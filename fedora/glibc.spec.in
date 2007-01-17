@@ -1,4 +1,4 @@
-%define glibcrelease 14
+%define glibcrelease 15
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define xenarches i686 athlon
 %ifarch %{xenarches}
@@ -46,7 +46,7 @@ Obsoletes: libc
 Prereq: basesystem, libgcc
 # This is for building auxiliary programs like memusage, nscd
 # For initial glibc bootstraps it can be commented out
-BuildPreReq: gd-devel libpng-devel zlib-devel texinfo, libselinux-devel >= 1.17.10-1
+BuildPreReq: gd-devel libpng-devel zlib-devel texinfo, libselinux-devel >= 1.33.4-3
 BuildPreReq: audit-libs-devel >= 1.1.3, sed >= 3.95, libcap-devel, gettext
 BuildPreReq: /bin/ps, /bin/kill, /bin/awk
 # This is to ensure that __frame_state_for is exported by glibc
@@ -788,7 +788,7 @@ touch locale/programs/*-kw.h
 GCC=gcc
 GXX=g++
 %ifarch %{ix86}
-BuildFlags="-march=%{_target_cpu} -mtune=generic"
+BuildFlags="-march=%{nptl_target_cpu} -mtune=generic"
 %endif
 %ifarch i686
 BuildFlags="-march=i686 -mtune=generic"
@@ -1378,7 +1378,7 @@ done
 %else
 
 mkdir -p $RPM_BUILD_ROOT/var/{db,run}/nscd
-touch $RPM_BUILD_ROOT/var/{db,run}/nscd/{passwd,group,hosts}
+touch $RPM_BUILD_ROOT/var/{db,run}/nscd/{passwd,group,hosts,services}
 touch $RPM_BUILD_ROOT/var/run/nscd/{socket,nscd.pid}
 %endif
 
@@ -1517,9 +1517,11 @@ rm -f *.filelist*
 %attr(0600,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /var/run/nscd/passwd
 %attr(0600,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /var/run/nscd/group
 %attr(0600,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /var/run/nscd/hosts
+%attr(0600,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /var/run/nscd/services
 %attr(0600,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /var/db/nscd/passwd
 %attr(0600,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /var/db/nscd/group
 %attr(0600,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /var/db/nscd/hosts
+%attr(0600,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /var/db/nscd/services
 %ghost %config(missingok,noreplace) /etc/sysconfig/nscd
 %endif
 
@@ -1544,6 +1546,19 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Wed Jan 17 2007 Jakub Jelinek <jakub@redhat.com> 2.5.90-15
+- fix NIS getservbyname when proto is NULL
+- fix nss_compat +group handling (#220658)
+- cache services in nscd
+- fix double free in fts_close (#222089)
+- fix vfork+execvp memory leak (#221187)
+- soft-fp fixes (BZ#2749)
+- further strtod fixes (BZ#3855)
+- make sure pthread_kill doesn't return EINVAL even if
+  the target thread exits in between pthread_kill ESRCH check
+  and the actual tgkill syscall (#220420)
+- fix ABBA deadlock possibility in ld.so scope locking code
+
 * Tue Dec 19 2006 Jakub Jelinek <jakub@redhat.com> 2.5.90-14
 - fix {j,m}rand48{,_r} on 64-bit arches (BZ#3747)
 - handle power6x AT_PLATFORM (#216970)

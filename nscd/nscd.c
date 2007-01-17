@@ -1,4 +1,4 @@
-/* Copyright (c) 1998-2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (c) 1998-2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -336,15 +336,15 @@ parse_opt (int key, char *arg, struct argp_state *state)
 	    exit (EXIT_FAILURE);
 
 	  request_header req;
-	  if (strcmp (arg, "passwd") == 0)
-	    req.key_len = sizeof "passwd";
-	  else if (strcmp (arg, "group") == 0)
-	    req.key_len = sizeof "group";
-	  else if (strcmp (arg, "hosts") == 0)
-	    req.key_len = sizeof "hosts";
-	  else
+	  dbtype cnt;
+	  for (cnt = pwddb; cnt < lastdb; ++cnt)
+	    if (strcmp (arg, dbnames[cnt]) == 0)
+	      break;
+
+	  if (cnt == lastdb)
 	    return ARGP_ERR_UNKNOWN;
 
+	  req.key_len = strlen (arg) + 1;
 	  req.version = NSCD_VERSION;
 	  req.type = INVALIDATE;
 
@@ -406,7 +406,7 @@ print_version (FILE *stream, struct argp_state *state)
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "2006");
+"), "2007");
   fprintf (stream, gettext ("Written by %s.\n"),
 	   "Thorsten Kukuk and Ulrich Drepper");
 }

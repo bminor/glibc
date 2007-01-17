@@ -1,3 +1,231 @@
+2007-01-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/fatal-prepare.h: Use PTHFCT_CALL to
+	demangle pointer.
+	* csu/libc-start.c: Likewise.
+
+2007-01-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/system.c: Remove NO_WAITPID support, it cannot
+	really work anyway.
+
+2007-01-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/connections.c (servinfo): Renamed to reqinfo.  Change all
+	users.
+	(handle_request): Remove unnecessary tests.
+
+	* nscd/cache.c (cache_add): Record the failure to add to the cache.
+
+2007-01-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* soft-fp/op-common.h (FP_TRUNC): When truncating a NaN, clear
+	workbits in semi-raw fraction.
+
+	* math/test-misc.c: Add new tests.
+
+2007-01-14  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* math/basic-test.c: Include test-skeleton.c.
+	(TEST_TRUNC): Define.
+	(truncdfsf_test, trunctfsf_test, trunctfdf_test): New.
+	(main): Rename to ...
+	(do_test): ...this.  Run new tests.
+	(TEST_FUNCTION): Define.
+
+2006-10-05  Steven Munroe  <sjmunroe@us.ibm.com>
+	    Joe Kerian  <jkerian@us.us.ibm.com>
+
+	[BZ #2749]
+	* soft-fp/op-4.h (__FP_FRAC_SUB_3, __FP_FRAC_SUB_4): Correct borrow
+	handling for high words.
+	* soft-fp/op-common.h (_FP_OVERFLOW_SEMIRAW): Always set inexact
+	and overflow for infinity.
+
+2007-01-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/connections.c (handle_request): Add a __builtin_expect.
+
+	* nscd/connections.c (serv2db): Change type into structure which
+	also says whether this is a request for data.  Renamed to
+	servinfo.  All users changed.
+	(handle_request): Much simpler test whether we should search the cache.
+
+	* nscd/connections.c (handle_request): Fix thinko in selinux test
+	invocation.
+
+	* sysdeps/generic/ldsodefs.h: Define DL_LOOKUP_SCOPE_LOCK.
+	* elf/dl-lookup.c (add_dependency): If scope map is locked, unlock
+	it before getting dl_load_lock and then relock.
+	(_dl_lookup_symbol_x): Pass flags to add_dependency.
+	When rerunning _dl_lookup_symbol_x, compute symbol_scope again in
+	case we unlocked the scope.
+	* elf/dl-runtime.c (_dl_fixup): Pass DL_LOOKUP_SCOPE_LOCK to
+	_dl_lookup_symbol_x in case we locked the scope.
+	(_dl_profile_fixup): Likewise.
+	* elf/dl-sym.c (do_sym): In flags passed to call_dl_lookup, also
+	set DL_LOOKUP_SCOPE_LOCK.
+
+2007-01-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* inet/Makefile: Define CFLAGS-getsrvbynm_r.c and
+	CFLAGS-getsrvbynpt_r.c.
+	* nscd/getsrvbynm_r.c: New file.
+	* nscd/getsrvbypt_r.c: New file.
+	* nscd/nscd_getserv_r.c: New file.
+	* nscd/servicescache.c: New file.
+	* nscd/Makefile (routines): Add nscd_getserv_r.
+	(nscd-modules): Add getsrvbynm_r, getsrvbypt_r, and servicescache.
+	Define CFLAGS-servicescache.c, CFLAGS-getsrvbynm_r.c, and
+	CFLAGS-getsrvbypt_r.c.
+	* nscd/cache.c (prune_cache): Rewrite to get re-add function from
+	table.  Add entries for services database.
+	* nscd/connections.c (serv2str): Mark as const.  Add entries for
+	services database.
+	(dbs): Add .reset_res and servdb initialization.
+	(serv2db): Add entries for services database.
+	(verify_persistent_db): Accept dbnr == servdb.
+	(invalidate_cache): Rewrite database name recognition to use a table.
+	Call res_init() if .reset_res is set for database.
+	(handle_request): Add code to handle services database.
+	* nscd/gai.c: Don't define __getservbyname_r.
+	* nscd/nscd-client.h (request_type): Remove LASTDBREQ, add
+	GETSERVBYNAME, GETSERVBYPORT, GETFDSERV.
+	(serv_response_header): Define.
+	(struct datahead): Add serv_response_header member.
+	* nscd/nscd.c (parse_opt): Rewrite parsing of -i parameter value
+	using table.
+	* nscd/nscd.conf: Add entries for services database.
+	* nscd/nscd.h: Adjust declaration of dbnames and serv2str.
+	Declare serv_iov_disabled.
+	Declare addservbyname, readdservbyname, addservbyport, and
+	readdservbyport.
+	* nscd/nscd_conf.c (dbnames): Mark as const.  Add services entry.
+	(find_db): Fix error message.
+	* nscd/nscd_proto.h: Declare __nss_not_use_nscd_services,
+	__nscd_getservbyname_r, and __nscd_getservbyport_r.
+	* nscd/selinux.c (perms): Add entries for services database.
+	* nss/Versions: Export __nss_services_lookup with GLIBC_PRIVATE.
+	* nss/nsswitch.c (__nss_disable_nscd): Also disable services database.
+
+	* nscd/grpcache.c: Remove obsolete code.  Cleanups.
+	* nscd/hstcache.c: Likewise.
+	* nscd/pwdcache.c: Likewise.
+
+	* nis/nss_nis/nis-service.c (_nss_nis_getservbyname_r): Correct
+	computation of keylen.
+
+	* include/string.h: Only redefine strndupa if this is really for
+	libc code.
+
+2007-01-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd_gethst_r.c: Minor cleanups.
+
+	* nscd/connections.c (handle_request): Check selinux permissions
+	for all non-admin commands.
+
+	* sysdeps/i386/i486/bits/atomic.h: Define
+	atomic_compare_and_exchange_val_acq,
+	atomic_compare_and_exchange_bool_acq, and atomic_exchange_and_add
+	using __sync_* built-ins for gcc >= 4.1.
+	* sysdeps/x86_64/bits/atomic.h: Likewise.
+
+	[BZ #3840]
+	* scripts/check-local-headers.sh: Restrict to testing .o.d, .os.d,
+	and .oS.d files.
+
+2007-01-05  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* stdlib/tst-makecontext.c: Include errno.h.  Change main()
+	to do_test().  Define TEST_FUNCTION. Include test-skeleton.c.
+	(do_test): Check errno and exit(0) if ENOSYS.
+
+2007-01-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/strtod_l.c (____STRTOF_INTERNAL): Fix handling of multi-byte
+	thousands separators.
+	* stdlib/Makefile: Add rules to build and run tst-strtod4.
+	* stdlib/tst-strtod4.c: New test.
+
+	[BZ #3855]
+	* stdlib/strtod_l.c (____STRTOF_INTERNAL): 0x. not followed by
+	hexadecimal digit should accept just the initial 0.
+	* stdlib/tst-strtod2.c (tests): New variable.
+	(do_test): Run several tests rather than just one.
+
+2007-01-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/soft-fp/sfp-machine.h: Remove.
+	* sysdeps/x86_64/soft-fp/sfp-machine.h: Likewise.
+
+2007-01-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* io/fts.c: Make sure fts_cur is always valid after return from
+	fts_read.
+	Patch by Miloslav Trmac <mitr@redhat.com>.
+
+2006-10-27  Richard Sandiford  <richard@codesourcery.com>
+
+	* elf/elf.h (R_MIPS_GLOB_DAT): Define.
+	(R_MIPS_NUM): Bump by 1.
+
+2007-01-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/execvp.c: Include alloca.h.
+	(allocate_scripts_argv): Renamed to...
+	(scripts_argv): ... this.  Don't allocate buffer here nor count
+	arguments.
+	(execvp): Use alloca if possible.
+	* posix/Makefile: Add rules to build and run tst-vfork3 test.
+	* posix/tst-vfork3.c: New test.
+
+2007-01-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/Makefile (tst-strxfrm2-ENV): Define.
+	* stdlib/Makefile (tst-strtod3-ENV): Define.
+
+2007-01-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/getconf.c: Update copyright year.
+	* nss/getent.c: Likewise.
+	* iconv/iconvconfig.c: Likewise.
+	* iconv/iconv_prog.c: Likewise.
+	* elf/ldconfig.c: Likewise.
+	* catgets/gencat.c: Likewise.
+	* csu/version.c: Likewise.
+	* elf/ldd.bash.in: Likewise.
+	* elf/sprof.c (print_version): Likewise.
+	* locale/programs/locale.c: Likewise.
+	* locale/programs/localedef.c: Likewise.
+	* nscd/nscd.c (print_version): Likewise.
+	* debug/xtrace.sh: Likewise.
+	* malloc/memusage.sh: Likewise.
+	* malloc/mtrace.pl: Likewise.
+	* debug/catchsegv.sh: Likewise.
+
+2006-12-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (sYSMALLOc): Remove some unnecessary alignment
+	attempts.
+
+2006-12-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/wordexp.c: Remove some unnecessary tests.
+
+2006-12-22  Gavin Romig-Koch  <gavin@redhat.com>
+
+	* nis/nss_compat/compat-grp.c (internal_getgrgid_r): Don't
+	blacklist the group till after we look it up.
+
+2006-12-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/atomic.h (atomic_forced_read): New macro.
+
+2006-12-20  SUGIOKA Toshinobu  <sugioka@itonet.co.jp>
+
+	* sysdeps/unix/sysv/linux/sh/bits/shm.h: New file.
+
 2006-12-19  Jakub Jelinek  <jakub@redhat.com>
 
 	* nss/getXXbyYY_r.c: Include atomic.h.
@@ -39,7 +267,7 @@
 
 	[BZ #3747]
 	* stdlib/jrand48_r.c (__jrand48_r): Make sure result is in the
-	[-231 .. 231) range.
+	[-2^31 .. 2^31) range.
 	* stdlib/tst-rand48.c (main): Fix expected values for 64-bit
 	targets.
 	* stdlib/tst-rand48-2.c: New test.

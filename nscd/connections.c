@@ -1,5 +1,5 @@
 /* Inner loops of cache daemon.
-   Copyright (C) 1998-2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1998-2003, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -75,7 +75,7 @@ static void begin_drop_privileges (void);
 static void finish_drop_privileges (void);
 
 /* Map request type to a string.  */
-const char *serv2str[LASTREQ] =
+const char *const serv2str[LASTREQ] =
 {
   [GETPWBYNAME] = "GETPWBYNAME",
   [GETPWBYUID] = "GETPWBYUID",
@@ -92,7 +92,10 @@ const char *serv2str[LASTREQ] =
   [GETFDGR] = "GETFDGR",
   [GETFDHST] = "GETFDHST",
   [GETAI] = "GETAI",
-  [INITGROUPS] = "INITGROUPS"
+  [INITGROUPS] = "INITGROUPS",
+  [GETSERVBYNAME] = "GETSERVBYNAME",
+  [GETSERVBYPORT] = "GETSERVBYPORT",
+  [GETFDSERV] = "GETFDSERV"
 };
 
 /* The control data structures for the services.  */
@@ -107,6 +110,7 @@ struct database_dyn dbs[lastdb] =
     .propagate = 1,
     .shared = 0,
     .max_db_size = DEFAULT_MAX_DB_SIZE,
+    .reset_res = 0,
     .filename = "/etc/passwd",
     .db_filename = _PATH_NSCD_PASSWD_DB,
     .disabled_iov = &pwd_iov_disabled,
@@ -125,6 +129,7 @@ struct database_dyn dbs[lastdb] =
     .propagate = 1,
     .shared = 0,
     .max_db_size = DEFAULT_MAX_DB_SIZE,
+    .reset_res = 0,
     .filename = "/etc/group",
     .db_filename = _PATH_NSCD_GROUP_DB,
     .disabled_iov = &grp_iov_disabled,
@@ -143,10 +148,30 @@ struct database_dyn dbs[lastdb] =
     .propagate = 0,		/* Not used.  */
     .shared = 0,
     .max_db_size = DEFAULT_MAX_DB_SIZE,
+    .reset_res = 1,
     .filename = "/etc/hosts",
     .db_filename = _PATH_NSCD_HOSTS_DB,
     .disabled_iov = &hst_iov_disabled,
     .postimeout = 3600,
+    .negtimeout = 20,
+    .wr_fd = -1,
+    .ro_fd = -1,
+    .mmap_used = false
+  },
+  [servdb] = {
+    .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
+    .prunelock = PTHREAD_MUTEX_INITIALIZER,
+    .enabled = 0,
+    .check_file = 1,
+    .persistent = 0,
+    .propagate = 0,		/* Not used.  */
+    .shared = 0,
+    .max_db_size = DEFAULT_MAX_DB_SIZE,
+    .reset_res = 0,
+    .filename = "/etc/services",
+    .db_filename = _PATH_NSCD_SERVICES_DB,
+    .disabled_iov = &serv_iov_disabled,
+    .postimeout = 28800,
     .negtimeout = 20,
     .wr_fd = -1,
     .ro_fd = -1,
@@ -156,21 +181,31 @@ struct database_dyn dbs[lastdb] =
 
 
 /* Mapping of request type to database.  */
-static struct database_dyn *const serv2db[LASTREQ] =
+static struct
 {
-  [GETPWBYNAME] = &dbs[pwddb],
-  [GETPWBYUID] = &dbs[pwddb],
-  [GETGRBYNAME] = &dbs[grpdb],
-  [GETGRBYGID] = &dbs[grpdb],
-  [GETHOSTBYNAME] = &dbs[hstdb],
-  [GETHOSTBYNAMEv6] = &dbs[hstdb],
-  [GETHOSTBYADDR] = &dbs[hstdb],
-  [GETHOSTBYADDRv6] = &dbs[hstdb],
-  [GETFDPW] = &dbs[pwddb],
-  [GETFDGR] = &dbs[grpdb],
-  [GETFDHST] = &dbs[hstdb],
-  [GETAI] = &dbs[hstdb],
-  [INITGROUPS] = &dbs[grpdb]
+  bool data_request;
+  struct database_dyn *db;
+} const reqinfo[LASTREQ] =
+{
+  [GETPWBYNAME] = { true, &dbs[pwddb] },
+  [GETPWBYUID] = { true, &dbs[pwddb] },
+  [GETGRBYNAME] = { true, &dbs[grpdb] },
+  [GETGRBYGID] = { true, &dbs[grpdb] },
+  [GETHOSTBYNAME] = { true, &dbs[hstdb] },
+  [GETHOSTBYNAMEv6] = { true, &dbs[hstdb] },
+  [GETHOSTBYADDR] = { true, &dbs[hstdb] },
+  [GETHOSTBYADDRv6] = { true, &dbs[hstdb] },
+  [SHUTDOWN] = { false, NULL },
+  [GETSTAT] = { false, NULL },
+  [SHUTDOWN] = { false, NULL },
+  [GETFDPW] = { false, &dbs[pwddb] },
+  [GETFDGR] = { false, &dbs[grpdb] },
+  [GETFDHST] = { false, &dbs[hstdb] },
+  [GETAI] = { true, &dbs[hstdb] },
+  [INITGROUPS] = { true, &dbs[grpdb] },
+  [GETSERVBYNAME] = { true, &dbs[servdb] },
+  [GETSERVBYPORT] = { true, &dbs[servdb] },
+  [GETFDSERV] = { false, &dbs[servdb] }
 };
 
 
@@ -305,7 +340,7 @@ check_use (const char *data, nscd_ssize_t first_free, uint8_t *usemap,
 static int
 verify_persistent_db (void *mem, struct database_pers_head *readhead, int dbnr)
 {
-  assert (dbnr == pwddb || dbnr == grpdb || dbnr == hstdb);
+  assert (dbnr == pwddb || dbnr == grpdb || dbnr == hstdb || dbnr == servdb);
 
   time_t now = time (NULL);
 
@@ -357,7 +392,7 @@ verify_persistent_db (void *mem, struct database_pers_head *readhead, int dbnr)
 
 	  /* Make sure the record is for this type of service.  */
 	  if (here->type >= LASTREQ
-	      || serv2db[here->type] != &dbs[dbnr])
+	      || reqinfo[here->type].db != &dbs[dbnr])
 	    goto fail;
 
 	  /* Validate boolean field value.  */
@@ -821,18 +856,16 @@ invalidate_cache (char *key, int fd)
   dbtype number;
   int32_t resp;
 
-  if (strcmp (key, "passwd") == 0)
-    number = pwddb;
-  else if (strcmp (key, "group") == 0)
-    number = grpdb;
-  else if (__builtin_expect (strcmp (key, "hosts"), 0) == 0)
-    {
-      number = hstdb;
+  for (number = pwddb; number < lastdb; ++number)
+    if (strcmp (key, dbnames[number]) == 0)
+      {
+	if (dbs[number].reset_res)
+	  res_init ();
 
-      /* Re-initialize the resolver.  resolv.conf might have changed.  */
-      res_init ();
-    }
-  else
+	break;
+      }
+
+  if (number == lastdb)
     {
       resp = EINVAL;
       writeall (fd, &resp, sizeof (resp));
@@ -907,22 +940,14 @@ cannot handle old request version %d; current version is %d"),
       return;
     }
 
-  /* Make the SELinux check before we go on to the standard checks.  We
-     need to verify that the request type is valid, since it has not
-     yet been checked at this point.  */
-  if (selinux_enabled
-      && __builtin_expect (req->type, GETPWBYNAME) >= GETPWBYNAME
-      && __builtin_expect (req->type, LASTREQ) < LASTREQ
-      && nscd_request_avc_has_perm (fd, req->type) != 0)
+  /* Make the SELinux check before we go on to the standard checks.  */
+  if (selinux_enabled && nscd_request_avc_has_perm (fd, req->type) != 0)
     return;
 
-  struct database_dyn *db = serv2db[req->type];
+  struct database_dyn *db = reqinfo[req->type].db;
 
-  // XXX Clean up so that each new command need not introduce a
-  // XXX new conditional.
-  if ((__builtin_expect (req->type, GETPWBYNAME) >= GETPWBYNAME
-       && __builtin_expect (req->type, LASTDBREQ) <= LASTDBREQ)
-      || req->type == GETAI || req->type == INITGROUPS)
+  /* See whether we can service the request from the cache.  */
+  if (__builtin_expect (reqinfo[req->type].data_request, true))
     {
       if (__builtin_expect (debug_level, 0) > 0)
 	{
@@ -940,7 +965,7 @@ cannot handle old request version %d; current version is %d"),
 	}
 
       /* Is this service enabled?  */
-      if (!db->enabled)
+      if (__builtin_expect (!db->enabled, 0))
 	{
 	  /* No, sent the prepared record.  */
 	  if (TEMP_FAILURE_RETRY (send (fd, db->disabled_iov->iov_base,
@@ -1066,6 +1091,14 @@ cannot handle old request version %d; current version is %d"),
       addinitgroups (db, fd, req, key, uid);
       break;
 
+    case GETSERVBYNAME:
+      addservbyname (db, fd, req, key, uid);
+      break;
+
+    case GETSERVBYPORT:
+      addservbyport (db, fd, req, key, uid);
+      break;
+
     case GETSTAT:
     case SHUTDOWN:
     case INVALIDATE:
@@ -1111,8 +1144,9 @@ cannot handle old request version %d; current version is %d"),
     case GETFDPW:
     case GETFDGR:
     case GETFDHST:
+    case GETFDSERV:
 #ifdef SCM_RIGHTS
-      send_ro_fd (serv2db[req->type], key, fd);
+      send_ro_fd (reqinfo[req->type].db, key, fd);
 #endif
       break;
 
@@ -1152,7 +1186,7 @@ cannot open /proc/self/cmdline: %s; disabling paranoia mode"),
       if (n == -1)
 	{
 	  dbg_log (_("\
-cannot open /proc/self/cmdline: %s; disabling paranoia mode"),
+cannot read /proc/self/cmdline: %s; disabling paranoia mode"),
 		   strerror (errno));
 
 	  close (fd);
