@@ -44,6 +44,9 @@
 /* Path for the configuration file.  */
 #define _PATH_NSCDCONF	 "/etc/nscd.conf"
 
+/* Maximu allowed length for the key.  */
+#define MAXKEYLEN 1024
+
 
 /* Available services.  */
 typedef enum
@@ -323,10 +326,10 @@ static inline int __nscd_drop_map_ref (struct mapped_database *map,
 
 
 /* Search the mapped database.  */
-extern const struct datahead *__nscd_cache_search (request_type type,
-						   const char *key,
-						   size_t keylen,
-						   const struct mapped_database *mapped);
+extern struct datahead *__nscd_cache_search (request_type type,
+					     const char *key,
+					     size_t keylen,
+					     const struct mapped_database *mapped);
 
 /* Wrappers around read, readv and write that only read/write less than LEN
    bytes on error or EOF.  */

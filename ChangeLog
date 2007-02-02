@@ -1,3 +1,138 @@
+2007-02-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (PTR_MANGLE): Roll value before
+	returning.
+	(PTR_DEMANGLE): Real definition now that it's not the same as
+	PRT_MANGLE anymore.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h: Likewise.
+
+	* string/strerror_l.c: New file.
+	* string/Makefile (routines): Add strerror_l.
+	* string/string.h: Declare strerror_l.
+	* string/Versions: Export strerror_l for GLIBC_2.6.
+
+2007-01-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd_helper.c (open_socket): Now takes request type and key
+	as parameter.  Construct request record.  Try sending request
+	before the first poll use, it usually succeeds.  Adjust all
+	callers.
+	* nscd/nscd-client.h: Define MAXKEYLEN.
+	* nscd/connections.c (nscd_run): Don't define MAXKEYLEN here.
+
+2007-01-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/nscd-client.h (__nscd_cache_search): Remove const qualifier
+	from return value.
+	* nscd/nscd_helper.c: Include string.h.
+	(__nscd_cache_search): Remove const qualifier from return value.
+	On strict alignment architectures check hash entry and data head
+	alignment.
+	* nscd/nscd_getpw_r.c (nscd_getpw_r): Don't crash or fail because
+	mmapped data during GC cycle contains garbage.  If
+	__nscd_drop_map_ref fails, decrement mapped->counter when returning
+	error or if retrying with NO_MAPPING, only __nscd_unmap if counter
+	dropped to 0.
+	* nscd/nscd_getgr_r.c (nscd_getgr_r): Likewise.
+	* nscd/nscd_initgroups.c (__nscd_getgrouplist): Likewise.
+	* nscd/nscd_gethst_r.c (nscd_gethst_r): Likewise.
+	* nscd/nscd_getai.c (__nscd_getai): Likewise.
+	* nscd/nscd_getserv_r.c (nscd_getserv_r): Likewise.
+
+2007-01-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/hsearch_r.c (hdestroy_r): Remove unnecessary test.
+
+2007-01-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/dl-trampoline.S (_dl_runtime_profile): Use register
+	names not numbers in cfi_*.
+
+2007-01-26  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/sys/personality.h (ADDR_NO_RANDOMIZE,
+	ADDR_LIMIT_3GB, PER_LINUX_32BIT, PER_LINUX32_3GB): Add.
+	Correct values of PER_HPUX and PER_OSF4.
+
+2007-01-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-minimal.c: Undefine _itoa first.
+	* stdio-common/_itoa.h: Define _itoa and _fitoa for 64-bit platforms.
+	* malloc/mtrace.c: Revert last change.
+	* posix/wordexp.c: Likewise.
+
+2007-01-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/bits/byteswap.h (__bswap_32): Add __nocona__, __core2__
+	and __geode__ to the list of i486+ CPUs.
+	* sysdeps/x86_64/bits/byteswap.h (__bswap_32): Likewise.
+
+2007-01-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/_itoa.c: Include <limits.h>.
+	* stdio-common/_itowa.c: Likewise.
+
+2007-01-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/_itowa.c: Don't compile _itowa for 64-bit
+	platforms.
+	* stdio-common/_itoa.c: Don't compile in _itoa and _fitoa for
+	64-bit platforms.
+	* malloc/mtrace.c (tr_where): Use _fitoa_word instead of _fitoa if
+	possible.
+	* posix/wordexp.c (parse_arith): Use _itoa_word instead of _itoa
+	if possible.
+
+	[BZ #3902]
+	* stdio-common/_itoa.c (_itoa): Make sure at least a zero is emitted.
+	* stdio-common/Makefile (tests): Add bug17.
+	* stdio-common/bug17.c: New file.
+
+2007-01-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/brf.c: New file.
+	* iconvdata/testdata/BRF: New file.
+	* iconvdata/testdata/BRF..UTF8: New file.
+	Contributed by Samuel Thibault <samuel.thibault@ens-lyon.org>.
+	* iconvdata/Makefile: Add rules to build BRF.
+	* iconvdata/TESTS: Add BRF entry.
+	* iconvdata/gconv-modules: Likewise.
+	* iconvdata/tst-tables.sh: Likewise.
+
+2007-01-18  Anton Nikishaev  <anton.nik@gmail.com>
+
+	* wcsmbs/wchar.h (wcstoll): Fix comment, function returns value of
+	type `long long int', not `long int'.
+	(wcstoq): Likewise.
+
+2007-01-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* scripts/gen-as-const.awk: Add cast to long to avoid int promotion
+	of values on 64-bit platforms which are too large.
+
+2007-01-12  Steven Munroe  <sjmunroe@us.ibm.com>
+	    Joe Kerian  <jkerian@us.us.ibm.com>
+
+	[BZ #2749]
+	* sysdeps/ieee754/ldbl-128ibm/s_copysignl.c: Include
+	<math_ldbl_opt.h>.  Remove weak_alias.  Use long_double_symbol macro.
+	(__copysignl): Use signbit() for comparison.
+	* sysdeps/ieee754/ldbl-128ibm/s_fabsl.c (__fabsl): Correct parms for
+	SET_LDOUBLE_WORDS64.
+
+	[BZ #2423, #2749]
+	* sysdeps/ieee754/ldbl-128ibm/s_ceill.c: Don't include <fenv_libc.h>.
+	(__ceill): Remove calls to fegetround(), fesetround().
+	* sysdeps/ieee754/ldbl-128ibm/s_floorl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_roundl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_truncl.c: Likewise.
+
+2007-01-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/nscd_getserv_r.c (nscd_getserv_r): Fix pastos.
+
+	* sysdeps/unix/sysv/linux/getdents.c (offsetof): Remove.
+
 2007-01-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/fatal-prepare.h: Use PTHFCT_CALL to
