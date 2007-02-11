@@ -1,4 +1,4 @@
-%define glibcrelease 16
+%define glibcrelease 17
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define xenarches i686 athlon
 %ifarch %{xenarches}
@@ -1546,6 +1546,12 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Sun Feb 11 2007 Jakub Jelinek <jakub@redhat.com> 2.5.90-17
+- RFC2671 support in resolver (#205842)
+- fix strptime (BZ#3944)
+- fix regcomp with REG_NEWLINE (BZ#3957)
+- fix pthread_mutex_timedlock on x86_64 (#228103)
+
 * Fri Feb  2 2007 Jakub Jelinek <jakub@redhat.com> 2.5.90-16
 - add strerror_l
 - fix application crashes when doing NSS lookups through nscd
