@@ -1,5 +1,4 @@
-/* Copyright (C) 1991-2002, 2003, 2004, 2005, 2006
-   Free Software Foundation, Inc.
+/* Copyright (C) 1991-2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,17 +52,19 @@
 #endif
 
 /* Those are flags in the conversion format. */
-#define LONG		0x001	/* l: long or double */
-#define LONGDBL		0x002	/* L: long long or long double */
-#define SHORT		0x004	/* h: short */
-#define SUPPRESS	0x008	/* *: suppress assignment */
-#define POINTER		0x010	/* weird %p pointer (`fake hex') */
-#define NOSKIP		0x020	/* do not skip blanks */
-#define WIDTH		0x040	/* width was given */
-#define GROUP		0x080	/* ': group numbers */
-#define MALLOC		0x100	/* a: malloc strings */
-#define CHAR		0x200	/* hh: char */
-#define I18N		0x400	/* I: use locale's digits */
+#define LONG		0x0001	/* l: long or double */
+#define LONGDBL		0x0002	/* L: long long or long double */
+#define SHORT		0x0004	/* h: short */
+#define SUPPRESS	0x0008	/* *: suppress assignment */
+#define POINTER		0x0010	/* weird %p pointer (`fake hex') */
+#define NOSKIP		0x0020	/* do not skip blanks */
+#define NUMBER_SIGNED	0x0040	/* signed integer */
+#define GROUP		0x0080	/* ': group numbers */
+#define MALLOC		0x0100	/* a: malloc strings */
+#define CHAR		0x0200	/* hh: char */
+#define I18N		0x0400	/* I: use locale's digits */
+#define HEXA_FLOAT	0x0800	/* hexadecimal float */
+#define READ_POINTER	0x1000	/* this is a pointer value */
 
 
 #include <locale/localeinfo.h>
@@ -205,9 +206,6 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 #define exp_char not_in
   /* Base for integral numbers.  */
   int base;
-  /* Signedness for integral numbers.  */
-  int number_signed;
-#define is_hexa number_signed
   /* Decimal point character.  */
 #ifdef COMPILE_WSCANF
   wint_t decimal;
@@ -239,8 +237,6 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
      possibly be matched even if in the input stream no character is
      available anymore.  */
   int skip_space = 0;
-  /* Nonzero if we are reading a pointer.  */
-  int read_pointer;
   /* Workspace.  */
   CHAR_T *tw;			/* Temporary pointer.  */
   CHAR_T *wp = NULL;		/* Workspace.  */
@@ -403,9 +399,6 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
       /* This is the start of the conversion string. */
       flags = 0;
 
-      /* Not yet decided whether we read a pointer or not.  */
-      read_pointer = 0;
-
       /* Initialize state of modifiers.  */
       argpos = 0;
 
@@ -424,7 +417,6 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	    {
 	      /* Oops; that was actually the field width.  */
 	      width = argpos;
-	      flags |= WIDTH;
 	      argpos = 0;
 	      goto got_width;
 	    }
@@ -439,16 +431,17 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	    flags |= SUPPRESS;
 	    break;
 	  case L_('\''):
-	    flags |= GROUP;
+#ifdef COMPILE_WSCANF
+	    if (thousands != L'\0')
+#else
+	    if (thousands != NULL)
+#endif
+	      flags |= GROUP;
 	    break;
 	  case L_('I'):
 	    flags |= I18N;
 	    break;
 	  }
-
-      /* We have seen width. */
-      if (ISDIGIT ((UCHAR_T) *f))
-	flags |= WIDTH;
 
       /* Find the maximum field width.  */
       width = 0;
@@ -1083,27 +1076,24 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	case L_('x'):	/* Hexadecimal integer.  */
 	case L_('X'):	/* Ditto.  */
 	  base = 16;
-	  number_signed = 0;
 	  goto number;
 
 	case L_('o'):	/* Octal integer.  */
 	  base = 8;
-	  number_signed = 0;
 	  goto number;
 
 	case L_('u'):	/* Unsigned decimal integer.  */
 	  base = 10;
-	  number_signed = 0;
 	  goto number;
 
 	case L_('d'):	/* Signed decimal integer.  */
 	  base = 10;
-	  number_signed = 1;
+	  flags |= NUMBER_SIGNED;
 	  goto number;
 
 	case L_('i'):	/* Generic number.  */
 	  base = 0;
-	  number_signed = 1;
+	  flags |= NUMBER_SIGNED;
 
 	number:
 	  c = inchar ();
@@ -1270,13 +1260,13 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 			mbdigits[n] = strchr (mbdigits[n], '\0') + 1;
 
 		      cmpp = mbdigits[n];
-		      while ((unsigned char) *cmpp == c && avail > 0)
+		      while ((unsigned char) *cmpp == c && avail >= 0)
 			{
 			  if (*++cmpp == '\0')
 			    break;
 			  else
 			    {
-			      if ((c = inchar ()) == EOF)
+			      if (avail == 0 || inchar () == EOF)
 				break;
 			      --avail;
 			    }
@@ -1323,13 +1313,13 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 			      int avail = width > 0 ? width : INT_MAX;
 
 			      cmpp = mbdigits[n];
-			      while ((unsigned char) *cmpp == c && avail > 0)
+			      while ((unsigned char) *cmpp == c && avail >= 0)
 				{
 				  if (*++cmpp == '\0')
 				    break;
 				  else
 				    {
-				      if ((c = inchar ()) == EOF)
+				      if (avail == 0 || inchar () == EOF)
 					break;
 				      --avail;
 				    }
@@ -1368,13 +1358,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 
 		  if (n < 10)
 		    c = L_('0') + n;
-		  else if ((flags & GROUP)
-#ifdef COMPILE_WSCANF
-			   && thousands != L'\0'
-#else
-			   && thousands != NULL
-#endif
-			   )
+		  else if (flags & GROUP)
 		    {
 		      /* Try matching against the thousands separator.  */
 #ifdef COMPILE_WSCANF
@@ -1384,14 +1368,14 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		      const char *cmpp = thousands;
 		      int avail = width > 0 ? width : INT_MAX;
 
-		      while ((unsigned char) *cmpp == c && avail > 0)
+		      while ((unsigned char) *cmpp == c && avail >= 0)
 			{
 			  ADDW (c);
 			  if (*++cmpp == '\0')
 			    break;
 			  else
 			    {
-			      if ((c = inchar ()) == EOF)
+			      if (avail == 0 || inchar () == EOF)
 				break;
 			      --avail;
 			    }
@@ -1440,13 +1424,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		  }
 		else if (!ISDIGIT (c) || (int) (c - L_('0')) >= base)
 		  {
-		    if (base == 10 && (flags & GROUP)
-#ifdef COMPILE_WSCANF
-			&& thousands != L'\0'
-#else
-			&& thousands != NULL
-#endif
-			)
+		    if (base == 10 && (flags & GROUP))
 		      {
 			/* Try matching against the thousands separator.  */
 #ifdef COMPILE_WSCANF
@@ -1456,14 +1434,14 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 			const char *cmpp = thousands;
 			int avail = width > 0 ? width : INT_MAX;
 
-			while ((unsigned char) *cmpp == c && avail > 0)
+			while ((unsigned char) *cmpp == c && avail >= 0)
 			  {
 			    ADDW (c);
 			    if (*++cmpp == '\0')
 			      break;
 			    else
 			      {
-				if ((c = inchar ()) == EOF)
+				if (avail == 0 || inchar () == EOF)
 				  break;
 				--avail;
 			      }
@@ -1507,7 +1485,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	      /* There was no number.  If we are supposed to read a pointer
 		 we must recognize "(nil)" as well.  */
 	      if (__builtin_expect (wpsize == 0
-				    && read_pointer
+				    && (flags & READ_POINTER)
 				    && (width < 0 || width >= 0)
 				    && c == '('
 				    && TOLOWER (inchar ()) == L_('n')
@@ -1534,14 +1512,14 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	  ADDW (L_('\0'));
 	  if (need_longlong && (flags & LONGDBL))
 	    {
-	      if (number_signed)
+	      if (flags & NUMBER_SIGNED)
 		num.q = __strtoll_internal (wp, &tw, base, flags & GROUP);
 	      else
 		num.uq = __strtoull_internal (wp, &tw, base, flags & GROUP);
 	    }
 	  else
 	    {
-	      if (number_signed)
+	      if (flags & NUMBER_SIGNED)
 		num.l = __strtol_internal (wp, &tw, base, flags & GROUP);
 	      else
 		num.ul = __strtoul_internal (wp, &tw, base, flags & GROUP);
@@ -1551,7 +1529,20 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 
 	  if (!(flags & SUPPRESS))
 	    {
-	      if (! number_signed)
+	      if (flags & NUMBER_SIGNED)
+		{
+		  if (need_longlong && (flags & LONGDBL))
+		    *ARG (LONGLONG int *) = num.q;
+		  else if (need_long && (flags & LONG))
+		    *ARG (long int *) = num.l;
+		  else if (flags & SHORT)
+		    *ARG (short int *) = (short int) num.l;
+		  else if (!(flags & CHAR))
+		    *ARG (int *) = (int) num.l;
+		  else
+		    *ARG (signed char *) = (signed char) num.ul;
+		}
+	      else
 		{
 		  if (need_longlong && (flags & LONGDBL))
 		    *ARG (unsigned LONGLONG int *) = num.uq;
@@ -1564,19 +1555,6 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		    *ARG (unsigned int *) = (unsigned int) num.ul;
 		  else
 		    *ARG (unsigned char *) = (unsigned char) num.ul;
-		}
-	      else
-		{
-		  if (need_longlong && (flags & LONGDBL))
-		    *ARG (LONGLONG int *) = num.q;
-		  else if (need_long && (flags & LONG))
-		    *ARG (long int *) = num.l;
-		  else if (flags & SHORT)
-		    *ARG (short int *) = (short int) num.l;
-		  else if (!(flags & CHAR))
-		    *ARG (int *) = (int) num.l;
-		  else
-		    *ARG (signed char *) = (signed char) num.ul;
 		}
 	      ++done;
 	    }
@@ -1591,6 +1569,8 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	case L_('a'):
 	case L_('A'):
 	  c = inchar ();
+	  if (width > 0)
+	    --width;
 	  if (__builtin_expect (c == EOF, 0))
 	    input_error ();
 
@@ -1603,63 +1583,6 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	      if (__builtin_expect (width == 0 || inchar () == EOF, 0))
 		/* EOF is only an input error before we read any chars.  */
 		conv_error ();
-	      if (! ISDIGIT (c) && TOLOWER (c) != L_('i')
-		  && TOLOWER (c) != L_('n'))
-		{
-#ifdef COMPILE_WSCANF
-		  if (__builtin_expect (c != decimal, 0))
-		    {
-		      /* This is no valid number.  */
-		      ungetc (c, s);
-		      conv_error ();
-		    }
-#else
-		  /* Match against the decimal point.  At this point
-                     we are taking advantage of the fact that we can
-                     push more than one character back.  This is
-                     (almost) never necessary since the decimal point
-                     string hopefully never contains more than one
-                     byte.  */
-		  const char *cmpp = decimal;
-		  int avail = width > 0 ? width : INT_MAX;
-
-		  while ((unsigned char) *cmpp == c && avail-- > 0)
-		    if (*++cmpp == '\0')
-		      break;
-		    else
-		      {
-			if (inchar () == EOF)
-			  break;
-		      }
-
-		  if (__builtin_expect (*cmpp != '\0', 0))
-		    {
-		      /* This is no valid number.  */
-		      while (1)
-			{
-			  ungetc (c, s);
-			  if (cmpp == decimal)
-			    break;
-			  c = (unsigned char) *--cmpp;
-			}
-
-		      conv_error ();
-		    }
-		  else
-		    {
-                     /* Add all the characters.  */
-                     for (cmpp = decimal; *cmpp != '\0'; ++cmpp)
-                       ADDW ((unsigned char) *cmpp);
-                     if (width > 0)
-                       width = avail;
-                     got_dot = 1;
-
-		      c = inchar ();
-		    }
-		  if (width > 0)
-		    width = avail;
-#endif
-		}
 	      if (width > 0)
 		--width;
 	    }
@@ -1751,7 +1674,6 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	      goto scan_float;
 	    }
 
-	  is_hexa = 0;
 	  exp_char = L_('e');
 	  if (width != 0 && c == L_('0'))
 	    {
@@ -1764,7 +1686,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		  /* It is a number in hexadecimal format.  */
 		  ADDW (c);
 
-		  is_hexa = 1;
+		  flags |= HEXA_FLOAT;
 		  exp_char = L_('p');
 
 		  /* Grouping is not allowed.  */
@@ -1775,11 +1697,11 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		}
 	    }
 
-	  do
+	  while (1)
 	    {
 	      if (ISDIGIT (c))
 		ADDW (c);
-	      else if (!got_e && is_hexa && ISXDIGIT (c))
+	      else if (!got_e && (flags & HEXA_FLOAT) && ISXDIGIT (c))
 		ADDW (c);
 	      else if (got_e && wp[wpsize - 1] == exp_char
 		       && (c == L_('-') || c == L_('+')))
@@ -1798,8 +1720,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		      ADDW (c);
 		      got_dot = 1;
 		    }
-		  else if ((flags & GROUP) != 0 && thousands != L'\0'
-			   && ! got_dot && c == thousands)
+		  else if ((flags & GROUP) != 0 && ! got_dot && c == thousands)
 		    ADDW (c);
 		  else
 		    {
@@ -1814,12 +1735,12 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 
 		  if (! got_dot)
 		    {
-		      while ((unsigned char) *cmpp == c && avail > 0)
+		      while ((unsigned char) *cmpp == c && avail >= 0)
 			if (*++cmpp == '\0')
 			  break;
 			else
 			  {
-			    if (inchar () == EOF)
+			    if (avail == 0 || inchar () == EOF)
 			      break;
 			    --avail;
 			  }
@@ -1843,20 +1764,19 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 			 we can compare against it.  */
 		      const char *cmp2p = thousands;
 
-		      if ((flags & GROUP) != 0 && thousands != NULL
-			  && ! got_dot)
+		      if ((flags & GROUP) != 0 && ! got_dot)
 			{
 			  while (cmp2p - thousands < cmpp - decimal
 				 && *cmp2p == decimal[cmp2p - thousands])
 			    ++cmp2p;
 			  if (cmp2p - thousands == cmpp - decimal)
 			    {
-			      while ((unsigned char) *cmp2p == c && avail > 0)
+			      while ((unsigned char) *cmp2p == c && avail >= 0)
 				if (*++cmp2p == '\0')
 				  break;
 				else
 				  {
-				    if (inchar () == EOF)
+				    if (avail == 0 || inchar () == EOF)
 				      break;
 				    --avail;
 				  }
@@ -1881,16 +1801,237 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		    }
 #endif
 		}
+
+	      if (width == 0 || inchar () == EOF)
+		break;
+
 	      if (width > 0)
 		--width;
 	    }
-	  while (width != 0 && inchar () != EOF);
+
+	  wctrans_t map;
+	  if (__builtin_expect ((flags & I18N) != 0, 0)
+	      /* Hexadecimal floats make no sense, fixing localized
+		 digits with ASCII letters.  */
+	      && !(flags & HEXA_FLOAT)
+	      /* Minimum requirement.  */
+	      && (wpsize == 0 || got_dot)
+	      && (map = __wctrans ("to_inpunct")) != NULL)
+	    {
+	      /* Reget the first character.  */
+	      inchar ();
+
+	      /* Localized digits, decimal points, and thousands
+		 separator.  */
+	      wint_t wcdigits[12];
+
+	      /* First get decimal equivalent to check if we read it
+		 or not.  */
+	      wcdigits[11] = __towctrans (L'.', map);
+
+	      /* If we have not read any character or have just read
+	         locale decimal point which matches the decimal point
+	         for localized FP numbers, then we may have localized
+	         digits.  Note, we test GOT_DOT above.  */
+#ifdef COMPILE_WSCANF
+	      if (wpsize == 0 || (wpsize == 1 && wcdigits[11] == decimal))
+#else
+	      char mbdigits[12][MB_LEN_MAX + 1];
+
+	      mbstate_t state;
+	      memset (&state, '\0', sizeof (state));
+
+	      bool match_so_far = wpsize == 0;
+	      size_t mblen = __wcrtomb (mbdigits[11], wcdigits[11], &state);
+	      if (mblen != (size_t) -1)
+		{
+		  mbdigits[11][mblen] = '\0';
+		  match_so_far |= (wpsize == strlen (decimal)
+				   && strcmp (decimal, mbdigits[11]) == 0);
+		}
+	      else
+		{
+		  size_t decimal_len = strlen (decimal);
+		  /* This should always be the case but the data comes
+		     from a file.  */
+		  if (decimal_len <= MB_LEN_MAX)
+		    {
+		      match_so_far |= wpsize == decimal_len;
+		      memcpy (mbdigits[11], decimal, decimal_len + 1);
+		    }
+		  else
+		    match_so_far = false;
+		}
+
+	      if (match_so_far)
+#endif
+		{
+		  bool have_locthousands = (flags & GROUP) != 0;
+
+		  /* Now get the digits and the thousands-sep equivalents.  */
+	          for (int n = 0; n < 11; ++n)
+		    {
+		      if (n < 10)
+			wcdigits[n] = __towctrans (L'0' + n, map);
+		      else if (n == 10)
+			{
+			  wcdigits[10] = __towctrans (L',', map);
+			  have_locthousands &= wcdigits[10] != L'\0';
+			}
+
+#ifndef COMPILE_WSCANF
+		      memset (&state, '\0', sizeof (state));
+
+		      size_t mblen = __wcrtomb (mbdigits[n], wcdigits[n],
+						&state);
+		      if (mblen == (size_t) -1)
+			{
+			  if (n == 10)
+			    {
+			      if (have_locthousands)
+				{
+				  size_t thousands_len = strlen (thousands);
+				  if (thousands_len <= MB_LEN_MAX)
+				    memcpy (mbdigits[10], thousands,
+					    thousands_len + 1);
+				  else
+				    have_locthousands = false;
+				}
+			    }
+			  else
+			    /* Ignore checking against localized digits.  */
+			    goto no_i18nflt;
+			}
+		      else
+			mbdigits[n][mblen] = '\0';
+#endif
+		    }
+
+		  /* Start checking against localized digits, if
+		     convertion is done correctly. */
+		  while (1)
+		    {
+		      if (got_e && wp[wpsize - 1] == exp_char
+			  && (c == L_('-') || c == L_('+')))
+			ADDW (c);
+		      else if (wpsize > 0 && !got_e
+			       && (CHAR_T) TOLOWER (c) == exp_char)
+			{
+			  ADDW (exp_char);
+			  got_e = got_dot = 1;
+			}
+		      else
+			{
+			  /* Check against localized digits, decimal point,
+			     and thousands separator.  */
+			  int n;
+			  for (n = 0; n < 12; ++n)
+			    {
+#ifdef COMPILE_WSCANF
+			      if (c == wcdigits[n])
+				{
+				  if (n < 10)
+				    ADDW (L_('0') + n);
+				  else if (n == 11 && !got_dot)
+				    {
+				      ADDW (decimal);
+				      got_dot = 1;
+				    }
+				  else if (n == 10 && have_locthousands
+					   && ! got_dot)
+				    ADDW (thousands);
+				  else
+				    /* The last read character is not part
+				       of the number anymore.  */
+				    n = 12;
+
+				  break;
+				}
+#else
+			      const char *cmpp = mbdigits[n];
+			      int avail = width > 0 ? width : INT_MAX;
+
+			      while ((unsigned char) *cmpp == c && avail >= 0)
+				if (*++cmpp == '\0')
+				  break;
+				else
+				  {
+				    if (avail == 0 || inchar () == EOF)
+				      break;
+				    --avail;
+				  }
+			      if (*cmpp == '\0')
+				{
+				  if (width > 0)
+				    width = avail;
+
+				  if (n < 10)
+				    ADDW (L_('0') + n);
+				  else if (n == 11 && !got_dot)
+				    {
+				      /* Add all the characters.  */
+				      for (cmpp = decimal; *cmpp != '\0';
+					   ++cmpp)
+					ADDW ((unsigned char) *cmpp);
+
+				      got_dot = 1;
+				    }
+				  else if (n == 10 && (flags & GROUP) != 0
+					   && ! got_dot)
+				    {
+				      /* Add all the characters.  */
+				      for (cmpp = thousands; *cmpp != '\0';
+					   ++cmpp)
+					ADDW ((unsigned char) *cmpp);
+				    }
+				  else
+				    /* The last read character is not part
+				       of the number anymore.  */
+				      n = 12;
+
+				  break;
+				}
+
+			      /* We are pushing all read characters back.  */
+			      if (cmpp > mbdigits[n])
+				{
+				  ungetc (c, s);
+				  while (--cmpp > mbdigits[n])
+				    ungetc_not_eof ((unsigned char) *cmpp, s);
+				  c = (unsigned char) *cmpp;
+				}
+#endif
+			    }
+
+			  if (n >= 12)
+			    {
+			      /* The last read character is not part
+				 of the number anymore.  */
+			      ungetc (c, s);
+			      break;
+			    }
+			}
+
+		      if (width == 0 || inchar () == EOF)
+			break;
+
+		      if (width > 0)
+			--width;
+		    }
+		}
+
+#ifndef COMPILE_WSCANF
+	    no_i18nflt:
+	      ;
+#endif
+	    }
 
 	  /* Have we read any character?  If we try to read a number
 	     in hexadecimal notation and we have read only the `0x'
 	     prefix or no exponent this is an error.  */
 	  if (__builtin_expect (wpsize == 0
-				|| (is_hexa && (wpsize == 2 || ! got_e)), 0))
+				|| ((flags & HEXA_FLOAT)
+				    && (wpsize == 2 || ! got_e)), 0))
 	    conv_error ();
 
 	scan_float:
@@ -2429,8 +2570,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	  flags &= ~(SHORT|LONGDBL);
 	  if (need_long)
 	    flags |= LONG;
-	  number_signed = 0;
-	  read_pointer = 1;
+	  flags |= READ_POINTER;
 	  goto number;
 
 	default:

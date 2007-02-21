@@ -1,6 +1,6 @@
 /* Floating point output for `printf'.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2006
-   Free Software Foundation, Inc.
+   Copyright (C) 1995-2003, 2006, 2007 Free Software Foundation, Inc.
+
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -811,12 +811,14 @@ ___printf_fp (FILE *fp,
     int chars_needed;
     int expscale;
     int intdig_max, intdig_no = 0;
-    int fracdig_min, fracdig_max, fracdig_no = 0;
+    int fracdig_min;
+    int fracdig_max;
     int dig_max;
     int significant;
     int ngroups = 0;
+    char spec = _tolower (info->spec);
 
-    if (_tolower (info->spec) == 'e')
+    if (spec == 'e')
       {
 	type = info->spec;
 	intdig_max = 1;
@@ -826,7 +828,7 @@ ___printf_fp (FILE *fp,
 	dig_max = INT_MAX;		/* Unlimited.  */
 	significant = 1;		/* Does not matter here.  */
       }
-    else if (_tolower (info->spec) == 'f')
+    else if (spec == 'f')
       {
 	type = 'f';
 	fracdig_min = fracdig_max = info->prec < 0 ? 6 : info->prec;
@@ -887,7 +889,7 @@ ___printf_fp (FILE *fp,
        other output.  If the amount of memory we have to allocate is too
        large use `malloc' instead of `alloca'.  */
     buffer_malloced = ! __libc_use_alloca (chars_needed * 2 * sizeof (wchar_t));
-    if (buffer_malloced)
+    if (__builtin_expect (buffer_malloced, 0))
       {
 	wbuffer = (wchar_t *) malloc ((2 + chars_needed) * sizeof (wchar_t));
 	if (wbuffer == NULL)
@@ -923,7 +925,9 @@ ___printf_fp (FILE *fp,
       }
 
     /* Generate the needed number of fractional digits.	 */
-    while (fracdig_no < fracdig_min
+    int fracdig_no = 0;
+    int added_zeros = 0;
+    while (fracdig_no < fracdig_min + added_zeros
 	   || (fracdig_no < fracdig_max && (fracsize > 1 || frac[0] != 0)))
       {
 	++fracdig_no;
@@ -934,7 +938,7 @@ ___printf_fp (FILE *fp,
 	  {
 	    ++fracdig_max;
 	    if (fracdig_min > 0)
-	      ++fracdig_min;
+	      ++added_zeros;
 	  }
       }
 
@@ -971,11 +975,23 @@ ___printf_fp (FILE *fp,
 	  {
 	    /* Process fractional digits.  Terminate if not rounded or
 	       radix character is reached.  */
+	    int removed = 0;
 	    while (*--wtp != decimalwc && *wtp == L'9')
-	      *wtp = '0';
+	      {
+		*wtp = L'0';
+		++removed;
+	      }
+	    if (removed == fracdig_min && added_zeros > 0)
+	      --added_zeros;
 	    if (*wtp != decimalwc)
 	      /* Round up.  */
 	      (*wtp)++;
+	    else if (__builtin_expect (spec == 'g' && type == 'f' && info->alt,
+				       0))
+	      /* This is a special case: the rounded number is 1.0,
+		 the format is 'g' or 'G', and the alternative format
+		 is selected.  This means the result mist be "1.".  */
+	      --added_zeros;
 	  }
 
 	if (fracdig_no == 0 || *wtp == decimalwc)
@@ -1042,7 +1058,7 @@ ___printf_fp (FILE *fp,
 
   do_expo:
     /* Now remove unnecessary '0' at the end of the string.  */
-    while (fracdig_no > fracdig_min && *(wcp - 1) == L'0')
+    while (fracdig_no > fracdig_min + added_zeros && *(wcp - 1) == L'0')
       {
 	--wcp;
 	--fracdig_no;
@@ -1060,26 +1076,41 @@ ___printf_fp (FILE *fp,
     /* Write the exponent if it is needed.  */
     if (type != 'f')
       {
-	*wcp++ = (wchar_t) type;
-	*wcp++ = expsign ? L'-' : L'+';
-
-	/* Find the magnitude of the exponent.	*/
-	expscale = 10;
-	while (expscale <= exponent)
-	  expscale *= 10;
-
-	if (exponent < 10)
-	  /* Exponent always has at least two digits.  */
-	  *wcp++ = L'0';
+	if (__builtin_expect (expsign != 0 && exponent == 4 && spec == 'g', 0))
+	  {
+	    /* This is another special case.  The exponent of the number is
+	       really smaller than -4, which requires the 'e'/'E' format.
+	       But after rounding the number has an exponent of -4.  */
+	    assert (wcp >= wstartp + 2);
+	    assert (wstartp[0] == L'1');
+	    __wmemcpy (wstartp, L"0.0001", 6);
+	    wstartp[1] = decimalwc;
+	    wmemset (wstartp + 6, L'0', wcp - (wstartp + 2));
+	    wcp += 4;
+	  }
 	else
-	  do
-	    {
-	      expscale /= 10;
-	      *wcp++ = L'0' + (exponent / expscale);
-	      exponent %= expscale;
-	    }
-	  while (expscale > 10);
-	*wcp++ = L'0' + exponent;
+	  {
+	    *wcp++ = (wchar_t) type;
+	    *wcp++ = expsign ? L'-' : L'+';
+
+	    /* Find the magnitude of the exponent.	*/
+	    expscale = 10;
+	    while (expscale <= exponent)
+	      expscale *= 10;
+
+	    if (exponent < 10)
+	      /* Exponent always has at least two digits.  */
+	      *wcp++ = L'0';
+	    else
+	      do
+		{
+		  expscale /= 10;
+		  *wcp++ = L'0' + (exponent / expscale);
+		  exponent %= expscale;
+		}
+	      while (expscale > 10);
+	    *wcp++ = L'0' + exponent;
+	  }
       }
 
     /* Compute number of characters which must be filled with the padding
@@ -1120,15 +1151,14 @@ ___printf_fp (FILE *fp,
 	  else
 	    thousands_sep_len = strlen (thousands_sep);
 
-	  if (buffer_malloced)
+	  if (__builtin_expect (buffer_malloced, 0))
 	    {
 	      buffer = (char *) malloc (2 + chars_needed + decimal_len
 					+ ngroups * thousands_sep_len);
 	      if (buffer == NULL)
 		{
 		  /* Signal an error to the caller.  */
-		  if (buffer_malloced)
-		    free (wbuffer);
+		  free (wbuffer);
 		  return -1;
 		}
 	    }
@@ -1162,7 +1192,7 @@ ___printf_fp (FILE *fp,
       PRINT (tmpptr, wstartp, wide ? wcp - wstartp : cp - tmpptr);
 
       /* Free the memory if necessary.  */
-      if (buffer_malloced)
+      if (__builtin_expect (buffer_malloced, 0))
 	{
 	  free (buffer);
 	  free (wbuffer);

@@ -1,3 +1,99 @@
+2007-02-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (tests): Add tst-sscanf.
+	(LOCALES): Add fa_IR.UTF-8.
+	* tst-sscanf.c: New file.
+
+	* da_DK.in: Adjust for unified collation.
+
+	* locales/vi_VN: Don't define HOK here as well.
+
+2007-02-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* SUPPORTED (SUPPORTED-LOCALES): Remove sr_CS locales.
+
+	[BZ #1430]
+	* locales/hu_HU: Revert
+		* locales/hu_HU: Better collation.
+		Patch by Gyuro Lehel <lehel@freemail.hu>.
+
+2005-01-16  Denis Barbier  <barbier@linuxfr.org>
+
+	[BZ #672]
+	* locales/ca_ES: Replace current collation rules by including
+	iso14651_t1 and adding extra rules if needed.  There should be
+	no noticeable changes in sorted text. only ligatures and
+	ignoreable characters have modified weights.
+	* locales/da_DK: Likewise.
+	* locales/en_CA: Likewise.
+	* locales/es_US: Likewise.
+	* locales/fi_FI: Likewise.
+	* locales/nb_NO: Likewise.
+
+2007-02-17  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #672]
+	* locales/iso14651_t1: Simplified.  Extended.
+
+	[BZ #58]
+	* locales/uk_UA: New version.
+
+	[BZ #3156]
+	* locales/pl_PL: Fix abday, abmon, d_t_fmt, d_fmt, and date_fmt.
+
+	[BZ #2692]
+	* locales/es_VE: Add am/pm format support.
+
+	[BZ #2648]
+	* locales/pl_PL: Fix currency_symbol and its placement.
+
+	[BZ #3363]
+	* SUPPORTED (SUPPORTED-LOCALES): Add tt_RU@iqtelif.
+	* locales/tt_RU@iqtelif: New file.
+
+	[BZ #3334]
+	* locales/sr_ME: Update from maintainer.
+
+	[BZ #3326]
+	* SUPPORTED (SUPPORTED-LOCALES): Add crh_UA.
+	* locales/crh_UA: New file.
+
+2007-02-16  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3322]
+	* SUPPORTED (SUPPORTED-LOCALES): Add sr_RS and sr_RS@latin.
+	* locales/sr_RS: New file.
+	* locales/sr_RS@latin: New file.
+
+	[BZ #3995]
+	* locales/ru_RU (LC_TIME): Set first_weekday and first_workday.
+
+	[BZ #3885]
+	* locales/i18n: Updates for Unicode 5.0.
+	* charmaps/UTF-8: Likewise.
+	Patch by Pablo Saratxaga <pablo@walon.org>
+
+2007-01-12  Gwenole Beauchesne  <gbeauchesne@mandriva.com>
+
+	[BZ #3884]
+	* locales/sl_SI: Slovenia joined the Euro zone.
+	Fix negative number format.
+
+2007-02-16  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3851]
+	* locales/bn_BD: Fix full name of January and February.
+	Patch by Jamil Ahmed <jamil@bengalinux.org>.
+
+2007-02-02  Bruno Haible  <bruno@clisp.org>
+
+	* charmaps/EUC-KR: Add mapping for 0xA2 0xE8.
+	* charmaps/JOHAB: Add mapping for 0xD9 0xE8.
+	Reported by Jungshik Shin <jungshik@google.com>.
+
+	* charmaps/JOHAB: Add mappings for 0xD9 0xE6 and 0xD9 0xE7.
+	Reported by Jungshik Shin <jungshik@google.com>.
+
 2007-01-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* charmaps/BRF: New file.

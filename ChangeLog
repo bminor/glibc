@@ -1,3 +1,173 @@
+2007-02-21  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #4076]
+	* io/ftw.c (ftw_startup): Handle special case of FTW_CHDIR in /.
+	(open_dir_stream): Likewise.
+	* io/Makefile (tests): Add bug-ftw5.
+	io/bug-ftw5.c: New file.
+
+	* nscd/hstcache.c (cache_addhst): Remove unnecessary conditional.
+	* nscd/servicescache.c (cache_addserv): Likewise.
+
+	* nscd/grpcache.c (cache_addgr): In case a record changed on
+	refresh, adjust key_copy.
+
+	[BZ #4074]
+	* nscd/pwdcache.c (cache_addpw): In case a record changed on
+	refresh, adjust key_copy.
+
+	[BZ #4070]
+	* stdio-common/printf_fp.c (___printf_fp): Handle a few more
+	* stdio-common/tfformat.c (sprint_doubles): Some more tests.
+	special cases.
+
+2007-02-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/printf_fp.c (___printf_fp): Cleanups and minor
+	optimization.
+
+	* stdio-common/vfscanf.c: Small cleanups throughout.
+
+2007-02-18  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3325]
+	* sysdeps/i386/fpu/e_fmodf.S: Use fprem1 instead of fprem.
+	* sysdeps/i386/fpu/e_fmodl.c: Likewise.
+	* sysdeps/i386/fpu/e_fmod.S: Likewise.
+	Patch by Jared Casper <jaredcasper@gmail.com>.
+
+	* sysdeps/unix/closedir.c: Outside libc don't use locking.
+	* sysdeps/unix/opendir.c: Likewise.
+	* sysdeps/unix/readdir.c: Likewise.
+
+	[BZ #2211]
+	* stdio-common/vfscanf.c: Handle localized digits etc for floating
+	point numbers.
+	Patch mostly by Hamed Malek <hamed@farsiweb.info>.
+
+	* stdio-common/vfscanf.c: Fix problems in width accounting.
+	* stdio-common/tst-sscanf.c (double_tests): New tests.
+	(main): Hook them up.
+
+	* stdio-common/vfscanf.c: Remove unused WIDTH handling.
+	More simplifications of floating-point reader.
+
+	* stdio-common/Makefile (tests): Add tst-swscanf.
+	* stdio-common/tst-sscanf.c: Make tests usable for swscanf
+	testing.
+	* stdio-common/tst-swscanf.c: New file.
+
+2007-02-17  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #2633]
+	* libio/stdio.h: Define struct _IO_FILE in global namespace.
+	* setjmp/setjmp.h: Define __jmp_buf_tag in global namespace.
+	Remove using for __jmp_buf_tag.
+	* locale/locale.h (struct lconv): Also define in std namespace.
+	* wcsmbs/wchar.h: Move using declaration for tm out of namespace.
+
+	[BZ #3842]
+	* sysdeps/posix/euidaccess.c [_LIBC] (euidaccess): Remove shortcut
+	using __libc_enable_secure.
+
+	[BZ #3818]
+	* sysdeps/unix/sysv/linux/sys/acct.h (struct acct_v3): Define.
+
+	[BZ #3745]
+	* locale/programs/ld-collate.c (handle_ellipsis): Fix generation
+	of names for ellipsises.
+
+	[BZ #3348]
+	* malloc/memusage.sh: Cleanups.
+	* debug/xtrace.sh: Quoting and trap changes.
+
+2007-02-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/iso-3166.def: Add Jersey, Guernsey, and Isle Of Man entries.
+
+	* locale/iso-3166.def: Update entry for Serbia.
+	* locale/iso-4217.def: Define RSD, remove CSD.
+
+	* sysdeps/x86_64/bits/atomic.h: One more change, this time for 16-
+	and 64-bit operations.
+
+	[BZ #4040]
+	* sysdeps/i386/i486/bits/atomic.h: One more change, this time for
+	16-bit operations.
+
+	* nscd/nscd.c (parse_opt): One more conversion to use send instead
+	of writev.
+
+2007-02-15  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3991]
+	* assert/assert.h (assert): Simplify.
+	(assert_perror): Likewise.
+	Patch by Israel G. Lugo <ilugo@bridonsecurity.com>.
+
+	* nscd/nscd_helper.c (open_socket): Don't send padding bytes from
+	reqdata.
+
+	* sysdeps/unix/sysv/linux/x86_64/send.c (__libc_send): Cosmetic
+	change: don't pass NULL in place of an integer.
+
+2007-02-02  Bruno Haible  <bruno@clisp.org>
+
+	[BZ #3954]
+	* iconvdata/ksc5601.c (__ksc5601_sym_to_ucs, __ksc5601_sym_from_ucs):
+	Add mapping for U+327E.
+	* iconvdata/ksc5601.h (KSC5601_SYMBOL): Increment.
+	* iconvdata/johab.c (BODY for FROM_LOOP, BODY for TO_LOOP): Enable
+	mapping of 0xD9 0xE8.
+	* iconvdata/uhc.c (BODY for FROM_LOOP, BODY for TO_LOOP): Disable
+	mapping of U+327E.
+	Reported by Jungshik Shin <jungshik@google.com>.
+
+	[BZ #3955]
+	* iconvdata/johab.c (BODY for FROM_LOOP, BODY for TO_LOOP): Enable
+	mapping of 0xD9 0xE6 and of 0xD9 0xE7.
+	Reported by Jungshik Shin <jungshik@google.com>.
+
+2007-02-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/bits/atomic;h: Fix asm parameters for some
+	byte variants.
+
+	[BZ #4040]
+	* sysdeps/i386/i486/bits/atomic.h: Fix asm parameters for some
+	byte variants.  Patch mostly be tom@tommay.net.
+
+2007-02-14  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #3996]
+	* posix/glob.c (attribute_hidden): Define if not defined.
+	(glob): Unescape dirname, filename or username when needed and not
+	GLOB_NOESCAPE.  Handle \/ correctly.  Handle GLOB_MARK if filename
+	is NULL.  Handle unescaped [ in pattern without closing ].
+	Don't pass GLOB_CHECK down to recursive glob for directories.
+	(__glob_pattern_type): New function.
+	(__glob_pattern_p): Implement using __glob_pattern_type.
+	(glob_in_dir): Handle GLOB_NOCHECK patterns containing no meta
+	characters and backslashes if not GLOB_NOESCAPE or unterminated [.
+	Remove unreachable code.
+	* posix/globtest.sh: Add a couple of new tests.
+
+2007-02-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/ru.po: Update from translation team.
+
+2007-02-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/bits/byteswap.h (__bswap_32): Add __amdfam10__
+	to the list of i486+ CPUs.
+	* sysdeps/x86_64/bits/byteswap.h (__bswap_32): Likewise.
+
+2007-02-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/rtld.c (RESOLVE_MAP): Always return bootstrap_map reference.
+	* elf/Makefile ($(objpfx)ld.so): Check that ld.so has no undefined
+	references.
+
 2007-02-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/sysdep.h: Remove incorrect comment.

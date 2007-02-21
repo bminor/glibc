@@ -1,4 +1,4 @@
-%define glibcrelease 17
+%define glibcrelease 18
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define xenarches i686 athlon
 %ifarch %{xenarches}
@@ -1546,6 +1546,18 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Wed Feb 21 2007 Jakub Jelinek <jakub@redhat.com> 2.5.90-18
+- fix nftw with FTW_CHDIR on / (BZ#4076)
+- nscd fixes (BZ#4074)
+- fix fmod{,f,l} on i?86 (BZ#3325)
+- support localized digits for fp values in *scanf (BZ#2211)
+- namespaces fixes (BZ#2633)
+- fix euidaccess (BZ#3842)
+- glob fixes (BZ#3996)
+- assorted locale data fixes (BZ#1430, BZ#672, BZ#58, BZ#3156,
+  BZ#2692, BZ#2648, BZ#3363, BZ#3334, BZ#3326, BZ#3322, BZ#3995,
+  BZ#3885, BZ#3884, BZ#3851)
+
 * Sun Feb 11 2007 Jakub Jelinek <jakub@redhat.com> 2.5.90-17
 - RFC2671 support in resolver (#205842)
 - fix strptime (BZ#3944)
