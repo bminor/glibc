@@ -26,7 +26,7 @@ run_program_env=$1; shift
 logfile=$common_objpfx/nptl/tst-tls6.out
 
 # We have to find libc and nptl
-library_path=${common_objpfx}:${common_objpfx}nptl
+library_path=${common_objpfx}:${common_objpfx}nptl:${common_objpfx}/dlfcn
 tst_tls5="${test_via_rtld_prefix} ${common_objpfx}/nptl/tst-tls5"
 
 > $logfile
