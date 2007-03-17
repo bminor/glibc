@@ -1,4 +1,242 @@
+2007-03-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-open.c (dl_open_worker): Declare l in 2 different
+	smaller scopes.
+	* elf/dl-dst.h (DL_DST_REQ_STATIC): Add l as macro argument.
+	(DL_DST_REQUIRED): Adjust user.
+
+	* include/dlfcn.h (struct link_map): New forward decl.
+
+	* inet/getnameinfo.c: Include stddef.h.
+	(getnameinfo): Use offsetof.
+
+	* time/tst-mktime2.c (do_test): Don't rely on signed wrap.
+
+	* stdio-common/vfprintf.c (_itoa): Undef before redefining.
+
+	* string/strerror_l.c: Include stdlib.h.
+
+	* configure.in (libc_cv_gnu89_inline): Test for -fgnu89-inline.
+	* config.make.in (gnu89-inline-CFLAGS): New variable.
+	* Makeconfig (CFLAGS): Use $(gnu89-inline-CFLAGS) together with
+	-std=gnu99.
+	* misc/sys/cdefs.h (__extern_inline, __extern_always_inline): Define.
+	* argp/argp.h: Use it.
+	* bits/mathinline.h: Likewise.
+	* bits/sigset.h: Likewise.
+	* bits/string.h: Likewise.
+	* ctype/ctype.h: Likewise.
+	* hurd/hurd.h: Likewise.
+	* hurd/hurd/fd.h: Likewise.
+	* hurd/hurd/port.h: Likewise.
+	* hurd/hurd/signal.h: Likewise.
+	* hurd/hurd/threadvar.h: Likewise.
+	* hurd/hurd/userlink.h: Likewise.
+	* io/sys/stat.h: Likewise.
+	* libio/bits/stdio.h: Likewise.
+	* libio/bits/stdio2.h: Likewise.
+	* mach/lock-intern.h: Likewise.
+	* mach/mach/mig_support.h: Likewise.
+	* math/bits/cmathcalls.h: Likewise.
+	* posix/bits/unistd.h: Likewise.
+	* socket/bits/socket2.h: Likewise.
+	* stdlib/bits/stdlib.h: Likewise.
+	* stdlib/stdlib.h: Likewise.
+	* string/argz.h: Likewise.
+	* string/bits/string2.h: Likewise.
+	* string/bits/string3.h: Likewise.
+	* sysdeps/alpha/fpu/bits/mathinline.h: Likewise.
+	* sysdeps/generic/inttypes.h: Likewise.
+	* sysdeps/generic/machine-lock.h: Likewise.
+	* sysdeps/generic/machine-sp.h: Likewise.
+	* sysdeps/i386/fpu/bits/mathinline.h: Likewise.
+	* sysdeps/i386/i486/bits/string.h: Likewise.
+	* sysdeps/ia64/fpu/bits/mathinline.h: Likewise.
+	* sysdeps/mach/alpha/machine-lock.h: Likewise.
+	* sysdeps/mach/alpha/machine-sp.h: Likewise.
+	* sysdeps/mach/i386/machine-lock.h: Likewise.
+	* sysdeps/mach/powerpc/machine-lock.h: Likewise.
+	* sysdeps/mach/powerpc/machine-sp.h: Likewise.
+	* sysdeps/powerpc/fpu/bits/mathinline.h: Likewise.
+	* sysdeps/s390/bits/string.h: Likewise.
+	* sysdeps/s390/fpu/bits/mathinline.h: Likewise.
+	* sysdeps/sparc/fpu/bits/mathinline.h: Likewise.
+	* sysdeps/unix/bsd/bsd4.4/bits/socket.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/sigset.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/socket.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/sysmacros.h: Likewise.
+	* sysdeps/x86_64/fpu/bits/mathinline.h: Likewise.
+	* wcsmbs/bits/wchar2.h: Likewise.
+	* wcsmbs/wchar.h: Likewise.
+	* stdlib/gmp.h: Likewise.  Include <features.h> to get
+	__extern_inline definition.
+
+2007-03-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/programs/ld-ctype.c (find_translit): Return NULL if ctype is
+	NULL.
+
+	[BZ #3919]
+	* math/libm-test.inc (log_test): Test -Inf and NaN.
+	(log10_test, log1p_test, log2_test): Test -Inf.
+	* sysdeps/i386/fpu/e_log.S (__ieee754_log): Don't raise
+	FE_INVALID when argument is qNaN.
+	* sysdeps/i386/fpu/e_logl.S (__ieee754_logl): Likewise.
+	* sysdeps/i386/fpu/e_logf.S (__ieee754_logf): Likewise.
+	* sysdeps/x86_64/fpu/e_logl.S (__ieee754_logl): Likewise.
+	* sysdeps/x86_64/fpu/e_log10l.S (__ieee754_log10l): Replace
+	andb $1, %ah with testb $1, %ah, don't test for parity, instead
+	testb $4, %ah and jump if non-zero.
+	* sysdeps/x86_64/fpu/e_log2l.S (__ieee754_log2l): Likewise.
+	* sysdeps/x86_64/fpu/s_log1pl.S (__log1pl): Likewise.
+
+	[BZ #4101]
+	* argp/argp-help.c (hol_cluster_cmp): Fix comparisons used to find
+	ancestors with the same depths.
+	Patch by Niels Moeller <nisse@lysator.liu.se>.
+	(filter_doc): Don't crash if argp is NULL.
+	* argp/Makefile (tests): Add tst-argp2.
+	* argp/tst-argp2.c: New test.
+
+	[BZ #4130]
+	* login/utmp_file.c (setutent_file): Use O_LARGEFILE for
+	open_not_cancel_2.
+	(updwtmp_file): Likewise.
+
+	[BZ #4181]
+	* inet/inet6_opt.c (add_padding): Only insert padding if npad > 0.
+	(inet6_opt_append): Don't check extlen is big enough if extbuf
+	is NULL.
+	(inet6_opt_finish): Likewise.
+	* inet/Makefile (tests): Add test-inet6_opt.
+	* inet/test-inet6_opt.c: New test.
+
+	* sysdeps/unix/sysv/linux/ifaddrs.c (__netlink_request): Never
+	reallocate the buffer, instead fail for MSG_TRUNC or for EBUSY
+	NLMSG_ERR.  Instead use a page sized buffer.
+	* sysdeps/unix/sysv/linux/check_pf.c (make_request): Use page sized
+	buffer.
+
+2007-03-14  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/fpu/s_llround.c: New file.
+	* sysdeps/alpha/fpu/s_llroundf.c: New file.
+	* sysdeps/alpha/fpu/s_lround.c: New file.
+	* sysdeps/alpha/fpu/s_lroundf.c: New file.
+	* sysdeps/alpha/fpu/s_round.c: New file.
+	* sysdeps/alpha/fpu/s_roundf.c: New file.
+	* sysdeps/alpha/fpu/s_trunc.c: New file.
+	* sysdeps/alpha/fpu/s_truncf.c: New file.
+
+	* sysdeps/alpha/fpu/s_ceil.c: Rewrite without branches.
+	* sysdeps/alpha/fpu/s_ceilf.c: Likewise.
+	* sysdeps/alpha/fpu/s_floor.c: Likewise.
+	* sysdeps/alpha/fpu/s_floorf.c: Likewise.
+	* sysdeps/alpha/fpu/s_rint.c: Likewise.
+	* sysdeps/alpha/fpu/s_rintf.c: Likewise.
+
+	* sysdeps/alpha/fpu/s_fmax.S: New file.
+	* sysdeps/alpha/fpu/s_fmaxf.S: New file.
+	* sysdeps/alpha/fpu/s_fmin.S: New file.
+	* sysdeps/alpha/fpu/s_fminf.S: New file.
+	* sysdeps/alpha/fpu/s_isnan.c: New file.
+	* sysdeps/alpha/fpu/s_isnanf.c: New file.
+	* sysdeps/alpha/fpu/s_llrint.c: New file.
+	* sysdeps/alpha/fpu/s_llrintf.c: New file.
+	* sysdeps/alpha/fpu/s_lrint.c: New file.
+	* sysdeps/alpha/fpu/s_lrintf.c: New file.
+	* sysdeps/alpha/fpu/s_nearbyint.c: New file.
+	* sysdeps/alpha/fpu/s_nearbyintf.c: New file.
+
+	* sysdeps/alpha/fpu/bits/mathinline.h (__floorf, __floor): Remove.
+	(__fdimf, fdimf, __fdim, fdim): Remove.
+	(__signbitf, __signbit, __signbitl): Use gcc builtin if available.
+	(__isnanf, __isnan, __isnanl): New.
+
+2007-03-13  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/ieee754/ldbl-128/Makefile: New file.
+
+2007-03-13  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/Makefile (sysdep-CFLAGS): Force dynamic rounding.
+	* sysdeps/alpha/fpu/bits/mathinline.h (__signbitl): New.
+	* sysdeps/alpha/fpu/libm-test-ulps: Regenerate.
+	* sysdeps/unix/sysv/linux/alpha/alphaev6/fpu/Implies: New file.
+	* sysdeps/unix/sysv/linux/alpha/alphaev67/fpu/Implies: New file.
+	* sysdeps/unix/sysv/linux/alpha/fpu/Implies: New file.
+
+2007-03-13  Richard Henderson  <rth@redhat.com>
+
+        * elf/dl-support.c (_dl_aux_init): Honor DL_PLATFORM_AUXV.
+	* sysdeps/unix/sysv/linux/alpha/dl-auxv.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/dl-support.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/dl-sysdep.c (__libc_alpha_cache_shape):
+	Move to dl-auxv.h; initialize instead of extern weak.
+	(DL_PLATFORM_AUXV): Move to dl-auxv.h; don't test for undef
+	weak symbol.
+	* sysdeps/unix/sysv/linux/alpha/sysconf.c (__libc_alpha_cache_shape):
+	Extern instead of initialized.
+
+2007-03-13  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/sigsuspend.S: Add support for
+	__sigsuspend_nocancel.
+
+2007-03-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (get_scope): Correct test for
+	172.16/12 address range.
+
+2007-03-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ifaddrs.c (__netlink_request): Retry with
+	a new netlink socket if NLMSG_ERR -EBUSY is seen after some MSG_TRUNC
+	message.
+
+2007-03-01  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #4069]
+	* sysdeps/ieee754/dbl-64/e_pow.c (__ieee754_pow): Check for NaN
+	earlier.
+	* math/libm-test.inc (pow_test): Add more tests involving NaNs.
+
+	* sysdeps/i386/fpu/e_powf.S (__ieee754_powf): Avoid invalid exception
+	for x qNaN and y either +-inf or non-integer value.
+	* sysdeps/i386/fpu/e_pow.S (__ieee754_pow): Likewise.
+	* sysdeps/i386/fpu/e_powl.S (__ieee754_powl): Likewise.
+	* sysdeps/x86_64/fpu/e_powl.S (__ieee754_powl): Likewise.
+
+2007-02-10  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/sh/Makefile: Remove sys/io.h
+	from sysdep_headers.
+
+2007-02-28  Jakub Jelinek  <jakub@redhat.com>
+
+	* time/tzfile.c (find_transition): Instead of a linear search try to
+	guess the transition index, use a linear search if the result is at
+	most 10 transitions away from the guess or binary search otherwise.
+
+2007-02-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ifaddrs.c (__netlink_request): Fix
+	memory reallocation.
+
 2007-02-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/strtod_l.c (____STRTOF_INTERNAL): Add branch predictions
+	and fix some typos.
+	Optimize use of TOLOWER.
+
+	[BZ #3325]
+	* sysdeps/i386/fpu/e_fmodf.S: Revert last changes, keep using fprem.
+	* sysdeps/i386/fpu/e_fmodl.c: Likewise.
+	* sysdeps/i386/fpu/e_fmod.S: Likewise.
+
+	[BZ #3458]
+	* sysdeps/unix/sysv/linux/posix_madvise.c: New file.
+	* sysdeps/unix/sysv/linux/syscalls.list: Remove posix_madvise entry.
 
 	[BZ #4076]
 	* io/ftw.c (ftw_startup): Handle special case of FTW_CHDIR in /.
@@ -18,8 +256,8 @@
 
 	[BZ #4070]
 	* stdio-common/printf_fp.c (___printf_fp): Handle a few more
-	* stdio-common/tfformat.c (sprint_doubles): Some more tests.
 	special cases.
+	* stdio-common/tfformat.c (sprint_doubles): Some more tests.
 
 2007-02-19  Ulrich Drepper  <drepper@redhat.com>
 

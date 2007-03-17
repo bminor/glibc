@@ -1,5 +1,5 @@
 /* round function.  PowerPC32/power5+ version.
-   Copyright (C) 2006 Free Software Foundation, Inc.
+   Copyright (C) 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,6 +32,6 @@ weak_alias (__round, round)
 weak_alias (__round, roundl)
 strong_alias (__round, __roundl)
 #endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
-compat_symbol (libm, __round, roundl, GLIBC_2_0)
+#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
+compat_symbol (libm, __round, roundl, GLIBC_2_1)
 #endif
