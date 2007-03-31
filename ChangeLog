@@ -1,3 +1,140 @@
+2007-03-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* scripts/check-local-headers.sh: Filter out sys/capability.h.
+
+2007-03-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* config.h.in (HAVE_LIBCAP): Add.
+	* nscd/selinux.h: Include sys/capability.h rather than non-existent
+	sys/capabilities.h.
+	* nscd/selinux.c (preserve_capabilities): Use cap_free instead of
+	free_caps.  Cast away const from 4th cap_set_flag argument.
+
+2007-03-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/Versions: Move sync_file_range to
+	GLIBC_2.6.
+	* sysdeps/unix/sysv/linux/Makefile [subdir=io] (sysdep_routines):
+	Add sync_file_range.
+	Reported by Atsushi Nemoto <anemo@mba.ocn.ne.jp>.
+
+2007-03-19  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/bits/atomic.h
+	[!MUTEX_HINT_ACQ]: Define MUTEX_HINT_ACQ.
+	[!MUTEX_HINT_REL]: Define MUTEX_HINT_REL.
+	(__arch_compare_and_exchange_val_32_acq): Add MUTEX_HINT_ACQ to lwarx.
+	(__arch_compare_and_exchange_val_32_rel): Add MUTEX_HINT_REL to lwarx.
+	(__arch_atomic_exchange_val_32_acq): Add MUTEX_HINT_ACQ to lwarx.
+	(__arch_atomic_exchange_rel_32_rel): Add MUTEX_HINT_REL to lwarx.
+	* sysdeps/powerpc/powerpc32/bits/atomic.h [_ARCH_PWR6 || _ARCH_PWR6X]:
+	Define MUTEX_HINT_ACQ as ",1" and MUTEX_HINT_REL as ",0".
+	(__arch_compare_and_exchange_bool_32_acq): Add MUTEX_HINT_ACQ to lwarx.
+	(__arch_compare_and_exchange_bool_32_rel): Add MUTEX_HINT_REL to lwarx.
+	* sysdeps/powerpc/powerpc64/bits/atomic.h [_ARCH_PWR6 || _ARCH_PWR6D]:
+	Define MUTEX_HINT_ACQ as ",1" and MUTEX_HINT_REL as ",0".
+	(__arch_compare_and_exchange_bool_32_acq): Add MUTEX_HINT_ACQ to lwarx.
+	(__arch_compare_and_exchange_bool_32_rel): Add MUTEX_HINT_REL to lwarx.
+	(__arch_compare_and_exchange_bool_64_acq): Add MUTEX_HINT_ACQ to lwarx.
+	(__arch_compare_and_exchange_bool_64_rel): Add MUTEX_HINT_REL to lwarx.
+	(__arch_compare_and_exchange_val_64_acq): Add MUTEX_HINT_ACQ to lwarx.
+	(__arch_compare_and_exchange_val_64_rel): Add MUTEX_HINT_REL to lwarx.
+	(__arch_atomic_exchange_val_64_acq): Add MUTEX_HINT_ACQ to lwarx.
+	(__arch_atomic_exchange_rel_64_rel): Add MUTEX_HINT_REL to lwarx.
+
+2007-03-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/libc-start.c
+	(__cache_line_size): Define the variable here.  Add
+	attribute_hidden, remove weak_extern.
+	(__libc_start_main): Set __cache_line_size
+	unconditionally.
+	* sysdeps/unix/sysv/linux/powerpc/dl-sysdep.c
+	(__cache_line_size): Define the variable here.  Add
+	attribute_hidden, remove weak_extern.
+	(DL_PLATFORM_AUXV): Set __cache_line_size
+	unconditionally.
+	* sysdeps/powerpc/powerpc32/dl-machine.c (__cache_line_size): Remove
+	weak_extern, add attribute_hidden.
+	(__elf_machine_runtime_setup): Assume __cache_line_size is always
+	defined in ld.so.
+	* sysdeps/powerpc/powerpc32/memset.S (__cache_line_size): Remove
+	definition.
+	* sysdeps/powerpc/powerpc64/memset.S (__cache_line_size): Likewise.
+
+2007-03-26  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #4276]
+	* timezone/africa: Update from tzdata2007d.
+	* timezone/asia: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/backward: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/iso3166.tab: Likewise.
+	* timezone/leapseconds: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/zone.tab: Likewise.
+
+	* timezone/private.h: Update from tzcode2007d.
+	* timezone/zdump.c: Likewise.
+	* timezone/zic.c: Likewise.
+
+2007-03-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* nis/nis_call.c: Include bits/libc-lock.h, sys/stat.h, unistd.h.
+	(nis_server_cache, nis_server_cache_lock, nis_cold_start_mtime): New
+	variables.
+	(nis_server_cache_search, nis_server_cache_add): New functions.
+	(__nisfind_server): Use them.  Add dbp and flags argument, if
+	call __nisbind_create.
+	(__nisbind_create): Add server_used and current_ep arguments,
+	only call __nis_findfastest if server_used is ~0.
+	(__do_niscall2, __prepare_niscall): Adjust callers.
+	(ckey_cache, ckey_cache_size, ckey_cache_allocated, ckey_cache_pid,
+	ckey_cache_euid, ckey_cache_lock): New variables.
+	(get_ckey): New function.
+	(__nisbind_connect): If not dbp->use_udp, pass IPPROTO_TCP to
+	__pmap_getnisport.  Save __pmap_getnisport result in
+	dbp->addr.sin_port if non-zero.  Use get_ckey to create conversation
+	key.
+	* nis/nis_lookup.c (nis_lookup): Likewise.
+	* nis/nis_table.c (nis_list): Likewise.
+	* nis/rpcsvc/nislib.h (__nisbind_create, __nisfind_server): Adjust
+	prototypes.
+
+	* nis/nss_nisplus/nisplus-pwd.c (_nss_nisplus_getpwnam_r,
+	_nss_nisplus_getpwuid_r): Pass USE_DGRAM flag to nis_list.
+	* nis/nss_nisplus/nisplus-service.c (_nss_nisplus_getservbyname_r,
+	_nss_nisplus_getservbyport_r): Likewise.
+	* nis/nss_nisplus/nisplus-network.c (_nss_nisplus_getnetbyname_r,
+	_nss_nisplus_getnetbyaddr_r): Likewise.
+	* nis/nss_nisplus/nisplus-spwd.c (_nss_nisplus_getspnam_r): Likewise.
+	* nis/nss_nisplus/nisplus-ethers.c (_nss_nisplus_gethostton_r,
+	_nss_nisplus_getntohost_r): Likewise.
+	* nis/nss_nisplus/nisplus-rpc.c (_nss_nisplus_getrpcbyname_r,
+	_nss_nisplus_getrpcbynumber_r): Likewise.
+
+2007-03-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* configure.in (libc_cv_gnu89_inline): Only do compile test.
+	* configure: Rebuilt.
+
+	* soft-fp/double.h (_FP_UNION_D): Use _FP_W_TYPE for frac
+	bit-fields.
+	* soft-fp/extended.h (_FP_UNION_E): Likewise.
+
+2006-06-07  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #2831]
+	* soft-fp/quad.h (_FP_UNION_Q): Use _FP_W_TYPE for frac
+	bit-fields.
+
+2007-03-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/gai.c: Include alloca.h.
+	(__libc_use_alloca): Define.
+
 2007-03-16  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-open.c (dl_open_worker): Declare l in 2 different
