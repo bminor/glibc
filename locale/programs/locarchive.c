@@ -521,7 +521,7 @@ close_archive (struct locarhandle *ah)
 #include "../../intl/explodename.c"
 #include "../../intl/l10nflist.c"
 
-static struct namehashent *
+struct namehashent *
 insert_name (struct locarhandle *ah,
 	     const char *name, size_t name_len, bool replace)
 {
@@ -579,7 +579,7 @@ insert_name (struct locarhandle *ah,
   return &namehashtab[idx];
 }
 
-static void
+void
 add_alias (struct locarhandle *ah, const char *alias, bool replace,
 	   const char *oldname, uint32_t *locrec_offset_p)
 {

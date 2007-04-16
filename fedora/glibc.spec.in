@@ -1,4 +1,4 @@
-%define glibcrelease 20
+%define glibcrelease 21
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define xenarches i686 athlon
 %ifarch %{xenarches}
@@ -969,11 +969,6 @@ popd
 cd ..
 %endif
 
-# compatibility hack: this locale has vanished from glibc, but some other
-# programs are still using it. Normally we would handle it in the %pre
-# section but with glibc that is simply not an option
-mkdir -p $RPM_BUILD_ROOT%{_prefix}/lib/locale/ru_RU/LC_MESSAGES
-
 # Remove the files we don't want to distribute
 rm -f $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libNoVersion*
 rm -f $RPM_BUILD_ROOT/%{_lib}/libNoVersion*
@@ -1051,7 +1046,19 @@ rm -f $RPM_BUILD_ROOT%{_prefix}/include/rpcsvc/rquota.[hx]
 # Hardlink identical locale files together
 %ifnarch %{auxarches}
 gcc -O2 -o build-%{nptl_target_cpu}-linuxnptl/hardlink fedora/hardlink.c
-build-%{nptl_target_cpu}-linuxnptl/hardlink -vc $RPM_BUILD_ROOT%{_prefix}/lib/locale
+rm ${RPM_BUILD_ROOT}${_prefix}/lib/locale/locale-archive || :
+olddir=`pwd`
+pushd ${RPM_BUILD_ROOT}${_prefix}/lib/locale
+# Intentionally we do not pass --alias-file=, aliases will be added
+# by build-locale-archive.
+$olddir/build-%{nptl_target_cpu}-linuxnptl/elf/ld.so \
+  --library-path $olddir/build-%{nptl_target_cpu}-linuxnptl/ \
+  $olddir/build-%{nptl_target_cpu}-linuxnptl/locale/localedef \
+    --prefix ${RPM_BUILD_ROOT} --add-to-archive \
+    *_*
+rm -rf *_*
+popd
+#build-%{nptl_target_cpu}-linuxnptl/hardlink -vc $RPM_BUILD_ROOT%{_prefix}/lib/locale
 %endif
 
 rm -f ${RPM_BUILD_ROOT}/%{_lib}/libnss1-*
@@ -1125,7 +1132,7 @@ grep -v '%{_prefix}/%{_lib}/lib.*\.a' < rpm.filelist.full |
 	grep -v 'nscd' > rpm.filelist
 
 grep '%{_prefix}/bin' < rpm.filelist >> common.filelist
-grep '%{_prefix}/lib/locale' < rpm.filelist >> common.filelist
+grep '%{_prefix}/lib/locale' < rpm.filelist | grep -v /locale-archive.tmpl >> common.filelist
 grep '%{_prefix}/libexec/pt_chown' < rpm.filelist >> common.filelist
 grep '%{_prefix}/sbin/[^gi]' < rpm.filelist >> common.filelist
 grep '%{_prefix}/share' < rpm.filelist \
@@ -1495,6 +1502,7 @@ rm -f *.filelist*
 %ifnarch %{auxarches}
 %files -f common.filelist common
 %defattr(-,root,root)
+%attr(0644,root,root) %config(missingok) %{_prefix}/lib/locale/locale-archive.tmpl
 %attr(0644,root,root) %verify(not md5 size mtime mode) %ghost %config(missingok,noreplace) %{_prefix}/lib/locale/locale-archive
 %dir %attr(755,root,root) /etc/default
 %verify(not md5 size mtime) %config(noreplace) /etc/default/nss
@@ -1549,10 +1557,21 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Apr 16 2007 Jakub Jelinek <jakub@redhat.com> 2.5.90-21
+- don't include individual locale files in glibc-common,
+  rather include prepared locale-archive template and let
+  build-locale-archive create locale-archive from the template
+  and any user supplied /usr/lib/locale/*_* directories,
+  then unlink the locale-archive template - this should save
+  > 80MB of glibc-common occupied disk space
+
 * Sat Mar 31 2007 Jakub Jelinek <jakub@redhat.com> 2.5.90-20
 - assorted NIS+ speedups (#223467)
 - fix HAVE_LIBCAP configure detection (#178934)
 - remove %{_prefix}/sbin/rpcinfo from glibc-common (#228894)
+- nexttoward*/nextafter* fixes (BZ#3306)
+- feholdexcept/feupdateenv fixes (BZ#3427)
+- speed up fnmatch with two or more * in the pattern
 
 * Sat Mar 17 2007 Jakub Jelinek <jakub@redhat.com> 2.5.90-19
 - fix power6 libm compat symbols on ppc32 (#232633)
