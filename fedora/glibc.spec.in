@@ -1564,6 +1564,10 @@ rm -f *.filelist*
   and any user supplied /usr/lib/locale/*_* directories,
   then unlink the locale-archive template - this should save
   > 80MB of glibc-common occupied disk space
+- fix _XOPEN_VERSION (BZ#4364)
+- fix printf with %g and values tiny bit smaller than 1.e-4 (#235864,
+  BZ#4362)
+- fix NIS+ __nisfind_server (#235229)
 
 * Sat Mar 31 2007 Jakub Jelinek <jakub@redhat.com> 2.5.90-20
 - assorted NIS+ speedups (#223467)

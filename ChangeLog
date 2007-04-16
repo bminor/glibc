@@ -2,6 +2,207 @@
 
 	* locale/programs/locarchive.c (add_alias, insert_name): Remove static.
 
+2007-04-16  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #4364]
+	* posix/unistd.h (_XOPEN_VERSION): Define appropriately for SUSv3.
+
+2007-04-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/programs/locarchive.c (INITIAL_NUM_NAMES,
+	INITIAL_SIZE_STRINGS, INITIAL_NUM_LOCREC): Update to accomodate
+	current number of locales in SUPPORTED.
+	(create_archive): Initialize serial.
+	(enlarge_archive): Preserve aliases rather than duplicating
+	their locrecs.
+
+2007-04-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* libio/genops.c (_IO_default_finish): Call _IO_lock_fini
+	after _IO_un_link, not before it.
+
+	* stdio-common/printf_fp.c (___printf_fp): Fix exponent -4
+	special case handling when wcp == wstartp + 1.  Fix a comment typo.
+	* stdio-common/tfformat.c (sprint_doubles): Add a new testcase.
+
+2007-03-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* libio/libio.h (__underflow, __uflow, __overflow, __wunderflow,
+	__wuflow, __woverflow, _IO_getc, _IO_putc, _IO_peekc_locked, _IO_padn,
+	_IO_sgetn, _IO_seekoff, _IO_seekpos, _IO_getwc, _IO_putwc, _IO_wpadn):
+	Remove __THROW.
+	* libio/fileops.c (new_do_write, _IO_file_xsgetn_mmap,
+	_IO_file_xsgetn_maybe_mmap): Likewise.
+	* libio/oldfileops.c (old_do_write): Likewise.
+	* libio/libioP.h (_IO_switch_to_get_mode, _IO_switch_to_wget_mode,
+	_IO_init_marker, _IO_init_wmarker, _IO_default_uflow,
+	_IO_wdefault_uflow, _IO_default_setbuf, _IO_default_seekpos,
+	_IO_do_write, _IO_new_do_write, _IO_old_do_write, _IO_wdo_write,
+	_IO_flush_all_lockp, _IO_flush_all, _IO_cleanup,
+	_IO_flush_all_linebuffered, _IO_new_fgetpos, _IO_old_fgetpos,
+	_IO_new_fsetpos, _IO_old_fsetpos, _IO_new_fgetpos64,
+	_IO_old_fgetpos64, _IO_new_fsetpos64, _IO_old_fsetpos64,
+	_IO_file_setbuf, _IO_file_seekoff, _IO_file_xsputn, _IO_file_xsgetn,
+	_IO_file_underflow, _IO_file_underflow_mmap,
+	_IO_file_underflow_maybe_mmap, _IO_file_overflow, _IO_file_attach,
+	_IO_file_open, _IO_file_fopen, _IO_file_write, _IO_file_read,
+	_IO_file_sync, _IO_file_close_it, _IO_file_finish,
+	_IO_new_file_attach, _IO_new_file_close_it, _IO_new_file_finish,
+	_IO_new_file_fopen, _IO_new_file_setbuf, _IO_file_setbuf_mmap,
+	_IO_new_file_sync, _IO_new_file_underflow, _IO_new_file_overflow,
+	_IO_new_file_seekoff, _IO_new_file_write, _IO_new_file_xsputn,
+	_IO_old_file_setbuf, _IO_old_file_seekoff, _IO_old_file_xsputn,
+	_IO_old_file_underflow, _IO_old_file_overflow, _IO_old_file_attach,
+	_IO_old_file_fopen, _IO_old_file_write, _IO_old_file_sync,
+	_IO_old_file_close_it, _IO_old_file_finish, _IO_wfile_xsputn,
+	_IO_wfile_setbuf, _IO_wfile_sync, _IO_wfile_underflow,
+	_IO_wfile_overflow, _IO_wfile_seekoff, _IO_old_proc_open,
+	_IO_old_proc_close, _IO_getdelim, _IO_flush_all_internal,
+	_IO_adjust_column_internal, _IO_default_uflow_internal,
+	_IO_default_xsgetn_internal, _IO_wdefault_xsputn_internal,
+	_IO_wdefault_xsgetn_internal, _IO_wdefault_uflow_internal,
+	_IO_file_setbuf_internal, _IO_file_seekoff_internal,
+	_IO_file_xsputn_internal, _IO_file_xsgetn_internal,
+	_IO_file_close_it_internal, _IO_file_underflow_internal,
+	_IO_file_overflow_internal, _IO_file_attach_internal,
+	_IO_file_fopen_internal, _IO_file_sync_internal,
+	_IO_file_finish_internal, _IO_wfile_xsputn_internal,
+	_IO_wfile_seekoff_internal, _IO_wfile_sync_internal,
+	_IO_switch_to_wget_mode_internal, _IO_padn_internal,
+	_IO_switch_to_get_mode_internal, _IO_seekoff_unlocked,
+	_IO_seekpos_unlocked): Likewise.
+	(_IO_strtod, _IO_dtoa, _IO_outfloat, _IO_read, _IO_write,
+	_IO_lseek, _IO_close, _IO_fstat): Remove unused prototypes.
+
+2007-04-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/programs/locarchive.c (show_archive_content): Fix sizeof
+	argument in xmalloc size computation.
+
+2007-04-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ieee754/ldbl-128ibm/s_nextafterl.c (__nextafterl): Use
+	math_opt_barrier and math_force_eval macros.
+
+2007-03-27  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #3306]
+	* math/math_private.h (math_opt_barrier, math_force_eval): Define.
+	* sysdeps/i386/fpu/math_private.h: New file.
+	* sysdeps/x86_64/fpu/math_private.h: New file.
+	* math/s_nexttowardf.c (__nexttowardf): Use math_opt_barrier and
+	math_force_eval macros.  Use "+m" constraint on asm rather than
+	"=m" and "m".
+	* math/s_nextafter.c (__nextafter): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_nexttoward.c (__nexttoward):
+	Likewise.
+	* sysdeps/ieee754/flt-32/s_nextafterf.c (__nextafterf): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nexttoward.c (__nexttoward): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_nexttoward.c (__nexttoward): Likewise.
+	* sysdeps/i386/fpu/s_nextafterl.c (__nextafterl): Use
+	math_opt_barrier and math_force_eval macros.
+	* sysdeps/ieee754/ldbl-128/s_nextafterl.c (__nextafterl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_nextafterl.c (__nextafterl): Likewise.
+	* sysdeps/i386/fpu/s_nexttoward.c: Include float.h.
+	(__nexttoward): Use math_opt_barrier and
+	math_force_eval macros.  Use "+m" constraint on asm rather than
+	"=m" and "m".  Only use asm to force double result if
+	FLT_EVAL_METHOD is 2.
+	* sysdeps/i386/fpu/s_nexttowardf.c: Include float.h.
+	(__nexttowardf): Use math_opt_barrier and
+	math_force_eval macros.  Use "+m" constraint on asm rather than
+	"=m" and "m".  Only use asm to force double result if
+	FLT_EVAL_METHOD is not 0.
+	* sysdeps/ieee754/ldbl-128ibm/s_nexttowardf.c: Include float.h.
+	(__nexttowardf): Use math_opt_barrier and
+	math_force_eval macros.  If FLT_EVAL_METHOD is not 0, force
+	x to float using asm.
+	* sysdeps/ieee754/ldbl-opt/s_nexttowardfd.c: Include float.h.
+	(__nldbl_nexttowardf): Use math_opt_barrier and
+	math_force_eval macros.  If FLT_EVAL_METHOD is not 0, force
+	x to float using asm.
+	* sysdeps/ieee754/ldbl-96/s_nexttowardf.c: Include float.h.
+	(__nexttowardf): Use math_opt_barrier and math_force_eval
+	macros.  If FLT_EVAL_METHOD is not 0, force x to float using asm.
+	* math/bug-nextafter.c (zero, inf): New variables.
+	(main): Add new tests.
+	* math/bug-nexttoward.c (zero, inf): New variables.
+	(main): Add new tests.
+
+2007-03-22  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #3427]
+	* sysdeps/x86_64/fpu/feholdexcpt.c (feholdexcept): Clear all
+	exceptions both in SW and MXCSR.
+	* sysdeps/x86_64/fpu/feupdateenv.c: New file.
+	* sysdeps/x86_64/fpu/feenablxcpt.c (feenableexcept): Remove dead code.
+	* sysdeps/x86_64/fpu/fedisblxcpt.c (fedisableexcept): Likewise.
+	* sysdeps/i386/fpu/feholdexcpt.c (feholdexcept): Clear all exceptions
+	in MXCSR if SSE is available.
+	* sysdeps/i386/fpu/feupdateenv.c: Include unistd.h, dl-procinfo.h
+	and ldsodefs.h.
+	(__feupdateenv): Query exceptions also from MXCSR if SSE is available.
+	Fix comment typo.
+	* sysdeps/ia64/fpu/feholdexcpt.c (feholdexcept): Clear all exceptions.
+	Return 0 rather than 1.
+	* sysdeps/ia64/fpu/feupdateenv.c (feupdateenv): Fix comment typo.
+	Remove incorrect part of a comment.  Fix argument to feraiseexcept.
+	* math/test-fenv.c (feholdexcept_tests): New function.
+	(main): Call it.
+
+2007-01-05  Richard B. Kreckel  <kreckel@ginac.de>
+
+	[BZ #3427]
+	* sysdeps/i386/fpu/feholdexcpt.c (feholdexcept): Clear all exceptions
+	in SW.
+
+2007-04-13  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #4344]
+	* elf/ldconfig.c (search_dir): Fix 2 off-by-2 errors.
+	Reported by David Anderson <davea42@earthlink.net>.
+
+2007-04-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/sys/wait.h: Remove unnecessary forward declaration.
+
+2007-04-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* nis/nis_call.c (__nisfind_server): Replace (*dir)->do_servers
+	with obj->do_servers after first_shoot.
+
+2007-04-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/Makefile (routines): Add sched_cpucount.
+	(tests): Add tst-cpucount.
+	* posix/sched_cpucount.c: New file.
+	* posix/tst-cpucount.c: New file.
+	* posix/Versions: Export __sched_cpucount with version GLIBC_2.6.
+	* bits/sched.h: Define __CPU_COUNT.  Declare __sched_cpucount.
+	* sysdeps/unix/sysv/linux/bits/sched.h: Likewise.
+	* posix/sched.h: Define CPU_COUNT.
+
+2007-03-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/fnmatch.c (STRUCT): Define.
+	(fnmatch): Pass NULL as last argument to internal_fn{,w}match.
+	* posix/fnmatch_loop.c (struct STRUCT): New type.
+	(FCT): Add ends argument.  If ends != NULL and normal * is
+	seen in the pattern, store current pattern and string pointers
+	and return.  Adjust recursive calls.
+	(EXT): Adjust FCT callers.
+	(STRUCT): Undef at the end of the file.
+	* posix/Makefile (tests): Add tst-fnmatch2.
+	* posix/tst-fnmatch2.c: New test.
+
+2007-04-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ia64/fpu/fesetround.c (fesetround): Return 0 on success
+	and 1 on failure.
+
+	* sysdeps/unix/sysv/linux/sync_file_range.c (sync_file_range):
+	Change last argument to unsigned int.
+
 2007-03-23  Jakub Jelinek  <jakub@redhat.com>
 
 	* scripts/check-local-headers.sh: Filter out sys/capability.h.
