@@ -1,6 +1,5 @@
-/* Copyright (c) 1997, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,26 +16,21 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <rpcsvc/nis.h>
+#include <errno.h>
+#include <sched.h>
+#include <sysdep.h>
 
-nis_name
-nis_domain_of (const_nis_name name)
+
+int
+sched_getcpu (void)
 {
-  static char result[NIS_MAXNAMELEN + 1];
+#ifdef __NR_getcpu
+  unsigned int cpu;
+  int r = INLINE_SYSCALL (getcpu, 3, &cpu, NULL, NULL);
 
-  return nis_domain_of_r (name, result, NIS_MAXNAMELEN);
-}
-
-const_nis_name
-__nis_domain_of (const_nis_name name)
-{
-  const_nis_name cptr = strchr (name, '.');
-
-  if (cptr++ == NULL)
-    return "";
-
-  if (*cptr == '\0')
-    return ".";
-
-  return cptr;
+  return r == -1 ? r : cpu;
+#else
+  __set_errno (ENOSYS);
+  return -1;
+#endif
 }

@@ -1,6 +1,5 @@
-/* Copyright (c) 1997, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,26 +16,35 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <rpcsvc/nis.h>
+#include <sysdep.h>
+#include <tls.h>
+#define _ERRNO_H	1
+#include <bits/errno.h>
 
-nis_name
-nis_domain_of (const_nis_name name)
-{
-  static char result[NIS_MAXNAMELEN + 1];
+/* For the calculation see asm/vsyscall.h.  */
+#define VSYSCALL_ADDR_vgetcpu	0xffffffffff600800
 
-  return nis_domain_of_r (name, result, NIS_MAXNAMELEN);
-}
 
-const_nis_name
-__nis_domain_of (const_nis_name name)
-{
-  const_nis_name cptr = strchr (name, '.');
+ENTRY (sched_getcpu)
+	/* Align stack and create local variable for result.  */
+	sub	$0x8, %rsp
+	cfi_adjust_cfa_offset(8)
 
-  if (cptr++ == NULL)
-    return "";
+	movq	%rsp, %rdi
+	xorl	%esi, %esi
+	movl	$VGETCPU_CACHE_OFFSET, %edx
+	addq	%fs:0, %rdx
 
-  if (*cptr == '\0')
-    return ".";
+	movq	$VSYSCALL_ADDR_vgetcpu, %rax
+	callq	*%rax
 
-  return cptr;
-}
+	cmpq	$-4095, %rdi
+	jae	SYSCALL_ERROR_LABEL
+
+	movl	(%rsp), %eax
+
+L(pseudo_end):
+	add	$0x8, %rsp
+	cfi_adjust_cfa_offset(-8)
+	ret
+PSEUDO_END(sched_getcpu)

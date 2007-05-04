@@ -61,6 +61,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <nscd/nscd-client.h>
 #include <nscd/nscd_proto.h>
 
+#ifdef HAVE_NETLINK_ROUTE
+# include <kernel-features.h>
+#endif
+
 #ifdef HAVE_LIBIDN
 extern int __idna_to_ascii_lz (const char *input, char **output, int flags);
 extern int __idna_to_unicode_lzlz (const char *input, char **output,
@@ -140,118 +144,6 @@ static const struct addrinfo default_hints =
     .ai_canonname = NULL,
     .ai_next = NULL
   };
-
-
-#if 0
-/* Using Unix sockets this way is a security risk.  */
-static int
-gaih_local (const char *name, const struct gaih_service *service,
-	    const struct addrinfo *req, struct addrinfo **pai)
-{
-  struct utsname utsname;
-
-  if ((name != NULL) && (req->ai_flags & AI_NUMERICHOST))
-    return GAIH_OKIFUNSPEC | -EAI_NONAME;
-
-  if ((name != NULL) || (req->ai_flags & AI_CANONNAME))
-    if (uname (&utsname) < 0)
-      return -EAI_SYSTEM;
-
-  if (name != NULL)
-    {
-      if (strcmp(name, "localhost") &&
-	  strcmp(name, "local") &&
-	  strcmp(name, "unix") &&
-	  strcmp(name, utsname.nodename))
-	return GAIH_OKIFUNSPEC | -EAI_NONAME;
-    }
-
-  if (req->ai_protocol || req->ai_socktype)
-    {
-      const struct gaih_typeproto *tp = gaih_inet_typeproto + 1;
-
-      while (tp->name[0]
-	     && ((tp->protoflag & GAI_PROTO_NOSERVICE) != 0
-		 || (req->ai_socktype != 0 && req->ai_socktype != tp->socktype)
-		 || (req->ai_protocol != 0
-		     && !(tp->protoflag & GAI_PROTO_PROTOANY)
-		     && req->ai_protocol != tp->protocol)))
-	++tp;
-
-      if (! tp->name[0])
-	{
-	  if (req->ai_socktype)
-	    return GAIH_OKIFUNSPEC | -EAI_SOCKTYPE;
-	  else
-	    return GAIH_OKIFUNSPEC | -EAI_SERVICE;
-	}
-    }
-
-  *pai = malloc (sizeof (struct addrinfo) + sizeof (struct sockaddr_un)
-		 + ((req->ai_flags & AI_CANONNAME)
-		    ? (strlen(utsname.nodename) + 1): 0));
-  if (*pai == NULL)
-    return -EAI_MEMORY;
-
-  (*pai)->ai_next = NULL;
-  (*pai)->ai_flags = req->ai_flags;
-  (*pai)->ai_family = AF_LOCAL;
-  (*pai)->ai_socktype = req->ai_socktype ? req->ai_socktype : SOCK_STREAM;
-  (*pai)->ai_protocol = req->ai_protocol;
-  (*pai)->ai_addrlen = sizeof (struct sockaddr_un);
-  (*pai)->ai_addr = (void *) (*pai) + sizeof (struct addrinfo);
-
-#ifdef _HAVE_SA_LEN
-  ((struct sockaddr_un *) (*pai)->ai_addr)->sun_len =
-    sizeof (struct sockaddr_un);
-#endif /* _HAVE_SA_LEN */
-
-  ((struct sockaddr_un *)(*pai)->ai_addr)->sun_family = AF_LOCAL;
-  memset(((struct sockaddr_un *)(*pai)->ai_addr)->sun_path, 0, UNIX_PATH_MAX);
-
-  if (service)
-    {
-      struct sockaddr_un *sunp = (struct sockaddr_un *) (*pai)->ai_addr;
-
-      if (strchr (service->name, '/') != NULL)
-	{
-	  if (strlen (service->name) >= sizeof (sunp->sun_path))
-	    return GAIH_OKIFUNSPEC | -EAI_SERVICE;
-
-	  strcpy (sunp->sun_path, service->name);
-	}
-      else
-	{
-	  if (strlen (P_tmpdir "/") + 1 + strlen (service->name) >=
-	      sizeof (sunp->sun_path))
-	    return GAIH_OKIFUNSPEC | -EAI_SERVICE;
-
-	  __stpcpy (__stpcpy (sunp->sun_path, P_tmpdir "/"), service->name);
-	}
-    }
-  else
-    {
-      /* This is a dangerous use of the interface since there is a time
-	 window between the test for the file and the actual creation
-	 (done by the caller) in which a file with the same name could
-	 be created.  */
-      char *buf = ((struct sockaddr_un *) (*pai)->ai_addr)->sun_path;
-
-      if (__builtin_expect (__path_search (buf, L_tmpnam, NULL, NULL, 0),
-			    0) != 0
-	  || __builtin_expect (__gen_tempname (buf, __GT_NOCREATE), 0) != 0)
-	return -EAI_SYSTEM;
-    }
-
-  if (req->ai_flags & AI_CANONNAME)
-    (*pai)->ai_canonname = strcpy ((char *) *pai + sizeof (struct addrinfo)
-				   + sizeof (struct sockaddr_un),
-				   utsname.nodename);
-  else
-    (*pai)->ai_canonname = NULL;
-  return 0;
-}
-#endif	/* 0 */
 
 
 static int
@@ -1105,17 +997,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
   return 0;
 }
 
-#if 0
-static const struct gaih gaih[] =
-  {
-    { PF_INET6, gaih_inet },
-    { PF_INET, gaih_inet },
-#if 0
-    { PF_LOCAL, gaih_local },
-#endif
-    { PF_UNSPEC, NULL }
-  };
-#endif
 
 struct sort_result
 {
@@ -1217,6 +1098,10 @@ static const struct prefixentry default_labels[] =
 	= { .u6_addr8 = { 0xfc, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } } },
       7, 6 },
+    { { .in6_u
+	= { .u6_addr8 = { 0x20, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } } },
+      32, 7 },
     { { .in6_u
 	= { .u6_addr8 = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } } },
@@ -1851,6 +1736,16 @@ gaiconf_reload (void)
 }
 
 
+#if HAVE_NETLINK_ROUTE
+# if __ASSUME_NETLINK_SUPPORT == 0
+/* Defined in ifaddrs.c.  */
+extern int __no_netlink_support attribute_hidden;
+# else
+#  define __no_netlink_support 0
+# endif
+#endif
+
+
 int
 getaddrinfo (const char *name, const char *service,
 	     const struct addrinfo *hints, struct addrinfo **pai)
@@ -1886,20 +1781,74 @@ getaddrinfo (const char *name, const char *service,
     return EAI_BADFLAGS;
 
   struct in6addrinfo *in6ai = NULL;
-  size_t in6ailen;
+  size_t in6ailen = 0;
   bool seen_ipv4 = false;
   bool seen_ipv6 = false;
+#ifdef HAVE_NETLINK_ROUTE
+  int sockfd = -1;
+  pid_t nl_pid;
+#endif
   /* We might need information about what kind of interfaces are available.
      But even if AI_ADDRCONFIG is not used, if the user requested IPv6
      addresses we have to know whether an address is deprecated or
      temporary.  */
   if ((hints->ai_flags & AI_ADDRCONFIG) || hints->ai_family == PF_UNSPEC
       || hints->ai_family == PF_INET6)
-    /* Determine whether we have IPv4 or IPv6 interfaces or both.  We
-       cannot cache the results since new interfaces could be added at
-       any time.  */
-    __check_pf (&seen_ipv4, &seen_ipv6, &in6ai, &in6ailen);
+    {
+      /* Determine whether we have IPv4 or IPv6 interfaces or both.  We
+	 cannot cache the results since new interfaces could be added at
+	 any time.  */
+      __check_pf (&seen_ipv4, &seen_ipv6, &in6ai, &in6ailen);
+#ifdef HAVE_NETLINK_ROUTE
+      if (! __no_netlink_support)
+	{
+	  sockfd = __socket (PF_NETLINK, SOCK_RAW, NETLINK_ROUTE);
 
+	  struct sockaddr_nl nladdr;
+	  memset (&nladdr, '\0', sizeof (nladdr));
+	  nladdr.nl_family = AF_NETLINK;
+
+	  socklen_t addr_len = sizeof (nladdr);
+
+	  if (sockfd >= 0
+	      && __bind (fd, (struct sockaddr *) &nladdr, sizeof (nladdr)) == 0
+	      && __getsockname (sockfd, (struct sockaddr *) &nladdr,
+				&addr_len) == 0
+	      && make_request (sockfd, nladdr.nl_pid, &seen_ipv4, &seen_ipv6,
+			       in6ai, in6ailen) == 0)
+	    {
+	      /* It worked.  */
+	      nl_pid = nladdr.nl_pid;
+	      goto got_netlink_socket;
+	    }
+
+	  if (sockfd >= 0)
+	    close_not_cancel_no_status (sockfd);
+
+#if __ASSUME_NETLINK_SUPPORT == 0
+	  /* Remember that there is no netlink support.  */
+	  if (errno != EMFILE && errno != ENFILE)
+	    __no_netlink_support = 1;
+#else
+	  else
+	    {
+	      if (errno != EMFILE && errno != ENFILE)
+		sockfd = -2;
+
+	      /* We cannot determine what interfaces are available.  Be
+		 pessimistic.  */
+	      seen_ipv4 = true;
+	      seen_ipv6 = true;
+	      return;
+	    }
+#endif
+	}
+#endif
+    }
+
+#ifdef HAVE_NETLINK_ROUTE
+ got_netlink_socket:
+#endif
   if (hints->ai_flags & AI_ADDRCONFIG)
     {
       /* Now make a decision on what we return, if anything.  */
@@ -1951,58 +1900,6 @@ getaddrinfo (const char *name, const char *service,
     end = NULL;
 
   unsigned int naddrs = 0;
-#if 0
-  /* If we would support more protocols than just IPv4 and IPv6 we
-     would iterate over a table with appropriate callback functions.
-     Since we currently only handle IPv4 and IPv6 this is not
-     necessary.  */
-  const struct gaih *g = gaih;
-  const struct gaih *pg = NULL;
-  int j = 0;
-  while (g->gaih)
-    {
-      if (hints->ai_family == g->family || hints->ai_family == AF_UNSPEC)
-	{
-	  j++;
-	  if (pg == NULL || pg->gaih != g->gaih)
-	    {
-	      pg = g;
-	      i = g->gaih (name, pservice, hints, end, &naddrs);
-	      if (i != 0)
-		{
-		  /* EAI_NODATA is a more specific result as it says that
-		     we found a result but it is not usable.  */
-		  if (last_i != (GAIH_OKIFUNSPEC | -EAI_NODATA))
-		    last_i = i;
-
-		  if (hints->ai_family == AF_UNSPEC && (i & GAIH_OKIFUNSPEC))
-		    {
-		      ++g;
-		      continue;
-		    }
-
-		  freeaddrinfo (p);
-		  free (in6ai);
-
-		  return -(i & GAIH_EAI);
-		}
-	      if (end)
-		while (*end)
-		  {
-		    end = &((*end)->ai_next);
-		    ++nresults;
-		  }
-	    }
-	}
-      ++g;
-    }
-
-  if (j == 0)
-    {
-      free (in6ai);
-      return EAI_FAMILY;
-    }
-#else
   if (hints->ai_family == AF_UNSPEC || hints->ai_family == AF_INET
       || hints->ai_family == AF_INET6)
     {
@@ -2026,7 +1923,6 @@ getaddrinfo (const char *name, const char *service,
       free (in6ai);
       return EAI_FAMILY;
     }
-#endif
 
   if (naddrs > 1)
     {
