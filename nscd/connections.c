@@ -68,6 +68,7 @@ static gid_t *server_groups;
 # define NGROUPS 32
 #endif
 static int server_ngroups;
+static volatile int sighup_pending;
 
 static pthread_attr_t attr;
 
@@ -1363,6 +1364,10 @@ nscd_run (void *p)
 	      if (readylist == NULL && to == ETIMEDOUT)
 		{
 		  --nready;
+
+		  if (sighup_pending)
+		    goto sighup_prune;
+
 		  pthread_mutex_unlock (&readylist_lock);
 		  goto only_prune;
 		}
@@ -1370,6 +1375,34 @@ nscd_run (void *p)
 	  else
 	    /* No need to timeout.  */
 	    pthread_cond_wait (&readylist_cond, &readylist_lock);
+	}
+
+      if (sighup_pending)
+	{
+	  --nready;
+	  pthread_cond_signal (&readylist_cond);
+	sighup_prune:
+	  sighup_pending = 0;
+	  pthread_mutex_unlock (&readylist_lock);
+
+	  /* Prune the password database.  */
+	  if (dbs[pwddb].enabled)
+	    prune_cache (&dbs[pwddb], LONG_MAX, -1);
+
+	  /* Prune the group database.  */
+	  if (dbs[grpdb].enabled)
+	    prune_cache (&dbs[grpdb], LONG_MAX, -1);
+
+	  /* Prune the host database.  */
+	  if (dbs[hstdb].enabled)
+	    prune_cache (&dbs[hstdb], LONG_MAX, -1);
+
+	  /* Re-locking.  */
+	  pthread_mutex_lock (&readylist_lock);
+
+	  /* One more thread available.  */
+	  ++nready;
+	  continue;
 	}
 
       struct fdlist *it = readylist->next;
@@ -1952,16 +1985,5 @@ finish_drop_privileges (void)
 void
 sighup_handler (int signum)
 {
-  /* Prune the password database.  */
-  if (dbs[pwddb].enabled)
-    prune_cache (&dbs[pwddb], LONG_MAX, -1);
-    
-  /* Prune the group database.  */
-  if (dbs[grpdb].enabled)
-    prune_cache (&dbs[grpdb], LONG_MAX, -1);
-
-  /* Prune the host database.  */
-  if (dbs[hstdb].enabled)
-    prune_cache (&dbs[hstdb], LONG_MAX, -1);
+  sighup_pending = 1;
 }
-

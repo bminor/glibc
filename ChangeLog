@@ -1,3 +1,10 @@
+2006-07-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/connections.c (sighup_pending): New variable.
+	(nscd_run): If sighup_pending, prune all 3 caches.
+	(sighup_handler): Don't prune caches here, rather just set
+	sighup_pending flag.
+
 2007-05-09  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ia64/fpu/fraiseexcpt.c (feraiseexcept): Don't raise overflow
