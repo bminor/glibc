@@ -1,4 +1,4 @@
-%define glibcrelease 23
+%define glibcrelease 24
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define xenarches i686 athlon
 %ifarch %{xenarches}
@@ -1561,6 +1561,9 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri May 11 2007 Jakub Jelinek <jakub@redhat.com> 2.5.90-24
+- utimensat, futimens and lutimes support
+
 * Thu May 10 2007 Jakub Jelinek <jakub@redhat.com> 2.5.90-23
 - use madvise MADV_DONTNEED in malloc
 - fix ia64 feraiseexcept
