@@ -1,3 +1,26 @@
+2007-05-02  Carlos O'Donell  <carlos@systemhalted.org>
+
+	[BZ #4455]
+	* tst-align2.c (do_test): Add _STACK_GROWS_UP case.
+	* tst-getpid1.c (do_test): Likewise.
+
+	[BZ #4456]
+	* allocatestack.c (change_stack_perm): Add _STACK_GROWS_UP case.
+	(allocate_stack): Likewise.
+
+2007-05-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/lowlevelrobustlock.c
+	(__lll_robust_lock_wait): Fix race caused by reloading of futex value.
+	(__lll_robust_timedlock_wait): Likewise.
+	Reported by Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>.
+
+2007-05-06  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #4465]
+	* tst-cancel-wrappers.sh: Set C["fdatasync"] to 1.
+	* tst-cancel4.c (tf_fdatasync): New test.
+
 2007-04-27  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #4392]

@@ -1,4 +1,5 @@
-/* Copyright (C) 2007 Free Software Foundation, Inc.
+/* Procedure definition for FE_MASK_ENV for Linux/ppc64.
+   Copyright (C) 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,33 +17,27 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#define __llround	not___llround
-#define llround		not_llround
-#include <math.h>
-#include <math_ldbl_opt.h>
-#undef __llround
-#undef llround
+#include <fenv.h>
+#include <errno.h>
+#include <sysdep.h>
+#include <sys/syscall.h>
+#include <sys/prctl.h>
+#include <kernel-features.h>
 
-long int
-__lround (double x)
+const fenv_t *
+__fe_mask_env (void)
 {
-  double adj;
-
-  adj = 0x1.fffffffffffffp-2;	/* nextafter (0.5, 0.0) */
-  adj = copysign (adj, x);
-  return x + adj;
+#if defined PR_SET_FPEXC && defined PR_FP_EXC_DISABLED
+  int result;
+  INTERNAL_SYSCALL_DECL (err);
+  result = INTERNAL_SYSCALL (prctl, err, 2, PR_SET_FPEXC, PR_FP_EXC_DISABLED);
+# ifndef __ASSUME_NEW_PRCTL_SYSCALL
+  if (INTERNAL_SYSCALL_ERROR_P (result, err)
+      && INTERNAL_SYSCALL_ERRNO (result, err) == EINVAL)
+    __set_errno (ENOSYS);
+# endif
+#else
+  __set_errno (ENOSYS);
+#endif
+  return FE_DFL_ENV;
 }
-
-strong_alias (__lround, __llround)
-weak_alias (__lround, lround)
-weak_alias (__llround, llround)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__lround, __lroundl)
-strong_alias (__lround, __llroundl)
-weak_alias (__lroundl, lroundl)
-weak_alias (__llroundl, llroundl)
-#endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
-compat_symbol (libm, __lround, lroundl, GLIBC_2_1);
-compat_symbol (libm, __llround, llroundl, GLIBC_2_1);
-#endif

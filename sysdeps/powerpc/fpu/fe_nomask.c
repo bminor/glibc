@@ -20,8 +20,9 @@
 #include <fenv.h>
 #include <errno.h>
 
-/* This is presently a stub, until it's decided how the kernels should
-   support this.  */
+/* This is a generic stub. An OS specific override is required to set
+   the FE0/FE1 bits in the MSR.  MSR update is privileged, so this will
+   normally involve a syscall.  */
 
 const fenv_t *
 __fe_nomask_env(void)
