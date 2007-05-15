@@ -2125,21 +2125,36 @@ typedef struct malloc_chunk* mbinptr;
 
 #define NBINS             128
 #define NSMALLBINS         64
-#define SMALLBIN_WIDTH      8
-#define MIN_LARGE_SIZE    512
+#define SMALLBIN_WIDTH    MALLOC_ALIGNMENT
+#define MIN_LARGE_SIZE    (NSMALLBINS * SMALLBIN_WIDTH)
 
 #define in_smallbin_range(sz)  \
   ((unsigned long)(sz) < (unsigned long)MIN_LARGE_SIZE)
 
-#define smallbin_index(sz)     (((unsigned)(sz)) >> 3)
+#define smallbin_index(sz) \
+  (SMALLBIN_WIDTH == 16 ? (((unsigned)(sz)) >> 4) : (((unsigned)(sz)) >> 3))
 
-#define largebin_index(sz)                                                   \
-(((((unsigned long)(sz)) >>  6) <= 32)?  56 + (((unsigned long)(sz)) >>  6): \
+#define largebin_index_32(sz)                                                \
+(((((unsigned long)(sz)) >>  6) <= 38)?  56 + (((unsigned long)(sz)) >>  6): \
  ((((unsigned long)(sz)) >>  9) <= 20)?  91 + (((unsigned long)(sz)) >>  9): \
  ((((unsigned long)(sz)) >> 12) <= 10)? 110 + (((unsigned long)(sz)) >> 12): \
  ((((unsigned long)(sz)) >> 15) <=  4)? 119 + (((unsigned long)(sz)) >> 15): \
  ((((unsigned long)(sz)) >> 18) <=  2)? 124 + (((unsigned long)(sz)) >> 18): \
                                         126)
+
+// XXX It remains to be seen whether it is good to keep the widths of
+// XXX the buckets the same or whether it should be scaled by a factor
+// XXX of two as well.
+#define largebin_index_64(sz)                                                \
+(((((unsigned long)(sz)) >>  6) <= 48)?  48 + (((unsigned long)(sz)) >>  6): \
+ ((((unsigned long)(sz)) >>  9) <= 20)?  91 + (((unsigned long)(sz)) >>  9): \
+ ((((unsigned long)(sz)) >> 12) <= 10)? 110 + (((unsigned long)(sz)) >> 12): \
+ ((((unsigned long)(sz)) >> 15) <=  4)? 119 + (((unsigned long)(sz)) >> 15): \
+ ((((unsigned long)(sz)) >> 18) <=  2)? 124 + (((unsigned long)(sz)) >> 18): \
+                                        126)
+
+#define largebin_index(sz) \
+  (SIZE_SZ == 8 ? largebin_index_64 (sz) : largebin_index_32 (sz))
 
 #define bin_index(sz) \
  ((in_smallbin_range(sz)) ? smallbin_index(sz) : largebin_index(sz))
@@ -2343,6 +2358,9 @@ struct malloc_par {
   /* Memory map support */
   int              n_mmaps;
   int              n_mmaps_max;
+#if MALLOC_DEBUG
+  int              n_mmaps_cmax;
+#endif
   int              max_n_mmaps;
   /* the mmap_threshold is dynamic, until the user sets
      it manually, at which point we need to disable any
@@ -2858,7 +2876,8 @@ static void do_check_malloc_state(mstate av)
   assert(total <= (unsigned long)(mp_.max_total_mem));
   assert(mp_.n_mmaps >= 0);
 #endif
-  assert(mp_.n_mmaps <= mp_.n_mmaps_max);
+  assert(mp_.n_mmaps <= mp_.n_mmaps_cmax);
+  assert(mp_.n_mmaps_max <= mp_.n_mmaps_cmax);
   assert(mp_.n_mmaps <= mp_.max_n_mmaps);
 
   assert((unsigned long)(av->system_mem) <=
@@ -3456,6 +3475,13 @@ munmap_chunk(p) mchunkptr p;
     }
 
   mp_.n_mmaps--;
+#if MALLOC_DEBUG
+  if (mp_.n_mmaps_cmax > mp_.n_mmaps_max)
+    {
+      assert (mp_.n_mmaps_cmax == mp_.n_mmaps + 1);
+      mp_.n_mmaps_cmax = mp_.n_mmaps;
+    }
+#endif
   mp_.mmapped_mem -= total_size;
 
   int ret __attribute__ ((unused)) = munmap((char *)block, total_size);
@@ -5371,6 +5397,9 @@ mstate av; size_t n_elements; size_t* sizes; int opts; Void_t* chunks[];
   mp_.n_mmaps_max = 0;
   mem = _int_malloc(av, size);
   mp_.n_mmaps_max = mmx;   /* reset mmap */
+#if MALLOC_DEBUG
+  mp_.n_mmaps_cmax = mmx;
+#endif
   if (mem == 0)
     return 0;
 
@@ -5696,8 +5725,17 @@ int mALLOPt(param_number, value) int param_number; int value;
       res = 0;
     else
 #endif
-      mp_.n_mmaps_max = value;
-      mp_.no_dyn_threshold = 1;
+      {
+#if MALLOC_DEBUG
+	if (mp_.n_mmaps <= value)
+	  mp_.n_mmaps_cmax = value;
+	else
+	  mp_.n_mmaps_cmax = mp_.n_mmaps;
+#endif
+
+	mp_.n_mmaps_max = value;
+	mp_.no_dyn_threshold = 1;
+      }
     break;
 
   case M_CHECK_ACTION:
