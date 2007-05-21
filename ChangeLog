@@ -1,3 +1,58 @@
+2007-05-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/epoll_pwait.S: New file.
+
+2007-05-21  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #4525]
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines): Add epoll_pwait.
+	* sysdeps/unix/sysv/linux/epoll_pwait.c: New file.
+	* sysdeps/unix/sysv/linux/syscalls.list (epoll_pwait): Remove.
+
+	* sysdeps/unix/sysv/linux/x86_64/sys/epoll.h (epoll_pwait): Declare.
+
+	[BZ #4514]
+	* stdio-common/vfprintf.c (vfprintf): Don't shadow workstart variable,
+	reinitialize workend at the start of each do_positional format spec
+	loop, free workstart before do_positional loops.
+	(printf_unknown): Fix size of work_buffer.
+	* stdio-common/tst-sprintf.c (main): Add 3 new testcases.
+
+	* malloc/hooks.c (MALLOC_STATE_VERSION): Bump.
+	(public_sET_STATe): If ms->version < 3, put all chunks into
+	unsorted chunks and clear {fd,bk}_nextsize fields of largebin
+	chunks.
+
+	* malloc/malloc.c [MALLOC_DEBUG]: Revert 2007-05-13 changes.
+	* malloc/hooks.c: Likewise.
+	* malloc/arena.c: Likewise.
+	* malloc/malloc.c (do_check_malloc_state): Don't assert
+	n_mmaps is not greater than n_mmaps_max.  This removes the need
+	for the previous change.
+
+	* malloc/Makefile (CFLAGS-malloc.c): Revert accidental
+	2007-05-07 commit.
+
+2007-05-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (do_check_chunk): Correct check for mmaped block
+	not overlapping with arena.
+
+	* malloc/mcheck.c (reallochook): If size==0, free the block.
+
+	* rt/tst-shm.c: Use fstat64 instead of fstat.
+
+	* sysdeps/unix/sysv/linux/i386/sync_file_range.S: Fix case where
+	__NR_sync_file_range is not defined.
+
+2007-05-17  Ulrich Drepper  <drepper@redhat.com>
+
+	Dummy files to prevent stub versions from being used.
+	* sysdeps/x86_64/fpu/k_cosl.c: New file.
+	* sysdeps/x86_64/fpu/k_rem_pio2l.c: New file.
+	* sysdeps/x86_64/fpu/k_sinl.c: New file.
+	* sysdeps/x86_64/fpu/k_tanl.c: New file.
+
 2007-05-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* version.h (VERSION): Define to 6.

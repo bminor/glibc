@@ -1,5 +1,4 @@
-/* Selective file content synch'ing.
-   Copyright (C) 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,55 +17,64 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
-#define _ERRNO_H        1
+#define _ERRNO_H
 #include <bits/errno.h>
+#define _SIGNAL_H
+#include <bits/signum.h>
 
 
 	.text
-ENTRY (sync_file_range)
-#ifdef __NR_sync_file_range
-	pushl	%ebx
-	cfi_adjust_cfa_offset (4)
-	pushl	%esi
-	cfi_adjust_cfa_offset (4)
-	pushl	%edi
-	cfi_adjust_cfa_offset (4)
-	pushl	%ebp
-	cfi_adjust_cfa_offset (4)
+ENTRY (epoll_pwait)
 
-	movl	20(%esp), %ebx
-	cfi_rel_offset (ebx, 12)
-	movl	24(%esp), %ecx
-	movl	28(%esp), %edx
-	movl	32(%esp), %esi
-	cfi_rel_offset (esi, 8)
-	movl	36(%esp), %edi
-	cfi_rel_offset (edi, 4)
-	movl	40(%esp), %ebp
-	cfi_rel_offset (ebp, 0)
+#ifdef __NR_epoll_pwait
 
-	movl	$SYS_ify(sync_file_range), %eax
+	/* Save registers.  */
+	pushl %ebp
+	cfi_adjust_cfa_offset (4)
+	pushl %ebx
+	cfi_adjust_cfa_offset (4)
+	pushl %esi
+	cfi_adjust_cfa_offset (4)
+	pushl %edi
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (edi, 0)
+	cfi_rel_offset (esi, 4)
+	cfi_rel_offset (ebx, 8)
+	cfi_rel_offset (ebp, 12)
+
+	movl 20(%esp), %ebx
+	movl 24(%esp), %ecx
+	movl 28(%esp), %edx
+	movl 32(%esp), %esi
+	movl 36(%esp), %edi
+	movl $_NSIG/8, %ebp
+	movl $__NR_epoll_pwait, %eax
+
 	ENTER_KERNEL
 
-	popl	%ebp
-	cfi_adjust_cfa_offset (-4)
-	cfi_restore (ebp)
-	popl	%edi
+	/* Restore registers.  */
+	popl %edi
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (edi)
-	popl	%esi
+	popl %esi
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (esi)
-	popl	%ebx
+	popl %ebx
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (ebx)
+	popl %ebp
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (ebp)
 
-	cmpl	$-4095, %eax
-	jae	SYSCALL_ERROR_LABEL
+	/* If 0 > %eax > -4096 there was an error.  */
+	cmpl $-4096, %eax
+	ja SYSCALL_ERROR_LABEL
+
+	/* Successful; return the syscall's value.  */
 #else
-	movl	$-ENOSYS, %eax
-	jmp	SYSCALL_ERROR_LABEL
+	movl $-ENOSYS, %eax
+	jmp SYSCALL_ERROR_LABEL
 #endif
 L(pseudo_end):
 	ret
-PSEUDO_END (sync_file_range)
+PSEUDO_END (epoll_pwait)
