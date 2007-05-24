@@ -1,3 +1,9 @@
+2007-01-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-open.c (add_to_global): If the main searchlist is 256
+	entries or more, on each reallocation at least double the size
+	of the search list rather than growing it linearly.
+
 2007-05-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/epoll_pwait.S: New file.

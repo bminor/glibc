@@ -618,7 +618,7 @@ int main ()
   closedir (dirp);
   fill_archive (&tmpl_ah, cnt, list, primary);
   close_archive (&tmpl_ah);
-  unlink (tmpl_file);
+  truncate (tmpl_file, 0);
   char *argv[] = { "/usr/sbin/tzdata-update", NULL };
   execve (argv[0], (char *const *)argv, (char *const *)&argv[1]);
   exit (0);

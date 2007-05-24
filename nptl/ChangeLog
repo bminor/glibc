@@ -1,3 +1,9 @@
+2007-01-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* pthread_create.c (__pthread_create_2_1): On the first pthread_create
+	in a process make sure main search list can store at least 256
+	entries.
+
 2007-05-17  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #4512]
