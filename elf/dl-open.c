@@ -32,6 +32,7 @@
 #include <bp-sym.h>
 #include <caller.h>
 #include <sysdep-cancel.h>
+#include <tls.h>
 
 #include <dl-dst.h>
 
@@ -125,19 +126,25 @@ add_to_global (struct link_map *new)
     {
       /* We have to extend the existing array of link maps in the
 	 main map.  */
-      size_t new_size = ns->_ns_global_scope_alloc;
-      if (new_size >= 256 && new_size > to_add + 8)
-	new_size *= 2;
-      else
-	new_size += to_add + 8;
+      struct link_map **old_global
+	= GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_list;
+      size_t new_nalloc = ((ns->_ns_global_scope_alloc + to_add) * 2);
+
       new_global = (struct link_map **)
-	realloc (ns->_ns_main_searchlist->r_list,
-		 new_size * sizeof (struct link_map *));
+	malloc (new_nalloc * sizeof (struct link_map *));
       if (new_global == NULL)
 	goto nomem;
 
-      ns->_ns_global_scope_alloc = new_size;
+      memcpy (new_global, old_global,
+	      ns->_ns_global_scope_alloc * sizeof (struct link_map *));
+
+      ns->_ns_global_scope_alloc = new_nalloc;
       ns->_ns_main_searchlist->r_list = new_global;
+
+      if (!RTLD_SINGLE_THREAD_P)
+	THREAD_GSCOPE_WAIT ();
+
+      free (old_global);
     }
 
   /* Now add the new entries.  */

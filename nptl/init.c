@@ -386,6 +386,8 @@ __pthread_initialize_minimal_internal (void)
 
   GL(dl_init_static_tls) = &__pthread_init_static_tls;
 
+  GL(dl_wait_lookup_done) = &__wait_lookup_done;
+
   /* Register the fork generation counter with the libc.  */
 #ifndef TLS_MULTIPLE_THREADS_IN_TCB
   __libc_multiple_threads_ptr =

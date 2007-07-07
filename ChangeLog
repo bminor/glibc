@@ -1,3 +1,30 @@
+2007-06-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/do-lookup.h (do_lookup_x): Read r_nlist before r_list and
+	make sure gcc doesn't mess around with this.
+
+2007-06-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-lookup.c (_dl_lookup_symbol_x): Remove use of r_nlist.
+
+2007-06-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-close.c (_dl_close_worker): Remove all to be removed
+	libraries from the global scope at once and call THREAD_GSCOPE_WAIT
+
+2007-05-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-close.c (_dl_close_worker): When removing object from
+	global scope, wait for all lookups to finish afterwards.
+	* elf/dl-open.c (add_to_global): When global scope array must
+	grow, allocate a new one and free old array only after all
+	lookups finish.
+	* elf/dl-runtime.c (_dl_fixup): Protect using global scope.
+	(_dl_lookup_symbol_x): Likewise.
+	* elf/dl-support.c: Define _dl_wait_lookup_done.
+	* sysdeps/generic/ldsodefs.h (struct rtld_global): Add
+	_dl_wait_lookup_done.
+
 2007-06-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ieee754/ldbl-128ibm/mpn2ldbl.c
@@ -55,12 +82,6 @@
 	* sysdeps/x86_64/memcpy.S: Complete rewrite.
 	* sysdeps/x86_64/mempcpy.S: Adjust appropriately.
 	Patch by Evandro Menezes <evandro.menezes@amd.com>.
-
-2007-01-15  Jakub Jelinek  <jakub@redhat.com>
-
-	* elf/dl-open.c (add_to_global): If the main searchlist is 256
-	entries or more, on each reallocation at least double the size
-	of the search list rather than growing it linearly.
 
 2007-05-21  Ulrich Drepper  <drepper@redhat.com>
 

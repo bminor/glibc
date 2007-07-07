@@ -462,30 +462,6 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
   pd->flags = ((iattr->flags & ~(ATTR_FLAG_SCHED_SET | ATTR_FLAG_POLICY_SET))
 	       | (self->flags & (ATTR_FLAG_SCHED_SET | ATTR_FLAG_POLICY_SET)));
 
-  /* Hack: realloc the main search list on the first pthread_create call
-     to minimize the number of global search scope reallocations.
-     Wastes at most 1KB on 32-bit and 2KB on 64-bit per process
-     which calls pthread_create.  */
-  if (__builtin_expect (self->header.multiple_threads == 0, 0)
-      && GL(dl_ns)[0]._ns_main_searchlist
-      && GL(dl_ns)[0]._ns_main_searchlist->r_nlist < 256
-      && GL(dl_ns)[0]._ns_global_scope_alloc < 256)
-    {
-      struct link_map **new_global = (struct link_map **)
-	realloc (GL(dl_ns)[0]._ns_global_scope_alloc == 0
-		 ? NULL : GL(dl_ns)[0]._ns_main_searchlist->r_list,
-		 256 * sizeof (struct link_map *));
-      if (new_global != NULL)
-	{
-	  if (GL(dl_ns)[0]._ns_global_scope_alloc == 0)
-	    memcpy (new_global, GL(dl_ns)[0]._ns_main_searchlist->r_list,
-		    GL(dl_ns)[0]._ns_main_searchlist->r_nlist
-		    * sizeof (struct link_map *));
-	  GL(dl_ns)[0]._ns_global_scope_alloc = 256;
-	  GL(dl_ns)[0]._ns_main_searchlist->r_list = new_global;
-	}
-    }
-
   /* Initialize the field for the ID of the thread which is waiting
      for us.  This is a self-reference in case the thread is created
      detached.  */
