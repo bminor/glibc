@@ -1,3 +1,8 @@
+2007-05-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* tst-robust9.c (do_test): Don't fail if ENABLE_PI and
+	pthread_mutex_init failed with ENOTSUP.
+
 2007-01-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* pthread_create.c (__pthread_create_2_1): On the first pthread_create
