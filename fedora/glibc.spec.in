@@ -1,4 +1,4 @@
-%define glibcrelease 3
+%define glibcrelease 4
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define xenarches i686 athlon
 %ifarch %{xenarches}
@@ -1329,8 +1329,8 @@ for f in `find $RPM_BUILD_ROOT/%{_lib} -type l`; do
 done
 
 echo Sorting source file lists. Might take a while...
-xargs -0 -n 1 echo < $sf | LC_ALL=C grep -v '/<internal>$\|\.gperf$' | LC_ALL=C sort -u > $sf.sorted
-xargs -0 -n 1 echo < $csf | LC_ALL=C grep -v '/<internal>$\|\.gperf$' | LC_ALL=C sort -u > $csf.sorted
+xargs -0 -n 1 echo < $sf | LC_ALL=C grep -v '/<internal>$\|<built-in>$\|\.gperf$' | LC_ALL=C sort -u > $sf.sorted
+xargs -0 -n 1 echo < $csf | LC_ALL=C grep -v '/<internal>$\|<built-in>$\|\.gperf$' | LC_ALL=C sort -u > $csf.sorted
 mkdir -p $RPM_BUILD_ROOT/usr/src/debug
 cat $sf.sorted $csf.sorted \
   | (cd $RPM_BUILD_DIR; LC_ALL=C sort -u | cpio -pdm ${RPM_BUILD_ROOT}/usr/src/debug)
@@ -1561,6 +1561,8 @@ rm -f *.filelist*
 %endif
 
 %changelog
+- filter <built-in> pseudo-files from debuginfo source lists (#245714)
+
 * Thu May 24 2007 Jakub Jelinek <jakub@redhat.com> 2.6-3
 - don't use %%config(missingok) for locale-archive.tmpl,
   instead of removing it altogether truncate it to zero
