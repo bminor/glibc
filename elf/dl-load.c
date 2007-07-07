@@ -1223,6 +1223,8 @@ cannot allocate TLS data structures for initial thread");
 		      loadcmds[nloadcmds - 1].mapstart - c->mapend,
 		      PROT_NONE);
 
+	l->l_contiguous = 1;
+
 	goto postmap;
       }
 
@@ -1242,6 +1244,7 @@ cannot allocate TLS data structures for initial thread");
     /* Remember which part of the address space this object uses.  */
     l->l_map_start = c->mapstart + l->l_addr;
     l->l_map_end = l->l_map_start + maplength;
+    l->l_contiguous = !has_holes;
 
     while (c < &loadcmds[nloadcmds])
       {
