@@ -1,3 +1,7 @@
+2007-06-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/rtld.c (dl_main): Don't call init_tls more than once.
+
 2007-06-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-close.c (free_mem): Free _dl_scope_free_list.
