@@ -1,3 +1,17 @@
+2007-05-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/cacheinfo.c (init_cacheinfo): Pass correct value
+	as second parameter to handle_intel.
+
+	* sysdeps/unix/sysv/linux/x86_64/sysconf.c: Move cache information
+	handling to ...
+	* sysdeps/x86_64/cacheinfo.c: ... here.  New file.
+	* sysdeps/x86_64/Makefile [subdir=string] (sysdep_routines): Add
+	cacheinfo.
+	* sysdeps/x86_64/memcpy.S: Complete rewrite.
+	* sysdeps/x86_64/mempcpy.S: Adjust appropriately.
+	Patch by Evandro Menezes <evandro.menezes@amd.com>.
+
 2007-01-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-open.c (add_to_global): If the main searchlist is 256
