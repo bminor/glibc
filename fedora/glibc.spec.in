@@ -1561,7 +1561,24 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Sun Jul  8 2007 Jakub Jelinek <jakub@redhat.com> 2.6-4
 - filter <built-in> pseudo-files from debuginfo source lists (#245714)
+- fix sscanf when errno is EINTR before the call (BZ#4745)
+- save/restore errno around reading /etc/default/nss (BZ#4702)
+- fix LD_HWCAP_MASK handling
+- disable workaround for #210748, instead backport
+  ld.so locking fixes from the trunk (#235026)
+- new x86_64 memcpy
+- don't write uninitialized padding bytes to nscd socket
+- fix dl{,v}sym, dl_iterate_phdr and dlopen if some library is
+  mapped into ld.so's inter-segment hole on x86_64 (#245035, #244545)
+- fix LD_AUDIT=a:b program (#180432)
+- don't crash on pseudo-zero long double values passed to
+  *printf on i?86/x86_64/ia64 (BZ#4586)
+- fix *printf %La and strtold with some hexadecimal floating point
+  constants on ppc/ppc64
+- fix nextafterl on ppc/ppc64
+- fix sem_timedwait on i?86 and x86_64
 
 * Thu May 24 2007 Jakub Jelinek <jakub@redhat.com> 2.6-3
 - don't use %%config(missingok) for locale-archive.tmpl,
