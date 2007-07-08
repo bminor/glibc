@@ -1,3 +1,8 @@
+2007-06-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* math/test-misc.c (main): Don't run last batch of tests with
+	IBM long double format.
+
 2007-07-07  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #4745]
