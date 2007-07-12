@@ -272,7 +272,7 @@ main (int argc, char **argv)
     res = sscanf ("0x1234", "%lf", &d);
     printf ("res = %d, d = %f\n", res, d);
 
-    if (res != 0 || d != 123456.789)
+    if (res != 1 || d != 4660)
       {
 	fputs ("test failed!\n", stdout);
 	result = 1;
