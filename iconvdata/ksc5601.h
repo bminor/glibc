@@ -22,7 +22,7 @@
 
 #define KSC5601_HANGUL 2350
 #define KSC5601_HANJA  4888
-#define KSC5601_SYMBOL  988
+#define KSC5601_SYMBOL  989
 
 #include <gconv.h>
 #include <stdint.h>
