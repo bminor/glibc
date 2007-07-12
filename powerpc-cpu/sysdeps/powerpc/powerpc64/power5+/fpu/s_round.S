@@ -33,6 +33,6 @@ weak_alias (__round, round)
 weak_alias (__round, roundl)
 strong_alias (__round, __roundl)
 #endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
-compat_symbol (libm, __round, roundl, GLIBC_2_0)
+#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
+compat_symbol (libm, __round, roundl, GLIBC_2_1)
 #endif

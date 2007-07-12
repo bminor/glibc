@@ -1,3 +1,14 @@
+2007-03-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_round.S: Use GLIBC_2_1
+	instead of GLIBC_2_0.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_trunc.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_round.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_trunc.S: Likewise.
+	* sysdeps/powerpc/powerpc32/powerpc64/fpu/s_llrint.S: Include
+	math_ldbl_opt.h.
+	(llrintl): Add @GLIBC_2.1 compat symbol.
+
 2006-10-20  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/power4/fpu/slowpow.c: New file.

@@ -33,6 +33,6 @@ weak_alias (__trunc, trunc)
 weak_alias (__trunc, truncl)
 strong_alias (__trunc, __truncl)
 #endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
-compat_symbol (libm, __trunc, truncl, GLIBC_2_0)
+#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
+compat_symbol (libm, __trunc, truncl, GLIBC_2_1)
 #endif
