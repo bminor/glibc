@@ -1,3 +1,17 @@
+2006-11-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* timezone/zdump.c: Redo fix for BZ #3137.
+
+2006-11-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* time/tzfile.c (__tzfile_read): Extend to handle new file format
+	on machines with 64-bit time_t.
+
+	* timezone/private.h: Update from tzcode2006o.
+	* timezone/tzfile.h: Likewise.
+	* timezone/zdump.c: Likewise.
+	* timezone/zic.c: Likewise.
+
 2006-07-02  Jakub Jelinek  <jakub@redhat.com>
 
 	* nscd/connections.c (sighup_pending): New variable.
