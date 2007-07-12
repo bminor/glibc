@@ -79,10 +79,7 @@ sem_timedwait:
 	jae	6f
 
 	cfi_offset(3, -16)		/* %ebx */
-7:	call	__pthread_enable_asynccancel
-	movl	%eax, 8(%esp)
-
-	xorl	%ecx, %ecx
+7:	xorl	%ecx, %ecx
 	movl	%esp, %ebx
 	movl	%ecx, %edx
 	movl	$SYS_gettimeofday, %eax
@@ -105,6 +102,10 @@ sem_timedwait:
 
 	movl	%ecx, (%esp)	/* Store relative timeout.  */
 	movl	%edx, 4(%esp)
+
+	call	__pthread_enable_asynccancel
+	movl	%eax, 8(%esp)
+
 	movl	28(%esp), %ebx
 	xorl	%ecx, %ecx
 	movl	%esp, %esi

@@ -1,3 +1,16 @@
+2007-05-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (tests): Add tst-sem10.
+	* tst-sem10.c: New file.
+
+2007-05-25  Ulrich Drepper  <drepper@redhat.com>
+	    Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/i486/sem_timedwait.S (sem_timedwait):
+	Move __pthread_enable_asynccancel right before futex syscall.
+	* sysdeps/unix/sysv/linux/x86_64/sem_timedwait.S (sem_timedwait):
+	Likewise.
+
 2007-05-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* tst-robust9.c (do_test): Don't fail if ENABLE_PI and
