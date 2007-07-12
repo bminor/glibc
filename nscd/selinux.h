@@ -23,7 +23,7 @@
 
 #include "nscd.h"
 #ifdef HAVE_LIBCAP
-# include <sys/capabilities.h>
+# include <sys/capability.h>
 #endif
 
 #ifdef HAVE_SELINUX

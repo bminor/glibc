@@ -30,6 +30,7 @@ if fgrep "$includedir" */*.d |
 fgrep -v "$includedir/asm" |
 fgrep -v "$includedir/linux" |
 fgrep -v "$includedir/selinux" |
+fgrep -v "$includedir/sys/capability.h" |
 fgrep -v "$includedir/gd"; then
   # If we found a match something is wrong.
   exit 1
