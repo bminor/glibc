@@ -50,7 +50,7 @@
 									      \
 	   First get the origin string if it is not available yet.	      \
 	   This can only happen for the map of the executable.  */	      \
-	DL_DST_REQ_STATIC						      \
+	DL_DST_REQ_STATIC (l)						      \
 	if ((l)->l_origin == NULL)					      \
 	  {								      \
 	    assert ((l)->l_name[0] == '\0');				      \
@@ -68,9 +68,9 @@
     __len; })
 
 #ifdef SHARED
-# define DL_DST_REQ_STATIC /* nothing */
+# define DL_DST_REQ_STATIC(l) /* nothing */
 #else
-# define DL_DST_REQ_STATIC \
+# define DL_DST_REQ_STATIC(l) \
   if ((l) == NULL)							      \
     {									      \
       const char *origin = _dl_get_origin ();				      \

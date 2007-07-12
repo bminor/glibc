@@ -1,3 +1,10 @@
+2007-03-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-open.c (dl_open_worker): Declare l in 2 different
+	smaller scopes.
+	* elf/dl-dst.h (DL_DST_REQ_STATIC): Add l as macro argument.
+	(DL_DST_REQUIRED): Adjust user.
+
 2007-03-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* locale/programs/ld-ctype.c (find_translit): Return NULL if ctype is
