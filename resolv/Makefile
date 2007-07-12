@@ -32,7 +32,7 @@ distribute := ../conf/portability.h mapv4v6addr.h mapv4v6hostent.h \
 routines := herror inet_addr inet_ntop inet_pton nsap_addr res_init \
 	    res_hconf res_libc res-state
 
-tests = tst-aton tst-leaks
+tests = tst-aton tst-leaks tst-inet_ntop
 xtests = tst-leaks2
 
 generate := mtrace-tst-leaks tst-leaks.mtrace tst-leaks2.mtrace
