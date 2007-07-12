@@ -182,7 +182,7 @@ _nss_nisplus_getspnam_r (const char *name, struct spwd *sp,
 
   snprintf (buf, sizeof (buf), "[name=%s],%s", name, pwd_tablename_val);
 
-  result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
+  result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS | USE_DGRAM, NULL, NULL);
 
   if (result == NULL)
     {

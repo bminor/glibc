@@ -338,7 +338,7 @@ _nss_nisplus_getnetbyname_r (const char *name, struct netent *network,
   /* Search at first in the alias list, and use the correct name
      for the next search */
   snprintf (buf, sizeof (buf), "[name=%s],%s", name, tablename_val);
-  result = nis_list (buf, FOLLOW_LINKS | FOLLOW_PATH, NULL, NULL);
+  result = nis_list (buf, FOLLOW_LINKS | FOLLOW_PATH | USE_DGRAM, NULL, NULL);
 
   if (result != NULL)
     {
@@ -366,7 +366,8 @@ _nss_nisplus_getnetbyname_r (const char *name, struct netent *network,
 	}
 
       nis_freeresult (result);
-      result = nis_list (bufptr, FOLLOW_LINKS | FOLLOW_PATH, NULL, NULL);
+      result = nis_list (bufptr, FOLLOW_LINKS | FOLLOW_PATH | USE_DGRAM,
+			 NULL, NULL);
     }
 
   if (result == NULL)
@@ -438,7 +439,8 @@ _nss_nisplus_getnetbyaddr_r (uint32_t addr, const int type,
     while (1)
       {
 	snprintf (buf, sizeof (buf), "[addr=%s],%s", buf2, tablename_val);
-	nis_result *result = nis_list (buf, EXPAND_NAME, NULL, NULL);
+	nis_result *result = nis_list (buf, EXPAND_NAME | USE_DGRAM,
+				       NULL, NULL);
 
 	if (result == NULL)
 	  {

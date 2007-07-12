@@ -256,7 +256,8 @@ _nss_nisplus_gethostton_r (const char *name, struct etherent *eth,
 
   snprintf (buf, sizeof (buf), "[name=%s],%s", name, tablename_val);
 
-  nis_result *result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
+  nis_result *result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS | USE_DGRAM,
+				 NULL, NULL);
 
   if (result == NULL)
     {
@@ -322,7 +323,8 @@ _nss_nisplus_getntohost_r (const struct ether_addr *addr, struct etherent *eth,
 	    addr->ether_addr_octet[4], addr->ether_addr_octet[5],
 	    tablename_val);
 
-  nis_result *result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS, NULL, NULL);
+  nis_result *result = nis_list (buf, FOLLOW_PATH | FOLLOW_LINKS | USE_DGRAM,
+				 NULL, NULL);
 
   if (result == NULL)
     {
