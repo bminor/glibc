@@ -1414,6 +1414,12 @@ ld.so does not support TLS, but program uses it!\n");
       /* Iterate over all entries in the list.  The order is important.  */
       struct audit_ifaces *last_audit = NULL;
       struct audit_list *al = audit_list->next;
+
+#ifdef USE_TLS
+      /* Since we start using the auditing DSOs right away we need to
+	 initialize the data structures now.  */
+      tcbp = init_tls ();
+#endif
       do
 	{
 #ifdef USE_TLS
@@ -1424,10 +1430,6 @@ ld.so does not support TLS, but program uses it!\n");
 	     always allocate the static block, we never defer it even if
 	     no DF_STATIC_TLS bit is set.  The reason is that we know
 	     glibc will use the static model.  */
-
-	  /* Since we start using the auditing DSOs right away we need to
-	     initialize the data structures now.  */
-	  tcbp = init_tls ();
 #endif
 	  struct dlmopen_args dlmargs;
 	  dlmargs.fname = al->name;
