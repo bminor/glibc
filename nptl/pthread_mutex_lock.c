@@ -127,6 +127,8 @@ __pthread_mutex_lock (mutex)
 	      int newval = id;
 #ifdef NO_INCR
 	      newval |= FUTEX_WAITERS;
+#else
+	      newval |= (oldval & FUTEX_WAITERS);
 #endif
 
 	      newval
