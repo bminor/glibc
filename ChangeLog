@@ -1,3 +1,8 @@
+2007-01-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nss_nis/nis-service.c (_nss_nis_getservbyname_r): Correct
+	computation of keylen.
+
 2007-01-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* io/fts.c: Make sure fts_cur is always valid after return from
