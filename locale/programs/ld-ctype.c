@@ -1866,6 +1866,9 @@ find_translit (struct localedef_t *locale, const struct charmap_t *charmap,
   assert (locale != NULL);
   ctype = locale->categories[LC_CTYPE].ctype;
 
+  if (ctype == NULL)
+    return NULL;
+
   if (ctype->translit != NULL)
     result = find_translit2 (ctype, charmap, wch);
 

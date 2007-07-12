@@ -1,5 +1,10 @@
 2007-03-15  Jakub Jelinek  <jakub@redhat.com>
 
+	* locale/programs/ld-ctype.c (find_translit): Return NULL if ctype is
+	NULL.
+
+2007-03-15  Jakub Jelinek  <jakub@redhat.com>
+
 	[BZ #4181]
 	* inet/inet6_opt.c (add_padding): Only insert padding if npad > 0.
 	(inet6_opt_append): Don't check extlen is big enough if extbuf
