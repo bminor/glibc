@@ -17,6 +17,7 @@
    02111-1307 USA.  */
 
 #include <ctype.h>
+#include <errno.h>
 #include <stdio.h>
 #include <stdio_ext.h>
 #include <stdlib.h>
@@ -54,6 +55,7 @@ static const struct
 static void
 init (void)
 {
+  int saved_errno = errno;
   FILE *fp = fopen (default_nss, "rc");
   if (fp != NULL)
     {
@@ -111,6 +113,7 @@ init (void)
 
       fclose (fp);
     }
+  __set_errno (saved_errno);
 }
 
 
