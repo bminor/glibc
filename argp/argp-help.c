@@ -672,9 +672,9 @@ hol_cluster_cmp (const struct hol_cluster *cl1, const struct hol_cluster *cl2)
 {
   /* If one cluster is deeper than the other, use its ancestor at the same
      level, so that finding the common ancestor is straightforward.  */
-  while (cl1->depth < cl2->depth)
+  while (cl1->depth > cl2->depth)
     cl1 = cl1->parent;
-  while (cl2->depth < cl1->depth)
+  while (cl2->depth > cl1->depth)
     cl2 = cl2->parent;
 
   /* Now reduce both clusters to their ancestors at the point where both have
@@ -987,7 +987,7 @@ static const char *
 filter_doc (const char *doc, int key, const struct argp *argp,
 	    const struct argp_state *state)
 {
-  if (argp->help_filter)
+  if (argp && argp->help_filter)
     /* We must apply a user filter to this output.  */
     {
       void *input = __argp_input (argp, state);
