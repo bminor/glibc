@@ -128,10 +128,6 @@ euidaccess (path, mode)
 #ifdef	_LIBC
   uid_t euid;
   gid_t egid;
-
-  if (! __libc_enable_secure)
-    /* If we are not set-uid or set-gid, access does the same.  */
-    return __access (path, mode);
 #else
   if (have_ids == 0)
     {
@@ -162,6 +158,10 @@ euidaccess (path, mode)
   /* Now we need the IDs.  */
   euid = __geteuid ();
   egid = __getegid ();
+
+  if (__getuid () == euid && __getgid () == egid)
+    /* If we are not set-uid or set-gid, access does the same.  */
+    return __access (path, mode);
 #endif
 
   /* The super-user can read and write any file, and execute any file
