@@ -3019,7 +3019,7 @@ parse_bracket_exp (re_string_t *regexp, re_dfa_t *dfa, re_token_t *token,
 #endif /* not RE_ENABLE_I18N */
       non_match = 1;
       if (syntax & RE_HAT_LISTS_NOT_NEWLINE)
-	bitset_set (sbcset, '\0');
+	bitset_set (sbcset, '\n');
       re_string_skip_bytes (regexp, token_len); /* Skip a token.  */
       token_len = peek_token_bracket (token, regexp, syntax);
       if (BE (token->type == END_OF_RE, 0))
@@ -3549,10 +3549,6 @@ build_charclass_op (re_dfa_t *dfa, RE_TRANSLATE_TYPE trans,
   if (non_match)
     {
 #ifdef RE_ENABLE_I18N
-      /*
-      if (syntax & RE_HAT_LISTS_NOT_NEWLINE)
-	bitset_set(cset->sbcset, '\0');
-      */
       mbcset->non_match = 1;
 #endif /* not RE_ENABLE_I18N */
     }
