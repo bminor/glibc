@@ -1,5 +1,11 @@
 2007-05-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/vfprintf.c (process_string_arg): Optimize
+	ridiculous precision in wide char code printing multi-byte string.
+	Reported by Jim Meyering <jim@meyering.net>.
+
+2007-05-06  Ulrich Drepper  <drepper@redhat.com>
+
 	[BZ #4465]
 	* posix/unistd.h: Remove __THROW from fdatasync.
 
