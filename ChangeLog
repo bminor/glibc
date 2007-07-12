@@ -1,3 +1,8 @@
+2007-04-27  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3213]
+	* locale/C-translit.h.in: Add entry for U2044.
+
 2007-04-25  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/check_pf.c (make_request): Return -1 instead
