@@ -348,8 +348,17 @@ open_dir_stream (int *dfdp, struct ftw_data *data, struct dir_data *dirp)
 	}
       else
 	{
-	  const char *name = ((data->flags & FTW_CHDIR)
-			      ? data->dirbuf + data->ftw.base: data->dirbuf);
+	  const char *name;
+
+	  if (data->flags & FTW_CHDIR)
+	    {
+	      name = data->dirbuf + data->ftw.base;
+	      if (name[0] == '\0')
+		name = ".";
+	    }
+	  else
+	    name = data->dirbuf;
+
 	  dirp->stream = __opendir (name);
 	}
 
@@ -721,9 +730,16 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
   /* Get stat info for start directory.  */
   if (result == 0)
     {
-      const char *name = ((data.flags & FTW_CHDIR)
-			  ? data.dirbuf + data.ftw.base
-			  : data.dirbuf);
+      const char *name;
+
+      if (data.flags & FTW_CHDIR)
+	{
+	  name = data.dirbuf + data.ftw.base;
+	  if (name[0] == '\0')
+	    name = ".";
+	}
+      else
+	name = data.dirbuf;
 
       if (((flags & FTW_PHYS)
 	   ? LXSTAT (_STAT_VER, name, &st)

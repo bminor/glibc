@@ -1,5 +1,13 @@
 2007-02-21  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #4076]
+	* io/ftw.c (ftw_startup): Handle special case of FTW_CHDIR in /.
+	(open_dir_stream): Likewise.
+	* io/Makefile (tests): Add bug-ftw5.
+	* io/bug-ftw5.c: New file.
+
+2007-02-21  Ulrich Drepper  <drepper@redhat.com>
+
 	* nscd/grpcache.c (cache_addgr): In case a record changed on
 	refresh, adjust key_copy.
 
