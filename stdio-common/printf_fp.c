@@ -1,6 +1,5 @@
 /* Floating point output for `printf'.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2006
-   Free Software Foundation, Inc.
+   Copyright (C) 1995-2003, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 

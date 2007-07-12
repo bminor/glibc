@@ -1,5 +1,6 @@
 /* Handling of dynamic sring tokens.
-   Copyright (C) 1999,2001,2002,2003,2004,2006 Free Software Foundation, Inc.
+   Copyright (C) 1999,2001,2002,2003,2004,2006,2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

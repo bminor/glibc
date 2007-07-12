@@ -1,5 +1,5 @@
 /* Internal function for converting integers to ASCII.
-   Copyright (C) 1994, 1995, 1996, 1999, 2000, 2002, 2003, 2004
+   Copyright (C) 1994, 1995, 1996, 1999, 2000, 2002, 2003, 2004, 2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Torbjorn Granlund <tege@matematik.su.se>

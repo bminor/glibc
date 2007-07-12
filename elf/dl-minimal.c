@@ -1,5 +1,5 @@
 /* Minimal replacements for basic facilities used in the dynamic linker.
-   Copyright (C) 1995-1998,2000-2002,2004,2005,2006
+   Copyright (C) 1995-1998,2000-2002,2004-2006,2007
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
