@@ -1,3 +1,8 @@
+2007-05-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/sys/cdefs.h: Redefine __nonnull so that test for
+	incorrect parameters in the libc code itself are not omitted.
+
 2007-05-07  Ulrich Drepper  <drepper@redhat.com>
 	    Jakub Jelinek  <jakub@redhat.com>
 
