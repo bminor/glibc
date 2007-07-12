@@ -26,6 +26,7 @@ C["close"]=1
 C["connect"]=1
 C["creat"]=1
 C["fcntl"]=1
+C["fdatasync"]=1
 C["fsync"]=1
 C["msgrcv"]=1
 C["msgsnd"]=1

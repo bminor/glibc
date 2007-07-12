@@ -1,5 +1,15 @@
 2007-05-06  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #4465]
+	* posix/unistd.h: Remove __THROW from fdatasync.
+
+2007-05-06  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #4465]
+	* sysdeps/unix/sysv/linux/syscalls.list (fdatasync): Add "C" to args.
+
+2007-05-06  Ulrich Drepper  <drepper@redhat.com>
+
 	[BZ #4131]
 	* elf/dl-addr.c (_dl_addr): Compare address with actual segment
 	boundaries to work around systems with overlapping binary loading.
