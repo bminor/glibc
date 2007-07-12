@@ -1,4 +1,4 @@
-%define glibcrelease 19
+%define glibcrelease 18.1
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define xenarches i686 athlon
 %ifarch %{xenarches}
@@ -31,6 +31,8 @@ Source2: %(echo %{glibcsrcdir} | sed s/glibc-/glibc-libidn-/).tar.bz2
 Source3: %{glibcname}-fedora-%{glibcdate}.tar.bz2
 Patch0: %{glibcname}-fedora.patch
 Patch1: %{name}-ia64-lib64.patch
+Patch2: glibc-rh234946.patch
+Patch3: glibc-x86_64-memcpy.patch
 Buildroot: %{_tmppath}/glibc-%{PACKAGE_VERSION}-root
 Obsoletes: zoneinfo, libc-static, libc-devel, libc-profile, libc-headers,
 Obsoletes: gencat, locale, ldconfig, locale-ja, glibc-profile
@@ -242,6 +244,9 @@ package or when debugging this package.
 %patch1 -p1
 %endif
 %endif
+%patch2 -p1
+# Postpone until this is enough tested in F7
+#%patch3 -p1
 
 # Hack till glibc-kernheaders get updated, argh
 mkdir -p override_headers/linux
