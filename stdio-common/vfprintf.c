@@ -1159,19 +1159,26 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 		else							      \
 		  {							      \
 		    /* In case we have a multibyte character set the	      \
-		       situation is more compilcated.  We must not copy	      \
+		       situation is more complicated.  We must not copy	      \
 		       bytes at the end which form an incomplete character. */\
-		    wchar_t ignore[prec];				      \
+		    size_t ignore_size = (unsigned) prec > 1024 ? 1024 : prec;\
+		    wchar_t ignore[ignore_size];			      \
 		    const char *str2 = string;				      \
-		    mbstate_t ps;					      \
+		    const char *strend = string + prec;			      \
+		    if (strend < string)				      \
+		      strend = (const char *) UINTPTR_MAX;		      \
 									      \
+		    mbstate_t ps;					      \
 		    memset (&ps, '\0', sizeof (ps));			      \
-		    if (__mbsnrtowcs (ignore, &str2, prec, prec, &ps)	      \
-			== (size_t) -1)					      \
-		      {							      \
-			done = -1;					      \
-			goto all_done;					      \
-		      }							      \
+									      \
+		    while (str2 != NULL && str2 < strend)		      \
+		      if (__mbsnrtowcs (ignore, &str2, strend - str2,	      \
+					ignore_size, &ps) == (size_t) -1)     \
+			{						      \
+			  done = -1;					      \
+			  goto all_done;				      \
+			}						      \
+									      \
 		    if (str2 == NULL)					      \
 		      len = strlen (string);				      \
 		    else						      \
