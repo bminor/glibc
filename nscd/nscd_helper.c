@@ -187,6 +187,7 @@ get_mapping (request_type type, const char *key,
     request_header req;
     char key[keylen];
   } reqdata;
+  size_t real_sizeof_reqdata = sizeof (request_header) + keylen;
 
   int sock = open_socket ();
   if (sock < 0)
@@ -201,9 +202,9 @@ get_mapping (request_type type, const char *key,
 #  define MSG_NOSIGNAL 0
 # endif
   if (__builtin_expect (TEMP_FAILURE_RETRY (__send (sock, &reqdata,
-						    sizeof (reqdata),
+						    real_sizeof_reqdata,
 						    MSG_NOSIGNAL))
-			!= sizeof (reqdata), 0))
+			!= real_sizeof_reqdata, 0))
     /* We cannot even write the request.  */
     goto out_close2;
 
