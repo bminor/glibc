@@ -85,11 +85,6 @@ _dl_new_object (char *realname, const char *libname, int type,
   new->l_scope = new->l_scope_mem;
   new->l_scope_max = sizeof (new->l_scope_mem) / sizeof (new->l_scope_mem[0]);
 
-  /* No need to initialize the scope lock if the initializer is zero.  */
-#if _RTLD_MRLOCK_INITIALIZER != 0
-  __rtld_mrlock_initialize (new->l_scope_lock);
-#endif
-
   /* Counter for the scopes we have to handle.  */
   idx = 0;
 
