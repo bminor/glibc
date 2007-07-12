@@ -54,9 +54,9 @@ __dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
 	nloaded += GL(dl_ns)[cnt]._ns_nloaded;
 
 	if (caller >= (const void *) l->l_map_start
-	    && caller < (const void *) l->l_map_end)
-	  /* There must be exactly one DSO for the range of the virtual
-	     memory.  Otherwise something is really broken.  */
+	    && caller < (const void *) l->l_map_end
+	    && (l->l_contiguous
+		|| _dl_addr_inside_object (l, (ElfW(Addr)) caller)))
 	  ns = cnt;
       }
 
