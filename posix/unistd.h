@@ -56,7 +56,9 @@ __BEGIN_DECLS
 #define _POSIX2_LOCALEDEF       200112L
 
 /* X/Open version number to which the library conforms.  It is selectable.  */
-#ifdef __USE_UNIX98
+#ifdef __USE_XOPEN2K
+# define _XOPEN_VERSION	600
+#elif defined __USE_UNIX98
 # define _XOPEN_VERSION	500
 #else
 # define _XOPEN_VERSION	4
