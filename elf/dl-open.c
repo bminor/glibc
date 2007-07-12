@@ -1,5 +1,5 @@
 /* Load a shared object at runtime, relocate it, and run its initializer.
-   Copyright (C) 1996-2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1996-2004, 2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,6 +31,8 @@
 #include <ldsodefs.h>
 #include <bp-sym.h>
 #include <caller.h>
+#include <sysdep-cancel.h>
+#include <tls.h>
 
 #include <dl-dst.h>
 
@@ -96,17 +98,17 @@ add_to_global (struct link_map *new)
      in an realloc() call.  Therefore we allocate a completely new
      array the first time we have to add something to the locale scope.  */
 
-  if (GL(dl_ns)[new->l_ns]._ns_global_scope_alloc == 0)
+  struct link_namespaces *ns = &GL(dl_ns)[new->l_ns];
+  if (ns->_ns_global_scope_alloc == 0)
     {
       /* This is the first dynamic object given global scope.  */
-      GL(dl_ns)[new->l_ns]._ns_global_scope_alloc
-	= GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_nlist + to_add + 8;
+      ns->_ns_global_scope_alloc
+	= ns->_ns_main_searchlist->r_nlist + to_add + 8;
       new_global = (struct link_map **)
-	malloc (GL(dl_ns)[new->l_ns]._ns_global_scope_alloc
-		* sizeof (struct link_map *));
+	malloc (ns->_ns_global_scope_alloc * sizeof (struct link_map *));
       if (new_global == NULL)
 	{
-	  GL(dl_ns)[new->l_ns]._ns_global_scope_alloc = 0;
+	  ns->_ns_global_scope_alloc = 0;
 	nomem:
 	  _dl_signal_error (ENOMEM, new->l_libname->name, NULL,
 			    N_("cannot extend global scope"));
@@ -114,29 +116,39 @@ add_to_global (struct link_map *new)
 	}
 
       /* Copy over the old entries.  */
-      GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_list
-	= memcpy (new_global,
-		  GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_list,
-		  (GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_nlist
+      ns->_ns_main_searchlist->r_list
+	= memcpy (new_global, ns->_ns_main_searchlist->r_list,
+		  (ns->_ns_main_searchlist->r_nlist
 		   * sizeof (struct link_map *)));
     }
-  else if (GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_nlist + to_add
-	   > GL(dl_ns)[new->l_ns]._ns_global_scope_alloc)
+  else if (ns->_ns_main_searchlist->r_nlist + to_add
+	   > ns->_ns_global_scope_alloc)
     {
       /* We have to extend the existing array of link maps in the
 	 main map.  */
+      struct link_map **old_global
+	= GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_list;
+      size_t new_nalloc = ((ns->_ns_global_scope_alloc + to_add) * 2);
+
       new_global = (struct link_map **)
-	realloc (GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_list,
-		 ((GL(dl_ns)[new->l_ns]._ns_global_scope_alloc + to_add + 8)
-		  * sizeof (struct link_map *)));
+	malloc (new_nalloc * sizeof (struct link_map *));
       if (new_global == NULL)
 	goto nomem;
 
-      GL(dl_ns)[new->l_ns]._ns_global_scope_alloc += to_add + 8;
-      GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_list = new_global;
+      memcpy (new_global, old_global,
+	      ns->_ns_global_scope_alloc * sizeof (struct link_map *));
+
+      ns->_ns_global_scope_alloc = new_nalloc;
+      ns->_ns_main_searchlist->r_list = new_global;
+
+      if (!RTLD_SINGLE_THREAD_P)
+	THREAD_GSCOPE_WAIT ();
+
+      free (old_global);
     }
 
   /* Now add the new entries.  */
+  unsigned int new_nlist = ns->_ns_main_searchlist->r_nlist;
   for (cnt = 0; cnt < new->l_searchlist.r_nlist; ++cnt)
     {
       struct link_map *map = new->l_searchlist.r_list[cnt];
@@ -144,15 +156,49 @@ add_to_global (struct link_map *new)
       if (map->l_global == 0)
 	{
 	  map->l_global = 1;
-	  GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_list[GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_nlist]
-	    = map;
-	  ++GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_nlist;
+	  ns->_ns_main_searchlist->r_list[new_nlist++] = map;
 	}
     }
+  atomic_write_barrier ();
+  ns->_ns_main_searchlist->r_nlist = new_nlist;
 
   return 0;
 }
 
+int
+_dl_scope_free (struct r_scope_elem **old)
+{
+  struct dl_scope_free_list *fsl;
+#define DL_SCOPE_FREE_LIST_SIZE (sizeof (fsl->list) / sizeof (fsl->list[0]))
+
+  if (RTLD_SINGLE_THREAD_P)
+    free (old);
+  else if ((fsl = GL(dl_scope_free_list)) == NULL)
+    {
+      GL(dl_scope_free_list) = fsl = malloc (sizeof (*fsl));
+      if (fsl == NULL)
+	{
+	  THREAD_GSCOPE_WAIT ();
+	  free (old);
+	  return 1;
+	}
+      else
+	{
+	  fsl->list[0] = old;
+	  fsl->count = 1;
+	}
+    }
+  else if (fsl->count < DL_SCOPE_FREE_LIST_SIZE)
+    fsl->list[fsl->count++] = old;
+  else
+    {
+      THREAD_GSCOPE_WAIT ();
+      while (fsl->count > 0)
+	free (fsl->list[--fsl->count]);
+      return 1;
+    }
+  return 0;
+}
 
 static void
 dl_open_worker (void *a)
@@ -160,7 +206,7 @@ dl_open_worker (void *a)
   struct dl_open_args *args = a;
   const char *file = args->file;
   int mode = args->mode;
-  struct link_map *new, *l;
+  struct link_map *new;
   int lazy;
   unsigned int i;
 #ifdef USE_TLS
@@ -187,13 +233,14 @@ dl_open_worker (void *a)
 	 By default we assume this is the main application.  */
       call_map = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
 
+      struct link_map *l;
       for (Lmid_t ns = 0; ns < DL_NNS; ++ns)
 	for (l = GL(dl_ns)[ns]._ns_loaded; l != NULL; l = l->l_next)
 	  if (caller_dlopen >= (const void *) l->l_map_start
-	      && caller_dlopen < (const void *) l->l_map_end)
+	      && caller_dlopen < (const void *) l->l_map_end
+	      && (l->l_contiguous
+		  || _dl_addr_inside_object (l, (ElfW(Addr)) caller_dlopen)))
 	    {
-	      /* There must be exactly one DSO for the range of the virtual
-		 memory.  Otherwise something is really broken.  */
 	      assert (ns == l->l_ns);
 	      call_map = l;
 	      goto found_caller;
@@ -326,7 +373,7 @@ dl_open_worker (void *a)
   /* Relocate the objects loaded.  We do this in reverse order so that copy
      relocs of earlier objects overwrite the data written by later objects.  */
 
-  l = new;
+  struct link_map *l = new;
   while (l->l_next)
     l = l->l_next;
   while (1)
@@ -379,6 +426,8 @@ dl_open_worker (void *a)
 
 	  while (*runp != NULL)
 	    {
+	      if (*runp == &new->l_searchlist)
+		break;
 	      ++cnt;
 	      ++runp;
 	    }
@@ -391,35 +440,45 @@ dl_open_worker (void *a)
 	    {
 	      /* The 'r_scope' array is too small.  Allocate a new one
 		 dynamically.  */
+	      size_t new_size;
 	      struct r_scope_elem **newp;
-	      size_t new_size = imap->l_scope_max * 2;
 
-	      if (imap->l_scope == imap->l_scope_mem)
+#define SCOPE_ELEMS(imap) \
+  (sizeof (imap->l_scope_mem) / sizeof (imap->l_scope_mem[0]))
+
+	      if (imap->l_scope != imap->l_scope_mem
+		  && imap->l_scope_max < SCOPE_ELEMS (imap))
 		{
+		  new_size = SCOPE_ELEMS (imap);
+		  newp = imap->l_scope_mem;
+		}
+	      else
+		{
+		  new_size = imap->l_scope_max * 2;
 		  newp = (struct r_scope_elem **)
 		    malloc (new_size * sizeof (struct r_scope_elem *));
 		  if (newp == NULL)
 		    _dl_signal_error (ENOMEM, "dlopen", NULL,
 				      N_("cannot create scope list"));
-		  imap->l_scope = memcpy (newp, imap->l_scope,
-					  cnt * sizeof (imap->l_scope[0]));
 		}
-	      else
-		{
-		  newp = (struct r_scope_elem **)
-		    realloc (imap->l_scope,
-			     new_size * sizeof (struct r_scope_elem *));
-		  if (newp == NULL)
-		    _dl_signal_error (ENOMEM, "dlopen", NULL,
-				      N_("cannot create scope list"));
-		  imap->l_scope = newp;
-		}
+
+	      memcpy (newp, imap->l_scope, cnt * sizeof (imap->l_scope[0]));
+	      struct r_scope_elem **old = imap->l_scope;
+
+	      imap->l_scope = newp;
+
+	      if (old != imap->l_scope_mem)
+		_dl_scope_free (old);
 
 	      imap->l_scope_max = new_size;
 	    }
 
-	  imap->l_scope[cnt++] = &new->l_searchlist;
-	  imap->l_scope[cnt] = NULL;
+	  /* First terminate the extended list.  Otherwise a thread
+	     might use the new last element and then use the garbage
+	     at offset IDX+1.  */
+	  imap->l_scope[cnt + 1] = NULL;
+	  atomic_write_barrier ();
+	  imap->l_scope[cnt] = &new->l_searchlist;
 	}
 #if USE_TLS
       /* Only add TLS memory if this object is loaded now and
@@ -547,15 +606,9 @@ no more namespaces available for dlmopen()"));
   _dl_unload_cache ();
 #endif
 
-  /* Release the lock.  */
-  __rtld_lock_unlock_recursive (GL(dl_load_lock));
-
+  /* See if an error occurred during loading.  */
   if (__builtin_expect (errstring != NULL, 0))
     {
-      /* Some error occurred during loading.  */
-      char *local_errstring;
-      size_t len_errstring;
-
       /* Remove the object from memory.  It may be in an inconsistent
 	 state if relocation failed, for example.  */
       if (args.map)
@@ -572,12 +625,18 @@ no more namespaces available for dlmopen()"));
 	    GL(dl_tls_dtv_gaps) = true;
 #endif
 
-	  _dl_close (args.map);
+	  _dl_close_worker (args.map);
 	}
+
+      assert (_dl_debug_initialize (0, args.nsid)->r_state == RT_CONSISTENT);
+
+      /* Release the lock.  */
+      __rtld_lock_unlock_recursive (GL(dl_load_lock));
 
       /* Make a local copy of the error string so that we can release the
 	 memory allocated for it.  */
-      len_errstring = strlen (errstring) + 1;
+      size_t len_errstring = strlen (errstring) + 1;
+      char *local_errstring;
       if (objname == errstring + len_errstring)
 	{
 	  size_t total_len = len_errstring + strlen (objname) + 1;
@@ -594,13 +653,14 @@ no more namespaces available for dlmopen()"));
       if (malloced)
 	free ((char *) errstring);
 
-      assert (_dl_debug_initialize (0, args.nsid)->r_state == RT_CONSISTENT);
-
       /* Reraise the error.  */
       _dl_signal_error (errcode, objname, NULL, local_errstring);
     }
 
   assert (_dl_debug_initialize (0, args.nsid)->r_state == RT_CONSISTENT);
+
+  /* Release the lock.  */
+  __rtld_lock_unlock_recursive (GL(dl_load_lock));
 
 #ifndef SHARED
   DL_STATIC_INIT (args.map);
@@ -635,5 +695,23 @@ show_scope (struct link_map *new)
 
       _dl_printf ("\n");
     }
+}
+#endif
+
+#ifdef IS_IN_rtld
+/* Return non-zero if ADDR lies within one of L's segments.  */
+int
+internal_function
+_dl_addr_inside_object (struct link_map *l, const ElfW(Addr) addr)
+{
+  int n = l->l_phnum;
+  const ElfW(Addr) reladdr = addr - l->l_addr;
+
+  while (--n >= 0)
+    if (l->l_phdr[n].p_type == PT_LOAD
+	&& reladdr - l->l_phdr[n].p_vaddr >= 0
+	&& reladdr - l->l_phdr[n].p_vaddr < l->l_phdr[n].p_memsz)
+      return 1;
+  return 0;
 }
 #endif

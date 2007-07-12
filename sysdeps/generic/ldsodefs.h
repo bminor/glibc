@@ -1,5 +1,5 @@
 /* Run-time dynamic linker data structures for loaded ELF shared objects.
-   Copyright (C) 1995-2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1995-2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -376,8 +376,6 @@ struct rtld_global
     struct link_map *_ns_loaded;
     /* Number of object in the _dl_loaded list.  */
     unsigned int _ns_nloaded;
-    /* Array representing global scope.  */
-    struct r_scope_elem *_ns_global_scope[2];
     /* Direct pointer to the searchlist of the main object.  */
     struct r_scope_elem *_ns_main_searchlist;
     /* This is zero at program start to signal that the global scope map is
@@ -440,23 +438,23 @@ struct rtld_global
   EXTERN void (*_dl_rtld_unlock_recursive) (void *);
 #endif
 
-  /* Prevailing state of the stack, PF_X indicating it's executable.  */
-  EXTERN ElfW(Word) _dl_stack_flags;
-
   /* If loading a shared object requires that we make the stack executable
      when it was not, we do it by calling this function.
      It returns an errno code or zero on success.  */
   EXTERN int (*_dl_make_stack_executable_hook) (void **) internal_function;
+
+  /* Prevailing state of the stack, PF_X indicating it's executable.  */
+  EXTERN ElfW(Word) _dl_stack_flags;
 
   /* Keep the conditional TLS members at the end so the layout of the
      structure used by !USE_TLS code matches the prefix of the layout in
      the USE_TLS rtld.  Note that `struct link_map' is conditionally
      defined as well, so _dl_rtld_map needs to be last before this.  */
 #ifdef USE_TLS
-  /* Highest dtv index currently needed.  */
-  EXTERN size_t _dl_tls_max_dtv_idx;
   /* Flag signalling whether there are gaps in the module ID allocation.  */
   EXTERN bool _dl_tls_dtv_gaps;
+  /* Highest dtv index currently needed.  */
+  EXTERN size_t _dl_tls_max_dtv_idx;
   /* Information about the dtv slots.  */
   EXTERN struct dtv_slotinfo_list
   {
@@ -493,6 +491,14 @@ struct rtld_global
   EXTERN void (*_dl_init_static_tls) (struct link_map *);
 #endif
 
+  EXTERN void (*_dl_wait_lookup_done) (void);
+
+  /* Scopes to free after next THREAD_GSCOPE_WAIT ().  */
+  EXTERN struct dl_scope_free_list
+  {
+    size_t count;
+    struct r_scope_elem **list[50];
+  } *_dl_scope_free_list;
 #ifdef SHARED
 };
 # define __rtld_global_attribute__
@@ -543,14 +549,14 @@ struct rtld_global_ro
 #define DL_DEBUG_HELP       (1 << 9)
 #define DL_DEBUG_PRELINK    (1 << 10)
 
-  /* Cached value of `getpagesize ()'.  */
-  EXTERN size_t _dl_pagesize;
-
   /* OS version.  */
   EXTERN unsigned int _dl_osversion;
   /* Platform name.  */
   EXTERN const char *_dl_platform;
   EXTERN size_t _dl_platformlen;
+
+  /* Cached value of `getpagesize ()'.  */
+  EXTERN size_t _dl_pagesize;
 
   /* Copy of the content of `_dl_main_searchlist' at startup time.  */
   EXTERN struct r_scope_elem _dl_initial_searchlist;
@@ -579,9 +585,6 @@ struct rtld_global_ro
 
   /* Expected cache ID.  */
   EXTERN int _dl_correct_cache_id;
-
-  /* 0 if internal pointer values should not be guarded, 1 if they should.  */
-  EXTERN int _dl_pointer_guard;
 
   /* Mask for hardware capabilities that are available.  */
   EXTERN uint64_t _dl_hwcap;
@@ -666,6 +669,9 @@ struct rtld_global_ro
   /* List of auditing interfaces.  */
   struct audit_ifaces *_dl_audit;
   unsigned int _dl_naudit;
+
+  /* 0 if internal pointer values should not be guarded, 1 if they should.  */
+  EXTERN int _dl_pointer_guard;
 };
 # define __rtld_global_attribute__
 # ifdef IS_IN_rtld
@@ -1063,6 +1069,11 @@ extern void *_dl_open (const char *name, int mode, const void *caller,
 		       Lmid_t nsid, int argc, char *argv[], char *env[])
      attribute_hidden;
 
+/* Free or queue for freeing scope OLD.  If other threads might be
+   in the middle of _dl_fixup, _dl_profile_fixup or dl*sym using the
+   old scope, OLD can't be freed until no thread is using it.  */
+extern int _dl_scope_free (struct r_scope_elem **old) attribute_hidden;
+
 /* Add module to slot information data.  */
 extern void _dl_add_to_slotinfo (struct link_map  *l) attribute_hidden;
 
@@ -1074,6 +1085,8 @@ extern struct link_map *_dl_update_slotinfo (unsigned long int req_modid);
    but never touch anything.  Return null if it's not allocated yet.  */
 extern void *_dl_tls_get_addr_soft (struct link_map *l) internal_function;
 
+extern int _dl_addr_inside_object (struct link_map *l, const ElfW(Addr) addr)
+     internal_function attribute_hidden;
 
 __END_DECLS
 

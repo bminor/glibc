@@ -1,5 +1,5 @@
 #! @BASH@
-# Copyright (C) 1999-2004, 2005, 2006 Free Software Foundation, Inc.
+# Copyright (C) 1999-2004, 2005, 2006, 2007 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@gnu.org>, 1999.
 
@@ -76,6 +76,15 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 " "Ulrich Drepper"
   exit 0
 }
+
+# These variables are local
+buffer=
+data=
+memusagestat_args=
+notimer=
+png=
+progname=
+tracemmap=
 
 # Process arguments.  But stop as soon as the program name is found.
 while test $# -gt 0; do
@@ -213,15 +222,8 @@ datafile=
 if test -n "$data"; then
   datafile="$data"
 elif test -n "$png"; then
-  datafile=$(mktemp ${TMPDIR:-/tmp}/memusage.XXXXXX 2> /dev/null)
-  if test $? -ne 0; then
-    # Lame, but if there is no `mktemp' program the user cannot expect more.
-    if test "$RANDOM" != "$RANDOM"; then
-      datafile=${TMPDIR:-/tmp}/memusage.$RANDOM
-    else
-      datafile=${TMPDIR:-/tmp}/memusage.$$
-    fi
-  fi
+  datafile=$(mktemp -t memusage.XXXXXX) || exit
+  trap 'rm -f "$datafile"; exit 1' HUP INT QUIT TERM PIPE
 fi
 if test -n "$datafile"; then
   add_env="$add_env MEMUSAGE_OUTPUT=$datafile"

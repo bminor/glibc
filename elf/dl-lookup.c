@@ -1,5 +1,5 @@
 /* Look up a symbol in the loaded objects.
-   Copyright (C) 1995-2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1995-2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,7 @@
 #include <ldsodefs.h>
 #include <dl-hash.h>
 #include <dl-machine.h>
+#include <sysdep-cancel.h>
 #include <bits/libc-lock.h>
 #include <tls.h>
 
@@ -200,14 +201,17 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
 static void
 internal_function
 _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
-		    const ElfW(Sym) **ref, struct r_scope_elem *symbol_scope[],
-		    struct sym_val *value,
+		    const ElfW(Sym) **ref, struct sym_val *value,
 		    const struct r_found_version *version, int type_class,
 		    int protected);
 
 
 /* Search loaded objects' symbol tables for a definition of the symbol
-   UNDEF_NAME, perhaps with a requested version for the symbol.  */
+   UNDEF_NAME, perhaps with a requested version for the symbol.
+
+   We must never have calls to the audit functions inside this function
+   or in any function which gets called.  If this would happen the audit
+   code might create a thread which can throw off all the scope locking.  */
 lookup_t
 internal_function
 _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
@@ -225,17 +229,13 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 
   /* No other flag than DL_LOOKUP_ADD_DEPENDENCY is allowed if we look
      up a versioned symbol.  */
-  assert (version == NULL || flags == 0 || flags == DL_LOOKUP_ADD_DEPENDENCY);
+  assert (version == NULL || (flags & ~(DL_LOOKUP_ADD_DEPENDENCY)) == 0);
 
   size_t i = 0;
   if (__builtin_expect (skip_map != NULL, 0))
-    {
-      /* Search the relevant loaded objects for a definition.  */
-      while ((*scope)->r_list[i] != skip_map)
-	++i;
-
-      assert (i < (*scope)->r_nlist);
-    }
+    /* Search the relevant loaded objects for a definition.  */
+    while ((*scope)->r_list[i] != skip_map)
+      ++i;
 
   /* Search the relevant loaded objects for a definition.  */
   for (size_t start = i; *scope != NULL; start = 0, ++scope)
@@ -338,16 +338,15 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
       && add_dependency (undef_map, current_value.m) < 0)
       /* Something went wrong.  Perhaps the object we tried to reference
 	 was just removed.  Try finding another definition.  */
-      return _dl_lookup_symbol_x (undef_name, undef_map, ref,
-				  symbol_scope, version, type_class,
-				  flags, skip_map);
+      return _dl_lookup_symbol_x (undef_name, undef_map, ref, symbol_scope,
+				  version, type_class, flags, skip_map);
 
   /* The object is used.  */
   current_value.m->l_used = 1;
 
   if (__builtin_expect (GLRO(dl_debug_mask)
 			& (DL_DEBUG_BINDINGS|DL_DEBUG_PRELINK), 0))
-    _dl_debug_bindings (undef_name, undef_map, ref, symbol_scope,
+    _dl_debug_bindings (undef_name, undef_map, ref,
 			&current_value, version, type_class, protected);
 
   *ref = current_value.s;
@@ -404,8 +403,7 @@ _dl_setup_hash (struct link_map *map)
 static void
 internal_function
 _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
-		    const ElfW(Sym) **ref, struct r_scope_elem *symbol_scope[],
-		    struct sym_val *value,
+		    const ElfW(Sym) **ref, struct sym_val *value,
 		    const struct r_found_version *version, int type_class,
 		    int protected)
 {

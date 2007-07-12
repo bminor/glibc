@@ -1,5 +1,5 @@
 /* Look up a symbol in a shared object loaded by `dlopen'.
-   Copyright (C) 1999,2000,2001,2002,2004,2006 Free Software Foundation, Inc.
+   Copyright (C) 1999-2002,2004,2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
 #include <stddef.h>
 #include <setjmp.h>
 #include <libintl.h>
@@ -24,6 +25,7 @@
 #include <dlfcn.h>
 #include <ldsodefs.h>
 #include <dl-hash.h>
+#include <sysdep-cancel.h>
 #ifdef USE_TLS
 # include <dl-tls.h>
 #endif
@@ -58,6 +60,29 @@ _dl_tls_symaddr (struct link_map *map, const ElfW(Sym) *ref)
 #endif
 
 
+struct call_dl_lookup_args
+{
+  /* Arguments to do_dlsym.  */
+  struct link_map *map;
+  const char *name;
+  struct r_found_version *vers;
+  int flags;
+
+  /* Return values of do_dlsym.  */
+  lookup_t loadbase;
+  const ElfW(Sym) **refp;
+};
+
+static void
+call_dl_lookup (void *ptr)
+{
+  struct call_dl_lookup_args *args = (struct call_dl_lookup_args *) ptr;
+  args->map = GLRO(dl_lookup_symbol_x) (args->name, args->map, args->refp,
+					args->map->l_scope, args->vers, 0,
+					args->flags, NULL);
+}
+
+
 static void *
 internal_function
 do_sym (void *handle, const char *name, void *who,
@@ -75,19 +100,59 @@ do_sym (void *handle, const char *name, void *who,
   for (Lmid_t ns = 0; ns < DL_NNS; ++ns)
     for (struct link_map *l = GL(dl_ns)[ns]._ns_loaded; l != NULL;
 	 l = l->l_next)
-      if (caller >= l->l_map_start && caller < l->l_map_end)
+      if (caller >= l->l_map_start && caller < l->l_map_end
+	  && (l->l_contiguous || _dl_addr_inside_object (l, caller)))
 	{
-	  /* There must be exactly one DSO for the range of the virtual
-	     memory.  Otherwise something is really broken.  */
 	  match = l;
 	  break;
 	}
 
   if (handle == RTLD_DEFAULT)
-    /* Search the global scope.  */
-    result = GLRO(dl_lookup_symbol_x) (name, match, &ref, match->l_scope,
-				       vers, 0, flags|DL_LOOKUP_ADD_DEPENDENCY,
-				       NULL);
+    {
+      /* Search the global scope.  We have the simple case where
+	 we look up in the scope of an object which was part of
+	 the initial binary.  And then the more complex part
+	 where the object is dynamically loaded and the scope
+	 array can change.  */
+      if (RTLD_SINGLE_THREAD_P)
+	result = GLRO(dl_lookup_symbol_x) (name, match, &ref,
+					   match->l_scope, vers, 0,
+					   flags | DL_LOOKUP_ADD_DEPENDENCY,
+					   NULL);
+      else
+	{
+	  struct call_dl_lookup_args args;
+	  args.name = name;
+	  args.map = match;
+	  args.vers = vers;
+	  args.flags = flags | DL_LOOKUP_ADD_DEPENDENCY;
+	  args.refp = &ref;
+
+	  THREAD_GSCOPE_SET_FLAG ();
+
+	  const char *objname;
+	  const char *errstring = NULL;
+	  bool malloced;
+	  int err = GLRO(dl_catch_error) (&objname, &errstring, &malloced,
+					  call_dl_lookup, &args);
+
+	  THREAD_GSCOPE_RESET_FLAG ();
+
+	  if (__builtin_expect (errstring != NULL, 0))
+	    {
+	      /* The lookup was unsuccessful.  Rethrow the error.  */
+	      char *errstring_dup = strdupa (errstring);
+	      char *objname_dup = strdupa (objname);
+	      if (malloced)
+		free ((char *) errstring);
+
+	      GLRO(dl_signal_error) (err, objname_dup, NULL, errstring_dup);
+	      /* NOTREACHED */
+	    }
+
+	  result = args.map;
+	}
+    }
   else if (handle == RTLD_NEXT)
     {
       if (__builtin_expect (match == GL(dl_ns)[LM_ID_BASE]._ns_loaded, 0))

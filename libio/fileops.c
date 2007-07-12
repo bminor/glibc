@@ -1,4 +1,5 @@
-/* Copyright (C) 1993, 1995, 1997-2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997-2005, 2006, 2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -174,14 +175,8 @@ _IO_new_file_close_it (fp)
   close_status = _IO_SYSCLOSE (fp);
 
   /* Free buffer. */
-  if (fp->_mode <= 0)
-    {
-      INTUSE(_IO_setb) (fp, NULL, NULL, 0);
-      _IO_setg (fp, NULL, NULL, NULL);
-      _IO_setp (fp, NULL, NULL);
-    }
 #if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
-  else
+  if (fp->_mode > 0)
     {
       if (_IO_have_wbackup (fp))
 	INTUSE(_IO_free_wbackup_area) (fp);
@@ -190,6 +185,9 @@ _IO_new_file_close_it (fp)
       _IO_wsetp (fp, NULL, NULL);
     }
 #endif
+  INTUSE(_IO_setb) (fp, NULL, NULL, 0);
+  _IO_setg (fp, NULL, NULL, NULL);
+  _IO_setp (fp, NULL, NULL);
 
   INTUSE(_IO_un_link) ((struct _IO_FILE_plus *) fp);
   fp->_flags = _IO_MAGIC|CLOSED_FILEBUF_FLAGS;
@@ -475,7 +473,7 @@ _IO_file_setbuf_mmap (fp, p, len)
   return result;
 }
 
-static _IO_size_t new_do_write (_IO_FILE *, const char *, _IO_size_t) __THROW;
+static _IO_size_t new_do_write (_IO_FILE *, const char *, _IO_size_t);
 
 /* Write TO_DO bytes from DATA to FP.
    Then mark FP as having empty buffers. */
@@ -1471,8 +1469,7 @@ _IO_file_xsgetn (fp, data, n)
 }
 INTDEF(_IO_file_xsgetn)
 
-static _IO_size_t _IO_file_xsgetn_mmap (_IO_FILE *, void *, _IO_size_t)
-     __THROW;
+static _IO_size_t _IO_file_xsgetn_mmap (_IO_FILE *, void *, _IO_size_t);
 static _IO_size_t
 _IO_file_xsgetn_mmap (fp, data, n)
      _IO_FILE *fp;
@@ -1531,8 +1528,7 @@ _IO_file_xsgetn_mmap (fp, data, n)
   return s - (char *) data;
 }
 
-static _IO_size_t _IO_file_xsgetn_maybe_mmap (_IO_FILE *, void *, _IO_size_t)
-     __THROW;
+static _IO_size_t _IO_file_xsgetn_maybe_mmap (_IO_FILE *, void *, _IO_size_t);
 static _IO_size_t
 _IO_file_xsgetn_maybe_mmap (fp, data, n)
      _IO_FILE *fp;

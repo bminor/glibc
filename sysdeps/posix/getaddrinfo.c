@@ -1157,7 +1157,7 @@ get_scope (const struct sockaddr_storage *ss)
 	 169.254/16 and 127/8 are link-local.  */
       if ((addr[0] == 169 && addr[1] == 254) || addr[0] == 127)
 	scope = 2;
-      else if (addr[0] == 10 || (addr[0] == 172 && addr[1] == 16)
+      else if (addr[0] == 10 || (addr[0] == 172 && (addr[1] & 0xf0) == 16)
 	       || (addr[0] == 192 && addr[1] == 168))
 	scope = 5;
       else
@@ -1217,6 +1217,10 @@ static const struct prefixentry default_labels[] =
 	= { .u6_addr8 = { 0xfc, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } } },
       7, 6 },
+    { { .in6_u
+	= { .u6_addr8 = { 0x20, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } } },
+      32, 7 },
     { { .in6_u
 	= { .u6_addr8 = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } } },
@@ -1395,10 +1399,10 @@ rfc3484_sort (const void *p1, const void *p2)
     {
       if (!(a1->source_addr_flags & in6ai_homeaddress)
 	  && (a2->source_addr_flags & in6ai_homeaddress))
-	return -1;
+	return 1;
       if ((a1->source_addr_flags & in6ai_homeaddress)
 	  && !(a2->source_addr_flags & in6ai_homeaddress))
-	return 1;
+	return -1;
     }
 
   /* Rule 5: Prefer matching label.  */
@@ -1435,11 +1439,11 @@ rfc3484_sort (const void *p1, const void *p2)
   if (a1->got_source_addr)
     {
       if (!(a1->source_addr_flags & in6ai_temporary)
-	  && (a1->source_addr_flags & in6ai_temporary))
+	  && (a2->source_addr_flags & in6ai_temporary))
 	return -1;
       if ((a1->source_addr_flags & in6ai_temporary)
-	  && !(a1->source_addr_flags & in6ai_temporary))
-	return -1;
+	  && !(a2->source_addr_flags & in6ai_temporary))
+	return 1;
 
       /* XXX Do we need to check anything beside temporary addresses?  */
     }

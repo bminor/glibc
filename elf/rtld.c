@@ -1,5 +1,5 @@
 /* Run time dynamic linker.
-   Copyright (C) 1995-2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1995-2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1414,6 +1414,12 @@ ld.so does not support TLS, but program uses it!\n");
       /* Iterate over all entries in the list.  The order is important.  */
       struct audit_ifaces *last_audit = NULL;
       struct audit_list *al = audit_list->next;
+
+#ifdef USE_TLS
+      /* Since we start using the auditing DSOs right away we need to
+	 initialize the data structures now.  */
+      tcbp = init_tls ();
+#endif
       do
 	{
 #ifdef USE_TLS
@@ -1424,10 +1430,6 @@ ld.so does not support TLS, but program uses it!\n");
 	     always allocate the static block, we never defer it even if
 	     no DF_STATIC_TLS bit is set.  The reason is that we know
 	     glibc will use the static model.  */
-
-	  /* Since we start using the auditing DSOs right away we need to
-	     initialize the data structures now.  */
-	  tcbp = init_tls ();
 #endif
 	  struct dlmopen_args dlmargs;
 	  dlmargs.fname = al->name;
@@ -2143,7 +2145,6 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 
   /* Now set up the variable which helps the assembler startup code.  */
   GL(dl_ns)[LM_ID_BASE]._ns_main_searchlist = &main_map->l_searchlist;
-  GL(dl_ns)[LM_ID_BASE]._ns_global_scope[0] = &main_map->l_searchlist;
 
   /* Save the information about the original global scope list since
      we need it in the memory handling later.  */

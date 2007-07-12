@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2002,2003,2004,2005,2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -385,6 +385,8 @@ __pthread_initialize_minimal_internal (void)
 #endif
 
   GL(dl_init_static_tls) = &__pthread_init_static_tls;
+
+  GL(dl_wait_lookup_done) = &__wait_lookup_done;
 
   /* Register the fork generation counter with the libc.  */
 #ifndef TLS_MULTIPLE_THREADS_IN_TCB
