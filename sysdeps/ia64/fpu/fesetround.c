@@ -26,7 +26,7 @@ fesetround (int round)
   fenv_t fpsr;
 
   if (round & ~3)
-    return 0;
+    return 1;
 
   /* Get the current state.  */
   __asm__ __volatile__ ("mov.m %0=ar.fpsr" : "=r" (fpsr));
@@ -37,6 +37,6 @@ fesetround (int round)
   /* Put the new state in effect.  */
   __asm__ __volatile__ ("mov.m ar.fpsr=%0" :: "r" (fpsr) : "memory");
 
-  return 1;
+  return 0;
 }
 libm_hidden_def (fesetround)
