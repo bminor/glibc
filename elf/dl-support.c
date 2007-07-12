@@ -134,6 +134,9 @@ int (*_dl_make_stack_executable_hook) (void **) internal_function
   = _dl_make_stack_executable;
 
 
+/* Function in libpthread to wait for termination of lookups.  */
+void (*_dl_wait_lookup_done) (void);
+
 #ifdef NEED_DL_SYSINFO
 /* Needed for improved syscall handling on at least x86/Linux.  */
 uintptr_t _dl_sysinfo = DL_SYSINFO_DEFAULT;

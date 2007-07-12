@@ -31,6 +31,8 @@
 #include <ldsodefs.h>
 #include <bp-sym.h>
 #include <caller.h>
+#include <sysdep-cancel.h>
+#include <tls.h>
 
 #include <dl-dst.h>
 
@@ -96,17 +98,17 @@ add_to_global (struct link_map *new)
      in an realloc() call.  Therefore we allocate a completely new
      array the first time we have to add something to the locale scope.  */
 
-  if (GL(dl_ns)[new->l_ns]._ns_global_scope_alloc == 0)
+  struct link_namespaces *ns = &GL(dl_ns)[new->l_ns];
+  if (ns->_ns_global_scope_alloc == 0)
     {
       /* This is the first dynamic object given global scope.  */
-      GL(dl_ns)[new->l_ns]._ns_global_scope_alloc
-	= GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_nlist + to_add + 8;
+      ns->_ns_global_scope_alloc
+	= ns->_ns_main_searchlist->r_nlist + to_add + 8;
       new_global = (struct link_map **)
-	malloc (GL(dl_ns)[new->l_ns]._ns_global_scope_alloc
-		* sizeof (struct link_map *));
+	malloc (ns->_ns_global_scope_alloc * sizeof (struct link_map *));
       if (new_global == NULL)
 	{
-	  GL(dl_ns)[new->l_ns]._ns_global_scope_alloc = 0;
+	  ns->_ns_global_scope_alloc = 0;
 	nomem:
 	  _dl_signal_error (ENOMEM, new->l_libname->name, NULL,
 			    N_("cannot extend global scope"));
@@ -114,29 +116,39 @@ add_to_global (struct link_map *new)
 	}
 
       /* Copy over the old entries.  */
-      GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_list
-	= memcpy (new_global,
-		  GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_list,
-		  (GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_nlist
+      ns->_ns_main_searchlist->r_list
+	= memcpy (new_global, ns->_ns_main_searchlist->r_list,
+		  (ns->_ns_main_searchlist->r_nlist
 		   * sizeof (struct link_map *)));
     }
-  else if (GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_nlist + to_add
-	   > GL(dl_ns)[new->l_ns]._ns_global_scope_alloc)
+  else if (ns->_ns_main_searchlist->r_nlist + to_add
+	   > ns->_ns_global_scope_alloc)
     {
       /* We have to extend the existing array of link maps in the
 	 main map.  */
+      struct link_map **old_global
+	= GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_list;
+      size_t new_nalloc = ((ns->_ns_global_scope_alloc + to_add) * 2);
+
       new_global = (struct link_map **)
-	realloc (GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_list,
-		 ((GL(dl_ns)[new->l_ns]._ns_global_scope_alloc + to_add + 8)
-		  * sizeof (struct link_map *)));
+	malloc (new_nalloc * sizeof (struct link_map *));
       if (new_global == NULL)
 	goto nomem;
 
-      GL(dl_ns)[new->l_ns]._ns_global_scope_alloc += to_add + 8;
-      GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_list = new_global;
+      memcpy (new_global, old_global,
+	      ns->_ns_global_scope_alloc * sizeof (struct link_map *));
+
+      ns->_ns_global_scope_alloc = new_nalloc;
+      ns->_ns_main_searchlist->r_list = new_global;
+
+      if (!RTLD_SINGLE_THREAD_P)
+	THREAD_GSCOPE_WAIT ();
+
+      free (old_global);
     }
 
   /* Now add the new entries.  */
+  unsigned int new_nlist = ns->_ns_main_searchlist->r_nlist;
   for (cnt = 0; cnt < new->l_searchlist.r_nlist; ++cnt)
     {
       struct link_map *map = new->l_searchlist.r_list[cnt];
@@ -144,11 +156,11 @@ add_to_global (struct link_map *new)
       if (map->l_global == 0)
 	{
 	  map->l_global = 1;
-	  GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_list[GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_nlist]
-	    = map;
-	  ++GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_nlist;
+	  ns->_ns_main_searchlist->r_list[new_nlist++] = map;
 	}
     }
+  atomic_write_barrier ();
+  ns->_ns_main_searchlist->r_nlist = new_nlist;
 
   return 0;
 }
@@ -380,6 +392,8 @@ dl_open_worker (void *a)
 
 	  while (*runp != NULL)
 	    {
+	      if (*runp == &new->l_searchlist)
+		break;
 	      ++cnt;
 	      ++runp;
 	    }
@@ -392,35 +406,52 @@ dl_open_worker (void *a)
 	    {
 	      /* The 'r_scope' array is too small.  Allocate a new one
 		 dynamically.  */
+	      size_t new_size;
 	      struct r_scope_elem **newp;
-	      size_t new_size = imap->l_scope_max * 2;
 
-	      if (imap->l_scope == imap->l_scope_mem)
+#define SCOPE_ELEMS(imap) \
+  (sizeof (imap->l_scope_mem) / sizeof (imap->l_scope_mem[0]))
+
+	      if (imap->l_scope != imap->l_scope_mem
+		  && imap->l_scope_max < SCOPE_ELEMS (imap))
 		{
+		  new_size = SCOPE_ELEMS (imap);
+		  newp = imap->l_scope_mem;
+		}
+	      else
+		{
+		  new_size = imap->l_scope_max * 2;
 		  newp = (struct r_scope_elem **)
 		    malloc (new_size * sizeof (struct r_scope_elem *));
 		  if (newp == NULL)
 		    _dl_signal_error (ENOMEM, "dlopen", NULL,
 				      N_("cannot create scope list"));
-		  imap->l_scope = memcpy (newp, imap->l_scope,
-					  cnt * sizeof (imap->l_scope[0]));
 		}
+
+	      memcpy (newp, imap->l_scope, cnt * sizeof (imap->l_scope[0]));
+	      struct r_scope_elem **old = imap->l_scope;
+
+	      if (RTLD_SINGLE_THREAD_P)
+		imap->l_scope = newp;
 	      else
 		{
-		  newp = (struct r_scope_elem **)
-		    realloc (imap->l_scope,
-			     new_size * sizeof (struct r_scope_elem *));
-		  if (newp == NULL)
-		    _dl_signal_error (ENOMEM, "dlopen", NULL,
-				      N_("cannot create scope list"));
+		  __rtld_mrlock_change (imap->l_scope_lock);
 		  imap->l_scope = newp;
+		  __rtld_mrlock_done (imap->l_scope_lock);
 		}
+
+	      if (old != imap->l_scope_mem)
+		free (old);
 
 	      imap->l_scope_max = new_size;
 	    }
 
-	  imap->l_scope[cnt++] = &new->l_searchlist;
-	  imap->l_scope[cnt] = NULL;
+	  /* First terminate the extended list.  Otherwise a thread
+	     might use the new last element and then use the garbage
+	     at offset IDX+1.  */
+	  imap->l_scope[cnt + 1] = NULL;
+	  atomic_write_barrier ();
+	  imap->l_scope[cnt] = &new->l_searchlist;
 	}
 #if USE_TLS
       /* Only add TLS memory if this object is loaded now and

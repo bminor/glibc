@@ -38,6 +38,7 @@
 #include <bits/libc-lock.h>
 #include <hp-timing.h>
 #include <tls.h>
+#include <rtld-lowlevel.h>
 
 __BEGIN_DECLS
 
@@ -376,8 +377,6 @@ struct rtld_global
     struct link_map *_ns_loaded;
     /* Number of object in the _dl_loaded list.  */
     unsigned int _ns_nloaded;
-    /* Array representing global scope.  */
-    struct r_scope_elem *_ns_global_scope[2];
     /* Direct pointer to the searchlist of the main object.  */
     struct r_scope_elem *_ns_main_searchlist;
     /* This is zero at program start to signal that the global scope map is
@@ -492,6 +491,8 @@ struct rtld_global
 
   EXTERN void (*_dl_init_static_tls) (struct link_map *);
 #endif
+
+  EXTERN void (*_dl_wait_lookup_done) (void);
 
 #ifdef SHARED
 };
@@ -853,7 +854,9 @@ enum
     DL_LOOKUP_ADD_DEPENDENCY = 1,
     /* Return most recent version instead of default version for
        unversioned lookup.  */
-    DL_LOOKUP_RETURN_NEWEST = 2
+    DL_LOOKUP_RETURN_NEWEST = 2,
+    /* Set if the scopr lock in the UNDEF_MAP is taken.  */
+    DL_LOOKUP_SCOPE_LOCK = 4
   };
 
 /* Lookup versioned symbol.  */

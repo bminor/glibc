@@ -2143,7 +2143,6 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 
   /* Now set up the variable which helps the assembler startup code.  */
   GL(dl_ns)[LM_ID_BASE]._ns_main_searchlist = &main_map->l_searchlist;
-  GL(dl_ns)[LM_ID_BASE]._ns_global_scope[0] = &main_map->l_searchlist;
 
   /* Save the information about the original global scope list since
      we need it in the memory handling later.  */

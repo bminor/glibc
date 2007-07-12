@@ -545,6 +545,8 @@ extern int __nptl_setxid (struct xid_command *cmdp) attribute_hidden;
 
 extern void __free_stack_cache (void) attribute_hidden;
 
+extern void __wait_lookup_done (void) attribute_hidden;
+
 #ifdef SHARED
 # define PTHREAD_STATIC_FN_REQUIRE(name)
 #else

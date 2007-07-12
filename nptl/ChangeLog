@@ -1,3 +1,142 @@
+2007-05-28  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/tls.h (THREAD_GSCOPE_RESET_FLAG): Use explicit
+	insn suffix.
+	(THREAD_GSCOPE_GET_FLAG): Remove.
+	* sysdeps/x86_64/tls.h (THREAD_GSCOPE_GET_FLAG): Remove.
+	* allocatestack.c (__wait_lookup_done): Revert 2007-05-24
+	changes.
+	* sysdeps/powerpc/tls.h (tcbhead_t): Remove gscope_flag.
+	(THREAD_GSCOPE_GET_FLAG): Remove.
+	(THREAD_GSCOPE_RESET_FLAG): Use THREAD_SELF->header.gscope_flag
+	instead of THREAD_GSCOPE_GET_FLAG.
+	(THREAD_GSCOPE_SET_FLAG): Likewise.  Add atomic_write_barrier after
+	it.
+	* sysdeps/s390/tls.h (THREAD_GSCOPE_FLAG_UNUSED,
+	THREAD_GSCOPE_FLAG_USED, THREAD_GSCOPE_FLAG_WAIT,
+	THREAD_GSCOPE_RESET_FLAG, THREAD_GSCOPE_SET_FLAG,
+	THREAD_GSCOPE_WAIT): Define.
+	* sysdeps/sparc/tls.h (THREAD_GSCOPE_FLAG_UNUSED,
+	THREAD_GSCOPE_FLAG_USED, THREAD_GSCOPE_FLAG_WAIT,
+	THREAD_GSCOPE_RESET_FLAG, THREAD_GSCOPE_SET_FLAG,
+	THREAD_GSCOPE_WAIT): Define.
+	* sysdeps/sh/tls.h (THREAD_GSCOPE_FLAG_UNUSED,
+	THREAD_GSCOPE_FLAG_USED, THREAD_GSCOPE_FLAG_WAIT,
+	THREAD_GSCOPE_RESET_FLAG, THREAD_GSCOPE_SET_FLAG,
+	THREAD_GSCOPE_WAIT): Define.
+	* sysdeps/ia64/tls.h (THREAD_GSCOPE_FLAG_UNUSED,
+	THREAD_GSCOPE_FLAG_USED, THREAD_GSCOPE_FLAG_WAIT,
+	THREAD_GSCOPE_RESET_FLAG, THREAD_GSCOPE_SET_FLAG,
+	THREAD_GSCOPE_WAIT): Define.
+
+2007-05-24  Richard Henderson  <rth@redhat.com>
+
+	* descr.h (struct pthread): Add header.gscope_flag.
+	* sysdeps/alpha/tls.h (THREAD_GSCOPE_FLAG_UNUSED,
+	THREAD_GSCOPE_FLAG_USED, THREAD_GSCOPE_FLAG_WAIT,
+	THREAD_GSCOPE_RESET_FLAG, THREAD_GSCOPE_SET_FLAG,
+	THREAD_GSCOPE_WAIT): Define.
+
+2007-05-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* allocatestack.c: Revert last change.
+	* init.c: Likewise.
+	* sysdeps/i386/tls.h: Likewise.
+	* sysdeps/x86_64/tls.h: Likewise.
+
+2007-05-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/tls.h (tcbhead_t): Add gscope_flag.
+	(THREAD_GSCOPE_FLAG_UNUSED, THREAD_GSCOPE_FLAG_USED,
+	THREAD_GSCOPE_FLAG_WAIT): Define.
+	(THREAD_GSCOPE_GET_FLAG, THREAD_GSCOPE_SET_FLAG,
+	THREAD_GSCOPE_RESET_FLAG, THREAD_GSCOPE_WAIT): Define.
+	* sysdeps/i386/tls.h (THREAD_GSCOPE_WAIT): Don't use
+	PTR_DEMANGLE.
+	(THREAD_GSCOPE_GET_FLAG): Define.
+	* sysdeps/x86_64/tls.h (THREAD_GSCOPE_GET_FLAG): Define.
+	* allocatestack.c (__wait_lookup_done): Use THREAD_GSCOPE_GET_FLAG
+	instead of ->header.gscope_flag directly.
+
+2007-05-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/pthread-functions.h (struct pthread_functions):
+	Remove ptr_wait_lookup_done again.
+	* init.c (pthread_functions): Don't add .ptr_wait_lookup_done here.
+	(__pthread_initialize_minimal_internal): Initialize
+	_dl_wait_lookup_done pointer in _rtld_global directly.
+	* sysdeps/unix/sysv/linux/libc_pthread_init.c (__libc_pthread_init):
+	Remove code to code _dl_wait_lookup_done.
+	* sysdeps/x86_64/tls.h (THREAD_GSCOPE_WAIT): The pointer is not
+	encrypted for now.
+
+2007-05-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* allocatestack.c (__wait_lookup_done): New function.
+	* sysdeps/pthread/pthread-functions.h (struct pthread_functions):
+	Add ptr_wait_lookup_done.
+	* init.c (pthread_functions): Initialize .ptr_wait_lookup_done.
+	* pthreadP.h: Declare __wait_lookup_done.
+	* sysdeps/i386/tls.h (tcbhead_t): Add gscope_flag.
+	Define macros to implement reference handling of global scope.
+	* sysdeps/x86_64/tls.h: Likewise.
+	* sysdeps/unix/sysv/linux/libc_pthread_init.c (__libc_pthread_init):
+	Initialize GL(dl_wait_lookup_done).
+
+2006-12-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/rtld-lowlevel.h
+	(__rtld_mrlock_initialize): Add missing closing parenthesis.
+
+2006-10-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h (RTLD_SINGLE_THREAD_P):
+	Define.
+	(SINGLE_THREAD_P): Define to 1 if IS_IN_rtld.
+	* sysdeps/unix/sysv/linux/alpha/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sysdep-cancel.h: Likewise.
+
+2006-10-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/rtld-lowlevel.h (__rtld_mrlock_lock,
+	__rtld_mrlock_change): Update oldval if atomic compare and exchange
+	failed.
+
+	* sysdeps/unix/sysv/linux/alpha/sysdep-cancel.h (SINGLE_THREAD_P):
+	Define to THREAD_SELF->header.multiple_threads.
+	* sysdeps/unix/sysv/linux/ia64/sysdep-cancel.h (SINGLE_THREAD_P):
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h (SINGLE_THREAD_P):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep-cancel.h
+	(SINGLE_THREAD_P): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep-cancel.h
+	(SINGLE_THREAD_P): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep-cancel.h
+	(SINGLE_THREAD_P): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep-cancel.h
+	(SINGLE_THREAD_P): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep-cancel.h (SINGLE_THREAD_P):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep-cancel.h
+	(SINGLE_THREAD_P): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep-cancel.h
+	(SINGLE_THREAD_P): Likewise.
+	* sysdeps/unix/sysv/linux/sh/sysdep-cancel.h (SINGLE_THREAD_P):
+	Likewise.
+
+2006-10-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/rtld-lowlevel.h: New file..
+
 2007-05-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (tests): Add tst-sem10.

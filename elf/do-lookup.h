@@ -29,8 +29,13 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 	     const struct r_found_version *const version, int flags,
 	     struct link_map *skip, int type_class)
 {
-  struct link_map **list = scope->r_list;
   size_t n = scope->r_nlist;
+  /* Make sure we read the value before proceeding.  Otherwise we
+     might use r_list pointing to the initial scope and r_nlist being
+     the value after a resize.  That is the only path in dl-open.c not
+     protected by GSCOPE.  A read barrier here might be to expensive.  */
+  __asm volatile ("" : "+r" (n), "+m" (scope->r_list));
+  struct link_map **list = scope->r_list;
 
   do
     {
