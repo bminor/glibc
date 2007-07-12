@@ -1,4 +1,4 @@
-%define glibcrelease 3
+%define glibcrelease 19
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define xenarches i686 athlon
 %ifarch %{xenarches}
@@ -904,6 +904,7 @@ librtso=`basename $RPM_BUILD_ROOT/%{_lib}/librt.so.*`
 
 %ifarch %{rtkaioarches}
 rm -f $RPM_BUILD_ROOT{,%{_prefix}}/%{_lib}/librtkaio.so*
+rm -f $RPM_BUILD_ROOT%{_prefix}/%{_lib}/librt.so.*
 mkdir -p $RPM_BUILD_ROOT/%{_lib}/rtkaio
 mv $RPM_BUILD_ROOT/%{_lib}/librtkaio-*.so $RPM_BUILD_ROOT/%{_lib}/rtkaio/
 rm -f $RPM_BUILD_ROOT/%{_lib}/$librtso
@@ -939,7 +940,7 @@ cd ..
 
 %if %{buildpower6}
 cd build-%{nptl_target_cpu}-linuxnptl-power6
-mkdir -p $RPM_BUILD_ROOT/%{_lib}/power6/
+mkdir -p $RPM_BUILD_ROOT/%{_lib}/power6{,x}
 cp -a libc.so $RPM_BUILD_ROOT/%{_lib}/power6/`basename $RPM_BUILD_ROOT/%{_lib}/libc-*.so`
 ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/libc-*.so` $RPM_BUILD_ROOT/%{_lib}/power6/`basename $RPM_BUILD_ROOT/%{_lib}/libc.so.*`
 cp -a math/libm.so $RPM_BUILD_ROOT/%{_lib}/power6/`basename $RPM_BUILD_ROOT/%{_lib}/libm-*.so`
@@ -952,10 +953,18 @@ cp -a rt/librt.so $RPM_BUILD_ROOT/%{_lib}/power6/`basename $RPM_BUILD_ROOT/%{_li
 ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so` $RPM_BUILD_ROOT/%{_lib}/power6/$librtso
 cp -a nptl_db/libthread_db.so $RPM_BUILD_ROOT/%{_lib}/power6/`basename $RPM_BUILD_ROOT/%{_lib}/libthread_db-*.so`
 ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/libthread_db-*.so` $RPM_BUILD_ROOT/%{_lib}/power6/`basename $RPM_BUILD_ROOT/%{_lib}/libthread_db.so.*`
+pushd $RPM_BUILD_ROOT/%{_lib}/power6x
+ln -sf ../power6/*.so .
+cp -a ../power6/*.so.* .
+popd
 %ifarch %{rtkaioarches}
-mkdir -p $RPM_BUILD_ROOT/%{_lib}/rtkaio/power6
+mkdir -p $RPM_BUILD_ROOT/%{_lib}/rtkaio/power6{,x}
 cp -a rtkaio/librtkaio.so $RPM_BUILD_ROOT/%{_lib}/rtkaio/power6/`basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so | sed s/librt-/librtkaio-/`
 ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/rtkaio/power6/librtkaio-*.so` $RPM_BUILD_ROOT/%{_lib}/rtkaio/power6/$librtso
+pushd $RPM_BUILD_ROOT/%{_lib}/rtkaio/power6x
+ln -sf ../power6/*.so .
+cp -a ../power6/*.so.* .
+popd
 %endif
 cd ..
 %endif
@@ -1153,6 +1162,11 @@ cp -f $RPM_BUILD_ROOT%{_prefix}/share/zoneinfo/US/Eastern $RPM_BUILD_ROOT/etc/lo
 #ln -sf ..%{_prefix}/share/zoneinfo/US/Eastern $RPM_BUILD_ROOT/etc/localtime
 
 rm -rf $RPM_BUILD_ROOT%{_prefix}/share/zoneinfo
+
+# Make sure %config files have the same timestamp
+touch -r fedora/glibc.spec.in $RPM_BUILD_ROOT/etc/ld.so.conf
+touch -r timezone/northamerica $RPM_BUILD_ROOT/etc/localtime
+touch -r sunrpc/etc.rpc $RPM_BUILD_ROOT/etc/rpc
 
 cd fedora
 $GCC -Os -static -o build-locale-archive build-locale-archive.c \
@@ -1441,8 +1455,10 @@ rm -f *.filelist*
 %endif
 %if %{buildpower6}
 %dir /%{_lib}/power6
+%dir /%{_lib}/power6x
 %ifarch %{rtkaioarches}
 %dir /%{_lib}/rtkaio/power6
+%dir /%{_lib}/rtkaio/power6x
 %endif
 %endif
 %ifarch s390x
@@ -1528,6 +1544,145 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Wed Jul  4 2007 Jakub Jelinek <jakub@redhat.com> 2.5-18
+- save/restore errno around reading /etc/default/nss (BZ#4702)
+- fix LD_HWCAP_MASK handling
+
+* Fri Jun 22 2007 Jakub Jelinek <jakub@redhat.com> 2.5-17
+- disable workaround for #210748 and #211133, instead backport
+  ld.so locking fixes from the trunk (#235026)
+- Korean charsets additions (BZ#3954, BZ#3955)
+- fix handling of 2001::/32 IPv6 addresses in getaddrinfo (BZ#4102)
+- add inline optimization for fgetc_unlocked
+- fix handling of 172.{1[7-9],2[0-9],3[01]}/16 IPv4 addresses in
+  getaddrinfo
+- make sure NULL checks in routines with nonnull attribute aren't
+  optimized away
+- don't write uninitialized padding bytes to nscd socket
+- avoid misaligned reads/writes in gethostbyname_r (#243967, BZ#4381)
+- fix dl{,v}sym, dl_iterate_phdr and dlopen if some library is
+  mapped into ld.so's inter-segment hole on x86_64 (#244545)
+- fix LD_AUDIT=a:b program (#180432)
+
+* Fri Jun  8 2007 Jakub Jelinek <jakub@redhat.com> 2.5-16
+- don't crash on pseudo-zero long double values passed to
+  *printf on i?86/x86_64/ia64 (BZ#4586)
+- fix *printf %La and strtold with some hexadecimal floating point
+  constants on ppc/ppc64
+- fix nextafterl on ppc/ppc64
+
+* Wed May 30 2007 Jakub Jelinek <jakub@redhat.com> 2.5-15
+- robust mutex fixes (BZ#4512)
+- *printf fixes (BZ#4514)
+- as_IN updates (#218035)
+- use MADV_DONTNEED in malloc (#237711)
+- fix sem_timedwait on i?86 and x86_64
+- fix dladdr if some shared library is mapped into ld.so intersegment
+  VM hole (#232224, BZ#4131)
+- fdatasync is a cancellation point (BZ#4465)
+- add a temporary hack to avoid reruning DSO initializers if dlopen
+  is called from _dl_fini destructors (#234946)
+
+* Wed May  2 2007 Jakub Jelinek <jakub@redhat.com> 2.5-14
+- add transliteration for <U2044> (BZ#3213)
+- fix *scanf with %f on hexadecimal floats without exponent (BZ#4342)
+- fix *printf with very large precisions for %s (#238406, BZ#4438)
+- fix inet_ntop size checking for AF_INET (BZ#4439)
+- for *printf %e avoid 1.000e-00, for exponent 0 always use + sign (#238431)
+- fix application crashes when doing NSS lookups through nscd
+  mmapped databases and nscd decides to start garbage collection
+  during the lookups (#219145, #225315)
+- fix NIS+ __nisfind_server (#235229)
+- assorted NIS+ speedups (#233460)
+- fix power6 libm compat symbols on ppc32 (#232633)
+- fix child refcntr in NPTL fork (#230198)
+- fix ifaddrs with many net devices on > 4KB page size arches (#230151)
+- fix pthread_mutex_timedlock on x86_64 (#228103)
+- fix HAVE_LIBCAP configure detection (#178934)
+- fix double free in fts_close (#222089)
+- fix vfork+execvp memory leak (#221187)
+- further localedef robustification (#203728)
+- fix printf with %g and values tiny bit smaller than 1.e-4 (#235864,
+  BZ#4362, BZ#4070)
+- fix _XOPEN_VERSION (BZ#4364)
+- nexttoward*/nextafter* fixes (BZ#3306)
+- various fixes (BZ#3919, BZ#4101, BZ#4130, BZ#4181, BZ#4069, BZ#3458,
+  BZ#3348, BZ#4344, BZ#4368, BZ#4305, BZ#4306)
+- fix nftw with FTW_CHDIR on / (BZ#4076)
+- nscd fixes (BZ#4074)
+- fix euidaccess (BZ#3842)
+- assorted locale data fixes (BZ#3322, BZ#3995, BZ#3884, BZ#3851, BZ#4411)
+- fix strptime (BZ#3944)
+- fix regcomp with REG_NEWLINE (BZ#3957)
+- fix %0lld printing of 0LL on 32-bit architectures (BZ#3902)
+- soft-fp fixes (BZ#2749)
+- further strtod fixes (BZ#3855)
+- update ru and sv translations
+- fix fesetround return value on ia64
+- fix nscd SIGHUP database invalidation
+
+* Mon Jan 15 2007 Jakub Jelinek <jakub@redhat.com> 2.5-12
+- add a workaround for #210748 and #211133
+- fix NIS getservbyname when proto is NULL
+
+* Fri Jan  5 2007 Jakub Jelinek <jakub@redhat.com> 2.5-10
+- fix nss_compat +group handling (#220658)
+
+* Fri Dec 22 2006 Jakub Jelinek <jakub@redhat.com> 2.5-9
+- make sure pthread_kill doesn't return EINVAL even if
+  the target thread exits in between pthread_kill ESRCH check
+  and the actual tgkill syscall (#220420)
+
+* Tue Dec 19 2006 Jakub Jelinek <jakub@redhat.com> 2.5-8
+- fix setcontext on ppc32 (#219107)
+- fix wide stdio after setvbuf (#217064, BZ#2337)
+- fix {j,m}rand48{,_r} on 64-bit arches (BZ#3747)
+- handle power6x AT_PLATFORM (#216970)
+- fix a race condition in getXXbyYY_r (#219145)
+- fix tst-pselect testcase
+
+* Tue Dec 12 2006 Jakub Jelinek <jakub@redhat.com> 2.5-7
+- fix hasmntopt (#218802)
+- fix setusershell and getusershell (#218782)
+- strtod fixes (BZ#3664, BZ#3673, BZ#3674)
+- fix ttyname and ttyname_r with invalid file descriptor (#218276)
+- fix nis_getnames if the default domain doesn't contain at least
+  two dots (#206483)
+- fix memusage with realloc (x, 0)
+
+* Wed Nov 29 2006 Jakub Jelinek <jakub@redhat.com> 2.5-6
+- fix svc_run (#216834, BZ#3559)
+- make sure there is consistent timestamp for /etc/ld.so.conf,
+  /etc/localtime and /etc/rpc between multilib glibc rpms
+- fix :include: /etc/alias handling (#215572)
+- update powerpc-cpu add-on to version 0.4 (#196319)
+- add power6x subdir to /%{_lib}/ and /%{_lib}/rtkaio/,
+  link all libs from ../power6/* into them
+- update nl, sv, pl and tr translations
+- add mai_IN locale (#213415)
+- fix es_ES LC_TIME (BZ#3320)
+
+* Tue Nov 14 2006 Jakub Jelinek <jakub@redhat.com> 2.5-5
+- remove bogus %{_libdir}/librt.so.1 symlink (#213555)
+- fix memusage (#213656)
+- fix sysconf (_SC_LEVEL{2,3}_CACHE_SIZE) on Intel Core Duo
+  CPUs
+- fix ld.so locking on dlopen failures (#213037, BZ#3429)
+- fix libthread_db.so on TLS_DTV_AT_TP architectures (#215513)
+- fix --inhibit-rpath (#214569)
+- fix _r_debug content when prelinked ld.so executes
+  a program as its argument
+- handle new tzdata format to cope with year > 2037 transitions
+  on 64-bit architectures
+- fix strxfrm
+- fix i?86 floor and ceil inlines (BZ#3451)
+
+* Thu Oct 19 2006 Jakub Jelinek <jakub@redhat.com> 2.5-4
+- fix i?86 6 argument syscalls (e.g. splice)
+- fix rtld minimal realloc (BZ#3352)
+- fix RFC3484 getaddrinfo sorting according to rules 4 and 7 (BZ#3369)
+- fix xdrmem_setpos (#211452)
+
 * Sun Oct  8 2006 Jakub Jelinek <jakub@redhat.com> 2.5-3
 - bump __GLIBC_MINOR__
 - increase PTHREAD_STACK_MIN on ppc{,64} to 128K to allow
