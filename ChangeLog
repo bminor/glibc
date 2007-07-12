@@ -1,3 +1,8 @@
+2007-06-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* math/test-misc.c (main): Don't run last batch of tests with
+	IBM long double format.
+
 2007-07-07  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #4745]
@@ -10,10 +15,13 @@
 	* stdio-common/bug19.c: New file.
 	* stdio-common/bug19a.c: New file.
 
-2007-07-05  Mike Frysinger  <vapier@gentoo.org>
+2007-06-06  Jakub Jelinek  <jakub@redhat.com>
 
-	* Makeconfig ($(common-objpfx)gnu/lib-names.stmp): Use LC_ALL=C when
-	running awk script.
+	[BZ #4586]
+	* sysdeps/i386/ldbl2mpn.c (__mpn_extract_long_double): Treat
+	pseudo-zeros as zero.
+	* sysdeps/x86_64/ldbl2mpn.c: New file.
+	* sysdeps/ia64/ldbl2mpn.c: New file.
 
 2007-07-01  Jakub Jelinek  <jakub@redhat.com>
 
@@ -31,34 +39,31 @@
 	* nis/nss-default.c: Include errno.h.
 	(init): Preserve errno.
 
-2007-07-02  Ulrich Drepper  <drepper@redhat.com>
+2007-06-19  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/unix/sysv/linux/bits/socket.h (PF_UNIX): Update comment.
+	* sysdeps/generic/ldsodefs.h (rtld_global): Reorder some elements
+	to fill in holes
+	(rtld_global_ro): Likewise.
 
-2007-06-30  Ulrich Drepper  <drepper@redhat.com>
+2007-06-18  Jakub Jelinek  <jakub@redhat.com>
 
-	* sysdeps/unix/sysv/linux/bits/socket.h: Add PF_RXRPC and AF_RXRPC.
+	* elf/dl-addr.c (_dl_addr): Skip PT_LOAD checking if l_contiguous.
+	Move PT_LOAD checking to...
+	(_dl_addr_inside_object): ... here, new function.
+	* elf/dl-sym.c (do_sym): If not l_contiguous,
+	call _dl_addr_inside_object.
+	* elf/dl-iteratephdr.c (__dl_iterate_phdr): Likewise.
+	* dlfcn/dlinfo.c (dlinfo_doit): Likewise.
+	* elf/dl-open.c (dl_open_worker): Likewise.
+	(_dl_addr_inside_object): New function if IS_IN_rtld.
+	* elf/dl-load.c (_dl_map_object_from_fd): Set l_contiguous if no
+	holes are present or are PROT_NONE protected.
+	* include/link.h (struct link_map): Add l_contiguous field.
+	* sysdeps/generic/ldsodefs.h (_dl_addr_inside_object): New prototype.
 
-2007-06-29  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+2007-06-18  Jakub Jelinek  <jakub@redhat.com>
 
-	* sysdeps/unix/sysv/linux/bits/socket.h: Add PF_IUCV and AF_IUCV.
-
-2007-06-29  Martin Schwidefsky  <schwidefsky@de.ibm.com>
-
-	* sysdeps/s390/dl-procinfo.c: New file.
-	* sysdeps/s390/dl-procinfo.h: New file.
-	* sysdeps/unix/sysv/linux/s390/dl-procinfo.h: New file.
-
-2007-06-29  Jakub Jelinek  <jakub@redhat.com>
-
-	* elf/dl-load.c (open_verify): Find .note.ABI-tag notes even
-	in PT_NOTE segments with multiple notes.
-	* elf/readelflib.c (process_elf_file): Likewise.
-
-2007-06-22  Ulrich Drepper  <drepper@redhat.com>
-
-	* nis/nis_domain_of.c (__nis_domain_of): Make the code a bit more
-	ISO C compliant.
+	* elf/rtld.c (dl_main): Don't call init_tls more than once.
 
 2007-06-19  Ulrich Drepper  <drepper@redhat.com>
 
@@ -92,88 +97,6 @@
 	* elf/dl-object.c (_dl_new_object): Don't use
 	__rtld_mrlock_initialize.
 
-2007-06-19  Ulrich Drepper  <drepper@redhat.com>
-
-	* sysdeps/generic/ldsodefs.h (rtld_global): Reorder some elements
-	to fill in holes
-	(rtld_global_ro): Likewise.
-
-2007-06-18  Jakub Jelinek  <jakub@redhat.com>
-
-	* elf/dl-addr.c (_dl_addr): Skip PT_LOAD checking if l_contiguous.
-	Move PT_LOAD checking to...
-	(_dl_addr_inside_object): ... here, new function.
-	* elf/dl-sym.c (do_sym): If not l_contiguous,
-	call _dl_addr_inside_object.
-	* elf/dl-iteratephdr.c (__dl_iterate_phdr): Likewise.
-	* dlfcn/dlinfo.c (dlinfo_doit): Likewise.
-	* elf/dl-open.c (dl_open_worker): Likewise.
-	(_dl_addr_inside_object): New function if IS_IN_rtld.
-	* elf/dl-load.c (_dl_map_object_from_fd): Set l_contiguous if no
-	holes are present or are PROT_NONE protected.
-	* include/link.h (struct link_map): Add l_contiguous field.
-	* sysdeps/generic/ldsodefs.h (_dl_addr_inside_object): New prototype.
-
-2007-06-18  Jakub Jelinek  <jakub@redhat.com>
-            Tomas Janousek  <tjanouse@redhat.com>
-            Ulrich Drepper  <drepper@redhat.com>
-
-	[BZ #4647]
-	* resolv/res_send.c (send_dg): Remove socket_pf.  Use ipv6_unavail
-	member in __res_state, only convaddr4to6 if nssocks[ns] is a PF_INET6
-	socket.
-	* resolv/resolv.h (__res_state): Add ipv6_unavail member.  Make
-	unused member a bitmap.
-	* resolv/res_init.c (__res_vinit): Reset ipv6_unavail if IPv6
-	servers are configured.
-
-2007-06-18  Jakub Jelinek  <jakub@redhat.com>
-
-	* elf/rtld.c (dl_main): Don't call init_tls more than once.
-
-2007-06-17  Andreas Schwab  <schwab@suse.de>
-
-	* sysdeps/generic/initfini.c: Tell gcc about the nonstandard sections.
-
-2007-06-16  Andreas Jaeger  <aj@suse.de>
-
-	[BZ #4125]
-	* sysdeps/unix/sysv/linux/sys/ptrace.h
-	(PTRACE_O_TRACESYSGOOD, PTRACE_O_TRACEFORK,
-	PTRACE_O_TRACEVFORK, PTRACE_O_TRACECLONE, PTRACE_O_TRACEEXEC,
-	PTRACE_O_TRACEVFORKDONE, PTRACE_O_TRACEEXIT, PTRACE_O_MASK,
-	PTRACE_EVENT_FORK, PTRACE_EVENT_VFORK, PTRACE_EVENT_CLONE,
-	PTRACE_EVENT_EXEC, PTRACE_EVENT_VFORK_DONE, PTRACE_EVENT_EXIT):
-	Define.
-	* sysdeps/unix/sysv/linux/powerpc/sys/ptrace.h: Likewise.
-	* sysdeps/unix/sysv/linux/ia64/sys/ptrace.h: Likewise.
-	* sysdeps/unix/sysv/linux/sparc/sys/ptrace.h: Likewise.
-	* sysdeps/unix/sysv/linux/s390/sys/ptrace.h: Likewise.
-
-2007-06-16  Ulrich Drepper  <drepper@redhat.com>
-
-	[BZ #4599]
-	* sysdeps/unix/sysv/linux/check_pf.c (make_request): When
-	determining whether there are IPv4/IPv6 addresses, ignore loopback
-	addresses.
-
-2007-06-14 Uros Bizjak <ubizjak@gmail.com>
-
-	* soft-fp/soft-fp.h (CMPtype): Define to "int" if undefined.
-	* soft-fp/eqdf2.c (__eqdf2): Use CMPtype instead of int
-	as the return type.  Change type of "r" variable to CMPtype.
-	* soft-fp/eqsf2.c (__eqsf2): Likewise.
-	* soft-fp/eqtf2.c (__eqtf2): Likewise.
-	* soft-fp/gedf2.c (__gedf2): Likewise.
-	* soft-fp/gesf2.c (__gesf2): Likewise.
-	* soft-fp/getf2.c (__getf2): Likewise.
-	* soft-fp/ledf2.c (__ledf2): Likewise.
-	* soft-fp/lesf2.c (__lesf2): Likewise.
-	* soft-fp/letf2.c (__letf2): Likewise.
-	* soft-fp/unorddf2 (__unorddf2): Likewise.
-	* soft-fp/unordsf2 (__unordsf2): Likewise.
-	* soft-fp/unordtf2 (__unordtf2): Likewise.
-
 2007-06-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/do-lookup.h (do_lookup_x): Read r_nlist before r_list and
@@ -187,46 +110,19 @@
 
 	* elf/dl-close.c (_dl_close_worker): Remove all to be removed
 	libraries from the global scope at once and call THREAD_GSCOPE_WAIT
-	at most once per _dl_close_worker.
 
-2007-06-08  Ulrich Drepper  <drepper@redhat.com>
+2007-05-18  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/unix/sysv/linux/bits/sched.h: Make second parameter of
-	__sched_cpucount as const.
-	* posix/sched_cpucount.c: Adjust.
-
-	* posix/sched_cpucount.c (__sched_cpucount): Allow using special
-	instruction for counting bits.
-	* sysdeps/x86_64/sched_cpucount.c: New file.
-
-2007-06-07  Ulrich Drepper  <drepper@redhat.com>
-
-	* configure.in: Avoid variable named BASH.
-	* config.make.in: Likewise.
-	Patch in part by Mike Frysinger.
-
-2007-06-06  Jakub Jelinek  <jakub@redhat.com>
-
-	[BZ #4586]
-	* sysdeps/i386/ldbl2mpn.c (__mpn_extract_long_double): Treat
-	pseudo-zeros as zero.
-	* sysdeps/x86_64/ldbl2mpn.c: New file.
-	* sysdeps/ia64/ldbl2mpn.c: New file.
-
-2007-06-04  Jakub Jelinek  <jakub@redhat.com>
-
-	* sysdeps/ieee754/ldbl-128ibm/s_nextafterl.c (nextafterl): Remove
-	unused ily variable.  Fix nextafterl on +-__LDBL_MAX__ and +-Inf.
-	Remove unreachable code at the end.
-
-2007-06-01  Steven Munroe  <sjmunroe@us.ibm.com>
-
-	* sysdeps/ieee754/ldbl-128ibm/s_fpclassifyl.c: Correct description of
-	ldbl-128ibm in comment.
-	(fpclassifyl): Correct classification of denormals.
-	* sysdeps/ieee754/ldbl-128ibm/s_nextafterl.c (nextafterl): Correct
-	return value for MIN denormal. Rewrite using long double math too
-	correctly handle denormals and canonicalize the results.
+	* elf/dl-close.c (_dl_close_worker): When removing object from
+	global scope, wait for all lookups to finish afterwards.
+	* elf/dl-open.c (add_to_global): When global scope array must
+	grow, allocate a new one and free old array only after all
+	lookups finish.
+	* elf/dl-runtime.c (_dl_fixup): Protect using global scope.
+	(_dl_lookup_symbol_x): Likewise.
+	* elf/dl-support.c: Define _dl_wait_lookup_done.
+	* sysdeps/generic/ldsodefs.h (struct rtld_global): Add
+	_dl_wait_lookup_done.
 
 2007-06-05  Jakub Jelinek  <jakub@redhat.com>
 
@@ -249,228 +145,22 @@
 	* stdio-common/tst-sprintf2.c: New test.
 	* stdio-common/Makefile (tests): Add tst-sprintf2.
 
-	* math/test-misc.c (main): Don't run last batch of tests with
-	IBM long double format.
+2007-06-04  Jakub Jelinek  <jakub@redhat.com>
 
-2007-05-31  Steven Munroe  <sjmunroe@us.ibm.com>
-
-	* sysdeps/powerpc/powerpc32/970/fpu/Implies: New file.
-	* sysdeps/powerpc/powerpc32/power5/fpu/Implies: New file.
-	* sysdeps/powerpc/powerpc32/power5+/fpu/Implies: New file.
-	* sysdeps/powerpc/powerpc32/power6/fpu/Implies: New file.
-	* sysdeps/powerpc/powerpc32/power6x/fpu/Implies: New file.
-	* sysdeps/powerpc/powerpc64/970/fpu/Implies: New file.
-	* sysdeps/powerpc/powerpc64/power5/fpu/Implies: New file.
-	* sysdeps/powerpc/powerpc64/power5+/fpu/Implies: New file.
-	* sysdeps/powerpc/powerpc64/power6/fpu/Implies: New file.
-	* sysdeps/powerpc/powerpc64/power6x/fpu/Implies: New file.
-	* sysdeps/unix/sysv/linux/powerpc/powerpc32/970/fpu/Implies: New file.
-	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power4/fpu/Implies:
-	New file.
-	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power5/fpu/Implies:
-	New file.
-	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power5+/fpu/Implies:
-	New file.
-	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power6/fpu/Implies:
-	New file.
-	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power6x/fpu/Implies:
-	New file.
-	* sysdeps/unix/sysv/linux/powerpc/powerpc64/970/fpu/Implies: New file.
-	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power4/fpu/Implies:
-	New file.
-	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power5/fpu/Implies:
-	New file.
-	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power5+/fpu/Implies:
-	New file.
-	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power6/fpu/Implies:
-	New file.
-	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power6x/fpu/Implies:
-	New file.
-
-2007-05-31  Steven Munroe  <sjmunroe@us.ibm.com>
-
-	* sysdeps/powerpc/powerpc32/powerpc64/fpu/s_llrint.S: Move.
-	* sysdeps/powerpc/powerpc32/power4/fpu/s_llrint.S: To here.
-	* sysdeps/powerpc/powerpc32/powerpc64/fpu/s_llrintf.S: Move.
-	* sysdeps/powerpc/powerpc32/power4/fpu/s_llrintf.S: To here.
-	* sysdeps/powerpc/powerpc32/powerpc64/fpu/s_llround.S: Move.
-	* sysdeps/powerpc/powerpc32/power4/fpu/s_llround.S: To here.
-	* sysdeps/powerpc/powerpc32/powerpc64/fpu/s_llroundf.S: Move.
-	* sysdeps/powerpc/powerpc32/power4/fpu/s_llroundf.S: To here.
-
-2007-05-22  Steven Munroe  <sjmunroe@us.ibm.com>
-
-	* sysdeps/powerpc/powerpc32/power5+/fpu/s_round.S
-	(LONG_DOUBLE_COMPAT): Specify correct version, GLIBC_2_1.
-	* sysdeps/powerpc/powerpc32/power5+/fpu/s_trunc.S
-	(LONG_DOUBLE_COMPAT): Specify correct version, GLIBC_2_1.
-	* sysdeps/powerpc/powerpc64/power5+/fpu/s_round.S
-	(LONG_DOUBLE_COMPAT): Specify correct version, GLIBC_2_1.
-	* sysdeps/powerpc/powerpc64/power5+/fpu/s_trunc.S
-	(LONG_DOUBLE_COMPAT): Specify correct version, GLIBC_2_1.
-
-2007-05-21  Steven Munroe  <sjmunroe@us.ibm.com>
-
-	* sysdeps/powerpc/powerpc32/power4/fpu/slowexp.c: New file.
-	* sysdeps/powerpc/powerpc32/power4/fpu/w_sqrt.c: New file.
-	* sysdeps/powerpc/powerpc64/power4/fpu/slowexp.c: New file.
-	* sysdeps/powerpc/powerpc64/power4/fpu/w_sqrt.c: New file.
-
-2007-03-15  Steven Munroe  <sjmunroe@us.ibm.com>
-
-	* sysdeps/powerpc/powerpc32/powerpc64/fpu/s_llrint.S
-	[LONG_DOUBLE_COMPAT]: Add compat_symbol for llrintl@@GLIBC_2_1.
-
-2006-02-13  Steven Munroe  <sjmunroe@us.ibm.com>
-
-	* sysdeps/powerpc/powerpc32/power6/fpu/s_llrint.S: New File
-	* sysdeps/powerpc/powerpc32/power6/fpu/s_llrintf.S: New File
-	* sysdeps/powerpc/powerpc32/power6/fpu/s_llround.S: New File
-	* sysdeps/powerpc/powerpc32/power6/fpu/s_llroundf.S: New File
-
-2006-10-20  Steven Munroe  <sjmunroe@us.ibm.com>
-
-	* sysdeps/powerpc/powerpc32/power4/fpu/slowpow.c: New file.
-	* sysdeps/powerpc/powerpc64/power4/fpu/slowpow.c: New file.
-
-2006-10-03  Steven Munroe  <sjmunroe@us.ibm.com>
-
-	* sysdeps/powerpc/powerpc32/powerpc64/fpu/s_llround.S: New file.
-	* sysdeps/powerpc/powerpc32/powerpc64/fpu/s_llroundf.S: New file.
-
-	* sysdeps/powerpc/powerpc32/powerpc64/fpu/Makefile: Moved.
-	* sysdeps/powerpc/powerpc32/powerpc64/fpu/mpa.c: Likewise.
-	* sysdeps/powerpc/powerpc32/power4/fpu/Makefile: To here.
-	* sysdeps/powerpc/powerpc32/power4/fpu/mpa.c: Likewise.
-
-2006-09-29  Steven Munroe  <sjmunroe@us.ibm.com>
-
-	* sysdeps/powerpc/powerpc32/power6x/fpu/s_lrint.S: New file.
-	* sysdeps/powerpc/powerpc32/power6x/fpu/s_lround.S: New file.
-	* sysdeps/powerpc/powerpc64/power6x/fpu/s_llrint.S: New file.
-	* sysdeps/powerpc/powerpc64/power6x/fpu/s_llround.S: New file.
-
-2006-09-28  Steven Munroe  <sjmunroe@us.ibm.com>
-
-	* sysdeps/powerpc/powerpc32/power5+/fpu/s_llround.S: New file.
-	* sysdeps/powerpc/powerpc32/power5+/fpu/s_llroundf.S: New file.
-	* sysdeps/powerpc/powerpc32/power5+/fpu/s_lround.S: New file.
-	* sysdeps/powerpc/powerpc32/power6x/fpu/Implies: New file.
-	* sysdeps/powerpc/powerpc64/power5+/fpu/s_llround.S: New file.
-	* sysdeps/powerpc/powerpc64/power6x/fpu/Implies: New file.
-
-2006-08-31  Steven Munroe  <sjmunroe@us.ibm.com>
-
-	* sysdeps/powerpc/powerpc32/powerpc64/fpu/Makefile: New file.
-	* sysdeps/powerpc/powerpc32/powerpc64/fpu/mpa.c: New file.
-	* sysdeps/powerpc/powerpc64/power4/fpu/Makefile: New file.
-	* sysdeps/powerpc/powerpc64/power4/fpu/mpa.c: New file.
-
-2006-06-15  Steven Munroe  <sjmunroe@us.ibm.com>
-
-	* sysdeps/powerpc/powerpc32/power5+/fpu/s_ceil.S: New file.
-	* sysdeps/powerpc/powerpc32/power5+/fpu/s_ceilf.S: New file.
-	* sysdeps/powerpc/powerpc32/power5+/fpu/s_floor.S: New file.
-	* sysdeps/powerpc/powerpc32/power5+/fpu/s_floorf.S: New file.
-	* sysdeps/powerpc/powerpc32/power5+/fpu/s_round.S: New file.
-	* sysdeps/powerpc/powerpc32/power5+/fpu/s_roundf.S: New file.
-	* sysdeps/powerpc/powerpc32/power5+/fpu/s_trunc.S: New file.
-	* sysdeps/powerpc/powerpc32/power5+/fpu/s_truncf.S: New file.
-	* sysdeps/powerpc/powerpc64/power5+/fpu/s_ceil.S: New file.
-	* sysdeps/powerpc/powerpc64/power5+/fpu/s_ceilf.S: New file.
-	* sysdeps/powerpc/powerpc64/power5+/fpu/s_floor.S: New file.
-	* sysdeps/powerpc/powerpc64/power5+/fpu/s_floorf.S: New file.
-	* sysdeps/powerpc/powerpc64/power5+/fpu/s_round.S: New file.
-	* sysdeps/powerpc/powerpc64/power5+/fpu/s_roundf.S: New file.
-	* sysdeps/powerpc/powerpc64/power5+/fpu/s_trunc.S: New file.
-	* sysdeps/powerpc/powerpc64/power5+/fpu/s_truncf.S: New file.
-
-2006-03-20  Steven Munroe  <sjmunroe@us.ibm.com>
-
-	* sysdeps/powerpc/powerpc32/powerpc64/fpu/s_llrint.S: New file.
-	* sysdeps/powerpc/powerpc32/powerpc64/fpu/s_llrintf.S: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_nextafterl.c (nextafterl): Remove
+	unused ily variable.  Fix nextafterl on +-__LDBL_MAX__ and +-Inf.
+	Remove unreachable code at the end.
 
 2007-06-01  Steven Munroe  <sjmunroe@us.ibm.com>
 
-	* sysdeps/powerpc/powerpc32/power6/memset.S: New file.
-	* sysdeps/powerpc/powerpc64/power6/memset.S: New file.
-
-2007-05-31  Steven Munroe  <sjmunroe@us.ibm.com>
-
-	* sysdeps/powerpc/powerpc32/970/Implies: New file.
-	* sysdeps/powerpc/powerpc32/power5/Implies: New file.
-	* sysdeps/powerpc/powerpc32/power5+/Implies: New file.
-	* sysdeps/powerpc/powerpc32/power6/Implies: New file.
-	* sysdeps/powerpc/powerpc32/power6x/Implies: New file.
-	* sysdeps/powerpc/powerpc64/970/Implies: New file.
-	* sysdeps/powerpc/powerpc64/power5/Implies: New file.
-	* sysdeps/powerpc/powerpc64/power5+/Implies: New file.
-	* sysdeps/powerpc/powerpc64/power6/Implies: New file.
-	* sysdeps/powerpc/powerpc64/power6x/Implies: New file.
-
-2007-05-21  Steven Munroe  <sjmunroe@us.ibm.com>
-
-	* sysdeps/powerpc/powerpc32/power4/memset.S: New file
-
-2007-03-13  Steven Munroe  <sjmunroe@us.ibm.com>
-
-	* sysdeps/powerpc/powerpc64/memcpy.S: Improve aligned loop to minimize
-	branch miss-predicts. Ensure that cache line crossing does not impact
-	dispatch grouping.
-
-2006-12-13  Steven Munroe  <sjmunroe@us.ibm.com>
-
-	* sysdeps/powerpc/powerpc64/power4/memcopy.h: Replace with include
-	"../../powerpc32/power4/memcopy.h".
-	* sysdeps/powerpc/powerpc64/power4/wordcopy.c: Replace with include
-	"../../powerpc32/power4/wordcopy.c".
-
-2006-10-03  Steven Munroe  <sjmunroe@us.ibm.com>
-
-	* sysdeps/powerpc/powerpc32/powerpc64/Makefile: Moved.
-	* sysdeps/powerpc/powerpc32/powerpc64/memcopy.h: Likewise.
-	* sysdeps/powerpc/powerpc32/powerpc64/wordcopy.c: Likewise.
-	* sysdeps/powerpc/powerpc32/power4/Makefile: To here.
-	* sysdeps/powerpc/powerpc32/power4/memcopy.h: Likewise.
-	* sysdeps/powerpc/powerpc32/power4/wordcopy.c: Likewise.
-
-2006-09-10  Steven Munroe  <sjmunroe@us.ibm.com>
-
-	* sysdeps/powerpc/powerpc32/power6/memcpy.S: New file.
-
-2006-08-31  Steven Munroe  <sjmunroe@us.ibm.com>
-
-	* sysdeps/powerpc/powerpc32/power6/wordcopy.c: New file.
-	* sysdeps/powerpc/powerpc32/powerpc64/Makefile: New file.
-	* sysdeps/powerpc/powerpc32/powerpc64/memcopy.h: New file.
-	* sysdeps/powerpc/powerpc32/powerpc64/wordcopy.c: New file.
-	* sysdeps/powerpc/powerpc64/power4/Makefile: New file.
-	* sysdeps/powerpc/powerpc64/power4/memcopy.h: New file.
-	* sysdeps/powerpc/powerpc64/power4/wordcopy.c: New file.
-	* sysdeps/powerpc/powerpc64/power6/wordcopy.c: New file.
-
-2006-07-06  Steven Munroe  <sjmunroe@us.ibm.com>
-
-	* sysdeps/powerpc/powerpc64/power6/memcpy.S: New file.
-
-2006-03-20  Steven Munroe  <sjmunroe@us.ibm.com>
-
-	* sysdeps/powerpc/powerpc32/power4/memcmp.S: New file.
-	* sysdeps/powerpc/powerpc32/power4/memcpy.S: New file.
-	* sysdeps/powerpc/powerpc32/power4/memset.S: New file.
-	* sysdeps/powerpc/powerpc32/power4/strncmp.S: New file.
-	* sysdeps/powerpc/powerpc64/power4/memcmp.S: New file.
-	* sysdeps/powerpc/powerpc64/power4/memcpy.S: New file.
-	* sysdeps/powerpc/powerpc64/power4/strncmp.S: New file.
-
-2007-05-29  Roland McGrath  <roland@redhat.com>
-
-	* po/Makefile (po-sed-cmd): New variable.
-	(libc.pot.files): Move sed command text in there, avoid \ inside ''.
+	* sysdeps/ieee754/ldbl-128ibm/s_fpclassifyl.c: Correct description of
+	ldbl-128ibm in comment.
+	(fpclassifyl): Correct classification of denormals.
+	* sysdeps/ieee754/ldbl-128ibm/s_nextafterl.c (nextafterl): Correct
+	return value for MIN denormal. Rewrite using long double math too
+	correctly handle denormals and canonicalize the results.
 
 2007-05-29  Ulrich Drepper  <drepper@redhat.com>
-
-	* crypt/md5-crypt.c: Fix comment.
 
 	* nscd/nscd_helper.c (get_mapping): Handle short replies instead
 	of crashing.  When this is the case or if the reply is malformed,
@@ -478,67 +168,10 @@
 	exist.
 	Patch in part by Guillaume Chazarain <guichaz@yahoo.fr>.
 
-2007-05-28  Jakub Jelinek  <jakub@redhat.com>
-
-	* sysdeps/unix/sysv/linux/futimes.c (miss_utimensat): Don't define
-	if __NR_utimensat is not defined.
-
-2007-05-26  Ulrich Drepper  <drepper@redhat.com>
-
-	* sysdeps/unix/sysv/linux/powerpc/libc-start.c: Include <sysdep.h>.
-
-2007-05-25  Jakub Jelinek  <jakub@redhat.com>
-
-	* io/bits/fcntl2.h (__open_2): Add nonnull attribute.
-	(open): Fix comment typos.  Don't call __open_2 if flags
-	is a compile time constant without O_CREAT.
-	(__open64_2): Add nonnull attribute.
-	(open64): Fix comment typos.  Don't call __open64_2 if flags
-	is a compile time constant without O_CREAT.
-	(__openat_2): Add nonnull attribute, fix nonnull attribute
-	on redirect.
-	(openat): Fix comment typos.  Don't call __openat_2 if flags
-	is a compile time constant without O_CREAT.
-	(__openat64_2): Add nonnull attribute, fix nonnull attribute
-	on redirect.
-	(openat64): Fix comment typos.  Don't call __openat64_2 if flags
-	is a compile time constant without O_CREAT.
-
-2007-05-24  Ulrich Drepper  <drepper@redhat.com>
-
-	* Makerules (sysd-rules): Define PTW for ptw-* files.
-	* Versions: Define GLIBC_2.7 for libc.
-	* include/stdio.h: Declare __fortify_fail.
-	* debug/fortify_fail.c: New file.
-	* debug/Makefile (routines): Add fortify_fail.
-	* debug/chk_fail.c: Use __fortify_fail.
-	* debug/stack_chk_fail.c: Likewise.
-	* io/Versions: Export __open_2, __open64_2, __openat_2, and
-	__openat64_2 for GLIBC_2.7.
-	* io/fcntl.h: When compiling with fortification, include bits/fcntl2.h.
-	* io/open.c: Define *_2 variant of function which checks for O_CREAT
-	and fails if necessary.
-	* io/open64.c: Likewise.
-	* io/openat.c: Likewise.
-	* io/openat64.c: Likewise.
-	* sysdeps/unix/sysv/linux/open64.c: Likewise.
-	* sysdeps/unix/sysv/linux/openat.c: Likewise.
-	* sysdeps/unix/sysv/linux/openat64.c: Likewise.
-	* io/bits/fcntl2.h: New file.
-	* include/fcntl.h: Declare __open_2, __open64_2, __openat_2, and
-	__openat64_2.
-	* include/bits/fcntl2.h: New file.
-	* sysdeps/unix/sysv/linux/Makefile [subdir=io] (sysdep_routines):
-	Add open_2.
-	* sysdeps/unix/sysv/linux/open_2.c: New file.
-
 2007-05-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/cacheinfo.c (init_cacheinfo): Pass correct value
 	as second parameter to handle_intel.
-
-	* nscd/aicache.c (addhstaiX): If reported TTL is zero don't cache
-	the entry.
 
 	* sysdeps/unix/sysv/linux/x86_64/sysconf.c: Move cache information
 	handling to ...
@@ -548,6 +181,8 @@
 	* sysdeps/x86_64/memcpy.S: Complete rewrite.
 	* sysdeps/x86_64/mempcpy.S: Adjust appropriately.
 	Patch by Evandro Menezes <evandro.menezes@amd.com>.
+
+2007-05-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/epoll_pwait.S: New file.
 
@@ -582,23 +217,7 @@
 	* malloc/Makefile (CFLAGS-malloc.c): Revert accidental
 	2007-05-07 commit.
 
-2007-05-19  Ulrich Drepper  <drepper@redhat.com>
-
-	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_PRIVATE_FUTEX):
-	Define for kernel >= 2.6.22.
-
 2007-05-18  Ulrich Drepper  <drepper@redhat.com>
-
-	* elf/dl-close.c (_dl_close_worker): When removing object from
-	global scope, wait for all lookups to finish afterwards.
-	* elf/dl-open.c (add_to_global): When global scope array must
-	grow, allocate a new one and free old array only after all
-	lookups finish.
-	* elf/dl-runtime.c (_dl_fixup): Protect using global scope.
-	(_dl_lookup_symbol_x): Likewise.
-	* elf/dl-support.c: Define _dl_wait_lookup_done.
-	* sysdeps/generic/ldsodefs.h (struct rtld_global): Add
-	_dl_wait_lookup_done.
 
 	* malloc/malloc.c (do_check_chunk): Correct check for mmaped block
 	not overlapping with arena.
@@ -618,12 +237,10 @@
 	* sysdeps/x86_64/fpu/k_sinl.c: New file.
 	* sysdeps/x86_64/fpu/k_tanl.c: New file.
 
-	* version.h (VERSION): Set to 2.6.90.
-
 2007-05-14  Ulrich Drepper  <drepper@redhat.com>
 
-	* version.h (VERSION): Define to 2.6.
-	* include/features.h (__GLIBC_MINOR__): Define to 6.
+	* version.h (VERSION): Define to 6.
+	* include/features.h (__GLIBC_MINOR__): Likewise.
 
 	* malloc/malloc.c: Use all small bin slots on 64-bit archs.
 
@@ -631,7 +248,6 @@
 	sizes.
 
 2007-05-13  Ulrich Drepper  <drepper@redhat.com>
-
 	* malloc/malloc.c [MALLOC_DEBUG]: Keep track of current maximum
 	number of mmaps.  n_mmaps_max is the target.
 	* malloc/hooks.c: Likewise.

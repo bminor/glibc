@@ -1,6 +1,6 @@
 /* Software floating-point emulation.
    Return 1 iff a or b is a NaN, 0 otherwise.
-   Copyright (C) 2006,2007 Free Software Foundation, Inc.
+   Copyright (C) 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Joseph Myers (joseph@codesourcery.com).
 
@@ -31,11 +31,12 @@
 #include "soft-fp.h"
 #include "quad.h"
 
-CMPtype __unordtf2(TFtype a, TFtype b)
+int
+__unordtf2(TFtype a, TFtype b)
 {
   FP_DECL_Q(A);
   FP_DECL_Q(B);
-  CMPtype r;
+  int r;
 
   FP_UNPACK_RAW_Q(A, a);
   FP_UNPACK_RAW_Q(B, b);

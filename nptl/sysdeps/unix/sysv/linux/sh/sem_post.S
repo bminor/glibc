@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,6 @@
 #include <sysdep.h>
 #include <shlib-compat.h>
 #include <pthread-errnos.h>
-#include <structsem.h>
 #include "lowlevel-atomic.h"
 
 
@@ -35,14 +34,11 @@
 	.align	5
 __new_sem_post:
 	mov	#1, r3
-	XADD (r3, @(VALUE,r4), r2)
-	mov.l	@(NWAITERS,r4), r2
-	tst	r2, r2
-	bt	2f
+	XADD (r3, @r4, r2)
+
 	mov	#FUTEX_WAKE, r5
-	mov.l	@(PRIVATE,r4), r1
-	or	r1, r5
-	mov	#1, r6
+	mov	r2, r6
+	add	#1, r6
 	mov	#0, r7
 	mov	#SYS_futex, r3
 	extu.b	r3, r3
@@ -51,7 +47,6 @@ __new_sem_post:
 
 	cmp/pz	r0
 	bf	1f
-2:
 	rts
 	 mov	#0, r0
 

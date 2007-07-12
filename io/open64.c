@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997, 1999, 2000, 2002, 2007
+/* Copyright (C) 1991, 1995, 1996, 1997, 1999, 2000, 2002
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -21,7 +21,7 @@
 #include <fcntl.h>
 #include <stdarg.h>
 #include <stddef.h>
-#include <stdio.h>
+#include <bp-sym.h>
 
 /* Open FILE with access OFLAG.  If OFLAG includes O_CREAT,
    a third argument is the file protection.  */
@@ -51,21 +51,7 @@ __libc_open64 (file, oflag)
 }
 strong_alias (__libc_open64, __open64)
 libc_hidden_def (__open64)
-weak_alias (__libc_open64, open64)
+weak_alias (__libc_open64, BP_SYM (open64))
 
 stub_warning (open64)
-
-
-int
-__open64_2 (file, oflag)
-     const char *file;
-     int oflag;
-{
-  if (oflag & O_CREAT)
-    __fortify_fail ("invalid open64 call: O_CREAT without mode");
-
-  return __open64 (file, oflag);
-}
-stub_warning (__open64_2)
-
 #include <stub-tag.h>

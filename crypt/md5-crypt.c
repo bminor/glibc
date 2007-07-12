@@ -106,7 +106,7 @@ __md5_crypt_r (key, salt, buffer, buflen)
 
   /* The last part is the salt string.  This must be at most 8
      characters and it ends at the first `$' character (for
-     compatibility with existing implementations).  */
+     compatibility which existing solutions).  */
   __md5_process_bytes (salt, salt_len, &ctx);
 
 

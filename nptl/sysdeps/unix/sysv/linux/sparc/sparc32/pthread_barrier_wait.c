@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2003.
 
@@ -52,9 +52,7 @@ pthread_barrier_wait (barrier)
       ++ibarrier->b.curr_event;
 
       /* Wake up everybody.  */
-      lll_futex_wake (&ibarrier->b.curr_event, INT_MAX,
-		      // XYZ check mutex flag
-		      LLL_SHARED);
+      lll_futex_wake (&ibarrier->b.curr_event, INT_MAX);
 
       /* This is the thread which finished the serialization.  */
       result = PTHREAD_BARRIER_SERIAL_THREAD;
@@ -70,9 +68,7 @@ pthread_barrier_wait (barrier)
 
       /* Wait for the event counter of the barrier to change.  */
       do
-	lll_futex_wait (&ibarrier->b.curr_event, event,
-			// XYZ check mutex flag
-			LLL_SHARED);
+	lll_futex_wait (&ibarrier->b.curr_event, event);
       while (event == ibarrier->b.curr_event);
     }
 

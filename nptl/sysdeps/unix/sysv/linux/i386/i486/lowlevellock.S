@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -32,22 +32,8 @@
 
 #define SYS_gettimeofday	__NR_gettimeofday
 #define SYS_futex		240
-#ifndef FUTEX_WAIT
-# define FUTEX_WAIT		0
-# define FUTEX_WAKE		1
-#endif
-
-#ifndef LOAD_FUTEX_WAIT
-# if FUTEX_WAIT == 0
-#  define LOAD_FUTEX_WAIT(reg) \
-	xorl	reg, reg
-# else
-#  define LOAD_FUTEX_WAIT(reg) \
-	movl	$FUTEX_WAIT, reg
-# endif
-# define LOAD_FUTEX_WAKE(reg) \
-	movl	$FUTEX_WAKE, reg
-#endif
+#define FUTEX_WAIT		0
+#define FUTEX_WAKE		1
 
 
 	.globl	__lll_mutex_lock_wait
@@ -69,7 +55,7 @@ __lll_mutex_lock_wait:
 	movl	$2, %edx
 	movl	%ecx, %ebx
 	xorl	%esi, %esi	/* No timeout.  */
-	LOAD_FUTEX_WAIT (%ecx)
+	xorl	%ecx, %ecx	/* movl $FUTEX_WAIT, %ecx */
 
 	cmpl	%edx, %eax	/* NB:	 %edx == 2 */
 	jne 2f
@@ -165,7 +151,7 @@ __lll_mutex_timedlock_wait:
 
 	/* Futex call.  */
 	movl	%esp, %esi
-	LOAD_FUTEX_WAIT (%ecx)
+	xorl	%ecx, %ecx	/* movl $FUTEX_WAIT, %ecx */
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
 	movl	%eax, %ecx
@@ -219,6 +205,35 @@ __lll_mutex_timedlock_wait:
 #endif
 
 
+#ifdef NOT_IN_libc
+	.globl	lll_unlock_wake_cb
+	.type	lll_unlock_wake_cb,@function
+	.hidden	lll_unlock_wake_cb
+	.align	16
+lll_unlock_wake_cb:
+	pushl	%ebx
+	pushl	%ecx
+	pushl	%edx
+
+	movl	20(%esp), %ebx
+	LOCK
+	subl	$1, (%ebx)
+	je	1f
+
+	movl	$FUTEX_WAKE, %ecx
+	movl	$1, %edx	/* Wake one thread.  */
+	movl	$SYS_futex, %eax
+	movl	$0, (%ebx)
+	ENTER_KERNEL
+
+1:	popl	%edx
+	popl	%ecx
+	popl	%ebx
+	ret
+	.size	lll_unlock_wake_cb,.-lll_unlock_wake_cb
+#endif
+
+
 	.globl	__lll_mutex_unlock_wake
 	.type	__lll_mutex_unlock_wake,@function
 	.hidden	__lll_mutex_unlock_wake
@@ -237,7 +252,7 @@ __lll_mutex_unlock_wake:
 
 	movl	%eax, %ebx
 	movl	$0, (%eax)
-	LOAD_FUTEX_WAKE (%ecx)
+	movl	$FUTEX_WAKE, %ecx
 	movl	$1, %edx	/* Wake one thread.  */
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
@@ -299,8 +314,6 @@ __lll_timedwait_tid:
 	jz	4f
 
 	movl	%esp, %esi
-	/* XXX The kernel so far uses global futex for the wakeup at
-	   all times.  */
 	xorl	%ecx, %ecx	/* movl $FUTEX_WAIT, %ecx */
 	movl	%ebp, %ebx
 	movl	$SYS_futex, %eax

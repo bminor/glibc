@@ -376,12 +376,6 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       __pthread_multiple_threads = *__libc_multiple_threads_ptr = 1;
 #endif
 
-#ifndef __ASSUME_PRIVATE_FUTEX
-      /* The thread must know when private futexes are supported.  */
-      pd->header.private_futex = THREAD_GETMEM (THREAD_SELF,
-						header.private_futex);
-#endif
-
 #ifdef NEED_DL_SYSINFO
       /* Copy the sysinfo value from the parent.  */
       THREAD_SYSINFO(pd) = THREAD_SELF_SYSINFO;
@@ -514,12 +508,6 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	  pd->header.multiple_threads = 1;
 #ifndef TLS_MULTIPLE_THREADS_IN_TCB
 	  __pthread_multiple_threads = *__libc_multiple_threads_ptr = 1;
-#endif
-
-#ifndef __ASSUME_PRIVATE_FUTEX
-	  /* The thread must know when private futexes are supported.  */
-	  pd->header.private_futex = THREAD_GETMEM (THREAD_SELF,
-                                                    header.private_futex);
 #endif
 
 #ifdef NEED_DL_SYSINFO
@@ -951,7 +939,7 @@ __nptl_setxid (struct xid_command *cmdp)
   int cur = cmdp->cntr;
   while (cur != 0)
     {
-      lll_private_futex_wait (&cmdp->cntr, cur);
+      lll_futex_wait (&cmdp->cntr, cur);
       cur = cmdp->cntr;
     }
 
@@ -1037,7 +1025,7 @@ __wait_lookup_done (void)
 	continue;
 
       do
-	lll_private_futex_wait (gscope_flagp, THREAD_GSCOPE_FLAG_WAIT);
+	lll_futex_wait (gscope_flagp, THREAD_GSCOPE_FLAG_WAIT);
       while (*gscope_flagp == THREAD_GSCOPE_FLAG_WAIT);
     }
 
@@ -1059,7 +1047,7 @@ __wait_lookup_done (void)
 	continue;
 
       do
-	lll_private_futex_wait (gscope_flagp, THREAD_GSCOPE_FLAG_WAIT);
+	lll_futex_wait (gscope_flagp, THREAD_GSCOPE_FLAG_WAIT);
       while (*gscope_flagp == THREAD_GSCOPE_FLAG_WAIT);
     }
 

@@ -97,9 +97,6 @@ enum
   = PTHREAD_MUTEX_PRIO_PROTECT_NP | PTHREAD_MUTEX_ADAPTIVE_NP
 };
 
-#define PTHREAD_MUTEX_TYPE(m) \
-  ((m)->__data.__kind)
-
 /* Ceiling in __data.__lock.  __data.__lock is signed, so don't
    use the MSB bit in there, but in the mask also include that bit,
    so that the compiler can optimize & PTHREAD_MUTEX_PRIO_CEILING_MASK
@@ -119,11 +116,6 @@ enum
 #define PTHREAD_MUTEXATTR_FLAG_BITS \
   (PTHREAD_MUTEXATTR_FLAG_ROBUST | PTHREAD_MUTEXATTR_FLAG_PSHARED \
    | PTHREAD_MUTEXATTR_PROTOCOL_MASK | PTHREAD_MUTEXATTR_PRIO_CEILING_MASK)
-
-
-/* Check whether rwlock prefers readers.   */
-#define PTHREAD_RWLOCK_PREFER_READER_P(rwlock) \
-  ((rwlock)->__data.__flags == 0)
 
 
 /* Bits used in robust mutex implementation.  */

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -76,11 +76,9 @@ struct pthread_condattr
 
 
 /* The __NWAITERS field is used as a counter and to house the number
-   of bits for other purposes.  COND_CLOCK_BITS is the number
-   of bits needed to represent the ID of the clock.  COND_NWAITERS_SHIFT
-   is the number of bits reserved for other purposes like the clock.  */
-#define COND_CLOCK_BITS		1
-#define COND_NWAITERS_SHIFT	1
+   of bits which represent the clock.  COND_CLOCK_BITS is the number
+   of bits reserved for the clock.  */
+#define COND_CLOCK_BITS	1
 
 
 /* Read-write lock variable attribute data structure.  */
@@ -98,7 +96,6 @@ struct pthread_barrier
   int lock;
   unsigned int left;
   unsigned int init_count;
-  int private;
 };
 
 
@@ -140,16 +137,9 @@ struct pthread_key_struct
 
 
 /* Semaphore variable structure.  */
-struct new_sem
+struct sem
 {
-  unsigned int value;
-  int private;
-  unsigned long int nwaiters;
-};
-
-struct old_sem
-{
-  unsigned int value;
+  unsigned int count;
 };
 
 

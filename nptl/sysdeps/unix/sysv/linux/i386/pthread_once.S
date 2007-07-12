@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -19,8 +19,6 @@
 
 #include <unwindbuf.h>
 #include <sysdep.h>
-#include <kernel-features.h>
-
 
 #ifndef UP
 # define LOCK lock
@@ -28,10 +26,8 @@
 # define LOCK
 #endif
 
-#define SYS_futex		240
-#define FUTEX_WAIT		0
-#define FUTEX_WAKE		1
-#define FUTEX_PRIVATE_FLAG	128
+#define SYS_futex	240
+#define FUTEX_WAKE	1
 
 	.comm	__fork_generation, 4, 4
 
@@ -94,16 +90,7 @@ __pthread_once:
 	jnz	3f	/* Different for generation -> run initializer.  */
 
 	/* Somebody else got here first.  Wait.  */
-#ifdef __ASSUME_PRIVATE_FUTEX
-	movl	$FUTEX_WAIT|FUTEX_PRIVATE_FLAG, %ecx
-#else
-# if FUTEX_WAIT == 0
-	movl	%gs:PRIVATE_FUTEX, %ecx
-# else
-	movl	$FUTEX_WAIT, %ecx
-	orl	%gs:PRIVATE_FUTEX, %ecx
-# endif
-#endif
+	movl	%esi, %ecx		/* movl $FUTEX_WAIT, %ecx */
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
 	jmp	6b
@@ -144,12 +131,7 @@ __pthread_once:
 
 	/* Wake up all other threads.  */
 	movl	$0x7fffffff, %edx
-#ifdef __ASSUME_PRIVATE_FUTEX
-	movl	$FUTEX_WAKE|FUTEX_PRIVATE_FLAG, %ecx
-#else
 	movl	$FUTEX_WAKE, %ecx
-	orl	%gs:PRIVATE_FUTEX, %ecx
-#endif
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
 
@@ -170,12 +152,7 @@ __pthread_once:
 	movl	$0, (%ebx)
 
 	movl	$0x7fffffff, %edx
-#ifdef __ASSUME_PRIVATE_FUTEX
-	movl	$FUTEX_WAKE|FUTEX_PRIVATE_FLAG, %ecx
-#else
 	movl	$FUTEX_WAKE, %ecx
-	orl	%gs:PRIVATE_FUTEX, %ecx
-#endif
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
 

@@ -44,9 +44,7 @@ __lll_robust_lock_wait (int *futex)
 	  && atomic_compare_and_exchange_bool_acq (futex, newval, oldval))
 	continue;
 
-      lll_futex_wait (futex, newval,
-		      // XYZ check mutex flag
-		      LLL_SHARED);
+      lll_futex_wait (futex, newval);
 
     try:
       ;
@@ -102,9 +100,7 @@ __lll_robust_timedlock_wait (int *futex, const struct timespec *abstime)
 	  && atomic_compare_and_exchange_bool_acq (futex, newval, oldval))
 	continue;
 
-      lll_futex_timed_wait (futex, newval, &rt,
-			    // XYZ check mutex flag
-			    LLL_SHARED);
+      lll_futex_timed_wait (futex, newval, &rt);
 
     try:
       ;

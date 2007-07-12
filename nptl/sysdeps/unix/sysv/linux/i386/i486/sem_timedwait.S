@@ -20,7 +20,6 @@
 #include <sysdep.h>
 #include <shlib-compat.h>
 #include <pthread-errnos.h>
-#include <structsem.h>
 
 #ifndef UP
 # define LOCK lock
@@ -30,12 +29,7 @@
 
 #define SYS_gettimeofday	__NR_gettimeofday
 #define SYS_futex		240
-#define FUTEX_WAIT		0
-
-
-#if VALUE != 0
-# error "code needs to be rewritten for VALUE != 0"
-#endif
+#define FUTEX_WAKE		1
 
 
 	.text
@@ -43,8 +37,14 @@
 	.globl	sem_timedwait
 	.type	sem_timedwait,@function
 	.align	16
+	cfi_startproc
 sem_timedwait:
-.LSTARTCODE:
+	/* First check for cancellation.  */
+	movl	%gs:CANCELHANDLING, %eax
+	andl	$0xfffffff9, %eax
+	cmpl	$8, %eax
+	je	10f
+
 	movl	4(%esp), %ecx
 
 	movl	(%ecx), %eax
@@ -61,24 +61,24 @@ sem_timedwait:
 
 	/* Check whether the timeout value is valid.  */
 1:	pushl	%esi
-.Lpush_esi:
+	cfi_adjust_cfa_offset(4)
 	pushl	%edi
-.Lpush_edi:
+	cfi_adjust_cfa_offset(4)
 	pushl	%ebx
-.Lpush_ebx:
+	cfi_adjust_cfa_offset(4)
 	subl	$12, %esp
-.Lsub_esp:
+	cfi_adjust_cfa_offset(12)
 
 	movl	32(%esp), %edi
+	cfi_offset(7, -12)		/* %edi */
 
 	/* Check for invalid nanosecond field.  */
 	cmpl	$1000000000, 4(%edi)
 	movl	$EINVAL, %esi
+	cfi_offset(6, -8)		/* %esi */
 	jae	6f
 
-	LOCK
-	incl	NWAITERS(%ecx)
-
+	cfi_offset(3, -16)		/* %ebx */
 7:	xorl	%ecx, %ecx
 	movl	%esp, %ebx
 	movl	%ecx, %edx
@@ -103,26 +103,19 @@ sem_timedwait:
 	movl	%ecx, (%esp)	/* Store relative timeout.  */
 	movl	%edx, 4(%esp)
 
-.LcleanupSTART:
 	call	__pthread_enable_asynccancel
 	movl	%eax, 8(%esp)
 
-	movl	28(%esp), %ebx	/* Load semaphore address.  */
-#if FUTEX_WAIT == 0
-	movl	PRIVATE(%ebx), %ecx
-#else
-	movl	$FUTEX_WAIT, %ecx
-	orl	PRIVATE(%ebx), %ecx
-#endif
+	movl	28(%esp), %ebx
+	xorl	%ecx, %ecx
 	movl	%esp, %esi
-	xorl	%edx, %edx
 	movl	$SYS_futex, %eax
+	xorl	%edx, %edx
 	ENTER_KERNEL
 	movl	%eax, %esi
 
 	movl	8(%esp), %eax
 	call	__pthread_disable_asynccancel
-.LcleanupEND:
 
 	testl	%esi, %esi
 	je	9f
@@ -138,22 +131,24 @@ sem_timedwait:
 	cmpxchgl %ecx, (%ebx)
 	jne	8b
 
-	xorl	%eax, %eax
-
-10:	LOCK
-	decl	NWAITERS(%ebx)
-
 	addl	$12, %esp
-.Ladd_esp:
+	cfi_adjust_cfa_offset(-12)
+	xorl	%eax, %eax
 	popl	%ebx
-.Lpop_ebx:
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(3)
 	popl	%edi
-.Lpop_edi:
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(7)
 	popl	%esi
-.Lpop_esi:
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(6)
 	ret
 
-.Lafter_ret:
+	cfi_adjust_cfa_offset(24)
+	cfi_offset(6, -8)		/* %esi */
+	cfi_offset(7, -12)	 	/* %edi */
+	cfi_offset(3, -16)		/* %ebx */
 3:	negl	%esi
 6:
 #ifdef PIC
@@ -177,163 +172,25 @@ sem_timedwait:
 	movl	%esi, (%eax)
 #endif
 
-	movl	28(%esp), %ebx	/* Load semaphore address.  */
+	addl	$12, %esp
+	cfi_adjust_cfa_offset(-12)
 	orl	$-1, %eax
-	jmp	10b
-	.size	sem_timedwait,.-sem_timedwait
+	popl	%ebx
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(3)
+	popl	%edi
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(7)
+	popl	%esi
+	cfi_adjust_cfa_offset(-4)
+	cfi_restore(6)
+	ret
 
-
-	.type	sem_wait_cleanup,@function
-sem_wait_cleanup:
+10:	/* Canceled.  */
+	movl	$0xffffffff, %gs:RESULT
 	LOCK
-	decl	NWAITERS(%ebx)
-	movl	%eax, (%esp)
-.LcallUR:
-	call	_Unwind_Resume@PLT
-	hlt
-.LENDCODE:
-	.size	sem_wait_cleanup,.-sem_wait_cleanup
-
-
-	.section .gcc_except_table,"a",@progbits
-.LexceptSTART:
-	.byte	0xff				# @LPStart format (omit)
-	.byte	0xff				# @TType format (omit)
-	.byte	0x01				# call-site format
-						# DW_EH_PE_uleb128
-	.uleb128 .Lcstend-.Lcstbegin
-.Lcstbegin:
-	.uleb128 .LcleanupSTART-.LSTARTCODE
-	.uleb128 .LcleanupEND-.LcleanupSTART
-	.uleb128 sem_wait_cleanup-.LSTARTCODE
-	.uleb128  0
-	.uleb128 .LcallUR-.LSTARTCODE
-	.uleb128 .LENDCODE-.LcallUR
-	.uleb128 0
-	.uleb128  0
-.Lcstend:
-
-
-	.section .eh_frame,"a",@progbits
-.LSTARTFRAME:
-	.long	.LENDCIE-.LSTARTCIE		# Length of the CIE.
-.LSTARTCIE:
-	.long	0				# CIE ID.
-	.byte	1				# Version number.
-#ifdef SHARED
-	.string	"zPLR"				# NUL-terminated augmentation
-						# string.
-#else
-	.string	"zPL"				# NUL-terminated augmentation
-						# string.
-#endif
-	.uleb128 1				# Code alignment factor.
-	.sleb128 -4				# Data alignment factor.
-	.byte	8				# Return address register
-						# column.
-#ifdef SHARED
-	.uleb128 7				# Augmentation value length.
-	.byte	0x9b				# Personality: DW_EH_PE_pcrel
-						# + DW_EH_PE_sdata4
-						# + DW_EH_PE_indirect
-	.long	DW.ref.__gcc_personality_v0-.
-	.byte	0x1b				# LSDA Encoding: DW_EH_PE_pcrel
-						# + DW_EH_PE_sdata4.
-	.byte	0x1b				# FDE Encoding: DW_EH_PE_pcrel
-						# + DW_EH_PE_sdata4.
-#else
-	.uleb128 6				# Augmentation value length.
-	.byte	0x0				# Personality: absolute
-	.long	__gcc_personality_v0
-	.byte	0x0				# LSDA Encoding: absolute
-#endif
-	.byte 0x0c				# DW_CFA_def_cfa
-	.uleb128 4
-	.uleb128 4
-	.byte	0x88				# DW_CFA_offset, column 0x10
-	.uleb128 1
-	.align 4
-.LENDCIE:
-
-	.long	.LENDFDE-.LSTARTFDE		# Length of the FDE.
-.LSTARTFDE:
-	.long	.LSTARTFDE-.LSTARTFRAME		# CIE pointer.
-#ifdef SHARED
-	.long	.LSTARTCODE-.			# PC-relative start address
-						# of the code.
-#else
-	.long	.LSTARTCODE			# Start address of the code.
-#endif
-	.long	.LENDCODE-.LSTARTCODE		# Length of the code.
-	.uleb128 4				# Augmentation size
-#ifdef SHARED
-	.long	.LexceptSTART-.
-#else
-	.long	.LexceptSTART
-#endif
-
-	.byte	4				# DW_CFA_advance_loc4
-	.long	.Lpush_esi-.LSTARTCODE
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 8
-	.byte   0x86				# DW_CFA_offset %esi
-        .uleb128 2
-	.byte	4				# DW_CFA_advance_loc4
-	.long	.Lpush_edi-.Lpush_esi
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 12
-	.byte   0x87				# DW_CFA_offset %edi
-        .uleb128 3
-	.byte	4				# DW_CFA_advance_loc4
-	.long	.Lpush_ebx-.Lpush_edi
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 16
-	.byte   0x83				# DW_CFA_offset %ebx
-        .uleb128 4
-	.byte	4				# DW_CFA_advance_loc4
-	.long	.Lsub_esp-.Lpush_ebx
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 28
-	.byte	4				# DW_CFA_advance_loc4
-	.long	.Ladd_esp-.Lsub_esp
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 16
-	.byte	4				# DW_CFA_advance_loc4
-	.long	.Lpop_ebx-.Ladd_esp
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 12
-	.byte	0xc3				# DW_CFA_restore %ebx
-	.byte	4				# DW_CFA_advance_loc4
-	.long	.Lpop_edi-.Lpop_ebx
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 8
-	.byte	0xc7				# DW_CFA_restore %edi
-	.byte	4				# DW_CFA_advance_loc4
-	.long	.Lpop_esi-.Lpop_edi
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 4
-	.byte	0xc6				# DW_CFA_restore %esi
-	.byte	4				# DW_CFA_advance_loc4
-	.long	.Lafter_ret-.Lpop_esi
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 28
-	.byte   0x86				# DW_CFA_offset %esi
-        .uleb128 2
-	.byte   0x87				# DW_CFA_offset %edi
-        .uleb128 3
-	.byte   0x83				# DW_CFA_offset %ebx
-        .uleb128 4
-	.align	4
-.LENDFDE:
-
-
-#ifdef SHARED
-	.hidden	DW.ref.__gcc_personality_v0
-	.weak	DW.ref.__gcc_personality_v0
-	.section .gnu.linkonce.d.DW.ref.__gcc_personality_v0,"aw",@progbits
-	.align	4
-	.type	DW.ref.__gcc_personality_v0, @object
-	.size	DW.ref.__gcc_personality_v0, 4
-DW.ref.__gcc_personality_v0:
-	.long	__gcc_personality_v0
-#endif
+	orl	$0x10, %gs:CANCELHANDLING
+	movl	%gs:CLEANUP_JMP_BUF, %eax
+	jmp	HIDDEN_JUMPTARGET (__pthread_unwind)
+	cfi_endproc
+	.size	sem_timedwait,.-sem_timedwait

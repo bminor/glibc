@@ -37,8 +37,6 @@
 #define FUTEX_LOCK_PI		6
 #define FUTEX_UNLOCK_PI		7
 #define FUTEX_TRYLOCK_PI	8
-#define FUTEX_PRIVATE_FLAG	128
-
 
 /* Initializer for compatibility lock.	*/
 #define LLL_MUTEX_LOCK_INITIALIZER (0)
@@ -262,6 +260,8 @@ typedef int lll_lock_t;
 /* Initializers for lock.  */
 #define LLL_LOCK_INITIALIZER		(0)
 #define LLL_LOCK_INITIALIZER_LOCKED	(1)
+
+extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 
 /* The states of a lock are:
     0  -  untaken

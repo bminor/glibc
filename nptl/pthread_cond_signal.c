@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2003.
 
@@ -44,15 +44,11 @@ __pthread_cond_signal (cond)
 
       /* Wake one.  */
       if (! __builtin_expect (lll_futex_wake_unlock (&cond->__data.__futex, 1,
-						     1, &cond->__data.__lock,
-						     // XYZ check mutex flag
-						     LLL_SHARED),
+						     1, &cond->__data.__lock),
 						     0))
 	return 0;
 
-      lll_futex_wake (&cond->__data.__futex, 1,
-		      // XYZ check mutex flag
-		      LLL_SHARED);
+      lll_futex_wake (&cond->__data.__futex, 1);
     }
 
   /* We are done.  */

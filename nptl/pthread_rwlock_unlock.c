@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2003.
 
@@ -38,18 +38,14 @@ __pthread_rwlock_unlock (pthread_rwlock_t *rwlock)
 	{
 	  ++rwlock->__data.__writer_wakeup;
 	  lll_mutex_unlock (rwlock->__data.__lock);
-	  lll_futex_wake (&rwlock->__data.__writer_wakeup, 1,
-			  // XYZ check mutex flag
-			  LLL_SHARED);
+	  lll_futex_wake (&rwlock->__data.__writer_wakeup, 1);
 	  return 0;
 	}
       else if (rwlock->__data.__nr_readers_queued)
 	{
 	  ++rwlock->__data.__readers_wakeup;
 	  lll_mutex_unlock (rwlock->__data.__lock);
-	  lll_futex_wake (&rwlock->__data.__readers_wakeup, INT_MAX,
-			  // XYZ check mutex flag
-			  LLL_SHARED);
+	  lll_futex_wake (&rwlock->__data.__readers_wakeup, INT_MAX);
 	  return 0;
 	}
     }

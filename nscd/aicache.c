@@ -1,5 +1,5 @@
 /* Cache handling for host lookup.
-   Copyright (C) 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2004.
 
@@ -77,6 +77,15 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
       else
 	dbg_log (_("Reloading \"%s\" in hosts cache!"), (char *) key);
     }
+
+#if 0
+  uid_t oldeuid = 0;
+  if (db->secure)
+    {
+      oldeuid = geteuid ();
+      pthread_seteuid_np (uid);
+    }
+#endif
 
   static service_user *hosts_database;
   service_user *nip = NULL;
@@ -254,10 +263,8 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 
 	      total = sizeof (*dataset) + naddrs + addrslen + canonlen;
 
-	      /* Now we can allocate the data structure.  If the TTL
-		 of the entry is reported as zero do not cache the
-		 entry at all.  */
-	      if (ttl != 0 && he == NULL)
+	      /* Now we can allocate the data structure.  */
+	      if (he == NULL)
 		{
 		  dataset = (struct dataset *) mempool_alloc (db,
 							      total
@@ -445,6 +452,11 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 
  out:
   _res.options = old_res_options;
+
+#if 0
+  if (db->secure)
+    pthread_seteuid_np (oldeuid);
+#endif
 
   if (dataset != NULL && !alloca_used)
     {

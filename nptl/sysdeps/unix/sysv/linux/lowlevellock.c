@@ -1,5 +1,5 @@
 /* low level locking for pthread library.  Generic futex-using version.
-   Copyright (C) 2003, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Mackerras <paulus@au.ibm.com>, 2003.
 
@@ -31,9 +31,7 @@ __lll_lock_wait (int *futex)
     {
       int oldval = atomic_compare_and_exchange_val_acq (futex, 2, 1);
       if (oldval != 0)
-	lll_futex_wait (futex, 2,
-			// XYZ check mutex flag
-			LLL_SHARED);
+	lll_futex_wait (futex, 2);
     }
   while (atomic_compare_and_exchange_bool_acq (futex, 2, 0) != 0);
 }
@@ -70,9 +68,7 @@ __lll_timedlock_wait (int *futex, const struct timespec *abstime)
       /* Wait.  */
       int oldval = atomic_compare_and_exchange_val_acq (futex, 2, 1);
       if (oldval != 0)
-	lll_futex_timed_wait (futex, 2, &rt,
-			      // XYZ check mutex flag
-			      LLL_SHARED);
+	lll_futex_timed_wait (futex, 2, &rt);
     }
   while (atomic_compare_and_exchange_bool_acq (futex, 2, 0) != 0);
 
@@ -80,8 +76,20 @@ __lll_timedlock_wait (int *futex, const struct timespec *abstime)
 }
 
 
-/* This function doesn't get included in libc.so  */
+/* These don't get included in libc.so  */
 #ifdef IS_IN_libpthread
+int
+lll_unlock_wake_cb (int *futex)
+{
+  int val = atomic_exchange_rel (futex, 0);
+
+  if (__builtin_expect (val > 1, 0))
+    lll_futex_wake (futex, 1);
+
+  return 0;
+}
+
+
 int
 __lll_timedwait_tid (int *tidp, const struct timespec *abstime)
 {
@@ -112,12 +120,12 @@ __lll_timedwait_tid (int *tidp, const struct timespec *abstime)
       if (rt.tv_sec < 0)
 	return ETIMEDOUT;
 
-      /* Wait until thread terminates.  The kernel so far does not use
-	 the private futex operations for this.  */
-      if (lll_futex_timed_wait (tidp, tid, &rt, LLL_SHARED) == -ETIMEDOUT)
+      /* Wait until thread terminates.  */
+      if (lll_futex_timed_wait (tidp, tid, &rt) == -ETIMEDOUT)
 	return ETIMEDOUT;
     }
 
   return 0;
 }
+
 #endif

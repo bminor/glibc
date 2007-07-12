@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2003.
 
@@ -62,18 +62,16 @@ __condvar_cleanup (void *arg)
       ++cbuffer->cond->__data.__woken_seq;
     }
 
-  cbuffer->cond->__data.__nwaiters -= 1 << COND_NWAITERS_SHIFT;
+  cbuffer->cond->__data.__nwaiters -= 1 << COND_CLOCK_BITS;
 
   /* If pthread_cond_destroy was called on this variable already,
      notify the pthread_cond_destroy caller all waiters have left
      and it can be successfully destroyed.  */
   destroying = 0;
   if (cbuffer->cond->__data.__total_seq == -1ULL
-      && cbuffer->cond->__data.__nwaiters < (1 << COND_NWAITERS_SHIFT))
+      && cbuffer->cond->__data.__nwaiters < (1 << COND_CLOCK_BITS))
     {
-      lll_futex_wake (&cbuffer->cond->__data.__nwaiters, 1,
-		      // XYZ check mutex flag
-		      LLL_SHARED);
+      lll_futex_wake (&cbuffer->cond->__data.__nwaiters, 1);
       destroying = 1;
     }
 
@@ -82,9 +80,7 @@ __condvar_cleanup (void *arg)
 
   /* Wake everybody to make sure no condvar signal gets lost.  */
   if (! destroying)
-    lll_futex_wake (&cbuffer->cond->__data.__futex, INT_MAX,
-		    // XYZ check mutex flag
-		    LLL_SHARED);
+    lll_futex_wake (&cbuffer->cond->__data.__futex, INT_MAX);
 
   /* Get the mutex before returning unless asynchronous cancellation
      is in effect.  */
@@ -115,7 +111,7 @@ __pthread_cond_wait (cond, mutex)
   /* We have one new user of the condvar.  */
   ++cond->__data.__total_seq;
   ++cond->__data.__futex;
-  cond->__data.__nwaiters += 1 << COND_NWAITERS_SHIFT;
+  cond->__data.__nwaiters += 1 << COND_CLOCK_BITS;
 
   /* Remember the mutex we are using here.  If there is already a
      different address store this is a bad user bug.  Do not store
@@ -150,9 +146,7 @@ __pthread_cond_wait (cond, mutex)
       cbuffer.oldtype = __pthread_enable_asynccancel ();
 
       /* Wait until woken by signal or broadcast.  */
-      lll_futex_wait (&cond->__data.__futex, futex_val,
-		      // XYZ check mutex flag
-		      LLL_SHARED);
+      lll_futex_wait (&cond->__data.__futex, futex_val);
 
       /* Disable asynchronous cancellation.  */
       __pthread_disable_asynccancel (cbuffer.oldtype);
@@ -174,16 +168,14 @@ __pthread_cond_wait (cond, mutex)
 
  bc_out:
 
-  cond->__data.__nwaiters -= 1 << COND_NWAITERS_SHIFT;
+  cond->__data.__nwaiters -= 1 << COND_CLOCK_BITS;
 
   /* If pthread_cond_destroy was called on this varaible already,
      notify the pthread_cond_destroy caller all waiters have left
      and it can be successfully destroyed.  */
   if (cond->__data.__total_seq == -1ULL
-      && cond->__data.__nwaiters < (1 << COND_NWAITERS_SHIFT))
-    lll_futex_wake (&cond->__data.__nwaiters, 1,
-		    // XYZ check mutex flag
-		    LLL_SHARED);
+      && cond->__data.__nwaiters < (1 << COND_CLOCK_BITS))
+    lll_futex_wake (&cond->__data.__nwaiters, 1);
 
   /* We are done with the condvar.  */
   lll_mutex_unlock (cond->__data.__lock);

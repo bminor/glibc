@@ -1,7 +1,6 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <bits/pthreadtypes.h>
-#include <bits/wordsize.h>
 
 --
 
@@ -13,4 +12,3 @@ READERS_QUEUED	offsetof (pthread_rwlock_t, __data.__nr_readers_queued)
 WRITERS_QUEUED	offsetof (pthread_rwlock_t, __data.__nr_writers_queued)
 FLAGS		offsetof (pthread_rwlock_t, __data.__flags)
 WRITER		offsetof (pthread_rwlock_t, __data.__writer)
-PSHARED		offsetof (pthread_rwlock_t, __data.__shared)

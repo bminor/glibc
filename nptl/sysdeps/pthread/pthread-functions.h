@@ -97,6 +97,7 @@ struct pthread_functions
   void (*ptr__nptl_deallocate_tsd) (void);
   int (*ptr__nptl_setxid) (struct xid_command *);
   void (*ptr_freeres) (void);
+  void (*ptr_wait_lookup_done) (int);
 };
 
 /* Variable in libc.so.  */

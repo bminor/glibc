@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -106,18 +106,8 @@ pthread_rwlock_timedwrlock:
 	/* Futex call.  */
 	movl	%ecx, (%esp)	/* Store relative timeout.  */
 	movl	%edx, 4(%esp)
-
 	movl	%esi, %edx
-#if __ASSUME_PRIVATE_FUTEX
-	movzbl	PSHARED(%ebp), %ecx
-	xorl	$FUTEX_PRIVATE_FLAG|FUTEX_WAIT, %ecx
-#else
-	movzbl	PSHARED(%ebp), %ecx
-# if FUTEX_WAIT != 0
-	orl	$FUTEX_WAIT, %ecx
-# endif
-	xorl	%gs:PRIVATE_FUTEX, %ecx
-#endif
+	xorl	%ecx, %ecx	/* movl $FUTEX_WAIT, %ecx */
 	movl	%esp, %esi
 	leal	WRITERS_WAKEUP(%ebp), %ebx
 	movl	$SYS_futex, %eax

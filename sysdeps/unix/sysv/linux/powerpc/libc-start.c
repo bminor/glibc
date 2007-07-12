@@ -20,7 +20,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <ldsodefs.h>
-#include <sysdep.h>
 #include <bp-start.h>
 #include <bp-sym.h>
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2005, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2005.
 
@@ -37,15 +37,15 @@ main (void)
   if (mtx_normal.__data.__kind != PTHREAD_MUTEX_TIMED_NP)
     return 1;
   if (mtx_recursive.__data.__kind != PTHREAD_MUTEX_RECURSIVE_NP)
-    return 2;
+    return 1;
   if (mtx_errorchk.__data.__kind != PTHREAD_MUTEX_ERRORCHECK_NP)
-    return 3;
+    return 1;
   if (mtx_adaptive.__data.__kind != PTHREAD_MUTEX_ADAPTIVE_NP)
-    return 4;
+    return 1;
   if (rwl_normal.__data.__flags != PTHREAD_RWLOCK_PREFER_READER_NP)
-    return 5;
+    return 1;
   if (rwl_writer.__data.__flags
       != PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP)
-    return 6;
+    return 1;
   return 0;
 }
