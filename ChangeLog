@@ -1,5 +1,11 @@
 2007-04-13  Jakub Jelinek  <jakub@redhat.com>
 
+	[BZ #4344]
+	* elf/ldconfig.c (search_dir): Fix 2 off-by-2 errors.
+	Reported by David Anderson <davea42@earthlink.net>.
+
+2007-04-13  Jakub Jelinek  <jakub@redhat.com>
+
 	* stdio-common/printf_fp.c (___printf_fp): Fix exponent -4
 	special case handling when wcp == wstartp + 1.  Fix a comment typo.
 	* stdio-common/tfformat.c (sprint_doubles): Add a new testcase.
