@@ -1,3 +1,9 @@
+2007-02-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S
+	(__lll_mutex_timedlock_wait): Use correct pointer when we don't
+	call into the kernel to delay.
+
 2006-12-28  David S. Miller  <davem@davemloft.net>
 
 	* shlib-versions: Fix sparc64 linux target specification.
