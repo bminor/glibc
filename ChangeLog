@@ -1,5 +1,11 @@
 2007-04-23  Jakub Jelinek  <jakub@redhat.com>
 
+	[BZ #4405]
+	* iconvdata/gconv-modules (E13B): Add a missing slash to the alias
+	name.  Patch by Aurelien Jarno <aurelien@aurel32.net>.
+
+2007-04-23  Jakub Jelinek  <jakub@redhat.com>
+
 	[BZ #4381]
 	* nss/nss_files/files-hosts.c (HOST_DB_LOOKUP): Ensure sufficient
 	alignment of buffer and tmp_buffer.
