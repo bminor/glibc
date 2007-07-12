@@ -1,5 +1,12 @@
 2007-03-15  Jakub Jelinek  <jakub@redhat.com>
 
+	[BZ #4130]
+	* login/utmp_file.c (setutent_file): Use O_LARGEFILE for
+	open_not_cancel_2.
+	(updwtmp_file): Likewise.
+
+2007-03-15  Jakub Jelinek  <jakub@redhat.com>
+
 	[BZ #4101]
 	* argp/argp-help.c (hol_cluster_cmp): Fix comparisons used to find
 	ancestors with the same depths.
