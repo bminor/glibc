@@ -29,5 +29,6 @@ madvise (__ptr_t addr, size_t len, int advice)
   __set_errno (ENOSYS);
   return -1;
 }
+libc_hidden_def (madvise)
 stub_warning (madvise)
 #include <stub-tag.h>
