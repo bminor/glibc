@@ -1,3 +1,21 @@
+2007-04-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdio-common/printf_fp.c (___printf_fp): Fix exponent -4
+	special case handling when wcp == wstartp + 1.  Fix a comment typo.
+	* stdio-common/tfformat.c (sprint_doubles): Add a new testcase.
+
+2007-02-21  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #4070]
+	* stdio-common/printf_fp.c (___printf_fp): Handle a few more
+	special cases.
+	* stdio-common/tfformat.c (sprint_doubles): Some more tests.
+
+2007-02-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/printf_fp.c (___printf_fp): Cleanups and minor
+	optimization.
+
 2007-04-06  Jakub Jelinek  <jakub@redhat.com>
 
 	* nis/nis_domain_of.c (__nis_domain_of): New function.
