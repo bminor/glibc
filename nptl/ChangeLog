@@ -186,6 +186,12 @@
 	* tst-cancel-wrappers.sh: Set C["fdatasync"] to 1.
 	* tst-cancel4.c (tf_fdatasync): New test.
 
+2007-02-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/fork.c (__libc_fork): Reset refcntr in
+	new thread, don't just decrement it.
+	Patch by Suzuki K P <suzuki@in.ibm.com>.
+
 2007-02-09  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S
