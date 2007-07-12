@@ -38,7 +38,7 @@ iconv_open (const char *tocode, const char *fromcode)
   int res;
 
   /* Normalize the name.  We remove all characters beside alpha-numeric,
-     '_', '-', '/', and '.'.  */
+     '_', '-', '/', '.', and ':'.  */
   tocode_len = strlen (tocode);
   tocode_conv = (char *) alloca (tocode_len + 3);
   strip (tocode_conv, tocode);

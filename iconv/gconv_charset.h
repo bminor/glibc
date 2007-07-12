@@ -30,7 +30,7 @@ strip (char *wp, const char *s)
   while (*s != '\0')
     {
       if (__isalnum_l (*s, _nl_C_locobj_ptr)
-	  || *s == '_' || *s == '-' || *s == '.' || *s == ',')
+	  || *s == '_' || *s == '-' || *s == '.' || *s == ',' || *s == ':')
 	*wp++ = __toupper_l (*s, _nl_C_locobj_ptr);
       else if (*s == '/')
 	{
