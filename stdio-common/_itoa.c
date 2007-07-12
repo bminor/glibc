@@ -269,6 +269,7 @@ _itoa (value, buflim, base, upper_case)
 
     default:
       {
+	char *bufend = buflim;
 #if BITS_PER_MP_LIMB == 64
 	mp_limb_t base_multiplier = brec->base_multiplier;
 	if (brec->flag)
@@ -454,6 +455,8 @@ _itoa (value, buflim, base, upper_case)
 	  }
 	while (n != 0);
 #endif
+	if (buflim == bufend)
+	  *--buflim = '0';
       }
       break;
     }
