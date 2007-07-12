@@ -1,3 +1,8 @@
+2007-03-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (get_scope): Correct test for
+	172.16/12 address range.
+
 2007-03-01  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #4069]
