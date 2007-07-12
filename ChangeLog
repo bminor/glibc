@@ -1,5 +1,34 @@
 2007-04-25  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/check_pf.c (make_request): Return -1 instead
+	of 0 after the out_fail label.
+
+2007-03-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/gai.c: Include alloca.h.
+	(__libc_use_alloca): Define.
+
+2007-03-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ifaddrs.c (__netlink_request): Never
+	reallocate the buffer, instead fail for MSG_TRUNC or for EBUSY
+	NLMSG_ERR.  Instead use a page sized buffer.
+	* sysdeps/unix/sysv/linux/check_pf.c (make_request): Use page sized
+	buffer.
+
+2007-03-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ifaddrs.c (__netlink_request): Retry with
+	a new netlink socket if NLMSG_ERR -EBUSY is seen after some MSG_TRUNC
+	message.
+
+2007-02-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ifaddrs.c (__netlink_request): Fix
+	memory reallocation.
+
+2007-04-25  Jakub Jelinek  <jakub@redhat.com>
+
 	* libio/bits/stdio.h (fgetc_unlocked): Add extern inline optimized
 	version.
 
