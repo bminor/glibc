@@ -1,5 +1,8 @@
 2007-07-31  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/clone.S: Revert 2006-11-30 changes.
+	* sysdeps/unix/sysv/linux/x86_64/clone.S: Likewise.
+
 	* stdio-common/tfformat.c (sprint_doubles): Add 12 new tests.
 
 2007-07-28  Ulrich Drepper  <drepper@redhat.com>
