@@ -26,6 +26,7 @@
 #include <pthreadP.h>
 #include <bits/libc-lock.h>
 #include <sysdep.h>
+#include <ldsodefs.h>
 
 
 #ifdef TLS_MULTIPLE_THREADS_IN_TCB

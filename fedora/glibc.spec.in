@@ -1,4 +1,4 @@
-%define glibcrelease 4
+%define glibcrelease 1
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define xenarches i686 athlon
 %ifarch %{xenarches}
@@ -869,7 +869,7 @@ if [ "$platform" != power6 ]; then
 %endif
   export LD_PRELOAD=`pwd`/power6emul/\$LIB/power6emul.so
 fi
-AddOns=",powerpc-cpu$AddOns --with-cpu=power6"
+AddOns="$AddOns --with-cpu=power6"
 GCC="$GCC -mcpu=power6"
 GXX="$GXX -mcpu=power6"
 build_nptl linuxnptl-power6
@@ -1397,6 +1397,9 @@ touch $RPM_BUILD_ROOT/var/run/nscd/{socket,nscd.pid}
 touch $RPM_BUILD_ROOT/%{_prefix}/lib/locale/locale-archive
 %endif
 
+mkdir -p $RPM_BUILD_ROOT/var/cache/ldconfig
+> $RPM_BUILD_ROOT/var/cache/ldconfig/aux-cache
+
 %post -p /usr/sbin/glibc_post_upgrade.%{_target_cpu}
 
 %postun -p /sbin/ldconfig
@@ -1490,6 +1493,8 @@ rm -f *.filelist*
 %dir /etc/ld.so.conf.d
 %dir %{_prefix}/libexec/getconf
 %dir %{_prefix}/%{_lib}/gconv
+%dir %attr(0700,root,root) /var/cache/ldconfig
+%attr(0600,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /var/cache/ldconfig/aux-cache
 %attr(0644,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /etc/ld.so.cache
 %doc README NEWS INSTALL FAQ BUGS NOTES PROJECTS CONFORMANCE
 %doc COPYING COPYING.LIB README.libm LICENSES
@@ -1561,6 +1566,12 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Tue Jul 31 2007 Jakub Jelinek <jakub@redhat.com> 2.6.90-1
+- update to trunk
+  - private futex optimizations
+  - open{,at}{,64} argument checking
+- ldconfig speedups
+
 * Sun Jul  8 2007 Jakub Jelinek <jakub@redhat.com> 2.6-4
 - filter <built-in> pseudo-files from debuginfo source lists (#245714)
 - fix sscanf when errno is EINTR before the call (BZ#4745)

@@ -23,6 +23,8 @@
 #include <time.h>
 #include <sys/param.h>
 #include <bits/pthreadtypes.h>
+#include <kernel-features.h>
+#include <tcb-offsets.h>
 
 #ifndef LOCK_INSTR
 # ifdef UP
@@ -39,7 +41,40 @@
 #define FUTEX_LOCK_PI		6
 #define FUTEX_UNLOCK_PI		7
 #define FUTEX_TRYLOCK_PI	8
+#define FUTEX_PRIVATE_FLAG	128
 
+
+/* Values for 'private' parameter of locking macros.  Yes, the
+   definition seems to be backwards.  But it is not.  The bit will be
+   reversed before passing to the system call.  */
+#define LLL_PRIVATE	0
+#define LLL_SHARED	FUTEX_PRIVATE_FLAG
+
+#if !defined NOT_IN_libc || defined IS_IN_rtld
+/* In libc.so or ld.so all futexes are private.  */
+# ifdef __ASSUME_PRIVATE_FUTEX
+#  define __lll_private_flag(fl, private) \
+  ((fl) | FUTEX_PRIVATE_FLAG)
+# else
+#  define __lll_private_flag(fl, private) \
+  ((fl) | THREAD_GETMEM (THREAD_SELF, header.private_futex))
+# endif
+#else
+# ifdef __ASSUME_PRIVATE_FUTEX
+#  define __lll_private_flag(fl, private) \
+  (((fl) | FUTEX_PRIVATE_FLAG) ^ (private))
+# else
+#  define __lll_private_flag(fl, private) \
+  (__builtin_constant_p (private)					      \
+   ? ((private) == 0							      \
+      ? ((fl) | THREAD_GETMEM (THREAD_SELF, header.private_futex))	      \
+      : (fl))								      \
+   : ({ unsigned int __fl = ((private) ^ FUTEX_PRIVATE_FLAG);		      \
+	asm ("andl %%fs:%P1, %0" : "+r" (__fl)				      \
+	     : "i" (offsetof (struct pthread, header.private_futex)));	      \
+	__fl | (fl); }))
+# endif	      
+#endif
 
 /* Initializer for compatibility lock.  */
 #define LLL_MUTEX_LOCK_INITIALIZER		(0)
@@ -148,44 +183,37 @@ LLL_STUB_UNWIND_INFO_START					\
 LLL_STUB_UNWIND_INFO_END
 
 
-#define lll_futex_wait(futex, val) \
-  ({									      \
-    int __status;							      \
-    register __typeof (val) _val __asm ("edx") = (val);			      \
-    __asm __volatile ("xorq %%r10, %%r10\n\t"				      \
-		      "syscall"						      \
-		      : "=a" (__status)					      \
-		      : "0" (SYS_futex), "D" (futex), "S" (FUTEX_WAIT),	      \
-			"d" (_val)					      \
-		      : "memory", "cc", "r10", "r11", "cx");		      \
-    __status;								      \
-  })
+#define lll_futex_wait(futex, val, private) \
+  lll_futex_timed_wait(futex, val, NULL, private)
 
 
-#define lll_futex_timed_wait(futex, val, timeout)			      \
+#define lll_futex_timed_wait(futex, val, timeout, private) \
   ({									      \
     register const struct timespec *__to __asm ("r10") = timeout;	      \
     int __status;							      \
     register __typeof (val) _val __asm ("edx") = (val);			      \
     __asm __volatile ("syscall"						      \
 		      : "=a" (__status)					      \
-		      : "0" (SYS_futex), "D" (futex), "S" (FUTEX_WAIT),	      \
+		      : "0" (SYS_futex), "D" (futex),			      \
+			"S" (__lll_private_flag (FUTEX_WAIT, private)),	      \
 		        "d" (_val), "r" (__to)				      \
 		      : "memory", "cc", "r11", "cx");			      \
     __status;								      \
   })
 
 
-#define lll_futex_wake(futex, nr) \
+#define lll_futex_wake(futex, nr, private) \
   do {									      \
     int __ignore;							      \
     register __typeof (nr) _nr __asm ("edx") = (nr);			      \
     __asm __volatile ("syscall"						      \
 		      : "=a" (__ignore)					      \
-		      : "0" (SYS_futex), "D" (futex), "S" (FUTEX_WAKE),	      \
+		      : "0" (SYS_futex), "D" (futex),			      \
+			"S" (__lll_private_flag (FUTEX_WAKE, private)),	      \
 			"d" (_nr)					      \
 		      : "memory", "cc", "r10", "r11", "cx");		      \
   } while (0)
+
 
 
 /* Does not preserve %eax and %ecx.  */
@@ -452,9 +480,6 @@ typedef int lll_lock_t;
 /* Initializers for lock.  */
 #define LLL_LOCK_INITIALIZER		(0)
 #define LLL_LOCK_INITIALIZER_LOCKED	(1)
-
-
-extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 
 
 /* The states of a lock are:

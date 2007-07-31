@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,7 @@
 #include <time.h>
 #include <sys/param.h>
 #include <bits/pthreadtypes.h>
+#include <kernel-features.h>
 
 #define SYS_futex		240
 #define FUTEX_WAIT		0
@@ -29,6 +30,39 @@
 #define FUTEX_LOCK_PI		6
 #define FUTEX_UNLOCK_PI		7
 #define FUTEX_TRYLOCK_PI	8
+#define FUTEX_PRIVATE_FLAG	128
+
+
+/* Values for 'private' parameter of locking macros.  Yes, the
+   definition seems to be backwards.  But it is not.  The bit will be
+   reversed before passing to the system call.  */
+#define LLL_PRIVATE    0
+#define LLL_SHARED     FUTEX_PRIVATE_FLAG
+
+
+#if !defined NOT_IN_libc || defined IS_IN_rtld
+/* In libc.so or ld.so all futexes are private.  */
+# ifdef __ASSUME_PRIVATE_FUTEX
+#  define __lll_private_flag(fl, private) \
+  ((fl) | FUTEX_PRIVATE_FLAG)
+# else
+#  define __lll_private_flag(fl, private) \
+  ((fl) | THREAD_GETMEM (THREAD_SELF, header.private_futex))
+# endif
+#else
+# ifdef __ASSUME_PRIVATE_FUTEX
+#  define __lll_private_flag(fl, private) \
+  (((fl) | FUTEX_PRIVATE_FLAG) ^ (private))
+# else
+#  define __lll_private_flag(fl, private) \
+  (__builtin_constant_p (private)					      \
+   ? ((private) == 0							      \
+      ? ((fl) | THREAD_GETMEM (THREAD_SELF, header.private_futex))	      \
+      : (fl))								      \
+   : ((fl) | (((private) ^ FUTEX_PRIVATE_FLAG)				      \
+	      & THREAD_GETMEM (THREAD_SELF, header.private_futex))))
+# endif	      
+#endif
 
 
 /* Initializer for compatibility lock.  */
@@ -251,7 +285,7 @@ extern int __lll_mutex_unlock_wake (int *__futex) attribute_hidden;
 		and %2,%0\n\
 		mov.l %0,@%1\n\
 	     1: mov r1,r15"\
-		: "=&r" (__result) : "r" (__futex), "r" (FUTEX_TID_MASK) \
+		: "=&r" (__result) : "r" (__futex), "r" (FUTEX_WAITERS) \
 		: "r0", "r1", "memory");	\
 	    if (__result) \
 	      __lll_mutex_unlock_wake (__futex); })
@@ -269,7 +303,7 @@ extern int __lll_mutex_unlock_wake (int *__futex) attribute_hidden;
 	     1: mov r1,r15"\
 		: "=&r" (__ignore) : "r" (__futex), "r" (FUTEX_OWNER_DIED) \
 		: "r0", "r1", "memory");	\
-	    lll_futex_wake (__futex, 1); })
+	    lll_futex_wake (__futex, 1, LLL_SHARED); })
 
 #define lll_mutex_islocked(futex) \
   (futex != 0)
@@ -294,29 +328,17 @@ typedef int lll_lock_t;
 	trapa #0x14"
 # endif
 
-#define lll_futex_wait(futex, val) \
+#define lll_futex_wait(futex, val, private) \
+  lll_futex_timed_wait (futex, val, NULL, private)
+
+
+#define lll_futex_timed_wait(futex, val, timeout, private) \
   ({									      \
     int __status;							      \
     register unsigned long __r3 asm ("r3") = SYS_futex;			      \
     register unsigned long __r4 asm ("r4") = (unsigned long) (futex);	      \
-    register unsigned long __r5 asm ("r5") = FUTEX_WAIT;		      \
-    register unsigned long __r6 asm ("r6") = (unsigned long) (val);	      \
-    register unsigned long __r7 asm ("r7") = 0;				      \
-    __asm __volatile (SYSCALL_WITH_INST_PAD				      \
-		      : "=z" (__status)					      \
-		      : "r" (__r3), "r" (__r4), "r" (__r5),		      \
-			"r" (__r6), "r" (__r7)				      \
-		      : "memory", "t");					      \
-    __status;								      \
-  })
-
-
-#define lll_futex_timed_wait(futex, val, timeout) \
-  ({									      \
-    int __status;							      \
-    register unsigned long __r3 asm ("r3") = SYS_futex;			      \
-    register unsigned long __r4 asm ("r4") = (unsigned long) (futex);	      \
-    register unsigned long __r5 asm ("r5") = FUTEX_WAIT;		      \
+    register unsigned long __r5 asm ("r5")				      \
+      = __lll_private_flag (FUTEX_WAIT, private);			      \
     register unsigned long __r6 asm ("r6") = (unsigned long) (val);	      \
     register unsigned long __r7 asm ("r7") = (timeout);			      \
     __asm __volatile (SYSCALL_WITH_INST_PAD				      \
@@ -328,12 +350,13 @@ typedef int lll_lock_t;
   })
 
 
-#define lll_futex_wake(futex, nr) \
+#define lll_futex_wake(futex, nr, private) \
   do {									      \
     int __ignore;							      \
     register unsigned long __r3 asm ("r3") = SYS_futex;			      \
     register unsigned long __r4 asm ("r4") = (unsigned long) (futex);	      \
-    register unsigned long __r5 asm ("r5") = FUTEX_WAKE;		      \
+    register unsigned long __r5 asm ("r5")				      \
+      = __lll_private_flag (FUTEX_WAKE, private);			      \
     register unsigned long __r6 asm ("r6") = (unsigned long) (nr);	      \
     register unsigned long __r7 asm ("r7") = 0;				      \
     __asm __volatile (SYSCALL_WITH_INST_PAD				      \
@@ -342,9 +365,6 @@ typedef int lll_lock_t;
 			"r" (__r6), "r" (__r7)				      \
 		      : "memory", "t");					      \
   } while (0)
-
-
-extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 
 
 /* The states of a lock are:
@@ -370,7 +390,7 @@ extern int __lll_wait_tid (int *tid) attribute_hidden;
   do {									      \
     __typeof (tid) *__tid = &(tid);					      \
     while (*__tid != 0)							      \
-      lll_futex_wait (__tid, *__tid);					      \
+      lll_futex_wait (__tid, *__tid, LLL_SHARED);			      \
   } while (0)
 
 extern int __lll_timedwait_tid (int *tid, const struct timespec *abstime)

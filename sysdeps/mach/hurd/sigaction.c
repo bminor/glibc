@@ -1,4 +1,6 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994, 1995, 1996, 1997, 2002, 2007
+     Free Software Foundation, Inc.
+
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -68,7 +70,7 @@ __sigaction (sig, act, oact)
       __spin_lock (&ss->lock);
       pending = ss->pending & ~ss->blocked;
     }
-  else if (a.sa_handler == SIG_IGN || a.sa_handler == SIG_DFL)
+  else if (act != NULL && (a.sa_handler == SIG_IGN || a.sa_handler == SIG_DFL))
     /* We are changing to an action that might be to ignore SIG signals.
        If SIG is blocked and pending and the new action is to ignore it, we
        must remove it from the pending set now; if the action is changed

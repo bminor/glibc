@@ -39,10 +39,6 @@ pthread_getattr_np (thread_id, attr)
   struct pthread_attr *iattr = (struct pthread_attr *) attr;
   int ret = 0;
 
-  /* We have to handle cancellation in the following code since we are
-     locking another threads desriptor.  */
-  pthread_cleanup_push ((void (*) (void *)) lll_unlock_wake_cb, &thread->lock);
-
   lll_lock (thread->lock);
 
   /* The thread library is responsible for keeping the values in the
@@ -178,8 +174,6 @@ pthread_getattr_np (thread_id, attr)
     }
 
   lll_unlock (thread->lock);
-
-  pthread_cleanup_pop (0);
 
   return ret;
 }

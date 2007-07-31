@@ -35,27 +35,6 @@
 #include <lowlevellock.h>
 
 
-#ifndef __NR_set_tid_address
-/* XXX For the time being...  Once we can rely on the kernel headers
-   having the definition remove these lines.  */
-#if defined __s390__
-# define __NR_set_tid_address	252
-#elif defined __ia64__
-# define __NR_set_tid_address	1233
-#elif defined __i386__
-# define __NR_set_tid_address	258
-#elif defined __x86_64__
-# define __NR_set_tid_address	218
-#elif defined __powerpc__
-# define __NR_set_tid_address	232
-#elif defined __sparc__
-# define __NR_set_tid_address	166
-#else
-# error "define __NR_set_tid_address"
-#endif
-#endif
-
-
 /* Size and alignment of static TLS block.  */
 size_t __static_tls_size;
 size_t __static_tls_align_m1;
@@ -237,7 +216,7 @@ sighandler_setxid (int sig, siginfo_t *si, void *ctx)
 			__xidcmd->id[1], __xidcmd->id[2]);
 
   if (atomic_decrement_val (&__xidcmd->cntr) == 0)
-    lll_futex_wake (&__xidcmd->cntr, 1);
+    lll_futex_wake (&__xidcmd->cntr, 1, LLL_PRIVATE);
 
   /* Reset the SETXID flag.  */
   struct pthread *self = THREAD_SELF;
@@ -246,7 +225,7 @@ sighandler_setxid (int sig, siginfo_t *si, void *ctx)
 
   /* And release the futex.  */
   self->setxid_futex = 1;
-  lll_futex_wake (&self->setxid_futex, 1);
+  lll_futex_wake (&self->setxid_futex, 1, LLL_PRIVATE);
 }
 
 
@@ -254,6 +233,9 @@ sighandler_setxid (int sig, siginfo_t *si, void *ctx)
    to give libpthread its own TLS segment just for this.  */
 extern void **__libc_dl_error_tsd (void) __attribute__ ((const));
 
+
+/* This can be set by the debugger before initialization is complete.  */
+static bool __nptl_initial_report_events;
 
 void
 __pthread_initialize_minimal_internal (void)
@@ -297,6 +279,18 @@ __pthread_initialize_minimal_internal (void)
 #endif
     set_robust_list_not_avail ();
 
+#ifndef __ASSUME_PRIVATE_FUTEX
+  /* Private futexes are always used (at least internally) so that
+     doing the test once this early is beneficial.  */
+  {
+    int word;
+    word = INTERNAL_SYSCALL (futex, err, 3, &word,
+			    FUTEX_WAKE | FUTEX_PRIVATE_FLAG, 1);
+    if (!INTERNAL_SYSCALL_ERROR_P (word, err))
+      THREAD_SETMEM (pd, header.private_futex, FUTEX_PRIVATE_FLAG);
+  }
+#endif
+
   /* Set initial thread's stack block from 0 up to __libc_stack_end.
      It will be bigger than it actually is, but for unwind.c/pt-longjmp.c
      purposes this is good enough.  */
@@ -306,6 +300,9 @@ __pthread_initialize_minimal_internal (void)
   INIT_LIST_HEAD (&__stack_user);
   list_add (&pd->list, &__stack_user);
 
+  /* Before initializing __stack_user, the debugger could not find us and
+     had to set __nptl_initial_report_events.  Propagate its setting.  */
+  THREAD_SETMEM (pd, report_events, __nptl_initial_report_events);
 
   /* Install the cancellation signal handler.  If for some reason we
      cannot install the handler we do not abort.  Maybe we should, but

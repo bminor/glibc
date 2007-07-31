@@ -2,8 +2,9 @@
    This file is part of the GNU C Library.
 
    This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License version 2 as
-   published by the Free Software Foundation.
+   it under the terms of the GNU General Public License as published
+   by the Free Software Foundation; version 2 of the License, or
+   (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -609,6 +610,7 @@ static const struct conf vars[] =
 
 #ifdef _CS_V6_WIDTH_RESTRICTED_ENVS
     { "_POSIX_V6_WIDTH_RESTRICTED_ENVS", _CS_V6_WIDTH_RESTRICTED_ENVS, CONFSTR },
+    { "POSIX_V6_WIDTH_RESTRICTED_ENVS", _CS_V6_WIDTH_RESTRICTED_ENVS, CONFSTR },
 #endif
 
 #ifdef _SC_V6_ILP32_OFFBIG
@@ -908,6 +910,9 @@ static const struct conf vars[] =
 #endif
 #ifdef _SC_LEVEL4_CACHE_ASSOC
     { "LEVEL4_CACHE_ASSOC", _SC_LEVEL4_CACHE_ASSOC, SYSCONF },
+#endif
+#ifdef _SC_LEVEL4_CACHE_LINESIZE
+    { "LEVEL4_CACHE_LINESIZE", _SC_LEVEL4_CACHE_LINESIZE, SYSCONF },
 #endif
 
 #ifdef _SC_IPV6

@@ -104,7 +104,7 @@ struct __sched_param
 # define __CPU_SETSIZE	1024
 # define __NCPUBITS	(8 * sizeof (__cpu_mask))
 
-/* Type for array elements in 'cpu_set'.  */
+/* Type for array elements in 'cpu_set_t'.  */
 typedef unsigned long int __cpu_mask;
 
 /* Basic access functions.  */
@@ -118,20 +118,72 @@ typedef struct
 } cpu_set_t;
 
 /* Access functions for CPU masks.  */
-# define __CPU_ZERO(cpusetp) \
+# if __GNUC_PREREQ (2, 91)
+#  define __CPU_ZERO_S(setsize, cpusetp) \
+  do __builtin_memset (cpusetp, '\0', setsize); while (0)
+# else
+#  define __CPU_ZERO_S(setsize, cpusetp) \
   do {									      \
-    unsigned int __i;							      \
+    size_t __i;								      \
+    size_t __imax = (setsize) / sizeof (__cpu_mask);			      \
     cpu_set_t *__arr = (cpusetp);					      \
-    for (__i = 0; __i < sizeof (cpu_set_t) / sizeof (__cpu_mask); ++__i)      \
+    for (__i = 0; __i < __imax; ++__i)					      \
       __arr->__bits[__i] = 0;						      \
   } while (0)
-# define __CPU_SET(cpu, cpusetp) \
-  ((cpusetp)->__bits[__CPUELT (cpu)] |= __CPUMASK (cpu))
-# define __CPU_CLR(cpu, cpusetp) \
-  ((cpusetp)->__bits[__CPUELT (cpu)] &= ~__CPUMASK (cpu))
-# define __CPU_ISSET(cpu, cpusetp) \
-  (((cpusetp)->__bits[__CPUELT (cpu)] & __CPUMASK (cpu)) != 0)
-extern int __sched_cpucount (size_t __setsize, cpu_set_t *__setp) __THROW;
-# define __CPU_COUNT(cpusetp) \
-  __sched_cpucount (sizeof (cpu_set_t), cpusetp)
+# endif
+# define __CPU_SET_S(cpu, setsize, cpusetp) \
+  ({ size_t __cpu = (cpu);						      \
+     __cpu < 8 * (setsize)						      \
+     ? ((cpusetp)->__bits[__CPUELT (__cpu)] |= __CPUMASK (__cpu)) : 0; })
+# define __CPU_CLR_S(cpu, setsize, cpusetp) \
+  ({ size_t __cpu = (cpu);						      \
+     __cpu < 8 * (setsize)						      \
+     ? ((cpusetp)->__bits[__CPUELT (__cpu)] &= ~__CPUMASK (__cpu)) : 0; })
+# define __CPU_ISSET_S(cpu, setsize, cpusetp) \
+  ({ size_t __cpu = (cpu);						      \
+     __cpu < 8 * (setsize)						      \
+     ? (((cpusetp)->__bits[__CPUELT (__cpu)] & __CPUMASK (__cpu))) != 0 : 0; })
+
+# define __CPU_COUNT_S(setsize, cpusetp) \
+  __sched_cpucount (setsize, cpusetp)
+
+# if __GNUC_PREREQ (2, 91)
+#  define __CPU_EQUAL_S(setsize, cpusetp1, cpusetp2) \
+  (__builtin_memcmp (cpusetp1, cpusetp2, setsize) == 0)
+# else
+#  define __CPU_EQUAL_S(setsize, cpusetp1, cpusetp2) \
+  ({ cpu_set_t *__arr1 = (cpusetp1);					      \
+     cpu_set_t *__arr2 = (cpusetp2);					      \
+     size_t __imax = (setsize) / sizeof (__cpu_mask);			      \
+     size_t __i;							      \
+     for (__i = 0; __i < __imax; ++__i)					      \
+       if (__arr1->__bits[__i] != __arr2->__bits[__i])			      \
+	 break;								      \
+     __i == __imax; })
+# endif
+
+# define __CPU_OP_S(setsize, destset, srcset1, srcset2, op) \
+  ({ cpu_set_t *__dest = (destset);					      \
+     cpu_set_t *__arr1 = (srcset1);					      \
+     cpu_set_t *__arr2 = (srcset2);					      \
+     size_t __imax = (setsize) / sizeof (__cpu_mask);			      \
+     size_t __i;							      \
+     for (__i = 0; __i < __imax; ++__i)					      \
+       __dest->__bits[__i] = __arr1->__bits[__i] op __arr2->__bits[__i];      \
+     __dest; })
+
+# define __CPU_ALLOC_SIZE(count) \
+  ((((count) + __NCPUBITS - 1) / __NCPUBITS) * 8)
+# define __CPU_ALLOC(count) __sched_cpualloc (count)
+# define __CPU_FREE(cpuset) __sched_cpufree (cpuset)
+
+__BEGIN_DECLS
+
+extern int __sched_cpucount (size_t __setsize, const cpu_set_t *__setp)
+  __THROW;
+extern cpu_set_t *__sched_cpualloc (size_t __count) __THROW __wur;
+extern void __sched_cpufree (cpu_set_t *__set) __THROW;
+
+__END_DECLS
+
 #endif

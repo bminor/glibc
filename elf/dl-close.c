@@ -494,11 +494,11 @@ _dl_close_worker (struct link_map *map)
 	  || (GL(dl_scope_free_list) != NULL
 	      && GL(dl_scope_free_list)->count)))
     {
-      struct dl_scope_free_list *fsl;
-
       THREAD_GSCOPE_WAIT ();
+
       /* Now we can free any queued old scopes.  */
-      if ((fsl = GL(dl_scope_free_list)) != NULL)
+      struct dl_scope_free_list *fsl  = GL(dl_scope_free_list);
+      if (fsl != NULL)
 	while (fsl->count > 0)
 	  free (fsl->list[--fsl->count]);
     }

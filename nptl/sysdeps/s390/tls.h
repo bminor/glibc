@@ -27,6 +27,7 @@
 # include <stdint.h>
 # include <stdlib.h>
 # include <list.h>
+# include <kernel-features.h>
 
 
 /* Type for the dtv.  */
@@ -51,6 +52,9 @@ typedef struct
   uintptr_t sysinfo;
   uintptr_t stack_guard;
   int gscope_flag;
+#ifndef __ASSUME_PRIVATE_FUTEX
+  int private_futex;
+#endif
 } tcbhead_t;
 
 # ifndef __s390x__
@@ -179,7 +183,7 @@ typedef struct
 	= atomic_exchange_rel (&THREAD_SELF->header.gscope_flag,	     \
 			       THREAD_GSCOPE_FLAG_UNUSED);		     \
       if (__res == THREAD_GSCOPE_FLAG_WAIT)				     \
-	lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1);		     \
+	lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1, LLL_PRIVATE);   \
     }									     \
   while (0)
 #define THREAD_GSCOPE_SET_FLAG() \

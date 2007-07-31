@@ -1,5 +1,5 @@
 /* Definitions for thread-local data handling.  Hurd/i386 version.
-   Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@
    thread pointer points to is unspecified.  Allocate the TCB there.  */
 # define TLS_TCB_AT_TP	1
 
-# ifndef ASSEMBLER
+# ifndef __ASSEMBLER__
 
 /* Use i386-specific RPCs to arrange that %gs segment register prefix
    addresses the TCB in each thread.  */
@@ -165,7 +165,7 @@ _hurd_tls_fork (thread_t child, struct i386_thread_state *state)
   return err;
 }
 
-# endif	/* !ASSEMBLER */
+# endif	/* !__ASSEMBLER__ */
 #endif /* HAVE_TLS_SUPPORT */
 
 #endif	/* i386/tls.h */

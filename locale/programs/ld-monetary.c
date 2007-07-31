@@ -1,10 +1,12 @@
-/* Copyright (C) 1995-1999,2000,2001,2002,2005 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1999,2000,2001,2002,2005,2007
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
    This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License version 2 as
-   published by the Free Software Foundation.
+   it under the terms of the GNU General Public License as published
+   by the Free Software Foundation; version 2 of the License, or
+   (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -278,13 +280,14 @@ not correspond to a valid name in ISO 4217"),
        monetary->cat = initval;						      \
     }									      \
   else if ((monetary->cat < min || monetary->cat > max)			      \
+	   && min < max							      \
 	   && !be_quiet && !nothing)					      \
     WITH_CUR_LOCALE (error (0, 0, _("\
 %s: value for field `%s' must be in range %d...%d"),			      \
 			    "LC_MONETARY", #cat, min, max))
 
-  TEST_ELEM (int_frac_digits, -128, 127, -1);
-  TEST_ELEM (frac_digits, -128, 127, -1);
+  TEST_ELEM (int_frac_digits, 1, 0, -1);
+  TEST_ELEM (frac_digits, 1, 0, -1);
   TEST_ELEM (p_cs_precedes, -1, 1, -1);
   TEST_ELEM (p_sep_by_space, -1, 2, -1);
   TEST_ELEM (n_cs_precedes, -1, 1, -1);

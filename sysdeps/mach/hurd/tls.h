@@ -1,5 +1,5 @@
 /* Definitions for thread-local data handling.  Hurd version.
-   Copyright (C) 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #ifndef _TLS_H
 #define _TLS_H
 
-#if defined HAVE_TLS_SUPPORT && !defined ASSEMBLER
+#if defined HAVE_TLS_SUPPORT && !defined __ASSEMBLER__
 
 # include <stddef.h>
 # include <stdbool.h>

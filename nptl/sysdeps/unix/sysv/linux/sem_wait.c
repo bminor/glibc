@@ -1,5 +1,5 @@
 /* sem_wait -- wait on a semaphore.  Generic futex-using version.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Mackerras <paulus@au.ibm.com>, 2003.
 
@@ -28,12 +28,69 @@
 #include <shlib-compat.h>
 
 
+void
+attribute_hidden
+__sem_wait_cleanup (void *arg)
+{
+  struct new_sem *isem = (struct new_sem *) arg;
+
+  atomic_decrement (&isem->nwaiters);
+}
+
+
 int
 __new_sem_wait (sem_t *sem)
 {
-  /* First check for cancellation.  */
-  CANCELLATION_P (THREAD_SELF);
+  struct new_sem *isem = (struct new_sem *) sem;
+  int err;
 
+  if (atomic_decrement_if_positive (&isem->value) > 0)
+    return 0;
+
+  atomic_increment (&isem->nwaiters);
+
+  pthread_cleanup_push (__sem_wait_cleanup, isem);
+
+  while (1)
+    {
+      /* Enable asynchronous cancellation.  Required by the standard.  */
+      int oldtype = __pthread_enable_asynccancel ();
+
+      err = lll_futex_wait (&isem->value, 0,
+			    // XYZ check mutex flag
+			    LLL_SHARED);
+
+      /* Disable asynchronous cancellation.  */
+      __pthread_disable_asynccancel (oldtype);
+
+      if (err != 0 && err != -EWOULDBLOCK)
+	{
+	  __set_errno (-err);
+	  err = -1;
+	  break;
+	}
+
+      if (atomic_decrement_if_positive (&isem->value) > 0)
+	{
+	  err = 0;
+	  break;
+	}
+    }
+
+  pthread_cleanup_pop (0);
+
+  atomic_decrement (&isem->nwaiters);
+
+  return err;
+}
+versioned_symbol (libpthread, __new_sem_wait, sem_wait, GLIBC_2_1);
+
+
+#if SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_1)
+int
+attribute_compat_text_section
+__old_sem_wait (sem_t *sem)
+{
   int *futex = (int *) sem;
   int err;
 
@@ -45,7 +102,8 @@ __new_sem_wait (sem_t *sem)
       /* Enable asynchronous cancellation.  Required by the standard.  */
       int oldtype = __pthread_enable_asynccancel ();
 
-      err = lll_futex_wait (futex, 0);
+      /* Always assume the semaphore is shared.  */
+      err = lll_futex_wait (futex, 0, LLL_SHARED);
 
       /* Disable asynchronous cancellation.  */
       __pthread_disable_asynccancel (oldtype);
@@ -56,8 +114,5 @@ __new_sem_wait (sem_t *sem)
   return -1;
 }
 
-versioned_symbol (libpthread, __new_sem_wait, sem_wait, GLIBC_2_1);
-#if SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_1)
-strong_alias (__new_sem_wait, __old_sem_wait)
 compat_symbol (libpthread, __old_sem_wait, sem_wait, GLIBC_2_0);
 #endif

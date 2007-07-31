@@ -1,4 +1,6 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994, 1995, 1996, 1997, 2007
+     Free Software Foundation, Inc.
+
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,6 +17,10 @@
    License along with the GNU C Library; if not, write to the Free
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
+
+/* Defines RTLD_PRIVATE_ERRNO and USE_DL_SYSINFO.  */
+#include <dl-sysdep.h>
+#include <tls.h>
 
 #define LOSE asm volatile ("hlt")
 

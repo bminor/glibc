@@ -23,7 +23,7 @@ subdir	:= io
 
 headers := sys/stat.h bits/stat.h sys/statfs.h bits/statfs.h sys/vfs.h \
 	   sys/statvfs.h bits/statvfs.h fcntl.h sys/fcntl.h bits/fcntl.h \
-	   poll.h sys/poll.h bits/poll.h \
+	   poll.h sys/poll.h bits/poll.h bits/fcntl2.h \
 	   utime.h ftw.h fts.h sys/sendfile.h
 
 routines :=								\
@@ -67,7 +67,8 @@ tests		:= test-utime test-stat test-stat2 test-lfs tst-getcwd \
 		   tst-openat tst-unlinkat tst-fstatat tst-futimesat \
 		   tst-renameat tst-fchownat tst-fchmodat tst-faccessat \
 		   tst-symlinkat tst-linkat tst-readlinkat tst-mkdirat \
-		   tst-mknodat tst-mkfifoat tst-ttyname_r bug-ftw5
+		   tst-mknodat tst-mkfifoat tst-ttyname_r bug-ftw5 \
+		   tst-posix_fallocate
 
 distribute	:= ftwtest-sh
 

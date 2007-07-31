@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2003.
 
@@ -40,7 +40,7 @@ __pthread_rwlock_rdlock (rwlock)
       if (rwlock->__data.__writer == 0
 	  /* ...and if either no writer is waiting or we prefer readers.  */
 	  && (!rwlock->__data.__nr_writers_queued
-	      || rwlock->__data.__flags == 0))
+	      || PTHREAD_RWLOCK_PREFER_READER_P (rwlock)))
 	{
 	  /* Increment the reader counter.  Avoid overflow.  */
 	  if (__builtin_expect (++rwlock->__data.__nr_readers == 0, 0))
@@ -77,7 +77,9 @@ __pthread_rwlock_rdlock (rwlock)
       lll_mutex_unlock (rwlock->__data.__lock);
 
       /* Wait for the writer to finish.  */
-      lll_futex_wait (&rwlock->__data.__readers_wakeup, waitval);
+      lll_futex_wait (&rwlock->__data.__readers_wakeup, waitval, 
+		      // XYZ check mutex flag
+		      LLL_SHARED);
 
       /* Get the lock.  */
       lll_mutex_lock (rwlock->__data.__lock);

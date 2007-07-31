@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,8 +24,24 @@
 
 #define SYS_gettimeofday	__NR_gettimeofday
 #define SYS_futex		240
-#define FUTEX_WAIT		0
-#define FUTEX_WAKE		1
+#ifndef FUTEX_WAIT
+# define FUTEX_WAIT		0
+# define FUTEX_WAKE		1
+#endif
+
+#ifndef LOAD_FUTEX_WAIT
+# if FUTEX_WAIT == 0
+#  define LOAD_FUTEX_WAIT(reg,tmp) \
+	xor	reg, reg
+# else
+#  define LOAD_FUTEX_WAIT(reg,tmp) \
+	mov	#FUTEX_WAIT, reg; \
+	extu.b	reg, reg
+# endif
+# define LOAD_FUTEX_WAKE(reg,tmp) \
+	mov	#FUTEX_WAKE, reg; \
+	extu.b	reg, reg
+#endif
 
 
 	.globl	__lll_mutex_lock_wait
@@ -40,7 +56,7 @@ __lll_mutex_lock_wait:
 	mov	r4, r6
 	mov	r5, r8
 	mov	#0, r7		/* No timeout.  */
-	mov	#FUTEX_WAIT, r5
+	LOAD_FUTEX_WAIT (r5, r0)
 
 	mov	#2, r4
 	cmp/eq	r4, r6
@@ -133,7 +149,7 @@ __lll_mutex_timedlock_wait:
 	bt	8f
 
 	mov	r8, r4
-	mov	#FUTEX_WAIT, r5
+	LOAD_FUTEX_WAIT (r5, r0)
 	mov	r10, r6
 	mov	r15, r7
 	mov	#SYS_futex, r3
@@ -186,41 +202,13 @@ __lll_mutex_timedlock_wait:
 #endif
 
 
-#ifdef NOT_IN_libc
-	.globl	lll_unlock_wake_cb
-	.type	lll_unlock_wake_cb,@function
-	.hidden	lll_unlock_wake_cb
-	.align	5
-	cfi_startproc
-lll_unlock_wake_cb:
-	DEC	(@r4, r2)
-	tst	r2, r2
-	bt	1f
-
-	mov	#FUTEX_WAKE, r5
-	mov	#1, r6		/* Wake one thread.  */
-	mov	#0, r7
-	mov.l	r7, @r4		/* Stores 0.  */
-	mov	#SYS_futex, r3
-	extu.b	r3, r3
-	trapa	#0x14
-	SYSCALL_INST_PAD
-
-1:	
-	rts
-	 nop
-	cfi_endproc
-	.size	lll_unlock_wake_cb,.-lll_unlock_wake_cb
-#endif
-
-
 	.globl	__lll_mutex_unlock_wake
 	.type	__lll_mutex_unlock_wake,@function
 	.hidden	__lll_mutex_unlock_wake
 	.align	5
 	cfi_startproc
 __lll_mutex_unlock_wake:
-	mov	#FUTEX_WAKE, r5
+	LOAD_FUTEX_WAKE (r5, r0)
 	mov	#1, r6		/* Wake one thread.  */
 	mov	#0, r7
 	mov.l	r7, @r4		/* Stores 0.  */
@@ -289,7 +277,10 @@ __lll_timedwait_tid:
 	bt	4f
 
 	mov	r8, r4
-	mov	#FUTEX_WAIT, r5
+	/* XXX The kernel so far uses global futex for the wakeup at
+	   all times.  */
+	mov	#0, r5
+	extu.b	r5, r5
 	mov	r2, r6
 	mov	r15, r7
 	mov	#SYS_futex, r3

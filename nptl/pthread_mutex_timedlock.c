@@ -37,7 +37,8 @@ pthread_mutex_timedlock (mutex, abstime)
   /* We must not check ABSTIME here.  If the thread does not block
      abstime must not be checked for a valid value.  */
 
-  switch (__builtin_expect (mutex->__data.__kind, PTHREAD_MUTEX_TIMED_NP))
+  switch (__builtin_expect (PTHREAD_MUTEX_TYPE (mutex),
+			    PTHREAD_MUTEX_TIMED_NP))
     {
       /* Recursive mutex.  */
     case PTHREAD_MUTEX_RECURSIVE_NP:
@@ -441,7 +442,9 @@ pthread_mutex_timedlock (mutex, abstime)
 		      }
 
 		    lll_futex_timed_wait (&mutex->__data.__lock,
-					  ceilval | 2, &rt);
+					  ceilval | 2, &rt,
+					  // XYZ check mutex flag
+					  LLL_SHARED);
 		  }
 	      }
 	    while (atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,

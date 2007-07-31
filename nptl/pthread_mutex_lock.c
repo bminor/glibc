@@ -43,7 +43,8 @@ __pthread_mutex_lock (mutex)
   pid_t id = THREAD_GETMEM (THREAD_SELF, tid);
 
   int retval = 0;
-  switch (__builtin_expect (mutex->__data.__kind, PTHREAD_MUTEX_TIMED_NP))
+  switch (__builtin_expect (PTHREAD_MUTEX_TYPE (mutex),
+			    PTHREAD_MUTEX_TIMED_NP))
     {
       /* Recursive mutex.  */
     case PTHREAD_MUTEX_RECURSIVE_NP:
@@ -408,7 +409,9 @@ __pthread_mutex_lock (mutex)
 		  break;
 
 		if (oldval != ceilval)
-		  lll_futex_wait (&mutex->__data.__lock, ceilval | 2);
+		  lll_futex_wait (&mutex->__data.__lock, ceilval | 2,
+				  // XYZ check mutex flag
+				  LLL_SHARED);
 	      }
 	    while (atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
 							ceilval | 2, ceilval)
