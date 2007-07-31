@@ -1,5 +1,7 @@
 2007-07-31  Jakub Jelinek  <jakub@redhat.com>
 
+	* NEWS, version.h (VERSION): 2.5.1.
+
 	* stdio-common/tfformat.c (sprint_doubles): Add 12 new tests.
 
 2007-07-28  Ulrich Drepper  <drepper@redhat.com>
