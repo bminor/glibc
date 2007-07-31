@@ -1,5 +1,7 @@
 2007-07-31  Jakub Jelinek  <jakub@redhat.com>
 
+	* NEWS, version.h (VERSION): 2.6.1.
+
 	* sysdeps/unix/sysv/linux/i386/clone.S: Revert 2006-11-30 changes.
 	* sysdeps/unix/sysv/linux/x86_64/clone.S: Likewise.
 
