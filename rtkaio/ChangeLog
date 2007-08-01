@@ -1,3 +1,8 @@
+2007-08-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kaio_misc.h (AIO_MISC_NOTIFY,
+	AIO_MISC_WAIT): Add LLL_PRIVATE as last argument to lll_futex_*wait.
+
 2006-09-15  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #3138]
