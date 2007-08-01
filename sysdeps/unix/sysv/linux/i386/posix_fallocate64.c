@@ -20,41 +20,42 @@
 #include <kernel-features.h>
 #include <sysdep.h>
 
-#define posix_fallocate static internal_fallocate
-#include <sysdeps/posix/posix_fallocate.c>
-#undef posix_fallocate
+extern int __posix_fallocate64_l64 (int fd, __off64_t offset, __off64_t len);
+#define __posix_fallocate64_l64 static internal_fallocate64
+#include <sysdeps/posix/posix_fallocate64.c>
+#undef __posix_fallocate64_l64
 
 #if !defined __ASSUME_FALLOCATE && defined __NR_fallocate
-int __have_fallocate attribute_hidden;
+/* Defined in posix_fallocate.c.  */
+extern int __have_fallocate attribute_hidden;
 #endif
 
+extern int __fallocate64 (int fd, int mode, __off64_t offset, __off64_t len)
+     attribute_hidden;
 
 /* Reserve storage for the data of the file associated with FD.  */
 int
-posix_fallocate (int fd, __off_t offset, __off_t len)
+__posix_fallocate64_l64 (int fd, __off64_t offset, __off64_t len)
 {
 #ifdef __NR_fallocate
 # ifndef __ASSUME_FALLOCATE
   if (__builtin_expect (__have_fallocate >= 0, 1))
 # endif
     {
-      INTERNAL_SYSCALL_DECL (err);
-      int res = INTERNAL_SYSCALL (fallocate, err, 6, fd, 0,
-				  __LONG_LONG_PAIR (offset >> 31, offset),
-				  __LONG_LONG_PAIR (len >> 31, len));
+      int res = __fallocate64 (fd, 0, offset, len);
 
-      if (! INTERNAL_SYSCALL_ERROR_P (res, err))
+      if (! res)
 	return 0;
 
 # ifndef __ASSUME_FALLOCATE
-      if (__builtin_expect (INTERNAL_SYSCALL_ERRNO (res, err) == ENOSYS, 0))
+      if (__builtin_expect (res == ENOSYS, 0))
 	__have_fallocate = -1;
       else
 # endif
-	if (INTERNAL_SYSCALL_ERRNO (res, err) != EOPNOTSUPP)
-	  return INTERNAL_SYSCALL_ERRNO (res, err);
+	if (res != EOPNOTSUPP)
+	  return res;
     }
 #endif
 
-  return internal_fallocate (fd, offset, len);
+  return internal_fallocate64 (fd, offset, len);
 }

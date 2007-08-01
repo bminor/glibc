@@ -28,6 +28,8 @@
 int __have_fallocate attribute_hidden;
 #endif
 
+extern int __fallocate64 (int fd, int mode, __off64_t offset, __off64_t len)
+     attribute_hidden;
 
 /* Reserve storage for the data of the file associated with FD.  */
 int
@@ -38,21 +40,17 @@ posix_fallocate (int fd, __off_t offset, __off_t len)
   if (__builtin_expect (__have_fallocate >= 0, 1))
 # endif
     {
-      INTERNAL_SYSCALL_DECL (err);
-      int res = INTERNAL_SYSCALL (fallocate, err, 6, fd, 0,
-				  __LONG_LONG_PAIR (offset >> 31, offset),
-				  __LONG_LONG_PAIR (len >> 31, len));
-
-      if (! INTERNAL_SYSCALL_ERROR_P (res, err))
+      int res = __fallocate64 (fd, 0, offset, len);
+      if (! res)
 	return 0;
 
 # ifndef __ASSUME_FALLOCATE
-      if (__builtin_expect (INTERNAL_SYSCALL_ERRNO (res, err) == ENOSYS, 0))
+      if (__builtin_expect (res == ENOSYS, 0))
 	__have_fallocate = -1;
       else
 # endif
-	if (INTERNAL_SYSCALL_ERRNO (res, err) != EOPNOTSUPP)
-	  return INTERNAL_SYSCALL_ERRNO (res, err);
+	if (res != EOPNOTSUPP)
+	  return res;
     }
 #endif
 
