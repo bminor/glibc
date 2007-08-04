@@ -1,4 +1,4 @@
-%define glibcrelease 2
+%define glibcrelease 3
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define xenarches i686 athlon
 %ifarch %{xenarches}
@@ -20,7 +20,12 @@ Summary: The GNU libc libraries.
 Name: glibc
 Version: %{glibcversion}
 Release: %{glibcrelease}
-License: LGPL
+# GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
+# Things that are linked directly into dynamically linked programs
+# and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
+# exception which allows linking it into any kind of programs or shared
+# libraries without restrictions.
+License: LGPLv2+ and LGPLv2+ with exceptions and GPLv2+
 Group: System Environment/Libraries
 Source0: %{glibcsrcdir}.tar.bz2
 %if %{glibc_release_tarballs}
@@ -1041,6 +1046,12 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Sat Aug  4 2007 Jakub Jelinek <jakub@redhat.com> 2.6.90-3
+- fix open{,at}{,64} macro for -pedantic (#250897)
+- add transliteration for l with stroke (#250492)
+- fix strtod ("-0", NULL)
+- update License tag
+
 * Wed Aug  1 2007 Jakub Jelinek <jakub@redhat.com> 2.6.90-2
 - make aux-cache purely optional performance optimization in ldconfig,
   don't issue any errors if it can't be created (#250430)
