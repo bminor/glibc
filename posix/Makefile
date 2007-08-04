@@ -291,13 +291,14 @@ bug-glob2-ENV = MALLOC_TRACE=$(objpfx)bug-glob2.mtrace
 $(objpfx)bug-glob2-mem: $(objpfx)bug-glob2.out
 	$(common-objpfx)malloc/mtrace $(objpfx)bug-glob2.mtrace > $@
 
-$(inst_libexecdir)/getconf: $(objpfx)getconf $(objpfx)getconf.speclist FORCE
+$(inst_libexecdir)/getconf: $(inst_bindir)/getconf \
+			    $(objpfx)getconf.speclist FORCE
 	$(addprefix $(..)./scripts/mkinstalldirs ,\
 		    $(filter-out $(wildcard $@),$@))
-	for spec in `cat $(objpfx)getconf.speclist`; do \
-	  $(INSTALL_PROGRAM) $< $@/$$spec.new; \
+	while read spec; do \
+	  ln -f $< $@/$$spec.new || $(INSTALL_PROGRAM) $< $@/$$spec.new; \
 	  mv -f $@/$$spec.new $@/$$spec; \
-	done
+	done < $(objpfx)getconf.speclist
 
 $(objpfx)getconf.speclist: getconf.speclist.h
 	$(CC) -E $(CFLAGS) $(CPPFLAGS) $< \
