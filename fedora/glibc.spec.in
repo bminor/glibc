@@ -1000,7 +1000,9 @@ rm -f *.filelist*
 %endif
 
 %changelog
-* Thu Aug  9 2007 Roland McGrath <roland@redhat.com>
+* Thu Aug  9 2007 Roland McGrath <roland@redhat.com> 2.6.90-5
+- update to trunk
+  - fix local PLT regressions
 - spec file revamp for new find-debuginfo.sh
 
 * Sun Aug  5 2007 Jakub Jelinek <jakub@redhat.com> 2.6.90-4

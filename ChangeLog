@@ -1,3 +1,42 @@
+2007-08-06  Roland McGrath  <roland@redhat.com>
+
+	* include/stdlib.h: Add libc_hidden_proto for strto*, __strto*_l.
+	Remove __strto*_l inlines.
+	* include/wchar.h: Add libc_hidden_proto for wcsto*, __wcsto*_l.
+	* stdlib/strtod.c: Add libc_hidden_def.
+	* stdlib/strtod_l.c: Likewise.
+	* stdlib/strtold.c [__LONG_DOUBLE_MATH_OPTIONAL]: Add libc_hidden_proto
+	for __new_strtold and __new_wcstold.
+	* sysdeps/ieee754/ldbl-128ibm/strtold_l.c: Add libc_hidden_proto for
+	__STRTOF, STRTOF.
+	* stdlib/strtol.c: Add libc_hidden_def.
+	* stdlib/strtol_l.c: Likewise.
+	* sysdeps/wordsize-64/strtol.c: Add libc_hidden_ver for strtoll and
+	strtoq.
+
+	* scripts/data/localplt-powerpc-linux-gnu.data: New file.
+
+	* scripts/data/localplt-x86_64-linux-gnu.data: File renamed to ...
+	* scripts/data/localplt-generic.data: ... here.
+	* elf/Makefile (check-data): Get generic file if no other.
+	($(objpfx)check-localplt.out): Make target unconditional.
+
+	* sysdeps/unix/sysv/linux/dl-osinfo.h (_dl_discover_osversion):
+	Use ElfW(Nhdr).
+
+2007-08-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/zh_CN.po: Updated translation from translation team.
+
+2007-08-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/socket.S (__socket):
+	Don't use CGOTSETUP and CGOTRESTORE macros.
+
+2007-08-04  Roland McGrath  <roland@redhat.com>
+
+	* posix/Makefile ($(objpfx)getconf.speclist): Fix typo.
+
 2007-08-04  Jakub Jelinek  <jakub@redhat.com>
 
 	* io/bits/fcntl2.h (open, open64, openat, openat64): Add
