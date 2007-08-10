@@ -1,3 +1,25 @@
+2007-08-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/shm_open.c (shm_open): Use O_CLOEXEC is
+	available.
+
+2007-08-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ieee754/ldbl-128ibm/strtold_l.c (___new_strtold_l,
+	___new_wcstold_l): New weak aliases.
+	(strtold_l, wcstold_l): Use them as second argument for
+	long_double_symbol.
+
+2007-08-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/sched_getcpu.S: Use correct
+	register in test for error.
+
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h (O_CLOEXEC): Define.
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h (O_CLOEXEC): Likewise.
+
+	* po/sv.po: Update from translation team.
+
 2007-08-06  Roland McGrath  <roland@redhat.com>
 
 	* include/stdlib.h: Add libc_hidden_proto for strto*, __strto*_l.
