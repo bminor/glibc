@@ -21,6 +21,7 @@
 #include <lowlevellock.h>
 #include <lowlevelrwlock.h>
 #include <pthread-errnos.h>
+#include <kernel-features.h>
 
 
 	.text
@@ -66,7 +67,7 @@ __pthread_rwlock_wrlock:
 	jne	10f
 
 11:
-#if __ASSUME_PRIVATE_FUTEX
+#ifdef __ASSUME_PRIVATE_FUTEX
 	movzbl	PSHARED(%ebx), %ecx
 	xorl	$FUTEX_PRIVATE_FLAG|FUTEX_WAIT, %ecx
 #else

@@ -24,6 +24,38 @@
 #include <bp-start.h>
 #include <bp-sym.h>
 
+
+#ifdef SHARED
+# include <sys/time.h>
+# include <dl-vdso.h>
+# undef __gettimeofday
+# undef __clock_gettime
+# undef __clock_getres
+# include <bits/libc-vdso.h>
+
+void *__vdso_gettimeofday attribute_hidden;
+void *__vdso_clock_gettime;
+void *__vdso_clock_getres;
+void *__vdso_get_tbfreq;
+
+static inline void
+_libc_vdso_platform_setup (void)
+{
+  PREPARE_VERSION (linux2615, "LINUX_2.6.15", 123718565);
+
+  __vdso_gettimeofday = _dl_vdso_vsym ("__kernel_gettimeofday", &linux2615);
+
+  __vdso_clock_gettime = _dl_vdso_vsym ("__kernel_clock_gettime", &linux2615);
+
+  __vdso_clock_getres = _dl_vdso_vsym ("__kernel_clock_getres", &linux2615);
+
+  __vdso_get_tbfreq = _dl_vdso_vsym ("__kernel_vdso_get_tbfreq", &linux2615);
+}
+
+# define VDSO_SETUP _libc_vdso_platform_setup
+#endif
+
+
 int __cache_line_size attribute_hidden;
 /* The main work is done in the generic function.  */
 #define LIBC_START_MAIN generic_start_main
@@ -40,36 +72,6 @@ struct startup_info
     int (*init) (int, char **, char **, void *);
     void (*fini) (void);
   };
-
-
-#ifdef SHARED
-# include <sys/time.h>
-# include <dl-vdso.h>
-# undef __gettimeofday
-# undef __clock_gettime
-# undef __clock_getres
-# include <bits/libc-vdso.h>
-
-void *__vdso_gettimeofday;
-void *__vdso_clock_gettime;
-void *__vdso_clock_getres;
-void *__vdso_get_tbfreq;
-
-static inline void _libc_vdso_platform_setup (void)
-  {
-    __vdso_gettimeofday = _dl_vdso_vsym ("__kernel_gettimeofday",
-  				         "LINUX_2.6.15");
-
-    __vdso_clock_gettime = _dl_vdso_vsym ("__kernel_clock_gettime",
-					  "LINUX_2.6.15");
-
-    __vdso_clock_getres = _dl_vdso_vsym ("__kernel_clock_getres",
-				         "LINUX_2.6.15");
-
-    __vdso_get_tbfreq = _dl_vdso_vsym ("__kernel_vdso_get_tbfreq",
-				       "LINUX_2.6.15");
-  }
-#endif
 
 int
 /* GKM FIXME: GCC: this should get __BP_ prefix by virtue of the
@@ -117,10 +119,7 @@ int
 	__cache_line_size = av->a_un.a_val;
 	break;
       }
-#ifdef SHARED
-  /* Resolve and initialize function pointers for VDSO functions.  */
-  _libc_vdso_platform_setup ();
-#endif
+
   return generic_start_main (stinfo->main, argc, ubp_av, auxvec,
 			     stinfo->init, stinfo->fini, rtld_fini,
 			     stack_on_entry);

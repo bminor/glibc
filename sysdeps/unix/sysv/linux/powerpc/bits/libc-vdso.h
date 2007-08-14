@@ -23,7 +23,7 @@
 
 #ifdef SHARED
 
-extern void *__vdso_gettimeofday;
+extern void *__vdso_gettimeofday attribute_hidden;
 
 extern void *__vdso_clock_gettime;
 

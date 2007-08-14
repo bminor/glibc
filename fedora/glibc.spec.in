@@ -1,4 +1,4 @@
-%define glibcrelease 7
+%define glibcrelease 9
 %define run_glibc_tests 1
 %define auxarches i586 i686 athlon sparcv9 alphaev6
 %define xenarches i686 athlon
@@ -1000,11 +1000,17 @@ rm -f *.filelist*
 %endif
 
 %changelog
-* Fri Aug 10 2007 Roland McGrath <roland@redhat.com> 2.6.90-7
+* Tue Aug 14 2007 Jakub Jelinek <jakub@redhat.com> 2.6.90-9
+- private futex even for mutexes and condvars
+- some further O_CLOEXEC changes
+- use vDSO on x86_64 if available
+- ia64 build fixes (#251983)
+
+* Fri Aug 10 2007 Roland McGrath <roland@redhat.com> 2.6.90-8
 - update to trunk
   - fix missing strtold_l export on ppc64
 
-* Thu Aug  9 2007 Roland McGrath <roland@redhat.com> 2.6.90-5
+* Thu Aug  9 2007 Roland McGrath <roland@redhat.com> 2.6.90-6
 - update to trunk
   - fix local PLT regressions
 - spec file revamp for new find-debuginfo.sh

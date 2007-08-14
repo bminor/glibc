@@ -1,4 +1,5 @@
-/* Copyright (C) 2000, 2007 Free Software Foundation, Inc.
+/* Resolve function pointers to VDSO functions.
+   Copyright (C) 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,17 +17,19 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
+#ifndef _LIBC_VDSO_H
+#define _LIBC_VDSO_H
 
-/* Generate a unique temporary file name from TEMPLATE.
-   The last six characters of TEMPLATE must be "XXXXXX";
-   they are replaced with a string that makes the filename unique.
-   Then open the file and return a fd. */
-int
-mkstemp64 (template)
-     char *template;
-{
-  return __gen_tempname (template, O_LARGEFILE, __GT_FILE);
-}
+#include <time.h>
+#include <sys/time.h>
+
+#ifdef SHARED
+
+extern int (*__vdso_gettimeofday) (struct timeval *, void *)
+  attribute_hidden;
+
+extern int (*__vdso_clock_gettime) (clockid_t, struct timespec *);
+
+#endif
+
+#endif /* _LIBC_VDSO_H */

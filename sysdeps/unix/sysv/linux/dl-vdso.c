@@ -1,5 +1,5 @@
 /* ELF symbol resolve functions for VDSO objects.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,11 +17,34 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#ifndef _DL_VDSO_H
-#define _DL_VDSO_H	1
+#include "config.h"
+#include <ldsodefs.h>
 
-/* Functions for resolving symbols in the VDSO link map.  */
-extern void *_dl_vdso_vsym (const char *name, const char *version)
-     internal_function attribute_hidden;
 
-#endif /* dl-vdso.h */
+void *
+internal_function
+_dl_vdso_vsym (const char *name, const struct r_found_version *vers)
+{
+  struct link_map *map = GLRO (dl_sysinfo_map);
+  void *value = NULL;
+
+
+  if (map != NULL)
+    {
+      /* Use a WEAK REF so we don't error out if the symbol is not found.  */
+      ElfW (Sym) wsym;
+      memset (&wsym, 0, sizeof (ElfW (Sym)));
+      wsym.st_info = (unsigned char) ELFW (ST_INFO (STB_WEAK, STT_NOTYPE));
+
+      /* Search the scope of the vdso map.  */
+      const ElfW (Sym) *ref = &wsym;
+      lookup_t result = GLRO (dl_lookup_symbol_x) (name, map, &ref,
+						   map->l_local_scope,
+						   vers, 0, 0, NULL);
+
+      if (ref != NULL)
+	value = DL_SYMBOL_ADDRESS (result, ref);
+    }
+
+  return value;
+}

@@ -25,6 +25,7 @@
 #include <bits/pthreadtypes.h>
 #include <ia64intrin.h>
 #include <atomic.h>
+#include <kernel-features.h>
 
 #define __NR_futex		1230
 #define FUTEX_WAIT		0
@@ -103,18 +104,20 @@ do									\
 while (0)
 
 /* Returns non-zero if error happened, zero if success.  */
-#define lll_futex_requeue(ftx, nr_wake, nr_move, mutex, val)		     \
+#define lll_futex_requeue(ftx, nr_wake, nr_move, mutex, val, private)	     \
 ({									     \
-   DO_INLINE_SYSCALL(futex, 6, (long) (ftx), FUTEX_CMP_REQUEUE,		     \
+   DO_INLINE_SYSCALL(futex, 6, (long) (ftx),				     \
+		     __lll_private_flag (FUTEX_CMP_REQUEUE, private),	     \
 		     (int) (nr_wake), (int) (nr_move), (long) (mutex),	     \
 		     (int) val);					     \
    _r10 == -1;								     \
 })
 
 /* Returns non-zero if error happened, zero if success.  */
-#define lll_futex_wake_unlock(ftx, nr_wake, nr_wake2, ftx2)		     \
+#define lll_futex_wake_unlock(ftx, nr_wake, nr_wake2, ftx2, private)	     \
 ({									     \
-   DO_INLINE_SYSCALL(futex, 6, (long) (ftx), FUTEX_WAKE_OP,		     \
+   DO_INLINE_SYSCALL(futex, 6, (long) (ftx),				     \
+		     __lll_private_flag (FUTEX_WAKE_OP, private),	     \
 		     (int) (nr_wake), (int) (nr_wake2), (long) (ftx2),	     \
 		     FUTEX_OP_CLEAR_WAKE_IF_GT_ONE);			     \
    _r10 == -1;								     \
@@ -152,6 +155,7 @@ extern int __lll_robust_lock_wait (int *futex, int private) attribute_hidden;
 	  __lll_lock_wait_private (__futex);				      \
 	else								      \
 	  __lll_lock_wait (__futex, private);				      \
+      }									      \
   }))
 #define lll_lock(futex, private) __lll_lock (&(futex), private)
 

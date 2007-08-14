@@ -24,6 +24,7 @@
 #include <bits/pthreadtypes.h>
 #include <atomic.h>
 #include <sysdep.h>
+#include <kernel-features.h>
 
 
 #define __NR_futex		394
@@ -103,24 +104,24 @@
   while (0)
 
 /* Returns non-zero if error happened, zero if success.  */
-#define lll_futex_requeue(futexp, nr_wake, nr_move, mutex, val) \
+#define lll_futex_requeue(futexp, nr_wake, nr_move, mutex, val, private) \
   ({									      \
     INTERNAL_SYSCALL_DECL (__err);					      \
     long int __ret;							      \
-    __ret = INTERNAL_SYSCALL (futex, __err, 6,				      \
-			      (futexp), FUTEX_CMP_REQUEUE, (nr_wake),	      \
-			      (nr_move), (mutex), (val));		      \
+    __ret = INTERNAL_SYSCALL (futex, __err, 6, (futexp),		      \
+			      __lll_private_flag (FUTEX_CMP_REQUEUE, private),\
+			      (nr_wake), (nr_move), (mutex), (val));	      \
     INTERNAL_SYSCALL_ERROR_P (__ret, __err);				      \
   })
 
 /* Returns non-zero if error happened, zero if success.  */
-#define lll_futex_wake_unlock(futexp, nr_wake, nr_wake2, futexp2) \
+#define lll_futex_wake_unlock(futexp, nr_wake, nr_wake2, futexp2, private) \
   ({									      \
     INTERNAL_SYSCALL_DECL (__err);					      \
     long int __ret;							      \
-    __ret = INTERNAL_SYSCALL (futex, __err, 6,				      \
-			      (futexp), FUTEX_WAKE_OP, (nr_wake),	      \
-			      (nr_wake2), (futexp2),			      \
+    __ret = INTERNAL_SYSCALL (futex, __err, 6, (futexp),		      \
+			      __lll_private_flag (FUTEX_WAKE_OP, private),    \
+			      (nr_wake), (nr_wake2), (futexp2),		      \
 			      FUTEX_OP_CLEAR_WAKE_IF_GT_ONE);		      \
     INTERNAL_SYSCALL_ERROR_P (__ret, __err);				      \
   })

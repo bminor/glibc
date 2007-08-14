@@ -1,6 +1,189 @@
+2007-08-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_PSELECT,
+	__ASSUME_PPOLL, __ASSUME_ATFCTS, __ASSUME_SET_ROBUST_LIST,
+	__ASSUME_UTIMENSAT, __ASSUME_FALLOCATE): Update per-arch conditions
+	when each feature was introduced.
+
+	* sysdeps/unix/sysv/linux/dl-vdso.c: Don't include dl-hash.h.
+	* sysdeps/unix/sysv/linux/dl-vdso.h: Don't include dl-hash.h if NDEBUG.
+	(CHECK_HASH): New macro.
+	(PREPARE_VERSION): Use it.
+
+	* sysdeps/unix/sysv/linux/pselect.c (__generic_pselect): Only provide
+	prototype if not __ASSUME_PSELECT.
+	* sysdeps/unix/sysv/linux/ppoll.c (__generic_ppoll): Only provide
+	prototype if not __ASSUME_PPOLL.
+
+	* sysdeps/unix/sysv/linux/dl-osinfo.h (ROUND): #undef after use.
+
+	* sysdeps/unix/clock_settime.c (freq, __pthread_clock_settime,
+	hp_timing_settime): Don't define or declare if HANDLED_CPUTIME
+	is defined.
+
+2007-08-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/libc-start.c
+	(_libc_vdso_platform_setup): If vDSO is not available point
+	__vdso_gettimeofday to the vsyscall.
+	* sysdeps/unix/sysv/linux/x86_64/gettimeofday.S [SHARED]: Use
+	__vdso_gettimeofday instead of vsyscall.
+
+2007-08-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/servicescache.c: Include kernel-features.h.
+	* nscd/gai.c: Likewise.
+	* sysdeps/unix/sysv/linux/statfs64.c: Likewise.
+	* sysdeps/unix/sysv/linux/fstatfs64.c: Likewise.
+	* sysdeps/unix/sysv/linux/fxstatat.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/mmap.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/mmap64.S: Likewise.
+	* sysdeps/unix/sysv/linux/xstatconv.c: Likewise.
+	* sysdeps/unix/sysv/linux/if_index.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/xstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/ifaddrs.c: Likewise.
+
+2007-08-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-dst.h: No need for _dl_dst_count, _dl_dst_substitute,
+	and _dl_get_origin defines anymore.
+
+	* sysdeps/unix/sysv/linux/clock_gettime.c (maybe_syscall_gettime_cpu):
+	Build fix for systems which might lack POSIX timer support.
+
+	* sysdeps/unix/sysv/linux/x86_64/libc-start.c
+	(_libc_vdso_platform_setup): Mangle function pointers before storing
+	them.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (INLINE_VSYSCALL):
+	Demangle vdso pointer before use.
+	(INTERNAL_VSYSCALL): Likewise.
+
+	* elf/cache.c (primes): Mark as const.
+	Noted by Roland McGrath.
+
+2007-08-01  Andreas Jaeger  <aj@suse.de>
+	    Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/ldconfig.c (opt_ignore_aux_cache): Add new option.
+	(options): Add option.
+	(parse_opt): Handle option.
+	(manual_link): Adjust process_file caller.  Call implicit_soname.
+	(search_dir): Formatting.  Use and populate auxiliary cache.
+	(main): Load and save auxiliary cache.
+	* elf/readlib.c (process_file): Add stat_buf argument.  Pass struct
+	stat64 from fstat64 to caller.
+	(implicit_soname): New function.
+	* elf/readelflib.c (process_elf_file): If DT_SONAME is not present,
+	leave *soname as NULL.
+	* elf/cache.c: Include libgen.h.
+	(print_entry, print_cache, compare, save_cache, add_to_cache):
+	Formatting and cleanups.
+	(aux_cache_entry_id, aux_cache_entry, aux_cache_file_entry,
+	aux_cache_file): New structures.
+	(AUX_CACHEMAGIC): Define.
+	(primes): New array.
+	(aux_hash_size, aux_hash): New variables.
+	(aux_cache_entry_id_hash, nextprime, init_aux_cache,
+	search_aux_cache, insert_to_aux_cache, add_to_aux_cache,
+	load_aux_cache, save_aux_cache): New functions.
+	* sysdeps/generic/ldconfig.h (_PATH_LDCONFIG_AUX_CACHE): Define.
+	(init_aux_cache, search_aux_cache, add_to_aux_cache,
+	load_aux_cache, save_aux_cache, implicit_soname): New prototypes.
+	(process_file): Adjust prototype.
+
+2007-08-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/sigcontext.h: Include stddef.h
+	with __need_size_t.
+
+2007-08-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/dl-vdso.c (_dl_vdso_vsym): Expect
+	r_found_version structure as second parameter.
+	* sysdeps/unix/sysv/linux/dl-vdso.h (PREPARE_VERSION): Define.
+	(_dl_vdso_vsym): Change type of second parameter accordingly.
+	* sysdeps/unix/sysv/linux/x86-64/libc-start.c
+	(_libc_vdso_platform_setup): Adjust.
+	* sysdeps/unix/sysv/linux/powerpc/libc-start.c
+	(_libc_vdso_platform_setup): Likewise.
+
+	* sysdeps/unix/sysv/linux/powerpc/dl-vdso.c: Move to...
+	* sysdeps/unix/sysv/linux/dl-vdso.c: ...here.
+	* sysdeps/unix/sysv/linux/powerpc/dl-vdso.h: Move to...
+	* sysdeps/unix/sysv/linux/dl-vdso.h: ...here.
+	* csu/libc-start.c: Pretty printing.
+	Use VDSO_SETUP if defined.
+	* sysdeps/unix/sysv/linux/powerpc/libc-start.c: Define VDSO_SETUP
+	and let generic code call into _libc_vdso_platform_setup.
+	* sysdeps/unix/sysv/linux/x86_64/libc-start.c: New file.
+	* sysdeps/unix/sysv/linux/x86_64/bits/libc-vdso.h: New file.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h: Pretty printing.
+	Define INLINE_VSYSCALL and INTERNAL_VSYSCALL.
+	* sysdeps/unix/sysv/linux/x86_64/Versions: Export __vdso_clock_gettime
+	for GLIBC_PRIVATE.
+	* sysdeps/unix/sysv/linux/x86_64/Makefile [subdir=elf]
+	(sysdep_rountines): Add dl-vdso.
+
+	* sysdeps/unix/sysv/linux/powerpc/Makefile: Use sysdep_routines instead
+	of routines.
+
+	* sysdeps/unix/sysv/linux/powerpc/bits/libc-vdso.h: Add
+	attribute_hidden to __vdso_gettimeofday prototype.
+
+2007-08-12  Roland McGrath  <roland@redhat.com>
+
+	* manual/stdio.texi (Variable Arguments Output): Fix xref to gcc manual.
+	From: Karl Berry <karl@freefriends.org>.
+
+2007-08-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-misc.c (_dl_sysdep_read_whole_file): We really don't need
+	an atime update for the files we read.
+
 2007-08-10  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/unix/sysv/linux/shm_open.c (shm_open): Use O_CLOEXEC is
+	* shadow/lckpwdf.c (__lckpwdf): Use O_CLOEXEC if possible.
+
+	* nscd/connections.c: Use O_CLOEXEC if possible.  Use mkostemp
+	instead of mkstemp.
+
+	* misc/Makefile (routines): Add mkostemp and mkostemp64.
+	* misc/Versions: Export mkostemp and mkostemp64 for GLIBC_2.7.
+	* misc/mkostemp.c: New file.
+	* misc/mkostemp64.c: New file.
+	* stdlib/stdlib.h: Declare the new functions.
+	* sysdeps/posix/tempname.c: Add new parameter which is added to
+	the flags for open.  Remove __GT_BIGFILE handling.
+	* stdio-common/tempname.c: Likewise.
+	* include/stdio.h: Adjust __gen_tempname prototype.
+	Renumber __GT_* constants.
+	* libio/oldtmpfile.c: Adjust for __gen_tempname interface change.
+	* misc/mkdtemp.c: Likewise.
+	* misc/mkstemp.c: Likewise.
+	* misc/mkstemp64.c: Likewise.
+	* misc/mktemp.c: Likewise.
+	* stdio-common/tempnam.c: Likewise.
+	* stdio-common/tmpfile.c: Likewise.
+	* stdio-common/tmpfile64.c: Likewise.
+	* stdio-common/tmpnam.c: Likewise.
+	* stdio-common/tmpnam_r.c: Likewise.
+
+2007-08-10  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/bits/ioctls.h (NLDLY, TABDLY, BSDLY, VTDLY):
+	New macros.
+	(NLDELAY, CRDELAY, TBDELAY, BSDELAY, VTDELAY): Define to those.
+	Reported by Samuel Thibault <samuel.thibault@ens-lyon.org>.
+
+2007-08-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/nss_files/files-XXX.c (internal_setent): Use O_CLOEXEC if
+	possible.
+	* nss/nss_files/files-alias.c (internal_setent): Likewise.
+	* nss/Makefile (libnss_files-routines): Add files-have_o_cloexec.
+	* nss/nss_files/files-have_o_cloexec.c: New file.
+
+	* sysdeps/unix/sysv/linux/shm_open.c (shm_open): Use O_CLOEXEC if
 	available.
 
 2007-08-10  Jakub Jelinek  <jakub@redhat.com>

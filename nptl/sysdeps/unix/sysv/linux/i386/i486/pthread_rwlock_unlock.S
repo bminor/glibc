@@ -20,6 +20,7 @@
 #include <sysdep.h>
 #include <lowlevellock.h>
 #include <lowlevelrwlock.h>
+#include <kernel-features.h>
 
 
 	.text
@@ -73,7 +74,7 @@ __pthread_rwlock_unlock:
 	jne	7f
 
 8:
-#if __ASSUME_PRIVATE_FUTEX
+#ifdef __ASSUME_PRIVATE_FUTEX
 	movzbl	PSHARED(%edi), %ecx
 	xorl	$FUTEX_PRIVATE_FLAG|FUTEX_WAKE, %ecx
 #else
