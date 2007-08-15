@@ -1,3 +1,44 @@
+2007-08-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/fpu/fraiseexcpt.c (__feraiseexcept): Fix raising
+	FE_UNDERFLOW on Niagara CPUs.
+
+	* sysdeps/sparc/fpu/feholdexcpt.c (feholdexcept): Clear all
+	exceptions.
+
+2007-08-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_runtime_setup): No
+	need to check GLRO(dl_hwcap) & HWCAP_SPARC_FLUSH on sparcv9.
+	(sparc_fixup_plt): Add do_flush argument instead of figuring whether
+	flush should be used or not inside of the function.
+	(elf_machine_fixup_plt, elf_machine_rela): Adjust caller.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S (__clone,
+	__thread_start): Use HIDDEN_JUMPTARGET.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/clone.S (__clone,
+	__thread_start): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sysdep.h (JUMPTARGET): Define.
+
+	* sysdeps/ieee754/ldbl-64-128/strtold_l.c (__STRTOF): Declare.
+	Add libc_hidden_proto.
+	(STRTOF): Add libc_hidden_proto.
+	(___new_strtold_l, ___new_wcstold_l): New weak aliases.
+	(strtold_l, wcstold_l): Use them as second argument for
+	long_double_symbol.
+
+2007-08-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-misc.c: Undo last change.  The kernel won't allow it.
+
+2007-08-13  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* stdlib/strtold_l.c: Include wchar.h if needed.  Add libc_hidden_def.
+
+2007-08-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/bg.po: New file.  From the translation team.
+
 2007-08-13  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_PSELECT,
