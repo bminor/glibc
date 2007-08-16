@@ -1,3 +1,29 @@
+2007-08-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/Makefile ($(objpfx)ld.so): Use readelf -s and awk instead of nm -u
+	to check for undefined symbols.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S (__clone):
+	If the syscall fails, set errno to the actual returned error number
+	rather than EINVAL.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/clone.S (__clone): If
+	arguments are incorrect, set errno to EINVAL, if the syscall
+	fails, set errno to the actual returned error number.
+
+	* stdlib/bits/stdlib-ldbl.h (__strtold_internal): Remove.
+	* wcsmbs/bits/wchar-ldbl.h (__wcstold_internal): Remove.
+
+	* sysdeps/sparc/sparc32/sparcv9b/memcpy.S: Moved to...
+	* sysdeps/sparc/sparc32/sparcv9/sparcv9b/memcpy.S: ... here.  New
+	file.
+	(ASI_PNF, ASI_BLK_P): Don't define.
+	* sysdeps/sparc/sparc32/sparcv9v/memcpy.S: Moved to...
+	* sysdeps/sparc/sparc32/sparcv9/sparcv9v/memcpy.S: ... here.  New
+	file.
+	* sysdeps/sparc/sparc32/sparcv9v/memset.S: Moved to...
+	* sysdeps/sparc/sparc32/sparcv9/sparcv9v/memset.S: ... here.  New
+	file.
+
 2007-08-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/sparc/fpu/fraiseexcpt.c (__feraiseexcept): Fix raising

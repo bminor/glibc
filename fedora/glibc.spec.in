@@ -1,4 +1,4 @@
-%define glibcrelease 10
+%define glibcrelease 11
 %define run_glibc_tests 1
 %define auxarches i586 i686 athlon sparcv9v sparc64v alphaev6
 %define xenarches i686 athlon
@@ -256,8 +256,6 @@ package or when debugging this package.
 # memmove. The memcpy implementation below is not tolerant at
 # all.
 rm -f sysdeps/alpha/alphaev6/memcpy.S
-mv sysdeps/sparc/sparc32/{,sparcv9/}sparcv9b
-mv sysdeps/sparc/sparc32/{,sparcv9/}sparcv9v
 
 find . -type f -size 0 -o -name "*.orig" -exec rm -f {} \;
 cat > find_provides.sh <<EOF
@@ -1012,6 +1010,12 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri Aug 17 2007 Jakub Jelinek <jakub@redhat.com> 2.6.90-11
+- remove __strtold_internal and __wcstold_internal from ppc*/s390*/sparc*
+  *-ldbl.h headers
+- temporarily backout x86_64 gettimeofday.S changes (#252453)
+- some further sparc, sparc64 and alpha fixes
+
 * Wed Aug 15 2007 Jakub Jelinek <jakub@redhat.com> 2.6.90-10
 - don't open /etc/ld.so.{cache,preload} with O_NOATIME (#252146)
 - s390{,x}, alpha and sparc fixes
