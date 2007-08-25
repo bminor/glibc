@@ -18,32 +18,32 @@
 
 #ifdef SHARED
 # include <dl-vdso.h>
+# undef __gettimeofday
+# undef __clock_gettime
+# undef __clock_getres
 # include <bits/libc-vdso.h>
 
-int (*__vdso_gettimeofday) (struct timeval *, void *) attribute_hidden;
-
-int (*__vdso_clock_gettime) (clockid_t, struct timespec *);
+void *__vdso_gettimeofday attribute_hidden;
+void *__vdso_clock_gettime;
+void *__vdso_clock_getres;
+void *__vdso_get_tbfreq;
 
 
 static inline void
 _libc_vdso_platform_setup (void)
 {
-  PREPARE_VERSION (linux26, "LINUX_2.6", 61765110);
+  PREPARE_VERSION (linux2615, "LINUX_2.6.15", 123718565);
 
-  void *p = _dl_vdso_vsym ("gettimeofday", &linux26);
-  /* If the vDSO is not available we fall back on the old vsyscall.  */
-#define VSYSCALL_ADDR_vgettimeofday	0xffffffffff600000ul
-  if (p == NULL)
-    p = (void *) VSYSCALL_ADDR_vgettimeofday;
-  PTR_MANGLE (p);
-  __vdso_gettimeofday = p;
+  __vdso_gettimeofday = _dl_vdso_vsym ("__kernel_gettimeofday", &linux2615);
 
-  p = _dl_vdso_vsym ("clock_gettime", &linux26);
-  PTR_MANGLE (p);
-  __vdso_clock_gettime = p;
+  __vdso_clock_gettime = _dl_vdso_vsym ("__kernel_clock_gettime", &linux2615);
+
+  __vdso_clock_getres = _dl_vdso_vsym ("__kernel_clock_getres", &linux2615);
+
+  __vdso_get_tbfreq = _dl_vdso_vsym ("__kernel_vdso_get_tbfreq", &linux2615);
 }
 
 # define VDSO_SETUP _libc_vdso_platform_setup
 #endif
 
-#include <csu/libc-start.c>
+#include "../init-first.c"

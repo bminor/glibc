@@ -28,7 +28,7 @@ ENTRY (__gettimeofday)
 	/* Align stack.  */
 	sub	$0x8, %rsp
 	cfi_adjust_cfa_offset(8)
-#if 0 /* def SHARED */
+#ifdef SHARED
 	movq	__vdso_gettimeofday(%rip), %rax
 	PTR_DEMANGLE (%rax)
 #else

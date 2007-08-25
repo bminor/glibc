@@ -1,3 +1,133 @@
+2007-08-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/cacheinfo.c (handle_amd): Fix computation of
+	associativity for fully-associative caches.
+
+	* sysdeps/x86_64/cacheinfo.c (handle_amd): Handle L3 cache
+	requests.  Fill on more associativity values for L2.
+	Patch mostly by Evandro Menezes.
+
+2007-08-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/init-first.c
+	(_libc_vdso_platform_setup): Avoid using exported variable by using
+	alias.
+
+	* resolv/arpa/nameser.h (NS_OPT_DNSSEC_OK): Define.
+
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: No reason to mark
+	fallocate64 as EXTRA< it is not referenced if the symbol isn't
+	defined.
+
+2007-08-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Correctly
+	align stack for call if pltexit is to be used.
+
+	[BZ #3924]
+	* sysdeps/i386/dl-trampoline.S (_dl_runtime_profile): Correctly
+	align for function call in case pltexit has to be called later.
+
+	* sysdeps/i386/dl-trampoline.S (_dl_runtime_resolve): Avoid
+	implicit atomic operation when storing function pointer.
+	(_dl_runtime_profile): Likewise.
+
+2007-08-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* nis/nis_table.c (nis_list): Don't fail if __follow_path returned
+	NIS_NOTFOUND.
+
+2007-08-21  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #4566]
+	* string/strtok.c: Fix typo in comment.
+
+	[BZ #4582]
+	* debug/segfault.c: Fix typos in comments.
+
+	[BZ #4588]
+	* stdio-common/tempnam.c: Fix comment, it is not checked that
+	TMPDIR points to a writable directory.
+
+	[BZ #4726]
+	* resolv/res_send.c (__libc_res_nsend): Initialize all of the
+	memory allocated for the name server address.
+
+	[BZ #4946]
+	* nscd/connections.c (handle_request): Using sendfile always
+	requires that mmap is used for the database.
+	Patch by Petr Baudis <pasky@suse.cz>.
+
+	[BZ #4905]
+	* nscd/hstcache.c (cache_addhst): When reloading an entry which
+	suddenly has two or more addresses, ignore it and remove the old
+	entry.
+
+	[BZ #4814]
+	* resolv/res_hconf.c: Prepare for compiling outside libc.
+	* nscd/res_hconf.c: New file.
+	* nscd/Makefile (nscd-modules): Add res_hconf.  Add rules to build
+	the new file.
+	* nscd/gethstbynm2_r.c (NEED__RES_HCONF): Define.
+	* nscd/gethstbyad_r.c (NEED__RES_HCONF): Likewise.
+
+	* nscd/hstcache.c (cache_addhst): Minimal optimization.
+
+	[BZ #4925]
+	* debug/pcprofiledump.c: Turn on internationalization by calling
+	setlocale.  Patch mostly by Benno Schulenberg.
+
+	[BZ #4936]
+	* iconv/gconv.c (__gconv): If flush was successful, clear rest of
+	the state.
+	* iconvdata/Makefile: Add rules to build and run bug-iconv5.
+	* iconvdata/bug-iconv5.c: New file.
+
+2007-08-04  Carlos O'Donell  <carlos@systemhalted.org>
+
+	[BZ #4896]
+	* elf/elf.h: Define R_PARISC_PLABEL21L, R_PARISC_PLABEL14R,
+	R_PARISC_GNU_VTENTRY, R_PARISC_GNU_VTINHERIT, R_PARISC_TLS_GD21L,
+	R_PARISC_TLS_GD14R, R_PARISC_TLS_GDCALL, R_PARISC_TLS_LDM21L,
+	R_PARISC_TLS_LDM14R, R_PARISC_TLS_LDMCALL, R_PARISC_TLS_LDO21L,
+	R_PARISC_TLS_LDO14R, R_PARISC_TLS_DTPMOD32, R_PARISC_TLS_DTPMOD64,
+	R_PARISC_TLS_DTPOFF32, R_PARISC_TLS_DTPOFF64, R_PARISC_TLS_LE21L,
+	R_PARISC_TLS_LE14R, R_PARISC_TLS_IE21L, R_PARISC_TLS_IE14R,
+	R_PARISC_TLS_TPREL32, R_PARISC_TLS_TPREL64.
+
+2007-08-21  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #4937]
+	* elf/do-lookup.h (do_lookup_x): Minimal improvement in hash
+	lookup loop.  Suggested by John Reiser.
+
+2007-08-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/sysdep.h: Include tls.h.
+
+2007-08-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* csu/libc-start.c: Don't handle VDSO_SETUP here.
+	* sysdeps/unix/sysv/linux/init-first.c: Handle it here instead.
+	* sysdeps/unix/sysv/linux/x86_64/libc-start.c: Renamed to...
+	* sysdeps/unix/sysv/linux/x86_64/init-first.c: ...this.  New file.
+	* sysdeps/unix/sysv/linux/powerpc/libc-start.c: Move VDSO_SETUP code
+	to...
+	* sysdeps/unix/sysv/linux/x86_64/init-first.c: ...here.  New file.
+
+2007-08-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/nl.po: Update from translation team.
+
+2007-08-16  Andreas Jaeger  <aj@suse.de>
+
+	* locale/localeinfo.h: Make _nl_category_name_idxs extern.
+        Reported by Peter Festner <peter.festner@ewetel.net>.
+
+2007-08-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* login/tst-grantpt.c (test_einval): Add 3rd argument to open.
+
 2007-08-16  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/Makefile ($(objpfx)ld.so): Use readelf -s and awk instead of nm -u
