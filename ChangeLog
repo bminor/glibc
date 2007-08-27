@@ -1,4 +1,45 @@
+2007-08-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list
+	(personality): Change caller to EXTRA.
+
 2007-08-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/iso-2022-kr.c (BODY): Fake initialization of array buf
+	to keep gcc quiet.
+	* iconvdata/iso-2022-cn.c (BODY): Likewise.
+
+	* locale/programs/ld-collate.c (collate_output): Avoid warning if
+	NDEBUG is defined.
+
+	* Makerules: Use -p option with mkdir.
+
+	* sunrpc/key_prot.c (xdr_unixcred): Work around gcc alias warning.
+	* nis/nis_xdr.c (_xdr_nis_server): Likewise.
+	(_xdr_directory_obj): Likewise.
+	(xdr_entry_obj): Likewise.
+	(xdr_group_obj): Likewise.
+	(xdr_link_obj): Likewise.
+	(xdr_table_obj): Likewise.
+	(_xdr_nis_result): Likewise.
+	(_xdr_ns_request): Likewise.
+	(_xdr_ib_request): Likewise.
+	(_xdr_nis_taglist): Likewise.
+	(xdr_cback_data): Likewise.
+	* nis/yp_xdr.c (xdr_ypmaplist): Likewise.
+	(xdr_ypresp_maplist): Likewise.
+
+	* stdio-common/Makefile: Avoid format string warning for tst-sprint.
+
+	* posix/regex_internal.h: Prevent some declarations and definitions
+	to be seen when used in tests.
+
+	* posix/tst-rfc3484.c (__idna_to_unicode_lzlz): Initialize *OUTPUT.
+	* posix/tst-rfc3484-2.c (__idna_to_unicode_lzlz): Likewise.
+
+	* debug/Makefile: Disable format checking when compiling tst-chk?.c.
+
+	* config.make.in (datarootdir): Add to shut up configure.
 
 	* sysdeps/x86_64/cacheinfo.c (handle_amd): Fix computation of
 	associativity for fully-associative caches.
@@ -16,7 +57,7 @@
 	* resolv/arpa/nameser.h (NS_OPT_DNSSEC_OK): Define.
 
 	* sysdeps/unix/sysv/linux/i386/syscalls.list: No reason to mark
-	fallocate64 as EXTRA< it is not referenced if the symbol isn't
+	fallocate64 as EXTRA.  It is not referenced if the symbol isn't
 	defined.
 
 2007-08-23  Ulrich Drepper  <drepper@redhat.com>

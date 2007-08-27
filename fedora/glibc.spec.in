@@ -1,4 +1,4 @@
-%define glibcrelease 12
+%define glibcrelease 13
 %define run_glibc_tests 1
 %define auxarches i586 i686 athlon sparcv9v sparc64v alphaev6
 %define xenarches i686 athlon
@@ -1010,6 +1010,9 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Aug 27 2007 Jakub Jelinek <jakub@redhat.com> 2.6.90-13
+- fix personality on x86_64/ppc/ppc64 (#256281)
+
 * Sat Aug 25 2007 Jakub Jelinek <jakub@redhat.com> 2.6.90-12
 - readd x86_64 gettimeofday stuff, initialize it earlier
 - nis_list fix (#254115)
