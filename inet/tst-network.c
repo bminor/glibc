@@ -34,7 +34,10 @@ struct
   {"1.0", 0x100},
   {"1", 0x1},
   {"192.168.0.0", 0xC0A80000},
+  {"0", 0},
+  {"0x0", 0},
   /* Now some invalid addresses.  */
+  {"0x", INADDR_NONE},
   {"141.30.225.2800", INADDR_NONE},
   {"141.76.1.1.1", INADDR_NONE},
   {"141.76.1.11.", INADDR_NONE},
@@ -61,6 +64,7 @@ main (void)
 
       if (res != tests[i].number)
 	{
+	  ++errors;
 	  printf ("Test failed for inet_network (\"%s\"):\n",
 		  tests[i].network);
 	  printf ("Expected return value %u (0x%x) but got %u (0x%x).\n",

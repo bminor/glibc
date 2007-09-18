@@ -238,16 +238,19 @@ get_mapping (request_type type, const char *key,
 
   /* Room for the data sent along with the file descriptor.  We expect
      the key name back.  */
-  struct iovec iov[1];
+  uint64_t mapsize;
+  struct iovec iov[2];
   iov[0].iov_base = resdata;
   iov[0].iov_len = keylen;
+  iov[1].iov_base = &mapsize;
+  iov[1].iov_len = sizeof (mapsize);
 
   union
   {
     struct cmsghdr hdr;
     char bytes[CMSG_SPACE (sizeof (int))];
   } buf;
-  struct msghdr msg = { .msg_iov = iov, .msg_iovlen = 1,
+  struct msghdr msg = { .msg_iov = iov, .msg_iovlen = 2,
 			.msg_control = buf.bytes,
 			.msg_controllen = sizeof (buf) };
   struct cmsghdr *cmsg = CMSG_FIRSTHDR (&msg);
@@ -268,10 +271,7 @@ get_mapping (request_type type, const char *key,
 # ifndef MSG_CMSG_CLOEXEC
 #  define MSG_CMSG_CLOEXEC 0
 # endif
-  if (__builtin_expect (TEMP_FAILURE_RETRY (__recvmsg (sock, &msg,
-						       MSG_CMSG_CLOEXEC))
-			!= keylen, 0))
-    goto out_close2;
+  ssize_t n = TEMP_FAILURE_RETRY (__recvmsg (sock, &msg, MSG_CMSG_CLOEXEC));
 
   if (__builtin_expect (CMSG_FIRSTHDR (&msg) == NULL
 			|| (CMSG_FIRSTHDR (&msg)->cmsg_len
@@ -280,51 +280,61 @@ get_mapping (request_type type, const char *key,
 
   mapfd = *(int *) CMSG_DATA (cmsg);
 
-  struct stat64 st;
-  if (__builtin_expect (strcmp (resdata, key) != 0, 0)
-      || __builtin_expect (fstat64 (mapfd, &st) != 0, 0)
-      || __builtin_expect (st.st_size < sizeof (struct database_pers_head), 0))
+  if (__builtin_expect (n != keylen && n != keylen + sizeof (mapsize), 0))
     goto out_close;
 
-  struct database_pers_head head;
-  if (__builtin_expect (TEMP_FAILURE_RETRY (__pread (mapfd, &head,
-						     sizeof (head), 0))
-			!= sizeof (head), 0))
+  if (__builtin_expect (strcmp (resdata, key) != 0, 0))
     goto out_close;
 
-  if (__builtin_expect (head.version != DB_VERSION, 0)
-      || __builtin_expect (head.header_size != sizeof (head), 0)
-      /* This really should not happen but who knows, maybe the update
-	 thread got stuck.  */
-      || __builtin_expect (! head.nscd_certainly_running
-			   && head.timestamp + MAPPING_TIMEOUT < time (NULL),
-			   0))
-    goto out_close;
+  if (__builtin_expect (n == keylen, 0))
+    {
+      struct stat64 st;
+      if (__builtin_expect (fstat64 (mapfd, &st) != 0, 0)
+	  || __builtin_expect (st.st_size < sizeof (struct database_pers_head),
+			       0))
+	goto out_close;
 
-  size_t size = (sizeof (head) + roundup (head.module * sizeof (ref_t), ALIGN)
-		 + head.data_size);
-
-  if (__builtin_expect (st.st_size < size, 0))
-    goto out_close;
+      mapsize = st.st_size;
+    }
 
   /* The file is large enough, map it now.  */
-  void *mapping = __mmap (NULL, size, PROT_READ, MAP_SHARED, mapfd, 0);
+  void *mapping = __mmap (NULL, mapsize, PROT_READ, MAP_SHARED, mapfd, 0);
   if (__builtin_expect (mapping != MAP_FAILED, 1))
     {
-      /* Allocate a record for the mapping.  */
-      struct mapped_database *newp = malloc (sizeof (*newp));
-      if (newp == NULL)
+      /* Check whether the database is correct and up-to-date.  */
+      struct database_pers_head *head = mapping;
+
+      if (__builtin_expect (head->version != DB_VERSION, 0)
+	  || __builtin_expect (head->header_size != sizeof (*head), 0)
+	  /* This really should not happen but who knows, maybe the update
+	     thread got stuck.  */
+	  || __builtin_expect (! head->nscd_certainly_running
+			       && (head->timestamp + MAPPING_TIMEOUT
+				   < time (NULL)), 0))
 	{
-	  /* Ugh, after all we went through the memory allocation failed.  */
-	  __munmap (mapping, size);
+	out_unmap:
+	  __munmap (mapping, mapsize);
 	  goto out_close;
 	}
 
+      size_t size = (sizeof (*head) + roundup (head->module * sizeof (ref_t),
+					       ALIGN)
+		     + head->data_size);
+
+      if (__builtin_expect (mapsize < size, 0))
+	goto out_unmap;
+
+      /* Allocate a record for the mapping.  */
+      struct mapped_database *newp = malloc (sizeof (*newp));
+      if (newp == NULL)
+	/* Ugh, after all we went through the memory allocation failed.  */
+	goto out_unmap;
+
       newp->head = mapping;
-      newp->data = ((char *) mapping + head.header_size
-		    + roundup (head.module * sizeof (ref_t), ALIGN));
+      newp->data = ((char *) mapping + head->header_size
+		    + roundup (head->module * sizeof (ref_t), ALIGN));
       newp->mapsize = size;
-      newp->datasize = head.data_size;
+      newp->datasize = head->data_size;
       /* Set counter to 1 to show it is usable.  */
       newp->counter = 1;
 

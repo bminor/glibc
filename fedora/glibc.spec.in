@@ -1,4 +1,4 @@
-%define glibcrelease 13
+%define glibcrelease 14
 %define run_glibc_tests 1
 %define auxarches i586 i686 athlon sparcv9v sparc64v alphaev6
 %define xenarches i686 athlon
@@ -1010,6 +1010,21 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Tue Sep 18 2007 Jakub Jelinek <jakub@redhat.com> 2.6.90-14
+- -D_FORTIFY_SOURCE{,=2} support for C++
+- fortification of fread{,_unlocked}
+- support *scanf m allocation modifier (%ms, %mls, %mc, ...)
+- in -std=c99 or -D_XOPEN_SOURCE=600 mode don't recognize
+  %as, %aS and %a[ as a GNU extension for *scanf
+- fix splice, vmsplice, tee return value, make them cancellation
+  points
+- mq_open checking
+- use inline function rather than function-like macro
+  for open{,at}{,64} checking
+- IFA_F_OPTIMISTIC handling in getaddrinfo (#259681)
+- fix an ABBA deadlock in ld.so (#284171)
+- remove sparc{32,64} unwind info from _start and clone
+
 * Mon Aug 27 2007 Jakub Jelinek <jakub@redhat.com> 2.6.90-13
 - fix personality on x86_64/ppc/ppc64 (#256281)
 

@@ -327,7 +327,6 @@ __END_NAMESPACE_C99
 #ifdef __USE_EXTERN_INLINES
 /* Define inline function as optimization.  */
 
-# ifndef __cplusplus
 /* We can use the BTOWC and WCTOB optimizations since we know that all
    locales must use ASCII encoding for the values in the ASCII range
    and because the wchar_t encoding is always ISO 10646.  */
@@ -342,7 +341,6 @@ __extern_inline int
 __NTH (wctob (wint_t __wc))
 { return (__builtin_constant_p (__wc) && __wc >= L'\0' && __wc <= L'\x7f'
 	  ? (int) __wc : __wctob_alias (__wc)); }
-# endif
 
 __extern_inline size_t
 __NTH (mbrlen (__const char *__restrict __s, size_t __n,
@@ -589,12 +587,42 @@ extern int swscanf (__const wchar_t *__restrict __s,
 		    __const wchar_t *__restrict __format, ...)
      __THROW /* __attribute__ ((__format__ (__wscanf__, 2, 3))) */;
 
+# if defined __USE_ISOC99 && !defined __USE_GNU \
+     && (!defined __LDBL_COMPAT || !defined __REDIRECT) \
+     && (defined __STRICT_ANSI__ || defined __USE_XOPEN2K)
+#  ifdef __REDIRECT
+/* For strict ISO C99 or POSIX compliance disallow %as, %aS and %a[
+   GNU extension which conflicts with valid %a followed by letter
+   s, S or [.  */
+extern int __REDIRECT (fwscanf, (__FILE *__restrict __stream,
+				 __const wchar_t *__restrict __format, ...),
+		       __isoc99_fwscanf)
+     /* __attribute__ ((__format__ (__wscanf__, 2, 3))) */;
+extern int __REDIRECT (wscanf, (__const wchar_t *__restrict __format, ...),
+		       __isoc99_wscanf)
+     /* __attribute__ ((__format__ (__wscanf__, 1, 2))) */;
+extern int __REDIRECT (swscanf, (__const wchar_t *__restrict __s,
+				 __const wchar_t *__restrict __format, ...),
+		       __isoc99_swscanf)
+     __THROW /* __attribute__ ((__format__ (__wscanf__, 2, 3))) */;
+#  else
+extern int __isoc99_fwscanf (__FILE *__restrict __stream,
+			     __const wchar_t *__restrict __format, ...);
+extern int __isoc99_wscanf (__const wchar_t *__restrict __format, ...);
+extern int __isoc99_swscanf (__const wchar_t *__restrict __s,
+			     __const wchar_t *__restrict __format, ...)
+     __THROW;
+#   define fwscanf __isoc99_fwscanf
+#   define wscanf __isoc99_wscanf
+#   define swscanf __isoc99_swscanf
+#  endif
+# endif
+
 __END_NAMESPACE_C99
 #endif /* Use ISO C95, C99 and Unix98. */
 
 #ifdef __USE_ISOC99
 __BEGIN_NAMESPACE_C99
-
 /* Read formatted input from S into argument list ARG.
 
    This function is a possible cancellation point and therefore not
@@ -615,6 +643,36 @@ extern int vswscanf (__const wchar_t *__restrict __s,
 		     __const wchar_t *__restrict __format,
 		     __gnuc_va_list __arg)
      __THROW /* __attribute__ ((__format__ (__wscanf__, 2, 0))) */;
+
+# if !defined __USE_GNU \
+     && (!defined __LDBL_COMPAT || !defined __REDIRECT) \
+     && (defined __STRICT_ANSI__ || defined __USE_XOPEN2K)
+#  ifdef __REDIRECT
+extern int __REDIRECT (vfwscanf, (__FILE *__restrict __s,
+				  __const wchar_t *__restrict __format,
+				  __gnuc_va_list __arg), __isoc99_vfwscanf)
+     /* __attribute__ ((__format__ (__wscanf__, 2, 0))) */;
+extern int __REDIRECT (vwscanf, (__const wchar_t *__restrict __format,
+				 __gnuc_va_list __arg), __isoc99_vwscanf)
+     /* __attribute__ ((__format__ (__wscanf__, 1, 0))) */;
+extern int __REDIRECT (vswscanf, (__const wchar_t *__restrict __s,
+				  __const wchar_t *__restrict __format,
+				  __gnuc_va_list __arg), __isoc99_vswscanf)
+     __THROW /* __attribute__ ((__format__ (__wscanf__, 2, 0))) */;
+#  else
+extern int __isoc99_vfwscanf (__FILE *__restrict __s,
+			      __const wchar_t *__restrict __format,
+			      __gnuc_va_list __arg);
+extern int __isoc99_vwscanf (__const wchar_t *__restrict __format,
+			     __gnuc_va_list __arg);
+extern int __isoc99_vswscanf (__const wchar_t *__restrict __s,
+			      __const wchar_t *__restrict __format,
+			      __gnuc_va_list __arg) __THROW;
+#   define vfwscanf __isoc99_vfwscanf
+#   define vwscanf __isoc99_vwscanf
+#   define vswscanf __isoc99_vswscanf
+#  endif
+# endif
 
 __END_NAMESPACE_C99
 #endif /* Use ISO C99. */
@@ -763,7 +821,7 @@ extern size_t wcsftime_l (wchar_t *__restrict __s, size_t __maxsize,
 #endif
 
 /* Define some macros helping to catch buffer overflows.  */
-#if __USE_FORTIFY_LEVEL > 0 && !defined __cplusplus
+#if __USE_FORTIFY_LEVEL > 0 && defined __extern_always_inline
 # include <bits/wchar2.h>
 #endif
 

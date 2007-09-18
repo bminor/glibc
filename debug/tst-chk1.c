@@ -1,4 +1,4 @@
-/* Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2004.
 
@@ -52,7 +52,7 @@ do_prepare (void)
     }
 
   const char *strs = "abcdefgh\nABCDEFGHI\nabcdefghij\nABCDEFGHIJ";
-  if (write (temp_fd, strs, strlen (strs)) != strlen (strs))
+  if ((size_t) write (temp_fd, strs, strlen (strs)) != strlen (strs))
     {
       puts ("could not write test strings into file");
       unlink (temp_filename);
@@ -105,7 +105,7 @@ int num2 = 987654;
       chk_fail_ok = 0;				\
       FAIL ();					\
     }
-#if __USE_FORTIFY_LEVEL >= 2
+#if __USE_FORTIFY_LEVEL >= 2 && (!defined __cplusplus || defined __va_arg_pack)
 #define CHK_FAIL2_START CHK_FAIL_START
 #define CHK_FAIL2_END CHK_FAIL_END
 #else
@@ -144,6 +144,12 @@ do_test (void)
 	  0
 #endif
 	  );
+
+#if defined __USE_FORTIFY_LEVEL && !defined __extern_always_inline
+  printf ("Test skipped");
+  if (l0 == 0)
+    return 0;
+#endif
 
   /* These ops can be done without runtime checking of object size.  */
   memcpy (buf, "abcdefghij", 10);
@@ -283,7 +289,7 @@ do_test (void)
   CHK_FAIL_END
 
   CHK_FAIL_START
-  p = mempcpy (buf + 6, "abcde", l0 + 5);
+  p = (char *) mempcpy (buf + 6, "abcde", l0 + 5);
   CHK_FAIL_END
 
   CHK_FAIL_START
@@ -306,6 +312,7 @@ do_test (void)
   stpncpy (buf + 6, "cd", l0 + 5);
   CHK_FAIL_END
 
+# if !defined __cplusplus || defined __va_arg_pack
   CHK_FAIL_START
   sprintf (buf + 8, "%d", num1);
   CHK_FAIL_END
@@ -313,6 +320,7 @@ do_test (void)
   CHK_FAIL_START
   snprintf (buf + 8, l0 + 3, "%d", num2);
   CHK_FAIL_END
+# endif
 
   memcpy (buf, str1 + 2, l0 + 9);
   CHK_FAIL_START
@@ -333,18 +341,18 @@ do_test (void)
   CHK_FAIL_END
 
   CHK_FAIL_START
-  p = mempcpy (a.buf1 + 6, "abcde", l0 + 5);
+  p = (char *) mempcpy (a.buf1 + 6, "abcde", l0 + 5);
   CHK_FAIL_END
 
   CHK_FAIL_START
   memset (a.buf1 + 9, 'j', l0 + 2);
   CHK_FAIL_END
 
-#if __USE_FORTIFY_LEVEL >= 2 && __GNUC_PREREQ (4, 0)
-# define O 0
-#else
-# define O 1
-#endif
+# if __USE_FORTIFY_LEVEL >= 2 && __GNUC_PREREQ (4, 0)
+#  define O 0
+# else
+#  define O 1
+# endif
 
   CHK_FAIL_START
   strcpy (a.buf1 + (O + 4), str1 + 5);
@@ -358,6 +366,7 @@ do_test (void)
   strncpy (a.buf1 + (O + 6), "X", l0 + 4);
   CHK_FAIL_END
 
+# if !defined __cplusplus || defined __va_arg_pack
   CHK_FAIL_START
   sprintf (a.buf1 + (O + 7), "%d", num1);
   CHK_FAIL_END
@@ -365,6 +374,7 @@ do_test (void)
   CHK_FAIL_START
   snprintf (a.buf1 + (O + 7), l0 + 3, "%d", num2);
   CHK_FAIL_END
+# endif
 
   memcpy (a.buf1, str1 + (3 - O), l0 + 8 + O);
   CHK_FAIL_START
@@ -749,6 +759,75 @@ do_test (void)
   CHK_FAIL_END
 #endif
 
+  rewind (stdin);
+
+  if (fread (buf, 1, sizeof (buf), stdin) != sizeof (buf)
+      || memcmp (buf, "abcdefgh\nA", 10))
+    FAIL ();
+  if (fread (buf, sizeof (buf), 1, stdin) != 1
+      || memcmp (buf, "BCDEFGHI\na", 10))
+    FAIL ();
+
+  rewind (stdin);
+
+  if (fread (buf, l0 + 1, sizeof (buf), stdin) != sizeof (buf)
+      || memcmp (buf, "abcdefgh\nA", 10))
+    FAIL ();
+  if (fread (buf, sizeof (buf), l0 + 1, stdin) != 1
+      || memcmp (buf, "BCDEFGHI\na", 10))
+    FAIL ();
+
+#if __USE_FORTIFY_LEVEL >= 1
+  CHK_FAIL_START
+  if (fread (buf, 1, sizeof (buf) + 1, stdin) != sizeof (buf) + 1)
+    FAIL ();
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  if (fread (buf, sizeof (buf) + 1, l0 + 1, stdin) != 1)
+    FAIL ();
+  CHK_FAIL_END
+#endif
+
+  rewind (stdin);
+
+  if (fread_unlocked (buf, 1, sizeof (buf), stdin) != sizeof (buf)
+      || memcmp (buf, "abcdefgh\nA", 10))
+    FAIL ();
+  if (fread_unlocked (buf, sizeof (buf), 1, stdin) != 1
+      || memcmp (buf, "BCDEFGHI\na", 10))
+    FAIL ();
+
+  rewind (stdin);
+
+  if (fread_unlocked (buf, 1, 4, stdin) != 4
+      || memcmp (buf, "abcdFGHI\na", 10))
+    FAIL ();
+  if (fread_unlocked (buf, 4, 1, stdin) != 1
+      || memcmp (buf, "efghFGHI\na", 10))
+    FAIL ();
+
+  rewind (stdin);
+
+  if (fread_unlocked (buf, l0 + 1, sizeof (buf), stdin) != sizeof (buf)
+      || memcmp (buf, "abcdefgh\nA", 10))
+    FAIL ();
+  if (fread_unlocked (buf, sizeof (buf), l0 + 1, stdin) != 1
+      || memcmp (buf, "BCDEFGHI\na", 10))
+    FAIL ();
+
+#if __USE_FORTIFY_LEVEL >= 1
+  CHK_FAIL_START
+  if (fread_unlocked (buf, 1, sizeof (buf) + 1, stdin) != sizeof (buf) + 1)
+    FAIL ();
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  if (fread_unlocked (buf, sizeof (buf) + 1, l0 + 1, stdin) != 1)
+    FAIL ();
+  CHK_FAIL_END
+#endif
+
   lseek (fileno (stdin), 0, SEEK_SET);
 
   if (read (fileno (stdin), buf, sizeof (buf) - 1) != sizeof (buf) - 1
@@ -853,7 +932,8 @@ do_test (void)
   else
     {
       const char *sendstr = "abcdefgh\nABCDEFGH\n0123456789\n";
-      if (send (sp[0], sendstr, strlen (sendstr), 0) != strlen (sendstr))
+      if ((size_t) send (sp[0], sendstr, strlen (sendstr), 0)
+	  != strlen (sendstr))
 	FAIL ();
 
       char recvbuf[12];
@@ -885,29 +965,30 @@ do_test (void)
       struct sockaddr_un sa_un;
 
       sl = sizeof (sa_un);
-      if (recvfrom (sp[1], recvbuf, sizeof recvbuf, MSG_PEEK, &sa_un, &sl)
+      if (recvfrom (sp[1], recvbuf, sizeof recvbuf, MSG_PEEK,
+		    (struct sockaddr *) &sa_un, &sl)
 	  != sizeof recvbuf
 	  || memcmp (recvbuf, sendstr, sizeof recvbuf) != 0)
 	FAIL ();
 
       sl = sizeof (sa_un);
       if (recvfrom (sp[1], recvbuf + 6, l0 + sizeof recvbuf - 7, MSG_PEEK,
-	  &sa_un, &sl) != sizeof recvbuf - 7
+		    (struct sockaddr *) &sa_un, &sl) != sizeof recvbuf - 7
 	  || memcmp (recvbuf + 6, sendstr, sizeof recvbuf - 7) != 0)
 	FAIL ();
 
 #if __USE_FORTIFY_LEVEL >= 1
       CHK_FAIL_START
       sl = sizeof (sa_un);
-      if (recvfrom (sp[1], recvbuf + 1, sizeof recvbuf, MSG_PEEK, &sa_un, &sl)
-	  != sizeof recvbuf)
+      if (recvfrom (sp[1], recvbuf + 1, sizeof recvbuf, MSG_PEEK,
+		    (struct sockaddr *) &sa_un, &sl) != sizeof recvbuf)
 	FAIL ();
       CHK_FAIL_END
 
       CHK_FAIL_START
       sl = sizeof (sa_un);
       if (recvfrom (sp[1], recvbuf + 4, l0 + sizeof recvbuf - 3, MSG_PEEK,
-	  &sa_un, &sl) != sizeof recvbuf - 3)
+		    (struct sockaddr *) &sa_un, &sl) != sizeof recvbuf - 3)
 	FAIL ();
       CHK_FAIL_END
 #endif

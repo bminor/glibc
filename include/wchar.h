@@ -152,6 +152,7 @@ extern int __vfwprintf (__FILE *__restrict __s,
 			__const wchar_t *__restrict __format,
 			__gnuc_va_list __arg)
      /* __attribute__ ((__format__ (__wprintf__, 2, 0))) */;
+#ifndef __cplusplus
 extern int __vfwprintf_chk (FILE *__restrict __s, int __flag,
 			    const wchar_t *__restrict __format,
 			    __gnuc_va_list __arg)
@@ -163,6 +164,24 @@ extern int __vswprintf_chk (wchar_t *__restrict __s, size_t __n,
      /* __attribute__ ((__format__ (__wprintf__, 5, 0))) */;
 libc_hidden_proto (__vfwprintf_chk)
 libc_hidden_proto (__vswprintf_chk)
+#endif
+
+extern int __isoc99_fwscanf (__FILE *__restrict __stream,
+			     __const wchar_t *__restrict __format, ...);
+extern int __isoc99_wscanf (__const wchar_t *__restrict __format, ...);
+extern int __isoc99_swscanf (__const wchar_t *__restrict __s,
+			     __const wchar_t *__restrict __format, ...)
+     __THROW;
+extern int __isoc99_vfwscanf (__FILE *__restrict __s,
+			      __const wchar_t *__restrict __format,
+			      __gnuc_va_list __arg);
+extern int __isoc99_vwscanf (__const wchar_t *__restrict __format,
+			     __gnuc_va_list __arg);
+extern int __isoc99_vswscanf (__const wchar_t *__restrict __s,
+			      __const wchar_t *__restrict __format,
+			      __gnuc_va_list __arg) __THROW;
+libc_hidden_proto (__isoc99_vswscanf)
+libc_hidden_proto (__isoc99_vfwscanf)
 
 /* Internal functions.  */
 extern size_t __mbsrtowcs_l (wchar_t *dst, const char **src, size_t len,

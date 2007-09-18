@@ -27,6 +27,7 @@ extern int __vsscanf (__const char *__restrict __s,
 		      _G_va_list __arg)
      __attribute__ ((__format__ (__scanf__, 2, 0)));
 
+#ifndef __cplusplus
 extern int __sprintf_chk (char *, int, size_t, const char *, ...) __THROW;
 extern int __snprintf_chk (char *, size_t, int, size_t, const char *, ...)
      __THROW;
@@ -40,6 +41,23 @@ extern int __vprintf_chk (int, const char *, _G_va_list);
 extern int __vfprintf_chk (FILE *, int, const char *, _G_va_list);
 extern char *__fgets_unlocked_chk (char *buf, size_t size, int n, FILE *fp);
 extern char *__fgets_chk (char *buf, size_t size, int n, FILE *fp);
+#endif
+
+extern int __isoc99_fscanf (FILE *__restrict __stream,
+			    __const char *__restrict __format, ...) __wur;
+extern int __isoc99_scanf (__const char *__restrict __format, ...) __wur;
+extern int __isoc99_sscanf (__const char *__restrict __s,
+			    __const char *__restrict __format, ...) __THROW;
+extern int __isoc99_vfscanf (FILE *__restrict __s,
+			     __const char *__restrict __format,
+			     _G_va_list __arg) __wur;
+extern int __isoc99_vscanf (__const char *__restrict __format,
+			    _G_va_list __arg) __wur;
+extern int __isoc99_vsscanf (__const char *__restrict __s,
+			     __const char *__restrict __format,
+			     _G_va_list __arg) __THROW;
+libc_hidden_proto (__isoc99_vsscanf)
+libc_hidden_proto (__isoc99_vfscanf)
 
 /* Prototypes for compatibility functions.  */
 extern FILE *__new_tmpfile (void);
@@ -65,6 +83,7 @@ extern void __libc_fatal (__const char *__message)
      __attribute__ ((__noreturn__));
 extern void __libc_message (int do_abort, __const char *__fnt, ...);
 extern void __fortify_fail (const char *msg) __attribute__ ((noreturn));
+libc_hidden_proto (__fortify_fail)
 
 /* Acquire ownership of STREAM.  */
 extern void __flockfile (FILE *__stream);

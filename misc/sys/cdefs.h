@@ -132,6 +132,7 @@
 #define __bos(ptr) __builtin_object_size (ptr, __USE_FORTIFY_LEVEL > 1)
 #define __bos0(ptr) __builtin_object_size (ptr, 0)
 #define __warndecl(name, msg) extern void name (void)
+#define __errordecl(name, msg) extern void name (void)
 
 
 /* Support for flexible arrays.  */
@@ -281,13 +282,28 @@
 
 /* GCC 4.3 and above with -std=c99 or -std=gnu99 implements ISO C99
    inline semantics, unless -fgnu89-inline is used.  */
-#ifdef __GNUC_STDC_INLINE__
-# define __extern_inline extern __inline __attribute__ ((__gnu_inline__))
-# define __extern_always_inline \
+#if !defined __cplusplus || __GNUC_PREREQ (4,3) \
+    || (defined __GNUC_RH_RELEASE__ && __GNUC__ == 4 \
+	&& __GNUC_MINOR__ == 1 && __GNUC_PATCHLEVEL__ == 2 \
+	&& __GNUC_RH_RELEASE__ >= 24)
+# if defined __GNUC_STDC_INLINE__ || defined __cplusplus
+#  define __extern_inline extern __inline __attribute__ ((__gnu_inline__))
+#  define __extern_always_inline \
   extern __always_inline __attribute__ ((__gnu_inline__))
-#else
-# define __extern_inline extern __inline
-# define __extern_always_inline extern __always_inline
+# else
+#  define __extern_inline extern __inline
+#  define __extern_always_inline extern __always_inline
+# endif
+#endif
+
+/* GCC 4.3 and above allow passing all anonymous arguments of an
+   __extern_always_inline function to some other vararg function.  */
+#if __GNUC_PREREQ (4,3) \
+    || (defined __GNUC_RH_RELEASE__ && __GNUC__ == 4 \
+	&& __GNUC_MINOR__ == 1 && __GNUC_PATCHLEVEL__ == 2 \
+	&& __GNUC_RH_RELEASE__ >= 24)
+# define __va_arg_pack() __builtin_va_arg_pack ()
+# define __va_arg_pack_len() __builtin_va_arg_pack_len ()
 #endif
 
 /* It is possible to compile containing GCC extensions even if GCC is
