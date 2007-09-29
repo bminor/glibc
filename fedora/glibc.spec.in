@@ -1,4 +1,4 @@
-%define glibcrelease 15
+%define glibcrelease 16
 %define run_glibc_tests 1
 %define auxarches i586 i686 athlon sparcv9v sparc64v alphaev6
 %define xenarches i686 athlon
@@ -1010,6 +1010,15 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Sat Sep 29 2007 Jakub Jelinek <jakub@redhat.com> 2.6.90-16
+- misc fixes (BZ#4963, BZ#4972, BZ#5028, BZ#5043, BZ#5058)
+- improve -D_FORTIFY_SOURCE{,=2} diagnostic through warning/error
+  attributes
+- fix wcscpy, wcpcpy, fgetws, fgetws_unlocked, swprintf and vswprintf
+  fortification inlines
+- fix a scalability issue with lazy binding in heavily multithreaded
+  programs
+
 * Thu Sep 20 2007 Jakub Jelinek <jakub@redhat.com> 2.6.90-15
 - $5$ (SHA-256) and $6$ (SHA-512) support in crypt
   (#228697, #249477, #173834)

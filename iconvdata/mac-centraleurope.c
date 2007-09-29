@@ -1,7 +1,7 @@
-/* Conversion from and to KOI8-R.
-   Copyright (C) 1997, 1998, 2007 Free Software Foundation, Inc.
+/* Conversion from and to MAC-CENTRALEUROPE.
+   Copyright (C) 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
+   Contributed by Ulrich Drepper <drepper@redhat.com>, 2007.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -20,10 +20,10 @@
 
 #include <stdint.h>
 
-/* Specify the conversion table.  */
-#define TABLES <koi8-r.h>
+/* Get the conversion table.  */
+#define TABLES <mac-centraleurope.h>
 
-#define CHARSET_NAME	"KOI8-R//"
+#define CHARSET_NAME	"MAC-CENTRALEUROPE//"
 #define HAS_HOLES	0	/* All 256 character are defined.  */
 
 #include <8bit-gap.c>
