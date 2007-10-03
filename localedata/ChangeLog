@@ -1,3 +1,76 @@
+2007-10-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* charmaps/UTF-8: Fix U06FF definition.  Remove double U074A
+	definition.  Add U0B71 and U27C0 to U27CA definitions.
+
+	* de_DE.in: Adjust for correct handling of backward direction sorting.
+
+	* fr_FR.in: New file.
+	* Makefile: Add rules to run fr_FR sorting test.
+
+2007-10-01  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #4941]
+	* locales/oc_FR: Fix Thursday abday and August mon and abmon data.
+
+	* SUPPORTED (SUPPORTED-LOCALES): Add ber_MA.UTF-8.
+
+	* locales/am_ET (LC_COLLATE): Define new script after copy.
+
+2007-09-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/cs_SR: Removed.
+
+	* locales/lo_LA: Add missing collating element o-e.
+
+	* locales/is_IS: Cleanup.  Remove invalid collation entries.
+	* locales/lv_LV: Likewise.
+
+	* locales/fa_IR: Add missing collating element Alef-Hamza.
+
+	* locales/da_DK: Add missing collating symbol ETH.
+	* locales/nb_NO: Likewise.
+
+	* locales/sa_IN: New file.
+	* SUPPORTED (SUPPORTED-LOCALES): Add sa_IN.
+
+	* locales/fr_FR: Change thousands_sep to U0020.
+
+	* locales/cs_CZ: Sort lowercase before uppercase.
+
+	* locales/en_GB: Change first weekday and workday to Monday.
+	* locales/nb_NO: Likewise.
+	* locales/nn_NO: Likewise.
+	[BZ #4833]
+	* locales/da_DK: Likewise.
+	[BZ #4705]
+	* locales/et_EE: Likewise.
+
+	* locales/iso14651_t1_common: Add rules for Georgian.
+
+	* locales/ber_DZ: New file.
+	* locales/fil_PH: New file.
+	* locales/fur_IT: New file.
+	* locales/fy_DE: New file.
+	* locales/ha_NG: New file.
+	* locales/ig_NG: New file.
+	* locales/ik_CA: New file.
+	* locales/iu_CA: New file.
+	* locales/li_BE: New file.
+	* locales/li_NL: New file.
+	* locales/nds_DE: New file.
+	* locales/nds_NL: New file.
+	* locales/pap_AN: New file.
+	* locales/sc_IT: New file.
+	* locales/tk_TM: New file.
+	* locales/ug_CN: New file.
+	* locales/yo_NG: New file.
+	* SUPPORTED: Add the new locales.
+
+2007-09-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* charmaps/ISO-8859-9E: New file.
+
 2007-09-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* charmaps/KOI8-RU: New file.

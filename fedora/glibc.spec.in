@@ -1,4 +1,4 @@
-%define glibcrelease 16
+%define glibcrelease 17
 %define run_glibc_tests 1
 %define auxarches i586 i686 athlon sparcv9v sparc64v alphaev6
 %define xenarches i686 athlon
@@ -1010,6 +1010,12 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Wed Oct  3 2007 Jakub Jelinek <jakub@redhat.com> 2.6.90-17
+- fix {,v}swprintf with -D_FORTIFY_SOURCE=1 -mlong-double-64 on ppc*/s390*/sparc*
+- strcoll fixes
+- misc fixes (BZ#645, BZ#5071)
+- locale fixes (BZ#4941, #299321, #203364, #196711, #236212)
+
 * Sat Sep 29 2007 Jakub Jelinek <jakub@redhat.com> 2.6.90-16
 - misc fixes (BZ#4963, BZ#4972, BZ#5028, BZ#5043, BZ#5058)
 - improve -D_FORTIFY_SOURCE{,=2} diagnostic through warning/error
