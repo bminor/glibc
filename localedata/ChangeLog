@@ -1,3 +1,39 @@
+2007-10-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* locales/en_US: Add first_weekday and first_workday.
+	* locales/cs_CZ: Likewise.
+	* locales/fur_IT: Likewise.
+	* locales/fy_DE: Likewise.
+	* locales/hu_HU: Likewise.
+	* locales/i18n: Likewise.
+	* locales/li_BE: Likewise.
+	* locales/li_NL: Likewise.
+	* locales/nds_DE: Likewise.
+	* locales/nds_NL: Likewise.
+	* locales/pl_PL: Likewise.
+	* locales/sc_IT: Likewise.
+	* locales/sk_SK: Likewise.
+
+2007-10-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/de_DE: Set first week day to Monday.
+	* locales/fr_FR: Likewise.
+
+2007-10-07  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #73]
+	* locales/nb_NO: Update time information, collation, thousands
+	separator.
+	* locales/nn_NO: Likewise.
+
+2007-10-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/en_NG: New file.
+
+2007-10-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* tst-langinfo.sh: Update expected THOUSEP for fr_FR.
+
 2007-10-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* charmaps/UTF-8: Fix U06FF definition.  Remove double U074A

@@ -1,4 +1,146 @@
-2007-10-03  Jakub Jelinek
+2007-10-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdio-common/printf-parse.h: Include string.h and wchar.h.
+	(__find_specwc): Change into __extern_always_inline function.
+	(__find_specmb): Likewise.  Remove ps argument.  Use __strchrnul.
+	(__parse_one_specmb): Remove ps argument.
+	* stdio-common/vfprintf.c (vfprintf): Remove mbstate variable.
+	Adjust __find_specmb and __parse_one_specmb callers.
+	* stdio-common/printf-prs.c (parse_printf_format): Likewise.
+	* stdio-common/printf-parsemb.c (__find_specwc, __find_specmb):
+	Removed.
+	(__parse_one_specmb): Remove ps argument, adjust __find_specmb
+	caller.
+
+2007-10-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/cacheinfo.c (init_cacheinfo): Work around problem
+	with some Pentium Ds.
+
+2007-10-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/eventfd_read.c (eventfd_read): Use
+	__read not read.
+	* sysdeps/unix/sysv/linux/eventfd_write.c (eventfd_write): Use
+	__write not write.
+
+2007-10-07  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #181]
+	* locale/C-time.c: Set week_1stday data to 19971201.
+	* locale/programs/ld-time.c (time_finish): Default for
+	first_workday is Monday.
+
+	[BZ #2633]
+	* wcsmbs/wchar.h: Move many C99 functions into std namespace.
+
+	[BZ #5103]
+	* posix/glob.c (glob): Recognize patterns starting \/.
+	* posix/tst-gnuglob.c (find_file): Handle absolute path names.
+	(main): Add test for pattern starting \/.
+
+	* misc/error.h: Use __const instead of const.
+	* misc/bits/error.h: Likewise.
+
+2007-10-07  Andreas Jaeger  <aj@suse.de>
+
+	* include/bits/error.h: New file.
+
+	* misc/bits/error.h (error_at_line): Fix prototype.
+
+2007-10-06  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3924]
+	* sysdeps/i386/dl-trampoline.S (_dl_runtime_profile): Fix a few
+	more little bugs in creating the stack frame when pltexit has to
+	be called.
+
+	* nscd/nscd_helper.c (__nscd_cache_search): Prevent endless loops.
+	* nscd/connections.c (verify_persistent_db): Recognize circular lists.
+
+	[BZ #4407]
+	* sysdeps/ieee754/dbl-64/e_lgamma_r.c: Fix *signgamp for -0.0.
+	* sysdeps/ieee754/flt-32/e_lgammaf_r.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/e_lgammal_r.c: Likewise.
+	* math/libm-test.inc: Add test for this case.
+
+	[BZ #5010]
+	* sunrpc/svc.c (struct svc_callout): Add sc_mapped element.
+	(svc_register): Initialize sc_mapped.  Set to TRUE if call to
+	map service succeeded.
+	(svc_is_mapped): New function.
+	(svc_unregister): Use it before trying to unmap service.
+
+2007-10-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* timezone/zic.c: Update from tzcode2007h.
+
+	[BZ #5063]
+	* timezone/africa: Update from tzdata2007h.
+	* timezone/antarctica: Likewise.
+	* timezone/asia: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/leapseconds: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+	* timzeone/zone.tab: Likewise.
+
+	[BZ #5104]
+	* elf/do-lookup.h (do_lookup_x): Don't ignore STT_COMMON symbols.
+
+	[BZ #5113]
+	* string/bits/string2.h (__strdup): Cast parameters to calloc to
+	avoid warning with -Wconversion.
+	(__strndup): Likewise.
+	Half the patch by Christian Iseli <christian.iseli@licr.org>.
+
+	[BZ #5112]
+	* nscd/connections.c (restart): Don't resync if database is
+	disabled.  Patch mostly by Brian De Wolf <bldewolf@csupomona.edu>.
+
+	* sysdeps/gnu/netinet/tcp.h: Define TCP_MD5SIG, TCP_MD5SIG_MAXKEYLEN,
+	struct tcp_md5sig.  Extend struct tcp_info according to recent kernels.
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines): Add eventfd,
+	evetnfd_read, eventfd_write.
+	* sysdeps/unix/sysv/linux/eventfd.c: New file.
+	* sysdeps/unix/sysv/linux/eventfd_read.c: New file.
+	* sysdeps/unix/sysv/linux/eventfd_write.c: New file.
+	* sysdeps/unix/sysv/linux/sys/eventfd.h: New file.
+	* sysdeps/unix/sysv/linux/Versions: Export eventfd, eventfd_read,
+	eventfd_write for GLIBC_2.7.
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines): Add signalfd.
+	* sysdeps/unix/sysv/linux/signalfd.c: New file.
+	* sysdeps/unix/sysv/linux/sys/signalfd.h: New file.
+	* sysdeps/unix/sysv/linux/Versions: Export signalfd for GLIBC_2.7.
+
+2007-10-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/msort.c: Include stdint.h.
+	(struct msort_param): New type.
+	(msort_with_tmp): Use struct msort_param pointer for unchanging
+	parameters.  Add optimized handling for several common sizes
+	and indirect sorting mode.
+	(qsort): Adjust msort_with_tmp callers.  For big S use indirect
+	sorting.
+	Suggested by Belazougui Djamel .
+
+	* stdlib/Makefile (tests): Add tst-qsort2.
+	* stdlib/tst-qsort2.c: New test.
+
+2007-10-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* login/login_tty.c (login_tty): The Linux kernel can return EBUSY
+	for dup2 in case another thread races with the current one.  Retry
+	in this case.
+
+	* misc/error.h: Remove support for use outside of libc.  We have to
+	include <features.h> now.  Include <bits/error.h> if possible.
+	* misc/bits/error.h: New file.
+
+2007-10-03  Jakub Jelinek  <jakub@redhat.com>
 
 	* string/bits/string3.h (memcpy, memmove, mempcpy, memset, bcopy,
 	bzero, strcpy, stpcpy, strncpy, strcat, strncat): Use

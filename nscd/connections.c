@@ -379,7 +379,9 @@ verify_persistent_db (void *mem, struct database_pers_head *readhead, int dbnr)
   nscd_ssize_t he_cnt = 0;
   for (nscd_ssize_t cnt = 0; cnt < head->module; ++cnt)
     {
-      ref_t work = head->array[cnt];
+      ref_t trail = head->array[cnt];
+      ref_t work = trail;
+      int tick = 0;
 
       while (work != ENDREF)
 	{
@@ -438,6 +440,13 @@ verify_persistent_db (void *mem, struct database_pers_head *readhead, int dbnr)
 	    }
 
 	  work = here->next;
+
+	  if (work == trail)
+	    /* A circular list, this must not happen.  */
+	    goto fail;
+	  if (tick)
+	    trail = ((struct hashentry *) (data + trail))->next;
+	  tick = 1 - tick;
 	}
     }
 
@@ -1285,14 +1294,15 @@ cannot change to old working directory: %s; disabling paranoia mode"),
 
   /* Synchronize memory.  */
   for (int cnt = 0; cnt < lastdb; ++cnt)
-    {
-      /* Make sure nobody keeps using the database.  */
-      dbs[cnt].head->timestamp = 0;
+    if (!dbs[cnt].enabled)
+      {
+	/* Make sure nobody keeps using the database.  */
+	dbs[cnt].head->timestamp = 0;
 
-      if (dbs[cnt].persistent)
-	// XXX async OK?
-	msync (dbs[cnt].head, dbs[cnt].memsize, MS_ASYNC);
-    }
+	if (dbs[cnt].persistent)
+	  // XXX async OK?
+	  msync (dbs[cnt].head, dbs[cnt].memsize, MS_ASYNC);
+      }
 
   /* The preparations are done.  */
   execv ("/proc/self/exe", argv);

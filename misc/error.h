@@ -1,5 +1,5 @@
 /* Declaration for error-reporting function
-   Copyright (C) 1995, 1996, 1997, 2003, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1995,1996,1997,2003,2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,32 +20,20 @@
 #ifndef _ERROR_H
 #define _ERROR_H 1
 
-#ifndef __attribute__
-/* This feature is available in gcc versions 2.5 and later.  */
-# if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 5) || __STRICT_ANSI__
-#  define __attribute__(Spec) /* empty */
-# endif
-/* The __-protected variants of `format' and `printf' attributes
-   are accepted by gcc versions 2.6.4 (effectively 2.7) and later.  */
-# if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 7)
-#  define __format__ format
-#  define __printf__ printf
-# endif
-#endif
+#include <features.h>
 
-#ifdef	__cplusplus
-extern "C" {
-#endif
+
+__BEGIN_DECLS
 
 /* Print a message with `fprintf (stderr, FORMAT, ...)';
    if ERRNUM is nonzero, follow it with ": " and strerror (ERRNUM).
    If STATUS is nonzero, terminate the program with `exit (STATUS)'.  */
 
-extern void error (int __status, int __errnum, const char *__format, ...)
+extern void error (int __status, int __errnum, __const char *__format, ...)
      __attribute__ ((__format__ (__printf__, 3, 4)));
 
-extern void error_at_line (int __status, int __errnum, const char *__fname,
-			   unsigned int __lineno, const char *__format, ...)
+extern void error_at_line (int __status, int __errnum, __const char *__fname,
+			   unsigned int __lineno, __const char *__format, ...)
      __attribute__ ((__format__ (__printf__, 5, 6)));
 
 /* If NULL, error will flush stdout, then print on stderr the program
@@ -60,8 +48,11 @@ extern unsigned int error_message_count;
    variable controls whether this mode is selected or not.  */
 extern int error_one_per_line;
 
-#ifdef	__cplusplus
-}
+
+#if defined __extern_always_inline && defined __va_arg_pack
+# include <bits/error.h>
 #endif
+
+__END_DECLS
 
 #endif /* error.h */
