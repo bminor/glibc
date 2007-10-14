@@ -1014,6 +1014,7 @@ rm -f *.filelist*
 - install <bits/error.h> (#330031)
 - disable -D_FORTIFY_SOURCE{,=2} support (with a warning) for
   GCC 3.4.x and earlier(#327641)
+- pl_PL locale changes (BZ#4098, #242296)
 - misc fixes (BZ#1140, BZ#3195, BZ#3242, BZ#4359)
 
 * Thu Oct 11 2007 Jakub Jelinek <jakub@redhat.com> 2.6.90-19
