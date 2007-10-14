@@ -2662,11 +2662,14 @@ skip_to (struct linereader *ldfile, struct locale_collate_t *collate,
 	  if (nowtok == tok_eof || nowtok == tok_end)
 	    return nowtok;
 	}
-      else if ((!to_endif && (nowtok == tok_else || nowtok == tok_elifdef
-			      || nowtok == tok_elifndef))
-	       || nowtok == tok_endif)
+      else if (nowtok == tok_endif || (!to_endif && nowtok == tok_else))
 	{
 	  lr_ignore_rest (ldfile, 1);
+	  return nowtok;
+	}
+      else if (!to_endif && (nowtok == tok_elifdef || nowtok == tok_elifndef))
+	{
+	  /* Do not read the rest of the line.  */
 	  return nowtok;
 	}
       else if (nowtok == tok_else)
@@ -2709,43 +2712,38 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
   /* The rest of the line containing `LC_COLLATE' must be free.  */
   lr_ignore_rest (ldfile, 1);
 
-  do
+  while (1)
     {
-      now = lr_token (ldfile, charmap, result, NULL, verbose);
-      nowtok = now->tok;
-    }
-  while (nowtok == tok_eol);
-
-  while (nowtok == tok_define)
-    {
-      if (ignore_content)
-	{
-	  lr_ignore_rest (ldfile, 0);
-	  continue;
-	}
-
-      arg = lr_token (ldfile, charmap, result, NULL, verbose);
-      if (arg->tok != tok_ident)
-	SYNTAX_ERROR (_("%s: syntax error"), "LC_COLLATE");
-      else
-	{
-	  /* Simply add the new symbol.  */
-	  struct name_list *newsym = xmalloc (sizeof (*newsym)
-					  + arg->val.str.lenmb + 1);
-	  memcpy (newsym->str, arg->val.str.startmb, arg->val.str.lenmb);
-	  newsym->str[arg->val.str.lenmb] = '\0';
-	  newsym->next = defined;
-	  defined = newsym;
-
-	  lr_ignore_rest (ldfile, 1);
-	}
-
       do
 	{
 	  now = lr_token (ldfile, charmap, result, NULL, verbose);
 	  nowtok = now->tok;
 	}
       while (nowtok == tok_eol);
+
+      if (nowtok != tok_define)
+	break;
+
+      if (ignore_content)
+	lr_ignore_rest (ldfile, 0);
+      else
+	{
+	  arg = lr_token (ldfile, charmap, result, NULL, verbose);
+	  if (arg->tok != tok_ident)
+	    SYNTAX_ERROR (_("%s: syntax error"), "LC_COLLATE");
+	  else
+	    {
+	      /* Simply add the new symbol.  */
+	      struct name_list *newsym = xmalloc (sizeof (*newsym)
+						  + arg->val.str.lenmb + 1);
+	      memcpy (newsym->str, arg->val.str.startmb, arg->val.str.lenmb);
+	      newsym->str[arg->val.str.lenmb] = '\0';
+	      newsym->next = defined;
+	      defined = newsym;
+
+	      lr_ignore_rest (ldfile, 1);
+	    }
+	}
     }
 
   if (nowtok == tok_copy)

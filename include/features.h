@@ -282,14 +282,13 @@
 #endif
 
 #if defined _FORTIFY_SOURCE && _FORTIFY_SOURCE > 0 \
-    && defined __OPTIMIZE__ && __OPTIMIZE__ > 0 \
-    && (__GNUC_PREREQ (4, 1) \
-        || (defined __GNUC_RH_RELEASE__ && __GNUC_PREREQ (4, 0)) \
-        || (defined __GNUC_RH_RELEASE__ && __GNUC_PREREQ (3, 4) \
-            && __GNUC_MINOR__ == 4 \
-            && (__GNUC_PATCHLEVEL__ > 2 \
-                || (__GNUC_PATCHLEVEL__ == 2 && __GNUC_RH_RELEASE__ >= 8))))
-# if _FORTIFY_SOURCE > 1
+    && defined __OPTIMIZE__ && __OPTIMIZE__ > 0
+# if !__GNUC_PREREQ (4, 1)
+#  ifdef __GNUC_RH_RELEASE__
+#   warning _FORTIFY_SOURCE supported only with GCC 4.1 and later
+#  endif
+#  define __USE_FORTIFY_LEVEL 0
+# elif _FORTIFY_SOURCE > 1
 #  define __USE_FORTIFY_LEVEL 2
 # else
 #  define __USE_FORTIFY_LEVEL 1

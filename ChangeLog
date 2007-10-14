@@ -1,3 +1,101 @@
+2007-10-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (struct sort_result): Add
+	service_order.
+	(rfc3484_sort): Make sure that even of qsort doesn't support
+	stable sorting it is stable by comparing service_order.
+	(getaddrinfo): Initialize service_order.
+
+	* include/time.h: Declare __tzset_parse_tz and __tzset_compute.
+	* time/tzset.c (tzset_internal): Break TZ string parsing out into
+	__tzset_parse_tz and updating of daylight, timezone, tzname into
+	update_vars.
+	(__tz_compute): Renamed from tz_compute.  Take additional parameters.
+	(__tz_convert): Updating of tm_isdst, tm_zone, and tm_gmtoff now
+	happens in __tz_compute.
+	* time/tzfile.c (__tzfile_read): Also read TZ string.
+	(find_transition): Fold into __tzfile_compute.
+	(__tzfile_compute): For times beyond the last transition try to
+	use the TZ string.
+	* timezone/tst-timezone.c: Information in daylight and tzname does
+	change for Asia/Tokyo timezone with more concrete information.
+	Remove the test.
+
+	* include/stdio.h: Add libc_hidden_proto for ftello.
+	* libio/ftello.c: Add libc_hidden_def.
+
+	[BZ #1140]
+	* time/tzfile.c (__tzfile_compute): Compute tzname[] values based
+	on the specified time and not the last entries in the file.  Move
+	code to determine tzname[] to...
+	(find_transition): ...here.  Add ugly guess for times before the
+	first transition.
+
+2007-10-13  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #3195]
+	* nscd/nscd_getai.c (__nscd_getai): Set errno to 0 in case we found
+	no entry.
+	* nscd/nscd_getgr.c (nscd_getgr_r): Likewise.
+	* nscd/nscd_gethst_r.c (nscd_gethst_r): Likewise.
+	* nscd/nscd_getpw_r.c (nscd_getpw_r): Likewise.
+	* nscd/nscd_getserv_r.c (nscd_getserv_r): Likewise.
+
+	* nscd/nscd_getgr_r.c (nscd_getgr_r): Optimize a bit: use simpler
+	read mechanism when there are no group members and avoid no-op
+	read syscall in this case.
+
+	[BZ #3242]
+	* nscd/nscd_helper.c (wait_on_socket): Take timeout as parameter.
+	(__readall): If reading failed due to EAGAIN error wait a bit
+	and possibly try again.
+	(__readvall): Likewise.
+
+2007-10-13  Bruno Haible  <bruno@clisp.org>
+
+	* intl/dcigettext.c (_nl_find_msg): Unlock the conversions_lock
+	when we cannot recode the message.
+
+2007-10-13  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #4359]
+	* libio/__freading.c (__freading): Don't return true for
+	write-only streams.  For read/write streams, check whether we
+	performed a read operation already.
+	* libio/Makefile (tests): Add tst-ext2.
+	* libio/tst-ext2.c: New file.
+
+2007-10-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/repertoire.c (repertoire_read): Always free
+	memory for repertoire file name [Coverity CID 270].
+
+	* elf/cache.c (save_aux_cache): Free memory allocated for
+	temporary file name [Coverity CID 267].
+
+2007-10-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* misc/Makefile (headers): Add bits/error.h.
+
+2007-10-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/fnmatch_loop.c: Take rule index returned as part of
+	findidx return value into account when accessing weights.
+	* posix/regcomp.c: Likewise.
+	* posix/regexec.c: Likewise.
+
+	* locale/programs/ld-collate.c (collate_read): Optimize a bit.
+	(skip_to): Fix problems with parameter of elifdef/elifndef.
+
+2007-10-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/gconv_simple.c: Add some branch prediction.
+
+2007-10-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/programs/ld-collate.c (collate_read): If ignore_content
+	and nowtok is tok_define, eat any tok_eol tokens.
+
 2007-10-11  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/gnu/netinet/tcp.h: Include sys/socket.h if __USE_MISC.
