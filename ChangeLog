@@ -1,10 +1,20 @@
 2007-10-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/glob.c: Reimplement link_exists_p to use fstatat64.
+
+	* posix/glob.c: Add some branch prediction throughout.
+
+	* nscd/nscd_getgr_r.c (nscd_getgr_r): Store result of successful
+	read from nscd.
+
 	* sysdeps/posix/getaddrinfo.c (struct sort_result): Add
 	service_order.
-	(rfc3484_sort): Make sure that even of qsort doesn't support
-	stable sorting it is stable by comparing service_order.
+	(rfc3484_sort): Make sure that even if qsort doesn't support
+	stable sorting out sorting here is stable by comparing service_order.
 	(getaddrinfo): Initialize service_order.
+	* posix/tst-rfc3484.c (do_test): Adjust for addition of
+	service_order field to sorting structure.
+	* posix/tst-rfc3484-2.c (do_test): Likewise.
 
 	* include/time.h: Declare __tzset_parse_tz and __tzset_compute.
 	* time/tzset.c (tzset_internal): Break TZ string parsing out into

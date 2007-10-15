@@ -774,7 +774,7 @@ glob (pattern, flags, errfunc, pglob)
 
       /* Return the directory if we don't check for error or if it exists.  */
       if ((flags & GLOB_NOCHECK)
-	  || (((flags & GLOB_ALTDIRFUNC)
+	  || (((__builtin_expect (flags & GLOB_ALTDIRFUNC, 0))
 	       ? ((*pglob->gl_stat) (dirname, &st) == 0
 		  && S_ISDIR (st.st_mode))
 	       : (__stat64 (dirname, &st64) == 0 && S_ISDIR (st64.st_mode)))))
@@ -846,7 +846,7 @@ glob (pattern, flags, errfunc, pglob)
 	    *(char *) &dirname[--dirlen] = '\0';
 	}
 
-      if ((flags & GLOB_ALTDIRFUNC) != 0)
+      if (__builtin_expect ((flags & GLOB_ALTDIRFUNC) != 0, 0))
 	{
 	  /* Use the alternative access functions also in the recursive
 	     call.  */
@@ -1030,7 +1030,7 @@ glob (pattern, flags, errfunc, pglob)
       struct_stat64 st64;
 
       for (i = oldcount; i < pglob->gl_pathc + pglob->gl_offs; ++i)
-	if (((flags & GLOB_ALTDIRFUNC)
+	if ((__builtin_expect (flags & GLOB_ALTDIRFUNC, 0)
 	     ? ((*pglob->gl_stat) (pglob->gl_pathv[i], &st) == 0
 		&& S_ISDIR (st.st_mode))
 	     : (__stat64 (pglob->gl_pathv[i], &st64) == 0
@@ -1222,21 +1222,42 @@ weak_alias (__glob_pattern_p, glob_pattern_p)
    allocated with alloca to be recycled.  */
 #if !defined _LIBC || !defined GLOB_ONLY_P
 static int
-link_exists_p (const char *dir, size_t dirlen, const char *fname,
-	       glob_t *pglob, int flags)
+__attribute_noinline__
+link_exists2_p (const char *dir, size_t dirlen, const char *fname,
+	       glob_t *pglob
+# ifndef _LIBC
+		, int flags
+# endif
+		)
 {
   size_t fnamelen = strlen (fname);
   char *fullname = (char *) __alloca (dirlen + 1 + fnamelen + 1);
   struct stat st;
+# ifndef _LIBC
   struct_stat64 st64;
+# endif
 
   mempcpy (mempcpy (mempcpy (fullname, dir, dirlen), "/", 1),
 	   fname, fnamelen + 1);
 
-  return (((flags & GLOB_ALTDIRFUNC)
+# ifdef _LIBC
+  return (*pglob->gl_stat) (fullname, &st) == 0;
+# else
+  return ((__builtin_expect (flags & GLOB_ALTDIRFUNC, 0)
 	   ? (*pglob->gl_stat) (fullname, &st)
 	   : __stat64 (fullname, &st64)) == 0);
+# endif
 }
+# ifdef _LIBC
+#  define link_exists_p(dfd, dirname, dirnamelen, fname, pglob, flags) \
+  (__builtin_expect (flags & GLOB_ALTDIRFUNC, 0)			      \
+   ? link_exists2_p (dirname, dirnamelen, fname, pglob)			      \
+   : ({ struct stat64 st64;						      \
+       __fxstatat64 (_STAT_VER, dfd, fname, &st64, 0) == 0; }))
+# else
+#  define link_exists_p(dfd, dirname, dirnamelen, fname, pglob, flags) \
+  link_exists2_p (dirname, dirnamelen, fname, pglob, flags)
+# endif
 #endif
 
 
@@ -1290,7 +1311,7 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
       mempcpy (mempcpy (mempcpy (fullname, directory, dirlen),
 			"/", 1),
 	       pattern, patlen + 1);
-      if (((flags & GLOB_ALTDIRFUNC)
+      if ((__builtin_expect (flags & GLOB_ALTDIRFUNC, 0)
 	   ? (*pglob->gl_stat) (fullname, &st)
 	   : __stat64 (fullname, &st64)) == 0)
 	/* We found this file to be existing.  Now tell the rest
@@ -1299,7 +1320,7 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
     }
   else
     {
-      stream = ((flags & GLOB_ALTDIRFUNC)
+      stream = (__builtin_expect (flags & GLOB_ALTDIRFUNC, 0)
 		? (*pglob->gl_opendir) (directory)
 		: opendir (directory));
       if (stream == NULL)
@@ -1311,6 +1332,10 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
 	}
       else
 	{
+#ifdef _LIBC
+	  int dfd = (__builtin_expect (flags & GLOB_ALTDIRFUNC, 0)
+		     ? -1 : dirfd ((DIR *) stream));
+#endif
 	  int fnm_flags = ((!(flags & GLOB_PERIOD) ? FNM_PERIOD : 0)
 			   | ((flags & GLOB_NOESCAPE) ? FNM_NOESCAPE : 0)
 #if defined _AMIGA || defined VMS
@@ -1333,7 +1358,7 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
 		}
 	      d64buf;
 
-	      if (flags & GLOB_ALTDIRFUNC)
+	      if (__builtin_expect (flags & GLOB_ALTDIRFUNC, 0))
 		{
 		  struct dirent *d32 = (*pglob->gl_readdir) (stream);
 		  if (d32 != NULL)
@@ -1347,7 +1372,7 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
 	      else
 		d = __readdir64 (stream);
 #else
-	      struct dirent *d = ((flags & GLOB_ALTDIRFUNC)
+	      struct dirent *d = (__builtin_expect (flags & GLOB_ALTDIRFUNC, 0)
 				  ? ((struct dirent *)
 				     (*pglob->gl_readdir) (stream))
 				  : __readdir (stream));
@@ -1369,7 +1394,7 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
 		  /* If the file we found is a symlink we have to
 		     make sure the target file exists.  */
 		  if (!DIRENT_MIGHT_BE_SYMLINK (d)
-		      || link_exists_p (directory, dirlen, name, pglob,
+		      || link_exists_p (dfd, directory, dirlen, name, pglob,
 					flags))
 		    {
 		      if (cur == names->count)
@@ -1485,7 +1510,7 @@ glob_in_dir (const char *pattern, const char *directory, int flags,
   if (stream != NULL)
     {
       save = errno;
-      if (flags & GLOB_ALTDIRFUNC)
+      if (__builtin_expect (flags & GLOB_ALTDIRFUNC, 0))
 	(*pglob->gl_closedir) (stream);
       else
 	closedir (stream);
