@@ -1,3 +1,100 @@
+2007-10-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Define F_DUPFD_CLOEXEC.
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h:  Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h: Likewise.
+
+2007-10-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (getaddrinfo): When sorting addresses
+	and admin selects to be able to replace the gai.conf file, lock
+	data structures around the qsort call.
+
+2007-10-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/cacheinfo.c: Comment out code added in support of
+	new memset.
+	* sysdeps/x86_64/memset.S: Revert to old version for now.  The cost is
+	too high for the improvements.  Implement bzero unconditionally for
+	use in libc.
+
+2007-10-17  Ulrich Drepper  <drepper@redhat.com>
+	    Jakub Jelinek  <jakub@redhat.com>
+
+	* time/tzfile.c (__tzfile_read): Read POSIX TZ string if available
+	even when time_t is 32-bit.
+	(__tzfile_compute): Override POSIX TZ string STD/DST zone names if
+	timezone data read by __tzfile_default.  Ensure __tzname[0] is
+	always set after the search.
+
+2007-10-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* time/tzfile.c (__tzfile_read): Help the compiler recognize
+	unreachable code on 32-bit machines.
+
+2007-10-16  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #5184]
+	* time/strftime_l.c: Include stdbool.h.
+	(my_strftime): New wrapper, old function renamed to...
+	(__strftime_internal): ... new function.  Add tzset_called
+	argument, pass it down to recursive calls, don't call tzset ()
+	if already true, set to true after call to tzset ().
+
+2007-10-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* time/tzfile.c (__tzfile_read): Take extra memory requested by caller
+	into account when copying TZ string.
+
+2007-10-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* time/tzfile.c (__tzfile_compute): For use_last case set i to
+	num_transition rather than num_transitions - 1.
+
+2007-10-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/x86_64/memset.S (memset): Fix sse2_nt_move
+	PIC indirect jump.
+
+	* sysdeps/x86_64/memset.S: Jump from bzero to memset using
+	a local label rather than HIDDEN_JUMPTARGET.
+
+2007-10-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/cacheinfo.c (__x86_64_shared_cache_size): Define.
+	(init_cacheinfo): Initialize it.
+	* sysdeps/x86_64/memset.S: Use __x86_64_shared_cache_size.
+	Always define bzero.
+	Remove non-glibc code.
+	* sysdeps/x86_64/bzero.S: Make an empty file.
+
+2007-10-15  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/cacheinfo.c
+	(__x86_64_preferred_memory_instruction): New.
+	(init_cacheinfo): Initialize __x86_64_preferred_memory_instruction.
+
+	* sysdeps/x86_64/memset.S: Rewrite.
+
+2007-10-15  Roland McGrath  <roland@redhat.com>
+
+	* po/libc.pot: Regenerated.
+
+2007-10-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/getXXbyYY_r.c (REENTRANT_NAME): Mangle startp and start_fct
+	pointers.
+
+	[BZ #3425]
+	* resolv/nss_dns/dns-host.c (getanswer_r): Fail with
+	NSS_STATUS_NOTFOUND if the server replied with only a CNAME and no
+	address record to T_A/T_AAAA requests.
+
 2007-10-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/glob.c: Reimplement link_exists_p to use fstatat64.

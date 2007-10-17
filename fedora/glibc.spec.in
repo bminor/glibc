@@ -1,4 +1,4 @@
-%define glibcrelease 21
+%define glibcrelease 22
 %define run_glibc_tests 1
 %define auxarches i586 i686 athlon sparcv9v sparc64v alphaev6
 %define xenarches i686 athlon
@@ -1010,6 +1010,12 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Wed Oct 17 2007 Jakub Jelinek <jakub@redhat.com> 2.6.90-22
+- fix tzfile.c for times after last transition (#333561)
+- fix sem_post@GLIBC_2.0 on i?86
+- appease valgrind in libpthread.so initialization
+- misc fixes (BZ#3425, BZ#5184, BZ#5186)
+
 * Mon Oct 15 2007 Jakub Jelinek <jakub@redhat.com> 2.6.90-21
 - fix getgr{name,gid}{,_r} with nscd
 
