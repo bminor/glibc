@@ -1,3 +1,17 @@
+2007-10-21  Andreas Jaeger  <aj@suse.de>
+
+	* manual/texinfo.tex: Update to latest version.
+
+	* manual/sysinfo.texi (System Parameters): Fix Formatting.
+
+	* manual/arith.texi (Status bit operations): Fix formatting.
+
+	* manual/errno.texi (Error Messages): Fix formatting.
+
+	* manual/sysinfo.texi (System Parameters): Fix formatting.
+
+	* manual/libc.texinfo: Update VERSION and UPDATED.
+
 2007-10-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/x86_64/memset.S (bzero): Renamed to __bzero.  Add
