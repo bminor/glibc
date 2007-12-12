@@ -1012,6 +1012,8 @@ rm -f *.filelist*
 %changelog
 * Wed Dec 12 2007 Jakub Jelinek <jakub@redhat.com> 2.7.90-1
 - update to trunk
+  - fix __USE_STRING_INLINES on i?86 (#408731, #371711)
+  - fix *scanf (#388751)
 
 * Wed Oct 17 2007 Jakub Jelinek <jakub@redhat.com> 2.7-1
 - glibc 2.7 release
