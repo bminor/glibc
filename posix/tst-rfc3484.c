@@ -18,6 +18,12 @@ __check_pf (bool *p1, bool *p2, struct in6addrinfo **in6ai, size_t *in6ailen)
   *in6ai = NULL;
   *in6ailen = 0;
 }
+void
+attribute_hidden
+__check_native (uint32_t a1_index, int *a1_native,
+		uint32_t a2_index, int *a2_native)
+{
+}
 int
 __idna_to_ascii_lz (const char *input, char **output, int flags)
 {
@@ -79,6 +85,7 @@ do_test (void)
 {
   labels = default_labels;
   precedence = default_precedence;
+  scopes= default_scopes;
 
   struct sockaddr_in so;
   so.sin_family = AF_INET;
@@ -94,9 +101,12 @@ do_test (void)
       results[i].source_addr_len = sizeof (so);
       results[i].source_addr_flags = 0;
       results[i].service_order = i;
+      results[i].prefixlen = 8;
+      results[i].index = 0;
     }
 
-  qsort (results, naddrs, sizeof (results[0]), rfc3484_sort);
+  struct sort_result_combo combo = { .results = results, .nresults = naddrs };
+  qsort_r (results, naddrs, sizeof (results[0]), rfc3484_sort, &combo);
 
   int result = 0;
   for (int i = 0; i < naddrs; ++i)

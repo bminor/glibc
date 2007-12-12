@@ -93,9 +93,12 @@ case "$1" in
 	;;
     force-reload | reload)
     	echo -n $"Reloading $prog: "
-	killproc /usr/sbin/nscd -HUP
-	RETVAL=$?
-	echo
+    	RETVAL=0
+    	/usr/sbin/nscd -i passwd || RETVAL=$?
+    	/usr/sbin/nscd -i group || RETVAL=$?
+    	/usr/sbin/nscd -i hosts || RETVAL=$?
+    	/usr/sbin/nscd -i services || RETVAL=$?
+    	echo
 	;;
     *)
 	echo $"Usage: $0 {start|stop|status|restart|reload|condrestart}"

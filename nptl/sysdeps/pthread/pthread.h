@@ -638,7 +638,7 @@ __pthread_cleanup_routine (struct __pthread_cleanup_frame *__frame)
     __pthread_unwind_buf_t __cancel_buf;				      \
     void (*__cancel_routine) (void *) = (routine);			      \
     void *__cancel_arg = (arg);						      \
-    int not_first_call = __sigsetjmp ((struct __jmp_buf_tag *)		      \
+    int not_first_call = __sigsetjmp ((struct __jmp_buf_tag *) (void *)	      \
 				      __cancel_buf.__cancel_jmp_buf, 0);      \
     if (__builtin_expect (not_first_call, 0))				      \
       {									      \
@@ -655,6 +655,7 @@ extern void __pthread_register_cancel (__pthread_unwind_buf_t *__buf)
 /* Remove a cleanup handler installed by the matching pthread_cleanup_push.
    If EXECUTE is non-zero, the handler function is called. */
 # define pthread_cleanup_pop(execute) \
+      do; while (0); /* Empty to allow label before pthread_cleanup_pop.  */  \
     } while (0);							      \
     __pthread_unregister_cancel (&__cancel_buf);			      \
     if (execute)							      \
@@ -672,7 +673,7 @@ extern void __pthread_unregister_cancel (__pthread_unwind_buf_t *__buf)
     __pthread_unwind_buf_t __cancel_buf;				      \
     void (*__cancel_routine) (void *) = (routine);			      \
     void *__cancel_arg = (arg);						      \
-    int not_first_call = __sigsetjmp ((struct __jmp_buf_tag *)		      \
+    int not_first_call = __sigsetjmp ((struct __jmp_buf_tag *) (void *)	      \
 				      __cancel_buf.__cancel_jmp_buf, 0);      \
     if (__builtin_expect (not_first_call, 0))				      \
       {									      \
@@ -690,6 +691,7 @@ extern void __pthread_register_cancel_defer (__pthread_unwind_buf_t *__buf)
    restores the cancellation type that was in effect when the matching
    pthread_cleanup_push_defer was called.  */
 #  define pthread_cleanup_pop_restore_np(execute) \
+      do; while (0); /* Empty to allow label before pthread_cleanup_pop.  */  \
     } while (0);							      \
     __pthread_unregister_cancel_restore (&__cancel_buf);		      \
     if (execute)							      \

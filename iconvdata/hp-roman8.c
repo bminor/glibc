@@ -1,5 +1,5 @@
 /* Conversion from and to HP-ROMAN8.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -20,10 +20,10 @@
 
 #include <stdint.h>
 
-/* Get the conversion table.  */
-#include <hp-roman8.h>
+/* Specify the conversion table.  */
+#define TABLES <hp-roman8.h>
 
 #define CHARSET_NAME	"HP-ROMAN8//"
 #define HAS_HOLES	1	/* Not all 256 character are defined.  */
 
-#include <8bit-generic.c>
+#include <8bit-gap.c>

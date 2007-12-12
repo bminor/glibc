@@ -833,6 +833,35 @@ rtld_lock_default_unlock_recursive (void *lock)
 #endif
 
 
+static void
+security_init (void)
+{
+  /* Set up the stack checker's canary.  */
+  uintptr_t stack_chk_guard = _dl_setup_stack_chk_guard ();
+#ifdef THREAD_SET_STACK_GUARD
+  THREAD_SET_STACK_GUARD (stack_chk_guard);
+#else
+  __stack_chk_guard = stack_chk_guard;
+#endif
+
+  /* Set up the pointer guard as well, if necessary.  */
+  if (GLRO(dl_pointer_guard))
+    {
+      // XXX If it is cheap, we should use a separate value.
+      uintptr_t pointer_chk_guard = stack_chk_guard;
+#ifndef HP_TIMING_NONAVAIL
+      hp_timing_t now;
+      HP_TIMING_NOW (now);
+      pointer_chk_guard ^= now;
+#endif
+#ifdef THREAD_SET_POINTER_GUARD
+      THREAD_SET_POINTER_GUARD (pointer_chk_guard);
+#endif
+      __pointer_chk_guard_local = pointer_chk_guard;
+    }
+}
+
+
 /* The library search path.  */
 static const char *library_path attribute_relro;
 /* The list preloaded objects.  */
@@ -1137,7 +1166,8 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  ElfW(Addr) allocend;
 
 	  /* Remember where the main program starts in memory.  */
-	  mapstart = (main_map->l_addr + (ph->p_vaddr & ~(ph->p_align - 1)));
+	  mapstart = (main_map->l_addr
+		      + (ph->p_vaddr & ~(GLRO(dl_pagesize) - 1)));
 	  if (main_map->l_map_start > mapstart)
 	    main_map->l_map_start = mapstart;
 
@@ -1404,6 +1434,12 @@ of this helper program; chances are you did not intend to run this program.\n\
       /* Since we start using the auditing DSOs right away we need to
 	 initialize the data structures now.  */
       tcbp = init_tls ();
+
+      /* Initialize security features.  We need to do it this early
+	 since otherwise the constructors of the audit libraries will
+	 use different values (especially the pointer guard) and will
+	 fail later on.  */
+      security_init ();
 
       do
 	{
@@ -1815,29 +1851,10 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
   if (tcbp == NULL)
     tcbp = init_tls ();
 
-  /* Set up the stack checker's canary.  */
-  uintptr_t stack_chk_guard = _dl_setup_stack_chk_guard ();
-#ifdef THREAD_SET_STACK_GUARD
-  THREAD_SET_STACK_GUARD (stack_chk_guard);
-#else
-  __stack_chk_guard = stack_chk_guard;
-#endif
-
-  /* Set up the pointer guard as well, if necessary.  */
-  if (GLRO(dl_pointer_guard))
-    {
-      // XXX If it is cheap, we should use a separate value.
-      uintptr_t pointer_chk_guard = stack_chk_guard;
-#ifndef HP_TIMING_NONAVAIL
-      hp_timing_t now;
-      HP_TIMING_NOW (now);
-      pointer_chk_guard ^= now;
-#endif
-#ifdef THREAD_SET_POINTER_GUARD
-      THREAD_SET_POINTER_GUARD (pointer_chk_guard);
-#endif
-      __pointer_chk_guard_local = pointer_chk_guard;
-    }
+  if (__builtin_expect (audit_list == NULL, 1))
+    /* Initialize security features.  But only if we have not done it
+       earlier.  */
+    security_init ();
 
   if (__builtin_expect (mode, normal) != normal)
     {

@@ -34,6 +34,11 @@
 #include "nscd.h"
 
 
+/* Wrapper functions with error checking for standard functions.  */
+extern void *xmalloc (size_t n);
+extern void *xcalloc (size_t n, size_t s);
+
+
 static int
 sort_he (const void *p1, const void *p2)
 {
@@ -117,13 +122,47 @@ gc (struct database_dyn *db)
      we have to look at the memory.  We use a mark and sweep algorithm
      where the marks are placed in this array.  */
   assert (db->head->first_free % BLOCK_ALIGN == 0);
-  BITMAP_T mark[(db->head->first_free / BLOCK_ALIGN + BITS - 1) / BITS];
-  memset (mark, '\0', sizeof (mark));
+
+  BITMAP_T *mark;
+  bool mark_use_malloc;
+  /* In prune_cache we are also using a dynamically allocated array.
+     If the array in the caller is too large we have malloc'ed it.  */
+  size_t stack_used = sizeof (bool) * db->head->module;
+  if (__builtin_expect (stack_used > MAX_STACK_USE, 0))
+    stack_used = 0;
+  size_t memory_needed = ((db->head->first_free / BLOCK_ALIGN + BITS - 1)
+			  / BITS) * sizeof (BITMAP_T);
+  if (memory_needed <= MAX_STACK_USE)
+    {
+      mark = (BITMAP_T *) alloca (memory_needed);
+      mark_use_malloc = false;
+      memset (mark, '\0', memory_needed);
+      stack_used = memory_needed;
+    }
+  else
+    {
+      mark = (BITMAP_T *) xcalloc (1, memory_needed);
+      mark_use_malloc = true;
+    }
 
   /* Create an array which can hold pointer to all the entries in hash
      entries.  */
-  struct hashentry *he[db->head->nentries];
-  struct hashentry *he_data[db->head->nentries];
+  memory_needed = 2 * db->head->nentries * sizeof (struct hashentry *);
+  struct hashentry **he;
+  struct hashentry **he_data;
+  bool he_use_malloc;
+  if (stack_used + memory_needed <= MAX_STACK_USE)
+    {
+      he = alloca (db->head->nentries * sizeof (struct hashentry *));
+      he_data = alloca (db->head->nentries * sizeof (struct hashentry *));
+      he_use_malloc = false;
+    }
+  else
+    {
+      he = xmalloc (memory_needed);
+      he_data = &he[db->head->nentries * sizeof (struct hashentry *)];
+      he_use_malloc = true;
+    }
 
   size_t cnt = 0;
   for (size_t idx = 0; idx < db->head->module; ++idx)
@@ -455,6 +494,11 @@ gc (struct database_dyn *db)
  out:
   pthread_mutex_unlock (&db->memlock);
   pthread_rwlock_unlock (&db->lock);
+
+  if (he_use_malloc)
+    free (he);
+  if (mark_use_malloc)
+    free (mark);
 }
 
 
@@ -481,7 +525,8 @@ mempool_alloc (struct database_dyn *db, size_t len)
 	{
 	  /* Try to resize the database.  Grow size of 1/8th.  */
 	  size_t oldtotal = (sizeof (struct database_pers_head)
-			     + roundup (db->head->module * sizeof (ref_t), ALIGN)
+			     + roundup (db->head->module * sizeof (ref_t),
+					ALIGN)
 			     + db->head->data_size);
 	  size_t new_data_size = (db->head->data_size
 				  + MAX (2 * len, db->head->data_size / 8));

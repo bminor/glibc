@@ -71,7 +71,6 @@
 #define O_SYNC		O_FSYNC
 #ifdef __USE_GNU
 # define O_NOATIME	0x0800	/* Don't set access time on read (owner).  */
-# define O_CLOEXEC	0x00010000 /* Set FD_CLOEXEC.  */
 #endif
 #ifdef	__USE_MISC
 # define O_SHLOCK	0x00020000 /* Open with shared file lock.  */
@@ -118,6 +117,9 @@
    once the file has been opened.  */
 
 #define	O_TRUNC		0x00010000 /* Truncate file to zero length.  */
+#ifdef __USE_GNU
+# define O_CLOEXEC	0x00400000 /* Set FD_CLOEXEC.  */
+#endif
 
 
 /* Controlling terminal flags.  These are understood only by `open',
@@ -162,6 +164,11 @@
 #define	F_GETLK		7	/* Get record locking info.  */
 #define	F_SETLK		8	/* Set record locking info (non-blocking).  */
 #define	F_SETLKW	9	/* Set record locking info (blocking).  */
+
+#ifdef __USE_GNU
+# define F_DUPFD_CLOEXEC 1030	/* Duplicate, set FD_CLOEXEC on new one.  */
+#endif
+
 
 /* File descriptor flags used with F_GETFD and F_SETFD.  */
 #define	FD_CLOEXEC	1	/* Close on exec.  */

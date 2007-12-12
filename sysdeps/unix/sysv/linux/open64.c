@@ -52,26 +52,3 @@ __libc_open64 (const char *file, int oflag, ...)
 weak_alias (__libc_open64, __open64)
 libc_hidden_weak (__open64)
 weak_alias (__libc_open64, open64)
-
-
-#ifndef PTW
-int
-__open64_2 (file, oflag)
-     const char *file;
-     int oflag;
-{
-  if (oflag & O_CREAT)
-    __fortify_fail ("invalid open64 call: O_CREAT without mode");
-
-  if (SINGLE_THREAD_P)
-    return INLINE_SYSCALL (open, 2, file, oflag | O_LARGEFILE);
-
-  int oldtype = LIBC_CANCEL_ASYNC ();
-
-  int result = INLINE_SYSCALL (open, 2, file, oflag | O_LARGEFILE);
-
-  LIBC_CANCEL_RESET (oldtype);
-
-  return result;
-}
-#endif

@@ -1,3 +1,48 @@
+2007-12-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* charmsp/HP-THAI8: New file.
+
+	[BZ #5464]
+	* charmaps/HP-GREEK8: New file.
+
+	[BZ #5463]
+	* charmaps/HP-TURKISH8: New file.
+
+2007-12-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* charmaps/UTF-8: Add Unicode 5.1 entries.
+
+2007-12-07  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5427]
+	* charmaps/HP-ROMAN9: New file.
+
+2007-12-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/si_LK (mon): Fix February and November spelling.
+	Patch by Danishka Navin <snavin@redhat.com>.
+
+2007-11-07  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5238]
+	* locales/ug_CN: Fix typo in collating symbol definition.
+
+	[BZ #5237]
+	* locales/lo_LA: Fix typos in collation symbols.
+
+2007-11-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/dz_BT: Fix representation of data.
+
+	* SUPPORTED (SUPPORTED-LOCALES): Add bo_CN and bo_IN.
+	* locales/bo_CN: New file.
+	* locales/bo_IN: New file.
+
+2007-10-28  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5224]
+	* locales/ig_NG: Add missing collating elements and symbols.
+
 2007-10-14  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #4098]

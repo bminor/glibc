@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <fork.h>
+#include <atomic.h>
 
 
 /* Lock to protect allocation and deallocation of fork handlers.  */
@@ -97,8 +98,7 @@ __register_atfork (prepare, parent, child, dso_handle)
       newp->child_handler = child;
       newp->dso_handle = dso_handle;
 
-      newp->next = __fork_handlers;
-      __fork_handlers = newp;
+      __linkin_atfork (newp);
     }
 
   /* Release the lock.  */
@@ -107,6 +107,17 @@ __register_atfork (prepare, parent, child, dso_handle)
   return newp == NULL ? ENOMEM : 0;
 }
 libc_hidden_def (__register_atfork)
+
+
+void
+attribute_hidden
+__linkin_atfork (struct fork_handler *newp)
+{
+  do
+    newp->next = __fork_handlers;
+  while (catomic_compare_and_exchange_bool_acq (&__fork_handlers,
+						newp, newp->next) != 0);
+}
 
 
 libc_freeres_fn (free_mem)

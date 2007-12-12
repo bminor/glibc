@@ -31,7 +31,7 @@
 #ifdef _WCHAR_H
 /* Get FILE definition.  */
 # define __need___FILE
-# ifdef __USE_UNIX98
+# if defined __USE_UNIX98 || defined __USE_XOPEN2K
 #  define __need_FILE
 # endif
 # include <stdio.h>
@@ -838,5 +838,10 @@ extern size_t wcsftime_l (wchar_t *__restrict __s, size_t __maxsize,
 __END_DECLS
 
 #endif	/* _WCHAR_H defined */
+
+/* Undefined all __need_* constants in case we are included to get those
+   constants but the whole file was already read.  */
+#undef __need_mbstate_t
+#undef __need_wint_t
 
 #endif /* wchar.h  */

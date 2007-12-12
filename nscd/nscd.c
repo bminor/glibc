@@ -120,9 +120,6 @@ static struct argp argp =
   options, parse_opt, NULL, doc,
 };
 
-/* The SIGHUP handler is extern to this file */
-extern void sighup_handler(int signum);
-
 /* True if only statistics are requested.  */
 static bool get_stats;
 
@@ -267,7 +264,6 @@ main (int argc, char **argv)
   signal (SIGINT, termination_handler);
   signal (SIGQUIT, termination_handler);
   signal (SIGTERM, termination_handler);
-  signal (SIGHUP, sighup_handler);
   signal (SIGPIPE, SIG_IGN);
 
   /* Cleanup files created by a previous 'bind'.  */

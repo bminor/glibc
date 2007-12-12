@@ -25,14 +25,14 @@ subdir	:= iconvdata
 modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   ISO8859-6 ISO8859-7 ISO8859-8 ISO8859-9 ISO8859-10		 \
 	   ISO8859-11 ISO8859-13 ISO8859-14 ISO8859-15 ISO8859-16	 \
-	   T.61 ISO_6937 SJIS KOI-8 HP-ROMAN8 EBCDIC-AT-DE		 \
+	   T.61 ISO_6937 SJIS KOI-8 HP-ROMAN8 HP-ROMAN9 EBCDIC-AT-DE	 \
 	   EBCDIC-AT-DE-A EBCDIC-CA-FR EUC-KR UHC JOHAB libJIS libKSC	 \
 	   BIG5 EUC-JP libGB EUC-CN libCNS EUC-TW ISO646 EBCDIC-DK-NO	 \
 	   EBCDIC-DK-NO-A EBCDIC-ES EBCDIC-ES-A EBCDIC-ES-S EBCDIC-FI-SE \
 	   EBCDIC-FI-SE-A EBCDIC-FR EBCDIC-IS-FRISS EBCDIC-IT EBCDIC-PT	 \
 	   EBCDIC-UK EBCDIC-US IBM037 IBM038 IBM274 IBM275 IBM423	 \
 	   IBM500 IBM870 IBM871 IBM891 IBM903 IBM904 IBM905 IBM1047	 \
-	   IBM874 CP737 CP775 ISO-2022-KR				 \
+	   IBM874 CP737 CP775 ISO-2022-KR HP-TURKISH8 HP-THAI8 HP-GREEK8 \
 	   KOI8-R LATIN-GREEK LATIN-GREEK-1 IBM256 IBM273 IBM277 IBM278	 \
 	   IBM280 IBM281 IBM284 IBM285 IBM290 IBM297 IBM420 IBM424	 \
 	   IBM437 IBM850 IBM851 IBM852 IBM855 IBM857 IBM860 IBM861	 \
@@ -67,7 +67,7 @@ include ../Makeconfig
 
 ifeq (yes,$(build-shared))
 tests = bug-iconv1 bug-iconv2 tst-loading tst-e2big tst-iconv4 bug-iconv4 \
-	tst-iconv6 bug-iconv5
+	tst-iconv6 bug-iconv5 bug-iconv6
 ifeq ($(have-thread-library),yes)
 tests += bug-iconv3
 endif
@@ -198,7 +198,8 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk gconv.map    \
 	      ibm12712.c ibm12712.h ibm16804.c ibm16804.h                   \
 	      ibm1364.c ibm1364.h ibm1371.c ibm1371.h ibm1388.c ibm1388.h   \
 	      ibm1390.c ibm1390.h ibm1399.c ibm1399.h iso_11548-1.c mik.c   \
-	      brf.c mac-centraleurope.c
+	      brf.c mac-centraleurope.c hp-roman9.c hp-turkish8.c	    \
+	      hp-thai8.c hp-greek8.c
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))
@@ -217,13 +218,11 @@ install-others	= $(addprefix $(inst_gconvdir)/, $(modules.so))	\
 # We can build the conversion tables for numerous charsets automatically.
 
 gen-8bit-modules := iso8859-2 iso8859-3 iso8859-4 iso8859-6 iso8859-9 koi-8 \
-		    hp-roman8 ebcdic-at-de ebcdic-at-de-a ebcdic-ca-fr	    \
-		    ebcdic-dk-no ebcdic-dk-no-a ebcdic-es ebcdic-es-a	    \
-		    ebcdic-es-s ebcdic-fi-se ebcdic-fi-se-a ebcdic-fr	    \
-		    ebcdic-is-friss ebcdic-it ebcdic-pt ebcdic-uk ebcdic-us \
+		    ebcdic-at-de ebcdic-at-de-a ebcdic-ca-fr ebcdic-dk-no   \
+		    ebcdic-dk-no-a ebcdic-es-s ebcdic-fi-se ebcdic-fi-se-a  \
+		    ebcdic-fr ebcdic-it ebcdic-pt ebcdic-us \
 		    ibm037 ibm038 ibm274 ibm275 ibm423 ibm500 ibm870 ibm871 \
-		    ibm891 ibm903 ibm904 ibm905 ibm1047 iso8859-16 viscii   \
-		    iso8859-9e
+		    ibm891 ibm903 ibm904 ibm905 ibm1047   \
 
 gen-8bit-gap-modules := koi8-r latin-greek latin-greek-1 ibm256 ibm273	   \
 			ibm277 ibm278 ibm280 ibm281 ibm284 ibm285 ibm290   \
@@ -240,8 +239,11 @@ gen-8bit-gap-modules := koi8-r latin-greek latin-greek-1 ibm256 ibm273	   \
 			iso8859-13 iso8859-14 iso8859-15 mac-uk sami-ws2   \
 			iso-ir-197 tis-620 koi8-u ibm874 cp10007 koi8-t	   \
 			georgian-ps georgian-academy iso-ir-209 mac-sami   \
-			iso8859-11 ibm866nav pt154 rk1048 mik brf \
-			mac-centraleurope koi8-ru
+			iso8859-11 ibm866nav pt154 rk1048 mik brf	   \
+			mac-centraleurope koi8-ru hp-roman8 hp-roman9	   \
+			ebcdic-es ebcdic-es-a ebcdic-is-friss ebcdic-uk    \
+			iso8859-16 viscii iso8859-9e hp-turkish8	   \
+			hp-thai8 hp-greek8
 
 gen-special-modules := iso8859-7jp
 

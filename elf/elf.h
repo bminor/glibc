@@ -604,6 +604,7 @@ typedef struct
 #define NT_LWPSINFO	17		/* Contains copy of lwpinfo struct */
 #define NT_PRFPXREG	20		/* Contains copy of fprxregset struct */
 #define NT_PRXFPREG	0x46e62b7f	/* Contains copy of user_fxsr_struct */
+#define NT_PPC_VMX	0x100		/* PowerPC Altivec/VMX registers */
 
 /* Legal values for the note segment descriptor types for object files.  */
 
@@ -1277,6 +1278,7 @@ typedef struct
 #define HWCAP_SPARC_V9		16	/* The CPU is v9, so v8plus is ok.  */
 #define HWCAP_SPARC_ULTRA3	32
 #define HWCAP_SPARC_BLKINIT	64	/* Sun4v with block-init/load-twin.  */
+#define HWCAP_SPARC_N2		128
 
 /* MIPS R3000 specific definitions.  */
 

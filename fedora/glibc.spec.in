@@ -1010,6 +1010,9 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Wed Dec 12 2007 Jakub Jelinek <jakub@redhat.com> 2.7.90-1
+- update to trunk
+
 * Wed Oct 17 2007 Jakub Jelinek <jakub@redhat.com> 2.7-1
 - glibc 2.7 release
 - fix tzfile.c for times after last transition (#333561)

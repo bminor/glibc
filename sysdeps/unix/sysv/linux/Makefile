@@ -25,7 +25,7 @@ sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h \
 		  sys/quota.h sys/fsuid.h \
 		  scsi/sg.h scsi/scsi.h scsi/scsi_ioctl.h sys/pci.h \
 		  sys/ultrasound.h sys/raw.h sys/personality.h sys/epoll.h \
-		  bits/a.out.h sys/inotify.h
+		  bits/a.out.h sys/inotify.h sys/signalfd.h sys/eventfd.h
 
 install-others += $(inst_includedir)/bits/syscall.h
 
@@ -122,7 +122,7 @@ ifeq ($(subdir),inet)
 sysdep_headers += netinet/if_fddi.h netinet/if_tr.h \
 		  netipx/ipx.h netash/ash.h netax25/ax25.h netatalk/at.h \
 		  netrom/netrom.h netpacket/packet.h netrose/rose.h \
-		  neteconet/ec.h
+		  neteconet/ec.h netiucv/iucv.h
 endif
 
 # Don't compile the ctype glue code, since there is no old non-GNU C library.
@@ -138,7 +138,7 @@ endif
 
 ifeq ($(subdir),io)
 sysdep_routines += xstatconv internal_statvfs internal_statvfs64 \
-		   sync_file_range open_2
+		   sync_file_range open_2 open64_2
 endif
 
 ifeq ($(subdir),elf)

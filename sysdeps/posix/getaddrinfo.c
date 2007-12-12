@@ -61,10 +61,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <nscd/nscd-client.h>
 #include <nscd/nscd_proto.h>
 
-#ifdef HAVE_NETLINK_ROUTE
-# include <kernel-features.h>
-#endif
-
 #ifdef HAVE_LIBIDN
 extern int __idna_to_ascii_lz (const char *input, char **output, int flags);
 extern int __idna_to_unicode_lzlz (const char *input, char **output,
@@ -1006,7 +1002,48 @@ struct sort_result
   uint8_t source_addr_len;
   bool got_source_addr;
   uint8_t source_addr_flags;
+  uint8_t prefixlen;
+  uint32_t index;
+  int32_t native;
 };
+
+struct sort_result_combo
+{
+  struct sort_result *results;
+  int nresults;
+};
+
+
+#if __BYTE_ORDER == __BIG_ENDIAN
+# define htonl_c(n) n
+#else
+# define htonl_c(n) __bswap_constant_32 (n)
+#endif
+
+static const struct scopeentry
+{
+  union
+  {
+    char addr[4];
+    uint32_t addr32;
+  };
+  uint32_t netmask;
+  int32_t scope;
+} default_scopes[] =
+  {
+    /* Link-local addresses: scope 2.  */
+    { { { 169, 254, 0, 0 } }, htonl_c (0xffff0000), 2 },
+    { { { 127, 0, 0, 0 } }, htonl_c (0xff000000), 2 },
+    /* Site-local addresses: scope 5.  */
+    { { { 10, 0, 0, 0 } }, htonl_c (0xff000000), 5 },
+    { { { 172, 16, 0, 0 } }, htonl_c (0xfff00000), 5 },
+    { { { 192, 168, 0, 0 } }, htonl_c (0xffff0000), 5 },
+    /* Default: scope 14.  */
+    { { { 0, 0, 0, 0 } }, htonl_c (0x00000000), 14 }
+  };
+
+/* The label table.  */
+static const struct scopeentry *scopes;
 
 
 static int
@@ -1033,17 +1070,17 @@ get_scope (const struct sockaddr_storage *ss)
   else if (ss->ss_family == PF_INET)
     {
       const struct sockaddr_in *in = (const struct sockaddr_in *) ss;
-      const uint8_t *addr = (const uint8_t *) &in->sin_addr;
 
-      /* RFC 3484 specifies how to map IPv6 addresses to scopes.
-	 169.254/16 and 127/8 are link-local.  */
-      if ((addr[0] == 169 && addr[1] == 254) || addr[0] == 127)
-	scope = 2;
-      else if (addr[0] == 10 || (addr[0] == 172 && (addr[1] & 0xf0) == 16)
-	       || (addr[0] == 192 && addr[1] == 168))
-	scope = 5;
-      else
-	scope = 14;
+      size_t cnt = 0;
+      while (1)
+	{
+	  if ((in->sin_addr.s_addr & scopes[cnt].netmask)
+	      == scopes[cnt].addr32)
+	    return scopes[cnt].scope;
+
+	  ++cnt;
+	}
+      /* NOTREACHED */
     }
   else
     /* XXX What is a good default?  */
@@ -1099,6 +1136,7 @@ static const struct prefixentry default_labels[] =
 	= { .u6_addr8 = { 0xfc, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } } },
       7, 6 },
+    /* Additional rule for Teredo tunnels.  */
     { { .in6_u
 	= { .u6_addr8 = { 0x20, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } } },
@@ -1223,7 +1261,7 @@ static int
 fls (uint32_t a)
 {
   uint32_t mask;
-  int n = 0;
+  int n;
   for (n = 0, mask = 1 << 31; n < 32; mask >>= 1, ++n)
     if ((a & mask) != 0)
       break;
@@ -1232,10 +1270,11 @@ fls (uint32_t a)
 
 
 static int
-rfc3484_sort (const void *p1, const void *p2)
+rfc3484_sort (const void *p1, const void *p2, void *arg)
 {
   const struct sort_result *a1 = (const struct sort_result *) p1;
   const struct sort_result *a2 = (const struct sort_result *) p2;
+  struct sort_result_combo *src = (struct sort_result_combo *) arg;
 
   /* Rule 1: Avoid unusable destinations.
      We have the got_source_addr flag set if the destination is reachable.  */
@@ -1320,14 +1359,34 @@ rfc3484_sort (const void *p1, const void *p2)
   /* Rule 7: Prefer native transport.  */
   if (a1->got_source_addr)
     {
-      if (!(a1->source_addr_flags & in6ai_temporary)
-	  && (a2->source_addr_flags & in6ai_temporary))
-	return -1;
-      if ((a1->source_addr_flags & in6ai_temporary)
-	  && !(a2->source_addr_flags & in6ai_temporary))
-	return 1;
+      /* The same interface index means the same interface which means
+	 there is no difference in transport.  This should catch many
+	 (most?) cases.  */
+      if (a1->index != a2->index)
+	{
+	  if (a1->native == -1 || a2->native == -1)
+	    {
+	      /* If we do not have the information use 'native' as the
+		 default.  */
+	      int a1_native = 0;
+	      int a2_native = 0;
+	      __check_native (a1->index, &a1_native, a2->index, &a2_native);
 
-      /* XXX Do we need to check anything beside temporary addresses?  */
+	      /* Fill in the results in all the records.  */
+	      for (int i = 0; i < src->nresults; ++i)
+		{
+		  if (a1->native == -1 && src->results[i].index == a1->index)
+		    src->results[i].native = a1_native;
+		  if (a2->native == -1 && src->results[i].index == a2->index)
+		    src->results[i].native = a2_native;
+		}
+	    }
+
+	  if (a1->native && !a2->native)
+	    return -1;
+	  if (!a1->native && a2->native)
+	    return 1;
+	}
     }
 
 
@@ -1350,20 +1409,31 @@ rfc3484_sort (const void *p1, const void *p2)
 	  assert (a1->source_addr.ss_family == PF_INET);
 	  assert (a2->source_addr.ss_family == PF_INET);
 
-	  struct sockaddr_in *in1_dst;
-	  struct sockaddr_in *in1_src;
-	  struct sockaddr_in *in2_dst;
-	  struct sockaddr_in *in2_src;
+	  /* Outside of subnets, as defined by the network masks,
+	     common address prefixes for IPv4 addresses make no sense.
+	     So, define a non-zero value only if source and
+	     destination address are on the same subnet.  */
+	  struct sockaddr_in *in1_dst
+	    = (struct sockaddr_in *) a1->dest_addr->ai_addr;
+	  in_addr_t in1_dst_addr = ntohl (in1_dst->sin_addr.s_addr);
+	  struct sockaddr_in *in1_src
+	    = (struct sockaddr_in *) &a1->source_addr;
+	  in_addr_t in1_src_addr = ntohl (in1_src->sin_addr.s_addr);
+	  in_addr_t netmask1 = 0xffffffffu << (32 - a1->prefixlen);
 
-	  in1_dst = (struct sockaddr_in *) a1->dest_addr->ai_addr;
-	  in1_src = (struct sockaddr_in *) &a1->source_addr;
-	  in2_dst = (struct sockaddr_in *) a2->dest_addr->ai_addr;
-	  in2_src = (struct sockaddr_in *) &a2->source_addr;
+	  if ((in1_src_addr & netmask1) == (in1_dst_addr & netmask1))
+	    bit1 = fls (in1_dst_addr ^ in1_src_addr);
 
-	  bit1 = fls (ntohl (in1_dst->sin_addr.s_addr
-			     ^ in1_src->sin_addr.s_addr));
-	  bit2 = fls (ntohl (in2_dst->sin_addr.s_addr
-			     ^ in2_src->sin_addr.s_addr));
+	  struct sockaddr_in *in2_dst
+	    = (struct sockaddr_in *) a2->dest_addr->ai_addr;
+	  in_addr_t in2_dst_addr = ntohl (in2_dst->sin_addr.s_addr);
+	  struct sockaddr_in *in2_src
+	    = (struct sockaddr_in *) &a2->source_addr;
+	  in_addr_t in2_src_addr = ntohl (in2_src->sin_addr.s_addr);
+	  in_addr_t netmask2 = 0xffffffffu << (32 - a2->prefixlen);
+
+	  if ((in2_src_addr & netmask2) == (in2_dst_addr & netmask2))
+	    bit2 = fls (in2_dst_addr ^ in2_src_addr);
 	}
       else if (a1->dest_addr->ai_family == PF_INET6)
 	{
@@ -1452,6 +1522,13 @@ libc_freeres_fn(fini)
       precedence = default_precedence;
       free ((void *) old);
     }
+
+  if (scopes != default_scopes)
+    {
+      const struct scopeentry *old = scopes;
+      scopes = default_scopes;
+      free ((void *) old);
+    }
 }
 
 
@@ -1462,12 +1539,31 @@ struct prefixlist
 };
 
 
+struct scopelist
+{
+  struct scopeentry entry;
+  struct scopelist *next;
+};
+
+
 static void
 free_prefixlist (struct prefixlist *list)
 {
   while (list != NULL)
     {
       struct prefixlist *oldp = list;
+      list = list->next;
+      free (oldp);
+    }
+}
+
+
+static void
+free_scopelist (struct scopelist *list)
+{
+  while (list != NULL)
+    {
+      struct scopelist *oldp = list;
       list = list->next;
       free (oldp);
     }
@@ -1488,6 +1584,20 @@ prefixcmp (const void *p1, const void *p2)
 }
 
 
+static int
+scopecmp (const void *p1, const void *p2)
+{
+  const struct scopeentry *e1 = (const struct scopeentry *) p1;
+  const struct scopeentry *e2 = (const struct scopeentry *) p2;
+
+  if (e1->netmask > e2->netmask)
+    return -1;
+  if (e1->netmask == e2->netmask)
+    return 0;
+  return 1;
+}
+
+
 static void
 gaiconf_init (void)
 {
@@ -1497,6 +1607,9 @@ gaiconf_init (void)
   struct prefixlist *precedencelist = NULL;
   size_t nprecedencelist = 0;
   bool precedencelist_nullbits = false;
+  struct scopelist *scopelist =  NULL;
+  size_t nscopelist = 0;
+  bool scopelist_nullbits = false;
 
   FILE *fp = fopen (GAICONF_FNAME, "rc");
   if (fp != NULL)
@@ -1587,7 +1700,7 @@ gaiconf_init (void)
 			  || (bits = strtoul (cp, &endp, 10)) != ULONG_MAX
 			  || errno != ERANGE)
 		      && *endp == '\0'
-		      && bits <= INT_MAX
+		      && bits <= 128
 		      && ((val = strtoul (val2, &endp, 10)) != ULONG_MAX
 			  || errno != ERANGE)
 		      && *endp == '\0'
@@ -1618,6 +1731,73 @@ gaiconf_init (void)
 		  gaiconf_reload_flag = strcmp (val1, "yes") == 0;
 		  if (gaiconf_reload_flag)
 		    gaiconf_reload_flag_ever_set = 1;
+		}
+	      break;
+
+	    case 7:
+	      if (strcmp (cmd, "scopev4") == 0)
+		{
+		  struct in6_addr prefix;
+		  unsigned long int bits;
+		  unsigned long int val;
+		  char *endp;
+
+		  bits = 32;
+		  __set_errno (0);
+		  cp = strchr (val1, '/');
+		  if (cp != NULL)
+		    *cp++ = '\0';
+		  if (inet_pton (AF_INET6, val1, &prefix))
+		    {
+		      if (IN6_IS_ADDR_V4MAPPED (&prefix)
+			  && (cp == NULL
+			      || (bits = strtoul (cp, &endp, 10)) != ULONG_MAX
+			      || errno != ERANGE)
+			  && *endp == '\0'
+			  && bits >= 96
+			  && bits <= 128
+			  && ((val = strtoul (val2, &endp, 10)) != ULONG_MAX
+			      || errno != ERANGE)
+			  && *endp == '\0'
+			  && val <= INT_MAX)
+			{
+			  struct scopelist *newp;
+			new_scope:
+			  newp = malloc (sizeof (*newp));
+			  if (newp == NULL)
+			    {
+			      free (line);
+			      fclose (fp);
+			      goto no_file;
+			    }
+
+			  newp->entry.netmask = htonl (bits != 96
+						       ? (0xffffffff
+							  << (128 - bits))
+						       : 0);
+			  newp->entry.addr32 = (prefix.s6_addr32[3]
+						& newp->entry.netmask);
+			  newp->entry.scope = val;
+			  newp->next = scopelist;
+			  scopelist = newp;
+			  ++nscopelist;
+			  scopelist_nullbits |= bits == 96;
+			}
+		    }
+		  else if (inet_pton (AF_INET, val1, &prefix.s6_addr32[3])
+			   && (cp == NULL
+			       || (bits = strtoul (cp, &endp, 10)) != ULONG_MAX
+			       || errno != ERANGE)
+			   && *endp == '\0'
+			   && bits <= 32
+			   && ((val = strtoul (val2, &endp, 10)) != ULONG_MAX
+			       || errno != ERANGE)
+			   && *endp == '\0'
+			   && val <= INT_MAX)
+		    {
+		      bits += 96;
+		      goto new_scope;
+		    }
 		}
 	      break;
 
@@ -1704,11 +1884,51 @@ gaiconf_init (void)
 
 	  /* Sort the entries so that the most specific ones are at
 	     the beginning.  */
-	  qsort (new_precedence, nprecedencelist, sizeof (*new_labels),
+	  qsort (new_precedence, nprecedencelist, sizeof (*new_precedence),
 		 prefixcmp);
 	}
       else
 	new_precedence = (struct prefixentry *) default_precedence;
+
+      struct scopeentry *new_scopes;
+      if (nscopelist > 0)
+	{
+	  if (!scopelist_nullbits)
+	    ++nscopelist;
+	  new_scopes = malloc (nscopelist * sizeof (*new_scopes));
+	  if (new_scopes == NULL)
+	    {
+	      if (new_labels != default_labels)
+		free (new_labels);
+	      if (new_precedence != default_precedence)
+		free (new_precedence);
+	      goto no_file;
+	    }
+
+	  int i = nscopelist;
+	  if (!scopelist_nullbits)
+	    {
+	      --i;
+	      new_scopes[i].addr32 = 0;
+	      new_scopes[i].netmask = 0;
+	      new_scopes[i].scope = 14;
+	    }
+
+	  struct scopelist *l = scopelist;
+	  while (i-- > 0)
+	    {
+	      new_scopes[i] = l->entry;
+	      l = l->next;
+	    }
+	  free_scopelist (scopelist);
+
+	  /* Sort the entries so that the most specific ones are at
+	     the beginning.  */
+	  qsort (new_scopes, nscopelist, sizeof (*new_scopes),
+		 scopecmp);
+	}
+      else
+	new_scopes = (struct scopeentry *) default_scopes;
 
       /* Now we are ready to replace the values.  */
       const struct prefixentry *old = labels;
@@ -1721,6 +1941,11 @@ gaiconf_init (void)
       if (old != default_precedence)
 	free ((void *) old);
 
+      const struct scopeentry *oldscope = scopes;
+      scopes = new_scopes;
+      if (oldscope != default_scopes)
+	free ((void *) oldscope);
+
       gaiconf_mtime = st.st_mtim;
     }
   else
@@ -1728,6 +1953,7 @@ gaiconf_init (void)
     no_file:
       free_prefixlist (labellist);
       free_prefixlist (precedencelist);
+      free_scopelist (scopelist);
 
       /* If we previously read the file but it is gone now, free the
 	 old data and use the builtin one.  Leave the reload flag
@@ -1745,16 +1971,6 @@ gaiconf_reload (void)
       || memcmp (&st.st_mtim, &gaiconf_mtime, sizeof (gaiconf_mtime)) != 0)
     gaiconf_init ();
 }
-
-
-#if HAVE_NETLINK_ROUTE
-# if __ASSUME_NETLINK_SUPPORT == 0
-/* Defined in ifaddrs.c.  */
-extern int __no_netlink_support attribute_hidden;
-# else
-#  define __no_netlink_support 0
-# endif
-#endif
 
 
 int
@@ -1795,71 +2011,12 @@ getaddrinfo (const char *name, const char *service,
   size_t in6ailen = 0;
   bool seen_ipv4 = false;
   bool seen_ipv6 = false;
-#ifdef HAVE_NETLINK_ROUTE
-  int sockfd = -1;
-  pid_t nl_pid;
-#endif
-  /* We might need information about what kind of interfaces are available.
-     But even if AI_ADDRCONFIG is not used, if the user requested IPv6
-     addresses we have to know whether an address is deprecated or
-     temporary.  */
-  if ((hints->ai_flags & AI_ADDRCONFIG) || hints->ai_family == PF_UNSPEC
-      || hints->ai_family == PF_INET6)
-    {
-      /* Determine whether we have IPv4 or IPv6 interfaces or both.  We
-	 cannot cache the results since new interfaces could be added at
-	 any time.  */
-      __check_pf (&seen_ipv4, &seen_ipv6, &in6ai, &in6ailen);
-#ifdef HAVE_NETLINK_ROUTE
-      if (! __no_netlink_support)
-	{
-	  sockfd = __socket (PF_NETLINK, SOCK_RAW, NETLINK_ROUTE);
+  /* We might need information about what interfaces are available.
+     Also determine whether we have IPv4 or IPv6 interfaces or both.  We
+     cannot cache the results since new interfaces could be added at
+     any time.  */
+  __check_pf (&seen_ipv4, &seen_ipv6, &in6ai, &in6ailen);
 
-	  struct sockaddr_nl nladdr;
-	  memset (&nladdr, '\0', sizeof (nladdr));
-	  nladdr.nl_family = AF_NETLINK;
-
-	  socklen_t addr_len = sizeof (nladdr);
-
-	  if (sockfd >= 0
-	      && __bind (fd, (struct sockaddr *) &nladdr, sizeof (nladdr)) == 0
-	      && __getsockname (sockfd, (struct sockaddr *) &nladdr,
-				&addr_len) == 0
-	      && make_request (sockfd, nladdr.nl_pid, &seen_ipv4, &seen_ipv6,
-			       in6ai, in6ailen) == 0)
-	    {
-	      /* It worked.  */
-	      nl_pid = nladdr.nl_pid;
-	      goto got_netlink_socket;
-	    }
-
-	  if (sockfd >= 0)
-	    close_not_cancel_no_status (sockfd);
-
-#if __ASSUME_NETLINK_SUPPORT == 0
-	  /* Remember that there is no netlink support.  */
-	  if (errno != EMFILE && errno != ENFILE)
-	    __no_netlink_support = 1;
-#else
-	  else
-	    {
-	      if (errno != EMFILE && errno != ENFILE)
-		sockfd = -2;
-
-	      /* We cannot determine what interfaces are available.  Be
-		 pessimistic.  */
-	      seen_ipv4 = true;
-	      seen_ipv6 = true;
-	      return;
-	    }
-#endif
-	}
-#endif
-    }
-
-#ifdef HAVE_NETLINK_ROUTE
- got_netlink_socket:
-#endif
   if (hints->ai_flags & AI_ADDRCONFIG)
     {
       /* Now make a decision on what we return, if anything.  */
@@ -1947,7 +2104,7 @@ getaddrinfo (const char *name, const char *service,
       struct addrinfo *last = NULL;
       char *canonname = NULL;
 
-      /* If we have information about deprecated and temporary address
+      /* If we have information about deprecated and temporary addresses
 	 sort the array now.  */
       if (in6ai != NULL)
 	qsort (in6ai, in6ailen, sizeof (*in6ai), in6aicmp);
@@ -1958,8 +2115,8 @@ getaddrinfo (const char *name, const char *service,
       for (i = 0, q = p; q != NULL; ++i, last = q, q = q->ai_next)
 	{
 	  results[i].dest_addr = q;
-	  results[i].got_source_addr = false;
 	  results[i].service_order = i;
+	  results[i].native = -1;
 
 	  /* If we just looked up the address for a different
 	     protocol, reuse the result.  */
@@ -1971,10 +2128,15 @@ getaddrinfo (const char *name, const char *service,
 	      results[i].source_addr_len = results[i - 1].source_addr_len;
 	      results[i].got_source_addr = results[i - 1].got_source_addr;
 	      results[i].source_addr_flags = results[i - 1].source_addr_flags;
+	      results[i].prefixlen = results[i - 1].prefixlen;
+	      results[i].index = results[i - 1].index;
 	    }
 	  else
 	    {
+	      results[i].got_source_addr = false;
 	      results[i].source_addr_flags = 0;
+	      results[i].prefixlen = 0;
+	      results[i].index = 0xffffffffu;
 
 	      /* We overwrite the type with SOCK_DGRAM since we do not
 		 want connect() to connect to the other side.  If we
@@ -2005,22 +2167,40 @@ getaddrinfo (const char *name, const char *service,
 		  results[i].source_addr_len = sl;
 		  results[i].got_source_addr = true;
 
-		  if (q->ai_family == AF_INET6 && in6ai != NULL)
+		  if (in6ai != NULL)
 		    {
 		      /* See whether the source address is on the list of
 			 deprecated or temporary addresses.  */
 		      struct in6addrinfo tmp;
-		      struct sockaddr_in6 *sin6p
-			= (struct sockaddr_in6 *) &results[i].source_addr;
-		      memcpy (tmp.addr, &sin6p->sin6_addr, IN6ADDRSZ);
+
+		      if (q->ai_family == AF_INET && af == AF_INET)
+			{
+			  struct sockaddr_in *sinp
+			    = (struct sockaddr_in *) &results[i].source_addr;
+			  tmp.addr[0] = 0;
+			  tmp.addr[1] = 0;
+			  tmp.addr[2] = htonl (0xffff);
+			  tmp.addr[3] = sinp->sin_addr.s_addr;
+			}
+		      else
+			{
+			  struct sockaddr_in6 *sin6p
+			    = (struct sockaddr_in6 *) &results[i].source_addr;
+			  memcpy (tmp.addr, &sin6p->sin6_addr, IN6ADDRSZ);
+			}
 
 		      struct in6addrinfo *found
 			= bsearch (&tmp, in6ai, in6ailen, sizeof (*in6ai),
 				   in6aicmp);
 		      if (found != NULL)
-			results[i].source_addr_flags = found->flags;
+			{
+			  results[i].source_addr_flags = found->flags;
+			  results[i].prefixlen = found->prefixlen;
+			  results[i].index = found->index;
+			}
 		    }
-		  else if (q->ai_family == AF_INET && af == AF_INET6)
+
+		  if (q->ai_family == AF_INET && af == AF_INET6)
 		    {
 		      /* We have to convert the address.  The socket is
 			 IPv6 and the request is for IPv4.  */
@@ -2029,10 +2209,17 @@ getaddrinfo (const char *name, const char *service,
 		      struct sockaddr_in *sin
 			= (struct sockaddr_in *) &results[i].source_addr;
 		      assert (IN6_IS_ADDR_V4MAPPED (sin6->sin6_addr.s6_addr32));
+		      sin->sin_family = AF_INET;
+		      /* We do not have to initialize sin_port since this
+			 fields has the same position and size in the IPv6
+			 structure.  */
+		      assert (offsetof (struct sockaddr_in, sin_port)
+			      == offsetof (struct sockaddr_in6, sin6_port));
+		      assert (sizeof (sin->sin_port)
+			      == sizeof (sin6->sin6_port));
 		      memcpy (&sin->sin_addr,
 			      &sin6->sin6_addr.s6_addr32[3], INADDRSZ);
-		      results[i].source_addr_len = INADDRSZ;
-		      sin->sin_family = AF_INET;
+		      results[i].source_addr_len = sizeof (struct sockaddr_in);
 		    }
 		}
 	      else if (errno == EAFNOSUPPORT && af == AF_INET6
@@ -2059,6 +2246,8 @@ getaddrinfo (const char *name, const char *service,
 
       /* We got all the source addresses we can get, now sort using
 	 the information.  */
+      struct sort_result_combo src
+	= { .results = results, .nresults = nresults };
       if (__builtin_expect (gaiconf_reload_flag_ever_set, 0))
 	{
 	  __libc_lock_define_initialized (static, lock);
@@ -2066,11 +2255,11 @@ getaddrinfo (const char *name, const char *service,
 	  __libc_lock_lock (lock);
 	  if (old_once && gaiconf_reload_flag)
 	    gaiconf_reload ();
-	  qsort (results, nresults, sizeof (results[0]), rfc3484_sort);
+	  qsort_r (results, nresults, sizeof (results[0]), rfc3484_sort, &src);
 	  __libc_lock_unlock (lock);
 	}
       else
-	qsort (results, nresults, sizeof (results[0]), rfc3484_sort);
+	qsort_r (results, nresults, sizeof (results[0]), rfc3484_sort, &src);
 
       /* Queue the results up as they come out of sorting.  */
       q = p = results[0].dest_addr;
