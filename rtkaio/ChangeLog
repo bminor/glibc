@@ -1,3 +1,9 @@
+2007-12-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kaio_read.c (aio_read64): Define to
+	something else while including kaio_misc.h.
+	* sysdeps/unix/sysv/linux/kaio_write.c (aio_write64): Likewise.
+
 2007-08-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/kaio_misc.h (AIO_MISC_NOTIFY,

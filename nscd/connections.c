@@ -1383,7 +1383,7 @@ nscd_run_prune (void *p)
 
       time_t next_wait;
       time_t now = time (NULL);
-      if (e == ETIMEDOUT now >= dbs[my_number].wakeup_time)
+      if (e == ETIMEDOUT || now >= dbs[my_number].wakeup_time)
 	{
 	  next_wait = prune_cache (&dbs[my_number], now, -1);
 	  next_wait = MAX (next_wait, CACHE_PRUNE_INTERVAL);
