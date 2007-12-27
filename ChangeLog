@@ -1,3 +1,63 @@
+2007-12-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/nsswitch.c (__nss_lookup): Actually use alternative name in
+	second lookup.
+
+2007-12-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/cacheinfo.c (intel_02_known): New entry 0x3f.
+	* sysdeps/unix/sysv/linux/i386/sysconf.c (intel_02_known): Likewise.
+
+2007-12-17  Roland McGrath  <roland@redhat.com>
+
+	* inet/ether_line.c (ether_line): Remove unused variable.
+
+2007-12-17  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* login/forkpty.c (forkpty): Add const qualifier to parameters termp
+	and winp.
+	* login/openpty.c (openpty): Likewise.
+	* login/pty.h (openpty, forkpty): Likewise.
+	* manual/terminal.texi (openpty, forkpty): Likewise.
+
+2007-12-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (public_cALLOc): For arena other than
+	main_arena, count all bytes inside the mprotect_size range of the
+	heap as uninitialized.
+
+2007-12-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/tst-execstack.c (do_test): Don't fail if SELinux forbids
+	executable stacks.
+
+	* malloc/malloc.c (public_mTRIm): Iterate over all arenas and call
+	mTRIm for all of them.
+	(mTRIm): Additionally iterate over all free blocks and use madvise
+	to free memory for all those blocks which contain at least one
+	memory page.
+	* malloc/tst-trim1.c: New file.
+	* malloc/Makefile (tests): Add tst-trim1.
+
+	* malloc/malloc.c (do_check_malloc_state): Minimal cleanups.
+
+2007-12-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (INTERNAL_SYSCALL_ERROR_P):
+	First cast argument to long
+	* sysdeps/unix/sysv/linux/x86_64/init-first.c (__vdso_gettimeofday):
+	Return long.
+	(__vdso_clock_gettime): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/libc-vdso.h: Functions
+	return long.
+
+2007-12-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/nl_langinfo.c (nl_langinfo): Just call __nl_langinfo_l.
+	* locale/nl_langinfo_l.c: Real implementation, copied from
+	nl_langinfo.c.
+	* include/langinfo.h: Add libc_hidden_proto for __nl_langinfo_l.
+
 2007-12-01  Jim Meyering  <meyering@redhat.com>
 
 	* posix/regcomp.c (optimize_utf8): Fix a typo, s/idx/ctx_type/,
