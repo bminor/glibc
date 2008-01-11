@@ -1,3 +1,82 @@
+2008-01-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (rfc3484_sort): Store result of
+	native interface lookup in all the relevant places.
+
+2008-01-10  Jakub Jelinek  <jakub@redhat.com>
+	    Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (sort_results): Remove service_order
+	field.  Use sockaddr_in6 for source_addr.
+	(get_scope): Change type of parameter to sockaddr_in6.  Adjust.
+	(match_prefix): Likewise.
+	(get_label): Likewise.
+	(get_precedence): Likewise.
+	(rfc3484_sort): Change to use indirect access to results array.
+	Adjust to use of sockaddr_in6.  Replace service_order test with
+	simple index comparison.
+	(getaddrinfo): Define order array.  Initialize it.  Don't initialize
+	service_order field.  Adjust qsort_t calls.  Access sorted result
+	array indirectly through order array.
+	* posix/tst-rfc3484.c: Adjust for change of rfc3484_sort.
+	* posix/tst-rfc3484-2.c: Likewise.
+	* posix/tst-rfc3484-3.c: Likewise.
+
+2008-01-09  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5541]
+	* sunrpc/rpc_thread.c (__rpc_thread_destroy): Also free xports and
+	pollfd structures.
+	Patch by André Cruz.
+
+	[BZ #5545]
+	* sunrpc/clnt_perr.c (clnt_sperror): Don't use fixed size buffer.
+	(clnt_spcreateerror): Likewise.
+
+	[BZ #5553]
+	* malloc/malloc.c (public_mALLOc): Set ar_ptr when trying main_arena.
+	(public_mEMALIGn): Likewise.
+	Patch mostly by Daniel Jacobowitz.
+
+2008-01-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/makecontext.S (__makecontext): Avoid
+	clobbering memory at or above uc_stack.ss_sp + uc_stack.ss_size.
+	* stdlib/Makefile: Add rules to build and run tst-makecontext2.
+	* stdlib/tst-makecontext2.c: New test.
+
+008-01-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* iconv/loop.c (UPDATE_PARAMS): Define to empty statement if not
+	defined.
+	(REINIT_PARAMS): Likewise.  Undefine before end of file.
+	(STANDARD_TO_LOOP_ERR_HANDLER): Use UPDATE_PARAMS before calling
+	transliteration hooks and REINIT_PARAMS afterwards.
+	* iconvdata/iso-2022-jp.c (BODY): Use a separate variable for
+	status.
+	(REINIT_PARAMS): Define.
+	* iconvdata/ibm1364.c (REINIT_PARAMS): Likewise.
+	* iconvdata/ibm930.c (REINIT_PARAMS): Likewise.
+	* iconvdata/ibm933.c (REINIT_PARAMS): Likewise.
+	* iconvdata/ibm935.c (REINIT_PARAMS): Likewise.
+	* iconvdata/ibm937.c (REINIT_PARAMS): Likewise.
+	* iconvdata/ibm939.c (REINIT_PARAMS): Likewise.
+	* iconvdata/iso-2022-cn.c (REINIT_PARAMS): Likewise.
+	* iconvdata/iso-2022-cn-ext.c (REINIT_PARAMS): Likewise.
+	* iconvdata/iso-2022-jp-3.c (REINIT_PARAMS): Likewise.
+	* iconvdata/iso-2022-kr.c (REINIT_PARAMS): Likewise.
+	* iconvdata/Makefile: Add rules to build and run tst-iconv7.c.
+	* iconvdata/tst-iconv7.c: New test.
+
+2008-01-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/stdio.h (vscanf): Fix definition for loser compilers.
+
+2008-01-05  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #5112]
+	* nscd/connections.c (restart): Fix condition.
+
 2008-01-03  Jakub Jelinek  <jakub@redhat.com>
 
 	* ctype/ctype.h (__ctype_b_loc, __ctype_tolower_loc,
