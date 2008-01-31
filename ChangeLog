@@ -1,3 +1,133 @@
+2008-01-30  Roland McGrath  <roland@redhat.com>
+
+	* manual/libc.texinfo: Update back-cover text.
+
+	* elf/elf.h (NT_386_TLS): New macro.
+
+2008-01-29  Roland McGrath  <roland@redhat.com>
+
+	* Makeconfig (sysd-rules-patterns): New variable.
+	* Makerules ($(common-objpfx)sysd-rules): Drive the loop from that.
+	(check-inhibit-asm): New canned sequence, replaces ...
+	(open-check-inhibit-asm, close-check-inhibit-asm): ... these, removed.
+	* elf/rtld-Rules ($(objpfx)rtld-%.os): Use $(rtld-CPPFLAGS) in commands.
+	(rtld-CPPFLAGS): Renamed from CPPFLAGS-rtld.
+	(CFLAGS-rtld): Variable removed.
+
+2008-01-24  Roland McGrath  <roland@redhat.com>
+
+	* configure.in: Let configure fragments set base_os.
+	* configure: Regenerated.
+
+2008-01-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/ko.po: Update from translation team.
+
+2008-01-12  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/fpu/ftestexcept.c (fetestexcept): Use short for fnstsw.
+
+2008-01-12  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #5040]
+	* sysdeps/unix/sysv/linux/x86_64/sys/epoll.h (enum EPOLL_EVENTS):
+	Add EPOLLRDHUP.
+
+2008-01-20  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* hurd/hurdsock.c (_hurd_socket_server): Return the standard
+	error EAFNOSUPPORT rather than non-standard EPFNOSUPPORT.
+	* sunrpc/bindrsvprt.c (bindresvport): Likewise.
+
+2007-10-23  Alexandre Oliva  <aoliva@redhat.com>
+
+	* include/link.h (FORCED_DYNAMIC_TLS_OFFSET): Define.
+	* elf/dl-close.c (_dl_close): Check for it.
+	* elf/dl-reloc.c (CHECK_STATIC_TLS): Likewise.
+	(_dl_allocate_static_tls): Likewise.
+	* elf/dl-tls.c (_dl_allocate_tls_init): Likewise.
+	(__tls_get_addr): Protect from race conditions in setting l_tls_offset
+	to it.
+	* elf/tst-tls16.c: New file.
+	* elf/tst-tlsmod16a.c: New file.
+	* elf/tst-tlsmod16b.c: New file.
+	* elf/Makefile: Add rules to build and run tst-tls16.
+
+2008-01-16  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5628]
+	* bits/shm.h: Fix comment describing shmid_ds.
+	* sysdeps/gnu/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/shm.h: Likewise.
+	Patch by Hareesh Nagarajan <hareesh.nagarajan@gmail.com>.
+
+	[BZ #5607]
+	* conform/data/fcntl.h-data: Fix posix_fadvise and posix_fallocate
+	prototypes.
+	* conform/data/limits.h-data: Adjust limits changed in v6 and add
+	additional suffixes.
+	* conform/data/mqueue.h-data: Fix typo in mq_curmsgs entry.
+	Add optional functions mq_timedreceive and mq_timedsend.
+	* conform/data/netdb.h-data: Add more AI_* and EAI_* constants.
+	* conform/data/pthread.h-data: Fix prototype of
+	pthread_condattr_setclock.  pthread_sigmask is not required in v6.
+	* conform/data/semaphore.h-data: Allow time.h definitions.
+	* conform/data/signal.h-data: Likewise.
+	* conform/data/stdio.h-data: getw and putw are not required in v6.
+	* conform/data/stdlib.h-data: Change setstate prototype.
+	* conform/data/string.h-data: Fix strerror_r prototype.
+	* conform/data/time.h-data: Fix typo in TIMER_ABSTIME definition.
+	* conform/data/unistd.h-data: pthread_atfork not required in v6.
+	Fix readlink prototype.
+	* conform/data/netinet/in.h-data: Add const to in6addr_any and
+	in6addr_loopback.
+	* inet/netinet/in.h: Cleanup namespace.
+	* posix/regex.h: Likewise.
+	* resolv/netdb.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/in.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/socket.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/stat.h: Likewise.
+	* sysdeps/posix/getaddrinfo.c (default_labels): Adjust for change
+	of names of in in6_addr.
+	(default_precedence): Likewise.
+	* sysdeps/unix/sysv/linux/cmsg_nxthdr.c: Include <stddef.h> for
+	NULL definition.
+
+2008-01-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* conform/data/fmtmsg.h-data: Add missing allows.
+	* conform/data/ftw.h-data: Likewise.
+	* conform/data/inttypes.h-data: Likewise.
+	* conform/data/math.h-data: Likewise.
+	* conform/data/signal.h-data: Likewise.
+	* conform/data/net/if.h-data: Likewise.
+	* conform/data/netinet/in.h-data: Likewise.
+	* conform/data/sys/socket.h-data: Likewise.
+
+	[BZ #5614]
+	* string/bits/string2.h (__strtok_r_1c): Always update *__NEXTP.
+	(__strtok_r): Simplify.
+	* string/tester.c (test_strtok_r): Add test case for futile search
+	with single-character seach string.
+
+2008-01-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/ko.po: Update from translation team.
+
+2008-01-11  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #5600]
+	* sysdeps/unix/sysv/linux/sys/signalfd.h (struct
+	signalfd_siginfo): Use 64-bit type for ssi_ptr to sync with Linux
+	kernel header.
+
 2008-01-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (rfc3484_sort): Store result of
