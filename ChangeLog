@@ -1,3 +1,28 @@
+2008-02-15  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5737]
+	* resolv/netdb.h: Make NI_MAXHOST and NI_MAXSERV available when
+	__USE_MISC is defined.
+
+2008-02-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sys/timerfd.h: New file.
+	* sysdeps/unix/sysv/linux/Makefile [subdir=misc] (sysdep_headers): Add
+	sys/timerfd.h.
+	* sysdeps/unix/sysv/linux/syscalls.list: Add timerfd_create,
+	timerfd_gettime, timerfd_settime.
+	* sysdeps/unix/sysv/linux/Versions: Add timerfd_create,
+	timerfd_gettime, timerfd_settime for GLIBC_2.8.
+
+2008-02-08  Roland McGrath  <roland@redhat.com>
+
+	* elf/elf.h (NT_PPC_SPE): New macro.
+
+2008-02-06  Roland McGrath  <roland@redhat.com>
+
+	* Makerules ($(common-objpfx)sysd-rules):
+	Depend on $(sysdep-makeconfigs).
+
 2008-01-31  Roland McGrath  <roland@redhat.com>
 
 	[BZ #5442]
