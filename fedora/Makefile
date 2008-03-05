@@ -64,9 +64,9 @@ glibc.spec: glibc.spec.in ../version.h branch.mk
 	 echo '%define glibcname $(tar-name)'; \
 	 echo '%define glibcsrcdir $(srcdir-name)'; \
 	 echo '%define glibc_release_tarballs $(if $(upstream),1,0)'; \
-	 sed -n '/VERSION/s/^.*"\([^"]*\)"$$/%define glibcversion \1/p' \
-	     ../version.h; \
-	 cat $<) > $@.new
+	 sed -e $$( sed -n '/VERSION/s/^.*"\([^"]*\)"$$/s,@glibcversion@,\1,/p' \
+	     ../version.h ) \
+	   $<) > $@.new
 	mv -f $@.new $@
 
 ifeq (,$(wildcard glibc.spec))

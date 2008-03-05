@@ -1,4 +1,3 @@
-%define glibcrelease 7
 %define run_glibc_tests 1
 %define auxarches i586 i686 athlon sparcv9v sparc64v alphaev6
 %define xenarches i686 athlon
@@ -17,10 +16,10 @@
 %define rtkaioarches %{ix86} x86_64 ia64 ppc ppc64 s390 s390x
 %define debuginfocommonarches %{ix86} alpha alphaev6 sparc sparcv9 sparcv9v sparc64 sparc64v
 %define _unpackaged_files_terminate_build 0
-Summary: The GNU libc libraries.
+Summary: The GNU libc libraries
 Name: glibc
-Version: %{glibcversion}
-Release: %{glibcrelease}
+Version: @glibcversion@
+Release: 8
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -28,6 +27,7 @@ Release: %{glibcrelease}
 # libraries without restrictions.
 License: LGPLv2+ and LGPLv2+ with exceptions and GPLv2+
 Group: System Environment/Libraries
+URL: http://sources.redhat.com/glibc/
 Source0: %{glibcsrcdir}.tar.bz2
 %if %{glibc_release_tarballs}
 Source1: %(echo %{glibcsrcdir} | sed s/glibc-/glibc-linuxthreads-/).tar.bz2
@@ -37,39 +37,22 @@ Source2: %(echo %{glibcsrcdir} | sed s/glibc-/glibc-libidn-/).tar.bz2
 Source3: %{glibcname}-fedora-%{glibcdate}.tar.bz2
 Patch0: %{glibcname}-fedora.patch
 Patch1: %{name}-ia64-lib64.patch
-Buildroot: %{_tmppath}/glibc-%{PACKAGE_VERSION}-root
-Obsoletes: zoneinfo, libc-static, libc-devel, libc-profile, libc-headers,
-Obsoletes: gencat, locale, ldconfig, locale-ja, glibc-profile
+Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Obsoletes: glibc-profile < 2.4
 Provides: ldconfig
 # The dynamic linker supports DT_GNU_HASH
 Provides: rtld(GNU_HASH)
-Autoreq: false
 Requires: glibc-common = %{version}-%{release}
-%ifarch sparc
-Obsoletes: libc
-%endif
 # Require libgcc in case some program calls pthread_cancel in its %%post
-Prereq: basesystem, libgcc
+Requires(pre): basesystem, libgcc
 # This is for building auxiliary programs like memusage, nscd
 # For initial glibc bootstraps it can be commented out
-BuildPreReq: gd-devel libpng-devel zlib-devel texinfo, libselinux-devel >= 1.33.4-3
-BuildPreReq: audit-libs-devel >= 1.1.3, sed >= 3.95, libcap-devel, gettext
-BuildPreReq: /bin/ps, /bin/kill, /bin/awk
+BuildRequires: gd-devel libpng-devel zlib-devel texinfo, libselinux-devel >= 1.33.4-3
+BuildRequires: audit-libs-devel >= 1.1.3, sed >= 3.95, libcap-devel, gettext
+BuildRequires: /bin/ps, /bin/kill, /bin/awk
 # This is to ensure that __frame_state_for is exported by glibc
 # will be compatible with egcs 1.x.y
-BuildPreReq: gcc >= 3.2
-Conflicts: rpm <= 4.0-0.65
-Conflicts: glibc-devel < 2.2.3
-Conflicts: gcc4 <= 4.0.0-0.6
-%ifarch x86_64 %{ix86}
-# Need gdb that understands DW_CFA_val_expression
-Conflicts: gdb < 6.3.0.0-1.111
-%endif
-# Earlier shadow-utils packages had too restrictive permissions on
-# /etc/default
-Conflicts: shadow-utils < 2:4.0.3-20
-Conflicts: nscd < 2.3.3-52
-Conflicts: kernel < 2.6.9
+BuildRequires: gcc >= 3.2
 %define enablekernel 2.6.9
 %ifarch i386
 %define nptl_target_cpu i486
@@ -84,8 +67,8 @@ BuildRequires: gcc >= 3.2.1-5
 BuildRequires: gcc >= 4.1.0-0.17
 %endif
 %if "%{_enable_debug_packages}" == "1"
-BuildPreReq: elfutils >= 0.72
-BuildPreReq: rpm >= 4.2-0.56
+BuildRequires: elfutils >= 0.72
+BuildRequires: rpm >= 4.2-0.56
 %endif
 %define __find_provides %{_builddir}/%{glibcsrcdir}/find_provides.sh
 %define _filter_GLIBC_PRIVATE 1
@@ -116,20 +99,9 @@ Install glibc-xen if you might run your system under the Xen hypervisor.
 %package devel
 Summary: Object files for development using standard C libraries.
 Group: Development/Libraries
-Conflicts: texinfo < 3.11
-# Need AS_NEEDED directive
-Conflicts: binutils < 2.15.94.0.2-1
-Prereq: /sbin/install-info
-Obsoletes: libc-debug, libc-headers, libc-devel, linuxthreads-devel
-Obsoletes: glibc-debug, nptl-devel
-Prereq: %{name}-headers
-Requires: %{name}-headers = %{version}-%{release}, %{name} = %{version}-%{release}
-%ifarch %{ix86}
-# Earlier gcc's had atexit reference in crtendS.o, which does not
-# work with this glibc where atexit is in libc_nonshared.a
-Conflicts: gcc < 2.96-79
-%endif
-Autoreq: true
+Requires(pre): /sbin/install-info
+Requires(pre): %{name}-headers = %{version}-%{release}
+Requires: %{name} = %{version}-%{release}
 
 %description devel
 The glibc-devel package contains the object files necessary
@@ -151,11 +123,9 @@ Provides: %{name}-headers(%{_target_cpu})
 # have to be installed, not i386 ones.
 Obsoletes: %{name}-headers(i386)
 %endif
-Obsoletes: libc-debug, libc-headers, libc-devel
-Prereq: kernel-headers
+Requires(pre): kernel-headers
 Requires: kernel-headers >= 2.2.1, %{name} = %{version}-%{release}
 BuildRequires: kernel-headers >= 2.6.22
-Autoreq: true
 
 %description headers
 The glibc-headers package contains the header files necessary
@@ -170,9 +140,7 @@ use the standard C libraries.
 
 %package common
 Summary: Common binaries and locale data for glibc
-Conflicts: %{name} < %{version}
-Conflicts: %{name} > %{version}
-Autoreq: false
+Requires: %{name}-%{version}-%{release}
 Requires: tzdata >= 2003a
 Group: System Environment/Base
 
@@ -183,11 +151,8 @@ libraries, as well as national language (locale) support.
 %package -n nscd
 Summary: A Name Service Caching Daemon (nscd).
 Group: System Environment/Daemons
-Conflicts: kernel < 2.2.0
 Requires: libselinux >= 1.17.10-1, audit-libs >= 1.1.3
-Conflicts: selinux-policy-targeted < 1.17.30-2.2
-Prereq: /sbin/chkconfig, /usr/sbin/useradd, /usr/sbin/userdel, sh-utils
-Autoreq: true
+Requires(pre): /sbin/chkconfig, /usr/sbin/useradd, /usr/sbin/userdel, sh-utils
 
 %description -n nscd
 Nscd caches name service lookups and can dramatically improve
@@ -196,7 +161,7 @@ performance with NIS+, and may help with DNS as well.
 %package utils
 Summary: Development utilities from GNU C library
 Group: Development/Tools
-Requires: glibc = %{version}-%{release}
+Requires: %{name} = %{version}-%{release}
 
 %description utils
 The glibc-utils package contains memusage, a memory usage profiler,
@@ -372,14 +337,14 @@ build_nptl linuxnptl-power6
 
 cd build-%{nptl_target_cpu}-linuxnptl
 $GCC -static -L. -Os ../fedora/glibc_post_upgrade.c -o glibc_post_upgrade.%{_target_cpu} \
-    -DNO_SIZE_OPTIMIZATION \
+  -DNO_SIZE_OPTIMIZATION \
 %ifarch i386
-    -DARCH_386 \
+  -DARCH_386 \
 %endif
-    '-DLIBTLS="/%{_lib}/tls/"' \
-    '-DGCONV_MODULES_DIR="%{_prefix}/%{_lib}/gconv"' \
-    '-DLD_SO_CONF="/etc/ld.so.conf"' \
-    '-DICONVCONFIG="%{_sbindir}/iconvconfig.%{_target_cpu}"'
+  '-DLIBTLS="/%{_lib}/tls/"' \
+  '-DGCONV_MODULES_DIR="%{_prefix}/%{_lib}/gconv"' \
+  '-DLD_SO_CONF="/etc/ld.so.conf"' \
+  '-DICONVCONFIG="%{_sbindir}/iconvconfig.%{_target_cpu}"'
 cd ..
 
 %install
@@ -390,8 +355,8 @@ mkdir -p $RPM_BUILD_ROOT
 make -j1 install_root=$RPM_BUILD_ROOT install -C build-%{nptl_target_cpu}-linuxnptl PARALLELMFLAGS=-s
 %ifnarch %{auxarches}
 cd build-%{nptl_target_cpu}-linuxnptl && \
-    make %{?_smp_mflags} install_root=$RPM_BUILD_ROOT install-locales -C ../localedata objdir=`pwd` && \
-    cd ..
+  make %{?_smp_mflags} install_root=$RPM_BUILD_ROOT install-locales -C ../localedata objdir=`pwd` && \
+  cd ..
 %endif
 
 librtso=`basename $RPM_BUILD_ROOT/%{_lib}/librt.so.*`
@@ -474,9 +439,9 @@ cp -a bits/stdio-lock.h $RPM_BUILD_ROOT%{_prefix}/include/bits/stdio-lock.h
 cp -a fedora/libc-lock.h $RPM_BUILD_ROOT%{_prefix}/include/bits/libc-lock.h
 
 if [ -d $RPM_BUILD_ROOT%{_prefix}/info -a "%{_infodir}" != "%{_prefix}/info" ]; then
-    mkdir -p $RPM_BUILD_ROOT%{_infodir}
-    mv -f $RPM_BUILD_ROOT%{_prefix}/info/* $RPM_BUILD_ROOT%{_infodir}
-    rm -rf $RPM_BUILD_ROOT%{_prefix}/info
+  mkdir -p $RPM_BUILD_ROOT%{_infodir}
+  mv -f $RPM_BUILD_ROOT%{_prefix}/info/* $RPM_BUILD_ROOT%{_infodir}
+  rm -rf $RPM_BUILD_ROOT%{_prefix}/info
 fi
 
 gzip -9nvf $RPM_BUILD_ROOT%{_infodir}/libc*
@@ -569,15 +534,15 @@ rm -f $RPM_BUILD_ROOT%{_sbindir}/rpcinfo
 
 # BUILD THE FILE LIST
 find $RPM_BUILD_ROOT -type f -or -type l |
-	sed -e 's|.*/etc|%config &|' \
-	    -e 's|.*/gconv/gconv-modules$|%verify(not md5 size mtime) %config(noreplace) &|' \
-	    -e 's|.*/gconv/gconv-modules.cache|%verify(not md5 size mtime) &|' \
-	    -e '/lib\/debug/d' > rpm.filelist.in
+  sed -e 's|.*/etc|%config &|' \
+      -e 's|.*/gconv/gconv-modules$|%verify(not md5 size mtime) %config(noreplace) &|' \
+      -e 's|.*/gconv/gconv-modules.cache|%verify(not md5 size mtime) &|' \
+      -e '/lib\/debug/d' > rpm.filelist.in
 for n in %{_prefix}/share %{_prefix}/include %{_prefix}/lib/locale; do
-    find ${RPM_BUILD_ROOT}${n} -type d | \
-	grep -v '%{_prefix}/share$' | \
-	grep -v '%{_infodir}' | \
-	sed "s/^/%dir /" >> rpm.filelist.in
+  find ${RPM_BUILD_ROOT}${n} -type d | \
+    grep -v '%{_prefix}/share$' | \
+    grep -v '%{_infodir}' | \
+    sed "s/^/%dir /" >> rpm.filelist.in
 done
 
 # primary filelist
@@ -587,10 +552,10 @@ LIB_LANG='s|.*/lib/locale/\([^/_]\+\)|%lang(\1) &|'
 # languages very well, temporarily disable
 LIB_LANG=''
 sed -e "s|$RPM_BUILD_ROOT||" -e "$LIB_LANG" -e "$SHARE_LANG" < rpm.filelist.in |
-	grep -v '/etc/\(localtime\|nsswitch.conf\|ld.so.conf\|ld.so.cache\|default\)'  | \
-	grep -v '/%{_lib}/lib\(pcprofile\|memusage\).so' | \
-	grep -v 'bin/\(memusage\|mtrace\|xtrace\|pcprofiledump\)' | \
-	sort > rpm.filelist
+  grep -v '/etc/\(localtime\|nsswitch.conf\|ld.so.conf\|ld.so.cache\|default\)'  | \
+  grep -v '/%{_lib}/lib\(pcprofile\|memusage\).so' | \
+  grep -v 'bin/\(memusage\|mtrace\|xtrace\|pcprofiledump\)' | \
+  sort > rpm.filelist
 
 mkdir -p $RPM_BUILD_ROOT%{_prefix}/%{_lib}
 mv -f $RPM_BUILD_ROOT/%{_lib}/lib{pcprofile,memusage}.so $RPM_BUILD_ROOT%{_prefix}/%{_lib}
@@ -608,12 +573,12 @@ grep '%{_infodir}' < rpm.filelist | grep -v '%{_infodir}/dir' > devel.filelist
 grep '%{_prefix}/include/gnu/stubs-[32164]\+\.h' < rpm.filelist >> devel.filelist || :
 
 grep '%{_prefix}/include' < rpm.filelist |
-	egrep -v '%{_prefix}/include/(linuxthreads|gnu/stubs-[32164]+\.h)' \
-		> headers.filelist
+  egrep -v '%{_prefix}/include/(linuxthreads|gnu/stubs-[32164]+\.h)' \
+	> headers.filelist
 
 mv rpm.filelist rpm.filelist.full
 grep -v '%{_prefix}/%{_lib}/lib.*_p.a' rpm.filelist.full |
-	egrep -v "(%{_prefix}/include)|(%{_infodir})" > rpm.filelist
+  egrep -v "(%{_prefix}/include)|(%{_infodir})" > rpm.filelist
 
 grep '%{_prefix}/%{_lib}/lib.*\.a' < rpm.filelist >> devel.filelist
 grep '%{_prefix}/%{_lib}/.*\.o' < rpm.filelist >> devel.filelist
@@ -621,24 +586,24 @@ grep '%{_prefix}/%{_lib}/lib.*\.so' < rpm.filelist >> devel.filelist
 
 mv rpm.filelist rpm.filelist.full
 grep -v '%{_prefix}/%{_lib}/lib.*\.a' < rpm.filelist.full |
-	grep -v '%{_prefix}/%{_lib}/.*\.o' |
-	grep -v '%{_prefix}/%{_lib}/lib.*\.so'|
-	grep -v '%{_prefix}/%{_lib}/linuxthreads' |
-	grep -v 'nscd' > rpm.filelist
+  grep -v '%{_prefix}/%{_lib}/.*\.o' |
+  grep -v '%{_prefix}/%{_lib}/lib.*\.so'|
+  grep -v '%{_prefix}/%{_lib}/linuxthreads' |
+  grep -v 'nscd' > rpm.filelist
 
 grep '%{_prefix}/bin' < rpm.filelist >> common.filelist
 #grep '%{_prefix}/lib/locale' < rpm.filelist | grep -v /locale-archive.tmpl >> common.filelist
 grep '%{_prefix}/libexec/pt_chown' < rpm.filelist >> common.filelist
 grep '%{_prefix}/sbin/[^gi]' < rpm.filelist >> common.filelist
-grep '%{_prefix}/share' < rpm.filelist \
-  | grep -v '%{_prefix}/share/zoneinfo' >> common.filelist
+grep '%{_prefix}/share' < rpm.filelist | \
+  grep -v '%{_prefix}/share/zoneinfo' >> common.filelist
 
 mv rpm.filelist rpm.filelist.full
 grep -v '%{_prefix}/bin' < rpm.filelist.full |
-	grep -v '%{_prefix}/lib/locale' |
-	grep -v '%{_prefix}/libexec/pt_chown' |
-	grep -v '%{_prefix}/sbin/[^gi]' |
-	grep -v '%{_prefix}/share' > rpm.filelist
+  grep -v '%{_prefix}/lib/locale' |
+  grep -v '%{_prefix}/libexec/pt_chown' |
+  grep -v '%{_prefix}/sbin/[^gi]' |
+  grep -v '%{_prefix}/share' > rpm.filelist
 
 > nosegneg.filelist
 %if %{xenpackage}
@@ -811,7 +776,7 @@ auxarches_debugsources=\
 egrep "$auxarches_debugsources" debuginfocommon.sources >> debuginfo.filelist
 
 egrep -v "$auxarches_debugsources" \
-      debuginfocommon.sources >> debuginfocommon.filelist
+  debuginfocommon.sources >> debuginfocommon.filelist
 %ifarch %{auxarches}
 %else
 # non-aux arches when there is a debuginfo-common
@@ -836,7 +801,7 @@ rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 echo Cutting down the list of unpackaged files
 >> debuginfocommon.filelist
 sed -e '/%%dir/d;/%%config/d;/%%verify/d;s/%%lang([^)]*) //;s#^/*##' \
-	  common.filelist devel.filelist headers.filelist \
+    common.filelist devel.filelist headers.filelist \
     utils.filelist nscd.filelist debuginfocommon.filelist |
 (cd $RPM_BUILD_ROOT; xargs --no-run-if-empty rm -f 2> /dev/null || :)
 
@@ -868,12 +833,12 @@ mkdir -p $RPM_BUILD_ROOT/var/cache/ldconfig
 %pre headers
 # this used to be a link and it is causing nightmares now
 if [ -L %{_prefix}/include/scsi ] ; then
-    rm -f %{_prefix}/include/scsi
+  rm -f %{_prefix}/include/scsi
 fi
 
 %preun devel
 if [ "$1" = 0 ]; then
-    /sbin/install-info --delete %{_infodir}/libc.info.gz %{_infodir}/dir || :
+  /sbin/install-info --delete %{_infodir}/libc.info.gz %{_infodir}/dir || :
 fi
 
 %post utils -p /sbin/ldconfig
@@ -882,23 +847,23 @@ fi
 
 %pre -n nscd
 /usr/sbin/useradd -M -o -r -d / -s /sbin/nologin \
-	-c "NSCD Daemon" -u 28 nscd > /dev/null 2>&1 || :
+  -c "NSCD Daemon" -u 28 nscd > /dev/null 2>&1 || :
 
 %post -n nscd
 /sbin/chkconfig --add nscd
 
 %preun -n nscd
 if [ $1 = 0 ] ; then
-    service nscd stop > /dev/null 2>&1
-    /sbin/chkconfig --del nscd
+  service nscd stop > /dev/null 2>&1
+  /sbin/chkconfig --del nscd
 fi
 
 %postun -n nscd
 if [ $1 = 0 ] ; then
-    /usr/sbin/userdel nscd > /dev/null 2>&1 || :
+  /usr/sbin/userdel nscd > /dev/null 2>&1 || :
 fi
 if [ "$1" -ge "1" ]; then
-    service nscd condrestart > /dev/null 2>&1 || :
+  service nscd condrestart > /dev/null 2>&1 || :
 fi
 
 %if %{xenpackage}
@@ -1011,6 +976,14 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Wed Mar  5 2008 Jakub Jelinek <jakub@redhat.com> 2.7.90-8
+- update to trunk
+  - {,v}{as,d}printf and obstack_{,v}printf fortification (#435905)
+  - fix getnameinfo/gethostbyaddr (#428067, BZ#5790)
+  - fix yp_order (#435519, BZ#5854)
+  - misc fixes (BZ#5779, BZ#5736, BZ#5627, BZ#5818, BZ#5012)
+- merge review cleanup (Tom Callaway, #225806)
+
 * Sat Feb 16 2008 Jakub Jelinek <jakub@redhat.com> 2.7.90-7
 - update to trunk
   - make NI_MAXHOST and NI_MAXSERV available even in BSDish
