@@ -1,4 +1,4 @@
-/* Copyright (C) 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2006, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2006.
 
@@ -34,12 +34,16 @@ inet6_opt_init (void *extbuf, socklen_t extlen)
 {
   if (extbuf != NULL)
     {
-      if (extlen <= 0 || (extlen % 8) != 0)
+      if (extlen <= 0 || (extlen % 8) != 0 || extlen > 256 * 8)
 	return -1;
 
       /* Fill in the length in units of 8 octets.  */
       struct ip6_hbh *extp = (struct ip6_hbh *) extbuf;
-      extp->ip6h_len = extlen / 8;
+
+      /* RFC 2460 requires that the header extension length is the
+	 length of the option header in 8-byte units, not including
+	 the first 8 bytes.  Hence we have to subtract one.  */
+      extp->ip6h_len = extlen / 8 - 1;
     }
 
   return sizeof (struct ip6_hbh);

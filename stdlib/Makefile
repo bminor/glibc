@@ -52,7 +52,7 @@ routines	:=							      \
 	rpmatch strfmon strfmon_l getsubopt xpg_basename fmtmsg		      \
 	strtoimax strtoumax wcstoimax wcstoumax				      \
 	getcontext setcontext makecontext swapcontext
-aux =	grouping groupingwc
+aux =	grouping groupingwc tens_in_limb
 
 # These routines will be omitted from the libc shared object.
 # Instead the static object files will be included in a special archive
@@ -69,7 +69,7 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
 		   test-a64l tst-qsort tst-system testmb2 bug-strtod2	    \
 		   tst-atof1 tst-atof2 tst-strtod2 tst-strtod3 tst-rand48-2 \
 		   tst-makecontext tst-strtod4 tst-strtod5 tst-qsort2	    \
-		   tst-makecontext2
+		   tst-makecontext2 tst-strtod6
 
 include ../Makeconfig
 

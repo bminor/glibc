@@ -1,3 +1,13 @@
+2008-03-08  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5602]
+	* locales/pt_PT: Fix mon_decimal_point.
+
+2008-03-07  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5777]
+	* locales/es_CR: Define am/pm format.
+
 2008-03-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* SUPPORTED (SUPPORTED-LOCALES): Add shs_CA.UTF-8.
