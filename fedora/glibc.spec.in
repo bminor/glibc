@@ -140,7 +140,7 @@ use the standard C libraries.
 
 %package common
 Summary: Common binaries and locale data for glibc
-Requires: %{name}-%{version}-%{release}
+Requires: %{name}=%{version}-%{release}
 Requires: tzdata >= 2003a
 Group: System Environment/Base
 
