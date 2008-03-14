@@ -181,4 +181,7 @@
 /* Typed memory objects are not available.  */
 #define _POSIX_TYPED_MEMORY_OBJECTS	-1
 
+/* Streams are not available.  */
+#define _XOPEN_STREAMS	-1
+
 #endif /* posix_opt.h */

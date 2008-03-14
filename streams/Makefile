@@ -21,7 +21,7 @@
 #
 subdir	:= streams
 
-headers		= stropts.h sys/stropts.h bits/stropts.h bits/xtitypes.h
+#headers		= stropts.h sys/stropts.h bits/stropts.h bits/xtitypes.h
 routines	= isastream getmsg getpmsg putmsg putpmsg fattach fdetach
 
 include ../Rules
