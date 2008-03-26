@@ -1,3 +1,66 @@
+2008-03-07  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/fpu/fegetenv.c (fegetenv): Remove PTRACE_PEEKUSER
+	ptrace call to get the ieee_instruction_pointer from the kernel.
+	* sysdeps/s390/fpu/fesetenv.c (fesetenv): Remove PTRACE_POKEUSER
+	ptrace call to set the ieee_instructtion_pointer.
+	* sysdeps/unix/sysv/linux/s390/sys/user.h (struct _user_regs_struct):
+	Add comment that ieee_instruction_pointer is always 0.
+
+2008-03-09  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #5857]
+	* sysdeps/ieee754/dbl-64/s_rint.c (__rint): Handle j0==18.
+	* sysdeps/ieee754/dbl-64/s_nearbyint.c (__nearbyint): Likewise.
+  	Patch by Mark Elliott <mark.h.elliott@lmco.com>.
+
+	* math/libm-test.inc (nearbyint_test): Add new test cases from #5857.
+	(rint_test): Likewise.
+
+2008-03-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nis_call.c (nis_server_cache_search): Save errno around stat
+	call.
+	(__nisfind_server): Similar for open readColdStartFile call.
+	Patch partially by Jim Meyering.
+	* nss/nss_files/files-XXX.c (_nss_files_getXXent_r): Save errno
+	around internal_setent call.
+
+	* po/vi.po: New Vietnamese translation.
+
+	* sysdeps/unix/sysv/linux/adjtime.c: Correctly use
+	ADJ_OFFSET_SS_READ.
+
+	* sysdeps/unix/sysv/linux/bits/sched.h: Add new CLONE_* flags,
+	remove CLONE_STOPPED.
+
+2008-02-10  Jim Meyering  <meyering@redhat.com>
+
+	Remove useless "if" before "free":
+	* elf/ldconfig.c (parse_conf_include): Likewise.
+	* gmon/gmon.c (weak_alias): Likewise.
+	* iconv/gconv_conf.c (__gconv_get_path): Likewise.
+	* inet/rcmd.c (__validuser2_sa): Likewise.
+	* intl/bindtextdom.c (set_binding_values): Likewise.
+	* intl/loadmsgcat.c (_nl_load_domain, _nl_unload_domain): Likewise.
+	* libio/genops.c (save_for_backup): Likewise.
+	* libio/wgenops.c (save_for_wbackup): Likewise.
+	* locale/programs/ld-collate.c (collate_read): Likewise.
+	* locale/programs/linereader.c (get_string): Likewise.
+	* nis/nss_compat/compat-pwd.c (give_pwd_free): Likewise.
+	* nis/nss_compat/compat-spwd.c (give_spwd_free): Likewise.
+	* resolv/res_debug.c (do_section): Likewise.
+	* sunrpc/xdr_sizeof.c (x_inline, xdr_sizeof): Likewise.
+	* sysdeps/mach/hurd/if_index.c (libc_hidden_def): Likewise.
+	* sysdeps/posix/sprofil.c (__sprofil): Likewise.
+	* time/lc-time-cleanup.c (_nl_cleanup_time): Likewise.
+	* time/tzset.c (tzset_internal): Likewise.
+
+2008-03-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/dl-sysdep.h: Use __ASSEMBLER__ instead
+	of ASSEMBLER.
+
 2008-03-11  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #5903]
