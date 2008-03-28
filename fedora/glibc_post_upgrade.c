@@ -182,6 +182,7 @@ main (void)
   /* Check if we can safely condrestart sshd.  */
   if (access ("/sbin/service", X_OK) == 0
       && access ("/usr/sbin/sshd", X_OK) == 0
+      && access ("/etc/rc.d/init.d/sshd", X_OK) == 0
       && access ("/bin/bash", X_OK) == 0)
     {
       if (check_elf ("/usr/sbin/sshd"))
