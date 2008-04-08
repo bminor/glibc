@@ -1,3 +1,26 @@
+2008-04-07  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #6021]
+	* locales/es_ES: Fix p_cs_precedes and n_cs_precedes.
+	Use common collation definition.
+
+	[BZ #6004]
+	* locales/iso14651_t1_common: Fix first weight for U+1E60, U+1E62,
+	U+1E64, U+1E66, and U+1E68.
+	Patch by Jesse Thilo <unixweenie@gmail.com>.
+
+	[BZ #5478]
+	* locales/hu_HU: Fix name_fmt.
+
+2008-03-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/iso14651_t1_common: Add support for Gujarati script.
+	Patch by Pravin Satpute <psatpute@redhat.com>.
+
+2008-03-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makefile (LOCALES): Add ja_JP.UTF-8.
+
 2008-03-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/iso14651_t1_common: Add support for Devanagari script.

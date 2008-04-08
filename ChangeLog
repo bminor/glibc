@@ -1,3 +1,98 @@
+2008-04-07  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #6042]
+	* sysdeps/unix/sysv/linux/net/ethernet.h: Add a few more
+	ETHERTYPE_* definitions.
+	Patch partly by Aurelien Jarno <aurelien@aurel32.net>.
+
+2008-04-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/mbtowc.c (__no_r_state): Remove.
+	(mbtowc): New static state variable.  Use it instead of
+	__no_r_state.
+	* stdlib/wctomb.c (__no_r_state): Remove extern decl.
+	(__wctomb_state): New hidden variable.
+	(wctomb): Use __wctomb_state instead of __no_r_state.
+	* debug/wctomb_chk.c (__no_r_state): Remove extern decl.
+	(__wctomb_state): New extern decl.
+	(__wctomb_chk): Use __wctomb_state instead of __no_r_state.
+
+2008-04-07  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5475]
+	* resolv/res_init.c: Handle scope IDs in resolv.conf.
+
+2008-04-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* malloc/mtrace.pl: Use $@ instead of $* to keep perl 5.10 quiet.
+
+2008-04-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/nl.po: Update from translation team.
+
+2008-03-31  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #6007]
+	* string/strfry.c: Handle empty strings again.
+
+2008-03-30  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5443]
+	* intl/dcigettext.c (__dcigettext): Get reader lock for locale data
+	before looking for translation.
+	* locale/duplocale.c: Transform __libc_setlocale_lock into rwlock.
+	* locale/freelocale.c: Likewise.
+	* locale/newlocale.c: Likewise.
+	* locale/setlocale.c: Likewise.
+	Based partially on a patch by ryo@np.css.fujitsu.com.
+
+2008-03-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* intl/dcigettext.c (_nl_find_msg): Reread nconversions after
+	acquiring wrlock.  Do conv_tab allocation while holding lock.
+	* intl/Makefile: Add rules to build and run tst-gettext6.
+	* intl/tst-gettext6.c: New test.
+	* intl/tst-gettext6.sh: New file.
+
+2008-03-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/nl.po: Update from translation team.
+
+	* sysdeps/unix/opendir.c (__alloc_dir): If allocation fails for size
+	provided through st_blksize, try the default size before giving up.
+
+2008-03-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/vfprintf.c (vfprintf): Correct overflow test.
+
+	[BZ #5939]
+	* sysdeps/posix/tempname.c (__gen_tempname): Correct flag selection.
+
+	* posix/getopt.c (_getopt_internal_r): Remove old POSIX-demanded
+	error message.  POSIX today does not require the messages to be in
+	a specific form.  Suggested by Jim Meyering <jim@meyering.net>.
+
+	[BZ #5979]
+	* sunrpc/auth_unix.c: Unify printed strings.
+	* sunrpc/clnt_tcp.c: Likewise.
+	* sunrpc/clnt_udp.c: Likewise.
+	* sunrpc/clnt_unix.c: Likewise.
+	* sunrpc/svc_tcp.c: Likewise.
+	* sunrpc/svc_udp.c: Likewise.
+	* sunrpc/svc_unix.c: Likewise.
+	* sunrpc/xdr.c: Likewise.
+	* sunrpc/xdr_array.c: Likewise.
+	* sunrpc/xdr_rec.c: Likewise.
+	* sunrpc/xdr_ref.c: Likewise.
+	* locale/programs/ld-time.c (time_finish): Unify messages.
+	* locale/programs/locfile.c (handle_copy): Fix typo.
+	* nscd/nscd.c (options): Fix typo.
+
+	[BZ #5995]
+	* stdlib/strtod_l.c: Use correct sign for result in one more
+	underflow case.
+	Patch by Eric Blake <ebb9@byu.net>.
+
 2008-03-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list: Add open

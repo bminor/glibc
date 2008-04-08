@@ -1,14 +1,15 @@
-# Translation of libc-2.7 to Dutch.
-# Copyright (C) 2004, 2006, 2007 Free Software Foundation, Inc.
+# Dutch translations for libc.
+# Copyright (C) 2007 Free Software Foundation, Inc.
+# This file is distributed under the same license as the glibc package.
 #
 # Elros Cyriatan <cyriatan@fastmail.fm>, 2004.
-# Benno Schulenberg <benno@vertaalt.nl>, 2006, 2007.
+# Benno Schulenberg <benno@vertaalt.nl>, 2006, 2007, 2008.
 msgid ""
 msgstr ""
 "Project-Id-Version: libc-2.7\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-10-15 21:18-0700\n"
-"PO-Revision-Date: 2007-11-14 21:31+0100\n"
+"PO-Revision-Date: 2008-04-05 22:04+0200\n"
 "Last-Translator: Benno Schulenberg <benno@vertaalt.nl>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "MIME-Version: 1.0\n"
@@ -322,7 +323,7 @@ msgstr ""
 "\n"
 "  -?,--help          deze hulptekst tonen\n"
 "     --usage         een korte gebruikssamenvatting tonen\n"
-"  -V,--version       versie-informatie tonen\n"
+"  -V,--version       programmaversie tonen\n"
 "\n"
 "Voor het rapporteren van gebreken in dit programma, zie:\n"
 "  <http://www.gnu.org/software/libc/bugs.html>.\\n"
@@ -940,7 +941,7 @@ msgstr ""
 "  -u, --unused            ongebruikte directe afhankelijkheden tonen\n"
 "  -v, --verbose           breedsprakige uitvoer\n"
 "\n"
-"      --version           versie-informatie tonen\n"
+"      --version           programmaversie tonen\n"
 "      --help              deze hulptekst tonen\n"
 "\n"
 "Voor het rapporteren van fouten, zie:\n"
@@ -1442,24 +1443,24 @@ msgstr "Teken ligt buiten bereik voor UTF-8"
 #: locale/programs/charmap-dir.c:59
 #, c-format
 msgid "cannot read character map directory `%s'"
-msgstr "kan tekenskaartmap '%s' niet lezen"
+msgstr "kan tekensetdefinitiesmap '%s' niet lezen"
 
 #: locale/programs/charmap.c:138
 #, c-format
 msgid "character map file `%s' not found"
-msgstr "kan tekenskaartbestand '%s' niet vinden"
+msgstr "kan tekensetdefinitiebestand '%s' niet vinden"
 
 #: locale/programs/charmap.c:195
 #, c-format
 msgid "default character map file `%s' not found"
-msgstr "kan standaard-tekenskaartbestand '%s' niet vinden"
+msgstr "kan standaard tekensetdefinitiebestand '%s' niet vinden"
 
 #: locale/programs/charmap.c:258
 #, c-format
 msgid "character map `%s' is not ASCII compatible, locale not ISO C compliant\n"
 msgstr ""
-"tekenskaart '%s' is niet ASCII-compatibel;\n"
-"de locale voldoet niet aan ISO C\n"
+"tekensetdefinitie '%s' is niet ASCII-compatibel;\n"
+"de taalregio voldoet niet aan ISO C\n"
 
 #: locale/programs/charmap.c:337
 #, c-format
@@ -1722,7 +1723,7 @@ msgstr "%s: syntaxfout"
 #: locale/programs/ld-collate.c:417
 #, c-format
 msgid "`%.*s' already defined in charmap"
-msgstr "'%.*s' is al gedefinieerd in tekenskaart"
+msgstr "'%.*s' is al gedefinieerd in tekensetdefinitie"
 
 #: locale/programs/ld-collate.c:426
 #, c-format
@@ -1983,7 +1984,7 @@ msgstr "%s: 'endif' zonder bijpassende 'ifdef' of 'ifndef'"
 #: locale/programs/ld-ctype.c:439
 #, c-format
 msgid "No character set name specified in charmap"
-msgstr "Geen tekensetnaam aangegeven in tekenskaart"
+msgstr "Geen tekensetnaam aangegeven in tekensetdefinitie"
 
 #: locale/programs/ld-ctype.c:468
 #, c-format
@@ -2023,7 +2024,7 @@ msgstr "<SP>-teken mag niet in klasse '%s' zitten"
 #: locale/programs/ld-ctype.c:599
 #, c-format
 msgid "character <SP> not defined in character map"
-msgstr "<SP>-teken is niet gedefinieerd in tekenskaart"
+msgstr "<SP>-teken is niet gedefinieerd in tekensetdefinitie"
 
 #: locale/programs/ld-ctype.c:714
 #, c-format
@@ -2033,12 +2034,12 @@ msgstr "het aantal items in de cijferscategorie is geen veelvoud van tien"
 #: locale/programs/ld-ctype.c:763
 #, c-format
 msgid "no input digits defined and none of the standard names in the charmap"
-msgstr "er zijn geen invoercijfers gedefinieerd en geen van de standaardnamen zit in de tekenskaart"
+msgstr "er zijn geen invoercijfers gedefinieerd en geen van de standaardnamen zit in de tekensetdefinitie"
 
 #: locale/programs/ld-ctype.c:828
 #, c-format
 msgid "not all characters used in `outdigit' are available in the charmap"
-msgstr "niet alle tekens gebruikt in 'outdigit' zijn beschikbaar in de tekenskaart"
+msgstr "niet alle tekens in 'outdigit' zijn beschikbaar in de tekensetdefinitie"
 
 #: locale/programs/ld-ctype.c:845
 #, c-format
@@ -2058,12 +2059,12 @@ msgstr "implementatiegrens: er zijn niet meer dan %Zd tekenklasses toegestaan"
 #: locale/programs/ld-ctype.c:1277
 #, c-format
 msgid "character map `%s' already defined"
-msgstr "tekenskaart '%s' is al gedefinieerd"
+msgstr "tekensetdefinitie '%s' is al gedefinieerd"
 
 #: locale/programs/ld-ctype.c:1283
 #, c-format
 msgid "implementation limit: no more than %d character maps allowed"
-msgstr "implementatiegrens: er zijn niet meer dan %d tekenskaarten toegestaan"
+msgstr "implementatiegrens: er zijn niet meer dan %d tekensetdefinities toegestaan"
 
 #: locale/programs/ld-ctype.c:1548 locale/programs/ld-ctype.c:1673
 #: locale/programs/ld-ctype.c:1779 locale/programs/ld-ctype.c:2471
@@ -2102,7 +2103,7 @@ msgstr "%s: syntaxfout in definitie van nieuwe tekenklasse"
 #: locale/programs/ld-ctype.c:2318
 #, c-format
 msgid "%s: syntax error in definition of new character map"
-msgstr "%s: syntaxfout in definitie van nieuwe tekenskaart"
+msgstr "%s: syntaxfout in nieuwe tekensetdefinitie"
 
 #: locale/programs/ld-ctype.c:2493
 msgid "ellipsis range must be marked by two operands of same type"
@@ -2161,7 +2162,7 @@ msgstr "%s: teken '%s' is niet gedefinieerd maar is nodig als standaardwaarde"
 #: locale/programs/ld-ctype.c:3297 locale/programs/ld-ctype.c:3364
 #, c-format
 msgid "%s: character `%s' in charmap not representable with one byte"
-msgstr "%s: teken '%s' in de tekenskaart is niet te representeren met één byte"
+msgstr "%s: teken '%s' in de tekensetdefinitie is niet te representeren met één byte"
 
 #: locale/programs/ld-ctype.c:3408 locale/programs/ld-ctype.c:3433
 #, c-format
@@ -2171,12 +2172,12 @@ msgstr "%s: teken '%s' is nodig als standaardwaarde maar niet te representeren m
 #: locale/programs/ld-ctype.c:3489
 #, c-format
 msgid "no output digits defined and none of the standard names in the charmap"
-msgstr "er zijn geen uitvoercijfers gedefinieerd en geen van de standaardnamen zit in de tekenskaart"
+msgstr "er zijn geen uitvoercijfers gedefinieerd en geen van de standaardnamen zit in de tekensetdefinitie"
 
 #: locale/programs/ld-ctype.c:3780
 #, c-format
 msgid "%s: transliteration data from locale `%s' not available"
-msgstr "%s: transliteratiegegevens van locale '%s' zijn niet beschikbaar"
+msgstr "%s: transliteratiegegevens van taalregio '%s' zijn niet beschikbaar"
 
 #: locale/programs/ld-ctype.c:3881
 #, c-format
@@ -2380,7 +2381,7 @@ msgstr "niet-symbolische tekenwaarden zouden niet gebruikt moeten worden"
 #: locale/programs/linereader.c:816
 #, c-format
 msgid "symbol `%.*s' not in charmap"
-msgstr "symbool '%.*s' zit niet in de tekenskaart"
+msgstr "symbool '%.*s' zit niet in de tekensetdefinitie"
 
 #: locale/programs/linereader.c:837
 #, c-format
@@ -2393,11 +2394,11 @@ msgstr "Systeeminformatie:"
 
 #: locale/programs/locale.c:76
 msgid "Write names of available locales"
-msgstr "namen van beschikbare locales tonen"
+msgstr "namen van beschikbare taalregio's tonen"
 
 #: locale/programs/locale.c:78
 msgid "Write names of available charmaps"
-msgstr "namen van beschikbare tekenskaarten tonen"
+msgstr "namen van beschikbare tekensetdefinities tonen"
 
 #: locale/programs/locale.c:79
 msgid "Modify output format:"
@@ -2405,15 +2406,15 @@ msgstr "Aanpassing van uitvoer:"
 
 #: locale/programs/locale.c:80
 msgid "Write names of selected categories"
-msgstr "namen van geselecteerde categorieën tonen"
+msgstr "namen van de geselecteerde categorieën tonen"
 
 #: locale/programs/locale.c:81
 msgid "Write names of selected keywords"
-msgstr "namen van geselecteerde sleutelwoorden tonen"
+msgstr "namen van de geselecteerde sleutelwoorden tonen"
 
 #: locale/programs/locale.c:82
 msgid "Print more information"
-msgstr "breedsprakige uitvoer"
+msgstr "uitgebreide uitvoer produceren"
 
 #: locale/programs/locale.c:87
 msgid ""
@@ -2421,7 +2422,7 @@ msgid ""
 "<http://www.gnu.org/software/libc/bugs.html>.\n"
 msgstr ""
 "  \n"
-"Informatie over locales weergeven.\vVoor het rapporteren van fouten, zie:\n"
+"Informatie over taalregio-instellingen weergeven.\vVoor het rapporteren van fouten, zie:\n"
 "  <http://www.gnu.org/software/libc/bugs.html>.\n"
 
 #: locale/programs/locale.c:92
@@ -2435,22 +2436,22 @@ msgstr ""
 #: locale/programs/locale.c:193
 #, c-format
 msgid "Cannot set LC_CTYPE to default locale"
-msgstr "Kan LC_TYPE niet op de standaard-locale instellen"
+msgstr "Kan LC_TYPE niet op de standaard-taalregio instellen"
 
 #: locale/programs/locale.c:195
 #, c-format
 msgid "Cannot set LC_MESSAGES to default locale"
-msgstr "Kan LC_MESSAGES niet op de standaard-locale instellen"
+msgstr "Kan LC_MESSAGES niet op de standaard-taalregio instellen"
 
 #: locale/programs/locale.c:208
 #, c-format
 msgid "Cannot set LC_COLLATE to default locale"
-msgstr "Kan LC_COLLATE niet op de standaard-locale instellen"
+msgstr "Kan LC_COLLATE niet op de standaard-taalregio instellen"
 
 #: locale/programs/locale.c:224
 #, c-format
 msgid "Cannot set LC_ALL to default locale"
-msgstr "Kan LC_ALL niet op de standaard-locale instellen"
+msgstr "Kan LC_ALL niet op de standaard-taalregio instellen"
 
 #: locale/programs/locale.c:500
 #, c-format
@@ -2507,7 +2508,7 @@ msgstr "geen nieuwe gegevens aan archief toevoegen"
 
 #: locale/programs/localedef.c:140
 msgid "Add locales named by parameters to archive"
-msgstr "genoemde locales aan archief toevoegen"
+msgstr "genoemde taalregio's aan archief toevoegen"
 
 #: locale/programs/localedef.c:141
 msgid "Replace existing archive content"
@@ -2515,7 +2516,7 @@ msgstr "bestaande inhoud van archief vervangen"
 
 #: locale/programs/localedef.c:143
 msgid "Remove locales named by parameters from archive"
-msgstr "genoemde locales uit archief verwijderen"
+msgstr "genoemde taalregio's uit archief verwijderen"
 
 #: locale/programs/localedef.c:144
 msgid "List content of archive"
@@ -2523,13 +2524,13 @@ msgstr "inhoud van archief weergeven"
 
 #: locale/programs/localedef.c:146
 msgid "locale.alias file to consult when making archive"
-msgstr "te raadplegen aliassenbestand"
+msgstr "te raadplegen aliassenbestand tijdens archivering"
 
 #: locale/programs/localedef.c:151
 msgid "Compile locale specification"
 msgstr ""
 "  \n"
-"Een locale-specificatie compileren."
+"De definitie van een taalregio compileren."
 
 #: locale/programs/localedef.c:154
 msgid ""
@@ -2555,7 +2556,7 @@ msgstr "FATAAL: systeem definieert '_POSIX2_LOCALEDEF' niet"
 #: locale/programs/localedef.c:599 locale/programs/localedef.c:619
 #, c-format
 msgid "cannot open locale definition file `%s'"
-msgstr "kan locale-definitiebestand '%s' niet openen"
+msgstr "kan taalregiodefinitiebestand '%s' niet openen"
 
 #: locale/programs/localedef.c:285
 #, c-format
@@ -2570,21 +2571,21 @@ msgid ""
 "                       locale path    : %s\n"
 "%s"
 msgstr ""
-"Systeemmap voor tekenskaarten      : %s\n"
-"                repertoire-kaarten : %s\n"
-"                locale-pad         : %s\n"
+"Systeemmap voor tekensetdefinities: %s\n"
+"            voor repertoirekaarten: %s\n"
+"            en het taalregiopad is: %s\n"
 "\n"
 "%s"
 
 #: locale/programs/localedef.c:567
 #, c-format
 msgid "circular dependencies between locale definitions"
-msgstr "circulaire afhankelijkheid tussen locale-definities"
+msgstr "circulaire afhankelijkheid tussen taalregiodefinities"
 
 #: locale/programs/localedef.c:573
 #, c-format
 msgid "cannot add already read locale `%s' a second time"
-msgstr "kan de reeds gelezen locale '%s' niet nogmaals toevoegen"
+msgstr "kan de reeds gelezen taalregio '%s' niet nogmaals toevoegen"
 
 #: locale/programs/locarchive.c:88 locale/programs/locarchive.c:261
 #, c-format
@@ -2610,17 +2611,17 @@ msgstr "kan archiefkop niet in het geheugen plaatsen"
 #: locale/programs/locarchive.c:156
 #, c-format
 msgid "failed to create new locale archive"
-msgstr "aanmaken van een nieuw locale-archief is mislukt"
+msgstr "aanmaken van een nieuw taalregio-archief is mislukt"
 
 #: locale/programs/locarchive.c:168
 #, c-format
 msgid "cannot change mode of new locale archive"
-msgstr "kan modus van het nieuwe locale-archief niet wijzigen"
+msgstr "kan modus van het nieuwe taalregio-archief niet wijzigen"
 
 #: locale/programs/locarchive.c:255
 #, c-format
 msgid "cannot map locale archive file"
-msgstr "kan locale-archief niet in het geheugen plaatsen"
+msgstr "kan taalregio-archief niet in het geheugen plaatsen"
 
 #: locale/programs/locarchive.c:331
 #, c-format
@@ -2630,12 +2631,12 @@ msgstr "kan nieuwe archief niet vergrendelen"
 #: locale/programs/locarchive.c:396
 #, c-format
 msgid "cannot extend locale archive file"
-msgstr "kan locale-archiefbestand niet uitbreiden"
+msgstr "kan taalregio-archiefbestand niet uitbreiden"
 
 #: locale/programs/locarchive.c:405
 #, c-format
 msgid "cannot change mode of resized locale archive"
-msgstr "kan modus van aangepast locale-archief niet wijzigen"
+msgstr "kan modus van aangepast taalregio-archief niet wijzigen"
 
 #: locale/programs/locarchive.c:413
 #, c-format
@@ -2645,17 +2646,17 @@ msgstr "kan nieuwe archief niet hernoemen"
 #: locale/programs/locarchive.c:466
 #, c-format
 msgid "cannot open locale archive \"%s\""
-msgstr "kan locale-archief '%s' niet openen"
+msgstr "kan taalregio-archief '%s' niet openen"
 
 #: locale/programs/locarchive.c:471
 #, c-format
 msgid "cannot stat locale archive \"%s\""
-msgstr "kan status van locale-archief '%s' niet opvragen"
+msgstr "kan status van taalregio-archief '%s' niet opvragen"
 
 #: locale/programs/locarchive.c:490
 #, c-format
 msgid "cannot lock locale archive \"%s\""
-msgstr "kan locale-archief '%s' niet vergrendelen"
+msgstr "kan taalregio-archief '%s' niet vergrendelen"
 
 #: locale/programs/locarchive.c:513
 #, c-format
@@ -2665,19 +2666,19 @@ msgstr "kan archiefkop niet lezen"
 #: locale/programs/locarchive.c:573
 #, c-format
 msgid "locale '%s' already exists"
-msgstr "locale '%s' bestaat al"
+msgstr "taalregio '%s' bestaat al"
 
 #: locale/programs/locarchive.c:804 locale/programs/locarchive.c:819
 #: locale/programs/locarchive.c:831 locale/programs/locarchive.c:843
 #: locale/programs/locfile.c:344
 #, c-format
 msgid "cannot add to locale archive"
-msgstr "kan niet aan locale-archief toevoegen"
+msgstr "kan niet aan taalregio-archief toevoegen"
 
 #: locale/programs/locarchive.c:998
 #, c-format
 msgid "locale alias file `%s' not found"
-msgstr "kan locale-aliassenbestand '%s' niet vinden"
+msgstr "kan taalregio-aliassenbestand '%s' niet vinden"
 
 #: locale/programs/locarchive.c:1142
 #, c-format
@@ -2702,7 +2703,7 @@ msgstr "kan map '%s' niet openen: %s -- genegeerd"
 #: locale/programs/locarchive.c:1233
 #, c-format
 msgid "incomplete set of locale files in \"%s\""
-msgstr "onvolledige verzameling van locale-bestanden in '%s'"
+msgstr "onvolledige verzameling van taalregiobestanden in '%s'"
 
 #: locale/programs/locarchive.c:1297
 #, c-format
@@ -2712,7 +2713,7 @@ msgstr "kan niet alle bestanden in '%s' lezen -- genegeerd"
 #: locale/programs/locarchive.c:1367
 #, c-format
 msgid "locale \"%s\" not in archive"
-msgstr "locale '%s' zit niet in archief"
+msgstr "taalregio '%s' zit niet in het archief"
 
 #: locale/programs/locfile.c:132
 #, c-format
@@ -2721,7 +2722,7 @@ msgstr "argument van '%s' moet een enkel teken zijn"
 
 #: locale/programs/locfile.c:252
 msgid "syntax error: not inside a locale definition section"
-msgstr "syntaxfout: niet binnen een locale-definitie-sectie"
+msgstr "syntaxfout: niet binnen een taalregiodefinitie-sectie"
 
 #: locale/programs/locfile.c:626
 #, c-format
@@ -2744,7 +2745,7 @@ msgstr "argument van 'copy' dient een tekenreeks te zijn"
 
 #: locale/programs/locfile.c:786
 msgid "locale name should consist only of portable characters"
-msgstr "een locale-naam mag alleen uit overdraagbare tekens bestaan"
+msgstr "een taalregionaam mag alleen uit overdraagbare tekens bestaan"
 
 #: locale/programs/locfile.c:805
 msgid "no other keyword shall be specified when `copy' is used"
@@ -2880,7 +2881,7 @@ msgstr ""
 "\n"
 "  -?,--help              deze hulptekst tonen\n"
 "     --usage             een korte gebruikssamenvatting tonen\n"
-"  -V,--version           versie-informatie tonen\n"
+"  -V,--version           programmaversie tonen\n"
 "\n"
 " De volgende opties zijn alleen bij grafische uitvoer van toepassing:\n"
 "  -t,--time-based        de grafiek lineair in de tijd maken\n"
@@ -4356,59 +4357,59 @@ msgstr "Onbekende variabele '%s'"
 
 #: posix/getopt.c:571 posix/getopt.c:587
 #, c-format
-msgid "%s: option '%s' is ambiguous\n"
+msgid "%s: option `%s' is ambiguous\n"
 msgstr "%s: optie '%s' is niet eenduidig\n"
 
 #: posix/getopt.c:620 posix/getopt.c:624
 #, c-format
-msgid "%s: option '--%s' doesn't allow an argument\n"
+msgid "%s: option `--%s' doesn't allow an argument\n"
 msgstr "%s: optie '--%s' staat geen argument toe\n"
 
 #: posix/getopt.c:633 posix/getopt.c:638
 #, c-format
-msgid "%s: option '%c%s' doesn't allow an argument\n"
+msgid "%s: option `%c%s' doesn't allow an argument\n"
 msgstr "%s: optie '%c%s' staat geen argument toe\n"
 
 #: posix/getopt.c:681 posix/getopt.c:700 posix/getopt.c:1016
 #: posix/getopt.c:1035
 #, c-format
-msgid "%s: option '%s' requires an argument\n"
+msgid "%s: option `%s' requires an argument\n"
 msgstr "%s: optie '%s' vereist een argument\n"
 
 #: posix/getopt.c:738 posix/getopt.c:741
 #, c-format
-msgid "%s: unrecognized option '--%s'\n"
+msgid "%s: unrecognized option `--%s'\n"
 msgstr "%s: onbekende optie '--%s'\n"
 
 #: posix/getopt.c:749 posix/getopt.c:752
 #, c-format
-msgid "%s: unrecognized option '%c%s'\n"
+msgid "%s: unrecognized option `%c%s'\n"
 msgstr "%s: onbekende optie '%c%s'\n"
 
 #: posix/getopt.c:804 posix/getopt.c:807
 #, c-format
-msgid "%s: illegal option -- '%c'\n"
+msgid "%s: illegal option -- %c\n"
 msgstr "%s: ongeldige optie -- %c\n"
 
 #: posix/getopt.c:813 posix/getopt.c:816
 #, c-format
-msgid "%s: invalid option -- '%c'\n"
+msgid "%s: invalid option -- %c\n"
 msgstr "%s: ongeldige optie -- %c\n"
 
 #: posix/getopt.c:868 posix/getopt.c:884 posix/getopt.c:1088
 #: posix/getopt.c:1106
 #, c-format
-msgid "%s: option requires an argument -- '%c'\n"
+msgid "%s: option requires an argument -- %c\n"
 msgstr "%s: optie vereist een argument -- %c\n"
 
 #: posix/getopt.c:937 posix/getopt.c:953
 #, c-format
-msgid "%s: option '-W %s' is ambiguous\n"
+msgid "%s: option `-W %s' is ambiguous\n"
 msgstr "%s: optie '-W %s' is niet eenduidig\n"
 
 #: posix/getopt.c:977 posix/getopt.c:995
 #, c-format
-msgid "%s: option '-W %s' doesn't allow an argument\n"
+msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: optie '-W %s' staat geen argument toe\n"
 
 #: posix/regcomp.c:135
@@ -5345,7 +5346,7 @@ msgstr "Onjuist apparaat"
 #. TRANS A file that isn't a directory was specified when a directory is required.
 #: sysdeps/gnu/errlist.c:229
 msgid "Not a directory"
-msgstr "Niet een map"
+msgstr "Is geen map"
 
 #. TRANS File is a directory; you cannot open a directory for writing,
 #. TRANS or create or remove hard links to it.
