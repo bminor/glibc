@@ -19,7 +19,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: @glibcversion@
-Release: 13
+Release: 14
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -976,6 +976,16 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Tue Apr  8 2008 Jakub Jelinek <jakub@redhat.com> 2.7.90-14
+- update to trunk
+  - misc fixes (BZ#5443, BZ#5475, BZ#5478, BZ#5939, BZ#5979, BZ#5995,
+    BZ#6004, BZ#6007, BZ#6020, BZ#6021, BZ#6042)
+  - change mtrace to keep perl 5.10 quiet (#441082)
+  - don't share conversion state between mbtowc and wctomb (#438687)
+  - if st_blksize is too large and malloc fails, retry with smaller
+    buffer in opendir (#430768)
+  - correct *printf overflow test (#358111)
+
 * Fri Mar 28 2008 Jakub Jelinek <jakub@redhat.com> 2.7.90-13
 - update to trunk
   - don't define ARG_MAX in <limits.h>, as it is no longer
