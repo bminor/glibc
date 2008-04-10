@@ -1,3 +1,113 @@
+2008-02-21  Alan Modra  <amodra@bigpond.net.au>
+
+	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_type_class):
+	Always set ELF_RTYPE_CLASS_PLT.
+	(elf_machine_lookup_noexec_p, elf_machine_lookup_noplt_p): Delete.
+
+2008-04-03  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power4/hp-timing.c: New file.
+	* sysdeps/powerpc/powerpc32/power4/hp-timing.h: New file.
+	* sysdeps/powerpc/powerpc64/hp-timing.h [_ARCH_PWR4] (HP_TIMING_NOW):
+	For ISA 2.01 and later replace mftb with mfspr 268.
+
+2008-02-19  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	[BZ #5768]
+	* sysdeps/powerpc/fpu/Makefile (libm-tests): Add test-powerpc-snan.
+	* sysdeps/powerpc/fpu/test-powerpc-snan.c: New file.
+
+2008-02-18  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	[BZ #5768]
+	* sysdeps/powerpc/powerpc32/fpu/s_isnan.S: New file.
+	* sysdeps/powerpc/powerpc32/fpu/s_isnan.c: Removed.
+	* sysdeps/powerpc/powerpc64/fpu/s_isnan.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_isnan.c: Removed.
+
+2008-04-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/tst-makecontext.c (othervar): New variable.
+	(cf): Test sign extending the argument to long.
+
+2008-03-03  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power5/fpu/s_isnan.S: New file.
+	* sysdeps/powerpc/powerpc32/power5/fpu/s_isnanf.S: New file.
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_isnan.S: New file.
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_isnanf.S: New file.
+	* sysdeps/powerpc/powerpc64/power5/fpu/s_isnan.S: New file.
+	* sysdeps/powerpc/powerpc64/power6/fpu/s_isnan.S: New file.
+	* sysdeps/powerpc/powerpc64/power6x/fpu/s_isnan.S: New file.
+
+2008-02-22  Alan Modra  <amodra@bigpond.net.au>
+
+	* elf/Makefile (tests): Substitute tests-vis-yes here.
+	(tests-vis-yes): Delete.
+	(modules-name, modules-vis-yes): Similarly.
+
+2008-02-12  Pete Eberlein  <eberlein@us.ibm.com>
+
+	[BZ #4407]
+	* sysdeps/ieee754/ldbl-128/e_lgammal_r.c (__ieee754_lgammal_r):
+	Preserve sign in signgamp when x is zero.
+
+2007-10-26  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power4/fpu/w_sqrt.S: New File.
+	* sysdeps/powerpc/powerpc32/power4/fpu/w_sqrt.c: Removed.
+	* sysdeps/powerpc/powerpc32/power4/fpu/w_sqrtf.S: New File.
+	* sysdeps/powerpc/powerpc32/power4/fpu/w_sqrtf.c: Removed.
+	* sysdeps/powerpc/powerpc32/power5/fpu/w_sqrt.S: New File.
+	* sysdeps/powerpc/powerpc32/power5/fpu/w_sqrtf.S: New File.
+
+2008-04-09  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #4314]
+	* sysdeps/i386/i686/memcpy.S: Optimize copying of equally aligned
+	buffers.
+
+	[BZ #5209]
+	* sysdeps/unix/sysv/syscalls.list: The times syscall doesn't have
+	a reserved error value.
+
+	* stdlib/tst-makecontext.c: Change parameter to cf to negative
+	value to check for correct sign extension.
+
+	[BZ #5436]
+	* sysdeps/unix/sysv/linux/x86_64/makecontext.c (__makecontext):
+	Copy 64-bit parameter values even though this is not required in
+	the standard.
+
+	* sysdeps/unix/sysv/linux/x86_64/vfork.S (__vfork): Record return
+	PC save.
+
+2008-02-14  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/i386/vfork.S (__vfork): Record return
+	PC save.
+
+2008-04-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* nss_files/files-XXX.c (_nss_files_getXXent_r): Restore saved errno.
+
+2008-04-09  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5998]
+	* libio/iofwrite.c (_IO_fwrite): Return correct count if flushing
+	in line-buffered stream failed.
+	* libio/iofwrite_u.c (fwrite_unlocked): Likewise.
+
+2008-04-08  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #6024]
+	* scripts/abi-versions.awk: If the version specified by
+	--enable-oldest-abi is older than the first version for this
+	architecture, use the default version.
+
+	* locale/programs/ld-collate.c (collate_read): Ignore script lines
+	as well when ignoring the whole category.
+
 2008-04-07  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #6042]

@@ -281,8 +281,8 @@ GCC="gcc -m64"
 GXX="g++ -m64"
 %endif
 
-#BuildFlags="$BuildFlags -DNDEBUG=1 -fasynchronous-unwind-tables"
-BuildFlags="$BuildFlags -fasynchronous-unwind-tables"
+BuildFlags="$BuildFlags -DNDEBUG=1 -fasynchronous-unwind-tables"
+#BuildFlags="$BuildFlags -fasynchronous-unwind-tables"
 EnableKernel="--enable-kernel=%{enablekernel}"
 echo "$GCC" > Gcc
 AddOns=`echo */configure | sed -e 's!/configure!!g;s!\(linuxthreads\|nptl\|rtkaio\|powerpc-cpu\)\( \|$\)!!g;s! \+$!!;s! !,!g;s!^!,!;/^,\*$/d'`
@@ -976,6 +976,14 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Thu Apr 10 2008 Jakub Jelinek <jakub@redhat.com> 2.7.90-15
+- update to trunk
+  - misc fixes (BZ#4314, BZ#4407, BZ#5209, BZ#5436, BZ#5768, BZ#5998,
+    BZ#6024)
+- restart sshd in %post when upstart is used - it doesn't have
+  /dev/initctl (#441763)
+- disable assert checking again
+
 * Tue Apr  8 2008 Jakub Jelinek <jakub@redhat.com> 2.7.90-14
 - update to trunk
   - misc fixes (BZ#5443, BZ#5475, BZ#5478, BZ#5939, BZ#5979, BZ#5995,
