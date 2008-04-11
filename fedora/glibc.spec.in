@@ -19,7 +19,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: @glibcversion@
-Release: 15
+Release: 16
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -976,10 +976,18 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri Apr 11 2008 Jakub Jelinek <jakub@redhat.com> 2.7.90-16
+- update to trunk
+  - misc fixes (BZ#4997, BZ#5741)
+  - make sure all users of __libc_setlocale_lock know it is
+    now a rwlock
+  - fix ppc/ppc64 compatibility _sys_errlist and _sys_siglist
+    symbols
+
 * Thu Apr 10 2008 Jakub Jelinek <jakub@redhat.com> 2.7.90-15
 - update to trunk
   - misc fixes (BZ#4314, BZ#4407, BZ#5209, BZ#5436, BZ#5768, BZ#5998,
-    BZ#6024)
+		BZ#6024)
 - restart sshd in %post when upstart is used - it doesn't have
   /dev/initctl (#441763)
 - disable assert checking again
@@ -987,7 +995,7 @@ rm -f *.filelist*
 * Tue Apr  8 2008 Jakub Jelinek <jakub@redhat.com> 2.7.90-14
 - update to trunk
   - misc fixes (BZ#5443, BZ#5475, BZ#5478, BZ#5939, BZ#5979, BZ#5995,
-    BZ#6004, BZ#6007, BZ#6020, BZ#6021, BZ#6042)
+		BZ#6004, BZ#6007, BZ#6020, BZ#6021, BZ#6042)
   - change mtrace to keep perl 5.10 quiet (#441082)
   - don't share conversion state between mbtowc and wctomb (#438687)
   - if st_blksize is too large and malloc fails, retry with smaller

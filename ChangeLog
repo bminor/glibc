@@ -1,3 +1,64 @@
+2007-11-20  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	[BZ #4997]
+	* sysdeps/powerpc/powerpc32/fpu/s_lround.S (__lround): Fixed erroneous
+	result when x is +/-nextafter(+/-0.5,-/+1) i.e. all 1's in the
+	mantissa.
+	* sysdeps/powerpc/powerpc32/power4/fpu/s_llround.S (__llround):
+	Likewise.  Also account for when x is an odd number between 2^52
+	and 2^53-1.
+	* sysdeps/powerpc/powerpc64/fpu/s_llround.S (__llround): Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_llroundf.S (__llroundf): Likewise.
+	* math/libm-test.inc (lround_test, llround_test): Added test cases to
+	detect aforementioned erroneous conditions.
+
+2008-04-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* configure.in: Check for -fno-section-anchors in addition to
+	-fno-toplevel-reorder.
+
+2008-04-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/features.h (__GLIBC_MINOR__): Bump to 8.
+
+	* sysdeps/powerpc/powerpc32/fpu/s_lroundf.S: Remove duplicate comment.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_llroundf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_llroundf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_lrint.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_lround.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_lroundf.S: Likewise.
+
+2008-04-11  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #5443]
+	* time/era.c: Transform __libc_setlocale_lock into rwlock.
+	* time/alt_digit.c: Likewise.
+	* wcsmbs/wcsmbsload.c: Likewise.
+
+2008-04-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* version.h (VERSION): Bump to 2.8.
+
+	* timzeone/asia: Update from tzdata2008b.
+	* timezone/backward: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/iso3166.tab: Likewise.
+	* timezone/leapseconds: Likewise.
+	* timezone/zone.tab: Likewise.
+	* timezone/private.h: Update from tzcode2008a.
+	* timezone/zdump.c: Likewise.
+	* timezone/zic.c: Likewise.
+
+2008-01-24  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	[BZ #5741]
+	* sysdeps/powerpc/powerpc64/dl-machine.h (PPC_DCBT, PPC_DCBF):
+	Define additonal Data Cache Block instruction macros.
+	(elf_machine_fixup_plt): Add dcbt for opd and plt entries.
+	Replace dcbst with dcbf and sync with sync/isync.
+
 2008-02-21  Alan Modra  <amodra@bigpond.net.au>
 
 	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_type_class):
