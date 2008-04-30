@@ -1,3 +1,43 @@
+2008-04-25  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/semctl.c (semctl):
+	Pass "union semun" properly in to sys_ipc, it must be passed
+	by value, not by reference.
+
+2008-04-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/Makefile (nscd-cflags): Set back to -fpie.
+	* nscd/nscd.h (mem_in_flight): Add attribute_tls_model_ie.
+	* nscd/connections.c (mem_in_flight): Likewise.
+
+	* nscd/nscd.h (dbs): Make hidden.
+
+2008-04-15  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5381]
+	* nscd/nscd.h: Define enum in_flight, mem_in_flight, and
+	mem_in_flight_list variables.  Add new parameter to mempool_alloc
+	prototype.
+	* nscd/mem.c (mempool_alloc): Take additional parameter.  Initialize
+	appropriate mem_in_flight element.
+	(gc): Take allocations which have not yet been committed to the
+	database into account.
+	* nscd/cache.c (cache_add): Add new parameter to mempool_alloc call.
+	Reset mem_in_flight before returning.
+	* nscd/connections.c (nscd_run_worker): Initialize mem_in_flight and
+	cue it up in mem_in_flight_list.
+	* nscd/aicache.c: Adjust mempool_alloc call.
+	* nscd/grpcache.c: Likewise.
+	* nscd/hstcache.c: Likewise.
+	* nscd/initgrcache.c: Likewise.
+	* nscd/pwdcache.c: Likewise.
+	* nscd/servicescache.c: Likewise.
+	* nscd/Makefile (nscd-flags): Until ld is fixed, use -fpic instead
+	of -fpie.
+
+	* nscd/connections.c (handle_request): Provide better error message
+	in case SELinux forbids the service.
+
 2008-04-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/bits/mathinline.h (__signbitl):
