@@ -73,3 +73,13 @@ CFLAGS-.o += -mno-tls-direct-seg-refs
 CPPFLAGS-.oS += -DNO_TLS_DIRECT_SEG_REFS
 CFLAGS-.oS += -mno-tls-direct-seg-refs
 endif
+
+ifeq ($(subdir),elf)
+sysdep-dl-routines += tlsdesc dl-tlsdesc
+sysdep_routines += tlsdesc dl-tlsdesc
+sysdep-rtld-routines += tlsdesc dl-tlsdesc
+endif
+
+ifeq ($(subdir),csu)
+gen-as-const-headers += tlsdesc.sym
+endif

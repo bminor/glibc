@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 1999, 2003-2006, 2007 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 1999, 2003-2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -160,6 +160,11 @@ cache_add (int type, const void *key, size_t len, struct datahead *packet,
   if (newp == NULL)
     {
       ++table->head->addfailed;
+
+      /* If necessary mark the entry as unusable so that lookups will
+	 not use it.  */
+      if (first)
+	packet->usable = false;
 
       /* Mark the in-flight memory as unused.  */
       for (enum in_flight idx = 0; idx < IDX_record_data; ++idx)

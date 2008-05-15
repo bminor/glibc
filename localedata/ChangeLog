@@ -1,3 +1,21 @@
+2008-05-14  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #6438]
+	* locales/iso14651_t1_common: Add sorting data for Telugu.
+
+	[BZ #6447]
+	* locales/be_BY: Fix yesexpr.
+	Patch by Alexander Mikhailian <mikhailian@altern.org>.
+
+2008-04-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* charmaps/UTF-8: Update for Unicode v5.1.
+	* locales/i18n: Update for Unicode 5.
+
+2008-04-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-langinfo.sh: Adjust for latest fr_FR locale changes.
+
 2008-04-07  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #6021]

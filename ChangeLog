@@ -1,3 +1,291 @@
+2008-05-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/Makefile (distribute): Add str-two-way.h.
+
+2008-03-29  Eric Blake	<ebb9@byu.net>
+
+	Rewrite string searches to O(n) rather than O(n^2).
+	* string/str-two-way.h: New file.  For linear fixed-allocation
+	string searching.
+	* string/memmem.c: New implementation.
+	* string/strstr.c: New implementation.
+	* string/strcasestr.c: New implementation.
+
+2008-04-11  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regcomp.c (optimize_utf8): Add a note on why we test
+	opr.ctx_type.
+	(calc_first): Initialize constraint field.
+	(duplicate_node_closure): Use it instead of special casing ANCHORS.
+	Use search_duplicated_node to avoid loops.  Fix grammar.
+	(duplicate_node): Merge constraint field for all node types.
+	(calc_eclosure_iter): Look at constraint field for all node types.
+	* posix/regex_internal.c (create_cd_newstate): Don't look at
+	create_cd_newstate.
+
+2008-05-14  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #6428]
+	* configure.in: Don't use $CFLAGS when assembling, use $ASFLAGS.
+
+	[BZ #6442]
+	* string/endian.h: Add macros for fixed-size endian conversion.
+	* bits/byteswap.h: Allow inclusion from <endian.h>.
+	* sysdeps/i386/bits/byteswap.h: Likewise.
+	* sysdeps/ia64/bits/byteswap.h: Likewise.
+	* sysdeps/s390/bits/byteswap.h: Likewise.
+	* sysdeps/x86_64/bits/byteswap.h: Likewise.
+	* string/Makefile (tests): Add tst-endian.
+	* string/tst-endian.c: New file.
+
+	* iconvdata/run-iconv-test.sh: Use = instead of == in test.
+	Patch by Reuben Thomas.
+
+2008-05-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* iconvdata/Makefile (bug-iconv6-ENV, tst-iconv7-ENV): Define.
+
+2008-05-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/bug-iconv6.c (do_test): Use de_DE.UTF-8 locale.
+
+	[BZ #6461]
+	* iconv/gconv_simple.c (BODY for __gconv_transform_ascii_internal):
+	Add missing braces.
+	(BODY for __gconv_transform_internal_ascii): Likewise.
+
+	[BZ #6472]
+	* sysdeps/posix/getaddrinfo.c (get_scope): Loopback addresses have
+	to be treated like link-local addresses.
+	(match_prefix): Don't treat IPv4 loopback address special when
+	converting to v4 mapped addressed.
+
+	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Call _res_hconf_init
+	if necessary.
+	* posix/tst-rfc3484.c: Add dummy definition of _res_hconf_init.
+	* posix/tst-rfc3484-2.c: Likewise.
+	* posix/tst-rfc3484-3.c: Likewise.
+
+	* sysdeps/posix/getaddrinfo.c: Implement handling of DCCP, UDPlite,
+	and SCTP.
+
+	* nss/getent.c (ahosts_keys_int): Handle all known socket types.
+
+	* inet/netinet/in.h (IPPIPPROTO_DCCP, IPPROTO_UDPLITE): Define.
+
+	* sysdeps/unix/sysv/linux/bits/socket.h (SOCK_DCCP): Define.
+
+2008-05-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/lt.po: New file.  From Lituanian translation team.
+
+2008-01-30  Alexandre Oliva  <aoliva@redhat.com>
+
+	Introduce TLS descriptors for i386 and x86_64.
+	* include/inline-hashtab.h: New file, copied from 2005's
+	libiberty, with fix for memory leak imported afterwards by
+	Glauber de Oliveira Costa.
+	* elf/tlsdeschtab.h: New file.
+	* elf/dl-reloc.c (_dl_try_allocate_static_tls): Extract from...
+	(_dl_allocate_static_tls): ... here.  Rearrange failure path.
+	(CHECK_STATIC_TLS): Move to...
+	* elf/dynamic-link.h: ... this file.
+	(TRY_STATIC_TLS): New macro.
+	* elf/dl-conflict.c (CHECK_STATIC_TLS, TRY_STATIC_TLS): Override.
+	* elf/elf.h (R_386_TLS_GOTDESC, R_386_TLS_DESC_CALL,
+	R_386_TLS_DESC): Define.
+	(R_X86_64_PC64, R_X86_GOTOFF64, R_X86_64_GOTPC32): Merge from
+	binutils.
+	(R_X86_64_GOTPC32_TLSDESC, R_X86_64_TLSDESC_CALL,
+	R_X86_64_TLSDESC): Define.
+	(R_386_NUM, R_X86_64_NUM): Adjust.
+	* sysdeps/i386/Makefile (sysdep-dl-routines, sysdep_routines,
+	sysdep-rtld-routines): Add tlsdesc and dl-tlsdesc for elf subdir.
+	(gen-as-const-headers): Add tlsdesc.sym to csu subdir.
+	* sysdeps/i386/dl-lookupcfg.h: New file.  Introduce _dl_unmap to
+	release tlsdesc_table.
+	* sysdeps/i386/dl-machine.h: Include dl-tlsdesc.h.
+	(elf_machine_type_class): Mark R_386_TLS_DESC as PLT class.
+	(elf_machine_rel): Handle R_386_TLS_DESC.
+	(elf_machine_rela): Likewise.
+	(elf_machine_lazy_rel): Likewise.
+	(elf_machine_lazy_rela): Likewise.
+	* sysdeps/i386/dl-tls.h (struct dl_tls_index): Name it.
+	* sysdeps/i386/dl-tlsdesc.S: New file.
+	* sysdeps/i386/dl-tlsdesc.h: New file.
+	* sysdeps/i386/tlsdesc.c: New file.
+	* sysdeps/i386/tlsdesc.sym: New file.
+	* sysdeps/i386/bits/linkmap.h (struct link_map_machine): Add
+	tlsdesc_table.
+	* sysdeps/x86_64/Makefile (sysdep-dl-routines, sysdep_routines,
+	sysdep-rtld-routines): Add tlsdesc and dl-tlsdesc for elf subdir.
+	(gen-as-const-headers): Add tlsdesc.sym to csu subdir.
+	* sysdeps/x86_64/dl-lookupcfg.h: New file.  Introduce _dl_unmap to
+	release tlsdesc_table.
+	* sysdeps/x86_64/dl-machine.h: Include dl-tlsdesc.h.
+	(elf_machine_runtime_setup): Set up lazy TLSDESC GOT entry.
+	(elf_machine_type_class): Mark R_X86_64_TLSDESC as PLT class.
+	(elf_machine_rel): Handle R_X86_64_TLSDESC.
+	(elf_machine_rela): Likewise.
+	(elf_machine_lazy_rel): Likewise.
+	* sysdeps/x86_64/dl-tls.h (struct dl_tls_index): Name it.
+	(__tls_get_addr): Do not declare for non-shared compiles.
+	* sysdeps/x86_64/dl-tlsdesc.S: New file.
+	* sysdeps/x86_64/dl-tlsdesc.h: New file.
+	* sysdeps/x86_64/tlsdesc.c: New file.
+	* sysdeps/x86_64/tlsdesc.sym: New file.
+	* sysdeps/x86_64/bits/linkmap.h (struct link_map_machine): Add
+	tlsdesc_table for both 32- and 64-bit structs.
+
+2008-05-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-tls.c (__tls_get_addr): Optimize by moving slow path in
+	its own function.  This reduces the frame setup costs and more.
+
+2008-02-11  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #3406]
+	* sysdeps/ieee754/flt-32/w_expf.c (o_threshold): Correct value.
+	* math/libm-test.inc (exp_test): Test 88.72269439697265625.
+
+2008-05-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* io/openat.c (__openat_2): Also pass fd to __openat.
+	* io/openat64.c (__openat64_2): Also pass fd to __openat64.
+	Patch by Kristian Van Der Vliet <vanders@liqwyd.com>.
+
+	* string/tester.c (test_memcmp): Add a few more tests.
+	Patch by Mats Erik Andersson <ynglingatal@comhem.se>.
+
+2008-05-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/cache.c (cache_add): Before returning with failure and this
+	is the first use of the record, mark it as unusable.
+	* nscd/aicache.c: Don't touch the dataset after cache_add returns
+	reporting a failure.
+	* nscd/grpcache.c: Likewise
+	* nscd/hstcache.c: Likewise.
+	* nscd/initgrcache.c: Likewise.
+	* nscd/pwdcache.c: Likewise.
+	* nscd/servicecache.c: Likewise.
+
+2008-05-10  Roland McGrath  <roland@redhat.com>
+
+	[BZ #6505]
+	* sysdeps/unix/sysv/linux/sys/user.h: Replace with #error stub.
+
+2008-05-08  David S. Miller  <davem@davemloft.net>
+
+	* misc/truncate64.c (truncate64): Use __truncate not truncate.
+
+	* sysdeps/ieee754/ldbl-128/e_j0l.c (__ieee751_j0l): Use __finitel.
+	(__ieee754_y0l): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_j1l.c (__ieee754_j1l): Likewise.
+	(__ieee754_y1l): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_expm1l.c (__expm1l): Use __ldexpl.
+	* sysdeps/ieee754/ldbl-128/s_log1pl.c: Kill bogus prototypes for
+	frexpl and ldexpl.  math_private.h provides them and the latter
+	is not even used.
+	(__log1pl): Use __frexpl.
+
+2008-05-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/resolv.h: Adjust __libc_res_nquery and __libc_res_nsend
+	prototypes.
+	* include/arpa/nameser_compat.h: Define T_UNSPEC.
+	* nis/Versions (libnss_nis): Export _nss_nis_gethostbyname4_r.
+	(libnss_nisplus): Export _nss_nisplus_gethostbyname4_r.
+	* nis/nss_nis/nis-hosts.c (LINE_PARSER): Change to also handle
+	af==AF_UNSPEC.
+	(_nss_nis_gethostbyname4_r): New function.
+	* nis/nss_nisplus/nisplus-hosts.c (_nss_nisplus_parse_hostent):
+	Change to also handle af==AF_UNSPEC.
+	(get_tablename): New function.  Use it to avoid duplication.
+	(_nss_nisplus_gethostbyname4_r): New function.
+	* nscd/aicache.c (addhstaiX): Use gethostbyname4_r function is
+	available.
+	* nss/Versions (libnss_files): Export _nss_files_gethostbyname4_r.
+	* nss/nss.h: Define struct gaih_addrtuple.
+	* nss/nss_files/files-hosts.c (LINE_PARSER): Change to also handle
+	af==AF_UNSPEC.
+	(_nss_files_gethostbyname4_r): New function.
+	* resolv/Versions (libnss_dns): Export _nss_dns_gethostbyname4_r.
+	* resolv/gethnmaddr.c: Adjust __libc_res_nsearch and __libc_res_nquery
+	calls.
+	* resolv/res_query.c (__libc_res_nquery): Take two additional
+	parameters for second answer buffer.  Handle type=T_UNSPEC to mean
+	look up IPv4 and IPv6.
+	Change all callers.
+	* resolv/res_send.c (__libc_res_nsend): Take five aditional parameters
+	for an additional query and answer buffer.  Pass to send_vc and
+	send_dg.
+	(send_vc): Send possibly two requests and receive two answers.
+	(send_dg): Likewise.
+	* resolv/nss_dns/dns-host.c: Adjust calls to __libc_res_nsearch and
+	__libc_res_nquery.
+	(_nss_dns_gethostbyname4_r): New function.
+	(gaih_getanswer_slice): Likewise.
+	(gaih_getanswer): Likewise.
+	* resolv/nss_dns/dns-canon.c (_nss_dns_getcanonname_r): Adjust
+	__libc_res_nquery call.
+	* resolv/nss_dns/dns-network.c (_nss_dns_getnetbyaddr_r): Likewise.
+	(_nss_dns_getnetbyname_r): Adjust __libc_res_nsearch call.
+	* sysdeps/posix/getaddrinfo.c: Use gethostbyname4_r function is
+	available.
+
+2008-05-05  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/Makefile: Use -mcpu=v7 for initfini.s build.
+	* sysdeps/sparc/sparc64/Makefile: Use -mcpu=v9 for initfini.s build.
+
+2007-09-14  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	Fix termios bit macros.
+	Move *DLY definitions where they belong, in termios.h.
+	Add *[0-3] definitions.
+	Fixes confusion between VT and FF.
+	* sysdeps/mach/hurd/bits/ioctls.h (NL0, NL1, TAB0, TAB1, TAB2, CR0,
+	CR1, CR2, CR3, FF0, FF1, BS0, BS1): Undefine these at start if they
+	are already defined to avoid collision with termios.h.
+	(NLDLY, TABDLY, TAB3, CRDLY, VTDLY, BSDLY): Remove macros.
+	* bits/termios.h [__USE_MISC || __USE_XOPEN] (NL0, NL1, TAB0,
+	TAB1, TAB2, CR0, CR1, CR2, CR3, FF0, FF1, BS0, BS1): Likewise.
+	[__USE_BSD || __USE_XOPEN] (OCRNL, ONOCR, ONLRET): New macros.
+	[__USE_MISC || __USE_XOPEN] (NLDLY, NL0, NL1, TABDLY, TAB0, TAB1, TAB2,
+	TAB3, CRDLY, CR0, CR1, CR2, CR3, FFDLY, FF0, FF1, BSDLY, BS0, BS1,
+	VTDLY, VT0, VT1): New macros.
+	[__USE_GNU] (OLCUC): Change value of macro.
+	[__USE_XOPEN] (OFILL): New macro.
+	[__USE_BSD] (CRTSCTS): Change value.
+	(CRTS_IFLOW, CCTS_OFLOW): Change into compatibility macros.
+	[__USE_BSD] (CDTRCTS, CHWFLOW): New macros.
+	(B7200, B14400, B28800, B76800): New macros.
+
+2008-05-01  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/ucontext_i.sym: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Makefile [$(subdir) = stdlib]:
+	(gen-as-const-headers): Add it.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/getcontext.S: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/makecontext.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/swapcontext.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscall.S: Add support for
+	six system call parameters.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscall.S: Likewise.
+
+2008-04-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/resource.h: Define RUSAGE_THREAD and
+	RUSAGE_LWP.
+	* sysdeps/unix/sysv/linux/sparc/bits/resource.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/resource.h: Likewise.
+
+2008-04-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/tst-setcontext.c: Include unistd.h.
+
 2008-04-25  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/semctl.c (semctl):
@@ -12,7 +300,17 @@
 
 	* nscd/nscd.h (dbs): Make hidden.
 
+	* sysdeps/unix/sysv/linux/times.c (__times): Fix check for EFAULT.
+	Avoid returning -1, return 0 instead.
+
+2008-04-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_mkquery.c (__res_nopt): Use NS_PUT16 instead of ns_put16.
+
 2008-04-15  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5209]
+	* sysdeps/unix/sysv/linux/times.c: New file.
 
 	[BZ #5381]
 	* nscd/nscd.h: Define enum in_flight, mem_in_flight, and
@@ -37,6 +335,12 @@
 
 	* nscd/connections.c (handle_request): Provide better error message
 	in case SELinux forbids the service.
+
+	* version.h (VERSION): Bump to 2.8.90.
+
+2008-04-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/dl-osinfo.h: Include fcntl.h.
 
 2008-04-11  Ulrich Drepper  <drepper@redhat.com>
 

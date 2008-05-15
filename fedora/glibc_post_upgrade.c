@@ -170,8 +170,8 @@ main (void)
   /* Check if telinit is available and either SysVInit fifo,
      or upstart telinit.  */
   if (access ("/sbin/telinit", X_OK)
-      || (access ("/dev/initctl", F_OK)
-	  && access ("/sbin/initctl", X_OK)))
+      || ((!!access ("/dev/initctl", F_OK))
+	  ^ !access ("/sbin/initctl", X_OK)))
     _exit (0);
   /* Check if we are not inside of some chroot, because we'd just
      timeout and leave /etc/initrunlvl.  */

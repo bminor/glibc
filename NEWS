@@ -1,9 +1,27 @@
-GNU C Library NEWS -- history of user-visible changes.  2008-4-9
+GNU C Library NEWS -- history of user-visible changes.  2008-5-14
 Copyright (C) 1992-2007, 2008 Free Software Foundation, Inc.
 See the end for copying conditions.
 
 Please send GNU C library bug reports via <http://sources.redhat.com/bugzilla/>
 using `glibc' in the "product" field.
+
+Version 2.9
+
+* Unified lookup for getaddrinfo: IPv4 and IPv6 addresses are now looked
+  up at the same time.  Implemented by Ulrich Drepper.
+
+* TLS descriptors for LD and GD on x86 and x86-64.
+  Implemented by Alexandre Oliva.
+
+* getaddrinfo now handles DCCP and UDPlite.
+  Implemented by Ulrich Drepper.
+
+* New fixed-size conversion macros: htobe16, htole16, be16toh, le16toh,
+  htobe32, htole32, be32toh, le32toh, htobe64, htole64, be64toh, le64toh.
+  Implemented by Ulrich Drepper.
+
+* New implementation of memmem, strstr, and strcasestr which is O(n).
+  Implemented by Eric Blake.
 
 Version 2.8
 

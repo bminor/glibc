@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <kernel-features.h>
 #include <dl-sysdep.h>
+#include <fcntl.h>
 #include <stdint.h>
 #include <hp-timing.h>
 #include <endian.h>

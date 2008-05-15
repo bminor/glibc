@@ -40,6 +40,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <errno.h>
 #include <ifaddrs.h>
 #include <netdb.h>
+#include <nss.h>
 #include <resolv.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -60,6 +61,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <not-cancel.h>
 #include <nscd/nscd-client.h>
 #include <nscd/nscd_proto.h>
+#include <resolv/res_hconf.h>
 
 #ifdef HAVE_LIBIDN
 extern int __idna_to_ascii_lz (const char *input, char **output, int flags);
@@ -91,21 +93,14 @@ struct gaih_servtuple
 
 static const struct gaih_servtuple nullserv;
 
-struct gaih_addrtuple
-  {
-    struct gaih_addrtuple *next;
-    char *name;
-    int family;
-    uint32_t addr[4];
-    uint32_t scopeid;
-  };
 
 struct gaih_typeproto
   {
     int socktype;
     int protocol;
-    char name[4];
-    int protoflag;
+    uint8_t protoflag;
+    bool defaultflag;
+    char name[8];
   };
 
 /* Values for `protoflag'.  */
@@ -114,11 +109,21 @@ struct gaih_typeproto
 
 static const struct gaih_typeproto gaih_inet_typeproto[] =
 {
-  { 0, 0, "", 0 },
-  { SOCK_STREAM, IPPROTO_TCP, "tcp", 0 },
-  { SOCK_DGRAM, IPPROTO_UDP, "udp", 0 },
-  { SOCK_RAW, 0, "raw", GAI_PROTO_PROTOANY|GAI_PROTO_NOSERVICE },
-  { 0, 0, "", 0 }
+  { 0, 0, 0, false, "" },
+  { SOCK_STREAM, IPPROTO_TCP, 0, true, "tcp" },
+  { SOCK_DGRAM, IPPROTO_UDP, 0, true, "udp" },
+#if defined SOCK_DCCP && defined IPPROTO_DCCP
+  { SOCK_DCCP, IPPROTO_DCCP, 0, false, "dccp" },
+#endif
+#ifdef IPPROTO_UDPLITE
+  { SOCK_DGRAM, IPPROTO_UDPLITE, 0, false, "udplite" },
+#endif
+#ifdef IPPROTO_SCTP
+  { SOCK_STREAM, IPPROTO_SCTP, 0, false, "sctp" },
+  { SOCK_SEQPACKET, IPPROTO_SCTP, 0, false, "sctp" },
+#endif
+  { SOCK_RAW, 0, GAI_PROTO_PROTOANY|GAI_PROTO_NOSERVICE, true, "raw" },
+  { 0, 0, 0, false, "" }
 };
 
 struct gaih
@@ -202,6 +207,7 @@ gaih_inet_serv (const char *servicename, const struct gaih_typeproto *tp,
       if (herrno == NETDB_INTERNAL)					      \
 	{								      \
 	  __set_h_errno (herrno);					      \
+	  _res.options = old_res_options;				      \
 	  return -EAI_SYSTEM;						      \
 	}								      \
       if (herrno == TRY_AGAIN)						      \
@@ -246,6 +252,10 @@ gaih_inet_serv (const char *servicename, const struct gaih_typeproto *tp,
  }
 
 
+typedef enum nss_status (*nss_gethostbyname4_r)
+  (const char *name, struct gaih_addrtuple **pat,
+   char *buffer, size_t buflen, int *errnop,
+   int *h_errnop, int32_t *ttlp);
 typedef enum nss_status (*nss_gethostbyname3_r)
   (const char *name, int af, struct hostent *host,
    char *buffer, size_t buflen, int *errnop,
@@ -365,18 +375,19 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	     we know about.  */
 	  struct gaih_servtuple **lastp = &st;
 	  for (++tp; tp->name[0]; ++tp)
-	    {
-	      struct gaih_servtuple *newp;
+	    if (tp->defaultflag)
+	      {
+		struct gaih_servtuple *newp;
 
-	      newp = __alloca (sizeof (struct gaih_servtuple));
-	      newp->next = NULL;
-	      newp->socktype = tp->socktype;
-	      newp->protocol = tp->protocol;
-	      newp->port = port;
+		newp = __alloca (sizeof (struct gaih_servtuple));
+		newp->next = NULL;
+		newp->socktype = tp->socktype;
+		newp->protocol = tp->protocol;
+		newp->port = port;
 
-	      *lastp = newp;
-	      lastp = &newp->next;
-	    }
+		*lastp = newp;
+		lastp = &newp->next;
+	      }
 	}
     }
 
@@ -685,87 +696,132 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 	  while (!no_more)
 	    {
-	      nss_gethostbyname3_r fct = NULL;
-	      if (req->ai_flags & AI_CANONNAME)
-		/* No need to use this function if we do not look for
-		   the canonical name.  The function does not exist in
-		   all NSS modules and therefore the lookup would
-		   often fail.  */
-		fct = __nss_lookup_function (nip, "gethostbyname3_r");
-	      if (fct == NULL)
-		/* We are cheating here.  The gethostbyname2_r function does
-		   not have the same interface as gethostbyname3_r but the
-		   extra arguments the latter takes are added at the end.
-		   So the gethostbyname2_r code will just ignore them.  */
-		fct = __nss_lookup_function (nip, "gethostbyname2_r");
-
-	      if (fct != NULL)
+	      nss_gethostbyname4_r fct4
+		= __nss_lookup_function (nip, "gethostbyname4_r");
+	      if (fct4 != NULL)
 		{
-		  if (req->ai_family == AF_INET6
-		      || req->ai_family == AF_UNSPEC)
-		    {
-		      gethosts (AF_INET6, struct in6_addr);
-		      no_inet6_data = no_data;
-		      inet6_status = status;
-		    }
-		  if (req->ai_family == AF_INET
-		      || req->ai_family == AF_UNSPEC
-		      || (req->ai_family == AF_INET6
-			  && (req->ai_flags & AI_V4MAPPED)
-			  /* Avoid generating the mapped addresses if we
-			     know we are not going to need them.  */
-			  && ((req->ai_flags & AI_ALL) || !got_ipv6)))
-		    {
-		      gethosts (AF_INET, struct in_addr);
+		  int herrno;
 
-		      if (req->ai_family == AF_INET)
+		  while (1)
+		    {
+		      rc = 0;
+		      status = DL_CALL_FCT (fct4, (name, pat, tmpbuf,
+						   tmpbuflen, &rc, &herrno,
+						   NULL));
+		      if (status != NSS_STATUS_TRYAGAIN
+			  || rc != ERANGE || herrno != NETDB_INTERNAL)
 			{
+			  if (herrno == NETDB_INTERNAL)
+			    {
+			      __set_h_errno (herrno);
+			      _res.options = old_res_options;
+			      return -EAI_SYSTEM;
+			    }
+			  if (herrno == TRY_AGAIN)
+			    no_data = EAI_AGAIN;
+			  else
+			    no_data = herrno == NO_DATA;
+			  break;
+			}
+		      tmpbuf = extend_alloca (tmpbuf,
+					      tmpbuflen, 2 * tmpbuflen);
+		    }
+
+		  if (status == NSS_STATUS_SUCCESS)
+		    {
+		      canon = (*pat)->name;
+
+		      while (*pat != NULL)
+			pat = &((*pat)->next);
+		    }
+		}
+	      else
+		{
+		  nss_gethostbyname3_r fct = NULL;
+		  if (req->ai_flags & AI_CANONNAME)
+		    /* No need to use this function if we do not look for
+		       the canonical name.  The function does not exist in
+		       all NSS modules and therefore the lookup would
+		       often fail.  */
+		    fct = __nss_lookup_function (nip, "gethostbyname3_r");
+		  if (fct == NULL)
+		    /* We are cheating here.  The gethostbyname2_r
+		       function does not have the same interface as
+		       gethostbyname3_r but the extra arguments the
+		       latter takes are added at the end.  So the
+		       gethostbyname2_r code will just ignore them.  */
+		    fct = __nss_lookup_function (nip, "gethostbyname2_r");
+
+		  if (fct != NULL)
+		    {
+		      if (req->ai_family == AF_INET6
+			  || req->ai_family == AF_UNSPEC)
+			{
+			  gethosts (AF_INET6, struct in6_addr);
 			  no_inet6_data = no_data;
 			  inet6_status = status;
 			}
-		    }
-
-		  /* If we found one address for AF_INET or AF_INET6,
-		     don't continue the search.  */
-		  if (inet6_status == NSS_STATUS_SUCCESS
-		      || status == NSS_STATUS_SUCCESS)
-		    {
-		      if ((req->ai_flags & AI_CANONNAME) != 0 && canon == NULL)
+		      if (req->ai_family == AF_INET
+			  || req->ai_family == AF_UNSPEC
+			  || (req->ai_family == AF_INET6
+			      && (req->ai_flags & AI_V4MAPPED)
+			      /* Avoid generating the mapped addresses if we
+				 know we are not going to need them.  */
+			      && ((req->ai_flags & AI_ALL) || !got_ipv6)))
 			{
-			  /* If we need the canonical name, get it
-			     from the same service as the result.  */
-			  nss_getcanonname_r cfct;
-			  int herrno;
+			  gethosts (AF_INET, struct in_addr);
 
-			  cfct = __nss_lookup_function (nip, "getcanonname_r");
-			  if (cfct != NULL)
+			  if (req->ai_family == AF_INET)
 			    {
-			      const size_t max_fqdn_len = 256;
-			      char *buf = alloca (max_fqdn_len);
-			      char *s;
-
-			      if (DL_CALL_FCT (cfct, (at->name ?: name, buf,
-						      max_fqdn_len, &s, &rc,
-						      &herrno))
-				  == NSS_STATUS_SUCCESS)
-				canon = s;
-			      else
-				/* Set to name now to avoid using
-				   gethostbyaddr.  */
-				canon = name;
+			      no_inet6_data = no_data;
+			      inet6_status = status;
 			    }
 			}
 
-		      break;
-		    }
+		      /* If we found one address for AF_INET or AF_INET6,
+			 don't continue the search.  */
+		      if (inet6_status == NSS_STATUS_SUCCESS
+			  || status == NSS_STATUS_SUCCESS)
+			{
+			  if ((req->ai_flags & AI_CANONNAME) != 0
+			      && canon == NULL)
+			    {
+			      /* If we need the canonical name, get it
+				 from the same service as the result.  */
+			      nss_getcanonname_r cfct;
+			      int herrno;
 
-		  /* We can have different states for AF_INET and
-		     AF_INET6.  Try to find a useful one for both.  */
-		  if (inet6_status == NSS_STATUS_TRYAGAIN)
-		    status = NSS_STATUS_TRYAGAIN;
-		  else if (status == NSS_STATUS_UNAVAIL
-			   && inet6_status != NSS_STATUS_UNAVAIL)
-		    status = inet6_status;
+			      cfct = __nss_lookup_function (nip,
+							    "getcanonname_r");
+			      if (cfct != NULL)
+				{
+				  const size_t max_fqdn_len = 256;
+				  char *buf = alloca (max_fqdn_len);
+				  char *s;
+
+				  if (DL_CALL_FCT (cfct, (at->name ?: name,
+							  buf, max_fqdn_len,
+							  &s, &rc, &herrno))
+				      == NSS_STATUS_SUCCESS)
+				    canon = s;
+				  else
+				    /* Set to name now to avoid using
+				       gethostbyaddr.  */
+				    canon = name;
+				}
+			    }
+
+			  break;
+			}
+
+		      /* We can have different states for AF_INET and
+			 AF_INET6.  Try to find a useful one for both.  */
+		      if (inet6_status == NSS_STATUS_TRYAGAIN)
+			status = NSS_STATUS_TRYAGAIN;
+		      else if (status == NSS_STATUS_UNAVAIL
+			       && inet6_status != NSS_STATUS_UNAVAIL)
+			status = inet6_status;
+		    }
 		}
 
 	      if (nss_next_action (nip, status) == NSS_ACTION_RETURN)
@@ -1056,7 +1112,10 @@ get_scope (const struct sockaddr_in6 *in6)
     {
       if (! IN6_IS_ADDR_MULTICAST (&in6->sin6_addr))
 	{
-	  if (IN6_IS_ADDR_LINKLOCAL (&in6->sin6_addr))
+	  if (IN6_IS_ADDR_LINKLOCAL (&in6->sin6_addr)
+	      /* RFC 4291 2.5.3 says that the loopback address is to be
+		 treated like a link-local address.  */
+	      || IN6_IS_ADDR_LOOPBACK (&in6->sin6_addr))
 	    scope = 2;
 	  else if (IN6_IS_ADDR_SITELOCAL (&in6->sin6_addr))
 	    scope = 5;
@@ -1189,20 +1248,14 @@ match_prefix (const struct sockaddr_in6 *in6,
     {
       const struct sockaddr_in *in = (const struct sockaddr_in *) in6;
 
-      /* Convert to IPv6 address.  */
+      /* Construct a V4-to-6 mapped address.  */
       in6_mem.sin6_family = PF_INET6;
       in6_mem.sin6_port = in->sin_port;
       in6_mem.sin6_flowinfo = 0;
-      if (in->sin_addr.s_addr == htonl (0x7f000001))
-	in6_mem.sin6_addr = (struct in6_addr) IN6ADDR_LOOPBACK_INIT;
-      else
-	{
-	  /* Construct a V4-to-6 mapped address.  */
-	  memset (&in6_mem.sin6_addr, '\0', sizeof (in6_mem.sin6_addr));
-	  in6_mem.sin6_addr.s6_addr16[5] = 0xffff;
-	  in6_mem.sin6_addr.s6_addr32[3] = in->sin_addr.s_addr;
-	  in6_mem.sin6_scope_id = 0;
-	}
+      memset (&in6_mem.sin6_addr, '\0', sizeof (in6_mem.sin6_addr));
+      in6_mem.sin6_addr.s6_addr16[5] = 0xffff;
+      in6_mem.sin6_addr.s6_addr32[3] = in->sin_addr.s_addr;
+      in6_mem.sin6_scope_id = 0;
 
       in6 = &in6_mem;
     }
@@ -2033,6 +2086,10 @@ getaddrinfo (const char *name, const char *service,
 
   if ((hints->ai_flags & AI_CANONNAME) && name == NULL)
     return EAI_BADFLAGS;
+
+  /* Initialize configurations.  */
+  if (__builtin_expect (!_res_hconf.initialized, 0))
+    _res_hconf_init ();
 
   struct in6addrinfo *in6ai = NULL;
   size_t in6ailen = 0;
