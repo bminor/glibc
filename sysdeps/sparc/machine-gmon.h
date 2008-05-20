@@ -1,6 +1,7 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* sparc-specific implementation of profiling support.
+   Copyright (C) 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Jakub Jelinek <jakub@redhat.com>, 1999.
+   Contributed by David S. Miller <davem@davemloft.net>, 2008
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,16 +18,16 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#define SIGCONTEXT struct sigcontext *
-#define SIGCONTEXT_EXTRA_ARGS
-#define GET_PC(__ctx)	((void *) ((__ctx)->si_regs.pc))
-#define FIRST_FRAME_POINTER \
-  ({ void *ret;							\
-     asm volatile ("ta 3; add %%fp, 56, %0" : "=r" (ret)); ret; })
-#define ADVANCE_STACK_FRAME(__next) \
-	((void *) (((unsigned *)(__next))+14))
+#include <sysdep.h>
 
-#define GET_STACK(__ctx)	((void *) (__ctx)->si_regs.u_regs[14])
-#define GET_FRAME(__ctx)	ADVANCE_STACK_FRAME (GET_STACK(__ctx))
-#define CALL_SIGHANDLER(handler, signo, ctx) \
-  (handler)((signo), SIGCONTEXT_EXTRA_ARGS (ctx))
+/* We must not pollute the global namespace.  */
+#define mcount_internal __mcount_internal
+
+extern void mcount_internal (u_long frompc, u_long selfpc) internal_function;
+
+#define _MCOUNT_DECL(frompc, selfpc) \
+void internal_function mcount_internal (u_long frompc, u_long selfpc)
+
+/* Define MCOUNT as empty since we have the implementation in another
+   file.  */
+#define MCOUNT

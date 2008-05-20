@@ -19,7 +19,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: @glibcversion@
-Release: 3
+Release: 4
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -976,6 +976,9 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Tue May 20 2008 Jakub Jelinek <jakub@redhat.com> 2.8.90-4
+- further getaddrinfo and nscd fixes
+
 * Sun May 18 2008 Jakub Jelinek <jakub@redhat.com> 2.8.90-3
 - getaddrinfo and nscd fixes
 - reenable assertion checking in rawhide
