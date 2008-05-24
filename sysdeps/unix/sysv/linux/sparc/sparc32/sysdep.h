@@ -1,4 +1,5 @@
-/* Copyright (C) 1997, 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2002, 2003, 2004, 2006, 2008
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Miguel de Icaza <miguel@gnu.ai.mit.edu>, January 1997.
 
@@ -89,6 +90,13 @@ ENTRY(name);					\
 
 #else  /* __ASSEMBLER__ */
 
+#if defined SHARED && defined DO_VERSIONING && defined PIC \
+    && !defined NO_HIDDEN && !defined NOT_IN_libc
+# define CALL_ERRNO_LOCATION "call   __GI___errno_location;"
+#else
+# define CALL_ERRNO_LOCATION "call   __errno_location;"
+#endif
+
 #define __SYSCALL_STRING						\
 	"ta	0x10;"							\
 	"bcs	2f;"							\
@@ -97,7 +105,7 @@ ENTRY(name);					\
 	".subsection 2;"						\
 	"2:"								\
 	"save	%%sp, -192, %%sp;"					\
-	"call	__errno_location;"					\
+	CALL_ERRNO_LOCATION						\
 	" nop;"								\
 	"st	%%i0,[%%o0];"						\
 	"ba	1b;"							\
@@ -113,7 +121,7 @@ ENTRY(name);					\
 	".subsection 2;"						\
 	"2:"								\
 	"save	%%sp, -192, %%sp;"					\
-	"call	__errno_location;"					\
+	CALL_ERRNO_LOCATION						\
 	" nop;"								\
 	"st	%%i0, [%%o0];"						\
 	"ba	1b;"							\
@@ -126,7 +134,7 @@ ENTRY(name);					\
 	" sub	%%g0, %%o0, %%o0;"					\
 	"1:"
 
-#define __SYSCALL_CLOBBERS "g2", "g3", "g4", "g5", "g6",		\
+#define __SYSCALL_CLOBBERS						\
 	"f0", "f1", "f2", "f3", "f4", "f5", "f6", "f7",			\
 	"f8", "f9", "f10", "f11", "f12", "f13", "f14", "f15",		\
 	"f16", "f17", "f18", "f19", "f20", "f21", "f22", "f23",		\
