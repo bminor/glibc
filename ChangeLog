@@ -1,3 +1,53 @@
+2008-06-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/grpcache.c (cache_addgr): Correctly compute size of
+	fixed-size portion of the record.
+	* nscd/servicescache.c (cache_addserv): Likewise.
+	* nscd/pwdcache.c (cache_addpw): Likewise.
+	* nscd/initgrcache.c (addinitgroupsX): Likewise.
+
+2008-06-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/mem.c (gc): Initialize obstack earlier so that if we jump
+	out we don't use uninitialized memory.
+
+	* nscd/hstcache.c (cache_addhst): Send correct number of bytes to
+	the client.
+
+2008-06-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/nss_dns/dns-host.c (gaih_getanswer_slice): Also log and
+	ignore T_DNAME messages.
+	* resolv/arpa/nameser_compat.h (T_DNAME): Define.
+
+2008-06-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* misc/regexp.h (compile): Use __REPB_PREFIX macro.
+	Avoid segfault if first GETC returns eof/'\0'/'\n'.
+
+2008-06-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/nscd_getserv_r.c (__nscd_getservbyport_r): Pass cp
+	instead of portstr to nscd_getserv_r.  Patch by
+	Roman Kagan <rkagan@mail.ru>.
+
+2008-05-26  Jim Meyering  <meyering@redhat.com>
+
+	Remove more useless "if" tests before "free".
+	* include/inline-hashtab.h (htab_delete): Likewise.
+	* libio/freopen.c (freopen): Likewise.
+	* libio/freopen64.c (freopen64): Likewise.
+	* locale/programs/ld-collate.c (collate_read): Likewise.
+	* misc/fstab.c (libc_freeres_fn): Likewise.
+	* posix/glob.c (globfree): Likewise.
+
+2008-05-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/Makefile (strop-tests): Add memmem.
+	* string/test-memmem.c: New file.
+	* string/test-string.h (BUF1PAGES): Define to 1 if undefined.
+	(test_init): Size buf1 according to BUF1PAGES.
+
 2008-05-24  Jakub Jelinek  <jakub@redhat.com>
 
 	* libio/stdio.h (vscanf): Fix -std=c99 redirect.
@@ -5,8 +55,8 @@
 	(CFLAGS-scanf17.c): New.
 	* stdio-common/scanf14.c (main): Add fscanf and scanf tests.
 	* stdio-common/scanf15.c (main): Likewise.
-	* stdio-common/scanf16.c: New test.
-	* stdio-common/scanf17.c: New test.
+	* stdio-common/scanf16.c: New file.
+	* stdio-common/scanf17.c: New file.
 
 2008-05-24  Ulrich Drepper  <drepper@redhat.com>
 
@@ -52,7 +102,7 @@
 	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h
 	(__SYSCALL_CLOBBERS): Likewise.
 	* scripts/data/localplt-sparc-linux-gnu.data: New file.
-	* scripts/data/localplt-sparc64-linux-gnu.data: Likewise.
+	* scripts/data/localplt-sparc64-linux-gnu.data: New file.
 
 2008-05-21  Jakub Jelinek  <jakub@redhat.com>
 
