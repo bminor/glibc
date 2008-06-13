@@ -1,5 +1,47 @@
 2008-06-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* time/strftime.c: Pass reference to tzset_called around to handle
+	recursive calls.
+
+	[BZ #6612]
+	* time/strftime.c (__strftime_internal): Call tzset() only
+	when printing timezone-dependent values.
+	Based on a patch by Petr Baudis <pasky@suse.cz>.
+
+	* resolv/nss_dns/dns-host.c (gaih_getanswer): Don't
+	unconditionally use second gaih_getanswer_slice result.
+
+	* sysdeps/posix/getaddrinfo.c (gai_inet): Remove unnecessary test.
+	(getaddrinfo): RES must always be non-NULL.
+
+2008-06-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/powerpc64/fpu/s_llround.S (__llround): Avoid using
+	cr[34] registers.
+	* sysdeps/powerpc/powerpc64/fpu/s_llroundf.S (__llroundf): Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/s_llround.S (__llround):
+	Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_lround.S (__lround): Avoid using cr3
+	register.
+
+2008-06-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd.h (struct database_dyn): Add inotify_descr and clear_cache
+	fields.
+	* nscd/connections.c (inotify_fd): New variable.
+	(nscd_init): Try to open an inotify descriptor.
+	If successful, watch files for databases using inotify instead of
+	having prune threads stat the files.
+	(nscd_run_prune): Recognize clear_cache flag being set and call
+	prune_cache appropriately.
+	(main_loop_poll): Add inotify descriptor to wait set and handle the
+	reported changes.
+	(main_loop_epoll): Likewise.
+	* nscd/cache.c (prune_cache): Don't stat files for databases if
+	inotify is used.
+	* sysdeps/unix/sysv/linux/Makefile [subdir=nscd]
+	(CFLAGS-connections.c): Add -DHAVE_INOTIFY.
+
 	* nscd/grpcache.c (cache_addgr): Correctly compute size of
 	fixed-size portion of the record.
 	* nscd/servicescache.c (cache_addserv): Likewise.
