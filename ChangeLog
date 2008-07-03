@@ -1,3 +1,76 @@
+2008-07-01  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/unix/bsd/bsd4.4/bits/socket.h: Define MSG_NOSIGNAL.
+	* hurd/hurd/fd.h (__hurd_sockfail): Add extern inline function.
+	* sysdeps/mach/hurd/recv.c (__recv): Use __hurd_sockfail instead of
+	__hurd_dfail.
+	* sysdeps/mach/hurd/recvfrom.c (__recvfrom): Likewise.
+	* sysdeps/mach/hurd/recvmsg.c (__recvmsg): Likewise.
+	* sysdeps/mach/hurd/send.c (__send): Likewise.
+	* sysdeps/mach/hurd/sendto.c (__sendfrom): Likewise.
+	* sysdeps/mach/hurd/sendmsg.c (__sendmsg): Likewise.
+
+2008-03-04  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/recv.c (__recv): Initialize NPORTS.
+	* sysdeps/mach/hurd/recvfrom.c (__recvfrom): Likewise.
+	* sysdeps/mach/hurd/recvmsg.c (__recvmsg): Likewise.
+	* hurd/fd-read.c (_hurd_fd_read): Initialize NREAD.
+	* hurd/get-host.c (_hurd_get_host_config): Likewise.
+	* sysdeps/mach/hurd/dl-sysdep.c (__libc_read): Likewise.
+
+2008-06-27  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #6657]
+	* time/strptime_l.c: Don't clear s.era_cnt after successful match
+	of %EY.
+	Patch by Petr Baudis.
+
+2008-06-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_debug.c (__p_type_syms): Add ns_t_dname entry.
+	Patch by Peter Jones <pjones@redhat.com>.
+
+2008-06-25  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #6654]
+	* stdlib/canonicalize.c (__realpath): readlink can write too much
+	into the buffer on platforms without PATH_MAX.
+
+2008-06-17  Carlos O'Donell  <carlos@codesourcery.com>
+
+	[BZ #6653]
+	* posix/tst-regex.c (main): Rename to...
+	(do_test): ... this. Remove cmdline option processing.
+	(TIMEOUT): Define.
+	(TEST_FUNCTION): Define.
+	(CMDLINE_OPTIONS): Define.
+
+2008-06-25  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5210]
+	* configure.in: Add -Werror to -fstack-protector test to catch
+	unsupported architectures.
+	Patch by Gilles Esponasse <g.esp@free.fr>.
+
+2008-06-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* stdlib/tst-setcontext.c: Set back_in_main before exit if
+	getcontext returns ENOSYS.
+
+2008-06-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/connections.c (main_loop_poll): Fix test for read error.
+	(main_loop_epoll): Likewise.
+
+2008-06-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c: Move _res_hconf_init call to a
+	better place so it is not called when nscd is used.
+
+	* nscd/connections.c: Also recognize and handle changes to the
+	resolver configuration file.
+
 2008-06-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* time/strftime.c: Pass reference to tzset_called around to handle

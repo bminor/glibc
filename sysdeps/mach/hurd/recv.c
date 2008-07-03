@@ -38,7 +38,7 @@ __recv (fd, buf, n, flags)
   char *bufp = buf;
   mach_msg_type_number_t nread = n;
   mach_port_t *ports;
-  mach_msg_type_number_t nports;
+  mach_msg_type_number_t nports = 0;
   char *cdata = NULL;
   mach_msg_type_number_t clen = 0;
 
@@ -48,7 +48,7 @@ __recv (fd, buf, n, flags)
 					       &cdata, &clen,
 					       &flags,
 					       n)))
-    return __hurd_dfail (fd, err);
+    return __hurd_sockfail (fd, flags, err);
 
   __mach_port_deallocate (__mach_task_self (), addrport);
   __vm_deallocate (__mach_task_self (), (vm_address_t) cdata, clen);
