@@ -1,3 +1,14 @@
+2008-07-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/iso14651_t1_common: Add Kannada collation support.
+	Patch by Pravin Satpute <psatpute@redhat.com>.
+	
+2008-07-08  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #6713]
+	* charmaps/UTF-8: Fix U1DBA entry representation.
+	Patch by Colin Watson.
+
 2008-06-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-strptime.c (do_test): Add test of %EY.

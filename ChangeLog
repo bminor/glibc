@@ -1,3 +1,55 @@
+2008-07-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/vfprintf.c (_IO_helper_overflow): In case _IO_sputn
+	doesn't manage to write anything, fail.
+
+	* malloc/hooks.c (__malloc_check_init): Remove printf.
+
+2008-07-14  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/bits/fcntl.h: Include <sys/types.h>.
+
+2008-07-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/connections.c (main_loop_poll): Fix handling of read errors
+	from inotify.
+	(main_loop_epoll): Likewise.
+
+2008-07-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_send.c: Remove unnecessary res_pquery prototype.
+
+	* resolv/res_query.c (__libc_res_nquery): Issue debug message only
+	if DEBUG is defined.
+
+	* resolv/res_query.c (__libc_res_nquery): Align buffer for T_AAAA
+	query.  Adjust buffer size computation for padding.
+
+2008-07-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/Makefile: Add rules to build and run tst-setvbuf1.
+	* stdio-common/tst-setvbuf1.c: New file.
+	* stdio-common/tst-setvbuf1.expect: New file.
+
+	[BZ #6719]
+	* libio/iosetvbuf.c (_IO_setvbuf): Correctly clear buffering flags
+	when selecting fully-buffered stream.
+	Patch by Wang Xin <wxinee@gmail.com>.
+
+2008-07-06  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/open.c: Include <stdio.h>.
+	(__open_2): New function.
+	(__open64_2): New alias to __open_2.
+	* sysdeps/mach/hurd/openat.c: Include <stdio.h>.
+	(__openat_2): New function.
+	(__openat64_2): New alias to __openat_2.
+
+2008-07-06  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #6723]
+	* time/mktime.c (__mktime_internal): Normalize tp->tm_isdst value.
+
 2008-07-01  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/unix/bsd/bsd4.4/bits/socket.h: Define MSG_NOSIGNAL.

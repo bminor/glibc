@@ -146,18 +146,34 @@ __libc_res_nquery(res_state statp,
 	      {
 		if ((oflags & RES_F_EDNS0ERR) == 0
 		    && (statp->options & RES_USE_EDNS0) != 0)
-		  n = __res_nopt(statp, n, query1, bufsize, anslen / 2);
+		  {
+		    n = __res_nopt(statp, n, query1, bufsize, anslen / 2);
+		    if (n < 0)
+		      goto unspec_nomem;
+		  }
 
 		nquery1 = n;
-		query2 = buf + nquery1;
+		/* Align the buffer.  */
+		int npad = ((nquery1 + __alignof__ (HEADER) - 1)
+			    & ~(__alignof__ (HEADER) - 1)) - nquery1;
+		if (n > bufsize - npad)
+		  {
+		    n = -1;
+		    goto unspec_nomem;
+		  }
+		int nused = n + npad;
+		query2 = buf + nused;
 		n = res_nmkquery(statp, QUERY, name, class, T_AAAA, NULL, 0,
-				 NULL, query2, bufsize - n);
+				 NULL, query2, bufsize - nused);
 		if (n > 0
 		    && (oflags & RES_F_EDNS0ERR) == 0
 		    && (statp->options & RES_USE_EDNS0) != 0)
-		  n = __res_nopt(statp, n, query2, bufsize - n, anslen / 2);
+		  n = __res_nopt(statp, n, query2, bufsize - nused - n,
+				 anslen / 2);
 		nquery2 = n;
 	      }
+
+	  unspec_nomem:;
 	  }
 	else
 	  {
@@ -188,8 +204,10 @@ __libc_res_nquery(res_state statp,
 		if ((statp->options & RES_USE_EDNS0) != 0
 		    && ((oflags ^ statp->_flags) & RES_F_EDNS0ERR) != 0) {
 			statp->_flags |= RES_F_EDNS0ERR;
+#ifdef DEBUG
 			if (statp->options & RES_DEBUG)
 				printf(";; res_nquery: retry without EDNS0\n");
+#endif
                         goto again;
 		}
 #ifdef DEBUG
