@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2006, 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,6 +29,16 @@
 # define __sigset_t_defined
 typedef __sigset_t sigset_t;
 #endif
+
+
+/* Flags to be passed to epoll_create2.  */
+enum
+  {
+    EPOLL_CLOEXEC = 02000000,
+#define EPOLL_CLOEXEC EPOLL_CLOEXEC
+    EPOLL_NONBLOCK = 04000
+#define EPOLL_NONBLOCK EPOLL_NONBLOCK
+  };
 
 
 enum EPOLL_EVENTS
@@ -63,9 +73,9 @@ enum EPOLL_EVENTS
 
 
 /* Valid opcodes ( "op" parameter ) to issue to epoll_ctl().  */
-#define EPOLL_CTL_ADD 1	/* Add a file decriptor to the interface.  */
-#define EPOLL_CTL_DEL 2	/* Remove a file decriptor from the interface.  */
-#define EPOLL_CTL_MOD 3	/* Change file decriptor epoll_event structure.  */
+#define EPOLL_CTL_ADD 1	/* Add a file descriptor to the interface.  */
+#define EPOLL_CTL_DEL 2	/* Remove a file descriptor from the interface.  */
+#define EPOLL_CTL_MOD 3	/* Change file descriptor epoll_event structure.  */
 
 
 typedef union epoll_data
@@ -90,6 +100,9 @@ __BEGIN_DECLS
    descriptors to be associated with the new instance.  The fd
    returned by epoll_create() should be closed with close().  */
 extern int epoll_create (int __size) __THROW;
+
+/* Same as epoll_create but with an additional FLAGS parameter.  */
+extern int epoll_create2 (int __size, int __flags) __THROW;
 
 
 /* Manipulate an epoll instance "epfd". Returns 0 in case of success,

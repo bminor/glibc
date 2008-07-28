@@ -1,5 +1,5 @@
 /* More debugging hooks for `malloc'.
-   Copyright (C) 1991-1994,1996-2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1991-1994,1996-2004, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 		 Written April 2, 1991 by John Gilmore of Cygnus Support.
 		 Based on mcheck.c by Mike Haertel.
@@ -34,25 +34,13 @@
 
 #include <stdio-common/_itoa.h>
 
-#ifdef _LIBC
-# include <libc-internal.h>
+#include <libc-internal.h>
 
-# include <libio/iolibio.h>
-# define setvbuf(s, b, f, l) INTUSE(_IO_setvbuf) (s, b, f, l)
-# define fwrite(buf, size, count, fp) _IO_fwrite (buf, size, count, fp)
-extern __typeof (malloc) __libc_malloc;
-extern __typeof (free) __libc_free;
-extern __typeof (realloc) __libc_realloc;
-libc_hidden_proto (__libc_malloc)
-libc_hidden_proto (__libc_realloc)
-libc_hidden_proto (__libc_free)
-libc_hidden_proto (__libc_memalign)
-#else
-# define __libc_malloc(sz) malloc (sz)
-# define __libc_free(ptr) free (ptr)
-# define __libc_realloc(ptr, sz) realloc (ptr, sz)
-# define __libc_memalign(al, sz) memalign (al, sz)
-#endif
+#include <libio/iolibio.h>
+#define setvbuf(s, b, f, l) INTUSE(_IO_setvbuf) (s, b, f, l)
+#define fwrite(buf, size, count, fp) _IO_fwrite (buf, size, count, fp)
+
+#include <kernel-features.h>
 
 #ifndef attribute_hidden
 # define attribute_hidden
@@ -166,7 +154,7 @@ tr_freehook (ptr, caller)
   if (tr_old_free_hook != NULL)
     (*tr_old_free_hook) (ptr, caller);
   else
-    __libc_free (ptr);
+    free (ptr);
   __free_hook = tr_freehook;
   __libc_lock_unlock (lock);
 }
@@ -185,7 +173,7 @@ tr_mallochook (size, caller)
   if (tr_old_malloc_hook != NULL)
     hdr = (__ptr_t) (*tr_old_malloc_hook) (size, caller);
   else
-    hdr = (__ptr_t) __libc_malloc (size);
+    hdr = (__ptr_t) malloc (size);
   __malloc_hook = tr_mallochook;
 
   tr_where (caller);
@@ -221,7 +209,7 @@ tr_reallochook (ptr, size, caller)
   if (tr_old_realloc_hook != NULL)
     hdr = (__ptr_t) (*tr_old_realloc_hook) (ptr, size, caller);
   else
-    hdr = (__ptr_t) __libc_realloc (ptr, size);
+    hdr = (__ptr_t) realloc (ptr, size);
   __free_hook = tr_freehook;
   __malloc_hook = tr_mallochook;
   __realloc_hook = tr_reallochook;
@@ -263,7 +251,7 @@ tr_memalignhook (alignment, size, caller)
   if (tr_old_memalign_hook != NULL)
     hdr = (__ptr_t) (*tr_old_memalign_hook) (alignment, size, caller);
   else
-    hdr = (__ptr_t) __libc_memalign (alignment, size);
+    hdr = (__ptr_t) memalign (alignment, size);
   __memalign_hook = tr_memalignhook;
   __malloc_hook = tr_mallochook;
 
@@ -327,9 +315,10 @@ mtrace ()
       if (mtb == NULL)
 	return;
 
-      mallstream = fopen (mallfile != NULL ? mallfile : "/dev/null", "wc");
+      mallstream = fopen (mallfile != NULL ? mallfile : "/dev/null", "wce");
       if (mallstream != NULL)
 	{
+#ifndef __ASSUME_O_CLOEXEC
 	  /* Make sure we close the file descriptor on exec.  */
 	  int flags = __fcntl (fileno (mallstream), F_GETFD, 0);
 	  if (flags >= 0)
@@ -337,6 +326,7 @@ mtrace ()
 	      flags |= FD_CLOEXEC;
 	      __fcntl (fileno (mallstream), F_SETFD, flags);
 	    }
+#endif
 	  /* Be sure it doesn't malloc its buffer!  */
 	  malloc_trace_buffer = mtb;
 	  setvbuf (mallstream, malloc_trace_buffer, _IOFBF, TRACE_BUFFER_SIZE);

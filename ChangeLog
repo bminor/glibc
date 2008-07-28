@@ -1,3 +1,267 @@
+2008-07-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_send.c (__libc_res_nsend): Take additional parameter.
+	Use it instead of locally defined resplen2 variable.
+	(res_nsend): Adjust for __libc_res_nsend interface change.
+	(send_vc): Initialize *resplen2 if necessary.  Read length of
+	package into an appropriately aligned variable.  Store converted length
+	in new variable and use it appropriately.
+	Add branch prediction help.
+	* resolv/res_query.c (__libc_res_nquery): Take additional parameter
+	and pass it on to __libc_res_nsend.  Adjust all callers.
+	(__libc_res_nsearch): Likewise.
+	(__libc_res_nqeurydomain): Likewise.
+	* resolv/nss_dns/dns-host.c: Adjust for __libc_res_nsearch interface
+	change.
+	(_nss_dns_gethostbyname4): Don't unconditionally allocate tmp array.
+	Define resplen2 variable and pass it to __libc_res_nsearch and then
+	to gaih_getanswer.
+	(getanswer_r): In case of incorrect DNS data don't overread buffer.
+	Add branch prediction.
+	(gaih_getanswer_slice): Likewise.  Check for invalid data types.
+	(gaih_getanswer): Don't decode second slice if first one failed due
+	to a too small buffer.  Don't let not found status of second
+	decoder shadow results of the first.
+	* resolv/gethnamaddr.c (gethostbyname2): Adjust for __libc_res_nsearch
+	and __libc_res_nquery interface changes
+	(gethostbyaddr): Adjust for __libc_res_nquery interface change.
+	* include/resolv.h: Adjust prototypes for __libc_res_nquery,
+	__libc_res_nsearch, and __libc_res_nsend.
+	* resolv/nss_dns/dns-canon.c: Adjust for __libc_res_nquery interface
+	change.
+	* resolv/nss_dns/dns-network.c: Adjust for __libc_res_nquery and
+	__libc_res_nsearch interface changes.
+
+2008-07-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/iopopen.c (_IO_new_proc_open): Remove unnecessary volatile.
+
+	* posix/wordexp.c (exec_comm): Use pipe2 if possible to create
+	file descriptors with close-on-exec set.
+	(exec_comm_child): Fix the case where the write end of the pipe is
+	STDOUT_FILENO already.  In case it is, clear close-on-exec.
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add __pipe2 alias.
+	* io/pipe2.c: Likewise.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define __ASSUME_PIPE2
+	instead of __ASSUME_PACCEPT.
+	* include/unistd.h: Declare __have_pipe2.
+	* libio/iopopen.c: Implement "e" flag.
+	* libio/Makefile (tests): Add tst-popen1.
+	* libio/tst-popen1.c: New file.
+
+	* sysdeps/unix/sysv/linux/bits/socket.h: Define PF_ISDN and AF_ISDN.
+	* sysdeps/unix/sysv/linux/sparc/bits/socket.h: Likewise.
+
+2008-07-26  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #6771]
+	* libio/fileops.c (_IO_new_file_attach): Preserve errno around
+	success call of _IO_SEEKOFF or calls which failed because the
+	descriptor is for a pipe.
+
+	* sunrpc/key_call.c (getkeyserv_handle): Use FD_CLOEXEC instead of
+	magic number.
+
+	* misc/syslog.c (openlog_internal): Use SOCK_CLOEXEC if possible.
+
+	* malloc/mtrace.c (mtrace): Use 'e' flag in fopen call.  Drop
+	F_SETFD use if we know fopen set the flag.
+
+	* login/utmp_file.c (setutent_file): Minor optimization in case
+	O_CLOEXEC is available.
+
+2008-07-24  Tom "spot" Callaway  <tcallawa@redhat.com>
+
+	* Makeconfig: Define pie-ccflag and PIE-ccflag variables.
+	* elf/Makefile: Use pie-ccflag variable.
+	* nscd/Makefile: Likewise.
+	* sysdeps/sparc/Makefile: Set $(pie-ccflag) to -fPIE.
+
+2008-07-21  Andreas Krebbel  <krebbel1@de.ibm.com>
+
+	[BZ #6724]
+	* Versions.def: Add GLIBC_2.9 version tag for libutil.
+	* sysdeps/unix/sysv/linux/s390/bits/utmp.h: Copy of
+	gnu/bits/utmp.h.  Check for __WORDSIZE_COMPAT32 removed.
+	* sysdeps/unix/sysv/linux/s390/bits/utmpx.h: Copy of
+	gnu/bits/utmpx.h.  Check for __WORDSIZE_COMPAT32 removed.
+	* sysdeps/unix/sysv/linux/s390/s390-32/Makefile: Add new files
+	utmp32, utmpx32 and login32.
+	* sysdeps/unix/sysv/linux/s390/s390-32/Versions: Add 2.9
+	versions of struct utmp functions to libc and libutil.
+	* sysdeps/unix/sysv/linux/s390/s390-32/utmp-compat.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getutent.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getutent_r.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getutid.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getutid_r.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getutline.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getutline_r.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getutmp.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getutxent.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getutxid.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getutxline.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/login.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/login32.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/pututxline.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/updwtmp.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/updwtmpx.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/utmp-convert.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/utmp32.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/utmp32.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/utmpx-convert.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/utmpx32.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/utmpx32.h: New file.
+
+2008-07-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* scripts/gen-as-const.awk: Generate more widely usable code by
+	using 64-bit arithmetic.
+
+	* stdio-common/printf_fp.c (___printf_fp): Give wide outout code
+	the same treatment as narrow output code in last patch.
+
+	* sunrpc/clnt_udp.c (__libc_clntudp_bufcreate): Namespace cleanup.
+
+	[BZ #6763]
+	* elf/dl-load.c (local_strdup): Remove inline.
+	(_dl_map_object_from_fd): Don't allocate l_symbolic_searchlist.r_list.
+	* elf/dl-object.c (_dl_new_object): Allocate symbolic searchlist as
+	part of the object.
+
+	* sysdeps/unix/sysv/linux/dl-origin.c: Add const to avoid warning.
+
+2008-07-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: IA-64 and SPARC have
+	the new syscalls, too.
+
+	* sysdeps/i386/i686/memcmp.S: Fix unwind information.
+	Reported by Paul Pluzhnikov <ppluzhnikov@google.com>.
+
+	[BZ #6698]
+	* stdio-common/_i18n_number.h (_i18n_number_rewrite): Take additional
+	parameter for end of buffer.  If temporary copy is too large use
+	malloc.
+	* stdio-common/vfprintf.c: Adjust for _i18n_number_rewrite
+	interface change.
+	* stdio-common/printf_fp.c (__printf_fp): Likewise..  Account for
+	string rewrite when allocating buffer.
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: PPC has the new
+	syscalls, too.
+
+	* nscd/connections.c (nscd_init): Clean up fcntl call.
+
+	* nscd/nscd_helper.c (open_socket): Use SOCK_CLOEXEC and
+	SOCK_NONBLOCK if possible.
+
+	* sysdeps/unix/sysv/linux/opensock.c (__opensock): Use
+	SOCK_CLOEXEC if available.
+
+	* include/rpc/clnt.h: Declare __libc_clntudp_bufcreate and
+	__libc_clntudp_bufcreate_internal.
+	* include/sys/socket.h: Declare __have_sock_cloexec.
+	* socket/Makefile (aux): Add have_sock_cloexec.
+	* socket/have_sock_cloexec.c: New file.
+	* sunrpc/clnt_udp.h (clntudp_bufcreate): Now a wrapper around
+	__libc_clntudp_bufcreate.
+	(__libc_clntudp_bufcreate): Former implementation of clntudp_bufcreate
+	which takes an additional parameter.  Create socket with non-blocking
+	mode and close-on-exec flag set, if wanted.
+	* sunrpc/Versions: Export __libc_clntudp_bufcreate@GLIBC_PRIVATE.
+	* nis/ypclnt.c (yp_bind_client_create): Use __libc_clntpudp_bufcreate
+	instead of clntudp_create.  The socket has already the close-on-exec
+	flag set if SOCK_CLOEXEC is defined.
+
+2008-07-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define
+	__ASSUME_PACCEPT, __ASSUME_IN_NONBLOCK, and __ASSUME_PACCEPT if
+	appropriate.
+	* nscd/connections.c: Avoid fcntl calls to set close-on-exec flag and
+	non-blocking mode by using socket, paccept, and inotify_init1.
+
+	* Versions.def (glibc): Add GLIBC_2.9.
+	* io/Makefile (routines): Add dup3 and pipe2.
+	* io/Versions [glibc] (GLIBC_2.9): Add dup3 and pipe2.
+	* io/dup3.c: New file.
+	* io/pipe2.c: New file.
+	* posix/unistd.h: Declare dup3 and pipe2.
+	* socket/Makefile (routines): Add paccept.
+	* socket/Versions [glibc] (GLIBC_2.9): Add paccept.
+	* socket/paccept.c: New file.
+	* socket/sys/socket.h: Declare paccept.
+	* sysdeps/unix/syscalls.list: Add entry for dup3.
+	* sysdeps/unix/sysv/linux/Versions [glibc] (GLIBC_2.9): Add
+	epoll_create2 and inotify_init1.
+	* sysdeps/unix/sysv/linux/eventfd.c: Use eventfd1 syscall if possible.
+	* sysdeps/unix/sysv/linux/paccept.c: New file.
+	* sysdeps/unix/sysv/linux/signalfd.c: Use signalfd4 syscall if
+	possible.
+	* sysdeps/unix/sysv/linux/socketcall.h: Add SOCKOP_paccept.
+	* sysdeps/unix/sysv/linux/syscalls.list: Add epoll_create2,
+	inotify_init1, and pipe2 entries.
+	* sysdeps/unix/sysv/linux/alpha/sys/epoll.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/sys/eventfd.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/sys/inotify.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/sys/signalfd.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/sys/timerfd.h: New file.
+	* sysdeps/unix/sysv/linux/bits/socket.h: Define SOCK_CLOEXEC and
+	SOCK_NONBLOCK.
+	* sysdeps/unix/sysv/linux/i386/paccept.S: New file.
+	* sysdeps/unix/sysv/linux/sparc/sys/epoll.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/sys/eventfd.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/sys/inotify.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/sys/signalfd.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/sys/timerfd.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/bits/socket.h: New file.
+	* sysdeps/unix/sysv/linux/sys/epoll.h: Define EPOLL_CLOEXEC and
+	EPOLL_NONBLOCK.  Declare epoll_create2.
+	* sysdeps/unix/sysv/linux/sys/eventfd.h: Define EFD_CLOEXEC and
+	EFD_NONBLOCK.
+	* sysdeps/unix/sysv/linux/sys/inotify.h: Define IN_CLOEXEC and
+	IN_NONBLOCK.  Declare inotify_init1.
+	* sysdeps/unix/sysv/linux/sys/signalfd.h: Define SFD_CLOEXEC and
+	SFD_NONBLOCK.
+	* sysdeps/unix/sysv/linux/sys/timerfd.h: Define TFD_CLOEXEC and
+	TFD_NONBLOCK.
+
+	* elf/elf.h: Define AT_EXECFN.
+	* elf/rtld.c [!__ASSUME_AT_EXECFN] (process_envvars): Don't handle
+	LD_ORIGIN_PATH.
+	* elf/dl-sysdep.c (_dl_sysdep_start): Handle AT_EXECFN.
+	* elf/dl-support.c: Define _dl_execfn.  Don't define _dl_origin_path
+	if __ASSUME_AT_EXECFN is defined.
+	(_dl_aux_init): Handle AT_EXECFN.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define __ASSUME_AT_EXECFN
+	for 2.6.27 and up.
+	* sysdeps/generic/ldsodefs.h (rtld_global_ro): Add _dl_execfn.
+	Don't define _dl_origin_path if __ASSUME_AT_EXECFN is defined.
+	* sysdeps/unix/sysv/linux/dl-origin.c (_dl_get_origin): Use
+	_dl_execfn if available and avoid compatibility code if
+	__ASSUME_AT_EXECFN is defined.
+
+	* sysdeps/unix/sysv/linux/dl-sysdep.h: Don't declare
+	_dl_discover_osversion only for older kernels.
+
+2008-07-22  Roland McGrath  <roland@frob.com>
+
+	* hurd/fd-read.c (_hurd_fd_read): Fix last change.
+
+2008-07-21  Roland McGrath  <roland@frob.com>
+
+	* hurd/fd-read.c (_hurd_fd_read): Return EGRATUITOUS if the server
+	returned too much data out of line.
+
+2008-07-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/setlocale.c (setname): Remove inline to avoid compiler
+	warning.
+
+	[BZ #6712]
+	* locale/setlocale.c (setlocale): Take the setlocale lock earlier.
+
 2008-07-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/vfprintf.c (_IO_helper_overflow): In case _IO_sputn

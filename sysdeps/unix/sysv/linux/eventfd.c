@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2007, 2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,10 @@
 int
 eventfd (int count, int flags)
 {
-  /* The system call has no flag parameter which is bad.  So we have
+#ifdef __NR_eventfd1
+  return INLINE_SYSCALL (eventfd1, 1, flags);
+#else
+  /* The old system call has no flag parameter which is bad.  So we have
      to wait until we have to support to pass additional values to the
      kernel (sys_indirect) before implementing setting flags like
      O_NONBLOCK etc.  */
@@ -34,10 +37,11 @@ eventfd (int count, int flags)
       return -1;
     }
 
-#ifdef __NR_eventfd
+# ifdef __NR_eventfd
   return INLINE_SYSCALL (eventfd, 1, count);
-#else
+# else
   __set_errno (ENOSYS);
   return -1;
+# endif
 #endif
 }
