@@ -19,7 +19,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: @glibcversion@
-Release: 11
+Release: 12
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -976,6 +976,15 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri Aug 29 2008 Jakub Jelinek <jakub@redhat.com> 2.8.90-12
+- update from trunk
+  - revert origin changes (#457849)
+  - use MAP_STACK for thread stacks
+  - misc fixes (BZ#6845, BZ#6544, BZ#6634, BZ#6589, BZ#6790, BZ#6791,
+    BZ#6824)
+  - power7 bits (BZ#6817)
+  - fix expm1 on i?86/x86_64 (#43354, BZ#5794)
+
 * Sat Aug  2 2008 Jakub Jelinek <jakub@redhat.com> 2.8.90-11
 - update from trunk
   - fix non-absolute $ORIGIN handling (#457560)

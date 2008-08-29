@@ -1,3 +1,161 @@
+2008-08-26  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #6860]
+        * hurd/hurd/signal.h (HURD_MSGPORT_RPC): Fix a typo.
+
+2008-07-18  Daniel Jacobowitz  <dan@codesourcery.com>
+
+	* Makefile (check-data): Check data directory in add-ons.
+	* elf/Makefile (check-data): Likewise.
+
+2008-08-18  Roland McGrath  <roland@redhat.com>
+
+	* configure.in (--with-cpu): Check compiler support for -march/-mcpu.
+	* configure: Regenerated.
+	* config.make.in (cflags-cpu): New substituted variable.
+	(with-cpu): Variable removed.
+	* Makeconfig (+cflags): Use $(cflags-cpu), not $(with-cpu).
+
+2008-08-14  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	[BZ #6845]
+	* sysdeps/powerpc/fpu/bits/mathinline.h (__signbitl): Copy new
+	__signbitl definition and __LONG_DOUBLE_128__ guard from:
+	* sysdeps/unix/sysv/linux/powerpc/bits/mathinline.h: Remove as
+	redundant.  Functions which call floating point assembler operations
+	should go into a sysdeps powerpc/fpu directory.
+
+2008-08-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/bits/mman.h: Define MAP_STACK.
+	* sysdeps/unix/sysv/linux/i386/bits/mman.h: Likewise.
+
+2008-08-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/memset.S: Reduce size of tables for PIC.
+
+	* sysdeps/unix/sysv/linux/dl-origin.c (_dl_get_origin): Undo all
+	change related to AT_EXECFN.  We cannot use that string.
+	* sysdeps/generic/ldsodefs.h (struct rtld_global_ro): Remove
+	_dl_execfn member.
+	* elf/dl-support.c: Remove _dl_execfn variable.
+	(_dl_aux_init): Remove handling of AT_EXECFN.
+	* elf/dl-sysdep.c (_dl_sysdep_start): Remove handling of AT_EXECFN.
+	* elf/rtld.c (process_envvars): Remove use of __ASSUME_AT_EXECFN.
+
+2008-08-13  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #6544]
+	* libio/fmemopen.c: Implement binary mode.  In this mode no NUL
+	byte gets added to writes and seeks from the end use the length of
+	the buffer and not the currently terminating NUL byte.
+
+	[BZ #6634]
+	* login/utmp_file.c (getutent_r_file): Take additional parameter.
+	Set to true if locking failed.
+	(getutid_r_file): Adjust caller.
+	(pututline_file): Likewise.  Return NULL in this case.
+	Patch mostly by halesh.s@gmail.com.
+
+2008-08-12  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #6589]
+	* sysdeps/unix/sysv/linux/ifaddrs.c (struct sockaddr_ll_max):
+	Define.
+	(struct ifaddrs_storage): Use it instead of sockaddr_ll.
+
+2008-08-12  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	[BZ #6839]
+	* sysdeps/powerpc/powerpc32/dl-machine.c (CHECK_STATIC_TLS): Remove
+	macro since it is now available in elf/dynamic-link.h.
+
+2008-08-12  Roland McGrath  <roland@frob.com>
+
+	* hurd/hurd/signal.h (HURD_MSGPORT_RPC): Avoid -Wparenthesis triggers,
+	in case used outside of libc.
+	Reported by Samuel Thibault <samuel.thibault@ens-lyon.org>
+
+2008-08-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_mkquery.c (res_nmkquery): Call ns_name_compress
+	directly instead of going through dn_comp.
+
+2008-08-11  Aurelien Jarno  <aurel32@debian.org>
+
+	* sysdeps/mach/i386/machine-lock.h (__spin_unlock, __spin_try_lock):
+	Fix asm constraints.
+
+2008-08-07  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #6790]
+	* sysdeps/unix/sysv/linux/bits/in.h (IP_PMTUDISC_PROBE): Define.
+	(IPV6_PMTUDISC_PROBE): Likewise.
+
+2008-08-07  Pete Eberlein  <eberlein@us.ibm.com>
+
+	[BZ #6791]
+	* sysdeps/unix/sysv/linux/powerpc/bits/mman.h (PROT_SAO): Define.
+
+2008-08-01  Steven Munroe  <sjmunroe@us.ibm.com>
+	    Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
+
+	[BZ #6817]
+	* sysdeps/powerpc/dl-procinfo.c (_dl_powerpc_cap_flags):
+	Added the members 'vsx' and 'arch_2_06'.
+	(_dl_powerpc_platforms): Add the member 'power7'.
+	* sysdeps/powerpc/dl-procinfo.h: Modify _DL_HWCAP_FIRST
+	to reflect the changes required by VSX and ISA 2.06.
+	Modify _DL_PLATFORMS_COUNT to reflect the addition of
+	'power7'.
+	Defined PPC_PLATFORM_POWER7.
+	(_dl_string_platform): Add support for POWER7.
+	* sysdeps/powerpc/sysdep.h: Define bit masks for VSX
+	capability and ISA 2.06.
+
+2008-08-07  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #6824]
+	* sysdeps/unix/sysv/linux/powerpc/bits/mathinline.h: Use correct
+	macro to detect use of 128 bit long double.
+	Patch by Ryan S. Arnold <rsa@us.ibm.com>.
+
+2008-08-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* scripts/gen-as-const.awk: Use 32-bit values on 32-bit platforms.
+
+	[BZ #5794]
+	* sysdeps/i386/fpu/s_expm1l.S: Simply use exp implementation for large
+	parameters.
+	* sysdeps/x86_64/fpu/s_expm1l.S: Likewise.
+	Patch by Denys Vlasenko <dvlasenk@redhat.com>.
+
+2008-08-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/connections.c (main_loop_poll): Pass a buffer which is
+	guaranteed to be large enough to read inotify event.  Ignore
+	EAGAIN error.  Better error message.  Add branch predicition.
+	(main_loop_epoll): Likewise.
+
+2008-08-02  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/i386/machine-lock.h (__spin_unlock, __spin_try_lock):
+	Add memory clobbers.
+
+2008-08-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* manual/arith.texi: Avoid @strong{Note:}.
+	* manual/creature.texi: Likewise.
+	* manual/filesys.texi: Likewise.
+	* manual/math.texi: Likewise.
+	* manual/memory.texi: Likewise.
+	* manual/resource.texi: Likewise.
+	* manual/syslog.texi: Likewise.
+	* manual/time.texi: Likewise.
+
+	* sysdeps/posix/clock_getres.c (hp_timing_getres): Remove inline
+	to prevent warning.
+
 2008-08-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/Versions: Fix changes due to old patch for
@@ -57,7 +215,7 @@
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Raise size of initial
 	buffer passed to NSS functions.
 
-	* nscd/connections.c (nscd_init): Type if preprocessor directive.
+	* nscd/connections.c (nscd_init): Typo in preprocessor directive.
 
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_PACCEPT):
 	Define.
