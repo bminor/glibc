@@ -239,7 +239,7 @@ static int resolv_conf_descr = -1;
    before be know the result.  */
 static int have_sock_cloexec;
 /* The paccept syscall was introduced at the same time as SOCK_CLOEXEC.  */
-# define have_paccept have_sock_cloexec
+# define have_paccept -1	// XXX For the time being there is no such call
 #endif
 
 /* Number of times clients had to wait.  */
@@ -1824,11 +1824,13 @@ main_loop_poll (void)
 	      if (have_paccept >= 0)
 #endif
 		{
+#if 0
 		  fd = TEMP_FAILURE_RETRY (paccept (sock, NULL, NULL, NULL,
 						    SOCK_NONBLOCK));
 #ifndef __ASSUME_PACCEPT
 		  if (have_paccept == 0)
 		    have_paccept = fd != -1 || errno != ENOSYS ? 1 : -1;
+#endif
 #endif
 		}
 #ifndef __ASSUME_PACCEPT

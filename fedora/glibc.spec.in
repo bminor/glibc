@@ -19,7 +19,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: @glibcversion@
-Release: 12
+Release: 14
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -221,6 +221,12 @@ package or when debugging this package.
 # memmove. The memcpy implementation below is not tolerant at
 # all.
 rm -f sysdeps/alpha/alphaev6/memcpy.S
+%if %{buildpower6}
+# On powerpc32, hp timing is only available in power4/power6
+# libs, not in base, so pre-power4 dynamic linker is incompatible
+# with power6 libs.
+rm -f sysdeps/powerpc/powerpc32/power4/hp-timing.[ch]
+%endif
 
 find . -type f -size 0 -o -name "*.orig" -exec rm -f {} \;
 cat > find_provides.sh <<EOF
@@ -976,6 +982,18 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Sun Oct 19 2008 Jakub Jelinek <jakub@redhat.com> 2.8.90-14
+- update from trunk
+  - fix dynamic TLS handling (#467309)
+  - fix sys/signalfd.h for C++ (#467172)
+  - fix sprof (#458861)
+  - fix _mcount and socket syscalls on s390x (#464146)
+  - try harder to allocate memory in valloc and pvalloc (#461481)
+- fix power6 32-bit libs (#467311)
+
+* Fri Oct 10 2008 Dennis Gilmore <dennis@ausil.us> 2.8.90-13
+- apply sparcv9v memset patch from jakub and davem
+
 * Fri Aug 29 2008 Jakub Jelinek <jakub@redhat.com> 2.8.90-12
 - update from trunk
   - revert origin changes (#457849)

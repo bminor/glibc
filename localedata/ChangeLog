@@ -1,8 +1,49 @@
+2008-09-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/en_GB: Set first weekday and workday to 2.
+
+2008-09-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/nl_AW: New file.
+	* SUPPORTED (SUPPORTED-LOCALES): Add nl_AW.UTF-8.
+
+	* locales/en_AG: New file.
+	* SUPPORTED (SUPPORTED-LOCALES): Add en_AG.UTF-8.
+
+2008-09-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/ht_HT: New file.
+	* SUPPORTED: Add ht_HT.UTF-8.
+
+	* locales/en_GB: Change dom_tel_fmt to %A %l.
+	* locales/de_DE: Likewise.
+
+	* SUPPORTED (SUPPORTED-LOCALES): Add sd_IN.
+
+	* locales/sd_IN: New file.
+	Contributed by Pravin Satpute <psatpute@redhat.com>.
+
+	* locales/sd_IN@devanagari: Fix locale name.
+	* locales/ks_IN@devanagari: Likewise.
+
+2008-09-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* SUPPORTED (SUPPORTED-LOCALES): Add ks_IN@devnagari and
+	sd_IN@devanagari.
+
+	[BZ #6857]
+	* locales/sd_IN@devanagari: New file.
+	Contributed by Pravin Satpute <psatpute@redhat.com>.
+
+	[BZ #6856]
+	* locales/ks_IN@devanagari: New file.
+	Contributed by Pravin Satpute <psatpute@redhat.com>.
+
 2008-07-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/iso14651_t1_common: Add Kannada collation support.
 	Patch by Pravin Satpute <psatpute@redhat.com>.
-	
+
 2008-07-08  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #6713]

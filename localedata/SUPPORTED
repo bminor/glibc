@@ -104,6 +104,7 @@ el_GR.UTF-8/UTF-8 \
 el_GR/ISO-8859-7 \
 el_CY.UTF-8/UTF-8 \
 el_CY/ISO-8859-7 \
+en_AG/UTF-8 \
 en_AU.UTF-8/UTF-8 \
 en_AU/ISO-8859-1 \
 en_BW.UTF-8/UTF-8 \
@@ -228,6 +229,7 @@ hr_HR.UTF-8/UTF-8 \
 hr_HR/ISO-8859-2 \
 hsb_DE/ISO-8859-2 \
 hsb_DE.UTF-8/UTF-8 \
+ht_HT/UTF-8 \
 hu_HU.UTF-8/UTF-8 \
 hu_HU/ISO-8859-2 \
 hy_AM/UTF-8 \
@@ -258,6 +260,7 @@ km_KH/UTF-8 \
 kn_IN/UTF-8 \
 ko_KR.EUC-KR/EUC-KR \
 ko_KR.UTF-8/UTF-8 \
+ks_IN@devanagari/UTF-8 \
 ku_TR.UTF-8/UTF-8 \
 ku_TR/ISO-8859-9 \
 kw_GB.UTF-8/UTF-8 \
@@ -291,6 +294,7 @@ nb_NO/ISO-8859-1 \
 nds_DE/UTF-8 \
 nds_NL/UTF-8 \
 ne_NP/UTF-8 \
+nl_AW/UTF-8 \
 nl_BE.UTF-8/UTF-8 \
 nl_BE/ISO-8859-1 \
 nl_BE@euro/ISO-8859-15 \
@@ -329,6 +333,8 @@ ru_UA/KOI8-U \
 rw_RW/UTF-8 \
 sa_IN/UTF-8 \
 sc_IT/UTF-8 \
+sd_IN/UTF-8 \
+sd_IN@devanagari/UTF-8 \
 se_NO/UTF-8 \
 shs_CA/UTF-8 \
 si_LK/UTF-8 \
