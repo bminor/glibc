@@ -172,6 +172,8 @@ If unsure if you need this, don't install this package.
 
 %if "%{_enable_debug_packages}" == "1"
 %define debug_package %{nil}
+%define __debug_install_post %{nil}
+%global __debug_package 1
 
 %package debuginfo
 Summary: Debug information for package %{name}
@@ -982,6 +984,12 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Tue Oct 28 2008 Jakub Jelinek <jakub@redhat.com> 2.8.90-15
+- update from trunk
+  - __libc_res_nquery fixes (#466786)
+- try to workaround recent rpm changes which now strip glibc
+  shared libraries when they shouldn't (#468129)
+
 * Sun Oct 19 2008 Jakub Jelinek <jakub@redhat.com> 2.8.90-14
 - update from trunk
   - fix dynamic TLS handling (#467309)
