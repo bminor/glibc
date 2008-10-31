@@ -784,7 +784,7 @@ send_vc(res_state statp,
 #else
 			int aligned_resplen
 			  = ((resplen + __alignof__ (HEADER) - 1)
-			     & (__alignof__ (HEADER) - 1));
+			     & ~(__alignof__ (HEADER) - 1));
 			*anssizp2 = orig_anssizp - aligned_resplen;
 			*ansp2 = *ansp + aligned_resplen;
 #endif
@@ -1008,7 +1008,7 @@ send_dg(res_state statp,
 	}
 	if (n == 0) {
 		Dprint(statp->options & RES_DEBUG, (stdout, ";; timeout\n"));
-		if (recvresp1 || (buf2 != NULL && recvresp2))
+		if (resplen > 1 && (recvresp1 || (buf2 != NULL && recvresp2)))
 		  {
 		    *resplen2 = 1;
 		    return resplen;
@@ -1058,8 +1058,16 @@ send_dg(res_state statp,
 				/* No buffer allocated for the first
 				   reply.  We can try to use the rest
 				   of the user-provided buffer.  */
+#ifdef _STRING_ARCH_unaligned
 				*anssizp2 = orig_anssizp - resplen;
 				*ansp2 = *ansp + resplen;
+#else
+				int aligned_resplen
+				  = ((resplen + __alignof__ (HEADER) - 1)
+				     & ~(__alignof__ (HEADER) - 1));
+				*anssizp2 = orig_anssizp - aligned_resplen;
+				*ansp2 = *ansp + aligned_resplen;
+#endif
 			} else {
 				/* The first reply did not fit into the
 				   user-provided buffer.  Maybe the second

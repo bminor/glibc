@@ -1,3 +1,69 @@
+2008-10-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-tls.c (__tls_get_addr): After calling _dl_update_slotinfo
+	refetch dtv, as it might have changed.
+	* elf/Makefile: Add rules to build and run tst-tls18.
+	* elf/tst-tls18.c: New test.
+	* elf/tst-tlsmod18a.c: New file.
+
+2008-09-09  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #6875]
+	* iconvdata/gconv-modules: Add LATIN9 as an alias to ISO-8859-15.
+
+2008-10-31  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #6867]
+	* sysdeps/powerpc/elf/rtld-global-offsets.sym: Fix typo.
+
+	[BZ #6919]
+	* posix/spawnattr_getschedparam.c (posix_spawnattr_getschedparam):
+	Fix length of copy operation.
+
+2008-10-02  Pierre Habouzit <madcoder@debian.org>
+
+	* sysdeps/unix/sysv/linux/eventfd.c (eventfd): Use the eventfd2 syscall
+	and fix its calling convention.
+
+2008-10-07  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #6942]
+	* resolv/res_send.c (send_vc): Fix last change.
+	(send_dg): Align here as well.
+
+2008-10-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ulimit.c (__ulimit): Handle UL_GETFSIZE
+	return value in case rlimit is RLIM_INFINITY.
+
+	[BZ #6947]
+	* sysdeps/unix/sysv/linux/ulimit.c (__ulimit): Fix return value
+	for UL_SETFSIZE.
+	* resource/Makefile (tests): Add bug-ulimit1.
+	* resource/bug-ulimit1.c: New file.
+
+	[BZ #6974]
+	* sunrpc/rpc_main.c (mkfile_output): Properly handle filename
+	without dot.  Properly terminate the string with a null byte.
+	Based on a patch by Aurelien Jarno <aurelien@aurel32.net>.
+
+	[BZ #6980]
+	* debug/getgroups_chk.c (__getgroups_chk): Return EINVAL error for
+	negative sizees.
+	* posix/bits/unistd.h (getgroups): Call __getgroups_chk for
+	negative __size.
+
+	[BZ #6995]
+	* sysdeps/powerpc/powerpc32/dl-machine.c: Fix typo in message.
+
+2008-10-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* grp/initgroups.c (internal_getgrouplist): Don't prematurely
+	abort if there is no initgroups_dyn function.
+
+	* resolv/res_send.c (send_dg): On timeout, only return nonzero
+	result if any of the queries really provided an answer.
+
 2008-10-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/lt.po: Update from translation team.
