@@ -1,3 +1,35 @@
+2008-11-12  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #7008]
+	* pthread_condattr_setclock.c (pthread_condattr_setclock): Fix masking
+	of old value.
+	* pthread_cond_init.c (__pthread_cond_init): Fix
+	cond->__data.__nwaiters initialization.
+	* Makefile (tests): Add tst-cond23.
+	* tst-cond23.c: New test.
+
+2008-11-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/malloc-machine.h (MALLOC): Adjust __libc_tsd_define
+	arguments.
+	(tsd_setspecific, tsd_getspecific): Adjust __libc_tsd_{set,get}
+	arguments.
+
+2008-11-01  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #6955]
+	* pthread_mutex_lock.c: Add support for private PI mutexes.
+	* pthread_mutex_timedlock.c: Likewise.
+	* pthread_mutex_trylock.c: Likewise.
+	* pthread_mutex_unlock.c: Likewise.
+	Patch mostly by Ben Jackson <ben@ben.com>.
+
+2008-10-31  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #6843]
+	* sysdeps/pthread/gai_misc.h (__gai_create_helper_thread):
+	Increase stack size for helper thread.
+
 2008-10-06  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/s390/tls.h (THREAD_SET_STACK_GUARD): Add empty inline
