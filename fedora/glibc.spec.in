@@ -19,7 +19,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: @glibcversion@
-Release: 17
+Release: 1
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -984,6 +984,10 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Thu Nov 13 2008 Jakub Jelinek <jakub@redhat.com> 2.9-1
+- glibc 2.9 release
+- fix CPU_ALLOC_SIZE on 32-bit arches (BZ#7029)
+
 * Wed Nov 12 2008 Jakub Jelinek <jakub@redhat.com> 2.8.90-17
 - update from trunk
   - don't abort on broken DNS replies (#469299, BZ#7009)
