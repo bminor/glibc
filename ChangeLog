@@ -1,3 +1,257 @@
+2009-01-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* wcsmbs/wcsnrtombs.c (__wcsnrtombs): Create temporary state object
+	if no output is written.
+
+	* version.h: Bump to 2.10 development.
+
+	* posix/getconf.c: Update copyright year.
+	* nss/getent.c: Likewise.
+	* iconv/iconvconfig.c: Likewise.
+	* iconv/iconv_prog.c: Likewise.
+	* elf/ldconfig.c: Likewise.
+	* catgets/gencat.c: Likewise.
+	* csu/version.c: Likewise.
+	* elf/ldd.bash.in: Likewise.
+	* elf/sprof.c (print_version): Likewise.
+	* locale/programs/locale.c: Likewise.
+	* locale/programs/localedef.c: Likewise.
+	* nscd/nscd.c (print_version): Likewise.
+	* debug/xtrace.sh: Likewise.
+	* malloc/memusage.sh: Likewise.
+	* malloc/mtrace.pl: Likewise.
+	* debug/catchsegv.sh: Likewise.
+
+2008-12-29  Mike Frysinger  <vapier@gentoo.org>
+
+	* iconvdata/Makefile (iconv-rules): Use LC_ALL=C when running awk
+	script.
+
+2008-12-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): When the
+	gethostbyname4_r function call succeeded, just leave the loop.
+
+	[BZ #9694]
+	* wcsmbs/wchar.h: Move undefs for local __need_* constants to the
+	very end.
+	* wctype/wctype.h: Get wint_t definition directly from <stddef.h>.
+	* wctype/Makefile (tests): Add bug-wctypeh.
+	* wctype/bug-wctypeh.c: New file.
+
+	* nscd/nscd_gethst_r.c (nscd_gethst_r): Don't use nscd if
+	LOCALDOMAIN is defined.
+	* nscd/nscd_getai.c (__nscd_getai): Likewise.
+
+	* sysdeps/x86_64/bits/select.h: New file.
+
+	* resolv/res_init.c (__res_vinit): Count all servers in	statp->nscount.
+
+2008-12-21  Bruno Haible  <bruno@clisp.org>
+
+	[BZ #9677]
+	* wcsmbs/mbsnrtowcs.c (__mbsnrtowcs): Create temporary state object
+	if no output is written.
+
+2008-12-13  Klaus Dittrich  <kladit@arcor.de>
+
+	* login/utmp_file.c (pututline_file): Replace call to dup2 with
+	libc internal symbol __dup2 to avoid access through the PLT.
+
+2008-12-08  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #6545]
+	* sysdeps/unix/sysv/linux/bits/socket.h (SCM_CREDENTIALS): Make
+	available only for __USE_GNU.
+
+	* inet/Makefile (tests): Add tst-getni2.
+	* inet/tst-getni2.c: New file.
+
+	[BZ #7080]
+	* inet/getnameinfo.c (getnameinfo): Check for output buffers being
+	NULL when NI_NAMEREQD is set.
+	Patch mostly by Yang Hongyang <yanghy@cn.fujitsu.com>.
+	* inet/Makefile (tests): Add tst-getni1.
+	* inet/tst-getni1.c: New file.
+
+2008-12-03  Petr Baudis  <pasky@suse.cz>
+
+	[BZ #7067]
+	* nscd/connections.c (invalidate_cache): Use prune_run_lock
+	instead of prune_lock.
+	(nscd_run_prune): Before calling prune_cache, take prune_run_lock.
+	* nscd/nscd.h (database_dyn): Add prune_run_cache.
+
+2008-12-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_send.c (send_dg): Use correct guards for SOCK_CLOEXEC
+	use.
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Fix typo in accept4
+	handling.
+
+	* resolv/res_init.c (__res_vinit): Always assign to statp->nscount
+	after reading name server list.
+
+	[BZ #7058]
+	* nis/nss_nis/nis-hosts.c (_nss_nis_gethostbyname4_r): Fix memory
+	handling for host name aliases.
+
+2008-11-24  Arkadiusz Miśkiewicz  <arekm@maven.pl>
+
+	* sysdeps/i386/dl-tlsdesc.S (_dl_tlsdesc_dynamic): Use LOAD_PIC_REG
+	instead of doing things manually.
+
+2008-11-26  Chris Steel  <chris.steel.lnx@googlemail.com>
+
+	* posix/regex_internal.h (build_wcs_upper_buffer):
+	Return type is reg_error_t.
+
+2008-12-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/globtest.sh: Use mktemp to create temporary file and
+	directory.
+
+	* sysdeps/unix/sysv/linux/bits/sched.h (__CPU_SET_S): Handle large
+	sets correctly.
+	(__CPU_CLR_S): Likewise.
+	(__CPU_ISSET_S): Likewise.
+
+2008-12-05  Joseph Myers  <joseph@codesourcery.com>
+	    Ulrich Drepper  <drepper@redhat.com>
+
+	* scripts/firstversion.awk: Use custom comparison function to compare
+	version numbers.
+	* scripts/versions.awk: Use sort invocation which can handle
+	multi-digit sub-version numbers.
+
+2008-12-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/ld-address.c (DEFINE_LANGUAGE_CODE2): Define.
+	* locale/iso-639.def: Add Chhattisgarhi entry.
+
+2008-12-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyname3_r): Recognize
+	ESRCH return value.
+	(_nss_dns_gethostbyname4_r): Likewise.
+	* resolv/res_init.c (__res_vinit): Initialize nscount to zero.
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): In case we use
+	gethostbyname4_r, we don't have a separate IPv6 status, so copy
+	the no_data variable.
+
+	* resolv/res_init.c (__res_vinit): Fill in IPv4 name server
+	information at the correct index.
+
+	* socket/sys/socket.h: Declare accept4.
+	* socket/accept4.c: New file.
+	* sysdeps/unix/sysv/linux/accept4.c: New file.
+	* sysdeps/unix/sysv/linux/i386/accept4.S: New file.
+	* socket/Makefile (routines): Add accept4.
+	* socket/Versions: Export accept4 with version GLIBC_2.10.
+	* socket/paccept.c: Removed.
+	* sysdeps/unix/sysv/linux/paccept.c: Removed.
+	* sysdeps/unix/sysv/linux/i386/paccept.S: Removed.
+	* Versions.def: Define GLIBC_2.10 for libc.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define __ASSUME_ACCEPT4.
+
+	* nscd/connections.c: Use accept4.
+
+	* sysdeps/unix/sysv/linux/i386/socket.S: Fix comment.
+
+2008-12-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_send.c (send_dg): Create sockets with non-blocking
+	flag already set.
+
+	* stdlib/setenv.c (unsetenv): Don't search environment if it does
+	not exist.
+	* stdlib/Makefile (tests): Add tst-unsetenv1.
+	* stdlib/tst-unsetenv1.c: New file.
+
+2008-11-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* login/utmp_file.c (file_writable): New variable.
+	(setutent_file): Don't try to open file for writing.
+	(pututline_file): Before writing, make descriptor writable if
+	necessary.
+
+2008-11-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Only restrict search
+	to IPv4 or IPv6 if an interface has been found.
+
+2008-11-26  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/ipc_priv.h: Renamed to ...
+	* sysdeps/unix/sysv/linux/powerpc/ipc_priv.h: ... here.
+
+	* sysdeps/unix/sysv/linux/alpha/wordexp.c: Renamed to ...
+	* sysdeps/unix/sysv/linux/ia64/wordexp.c: ... here.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/wordexp.c: Change #include.
+
+	* elf/elf.h (NT_386_IOPERM): New macro.
+	(NT_PPC_VSX): New macro.
+
+2008-11-25  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/alpha, sysdeps/unix/bsd/osf/alpha,
+	sysdeps/unix/bsd/Attic/osf1/alpha, sysdeps/unix/sysv/linux/alpha,
+	sysdeps/unix/sysv/linux/alpha/alpha, sysdeps/unix/alpha,
+	sysdeps/mach/alpha, sysdeps/mach/hurd/alpha:
+	Subdirectories moved to ports repository.
+	* configure.in (base_machine): Remove alpha case.
+
+2008-11-25  Thomas Schwinge  <tschwinge@gnu.org>
+
+	* sysdeps/mach/strerror_l.c: New file.
+
+2008-11-13  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	[BZ #6411]
+	* sysdeps/powerpc/fpu/Makefile: Added test case tst-setcontext-fpscr.
+	* sysdeps/powerpc/fpu/feholdexcpt.c (_FPU_MASK_ALL): Define to replace
+	magic numbers.
+	* sysdeps/powerpc/fpu/fenv_libc.h (fesetenv_register): Dynamically
+	choose mtfsf insn based on PPC_FEATURE_HAS_DFP.
+	(relax_fenv_state): Same as above.
+	(FPSCR_29): Reserve bit in ISA 2.05.
+	(FPSCR_NI): Provide define for compat.
+	* sysdeps/powerpc/fpu/fesetenv.c (_FPU_MASK_ALL): Define to replace
+	magic numbers.
+	* sysdeps/powerpc/fpu/feupdateenv.c (_FPU_MASK_ALL): Define to replace
+	magic numbers.
+	* sysdeps/powerpc/fpu/tst-setcontext-fpscr.c: New file.  Test case to
+	test setcontext and swapcontext with dynamic 64-bit FPSCR detection.
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp-common.S (__longjmp): Adjust
+	access to hwcap to account for hwcap size increase to uint64_t.
+	* sysdeps/powerpc/powerpc32/fpu/setjmp-common.S (__sigsetjmp ):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext-common.S
+	(*setcontext): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power6/fpu/setcontext.S:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power6/fpu/swapcontext.S:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext-common.S
+	(*setcontext): dynamically select mtfsf insn based on
+	PPC_FEATURE_HAS_DFP. Adjust access to hwcap to account for hwcap size
+	increase to uint64_t.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext-common.S
+	(*swapcontext): dynamically select mtfsf insn based on
+	PPC_FEATURE_HAS_DFP.  Adjust access to hwcap to account for hwcap size
+	increase to uint64_t.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power6/fpu/setcontext.S:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power6/fpu/swapcontext.S:
+	New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/setcontext.S
+	(*setcontext): dynamically select mtfsf insn based on
+	PPC_FEATURE_HAS_DFP.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/swapcontext.S
+	(*swapcontext): dynamically select mtfsf insn based on
+	PPC_FEATURE_HAS_DFP.
+
 2008-11-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* version.h: Bump for 2.9 release.
@@ -2957,7 +3211,7 @@
 
 	* nscd/aicache.c (addhstaiX): Fix default TTL handling.
 
-	* inet/getnetgrent.c (setup): Encrypt static pointer.
+	* inet/getnetgrent_r.c (setup): Encrypt static pointer.
 
 2007-10-28  Ulrich Drepper  <drepper@redhat.com>
 

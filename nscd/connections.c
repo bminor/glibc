@@ -109,6 +109,7 @@ struct database_dyn dbs[lastdb] =
   [pwddb] = {
     .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
     .prune_lock = PTHREAD_MUTEX_INITIALIZER,
+    .prune_run_lock = PTHREAD_MUTEX_INITIALIZER,
     .enabled = 0,
     .check_file = 1,
     .persistent = 0,
@@ -129,6 +130,7 @@ struct database_dyn dbs[lastdb] =
   [grpdb] = {
     .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
     .prune_lock = PTHREAD_MUTEX_INITIALIZER,
+    .prune_run_lock = PTHREAD_MUTEX_INITIALIZER,
     .enabled = 0,
     .check_file = 1,
     .persistent = 0,
@@ -149,6 +151,7 @@ struct database_dyn dbs[lastdb] =
   [hstdb] = {
     .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
     .prune_lock = PTHREAD_MUTEX_INITIALIZER,
+    .prune_run_lock = PTHREAD_MUTEX_INITIALIZER,
     .enabled = 0,
     .check_file = 1,
     .persistent = 0,
@@ -169,6 +172,7 @@ struct database_dyn dbs[lastdb] =
   [servdb] = {
     .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
     .prune_lock = PTHREAD_MUTEX_INITIALIZER,
+    .prune_run_lock = PTHREAD_MUTEX_INITIALIZER,
     .enabled = 0,
     .check_file = 1,
     .persistent = 0,
@@ -238,8 +242,9 @@ static int resolv_conf_descr = -1;
 /* Negative if SOCK_CLOEXEC is not supported, positive if it is, zero
    before be know the result.  */
 static int have_sock_cloexec;
-/* The paccept syscall was introduced at the same time as SOCK_CLOEXEC.  */
-# define have_paccept -1	// XXX For the time being there is no such call
+#endif
+#ifndef __ASSUME_ACCEPT4
+static int have_accept4;
 #endif
 
 /* Number of times clients had to wait.  */
@@ -975,9 +980,9 @@ invalidate_cache (char *key, int fd)
 
   if (dbs[number].enabled)
     {
-      pthread_mutex_lock (&dbs[number].prune_lock);
+      pthread_mutex_lock (&dbs[number].prune_run_lock);
       prune_cache (&dbs[number], LONG_MAX, fd);
-      pthread_mutex_unlock (&dbs[number].prune_lock);
+      pthread_mutex_unlock (&dbs[number].prune_run_lock);
     }
   else
     {
@@ -1492,6 +1497,7 @@ nscd_run_prune (void *p)
   dbs[my_number].wakeup_time = now + CACHE_PRUNE_INTERVAL + my_number;
 
   pthread_mutex_t *prune_lock = &dbs[my_number].prune_lock;
+  pthread_mutex_t *prune_run_lock = &dbs[my_number].prune_run_lock;
   pthread_cond_t *prune_cond = &dbs[my_number].prune_cond;
 
   pthread_mutex_lock (prune_lock);
@@ -1525,7 +1531,12 @@ nscd_run_prune (void *p)
 
 	  pthread_mutex_unlock (prune_lock);
 
+	  /* We use a separate lock for running the prune function (instead
+	     of keeping prune_lock locked) because this enables concurrent
+	     invocations of cache_add which might modify the timeout value.  */
+	  pthread_mutex_lock (prune_run_lock);
 	  next_wait = prune_cache (&dbs[my_number], prune_now, -1);
+	  pthread_mutex_unlock (prune_run_lock);
 
 	  next_wait = MAX (next_wait, CACHE_PRUNE_INTERVAL);
 	  /* If clients cannot determine for sure whether nscd is running
@@ -1609,8 +1620,8 @@ nscd_run_worker (void *p)
       /* We are done with the list.  */
       pthread_mutex_unlock (&readylist_lock);
 
-#ifndef __ASSUME_SOCK_CLOEXEC
-      if (have_sock_cloexec < 0)
+#ifndef __ASSUME_ACCEPT4
+      if (have_accept4 < 0)
 	{
 	  /* We do not want to block on a short read or so.  */
 	  int fl = fcntl (fd, F_GETFL);
@@ -1819,22 +1830,20 @@ main_loop_poll (void)
 	      /* We have a new incoming connection.  Accept the connection.  */
 	      int fd;
 
-#ifndef __ASSUME_PACCEPT
+#ifndef __ASSUME_ACCEPT4
 	      fd = -1;
-	      if (have_paccept >= 0)
+	      if (have_accept4 >= 0)
 #endif
 		{
-#if 0
-		  fd = TEMP_FAILURE_RETRY (paccept (sock, NULL, NULL, NULL,
+		  fd = TEMP_FAILURE_RETRY (accept4 (sock, NULL, NULL,
 						    SOCK_NONBLOCK));
-#ifndef __ASSUME_PACCEPT
-		  if (have_paccept == 0)
-		    have_paccept = fd != -1 || errno != ENOSYS ? 1 : -1;
-#endif
+#ifndef __ASSUME_ACCEPT4
+		  if (have_accept4 == 0)
+		    have_accept4 = fd != -1 || errno != ENOSYS ? 1 : -1;
 #endif
 		}
-#ifndef __ASSUME_PACCEPT
-	      if (have_paccept < 0)
+#ifndef __ASSUME_ACCEPT4
+	      if (have_accept4 < 0)
 		fd = TEMP_FAILURE_RETRY (accept (sock, NULL, NULL));
 #endif
 
@@ -2000,7 +2009,7 @@ main_loop_epoll (int efd)
     /* We cannot use epoll.  */
     return;
 
-#ifdef HAVE_INOTIFY
+# ifdef HAVE_INOTIFY
   if (inotify_fd != -1)
     {
       ev.events = EPOLLRDNORM;
@@ -2010,7 +2019,7 @@ main_loop_epoll (int efd)
 	return;
       nused = 2;
     }
-#endif
+# endif
 
   while (1)
     {
@@ -2025,8 +2034,26 @@ main_loop_epoll (int efd)
 	if (revs[cnt].data.fd == sock)
 	  {
 	    /* A new connection.  */
-	    int fd = TEMP_FAILURE_RETRY (accept (sock, NULL, NULL));
+	    int fd;
 
+# ifndef __ASSUME_ACCEPT4
+	    fd = -1;
+	    if (have_accept4 >= 0)
+# endif
+	      {
+		fd = TEMP_FAILURE_RETRY (accept4 (sock, NULL, NULL,
+						  SOCK_NONBLOCK));
+# ifndef __ASSUME_ACCEPT4
+		if (have_accept4 == 0)
+		  have_accept4 = fd != -1 || errno != ENOSYS ? 1 : -1;
+# endif
+	      }
+# ifndef __ASSUME_ACCEPT4
+	    if (have_accept4 < 0)
+	      fd = TEMP_FAILURE_RETRY (accept (sock, NULL, NULL));
+# endif
+
+	    /* Use the descriptor if we have not reached the limit.  */
 	    if (fd >= 0)
 	      {
 		/* Try to add the  new descriptor.  */
@@ -2048,7 +2075,7 @@ main_loop_epoll (int efd)
 		  }
 	      }
 	  }
-#ifdef HAVE_INOTIFY
+# ifdef HAVE_INOTIFY
 	else if (revs[cnt].data.fd == inotify_fd)
 	  {
 	    bool to_clear[lastdb] = { false, };
@@ -2104,7 +2131,7 @@ main_loop_epoll (int efd)
 		  pthread_cond_signal (&dbs[dbcnt].prune_cond);
 		}
 	  }
-#endif
+# endif
 	else
 	  {
 	    /* Remove the descriptor from the epoll descriptor.  */

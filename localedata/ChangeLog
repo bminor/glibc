@@ -1,3 +1,37 @@
+2008-12-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/iso14651_t1_common: Fix sorting of U+0AB3.
+	Patch by Pravin Satpute <psatpute@redhat.com>.
+
+2008-12-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/i18n: Move Indic Matra characters to punct.
+	* locales/as_IN: Add support for internationalized digits.
+	* locales/bn_BD: Likewise.
+	* locales/bn_IN: Likewise.
+	* locales/gu_IN: Likewise.
+	* locales/hi_IN: Likewise.
+	* locales/kn_IN: Likewise.
+	* locales/ml_IN: Likewise.
+	* locales/mr_IN: Likewise.
+	* locales/or_IN: Likewise.
+	* locales/pa_IN: Likewise.
+	* locales/ta_IN: Likewise.
+	* locales/te_IN: Likewise.
+	Patch by Pravin Satpute <psatpute@redhat.com>.
+
+2008-12-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* tests-mbwc/tst_types.h (TIN_MBRLEN_REC): Use correct array
+	length constant.
+
+2008-12-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* SUPPORTED (SUPPORTED-LOCALES): Add hne_IN.
+
+	* locales/hne_IN: New file.
+	Contributed by Pravin Satpute <psatpute@redhat.com>.
+
 2008-10-31  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #6920]

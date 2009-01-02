@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1998,2002,2003,2005 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1998,2002,2003,2005,2008 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
 #define P2(a, b) a##b
 
 	.text
-/* The socket-oriented system calls are handled unusally in Linux.
+/* The socket-oriented system calls are handled unusally in Linux/i386.
    They are all gated through the single `socketcall' system call number.
    `socketcall' takes two arguments: the first is the subcode, specifying
    which socket function is being called; and the second is a pointer to

@@ -984,7 +984,15 @@ rm -f *.filelist*
 %endif
 
 %changelog
-* Thu Nov 13 2008 Jakub Jelinek <jakub@redhat.com> 2.9-1
+* Fri Jan  2 2009 Jakub Jelinek <jakub@redhat.com> 2.9.90-1
+- update from trunk (#478314)
+
+* Mon Dec  8 2008 Jakub Jelinek <jakub@redhat.com> 2.9-3
+- temporarily disable _nss_dns_gethostbyname4_r (#459756)
+- NIS hostname lookup fixes (#473073, #474800, BZ#7058)
+- fix unsetenv (#472941)
+
+* Thu Nov 13 2008 Jakub Jelinek <jakub@redhat.com> 2.9-2
 - glibc 2.9 release
 - fix CPU_ALLOC_SIZE on 32-bit arches (BZ#7029)
 
