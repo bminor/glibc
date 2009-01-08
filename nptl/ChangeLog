@@ -1,3 +1,32 @@
+2009-01-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* init.c (__pthread_initialize_minimal_internal): Optimize test
+	FUTEX_CLOCK_REALTIME a bit.
+
+2009-01-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* init.c (__pthread_initialize_minimal_internal): Cheat a bit by
+	only passing five parameters to FUTEX_WAIT_BITSET call.
+
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevellock.S
+	(__lll_timedlock_wait): Use FUTEX_WAIT_BITSET|FUTEX_CLOCK_REALTIME
+	instead of computing relative timeout.
+
+2009-01-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* init.c (__pthread_initialize_minimal_internal): Check for
+	FUTEX_CLOCK_REALTIME flag.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S (__lll_timedlock_wait):
+	Use FUTEX_WAIT_BITSET|FUTEX_CLOCK_REALTIME instead of computing
+	relative timeout.
+
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Define
+	FUTEX_CLOCK_REALTIME and FUTEX_BITSET_MATCH_ANY.
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.h: Likewise.
+
 2008-12-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/pthread.h (pthread_cleanup_pop): Use { } as empty

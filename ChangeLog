@@ -1,4 +1,76 @@
+2009-01-08  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #9720]
+	* sysdeps/unix/sysv/linux/bits/resource.h (enum __rusage_who): Avoid
+	comma after RUSAGE_CHILDREN if not -D_GNU_SOURCE.
+	* sysdeps/unix/sysv/linux/sparc/bits/resource.h (enum __rusage_who):
+	Likewise.
+
+2009-01-05  Paolo Bonzini  <bonzini@gnu.org>
+
+	[BZ 697]
+	* posix/regexec.c (prune_impossible_nodes): Handle sifted_states[0]
+	being NULL also if there are no backreferences.
+	* posix/rxspencer/tests: Add testcases.
+
+2009-01-04  Paolo Bonzini  <bonzini@gnu.org>
+
+	[BZ 9697]
+	* posix/bug-regex17.c: Add testcases.
+	* posix/regcomp.c (re_compile_fastmap_iter): Rewrite COMPLEX_BRACKET
+	handling.
+
+2009-01-05  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/bits/libc-vdso.h: New file.
+	* sysdeps/unix/sysv/linux/s390/gettimeofday.c: New file.
+	* sysdeps/unix/sysv/linux/s390/init-first.c: New file.
+	* sysdeps/unix/sysv/linux/s390/Makefile (sysdep_routines): Add dl-vdso
+	for elf subdir.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h (INLINE_VSYSCALL,
+	INTERNAL_VSYSCALL, INTERNAL_VSYSCALL_NO_SYSCALL_FALLBACK,
+	INTERNAL_SYSCALL_NCS, HAVE_CLOCK_GETRES_VSYSCALL and
+	HAVE_CLOCK_GETTIME_VSYSCALL: Define.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/Versions: New file.
+
+2008-12-31  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regcomp.c (re_compile_fastmap_iter): Use __mbrtowc.
+	* posix/regex_internal.c (build_wcs_buffer, build_wcs_upper_buffer,
+	re_string_skip_chars, re_string_reconstruct): Likewise.
+	* posix/regex_internal.h [!_LIBC] (__mbrtowc): New #define.
+
+2008-12-31  Rafael Avila de Espindola  <espindola@google.com>
+
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyaddr2_r): Check and
+	adjust the buffer alignment.
+
+2009-01-07  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/Makefile (sysdep_headers) [subdir=socket]:
+	Add net/ethernet.h net/if_arp.h net/if_ether.h net/if_ppp.h
+	net/route.h.
+
+	* hurd/report-wait.c (describe_number): Use __stpcpy to prepend
+	flavor to description only when flavor is not NULL.
+
+	* hurd/hurdsig.c (signal_allowed): Unlock _hurd_dtable_lock
+	mutex after SIGIO/SIGURG lookup loop.
+
+2009-01-03  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* bits/resource.h (PRIO_PROCESS, PRIO_PGRP, PRIO_USER): Add macros.
+
+2009-01-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Describe 6th argument
+	handling.
+
 2009-01-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_FUTEX_CLOCK_REALTIME): Define.
 
 	* wcsmbs/wcsnrtombs.c (__wcsnrtombs): Create temporary state object
 	if no output is written.

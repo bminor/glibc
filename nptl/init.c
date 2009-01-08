@@ -1,4 +1,4 @@
-/* Copyright (C) 2002,2003,2004,2005,2006,2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2007, 2008, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <assert.h>
+#include <errno.h>
 #include <limits.h>
 #include <signal.h>
 #include <stdlib.h>
@@ -47,6 +48,15 @@ int __set_robust_list_avail;
   __set_robust_list_avail = -1
 #else
 # define set_robust_list_not_avail() do { } while (0)
+#endif
+
+#ifndef __ASSUME_FUTEX_CLOCK_REALTIME
+/* Nonzero if we do not have FUTEX_CLOCK_REALTIME.  */
+int __have_futex_clock_realtime;
+# define __set_futex_clock_realtime() \
+  __have_futex_clock_realtime = 1
+#else
+#define __set_futex_clock_realtime() do { } while (0)
 #endif
 
 /* Version of the library, used in libthread_db to detect mismatches.  */
@@ -290,6 +300,28 @@ __pthread_initialize_minimal_internal (void)
     if (!INTERNAL_SYSCALL_ERROR_P (word, err))
       THREAD_SETMEM (pd, header.private_futex, FUTEX_PRIVATE_FLAG);
   }
+
+  /* Private futexes have been introduced earlier than the
+     FUTEX_CLOCK_REALTIME flag.  We don't have to run the test if we
+     know the former are not supported.  This also means we know the
+     kernel will return ENOSYS for unknown operations.  */
+  if (THREAD_GETMEM (pd, header.private_futex) != 0)
+#endif
+#ifndef __ASSUME_FUTEX_CLOCK_REALTIME
+    {
+      int word = 0;
+      /* NB: the syscall actually takes six parameters.  The last is the
+	 bit mask.  But since we will not actually wait at all the value
+	 is irrelevant.  Given that passing six parameters is difficult
+	 on some architectures we just pass whatever random value the
+	 calling convention calls for to the kernel.  It causes no harm.  */
+      word = INTERNAL_SYSCALL (futex, err, 5, &word,
+			       FUTEX_WAIT_BITSET | FUTEX_CLOCK_REALTIME
+			       | FUTEX_PRIVATE_FLAG, 1, NULL, 0);
+      assert (INTERNAL_SYSCALL_ERROR_P (word, err));
+      if (INTERNAL_SYSCALL_ERRNO (word, err) != ENOSYS)
+	__set_futex_clock_realtime ();
+    }
 #endif
 
   /* Set initial thread's stack block from 0 up to __libc_stack_end.
