@@ -1,3 +1,175 @@
+2009-02-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/wfileops.c (_IO_wfile_underflow): Fix handling of
+	incomplete characters at end of input buffer.
+	* libio/Makefile (tests): Add tst-fgetwc.
+	* libio/tst-fgetwc.c: New file.
+	* libio/tst-fgetwc.input: New file.
+
+2009-02-02  Andrew Stubbs  <ams@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/sh/Makefile (libm.so-no-z-defs): Define.
+
+2009-02-02  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #9793]
+	* iconv/gconv_trans.c (__gconv_transliterate): Don't change
+	*OUTBUFSTART unless the whole output fit into the buffer.
+	* iconv/Makefile (tests): Add tst-iconv4.
+	* iconv/tst-iconv4.c: New file.
+
+2009-02-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/cacheinfo.c (intel_02_known): Add new descriptors.
+	* sysdeps/unix/sysv/linux/i386/sysconf.c (intel_02_known): Likewise.
+
+2009-01-29  Andrew Stubbs  <ams@codesourcery.com>
+
+	* elf/Makefile (ld.so): Adjust the sed script to insert _begin in to
+	newer linker scripts.
+
+2009-01-30  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #7040]
+	* sysdeps/unix/sysv/linux/sys/inotify.h: Second parameter of
+	inotify_rm_watch should have type int.
+
+2009-01-06  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp-common.S (__longjmp):
+	Make aligned_restore_vmx a local symbol.
+	* sysdeps/powerpc/powerpc64/__longjmp-common.S (__longjmp):
+	Likewise.
+
+2009-01-30  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/bits/shm.h (SHM_EXEC): Define.
+	* sysdeps/unix/sysv/linux/ia64/bits/shm.h (SHM_EXEC): Define.
+	* sysdeps/unix/sysv/linux/powerpc/bits/shm.h (SHM_EXEC): Define.
+	* sysdeps/unix/sysv/linux/s390/bits/shm.h (SHM_EXEC): Define.
+	* sysdeps/unix/sysv/linux/sh/bits/shm.h (SHM_EXEC): Define.
+	* sysdeps/unix/sysv/linux/sparc/bits/shm.h (SHM_EXEC): Define.
+	* sysdeps/unix/sysv/linux/x86_64/bits/shm.h (SHM_EXEC): Define.
+
+2009-01-11  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	[BZ #9726]
+	* sysdeps/powerpc/fpu/tst-setcontext-fpscr.c (_SET_DI_FPSCR,
+	_SET_SI_FPSCR): Clobber fp0 to prevent erroneous test-case passes.
+
+2009-01-08  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	[BZ #9726]
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext-common.S
+	(__CONTEXT_FUNC_NAME): Fix mtfsf to use fp31 instead of fp0.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext-common.S
+	(__CONTEXT_FUNC_NAME): Fix mtfsf to use fp31 instead of fp0.
+
+2009-01-11  Thomas Schwinge  <tschwinge@gnu.org>
+
+	* sysdeps/generic/dl-osinfo.h (_dl_setup_stack_chk_guard): Use
+	memcpy instead of memcmp.
+	(_dl_setup_pointer_guard): Likewise.
+
+2009-01-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (sYSMALLOc): Don't use assert when detecting
+	manipulated brk, use malloc_printerr.
+	* misc/sbrk.c (__sbrk): Better error handling for nonsense
+	requests.
+
+2009-01-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* string/string.h (memchr, strchr, strrchr, strpbrk, strstr, index,
+	rindex): For C++ add inlines so that they can be recognized as
+	builtins.
+	* string/strings.h: Define correct C++ prototypes for gcc 4.4.
+
+2009-01-29  Ulrich Drepper  <drepper@redhat.com>
+	    Jakub Jelinek  <jakub@redhat.com>
+
+	* string/string.h: Define correct C++ prototypes for gcc 4.4.
+	* wcsmbs/wchar.h: Likewise.
+
+2009-01-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/stackinfo.h (stackinfo_get_sp): Define.
+	(stackinfo_sub_sp): Define.
+
+2009-01-28  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #9750]
+	* nscd/mem.c (gc): Use alloca_count to get the real stack usage.
+	* include/alloca.h (alloca_account): Define.
+	* sysdeps/x86_64/stackinfo.h (stackinfo_get_sp): Define.
+	(stackinfo_sub_sp): Define.
+
+	* nscd/connections.c (nscd_init): If database file access fails
+	check whether this is due to permission problems and bail in that
+	case.
+
+	[BZ #9741]
+	* nscd/mem.c (gc): Fix assignment of he_data in case malloc is used.
+	Reported by Jun'ichi Nomura <j-nomura@ce.jp.nec.com>.
+
+2009-01-14  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/sysdep.h (INTERNAL_SYSCALL):
+	Add "t" to clobber list.
+	(INTERNAL_SYSCALL_NCS): Likewise.
+
+2009-01-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/getent.c (print_networks): Don't print comma between aliases.
+
+2009-01-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/tst-clone.c (do_test): Avoid warning.
+
+	* misc/hsearch_r.c (hcreate_r): We need at least three elements in
+	the hash table.
+	* misc/Makefile (tests): Add bug-hsearch1.
+	* misc/bug-hsearch1.c: New file.
+
+2009-01-22  Roland McGrath  <roland@redhat.com>
+
+	* Makeconfig (%.v.i): Strip trailing # comments,
+	not only whole-line comments.
+
+2009-01-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/dl-osinfo.h (_dl_setup_stack_chk_guard): Take
+	one parameter.  If non-NULL use it to initialize return value.
+	(_dl_setup_pointer_guard): New function.
+	* sysdeps/unix/sysv/linux/dl-osinfo.h: Likewise.
+	* sysdeps/generic/ldsodefs.h: Declare _dl_random.
+	* elf/rtld.c (security_init): Pass _dl_random to
+	_dl_setup_stack_chk_guard.  Call _dl_setup_pointer_guard to initialize
+	pointer_chk_guard.
+	* elf/dl-sysdep.c (_dl_random): New variable.
+	(_dl_sysdep_start): Handle AT_RANDOM.
+	(_dl_show_auxv): Likewise.
+	* elf/dl-support.c (_dl_random): New variable.
+	(_dl_aux_init): Handle AT_RANDOM.
+	* csu/libc-start.c [!SHARED] (libc_start_main): Pass _dl_random
+	to _dl_setup_stack_chk_guard.
+
+	* elf/elf.h (AT_RANDOM): Define AT_BASE_PLATFORM and AT_RANDOM.
+
+2009-01-10  Roland McGrath  <roland@redhat.com>
+
+	* nscd/nscd.c (parse_opt): Use argp_error for bad -i argument.
+
+2009-01-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/fpu/libm-test-ulps: Adjust expm1 errors.
+
+	[BZ #9706]
+	* nss/nss_files/files-parse.c (strtou32): New function.
+	(INT_FIELD): Use strotu32 instead of strtoul to unify behavior
+	across 32-bit and 64-bit platforms.
+	(INT_FIELD_MAYBE_NULL): Likewise.
+
 2009-01-08  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #9720]
@@ -8,14 +180,14 @@
 
 2009-01-05  Paolo Bonzini  <bonzini@gnu.org>
 
-	[BZ 697]
+	[BZ #697]
 	* posix/regexec.c (prune_impossible_nodes): Handle sifted_states[0]
 	being NULL also if there are no backreferences.
 	* posix/rxspencer/tests: Add testcases.
 
 2009-01-04  Paolo Bonzini  <bonzini@gnu.org>
 
-	[BZ 9697]
+	[BZ #9697]
 	* posix/bug-regex17.c: Add testcases.
 	* posix/regcomp.c (re_compile_fastmap_iter): Rewrite COMPLEX_BRACKET
 	handling.
@@ -535,7 +707,7 @@
 
 	[BZ #6942]
 	* resolv/res_send.c (send_vc): Fix use of unaligned address.
-        Properly handle partial reads.
+	Properly handle partial reads.
 
 2008-10-01  Mark Shinwell  <shinwell@codesourcery.com>
 
@@ -586,7 +758,7 @@
 	Patch by Michael Solberg <msolberg@redhat.com>.
 
 2008-09-12  Flavio Leitner  <fleitner@redhat.com>
-            Ulrich Drepper  <drepper@redhat.com>
+	    Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/malloc.c (public_vALLOc): Try other arenas in case
 	_int_valloc fails.
@@ -4539,7 +4711,7 @@
 2007-08-16  Andreas Jaeger  <aj@suse.de>
 
 	* locale/localeinfo.h: Make _nl_category_name_idxs extern.
-        Reported by Peter Festner <peter.festner@ewetel.net>.
+	Reported by Peter Festner <peter.festner@ewetel.net>.
 
 2007-08-17  Jakub Jelinek  <jakub@redhat.com>
 
@@ -5629,8 +5801,8 @@
 	* sysdeps/generic/ldsodefs.h (_dl_addr_inside_object): New prototype.
 
 2007-06-18  Jakub Jelinek  <jakub@redhat.com>
-            Tomas Janousek  <tjanouse@redhat.com>
-            Ulrich Drepper  <drepper@redhat.com>
+	    Tomas Janousek  <tjanouse@redhat.com>
+	    Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #4647]
 	* resolv/res_send.c (send_dg): Remove socket_pf.  Use ipv6_unavail
