@@ -1581,11 +1581,11 @@ typedef struct malloc_chunk* mchunkptr;
 
 #if __STD_C
 
-Void_t*         _int_malloc(mstate, size_t);
-void            _int_free(mstate, Void_t*);
-Void_t*         _int_realloc(mstate, Void_t*, size_t);
-Void_t*         _int_memalign(mstate, size_t, size_t);
-Void_t*         _int_valloc(mstate, size_t);
+static Void_t*  _int_malloc(mstate, size_t);
+static void     _int_free(mstate, mchunkptr);
+static Void_t*  _int_realloc(mstate, mchunkptr, INTERNAL_SIZE_T);
+static Void_t*  _int_memalign(mstate, size_t, size_t);
+static Void_t*  _int_valloc(mstate, size_t);
 static Void_t*  _int_pvalloc(mstate, size_t);
 /*static Void_t*  cALLOc(size_t, size_t);*/
 #ifndef _LIBC
@@ -1632,12 +1632,12 @@ static void      free_atfork(Void_t* mem, const Void_t *caller);
 
 #else
 
-Void_t*         _int_malloc();
-void            _int_free();
-Void_t*         _int_realloc();
-Void_t*         _int_memalign();
-Void_t*         _int_valloc();
-Void_t*         _int_pvalloc();
+static Void_t*  _int_malloc();
+static void     _int_free();
+static Void_t*  _int_realloc();
+static Void_t*  _int_memalign();
+static Void_t*  _int_valloc();
+static Void_t*  _int_pvalloc();
 /*static Void_t*  cALLOc();*/
 static Void_t** _int_icalloc();
 static Void_t** _int_icomalloc();
@@ -3084,7 +3084,7 @@ static Void_t* sYSMALLOc(nb, av) INTERNAL_SIZE_T nb; mstate av;
 	set_head(chunk_at_offset(old_top, old_size), (2*SIZE_SZ)|PREV_INUSE);
 	set_foot(chunk_at_offset(old_top, old_size), (2*SIZE_SZ));
 	set_head(old_top, old_size|PREV_INUSE|NON_MAIN_ARENA);
-	_int_free(av, chunk2mem(old_top));
+	_int_free(av, old_top);
       } else {
 	set_head(old_top, (old_size + 2*SIZE_SZ)|PREV_INUSE);
 	set_foot(old_top, (old_size + 2*SIZE_SZ));
@@ -3131,7 +3131,7 @@ static Void_t* sYSMALLOc(nb, av) INTERNAL_SIZE_T nb; mstate av;
 
   if (brk != (char*)(MORECORE_FAILURE)) {
     /* Call the `morecore' hook if necessary.  */
-    if (__after_morecore_hook)
+    if (__builtin_expect (__after_morecore_hook != NULL, 0))
       (*__after_morecore_hook) ();
   } else {
   /*
@@ -3270,7 +3270,7 @@ static Void_t* sYSMALLOc(nb, av) INTERNAL_SIZE_T nb; mstate av;
           snd_brk = (char*)(MORECORE(0));
         } else
 	  /* Call the `morecore' hook if necessary.  */
-	  if (__after_morecore_hook)
+	  if (__builtin_expect (__after_morecore_hook != NULL, 0))
 	    (*__after_morecore_hook) ();
       }
 
@@ -3323,7 +3323,7 @@ static Void_t* sYSMALLOc(nb, av) INTERNAL_SIZE_T nb; mstate av;
 
           /* If possible, release the rest. */
           if (old_size >= MINSIZE) {
-            _int_free(av, chunk2mem(old_top));
+            _int_free(av, old_top);
           }
 
         }
@@ -3415,7 +3415,7 @@ static int sYSTRIm(pad, av) size_t pad; mstate av;
 
       MORECORE(-extra);
       /* Call the `morecore' hook if necessary.  */
-      if (__after_morecore_hook)
+      if (__builtin_expect (__after_morecore_hook != NULL, 0))
 	(*__after_morecore_hook) ();
       new_brk = (char*)(MORECORE(0));
 
@@ -3542,7 +3542,7 @@ public_mALLOc(size_t bytes)
   Void_t *victim;
 
   __malloc_ptr_t (*hook) (size_t, __const __malloc_ptr_t) = __malloc_hook;
-  if (hook != NULL)
+  if (__builtin_expect (hook != NULL, 0))
     return (*hook)(bytes, RETURN_ADDRESS (0));
 
   arena_get(ar_ptr, bytes);
@@ -3585,7 +3585,7 @@ public_fREe(Void_t* mem)
   mchunkptr p;                          /* chunk corresponding to mem */
 
   void (*hook) (__malloc_ptr_t, __const __malloc_ptr_t) = __free_hook;
-  if (hook != NULL) {
+  if (__builtin_expect (hook != NULL, 0)) {
     (*hook)(mem, RETURN_ADDRESS (0));
     return;
   }
@@ -3622,7 +3622,7 @@ public_fREe(Void_t* mem)
 #else
   (void)mutex_lock(&ar_ptr->mutex);
 #endif
-  _int_free(ar_ptr, mem);
+  _int_free(ar_ptr, p);
   (void)mutex_unlock(&ar_ptr->mutex);
 }
 #ifdef libc_hidden_def
@@ -3635,14 +3635,11 @@ public_rEALLOc(Void_t* oldmem, size_t bytes)
   mstate ar_ptr;
   INTERNAL_SIZE_T    nb;      /* padded request size */
 
-  mchunkptr oldp;             /* chunk corresponding to oldmem */
-  INTERNAL_SIZE_T    oldsize; /* its size */
-
   Void_t* newp;             /* chunk to return */
 
   __malloc_ptr_t (*hook) (__malloc_ptr_t, size_t, __const __malloc_ptr_t) =
     __realloc_hook;
-  if (hook != NULL)
+  if (__builtin_expect (hook != NULL, 0))
     return (*hook)(oldmem, bytes, RETURN_ADDRESS (0));
 
 #if REALLOC_ZERO_BYTES_FREES
@@ -3652,8 +3649,10 @@ public_rEALLOc(Void_t* oldmem, size_t bytes)
   /* realloc of null is supposed to be same as malloc */
   if (oldmem == 0) return public_mALLOc(bytes);
 
-  oldp    = mem2chunk(oldmem);
-  oldsize = chunksize(oldp);
+  /* chunk corresponding to oldmem */
+  const mchunkptr oldp    = mem2chunk(oldmem);
+  /* its size */
+  const INTERNAL_SIZE_T oldsize = chunksize(oldp);
 
   /* Little security check which won't hurt performance: the
      allocator never wrapps around at the end of the address space.
@@ -3705,7 +3704,7 @@ public_rEALLOc(Void_t* oldmem, size_t bytes)
   tsd_setspecific(arena_key, (Void_t *)ar_ptr);
 #endif
 
-  newp = _int_realloc(ar_ptr, oldmem, bytes);
+  newp = _int_realloc(ar_ptr, oldp, nb);
 
   (void)mutex_unlock(&ar_ptr->mutex);
   assert(!newp || chunk_is_mmapped(mem2chunk(newp)) ||
@@ -3728,7 +3727,7 @@ public_rEALLOc(Void_t* oldmem, size_t bytes)
 #else
 	  (void)mutex_lock(&ar_ptr->mutex);
 #endif
-	  _int_free(ar_ptr, oldmem);
+	  _int_free(ar_ptr, oldp);
 	  (void)mutex_unlock(&ar_ptr->mutex);
 	}
     }
@@ -3748,7 +3747,7 @@ public_mEMALIGn(size_t alignment, size_t bytes)
   __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, size_t,
 					__const __malloc_ptr_t)) =
     __memalign_hook;
-  if (hook != NULL)
+  if (__builtin_expect (hook != NULL, 0))
     return (*hook)(alignment, bytes, RETURN_ADDRESS (0));
 
   /* If need less alignment than we give anyway, just relay to malloc */
@@ -3805,7 +3804,7 @@ public_vALLOc(size_t bytes)
   __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, size_t,
 					__const __malloc_ptr_t)) =
     __memalign_hook;
-  if (hook != NULL)
+  if (__builtin_expect (hook != NULL, 0))
     return (*hook)(pagesz, bytes, RETURN_ADDRESS (0));
 
   arena_get(ar_ptr, bytes + pagesz + MINSIZE);
@@ -3852,7 +3851,7 @@ public_pVALLOc(size_t bytes)
   __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, size_t,
 					__const __malloc_ptr_t)) =
     __memalign_hook;
-  if (hook != NULL)
+  if (__builtin_expect (hook != NULL, 0))
     return (*hook)(pagesz, rounded_bytes, RETURN_ADDRESS (0));
 
   arena_get(ar_ptr, bytes + 2*pagesz + MINSIZE);
@@ -3906,7 +3905,7 @@ public_cALLOc(size_t n, size_t elem_size)
     }
   }
 
-  if (hook != NULL) {
+  if (__builtin_expect (hook != NULL, 0)) {
     sz = bytes;
     mem = (*hook)(sz, RETURN_ADDRESS (0));
     if(mem == 0)
@@ -4125,7 +4124,7 @@ public_mALLOPt(int p, int v)
   ------------------------------ malloc ------------------------------
 */
 
-Void_t*
+static Void_t*
 _int_malloc(mstate av, size_t bytes)
 {
   INTERNAL_SIZE_T nb;               /* normalized request size */
@@ -4589,10 +4588,9 @@ _int_malloc(mstate av, size_t bytes)
   ------------------------------ free ------------------------------
 */
 
-void
-_int_free(mstate av, Void_t* mem)
+static void
+_int_free(mstate av, mchunkptr p)
 {
-  mchunkptr       p;           /* chunk corresponding to mem */
   INTERNAL_SIZE_T size;        /* its size */
   mfastbinptr*    fb;          /* associated fastbin */
   mchunkptr       nextchunk;   /* next contiguous chunk */
@@ -4604,7 +4602,6 @@ _int_free(mstate av, Void_t* mem)
 
   const char *errstr = NULL;
 
-  p = mem2chunk(mem);
   size = chunksize(p);
 
   /* Little security check which won't hurt performance: the
@@ -4616,7 +4613,7 @@ _int_free(mstate av, Void_t* mem)
     {
       errstr = "free(): invalid pointer";
     errout:
-      malloc_printerr (check_action, errstr, mem);
+      malloc_printerr (check_action, errstr, chunk2mem(p));
       return;
     }
   /* We know that each chunk is at least MINSIZE bytes in size.  */
@@ -4663,7 +4660,7 @@ _int_free(mstate av, Void_t* mem)
       }
 
     if (__builtin_expect (perturb_byte, 0))
-      free_perturb (mem, size - SIZE_SZ);
+      free_perturb (chunk2mem(p), size - SIZE_SZ);
 
     p->fd = *fb;
     *fb = p;
@@ -4707,7 +4704,7 @@ _int_free(mstate av, Void_t* mem)
       }
 
     if (__builtin_expect (perturb_byte, 0))
-      free_perturb (mem, size - SIZE_SZ);
+      free_perturb (chunk2mem(p), size - SIZE_SZ);
 
     /* consolidate backward */
     if (!prev_inuse(p)) {
@@ -4943,13 +4940,8 @@ static void malloc_consolidate(av) mstate av;
 */
 
 Void_t*
-_int_realloc(mstate av, Void_t* oldmem, size_t bytes)
+_int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T nb)
 {
-  INTERNAL_SIZE_T  nb;              /* padded request size */
-
-  mchunkptr        oldp;            /* chunk corresponding to oldmem */
-  INTERNAL_SIZE_T  oldsize;         /* its size */
-
   mchunkptr        newp;            /* chunk to return */
   INTERNAL_SIZE_T  newsize;         /* its size */
   Void_t*          newmem;          /* corresponding user mem */
@@ -4969,20 +4961,18 @@ _int_realloc(mstate av, Void_t* oldmem, size_t bytes)
 
   const char *errstr = NULL;
 
-
-  checked_request2size(bytes, nb);
-
-  oldp    = mem2chunk(oldmem);
-  oldsize = chunksize(oldp);
-
   /* Simple tests for old block integrity.  */
   if (__builtin_expect (misaligned_chunk (oldp), 0))
     {
       errstr = "realloc(): invalid pointer";
     errout:
-      malloc_printerr (check_action, errstr, oldmem);
+      malloc_printerr (check_action, errstr, chunk2mem(oldp));
       return NULL;
     }
+
+  /* oldmem size */
+  const INTERNAL_SIZE_T oldsize = chunksize(oldp);
+
   if (__builtin_expect (oldp->size <= 2 * SIZE_SZ, 0)
       || __builtin_expect (oldsize >= av->system_mem, 0))
     {
@@ -5054,7 +5044,7 @@ _int_realloc(mstate av, Void_t* oldmem, size_t bytes)
           */
 
           copysize = oldsize - SIZE_SZ;
-          s = (INTERNAL_SIZE_T*)(oldmem);
+          s = (INTERNAL_SIZE_T*)(chunk2mem(oldp));
           d = (INTERNAL_SIZE_T*)(newmem);
           ncopies = copysize / sizeof(INTERNAL_SIZE_T);
           assert(ncopies >= 3);
@@ -5080,7 +5070,7 @@ _int_realloc(mstate av, Void_t* oldmem, size_t bytes)
             }
           }
 
-          _int_free(av, oldmem);
+          _int_free(av, oldp);
           check_inuse_chunk(av, newp);
           return chunk2mem(newp);
         }
@@ -5104,7 +5094,7 @@ _int_realloc(mstate av, Void_t* oldmem, size_t bytes)
 	       (av != &main_arena ? NON_MAIN_ARENA : 0));
       /* Mark remainder as inuse so free() won't complain */
       set_inuse_bit_at_offset(remainder, remainder_size);
-      _int_free(av, chunk2mem(remainder));
+      _int_free(av, remainder);
     }
 
     check_inuse_chunk(av, newp);
@@ -5129,7 +5119,7 @@ _int_realloc(mstate av, Void_t* oldmem, size_t bytes)
 
     /* don't need to remap if still within same page */
     if (oldsize == newsize - offset)
-      return oldmem;
+      return chunk2mem(oldp);
 
     cp = (char*)mremap((char*)oldp - offset, oldsize + offset, newsize, 1);
 
@@ -5157,13 +5147,13 @@ _int_realloc(mstate av, Void_t* oldmem, size_t bytes)
 
     /* Note the extra SIZE_SZ overhead. */
     if ((unsigned long)(oldsize) >= (unsigned long)(nb + SIZE_SZ))
-      newmem = oldmem; /* do nothing */
+      newmem = chunk2mem(oldp); /* do nothing */
     else {
       /* Must alloc, copy, free. */
       newmem = _int_malloc(av, nb - MALLOC_ALIGN_MASK);
       if (newmem != 0) {
-        MALLOC_COPY(newmem, oldmem, oldsize - 2*SIZE_SZ);
-        _int_free(av, oldmem);
+        MALLOC_COPY(newmem, chunk2mem(oldp), oldsize - 2*SIZE_SZ);
+        _int_free(av, oldp);
       }
     }
     return newmem;
@@ -5181,7 +5171,7 @@ _int_realloc(mstate av, Void_t* oldmem, size_t bytes)
   ------------------------------ memalign ------------------------------
 */
 
-Void_t*
+static Void_t*
 _int_memalign(mstate av, size_t alignment, size_t bytes)
 {
   INTERNAL_SIZE_T nb;             /* padded  request size */
@@ -5257,7 +5247,7 @@ _int_memalign(mstate av, size_t alignment, size_t bytes)
 	     (av != &main_arena ? NON_MAIN_ARENA : 0));
     set_inuse_bit_at_offset(newp, newsize);
     set_head_size(p, leadsize | (av != &main_arena ? NON_MAIN_ARENA : 0));
-    _int_free(av, chunk2mem(p));
+    _int_free(av, p);
     p = newp;
 
     assert (newsize >= nb &&
@@ -5273,7 +5263,7 @@ _int_memalign(mstate av, size_t alignment, size_t bytes)
       set_head(remainder, remainder_size | PREV_INUSE |
 	       (av != &main_arena ? NON_MAIN_ARENA : 0));
       set_head_size(p, nb);
-      _int_free(av, chunk2mem(remainder));
+      _int_free(av, remainder);
     }
   }
 
@@ -5514,7 +5504,7 @@ mstate av; size_t n_elements; size_t* sizes; int opts; Void_t* chunks[];
   ------------------------------ valloc ------------------------------
 */
 
-Void_t*
+static Void_t*
 #if __STD_C
 _int_valloc(mstate av, size_t bytes)
 #else
@@ -5531,7 +5521,7 @@ _int_valloc(av, bytes) mstate av; size_t bytes;
 */
 
 
-Void_t*
+static Void_t*
 #if __STD_C
 _int_pvalloc(mstate av, size_t bytes)
 #else
@@ -6020,7 +6010,7 @@ __posix_memalign (void **memptr, size_t alignment, size_t size)
 
   /* Call the hook here, so that caller is posix_memalign's caller
      and not posix_memalign itself.  */
-  if (hook != NULL)
+  if (__builtin_expect (hook != NULL, 0))
     mem = (*hook)(alignment, size, RETURN_ADDRESS (0));
   else
     mem = public_mEMALIGn (alignment, size);

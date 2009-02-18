@@ -1,4 +1,4 @@
-# Copyright (C) 1991-1999, 2000-2006, 2007 Free Software Foundation, Inc.
+# Copyright (C) 1991-1999, 2000-2006, 2007, 2009 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -303,6 +303,6 @@ $(inst_libexecdir)/getconf: $(inst_bindir)/getconf \
 
 $(objpfx)getconf.speclist: getconf.speclist.h
 	$(CC) -E $(CFLAGS) $(CPPFLAGS) $< \
-	  | sed -n -e '/START_OF_STRINGS/,$${/POSIX_V6_/{s/^[^"]*"//;s/".*$$//;p}}' \
+	  | sed -n -e '/START_OF_STRINGS/,$${/\(POSIX_V[67]\|_XBS5\)_/{s/^[^"]*"//;s/".*$$//;p}}' \
 	  > $@.new
 	mv -f $@.new $@

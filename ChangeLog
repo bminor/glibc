@@ -1,3 +1,219 @@
+2009-02-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/monetary.h: Uglify function parameter names.
+	* sunrpc/rpc/pmap_clnt.h: Likewise.
+	* sunrpc/rpc/svc.h: Likewise.
+	* sunrpc/rpc/xdr.h: Likewise.
+	* sunrpc/rpc/clnt.h: Likewise.
+	* resolv/netdb.h: Likewise.
+	* resolv/arpa/nameser.h: Likewise.
+	* resolv/resolv.h: Likewise.
+	* argp/argp.h: Likewise.
+	* locale/langinfo.h: Likewise.
+	* io/sys/stat.h: Likewise.
+	* posix/spawn.h: Likewise.
+	* nis/rpcsvc/nislib.h: Likewise.
+	* malloc/obstack.h: Likewise.
+	* sysdeps/ia64/bits/link.h: Likewise.
+	* sysdeps/i386/bits/link.h: Likewise.
+	* sysdeps/s390/bits/link.h: Likewise.
+	* sysdeps/powerpc/bits/link.h: Likewise.
+	* sysdeps/x86_64/bits/link.h: Likewise.
+	* sysdeps/sparc/bits/link.h: Likewise.
+	* sysdeps/sh/bits/link.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sys/io.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sys/io.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sys/eventfd.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/eventfd.h: Likewise.
+
+2008-12-01  Fredrik Unger  <fred@tree.se>
+
+	* soft-fp/double.h [_FP_W_TYPE_SIZE >= 64] (FP_UNPACK_SEMIRAW_D,
+	FP_UNPACK_SEMIRAW_DP): Use _FP_UNPACK_RAW_1 instead of
+	_FP_UNPACK_RAW_2, fix up first argument.
+
+2009-02-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/getsysstats.c (next_line): New function.
+	(GET_NPROCS_PARSER): Change parameters and use next_line.
+	(__get_nprocs): Rewrite to not use stdio routines.
+	* sysdeps/unix/sysv/linux/sparc/getsysstats.c (GET_NPROCS_PARSER):
+	Change parameters and use next_line.
+
+2009-02-13  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #5381]
+	* nscd/nscd.h: Remove definitions and declarations for mem_in_flight.
+	Change mempool_alloc prototype.
+	* nscd/mem.c (gc): Don't handle mem_in_flight.
+	(mempool_alloc): Third parameter now only indicates whether this is the
+	first call (to allocate data) or not.  If it is, get db rdlock.
+	Release it on error.  Don't handle mem_in_flight.
+	* nscd/aicache.c (addhstaiX): Mark he parameter as const.
+	Adjust third parameter of mempool_alloc calls.
+	Nothing to do here in case mempool_alloc fails.
+	Avoid local variable shadowing parameter.  No need to get db rdlock
+	before calling cache_add.
+	* nscd/cache.c (cache_add): Adjust call to mempool_alloc.  There is
+	no mem_in_flight array anymore.
+	* nscd/connections.c: Remove definition and handling of mem_in_flight.
+	* nscd/grpcache.c (cache_addgr): Adjust third parameter of
+	mempool_alloc calls.  Mark he parameter as const.  Nothing to do here
+	in case mempool_alloc fails. No need to get db rdlock before calling
+	cache_add.
+	* nscd/hstcache.c (cache_addhst): Likewise.
+	* nscd/initgrcache.c (addinitgroupsX): Likewise.
+	* nscd/servicescache.c (cache_addserv): Likewise.
+	* nscd/pwdcache.c (cache_addpw): Likewise.  Remove some debugging code.
+
+2009-02-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/lt.po: Update from translation team.
+
+2009-02-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-load.c (open_verify): In case VALID_ELF_HEADER is
+	defined, allow additional data to be added using the optional
+	MORE_ELF_HEADER_DATA macro.
+	* sysdeps/unix/sysv/linux/ldsodefs.h (VALID_ELF_HEADER,
+	VALID_ELF_OSABI, VALID_ELF_ABIVERSION, MORE_ELF_HEADER_DATA): Define.
+
+2009-02-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/atomic.h: Define catomic_and if not already defined.
+	* sysdeps/x86_64/bits/atomic.h: Define catomic_and.
+	* sysdeps/i386/i486/bits/atomic.h: Likewise.
+
+2009-02-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (_int_free): Second argument is now mchunkptr.
+	Change all callers.
+	(_int_realloc): Likewise.  Third argument is now padded size
+	All _int_* functions are now static.
+
+	* malloc/hooks.c: Change all callers to _int_free and _int_realloc.
+	* malloc/arena.c: Likewise.
+	* include/malloc.h: Remove now unnecessary declarations of the _int_*
+	functions.
+
+	* sunrpc/rpc_common.c: We cannot move _null_auth into .rodata that
+	easily.
+
+	* malloc/malloc.c: Add branch prediction for use of the hooks.
+
+	* grp/compat-initgroups.c [NOT_IN_libc] (__libc_use_alloca): Define.
+
+2009-02-06  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #7095]
+	* bits/confname.h: Add SUSv7 macros for getconf environments.
+	* bits/environments.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/environments.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/environments.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/environments.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/environments.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/environments.h: Likewise.
+	* posix/confstr.c: Handle SUSv5 and SUSv7 environments.
+	* posix/getconf.c: Likewise.
+	* posix/sysconf.c: Likewise.
+	* sysdeps/posix/sysconf.c: Likewise.
+	* posix/Makefile (getconf.speclist): Also collect SUSv5 and SUSv7
+	environments.
+
+2009-01-16  Petr Baudis  <pasky@suse.cz>
+
+	[BZ #9753]
+	* resolv/res_libc.c (__res_maybe_init): Call __res_vinit()
+	even if we currently have zero nscount.
+
+2009-02-06  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #9781]
+	* grp/compat-initgroups.c (compat_call): Switch to use malloc when
+	the input line is too long.
+
+	* po/Makefile (libc.pot): Add f_print as function taking c-format
+	parameter.
+
+	* debug/xtrace.sh: Unify translatable messages.
+	* elf/ldd.bash.in: Likewise.
+	* elf/sprof.c: Likewise.
+	* locale/programs/locale.c: Likewise.
+	* malloc/memusage.sh: Likewise.
+	* nss/getent.c: Likewise.
+
+2009-02-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* debug/pcprofiledump.c (print_version,
+	argp_program_version_hook): New function.
+	* elf/ldconfig.c (more_help): New function.
+	(argp): Use it.
+	* elf/sln.c (usage): New function.
+	(main): Support --help and --version.
+	* malloc/memusagestat.c (print_version): New function.
+	(argp_program_version_hook): New variable.
+	* nscd/nscd.c (more_help): New function.
+	(argp): Use it.
+	* posix/getconf.c (main): Send --version output to stdout.
+	Support --help.
+	* sunrpc/rpc_main.c (usage, options_usage): Take STREAM and STATUS
+	arguments.  All callers changed.
+	(print_version): New function.
+	(parseargs): Support --help and --version.
+	* sunrpc/rpcinfo.c (usage): Take STREAM argument.  All callers
+	changed.
+	(print_version): New function.
+	(main): Use getopt_long.  Support --help and --version.
+	* sysdeps/unix/sysv/linux/lddlibc4.c (main): Support --help and
+	--version.
+
+2009-02-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/memusage.c (DEFAULT_BUFFER_SIZE): Change to 32768.
+	(update_data): Fix handling of wrapping back
+	to the beginning of the buffer.
+
+	[BZ #9823]
+	* stdio-common/psignal.c (psignal): Fix test for empty string.
+
+2009-02-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/rpc/auth.h: Use libc_hidden_proto for _null_auth.
+	* sunrpc/rpc_common.c: Add libc_hidden_def for _null_auth.  Also
+	move _null_auth to .rodata.
+
+	* time/tzset.c (__tzset_parse_tz): DST offset must also allow hour
+	value of 24.
+
+	* intl/dcigettext.c (DCIGETTEXT): Avoid some code duplication.
+
+	* sysdeps/unix/opendir.c (__alloc_dir): We have a lot more memory
+	today than when the original code was written.  Use larger
+	buffers.  This also makes it unnecessary to have stat information,
+	if this causes extra efforts.
+	(__opendir): In case O_DIRECTORY works, don't call fstat just for
+	__alloc_dir.
+
+2009-02-03  Andrew Stubbs  <ams@codesourcery.com>
+
+	* sysdeps/sh/sh4/dl-trampoline.S: Only set HAVE_FPU if __SH_FPU_ANY__
+	is set.
+	* sysdeps/sh/sh4/setjmp.S: Support SH4-NOFPU.
+	* sysdeps/sh/sh4/__longjmp.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sh4/getcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sh4/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sh4/swapcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sh4/register-dump.h: Likewise.
+
+2009-02-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/ru.po: Update from translation team.
+
+2008-11-17  Nathan Sidwell  <nathan@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/sparc/bits/siginfo.h (struct sigevent):
+	Add _tid slot to maintain consistency with kernel.
+
 2009-02-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/wfileops.c (_IO_wfile_underflow): Fix handling of

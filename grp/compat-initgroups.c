@@ -8,13 +8,19 @@ typedef enum nss_status (*end_function) (void);
 typedef enum nss_status (*get_function) (struct group *, char *,
 					 size_t, int *);
 
+/* This file is also used in nscd where __libc_alloca_cutoff is not
+   available.  */
+#ifdef NOT_IN_libc
+# define __libc_use_alloca(size) ((size) < __MAX_ALLOCA_CUTOFF * 4)
+#endif
+
+
 static enum nss_status
 compat_call (service_user *nip, const char *user, gid_t group, long int *start,
 	     long int *size, gid_t **groupsp, long int limit, int *errnop)
 {
   struct group grpbuf;
   size_t buflen = __sysconf (_SC_GETGR_R_SIZE_MAX);
-  char *tmpbuf;
   enum nss_status status;
   set_function setgrent_fct;
   get_function getgrent_fct;
@@ -35,7 +41,9 @@ compat_call (service_user *nip, const char *user, gid_t group, long int *start,
 
   endgrent_fct = __nss_lookup_function (nip, "endgrent");
 
-  tmpbuf = __alloca (buflen);
+  char *tmpbuf = __alloca (buflen);
+  bool use_malloc = false;
+  enum nss_status result = NSS_STATUS_SUCCESS;
 
   do
     {
@@ -44,8 +52,20 @@ compat_call (service_user *nip, const char *user, gid_t group, long int *start,
 	      status == NSS_STATUS_TRYAGAIN)
 	     && *errnop == ERANGE)
         {
-          buflen *= 2;
-          tmpbuf = __alloca (buflen);
+	  if (__libc_use_alloca (buflen * 2))
+	    tmpbuf = extend_alloca (tmpbuf, buflen, buflen * 2);
+	  else
+	    {
+	      buflen *= 2;
+	      char *newbuf = realloc (use_malloc ? tmpbuf : NULL, buflen);
+	      if (newbuf == NULL)
+		{
+		  result = NSS_STATUS_TRYAGAIN;
+		  goto done;
+		}
+	      use_malloc = true;
+	      tmpbuf = newbuf;
+	    }
         }
 
       if (status != NSS_STATUS_SUCCESS)
@@ -102,8 +122,11 @@ compat_call (service_user *nip, const char *user, gid_t group, long int *start,
   while (status == NSS_STATUS_SUCCESS);
 
  done:
+  if (use_malloc)
+    free (tmpbuf);
+
   if (endgrent_fct)
     DL_CALL_FCT (endgrent_fct, ());
 
-  return NSS_STATUS_SUCCESS;
+  return result;
 }

@@ -1,5 +1,26 @@
+2009-02-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/iso14651_t1_common: Add rules for sorting Malayalam.
+	Patch by Santhosh Thottingal <santhosh.thottingal@gmail.com>.
+
+2009-02-06  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #7098]
+	* Makefile ($(inst_i18ndir)/charmaps/%.gz): No need to save
+	timestamp in compressed charmaps.
+	Patch by Gilles Espinasse <g.esp@free.fr>.
+
+	[BZ #9730]
+	* locales/sv_FI: Fix time formats.
+
+	[BZ #9736]
+	* locales/el_CY: Fix frac_digits and int_frac_digits.
+	* locales/el_GR: Likewise.
+	Patch by Clint Adams <schizo@debian.org>.
+
 2009-01-28  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #9791]
 	* locales/as_IN: Break circular include loops introduced in last patch.
 	* locales/bn_BD: Likewise.
 	* locales/bn_IN: Likewise.
