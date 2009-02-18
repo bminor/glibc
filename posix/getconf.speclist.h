@@ -1,5 +1,17 @@
 #include <unistd.h>
 const char *START_OF_STRINGS =
+#if _POSIX_V7_ILP32_OFF32 == 1
+"POSIX_V7_ILP32_OFF32"
+#endif
+#if _POSIX_V7_ILP32_OFFBIG == 1
+"POSIX_V7_ILP32_OFFBIG"
+#endif
+#if _POSIX_V7_LP64_OFF64 == 1
+"POSIX_V7_LP64_OFF64"
+#endif
+#if _POSIX_V7_LPBIG_OFFBIG == 1
+"POSIX_V7_LPBIG_OFFBIG"
+#endif
 #if _POSIX_V6_ILP32_OFF32 == 1
 "POSIX_V6_ILP32_OFF32"
 #endif
@@ -11,5 +23,17 @@ const char *START_OF_STRINGS =
 #endif
 #if _POSIX_V6_LPBIG_OFFBIG == 1
 "POSIX_V6_LPBIG_OFFBIG"
+#endif
+#if _XBS5_ILP32_OFF32 == 1
+"XBS5_ILP32_OFF32"
+#endif
+#if _XBS5_ILP32_OFFBIG == 1
+"XBS5_ILP32_OFFBIG"
+#endif
+#if _XBS5_LP64_OFF64 == 1
+"XBS5_LP64_OFF64"
+#endif
+#if _XBS5_LPBIG_OFFBIG == 1
+"XBS5_LPBIG_OFFBIG"
 #endif
 "";
