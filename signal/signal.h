@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2003, 2004, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2003, 2004, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -70,6 +70,15 @@ typedef __uid_t uid_t;
 # endif
 #endif	/* Unix98 */
 
+#ifdef __USE_POSIX199309
+/* We need `struct timespec' later on.  */
+# define __need_timespec
+# include <time.h>
+
+/* Get the `siginfo_t' type plus the needed symbols.  */
+# include <bits/siginfo.h>
+#endif
+
 
 /* Type of a signal handler.  */
 typedef void (*__sighandler_t) (int);
@@ -136,10 +145,16 @@ extern __sighandler_t ssignal (int __sig, __sighandler_t __handler)
 extern int gsignal (int __sig) __THROW;
 #endif /* Use SVID.  */
 
-#ifdef __USE_MISC
+#if defined __USE_MISC || defined __USE_XOPEN2K
 /* Print a message describing the meaning of the given signal number.  */
 extern void psignal (int __sig, __const char *__s);
-#endif /* Use misc.  */
+#endif /* Use misc or POSIX 2008.  */
+
+#ifdef __USE_XOPEN2K
+/* Print a message describing the meaning of the given signal information.  */
+extern void psiginfo (__const siginfo_t *__pinfo, __const char *__s);
+#endif /* POSIX 2008.  */
+
 
 
 /* The `sigpause' function has two different interfaces.  The original
@@ -202,15 +217,6 @@ typedef __sighandler_t sig_t;
 #endif
 
 #ifdef __USE_POSIX
-
-# ifdef __USE_POSIX199309
-/* We need `struct timespec' later on.  */
-#  define __need_timespec
-#  include <time.h>
-
-/* Get the `siginfo_t' type plus the needed symbols.  */
-#  include <bits/siginfo.h>
-# endif
 
 /* Clear all signals from SET.  */
 extern int sigemptyset (sigset_t *__set) __THROW __nonnull ((1));

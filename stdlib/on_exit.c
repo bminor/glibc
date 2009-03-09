@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996, 2005, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 int
 __on_exit (void (*func) (int status, void *arg), void *arg)
 {
-  struct exit_function *new = __new_exitfn ();
+  struct exit_function *new = __new_exitfn (&__exit_funcs);
 
   if (new == NULL)
     return -1;

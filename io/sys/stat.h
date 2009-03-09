@@ -254,7 +254,7 @@ extern int fstatat64 (int __fd, __const char *__restrict __file,
      __THROW __nonnull ((2, 3));
 #endif
 
-#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K
 # ifndef __USE_FILE_OFFSET64
 /* Get file attributes about FILE and put them in BUF.
    If FILE is a symbolic link, do not follow it.  */
@@ -333,14 +333,14 @@ extern int mkdirat (int __fd, __const char *__path, __mode_t __mode)
 #if defined __USE_MISC || defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 extern int mknod (__const char *__path, __mode_t __mode, __dev_t __dev)
      __THROW __nonnull ((1));
-#endif
 
-#ifdef __USE_ATFILE
+# ifdef __USE_ATFILE
 /* Like mknod, create a new device file with permission bits MODE and
    device number DEV.  But interpret relative PATH names relative to
    the directory associated with FD.  */
 extern int mknodat (int __fd, __const char *__path, __mode_t __mode,
 		    __dev_t __dev) __THROW __nonnull ((2));
+# endif
 #endif
 
 
@@ -365,8 +365,7 @@ extern int utimensat (int __fd, __const char *__path,
      __THROW __nonnull ((2));
 #endif
 
-#ifdef __USE_GNU
-/* XXX This will change to the macro for the next 2008 POSIX revision.  */
+#ifdef __USE_XOPEN2K8
 /* Set file access and modification times of the file associated with FD.  */
 extern int futimens (int __fd, __const struct timespec __times[2]) __THROW;
 #endif
