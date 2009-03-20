@@ -1,3 +1,139 @@
+2009-03-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/dirent.h: Yet more changes to match sort function type
+	change.
+	* sysdeps/unix/sysv/linux/i386/alphasort64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/olddirent.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/versionsort64.c: Likewise.
+
+2009-03-16  Thomas Schwinge  <tschwinge@gnu.org>
+
+	* dirent/scandir64.c (scandir64): Adjust declaration to type change.
+
+2009-03-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/connections.c (restart): Try to preserve the process name
+	by reading the /proc/self/exe symlink and using the return name.
+	Patch by Jeff Bastian <jbastian@redhat.com>.
+
+2009-03-15  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #9733]
+	* elf/dl-load.c (_dl_map_object_from_fd): Only call audit hooks
+	if we are not loading a new audit library.
+	* elf/dl-reloc (_dl_relocate_object): Third parameter is now a bitmask.
+	Only use profiling trampoline for auditing if we are not relocating
+	an audit library.
+	* elf/dl-open.c (dl_open_worker): Adjust _dl_relocate_object call.
+	* elf/rtld.c: Likewise.
+	* sysdeps/generic/ldsodefs.h: Adjust _dl_relocate_object prototype.
+
+	* elf/rtld.c (dl_main): Extend help message for --audit option.
+
+	[BZ #9759]
+	* dirent/dirent.h: Adjust prototypes of scandir, scandir64, alphasort,
+	alphasort64, versionsort, and versionsort64 to POSIX 2008.
+	* dirent/alphasort.c: Adjust implementation to type change.
+	* dirent/alphasort64.c: Likewise.
+	* dirent/scandir.c: Likewise.
+	* dirent/versionsort.c: Likewise.
+	* dirent/versionsort64.c: Likewise.
+	* sysdeps/wordsize-64/alphasort.c: Add hack to hide alphasort64
+	declaration.
+	* sysdeps/wordsize-64/versionsort.c: Add hack to hide versionsort64
+	declaration.
+
+	[BZ #9880]
+	* inet/inet6_rth.c (inet6_rth_reverse): Compute number of segments
+	correctly.  Set segleft member in output as required.
+	Patch partly by Yang Hongyang <yanghy@cn.fujitsu.com>.
+	* inet/tst-inet6_rth.c (do_test): Add tests for inet6_rth_reverse.
+
+	[BZ #9881]
+	* inet/inet6_rth.c (inet6_rth_add): Add some error checking.
+	Patch mostly by Yang Hongyang <yanghy@cn.fujitsu.com>.
+	* inet/Makefile (tests): Add tst-inet6_rth.
+	* inet/tst-inet6_rth.c: New file.
+
+	[BZ #5807]
+	* string/strlen.c (strlen): Fix omission in the expression to test
+	for NUL bytes.
+
+2009-03-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* crypt/sha256test.c (main): Perform 100,000 'a' test in a second way.
+
+	* elf/dl-runtime.c (reloc_offset): Define.
+	(reloc_index): Define.
+	(_dl_fixup): Rename reloc_offset parameter to reloc_arg.
+	(_dl_fixup_profile): Likewise.  Use reloc_index instead of
+	computing index from reloc_offset.
+	(_dl_call_pltexit): Likewise.
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_resolve): Just pass
+	the relocation index to _dl_fixup.
+	(_dl_runtime_profile): Likewise for _dl_fixup_profile and
+	_dl_call_pltexit.
+	* sysdeps/x86_64/dl-runtime.c: New file.
+
+	[BZ #9893]
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Fix
+	alignment of La_x86_64_regs.  Store xmm parameters.
+	Patch mostly by Jiri Olsa <olsajiri@gmail.com>.
+
+	[BZ #9913]
+	* string/strverscmp.c (__strverscmp): Fix case of different digits
+	in fractional part of string.
+	Patch by Jingyu Liu <jyliu@fortinet.com>.
+	* string/Makefile (tests): Add tst-svc2.
+	* string/tst-svc2.c: New file.
+
+	* string/strverscmp.c (__strverscmp): Optimize size of tables.
+
+	* locale/iso-639.def: Add Min Nan.
+
+2009-03-11  Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
+
+	[BZ #9948]
+	* elf/dl-sysdep.c (_dl_show_auxv): Add support for AT_BASE_PLATFORM.
+
+2009-03-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-sysdep.c (auxvars): Compress data structure.
+
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Implement
+	STT_GNU_IFUNC handling.
+	(elf_machine_rela): Likewise.
+
+2009-03-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* config.h.in (USE_MULTIARCH): Define.
+	* configure.in: Handle --enable-multi-arch.
+	* elf/dl-runtime.c (_dl_fixup): Handle STT_GNU_IFUNC.
+	(_dl_fixup_profile): Likewise.
+	* elf/do-lookup.c (dl_lookup_x): Likewise.
+	* sysdeps/x86_64/dl-machine.h: Handle STT_GNU_IFUNC.
+	* elf/elf.h (STT_GNU_IFUNC): Define.
+	* include/libc-symbols.h (libc_ifunc): Define.
+	* sysdeps/x86_64/cacheinfo.c: If USE_MULTIARCH is defined, use the
+	framework in init-arch.h to get CPUID values.
+	* sysdeps/x86_64/multiarch/Makefile: New file.
+	* sysdeps/x86_64/multiarch/init-arch.c: New file.
+	* sysdeps/x86_64/multiarch/init-arch.h: New file.
+	* sysdeps/x86_64/multiarch/sched_cpucount.c: New file.
+
+	* config.make.in (experimental-malloc): Define.
+	* configure.in: Handle --enable-experimental-malloc.
+	* malloc/Makefile: Handle experimental-malloc flag.
+	* malloc/malloc.c: Implement PER_THREAD and ATOMIC_FASTBINS features.
+	* malloc/arena.c: Likewise.
+	* malloc/hooks.c: Likewise.
+	* malloc/malloc.h: Define M_ARENA_TEST and M_ARENA_MAX.
+
+2009-03-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): Add branch
+	prediction.  A few size optimizations.
+
 2009-03-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* time/tzset.c: Optimize a bit for size.

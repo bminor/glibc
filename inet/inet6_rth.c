@@ -1,4 +1,4 @@
-/* Copyright (C) 2006 Free Software Foundation, Inc.
+/* Copyright (C) 2006, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2006.
 
@@ -93,6 +93,9 @@ inet6_rth_add (void *bp, const struct in6_addr *addr)
       struct ip6_rthdr0 *rthdr0;
     case IPV6_RTHDR_TYPE_0:
       rthdr0 = (struct ip6_rthdr0 *) rthdr;
+      if (rthdr0->ip6r0_len * 8 / sizeof (struct in6_addr)
+	  - rthdr0->ip6r0_segleft < 1)
+        return -1;
 
       memcpy (&rthdr0->ip6r0_addr[rthdr0->ip6r0_segleft++],
 	      addr, sizeof (struct in6_addr));
@@ -127,7 +130,7 @@ inet6_rth_reverse (const void *in, void *out)
       /* Copy header, not the addresses.  The memory regions can overlap.  */
       memmove (out_rthdr0, in_rthdr0, sizeof (struct ip6_rthdr0));
 
-      int total = in_rthdr0->ip6r0_segleft * 8 / sizeof (struct in6_addr);
+      int total = in_rthdr0->ip6r0_len * 8 / sizeof (struct in6_addr);
       for (int i = 0; i < total / 2; ++i)
 	{
 	  /* Remember, IN_RTHDR0 and OUT_RTHDR0 might overlap.  */
@@ -137,6 +140,8 @@ inet6_rth_reverse (const void *in, void *out)
 	}
       if (total % 2 != 0 && in != out)
 	out_rthdr0->ip6r0_addr[total / 2] = in_rthdr0->ip6r0_addr[total / 2];
+
+      out_rthdr0->ip6r0_segleft = total;
 
       return 0;
     }

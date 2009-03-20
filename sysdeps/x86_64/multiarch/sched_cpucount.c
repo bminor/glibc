@@ -1,5 +1,7 @@
-/* Copyright (C) 1992, 1997,1998,2000,2004,2009 Free Software Foundation, Inc.
+/* Count bits in CPU set.  x86-64 multi-arch version.
    This file is part of the GNU C Library.
+   Copyright (C) 2008 Free Software Foundation, Inc.
+   Contributed by Ulrich Drepper <drepper@redhat.com>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,34 +18,25 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <dirent.h>
-#include <string.h>
+#ifdef SHARED
+# include <sched.h>
+# include "init-arch.h"
 
-int
-__alphasort64 (const struct dirent64 **a, const struct dirent64 **b)
-{
-  return strcoll ((*a)->d_name, (*b)->d_name);
-}
+# define __sched_cpucount static generic_cpucount
+# include <posix/sched_cpucount.c>
+# undef __sched_cpucount
 
-#include <shlib-compat.h>
+# define POPCNT(l) \
+  ({ __cpu_mask r; \
+     asm ("popcntq %1, %0" : "=r" (r) : "0" (l));\
+     r; })
+# define __sched_cpucount static popcount_cpucount
+# include <posix/sched_cpucount.c>
+# undef __sched_cpucount
 
-versioned_symbol (libc, __alphasort64, alphasort64, GLIBC_2_2);
-
-#if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)
-
-#include <sysdeps/unix/sysv/linux/i386/olddirent.h>
-
-int
-__old_alphasort64 (const struct __old_dirent64 **a,
-		   const struct __old_dirent64 **b);
-
-int
-attribute_compat_text_section
-__old_alphasort64 (const struct __old_dirent64 **a,
-		   const struct __old_dirent64 **b)
-{
-  return strcoll ((*a)->d_name, (*b)->d_name);
-}
-
-compat_symbol (libc, __old_alphasort64, alphasort64, GLIBC_2_1);
+libc_ifunc (__sched_cpucount,
+	    INTEL_HAS_POPCOUNT || AMD_HAS_POPCOUNT
+	    ? popcount_cpucount : generic_cpucount);
+#else
+# include_next <sched_cpucount.c>
 #endif
