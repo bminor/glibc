@@ -24,7 +24,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <sys/mman.h>		/* Check if MAP_ANON is defined.  */
+#include <sys/mman.h>
 #include <sys/param.h>
 #include <sys/stat.h>
 #include <ldsodefs.h>
@@ -125,8 +125,9 @@ struct rtld_global _rtld_global =
     /* Default presumption without further information is executable stack.  */
     ._dl_stack_flags = PF_R|PF_W|PF_X,
 #ifdef _LIBC_REENTRANT
-    ._dl_load_lock = _RTLD_LOCK_RECURSIVE_INITIALIZER
+    ._dl_load_lock = _RTLD_LOCK_RECURSIVE_INITIALIZER,
 #endif
+    ._dl_nns = 1
   };
 /* If we would use strong_alias here the compiler would see a
    non-hidden definition.  This would undo the effect of the previous
@@ -1782,12 +1783,6 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
   for (i = main_map->l_searchlist.r_nlist; i > 0; )
     main_map->l_searchlist.r_list[--i]->l_global = 1;
 
-#ifndef MAP_ANON
-  /* We are done mapping things, so close the zero-fill descriptor.  */
-  __close (_dl_zerofd);
-  _dl_zerofd = -1;
-#endif
-
   /* Remove _dl_rtld_map from the chain.  */
   GL(dl_rtld_map).l_prev->l_next = GL(dl_rtld_map).l_next;
   if (GL(dl_rtld_map).l_next != NULL)
@@ -2759,7 +2754,7 @@ print_statistics (hp_timing_t *rtld_total_timep)
 #endif
 
   unsigned long int num_relative_relocations = 0;
-  for (Lmid_t ns = 0; ns < DL_NNS; ++ns)
+  for (Lmid_t ns = 0; ns < GL(dl_nns); ++ns)
     {
       if (GL(dl_ns)[ns]._ns_loaded == NULL)
 	continue;

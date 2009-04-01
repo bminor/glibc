@@ -386,6 +386,8 @@ struct rtld_global
     /* Keep track of changes to each namespace' list.  */
     struct r_debug _ns_debug;
   } _dl_ns[DL_NNS];
+  /* One higher than index of last used namespace.  */
+  EXTERN size_t _dl_nns;
 
   /* During the program run we must not modify the global data of
      loaded shared object simultanously in two threads.  Therefore we
@@ -398,11 +400,6 @@ struct rtld_global
 
   /* Incremented whenever something may have been added to dl_loaded.  */
   EXTERN unsigned long long _dl_load_adds;
-
-#ifndef MAP_ANON
-  /* File descriptor referring to the zero-fill device.  */
-  EXTERN int _dl_zerofd;
-#endif
 
   /* The object to be initialized first.  */
   EXTERN struct link_map *_dl_initfirst;
