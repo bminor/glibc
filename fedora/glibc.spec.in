@@ -1011,8 +1011,8 @@ rm -f *.filelist*
 %changelog
 * Tue Apr  7 2009 Jakub Jelinek <jakub@redhat.com> 2.9.90-13
 - update from trunk
+  - fix strverscmp (#494457)
 - configure with --enable-nss-crypt
-- temporarily revert recent strverscmp cleanups (#494457)
 
 * Wed Apr  1 2009 Jakub Jelinek <jakub@redhat.com> 2.9.90-12
 - update from trunk
