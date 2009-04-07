@@ -1,6 +1,4 @@
-/* strlen(str) -- determine the length of the string STR.
-   Copyright (C) 2009 Free Software Foundation, Inc.
-   Contributed by Ulrich Drepper <drepper@redhat.com>.
+/* Copyright (C) 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,36 +16,26 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <sysdep.h>
+#include <errno.h>
+#include <unistd.h>
+#include <sys/uio.h>
 
+/* Write data pointed by the buffers described by VECTOR, which is a
+   vector of COUNT 'struct iovec's, to file descriptor FD at the given
+   position OFFSET without change the file pointer.  The data is
+   written in the order specified.  Operates just like 'write' (see
+   <unistd.h>) except that the data are taken from VECTOR instead of a
+   contiguous buffer.  */
+ssize_t
+pwritev64 (fd, vector, count, offset)
+     int fd;
+     const struct iovec *vector;
+     int count;
+     off64_t offset;
+{
+  __set_errno (ENOSYS);
+  return -1;
+}
 
-ENTRY(strlen)
-	movq	%rdi, %rcx
-	movq	%rdi, %r8
-	andq	$~15, %rdi
-	pxor	%xmm1, %xmm1
-	orl	$0xffffffff, %esi
-	movdqa	(%rdi), %xmm0
-	subq	%rdi, %rcx
-	leaq	16(%rdi), %rdi
-	pcmpeqb	%xmm1, %xmm0
-	shl	%cl, %esi
-	pmovmskb %xmm0, %edx
-	xorl	%eax, %eax
-	negq	%r8
-	andl	%esi, %edx
-	jnz	1f
-
-2:	movdqa	(%rdi), %xmm0
-	leaq	16(%rdi), %rdi
-	pcmpeqb	%xmm1, %xmm0
-	pmovmskb %xmm0, %edx
-	testl	%edx, %edx
-	jz	2b
-
-1:	leaq	-16(%rdi,%r8), %rdi
-	bsfl	%edx, %eax
-	addq	%rdi, %rax
-	ret
-END(strlen)
-libc_hidden_builtin_def (strlen)
+stub_warning (pwritev64)
+#include <stub-tag.h>

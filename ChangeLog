@@ -1,3 +1,90 @@
+2009-04-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/resolv.h (RES_SNGLKUP): Define.
+	* resolv/res_init.c (res_setoptions): Recognize single-request option.
+	* resolv/res_send.c (send_dg): If we sent two requests at once and
+	only get one reply before timeout switch to mode where we send the
+	second request only after the first answer has been received.
+
+2009-04-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/strlen.S: Optimize by using SSE2 instructions.
+	* sysdeps/x86_64/strchr.S: Likewise.
+
+2009-04-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* configure.in: We need to test for the compiler earlier.
+
+	* misc/Makefile (routines): Add preadv, preadv64, pwritev, pwritev64.
+	* misc/Versions: Export preadv, preadv64, pwritev, pwritev64 for
+	GLIBC_2.10.
+	* misc/sys/uio.h: Declare preadv, preadv64, pwritev, pwritev64.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Add entries for preadv
+	and pwritev.
+	* misc/preadv.c: New file.
+	* misc/preadv64.c: New file.
+	* misc/pwritev.c: New file.
+	* misc/pwritev64.c: New file.
+	* sysdeps/posx/preadv.c: New file.
+	* sysdeps/posx/preadv64.c: New file.
+	* sysdeps/posx/pwritev.c: New file.
+	* sysdeps/posx/pwritev64.c: New file.
+	* sysdeps/unix/sysv/linux/preadv.c: New file.
+	* sysdeps/unix/sysv/linux/preadv64.c: New file.
+	* sysdeps/unix/sysv/linux/pwritev.c: New file.
+	* sysdeps/unix/sysv/linux/pwritev64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/preadv64.c: New file.
+	* sysdeps/unix/sysv/linux/wordsize-64/pwritev64.c: New file.
+
+	* sysdeps/unix/sysv/linux/readv.c (__libc_readv): Fix calling of
+	compatibility code.
+	* sysdeps/unix/sysv/linux/writev.c (__libc_writev): Likewise.
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define
+	__ASSUME_COMPLETE_READV_WRITEV.
+	* sysdeps/unix/sysv/linux/readv.c: No need for userlevel fallback
+	with modern kernels.
+	* sysdeps/unix/sysv/linux/writev.c: Likewise.
+
+	* sysdeps/posix/readv.c: Since read is a cancellation point we have
+	to free a possible malloced buffer in case of cancellation.
+	* sysdeps/posix/writev.c: Likewise for write.
+
+2009-04-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/socket.h: Add missing protocol numbers.
+
+	* configure.in: Recognize --enable-nss-crypt.
+	* config.make.in: Add nss-crypt entry.
+	* crypt/Makefile: If nss-crypt==yes, don't build md5.c, sha256.c,
+	sha512.c.  Don't run md5test, sha256test, sha512test.  Pass -DUSE_NSS
+	and include path for NSS directory to compiler for md5-crypt,
+	sha256-crypt, sha512-crypt.  Link libcrypt.so with -lfreebl3.
+	* crypt/md5-crypt.c: If USE_NSS is defined, don't use local hash
+	function implementation, use NSS.  Introduce wrappers around the
+	hash function calls.  Little code size optimization.
+	* crypt/sha256-crypt.c: Likewise.
+	* crypt/sha512-crypt.c: Likewise.
+	* scripts/check-local-headers.sh: Ignore nss3 directory.
+
+	* configure.in: Rename pic_default to libc_cv_pic_default.
+	* config.make.in: Likewise.
+
+2009-04-01  Roland McGrath  <roland@redhat.com>
+
+	* elf/elf.h (R_SPARC_GLOB_JMP): New macro.
+	(R_SPARC_GOTDATA_HIX22, R_SPARC_GOTDATA_LOX10): New macros.
+	(R_SPARC_GOTDATA_OP_HIX22, R_SPARC_GOTDATA_OP_LOX10): Likewise.
+	(R_SPARC_GOTDATA_OP, R_SPARC_H34): Likewise.
+	(R_SPARC_SIZE32, R_SPARC_SIZE64): Likewise.
+	(R_SPARC_GNU_VTINHERIT, R_SPARC_GNU_VTENTRY, R_SPARC_REV32): Likewise.
+	(R_SPARC_NUM): Update.
+	From Dave Miller <davem@davemloft.net>.
+
+2009-04-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sys/eventfd.h (EFD_SEMAPHORE): Define.
+
 2009-03-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-open.c: Keep track of used name spaces and only iterate over

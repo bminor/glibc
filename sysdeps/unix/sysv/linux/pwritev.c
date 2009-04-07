@@ -1,5 +1,4 @@
-/* writev supports all Linux kernels >= 2.0.
-   Copyright (C) 1997,1998,2000,2002,2003,2009 Free Software Foundation, Inc.
+/* Copyright (C) 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,55 +19,70 @@
 #include <errno.h>
 #include <stddef.h>
 #include <sys/param.h>
+#if __WORDSIZE == 64 && !defined PWRITEV
+/* Hide the pwritev64 declaration.  */
+# define pwritev64 __redirect_pwritev64
+#endif
 #include <sys/uio.h>
 
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
-#include <bp-checks.h>
 #include <kernel-features.h>
 
-static ssize_t __atomic_writev_replacement (int, const struct iovec *,
-					    int) internal_function;
-
-
-/* Not all versions of the kernel support the large number of records.  */
-#ifndef UIO_FASTIOV
-# define UIO_FASTIOV	8	/* 8 is a safe number.  */
+#ifndef PWRITEV
+# define PWRITEV pwritev
+# define PWRITEV_REPLACEMENT __atomic_pwritev_replacement
+# define PWRITE __pwrite
+# define OFF_T off_t
 #endif
+
+static ssize_t PWRITEV_REPLACEMENT (int, __const struct iovec *,
+				    int, OFF_T) internal_function;
 
 
 ssize_t
-__libc_writev (fd, vector, count)
+PWRITEV (fd, vector, count, offset)
      int fd;
      const struct iovec *vector;
      int count;
+     OFF_T offset;
 {
+#ifdef __NR_pwritev
   ssize_t result;
 
   if (SINGLE_THREAD_P)
-    result = INLINE_SYSCALL (writev, 3, fd, CHECK_N (vector, count), count);
+    result = INLINE_SYSCALL (pwritev, 5, fd, vector, count, offset >> 32,
+			     offset & 0xffffffff);
   else
     {
       int oldtype = LIBC_CANCEL_ASYNC ();
 
-      result = INLINE_SYSCALL (writev, 3, fd, CHECK_N (vector, count), count);
+      result = INLINE_SYSCALL (pwritev, 5, fd, vector, count, offset >> 32,
+			       offset & 0xffffffff);
 
       LIBC_CANCEL_RESET (oldtype);
     }
-
-#ifdef __ASSUME_COMPLETE_READV_WRITEV
+# ifdef __ASSUME_PWRITEV
   return result;
-#else
-  if (result >= 0 || errno != EINVAL || count <= UIO_FASTIOV)
-    return result;
+# endif
+#endif
 
-  return __atomic_writev_replacement (fd, vector, count);
+#ifndef __ASSUME_PWRITEV
+# ifdef __NR_pwritev
+  if (result >= 0 || errno != ENOSYS)
+    return result;
+# endif
+
+  return PWRITEV_REPLACEMENT (fd, vector, count, offset);
 #endif
 }
-strong_alias (__libc_writev, __writev)
-weak_alias (__libc_writev, writev)
+#if __WORDSIZE == 64 && defined pwritev64
+# undef pwritev64
+strong_alias (pwritev, pwritev64)
+#endif
 
-#ifndef __ASSUME_COMPLETE_READV_WRITEV
-# define __libc_writev static internal_function __atomic_writev_replacement
-# include <sysdeps/posix/writev.c>
+#ifndef __ASSUME_PWRITEV
+# undef PWRITEV
+# define PWRITEV static internal_function PWRITEV_REPLACEMENT
+# include <sysdeps/posix/pwritev.c>
 #endif

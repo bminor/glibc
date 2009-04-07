@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1992,1996,1997,2002,2009 Free Software Foundation, Inc.
+/* Copyright (C) 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,14 +16,25 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <sys/param.h>
+#if __WORDSIZE == 64 && !defined PREADV
+/* Hide the preadv64 declaration.  */
+# define preadv64 __redirect_preadv64
+#endif
 #include <sys/uio.h>
-#include <errno.h>
+#include <bits/wordsize.h>
+
+#ifndef PREADV
+# define PREADV preadv
+# define PREAD __pread
+# define OFF_T off_t
+#endif
 
 
 static void
@@ -33,15 +44,16 @@ ifree (char **ptrp)
 }
 
 
-/* Write data pointed by the buffers described by VECTOR, which
-   is a vector of COUNT 'struct iovec's, to file descriptor FD.
-   The data is written in the order specified.
-   Operates just like 'write' (see <unistd.h>) except that the data
-   are taken from VECTOR instead of a contiguous buffer.  */
+/* Read data from file descriptor FD at the given position OFFSET
+   without change the file pointer, and put the result in the buffers
+   described by VECTOR, which is a vector of COUNT 'struct iovec's.
+   The buffers are filled in the order specified.  Operates just like
+   'read' (see <unistd.h>) except that data are put in VECTOR instead
+   of a contiguous buffer.  */
 ssize_t
-__libc_writev (int fd, const struct iovec *vector, int count)
+PREADV (int fd, const struct iovec *vector, int count, OFF_T offset)
 {
-  /* Find the total number of bytes to be written.  */
+  /* Find the total number of bytes to be read.  */
   size_t bytes = 0;
   for (int i = 0; i < count; ++i)
     {
@@ -66,30 +78,31 @@ __libc_writev (int fd, const struct iovec *vector, int count)
     {
       malloced_buffer = buffer = (char *) malloc (bytes);
       if (buffer == NULL)
-	/* XXX I don't know whether it is acceptable to try writing
-	   the data in chunks.  Probably not so we just fail here.  */
 	return -1;
     }
 
-  /* Copy the data into BUFFER.  */
-  size_t to_copy = bytes;
-  char *bp = buffer;
+  /* Read the data.  */
+  ssize_t bytes_read = PREAD (fd, buffer, bytes, offset);
+  if (bytes_read <= 0)
+    return -1;
+
+  /* Copy the data from BUFFER into the memory specified by VECTOR.  */
+  bytes = bytes_read;
   for (int i = 0; i < count; ++i)
     {
-      size_t copy = MIN (vector[i].iov_len, to_copy);
+      size_t copy = MIN (vector[i].iov_len, bytes);
 
-      bp = __mempcpy ((void *) bp, (void *) vector[i].iov_base, copy);
+      (void) memcpy ((void *) vector[i].iov_base, (void *) buffer, copy);
 
-      to_copy -= copy;
-      if (to_copy == 0)
+      buffer += copy;
+      bytes -= copy;
+      if (bytes == 0)
 	break;
     }
 
-  ssize_t bytes_written = __write (fd, buffer, bytes);
-
-  return bytes_written;
+  return bytes_read;
 }
-#ifndef __libc_writev
-strong_alias (__libc_writev, __writev)
-weak_alias (__libc_writev, writev)
+#if __WORDSIZE == 64 && defined preadv64
+# undef preadv64
+strong_alias (preadv, preadv64)
 #endif
