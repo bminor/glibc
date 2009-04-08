@@ -1,3 +1,22 @@
+2009-04-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/strchrnul.S: New file.
+
+	* crypt/Makefile (LDLIBS-crypt.so): Use this variable instead of
+	depending libcrypt on -lfreebl3.
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Power also has
+	preadv/pwritev in 2.6.30.
+
+	* resolv/res_hconf.c (_res_hconf_trim_domain): Use strcasecmp
+	instead of __strcasecmp.
+	* resolv/nss_dns/dns-host.c (getanswer_r): Likewise.
+
+	* string/stratcliff.c (do_test): Add memchr tests..
+	* wcsmbs/wcsatcliff.c (MEMCHR): Define.
+	* sysdeps/x86_64/memchr.S: Fix handling of end of buffer after
+	first read quad word.
+
 2009-04-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* string/strverscmp.c (__strverscmp): Fix last cleanups.
