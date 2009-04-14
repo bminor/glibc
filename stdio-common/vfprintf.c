@@ -1,5 +1,4 @@
-/* Copyright (C) 1991-2002, 2003, 2004, 2005, 2006, 2007, 2008
-   Free Software Foundation, Inc.
+/* Copyright (C) 1991-2008, 2009   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -239,7 +238,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
   /* This table maps a character into a number representing a
      class.  In each step there is a destination label for each
      class.  */
-  static const int jump_table[] =
+  static const uint8_t jump_table[] =
   {
     /* ' ' */  1,            0,            0, /* '#' */  4,
 	       0, /* '%' */ 14,            0, /* '\''*/  6,
@@ -1631,6 +1630,7 @@ do_positional:
     size_t nargs = 0;
     int *args_type;
     union printf_arg *args_value = NULL;
+    int *args_size;
 
     /* Positional parameters refer to arguments directly.  This could
        also determine the maximum number of arguments.  Track the
@@ -1663,24 +1663,10 @@ do_positional:
 	  {
 	    /* Extend the array of format specifiers.  */
 	    struct printf_spec *old = specs;
+	    specs = extend_alloca (specs, nspecs_max, 2 * nspecs_max);
 
-	    nspecs_max *= 2;
-	    specs = alloca (nspecs_max * sizeof (struct printf_spec));
-
-	    if (specs == &old[nspecs])
-	      /* Stack grows up, OLD was the last thing allocated;
-		 extend it.  */
-	      nspecs_max += nspecs_max / 2;
-	    else
-	      {
-		/* Copy the old array's elements to the new space.  */
-		memcpy (specs, old, nspecs * sizeof (struct printf_spec));
-		if (old == &specs[nspecs])
-		  /* Stack grows down, OLD was just below the new
-		     SPECS.  We can use that space when the new space
-		     runs out.  */
-		  nspecs_max += nspecs_max / 2;
-	      }
+	    /* Copy the old array's elements to the new space.  */
+	    memmove (specs, old, nspecs * sizeof (struct printf_spec));
 	  }
 
 	/* Parse the format specifier.  */
@@ -1699,6 +1685,7 @@ do_positional:
     memset (args_type, s->_flags2 & _IO_FLAGS2_FORTIFY ? '\xff' : '\0',
 	    nargs * sizeof (int));
     args_value = alloca (nargs * sizeof (union printf_arg));
+    args_size = alloca (nargs * sizeof (int));
 
     /* XXX Could do sanity check here: If any element in ARGS_TYPE is
        still zero after this loop, format is invalid.  For now we
@@ -1719,8 +1706,10 @@ do_positional:
 	  {
 	  case 0:		/* No arguments.  */
 	    break;
-	  case 1:		/* One argument; we already have the type.  */
+	  case 1:		/* One argument; we already have the
+				   type and size.  */
 	    args_type[specs[cnt].data_arg] = specs[cnt].data_arg_type;
+	    args_size[specs[cnt].data_arg] = specs[cnt].size;
 	    break;
 	  default:
 	    /* We have more than one argument for this format spec.
@@ -1728,7 +1717,8 @@ do_positional:
 	       all the types.  */
 	    (void) (*__printf_arginfo_table[specs[cnt].info.spec])
 	      (&specs[cnt].info,
-	       specs[cnt].ndata_args, &args_type[specs[cnt].data_arg]);
+	       specs[cnt].ndata_args, &args_type[specs[cnt].data_arg],
+	       &args_size[specs[cnt].data_arg]);
 	    break;
 	  }
       }
@@ -1743,13 +1733,21 @@ do_positional:
 	  args_value[cnt].mem = va_arg (ap_save, type);			      \
 	  break
 
-	T (PA_CHAR, pa_int, int); /* Promoted.  */
 	T (PA_WCHAR, pa_wchar, wint_t);
-	T (PA_INT|PA_FLAG_SHORT, pa_int, int); /* Promoted.  */
+	case PA_CHAR:				/* Promoted.  */
+	case PA_INT|PA_FLAG_SHORT:		/* Promoted.  */
+#if LONG_MAX == INT_MAX
+	case PA_INT|PA_FLAG_LONG:
+#endif
 	T (PA_INT, pa_int, int);
-	T (PA_INT|PA_FLAG_LONG, pa_long_int, long int);
+#if LONG_MAX == LONG_LONG_MAX
+	case PA_INT|PA_FLAG_LONG:
+#endif
 	T (PA_INT|PA_FLAG_LONG_LONG, pa_long_long_int, long long int);
-	T (PA_FLOAT, pa_double, double);	/* Promoted.  */
+#if LONG_MAX != INT_MAX && LONG_MAX != LONG_LONG_MAX
+# error "he?"
+#endif
+	case PA_FLOAT:				/* Promoted.  */
 	T (PA_DOUBLE, pa_double, double);
 	case PA_DOUBLE|PA_FLAG_LONG_DOUBLE:
 	  if (__ldbl_is_dbl)
@@ -1760,13 +1758,20 @@ do_positional:
 	  else
 	    args_value[cnt].pa_long_double = va_arg (ap_save, long double);
 	  break;
-	T (PA_STRING, pa_string, const char *);
-	T (PA_WSTRING, pa_wstring, const wchar_t *);
+	case PA_STRING:				/* All pointers are the same */
+	case PA_WSTRING:			/* All pointers are the same */
 	T (PA_POINTER, pa_pointer, void *);
 #undef T
 	default:
 	  if ((args_type[cnt] & PA_FLAG_PTR) != 0)
 	    args_value[cnt].pa_pointer = va_arg (ap_save, void *);
+	  else if (__builtin_expect (__printf_va_arg_table != NULL, 0)
+		   && __printf_va_arg_table[args_type[cnt] - PA_LAST] != NULL)
+	    {
+	      args_value[cnt].pa_user = alloca (args_size[cnt]);
+	      (*__printf_va_arg_table[args_type[cnt] - PA_LAST])
+		(args_value[cnt].pa_user, &ap_save);
+	    }
 	  else
 	    args_value[cnt].pa_long_double = 0.0;
 	  break;
@@ -1870,6 +1875,40 @@ do_positional:
 	/* Process format specifiers.  */
 	while (1)
 	  {
+	    extern printf_function **__printf_function_table;
+	    int function_done;
+
+	    if (spec <= UCHAR_MAX
+		&& __printf_function_table != NULL
+		&& __printf_function_table[(size_t) spec] != NULL)
+	      {
+		const void **ptr = alloca (specs[nspecs_done].ndata_args
+					   * sizeof (const void *));
+
+		/* Fill in an array of pointers to the argument values.  */
+		for (unsigned int i = 0; i < specs[nspecs_done].ndata_args;
+		     ++i)
+		  ptr[i] = &args_value[specs[nspecs_done].data_arg + i];
+
+		/* Call the function.  */
+		function_done = __printf_function_table[(size_t) spec]
+		  (s, &specs[nspecs_done].info, ptr);
+
+		if (function_done != -2)
+		  {
+		    /* If an error occurred we don't have information
+		       about # of chars.  */
+		    if (function_done < 0)
+		      {
+			done = -1;
+			goto all_done;
+		      }
+
+		    done_add (function_done);
+		    break;
+		  }
+	      }
+
 	    JUMP (spec, step4_jumps);
 
 	    process_arg ((&specs[nspecs_done]));
@@ -1877,18 +1916,8 @@ do_positional:
 
 	  LABEL (form_unknown):
 	    {
-	      extern printf_function **__printf_function_table;
-	      int function_done;
-	      printf_function *function;
 	      unsigned int i;
 	      const void **ptr;
-
-	      function =
-		(__printf_function_table == NULL ? NULL :
-		 __printf_function_table[specs[nspecs_done].info.spec]);
-
-	      if (function == NULL)
-		function = &printf_unknown;
 
 	      ptr = alloca (specs[nspecs_done].ndata_args
 			    * sizeof (const void *));
@@ -1898,7 +1927,8 @@ do_positional:
 		ptr[i] = &args_value[specs[nspecs_done].data_arg + i];
 
 	      /* Call the function.  */
-	      function_done = (*function) (s, &specs[nspecs_done].info, ptr);
+	      function_done = printf_unknown (s, &specs[nspecs_done].info,
+					      ptr);
 
 	      /* If an error occurred we don't have information about #
 		 of chars.  */

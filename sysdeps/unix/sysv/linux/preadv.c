@@ -29,6 +29,7 @@
 #include <sys/syscall.h>
 #include <kernel-features.h>
 
+
 #ifndef PREADV
 # define PREADV preadv
 # define PREADV_REPLACEMENT __atomic_preadv_replacement
@@ -36,8 +37,10 @@
 # define OFF_T off_t
 #endif
 
+#ifndef __ASSUME_PREADV
 static ssize_t PREADV_REPLACEMENT (int, __const struct iovec *,
 				   int, OFF_T) internal_function;
+#endif
 
 
 ssize_t
@@ -51,14 +54,16 @@ PREADV (fd, vector, count, offset)
   ssize_t result;
 
   if (SINGLE_THREAD_P)
-    result = INLINE_SYSCALL (preadv, 5, fd, vector, count, offset >> 32,
-			     offset & 0xffffffff);
+    result = INLINE_SYSCALL (preadv, 5, fd, vector, count,
+			     (off_t) ((off64_t) offset >> 32),
+			     (off_t) (offset & 0xffffffff));
   else
     {
       int oldtype = LIBC_CANCEL_ASYNC ();
 
-      result = INLINE_SYSCALL (preadv, 5, fd, vector, count, offset >> 32,
-			       offset & 0xffffffff);
+      result = INLINE_SYSCALL (preadv, 5, fd, vector, count,
+			       (off_t) ((off64_t) offset >> 32),
+			       (off_t) (offset & 0xffffffff));
 
       LIBC_CANCEL_RESET (oldtype);
     }

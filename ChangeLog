@@ -1,3 +1,64 @@
+2009-04-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/powerpc32/elf/start.S: Ensure .data is non-empty.
+	* sysdeps/powerpc/powerpc64/elf/start.S: Likewise.
+	* sysdeps/sparc/sparc32/elf/start.S: Likewise.
+	* sysdeps/sparc/sparc64/elf/start.S: Likewise.
+
+2009-04-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: SH also has
+	preadv/pwritev.
+
+2009-04-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86-64/strrchr.S: New file.
+
+2009-04-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/printf.h (struct printf_info): Add user element.
+	New types printf_arginfo_size_function, printf_va_arg_function.
+	Declare register_printf_specifier, register_printf_modifier,
+	register_printf_type.
+	* stdio-common/printf-parse.h (struct printf_spec): Add size element.
+	(union printf_arg): Add pa_user element.
+	Adjust __printf_arginfo_table type.
+	Add __printf_va_arg_table, __printf_modifier_table,
+	__handle_registered_modifier_mb, and __handle_registered_modifier_wc
+	declarations.
+	* stdio-common/printf-parsemb.c: Recognize registered modifiers.
+	If registered arginfo call failed try normal specifier.
+	* stdio-common/printf-prs.c: Pass additional parameter to arginfo
+	function.
+	* stdio-common/Makefile (routines): Add reg-modifier and reg-type.
+	* stdio-common/Versions: Export register_printf_modifier,
+	register_printf_type, and register_printf_specifier for GLIBC_2.10.
+	* stdio-common/reg-modifier.c: New file.
+	* stdio-common/reg-type.c: New file.
+	* stdio-common/reg-printf.c (__register_printf_specifier): New
+	function.  Mostly the old __register_printf_function function but
+	uses locking and type of third parameter changed.
+	(__register_printf_function): Implement using
+	__register_printf_specifier.
+	* stdio-common/vfprintf.c (vfprintf): Collect argument sizes in
+	calls to arginfo functions.  Allocate enough memory for user-defined
+	types.  Call new va_arg functions to get user-defined types.
+	Try installed handlers even for existing format specifiers first.
+
+2009-04-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/rawmemchr.S: New file.
+
+	* stdio-common/vfprintf.c (vfprintf): Slightly more compact code.
+	Simplified code and possible copy problem fixed.
+
+	* sysdeps/unix/sysv/linux/preadv.c: Avoid prototype for static
+	function if it is not defined.  Add some necessary casts.
+	* sysdeps/unix/sysv/linux/pwritev.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: SPARC and IA64 also
+	have preadv/pwritev in 2.6.30.
+
 2009-04-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/malloc.c (malloc_info): New function.
