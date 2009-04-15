@@ -1,3 +1,49 @@
+2009-04-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/getsysstats.c (next_line): Make sure there
+	are always at least 4 bytes in the returned line.
+
+2009-04-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/getsysstats.c (__get_nprocs): Check
+	__libc_use_alloca (8192), if the stack is too small use 512 bytes
+	instead of 8K.  Stop searching in /proc/stat after hitting first
+	line not starting with cpu.
+	(next_line): Truncate too long
+	lines at buffer size * 3/4 instead of pretending there were line
+	breaks inside of large lines.
+
+2009-04-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/mp_clz_tab.c: New file.
+
+2009-03-17  Ryan S. Arnold  <rsa@us.ibm.com>
+            Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/fallocate.c: Handle old kernel headers.
+	* sysdeps/unix/sysv/linux/fallocate64.c: Likewise.
+
+2009-03-25  Andrew Stubbs  <ams@codesourcery.com>
+
+	* sysdeps/sh/libc-tls.c: New file.
+
+	* sysdeps/sh/bits/setjmp.h (__jmp_buf): Give name to structure type.
+
+2009-04-14  Roland McGrath  <roland@redhat.com>
+
+	* elf/elf.h: Add various missing ARM constants, to match binutils.
+
+2009-04-14  Ulrich Drepper  <drepper@redhat.com>
+
+	Optimizations from GMP.
+	* sysdeps/x86_64/add_n.S: New file.
+	* sysdeps/x86_64/addmul_1.S: New file.
+	* sysdeps/x86_64/lshift.S: New file.
+	* sysdeps/x86_64/mul_1.S: New file.
+	* sysdeps/x86_64/rshift.S: New file.
+	* sysdeps/x86_64/sub_n.S: New file.
+	* sysdeps/x86_64/submul_1.S: New file.
+
 2009-04-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/powerpc/powerpc32/elf/start.S: Ensure .data is non-empty.

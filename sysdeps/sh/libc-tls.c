@@ -1,4 +1,5 @@
-/* Copyright (C) 2007, 2009 Free Software Foundation, Inc.
+/* Thread-local storage handling in the ELF dynamic linker.  SH version.
+   Copyright (C) 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,21 +17,17 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <errno.h>
-#include <fcntl.h>
-#include <sysdep.h>
+#include <csu/libc-tls.c>
+#include <dl-tls.h>
 
+/* On SH, linker optimizations are not required, so __tls_get_addr
+   can be called even in statically linked binaries.  In this case module
+   must be always 1 and PT_TLS segment exist in the binary, otherwise it
+   would not link.  */
 
-/* Reserve storage for the data of the file associated with FD.  */
-int
-fallocate (int fd, int mode, __off_t offset, __off_t len)
+void *
+__tls_get_addr (tls_index *ti)
 {
-#ifndef __NR_fallocate
-  return INLINE_SYSCALL (fallocate, 6, fd, mode,
-			 __LONG_LONG_PAIR (offset >> 31, offset),
-			 __LONG_LONG_PAIR (len >> 31, len));
-#else
-  __set_errno (ENOSYS);
-  return -1;
-#endif
+  dtv_t *dtv = THREAD_DTV ();
+  return (char *) dtv[1].pointer.val + ti->ti_offset;
 }
