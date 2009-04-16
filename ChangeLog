@@ -1,3 +1,13 @@
+2009-04-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-open.c (_dl_open): Bump GL(dl_nns) to 1 if no libraries
+	are dlopened in statically linked program even for __LM_ID_CALLER.
+
+2009-04-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_send.c (send_dg): Don't switch into single-request
+	mode if we already are in it.
+
 2009-04-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/getsysstats.c (next_line): Make sure there
