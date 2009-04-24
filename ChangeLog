@@ -1,3 +1,40 @@
+2009-04-24  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10093]
+	* iconv/gconv_simple.c (BODY for UTF-8 to INTERNAL): Don't accept
+	UTF-16 surrogates.
+
+	* locale/programs/locarchive.c (enlarge_archive): Conserve address
+	space when temporarily mapping the whole content of the old file.
+
+	[BZ #10100]
+	* misc/hsearch_r.c (hsearch_r): Add back ensurance that hval is
+	not zero.
+
+2009-04-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* iconvdata/sjis.c (BODY): Don't advance inptr before
+	STANDARD_FROM_LOOP_ERR_HANDLER (2) for 2 byte invalid input.
+	Use STANDARD_FROM_LOOP_ERR_HANDLER with 2 instead of 1 for
+	two byte chars.
+
+2009-04-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/locarchive.h (struct locarhandle): Rename len field to
+	mmaped and add new reserved field.
+	* locale/programs/locarchive.c (RESERVE_MMAP_SIZE): Define.
+	(create_archive): Reserve address space and then map file into it.
+	(open_archive): Likewise.
+	(file_data_available_p): New function.
+	(compare_from_file): New function.
+	(close_archive): Adjust to member name changes.
+	(add_locale): Before comparing locale data, check it is mapped.
+	Otherwise fall back to reading from the file.
+
+2009-04-23  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* stdio-common/psiginfo.c: Include <errno.h>.
+
 2009-04-23  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #9920]
