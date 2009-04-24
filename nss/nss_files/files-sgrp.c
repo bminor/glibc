@@ -1,4 +1,5 @@
-/* Copyright (C) 2009 Free Software Foundation, Inc.
+/* User file parser in nss_files module.
+   Copyright (C) 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,26 +17,22 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <errno.h>
-#include <unistd.h>
-#include <sys/uio.h>
+#include <gshadow.h>
 
-/* Write data pointed by the buffers described by VECTOR, which is a
-   vector of COUNT 'struct iovec's, to file descriptor FD at the given
-   position OFFSET without change the file pointer.  The data is
-   written in the order specified.  Operates just like 'pwrite' (see
-   <unistd.h>) except that the data are taken from VECTOR instead of a
-   contiguous buffer.  */
-ssize_t
-pwritev (fd, vector, count, offset)
-     int fd;
-     const struct iovec *vector;
-     int count;
-     off_t offset;
-{
-  __set_errno (ENOSYS);
-  return -1;
-}
+#define STRUCTURE	sgrp
+#define ENTNAME		sgent
+#define DATABASE	"gshadow"
+struct sgent_data {};
 
-stub_warning (pwritev)
-#include <stub-tag.h>
+/* Our parser function is already defined in sgetspent_r.c, so use that
+   to parse lines from the database file.  */
+#define EXTERN_PARSER
+#include "files-parse.c"
+#include GENERIC
+
+DB_LOOKUP (sgnam, 1 + strlen (name), (".%s", name),
+	   {
+	     if (name[0] != '+' && name[0] != '-'
+		 && ! strcmp (name, result->sg_namp))
+	       break;
+	   }, const char *name)

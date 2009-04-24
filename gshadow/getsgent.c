@@ -1,5 +1,6 @@
 /* Copyright (C) 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@redhat.com>, 2009.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,26 +17,14 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <errno.h>
-#include <unistd.h>
-#include <sys/uio.h>
+#include <gshadow.h>
 
-/* Write data pointed by the buffers described by VECTOR, which is a
-   vector of COUNT 'struct iovec's, to file descriptor FD at the given
-   position OFFSET without change the file pointer.  The data is
-   written in the order specified.  Operates just like 'pwrite' (see
-   <unistd.h>) except that the data are taken from VECTOR instead of a
-   contiguous buffer.  */
-ssize_t
-pwritev (fd, vector, count, offset)
-     int fd;
-     const struct iovec *vector;
-     int count;
-     off_t offset;
-{
-  __set_errno (ENOSYS);
-  return -1;
-}
 
-stub_warning (pwritev)
-#include <stub-tag.h>
+#define LOOKUP_TYPE	struct sgrp
+#define SETFUNC_NAME	setsgent
+#define	GETFUNC_NAME	getsgent
+#define	ENDFUNC_NAME	endsgent
+#define DATABASE_NAME	gshadow
+#define BUFLEN		1024
+
+#include "../nss/getXXent.c"
