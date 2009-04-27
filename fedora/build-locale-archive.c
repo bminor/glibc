@@ -63,14 +63,6 @@ next_prime (unsigned long seed)
   return seed;
 }
 
-/* xmalloc is only used by show_archive_content.  */
-void *
-xmalloc (size_t size)
-{
-  (void) size;
-  exit (255);
-}
-
 void
 error (int status, int errnum, const char *message, ...)
 {
@@ -87,6 +79,15 @@ error (int status, int errnum, const char *message, ...)
   fflush (stderr);
   if (status)
     exit (errnum == EROFS ? 0 : status);
+}
+
+void *
+xmalloc (size_t size)
+{
+  void *p = malloc (size);
+  if (p == NULL)
+    error (EXIT_FAILURE, errno, "could not allocate %zd bytes of memory", size);
+  return p;
 }
 
 static void
@@ -112,15 +113,16 @@ open_tmpl_archive (struct locarhandle *ah)
     error (EXIT_FAILURE, errno, "cannot read archive header");
 
   ah->fd = fd;
-  ah->len = (head.sumhash_offset
-	     + head.sumhash_size * sizeof (struct sumhashent));
-  if (ah->len > st.st_size)
+  ah->mmaped = (head.sumhash_offset
+		+ head.sumhash_size * sizeof (struct sumhashent));
+  if (ah->mmaped > (unsigned long) st.st_size)
     error (EXIT_FAILURE, 0, "locale archite template file truncated");
-  ah->len = st.st_size;
+  ah->mmaped = st.st_size;
+  ah->reserved = st.st_size;
 
   /* Now we know how large the administrative information part is.
      Map all of it.  */
-  ah->addr = mmap64 (NULL, ah->len, PROT_READ, MAP_SHARED, fd, 0);
+  ah->addr = mmap64 (NULL, ah->mmaped, PROT_READ, MAP_SHARED, fd, 0);
   if (ah->addr == MAP_FAILED)
     error (EXIT_FAILURE, errno, "cannot map archive header");
 }
