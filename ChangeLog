@@ -1,3 +1,138 @@
+2009-04-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/programs/locarchive.c (create_archive): Add MAP_PRIVATE
+	to MAP_ANON in PROT_NONE mmap64 call.
+	(open_archive): Likewise.
+	(file_data_available_p): Use mmap64 instead of mremap.
+	(enlarge_archive): Likewise.  Update head if ah->addr changed.
+	Attempt to reserve address space after mmap64 region.
+
+2009-04-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/s_expm1.c: Set errno for overflow.
+	* sysdeps/ieee754/flt-32/s_expm1f.c: Likewise.
+	* sysdeps/x86_64/fpu/s_expm1l.S: Likewise.
+
+	* sysdeps/ieee754/k_standard.c (__kernel_standard): Pole errors in
+	atanh should set ERANGE.
+
+	[BZ #10087]
+	* elf/dl-runtime.c (_dl_fixup): Use DL_FIXUP_VALUE_ADDR to access
+	result of lookup to make call to implement STT_GNU_IFUNC.
+	(_dl_profile_fixup): Likewise.
+	Patch by H.J. Lu <hjl.tools@gmail.com>.
+
+	* nscd/connections.c (send_ro_fd): Define temporary variable to avoid
+	warning.
+
+	* sysdeps/unix/sysv/linux/dl-osinfo.h (dl_fatal): Remove inline
+	from definition.
+
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): Don't define
+	label if it is not used.
+
+	* elf/dl-profile.c (_dl_start_profile): Define real-type variant
+	of gmon_hist_hdr and gmon_hdr structures and use them.
+	* elf/sprof.c: Likewise.
+
+	* elf/dl-load.c (open_verify): Add temporary variable to avoid
+	warning.
+
+	* nscd/nscd_helper.c (get_mapping): Avoid casts to avoid warnings.
+
+	* sunrpc/clnt_raw.c (clntraw_private_s): Use union in definition
+	to avoid cast.
+
+	* inet/rexec.c (rexec_af): Make sa2 a union to avoid warnings.
+	* inet/rcmd.c (rcmd_af): Make from a union of the various needed types
+	to avoid warnings.
+	(iruserok_af): Use ss_family instead of casts.
+
+	* gmon/gmon.c (write_hist): Define real-type variant of
+	gmon_hist_hdr structure and use it.
+	(write_gmon): Likewise for gmon_hdr.
+
+	* sysdeps/unix/sysv/linux/readv.c: Avoid declaration of replacement
+	function if we are not going to define it.
+	* sysdeps/unix/sysv/linux/writev.c: Likewise.
+
+	* inet/inet6_option.c (option_alloc): Add temporary variable to
+	avoid warning.
+
+	* libio/strfile.h (struct _IO_streambuf): Use correct type and
+	name of VTable element.
+	* libio/iovsprintf.c: Avoid casts to avoid warnings.
+	* libio/iovsscanf.c: Likewise.
+	* libio/vasprintf.c: Likewise.
+	* libio/vsnprintf.c: Likewise.
+	* stdio-common/isoc99_vsscanf.c: Likewise.
+	* stdlib/strfmon_l.c: Likewise.
+	* debug/vasprintf_chk.c: Likewise.
+	* debug/vsnprintf_chk.c: Likewise.
+	* debug/vsprintf_chk.c: Likewise.
+
+	* nss/nsswitch.c (__nss_lookup_function): En/Decrypt cached
+	function pointers.
+
+2009-04-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/s_tan.c (tan): Fix -Wsequence-point warnings.
+
+2009-04-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/bits/posix1_lim.h: Cleanup namespace a bit.
+
+	* sysdeps/i386/fpu/s_tan.S: Set errno for ±Inf.
+	* sysdeps/i386/fpu/s_tanf.S: Likewise.
+	* sysdeps/i386/fpu/s_tanl.S: Likewise.
+	* sysdeps/ieee754/dbl-64/s_tan.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_tanf.c: Likewise.
+	* sysdeps/x86_64/fpu/s_tanl.S: Likewise.
+	* math/libm-test.inc: Add tests for errno after tan calls with
+	±Inf.
+
+	* sysdeps/ieee754/k_standard.c (__kernel_standard): Use correct
+	errno value vor pow(+-0,neg).
+	* math/libm-test.inc (pow_test): Add tests for errno value for
+	pole errors.
+
+	* math/w_fmod.c: Also handle x=±Inf as error.
+	* math/w_fmodf.c: Likewise.
+	* math/w_fmodl.c: Likewise.
+	* math/libm-test.inc (fmod_test): Add tests for errno after calls for
+	x=±Inf or y=0.
+
+	* sysdeps/i386/fpu/s_cos.S: Set errno for ±Inf.
+	* sysdeps/i386/fpu/s_cosf.S: Likewise.
+	* sysdeps/i386/fpu/s_cosl.S: Likewise.
+	* sysdeps/i386/fpu/s_sin.S: Likewise.
+	* sysdeps/i386/fpu/s_sinf.S: Likewise.
+	* sysdeps/i386/fpu/s_sinl.S: Likewise.
+	* sysdeps/ieee754/dbl-64/s_sin.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_cosf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_sinf.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_cosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_sinl.c: Likewise.
+	* sysdeps/x86_64/fpu/s_cosl.S: Likewise.
+	* sysdeps/x86_64/fpu/s_sinl.S: Likewise.
+	* math/libm-test.inc: Add tests for errno after sin/cos calls with
+	±Inf.
+
+	* stdlib/strtod_l.c (round_and_return): We have to set errno to
+	ERANGE for underflows.
+	* stdlib/tst-strtod.c (tests): Two tests should set errno to ERANGE.
+
+	* stdio-common/stdio_lim.h.in (L_cuserid): Not part of POSIX since
+	the 2001 revision.
+
+	* libio/tst-widetext.input: Remove surrogates.
+
+	* include/features.h: _POSIX_C_SOURCE >= 200112L implies C99.
+
+	* sysdeps/ieee754/k_standard.c (__kernel_standard): Pole errors
+	for lgamma should set errno to ERANGE, not EDOM.
+	* math/libm-test.inc (lgamma_test): Check errno for pole errors.
+
 2009-04-24  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #10093]

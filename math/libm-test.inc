@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2006, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1997.
 
@@ -1993,9 +1993,15 @@ cos_test (void)
 
   TEST_f_f (cos, 0, 1);
   TEST_f_f (cos, minus_zero, 1);
+  errno = 0;
   TEST_f_f (cos, plus_infty, nan_value, INVALID_EXCEPTION);
+  check_int ("errno for cos(+inf) == EDOM", errno, EDOM, 0, 0, 0);
+  errno = 0;
   TEST_f_f (cos, minus_infty, nan_value, INVALID_EXCEPTION);
+  check_int ("errno for cos(-inf) == EDOM", errno, EDOM, 0, 0, 0);
+  errno = 0;
   TEST_f_f (cos, nan_value, nan_value);
+  check_int ("errno for cos(NaN) unchanged", errno, 0, 0, 0, 0);
 
   TEST_f_f (cos, M_PI_6l * 2.0, 0.5);
   TEST_f_f (cos, M_PI_6l * 4.0, -0.5);
@@ -2877,11 +2883,17 @@ fmod_test (void)
   TEST_ff_f (fmod, minus_zero, 3, minus_zero);
 
   /* fmod (+inf, y) == NaN plus invalid exception.  */
+  errno = 0;
   TEST_ff_f (fmod, plus_infty, 3, nan_value, INVALID_EXCEPTION);
+  check_int ("errno for fmod(Inf,3) unchanged", errno, EDOM, 0, 0, 0);
   /* fmod (-inf, y) == NaN plus invalid exception.  */
+  errno = 0;
   TEST_ff_f (fmod, minus_infty, 3, nan_value, INVALID_EXCEPTION);
+  check_int ("errno for fmod(-Inf,3) unchanged", errno, EDOM, 0, 0, 0);
   /* fmod (x, +0) == NaN plus invalid exception.  */
+  errno = 0;
   TEST_ff_f (fmod, 3, 0, nan_value, INVALID_EXCEPTION);
+  check_int ("errno for fmod(3,0) unchanged", errno, EDOM, 0, 0, 0);
   /* fmod (x, -0) == NaN plus invalid exception.  */
   TEST_ff_f (fmod, 3, minus_zero, nan_value, INVALID_EXCEPTION);
 
@@ -3241,7 +3253,9 @@ lgamma_test (void)
   TEST_f_f (lgamma, nan_value, nan_value);
 
   /* lgamma (x) == +inf plus divide by zero exception for integer x <= 0.  */
+  errno = 0;
   TEST_f_f (lgamma, -3, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  check_int ("errno for lgamma(-integer) == ERANGE", errno, ERANGE, 0, 0, 0);
   TEST_f_f (lgamma, minus_infty, plus_infty);
 
   TEST_f_f1 (lgamma, 1, 0, 1);
@@ -4728,15 +4742,31 @@ pow_test (void)
   TEST_ff_f (pow, -10.1L, 1.1L, nan_value, INVALID_EXCEPTION);
   TEST_ff_f (pow, -10.1L, -1.1L, nan_value, INVALID_EXCEPTION);
 
+  errno = 0;
   TEST_ff_f (pow, 0, -1, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  check_int ("errno for pow(0,-odd) == ERANGE", errno, ERANGE, 0, 0, 0);
+  errno = 0;
   TEST_ff_f (pow, 0, -11, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  check_int ("errno for pow(0,-odd) == ERANGE", errno, ERANGE, 0, 0, 0);
+  errno = 0;
   TEST_ff_f (pow, minus_zero, -1, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  TEST_ff_f (pow, minus_zero, -11, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  check_int ("errno for pow(-0,-odd) == ERANGE", errno, ERANGE, 0, 0, 0);
+  errno = 0;
+  TEST_ff_f (pow, minus_zero, -11L, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  check_int ("errno for pow(-0,-odd) == ERANGE", errno, ERANGE, 0, 0, 0);
 
+  errno = 0;
   TEST_ff_f (pow, 0, -2, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  check_int ("errno for pow(0,-even) == ERANGE", errno, ERANGE, 0, 0, 0);
+  errno = 0;
   TEST_ff_f (pow, 0, -11.1L, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  check_int ("errno for pow(0,-num) == ERANGE", errno, ERANGE, 0, 0, 0);
+  errno = 0;
   TEST_ff_f (pow, minus_zero, -2, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  check_int ("errno for pow(-0,-even) == ERANGE", errno, ERANGE, 0, 0, 0);
+  errno = 0;
   TEST_ff_f (pow, minus_zero, -11.1L, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  check_int ("errno for pow(-0,-num) == ERANGE", errno, ERANGE, 0, 0, 0);
 
   TEST_ff_f (pow, 0x1p72L, 0x1p72L, plus_infty);
   TEST_ff_f (pow, 10, -0x1p72L, 0);
@@ -4749,10 +4779,8 @@ pow_test (void)
   TEST_ff_f (pow, minus_zero, 1, minus_zero);
   TEST_ff_f (pow, minus_zero, 11, minus_zero);
 
-
   TEST_ff_f (pow, 0, 2, 0);
   TEST_ff_f (pow, 0, 11.1L, 0);
-
 
   TEST_ff_f (pow, minus_zero, 2, 0);
   TEST_ff_f (pow, minus_zero, 11.1L, 0);
@@ -5495,9 +5523,15 @@ sin_test (void)
 
   TEST_f_f (sin, 0, 0);
   TEST_f_f (sin, minus_zero, minus_zero);
+  errno = 0;
   TEST_f_f (sin, plus_infty, nan_value, INVALID_EXCEPTION);
+  check_int ("errno for sin(+inf) == EDOM", errno, EDOM, 0, 0, 0);
+  errno = 0;
   TEST_f_f (sin, minus_infty, nan_value, INVALID_EXCEPTION);
+  check_int ("errno for sin(-inf) == EDOM", errno, EDOM, 0, 0, 0);
+  errno = 0;
   TEST_f_f (sin, nan_value, nan_value);
+  check_int ("errno for sin(NaN) unchanged", errno, 0, 0, 0, 0);
 
   TEST_f_f (sin, M_PI_6l, 0.5);
   TEST_f_f (sin, -M_PI_6l, -0.5);
@@ -5619,9 +5653,15 @@ tan_test (void)
 
   TEST_f_f (tan, 0, 0);
   TEST_f_f (tan, minus_zero, minus_zero);
+  errno = 0;
   TEST_f_f (tan, plus_infty, nan_value, INVALID_EXCEPTION);
+  check_int ("errno for tan(Inf) == EDOM", errno, EDOM, 0, 0, 0);
+  errno = 0;
   TEST_f_f (tan, minus_infty, nan_value, INVALID_EXCEPTION);
+  check_int ("errno for tan(-Inf) == EDOM", errno, EDOM, 0, 0, 0);
+  errno = 0;
   TEST_f_f (tan, nan_value, nan_value);
+  check_int ("errno for tan(NaN) == 0", errno, 0, 0, 0, 0);
 
   TEST_f_f (tan, M_PI_4l, 1);
   TEST_f_f (tan, 0.75L, 0.931596459944072461165202756573936428L);
