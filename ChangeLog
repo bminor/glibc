@@ -1,3 +1,10 @@
+2009-05-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/selinux.c (nscd_avc_destroy): Removed.
+	* nscd/selinux.h (nscd_avc_destroy): Likewise.
+	* nscd/nscd.c (termination_handler): Don't call
+	nscd_avc_destroy.
+
 2009-05-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* version.h (VERSION): Bump to 2.10.1.
