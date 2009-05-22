@@ -1,3 +1,8 @@
+2009-05-21  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #10162]
+	* sysdeps/ia64/memchr.S: Use speculative load.
+
 2009-05-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h: Don't define
