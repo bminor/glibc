@@ -1,72 +1,72 @@
-# Makefile for maintaining glibc fedora-branch and creating Fedora source RPMs.
+# Makefile for maintaining Fedora branches and creating Fedora source RPMs.
 
 glibc.spec: # The default target.
 
-tag-prefix := fedora-
+.PHONY: follow merge merge-base tag force-tag archive finish_archive srpm rpm
 
-.PHONY: update commit-merge tag archive finish_archive srpm rpm
+releases-url := ftp://sources.redhat.com/pub/glibc/releases/
+tag-prefix := fedora/
+branch-name := fedora
 
-snapshot-date-fmt := +'%Y-%m-%d %H:%M %Z'
-snapshot-name-fmt := +'%Y%m%dT%H%M'
+GIT ?= git
+git = $(shell $(GIT) $1 $2)
+gitconf = $(call git,config,--get $1)
+branchname = $(patsubst refs/heads/%,%,$1)
 
-include branch.mk
+my-branch := $(call branchname,$(call git,symbolic-ref,HEAD))
+upstream-remote := $(call gitconf,branch.$(my-branch).remote)
+upstream-branch := $(call branchname,$(call gitconf,branch.$(my-branch).merge))
 
+dep-my-branch := $(firstword $(wildcard ../.git/refs/heads/$(my-branch) \
+	      		    	       	../.git/packed-refs))
+dep-upstream-branch := $(firstword $(wildcard \
+	../.git/refs/remotes/$(upstream-remote)/$(upstream-branch) \
+	../.git/packed-refs))
 
-on-branch = $(filter-out HEAD,$(glibc-base))
-
-snapshot-date := $($(glibc-branch)-sync-date)
-snapshot-name := $(shell date -u -d '$(snapshot-date)' $(snapshot-name-fmt))
-
-tag-name := glibc$(patsubst glibc-%-branch,-%,\
-			    $(filter-out HEAD,$(glibc-base)))
-tar-name := $(subst _,.,$(tag-name))
-select-snapshot = -r '$($(glibc-branch)-sync-tag)'
-snapshot-id = $($(glibc-branch)-sync-tag)
-
-branch-name := $(patsubst %-$(patsubst glibc-%,%,$(tag-name)),%,\
-			  $(glibc-branch))
-
-branch.mk-vars = glibc-branch glibc-base DIST_BRANCH COLLECTION \
-		 releases-url
-
-ifeq (,$(upstream-tag))
-ifneq (,$(upstream))
-upstream-tag := glibc-$(subst .,_,$(upstream))
+# Use 'make follow branch=release/3.14/master' to switch this checkout
+# to a new upstream branch to merge from.
+follow:
+ifeq (,$(branch))
+	@echo "Use '$(MAKE) follow branch=NAME'"; exit 2
+else
+	$(GIT) rev-parse --verify $(upstream-remote)/$(branch)
+	$(GIT) config branch.$(my-branch).merge $(branch)
+	@$(GIT) branch -v | grep "^. $(subst .,\\.,$(my-branch)) "
 endif
-endif
 
-update:
-	now=`date -u $(snapshot-date-fmt)`; \
-	$(if $(upstream-tag),new='$(upstream-tag)';,\
-	name=`date -u -d "$$now" $(snapshot-name-fmt)`; \
-	new="$(tag-prefix)$(tag-name)-$$name"; \
-	cvs -Q rtag $(if $(on-branch),-r $(glibc-base),-D "$$now") $$new libc;\
-	)\
-	(echo '# This file is updated automatically by Makefile.'; \
-	 $(foreach var,$(branch.mk-vars) $(if $(upstream-tag),upstream),\
-		   $(if $($(var)),echo '$(var) := $($(var))';)) \
-	 echo "$(glibc-branch)-sync-date := $$now"; \
-	 echo "$(glibc-branch)-sync-tag := $$new"; \
-	) > branch.mk; \
-	cd ..; (set -x; cvs -q update -d -P \
-			    -j'$($(glibc-branch)-sync-tag)' -j"$$new") \
-		   2>&1 | tee fedora/update.log
+# Use this to merge upstream changes into this branch.
+# It will fail if conflict resolution is required.
+# Then you follow up with editting, 'git add FILE...', and git commit.
+merge:
+	$(GIT) pull
 
-.PHONY: snapshot-time
-snapshot-time: branch.mk
-	date -d '$(snapshot-date)'
+describe-merge = describe --match 'glibc-*'
 
-commit-merge:
-	cd ..; cvs -Q commit -m"Updated to $(snapshot-id)"
+merge-base-id := $(call git,merge-base,\
+	      	       	HEAD $(upstream-remote)/$(upstream-branch))
+merge-base-name := $(call git,$(describe-merge) $(merge-base-id))
 
-glibc.spec: glibc.spec.in ../version.h branch.mk
-	(echo '%define glibcdate $(snapshot-name)'; \
-	 echo '%define glibcname $(tar-name)'; \
-	 echo '%define glibcsrcdir $(srcdir-name)'; \
-	 echo '%define glibc_release_tarballs $(if $(upstream),1,0)'; \
-	 sed -e $$( sed -n '/VERSION/s/^.*"\([^"]*\)"$$/s,@glibcversion@,\1,/p' \
-	     ../version.h ) \
-	   $<) > $@.new
+merge-base:
+	@echo $(merge-base-id) $(merge-base-name)
+
+snapshot-name := $(patsubst glibc-%,%,$(merge-base-name))
+
+tar-name = $(merge-base-name)
+
+upstream-pristine = \
+	$(GIT) $(describe-merge) --exact-match > /dev/null 2>&1 $(merge-base-id)
+
+glibc.spec: glibc.spec.in $(dep-my-branch)
+	@rm -f $@.new
+	echo '%define glibcsrcdir $(tar-name)' > $@.new
+	if $(upstream-pristine); then \
+	  echo '%define glibc_release_url $(releases-url)' >> $@.new; \
+	else : ; fi; \
+	$(GIT) show $(my-branch):version.h \
+	| sed -n '/VERSION/s/^.*"\([^"]*\)"$$/%define glibcversion \1/p' \
+	>> $@.new
+	echo '### $< follows:' >> $@.new
+	cat $< >> $@.new
 	mv -f $@.new $@
 
 ifeq (,$(wildcard glibc.spec))
@@ -74,78 +74,61 @@ Makefile: glibc.spec ;
 else
 
 spec-nvr := $(shell rpm -q --qf '%{NAME}-%{VERSION}-%{RELEASE}\n' \
-			--specfile glibc.spec | sed 1q)
-spec-tag = $(subst .,_,$(spec-nvr))
+			--specfile glibc.spec 2> /dev/null | sed 1q)
+spec-tag = $(spec-nvr)
 
-ifeq ($(tagged),no)
-select-release = -r $(glibc-branch)-branch
-else
-select-release = -r $(tag-prefix)$(spec-tag)
-endif
+tag-spec = -a -m'$(spec-nvr)' $(tag-prefix)$(spec-tag)
 
 tag: glibc.spec
-	cd ..; cvs -Q tag -c $(tag-prefix)$(spec-tag)
+	$(GIT) tag $(tag-spec)
 
 force-tag: glibc.spec
-	cd ..; cvs -Q tag -F -c $(tag-prefix)$(spec-tag)
+	$(GIT) tag -f $(tag-spec)
 
-ifeq (,$(upstream))
-srcdir-name = $(tar-name)-$(snapshot-name)
-else
-tar-name = glibc-$(upstream)
-srcdir-name = $(tar-name)
-
-ifneq ($($(glibc-branch)-sync-tag),$(upstream-tag))
-define upstream-tag-check
-	@echo Need to run make update upstream=$(upstream); exit 1
-endef
-endif
 endif
 
-# Note this rule assumes that your working directory (..) is up to date.
-$(tar-name)-$(branch-name).patch: makepatch.awk glibc.spec \
-				  ../ChangeLog ../*/ChangeLog
-	$(upstream-tag-check)
-# Use -kk to suppress patches for $ Id $ differences between branches.
-	(cd ..; cvs -q diff -kk -upN $(select-snapshot) $(select-release)) | \
-	awk -v OLDVER=$(srcdir-name) \
-	    -v NEWVER=$(srcdir-name)-$(branch-name) \
-	    -f $< > patch.tmp
-	mv -f patch.tmp $@
-
-# makepatch.awk omits these files from the patch; we put them in a tar file.
-outside-patch = fedora c_stubs rtkaio \
+# Omit these files from the patch and put them in a tar file.
+outside-patch = fedora/ c_stubs/ rtkaio/ \
 		localedata/charmaps/GB18030 iconvdata/gb18030.c
 
-$(tar-name)-$(branch-name)-$(snapshot-name).tar.bz2: Makefile branch.mk \
-						     ../ChangeLog \
-						     ../*/ChangeLog
-	$(upstream-tag-check)
-	@rm -rf libc
-	cvs -Q export $(select-release) $(addprefix libc/,$(outside-patch))
-	tar cf - -C libc $(outside-patch) | bzip2 -9 > $@.new
-	rm -rf libc
-	mv -f $@.new $@
+glibc-$(branch-name).patch: glibc.spec Makefile $(dep-upstream-branch)
+	@echo "Creating $@ from `$(git-describe) $(my-branch)`..."
+	@$(GIT) diff -a --no-renames $(merge-base-id)..$(my-branch) \
+	| awk '$$1 == "diff" && $$2 == "--git" { file = $$3 } \
+	       $$1 == "---" && $$2 == "/dev/null" { $$2 = file } \
+	       { print }' \
+	| filterdiff --remove-timestamps --clean --strip=1 \
+		     -x '*/.gitignore' \
+		     $(patsubst %,-x '*/%',$(patsubst %/,%/*,$(outside-patch)))\
+		     --addoldprefix='$(merge-base-name)/' \
+		     --addnewprefix='$(spec-nvr)/' \
+	> patch.tmp
+	@mv -f patch.tmp $@
 
-glibc-tarballs = $(srcdir-name).tar.bz2
-ifeq (,$(upstream))
-$(srcdir-name).tar.bz2: Makefile branch.mk
-	@rm -rf $(srcdir-name)
-	cvs -Q export -d $(srcdir-name) $(select-snapshot) libc
-	tar cf - $(srcdir-name) | bzip2 -9 > $@.new
-	rm -rf $(srcdir-name)
-	mv -f $@.new $@
-else
-glibc-tarballs += $(srcdir-name:glibc-%=glibc-linuxthreads-%).tar.bz2 \
-		  $(srcdir-name:glibc-%=glibc-libidn-%).tar.bz2
+git-describe = $(GIT) describe --long --always
 
-$(glibc-tarballs):
-	curl -O $(releases-url)/$@
-endif
+define git-tar
+echo "Creating $@ from `$(git-describe) $1`..."; \
+(cd ..; $(GIT) archive --format=tar --prefix='$(tar-name)/' $1 $2) \
+| bzip2 -9 > $@.new && \
+mv -f $@.new $@
+endef
 
-archives = $(glibc-tarballs) \
-	   $(tar-name)-$(branch-name)-$(snapshot-name).tar.bz2 \
-	   $(tar-name)-$(branch-name).patch
+$(tar-name)-$(branch-name).tar.bz2: glibc.spec Makefile
+	@$(call git-tar,$(my-branch),$(outside-patch))
+
+$(tar-name).tar.bz2: $(dep-upstream-branch) Makefile
+	@if $(upstream-pristine); then \
+	   echo 'Fetching from $(releases-url)...'; \
+	   curl $(addprefix -C - -O $(releases-url),\
+			    $@ $(@:glibc-%=glibc-libidn-%)); \
+	 else \
+	   $(call git-tar,$(merge-base-id)); \
+	 fi
+
+archives = $(tar-name).tar.bz2 \
+	   $(tar-name)-$(branch-name).tar.bz2 \
+	   glibc-$(branch-name).patch
 
 finish_archive: $(archives)
 
@@ -173,20 +156,20 @@ $(spec-nvr).src.rpm: glibc.spec $(archives)
 
 ifdef COMMON_DIR
 DIST_BRANCH ?= devel
-COLLECTION ?= dist-f8
 
 pkgs-baseurl := cvs://cvs.fedoraproject.org/cvs/pkgs?rpms
 pkgs-url = $(pkgs-baseurl)/glibc/$(DIST_BRANCH)\#$(spec-tag)
 
 pkgs-import: $(spec-nvr).src.rpm
+	cd $(COMMON_DIR) && cvs -q update
 	$(COMMON_DIR)/cvs-import.sh -b $(DIST_BRANCH) $<
 	rpm -qp $< --queryformat '[%{FILEMD5S}  %{FILENAMES}\n]' > $@.new
 	mv -f $@.new $@
 
 build: pkgs-import
-	koji build $(BUILD_FLAGS) $(COLLECTION) '$(pkgs-url)'
+	cd $(COMMON_DIR)/../glibc/$(DIST_BRANCH) && \
+	cvs -q update && \
+	$(MAKE) build
 
 endif
 ###
-
-endif

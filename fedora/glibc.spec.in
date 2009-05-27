@@ -16,9 +16,10 @@
 %define rtkaioarches %{ix86} x86_64 ia64 ppc ppc64 s390 s390x
 %define debuginfocommonarches %{ix86} alpha alphaev6 sparc sparcv9 sparcv9v sparc64 sparc64v
 %define _unpackaged_files_terminate_build 0
+
 Summary: The GNU libc libraries
 Name: glibc
-Version: @glibcversion@
+Version: %{glibcversion}
 Release: 1
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
@@ -28,14 +29,15 @@ Release: 1
 License: LGPLv2+ and LGPLv2+ with exceptions and GPLv2+
 Group: System Environment/Libraries
 URL: http://sources.redhat.com/glibc/
-Source0: %{glibcsrcdir}.tar.bz2
-%if %{glibc_release_tarballs}
-Source1: %(echo %{glibcsrcdir} | sed s/glibc-/glibc-linuxthreads-/).tar.bz2
-Source2: %(echo %{glibcsrcdir} | sed s/glibc-/glibc-libidn-/).tar.bz2
-%define glibc_release_unpack -a1 -a2
+Source0: %{?glibc_release_url}%{glibcsrcdir}.tar.bz2
+%if 0%{?glibc_release_url:1}
+%define glibc_libidn_tarball %(echo %{glibcsrcdir} | \
+			     	    sed s/glibc-/glibc-libidn-/).tar.bz2
+Source1: %{glibc_release_url}%{glibc_libidn_tarball}
+%define glibc_release_unpack -a1
 %endif
-Source3: %{glibcname}-fedora-%{glibcdate}.tar.bz2
-Patch0: %{glibcname}-fedora.patch
+Source2: %{glibcsrcdir}-fedora.tar.bz2
+Patch0: %{name}-fedora.patch
 Patch1: %{name}-ia64-lib64.patch
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Obsoletes: glibc-profile < 2.4
@@ -221,7 +223,7 @@ package or when debugging this package.
 %endif
 
 %prep
-%setup -q -n %{glibcsrcdir} %{glibc_release_unpack} -a3
+%setup -q -n %{glibcsrcdir} %{?glibc_release_unpack} -a2
 %patch0 -E -p1
 %ifarch ia64
 %if "%{_lib}" == "lib64"
