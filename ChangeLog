@@ -1,3 +1,7 @@
+2009-06-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-sysdep.c (_dl_show_auxv): Terminate correct string.
+
 2009-05-30  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* configure.in: Move AC_CANONICAL_HOST before first use of $host
