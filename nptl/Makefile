@@ -1,5 +1,4 @@
-# Copyright (C) 2002,2003,2004,2005,2006,2007,2008
-#	Free Software Foundation, Inc.
+# Copyright (C) 2002-2008,2009 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -28,10 +27,11 @@ extra-libs := libpthread
 extra-libs-others := $(extra-libs)
 install-lib-ldscripts := libpthread.so
 
-routines = alloca_cutoff forward libc-lowlevellock libc-cancellation
+routines = alloca_cutoff forward libc-lowlevellock libc-cancellation \
+	   libc-cleanup
 shared-only-routines = forward
 
-libpthread-routines = init vars events version \
+libpthread-routines = nptl-init vars events version \
 		      pthread_create pthread_exit pthread_detach \
 		      pthread_join pthread_tryjoin pthread_timedjoin \
 		      pthread_self pthread_equal pthread_yield \
@@ -139,8 +139,8 @@ CFLAGS-pthread_atfork.c = -DNOT_IN_libc
 # we have to compile some files with exception handling enabled, some
 # even with asynchronous unwind tables.
 
-# init.c contains sigcancel_handler().
-CFLAGS-init.c = -fexceptions -fasynchronous-unwind-tables
+# nptl-init.c contains sigcancel_handler().
+CFLAGS-nptl-init.c = -fexceptions -fasynchronous-unwind-tables
 # The unwind code itself,
 CFLAGS-unwind.c = -fexceptions
 CFLAGS-unwind-forcedunwind.c = -fexceptions -fasynchronous-unwind-tables

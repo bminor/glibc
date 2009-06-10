@@ -1,3 +1,30 @@
+2009-05-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* libc-cancellation.c: Move __libc_cleanup_routine to...
+	* libc-cleanup.c: ...here.  New file.
+	* Makefile (routines): Add libc-cleanup.
+
+	* cancellation.c (__pthread_disable_asynccancel): Remove unnecessary
+	test.
+	* libc-cancellation.c: Use <nptl/cancellation.c: to define the code.
+	* sysdeps/pthread/librt-cancellation.c: Likewise.
+
+	[BZ #9924]
+	* nptl-init.c: Renamed from init.c.
+	* Makefile: Change all occurences of init.c to nptl-init.c.
+
+2009-05-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* cancellation.c (__pthread_disable_asynccancel): Correct the bits
+	to test when deciding on the delay.
+	* libc-cancellation.c (__libc_disable_asynccancel): Likewise.
+	* pthread_cancel.c: Close race between deciding on sending a signal
+	and setting the CANCELING_BIT bit.
+
+	* cancellation.c (__pthread_disable_asynccancel): Don't return if
+	thread is canceled.
+	* libc-cancellation.c (__libc_disable_asynccancel): Likewise.
+
 2009-04-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* cancellation.c (__pthread_disable_asynccancel): Use THREAD_ATOMIC_AND

@@ -1,5 +1,5 @@
 /* Startup support for ELF initializers/finalizers in the main executable.
-   Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004, 2005, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,6 +36,20 @@
 
 #include <stddef.h>
 
+#if defined USE_MULTIARCH && !defined LIBC_NONSHARED
+# include <link.h>
+# include <dl-irel.h>
+
+# ifdef ELF_MACHINE_IRELA
+extern const ElfW(Rela) __rela_iplt_start [];
+extern const ElfW(Rela) __rela_iplt_end [];
+# endif
+
+# ifdef ELF_MACHINE_IREL
+extern const ElfW(Rel) __rel_iplt_start [];
+extern const ElfW(Rel) __rel_iplt_end [];
+# endif
+#endif	/* LIBC_NONSHARED */
 
 /* These magic symbols are provided by the linker.  */
 extern void (*__preinit_array_start []) (int, char **, char **)
@@ -83,7 +97,23 @@ __libc_csu_init (int argc, char **argv, char **envp)
   /* For dynamically linked executables the preinit array is executed by
      the dynamic linker (before initializing any shared object.  */
 
-#ifndef LIBC_NONSHARED
+#if defined USE_MULTIARCH && !defined LIBC_NONSHARED
+# ifdef ELF_MACHINE_IRELA
+  {
+    const size_t size = __rela_iplt_end - __rela_iplt_start;
+    for (size_t i = 0; i < size; i++)
+      elf_irela (&__rela_iplt_start [i]);
+  }
+# endif
+
+# ifdef ELF_MACHINE_IREL
+  {
+    const size_t size = __rel_iplt_end - __rel_iplt_start;
+    for (size_t i = 0; i < size; i++)
+      elf_irel (&__rel_iplt_start [i]);
+  }
+# endif
+
   /* For static executables, preinit happens rights before init.  */
   {
     const size_t size = __preinit_array_end - __preinit_array_start;

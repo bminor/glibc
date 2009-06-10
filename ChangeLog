@@ -1,3 +1,429 @@
+2009-06-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* dlfcn/dlfcn.h: Remove comma at end of enum.
+	Patch by J.H.M. Dassen <rdassen@redhat.com>.
+
+	* libio/fileops.c (_IO_new_file_fopen): Don't prematurely stop
+	parsing mode string.
+
+2009-06-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/rawmemchr.S: Minor optimization.
+
+	* sysdeps/x86_64/multiarch/rawmemchr.S: New file.
+
+	* sysdeps/x86_64/multiarch/strlen.S: New file.
+	* sysdeps/x86_64/multiarch/ifunc-defines.sym: New file.
+	* sysdeps/x86_64/multiarch/Makefile: Add rule to build ifunc-defines.h.
+	* sysdeps/x86_64/multiarch/init-arch.h: Name structure with register
+	content.
+
+	* csu/elf-init.c: Only compile in IFUNC functionality if USE_MULTIARCH
+	is defined.
+
+2009-06-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/strlen.S: Minor optimizations.
+
+2009-06-02  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/Makefile (distribute): Add ifuncmain1.c, ifuncmain1pic.c,
+	ifuncmain1vis.c, ifuncmain1vispic.c, ifuncmain1static.c,
+	ifuncmain1staticpic.c, ifuncmain1picstatic.c, ifuncdep1.c,
+	ifuncdep1pic.c, ifuncmod1.c, ifuncmain1pie.c, ifuncmain1vispie.c,
+	ifuncmain2.c, ifuncmain2static.c, ifuncdep2.c,
+	funcmain2pic.c, ifuncmain2picstatic.c, ifuncdep2pic.c,
+	ifuncmain3.c, ifuncmod3.c,.
+	ifuncmain4.c, ifuncmain4static.c, ifuncmain4picstatic.c.
+	(tests-static): Add ifuncmain1static, ifuncmain1picstatic,
+	ifuncmain2static, ifuncmain2picstatic, ifuncmain4static,
+	ifuncmain4picstatic.
+	(tests): Add ifuncmain1, ifuncmain1pic, ifuncmain1vis,
+	ifuncmain1vispic, ifuncmain1staticpic, ifuncmain2, ifuncmain2pic,
+	ifuncmain3, ifuncmain4.
+	(tests): Depend on $(objpfx)ifuncmain1pie.out and
+	$(objpfx)ifuncmain1vispie.out.
+	(modules-names): Add ifuncmod1 ifuncmod3.
+	(generated): Add ifuncmain1pie ifuncmain1pie.out
+	ifuncmain1vispie ifuncmain1vispie.out.
+	Define rules to build and run the tests.
+	* elf/ifuncdep1.c: New file.
+	* elf/ifuncdep1pic.c: New file.
+	* elf/ifuncdep2.c: New file.
+	* elf/ifuncdep2pic.c: New file.
+	* elf/ifuncmain1.c: New file.
+	* elf/ifuncmain1pic.c: New file.
+	* elf/ifuncmain1picstatic.c: New file.
+	* elf/ifuncmain1pie.c: New file.
+	* elf/ifuncmain1static.c: New file.
+	* elf/ifuncmain1staticpic.c: New file.
+	* elf/ifuncmain1vis.c: New file..
+	* elf/ifuncmain1vispic.c: New file..
+	* elf/ifuncmain1vispie.c: New file.
+	* elf/ifuncmain2.c: New file.
+	* elf/ifuncmain2pic.c: New file.
+	* elf/ifuncmain2picstatic.c: New file.
+	* elf/ifuncmain2static.c: New file.
+	* elf/ifuncmain3.c: New file.
+	* elf/ifuncmain4.c: New file.
+	* elf/ifuncmain4picstatic.c: New file.
+	* elf/ifuncmain4static.c: New file.
+	* elf/ifuncmod1.c: New file.
+	* elf/ifuncmod3.c: New file.
+
+2009-06-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-sysdep.c (_dl_show_auxv): Terminate correct string.
+
+2009-06-02  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10221]
+	* posix/Makefile (routines): Add execvpe.
+	* posix/Versions: Export execvpe for GLIBC_2.11.
+	* posix/execvp.c: Now only a wrapper.  Move code to...
+	* posix/execvpe.c: ...here.  New file.
+	* posix/unistd.h: Declare execvpe.
+
+2009-06-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Reorder conditions
+	for STT_GNU_IFUNC handling for efficiency.
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): Likewise.
+
+	* sysdeps/i386/dl-irel.h (elf_irel): Use __libc_fatal instead of just
+	_exit.
+	* sysdeps/x86_64/dl-irel.h (elf_irela): Likewise.
+
+2009-05-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/multiarch/sched_cpucount.c: Also use optimized code
+	for !SHARED.
+
+2009-05-29  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* csu/elf-init.c: Include <link.h> and <dl-irel.h> if LIBC_NONSHARED
+	is not defined.
+	(__rela_iplt_start): New declaration.
+	(__rela_iplt_end): Likewise.
+	(__rel_iplt_start): Likewise.
+	(__rel_iplt_end): Likewise.
+	(__libc_csu_init): Process __rela_iplt_start and __rel_iplt_start.
+	* elf/elf.h (R_386_IRELATIVE): New macro.
+	(R_X86_64_IRELATIVE): New macro.
+	(R_386_NUM): Updated.
+	(R_X86_64_NUM): Likewise.
+	* include/libc-symbols.h (libc_ifunc_hidden_def1): New macro.
+	(libc_ifunc_hidden_def): New macro.
+	* sysdeps/generic/dl-irel.h: New file.
+	* sysdeps/i386/dl-irel.h: New file.
+	* sysdeps/x86_64/dl-irel.h: New file.
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Handle R_386_IRELATIVE.
+	(elf_machine_rela): Check SHN_UNDEF for STT_GNU_IFUNC symbol.
+	Handle R_386_IRELATIVE.
+	(elf_machine_lazy_rel): Handle R_386_IRELATIVE.
+	(elf_machine_lazy_rela): Likewise.
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): Handle
+	R_X86_64_IRELATIVE.
+	(elf_machine_lazy_rel): Handle R_X86_64_IRELATIVE.
+
+2009-05-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/multiarch/init-arch.h: Define COMMON_CPUID_INDEX_1
+	instead of INTEL_CPUID_INDEX_1 and AMD_CPUID_INDEX_1.  So far there
+	are no differences.  If an architecture has bits in CPUID index 1
+	meaning different things the values for the COMMON_CPUID_INDEX_1
+	index must not be set.
+	(INTEL_HAS_POPCOUNT, AMD_HAS_POPCOUNT): Removed in favor of...
+	(HAS_POPCOUNT): ...this.  New macro.
+	* sysdeps/x86_64/multiarch/init-arch.c: Use COMMON_CPUID_INDEX_1
+	instead of INTEL_CPUID_INDEX_1 and AMD_CPUID_INDEX_1.  Unify code
+	to set the value for Intel and AMD architectures.
+	* sysdeps/x86_64/cacheinfo.c: Use COMMON_CPUID_INDEX_1 instead of
+	INTEL_CPUID_INDEX_1.
+	* sysdeps/x86_64/multiarch/sched_cpucount.c: Adjust for HAS_POPCOUNT
+	change.
+
+2009-05-30  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* configure.in: Move AC_CANONICAL_HOST before first use of $host
+	and $build.
+
+2009-05-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ieee754/ldbl-128/s_expm1l.c: Include <errno.h>.
+	(__expm1l): Set errno to ERANGE on overflow.
+	* sysdeps/ieee754/ldbl-128/s_tanl.c: Include <errno.h>.
+	(__tanl): Set errno to EDOM for ±Inf.
+	* sysdeps/ieee754/ldbl-128/s_cosl.c: Include <errno.h>.
+	(__cosl): Set errno to EDOM for ±Inf.
+	* sysdeps/ieee754/ldbl-128/s_sinl.c: Include <errno.h>.
+	(__sinl): Set errno to EDOM for ±Inf.
+
+	* sysdeps/s390/s390-32/__longjmp.c (__longjmp): If CHECK_SP is
+	defined, use it.
+	* sysdeps/s390/s390-64/__longjmp.c (__longjmp): Likewise.
+	* sysdeps/s390/s390-32/____longjmp_chk.c: New file.
+	* sysdeps/s390/s390-64/____longjmp_chk.c: New file.
+
+2009-05-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/cacheinfo.c: Compact intel_02_known array.  Adjust
+	code accessing it.
+	* sysdeps/unix/sysv/linux/i386/sysconf.c: Likewise.
+
+2009-05-22  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/ieee754/ldbl-128ibm/s_sinl.c: Set errno for ±Inf.
+	* sysdeps/ieee754/ldbl-128ibm/s_cosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_tanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_expm1l.c: Set errno for overflow.
+
+	* sysdeps/powerpc/powerpc32/____longjmp_chk.S: New file.
+	* sysdeps/powerpc/powerpc64/____longjmp_chk.S: New file.
+	* sysdeps/powerpc/powerpc32/__longjmp-common.S: Use CHECK_SP if
+	defined.
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp-common.S: Likewise.
+	* sysdeps/powerpc/powerpc64/__longjmp-common.S: Likewise.
+
+2009-05-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/accept4.c: Include kernel-features.h.
+	(accept4): If __NR_accept4 is not defined, but __NR_socketcall
+	is, either do nothing at all if __ASSUME_ACCEPT4, or
+	call __internal_accept4 and handle EINVAL -> ENOSYS translation.
+	* sysdeps/unix/sysv/linux/internal_accept4.S: New file.
+	* sysdeps/unix/sysv/linux/i386/accept4.S (SOCKOP_accept4): Don't
+	define.
+	* sysdeps/unix/sysv/linux/i386/internal_accept4.S: New file.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep-routines): Add
+	internal_accept4 in socket directory.
+
+2009-05-20  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/ia64/configure.in: New file.
+
+2009-05-21  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #10162]
+	* sysdeps/ia64/memchr.S: Use speculative load.
+
+	* sysdeps/unix/sysv/linux/ia64/____longjmp_chk.S: New file.
+	* sysdeps/unix/sysv/linux/ia64/__longjmp.S: If CHECK_RSP is defined,
+	use it.
+
+	* sysdeps/i386/__longjmp.S: Add .text.
+	* sysdeps/x86_64/__longjmp.S: Likewise.
+
+2009-05-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Don't define
+	__ASSUME_ACCEPT4 for IA-64.
+
+2009-05-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/accept4.c (__NR_accept4): Don't define.
+
+	* sysdeps/unix/sysv/linux/socketcall.h (SOCKOP_paccept): Remove.
+	(SOCKOP_accept4): Define.
+
+2009-05-20  Ulrich Drepper  <drepper@redhat.com>
+
+	Sun approved the change of the license.
+	* sunrpc/auth_des.c: Replace license text.
+	* sunrpc/auth_none.c: Likewise.
+	* sunrpc/auth_unix.c: Likewise.
+	* sunrpc/authdes_prot.c: Likewise.
+	* sunrpc/authuxprot.c: Likewise.
+	* sunrpc/bindrsvprt.c: Likewise.
+	* sunrpc/clnt_gen.c: Likewise.
+	* sunrpc/clnt_perr.c: Likewise.
+	* sunrpc/clnt_raw.c: Likewise.
+	* sunrpc/clnt_simp.c: Likewise.
+	* sunrpc/clnt_tcp.c: Likewise.
+	* sunrpc/clnt_udp.c: Likewise.
+	* sunrpc/clnt_unix.c: Likewise.
+	* sunrpc/des_crypt.c: Likewise.
+	* sunrpc/des_soft.c: Likewise.
+	* sunrpc/get_myaddr.c: Likewise.
+	* sunrpc/getrpcport.c: Likewise.
+	* sunrpc/key_call.c: Likewise.
+	* sunrpc/key_prot.c: Likewise.
+	* sunrpc/openchild.c: Likewise.
+	* sunrpc/pm_getmaps.c: Likewise.
+	* sunrpc/pm_getport.c: Likewise.
+	* sunrpc/pmap_clnt.c: Likewise.
+	* sunrpc/pmap_prot.c: Likewise.
+	* sunrpc/pmap_prot2.c: Likewise.
+	* sunrpc/pmap_rmt.c: Likewise.
+	* sunrpc/rpc/auth.h: Likewise.
+	* sunrpc/rpc/auth_unix.h: Likewise.
+	* sunrpc/rpc/clnt.h: Likewise.
+	* sunrpc/rpc/des_crypt.h: Likewise.
+	* sunrpc/rpc/key_prot.h: Likewise.
+	* sunrpc/rpc/netdb.h: Likewise.
+	* sunrpc/rpc/pmap_clnt.h: Likewise.
+	* sunrpc/rpc/pmap_prot.h: Likewise.
+	* sunrpc/rpc/pmap_rmt.h: Likewise.
+	* sunrpc/rpc/rpc.h: Likewise.
+	* sunrpc/rpc/rpc_des.h: Likewise.
+	* sunrpc/rpc/rpc_msg.h: Likewise.
+	* sunrpc/rpc/svc.h: Likewise.
+	* sunrpc/rpc/svc_auth.h: Likewise.
+	* sunrpc/rpc/types.h: Likewise.
+	* sunrpc/rpc/xdr.h: Likewise.
+	* sunrpc/rpc_clntout.c: Likewise.
+	* sunrpc/rpc_cmsg.c: Likewise.
+	* sunrpc/rpc_common.c: Likewise.
+	* sunrpc/rpc_cout.c: Likewise.
+	* sunrpc/rpc_dtable.c: Likewise.
+	* sunrpc/rpc_hout.c: Likewise.
+	* sunrpc/rpc_main.c: Likewise.
+	* sunrpc/rpc_parse.c: Likewise.
+	* sunrpc/rpc_parse.h: Likewise.
+	* sunrpc/rpc_prot.c: Likewise.
+	* sunrpc/rpc_sample.c: Likewise.
+	* sunrpc/rpc_scan.c: Likewise.
+	* sunrpc/rpc_scan.h: Likewise.
+	* sunrpc/rpc_svcout.c: Likewise.
+	* sunrpc/rpc_tblout.c: Likewise.
+	* sunrpc/rpc_util.c: Likewise.
+	* sunrpc/rpc_util.h: Likewise.
+	* sunrpc/rpcinfo.c: Likewise.
+	* sunrpc/rpcsvc/bootparam_prot.x: Likewise.
+	* sunrpc/rpcsvc/key_prot.x: Likewise.
+	* sunrpc/rpcsvc/klm_prot.x: Likewise.
+	* sunrpc/rpcsvc/mount.x: Likewise.
+	* sunrpc/rpcsvc/nfs_prot.x: Likewise.
+	* sunrpc/rpcsvc/rex.x: Likewise.
+	* sunrpc/rpcsvc/rstat.x: Likewise.
+	* sunrpc/rpcsvc/rusers.x: Likewise.
+	* sunrpc/rpcsvc/sm_inter.x: Likewise.
+	* sunrpc/rpcsvc/spray.x: Likewise.
+	* sunrpc/rpcsvc/yppasswd.x: Likewise.
+	* sunrpc/rtime.c: Likewise.
+	* sunrpc/svc.c: Likewise.
+	* sunrpc/svc_auth.c: Likewise.
+	* sunrpc/svc_authux.c: Likewise.
+	* sunrpc/svc_raw.c: Likewise.
+	* sunrpc/svc_run.c: Likewise.
+	* sunrpc/svc_simple.c: Likewise.
+	* sunrpc/svc_tcp.c: Likewise.
+	* sunrpc/svc_udp.c: Likewise.
+	* sunrpc/svc_unix.c: Likewise.
+	* sunrpc/svcauth_des.c: Likewise.
+	* sunrpc/xcrypt.c: Likewise.
+	* sunrpc/xdr.c: Likewise.
+	* sunrpc/xdr_array.c: Likewise.
+	* sunrpc/xdr_float.c: Likewise.
+	* sunrpc/xdr_mem.c: Likewise.
+	* sunrpc/xdr_rec.c: Likewise.
+	* sunrpc/xdr_ref.c: Likewise.
+	* sunrpc/xdr_sizeof.c: Likewise.
+	* sunrpc/xdr_stdio.c: Likewise.
+
+	* po/da.po: Update from translation team.
+
+2009-05-18  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/____longjmp_chk.S: New file.
+	* sysdeps/sh/sh3/__longjmp.S: If CHECK_SP is defined, use it.
+	* sysdeps/sh/sh4/__longjmp.S: Likewise.
+
+2009-05-18  Jakub Jelinek  <jakub@redhat.com>
+	    Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd_helper.c (MINIMUM_HASHENTRY_SIZE): Define.
+	(__nscd_cache_search): Assume each entry in the
+	hash chain needs one hashentry and half of datahead.  Use
+	MINIMUM_HASHENTRY_SIZE instead of sizeof(hashentry).
+
+2009-05-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/sys/wait.h: Fix typos.  Pretty printing.
+	* stdlib/stdlib.h: Likewise.  Correct comments.
+
+	[BZ #10159]
+	* stdlib/stdlib.h (__WAIT_INT): Match the definition in <sys/wait.h>.
+
+	* nscd/nscd_helper.c (__nscd_cache_search): Fix exit condition in last
+	patch.
+
+2009-05-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd_helper.c (__nscd_cache_search): Introduce loop counter.
+	Use it if we absolutely cannot reach any more correct list elements
+	because that many do not fit into the currently mapped database.
+
+2009-05-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/nscd_helper.c: Include stddef.h.
+	(__nscd_cache_search): Add datalen argument.  Use atomic_forced_read
+	in a couple of places.  Return NULL if trail is not less than
+	datasize, don't consider dataheads with length smaller than
+	offsetof (struct datahead, data) + datalen.
+	* nscd/nscd_client.h (__nscd_cache_search): Adjust prototype.
+	* nscd/nscd_gethst_r.c (nscd_gethst_r): Adjust callers.
+	* nscd/nscd_getpw_r.c (nscd_getpw_r): Likewise.
+	* nscd/nscd_getgr_r.c (nscd_getgr_r): Likewise.
+	* nscd/nscd_getai.c (__nscd_getai): Likewise.
+	* nscd/nscd_initgroups.c (__nscd_getgrouplist): Likewise.
+	* nscd/nscd_getserv_r.c (nscd_getserv_r): Likewise.
+
+	* sysdeps/unix/sysv/linux/i386/fallocate64.c (__fallocate64_l64):
+	Rename ...
+	(fallocate64): ... to this.
+	* sysdeps/unix/sysv/linux/fallocate64.c (__fallocate64_l64):
+	Rename ...
+	(fallocate64): ... to this.
+	* sysdeps/unix/sysv/linux/Versions (libc): Remove fallocate64.
+	* sysdeps/unix/sysv/linux/wordsize-64/Versions (libc): Add
+	fallocate64@@GLIBC_2.10.
+	* sysdeps/unix/sysv/linux/i386/Versions (libc): Add
+	fallocate64@@GLIBC_2.11.
+	* sysdeps/unix/sysv/linux/s390/s390-32/Versions (libc): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/Versions (libc): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Versions (libc): Likewise.
+	* sysdeps/unix/sysv/linux/sh/Versions (libc): Likewise.
+
+	* nscd/selinux.c (nscd_avc_destroy): Removed.
+	* nscd/selinux.h (nscd_avc_destroy): Likewise.
+	* nscd/nscd.c (termination_handler): Don't call
+	nscd_avc_destroy.
+
+2009-05-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/atomic.h: Formatting.
+	(catomic_compare_and_exchange_val_acq): Don't define if already
+	defined by bits/atomic.h.
+
+2009-05-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* math/libm-test.inc (expm1_test): Add test for range error.
+
+	* Versions.def: Add GLIBC_2.11 for libc.
+	* debug/Makefile (routines): Add longjmp_chk.
+	Add rules to build and run tst-longjmp_chk.
+	* debug/Versions: Export __longjmp_chk for GLIBC_2.11.
+	* debug/longjmp_chk.c: New file.
+	* debug/tst-longjmp_chk.c: New file.
+	* include/bits/setjmp2.: New file.
+	* include/stdio.h: Mark __fortify_fail as internal_function.
+	* setjmp/Makefile (headers): Add bits/setjmp2.h.
+	* setjmp/bits/setjmp2.h: New file.
+	* setjmp/longjmp.c: If __libc_siglongjmp is defined, don't define any
+	of the aliases.
+	* setjmp/setjmp.h: Include <bits/setjmp2.h> if _FORTIFY_SOURCE is
+	defined.
+	* sysdeps/i386/____longjmp_chk.S: New file.
+	* sysdeps/x86_64/____longjmp_chk.S: New file.
+	* sysdeps/i386/__longjmp.S: If CHECK_ESP is defined, use it.
+	* sysdeps/x86_64/__longjmp.S: Likewise.
+
+	* version.h: Bump for 2.11 development.
+
+	* elf/check-execstack.c: New file.
+	* elf/Makefile: Add rules to build and run check-execstack.
+
 2009-05-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* version.h (VERSION): Bump to 2.10.1.
