@@ -1,5 +1,9 @@
 2009-06-15  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #10196]
+	* libio/tst-fgetwc.c (do_test): Use de_DE.UTF-8 as locale name.
+	Patch by Bruce Dubbs <bdubbs@linuxfromscratch.org>.
+
 	* time/tzfile.c (__tzfile_read): Correct computation of tzspec_len.
 
 	[BZ #10211]
