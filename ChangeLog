@@ -27,6 +27,13 @@
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power6/fpu/swapcontext.S:
 	Likewise.
 
+2009-04-22  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	[BZ #10107]
+	* sysdeps/powerpc/powerpc32/power6/memcpy.S (memcpy): Replace cmpldi
+	with cmplwi.
+	* sysdeps/powerpc/powerpc32/power6/memset.S (memset): Likewise.
+
 2008-04-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/dl-osinfo.h: Include fcntl.h.
