@@ -1,3 +1,102 @@
+2009-06-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/grantpt.c (grantpt): Only call chown and
+	chmod if it is necessary.
+
+	[BZ #10166]
+	* sysdeps/unix/sysv/linux/grantpt.c: If slave device is on devpts or
+	devfs, the mode might not be correct.  Check it and return only if it
+	is correct.
+
+	[BZ #10183]
+	* posix/tst-cpucount.c: Don't try more than CPU_SETSIZE bits.
+
+	[BZ #10195]
+	* inet/netinet/icmp6.h (struct nd_opt_home_agent_info): Change type
+	of nd_opt_home_agent_info_preference to uint16_t.
+	Patch by Arnaud Ebalard <arno@natisbad.org>.
+
+	[BZ #10207]
+	* nss/getent.c: Add support for print gshadow data.
+
+	[BZ #10203]
+	* nis/nss_nis/nis-pwd.c (internal_nis_endpwent): Free all buffers,
+	not just the currently used one and those which follow.
+	Patch by Joe Landers <jlanders@vmware.com>.
+
+	[BZ #10196]
+	* libio/tst-fgetwc.c (do_test): Use de_DE.UTF-8 as locale name.
+	Patch by Bruce Dubbs <bdubbs@linuxfromscratch.org>.
+
+	[BZ #10217]
+	* stdlib/abort.c: Define variable __abort_msg.
+	* stdlib/Versions: Export __abort_msg with GLIBC_PRIVATE version.
+	* include/stdlib.h: Declare __abort_msg.
+	* assert/assert-perr.c: Don't free buffer for message immediately.
+	Store atomically in __abort_msg and free old buffer if necessary.
+	* assert/assert.c: Likewise.
+	* sysdeps/posix/libc_fatal.c: Allocate buffer for message, copy it,
+	store pointer in __abort_msg, and possibly free old string.
+	* sysdeps/unix/sysv/linux/libc_fatal.c: Likewise.
+
+	* time/tzfile.c (__tzfile_read): Correct computation of tzspec_len.
+
+	[BZ #10211]
+	* time/tzfile.c (__tzfile_compute): If we use the envvar format still
+	handle leap seconds if they are available.
+	Patch by Akinori Hattori <hattya@gentoo.org>.
+
+	* timezone/tzselect.ksh: Update from tzcode2009i.
+	* timezone/zdump.c: Likewise.
+	* timezone/zic.c: Likewise.
+
+	* timezone/africa: Update from tzdata2009i.
+	* timezone/antarctica: Likewise.
+	* timezone/asia: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/backward: Likewise.
+	* timezone/etcetera: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/factory: Likewise.
+	* timezone/iso3166.tab: Likewise.
+	* timezone/leapseconds: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/pacificnew: Likewise.
+	* timezone/solar87: Likewise.
+	* timezone/solar88: Likewise.
+	* timezone/solar89: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/systemv: Likewise.
+	* timezone/yearistype: Likewise.
+	* timezone/zone.tab: Likewise.
+
+2009-06-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-lookup.c (_dl_debug_bindings): When resolving to
+	STT_GNU_IFUNC symbol or in 8 into type_class.
+
+	* sysdeps/i386/dl-irel.h (elf_irel): Use Elf32_Addr type
+	instead of Elf64_Addr.
+
+2009-06-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/sv.po: Update from translation team.
+
+	[BZ #10229]
+	* misc/sys/select.h (__NFDBITS): Expression should have type int.
+	* sysdeps/x86_64/bits/select.h: Remove asm versions for __FD_SET,
+	__FD_CLR, and __FD_ISSET.  gcc nowadays generates better code from
+	the C version.
+
+2009-06-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* Versions.def: Add GLIBC_2.11 for libpthread.
+
+2009-06-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_send.c (send_dg): Remember we switched to
+	single-request mode.
+
 2009-06-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* dlfcn/dlfcn.h: Remove comma at end of enum.
