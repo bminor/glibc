@@ -223,7 +223,7 @@ package or when debugging this package.
 %endif
 
 %prep
-%setup -q -n %{glibcsrcdir} %{?glibc_release_unpack} -a2
+%setup -q -n %{glibcsrcdir} %{?glibc_release_unpack} -b2
 %patch0 -E -p1
 %ifarch ia64
 %if "%{_lib}" == "lib64"
