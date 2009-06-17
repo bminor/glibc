@@ -31,10 +31,10 @@ Group: System Environment/Libraries
 URL: http://sources.redhat.com/glibc/
 Source0: %{?glibc_release_url}%{glibcsrcdir}.tar.bz2
 %if 0%{?glibc_release_url:1}
-%define glibc_libidn_tarball %(echo %{glibcsrcdir} | \
-			     	    sed s/glibc-/glibc-libidn-/).tar.bz2
-Source1: %{glibc_release_url}%{glibc_libidn_tarball}
+%define glibc_libidn_srcdir %(echo %{glibcsrcdir} | sed s/glibc-/glibc-libidn-/)
+Source1: %{glibc_release_url}%{glibc_libidn_srcdir}.tar.bz2
 %define glibc_release_unpack -a1
+%define glibc_release_setup mv %{glibc_libidn_srcdir} libidn
 %endif
 Source2: %{glibcsrcdir}-fedora.tar.bz2
 Patch0: %{name}-fedora.patch
@@ -224,6 +224,7 @@ package or when debugging this package.
 
 %prep
 %setup -q -n %{glibcsrcdir} %{?glibc_release_unpack} -b2
+%{?glibc_release_setup}
 %patch0 -E -p1
 %ifarch ia64
 %if "%{_lib}" == "lib64"
