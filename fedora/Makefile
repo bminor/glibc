@@ -15,7 +15,7 @@ branchname = $(patsubst refs/heads/%,%,$1)
 
 my-branch := $(call branchname,$(call git,symbolic-ref,HEAD))
 upstream-remote := $(call gitconf,branch.$(my-branch).remote)
-upstream-branch := $(call branchname,$(call gitconf,branch.$(my-branch).merge))
+upstream-branch := $(call branchname,$(call gitconf,branch.$(my-branch).follow))
 
 dep-my-branch := $(firstword $(wildcard ../.git/refs/heads/$(my-branch) \
 	      		    	       	../.git/packed-refs))
@@ -30,7 +30,7 @@ ifeq (,$(branch))
 	@echo "Use '$(MAKE) follow branch=NAME'"; exit 2
 else
 	$(GIT) rev-parse --verify $(upstream-remote)/$(branch)
-	$(GIT) config branch.$(my-branch).merge $(branch)
+	$(GIT) config branch.$(my-branch).follow $(branch)
 	@$(GIT) branch -v | grep "^. $(subst .,\\.,$(my-branch)) "
 endif
 
@@ -39,6 +39,7 @@ endif
 # Then you follow up with editting, 'git add FILE...', and git commit.
 merge:
 	$(GIT) pull
+	$(GIT) merge $(upstream-remote)/$(upstream-branch)
 
 describe-merge = describe --match 'glibc-*'
 
