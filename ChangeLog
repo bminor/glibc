@@ -1,3 +1,7 @@
+2009-06-23  Andreas Schwab  <aschwab@redhat.com>
+
+	* time/tzfile.c (__tzfile_read): Don't use an empty TZ string.
+
 2009-06-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/socket.h: Define PF_IEEE802154 and
