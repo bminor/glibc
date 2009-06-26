@@ -1,5 +1,8 @@
 2009-06-26  Andreas Schwab  <aschwab@redhat.com>
 
+	* timezone/zic.c (stringzone): Don't try to generate a POSIX TZ
+	string when the timezone ends in DST.
+
 	* sysdeps/powerpc/powerpc32/____longjmp_chk.S (CHECK_SP): Save lr
 	before call.
 	* sysdeps/powerpc/powerpc64/____longjmp_chk.S (CHECK_SP):
