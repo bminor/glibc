@@ -1,12 +1,206 @@
+2009-06-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/resolv.h: Define RES_SNGLKUPREOP.
+	* resolv/res_init.c (res_setoptions): Recognize single-request-reopen
+	option.
+	* resolv/res_send.c (reopen): New function.  Broken out of...
+	(send_dg): ... here.  Recognize RES_SNGLKUPREOP.  Implement second
+	fallback mechanism.  If single-request fails switch to
+	single-request-reopen mode which opens a new socket for the second
+	request.
+
+2009-06-25  Andreas Schwab  <aschwab@redhat.com>
+
+	* sysdeps/powerpc/powerpc32/____longjmp_chk.S (LOAD_ARG): Define.
+	(CHECK_SP): Use it.
+
+2009-06-24  Andreas Schwab  <aschwab@redhat.com>
+
+	* sysdeps/powerpc/powerpc32/power4/fpu/w_sqrtf.S: Fix cfa offset
+	for saved registers.
+	* sysdeps/powerpc/powerpc32/power4/fpu/w_sqrt.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power5/fpu/w_sqrtf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power5/fpu/w_sqrt.S: Likewise.
+
+2009-06-23  Andreas Schwab  <aschwab@redhat.com>
+
+	* time/tzfile.c (__tzfile_read): Don't use an empty TZ string.
+
+2009-06-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/id.po: Update from translation team.
+
+	* po/bg.po: Update from translation team.
+
+2009-06-22  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* string/strncmp.c (STRNCMP): New.  Defined to strncmp if not
+	defined.
+	(strncmp): Renamed to STRNCMP.
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	strncmp-c for string.
+	* sysdeps/x86_64/multiarch/init-arch.h (HAS_SSE4_2): Define.
+	* sysdeps/x86_64/multiarch/strcmp.S: New file.
+	* sysdeps/x86_64/multiarch/strncmp.S: New file.
+	* sysdeps/x86_64/multiarch/strncmp-c.c: New file.
+
+2009-06-19  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/Makefile (distribute): Add ifuncmain1staticpie.c,
+	ifuncmain5.c, ifuncmain5pic.c, ifuncmain5picstatic.c,
+	ifuncmain5pie.c, ifuncmain5static.c, ifuncmain5staticpic.c,
+	ifuncdep5.c, ifuncdep5pic.c, ifuncmod5.c, ifuncmain7.c,
+	ifuncmain7pic.c, ifuncmain7picstatic.c, ifuncmain7pie.c, and
+	ifuncmain7static.c.
+	(tests-static): Add ifuncmain5static, ifuncmain5picstatic,
+	ifuncmain7static, and ifuncmain7picstatic.
+	(tests): Also depend on $(objpfx)ifuncmain1staticpie.out,
+	$(objpfx)ifuncmain5pie.out, $(objpfx)ifuncmain6pie.out, and
+	$(objpfx)ifuncmain7pie.out.
+	(modules-names): Add ifuncmod5 ifuncmod6
+	(ifuncmod5.so-no-z-defs): Define.
+	(ifuncmod6.so-no-z-defs): Define.
+	(CFLAGS-ifuncmain5pic.c): Define.
+	(CFLAGS-ifuncmain5picstatic.c): Define.
+	(CFLAGS-ifuncmain5staticpic.c): Define.
+	(CFLAGS-ifuncdep5pic.c): Define.
+	(CFLAGS-ifuncmain7pic.c): Define.
+	(CFLAGS-ifuncmain7picstatic.c): Define.
+	(CFLAGS-ifuncmain1staticpie.c): Define.
+	(CFLAGS-ifuncmain5pie.c): Define.
+	(CFLAGS-ifuncmain6pie.c): Define.
+	(CFLAGS-ifuncmain7pie.c): Define.
+	($(objpfx)ifuncmain1staticpie.out): Define.
+	($(objpfx)ifuncmain1staticpie): Define.
+	($(objpfx)ifuncmain5pie.out): Define.
+	($(objpfx)ifuncmain5pie): Define.
+	($(objpfx)ifuncmain6pie.out): Define.
+	($(objpfx)ifuncmain6pie): Define.
+	($(objpfx)ifuncmain5): Define.
+	($(objpfx)ifuncmain5pic): Define.
+	($(objpfx)ifuncmain5static): Define.
+	($(objpfx)ifuncmain5staticpic): Define.
+	($(objpfx)ifuncmain5picstatic): Define.
+	(generated): Add ifuncmain1staticpie, ifuncmain1staticpie.out,
+	ifuncmain5pie, ifuncmain5pie.out, ifuncmain6pie, and
+	ifuncmain6pie.out.
+	* elf/b/elf/ifuncmain1staticpie.c: New file.
+	* elf/ifuncdep5.c: New file.
+	* elf/ifuncdep5pic.c: New file.
+	* elf/ifuncmain5.c: New file.
+	* elf/ifuncmain5pic.c: New file.
+	* elf/ifuncmain5picstatic.c: New file.
+	* elf/ifuncmain5pie.c: New file.
+	* elf/ifuncmain5static.c: New file.
+	* elf/ifuncmain5staticpic.c: New file.
+	* elf/ifuncmain6pie.c: New file.
+	* elf/ifuncmain7.c: New file.
+	* elf/ifuncmain7pic.c: New file.
+	* elf/ifuncmain7picstatic.c: New file.
+	* elf/ifuncmain7pie.c: New file.
+	* elf/ifuncmain7static.c: New file.
+	* elf/ifuncmod5.c: New file.
+	* elf/ifuncmod6.c: New file.
+
+2009-06-20  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10085]
+	* nis/nss_compat/compat-initgroups.c (nss_setgrent): New variable.
+	(nss_endgrent): New variable.
+	(struct ent_t): Add need_endgrent and skip_initgroups_dyn
+	fields. Change type of files to bool and adjust all users.
+	(init_nss_interface): Initialize nss_setgrent and nss_endgrent.
+	(internal_endgrent): Call nss_endgrent if necessary.
+	(add_group): New function.  Broken out of...
+	(check_and_add_group): ...here.
+	(getgrent_next_nss): Remove test that any callback is available.
+	Use skip_initgroups_dyn to determine whether to use initgroups_dyn
+	callback.  If there is no blacklist we can trust the results returned
+	by the initgroups_dyn callback.  In case there is a callback and we
+	find a group entry for the group ID but it doesn't contain the
+	correct member, switch to the slow mode and use getgrent_r.
+	(internal_getgrent_r): When we see a +: entry, determine whether
+	there is any callback and which we can use the initgroups_dyn
+	callback.
+
+2009-06-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c (_int_malloc): Add some consistency checks.
+	(_int_free): Likewise.
+
+	* sysdeps/unix/sysv/linux/bits/socket.h: Define PF_IEEE802154 and
+	AF_IEEE802154.
+	* sysdeps/unix/sysv/linux/sparc/bits/socket.h: Likewise.
+	* sysdeps/unix/sysv/linux/net/if_arp.h: Define ARPHRD_IEEE802154
+	and ARPHRD_IEEE802154_PHY.
+
+	* sysdeps/unix/sysv/linux/sparc/bits/socket.h: Add missing definitions
+	relative to generic Linux version.
+
+2009-06-17  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/Makefile ($(objpfx)ifuncmain1pie): Use $(+link-pie).
+	($(objpfx)ifuncmain1vispie): Likewise.
+
+2009-06-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* login/Makefile: Build pt_chown as PIE.
+
+2009-06-15  Andreas Schwab  <aschwab@redhat.com>
+
+	* debug/xtrace.sh (do_help): Don't treat bug reporting message as
+	a format string.
+	* elf/sln.c (usage): Likewise.
+	* malloc/memusage.sh (do_help): Likewise.
+	* nss/getent.c (more_help): Likewise.
+	* posix/getconf.c (main): Likewise.
+	* sunrpc/rpcinfo.c (usage): Likewise.
+	* sysdeps/unix/sysv/linux/lddlibc4.c (main): Likewise.
+
+2009-06-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* login/programs/pt_chown.c: Use libcap to drop privileges other than
+	those needed.
+	* login/Makefile: If necessary link pt_chown with -lcap.
+	* sysdeps/generic/pty-private.h: Define FAIL_ENOMEM.
+	* sysdeps/unix/grantpt.c: Handle FAIL_ENOMEM.
+
+2009-06-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/x86_64/memchr.S (memchr): Use unsigned instead of signed
+	comparisons.
+	* string/test-memchr.c (do_random_tests): Test very large lengths
+	as well.
+
+2009-06-02  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* Makeconfig (+link-pie): Define.
+	(+prectorS): Define.
+	(+postctorS): Define.
+	* elf/Makefile ($(objpfx)tst-pie1): Use $(+link-pie).
+	* nscd/Makefile ($(objpfx)nscd): Likewise.
+
+2009-04-22  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	[BZ #10107]
+	* sysdeps/powerpc/powerpc32/power6/memcpy.S (memcpy): Replace cmpldi
+	with cmplwi.
+	* sysdeps/powerpc/powerpc32/power6/memset.S (memset): Likewise.
+
+2009-06-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/grantpt.c: Remove file after folding changes
+	into ...
+	* sysdeps/unix/grantpt.c: ...here.
+
 2009-06-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/grantpt.c (grantpt): Only call chown and
 	chmod if it is necessary.
 
 	[BZ #10166]
-	* sysdeps/unix/sysv/linux/grantpt.c: If slave device is on devpts or
-	devfs, the mode might not be correct.  Check it and return only if it
-	is correct.
+	* sysdeps/unix/sysv/linux/grantpt.c: Remove shortcut which was used
+	when the slave device is in devpts or devfs.
 
 	[BZ #10183]
 	* posix/tst-cpucount.c: Don't try more than CPU_SETSIZE bits.
@@ -17,7 +211,7 @@
 	Patch by Arnaud Ebalard <arno@natisbad.org>.
 
 	[BZ #10207]
-	* nss/getent.c: Add support for print gshadow data.
+	* nss/getent.c: Add support for printing gshadow data.
 
 	[BZ #10203]
 	* nis/nss_nis/nis-pwd.c (internal_nis_endpwent): Free all buffers,
@@ -26,6 +220,7 @@
 
 	[BZ #10196]
 	* libio/tst-fgetwc.c (do_test): Use de_DE.UTF-8 as locale name.
+	* libio/Makefile: Run tst-fgetwc with necessary envvar.
 	Patch by Bruce Dubbs <bdubbs@linuxfromscratch.org>.
 
 	[BZ #10217]
