@@ -15,6 +15,7 @@
 %endif
 %define rtkaioarches %{ix86} x86_64 ia64 ppc ppc64 s390 s390x
 %define debuginfocommonarches %{ix86} alpha alphaev6 sparc sparcv9 sparcv9v sparc64 sparc64v
+%define multiarcharches %{ix86} x86_64
 %define _unpackaged_files_terminate_build 0
 
 Summary: The GNU libc libraries
@@ -63,12 +64,17 @@ BuildRequires: gcc >= 3.2
 %endif
 # Need AS_NEEDED directive
 # Need --hash-style=* support
+%ifarch %{multiarcharches}
+# Need STT_IFUNC support
+BuildRequires: binutils >= 2.19.51.0.10
+%else
 BuildRequires: binutils >= 2.17.50.0.2-5
+%endif
 BuildRequires: gcc >= 3.2.1-5
 %ifarch ppc s390 s390x
 BuildRequires: gcc >= 4.1.0-0.17
 %endif
-%if "%{_enable_debug_packages}" == "1"
+%if 0%{?_enable_debug_packages}
 BuildRequires: elfutils >= 0.72
 BuildRequires: rpm >= 4.2-0.56
 %endif
@@ -102,7 +108,8 @@ Install glibc-xen if you might run your system under the Xen hypervisor.
 Summary: Object files for development using standard C libraries.
 Group: Development/Libraries
 Requires(pre): /sbin/install-info
-Requires(pre): %{name}-headers = %{version}-%{release}
+Requires(pre): %{name}-headers
+Requires: %{name}-headers = %{version}-%{release}
 Requires: %{name} = %{version}-%{release}
 
 %description devel
@@ -182,7 +189,7 @@ which can be helpful during program debugging.
 
 If unsure if you need this, don't install this package.
 
-%if "%{_enable_debug_packages}" == "1"
+%if 0%{?_enable_debug_packages}
 %define debug_package %{nil}
 %define __debug_install_post %{nil}
 %global __debug_package 1
@@ -323,6 +330,9 @@ CC="$GCC" CXX="$GXX" CFLAGS="$build_CFLAGS" ../configure --prefix=%{_prefix} \
 	--with-headers=%{_prefix}/include --enable-bind-now \
 	--with-tls --with-__thread --build %{nptl_target_cpu}-redhat-linux \
 	--host %{nptl_target_cpu}-redhat-linux \
+%ifarch %{multiarcharches}
+	--enable-multi-arch \
+%endif
 	--disable-profile --enable-experimental-malloc --enable-nss-crypt
 make %{?_smp_mflags} -r CFLAGS="$build_CFLAGS" PARALLELMFLAGS=-s
 
@@ -342,10 +352,10 @@ if [ "$platform" != power6 ]; then
   mkdir -p power6emul/{lib,lib64}
   $GCC -shared -O2 -fpic -o power6emul/%{_lib}/power6emul.so fedora/power6emul.c -Wl,-z,initfirst
 %ifarch ppc
-  echo '' | gcc -shared -nostdlib -O2 -fpic -m64 -o power6emul/lib64/power6emul.so -xc -
+  gcc -shared -nostdlib -O2 -fpic -m64 -o power6emul/lib64/power6emul.so -xc - </dev/null
 %endif
 %ifarch ppc64
-  echo '' | gcc -shared -nostdlib -O2 -fpic -m32 -o power6emul/lib/power6emul.so -xc -
+  gcc -shared -nostdlib -O2 -fpic -m32 -o power6emul/lib/power6emul.so -xc - < /dev/null
 %endif
   export LD_PRELOAD=`pwd`/power6emul/\$LIB/power6emul.so
 fi
@@ -554,40 +564,43 @@ rm -f $RPM_BUILD_ROOT/etc/gai.conf
 rm -f $RPM_BUILD_ROOT%{_sbindir}/rpcinfo
 
 # BUILD THE FILE LIST
-find $RPM_BUILD_ROOT -type f -or -type l |
-  sed -e 's|.*/etc|%config &|' \
-      -e 's|.*/gconv/gconv-modules$|%verify(not md5 size mtime) %config(noreplace) &|' \
-      -e 's|.*/gconv/gconv-modules.cache|%verify(not md5 size mtime) &|' \
-      -e '/lib\/debug/d' > rpm.filelist.in
-for n in %{_prefix}/share %{_prefix}/include %{_prefix}/lib/locale; do
-  find ${RPM_BUILD_ROOT}${n} -type d | \
-    grep -v '%{_prefix}/share$' | \
-    grep -v '%{_infodir}' | \
-    sed "s/^/%dir /" >> rpm.filelist.in
-done
+{
+  find $RPM_BUILD_ROOT \( -type f -or -type l \) \
+       \( \
+	 -name etc -printf "%%%%config " -o \
+	 -name gconv-modules \
+	 -printf "%%%%verify(not md5 size mtime) %%%%config(noreplace) " -o \
+	 -name gconv-modules.cache \
+	 -printf "%%%%verify(not md5 size mtime) " \
+	 , \
+         ! -path "*/lib/debug" -printf "/%%P\n" \)
+  find $RPM_BUILD_ROOT -type d \
+       \( -path '*%{_prefix}/share/*' ! -path '*%{_infodir}' -o \
+          -path "*%{_prefix}/include/*" -o \
+          -path "*%{_prefix}/lib/locale/*" \
+       \) -printf "%%%%dir /%%P\n"
+} | {
 
-# primary filelist
-SHARE_LANG='s|.*/share/locale/\([^/_]\+\).*/LC_MESSAGES/.*\.mo|%lang(\1) &|'
-LIB_LANG='s|.*/lib/locale/\([^/_]\+\)|%lang(\1) &|'
-# rpm does not handle %lang() tagged files hardlinked together accross
-# languages very well, temporarily disable
-LIB_LANG=''
-sed -e "s|$RPM_BUILD_ROOT||" -e "$LIB_LANG" -e "$SHARE_LANG" < rpm.filelist.in |
-  grep -v '/etc/\(localtime\|nsswitch.conf\|ld.so.conf\|ld.so.cache\|default\)'  | \
-  grep -v '/%{_lib}/lib\(pcprofile\|memusage\).so' | \
-  grep -v 'bin/\(memusage\|mtrace\|xtrace\|pcprofiledump\)' | \
-  sort > rpm.filelist
+  # primary filelist
+  SHARE_LANG='s|.*/share/locale/\([^/_]\+\).*/LC_MESSAGES/.*\.mo|%lang(\1) &|'
+  LIB_LANG='s|.*/lib/locale/\([^/_]\+\)|%lang(\1) &|'
+  # rpm does not handle %lang() tagged files hardlinked together accross
+  # languages very well, temporarily disable
+  LIB_LANG=''
+  sed -e "$LIB_LANG" -e "$SHARE_LANG" \
+      -e '\,/etc/\(localtime\|nsswitch.conf\|ld\.so\.conf\|ld\.so\.cache\|default\),d' \
+      -e '\,/%{_lib}/lib\(pcprofile\|memusage\)\.so,d' \
+      -e '\,bin/\(memusage\|mtrace\|xtrace\|pcprofiledump\),d'
+} | sort > rpm.filelist
 
 mkdir -p $RPM_BUILD_ROOT%{_prefix}/%{_lib}
 mv -f $RPM_BUILD_ROOT/%{_lib}/lib{pcprofile,memusage}.so $RPM_BUILD_ROOT%{_prefix}/%{_lib}
 for i in $RPM_BUILD_ROOT%{_prefix}/bin/{xtrace,memusage}; do
-  cp -a $i $i.tmp
   sed -e 's~=/%{_lib}/libpcprofile.so~=%{_prefix}/%{_lib}/libpcprofile.so~' \
       -e 's~=/%{_lib}/libmemusage.so~=%{_prefix}/%{_lib}/libmemusage.so~' \
       -e 's~='\''/\\\$LIB/libpcprofile.so~='\''%{_prefix}/\\$LIB/libpcprofile.so~' \
       -e 's~='\''/\\\$LIB/libmemusage.so~='\''%{_prefix}/\\$LIB/libmemusage.so~' \
-    $i.tmp > $i
-  chmod 755 $i; rm -f $i.tmp
+      -i $i
 done
 
 grep '%{_infodir}' < rpm.filelist | grep -v '%{_infodir}/dir' > devel.filelist
@@ -597,9 +610,9 @@ grep '%{_prefix}/include' < rpm.filelist |
   egrep -v '%{_prefix}/include/(linuxthreads|gnu/stubs-[32164]+\.h)' \
 	> headers.filelist
 
-mv rpm.filelist rpm.filelist.full
-grep -v '%{_prefix}/%{_lib}/lib.*_p.a' rpm.filelist.full |
-  egrep -v "(%{_prefix}/include)|(%{_infodir})" > rpm.filelist
+sed -i -e '\|%{_prefix}/%{_lib}/lib.*_p.a|d' \
+       -e '\|%{_prefix}/include|d' \
+       -e '\|%{_infodir}|d' rpm.filelist
 
 grep '%{_prefix}/%{_lib}/lib.*\.a' < rpm.filelist \
   | grep '/lib\(\(c\|pthread\|nldbl\)_nonshared\|bsd\(\|-compat\)\|g\|ieee\|mcheck\|rpcsvc\)\.a$' \
@@ -610,12 +623,11 @@ grep '%{_prefix}/%{_lib}/lib.*\.a' < rpm.filelist \
 grep '%{_prefix}/%{_lib}/.*\.o' < rpm.filelist >> devel.filelist
 grep '%{_prefix}/%{_lib}/lib.*\.so' < rpm.filelist >> devel.filelist
 
-mv rpm.filelist rpm.filelist.full
-grep -v '%{_prefix}/%{_lib}/lib.*\.a' < rpm.filelist.full |
-  grep -v '%{_prefix}/%{_lib}/.*\.o' |
-  grep -v '%{_prefix}/%{_lib}/lib.*\.so'|
-  grep -v '%{_prefix}/%{_lib}/linuxthreads' |
-  grep -v 'nscd' > rpm.filelist
+sed -i -e '\|%{_prefix}/%{_lib}/lib.*\.a|d' \
+       -e '\|%{_prefix}/%{_lib}/.*\.o|d' \
+       -e '\|%{_prefix}/%{_lib}/lib.*\.so|d' \
+       -e '\|%{_prefix}/%{_lib}/linuxthreads|d' \
+       -e '\|nscd|d' rpm.filelist
 
 grep '%{_prefix}/bin' < rpm.filelist >> common.filelist
 #grep '%{_prefix}/lib/locale' < rpm.filelist | grep -v /locale-archive.tmpl >> common.filelist
@@ -624,18 +636,16 @@ grep '%{_prefix}/sbin/[^gi]' < rpm.filelist >> common.filelist
 grep '%{_prefix}/share' < rpm.filelist | \
   grep -v '%{_prefix}/share/zoneinfo' >> common.filelist
 
-mv rpm.filelist rpm.filelist.full
-grep -v '%{_prefix}/bin' < rpm.filelist.full |
-  grep -v '%{_prefix}/lib/locale' |
-  grep -v '%{_prefix}/libexec/pt_chown' |
-  grep -v '%{_prefix}/sbin/[^gi]' |
-  grep -v '%{_prefix}/share' > rpm.filelist
+sed -i -e '\|%{_prefix}/bin|d' \
+       -e '\|%{_prefix}/lib/locale|d' \
+       -e '\|%{_prefix}/libexec/pt_chown|d' \
+       -e '\|%{_prefix}/sbin/[^gi]|d' \
+       -e '\|%{_prefix}/share|d' rpm.filelist
 
 > nosegneg.filelist
 %if %{xenpackage}
 grep '/%{_lib}/%{nosegneg_subdir}' < rpm.filelist >> nosegneg.filelist
-mv rpm.filelist rpm.filelist.full
-grep -v '/%{_lib}/%{nosegneg_subdir}' < rpm.filelist.full > rpm.filelist
+sed -i -e '\|/%{_lib}/%{nosegneg_subdir}|d' rpm.filelist
 %endif
 
 echo '%{_prefix}/sbin/build-locale-archive' >> common.filelist
@@ -757,7 +767,7 @@ ar rcs libpthread.a libpthread.o
 rm libpthread.o
 popd
 
-%if "%{_enable_debug_packages}" == "1"
+%if 0%{?_enable_debug_packages}
 
 # The #line directives gperf generates do not give the proper
 # file name relative to the build directory.
@@ -781,7 +791,7 @@ find_debuginfo_args="$find_debuginfo_args \
 list_debug_archives()
 {
   local dir=%{_prefix}/lib/debug%{_prefix}/%{_lib}
-  (cd $RPM_BUILD_ROOT; ls ${dir#/}/*.a) | sed 's,^,/,'
+  find $RPM_BUILD_ROOT$dir -name "*.a" -printf "$dir/%%P\n"
 }
 
 %ifarch %{debuginfocommonarches}
@@ -797,10 +807,9 @@ list_debug_archives()
 %endif
 
 sed -i '\#^%{_prefix}/src/debug/#d' debuginfocommon.filelist
-(cd $RPM_BUILD_ROOT%{_prefix}/src; find debug -type d) |
-sed 's#^#%dir %{_prefix}/src/#' > debuginfocommon.sources
-(cd $RPM_BUILD_ROOT%{_prefix}/src; find debug ! -type d) |
-sed 's#^#%{_prefix}/src/#' >> debuginfocommon.sources
+find $RPM_BUILD_ROOT%{_prefix}/src/debug \
+     \( -type d -printf '%%%%dir ' \) , \
+     -printf '%{_prefix}/src/debug/%%P\n' > debuginfocommon.sources
 
 # auxarches get only these few source files
 auxarches_debugsources=\
@@ -810,8 +819,7 @@ egrep "$auxarches_debugsources" debuginfocommon.sources >> debuginfo.filelist
 
 egrep -v "$auxarches_debugsources" \
   debuginfocommon.sources >> debuginfocommon.filelist
-%ifarch %{auxarches}
-%else
+%ifnarch %{auxarches}
 # non-aux arches when there is a debuginfo-common
 # all the sources go into debuginfo-common
 #cat debuginfocommon.sources >> debuginfocommon.filelist
@@ -821,7 +829,8 @@ list_debug_archives >> debuginfocommon.filelist
 
 %else
 
-list_debug_archives >> debuginfo.filelist
+# already found by find-debuginfo
+#list_debug_archives >> debuginfo.filelist
 
 %endif
 
@@ -1000,7 +1009,7 @@ rm -f *.filelist*
 %ghost %config(missingok,noreplace) /etc/sysconfig/nscd
 %endif
 
-%if "%{_enable_debug_packages}" == "1"
+%if 0%{?_enable_debug_packages}
 %files debuginfo -f debuginfo.filelist
 %defattr(-,root,root)
 %ifarch %{debuginfocommonarches}
@@ -1012,6 +1021,23 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Thu Jun 26 2009 Andreas Schwab <aschwab@redhat.com> 2.10.90-1
+- Update from master.
+- Enable multi-arch support on x86/x86-64.
+- Add requires glibc-headers to glibc-devel (#476295).
+- Implement second fallback mode for DNS requests (#505105).
+- Don't generate invalid POSIX TZ string for Asia/Dhaka timezone (#506941).
+- Allow backtrace through __longjmp_chk on powerpc.
+
+* Fri May 22 2009 Jakub Jelinek <jakub@redhat.com> 2.10.1-2
+- fix accept4 on architectures other than i?86/x86_64
+- robustify nscd client code during server GC
+- fix up nscd segfaults during daemon shutdown
+- fix memchr on ia64 (BZ#10162)
+- replace the Sun RPC license with the BSD license, with the explicit
+  permission of Sun Microsystems
+- fix up powerpc long double errno reporting
+
 * Sun May 10 2009 Jakub Jelinek <jakub@redhat.com> 2.10.1-1
 - fix up getsgent_r and getsgnam_r exports on i?86 and ppc
 
