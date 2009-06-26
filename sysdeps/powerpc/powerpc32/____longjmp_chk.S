@@ -49,8 +49,16 @@
 #define CHECK_SP(reg) \
 	cmplw	reg, r1;				\
 	bge+	.Lok;					\
+	cfi_remember_state;				\
+	mflr	r0;					\
+	stwu	r1,-16(r1);				\
+	cfi_adjust_cfa_offset (16);			\
+	stw	r0,20(r1);				\
+	cfi_offset (lr, 4);				\
 	LOAD_ARG;					\
 	bl	HIDDEN_JUMPTARGET (__fortify_fail);	\
+	nop;						\
+	cfi_restore_state;				\
 .Lok:
 
 #include <__longjmp-common.S>

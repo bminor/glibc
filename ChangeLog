@@ -1,3 +1,10 @@
+2009-06-26  Andreas Schwab  <aschwab@redhat.com>
+
+	* sysdeps/powerpc/powerpc32/____longjmp_chk.S (CHECK_SP): Save lr
+	before call.
+	* sysdeps/powerpc/powerpc64/____longjmp_chk.S (CHECK_SP):
+	Likewise.
+
 2009-06-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/resolv.h: Define RES_SNGLKUPREOP.
