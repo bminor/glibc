@@ -17,7 +17,9 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <config.h>
 #include <sysdep.h>
+#include <link-defines.h>
 
 	.text
 	.globl _dl_runtime_resolve
@@ -89,25 +91,85 @@ _dl_runtime_profile:
 
 	/* Actively align the La_x86_64_regs structure.  */
 	andq $0xfffffffffffffff0, %rsp
-	subq $192, %rsp		# sizeof(La_x86_64_regs)
+# ifdef HAVE_AVX_SUPPORT
+	/* sizeof(La_x86_64_regs).  Need extra space for 8 SSE registers
+	   to detect if any xmm0-xmm7 registers are changed by audit
+	   module.  */
+	subq $(LR_SIZE + XMM_SIZE*8), %rsp
+# else
+	subq $LR_SIZE, %rsp		# sizeof(La_x86_64_regs)
+# endif
 	movq %rsp, 24(%rbx)
 
-	movq %rdx,   (%rsp)	# Fill the La_x86_64_regs structure.
-	movq %r8,   8(%rsp)
-	movq %r9,  16(%rsp)
-	movq %rcx, 24(%rsp)
-	movq %rsi, 32(%rsp)
-	movq %rdi, 40(%rsp)
-	movq %rbp, 48(%rsp)
+	/* Fill the La_x86_64_regs structure.  */
+	movq %rdx, LR_RDX_OFFSET(%rsp)
+	movq %r8,  LR_R8_OFFSET(%rsp)
+	movq %r9,  LR_R9_OFFSET(%rsp)
+	movq %rcx, LR_RCX_OFFSET(%rsp)
+	movq %rsi, LR_RSI_OFFSET(%rsp)
+	movq %rdi, LR_RDI_OFFSET(%rsp)
+	movq %rbp, LR_RBP_OFFSET(%rsp)
+
 	leaq 48(%rbx), %rax
-	movq %rax, 56(%rsp)
-	movaps %xmm0,  64(%rsp)
-	movaps %xmm1,  80(%rsp)
-	movaps %xmm2,  96(%rsp)
-	movaps %xmm3, 112(%rsp)
-	movaps %xmm4, 128(%rsp)
-	movaps %xmm5, 144(%rsp)
-	movaps %xmm7, 160(%rsp)
+	movq %rax, LR_RSP_OFFSET(%rsp)
+
+	/* We always store the XMM registers even if AVX is available.
+	   This is to provide backward binary compatility for existing
+	   audit modules.  */
+	movaps %xmm0,		   (LR_XMM_OFFSET)(%rsp)
+	movaps %xmm1, (LR_XMM_OFFSET +   XMM_SIZE)(%rsp)
+	movaps %xmm2, (LR_XMM_OFFSET + XMM_SIZE*2)(%rsp)
+	movaps %xmm3, (LR_XMM_OFFSET + XMM_SIZE*3)(%rsp)
+	movaps %xmm4, (LR_XMM_OFFSET + XMM_SIZE*4)(%rsp)
+	movaps %xmm5, (LR_XMM_OFFSET + XMM_SIZE*5)(%rsp)
+	movaps %xmm6, (LR_XMM_OFFSET + XMM_SIZE*6)(%rsp)
+	movaps %xmm7, (LR_XMM_OFFSET + XMM_SIZE*7)(%rsp)
+
+# ifdef HAVE_AVX_SUPPORT
+	.data
+L(have_avx):
+	.zero 4
+	.size L(have_avx), 4
+	.previous
+
+	cmpl	$0, L(have_avx)(%rip)
+	jne	1f
+	movq	%rbx, %r11		# Save rbx
+	movl	$1, %eax
+	cpuid
+	movq	%r11,%rbx		# Restore rbx
+	movl	$1, %eax
+	testl	$(1 << 28), %ecx
+	jne	2f
+	negl	%eax
+2:	movl	%eax, L(have_avx)(%rip)
+	cmpl	$0, %eax
+
+1:	js	L(no_avx1)
+
+	/* This is to support AVX audit modules.  */
+	vmovdqu %ymm0,		      (LR_VECTOR_OFFSET)(%rsp)
+	vmovdqu %ymm1, (LR_VECTOR_OFFSET +   VECTOR_SIZE)(%rsp)
+	vmovdqu %ymm2, (LR_VECTOR_OFFSET + VECTOR_SIZE*2)(%rsp)
+	vmovdqu %ymm3, (LR_VECTOR_OFFSET + VECTOR_SIZE*3)(%rsp)
+	vmovdqu %ymm4, (LR_VECTOR_OFFSET + VECTOR_SIZE*4)(%rsp)
+	vmovdqu %ymm5, (LR_VECTOR_OFFSET + VECTOR_SIZE*5)(%rsp)
+	vmovdqu %ymm6, (LR_VECTOR_OFFSET + VECTOR_SIZE*6)(%rsp)
+	vmovdqu %ymm7, (LR_VECTOR_OFFSET + VECTOR_SIZE*7)(%rsp)
+
+	/* Save xmm0-xmm7 registers to detect if any of them are
+	   changed by audit module.  */
+	vmovdqa %xmm0,		    (LR_SIZE)(%rsp)
+	vmovdqa %xmm1, (LR_SIZE +   XMM_SIZE)(%rsp)
+	vmovdqa %xmm2, (LR_SIZE + XMM_SIZE*2)(%rsp)
+	vmovdqa %xmm3, (LR_SIZE + XMM_SIZE*3)(%rsp)
+	vmovdqa %xmm4, (LR_SIZE + XMM_SIZE*4)(%rsp)
+	vmovdqa %xmm5, (LR_SIZE + XMM_SIZE*5)(%rsp)
+	vmovdqa %xmm6, (LR_SIZE + XMM_SIZE*6)(%rsp)
+	vmovdqa %xmm7, (LR_SIZE + XMM_SIZE*7)(%rsp)
+
+L(no_avx1):
+# endif
 
 	movq %rsp, %rcx		# La_x86_64_regs pointer to %rcx.
 	movq 48(%rbx), %rdx	# Load return address if needed.
@@ -119,27 +181,87 @@ _dl_runtime_profile:
 	movq %rax, %r11		# Save return value.
 
 	movq 8(%rbx), %rax	# Get back register content.
-	movq      (%rsp), %rdx
-	movq     8(%rsp), %r8
-	movq    16(%rsp), %r9
-	movaps  64(%rsp), %xmm0
-	movaps  80(%rsp), %xmm1
-	movaps  96(%rsp), %xmm2
-	movaps 112(%rsp), %xmm3
-	movaps 128(%rsp), %xmm4
-	movaps 144(%rsp), %xmm5
-	movaps 160(%rsp), %xmm7
+	movq LR_RDX_OFFSET(%rsp), %rdx
+	movq  LR_R8_OFFSET(%rsp), %r8
+	movq  LR_R9_OFFSET(%rsp), %r9
 
+	movaps		    (LR_XMM_OFFSET)(%rsp), %xmm0
+	movaps	 (LR_XMM_OFFSET + XMM_SIZE)(%rsp), %xmm1
+	movaps (LR_XMM_OFFSET + XMM_SIZE*2)(%rsp), %xmm2
+	movaps (LR_XMM_OFFSET + XMM_SIZE*3)(%rsp), %xmm3
+	movaps (LR_XMM_OFFSET + XMM_SIZE*4)(%rsp), %xmm4
+	movaps (LR_XMM_OFFSET + XMM_SIZE*5)(%rsp), %xmm5
+	movaps (LR_XMM_OFFSET + XMM_SIZE*6)(%rsp), %xmm6
+	movaps (LR_XMM_OFFSET + XMM_SIZE*7)(%rsp), %xmm7
+
+# ifdef HAVE_AVX_SUPPORT
+	cmpl	$0, L(have_avx)(%rip)
+	js	L(no_avx2)
+
+	/* Check if any xmm0-xmm7 registers are changed by audit
+	   module.  */
+	vpcmpeqq (LR_SIZE)(%rsp), %xmm0, %xmm8
+	vpmovmskb %xmm8, %esi
+	cmpl $0xffff, %esi
+	je 1f
+	vmovdqu			(LR_VECTOR_OFFSET)(%rsp), %ymm0
+
+1:	vpcmpeqq (LR_SIZE + XMM_SIZE)(%rsp), %xmm1, %xmm8
+	vpmovmskb %xmm8, %esi
+	cmpl $0xffff, %esi
+	je 1f
+	vmovdqu	  (LR_VECTOR_OFFSET + VECTOR_SIZE)(%rsp), %ymm1
+
+1:	vpcmpeqq (LR_SIZE + XMM_SIZE*2)(%rsp), %xmm2, %xmm8
+	vpmovmskb %xmm8, %esi
+	cmpl $0xffff, %esi
+	je 1f
+	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*2)(%rsp), %ymm2
+
+1:	vpcmpeqq (LR_SIZE + XMM_SIZE*3)(%rsp), %xmm3, %xmm8
+	vpmovmskb %xmm8, %esi
+	cmpl $0xffff, %esi
+	je 1f
+	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*3)(%rsp), %ymm3
+
+1:	vpcmpeqq (LR_SIZE + XMM_SIZE*4)(%rsp), %xmm4, %xmm8
+	vpmovmskb %xmm8, %esi
+	cmpl $0xffff, %esi
+	je 1f
+	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*4)(%rsp), %ymm4
+
+1:	vpcmpeqq (LR_SIZE + XMM_SIZE*5)(%rsp), %xmm5, %xmm8
+	vpmovmskb %xmm8, %esi
+	cmpl $0xffff, %esi
+	je 1f
+	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*5)(%rsp), %ymm5
+
+1:	vpcmpeqq (LR_SIZE + XMM_SIZE*6)(%rsp), %xmm6, %xmm8
+	vpmovmskb %xmm8, %esi
+	cmpl $0xffff, %esi
+	je 1f
+	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*6)(%rsp), %ymm6
+
+1:	vpcmpeqq (LR_SIZE + XMM_SIZE*7)(%rsp), %xmm7, %xmm8
+	vpmovmskb %xmm8, %esi
+	cmpl $0xffff, %esi
+	je 1f
+	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*7)(%rsp), %ymm7
+
+L(no_avx2):
+1:
+# endif
 	movq 16(%rbx), %r10	# Anything in framesize?
 	testq %r10, %r10
-	jns 1f
+	jns 3f
 
 	/* There's nothing in the frame size, so there
 	   will be no call to the _dl_call_pltexit. */
 
-	movq 24(%rsp), %rcx	# Get back registers content.
-	movq 32(%rsp), %rsi
-	movq 40(%rsp), %rdi
+	/* Get back registers content.  */
+	movq LR_RCX_OFFSET(%rsp), %rcx
+	movq LR_RSI_OFFSET(%rsp), %rsi
+	movq LR_RDI_OFFSET(%rsp), %rdi
 
 	movq %rbx, %rsp
 	movq (%rsp), %rbx
@@ -151,7 +273,7 @@ _dl_runtime_profile:
 	cfi_adjust_cfa_offset(-48)
 	jmp *%r11		# Jump to function address.
 
-1:
+3:
 	cfi_adjust_cfa_offset(48)
 	cfi_rel_offset(%rbx, 0)
 	cfi_def_cfa_register(%rbx)
@@ -161,7 +283,7 @@ _dl_runtime_profile:
 	   temporary buffer of the size specified by the 'framesize'
 	   returned from _dl_profile_fixup */
 
-	leaq 56(%rbx), %rsi	# stack
+	leaq LR_RSP_OFFSET(%rbx), %rsi	# stack
 	addq $8, %r10
 	andq $0xfffffffffffffff0, %r10
 	movq %r10, %rcx
@@ -183,31 +305,80 @@ _dl_runtime_profile:
 	   _dl_call_pltexit.  The La_x86_64_regs is being pointed by rsp now,
 	   so we just need to allocate the sizeof(La_x86_64_retval) space on
 	   the stack, since the alignment has already been taken care of. */
-
-	subq $80, %rsp		# sizeof(La_x86_64_retval)
+# ifdef HAVE_AVX_SUPPORT
+	/* sizeof(La_x86_64_retval).  Need extra space for 2 SSE
+	   registers to detect if xmm0/xmm1 registers are changed
+	   by audit module.  */
+	subq $(LRV_SIZE + XMM_SIZE*2), %rsp
+# else
+	subq $LRV_SIZE, %rsp	# sizeof(La_x86_64_retval)
+# endif
 	movq %rsp, %rcx		# La_x86_64_retval argument to %rcx.
 
-	movq %rax, (%rcx)	# Fill in the La_x86_64_retval structure.
-	movq %rdx, 8(%rcx)
-	movaps %xmm0, 16(%rcx)
-	movaps %xmm1, 32(%rcx)
-	fstpt 48(%rcx)
-	fstpt 64(%rcx)
+	/* Fill in the La_x86_64_retval structure.  */
+	movq %rax, LRV_RAX_OFFSET(%rcx)
+	movq %rdx, LRV_RDX_OFFSET(%rcx)
+
+	movaps %xmm0, LRV_XMM0_OFFSET(%rcx)
+	movaps %xmm1, LRV_XMM1_OFFSET(%rcx)
+
+# ifdef HAVE_AVX_SUPPORT
+	cmpl	$0, L(have_avx)(%rip)
+	js	L(no_avx3)
+
+	/* This is to support AVX audit modules.  */
+	vmovdqu %ymm0, LRV_VECTOR0_OFFSET(%rcx)
+	vmovdqu %ymm1, LRV_VECTOR1_OFFSET(%rcx)
+
+	/* Save xmm0/xmm1 registers to detect if they are changed
+	   by audit module.  */
+	vmovdqa %xmm0,		  (LRV_SIZE)(%rcx)
+	vmovdqa %xmm1, (LRV_SIZE + XMM_SIZE)(%rcx)
+
+L(no_avx3):
+# endif
+
+	fstpt LRV_ST0_OFFSET(%rcx)
+	fstpt LRV_ST1_OFFSET(%rcx)
 
 	movq 24(%rbx), %rdx	# La_x86_64_regs argument to %rdx.
 	movq 40(%rbx), %rsi	# Copy args pushed by PLT in register.
         movq 32(%rbx), %rdi	# %rdi: link_map, %rsi: reloc_index
 	call _dl_call_pltexit
 
-	movq  (%rsp), %rax	# Restore return registers.
-	movq 8(%rsp), %rdx
-	movaps 16(%rsp), %xmm0
-	movaps 32(%rsp), %xmm1
-	fldt 64(%rsp)
-	fldt 48(%rsp)
+	/* Restore return registers.  */
+	movq LRV_RAX_OFFSET(%rsp), %rax
+	movq LRV_RDX_OFFSET(%rsp), %rdx
+
+	movaps LRV_XMM0_OFFSET(%rsp), %xmm0
+	movaps LRV_XMM1_OFFSET(%rsp), %xmm1
+
+# ifdef HAVE_AVX_SUPPORT
+	cmpl	$0, L(have_avx)(%rip)
+	js	L(no_avx4)
+
+	/* Check if xmm0/xmm1 registers are changed by audit module.  */
+	vpcmpeqq (LRV_SIZE)(%rsp), %xmm0, %xmm2
+	vpmovmskb %xmm2, %esi
+	cmpl $0xffff, %esi
+	je 1f
+	vmovdqu LRV_VECTOR0_OFFSET(%rsp), %ymm0
+
+1:	vpcmpeqq (LRV_SIZE + XMM_SIZE)(%rsp), %xmm1, %xmm2
+	vpmovmskb %xmm2, %esi
+	cmpl $0xffff, %esi
+	je 1f
+	vmovdqu LRV_VECTOR1_OFFSET(%rsp), %ymm1
+
+L(no_avx4):
+1:
+# endif
+
+	fldt LRV_ST1_OFFSET(%rsp)
+	fldt LRV_ST0_OFFSET(%rsp)
 
 	movq %rbx, %rsp
-	movq  (%rsp), %rbx
+	movq (%rsp), %rbx
 	cfi_restore(rbx)
 	cfi_def_cfa_register(%rsp)
 

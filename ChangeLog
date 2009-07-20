@@ -1,3 +1,204 @@
+2009-07-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/sysdep.h: Define cfi_personality, cfi_lsda,
+	CFI_PERSONALITY, CFI_LSDA, and DW_EH_PE_* constants.
+
+2009-07-16  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10360]
+	* resolv/res-mkquery.c (__res_nopt): If anslen is > 0xffff store
+	0xffff in the EDNS0 record.
+
+2009-07-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/cache.c (cache_add): Use atomic_compare_and_exchange_bool_rel
+	instead of atomic_compare_and_exchange_bool_acq to ensure pointer
+	is written before the list head update.
+	Patch by Andreas Schwab <aschwab@redhat.com>.
+
+2009-07-16  Ulrich Drepper  <drepper@redhat.com>
+	    Jakub Jelinek  <jakub@redhat.com>
+
+	* malloc/malloc.c [ATOMIC_FASTBINS] (_int_free): Make check for
+	corruption thread-safe.
+
+2009-07-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/atomic.h (catomic_compare_and_exchange_val_rel): If arch
+	overrides atomic_compare_and_exchange_val_rel, define to
+	atomic_compare_and_exchange_val_rel by default, otherwise default
+	to catomic_compare_and_exchange_val_acq.
+	(catomic_compare_and_exchange_bool_rel): If arch overrides
+	atomic_compare_and_exchange_bool_rel, define to
+	atomic_compare_and_exchange_bool_rel by default.
+	* malloc/malloc.c (_int_free): Revert 2009-07-02 change.
+	Use catomic_compare_and_exchange_val_rel instead of
+	catomic_compare_and_exchange_val_acq.
+
+2009-07-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/ldsodefs.h: Add prototype for
+	_dl_higher_prime_number.
+	* elf/dl-misc.c (_dl_higher_prime_number): Mark with internal_function.
+
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Optimize
+	restoring of ymm registers a bit.
+
+2009-07-15  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/memcmp.S: New file.
+
+2009-07-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86-64/dl-trampoline.h: Remove after integrating code into...
+	* sysdeps/x86-64/dl-trampoline.S: ...here.  Rewrite to avoid function
+	pointers in writable memory.
+
+2009-07-07  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* config.h.in: Add HAVE_AVX_SUPPORT entry.
+	* config.make.in: Add config-cflags-avx entry.
+	* configure.in: Substitute libc_cv_cc_avx.
+	* elf/Makefile: Add rules to build and run tst-audit4 and tst-audit5.
+	* elf/tst-audit4.c: New file.
+	* elf/tst-audit5.c: New file.
+	* elf/tst-auditmod4a.c: New file.
+	* elf/tst-auditmod4b.c: New file.
+	* elf/tst-auditmod5a.c: New file.
+	* elf/tst-auditmod5b.c: New file.
+	* sysdeps/x86_64/Makefile (gen-as-const-headers): Add
+	link-defines.sym.
+	* sysdeps/x86_64/bits/link.h (La_x86_64_ymm): New.
+	(La_x86_64_vector): Likewise.
+	(La_x86_64_regs): Append lr_vector.
+	(La_x86_64_retval): Append lr_vector0/lrv_vector1.
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Move
+	saving and restoring SSE registers to ...
+	* sysdeps/x86_64/dl-trampoline.h: This.  New file.
+	* sysdeps/x86_64/dl-trampoline.S: Include <config.h> and
+	<link-defines.h>.
+	(_dl_runtime_profile): Use LR_SIZE to allocate space for
+	La_x86_64_regs.  Allocate extra space and jump to memory at
+	save_and_restore_vector if HAVE_AVX_SUPPORT is defined.
+	(save_and_restore_vector_sse): New.
+	(save_and_restore_vector_avx): Likewise.
+	(check_avx): Likewise.
+	(save_and_restore_vector): Likewise.
+	* sysdeps/x86_64/elf/configure.in: Set libc_cv_cc_avx and
+	HAVE_AVX_SUPPORT.
+	* sysdeps/x86_64/link-defines.sym: New file.
+
+2009-07-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/do-lookup.h: Removed after folding content into...
+	* elf/dl-lookup.c: ...here.
+
+	* sysdeps/unix/sysv/linux/sys/epoll.h: Fix comment.
+
+2009-07-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* configure.in: Check for gnu_unique_symbol symbol type.
+	* config.h.in: Add HAVE_ASM_UNIQUE_OBJECT entry.
+	* elf/do-lookup.h (do_lookup_x): Take new parameter with link map of
+	the undefined symbol.  Handle STB_GNU_UNIQUE binding of found symbol.
+	* elf/dl-lookup.c (_dl_lookup_symbol_x): Adjust callers for do_lookup_x
+	change.
+	* sysdeps/generic/ldsodefs.h (struct rtld_global): Add definitions for
+	unique symbol table.
+	* elf/rtld.c (rtld_global): Initialize lock of unique symbol hash table
+	for first namespace.
+	* elf/dl-open.c (_dl_open): For new namespace, initialize lock for
+	unique symbol hash table.
+	* elf/Makefile: Add rules to build and run tst-unique1 and tst-unique2.
+	* elf/tst-unique1.c: New file.
+	* elf/tst-unique1mod1.c: New file.
+	* elf/tst-unique1mod2.c: New file.
+	* elf/tst-unique2.c: New file.
+	* elf/tst-unique2mod1.c: New file.
+	* elf/tst-unique2mod2.c: New file.
+
+2009-07-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/elf.h (STB_GNU_UNIQUE): Define.
+
+	* elf/dl-misc.c (_dl_higher_prime_number): New function.  Moved here
+	from...
+	* include/inline-hashtab.h: ...here.
+	(htab_expand): Adjust for renamed function.  Correct memory handling.
+
+2009-07-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/do-lookup.h (do_lookup_x): Optimize test for valid symbol types.
+
+2009-07-03  Andreas Schwab  <aschwab@redhat.com>
+
+	* sysdeps/powerpc/sysdep.h (PPC_FEATURE_ARCH_2_06): Fix value.
+	(PPC_FEATURE_HAS_VSX): Likewise.
+
+2009-07-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/multiarch/strcspn-c.c: Minor cleanups.
+	* sysdeps/x86_64/multiarch/strspn-c.c: Likewise.
+
+	* sysdeps/x86_64/multiarch/strcmp.S: Make sure functions are all
+	aligned to 16 byte boundaries.
+	* sysdeps/x86_64/multiarch/strcpy.S: Likewise.
+	* sysdeps/x86_64/multiarch/strlen.S: Likewise.
+	* sysdeps/x86_64/multiarch/rawmemchr.S: Likewise.
+
+2009-07-02  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* config.h.in (HAVE_SSE4_SUPPORT): New macro.
+	* config.make.in (config-cflags-sse4): New variable.
+	* configure.in: Substitute libc_cv_cc_sse4.
+	* sysdeps/i386/configure.in: Set libc_cv_cc_sse4 and
+	HAVE_SSE4_SUPPORT.
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	strcspn-c, strpbrk-c, strspn-c for string if gcc supports SSE4.
+	* sysdeps/x86_64/multiarch/strcspn-c.c: New file.
+	* sysdeps/x86_64/multiarch/strcspn.S: New file.
+	* sysdeps/x86_64/multiarch/strpbrk-c.c: New file.
+	* sysdeps/x86_64/multiarch/strpbrk.S: New file.
+	* sysdeps/x86_64/multiarch/strspn-c.c: New file.
+	* sysdeps/x86_64/multiarch/strspn.S: New file.
+
+2009-06-30  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/Makefile (distribute): Remove tst-audit.sh.  Add
+	tst-audit2.c, tst-audit3.c, tst-auditmod3a.c, tst-auditmod3b.c.
+	(tests): Add tst-audit3 for x86_64.
+	(modules-names): Add tst-auditmod3a, tst-auditmod3b.
+	($(objpfx)tst-audit3): Define.
+	($(objpfx)tst-audit3.out): Define.
+	(tst-audit3-ENV): Define.
+	* elf/tst-audit3.c: New file.
+	* elf/tst-auditmod3a.c: New file.
+	* elf/tst-auditmod3b.c: New file.
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Save
+	and restore xmm6.
+
+	* string/stpncpy.c (STPNCPY): New.  Defined if not defined.
+	(__stpncpy): Renamed to ...
+	(STPNCPY): This.
+	(stpncpy): Create alias only if STPNCPY is not defined.
+	* string/strncpy.c (STRNCPY): New.  Defined to strncpy if not
+	defined.
+	(strncpy): Renamed to ...
+	(STRNCPY): This.
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	 stpncpy-c strncpy-c for string.
+	* sysdeps/x86_64/multiarch/stpcpy.S: New file.
+	* sysdeps/x86_64/multiarch/stpncpy-c.c: New file.
+	* sysdeps/x86_64/multiarch/stpncpy.S: New file.
+	* sysdeps/x86_64/multiarch/strcpy.S: New file.
+	* sysdeps/x86_64/multiarch/strncpy-c.c: New file.
+	* sysdeps/x86_64/multiarch/strncpy.S: New file.
+
+2009-07-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c [ATOMIC_FASTBINS] (_int_free): Add full barrier when
+	adding to fast bin list.
+
 2009-07-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/nss_nis/nis-network.c (_nss_nis_getnetbyaddr_r): Don't use

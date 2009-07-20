@@ -47,7 +47,7 @@ distribute	:= rtld-Rules \
 		   dl-cache.h dl-hash.h soinit.c sofini.c ldd.bash.in \
 		   genrtldtbl.awk atomicity.h dl-procinfo.h ldsodefs.h \
 		   dl-librecon.h interp.c sln.c dl-dst.h hp-timing.h \
-		   do-lookup.h dl-lookupcfg.h sprof.c gen-trusted-dirs.awk \
+		   dl-lookupcfg.h sprof.c gen-trusted-dirs.awk \
 		   testobj1.c testobj2.c testobj3.c testobj4.c testobj5.c \
 		   testobj6.c testobj1_1.c failobj.c unloadmod.c \
 		   ldconfig.h ldconfig.c cache.c readlib.c readelflib.c \
@@ -89,7 +89,10 @@ distribute	:= rtld-Rules \
 		   unload4mod1.c unload4mod2.c unload4mod3.c unload4mod4.c \
 		   unload6mod1.c unload6mod2.c unload6mod3.c \
 		   unload7mod1.c unload7mod2.c \
-		   tst-auditmod1.c tst-audit.sh \
+		   tst-audit1.c tst-audit2.c tst-audit3.c tst-audit4.c \
+		   tst-auditmod1.c tst-auditmod3a.c tst-auditmod3b.c \
+		   tst-auditmod4a.c tst-auditmod4b.c \
+		   tst-audit5.c tst-auditmod5a.c tst-auditmod5b.c \
 		   order2mod1.c order2mod2.c order2mod3.c order2mod4.c \
 		   tst-stackguard1.c tst-stackguard1-static.c \
 		   tst-array5.c tst-array5-static.c tst-array5dep.c \
@@ -110,7 +113,9 @@ distribute	:= rtld-Rules \
 		   ifuncdep5.c ifuncdep5pic.c ifuncmod5.c \
 		   ifuncmain6pie.c ifuncmod6.c \
 		   ifuncmain7.c ifuncmain7pic.c ifuncmain7picstatic.c \
-		   ifuncmain7pie.c ifuncmain7static.c
+		   ifuncmain7pie.c ifuncmain7static.c \
+		   tst-unique1.c tst-unique1mod1.c tst-unique1mod2.c \
+		   tst-unique2.c tst-unique2mod1.c tst-unique2mod2.c
 
 CFLAGS-dl-runtime.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-dl-lookup.c = -fexceptions -fasynchronous-unwind-tables
@@ -189,10 +194,14 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-dlmopen1 tst-dlmopen2 tst-dlmopen3 \
 	 unload3 unload4 unload5 unload6 unload7 tst-global1 order2 \
 	 tst-audit1 tst-audit2 \
-	 tst-stackguard1 tst-addr1 tst-thrlock
+	 tst-stackguard1 tst-addr1 tst-thrlock \
+	 tst-unique1 tst-unique2
 #	 reldep9
 test-srcs = tst-pathopt
 tests-execstack-yes = tst-execstack tst-execstack-needed tst-execstack-prog
+ifeq (x86_64,$(config-machine))
+tests += tst-audit3 tst-audit4 tst-audit5
+endif
 endif
 ifeq (yesyes,$(have-fpie)$(build-shared))
 tests: $(objpfx)tst-pie1.out
@@ -234,12 +243,19 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		unload4mod1 unload4mod2 unload4mod3 unload4mod4 \
 		unload6mod1 unload6mod2 unload6mod3 \
 		unload7mod1 unload7mod2 \
-		order2mod1 order2mod2 order2mod3 order2mod4
+		order2mod1 order2mod2 order2mod3 order2mod4 \
+		tst-unique1mod1 tst-unique1mod2 \
+		tst-unique2mod1 tst-unique2mod2
 ifeq (yes,$(have-initfini-array))
 modules-names += tst-array2dep tst-array5dep
 endif
 ifeq (yesyes,$(have-fpie)$(build-shared))
 modules-names += tst-piemod1
+endif
+ifeq (x86_64,$(config-machine))
+modules-names += tst-auditmod3a tst-auditmod3b \
+		tst-auditmod4a tst-auditmod4b \
+		tst-auditmod5a tst-auditmod5b
 endif
 modules-execstack-yes = tst-execstack-mod
 extra-test-objs += $(addsuffix .os,$(strip $(modules-names)))
@@ -959,6 +975,18 @@ tst-audit1-ENV = LD_AUDIT=$(objpfx)tst-auditmod1.so
 $(objpfx)tst-audit2.out: $(objpfx)tst-auditmod1.so
 tst-audit2-ENV = LD_AUDIT=$(objpfx)tst-auditmod1.so
 
+$(objpfx)tst-audit3: $(objpfx)tst-auditmod3a.so
+$(objpfx)tst-audit3.out: $(objpfx)tst-auditmod3b.so
+tst-audit3-ENV = LD_AUDIT=$(objpfx)tst-auditmod3b.so
+
+$(objpfx)tst-audit4: $(objpfx)tst-auditmod4a.so
+$(objpfx)tst-audit4.out: $(objpfx)tst-auditmod4b.so
+tst-audit4-ENV = LD_AUDIT=$(objpfx)tst-auditmod4b.so
+
+$(objpfx)tst-audit5: $(objpfx)tst-auditmod5a.so
+$(objpfx)tst-audit5.out: $(objpfx)tst-auditmod5b.so
+tst-audit5-ENV = LD_AUDIT=$(objpfx)tst-auditmod5b.so
+
 $(objpfx)tst-global1: $(libdl)
 $(objpfx)tst-global1.out: $(objpfx)testobj6.so $(objpfx)testobj2.so
 
@@ -1094,3 +1122,16 @@ $(objpfx)ifuncmain5pic: $(addprefix $(objpfx),ifuncmod5.so)
 $(objpfx)ifuncmain5static: $(addprefix $(objpfx),ifuncdep5.o)
 $(objpfx)ifuncmain5staticpic: $(addprefix $(objpfx),ifuncdep5pic.o)
 $(objpfx)ifuncmain5picstatic: $(addprefix $(objpfx),ifuncdep5pic.o)
+
+$(objpfx)tst-unique1: $(libdl)
+$(objpfx)tst-unique1.out: $(objpfx)tst-unique1mod1.so \
+			  $(objpfx)tst-unique1mod2.so
+
+$(objpfx)tst-unique2: $(libdl) $(objpfx)tst-unique2mod1.so
+$(objpfx)tst-unique2.out: $(objpfx)tst-unique2mod2.so
+
+ifeq (yes,$(config-cflags-avx))
+CFLAGS-tst-audit4.c += -mavx
+CFLAGS-tst-auditmod4a.c += -mavx
+CFLAGS-tst-auditmod4b.c += -mavx
+endif

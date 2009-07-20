@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2005, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2005, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
+#include <kernel-features.h>
 #include <lowlevellock.h>
 #include <shlib-compat.h>
 #include <pthread-errnos.h>
@@ -34,6 +35,15 @@
 	.align	16
 sem_timedwait:
 .LSTARTCODE:
+	cfi_startproc
+#ifdef SHARED
+	cfi_personality(DW_EH_PE_pcrel | DW_EH_PE_sdata4 | DW_EH_PE_indirect,
+			DW.ref.__gcc_personality_v0)
+	cfi_lsda(DW_EH_PE_pcrel | DW_EH_PE_sdata4, .LexceptSTART)
+#else
+	cfi_personality(DW_EH_PE_udata4, __gcc_personality_v0)
+	cfi_lsda(DW_EH_PE_udata4, .LexceptSTART)
+#endif
 #if VALUE == 0
 	movl	(%rdi), %eax
 #else
@@ -56,13 +66,21 @@ sem_timedwait:
 
 	/* Check whether the timeout value is valid.  */
 1:	pushq	%r12
-.Lpush_r12:
+	cfi_adjust_cfa_offset(8)
+	cfi_rel_offset(%r12, 0)
 	pushq	%r13
-.Lpush_r13:
+	cfi_adjust_cfa_offset(8)
+	cfi_rel_offset(%r13, 0)
 	pushq	%r14
-.Lpush_r14:
-	subq	$24, %rsp
-.Lsubq:
+	cfi_adjust_cfa_offset(8)
+	cfi_rel_offset(%r14, 0)
+#ifdef __ASSUME_FUTEX_CLOCK_REALTIME
+# define STACKFRAME 8
+#else
+# define STACKFRAME 24
+#endif
+	subq	$STACKFRAME, %rsp
+	cfi_adjust_cfa_offset(STACKFRAME)
 
 	movq	%rdi, %r12
 	movq	%rsi, %r13
@@ -75,6 +93,97 @@ sem_timedwait:
 	LOCK
 	addq	$1, NWAITERS(%r12)
 
+#ifndef __ASSUME_FUTEX_CLOCK_REALTIME
+#  ifdef PIC
+	cmpl	$0, __have_futex_clock_realtime(%rip)
+#  else
+	cmpl	$0, __have_futex_clock_realtime
+#  endif
+	je	.Lreltmo
+#endif
+
+.LcleanupSTART:
+13:	call	__pthread_enable_asynccancel
+	movl	%eax, (%rsp)
+
+	movq	%r13, %r10
+#if VALUE == 0
+	movq	%r12, %rdi
+#else
+	leaq	VALUE(%r12), %rdi
+#endif
+	movl	$0xffffffff, %r9d
+	movl	$FUTEX_WAIT_BITSET|FUTEX_CLOCK_REALTIME, %esi
+	orl	PRIVATE(%rdi), %esi
+	movl	$SYS_futex, %eax
+	xorl	%edx, %edx
+	syscall
+	movq	%rax, %r14
+
+	movl	(%rsp), %edi
+	call	__pthread_disable_asynccancel
+.LcleanupEND:
+
+	testq	%r14, %r14
+	je	11f
+	cmpq	$-EWOULDBLOCK, %r14
+	jne	3f
+
+11:
+#if VALUE == 0
+	movl	(%r12), %eax
+#else
+	movl	VALUE(%r12), %eax
+#endif
+14:	testl	%eax, %eax
+	je	13b
+
+	leaq	-1(%rax), %rcx
+	LOCK
+#if VALUE == 0
+	cmpxchgl %ecx, (%r12)
+#else
+	cmpxchgl %ecx, VALUE(%r12)
+#endif
+	jne	14b
+
+10:	xorl	%eax, %eax
+
+15:	LOCK
+	subq	$1, NWAITERS(%r12)
+
+	addq	$STACKFRAME, %rsp
+	cfi_adjust_cfa_offset(-STACKFRAME)
+	popq	%r14
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(%r14)
+	popq	%r13
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(%r13)
+	popq	%r12
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(%r12)
+	retq
+
+	cfi_adjust_cfa_offset(STACKFRAME + 3 * 8)
+	cfi_rel_offset(%r12, STACKFRAME + 2 * 8)
+	cfi_rel_offset(%r13, STACKFRAME + 1 * 8)
+	cfi_rel_offset(%r14, STACKFRAME)
+3:	negq	%r14
+6:
+#if USE___THREAD
+	movq	errno@gottpoff(%rip), %rdx
+	movl	%r14d, %fs:(%rdx)
+#else
+	callq	__errno_location@plt
+	movl	%r14d, (%rax)
+#endif
+
+	orl	$-1, %eax
+	jmp	15b
+
+#ifndef __ASSUME_FUTEX_CLOCK_REALTIME
+.Lreltmo:
 7:	xorl	%esi, %esi
 	movq	%rsp, %rdi
 	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
@@ -93,27 +202,27 @@ sem_timedwait:
 	decq	%rdi
 5:	testq	%rdi, %rdi
 	movl	$ETIMEDOUT, %r14d
-	js	6f		/* Time is already up.  */
+	js	6b		/* Time is already up.  */
 
 	movq	%rdi, (%rsp)	/* Store relative timeout.  */
 	movq	%rsi, 8(%rsp)
 
-.LcleanupSTART:
+.LcleanupSTART2:
 	call	__pthread_enable_asynccancel
 	movl	%eax, 16(%rsp)
 
 	movq	%rsp, %r10
-#if VALUE == 0
+# if VALUE == 0
 	movq	%r12, %rdi
-#else
+# else
 	leaq	VALUE(%r12), %rdi
-#endif
-#if FUTEX_WAIT == 0
+# endif
+# if FUTEX_WAIT == 0
 	movl	PRIVATE(%rdi), %esi
-#else
+# else
 	movl	$FUTEX_WAIT, %esi
 	orl	PRIVATE(%rdi), %esi
-#endif
+# endif
 	movl	$SYS_futex, %eax
 	xorl	%edx, %edx
 	syscall
@@ -121,59 +230,32 @@ sem_timedwait:
 
 	movl	16(%rsp), %edi
 	call	__pthread_disable_asynccancel
-.LcleanupEND:
+.LcleanupEND2:
 
 	testq	%r14, %r14
 	je	9f
 	cmpq	$-EWOULDBLOCK, %r14
-	jne	3f
+	jne	3b
 
 9:
-#if VALUE == 0
+# if VALUE == 0
 	movl	(%r12), %eax
-#else
+# else
 	movl	VALUE(%r12), %eax
-#endif
+# endif
 8:	testl	%eax, %eax
 	je	7b
 
 	leaq	-1(%rax), %rcx
 	LOCK
-#if VALUE == 0
+# if VALUE == 0
 	cmpxchgl %ecx, (%r12)
-#else
+# else
 	cmpxchgl %ecx, VALUE(%r12)
-#endif
+# endif
 	jne	8b
-
-	xorl	%eax, %eax
-
-10:	LOCK
-	subq	$1, NWAITERS(%r12)
-
-	addq	$24, %rsp
-.Laddq:
-	popq	%r14
-.Lpop_r14:
-	popq	%r13
-.Lpop_r13:
-	popq	%r12
-.Lpop_r12:
-	retq
-
-.Lafter_retq:
-3:	negq	%r14
-6:
-#if USE___THREAD
-	movq	errno@gottpoff(%rip), %rdx
-	movl	%r14d, %fs:(%rdx)
-#else
-	callq	__errno_location@plt
-	movl	%r14d, (%rax)
-#endif
-
-	orl	$-1, %eax
 	jmp	10b
+#endif
 	.size	sem_timedwait,.-sem_timedwait
 
 
@@ -186,138 +268,32 @@ sem_timedwait_cleanup:
 	call	_Unwind_Resume@PLT
 	hlt
 .LENDCODE:
+	cfi_endproc
 	.size	sem_timedwait_cleanup,.-sem_timedwait_cleanup
 
 
 	.section .gcc_except_table,"a",@progbits
 .LexceptSTART:
-	.byte	0xff				# @LPStart format (omit)
-	.byte	0xff				# @TType format (omit)
-	.byte	0x01				# call-site format
-						# DW_EH_PE_uleb128
+	.byte	DW_EH_PE_omit			# @LPStart format
+	.byte	DW_EH_PE_omit			# @TType format
+	.byte	DW_EH_PE_uleb128		# call-site format
 	.uleb128 .Lcstend-.Lcstbegin
 .Lcstbegin:
 	.uleb128 .LcleanupSTART-.LSTARTCODE
 	.uleb128 .LcleanupEND-.LcleanupSTART
 	.uleb128 sem_timedwait_cleanup-.LSTARTCODE
 	.uleb128  0
+#ifndef __ASSUME_FUTEX_CLOCK_REALTIME
+	.uleb128 .LcleanupSTART2-.LSTARTCODE
+	.uleb128 .LcleanupEND2-.LcleanupSTART2
+	.uleb128 sem_timedwait_cleanup-.LSTARTCODE
+	.uleb128  0
+#endif
 	.uleb128 .LcallUR-.LSTARTCODE
 	.uleb128 .LENDCODE-.LcallUR
 	.uleb128 0
 	.uleb128  0
 .Lcstend:
-
-
-	.section .eh_frame,"a",@progbits
-.LSTARTFRAME:
-	.long	.LENDCIE-.LSTARTCIE		# Length of the CIE.
-.LSTARTCIE:
-	.long	0				# CIE ID.
-	.byte	1				# Version number.
-#ifdef SHARED
-	.string	"zPLR"				# NUL-terminated augmentation
-						# string.
-#else
-	.string	"zPL"				# NUL-terminated augmentation
-						# string.
-#endif
-	.uleb128 1				# Code alignment factor.
-	.sleb128 -8				# Data alignment factor.
-	.byte	16				# Return address register
-						# column.
-#ifdef SHARED
-	.uleb128 7				# Augmentation value length.
-	.byte	0x9b				# Personality: DW_EH_PE_pcrel
-						# + DW_EH_PE_sdata4
-						# + DW_EH_PE_indirect
-	.long	DW.ref.__gcc_personality_v0-.
-	.byte	0x1b				# LSDA Encoding: DW_EH_PE_pcrel
-						# + DW_EH_PE_sdata4.
-	.byte	0x1b				# FDE Encoding: DW_EH_PE_pcrel
-						# + DW_EH_PE_sdata4.
-#else
-	.uleb128 10				# Augmentation value length.
-	.byte	0x0				# Personality: absolute
-	.quad	__gcc_personality_v0
-	.byte	0x0				# LSDA Encoding: absolute
-#endif
-	.byte 0x0c				# DW_CFA_def_cfa
-	.uleb128 7
-	.uleb128 8
-	.byte	0x90				# DW_CFA_offset, column 0x10
-	.uleb128 1
-	.align 8
-.LENDCIE:
-
-	.long	.LENDFDE-.LSTARTFDE		# Length of the FDE.
-.LSTARTFDE:
-	.long	.LSTARTFDE-.LSTARTFRAME		# CIE pointer.
-#ifdef SHARED
-	.long	.LSTARTCODE-.			# PC-relative start address
-						# of the code.
-	.long	.LENDCODE-.LSTARTCODE		# Length of the code.
-	.uleb128 4				# Augmentation size
-	.long	.LexceptSTART-.
-#else
-	.quad	.LSTARTCODE			# Start address of the code.
-	.quad	.LENDCODE-.LSTARTCODE		# Length of the code.
-	.uleb128 8				# Augmentation size
-	.quad	.LexceptSTART
-#endif
-
-	.byte	4				# DW_CFA_advance_loc4
-	.long	.Lpush_r12-.LSTARTCODE
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 16
-	.byte   0x8c				# DW_CFA_offset %r12
-        .uleb128 2
-	.byte	4				# DW_CFA_advance_loc4
-	.long	.Lpush_r13-.Lpush_r12
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 24
-	.byte   0x8d				# DW_CFA_offset %r13
-        .uleb128 3
-	.byte	4				# DW_CFA_advance_loc4
-	.long	.Lpush_r14-.Lpush_r13
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 32
-	.byte   0x8e				# DW_CFA_offset %r14
-        .uleb128 4
-	.byte	4				# DW_CFA_advance_loc4
-	.long	.Lsubq-.Lpush_r14
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 56
-	.byte	4				# DW_CFA_advance_loc4
-	.long	.Laddq-.Lsubq
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 32
-	.byte	4				# DW_CFA_advance_loc4
-	.long	.Lpop_r14-.Laddq
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 24
-	.byte	0xce				# DW_CFA_restore %r14
-	.byte	4				# DW_CFA_advance_loc4
-	.long	.Lpop_r13-.Lpop_r14
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 16
-	.byte	0xcd				# DW_CFA_restore %r13
-	.byte	4				# DW_CFA_advance_loc4
-	.long	.Lpop_r12-.Lpop_r13
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 8
-	.byte	0xcc				# DW_CFA_restore %r12
-	.byte	4				# DW_CFA_advance_loc4
-	.long	.Lafter_retq-.Lpop_r12
-	.byte	14				# DW_CFA_def_cfa_offset
-	.uleb128 56
-	.byte   0x8c				# DW_CFA_offset %r12
-        .uleb128 2
-	.byte   0x8d				# DW_CFA_offset %r13
-        .uleb128 3
-	.byte   0x8e				# DW_CFA_offset %r14
-        .uleb128 4
-	.align	8
-.LENDFDE:
 
 
 #ifdef SHARED

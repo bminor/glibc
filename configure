@@ -657,6 +657,8 @@ xcoff
 elf
 ldd_rewrite_script
 use_ldconfig
+libc_cv_cc_avx
+libc_cv_cc_sse4
 libc_cv_cpp_asm_debuginfo
 libc_cv_forced_unwind
 libc_cv_rootsbindir
@@ -5993,6 +5995,32 @@ _ACEOF
 
 fi
 
+{ $as_echo "$as_me:$LINENO: checking for assembler gnu_unique_object symbol type" >&5
+$as_echo_n "checking for assembler gnu_unique_object symbol type... " >&6; }
+if test "${libc_cv_asm_unique_object+set}" = set; then
+  $as_echo_n "(cached) " >&6
+else
+  cat > conftest.s <<EOF
+${libc_cv_dot_text}
+_sym:
+.type _sym, ${libc_cv_asm_type_prefix}gnu_unique_object
+EOF
+if ${CC-cc} -c $ASFLAGS conftest.s 1>&5 2>&5; then
+  libc_cv_asm_unique_object=yes
+else
+  libc_cv_asm_unique_object=no
+fi
+rm -f conftest*
+fi
+{ $as_echo "$as_me:$LINENO: result: $libc_cv_asm_unique_object" >&5
+$as_echo "$libc_cv_asm_unique_object" >&6; }
+if test $libc_cv_asm_unique_object = yes; then
+  cat >>confdefs.h <<\_ACEOF
+#define HAVE_ASM_UNIQUE_OBJECT 1
+_ACEOF
+
+fi
+
 # For the multi-arch option we need support in the assembler.
 if test "$multi_arch" = yes; then
   if test "x$libc_cv_asm_type_prefix" != xno; then
@@ -8730,6 +8758,8 @@ $as_echo "$as_me: WARNING: *** During \"make install\" old headers from glibc 2.
   { $as_echo "$as_me:$LINENO: WARNING: *** be removed." >&5
 $as_echo "$as_me: WARNING: *** be removed." >&2;}
 fi
+
+
 
 
 

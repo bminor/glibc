@@ -480,6 +480,7 @@ $(objpfx)tst-fini1: $(shared-thread-library) $(objpfx)tst-fini1mod.so
 ifeq (yes,$(build-shared))
 $(objpfx)tst-cond11: $(common-objpfx)rt/librt.so
 $(objpfx)tst-cond19: $(common-objpfx)rt/librt.so
+$(objpfx)tst-sem5: $(common-objpfx)rt/librt.so
 $(objpfx)tst-cancel17: $(common-objpfx)rt/librt.so
 $(objpfx)tst-cancelx17: $(common-objpfx)rt/librt.so
 $(objpfx)tst-cancel18: $(common-objpfx)rt/librt.so
@@ -493,6 +494,7 @@ $(objpfx)tst-_res1: $(objpfx)tst-_res1mod2.so $(shared-thread-library)
 else
 $(objpfx)tst-cond11: $(common-objpfx)rt/librt.a
 $(objpfx)tst-cond19: $(common-objpfx)rt/librt.a
+$(objpfx)tst-sem5: $(common-objpfx)rt/librt.a
 $(objpfx)tst-cancel17: $(common-objpfx)rt/librt.a
 $(objpfx)tst-cancelx17: $(common-objpfx)rt/librt.a
 $(objpfx)tst-cancel18: $(common-objpfx)rt/librt.a
