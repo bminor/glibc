@@ -1,5 +1,5 @@
 %define run_glibc_tests 1
-%define auxarches i686 athlon sparcv9v sparc64v alphaev6
+%define auxarches athlon sparcv9v sparc64v alphaev6
 %define xenarches i686 athlon
 %ifarch %{xenarches}
 %define buildxen 1
@@ -14,14 +14,14 @@
 %define buildpower6 0
 %endif
 %define rtkaioarches %{ix86} x86_64 ia64 ppc ppc64 s390 s390x
-%define debuginfocommonarches %{ix86} alpha alphaev6 sparc sparcv9 sparcv9v sparc64 sparc64v
+%define debuginfocommonarches alpha alphaev6 sparc sparcv9 sparcv9v sparc64 sparc64v
 %define multiarcharches %{ix86} x86_64
 %define _unpackaged_files_terminate_build 0
 
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 3
+Release: 4
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -141,6 +141,7 @@ Provides: %{name}-headers(%{_target_cpu})
 # If both -m32 and -m64 is to be supported on AMD64, x86_64 glibc-headers
 # have to be installed, not i586 ones.
 Obsoletes: %{name}-headers(i586)
+Obsoletes: %{name}-headers(i686)
 %endif
 Requires(pre): kernel-headers
 Requires: kernel-headers >= 2.2.1, %{name} = %{version}-%{release}
@@ -200,6 +201,10 @@ Group: Development/Debug
 AutoReqProv: no
 %ifarch %{debuginfocommonarches}
 Requires: glibc-debuginfo-common = %{version}-%{release}
+%else
+%ifarch %{ix86}
+Obsoletes: glibc-debuginfo-common
+%endif
 %endif
 
 %description debuginfo
@@ -797,7 +802,7 @@ list_debug_archives()
 %ifarch %{debuginfocommonarches}
 
 %ifarch %{ix86}
-%define basearch i586
+%define basearch i686
 %endif
 %ifarch alpha alphaev6
 %define basearch alpha
@@ -1022,6 +1027,10 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Jul 20 2009 Andreas Schwab <schwab@redhat.com> - 2.10.90-4
+- Update from master.
+- Don't build separate i686 package.
+
 * Wed Jul  8 2009 Andreas Schwab <schwab@redhat.com> 2.10.90-3
 - Reenable setuid on pt_chown.
 
