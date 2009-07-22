@@ -780,12 +780,12 @@ endif
 # The assembler can generate debug information too.
 ifndef ASFLAGS
 ifeq ($(have-cpp-asm-debuginfo),yes)
-ASFLAGS := $(filter -g%,$(CFLAGS))
+ASFLAGS = $(filter -g%,$(CFLAGS))
 else
-ASFLAGS :=
+ASFLAGS =
 endif
 endif
-ASFLAGS += $(ASFLAGS-config) $(asflags-cpu)
+ASFLAGS += $(ASFLAGS-config) $(asflags-cpu) $(sysdep-ASFLAGS)
 
 ifndef BUILD_CC
 BUILD_CC = $(CC)

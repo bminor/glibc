@@ -2,6 +2,8 @@
 # Every i386 port in use uses gas syntax (I think).
 asm-CPPFLAGS += -DGAS_SYNTAX
 
+sysdep-ASFLAGS += -U__i686
+
 # The i386 `long double' is a distinct type we support.
 long-double-fcts = yes
 
