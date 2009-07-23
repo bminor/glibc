@@ -21,7 +21,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 6
+Release: 7
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -314,8 +314,14 @@ GCC="gcc -m64"
 GXX="g++ -m64"
 %endif
 
-#BuildFlags="$BuildFlags -DNDEBUG=1 -fasynchronous-unwind-tables"
 BuildFlags="$BuildFlags -fasynchronous-unwind-tables"
+# Add -DNDEBUG unless using a prerelease
+case %{version} in
+  *.*.9[0-9]*) ;;
+  *)
+     BuildFlags="$BuildFlags -DNDEBUG"
+     ;;
+esac
 EnableKernel="--enable-kernel=%{enablekernel}"
 echo "$GCC" > Gcc
 AddOns=`echo */configure | sed -e 's!/configure!!g;s!\(linuxthreads\|nptl\|rtkaio\|powerpc-cpu\)\( \|$\)!!g;s! \+$!!;s! !,!g;s!^!,!;/^,\*$/d'`
@@ -579,11 +585,11 @@ rm -f $RPM_BUILD_ROOT%{_sbindir}/rpcinfo
 	 -name gconv-modules.cache \
 	 -printf "%%%%verify(not md5 size mtime) " \
 	 , \
-         ! -path "*/lib/debug" -printf "/%%P\n" \)
+	 ! -path "*/lib/debug" -printf "/%%P\n" \)
   find $RPM_BUILD_ROOT -type d \
        \( -path '*%{_prefix}/share/*' ! -path '*%{_infodir}' -o \
-          -path "*%{_prefix}/include/*" -o \
-          -path "*%{_prefix}/lib/locale/*" \
+	  -path "*%{_prefix}/include/*" -o \
+	  -path "*%{_prefix}/lib/locale/*" \
        \) -printf "%%%%dir /%%P\n"
 } | {
 
@@ -1028,6 +1034,10 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Thu Jul 23 2009 Andreas Schwab <schwab@redhat.com> - 2.10.90-7
+- Update from master.
+- Build with -DNDEBUG unless using a prerelease.
+
 * Thu Jul 23 2009 Andreas Schwab <schwab@redhat.com> - 2.10.90-6
 - Rebuilt with binutils-2.19.51.0.14-29.fc12 to fix static binaries
 
