@@ -312,13 +312,13 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 		 definition we have to use it.  */
 	      void enter (struct unique_sym *table, size_t size,
 			  unsigned int hash, const char *name,
-			  const ElfW(Sym) *sym, const struct link_map *map)
+			  const ElfW(Sym) *sym, struct link_map *map)
 	      {
 		size_t idx = hash % size;
 		size_t hash2 = 1 + hash % (size - 2);
 		while (1)
 		  {
-		    if (table[idx].hashval == 0)
+		    if (table[idx].name == NULL)
 		      {
 			table[idx].hashval = hash;
 			table[idx].name = strtab + sym->st_name;
@@ -331,7 +331,13 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 			  {
 			    table[idx].sym = sym;
 			    table[idx].map = map;
+
+			    if (map->l_type == lt_loaded)
+			      /* Make sure we don't unload this object by
+				 setting the appropriate flag.  */
+			      map->l_flags_1 |= DF_1_NODELETE;
 			  }
+
 			return;
 		      }
 
@@ -363,8 +369,7 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 			  return 1;
 			}
 
-		      if (entries[idx].hashval == 0
-			  && entries[idx].name == NULL)
+		      if (entries[idx].name == NULL)
 			break;
 
 		      idx += hash2;
@@ -386,7 +391,7 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 			}
 
 		      for (idx = 0; idx < size; ++idx)
-			if (entries[idx].hashval != 0)
+			if (entries[idx].name != NULL)
 			  enter (newentries, newsize, entries[idx].hashval,
 				 entries[idx].name, entries[idx].sym,
 				 entries[idx].map);
@@ -410,7 +415,8 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 		  tab->free = free;
 		}
 
-	      enter (entries, size, new_hash, strtab + sym->st_name, sym, map);
+	      enter (entries, size, new_hash, strtab + sym->st_name, sym,
+		     (struct link_map *) map);
 	      ++tab->n_elements;
 
 	      __rtld_lock_unlock_recursive (tab->lock);
