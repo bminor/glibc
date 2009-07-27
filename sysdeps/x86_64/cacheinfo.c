@@ -25,6 +25,17 @@
 
 #ifdef USE_MULTIARCH
 # include "multiarch/init-arch.h"
+
+# define is_intel __cpu_features.kind == arch_kind_intel
+# define is_amd __cpu_features.kind == arch_kind_amd
+# define max_cpuid __cpu_features.max_cpuid
+#else
+  /* This spells out "GenuineIntel".  */
+# define is_intel \
+  ebx == 0x756e6547 && ecx == 0x6c65746e && edx == 0x49656e69
+  /* This spells out "AuthenticAMD".  */
+# define is_amd \
+  ebx == 0x68747541 && ecx == 0x444d4163 && edx == 0x69746e65
 #endif
 
 static const struct intel_02_cache_info
@@ -100,6 +111,9 @@ static const struct intel_02_cache_info
     { 0xe3, 16, 64, M(_SC_LEVEL3_CACHE_SIZE),  2097152 },
     { 0xe3, 16, 64, M(_SC_LEVEL3_CACHE_SIZE),  4194304 },
     { 0xe4, 16, 64, M(_SC_LEVEL3_CACHE_SIZE),  8388608 },
+    { 0xea, 24, 64, M(_SC_LEVEL3_CACHE_SIZE), 12582912 },
+    { 0xeb, 24, 64, M(_SC_LEVEL3_CACHE_SIZE), 18874368 },
+    { 0xec, 24, 64, M(_SC_LEVEL3_CACHE_SIZE), 25165824 },
   };
 
 #define nintel_02_known (sizeof (intel_02_known) / sizeof (intel_02_known [0]))
@@ -152,6 +166,12 @@ intel_check_word (int name, unsigned int value, bool *has_level_2,
 	      /* Intel reused this value.  For family 15, model 6 it
 		 specifies the 3rd level cache.  Otherwise the 2nd
 		 level cache.  */
+	      unsigned int family;
+	      unsigned int model;
+#ifdef USE_MULTIARCH
+	      family = __cpu_features.family;
+	      model = __cpu_features.model;
+#else
 	      unsigned int eax;
 	      unsigned int ebx;
 	      unsigned int ecx;
@@ -160,9 +180,10 @@ intel_check_word (int name, unsigned int value, bool *has_level_2,
 			    : "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)
 			    : "0" (1));
 
-	      unsigned int family = ((eax >> 20) & 0xff) + ((eax >> 8) & 0xf);
-	      unsigned int model = ((((eax >>16) & 0xf) << 4)
-				    + ((eax >> 4) & 0xf));
+	      family = ((eax >> 20) & 0xff) + ((eax >> 8) & 0xf);
+	      model = (((eax >>16) & 0xf) << 4) + ((eax >> 4) & 0xf);
+#endif
+
 	      if (family == 15 && model == 6)
 		{
 		  /* The level 3 cache is encoded for this model like
@@ -394,21 +415,24 @@ long int
 attribute_hidden
 __cache_sysconf (int name)
 {
+#ifdef USE_MULTIARCH
+  if (__cpu_features.kind == arch_kind_unknown)
+    __init_cpu_features ();
+#else
   /* Find out what brand of processor.  */
-  unsigned int eax;
+  unsigned int max_cpuid;
   unsigned int ebx;
   unsigned int ecx;
   unsigned int edx;
   asm volatile ("cpuid"
-		: "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)
+		: "=a" (max_cpuid), "=b" (ebx), "=c" (ecx), "=d" (edx)
 		: "0" (0));
+#endif
 
-  /* This spells out "GenuineIntel".  */
-  if (ebx == 0x756e6547 && ecx == 0x6c65746e && edx == 0x49656e69)
-    return handle_intel (name, eax);
+  if (is_intel)
+    return handle_intel (name, max_cpuid);
 
-  /* This spells out "AuthenticAMD".  */
-  if (ebx == 0x68747541 && ecx == 0x444d4163 && edx == 0x69746e65)
+  if (is_amd)
     return handle_amd (name);
 
   // XXX Fill in more vendors.
@@ -457,20 +481,11 @@ init_cacheinfo (void)
 #ifdef USE_MULTIARCH
   if (__cpu_features.kind == arch_kind_unknown)
     __init_cpu_features ();
-# define is_intel __cpu_features.kind == arch_kind_intel
-# define is_amd __cpu_features.kind == arch_kind_amd
-# define max_cpuid __cpu_features.max_cpuid
 #else
   int max_cpuid;
   asm volatile ("cpuid"
 		: "=a" (max_cpuid), "=b" (ebx), "=c" (ecx), "=d" (edx)
 		: "0" (0));
-  /* This spells out "GenuineIntel".  */
-# define is_intel \
-  ebx == 0x756e6547 && ecx == 0x6c65746e && edx == 0x49656e69
-  /* This spells out "AuthenticAMD".  */
-# define is_amd \
-  ebx == 0x68747541 && ecx == 0x444d4163 && edx == 0x69746e65
 #endif
 
   if (is_intel)
