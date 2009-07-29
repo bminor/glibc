@@ -1008,7 +1008,7 @@ send_dg(res_state statp,
 		seconds /= statp->nscount;
 	if (seconds <= 0)
 		seconds = 1;
-	bool single_request = ((statp->options) & RES_SNGLKUP) != 0;// XXX
+	bool single_request = (statp->options & RES_SNGLKUP) != 0;// XXX
 	int save_gotsomewhere = *gotsomewhere;
  retry:
 	evNowTime(&now);
@@ -1059,6 +1059,7 @@ send_dg(res_state statp,
 		       have received the first answer.  */
 		    if (!single_request)
 		      {
+			statp->options |= RES_SNGLKUP;
 			single_request = true;
 			*gotsomewhere = save_gotsomewhere;
 			goto retry;
@@ -1254,14 +1255,10 @@ send_dg(res_state statp,
 				? *thisanssiz : *thisresplen);
 
 			if (recvresp1 || (buf2 != NULL && recvresp2))
-			  {
-			    *resplen2 = 1;
-			    return resplen;
-			  }
+			  return resplen;
 			if (buf2 != NULL)
 			  {
 			    /* We are waiting for a possible second reply.  */
-			    resplen = 1;
 			    if (hp->id == anhp->id)
 			      recvresp1 = 1;
 			    else

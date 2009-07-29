@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1993,1995-2001,2003,2004,2006, 2007
+/* Copyright (C) 1991-1993,1995-2001,2003,2004,2006,2007,2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -248,7 +248,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
 				+ num_transitions * (8 + 1)
 				+ num_types * 6
 				+ chars
-				+ num_leaps * 8
+				+ num_leaps * 12
 				+ num_isstd
 				+ num_isgmt) - 1 : 0);
 
@@ -418,6 +418,10 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
       tzstr[tzspec_len - 1] = '\0';
       tzspec = __tzstring (tzstr);
     }
+
+  /* Don't use an empty TZ string.  */
+  if (tzspec != NULL && tzspec[0] == '\0')
+    tzspec = NULL;
 
   fclose (f);
 
@@ -659,9 +663,7 @@ __tzfile_compute (time_t timer, int use_localtime,
 	      __tzname[1] = __tzstring (&zone_names[strlen (zone_names) + 1]);
 	    }
 
-	  *leap_correct = 0L;
-	  *leap_hit = 0;
-	  return;
+	  goto leap;
 	}
       else
 	{
@@ -762,6 +764,7 @@ __tzfile_compute (time_t timer, int use_localtime,
       tp->tm_gmtoff = info->offset;
     }
 
+ leap:
   *leap_correct = 0L;
   *leap_hit = 0;
 

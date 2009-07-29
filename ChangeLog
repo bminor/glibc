@@ -1,3 +1,371 @@
+2009-05-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/accept4.c: Include kernel-features.h.
+	(accept4): If __NR_accept4 is not defined, but __NR_socketcall
+	is, either do nothing at all if __ASSUME_ACCEPT4, or
+	call __internal_accept4 and handle EINVAL -> ENOSYS translation.
+	* sysdeps/unix/sysv/linux/internal_accept4.S: New file.
+	* sysdeps/unix/sysv/linux/i386/accept4.S (SOCKOP_accept4): Don't
+	define.
+	* sysdeps/unix/sysv/linux/i386/internal_accept4.S: New file.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep-routines): Add
+	internal_accept4 in socket directory.
+
+2009-07-26  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10422]
+	* sysdeps/unix/sysv/linux/eventfd.c: Add compatibility for old
+	kernels, dropped when eventfd2 support was added.
+	* sysdeps/unix/sysv/linux/signalfd.c: Add compatibility for old
+	kernels, dropped when signalfd4 support was added.
+	* sysdeps/unix/sysv/linux/kernel-features.h: More CLOEXEC syscalls
+	added, name them.
+
+	[BZ #10452]
+	* resolv/res_send.c (send_dg): Pass full SERVFAIL, NOTIMP, REFUSED
+	replies up.
+
+2009-07-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/cache.c (cache_add): Use atomic_compare_and_exchange_bool_rel
+	instead of atomic_compare_and_exchange_bool_acq to ensure pointer
+	is written before the list head update.
+	Patch by Andreas Schwab <aschwab@redhat.com>.
+
+	    Jakub Jelinek  <jakub@redhat.com>
+
+	* malloc/malloc.c [ATOMIC_FASTBINS] (_int_free): Make check for
+	corruption thread-safe.
+
+2009-07-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/atomic.h (catomic_compare_and_exchange_val_rel): If arch
+	overrides atomic_compare_and_exchange_val_rel, define to
+	atomic_compare_and_exchange_val_rel by default, otherwise default
+	to catomic_compare_and_exchange_val_acq.
+	(catomic_compare_and_exchange_bool_rel): If arch overrides
+	atomic_compare_and_exchange_bool_rel, define to
+	atomic_compare_and_exchange_bool_rel by default.
+	* malloc/malloc.c (_int_free): Revert 2009-07-02 change.
+	Use catomic_compare_and_exchange_val_rel instead of
+	catomic_compare_and_exchange_val_acq.
+
+2009-07-07  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/Makefile: Don't build modules for tst-audit3 for anything
+	but x86-64 targets.
+
+2009-07-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sys/epoll.h: Fix comment.
+
+2009-07-03  Andreas Schwab  <aschwab@redhat.com>
+
+	* sysdeps/powerpc/sysdep.h (PPC_FEATURE_ARCH_2_06): Fix value.
+	(PPC_FEATURE_HAS_VSX): Likewise.
+
+2009-06-30  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/Makefile (distribute): Remove tst-audit.sh.  Add
+	tst-audit2.c, tst-audit3.c, tst-auditmod3a.c, tst-auditmod3b.c.
+	(tests): Add tst-audit3 for x86_64.
+	(modules-names): Add tst-auditmod3a, tst-auditmod3b.
+	($(objpfx)tst-audit3): Define.
+	($(objpfx)tst-audit3.out): Define.
+	(tst-audit3-ENV): Define.
+	* elf/tst-audit3.c: New file.
+	* elf/tst-auditmod3a.c: New file.
+	* elf/tst-auditmod3b.c: New file.
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Save
+	and restore xmm6.
+
+2009-07-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/malloc.c [ATOMIC_FASTBINS] (_int_free): Add full barrier when
+	adding to fast bin list.
+
+2009-07-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nss_nis/nis-network.c (_nss_nis_getnetbyaddr_r): Don't use
+	inet_makeaddr.  This worked only with class-based networks.
+	* nis/nss_nisplus/nisplus-network.c (_nss_nisplus_getnetbyaddr_r):
+	Likewise.
+
+	* nss/nss_files/files-network.c (netbyaddr): If type is AF_UNSPEC,
+	recognize all types.
+	* nss/getent.c (networks_keys): Pass AF_UNSPEC instead of AF_UNIX
+	to getnetbyaddr.  Fix network parameter to getnetbyaddr.  It must
+	be in host byte order.
+
+2009-06-24  Andreas Schwab  <aschwab@redhat.com>
+
+	* sysdeps/powerpc/powerpc32/power4/fpu/w_sqrtf.S: Fix cfa offset
+	for saved registers.
+	* sysdeps/powerpc/powerpc32/power4/fpu/w_sqrt.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power5/fpu/w_sqrtf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power5/fpu/w_sqrt.S: Likewise.
+
+2009-06-23  Andreas Schwab  <aschwab@redhat.com>
+
+	* time/tzfile.c (__tzfile_read): Don't use an empty TZ string.
+
+2009-06-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/socket.h: Define PF_IEEE802154 and
+	AF_IEEE802154.
+	* sysdeps/unix/sysv/linux/sparc/bits/socket.h: Likewise.
+	* sysdeps/unix/sysv/linux/net/if_arp.h: Define ARPHRD_IEEE802154
+	and ARPHRD_IEEE802154_PHY.
+
+	* sysdeps/unix/sysv/linux/sparc/bits/socket.h: Add missing definitions
+	relative to generic Linux version.
+
+2009-06-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/x86_64/memchr.S (memchr): Use unsigned instead of signed
+	comparisons.
+	* string/test-memchr.c (do_random_tests): Test very large lengths
+	as well.
+
+2009-04-22  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	[BZ #10107]
+	* sysdeps/powerpc/powerpc32/power6/memcpy.S (memcpy): Replace cmpldi
+	with cmplwi.
+	* sysdeps/powerpc/powerpc32/power6/memset.S (memset): Likewise.
+
+2009-06-15  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10166]
+	* sysdeps/unix/sysv/linux/grantpt.c: Remove shortcut which was used
+	when the slave device is in devpts or devfs.
+
+	[BZ #10183]
+	* posix/tst-cpucount.c: Don't try more than CPU_SETSIZE bits.
+
+	[BZ #10195]
+	* inet/netinet/icmp6.h (struct nd_opt_home_agent_info): Change type
+	of nd_opt_home_agent_info_preference to uint16_t.
+	Patch by Arnaud Ebalard <arno@natisbad.org>.
+
+	[BZ #10203]
+	* nis/nss_nis/nis-pwd.c (internal_nis_endpwent): Free all buffers,
+	not just the currently used one and those which follow.
+	Patch by Joe Landers <jlanders@vmware.com>.
+
+	[BZ #10196]
+	* libio/tst-fgetwc.c (do_test): Use de_DE.UTF-8 as locale name.
+	* libio/Makefile: Run tst-fgetwc with necessary envvar.
+	Patch by Bruce Dubbs <bdubbs@linuxfromscratch.org>.
+
+	* time/tzfile.c (__tzfile_read): Correct computation of tzspec_len.
+
+	[BZ #10211]
+	* time/tzfile.c (__tzfile_compute): If we use the envvar format still
+	handle leap seconds if they are available.
+	Patch by Akinori Hattori <hattya@gentoo.org>.
+
+2009-06-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_send.c (send_dg): Remember we switched to
+	single-request mode.
+
+2009-06-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* dlfcn/dlfcn.h: Remove comma at end of enum.
+	Patch by J.H.M. Dassen <rdassen@redhat.com>.
+
+	* libio/fileops.c (_IO_new_file_fopen): Don't prematurely stop
+	parsing mode string.
+
+2009-06-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-sysdep.c (_dl_show_auxv): Terminate correct string.
+
+2009-05-30  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* configure.in: Move AC_CANONICAL_HOST before first use of $host
+	and $build.
+	* configure: Regenerated.
+
+2009-05-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ieee754/ldbl-128/s_expm1l.c: Include <errno.h>.
+	(__expm1l): Set errno to ERANGE on overflow.
+	* sysdeps/ieee754/ldbl-128/s_tanl.c: Include <errno.h>.
+	(__tanl): Set errno to EDOM for ±Inf.
+	* sysdeps/ieee754/ldbl-128/s_cosl.c: Include <errno.h>.
+	(__cosl): Set errno to EDOM for ±Inf.
+	* sysdeps/ieee754/ldbl-128/s_sinl.c: Include <errno.h>.
+	(__sinl): Set errno to EDOM for ±Inf.
+
+2009-05-22  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/ieee754/ldbl-128ibm/s_sinl.c: Set errno for ±Inf.
+	* sysdeps/ieee754/ldbl-128ibm/s_cosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_tanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_expm1l.c: Set errno for overflow.
+
+2009-05-21  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #10162]
+	* sysdeps/ia64/memchr.S: Use speculative load.
+
+2009-05-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Don't define
+	__ASSUME_ACCEPT4 for IA-64.
+
+2009-05-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/accept4.c (__NR_accept4): Don't define.
+
+	* sysdeps/unix/sysv/linux/socketcall.h (SOCKOP_paccept): Remove.
+	(SOCKOP_accept4): Define.
+
+2009-05-20  Ulrich Drepper  <drepper@redhat.com>
+
+	Sun approved the change of the license.
+	* sunrpc/auth_des.c: Replace license text.
+	* sunrpc/auth_none.c: Likewise.
+	* sunrpc/auth_unix.c: Likewise.
+	* sunrpc/authdes_prot.c: Likewise.
+	* sunrpc/authuxprot.c: Likewise.
+	* sunrpc/bindrsvprt.c: Likewise.
+	* sunrpc/clnt_gen.c: Likewise.
+	* sunrpc/clnt_perr.c: Likewise.
+	* sunrpc/clnt_raw.c: Likewise.
+	* sunrpc/clnt_simp.c: Likewise.
+	* sunrpc/clnt_tcp.c: Likewise.
+	* sunrpc/clnt_udp.c: Likewise.
+	* sunrpc/clnt_unix.c: Likewise.
+	* sunrpc/des_crypt.c: Likewise.
+	* sunrpc/des_soft.c: Likewise.
+	* sunrpc/get_myaddr.c: Likewise.
+	* sunrpc/getrpcport.c: Likewise.
+	* sunrpc/key_call.c: Likewise.
+	* sunrpc/key_prot.c: Likewise.
+	* sunrpc/openchild.c: Likewise.
+	* sunrpc/pm_getmaps.c: Likewise.
+	* sunrpc/pm_getport.c: Likewise.
+	* sunrpc/pmap_clnt.c: Likewise.
+	* sunrpc/pmap_prot.c: Likewise.
+	* sunrpc/pmap_prot2.c: Likewise.
+	* sunrpc/pmap_rmt.c: Likewise.
+	* sunrpc/rpc/auth.h: Likewise.
+	* sunrpc/rpc/auth_unix.h: Likewise.
+	* sunrpc/rpc/clnt.h: Likewise.
+	* sunrpc/rpc/des_crypt.h: Likewise.
+	* sunrpc/rpc/key_prot.h: Likewise.
+	* sunrpc/rpc/netdb.h: Likewise.
+	* sunrpc/rpc/pmap_clnt.h: Likewise.
+	* sunrpc/rpc/pmap_prot.h: Likewise.
+	* sunrpc/rpc/pmap_rmt.h: Likewise.
+	* sunrpc/rpc/rpc.h: Likewise.
+	* sunrpc/rpc/rpc_des.h: Likewise.
+	* sunrpc/rpc/rpc_msg.h: Likewise.
+	* sunrpc/rpc/svc.h: Likewise.
+	* sunrpc/rpc/svc_auth.h: Likewise.
+	* sunrpc/rpc/types.h: Likewise.
+	* sunrpc/rpc/xdr.h: Likewise.
+	* sunrpc/rpc_clntout.c: Likewise.
+	* sunrpc/rpc_cmsg.c: Likewise.
+	* sunrpc/rpc_common.c: Likewise.
+	* sunrpc/rpc_cout.c: Likewise.
+	* sunrpc/rpc_dtable.c: Likewise.
+	* sunrpc/rpc_hout.c: Likewise.
+	* sunrpc/rpc_main.c: Likewise.
+	* sunrpc/rpc_parse.c: Likewise.
+	* sunrpc/rpc_parse.h: Likewise.
+	* sunrpc/rpc_prot.c: Likewise.
+	* sunrpc/rpc_sample.c: Likewise.
+	* sunrpc/rpc_scan.c: Likewise.
+	* sunrpc/rpc_scan.h: Likewise.
+	* sunrpc/rpc_svcout.c: Likewise.
+	* sunrpc/rpc_tblout.c: Likewise.
+	* sunrpc/rpc_util.c: Likewise.
+	* sunrpc/rpc_util.h: Likewise.
+	* sunrpc/rpcinfo.c: Likewise.
+	* sunrpc/rpcsvc/bootparam_prot.x: Likewise.
+	* sunrpc/rpcsvc/key_prot.x: Likewise.
+	* sunrpc/rpcsvc/klm_prot.x: Likewise.
+	* sunrpc/rpcsvc/mount.x: Likewise.
+	* sunrpc/rpcsvc/nfs_prot.x: Likewise.
+	* sunrpc/rpcsvc/rex.x: Likewise.
+	* sunrpc/rpcsvc/rstat.x: Likewise.
+	* sunrpc/rpcsvc/rusers.x: Likewise.
+	* sunrpc/rpcsvc/sm_inter.x: Likewise.
+	* sunrpc/rpcsvc/spray.x: Likewise.
+	* sunrpc/rpcsvc/yppasswd.x: Likewise.
+	* sunrpc/rtime.c: Likewise.
+	* sunrpc/svc.c: Likewise.
+	* sunrpc/svc_auth.c: Likewise.
+	* sunrpc/svc_authux.c: Likewise.
+	* sunrpc/svc_raw.c: Likewise.
+	* sunrpc/svc_run.c: Likewise.
+	* sunrpc/svc_simple.c: Likewise.
+	* sunrpc/svc_tcp.c: Likewise.
+	* sunrpc/svc_udp.c: Likewise.
+	* sunrpc/svc_unix.c: Likewise.
+	* sunrpc/svcauth_des.c: Likewise.
+	* sunrpc/xcrypt.c: Likewise.
+	* sunrpc/xdr.c: Likewise.
+	* sunrpc/xdr_array.c: Likewise.
+	* sunrpc/xdr_float.c: Likewise.
+	* sunrpc/xdr_mem.c: Likewise.
+	* sunrpc/xdr_rec.c: Likewise.
+	* sunrpc/xdr_ref.c: Likewise.
+	* sunrpc/xdr_sizeof.c: Likewise.
+	* sunrpc/xdr_stdio.c: Likewise.
+
+2009-05-18  Jakub Jelinek  <jakub@redhat.com>
+	    Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd_helper.c (MINIMUM_HASHENTRY_SIZE): Define.
+	(__nscd_cache_search): Assume each entry in the
+	hash chain needs one hashentry and half of datahead.  Use
+	MINIMUM_HASHENTRY_SIZE instead of sizeof(hashentry).
+
+2009-05-16  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10159]
+	* stdlib/stdlib.h (__WAIT_INT): Match the definition in <sys/wait.h>.
+
+	* nscd/nscd_helper.c (__nscd_cache_search): Fix exit condition in last
+	patch.
+
+2009-05-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd_helper.c (__nscd_cache_search): Introduce loop counter.
+	Use it if we absolutely cannot reach any more correct list elements
+	because that many do not fit into the currently mapped database.
+
+2009-05-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/nscd_helper.c: Include stddef.h.
+	(__nscd_cache_search): Add datalen argument.  Use atomic_forced_read
+	in a couple of places.  Return NULL if trail is not less than
+	datasize, don't consider dataheads with length smaller than
+	offsetof (struct datahead, data) + datalen.
+	* nscd/nscd_client.h (__nscd_cache_search): Adjust prototype.
+	* nscd/nscd_gethst_r.c (nscd_gethst_r): Adjust callers.
+	* nscd/nscd_getpw_r.c (nscd_getpw_r): Likewise.
+	* nscd/nscd_getgr_r.c (nscd_getgr_r): Likewise.
+	* nscd/nscd_getai.c (__nscd_getai): Likewise.
+	* nscd/nscd_initgroups.c (__nscd_getgrouplist): Likewise.
+	* nscd/nscd_getserv_r.c (nscd_getserv_r): Likewise.
+
+	* nscd/selinux.c (nscd_avc_destroy): Removed.
+	* nscd/selinux.h (nscd_avc_destroy): Likewise.
+	* nscd/nscd.c (termination_handler): Don't call
+	nscd_avc_destroy.
+
+2009-05-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/atomic.h: Formatting.
+	(catomic_compare_and_exchange_val_acq): Don't define if already
+	defined by bits/atomic.h.
+
 2009-05-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* version.h (VERSION): Bump to 2.10.1.

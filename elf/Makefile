@@ -89,7 +89,8 @@ distribute	:= rtld-Rules \
 		   unload4mod1.c unload4mod2.c unload4mod3.c unload4mod4.c \
 		   unload6mod1.c unload6mod2.c unload6mod3.c \
 		   unload7mod1.c unload7mod2.c \
-		   tst-auditmod1.c tst-audit.sh \
+		   tst-audit1.c tst-audit2.c tst-audit3.c \
+		   tst-auditmod1.c tst-auditmod3a.c tst-auditmod3b.c \
 		   order2mod1.c order2mod2.c order2mod3.c order2mod4.c \
 		   tst-stackguard1.c tst-stackguard1-static.c \
 		   tst-array5.c tst-array5-static.c tst-array5dep.c \
@@ -176,6 +177,9 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 #	 reldep9
 test-srcs = tst-pathopt
 tests-execstack-yes = tst-execstack tst-execstack-needed tst-execstack-prog
+ifeq (x86_64,$(config-machine))
+tests += tst-audit3
+endif
 endif
 ifeq (yesyes,$(have-fpie)$(build-shared))
 tests: $(objpfx)tst-pie1.out
@@ -223,6 +227,9 @@ modules-names += tst-array2dep tst-array5dep
 endif
 ifeq (yesyes,$(have-fpie)$(build-shared))
 modules-names += tst-piemod1
+endif
+ifeq (x86_64,$(config-machine))
+modules-names += tst-auditmod3a tst-auditmod3b
 endif
 modules-execstack-yes = tst-execstack-mod
 extra-test-objs += $(addsuffix .os,$(strip $(modules-names)))
@@ -913,6 +920,10 @@ tst-audit1-ENV = LD_AUDIT=$(objpfx)tst-auditmod1.so
 
 $(objpfx)tst-audit2.out: $(objpfx)tst-auditmod1.so
 tst-audit2-ENV = LD_AUDIT=$(objpfx)tst-auditmod1.so
+
+$(objpfx)tst-audit3: $(objpfx)tst-auditmod3a.so
+$(objpfx)tst-audit3.out: $(objpfx)tst-auditmod3b.so
+tst-audit3-ENV = LD_AUDIT=$(objpfx)tst-auditmod3b.so
 
 $(objpfx)tst-global1: $(libdl)
 $(objpfx)tst-global1.out: $(objpfx)testobj6.so $(objpfx)testobj2.so
