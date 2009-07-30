@@ -61,6 +61,7 @@ _dl_runtime_resolve:
 	cfi_startproc
 
 _dl_runtime_profile:
+	cfi_adjust_cfa_offset(16) # Incorporate PLT
 	/* The La_x86_64_regs data structure pointed to by the
 	   fourth paramater must be 16-byte aligned.  This must
 	   be explicitly enforced.  We have the set up a dynamically
@@ -68,7 +69,7 @@ _dl_runtime_profile:
 	   has a fixed size and preserves the original stack pointer.  */
 
 	subq $32, %rsp		# Allocate the local storage.
-	cfi_adjust_cfa_offset(48) # Incorporate PLT
+	cfi_adjust_cfa_offset(32)
 	movq %rbx, (%rsp)
 	cfi_rel_offset(%rbx, 0)
 
@@ -203,49 +204,49 @@ L(no_avx1):
 	vpcmpeqq (LR_SIZE)(%rsp), %xmm0, %xmm8
 	vpmovmskb %xmm8, %esi
 	cmpl $0xffff, %esi
-	je 1f
+	jne 1f
 	vmovdqu			(LR_VECTOR_OFFSET)(%rsp), %ymm0
 
 1:	vpcmpeqq (LR_SIZE + XMM_SIZE)(%rsp), %xmm1, %xmm8
 	vpmovmskb %xmm8, %esi
 	cmpl $0xffff, %esi
-	je 1f
+	jne 1f
 	vmovdqu	  (LR_VECTOR_OFFSET + VECTOR_SIZE)(%rsp), %ymm1
 
 1:	vpcmpeqq (LR_SIZE + XMM_SIZE*2)(%rsp), %xmm2, %xmm8
 	vpmovmskb %xmm8, %esi
 	cmpl $0xffff, %esi
-	je 1f
+	jne 1f
 	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*2)(%rsp), %ymm2
 
 1:	vpcmpeqq (LR_SIZE + XMM_SIZE*3)(%rsp), %xmm3, %xmm8
 	vpmovmskb %xmm8, %esi
 	cmpl $0xffff, %esi
-	je 1f
+	jne 1f
 	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*3)(%rsp), %ymm3
 
 1:	vpcmpeqq (LR_SIZE + XMM_SIZE*4)(%rsp), %xmm4, %xmm8
 	vpmovmskb %xmm8, %esi
 	cmpl $0xffff, %esi
-	je 1f
+	jne 1f
 	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*4)(%rsp), %ymm4
 
 1:	vpcmpeqq (LR_SIZE + XMM_SIZE*5)(%rsp), %xmm5, %xmm8
 	vpmovmskb %xmm8, %esi
 	cmpl $0xffff, %esi
-	je 1f
+	jne 1f
 	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*5)(%rsp), %ymm5
 
 1:	vpcmpeqq (LR_SIZE + XMM_SIZE*6)(%rsp), %xmm6, %xmm8
 	vpmovmskb %xmm8, %esi
 	cmpl $0xffff, %esi
-	je 1f
+	jne 1f
 	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*6)(%rsp), %ymm6
 
 1:	vpcmpeqq (LR_SIZE + XMM_SIZE*7)(%rsp), %xmm7, %xmm8
 	vpmovmskb %xmm8, %esi
 	cmpl $0xffff, %esi
-	je 1f
+	jne 1f
 	vmovdqu (LR_VECTOR_OFFSET + VECTOR_SIZE*7)(%rsp), %ymm7
 
 L(no_avx2):
@@ -361,13 +362,13 @@ L(no_avx3):
 	vpcmpeqq (LRV_SIZE)(%rsp), %xmm0, %xmm2
 	vpmovmskb %xmm2, %esi
 	cmpl $0xffff, %esi
-	je 1f
+	jne 1f
 	vmovdqu LRV_VECTOR0_OFFSET(%rsp), %ymm0
 
 1:	vpcmpeqq (LRV_SIZE + XMM_SIZE)(%rsp), %xmm1, %xmm2
 	vpmovmskb %xmm2, %esi
 	cmpl $0xffff, %esi
-	je 1f
+	jne 1f
 	vmovdqu LRV_VECTOR1_OFFSET(%rsp), %ymm1
 
 L(no_avx4):
@@ -389,4 +390,86 @@ L(no_avx4):
 
 	cfi_endproc
 	.size _dl_runtime_profile, .-_dl_runtime_profile
+#endif
+
+
+#ifdef SHARED
+	.globl _dl_x86_64_save_sse
+	.type _dl_x86_64_save_sse, @function
+	.align 16
+	cfi_startproc
+_dl_x86_64_save_sse:
+# ifdef HAVE_AVX_SUPPORT
+	cmpl	$0, L(have_avx)(%rip)
+	jne	1f
+	movq	%rbx, %r11		# Save rbx
+	movl	$1, %eax
+	cpuid
+	movq	%r11,%rbx		# Restore rbx
+	movl	$1, %eax
+	testl	$(1 << 28), %ecx
+	jne	2f
+	negl	%eax
+2:	movl	%eax, L(have_avx)(%rip)
+	cmpl	$0, %eax
+
+1:	js	L(no_avx5)
+
+#  define YMM_SIZE 32
+	vmovdqa %ymm0, %fs:RTLD_SAVESPACE_SSE+0*YMM_SIZE
+	vmovdqa %ymm1, %fs:RTLD_SAVESPACE_SSE+1*YMM_SIZE
+	vmovdqa %ymm2, %fs:RTLD_SAVESPACE_SSE+2*YMM_SIZE
+	vmovdqa %ymm3, %fs:RTLD_SAVESPACE_SSE+3*YMM_SIZE
+	vmovdqa %ymm4, %fs:RTLD_SAVESPACE_SSE+4*YMM_SIZE
+	vmovdqa %ymm5, %fs:RTLD_SAVESPACE_SSE+5*YMM_SIZE
+	vmovdqa %ymm6, %fs:RTLD_SAVESPACE_SSE+6*YMM_SIZE
+	vmovdqa %ymm7, %fs:RTLD_SAVESPACE_SSE+7*YMM_SIZE
+	ret
+L(no_avx5):
+# endif
+# define YMM_SIZE 16
+	movdqa	%xmm0, %fs:RTLD_SAVESPACE_SSE+0*XMM_SIZE
+	movdqa	%xmm1, %fs:RTLD_SAVESPACE_SSE+1*XMM_SIZE
+	movdqa	%xmm2, %fs:RTLD_SAVESPACE_SSE+2*XMM_SIZE
+	movdqa	%xmm3, %fs:RTLD_SAVESPACE_SSE+3*XMM_SIZE
+	movdqa	%xmm4, %fs:RTLD_SAVESPACE_SSE+4*XMM_SIZE
+	movdqa	%xmm5, %fs:RTLD_SAVESPACE_SSE+5*XMM_SIZE
+	movdqa	%xmm6, %fs:RTLD_SAVESPACE_SSE+6*XMM_SIZE
+	movdqa	%xmm7, %fs:RTLD_SAVESPACE_SSE+7*XMM_SIZE
+	ret
+	cfi_endproc
+	.size _dl_x86_64_save_sse, .-_dl_x86_64_save_sse
+
+
+	.globl _dl_x86_64_restore_sse
+	.type _dl_x86_64_restore_sse, @function
+	.align 16
+	cfi_startproc
+_dl_x86_64_restore_sse:
+# ifdef HAVE_AVX_SUPPORT
+	cmpl	$0, L(have_avx)(%rip)
+	js	L(no_avx6)
+
+	vmovdqa %fs:RTLD_SAVESPACE_SSE+0*YMM_SIZE, %ymm0
+	vmovdqa %fs:RTLD_SAVESPACE_SSE+1*YMM_SIZE, %ymm1
+	vmovdqa %fs:RTLD_SAVESPACE_SSE+2*YMM_SIZE, %ymm2
+	vmovdqa %fs:RTLD_SAVESPACE_SSE+3*YMM_SIZE, %ymm3
+	vmovdqa %fs:RTLD_SAVESPACE_SSE+4*YMM_SIZE, %ymm4
+	vmovdqa %fs:RTLD_SAVESPACE_SSE+5*YMM_SIZE, %ymm5
+	vmovdqa %fs:RTLD_SAVESPACE_SSE+6*YMM_SIZE, %ymm6
+	vmovdqa %fs:RTLD_SAVESPACE_SSE+7*YMM_SIZE, %ymm7
+	ret
+L(no_avx6):
+# endif
+	movdqa	%fs:RTLD_SAVESPACE_SSE+0*XMM_SIZE, %xmm0
+	movdqa	%fs:RTLD_SAVESPACE_SSE+1*XMM_SIZE, %xmm1
+	movdqa	%fs:RTLD_SAVESPACE_SSE+2*XMM_SIZE, %xmm2
+	movdqa	%fs:RTLD_SAVESPACE_SSE+3*XMM_SIZE, %xmm3
+	movdqa	%fs:RTLD_SAVESPACE_SSE+4*XMM_SIZE, %xmm4
+	movdqa	%fs:RTLD_SAVESPACE_SSE+5*XMM_SIZE, %xmm5
+	movdqa	%fs:RTLD_SAVESPACE_SSE+6*XMM_SIZE, %xmm6
+	movdqa	%fs:RTLD_SAVESPACE_SSE+7*XMM_SIZE, %xmm7
+	ret
+	cfi_endproc
+	.size _dl_x86_64_restore_sse, .-_dl_x86_64_restore_sse
 #endif
