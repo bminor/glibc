@@ -20,7 +20,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 1
+Release: 3
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1012,6 +1012,35 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Wed Jul 31 2009 Andreas Schwab <schwab@redhat.com> - 2.10.1-3
+- Update from release/2.10/master.
+  - handle missing NSS modules (#513698)
+  - Handle SERVFAIL, NOTIMP, REFUSED replies from DNS server better
+  - Fix handling of xmm6 in ld.so audit hooks on x86-64
+  - Fix possible race when freeing object in fast bin list
+  - Fix NIS and NIS+ getnetbyaddr backends
+  - Fix getent networks lookup and resulting incorrect NSS change
+  - Fix getnetbyaddr implementation
+  - Fix cfa offset for saved registers in PPC sqrt implementations
+  - Handle empty TZ strings at the end of new-style timzeone files correctly
+  - Add 802.15.4 definitions to header files
+  - Fix incorrect use of cmpldi in 32-bit PPC code
+  - Define week, first_weekday, first_workday in de_AT locale (BZ#10011)
+  - Fix permission of slave device on devpts if necessary
+  - When iterating over CPU bitmask, don't try more than CPU_SETSIZE
+  - Fix memory leak when batch-reading large NIS password maps
+  - Handle leap seconds even if no DST rule exists
+  - Fix errno for IBM long double
+
+* Fri May 22 2009 Jakub Jelinek <jakub@redhat.com> 2.10.1-2
+- fix accept4 on architectures other than i?86/x86_64
+- robustify nscd client code during server GC
+- fix up nscd segfaults during daemon shutdown
+- fix memchr on ia64 (BZ#10162)
+- replace the Sun RPC license with the BSD license, with the explicit
+  permission of Sun Microsystems
+- fix up powerpc long double errno reporting
+
 * Sun May 10 2009 Jakub Jelinek <jakub@redhat.com> 2.10.1-1
 - fix up getsgent_r and getsgnam_r exports on i?86 and ppc
 
