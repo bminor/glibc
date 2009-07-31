@@ -31,7 +31,7 @@
    Operates just like `write' (see <unistd.h>) except that the data
    are taken from VECTOR instead of a contiguous buffer.  */
 ssize_t
-__libc_writev (int fd, const struct iovec *vector, int count)
+__libc_writev (int fd, const struct iovec *io_vector, int count)
 {
   char *buffer;
   register char *bp;
@@ -45,12 +45,12 @@ __libc_writev (int fd, const struct iovec *vector, int count)
   for (i = 0; i < count; ++i)
     {
       /* Check for ssize_t overflow.  */
-      if (SSIZE_MAX - bytes < vector[i].iov_len)
+      if (SSIZE_MAX - bytes < io_vector[i].iov_len)
 	{
 	  __set_errno (EINVAL);
 	  return -1;
 	}
-      bytes += vector[i].iov_len;
+      bytes += io_vector[i].iov_len;
     }
 
   /* Allocate a temporary buffer to hold the data.  We should normally
@@ -75,9 +75,9 @@ __libc_writev (int fd, const struct iovec *vector, int count)
   bp = buffer;
   for (i = 0; i < count; ++i)
     {
-      size_t copy = MIN (vector[i].iov_len, to_copy);
+      size_t copy = MIN (io_vector[i].iov_len, to_copy);
 
-      bp = __mempcpy ((void *) bp, (void *) vector[i].iov_base, copy);
+      bp = __mempcpy ((void *) bp, (void *) io_vector[i].iov_base, copy);
 
       to_copy -= copy;
       if (to_copy == 0)

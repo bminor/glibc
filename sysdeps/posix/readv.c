@@ -31,7 +31,7 @@
    Operates just like `read' (see <unistd.h>) except that data are
    put in VECTOR instead of a contiguous buffer.  */
 ssize_t
-__libc_readv (int fd, const struct iovec *vector, int count)
+__libc_readv (int fd, const struct iovec *io_vector, int count)
 {
   char *buffer;
   char *buffer_start;
@@ -45,12 +45,12 @@ __libc_readv (int fd, const struct iovec *vector, int count)
   for (i = 0; i < count; ++i)
     {
       /* Check for ssize_t overflow.  */
-      if (SSIZE_MAX - bytes < vector[i].iov_len)
+      if (SSIZE_MAX - bytes < io_vector[i].iov_len)
 	{
 	  __set_errno (EINVAL);
 	  return -1;
 	}
-      bytes += vector[i].iov_len;
+      bytes += io_vector[i].iov_len;
     }
 
   /* Allocate a temporary buffer to hold the data.  We should normally
@@ -80,9 +80,9 @@ __libc_readv (int fd, const struct iovec *vector, int count)
   buffer_start = buffer;
   for (i = 0; i < count; ++i)
     {
-      size_t copy = MIN (vector[i].iov_len, bytes);
+      size_t copy = MIN (io_vector[i].iov_len, bytes);
 
-      (void) memcpy ((void *) vector[i].iov_base, (void *) buffer, copy);
+      (void) memcpy ((void *) io_vector[i].iov_base, (void *) buffer, copy);
 
       buffer += copy;
       bytes -= copy;

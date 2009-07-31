@@ -26,9 +26,9 @@
    Operates just like `read' (see <unistd.h>) except that data are
    put in VECTOR instead of a contiguous buffer.  */
 ssize_t
-__libc_readv (fd, vector, count)
+__libc_readv (fd, io_vector, count)
      int fd;
-     const struct iovec *vector;
+     const struct iovec *io_vector;
      int count;
 {
   __set_errno (ENOSYS);

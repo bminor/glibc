@@ -39,31 +39,31 @@ static ssize_t __atomic_readv_replacement (int, __const struct iovec *,
 /* We should deal with kernel which have a smaller UIO_FASTIOV as well
    as a very big count.  */
 static ssize_t
-do_readv (int fd, const struct iovec *vector, int count)
+do_readv (int fd, const struct iovec *io_vector, int count)
 {
   ssize_t bytes_read;
 
-  bytes_read = INLINE_SYSCALL (readv, 3, fd, CHECK_N (vector, count), count);
+  bytes_read = INLINE_SYSCALL (readv, 3, fd, CHECK_N (io_vector, count), count);
 
   if (bytes_read >= 0 || errno != EINVAL || count <= UIO_FASTIOV)
     return bytes_read;
 
-  return __atomic_readv_replacement (fd, vector, count);
+  return __atomic_readv_replacement (fd, io_vector, count);
 }
 
 
 ssize_t
-__libc_readv (fd, vector, count)
+__libc_readv (fd, io_vector, count)
      int fd;
-     const struct iovec *vector;
+     const struct iovec *io_vector;
      int count;
 {
   if (SINGLE_THREAD_P)
-    return do_readv (fd, vector, count);
+    return do_readv (fd, io_vector, count);
 
   int oldtype = LIBC_CANCEL_ASYNC ();
 
-  int result = do_readv (fd, vector, count);
+  int result = do_readv (fd, io_vector, count);
 
   LIBC_CANCEL_RESET (oldtype);
 
