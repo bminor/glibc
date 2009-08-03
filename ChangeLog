@@ -1,3 +1,74 @@
+2009-08-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/configure.in: Add test for <cpuid.h>.
+
+2009-07-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/____longjmp_chk.S (longjmp_msg): Yet
+	another rewrite.  Much smaller and faster.
+	* sysdeps/unix/sysv/linux/i386/____longjmp_chk.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/x86_64/____longjmp_chk.S (longjmp_msg): Get
+	ss_flags from the correct location.
+
+2009-07-31  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/Makefile (sysdep_routines): Add cacheinfo.
+	* sysdeps/i386/i686/cacheinfo.c: New file.
+	* sysdeps/i386/i686/multiarch/Makefile: New file.
+	* sysdeps/i386/i686/multiarch/ifunc-defines.sym: New file.
+	* sysdeps/i386/i686/multiarch/init-arch.c: New file.
+	* sysdeps/i386/i686/multiarch/init-arch.h: New file.
+	* sysdeps/i386/i686/multiarch/sched_cpucount.c: New file.
+	* sysdeps/unix/sysv/linux/i386/i686/sysconf.c: New file.
+	* sysdeps/x86_64/cacheinfo.c: Include <cpuid.h>.
+	(__cpuid_count): New. Provide the default.
+	(__x86_64_prefetchw): Define only if DISABLE_PREFETCHW is not defined.
+	(__x86_64_preferred_memory_instruction): Define only if
+	DISABLE_PREFERRED_MEMORY_INSTRUCTION is not defined.
+	(intel_check_word): Use __cpuid.
+	(handle_intel): Likewise.
+	(handle_amd): Likewise.
+	(__cache_sysconf): Likewise.
+	(init_cacheinfo): Updated.  Use __cpuid and __cpuid_count.
+	(__cache_sysconf): Likewise.
+	(init_cacheinfo): Updated.  Use __cpuid and __cpuid_count.
+	* sysdeps/x86_64/multiarch/init-arch.c: Include <cpuid.h>.
+	(get_common_indeces): Use __cpuid.
+	(__init_cpu_features): Likewise.  Disable SSSE3 on Atom only
+	if ENABLE_SSSE3_ON_ATOM is not defined.
+	* sysdeps/x86_64/multiarch/init-arch.h (HAS_SSE2): Define.
+	* sysdeps/x86_64/multiarch/sched_cpucount.c (POPCNT): Use
+	popcnt instead of popcntq.
+
+2009-07-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* malloc/Makefile (CFLAGS-obstack.c): Add $(uses-callbacks).
+
+2009-07-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/____longjmp_chk.S: New file.
+	* sysdeps/i386/____longjmp_chk.S: Remove all code.  This is now a file
+	which always causes a compile error.
+
+	* sysdeps/i386/__longjmp.S: Remove bound-checking pointer support.
+
+	* sysdeps/unix/sysv/linux/x86_64/____longjmp_chk.S: New file.  Content
+	comes from...
+	* sysdeps/x86_64/____longjmp_chk.S: ...here.  This is now a file
+	which always causes a compile error.
+
+	* debug/Makefile (tests): Add tst-longjmp_chk2.
+	* debug/tst-longjmp_chk2.c: New file.
+
+	* sysdeps/x86_64/__longjmp.S: Remove CHECK_RSP handling.  Fix CFI.
+	Remove incorrect use of BP_SYM.
+	* sysdeps/x86_64/____longjmp_chk.S: Rewrite.  Complete implementation
+	here now since it is more complex than just a simple check.
+
+	* sysdeps/ia64/backtrace.c (backtrace_helper): Stop backtrace when
+	we make no more progress.
+
 2009-07-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* math/s_fma.c: Don't define alias if __fma is a macro.
