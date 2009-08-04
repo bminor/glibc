@@ -1,3 +1,19 @@
+2009-06-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* login/Makefile: Build pt_chown as PIE.
+
+2009-06-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* login/Makefile: If necessary link pt_chown with -lcap.
+
+2009-06-02  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* Makeconfig (+link-pie): Define.
+	(+prectorS): Define.
+	(+postctorS): Define.
+	* elf/Makefile ($(objpfx)tst-pie1): Use $(+link-pie).
+	* nscd/Makefile ($(objpfx)nscd): Likewise.
+
 2009-05-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/accept4.c: Include kernel-features.h.
