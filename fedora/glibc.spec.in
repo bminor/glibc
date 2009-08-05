@@ -530,17 +530,6 @@ mkdir -p $RPM_BUILD_ROOT%{_prefix}/lib/debug%{_prefix}/%{_lib}
 cp -a $RPM_BUILD_ROOT%{_prefix}/%{_lib}/*.a \
   $RPM_BUILD_ROOT%{_prefix}/lib/debug%{_prefix}/%{_lib}/
 rm -f $RPM_BUILD_ROOT%{_prefix}/lib/debug%{_prefix}/%{_lib}/*_p.a
-# Now strip debugging info from static libraries
-pushd $RPM_BUILD_ROOT%{_prefix}/%{_lib}/
-for i in *.a; do
-  if [ -f $i ]; then
-    case "$i" in
-    *_p.a) ;;
-    *) strip -g -R .comment $i ;;
-    esac
-  fi
-done
-popd
 
 # rquota.x and rquota.h are now provided by quota
 rm -f $RPM_BUILD_ROOT%{_prefix}/include/rpcsvc/rquota.[hx]
