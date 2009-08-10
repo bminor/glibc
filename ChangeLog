@@ -1,3 +1,8 @@
+2009-08-10  SUGIOKA Toshinobu  <sugioka@itonet.co.jp>
+
+	* stdlib/longlong.h [__sh__] (udiv_qrnnd, sub_ddmmss): Add "t" to
+	clobber list.
+
 2009-07-31  Jakub Jelinek  <jakub@redhat.com>
 
 	* malloc/Makefile (CFLAGS-obstack.c): Add $(uses-callbacks).
