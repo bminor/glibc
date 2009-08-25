@@ -1,3 +1,7 @@
+2009-08-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/s_fdiml.c (__fdiml): Use fpclassify instead of fpclassifyl.
+
 2009-08-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* math/s_fdim.c: In case of overflows set errno.
