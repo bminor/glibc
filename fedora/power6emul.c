@@ -163,6 +163,25 @@ asm (".globl frip, friz, frin, frim\n.hidden frip, friz, frin, frim\n\t"
 "3:"	"mtfsf   0x01,11\n\t"
 	"blr\n");
 
+#ifdef __powerpc64__
+#define m1 0x5555555555555555L
+#define m2 0x3333333333333333L
+#define m3 0x0f0f0f0f0f0f0f0fL
+#else
+#define m1 0x55555555
+#define m2 0x33333333
+#define m3 0x0f0f0f0f
+#endif
+
+static inline unsigned long
+popcntb (unsigned long n)
+{
+  n -= (n >> 1) & m1;
+  n = (n & m2) + ((n >> 2) & m2);
+  n = (n + (n >> 4)) & m3;
+  return n;
+}
+
 static void
 catch_sigill (int signal, struct sigcontext *ctx)
 {
@@ -218,6 +237,18 @@ catch_sigill (int signal, struct sigcontext *ctx)
       asm volatile ("mffs %0" : "=f" (u.d));
       u.i[1] &= 0xfffe0000; /* Is this correct?  */
       *fpscr |= u.i[1];
+      ctx->regs->nip += 4;
+      return;
+    }
+  if ((insn & 0xfc00ffff) == 0x7c0000f4) /* popcntb */
+    {
+      unsigned long *regs = (unsigned long *) ctx->regs;
+      unsigned dest = (insn >> 16) & 0x1f;
+      unsigned src = (insn >> 21) & 0x1f;
+      unsigned long res = 0;
+      int i;
+
+      regs[dest] = popcntb (regs[src]);
       ctx->regs->nip += 4;
       return;
     }
