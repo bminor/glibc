@@ -1,7 +1,7 @@
-/* Return positive difference between arguments.
-   Copyright (C) 1997, 2004, 2009 Free Software Foundation, Inc.
+/* Return nonzero value if number is negative.
+   Copyright (C) 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
+   Contributed by Ulrich Drepper <drepper@redha.com>, 2009.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -18,31 +18,10 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <errno.h>
-#include <math.h>
+#include <sysdep.h>
 
-double
-__fdim (double x, double y)
-{
-  int clsx = fpclassify (x);
-  int clsy = fpclassify (y);
-
-  if (clsx == FP_NAN || clsy == FP_NAN
-      || (y < 0 && clsx == FP_INFINITE && clsy == FP_INFINITE))
-    /* Raise invalid flag.  */
-    return x - y;
-
-  if (x <= y)
-    return 0.0;
-
-  double r = x - y;
-  if (fpclassify (r) == FP_INFINITE)
-    __set_errno (ERANGE);
-
-  return r;
-}
-weak_alias (__fdim, fdim)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__fdim, __fdiml)
-weak_alias (__fdim, fdiml)
-#endif
+ENTRY(__signbit)
+	pmovmskb %xmm0, %eax
+	andl	$0x80, %eax
+	ret
+END(__signbit)

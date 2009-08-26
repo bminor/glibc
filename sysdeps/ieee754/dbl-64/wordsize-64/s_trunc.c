@@ -1,5 +1,5 @@
-/* Return positive difference between arguments.
-   Copyright (C) 1997, 2004, 2009 Free Software Foundation, Inc.
+/* Truncate argument to nearest integral value not larger than the argument.
+   Copyright (C) 1997, 1998, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -18,31 +18,39 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <errno.h>
 #include <math.h>
 
+#include "math_private.h"
+
+
 double
-__fdim (double x, double y)
+__trunc (double x)
 {
-  int clsx = fpclassify (x);
-  int clsy = fpclassify (y);
+  int64_t i0, j0;
+  int64_t sx;
 
-  if (clsx == FP_NAN || clsy == FP_NAN
-      || (y < 0 && clsx == FP_INFINITE && clsy == FP_INFINITE))
-    /* Raise invalid flag.  */
-    return x - y;
+  EXTRACT_WORDS64 (i0, x);
+  sx = i0 & UINT64_C(0x8000000000000000);
+  j0 = ((i0 >> 52) & 0x7ff) - 0x3ff;
+  if (j0 < 52)
+    {
+      if (j0 < 0)
+	/* The magnitude of the number is < 1 so the result is +-0.  */
+	INSERT_WORDS64 (x, sx);
+      else
+	INSERT_WORDS64 (x, sx | (i0 & ~(UINT64_C(0x000fffffffffffff) >> j0)));
+    }
+  else
+    {
+      if (j0 == 0x400)
+	/* x is inf or NaN.  */
+	return x + x;
+    }
 
-  if (x <= y)
-    return 0.0;
-
-  double r = x - y;
-  if (fpclassify (r) == FP_INFINITE)
-    __set_errno (ERANGE);
-
-  return r;
+  return x;
 }
-weak_alias (__fdim, fdim)
+weak_alias (__trunc, trunc)
 #ifdef NO_LONG_DOUBLE
-strong_alias (__fdim, __fdiml)
-weak_alias (__fdim, fdiml)
+strong_alias (__trunc, __truncl)
+weak_alias (__trunc, truncl)
 #endif

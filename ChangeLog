@@ -1,3 +1,74 @@
+2009-08-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_isinf.c: New file.
+
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_isnan.c: New file.
+
+2009-08-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_lround.c: Add llround aliases.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_llround.c: New file.
+
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_nearbyint.c: New file
+
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_rint.c: New file.
+
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_round.c: New file.
+
+2009-08-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/s_fdiml.c (__fdiml): Use fpclassify instead of fpclassifyl.
+
+2009-08-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/fpu/s_scalbln.c: New file.
+	* sysdeps/x86_64/fpu/s_scalbn.c: New file.
+
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_scalbn.c: New file.
+
+	* sysdeps/x86_64/fpu/s_signbit.S: New file.
+	* sysdeps/x86_64/fpu/s_signbitf.S: New file.
+
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_lround.c: New file.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_trunc.c: New file.
+
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Remove
+	leftover YMM_SIZE definition.
+
+2009-08-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* math/math_private.h (ieee_double_shape_type): Add uint64_t word to
+	union.
+	(EXTRACT_WORDS64, INSERT_WORDS64): Define.
+	* sysdeps/x86_64/fpu/math_private.h (EXTRACT_WORDS64, INSERT_WORDS64):
+	Redefine.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_ceil.c: New file.
+
+	* sysdeps/x86_64/fpu/math_private.h: Add specialized GET_FLOAT_WORD
+	and SET_FLOAT_WORD definitions.
+
+2009-08-24  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/syscall-template.S: New file.
+	* sysdeps/unix/make-syscalls.sh: Generate rules to use it.
+	* sysdeps/unix/Makefile (omit-deps): Do not omit syscall stubs' deps.
+	(compile-syscall): Pass mkdep and -g options as normal.
+	(s-proto.d, s-proto-cancel.d): Don't "-include" these.
+	(common-generated): Don't add them here.
+
+2009-08-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* math/s_fdim.c: In case of overflows set errno.
+	* math/s_fdimf.c: Likewise.
+	* math/s_fdiml.c: Likewise.
+
+	* math/math.h: Define math_errhandling of __FAST_MATH__ is not defined.
+	* sysdeps/i386/fpu/bits/mathinline.h: Undefine math_errhandling if we
+	are using the inline optimizations.
+
+	* sysdeps/x86_64/fpu/bits/mathinline.h (__signbit): Optimize.
+	(__signbitf): Likewise.
+
 2009-08-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/regcomp.c (parse_dup_op): Verify the expression is correctly
