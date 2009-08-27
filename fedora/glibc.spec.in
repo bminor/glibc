@@ -347,7 +347,9 @@ build_CFLAGS="$BuildFlags -g -O3 $*"
 %ifarch %{multiarcharches}
 	--enable-multi-arch \
 %endif
-	--disable-profile --enable-experimental-malloc --enable-nss-crypt
+	--disable-profile --enable-experimental-malloc --enable-nss-crypt ||
+{ cat config.log ; false }
+
 make %{?_smp_mflags} -r CFLAGS="$build_CFLAGS" PARALLELMFLAGS=-s
 
 cd ..
@@ -1029,6 +1031,7 @@ rm -f *.filelist*
 - Update from master.
 
 * Wed Aug 26 2009 Andreas Schwab <schwab@redhat.com> - 2.10.90-16
+- Update from master.
   - handle AVX saving on x86-64 in interrupted symbol lookups (#519081).
 
 * Mon Aug 24 2009 Andreas Schwab <schwab@redhat.com> - 2.10.90-15
