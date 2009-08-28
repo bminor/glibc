@@ -1,3 +1,8 @@
+2009-08-27  Andrew Stubbs  <ams@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.S (__lll_timedlock_wait):
+	Correct a logic error.
+
 2009-08-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_unlock.S: Add CFI
