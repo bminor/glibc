@@ -1,3 +1,9 @@
+2009-08-31  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10560]
+	* malloc/malloc.c: Add local assert definition to avoid problems with
+	memory allocation in the real one.
+
 2009-08-25  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/s_fdiml.c (__fdiml): Use fpclassify instead of fpclassifyl.
