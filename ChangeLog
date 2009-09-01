@@ -2,6 +2,11 @@
 
 	* configure.in: Support binutils 2.20.
 
+2009-08-31  Joshua W. Boyer  <jwboyer@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power6/memcpy.S: Change srdi instruction
+	to srwi in 32-bit memcpy for power6.
+
 2008-06-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makeconfig: Undo last change.  Add asflags-cpu to ASFLAGS in the
