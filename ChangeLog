@@ -1,3 +1,8 @@
+2009-08-31  Joshua W. Boyer  <jwboyer@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power6/memcpy.S: Change srdi instruction
+	to srwi in 32-bit memcpy for power6.
+
 2009-08-31  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #10560]
