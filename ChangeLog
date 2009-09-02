@@ -1,5 +1,26 @@
 2009-08-31  Andreas Schwab  <schwab@redhat.com>
 
+	* libio/wfileops.c (_IO_wfile_seekoff): Remove dead code and
+	reformulate in-buffer optimisation check to match code in
+	_IO_new_file_seekoff.
+
+2009-08-31  Joshua W. Boyer  <jwboyer@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power6/memcpy.S: Change srdi instruction
+	to srwi in 32-bit memcpy for power6.
+
+2009-09-01  Andreas Schwab  <schwab@redhat.com>
+
+	* include/stdio.h: Declare hidden proto for fflush.
+	* libio/iofflush.c: Add hidden weak alias for fflush.
+
+2009-09-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/x86_64/fpu/bits/mathinline.h: Include bits/wordsize.h.
+	(__signbitf, __signbit): Only use SSE inline asm for 64-bit.
+
+2009-08-31  Andreas Schwab  <schwab@redhat.com>
+
 	* sysdeps/x86_64/fpu/bits/mathinline.h: Use __asm instead of asm.
 
 2009-08-31  Ulrich Drepper  <drepper@redhat.com>
