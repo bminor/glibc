@@ -21,7 +21,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 19
+Release: 20
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1026,6 +1026,11 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Thu Sep  3 2009 Andreas Schwab <schwab@redhat.com> - 2.10.90-20
+- Update from master.
+  - Fix strstr/strcasestr/fma/fmaf on x86_64 (#519226).
+  - Fix lookup of group names in hesiod initgroups (#520472).
+
 * Wed Sep  2 2009 Andreas Schwab <schwab@redhat.com> - 2.10.90-19
 - Update from master.
   - Fix x86_64 bits/mathinline.h for -m32 compilation.
