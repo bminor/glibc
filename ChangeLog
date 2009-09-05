@@ -1,4 +1,8 @@
-2009-05-09  Ulrich Drepper  <drepper@redhat.com>
+2009-09-04  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* configure.in: Support binutils 2.20.
+
+2008-06-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makeconfig: Undo last change.  Add asflags-cpu to ASFLAGS in the
 	same place we add ASFLAGS-config.
