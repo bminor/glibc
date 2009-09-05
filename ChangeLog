@@ -1,3 +1,7 @@
+2009-09-04  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* configure.in: Support binutils 2.20.
+
 2009-09-01  Andreas Schwab  <schwab@redhat.com>
 
 	* hesiod/nss_hesiod/hesiod-grp.c (internal_gid_from_group): Fix
