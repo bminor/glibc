@@ -1,3 +1,7 @@
+2009-09-05  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* configure.in: Support binutils 2.100 and 3.0.
+
 2009-09-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/ld-collate.c (struct locale_collate_t): Add
