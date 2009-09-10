@@ -72,7 +72,7 @@ restart() {
 # See how we were called.
 case "$1" in
     start)
-	start
+	[ -e /var/lock/subsys/nscd ] || start
 	RETVAL=$?
 	;;
     stop)
@@ -88,7 +88,7 @@ case "$1" in
 	RETVAL=$?
 	;;
     try-restart | condrestart)
-	[ -e /var/lock/subsys/nscd ] && restart
+	[ ! -e /var/lock/subsys/nscd ] || restart
 	RETVAL=$?
 	;;
     force-reload | reload)
