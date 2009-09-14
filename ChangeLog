@@ -1,4 +1,23 @@
+2009-09-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/getconf.c (main): Handle -- on command line.
+
+2009-09-05  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* configure.in: Support binutils 2.100 and 3.0.
+
+2009-09-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/s390/s390-32/____longjmp_chk.c: Removed.
+	* sysdeps/s390/s390-64/____longjmp_chk.c: Removed.
+	* sysdeps/unix/sysv/linux/s390/s390-32/____longjmp_chk.c: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/____longjmp_chk.c: New file.
+
 2009-09-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/ld-collate.c (struct locale_collate_t): Add
+	unnamed_section_defined field.
+	(collate_read): Test and set unnamed_section_defined.
 
 	* posix/getconf.c (vars): Handle POSIX2_LINE_MAX in addition to
 	_POSIX2_LINE_MAX.
