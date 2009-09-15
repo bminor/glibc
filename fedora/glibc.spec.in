@@ -539,9 +539,8 @@ rm -f $RPM_BUILD_ROOT%{_prefix}/lib/debug%{_prefix}/%{_lib}/*_p.a
 # rquota.x and rquota.h are now provided by quota
 rm -f $RPM_BUILD_ROOT%{_prefix}/include/rpcsvc/rquota.[hx]
 
-# Hardlink identical locale files together
+# Create archive of locale files
 %ifnarch %{auxarches}
-gcc -O2 -o build-%{nptl_target_cpu}-linuxnptl/hardlink fedora/hardlink.c
 olddir=`pwd`
 pushd ${RPM_BUILD_ROOT}%{_prefix}/lib/locale
 rm locale-archive || :
@@ -555,7 +554,6 @@ $olddir/build-%{nptl_target_cpu}-linuxnptl/elf/ld.so \
 rm -rf *_*
 mv locale-archive{,.tmpl}
 popd
-#build-%{nptl_target_cpu}-linuxnptl/hardlink -vc $RPM_BUILD_ROOT%{_prefix}/lib/locale
 %endif
 
 rm -f ${RPM_BUILD_ROOT}/%{_lib}/libnss1-*
