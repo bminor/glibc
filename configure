@@ -660,6 +660,7 @@ oldest_abi
 bindnow
 force_install
 all_warnings
+subdirs
 build
 build_cpu
 build_vendor
@@ -668,7 +669,6 @@ host
 host_cpu
 host_vendor
 host_os
-subdirs
 add_ons
 add_on_subdirs
 base_machine
@@ -779,7 +779,8 @@ CPP
 CXX
 CXXFLAGS
 CCC'
-ac_subdirs_all=''
+ac_subdirs_all='
+'
 
 # Initialize some variables set by options.
 ac_init_help=
@@ -2172,6 +2173,9 @@ fi
 
 
 
+subdirs="$subdirs "
+
+
 # Make sure we can run config.sub.
 $SHELL "$ac_aux_dir/config.sub" sun4 >/dev/null 2>&1 ||
   { { echo "$as_me:$LINENO: error: cannot run $SHELL $ac_aux_dir/config.sub" >&5
@@ -2412,6 +2416,7 @@ echo "$as_me: error: add-on directory \"$libc_add_on\" does not exist" >&2;}
 
     libc_add_on_frag=$libc_add_on_srcdir/configure
     libc_add_on_canonical=
+    libc_add_on_config_subdirs=
     if test -r "$libc_add_on_frag"; then
       { echo "$as_me:$LINENO: running configure fragment for add-on $libc_add_on" >&5
 echo "$as_me: running configure fragment for add-on $libc_add_on" >&6;}
@@ -2446,6 +2451,24 @@ echo "$as_me: error: fragment must set \$libc_add_on_canonical" >&2;}
 	  test "$subdir_srcdir" = "\$(..)$d" || config_vars="$config_vars
 $d-srcdir = $subdir_srcdir"
 	done
+	for d in $libc_add_on_config_subdirs; do
+	  case "$d" in
+	  /*) { { echo "$as_me:$LINENO: error:  fragment uses absolute path in \$libc_add_on_config_subdirs" >&5
+echo "$as_me: error:  fragment uses absolute path in \$libc_add_on_config_subdirs" >&2;}
+   { (exit 1); exit 1; }; } ;;
+	  esac
+	  if test ! -d "$libc_add_on_srcdir/$d"; then
+	    { { echo "$as_me:$LINENO: error: fragment wants to configure missing directory $d" >&5
+echo "$as_me: error: fragment wants to configure missing directory $d" >&2;}
+   { (exit 1); exit 1; }; }
+	  fi
+	  case "$libc_add_on" in
+	  /*) { { echo "$as_me:$LINENO: error:  relative path required for add-on using \$libc_add_on_config_subdirs" >&5
+echo "$as_me: error:  relative path required for add-on using \$libc_add_on_config_subdirs" >&2;}
+   { (exit 1); exit 1; }; } ;;
+	  esac
+	  subdirs="$subdirs $libc_add_on/$d"
+	done
       }
     fi
     if test -n "$libc_add_on"; then
@@ -2462,7 +2485,7 @@ echo $ECHO_N "checking add-on $libc_add_on for preconfigure fragments... $ECHO_C
 echo "${ECHO_T}" >&6; }
       fi
       use_add_ons="$use_add_ons $libc_add_on"
-      add_ons_pfx="$add_ons_pfx $libc_add_on/"
+add_ons_pfx="$add_ons_pfx $libc_add_on/"
       test -z "$libc_add_on_canonical" ||
       add_ons_sfx="$add_ons_sfx /$libc_add_on_canonical"
     fi
@@ -9182,6 +9205,7 @@ oldest_abi!$oldest_abi$ac_delim
 bindnow!$bindnow$ac_delim
 force_install!$force_install$ac_delim
 all_warnings!$all_warnings$ac_delim
+subdirs!$subdirs$ac_delim
 build!$build$ac_delim
 build_cpu!$build_cpu$ac_delim
 build_vendor!$build_vendor$ac_delim
@@ -9190,7 +9214,6 @@ host!$host$ac_delim
 host_cpu!$host_cpu$ac_delim
 host_vendor!$host_vendor$ac_delim
 host_os!$host_os$ac_delim
-subdirs!$subdirs$ac_delim
 add_ons!$add_ons$ac_delim
 add_on_subdirs!$add_on_subdirs$ac_delim
 base_machine!$base_machine$ac_delim

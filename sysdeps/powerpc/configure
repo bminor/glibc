@@ -2,8 +2,8 @@
  # Local configure fragment for sysdeps/powerpc.
 
 # Accept binutils which knows about ".machine".
-echo "$as_me:$LINENO: checking for .machine support" >&5
-echo $ECHO_N "checking for .machine support... $ECHO_C" >&6
+{ echo "$as_me:$LINENO: checking for .machine support" >&5
+echo $ECHO_N "checking for .machine support... $ECHO_C" >&6; }
 if test "${libc_cv_ppc_machine+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
@@ -23,8 +23,8 @@ else
 fi
 rm -f conftest*
 fi
-echo "$as_me:$LINENO: result: $libc_cv_ppc_machine" >&5
-echo "${ECHO_T}$libc_cv_ppc_machine" >&6
+{ echo "$as_me:$LINENO: result: $libc_cv_ppc_machine" >&5
+echo "${ECHO_T}$libc_cv_ppc_machine" >&6; }
 if test $libc_cv_ppc_machine != yes; then
   { { echo "$as_me:$LINENO: error:
 *** A binutils version which can handle
