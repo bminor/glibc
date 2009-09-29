@@ -65,6 +65,7 @@ BuildRequires: gcc >= 3.2
 %ifarch %{multiarcharches}
 # Need STT_IFUNC support
 BuildRequires: binutils >= 2.19.51.0.10
+Conflicts: binutils < 2.19.51.0.10
 # Earlier releases have broken support for IRELATIVE relocations
 Conflicts: prelink < 0.4.2
 %else
