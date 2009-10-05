@@ -156,7 +156,7 @@ $(spec-nvr).src.rpm: glibc.spec $(archives)
 -include ~/.cvspkgsrc
 
 ifdef COMMON_DIR
-DIST_BRANCH ?= devel
+DIST_BRANCH ?= F-12
 
 pkgs-baseurl := cvs://cvs.fedoraproject.org/cvs/pkgs?rpms
 pkgs-url = $(pkgs-baseurl)/glibc/$(DIST_BRANCH)\#$(spec-tag)
