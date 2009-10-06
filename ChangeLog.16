@@ -171,11 +171,6 @@
 	[BZ #2611]
 	* stdio-common/renameat.c (renameat): Fix typo.
 
-2006-04-27  Jakub Jelinek  <jakub@redhat.com>
-
-	* nscd/connections.c (sighup_handler): Only run prune_cache on
-	enabled databases.
-
 2006-04-26  Roland McGrath  <roland@redhat.com>
 
 	* Makeconfig (%.v.i rule): Don't use -DASSEMBLER.
@@ -1034,34 +1029,6 @@
 	* sysdeps/unix/sysv/linux/i386/sysconf.c (__sysconf): Don't handle
 	_SC_CPUTIME and _SC_THREAD_CPUTIME here.
 	* sysdeps/unix/sysv/linux/x86_64/sysconf.c (__sysconf): Likewise.
-
-2006-03-04  Jakub Jelinek  <jakub@redhat.com>
-	    Roland McGrath  <roland@redhat.com>
-
-	* sysdeps/unix/sysv/linux/i386/lowlevellock.h
-	(LLL_STUB_UNWIND_INFO_START, LLL_STUB_UNWIND_INFO_END,
-	LLL_STUB_UNWIND_INFO_3, LLL_STUB_UNWIND_INFO_4): Define.
-	(lll_mutex_lock, lll_robust_mutex_lock, lll_mutex_cond_lock,
-	lll_robust_mutex_cond_lock, lll_mutex_timedlock,
-	lll_robust_mutex_timedlock, lll_mutex_unlock,
-	lll_robust_mutex_unlock, lll_lock, lll_unlock): Use them.
-	Add _L_*_ symbols around the subsection.
-	* sysdeps/unix/sysv/linux/i386/i486/lowlevellock.S: Add unwind info.
-	* sysdeps/unix/sysv/linux/i386/i486/lowlevelrobustlock.S: Likewise.
-
-2006-03-03  Jakub Jelinek  <jakub@redhat.com>
-	    Roland McGrath  <roland@redhat.com>
-
-	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h
-	(LLL_STUB_UNWIND_INFO_START, LLL_STUB_UNWIND_INFO_END,
-	LLL_STUB_UNWIND_INFO_5, LLL_STUB_UNWIND_INFO_6): Define.
-	(lll_mutex_lock, lll_robust_mutex_lock, lll_mutex_cond_lock,
-	lll_robust_mutex_cond_lock, lll_mutex_timedlock,
-	lll_robust_mutex_timedlock, lll_mutex_unlock,
-	lll_robust_mutex_unlock, lll_lock, lll_unlock): Use them.
-	Add _L_*_ symbols around the subsection.
-	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S: Add unwind info.
-	* sysdeps/unix/sysv/linux/x86_64/lowlevelrobustlock.S: Likewise.
 
 2006-03-05  Roland McGrath  <roland@redhat.com>
 
@@ -2077,8 +2044,6 @@
 
 	* sysdeps/unix/sysv/linux/futimesat.c (futimesat): If
 	file == NULL, use __futimes unconditionally.
-
-	* manual/filesys.texi (futimes): Fix prototype.
 
 2006-02-02  Ulrich Drepper  <drepper@redhat.com>
 
@@ -4570,10 +4535,6 @@
 
 	* elf/order2mod2.c (init): Cast ignored value to void.
 
-2005-12-27  Jakub Jelinek  <jakub@redhat.com>
-
-	* elf/ldconfig.c (search_dir): Skip prelink temporaries.
-
 2005-12-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/tst-tls13.c (do_test): Avoid using the library path when
@@ -4856,26 +4817,6 @@
 
 	* sysdeps/unix/sysv/linux/time.c: If __NR_time is not defined,
 	use sysdeps/unix/time.c implementation.
-
-2005-12-20  Jakub Jelinek  <jakub@redhat.com>
-
-	* malloc/mtrace.c (__libc_malloc, __libc_free, __libc_realloc,
-	__libc_memalign): Add prototypes and libc_hidden_proto resp.
-	defines for !_LIBC.
-	(tr_freehook): Call __libc_free instead of free.
-	(tr_mallochook): Call __libc_malloc instead of malloc.
-	(tr_reallochook): Call __libc_realloc instead of realloc.
-	(tr_memalignhook): Call __libc_memalign instead of memalign.
-	* malloc/mcheck.c: Include stdlib.h.
-	(__libc_malloc, __libc_free, __libc_realloc,
-	__libc_memalign): Add prototypes and libc_hidden_proto resp.
-	defines for !_LIBC.
-	(freehook): Call __libc_free instead of free.
-	(mallochook): Call __libc_malloc instead of malloc.
-	(reallochook): Call __libc_realloc instead of realloc.
-	(memalignhook): Call __libc_memalign instead of memalign.
-	(mcheck): Call __libc_malloc and __libc_free instead of
-	malloc and free.
 
 2005-12-19  Ulrich Drepper  <drepper@redhat.com>
 
@@ -7994,11 +7935,6 @@
 	* elf/elf.h (R_ARM_TLS_DTPMOD32, R_ARM_TLS_DTPOFF32,
 	R_ARM_TLS_TPOFF32, R_ARM_TLS_GD32, R_ARM_TLS_LDM32,
 	R_ARM_TLS_LDO32, R_ARM_TLS_IE32, R_ARM_TLS_LE32): New macros.
-
-2005-10-03  Jakub Jelinek  <jakub@redhat.com>
-
-	* nscd/selinux.c (audit_init): Print error string in the failure
-	message.
 
 2005-10-03  Roland McGrath  <roland@redhat.com>
 
@@ -12194,18 +12130,6 @@
 	* include/stub-tag.h: Update comment.
 
 	* scripts/soversions.awk: Fix default version set handling.
-
-2005-02-09  Jakub Jelinek  <jakub@redhat.com>
-
-	* sysdeps/unix/sysv/linux/bits/termios.h (CMSPAR): Define.
-	* sysdeps/unix/sysv/linux/alpha/bits/termios.h: Add __USE_MISC
-	and __USE_XOPEN guards to match linux/bits/termios.h.
-	(CMSPAR): Define.
-	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h: Add __USE_MISC
-	and __USE_XOPEN guards to match linux/bits/termios.h.
-	(CMSPAR): Define.
-	* sysdeps/unix/sysv/linux/sparc/bits/termios.h: Add __USE_MISC
-	and __USE_XOPEN guards to match linux/bits/termios.h.
 
 2005-02-10  Roland McGrath  <roland@redhat.com>
 
