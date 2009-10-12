@@ -1,3 +1,66 @@
+2009-10-08  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10730]
+	* stdlib/random_r.c (__initstate_r): Remove duplicate __set-errno.
+	Patch in part by Steve Ward <planet36@gmail.com>.
+
+	[BZ #10731]
+	* stdlib/rand_r.c: Fix typo.
+
+	* po/cs.po: Update from translation team.
+
+2009-10-06  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Close fd before
+	returning if RTLD_NOLOAD.
+
+2009-10-06  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/x86_64/multiarch/strstr-c.c
+	[! SHARED]: Omit libc_hidden_builtin_def fiddling.
+
+	* sysdeps/x86_64/multiarch/strcasestr-c.c: Remove
+	libc_hidden_builtin_def fiddling, does not apply to strcasestr at all.
+
+	* sysdeps/x86_64/multiarch/init-arch.h
+	[NOT_IN_libc] (__get_cpu_features): Define it as a macro.
+	(HAS_CPU_FEATURE): New macro.
+	(HAS_SSE2, HAS_POPCOUNT, HAS_SSE4_2, HAS_FMA): Use it.
+	* sysdeps/x86_64/multiarch/init-arch.c
+	(__get_cpu_features): #undef it before definition.
+
+2009-10-05  Andreas Schwab  <schwab@redhat.com>
+
+	* locale/C-time.c: Revert week-1stday back to 19971130 and set
+	first_weekday to 1 and first_workday to 2.
+
+2009-10-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Define F_SETOWN_EX and
+	F_GETOWN_EX.
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.
+
+2009-09-28  Andreas Schwab  <schwab@redhat.com>
+
+	* stdio-common/printf_fp.c: Check for and avoid integer overflows.
+	* stdio-common/vfprintf.c: Likewise.
+
+2009-09-27  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/mkdirat.c: Include <hurd/fd.h>.
+	(mkdirat): Call __directory_name_split_at instead of
+	__directory_name_split.
+
+2009-09-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/locale-spec.c (locale_special): If nothing matches
+	fail with an appropriate message.
+
 2009-09-10  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* configure.in: Exclude binutils 2.X.  Support binutils 2.100
