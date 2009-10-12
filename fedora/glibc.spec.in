@@ -21,7 +21,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 24
+Release: 25
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1027,6 +1027,13 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Oct 12 2009 Andreas Schwab <schwab@redhat.com> - 2.10.90-25
+- Update from master
+  - Fix descriptor leak when calling dlopen with RTLD_NOLOAD (#527409).
+  - Fix week-1stday in C locale.
+  - Check for integer overflows in formatting functions.
+  - Fix locale program error handling (#525363).
+
 * Mon Sep 28 2009 Andreas Schwab <schwab@redhat.com> - 2.10.90-24
 - Update from master.
   - Fix missing reloc dependency (#517001).
