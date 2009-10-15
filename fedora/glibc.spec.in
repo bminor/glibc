@@ -423,53 +423,60 @@ ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/rtkaio/librtkaio-*.so` $RPM_BUILD_ROOT/
 %if %{buildxen}
 %define nosegneg_subdir_base i686
 %define nosegneg_subdir i686/nosegneg
+%define nosegneg_subdir_up ../..
 cd build-%{nptl_target_cpu}-linuxnptl-nosegneg
-SubDir=%{nosegneg_subdir}
-mkdir -p $RPM_BUILD_ROOT/%{_lib}/$SubDir/
-cp -a libc.so $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/libc-*.so`
-ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/libc-*.so` $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/libc.so.*`
-cp -a math/libm.so $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/libm-*.so`
-ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/libm-*.so` $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/libm.so.*`
-cp -a nptl/libpthread.so $RPM_BUILD_ROOT/%{_lib}/$SubDir/libpthread-%{version}.so
-pushd $RPM_BUILD_ROOT/%{_lib}/$SubDir
-ln -sf libpthread-*.so `basename $RPM_BUILD_ROOT/%{_lib}/libpthread.so.*`
-popd
-cp -a rt/librt.so $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so`
-ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so` $RPM_BUILD_ROOT/%{_lib}/$SubDir/$librtso
-cp -a nptl_db/libthread_db.so $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/libthread_db-*.so`
-ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/libthread_db-*.so` $RPM_BUILD_ROOT/%{_lib}/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/libthread_db.so.*`
+destdir=$RPM_BUILD_ROOT/%{_lib}/%{nosegneg_subdir}
+mkdir -p $destdir
+for lib in libc math/libm nptl/libpthread rt/librt nptl_db/libthread_db
+do
+  libbase=${lib#*/}
+  libbaseso=$(basename $RPM_BUILD_ROOT/%{_lib}/${libbase}-*.so)
+  # Only install if different from base lib
+  if cmp -s ${lib}.so ../build-%{nptl_target_cpu}-linuxnptl/${lib}.so; then
+    ln -sf %{nosegneg_subdir_up}/$libbasev $destdir/$libbaseso
+  else
+    cp -a ${lib}.so $destdir/$libbaseso
+  fi
+  ln -sf $libbaseso $destdir/$(basename $RPM_BUILD_ROOT/%{_lib}/${libbase}.so.*)
+done
 %ifarch %{rtkaioarches}
-mkdir -p $RPM_BUILD_ROOT/%{_lib}/rtkaio/$SubDir
-cp -a rtkaio/librtkaio.so $RPM_BUILD_ROOT/%{_lib}/rtkaio/$SubDir/`basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so | sed s/librt-/librtkaio-/`
-ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/rtkaio/$SubDir/librtkaio-*.so` $RPM_BUILD_ROOT/%{_lib}/rtkaio/$SubDir/$librtso
+destdir=$RPM_BUILD_ROOT/%{_lib}/rtkaio/%{nosegneg_subdir}
+mkdir -p $destdir
+librtkaioso=$(basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so | sed s/librt-/librtkaio-/)
+if cmp -s rtkaio/librtkaio.so ../build-%{nptl_target_cpu}-linuxnptl/rtkaio/librtkaio.so; then
+  ln -s %{nosegneg_subdir_up}/$librtkaioso $destdir/$librtkaioso
+else
+  cp -a rtkaio/librtkaio.so $destdir/$librtkaioso
+fi
+ln -sf $librtkaioso $destdir/$librtso
 %endif
 cd ..
 %endif
 
 %if %{buildpower6}
 cd build-%{nptl_target_cpu}-linuxnptl-power6
-mkdir -p $RPM_BUILD_ROOT/%{_lib}/power6{,x}
-cp -a libc.so $RPM_BUILD_ROOT/%{_lib}/power6/`basename $RPM_BUILD_ROOT/%{_lib}/libc-*.so`
-ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/libc-*.so` $RPM_BUILD_ROOT/%{_lib}/power6/`basename $RPM_BUILD_ROOT/%{_lib}/libc.so.*`
-cp -a math/libm.so $RPM_BUILD_ROOT/%{_lib}/power6/`basename $RPM_BUILD_ROOT/%{_lib}/libm-*.so`
-ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/libm-*.so` $RPM_BUILD_ROOT/%{_lib}/power6/`basename $RPM_BUILD_ROOT/%{_lib}/libm.so.*`
-cp -a nptl/libpthread.so $RPM_BUILD_ROOT/%{_lib}/power6/libpthread-%{version}.so
-pushd $RPM_BUILD_ROOT/%{_lib}/power6
-ln -sf libpthread-*.so `basename $RPM_BUILD_ROOT/%{_lib}/libpthread.so.*`
-popd
-cp -a rt/librt.so $RPM_BUILD_ROOT/%{_lib}/power6/`basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so`
-ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so` $RPM_BUILD_ROOT/%{_lib}/power6/$librtso
-cp -a nptl_db/libthread_db.so $RPM_BUILD_ROOT/%{_lib}/power6/`basename $RPM_BUILD_ROOT/%{_lib}/libthread_db-*.so`
-ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/libthread_db-*.so` $RPM_BUILD_ROOT/%{_lib}/power6/`basename $RPM_BUILD_ROOT/%{_lib}/libthread_db.so.*`
-pushd $RPM_BUILD_ROOT/%{_lib}/power6x
+destdir=$RPM_BUILD_ROOT/%{_lib}/power6
+mkdir -p ${destdir}
+for lib in libc math/libm nptl/libpthread rt/librt nptl_db/libthread_db
+do
+  libbase=${lib#*/}
+  libbaseso=$(basename $RPM_BUILD_ROOT/%{_lib}/${libbase}-*.so)
+  cp -a ${lib}.so $destdir/$libbaseso
+  ln -sf $libbaseso $destdir/$(basename $RPM_BUILD_ROOT/%{_lib}/${libbase}.so.*)
+done
+mkdir -p ${destdir}x
+pushd ${destdir}x
 ln -sf ../power6/*.so .
 cp -a ../power6/*.so.* .
 popd
 %ifarch %{rtkaioarches}
-mkdir -p $RPM_BUILD_ROOT/%{_lib}/rtkaio/power6{,x}
-cp -a rtkaio/librtkaio.so $RPM_BUILD_ROOT/%{_lib}/rtkaio/power6/`basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so | sed s/librt-/librtkaio-/`
-ln -sf `basename $RPM_BUILD_ROOT/%{_lib}/rtkaio/power6/librtkaio-*.so` $RPM_BUILD_ROOT/%{_lib}/rtkaio/power6/$librtso
-pushd $RPM_BUILD_ROOT/%{_lib}/rtkaio/power6x
+destdir=$RPM_BUILD_ROOT/%{_lib}/rtkaio/power6
+mkdir -p $destdir
+librtkaioso=$(basename $RPM_BUILD_ROOT/%{_lib}/librt-*.so | sed s/librt-/librtkaio-/)
+cp -a rtkaio/librtkaio.so $destdir/$librtkaioso
+ln -sf $librtkaioso $destdir/$librtso
+mkdir -p ${destdir}x
+pushd ${destdir}x
 ln -sf ../power6/*.so .
 cp -a ../power6/*.so.* .
 popd
