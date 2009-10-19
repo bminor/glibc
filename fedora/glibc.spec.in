@@ -433,7 +433,7 @@ do
   libbaseso=$(basename $RPM_BUILD_ROOT/%{_lib}/${libbase}-*.so)
   # Only install if different from base lib
   if cmp -s ${lib}.so ../build-%{nptl_target_cpu}-linuxnptl/${lib}.so; then
-    ln -sf %{nosegneg_subdir_up}/$libbasev $destdir/$libbaseso
+    ln -sf %{nosegneg_subdir_up}/$libbaseso $destdir/$libbaseso
   else
     cp -a ${lib}.so $destdir/$libbaseso
   fi
