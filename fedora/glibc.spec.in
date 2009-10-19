@@ -21,7 +21,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 25
+Release: 26
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1034,6 +1034,11 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Oct 19 2009 Andreas Schwab <schwab@redhat.com> - 2.10.90-26
+- Update from master.
+  - Add ____longjmp_chk for sparc.
+- Avoid installing the same libraries twice.
+
 * Mon Oct 12 2009 Andreas Schwab <schwab@redhat.com> - 2.10.90-25
 - Update from master
   - Fix descriptor leak when calling dlopen with RTLD_NOLOAD (#527409).
