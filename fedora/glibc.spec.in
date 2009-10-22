@@ -318,8 +318,6 @@ GXX="g++ -m64"
 %endif
 
 BuildFlags="$BuildFlags -fasynchronous-unwind-tables"
-# gcc is a memory hog without that (#523172).
-BuildFlags="$BuildFlags -fno-var-tracking-assignments"
 # Add -DNDEBUG unless using a prerelease
 case %{version} in
   *.*.9[0-9]*) ;;
