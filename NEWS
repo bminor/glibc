@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2009-8-8
+GNU C Library NEWS -- history of user-visible changes.  2009-10-29
 Copyright (C) 1992-2008, 2009 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -7,7 +7,8 @@ using `glibc' in the "product" field.
 
 Version 2.11
 
-* New interfaces: execvpe, pthread_sigqueue
+* New interfaces: execvpe, pthread_sigqueue, mkstemps, mkstemps64, mkostemps,
+  mkostemps64
   Implemented by Ulrich Drepper.
 
 * Checking version of longjmp added that fails if an uninitialized stack
@@ -16,9 +17,11 @@ Version 2.11
 * STT_GNU_IFUNC is now supported in static executables.
   Implemented by H.J. Lu.
 
+* STT_GNU_IFUNC implemented for PPC by Alan Modra.
+
 * New optimized string functions for x86-64: strstr, strcasestr, memcmp,
   strcspn, strpbrk, strspn, strcpy, stpcpy, strncpy, strcmp (SSE2, SSE4.2),
-  strncmp (SSE2, SSE4.2).
+  strncmp (SSE2, SSE4.2), strchr (SSE4.2), strrchr (SSE4.2).
   Contributed by H.J. Lu.
 
   strlen, rawmemchr, strcmp (SSSE3), strncmp (SSSE3).
@@ -54,6 +57,8 @@ Version 2.11
 * Using condvars with PI mutexes is now more efficient due to kernel
   support for requeueing to PI futexes.  NPTL support added for x86-64.
   Implemented by Ulrich Drepper.
+
+* New locale: ps_AF
 
 
 Version 2.10

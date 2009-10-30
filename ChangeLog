@@ -1,3 +1,257 @@
+2009-10-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/mkostemps.c: New file.
+	* misc/mkostemps64.c: New file.
+
+2009-10-30  Andreas Schwab  <schwab@redhat.com>
+
+	* locale/programs/locale-spec.c: Include <error.h> and
+	<libintl.h>.
+
+	* sysdeps/unix/sysv/linux/readlinkat.c: Fix last change.
+
+2009-10-28  Roland McGrath  <roland@redhat.com>
+
+	* Makefile (dist-prepare): New target.
+	(tag-for-dist): Target removed.
+	(glibc-%.tar): Pattern rule removed.
+	(%.tar): New pattern rule, does simple use of git archive.
+	(dist-version): Remove variable definition.
+	(dist): Just depend on that.  Add .tar.xz dependency.
+	If dist-version variable not set on command line, depend on
+	dist-prepare, re-invoke with dist-version set via git describe.
+
+	* Makerules (%.xz): New pattern rule.
+
+2009-10-28  Alan Modra  <amodra@bigpond.net.au>
+
+	* elf/ifuncdep2.c: Include ifunc-sel.h.
+	(global): Delete.
+	(foo1_ifunc, foo2_ifunc, foo3_ifunc): Use ifunc_sel.
+	* elf/ifuncmain1.c (global): Delete.
+	* elf/ifuncmain1vis.c: Likewise.
+	* elf/ifuncmain2.c: Likewise.
+	* elf/ifuncmain5.c: Likewise.
+	* elf/ifuncmod3.c: Likewise.
+	* elf/ifuncmain6pie.c: Include ifunc-sel.h.
+	(foo_ifunc): Use ifunc_one.
+	* elf/ifuncmain7.c: Likewise.
+	* elf/ifuncmod1.c: Include ifunc-sel.h.
+	(global): Define protected var.
+	(foo_ifunc, foo_hidden_ifunc, foo_protected_ifunc): Use ifunc_sel.
+	* elf/ifuncmod5.c: Likewise.
+	* sysdeps/generic/elf/ifunc-sel.h: New file.
+	* sysdeps/powerpc/elf/ifunc-sel.h: New file.
+
+2009-07-30  Alan Modra  <amodra@bigpond.net.au>
+
+	* elf/elf.h (R_PPC_NUM, R_PPC64_NUM): Delete unused and incorrect.
+	(R_PPC_REL16*): Correct comments.
+	(R_PPC_IRELATIVE, R_PPC64_IRELATIVE, R_PPC64_JMP_IREL): Define.
+	(R_PPC64_REL16, R_PPC64_REL16_LO, R_PPC64_REL16_HI,
+	 R_PPC64_REL16_HA): Define.
+	* sysdeps/powerpc/powerpc32/dl-irel.h: New file.
+	* sysdeps/powerpc/powerpc64/dl-irel.h: New file.
+	* sysdeps/powerpc/powerpc32/dl-machine.c (__elf_machine_fixup_plt):
+	Delete unused "reloc" param.
+	(__process_machine_rela): Handle R_PPC_IRELATIVE.
+	* sysdeps/powerpc/powerpc32/dl-machine.h (__elf_machine_fixup_plt):
+	Delete "reloc" param.
+	(elf_machine_rela): Handle STT_GNU_IFUNC functions and
+	R_PPC_IRELATIVE.
+	* sysdeps/powerpc/powerpc64/dl-machine.h (resolve_ifunc): New function.
+	(elf_machine_rela): Handle STT_GNU_IFUNC functions and new ifunc
+	relocations.
+
+d2009-10-30  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10315]
+	* sysdeps/gnu/netinet/udp.h: Define UDP_CORK, UDP_ENCAP,
+	UDP_ENCAP_ESPINUDP_NON_IKE, UDP_ENCAP_ESPINUDP, and
+	UDP_ENCAP_L2TPINUDP.
+
+	[BZ #10349]
+	* sysdeps/posix/tempname.c (__gen_tempname): Take new second
+	parameter, specifying length of prefix.
+	* stdio-common/tempname.c: Likewise.
+	* include/stdio.h: Adjust prototypes.
+	* libio/oldtmpfile.c: Adjust caller.
+	* misc/mkdtemp.c: Likewise.
+	* misc/mkostemp.c: Likewise.
+	* misc/mkostemp64.c: Likewise.
+	* misc/mkstemp.c:  Likewise.
+	* misc/mkstemp64.c: Likewise.
+	* misc/mktemp.c: Likewise.
+	* stdio-common/tempnam.c: Likewise.
+	* stdio-common/tmpfile.c: Likewise.
+	* stdio-common/tmpnam.c: Likewise.
+	* stdio-common/tmpnam_r.c: Likewise.
+	* misc/mkstemps.c: New file.
+	* misc/mkstemps64.c: New file.
+	* stdlib/stdlib.h: Add prototypes.
+	* misc/Makefile (routines): Add mkstemps and mkstemps64.
+	* misc/Versions: Export mkstemps and mkstemps64 for GLIBC_2.11.
+
+2009-10-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/iso-639.def: Add sml entry.
+
+	[BZ #10391]
+	* resolv/res_send.c (send_dg): Initialize resplen.
+
+	[BZ #10446]
+	* sysdeps/unix/sysv/linux/ia64/bits/siginfo.h: Match sigevent
+	definition to the kernel's.
+	* sysdeps/unix/sysv/linux/s390/bits/siginfo.h: Likewise.
+
+2009-08-18  Anders Johansson  <ajohansson@novell.com>
+
+	* nscd/aicache.c: Fix mixing up dataset and dataset->resp
+	offsets and record sizes in assert()s and response sending.
+	* nscd/grpcache.c: Likewise.
+	* nscd/hstcache.c: Likewise.
+	* nscd/initgrcache.c: Likewise.
+	* nscd/pwdcache.c: Likewise.
+
+2009-10-29  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10540]
+	* nss/nss_files/files-hosts.c (_nss_files_gethostbyname4_r): If
+	/etc/hosts does not exist set errnop and herrnop appropriately.
+	Patch by Steve Langasek <vorlon@debian.org>.
+
+	[BZ #10553]
+	* malloc/malloc.c (malloc_info): Fix typos in format strings.
+	Patch by John Sullivan <jsrhbz@kanargh.force9.co.uk>.
+
+	[BZ #10564]
+	* login/utmp_file.c (TIMEOUT): Increase to 10.
+
+	[BZ #10609]
+	* sysdeps/unix/sysv/linux/faccessat.c: Fix handling of empty parameters
+	for file names in case the syscall is not available.
+	* sysdeps/unix/sysv/linux/fchmodat.c: Likewise.
+	* sysdeps/unix/sysv/linux/fchownat.c: Likewise.
+	* sysdeps/unix/sysv/linux/futimesat.c: Likewise.
+	* sysdeps/unix/sysv/linux/fxstatat.c: Likewise.
+	* sysdeps/unix/sysv/linux/fxstatat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/fchownat.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/fxstatat.c: Likewise.
+	* sysdeps/unix/sysv/linux/linkat.c: Likewise.
+	* sysdeps/unix/sysv/linux/mkdirat.c: Likewise.
+	* sysdeps/unix/sysv/linux/openat.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/fchownat.c: Likewise.
+	* sysdeps/unix/sysv/linux/readlinkat.c: Likewise.
+	* sysdeps/unix/sysv/linux/renameat.c: Likewise.
+	* sysdeps/unix/sysv/linux/symlinkat.c: Likewise.
+	* sysdeps/unix/sysv/linux/unlinkat.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/fxstatat.c: Likewise.
+	* sysdeps/unix/sysv/linux/xmknodat.c: Likewise.
+
+	[BZ #10643]
+	* sysdeps/pthread/aio_misc.c (__aio_enqueue_request): If thread
+	creation filed, remove the request from the 'requests' list and signal
+	the caller that the request is finished.
+
+	[BZ #10692]
+	* nis/nss_nis/nis-grp.c (internal_nis_getgrent_r): Don't free buffer
+	in error if batch_read.  Patch by Joe Landers <jlanders@vmware.com>.
+
+	[BZ #10713]
+	* nis/nss_nis/nis-grp.c (internal_nis_endgrent): Start freeing blocks
+	from intern.start.  Patch by Joe Landers <jlanders@vmware.com>.
+
+	[BZ #10780]
+	* libio/ioputs.c (_IO_puts): Make sure to not return a number which
+	overflows the int return type.
+
+	[BZ #10717]
+	* malloc/memusagestat.c (main): Fix repairing of trace files.  We also
+	have to compute maxsize_total, we have to update the variables, and
+	the also_total handling must happen after the repair.
+
+	[BZ #10742]
+	* nscd/dbg_log.c (dbg_log): Print timestamp before the message text.
+	Based on patch by Jeffrey Bastian <jbastian@redhat.com>.
+
+2009-10-27  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/getpt.c (__posix_openpt): Make sure
+	errno is always set when returning unsuccessfully.
+
+2009-10-29  Andreas Schwab  <schwab@redhat.com>
+
+	* malloc/memusage.c (update_data): Fix index wraparound handling
+	so that buffer_cnt is actually reset.
+
+2009-10-29  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10784]
+	* sysdeps/unix/sysv/linux/ttyname.c (getttyname): Always copy name
+	of the directory we look at into the static buffer if there is one
+	at the start of the loop.
+
+	[BZ #10789]
+	* sysdeps/generic/netinet/ip.h: Define IPTOS_ENC* and IPTOS_DSCP*
+	macros.  Patch by Philip Prindeville <philipp@redfish-solutions.com>.
+
+	[BZ #10840]
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define
+	__ASSUME_F_GETOWN_EX.
+	* sysdeps/unix/sysv/linux/fcntl.c: Implement F_GETOWN using F_GETOWN_EX
+	if possible.
+	* sysdeps/unix/sysv/linux/i386/fcntl.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Define F_OWNER_*
+	and f_owner_ex.
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.
+
+	[BZ #10847]
+	* sysdeps/gnu/getutmp.c: Allow compatibility code to play around with
+	getutmpx symbol.
+
+	[BZ #10823]
+	* resolv/res_send.c (__libc_res_nsend): Fix copying of IPv4 server
+	addresses.  Patch by Petar Bogdanovic <petar@smokva.net>.
+
+2009-10-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/ldbl-128/w_expl.c: Add hidden_def (__expl).
+
+2009-10-27  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #10817]
+	* math/w_coshl.c (__coshl): Use __finitel instead of __finite.
+	Reported by Ray Chason.
+
+2009-10-21  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	strend-sse4.
+	* sysdeps/x86_64/multiarch/strchr.S: New file.
+	* sysdeps/x86_64/multiarch/strend-sse4.S: New file.
+	* sysdeps/x86_64/multiarch/strrchr.S: New file.
+
+2009-10-21  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/dl-sym.c (do_sym): Resolve STT_GNU_IFUNC symbols.
+
+2009-10-19  Andreas Schwab  <schwab@redhat.com>
+
+	* include/math.h: Add hidden protos for __exp/__expf/__expl.
+	* sysdeps/ieee754/dbl-64/w_exp.c: Add hidden alias.
+	* sysdeps/ieee754/flt-32/w_expf.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/w_expl.c: Likewise.
+	* sysdeps/i386/fpu/s_expm1.S: Call __exp to handle overflow.
+	* sysdeps/i386/fpu/s_expm1f.S: Call __expf to handle overflow.
+	* sysdeps/i386/fpu/s_expm1l.S: Call __expl instead of
+	__ieee751_expl to handle overflow.
+
 2009-10-14  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/____longjmp_chk.S: New file.

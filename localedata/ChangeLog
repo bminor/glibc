@@ -1,3 +1,38 @@
+2009-10-30  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10286]
+	* locales/ast_ES: Define first_weekday.
+
+	[BZ #10312]
+	* locales/es_CO: Define am_pm , t_fmt_ampm, first_weekday.
+	Patch by Jorge Guerrero <geojorg@gmail.com>.
+
+	[BZ #10319]
+	* locales/shs_CA: Fix accents.
+	Patch by Neskie Manuel <neskiem@gmail.com>.
+
+2009-10-29  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10425]
+	* locales/it_IT: Fix date_fmt.
+	* locales/it_CH: Likewise.
+	Patch by Nicolo' Chieffo <nicolo.chieffo@gmail.com>.
+
+	* locales/POSIX: Define yesstr and nostr.
+	* locales/en_US: Likewise.
+	Patch by Petr Machata <pmachata@redhat.com>.
+
+	* locales/crh_UA: Fix first day of week and a few spellings.
+	Patch by Reþat SABIQ <tilde.birlik@gmail.com>.
+
+2009-10-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* SUPPORTED (SUPPORTED-LOCALES): Add ps_AF.UTF-8.
+
+	* locale/ps_AF: New file.
+	Contributed by Sayamindu Dasgupta <sayamindu@gmail.com> and
+	Pravin Satpute <psatpute@redhat.com>.
+
 2009-06-16  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #10011]
