@@ -195,22 +195,6 @@ d2009-10-30  Ulrich Drepper  <drepper@redhat.com>
 	* sysdeps/generic/netinet/ip.h: Define IPTOS_ENC* and IPTOS_DSCP*
 	macros.  Patch by Philip Prindeville <philipp@redfish-solutions.com>.
 
-	[BZ #10840]
-	* sysdeps/unix/sysv/linux/kernel-features.h: Define
-	__ASSUME_F_GETOWN_EX.
-	* sysdeps/unix/sysv/linux/fcntl.c: Implement F_GETOWN using F_GETOWN_EX
-	if possible.
-	* sysdeps/unix/sysv/linux/i386/fcntl.c: Likewise.
-
-	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Define F_OWNER_*
-	and f_owner_ex.
-	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h: Likewise.
-	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h: Likewise.
-	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Likewise.
-	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise.
-	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Likewise.
-	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.
-
 	[BZ #10847]
 	* sysdeps/gnu/getutmp.c: Allow compatibility code to play around with
 	getutmpx symbol.
