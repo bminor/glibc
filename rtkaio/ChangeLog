@@ -1,3 +1,7 @@
+2009-10-30  Andreas Schwab  <schwab@redhat.com>
+
+	* tst-aiod.h: Include <string.h>.
+
 2009-09-30  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/librtkaio-cancellation.S: New

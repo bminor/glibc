@@ -20,6 +20,7 @@
 
 #include <fcntl.h>
 #include <sys/mman.h>
+#include <string.h>
 #include <unistd.h>
 
 static int
