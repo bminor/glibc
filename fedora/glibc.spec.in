@@ -15,13 +15,13 @@
 %endif
 %define rtkaioarches %{ix86} x86_64 ia64 ppc ppc64 s390 s390x
 %define debuginfocommonarches alpha alphaev6 sparc sparcv9 sparcv9v sparc64 sparc64v
-%define multiarcharches %{ix86} x86_64
+%define multiarcharches %{ix86} x86_64 ppc ppc64
 %define _unpackaged_files_terminate_build 0
 
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 26
+Release: 27
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1032,6 +1032,23 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri Oct 30 2009 Andreas Schwab <schwab@redhat.com> - 2.10.90-27
+- Update from master.
+  - Fix races in setXid implementation (BZ#3270).
+  - Implement IFUNC for PPC and enable multi-arch support.
+  - Implement mkstemps/mkstemps64 and mkostemps/mkostemps64 (BZ#10349).
+  - Fix IA-64 and S390 sigevent definitions (BZ#10446).
+  - Fix memory leak in NIS grp database handling (BZ#10713).
+  - Print timestamp in nscd debug messages (BZ#10742).
+  - Fix mixing IPv4 and IPv6 name server in resolv.conf.
+  - Fix range checks in coshl.
+  - Implement SSE4.2 optimized strchr and strrchr.
+  - Handle IFUNC symbols in dlsym (#529965).
+  - Misc fixes (BZ#10312, BZ#10315, BZ#10319, BZ#10391, BZ#10425,
+    BZ#10540, BZ#10553, BZ#10564, BZ#10609, BZ#10692, BZ#10780,
+    BZ#10717, BZ#10784, BZ#10789, BZ#10847
+- No longer build with -fno-var-tracking-assignments.
+
 * Mon Oct 19 2009 Andreas Schwab <schwab@redhat.com> - 2.10.90-26
 - Update from master.
   - Add ____longjmp_chk for sparc.
