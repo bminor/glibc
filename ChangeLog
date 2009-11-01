@@ -1,3 +1,8 @@
+2009-11-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/hooks.c (free_check): Restore locking and call _int_free
+	appropriately.
+
 2009-10-28  Roland McGrath  <roland@redhat.com>
 
 	* Makefile (dist-prepare): New target.
