@@ -15,13 +15,13 @@
 %endif
 %define rtkaioarches %{ix86} x86_64 ia64 ppc ppc64 s390 s390x
 %define debuginfocommonarches alpha alphaev6 sparc sparcv9 sparcv9v sparc64 sparc64v
-%define multiarcharches %{ix86} x86_64 ppc ppc64
+%define multiarcharches %{ix86} x86_64
 %define _unpackaged_files_terminate_build 0
 
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 27
+Release: 1
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -376,7 +376,7 @@ build_nptl linuxnptl-power6
 %endif
 
 cd build-%{nptl_target_cpu}-linuxnptl
-$GCC -static -L. -Os ../fedora/glibc_post_upgrade.c -o glibc_post_upgrade.%{_target_cpu} \
+$GCC -static -L. -Os -g ../fedora/glibc_post_upgrade.c -o glibc_post_upgrade.%{_target_cpu} \
   -DNO_SIZE_OPTIMIZATION \
 %ifarch i386 i486 i586
   -DARCH_386 \
@@ -678,13 +678,13 @@ touch -r timezone/northamerica $RPM_BUILD_ROOT/etc/localtime
 touch -r sunrpc/etc.rpc $RPM_BUILD_ROOT/etc/rpc
 
 cd fedora
-$GCC -Os -static -o build-locale-archive build-locale-archive.c \
+$GCC -Os -g -static -o build-locale-archive build-locale-archive.c \
   ../build-%{nptl_target_cpu}-linuxnptl/locale/locarchive.o \
   ../build-%{nptl_target_cpu}-linuxnptl/locale/md5.o \
   -DDATADIR=\"%{_datadir}\" -DPREFIX=\"%{_prefix}\" \
   -L../build-%{nptl_target_cpu}-linuxnptl
 install -m 700 build-locale-archive $RPM_BUILD_ROOT/usr/sbin/build-locale-archive
-$GCC -Os -static -o tzdata-update tzdata-update.c \
+$GCC -Os -g -static -o tzdata-update tzdata-update.c \
   -L../build-%{nptl_target_cpu}-linuxnptl
 install -m 700 tzdata-update $RPM_BUILD_ROOT/usr/sbin/tzdata-update
 cd ..
@@ -1025,6 +1025,11 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Nov  2 2009 Andreas Schwab <schwab@redhat.com> - 2.11-1
+- Update to 2.11 release.
+- Disable multi-arch support on PowerPC again since binutils is too old.
+- Fix crash in tzdata-update due to use of multi-arch symbol (#532128).
+
 * Fri Oct 30 2009 Andreas Schwab <schwab@redhat.com> - 2.10.90-27
 - Update from master.
   - Fix races in setXid implementation (BZ#3270).
