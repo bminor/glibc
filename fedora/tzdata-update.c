@@ -483,6 +483,15 @@ clean_up:
     INTERNAL_SYSCALL (unlink, err, 1, tempfilename);
 }
 
+static char *
+simple_strchr (const char *s, int c)
+{
+  for (; *s != (char) c; ++s)
+    if (*s == '\0')
+      return NULL;
+  return (char *) s;
+}
+
 int
 main (int argc, char **argv)
 {
@@ -508,7 +517,7 @@ main (int argc, char **argv)
 	      while (*p == ' ' || *p == '\t') p++;
 	      if (*p == '"') p++;
 	      char *q = p;
-	      while (strchr (" \t\n\"", *p) == NULL) p++;
+	      while (simple_strchr (" \t\n\"", *p) == NULL) p++;
 	      const char path[] = "/usr/share/zoneinfo/";
 	      if (p - q >= sizeof (zonename) - sizeof (path))
 		return 0;
@@ -517,7 +526,7 @@ main (int argc, char **argv)
 	      break;
 	    }
 	}
-      p = strchr (p, '\n');
+      p = simple_strchr (p, '\n');
       if (p) p++;
     }
   if (*zonename == '\0')
