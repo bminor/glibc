@@ -121,8 +121,7 @@ $(tar-name)-$(branch-name).tar.bz2: glibc.spec Makefile
 $(tar-name).tar.bz2: $(dep-upstream-branch) Makefile
 	@if $(upstream-pristine); then \
 	   echo 'Fetching from $(releases-url)...'; \
-	   curl $(addprefix -C - -O $(releases-url),\
-			    $@ $(@:glibc-%=glibc-libidn-%)); \
+	   curl -C - -O $(releases-url)/$@; \
 	 else \
 	   $(call git-tar,$(merge-base-id)); \
 	 fi
