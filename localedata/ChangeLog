@@ -1,5 +1,15 @@
 2009-10-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/it_CH: Fix typos in last change.
+	* locales/it_IT: Likewise.
+
+	* SUPPORTED (SUPPORTED-LOCALES): Add my_MM.
+
+	[BZ #9986]
+	* locales/iso_14651_common: Add rules for Burmese.
+	* locales/my_MM: New file.
+	Contributed by Keith Stribley <devel@thanlwinsoft.org>.
+
 	[BZ #10286]
 	* locales/ast_ES: Define first_weekday.
 
