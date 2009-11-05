@@ -21,7 +21,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 1
+Release: 2
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1025,6 +1025,11 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Thu Nov  5 2009 Andreas Schwab <schwab@redhat.com> - 2.11-2
+- Fix readahead on powerpc32.
+- Fix R_PPC64_{JMP_IREL,IRELATIVE} handling.
+- Fix preadv, pwritev and fallocate for -D_FILE_OFFSET_BITS=64 (#533063).
+
 * Mon Nov  2 2009 Andreas Schwab <schwab@redhat.com> - 2.11-1
 - Update to 2.11 release.
 - Disable multi-arch support on PowerPC again since binutils is too old.
