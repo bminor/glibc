@@ -1,3 +1,69 @@
+2009-11-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* version.h: Bump for 2.12 development.
+
+2009-11-10  Andreas Schwab  <schwab@redhat.com>
+
+	* resolv/mapv4v6hostent.h (map_v4v6_hostent): Return non-zero if
+	out of buffer space.
+	* resolv/nss_dns/dns-host.c (getanswer_r): Check for
+	map_v4v6_hostent running out of space.
+
+2009-11-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/bits/string3.h (memset): If the second parameter is constant
+	and zero there is likely no transposition.
+	Patch by Caolan McNamara <caolanm@redhat.com.
+
+2009-11-04  Philippe De Muyter  <phdm@macqel.be>
+
+	* sysdeps/powerpc/fpu/e_sqrt.c: Fix spelling of (Newton-)Raphson.
+	* sysdeps/powerpc/fpu/e_sqrtf.c: Likewise.
+
+2009-10-30  Holger Hans Peter Freyther  <zecke@selfish.org>
+
+	* malloc/memusagestat.c (main): Fix spelling in an error message.
+
+2009-11-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/dl-sym.c (do_sym): Properly handle STT_GNU_IFUNC symbols.
+	* elf/ifuncmain3.c (main): Test dlopen STT_GNU_IFUNC symbol.
+
+2009-11-03  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/syscalls.list: Add
+	readahead.
+
+2009-11-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/powerpc64/dl-machine.h (resolve_ifunc): Don't
+	relocate opd entry when resolving prelink conflicts.
+
+2009-11-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* misc/sys/uio.h (preadv, pwritev): Fix type of last argument
+	when -D_FILE_OFFSET_BITS=64.
+
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h (fallocate): Fix types
+	of last two arguments when -D_FILE_OFFSET_BITS=64.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h (fallocate): Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h (fallocate): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h (fallocate): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h (fallocate): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h (fallocate): Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h (fallocate): Likewise.
+
+2009-11-03  Andreas Schwab  <schwab@linux-m68k.org>
+
+	[BZ #4457]
+	* sysdeps/generic/libgcc_s.h: New file.
+	* sysdeps/generic/framestate.c: Include it and use LIBGCC_S_SO.
+
+2009-11-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/hooks.c (free_check): Restore locking and call _int_free
+	appropriately.
+
 2009-10-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* version.h (VERSION): Bump for 2.11 release.
