@@ -30,30 +30,58 @@ __BEGIN_DECLS
 /* These may be used to determine what facilities are present at compile time.
    Their values can be obtained at run time from `sysconf'.  */
 
+#ifdef __USE_XOPEN2K8
 /* POSIX Standard approved as ISO/IEC 9945-1 as of September 2008.  */
-#define	_POSIX_VERSION	200809L
+# define _POSIX_VERSION	200809L
+#elif defined __USE_XOPEN2K
+/* POSIX Standard approved as ISO/IEC 9945-1 as of December 2001.  */
+# define _POSIX_VERSION	200112L
+#elif defined __USE_POSIX199506
+/* POSIX Standard approved as ISO/IEC 9945-1 as of June 1995.  */
+# define _POSIX_VERSION	199506L
+#elif defined __USE_POSIX199309
+/* POSIX Standard approved as ISO/IEC 9945-1 as of September 1993.  */
+# define _POSIX_VERSION	199309L
+#else
+/* POSIX Standard approved as ISO/IEC 9945-1 as of September 1990.  */
+# define _POSIX_VERSION	199009L
+#endif
 
 /* These are not #ifdef __USE_POSIX2 because they are
    in the theoretically application-owned namespace.  */
 
+#ifdef __USE_XOPEN2K8
+# define __POSIX2_THIS_VERSION	200809L
 /* The utilities on GNU systems also correspond to this version.  */
-#define _POSIX2_VERSION	200809L
+#elif defined __USE_XOPEN2K
+/* The utilities on GNU systems also correspond to this version.  */
+# define __POSIX2_THIS_VERSION	200112L
+#elif defined __USE_POSIX199506
+/* The utilities on GNU systems also correspond to this version.  */
+# define __POSIX2_THIS_VERSION	199506L
+#else
+/* The utilities on GNU systems also correspond to this version.  */
+# define __POSIX2_THIS_VERSION	199209L
+#endif
+
+/* The utilities on GNU systems also correspond to this version.  */
+#define _POSIX2_VERSION	__POSIX2_THIS_VERSION
 
 /* If defined, the implementation supports the
    C Language Bindings Option.  */
-#define	_POSIX2_C_BIND	200809L
+#define	_POSIX2_C_BIND	__POSIX2_THIS_VERSION
 
 /* If defined, the implementation supports the
    C Language Development Utilities Option.  */
-#define	_POSIX2_C_DEV	200809L
+#define	_POSIX2_C_DEV	__POSIX2_THIS_VERSION
 
 /* If defined, the implementation supports the
    Software Development Utilities Option.  */
-#define	_POSIX2_SW_DEV	200809L
+#define	_POSIX2_SW_DEV	__POSIX2_THIS_VERSION
 
 /* If defined, the implementation supports the
    creation of locales with the localedef utility.  */
-#define _POSIX2_LOCALEDEF       200809L
+#define _POSIX2_LOCALEDEF       __POSIX2_THIS_VERSION
 
 /* X/Open version number to which the library conforms.  It is selectable.  */
 #ifdef __USE_XOPEN2K8

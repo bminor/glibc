@@ -631,8 +631,12 @@ _IO_wfile_seekoff (fp, offset, dir, mode)
       clen = (*cv->__codecvt_do_encoding) (cv);
 
       if (clen > 0)
-	offset -= (fp->_wide_data->_IO_read_end
-		   - fp->_wide_data->_IO_read_ptr) * clen;
+	{
+	  offset -= (fp->_wide_data->_IO_read_end
+		     - fp->_wide_data->_IO_read_ptr) * clen;
+	  /* Adjust by readahead in external buffer.  */
+	  offset -= fp->_IO_read_end - fp->_IO_read_ptr;
+	}
       else
 	{
 	  int nread;
@@ -678,87 +682,27 @@ _IO_wfile_seekoff (fp, offset, dir, mode)
   if (fp->_offset != _IO_pos_BAD && fp->_IO_read_base != NULL
       && !_IO_in_backup (fp))
     {
-      /* Offset relative to start of main get area. */
-      _IO_off64_t rel_offset = (offset - fp->_offset
-				+ (fp->_IO_read_end - fp->_IO_read_base));
-      if (rel_offset >= 0)
+      _IO_off64_t start_offset = (fp->_offset
+				  - (fp->_IO_read_end - fp->_IO_buf_base));
+      if (offset >= start_offset && offset < fp->_offset)
 	{
-#if 0
-	  if (_IO_in_backup (fp))
-	    _IO_switch_to_main_get_area (fp);
-#endif
-	  if (rel_offset <= fp->_IO_read_end - fp->_IO_read_base)
-	    {
-	      enum __codecvt_result status;
-	      struct _IO_codecvt *cd = fp->_codecvt;
-	      const char *read_ptr_copy;
+	  enum __codecvt_result status;
+	  struct _IO_codecvt *cd = fp->_codecvt;
+	  const char *read_ptr_copy;
 
-	      fp->_IO_read_ptr = fp->_IO_read_base + rel_offset;
-	      _IO_setp (fp, fp->_IO_buf_base, fp->_IO_buf_base);
-
-	      /* Now set the pointer for the internal buffer.  This
-                 might be an iterative process.  Though the read
-                 pointer is somewhere in the current external buffer
-                 this does not mean we can convert this whole buffer
-                 at once fitting in the internal buffer.  */
-	      fp->_wide_data->_IO_state = fp->_wide_data->_IO_last_state;
-	      read_ptr_copy = fp->_IO_read_base;
-	      fp->_wide_data->_IO_read_ptr = fp->_wide_data->_IO_read_base;
-	      do
-		{
-		  wchar_t buffer[1024];
-		  wchar_t *ignore;
-		  status = (*cd->__codecvt_do_in) (cd,
-						   &fp->_wide_data->_IO_state,
-						   read_ptr_copy,
-						   fp->_IO_read_ptr,
-						   &read_ptr_copy,
-						   buffer,
-						   buffer
-						   + (sizeof (buffer)
-						      / sizeof (buffer[0])),
-						   &ignore);
-		  if (status != __codecvt_ok && status != __codecvt_partial)
-		    {
-		      fp->_flags |= _IO_ERR_SEEN;
-		      goto dumb;
-		    }
-		}
-	      while (read_ptr_copy != fp->_IO_read_ptr);
-
-	      fp->_wide_data->_IO_read_ptr = fp->_wide_data->_IO_read_base;
-
-	      _IO_mask_flags (fp, 0, _IO_EOF_SEEN);
-	      goto resync;
-	    }
-#ifdef TODO
-	    /* If we have streammarkers, seek forward by reading ahead. */
-	    if (_IO_have_markers (fp))
-	      {
-		int to_skip = rel_offset
-		  - (fp->_IO_read_ptr - fp->_IO_read_base);
-		if (ignore (to_skip) != to_skip)
-		  goto dumb;
-		_IO_mask_flags (fp, 0, _IO_EOF_SEEN);
-		goto resync;
-	      }
-#endif
-	}
-#ifdef TODO
-      if (rel_offset < 0 && rel_offset >= Bbase () - Bptr ())
-	{
-	  if (!_IO_in_backup (fp))
-	    _IO_switch_to_backup_area (fp);
-	  gbump (fp->_IO_read_end + rel_offset - fp->_IO_read_ptr);
+	  _IO_setg (fp, fp->_IO_buf_base,
+		    fp->_IO_buf_base + (offset - start_offset),
+		    fp->_IO_read_end);
+	  _IO_setp (fp, fp->_IO_buf_base, fp->_IO_buf_base);
+	  _IO_wsetg (fp, fp->_wide_data->_IO_buf_base,
+		     fp->_wide_data->_IO_buf_base,
+		     fp->_wide_data->_IO_buf_base);
+	  _IO_wsetp (fp, fp->_wide_data->_IO_buf_base,
+		     fp->_wide_data->_IO_buf_base);
 	  _IO_mask_flags (fp, 0, _IO_EOF_SEEN);
 	  goto resync;
 	}
-#endif
     }
-
-#ifdef TODO
-  INTUSE(_IO_unsave_markers) (fp);
-#endif
 
   if (fp->_flags & _IO_NO_READS)
     goto dumb;
@@ -792,6 +736,9 @@ _IO_wfile_seekoff (fp, offset, dir, mode)
   _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_base + delta,
 	    fp->_IO_buf_base + count);
   _IO_setp (fp, fp->_IO_buf_base, fp->_IO_buf_base);
+  _IO_wsetg (fp, fp->_wide_data->_IO_buf_base,
+	     fp->_wide_data->_IO_buf_base, fp->_wide_data->_IO_buf_base);
+  _IO_wsetp (fp, fp->_wide_data->_IO_buf_base, fp->_wide_data->_IO_buf_base);
   fp->_offset = result + count;
   _IO_mask_flags (fp, 0, _IO_EOF_SEEN);
   return offset;

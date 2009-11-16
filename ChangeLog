@@ -1,3 +1,115 @@
+2009-10-28  Roland McGrath  <roland@redhat.com>
+
+	* Makefile (dist-prepare): New target.
+	(tag-for-dist): Target removed.
+	(glibc-%.tar): Pattern rule removed.
+	(%.tar): New pattern rule, does simple use of git archive.
+	(dist-version): Remove variable definition.
+	(dist): Just depend on that.  Add .tar.xz dependency.
+	If dist-version variable not set on command line, depend on
+	dist-prepare, re-invoke with dist-version set via git describe.
+
+	* Makerules (%.xz): New pattern rule.
+
+2009-11-03  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/syscalls.list: Add
+	readahead.
+
+2009-11-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* misc/sys/uio.h (preadv, pwritev): Fix type of last argument
+	when -D_FILE_OFFSET_BITS=64.
+
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h (fallocate): Fix types
+	of last two arguments when -D_FILE_OFFSET_BITS=64.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h (fallocate): Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h (fallocate): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h (fallocate): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h (fallocate): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h (fallocate): Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h (fallocate): Likewise.
+
+2009-09-05  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* configure.in: Support binutils 2.100 and 3.0.
+
+2009-09-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/ld-collate.c (struct locale_collate_t): Add
+	unnamed_section_defined field.
+	(collate_read): Test and set unnamed_section_defined.
+
+	* posix/getconf.c (vars): Handle POSIX2_LINE_MAX in addition to
+	_POSIX2_LINE_MAX.
+
+2009-09-04  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* configure.in: Support binutils 2.20.
+
+2009-09-01  Andreas Schwab  <schwab@redhat.com>
+
+	* hesiod/nss_hesiod/hesiod-grp.c (internal_gid_from_group): Fix
+	parsing of group entry.
+
+2009-09-02  Andreas Schwab  <schwab@redhat.com>
+
+	* libio/wfileops.c (_IO_wfile_seekoff): Account for readahead in
+	external buffer.  Always discard readahead in internal buffer.
+	* libio/Makefile (tests): Add bug-wsetpos.
+	* libio/bug-wsetpos.c: New file.
+
+2009-08-31  Andreas Schwab  <schwab@redhat.com>
+
+	* libio/wfileops.c (_IO_wfile_seekoff): Remove dead code and
+	reformulate in-buffer optimisation check to match code in
+	_IO_new_file_seekoff.
+
+2009-08-31  Joshua W. Boyer  <jwboyer@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power6/memcpy.S: Change srdi instruction
+	to srwi in 32-bit memcpy for power6.
+
+2009-08-31  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10560]
+	* malloc/malloc.c: Add local assert definition to avoid problems with
+	memory allocation in the real one.
+
+2009-08-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/s_fdiml.c (__fdiml): Use fpclassify instead of fpclassifyl.
+
+2009-08-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* math/s_fdim.c: In case of overflows set errno.
+	* math/s_fdimf.c: Likewise.
+	* math/s_fdiml.c: Likewise.
+
+2009-08-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regcomp.c (parse_dup_op): Verify the expression is correctly
+	terminated.
+	* posix/Makefile (tests): Add bug-regex29.
+	* posix/bug-regex29.c: New file.
+
+	* posix/unistd.h: Define _POSIX_VERSION and _POSIX2_* correctly if
+	older POSIX versions are selected.
+
+2009-08-10  SUGIOKA Toshinobu  <sugioka@itonet.co.jp>
+
+	* stdlib/longlong.h [__sh__] (udiv_qrnnd, sub_ddmmss): Add "t" to
+	clobber list.
+
+2009-07-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* malloc/Makefile (CFLAGS-obstack.c): Add $(uses-callbacks).
+
+2009-07-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ia64/backtrace.c (backtrace_helper): Stop backtrace when
+	we make no more progress.
+
 2009-07-25  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #10448]
