@@ -126,7 +126,16 @@ ENTRY(__memchr)
 	br.ret.sptk.many b0
 
 .recovery:
-	adds	ret0 = -((MEMLAT + 1) * 8), ret0;;
+#if MEMLAT != 6
+# error "MEMLAT must be 6!"
+#endif
+(p[MEMLAT-6])	add	ret0 = -8, ret0;;
+(p[MEMLAT-5])	add	ret0 = -8, ret0;;
+(p[MEMLAT-4])	add	ret0 = -8, ret0;;
+(p[MEMLAT-3])	add	ret0 = -8, ret0;;
+(p[MEMLAT-2])	add	ret0 = -8, ret0;;
+(p[MEMLAT-1])	add	ret0 = -8, ret0;;
+(p[MEMLAT])	add	ret0 = -8, ret0;;
 (p[MEMLAT+1])	add	ret0 = -8, ret0;;
 (p[MEMLAT+2])	add	ret0 = -8, ret0;;
 .l4:

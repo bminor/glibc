@@ -1,3 +1,9 @@
+2009-11-18  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #10162]
+	* sysdeps/ia64/memchr.S: Don't use a simple loop on data shorter
+	than software pipeline.  Properly recover from shorter read.
+
 2009-11-16  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sync_file_range.c (sync_file_range):
