@@ -20,7 +20,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 5
+Release: 1
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1006,6 +1006,18 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri Nov 20 2009 Andreas Schwab <schwab@redhat.com> - 2.10.2-1
+- Update to glibc-2.10.2 release.
+  - Correct readahead syscall wrapper on powerpc32
+  - Fix preadv, pwritev and fallocate for -D_FILE_OFFSET_BITS=64 (#533063)
+  - Fix endless loop in localedef
+  - Handle POSIX2_LINE_MAX in getconf
+  - Fix timer_create to initialize timer_t properly
+  - Fix lookup of group names in hesiod initgroups
+  - Fix fsetpos on wide streams
+  - Fix overflow handling in fdim
+  - Recognize ill-formed { } expressions in regcomp
+
 * Wed Aug 19 2009 Andreas Schwab <schwab@redhat.com> - 2.10.1-5
 - Update from release/2.10/master.
   - handle missing nss module for biarch systems (#512309)
