@@ -42,12 +42,12 @@ td_symbol_list (void)
 
 
 ps_err_e
-td_lookup (struct ps_prochandle *ps, int idx, psaddr_t *sym_addr)
+td_lookup_1 (struct ps_prochandle *ps, int idx, psaddr_t *sym_addr, bool rtld)
 {
   ps_err_e result;
   assert (idx >= 0 && idx < SYM_NUM_MESSAGES);
-  result = ps_pglobal_lookup (ps, LIBPTHREAD_SO, symbol_list_arr[idx],
-			      sym_addr);
+  result = ps_pglobal_lookup (ps, rtld ? LD_SO : LIBPTHREAD_SO,
+			      symbol_list_arr[idx], sym_addr);
 
 #ifdef HAVE_ASM_GLOBAL_DOT_NAME
   /* For PowerPC, 64-bit uses dot symbols but 32-bit does not.

@@ -1,5 +1,5 @@
 /* Retrieve event.
-   Copyright (C) 1999, 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1999,2001,2002,2003,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 1999.
 
@@ -42,6 +42,10 @@ td_ta_event_getmsg (const td_thragent_t *ta_arg, td_event_msg_t *msg)
   /* Test whether the TA parameter is ok.  */
   if (! ta_ok (ta))
     return TD_BADTA;
+
+  err = _td_ta_check_nptl (ta);
+  if (err != TD_OK)
+    return err;
 
   /* Get the pointer to the thread descriptor with the last event.  */
   err = DB_GET_VALUE (thp, ta, __nptl_last_event, 0);

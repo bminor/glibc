@@ -1,7 +1,6 @@
-/* Get the number of threads in the process.
-   Copyright (C) 1999,2001,2002,2003,2009 Free Software Foundation, Inc.
+/* libthread_db hooks in the dynamic linker.
+   Copyright (C) 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@redhat.com>, 1999.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -18,29 +17,22 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include "thread_dbP.h"
+/* This cpp magic lets us use #include_next in the #else branch.  */
+#ifndef IS_IN_dl_sysdep
+# define IS_IN_dl_sysdep 1
+# include <dl-sysdep.c>
+#else
 
-td_err_e
-td_ta_get_nthreads (const td_thragent_t *ta_arg, int *np)
-{
-  td_thragent_t *const ta = (td_thragent_t *) ta_arg;
-  td_err_e err;
-  psaddr_t n;
+# include_next <dl-sysdep.c>
 
-  LOG ("td_ta_get_nthreads");
+/* A dynamic linker with TLS support needs to make some information
+   available to libthread_db so debuggers can figure out TLS lookups
+   even when libpthread is not loaded.  */
 
-  /* Test whether the TA parameter is ok.  */
-  if (! ta_ok (ta))
-    return TD_BADTA;
+# include <version.h>
 
-  err = _td_ta_check_nptl (ta);
-  if (err != TD_OK)
-    return err;
+const char _thread_db_dl_nptl_version[] __attribute_used__ = VERSION;
 
-  /* Access the variable in the inferior that tells us.  */
-  err = DB_GET_VALUE (n, ta, __nptl_nthreads, 0);
-  if (err == TD_OK)
-    *np = (uintptr_t) n;
+# include <../nptl_db/db_info.c>
 
-  return err;
-}
+#endif

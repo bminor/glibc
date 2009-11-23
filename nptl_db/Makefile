@@ -51,7 +51,8 @@ libthread_db-inhibit-o = $(filter-out .os,$(object-suffixes))
 libthread_db.so-no-z-defs = yes
 
 distribute = thread_dbP.h shlib-versions proc_service.h \
-	     db_info.c structs.def db-symbols.h db-symbols.awk
+	     db_info.c structs.def db-symbols.h \
+	     db-symbols.awk rtld-db-symbols.awk
 include ../Rules
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
@@ -66,3 +67,10 @@ $(objpfx)db-symbols.out: $(objpfx)db-symbols.v.i \
 	readelf -W -s $(filter %.so,$^) | $(AWK) -f $< > $@
 
 $(objpfx)db-symbols.v.i: db-symbols.awk
+
+tests: $(objpfx)rtld-db-symbols.out
+$(objpfx)rtld-db-symbols.out: $(objpfx)rtld-db-symbols.v.i \
+			 $(common-objpfx)elf/ld.so
+	readelf -W -s $(filter %.so,$^) | $(AWK) -f $< > $@
+
+$(objpfx)rtld-db-symbols.v.i: rtld-db-symbols.awk db-symbols.awk

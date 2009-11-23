@@ -1,0 +1,6 @@
+ld {
+  GLIBC_PRIVATE {
+    # These are used by libthread_db, so must be visible somehow.
+    _thread_db_*;
+  }
+}

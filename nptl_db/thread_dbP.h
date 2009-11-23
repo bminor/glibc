@@ -1,5 +1,5 @@
 /* Private header for thread debug library
-   Copyright (C) 2003, 2004, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2003,2004,2007,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -140,16 +140,16 @@ ta_ok (const td_thragent_t *ta)
 
 
 /* Internal wrapper around ps_pglobal_lookup.  */
-extern ps_err_e td_lookup (struct ps_prochandle *ps,
-			   int idx, psaddr_t *sym_addr) attribute_hidden;
-
-
+extern ps_err_e td_lookup_1 (struct ps_prochandle *ps, int idx,
+			     psaddr_t *sym_addr, bool rtld) attribute_hidden;
+#define td_lookup(ta, idx, sym_addr) \
+  td_lookup_1 ((ta)->ph, idx, sym_addr, (ta)->ta_addr_nptl_version == 0)
 
 
 /* Store in psaddr_t VAR the address of inferior's symbol NAME.  */
 #define DB_GET_SYMBOL(var, ta, name)					      \
   (((ta)->ta_addr_##name == 0						      \
-    && td_lookup ((ta)->ph, SYM_##name, &(ta)->ta_addr_##name) != PS_OK)      \
+    && td_lookup ((ta), SYM_##name, &(ta)->ta_addr_##name) != PS_OK)	      \
    ? TD_ERR : ((var) = (ta)->ta_addr_##name, TD_OK))
 
 /* Store in psaddr_t VAR the value of ((TYPE) PTR)->FIELD[IDX] in the inferior.
@@ -181,7 +181,7 @@ extern td_err_e _td_locate_field (td_thragent_t *ta,
    A target value smaller than psaddr_t is zero-extended.  */
 #define DB_GET_VALUE(var, ta, name, idx)				      \
   (((ta)->ta_addr_##name == 0						      \
-    && td_lookup ((ta)->ph, SYM_##name, &(ta)->ta_addr_##name) != PS_OK)      \
+    && td_lookup ((ta), SYM_##name, &(ta)->ta_addr_##name) != PS_OK)	      \
    ? TD_ERR								      \
    : _td_fetch_value ((ta), (ta)->ta_var_##name, SYM_DESC_##name, 	      \
 		      (psaddr_t) 0 + (idx), (ta)->ta_addr_##name, &(var)))
@@ -213,7 +213,7 @@ extern td_err_e _td_fetch_value_local (td_thragent_t *ta,
    A target field smaller than psaddr_t is zero-extended.  */
 #define DB_PUT_VALUE(ta, name, idx, value)				      \
   (((ta)->ta_addr_##name == 0						      \
-    && td_lookup ((ta)->ph, SYM_##name, &(ta)->ta_addr_##name) != PS_OK)      \
+    && td_lookup ((ta), SYM_##name, &(ta)->ta_addr_##name) != PS_OK)	      \
    ? TD_ERR								      \
    : _td_store_value ((ta), (ta)->ta_var_##name, SYM_DESC_##name, 	      \
 		      (psaddr_t) 0 + (idx), (ta)->ta_addr_##name, (value)))
@@ -253,5 +253,7 @@ extern td_err_e _td_check_sizeof (td_thragent_t *ta, uint32_t *sizep,
 
 extern td_err_e __td_ta_lookup_th_unique (const td_thragent_t *ta,
 					  lwpid_t lwpid, td_thrhandle_t *th);
+
+extern td_err_e _td_ta_check_nptl (td_thragent_t *ta) attribute_hidden;
 
 #endif /* thread_dbP.h */

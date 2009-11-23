@@ -1,5 +1,5 @@
 /* Enable specific event for thread.
-   Copyright (C) 1999,2001,2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 1999,2001,2002,2003,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 1999.
 
@@ -34,9 +34,12 @@ td_thr_set_event (th, event)
 
   LOG ("td_thr_set_event");
 
+  err = _td_ta_check_nptl (th->th_ta_p);
+
   /* Fetch the old event mask from the inferior and modify it in place.  */
-  err = DB_GET_FIELD_ADDRESS (eventmask, th->th_ta_p,
-			      th->th_unique, pthread, eventbuf_eventmask, 0);
+  if (err == TD_OK)
+    err = DB_GET_FIELD_ADDRESS (eventmask, th->th_ta_p,
+				th->th_unique, pthread, eventbuf_eventmask, 0);
   if (err == TD_OK)
     err = DB_GET_STRUCT (copy, th->th_ta_p, eventmask, td_thr_events_t);
   if (err == TD_OK)

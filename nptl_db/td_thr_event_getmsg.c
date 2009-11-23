@@ -1,5 +1,5 @@
 /* Retrieve event.
-   Copyright (C) 1999, 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1999,2001,2002,2003,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 1999.
 
@@ -32,9 +32,12 @@ td_thr_event_getmsg (const td_thrhandle_t *th, td_event_msg_t *msg)
 
   LOG ("td_thr_event_getmsg");
 
+  err = _td_ta_check_nptl (th->th_ta_p);
+
   /* Copy the event message buffer in from the inferior.  */
-  err = DB_GET_FIELD_ADDRESS (eventbuf, th->th_ta_p, th->th_unique, pthread,
-			      eventbuf, 0);
+  if (err == TD_OK)
+    err = DB_GET_FIELD_ADDRESS (eventbuf, th->th_ta_p, th->th_unique, pthread,
+				eventbuf, 0);
   if (err == TD_OK)
     err = DB_GET_STRUCT (copy, th->th_ta_p, eventbuf, td_eventbuf_t);
   if (err != TD_OK)

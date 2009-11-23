@@ -1,3 +1,50 @@
+2009-11-23  Roland McGrath  <roland@redhat.com>
+
+	* rtld-db-symbols.awk: New file.
+	* Makefile (distribute): Add it.
+	($(objpfx)rtld-db-symbols.v.i): New target.
+	($(objpfx)rtld-db-symbols.out): New target.
+	(tests): Depend on that.
+
+	* td_ta_map_lwp2thr.c (td_ta_map_lwp2thr): Handle TD_NOLIBTHREAD case
+	like pre-initialization case.
+	* td_thr_validate.c (td_thr_validate): Likewise.
+	* td_ta_thr_iter.c (td_ta_thr_iter): Likewise.
+
+	* td_ta_clear_event.c: Call _td_ta_check_nptl first and punt on failure.
+	* td_ta_event_addr.c: Likewise.
+	* td_ta_event_getmsg.c: Likewise.
+	* td_ta_get_nthreads.c: Likewise.
+	* td_ta_set_event.c: Likewise.
+	* td_ta_tsd_iter.c: Likewise.
+	* td_thr_clear_event.c: Likewise.
+	* td_thr_event_enable.c: Likewise.
+	* td_thr_event_getmsg.c: Likewise.
+	* td_thr_set_event.c: Likewise.
+	* td_thr_tsd.c: Likewise.
+
+	* td_ta_new.c (check_version): New function, broken out of ...
+	(td_ta_new): ... here.  Call it.  Cache version symbol addresses
+	in *TA.  Accept _thread_db_dl_nptl_version from rtld if libpthread
+	lookup fails.
+	(_td_ta_check_nptl): New function.
+	* thread_dbP.h: Declare it.
+
+	* td_symbol_list.c (td_lookup): Renamed to ...
+	(td_lookup_1): ... this.  Take RTLD flag to choose DSO name.
+	* thread_dbP.h (td_lookup_1): Declare it.
+	(td_lookup): Define as macro using that,
+	now take td_thragent pointer as first argument.
+	(DB_GET_SYMBOL, DB_GET_VALUE, DB_PUT_VALUE): Update callers.
+	* fetch-value.c (_td_locate_field, _td_check_sizeof): Likewise.
+	* td_ta_map_lwp2thr.c: Likewise.
+
+	* structs.def [IS_IN_libpthread || defined IS_IN_libthread_db]:
+	Put most fields under this condition, only TLS ones outside it.
+	[! IS_IN_libpthread]: Add _thread_db_dl_nptl_version symbol.
+	* db-symbols.awk [! IS_IN_rtld]: %define IS_IN_libpthread before
+	%include "db-symbols.h".
+
 2009-08-23  Roland McGrath  <roland@redhat.com>
 
 	* td_ta_map_lwp2thr.c (__td_ta_lookup_th_unique): Move ta_ok check

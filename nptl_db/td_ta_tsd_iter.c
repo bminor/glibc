@@ -1,5 +1,5 @@
 /* Iterate over a process's thread-specific data.
-   Copyright (C) 1999,2000,2001,2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 1999,2000,2001,2002,2003,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 1999.
 
@@ -37,6 +37,10 @@ td_ta_tsd_iter (const td_thragent_t *ta_arg, td_key_iter_f *callback,
   /* Test whether the TA parameter is ok.  */
   if (! ta_ok (ta))
     return TD_BADTA;
+
+  err = _td_ta_check_nptl (ta);
+  if (err != TD_OK)
+    return err;
 
   /* This makes sure we have the size information on hand.  */
   addr = 0;

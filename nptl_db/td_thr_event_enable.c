@@ -1,5 +1,5 @@
 /* Enable event process-wide.
-   Copyright (C) 1999, 2001, 2002, 2003, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1999,2001,2002,2003,2007,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 1999.
 
@@ -27,6 +27,10 @@ td_thr_event_enable (th, onoff)
      int onoff;
 {
   LOG ("td_thr_event_enable");
+
+  td_err_e err = _td_ta_check_nptl (th->th_ta_p);
+  if (err != TD_OK)
+    return err;
 
   if (th->th_unique != 0)
     {

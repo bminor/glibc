@@ -1,3 +1,8 @@
+2009-11-23  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/pthread/dl-sysdep.c: New file.
+	* sysdeps/pthread/Versions: New file.
+
 2009-11-27  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/sh/pt-initfini.c (_init): Don't call

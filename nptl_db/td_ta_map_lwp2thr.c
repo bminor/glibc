@@ -38,7 +38,7 @@ __td_ta_lookup_th_unique (const td_thragent_t *ta_arg,
       /* We need to read in from the inferior the instructions what to do.  */
       psaddr_t howto;
 
-      err = td_lookup (ta->ph, SYM_TH_UNIQUE_CONST_THREAD_AREA, &howto);
+      err = td_lookup (ta, SYM_TH_UNIQUE_CONST_THREAD_AREA, &howto);
       if (err == PS_OK)
 	{
 	  err = ps_pdread (ta->ph, howto,
@@ -56,13 +56,12 @@ __td_ta_lookup_th_unique (const td_thragent_t *ta_arg,
 	  switch (sizeof (regs[0]))
 	    {
 	    case 8:
-	      err = td_lookup (ta->ph, SYM_TH_UNIQUE_REGISTER64, &howto);
+	      err = td_lookup (ta, SYM_TH_UNIQUE_REGISTER64, &howto);
 	      if (err == PS_OK)
 		ta->ta_howto = ta_howto_reg;
 	      else if (err == PS_NOSYM)
 		{
-		  err = td_lookup (ta->ph,
-				   SYM_TH_UNIQUE_REGISTER64_THREAD_AREA,
+		  err = td_lookup (ta, SYM_TH_UNIQUE_REGISTER64_THREAD_AREA,
 				   &howto);
 		  if (err == PS_OK)
 		    ta->ta_howto = ta_howto_reg_thread_area;
@@ -70,13 +69,12 @@ __td_ta_lookup_th_unique (const td_thragent_t *ta_arg,
 	      break;
 
 	    case 4:
-	      err = td_lookup (ta->ph, SYM_TH_UNIQUE_REGISTER32, &howto);
+	      err = td_lookup (ta, SYM_TH_UNIQUE_REGISTER32, &howto);
 	      if (err == PS_OK)
 		ta->ta_howto = ta_howto_reg;
 	      else if (err == PS_NOSYM)
 		{
-		  err = td_lookup (ta->ph,
-				   SYM_TH_UNIQUE_REGISTER32_THREAD_AREA,
+		  err = td_lookup (ta, SYM_TH_UNIQUE_REGISTER32_THREAD_AREA,
 				   &howto);
 		  if (err == PS_OK)
 		    ta->ta_howto = ta_howto_reg_thread_area;
@@ -187,14 +185,19 @@ td_ta_map_lwp2thr (const td_thragent_t *ta_arg,
      at exec.  So if it looks like initialization is incomplete, we only
      fake a special descriptor for the initial thread.  */
 
-  psaddr_t list;
-  td_err_e err = DB_GET_SYMBOL (list, ta, __stack_user);
-  if (err != TD_OK)
-    return err;
+  psaddr_t list = 0;
 
-  err = DB_GET_FIELD (list, ta, list, list_t, next, 0);
-  if (err != TD_OK)
+  td_err_e err = _td_ta_check_nptl (ta);
+  if (err == TD_NOLIBTHREAD)
+    list = 0;
+  else if (err != TD_OK)
     return err;
+  else
+    {
+      err = DB_GET_SYMBOL (list, ta, __stack_user);
+      if (err == TD_OK)
+	err = DB_GET_FIELD (list, ta, list, list_t, next, 0);
+    }
 
   if (list == 0)
     {

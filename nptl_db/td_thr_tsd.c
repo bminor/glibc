@@ -1,5 +1,5 @@
 /* Get a thread-specific data pointer for a thread.
-   Copyright (C) 1999,2001,2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 1999,2001,2002,2003,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 1999.
 
@@ -31,8 +31,11 @@ td_thr_tsd (const td_thrhandle_t *th, const thread_key_t tk, void **data)
 
   LOG ("td_thr_tsd");
 
+  err = _td_ta_check_nptl (th->th_ta_p);
+
   /* Get the key entry.  */
-  err = DB_GET_VALUE (tk_seq, th->th_ta_p, __pthread_keys, tk);
+  if (err == TD_OK)
+    err = DB_GET_VALUE (tk_seq, th->th_ta_p, __pthread_keys, tk);
   if (err == TD_NOAPLIC)
     return TD_BADKEY;
   if (err != TD_OK)

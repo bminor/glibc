@@ -62,24 +62,30 @@ td_thr_validate (const td_thrhandle_t *th)
 
   LOG ("td_thr_validate");
 
-  /* First check the list with threads using user allocated stacks.  */
-  bool uninit = false;
-  err = DB_GET_SYMBOL (list, th->th_ta_p, __stack_user);
-  if (err == TD_OK)
-    err = check_thread_list (th, list, &uninit);
-
-  /* If our thread is not on this list search the list with stack
-     using implementation allocated stacks.  */
-  if (err == TD_NOTHR)
+  err = _td_ta_check_nptl (th->th_ta_p);
+  if (err == TD_NOLIBTHREAD && th->th_unique == 0)
+    err = TD_OK;
+  else if (err == TD_OK)
     {
-      err = DB_GET_SYMBOL (list, th->th_ta_p, stack_used);
+      /* First check the list with threads using user allocated stacks.  */
+      bool uninit = false;
+      err = DB_GET_SYMBOL (list, th->th_ta_p, __stack_user);
       if (err == TD_OK)
 	err = check_thread_list (th, list, &uninit);
 
-      if (err == TD_NOTHR && uninit && th->th_unique == 0)
-	/* __pthread_initialize_minimal has not run yet.
-	   There is only the special case thread handle.  */
-	err = TD_OK;
+      /* If our thread is not on this list search the list with stack
+	 using implementation allocated stacks.  */
+      if (err == TD_NOTHR)
+	{
+	  err = DB_GET_SYMBOL (list, th->th_ta_p, stack_used);
+	  if (err == TD_OK)
+	    err = check_thread_list (th, list, &uninit);
+
+	  if (err == TD_NOTHR && uninit && th->th_unique == 0)
+	    /* __pthread_initialize_minimal has not run yet.
+	       There is only the special case thread handle.  */
+	    err = TD_OK;
+	}
     }
 
   if (err == TD_OK)

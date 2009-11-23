@@ -1,5 +1,5 @@
 /* Iterate over a process's threads.
-   Copyright (C) 1999,2000,2001,2002,2003,2004,2007,2008
+   Copyright (C) 1999,2000,2001,2002,2003,2004,2007,2008,2009
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 1999.
@@ -23,6 +23,18 @@
 
 
 static td_err_e
+fake_initial_thread (td_thragent_t *ta, td_thr_iter_f *callback, void *cbdata_p)
+{
+  /* __pthread_initialize_minimal has not run.  There is just the main
+     thread to return.  We cannot rely on its thread register.  They
+     sometimes contain garbage that would confuse us, left by the
+     kernel at exec.  So if it looks like initialization is incomplete,
+     we only fake a special descriptor for the initial thread.  */
+  td_thrhandle_t th = { ta, 0 };
+  return (*callback) (&th, cbdata_p) != 0 ? TD_DBERR : TD_OK;
+}
+
+static td_err_e
 iterate_thread_list (td_thragent_t *ta, td_thr_iter_f *callback,
 		     void *cbdata_p, td_thr_state_e state, int ti_pri,
 		     psaddr_t head, bool fake_empty, pid_t match_pid)
@@ -41,15 +53,7 @@ iterate_thread_list (td_thragent_t *ta, td_thr_iter_f *callback,
     return err;
 
   if (next == 0 && fake_empty)
-    {
-      /* __pthread_initialize_minimal has not run.  There is just the main
-	 thread to return.  We cannot rely on its thread register.  They
-	 sometimes contain garbage that would confuse us, left by the
-	 kernel at exec.  So if it looks like initialization is incomplete,
-	 we only fake a special descriptor for the initial thread.  */
-      td_thrhandle_t th = { ta, 0 };
-      return callback (&th, cbdata_p) != 0 ? TD_DBERR : TD_OK;
-    }
+    return fake_initial_thread (ta, callback, cbdata_p);
 
   /* Cache the offset from struct pthread to its list_t member.  */
   err = DB_GET_FIELD_ADDRESS (ofs, ta, 0, pthread, list, 0);
@@ -148,6 +152,10 @@ td_ta_thr_iter (const td_thragent_t *ta_arg, td_thr_iter_f *callback,
   if (! ta_ok (ta))
     return TD_BADTA;
 
+  err = _td_ta_check_nptl (ta);
+  if (err == TD_NOLIBTHREAD)
+    return fake_initial_thread (ta, callback, cbdata_p);
+
   /* The thread library keeps two lists for the running threads.  One
      list contains the thread which are using user-provided stacks
      (this includes the main thread) and the other includes the
@@ -156,7 +164,8 @@ td_ta_thr_iter (const td_thragent_t *ta_arg, td_thr_iter_f *callback,
      list of threads with user-defined stacks.  */
 
   pid_t pid = ps_getpid (ta->ph);
-  err = DB_GET_SYMBOL (list, ta, __stack_user);
+  if (err == TD_OK)
+    err = DB_GET_SYMBOL (list, ta, __stack_user);
   if (err == TD_OK)
     err = iterate_thread_list (ta, callback, cbdata_p, state, ti_pri,
 			       list, true, pid);

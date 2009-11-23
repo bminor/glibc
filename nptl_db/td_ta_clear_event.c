@@ -1,5 +1,5 @@
 /* Globally disable events.
-   Copyright (C) 1999, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1999,2001,2002,2003,2004,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 1999.
 
@@ -37,8 +37,11 @@ td_ta_clear_event (ta_arg, event)
   if (! ta_ok (ta))
     return TD_BADTA;
 
+  err = _td_ta_check_nptl (ta);
+
   /* Fetch the old event mask from the inferior and modify it in place.  */
-  err = DB_GET_SYMBOL (eventmask, ta, __nptl_threads_events);
+  if (err == TD_OK)
+    err = DB_GET_SYMBOL (eventmask, ta, __nptl_threads_events);
   if (err == TD_OK)
     err = DB_GET_STRUCT (copy, ta, eventmask, td_thr_events_t);
   if (err == TD_OK)

@@ -1,5 +1,5 @@
 /* Helper routines for libthread_db.
-   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@ _td_check_sizeof (td_thragent_t *ta, uint32_t *sizep, int sizep_name)
   if (*sizep == 0)
     {
       psaddr_t descptr;
-      ps_err_e err = td_lookup (ta->ph, sizep_name, &descptr);
+      ps_err_e err = td_lookup (ta, sizep_name, &descptr);
       if (err == PS_NOSYM)
 	return TD_NOCAPAB;
       if (err == PS_OK)
@@ -51,7 +51,7 @@ _td_locate_field (td_thragent_t *ta,
     {
       /* Read the information about this field from the inferior.  */
       psaddr_t descptr;
-      ps_err_e err = td_lookup (ta->ph, descriptor_name, &descptr);
+      ps_err_e err = td_lookup (ta, descriptor_name, &descptr);
       if (err == PS_NOSYM)
 	return TD_NOCAPAB;
       if (err == PS_OK)

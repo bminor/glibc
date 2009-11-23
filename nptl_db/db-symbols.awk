@@ -1,6 +1,10 @@
 # This script processes the output of 'readelf -W -s' on the libpthread.so
 # we've just built.  It checks for all the symbols used in td_symbol_list.
 
+%ifndef IS_IN_rtld
+%define IS_IN_libpthread
+%endif
+
 BEGIN {
 %define DB_LOOKUP_NAME(idx, name)		required[STRINGIFY (name)] = 1;
 %define DB_LOOKUP_NAME_TH_UNIQUE(idx, name)	th_unique[STRINGIFY (name)] = 1;

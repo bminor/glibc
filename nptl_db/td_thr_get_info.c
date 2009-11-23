@@ -41,8 +41,14 @@ td_thr_get_info (const td_thrhandle_t *th, td_thrinfo_t *infop)
       schedpolicy = SCHED_OTHER;
       schedprio = 0;
       tid = 0;
-      err = DB_GET_VALUE (report_events, th->th_ta_p,
-			  __nptl_initial_report_events, 0);
+      if (th->th_ta_p->ta_addr_nptl_version == 0)
+	{
+	  report_events = 0;
+	  err = TD_OK;
+	}
+      else
+	err = DB_GET_VALUE (report_events, th->th_ta_p,
+			    __nptl_initial_report_events, 0);
     }
   else
     {
