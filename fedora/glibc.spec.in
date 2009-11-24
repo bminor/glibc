@@ -15,13 +15,13 @@
 %endif
 %define rtkaioarches %{ix86} x86_64 ia64 ppc ppc64 s390 s390x
 %define debuginfocommonarches alpha alphaev6 sparc sparcv9 sparcv9v sparc64 sparc64v
-%define multiarcharches %{ix86} x86_64
+%define multiarcharches ppc ppc64 %{ix86} x86_64
 %define _unpackaged_files_terminate_build 0
 
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 1
+Release: 2
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -58,8 +58,13 @@ BuildRequires: gcc >= 3.2
 %endif
 %ifarch %{multiarcharches}
 # Need STT_IFUNC support
+%ifarch ppc ppc64
+BuildRequires: binutils >= 2.20.51.0.2
+Conflicts: binutils < 2.20.51.0.2
+%else
 BuildRequires: binutils >= 2.19.51.0.10
 Conflicts: binutils < 2.19.51.0.10
+%endif
 # Earlier releases have broken support for IRELATIVE relocations
 Conflicts: prelink < 0.4.2
 %else
@@ -1025,6 +1030,21 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Tue Nov 24 2009 Andreas Schwab <schwab@redhat.com> - 2.11.90-2
+- Update from master.
+  - Define week, first_weekday, and first_workday for en_DK locale (#525126).
+  - Use struct timespec for timestamps in struct stat also if
+    __USE_XOPEN2K8 (#539870).
+  - Fix week information for nl_NL locale (#499748).
+  - Update ntp_gettime for Linux (#479558).
+  - Fix getwc* and putwc* on non-wide streams (BZ#10958).
+  - Avoid warnings in CPU_* macros when using const bitsets (BZ#10918).
+  - Handle LC_GLOBAL_LOCALE in duplocale (BZ#10969).
+  - Fix _NC_LOCALE_NAME definition (BZ#10968).
+  - Add missing Linux MADV_* definitions (BZ#10972).
+  - Add support for new Linux error ERFKILL (BZ#10939).
+- Enable multi-arch support on ppc and ppc64.
+
 * Thu Nov 12 2009 Andreas Schwab <schwab@redhat.com> - 2.11.90-1
 - Update from master.
 
