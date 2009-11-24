@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2002, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,11 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#define ntp_gettime ntp_gettime_redirect
+
 #include <sys/timex.h>
+
+#undef ntp_gettime
 
 #ifndef MOD_OFFSET
 # define modes mode
@@ -27,8 +31,7 @@ extern int INTUSE(__adjtimex) (struct timex *__ntx);
 
 
 int
-ntp_gettime (ntv)
-     struct ntptimeval *ntv;
+ntp_gettime (struct ntptimeval *ntv)
 {
   struct timex tntx;
   int result;

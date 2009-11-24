@@ -1,4 +1,4 @@
-/* Copyright (C) 2007, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2002, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,23 +16,31 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <errno.h>
-#include <fcntl.h>
-#include <sysdep.h>
+#include <sys/timex.h>
 
-
-extern int __call_fallocate (int fd, int mode, __off64_t offset, __off64_t len)
-     attribute_hidden;
-
-
-/* Reserve storage for the data of the file associated with FD.  */
-int
-fallocate (int fd, int mode, __off_t offset, __off_t len)
-{
-#ifdef __NR_fallocate
-  return __call_fallocate (fd, mode, offset, len);
-#else
-  __set_errno (ENOSYS);
-  return -1;
+#ifndef MOD_OFFSET
+# define modes mode
 #endif
+
+
+extern int INTUSE(__adjtimex) (struct timex *__ntx);
+
+
+int
+ntp_gettimex (struct ntptimeval *ntv)
+{
+  struct timex tntx;
+  int result;
+
+  tntx.modes = 0;
+  result = INTUSE(__adjtimex) (&tntx);
+  ntv->time = tntx.time;
+  ntv->maxerror = tntx.maxerror;
+  ntv->esterror = tntx.esterror;
+  ntv->tai = tntx.tai;
+  ntv->__unused1 = 0;
+  ntv->__unused2 = 0;
+  ntv->__unused3 = 0;
+  ntv->__unused4 = 0;
+  return result;
 }

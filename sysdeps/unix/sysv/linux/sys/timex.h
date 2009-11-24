@@ -24,11 +24,19 @@
 
 /* These definitions from linux/timex.h as of 2.6.30.  */
 
+#define NTP_API	4	/* NTP API version */
+
 struct ntptimeval
 {
   struct timeval time;	/* current time (ro) */
   long int maxerror;	/* maximum error (us) (ro) */
   long int esterror;	/* estimated error (us) (ro) */
+  long int tai;		/* TAI offset (ro) */
+
+  long int __unused1;
+  long int __unused2;
+  long int __unused3;
+  long int __unused4;
 };
 
 struct timex
@@ -85,6 +93,9 @@ struct timex
 #define MOD_TIMECONST	ADJ_TIMECONST
 #define MOD_CLKB	ADJ_TICK
 #define MOD_CLKA	ADJ_OFFSET_SINGLESHOT /* 0x8000 in original */
+#define MOD_TAI		ADJ_TAI
+#define MOD_MICRO	ADJ_MICRO
+#define MOD_NANO	ADJ_NANO
 
 
 /* Status codes (timex.status) */
@@ -108,8 +119,9 @@ struct timex
 #define STA_MODE	0x4000	/* mode (0 = PLL, 1 = FLL) (ro) */
 #define STA_CLK		0x8000	/* clock source (0 = A, 1 = B) (ro) */
 
+/* Read-only bits */
 #define STA_RONLY (STA_PPSSIGNAL | STA_PPSJITTER | STA_PPSWANDER | \
-    STA_PPSERROR | STA_CLOCKERR) /* read-only bits */
+    STA_PPSERROR | STA_CLOCKERR | STA_NANO | STA_MODE | STA_CLK)
 
 /* Clock states (time_state) */
 #define TIME_OK		0	/* clock synchronized, no leap second */
@@ -128,7 +140,13 @@ __BEGIN_DECLS
 extern int __adjtimex (struct timex *__ntx) __THROW;
 extern int adjtimex (struct timex *__ntx) __THROW;
 
-extern int ntp_gettime (struct ntptimeval *__ntv) __THROW;
+#if defined __GNUC__ && __GNUC__ >= 2
+extern int ntp_gettime (struct ntptimeval *__ntv)
+     __asm__ ("ntp_gettimex") __THROW;
+#else
+extern int ntp_gettimex (struct ntptimeval *__ntv) __THROW;
+# define ntp_gettime ntp_gettimex
+#endif
 extern int ntp_adjtime (struct timex *__tntx) __THROW;
 
 __END_DECLS

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 2002,2003,2004,2006,2007,2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -35,16 +35,17 @@ __pthread_cond_broadcast:
 	cfi_startproc
 	pushl	%ebx
 	cfi_adjust_cfa_offset(4)
+	cfi_rel_offset(%ebx, 0)
 	pushl	%esi
 	cfi_adjust_cfa_offset(4)
+	cfi_rel_offset(%esi, 0)
 	pushl	%edi
 	cfi_adjust_cfa_offset(4)
+	cfi_rel_offset(%edi, 0)
 	pushl	%ebp
 	cfi_adjust_cfa_offset(4)
-	cfi_offset(%ebx, -8)
-	cfi_offset(%esi, -12)
-	cfi_offset(%edi, -16)
-	cfi_offset(%ebp, -20)
+	cfi_rel_offset(%ebp, 0)
+	cfi_remember_state
 
 	movl	20(%esp), %ebx
 
@@ -120,32 +121,6 @@ __pthread_cond_broadcast:
 	cmpl	$0xfffff001, %eax
 	jae	9f
 
-10:	xorl	%eax, %eax
-	popl	%ebp
-	cfi_adjust_cfa_offset(-4)
-	cfi_restore(%ebp)
-	popl	%edi
-	cfi_adjust_cfa_offset(-4)
-	cfi_restore(%edi)
-	popl	%esi
-	cfi_adjust_cfa_offset(-4)
-	cfi_restore(%esi)
-	popl	%ebx
-	cfi_adjust_cfa_offset(-4)
-	cfi_restore(%ebx)
-	ret
-
-	cfi_adjust_cfa_offset(16)
-	cfi_offset(%ebx, -8)
-	cfi_offset(%esi, -12)
-	cfi_offset(%edi, -16)
-	cfi_offset(%ebp, -20)
-	.align	16
-	/* Unlock.  */
-4:	LOCK
-	subl	$1, cond_lock-cond_futex(%ebx)
-	jne	5f
-
 6:	xorl	%eax, %eax
 	popl	%ebp
 	cfi_adjust_cfa_offset(-4)
@@ -161,11 +136,8 @@ __pthread_cond_broadcast:
 	cfi_restore(%ebx)
 	ret
 
-	cfi_adjust_cfa_offset(16)
-	cfi_offset(%ebx, -8)
-	cfi_offset(%esi, -12)
-	cfi_offset(%edi, -16)
-	cfi_offset(%ebp, -20)
+	cfi_restore_state
+
 	/* Initial locking failed.  */
 1:
 #if cond_lock == 0
@@ -186,7 +158,13 @@ __pthread_cond_broadcast:
 	call	__lll_lock_wait
 	jmp	2b
 
-	/* Unlock in loop requires waekup.  */
+	.align	16
+	/* Unlock.  */
+4:	LOCK
+	subl	$1, cond_lock-cond_futex(%ebx)
+	je	6b
+
+	/* Unlock in loop requires wakeup.  */
 5:	leal	cond_lock-cond_futex(%ebx), %eax
 #if (LLL_SHARED-LLL_PRIVATE) > 255
 	xorl	%ecx, %ecx
@@ -201,7 +179,7 @@ __pthread_cond_broadcast:
 	call	__lll_unlock_wake
 	jmp	6b
 
-	/* Unlock in loop requires waekup.  */
+	/* Unlock in loop requires wakeup.  */
 7:	leal	cond_lock-cond_futex(%ebx), %eax
 #if (LLL_SHARED-LLL_PRIVATE) > 255
 	xorl	%ecx, %ecx
@@ -232,7 +210,7 @@ __pthread_cond_broadcast:
 	addl	$FUTEX_WAKE, %ecx
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
-	jmp	10b
+	jmp	6b
 	cfi_endproc
 	.size	__pthread_cond_broadcast, .-__pthread_cond_broadcast
 versioned_symbol (libpthread, __pthread_cond_broadcast, pthread_cond_broadcast,

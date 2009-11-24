@@ -107,8 +107,8 @@
 #ifdef __USE_GNU
 # define F_SETSIG	10	/* Set number of signal to be sent.  */
 # define F_GETSIG	11	/* Get number of signal to be sent.  */
-# define F_SETOWN_EX	12	/* Get owner (thread receiving SIGIO).  */
-# define F_GETOWN_EX	13	/* Set owner (thread receiving SIGIO).  */
+# define F_SETOWN_EX	15	/* Get owner (thread receiving SIGIO).  */
+# define F_GETOWN_EX	16	/* Set owner (thread receiving SIGIO).  */
 #endif
 
 #ifdef __USE_GNU
@@ -187,9 +187,10 @@ struct flock64
 /* Owner types.  */
 enum __pid_type
   {
-    F_OWNER_TID = 0,	/* Kernel thread.  */
-    F_OWNER_PID,	/* Process.  */
-    F_OWNER_GID		/* Process group.  */
+    F_OWNER_TID = 0,		/* Kernel thread.  */
+    F_OWNER_PID,		/* Process.  */
+    F_OWNER_PGRP,		/* Process group.  */
+    F_OWNER_GID = F_OWNER_PGRP	/* Alternative, obsolete name.  */
   };
 
 /* Structure to use with F_GETOWN_EX and F_SETOWN_EX.  */
@@ -257,7 +258,7 @@ extern ssize_t readahead (int __fd, __off64_t __offset, size_t __count)
 
 
 /* Selective file content synch'ing.  */
-extern int sync_file_range (int __fd, __off64_t __from, __off64_t __to,
+extern int sync_file_range (int __fd, __off64_t __offset, __off64_t __count,
 			    unsigned int __flags);
 
 

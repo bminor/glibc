@@ -1,3 +1,143 @@
+2009-11-23  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/bits/stat.h: Use struct timespec
+	for timestamps also if __USE_XOPEN2K8.
+	* sysdeps/unix/sysv/linux/sparc/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/stat.h: Likewise.
+
+2009-11-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/connections.c (restart): Try harder to re-exec.
+
+	* sunrpc/create_xid.c (_create_xid): Reinitialize state after fork.
+
+	* sysdeps/unix/sysv/linux/ntp_gettimex.c:  New file.
+	* sysdeps/unix/sysv/linux/Makefile: Add rules to build ntp_gettimex.
+	* sysdeps/unix/sysv/linux/Versions: Export ntp_gettimex for GLIBC_2.12.
+	* sysdeps/unix/sysv/linux/sys/timex.h (ntptimeval): Add tai member and
+	some placeholders.  Redirect ntp_gettime to ntp_gettimex.
+	* sysdeps/unix/sysv/linux/ntp_gettime.c: Adjust for header change.
+
+	* sysdeps/unix/sysv/linux/sys/timex.h (MOD_TAI, MOD_MICRO, MOD_NANO):
+	Define.
+	(STA_RONLY): Add STA_NANO, STA_MODE, and STA_CLK.
+
+2009-11-18  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #10162]
+	* sysdeps/ia64/memchr.S: Don't use a simple loop on data shorter
+	than software pipeline.  Properly recover from shorter read.
+
+2009-11-19  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10958]
+	* libio/libio.h (_IO_getwc_unlocked): Check for _wide_data being
+	initialized before using it.
+	(_IO_putwc_unlocked): Likewise.
+
+	[BZ #10918]
+	* sysdeps/unix/sysv/linux/bits/sched.h (__CPU_ISSET_S): Use __const
+	in cast to not throw away const-ness of parameters.
+	(__CPU_EQUAL_S): Likewise.
+	(__CPU_OP_S): Likewise.
+
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Introduce new symbol
+	F_OWNER_PGRP and mark F_OWNER_GID obsolete.  The kernel people made
+	this gratuitous change and we have to keep compatibility.
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.
+
+2009-11-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Change misleading names
+	of parameters of sync_file_range.
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.
+
+2009-11-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sync_file_range.c (sync_file_range):
+	Implement using sync_file_range2 syscall if __NR_sync_file_range2
+	is defined.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sync_file_range.c: New
+	file.
+
+2009-11-17  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/bug-regex30.c: New file.
+	* posix/Makefile: Add rules to build and run bug-regex30.
+	* posix/regcomp.c (re_compile_fastmap_iter): Add all multibyte
+	character lead bytes when there is a range in a COMPLEX_BRACKET.
+	Reported by Oleg Bylatov.
+
+2009-11-17  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10969]
+	* locale/duplocale.c (__duplocale): Handle LC_GLOBAL_LOCALE special.
+	* locale/tst-duplocale.c: New file.
+	* locale/Makefile (tests): Add tst-duplocale.
+
+	[BZ #10968]
+	* locale/langinfo.h (_NL_LOCALE_NAME): Correct definition.
+	Patch by Bruno Haible <bruno@clisp.org>.
+	* locale/tst-locname.c: New file.
+	* locale/Makefile (tests): Add tst-locname.
+
+	[BZ #10972]
+	* sysdeps/unix/sysv/linux/powerpc/bits/mman.h: Add new MADV_*
+	constants from recent kernels.
+	* sysdeps/unix/sysv/linux/i386/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/mman.h: Likewise.
+
+2009-11-09  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #10162]
+	* sysdeps/ia64/memchr.S: Use a simple loop on data shorter than
+	software pipeline.
+
+2009-11-09  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/i386/fallocate.c: Include errno.h.
+	(fallocate): Return ENOSYS if __NR_fallocate is not defined.
+	* sysdeps/unix/sysv/linux/i386/fallocate64.c: Likewise.
+
+2009-11-06  Mike Frysinger  <vapier@gentoo.org>
+
+	* posix/bug-regex29.c: Include stdio.h.
+
+2009-11-14  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10939]
+	* Versions.def: Define GLIBC_2.12 for libc.
+	* manual/errno.texi: Add ERFKILL entry.
+	* sysdeps/unix/sysv/linux/Versions: Add new errlist compat entries
+	for 2.12.
+	* sysdeps/unix/sysv/linux/bits/errno.h: Define ERFKILL is not done.
+	* sysdeps/unix/sysv/linux/sparc/bits/errno.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Update F_SETOWN_EX and
+	F_GETOWN_EX definitions according to corrected kernel definitions.
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.
+
 2009-11-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* version.h: Bump for 2.12 development.

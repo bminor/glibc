@@ -1,4 +1,5 @@
-/* Copyright (C) 2007, 2009 Free Software Foundation, Inc.
+/* Selective file content synch'ing.
+   Copyright (C) 2006, 2007, 2009 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,21 +19,26 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <sys/types.h>
+
 #include <sysdep.h>
+#include <sys/syscall.h>
 
 
-extern int __call_fallocate (int fd, int mode, __off64_t offset, __off64_t len)
-     attribute_hidden;
-
-
-/* Reserve storage for the data of the file associated with FD.  */
+#if defined __NR_sync_file_range2
 int
-fallocate (int fd, int mode, __off_t offset, __off_t len)
+sync_file_range (int fd, __off64_t from, __off64_t to, unsigned int flags)
 {
-#ifdef __NR_fallocate
-  return __call_fallocate (fd, mode, offset, len);
+  return INLINE_SYSCALL (sync_file_range2, 4, fd, flags, from, to);
+}
 #else
+int
+sync_file_range (int fd, __off64_t from, __off64_t to, unsigned int flags)
+{
   __set_errno (ENOSYS);
   return -1;
-#endif
 }
+stub_warning (sync_file_range)
+
+# include <stub-tag.h>
+#endif
