@@ -15,13 +15,17 @@
 %endif
 %define rtkaioarches %{ix86} x86_64 ia64 ppc ppc64 s390 s390x
 %define debuginfocommonarches alpha alphaev6 sparc sparcv9 sparcv9v sparc64 sparc64v
+%if 0%{?rhel} >= 6
+%define multiarcharches ppc pp64 %{ix86} x86_64
+%else
 %define multiarcharches %{ix86} x86_64
+%endif
 %define _unpackaged_files_terminate_build 0
 
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 2
+Release: 3
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -58,8 +62,13 @@ BuildRequires: gcc >= 3.2
 %endif
 %ifarch %{multiarcharches}
 # Need STT_IFUNC support
+%ifarch ppc ppc64
+BuildRequires: binutils >= 2.20.51.0.2
+Conflicts: binutils < 2.20.51.0.2
+%else
 BuildRequires: binutils >= 2.19.51.0.10
 Conflicts: binutils < 2.19.51.0.10
+%endif
 # Earlier releases have broken support for IRELATIVE relocations
 Conflicts: prelink < 0.4.2
 %else
@@ -1025,6 +1034,9 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Tue Nov 24 2009 Andreas Schwab <schwab@redhat.com> - 2.11-3
+- Enable multi-arch support for ppc and ppc64 on RHEL-6
+
 * Thu Nov  5 2009 Andreas Schwab <schwab@redhat.com> - 2.11-2
 - Fix readahead on powerpc32.
 - Fix R_PPC64_{JMP_IREL,IRELATIVE} handling.
