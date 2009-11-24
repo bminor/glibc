@@ -1,3 +1,10 @@
+2009-11-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* csu/elf-init.c (__libc_csu_irel): New function.  Code to perform
+	irel relocations split out from...
+	(__libc_csu_init): ...here.
+	* csu/libc-start.c [!SHARED]: Call __libc_csu_irel early.
+
 2009-11-18  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #10162]
