@@ -1,5 +1,5 @@
 /* O_*, F_*, FD_* bit values for Linux/PowerPC.
-   Copyright (C) 1995, 1996, 1997, 1998, 2000, 2003, 2004, 2006, 2007
+   Copyright (C) 1995, 1996, 1997, 1998, 2000, 2003, 2004, 2006, 2007, 2009
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -85,13 +85,15 @@
 #define F_SETLKW64	14	/* Set record locking info (blocking).	*/
 
 #if defined __USE_BSD || defined __USE_UNIX98
-# define F_SETOWN	8	/* Get owner of socket (receiver of SIGIO).  */
-# define F_GETOWN	9	/* Set owner of socket (receiver of SIGIO).  */
+# define F_SETOWN	8	/* Get owner (process receiving of SIGIO).  */
+# define F_GETOWN	9	/* Set owner (process receiving of SIGIO).  */
 #endif
 
 #ifdef __USE_GNU
 # define F_SETSIG	10	/* Set number of signal to be sent.  */
 # define F_GETSIG	11	/* Get number of signal to be sent.  */
+# define F_SETOWN_EX	12	/* Get owner (thread receiving SIGIO).  */
+# define F_GETOWN_EX	13	/* Set owner (thread receiving SIGIO).  */
 #endif
 
 #ifdef __USE_GNU
@@ -163,6 +165,23 @@ struct flock64
     __off64_t l_start;	/* Offset where the lock begins.  */
     __off64_t l_len;	/* Size of the locked area; zero means until EOF.  */
     __pid_t l_pid;	/* Process holding the lock.  */
+  };
+#endif
+
+#ifdef __USE_GNU
+/* Owner types.  */
+enum __pid_type
+  {
+    F_OWNER_TID = 0,	/* Kernel thread.  */
+    F_OWNER_PID,	/* Process.  */
+    F_OWNER_GID		/* Process group.  */
+  };
+
+/* Structure to use with F_GETOWN_EX and F_SETOWN_EX.  */
+struct f_owner_ex
+  {
+    enum __pid_type type;	/* Owner type of ID.  */
+    __pid_t pid;		/* ID of owner.  */
   };
 #endif
 
