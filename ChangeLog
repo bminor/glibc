@@ -1,3 +1,132 @@
+2009-11-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/grantpt.c (grantpt): Use CLOSE_ALL_FDS is available
+	before the exec.
+	* sysdeps/unix/sysv/linux/grantpt.c: New file.
+	* login/programs/pt_chown.c (main): Don't print message on errors
+	when doing real work.
+
+	* csu/elf-init.c (__libc_csu_irel): New function.  Code to perform
+	irel relocations split out from...
+	(__libc_csu_init): ...here.
+	* csu/libc-start.c [!SHARED]: Call __libc_csu_irel early.
+
+2009-11-18  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #10162]
+	* sysdeps/ia64/memchr.S: Don't use a simple loop on data shorter
+	than software pipeline.  Properly recover from shorter read.
+
+2009-11-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sync_file_range.c (sync_file_range):
+	Implement using sync_file_range2 syscall if __NR_sync_file_range2
+	is defined.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sync_file_range.c: New
+	file.
+
+2009-11-19  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10958]
+	* libio/libio.h (_IO_getwc_unlocked): Check for _wide_data being
+	initialized before using it.
+	(_IO_putwc_unlocked): Likewise.
+
+	[BZ #10918]
+	* sysdeps/unix/sysv/linux/bits/sched.h (__CPU_ISSET_S): Use __const
+	in cast to not throw away const-ness of parameters.
+	(__CPU_EQUAL_S): Likewise.
+	(__CPU_OP_S): Likewise.
+
+2009-11-17  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/bug-regex30.c: New file.
+	* posix/Makefile: Add rules to build and run bug-regex30.
+	* posix/regcomp.c (re_compile_fastmap_iter): Add all multibyte
+	character lead bytes when there is a range in a COMPLEX_BRACKET.
+	Reported by Oleg Bylatov.
+
+2009-11-17  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10969]
+	* locale/duplocale.c (__duplocale): Handle LC_GLOBAL_LOCALE special.
+	* locale/tst-duplocale.c: New file.
+	* locale/Makefile (tests): Add tst-duplocale.
+
+	[BZ #10968]
+	* locale/langinfo.h (_NL_LOCALE_NAME): Correct definition.
+	Patch by Bruno Haible <bruno@clisp.org>.
+	* locale/tst-locname.c: New file.
+	* locale/Makefile (tests): Add tst-locname.
+
+	[BZ #10972]
+	* sysdeps/unix/sysv/linux/powerpc/bits/mman.h: Add new MADV_*
+	constants from recent kernels.
+	* sysdeps/unix/sysv/linux/i386/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/mman.h: Likewise.
+
+2009-11-09  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/i386/fallocate.c: Include errno.h.
+	(fallocate): Return ENOSYS if __NR_fallocate is not defined.
+	* sysdeps/unix/sysv/linux/i386/fallocate64.c: Likewise.
+
+2009-11-06  Mike Frysinger  <vapier@gentoo.org>
+
+	* posix/bug-regex29.c: Include stdio.h.
+
+2009-11-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Update F_SETOWN_EX and
+	F_GETOWN_EX definitions according to corrected kernel definitions.
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.
+
+2009-11-10  Andreas Schwab  <schwab@redhat.com>
+
+	* resolv/mapv4v6hostent.h (map_v4v6_hostent): Return non-zero if
+	out of buffer space.
+	* resolv/nss_dns/dns-host.c (getanswer_r): Check for
+	map_v4v6_hostent running out of space.
+
+2009-11-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/bits/string3.h (memset): If the second parameter is constant
+	and zero there is likely no transposition.
+	Patch by Caolan McNamara <caolanm@redhat.com.
+
+2009-11-04  Philippe De Muyter  <phdm@macqel.be>
+
+	* sysdeps/powerpc/fpu/e_sqrt.c: Fix spelling of (Newton-)Raphson.
+	* sysdeps/powerpc/fpu/e_sqrtf.c: Likewise.
+
+2009-10-30  Holger Hans Peter Freyther  <zecke@selfish.org>
+
+	* malloc/memusagestat.c (main): Fix spelling in an error message.
+
+2009-11-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/dl-sym.c (do_sym): Properly handle STT_GNU_IFUNC symbols.
+	* elf/ifuncmain3.c (main): Test dlopen STT_GNU_IFUNC symbol.
+
+2009-11-03  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/syscalls.list: Add
+	readahead.
+
+2009-11-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/powerpc64/dl-machine.h (resolve_ifunc): Don't
+	relocate opd entry when resolving prelink conflicts.
+
 2009-11-04  Jakub Jelinek  <jakub@redhat.com>
 
 	* misc/sys/uio.h (preadv, pwritev): Fix type of last argument
@@ -12,15 +141,16 @@
 	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h (fallocate): Likewise.
 	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h (fallocate): Likewise.
 
-2009-11-03  Jakub Jelinek  <jakub@redhat.com>
+2009-11-03  Andreas Schwab  <schwab@linux-m68k.org>
 
-	* sysdeps/powerpc/powerpc64/dl-machine.h (resolve_ifunc): Don't
-	relocate opd entry when resolving prelink conflicts.
+	[BZ #4457]
+	* sysdeps/generic/libgcc_s.h: New file.
+	* sysdeps/generic/framestate.c: Include it and use LIBGCC_S_SO.
 
-2009-11-03  Andreas Schwab  <schwab@redhat.com>
+2009-11-01  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/unix/sysv/linux/powerpc/powerpc32/syscalls.list: Add
-	readahead.
+	* malloc/hooks.c (free_check): Restore locking and call _int_free
+	appropriately.
 
 2009-10-30  Ulrich Drepper  <drepper@redhat.com>
 
