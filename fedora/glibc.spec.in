@@ -21,7 +21,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 2
+Release: 3
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1030,6 +1030,13 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Nov 30 2009 Andreas Schwab <schwab@redhat.com> - 2.11.90-3
+- Update from master.
+  - Fix infloop in __pthread_disable_asynccancel on x86_64 (#537690).
+  - Prevent unintended file desriptor leak in grantpt (#530558).
+  - Fix startup to security-relevant statically linked binaries (#528631).
+- Re-install CFI in x86/x86_64 clone (#491542).
+
 * Tue Nov 24 2009 Andreas Schwab <schwab@redhat.com> - 2.11.90-2
 - Update from master.
   - Define week, first_weekday, and first_workday for en_DK locale (#525126).
