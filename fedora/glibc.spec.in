@@ -25,7 +25,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 3
+Release: 4
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1034,6 +1034,22 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Nov 30 2009 Andreas Schwab <schwab@redhat.com> - 2.11-4
+- Update from 2.11 branch
+  - Fix sync_file_range on ppc/ppc64.
+  - Fix getwc* and putwc* on non-wide streams (BZ#10958).
+  - Avoid warnings in CPU_* macros when using const bitsets (BZ#10918).
+  - Fix ranges with multibyte characters as endpoints.
+  - Handle LC_GLOBAL_LOCALE in duplocale (BZ#10969).
+  - Fix _NC_LOCALE_NAME definition (BZ#10968).
+  - Add missing Linux MADV_* definitions (BZ#10972).
+  - Handle running out of buffer space with IPv6 mapping enabled.
+  - Avoid memset warning in one case (#532492).
+  - Restore locking in free_check (#504963).
+- Fix infloop in __pthread_disable_asynccancel on x86_64 (#537690).
+- Prevent unintended file desriptor leak in grantpt (#530558).
+- Fix startup to security-relevant statically linked binaries (#528631).
+
 * Tue Nov 24 2009 Andreas Schwab <schwab@redhat.com> - 2.11-3
 - Enable multi-arch support for ppc and ppc64 on RHEL-6
 
