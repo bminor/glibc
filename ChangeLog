@@ -11,6 +11,10 @@
 	(__libc_csu_init): ...here.
 	* csu/libc-start.c [!SHARED]: Call __libc_csu_irel early.
 
+2009-11-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* sunrpc/create_xid.c (_create_xid): Reinitialize state after fork.
+
 2009-11-18  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #10162]
