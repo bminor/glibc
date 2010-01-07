@@ -1,3 +1,7 @@
+2010-01-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* dirent/dirent.h: Fix typo in feature selection macro use.
+
 2009-12-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* include/link.h (struct link_map): Move l_used into its own word.
