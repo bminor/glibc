@@ -1,8 +1,11 @@
+#ifndef ISO
 constant WNOHANG
 constant WUNTRACED
 
 macro WEXITSTATUS
+# if !defined POSIX && !defined POSIX2008
 macro WIFCONTINUED
+# endif
 macro WIFEXITED
 macro WIFSIGNALED
 macro WIFSTOPPED
@@ -11,7 +14,9 @@ macro WTERMSIG
 
 constant WEXITED
 constant WSTOPPED
+# if !defined POSIX && !defined POSIX2008
 constant WCONTINUED
+# endif
 constant WNOHANG
 constant WNOWAIT
 
@@ -43,7 +48,9 @@ element {struct rusage} {struct timeval} ru_stime
 type pid_t
 
 function pid_t wait (int*)
+#if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
 function pid_t wait3 (int*, int, struct rusage*)
+#endif
 function int waitid (idtype_t, id_t, siginfo_t*, int)
 function pid_t waitpid (pid_t, int*, int)
 
@@ -62,3 +69,4 @@ allow SEGV_
 allow SI_
 allow TRAP_
 allow *_t
+#endif

@@ -1,6 +1,7 @@
 #! /usr/bin/perl
 
 use Getopt::Long;
+use POSIX;
 
 $CC = "gcc";
 
@@ -30,7 +31,8 @@ if (@headers == ()) {
 }
 
 if ($dialect ne "ISO" && $dialect ne "POSIX" && $dialect ne "XPG3"
-    && $dialect ne "XPG4" && $dialect ne "UNIX98" && $dialect ne "XOPEN2K") {
+    && $dialect ne "XPG4" && $dialect ne "UNIX98" && $dialect ne "XOPEN2K"
+    && $dialect ne "XOPEN2K8" && $dialect ne "POSIX2008") {
   die "unknown dialect \"$dialect\"";
 }
 
@@ -40,6 +42,8 @@ $CFLAGS{"XPG3"} = "-I. -fno-builtin '-D__attribute__(x)=' -D_XOPEN_SOURCE";
 $CFLAGS{"XPG4"} = "-I. -fno-builtin '-D__attribute__(x)=' -D_XOPEN_SOURCE_EXTENDED";
 $CFLAGS{"UNIX98"} = "-I. -fno-builtin '-D__attribute__(x)=' -D_XOPEN_SOURCE=500";
 $CFLAGS{"XOPEN2K"} = "-I. -fno-builtin '-D__attribute__(x)=' -D_XOPEN_SOURCE=600";
+$CFLAGS{"XOPEN2K8"} = "-I. -fno-builtin '-D__attribute__(x)=' -D_XOPEN_SOURCE=700";
+$CFLAGS{"POSIX2008"} = "-I. -fno-builtin '-D__attribute__(x)=' -D_POSIX_C_SOURCE=200809L";
 
 
 # These are the ISO C99 keywords.
@@ -52,14 +56,17 @@ $CFLAGS{"XOPEN2K"} = "-I. -fno-builtin '-D__attribute__(x)=' -D_XOPEN_SOURCE=600
 # These are symbols which are known to pollute the namespace.
 @knownproblems = ('unix', 'linux', 'i386');
 
-# Some headers need a bit more attention.
-$mustprepend{'inttypes.h'} = "#include <stddef.h>\n";
-$mustprepend{'regex.h'} = "#include <sys/types.h>\n";
-$mustprepend{'sched.h'} = "#include <sys/types.h>\n";
-$mustprepend{'signal.h'} = "#include <pthread.h>\n";
-$mustprepend{'stdio.h'} = "#include <sys/types.h>\n";
-$mustprepend{'wchar.h'} = "#include <stdarg.h>\n";
-$mustprepend{'wordexp.h'} = "#include <stddef.h>\n";
+if ($dialect ne "XOPEN2K8" && $dialect ne "POSIX2008") {
+  # Some headers need a bit more attention.  At least with XPG7
+  # all headers should be self-contained.
+  $mustprepend{'inttypes.h'} = "#include <stddef.h>\n";
+  $mustprepend{'regex.h'} = "#include <sys/types.h>\n";
+  $mustprepend{'sched.h'} = "#include <sys/types.h>\n";
+  $mustprepend{'signal.h'} = "#include <pthread.h>\n";
+  $mustprepend{'stdio.h'} = "#include <sys/types.h>\n";
+  $mustprepend{'wchar.h'} = "#include <stdarg.h>\n";
+  $mustprepend{'wordexp.h'} = "#include <stddef.h>\n";
+}
 
 # Make a hash table from this information.
 while ($#keywords >= 0) {
@@ -71,7 +78,10 @@ while ($#knownproblems >= 0) {
   $isknown{pop (@knownproblems)} = 1;
 }
 
-$tmpdir = "/tmp";
+$uid = getuid();
+($pwname,$pwpasswd,$pwuid,$pwgid,
+ $pwquota,$pwcomment,$pwgcos,$pwdir,$pwshell,$pwexpire) = getpwuid($uid);
+$tmpdir = "$pwdir";
 
 $verbose = 1;
 
@@ -660,9 +670,6 @@ while ($#headers >= 0) {
 	$maybe_opaque = 1;
       }
 
-      # Remember that this name is allowed.
-      push @allow, $type;
-
       # Generate a program to test for the availability of this constant.
       open (TESTFILE, ">$fnamebase.c");
       print TESTFILE "$prepend";
@@ -690,9 +697,6 @@ while ($#headers >= 0) {
 	$maybe_opaque = 1;
       }
 
-      # Remember that this name is allowed.
-      push @allow, $type;
-
       # Generate a program to test for the availability of this type.
       open (TESTFILE, ">$fnamebase.c");
       print TESTFILE "$prepend";
@@ -702,6 +706,27 @@ while ($#headers >= 0) {
       } else {
 	print TESTFILE "$type a;\n";
       }
+      close (TESTFILE);
+
+      compiletest ($fnamebase, "Testing for type $type",
+		   "Type \"$type\" not available.", $missing, 0);
+    } elsif (/^tag *({([^}]*)|([a-zA-Z0-9_]*))/) {
+      my($type) = "$2$3";
+
+      # Remember that this name is allowed.
+      if ($type =~ /^struct *(.*)/) {
+	push @allow, $1;
+      } elsif ($type =~ /^union *(.*)/) {
+	push @allow, $1;
+      } else {
+	push @allow, $type;
+      }
+
+      # Generate a program to test for the availability of this type.
+      open (TESTFILE, ">$fnamebase.c");
+      print TESTFILE "$prepend";
+      print TESTFILE "#include <$h>\n";
+      print TESTFILE "$type;\n";
       close (TESTFILE);
 
       compiletest ($fnamebase, "Testing for type $type",
