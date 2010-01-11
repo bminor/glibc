@@ -1,3 +1,7 @@
+2010-01-11  Andreas Schwab  <schwab@redhat.com>
+
+	* bits/confname.h: Add missing comma, remove trailing commas.
+
 2010-01-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/sigaction.h: SA_RESTART, SA_NODEFER,
