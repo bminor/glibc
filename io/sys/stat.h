@@ -104,7 +104,10 @@ typedef __blksize_t blksize_t;
 
 __BEGIN_DECLS
 
-#include <bits/stat.h>
+#ifndef __bits_stat_h_included
+# include <bits/stat.h>
+# define __bits_stat_h_included
+#endif
 
 #if defined __USE_BSD || defined __USE_MISC || defined __USE_XOPEN
 # define S_IFMT		__S_IFMT

@@ -38,7 +38,10 @@ __BEGIN_DECLS
 # include <bits/types.h>         /* For __mode_t and __dev_t.  */
 # define __need_timespec
 # include <time.h>
-# include <bits/stat.h>
+# ifndef __bits_stat_h_included
+#  include <bits/stat.h>
+#  define __bits_stat_h_included
+# endif
 
 # define S_IFMT		__S_IFMT
 # define S_IFDIR	__S_IFDIR
