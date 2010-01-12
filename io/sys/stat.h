@@ -29,7 +29,7 @@
 #include <bits/types.h>		/* For __mode_t and __dev_t.  */
 
 #if defined __USE_XOPEN || defined __USE_XOPEN2K || defined __USE_MISC \
-         || defined __USE_ATFILE
+	 || defined __USE_ATFILE
 # if defined __USE_XOPEN || defined __USE_XOPEN2K
 #  define __need_time_t
 # endif
@@ -104,10 +104,7 @@ typedef __blksize_t blksize_t;
 
 __BEGIN_DECLS
 
-#ifndef __bits_stat_h_included
-# include <bits/stat.h>
-# define __bits_stat_h_included
-#endif
+#include <bits/stat.h>
 
 #if defined __USE_BSD || defined __USE_MISC || defined __USE_XOPEN
 # define S_IFMT		__S_IFMT
@@ -296,7 +293,7 @@ extern int lchmod (__const char *__file, __mode_t __mode)
 #endif
 
 /* Set file access permissions of the file FD is open on to MODE.  */
-#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
 extern int fchmod (int __fd, __mode_t __mode) __THROW;
 #endif
 

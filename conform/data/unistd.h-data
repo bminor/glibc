@@ -300,10 +300,12 @@ constant _CS_V7_ENV
 constant _SC_THREAD_ROBUST_PRIO_INHERIT
 constant _SC_THREAD_ROBUST_PRIO_PROTECT
 
+#if !defined POSIX && !defined POSIX2008
 constant F_LOCK
 constant F_ULOCK
 constant F_TEST
 constant F_TLOCK
+#endif
 
 constant _PC_ASYNC_IO
 constant _PC_CHOWN_RESTRICTED
@@ -340,7 +342,9 @@ type intptr_t
 
 function int access (const char*, int)
 function {unsigned int} alarm (unsigned int)
+#if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX && !defined POSIX2008
 function int brk (void*)
+#endif
 function int chdir (const char*)
 #if defined XPG3 || defined XPG4 || defined UNIX98
 function int chroot (const char*)
@@ -374,7 +378,9 @@ function int fchown (int, uid_t, gid_t)
 # if defined XOPEN2K8 || defined POSIX2008
 function int fchownat (int, const char*, uid_t, gid_t, int)
 # endif
+#ifndef POSIX
 function int fchdir (int)
+#endif
 function int fdatasync (int)
 # if defined XOPEN2K8 || defined POSIX2008
 function int fexecve (int, char *const[], char *const[])
@@ -384,7 +390,9 @@ function {long int} fpathconf (int, int)
 function int fsync (int)
 function int ftruncate (int, off_t)
 function {char*} getcwd (char*, size_t)
+#if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX && !defined POSIX2008
 function int getdtablesize (void)
+#endif
 function gid_t getegid (void)
 function uid_t geteuid (void)
 function gid_t getgid (void)
@@ -396,19 +404,27 @@ function int gethostname (char*, size_t)
 function {char*} getlogin (void)
 function int getlogin_r (char*, size_t)
 function int getopt (int, char*const[], const char*)
-function int getpagesize (void)
 #if defined XPG3 || defined XPG4 || defined UNIX98
+function int getpagesize (void)
 function {char*} getpass (const char*)
 #endif
+#ifndef POSIX
 function pid_t getpgid (pid_t)
+#endif
 function pid_t getpgrp (void)
 function pid_t getpid (void)
 function pid_t getppid (void)
+#ifndef POSIX
 function pid_t getsid (pid_t)
+#endif
 function uid_t getuid (void)
+#if defined XPG3 || defined XPG4 || defined UNIX98 || defined XOPEN2K
 function {char*} getwd (char*)
+#endif
 function int isatty (int)
+#ifndef POSIX
 function int lchown (const char*, uid_t, gid_t)
+#endif
 function int link (const char*, const char*)
 # if defined XOPEN2K8 || defined POSIX2008
 function int linkat (int, const char*, int, const char*, int)
@@ -423,18 +439,24 @@ function int nice (int)
 function {long int} pathconf (const char*, int)
 function int pause (void)
 function int pipe (int[2])
+#ifndef POSIX
 function ssize_t pread (int, void*, size_t, off_t)
+#endif
 #if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX2008
 function int pthread_atfork (void(*)(void), void(*)(void), void(*)(void))
 #endif
+#ifndef POSIX
 function ssize_t pwrite (int, const void*, size_t, off_t)
+#endif
 function ssize_t read (int, void*, size_t)
 function ssize_t readlink (const char*, char*, size_t)
 # if defined XOPEN2K8 || defined POSIX2008
 function ssize_t readlinkat (int, const char*, char*, size_t)
 # endif
 function int rmdir (const char*)
+#if !defined XOPEN2K && !defined XOPEN2K8 && !defined POSIX && !defined POSIX2008
 function {void*} sbrk (intptr_t)
+#endif
 function int setegid (gid_t)
 function int seteuid (uid_t)
 function int setgid (gid_t)
@@ -460,16 +482,22 @@ function void sync (void)
 function {long int} sysconf (int)
 function pid_t tcgetpgrp (int)
 function int tcsetpgrp (int, pid_t)
+#ifndef POSIX
 function int truncate (const char*, off_t)
+#endif
 function {char*} ttyname (int)
 function int ttyname_r (int, char*, size_t)
+#if defined XPG3 || defined XPG4 || defined UNIX98 || defined XOPEN2K
 function useconds_t ualarm (useconds_t, useconds_t)
+#endif
 function int unlink (const char*)
 # if defined XOPEN2K8 || defined POSIX2008
 function int unlinkat (int, const char*, int)
 # endif
+#if defined XPG3 || defined XPG4 || defined UNIX98 || defined XOPEN2K
 function int usleep (useconds_t)
 function pid_t vfork (void)
+#endif
 function ssize_t write (int, const void*, size_t)
 
 variable {char*} optarg

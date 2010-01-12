@@ -1,9 +1,55 @@
+2010-01-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/sys/wait.h: Don't define W* macros etc. if
+	stdlib.h has been included with _POSIX_C_SOURCE >= 200809L.
+
+2010-01-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* io/sys/stat.h: Declare fchmod for XPG7.
+	* conform/data/sys/stat.h-data: Fix up for XPG7.
+
+	* termios/termios.h: Define pid_t for XPG7.
+
+	* conform/data/math.h-data: Fix up for XPG6 and XPG7.
+	* conform/data/tgmath.h-data: Likewise.
+
+	* conform/data/time.h-data: Fix POSIX tests.
+
+	* conform/data/wchar.h-data: Fix up XPG7 tests.
+
+	* include/features.h: Fix __USE_ISOC95 handling.
+
+	* conform/data/wordexp.h-data: Fix typo in last change.
+
+	* conform/data/unistd.h-data: Fix up older POSIX tests.
+
+	* stdlib/stdlib.h: Fix handling symbols removed in XPG7.
+	* posix/unistd.h: Likewise.
+
+	* posix/unistd.h: Include environments.h also for XPG6 and up.
+	Define intptr_t for XPG6 and up.
+	Fix up for XPG7.
+	* conform/data/unistd.h-data: Fix up for XPG6 and XPG7.
+
+	* conform/data/sys/types.h-data: Fix up for XPG7.
+
+	* sysdeps/unix/bsd/bits/stat.h: Fix double-inclusion problem.
+	* sysdeps/unix/sysv/linux/powerpc/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/bits/stat.h: Likewise.
+	* sysdeps/mach/hurd/bits/stat.h: Likewise.
+
+	* bits/confname.h: Fix typo in last change.
+
+	* conform/data/unistd.h-data: lockf-constants Not needed for POSIX.
+
 2010-01-11  Andreas Schwab  <schwab@redhat.com>
 
-	* io/fcntl.h: Only include <bits/stat.h> once.
-	* io/sys/stat.h: Likewise.
-
-	* bits/confname.h: Add missing comma, remove trailing commas.
+	* bits/confname.h: Remove trailing comma.
 
 2010-01-10  Ulrich Drepper  <drepper@redhat.com>
 
