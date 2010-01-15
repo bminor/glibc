@@ -1,4 +1,4 @@
-  /* Copyright (C) 1996-2002, 2003, 2004, 2009 Free Software Foundation, Inc.
+  /* Copyright (C) 1996-2004, 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,22 +53,24 @@
 
 __BEGIN_DECLS
 
+#if defined __USE_MISC || !defined __USE_XOPEN2K8
 /* Error status for non-reentrant lookup functions.
    We use a macro to access always the thread-specific `h_errno' variable.  */
-#define h_errno (*__h_errno_location ())
+# define h_errno (*__h_errno_location ())
 
 /* Function to get address of global `h_errno' variable.  */
 extern int *__h_errno_location (void) __THROW __attribute__ ((__const__));
 
 
 /* Possible values left in `h_errno'.  */
-#define	HOST_NOT_FOUND	1	/* Authoritative Answer Host not found.  */
-#define	TRY_AGAIN	2	/* Non-Authoritative Host not found,
+# define HOST_NOT_FOUND	1	/* Authoritative Answer Host not found.  */
+# define TRY_AGAIN	2	/* Non-Authoritative Host not found,
 				   or SERVERFAIL.  */
-#define	NO_RECOVERY	3	/* Non recoverable errors, FORMERR, REFUSED,
+# define NO_RECOVERY	3	/* Non recoverable errors, FORMERR, REFUSED,
 				   NOTIMP.  */
-#define	NO_DATA		4	/* Valid name, no data record of requested
+# define NO_DATA	4	/* Valid name, no data record of requested
 				   type.  */
+#endif
 #if defined __USE_MISC || defined __USE_GNU
 # define NETDB_INTERNAL	-1	/* See errno.  */
 # define NETDB_SUCCESS	0	/* No problem.  */
@@ -85,7 +87,7 @@ extern int *__h_errno_location (void) __THROW __attribute__ ((__const__));
 # define SCOPE_DELIMITER	'%'
 #endif
 
-#if defined __USE_MISC || defined __USE_GNU
+#ifdef __USE_MISC
 /* Print error indicated by `h_errno' variable on standard error.  STR
    if non-null is printed before the error string.  */
 extern void herror (__const char *__str) __THROW;

@@ -1,3 +1,158 @@
+2010-01-14  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11027]
+	* sysdeps/generic/netinet/ip.h: Define IPTOS_CLASS_* macros according
+	to RFC 2474.
+	Patch by Philip Prindeville <philipp@redfish-solutions.com>.
+
+	[BZ #11141]
+	* resolv/res_send.c (reopen): Don't use IPv6 sockets for IPv4
+	addresses.
+
+	[BZ #11127]
+	* posix/regcomp.c (alc_eclosure_iter): Do not ignore
+	re_node_set_insert failure; return REG_ESPACE.
+	Patch by Paul Eggert.
+
+	* bits/confname.h: Make pre-C99-safe.
+
+2010-01-14  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	* Makeconfig (+prector, +postctor, +prectorS, +postctorS): Add
+	$(sysdep-LDFLAGS) to pre and post ctors so that the proper .o
+	files are found by GCC.
+
+2010-01-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/unistd.h: Relax conditions for ualarm, usleep, getwd, vfork,
+	brk, and sbrk.
+
+	* string/strings.h: Relax condition for bcmp, bcopy, bzero, ffs,
+	index, and rindex.
+
+	* stdlib/stdlib.h: Relax conditions for *cvt functions and valloc.
+
+	* Versions.def: Add GLIBC_2.12 for libpthread.
+
+	[BZ #11126]
+	* malloc/malloc.c (malloc_info): Initialize malloc if not already
+	done.  Handle empty bin lists.
+
+	* posix/unistd.h: Change getpagesize and getdtablesize declaration
+	visibility some more.
+
+	* resolv/netdb.h: Relax condition to elide obsolete resolver constants.
+
+	* posix/unistd.h: Declare getpagesize in _GNU_SOURCE mode.
+
+	[BZ #11120]
+	* sysdeps/x86_64/strcmp.S: Prevent silent errors should strncmp be
+	needed outside libc.
+
+2010-01-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/stdlib.h: Parameter of unsetenv must not be NULL.
+
+2010-01-12  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/strlen.S: Unroll the loop.
+
+2010-01-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/stdlib.h: Be a bit more relaxed about obsoleted mktemp symbol.
+
+2010-01-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* conform/data/complex.h-data: Test for POSIX2008.
+
+	* conform/data/ctype.h-data: Fix POSIX testing.
+
+	* conform/data/dirent.h-data: ino_t only needed for XSI.
+
+	* grp/grp.h: Declare getgrent and endgrent for XPG7.
+
+	* conform/data/inttypes.h-data: Use same types as the headers.
+
+	* resolv/netdb.h: Don't define old resolver macros for XPG7.
+
+	* conform/data/sys/uio.h-data: Don't exclude POSIX2008.
+
+	* conform/conformtest.pl: Implement tag for allow-header.
+	Fix newline handling in allow-header implementation.
+
+	* conform/data/time.h-data: Use allow-header instead of duplicating
+	information.
+
+	* conform/data/time.h-data: Allow sigevent tag.
+
+	* posix/sched.h: Define time_t and pid_t for XPG7.
+
+2010-01-12  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/bcopy.S: New file.
+
+	* sysdeps/i386/i686/cacheinfo.c (__x86_64_data_cache_size): Define.
+
+	* sysdeps/i386/i686/memcpy.S (__memcpy_chk): Use ENTRY_CHK
+	and END_CHK.
+	* sysdeps/i386/i686/memmove.S (__memmove_chk): Likewise.
+	* sysdeps/i386/i686/mempcpy.S (__mempcpy_chk): Likewise.
+	* sysdeps/i386/i686/memset.S (__memset_chk): Likewise.
+
+	* sysdeps/i386/i686/memmove.S: Support USE_AS_BCOPY.
+
+	* sysdeps/i386/i686/multiarch/Makefile (sysdep_routines): Add
+	bzero-sse2 memset-sse2 memcpy-ssse3 mempcpy-ssse3 memmove-ssse3
+	memcpy-ssse3-rep mempcpy-ssse3-rep memmove-ssse3-rep
+	bcopy-ssse3 bcopy-ssse3-rep memset-sse2-rep bzero-sse2-rep
+	* sysdeps/i386/i686/multiarch/bcopy-ssse3-rep.S: New file.
+	* sysdeps/i386/i686/multiarch/bcopy-ssse3.S: New file.
+	* sysdeps/i386/i686/multiarch/bcopy.S: New file.
+	* sysdeps/i386/i686/multiarch/bzero-sse2-rep.S: New file.
+	* sysdeps/i386/i686/multiarch/bzero-sse2.S: New file.
+	* sysdeps/i386/i686/multiarch/bzero.S: New file.
+	* sysdeps/i386/i686/multiarch/memcpy-ssse3-rep.S: New file.
+	* sysdeps/i386/i686/multiarch/memcpy-ssse3.S: New file.
+	* sysdeps/i386/i686/multiarch/memcpy.S: New file.
+	* sysdeps/i386/i686/multiarch/memcpy_chk.S: New file.
+	* sysdeps/i386/i686/multiarch/memmove-ssse3-rep.S: New file.
+	* sysdeps/i386/i686/multiarch/memmove-ssse3.S: New file.
+	* sysdeps/i386/i686/multiarch/memmove.S: New file.
+	* sysdeps/i386/i686/multiarch/memmove_chk.S: New file.
+	* sysdeps/i386/i686/multiarch/mempcpy-ssse3-rep.S: New file.
+	* sysdeps/i386/i686/multiarch/mempcpy-ssse3.S: New file.
+	* sysdeps/i386/i686/multiarch/mempcpy.S: New file.
+	* sysdeps/i386/i686/multiarch/mempcpy_chk.S: New file.
+	* sysdeps/i386/i686/multiarch/memset-sse2-rep.S: New file.
+	* sysdeps/i386/i686/multiarch/memset-sse2.S: New file.
+	* sysdeps/i386/i686/multiarch/memset.S: New file.
+	* sysdeps/i386/i686/multiarch/memset_chk.S: New file.
+
+	* sysdeps/i386/sysdep.h (ENTRY_CHK): New.
+	(END_CHK): Likewise.
+
+	* sysdeps/i386/i686/multiarch/ifunc-defines.sym: Add
+	FEATURE_OFFSET, FEATURE_SIZE and FEATURE_INDEX_1.
+	* sysdeps/x86_64/multiarch/ifunc-defines.sym: Likewise.
+
+	* sysdeps/x86_64/cacheinfo.c (intel_02_cache_info): Add entries
+	for 0x0e and 0x80.
+	(__x86_64_data_cache_size): New.
+	(init_cacheinfo): Set __x86_64_data_cache_size.
+
+	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features): Turn
+	on bit_Fast_Rep_String for Intel Core i7.
+
+	* sysdeps/x86_64/multiarch/init-arch.h (bit_Fast_Rep_String): New.
+	(index_Fast_Rep_String): Likewise.
+	(FEATURE_INDEX_1): Likewise.
+	(FEATURE_INDEX_MAX): Likewise.
+	(cpu_features): Add feature.
+
+2010-01-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* conform/data/sys/select.h-data: Fix up for XPG7.
+
 2010-01-12  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/sys/wait.h: Don't define W* macros etc. if
@@ -46,10 +201,6 @@
 	* bits/confname.h: Fix typo in last change.
 
 	* conform/data/unistd.h-data: lockf-constants Not needed for POSIX.
-
-2010-01-11  Andreas Schwab  <schwab@redhat.com>
-
-	* bits/confname.h: Remove trailing comma.
 
 2010-01-10  Ulrich Drepper  <drepper@redhat.com>
 
