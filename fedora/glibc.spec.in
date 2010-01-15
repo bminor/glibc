@@ -21,7 +21,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 8
+Release: 9
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1030,6 +1030,15 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri Jan 15 2010 Andreas Schwab <schwab@redhat.com> - 2.11.90-9
+- Update from master.
+  - Define IPTOS_CLASS_* macros according to RFC 2474 (BZ#11027)
+  - Always use IPv4 sockets for IPv4 addresses (BZ#11141)
+  - regcomp.c: do not ignore memory allocation failure (BZ#11127)
+  - Fix malloc_info without prior allocations (BZ#11126)
+  - Optimize 32bit memset/memcpy with SSE2/SSSE3
+  - Relax feature tests in headers
+
 * Tue Jan 12 2010 Andreas Schwab <schwab@redhat.com> - 2.11.90-8
 - Update from master.
   - More POSIX conformance fixes.
