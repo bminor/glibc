@@ -40,11 +40,11 @@
 
         .text
 #if defined PIC && !defined NOT_IN_libc && !BZERO_P
-ENTRY_CHK (__memset_chk)
+ENTRY (__memset_chk)
 	movl	12(%esp), %eax
 	cmpl	%eax, 16(%esp)
 	jb	HIDDEN_JUMPTARGET (__chk_fail)
-END_CHK (__memset_chk)
+END (__memset_chk)
 #endif
 ENTRY (BP_SYM (memset))
 	ENTER

@@ -26,27 +26,18 @@
 
 #define PARMS	LINKAGE+4	/* one spilled register */
 #define RTN	PARMS
+#define DEST	RTN+RTN_SIZE
+#define SRC	DEST+PTR_SIZE
+#define LEN	SRC+PTR_SIZE
 
 	.text
-
-#ifdef USE_AS_BCOPY
-# define SRC	RTN+RTN_SIZE
-# define DEST	SRC+PTR_SIZE
-# define LEN	DEST+PTR_SIZE
-#else
-# define DEST	RTN+RTN_SIZE
-# define SRC	DEST+PTR_SIZE
-# define LEN	SRC+PTR_SIZE
-
-# if defined PIC && !defined NOT_IN_libc
-ENTRY_CHK (__memmove_chk)
+#if defined PIC && !defined NOT_IN_libc
+ENTRY (__memmove_chk)
 	movl	12(%esp), %eax
 	cmpl	%eax, 16(%esp)
 	jb	HIDDEN_JUMPTARGET (__chk_fail)
-END_CHK (__memmove_chk)
-# endif
+END (__memmove_chk)
 #endif
-
 ENTRY (BP_SYM (memmove))
 	ENTER
 
@@ -78,10 +69,8 @@ ENTRY (BP_SYM (memmove))
 	movsl
 	movl	%edx, %esi
 	cfi_restore (esi)
-#ifndef USE_AS_BCOPY
 	movl	DEST(%esp), %eax
 	RETURN_BOUNDED_POINTER (DEST(%esp))
-#endif
 
 	popl	%edi
 	cfi_adjust_cfa_offset (-4)
@@ -112,10 +101,8 @@ ENTRY (BP_SYM (memmove))
 	movsl
 	movl	%edx, %esi
 	cfi_restore (esi)
-#ifndef USE_AS_BCOPY
 	movl	DEST(%esp), %eax
 	RETURN_BOUNDED_POINTER (DEST(%esp))
-#endif
 
 	cld
 	popl	%edi
@@ -125,6 +112,4 @@ ENTRY (BP_SYM (memmove))
 	LEAVE
 	RET_PTR
 END (BP_SYM (memmove))
-#ifndef USE_AS_BCOPY
 libc_hidden_builtin_def (memmove)
-#endif
