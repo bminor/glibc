@@ -21,7 +21,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 9
+Release: 10
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1030,6 +1030,15 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Tue Jan 19 2010 Andreas Schwab <schwab@redhat.com> - 2.11.90-10
+- Update from master
+  - Fix ____longjmp_chk for s390/s390x
+  - Remove duplicate definitions of O_DSYNC and O_RSYNC for Linux/sparc
+  - Ignore negative dynamic entry types (#546890)
+  - Fix pthread_cond_*wait with requeue-PI on i386 (#548989)
+  - Fix _XOPEN_SOURCE_EXTENDED handling
+- Revert "Optimize 32bit memset/memcpy with SSE2/SSSE3."
+
 * Fri Jan 15 2010 Andreas Schwab <schwab@redhat.com> - 2.11.90-9
 - Update from master.
   - Define IPTOS_CLASS_* macros according to RFC 2474 (BZ#11027)
