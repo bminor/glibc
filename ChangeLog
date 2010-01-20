@@ -1,3 +1,85 @@
+2010-01-20  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/____longjmp_chk.c
+	(CHECK_SP): Fix check for alternate stack.
+	* sysdeps/unix/sysv/linux/s390/s390-64/____longjmp_chk.c
+	(CHECK_SP): Likewise.
+
+2010-01-19  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/multiarch/memmove.S: Also check
+	bit_Fast_Rep_String when SHARED isn't defined.
+
+2010-01-19  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11194]
+	* misc/bits/syslog.h (syslog, vsyslog): Remove unnecessary return.
+
+2010-01-17  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/bits/libc-lock.h
+	(__rtld_lock_recursive_t): New type.
+	(__rtld_lock_initialize): New macro.
+
+2010-01-14  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/cell/memcpy.S: New file.
+	* sysdeps/powerpc/powerpc64/cell/memcpy.S: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/cell/fpu/Implies: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/cell/fpu/Implies: New file.
+
+2010-01-18  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Remove duplicate
+	definitions of O_DSYNC and O_RSYNC.
+
+	* elf/dynamic-link.h (elf_get_dynamic_info): Use correct type when
+	casting d_tag.
+
+	* elf/dynamic-link.h (elf_get_dynamic_info): Ignore negative
+	dynamic entry types.
+
+2010-01-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ieee754/ldbl-128/s_ceill.c (huge): Add L suffix to the
+	constant.
+	* sysdeps/ieee754/ldbl-128/s_floorl.c (huge): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_expm1l.c (big): Decrease to avoid
+	overflow.
+	* sysdeps/ieee754/ldbl-128/s_log1pl.c (big): Remove unused variable.
+
+	* sysdeps/ieee754/ldbl-128/s_nexttowardf.c (__nexttowardf): Use
+	math_opt_barrier and math_force_eval macros.
+
+2010-01-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regcomp.c: Fix a few more cases of ignored return values.
+	* posix/regex_internal.c: Likewise.
+	* posix/regexec.c: Likewise.
+
+	* include/features.h: _XOPEN_SOURCE_EXTENDED is not defined to be
+	used without _XOPEN_SOURCE.  Don't base any decisions on this macro
+	if _XOPEN_SOURCE is not defined as well.
+
+2010-01-15  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	* sysdeps/s390/s390-32/elf/start.S (_start): Added check for the
+	high gprs kernel facility.
+	* sysdeps/s390/s390-32/dl-machine.h (elf_machine_matches_host):
+	Added high gprs check for DSOs.
+	* elf/elf.h (EF_S390_HIGH_GPRS): Added macro definition for the
+	new elf header flag.
+
+2010-01-13  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	* elf/dl-sysdep.c (_dl_sysdep_start): Added the auxv parameter to
+	dl_main.
+	* elf/dl-open.c (_dl_sysdep_start): Likewise..
+	* sysdeps/generic/ldsodefs.h (_dl_sysdep_start): Likewise.
+	* elf/rtld.c (dl_main): Added new parameter auxv.  Adjust the
+	AT_PHDR, AT_PHNUM and AT_ENTRY fields if the ld.so is directly
+	started.
+
 2010-01-14  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #11027]
