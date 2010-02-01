@@ -21,7 +21,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 10
+Release: 11
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1030,6 +1030,15 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Feb  1 2010 Andreas Schwab <schwab@redhat.com> - 2.11.90-11
+- Update from master
+  - Fix error checking in iconv (#558053)
+  - Don't map U00DF to U1E9E in toupper table
+  - _nl_load_locale() incorrectly handles mmap() failures (BZ#11200)
+  - Fix various issues in regex matcher (BZ#11183, BZ#11184, BZ#11185,
+    BZ#11186, BZ#11187, BZ#11188, BZ#11189, BZ#11190, BZ#11191,
+    BZ#11192, BZ#11193)
+
 * Tue Jan 19 2010 Andreas Schwab <schwab@redhat.com> - 2.11.90-10
 - Update from master
   - Fix ____longjmp_chk for s390/s390x
