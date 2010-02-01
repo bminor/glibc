@@ -133,7 +133,14 @@ re_string_realloc_buffers (re_string_t *pstr, int new_buf_len)
 #ifdef RE_ENABLE_I18N
   if (pstr->mb_cur_max > 1)
     {
-      wint_t *new_wcs = re_realloc (pstr->wcs, wint_t, new_buf_len);
+      wint_t *new_wcs;
+
+      /* Avoid overflow in realloc.  */
+      const size_t max_object_size = MAX (sizeof (wint_t), sizeof (int));
+      if (BE (SIZE_MAX / max_object_size < new_buf_len, 0))
+	return REG_ESPACE;
+
+      new_wcs = re_realloc (pstr->wcs, wint_t, new_buf_len);
       if (BE (new_wcs == NULL, 0))
 	return REG_ESPACE;
       pstr->wcs = new_wcs;
@@ -482,18 +489,18 @@ re_string_skip_chars (re_string_t *pstr, int new_raw_idx, wint_t *last_wc)
   mbstate_t prev_st;
   int rawbuf_idx;
   size_t mbclen;
-  wchar_t wc = WEOF;
+  wint_t wc = WEOF;
 
   /* Skip the characters which are not necessary to check.  */
   for (rawbuf_idx = pstr->raw_mbs_idx + pstr->valid_raw_len;
        rawbuf_idx < new_raw_idx;)
     {
-      int remain_len;
-      remain_len = pstr->len - rawbuf_idx;
+      wchar_t wc2;
+      int remain_len = pstr->len - rawbuf_idx;
       prev_st = pstr->cur_state;
-      mbclen = __mbrtowc (&wc, (const char *) pstr->raw_mbs + rawbuf_idx,
+      mbclen = __mbrtowc (&wc2, (const char *) pstr->raw_mbs + rawbuf_idx,
 			  remain_len, &pstr->cur_state);
-      if (BE (mbclen == (size_t) -2 || mbclen == (size_t) -1 || mbclen == 0, 0))
+      if (BE ((ssize_t) mbclen <= 0, 0))
 	{
 	  /* We treat these cases as a single byte character.  */
 	  if (mbclen == 0 || remain_len == 0)
@@ -503,10 +510,12 @@ re_string_skip_chars (re_string_t *pstr, int new_raw_idx, wint_t *last_wc)
 	  mbclen = 1;
 	  pstr->cur_state = prev_st;
 	}
+      else
+	wc = (wint_t) wc2;
       /* Then proceed the next character.  */
       rawbuf_idx += mbclen;
     }
-  *last_wc = (wint_t) wc;
+  *last_wc = wc;
   return rawbuf_idx;
 }
 #endif /* RE_ENABLE_I18N  */
@@ -694,7 +703,7 @@ re_string_reconstruct (re_string_t *pstr, int idx, int eflags)
 
 	      if (pstr->is_utf8)
 		{
-		  const unsigned char *raw, *p, *q, *end;
+		  const unsigned char *raw, *p, *end;
 
 		  /* Special case UTF-8.  Multi-byte chars start with any
 		     byte other than 0x80 - 0xbf.  */
@@ -723,13 +732,11 @@ re_string_reconstruct (re_string_t *pstr, int idx, int eflags)
 			  unsigned char buf[6];
 			  size_t mbclen;
 
-			  q = p;
 			  if (BE (pstr->trans != NULL, 0))
 			    {
 			      int i = mlen < 6 ? mlen : 6;
 			      while (--i >= 0)
 				buf[i] = pstr->trans[p[i]];
-			      q = buf;
 			    }
 			  /* XXX Don't use mbrtowc, we know which conversion
 			     to use (UTF-8 -> UCS4).  */
@@ -1404,8 +1411,11 @@ re_dfa_add_node (re_dfa_t *dfa, re_token_t token)
       re_node_set *new_edests, *new_eclosures;
       re_token_t *new_nodes;
 
-      /* Avoid overflows.  */
-      if (BE (new_nodes_alloc < dfa->nodes_alloc, 0))
+      /* Avoid overflows in realloc.  */
+      const size_t max_object_size = MAX (sizeof (re_token_t),
+					  MAX (sizeof (re_node_set),
+					       sizeof (int)));
+      if (BE (SIZE_MAX / max_object_size < new_nodes_alloc, 0))
 	return -1;
 
       new_nodes = re_realloc (dfa->nodes, re_token_t, new_nodes_alloc);

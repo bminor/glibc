@@ -368,16 +368,16 @@ re_search_2_stub (bufp, string1, length1, string2, length2, start, range, regs,
   const char *str;
   int rval;
   int len = length1 + length2;
-  int free_str = 0;
+  char *s = NULL;
 
-  if (BE (length1 < 0 || length2 < 0 || stop < 0, 0))
+  if (BE (length1 < 0 || length2 < 0 || stop < 0 || len < length1, 0))
     return -2;
 
   /* Concatenate the strings.  */
   if (length2 > 0)
     if (length1 > 0)
       {
-	char *s = re_malloc (char, len);
+	s = re_malloc (char, len);
 
 	if (BE (s == NULL, 0))
 	  return -2;
@@ -388,17 +388,14 @@ re_search_2_stub (bufp, string1, length1, string2, length2, start, range, regs,
 	memcpy (s + length1, string2, length2);
 #endif
 	str = s;
-	free_str = 1;
       }
     else
       str = string2;
   else
     str = string1;
 
-  rval = re_search_stub (bufp, str, len, start, range, stop, regs,
-			 ret_len);
-  if (free_str)
-    re_free ((char *) str);
+  rval = re_search_stub (bufp, str, len, start, range, stop, regs, ret_len);
+  re_free (s);
   return rval;
 }
 
@@ -512,9 +509,14 @@ re_copy_regs (regs, pmatch, nregs, regs_allocated)
   if (regs_allocated == REGS_UNALLOCATED)
     { /* No.  So allocate them with malloc.  */
       regs->start = re_malloc (regoff_t, need_regs);
-      regs->end = re_malloc (regoff_t, need_regs);
-      if (BE (regs->start == NULL, 0) || BE (regs->end == NULL, 0))
+      if (BE (regs->start == NULL, 0))
 	return REGS_UNALLOCATED;
+      regs->end = re_malloc (regoff_t, need_regs);
+      if (BE (regs->end == NULL, 0))
+	{
+	  re_free (regs->start);
+	  return REGS_UNALLOCATED;
+	}
       regs->num_regs = need_regs;
     }
   else if (regs_allocated == REGS_REALLOCATE)
@@ -524,9 +526,15 @@ re_copy_regs (regs, pmatch, nregs, regs_allocated)
       if (BE (need_regs > regs->num_regs, 0))
 	{
 	  regoff_t *new_start = re_realloc (regs->start, regoff_t, need_regs);
-	  regoff_t *new_end = re_realloc (regs->end, regoff_t, need_regs);
-	  if (BE (new_start == NULL, 0) || BE (new_end == NULL, 0))
+	  regoff_t *new_end;
+	  if (BE (new_start == NULL, 0))
 	    return REGS_UNALLOCATED;
+	  new_end = re_realloc (regs->end, regoff_t, need_regs);
+	  if (BE (new_end == NULL, 0))
+	    {
+	      re_free (new_start);
+	      return REGS_UNALLOCATED;
+	    }
 	  regs->start = new_start;
 	  regs->end = new_end;
 	  regs->num_regs = need_regs;
@@ -694,6 +702,13 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
      multi character collating element.  */
   if (nmatch > 1 || dfa->has_mb_node)
     {
+      /* Avoid overflow.  */
+      if (BE (SIZE_MAX / sizeof (re_dfastate_t *) <= mctx.input.bufs_len, 0))
+	{
+	  err = REG_ESPACE;
+	  goto free_return;
+	}
+
       mctx.state_log = re_malloc (re_dfastate_t *, mctx.input.bufs_len + 1);
       if (BE (mctx.state_log == NULL, 0))
 	{
@@ -952,6 +967,11 @@ prune_impossible_nodes (mctx)
 #endif
   match_last = mctx->match_last;
   halt_node = mctx->last_node;
+
+  /* Avoid overflow.  */
+  if (BE (SIZE_MAX / sizeof (re_dfastate_t *) <= match_last, 0))
+    return REG_ESPACE;
+
   sifted_states = re_malloc (re_dfastate_t *, match_last + 1);
   if (BE (sifted_states == NULL, 0))
     {
@@ -3362,6 +3382,13 @@ build_trtable (const re_dfa_t *dfa, re_dfastate_t *state)
   if (BE (err != REG_NOERROR, 0))
     goto out_free;
 
+  /* Avoid arithmetic overflow in size calculation.  */
+  if (BE ((((SIZE_MAX - (sizeof (re_node_set) + sizeof (bitset_t)) * SBC_MAX)
+	    / (3 * sizeof (re_dfastate_t *)))
+	   < ndests),
+	  0))
+    goto out_free;
+
   if (__libc_use_alloca ((sizeof (re_node_set) + sizeof (bitset_t)) * SBC_MAX
 			 + ndests * 3 * sizeof (re_dfastate_t *)))
     dest_states = (re_dfastate_t **)
@@ -4076,6 +4103,10 @@ extend_buffers (re_match_context_t *mctx)
 {
   reg_errcode_t ret;
   re_string_t *pstr = &mctx->input;
+
+  /* Avoid overflow.  */
+  if (BE (INT_MAX / 2 / sizeof (re_dfastate_t *) <= pstr->bufs_len, 0))
+    return REG_ESPACE;
 
   /* Double the lengthes of the buffers.  */
   ret = re_string_realloc_buffers (pstr, pstr->bufs_len * 2);

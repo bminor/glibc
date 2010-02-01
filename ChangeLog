@@ -1,3 +1,71 @@
+2010-01-26  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/getsysstats.c (get_nprocs_conf, get_nprocs,
+	get_phys_pages, get_avphys_pages): Add weak aliases.
+
+2010-01-25  Andreas Schwab  <schwab@redhat.com>
+
+	* iconv/iconv_prog.c (write_output): Fix check for open failure.
+
+2010-01-22  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11200]
+	* locale/loadlocale.c (_nl_load_locale): Fix recognition of genuine
+	mmap resource problem.  Patch by Joe Landers <jlanders@vmware.com>.
+
+2010-01-22  Jim Meyering  <jim@meyering.net>
+
+	[BZ #11193]
+	* posix/regexec.c (extend_buffers): Avoid overflow in realloc
+	buffer length computation.
+
+	[BZ #11192]
+	* posix/regexec.c (re_copy_regs): Don't leak when allocation
+	of the start buffer succeeds but allocation of the "end" one fails.
+
+	[BZ #11191]
+	* posix/regexec.c (re_search_2_stub): Check for overflow
+	when adding the sizes of the two strings.
+
+	[BZ #11190]
+	* posix/regexec.c (re_search_internal): Avoid overflow
+	in computing re_malloc buffer size.
+
+	[BZ #11189]
+	* posix/regexec.c (prune_impossible_nodes): Avoid overflow
+	in computing re_malloc buffer size.
+
+	[BZ #11188]
+	* posix/regexec.c (build_trtable): Avoid arithmetic overflow
+	in size calculation.
+
+	[BZ #11187]
+	* posix/regexec.c (re_search_2_stub): Use simpler method than
+	boolean for freeing internal storage.
+
+2010-01-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regex_internal.c (re_string_skip_chars): Simplify test for
+	failed mbrtowc call.
+
+2010-01-22  Jim Meyering  <jim@meyering.net>
+
+	[BZ #11186]
+	* posix/regex_internal.c (re_string_skip_chars): Don't assume WEOF
+	fits in wchar_t.  Problem reported by Eric Blake.
+
+	[BZ #11185]
+	* posix/regex_internal.c (re_string_reconstruct): Remove declaration
+	and stores into set-but-not-used local, "q".
+
+	[BZ #11184]
+	* posix/regex_internal.c (re_dfa_add_node): Extend the overflow
+	detection test.  Patch by Paul Eggert.
+
+	[BZ #11183]
+	* posix/regex_internal.c (re_string_realloc_buffers):
+	Detect and handle internal overflow.  Patch by Paul Eggert
+
 2010-01-20  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/unix/sysv/linux/s390/s390-32/____longjmp_chk.c
