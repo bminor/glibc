@@ -1,3 +1,9 @@
+2010-02-05  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #11230]
+	* sysdeps/ia64/memchr.S: Don't read beyond the last byte
+	during recovery.
+
 2010-03-25  Ryan S. Arnold  <rsa@us.ibm.com>
 
 	* sysdeps/unix/sysv/linux/getsysstats.c (next_line): Remove
