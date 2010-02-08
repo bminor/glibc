@@ -1,3 +1,10 @@
+2009-10-27  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #10855]
+	* locale/programs/locarchive.c: use MMAP_SHARED to reserve memory
+	used later with MMAP_FIXED | MMAP_SHARED to cope with different
+	alignment restrictions.
+
 2010-02-08  Andreas Schwab  <schwab@redhat.com>
 
 	[BZ #11155]

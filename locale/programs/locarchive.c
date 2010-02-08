@@ -134,7 +134,7 @@ create_archive (const char *archivefname, struct locarhandle *ah)
   size_t reserved = RESERVE_MMAP_SIZE;
   int xflags = 0;
   if (total < reserved
-      && ((p = mmap64 (NULL, reserved, PROT_NONE, MAP_PRIVATE | MAP_ANON,
+      && ((p = mmap64 (NULL, reserved, PROT_NONE, MAP_SHARED | MAP_ANON,
 		       -1, 0)) != MAP_FAILED))
     xflags = MAP_FIXED;
   else
@@ -396,7 +396,7 @@ enlarge_archive (struct locarhandle *ah, const struct locarhead *head)
   size_t reserved = RESERVE_MMAP_SIZE;
   int xflags = 0;
   if (total < reserved
-      && ((p = mmap64 (NULL, reserved, PROT_NONE, MAP_PRIVATE | MAP_ANON,
+      && ((p = mmap64 (NULL, reserved, PROT_NONE, MAP_SHARED | MAP_ANON,
 		       -1, 0)) != MAP_FAILED))
     xflags = MAP_FIXED;
   else
@@ -614,7 +614,7 @@ open_archive (struct locarhandle *ah, bool readonly)
   int xflags = 0;
   void *p;
   if (st.st_size < reserved
-      && ((p = mmap64 (NULL, reserved, PROT_NONE, MAP_PRIVATE | MAP_ANON,
+      && ((p = mmap64 (NULL, reserved, PROT_NONE, MAP_SHARED | MAP_ANON,
 		       -1, 0)) != MAP_FAILED))
     xflags = MAP_FIXED;
   else
