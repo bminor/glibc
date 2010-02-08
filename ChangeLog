@@ -1,3 +1,10 @@
+2009-10-27  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #10855]
+	* locale/programs/locarchive.c: use MMAP_SHARED to reserve memory
+	used later with MMAP_FIXED | MMAP_SHARED to cope with different
+	alignment restrictions.
+
 2009-11-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/grantpt.c (grantpt): Use CLOSE_ALL_FDS is available
