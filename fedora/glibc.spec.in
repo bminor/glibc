@@ -21,7 +21,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 11
+Release: 12
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1030,6 +1030,17 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Feb  8 2010 Andreas Schwab <schwab@redhat.com> - 2.11.90-12
+- Update from master
+  - Update constants in <sys/mount.h> for current kernels (#11235)
+  - Fix endless loop with invalid /etc/shells file (#11242)
+  - Fix sorting of malayalam letter 'na' (#10414)
+  - Add kok_IN locale
+  - Use common collation data in as_IN locale
+  - Avoid alloca in setenv for long strings
+- Use shared mapping to reserve memory when creating locale archive (#10855)
+- Fix fstat on Linux/sparc64 (#11155)
+
 * Mon Feb  1 2010 Andreas Schwab <schwab@redhat.com> - 2.11.90-11
 - Update from master
   - Fix error checking in iconv (#558053)
