@@ -1,6 +1,6 @@
 /* Optimized version of the standard memchr() function.
    This file is part of the GNU C Library.
-   Copyright (C) 2000, 2001, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2003, 2010 Free Software Foundation, Inc.
    Contributed by Dan Pop <Dan.Pop@cern.ch>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,9 +21,9 @@
 /* Return: the address of the first occurence of chr in str or NULL
 
    Inputs:
-  	in0:	str
-  	in1:	chr
-  	in2:	byte count
+	in0:	str
+	in1:	chr
+	in2:	byte count
 
    This implementation assumes little endian mode.  For big endian mode,
    the instruction czx1.r should be replaced by czx1.l.
@@ -47,7 +47,7 @@
 #define saved_lc	r16
 #define	chr		r17
 #define len		r18
-#define pos0		r20
+#define last		r20
 #define val		r21
 #define tmp		r24
 #define chrx8		r25
@@ -62,12 +62,13 @@ ENTRY(__memchr)
 	.rotr	value[MEMLAT+1], addr[MEMLAT+3], aux[2], poschr[2]
 	.rotp	p[MEMLAT+3]
 	.save ar.lc, saved_lc
-        mov 	saved_lc = ar.lc 	// save the loop counter
+	mov	saved_lc = ar.lc	// save the loop counter
 	.save pr, saved_pr
 	mov	saved_pr = pr		// save the predicates
 	.body
-	mov 	ret0 = str
-	and 	tmp = 7, str		// tmp = str % 8
+	mov	ret0 = str
+	add	last = str, in2		// last byte
+	and	tmp = 7, str		// tmp = str % 8
 	cmp.ne	p7, p0 = r0, r0		// clear p7
 	extr.u	chr = in1, 0, 8		// chr = (unsigned char) in1
 	mov	len = in2
@@ -88,7 +89,7 @@ ENTRY(__memchr)
 .str_aligned:
 	cmp.ne	p6, p0 = r0, r0		// clear p6
 	shr.u	loopcnt = len, 3	// loopcnt = len / 8
-	and 	len = 7, len ;;		// remaining len = len & 7
+	and	len = 7, len ;;		// remaining len = len & 7
 	adds	loopcnt = -1, loopcnt
 	mov	ar.ec = MEMLAT + 3
 	mux1	chrx8 = chr, @brcst ;;	// get a word full of chr
@@ -119,7 +120,7 @@ ENTRY(__memchr)
 	mov	ret0 = r0 ;;	// return NULL
 .foundit:
 	.pred.rel "mutex" p6, p7
-(p6)	adds	ret0 = -1, ret0 		   // if we got here from l1 or l3
+(p6)	adds	ret0 = -1, ret0			   // if we got here from l1 or l3
 (p7)	add	ret0 = addr[MEMLAT+2], poschr[1]   // if we got here from l2
 	mov	pr = saved_pr, -1
 	mov	ar.lc = saved_lc
@@ -143,7 +144,10 @@ ENTRY(__memchr)
 	ld8	tmp = [ret0];;		// load the first unchecked 8byte
 	xor	aux[1] = tmp, chrx8;;
 	czx1.r	poschr[1] = aux[1];;
-	cmp.ne	p7, p0 = 8, poschr[1]
+	cmp.ne	p7, p0 = 8, poschr[1];;
+(p7)	add	ret0 = addr[MEMLAT+2], poschr[1];;
+(p7)	cmp.geu	p6, p7 = ret0, last	// don't go over the last byte
+(p6)	br.cond.spnt	.notfound;;
 (p7)	br.cond.spnt	.foundit;;
 	adds	ret0 = 8, ret0		// load the next unchecked 8byte
 	br.sptk	.l4;;

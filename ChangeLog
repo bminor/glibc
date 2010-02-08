@@ -1,3 +1,40 @@
+2010-02-05  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #11230]
+	* sysdeps/ia64/memchr.S: Don't read beyond the last byte
+	during recovery.
+
+2010-01-26  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/utmp32.c: Use internal
+	interface.
+	* sysdeps/unix/sysv/linux/s390/s390-32/utmpx32.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/utmpx32.h: Declare internal
+	utmpx interface.
+
+	* sysdeps/unix/sysv/linux/sparc/Versions: Add new errlist compat
+	entry for 2.12.
+
+2010-02-03  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11235]
+	* sysdeps/unix/sysv/linux/sys/mount.h: Remove S_WRITE, S_APPEND,
+	S_IMMUTABLE.  Add MS_DIRSYNC, MS_MOVE, MS_SILENT, MS_REC,
+	MS_POSIXACL, MS_UNBINDABLE, MS_PRIVATE, MS_SLAVE, MS_SHARED,
+	MS_RELATIME, MS_KERNMOUNT, MS_I_VERSION, MS_STRICTATIME,
+	MS_ACTIVE, and MS_NOUSER.
+	(MS_RMT_MASK): Update according to current kernels.
+
+	[BZ #11242]
+	* misc/getusershell.c (initshells): Allocate one more byte in input
+	buffer so that fgets doesn't loop undefinitely.
+
+2010-02-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/setenv.c (__add_to_environ): Don't use alloca if
+	__libc_use_alloca tells us not to.  Fix memory leak in an error
+	situation.  Based partially on patch by Jim Meyering.
+
 2010-01-26  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/getsysstats.c (get_nprocs_conf, get_nprocs,
