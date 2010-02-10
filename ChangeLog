@@ -1,3 +1,7 @@
+2010-02-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/lshift.S: Fix unwind information.
+
 2010-02-03  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #11242]
