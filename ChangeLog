@@ -1,5 +1,14 @@
-2009-11-06  Petr Baudis <pasky@suse.cz>
+2010-02-10  Luis Machado  <luisgpm@br.ibm.com>
+	* sysdeps/powerpc/powerpc64/power7/Implies: Removed.
+	* sysdeps/powerpc/powerpc64/power7/fpu/Implies: Removed.
+	* sysdeps/powerpc/powerpc32/power7/Implies: Removed.
+	* sysdeps/powerpc/powerpc32/power7/fpu/Implies: Removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power7/fpu/Implies: Add
+	64-bit power7 fpu path.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power7/fpu/Implies: Add
+	32-bit power7 fpu math.
 
+2009-11-06  Petr Baudis <pasky@suse.cz>
 	* include/sys/uio.h: Change __vector to __iovec to avoid clash
 	with altivec.
 
