@@ -1,3 +1,9 @@
+2010-02-10  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11271]
+	* io/ftw.c (ftw_startup): Close	descriptor for initial directory
+	after changing back to it.
+
 2010-02-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/lshift.S: Fix unwind information.
