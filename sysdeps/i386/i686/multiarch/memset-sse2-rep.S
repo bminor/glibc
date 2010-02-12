@@ -261,7 +261,7 @@ L(not_aligned_16):
 	ALIGN (4)
 L(aligned_16):
 	cmp	$128, %ecx
-	jge	L(128bytesormore)
+	jae	L(128bytesormore)
 
 L(aligned_16_less128bytes):
 	BRANCH_TO_JMPTBL_ENTRY (L(table_16_128bytes))
@@ -306,7 +306,7 @@ L(128bytesormore_normal):
 	movdqa	%xmm0, 0x60(%edx)
 	movdqa	%xmm0, 0x70(%edx)
 	lea	128(%edx), %edx
-	jl	L(128bytesless_normal)
+	jb	L(128bytesless_normal)
 
 
 	sub	$128, %ecx
@@ -319,7 +319,7 @@ L(128bytesormore_normal):
 	movdqa	%xmm0, 0x60(%edx)
 	movdqa	%xmm0, 0x70(%edx)
 	lea	128(%edx), %edx
-	jge	L(128bytesormore_normal)
+	jae	L(128bytesormore_normal)
 
 L(128bytesless_normal):
 	POP (%edi)
