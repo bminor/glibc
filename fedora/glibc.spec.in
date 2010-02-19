@@ -947,12 +947,10 @@ rm -f *.filelist*
 %endif
 %endif
 %ifarch s390x
-%dir /lib
 /lib/ld64.so.1
 %endif
 %ifarch ia64
 %if "%{_lib}" == "lib64"
-%dir /lib
 /lib/ld-linux-ia64.so.2
 %endif
 %endif
@@ -979,7 +977,6 @@ rm -f *.filelist*
 %ifnarch %{auxarches}
 %files -f common.filelist common
 %defattr(-,root,root)
-%dir %{_prefix}/lib/locale
 %attr(0644,root,root) %verify(not md5 size mtime) %{_prefix}/lib/locale/locale-archive.tmpl
 %attr(0644,root,root) %verify(not md5 size mtime mode) %ghost %config(missingok,noreplace) %{_prefix}/lib/locale/locale-archive
 %dir %attr(755,root,root) /etc/default
