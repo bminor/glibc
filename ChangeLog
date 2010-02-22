@@ -1,3 +1,184 @@
+2010-02-19  Carl Fredrik Hammar  <hammy.lite@gmail.com>
+
+	* hurd/hurdioctl.c (tiocsctty): Call `do_tiocsctty' instead of
+	non-existent `tiocsctty_port'.
+
+2010-02-16  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/multiarch/memcmp.S (memcmp): Use CPUID_OFFSET
+	instead of FEATURE_OFFSET.
+	* sysdeps/i386/i686/multiarch/strcmp.S (strcmp): Likewise.
+
+	* sysdeps/i386/i686/multiarch/memcmp-sse4.S: Add alignnments.
+	Fix one unwind info problem.
+
+	* sysdeps/i386/i686/multiarch/memcmp-ssse3.S (less1bytes): Add CFI_POP.
+
+	* sysdeps/i386/i686/multiarch/strcmp-sse4.S: Simplify unwind info.
+
+2010-02-17  H.J. Lu  <hongjiu.lu@intel.com>
+	    Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/i686/multiarch/strcmp-ssse3.S: Fix typo in unwind info.
+	Clean up a bit.
+
+2010-02-17  Carl Fredrik Hammar  <hammy.lite@gmail.com>
+
+	* hurd/hurdioctl.c (tiocsctty): Only get FD ports, do work in...
+	(tiocsctty_port): ...this new function.
+
+	* hurd/hurd/ioctl.h (_HURD_HANDLE_IOCTLS_1): Cast to
+	`ioctl_handler_t'.
+
+2010-02-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/i686/multiarch/memcmp-sse4.S: Fix unwind info.
+	* sysdeps/i386/i686/multiarch/memcmp-ssse3.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strcmp-sse4.S: Likewise.
+	* sysdeps/i386/i686/multiarch/strcmp-ssse3.S: Likewise.
+
+	* sysdeps/i386/i686/multiarch/strcmp-sse4.S: Don't fall through to
+	undefined code.
+
+2010-02-12  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/multiarch/Makefile (sysdep_routines): Add
+	strcmp-ssse3, strcmp-sse4, strncmp-c, strncmp-ssse3, strncmp-sse4,
+	memcmp-c, memcmp-ssse3, and memcmp-sse4.
+	* sysdeps/i386/i686/multiarch/memcmp-sse4.S: New file.
+	* sysdeps/i386/i686/multiarch/memcmp-ssse3.S: New file.
+	* sysdeps/i386/i686/multiarch/memcmp.S: New file.
+	* sysdeps/i386/i686/multiarch/strcmp-sse4.S: New file.
+	* sysdeps/i386/i686/multiarch/strcmp-ssse3.S: New file.
+	* sysdeps/i386/i686/multiarch/strcmp.S: New file.
+	* sysdeps/i386/i686/multiarch/strncmp-c.c: New file.
+	* sysdeps/i386/i686/multiarch/strncmp-sse4.S: New file.
+	* sysdeps/i386/i686/multiarch/strncmp-ssse3.S: New file.
+	* sysdeps/i386/i686/multiarch/strncmp.S: New file.
+
+2010-02-12  Luis Machado  <luisgpm@br.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/dl-machine.h: Removed old PPC_REL16 check.
+	* sysdeps/powerpc/powerpc32/dl-machine.h: Likewise.
+	* sysdeps/powerpc/powerpc32/elf/start.S: Likewise.
+	* sysdeps/powerpc/powerpc32/memset.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power5/fpu/w_sqrt.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power5/fpu/w_sqrtf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/configure.in: Fail if R_PPC_REL16
+	is not supported.
+	* sysdeps/powerpc/powerpc32/fpu/s_round.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_truncf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp-common.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_floorf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_ceilf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_ceil.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_floor.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_roundf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_rintf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_trunc.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/setjmp-common.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_lround.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_rint.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/w_sqrt.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/s_llround.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/w_sqrtf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/dl-start.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/____longjmp_chk.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext-common.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext-common.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext-common.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/brk.S: Likewise.
+
+2010-02-12  Alan Modra  <amodra@gmail.com>
+
+	* elf/tls-macros.h [__powerpc__] (__TLS_CALL_CLOBBERS): Remove r3.
+	Define and use for __powerpc64__ too.
+	[__powerpc__] (TLS_LD): Add r3 to clobbers.
+	[__powerpc__] (TLS_GD): Set asm output.  Make __result r3 reg.
+	[__powerpc64__] (TLS_GD): Make __result r3 reg.
+	[__powerpc64__] (TLS_IE): Relax output constraint.
+
+2010-02-11  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	* sysdeps/s390/s390-64/utf8-utf16-z9.c: Disable hardware
+	instructions cu21 and cu24.  Add well-formedness checking
+	parameter and adjust the software implementation.
+	* sysdeps/s390/s390-64/utf16-utf32-z9.c: Likewise.
+
+2010-02-10  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11271]
+	* io/ftw.c (ftw_startup): Close	descriptor for initial directory
+	after changing back to it.
+
+2010-02-05  David S. Miller  <davem@davemloft.net>
+
+	* elf/elf.h (R_SPARC_JMP_IREL, R_SPARC_IRELATIVE): Define.
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_rela): Handle new
+	ifunc relocs.
+	(elf_machine_lazy_rel): Likewise.
+	(sparc_fixup_plt): Pull out to...
+	* sysdeps/sparc/sparc32/dl-plt.h: ...here.
+	* sysdeps/sparc/sparc32/dl-irel.h: New file.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela): Handle new
+	ifunc relocs.
+	(elf_machine_lazy_rel): Likewise.
+	(sparc64_fixup_plt): Pull out to...
+	* sysdeps/sparc/sparc64/dl-plt.h: ...here.
+	* sysdeps/sparc/sparc64/dl-irel.h: New file.
+
+2010-02-09  Maxim Kuvyrkov  <maxim@codesourcery.com>
+
+	* elf/elf.h: Define m68k TLS relocations.
+
+2010-02-10  Luis Machado  <luisgpm@br.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power7/Implies: Removed.
+	* sysdeps/powerpc/powerpc64/power7/fpu/Implies: Removed.
+	* sysdeps/powerpc/powerpc32/power7/Implies: Removed.
+	* sysdeps/powerpc/powerpc32/power7/fpu/Implies: Removed.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power7/fpu/Implies: Add
+	64-bit power7 fpu path.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power7/fpu/Implies: Add
+	32-bit power7 fpu math.
+
+2010-02-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/rshift.S: More compact unwind information.
+
+	* sysdeps/i386/lshift.S: Fix unwind information.
+
+2010-02-08  Luis Machado  <luisgpm@br.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power7/fpu/s_isnan.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/fpu/s_isnan.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/fpu/s_isnanf.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/fpu/s_isnanf.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/fpu/s_isinf.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/fpu/s_isinf.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/fpu/s_isinff.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/fpu/s_isinff.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/fpu/s_finite.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/fpu/s_finite.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/fpu/s_finitef.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/fpu/s_finitef.S: New file.
+
+2010-02-08  Andreas Schwab  <schwab@redhat.com>
+
+	* include/fenv.h: Add hidden proto for fegetenv.
+	* math/fegetenv.c: Add hidden alias.
+	* sysdeps/i386/fpu/fegetenv.c: Likewise.
+	* sysdeps/ia64/fpu/fegetenv.c: Likewise.
+	* sysdeps/powerpc/fpu/fegetenv.c: Likewise.
+	* sysdeps/sh/sh4/fpu/fegetenv.c: Likewise.
+	* sysdeps/sparc/fpu/fegetenv.c: Likewise.
+	* sysdeps/x86_64/fpu/fegetenv.c: Likewise
+	* sysdeps/s390/fpu/fegetenv.c: Likewise.  Remove unused headers.
+
 2010-02-12  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/i686/multiarch/memcpy-ssse3-rep.S: Use unsigned
