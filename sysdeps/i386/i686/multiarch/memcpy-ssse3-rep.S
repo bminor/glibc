@@ -1249,11 +1249,12 @@ L(large_page):
 	movdqu	%xmm0, (%esi)
 	movntdq	%xmm1, (%edx)
 	lea	16(%edx), %edx
+	lea	-16(%ecx), %ecx
 	cmp	%al, %dl
 	je	L(copy_page_by_rep)
 L(large_page_loop_init):
 	POP (%esi)
-	lea	-0x90(%ecx), %ecx
+	lea	-0x80(%ecx), %ecx
 	POP (%edi)
 L(large_page_loop):
 	prefetchnta	0x1c0(%eax)

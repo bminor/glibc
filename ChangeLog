@@ -1,3 +1,8 @@
+2010-02-21  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/multiarch/memcpy-ssse3-rep.S: Properly
+	decrement ECX when jumping to copy_page_by_rep.
+
 2010-02-19  Carl Fredrik Hammar  <hammy.lite@gmail.com>
 
 	* hurd/hurdioctl.c (tiocsctty): Call `do_tiocsctty' instead of
