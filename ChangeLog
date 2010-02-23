@@ -1,3 +1,35 @@
+2010-02-22  Jim Meyering  <meyering@redhat.com>
+
+	* manual/math.texi (BSD Random): Fix a typo: s/are/is/
+
+	* manual/charset.texi: Adjust grammar.
+
+	* manual/errno.texi (Error Messages): Fix doubled-words and typos.
+	* manual/charset.texi (Selecting the Conversion): Likewise.
+	* manual/getopt.texi (Getopt Long Options): Likewise.
+	* manual/memory.texi (Resizing the Data Segment): Likewise.
+	* manual/message.texi (GUI program problems): Likewise.
+	* manual/resource.texi (CPU Affinity): Likewise.
+	* manual/stdio.texi (Streams and Threads): Likewise.
+	* manual/time.texi (High Accuracy Clock): Likewise.
+
+2009-02-20  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_runtime_setup):
+	Adjust rela->r_offset by l->l_addr when rewriting PLT.
+
+	* sysdeps/sparc/sparc64/memchr.S: Use unsigned branch on greater to
+	test end of buffer.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/makecontext.c
+	(__makecontext): Adjust arg counter properly when copying arg
+	stack slots.
+
+2009-02-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_runtime_setup):
+	Adjust rela->r_offset by l->l_addr when rewriting PLT.
+
 2010-02-21  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/i686/multiarch/memcpy-ssse3-rep.S: Properly
