@@ -524,6 +524,7 @@ chmod 644 $RPM_BUILD_ROOT/etc/ld.so.conf
 mkdir -p $RPM_BUILD_ROOT/etc/ld.so.conf.d
 mkdir -p $RPM_BUILD_ROOT/etc/sysconfig
 > $RPM_BUILD_ROOT/etc/sysconfig/nscd
+> $RPM_BUILD_ROOT/etc/gai.conf
 
 # Include %{_prefix}/%{_lib}/gconv/gconv-modules.cache
 > $RPM_BUILD_ROOT%{_prefix}/%{_lib}/gconv/gconv-modules.cache
@@ -565,8 +566,6 @@ rm -f ${RPM_BUILD_ROOT}/%{_lib}/libnss-*.so.1
 
 # Ugly hack for buggy rpm
 ln -f ${RPM_BUILD_ROOT}%{_sbindir}/iconvconfig{,.%{_target_cpu}}
-
-rm -f $RPM_BUILD_ROOT/etc/gai.conf
 
 # In F7+ this is provided by rpcbind rpm
 rm -f $RPM_BUILD_ROOT%{_sbindir}/rpcinfo
@@ -982,6 +981,7 @@ rm -f *.filelist*
 %dir %attr(755,root,root) /etc/default
 %verify(not md5 size mtime) %config(noreplace) /etc/default/nss
 %attr(4711,root,root) %{_prefix}/libexec/pt_chown
+%attr(0644,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /etc/gai.conf
 %doc documentation/*
 
 %files -f devel.filelist devel
