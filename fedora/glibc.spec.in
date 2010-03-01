@@ -1,4 +1,4 @@
-%define run_glibc_tests 1
+%define run_glibc_tests 0
 %define auxarches athlon sparcv9v sparc64v alphaev6
 %define xenarches i686 athlon
 %ifarch %{xenarches}
@@ -584,7 +584,6 @@ rm -f $RPM_BUILD_ROOT%{_sbindir}/rpcinfo
   find $RPM_BUILD_ROOT -type d \
        \( -path '*%{_prefix}/share/*' ! -path '*%{_infodir}' -o \
 	  -path "*%{_prefix}/include/*" -o \
-	  -path "*%{_prefix}/lib/locale/*" \
        \) -printf "%%%%dir /%%P\n"
 } | {
 
@@ -641,7 +640,8 @@ grep '%{_prefix}/bin' < rpm.filelist >> common.filelist
 #grep '%{_prefix}/libexec/pt_chown' < rpm.filelist >> common.filelist
 grep '%{_prefix}/sbin/[^gi]' < rpm.filelist >> common.filelist
 grep '%{_prefix}/share' < rpm.filelist | \
-  grep -v '%{_prefix}/share/zoneinfo' >> common.filelist
+  grep -v -e '%{_prefix}/share/zoneinfo' -e '%%dir %{prefix}/share' \
+       >> common.filelist
 
 sed -i -e '\|%{_prefix}/bin|d' \
        -e '\|%{_prefix}/lib/locale|d' \
