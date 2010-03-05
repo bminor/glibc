@@ -1,4 +1,4 @@
-%define run_glibc_tests 0
+%define run_glibc_tests 1
 %define auxarches athlon sparcv9v sparc64v alphaev6
 %define xenarches i686 athlon
 %ifarch %{xenarches}
