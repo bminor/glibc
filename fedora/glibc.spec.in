@@ -16,7 +16,6 @@
 %define rtkaioarches %{ix86} x86_64 ia64 ppc ppc64 s390 s390x
 %define debuginfocommonarches alpha alphaev6 sparc sparcv9 sparcv9v sparc64 sparc64v
 %define multiarcharches ppc ppc64 %{ix86} x86_64
-%define _unpackaged_files_terminate_build 0
 
 Summary: The GNU libc libraries
 Name: glibc
