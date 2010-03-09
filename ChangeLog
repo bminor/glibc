@@ -1,3 +1,197 @@
+2010-03-09  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela): Handling
+	of R_SPARC_TLS_LE_* needs to use 32-bit loads and stores, not
+	64-bit ones.
+
+	* sysdeps/sparc/sparc32/memcpy.S: Fix build.
+
+	* sysdeps/sparc/sparc32/strlen.S: Optimize.
+	* sysdeps/sparc/sparc64/strlen.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/strlen.S (ASI_PNF, ASI_BLK_P,
+	XCC): Delete definitions, not needed.
+
+2010-03-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/internal_statvfs.c (__statvfs_getflags):
+	Little follow-up patch from last change.
+
+2010-03-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/internal_statvfs.c: Handle ext4 and logfs.
+	* sysdeps/unix/sysv/linux/linux_fsinfo.h: Add entry for logfs.
+
+2010-02-18  Yann Droneaud  <yann@droneaud.fr>
+
+	* resolv/res_send.c: Fixed DEBUG statements.
+	Moved tmpbuf declaration to block beginning and
+	updated pointer names used in multiple DprintQ() calls
+
+2010-02-18  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* config.make.in (config-asflags-i686): Define.
+	* configure.in: Substitute libc_cv_as_i686.
+	* sysdeps/i386/configure.in: Check if assembler supports -mtune=i686.
+	* sysdeps/i386/i686/Makefile (CFLAGS-.oX): Add -Wa,-mtune=i686
+	if assembler supports -mtune=i686.
+	(ASFLAGS-.oX): Likewise.
+
+2010-03-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/elf.h (R_X86_64_SIZE32): Define.
+	(R_X86_64_SIZE64): Define.
+
+2010-03-02  Richard Guenther  <rguenther@suse.de>
+
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): R_X86_64_PC32
+	is sign-extending.
+
+2010-03-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/in.h: Add a few more definitions from
+	the kernel headers.
+
+2010-03-04  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc64/Implies: Add ieee754/dbl-64/wordsize-64 entry.
+
+	* sysdeps/sparc/sparc32/sparcv8/udiv_qrnnd.S: Delete.
+	* sysdeps/sparc/sparc32/udiv_qrnnd.S: Delete.
+
+2010-03-03  David S. Miller  <davem@davemloft.net>
+
+	* math/math_private.h (INSERT_WORDS64): Fix argument order.
+
+2010-03-03  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/msgrcv.c: New file.
+
+2010-03-03  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_lazy_rel): Must
+	pass '1' for 't' argument to sparc_fixup_plt.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_lazy_rel):
+	Likewise.
+	* sysdeps/sparc/sparc32/dl-plt.h (OPCODE_BA_PT): Define.
+	(sparc_fixup_plt): Document 't' argument.  Enable branch
+	optimization and use v9 branches when possible.  Explain why we
+	cannot unconditionally patch the branch into the first PLT
+	instruction.
+	* sysdeps/sparc/sparc64/dl-plt.h (sparc64_fixup_plt): Document 't'
+	argument.  Use v9 branches when possible.  Explain why we can in
+	fact unconditionally use a branch in the first PLT instruction
+	here.
+
+2010-02-28  Roland McGrath  <roland@redhat.com>
+
+	* elf/elf.h (NT_X86_XSTATE): New macro.
+
+2010-02-25  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc64/Makefile: Add align-cpy rule.
+	* sysdeps/sparc/sparc64/align-cpy.S: New.
+	* sysdeps/sparc/sparc64/memcpy.S (__align_cpy_1, __align_cpy_2,
+	__align_cpy_4, __align_cpy_8, __align_cpy_16): Remove.
+	* sysdeps/sparc/sparc64/sparcv9b/memcpy.S (__align_cpy_1,
+	__align_cpy_2, __align_cpy_4, __align_cpy_8, __align_cpy_16):
+	Remove.
+	* sysdeps/sparc/sparc64/sparcv9v/memcpy.S (__align_cpy_1,
+	__align_cpy_2, __align_cpy_4, __align_cpy_8, __align_cpy_16):
+	Remove.
+	* sysdeps/sparc/sparc64/sparcv9v2/memcpy.S (__align_cpy_1,
+	__align_cpy_2, __align_cpy_4, __align_cpy_8, __align_cpy_16):
+	Remove.
+
+	* sysdeps/sparc/sparc32/bcopy.c: Delete.
+	* sysdeps/sparc/sparc32/memmove.c: Delete.
+	* sysdeps/sparc/sparc32/sparcv9/bcopy.c: Delete.
+	* sysdeps/sparc/sparc32/sparcv9/memmove.c: Delete.
+	* sysdeps/sparc/sparc64/bcopy.c: Delete.
+	* sysdeps/sparc/sparc64/memmove.c: Delete.
+	* sysdeps/sparc/sparc64/memcopy.h: New.
+	* sysdeps/sparc/sparc32/memcpy.S (bcopy, memmove): Remove.
+	* sysdeps/sparc/sparc64/memcpy.S (bcopy, memmove): Likewise.
+	* sysdeps/sparc/sparc64/sparcv9b/memcpy.S (bcopy, memmove): Likewise.
+	* sysdeps/sparc/sparc64/sparcv9v/memcpy.S (bcopy, memmove): Likewise.
+	* sysdeps/sparc/sparc64/sparcv9v2/memcpy.S (bcopy, memmove): Likewise.
+
+	* sysdeps/sparc/elf/rtld-global-offsets.sym: New file.
+	* sysdeps/sparc/Makefile (csu): Add rtld-global-offsets.sym to
+	gen-as-const-headers.
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/Makefile: New file.
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/memcpy.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/memset.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/sparcv9b/memcpy.S: Move to...
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/memcpy-ultra3.S: ...here.
+	* sysdeps/sparc/sparc32/sparcv9/sparcv9v/memcpy.S: Move to...
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/memcpy-niagara1.S: ...here.
+	* sysdeps/sparc/sparc32/sparcv9/sparcv9v/memset.S: Move to...
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/memset-niagara1.S: ...here.
+	* sysdeps/sparc/sparc32/sparcv9/sparcv9v2/memcpy.S: Move to...
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/memcpy-niagara2.S: ...here.
+	* sysdeps/sparc/sparc32/sparcv9/sparcv9v2/memset.S: Removed.
+	* sysdeps/sparc/sparc64/multiarch/Makefile: New file.
+	* sysdeps/sparc/sparc64/sparcv9v/memcpy.S: Move to...
+	* sysdeps/sparc/sparc64/multiarch/memcpy-niagara1.S: ...here.
+	* sysdeps/sparc/sparc64/sparcv9v2/memcpy.S: Move to...
+	* sysdeps/sparc/sparc64/multiarch/memcpy-niagara2.S: ...here.
+	* sysdeps/sparc/sparc64/sparcv9b/memcpy.S: Move to...
+	* sysdeps/sparc/sparc64/multiarch/memcpy-ultra3.S: ...here.
+	* sysdeps/sparc/sparc64/sparcv9v/memset.S: Move to...
+	* sysdeps/sparc/sparc64/multiarch/memset-niagara1.S: ...here.
+	* sysdeps/sparc/sparc64/sparcv9v2/memset.S: Removed.
+	* sysdeps/sparc/sparc64/multiarch/memcpy.S: New file.
+	* sysdeps/sparc/sparc64/multiarch/memset.S: New file.
+
+2010-02-20  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #11332]
+	* sysdeps/i386/i686/multiarch/strcmp-sse4.S: Use cfi_remember_state
+	and cfi_restore_state only if USE_AS_STRNCMP is defined.
+
+2010-02-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/Implies: Add ieee754/dbl-64/wordsize-64 entry.
+
+2010-02-24  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/multiarch/memcpy-ssse3-rep.S
+	(bk_write_less32bytes_2): Renamed to ...
+	(bk_write_less48bytes): This.
+	Use unsigned conditional jumps.
+	Correct unwind info.
+	Use add/sub instead of lea if possible.
+	(shl_0_gobble_cache_loop_tail): Removed.
+	(large_page): Properly adjust ECX.
+
+	* sysdeps/i386/i686/multiarch/memcpy-ssse3.S: Use unsigned
+	conditional jumps.
+	Correct unwind info.
+
+	* sysdeps/i386/i686/multiarch/memset-sse2-rep.S: Remove redundant
+	punpcklbw.
+	Use unsigned conditional jumps.
+	(128bytesormore_nt): Renamed to ...
+	(128bytesormore_endof_L1): This.
+	Use add instead of lea if possible.
+	Correct unwind info.
+	* sysdeps/i386/i686/multiarch/memset-sse2.S: Remove redundant
+	punpcklbw.
+	Use unsigned conditional jumps.
+	Use add instead of lea if possible.
+	Correct unwind info.
+
+2010-02-24  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11319]
+	* libio/iovdprintf.c (_IO_vdprintf): Explicitly flush stream before
+	undoing the stream because _IO_FINISH doesn't report failures.
+
+	[BZ #5553]
+	* malloc/malloc.c (public_vALLOc): Set ar_ptr when trying main_arena.
+	(public_pVALLOc): Likewise.
+	Patch by Petr Baudis.
+
 2010-02-22  Jim Meyering  <meyering@redhat.com>
 
 	* manual/math.texi (BSD Random): Fix a typo: s/are/is/
@@ -29,11 +223,6 @@
 
 	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_runtime_setup):
 	Adjust rela->r_offset by l->l_addr when rewriting PLT.
-
-2010-02-21  H.J. Lu  <hongjiu.lu@intel.com>
-
-	* sysdeps/i386/i686/multiarch/memcpy-ssse3-rep.S: Properly
-	decrement ECX when jumping to copy_page_by_rep.
 
 2010-02-19  Carl Fredrik Hammar  <hammy.lite@gmail.com>
 
@@ -215,17 +404,6 @@
 	* sysdeps/sparc/fpu/fegetenv.c: Likewise.
 	* sysdeps/x86_64/fpu/fegetenv.c: Likewise
 	* sysdeps/s390/fpu/fegetenv.c: Likewise.  Remove unused headers.
-
-2010-02-12  H.J. Lu  <hongjiu.lu@intel.com>
-
-	* sysdeps/i386/i686/multiarch/memcpy-ssse3-rep.S: Use unsigned
-	conditional jumps.
-	(shl_0_gobble_cache_loop_tail): Removed.
-	* sysdeps/i386/i686/multiarch/memcpy-ssse3.S: Likewise.
-
-	* sysdeps/i386/i686/multiarch/memset-sse2-rep.S: Use unsigned
-	conditional jumps.
-	* sysdeps/i386/i686/multiarch/memset-sse2.S: Likewise.
 
 2009-10-27  Aurelien Jarno  <aurelien@aurel32.net>
 

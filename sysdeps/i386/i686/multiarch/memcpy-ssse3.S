@@ -162,6 +162,7 @@ L(48bytesormore):
 	movl	%edx, %edi
 	and	$-16, %edx
 	PUSH (%esi)
+	cfi_remember_state
 	add	$16, %edx
 	movl	%edi, %esi
 	sub	%edx, %edi
@@ -187,6 +188,8 @@ L(48bytesormore):
 
 	BRANCH_TO_JMPTBL_ENTRY (L(shl_table), %edi, 4)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_0):
 	movdqu	%xmm0, (%esi)
@@ -234,6 +237,7 @@ L(shl_0_end):
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY (L(table_48bytes_fwd), %ecx, 4)
 
+	CFI_PUSH (%edi)
 L(shl_0_gobble):
 
 #ifdef DATA_CACHE_SIZE_HALF
@@ -383,7 +387,8 @@ L(shl_0_mem_less_16bytes):
 	add	%ecx, %eax
 	BRANCH_TO_JMPTBL_ENTRY (L(table_48bytes_fwd), %ecx, 4)
 
-
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_1):
 	BRANCH_TO_JMPTBL_ENTRY_VALUE(L(table_48bytes_fwd))
@@ -427,6 +432,8 @@ L(shl_1_end):
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY_TAIL(L(table_48bytes_fwd), %ecx, 4)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_2):
 	BRANCH_TO_JMPTBL_ENTRY_VALUE(L(table_48bytes_fwd))
@@ -470,6 +477,8 @@ L(shl_2_end):
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY_TAIL(L(table_48bytes_fwd), %ecx, 4)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_3):
 	BRANCH_TO_JMPTBL_ENTRY_VALUE(L(table_48bytes_fwd))
@@ -513,6 +522,8 @@ L(shl_3_end):
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY_TAIL(L(table_48bytes_fwd), %ecx, 4)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_4):
 	BRANCH_TO_JMPTBL_ENTRY_VALUE(L(table_48bytes_fwd))
@@ -556,6 +567,8 @@ L(shl_4_end):
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY_TAIL(L(table_48bytes_fwd), %ecx, 4)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_5):
 	BRANCH_TO_JMPTBL_ENTRY_VALUE(L(table_48bytes_fwd))
@@ -599,7 +612,8 @@ L(shl_5_end):
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY_TAIL(L(table_48bytes_fwd), %ecx, 4)
 
-
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_6):
 	BRANCH_TO_JMPTBL_ENTRY_VALUE(L(table_48bytes_fwd))
@@ -643,6 +657,8 @@ L(shl_6_end):
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY_TAIL(L(table_48bytes_fwd), %ecx, 4)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_7):
 	BRANCH_TO_JMPTBL_ENTRY_VALUE(L(table_48bytes_fwd))
@@ -686,6 +702,8 @@ L(shl_7_end):
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY_TAIL(L(table_48bytes_fwd), %ecx, 4)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_8):
 	BRANCH_TO_JMPTBL_ENTRY_VALUE(L(table_48bytes_fwd))
@@ -729,6 +747,8 @@ L(shl_8_end):
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY_TAIL(L(table_48bytes_fwd), %ecx, 4)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_9):
 	BRANCH_TO_JMPTBL_ENTRY_VALUE(L(table_48bytes_fwd))
@@ -772,6 +792,8 @@ L(shl_9_end):
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY_TAIL(L(table_48bytes_fwd), %ecx, 4)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_10):
 	BRANCH_TO_JMPTBL_ENTRY_VALUE(L(table_48bytes_fwd))
@@ -815,6 +837,8 @@ L(shl_10_end):
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY_TAIL(L(table_48bytes_fwd), %ecx, 4)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_11):
 	BRANCH_TO_JMPTBL_ENTRY_VALUE(L(table_48bytes_fwd))
@@ -858,6 +882,8 @@ L(shl_11_end):
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY_TAIL(L(table_48bytes_fwd), %ecx, 4)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_12):
 	BRANCH_TO_JMPTBL_ENTRY_VALUE(L(table_48bytes_fwd))
@@ -901,6 +927,8 @@ L(shl_12_end):
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY_TAIL(L(table_48bytes_fwd), %ecx, 4)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_13):
 	BRANCH_TO_JMPTBL_ENTRY_VALUE(L(table_48bytes_fwd))
@@ -944,6 +972,8 @@ L(shl_13_end):
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY_TAIL(L(table_48bytes_fwd), %ecx, 4)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_14):
 	BRANCH_TO_JMPTBL_ENTRY_VALUE(L(table_48bytes_fwd))
@@ -987,7 +1017,8 @@ L(shl_14_end):
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY_TAIL(L(table_48bytes_fwd), %ecx, 4)
 
-
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_15):
 	BRANCH_TO_JMPTBL_ENTRY_VALUE(L(table_48bytes_fwd))
@@ -1228,8 +1259,10 @@ L(fwd_write_3bytes):
 	movl	DEST(%esp), %eax
 # endif
 #endif
-	RETURN
+	RETURN_END
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(large_page):
 	movdqu	(%eax), %xmm1
@@ -1652,6 +1685,7 @@ L(bk_write_less32bytes):
 L(bk_write_less32bytes_2):
 	BRANCH_TO_JMPTBL_ENTRY (L(table_48_bytes_bwd), %ecx, 4)
 
+	CFI_PUSH (%esi)
 	ALIGN (4)
 L(bk_align):
 	cmp	$8, %ecx

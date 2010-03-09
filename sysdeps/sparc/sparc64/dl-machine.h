@@ -513,11 +513,13 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	  value = sym->st_value - sym_map->l_tls_offset
 	    + reloc->r_addend;
 	  if (r_type == R_SPARC_TLS_LE_HIX22)
-	    *reloc_addr = (*reloc_addr & 0xffc00000)
-	      | (((~value) >> 10) & 0x3fffff);
+	    *(unsigned int *)reloc_addr =
+	      ((*(unsigned int *)reloc_addr & 0xffc00000)
+	       | (((~value) >> 10) & 0x3fffff));
 	  else
-	    *reloc_addr = (*reloc_addr & 0xffffe000) | (value & 0x3ff)
-	      | 0x1c00;
+	    *(unsigned int *)reloc_addr =
+	      ((*(unsigned int *)reloc_addr & 0xffffe000) | (value & 0x3ff)
+	       | 0x1c00);
 	}
       break;
 # endif
@@ -661,7 +663,7 @@ elf_machine_lazy_rel (struct link_map *map,
 	{
 	  /* 'high' is always zero, for large PLT entries the linker
 	     emits an R_SPARC_IRELATIVE.  */
-	  sparc64_fixup_plt (map, reloc, reloc_addr, value, 0, 0);
+	  sparc64_fixup_plt (map, reloc, reloc_addr, value, 0, 1);
 	}
       else
 	*reloc_addr = value;

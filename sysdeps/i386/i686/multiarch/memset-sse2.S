@@ -243,7 +243,6 @@ L(32bytesormore):
 	pxor	%xmm0, %xmm0
 #else
 	movd	%eax, %xmm0
-	punpcklbw %xmm0, %xmm0
 	pshufd	$0, %xmm0, %xmm0
 #endif
 	testl	$0xf, %edx
@@ -287,14 +286,17 @@ L(128bytesormore):
 
 #ifdef DATA_CACHE_SIZE
 	POP (%ebx)
+# define RESTORE_EBX_STATE CFI_PUSH (%ebx)
 	cmp	$DATA_CACHE_SIZE, %ecx
 #else
 # ifdef SHARED
+#  define RESTORE_EBX_STATE
 	call	__i686.get_pc_thunk.bx
 	add	$_GLOBAL_OFFSET_TABLE_, %ebx
 	cmp	__x86_data_cache_size@GOTOFF(%ebx), %ecx
 # else
 	POP (%ebx)
+#  define RESTORE_EBX_STATE CFI_PUSH (%ebx)
 	cmp	__x86_data_cache_size, %ecx
 # endif
 #endif
@@ -328,7 +330,7 @@ L(128bytesormore_normal):
 	jae	L(128bytesormore_normal)
 
 L(128bytesless_normal):
-	lea	128(%ecx), %ecx
+	add	$128, %ecx
 	BRANCH_TO_JMPTBL_ENTRY (L(table_16_128bytes))
 
 	ALIGN (4)
@@ -351,6 +353,7 @@ L(128bytes_L2_normal):
 L(128bytesless_L2_normal):
 	BRANCH_TO_JMPTBL_ENTRY (L(table_16_128bytes))
 
+	RESTORE_EBX_STATE
 L(128bytesormore_nt_start):
 	sub	%ebx, %ecx
 	ALIGN (4)

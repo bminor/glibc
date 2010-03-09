@@ -127,10 +127,8 @@ ENTRY (MEMCPY)
 	cmp	%eax, %edx
 	jb	L(copy_forward)
 	je	L(fwd_write_0bytes)
-	cmp	$32, %ecx
-	jae	L(memmove_bwd)
-	jmp	L(bk_write_less32bytes_2)
-L(memmove_bwd):
+	cmp	$48, %ecx
+	jb	L(bk_write_less48bytes)
 	add	%ecx, %eax
 	cmp	%eax, %edx
 	movl	SRC(%esp), %eax
@@ -162,6 +160,7 @@ L(48bytesormore):
 	movl	%edx, %edi
 	and	$-16, %edx
 	PUSH (%esi)
+	cfi_remember_state
 	add	$16, %edx
 	movl	%edi, %esi
 	sub	%edx, %edi
@@ -234,6 +233,8 @@ L(shl_0_end):
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY (L(table_48bytes_fwd), %ecx, 4)
 
+	cfi_restore_state
+	cfi_remember_state
 L(shl_0_gobble):
 
 #ifdef DATA_CACHE_SIZE_HALF
@@ -252,7 +253,7 @@ L(shl_0_gobble):
 	sub	%esi, %edi
 	cmp	%edi, %ecx
 	jae	L(shl_0_gobble_mem_start)
-	lea	-128(%ecx), %ecx
+	sub	$128, %ecx
 	ALIGN (4)
 L(shl_0_gobble_cache_loop):
 	movdqa	(%eax), %xmm0
@@ -276,9 +277,9 @@ L(shl_0_gobble_cache_loop):
 	lea	0x80(%edx), %edx
 
 	jae	L(shl_0_gobble_cache_loop)
-	cmp	$-0x40, %ecx
-	lea	0x80(%ecx), %ecx
-	jl	L(shl_0_cache_less_64bytes)
+	add	$0x80, %ecx
+	cmp	$0x40, %ecx
+	jb	L(shl_0_cache_less_64bytes)
 
 	movdqa	(%eax), %xmm0
 	sub	$0x40, %ecx
@@ -319,12 +320,13 @@ L(shl_0_cache_less_16bytes):
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY (L(table_48bytes_fwd), %ecx, 4)
 
-
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_0_gobble_mem_start):
 	cmp	%al, %dl
 	je	L(copy_page_by_rep)
-	lea	-128(%ecx), %ecx
+	sub	$128, %ecx
 L(shl_0_gobble_mem_loop):
 	prefetchnta 0x1c0(%eax)
 	prefetchnta 0x280(%eax)
@@ -352,9 +354,9 @@ L(shl_0_gobble_mem_loop):
 	lea	0x80(%edx), %edx
 
 	jae	L(shl_0_gobble_mem_loop)
-	cmp	$-0x40, %ecx
-	lea	0x80(%ecx), %ecx
-	jl	L(shl_0_mem_less_64bytes)
+	add	$0x80, %ecx
+	cmp	$0x40, %ecx
+	jb	L(shl_0_mem_less_64bytes)
 
 	movdqa	(%eax), %xmm0
 	sub	$0x40, %ecx
@@ -395,14 +397,15 @@ L(shl_0_mem_less_16bytes):
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY (L(table_48bytes_fwd), %ecx, 4)
 
-
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_1):
 	BRANCH_TO_JMPTBL_ENTRY_VALUE(L(table_48bytes_fwd))
-	lea	-1(%eax), %eax
+	sub	$1, %eax
 	movaps	(%eax), %xmm1
 	xor	%edi, %edi
-	lea	-32(%ecx), %ecx
+	sub	$32, %ecx
 	movdqu	%xmm0, (%esi)
 	POP (%esi)
 L(shl_1_loop):
@@ -432,20 +435,22 @@ L(shl_1_loop):
 	jae	L(shl_1_loop)
 
 L(shl_1_end):
-	lea	32(%ecx), %ecx
+	add	$32, %ecx
 	add	%ecx, %edi
 	add	%edi, %edx
 	lea	1(%edi, %eax), %eax
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY_TAIL(L(table_48bytes_fwd), %ecx, 4)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_2):
 	BRANCH_TO_JMPTBL_ENTRY_VALUE(L(table_48bytes_fwd))
-	lea	-2(%eax), %eax
+	sub	$2, %eax
 	movaps	(%eax), %xmm1
 	xor	%edi, %edi
-	lea	-32(%ecx), %ecx
+	sub	$32, %ecx
 	movdqu	%xmm0, (%esi)
 	POP (%esi)
 L(shl_2_loop):
@@ -475,20 +480,22 @@ L(shl_2_loop):
 	jae	L(shl_2_loop)
 
 L(shl_2_end):
-	lea	32(%ecx), %ecx
+	add	$32, %ecx
 	add	%ecx, %edi
 	add	%edi, %edx
 	lea	2(%edi, %eax), %eax
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY_TAIL(L(table_48bytes_fwd), %ecx, 4)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_3):
 	BRANCH_TO_JMPTBL_ENTRY_VALUE(L(table_48bytes_fwd))
-	lea	-3(%eax), %eax
+	sub	$3, %eax
 	movaps	(%eax), %xmm1
 	xor	%edi, %edi
-	lea	-32(%ecx), %ecx
+	sub	$32, %ecx
 	movdqu	%xmm0, (%esi)
 	POP (%esi)
 L(shl_3_loop):
@@ -518,20 +525,22 @@ L(shl_3_loop):
 	jae	L(shl_3_loop)
 
 L(shl_3_end):
-	lea	32(%ecx), %ecx
+	add	$32, %ecx
 	add	%ecx, %edi
 	add	%edi, %edx
 	lea	3(%edi, %eax), %eax
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY_TAIL(L(table_48bytes_fwd), %ecx, 4)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_4):
 	BRANCH_TO_JMPTBL_ENTRY_VALUE(L(table_48bytes_fwd))
-	lea	-4(%eax), %eax
+	sub	$4, %eax
 	movaps	(%eax), %xmm1
 	xor	%edi, %edi
-	lea	-32(%ecx), %ecx
+	sub	$32, %ecx
 	movdqu	%xmm0, (%esi)
 	POP (%esi)
 L(shl_4_loop):
@@ -561,20 +570,22 @@ L(shl_4_loop):
 	jae	L(shl_4_loop)
 
 L(shl_4_end):
-	lea	32(%ecx), %ecx
+	add	$32, %ecx
 	add	%ecx, %edi
 	add	%edi, %edx
 	lea	4(%edi, %eax), %eax
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY_TAIL(L(table_48bytes_fwd), %ecx, 4)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_5):
 	BRANCH_TO_JMPTBL_ENTRY_VALUE(L(table_48bytes_fwd))
-	lea	-5(%eax), %eax
+	sub	$5, %eax
 	movaps	(%eax), %xmm1
 	xor	%edi, %edi
-	lea	-32(%ecx), %ecx
+	sub	$32, %ecx
 	movdqu	%xmm0, (%esi)
 	POP (%esi)
 L(shl_5_loop):
@@ -604,21 +615,22 @@ L(shl_5_loop):
 	jae	L(shl_5_loop)
 
 L(shl_5_end):
-	lea	32(%ecx), %ecx
+	add	$32, %ecx
 	add	%ecx, %edi
 	add	%edi, %edx
 	lea	5(%edi, %eax), %eax
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY_TAIL(L(table_48bytes_fwd), %ecx, 4)
 
-
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_6):
 	BRANCH_TO_JMPTBL_ENTRY_VALUE(L(table_48bytes_fwd))
-	lea	-6(%eax), %eax
+	sub	$6, %eax
 	movaps	(%eax), %xmm1
 	xor	%edi, %edi
-	lea	-32(%ecx), %ecx
+	sub	$32, %ecx
 	movdqu	%xmm0, (%esi)
 	POP (%esi)
 L(shl_6_loop):
@@ -648,20 +660,22 @@ L(shl_6_loop):
 	jae	L(shl_6_loop)
 
 L(shl_6_end):
-	lea	32(%ecx), %ecx
+	add	$32, %ecx
 	add	%ecx, %edi
 	add	%edi, %edx
 	lea	6(%edi, %eax), %eax
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY_TAIL(L(table_48bytes_fwd), %ecx, 4)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_7):
 	BRANCH_TO_JMPTBL_ENTRY_VALUE(L(table_48bytes_fwd))
-	lea	-7(%eax), %eax
+	sub	$7, %eax
 	movaps	(%eax), %xmm1
 	xor	%edi, %edi
-	lea	-32(%ecx), %ecx
+	sub	$32, %ecx
 	movdqu	%xmm0, (%esi)
 	POP (%esi)
 L(shl_7_loop):
@@ -691,20 +705,22 @@ L(shl_7_loop):
 	jae	L(shl_7_loop)
 
 L(shl_7_end):
-	lea	32(%ecx), %ecx
+	add	$32, %ecx
 	add	%ecx, %edi
 	add	%edi, %edx
 	lea	7(%edi, %eax), %eax
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY_TAIL(L(table_48bytes_fwd), %ecx, 4)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_8):
 	BRANCH_TO_JMPTBL_ENTRY_VALUE(L(table_48bytes_fwd))
-	lea	-8(%eax), %eax
+	sub	$8, %eax
 	movaps	(%eax), %xmm1
 	xor	%edi, %edi
-	lea	-32(%ecx), %ecx
+	sub	$32, %ecx
 	movdqu	%xmm0, (%esi)
 	POP (%esi)
 L(shl_8_loop):
@@ -734,20 +750,22 @@ L(shl_8_loop):
 	jae	L(shl_8_loop)
 
 L(shl_8_end):
-	lea	32(%ecx), %ecx
+	add	$32, %ecx
 	add	%ecx, %edi
 	add	%edi, %edx
 	lea	8(%edi, %eax), %eax
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY_TAIL(L(table_48bytes_fwd), %ecx, 4)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_9):
 	BRANCH_TO_JMPTBL_ENTRY_VALUE(L(table_48bytes_fwd))
-	lea	-9(%eax), %eax
+	sub	$9, %eax
 	movaps	(%eax), %xmm1
 	xor	%edi, %edi
-	lea	-32(%ecx), %ecx
+	sub	$32, %ecx
 	movdqu	%xmm0, (%esi)
 	POP (%esi)
 L(shl_9_loop):
@@ -777,20 +795,22 @@ L(shl_9_loop):
 	jae	L(shl_9_loop)
 
 L(shl_9_end):
-	lea	32(%ecx), %ecx
+	add	$32, %ecx
 	add	%ecx, %edi
 	add	%edi, %edx
 	lea	9(%edi, %eax), %eax
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY_TAIL(L(table_48bytes_fwd), %ecx, 4)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_10):
 	BRANCH_TO_JMPTBL_ENTRY_VALUE(L(table_48bytes_fwd))
-	lea	-10(%eax), %eax
+	sub	$10, %eax
 	movaps	(%eax), %xmm1
 	xor	%edi, %edi
-	lea	-32(%ecx), %ecx
+	sub	$32, %ecx
 	movdqu	%xmm0, (%esi)
 	POP (%esi)
 L(shl_10_loop):
@@ -820,20 +840,22 @@ L(shl_10_loop):
 	jae	L(shl_10_loop)
 
 L(shl_10_end):
-	lea	32(%ecx), %ecx
+	add	$32, %ecx
 	add	%ecx, %edi
 	add	%edi, %edx
 	lea	10(%edi, %eax), %eax
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY_TAIL(L(table_48bytes_fwd), %ecx, 4)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_11):
 	BRANCH_TO_JMPTBL_ENTRY_VALUE(L(table_48bytes_fwd))
-	lea	-11(%eax), %eax
+	sub	$11, %eax
 	movaps	(%eax), %xmm1
 	xor	%edi, %edi
-	lea	-32(%ecx), %ecx
+	sub	$32, %ecx
 	movdqu	%xmm0, (%esi)
 	POP (%esi)
 L(shl_11_loop):
@@ -863,20 +885,22 @@ L(shl_11_loop):
 	jae	L(shl_11_loop)
 
 L(shl_11_end):
-	lea	32(%ecx), %ecx
+	add	$32, %ecx
 	add	%ecx, %edi
 	add	%edi, %edx
 	lea	11(%edi, %eax), %eax
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY_TAIL(L(table_48bytes_fwd), %ecx, 4)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_12):
 	BRANCH_TO_JMPTBL_ENTRY_VALUE(L(table_48bytes_fwd))
-	lea	-12(%eax), %eax
+	sub	$12, %eax
 	movaps	(%eax), %xmm1
 	xor	%edi, %edi
-	lea	-32(%ecx), %ecx
+	sub	$32, %ecx
 	movdqu	%xmm0, (%esi)
 	POP (%esi)
 L(shl_12_loop):
@@ -906,20 +930,22 @@ L(shl_12_loop):
 	jae	L(shl_12_loop)
 
 L(shl_12_end):
-	lea	32(%ecx), %ecx
+	add	$32, %ecx
 	add	%ecx, %edi
 	add	%edi, %edx
 	lea	12(%edi, %eax), %eax
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY_TAIL(L(table_48bytes_fwd), %ecx, 4)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_13):
 	BRANCH_TO_JMPTBL_ENTRY_VALUE(L(table_48bytes_fwd))
-	lea	-13(%eax), %eax
+	sub	$13, %eax
 	movaps	(%eax), %xmm1
 	xor	%edi, %edi
-	lea	-32(%ecx), %ecx
+	sub	$32, %ecx
 	movdqu	%xmm0, (%esi)
 	POP (%esi)
 L(shl_13_loop):
@@ -949,20 +975,22 @@ L(shl_13_loop):
 	jae	L(shl_13_loop)
 
 L(shl_13_end):
-	lea	32(%ecx), %ecx
+	add	$32, %ecx
 	add	%ecx, %edi
 	add	%edi, %edx
 	lea	13(%edi, %eax), %eax
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY_TAIL(L(table_48bytes_fwd), %ecx, 4)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_14):
 	BRANCH_TO_JMPTBL_ENTRY_VALUE(L(table_48bytes_fwd))
-	lea	-14(%eax), %eax
+	sub	$14, %eax
 	movaps	(%eax), %xmm1
 	xor	%edi, %edi
-	lea	-32(%ecx), %ecx
+	sub	$32, %ecx
 	movdqu	%xmm0, (%esi)
 	POP (%esi)
 L(shl_14_loop):
@@ -992,21 +1020,22 @@ L(shl_14_loop):
 	jae	L(shl_14_loop)
 
 L(shl_14_end):
-	lea	32(%ecx), %ecx
+	add	$32, %ecx
 	add	%ecx, %edi
 	add	%edi, %edx
 	lea	14(%edi, %eax), %eax
 	POP (%edi)
 	BRANCH_TO_JMPTBL_ENTRY_TAIL(L(table_48bytes_fwd), %ecx, 4)
 
-
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(shl_15):
 	BRANCH_TO_JMPTBL_ENTRY_VALUE(L(table_48bytes_fwd))
-	lea	-15(%eax), %eax
+	sub	$15, %eax
 	movaps	(%eax), %xmm1
 	xor	%edi, %edi
-	lea	-32(%ecx), %ecx
+	sub	$32, %ecx
 	movdqu	%xmm0, (%esi)
 	POP (%esi)
 L(shl_15_loop):
@@ -1036,7 +1065,7 @@ L(shl_15_loop):
 	jae	L(shl_15_loop)
 
 L(shl_15_end):
-	lea	32(%ecx), %ecx
+	add	$32, %ecx
 	add	%ecx, %edi
 	add	%edi, %edx
 	lea	15(%edi, %eax), %eax
@@ -1240,21 +1269,23 @@ L(fwd_write_3bytes):
 	movl	DEST(%esp), %eax
 # endif
 #endif
-	RETURN
+	RETURN_END
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(large_page):
 	movdqu	(%eax), %xmm1
-	lea	16(%eax), %eax
 	movdqu	%xmm0, (%esi)
 	movntdq	%xmm1, (%edx)
-	lea	16(%edx), %edx
-	lea	-16(%ecx), %ecx
+	add	$0x10, %eax
+	add	$0x10, %edx
+	sub	$0x10, %ecx
 	cmp	%al, %dl
 	je	L(copy_page_by_rep)
 L(large_page_loop_init):
 	POP (%esi)
-	lea	-0x80(%ecx), %ecx
+	sub	$0x80, %ecx
 	POP (%edi)
 L(large_page_loop):
 	prefetchnta	0x1c0(%eax)
@@ -1280,9 +1311,9 @@ L(large_page_loop):
 	movntdq	%xmm7, 0x70(%edx)
 	lea	0x80(%edx), %edx
 	jae	L(large_page_loop)
-	cmp	$-0x40, %ecx
-	lea	0x80(%ecx), %ecx
-	jl	L(large_page_less_64bytes)
+	add	$0x80, %ecx
+	cmp	$0x40, %ecx
+	jb	L(large_page_less_64bytes)
 
 	movdqu	(%eax), %xmm0
 	movdqu	0x10(%eax), %xmm1
@@ -1312,6 +1343,8 @@ L(large_page_less_32bytes):
 	sfence
 	BRANCH_TO_JMPTBL_ENTRY (L(table_48bytes_fwd), %ecx, 4)
 
+	cfi_restore_state
+	cfi_remember_state
 	ALIGN (4)
 L(copy_page_by_rep):
 	mov	%eax, %esi
@@ -1658,8 +1691,8 @@ L(table_48_bytes_bwd):
 L(copy_backward):
 	PUSH (%esi)
 	movl	%eax, %esi
-	lea	(%ecx,%edx,1),%edx
-	lea	(%ecx,%esi,1),%esi
+	add	%ecx, %edx
+	add	%ecx, %esi
 	testl	$0x3, %edx
 	jnz	L(bk_align)
 
@@ -1698,9 +1731,10 @@ L(bk_write_less32bytes):
 	sub	%ecx, %edx
 	sub	%ecx, %eax
 	POP (%esi)
-L(bk_write_less32bytes_2):
+L(bk_write_less48bytes):
 	BRANCH_TO_JMPTBL_ENTRY (L(table_48_bytes_bwd), %ecx, 4)
 
+	CFI_PUSH (%esi)
 	ALIGN (4)
 L(bk_align):
 	cmp	$8, %ecx

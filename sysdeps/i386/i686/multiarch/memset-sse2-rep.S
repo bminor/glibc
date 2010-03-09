@@ -243,7 +243,6 @@ L(32bytesormore):
 	pxor	%xmm0, %xmm0
 #else
 	movd	%eax, %xmm0
-	punpcklbw %xmm0, %xmm0
 	pshufd	$0, %xmm0, %xmm0
 #endif
 	testl	$0xf, %edx
@@ -293,7 +292,7 @@ L(128bytesormore):
  * fast string will prefetch and combine data efficiently.
  */
 	cmp	%edi, %ecx
-	jae	L(128bytesormore_nt)
+	jae	L(128bytesormore_endof_L1)
 	subl	$128, %ecx
 L(128bytesormore_normal):
 	sub	$128, %ecx
@@ -323,11 +322,12 @@ L(128bytesormore_normal):
 
 L(128bytesless_normal):
 	POP (%edi)
-	lea	128(%ecx), %ecx
+	add	$128, %ecx
 	BRANCH_TO_JMPTBL_ENTRY (L(table_16_128bytes))
 
+	CFI_PUSH (%edi)
 	ALIGN (4)
-L(128bytesormore_nt):
+L(128bytesormore_endof_L1):
 	mov	%edx, %edi
 	mov	%ecx, %edx
 	shr	$2, %ecx
