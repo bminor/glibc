@@ -20,7 +20,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 14
+Release: 15
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1026,6 +1026,19 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Tue Mar  9 2010 Andreas Schwab <schwab@redhat.com> - 2.11.90-15
+- Update from master
+  - sparc64: Fix handling of R_SPARC_TLS_LE_* relocations (#571551)
+  - Handle ext4 and logfs in statvfs functions
+  - Fix setxid race with thread creation
+  - Pass -mtune=i686 to assembler when compiling for i686
+  - Fix R_X86_64_PC32 overflow detection
+  - Fix msgrcv on sparc64
+  - Fix unwind info in x86 strcmp-sse4.S (BZ#11332)
+  - sparc: Add multiarch support for memset/bzero/memcpy
+- Remove directories owned by filesystem (#569414)
+- Add %%ghost /etc/gai.conf to glibc-common (#567748)
+
 * Tue Feb 23 2010 Andreas Schwab <schwab@redhat.com> - 2.11.90-14
 - Update from master
   - Sparc updates
