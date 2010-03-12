@@ -1,3 +1,8 @@
+2010-03-12  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/dl-dst.h: Include "trusted-dirs.h".
+	(DL_DST_REQUIRED): Take $LIB into account.
+
 2011-01-10  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	* sysdeps/i386/Makefile: stdlib/cxa_finalize.c needs 16-byte stack
