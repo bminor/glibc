@@ -1,3 +1,7 @@
+2010-02-16  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	* Makefile: Add missing gconv-modules dependency.
+
 2010-01-25  Andreas Schwab  <schwab@redhat.com>
 
 	* locales/i18n: Don't map U00DF to U1E9E in toupper table.
