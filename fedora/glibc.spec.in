@@ -20,7 +20,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 15
+Release: 16
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1026,6 +1026,9 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Thu Mar 18 2010 Andreas Schwab <schwab@redhat.com> - 2.11.90-16
+- Fix SSSE3 memcmp (#574210)
+
 * Tue Mar  9 2010 Andreas Schwab <schwab@redhat.com> - 2.11.90-15
 - Update from master
   - sparc64: Fix handling of R_SPARC_TLS_LE_* relocations (#571551)
