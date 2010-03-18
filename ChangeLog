@@ -1,3 +1,8 @@
+2010-03-18  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/multiarch/memcmp-ssse3.S: Update %xmm3
+	when exit from loop.
+
 2010-03-09  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela): Handling
