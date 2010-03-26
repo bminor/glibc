@@ -1,3 +1,8 @@
+2010-03-25  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Reset no_data before
+	each action.
+
 2010-03-09  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela): Handling
