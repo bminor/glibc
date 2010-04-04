@@ -1,5 +1,15 @@
 2010-04-03  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #11387]
+	* sysdeps/unix/sysv/linux/ifaddrs.c (map_newlin): Don't abort on
+	unknown interface, return -1.
+	(getifaddrs_internal): Rename from getifaddrs.  Handle errors in
+	map_newlink be returning -EAGAIN.
+	(getifaddrs): If -EAGAIN is returned from getifaddrs_internal try
+	again.
+
+2010-04-03  Ulrich Drepper  <drepper@redhat.com>
+
 	[BZ #11438]
 	* posix/gai.conf: Document problems with IPv4 site-local addresses and
 	NATs.
