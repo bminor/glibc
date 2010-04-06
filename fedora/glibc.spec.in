@@ -25,7 +25,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 4
+Release: 5
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1034,6 +1034,9 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Wed Mar 31 2010 Tom "spot" Callaway <tcallawa@redhat.com> - 2.11.1-5
+- Fix for sparc64 msgrcv from upstream trunk
+
 * Wed Mar 17 2010 Andreas Schwab <schwab@redhat.com> - 2.11.1-4
 - Update from 2.11 branch
   - regcomp.c: do not ignore memory allocation failure (BZ#11127)
