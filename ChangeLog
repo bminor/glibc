@@ -1,3 +1,9 @@
+2010-04-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (default_scopes): Assign global
+	scope to RFC 1918 addresses.
+	* posix/gai.conf: Document difference from RFC 3484.
+
 2010-04-05  Thomas Schwinge  <thomas@schwinge.name>
 
 	* sysdeps/gnu/unwind-resume.c: New, moved from nptl/sysdeps/pthread/.
