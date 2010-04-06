@@ -20,7 +20,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 16
+Release: 17
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1026,6 +1026,33 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Tue Apr  6 2010 Andreas Schwab <schwab@redhat.com> - 2.11.90-17
+- Update from master
+  - Locale data updates (BZ#11007, BZ#11258, BZ#11272, BZ#10554)
+  - Handle DNS timeouts in old-style lookup code (BZ#11010)
+  - Fix aux cache handling in ldconfig with chroot (BZ#11149)
+  - Fix printing error messages in getopt (BZ#11043)
+  - Declare iruserok and iruserok_af (BZ#11070)
+  - Fix option aliasing in argp (BZ#11254)
+  - Handle POSIX-compliant errno value of unlink in remove (BZ#11276)
+  - Fix definition and testing of S_ISSOCK (BZ#11279)
+  - Fix retrieving of kernel header version (BZ#11287)
+  - Fix concurrent handling of __cpu_features (BZ#11292)
+  - Handle unnecessary padding in getdents64 (BZ#11333)
+  - Fix changes to interface list during getifaddrs calls (BZ#11387)
+  - Missing memory barrier in DES initialization (BZ#11449)
+  - Fix spurious UNAVAIL status is getaddrinfo
+  - Add support for new clocks (BZ#11389)
+  - Fix Linux getlogin{_r,} implementation
+  - Fix missing zero-termination in cuserid (BZ#11397)
+  - Fix glob with empty pattern
+  - Fix handling of STB_GNU_UNIQUE in LD_TRACE_PRELINKING
+  - Unify wint_t handling in wchar.h and wctype.h (BZ#11410)
+  - Implement handling of libc ABI in ELF header
+  - Don't underestimate length of DST substitution in rpath
+  - Power7-optimized 64-bit and 32-bit memcpy
+- Assign global scope to RFC 1918 addresses (#577626)
+
 * Thu Mar 18 2010 Andreas Schwab <schwab@redhat.com> - 2.11.90-16
 - Fix SSSE3 memcmp (#574210)
 
