@@ -1,3 +1,29 @@
+2010-04-05  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11007]
+	* locales/pt_BR: Define thousands_sep and grouping.
+
+2010-01-28  Marcelo E. Magallon  <marcelo.magallon@gmail.com>
+
+	[BZ #11258]
+	* locales/es_CR: Update for LC_MONETARY, LC_NUMERIC, LC_PAPER,
+	LC_TELEPHONE and LC_NAME and LC_ADDRESS.
+
+2010-04-04  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11272]
+	* locales/fr_BE: Define week, first_weekday, and first_workday.
+
+2010-03-24  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10554]
+	* locales/et_EE: Change first_weekday and first_workday.
+	Patch by Priit Laes <plaes@plaes.org>.
+
+2010-02-16  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	* Makefile: Add missing gconv-modules dependency.
+
 2010-02-03  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #10414]

@@ -1,4 +1,4 @@
-/* Copyright (C) 1999-2008, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1999-2008, 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1999.
 
@@ -317,7 +317,7 @@ print_version (FILE *stream, struct argp_state *state)
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "2009");
+"), "2010");
   fprintf (stream, gettext ("Written by %s.\n"),
 	   "Andreas Jaeger");
 }
@@ -1316,11 +1316,9 @@ main (int argc, char **argv)
 				  p ? (*p = '\0', cache_file) : "/");
 
       if (canon == NULL)
-	{
-	  error (EXIT_FAILURE, errno,
-		 _("Can't open cache file directory %s\n"),
-		 p ? cache_file : "/");
-	}
+	error (EXIT_FAILURE, errno,
+	       _("Can't open cache file directory %s\n"),
+	       p ? cache_file : "/");
 
       if (p)
 	++p;
@@ -1359,8 +1357,17 @@ main (int argc, char **argv)
       add_arch_dirs (config_file);
     }
 
+  char *aux_cache_file = _PATH_LDCONFIG_AUX_CACHE;
+  if (opt_chroot)
+    {
+      aux_cache_file = chroot_canon (opt_chroot, aux_cache_file);
+      if (aux_cache_file == NULL)
+	error (EXIT_FAILURE, errno, _("Can't open cache file %s\n"),
+	       _PATH_LDCONFIG_AUX_CACHE);
+    }
+
   if (! opt_ignore_aux_cache)
-    load_aux_cache (_PATH_LDCONFIG_AUX_CACHE);
+    load_aux_cache (aux_cache_file);
   else
     init_aux_cache ();
 
@@ -1369,7 +1376,7 @@ main (int argc, char **argv)
   if (opt_build_cache)
     {
       save_cache (cache_file);
-      save_aux_cache (_PATH_LDCONFIG_AUX_CACHE);
+      save_aux_cache (aux_cache_file);
     }
 
   return 0;

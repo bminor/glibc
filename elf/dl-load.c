@@ -1569,11 +1569,11 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
 #ifndef VALID_ELF_HEADER
 # define VALID_ELF_HEADER(hdr,exp,size)	(memcmp (hdr, exp, size) == 0)
 # define VALID_ELF_OSABI(osabi)		(osabi == ELFOSABI_SYSV)
-# define VALID_ELF_ABIVERSION(ver)	(ver == 0)
+# define VALID_ELF_ABIVERSION(osabi,ver) (ver == 0)
 #elif defined MORE_ELF_HEADER_DATA
   MORE_ELF_HEADER_DATA;
 #endif
-  static const unsigned char expected[EI_PAD] =
+  static const unsigned char expected[EI_NIDENT] =
   {
     [EI_MAG0] = ELFMAG0,
     [EI_MAG1] = ELFMAG1,
@@ -1655,7 +1655,13 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
 
       /* See whether the ELF header is what we expect.  */
       if (__builtin_expect (! VALID_ELF_HEADER (ehdr->e_ident, expected,
-						EI_PAD), 0))
+						EI_ABIVERSION)
+			    || !VALID_ELF_ABIVERSION (ehdr->e_ident[EI_OSABI],
+						      ehdr->e_ident[EI_ABIVERSION])
+			    || memcmp (&ehdr->e_ident[EI_PAD],
+				       &expected[EI_PAD],
+				       EI_NIDENT - EI_PAD) != 0,
+			    0))
 	{
 	  /* Something is wrong.  */
 	  const Elf32_Word *magp = (const void *) ehdr->e_ident;
@@ -1695,8 +1701,12 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
 	     allowed here.  */
 	  else if (!VALID_ELF_OSABI (ehdr->e_ident[EI_OSABI]))
 	    errstring = N_("ELF file OS ABI invalid");
-	  else if (!VALID_ELF_ABIVERSION (ehdr->e_ident[EI_ABIVERSION]))
+	  else if (!VALID_ELF_ABIVERSION (ehdr->e_ident[EI_OSABI],
+					  ehdr->e_ident[EI_ABIVERSION]))
 	    errstring = N_("ELF file ABI version invalid");
+	  else if (memcmp (&ehdr->e_ident[EI_PAD], &expected[EI_PAD],
+			   EI_NIDENT - EI_PAD) != 0)
+	    errstring = N_("nonzero padding in e_ident");
 	  else
 	    /* Otherwise we don't know what went wrong.  */
 	    errstring = N_("internal error");

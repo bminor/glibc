@@ -1,5 +1,4 @@
-/* Copyright (C) 1991,1992,1995-1997,2000,2002,2004,2010
-   Free Software Foundation, Inc.
+/* Copyright (C) 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,37 +16,24 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <assert.h>
+#include <pwd.h>
 #include <unistd.h>
-#include <sys/param.h>
+#include <not-cancel.h>
 
-#include <ldsodefs.h>
-#include <kernel-features.h>
+#define STATIC static
+#define getlogin getlogin_fd0
+#include <sysdeps/unix/getlogin.c>
+#undef getlogin
 
-/* Return the system page size.  */
-int
-__getpagesize ()
+
+/* Return the login name of the user, or NULL if it can't be determined.
+   The returned pointer, if not NULL, is good only until the next call.  */
+
+char *
+getlogin (void)
 {
-#ifdef __ASSUME_AT_PAGESIZE
-  assert (GLRO(dl_pagesize) != 0);
-  return GLRO(dl_pagesize);
-#else
-  if (GLRO(dl_pagesize) != 0)
-    return GLRO(dl_pagesize);
+  if (__getlogin_r_loginuid (name, sizeof (name)) == 0)
+    return name;
 
-# ifdef	EXEC_PAGESIZE
-  return EXEC_PAGESIZE;
-# else	/* No EXEC_PAGESIZE.  */
-#  ifdef NBPG
-#   ifndef CLSIZE
-#    define CLSIZE	1
-#   endif	/* No CLSIZE.  */
-  return NBPG * CLSIZE;
-#  else	/* No NBPG.  */
-  return NBPC;
-#  endif	/* NBPG.  */
-# endif	/* EXEC_PAGESIZE.  */
-#endif
+  return getlogin_fd0 ();
 }
-libc_hidden_def (__getpagesize)
-weak_alias (__getpagesize, getpagesize)
