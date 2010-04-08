@@ -1,0 +1,6 @@
+libc {
+  GLIBC_PRIVATE {
+    # Internal libc interface to libpthread
+    __uname;
+  }
+}
