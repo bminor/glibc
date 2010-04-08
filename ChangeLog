@@ -1,3 +1,9 @@
+2009-12-02  Eric Blake	<ebb9@byu.net>
+
+	[BZ #11041]
+	* posix/getopt.c (_getopt_internal_r): Handle '-Wfoo' identically
+	to '--foo', with optional argument or non-ambiguous prefix.
+
 2010-04-05  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #11010]
