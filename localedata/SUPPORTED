@@ -80,6 +80,7 @@ crh_UA/UTF-8 \
 cs_CZ.UTF-8/UTF-8 \
 cs_CZ/ISO-8859-2 \
 csb_PL/UTF-8 \
+cv_RU/UTF-8 \
 cy_GB.UTF-8/UTF-8 \
 cy_GB/ISO-8859-14 \
 da_DK.UTF-8/UTF-8 \
@@ -262,6 +263,7 @@ km_KH/UTF-8 \
 kn_IN/UTF-8 \
 ko_KR.EUC-KR/EUC-KR \
 ko_KR.UTF-8/UTF-8 \
+kok_IN/UTF-8 \
 ks_IN/UTF-8 \
 ks_IN@devanagari/UTF-8 \
 ku_TR.UTF-8/UTF-8 \
@@ -358,6 +360,7 @@ so_SO.UTF-8/UTF-8 \
 so_SO/ISO-8859-1 \
 sq_AL.UTF-8/UTF-8 \
 sq_AL/ISO-8859-1 \
+sq_MK/UTF-8 \
 sr_ME/UTF-8 \
 sr_RS/UTF-8 \
 sr_RS@latin/UTF-8 \

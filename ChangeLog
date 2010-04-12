@@ -1,3 +1,110 @@
+2010-04-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/aicache.c (addhstaiX): Correct passing memory to address
+	list to gethostbyname4_r functions.
+
+	* resolv/nss_dns/dns-host.c (gaih_getanswer_slice): Optimize
+	copying of h_name.
+
+2010-04-09  Roland McGrath  <roland@redhat.com>
+
+	* Makerules ($(common-objpfx)libc-abis.h): Depend on libc-abis.stamp.
+	($(common-objpfx)libc-abis.stamp): New target, rule moved from
+	libc-abis.h target.  Use a stamp file to avoid repeating no-op
+	move-if-change on every run.
+
+	* posix/Makefile (tst-chmod-ARGS): Pass $(objdir), not `pwd`.
+
+2010-04-08  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10915]
+	* nscd/nscd_stat.c (struct statdata): Add reload_count field.
+	(send_stats): Fill in reload_count.
+	(receive_print_stats): Print reload_count.
+
+	* sysdeps/unix/sysv/linux/getlogin_r.c (__getlogin_r_loginuid): When
+	reading the loginuid file use a buffer which is always large enough.
+	NUL-terminate the string.
+
+	* malloc/malloc.c (_int_malloc): Return NULL if printing error message
+	returns.
+
+2010-04-07  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/fallocate.c: Set errno on error.
+	* sysdeps/unix/sysv/linux/i386/fallocate64.c: Likewise.
+
+2010-04-08  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #10401]
+	* math/s_cprojl.c (__cprojl): Fix implementation to follow C99
+	standard.
+	* math/s_cprojf.c (__cprojf): Likewise.
+	* math/s_cproj.c (__cproj): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_cprojl.c (__cprojl): Likewise.
+	* math/libm-test.inc (cproj_test): Fix test.
+
+2010-04-08  Roland McGrath  <roland@redhat.com>
+
+	* Makerules (libc-abis): Variable removed.
+	($(common-objpfx)libc-abis.h): Depend on Makerules too.
+	Use automatic variables in commands.
+	Depend on first libc-abis from $(sysdirs) or $(..).
+
+2010-04-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/bug-getopt1.c: New file.
+	* posix/bug-getopt2.c: New file.
+	* posix/bug-getopt3.c: New file.
+	* posix/bug-getopt4.c: New file.
+	* posix/bug-getopt5.c: New file.
+
+2009-12-01  Eric Blake  <ebb9@byu.net>
+
+	[BZ #11039]
+	* posix/getopt.c (_getopt_internal_r): Skip optional - or + before
+	checking lead byte of optstring for :.
+
+	[BZ #11040]
+	* posix/getopt.c (_getopt_internal_r): Reject '-;' as short
+	option, since it conflicts with "W;" optstring extension.
+
+2009-12-02  Eric Blake  <ebb9@byu.net>
+
+	[BZ #11041]
+	* posix/getopt.c (_getopt_internal_r): Handle '-Wfoo' identically
+	to '--foo', with optional argument or non-ambiguous prefix.
+
+2010-04-07  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11134]
+	* nis/libnsl.h (NSS_FLAG_ADJUNCT_AS_SHADOW): Define.
+	* nis/nss: Document new ADJUNCT_AS_SHADOW variable.
+	* nis/nss-default.c: Handle ADJUNCT_AS_SHADOW variable.
+	* nis/nss_nis/nis-pwd.c (internal_nis_endpwent): Minor cleanups.
+	(internal_nis_getpwent_r): Don't fill in password from adjunct table
+	if NSS_FLAG_ADJUNCT_AS_SHADOW is set.
+	(_nss_nis_getpwnam_r): Likewise.
+	(_nss_nis_getpwuid_r): Likewise.
+	* nis/nss_nis/nis-spwd.c (ent_adjunct_used): New global variable.
+	(_nss_nis_setspent): Also reset ent_adjunct_used.
+	(internal_nis_getspent_r): If new_start is set and shadow.byname table
+	does not exist and NSS_FLAG_ADJUNCT_AS_SHADOW is set, try to get
+	passwd.adjunct.byname table.  If new_start is not set get next entry
+	from the initially used table.  Synthesize shadow.byname table if
+	necessary by adding two empty fields.
+	(_nss_nis_getspnam_r): If shadow.byname table does not exist and
+	NSS_FLAG_ADJUNCT_AS_SHADOW is set, try to get passwd.adjunct.byname
+	table and synthesize shadow.byname table.
+
+2010-04-06  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* Makerules (libc-abis): Add $(..) to libc-abis.
+
+2010-04-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* Makerules (libc-abis): Fix search for libc-abis in add-ons.
+
 2010-04-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (default_scopes): Assign global
@@ -12,6 +119,10 @@
 	build unwind-resume code, previously in nptl/sysdeps/pthread/Makefile.
 
 2010-04-05  Roland McGrath  <roland@redhat.com>
+
+	* elf/dl-cache.c (_dl_load_cache_lookup): Obey dl_hwcap_mask.
+
+	* elf/dl-support.c (_dl_hwcap_mask): New variable.
 
 	* elf/rtld.c (dl_main) [HAVE_AUX_VECTOR]: Add a cast.
 
@@ -172,6 +283,7 @@
 
 2010-03-25  Andreas Schwab  <schwab@redhat.com>
 
+	[BZ #11001]
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Reset no_data before
 	each action.
 
@@ -969,6 +1081,7 @@
 	re_node_set_insert failure; return REG_ESPACE.
 	Patch by Paul Eggert.
 
+	[BZ #10864]
 	* bits/confname.h: Make pre-C99-safe.
 
 2010-01-14  Ryan S. Arnold  <rsa@us.ibm.com>

@@ -92,7 +92,9 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   tst-execve1 tst-execve2 tst-execle1 tst-execle2 \
 		   tst-execvp3 tst-execvp4 tst-rfc3484 tst-rfc3484-2 \
 		   tst-rfc3484-3 \
-		   tst-getaddrinfo3 tst-fnmatch2 tst-cpucount tst-cpuset
+		   tst-getaddrinfo3 tst-fnmatch2 tst-cpucount tst-cpuset \
+		   bug-getopt1 bug-getopt2 bug-getopt3 bug-getopt4 \
+		   bug-getopt5
 xtests		:= bug-ga2
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
@@ -177,7 +179,7 @@ tstgetopt-ARGS = -a -b -cfoobar --required foobar --optional=bazbug \
 tst-exec-ARGS = -- $(built-program-cmd)
 tst-spawn-ARGS = -- $(built-program-cmd)
 tst-dir-ARGS = `pwd` `cd $(common-objdir)/$(subdir); pwd` `cd $(common-objdir); pwd` $(objpfx)tst-dir
-tst-chmod-ARGS = `pwd`
+tst-chmod-ARGS = $(objdir)
 tst-vfork3-ARGS = --test-dir=$(objpfx)
 
 tst-fnmatch-ENV = LOCPATH=$(common-objpfx)localedata
