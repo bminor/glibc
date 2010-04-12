@@ -20,7 +20,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 17
+Release: 18
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1026,6 +1026,18 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Apr 12 2010 Andreas Schwab <schwab@redhat.com> - 2.11.90-18
+- Update from master
+  - Implement interfaces to set and get names of threads (BZ#11390)
+  - Locale data updates (BZ#10824, BZ#10936, BZ#11470, BZ#11471)
+  - Print reload count in nscd statistics (BZ#10915)
+  - Fix reading loginuid file in getlogin{,_r}
+  - Fix fallocate error return on i386
+  - Fix cproj implmentation (BZ#10401)
+  - Fix getopt handing (BZ#11039, BZ#11040, BZ#11041)
+  - Implement new mode for NIS passwd.adjunct.byname table (BZ#11134)
+  - Obey LD_HWCAP_MASK in ld.so.cache lookups
+
 * Tue Apr  6 2010 Andreas Schwab <schwab@redhat.com> - 2.11.90-17
 - Update from master
   - Locale data updates (BZ#11007, BZ#11258, BZ#11272, BZ#10554)
