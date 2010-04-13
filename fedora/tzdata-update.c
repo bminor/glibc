@@ -397,6 +397,16 @@ char buffer[32768], data[32768];
 size_t datasize;
 char zonename[1024];
 
+static int
+simple_memcmp (const char *s1, const char *s2, size_t n)
+{
+  int ret = 0;
+
+  while (n--
+	 && (ret = *(unsigned char *) s1++ - *(unsigned char *) s2++) == 0);
+  return ret;
+}
+
 ssize_t
 readall (int fd, void *buf, size_t len)
 {
@@ -455,7 +465,8 @@ update (const char *filename)
   if (ret <= 0 || (size_t) ret == sizeof (buffer))
     return;
   /* Don't update the file unnecessarily.  */
-  if ((size_t) ret == datasize && memcmp (buffer, data, datasize) == 0)
+  if ((size_t) ret == datasize
+      && simple_memcmp (buffer, data, datasize) == 0)
     return;
   size_t len = strlen (filename);
   char tempfilename[len + sizeof (".tzupdate")];
@@ -507,7 +518,7 @@ main (int argc, char **argv)
   while (p != NULL)
     {
       while (*p == ' ' || *p == '\t') p++;
-      if (memcmp (p, "ZONE", 4) == 0)
+      if (simple_memcmp (p, "ZONE", 4) == 0)
 	{
 	  p += 4;
 	  while (*p == ' ' || *p == '\t') p++;
