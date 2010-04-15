@@ -1,3 +1,8 @@
+2010-04-14  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/dl-version.c (_dl_check_map_versions): Avoid index overflow
+	when dependencies are missing.
+
 2010-04-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/aicache.c (addhstaiX): Correct passing memory to address
