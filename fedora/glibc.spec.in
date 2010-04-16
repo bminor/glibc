@@ -406,7 +406,7 @@ cd build-%{nptl_target_cpu}-linuxnptl && \
 librtso=`basename $RPM_BUILD_ROOT/%{_lib}/librt.so.*`
 
 %ifarch %{rtkaioarches}
-rm -f $RPM_BUILD_ROOT{,%{_prefix}}/%{_lib}/librtkaio.so*
+rm -f $RPM_BUILD_ROOT{,%{_prefix}}/%{_lib}/librtkaio.*
 rm -f $RPM_BUILD_ROOT%{_prefix}/%{_lib}/librt.so.*
 mkdir -p $RPM_BUILD_ROOT/%{_lib}/rtkaio
 mv $RPM_BUILD_ROOT/%{_lib}/librtkaio-*.so $RPM_BUILD_ROOT/%{_lib}/rtkaio/
