@@ -1,5 +1,5 @@
 /* Handle general operations.
-   Copyright (C) 1997,1998,1999,2000,2001,2002,2003,2006
+   Copyright (C) 1997,1998,1999,2000,2001,2002,2003,2006,2010
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -617,7 +617,8 @@ __aio_enqueue_user_request (struct requestlist *newp)
 	  running = newp->running = allocated;
 
 	  /* Now try to start a thread.  */
-	  if (aio_create_helper_thread (&thid, handle_fildes_io, newp) == 0)
+	  result = aio_create_helper_thread (&thid, handle_fildes_io, newp);
+	  if (result == 0)
 	    /* We managed to enqueue the request.  All errors which can
 	       happen now can be recognized by calls to `aio_return' and
 	       `aio_error'.  */
@@ -628,10 +629,14 @@ __aio_enqueue_user_request (struct requestlist *newp)
 	      running = newp->running = yes;
 
 	      if (nthreads == 0)
-		/* We cannot create a thread in the moment and there is
-		   also no thread running.  This is a problem.  `errno' is
-		   set to EAGAIN if this is only a temporary problem.  */
-		result = -1;
+		{
+		  /* We cannot create a thread in the moment and there is
+		     also no thread running.  This is a problem.  `errno' is
+		     set to EAGAIN if this is only a temporary problem.  */
+		  __aio_remove_request (NULL, newp, 0);
+		}
+	      else
+		result = 0;
 	    }
 	}
     }
@@ -658,7 +663,7 @@ struct requestlist *
 internal_function
 __aio_enqueue_request_ctx (aiocb_union *aiocbp, int operation, kctx_t kctx)
 {
-  int policy, prio;
+  int policy, prio, result;
   struct sched_param param;
   struct requestlist *newp;
   int op = (operation & 0xffff);
@@ -793,10 +798,13 @@ __aio_enqueue_request_ctx (aiocb_union *aiocbp, int operation, kctx_t kctx)
       newp->kioctx = KCTX_NONE;
     }
 
-  if (__aio_enqueue_user_request (newp))
+  result = __aio_enqueue_user_request (newp);
+  if (result)
     {
       /* Something went wrong.  */
       __aio_free_request (newp);
+      aiocbp->aiocb.__error_code = result;
+      __set_errno (result);
       newp = NULL;
     }
 
