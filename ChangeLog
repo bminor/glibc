@@ -1,3 +1,7 @@
+2010-04-24  Emilio Pozuelo Monfort  <pochu27@gmail.com>
+
+	* hurd/lookup-at.c (__file_name_lookup_at): Fix error return value.
+
 2010-04-14  Andreas Schwab  <schwab@redhat.com>
 
 	* elf/dl-version.c (_dl_check_map_versions): Avoid index overflow
