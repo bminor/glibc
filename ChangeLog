@@ -1,3 +1,73 @@
+2010-05-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* version.h (VERSION): Bump for 2.12 release.
+	* include/features.h (__GLIBC_MINOR__): Bump to 12.
+
+	[BZ #11149]
+	* elf/ldconfig.c (search_dir): Fix handling of symlinks in chroot.
+
+	* elf/chroot_canon.c (chroot_canon): Use xmalloc and xrealloc.
+
+	* elf/ldconfig.c (parse_conf_include): Don't fall back to
+	directories named in config file outside the chroot.
+
+2010-02-02  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/generic/ldsodefs.h (struct rtld_global): Add
+	_dl_load_write_lock.
+	* elf/rtld.c (_rtld_global): Initialize it.
+	* elf/dl-support.c (_dl_load_write_lock): Define .
+	* elf/dl-close.c (_dl_close_worker): Lock GL(dl_load_write_lock)
+	when modifying the list of loaded objects.
+	* elf/dl-load.c (lose): Likewise.
+	* elf/dl-object.c (_dl_new_object): Likewise.
+	* elf/dl-iteratephdr.c (__dl_iterate_phdr): Lock
+	GL(dl_load_write_lock) instead of GL(dl_load_lock).
+
+2010-05-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-iteratephdr.c (__dl_iterate_phdr): Remove unnecessary
+	assignment.
+
+2010-05-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/mntent_r.c (encode_name): The slow loop handles newlines so we
+	should recognize them as an abort condition.
+	Patch by Jan Lieskovsky <jlieskov@redhat.com>.
+
+2010-04-25  Bruno Haible  <bruno@clisp.org>
+
+	[BZ #11538]
+	* sysdeps/unix/bsd/ptsname.c (__ptsname_r): Use __ttyname_r's return
+	value instead of errno.
+	* sysdeps/unix/getlogin.c (getlogin): Likewise.
+
+	[BZ #11537]
+	* sysdeps/mach/hurd/ttyname_r.c (__ttyname_r): Upon failure, return
+	errno, not -1.
+
+2010-04-24  Emilio Pozuelo Monfort  <pochu27@gmail.com>
+
+	* hurd/lookup-at.c (__file_name_lookup_at): Fix error return value.
+
+2010-04-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/vi.po: Update from translation team.
+
+2010-04-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/bg.po: Update from translation team.
+
+2010-04-19  Roland McGrath  <roland@redhat.com>
+
+	* elf/Makefile ($(objpfx)noload): Depend on libdl.so.
+
+	* Makeconfig (as-needed, no-as-needed): New variables.
+	(link-libc): Add ld.so inside --as-needed.
+
+	* stdio-common/tst-fmemopen.c (TEST_FILE): Macro removed.
+	(main): Take arguments.  Construct test file name from ARGV[0].
+
 2010-04-15  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* string/test-strncmp.c (check_result): New function.
@@ -1643,7 +1713,7 @@
 	argv argument as non-NULL.
 	(execle, execl, execlp): Mark the first ARG argument as non-NULL.
 
--2009-12-08  Ulrich Drepper  <drepper@redhat.com>
+2009-12-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/socket.h: Define mmsghdr and declare
 	recvmmsg.

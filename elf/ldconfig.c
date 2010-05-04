@@ -773,7 +773,18 @@ search_dir (const struct dir_entry *entry)
 	{
 	  /* In case of symlink, we check if the symlink refers to
 	     a directory. */
-	  if (__builtin_expect (stat64 (real_file_name, &stat_buf), 0))
+	  char *target_name = real_file_name;
+	  if (opt_chroot)
+	    {
+	      target_name = chroot_canon (opt_chroot, file_name);
+	      if (target_name == NULL)
+		{
+		  if (strstr (file_name, ".so") == NULL)
+		    error (0, 0, _("Input file %s not found.\n"), file_name);
+		  continue;
+		}
+	    }
+	  if (__builtin_expect (stat64 (target_name, &stat_buf), 0))
 	    {
 	      if (opt_verbose)
 		error (0, errno, _("Cannot stat %s"), file_name);
@@ -1183,7 +1194,9 @@ parse_conf_include (const char *config_file, unsigned int lineno,
   if (do_chroot && opt_chroot)
     {
       char *canon = chroot_canon (opt_chroot, pattern);
-      result = glob64 (canon ?: pattern, 0, NULL, &gl);
+      if (canon == NULL)
+	return;
+      result = glob64 (canon, 0, NULL, &gl);
       free (canon);
     }
   else
