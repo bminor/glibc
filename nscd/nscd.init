@@ -76,7 +76,7 @@ case "$1" in
 	RETVAL=$?
 	;;
     stop)
-	stop
+	[ ! -e /var/lock/subsys/nscd ] || stop
 	RETVAL=$?
 	;;
     status)
