@@ -173,7 +173,7 @@ libraries, as well as national language (locale) support.
 Summary: A Name Service Caching Daemon (nscd).
 Group: System Environment/Daemons
 Requires: libselinux >= 1.17.10-1, audit-libs >= 1.1.3
-Requires(pre): /sbin/chkconfig, /usr/sbin/useradd, /usr/sbin/userdel, sh-utils
+Requires(pre): /sbin/chkconfig, /usr/sbin/useradd, /usr/sbin/userdel, coreutils
 
 %description -n nscd
 Nscd caches name service lookups and can dramatically improve
