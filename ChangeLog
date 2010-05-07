@@ -1,3 +1,7 @@
+2010-05-07  Roland McGrath  <roland@redhat.com>
+
+	* elf/ldconfig.c (main): Add a const.
+
 2010-05-04  Andreas Schwab  <schwab@redhat.com>
 
 	* posix/regexec.c (find_collation_sequence_value): Fix skipping
