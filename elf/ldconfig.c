@@ -773,7 +773,18 @@ search_dir (const struct dir_entry *entry)
 	{
 	  /* In case of symlink, we check if the symlink refers to
 	     a directory. */
-	  if (__builtin_expect (stat64 (real_file_name, &stat_buf), 0))
+	  char *target_name = real_file_name;
+	  if (opt_chroot)
+	    {
+	      target_name = chroot_canon (opt_chroot, file_name);
+	      if (target_name == NULL)
+		{
+		  if (strstr (file_name, ".so") == NULL)
+		    error (0, 0, _("Input file %s not found.\n"), file_name);
+		  continue;
+		}
+	    }
+	  if (__builtin_expect (stat64 (target_name, &stat_buf), 0))
 	    {
 	      if (opt_verbose)
 		error (0, errno, _("Cannot stat %s"), file_name);
@@ -1174,7 +1185,9 @@ parse_conf_include (const char *config_file, unsigned int lineno,
   if (do_chroot && opt_chroot)
     {
       char *canon = chroot_canon (opt_chroot, pattern);
-      result = glob64 (canon ?: pattern, 0, NULL, &gl);
+      if (canon == NULL)
+	return;
+      result = glob64 (canon, 0, NULL, &gl);
       free (canon);
     }
   else
@@ -1305,11 +1318,9 @@ main (int argc, char **argv)
 				  p ? (*p = '\0', cache_file) : "/");
 
       if (canon == NULL)
-	{
-	  error (EXIT_FAILURE, errno,
-		 _("Can't open cache file directory %s\n"),
-		 p ? cache_file : "/");
-	}
+	error (EXIT_FAILURE, errno,
+	       _("Can't open cache file directory %s\n"),
+	       p ? cache_file : "/");
 
       if (p)
 	++p;
@@ -1346,8 +1357,17 @@ main (int argc, char **argv)
 	add_system_dir (LIBDIR);
     }
 
+  const char *aux_cache_file = _PATH_LDCONFIG_AUX_CACHE;
+  if (opt_chroot)
+    {
+      aux_cache_file = chroot_canon (opt_chroot, aux_cache_file);
+      if (aux_cache_file == NULL)
+	error (EXIT_FAILURE, errno, _("Can't open cache file %s\n"),
+	       _PATH_LDCONFIG_AUX_CACHE);
+    }
+
   if (! opt_ignore_aux_cache)
-    load_aux_cache (_PATH_LDCONFIG_AUX_CACHE);
+    load_aux_cache (aux_cache_file);
   else
     init_aux_cache ();
 
@@ -1356,7 +1376,7 @@ main (int argc, char **argv)
   if (opt_build_cache)
     {
       save_cache (cache_file);
-      save_aux_cache (_PATH_LDCONFIG_AUX_CACHE);
+      save_aux_cache (aux_cache_file);
     }
 
   return 0;

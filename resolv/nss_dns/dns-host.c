@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2004, 2007, 2008, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2004, 2007-2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Extended from original form by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -198,21 +198,27 @@ _nss_dns_gethostbyname3_r (const char *name, int af, struct hostent *result,
 			  1024, &host_buffer.ptr, NULL, NULL, NULL);
   if (n < 0)
     {
-      if (errno == ESRCH)
+      switch (errno)
 	{
+	case ESRCH:
 	  status = NSS_STATUS_TRYAGAIN;
 	  h_errno = TRY_AGAIN;
+	  break;
+	case ECONNREFUSED:
+	case ETIMEDOUT:
+	  status = NSS_STATUS_UNAVAIL;
+	  break;
+	default:
+	  status = NSS_STATUS_NOTFOUND;
+	  break;
 	}
-      else
-	status = (errno == ECONNREFUSED
-		  ? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND);
       *h_errnop = h_errno;
       if (h_errno == TRY_AGAIN)
 	*errnop = EAGAIN;
       else
 	__set_errno (olderr);
 
-      /* If we are looking for a IPv6 address and mapping is enabled
+      /* If we are looking for an IPv6 address and mapping is enabled
 	 by having the RES_USE_INET6 bit in _res.options set, we try
 	 another lookup.  */
       if (af == AF_INET6 && (_res.options & RES_USE_INET6))
@@ -1044,7 +1050,7 @@ gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
 	  ++had_error;
 	  continue;
 	}
-      if (*firstp)
+      if (*firstp && canon == NULL)
 	{
 	  h_name = buffer;
 	  buffer += h_namelen;
@@ -1160,19 +1166,7 @@ gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
 	  if (ttl != 0 && ttlp != NULL)
 	    *ttlp = ttl;
 
-	  if (canon != NULL)
-	    {
-	      (*pat)->name = canon;
-
-	      /* Reclaim buffer space.  */
-	      if (h_name + h_namelen == buffer)
-		{
-		  buffer = h_name;
-		  buflen += h_namelen;
-		}
-	    }
-	  else
-	    (*pat)->name = h_name;
+	  (*pat)->name = canon ?: h_name;
 
 	  *firstp = 0;
 	}

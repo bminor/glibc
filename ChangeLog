@@ -66,6 +66,268 @@
 	* include/sys/uio.h: Change __vector to __iovec to avoid clash
 	with altivec.
 
+2010-05-07  Roland McGrath  <roland@redhat.com>
+
+	* elf/ldconfig.c (main): Add a const.
+
+2010-05-04  Andreas Schwab  <schwab@redhat.com>
+
+	* posix/regexec.c (find_collation_sequence_value): Fix skipping
+	the wide char sequence of the collating element.
+
+2010-05-03  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11149]
+	* elf/ldconfig.c (search_dir): Fix handling of symlinks in chroot.
+
+	* elf/chroot_canon.c (chroot_canon): Use xmalloc and xrealloc.
+
+	* elf/ldconfig.c (parse_conf_include): Don't fall back to
+	directories named in config file outside the chroot.
+
+2010-05-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/mntent_r.c (encode_name): The slow loop handles newlines so we
+	should recognize them as an abort condition.
+	Patch by Jan Lieskovsky <jlieskov@redhat.com>.
+
+2010-04-25  Bruno Haible  <bruno@clisp.org>
+
+	[BZ #11538]
+	* sysdeps/unix/bsd/ptsname.c (__ptsname_r): Use __ttyname_r's return
+	value instead of errno.
+	* sysdeps/unix/getlogin.c (getlogin): Likewise.
+
+	[BZ #11537]
+	* sysdeps/mach/hurd/ttyname_r.c (__ttyname_r): Upon failure, return
+	errno, not -1.
+
+2010-04-24  Emilio Pozuelo Monfort  <pochu27@gmail.com>
+
+	* hurd/lookup-at.c (__file_name_lookup_at): Fix error return value.
+
+2010-04-14  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/dl-version.c (_dl_check_map_versions): Avoid index overflow
+	when dependencies are missing.
+
+2010-04-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/aicache.c (addhstaiX): Correct passing memory to address
+	list to gethostbyname4_r functions.
+
+	* resolv/nss_dns/dns-host.c (gaih_getanswer_slice): Optimize
+	copying of h_name.
+
+2010-04-07  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/fallocate.c: Set errno on error.
+	* sysdeps/unix/sysv/linux/i386/fallocate64.c: Likewise.
+
+2009-12-01  Eric Blake  <ebb9@byu.net>
+
+	[BZ #11039]
+	* posix/getopt.c (_getopt_internal_r): Skip optional - or + before
+	checking lead byte of optstring for :.
+
+	[BZ #11040]
+	* posix/getopt.c (_getopt_internal_r): Reject '-;' as short
+	option, since it conflicts with "W;" optstring extension.
+
+2009-12-02  Eric Blake  <ebb9@byu.net>
+
+	[BZ #11041]
+	* posix/getopt.c (_getopt_internal_r): Handle '-Wfoo' identically
+	to '--foo', with optional argument or non-ambiguous prefix.
+
+2010-04-05  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11010]
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyname3_r): Handle
+	timeouts from servers.
+
+	[BZ #11149]
+	* elf/ldconfig.c (main): Respect chroot setting when looking for
+	the aux cache.
+
+2010-04-04  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11043]
+	* posix/getopt.c (_getopt_internal_r): Fix arguments printed in error
+	messages.
+
+	[BZ #11070]
+	* resolv/netdb.h: Declare iruserok and iruserok_af.
+
+	* argp/Makefile: Add rules to build and run bug-argp2.
+	* argp/bug-argp2.c: New file.
+
+2010-02-05  Sergey Poznyakoff  <gray@gnu.org.ua>
+
+	[BZ #11254]
+	* argp/argp-parse.c (convert_options): Fix improper use of `|'
+	between character values.
+
+2010-04-04  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11287]
+	* csu/Makefile ($(objpfx)version-info.h): Handle newer kernel headers
+	which don't define UTS_RELEASE.
+
+2010-04-04  H.J. Lu  <hongjiu.lu@intel.com>
+	    Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11292]
+	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features): Allow
+	concurrent initialization and use of __cpu_features.
+
+2010-04-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/multiarch/init-arch.h (cpu_features): Add tag to
+	the enum.
+
+2010-04-03  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11333]
+	* sysdeps/unix/readdir_r.c (__READDIR_R): Add support for platforms
+	which include unnecessary padding in d_reclen.
+	* sysdeps/unix/sysv/linux/i386/readdir64_r.c: Select work-around for
+	unnecessary padding.
+
+	[BZ #11387]
+	* sysdeps/unix/sysv/linux/ifaddrs.c (map_newlin): Don't abort on
+	unknown interface, return -1.
+	(getifaddrs_internal): Rename from getifaddrs.  Handle errors in
+	map_newlink be returning -EAGAIN.
+	(getifaddrs): If -EAGAIN is returned from getifaddrs_internal try
+	again.
+
+2010-04-03  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11438]
+	* posix/gai.conf: Document problems with IPv4 site-local addresses and
+	NATs.
+
+	[BZ #11449]
+	* crypt/crypt_util.c (__init_des_r): Add memory barrier before setting
+	small_tables_initialized.
+
+	* malloc/malloc.c (set_max_fast): Fix computation of the value.
+
+2010-03-25  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Reset no_data before
+	each action.
+
+2010-03-25  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/posix/cuserid.c: Fix typo.
+
+2010-03-24  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11397]
+	* sysdeps/posix/cuserid.c (cuserid): Make sure the returned string
+	is NUL terminated.
+	Patch by Jonathan Geisler <jgeisler@cse.taylor.edu>.
+
+2010-03-02  Richard Guenther  <rguenther@suse.de>
+
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): R_X86_64_PC32
+	is sign-extending.
+
+2010-02-24  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11319]
+	* libio/iovdprintf.c (_IO_vdprintf): Explicitly flush stream before
+	undoing the stream because _IO_FINISH doesn't report failures.
+
+	[BZ #5553]
+	* malloc/malloc.c (public_vALLOc): Set ar_ptr when trying main_arena.
+	(public_pVALLOc): Likewise.
+	Patch by Petr Baudis.
+
+2010-02-22  Jim Meyering  <meyering@redhat.com>
+
+	* manual/math.texi (BSD Random): Fix a typo: s/are/is/
+
+	* manual/charset.texi: Adjust grammar.
+
+	* manual/errno.texi (Error Messages): Fix doubled-words and typos.
+	* manual/charset.texi (Selecting the Conversion): Likewise.
+	* manual/getopt.texi (Getopt Long Options): Likewise.
+	* manual/memory.texi (Resizing the Data Segment): Likewise.
+	* manual/message.texi (GUI program problems): Likewise.
+	* manual/resource.texi (CPU Affinity): Likewise.
+	* manual/stdio.texi (Streams and Threads): Likewise.
+	* manual/time.texi (High Accuracy Clock): Likewise.
+
+2010-02-11  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	* sysdeps/s390/s390-64/utf8-utf16-z9.c: Disable hardware
+	instructions cu21 and cu24.  Add well-formedness checking
+	parameter and adjust the software implementation.
+	* sysdeps/s390/s390-64/utf16-utf32-z9.c: Likewise.
+
+2010-02-10  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11271]
+	* io/ftw.c (ftw_startup): Close	descriptor for initial directory
+	after changing back to it.
+
+2010-02-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/lshift.S: Fix unwind information.
+
+2010-02-03  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11242]
+	* misc/getusershell.c (initshells): Allocate one more byte in input
+	buffer so that fgets doesn't loop undefinitely.
+
+2010-01-25  Andreas Schwab  <schwab@redhat.com>
+
+	* iconv/iconv_prog.c (write_output): Fix check for open failure.
+
+2010-01-22  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11200]
+	* locale/loadlocale.c (_nl_load_locale): Fix recognition of genuine
+	mmap resource problem.  Patch by Joe Landers <jlanders@vmware.com>.
+
+2010-01-22  Jim Meyering  <jim@meyering.net>
+
+	[BZ #11184]
+	* posix/regex_internal.c (re_dfa_add_node): Extend the overflow
+	detection test.  Patch by Paul Eggert.
+
+	[BZ #11183]
+	* posix/regex_internal.c (re_string_realloc_buffers):
+	Detect and handle internal overflow.  Patch by Paul Eggert
+
+2010-01-20  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/____longjmp_chk.c
+	(CHECK_SP): Fix check for alternate stack.
+	* sysdeps/unix/sysv/linux/s390/s390-64/____longjmp_chk.c
+	(CHECK_SP): Likewise.
+
+2010-01-19  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11194]
+	* misc/bits/syslog.h (syslog, vsyslog): Remove unnecessary return.
+
+2010-01-18  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/dynamic-link.h (elf_get_dynamic_info): Use correct type when
+	casting d_tag.
+
+	* elf/dynamic-link.h (elf_get_dynamic_info): Ignore negative
+	dynamic entry types.
+
+2010-01-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* bits/confname.h: Make pre-C99-safe.
+
 2010-02-05  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #11230]

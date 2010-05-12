@@ -133,7 +133,14 @@ re_string_realloc_buffers (re_string_t *pstr, int new_buf_len)
 #ifdef RE_ENABLE_I18N
   if (pstr->mb_cur_max > 1)
     {
-      wint_t *new_wcs = re_realloc (pstr->wcs, wint_t, new_buf_len);
+      wint_t *new_wcs;
+
+      /* Avoid overflow in realloc.  */
+      const size_t max_object_size = MAX (sizeof (wint_t), sizeof (int));
+      if (BE (SIZE_MAX / max_object_size < new_buf_len, 0))
+	return REG_ESPACE;
+
+      new_wcs = re_realloc (pstr->wcs, wint_t, new_buf_len);
       if (BE (new_wcs == NULL, 0))
 	return REG_ESPACE;
       pstr->wcs = new_wcs;
@@ -1404,8 +1411,11 @@ re_dfa_add_node (re_dfa_t *dfa, re_token_t token)
       re_node_set *new_edests, *new_eclosures;
       re_token_t *new_nodes;
 
-      /* Avoid overflows.  */
-      if (BE (new_nodes_alloc < dfa->nodes_alloc, 0))
+      /* Avoid overflows in realloc.  */
+      const size_t max_object_size = MAX (sizeof (re_token_t),
+					  MAX (sizeof (re_node_set),
+					       sizeof (int)));
+      if (BE (SIZE_MAX / max_object_size < new_nodes_alloc, 0))
 	return -1;
 
       new_nodes = re_realloc (dfa->nodes, re_token_t, new_nodes_alloc);
