@@ -25,7 +25,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 6
+Release: 7
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1034,6 +1034,32 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri May 14 2010 Andreas Schwab <schwab@redhat.com> - 2.11.1-7
+- Update from 2.11 branch
+  - Fix ldconfig to handle symlinks in chroot correctly (BZ#11149)
+  - Fix handling if newline in addmntent
+  - Fix ttyname_r callers not to expect errno was set (BZ#11538)
+  - Don't crash in trace mode when dependencies are missing
+  - Fix crash on reloading of gai data in nscd
+  - Fix fallocate error return on i386
+  - Fix getopt option handing (BZ#11039, BZ#11040, BZ#11041)
+  - Handle DNS timeouts in old-style lookup code (BZ#11010)
+  - Fix aux cache handling in ldconfig with chroot (BZ#11149)
+  - Fix printing error messages in getopt (BZ#11043)
+  - Declare iruserok and iruserok_af (BZ#11070)
+  - Fix option aliasing in argp (BZ#11254)
+  - Fix concurrent handling of __cpu_features (BZ#11292)
+  - Handle unnecessary padding in getdents64 (BZ#11333)
+  - Fix changes to interface list during getifaddrs calls (BZ#11387)
+  - Missing memory barrier in DES initialization (BZ#11449)
+  - Calls to cuserid can result in buffer overruns and/or overflows (BZ#11397)
+  - Fix R_X86_64_PC32 overflow detection
+  - Fix reporting of I/O errors in *dprintf functions (BZ#11319)
+  - Fix assertion in palloc and pvalloc as well (BZ#5553)
+  - Fix file descriotor leak in nftw with FTW_CHDIR (BZ#11271)
+  - Fix endless loop with invalid /etc/shells file (BZ#11242)
+  - _nl_load_locale incorrectly handles mmap() failures (BZ#11200)
+
 * Fri Apr 16 2010 Andreas Schwab <schwab@redhat.com> - 2.11.1-6
 - Fix spurious UNAVAIL status in getaddrinfo (#576667, #581673)
 
