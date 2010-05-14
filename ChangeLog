@@ -1,3 +1,9 @@
+2010-05-15  Luis Machado  <luisgpm@br.ibm.com>
+	* sysdeps/powerpc/powerpc64/power7/memset.S: New POWER7-optimized
+	64-bit memset.
+	* sysdeps/powerpc/powerpc32/power7/memset.S: New POWER7-optimized
+	32-bit memset.
+
 2010-05-01  Alan Modra  <amodra@gmail.com>
 	* sysdeps/powerpc/powerpc32/power4/memcmp.S: Correct cfi for r24.
 	* sysdeps/powerpc/powerpc64/bsd-_setjmp.S: Move contents..
