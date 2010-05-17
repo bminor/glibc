@@ -582,7 +582,7 @@ rm -f $RPM_BUILD_ROOT%{_sbindir}/rpcinfo
 	 ! -path "*/lib/debug/*" -printf "/%%P\n" \)
   find $RPM_BUILD_ROOT -type d \
        \( -path '*%{_prefix}/share/*' ! -path '*%{_infodir}' -o \
-	  -path "*%{_prefix}/include/*" -o \
+	  -path "*%{_prefix}/include/*" \
        \) -printf "%%%%dir /%%P\n"
 } | {
 
