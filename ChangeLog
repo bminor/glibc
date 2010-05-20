@@ -1,3 +1,7 @@
+2010-05-17  Luis Machado  <luisgpm@br.ibm.com>
+	* sysdeps/powerpc/powerpc64/power7/memset.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/memset.S: New file.
+
 2010-05-01  Alan Modra  <amodra@gmail.com>
 	* sysdeps/powerpc/powerpc32/power4/memcmp.S: Correct cfi for r24.
 	* sysdeps/powerpc/powerpc64/bsd-_setjmp.S: Move contents..
@@ -33,10 +37,6 @@
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/vfork.S (__vfork):
 	Branch to local label emitted by PSEUDO_RET rather than
 	__syscall_error.
-
-2010-03-10  Luis Machado  <luisgpm@br.ibm.com>
-	* sysdeps/powerpc/powerpc64/power7/memcpy.S: New file.
-	* sysdeps/powerpc/powerpc32/power7/memcpy.S: New file.
 
 2010-02-12  Luis Machado  <luisgpm@br.ibm.com>
 	* sysdeps/powerpc/powerpc32/dl-machine.h: Removed old PPC_REL16
