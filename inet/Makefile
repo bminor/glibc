@@ -57,6 +57,8 @@ tests := htontest test_ifindex tst-ntoa tst-ether_aton tst-network \
 
 include ../Rules
 
+CFLAGS-tst-inet6_rth.c = -fno-strict-aliasing
+
 ifeq ($(have-thread-library),yes)
 
 CFLAGS-gethstbyad_r.c = -DUSE_NSCD=1 -fexceptions

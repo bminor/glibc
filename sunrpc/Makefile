@@ -129,6 +129,10 @@ CFLAGS-openchild.c = -fexceptions
 
 CPPFLAGS += -D_RPC_THREAD_SAFE_
 
+CFLAGS-clnt_tcp.c = -fno-strict-aliasing
+CFLAGS-clnt_udp.c = -fno-strict-aliasing
+CFLAGS-clnt_unix.c = -fno-strict-aliasing
+
 include ../Rules
 
 $(objpfx)rpcgen: $(addprefix $(objpfx),$(rpcgen-objs)) \

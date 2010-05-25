@@ -9,3 +9,5 @@ CFLAGS-rtld-mempcpy.os = $(no-special-regs)
 CFLAGS-rtld-memmove.os = $(no-special-regs)
 CFLAGS-rtld-memchr.os = $(no-special-regs)
 CFLAGS-rtld-strnlen.os = $(no-special-regs)
+
+CFLAGS-gmon-start.c = -fno-strict-aliasing
