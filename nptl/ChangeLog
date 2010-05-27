@@ -1,3 +1,8 @@
+2010-05-27  Andreas Schwab  <schwab@redhat.com>
+
+	* Makefile ($(objpfx)tst-_res1): Depend on
+	$(objpfx)tst-_res1mod1.so.
+
 2010-04-09  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #11390]
