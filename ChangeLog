@@ -1,3 +1,10 @@
+2010-05-27  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/Makefile ($(objpfx)tst-tls10): Depend on
+	$(objpfx)tst-tlsmod7.so.
+	($(objpfx)tst-tls11): Depend on $(objpfx)tst-tlsmod9.so.
+	($(objpfx)tst-tls12): Depend on $(objpfx)tst-tlsmod11.so.
+
 2010-05-17  Luis Machado  <luisgpm@br.ibm.com>
 
 	POWER7 optimizations.
