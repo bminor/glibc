@@ -137,9 +137,12 @@ archive: glibc.spec
 
 rpm srpm: $(spec-nvr).src.rpm
 $(spec-nvr).src.rpm: glibc.spec $(archives)
-	rpmbuild --define "_sourcedir `pwd`" \
-		 --define "_specdir `pwd`" \
-		 --define "_srcrpmdir `pwd`" \
+	rpmbuild --define "_topdir ." \
+		 --define "_sourcedir %{_topdir}" \
+		 --define "_specdir %{_topdir}" \
+		 --define "_srcrpmdir %{_topdir}" \
+		 --define "_rpmdir %{_topdir}" \
+		 --define "_builddir %{_topdir}" \
 		 --nodeps -bs $<
 
 ###
