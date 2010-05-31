@@ -1,9 +1,54 @@
+2010-05-28  Luis Machado  <luisgpm@br.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power7/memcpy.S: Exchange srdi for srwi.
+
 2010-05-27  Andreas Schwab  <schwab@redhat.com>
 
 	* elf/Makefile ($(objpfx)tst-tls10): Depend on
 	$(objpfx)tst-tlsmod7.so.
 	($(objpfx)tst-tls11): Depend on $(objpfx)tst-tlsmod9.so.
 	($(objpfx)tst-tls12): Depend on $(objpfx)tst-tlsmod11.so.
+
+2010-05-26  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #11640]
+	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features):
+	Properly check family and model.
+
+2010-05-26  Takashi Yoshii  <takashi.yoshii.zj@renesas.com>
+
+	* sysdeps/unix/sysv/linux/sh/sh4/register-dump.h: Fix iov[] size.
+
+2010-05-24  Luis Machado  <luisgpm@br.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power7/memset.S: POWER7 32-bit memset fix.
+
+2010-05-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-runtime.c (_dl_profile_fixup): Don't crash on unresolved weak
+	symbol reference.
+
+2010-05-19  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/dl-runtime.c (_dl_fixup): Don't crash on unresolved weak
+	symbol reference.
+
+2010-05-21  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines): Add recvmmsg
+	and internal_recvmmsg.
+	* sysdeps/unix/sysv/linux/recvmmsg.c: New file.
+	* sysdeps/unix/sysv/linux/internal_recvmmsg.S: New file.
+	* sysdeps/unix/sysv/linux/socketcall.h (SOCKOP_recvmmsg): Define.
+	* sysdeps/unix/sysv/linux/syscalls.list (recvmmsg): Remove.
+
+	* sunrpc/clnt_tcp.c (clnttcp_control): Add missing break.
+	* sunrpc/clnt_udp.c (clntudp_control): Likewise.
+	* sunrpc/clnt_unix.c (clntunix_control): Likewise.
+
+2010-05-20  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sys/timex.h: Use __REDIRECT_NTH.
 
 2010-05-17  Luis Machado  <luisgpm@br.ibm.com>
 
