@@ -894,8 +894,10 @@ fi
 %postun utils -p /sbin/ldconfig
 
 %pre -n nscd
-/usr/sbin/useradd -M -o -r -d / -s /sbin/nologin \
-  -c "NSCD Daemon" -u 28 nscd > /dev/null 2>&1 || :
+getent group nscd >/dev/null || /usr/sbin/groupadd -g 28 -r nscd
+getent passwd nscd >/dev/null ||
+  /usr/sbin/useradd -M -o -r -d / -s /sbin/nologin \
+		    -c "NSCD Daemon" -u 28 -g nscd nscd
 
 %post -n nscd
 /sbin/chkconfig --add nscd
