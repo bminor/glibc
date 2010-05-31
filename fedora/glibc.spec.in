@@ -20,7 +20,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 1
+Release: 2
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1028,6 +1028,17 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon May 31 2010 Andreas Schwab <schwab@redhat.com> - 2.12.90-2
+- Update from master
+  - Small fix to POWER7 32-bit memcpy
+  - Correct x86 CPU family and model check (BZ#11640, #596554)
+  - Fix iov size in SH register_dump
+  - Don't crash on unresolved weak symbol reference
+  - Implement recvmmsg also as socketcall
+  - sunrpc: Fix spurious fall-through
+  - Make <sys/timex.h> compatible with C++ (#593762)
+- Fix users and groups creation in nscd %%post script
+
 * Wed May 19 2010 Andreas Schwab <schwab@redhat.com> - 2.12.90-1
 - Update from master
   - POWER7 optimized memset
