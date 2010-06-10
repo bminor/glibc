@@ -1,5 +1,8 @@
 2010-06-10  Andreas Schwab  <schwab@redhat.com>
 
+	* sysdeps/unix/sysv/linux/getpagesize.c: Don't assume AT_PAGESIZE
+	is always available.
+
 	* sysdeps/unix/sysv/linux/i386/Versions: Export __uname under
 	GLIBC_PRIVATE.
 	* nptl/Versions: Export __getrlimit under GLIBC_PRIVATE.
