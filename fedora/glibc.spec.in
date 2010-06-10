@@ -593,7 +593,7 @@ rm -f $RPM_BUILD_ROOT%{_sbindir}/rpcinfo
   # languages very well, temporarily disable
   LIB_LANG=''
   sed -e "$LIB_LANG" -e "$SHARE_LANG" \
-      -e '\,/etc/\(localtime\|nsswitch.conf\|ld\.so\.conf\|ld\.so\.cache\|default\),d' \
+      -e '\,/etc/\(localtime\|nsswitch.conf\|ld\.so\.conf\|ld\.so\.cache\|default\|rpc\),d' \
       -e '\,/%{_lib}/lib\(pcprofile\|memusage\)\.so,d' \
       -e '\,bin/\(memusage\|mtrace\|xtrace\|pcprofiledump\),d'
 } | sort > rpm.filelist
@@ -957,6 +957,7 @@ rm -f *.filelist*
 %verify(not md5 size mtime) %config(noreplace) /etc/localtime
 %verify(not md5 size mtime) %config(noreplace) /etc/nsswitch.conf
 %verify(not md5 size mtime) %config(noreplace) /etc/ld.so.conf
+%verify(not md5 size mtime) %config(noreplace) /etc/rpc
 %dir /etc/ld.so.conf.d
 %dir %{_prefix}/libexec/getconf
 %dir %{_prefix}/%{_lib}/gconv
