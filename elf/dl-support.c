@@ -122,8 +122,15 @@ ElfW(Phdr) *_dl_phdr;
 size_t _dl_phnum;
 uint64_t _dl_hwcap __attribute__ ((nocommon));
 
+
+#if (defined (_ARCH_PPC64) || defined (__powerpc64__))
+/* Default to no-exec stack on PPC64.  */
+/* Prevailing state of the stack, PF_X indicating it's executable.  */
+ElfW(Word) _dl_stack_flags = PF_R|PF_W;
+#else
 /* Prevailing state of the stack, PF_X indicating it's executable.  */
 ElfW(Word) _dl_stack_flags = PF_R|PF_W|PF_X;
+#endif
 
 /* If loading a shared object requires that we make the stack executable
    when it was not, we do it by calling this function.

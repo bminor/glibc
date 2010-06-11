@@ -1000,8 +1000,13 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	}
     }
 
+#if (defined (_ARCH_PPC64) || defined (__powerpc64__))
+  /* Default to no-exec stack on PPC64.  */
+  uint_fast16_t stack_flags = PF_R|PF_W;
+#else
   /* Presumed absent PT_GNU_STACK.  */
   uint_fast16_t stack_flags = PF_R|PF_W|PF_X;
+#endif
 
   {
     /* Scan the program header table, collecting its load commands.  */

@@ -123,7 +123,12 @@ INTVARDEF(_dl_starting_up)
 struct rtld_global _rtld_global =
   {
     /* Default presumption without further information is executable stack.  */
+#if (defined (_ARCH_PPC64) || defined (__powerpc64__))
+    /* Default to no-exec stack on PPC64.  */
+    ._dl_stack_flags = PF_R|PF_W,
+#else
     ._dl_stack_flags = PF_R|PF_W|PF_X,
+#endif
 #ifdef _LIBC_REENTRANT
     ._dl_load_lock = _RTLD_LOCK_RECURSIVE_INITIALIZER
 #endif
