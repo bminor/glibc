@@ -1,3 +1,12 @@
+2010-06-11  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Set default stack_flags to
+	no-exec for ARCH_PPC64.
+	* elf/dl-support.c [_dl_stack_flags]: Set default stack_flags to
+	no-exec for ARCH_PPC64.
+	* elf/rtld.c (_dl_starting_up): Set default stack_flags to no-exec for
+	ARCH_PPC64.
+
 2010-05-28  Luis Machado  <luisgpm@br.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/power7/memcpy.S: Exchange srdi for srwi.
