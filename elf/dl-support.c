@@ -80,10 +80,8 @@ unsigned long long _dl_load_adds;
    create a fake scope containing nothing.  */
 struct r_scope_elem _dl_initial_searchlist;
 
-#ifndef HAVE_INLINED_SYSCALLS
 /* Nonzero during startup.  */
 int _dl_starting_up = 1;
-#endif
 
 /* Random data provided by the kernel.  */
 void *_dl_random;

@@ -1,3 +1,10 @@
+2010-06-11  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/rtld.c (_dl_starting_up): Always define.
+	(dl_main): Always set _dl_starting_up.
+	* elf/dl-support.c (_dl_starting_up): Always define.
+	* elf/dl-init.c (_dl_init): Always clear _dl_starting_up.
+
 2010-06-10  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/unix/sysv/linux/getpagesize.c: Don't assume AT_PAGESIZE
