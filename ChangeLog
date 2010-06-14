@@ -1,3 +1,7 @@
+2010-06-02  Andreas Schwab  <schwab@redhat.com>
+
+	* nis/nss_nis/nis-initgroups.c (get_uid): Properly resize buffer.
+
 2010-06-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* libio/stdio.h (sscanf, vsscanf): Use __REDIRECT_NTH instead of
