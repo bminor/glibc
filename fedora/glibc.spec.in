@@ -1580,7 +1580,7 @@ rm -f *.filelist*
   - concurrent IPv4 and IPv6 DNS lookups by getaddrinfo
 
 * Mon May  5 2008 Jakub Jelinek <jakub@redhat.com> 2.8-3
-- don't run telinit u in %post if both /dev/initctl and
+- don't run telinit u in %%post if both /dev/initctl and
   /sbin/initctl exist (#444978)
 - workaround GCC ppc64 miscompilation of c{log{,10},acosh,atan}l
   (#444996)
@@ -1605,7 +1605,7 @@ rm -f *.filelist*
 - update to trunk
   - misc fixes (BZ#4314, BZ#4407, BZ#5209, BZ#5436, BZ#5768, BZ#5998,
 		BZ#6024)
-- restart sshd in %post when upstart is used - it doesn't have
+- restart sshd in %%post when upstart is used - it doesn't have
   /dev/initctl (#441763)
 - disable assert checking again
 
@@ -1735,9 +1735,9 @@ rm -f *.filelist*
 * Tue Sep 18 2007 Jakub Jelinek <jakub@redhat.com> 2.6.90-14
 - -D_FORTIFY_SOURCE{,=2} support for C++
 - fortification of fread{,_unlocked}
-- support *scanf m allocation modifier (%ms, %mls, %mc, ...)
+- support *scanf m allocation modifier (%%ms, %%mls, %%mc, ...)
 - in -std=c99 or -D_XOPEN_SOURCE=600 mode don't recognize
-  %as, %aS and %a[ as a GNU extension for *scanf
+  %%as, %%aS and %%a[ as a GNU extension for *scanf
 - fix splice, vmsplice, tee return value, make them cancellation
   points
 - mq_open checking
@@ -1822,7 +1822,7 @@ rm -f *.filelist*
 - fix LD_AUDIT=a:b program (#180432)
 - don't crash on pseudo-zero long double values passed to
   *printf on i?86/x86_64/ia64 (BZ#4586)
-- fix *printf %La and strtold with some hexadecimal floating point
+- fix *printf %%La and strtold with some hexadecimal floating point
   constants on ppc/ppc64
 - fix nextafterl on ppc/ppc64
 - fix sem_timedwait on i?86 and x86_64
@@ -1858,10 +1858,10 @@ rm -f *.filelist*
 
 * Fri May  4 2007 Jakub Jelinek <jakub@redhat.com> 2.5.90-22
 - add transliteration for <U2044> (BZ#3213)
-- fix *scanf with %f on hexadecimal floats without exponent (BZ#4342)
-- fix *printf with very large precisions for %s (#238406, BZ#4438)
+- fix *scanf with %%f on hexadecimal floats without exponent (BZ#4342)
+- fix *printf with very large precisions for %%s (#238406, BZ#4438)
 - fix inet_ntop size checking for AF_INET (BZ#4439)
-- for *printf %e avoid 1.000e-00, for exponent 0 always use + sign (#238431)
+- for *printf %%e avoid 1.000e-00, for exponent 0 always use + sign (#238431)
 - fix a regression introduced in #223467 changes
 - gethostby*_r alignment fixes (BZ#4381)
 - fix ifaddrs error handling
@@ -1874,14 +1874,14 @@ rm -f *.filelist*
   then unlink the locale-archive template - this should save
   > 80MB of glibc-common occupied disk space
 - fix _XOPEN_VERSION (BZ#4364)
-- fix printf with %g and values tiny bit smaller than 1.e-4 (#235864,
+- fix printf with %%g and values tiny bit smaller than 1.e-4 (#235864,
   BZ#4362)
 - fix NIS+ __nisfind_server (#235229)
 
 * Sat Mar 31 2007 Jakub Jelinek <jakub@redhat.com> 2.5.90-20
 - assorted NIS+ speedups (#223467)
 - fix HAVE_LIBCAP configure detection (#178934)
-- remove %{_prefix}/sbin/rpcinfo from glibc-common (#228894)
+- remove %%{_prefix}/sbin/rpcinfo from glibc-common (#228894)
 - nexttoward*/nextafter* fixes (BZ#3306)
 - feholdexcept/feupdateenv fixes (BZ#3427)
 - speed up fnmatch with two or more * in the pattern
@@ -1916,7 +1916,7 @@ rm -f *.filelist*
 - fix application crashes when doing NSS lookups through nscd
   mmapped databases and nscd decides to start garbage collection
   during the lookups (#219145, #225315)
-- fix %0lld printing of 0LL on 32-bit architectures (BZ#3902)
+- fix %%0lld printing of 0LL on 32-bit architectures (BZ#3902)
 - ignore errors from install-info in glibc-devel scriptlets
   (#223691)
 
@@ -1969,7 +1969,7 @@ rm -f *.filelist*
   in __libc_start_main instead)
 - add unwind info for x86-64 restore_rt signal return landing pad
   (#217087)
-- add power6x subdir to /%{_lib}/ and /%{_lib}/rtkaio/,
+- add power6x subdir to /%%{_lib}/ and /%%{_lib}/rtkaio/,
   link all libs from ../power6/* into them
 
 * Tue Nov 28 2006 Jakub Jelinek <jakub@redhat.com> 2.5.90-8
@@ -2002,7 +2002,7 @@ rm -f *.filelist*
 * Fri Nov  3 2006 Jakub Jelinek <jakub@redhat.com> 2.5.90-4
 - fix atexit backwards compatibility (#213388)
 - add mai_IN locale (#213415)
-- remove bogus %{_libdir}/librt.so.1 symlink (#213555)
+- remove bogus %%{_libdir}/librt.so.1 symlink (#213555)
 - fix memusage (#213656)
 - change libc.info category (#209493)
 
@@ -2052,7 +2052,7 @@ rm -f *.filelist*
   AT_PLATFORM
 - fix ppc{32,64} libSegFault.so
 - use -mtune=generic even for glibc-devel.i386 (#206437)
-- fix /%{_lib}/librt.so.1 symlink
+- fix /%%{_lib}/librt.so.1 symlink
 
 * Fri Sep 15 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-32
 - on ppc* use just AT_PLATFORM and altivec AT_HWCAP bit for library selection
@@ -2066,7 +2066,7 @@ rm -f *.filelist*
 - fix mktime on 32-bit arches a few years after 2038 (BZ#2821)
 
 * Thu Sep  7 2006 Jakub Jelinek <jakub@redhat.com> 2.4.90-30
-- add librtkaio, to use it add /%{lib}/rtkaio to your
+- add librtkaio, to use it add /%%{lib}/rtkaio to your
   LD_LIBRARY_PATH or /etc/ld.so.conf
 - fix or_IN February name (#204730)
 - fix pthread_create called from cancellation handlers (BZ#3124)
@@ -2397,7 +2397,7 @@ rm -f *.filelist*
 
 * Thu Oct 20 2005 Jakub Jelinek <jakub@redhat.com> 2.3.90-15
 - update from CVS
-  - be permissive in %n check because of kernel bug #165351 (#171240)
+  - be permissive in %%n check because of kernel bug #165351 (#171240)
   - don't misalign stack in pthread_once on x86_64 (#170786, IT#81521)
   - many locale fixes
 
@@ -2569,15 +2569,15 @@ rm -f *.filelist*
   - fix linuxthreads clocks
 - put xen libs into the glibc-2*.i686 package instead of a separate one
 - fix librt.so symlink in linuxthreads-devel
-- do not include linuxthreads-devel on %{auxarches},
+- do not include linuxthreads-devel on %%{auxarches},
   just on the base architectures
 
 * Wed Apr 27 2005 Jakub Jelinek <jakub@redhat.com> 2.3.5-2
 - update from CVS
   - with MALLOC_CHECK_=N N>0 (#153003)
   - fix recursive dlclose (#154641)
-  - handle %z in strptime (#154804)
-  - automatically append /%{_lib}/obsolete/linuxthreads/
+  - handle %%z in strptime (#154804)
+  - automatically append /%%{_lib}/obsolete/linuxthreads/
     to standard library search path if LD_ASSUME_KERNEL=N N <= 2.4.19
     or for glibc 2.0 binaries (or broken ones that don't use errno/h_errno
     properly).  Warning: all those will stop working when LinuxThreads
@@ -2604,9 +2604,9 @@ rm -f *.filelist*
 - fix <pthread.h> and <bits/libc-lock.h> with -std=c89 -fexceptions (#153774)
 
 * Mon Apr  4 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-20
-- move LinuxThreads libraries to /%{_lib}/obsolete/linuxthreads/
-  and NPTL libraries to /%{_lib}.  To run a program against LinuxThreads,
-  LD_ASSUME_KERNEL=2.4.xx LD_LIBRARY_PATH=/%{_lib}/obsolete/linuxthreads/
+- move LinuxThreads libraries to /%%{_lib}/obsolete/linuxthreads/
+  and NPTL libraries to /%%{_lib}.  To run a program against LinuxThreads,
+  LD_ASSUME_KERNEL=2.4.xx LD_LIBRARY_PATH=/%%{_lib}/obsolete/linuxthreads/
   is now needed
 - bzip2 ChangeLog* files instead of gzipping them
 
@@ -2616,9 +2616,9 @@ rm -f *.filelist*
   - fix initgroups (BZ#661)
 - kill nptl-devel subpackage, add linuxthreads-devel,
   compile and link by default against NPTL and only with
-  -I/usr/include/linuxthreads -L/usr/%{_lib}/linuxthreads
+  -I/usr/include/linuxthreads -L/usr/%%{_lib}/linuxthreads
   against LinuxThreads
-- package /usr/lib/debug/%{_lib}/tls/i{5,6}86 symlinks in
+- package /usr/lib/debug/%%{_lib}/tls/i{5,6}86 symlinks in
   i386 glibc-debuginfo
 - limit number of ChangeLog* files in glibc-common %%doc
   to last 2.5 years of changes only to save space
@@ -2647,14 +2647,14 @@ rm -f *.filelist*
   - with -D_FORTIFY_SOURCE=*, avoid defining read and a bunch of others
     as function-like macros, there are too many broken programs
     out there
-- add %%dir %{_prefix}/%{_lib}/gconv to glibc's file list (#151372)
+- add %%dir %%{_prefix}/%%{_lib}/gconv to glibc's file list (#151372)
 
 * Sun Mar  6 2005 Roland McGrath <roland@redhat.com> 2.3.4-14
 - fix bits/socket2.h macro typos
 
 * Sat Mar  5 2005 Jakub Jelinek <jakub@redhat.com> 2.3.4-12
 - fix tst-chk{2,3}
-- fix up AS_NEEDED directive in /usr/%{_lib}/libc.so
+- fix up AS_NEEDED directive in /usr/%%{_lib}/libc.so
 - BuildReq binutils >= 2.15.94.0.2-1 for AS_NEEDED, in
   glibc-devel Conflict with binutils < 2.15.94.0.2-1
 
@@ -2706,9 +2706,9 @@ rm -f *.filelist*
   - change regex \B handling to match old GNU regex as well as perl/grep's dfa
     (from empty string inside of word to empty string not at a word boundary,
      BZ#693)
-  - slightly optimize i686 TLS accesses, use direct TLS %gs access in sem_*
+  - slightly optimize i686 TLS accesses, use direct TLS %%gs access in sem_*
     and allow building -mno-tls-direct-seg-refs glibc that is free of direct TLS
-    %gs access with negative offsets
+    %%gs access with negative offsets
   - fix addseverity
   - fix fmemopen
   - fix rewinddir
@@ -2749,7 +2749,7 @@ rm -f *.filelist*
 - if /sbin/ldconfig doesn't exist when running
   glibc_post_upgrade.%%{_target_cpu}, just don't attempt to run it.
   This can happen during first install of bi-arch glibc and the
-  other arch glibc's %post wil run /sbin/ldconfig (#143326)
+  other arch glibc's %%post wil run /sbin/ldconfig (#143326)
 - use -o and --nostdlib options to create all needed
   gconv-modules.cache files on bi-arch setups
 
@@ -2788,7 +2788,7 @@ rm -f *.filelist*
 
 * Tue Dec 14 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-92
 - update from CVS
-- fix %{_prefix}/libexec/getconf filenames generation
+- fix %%{_prefix}/libexec/getconf filenames generation
 
 * Tue Dec 14 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-91
 - update from CVS
@@ -2798,7 +2798,7 @@ rm -f *.filelist*
     (#142214)
   - some more realloc corruption checks
   - fix getconf _POSIX_V6_WIDTH_RESTRICTED_ENVS output,
-    tweak %{_prefix}/libexec/getconf/ filenames
+    tweak %%{_prefix}/libexec/getconf/ filenames
 
 * Fri Dec 10 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-90
 - update from CVS
@@ -2826,8 +2826,8 @@ rm -f *.filelist*
     check_dst_limits_calc_pos_1 (#142060)
   - make getpid () working with clone/clone2 without CLONE_THREAD
     (so far on i386/x86_64/ia64 only)
-- move %{_prefix}/libexec/getconf/* to glibc from glibc-common
-- make %{_prefix}/libexec/getconf directory owned by glibc package
+- move %%{_prefix}/libexec/getconf/* to glibc from glibc-common
+- make %%{_prefix}/libexec/getconf directory owned by glibc package
 
 * Fri Dec  3 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-87
 - update from CVS
@@ -2852,7 +2852,7 @@ rm -f *.filelist*
   - support -v specification in getconf
   - fix sysconf (_SC_LFS64_CFLAGS) etc.
   - avoid thread stack aliasing issues on EM64T (#140803)
-- move %{_prefix}/include/nptl headers from nptl-devel
+- move %%{_prefix}/include/nptl headers from nptl-devel
   to glibc-headers, so that even NPTL specific programs
   can be built bi-arch without problems
 
@@ -2884,8 +2884,8 @@ rm -f *.filelist*
 
 * Fri Nov 19 2004 Jakub Jelinek <jakub@redhat.com> 2.3.3-80
 - update from CVS
-  - with -D_FORTIFY_SOURCE=2, prevent missing %N$ formats
-  - for -D_FORTIFY_SOURCE=2 and %n in writable format string,
+  - with -D_FORTIFY_SOURCE=2, prevent missing %%N$ formats
+  - for -D_FORTIFY_SOURCE=2 and %%n in writable format string,
     issue special error message instead of using the buffer overflow
     detected one
   - speedup regex searching with REG_NOSUB, add RE_NO_SUB,
@@ -3313,7 +3313,7 @@ rm -f *.filelist*
   - strtol speed optimization
   - don't try to use certainly unimplemented syscalls on ppc64
 - kill -debug subpackage, move the libs to glibc-debuginfo{,-common}
-  into /usr/lib/debug/usr/%{_lib}/ directory
+  into /usr/lib/debug/usr/%%{_lib}/ directory
 - fix c_stubs with gcc 3.4
 - move all the up to 3 builds into %%build scriptlet and
   leave only installation in the %%install scriptlet
@@ -3662,7 +3662,7 @@ rm -f *.filelist*
   - fix zic bug on 64-bit platforms
   - some TLS handling fixes
   - make ldconfig look into alternate ABI dirs by default (#99402)
-- move %{_datadir}/zoneinfo to tzdata package, so that it can be
+- move %%{_datadir}/zoneinfo to tzdata package, so that it can be
   errataed separately from glibc
 - new add-on - rtkaio
 - prereq libgcc, as glibc now relies on libgcc_s.so.1 for pthread_cancel
@@ -3872,7 +3872,7 @@ rm -f *.filelist*
 - fix NPTL pthread_cond_timedwait
 - fix sysconf (_SC_MONOTONIC_CLOCK)
 - use /%%{_lib}/tls instead of /lib/tls on x86-64
-- add /%{_lib}/tls/librt*so* and /%{_lib}/i686/librt*so*
+- add /%%{_lib}/tls/librt*so* and /%%{_lib}/i686/librt*so*
 - display content of .out files for all make check failures
 
 * Wed Mar 26 2003 Jakub Jelinek <jakub@redhat.com> 2.3.2-17
@@ -3938,7 +3938,7 @@ rm -f *.filelist*
 - update from CVS
 - only warn about errno, h_errno or _res for binaries, never
   libraries
-- rebuilt with gcc-3.2.2-4 to use direct %gs TLS access insn sequences
+- rebuilt with gcc-3.2.2-4 to use direct %%gs TLS access insn sequences
 
 * Sun Feb 23 2003 Jakub Jelinek <jakub@redhat.com> 2.3.2-2
 - update from CVS
@@ -4121,8 +4121,8 @@ rm -f *.filelist*
 
 * Fri Dec 13 2002 Jakub Jelinek <jakub@redhat.com> 2.3.1-14
 - update from CVS
-  - replace __libc_lock_needed@GOTOFF(%ebx) with
-    %gs:offsetof(tcbhead_t, multiple_threads)
+  - replace __libc_lock_needed@GOTOFF(%%ebx) with
+    %%gs:offsetof(tcbhead_t, multiple_threads)
   - start of new NPTL cancellation wrappers
 
 * Thu Dec 12 2002 Jakub Jelinek <jakub@redhat.com> 2.3.1-13
@@ -4175,7 +4175,7 @@ rm -f *.filelist*
 
 * Thu Oct 24 2002 Jakub Jelinek <jakub@redhat.com> 2.3.1-4
 - update from CVS
-  - fixed %a and %A in *printf (#75821)
+  - fixed %%a and %%A in *printf (#75821)
   - fix re_comp memory leaking (#76594)
 
 * Tue Oct 22 2002 Jakub Jelinek <jakub@redhat.com> 2.3.1-3
@@ -4303,7 +4303,7 @@ rm -f *.filelist*
 
 * Wed Aug 14 2002 Jakub Jelinek <jakub@redhat.com> 2.2.90-21
 - fix path to locale-archive in libc reader
-- build locale archive at glibc-common %post time
+- build locale archive at glibc-common %%post time
 - export __strtold_internal and __wcstold_internal on Alpha again
 - workaround some localedata problems
 
@@ -4548,9 +4548,9 @@ rm -f *.filelist*
 
 * Fri Aug 10 2001 Jakub Jelinek <jakub@redhat.com> 2.2.4-4
 - don't crash on catclose(-1)
-- fix wscanf %[] handling
+- fix wscanf %%[] handling
 - fix return value from swprintf
-- handle year + %U/%W week + week day in strptime
+- handle year + %%U/%%W week + week day in strptime
 
 * Thu Aug  9 2001 Jakub Jelinek <jakub@redhat.com> 2.2.4-3
 - update from CVS to
@@ -4566,7 +4566,7 @@ rm -f *.filelist*
 * Sat Aug  4 2001 Jakub Jelinek <jakub@redhat.com>
 - update from CVS
   - fix iconv cache handling
-- glibc should not own %{_infodir}, %{_mandir} nor %{_mandir}/man3 (#50673)
+- glibc should not own %%{_infodir}, %%{_mandir} nor %%{_mandir}/man3 (#50673)
 - add gconv-modules.cache as emtpy config file (#50699)
 - only run iconvconfig if /usr is mounted read-write (#50667)
 
