@@ -1,3 +1,8 @@
+2011-08-31  Andreas Schwab  <schwab@redhat.com>
+
+	* allocatestack.c (setxid_mark_thread): Ensure that the exiting
+	thread is woken up.
+
 2011-08-08  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/cancellation.S: Maintain aligned
