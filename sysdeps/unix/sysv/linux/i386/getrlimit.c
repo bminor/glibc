@@ -79,4 +79,5 @@ __new_getrlimit (enum __rlimit_resource resource, struct rlimit *rlimits)
 }
 
 weak_alias (__new_getrlimit, __getrlimit);
+libc_hidden_weak (__getrlimit)
 versioned_symbol (libc, __new_getrlimit, getrlimit, GLIBC_2_2);

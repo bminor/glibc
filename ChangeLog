@@ -1,3 +1,10 @@
+2010-07-01  Andreas Schwab  <schwab@redhat.com>
+
+	* include/sys/resource.h (__getrlimit): Add hidden proto.
+	* sysdeps/unix/sysv/linux/i386/getrlimit.c: Add libc_hidden_weak.
+	* sysdeps/mach/hurd/getrlimit.c: Add libc_hidden_def.
+	* resource/getrlimit.c: Likewise.
+
 2010-06-28  Andreas Schwab  <schwab@redhat.com>
 
 	* allocatestack.c (setxid_mark_thread): Ensure that the exiting
