@@ -1,5 +1,5 @@
 /* Close a shared object opened by `_dl_open'.
-   Copyright (C) 1996-2007, 2009 Free Software Foundation, Inc.
+   Copyright (C) 1996-2007, 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -274,7 +274,7 @@ _dl_close_worker (struct link_map *map)
 	    }
 
 #ifdef SHARED
-	  /* Auditing checkpoint: we have a new object.  */
+	  /* Auditing checkpoint: we remove an object.  */
 	  if (__builtin_expect (do_audit, 0))
 	    {
 	      struct audit_ifaces *afct = GLRO(dl_audit);

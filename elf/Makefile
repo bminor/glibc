@@ -28,7 +28,7 @@ routines	= $(dl-routines) dl-support dl-iteratephdr \
 # The core dynamic linking functions are in libc for the static and
 # profiled libraries.
 dl-routines	= $(addprefix dl-,load cache lookup object reloc deps \
-			          runtime error init fini debug misc \
+				  runtime error init fini debug misc \
 				  version profile conflict tls origin scope \
 				  execstack caller open close trampoline)
 all-dl-routines = $(dl-routines) $(sysdep-dl-routines)
@@ -226,7 +226,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		neededobj5 neededobj6 firstobj globalmod1 \
 		unload2mod unload2dep ltglobmod1 ltglobmod2 pathoptobj \
 		dblloadmod1 dblloadmod2 dblloadmod3 reldepmod5 reldepmod6 \
-	        reldep6mod0 reldep6mod1 reldep6mod2 reldep6mod3 reldep6mod4 \
+		reldep6mod0 reldep6mod1 reldep6mod2 reldep6mod3 reldep6mod4 \
 		reldep7mod1 reldep7mod2 \
 		tst-tlsmod1 tst-tlsmod2 tst-tlsmod3 tst-tlsmod4 \
 		tst-tlsmod5 tst-tlsmod6 tst-tlsmod7 tst-tlsmod8 \
@@ -934,11 +934,11 @@ $(objpfx)tst-dlmodcount: $(libdl)
 $(objpfx)tst-dlmodcount.out: $(test-modules)
 
 check-data := $(firstword $(wildcard \
-	        $(foreach D,$(add-ons) scripts,\
-	        	  $(patsubst %,$(..)$D/data/localplt-%.data,\
-			   	     $(abi-name) \
-			   	     $(addsuffix -$(config-os),\
-				     		 $(config-machine) \
+		$(foreach D,$(add-ons) scripts,\
+			  $(patsubst %,$(..)$D/data/localplt-%.data,\
+				     $(abi-name) \
+				     $(addsuffix -$(config-os),\
+						 $(config-machine) \
 						 $(base-machine)) \
 			   generic))))
 
@@ -950,9 +950,9 @@ endif
 
 $(objpfx)check-localplt.out: $(objpfx)check-localplt \
 			     $(common-objpfx)libc.so \
-		    	     $(common-objpfx)math/libm.so $(thread-dso) \
-		    	     $(common-objpfx)rt/librt.so \
-		    	     $(common-objpfx)dlfcn/libdl.so \
+			     $(common-objpfx)math/libm.so $(thread-dso) \
+			     $(common-objpfx)rt/librt.so \
+			     $(common-objpfx)dlfcn/libdl.so \
 			     $(common-objpfx)resolv/libresolv.so \
 			     $(common-objpfx)crypt/libcrypt.so \
 			     $(check-data)

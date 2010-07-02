@@ -27,6 +27,10 @@ static int getlogin_r_fd0 (char *name, size_t namesize);
 #undef getlogin_r
 
 
+/* Try to determine login name from /proc/self/loginuid and return 0
+   if successful.  If /proc/self/loginuid cannot be read return -1.
+   Otherwise return the error number.  */
+
 int
 attribute_hidden
 __getlogin_r_loginuid (name, namesize)
@@ -35,7 +39,7 @@ __getlogin_r_loginuid (name, namesize)
 {
   int fd = open_not_cancel_2 ("/proc/self/loginuid", O_RDONLY);
   if (fd == -1)
-    return 1;
+    return -1;
 
   /* We are reading a 32-bit number.  12 bytes are enough for the text
      representation.  If not, something is wrong.  */
@@ -51,37 +55,38 @@ __getlogin_r_loginuid (name, namesize)
       || (uidbuf[n] = '\0',
 	  uid = strtoul (uidbuf, &endp, 10),
 	  endp == uidbuf || *endp != '\0'))
-    return 1;
+    return -1;
 
   size_t buflen = 1024;
   char *buf = alloca (buflen);
   bool use_malloc = false;
   struct passwd pwd;
   struct passwd *tpwd;
+  int result = 0;
   int res;
 
-  while ((res = __getpwuid_r (uid, &pwd, buf, buflen, &tpwd)) != 0)
+  while ((res = __getpwuid_r (uid, &pwd, buf, buflen, &tpwd)) == ERANGE)
     if (__libc_use_alloca (2 * buflen))
-      extend_alloca (buf, buflen, 2 * buflen);
+      buf = extend_alloca (buf, buflen, 2 * buflen);
     else
       {
 	buflen *= 2;
 	char *newp = realloc (use_malloc ? buf : NULL, buflen);
 	if (newp == NULL)
 	  {
-	  fail:
-	    if (use_malloc)
-	      free (buf);
-	    return 1;
+	    result = ENOMEM;
+	    goto out;
 	  }
 	buf = newp;
 	use_malloc = true;
       }
 
-  if (tpwd == NULL)
-    goto fail;
+  if (res != 0)
+    {
+      result = -1;
+      goto out;
+    }
 
-  int result = 0;
   size_t needed = strlen (pwd.pw_name) + 1;
   if (needed > namesize)
     {
@@ -109,8 +114,9 @@ getlogin_r (name, namesize)
      char *name;
      size_t namesize;
 {
-  if (__getlogin_r_loginuid (name, namesize) == 0)
-    return 0;
+  int res = __getlogin_r_loginuid (name, namesize);
+  if (res >= 0)
+    return res;
 
   return getlogin_r_fd0 (name, namesize);
 }
