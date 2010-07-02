@@ -20,7 +20,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 3
+Release: 4
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1029,6 +1029,15 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri Jul  2 2010 Andreas Schwab <schwab@redhat.com> - 2.12.90-4
+- Update from master
+  - Work around kernel rejecting valid absolute timestamps
+  - Improve 64bit memcpy/memmove for Atom, Core 2 and Core i7
+  - Fix error handling in Linux getlogin*
+- Workaround assembler bug sneaking in nopl (#579838)
+- Fix scope handling during dl_close
+- Fix setxid race handling exiting threads
+
 * Tue Jun 15 2010 Andreas Schwab <schwab@redhat.com> - 2.12.90-3
 - Update from master
   - Power7 string compare optimizations
