@@ -2,6 +2,22 @@
 
 	* sysdeps/i386/i686/Makefile: Don't pass -mtune to assembler.
 
+2010-06-02  Kirill A. Shutemov  <kirill@shutemov.name>
+
+	* elf/dl-reloc.c: Flush cache after solving TEXTRELs if arch
+	requires it.
+
+2010-06-02  Andreas Schwab  <schwab@redhat.com>
+
+	* nis/nss_nis/nis-initgroups.c (get_uid): Properly resize buffer.
+
+2010-06-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* libio/stdio.h (sscanf, vsscanf): Use __REDIRECT_NTH instead of
+	__REDIRECT followed by __THROW.
+	* wcsmbs/wchar.h (swscanf, vswscanf): Likewise.
+	* posix/getopt.h (getopt): Likewise.
+
 2010-05-26  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #11640]
