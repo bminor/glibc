@@ -1,3 +1,7 @@
+2010-07-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (tst-_res1): Add tst-_res1mod1 to dependency list.
+
 2010-10-13  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #12113]
