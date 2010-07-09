@@ -4,7 +4,7 @@ glibc.spec: # The default target.
 
 .PHONY: follow merge merge-base tag force-tag archive finish_archive srpm rpm
 
-releases-url := http://ftp.gnu.org/pub/gnu/glibc/
+releases-url := http://ftp.gnu.org/gnu/glibc/
 tag-prefix := fedora/
 branch-name := fedora
 
