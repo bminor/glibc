@@ -33,7 +33,7 @@ Release: 3
 # libraries without restrictions.
 License: LGPLv2+ and LGPLv2+ with exceptions and GPLv2+
 Group: System Environment/Libraries
-URL: http://sources.redhat.com/glibc/
+URL: http://www.gnu.org/software/glibc/
 Source0: %{?glibc_release_url}%{glibcsrcdir}.tar.bz2
 Source1: %{glibcsrcdir}-fedora.tar.bz2
 Patch0: %{name}-fedora.patch
