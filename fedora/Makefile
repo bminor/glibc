@@ -17,6 +17,15 @@ my-branch := $(call branchname,$(call git,symbolic-ref,HEAD))
 upstream-remote := $(call gitconf,branch.$(my-branch).remote)
 upstream-branch := $(call branchname,$(call gitconf,branch.$(my-branch).follow))
 
+ports-repo := $(call gitconf,glibc.ports-repo)
+
+ifndef ports-repo
+$(error \
+You need a glibc-ports repository! \
+Get one and do: "git config --add glibc.ports-repo ~/DIR/.git" \
+)
+endif
+
 dep-my-branch := $(firstword $(wildcard ../.git/refs/heads/$(my-branch) \
 	      		    	       	../.git/packed-refs))
 dep-upstream-branch := $(firstword $(wildcard \
@@ -57,15 +66,25 @@ tar-name = $(merge-base-name)
 upstream-pristine = \
 	$(GIT) $(describe-merge) --exact-match > /dev/null 2>&1 $(merge-base-id)
 
+GIT-ports = $(GIT) --git-dir=$(ports-repo)
+git-ports = $(shell $(GIT-ports) $1 $2)
+
+ports-pristine = $(GIT-ports) $(describe-merge) --exact-match > /dev/null 2>&1 \
+						$(upstream-branch)
+ports-base-name := $(call git-ports,$(describe-merge) $(upstream-branch))
+
+ports-tar-name := $(patsubst glibc-%,glibc-ports-%,$(ports-base-name))
+
 glibc.spec: glibc.spec.in $(dep-my-branch)
 	@rm -f $@.new
 	echo '%define glibcsrcdir $(tar-name)' > $@.new
-	if $(upstream-pristine); then \
+	if $(upstream-pristine) && $(ports-pristine); then \
 	  echo '%define glibc_release_url $(releases-url)' >> $@.new; \
 	else : ; fi; \
 	$(GIT) show $(my-branch):version.h \
 	| sed -n '/VERSION/s/^.*"\([^"]*\)"$$/%define glibcversion \1/p' \
 	>> $@.new
+	echo '%define glibcportsdir $(ports-tar-name)' >> $@.new
 	echo '### $< follows:' >> $@.new
 	cat $< >> $@.new
 	mv -f $@.new $@
@@ -107,10 +126,18 @@ glibc-$(branch-name).patch: glibc.spec Makefile $(dep-upstream-branch)
 	@mv -f patch.tmp $@
 
 git-describe = $(GIT) describe --long --always
+ports-git-describe = $(GIT-ports) describe --long --always
 
 define git-tar
 echo "Creating $@ from `$(git-describe) $1`..."; \
 (cd ..; $(GIT) archive --format=tar --prefix='$(tar-name)/' $1 $2) \
+| bzip2 -9 > $@.new && \
+mv -f $@.new $@
+endef
+
+define ports-git-tar
+echo "Creating $@ from `$(ports-git-describe) $1`..."; \
+(cd ..; $(GIT-ports) archive --format=tar --prefix='$(ports-tar-name)/' $1 $2) \
 | bzip2 -9 > $@.new && \
 mv -f $@.new $@
 endef
@@ -126,9 +153,18 @@ $(tar-name).tar.bz2: $(dep-upstream-branch) Makefile
 	   $(call git-tar,$(merge-base-id)); \
 	 fi
 
+$(ports-tar-name).tar.bz2: Makefile
+	@if $(ports-pristine); then \
+	   echo 'Fetching from $(releases-url)...'; \
+	   curl -C - -O $(releases-url)/$@; \
+	 else \
+	   $(call ports-git-tar,$(upstream-branch)); \
+	 fi
+
 archives = $(tar-name).tar.bz2 \
 	   $(tar-name)-$(branch-name).tar.bz2 \
-	   glibc-$(branch-name).patch
+	   glibc-$(branch-name).patch \
+	   $(ports-tar-name).tar.bz2
 
 finish_archive: $(archives)
 
