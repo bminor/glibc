@@ -22,7 +22,7 @@ ports-repo := $(call gitconf,glibc.ports-repo)
 ifndef ports-repo
 $(error \
 You need a glibc-ports repository! \
-Get one and do: "git config --add glibc.ports-repo ~/DIR/.git" \
+Get one and do: "git config glibc.ports-repo GLIBC_PORTS.git" \
 )
 endif
 
