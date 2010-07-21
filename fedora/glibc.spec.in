@@ -50,7 +50,7 @@ BuildRequires: /bin/ps, /bin/kill, /bin/awk
 # This is to ensure that __frame_state_for is exported by glibc
 # will be compatible with egcs 1.x.y
 BuildRequires: gcc >= 3.2
-%define enablekernel 2.6.18
+%define enablekernel 2.6.32
 %ifarch i386
 %define nptl_target_cpu i486
 %else
