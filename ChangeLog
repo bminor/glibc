@@ -1,3 +1,13 @@
+2011-02-08  Roland McGrath  <roland@redhat.com>
+
+	* include/stap-probe.h: New file.
+	* configure.in: Handle --enable-systemtap.
+	* configure: Regenerated.
+	* config.h.in (USE_STAP_PROBE): New #undef.
+	* extra-lib.mk (CPPFLAGS-$(lib)): Add -DIN_LIB=$(lib).
+	* elf/Makefile (CPPFLAGS-.os): Add -DIN_LIB=rtld.
+	* elf/rtld-Rules (rtld-CPPFLAGS): Likewise.
+
 2011-02-23  Andreas Schwab  <schwab@redhat.com>
 	    Ulrich Drepper  <drepper@gmail.com>
 

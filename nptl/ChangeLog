@@ -1,3 +1,7 @@
+2010-07-23  Roland McGrath  <roland@redhat.com>
+
+	* pthread_create.c (start_thread): Define pthread_start LIBC_PROBE.
+
 2011-01-19  Roland McGrath  <roland@redhat.com>
 
 	* pthread_cond_wait.c (__pthread_cond_wait): Fix comment typo.
