@@ -561,7 +561,7 @@ int main ()
 	{
 	  char *ptr = malloc (strlen (primary) + strlen (".utf8") + 1), *p, *q;
 
-	  if (ptr)
+	  if (ptr != NULL)
 	    {
 	      p = ptr;
 	      q = primary;
@@ -585,6 +585,8 @@ int main ()
     {
       if (strcmp (d->d_name, ".") == 0 || strcmp (d->d_name, "..") == 0)
 	continue;
+      if (strchr (d->d_name, '_') == NULL)
+	continue;
 
       size_t d_name_len = strlen (d->d_name);
       if (loc_path_len + d_name_len + 1 > sizeof (path))
@@ -602,7 +604,10 @@ int main ()
       if (! S_ISDIR (st.st_mode))
 	continue;
       if (cnt == 16384)
-	error (EXIT_FAILURE, 0, "too many directories in \"%s\"", loc_path);
+	{
+	  error (0, 0, "too many directories in \"%s\"", loc_path);
+	  break;
+	}
       list[cnt] = strdup (path);
       if (list[cnt] == NULL)
 	{
