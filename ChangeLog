@@ -1,3 +1,11 @@
+2010-07-26  Roland McGrath  <roland@redhat.com>
+
+	[BZ #11840]
+	* configure.in (-fgnu89-inline check): Set and substitute
+	gnu89_inline, not libc_cv_gnu89_inline.
+	* configure: Regenerated.
+	* config.make.in (gnu89-inline-CFLAGS): Use @gnu89_inline@.
+
 2010-07-20  Roland McGrath  <roland@redhat.com>
 
 	* elf/dl-sysdep.c (_dl_important_hwcaps): Add dsocaps mask to
