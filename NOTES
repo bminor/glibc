@@ -184,7 +184,7 @@ relying on semantics undefined within the standard.
 
      Note that if you do this, you must link your program with the BSD
      compatibility library by passing the `-lbsd-compat' option to the
-     compiler or linker.  *Note:* If you forget to do this, you may get
+     compiler or linker.  *NB:* If you forget to do this, you may get
      very strange errors at run time.
 
  -- Macro: _REENTRANT
