@@ -29,9 +29,9 @@ Release: 6
 License: LGPLv2+ and LGPLv2+ with exceptions and GPLv2+
 Group: System Environment/Libraries
 URL: http://www.gnu.org/software/glibc/
-Source0: %{?glibc_release_url}%{glibcsrcdir}.tar.bz2
-Source1: %{?glibc_release_url}%{glibcportsdir}.tar.bz2
-Source2: %{glibcsrcdir}-fedora.tar.bz2
+Source0: %{?glibc_release_url}%{glibcsrcdir}.tar.xz
+Source1: %{?glibc_release_url}%{glibcportsdir}.tar.xz
+Source2: %{glibcsrcdir}-fedora.tar.xz
 Patch0: %{name}-fedora.patch
 Patch1: %{name}-ia64-lib64.patch
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)

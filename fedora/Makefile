@@ -131,21 +131,21 @@ ports-git-describe = $(GIT-ports) describe --long --always
 define git-tar
 echo "Creating $@ from `$(git-describe) $1`..."; \
 (cd ..; $(GIT) archive --format=tar --prefix='$(tar-name)/' $1 $2) \
-| bzip2 -9 > $@.new && \
+| xz -9 > $@.new && \
 mv -f $@.new $@
 endef
 
 define ports-git-tar
 echo "Creating $@ from `$(ports-git-describe) $1`..."; \
 (cd ..; $(GIT-ports) archive --format=tar --prefix='$(ports-tar-name)/' $1 $2) \
-| bzip2 -9 > $@.new && \
+| xz -9 > $@.new && \
 mv -f $@.new $@
 endef
 
-$(tar-name)-$(branch-name).tar.bz2: glibc.spec Makefile
+$(tar-name)-$(branch-name).tar.xz: glibc.spec Makefile
 	@$(call git-tar,$(my-branch),$(outside-patch))
 
-$(tar-name).tar.bz2: $(dep-upstream-branch) Makefile
+$(tar-name).tar.xz: $(dep-upstream-branch) Makefile
 	@if $(upstream-pristine); then \
 	   echo 'Fetching from $(releases-url)...'; \
 	   curl -C - -O $(releases-url)/$@; \
@@ -153,7 +153,7 @@ $(tar-name).tar.bz2: $(dep-upstream-branch) Makefile
 	   $(call git-tar,$(merge-base-id)); \
 	 fi
 
-$(ports-tar-name).tar.bz2: Makefile
+$(ports-tar-name).tar.xz: Makefile
 	@if $(ports-pristine); then \
 	   echo 'Fetching from $(releases-url)...'; \
 	   curl -C - -O $(releases-url)/$@; \
@@ -161,10 +161,10 @@ $(ports-tar-name).tar.bz2: Makefile
 	   $(call ports-git-tar,$(upstream-branch)); \
 	 fi
 
-archives = $(tar-name).tar.bz2 \
-	   $(tar-name)-$(branch-name).tar.bz2 \
+archives = $(tar-name).tar.xz \
+	   $(tar-name)-$(branch-name).tar.xz \
 	   glibc-$(branch-name).patch \
-	   $(ports-tar-name).tar.bz2
+	   $(ports-tar-name).tar.xz
 
 finish_archive: $(archives)
 
