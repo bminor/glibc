@@ -51,6 +51,7 @@ BuildRequires: /bin/ps, /bin/kill, /bin/awk
 # will be compatible with egcs 1.x.y
 BuildRequires: gcc >= 3.2
 %define enablekernel 2.6.32
+Conflicts: kernel < %{enablekernel}
 %ifarch i386
 %define nptl_target_cpu i486
 %else
