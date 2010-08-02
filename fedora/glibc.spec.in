@@ -352,7 +352,8 @@ build_CFLAGS="$BuildFlags -g -O3 $*"
 %ifarch %{multiarcharches}
 	--enable-multi-arch \
 %endif
-	--disable-profile --enable-experimental-malloc --enable-nss-crypt
+	--disable-profile --enable-experimental-malloc --enable-nss-crypt ||
+{ cat config.log; false; }
 
 make %{?_smp_mflags} -r CFLAGS="$build_CFLAGS" PARALLELMFLAGS=-s
 
