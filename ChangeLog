@@ -1,3 +1,113 @@
+2010-07-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/multiarch/Makefile [subdir=string] (sysdep_routines):
+	Add strcasecmp_l-ssse3.
+	* sysdeps/x86_64/multiarch/strcmp.S: Add support to compile for
+	strcasecmp.
+	* sysdeps/x86_64/strcmp.S: Allow more flexible compiling of strcasecmp.
+	* sysdeps/x86_64/multiarch/strcasecmp_l.S: New file.
+	* sysdeps/x86_64/multiarch/strcasecmp_l-ssse3.S: New file.
+
+2010-07-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/multiarch/strcmp.S: Pretty printing.
+
+	* string/Makefile (strop-tests): Add strcasecmp.
+	* sysdeps/x86_64/Makefile [subdir=string] (sysdep_routines): Add
+	strcasecmp_l-nonascii.
+	(gen-as-const-headers): Add locale-defines.sym.
+	* sysdeps/x86_64/strcmp.S: Add support for strcasecmp implementation.
+	* sysdeps/x86_64/strcasecmp.S: New file.
+	* sysdeps/x86_64/strcasecmp_l.S: New file.
+	* sysdeps/x86_64/strcasecmp_l-nonascii.c: New file.
+	* sysdeps/x86_64/locale-defines.sym: New file.
+	* string/test-strcasecmp.c: New file.
+
+	* string/test-strcasestr.c: Test both ends of the range of characters.
+	* sysdeps/x86_64/multiarch/strstr.c: Fix UCHIGH definition.
+
+2010-07-29  Roland McGrath  <roland@redhat.com>
+
+	[BZ #11856]
+	* manual/locale.texi (Yes-or-No Questions): Fix example code.
+
+2010-07-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/multiarch/strcmp-ssse3.S: Avoid compiling the file
+	for ld.so.
+
+2010-07-27  Andreas Schwab  <schwab@redhat.com>
+
+	* manual/memory.texi (Malloc Tunable Parameters): Document
+	M_PERTURB.
+
+2010-07-26  Roland McGrath  <roland@redhat.com>
+
+	[BZ #11840]
+	* configure.in (-fgnu89-inline check): Set and substitute
+	gnu89_inline, not libc_cv_gnu89_inline.
+	* configure: Regenerated.
+	* config.make.in (gnu89-inline-CFLAGS): Use @gnu89_inline@.
+
+2010-07-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/test-strnlen.c: New file.
+	* string/Makefile (strop-tests): Add strnlen.
+	* string/tester.c (test_strnlen): Add a few more test cases.
+	* string/tst-strlen.c: Better error reporting.
+
+	* sysdeps/x86_64/strnlen.S: New file.
+
+2010-07-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/multiarch/strstr.c (__m128i_strloadu_tolower): Use
+	lower-latency instructions.
+
+2010-07-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/test-strcasestr.c: New file.
+	* string/test-strstr.c: New file.
+	* string/Makefile (strop-tests): Add strstr and strcasestr.
+	* string/str-two-way.h: Don't undefine MAX.
+	* string/strcasestr.c: Don't define alias if NO_ALIAS is defined.
+
+2010-07-21  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/i386/i686/multiarch/Makefile (sysdep_routines): Add
+	strcasestr-nonascii.
+	(CFLAGS-strcasestr-nonascii.c): Define.
+	* sysdeps/i386/i686/multiarch/strcasestr-nonascii.c: New file.
+	* sysdeps/x86_64/multiarch/strcasestr-nonascii.c (STRSTR_SSE42):
+	Remove unused attribute.
+
+2010-07-20  Roland McGrath  <roland@redhat.com>
+
+	* elf/dl-sysdep.c (_dl_important_hwcaps): Add dsocaps mask to
+	dl_hwcap_mask as well as dl_hwcap.  Without this, dsocaps matching in
+	ld.so.cache was broken.  With it, there is no way to disable dsocaps
+	like LD_HWCAP_MASK can disable hwcaps.
+
+2010-06-02  Emilio Pozuelo Monfort  <pochu27@gmail.com>
+
+	* sysdeps/mach/hurd/sendmsg.c (__libc_sendmsg): Fix memory leaks.
+
+2010-07-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/multiarch/strstr.c: Rewrite to avoid indirect function
+	call in strcasestr.
+	* sysdeps/x86_64/multiarch/strcasestr.c: Declare
+	__strcasestr_sse42_nonascii.
+	* sysdeps/x86_64/multiarch/Makefile: Add rules to build
+	strcasestr-nonascii.c.
+	* sysdeps/x86_64/multiarch/strcasestr-nonascii.c: New file.
+
+2010-06-15  Luis Machado  <luisgpm@br.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_copysign.S: New file.
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_copysignf.S: New file.
+	* sysdeps/powerpc/powerpc64/power6/fpu/s_copysign.S: New file.
+	* sysdeps/powerpc/powerpc64/power6/fpu/s_copysignf.S: New file.
+
 2010-07-18  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* debug/vdprintf_chk.c (__vdprintf_chk): Remove undefined
