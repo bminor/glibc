@@ -21,7 +21,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 6
+Release: 7
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1036,6 +1036,18 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Aug  2 2010 Andreas Schwab <schwab@redhat.com> - 2.12.90-7
+- Update from master
+  - Add optimized x86-64 implementation of strnlen and strcaecmp
+  - Document M_PERTURB
+  - Fix vDSO synthetic hwcap handling so they are not masked out from
+    ld.so.cache matching
+  - POWER6/7 optimizations for copysign
+- Build with ports addon on alpha and armv5tel
+- Add conflict with kernel < 2.6.32 (#619538)
+- Switch to xz compressed tar files
+- build-locale-archive: process only directories matching *_*
+
 * Wed Jul 21 2010 Andreas Schwab <schwab@redhat.com> - 2.12.90-6
 - Bump minimum kernel version to 2.6.32
 
