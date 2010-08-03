@@ -16,7 +16,6 @@
 %define rtkaioarches %{ix86} x86_64 ia64 ppc ppc64 s390 s390x
 %define debuginfocommonarches alpha alphaev6 sparc sparcv9 sparcv9v sparc64 sparc64v
 %define multiarcharches ppc ppc64 %{ix86} x86_64
-%define portsarches alpha armv5tel
 
 Summary: The GNU libc libraries
 Name: glibc
@@ -331,9 +330,6 @@ echo "$GCC" > Gcc
 AddOns=`echo */configure | sed -e 's!/configure!!g;s!\(linuxthreads\|nptl\|rtkaio\|powerpc-cpu\)\( \|$\)!!g;s! \+$!!;s! !,!g;s!^!,!;/^,\*$/d'`
 %ifarch %{rtkaioarches}
 AddOns=,rtkaio$AddOns
-%endif
-%ifarch %{portsarches}
-AddOns=,../%{glibcportsdir}$AddOns
 %endif
 
 build_nptl()
