@@ -339,7 +339,10 @@ shift
 rm -rf $builddir
 mkdir $builddir ; cd $builddir
 build_CFLAGS="$BuildFlags -g -O3 $*"
-../configure CC="$GCC" CXX="$GXX" CFLAGS="$build_CFLAGS" \
+# Some configure checks can spuriously fail for some architectures if
+# unwind info is present
+configure_CFLAGS="$build_CFLAGS -fno-asynchronous-unwind-tables"
+../configure CC="$GCC" CXX="$GXX" CFLAGS="$configure_CFLAGS" \
 	--prefix=%{_prefix} \
 	--enable-add-ons=../%{glibcportsdir},nptl$AddOns \
 	--with-headers=%{_prefix}/include $EnableKernel --enable-bind-now \
