@@ -1,3 +1,9 @@
+2010-08-09  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11883]
+	* posix/fnmatch.c: Keep track of alloca use and fall back on malloc.
+	* posix/fnmatch_loop.c: Likewise.
+
 2010-11-10  Luis Machado  <luisgpm@br.ibm.com>
 
 	* sysdeps/ieee754/ldbl-128ibm/e_sqrtl.c (__ieee754_sqrtl): Force
