@@ -1,3 +1,9 @@
+2010-08-11  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11903]
+	* sysdeps/generic/netinet/ip.h (IPTOS_CLASS): Fix definition.
+	Patch by Evgeni Bikov <bikovevg@iitp.ru>.
+
 2010-08-21  Mike Frysinger  <vapier@gentoo.org>
 
 	* configure.in: Move assembler checks to before sysdep dir checking.
