@@ -1,3 +1,9 @@
+2010-08-12  Andreas Schwab  <schwab@redhat.com>
+
+	[BZ #11904]
+	* locale/programs/locale.c (print_assignment): New function.
+	(show_locale_vars): Use it.
+
 2010-10-26  Ulrich Drepper  <drepper@gmail.com>
 
 	* elf/rtld.c (dl_main): Move assertion after the point where rtld map
