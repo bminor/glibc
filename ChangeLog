@@ -1,5 +1,22 @@
 2010-08-12  Luis Machado  <luisgpm@br.ibm.com>
 
+	* sysdeps/powerpc/powerpc32/power7/memchr.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/memrchr.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/rawmemchr.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/strchr.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/strchrnul.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/strlen.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/strnlen.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/memchr.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/memrchr.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/rawmemchr.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/strchr.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/strchrnul.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/strlen.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/strnlen.S: New file.
+
+2010-08-12  Luis Machado  <luisgpm@br.ibm.com>
+
 	* sysdeps/powerpc/powerpc32/power6/fpu/s_copysign.S: New file.
 	* sysdeps/powerpc/powerpc32/power6/fpu/s_copysignf.S: New file.
 	* sysdeps/powerpc/powerpc64/power6/fpu/s_copysign.S: New file.
