@@ -1,3 +1,10 @@
+2010-08-12  Luis Machado  <luisgpm@br.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_copysign.S: New file.
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_copysignf.S: New file.
+	* sysdeps/powerpc/powerpc64/power6/fpu/s_copysign.S: New file.
+	* sysdeps/powerpc/powerpc64/power6/fpu/s_copysignf.S: New file.
+
 2010-06-10  Luis Machado  <luisgpm@br.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/power7/memcmp.S: New file
