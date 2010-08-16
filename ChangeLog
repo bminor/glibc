@@ -1,3 +1,7 @@
+2010-08-12  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/elf/Makefile: New file.
+
 2010-07-31  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* hurd/hurdselect.c (_hurd_select): Round timeout up instead of down

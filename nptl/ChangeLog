@@ -1,3 +1,7 @@
+2010-08-12  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* nptl/sysdeps/unix/sysv/linux/i386/Makefile: New file.
+
 2010-07-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (tst-_res1): Add tst-_res1mod1 to dependency list.
