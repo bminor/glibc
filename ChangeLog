@@ -1,3 +1,26 @@
+2010-08-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/getlogin_r.c (__getlogin_r_loginuid):
+	Also fail if tpwd after pwuid call is NULL.
+
+2010-06-21  Andreas Schwab <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/getlogin_r.c (__getlogin_r_loginuid):
+	Restore proper fallback handling.
+
+2010-06-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/getlogin_r.c (__getlogin_r_loginuid): Handle
+	OOM in getpwuid_r correctly.  Return error number when the caller
+	should return, otherwise -1.
+	(getlogin_r): Adjust to return also for result of __getlogin_r_loginuid
+	call returning > 0 value.
+	* sysdeps/unix/sysv/linux/getlogin.c (getlogin): Likewise.
+
+2010-07-27  Andreas Schwab  <schwab@redhat.com>
+
+	* version.h (VERSION): Bump for 2.12.1 release.
+
 2010-06-21  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/i386/i686/Makefile: Don't pass -mtune to assembler.
