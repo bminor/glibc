@@ -1,5 +1,5 @@
 /* Common code for file-based databases in nss_files module.
-   Copyright (C) 1996-1999,2001,2002,2004,2007,2008
+   Copyright (C) 1996-1999,2001,2002,2004,2007,2008,2010
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -190,7 +190,7 @@ internal_getent (struct STRUCTURE *result,
 {
   char *p;
   struct parser_data *data = (void *) buffer;
-  int linebuflen = buffer + buflen - data->linebuffer;
+  size_t linebuflen = buffer + buflen - data->linebuffer;
   int parse_result;
 
   if (buflen < sizeof *data + 2)

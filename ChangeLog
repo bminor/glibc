@@ -1,5 +1,8 @@
 2010-09-27  Andreas Schwab  <schwab@redhat.com>
 
+	* nss/nss_files/files-XXX.c (internal_getent): Declare linebuflen
+	as size_t.
+
 	* sysdeps/i386/i686/multiarch/strspn.S (ENTRY): Add missing
 	backslash.
 
