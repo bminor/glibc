@@ -44,6 +44,25 @@
    * crtn.s puts the corresponding function epilogues
    in the .init and .fini sections. */
 
+/* The unwind annotation for _fini is peculiar for good reasons:
+   (a) We need a real function that isn't constructed separately
+       (i.e. one which has a .size directive) in order to attach unwind
+       info to it.  Hence _fini is a wrapper around _real_fini, the
+       former being a normal function, the latter being the first
+       instruction of the traditional _fini.
+   (b) We must not fiddle with the stack pointer in _real_fini,
+       as we wouldn't be able to describe the effects in unwind info
+   (c) some versions of GCC have no correct unwind info for
+       __do_global_dtors_aux, meaning they can't properly restore %rbp
+       (unwinding through it is possible but later up when we next
+       need %rbp we can't access it anymore)
+       Therefore we save/restore it in _fini for uses later up the call chain.
+       But we don't make the CFA use that register (that would lead to
+       the above problem)
+   (d) We want an 16-aligned stack pointer at _real_fini.  Because of (a)
+       we can't align it in _real_fini, hence we do it in the caller by
+       subtracting 8, making in 8mod16 which the call then make 0mod16
+       again.  */
 __asm__ ("\n\
 #include \"defs.h\"\n\
 \n\
@@ -88,16 +107,28 @@ _init:\n\
 .globl _fini\n\
 	.type	_fini,@function\n\
 _fini:\n\
+	.cfi_startproc\n\
+	push	%rbp\n\
+	.cfi_def_cfa_offset 16\n\
+	.cfi_offset 6,-16\n\
 	subq	$8, %rsp\n\
+	.cfi_def_cfa_offset 24\n\
+	call	_real_fini\n\
+	addq    $8, %rsp\n\
+	.cfi_def_cfa_offset 16\n\
+	pop     %rbp\n\
+	ret\n\
+	.cfi_endproc\n\
 	ALIGN\n\
 	END_FINI\n\
+.size	_fini, .-_fini\n\
+_real_fini:\n\
 \n\
 /*@_fini_PROLOG_ENDS*/\n\
 	call	i_am_not_a_leaf@PLT\n\
 \n\
 /*@_fini_EPILOG_BEGINS*/\n\
 	.section .fini\n\
-	addq	$8, %rsp\n\
 	ret\n\
 	END_FINI\n\
 \n\
