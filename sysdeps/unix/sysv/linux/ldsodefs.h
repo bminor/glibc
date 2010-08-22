@@ -36,6 +36,12 @@ extern void _dl_aux_init (ElfW(auxv_t) *av) internal_function;
 /* Initialization which is normally done by the dynamic linker.  */
 extern void _dl_non_dynamic_init (void) internal_function;
 
+/* We need special support to initialize DSO loaded for statically linked
+   binaries.  */
+extern void _dl_static_init (struct link_map *map);
+#undef DL_STATIC_INIT
+#define DL_STATIC_INIT(map) _dl_static_init (map)
+
 /* We can assume that the kernel always provides the AT_UID, AT_EUID,
    AT_GID, and AT_EGID values in the auxiliary vector from 2.4.0 or so on.  */
 #if __ASSUME_AT_XID

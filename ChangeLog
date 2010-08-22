@@ -1,3 +1,16 @@
+2010-08-18  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #11929]
+	* sysdeps/unix/sysv/linux/ia64/Makefile: Move dl-static addition to
+	sysdep vars for subdir==elf to ...
+	* sysdeps/unix/sysv/linux/Makefile: ... here.
+	* sysdeps/unix/sysv/linux/ia64/dl-static.c: Move file to ...
+	* sysdeps/unix/sysv/linux/dl-static.c: ... here.
+	* sysdeps/unix/sysv/linux/ia64/ldsodefs.h: Delete, and move the
+	DL_STATIC_INIT defines to ...
+	* sysdeps/unix/sysv/linux/ldsodefs.h: ... here.
+	* sysdeps/unix/sysv/linux/ia64/getpagesize.c: Delete.
+
 2006-11-30  Jan Kratochvil  <jan.kratochvil@redhat.com>
 
 	[BZ #6693]
