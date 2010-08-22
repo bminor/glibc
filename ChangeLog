@@ -1,3 +1,8 @@
+2010-06-01  Jan Sembera  <jsembera@suse.cz>
+
+	[BZ #6812]
+	* nscd/hstcache.c: Propagate TRY_AGAIN properly to the clients.
+
 2010-11-11  Andreas Schwab  <schwab@redhat.com>
 
 	* posix/fnmatch_loop.c (NEW_PATTERN): Fix use of alloca.

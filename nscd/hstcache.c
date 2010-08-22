@@ -77,6 +77,20 @@ static const hst_response_header notfound =
 };
 
 
+/* This is the standard reply in case of temporary error */
+static const hst_response_header tryagain =
+{
+  .version = NSCD_VERSION,
+  .found = 0,
+  .h_name_len = 0,
+  .h_aliases_cnt = 0,
+  .h_addrtype = -1,
+  .h_length = -1,
+  .h_addr_list_cnt = 0,
+  .error = TRY_AGAIN
+};
+
+
 static void
 cache_addhst (struct database_dyn *db, int fd, request_header *req,
 	      const void *key, struct hostent *hst, uid_t owner,
@@ -85,6 +99,7 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 {
   bool all_written = true;
   time_t t = time (NULL);
+  hst_response_header *errhdr;
 
   /* We allocate all data in one memory block: the iov vector,
      the response header and the dataset itself.  */
@@ -112,15 +127,20 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 	{
 	  /* We have no data.  This means we send the standard reply for this
 	     case.  */
-	  ssize_t total = sizeof (notfound);
+	  ssize_t total = sizeof (hst_response_header);
+	  errhdr = (errval == EAGAIN) ? &tryagain : &notfound;
 
 	  if (fd != -1 &&
-	      TEMP_FAILURE_RETRY (send (fd, &notfound, total,
+	      TEMP_FAILURE_RETRY (send (fd, errhdr, total,
 					MSG_NOSIGNAL)) != total)
 	    all_written = false;
 
-	  dataset = mempool_alloc (db, sizeof (struct dataset) + req->key_len,
-				   1);
+	  if (errval == EAGAIN)
+	      /* Don't store temporary resolver errors at all */
+	      dataset = NULL;
+	  else
+	      dataset = mempool_alloc (db, sizeof (struct dataset) + req->key_len,
+				       IDX_result_data);
 	  /* If we cannot permanently store the result, so be it.  */
 	  if (dataset != NULL)
 	    {
@@ -490,7 +510,7 @@ addhstbyX (struct database_dyn *db, int fd, request_header *req,
 	      /* We set the error to indicate this is (possibly) a
 		 temporary error and that it does not mean the entry
 		 is not available at all.  */
-	      errval = EAGAIN;
+	      h_errno = TRY_AGAIN;
 	      break;
 	    }
 	  use_malloc = true;
@@ -502,7 +522,7 @@ addhstbyX (struct database_dyn *db, int fd, request_header *req,
     }
 
   cache_addhst (db, fd, req, key, hst, uid, he, dh,
-		h_errno == TRY_AGAIN ? errval : 0, ttl);
+		h_errno == TRY_AGAIN ? EAGAIN : 0, ttl);
 
   if (use_malloc)
     free (buffer);
