@@ -1,3 +1,13 @@
+2010-05-12  Petr Baudis <pasky@suse.cz>
+
+	[BZ #11589]
+	* sysdeps/ieee754/dbl-64/e_jn.c: Compensate major precision loss
+	around j0() zero points by switching to j1().
+	* sysdeps/ieee754/flt-32/e_jnf.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_jnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_jnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/e_jnl.c: Likewise.
+
 2010-06-01  Jan Sembera  <jsembera@suse.cz>
 
 	[BZ #6812]
