@@ -84,7 +84,9 @@ static const struct cmd
 };
 
 /* Structure containing the state.  */
+#ifndef NOT_IN_libc
 struct hconf _res_hconf;
+#endif
 
 /* Skip white space.  */
 static const char *

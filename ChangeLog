@@ -1,3 +1,9 @@
+2010-08-19  Petr Baudis <pasky@suse.cz>
+
+	[BZ #11928]
+        * nscd/aicache.c (addhstaiX): Ensure _res_hconf has been initialized.
+        * resolv/res_hconf.c (_res_hconf): Do not redefine outside of libc.
+
 2010-05-31  Petr Baudis <pasky@suse.cz>
 
 	[BZ #10085]

@@ -26,6 +26,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <sys/mman.h>
+#include <resolv/res_hconf.h>
 
 #include "dbg_log.h"
 #include "nscd.h"
@@ -103,6 +104,8 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 
   if (__res_maybe_init (&_res, 0) == -1)
 	    no_more = 1;
+  if (!_res_hconf.initialized)
+    _res_hconf_init ();
 
   /* If we are looking for both IPv4 and IPv6 address we don't want
      the lookup functions to automatically promote IPv4 addresses to
