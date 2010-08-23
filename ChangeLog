@@ -1,3 +1,320 @@
+2010-08-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sunrpc/auth_des.c: Update copyright notice once again.
+	* sunrpc/auth_none.c: Likewise.
+	* sunrpc/auth_unix.c: Likewise.
+	* sunrpc/authdes_prot.c: Likewise.
+	* sunrpc/authuxprot.c: Likewise.
+	* sunrpc/bindrsvprt.c: Likewise.
+	* sunrpc/clnt_gen.c: Likewise.
+	* sunrpc/clnt_perr.c: Likewise.
+	* sunrpc/clnt_raw.c: Likewise.
+	* sunrpc/clnt_simp.c: Likewise.
+	* sunrpc/clnt_tcp.c: Likewise.
+	* sunrpc/clnt_udp.c: Likewise.
+	* sunrpc/clnt_unix.c: Likewise.
+	* sunrpc/des_crypt.c: Likewise.
+	* sunrpc/des_soft.c: Likewise.
+	* sunrpc/get_myaddr.c: Likewise.
+	* sunrpc/getrpcport.c: Likewise.
+	* sunrpc/key_call.c: Likewise.
+	* sunrpc/key_prot.c: Likewise.
+	* sunrpc/openchild.c: Likewise.
+	* sunrpc/pm_getmaps.c: Likewise.
+	* sunrpc/pm_getport.c: Likewise.
+	* sunrpc/pmap_clnt.c: Likewise.
+	* sunrpc/pmap_prot.c: Likewise.
+	* sunrpc/pmap_prot2.c: Likewise.
+	* sunrpc/pmap_rmt.c: Likewise.
+	* sunrpc/rpc/auth.h: Likewise.
+	* sunrpc/rpc/auth_unix.h: Likewise.
+	* sunrpc/rpc/clnt.h: Likewise.
+	* sunrpc/rpc/des_crypt.h: Likewise.
+	* sunrpc/rpc/key_prot.h: Likewise.
+	* sunrpc/rpc/netdb.h: Likewise.
+	* sunrpc/rpc/pmap_clnt.h: Likewise.
+	* sunrpc/rpc/pmap_prot.h: Likewise.
+	* sunrpc/rpc/pmap_rmt.h: Likewise.
+	* sunrpc/rpc/rpc.h: Likewise.
+	* sunrpc/rpc/rpc_des.h: Likewise.
+	* sunrpc/rpc/rpc_msg.h: Likewise.
+	* sunrpc/rpc/svc.h: Likewise.
+	* sunrpc/rpc/svc_auth.h: Likewise.
+	* sunrpc/rpc/types.h: Likewise.
+	* sunrpc/rpc/xdr.h: Likewise.
+	* sunrpc/rpc_clntout.c: Likewise.
+	* sunrpc/rpc_cmsg.c: Likewise.
+	* sunrpc/rpc_common.c: Likewise.
+	* sunrpc/rpc_cout.c: Likewise.
+	* sunrpc/rpc_dtable.c: Likewise.
+	* sunrpc/rpc_hout.c: Likewise.
+	* sunrpc/rpc_main.c: Likewise.
+	* sunrpc/rpc_parse.c: Likewise.
+	* sunrpc/rpc_parse.h: Likewise.
+	* sunrpc/rpc_prot.c: Likewise.
+	* sunrpc/rpc_sample.c: Likewise.
+	* sunrpc/rpc_scan.c: Likewise.
+	* sunrpc/rpc_scan.h: Likewise.
+	* sunrpc/rpc_svcout.c: Likewise.
+	* sunrpc/rpc_tblout.c: Likewise.
+	* sunrpc/rpc_util.c: Likewise.
+	* sunrpc/rpc_util.h: Likewise.
+	* sunrpc/rpcinfo.c: Likewise.
+	* sunrpc/rpcsvc/bootparam_prot.x: Likewise.
+	* sunrpc/rpcsvc/key_prot.x: Likewise.
+	* sunrpc/rpcsvc/klm_prot.x: Likewise.
+	* sunrpc/rpcsvc/mount.x: Likewise.
+	* sunrpc/rpcsvc/nfs_prot.x: Likewise.
+	* sunrpc/rpcsvc/nlm_prot.x: Likewise.
+	* sunrpc/rpcsvc/rex.x: Likewise.
+	* sunrpc/rpcsvc/rstat.x: Likewise.
+	* sunrpc/rpcsvc/rusers.x: Likewise.
+	* sunrpc/rpcsvc/sm_inter.x: Likewise.
+	* sunrpc/rpcsvc/spray.x: Likewise.
+	* sunrpc/rpcsvc/yppasswd.x: Likewise.
+	* sunrpc/rtime.c: Likewise.
+	* sunrpc/svc.c: Likewise.
+	* sunrpc/svc_auth.c: Likewise.
+	* sunrpc/svc_authux.c: Likewise.
+	* sunrpc/svc_raw.c: Likewise.
+	* sunrpc/svc_run.c: Likewise.
+	* sunrpc/svc_simple.c: Likewise.
+	* sunrpc/svc_tcp.c: Likewise.
+	* sunrpc/svc_udp.c: Likewise.
+	* sunrpc/svc_unix.c: Likewise.
+	* sunrpc/svcauth_des.c: Likewise.
+	* sunrpc/xcrypt.c: Likewise.
+	* sunrpc/xdr.c: Likewise.
+	* sunrpc/xdr_array.c: Likewise.
+	* sunrpc/xdr_float.c: Likewise.
+	* sunrpc/xdr_mem.c: Likewise.
+	* sunrpc/xdr_rec.c: Likewise.
+	* sunrpc/xdr_ref.c: Likewise.
+	* sunrpc/xdr_sizeof.c: Likewise.
+	* sunrpc/xdr_stdio.c: Likewise.
+
+	* sysdeps/x86_64/multiarch/strcmp.S: Fix two typos in strncasecmp
+	handling.
+
+2010-08-19  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/i386/i686/multiarch/strspn.S [!SHARED]: Fix SSE4.2 check.
+
+2010-08-19  Luis Machado  <luisgpm@br.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power7/memchr.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/memrchr.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/rawmemchr.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/strchr.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/strchrnul.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/strlen.S: New file.
+	* sysdeps/powerpc/powerpc32/power7/strnlen.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/memchr.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/memrchr.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/rawmemchr.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/strchr.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/strchrnul.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/strlen.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/strnlen.S: New file.
+
+2010-07-26  Anton Blanchard  <anton@samba.org>
+
+	* malloc/malloc.c (sYSTRIm): Replace divide and multiply with mask.
+	* malloc/arena.c (heap_trim): Likewise.
+
+2010-08-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add entry for fanotify_init
+	here.  Not...
+	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list: ...here...
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: ... orhere.
+
+2010-08-12  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/elf/Makefile: New file.
+
+2010-08-14  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/sys/fanotify.h: Remove third argument
+	from fanotify_init.
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list: Likewise.
+
+2010-08-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/strcmp.S: Use correct register for fourth parameter
+	of strncasecmp_l.
+	* sysdeps/multiarch/strcmp.S: Likewise.
+
+2010-08-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/Makefile [subdir=string] (sysdep_routines): Add
+	strncase_l-nonascii.
+	* sysdeps/x86_64/multiarch/Makefile [subdir=string] (sysdep_routines):
+	Add strncase_l-ssse3.
+	* sysdeps/x86_64/multiarch/strcmp.S: Prepare for use as strncasecmp.
+	* sysdeps/x86_64/strcmp.S: Likewise.
+	* sysdeps/x86_64/multiarch/strncase_l-ssse3.S: New file.
+	* sysdeps/x86_64/multiarch/strncase_l.S: New file.
+	* sysdeps/x86_64/strncase.S: New file.
+	* sysdeps/x86_64/strncase_l-nonascii.c: New file.
+	* sysdeps/x86_64/strncase_l.S: New file.
+	* string/Makefile (strop-tests): Add strncasecmp.
+	* string/test-strncasecmp.c: New file.
+
+	* sysdeps/x86_64/strcasecmp_l-nonascii.c: Add prototype to avoid
+	warning.
+
+	* sysdeps/x86_64/strcmp.S: Move definition of NO_NOLOCALE_ALIAS to...
+	* sysdeps/x86_64/multiarch/strcasecmp_l-ssse3.S: ... here.
+
+2010-08-14  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/prlimit.c: Make it compile.
+
+2010-08-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/termios.h: Define EXTPROC.
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/termios.h: Likewise.
+
+2010-05-01  Alan Modra  <amodra@gmail.com>
+
+	* sysdeps/powerpc/powerpc32/power4/memcmp.S: Correct cfi for r24.
+	* sysdeps/powerpc/powerpc64/bsd-_setjmp.S: Move contents..
+	* sysdeps/powerpc/powerpc64/bsd-setjmp.S: ..and these too..
+	* sysdeps/powerpc/powerpc64/setjmp.S: ..to here..
+	* sysdeps/powerpc/powerpc64/setjmp-common.S: ..and here, with some
+	tidying.  Don't tail-call __sigjmp_save for static lib.
+	* sysdeps/powerpc/powerpc64/sysdep.h (SAVE_ARG, REST_ARG): Correct
+	save location.
+	(CFI_SAVE_ARG, CFI_REST_ARG): New macros.
+	(CALL_MCOUNT): Add eh info, and nop after bl.
+	(TAIL_CALL_SYSCALL_ERROR): New macro.
+	(PSEUDO_RET): Use it.
+	* sysdeps/powerpc/powerpc64/dl-trampoline.S (_dl_runtime_resolve):
+	Correct save location of integer regs and cr.
+	(_dl_profile_resolve): Correct cr save location.  Delete nops
+	after bl when SHARED.  Reduce cfi size a little by better
+	placement of cfi directives.
+	* sysdeps/powerpc/powerpc64/fpu/s_copysign.S (__copysign): Don't
+	make a stack frame.  Instead use parm save area as a temp.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/brk.S (__brk): Don't
+	make a stack frame.  Use TAIL_CALL_SYSCALL_ERROR.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S (__clone):
+	Don't make a stack frame for parent, use parm save area.
+	Increase child stack frame to 112 bytes.  Don't save unused reg,
+	and adjust reg usage.  Set up cfi on error recovery and
+	epilogue of parent, and use TAIL_CALL_SYSCALL_ERROR, PSEUDO_RET.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/makecontext.S
+	(__makecontext): Add dummy nop after jump to exit.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/socket.S (__socket):
+	Use correct parm save area and cr save, reduce stack frame.
+	Correct cfi for possible PSEUDO_RET frame setup.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/vfork.S (__vfork):
+	Branch to local label emitted by PSEUDO_RET rather than
+	__syscall_error.
+
+2010-08-12  Andreas Schwab  <schwab@redhat.com>
+
+	[BZ #11904]
+	* locale/programs/locale.c (print_assignment): New function.
+	(show_locale_vars): Use it.
+
+2010-08-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/statfs.h (struct statfs): Add f_flags
+	field.
+	(struct statfs64): Likewise.
+	(_STATFS_F_FLAGS): Define.
+	* sysdeps/unix/sysv/linux/s390/bits/statfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/internal_statvfs.c (__statvfs_getflags):
+	Don't define if __ASSUME_STATFS_F_FLAGS is defined.
+	(ST_VALID): Define locally.
+	(INTERNAL_STATVFS): If f_flags has ST_VALID set don't call
+	__statvfs_getflags, use the provided value.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define
+	__ASSUME_STATFS_F_FLAGS.
+
+	* sysdeps/unix/sysv/linux/sys/inotify.h (IN_EXCL_UNLINK): Define.
+
+	* sysdeps/unix/sysv/linux/Makefile [subdir=misc] (sysdep_headers):
+	Add sys/fanotify.h.
+	* sysdeps/unix/sysv/linux/Versions [libc]: Export fanotify_init and
+	fanotify_mask for GLIBC_2.13.
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: Add entries for
+	fanotify_init and fanotify_mark.
+	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/sys/fanotify.h: New file.
+
+	* sysdeps/unix/sysv/linux/Makefile [subdir=misc] (sysdep_routines):
+	Add prlimit.
+	* sysdeps/unix/sysv/linux/Versions [libc]: Export prlimit and
+	prlimit64 for GLIBC_2.13.
+	* sysdeps/unix/sysv/linux/bits/resource.h: Declare prlimit and
+	prlimit64.
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: Add entry for prlimit64
+	syscall.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/sh/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.lis: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list: Likewise.  Also
+	add prlimit alias.
+	* sysdeps/unix/sysv/linux/prlimit.c: New file.
+
+	[BZ #11903]
+	* sysdeps/generic/netinet/ip.h (IPTOS_CLASS): Fix definition.
+	Patch by Evgeni Bikov <bikovevg@iitp.ru>.
+
+	* nss/Makefile: Add rules to build and run tst-nss-test1.
+	* shlib-versions: Add entry for libnss_test1.
+	* nss/nss_test1.c: New file.
+	* nss/tst-nss-test1.c: New file.
+
+	* nss/nsswitch.c (__nss_database_custom): Define new variable.
+	(__nss_configure_lookup): Set appropriate entry in
+	__nss_configure_lookup to true.
+	* nss/nsswitch.h: Define enum with indeces of databases in
+	databases and __nss_database_custom arrays.  Declare
+	__nss_database_custom.
+	* grp/initgroups.c (internal_getgrouplist): Use __nss_database_custom
+	to avoid using nscd when custom rules are installed.
+	* nss/getXXbyYY_r.c: Likewise.
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Likewise.
+
+	* nss/nss_files/files-parse.c: Whitespace fixes.
+
+2010-08-09  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11883]
+	* posix/fnmatch.c: Keep track of alloca use and fall back on malloc.
+	* posix/fnmatch_loop.c: Likewise.
+
+2010-07-17  Andi Kleen  <ak@linux.intel.com>
+
+	* sysdeps/i386/i386-mcount.S (__fentry__): Define.
+	* sysdeps/x86_64/_mcount.S (__fentry__): Define.
+	* stdlib/Versions (__fentry__): Add for GLIBC 2.13
+	* Versions.def [GLIBC_2.13]: Add.
+
+2010-08-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/getlogin_r.c (__getlogin_r_loginuid):
+	Also fail if tpwd after pwuid call is NULL.
+
+2010-07-31  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* hurd/hurdselect.c (_hurd_select): Round timeout up instead of down
+	when converting to ms.
+
+2010-06-06  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/ttyname.c (ttyname): Replace MIG_BAD_ID and
+	EOPNOTSUPP errors with ENOTTY.
+	* sysdeps/mach/hurd/ttyname_r.c (__ttyname_r): Replace MIG_BAD_ID and
+	EOPNOTSUPP errors with ENOTTY.
+
 2010-07-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/multiarch/Makefile [subdir=string] (sysdep_routines):
