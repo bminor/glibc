@@ -1,3 +1,7 @@
+2010-08-21  Mike Frysinger  <vapier@gentoo.org>
+
+	* configure.in: Move assembler checks to before sysdep dir checking.
+
 2010-11-24  Andreas Schwab  <schwab@redhat.com>
 
 	* resolv/nss_dns/dns-host.c (getanswer_r): Don't handle ttl == 0
