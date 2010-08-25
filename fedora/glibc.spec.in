@@ -389,9 +389,6 @@ build_nptl linuxnptl-power6
 cd build-%{nptl_target_cpu}-linuxnptl
 $GCC -static -L. -Os -g ../fedora/glibc_post_upgrade.c -o glibc_post_upgrade.%{_target_cpu} \
   -DNO_SIZE_OPTIMIZATION \
-%ifarch i386 i486 i586
-  -DARCH_386 \
-%endif
   '-DLIBTLS="/%{_lib}/tls/"' \
   '-DGCONV_MODULES_DIR="%{_prefix}/%{_lib}/gconv"' \
   '-DLD_SO_CONF="/etc/ld.so.conf"' \
