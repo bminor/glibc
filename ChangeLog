@@ -1,3 +1,9 @@
+2010-08-25  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10851]
+	* resolv/res_init.c (__res_vinit): When no server address at all
+	is given default to loopback.
+
 2010-08-12  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/elf/Makefile: New file.
