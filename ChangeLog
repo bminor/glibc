@@ -1,5 +1,9 @@
 2010-09-27  Andreas Schwab  <schwab@redhat.com>
 
+	[BZ #6530]
+	* stdio-common/vfprintf.c (process_string_arg): Revert 2000-07-22
+	change.
+
 	* nss/nss_files/files-XXX.c (internal_getent): Declare linebuflen
 	as size_t.
 
