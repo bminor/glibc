@@ -1,3 +1,9 @@
+2010-08-31  Andreas Schwab  <schwab@redhat.com>
+
+	[BZ #7066]
+	* stdlib/strtod_l.c (____STRTOF_INTERNAL): Fix array overflow when
+	shifting retval into place.
+
 2010-09-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/res_init.c (__res_vinit): Count the default server we added.
