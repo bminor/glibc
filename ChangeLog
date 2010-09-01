@@ -1,5 +1,9 @@
 2010-09-27  Andreas Schwab  <schwab@redhat.com>
 
+	[BZ #11561]
+	* posix/regcomp.c (parse_bracket_exp): When looking up collating
+	elements compare against the byte sequence of it, not its name.
+
 	[BZ #6530]
 	* stdio-common/vfprintf.c (process_string_arg): Revert 2000-07-22
 	change.
