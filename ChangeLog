@@ -1,3 +1,176 @@
+2010-09-06  Andreas Schwab  <schwab@redhat.com>
+
+	* manual/Makefile: Don't mix pattern rules with normal rules.
+
+2010-09-05  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* debug/vdprintf_chk.c (__vdprintf_chk): Remove undefined
+	operation.
+	* libio/iofdopen.c (_IO_new_fdopen): Likewise.
+	* libio/iofopncook.c (_IO_cookie_init): Likewise.
+	* libio/iovdprintf.c (_IO_vdprintf): Likewise.
+	* libio/oldiofdopen.c (_IO_old_fdopen): Likewise.
+	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_rela):
+	Likewise.
+
+2010-09-04  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11979]
+	* iconvdata/gconv-modules: Remove EBCDIC-CP-AR2 alias from
+	IBM-930, IBM-933, IBM-935, IBM-937, and IBM-939.
+
+2010-09-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/add_n.S: Update from GMP 5.0.1.
+	* sysdeps/x86_64/addmul_1.S: Likewise.
+	* sysdeps/x86_64/lshift.S: Likewise.
+	* sysdeps/x86_64/mul_1.S: Likewise.
+	* sysdeps/x86_64/rshift.S: Likewise.
+	* sysdeps/x86_64/sub_n.S: Likewise.
+	* sysdeps/x86_64/submul_1.S: Likewise.
+
+2010-09-01  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	This aligns bits/sched.h onto sysdeps/unix/sysv/linux/bits/sched.h:
+	Define __sched_param instead of SCHED_* and sched_param when
+	<bits/sched.h> is included with __need_schedparam defined.
+	* bits/sched.h [__need_schedparam]
+	(SCHED_OTHER, SCHED_FIFO, SCHED_RR, sched_param): Do not define.
+	[!__defined_schedparam && (__need_schedparam || _SCHED_H)]
+	(__defined_schedparam): Define to 1.
+	(__sched_param): New structure, identical to sched_param.
+	(__need_schedparam): Undefine.
+
+2010-08-31  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/sparc/sys/epoll.h (epoll_create2): Delete.
+	(epoll_create1): Declare.
+
+	* sysdeps/unix/sysv/linux/x86_64/sys/epoll.h: Fix typo.
+
+2010-08-31  Andreas Schwab  <schwab@redhat.com>
+
+	[BZ #7066]
+	* stdlib/strtod_l.c (____STRTOF_INTERNAL): Fix array overflow when
+	shifting retval into place.
+
+2010-09-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/rpcsvc/nis.h: Update copyright notice.
+	* nis/rpcsvc/nis.x: Likewise.
+	* nis/rpcsvc/nis_callback.h: Likewise.
+	* nis/rpcsvc/nis_callback.x: Likewise.
+	* nis/rpcsvc/nis_object.x: Likewise.
+	* nis/rpcsvc/nis_tags.h: Likewise.
+	* nis/rpcsvc/yp.h: Likewise.
+	* nis/rpcsvc/yp.x: Likewise.
+	* nis/rpcsvc/ypupd.h: Likewise.
+	* nis/yp_xdr.c: Likewise.
+	* nis/ypupdate_xdr.c: Likewise.
+
+	* sunrpc/pm_getport.c (__libc_rpc_getport): New function.  This is
+	mainly the body of pmap_getport.  Add parameters to specify timeouts.
+	(pmap_getport): Use __libc_rpc_getport.
+	* sunrpc/Versions: Export __libc_rpc_getport with GLIBC_PRIVATE.
+	* include/rpc/pmap_clnt.h: Declare __libc_rpc_getport.
+	* nis/nis_findserv.c: Remove pmap_getport copy. Use __libc_rpc_getport.
+
+2010-08-31  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/syscalls.list: Add
+	fanotify_mark.
+
+2010-08-27  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/i386/i686/multiarch/Makefile
+	(CFLAGS-varshift.c): New variable.
+
+2010-08-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/i686/multiarch/varshift.S: File removed.
+	* sysdeps/i386/i686/multiarch/varshift.c: New file.
+
+	* sysdeps/x86_64/multiarch/strlen-no-bsf.S: Move to .text.slow section.
+
+	* sysdeps/x86_64/strlen.S: Minimal code improvement.
+
+2010-08-26  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/strlen.S: Unroll the loop.
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	strlen-sse2 strlen-sse2-bsf.
+	* sysdeps/x86_64/multiarch/strlen.S ((strlen): Return
+	__strlen_no_bsf if bit_Slow_BSF is set.
+	(__strlen_sse42): Removed.
+	* sysdeps/x86_64/multiarch/strlen-no-bsf.S: New file.
+	* sysdeps/x86_64/multiarch/strlen-sse4.S: New file.
+
+2010-08-25  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/x86_64/multiarch/varshift.S: File removed.
+	* sysdeps/x86_64/multiarch/varshift.c: New file.
+	* sysdeps/x86_64/multiarch/Makefile (CFLAGS-varshift.c): New variable.
+	* sysdeps/x86_64/multiarch/varshift.h: Clean up decls, fix a cast.
+	* sysdeps/x86_64/multiarch/memmove.c: Move decls around.
+	* sysdeps/x86_64/multiarch/memmove_chk.c: Likewise.
+
+2010-08-25  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/multiarch/Makefile (sysdep_routines): Add
+	strlen-sse2 strlen-sse2-bsf.
+	* sysdeps/i386/i686/multiarch/strlen.S (strlen): Return
+	__strlen_sse2_bsf if bit_Slow_BSF is unset.
+	(__strlen_sse2): Removed.
+	* sysdeps/i386/i686/multiarch/strlen-sse2-bsf.S: New file.
+	* sysdeps/i386/i686/multiarch/strlen-sse2.S: New file.
+	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features): Set
+	bit_Slow_BSF for Atom.
+	* sysdeps/x86_64/multiarch/init-arch.h (bit_Slow_BSF): Define.
+	(index_Slow_BSF): Define.
+	(HAS_SLOW_BSF): Define.
+
+2010-08-25  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10851]
+	* resolv/res_init.c (__res_vinit): When no server address at all
+	is given default to loopback.
+
+2010-08-24  Roland McGrath  <roland@redhat.com>
+
+	* configure.in: Remove config-name.h generation.
+	* configure: Regenerated.
+	* config-name.in: File removed.
+	* scripts/config-uname.sh: New file.
+	* posix/Makefile (uname.c): Depend on $(objdir)config-name.h.
+	($(objdir)config-name.h): New target.
+
+	* sunrpc/rpc_parse.h: Avoid nested comment.
+
+2010-08-24  Richard Henderson  <rth@redhat.com>
+	    Ulrich Drepper  <drepper@redhat.com>
+	    H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/multiarch/Makefile (sysdep_routines): Add varshift.
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Likewise.
+	* sysdeps/x86_64/multiarch/strcspn-c.c: Include "varshift.h".
+	Replace _mm_srli_si128 with __m128i_shift_right.  Replace
+	_mm_alignr_epi8 with _mm_loadu_si128.
+	* sysdeps/x86_64/multiarch/strspn-c.c: Likewise.
+	* sysdeps/x86_64/multiarch/strstr.c: Include "varshift.h".
+	(__m128i_shift_right): Removed.
+	* sysdeps/i386/i686/multiarch/varshift.h: New file.
+	* sysdeps/i386/i686/multiarch/varshift.S: New file.
+	* sysdeps/x86_64/multiarch/varshift.h: New file.
+	* sysdeps/x86_64/multiarch/varshift.S: New file.
+
+2010-08-21  Mike Frysinger  <vapier@gentoo.org>
+
+	* configure.in: Move assembler checks to before sysdep dir checking.
+
+2010-08-20  Petr Baudis  <pasky@suse.cz>
+
+	* LICENSES: Sync the sunrpc license.
+
 2010-08-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* sunrpc/auth_des.c: Update copyright notice once again.

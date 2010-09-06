@@ -1,6 +1,6 @@
-/* strlen(str) -- determine the length of the string STR.
-   Copyright (C) 2009, 2010 Free Software Foundation, Inc.
-   Contributed by Ulrich Drepper <drepper@redhat.com>.
+/* strlen with SSE2 and BSF
+   Copyright (C) 2010 Free Software Foundation, Inc.
+   Contributed by Intel Corporation.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,31 +18,52 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <sysdep.h>
+#if defined SHARED && !defined NOT_IN_libc
 
+#include <sysdep.h>
+#include "asm-syntax.h"
+
+#define CFI_PUSH(REG)						\
+  cfi_adjust_cfa_offset (4);					\
+  cfi_rel_offset (REG, 0)
+
+#define CFI_POP(REG)						\
+  cfi_adjust_cfa_offset (-4);					\
+  cfi_restore (REG)
+
+#define PUSH(REG)	pushl REG; CFI_PUSH (REG)
+#define POP(REG)	popl REG; CFI_POP (REG)
+#define PARMS		4 + 8	/* Preserve ESI and EDI.  */
+#define	STR		PARMS
+#define ENTRANCE	PUSH (%esi); PUSH (%edi); cfi_remember_state
+#define RETURN		POP (%edi); POP (%esi); ret; \
+			cfi_restore_state; cfi_remember_state
 
 	.text
-ENTRY(strlen)
-	xor	%rax, %rax
+ENTRY ( __strlen_sse2_bsf)
+	ENTRANCE
+	mov	STR(%esp), %edi
+	xor	%eax, %eax
 	mov	%edi, %ecx
 	and	$0x3f, %ecx
 	pxor	%xmm0, %xmm0
 	cmp	$0x30, %ecx
 	ja	L(next)
-	movdqu	(%rdi), %xmm1
+	movdqu	(%edi), %xmm1
 	pcmpeqb	%xmm1, %xmm0
 	pmovmskb %xmm0, %edx
 	test	%edx, %edx
 	jnz	L(exit_less16)
-	mov	%rdi, %rax
-	and	$-16, %rax
+	mov	%edi, %eax
+	and	$-16, %eax
 	jmp	L(align16_start)
 L(next):
-	mov	%rdi, %rax
-	and	$-16, %rax
-	pcmpeqb	(%rax), %xmm0
+
+	mov	%edi, %eax
+	and	$-16, %eax
+	pcmpeqb	(%eax), %xmm0
 	mov	$-1, %esi
-	sub	%rax, %rcx
+	sub	%eax, %ecx
 	shl	%cl, %esi
 	pmovmskb %xmm0, %edx
 	and	%esi, %edx
@@ -54,49 +75,53 @@ L(align16_start):
 	pxor	%xmm3, %xmm3
 	.p2align 4
 L(align16_loop):
-	pcmpeqb	16(%rax), %xmm0
+	pcmpeqb	16(%eax), %xmm0
 	pmovmskb %xmm0, %edx
 	test	%edx, %edx
 	jnz	L(exit16)
 
-	pcmpeqb	32(%rax), %xmm1
+	pcmpeqb	32(%eax), %xmm1
 	pmovmskb %xmm1, %edx
 	test	%edx, %edx
 	jnz	L(exit32)
 
-	pcmpeqb	48(%rax), %xmm2
+	pcmpeqb	48(%eax), %xmm2
 	pmovmskb %xmm2, %edx
 	test	%edx, %edx
 	jnz	L(exit48)
 
-	pcmpeqb	64(%rax), %xmm3
+	pcmpeqb	64(%eax), %xmm3
 	pmovmskb %xmm3, %edx
-	lea	64(%rax), %rax
+	lea	64(%eax), %eax
 	test	%edx, %edx
 	jz	L(align16_loop)
 L(exit):
-	sub	%rdi, %rax
+	sub	%edi, %eax
 L(exit_less16):
-	bsf	%rdx, %rdx
-	add	%rdx, %rax
-	ret
-	.p2align 4
+	bsf	%edx, %edx
+	add	%edx, %eax
+	RETURN
 L(exit16):
-	sub	%rdi, %rax
-	bsf	%rdx, %rdx
-	lea	16(%rdx,%rax), %rax
-	ret
-	.p2align 4
+	sub	%edi, %eax
+	bsf	%edx, %edx
+	add	%edx, %eax
+	add	$16, %eax
+	RETURN
 L(exit32):
-	sub	%rdi, %rax
-	bsf	%rdx, %rdx
-	lea	32(%rdx,%rax), %rax
-	ret
-	.p2align 4
+	sub	%edi, %eax
+	bsf	%edx, %edx
+	add	%edx, %eax
+	add	$32, %eax
+	RETURN
 L(exit48):
-	sub	%rdi, %rax
-	bsf	%rdx, %rdx
-	lea	48(%rdx,%rax), %rax
+	sub	%edi, %eax
+	bsf	%edx, %edx
+	add	%edx, %eax
+	add	$48, %eax
+	POP (%edi)
+	POP (%esi)
 	ret
-END(strlen)
-libc_hidden_builtin_def (strlen)
+
+END ( __strlen_sse2_bsf)
+
+#endif
