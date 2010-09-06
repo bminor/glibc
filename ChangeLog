@@ -1,3 +1,7 @@
+2010-09-06  Andreas Schwab  <schwab@redhat.com>
+
+	* manual/Makefile: Don't mix pattern rules with normal rules.
+
 2010-08-12  Andreas Schwab  <schwab@redhat.com>
 
 	[BZ #11904]
