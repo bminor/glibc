@@ -93,6 +93,12 @@ else
 # These are the basic compilation rules corresponding to the Makerules ones.
 # The sysd-rules generated makefile already defines pattern rules for rtld-%
 # targets built from sysdeps source files.
+$(objpfx)rtld-%.os: rtld-%.S $(before-compile)
+	$(compile-command.S) $(rtld-CPPFLAGS)
+$(objpfx)rtld-%.os: rtld-%.s $(before-compile)
+	$(compile-command.s) $(rtld-CPPFLAGS)
+$(objpfx)rtld-%.os: rtld-%.c $(before-compile)
+	$(compile-command.c) $(rtld-CPPFLAGS)
 $(objpfx)rtld-%.os: %.S $(before-compile)
 	$(compile-command.S) $(rtld-CPPFLAGS)
 $(objpfx)rtld-%.os: %.s $(before-compile)
@@ -101,6 +107,9 @@ $(objpfx)rtld-%.os: %.c $(before-compile)
 	$(compile-command.c) $(rtld-CPPFLAGS)
 
 # The rules for generated source files.
+$(objpfx)rtld-%.os: $(objpfx)rtld-%.S $(before-compile); $(compile-command.S)
+$(objpfx)rtld-%.os: $(objpfx)rtld-%.s $(before-compile); $(compile-command.s)
+$(objpfx)rtld-%.os: $(objpfx)rtld-%.c $(before-compile); $(compile-command.c)
 $(objpfx)rtld-%.os: $(objpfx)%.S $(before-compile); $(compile-command.S)
 $(objpfx)rtld-%.os: $(objpfx)%.s $(before-compile); $(compile-command.s)
 $(objpfx)rtld-%.os: $(objpfx)%.c $(before-compile); $(compile-command.c)
