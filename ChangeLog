@@ -1,3 +1,7 @@
+2010-09-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_init.c (__res_vinit): Count the default server we added.
+
 2010-08-25  Ulrich Drepper  <drepper@redhat.com>
 
 	[BZ #10851]
