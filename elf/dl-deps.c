@@ -478,6 +478,7 @@ _dl_map_object_deps (struct link_map *map,
 		  nneeded * sizeof needed[0]);
 	  atomic_write_barrier ();
 	  l->l_initfini = l_initfini;
+	  l->l_free_initfini = 1;
 	}
 
       /* If we have no auxiliary objects just go on to the next map.  */
@@ -681,6 +682,7 @@ Filters not supported with LD_TRACE_PRELINKING"));
   l_initfini[nlist] = NULL;
   atomic_write_barrier ();
   map->l_initfini = l_initfini;
+  map->l_free_initfini = 1;
   if (l_reldeps != NULL)
     {
       atomic_write_barrier ();
@@ -689,5 +691,5 @@ Filters not supported with LD_TRACE_PRELINKING"));
       _dl_scope_free (old_l_reldeps);
     }
   if (old_l_initfini != NULL)
-      map->l_orig_initfini = old_l_initfini;
+    _dl_scope_free (old_l_initfini);
 }

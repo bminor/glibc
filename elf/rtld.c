@@ -2251,6 +2251,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 	      lnp->dont_free = 1;
 	      lnp = lnp->next;
 	    }
+	  l->l_free_initfini = 0;
 
 	  if (l != &GL(dl_rtld_map))
 	    _dl_relocate_object (l, l->l_scope, GLRO(dl_lazy) ? RTLD_LAZY : 0,
