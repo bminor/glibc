@@ -192,6 +192,9 @@ struct link_map
 						 during LD_TRACE_PRELINKING=1
 						 contains any DT_SYMBOLIC
 						 libraries.  */
+    unsigned int l_free_initfini:1; /* Nonzero if l_initfini can be
+				       freed, ie. not allocated with
+				       the dummy malloc in ld.so.  */
 
     /* Collected information about own RPATH directories.  */
     struct r_search_path_struct l_rpath_dirs;

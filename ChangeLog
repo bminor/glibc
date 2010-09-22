@@ -1,5 +1,12 @@
 2010-09-27  Andreas Schwab  <schwab@redhat.com>
 
+	* include/link.h (struct link_map): Add l_free_initfini.
+	* elf/dl-deps.c (_dl_map_object_deps): Set it when assigning
+	l_initfini.
+	* elf/rtld.c (dl_main): Clear it on all objects loaded on startup.
+	* elf/dl-libc.c (free_mem): Free l_initfini if l_free_initfini is
+	set.
+
 	[BZ #11561]
 	* posix/regcomp.c (parse_bracket_exp): When looking up collating
 	elements compare against the byte sequence of it, not its name.
