@@ -1036,7 +1036,7 @@ rm -f *.filelist*
   - Actually make it possible to user the default name server
 - Fix memory leak on init/fini dependency list (#632936)
 - Fix handling of collating symbols in regexps (BZ#11561)
-- Don't parse %s format argument as multibyte string (BZ#6530)
+- Don't parse %%s format argument as multibyte string (BZ#6530)
 - Fix overflow in nss files parser
 - Fix spurious nop at start of __strspn_ia32
 
