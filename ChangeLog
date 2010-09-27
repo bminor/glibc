@@ -1,3 +1,65 @@
+2010-09-24  Petr Baudis <pasky@suse.cz>
+
+	* debug/stack_chk_fail_local.c: Add missing licence exception.
+	* debug/warning-nop.c: Likewise.
+
+2010-09-15  Michael B. Brutman  <brutman@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/ppca2/memcpy.S: New file.
+	* sysdeps/powerpc/powerpc64/ppca2/memcpy.S: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/ppca2/fpu/Implies: New
+	submachine.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/ppca2/fpu/Implies:
+	Likewise.
+
+2010-09-15  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/getdents.c (__GETDENTS): When
+	implementing getdents64 using getdents syscall, set d_type if
+	__ASSUME_GETDENTS32_D_TYPE.
+
+2010-09-16  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/dl-close.c (free_slotinfo, free_mem): Move to...
+	* elf/dl-libc.c (free_slotinfo, free_mem): ... here.
+
+2010-09-21  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #12037]
+	* posix/unistd.h: Undo change of feature selection for ftruncate from
+	2010-01-11.
+
+2010-09-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/strcmp.S: Fix another typo in x86-64 strncasecmp limit
+	detection.
+
+2010-09-20  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list: Add
+	fanotify_mark.
+	* sysdeps/unix/sysv/linux/s390/s390-32/syscalls.list: Likewise.
+
+2010-09-14  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/s390/s390-32/__longjmp.c (__longjmp): Define register
+	variables after CHECK_SP call.
+	* sysdeps/s390/s390-64/__longjmp.c (__longjmp): Likewise.
+
+2010-09-13  Andreas Schwab  <schwab@redhat.com>
+	    Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/rtld.c (dl_main): Set GLRO(dl_init_all_dirs) just before
+	re-relocationg ld.so.
+	* elf/dl-support.c (_dl_non_dynamic_init): And here after the
+	_dl_init_paths call.
+	* elf/dl-load.c (_dl_init_paths).  Don't set GLRO(dl_init_all_dirs)
+	here anymore.
+
+2010-09-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_init.c (__res_vinit): Count the default server we added.
+
 2010-09-13  Andreas Schwab  <schwab@redhat.com>
 
 	* Makeconfig (sysd-rules-patterns): Add rtld-%:rtld-%.
