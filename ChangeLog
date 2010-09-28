@@ -1,3 +1,9 @@
+2010-09-27  Andreas Schwab  <schwab@redhat.com>
+
+	[BZ #11611]
+	* sysdeps/unix/sysv/linux/internal_statvfs.c (INTERNAL_STATVFS):
+	Mask out sign-bit copies when constructing f_fsid.
+
 2010-11-19  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/unix/sysv/linux/i386/bits/mman.h: Define MAP_HUGETLB.
