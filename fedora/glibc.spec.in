@@ -20,7 +20,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 13
+Release: 14
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1022,6 +1022,10 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Tue Sep 28 2010 Andreas Schwab <schwab@redhat.com> - 2.12.90-14
+- Don't try to write to _rtld_global_ro after performing relro
+  protection (#638091)
+
 * Mon Sep 27 2010 Andreas Schwab <schwab@redhat.com> - 2.12.90-13
 - Update from master
   - Add two forgotten licence exceptions
