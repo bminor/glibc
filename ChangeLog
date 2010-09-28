@@ -1,3 +1,8 @@
+2010-09-28  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/rtld.c (dl_main): Move setting of GLRO(dl_init_all_dirs)
+	before performing relro protection.
+
 2010-09-27  Andreas Schwab  <schwab@redhat.com>
 
 	* include/link.h (struct link_map): Add l_free_initfini.

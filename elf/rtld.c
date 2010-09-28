@@ -2168,6 +2168,10 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
      we need it in the memory handling later.  */
   GLRO(dl_initial_searchlist) = *GL(dl_ns)[LM_ID_BASE]._ns_main_searchlist;
 
+  /* Remember the last search directory added at startup, now that
+     malloc will no longer be the one from dl-minimal.c.  */
+  GLRO(dl_init_all_dirs) = GL(dl_all_dirs);
+
   if (prelinked)
     {
       if (main_map->l_info [ADDRIDX (DT_GNU_CONFLICT)] != NULL)
@@ -2287,10 +2291,6 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 	_dl_fatal_printf ("cannot set up thread-local storage: %s\n",
 			  lossage);
     }
-
-  /* Remember the last search directory added at startup, now that
-     malloc will no longer be the one from dl-minimal.c.  */
-  GLRO(dl_init_all_dirs) = GL(dl_all_dirs);
 
   if (! prelinked && rtld_multiple_ref)
     {
