@@ -1,3 +1,8 @@
+2010-10-05  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Don't discard result of
+	decoding ACE if AI_CANONIDN.
+
 2010-10-03  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12005]
