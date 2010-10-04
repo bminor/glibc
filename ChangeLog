@@ -1,3 +1,8 @@
+2010-10-03  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12005]
+	* malloc/mcheck.c: Handle large requests.
+
 2010-09-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/getdents.c (__GETDENTS): When
