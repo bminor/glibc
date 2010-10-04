@@ -1,3 +1,45 @@
+2010-10-03  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12005]
+	* malloc/mcheck.c: Handle large requests.
+
+	[BZ #12077]
+	* sysdeps/x86_64/strcmp.S: Fix handling of remaining bytes in buffer
+	for strncmp and strncasecmp.
+	* string/stratcliff.c: Add tests for strcmp and strncmp.
+	* wcsmbs/wcsatcliff.c: Adjust for stratcliff change.
+
+2010-09-28  Nobuhiro Iwamatsu  <iwamatsu@nigauri.org>
+
+	* sysdeps/sh/sh4/fpu/fpu_control.h: Add 'extern "C"' protection to
+	__set_fpscr.
+
+2010-09-30  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux_fsinfo.h (BTRFS_SUPER_MAGIC): Define.
+	(CGROUP_SUPER_MAGIC): Define.
+	* sysdeps/unix/sysv/linux/internal_statvfs.c (__statvfs_getflags):
+	Handle btrfs and cgroup file systems.
+	* sysdeps/unix/sysv/linux/pathconf.c (__statfs_filesize_max):
+	Likewise.
+
+2010-09-27  Luis Machado  <luisgpm@br.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/rtld-memset.c: New file.
+	* sysdeps/powerpc/powerpc64/rtld-memset.c: New file.
+
+2010-09-29  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	[BZ #12067]
+	* sysdeps/s390/s390-32/elf/start.S: Fix address calculation when
+	trying to locate the ELF header.
+
+2010-09-27  Andreas Schwab  <schwab@redhat.com>
+
+	[BZ #11611]
+	* sysdeps/unix/sysv/linux/internal_statvfs.c (INTERNAL_STATVFS):
+	Mask out sign-bit copies when constructing f_fsid.
+
 2010-09-28  Andreas Schwab  <schwab@redhat.com>
 
 	* elf/rtld.c (dl_main): Move setting of GLRO(dl_init_all_dirs)
@@ -30,15 +72,6 @@
 
 	* debug/stack_chk_fail_local.c: Add missing licence exception.
 	* debug/warning-nop.c: Likewise.
-
-2010-09-15  Michael B. Brutman  <brutman@us.ibm.com>
-
-	* sysdeps/powerpc/powerpc32/ppca2/memcpy.S: New file.
-	* sysdeps/powerpc/powerpc64/ppca2/memcpy.S: New file.
-	* sysdeps/unix/sysv/linux/powerpc/powerpc32/ppca2/fpu/Implies: New
-	submachine.
-	* sysdeps/unix/sysv/linux/powerpc/powerpc64/ppca2/fpu/Implies:
-	Likewise.
 
 2010-09-15  Joseph Myers  <joseph@codesourcery.com>
 

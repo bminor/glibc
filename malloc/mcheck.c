@@ -1,5 +1,6 @@
 /* Standard debugging hooks for `malloc'.
-   Copyright (C) 1990-1997,1999,2000-2002,2007 Free Software Foundation, Inc.
+   Copyright (C) 1990-1997,1999,2000-2002,2007,2010
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written May 1989 by Mike Haertel.
 
@@ -26,6 +27,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <libintl.h>
+# include <errno.h>
 #endif
 
 #ifdef _LIBC
@@ -225,6 +227,12 @@ mallochook (__malloc_size_t size, const __ptr_t caller)
   if (pedantic)
     mcheck_check_all ();
 
+  if (size > ~((size_t) 0) - (sizeof (struct hdr) + 1))
+    {
+      __set_errno (ENOMEM);
+      return NULL;
+    }
+
   __malloc_hook = old_malloc_hook;
   if (old_malloc_hook != NULL)
     hdr = (struct hdr *) (*old_malloc_hook) (sizeof (struct hdr) + size + 1,
@@ -256,6 +264,12 @@ memalignhook (__malloc_size_t alignment, __malloc_size_t size,
     mcheck_check_all ();
 
   slop = (sizeof *hdr + alignment - 1) & -alignment;
+
+  if (size > ~((size_t) 0) - (slop + 1))
+    {
+      __set_errno (ENOMEM);
+      return NULL;
+    }
 
   __memalign_hook = old_memalign_hook;
   if (old_memalign_hook != NULL)
@@ -291,6 +305,12 @@ reallochook (__ptr_t ptr, __malloc_size_t size, const __ptr_t caller)
 
   if (pedantic)
     mcheck_check_all ();
+
+  if (size > ~((size_t) 0) - (sizeof (struct hdr) + 1))
+    {
+      __set_errno (ENOMEM);
+      return NULL;
+    }
 
   if (ptr)
     {
