@@ -1,3 +1,11 @@
+2010-10-03  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12077]
+	* sysdeps/x86_64/strcmp.S: Fix handling of remaining bytes in buffer
+	for strncmp.
+	* string/stratcliff.c: Add tests for strcmp and strncmp.
+	* wcsmbs/wcsatcliff.c: Adjust for stratcliff change.
+
 2010-08-19  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/i386/i686/multiarch/strspn.S [!SHARED]: Fix SSE4.2 check.
