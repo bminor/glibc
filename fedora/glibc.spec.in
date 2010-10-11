@@ -516,9 +516,6 @@ mkdir -p $RPM_BUILD_ROOT/etc/rc.d/init.d
 install -m 755 nscd/nscd.init $RPM_BUILD_ROOT/etc/rc.d/init.d/nscd
 %endif
 
-# Don't include ld.so.cache
-rm -f $RPM_BUILD_ROOT/etc/ld.so.cache
-
 # Include ld.so.conf
 echo 'include ld.so.conf.d/*.conf' > $RPM_BUILD_ROOT/etc/ld.so.conf
 > $RPM_BUILD_ROOT/etc/ld.so.cache
@@ -598,7 +595,7 @@ rm -f $RPM_BUILD_ROOT%{_sbindir}/rpcinfo
   # languages very well, temporarily disable
   LIB_LANG=''
   sed -e "$LIB_LANG" -e "$SHARE_LANG" \
-      -e '\,/etc/\(localtime\|nsswitch.conf\|ld\.so\.conf\|ld\.so\.cache\|default\|rpc\),d' \
+      -e '\,/etc/\(localtime\|nsswitch.conf\|ld\.so\.conf\|ld\.so\.cache\|default\|rpc\|gai\.conf\),d' \
       -e '\,/%{_lib}/lib\(pcprofile\|memusage\)\.so,d' \
       -e '\,bin/\(memusage\|mtrace\|xtrace\|pcprofiledump\),d'
 } | sort > rpm.filelist
@@ -958,6 +955,7 @@ rm -f *.filelist*
 %dir %attr(0700,root,root) /var/cache/ldconfig
 %attr(0600,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /var/cache/ldconfig/aux-cache
 %attr(0644,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /etc/ld.so.cache
+%attr(0644,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /etc/gai.conf
 %doc README NEWS INSTALL FAQ BUGS NOTES PROJECTS CONFORMANCE
 %doc COPYING COPYING.LIB README.libm LICENSES
 %doc hesiod/README.hesiod
@@ -977,7 +975,6 @@ rm -f *.filelist*
 %dir %attr(755,root,root) /etc/default
 %verify(not md5 size mtime) %config(noreplace) /etc/default/nss
 %attr(4711,root,root) %{_prefix}/libexec/pt_chown
-%attr(0644,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /etc/gai.conf
 %doc documentation/*
 
 %files -f devel.filelist devel
