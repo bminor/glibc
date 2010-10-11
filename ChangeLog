@@ -1,3 +1,9 @@
+2010-10-11  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12093]
+	* sysdeps/unix/sysv/linux/check_pf.c (__check_pf): ->ifa_addr might
+	be NULL.
+
 2010-09-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/getdents.c (__GETDENTS): When
