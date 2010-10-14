@@ -20,7 +20,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 15
+Release: 16
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1020,6 +1020,18 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Thu Oct 14 2010 Andreas Schwab <schwab@redhat.com> - 2.12.90-16
+- Update from master
+  - Implement accurate fma (BZ#3268, #43358)
+  - Fix alignment of AVX save area on x86-64 (BZ#12113)
+  - Fix regex memory leaks (BZ#12078)
+  - Improve output of psiginfo (BZ#12107, BZ#12108)
+  - Don't return NULL address in getifaddrs (BZ#12093)
+  - Fix strstr and memmem algorithm (BZ#12092, #641124)
+- Don't discard result of decoding ACE if AI_CANONIDN (#636642)
+- Remove /etc/gai.conf from glibc-common and mark it %%ghost in glibc
+- Require exact glibc version in nscd
+
 * Mon Oct  4 2010 Andreas Schwab <schwab@redhat.com> - 2.12.90-15
 - Update from master
   - Handle large requests in debugging hooks for malloc (BZ#12005)
