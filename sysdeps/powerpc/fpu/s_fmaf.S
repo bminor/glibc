@@ -1,7 +1,6 @@
-/* Test exception in current environment.
-   Copyright (C) 1997, 1999, 2000, 2010 Free Software Foundation, Inc.
+/* Compute x * y + z as ternary operation.  PowerPC version.
+   Copyright (C) 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Christian Boissat <Christian.Boissat@cern.ch>, 1999.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -18,16 +17,12 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <fenv.h>
+#include <sysdep.h>
 
-int
-fetestexcept (int excepts)
-{
-  fenv_t fpsr;
+ENTRY(__fmaf)
+/* float [f1] fmaf (float [f1] x, float [f2] y, float [f3] z); */
+	fmadds	fp1,fp1,fp2,fp3
+	blr
+END(__fmaf)
 
-  /* Get current exceptions.  */
-  __asm__ __volatile__ ("mov.m %0=ar.fpsr" : "=r" (fpsr));
-
-  return (fpsr >> 13) & excepts & FE_ALL_EXCEPT;
-}
-libm_hidden_def (fetestexcept)
+weak_alias (__fmaf,fmaf)

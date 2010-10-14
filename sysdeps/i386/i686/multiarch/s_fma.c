@@ -33,4 +33,4 @@ weak_alias (__fma, fma)
 # define __fma __fma_ia32
 #endif
 
-#include <math/s_fma.c>
+#include <sysdeps/ieee754/ldbl-96/s_fma.c>
