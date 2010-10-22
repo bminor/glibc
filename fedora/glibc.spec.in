@@ -20,7 +20,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 17
+Release: 18
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1020,6 +1020,9 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri Oct 22 2010 Andreas Schwab <schwab@redhat.com> - 2.12.90-18
+- Require suid bit on audit objects in privileged programs (CVE-2010-3856)
+
 * Tue Oct 19 2010 Andreas Schwab <schwab@redhat.com> - 2.12.90-17
 - Update from master
   - Fix some fma issues, implement fmal (BZ#3268, #43358)
