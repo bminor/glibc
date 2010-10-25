@@ -1,3 +1,9 @@
+2010-10-24  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #12140]
+	* malloc/malloc.c (_int_free): Fill correct number of bytes when
+	perturbing.
+
 2010-09-09  Andreas Schwab  <schwab@redhat.com>
 
 	* Makeconfig (sysd-rules-patterns): Add rtld-%:rtld-%.
