@@ -1,3 +1,8 @@
+2010-10-18  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/dl-open.c (dl_open_worker): Don't expand DST here, let
+	_dl_map_object do it.
+
 2010-10-15  Andreas Schwab  <schwab@redhat.com>
 
 	* scripts/data/localplt-s390-linux-gnu.data: New file.
