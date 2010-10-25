@@ -1,3 +1,10 @@
+2010-09-09  Andreas Schwab  <schwab@redhat.com>
+
+	* Makeconfig (sysd-rules-patterns): Add rtld-%:rtld-%.
+	(sysd-rules-targets): Remove duplicates.
+	* elf/rtld-Rules ($(objpfx)rtld-%.os): Add pattern rules with
+	rtld-%.$o dependency.
+
 2010-10-22  Andreas Schwab  <schwab@redhat.com>
 
 	* include/dlfcn.h (__RTLD_SECURE): Define.
