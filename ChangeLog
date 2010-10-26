@@ -1,3 +1,11 @@
+2010-10-26  Peter Bergner  <bergner@vnet.ibm.com>
+
+	* elf/rtld.c (process_envvars): Added conditional EXTRA_LD_ENVVARS_11
+	macro which allows overriding of AT_PLATFORM using an environment
+	variable.
+	* sysdeps/unix/sysv/linux/powerpc/dl-librecon.h: New file adding
+	definition for the EXTRA_LD_ENVVARS_11 macro.
+
 2010-10-06  Ulrich Drepper  <drepper@gmail.com>
 
 	* string/bug-strstr1.c: New file.
