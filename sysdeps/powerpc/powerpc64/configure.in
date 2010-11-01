@@ -40,3 +40,22 @@ rm -f conftest.c conftest.s
 if test x$libc_cv_overlapping_opd = xyes; then
   AC_DEFINE(USE_PPC64_OVERLAPPING_OPD)
 fi
+
+# Some compilers have been configured to emit PT_GNU_STACK on PowerPC64 even
+# though this isn't necessary.  If it is present then which check-execstack is
+# tested should be changed.
+AC_CACHE_CHECK(if PT_GNU_STACK ELF program header is emitted by the compiler on PowerPC64, libc_cv_ppc64_pt_gnu_stack, [dnl
+echo 'int main (void) { return 0; }' > conftest.c
+libc_cv_ppc64_pt_gnu_stack=no
+  if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -o conftest
+		     conftest.c 1>&AS_MESSAGE_LOG_FD])
+  then
+    if readelf -l conftest | fgrep GNU_STACK > /dev/null; then
+      libc_cv_ppc64_pt_gnu_stack=yes
+    fi
+  fi
+  rm -f conftest*])
+#AC_SUBST(libc_cv_ppc64_pt_gnu_stack)
+if test $libc_cv_ppc64_pt_gnu_stack = yes; then
+  AC_DEFINE(HAVE_PPC64_PT_GNU_STACK)
+fi

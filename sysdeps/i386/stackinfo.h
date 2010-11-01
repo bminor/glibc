@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,9 @@
    of the processor.  */
 
 #ifndef _STACKINFO_H
-#define _STACKINFO_H	1
+
+/* Pick up the default definition for _STACK_FLAGS and define _STACKINFO_H.  */
+#include <sysdeps/generic/stackinfo.h>
 
 /* On x86 the stack grows down.  */
 #define _STACK_GROWS_DOWN	1

@@ -195,6 +195,9 @@
 /* Define if your compiler defaults to -msecure-plt mode on ppc.  */
 #undef HAVE_PPC_SECURE_PLT
 
+/* Define if your compiler emits a PT_GNU_STACK header for ppc64.  */
+#undef HAVE_PPC64_PT_GNU_STACK
+
 /* Define if __stack_chk_guard canary should be randomized at program startup.  */
 #undef ENABLE_STACKGUARD_RANDOMIZE
 

@@ -1,3 +1,35 @@
+2010-10-26  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	* config.h.in: Added HAVE_PPC64_PT_GNU_STACK which is set during a
+	configure test to determine whether the the $(CC) compiler defaults to
+	PT_GNU_STACK support for PPC64.
+	* elf/Makefile (($objpfx)check-execstac:): Replaced $(native-compile)
+	with an operation which does the same thing but searches sysdeps/ for
+	the testcase before settling on elf/check-execstack.c.  This allows
+	overriding in sysdeps/powerpc/powerpc64/check-execstack.c.
+	* elf/dl-load.c (_dl_map_object_from_fd): Replace PF_R|RF_W|PF_X with
+	_STACK_FLAGS, defined in stackinfo.h.
+	* elf/dl-support.c (_dl_stack_flags): Likewise.
+	* elf/rtld.c (_rtld_global): Likewise.
+	* sysdeps/generic/stackinfo.h: Define _STACK_FLAGS = PF_R|PF_W|PF_X.
+	Define _STACKINFO_H.
+	* sysdeps/i386/stackinfo.h: Include <sysdeps/generic/stackinfo.h> and
+	remove #define _STACKINFO_H.
+	* sysdeps/ia64/stackinfo.h: Likewise.
+	* sysdeps/s390/stackinfo.h: Likewise.
+	* sysdeps/sh/stackinfo.h: Likewise.
+	* sysdeps/sparc/stackinfo.h: Likewise.
+	* sysdeps/x86_64/stackinfo.h: Likewise.
+	* sysdeps/powerpc/stackinfo.h: Define _STACK_FLAGS as PF_R|PF_W, i.e.,
+	nonexecutable, on PowerPC64, but PF_R|PF_W|PF_X on PowerPC32.
+	* sysdeps/powerpc/powerpc64/check-execstack.c: New file which checks
+	the test executable to make sure it doesn't have PT_GNU_STACK set and
+	then checks the executable to see if the mapfile indicates that
+	the [stack] is nonexecutable.
+	* sysdeps/powerpc/powerpc64/configure: Regenerated.
+	* sysdeps/powerpc/powerpc64/configure.in: Added fragment to test for
+	PT_GNU_STACK default in the compiler.  It sets HAVE_PPC64_PT_GNU_STACK.
+
 2010-10-16  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #3268]

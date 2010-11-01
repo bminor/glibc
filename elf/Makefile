@@ -899,8 +899,13 @@ $(objpfx)check-textrel: check-textrel.c
 	$(native-compile)
 
 check-execstack-CFLAGS = -O -Wall -D_XOPEN_SOURCE=600 -D_BSD_SOURCE -std=gnu99
+# Perform the same operation as $(native-compile) but search sysdeps/ for a
+# matching testcase file before settling for the testcase in elf/.
 $(objpfx)check-execstack: check-execstack.c
-	$(native-compile)
+	$(make-target-directory)
+	$(patsubst %/,cd % &&,$(objpfx)) \
+	$(BUILD_CC) $($(basename $(<F))-CFLAGS) $(ALL_BUILD_CFLAGS) \
+	$(firstword $(wildcard $(addsuffix /$<,$(addprefix $(shell pwd)/,$(sysdirs)) $(shell pwd)))) -o $(@F)
 
 check-localplt-CFLAGS = -O -Wall -D_GNU_SOURCE -std=gnu99
 $(objpfx)check-localplt: check-localplt.c

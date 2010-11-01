@@ -1,4 +1,4 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,5 +24,14 @@
 
 /* On PPC the stack grows down.  */
 #define _STACK_GROWS_DOWN	1
+
+#if __WORDSIZE == 64
+/* PPC64 doesn't need an executable stack and doesn't need PT_GNU_STACK
+ * to make the stack nonexecutable.  */
+# define _STACK_FLAGS	(PF_R|PF_W)
+#else
+/* PF_X can be overridden if PT_GNU_STACK is present but is presumed absent.  */
+# define _STACK_FLAGS	(PF_R|PF_W|PF_X)
+#endif
 
 #endif	/* stackinfo.h */
