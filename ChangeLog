@@ -1,3 +1,11 @@
+2010-11-03  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #12191]
+	* sysdeps/x86_64/cacheinfo.c (init_cacheinfo): Round
+	__x86_64_data_cache_size_half, __x86_64_data_cache_size
+	__x86_64_shared_cache_size_half and __x86_64_shared_cache_size,
+	to multiple of 256 bytes.
+
 2010-11-03  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12167]
