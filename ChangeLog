@@ -1,3 +1,9 @@
+2010-11-08  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12194]
+	* sysdeps/i386/bits/byteswap.h: Avoid warning in __bswap_16.
+	* sysdeps/x86_64/bits/byteswap.h: Likewise.
+
 2010-09-06  Andreas Schwab  <schwab@redhat.com>
 
 	* manual/Makefile: Don't mix pattern rules with normal rules.
