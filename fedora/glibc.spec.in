@@ -858,6 +858,26 @@ touch $RPM_BUILD_ROOT/var/run/nscd/{socket,nscd.pid}
 mkdir -p $RPM_BUILD_ROOT/var/cache/ldconfig
 > $RPM_BUILD_ROOT/var/cache/ldconfig/aux-cache
 
+%pre -p <lua>
+-- Check that the running kernel is new enough
+required = '%{enablekernel}'
+f = io.open("/proc/sys/kernel/osrelease")
+if f then
+  rel = {}
+  for v in string.gmatch(f:read(), '%%d+') do
+    table.insert(rel, tonumber(v))
+  end
+  i = 1
+  for r in string.gmatch(required, '%%d+') do
+    if rel[i] == nil or tonumber(r) > rel[i] then
+      print("FATAL: kernel too old")
+      os.exit(1)
+    end
+    if tonumber(r) < rel[i] then break end
+    i = i + 1
+  end
+end
+
 %post -p /usr/sbin/glibc_post_upgrade.%{_target_cpu}
 
 %postun -p /sbin/ldconfig
