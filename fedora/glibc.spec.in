@@ -1043,7 +1043,7 @@ rm -f *.filelist*
 * Fri Nov 12 2010 Andreas Schwab <schwab@redhat.com> - 2.12.90-19
 - Update from master
   - Fix memory leak in fnmatch
-  - Support Intel processor model 6 and model 0x2
+  - Support Intel processor model 6 and model 0x2c
   - Fix comparison in sqrtl for IBM long double
   - Fix one exit path in x86-64 SSE4.2 str{,n}casecmp (BZ#12205, #651638)
   - Fix warnings in __bswap_16 (BZ#12194)
