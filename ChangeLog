@@ -1,9 +1,142 @@
+2010-11-11  Andreas Schwab  <schwab@redhat.com>
+
+	* posix/fnmatch_loop.c (NEW_PATTERN): Fix use of alloca.
+	* posix/Makefile (tests): Add $(objpfx)tst-fnmatch-mem.
+	(tst-fnmatch-ENV): Set MALLOC_TRACE.
+	($(objpfx)tst-fnmatch-mem): New rule.
+	(generated): Add tst-fnmatch-mem and tst-fnmatch.mtrace.
+	* posix/tst-fnmatch.c (main): Call mtrace.
+
+2010-11-11  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features):
+	Support Intel processor model 6 and model 0x2c.
+
+2010-11-10  Luis Machado  <luisgpm@br.ibm.com>
+
+	* sysdeps/ieee754/ldbl-128ibm/e_sqrtl.c (__ieee754_sqrtl): Force
+	  signed comparison.
+
+2010-11-09  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #12205]
+	* string/test-strncasecmp.c (check_result): New function.
+	(do_one_test): Use it.
+	(check1): New function.
+	(test_main): Use it.
+	* sysdeps/i386/i686/multiarch/strcmp.S (nibble_ashr_use_sse4_2_exit):
+	Support strcasecmp and strncasecmp.
+
+2010-11-08  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12194]
+	* sysdeps/i386/bits/byteswap.h: Avoid warning in __bswap_16.
+	* sysdeps/x86_64/bits/byteswap.h: Likewise.
+
+2010-11-07  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/memset.S: Check USE_MULTIARCH and USE_SSE2 for
+	IFUNC support.
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	memset-x86-64.
+	* sysdeps/x86_64/multiarch/bzero.S: New file.
+	* sysdeps/x86_64/multiarch/cacheinfo.c: New file.
+	* sysdeps/x86_64/multiarch/memset-x86-64.S: New file.
+	* sysdeps/x86_64/multiarch/memset.S: New file.
+	* sysdeps/x86_64/multiarch/memset_chk.S: New file.
+	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features):
+	Set bit_Prefer_SSE_for_memop for Intel processors.
+	* sysdeps/x86_64/multiarch/init-arch.h (bit_Prefer_SSE_for_memop):
+	Define.
+	(index_Prefer_SSE_for_memop): Define.
+	(HAS_PREFER_SSE_FOR_MEMOP): Define.
+
+2010-11-04  Luis Machado  <luisgpm@br.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power7/mempcpy.S: New file.
+	* sysdeps/powerpc/powerpc64/power7/mempcpy.S: New file.
+
+2010-11-03  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #12191]
+	* sysdeps/i386/i686/cacheinfo.c (__x86_64_raw_data_cache_size): New.
+	(__x86_64_raw_data_cache_size_half): Likewise.
+	(__x86_64_raw_shared_cache_size): Likewise.
+	(__x86_64_raw_shared_cache_size_half): Likewise.
+
+	* sysdeps/x86_64/cacheinfo.c (__x86_64_raw_data_cache_size): New.
+	(__x86_64_raw_data_cache_size_half): Likewise.
+	(__x86_64_raw_shared_cache_size): Likewise.
+	(__x86_64_raw_shared_cache_size_half): Likewise.
+	(init_cacheinfo): Set __x86_64_raw_data_cache_size,
+	__x86_64_raw_data_cache_size_half, __x86_64_raw_shared_cache_size
+	and __x86_64_raw_shared_cache_size_half.  Round
+	__x86_64_data_cache_size_half, __x86_64_data_cache_size
+	__x86_64_shared_cache_size_half and __x86_64_shared_cache_size,
+	to multiple of 256 bytes.
+
+2010-11-03  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12167]
+	* sysdeps/unix/sysv/linux/ttyname.c (ttyname): Recognize new mangling
+	of inacessible symlinks.  Verify result of symlink before returning it.
+	* sysdeps/unix/sysv/linux/ttyname_r.c (__ttyname_r): Likewise.
+	Patch mostly by Miklos Szeredi <miklos@szeredi.hu>.
+
+2010-10-28  Erich Ritz  <erichritz@gmail.com>
+
+	* math/math.h (isinf): Fix typo in comment.
+
+2010-11-01  Ulrich Drepper  <drepper@gmail.com>
+
+	* po/da.po: Update from translation team.
+
+2010-10-26  Ulrich Drepper  <drepper@gmail.com>
+
+	* elf/rtld.c (dl_main): Move assertion after the point where rtld map
+	is added to the list.
+
+2010-10-20  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+	    Ulrich Drepper  <drepper@gmail.com>
+
+	* elf/dl-object.c (_dl_new_object): Don't append the new object to
+	the global list here.  Move code to...
+	(_dl_add_to_namespace_list): ...here.  New function.
+	* elf/rtld.c (dl_main): Invoke _dl_add_to_namespace_list.
+	* sysdeps/generic/ldsodefs.h (_dl_add_to_namespace_list): Declare.
+	* elf/dl-load.c (lose): Don't remove the element from the list.
+	(_dl_map_object_from_fd): Invoke _dl_add_to_namespace_list.
+	(_dl_map_object): Likewise.
+
+2010-10-25  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12159]
+	* sysdeps/x86_64/multiarch/strchr.S: Fix propagation of search byte
+	into all bytes of SSE register.
+	Patch by Richard Li <richardpku@gmail.com>.
+
+2010-10-24  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12140]
+	* malloc/malloc.c (_int_free): Fill correct number of bytes when
+	perturbing.
+
+2010-10-20  Michael B. Brutman  <brutman@us.ibm.com>
+
+	* sysdeps/powerpc/dl-procinfo.c: Add support for ppca2 platform
+	* sysdeps/powerpc/dl-procinfo.h: Add support for ppca2 platform
+	* sysdeps/powerpc/powerpc32/a2/memcpy.S: New file.
+	* sysdeps/powerpc/powerpc64/a2/memcpy.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/a2/Implies: New
+	submachine.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/a2/Implies: Likewise.
+
 2010-10-22  Andreas Schwab  <schwab@redhat.com>
 
 	* include/dlfcn.h (__RTLD_SECURE): Define.
 	* elf/dl-load.c (_dl_map_object): Remove preloaded parameter.  Use
 	mode & __RTLD_SECURE instead.
-	(open_path): Remove preloaded parameter to secure.
+	(open_path): Rename preloaded parameter to secure.
 	* sysdeps/generic/ldsodefs.h (_dl_map_object): Adjust declaration.
 	* elf/dl-open.c (dl_open_worker): Adjust call to _dl_map_object.
 	* elf/dl-deps.c (openaux): Likewise.
@@ -12,6 +145,54 @@
 	(dl_main): Likewise.
 	(do_preload): Use __RTLD_SECURE instead of is_preloaded.
 	(dlmopen_doit): Add __RTLD_SECURE to mode bits.
+
+2010-09-09  Andreas Schwab  <schwab@redhat.com>
+
+	* Makeconfig (sysd-rules-patterns): Add rtld-%:rtld-%.
+	(sysd-rules-targets): Remove duplicates.
+	* elf/rtld-Rules ($(objpfx)rtld-%.os): Add pattern rules with
+	rtld-%.$o dependency.
+
+2010-10-18  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/dl-open.c (dl_open_worker): Don't expand DST here, let
+	_dl_map_object do it.
+
+2010-10-19  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/i386/bits/mathdef.h (FP_FAST_FMA): If the GCC 4.6 port has
+	fast fma builtins, define the macros in the C99 standard.
+	(FP_FAST_FMAF): Likewise.
+	(FP_FAST_FMAL): Likewise.
+	* sysdeps/x86_64/bits/mathdef.h: Likewise.
+
+	* bits/mathdef.h: Update copyright year.
+	* sysdeps/powerpc/bits/mathdef.h: Likewise.
+
+2010-10-19  Michael Meissner  <meissner@linux.vnet.ibm.com>
+
+	* bits/mathdef.h (FP_FAST_FMA): If the GCC 4.6 port has fast fma
+	builtins, define the macros in the C99 standard.
+	(FP_FAST_FMAF): Likewise.
+	(FP_FAST_FMAL): Likewise.
+	* sysdeps/powerpc/bits/mathdef.h (FP_FAST_FMA): Define, ppc as
+	multiply/add.
+	(FP_FAST_FMAF): Likewise.
+
+2010-10-15  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #3268]
+	* math/libm-test.inc (fma_test): Some new testcases.
+	* sysdeps/ieee754/ldbl-128/s_fmal.c: New file.
+	* sysdeps/ieee754/ldbl-96/s_fma.c (__fma): Fix fma with finite x and
+	y and infinite z.  Do multiplication by C already in long double.
+	* sysdeps/ieee754/ldbl-96/s_fmal.c: New file.
+	* sysdeps/ieee754/dbl-64/s_fma.c (__fma): Fix fma with finite x and
+	y and infinite z.  Do bitwise or of inexact bit into u.d.
+	* sysdeps/ieee754/ldbl-64-128/s_fmal.c: New file.
+	* sysdeps/i386/fpu/s_fmaf.S: Removed.
+	* sysdeps/i386/fpu/s_fma.S: Removed.
+	* sysdeps/i386/fpu/s_fmal.S: Removed.
 
 2010-10-16  Jakub Jelinek  <jakub@redhat.com>
 
@@ -271,13 +452,6 @@
 2010-09-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/res_init.c (__res_vinit): Count the default server we added.
-
-2010-09-13  Andreas Schwab  <schwab@redhat.com>
-
-	* Makeconfig (sysd-rules-patterns): Add rtld-%:rtld-%.
-	(sysd-rules-targets): Remove duplicates.
-	* elf/rtld-Rules ($(objpfx)rtld-%.os): Add pattern rules with
-	rtld-%.$o dependency.
 
 2010-09-08  Chung-Lin Tang  <cltang@codesourcery.com>
 	    Ulrich Drepper  <drepper@redhat.com>

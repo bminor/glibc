@@ -59,6 +59,11 @@ __init_cpu_features (void)
 
       get_common_indeces (&family, &model);
 
+      /* Intel processors prefer SSE instruction for memory/string
+	 routines if they are avaiable.  */
+      __cpu_features.feature[index_Prefer_SSE_for_memop]
+	|= bit_Prefer_SSE_for_memop;
+
       unsigned int eax = __cpu_features.cpuid[COMMON_CPUID_INDEX_1].eax;
       unsigned int extended_family = (eax >> 20) & 0xff;
       unsigned int extended_model = (eax >> 12) & 0xf0;
@@ -82,6 +87,7 @@ __init_cpu_features (void)
 	    case 0x1e:
 	    case 0x1f:
 	    case 0x25:
+	    case 0x2c:
 	    case 0x2e:
 	    case 0x2f:
 	      /* Rep string instructions and copy backward are fast on

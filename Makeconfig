@@ -695,7 +695,7 @@ CPPFLAGS = $($(subdir)-CPPFLAGS) $(+includes) $(defines) \
 	   -include $(..)include/libc-symbols.h $(sysdep-CPPFLAGS) \
 	   $(CPPFLAGS-$(suffix $@)) \
 	   $(foreach lib,$(libof-$(basename $(@F))) \
-		         $(libof-$(<F)) $(libof-$(@F)),$(CPPFLAGS-$(lib))) \
+			 $(libof-$(<F)) $(libof-$(@F)),$(CPPFLAGS-$(lib))) \
 	   $(CPPFLAGS-$(<F)) $(CPPFLAGS-$(@F)) $(CPPFLAGS-$(basename $(@F)))
 override CFLAGS	= -std=gnu99 $(gnu89-inline-CFLAGS) \
 		  $(filter-out %frame-pointer,$(+cflags)) $(+gccwarn-c) \
@@ -976,7 +976,7 @@ endif
 
 # Compute just the target patterns.  Makeconfig has set sysd-rules-patterns.
 sysd-rules-targets := $(sort $(foreach p,$(sysd-rules-patterns),\
-				       $(firstword $(subst :, ,$p))))
+					 $(firstword $(subst :, ,$p))))
 
 endif # Makeconfig not yet included
 
