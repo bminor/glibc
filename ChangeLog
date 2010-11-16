@@ -1,3 +1,10 @@
+2010-11-16  Petr Baudis  <pasky@suse.cz>
+
+	[BZ #11155]
+	* sysdeps/unis/sysv/linux/sparc/sparc64/fxstat.c: Use i386 fxstat
+	with support for fxstat64 instead of generic fxstat version.
+	Solution by hideaki@sogetthis.com.
+
 2010-08-18  Mike Frysinger  <vapier@gentoo.org>
 
 	[BZ #11929]
