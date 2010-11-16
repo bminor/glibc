@@ -537,10 +537,12 @@ install -m 700 build-%{nptl_target_cpu}-linuxnptl/glibc_post_upgrade.%{_target_c
 
 strip -g $RPM_BUILD_ROOT%{_prefix}/%{_lib}/*.o
 
+%if 0%{?_enable_debug_packages}
 mkdir -p $RPM_BUILD_ROOT%{_prefix}/lib/debug%{_prefix}/%{_lib}
 cp -a $RPM_BUILD_ROOT%{_prefix}/%{_lib}/*.a \
   $RPM_BUILD_ROOT%{_prefix}/lib/debug%{_prefix}/%{_lib}/
 rm -f $RPM_BUILD_ROOT%{_prefix}/lib/debug%{_prefix}/%{_lib}/*_p.a
+%endif
 
 # rquota.x and rquota.h are now provided by quota
 rm -f $RPM_BUILD_ROOT%{_prefix}/include/rpcsvc/rquota.[hx]
