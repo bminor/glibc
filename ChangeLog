@@ -1,3 +1,9 @@
+2006-11-30  Jan Kratochvil  <jan.kratochvil@redhat.com>
+
+	[BZ #6693]
+	* sysdeps/unix/sysv/linux/x86_64/clone.S: Provide CFI for the outermost
+	`clone' function to ensure proper unwinding stop of gdb.
+
 2010-05-31  Petr Baudis  <pasky@suse.cz>
 
 	[BZ #11149]
