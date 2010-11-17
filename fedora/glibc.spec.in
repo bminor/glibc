@@ -863,21 +863,9 @@ mkdir -p $RPM_BUILD_ROOT/var/cache/ldconfig
 %pre -p <lua>
 -- Check that the running kernel is new enough
 required = '%{enablekernel}'
-f = io.open("/proc/sys/kernel/osrelease")
-if f then
-  rel = {}
-  for v in string.gmatch(f:read(), '%%d+') do
-    table.insert(rel, tonumber(v))
-  end
-  i = 1
-  for r in string.gmatch(required, '%%d+') do
-    if rel[i] == nil or tonumber(r) > rel[i] then
-      print("FATAL: kernel too old")
-      os.exit(1)
-    end
-    if tonumber(r) < rel[i] then break end
-    i = i + 1
-  end
+rel = posix.uname("%r")
+if rpm.vercmp(rel, required) < 0 then
+  error("FATAL: kernel too old", 0)
 end
 
 %post -p /usr/sbin/glibc_post_upgrade.%{_target_cpu}
