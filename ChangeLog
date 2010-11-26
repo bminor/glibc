@@ -1,3 +1,9 @@
+2010-11-24  Andreas Schwab  <schwab@redhat.com>
+
+	* resolv/nss_dns/dns-host.c (getanswer_r): Don't handle ttl == 0
+	specially.
+	(gaih_getanswer_slice): Likewise.
+
 2010-05-31  Petr Baudis  <pasky@suse.cz>
 
 	[BZ #11149]
