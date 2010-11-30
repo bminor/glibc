@@ -1,9 +1,258 @@
+2010-05-31  Petr Baudis  <pasky@suse.cz>
+
+	[BZ #11149]
+	* elf/ldconfig.c (main): Allow aux_cache_file open()ing to fail
+	silently even in the chroot mode.
+
+2010-05-31  Petr Baudis <pasky@suse.cz>
+
+	[BZ #10085]
+	* nis/nss_compat/compat-initgroups.c (internal_getgrent_r): Fix
+	initialization of skip_initgroups_dyn.
+
+2010-09-27  Andreas Schwab  <schwab@redhat.com>
+
+	[BZ #11611]
+	* sysdeps/unix/sysv/linux/internal_statvfs.c (INTERNAL_STATVFS):
+	Mask out sign-bit copies when constructing f_fsid.
+
+2010-11-19  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/unix/sysv/linux/i386/bits/mman.h: Define MAP_HUGETLB.
+	* sysdeps/unix/sysv/linux/x86_64/bits/mman.h: Likewise.
+
+2010-11-16  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/unix/sysv/linux/sys/swap.h (SWAP_FLAG_DISCARD): Define.
+
+2010-11-11  Andreas Schwab  <schwab@redhat.com>
+
+	* posix/fnmatch_loop.c (NEW_PATTERN): Fix use of alloca.
+	* posix/Makefile (tests): Add $(objpfx)tst-fnmatch-mem.
+	(tst-fnmatch-ENV): Set MALLOC_TRACE.
+	($(objpfx)tst-fnmatch-mem): New rule.
+	(generated): Add tst-fnmatch-mem and tst-fnmatch.mtrace.
+	* posix/tst-fnmatch.c (main): Call mtrace.
+
+2010-08-09  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11883]
+	* posix/fnmatch.c: Keep track of alloca use and fall back on malloc.
+	* posix/fnmatch_loop.c: Likewise.
+
+2010-11-10  Luis Machado  <luisgpm@br.ibm.com>
+
+	* sysdeps/ieee754/ldbl-128ibm/e_sqrtl.c (__ieee754_sqrtl): Force
+	  signed comparison.
+
+2010-11-08  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12194]
+	* sysdeps/i386/bits/byteswap.h: Avoid warning in __bswap_16.
+	* sysdeps/x86_64/bits/byteswap.h: Likewise.
+
+2010-09-06  Andreas Schwab  <schwab@redhat.com>
+
+	* manual/Makefile: Don't mix pattern rules with normal rules.
+
+2010-08-12  Andreas Schwab  <schwab@redhat.com>
+
+	[BZ #11904]
+	* locale/programs/locale.c (print_assignment): New function.
+	(show_locale_vars): Use it.
+
+2010-10-26  Ulrich Drepper  <drepper@gmail.com>
+
+	* elf/rtld.c (dl_main): Move assertion after the point where rtld map
+	is added to the list.
+
+2010-10-20  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+	    Ulrich Drepper  <drepper@gmail.com>
+
+	* elf/dl-object.c (_dl_new_object): Don't append the new object to
+	the global list here.  Move code to...
+	(_dl_add_to_namespace_list): ...here.  New function.
+	* elf/rtld.c (dl_main): Invoke _dl_add_to_namespace_list.
+	* sysdeps/generic/ldsodefs.h (_dl_add_to_namespace_list): Declare.
+	* elf/dl-load.c (lose): Don't remove the element from the list.
+	(_dl_map_object_from_fd): Invoke _dl_add_to_namespace_list.
+	(_dl_map_object): Likewise.
+
+2010-10-24  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #12140]
+	* malloc/malloc.c (_int_free): Fill correct number of bytes when
+	perturbing.
+
+2010-09-09  Andreas Schwab  <schwab@redhat.com>
+
+	* Makeconfig (sysd-rules-patterns): Add rtld-%:rtld-%.
+	(sysd-rules-targets): Remove duplicates.
+	* elf/rtld-Rules ($(objpfx)rtld-%.os): Add pattern rules with
+	rtld-%.$o dependency.
+
+2010-10-18  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/dl-open.c (dl_open_worker): Don't expand DST here, let
+	_dl_map_object do it.
+
+2010-10-15  Andreas Schwab  <schwab@redhat.com>
+
+	* scripts/data/localplt-s390-linux-gnu.data: New file.
+	* scripts/data/localplt-s390x-linux-gnu.data: New file.
+
+2010-10-12  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #12078]
+	* posix/regcomp.c (parse_branch): One more memory leak plugged.
+	* posix/bug-regex31.input: Add test case.
+
+2010-10-11  Ulrich Drepper  <drepper@gmail.com>
+
+	* posix/bug-regex31.c: Rewrite to run multiple tests from stdin.
+	* posix/bug-regex31.input: New file.
+
+	[BZ #12078]
+	* posix/regcomp.c (parse_branch): Free memory when allocation failed.
+	(parse_sub_exp): Fix last change, use postorder.
+
+	* posix/bug-regex31.c: New file.
+	* posix/Makefile: Add rules to build and run bug-regex31.
+
+	* posix/regcomp.c (parse_bracket_exp): Add missing re_free calls.
+
+	[BZ #12078]
+	* posix/regcomp.c (parse_sub_exp): Free tree data when it is not used.
+
+	[BZ #12093]
+	* sysdeps/unix/sysv/linux/check_pf.c (__check_pf): ->ifa_addr might
+	be NULL.
+
+2010-09-15  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/getdents.c (__GETDENTS): When
+	implementing getdents64 using getdents syscall, set d_type if
+	__ASSUME_GETDENTS32_D_TYPE.
+
+2010-09-14  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/s390/s390-32/__longjmp.c (__longjmp): Define register
+	variables after CHECK_SP call.
+	* sysdeps/s390/s390-64/__longjmp.c (__longjmp): Likewise.
+
+2010-09-08  Chung-Lin Tang  <cltang@codesourcery.com>
+	    Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #11968]
+	* sysdeps/unix/sysv/linux/x86_64/____longjmp_chk.S
+	(____longjmp_chk): Use %ebx for saving value across system call.
+	Add unwind info.
+
+2010-08-31  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/sparc/sys/epoll.h (epoll_create2): Delete.
+	(epoll_create1): Declare.
+
+	* sysdeps/unix/sysv/linux/x86_64/sys/epoll.h: Fix typo.
+
+2010-08-31  Andreas Schwab  <schwab@redhat.com>
+
+	[BZ #7066]
+	* stdlib/strtod_l.c (____STRTOF_INTERNAL): Fix array overflow when
+	shifting retval into place.
+
+2010-09-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_init.c (__res_vinit): Count the default server we added.
+
+2010-08-25  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #10851]
+	* resolv/res_init.c (__res_vinit): When no server address at all
+	is given default to loopback.
+
+2010-08-12  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/elf/Makefile: New file.
+
+2010-07-31  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* hurd/hurdselect.c (_hurd_select): Round timeout up instead of down
+	when converting to ms.
+
+2010-07-29  Roland McGrath  <roland@redhat.com>
+
+	[BZ 11856]
+	* manual/locale.texi (Yes-or-No Questions): Fix example code.
+
+2010-07-27  Andreas Schwab  <schwab@redhat.com>
+
+	* manual/memory.texi (Malloc Tunable Parameters): Document
+	M_PERTURB.
+
+2010-07-26  Roland McGrath  <roland@redhat.com>
+
+	[BZ #11840]
+	* configure.in (-fgnu89-inline check): Set and substitute
+	gnu89_inline, not libc_cv_gnu89_inline.
+	* configure: Regenerated.
+	* config.make.in (gnu89-inline-CFLAGS): Use @gnu89_inline@.
+
+2010-07-20  Roland McGrath  <roland@redhat.com>
+
+	* elf/dl-sysdep.c (_dl_important_hwcaps): Add dsocaps mask to
+	dl_hwcap_mask as well as dl_hwcap.  Without this, dsocaps matching in
+	ld.so.cache was broken.  With it, there is no way to disable dsocaps
+	like LD_HWCAP_MASK can disable hwcaps.
+
+2010-07-05  Roland McGrath  <roland@redhat.com>
+
+	* manual/arith.texi (Rounding Functions): Fix rint description
+	implicit in round description.
+
+2010-07-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/Makefile: Fix linking for a few tests to make recent linker
+	happy.
+
+2010-06-02  Emilio Pozuelo Monfort  <pochu27@gmail.com>
+
+	* hurd/lookup-at.c (__file_name_lookup_at): Accept
+	AT_SYMLINK_FOLLOW in AT_FLAGS.  Fail with EINVAL if both
+	AT_SYMLINK_FOLLOW and AT_SYMLINK_NOFOLLOW are present
+	in AT_FLAGS.
+	* hurd/hurd/fd.h (__file_name_lookup_at): Update comment.
+	* sysdeps/mach/hurd/linkat.c (linkat): Pass O_NOLINK in FLAGS.
+
+2010-11-03  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #12191]
+	* sysdeps/x86_64/cacheinfo.c (init_cacheinfo): Round
+	__x86_64_data_cache_size_half, __x86_64_data_cache_size
+	__x86_64_shared_cache_size_half and __x86_64_shared_cache_size,
+	to multiple of 256 bytes.
+
+2010-11-03  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12167]
+	* sysdeps/unix/sysv/linux/ttyname.c (ttyname): Recognize new mangling
+	of inacessible symlinks.  Verify result of symlink before returning it.
+	* sysdeps/unix/sysv/linux/ttyname_r.c (__ttyname_r): Likewise.
+	Patch mostly by Miklos Szeredi <miklos@szeredi.hu>.
+
+2010-10-25  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #12159]
+	* sysdeps/x86_64/multiarch/strchr.S: Fix propagation of search byte
+	into all bytes of SSE register.
+	Patch by Richard Li <richardpku@gmail.com>.
+
 2010-10-22  Andreas Schwab  <schwab@redhat.com>
 
 	* include/dlfcn.h (__RTLD_SECURE): Define.
 	* elf/dl-load.c (_dl_map_object): Remove preloaded parameter.  Use
 	mode & __RTLD_SECURE instead.
-	(open_path): Remove preloaded parameter to secure.
+	(open_path): Rename preloaded parameter to secure.
 	* sysdeps/generic/ldsodefs.h (_dl_map_object): Adjust declaration.
 	* elf/dl-open.c (dl_open_worker): Adjust call to _dl_map_object.
 	* elf/dl-deps.c (openaux): Likewise.
@@ -12,6 +261,44 @@
 	(dl_main): Likewise.
 	(do_preload): Use __RTLD_SECURE instead of is_preloaded.
 	(dlmopen_doit): Add __RTLD_SECURE to mode bits.
+
+2010-10-06  Ulrich Drepper  <drepper@gmail.com>
+
+	* string/bug-strstr1.c: New file.
+	* string/Makefile: Add rules to build and run bug-strstr1.
+
+2010-10-05  Eric Blake  <eblake@redhat.com>
+
+	[BZ #12092]
+	* string/str-two-way.h (two_way_long_needle): Always clear memory
+	when skipping input due to the shift table.
+
+2010-10-03  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12005]
+	* malloc/mcheck.c: Handle large requests.
+
+	[BZ #12077]
+	* sysdeps/x86_64/strcmp.S: Fix handling of remaining bytes in buffer
+	for strncmp and strncasecmp.
+	* string/stratcliff.c: Add tests for strcmp and strncmp.
+	* wcsmbs/wcsatcliff.c: Adjust for stratcliff change.
+
+2010-06-02  Kirill A. Shutemov  <kirill@shutemov.name>
+
+	* elf/dl-reloc.c: Flush cache after solving TEXTRELs if arch
+	requires it.
+
+2010-06-02  Andreas Schwab  <schwab@redhat.com>
+
+	* nis/nss_nis/nis-initgroups.c (get_uid): Properly resize buffer.
+
+2010-06-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* libio/stdio.h (sscanf, vsscanf): Use __REDIRECT_NTH instead of
+	__REDIRECT followed by __THROW.
+	* wcsmbs/wchar.h (swscanf, vswscanf): Likewise.
+	* posix/getopt.h (getopt): Likewise.
 
 2010-10-18  Andreas Schwab  <schwab@redhat.com>
 

@@ -1,3 +1,23 @@
+2010-08-12  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* nptl/sysdeps/unix/sysv/linux/i386/Makefile: New file.
+
+2010-07-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (tst-_res1): Add tst-_res1mod1 to dependency list.
+
+2010-10-13  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #12113]
+	* sysdeps/x86_64/pthreaddef.h (TCB_ALIGNMENT): Changed to 32.
+	* sysdeps/x86_64/tls.h (TLS_TCB_ALIGN): Defined with alignment
+	of "struct pthread".
+
+2010-06-01  Takashi Yoshii  <takashi.yoshii.zj@renesas.com>
+
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.S: Fix incorrect
+	location of ifndef __ASSUME_FUTEX_CLOCK_REALTIME.
+
 2009-11-27  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/cancellation.S: Reload

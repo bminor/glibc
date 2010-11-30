@@ -453,10 +453,10 @@ __cache_sysconf (int name)
 
 
 /* Half the data cache size for use in memory and string routines, typically
-   L1 size.  */
+   L1 size, rounded to multiple of 256 bytes.  */
 long int __x86_64_data_cache_size_half attribute_hidden = 32 * 1024 / 2;
 /* Shared cache size for use in memory and string routines, typically
-   L2 or L3 size.  */
+   L2 or L3 size, rounded to multiple of 256 bytes.  */
 long int __x86_64_shared_cache_size_half attribute_hidden = 1024 * 1024 / 2;
 long int __x86_64_shared_cache_size attribute_hidden = 1024 * 1024;
 
@@ -657,10 +657,16 @@ init_cacheinfo (void)
     }
 
   if (data > 0)
-    __x86_64_data_cache_size_half = data / 2;
+    {
+      /* Round data cache size to multiple of 256 bytes.  */
+      data = data & ~255L;
+      __x86_64_data_cache_size_half = data / 2;
+    }
 
   if (shared > 0)
     {
+      /* Round shared cache size to multiple of 256 bytes.  */
+      shared = shared & ~255L;
       __x86_64_shared_cache_size_half = shared / 2;
       __x86_64_shared_cache_size = shared;
     }

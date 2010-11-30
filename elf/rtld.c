@@ -1088,10 +1088,14 @@ of this helper program; chances are you did not intend to run this program.\n\
       main_map = _dl_new_object ((char *) "", "", lt_executable, NULL,
 				 __RTLD_OPENEXEC, LM_ID_BASE);
       assert (main_map != NULL);
-      assert (main_map == GL(dl_ns)[LM_ID_BASE]._ns_loaded);
       main_map->l_phdr = phdr;
       main_map->l_phnum = phnum;
       main_map->l_entry = *user_entry;
+
+      /* Even though the link map is not yet fully initialized we can add
+	 it to the map list since there are no possible users running yet.  */
+      _dl_add_to_namespace_list (main_map, LM_ID_BASE);
+      assert (main_map == GL(dl_ns)[LM_ID_BASE]._ns_loaded);
 
       /* At this point we are in a bit of trouble.  We would have to
 	 fill in the values for l_dev and l_ino.  But in general we
@@ -1235,7 +1239,7 @@ of this helper program; chances are you did not intend to run this program.\n\
       /* We were invoked directly, so the program might not have a
 	 PT_INTERP.  */
       _dl_rtld_libname.name = GL(dl_rtld_map).l_name;
-      /* _dl_rtld_libname.next = NULL; 	Already zero.  */
+      /* _dl_rtld_libname.next = NULL;	Already zero.  */
       GL(dl_rtld_map).l_libname =  &_dl_rtld_libname;
     }
   else
@@ -1359,6 +1363,9 @@ of this helper program; chances are you did not intend to run this program.\n\
 		_dl_fatal_printf ("out of memory\n");
 	      l->l_libname->name = memcpy (copy, dsoname, len);
 	    }
+
+	  /* Add the vDSO to the object list.  */
+	  _dl_add_to_namespace_list (l, LM_ID_BASE);
 
 	  /* Rearrange the list so this DSO appears after rtld_map.  */
 	  assert (l->l_next == NULL);
