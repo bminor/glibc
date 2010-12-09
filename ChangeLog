@@ -13,12 +13,6 @@
 	(do_preload): Use __RTLD_SECURE instead of is_preloaded.
 	(dlmopen_doit): Add __RTLD_SECURE to mode bits.
 
-2010-10-18  Andreas Schwab  <schwab@redhat.com>
-
-	* elf/dl-load.c (is_dst): Remove last parameter.
-	(_dl_dst_count): Ignore $ORIGIN in privileged programs.
-	(_dl_dst_substitute): Likewise.
-
 2010-10-06  Ulrich Drepper  <drepper@gmail.com>
 
 	* string/bug-strstr1.c: New file.
