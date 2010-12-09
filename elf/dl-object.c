@@ -220,6 +220,9 @@ _dl_new_object (char *realname, const char *libname, int type,
     out:
       new->l_origin = origin;
     }
+  else if (INTUSE(__libc_enable_secure) && type == lt_executable)
+    /* The origin of a privileged program cannot be trusted.  */
+    new->l_origin = (char *) -1;
 
   return new;
 }

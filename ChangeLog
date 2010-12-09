@@ -1,3 +1,8 @@
+2010-12-13  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/dl-object.c (_dl_new_object): Ignore origin of privileged
+	program.
+
 2010-11-11  Andreas Schwab  <schwab@redhat.com>
 
 	* posix/fnmatch_loop.c (NEW_PATTERN): Fix use of alloca.
