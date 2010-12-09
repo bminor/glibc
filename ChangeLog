@@ -1,3 +1,8 @@
+2010-12-13  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/dl-object.c (_dl_new_object): Ignore origin of privileged
+	program.
+
 2010-10-22  Andreas Schwab  <schwab@redhat.com>
 
 	* include/dlfcn.h (__RTLD_SECURE): Define.
