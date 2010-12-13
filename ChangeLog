@@ -1,3 +1,73 @@
+2010-12-10  Andreas Schwab  <schwab@redhat.com>
+
+	* wcsmbs/wchar.h (wcpcpy, wcpncpy): Only declare under
+	_GNU_SOURCE.
+
+	* wcsmbs/wchar.h (wcpcpy, wcpncpy): Add __restrict.
+	* wcsmbs/bits/wchar2.h (__wmemmove_chk_warn, wmemmove, wmemset):
+	Remove __restrict.
+	(wcscpy, __wcpcpy_chk, __wcpcpy_alias, wcpcpy, wcsncpy, wcpncpy)
+	(wcscat, wcsncat, __wcrtomb_chk, wcrtomb): Add __restrict.
+
+2010-12-09  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #11655]
+	* stdlib/msort.c (qsort_r): Make sure both phys_pages and pagesize
+	are initialized.
+
+2010-12-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* string/bits/string3.h (memmove, bcopy): Remove __restrict.
+
+2010-12-03  Ulrich Drepper  <drepper@gmail.com>
+
+	* po/it.po: Update from translation team.
+
+2010-12-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/multiarch/strcmp-ssse3.S (STRCMP): Remove
+	unused codes.
+
+2010-11-30  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/i386/fpu/libm-test-ulps: Relax ynf(10,0.75) test expectations.
+
+2010-11-24  Andreas Schwab  <schwab@redhat.com>
+
+	* resolv/nss_dns/dns-host.c (getanswer_r): Don't handle ttl == 0
+	specially.
+	(gaih_getanswer_slice): Likewise.
+
+2010-10-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ieee754/ldbl-128/s_fmal.c (__fmal): Fix up inline asm.
+
+2010-05-31  Petr Baudis  <pasky@suse.cz>
+
+	[BZ #11149]
+	* elf/ldconfig.c (main): Allow aux_cache_file open()ing to fail
+	silently even in the chroot mode.
+
+2010-11-22  Ulrich Drepper  <drepper@gmail.com>
+
+	* nis/nss_compat/compat-initgroups.c (internal_getgrent_r): Optimize
+	last patch a bit.  Pretty printing
+
+2010-05-31  Petr Baudis <pasky@suse.cz>
+
+	[BZ #10085]
+	* nis/nss_compat/compat-initgroups.c (internal_getgrent_r): Fix
+	initialization of skip_initgroups_dyn.
+
+2010-11-19  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/unix/sysv/linux/i386/bits/mman.h: Define MAP_HUGETLB.
+	* sysdeps/unix/sysv/linux/x86_64/bits/mman.h: Likewise.
+
+2010-11-16  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/unix/sysv/linux/sys/swap.h (SWAP_FLAG_DISCARD): Define.
+
 2010-12-13  Andreas Schwab  <schwab@redhat.com>
 
 	* elf/dl-object.c (_dl_new_object): Ignore origin of privileged
