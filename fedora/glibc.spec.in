@@ -20,7 +20,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 4
+Release: 1
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1028,6 +1028,46 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Dec 13 2010 Andreas Schwab <schwab@redhat.com> - 2.12.2-1
+- Update to 2.12.2 release
+  - Declare wcpcpy and wcpncpy only under _GNU_SOURCE
+  - Fix use of restrict in wchar.h and string.h
+  - Fix race in qsort_r initialization (BZ#11655)
+  - Fix IPTOS_CLASS definition (BZ#11903)
+  - Don't ignore zero TTL in DNS answers
+  - Fix x86 pthread_cond_signal() FUTEX_WAKE_OP fallback
+  - Work around kernel rejecting valid absolute timestamps
+  - Allow aux_cache_file open()ing to fail silently even in the chroot
+    mode (BZ#11149)
+  - Fix multiple nss_compat initgroups() bugs (BZ#10085)
+  - Properly convert f_fsid in statvfs (BZ#11611)
+  - Define MAP_HUGETLB and SWAP_FLAG_DISCARD
+  - Avoid too much stack use in fnmatch (BZ#11883)
+  - Fix comparison in sqrtl for IBM long double 128
+  - Fix warnings in __bswap_16 (BZ#12194)
+  - Properly quote output of locale (BZ#11904)
+  - Fix perturbing in malloc on free (BZ#12140)
+  - Don't expand DST twice in dl_open
+  - Fix memory leak for some invalid regular expressions (BZ#12078)
+  - Linux getifaddrs might return entries with ->ifa_addr being NULL
+    (BZ#12093)
+  - Handle large malloc requests (BZ#12005)
+  - getdents64 fallback d_type support
+  - Fix register conflict in s390 ____longjmp_chk
+  - Fix _FORITY_SOURCE version of longjmp for Linux/x86-64 (BZ#11968)
+  - Fix array overflow in floating point parser (BZ#7066)
+  - Missing server address again leads to localhost being used (BZ#10851)
+  - Document M_PERTURB
+  - Fix vDSO synthetic hwcap handling so they are not masked out from
+    ld.so.cache matching
+  - 32bit memset-sse2.S fails with uneven cache size (BZ#12191)
+  - Verify in ttyname() that the symlink is valid (BZ#12167)
+  - Fix concurrency problem between dl_open and dl_iterate_phdr
+  - Fix x86-64 strchr propagation of search byte into all bytes of SSE
+    register (BZ#12159)
+  - Fix alignment of AVX safe area on x86-64 (BZ#12113, #643889)
+- Don't ignore $ORIGIN in libraries
+
 * Fri Oct 22 2010 Andreas Schwab <schwab@redhat.com> - 2.12.1-4
 - Require suid bit on audit objects in privileged programs (CVE-2010-3856)
 
