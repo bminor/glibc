@@ -555,17 +555,17 @@ extern float wcstof_l (__const wchar_t *__restrict __nptr,
 extern long double wcstold_l (__const wchar_t *__restrict __nptr,
 			      wchar_t **__restrict __endptr,
 			      __locale_t __loc) __THROW;
-#endif /* GNU */
 
 
-#ifdef	__USE_XOPEN2K8
 /* Copy SRC to DEST, returning the address of the terminating L'\0' in
    DEST.  */
-extern wchar_t *wcpcpy (wchar_t *__dest, __const wchar_t *__src) __THROW;
+extern wchar_t *wcpcpy (wchar_t *__restrict __dest,
+			__const wchar_t *__restrict __src) __THROW;
 
 /* Copy no more than N characters of SRC to DEST, returning the address of
    the last character written into DEST.  */
-extern wchar_t *wcpncpy (wchar_t *__dest, __const wchar_t *__src, size_t __n)
+extern wchar_t *wcpncpy (wchar_t *__restrict __dest,
+			 __const wchar_t *__restrict __src, size_t __n)
      __THROW;
 #endif	/* use GNU */
 

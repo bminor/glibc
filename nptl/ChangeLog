@@ -1,12 +1,56 @@
+2010-08-10  Dinakar Guniguntala  <dino@in.ibm.com>
+	    Stefan Hajnoczi  <stefanha@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_signal.S: If
+	FUTEX_WAKE_OP fails make sure to call FUTEX_WAKE instead.
+
+2010-07-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-abstime.c (do_test): Some more cleanups
+
+2010-07-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-abstime.c: Correct testing and add test for sem_timedwait.
+
+2010-07-01  Andreas Schwab  <schwab@redhat.com>
+	    Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (tests): Add tst-abstime.
+	* tst-abstime.c: New file.
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevellock.S
+	(__lll_timedlock_wait): Check for timestamp before the Epoch.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S
+	(__lll_timedlock_wait): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevelrobustlock.S
+	(__lll_robust_timedlock_wait): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S
+	(__pthread_cond_timedwait): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedrdlock.S
+	(pthread_rwlock_timedrdlock): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedwrlock.S
+	(pthread_rwlock_timedwrlock): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sem_timedwait.S (sem_timedwait):
+	Likewise.
+
+2010-08-12  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* nptl/sysdeps/unix/sysv/linux/i386/Makefile: New file.
+
+2010-07-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (tst-_res1): Add tst-_res1mod1 to dependency list.
+
+2010-10-13  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #12113]
+	* sysdeps/x86_64/pthreaddef.h (TCB_ALIGNMENT): Changed to 32.
+	* sysdeps/x86_64/tls.h (TLS_TCB_ALIGN): Defined with alignment
+	of "struct pthread".
+
 2010-06-01  Takashi Yoshii  <takashi.yoshii.zj@renesas.com>
 
 	* sysdeps/unix/sysv/linux/sh/lowlevellock.S: Fix incorrect
 	location of ifndef __ASSUME_FUTEX_CLOCK_REALTIME.
-
-2010-05-27  Andreas Schwab  <schwab@redhat.com>
-
-	* Makefile ($(objpfx)tst-_res1): Depend on
-	$(objpfx)tst-_res1mod1.so.
 
 2010-04-09  Ulrich Drepper  <drepper@redhat.com>
 
