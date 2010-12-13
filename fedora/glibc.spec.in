@@ -20,7 +20,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 19
+Release: 20
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1030,6 +1030,20 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Dec 13 2010 Andreas Schwab <schwab@redhat.com> - 2.12.90-20
+- Update from master
+  - Declare wcpcpy and wcpncpy only under _GNU_SOURCE
+  - Fix use of restrict in wchar.h and string.h
+  - Fix race in qsort_r initialization (BZ#11655)
+  - Don't ignore zero TTL in DNS answers
+  - Allow aux_cache_file open()ing to fail silently even in the chroot
+    mode (BZ#11149)
+  - Fix multiple nss_compat initgroups() bugs (BZ#10085)
+  - Define MAP_HUGETLB and SWAP_FLAG_DISCARD
+- Remove .UTF-8 suffix from locale names when it is the only supported
+  codeset (#657556)
+- Don't ignore $ORIGIN in libraries
+
 * Fri Nov 12 2010 Andreas Schwab <schwab@redhat.com> - 2.12.90-19
 - Update from master
   - Fix memory leak in fnmatch
