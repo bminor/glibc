@@ -20,7 +20,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 20
+Release: 21
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1030,6 +1030,9 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Tue Dec 14 2010 Andreas Schwab <schwab@redhat.com> - 2.12.90-21
+- Revert bogus change
+
 * Mon Dec 13 2010 Andreas Schwab <schwab@redhat.com> - 2.12.90-20
 - Update from master
   - Declare wcpcpy and wcpncpy only under _GNU_SOURCE
