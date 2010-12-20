@@ -1,6 +1,7 @@
 2010-12-19  Ulrich Drepper  <drepper@gmail.com>
 
-	* sysdeps/unix/readdir_r.c (__READDIR_R): Compute reclen more accurate.
+	* sysdeps/unix/readdir_r.c (__READDIR_R): Compute reclen more
+	accurately.
 	* sysdeps/unix/sysv/linux/wordsize-64/readdir_r.c: Define
 	GETDENTS_64BIT_ALIGNED.
 
