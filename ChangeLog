@@ -1,3 +1,8 @@
+2010-12-25  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12207]
+	* malloc/malloc.c (do_check_malloc_state): Use fastbin macro.
+
 2010-12-19  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/unix/readdir_r.c (__READDIR_R): Compute reclen more
