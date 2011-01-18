@@ -20,7 +20,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 21
+Release: 1
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1030,6 +1030,31 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Tue Jan 18 2011 Andreas Schwab <schwab@redhat.com> - 2.13-1
+- Update to 2.13 release
+  - Define AT_NO_AUTOMOUNT
+  - Define MADV_HUGEPAGE and MADV_NOHUGEPAGE
+  - Add definitions for new socket protocols
+  - Signal temporary host lookup errors in nscd as such to the
+    requester (BZ#6812)
+  - Change setgroups to affect all the threads in the process
+    (BZ#10563)
+  - FIx handling of unterminated [ expression in fnmatch (BZ#12378)
+  - Relax requirement on close in child created by posix_spawn
+  - Fix handling of missing syscall in Linux mkdirat (BZ#12397)
+  - Handle long lines in host lookups in the right place (BZ#10484)
+  - Fix assertion when handling DSTs during auditing
+  - Fix alignment in x86 destructor calls
+  - Fix grouping when rounding increases number of integer digits
+    (BZ#12394)
+  - Update Japanese translations
+  - Fix infloop on persistent failing calloc in regex (BZ#12348)
+  - Use prlimit64 for 32-bit [gs]etrlimit64 implementation (BZ#12201)
+  - Change XPG-compliant strerror_r function to return error code
+    (BZ#12204)
+  - Always allow overwriting printf modifiers etc.
+  - Make PowerPC64 default to nonexecutable stack
+
 * Tue Dec 14 2010 Andreas Schwab <schwab@redhat.com> - 2.12.90-21
 - Revert bogus change
 
