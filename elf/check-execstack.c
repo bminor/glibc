@@ -1,5 +1,5 @@
 /* Check for executable stacks in DSOs.
-   Copyright (C) 2009 Free Software Foundation, Inc.
+   Copyright (C) 2009, 2010 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contribute by Ulrich Drepper <drepper@redhat.com>. 2009.
 
@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include "check-execstack.h"
 
 
 #ifdef BITS
@@ -91,8 +92,13 @@ AB(handle_file) (const char *fname, int fd)
 	return 0;
       }
 
-  printf ("%s: no PT_GNU_STACK entry\n", fname);
-  return 1;
+  if (DEFAULT_STACK_PERMS & PF_X)
+    {
+      printf ("%s: no PT_GNU_STACK entry\n", fname);
+      return 1;
+    }
+
+  return 0;
 }
 
 # undef BITS
@@ -152,7 +158,6 @@ main (int argc, char *argv[])
 
   for (cnt = 1; cnt < argc; ++cnt)
     result |= handle_file (argv[cnt]);
-
   return result;
 }
 #endif

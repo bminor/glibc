@@ -1,3 +1,220 @@
+2011-01-17  Ulrich Drepper  <drepper@gmail.com>
+
+	* version.h (RELEASE): Bump for 2.13 release.
+	* include/features.h: (__GLIBC_MINOR__): Bump to 13.
+
+	* io/fcntl.h: Define AT_NO_AUTOMOUNT.
+
+	* sysdeps/unix/sysv/linux/i386/bits/mman.h: Define MADV_HUGEPAGE and
+	MADV_NOHUGEPAGE.
+	* sysdeps/unix/sysv/linux/ia64/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/mman.h: Likewise.
+
+	* posix/getconf.c: Update copyright year.
+	* catgets/gencat.c: Likewise.
+	* csu/version.c: Likewise.
+	* debug/catchsegv.sh: Likewise.
+	* debug/xtrace.sh: Likewise.
+	* elf/ldconfig.c: Likewise.
+	* elf/ldd.bash.in: Likewise.
+	* elf/sprof.c (print_version): Likewise.
+	* iconv/iconv_prog.c: Likewise.
+	* iconv/iconvconfig.c: Likewise.
+	* locale/programs/locale.c: Likewise.
+	* locale/programs/localedef.c: Likewise.
+	* malloc/memusage.sh: Likewise.
+	* malloc/mtrace.pl: Likewise.
+	* nscd/nscd.c (print_version): Likewise.
+	* nss/getent.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/bits/socket.h: Define AF_CAIF, AF_ALG,
+	PF_CAIF, and PF_ALG.
+	* sysdeps/unix/sysv/linux/sparc/bits/socket.h: Likewise.
+
+2011-01-16  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* elf/Makefile (tlsmod17a-modules, tlsmod18a-modules): Define.
+	(modules-names): Use them.
+	(ifunc-test-modules, ifunc-pie-tests): Define.
+	(extra-test-objs): Add tlsmod17a-modules, tlsmod18a-modules,
+	tst-pie1, ifunc-test-modules and ifunc-pie-tests objects.
+	(test-extras): Likewise.
+	($(patsubst %,$(objpfx)%.os,$(tlsmod17a-modules))): Use
+	$(compile-command.c).
+	($(patsubst %,$(objpfx)%.os,$(tlsmod18a-modules))): Likewise.
+	(all-built-dso): Define.
+	(check-textrel.out, check-execstack.out): Depend on it.
+
+	* configure.in: Don't override --enable-multi-arch.
+
+2011-01-15  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #6812]
+	* nscd/hstcache.c (tryagain): Define.
+	(cache_addhst): Return tryagain not notfound for temporary errors.
+	(addhstbyX): Also set h_errno to TRY_AGAIN when memory allocation
+	failed.
+
+2011-01-14  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #10563]
+	* sysdeps/unix/sysv/linux/i386/setgroups.c: Use INLINE_SETXID_SYSCALL
+	to make the syscall.
+	* sysdeps/unix/sysv/linux/setgroups.c: New file.
+
+	[BZ #12378]
+	* posix/fnmatch_loop.c (FCT): When matching '[' keep track of beginning
+	and fall back to matching as normal character if the string ends before
+	the matching ']' is found.  This is what POSIX requires.
+	* posix/testfnm.c: Adjust test result.
+	* posix/globtest.sh: Adjust test result.  Add new test.
+	* posix/tst-fnmatch.input: Likewise.
+	* posix/tst-fnmatch2.c: Add new test.
+
+2010-12-28  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* elf/Makefile (check-execstack): Revert last change.  Depend on
+	check-execstack.h.
+	(check-execstack.h): New target.
+	(generated): Add check-execstack.h.
+	* elf/check-execstack.c: Include "check-execstack.h".
+	(main): Revert last change.
+	(handle_file): Return zero if GNU_STACK is absent and
+	DEFAULT_STACK_PERMS doesn't include PF_X.
+
+2011-01-13  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/posix/spawni.c (__spawni): Don't fail if close file action
+	in child fails because the descriptor is already closed.
+	* include/sys/resource.h: Add libc_hidden_proto for getrlimit64.
+	* sysdeps/unix/sysv/linux/getrlimit64.c: Add libc_hidden_def.
+	* sysdeps/unix/sysv/linux/i386/getrlimit64.c: Likewise.
+
+	[BZ #12397]
+	* sysdeps/unix/sysv/linux/mkdirat.c (mkdirat): Fix handling of missing
+	syscall.
+
+	[BZ #10484]
+	* nss/nss_files/files-hosts.c (HOST_DB_LOOKUP): Handle overflows of
+	temporary buffer used to handle multi lookups locally.
+	* include/alloca.h: Add libc_hidden_proto for __libc_alloca_cutoff.
+
+2011-01-12  Ulrich Drepper  <drepper@gmail.com>
+
+	* elf/dl-dst.h (DL_DST_REQUIRED): Allow l_origin to be NULL when
+	loader is ld.so.
+
+2011-01-10  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	* sysdeps/i386/Makefile: stdlib/cxa_finalize.c needs 16-byte stack
+	alignment for SSE2.
+
+2011-01-12  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12394]
+	* stdio-common/printf_fp.c (__printf_fp): Add more room for grouping
+	characters.  When rounding increased number of integer digits recompute
+	number of groups.
+	* stdio-common/tst-grouping.c: New file.
+	* stdio-common/Makefile: Add rules to build and run tst-grouping.
+
+2011-01-09  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/i386/bits/select.h: Don't use asm code for __FD_SET,
+	__FD_CLR, and __FS_ISSET.  gcc generates better code on its own.
+
+	* sysdeps/x86_64/bits/select.h: Mark value of __FD_SET and __FD_CLR as
+	void.
+	* bits/select.h: Likewise.
+
+2011-01-08  Ulrich Drepper  <drepper@gmail.com>
+
+	* po/ja.po: Update from translation team.
+
+2011-01-04  David S. Miller  <davem@sunset.davemloft.net>
+
+	[BZ #11155]
+	* sysdeps/unix/sysv/linux/sparc/sparc64/fxstat.c: Use i386's
+	implementation just like for lxstat, fxstatat, et al.
+
+2010-12-27  Jim Meyering  <meyering@redhat.com>
+
+	[BZ #12348]
+	* posix/regexec.c (build_trtable): Return failure indication upon
+	calloc failure.  Otherwise, re_search_internal could infloop on OOM.
+
+2010-12-25  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12201]
+	* sysdeps/unix/sysv/linux/getrlimit64.c: New file.
+	* sysdeps/unix/sysv/linux/setrlimit64.c: New file.
+	* sysdeps/unix/sysv/linux/i386/getrlimit64.c: Use ../getrlimit64.c.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define __ASSUME_PRLIMIT64.
+
+	[BZ #12207]
+	* malloc/malloc.c (do_check_malloc_state): Use fastbin macro.
+
+	[BZ #12204]
+	* string/xpg-strerror.c (__xpg_strerror_r): Return error code, not -1.
+	* sysdeps/mach/xpg-strerror.c (__xpg_strerror_r): Likewise.
+
+2010-12-15  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* config.h.in (NO_CTORS_DTORS_SECTIONS): Define.
+	* configure.in: Define NO_CTORS_DTORS_SECTIONS if linker
+	script has SORT_BY_INIT_PRIORITY.
+	* elf/sofini.c: Remove `.ctors' and `.dtors' sections if
+	NO_CTORS_DTORS_SECTIONS is defined.
+	* elf/soinit.c: Likewise.
+	* sysdeps/i386/init-first.c: Don't call __libc_global_ctors if
+	NO_CTORS_DTORS_SECTIONS is defined.
+	* sysdeps/mach/hurd/i386/init-first.c: Likewise.
+	* sysdeps/mach/hurd/powerpc/init-first.c: Likewise.
+	* sysdeps/sh/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/init-first.c: Likewise.
+
+2010-12-24  Ulrich Drepper  <drepper@gmail.com>
+
+	* stdio-common/vfprintf.c (vfprintf): If printf handlers are installed
+	always use the slow path.
+
+2010-12-15  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	* elf/Makefile: (check-execstack): Replace $(native-compile) with a
+	similar rule which adds the sysdep directories to the header search in
+	order to pick up the correct platform stackinfo.h.
+	* elf/check-execstack.c (main): Check DEFAULT_STACK_PERMS for PF_X and
+	perform test if it is, otherwise return successfully without testing.
+	* elf/dl-load.c (_dl_map_object_from_fd): Source stack_flags from
+	DEFAULT_STACK_PERMS define in stackinfo.h.
+	* elf/dl-support.c (_dl_stack_flags): Source from DEFAULT_STACK_PERMS
+	defined in stackinfo.h.
+	* elf/rtld.c (_dl_starting_up): Source ._dl_stack_flags from
+	DEFAULT_STACK_PERMS defined in stackinfo.h.
+	* sysdeps/i386/stackinfo.h: Define DEFAULT_STACK_PERMS with PF_X.
+	* sysdeps/ia64/stackinfo.h: Likewise.
+	* sysdeps/s390/stackinfo.h: Likewise.
+	* sysdeps/sh/stackinfo.h: Likewise.
+	* sysdeps/sparc/stackinfo.h: Likewise.
+	* sysdeps/x86_64/stackinfo.h: Likewise.
+	* sysdeps/powerpc/stackinfo.h: Define DEFAULT_STACK_PERMS without
+	PF_X for powerpc64.  Retain PF_X for powerpc32.
+
+2010-12-19  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/unix/readdir_r.c (__READDIR_R): Compute reclen more
+	accurately.
+	* sysdeps/unix/sysv/linux/wordsize-64/readdir_r.c: Define
+	GETDENTS_64BIT_ALIGNED.
+
+2010-12-14  Ulrich Drepper  <dreper@gmail.com>
+
+	* sysdeps/i386/i686/multiarch/strcmp.S: Undo accidental checkin.
+
 2010-12-10  Andreas Schwab  <schwab@redhat.com>
 
 	* wcsmbs/wchar.h (wcpcpy, wcpncpy): Only declare under

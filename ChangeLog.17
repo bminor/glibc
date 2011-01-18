@@ -1023,12 +1023,6 @@
 	used later with MMAP_FIXED | MMAP_SHARED to cope with different
 	alignment restrictions.
 
-2010-02-08  Andreas Schwab  <schwab@redhat.com>
-
-	[BZ #11155]
-	* sysdeps/unix/sysv/linux/sparc/sparc64/fxstat.c: Include i386
-	version.
-
 2010-02-05  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #11230]

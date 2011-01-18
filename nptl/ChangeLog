@@ -1,3 +1,20 @@
+2011-01-16  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* Makefile (test-extras): Add tst-cleanup4aux.
+
+2011-01-14  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #10563]
+	* sysdeps/pthread/setxid.h (__SETXID_1): Add cast to assignment.
+	(__SETXID_2): Likewise.
+	(__SETXID_3): Likewise.
+
+2011-01-13  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #10484]
+	* Versions [libc] (GLIBC_PRIVATE): Export __libc_alloca_cutoff.
+	* alloca_cutoff.c: Add libc_hidden_def.
+
 2010-10-13  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #12113]
