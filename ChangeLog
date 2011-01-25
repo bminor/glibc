@@ -1,3 +1,40 @@
+2011-01-19  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #11724]
+	* elf/dl-deps.c (_dl_map_object_deps): Rewrite sorting determining order
+	of constructors.
+	* elf/dl-fini.c (_dl_sort_fini): Rewrite sorting determining order
+	of destructors.
+	(_dl_fini): Don't call _dl_sort_fini if there is only one object.
+
+	[BZ #11724]
+	* elf/Makefile: Add rules to build and run new test.
+	* elf/tst-initorder.c: New file.
+	* elf/tst-initorder.exp: New file.
+	* elf/tst-initordera1.c: New file.
+	* elf/tst-initordera2.c: New file.
+	* elf/tst-initordera3.c: New file.
+	* elf/tst-initordera4.c: New file.
+	* elf/tst-initorderb1.c: New file.
+	* elf/tst-initorderb2.c: New file.
+	* elf/tst-order-a1.c: New file.
+	* elf/tst-order-a2.c: New file.
+	* elf/tst-order-a3.c: New file.
+	* elf/tst-order-a4.c: New file.
+	* elf/tst-order-b1.c: New file.
+	* elf/tst-order-b2.c: New file.
+	* elf/tst-order-main.c: New file.
+	New test case by George Gensure <werkt0@gmail.com>.
+
+2010-10-01  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Don't discard result of
+	decoding ACE if AI_CANONIDN.
+
+2011-01-18  Ulrich Drepper  <drepper@gmail.com>
+
+	* elf/Makefile: Build IFUNC tests unless multi-arch = no.
+
 2011-01-17  Ulrich Drepper  <drepper@gmail.com>
 
 	* version.h (RELEASE): Bump for 2.13 release.
@@ -610,11 +647,6 @@
 	[BZ #12092]
 	* string/str-two-way.h (two_way_long_needle): Always clear memory
 	when skipping input due to the shift table.
-
-2010-10-05  Andreas Schwab  <schwab@redhat.com>
-
-	* sysdeps/posix/getaddrinfo.c (gaih_inet): Don't discard result of
-	decoding ACE if AI_CANONIDN.
 
 2010-10-03  Ulrich Drepper  <drepper@gmail.com>
 
