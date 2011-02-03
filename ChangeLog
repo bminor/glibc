@@ -1,3 +1,9 @@
+2011-02-03  Andreas Schwab  <schwab@redhat.com>
+
+	* login/programs/pt_chown.c (main): Check for valid file
+	descriptor instead of privileges.  Be careful to drop all
+	capabilities when not needed.
+
 2011-01-19  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #11724]

@@ -29,6 +29,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <fcntl.h>
 #ifdef HAVE_LIBCAP
 # include <sys/capability.h>
 # include <sys/prctl.h>
@@ -143,7 +144,7 @@ main (int argc, char *argv[])
   uid_t uid = getuid ();
   int remaining;
 
-  if (argc == 1 && euid == 0)
+  if (argc == 1 && fcntl (PTY_FILENO, F_GETFD) == 0)
     {
 #ifdef HAVE_LIBCAP
   /* Drop privileges.  */
@@ -176,6 +177,13 @@ main (int argc, char *argv[])
 
   /* We aren't going to be using privileges, so drop them right now. */
   setuid (uid);
+#ifdef HAVE_LIBCAP
+  cap_t caps = cap_init ();
+  if (caps == NULL)
+    error (1, errno, "cap_init");
+  cap_set_proc (caps);
+  cap_free (caps);
+#endif
 
   /* Set locale via LC_ALL.  */
   setlocale (LC_ALL, "");
@@ -194,10 +202,6 @@ main (int argc, char *argv[])
 		 program_invocation_short_name);
       return EXIT_FAILURE;
     }
-
-  /* Check if we are properly installed.  */
-  if (euid != 0)
-    error (FAIL_EXEC, 0, gettext ("needs to be installed setuid `root'"));
 
   return EXIT_SUCCESS;
 }
