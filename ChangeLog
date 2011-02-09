@@ -1537,6 +1537,10 @@
 	* elf/dl-close.c (_dl_close_worker): Reset private search list if
 	it wasn't used.
 
+2010-06-21  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/i386/i686/Makefile: Don't pass -mtune to assembler.
+
 2010-06-07  Andreas Schwab  <schwab@redhat.com>
 
 	* dlfcn/Makefile: Remove explicit dependencies on libc.so and
