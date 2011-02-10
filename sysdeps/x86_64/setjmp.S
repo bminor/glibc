@@ -1,5 +1,5 @@
 /* setjmp for x86-64.
-   Copyright (C) 2001, 2003, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2001,2003,2005,2006,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@
 #include <sysdep.h>
 #include <jmpbuf-offsets.h>
 #include <asm-syntax.h>
+#include <stap-probe.h>
 
 ENTRY (__sigsetjmp)
 	/* Save registers.  */
@@ -41,6 +42,7 @@ ENTRY (__sigsetjmp)
 #endif
 	movq %rdx, (JB_RSP*8)(%rdi)
 	movq (%rsp), %rax	/* Save PC we are returning to now.  */
+	LIBC_PROBE (setjmp, 3, 8@%rdi, -4@%esi, 8@%rax)
 #ifdef PTR_MANGLE
 	PTR_MANGLE (%rax)
 #endif

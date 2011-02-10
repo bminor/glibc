@@ -1,3 +1,12 @@
+2011-02-09  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/x86_64/__longjmp.S: Add a static probe here.
+	* sysdeps/x86_64/setjmp.S: Likewise.
+	* sysdeps/i386/bsd-setjmp.S: Likewise.
+	* sysdeps/i386/bsd-_setjmp.S: Likewise.
+	* sysdeps/i386/setjmp.S: Likewise.
+	* sysdeps/i386/__longjmp.S: Likewise.
+
 2011-02-08  Roland McGrath  <roland@redhat.com>
 
 	* include/stap-probe.h: New file.
