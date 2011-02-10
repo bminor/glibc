@@ -14,7 +14,8 @@
 %define buildpower6 0
 %endif
 %define rtkaioarches %{ix86} x86_64 ia64 ppc ppc64 s390 s390x
-%define debuginfocommonarches alpha alphaev6
+%define biarcharches %{ix86} x86_64 ppc ppc64
+%define debuginfocommonarches %{biarcharches} alpha alphaev6
 %define multiarcharches ppc ppc64 %{ix86} x86_64 %{sparc}
 
 Summary: The GNU libc libraries
@@ -789,12 +790,12 @@ eu-readelf -hS $RPM_BUILD_ROOT/usr/bin/getconf $RPM_BUILD_ROOT/usr/libexec/getco
 find_debuginfo_args='--strict-build-id -g'
 %ifarch %{debuginfocommonarches}
 find_debuginfo_args="$find_debuginfo_args \
-  -l common.filelist -l utils.filelist -l nscd.filelist \
+  -l common.filelist -l utils.filelist -l nscd.filelist -p '.*/sbin/.*' \
   -o debuginfocommon.filelist \
   -l rpm.filelist -l nosegneg.filelist \
 "
 %endif
-/usr/lib/rpm/find-debuginfo.sh $find_debuginfo_args -o debuginfo.filelist
+eval /usr/lib/rpm/find-debuginfo.sh "$find_debuginfo_args" -o debuginfo.filelist
 
 list_debug_archives()
 {
@@ -803,6 +804,17 @@ list_debug_archives()
 }
 
 %ifarch %{debuginfocommonarches}
+
+sed -i '\#^%{_prefix}/src/debug/#d' debuginfocommon.filelist
+find $RPM_BUILD_ROOT%{_prefix}/src/debug \
+     \( -type d -printf '%%%%dir ' \) , \
+     -printf '%{_prefix}/src/debug/%%P\n' > debuginfocommon.sources
+
+%ifarch %{biarcharches}
+
+cat debuginfocommon.sources >> debuginfo.filelist
+
+%else
 
 %ifarch %{ix86}
 %define basearch i686
@@ -814,11 +826,6 @@ list_debug_archives()
 %define basearch sparc
 %endif
 
-sed -i '\#^%{_prefix}/src/debug/#d' debuginfocommon.filelist
-find $RPM_BUILD_ROOT%{_prefix}/src/debug \
-     \( -type d -printf '%%%%dir ' \) , \
-     -printf '%{_prefix}/src/debug/%%P\n' > debuginfocommon.sources
-
 # auxarches get only these few source files
 auxarches_debugsources=\
 '/(generic|linux|%{basearch}|nptl(_db)?)/|/%{glibcsrcdir}/build|/dl-osinfo\.h'
@@ -827,6 +834,8 @@ egrep "$auxarches_debugsources" debuginfocommon.sources >> debuginfo.filelist
 
 egrep -v "$auxarches_debugsources" \
   debuginfocommon.sources >> debuginfocommon.filelist
+
+%endif
 
 list_debug_archives >> debuginfocommon.filelist
 
