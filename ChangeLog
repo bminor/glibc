@@ -1,5 +1,89 @@
 2011-02-03  Andreas Schwab  <schwab@redhat.com>
 
+	* sysdeps/unix/sysv/linux/sparc/bits/socket.h: Sync with
+	sysdeps/unix/sysv/linux/bits/socket.h.
+
+2011-01-30  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* bits/sched.h (__CPU_ZERO, __CPU_SET, __CPU_CLR, __CPU_ISSET)
+	(__CPU_COUNT): Remove old macros.
+	(__CPU_ZERO_S, __CPU_SET_S, __CPU_CLR_S, __CPU_ISSET_S)
+	(__CPU_COUNT, __CPU_EQUAL_S, __CPU_OP_S, __CPU_ALLOC_SIZE)
+	(__CPU_ALLOC, __CPU_FREE): Add macros.
+	(__sched_cpualloc, __sched_cpufree): Add declarations.
+
+2011-02-05  Ulrich Drepper  <drepper@gmail.com>
+
+	* nscd/nscd-client.h: Define MAX_TIMEOUT_VALUE.
+	(struct datahead): Reuse 32 bits of the alignment for a TTL field.
+	* nscd/aicache.c (addhstaiX): Return timeout of added value.
+	(readdhstai): Return value of addhstaiX call.
+	* nscd/grpcache.c (cache_addgr): Return timeout of added value.
+	(addgrbyX): Return value returned by cache_addgr.
+	(readdgrbyname): Return value returned by addgrbyX.
+	(readdgrbygid): Likewise.
+	* nscd/pwdcache.c (cache_addpw): Return timeout of added value.
+	(addpwbyX): Return value returned by cache_addpw.
+	(readdpwbyname): Return value returned by addhstbyX.
+	(readdpwbyuid): Likewise.
+	* nscd/servicescache.c (cache_addserv): Return timeout of added value.
+	(addservbyX): Return value returned by cache_addserv.
+	(readdservbyname): Return value returned by addservbyX:
+	(readdservbyport): Likewise.
+	* nscd/hstcache.c (cache_addhst): Return timeout of added value.
+	(addhstbyX): Return value returned by cache_addhst.
+	(readdhstbyname): Return value returned by addhstbyX.
+	(readdhstbyaddr): Likewise.
+	(readdhstbynamev6): Likewise.
+	(readdhstbyaddrv6): Likewise.
+	* nscd/initgrcache.c (addinitgroupsX): Return timeout of added value.
+	(readdinitgroups): Return value returned by addinitgroupsX.
+	* nscd/cache.c (readdfcts): Change return value of functions to time_t.
+	(prune_cache): Keep track of timeout value of re-added entries.
+	* nscd/connections.c (nscd_run_prune): Use MAX_TIMEOUT_VALUE.
+	* nscd/nscd.h: Adjust prototypes of readd* functions.
+
+2011-02-04  Roland McGrath  <roland@redhat.com>
+
+	* nis/nis_server.c (nis_servstate): Use the right name for 0.
+	(nis_stats): Likewise.
+	* nis/nis_modify.c (nis_modify): Likewise.
+	* nis/nis_remove.c (nis_remove): Likewise.
+	* nis/nis_add.c (nis_add): Likewise.
+
+	* elf/dl-object.c (_dl_new_object): Remove unused variable L.
+
+	* posix/fnmatch_loop.c: Add some consts.
+
+	* sysdeps/x86_64/multiarch/memset-x86-64.S: Add an #undef.
+
+2011-02-02  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #12460]
+	* config.make.in (config-cflags-novzeroupper): Define.
+	* configure.in: Substitute libc_cv_cc_novzeroupper.
+	* elf/Makefile (AVX-CFLAGS): Define.
+	(CFLAGS-tst-audit4.c): Replace -mavx with $(AVX-CFLAGS).
+	(CFLAGS-tst-auditmod4a.c): Likewise.
+	(CFLAGS-tst-auditmod4b.c): Likewise.
+	(CFLAGS-tst-auditmod6b.c): Likewise.
+	(CFLAGS-tst-auditmod6c.c): Likewise.
+	(CFLAGS-tst-auditmod7b.c): Likewise.
+	* sysdeps/i386/configure.in: Check -mno-vzeroupper.
+
+2011-02-02  Ulrich Drepper  <drepper@gmail.com>
+
+	* elf/dl-runtime.c (_dl_call_pltexit): Pass correct address of the
+	function to the callback.
+	Patch partly by Jiri Olsa <jolsa@redhat.com>.
+
+2011-02-02  Andreas Schwab  <schwab@redhat.com>
+
+	* shadow/sgetspent.c: Check return value of __sgetspent_r instead
+	of errno.
+
+2011-02-03  Andreas Schwab  <schwab@redhat.com>
+
 	* login/programs/pt_chown.c (main): Check for valid file
 	descriptor instead of privileges.  Be careful to drop all
 	capabilities when not needed.

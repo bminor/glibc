@@ -1172,10 +1172,14 @@ $(objpfx)tst-unique2: $(libdl) $(objpfx)tst-unique2mod1.so
 $(objpfx)tst-unique2.out: $(objpfx)tst-unique2mod2.so
 
 ifeq (yes,$(config-cflags-avx))
-CFLAGS-tst-audit4.c += -mavx
-CFLAGS-tst-auditmod4a.c += -mavx
-CFLAGS-tst-auditmod4b.c += -mavx
-CFLAGS-tst-auditmod6b.c += -mavx
-CFLAGS-tst-auditmod6c.c += -mavx
-CFLAGS-tst-auditmod7b.c += -mavx
+AVX-CFLAGS=-mavx
+ifeq (yes,$(config-cflags-novzeroupper))
+AVX-CFLAGS+=-mno-vzeroupper
+endif
+CFLAGS-tst-audit4.c += $(AVX-CFLAGS)
+CFLAGS-tst-auditmod4a.c += $(AVX-CFLAGS)
+CFLAGS-tst-auditmod4b.c += $(AVX-CFLAGS)
+CFLAGS-tst-auditmod6b.c += $(AVX-CFLAGS)
+CFLAGS-tst-auditmod6c.c += $(AVX-CFLAGS)
+CFLAGS-tst-auditmod7b.c += $(AVX-CFLAGS)
 endif
