@@ -21,7 +21,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 1
+Release: 4
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1039,6 +1039,18 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Feb 14 2011 Andreas Schwab <schwab@redhat.com> - 2.13.90-4
+- Update from master
+  - Update sysdeps/unix/sysv/linux/sparc/bits/socket.h
+  - Synchronize generic bits/sched.h cpu_set_t with Linux implementation
+  - Schedule nscd cache pruning more accurately from re-added values
+  - Fix passing symbol value to pltexit callbacks when ld.so auditing
+  - Fix range error handling in sgetspent
+- Revert "Fix ordering of DSO constructors and destructors" (#673014)
+- Create debuginfo-common on biarch archs
+- Reinstall assembler workaround.
+- Replace setuid by file capabilities (#646469)
+
 * Tue Jan 25 2011 Andreas Schwab <schwab@redhat.com> - 2.13.90-1
 - Update from master
   - Fix ordering of DSO constructors and destructors (BZ#11724)
