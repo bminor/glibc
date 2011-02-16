@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include "pthreadP.h"
 #include <lowlevellock.h>
+#include <stap-probe.h>
 
 static int
 internal_function
@@ -50,6 +51,9 @@ __pthread_mutex_unlock_usercnt (mutex, decr)
 
       /* Unlock.  */
       lll_unlock (mutex->__data.__lock, PTHREAD_MUTEX_PSHARED (mutex));
+
+      LIBC_PROBE (mutex_release, 1, mutex);
+
       return 0;
     }
   else if (__builtin_expect (type == PTHREAD_MUTEX_RECURSIVE_NP, 1))
@@ -272,6 +276,9 @@ __pthread_mutex_unlock_full (pthread_mutex_t *mutex, int decr)
 			PTHREAD_MUTEX_PSHARED (mutex));
 
       int oldprio = newval >> PTHREAD_MUTEX_PRIO_CEILING_SHIFT;
+
+      LIBC_PROBE (mutex_release, 1, mutex);
+
       return __pthread_tpp_change_priority (oldprio, -1);
 
     default:
@@ -279,6 +286,7 @@ __pthread_mutex_unlock_full (pthread_mutex_t *mutex, int decr)
       return EINVAL;
     }
 
+  LIBC_PROBE (mutex_release, 1, mutex);
   return 0;
 }
 

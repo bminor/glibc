@@ -26,6 +26,7 @@
 
 #include <shlib-compat.h>
 #include <kernel-features.h>
+#include <stap-probe.h>
 
 
 int
@@ -34,6 +35,8 @@ __pthread_cond_signal (cond)
 {
   int pshared = (cond->__data.__mutex == (void *) ~0l)
 		? LLL_SHARED : LLL_PRIVATE;
+
+  LIBC_PROBE (cond_signal, 1, cond);
 
   /* Make sure we are alone.  */
   lll_lock (cond->__data.__lock, pshared);

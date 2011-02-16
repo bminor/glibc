@@ -25,6 +25,7 @@
 #include <pthreadP.h>
 
 #include <shlib-compat.h>
+#include <stap-probe.h>
 
 
 struct _condvar_cleanup_buffer
@@ -100,6 +101,8 @@ __pthread_cond_wait (cond, mutex)
   int err;
   int pshared = (cond->__data.__mutex == (void *) ~0l)
   		? LLL_SHARED : LLL_PRIVATE;
+
+  LIBC_PROBE (cond_wait, 2, cond, mutex);
 
   /* Make sure we are alone.  */
   lll_lock (cond->__data.__lock, pshared);

@@ -25,7 +25,7 @@
 #include <kernel-features.h>
 #include <pthread-pi-defines.h>
 #include <pthread-errnos.h>
-
+#include <stap-probe.h>
 
 	.text
 
@@ -34,6 +34,8 @@
 	.type	__pthread_cond_broadcast, @function
 	.align	16
 __pthread_cond_broadcast:
+
+        LIBC_PROBE (cond_broadcast, 1, %rdi)
 
 	/* Get internal lock.  */
 	movl	$1, %esi

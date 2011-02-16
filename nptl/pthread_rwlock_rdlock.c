@@ -22,6 +22,7 @@
 #include <lowlevellock.h>
 #include <pthread.h>
 #include <pthreadP.h>
+#include <stap-probe.h>
 
 
 /* Acquire read lock for RWLOCK.  */
@@ -30,6 +31,8 @@ __pthread_rwlock_rdlock (rwlock)
      pthread_rwlock_t *rwlock;
 {
   int result = 0;
+
+  LIBC_PROBE (rdlock_entry, 1, rwlock);
 
   /* Make sure we are alone.  */
   lll_lock (rwlock->__data.__lock, rwlock->__data.__shared);
@@ -49,6 +52,8 @@ __pthread_rwlock_rdlock (rwlock)
 	      --rwlock->__data.__nr_readers;
 	      result = EAGAIN;
 	    }
+          else
+            LIBC_PROBE (rdlock_acquire_read, 1, rwlock);
 
 	  break;
 	}

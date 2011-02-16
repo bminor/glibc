@@ -18,12 +18,15 @@
    02111-1307 USA.  */
 
 #include "pthreadP.h"
+#include <stap-probe.h>
 
 
 int
 __pthread_rwlock_destroy (rwlock)
      pthread_rwlock_t *rwlock;
 {
+  LIBC_PROBE (rwlock_destroy, 1, rwlock);
+
   /* Nothing to be done.  For now.  */
   return 0;
 }

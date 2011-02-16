@@ -23,6 +23,7 @@
 #include <lowlevelcond.h>
 #include <tcb-offsets.h>
 #include <pthread-pi-defines.h>
+#include <stap-probe.h>
 
 #include <kernel-features.h>
 
@@ -64,6 +65,8 @@ __pthread_cond_wait:
 	   rsp +  0 | old cancellation mode    |
 	            +--------------------------+
 	*/
+
+	LIBC_PROBE (cond_wait, 2, %rdi, %rsi)
 
 	cmpq	$-1, dep_mutex(%rdi)
 

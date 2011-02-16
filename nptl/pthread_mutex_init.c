@@ -24,6 +24,8 @@
 #include <kernel-features.h>
 #include "pthreadP.h"
 
+#include <stap-probe.h>
+
 static const struct pthread_mutexattr default_attr =
   {
     /* Default is a normal mutex, not shared between processes.  */
@@ -134,6 +136,8 @@ __pthread_mutex_init (mutex, mutexattr)
   // mutex->__nusers = 0;	already done by memset
   // mutex->__spins = 0;	already done by memset
   // mutex->__next = NULL;	already done by memset
+
+  LIBC_PROBE (mutex_init, 1, mutex);
 
   return 0;
 }

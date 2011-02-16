@@ -22,7 +22,7 @@
 #include <lowlevelrwlock.h>
 #include <pthread-errnos.h>
 #include <kernel-features.h>
-
+#include <stap-probe.h>
 
 	.text
 
@@ -31,6 +31,9 @@
 	.align	16
 __pthread_rwlock_wrlock:
 	cfi_startproc
+
+        LIBC_PROBE (wrlock_entry, 1, %rdi)
+
 	xorq	%r10, %r10
 
 	/* Get the lock.  */

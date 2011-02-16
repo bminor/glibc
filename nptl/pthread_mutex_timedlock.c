@@ -24,6 +24,8 @@
 #include <lowlevellock.h>
 #include <not-cancel.h>
 
+#include <stap-probe.h>
+
 
 int
 pthread_mutex_timedlock (mutex, abstime)
@@ -33,6 +35,8 @@ pthread_mutex_timedlock (mutex, abstime)
   int oldval;
   pid_t id = THREAD_GETMEM (THREAD_SELF, tid);
   int result = 0;
+
+  LIBC_PROBE (mutex_timedlock_entry, 2, mutex, abstime);
 
   /* We must not check ABSTIME here.  If the thread does not block
      abstime must not be checked for a valid value.  */
@@ -172,6 +176,8 @@ pthread_mutex_timedlock (mutex, abstime)
 
 		  ++mutex->__data.__count;
 
+                  LIBC_PROBE (mutex_timedlock_acquired, 1, mutex);
+
 		  return 0;
 		}
 	    }
@@ -241,6 +247,8 @@ pthread_mutex_timedlock (mutex, abstime)
 		  return EAGAIN;
 
 		++mutex->__data.__count;
+
+                LIBC_PROBE (mutex_timedlock_acquired, 1, mutex);
 
 		return 0;
 	      }
@@ -377,6 +385,8 @@ pthread_mutex_timedlock (mutex, abstime)
 
 		++mutex->__data.__count;
 
+                LIBC_PROBE (mutex_timedlock_acquired, 1, mutex);
+
 		return 0;
 	      }
 	  }
@@ -477,6 +487,8 @@ pthread_mutex_timedlock (mutex, abstime)
       /* Record the ownership.  */
       mutex->__data.__owner = id;
       ++mutex->__data.__nusers;
+
+      LIBC_PROBE (mutex_timedlock_acquired, 1, mutex);
     }
 
  out:

@@ -24,6 +24,7 @@
 #include <pthread-pi-defines.h>
 #include <kernel-features.h>
 #include <pthread-errnos.h>
+#include <stap-probe.h>
 
 
 	.text
@@ -33,6 +34,8 @@
 	.type	__pthread_cond_signal, @function
 	.align	16
 __pthread_cond_signal:
+
+        LIBC_PROBE (cond_signal, 1, %rdi)
 
 	/* Get internal lock.  */
 	movq	%rdi, %r8

@@ -556,6 +556,8 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
   /* Pass the descriptor to the caller.  */
   *newthread = (pthread_t) pd;
 
+  LIBC_PROBE (pthread_create, 4, newthread, attr, start_routine, arg);
+
   /* Start the thread.  */
   return create_thread (pd, iattr, STACK_VARIABLES_ARGS);
 }
