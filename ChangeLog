@@ -1,9 +1,3 @@
-2011-02-14  Ryan S. Arnold  <rsa@us.ibm.com>
-
-	* sysdeps/powerpc/powerpc64/power7/Makefile (CFLAGS-rtld.c): Add
-	-mno-vsx to prevent GCC from using a VSX register and a TOC
-	reference before relocations are resolved under -O3 optimization.
-
 2010-11-10  Luis Machado  <luisgpm@br.ibm.com>
 
 	* sysdeps/ieee754/ldbl-128ibm/e_sqrtl.c (__ieee754_sqrtl): Force
