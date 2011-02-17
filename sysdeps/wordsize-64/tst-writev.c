@@ -23,7 +23,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/uio.h>
-
+#include <stdint.h>
 
 /* The purpose of this test is to verify that the INTERNAL_[V]SYSCALL_NCS
    macros on 64-bit platforms don't cast the return type to (int) which would
