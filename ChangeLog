@@ -1,3 +1,11 @@
+2010-09-28  Andreas Schwab  <schwab@redhat.com>
+	    Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12489]
+	* elf/rtld.c (dl_main): Move setting of GLRO(dl_init_all_dirs)
+	before performing relro protection.  At old place add assertion
+	to make sure nothing changed.
+
 2011-04-08  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sync_file_range.c:
