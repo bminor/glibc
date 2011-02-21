@@ -1,4 +1,4 @@
-2011-02-09  Roland McGrath  <roland@redhat.com>
+2011-02-21  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/x86_64/__longjmp.S: Add a static probe here.
 	* sysdeps/x86_64/setjmp.S: Likewise.
@@ -6,6 +6,8 @@
 	* sysdeps/i386/bsd-_setjmp.S: Likewise.
 	* sysdeps/i386/setjmp.S: Likewise.
 	* sysdeps/i386/__longjmp.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/____longjmp_chk.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/____longjmp_chk.S: Likewise.
 
 2011-02-08  Roland McGrath  <roland@redhat.com>
 
