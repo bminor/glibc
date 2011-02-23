@@ -24,7 +24,7 @@
 #include <pthread-errnos.h>
 #include <pthread-pi-defines.h>
 #include <kernel-features.h>
-
+#include <stap-probe.h>
 
 	.text
 
@@ -60,6 +60,8 @@ __pthread_cond_timedwait:
 
 	movl	20(%esp), %ebx
 	movl	28(%esp), %ebp
+
+	LIBC_PROBE (cond_timedwait, 3, %ebx, 24(%esp), %ebp)
 
 	cmpl	$1000000000, 4(%ebp)
 	movl	$EINVAL, %eax

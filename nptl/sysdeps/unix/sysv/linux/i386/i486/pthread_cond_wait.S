@@ -25,6 +25,7 @@
 #include <pthread-errnos.h>
 #include <pthread-pi-defines.h>
 #include <kernel-features.h>
+#include <stap-probe.h>
 
 
 	.text
@@ -60,6 +61,8 @@ __pthread_cond_wait:
 
 	xorl	%esi, %esi
 	movl	20(%esp), %ebx
+
+	LIBC_PROBE (cond_wait, 2, 24(%esp), %ebx)
 
 	/* Get internal lock.  */
 	movl	$1, %edx

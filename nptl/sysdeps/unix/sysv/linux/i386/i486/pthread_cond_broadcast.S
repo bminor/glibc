@@ -24,6 +24,7 @@
 #include <kernel-features.h>
 #include <pthread-pi-defines.h>
 #include <pthread-errnos.h>
+#include <stap-probe.h>
 
 	.text
 
@@ -48,6 +49,8 @@ __pthread_cond_broadcast:
 	cfi_remember_state
 
 	movl	20(%esp), %ebx
+
+	LIBC_PROBE (cond_broadcast, 1, %edx)
 
 	/* Get internal lock.  */
 	movl	$1, %edx
