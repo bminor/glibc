@@ -1,5 +1,5 @@
 /* Run time dynamic linker.
-   Copyright (C) 1995-2006, 2007, 2008, 2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 1995-2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -2251,7 +2251,6 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 	      lnp->dont_free = 1;
 	      lnp = lnp->next;
 	    }
-	  l->l_free_initfini = 0;
 
 	  if (l != &GL(dl_rtld_map))
 	    _dl_relocate_object (l, l->l_scope, GLRO(dl_lazy) ? RTLD_LAZY : 0,
@@ -2299,6 +2298,8 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 			  lossage);
     }
 
+  /* Make sure no new search directories have been added.  */
+  assert (GLRO(dl_init_all_dirs) == GL(dl_all_dirs));
   if (! prelinked && rtld_multiple_ref)
     {
       /* There was an explicit ref to the dynamic linker as a shared lib.

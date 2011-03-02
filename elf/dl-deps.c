@@ -478,7 +478,6 @@ _dl_map_object_deps (struct link_map *map,
 		  nneeded * sizeof needed[0]);
 	  atomic_write_barrier ();
 	  l->l_initfini = l_initfini;
-	  l->l_free_initfini = 1;
 	}
 
       /* If we have no auxiliary objects just go on to the next map.  */
@@ -491,6 +490,10 @@ _dl_map_object_deps (struct link_map *map,
  out:
   if (errno == 0 && errno_saved != 0)
     __set_errno (errno_saved);
+
+  if (errno_reason)
+    _dl_signal_error (errno_reason == -1 ? 0 : errno_reason, objname,
+		      NULL, errstring);
 
   struct link_map **old_l_initfini = NULL;
   if (map->l_initfini != NULL && map->l_type == lt_loaded)
@@ -675,7 +678,6 @@ Filters not supported with LD_TRACE_PRELINKING"));
   l_initfini[nlist] = NULL;
   atomic_write_barrier ();
   map->l_initfini = l_initfini;
-  map->l_free_initfini = 1;
   if (l_reldeps != NULL)
     {
       atomic_write_barrier ();
@@ -684,9 +686,5 @@ Filters not supported with LD_TRACE_PRELINKING"));
       _dl_scope_free (old_l_reldeps);
     }
   if (old_l_initfini != NULL)
-    _dl_scope_free (old_l_initfini);
-
-  if (errno_reason)
-    _dl_signal_error (errno_reason == -1 ? 0 : errno_reason, objname,
-		      NULL, errstring);
+      map->l_orig_initfini = old_l_initfini;
 }

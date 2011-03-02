@@ -1,3 +1,99 @@
+2011-02-23  Andreas Schwab  <schwab@redhat.com>
+	    Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12509]
+	* include/link.h (struct link_map): Add l_orig_initfini.
+	* elf/dl-load.c (_dl_map_object_from_fd): Free realname before
+	returning unsuccessfully.
+	* elf/dl-close.c (_dl_close_worker): If this is the last explicit
+	close of a file loaded at startup, restore the original l_initfini
+	list.
+	* elf/dl-deps.c (_dl_map_object_deps): Don't free old l_initfini
+	list, store the pointer.
+	* elf/Makefile ($(objpfx)noload-mem): New rule.
+	(noload-ENV): Define.
+	(tests): Add $(objpfx)noload-mem.
+	* elf/noload.c: Include <memcheck.h>.
+	(main): Call mtrace.  Close all opened handles.
+
+2011-02-17  Andreas Schwab  <schwab@redhat.com>
+
+	[BZ #12454]
+	* elf/dl-deps.c (_dl_map_object_deps): Signal error early when
+	dependencies are missing.
+
+2011-02-22  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	Fix __if_freereq crash: Unlike the generic version which uses free,
+	Hurd needs munmap.
+	* sysdeps/mach/hurd/ifreq.h: New file.
+
+2011-01-27  Petr Baudis  <pasky@suse.cz>
+	    Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ 12445]#
+	* stdio-common/vfprintf.c (vfprintf): Pass correct newlen
+	to extend_alloca().
+	* stdio-common/bug23.c: New file.
+	* stdio-common/Makefile (tests): Add bug23.
+
+2010-09-28  Andreas Schwab  <schwab@redhat.com>
+	    Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12489]
+	* elf/rtld.c (dl_main): Move setting of GLRO(dl_init_all_dirs)
+	before performing relro protection.  At old place add assertion
+	to make sure nothing changed.
+
+2011-02-17  Nathan Sidwell  <nathan@codesourcery.com>
+	    Glauber de Oliveira Costa  <glommer@gmail.com>
+
+	* elf/elf.h: Add new ARM TLS relocs.
+
+2011-02-16  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h:
+	(INTERNAL_VSYSCALL_NCS INTERNAL_SYSCALL_NCS): Remove erroneous (int)
+	cast from r3.
+	* sysdeps/wordsize-64/Makefile: New file.  Add tst-writev to
+	'tests' variable.
+	* sysdeps/wordsize-64/tst-writev.c: New file.
+
+2011-02-15  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power7/Makefile: New file which adds
+	-mno-vsx to the CFLAGS-rtld.c variable to avoid using VSX registers and
+	insns in _dl_start to prevent a TOC reference before relocs are
+	resolved.
+
+2011-02-15  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12469]
+	* Makeconfig: Remove RANLIB definition.
+	* Makerules: Don't use RANLIB.
+	* aclocal.m4: Remove ranlib test.
+	* configure.in: No need to check for ranlib.
+	* elf/rtld-Rules: Don't use RANLIB.
+
+2011-02-16  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/i386/sysdep.h: Add _MACH_I386_SYSDEP_H inclusion
+	protection macro.
+	* sysdeps/mach/i386/thread_state.h: Add _MACH_I386_THREAD_STATE_H
+	inclusion protection macro.
+
+	* stdio-common/psiginfo.c (psiginfo): Check pinfo->si_signo against
+	SIGRTMIN and SIGRTMAX and print information in that case only when
+	SIGRTMIN is defined.
+
+2011-02-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdio-common/printf-parsemb.c (__parse_one_specmb): Handle
+	arginfo fn returning -1.
+
+	* stdio-common/_i18n_number.h (_i18n_number_rewrite): Ensure decimal
+	and thousands string is zero terminated.
+
 2011-02-03  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/bits/socket.h: Sync with
@@ -780,19 +876,7 @@
 	* sysdeps/unix/sysv/linux/internal_statvfs.c (INTERNAL_STATVFS):
 	Mask out sign-bit copies when constructing f_fsid.
 
-2010-09-28  Andreas Schwab  <schwab@redhat.com>
-
-	* elf/rtld.c (dl_main): Move setting of GLRO(dl_init_all_dirs)
-	before performing relro protection.
-
 2010-09-27  Andreas Schwab  <schwab@redhat.com>
-
-	* include/link.h (struct link_map): Add l_free_initfini.
-	* elf/dl-deps.c (_dl_map_object_deps): Set it when assigning
-	l_initfini.
-	* elf/rtld.c (dl_main): Clear it on all objects loaded on startup.
-	* elf/dl-libc.c (free_mem): Free l_initfini if l_free_initfini is
-	set.
 
 	[BZ #11561]
 	* posix/regcomp.c (parse_bracket_exp): When looking up collating

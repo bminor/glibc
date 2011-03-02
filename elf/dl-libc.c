@@ -265,13 +265,13 @@ libc_freeres_fn (free_mem)
 
   for (Lmid_t ns = 0; ns < GL(dl_nns); ++ns)
     {
+      /* Remove all additional names added to the objects.  */
       for (l = GL(dl_ns)[ns]._ns_loaded; l != NULL; l = l->l_next)
 	{
 	  struct libname_list *lnp = l->l_libname->next;
 
 	  l->l_libname->next = NULL;
 
-	  /* Remove all additional names added to the objects.  */
 	  while (lnp != NULL)
 	    {
 	      struct libname_list *old = lnp;
@@ -279,10 +279,6 @@ libc_freeres_fn (free_mem)
 	      if (! old->dont_free)
 		free (old);
 	    }
-
-	  /* Free the initfini dependency list.  */
-	  if (l->l_free_initfini)
-	    free (l->l_initfini);
 	}
 
       if (__builtin_expect (GL(dl_ns)[ns]._ns_global_scope_alloc, 0) != 0
