@@ -1,5 +1,10 @@
 2011-03-14  Andreas Schwab  <schwab@redhat.com>
 
+	* elf/dl-load.c (is_dst): Remove parameter secure, all callers
+	changed.  Don't check for isolated use.
+	(_dl_dst_substitute): Ignore rpath elements containing
+	non-isolated use of $ORIGIN when privileged.
+
 	* elf/dl-load.c (_dl_dst_substitute): When skipping the first
 	rpath element also skip the following colon.
 	(expand_dynamic_string_token): Add is_path parameter and pass
