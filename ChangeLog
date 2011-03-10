@@ -1,3 +1,11 @@
+2011-03-10  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12510]
+	* elf/dl-lookup.c (do_lookup_x): For copy relocations of unique objects
+	copy from the symbol referenced in the relocation to initialize the
+	used variable.
+	Patch by Piotr Bury <pbury@goahead.com>.
+
 2011-03-06  Ulrich Drepper  <drepper@gmail.com>
 
 	* elf/dl-load.c (_dl_map_object): If we are looking for the first
