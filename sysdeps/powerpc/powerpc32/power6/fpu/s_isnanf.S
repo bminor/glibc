@@ -39,7 +39,7 @@ EALIGN (__isnanf, 4, 0)
 L(NaN):
 	li	r3,1		/* else return 1 */
 	blr
-	END (__isnan)
+	END (__isnanf)
 
 hidden_def (__isnanf)
 weak_alias (__isnanf, isnanf)
