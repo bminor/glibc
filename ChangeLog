@@ -1,3 +1,7 @@
+2011-03-18  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/ldd.bash.in: Never run file directly.
+
 2011-03-14  Andreas Schwab  <schwab@redhat.com>
 
 	* elf/dl-load.c (is_dst): Remove parameter secure, all callers
