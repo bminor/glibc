@@ -21,7 +21,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 6
+Release: 7
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1039,6 +1039,20 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Mar 21 2011 Andreas Schwab <schwab@redhat.com> - 2.13.90-7
+- Update from master
+  - Handle page boundaries in x86 SSE4.2 strncmp (BZ#12597)
+  - Implement x86 cpuid handling of leaf4 for cache information (BZ#12587)
+  - Check size of pattern in wide character representation in fnmatch
+    (BZ #12583)
+  - Remove __restrict quals from wmemcmp prototype
+  - Fix copy relocations handling of unique objects (BZ#12510)
+- ldd: never run file directly
+- Ignore rpath elements containing non-isolated use of $ORIGIN when
+  privileged
+- Don't leave empty element in rpath when skipping the first element
+- Revert "Don't crash when dependencies are missing" (#688990)
+
 * Mon Mar  7 2011 Andreas Schwab <schwab@redhat.com> - 2.13.90-6
 - Update from master
   - Fix loading first object along a path when tracing
