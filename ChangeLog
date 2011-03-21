@@ -1,3 +1,57 @@
+2011-03-20  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #12597]
+	* string/test-strncmp.c (do_page_test): New function.
+	(check2): Likewise.
+	(test_main): Call check2.
+	* sysdeps/x86_64/multiarch/strcmp.S: Properly cross page boundary.
+
+2011-03-20  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12587]
+	* sysdeps/unix/sysv/linux/i386/sysconf.c (intel_check_word):
+	Handle cache information in CPU leaf 4.
+	* sysdeps/x86_64/cacheinfo.c (intel_check_word): Likewise.
+
+2011-03-18  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12583]
+	* posix/fnmatch.c (fnmatch): Check size of pattern in wide
+	character representation.
+	Partly based on a patch by Tomas Hoger <thoger@redhat.com>.
+
+2011-03-16  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_isnanf.S (isnanf): Fix
+	END(__isnan) to END(__isnanf) to match function entry point/label
+	EALIGN(__isnanf,...).
+
+2011-03-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* wcsmbs/wchar.h (wmemcmp): Remove __restrict qualifiers.
+
+2011-03-10  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12510]
+	* elf/dl-lookup.c (do_lookup_x): For copy relocations of unique objects
+	copy from the symbol referenced in the relocation to initialize the
+	used variable.
+	Patch by Piotr Bury <pbury@goahead.com>.
+	* elf/Makefile: Add rules to build and tst-unique3.
+	* include/bits/dlfcn.h: Remove _dl_mcount_wrapper_check declaration.
+	* elf/tst-unique3.cc: New file.
+	* elf/tst-unique3.h: New file.
+	* elf/tst-unique3lib.cc: New file.
+	* elf/tst-unique3lib2.cc: New file.
+
+	* elf/Makefile: Don't run tst-execstack* tests of SELinux is enabled.
+
+2011-03-10  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/sparc/sparc64/elf/configure.in (libc_cv_sparc64_tls): Add
+	$LDFLAGS and -nostdlib -nostartfiles to linking step.  Change main
+	to _start.
+
 2011-03-18  Andreas Schwab  <schwab@redhat.com>
 
 	* elf/ldd.bash.in: Never run file directly.
