@@ -21,7 +21,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 7
+Release: 8
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1039,6 +1039,10 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Thu Mar 24 2011 Andreas Schwab <schwab@redhat.com> - 2.13.90-8
+- Update from master
+  - Fix infinite loop (#690323)
+
 * Mon Mar 21 2011 Andreas Schwab <schwab@redhat.com> - 2.13.90-7
 - Update from master
   - Handle page boundaries in x86 SSE4.2 strncmp (BZ#12597)
