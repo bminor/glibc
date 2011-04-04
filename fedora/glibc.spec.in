@@ -17,6 +17,7 @@
 %define biarcharches %{ix86} x86_64 ppc ppc64
 %define debuginfocommonarches %{biarcharches} alpha alphaev6
 %define multiarcharches ppc ppc64 %{ix86} x86_64 %{sparc}
+%define systemtaparches %{ix86} x86_64
 
 Summary: The GNU libc libraries
 Name: glibc
@@ -48,6 +49,9 @@ Requires(pre): basesystem, libgcc
 BuildRequires: gd-devel libpng-devel zlib-devel texinfo, libselinux-devel >= 1.33.4-3
 BuildRequires: audit-libs-devel >= 1.1.3, sed >= 3.95, libcap-devel, gettext, nss-devel
 BuildRequires: /bin/ps, /bin/kill, /bin/awk
+%ifarch %{systemtaparches}
+BuildRequires: systemtap-sdt-devel
+%endif
 # This is to ensure that __frame_state_for is exported by glibc
 # will be compatible with egcs 1.x.y
 BuildRequires: gcc >= 3.2
@@ -352,6 +356,9 @@ configure_CFLAGS="$build_CFLAGS -fno-asynchronous-unwind-tables"
 	--host %{nptl_target_cpu}-redhat-linux \
 %ifarch %{multiarcharches}
 	--enable-multi-arch \
+%endif
+%ifarch %{systemtaparches}
+	--enable-systemtap \
 %endif
 	--disable-profile --enable-experimental-malloc --enable-nss-crypt ||
 { cat config.log; false; }
