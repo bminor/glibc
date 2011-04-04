@@ -1,4 +1,4 @@
-/* Copyright (C) 2001,2004,2005,2006,2009 Free Software Foundation, Inc.
+/* Copyright (C) 2001,2004,2005,2006,2009,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@
 #include <sysdep.h>
 #include <jmpbuf-offsets.h>
 #include <asm-syntax.h>
+#include <stap-probe.h>
 
 /* Jump to the position specified by ENV, causing the
    setjmp call there to return VAL, or 1 if VAL is 0.
@@ -34,6 +35,7 @@ ENTRY(__longjmp)
 	PTR_DEMANGLE (%r9)
 	PTR_DEMANGLE (%rdx)
 #endif
+	LIBC_PROBE (longjmp, 3, 8@%rdi, -4@%esi, 8@%rdx)
 	/* We add unwind information for the target here.  */
 	cfi_def_cfa(%rdi, 0)
 	cfi_register(%rsp,%r8)
@@ -53,5 +55,6 @@ ENTRY(__longjmp)
 	mov %esi, %eax
 	movq %r8,%rsp
 	movq %r9,%rbp
+	LIBC_PROBE (longjmp_target, 3, 8@%rdi, -4@%eax, 8@%rdx)
 	jmpq *%rdx
 END (__longjmp)

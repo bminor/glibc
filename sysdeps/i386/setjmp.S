@@ -1,5 +1,5 @@
 /* setjmp for i386.
-   Copyright (C) 1995,1996,1997,2000,2001,2005,2006
+   Copyright (C) 1995,1996,1997,2000,2001,2005,2006,2011
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -23,6 +23,7 @@
 #include <asm-syntax.h>
 #include "bp-sym.h"
 #include "bp-asm.h"
+#include <stap-probe.h>
 
 #define PARMS	LINKAGE		/* no space for saved regs */
 #define JMPBUF	PARMS
@@ -44,6 +45,7 @@ ENTRY (BP_SYM (__sigsetjmp))
 #endif
      	movl %ecx, (JB_SP*4)(%eax)
 	movl PCOFF(%esp), %ecx	/* Save PC we are returning to now.  */
+	LIBC_PROBE (setjmp, 3, 4@%eax, -4@SIGMSK(%esp), 4@%ecx)
 #ifdef PTR_MANGLE
 	PTR_MANGLE (%ecx)
 #endif

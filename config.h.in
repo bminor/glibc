@@ -204,6 +204,9 @@
 /* Define if `.ctors' and `.dtors' sections shouldn't be used.  */
 #undef	NO_CTORS_DTORS_SECTIONS
 
+/* Define if Systemtap <sys/sdt.h> probes should be defined.  */
+#undef USE_STAP_PROBE
+
 /*
  */
 

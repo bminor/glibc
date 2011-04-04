@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <shlib-compat.h>
 #include "pthreadP.h"
+#include <stap-probe.h>
 
 
 int
@@ -28,6 +29,8 @@ __pthread_cond_destroy (cond)
 {
   int pshared = (cond->__data.__mutex == (void *) ~0l)
 		? LLL_SHARED : LLL_PRIVATE;
+
+  LIBC_PROBE (cond_destroy, 1, cond);
 
   /* Make sure we are alone.  */
   lll_lock (cond->__data.__lock, pshared);

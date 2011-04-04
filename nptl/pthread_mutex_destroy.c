@@ -20,11 +20,15 @@
 #include <errno.h>
 #include "pthreadP.h"
 
+#include <stap-probe.h>
+
 
 int
 __pthread_mutex_destroy (mutex)
      pthread_mutex_t *mutex;
 {
+  LIBC_PROBE (mutex_destroy, 1, mutex);
+
   if ((mutex->__data.__kind & PTHREAD_MUTEX_ROBUST_NORMAL_NP) == 0
       && mutex->__data.__nusers != 0)
     return EBUSY;

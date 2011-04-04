@@ -20,6 +20,8 @@
 #ifndef _LOWLEVELLOCK_H
 #define _LOWLEVELLOCK_H	1
 
+#include <stap-probe.h>
+
 #ifndef __ASSEMBLER__
 # include <time.h>
 # include <sys/param.h>
@@ -226,6 +228,7 @@ LLL_STUB_UNWIND_INFO_END
   do {									      \
     int __ignore;							      \
     register __typeof (nr) _nr asm ("edx") = (nr);			      \
+    LIBC_PROBE (lll_futex_wake, 3, futex, nr, private);                       \
     __asm __volatile (LLL_EBX_LOAD					      \
 		      LLL_ENTER_KERNEL					      \
 		      LLL_EBX_LOAD					      \

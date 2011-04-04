@@ -1,4 +1,5 @@
-/* Copyright (C) 2001,2004,2005,2006,2009 Free Software Foundation, Inc.
+/* Copyright (C) 2001,2004,2005,2006,2009,2011
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +20,7 @@
 #include <sysdep.h>
 #include <jmpbuf-offsets.h>
 #include <asm-syntax.h>
+#include <stap-probe.h>
 
 
 	.section .rodata.str1.1,"aMS",@progbits,1
@@ -79,7 +81,9 @@ ENTRY (____longjmp_chk)
 	cfi_adjust_cfa_offset(-12)
 	movl	4(%esp), %ecx
 
-.Lok:	/* We add unwind information for the target here.  */
+.Lok:
+	LIBC_PROBE (longjmp, 3, 4@%ecx, -4@8(%esp), 4@%edx)
+	/* We add unwind information for the target here.  */
 	cfi_def_cfa(%ecx, 0)
 	cfi_register(%eip, %edx)
 	cfi_register(%esp, %edi)
@@ -102,5 +106,6 @@ ENTRY (____longjmp_chk)
 	cfi_restore(%ebp)
 
 	/* Jump to saved PC.  */
+	LIBC_PROBE (longjmp_target, 3, 4@%ecx, -4@%eax, 4@%edx)
 	jmp	*%edx
 END (____longjmp_chk)

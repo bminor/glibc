@@ -22,6 +22,7 @@
 #include <lowlevellock.h>
 #include <pthread.h>
 #include <pthreadP.h>
+#include <stap-probe.h>
 
 
 /* Acquire write lock for RWLOCK.  */
@@ -30,6 +31,8 @@ __pthread_rwlock_wrlock (rwlock)
      pthread_rwlock_t *rwlock;
 {
   int result = 0;
+
+  LIBC_PROBE (wrlock_entry, 1, rwlock);
 
   /* Make sure we are alone.  */
   lll_lock (rwlock->__data.__lock, rwlock->__data.__shared);
@@ -41,6 +44,8 @@ __pthread_rwlock_wrlock (rwlock)
 	{
 	  /* Mark self as writer.  */
 	  rwlock->__data.__writer = THREAD_GETMEM (THREAD_SELF, tid);
+
+          LIBC_PROBE (wrlock_acquire_write, 1, rwlock);
 	  break;
 	}
 

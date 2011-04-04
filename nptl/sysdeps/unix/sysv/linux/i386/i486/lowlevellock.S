@@ -22,6 +22,8 @@
 #include <kernel-features.h>
 #include <lowlevellock.h>
 
+#include <stap-probe.h>
+
 	.text
 
 #ifdef __ASSUME_PRIVATE_FUTEX
@@ -91,7 +93,8 @@ __lll_lock_wait_private:
 	cmpl	%edx, %eax	/* NB:	 %edx == 2 */
 	jne 2f
 
-1:	movl	$SYS_futex, %eax
+1:	LIBC_PROBE (lll_lock_wait_private, 1, %ebx)
+	movl	$SYS_futex, %eax
 	ENTER_KERNEL
 
 2:	movl	%edx, %eax

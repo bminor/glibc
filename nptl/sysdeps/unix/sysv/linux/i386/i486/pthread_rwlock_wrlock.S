@@ -23,6 +23,7 @@
 #include <pthread-errnos.h>
 #include <kernel-features.h>
 
+#include <stap-probe.h>
 
 	.text
 
@@ -40,6 +41,8 @@ __pthread_rwlock_wrlock:
 
 	xorl	%esi, %esi
 	movl	12(%esp), %ebx
+
+	LIBC_PROBE (wrlock_entry, 1, %ebx)
 
 	/* Get the lock.  */
 	movl	$1, %edx

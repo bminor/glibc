@@ -31,6 +31,8 @@
 
 #include <shlib-compat.h>
 
+#include <stap-probe.h>
+
 
 /* Local function to start thread and handle cleanup.  */
 static int start_thread (void *arg);
@@ -296,6 +298,8 @@ start_thread (void *arg)
 	  CANCEL_RESET (oldtype);
 	}
 
+      LIBC_PROBE (pthread_start, 3, (pthread_t) pd, pd->start_routine, pd->arg);
+
       /* Run the code the user provided.  */
 #ifdef CALL_THREAD_FCT
       THREAD_SETMEM (pd, result, CALL_THREAD_FCT (pd));
@@ -551,6 +555,8 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
 
   /* Pass the descriptor to the caller.  */
   *newthread = (pthread_t) pd;
+
+  LIBC_PROBE (pthread_create, 4, newthread, attr, start_routine, arg);
 
   /* Start the thread.  */
   return create_thread (pd, iattr, STACK_VARIABLES_ARGS);

@@ -23,6 +23,8 @@
 #include <atomic.h>
 #include "pthreadP.h"
 
+#include <stap-probe.h>
+
 
 static void
 cleanup (void *arg)
@@ -54,6 +56,8 @@ pthread_join (threadid, thread_return)
 
   struct pthread *self = THREAD_SELF;
   int result = 0;
+
+  LIBC_PROBE (pthread_join, 1, threadid);
 
   /* During the wait we change to asynchronous cancellation.  If we
      are canceled the thread we are waiting for must be marked as
@@ -109,6 +113,8 @@ pthread_join (threadid, thread_return)
       /* Free the TCB.  */
       __free_tcb (pd);
     }
+
+  LIBC_PROBE (pthread_join_ret, 3, threadid, result, pd->result);
 
   return result;
 }
