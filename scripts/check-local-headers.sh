@@ -31,6 +31,8 @@ fgrep -v "$includedir/asm" |
 fgrep -v "$includedir/linux" |
 fgrep -v "$includedir/selinux" |
 fgrep -v "$includedir/sys/capability.h" |
+fgrep -v "$includedir/sys/sdt.h" |
+fgrep -v "$includedir/sys/sdt-config.h" |
 fgrep -v "$includedir/gd" |
 fgrep -v "$includedir/nss3"; then
   # If we found a match something is wrong.

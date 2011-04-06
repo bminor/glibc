@@ -1,3 +1,7 @@
+2011-04-06  Andreas Schwab  <schwab@redhat.com>
+
+	* scripts/check-local-headers.sh: Ignore systemtap headers.
+
 2011-02-21  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/x86_64/__longjmp.S: Add a static probe here.
