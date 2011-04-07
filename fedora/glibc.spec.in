@@ -22,7 +22,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 8
+Release: 9
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1046,6 +1046,19 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Thu Apr  7 2011 Andreas Schwab <schwab@redhat.com> - 2.13.90-9
+- Update from master
+  - Fix typo in cache information table for x86-{32,64}
+  - Define CLOCK_BOOTTIME, O_PATH, AT_EMPTY_PATH
+  - Work around old buggy program which cannot cope with memcpy
+    semantics (BZ#12518)
+  - Fix visibility of declarations of wcpcpy and wcpncpy (BZ#12631)
+  - Add clock_adjtime, name_to_handle_at, open_by_handle_at, syncfs
+    syscalls
+  - Really implement fallocate{,64} and sync_file_range as
+    cancellation points
+- Enable systemtap support (#690281)
+
 * Thu Mar 24 2011 Andreas Schwab <schwab@redhat.com> - 2.13.90-8
 - Update from master
   - Fix infinite loop (#690323)
