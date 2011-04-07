@@ -1,3 +1,121 @@
+2011-04-03  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/x86_64/cacheinfo.c (intel_02_known): Fix typo in table.
+	* sysdeps/unix/sysv/linux/i386/sysconf.c (intel_02_known): Likewise.
+
+2011-04-02  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/unix/sysv/linux/bits/time.h (CLOCK_BOOTTIME): Define.
+
+	* include/features.h: Mention __USE_XOPEN2K8 in comment.
+
+2011-03-26  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #12518]
+	* sysdeps/x86_64/Versions: Add memcpy to GLIBC_2.14.
+	* sysdeps/x86_64/memcpy.S: Provide GLIBC_2_14 memcpy.
+	* sysdeps/x86_64/memmove.c: New file.
+	* sysdeps/x86_64/multiarch/memcpy.S: Include <shlib-compat.h>.
+	(memcpy): Renamed to ...
+	(__new_memcpy): This.
+	(memcpy): Provide GLIBC_2_14 memcpy.
+	* sysdeps/x86_64/multiarch/memmove.c: Include <shlib-compat.h>.
+	(memcpy): Provide GLIBC_2_2_5 memcpy.
+
+2011-04-01  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12631]
+	* wcsmbs/wchar.h: Make wcpcpy and wcpncpy visible for __USE_XOPEN2K8.
+
+2011-03-30  Andreas Schwab  <schwab@redhat.com>
+
+	* misc/syncfs.c: New file.
+	* misc/Makefile (routines): Add syncfs.
+	* posix/unistd.h: Declare syncfs.
+	* sysdeps/unix/syscalls.list: Add syncfs.
+
+2011-04-01  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/Versions: Rename open_by_handle to
+	open_by_handle_at.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h: Likewise.
+
+2011-04-01  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Define O_PATH.
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h: Likewise.
+
+	* io/Makefile: Compile fallocate.c, fallocate64.c, and
+	sync_file_range.c with -fexceptions.
+	* sysdeps/unix/sysv/linux/fallocate.c: Make cancelable.
+	* sysdeps/unix/sysv/linux/fallocate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/fallocate.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/fallocate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/fallocate.c: Likewise.
+	* sysdeps/unix/sysv/linux/sync_file_range.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list: Mark
+	sync_file_range as cancellation point
+	* sysdeps/unix/sysv/linux/i386/sync_file_range.c: New file.  This is
+	now a wrapper around __call_sync_file_range with cancellation handling.
+	* sysdeps/unix/sysv/linux/i386/sync_file_range.S: Renamed to ...
+	* sysdeps/unix/sysv/linux/i386/call_sync_file_range.S: ...this.  Change
+	function name to __call_sync_file_range.
+	* sysdeps/unix/sysv/linux/i386/Makefile [subdir=io] (sysdep_routines):
+	Add call_sync_file_range.
+
+2011-04-01  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
+	bits/timex.h.
+
+2011-04-01  Ulrich Drepper  <drepper@gmail.com>
+
+	* iconv/iconv.h: Fix typo in comment.
+	* io/fcntl.h: Likewise.
+	* libio/stdio.h: Likewise.
+	* posix/spawn.h: Likewise.
+	* posix/unistd.h: Likewise.
+	* stdlib/stdlib.h: Likewise.
+	* time/time.h: Likewise.
+	* wcsmbs/wchar.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/Versions [GLIBC_2.14] (name_to_handle_at,
+	open_by_handle): Add.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Define struct file_handle
+	and MAX_HANDLE_SZ.  Declare name_to_handle_at and open_by_handle.
+	Augment a few comments.
+	* sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/syscalls.list: Add name_to_handle_at and
+	open_by_handle.
+
+	* io/fcntl.h (AT_EMPTY_PATH): Define.
+
+2011-03-30  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add clock_adjtime.
+	* sysdeps/unix/sysv/linux/bits/time.h: New file.
+	* sysdeps/unix/sysv/linux/sys/timex.h: Move struct timex definition
+	to...
+	* sysdeps/unix/sysv/linux/bits/timex.h: ...here.  New file.
+	* Versions.def: Add GLIBC_2.14.
+	* sysdeps/unix/sysv/linux/Versions [GLIBC_2.14] (clock_adjtime):
+	Export.
+
 2011-04-06  Andreas Schwab  <schwab@redhat.com>
 
 	* scripts/check-local-headers.sh: Ignore systemtap headers.

@@ -1,4 +1,5 @@
-/* Copyright (C) 2007, 2009, 2011 Free Software Foundation, Inc.
+/* Selective file content synch'ing.
+   Copyright (C) 2006, 2007, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,34 +22,23 @@
 #include <sysdep-cancel.h>
 
 
-extern int __call_fallocate (int fd, int mode, __off64_t offset, __off64_t len)
+extern int __call_sync_file_range (int fd, off64_t offset, off64_t nbytes,
+				   unsigned int flags)
      attribute_hidden;
 
 
-/* Reserve storage for the data of the file associated with FD.  */
 int
-fallocate (int fd, int mode, __off_t offset, __off_t len)
+sync_file_range (int fd, __off64_t from, __off64_t to, unsigned int flags)
 {
-#ifdef __NR_fallocate
-  int err;
   if (SINGLE_THREAD_P)
-    err = __call_fallocate (fd, mode, offset, len);
-  else
-    {
-      int oldtype = LIBC_CANCEL_ASYNC ();
+    return __call_sync_file_range (fd, from, to, flags);
 
-      err = __call_fallocate (fd, mode, offset, len);
+  int result;
+  int oldtype = LIBC_CANCEL_ASYNC ();
 
-      LIBC_CANCEL_RESET (oldtype);
-    }
-  if (__builtin_expect (err, 0))
-    {
-      __set_errno (err);
-      err = -1;
-    }
-  return err;
-#else
-  __set_errno (ENOSYS);
-  return -1;
-#endif
+  result = __call_sync_file_range (fd, from, to, flags);
+
+  LIBC_CANCEL_RESET (oldtype);
+
+  return result;
 }

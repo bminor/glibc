@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2008, 2009, 2010 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2008, 2009, 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -554,8 +554,10 @@ extern float wcstof_l (__const wchar_t *__restrict __nptr,
 extern long double wcstold_l (__const wchar_t *__restrict __nptr,
 			      wchar_t **__restrict __endptr,
 			      __locale_t __loc) __THROW;
+#endif	/* use GNU */
 
 
+#ifdef __USE_XOPEN2K8
 /* Copy SRC to DEST, returning the address of the terminating L'\0' in
    DEST.  */
 extern wchar_t *wcpcpy (wchar_t *__restrict __dest,
@@ -566,12 +568,10 @@ extern wchar_t *wcpcpy (wchar_t *__restrict __dest,
 extern wchar_t *wcpncpy (wchar_t *__restrict __dest,
 			 __const wchar_t *__restrict __src, size_t __n)
      __THROW;
-#endif	/* use GNU */
 
 
 /* Wide character I/O functions.  */
 
-#ifdef	__USE_XOPEN2K8
 /* Like OPEN_MEMSTREAM, but the stream is wide oriented and produces
    a wide character string.  */
 extern __FILE *open_wmemstream (wchar_t **__bufloc, size_t *__sizeloc) __THROW;
@@ -758,7 +758,7 @@ extern wint_t putwc (wchar_t __wc, __FILE *__stream);
 
 /* Write a character to stdout.
 
-   This function is a possible cancellation points and therefore not
+   This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern wint_t putwchar (wchar_t __wc);
 
@@ -766,14 +766,14 @@ extern wint_t putwchar (wchar_t __wc);
 /* Get a newline-terminated wide character string of finite length
    from STREAM.
 
-   This function is a possible cancellation points and therefore not
+   This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern wchar_t *fgetws (wchar_t *__restrict __ws, int __n,
 			__FILE *__restrict __stream);
 
 /* Write a string to STREAM.
 
-   This function is a possible cancellation points and therefore not
+   This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern int fputws (__const wchar_t *__restrict __ws,
 		   __FILE *__restrict __stream);
@@ -781,7 +781,7 @@ extern int fputws (__const wchar_t *__restrict __ws,
 
 /* Push a character back onto the input buffer of STREAM.
 
-   This function is a possible cancellation points and therefore not
+   This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern wint_t ungetwc (wint_t __wc, __FILE *__stream);
 __END_NAMESPACE_STD

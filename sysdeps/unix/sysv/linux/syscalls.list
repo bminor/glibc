@@ -4,6 +4,7 @@ adjtimex	adjtime	adjtimex	i:p	__adjtimex	adjtimex ntp_adjtime __adjtimex_interna
 bdflush		EXTRA	bdflush		i:ii	bdflush
 capget		EXTRA	capget		i:pp	capget
 capset		EXTRA	capset		i:pp	capset
+clock_adjtime	EXTRA	clock_adjtime	i:ip	clock_adjtime
 creat		-	creat		Ci:si	__libc_creat creat
 create_module	EXTRA	create_module	3	create_module
 delete_module	EXTRA	delete_module	3	delete_module
@@ -103,3 +104,6 @@ timerfd_settime	EXTRA	timerfd_settime	i:iipp	timerfd_settime
 timerfd_gettime	EXTRA	timerfd_gettime	i:ip	timerfd_gettime
 
 fanotify_init	EXTRA	fanotify_init	i:ii	fanotify_init
+
+name_to_handle_at EXTRA	name_to_handle_at i:isppi name_to_handle_at
+open_by_handle_at EXTRA	open_by_handle_at Ci:ipi  open_by_handle_at
