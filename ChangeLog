@@ -1,3 +1,8 @@
+2011-04-08  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sync_file_range.c:
+	Make cancelable.
+
 2011-03-14  Andreas Schwab  <schwab@redhat.com>
 
 	* elf/dl-load.c (_dl_dst_substitute): When skipping the first
