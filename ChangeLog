@@ -1,3 +1,9 @@
+2011-05-03  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/Makefile (CFLAGS-initfini.s): Add
+	-fno-inline to prevent potential erroneous optimization where init is
+	inlined to branch directly to fini.
+
 2011-02-23  Andreas Schwab  <schwab@redhat.com>
 	    Ulrich Drepper  <drepper@gmail.com>
 

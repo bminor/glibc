@@ -28,7 +28,7 @@ elide-routines.os += hp-timing
 ifneq ($(elf),no)
 # The initfini generation code doesn't work in the presence of -fPIC, so
 # we use -fpic instead which is much better.
-CFLAGS-initfini.s += -fpic -O1
+CFLAGS-initfini.s += -fpic -O1 -fno-inline
 endif
 endif
 
