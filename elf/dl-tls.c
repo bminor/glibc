@@ -249,6 +249,11 @@ _dl_determine_tlsoffset (void)
 # error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 #endif
 
+  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_RELOC, 0))
+    _dl_debug_printf ("\ninitial static tls: "
+		      "dl_tls_static_used = %Zu, dl_tls_status_size = %Zu\n",
+		      GL(dl_tls_static_used), GL(dl_tls_static_size));
+
   /* The alignment requirement for the static TLS block.  */
   GL(dl_tls_static_align) = max_align;
 }

@@ -1,3 +1,12 @@
+2011-03-15  Alan Modra  <amodra@gmail.com>
+
+	* elf/dl-reloc.c (_dl_try_allocate_static_tls <TLS_DTV_AT_TP>): Handle
+	l_tls_firstbyte_offset non-zero.  Save padding offset in
+	l_tls_firstbyte_offset for later use.  Add debug print.
+	* elf/dl-close.c (_dl_close_worker <TLS_DTV_AT_TP>): Correct code
+	freeing static tls block.  Add debug print.
+	* elf/fl-tls.c (_dl_determine_tlsoffset): Add debug print.
+
 2011-06-30  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
 
 	* nptl/sysdeps/unix/sysv/linux/aio_misc.h
