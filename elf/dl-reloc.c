@@ -77,23 +77,33 @@ _dl_try_allocate_static_tls (struct link_map *map)
 
   map->l_tls_offset = GL(dl_tls_static_used) = offset;
 #elif TLS_DTV_AT_TP
+  size_t offset;
   size_t used;
-  size_t check;
 
-  size_t offset = roundup (GL(dl_tls_static_used), map->l_tls_align);
-  used = offset + map->l_tls_blocksize;
-  check = used;
   /* dl_tls_static_used includes the TCB at the beginning.  */
+  offset = (((GL(dl_tls_static_used)
+	      - map->l_tls_firstbyte_offset
+	      + map->l_tls_align - 1) & -map->l_tls_align)
+	    + map->l_tls_firstbyte_offset);
+  used = offset + map->l_tls_blocksize;
 
-  if (check > GL(dl_tls_static_size))
+  if (used > GL(dl_tls_static_size))
     goto fail;
 
   map->l_tls_offset = offset;
+  map->l_tls_firstbyte_offset = GL(dl_tls_static_used);
   GL(dl_tls_static_used) = used;
 #else
 # error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 #endif
 
+  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_RELOC, 0))
+    _dl_debug_printf ("\nstatic tls: %s\n"
+		      "  l_tls_offset = %Zu, l_tls_firstbyte_offset = %Zu,"
+		      " dl_tls_static_used = %Zu\n",
+		      map->l_name[0] ? map->l_name : rtld_progname,
+		      map->l_tls_offset, map->l_tls_firstbyte_offset,
+		      GL(dl_tls_static_used));
   /* If the object is not yet relocated we cannot initialize the
      static TLS region.  Delay it.  */
   if (map->l_real->l_relocated)
