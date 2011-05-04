@@ -22,7 +22,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 9
+Release: 10
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1046,6 +1046,27 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Wed May  4 2011 Andreas Schwab <schwab@redhat.com> - 2.13.90-10
+- Update from master
+  - ldconfig: don't crash on empty path in config file (#699784)
+  - getaddrinfo(AF_INET6) does not return scope_id info provided by
+    NSS modules (BZ#12714)
+  - Fix pathconf(_PC_BUF_SIZE) (BZ#12723)
+  - Fix getnameinfo flags parameter type (BZ#12717)
+  - Add finer grained control for initgroups lookups to NSS
+  - Use all possible bytes from fopen mode string (BZ#12685, #698025)
+  - Define initgroups callback for nss_files
+  - elf.h: Define R_ARM_IRELATIVE reloc type
+  - Fix static linking with checking x86/x86-64 memcpy (BZ#12653)
+  - Fix POWER4/POWER7 optimized strncmp to not read past differing bytes
+  - Fix FPU context handling in getcontext on x86-64 (BZ#12420)
+  - Skip extra zeroes when searching auxv on s390
+  - Obsolete RPC implementation in libc
+  - Fix memory leak in TLS of loaded objects (BZ#12650)
+  - Don't leave empty element in rpath when skipping an element
+  - Make ppc sync_file_range cancelable
+  - Maintain stack alignment in ____longjmp_chk on x86_64
+
 * Thu Apr  7 2011 Andreas Schwab <schwab@redhat.com> - 2.13.90-9
 - Update from master
   - Fix typo in cache information table for x86-{32,64}
