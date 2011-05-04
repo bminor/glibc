@@ -1,3 +1,10 @@
+2011-04-10  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12650]
+	* allocatestack.c (get_cached_stack): Deallocate DTV entries before
+	clearing memory.
+	Patch partly by Robert Rex <robert.rex@exasol.com>.
+
 2011-02-22  Rayson Ho  <rho@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Low-level SystemTap

@@ -1,5 +1,5 @@
 /* Get file-specific information about a file.  Linux version.
-   Copyright (C) 1991,1995,1996,1998-2003,2008,2010 Free Software Foundation, Inc.
+   Copyright (C) 1991,1995,1996,1998-2003,2008,2010,2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,6 +36,8 @@ long int
 __pathconf (const char *file, int name)
 {
   struct statfs fsbuf;
+  int fd;
+  int flags;
 
   switch (name)
     {
@@ -50,6 +52,21 @@ __pathconf (const char *file, int name)
 
     case _PC_CHOWN_RESTRICTED:
       return __statfs_chown_restricted (__statfs (file, &fsbuf), &fsbuf);
+
+    case _PC_PIPE_BUF:
+      flags = O_RDONLY|O_NONBLOCK|O_NOCTTY;
+#ifdef O_CLOEXEC
+      flags |= O_CLOEXEC;
+#endif
+      fd = open_not_cancel_2 (file, flags);
+      if (fd >= 0)
+	{
+	  long int r = __fcntl (fd, F_GETPIPE_SZ);
+	  close_not_cancel_no_status (fd);
+	  if (r > 0)
+	    return r;
+	}
+      /* FALLTHROUGH */
 
     default:
       return posix_pathconf (file, name);

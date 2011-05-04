@@ -1,3 +1,229 @@
+2011-05-03  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/ldconfig.c (add_dir): Don't crash on empty path.
+
+2011-04-28  Maciej Babinski  <mbabinski@google.com>
+
+	[BZ #12714]
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Don't bypass
+	gethostbyname4_r when IPv6 results are possible.
+
+2011-05-02  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12723]
+	* sysdeps/unix/sysv/linux/pathconf.c (__pathconf): Implement
+	_PC_PIPE_BUF handling.
+
+2011-04-30  Bruno Haible  <bruno@clisp.org>
+
+	[BZ #12717]
+	* conform/data/netdb.h-data (getnameinfo): Make POSIX compliant.
+	* resolv/netdb.h (getnameinfo): Change type of flags parameter
+	to 'int'.
+	* inet/getnameinfo.c (getnameinfo): Likewise.
+
+2011-04-29  Ulrich Drepper  <drepper@gmail.com>
+
+	* grp/initgroups.c (internal_getgrouplist): Prefer initgroups setting
+	to groups setting in database lookup.
+	* nss/nsswitch.conf: Add initgroups entry.
+
+2011-04-22  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12685]
+	* libio/fileops.c (_IO_new_file_fopen): Scan up to 7 bytes of the
+	mode string.
+	Patch by Eric Blake <eblake@redhat.com>.
+
+2011-04-20  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sunrpc/Makefile (need-export-routines): Add svc_run.
+	(routines): Remove svc_run.
+	($(objpfx)thrsvc): Add $(common-objpfx)linkobj/libc.so.
+	* sunrpc/clnt_perr.c (clnt_perrno): Export.
+	* sunrpc/svc_run.c (svc_run): Likewise.
+	* sunrpc/svc_udp.c (svcudp_create): Likewise.
+
+2011-04-21  Ulrich Drepper  <drepper@gmail.com>
+
+	* nss/nss_files/files-initgroups.c (_nss_files_initgroups_dyn): Fix
+	problem in reallocation in last patch.
+
+2011-04-20  Ulrich Drepper  <drepper@gmail.com>
+
+	* sunrpc/Makefile: Move inclusion of Rules.
+
+2011-04-19  Ulrich Drepper  <drepper@gmail.com>
+
+	* nss/nss_files/files-initgroups.c: New file.
+	* nss/Makefile (libnss_files-routines): Add files-initgroups.
+	* nss/Versions (libnss_files) [GLIBC_PRIVATE]: Export
+	_nss_files_initgroups_dyn.
+
+2011-03-31  Richard Sandiford  <richard.sandiford@linaro.org>
+
+	* elf/elf.h (R_ARM_IRELATIVE): Define.
+
+2011-04-19  Ulrich Drepper  <drepper@gmail.com>
+
+	* po/ru.po: Update from translation team.
+
+2011-04-17  Ulrich Drepper  <drepper@gmail.com>
+
+	* sunrpc/Makefile ($(rpc-compat-routines.os)): Add before-compile to
+	dependencies.
+
+2011-02-06  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #12653]
+	* sysdeps/i386/i686/multiarch/memcpy-ssse3-rep.S: Only protect
+	MEMCPY_CHK with USE_AS_BCOPY ifdef check.
+	* sysdeps/i386/i686/multiarch/memcpy-ssse3.S: Likewise.
+	* sysdeps/x86_64/multiarch/memcpy-ssse3.S: Likewise.
+	* sysdeps/x86_64/multiarch/memcpy-ssse3-back.S: Likewise.
+
+2011-03-28  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/powerpc/powerpc32/power4/strncmp.S: Don't read past
+	differing bytes.
+	* sysdeps/powerpc/powerpc64/power4/strncmp.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power7/strncmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/strncmp.S: Likewise.
+
+2011-04-17  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12420]
+	* sysdeps/unix/sysv/linux/x86_64/getcontext.S: Reload context after
+	storing it.
+	* stdlib/bug-getcontext.c: New file.
+	* stdlib/Makefile: Add rules to build and run bug-getcontext.
+
+2011-04-13  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	* sysdeps/s390/s390-64/utf16-utf32-z9.c: Wrap the z9-109
+	instructions into .machine "z9-109".
+	* sysdeps/s390/s390-64/utf8-utf16-z9.c: Likewise.
+	* sysdeps/s390/s390-64/utf8-utf32-z9.c: Likewise.
+
+2011-04-11  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	* sysdeps/s390/s390-32/elf/start.S (_start): Skip extra zeroes
+	between environment variables and auxiliary vector.
+
+2011-04-16  Ulrich Drepper  <drepper@gmail.com>
+
+	* Makefile: Add rules to build linkobj/libc.so.
+	* include/libc-symbols.h: Define libc_hidden_nolink.
+	* include/rpc/auth.h: Mark functions which are to be hidden.
+	* include/rpc/auth_des.h: Likewise.
+	* include/rpc/auth_unix.h: Likewise.
+	* include/rpc/clnt.h: Likewise.
+	* include/rpc/des_crypt.h: Likewise.
+	* include/rpc/key_prot.h: Likewise.
+	* include/rpc/pmap_clnt.h: Likewise.
+	* include/rpc/pmap_prot.h: Likewise.
+	* include/rpc/pmap_rmt.h: Likewise.
+	* include/rpc/rpc_msg.h: Likewise.
+	* include/rpc/svc.h: Likewise.
+	* include/rpc/svc_auth.h: Likewise.
+	* include/rpc/xdr.h: Likewise.
+	* nis/Makefile: Link all DSOs against linkobj/libc.so.
+	* nss/Makefile: Likewise.
+	* sunrpc/Makefile: Don't install headers.  Build library with normal
+	entry points.  Don't build rpcinfo.  Link RPC tests appropriately.
+	* sunrpc/auth_des.c: Hide exported symbols by default, export some
+	for the compat linking library.  Remove use of INTDEF/INTUSE.
+	* sunrpc/auth_none.c: Likewise.
+	* sunrpc/auth_unix.c: Likewise.
+	* sunrpc/authdes_prot.c: Likewise.
+	* sunrpc/authuxprot.c: Likewise.
+	* sunrpc/clnt_gen.c: Likewise.
+	* sunrpc/clnt_perr.c: Likewise.
+	* sunrpc/clnt_raw.c: Likewise.
+	* sunrpc/clnt_simp.c: Likewise.
+	* sunrpc/clnt_tcp.c: Likewise.
+	* sunrpc/clnt_udp.c: Likewise.
+	* sunrpc/clnt_unix.c: Likewise.
+	* sunrpc/des_crypt.c: Likewise.
+	* sunrpc/des_soft.c: Likewise.
+	* sunrpc/get_myaddr.c: Likewise.
+	* sunrpc/key_call.c: Likewise.
+	* sunrpc/key_prot.c: Likewise.
+	* sunrpc/netname.c: Likewise.
+	* sunrpc/pm_getmaps.c: Likewise.
+	* sunrpc/pm_getport.c: Likewise.
+	* sunrpc/pmap_clnt.c: Likewise.
+	* sunrpc/pmap_prot.c: Likewise.
+	* sunrpc/pmap_prot2.c: Likewise.
+	* sunrpc/pmap_rmt.c: Likewise.
+	* sunrpc/publickey.c: Likewise.
+	* sunrpc/rpc_cmsg.c: Likewise.
+	* sunrpc/rpc_common.c: Likewise.
+	* sunrpc/rpc_dtable.c: Likewise.
+	* sunrpc/rpc_prot.c: Likewise.
+	* sunrpc/rpc_thread.c: Likewise.
+	* sunrpc/rtime.c: Likewise.
+	* sunrpc/svc.c: Likewise.
+	* sunrpc/svc_auth.c: Likewise.
+	* sunrpc/svc_authux.c: Likewise.
+	* sunrpc/svc_raw.c: Likewise.
+	* sunrpc/svc_run.c: Likewise.
+	* sunrpc/svc_simple.c: Likewise.
+	* sunrpc/svc_tcp.c: Likewise.
+	* sunrpc/svc_udp.c: Likewise.
+	* sunrpc/svc_unix.c: Likewise.
+	* sunrpc/svcauth_des.c: Likewise.
+	* sunrpc/xcrypt.c: Likewise.
+	* sunrpc/xdr.c: Likewise.
+	* sunrpc/xdr_array.c: Likewise.
+	* sunrpc/xdr_float.c: Likewise.
+	* sunrpc/xdr_intXX_t.c: Likewise.
+	* sunrpc/xdr_mem.c: Likewise.
+	* sunrpc/xdr_rec.c: Likewise.
+	* sunrpc/xdr_ref.c: Likewise.
+	* sunrpc/xdr_sizeof.c: Likewise.
+	* sunrpc/xdr_stdio.c: Likewise.
+
+2011-04-10  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12650]
+	* sysdeps/i386/dl-tls.h: Define TLS_DTV_UNALLOCATED.
+	* sysdeps/ia64/dl-tls.h: Likewise.
+	* sysdeps/powerpc/dl-tls.h: Likewise.
+	* sysdeps/s390/dl-tls.h: Likewise.
+	* sysdeps/sh/dl-tls.h: Likewise.
+	* sysdeps/sparc/dl-tls.h: Likewise.
+	* sysdeps/x86_64/dl-tls.h: Likewise.
+	* elf/dl-tls.c: Don't define TLS_DTV_UNALLOCATED here.
+
+2011-03-14  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/dl-load.c (_dl_dst_substitute): When skipping the first
+	rpath element also skip the following colon.
+	(expand_dynamic_string_token): Add is_path parameter and pass
+	down to DL_DST_REQUIRED and _dl_dst_substitute.
+	(decompose_rpath): Call expand_dynamic_string_token with
+	non-zero is_path.  Ignore empty rpaths.
+	(_dl_map_object_from_fd): Call expand_dynamic_string_token
+	with zero is_path.
+
+2011-04-08  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sync_file_range.c:
+	Make cancelable.
+
+2011-04-09  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12655]
+	* sysdeps/unix/sysv/linux/sys/syscall.h: Fix comment.
+	Patch by Filipe David Manana <fdmanana@apache.org>.
+
+2011-04-07  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/____longjmp_chk.S (CALL_FAIL):
+	Maintain aligned stack.
+	(CHECK_RSP): Remove unused macro.
+
 2011-04-03  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/x86_64/cacheinfo.c (intel_02_known): Fix typo in table.

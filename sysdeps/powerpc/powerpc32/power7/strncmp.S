@@ -1,5 +1,5 @@
 /* Optimized strcmp implementation for POWER7/PowerPC32.
-   Copyright (C) 2010 Free Software Foundation, Inc.
+   Copyright (C) 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,7 +35,7 @@ EALIGN (BP_SYM(strncmp),4,0)
 #define rSTR2	r4	/* second string arg */
 #define rN	r5	/* max string length */
 /* Note:  The Bounded pointer support in this code is broken.  This code
-   was inherited from PPC32 and and that support was never completed.
+   was inherited from PPC32 and that support was never completed.
    Current PPC gcc does not support -fbounds-check or -fbounded-pointers.  */
 #define rWORD1	r6	/* current word in s1 */
 #define rWORD2	r7	/* current word in s2 */
@@ -141,30 +141,31 @@ L(u1):
 	bdz	L(u4)
 	cmpw	rWORD1,rWORD2
 	beq	cr1,L(u4)
+	bne	L(u4)
 	lbzu	rWORD3,1(rSTR1)
 	lbzu	rWORD4,1(rSTR2)
-	bne	L(u4)
 	cmpwi	cr1,rWORD3,0
 	bdz	L(u3)
 	cmpw	rWORD3,rWORD4
 	beq	cr1,L(u3)
+	bne	L(u3)
 	lbzu	rWORD1,1(rSTR1)
 	lbzu	rWORD2,1(rSTR2)
-	bne	L(u3)
 	cmpwi	cr1,rWORD1,0
 	bdz	L(u4)
 	cmpw	rWORD1,rWORD2
 	beq	cr1,L(u4)
+	bne	L(u4)
 	lbzu	rWORD3,1(rSTR1)
 	lbzu	rWORD4,1(rSTR2)
-	bne	L(u4)
 	cmpwi	cr1,rWORD3,0
 	bdz	L(u3)
 	cmpw	rWORD3,rWORD4
 	beq	cr1,L(u3)
+	bne	L(u3)
 	lbzu	rWORD1,1(rSTR1)
 	lbzu	rWORD2,1(rSTR2)
-	beq	L(u1)
+	b	L(u1)
 
 L(u3):  sub	rRTN,rWORD3,rWORD4
 	blr
