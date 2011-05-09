@@ -1,3 +1,10 @@
+2011-05-13  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/dl-load.c (is_dst): Remove parameter secure, all callers
+	changed.  Move check for valid use of $ORIGIN ...
+	(_dl_dst_substitute): ... here.  Reset check_for_trusted when a
+	path element is skipped.
+
 2011-05-12  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12511]
