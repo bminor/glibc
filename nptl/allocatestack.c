@@ -628,7 +628,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	    {
 	      int err;
 	    mprot_error:
-	      err = errno;
+	      err = errno == ENOMEM ? EAGAIN : errno;
 
 	      lll_lock (stack_cache_lock, LLL_PRIVATE);
 
