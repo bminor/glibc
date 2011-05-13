@@ -450,13 +450,6 @@
 
 	* elf/ldd.bash.in: Never run file directly.
 
-2011-03-14  Andreas Schwab  <schwab@redhat.com>
-
-	* elf/dl-load.c (is_dst): Remove parameter secure, all callers
-	changed.  Don't check for isolated use.
-	(_dl_dst_substitute): Ignore rpath elements containing
-	non-isolated use of $ORIGIN when privileged.
-
 2011-03-07  Andreas Schwab  <schwab@redhat.com>
 
 	* include/link.h (struct link_map): Remove l_orig_initfini.

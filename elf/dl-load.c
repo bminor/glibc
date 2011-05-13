@@ -169,7 +169,8 @@ local_strdup (const char *s)
 
 
 static size_t
-is_dst (const char *start, const char *name, const char *str, int is_path)
+is_dst (const char *start, const char *name, const char *str,
+	int is_path, int secure)
 {
   size_t len;
   bool is_curly = false;
@@ -198,6 +199,11 @@ is_dst (const char *start, const char *name, const char *str, int is_path)
 	   && (!is_path || name[len] != ':'))
     return 0;
 
+  if (__builtin_expect (secure, 0)
+      && ((name[len] != '\0' && (!is_path || name[len] != ':'))
+	  || (name != start + 1 && (!is_path || name[-2] != ':'))))
+    return 0;
+
   return len;
 }
 
@@ -212,10 +218,13 @@ _dl_dst_count (const char *name, int is_path)
     {
       size_t len;
 
+      /* $ORIGIN is not expanded for SUID/GUID programs (except if it
+	 is $ORIGIN alone) and it must always appear first in path.  */
       ++name;
-      if ((len = is_dst (start, name, "ORIGIN", is_path)) != 0
-	  || (len = is_dst (start, name, "PLATFORM", is_path)) != 0
-	  || (len = is_dst (start, name, "LIB", is_path)) != 0)
+      if ((len = is_dst (start, name, "ORIGIN", is_path,
+			 INTUSE(__libc_enable_secure))) != 0
+	  || (len = is_dst (start, name, "PLATFORM", is_path, 0)) != 0
+	  || (len = is_dst (start, name, "LIB", is_path, 0)) != 0)
 	++cnt;
 
       name = strchr (name + len, '$');
@@ -247,16 +256,9 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result,
 	  size_t len;
 
 	  ++name;
-	  if ((len = is_dst (start, name, "ORIGIN", is_path)) != 0)
+	  if ((len = is_dst (start, name, "ORIGIN", is_path,
+			     INTUSE(__libc_enable_secure))) != 0)
 	    {
-	      /* $ORIGIN is not expanded for SUID/GUID programs
-		 (except if it is $ORIGIN alone) and it must always
-		 appear first in path.  */
-	      if (__builtin_expect (INTUSE(__libc_enable_secure), 0)
-		  && ((name[len] != '\0' && (!is_path || name[len] != ':'))
-		      || (name != start + 1 && (!is_path || name[-2] != ':'))))
-		repl = (const char *) -1;
-	      else
 #ifndef SHARED
 	      if (l == NULL)
 		repl = _dl_get_origin ();
@@ -264,9 +266,9 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result,
 #endif
 		repl = l->l_origin;
 	    }
-	  else if ((len = is_dst (start, name, "PLATFORM", is_path)) != 0)
+	  else if ((len = is_dst (start, name, "PLATFORM", is_path, 0)) != 0)
 	    repl = GLRO(dl_platform);
-	  else if ((len = is_dst (start, name, "LIB", is_path)) != 0)
+	  else if ((len = is_dst (start, name, "LIB", is_path, 0)) != 0)
 	    repl = DL_DST_LIB;
 
 	  if (repl != NULL && repl != (const char *) -1)
