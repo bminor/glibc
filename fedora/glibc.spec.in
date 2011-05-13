@@ -18,11 +18,12 @@
 %define debuginfocommonarches %{biarcharches} alpha alphaev6
 %define multiarcharches ppc ppc64 %{ix86} x86_64 %{sparc}
 %define systemtaparches %{ix86} x86_64
+%define silentrules PARALLELMFLAGS=-s
 
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 11
+Release: 12
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -363,7 +364,7 @@ configure_CFLAGS="$build_CFLAGS -fno-asynchronous-unwind-tables"
 	--disable-profile --enable-experimental-malloc --enable-nss-crypt ||
 { cat config.log; false; }
 
-make %{?_smp_mflags} -r CFLAGS="$build_CFLAGS" PARALLELMFLAGS=-s
+make %{?_smp_mflags} -r CFLAGS="$build_CFLAGS" %{silentrules}
 
 cd ..
 }
@@ -409,7 +410,7 @@ GCC=`cat Gcc`
 
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT
-make -j1 install_root=$RPM_BUILD_ROOT install -C build-%{nptl_target_cpu}-linuxnptl PARALLELMFLAGS=-s
+make -j1 install_root=$RPM_BUILD_ROOT install -C build-%{nptl_target_cpu}-linuxnptl %{silentrules}
 %ifnarch %{auxarches}
 cd build-%{nptl_target_cpu}-linuxnptl && \
   make %{?_smp_mflags} install_root=$RPM_BUILD_ROOT install-locales -C ../localedata objdir=`pwd` && \
@@ -731,7 +732,7 @@ export TIMEOUTFACTOR=16
 parent=$$
 echo ====================TESTING=========================
 cd build-%{nptl_target_cpu}-linuxnptl
-( make %{?_smp_mflags} -k check PARALLELMFLAGS=-s 2>&1
+( make %{?_smp_mflags} -k check %{silentrules} 2>&1
   sleep 10s
   teepid="`ps -eo ppid,pid,command | awk '($1 == '${parent}' && $3 ~ /^tee/) { print $2 }'`"
   [ -n "$teepid" ] && kill $teepid
@@ -740,7 +741,7 @@ cd ..
 %if %{buildxen}
 echo ====================TESTING -mno-tls-direct-seg-refs=============
 cd build-%{nptl_target_cpu}-linuxnptl-nosegneg
-( make %{?_smp_mflags} -k check PARALLELMFLAGS=-s 2>&1
+( make %{?_smp_mflags} -k check %{silentrules} 2>&1
   sleep 10s
   teepid="`ps -eo ppid,pid,command | awk '($1 == '${parent}' && $3 ~ /^tee/) { print $2 }'`"
   [ -n "$teepid" ] && kill $teepid
@@ -753,7 +754,7 @@ cd build-%{nptl_target_cpu}-linuxnptl-power6
 ( if [ -d ../power6emul ]; then
     export LD_PRELOAD=`cd ../power6emul; pwd`/\$LIB/power6emul.so
   fi
-  make %{?_smp_mflags} -k check PARALLELMFLAGS=-s 2>&1
+  make %{?_smp_mflags} -k check %{silentrules} 2>&1
   sleep 10s
   teepid="`ps -eo ppid,pid,command | awk '($1 == '${parent}' && $3 ~ /^tee/) { print $2 }'`"
   [ -n "$teepid" ] && kill $teepid
@@ -1046,6 +1047,32 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri May 13 2011 Andreas Schwab <schwab@redhat.com> - 2.13.90-12
+- Update from master
+  - Fix resizing table for unique symbols when adding symbol for copy
+    relocation (BZ#12511)
+  - Fix sched_setscheduler call in spawn implementation (BZ#12052)
+  - Report write error in addmnt even for cached streams (BZ#12625)
+  - Translate kernel error into what pthread_create should return
+    (BZ#386)
+  - More configurability for secondary group lookup (BZ#11257)
+  - Several locale data updates (BZ#11258, BZ#11487, BZ#11532,
+    BZ#11578, BZ#11653, BZ#11668, BZ#11945, BZ#11947, BZ#12158,
+    BZ#12200, BZ#12178, BZ#12178, BZ#12346, BZ#12449, BZ#12545,
+    BZ#12551, BZ#12611, BZ#12660, BZ#12681, BZ#12541, BZ#12711,
+    BZ#12738)
+  - Fix Linux getcwd for long paths (BZ#12713)
+  - static tls memory leak on TLS_DTV_AT_TP archs
+  - Actually undefine ARG_MAX from <linux/limits.h>
+  - Backport BIND code to query name as TLD (BZ#12734)
+  - Allow $ORIGIN to reference trusted directoreis in SUID binaries
+    (BZ #12393)
+  - Add missing {__BEGIN,__END}_DECLS to sys/sysmacros.h
+  - Report if no record is found by initgroups in nss_files
+- Never leave $ORIGIN unexpanded
+- Revert "Ignore origin of privileged program"
+- Reexport RPC interface
+
 * Thu May  5 2011 Andreas Schwab <schwab@redhat.com> - 2.13.90-11
 - Update from master
   - Don't use removed rpc headers
@@ -4726,7 +4753,7 @@ rm -f *.filelist*
 - rebuilt against newer glibc-kernheaders to use the correct
   PATH_MAX
 - handle .athlon.rpm glibc the same way as .i686.rpm
-- add a couple of .ISO-8859-15 locales (#61922)
+- add a couple of .ISO-8859-15 locales (#61908)
 - readd temporarily currencies which were superceeded by Euro
   into the list of accepted currencies by localedef to make
   standard conformance testsuites happy
