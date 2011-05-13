@@ -1,4 +1,162 @@
-2011-05-06  Andreas Schwab  <schwab@redhat.com>
+2011-05-12  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12511]
+	* elf/dl-lookup.c (enter): Don't test for copy relocation here and
+	don't set DF_1_NODELETE here.
+	(do_lookup_x): When entering new entry test for copy relocation
+	and if necessary set DF_1_NODELETE flag.
+	* elf/tst-unique4.cc: New file.
+	* elf/tst-unique4.h: New file.
+	* elf/tst-unique4lib.cc: New file.
+	* elf/Makefile: Add rules to build and run tst-unique4.
+	Patch by Piotr Bury <pbury@goahead.com>.
+
+2011-05-11  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12052]
+	* sysdeps/posix/spawni.c (__spawni): Fix sched_setscheduler call.
+
+	[BZ #12625]
+	* misc/mntent_r.c (addmntent): Flush the stream after the output
+
+	[BZ #12393]
+	* elf/dl-load.c (is_trusted_path): Remove unnecessary test.
+	(is_trusted_path_normalize): Skip initial colon.  Append slash
+	to empty buffer.  Duplicate is_trusted_path code but allow
+	constructed patch to be prefix.
+	(is_dst): Allow $ORIGIN followed by /.
+	(_dl_dst_substitute): Correct clearing of check_for_trusted.
+	Correct testing of result of is_trusted_path_normalize
+	(decompose_rpath): Fix warning.
+
+2011-05-10  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #11257]
+	* grp/initgroups.c (internal_getgrouplist): When we found the service
+	list through the initgroups entry in nsswitch.conf do not always
+	continue on a successful lookup.  Don't always use the
+	__nss_group_database value if it is set.
+	* nss/nsswitch.conf (initgroups): Change action for successful db
+	lookup to continue for compatibility.
+
+2011-05-09  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #11532]
+	* iconvdata/Makefile: Add rules to build CP770, CP771, CP772, CP773,
+	and CP774 modules.
+	* iconvdata/gconv-modules: Add entries for CP770, CP771, CP772, CP773,
+	and CP774 modules.
+	* iconvdata/tst-tables.sh: Likewise.
+	* iconvdata/cp770.c: New file.
+	* iconvdata/cp771.c: New file.
+	* iconvdata/cp772.c: New file.
+	* iconvdata/cp773.c: New file.
+	* iconvdata/cp774.c: New file.
+	* iconvdata/testdata/CP770: New file.
+	* iconvdata/testdata/CP770..UTF8: New file.
+	* iconvdata/testdata/CP771: New file.
+	* iconvdata/testdata/CP771..UTF8: New file.
+	* iconvdata/testdata/CP772: New file.
+	* iconvdata/testdata/CP772..UTF8: New file.
+	* iconvdata/testdata/CP773: New file.
+	* iconvdata/testdata/CP773..UTF8: New file.
+	* iconvdata/testdata/CP774: New file.
+	* iconvdata/testdata/CP774..UTF8: New file.
+
+	* iconvdata/gen-8bit-gap-1.sh: End reading of charmap file at
+	END CHARMAP line.
+	* iconvdata/gen-8bit-gap.sh: Likewise.
+	* iconvdata/gen-8bit.sh: Likewise.
+
+	* locale/iso-639.def: Add ary entry.
+
+	[BZ #11258]
+	* locale/C-translit.h.in: Add U20A1 transliteration.
+
+	[BZ #12178]
+	* locale/iso-639.def: Add wae entry.
+	Patch by Kevin Bortis <bortis@translate-wae.ch>.
+
+	[BZ #12545]
+	* locale/programs/localedef.c (construct_output_path): Use ssize_t
+	for n.
+
+	[BZ #12711]
+	* locale/C-translit.h.in: Add entry for U20B9.
+	Patch by pravin.d.s@gmail.com.
+
+2011-05-08  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12713]
+	* sysdeps/unix/sysv/linux/getcwd.c: If getcwd syscall report
+	ENAMETOOLONG use generic getcwd.
+	* sysdeps/posix/getcwd.c: Add support to use openat.  Make usable
+	in rtld.  Use *stat64.
+	* sysdeps/unix/sysv/linux/Makefile [subdir=elf] (sysdep-rtld-routines):
+	Add dl-getcwd, dl-openat64, dl-opendir, dl-fxstatat64.
+	* sysdeps/unix/sysv/linux/dl-getcwd.c: New file.
+	* sysdeps/unix/sysv/linux/dl-openat64.c: New file.
+	* sysdeps/unix/sysv/linux/dl-opendir.c: New file.
+	* sysdeps/unix/sysv/linux/dl-fxstat64.c: New file.
+	* include/sys/stat.h: Define __fstatat, __lstat64, __fstat64, and
+	__fstatat64 macros.
+	* include/dirent.h: Add libc_hidden_proto for rewinddir.
+	* dirent/rewinddir.c: Add libc_hidden_def.
+	* sysdeps/mach/hurd/rewinddir.c: Likewise.
+	* sysdeps/unix/rewinddir.c: Likewise.  Don't do locking outside libc.
+
+	* include/dirent.h (__alloc_dir): Add flags parameter.
+	* sysdeps/unix/fdopendir.c (__fdopendir): Pass flags to __alloc_dir.
+	* sysdeps/unix/opendir.c (__opendir): Pass 0 in new parameter to
+	__alloc_dir.
+	(__alloc_dir): Take new parameter.  Don't call fcntl for invocations
+	from fdopendir if O_CLOEXEC is already set.
+
+2011-03-15  Alan Modra  <amodra@gmail.com>
+
+	* elf/dl-reloc.c (_dl_try_allocate_static_tls <TLS_DTV_AT_TP>): Handle
+	l_tls_firstbyte_offset non-zero.  Save padding offset in
+	l_tls_firstbyte_offset for later use.
+	* elf/dl-close.c (_dl_close_worker <TLS_DTV_AT_TP>): Correct code
+	freeing static tls block.
+
+2011-03-05  Jonathan Nieder  <jrnieder@gmail.com>
+
+	* sysdeps/unix/sysv/linux/sys/param.h: Fix an #ifndef __undef_ARG_MAX
+	where #ifdef was intended.  The intent is to prevent ARG_MAX from
+	being defined by the kernel headers.
+
+2011-05-07  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12734]
+	* resolv/resolv.h: Define RES_NOTLDQUERY.
+	* resolv/res_init.c (res_setoptions): Recognize no_tld_query and
+	no-tld-query and set RES_NOTLDQUERY.
+	* resolv/res_debug.c (p_option): Handle RES_NOTLDQUERY.
+	* resolv/res_query.c (__libc_res_nsearch): Backport changes from
+	modern BIND to search name as TLD unless forbidden.
+
+2011-05-07  Petr Baudis  <pasky@suse.cz>
+	    Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12393]
+	* elf/dl-load.c (fillin_rpath): Move trusted path check...
+	(is_trusted_path): ...to here.
+	(is_trusted_path_normalize): Wrapper for /../ and /./ normalization.
+	(_dl_dst_substitute): Verify expanded $ORIGIN path elements
+	using is_trusted_path_normalize() in setuid scripts.
+
+2011-05-06  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	* sysdeps/unix/sysv/linux/sys/sysmacros.h: Add missing
+	__BEGIN/__END_DECLS.
+
+2011-05-06  Ulrich Drepper  <drepper@gmail.com>
+
+	* nss/nss_files/files-initgroups.c (_nss_files_initgroups_dyn): Return
+	NSS_STATUS_NOTFOUND if no record was found.
+
+2011-05-05  Andreas Schwab  <schwab@redhat.com>
 
 	* sunrpc/Makefile (headers): Add rpc/netdb.h.
 	(headers-not-in-tirpc): Remove rpc/netdb.h

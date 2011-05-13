@@ -1,4 +1,108 @@
-2010-12-08  Andreas Schwab  <schwab@redhat.com>
+2011-05-09  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #11487]
+	* locales/sq_AL (yesexpr): Recognize pP as well.
+	(noexpr): Recognize jJ as well.
+
+	[BZ #11532]
+	* localedata/charmaps/CP770: New file.
+	* localedata/charmaps/CP771: New file.
+	* localedata/charmaps/CP772: New file.
+	* localedata/charmaps/CP773: New file.
+	* localedata/charmaps/CP774: New file.
+
+	[BZ #11578]
+	* locales/es_PA: Change paper format to letter.
+	* locales/es_SV: Likewise.
+	Patch by Caolán McNamara <caolanm@redhat.com>.
+
+	[BZ #11653]
+	* locales/es_NI: Fix currency_symbol.
+
+	[BZ #11668]
+	* locales/es_NI: Change paper format to letter.
+
+	[BZ #11945]
+	* locales/ru_RU [LC_TIME]: Lowercase month names.
+	Patch by Alexey Balmashnov  <a.balmashnov@gmail.com>.
+
+	[BZ #11947]
+	* locales/mhr_RU: New file.
+	* SUPPORTED (SUPPORTED-LOCALES): Add appropriate entry.
+
+	[BZ #11258]
+	* locales/translit_neutral: Add entry for U20A1.
+	* locales/es_SV (currency_symbol): Change to U20A1.
+
+	[BZ #12158]
+	* locales/lij_IT: New file.
+	* SUPPORTED (SUPPORTED-LOCALES): Add appropriate entry.
+
+	[BZ #12200]
+	* locales/yue_HK: New file.
+	* SUPPORTED (SUPPORTED-LOCALES): Add appropriate entry.
+	Contributed by Chunshek Chan <chunshek@gmail.com>.
+
+	[BZ #12178]
+	* locales/wae_CH: New file.
+	* SUPPORTED (SUPPORTED-LOCALES): Add appropriate entry.
+	Patch mostly by Kevin Bortis <bortis@translate-wae.ch>.
+
+	[BZ #12346]
+	* locales/et_EE (LC_MONETARY): Change to Euro.
+	Patch by Priit Laes <plaes@plaes.org>.
+
+	[BZ #12449]
+	* locales/lb_LU: New file.
+	* SUPPORTED (SUPPORTED-LOCALES): Add appropriate entry.
+
+	[BZ #12551]
+	* locales/sw_KE: New file.
+	* locales/sw_TZ: New file.
+	* SUPPORTED (SUPPORTED-LOCALES): Add appropriate entries.
+
+	[BZ #12611]
+	* locales/ff_SN: New file.
+	* SUPPORTED (SUPPORTED-LOCALES): Add appropriate entry.
+
+	[BZ #12660]
+	* locales/tk_TM: Change day and month names back after edict.
+	Patch by Ghorban M. Tavakoly <gmt314@yahoo.com>.
+
+	[BZ #12681]
+	* locales/bem_ZA: New file.
+	* locales/en_ZA: New file.
+	* SUPPORTED (SUPPORTED-LOCALES): Add appropriate entries.
+
+	[BZ #12541]
+	* locales/ar_IN: Update currency_symbol.
+	* locales/as_IN: Likewise.
+	* locales/bn_IN: Likewise.
+	* locales/en_IN: Likewise.
+	* locales/gu_IN: Likewise.
+	* locales/hi_IN: Likewise.
+	* locales/kn_IN: Likewise.
+	* locales/kok_IN: Likewise.
+	* locales/ks_IN: Likewise.
+	* locales/ml_IN: Likewise.
+	* locales/mr_IN: Likewise.
+	* locales/or_IN: Likewise.
+	* locales/pa_IN: Likewise.
+	* locales/sa_IN: Likewise.
+	* locales/sd_IN: Likewise.
+	* locales/ta_IN: Likewise.
+	* locales/te_IN: Likewise.
+	Patch by pravin.d.s@gmail.com.
+
+	[BZ #12711]
+	* charmaps/UTF-8: Update from reason Unidata.txt file.
+
+	[BZ #12738]
+	* locales/os_RU: New file.
+	Contributed by Soslan Khubulov <soslanx@gmail.com>.
+	* SUPPORTED: Add entry for os_RU.
+
+2010-12-02  Andreas Schwab  <schwab@redhat.com>
 
 	* SUPPORTED: Remove .UTF-8 suffix from az_AZ, as_IN, tt_RU locale
 	names.

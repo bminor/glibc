@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995-1998, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995-1998, 2005, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,15 +23,19 @@
 #include <dirstream.h>
 
 /* Rewind DIRP to the beginning of the directory.  */
-/* XXX should be __rewinddir ? */
 void
 rewinddir (dirp)
      DIR *dirp;
 {
+#ifndef NOT_IN_libc
   __libc_lock_lock (dirp->lock);
+#endif
   (void) __lseek (dirp->fd, (off_t) 0, SEEK_SET);
   dirp->filepos = 0;
   dirp->offset = 0;
   dirp->size = 0;
+#ifndef NOT_IN_libc
   __libc_lock_unlock (dirp->lock);
+#endif
 }
+libc_hidden_def (rewinddir)
