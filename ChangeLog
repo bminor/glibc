@@ -1,7 +1,10 @@
 2011-05-14  Ulrich Drepper  <drepper@gmail.com>
 
+	* libio/fileops.c (_IO_new_file_close_it): Initialize write_status.
+
 	* iconv/loop.c (SINGLE) [STORE_REST]: Add input bytes to bytebuf before
-	storing incomplete byte sequence in state object.
+	storing incomplete byte sequence in state object.  Avoid testing for
+	guaranteed too small input if we know there is enough data available.
 
 2011-05-13  Ulrich Drepper  <drepper@gmail.com>
 
