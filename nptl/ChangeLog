@@ -4048,15 +4048,6 @@
 	Use __sigfillset.  Document that sigfillset does the right thing wrt
 	to SIGSETXID.
 
-2005-08-08  Jakub Jelinek  <jakub@redhat.com>
-
-	* tst-stackguard1.c (do_test): Likewise.
-
-2005-07-29  Jakub Jelinek  <jakub@redhat.com>
-
-	* tst-stackguard1.c (do_test): Don't fail if the poor man's
-	randomization doesn't work well enough.
-
 2005-07-11  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #1102]

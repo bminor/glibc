@@ -17,13 +17,10 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <errno.h>
 #include <kernel-features.h>
 #include <dl-sysdep.h>
 #include <fcntl.h>
 #include <stdint.h>
-#include <hp-timing.h>
-#include <endian.h>
 
 #ifndef MIN
 # define MIN(a,b) (((a)<(b))?(a):(b))
@@ -83,32 +80,6 @@ _dl_setup_stack_chk_guard (void *dl_random)
       unsigned char *p = (unsigned char *) &ret;
       p[sizeof (ret) - 1] = 255;
       p[sizeof (ret) - 2] = '\n';
-#ifdef HP_TIMING_NOW
-      hp_timing_t hpt;
-      HP_TIMING_NOW (hpt);
-      hpt = (hpt & 0xffff) << 8;
-      ret ^= hpt;
-#endif
-      uintptr_t stk;
-      /* Avoid GCC being too smart.  */
-      asm ("" : "=r" (stk) : "r" (p));
-      stk &= 0x7ffff0;
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-      stk <<= (__WORDSIZE - 23);
-#elif __WORDSIZE == 64
-      stk <<= 31;
-#endif
-      ret ^= stk;
-      /* Avoid GCC being too smart.  */
-      p = (unsigned char *) &errno;
-      asm ("" : "=r" (stk) : "r" (p));
-      stk &= 0x7fff00;
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-      stk <<= (__WORDSIZE - 29);
-#else
-      stk >>= 8;
-#endif
-      ret ^= stk;
     }
   else
 #endif

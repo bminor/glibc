@@ -8930,12 +8930,6 @@
 	* argp/argp-help.c (__argp_error): __asprintf -> vasprintf.
 	(__argp_failure): Likewise.
 
-2005-08-08  Jakub Jelinek  <jakub@redhat.com>
-
-	* sysdeps/unix/sysv/linux/dl-osinfo.h (_dl_setup_stack_chk_guard):
-	Shift marked &errno down on big-endian instead of up.
-	* elf/tst-stackguard1.c (do_test): Fix a typo.
-
 2005-08-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/cache.c (cache_add): Commit hash table and header to disk.
@@ -9059,17 +9053,6 @@
 	Call __vfprintf_chk if necessary.  Make vsyslog a wrapper.  Add
 	__syslog_chk.
 	* misc/Versions: Export __syslog_chk and __vsyslog_chk.
-
-2005-07-29  Jakub Jelinek  <jakub@redhat.com>
-
-	* sysdeps/unix/sysv/linux/dl-osinfo.h: Include errno.h, hp-timing.h,
-	endian.h.
-	(_dl_setup_stack_chk_guard): Even without
-	--enable-stackguard-randomization attempt to do some guard
-	randomization using hp-timing (if available) and kernel stack and
-	mmap randomization.
-	* elf/tst-stackguard1.c (do_test): Don't fail if the poor man's
-	randomization doesn't work well enough.
 
 2005-07-28  Thomas Schwinge  <schwinge@nic-nac-project.de>
 
