@@ -1,3 +1,177 @@
+2011-05-16  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* fileops.c (_IO_new_file_fopen): Get fd from _IO_fileno.
+
+2011-05-17  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #11837]
+	* iconvdata/gb18030.c: Update to GB18020-2005.
+
+2011-05-16  Ulrich Drepper  <drepper@gmail.com>
+
+	* posix/regex.h (RE_SYNTAX_AWK, RE_SYNTAX_GNU_AWK,
+	RE_SYNTAX_POSIX_AWK): Update to match recent development.
+	Patch by Aharon Robbins <arnold@skeeve.com>.
+
+	[BZ #11892]
+	* stdlib/putenv.c (putenv): Don't always create copy of the variable
+	on the stack.
+
+	[BZ #11895]
+	* misc/pselect.c (__pselect): Handle timeout value errors hidden
+	through underflows.
+
+	[BZ #12766]
+	* misc/error.c (error_at_line): Ensure file_name and old_file_name
+	point to strings before performing equality test for error_one_per_line
+	mode.
+
+	[BZ #11697]
+	* login/programs/pt_chown.c (do_pt_chown): Always call chown.
+
+	[BZ #11820]
+	* sysdeps/unix/sysv/linux/x86_64/sys/user.h
+	(struct user_fpregs_struct): Avoid __uint*_t types.
+
+	[BZ #6420]
+	* malloc/mtrace.c (tr_where): Add additional parameter to point to
+	symbol info.  Use it instead of calling _dl_addr locally.
+	(lock_and_info): New function.
+	(tr_freehook): Call lock_and_info and pass symbol info as additional
+	parameter to tr_where.
+	(tr_mallochook): Likewise.
+	(tr_reallochook): Likewise.
+	(tr_memalignhook): Likewise.
+
+	* malloc/mtrace.c: Remove support for USE_MTRACE_FILE.  It is not
+	used and couldn't be at all thread-safe.
+
+2011-05-15  Ulrich Drepper  <drepper@gmail.com>
+
+	* libio/freopen.c (freopen): Don't close old file descriptor
+	before the new one is opened.  Instead dup the new file descriptor
+	to the old one after the new stream is created.
+	* libio/freopen64.c (freopen64): Likewise.
+	* libio/libio.h: Define _IO_FLAGS2_NOCLOSE and _IO_FLAGS2_CLOEXEC.
+	* libio/fileops.c (_IO_new_file_close_it): Handle new
+	_IO_FLAGS2_NOCLOSE flag.
+	(_IO_new_file_fopen): Set _IO_FLAGS2_CLOEXEC for "e" mode.
+	If _IO_file_open didn't set FD_CLOEXEC do it after the call.
+	* libio/oldfileops.c (_IO_old_file_close_it): Handle new
+	_IO_FLAGS2_NOCLOSE flag.
+	* include/unistd.h: Add hidden_proto for dup3.
+	Define __have_dup3.
+	* io/dup3.c: Define hidden symbol.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define __ASSUME_DUP3.
+
+	[BZ #7101]
+	* posix/getopt.c (_getopt_internal_r): List all ambigious possibilities
+	when an incomplete long option is used.
+	* posix/tst-getopt_long1.c: New file.
+	* posix/Makefile (tests): Add tst-getopt_long1.
+
+	[BZ #10138]
+	* scripts/config.guess: Update from autoconf-2.68.
+	* scripts/config.sub: Likewise.
+
+	[BZ #10157]
+	* sysdeps/unix/sysv/linux/sysconf.c (__sysconf): Split out CPUTIME
+	tests into ...
+	(has_cpuclock): ...this.  New function.
+	* sysdeps/unix/sysv/linux/ia64/sysconf.c: Just define HAS_CPUCLOCK
+	macro here based on has_cpuclock code.
+
+	[BZ #10149]
+	* sysdeps/unix/sysv/linux/dl-osinfo.h (_dl_setup_stack_chk_guard):
+	First byte (not low byte) is now always NUL.
+	* sysdeps/generic/dl-osinfo.h (_dl_setup_stack_chk_guard): Likewise.
+
+	* sysdeps/unix/sysv/linux/dl-osinfo.h (_dl_setup_stack_chk_guard):
+	Use non-cancelable interfaces.
+
+	[BZ #9809]
+	* locale/iso-639.def: Add entry for Sorani.
+
+	[BZ #11901]
+	* include/stdlib.h: Move include protection to the right place.
+	Define abort_msg_s.  Declare __abort_msg with it.
+	* stdlib/abort.c (__abort_msg): Adjust type.
+	* assert/assert.c (__assert_fail_base): New function.  Majority
+	of code from __assert_fail.  Allocate memory for __abort_msg with
+	mmap.
+	(__assert_fail): Now call __assert_fail_base.
+	* assert/assert-perr.c: Remove bulk of implementation.  Use
+	__assert_fail_base.
+	* include/assert.hL Declare __assert_fail_base.
+	* sysdeps/posix/libc_fatal.c: Allocate memory for __abort_msg with
+	mmap.
+	* sysdeps/unix/sysv/linux/libc_fatal.c: Likewise.
+
+2011-05-14  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #11952]
+	[BZ #12453]
+	* elf/dl-open.c (dl_open_worker): Delay calls to _dl_update_slotinfo
+	until all modules are registered in the DTV.
+	* elf/Makefile: Add rules to build and run tst-tls19.
+	* elf/tst-tls19.c: New file.
+	* elf/tst-tls19mod1.c: New file.
+	* elf/tst-tls19mod2.c: New file.
+	* elf/tst-tls19mod3.c: New file.
+	Patch mostly by Martin von Gagern <Martin.vGagern@gmx.net>.
+
+	[BZ #12083]
+	* sysdeps/pthread/aio_misc.c (__aio_init): Compute optim.aio_num
+	correctly.
+
+	[BZ #12601]
+	* iconvdata/cp932.c (BODY to UCS4): Fix incrementing inptr in case of
+	two-byte sequence errors.
+	* iconvdata/Makefile (tests): Add bug-iconv8.
+	* iconvdata/bug-iconv8.c: New file.
+
+	[BZ #12626]
+	* sysdeps/generic/elf/backtracesymsfd.c (__backtrace_symbols_fd): Move
+	buf2 definition.
+
+	* libio/fileops.c (_IO_new_file_close_it): Initialize write_status.
+
+	[BZ #12432]
+	* sysdeps/ia64/backtrace.c (struct trace_reg): Add cfa element.
+	(dummy_getcfa): New function.
+	(init): Get _Unwind_GetCFA address, use dummy if not found.
+	(backtrace_helper): In recursion check, also check whether CFA changes.
+	(__backtrace): Completely initialize arg.
+
+	* iconv/loop.c (SINGLE) [STORE_REST]: Add input bytes to bytebuf before
+	storing incomplete byte sequence in state object.  Avoid testing for
+	guaranteed too small input if we know there is enough data available.
+
+2011-05-11  Andreas Schwab  <schwab@redhat.com>
+
+	* Makeconfig (+link-pie): Indent.
+	* Rules (binaries-pie): Define if $(have-fpie) and
+	$(build-shared).
+	(binaries-shared): Also filter out $(binaries-pie).
+	($(addprefix $(objpfx),$(binaries-pie))): New rule.
+	* nscd/Makefile (others-pie): Add nscd.
+	(LDFLAGS-nscd): Set this instead of relro-LDFLAGS.
+	($(objpfx)nscd): Remove command override.
+	* login/Makefile (others-pie): Add pt_chown.
+	($(objpfx)pt_chown): Remove command override.
+	* elf/Makefile: Add PIE tests to tests and tests-pie variables and
+	remove command overrides.
+
+2011-05-13  Ulrich Drepper  <drepper@gmail.com>
+
+	* libio/tst_putwc.c: Fix error messages.
+
+	[BZ #12724]
+	* libio/fileops.c (_IO_new_file_close_it): Always flush when
+	currently writing and seek to current position when not.
+	* libio/Makefile (tests): Add bug-fclose1.
+	* libio/bug-fclose1.c: New file.
+
 2011-05-13  Andreas Schwab  <schwab@redhat.com>
 
 	* elf/dl-load.c (is_dst): Remove parameter secure, all callers

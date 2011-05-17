@@ -1,5 +1,5 @@
 /* Conversion loop frame work.
-   Copyright (C) 1998-2002, 2003, 2005, 2008 Free Software Foundation, Inc.
+   Copyright (C) 1998-2003, 2005, 2008, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -395,10 +395,14 @@ SINGLE(LOOPFCT) (struct __gconv_step *step,
 #endif
 
   /* Are there enough bytes in the input buffer?  */
-  if (__builtin_expect (inptr + (MIN_NEEDED_INPUT - inlen) > inend, 0))
+  if (MIN_NEEDED_INPUT > 1
+      && __builtin_expect (inptr + (MIN_NEEDED_INPUT - inlen) > inend, 0))
     {
       *inptrp = inend;
 #ifdef STORE_REST
+      while (inptr < inend)
+	bytebuf[inlen++] = *inptr++;
+
       inptr = bytebuf;
       inptrp = &inptr;
       inend = &bytebuf[inlen];
