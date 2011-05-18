@@ -14,7 +14,7 @@
 %define buildpower6 0
 %endif
 %define rtkaioarches %{ix86} x86_64 ia64 ppc ppc64 s390 s390x
-%define biarcharches %{ix86} x86_64 ppc ppc64
+%define biarcharches %{ix86} x86_64 ppc ppc64 s390 s390x
 %define debuginfocommonarches %{biarcharches} alpha alphaev6
 %define multiarcharches ppc ppc64 %{ix86} x86_64 %{sparc}
 %define systemtaparches %{ix86} x86_64
@@ -23,7 +23,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 12
+Release: 13
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1047,6 +1047,29 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Wed May 18 2011 Andreas Schwab <schwab@redhat.com> - 2.13.90-13
+- Update from master
+  - Update GB18030 to 2005 version (BZ#11837)
+  - Update RE_SYNTAX*_AWK constants in regex.h
+  - Handle long variable names in putenv (BZ#11892)
+  - Fix test for error_one_per_line mode in error (BZ#12766)
+  - Cleanup x86-64 sys/user.h (BZ#11820)
+  - Several locale data updates (BZ#11987, BZ#9732, BZ#9730, BZ#4357,
+    BZ#12582)
+  - Avoid potential deadlock in mtrace (BZ#6420)
+  - Fix a few problems in fopen and freopen
+  - Provide more helpful error message in getopt (BZ#7101)
+  - Make stack canary value harder to read through read overflow (BZ#10149)
+  - Use mmap for allocation of buffers used for __abort_msg (BZ#11901)
+  - Fix handling of static TLS in dlopen'ed objects (BZ#12453)
+  - Fix initialization of optimization values for AIO (BZ#12083)
+  - Fix handling of conversion problem in CP932 module (BZ#12601)
+  - Fix potential problem with out-of-scope buffer (BZ#12626)
+  - Handle recursive calls in backtrace better (BZ#12432)
+  - Fix handling of incomplete character storage in state
+  - Fix file descriptor position after fclose (BZ#12724)
+- Reinstall NIS RPC headers
+
 * Fri May 13 2011 Andreas Schwab <schwab@redhat.com> - 2.13.90-12
 - Update from master
   - Fix resizing table for unique symbols when adding symbol for copy
