@@ -152,9 +152,9 @@ CFLAGS-openchild.c = -fexceptions
 
 CPPFLAGS += -D_RPC_THREAD_SAFE_
 
-CFLAGS-clnt_tcp.c = -fno-strict-aliasing
-CFLAGS-clnt_udp.c = -fno-strict-aliasing
-CFLAGS-clnt_unix.c = -fno-strict-aliasing
+CFLAGS-clnt_tcp.c += -fno-strict-aliasing
+CFLAGS-clnt_udp.c += -fno-strict-aliasing
+CFLAGS-clnt_unix.c += -fno-strict-aliasing
 
 $(objpfx)tst-getmyaddr: $(common-objpfx)linkobj/libc.so
 $(objpfx)tst-xdrmem: $(common-objpfx)linkobj/libc.so

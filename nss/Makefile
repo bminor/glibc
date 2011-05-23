@@ -75,7 +75,7 @@ endif
 
 include ../Rules
 
-CFLAGS-files-hosts.c = -fno-strict-aliasing
+CFLAGS-files-hosts.c += -fno-strict-aliasing
 
 ifeq (yes,$(build-static-nss))
 $(objpfx)getent: $(objpfx)libnss_files.a

@@ -69,8 +69,8 @@ libnss_nisplus-inhibit-o = $(filter-out .os,$(object-suffixes))
 
 include ../Rules
 
-CFLAGS-nis_findserv.c = -fno-strict-aliasing
-CFLAGS-ypclnt.c = -fno-strict-aliasing
+CFLAGS-nis_findserv.c += -fno-strict-aliasing
+CFLAGS-ypclnt.c += -fno-strict-aliasing
 
 $(objpfx)libnss_compat.so: $(objpfx)libnsl.so$(libnsl.so-version)
 $(objpfx)libnss_nis.so: $(objpfx)libnsl.so$(libnsl.so-version) \

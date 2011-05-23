@@ -57,7 +57,7 @@ tests := htontest test_ifindex tst-ntoa tst-ether_aton tst-network \
 
 include ../Rules
 
-CFLAGS-tst-inet6_rth.c = -fno-strict-aliasing
+CFLAGS-tst-inet6_rth.c += -fno-strict-aliasing
 
 ifeq ($(have-thread-library),yes)
 
