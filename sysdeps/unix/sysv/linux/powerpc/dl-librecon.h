@@ -1,5 +1,5 @@
 /* Optional code to distinguish library flavours.
-   Copyright (C) 2010 Free Software Foundation, Inc.
+   Copyright (C) 2010, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Peter Bergner <bergner@linux.vnet.ibm.com>
 
@@ -20,17 +20,27 @@
 
 #ifndef _DL_LIBRECON_H
 
+#include <string.h>
 #include <sysdeps/unix/sysv/linux/dl-librecon.h>
 
 /* Recognizing extra environment variables.  */
 #define EXTRA_LD_ENVVARS_11 \
   if (memcmp (envline, "AT_PLATFORM", 11) == 0)				      \
     {									      \
-      GLRO(dl_platform) = &envline[12];					      \
-      /* Determine the length of the platform name.  */			      \
-      if (GLRO(dl_platform) != NULL)					      \
-        GLRO(dl_platformlen) = strlen (GLRO(dl_platform));		      \
+      int platformlen = strlen (&envline[12]);				      \
+      GLRO(dl_platformlen) = platformlen;				      \
+      if (platformlen > 0)						      \
+	{								      \
+	  GLRO(dl_platform) = &envline[12];				      \
+	  break;							      \
+	}								      \
+      GLRO(dl_platform) = NULL;						      \
       break;		 		 		 		      \
     }
+
+/* Extra unsecure variables.  The names are all stuffed in a single
+   string which means they have to be terminated with a '\0' explicitly.  */
+#define EXTRA_UNSECURE_ENVVARS \
+  "LD_AT_PLATFORM\0"
 
 #endif /* dl-librecon.h */
