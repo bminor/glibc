@@ -23,7 +23,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 13
+Release: 14
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1047,6 +1047,29 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri May 27 2011 Andreas Schwab <schwab@redhat.com> - 2.13.90-14
+- Update from master
+  - Fix conversion to ISO-2022-JP-2 with ISO-8859-7 designation
+    (BZ#12814)
+  - Undo accidental change in x86-64 user.h
+  - Update Japanese translation
+  - Define RLIMIT_RTTIME (BZ#12795)
+  - Update longlong.h from GCC
+  - Add a few more alloca size checks (BZ#12671)
+  - Fix flags parameter value passed to pltenter and pltexit
+  - Define CLOCK_REALTIME_ALARM and CLOCK_BOOTTIME_ALARM
+  - Always fill output buffer in XPG strerror function (BZ#12782)
+  - Nicer output for negative error numbers in strerror_r
+  - Fix CP1258 conversion (BZ#12777)
+  - Fix handling of LC_CTYPE in locale name handling (BZ#12788)
+  - Set stream errors in more cases (BZ#12792)
+  - Don't unconditionally use alloca in gaih_inet (BZ#11869)
+  - Update documentation in regex.h (BZ#11857)
+  - Prevent Altivec and VSX insns on PowerPC64 when no FPRs or VRs are
+    available
+  - Fix typo in x86-64 powl (BZ#12775)
+- Avoid overriding CFLAGS (#703880)
+
 * Wed May 18 2011 Andreas Schwab <schwab@redhat.com> - 2.13.90-13
 - Update from master
   - Update GB18030 to 2005 version (BZ#11837)
