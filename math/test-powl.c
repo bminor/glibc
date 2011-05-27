@@ -1,5 +1,5 @@
-/* Copyright (C) 1991, 1993, 1995-1998, 2000, 2002, 2004, 2010, 2011
-   Free Software Foundation, Inc.
+/* Test for powl
+   Copyright (C) 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,32 +17,35 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <assert.h>
-#include <errno.h>
 #include <stdio.h>
-#include <string.h>
-#include <sys/param.h>
+#include <math.h>
+#include <float.h>
+#include <ieee754.h>
 
-
-/* Fill buf with a string describing the errno code in ERRNUM.  */
 int
-__xpg_strerror_r (int errnum, char *buf, size_t buflen)
+main (void)
 {
-  const char *estr = __strerror_r (errnum, buf, buflen);
-  size_t estrlen = strlen (estr);
+  int result = 0;
 
-  if (estr == buf)
+#ifndef NO_LONG_DOUBLE
+# if LDBL_MANT_DIG == 64
     {
-      assert (errnum < 0 || errnum >= _sys_nerr_internal
-	      || _sys_errlist_internal[errnum] == NULL);
-      return EINVAL;
+      long double x = 1e-20;
+      union ieee854_long_double u;
+      u.ieee.mantissa0 = 1;
+      u.ieee.mantissa1 = 1;
+      u.ieee.exponent = 0;
+      u.ieee.negative = 0;
+      (void) powl (0.2, u.d);
+      x = powl (x, 1.5);
+      if (fabsl (x - 1e-30) > 1e-10)
+	{
+	  printf ("powl (1e-20, 1.5): wrong result: %Lg\n", x);
+	  result = 1;
+	}
     }
-  assert (errnum >= 0 && errnum < _sys_nerr_internal
-	  && _sys_errlist_internal[errnum] != NULL);
+# endif
+#endif
 
-  /* Terminate the string in any case.  */
-  if (buflen > 0)
-    *((char *) __mempcpy (buf, estr, MIN (buflen - 1, estrlen))) = '\0';
-
-  return buflen <= estrlen ? ERANGE : 0;
+  return result;
 }

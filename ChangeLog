@@ -1,3 +1,123 @@
+2011-05-27  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12814]
+	* iconvdata/Makefile (tests): Add bug-iconv9.
+	* iconvdata/bug-iconv9.c: New file.
+
+2011-05-27  Andreas Schwab  <schwab@redhat.com>
+
+	[BZ #12814]
+	* iconvdata/iso-2022-jp.c (BODY): Fix invalid variable shadowing.
+
+2011-05-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/sys/user.h
+	(struct user_regs_struct): Change intcs field back to cs.
+
+2011-05-25  Ulrich Drepper  <drepper@gmail.com>
+
+	* po/ja.po: Update from translation team.
+
+2011-05-23  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12795]
+	* sysdeps/unix/sysv/linux/bits/resource.h (RLIMIT_RTTIME): Define.
+	* sysdeps/unix/sysv/linux/sparc/bits/resource.h: Likewise.
+
+2011-05-20  Andreas Schwab  <schwab@redhat.com>
+
+	* stdlib/longlong.h: Update from GCC.
+
+2011-05-23  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/sysconf.c (HAS_CPUCLOCK): Add
+	parameter name.
+	* sysdeps/unix/sysv/linux/sysconf.c (has_cpuclock, HAS_CPUCLOCK):
+	Add parameter name.
+	(__sysconf): Pass it down.
+
+2011-05-22  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12671]
+	* nis/nss_nis/nis-alias.c (_nss_nis_getaliasbyname_r): Use malloc in
+	some situations.
+	* nscd/nscd_getserv_r.c (nscd_getserv_r): Likewise.
+	* posix/glob.c (glob_in_dir): Take additional parameter alloca_used.
+	add in in __libc_use_alloca calls.  Adjust callers.
+	(glob): Use malloc in some situations.
+
+	* elf/dl-runtime.c (_dl_profile_fixup): Also store LA_SYMB_NOPLTENTER
+	and LA_SYMB_NOPLTEXIT in flags which are passed to pltenter and
+	pltexit.
+
+2011-05-21  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/unix/sysv/linux/bits/time.h: Define CLOCK_REALTIME_ALARM
+	and CLOCK_BOOTTIME_ALARM.
+
+	[BZ #12782]
+	* string/xpg-strerror.c (__xpg_strerror_r): Fill buffer even if error
+	is returned.
+
+	* string/_strerror.c (__strerror_r): Print negative errors as signed
+	numbers.
+
+	[BZ #12777]
+	* iconvdata/cp1258.c (comp_table_data): Remove entry 0x00A5 0xEC.
+	(decomp_table): Change U0385 entry to emit 0xA5 0xEC.
+	* iconvdata/CP1258.irreversible: Adjust entry 0xA8EC.
+
+	* configure.in: Fix typo in redirection and correct removal of test
+	files in two cases.
+
+	[BZ #12788]
+	* locale/setlocale.c (new_composite_name): Fix test to check for
+	identical name of all categories.
+
+	[BZ #12792]
+	* libio/filedoalloc.c (local_isatty): New function.
+	(_IO_file_doallocate): Use local_isatty.
+	* stdio-common/perror.c (perror): In case a new stream is used
+	forward the stream error.
+	* stdio-common/vfprintf.c (ARGCHECK): For read-only streams also set
+	error flag.
+
+2011-05-20  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #11869]
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Don't unconditionally use
+	alloca.
+	* include/alloca.h (extend_alloca_account): Define.
+
+	[BZ #11857]
+	* posix/regex.h: Fix comments with documentation of user-accessible
+	fields after compilation and describe correct free'ing of pattern
+	after re_compile_pattern.
+	Patch by Reuben Thomas <rrt@sc3d.org>.
+
+2011-05-18  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/Makefile (no-special-regs): Add -mno-vsx
+	and -mno-altivec to prevent the compiler from using Altivec and/or
+	VSX instructions when the corresponding registers are not available.
+
+2011-05-19  Andreas Schwab  <schwab@redhat.com>
+
+	* grp/compat-initgroups.c (__libc_use_alloca): Don't define.
+
+2011-05-19  Ulrich Drepper  <drepper@gmail.com>
+
+	* libio/freopen.c (freopen): Use __dup2, not dup2.
+	* libio/freopen64.c (freopen64): Likewise.
+
+2011-05-17  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #12775]
+	* sysdeps/x86_64/fpu/e_powl.S: Fix a typo.
+	* math/Makefile (tests): Add test-powl.
+	(CFLAGS-test-powl.c): Define.
+	* math/test-powl.c: New file.
+
 2011-05-16  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* fileops.c (_IO_new_file_fopen): Get fd from _IO_fileno.
