@@ -1,3 +1,10 @@
+2011-05-29  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12350]
+	* sysdeps/posix/getaddrinfo.c (gethosts): Restore only RES_USE_IENT6
+	bit from old_res_options.
+	(gaih_inet): Likewise.
+
 2011-05-28  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12811]
