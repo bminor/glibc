@@ -23,7 +23,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 14
+Release: 1
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1047,6 +1047,24 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Tue May 31 2011 Andreas Schwab <schwab@redhat.com> - 2.14-1
+- Update to 2.14 release
+  - Handle DNS server failures in case of AF_UNSPEC lookups correctly
+    (BZ#12684)
+  - Prevent loader from loading itself
+  - Restore _res correctly (BZ#12350)
+  - Interpret numeric values in shadow file as signed (BZ#11099)
+  - Recognize use-vc option in resolv.conf (BZ#11558)
+  - Mark malloc hook variables as deprecated
+  - Declare malloc hook variables as volatile (BZ#11781)
+  - Don't document si_code used for raise (BZ#11799)
+  - Fix unnecessary overallocation due to incomplete character (BZ#12811)
+  - Handle failure of _nl_explode_name in all cases
+  - Add support for time syscall in vDSO (BZ#12813)
+  - Add sendmmsg and setns syscalls
+  - Use getcpu definition from vDSO on x86-64 (BZ#12813)
+- Don't free non-malloced memory and fix memory leak (#709267)
+
 * Fri May 27 2011 Andreas Schwab <schwab@redhat.com> - 2.13.90-14
 - Update from master
   - Fix conversion to ISO-2022-JP-2 with ISO-8859-7 designation
