@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2011-5-27
+GNU C Library NEWS -- history of user-visible changes.  2011-5-30
 Copyright (C) 1992-2009, 2010, 2011 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -9,33 +9,42 @@ Version 2.14
 
 * The following bugs are resolved with this release:
 
-  386, 6420, 7101, 9730, 9732, 9809, 10138, 10149, 10157, 11257, 11258,
-  11487, 11532, 11578, 11653, 11668, 11697, 11724, 11820, 11837, 11857,
-  11869, 11892, 11895, 11901, 11945, 11947, 11952, 11987, 12052, 12083,
-  12158, 12178, 12200, 12346, 12393, 12420, 12432, 12445, 12449, 12453,
-  12454, 12460, 12469, 12489, 12509, 12510, 12511, 12518, 12527, 12541,
-  12545, 12551, 12582, 12583, 12587, 12597, 12601, 12611, 12625, 12626,
-  12631, 12650, 12653, 12655, 12660, 12671, 12681, 12685, 12711, 12713,
-  12714, 12717, 12723, 12724, 12734, 12738, 12746, 12766, 12775, 12777,
-  12782, 12788, 12792, 12795, 12814
+  386, 6420, 7101, 9730, 9732, 9809, 10138, 10149, 10157, 11099, 11257,
+  11258, 11487, 11532, 11558, 11578, 11634, 11653, 11668, 11697, 11724,
+  11781, 11799, 11820, 11837, 11857, 11869, 11892, 11895, 11901, 11945,
+  11947, 11952, 11987, 12052, 12083, 12158, 12178, 12200, 12346, 12350,
+  12393, 12420, 12432, 12445, 12449, 12453, 12454, 12460, 12469, 12489,
+  12509, 12510, 12511, 12518, 12527, 12541, 12545, 12551, 12582, 12583,
+  12587, 12597, 12601, 12611, 12625, 12626, 12631, 12650, 12653, 12655,
+  12660, 12671, 12681, 12684, 12685, 12711, 12713, 12714, 12717, 12723,
+  12724, 12734, 12738, 12746, 12766, 12775, 12777, 12782, 12788, 12792,
+  12795, 12811, 12813, 12814
 
 * New Linux interfaces: clock_adjtime, name_to_handle_at, open_by_handle_at,
-  syncfs
+  syncfs, setns, sendmmsg
 
 * New locales: os_RU, bem_ZA, en_ZA, ff_SN, sw_KE, sw_TZ, lb_LU, wae_CH,
   yue_HK, lij_IT, mhr_RU
 
 * New encodings: CP770, CP771, CP772, CP773, CP774
+
+* New program sotruss to trace calls through PLTs
+  Implemented by Ulrich Drepper.
+
+* The malloc hook implementation is marked deprecated and will be removed
+  from the default implementation in the next version.  The design never
+  worked ever since the introduction of threads.  Even programs which do
+  not create threads themselves can use multiple threads created internally.
 
 Version 2.13
 
 * The following bugs are resolved with this release:
 
-  3268, 6812, 7066, 10085, 10484, 10563, 10851, 11149, 11155, 11611, 11640,
-  11655, 11701, 11840, 11856, 11883, 11903, 11904, 11968, 11979, 12005,
-  12037, 12067, 12077, 12078, 12092, 12093, 12107, 12108, 12113, 12140,
-  12159, 12167, 12191, 12194, 12201, 12204, 12205, 12207, 12348, 12378,
-  12394, 12397
+  3268, 6812, 7066, 10085, 10484, 10563, 10851, 11149, 11155, 11577, 11611,
+  11640, 11655, 11701, 11840, 11856, 11883, 11903, 11904, 11968, 11979,
+  12005, 12037, 12067, 12077, 12078, 12092, 12093, 12107, 12108, 12113,
+  12140, 12159, 12167, 12191, 12194, 12201, 12204, 12205, 12207, 12348,
+  12378, 12394, 12397
 
 * New Linux interfaces: prlimit, prlimit64, fanotify_init, fanotify_mark
 

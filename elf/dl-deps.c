@@ -614,14 +614,14 @@ Filters not supported with LD_TRACE_PRELINKING"));
 	map->l_searchlist.r_list[i]->l_reserved = 0;
     }
 
-  /* Now determine the order in which the initialization has to happen.  */
+  /* Sort the initializer list to take dependencies into account.  The binary
+     itself will always be initialize last.  */
   memcpy (l_initfini, map->l_searchlist.r_list,
 	  nlist * sizeof (struct link_map *));
-
-  /* We can skip looking for the binary itself which is at the front
-     of the search list.  */
-  if (nlist > 1)
+  if (__builtin_expect (nlist > 1, 1))
     {
+      /* We can skip looking for the binary itself which is at the front
+	 of the search list.  */
       i = 1;
       bool seen[nlist];
       memset (seen, false, nlist * sizeof (seen[0]));
