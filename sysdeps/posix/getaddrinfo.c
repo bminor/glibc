@@ -881,16 +881,48 @@ gaih_inet (const char *name, const struct gaih_service *service,
 			}
 		    }
 
-		  no_inet6_data = no_data;
-
 		  if (status == NSS_STATUS_SUCCESS)
 		    {
 		      if ((req->ai_flags & AI_CANONNAME) != 0 && canon == NULL)
 			canon = (*pat)->name;
 
 		      while (*pat != NULL)
-			pat = &((*pat)->next);
+			{
+			  if ((*pat)->family == AF_INET
+			      && req->ai_family == AF_INET6
+			      && (req->ai_flags & AI_V4MAPPED) != 0)
+			    {
+			      uint32_t *pataddr = (*pat)->addr;
+			      (*pat)->family = AF_INET6;
+			      pataddr[3] = pataddr[0];
+			      pataddr[2] = htonl (0xffff);
+			      pataddr[1] = 0;
+			      pataddr[0] = 0;
+			      pat = &(*pat)->next;
+			    }
+			  else if ((req->ai_family == AF_UNSPEC
+				    || (*pat)->family == req->ai_family))
+			    {
+			      if ((*pat)->family == AF_INET6)
+				got_ipv6 = true;
+			      pat = &(*pat)->next;
+			    }
+			  else if (*pat == at)
+			    {
+			      if ((*pat)->next != NULL)
+				memcpy (*pat, (*pat)->next, sizeof (**pat));
+			      else
+				{
+				  no_data = 1;
+				  break;
+				}
+			    }
+			  else
+			    *pat = (*pat)->next;
+			}
 		    }
+
+		  no_inet6_data = no_data;
 		}
 	      else
 		{
