@@ -1,3 +1,73 @@
+2011-06-15  Ulrich Drepper  <drepper@gmail.com>
+
+	* resolv/res_send.c (__libc_res_nsend): Fix typos in last patch.  We
+	need to dereference resplen2.
+
+2011-06-14  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/unix/sysv/linux/wordsize-64/dl-fxstatat64.c: New file.
+
+2011-06-14  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/check_native.c: Include <string.h> for
+	memset declaration.
+
+2011-06-10  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Fix logic allocating
+	tmpbuf.
+
+2011-06-07  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/dl-irel.h (elf_irela): Pass dl_hwcap to
+	ifuncs.
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_rela,
+	elf_machine_lazy_rel): Likewise.
+	* sysdeps/sparc/sparc64/dl-irel.h (elf_irela): Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela,
+	elf_machine_lazy_rel): Likewise.
+	* sysdeps/sparc/sparc64/multiarch/memcpy.S (memcpy): Fetch
+	dl_hwcap via passed in argument.
+	* sysdeps/sparc/sparc64/multiarch/memset.S (memset, bzero):
+	Likewise.
+
+2011-06-06  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
+
+	* stdlib/longlong.h: Update from GCC.  Fix smul_ppmm for S/390.
+
+2011-06-06  Roland McGrath  <roland@hack.frob.com>
+
+	[BZ #12849]
+	* manual/fdl-1.1.texi: New file, verbatim from:
+	http://www.gnu.org/licenses/old-licenses/fdl-1.1.texi
+	* manual/lgpl-2.1.texi: New file, verbatim from:
+	http://www.gnu.org/licenses/old-licenses/lgpl-2.1.texi
+	* manual/Makefile (licenses): New variable, list those new file names.
+	(texis): Use it.
+	(chapters.% top-menu.%): Include $(licenses) with $(appendices).
+
+	* manual/fdl.texi: File removed.
+	* manual/lesser.texi: File removed.
+	* manual/libc.texinfo (Copying, Documentation License):
+	Use new @include file names, put @appendix directive before @include.
+
+2011-06-04  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #12841]
+	* rt/bits/mqueue2.h (__mq_open_2): Add __THROW.
+	(__mq_open_alias): Use __REDIRECT_NTH instead of __REDIRECT.
+	(mq_open): Add __NTH.
+
+2011-06-02  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features):
+	Assume Intel Core i3/i5/i7 processor if AVX is available.
+
+2011-05-31  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/unix/sysv/linux/dl-osinfo.h (_dl_setup_stack_chk_guard): Fix
+	typo.
+
 2011-05-31  Andreas Schwab  <schwab@redhat.com>
 
 	* nscd/nscd_getserv_r.c (nscd_getserv_r): Don't free non-malloced
