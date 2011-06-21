@@ -23,7 +23,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 2
+Release: 3
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1047,6 +1047,18 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Jun 21 2011 Andreas Schwab <schwab@redhat.com> - 2.14-3
+- Update from 2.14 branch
+  - Fix typo in recent resolver change which causes segvs (#710279)
+  - Fix memory leak in getaddrinfo (#712178)
+  - Fix <bits/mqueue2.h> for C++ (BZ#12841)
+  - Assume Intel Core i3/i5/i7 processor if AVX is available
+- Filter results from gethostbyname4_r according to request flags
+  (#711827)
+- Repair GB18030 charmap (#712901)
+- Revert "Use .machine to prevent AS from complaining about z9-109
+  instructions in iconv modules" (#711330)
+
 * Fri Jun  3 2011 Andreas Schwab <schwab@redhat.com> - 2.14-2
 - Revert "Handle DNS server failures in case of AF_UNSPEC lookups
   correctly" (#710279)
