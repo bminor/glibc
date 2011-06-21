@@ -1,3 +1,7 @@
+2011-06-21  Andreas Schwab  <schwab@redhat.com>
+
+	* charmaps/GB18030: Readd lost characters.
+
 2011-05-21  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12788]

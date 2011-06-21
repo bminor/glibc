@@ -1,3 +1,7 @@
+2011-06-21  Andreas Schwab  <schwab@redhat.com>
+
+	* iconvdata/gb18030.c: Regenerate tables.
+
 2011-06-16  Andreas Schwab  <schwab@redhat.com>
 
 	[BZ #12885]
