@@ -562,8 +562,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 	  /* If we do not have to look for IPv6 addresses, use
 	     the simple, old functions, which do not support
-	     IPv6 scope ids. */
-	  if (req->ai_family == AF_INET)
+	     IPv6 scope ids, nor retrieving the canonical name.  */
+	  if (req->ai_family == AF_INET && (req->ai_flags & AI_CANONNAME) == 0)
 	    {
 	      int family = req->ai_family;
 	      size_t tmpbuflen = 512;
@@ -1108,68 +1108,10 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	/* Only the first entry gets the canonical name.  */
 	if (at2 == at && (req->ai_flags & AI_CANONNAME) != 0)
 	  {
-	    char *tmpbuf2 = NULL;
-	    bool malloc_tmpbuf2 = false;
-
 	    if (canon == NULL)
-	      {
-		struct hostent *h = NULL;
-		int herrno;
-		struct hostent th;
-		size_t tmpbuf2len = 512;
-
-		do
-		  {
-		    if (__libc_use_alloca (alloca_used + 2 * tmpbuf2len))
-		      tmpbuf2 = extend_alloca_account (tmpbuf2, tmpbuf2len,
-						       tmpbuf2len * 2,
-						       alloca_used);
-		    else
-		      {
-			char *newp = realloc (malloc_tmpbuf2 ? tmpbuf2 : NULL,
-					      2 * tmpbuf2len);
-			if (newp == NULL)
-			  {
-			    if (malloc_tmpbuf2)
-			      free (tmpbuf2);
-			    result = -EAI_MEMORY;
-			    goto free_and_return;
-			  }
-
-			tmpbuf2 = newp;
-			tmpbuf2len = 2 * tmpbuf2len;
-			malloc_tmpbuf2 = true;
-		      }
-
-		    rc = __gethostbyaddr_r (at2->addr,
-					    ((at2->family == AF_INET6)
-					     ? sizeof (struct in6_addr)
-					     : sizeof (struct in_addr)),
-					    at2->family, &th, tmpbuf2,
-					    tmpbuf2len, &h, &herrno);
-		  }
-		while (rc == ERANGE && herrno == NETDB_INTERNAL);
-
-		if (rc != 0 && herrno == NETDB_INTERNAL)
-		  {
-		    if (malloc_tmpbuf2)
-		      free (tmpbuf2);
-
-		    __set_h_errno (herrno);
-		    result = -EAI_SYSTEM;
-		    goto free_and_return;
-		  }
-
-		if (h != NULL)
-		  canon = h->h_name;
-		else
-		  {
-		    assert (orig_name != NULL);
-		    /* If the canonical name cannot be determined, use
-		       the passed in string.  */
-		    canon = orig_name;
-		  }
-	      }
+	      /* If the canonical name cannot be determined, use
+		 the passed in string.  */
+	      canon = orig_name;
 
 #ifdef HAVE_LIBIDN
 	    if (req->ai_flags & AI_CANONIDN)
@@ -1184,9 +1126,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		int rc = __idna_to_unicode_lzlz (canon, &out, idn_flags);
 		if (rc != IDNA_SUCCESS)
 		  {
-		    if (malloc_tmpbuf2)
-		      free (tmpbuf2);
-
 		    if (rc == IDNA_MALLOC_ERROR)
 		      result = -EAI_MEMORY;
 		    else if (rc == IDNA_DLOPEN_ERROR)
@@ -1216,17 +1155,11 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		    canon = strdup (canon);
 		    if (canon == NULL)
 		      {
-			if (malloc_tmpbuf2)
-			  free (tmpbuf2);
-
 			result = -EAI_MEMORY;
 			goto free_and_return;
 		      }
 		  }
 	      }
-
-	    if (malloc_tmpbuf2)
-	      free (tmpbuf2);
 	  }
 
 	family = at2->family;

@@ -1,3 +1,8 @@
+2011-06-28  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Don't use gethostbyaddr
+	to determine canonical name.
+
 2011-06-27  Andreas Schwab  <schwab@redhat.com>
 
 	* iconvdata/gb18030.c (BODY for TO_LOOP): Fix encoding of non-BMP
