@@ -1,3 +1,9 @@
+2011-06-21  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12885]
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): When looking up only IPv6
+	addresses using gethostbyname4_r ignore IPv4 addresses.
+
 2011-06-15  Ulrich Drepper  <drepper@gmail.com>
 
 	* resolv/res_send.c (__libc_res_nsend): Fix typos in last patch.  We
