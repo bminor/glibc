@@ -1,3 +1,7 @@
+2011-06-22  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Fix last change.
+
 2011-06-21  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12885]
