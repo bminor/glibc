@@ -1,3 +1,9 @@
+2011-06-28  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12935]
+	* malloc/memusage.sh: Fix quoting in message.
+	* debug/xtrace.sh: Likewise.
+
 2011-06-27  Andreas Schwab  <schwab@redhat.com>
 
 	* iconvdata/gb18030.c (BODY for TO_LOOP): Fix encoding of non-BMP
