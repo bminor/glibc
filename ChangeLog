@@ -1,3 +1,13 @@
+2011-06-28  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/fpu/e_hypot.c: optimizations for POWER5 and POWER6.
+	* sysdeps/powerpc/fpu/e_hypotf.c: likewise.
+
+2011-06-28  Adhemerval Zanella <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/fpu/e_rem_pio2f.c: splitting the code on k_rem_pio2f.c
+	* sysdeps/powerpc/fpu/k_rem_pio2f.c: some code from e_rem_pio2f.c.
+
 2011-06-15  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/fpu/Makefile: Added new objects.
