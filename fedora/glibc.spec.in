@@ -23,7 +23,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 3
+Release: 4
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1047,6 +1047,12 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Tue Jun 28 2011 Andreas Schwab <schwab@redhat.com> - 2.14-4
+- Update from 2.14 branch
+  - Fix crash in GB18030 encoder (#712901)
+- Fix more bugs in GB18030 charmap
+- Don't use gethostbyaddr to determine canonical name
+
 * Mon Jun 21 2011 Andreas Schwab <schwab@redhat.com> - 2.14-3
 - Update from 2.14 branch
   - Fix typo in recent resolver change which causes segvs (#710279)
