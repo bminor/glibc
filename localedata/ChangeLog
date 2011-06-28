@@ -1,3 +1,7 @@
+2011-06-28  Andreas Schwab  <schwab@redhat.com>
+
+	* charmaps/GB18030: Correct some entries.
+
 2011-06-21  Andreas Schwab  <schwab@redhat.com>
 
 	* charmaps/GB18030: Readd lost characters.

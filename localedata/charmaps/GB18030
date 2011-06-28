@@ -40889,14 +40889,14 @@ CHARMAP
 <U9FB1>     /x82/x35/x90/x34 <CJK>
 <U9FB2>     /x82/x35/x90/x35 <CJK>
 <U9FB3>     /x82/x35/x90/x36 <CJK>
-<U9FB4>     /x82/x35/x90/x37 <CJK>
-<U9FB5>     /x82/x35/x90/x38 <CJK>
-<U9FB6>     /x82/x35/x90/x39 <CJK>
-<U9FB7>     /x82/x35/x91/x30 <CJK>
-<U9FB8>     /x82/x35/x91/x31 <CJK>
-<U9FB9>     /x82/x35/x91/x32 <CJK>
-<U9FBA>     /x82/x35/x91/x33 <CJK>
-<U9FBB>     /x82/x35/x91/x34 <CJK>
+<U9FB4>     /xfe/x59         <CJK>
+<U9FB5>     /xfe/x61         <CJK>
+<U9FB6>     /xfe/x66         <CJK>
+<U9FB7>     /xfe/x67         <CJK>
+<U9FB8>     /xfe/x6d         <CJK>
+<U9FB9>     /xfe/x7e         <CJK>
+<U9FBA>     /xfe/x90         <CJK>
+<U9FBB>     /xfe/xa0         <CJK>
 <U9FBC>     /x82/x35/x91/x35 <CJK>
 <U9FBD>     /x82/x35/x91/x36 <CJK>
 <U9FBE>     /x82/x35/x91/x37 <CJK>
@@ -57234,16 +57234,16 @@ CHARMAP
 <UE78A>     /xa6/xbe         <Private Use>
 <UE78B>     /xa6/xbf         <Private Use>
 <UE78C>     /xa6/xc0         <Private Use>
-<UE78D>     /xa6/xd9         <Private Use>
-<UE78E>     /xa6/xda         <Private Use>
-<UE78F>     /xa6/xdb         <Private Use>
-<UE790>     /xa6/xdc         <Private Use>
-<UE791>     /xa6/xdd         <Private Use>
-<UE792>     /xa6/xde         <Private Use>
-<UE793>     /xa6/xdf         <Private Use>
-<UE794>     /xa6/xec         <Private Use>
-<UE795>     /xa6/xed         <Private Use>
-<UE796>     /xa6/xf3         <Private Use>
+% <UE78D>     /xa6/xd9         <Private Use>
+% <UE78E>     /xa6/xda         <Private Use>
+% <UE78F>     /xa6/xdb         <Private Use>
+% <UE790>     /xa6/xdc         <Private Use>
+% <UE791>     /xa6/xdd         <Private Use>
+% <UE792>     /xa6/xde         <Private Use>
+% <UE793>     /xa6/xdf         <Private Use>
+% <UE794>     /xa6/xec         <Private Use>
+% <UE795>     /xa6/xed         <Private Use>
+% <UE796>     /xa6/xf3         <Private Use>
 <UE797>     /xa6/xf6         <Private Use>
 <UE798>     /xa6/xf7         <Private Use>
 <UE799>     /xa6/xf8         <Private Use>
@@ -57371,15 +57371,15 @@ CHARMAP
 <UE813>     /xd7/xfd         <Private Use>
 <UE814>     /xd7/xfe         <Private Use>
 <UE815>     /x83/x36/xc9/x34 <Private Use>
-<UE816>     /xfe/x51         <Private Use>
-<UE817>     /xfe/x52         <Private Use>
-<UE818>     /xfe/x53         <Private Use>
+% <UE816>     /xfe/x51         <Private Use>
+% <UE817>     /xfe/x52         <Private Use>
+% <UE818>     /xfe/x53         <Private Use>
 <UE819>     /x83/x36/xc9/x35 <Private Use>
 <UE81A>     /x83/x36/xc9/x36 <Private Use>
 <UE81B>     /x83/x36/xc9/x37 <Private Use>
 <UE81C>     /x83/x36/xc9/x38 <Private Use>
 <UE81D>     /x83/x36/xc9/x39 <Private Use>
-<UE81E>     /xfe/x59         <Private Use>
+% <UE81E>     /xfe/x59         <Private Use>
 <UE81F>     /x83/x36/xca/x30 <Private Use>
 <UE820>     /x83/x36/xca/x31 <Private Use>
 <UE821>     /x83/x36/xca/x32 <Private Use>
@@ -57387,19 +57387,19 @@ CHARMAP
 <UE823>     /x83/x36/xca/x34 <Private Use>
 <UE824>     /x83/x36/xca/x35 <Private Use>
 <UE825>     /x83/x36/xca/x36 <Private Use>
-<UE826>     /xfe/x61         <Private Use>
+% <UE826>     /xfe/x61         <Private Use>
 <UE827>     /x83/x36/xca/x37 <Private Use>
 <UE828>     /x83/x36/xca/x38 <Private Use>
 <UE829>     /x83/x36/xca/x39 <Private Use>
 <UE82A>     /x83/x36/xcb/x30 <Private Use>
-<UE82B>     /xfe/x66         <Private Use>
-<UE82C>     /xfe/x67         <Private Use>
+% <UE82B>     /xfe/x66         <Private Use>
+% <UE82C>     /xfe/x67         <Private Use>
 <UE82D>     /x83/x36/xcb/x31 <Private Use>
 <UE82E>     /x83/x36/xcb/x32 <Private Use>
 <UE82F>     /x83/x36/xcb/x33 <Private Use>
 <UE830>     /x83/x36/xcb/x34 <Private Use>
-<UE831>     /xfe/x6c         <Private Use>
-<UE832>     /xfe/x6d         <Private Use>
+% <UE831>     /xfe/x6c         <Private Use>
+% <UE832>     /xfe/x6d         <Private Use>
 <UE833>     /x83/x36/xcb/x35 <Private Use>
 <UE834>     /x83/x36/xcb/x36 <Private Use>
 <UE835>     /x83/x36/xcb/x37 <Private Use>
@@ -57408,7 +57408,7 @@ CHARMAP
 <UE838>     /x83/x36/xcc/x30 <Private Use>
 <UE839>     /x83/x36/xcc/x31 <Private Use>
 <UE83A>     /x83/x36/xcc/x32 <Private Use>
-<UE83B>     /xfe/x76         <Private Use>
+% <UE83B>     /xfe/x76         <Private Use>
 <UE83C>     /x83/x36/xcc/x33 <Private Use>
 <UE83D>     /x83/x36/xcc/x34 <Private Use>
 <UE83E>     /x83/x36/xcc/x35 <Private Use>
@@ -57416,7 +57416,7 @@ CHARMAP
 <UE840>     /x83/x36/xcc/x37 <Private Use>
 <UE841>     /x83/x36/xcc/x38 <Private Use>
 <UE842>     /x83/x36/xcc/x39 <Private Use>
-<UE843>     /xfe/x7e         <Private Use>
+% <UE843>     /xfe/x7e         <Private Use>
 <UE844>     /x83/x36/xcd/x30 <Private Use>
 <UE845>     /x83/x36/xcd/x31 <Private Use>
 <UE846>     /x83/x36/xcd/x32 <Private Use>
@@ -57433,8 +57433,8 @@ CHARMAP
 <UE851>     /x83/x36/xce/x33 <Private Use>
 <UE852>     /x83/x36/xce/x34 <Private Use>
 <UE853>     /x83/x36/xce/x35 <Private Use>
-<UE854>     /xfe/x90         <Private Use>
-<UE855>     /xfe/x91         <Private Use>
+% <UE854>     /xfe/x90         <Private Use>
+% <UE855>     /xfe/x91         <Private Use>
 <UE856>     /x83/x36/xce/x36 <Private Use>
 <UE857>     /x83/x36/xce/x37 <Private Use>
 <UE858>     /x83/x36/xce/x38 <Private Use>
@@ -57449,7 +57449,7 @@ CHARMAP
 <UE861>     /x83/x36/xcf/x37 <Private Use>
 <UE862>     /x83/x36/xcf/x38 <Private Use>
 <UE863>     /x83/x36/xcf/x39 <Private Use>
-<UE864>     /xfe/xa0         <Private Use>
+% <UE864>     /xfe/xa0         <Private Use>
 <UE865>     /x83/x36/xd0/x30 <Private Use>
 <UE866>     /x83/x36/xd0/x31 <Private Use>
 <UE867>     /x83/x36/xd0/x32 <Private Use>
@@ -62997,16 +62997,16 @@ CHARMAP
 <UFE0D>     /x84/x31/x82/x33 VARIATION SELECTOR-14
 <UFE0E>     /x84/x31/x82/x34 VARIATION SELECTOR-15
 <UFE0F>     /x84/x31/x82/x35 VARIATION SELECTOR-16
-<UFE10>     /x84/x31/x82/x36 <UNASSIGNED>
-<UFE11>     /x84/x31/x82/x37 <UNASSIGNED>
-<UFE12>     /x84/x31/x82/x38 <UNASSIGNED>
-<UFE13>     /x84/x31/x82/x39 <UNASSIGNED>
-<UFE14>     /x84/x31/x83/x30 <UNASSIGNED>
-<UFE15>     /x84/x31/x83/x31 <UNASSIGNED>
-<UFE16>     /x84/x31/x83/x32 <UNASSIGNED>
-<UFE17>     /x84/x31/x83/x33 <UNASSIGNED>
-<UFE18>     /x84/x31/x83/x34 <UNASSIGNED>
-<UFE19>     /x84/x31/x83/x35 <UNASSIGNED>
+<UFE10>     /xa6/xd9         PRESENTATION FORM FOR VERTICAL COMMA
+<UFE11>     /xa6/xdb         PRESENTATION FORM FOR VERTICAL IDEOGRAPHIC COMMA
+<UFE12>     /xa6/xda         PRESENTATION FORM FOR VERTICAL IDEOGRAPHIC FULL STOP
+<UFE13>     /xa6/xdc         PRESENTATION FORM FOR VERTICAL COLON
+<UFE14>     /xa6/xdd         PRESENTATION FORM FOR VERTICAL SEMICOLON
+<UFE15>     /xa6/xde         PRESENTATION FORM FOR VERTICAL EXCLAMATION MARK
+<UFE16>     /xa6/xdf         PRESENTATION FORM FOR VERTICAL QUESTION MARK
+<UFE17>     /xa6/xec         PRESENTATION FORM FOR VERTICAL LEFT WHITE LENTICULAR BRACKET
+<UFE18>     /xa6/xed         PRESENTATION FORM FOR VERTICAL RIGHT WHITE LENTICULAR BRAKCET
+<UFE19>     /xa6/xf3         PRESENTATION FORM FOR VERTICAL HORIZONTAL ELLIPSIS
 <UFE1A>     /x84/x31/x83/x36 <UNASSIGNED>
 <UFE1B>     /x84/x31/x83/x37 <UNASSIGNED>
 <UFE1C>     /x84/x31/x83/x38 <UNASSIGNED>
@@ -63017,9 +63017,9 @@ CHARMAP
 <UFE21>     /x84/x31/x84/x33 COMBINING LIGATURE RIGHT HALF
 <UFE22>     /x84/x31/x84/x34 COMBINING DOUBLE TILDE LEFT HALF
 <UFE23>     /x84/x31/x84/x35 COMBINING DOUBLE TILDE RIGHT HALF
-<UFE24>     /x84/x31/x84/x36 <UNASSIGNED>
-<UFE25>     /x84/x31/x84/x37 <UNASSIGNED>
-<UFE26>     /x84/x31/x84/x38 <UNASSIGNED>
+<UFE24>     /x84/x31/x84/x36 COMBINING MACRON LEFT HALF
+<UFE25>     /x84/x31/x84/x37 COMBINING MACRON RIGHT HALF
+<UFE26>     /x84/x31/x84/x38 COMBINING CONJOINING MACRON
 <UFE27>     /x84/x31/x84/x39 <UNASSIGNED>
 <UFE28>     /x84/x31/x85/x30 <UNASSIGNED>
 <UFE29>     /x84/x31/x85/x31 <UNASSIGNED>

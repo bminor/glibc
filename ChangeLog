@@ -1,5 +1,8 @@
 2011-06-28  Andreas Schwab  <schwab@redhat.com>
 
+	* iconvdata/gb18030.c: Update tables.
+	(BODY for FROM_LOOP): Handle non-BMP characters specially.
+
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Don't use gethostbyaddr
 	to determine canonical name.
 
