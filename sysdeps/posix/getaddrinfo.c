@@ -883,6 +883,9 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 		  if (status == NSS_STATUS_SUCCESS)
 		    {
+		      assert (!no_data);
+		      no_data = 1;
+
 		      if ((req->ai_flags & AI_CANONNAME) != 0 && canon == NULL)
 			canon = (*pat)->name;
 
@@ -898,27 +901,20 @@ gaih_inet (const char *name, const struct gaih_service *service,
 			      pataddr[2] = htonl (0xffff);
 			      pataddr[1] = 0;
 			      pataddr[0] = 0;
-			      pat = &(*pat)->next;
+			      pat = &((*pat)->next);
+			      no_data = 0;
 			    }
-			  else if ((req->ai_family == AF_UNSPEC
-				    || (*pat)->family == req->ai_family))
+			  else if (req->ai_family == AF_UNSPEC
+				   || (*pat)->family == req->ai_family)
 			    {
-			      if ((*pat)->family == AF_INET6)
+			      pat = &((*pat)->next);
+
+			      no_data = 0;
+			      if (req->ai_family == AF_INET6)
 				got_ipv6 = true;
-			      pat = &(*pat)->next;
-			    }
-			  else if (*pat == at)
-			    {
-			      if ((*pat)->next != NULL)
-				memcpy (*pat, (*pat)->next, sizeof (**pat));
-			      else
-				{
-				  no_data = 1;
-				  break;
-				}
 			    }
 			  else
-			    *pat = (*pat)->next;
+			    *pat = ((*pat)->next);
 			}
 		    }
 
