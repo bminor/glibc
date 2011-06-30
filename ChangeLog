@@ -1,3 +1,8 @@
+2011-06-30  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Make sure RES_USE_INET6
+	is always restored.
+
 2011-06-28  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12935]
