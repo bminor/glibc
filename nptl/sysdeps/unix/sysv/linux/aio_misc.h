@@ -46,8 +46,9 @@ __aio_create_helper_thread (pthread_t *threadp, void *(*tf) (void *),
   pthread_attr_init (&attr);
   pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
 
-  /* The helper thread needs only very little resources.  */
-  (void) pthread_attr_setstacksize (&attr, PTHREAD_STACK_MIN);
+  /* Leave the stack size as the default or it can be too small for TLS
+   * requirements if set to PTHREAD_STACK_MIN.  */
+  (void) pthread_attr_setstacksize (&attr, 0);
 
   /* Block all signals in the helper thread.  To do this thoroughly we
      temporarily have to block all signals here.  */

@@ -1,3 +1,10 @@
+2011-06-30  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	* nptl/sysdeps/unix/sysv/linux/aio_misc.h
+	(__aio_create_helper_thread): Set the pthread_attr stacksize to the
+	default, 0.  When previously set to PTHREAD_STACK_MIN, pthread_create
+	would fail if TLS requirements on the stack exceed that small value.
+
 2011-06-28  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/fpu/e_hypot.c: optimizations for POWER5 and POWER6.
