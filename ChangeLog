@@ -1,3 +1,11 @@
+2011-06-30  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	* nptl/sysdeps/unix/sysv/linux/aio_misc.h
+	(__aio_create_helper_thread): Remove call to
+	pthread_attr_setstacksize () which set the stacksize to
+	PTHREAD_STACK_MIN.  This is too small if large amounts of TLS are in
+	use.  Removing this call effectively sets stacksize to 'default'.
+
 2011-03-15  Alan Modra  <amodra@gmail.com>
 
 	* elf/dl-reloc.c (_dl_try_allocate_static_tls <TLS_DTV_AT_TP>): Handle
