@@ -1,3 +1,8 @@
+2011-06-22  Marek Polacek  <mpolacek@redhat.com>
+
+	[BZ #9696]
+	* stdlib/strtod_l.c (round_and_return): Set ERANGE instead of EDOM.
+
 2011-06-30  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Make sure RES_USE_INET6
