@@ -59,6 +59,9 @@ BuildRequires: gcc >= 3.2
 %define enablekernel 2.6.32
 Conflicts: kernel < %{enablekernel}
 %define target %{_target_cpu}-redhat-linux
+%ifarch %{arm}
+%define target %{_target_cpu}-redhat-linuxeabi
+%endif
 %ifarch %{multiarcharches}
 # Need STT_IFUNC support
 %ifarch ppc ppc64
