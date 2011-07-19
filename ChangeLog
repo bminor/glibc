@@ -1,3 +1,8 @@
+2011-07-19  Ulrich Drepper  <drepper@gmail.com>
+
+	* nscd/nscd.c (termination_handler): Don't do anything for a database
+	if it has not yet been initialized.
+
 2011-07-05  Andreas Jaeger  <aj@suse.de>
 
 	[BZ#9696]
