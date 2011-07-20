@@ -1,3 +1,7 @@
+2011-07-20  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/x86_64/bits/link.h (La_x86_64_ymm): Force 16-byte alignment.
+
 2011-07-20  Andreas Schwab  <schwab@redhat.com>
 
 	* resolv/res_query.c (__libc_res_nquerydomain): Use size_t for
