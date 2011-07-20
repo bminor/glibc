@@ -1,3 +1,8 @@
+2011-07-20  Andreas Schwab  <schwab@redhat.com>
+
+	* resolv/res_query.c (__libc_res_nquerydomain): Use size_t for
+	strlen results.
+
 2011-07-19  Andreas Schwab  <schwab@redhat.com>
 
 	* string/strxfrm_l.c (STRXFRM): Fix alloca accounting.
