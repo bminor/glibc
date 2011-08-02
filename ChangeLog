@@ -1,3 +1,11 @@
+2011-07-28  Will Schmidt  <will_schmidt@vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power7/memcpy.S: Optimize the
+	aligned copy for power7 with vector-scalar instructions.
+
+	* sysdeps/powerpc/powerpc64/power7/memcpy.S: Optimize the
+	aligned copy for power7 with vector-scalar instructions.
+
 2011-05-18  Ryan S. Arnold  <rsa@us.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/Makefile (no-special-regs): Add -mno-vsx
