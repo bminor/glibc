@@ -1,3 +1,94 @@
+2011-05-30  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12454]
+	* elf/dl-deps.c (_dl_map_object_deps): Run initializer sorting only
+	when there are multiple maps.
+	* elf/dl-fini.c (_dl_sort_fini): Check for list of one.
+	(_dl_fini): Remove test here.
+
+	* elf/rtld.c (dl_main): Don't allow the loader to load itself.
+
+2011-02-06  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #12653]
+	* sysdeps/i386/i686/multiarch/memcpy-ssse3-rep.S: Only protect
+	MEMCPY_CHK with USE_AS_BCOPY ifdef check.
+	* sysdeps/i386/i686/multiarch/memcpy-ssse3.S: Likewise.
+	* sysdeps/x86_64/multiarch/memcpy-ssse3.S: Likewise.
+	* sysdeps/x86_64/multiarch/memcpy-ssse3-back.S: Likewise.
+
+2010-09-28  Andreas Schwab  <schwab@redhat.com>
+	    Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12489]
+	* elf/rtld.c (dl_main): Move setting of GLRO(dl_init_all_dirs)
+	before performing relro protection.  At old place add assertion
+	to make sure nothing changed.
+
+2011-02-16  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h:
+	(INTERNAL_VSYSCALL_NCS INTERNAL_SYSCALL_NCS): Remove erroneous (int)
+	cast from r3.
+	* sysdeps/wordsize-64/Makefile: New file.  Add tst-writev to
+	'tests' variable.
+	* sysdeps/wordsize-64/tst-writev.c: New file.
+
+2011-02-15  Ryan S. Arnold  <rsa@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power7/Makefile: New file which adds
+	-mno-vsx to the CFLAGS-rtld.c variable to avoid using VSX registers and
+	insns in _dl_start to prevent a TOC reference before relocs are
+	resolved.
+
+2011-02-02  Ulrich Drepper  <drepper@gmail.com>
+
+	* elf/dl-runtime.c (_dl_call_pltexit): Pass correct address of the
+	function to the callback.
+	Patch partly by Jiri Olsa <jolsa@redhat.com>.
+
+2011-02-02  Andreas Schwab  <schwab@redhat.com>
+
+	* shadow/sgetspent.c: Check return value of __sgetspent_r instead
+	of errno.
+
+2011-01-19  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #11724]
+	* elf/dl-deps.c (_dl_map_object_deps): Rewrite sorting determining order
+	of constructors.
+	* elf/dl-fini.c (_dl_sort_fini): Rewrite sorting determining order
+	of destructors.
+	(_dl_fini): Don't call _dl_sort_fini if there is only one object.
+
+	[BZ #11724]
+	* elf/Makefile: Add rules to build and run new test.
+	* elf/tst-initorder.c: New file.
+	* elf/tst-initorder.exp: New file.
+	* elf/tst-initordera1.c: New file.
+	* elf/tst-initordera2.c: New file.
+	* elf/tst-initordera3.c: New file.
+	* elf/tst-initordera4.c: New file.
+	* elf/tst-initorderb1.c: New file.
+	* elf/tst-initorderb2.c: New file.
+	* elf/tst-order-a1.c: New file.
+	* elf/tst-order-a2.c: New file.
+	* elf/tst-order-a3.c: New file.
+	* elf/tst-order-a4.c: New file.
+	* elf/tst-order-b1.c: New file.
+	* elf/tst-order-b2.c: New file.
+	* elf/tst-order-main.c: New file.
+	New test case by George Gensure <werkt0@gmail.com>.
+
+2010-10-01  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Don't discard result of
+	decoding ACE if AI_CANONIDN.
+
+2011-01-18  Ulrich Drepper  <drepper@gmail.com>
+
+	* elf/Makefile: Build IFUNC tests unless multi-arch = no.
+
 2011-01-17  Ulrich Drepper  <drepper@gmail.com>
 
 	* version.h (RELEASE): Bump for 2.13 release.
