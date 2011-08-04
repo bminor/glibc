@@ -20,7 +20,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 1
+Release: 2
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1028,6 +1028,14 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Thu Aug  4 2011 Andreas Schwab <schwab@redhat.com> - 2.13-2
+- Update from 2.13 branch
+  - Fix static linking with checking x86/x86-64 memcpy (BZ#12653)
+  - Fix passing symbol value to pltexit callbacks when ld.so auditing
+  - Fix range error handling in sgetspent
+  - Fix ordering of DSO constructors and destructors (BZ#11724)
+- Use eabi for arm
+
 * Tue Jan 18 2011 Andreas Schwab <schwab@redhat.com> - 2.13-1
 - Update to 2.13 release
   - Define AT_NO_AUTOMOUNT
