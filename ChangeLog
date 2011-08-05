@@ -1,3 +1,108 @@
+2011-07-22  Andreas Schwab  <schwab@redhat.com>
+
+	* resolv/res_init.c (__res_vinit): Properly tokenize nameserver
+	line.
+
+2011-07-26  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Don't discard result of
+	encoding to ACE if AI_IDN.
+
+2011-07-25  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/i386/i486/bits/string.h (__strncat_g): Correctly handle
+	__n bigger than INT_MAX+1.
+	(__strncmp_g): Likewise.
+
+2011-07-23  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Fix one more
+	typo.
+	(_dl_x86_64_save_sse): Likewise.
+
+2011-07-22  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Fix test for
+	OSXSAVE.
+	(_dl_x86_64_save_sse): Likewise.
+
+2011-07-21  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): Fix last
+	change.
+	(_dl_x86_64_save_sse): Use correct AVX check.
+
+2011-07-20  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #13007]
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_profile): More complete
+	check for AVX enablement so that we don't crash with old kernels and
+	new hardware.
+	* elf/tst-audit4.c: Add same checks here.
+	* elf/tst-audit6.c: Likewise.
+
+2011-07-20  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12852]
+	* posix/glob.c (glob): Check passed in values before using them in
+	expressions to avoid some overflows.
+	(glob_in_dir): Likewise.
+
+2011-07-20  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/x86_64/bits/link.h (La_x86_64_ymm): Force 16-byte alignment.
+
+2011-07-20  Andreas Schwab  <schwab@redhat.com>
+
+	* resolv/res_query.c (__libc_res_nquerydomain): Use size_t for
+	strlen results.
+
+2011-07-19  Andreas Schwab  <schwab@redhat.com>
+
+	* string/strxfrm_l.c (STRXFRM): Fix alloca accounting.
+
+2011-07-19  Ulrich Drepper  <drepper@gmail.com>
+
+	* nscd/nscd.c (termination_handler): Don't do anything for a database
+	if it has not yet been initialized.
+
+2011-07-05  Andreas Jaeger  <aj@suse.de>
+
+	[BZ#9696]
+	* stdlib/tst-strtod.c: Add testcase.
+
+2011-07-07  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12868]
+	* sysdeps/unix/sysv/linux/linux_fsinfo.h: Define Lustre constants.
+	* sysdeps/unix/sysv/linux/internal_statvfs.c (__statvfs_getflags):
+	Handle Lustre.
+	* sysdeps/unix/sysv/linux/pathconf.c (__statfs_link_max): Likewise.
+	(__statfs_filesize_max): Likewise.
+	Patch mostly by Andreas Dilger <adilger@whamcloud.com>.
+
+2011-07-06  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12922]
+	* posix/getopt.c (_getopt_internal_r): When "W;" is in short options
+	but no long options are defined, just return 'W'.
+
+2011-06-22  Marek Polacek  <mpolacek@redhat.com>
+
+	[BZ #9696]
+	* stdlib/strtod_l.c (round_and_return): Set ERANGE instead of EDOM.
+
+2011-06-30  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Make sure RES_USE_INET6
+	is always restored.
+
+2011-06-28  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12935]
+	* malloc/memusage.sh: Fix quoting in message.
+	* debug/xtrace.sh: Likewise.
+
 2011-06-28  Andreas Schwab  <schwab@redhat.com>
 
 	* iconvdata/gb18030.c: Update tables.

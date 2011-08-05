@@ -1,5 +1,5 @@
 /* PLT trampolines.  x86-64 version.
-   Copyright (C) 2004, 2005, 2007, 2009 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005, 2007, 2009, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -139,11 +139,20 @@ L(have_avx):
 	movl	$1, %eax
 	cpuid
 	movq	%r11,%rbx		# Restore rbx
-	movl	$1, %eax
-	testl	$(1 << 28), %ecx
+	xorl	%eax, %eax
+	// AVX and XSAVE supported?
+	andl	$((1 << 28) | (1 << 27)), %ecx
+	cmpl	$((1 << 28) | (1 << 27)), %ecx
 	jne	2f
-	negl	%eax
-2:	movl	%eax, L(have_avx)(%rip)
+	xorl	%ecx, %ecx
+	// Get XFEATURE_ENABLED_MASK
+	xgetbv
+	andl	$0x6, %eax
+	cmpl	$0x6, %eax
+	// Nonzero if SSE and AVX state saving is enabled.
+	sete	%al
+2:	leal	-1(%eax,%eax), %eax
+	movl	%eax, L(have_avx)(%rip)
 	cmpl	$0, %eax
 
 1:	js	L(no_avx)
@@ -176,11 +185,20 @@ _dl_x86_64_save_sse:
 	movl	$1, %eax
 	cpuid
 	movq	%r11,%rbx		# Restore rbx
-	movl	$1, %eax
-	testl	$(1 << 28), %ecx
+	xorl	%eax, %eax
+	// AVX and XSAVE supported?
+	andl	$((1 << 28) | (1 << 27)), %ecx
+	cmpl	$((1 << 28) | (1 << 27)), %ecx
 	jne	2f
-	negl	%eax
-2:	movl	%eax, L(have_avx)(%rip)
+	xorl	%ecx, %ecx
+	// Get XFEATURE_ENABLED_MASK
+	xgetbv
+	andl	$0x6, %eax
+	cmpl	$0x6, %eax
+	// Nonzero if SSE and AVX state saving is enabled.
+	sete	%al
+2:	leal	-1(%eax,%eax), %eax
+	movl	%eax, L(have_avx)(%rip)
 	cmpl	$0, %eax
 
 1:	js	L(no_avx5)

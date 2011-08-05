@@ -432,7 +432,10 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  /* In case the output string is the same as the input string
 	     no new string has been allocated.  */
 	  if (p != name)
-	    malloc_name = true;
+	    {
+	      name = p;
+	      malloc_name = true;
+	    }
 	}
 #endif
 
@@ -828,6 +831,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	      tmpbuf = malloc (tmpbuflen);
 	      if (tmpbuf == NULL)
 		{
+		  _res.options |= old_res_options & RES_USE_INET6;
 		  result = -EAI_MEMORY;
 		  goto free_and_return;
 		}
@@ -872,6 +876,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 						2 * tmpbuflen);
 			  if (newp == NULL)
 			    {
+			      _res.options |= old_res_options & RES_USE_INET6;
 			      result = -EAI_MEMORY;
 			      goto free_and_return;
 			    }
@@ -991,6 +996,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 				      canonbuf = malloc (max_fqdn_len);
 				      if (canonbuf == NULL)
 					{
+					  _res.options
+					    |= old_res_options & RES_USE_INET6;
 					  result = -EAI_MEMORY;
 					  goto free_and_return;
 					}
