@@ -23,7 +23,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 4
+Release: 5
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1045,6 +1045,24 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri Aug  5 2011 Andreas Schwab <schwab@redhat.com> - 2.14-5
+- Update from 2.14 branch
+  - Properly tokenize nameserver line for servers with IPv6 address
+  - Fix encoding name for IDN in getaddrinfo (#725755)
+  - Fix inline strncat/strncmp on x86
+  - Fix check for AVX enablement (BZ#13007)
+  - Check for overflows in expressions (BZ#12852)
+  - Force La_x86_64_ymm to be 16-byte aligned
+  - Fix alloca accounting in strxfm
+  - Avoid possible crashes in anormal nscd exits
+  - Handle Lustre filesystem (BZ#12868)
+  - Handle W; without long options in getopt (BZ#12922)
+  - Change error code for underflows in strtod (BZ#9696)
+  - Fix robust mutex handling after fork
+  - Make sure RES_USE_INET6 is always restored
+  - Fix quoting in some installed shell scripts (#726483)
+- Use eabi for arm
+
 * Tue Jun 28 2011 Andreas Schwab <schwab@redhat.com> - 2.14-4
 - Update from 2.14 branch
   - Fix crash in GB18030 encoder (#712901)
