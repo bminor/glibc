@@ -327,6 +327,6 @@ $(inst_libexecdir)/getconf: $(inst_bindir)/getconf \
 
 $(objpfx)getconf.speclist: getconf.speclist.h
 	$(CC) -E $(CFLAGS) $(CPPFLAGS) $< \
-	  | sed -n -e '/START_OF_STRINGS/,$${/\(POSIX_V[67]\|_XBS5\)_/{s/^[^"]*"//;s/".*$$//;p}}' \
+	  | sed -n -e '/START_OF_STRINGS/,$${/\(POSIX_V[67]\|XBS5\)_/{s/^[^"]*"//;s/".*$$//;p}}' \
 	  > $@.new
 	mv -f $@.new $@
