@@ -1,3 +1,12 @@
+2011-08-14  Roland McGrath  <roland@hack.frob.com>
+
+	* locale/Makefile (locale-CPPFLAGS): Renamed CPPFLAGS-locale-programs.
+	(locale-CPPFLAGS): New variable; put LOCALEDIR, LOCALE_ALIAS_PATH and
+	-Iprograms here.
+	(cppflags-iterator.mk sequence): Use locale-programs in place of nonlib.
+	(localedef-modules): Add localedef.
+	(locale-modules): Add locale.
+
 2011-08-13  Ulrich Drepper  <drepper@gmail.com>
 
 	* intl/l10nflist.c (_nl_normalize_codeset): Make it compile outside
