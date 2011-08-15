@@ -23,7 +23,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 5
+Release: 6
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1038,6 +1038,12 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Mon Aug 15 2011 Andreas Schwab <schwab@redhat.com> - 2.14-6
+- Update from 2.14 branch
+  - Locale-independent parsing in libintl (#726536)
+  - Fix stack alignment on x86_64 (#728762)
+- Filter out GLIBC_PRIVATE symbols again
+
 * Fri Aug  5 2011 Andreas Schwab <schwab@redhat.com> - 2.14-5
 - Update from 2.14 branch
   - Properly tokenize nameserver line for servers with IPv6 address
