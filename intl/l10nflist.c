@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2002, 2004, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2002, 2004, 2005, 2011 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -134,7 +134,7 @@ argz_next__ (argz, argz_len, entry)
   if (entry)
     {
       if (entry < argz + argz_len)
-        entry = strchr (entry, '\0') + 1;
+	entry = strchr (entry, '\0') + 1;
 
       return entry >= argz + argz_len ? NULL : (char *) entry;
     }
@@ -332,13 +332,18 @@ _nl_normalize_codeset (codeset, name_len)
   char *retval;
   char *wp;
   size_t cnt;
+#ifdef NOT_IN_libc
+  locale_t locale = newlocale (0, "C", NULL);
+#else
+# define locale _nl_C_locobj_ptr
+#endif
 
   for (cnt = 0; cnt < name_len; ++cnt)
-    if (isalnum ((unsigned char) codeset[cnt]))
+    if (__isalnum_l ((unsigned char) codeset[cnt], locale))
       {
 	++len;
 
-	if (isalpha ((unsigned char) codeset[cnt]))
+	if (! __isdigit_l ((unsigned char) codeset[cnt], locale))
 	  only_digit = 0;
       }
 
@@ -346,15 +351,14 @@ _nl_normalize_codeset (codeset, name_len)
 
   if (retval != NULL)
     {
+      wp = retval;
       if (only_digit)
-	wp = stpcpy (retval, "iso");
-      else
-	wp = retval;
+	wp = stpcpy (wp, "iso");
 
       for (cnt = 0; cnt < name_len; ++cnt)
-	if (isalpha ((unsigned char) codeset[cnt]))
-	  *wp++ = tolower ((unsigned char) codeset[cnt]);
-	else if (isdigit ((unsigned char) codeset[cnt]))
+	if (__isalpha_l ((unsigned char) codeset[cnt], locale))
+	  *wp++ = __tolower_l ((unsigned char) codeset[cnt], locale);
+	else if (__isdigit_l ((unsigned char) codeset[cnt], locale))
 	  *wp++ = codeset[cnt];
 
       *wp = '\0';
