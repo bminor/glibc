@@ -1,3 +1,10 @@
+2011-08-04  Will Schmidt  <will_schmidt@vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power7/strncmp.S: Adjust the alignment
+	and add nop instructions for throughput optimization.
+	* sysdeps/powerpc/powerpc64/power7/strncmp.S: Adjust the alignment
+	and nop instructions for throughput optimization.
+
 2011-08-01  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/fpu/e_hypot.c: New file: hypot optimized for POWER.
