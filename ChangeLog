@@ -1,3 +1,17 @@
+2011-08-01  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/fpu/e_hypot.c: New file: hypot optimized for POWER.
+	* sysdeps/powerpc/fpu/e_hypotf.c: New file: hypotf optimized for POWER.
+	* sysdeps/powerpc/fpu/e_rem_pio2f.c: New file: optimized for POWER.
+	* sysdeps/powerpc/fpu/k_rem_pio2f.c: Likewise.
+	* sysdeps/powerpc/fpu/k_cosf.c: Likewise.
+	* sysdeps/powerpc/fpu/k_sinf.c: Likewise.
+	* sysdeps/powerpc/fpu/s_cosf.c: Likewise.
+	* sysdeps/powerpc/fpu/s_sinf.c: Likewise.
+	* sysdeps/powerpc/fpu/s_scalbnf.c: Likewise.
+	* sysdeps/powerpc/fpu/s_float_bitwise.h: new file: bitwise operation over
+	floats optimized for POWER7.
+
 2011-07-28  Will Schmidt  <will_schmidt@vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/power7/memcpy.S: Optimize the
