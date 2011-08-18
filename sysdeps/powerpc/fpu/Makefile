@@ -4,11 +4,6 @@ libm-tests += test-powerpc-snan
 
 # libm needs ld.so to access dl_hwcap
 $(objpfx)libm.so: $(elfobjdir)/ld.so
-
-duplicated-routines = s_float_bitwise
-
-libm-sysdep_routines += $(duplicated-routines:s_%=m_%)
-sysdep_routines += $(duplicated-routines)
 endif
 
 ifeq ($(subdir),stdlib)
