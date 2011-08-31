@@ -139,11 +139,6 @@
 	Maintain aligned stack.
 	(CHECK_RSP): Remove unused macro.
 
-2011-04-01  Andreas Schwab  <schwab@redhat.com>
-
-	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
-	bits/timex.h
-
 2011-03-18  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12583]
