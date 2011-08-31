@@ -209,7 +209,7 @@ endif
 ifeq (yesyes,$(have-fpie)$(build-shared))
 tests: $(objpfx)tst-pie1.out
 endif
-tests: $(objpfx)tst-leaks1-mem $(objpfx)noload-mem
+tests: $(objpfx)tst-leaks1-mem
 tlsmod17a-suffixes = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
 tlsmod18a-suffixes = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
 modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
@@ -657,10 +657,6 @@ vismain-ENV = LD_PRELOAD=$(addprefix $(objpfx),vismod3.so)
 $(objpfx)noload: $(objpfx)testobj1.so
 LDFLAGS-noload = -rdynamic
 $(objpfx)noload.out: $(objpfx)testobj5.so
-
-$(objpfx)noload-mem: $(objpfx)noload.out
-	$(common-objpfx)malloc/mtrace $(objpfx)noload.mtrace > $@
-noload-ENV = MALLOC_TRACE=$(objpfx)noload.mtrace
 
 LDFLAGS-nodelete = -rdynamic
 LDFLAGS-nodelmod1.so = -Wl,--enable-new-dtags,-z,nodelete

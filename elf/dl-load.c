@@ -987,7 +987,6 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
     {
       /* We are not supposed to load the object unless it is already
 	 loaded.  So return now.  */
-      free (realname);
       __close (fd);
       return NULL;
     }
@@ -1006,7 +1005,6 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
       _dl_zerofd = _dl_sysdep_open_zero_fill ();
       if (_dl_zerofd == -1)
 	{
-	  free (realname);
 	  __close (fd);
 	  _dl_signal_error (errno, NULL, NULL,
 			    N_("cannot open zero fill device"));

@@ -669,5 +669,5 @@ Filters not supported with LD_TRACE_PRELINKING"));
       _dl_scope_free (old_l_reldeps);
     }
   if (old_l_initfini != NULL)
-      map->l_orig_initfini = old_l_initfini;
+    _dl_scope_free (old_l_initfini);
 }
