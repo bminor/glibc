@@ -1,3 +1,70 @@
+2011-08-29  Jiri Olsa <jolsa@redhat.com>
+
+	* sysdeps/i386/dl-trampoline.S (_dl_runtime_profile): Fix cfi
+	directive.
+
+2011-08-24  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/Makefile: Add rules to build and run unload8 test.
+	* elf/unload8.c: New file.
+	* elf/unload8mod1.c: New file.
+	* elf/unload8mod1x.c: New file.
+	* elf/unload8mod2.c: New file.
+	* elf/unload8mod3.c: New file.
+
+	* elf/dl-close.c (_dl_close_worker): Reset private search list if
+	it wasn't used.
+
+2011-08-23  Andreas Schwab  <schwab@redhat.com>
+
+	* sysdeps/i386/i686/multiarch/strspn.S (ENTRY): Add missing
+	backslash.
+
+2011-08-22  Andreas Schwab  <schwab@redhat.com>
+
+	* elf/dl-deps.c (_dl_map_object_deps): Move check for missing
+	dependencies back to end of function.
+
+2011-08-16  Andreas Schwab  <schwab@redhat.com>
+
+	[BZ #11724]
+	* elf/dl-deps.c (_dl_map_object_deps): Only assume cycle when
+	object is seen twice.
+	* elf/dl-fini.c (_dl_sort_fini): Likewise.
+
+	* elf/Makefile (distribute): Add tst-initorder2.c.
+	(tests): Add tst-initorder2.
+	(modules-names): Add tst-initorder2a tst-initorder2b
+	tst-initorder2c tst-initorder2d.  Add rules to build them.
+	($(objpfx)tst-initorder2.out): New rule.
+	* elf/tst-initorder2.c: New file.
+	* elf/tst-initorder2.exp: New file.
+
+2011-08-20  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #13114]
+	* stdio-common/Makefile (tests): Add bug24.
+	* stdio-common/bug24.c: New file.
+
+2011-08-19  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #13114]
+	* libio/fileops.c (_IO_new_file_fopen): Fix handling of
+	non-existant file when using close-on-exec mode.
+
+2011-08-20  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_resolve): Fix CFI for
+	the very first instruction.
+
+2011-08-20  Ulrich Drepper  <drepper@gmail.com>
+
+	* sysdeps/x86_64/dl-trampoline.h: If MORE_CODE is defined, restore
+	the CFI state in the end.
+	* sysdeps/x86_64/dl-trampoline.S: Define MORE_CODE before first
+	inclusion of dl-trampoline.h.
+	Based on a patch by Jiri Olsa <jolsa@redhat.com>.
+
 2011-08-14  Roland McGrath  <roland@hack.frob.com>
 
 	* locale/Makefile (locale-CPPFLAGS): Renamed CPPFLAGS-locale-programs.
@@ -2167,9 +2234,6 @@
 	* nss/nss_files/files-XXX.c (internal_getent): Declare linebuflen
 	as size_t.
 
-	* sysdeps/i386/i686/multiarch/strspn.S (ENTRY): Add missing
-	backslash.
-
 2010-09-24  Petr Baudis <pasky@suse.cz>
 
 	* debug/stack_chk_fail_local.c: Add missing licence exception.
@@ -2968,21 +3032,6 @@
 	* sysdeps/unix/sysv/linux/i386/getrlimit.c: Add libc_hidden_weak.
 	* sysdeps/mach/hurd/getrlimit.c: Add libc_hidden_def.
 	* resource/getrlimit.c: Likewise.
-
-2010-06-28  Andreas Schwab  <schwab@redhat.com>
-
-	* allocatestack.c (setxid_mark_thread): Ensure that the exiting
-	thread is woken up.
-
-	* elf/Makefile: Add rules to build and run unload8 test.
-	* elf/unload8.c: New file.
-	* elf/unload8mod1.c: New file.
-	* elf/unload8mod1x.c: New file.
-	* elf/unload8mod2.c: New file.
-	* elf/unload8mod3.c: New file.
-
-	* elf/dl-close.c (_dl_close_worker): Reset private search list if
-	it wasn't used.
 
 2010-06-21  Andreas Schwab  <schwab@redhat.com>
 

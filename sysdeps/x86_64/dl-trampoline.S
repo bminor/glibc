@@ -27,8 +27,9 @@
 	.align 16
 	cfi_startproc
 _dl_runtime_resolve:
+	cfi_adjust_cfa_offset(16) # Incorporate PLT
 	subq $56,%rsp
-	cfi_adjust_cfa_offset(72) # Incorporate PLT
+	cfi_adjust_cfa_offset(56)
 	movq %rax,(%rsp)	# Preserve registers otherwise clobbered.
 	movq %rcx, 8(%rsp)
 	movq %rdx, 16(%rsp)
@@ -158,14 +159,15 @@ L(have_avx):
 1:	js	L(no_avx)
 
 #  define RESTORE_AVX
+#  define MORE_CODE
 #  include "dl-trampoline.h"
 
 	.align 16
 L(no_avx):
 # endif
 
-#  undef RESTORE_AVX
-#  include "dl-trampoline.h"
+# undef RESTORE_AVX
+# include "dl-trampoline.h"
 
 	cfi_endproc
 	.size _dl_runtime_profile, .-_dl_runtime_profile
