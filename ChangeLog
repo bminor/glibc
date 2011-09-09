@@ -15,38 +15,6 @@
 	freeing static tls block.  Add debug print.
 	* elf/fl-tls.c (_dl_determine_tlsoffset): Add debug print.
 
-2011-06-28  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
-
-	* sysdeps/powerpc/fpu/e_hypot.c: optimizations for POWER5 and POWER6.
-	* sysdeps/powerpc/fpu/e_hypotf.c: likewise.
-
-2011-06-28  Adhemerval Zanella <azanella@linux.vnet.ibm.com>
-
-	* sysdeps/powerpc/fpu/e_rem_pio2f.c: splitting the code on k_rem_pio2f.c
-	* sysdeps/powerpc/fpu/k_rem_pio2f.c: some code from e_rem_pio2f.c.
-
-2011-06-15  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
-
-	* sysdeps/powerpc/fpu/Makefile: Added new objects.
-	* sysdeps/powerpc/fpu/e_hypot.c: New file: hypot optimized for POWER.
-	* sysdeps/powerpc/fpu/e_hypotf.c: New file: hypotf optimized for
-	POWER.
-	* sysdeps/powerpc/fpu/e_rem_pio2f.c: New file: optimized for POWER.
-	* sysdeps/powerpc/fpu/k_cosf.c: New file: optimized for POWER.
-	* sysdeps/powerpc/fpu/k_sinf.c: New file: optimized for POWER.
-	* sysdeps/powerpc/fpu/s_cosf.c: New file: sinf optimized for POWER.
-	* sysdeps/powerpc/fpu/s_sinf.c: New file: cosf optimized for POWER.
-	* sysdeps/powerpc/fpu/s_float_bitwise.h: New file:  bitwise operation
-	over floats.
-	* sysdeps/powerpc/powerpc32/fpu/s_float_bitwise.S: New file: bitwise
-	operation over float, PPC32 implementation.
-	* sysdeps/powerpc/powerpc32/power7/fpu/s_float_bitwise.S: New file:
-	bitwise operation over floats, PPC32 implementation using VSX.
-	* sysdeps/powerpc/powerpc64/fpu/s_float_bitwise.S: New file: bitwise
-	operation over float, PPC64 implementation.
-	* sysdeps/powerpc/powerpc64/power7/fpu/s_float_bitwise.S: New file:
-	bitwise operation over floats, PPC64 implementation using VSX.
-
 2011-05-25  Ryan S. Arnold  <rsa@us.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/dl-librecon.h
