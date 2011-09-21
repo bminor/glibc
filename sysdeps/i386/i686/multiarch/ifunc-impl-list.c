@@ -44,6 +44,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __bcopy_ssse3)
 	      IFUNC_IMPL_ADD (array, i, bcopy, HAS_CPU_FEATURE (SSE2),
 			      __bcopy_sse2_unaligned)
+	      IFUNC_IMPL_ADD (array, i, bcopy, 1, __bcopy_erms)
 	      IFUNC_IMPL_ADD (array, i, bcopy, 1, __bcopy_ia32))
 
   /* Support sysdeps/i386/i686/multiarch/bzero.S.  */
@@ -52,6 +53,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __bzero_sse2_rep)
 	      IFUNC_IMPL_ADD (array, i, bzero, HAS_CPU_FEATURE (SSE2),
 			      __bzero_sse2)
+	      IFUNC_IMPL_ADD (array, i, bzero, 1, __bzero_erms)
 	      IFUNC_IMPL_ADD (array, i, bzero, 1, __bzero_ia32))
 
   /* Support sysdeps/i386/i686/multiarch/memchr.S.  */
@@ -82,6 +84,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      HAS_CPU_FEATURE (SSE2),
 			      __memmove_chk_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, __memmove_chk, 1,
+			      __memmove_chk_erms)
+	      IFUNC_IMPL_ADD (array, i, __memmove_chk, 1,
 			      __memmove_chk_ia32))
 
   /* Support sysdeps/i386/i686/multiarch/memmove.S.  */
@@ -92,6 +96,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memmove_ssse3)
 	      IFUNC_IMPL_ADD (array, i, memmove, HAS_CPU_FEATURE (SSE2),
 			      __memmove_sse2_unaligned)
+	      IFUNC_IMPL_ADD (array, i, memmove, 1, __memmove_erms)
 	      IFUNC_IMPL_ADD (array, i, memmove, 1, __memmove_ia32))
 
   /* Support sysdeps/i386/i686/multiarch/memrchr.S.  */
@@ -111,6 +116,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      HAS_CPU_FEATURE (SSE2),
 			      __memset_chk_sse2)
 	      IFUNC_IMPL_ADD (array, i, __memset_chk, 1,
+			      __memset_chk_erms)
+	      IFUNC_IMPL_ADD (array, i, __memset_chk, 1,
 			      __memset_chk_ia32))
 
   /* Support sysdeps/i386/i686/multiarch/memset.S.  */
@@ -119,6 +126,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memset_sse2_rep)
 	      IFUNC_IMPL_ADD (array, i, memset, HAS_CPU_FEATURE (SSE2),
 			      __memset_sse2)
+	      IFUNC_IMPL_ADD (array, i, memset, 1, __memset_erms)
 	      IFUNC_IMPL_ADD (array, i, memset, 1, __memset_ia32))
 
   /* Support sysdeps/i386/i686/multiarch/rawmemchr.S.  */
@@ -319,6 +327,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      HAS_CPU_FEATURE (SSE2),
 			      __memcpy_chk_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, __memcpy_chk, 1,
+			      __memcpy_chk_erms)
+	      IFUNC_IMPL_ADD (array, i, __memcpy_chk, 1,
 			      __memcpy_chk_ia32))
 
   /* Support sysdeps/i386/i686/multiarch/memcpy.S.  */
@@ -329,6 +339,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memcpy_ssse3)
 	      IFUNC_IMPL_ADD (array, i, memcpy, HAS_CPU_FEATURE (SSE2),
 			      __memcpy_sse2_unaligned)
+	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_erms)
 	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_ia32))
 
   /* Support sysdeps/i386/i686/multiarch/mempcpy_chk.S.  */
@@ -343,6 +354,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      HAS_CPU_FEATURE (SSE2),
 			      __mempcpy_chk_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk, 1,
+			      __mempcpy_chk_erms)
+	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk, 1,
 			      __mempcpy_chk_ia32))
 
   /* Support sysdeps/i386/i686/multiarch/mempcpy.S.  */
@@ -353,6 +366,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __mempcpy_ssse3)
 	      IFUNC_IMPL_ADD (array, i, mempcpy, HAS_CPU_FEATURE (SSE2),
 			      __mempcpy_sse2_unaligned)
+	      IFUNC_IMPL_ADD (array, i, mempcpy, 1, __mempcpy_erms)
 	      IFUNC_IMPL_ADD (array, i, mempcpy, 1, __mempcpy_ia32))
 
   /* Support sysdeps/i386/i686/multiarch/strlen.S.  */

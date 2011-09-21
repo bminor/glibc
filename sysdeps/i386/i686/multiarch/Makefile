@@ -25,7 +25,9 @@ sysdep_routines += bzero-sse2 memset-sse2 memcpy-ssse3 mempcpy-ssse3 \
 		   strcasecmp_l-sse4 strncase_l-sse4 \
 		   bcopy-sse2-unaligned memcpy-sse2-unaligned \
 		   mempcpy-sse2-unaligned memmove-sse2-unaligned \
-		   strcspn-c strpbrk-c strspn-c
+		   strcspn-c strpbrk-c strspn-c \
+		   bcopy-erms memcpy-erms memmove-erms mempcpy-erms \
+		   bzero-erms memset-erms
 CFLAGS-varshift.c += -msse4
 CFLAGS-strcspn-c.c += -msse4
 CFLAGS-strpbrk-c.c += -msse4
