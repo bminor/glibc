@@ -1,3 +1,12 @@
+2011-10-07  Andreas Schwab  <schwab@redhat.com>
+
+	* version.h (VERSION): Bump for 2.14.1 release.
+
+2011-09-27  Andreas Schwab  <schwab@redhat.com>
+
+	* nss/nss_files/files-initgroups.c (_nss_files_initgroups_dyn):
+	Reread the line before reparsing it.
+
 2011-08-29  Jiri Olsa <jolsa@redhat.com>
 
 	* sysdeps/i386/dl-trampoline.S (_dl_runtime_profile): Fix cfi
