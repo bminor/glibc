@@ -23,7 +23,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: 1
+Release: 2
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1071,6 +1071,10 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri Oct 28 2011 Andreas Schwab <schwab@redhat.com> - 2.14.1-2
+- Convert tzdata-update to lua (#743034)
+- Mark __clone as .cantunwind (#749556)
+
 * Fri Oct  7 2011 Andreas Schwab <schwab@redhat.com> - 2.14.1-1
 - Update to 2.14.1 release
   - Correctly reparse group line after enlarging the buffer (#739360)
