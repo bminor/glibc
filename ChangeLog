@@ -1,3 +1,8 @@
+2011-12-06  Andreas Schwab  <schwab@linux-m68k.org>
+
+	[BZ #13472]
+	* sysdeps/powerpc/fpu/e_hypot.c (twoM600): Correct value.
+
 2011-11-07  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/fpu/math_private.h: Using inline assembly version
