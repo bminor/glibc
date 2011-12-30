@@ -79,17 +79,17 @@ static const float two_over_pi[] = {
 
 
 static const float PIo2[] = {
-  1.5703125000e+00,            /* 0x3fc90000 */
-  4.5776367188e-04,            /* 0x39f00000 */
-  2.5987625122e-05,            /* 0x37da0000 */
-  7.5437128544e-08,            /* 0x33a20000 */
-  6.0026650317e-11,            /* 0x2e840000 */
-  7.3896444519e-13,            /* 0x2b500000 */
-  5.3845816694e-15,            /* 0x27c20000 */
-  5.6378512969e-18,            /* 0x22d00000 */
-  8.3009228831e-20,            /* 0x1fc40000 */
-  3.2756352257e-22,            /* 0x1bc60000 */
-  6.3331015649e-25,            /* 0x17440000 */
+  1.5703125000e+00,		/* 0x3fc90000 */
+  4.5776367188e-04,		/* 0x39f00000 */
+  2.5987625122e-05,		/* 0x37da0000 */
+  7.5437128544e-08,		/* 0x33a20000 */
+  6.0026650317e-11,		/* 0x2e840000 */
+  7.3896444519e-13,		/* 0x2b500000 */
+  5.3845816694e-15,		/* 0x27c20000 */
+  5.6378512969e-18,		/* 0x22d00000 */
+  8.3009228831e-20,		/* 0x1fc40000 */
+  3.2756352257e-22,		/* 0x1bc60000 */
+  6.3331015649e-25,		/* 0x17440000 */
 };
 
 
@@ -126,7 +126,7 @@ __fp_kernel_rem_pio2f (float *x, float *y, float e0, int32_t nx)
   for (i = 0; i <= jk; i++)
     {
       for (j = 0, fw = 0.0; j <= jx; j++)
-       fw += x[j] * f[jx + i - j];
+	fw += x[j] * f[jx + i - j];
       q[i] = fw;
     }
 
@@ -135,19 +135,19 @@ recompute:
   /* distill q[] into iq[] reversingly */
   for (i = 0, j = jz, z = q[jz]; j > 0; i++, j--)
     {
-      fw = truncf (twon8 * z);
+      fw = __truncf (twon8 * z);
       iq[i] = (int32_t) (z - two8 * fw);
       z = q[j - 1] + fw;
     }
 
   /* compute n */
-  z = __scalbnf (z, q0);       /* actual value of z */
-  z -= 8.0 * floorf (z * 0.125);       /* trim off integer >= 8 */
+  z = __scalbnf (z, q0);	/* actual value of z */
+  z -= 8.0 * __floorf (z * 0.125);	/* trim off integer >= 8 */
   n = (int32_t) z;
-  z -= truncf (z);
+  z -= __truncf (z);
   ih = 0;
   if (q0 > 0)
-    {                          /* need iq[jz-1] to determine n */
+    {				/* need iq[jz-1] to determine n */
       i = (iq[jz - 1] >> (8 - q0));
       n += i;
       iq[jz - 1] -= i << (8 - q0);
@@ -159,41 +159,41 @@ recompute:
     ih = 2;
 
   if (ih > 0)
-    {                          /* q > 0.5 */
+    {				/* q > 0.5 */
       n += 1;
       carry = 0;
       for (i = 0; i < jz; i++)
-       {                       /* compute 1-q */
-         j = iq[i];
-         if (carry == 0)
-           {
-             if (j != 0)
-               {
-                 carry = 1;
-                 iq[i] = 0x100 - j;
-               }
-           }
-         else
-           iq[i] = 0xff - j;
-       }
+	{			/* compute 1-q */
+	  j = iq[i];
+	  if (carry == 0)
+	    {
+	      if (j != 0)
+		{
+		  carry = 1;
+		  iq[i] = 0x100 - j;
+		}
+	    }
+	  else
+	    iq[i] = 0xff - j;
+	}
       if (q0 > 0)
-       {                       /* rare case: chance is 1 in 12 */
-         switch (q0)
-           {
-           case 1:
-             iq[jz - 1] &= 0x7f;
-             break;
-           case 2:
-             iq[jz - 1] &= 0x3f;
-             break;
-           }
-       }
+	{			/* rare case: chance is 1 in 12 */
+	  switch (q0)
+	    {
+	    case 1:
+	      iq[jz - 1] &= 0x7f;
+	      break;
+	    case 2:
+	      iq[jz - 1] &= 0x3f;
+	      break;
+	    }
+	}
       if (ih == 2)
-       {
-         z = one - z;
-         if (carry != 0)
-           z -= __scalbnf (one, q0);
-       }
+	{
+	  z = one - z;
+	  if (carry != 0)
+	    z -= __scalbnf (one, q0);
+	}
     }
 
   /* check if recomputation is needed */
@@ -201,21 +201,21 @@ recompute:
     {
       j = 0;
       for (i = jz - 1; i >= jk; i--)
-       j |= iq[i];
+	j |= iq[i];
       if (j == 0)
-       {                       /* need recomputation */
-         for (k = 1; iq[jk - k] == 0; k++);    /* k = no. of terms needed */
+	{			/* need recomputation */
+	  for (k = 1; iq[jk - k] == 0; k++);	/* k = no. of terms needed */
 
-         for (i = jz + 1; i <= jz + k; i++)
-           {                   /* add q[jz+1] to q[jz+k] */
-             f[jx + i] = two_over_pi[jv + i];
-             for (j = 0, fw = 0.0; j <= jx; j++)
-               fw += x[j] * f[jx + i - j];
-             q[i] = fw;
-           }
-         jz += k;
-         goto recompute;
-       }
+	  for (i = jz + 1; i <= jz + k; i++)
+	    {			/* add q[jz+1] to q[jz+k] */
+	      f[jx + i] = two_over_pi[jv + i];
+	      for (j = 0, fw = 0.0; j <= jx; j++)
+		fw += x[j] * f[jx + i - j];
+	      q[i] = fw;
+	    }
+	  jz += k;
+	  goto recompute;
+	}
     }
 
   /* chop off zero terms */
@@ -224,24 +224,24 @@ recompute:
       jz -= 1;
       q0 -= 8;
       while (iq[jz] == 0)
-       {
-         jz--;
-         q0 -= 8;
-       }
+	{
+	  jz--;
+	  q0 -= 8;
+	}
     }
   else
-    {                          /* break z into 8-bit if necessary */
+    {				/* break z into 8-bit if necessary */
       z = __scalbnf (z, -q0);
       if (z >= two8)
-       {
-         fw = truncf (twon8 * z);
-         iq[jz] = (int32_t) (z - two8 * fw);
-         jz += 1;
-         q0 += 8;
-         iq[jz] = (int32_t) fw;
-       }
+	{
+	  fw = __truncf (twon8 * z);
+	  iq[jz] = (int32_t) (z - two8 * fw);
+	  jz += 1;
+	  q0 += 8;
+	  iq[jz] = (int32_t) fw;
+	}
       else
-       iq[jz] = (int32_t) z;
+	iq[jz] = (int32_t) z;
     }
 
   /* convert integer "bit" chunk to floating-point value */
@@ -256,7 +256,7 @@ recompute:
   for (i = jz; i >= 0; i--)
     {
       for (fw = 0.0, k = 0; k <= jp && k <= jz - i; k++)
-       fw += PIo2[k] * q[i + k];
+	fw += PIo2[k] * q[i + k];
       fq[jz - i] = fw;
     }
 
