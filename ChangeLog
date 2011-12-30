@@ -1,3 +1,21 @@
+2011-11-16  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/Makefile: Added locale-defines.sym generation.
+	* sysdeps/powerpc/locale-defines.sym: Locale definitions for strcasecmp
+	optimized code.
+	* sysdeps/powerpc/powerpc32/power7/Makefile: New file: added unroll-loop
+	option for strncasecmp/strncasecmp_l compilation.
+	* sysdeps/powerpc/powerpc32/power7/strcasecmp.S: New file: strcasecmp
+	optimization for PPC32.
+	* sysdeps/powerpc/powerpc32/power7/strcasecmp_l.S: New file: strcasecmp_l
+	optimization for PPC32.
+	* sysdeps/powerpc/powerpc64/power7/Makefile: Added unroll-loop option for
+	strncasecmp/strncasecmp_l compilation.
+	* sysdeps/powerpc/powerpc64/power7/strcasecmp.S: New file: strcasecmp
+	optimization for PPC64.
+	* sysdeps/powerpc/powerpc64/power7/strcasecmp_l.S: New file: strcasecmp_l
+	optimization for PPC64.
+
 2011-11-18  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* math/libm-test.inc: Added more nerabyint tests.
