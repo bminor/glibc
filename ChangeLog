@@ -1,3 +1,15 @@
+2011-10-12  Ulrich Drepper  <drepper@gmail.com>
+
+	Add integration with gcc's -ffinite-math-only and optimize wrapper
+	functions in libm.
+	* sysdeps/powerpc/fpu/e_hypot.c: Add __*_finite alias.
+	* sysdeps/powerpc/fpu/e_hypotf.c: Likewise.
+	* sysdeps/powerpc/fpu/e_sqrt.c: Likewise.
+	* sysdeps/powerpc/fpu/e_sqrtf.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/e_sqrt.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/e_sqrtf.c: Likewise.
+	* sysdeps/ieee754/dbl-64/halfulp.c: Likewise.
+
 2011-09-15  Andreas Schwab  <schwab@redhat.com>
 
 	* sysdeps/powerpc/fpu/e_hypot.c (__ieee754_hypot): Use
