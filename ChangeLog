@@ -19,7 +19,7 @@
 2011-11-18  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* math/libm-test.inc: Added more nerabyint tests.
-	* sysdeps/powerpc/powerpc32/fpu/s_nearbyint.S: New file: nearbyint 
+	* sysdeps/powerpc/powerpc32/fpu/s_nearbyint.S: New file: nearbyint
 	optimized for PPC32.
 	* sysdeps/powerpc/powerpc32/fpu/s_nearbyintf.S: New file: nearbyintf
 	optimized for PPC32.
