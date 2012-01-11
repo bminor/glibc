@@ -4,6 +4,23 @@
 	* io/Makefile: Added have_pipe2 object.
 	* io/have_pipe2.c: Declaring __have_pipe2 variable.
 
+2011-12-06  Andreas Schwab  <schwab@linux-m68k.org>
+
+	[BZ #13472]
+	* sysdeps/powerpc/fpu/e_hypot.c (twoM600): Correct value.
+
+2011-11-18  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* math/libm-test.inc: Added more nerabyint tests.
+	* sysdeps/powerpc/powerpc32/fpu/s_nearbyint.S: New file: nearbyint
+	optimized for PPC32.
+	* sysdeps/powerpc/powerpc32/fpu/s_nearbyintf.S: New file: nearbyintf
+	optimized for PPC32.
+	* sysdeps/powerpc/powerpc64/fpu/s_nearbyint.S: New file: nearbyint
+	optimized for PPC64.
+	* sysdeps/powerpc/powerpc64/fpu/s_nearbyintf.S: New file: nearbyintf
+	optimized for PPC64.
+
 2011-11-16  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/Makefile: Added locale-defines.sym generation.
@@ -22,28 +39,6 @@
 	* sysdeps/powerpc/powerpc64/power7/strcasecmp_l.S: New file: strcasecmp_l
 	optimization for PPC64.
 
-2011-11-18  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
-
-	* math/libm-test.inc: Added more nerabyint tests.
-	* sysdeps/powerpc/powerpc32/fpu/s_nearbyint.S: New file: nearbyint 
-	optimized for PPC32.
-	* sysdeps/powerpc/powerpc32/fpu/s_nearbyintf.S: New file: nearbyintf
-	optimized for PPC32.
-	* sysdeps/powerpc/powerpc64/fpu/s_nearbyint.S: New file: nearbyint
-	optimized for PPC64.
-	* sysdeps/powerpc/powerpc64/fpu/s_nearbyintf.S: New file: nearbyintf
-	optimized for PPC64.
-
-2011-10-22  Andreas Schwab  <schwab@linux-m68k.org>
-
-	* sysdeps/ieee754/ldbl-128ibm/s_atanl.c: Include <math.h> before
-	"math_private.h".
-
-2011-12-06  Andreas Schwab  <schwab@linux-m68k.org>
-
-	[BZ #13472]
-	* sysdeps/powerpc/fpu/e_hypot.c (twoM600): Correct value.
-
 2011-11-07  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/fpu/math_private.h: Using inline assembly version
@@ -54,6 +49,11 @@
 	* sysdeps/powerpc/fpu/e_sqrtf.c: Likewise.
 	* sysdeps/powerpc/powerpc64/fpu/e_sqrt.c: Likewise.
 	* sysdeps/powerpc/powerpc64/fpu/e_sqrtf.c: Likewise.
+
+2011-10-22  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/ieee754/ldbl-128ibm/s_atanl.c: Include <math.h> before
+	"math_private.h".
 
 2011-10-12  Ulrich Drepper  <drepper@gmail.com>
 
@@ -77,28 +77,6 @@
 	__floorf instead of floorf.
 	* sysdeps/powerpc/fpu/k_rem_pio2f.c (__fp_kernel_rem_pio2f): Use
 	__floorf, __truncf instead of floorf, truncf.
-
-2011-03-28  Andreas Schwab  <schwab@linux-m68k.org>
-
-	* sysdeps/powerpc/powerpc32/power4/strncmp.S: Don't read past
-	differing bytes.
-	* sysdeps/powerpc/powerpc64/power4/strncmp.S: Likewise.
-	* sysdeps/powerpc/powerpc32/power7/strncmp.S: Likewise.
-	* sysdeps/powerpc/powerpc64/power7/strncmp.S: Likewise.
-
-2011-07-28  Will Schmidt  <will_schmidt@vnet.ibm.com>
-
-	* sysdeps/powerpc/powerpc32/power7/memcpy.S: Optimize the
-	aligned copy for power7 with vector-scalar instructions.
-
-	* sysdeps/powerpc/powerpc64/power7/memcpy.S: Optimize the
-	aligned copy for power7 with vector-scalar instructions.
-
-2011-05-18  Ryan S. Arnold  <rsa@us.ibm.com>
-
-	* sysdeps/powerpc/powerpc64/Makefile (no-special-regs): Add -mno-vsx
-	and -mno-altivec to prevent the compiler from using Altivec and/or
-	VSX instructions when the corresponding registers are not available.
 
 2011-08-18  David Flaherty  <flaherty@linux.vnet.ibm.com>
 
@@ -138,6 +116,14 @@
 	* sysdeps/powerpc/fpu/s_float_bitwise.h: new file: bitwise operation over
 	floats optimized for POWER7.
 
+2011-07-28  Will Schmidt  <will_schmidt@vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/power7/memcpy.S: Optimize the
+	aligned copy for power7 with vector-scalar instructions.
+
+	* sysdeps/powerpc/powerpc64/power7/memcpy.S: Optimize the
+	aligned copy for power7 with vector-scalar instructions.
+
 2011-06-30  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
 
 	* nptl/sysdeps/unix/sysv/linux/aio_misc.h
@@ -145,15 +131,6 @@
 	pthread_attr_setstacksize () which set the stacksize to
 	PTHREAD_STACK_MIN.  This is too small if large amounts of TLS are in
 	use.  Removing this call effectively sets stacksize to 'default'.
-
-2011-03-15  Alan Modra  <amodra@gmail.com>
-
-	* elf/dl-reloc.c (_dl_try_allocate_static_tls <TLS_DTV_AT_TP>): Handle
-	l_tls_firstbyte_offset non-zero.  Save padding offset in
-	l_tls_firstbyte_offset for later use.  Add debug print.
-	* elf/dl-close.c (_dl_close_worker <TLS_DTV_AT_TP>): Correct code
-	freeing static tls block.  Add debug print.
-	* elf/fl-tls.c (_dl_determine_tlsoffset): Add debug print.
 
 2011-05-25  Ryan S. Arnold  <rsa@us.ibm.com>
 
@@ -163,13 +140,28 @@
 	LD_AT_PLATFORM="".
 	(EXTRA_UNSECURE_ENVVARS): Add LD_AT_PLATFORM to the list.
 
-2011-02-11  Jakub Jelinek  <jakub@redhat.com>
+2011-05-18  Ryan S. Arnold  <rsa@us.ibm.com>
 
-	* stdio-common/printf-parsemb.c (__parse_one_specmb): Handle
-	arginfo fn returning -1.
+	* sysdeps/powerpc/powerpc64/Makefile (no-special-regs): Add -mno-vsx
+	and -mno-altivec to prevent the compiler from using Altivec and/or
+	VSX instructions when the corresponding registers are not available.
 
-	* stdio-common/_i18n_number.h (_i18n_number_rewrite): Ensure decimal
-	and thousands string is zero terminated.
+2011-03-28  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/powerpc/powerpc32/power4/strncmp.S: Don't read past
+	differing bytes.
+	* sysdeps/powerpc/powerpc64/power4/strncmp.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power7/strncmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/strncmp.S: Likewise.
+
+2011-03-15  Alan Modra  <amodra@gmail.com>
+
+	* elf/dl-reloc.c (_dl_try_allocate_static_tls <TLS_DTV_AT_TP>): Handle
+	l_tls_firstbyte_offset non-zero.  Save padding offset in
+	l_tls_firstbyte_offset for later use.  Add debug print.
+	* elf/dl-close.c (_dl_close_worker <TLS_DTV_AT_TP>): Correct code
+	freeing static tls block.  Add debug print.
+	* elf/fl-tls.c (_dl_determine_tlsoffset): Add debug print.
 
 2011-02-16  Ryan S. Arnold  <rsa@us.ibm.com>
 
@@ -187,6 +179,14 @@
 	insns in _dl_start to prevent a TOC reference before relocs are
 	resolved.
 
+2011-02-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdio-common/printf-parsemb.c (__parse_one_specmb): Handle
+	arginfo fn returning -1.
+
+	* stdio-common/_i18n_number.h (_i18n_number_rewrite): Ensure decimal
+	and thousands string is zero terminated.
+
 2010-11-10  Luis Machado  <luisgpm@br.ibm.com>
 
 	* sysdeps/ieee754/ldbl-128ibm/e_sqrtl.c (__ieee754_sqrtl): Force
@@ -196,11 +196,6 @@
 
 	* sysdeps/powerpc/powerpc32/power7/mempcpy.S: New file.
 	* sysdeps/powerpc/powerpc64/power7/mempcpy.S: New file.
-
-2009-11-06  Petr Baudis <pasky@suse.cz>
-
-	* include/sys/uio.h: Change __vector to __iovec to avoid clash
-	with altivec.
 
 2010-10-26  Ryan S. Arnold  <rsa@us.ibm.com>
 
@@ -602,5 +597,11 @@
 	* malloc/malloc.c (_int_free): Possible race in the most recently
 	added check.  Only act on the data if no current modification
 	happened.
+
+2009-11-06  Petr Baudis <pasky@suse.cz>
+
+	* include/sys/uio.h: Change __vector to __iovec to avoid clash
+	with altivec.
+
 
 See ChangeLog.17 for earlier changes.
