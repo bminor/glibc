@@ -1,3 +1,9 @@
+2011-12-28  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* include/unistd.h: Defining __have_pipe2 as external variable.
+	* io/Makefile: Added have_pipe2 object.
+	* io/have_pipe2.c: Declaring __have_pipe2 variable.
+
 2011-11-16  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/Makefile: Added locale-defines.sym generation.
