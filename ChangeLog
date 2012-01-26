@@ -101,6 +101,13 @@
 	* sysdeps/i386/fpu/feupdateenv.c (__feupdateenv) Invoke __feraiseexcept
 	instead of feraiseexcept.
 
+2012-01-26  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #13583]
+	* sysdeps/x86_64/multiarch/init-arch.h: Define bit_OSXSAVE.
+	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features): If
+	bit_AVX is set also check OSXAVE/XCR0 and reset bit_AVX if necessary.
+
 2012-01-01  Ulrich Drepper  <drepper@gmail.com>
 
 	* posix/getconf.c: Update copyright year.
