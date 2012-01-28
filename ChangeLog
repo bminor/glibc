@@ -1,3 +1,9 @@
+2012-01-28  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* elf/elf.h (EM_TILEPRO, EM_TILEGX): New macros.
+	(EM_NUM): Update.
+	(R_TILEPRO_*, R_TILEGX_*): New macros.
+
 2012-01-01  Ulrich Drepper  <drepper@gmail.com>
 
 	* posix/getconf.c: Update copyright year.
