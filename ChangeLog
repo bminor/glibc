@@ -1,5 +1,9 @@
 2012-01-28  Chris Metcalf  <cmetcalf@tilera.com>
 
+	* sysdeps/unix/sysv/linux/faccessat.c (faccessat): Call __fxstatat64.
+
+2012-01-28  Chris Metcalf  <cmetcalf@tilera.com>
+
 	* include/sys/epoll.h: New file.
 	* sysdeps/unix/sysv/linux/epoll_pwait.c (epoll_pwait): Mark as
 	libc_hidden_def.
