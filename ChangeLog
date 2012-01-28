@@ -131,6 +131,10 @@
 	* sysdeps/i386/fpu/feupdateenv.c (__feupdateenv) Invoke __feraiseexcept
 	instead of feraiseexcept.
 
+2012-01-28  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* scripts/firstversions.awk: Fix bug in version range handling.
+
 2012-01-26  Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #13583]
