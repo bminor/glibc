@@ -19,7 +19,7 @@
 
 /* We can do a few things better on x86-64.  */
 
-#ifdef __AVX__
+#if defined __AVX__ || defined SSE2AVX
 # define MOVD "vmovd"
 #else
 # define MOVD "movd"
@@ -86,7 +86,7 @@
   ({ int __di; GET_FLOAT_WORD (__di, (float) d);			      \
      (__di & 0x7fffffff) < 0x7f800000; })
 
-#ifdef __AVX__
+#if defined __AVX__ || defined SSE2AVX
 # define __ieee754_sqrt(d) \
   ({ double __res;							      \
     asm ("vsqrtsd %1, %0, %0" : "=x" (__res) : "xm" ((double) (d)));	      \
@@ -112,7 +112,7 @@
 
 #ifdef __SSE4_1__
 # ifndef __rint
-#  ifdef __AVX__
+#  if defined __AVX__ || defined SSE2AVX
 #   define __rint(d) \
   ({ double __res; \
     asm ("vroundsd $4, %1, %0, %0" : "=x" (__res) : "xm" ((double) (d)));      \
@@ -125,7 +125,7 @@
 #  endif
 # endif
 # ifndef __rintf
-#  ifdef __AVX__
+#  if defined __AVX__ || defined SSE2AVX
 #   define __rintf(d) \
   ({ float __res; \
     asm ("vroundss $4, %1, %0, %0" : "=x" (__res) : "xm" ((float) (d)));      \
@@ -139,7 +139,7 @@
 # endif
 
 # ifndef __floor
-#  ifdef __AVX__
+#  if defined __AVX__ || defined SSE2AVX
 #   define __floor(d) \
   ({ double __res; \
     asm ("vroundsd $1, %1, %0, %0" : "=x" (__res) : "xm" ((double) (d)));      \
@@ -152,7 +152,7 @@
 #  endif
 # endif
 # ifndef __floorf
-#  ifdef __AVX__
+#  if defined __AVX__ || defined SSE2AVX
 #   define __floorf(d) \
   ({ float __res; \
     asm ("vroundss $1, %1, %0, %0" : "=x" (__res) : "xm" ((float) (d)));      \
@@ -169,29 +169,6 @@
 
 /* Specialized variants of the <fenv.h> interfaces which only handle
    either the FPU or the SSE unit.  */
-#undef libc_fegetround
-#define libc_fegetround() \
-  ({									      \
-     unsigned int mxcsr;						      \
-     asm volatile ("stmxcsr %0" : "=m" (*&mxcsr));			      \
-     (mxcsr & 0x6000) >> 3;						      \
-  })
-#undef libc_fegetroundf
-#define libc_fegetroundf() libc_fegetround ()
-// #define libc_fegetroundl() fegetround ()
-
-#undef libc_fesetround
-#define libc_fesetround(r) \
-  do {									      \
-     unsigned int mxcsr;						      \
-     asm ("stmxcsr %0" : "=m" (*&mxcsr));				      \
-     mxcsr = (mxcsr & ~0x6000) | ((r) << 3);				      \
-     asm volatile ("ldmxcsr %0" : : "m" (*&mxcsr));			      \
-  } while (0)
-#undef libc_fesetroundf
-#define libc_fesetroundf(r) libc_fesetround (r)
-// #define libc_fesetroundl(r) (void) fesetround (r)
-
 #undef libc_feholdexcept
 #ifdef __AVX__
 # define libc_feholdexcept(e) \
