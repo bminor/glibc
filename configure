@@ -624,6 +624,7 @@ use_ldconfig
 libc_cv_as_i686
 libc_cv_cc_fma4
 libc_cv_cc_novzeroupper
+libc_cv_cc_sse2avx
 libc_cv_cc_avx
 libc_cv_cc_sse4
 libc_cv_cpp_asm_debuginfo

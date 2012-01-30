@@ -137,6 +137,14 @@
 	ARENA_TEST says not to.  Simplify test for creation of a new arena.
 	Partially based on a patch by Siddhesh Poyarekar <siddhesh@redhat.com>.
 
+2012-01-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* configure.in (libc_cv_cc_sse2avx): AC_SUBST.
+	* configure: Regenerate.
+	* config.make.in (config-cflags-sse2avx): Define.
+	* sysdeps/x86_64/fpu/multiarch/Makefile (CFLAGS-slowexp-avx.c):
+	Fix typo.
+
 2012-01-28  Ulrich Drepper  <drepper@gmail.com>
 
 	* config.h.in: Define HAVE_SSE2AVX_SUPPORT.
