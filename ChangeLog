@@ -131,6 +131,12 @@
 	* sysdeps/i386/fpu/feupdateenv.c (__feupdateenv) Invoke __feraiseexcept
 	instead of feraiseexcept.
 
+2012-01-31  Ulrich Drepper  <drepper@gmail.com>
+
+	* malloc/arena.c (arena_get2): Really don't call __get_nprocs if
+	ARENA_TEST says not to.  Simplify test for creation of a new arena.
+	Partially based on a patch by Siddhesh Poyarekar <siddhesh@redhat.com>.
+
 2012-01-28  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* scripts/firstversions.awk: Fix bug in version range handling.
