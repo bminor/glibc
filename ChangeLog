@@ -3,6 +3,10 @@
 	[BZ #411]
 	* sysdeps/unix/sysv/linux/i386/sysdep.h: Redefine __i686.
 
+2012-02-07  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* math/libm-test.inc (jn_test): Add missing L suffix.
+
 2012-02-10  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* sysdeps/i386/fpu/feupdateenv.c (__feupdateenv) Invoke __feraiseexcept
