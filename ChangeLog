@@ -81,6 +81,11 @@
 	[BZ #11494]
 	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h (O_FSYNC): Define.
 
+2012-02-09  Richard Henderson  <rth@twiddle.net>
+
+	* sysdeps/unix/sysv/linux/internal_statvfs.c: Use <> for include
+	of kernel-features.h.
+
 2012-02-08  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/i386/fpu/libm-test-ulps: Reduce ldouble ULPs for jn
