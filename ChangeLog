@@ -3,6 +3,11 @@
 	[BZ #411]
 	* sysdeps/unix/sysv/linux/i386/sysdep.h: Redefine __i686.
 
+2012-02-10  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* sysdeps/i386/fpu/feupdateenv.c (__feupdateenv) Invoke __feraiseexcept
+	instead of feraiseexcept.
+
 2012-01-01  Ulrich Drepper  <drepper@gmail.com>
 
 	* posix/getconf.c: Update copyright year.
