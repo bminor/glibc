@@ -76,6 +76,11 @@
 	[BZ #411]
 	* sysdeps/unix/sysv/linux/i386/sysdep.h: Redefine __i686.
 
+2012-02-16  David S. Miller  <davem@davemloft.net>
+
+	[BZ #11494]
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h (O_FSYNC): Define.
+
 2012-02-08  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/i386/fpu/libm-test-ulps: Reduce ldouble ULPs for jn
