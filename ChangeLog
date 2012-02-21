@@ -1,3 +1,8 @@
+2012-02-21  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/fpu/libm-test-ulps: More jn test ULP updates.
+	* sysdeps/sparc/sparc64/fpu/libm-test-ulps: Likewise.
+
 2012-02-22  Carlos O'Donell  <carlos_odonell@mentor.com>
 
 	[BZ #411]
