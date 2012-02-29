@@ -62,6 +62,18 @@
 	* sysdeps/x86_64/fpu/multiarch/s_tan-fma4.c (__branred): Don't
 	define.
 
+2012-02-29  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13786]
+	* sysdeps/i386/i686/multiarch/strcmp.S [USE_AS_STRCASECMP_L]: Do
+	not include ../strcmp.S.
+	[USE_AS_STRNCASECMP_L]: Likewise.
+	* sysdeps/i386/i686/multiarch/strcasecmp_l-c.c
+	(__strcasecmp_l_ia32): Define as alias to __strcasecmp_l_nonascii.
+	* sysdeps/i386/i686/multiarch/strncase_l-c.c
+	(__strncasecmp_l_ia32): Define as alias to
+	__strncasecmp_l_nonascii.
+
 2012-02-27  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/ieee754/ldbl-128/s_nearbyintl.c (__nearbyintl): Do not

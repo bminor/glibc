@@ -122,6 +122,7 @@ END(STRCMP)
 # endif
 #endif
 
-#ifndef USE_AS_STRNCMP
+#if !defined USE_AS_STRNCMP && !defined USE_AS_STRCASECMP_L \
+    && !defined USE_AS_STRNCASECMP_L
 # include "../strcmp.S"
 #endif
