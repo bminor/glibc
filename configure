@@ -622,6 +622,7 @@ elf
 ldd_rewrite_script
 use_ldconfig
 libc_cv_as_i686
+libc_cv_cc_nofma
 libc_cv_cc_fma4
 libc_cv_cc_novzeroupper
 libc_cv_cc_sse2avx
@@ -7328,6 +7329,26 @@ $as_echo "$libc_cv_gcc_tls_model_attr" >&6; }
 if test "$libc_cv_gcc_tls_model_attr" = no; then
   as_fn_error $? "support for the tls_model attribute is required" "$LINENO" 5
 fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for compiler option to disable generation of FMA instructions" >&5
+$as_echo_n "checking for compiler option to disable generation of FMA instructions... " >&6; }
+if ${libc_cv_cc_nofma+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  libc_cv_cc_nofma=
+for opt in -ffp-contract=off -mno-fused-madd; do
+  if { ac_try='${CC-cc} $opt -xc /dev/null -S -o /dev/null'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then :
+  libc_cv_cc_nofma=$opt; break
+fi
+done
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_cc_nofma" >&5
+$as_echo "$libc_cv_cc_nofma" >&6; }
 
 if test -n "$submachine"; then
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for compiler option for CPU variant" >&5
