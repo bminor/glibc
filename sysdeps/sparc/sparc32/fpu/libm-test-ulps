@@ -652,8 +652,6 @@ ldouble: 2
 Test "jn (10, 2.0) == 0.251538628271673670963516093751820639e-6":
 float: 4
 ifloat: 4
-<<<<<<< HEAD
-=======
 Test "jn (2, 2.4048255576957729) == 0.43175480701968038399746111312430703":
 double: 2
 float: 1
@@ -661,7 +659,6 @@ idouble: 2
 ifloat: 1
 ildouble: 1
 ldouble: 1
->>>>>>> 5863940... Update long-double sparc math ULPs missed by previous changes.
 Test "jn (3, 0.125) == 0.406503832554912875023029337653442868e-4":
 double: 1
 float: 1
@@ -684,8 +681,6 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
-<<<<<<< HEAD
-=======
 Test "jn (3, 2.4048255576957729) == 0.19899990535769083404042146764530813":
 double: 3
 idouble: 3
@@ -731,7 +726,6 @@ idouble: 1
 ifloat: 2
 ildouble: 3
 ldouble: 3
->>>>>>> 5863940... Update long-double sparc math ULPs missed by previous changes.
 
 # lgamma
 Test "lgamma (-0.5) == log(2*sqrt(pi))":
@@ -1295,15 +1289,9 @@ Function: "jn":
 double: 4
 float: 4
 idouble: 4
-<<<<<<< HEAD
-ifloat: 4
-ildouble: 4
-ldouble: 4
-=======
 ifloat: 5
 ildouble: 8
 ldouble: 8
->>>>>>> 5863940... Update long-double sparc math ULPs missed by previous changes.
 
 Function: "lgamma":
 double: 1
