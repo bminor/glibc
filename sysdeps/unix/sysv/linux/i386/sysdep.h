@@ -29,6 +29,10 @@
 #include <dl-sysdep.h>
 #include <tls.h>
 
+#if defined __i686 && defined __ASSEMBLER__
+#undef __i686
+#define __i686 __i686
+#endif
 
 /* For Linux we can use the system call table in the header file
 	/usr/include/asm/unistd.h

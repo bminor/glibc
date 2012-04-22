@@ -1,3 +1,8 @@
+2012-02-22  Carlos O'Donell  <carlos_odonell@mentor.com>
+
+	[BZ #411]
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Redefine __i686.
+
 2012-01-01  Ulrich Drepper  <drepper@gmail.com>
 
 	* posix/getconf.c: Update copyright year.

@@ -1,3 +1,8 @@
+2012-04-22  Carlos O'Donell  <carlos_odonell@mentor.com>
+
+	[BZ #411]
+	* sysdeps/pthread/pt-initfini.c: Redefine __i686.
+
 2011-12-22  Ulrich Drepper  <drepper@gmail.com>
 
 	* sysdeps/pthread/gai_misc.h (__gai_create_helper_thread): Use
