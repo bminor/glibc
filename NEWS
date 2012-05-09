@@ -56,7 +56,12 @@ Version 2.16
 
 * More generic and 64-bit performance optimizations to math functions.
   Implemented by Ulrich Drepper.
-
+
+* Resurrect the RPC implementation in libc so that it can be used again for
+  compilation of new programs. It will be removed once TI-RPC can fully
+  replace the glibc RPC code. To use it, configure using 
+  --enable-obsolete-rpc.
+
 Version 2.15
 
 * The following bugs are resolved with this release:
