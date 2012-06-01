@@ -16,6 +16,12 @@
 	* sysdeps/mach/configure: Likewise.
 	* sysdeps/mach/hurd/configure: Likewise.
 
+2012-06-01  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14048]
+	* sysdeps/ieee754/dbl-64/wordsize-64/e_fmod.c (__ieee754_fmod):
+	Use int64_t for variable i.
+
 2012-05-17  Andreas Jaeger  <aj@suse.de>
 	    Carlos O'Donell  <carlos_odonell@mentor.com>
 
