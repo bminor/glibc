@@ -16,6 +16,11 @@
 	* sysdeps/mach/configure: Likewise.
 	* sysdeps/mach/hurd/configure: Likewise.
 
+2012-06-05  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/ieee754/ldbl-128ibm/e_fmodl.c: Fix for wrong ldbl128-ibm
+	fmodl commit.
+
 2012-06-04  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/ieee754/ldbl-128ibm/e_fmodl.c (__ieee754_fmodl): Fix
