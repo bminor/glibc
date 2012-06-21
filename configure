@@ -7967,6 +7967,8 @@ fi
 
 
 
+
+
 if test $elf = yes; then
   $as_echo "#define HAVE_ELF 1" >>confdefs.h
 

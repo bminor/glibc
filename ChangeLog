@@ -1,3 +1,12 @@
+2012-06-21  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14167]
+	* aclocal.m4 (LIBC_TRY_CC_OPTION): New macro.
+	* configure: Regenerated.
+	* sysdeps/ia64/configure: Likewise.
+	* sysdeps/mach/configure: Likewise.
+	* sysdeps/mach/hurd/configure: Likewise.
+
 2012-05-17  Andreas Jaeger  <aj@suse.de>
 	    Carlos O'Donell  <carlos_odonell@mentor.com>
 
