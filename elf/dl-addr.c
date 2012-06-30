@@ -87,7 +87,8 @@ determine_info (const ElfW(Addr) addr, struct link_map *match, Dl_info *info,
 
       for (; (void *) symtab < (void *) symtabend; ++symtab)
 	if ((ELFW(ST_BIND) (symtab->st_info) == STB_GLOBAL
-	     || ELFW(ST_BIND) (symtab->st_info) == STB_WEAK)
+	     || ELFW(ST_BIND) (symtab->st_info) == STB_WEAK
+	     || ELFW(ST_BIND) (symtab->st_info) == STB_SECONDARY)
 	    && ELFW(ST_TYPE) (symtab->st_info) != STT_TLS
 	    && (symtab->st_shndx != SHN_UNDEF
 		|| symtab->st_value != 0)
