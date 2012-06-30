@@ -1082,7 +1082,8 @@ read_symbols (struct shobj *shobj)
 	    newsym->name = &shobj->strtab[sym->st_name];
 	    newsym->addr = sym->st_value;
 	    newsym->size = sym->st_size;
-	    newsym->weak = ELFW(ST_BIND) (sym->st_info) == STB_WEAK;
+	    newsym->weak = (ELFW(ST_BIND) (sym->st_info) == STB_SECONDARY
+			    || ELFW(ST_BIND) (sym->st_info) == STB_WEAK);
 	    newsym->hidden = (ELFW(ST_VISIBILITY) (sym->st_other)
 			      != STV_DEFAULT);
 	    newsym->ticks = 0;
@@ -1140,7 +1141,8 @@ read_symbols (struct shobj *shobj)
 	      newsym->name = &strtab[symtab->st_name];
 	      newsym->addr = symtab->st_value;
 	      newsym->size = symtab->st_size;
-	      newsym->weak = ELFW(ST_BIND) (symtab->st_info) == STB_WEAK;
+	      newsym->weak = (ELFW(ST_BIND) (symtab->st_info) == STB_SECONDARY
+			      || ELFW(ST_BIND) (symtab->st_info) == STB_WEAK);
 	      newsym->hidden = (ELFW(ST_VISIBILITY) (symtab->st_other)
 				!= STV_DEFAULT);
 	      newsym->ticks = 0;

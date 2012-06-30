@@ -472,7 +472,8 @@ typedef struct
 #define STB_LOCAL	0		/* Local symbol */
 #define STB_GLOBAL	1		/* Global symbol */
 #define STB_WEAK	2		/* Weak symbol */
-#define	STB_NUM		3		/* Number of defined types.  */
+#define STB_SECONDARY	3		/* Secondary symbol */
+#define	STB_NUM		4		/* Number of defined types.  */
 #define STB_LOOS	10		/* Start of OS-specific */
 #define STB_GNU_UNIQUE	10		/* Unique symbol.  */
 #define STB_HIOS	12		/* End of OS-specific */

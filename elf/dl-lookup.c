@@ -518,10 +518,15 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 
 	  switch (ELFW(ST_BIND) (sym->st_info))
 	    {
+	    case STB_SECONDARY:
+	      /* Secondary definition.  Use this value if we don't find
+		 another.  */
+	      goto dynamic_weak;
 	    case STB_WEAK:
 	      /* Weak definition.  Use this value if we don't find another.  */
 	      if (__glibc_unlikely (GLRO(dl_dynamic_weak)))
 		{
+dynamic_weak:
 		  if (! result->s)
 		    {
 		      result->s = sym;
@@ -857,7 +862,9 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 
   if (__glibc_unlikely (current_value.s == NULL))
     {
-      if ((*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK)
+      if ((*ref == NULL
+	   || (ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK
+	       && ELFW(ST_BIND) ((*ref)->st_info) != STB_SECONDARY))
 	  && skip_map == NULL
 	  && !(GLRO(dl_debug_mask) & DL_DEBUG_UNUSED))
 	{

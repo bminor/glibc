@@ -1628,8 +1628,10 @@ foo:
 EOF
 if AC_TRY_COMMAND(${CC-cc} $ASFLAGS -c conftest.s 1>&AS_MESSAGE_LOG_FD); then
   libc_cv_asm_weak_directive=yes
+  libc_cv_asm_weak=.weak
 else
   libc_cv_asm_weak_directive=no
+  libc_cv_asm_weak=
 fi
 rm -f conftest*])
 
@@ -1648,6 +1650,7 @@ baz:
 EOF
   if AC_TRY_COMMAND(${CC-cc} $ASFLAGS -c conftest.s 1>&AS_MESSAGE_LOG_FD); then
     libc_cv_asm_weakext_directive=yes
+    libc_cv_asm_weak=.weakext
   else
     libc_cv_asm_weakext_directive=no
   fi
@@ -1660,6 +1663,53 @@ if test $libc_cv_asm_weak_directive = yes; then
 elif test $libc_cv_asm_weakext_directive = yes; then
   AC_DEFINE(HAVE_ASM_WEAKEXT_DIRECTIVE)
 fi
+
+AC_CACHE_CHECK(for .secondary assembler directive,
+	       libc_cv_asm_secondary_directive, [dnl
+cat > conftest.s <<EOF
+${libc_cv_dot_text}
+_sym:
+.secondary _sym
+EOF
+test -n "$libc_cv_asm_weak" && cat >> conftest.s <<EOF
+$libc_cv_asm_weak _sym
+EOF
+if ${CC-cc} -c $ASFLAGS -o conftest.o conftest.s 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD; then
+  if $READELF -s conftest.o | fgrep _sym | fgrep SECOND > /dev/null; then
+    libc_cv_asm_secondary_directive=yes
+  else
+    libc_cv_asm_secondary_directive=no
+  fi
+else
+  libc_cv_asm_secondary_directive=no
+fi
+rm -f conftest*])
+if test $libc_cv_asm_secondary_directive = yes; then
+  AC_DEFINE(HAVE_ASM_SECONDARY_DIRECTIVE)
+  AC_CACHE_CHECK(for secondary symbol in shared library,
+		 libc_cv_ld_secondary, [dnl
+cat > conftest.c <<EOF
+asm (".secondary foo");
+void foo (void) { }
+EOF
+  if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
+			    -fPIC -shared -o conftest.so conftest.c
+			    -nostartfiles -nostdlib
+			    1>&AS_MESSAGE_LOG_FD])
+  then
+    if $READELF -s conftest.so | fgrep foo | fgrep SECOND > /dev/null; then
+      libc_cv_ld_secondary=yes
+    else
+      libc_cv_ld_secondary=no
+    fi
+  else
+    libc_cv_ld_secondary=no
+  fi
+  rm -f conftest*])
+else
+  libc_cv_ld_secondary=no
+fi
+AC_SUBST(libc_cv_ld_secondary)
 
 AC_CACHE_CHECK(for ld --no-whole-archive, libc_cv_ld_no_whole_archive, [dnl
 cat > conftest.c <<\EOF
