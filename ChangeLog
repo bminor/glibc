@@ -1,3 +1,10 @@
+2012-07-06  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	* elf/dynamic-link.h (elf_get_dynamic_info): Remove assert()
+	around DT_RUNPATH and DT_RPATH which prevents running a dynamic
+	linker with an embedded RPATH flag, which is what a compiler
+	modified to embed a non-default INTERP section would do.
+
 2012-07-03  Andreas Jaeger  <aj@suse.de>
 
 	* po/bg.po: Update from translation team.
