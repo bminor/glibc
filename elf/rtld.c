@@ -2666,6 +2666,11 @@ process_envvars (enum mode *modep)
 	  break;
 
 	case 11:
+#ifdef EXTRA_LD_ENVVARS_11
+	   /* We might have some extra environment variables with length 11
+	      to handle.  */
+	   EXTRA_LD_ENVVARS_11
+#endif
 	  /* Path where the binary is found.  */
 	  if (!INTUSE(__libc_enable_secure)
 	      && memcmp (envline, "ORIGIN_PATH", 11) == 0)

@@ -1,3 +1,11 @@
+2012-07-06  Peter Bergner  <bergner@vnet.ibm.com>
+
+	* elf/rtld.c (process_envvars): Added conditional EXTRA_LD_ENVVARS_11
+	macro which allows overriding of AT_PLATFORM using an environment
+	variable.
+	* sysdeps/unix/sysv/linux/powerpc/dl-librecon.h: New file adding
+	definition for the EXTRA_LD_ENVVARS_11 macro.
+
 2012-07-06  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
 
 	* elf/dynamic-link.h (elf_get_dynamic_info): Remove assert()
