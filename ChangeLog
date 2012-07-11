@@ -1,3 +1,7 @@
+2012-07-11  Andreas Jaeger  <aj@suse.de>
+
+	* po/fr.po: Update from translation team.
+
 2012-07-04  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* catgets/Makefile ($(objpfx)de.msg): Use xopen-msg.awk instead of
