@@ -1,0 +1,9 @@
+2012-07-18  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* configure.in (sysnames): Don't look for Implies-before and
+	Implies-after files.  Handle conditional implied directory.
+	* configure: Regenerated.
+	* sysdeps/x86_64/Implies: Add $machine:x86_64/64:wordsize-64 and
+	$machine:x86_64/x32:wordsize-32.
+	* sysdeps/x86_64/64/Implies-after: Removed.
+	* sysdeps/x86_64/x32/Implies-after: Likewise.
