@@ -1,3 +1,5 @@
+cat <<EOF
 tile/tilegx
 tile
 wordsize-32
+EOF

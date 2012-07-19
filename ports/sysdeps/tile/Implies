@@ -1,2 +1,2 @@
-ieee754/dbl-64
-ieee754/flt-32
+echo ieee754/dbl-64
+echo ieee754/flt-32

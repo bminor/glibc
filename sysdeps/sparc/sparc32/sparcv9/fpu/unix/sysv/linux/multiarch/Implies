@@ -1,4 +1,6 @@
 # We must list this here to move it ahead of the ldbl-opt code.
+cat <<EOF
 sparc/sparc32/sparcv9/fpu/multiarch
 sparc/sparc32/sparcv9/fpu
 sparc/sparc32/fpu
+EOF

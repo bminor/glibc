@@ -1,7 +1,9 @@
-x86
-$machine:x86_64/64:wordsize-64
-$machine:x86_64/x32:wordsize-32
+echo x86
+[ "$machine" = x86_64/64 ] && echo wordsize-64
+[ "$machine" = x86_64/x32 ] && echo wordsize-32
+cat <<EOF
 ieee754/ldbl-96
 ieee754/dbl-64/wordsize-64
 ieee754/dbl-64
 ieee754/flt-32
+EOF

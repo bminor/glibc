@@ -1,2 +1,2 @@
 # The PPro and PII cores are mostly the same.
-i386/i686
+echo i386/i686

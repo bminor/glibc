@@ -771,18 +771,9 @@ while test $# -gt 0; do
 
   if test -f $xsrcdir$name/Implies; then
     # Collect more names from the `Implies' file (removing comments).
-    implied_candidate="`sed 's/#.*$//' < $xsrcdir$name/Implies`"
+    implied_candidate="`. $xsrcdir$name/Implies`"
     implied=
     for x in $implied_candidate; do
-      case $x in
-	"\$"*:*:*)
-	  implied_var="`echo $x | sed 's/:.*$//'`"
-	  eval "implied_var=$implied_var"
-	  implied_cond="`echo $x | sed 's/.*:\(.*\):.*$/\1/'`"
-	  test "$implied_var" = "$implied_cond" || continue
-	  x="`echo $x | sed 's/.*://'`"
-	  ;;
-      esac
       found=no
       if test -d $xsrcdir$name_base/$x; then
 	implied="$implied $name_base/$x";

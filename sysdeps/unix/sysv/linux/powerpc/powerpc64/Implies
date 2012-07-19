@@ -1,1 +1,1 @@
-unix/sysv/linux/wordsize-64
+echo unix/sysv/linux/wordsize-64

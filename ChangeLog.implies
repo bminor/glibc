@@ -1,3 +1,76 @@
+2012-07-19  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* configure.in (sysnames): Run Implies to get implied directory.
+	* configure: Regenerated.
+	* sysdeps/i386/Implies: Changed it to shell script.
+	* sysdeps/i386/fpu/Implies: Likewise.
+	* sysdeps/i386/i586/Implies: Likewise.
+	* sysdeps/i386/i686/Implies: Likewise.
+	* sysdeps/i386/i786/Implies: Likewise.
+	* sysdeps/mach/hurd/Implies: Likewise.
+	* sysdeps/powerpc/Implies: Likewise.
+	* sysdeps/powerpc/powerpc32/970/Implies: Likewise.
+	* sysdeps/powerpc/powerpc32/Implies: Likewise.
+	* sysdeps/powerpc/powerpc32/power5+/Implies: Likewise.
+	* sysdeps/powerpc/powerpc32/power5/Implies: Likewise.
+	* sysdeps/powerpc/powerpc32/power6/Implies: Likewise.
+	* sysdeps/powerpc/powerpc32/power6x/Implies: Likewise.
+	* sysdeps/powerpc/powerpc32/power7/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/970/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power5+/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power5/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power6/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power6x/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/Implies: Likewise.
+	* sysdeps/s390/Implies: Likewise.
+	* sysdeps/s390/s390-32/Implies: Likewise.
+	* sysdeps/s390/s390-64/Implies: Likewise.
+	* sysdeps/sh/Implies: Likewise.
+	* sysdeps/sparc/sparc32/Implies: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/unix/sysv/linux/multiarch/Implies:
+	Likewise.
+	* sysdeps/sparc/sparc64/Implies: Likewise.
+	* sysdeps/unix/Implies: Likewise.
+	* sysdeps/unix/bsd/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/i386/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/970/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/a2/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/cell/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/cell/fpu/Implies:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power4/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power5+/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power5/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power6/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power6x/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power7/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/970/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/a2/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/cell/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/cell/fpu/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fpu/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power4/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power5+/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power5/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power6/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power6x/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power7/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/s390/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/s390/fpu/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/fpu/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sparcv9/fpu/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/Implies: Likewise.
+	* sysdeps/x86_64/Implies: Likewise.
+	* sysdeps/x86_64/fpu/Implies: Likewise.
+
 2012-07-18  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* configure.in (sysnames): Don't look for Implies-before and

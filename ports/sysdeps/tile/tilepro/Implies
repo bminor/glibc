@@ -1,2 +1,2 @@
-tile
-wordsize-32
+echo tile
+echo wordsize-32

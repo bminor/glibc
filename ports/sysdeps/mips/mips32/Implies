@@ -1,2 +1,2 @@
-mips
-wordsize-32
+echo mips
+echo wordsize-32

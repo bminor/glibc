@@ -1,2 +1,2 @@
-powerpc/powerpc64/cell/fpu
-powerpc/powerpc64/cell
+echo powerpc/powerpc64/cell/fpu
+echo powerpc/powerpc64/cell

@@ -1,3 +1,5 @@
+cat <<EOF
 unix/sysv/linux/tile
 unix/sysv/linux/generic/wordsize-32
 unix/sysv/linux/generic
+EOF

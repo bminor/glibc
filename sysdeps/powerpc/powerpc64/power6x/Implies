@@ -1,2 +1,2 @@
-powerpc/powerpc64/power6/fpu
-powerpc/powerpc64/power6
+echo powerpc/powerpc64/power6/fpu
+echo powerpc/powerpc64/power6

@@ -1,2 +1,2 @@
 # Override ldbl-opt with alpha specific routines.
-alpha/alphaev6/fpu
+echo alpha/alphaev6/fpu
