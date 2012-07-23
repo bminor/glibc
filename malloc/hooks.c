@@ -171,6 +171,9 @@ mem2chunk_check(void* mem, unsigned char **magic_p)
 			    next_chunk(prev_chunk(p))!=p) ))
       return NULL;
     magic = MAGICBYTE(p);
+#ifdef __CHKP__
+	 p = (mchunkptr) __bnd_set_ptr_bounds(p, sz + SIZE_SZ);
+#endif
     for(sz += SIZE_SZ-1; (c = ((unsigned char*)p)[sz]) != magic; sz -= c) {
       if(c<=0 || sz<(c+2*SIZE_SZ)) return NULL;
     }

@@ -218,7 +218,6 @@
 
 #include <malloc-machine.h>
 #include <malloc-sysdep.h>
-
 #include <atomic.h>
 #include <_itoa.h>
 #include <bits/wordsize.h>
@@ -1222,11 +1221,12 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 /*
   ---------- Size and alignment checks and conversions ----------
 */
-
+#ifndef __CHKP__
 /* conversion from malloc headers to user pointers, and back */
 
-#define chunk2mem(p)   ((void*)((char*)(p) + 2*SIZE_SZ))
-#define mem2chunk(mem) ((mchunkptr)((char*)(mem) - 2*SIZE_SZ))
+# define chunk2mem(p)   ((void*)((char*)(p) + 2*SIZE_SZ))
+# define mem2chunk(mem) ((mchunkptr)((char*)(mem) - 2*SIZE_SZ))
+#endif
 
 /* The smallest possible chunk */
 #define MIN_CHUNK_SIZE        (offsetof(struct malloc_chunk, fd_nextsize))
@@ -1239,12 +1239,11 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 /* Check if m has acceptable alignment */
 
 #define aligned_OK(m)  (((unsigned long)(m) & MALLOC_ALIGN_MASK) == 0)
+#define aligned_chunk_OK(p)  (((unsigned long)((char *)(p) + 2 * SIZE_SZ) & MALLOC_ALIGN_MASK) == 0)
 
 #define misaligned_chunk(p) \
-  ((uintptr_t)(MALLOC_ALIGNMENT == 2 * SIZE_SZ ? (p) : chunk2mem (p)) \
+  ((uintptr_t)(MALLOC_ALIGNMENT == 2 * SIZE_SZ ? (p) : ((char *)(p)  + 2 * SIZE_SZ)) \
    & MALLOC_ALIGN_MASK)
-
-
 /*
    Check if a request is so large that it would wrap around zero when
    padded and aligned. To simplify some other code, the bound is made
@@ -1312,49 +1311,116 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 /* Get size, ignoring use bits */
 #define chunksize(p)         ((p)->size & ~(SIZE_BITS))
 
+#ifdef __CHKP__
+static void* chunk2mem (void *p) {
+  void *t = p + 2 * SIZE_SZ;
+  if (chunk_is_mmapped((mchunkptr)p))
+    return (void *) __bnd_narrow_ptr_bounds (t, t, chunksize((mchunkptr)p) - 2 * SIZE_SZ);
+  /* prev_size field of the next chunk can be used */
+  return (void *) __bnd_set_ptr_bounds(t, chunksize((mchunkptr)p) - SIZE_SZ);
+}
 
-/* Ptr to next physical malloc_chunk. */
-#define next_chunk(p) ((mchunkptr)( ((char*)(p)) + ((p)->size & ~SIZE_BITS) ))
+static mchunkptr mem2chunk(void *mem) {
+  mchunkptr temp = (mchunkptr)((char *)(mem) - 2 * SIZE_SZ);
+  temp = __bnd_set_ptr_bounds (temp, sizeof (struct malloc_chunk));
+  return  __bnd_set_ptr_bounds (temp, chunksize(temp) > sizeof(struct malloc_chunk) ?
+         chunksize(temp) : sizeof(struct malloc_chunk));
+}
+
+static mchunkptr next_chunk (mchunkptr p) {
+  mchunkptr temp = (mchunkptr)((char*) p + chunksize(p));
+  return (mchunkptr) __bnd_set_ptr_bounds ((void *) temp, sizeof(struct malloc_chunk));
+}
+
+static mchunkptr prev_chunk (mchunkptr p) {
+  mchunkptr temp = (mchunkptr)((char*) p - p->prev_size);
+  return (mchunkptr) __bnd_set_ptr_bounds ((void *) temp, sizeof(struct malloc_chunk));
+}
+
+static mchunkptr chunk_at_offset (mchunkptr p, INTERNAL_SIZE_T s) {
+  mchunkptr temp = (mchunkptr)((char*) p + s);
+  return (mchunkptr) __bnd_set_ptr_bounds ((void *) temp, sizeof(struct malloc_chunk));
+}
+
+static int inuse (mchunkptr p) {
+  return next_chunk(p)->size & PREV_INUSE;
+}
+
+static int  inuse_bit_at_offset (mchunkptr p, INTERNAL_SIZE_T s) {
+  return chunk_at_offset(p, s)->size & PREV_INUSE;
+}
+
+static void set_inuse_bit_at_offset (mchunkptr p, INTERNAL_SIZE_T s) {
+  chunk_at_offset(p, s)->size |= PREV_INUSE;
+}
+
+static void clear_inuse_bit_at_offset (mchunkptr p, INTERNAL_SIZE_T s) {
+  chunk_at_offset(p, s)->size &= ~(PREV_INUSE);
+}
+
+/* Set size at head, without disturbing its use bit */
+# define set_head_size(p, s)                                              \
+{                                                                        \
+  (p) = (__typeof(p)) __bnd_set_ptr_bounds ((void *) (p), (s) > sizeof (__typeof(p)) ? \
+        (s) : sizeof(__typeof(p)));                              \
+  (p)->size = ((p)->size & SIZE_BITS) | (s);                             \
+}
+
+/* Set size/use field */
+# define set_head(p, s)                                           \
+({                                                                 \
+  (p) = (__typeof(p)) __bnd_set_ptr_bounds ((void *) (p),          \
+       ((s) & ~(SIZE_BITS)) > sizeof (__typeof(p)) ?               \
+            ((s) & ~(SIZE_BITS)): sizeof (__typeof(p)));           \
+  (p)->size = (s);                                                 \
+})
+
+/* Set size at footer (only when chunk is not in use) */
+static void set_foot (mchunkptr p, INTERNAL_SIZE_T s) {
+   chunk_at_offset(p, s)->prev_size = s;
+}
+#else
+/* Ptr to next physicaly100y malloc_chunk. */
+# define next_chunk(p) ((mchunkptr)( ((char*)(p)) + ((p)->size & ~SIZE_BITS) ))
 
 /* Ptr to previous physical malloc_chunk */
-#define prev_chunk(p) ((mchunkptr)( ((char*)(p)) - ((p)->prev_size) ))
+# define prev_chunk(p) ((mchunkptr)( ((char*)(p)) - ((p)->prev_size) ))
 
 /* Treat space at ptr + offset as a chunk */
-#define chunk_at_offset(p, s)  ((mchunkptr)(((char*)(p)) + (s)))
+# define chunk_at_offset(p, s)  ((mchunkptr)(((char*)(p)) + (s)))
 
 /* extract p's inuse bit */
-#define inuse(p)\
+# define inuse(p)\
 ((((mchunkptr)(((char*)(p))+((p)->size & ~SIZE_BITS)))->size) & PREV_INUSE)
 
 /* set/clear chunk as being inuse without otherwise disturbing */
-#define set_inuse(p)\
+# define set_inuse(p)\
 ((mchunkptr)(((char*)(p)) + ((p)->size & ~SIZE_BITS)))->size |= PREV_INUSE
 
-#define clear_inuse(p)\
+# define clear_inuse(p)\
 ((mchunkptr)(((char*)(p)) + ((p)->size & ~SIZE_BITS)))->size &= ~(PREV_INUSE)
 
 
 /* check/set/clear inuse bits in known places */
-#define inuse_bit_at_offset(p, s)\
+# define inuse_bit_at_offset(p, s)\
  (((mchunkptr)(((char*)(p)) + (s)))->size & PREV_INUSE)
 
-#define set_inuse_bit_at_offset(p, s)\
+# define set_inuse_bit_at_offset(p, s)\
  (((mchunkptr)(((char*)(p)) + (s)))->size |= PREV_INUSE)
 
-#define clear_inuse_bit_at_offset(p, s)\
+# define clear_inuse_bit_at_offset(p, s)\
  (((mchunkptr)(((char*)(p)) + (s)))->size &= ~(PREV_INUSE))
 
 
 /* Set size at head, without disturbing its use bit */
-#define set_head_size(p, s)  ((p)->size = (((p)->size & SIZE_BITS) | (s)))
+# define set_head_size(p, s)  ((p)->size = (((p)->size & SIZE_BITS) | (s)))
 
 /* Set size/use field */
-#define set_head(p, s)       ((p)->size = (s))
+# define set_head(p, s)       ((p)->size = (s))
 
 /* Set size at footer (only when chunk is not in use) */
-#define set_foot(p, s)       (((mchunkptr)((char*)(p) + (s)))->prev_size = (s))
-
-
+# define set_foot(p, s)       (((mchunkptr)((char*)(p) + (s)))->prev_size = (s))
+#endif
 /*
   -------------------- Internal data structures --------------------
 
@@ -1945,7 +2011,7 @@ static void do_check_chunk(mstate av, mchunkptr p)
     /* chunk is page-aligned */
     assert(((p->prev_size + sz) & (GLRO(dl_pagesize)-1)) == 0);
     /* mem is aligned */
-    assert(aligned_OK(chunk2mem(p)));
+    assert(aligned_chunk_OK(p));
   }
 }
 
@@ -1968,7 +2034,7 @@ static void do_check_free_chunk(mstate av, mchunkptr p)
   if ((unsigned long)(sz) >= MINSIZE)
   {
     assert((sz & MALLOC_ALIGN_MASK) == 0);
-    assert(aligned_OK(chunk2mem(p)));
+    assert(aligned_chunk_OK(p));
     /* ... matching footer field */
     assert(next->prev_size == sz);
     /* ... and is fully consolidated */
@@ -2042,7 +2108,7 @@ static void do_check_remalloced_chunk(mstate av, mchunkptr p, INTERNAL_SIZE_T s)
   assert((sz & MALLOC_ALIGN_MASK) == 0);
   assert((unsigned long)(sz) >= MINSIZE);
   /* ... and alignment */
-  assert(aligned_OK(chunk2mem(p)));
+  assert(aligned_chunk_OK(p));
   /* chunk is less than MINSIZE more than request */
   assert((long)(sz) - (long)(s) >= 0);
   assert((long)(sz) - (long)(s + MINSIZE) < 0);
@@ -2313,16 +2379,16 @@ static void* sysmalloc(INTERNAL_SIZE_T nb, mstate av)
 	    /* For glibc, chunk2mem increases the address by 2*SIZE_SZ and
 	       MALLOC_ALIGN_MASK is 2*SIZE_SZ-1.  Each mmap'ed area is page
 	       aligned and therefore definitely MALLOC_ALIGN_MASK-aligned.  */
-	    assert (((INTERNAL_SIZE_T)chunk2mem(mm) & MALLOC_ALIGN_MASK) == 0);
+	    assert (((INTERNAL_SIZE_T)((void *)mm + 2 * SIZE_SZ) & MALLOC_ALIGN_MASK) == 0);
 	    front_misalign = 0;
 	  }
 	else
-	  front_misalign = (INTERNAL_SIZE_T)chunk2mem(mm) & MALLOC_ALIGN_MASK;
+	  front_misalign = (INTERNAL_SIZE_T)((void *)mm + 2 * SIZE_SZ) & MALLOC_ALIGN_MASK;
 	if (front_misalign > 0) {
 	  correction = MALLOC_ALIGNMENT - front_misalign;
 	  p = (mchunkptr)(mm + correction);
-	  p->prev_size = correction;
 	  set_head(p, (size - correction) |IS_MMAPPED);
+	  p->prev_size = correction;
 	}
 	else
 	  {
@@ -2349,7 +2415,11 @@ static void* sysmalloc(INTERNAL_SIZE_T nb, mstate av)
   /* Record incoming configuration of top */
 
   old_top  = av->top;
-  old_size = chunksize(old_top);
+  if (old_top == initial_top(av)) {
+		  old_size = 0;
+  } else {
+        old_size = chunksize(old_top);
+  }
   old_end  = (char*)(chunk_at_offset(old_top, old_size));
 
   brk = snd_brk = (char*)(MORECORE_FAILURE);
@@ -2399,9 +2469,9 @@ static void* sysmalloc(INTERNAL_SIZE_T nb, mstate av)
 	 become the top chunk again later.  Note that a footer is set
 	 up, too, although the chunk is marked in use. */
       old_size = (old_size - MINSIZE) & ~MALLOC_ALIGN_MASK;
-      set_head(chunk_at_offset(old_top, old_size + 2*SIZE_SZ), 0|PREV_INUSE);
+      chunk_at_offset(old_top, old_size + 2*SIZE_SZ)->size = 0|PREV_INUSE;
       if (old_size >= MINSIZE) {
-	set_head(chunk_at_offset(old_top, old_size), (2*SIZE_SZ)|PREV_INUSE);
+         chunk_at_offset(old_top, old_size)->size = (2*SIZE_SZ)|PREV_INUSE;
 	set_foot(chunk_at_offset(old_top, old_size), (2*SIZE_SZ));
 	set_head(old_top, old_size|PREV_INUSE|NON_MAIN_ARENA);
 	_int_free(av, old_top, 1);
@@ -2545,7 +2615,7 @@ static void* sysmalloc(INTERNAL_SIZE_T nb, mstate av)
 
 	/* Guarantee alignment of first new chunk made from this space */
 
-	front_misalign = (INTERNAL_SIZE_T)chunk2mem(brk) & MALLOC_ALIGN_MASK;
+	front_misalign = (INTERNAL_SIZE_T)((void *)brk + 2*SIZE_SZ) & MALLOC_ALIGN_MASK;
 	if (front_misalign > 0) {
 
 	  /*
@@ -2599,9 +2669,9 @@ static void* sysmalloc(INTERNAL_SIZE_T nb, mstate av)
       else {
 	if (MALLOC_ALIGNMENT == 2 * SIZE_SZ)
 	  /* MORECORE/mmap must correctly align */
-	  assert(((unsigned long)chunk2mem(brk) & MALLOC_ALIGN_MASK) == 0);
+	  assert(((unsigned long)((void *)brk + 2*SIZE_SZ) & MALLOC_ALIGN_MASK) == 0);
 	else {
-	  front_misalign = (INTERNAL_SIZE_T)chunk2mem(brk) & MALLOC_ALIGN_MASK;
+	  front_misalign = (INTERNAL_SIZE_T)((void *)brk + 2*SIZE_SZ) & MALLOC_ALIGN_MASK;
 	  if (front_misalign > 0) {
 
 	    /*
@@ -2676,8 +2746,12 @@ static void* sysmalloc(INTERNAL_SIZE_T nb, mstate av)
 
   /* finally, do the allocation */
   p = av->top;
-  size = chunksize(p);
-
+  if (p != initial_top(av)) {
+    size = chunksize(p);
+  }
+  else {
+    size = 0;
+  }
   /* check that one of the above allocation paths succeeded */
   if ((unsigned long)(size) >= (unsigned long)(nb + MINSIZE)) {
     remainder_size = size - nb;
@@ -2820,11 +2894,10 @@ mremap_chunk(mchunkptr p, size_t new_size)
 
   p = (mchunkptr)(cp + offset);
 
-  assert(aligned_OK(chunk2mem(p)));
-
-  assert((p->prev_size == offset));
+  assert(aligned_chunk_OK(p));
   set_head(p, (new_size - offset)|IS_MMAPPED);
 
+  assert((p->prev_size == offset));
   mp_.mmapped_mem -= size + offset;
   mp_.mmapped_mem += new_size;
   if ((unsigned long)mp_.mmapped_mem > (unsigned long)mp_.max_mmapped_mem)
@@ -2863,7 +2936,11 @@ __libc_malloc(size_t bytes)
     (void)mutex_unlock(&ar_ptr->mutex);
   assert(!victim || chunk_is_mmapped(mem2chunk(victim)) ||
 	 ar_ptr == arena_for_chunk(mem2chunk(victim)));
+#ifndef __CHKP__
   return victim;
+#else
+  return __bnd_narrow_ptr_bounds (victim, victim, bytes);
+#endif
 }
 libc_hidden_def(__libc_malloc)
 
@@ -2951,7 +3028,12 @@ __libc_realloc(void* oldmem, size_t bytes)
     if(newp) return chunk2mem(newp);
 #endif
     /* Note the extra SIZE_SZ overhead. */
-    if(oldsize - SIZE_SZ >= nb) return oldmem; /* do nothing */
+    if(oldsize - SIZE_SZ >= nb)
+#ifndef __CHKP__
+		 return oldmem; /* do nothing */
+#else
+		 return __bnd_narrow_ptr_bounds(oldmem, oldmem, bytes); /* do nothing */
+#endif
     /* Must alloc, copy, free. */
     newmem = __libc_malloc(bytes);
     if (newmem == 0) return 0; /* propagate failure */
@@ -2993,8 +3075,11 @@ __libc_realloc(void* oldmem, size_t bytes)
 	  _int_free(ar_ptr, oldp, 0);
 	}
     }
-
+#ifndef __CHKP__
   return newp;
+#else
+  return __bnd_narrow_ptr_bounds(newp, newp, bytes);
+#endif
 }
 libc_hidden_def (__libc_realloc)
 
@@ -3029,7 +3114,11 @@ __libc_memalign(size_t alignment, size_t bytes)
     (void)mutex_unlock(&ar_ptr->mutex);
   assert(!p || chunk_is_mmapped(mem2chunk(p)) ||
 	 ar_ptr == arena_for_chunk(mem2chunk(p)));
+#ifndef __CHKP__
   return p;
+#else
+  return __bnd_narrow_ptr_bounds(p, p, bytes);
+#endif
 }
 /* For ISO C11.  */
 weak_alias (__libc_memalign, aligned_alloc)
@@ -3065,8 +3154,11 @@ __libc_valloc(size_t bytes)
     (void)mutex_unlock (&ar_ptr->mutex);
   assert(!p || chunk_is_mmapped(mem2chunk(p)) ||
 	 ar_ptr == arena_for_chunk(mem2chunk(p)));
-
+#ifndef __CHKP__
   return p;
+#else
+  return __bnd_narrow_ptr_bounds(p, p, bytes);
+#endif
 }
 
 void*
@@ -3100,7 +3192,11 @@ __libc_pvalloc(size_t bytes)
   assert(!p || chunk_is_mmapped(mem2chunk(p)) ||
 	 ar_ptr == arena_for_chunk(mem2chunk(p)));
 
+#ifndef __CHKP__
   return p;
+#else
+  return __bnd_narrow_ptr_bounds(p, p, bytes);
+#endif
 }
 
 void*
@@ -3132,6 +3228,9 @@ __libc_calloc(size_t n, size_t elem_size)
     mem = (*hook)(sz, RETURN_ADDRESS (0));
     if(mem == 0)
       return 0;
+#ifdef __CHKP__
+    mem = __bnd_narrow_ptr_bounds(mem, mem, sz);
+#endif
     return memset(mem, 0, sz);
   }
 
@@ -3145,7 +3244,12 @@ __libc_calloc(size_t n, size_t elem_size)
      need to clear. */
 #if MORECORE_CLEARS
   oldtop = top(av);
-  oldtopsize = chunksize(top(av));
+  if (oldtop == initial_top(av))
+  {
+	  oldtopsize = 0;
+  } else {
+     oldtopsize = chunksize(top(av));
+  }
 #if MORECORE_CLEARS < 2
   /* Only newly allocated memory is guaranteed to be cleared.  */
   if (av == &main_arena &&
@@ -3179,6 +3283,9 @@ __libc_calloc(size_t n, size_t elem_size)
   /* Two optional cases in which clearing not necessary */
   if (chunk_is_mmapped (p))
     {
+#ifdef __CHKP__
+      mem =  __bnd_narrow_ptr_bounds(mem, mem, sz);
+#endif
       if (__builtin_expect (perturb_byte, 0))
 	MALLOC_ZERO (mem, sz);
       return mem;
@@ -3221,8 +3328,11 @@ __libc_calloc(size_t n, size_t elem_size)
       }
     }
   }
-
+#ifndef __CHKP__
   return mem;
+#else
+  return __bnd_narrow_ptr_bounds(mem, mem, sz);
+#endif
 }
 
 /*
@@ -3676,7 +3786,11 @@ _int_malloc(mstate av, size_t bytes)
     */
 
     victim = av->top;
-    size = chunksize(victim);
+    if (victim == initial_top(av)) {
+       size = 0;
+    } else {
+       size = chunksize(victim);
+    }
 
     if ((unsigned long)(size) >= (unsigned long)(nb + MINSIZE)) {
       remainder_size = size - nb;
@@ -4051,6 +4165,9 @@ static void malloc_consolidate(mstate av)
       p = atomic_exchange_acq (fb, 0);
       if (p != 0) {
 	do {
+#ifdef __CHKP__
+	  p = __bnd_set_ptr_bounds(p, sizeof (struct malloc_chunk));
+#endif
 	  check_inuse_chunk(av, p);
 	  nextp = p->fd;
 
@@ -4336,8 +4453,8 @@ _int_memalign(mstate av, size_t alignment, size_t bytes)
 
     /* For mmapped chunks, just adjust offset */
     if (chunk_is_mmapped(p)) {
-      newp->prev_size = p->prev_size + leadsize;
       set_head(newp, newsize|IS_MMAPPED);
+      newp->prev_size = p->prev_size + leadsize;
       return chunk2mem(newp);
     }
 
@@ -4350,7 +4467,7 @@ _int_memalign(mstate av, size_t alignment, size_t bytes)
     p = newp;
 
     assert (newsize >= nb &&
-	    (((unsigned long)(chunk2mem(p))) % alignment) == 0);
+	    (((unsigned long)((char *)p + 2 * SIZE_SZ) % alignment) == 0));
   }
 
   /* Also give back spare room at the end */
@@ -4430,7 +4547,7 @@ static int mtrim(mstate av, size_t pad)
 						+ sizeof (struct malloc_chunk)
 						+ psm1) & ~psm1);
 
-		assert ((char *) chunk2mem (p) + 4 * SIZE_SZ <= paligned_mem);
+      assert ((char *) (p) + 6 * SIZE_SZ <= paligned_mem);
 		assert ((char *) p + size > paligned_mem);
 
 		/* This is the size we could potentially free.  */
@@ -4932,7 +5049,6 @@ __posix_memalign (void **memptr, size_t alignment, size_t size)
 }
 weak_alias (__posix_memalign, posix_memalign)
 
-
 int
 malloc_info (int options, FILE *fp)
 {
@@ -5120,7 +5236,6 @@ malloc_info (int options, FILE *fp)
 
   return 0;
 }
-
 
 strong_alias (__libc_calloc, __calloc) weak_alias (__libc_calloc, calloc)
 strong_alias (__libc_free, __cfree) weak_alias (__libc_free, cfree)

@@ -131,9 +131,15 @@ int __malloc_initialized = -1;
 #endif
 
 /* find the heap and corresponding arena for a given ptr */
-
-#define heap_for_ptr(ptr) \
+#ifndef __CHKP__
+# define heap_for_ptr(ptr) \
  ((heap_info *)((unsigned long)(ptr) & ~(HEAP_MAX_SIZE-1)))
+#else
+static heap_info *heap_for_ptr (void *ptr) {
+  heap_info *t = (heap_info *)((unsigned long)(ptr) & ~(HEAP_MAX_SIZE-1));
+  return __bnd_set_ptr_bounds(t, sizeof(heap_info));
+}
+#endif
 #define arena_for_chunk(ptr) \
  (chunk_non_main_arena(ptr) ? heap_for_ptr(ptr)->ar_ptr : &main_arena)
 
