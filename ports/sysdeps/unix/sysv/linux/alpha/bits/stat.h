@@ -117,6 +117,9 @@ struct stat64
   };
 #endif
 
+/* Inform libc code that these two types are effectively identical.  */
+#define _STAT_MATCHES_STAT64	1
+
 #undef __ST_TIME
 
 /* Tell code we have these members.  */

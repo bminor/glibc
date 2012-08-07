@@ -100,4 +100,9 @@ struct stat64
   };
 #endif
 
+#if defined __OFF_T_MATCHES_OFF64_T && defined __INO_T_MATCHES_INO64_T
+/* Inform libc code that these two types are effectively identical.  */
+# define _STAT_MATCHES_STAT64	1
+#endif
+
 #endif	/* bits/stat.h */

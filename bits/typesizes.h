@@ -69,6 +69,9 @@
 
 /* Same for ino_t and ino64_t.  */
 # define __INO_T_MATCHES_INO64_T	1
+
+/* Same for blkcnt_t and blkcnt64_t.  */
+# define __BLKCNT_T_MATCHES_BLKCNT64_T
 #endif
 
 /* Number of descriptors that can fit in an `fd_set'.  */
