@@ -99,6 +99,7 @@ sysdeps-add-ons = @sysdeps_add_ons@
 cross-compiling = @cross_compiling@
 force-install = @force_install@
 link-obsolete-rpc = @link_obsolete_rpc@
+build-nis = @build_nis@
 
 # Build tools.
 CC = @CC@
