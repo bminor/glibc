@@ -840,6 +840,31 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 				  ? undef_map->l_scope : symbol_scope,
 				  version, type_class, flags, skip_map);
 
+  if (__builtin_expect (*ref != NULL, 1)
+      && (__builtin_expect (ELFW(ST_TYPE) (current_value.s->st_info) == STT_TLS, 0)
+	  || __builtin_expect (ELFW(ST_TYPE) ((*ref)->st_info) == STT_TLS, 0))
+      && __builtin_expect (ELFW(ST_TYPE) (current_value.s->st_info) !=
+			   ELFW(ST_TYPE) ((*ref)->st_info), 1))
+    {
+      const char *reference_name = undef_map ? undef_map->l_name : "";
+      const char *definition_name = (current_value.m->l_name[0]
+				     ? current_value.m->l_name
+				     : rtld_progname);
+      _dl_signal_cerror (0, (reference_name[0]
+			     ? reference_name
+			     : (rtld_progname ?: "<main program>")),
+			 N_("symbol lookup error"),
+			 make_string ((ELFW(ST_TYPE) ((*ref)->st_info) == STT_TLS
+				       ? "TLS" : "non-TLS"),
+				      " definition `", undef_name,
+				      "' mismatches ",
+				      (ELFW(ST_TYPE) (current_value.s->st_info) == STT_TLS
+				       ? "TLS" : "non-TLS"),
+				      " reference in ", definition_name));
+      *ref = NULL;
+      return 0;
+    }
+
   /* The object is used.  */
   if (__builtin_expect (current_value.m->l_used == 0, 0))
     current_value.m->l_used = 1;
