@@ -1,0 +1,5 @@
+2012-09-08  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14562]
+	* malloc/arena.c (heap_trim): Properly get fencepost and adjust
+	new chunk size with MALLOC_ALIGN_MASK.

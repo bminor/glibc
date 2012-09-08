@@ -652,15 +652,18 @@ heap_trim(heap_info *heap, size_t pad)
   unsigned long pagesz = GLRO(dl_pagesize);
   mchunkptr top_chunk = top(ar_ptr), p, bck, fwd;
   heap_info *prev_heap;
-  long new_size, top_size, extra;
+  long new_size, top_size, extra, misalign;
 
   /* Can this heap go away completely? */
   while(top_chunk == chunk_at_offset(heap, sizeof(*heap))) {
     prev_heap = heap->prev;
     p = chunk_at_offset(prev_heap, prev_heap->size - (MINSIZE-2*SIZE_SZ));
+    /* fencepost must be properly aligned.  */
+    misalign = ((long) p) & MALLOC_ALIGN_MASK;
+    p = (mchunkptr)(((unsigned long) p) & ~MALLOC_ALIGN_MASK);
     assert(p->size == (0|PREV_INUSE)); /* must be fencepost */
     p = prev_chunk(p);
-    new_size = chunksize(p) + (MINSIZE-2*SIZE_SZ);
+    new_size = chunksize(p) + (MINSIZE-2*SIZE_SZ) + misalign;
     assert(new_size>0 && new_size<(long)(2*MINSIZE));
     if(!prev_inuse(p))
       new_size += p->prev_size;
