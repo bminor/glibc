@@ -298,7 +298,8 @@ tests += tst-cancelx2 tst-cancelx3 tst-cancelx4 tst-cancelx5 \
 	 tst-cancelx11 tst-cancelx12 tst-cancelx13 tst-cancelx14 tst-cancelx15 \
 	 tst-cancelx16 tst-cancelx17 tst-cancelx18 tst-cancelx20 tst-cancelx21 \
 	 tst-cleanupx0 tst-cleanupx1 tst-cleanupx2 tst-cleanupx3 tst-cleanupx4 \
-	 tst-oncex3 tst-oncex4
+	 tst-oncex3 tst-oncex4 tst-cancelx7-static
+tests-static += tst-cancelx7-static
 endif
 ifeq ($(build-shared),yes)
 tests += tst-atfork2 tst-tls3 tst-tls4 tst-tls5 tst-_res1 tst-fini1 \
@@ -366,10 +367,12 @@ link-libc-static := $(common-objpfx)libc.a $(static-gnulib) \
 tests-static += tst-locale1 tst-locale2 tst-stackguard1-static \
 		tst-cancel21-static tst-cancel24-static tst-cond8-static \
 		tst-mutex8-static tst-mutexpi8-static tst-sem11-static \
-		tst-sem12-static
+		tst-sem12-static \
+		tst-raise1-static tst-cancel7-static
 tests += tst-stackguard1-static tst-cancel21-static tst-cancel24-static \
 	 tst-cond8-static tst-mutex8-static tst-mutexpi8-static \
-	 tst-sem11-static tst-sem12-static
+	 tst-sem11-static tst-sem12-static \
+	 tst-raise1-static tst-cancel7-static
 xtests-static += tst-setuid1-static
 
 # These tests are linked with libc before libpthread
