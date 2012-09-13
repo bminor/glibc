@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2015 Free Software Foundation, Inc.
+/* Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,27 +15,20 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <pthread.h>
-
-/* We have to completely disable cancellation.  assert() must not be a
-   cancellation point but the implementation uses write() etc.  */
 #ifdef HAVE_ASM_SECONDARY_DIRECTIVE
-# define FATAL_PREPARE __pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, NULL);
-#else
+# include <errno.h>
+# include "pthreadP.h"
+
+/* Make sure that it is used only when libpthread is not used.  */
+asm (".secondary __pthread_setcancelstate");
+
+int
+__pthread_setcancelstate (int state, int *oldstate)
+{
+  return 0;
+}
 # ifdef SHARED
-#  include <pthread-functions.h>
-#  define FATAL_PREPARE \
-   {									      \
-     if (__libc_pthread_functions_init)					      \
-       PTHFCT_CALL (ptr___pthread_setcancelstate, (PTHREAD_CANCEL_DISABLE,    \
-						 NULL));		      \
-   }
-# else
-#  pragma weak __pthread_setcancelstate
-#  define FATAL_PREPARE \
-   {									      \
-     if (__pthread_setcancelstate != NULL)				      \
-       __pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, NULL);		      \
-   }
+asm (".secondary pthread_setcancelstate");
+strong_alias (__pthread_setcancelstate, pthread_setcancelstate)
 # endif
 #endif

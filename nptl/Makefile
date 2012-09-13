@@ -28,9 +28,31 @@ extra-libs := libpthread
 extra-libs-others := $(extra-libs)
 install-lib-ldscripts := libpthread.so
 
+include ../Makeconfig
+
 routines = alloca_cutoff forward libc-lowlevellock libc-cancellation \
 	   libc-cleanup libc_pthread_init libc_multiple_threads \
 	   register-atfork unregister-atfork
+ifeq (yes,$(have-secondary))
+libc-libpthread-routines = libc-cleanup_defer_compat \
+			   libc-pthread_getspecific \
+			   libc-pthread_key_create \
+			   libc-pthread_mutex_lock \
+			   libc-pthread_mutex_unlock \
+			   libc-pthread_once \
+			   libc-pthread_rwlock_rdlock \
+			   libc-pthread_rwlock_unlock \
+			   libc-pthread_rwlock_wrlock \
+			   libc-pthread_setcancelstate \
+			   libc-pthread_setspecific \
+			   libc-pthread_unwind
+
+libc-libpthread-static-only-routines = libc-pthread_rwlock_destroy \
+				       libc-pthread_rwlock_init
+static-only-routines += $(libc-libpthread-static-only-routines)
+libc-libpthread-routines += $(libc-libpthread-static-only-routines)
+routines += $(libc-libpthread-routines)
+endif
 shared-only-routines = forward
 
 libpthread-routines = nptl-init vars events version \
@@ -167,7 +189,13 @@ CFLAGS-pthread_exit.c = -fexceptions
 
 # Among others, __pthread_unwind is forwarded.  This function must handle
 # exceptions.
+ifeq (yes,$(have-secondary))
+# __pthread_unwind can't call abort and GCC doesn't know kill won't
+# return.
+CFLAGS-libc-pthread_unwind.c += -fexceptions -Wno-error
+else
 CFLAGS-forward.c = -fexceptions
+endif
 
 # The following are cancellation points.  Some of the functions can
 # block and therefore temporarily enable asynchronous cancellation.

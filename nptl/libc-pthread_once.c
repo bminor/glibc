@@ -1,6 +1,5 @@
-/* Copyright (C) 2002-2015 Free Software Foundation, Inc.
+/* Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,10 +15,23 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc) && !defined SHARED
-/* Allow libpthread.a to override the ones in libc.a.  */
-	weak_extern (__lll_lock_wait_private)
-	weak_extern (__lll_unlock_wake_private)
-#endif
+#ifdef HAVE_ASM_SECONDARY_DIRECTIVE
+#include "pthreadP.h"
 
-#include "lowlevellock.S"
+/* Make sure that it is used only when libpthread is not used.  */
+asm (".secondary __pthread_once");
+asm (".secondary pthread_once");
+
+int
+__pthread_once (pthread_once_t *once_control,
+		void (*init_routine) (void))
+{
+  if (*once_control == PTHREAD_ONCE_INIT)
+    {
+      init_routine ();
+      *once_control |= 2;
+    }
+  return 0;
+}
+strong_alias (__pthread_once, pthread_once)
+#endif

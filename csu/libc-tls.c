@@ -232,6 +232,11 @@ _dl_tls_setup (void)
 }
 
 
+#ifdef HAVE_ASM_SECONDARY_DIRECTIVE
+/* Make sure that it is used only when libpthread.a is not used  */
+asm (".secondary __pthread_initialize_minimal");
+#endif
+
 /* This is the minimal initialization function used when libpthread is
    not used.  */
 void

@@ -189,6 +189,12 @@ GLIBC_2.0
  __profile_frequency F
  __progname D 0x4
  __progname_full D 0x4
+ __pthread_getspecific F
+ __pthread_key_create F
+ __pthread_mutex_lock F
+ __pthread_mutex_unlock F
+ __pthread_once F
+ __pthread_setspecific F
  __rcmd_errstr D 0x4
  __read F
  __realloc_hook D 0x4
@@ -269,6 +275,8 @@ GLIBC_2.0
  _obstack_free F
  _obstack_memory_used F
  _obstack_newchunk F
+ _pthread_cleanup_pop_restore F
+ _pthread_cleanup_push_defer F
  _res D 0x200
  _rpc_dtablesize F
  _seterr_reply F
@@ -868,6 +876,7 @@ GLIBC_2.0
  pthread_mutex_init F
  pthread_mutex_lock F
  pthread_mutex_unlock F
+ pthread_once F
  pthread_self F
  pthread_setcancelstate F
  pthread_setcanceltype F
@@ -1882,6 +1891,9 @@ GLIBC_2.2
  __lxstat64 F
  __nl_langinfo_l F
  __open64 F
+ __pthread_rwlock_rdlock F
+ __pthread_rwlock_unlock F
+ __pthread_rwlock_wrlock F
  __res_init F
  __res_nclose F
  __res_ninit F
