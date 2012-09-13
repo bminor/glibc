@@ -179,3 +179,13 @@ __pthread_rwlock_rdlock (pthread_rwlock_t *rwlock)
 
 weak_alias (__pthread_rwlock_rdlock, pthread_rwlock_rdlock)
 hidden_def (__pthread_rwlock_rdlock)
+
+#ifdef SHARED
+# include <shlib-compat.h>
+strong_alias (__pthread_rwlock_rdlock, __pthread_rwlock_rdlock_2_2)
+strong_alias (__pthread_rwlock_rdlock, __pthread_rwlock_rdlock_private)
+compat_symbol (libpthread, __pthread_rwlock_rdlock_2_2,
+	       __pthread_rwlock_rdlock, GLIBC_2_2);
+compat_symbol (libpthread, __pthread_rwlock_rdlock_private,
+	       __pthread_rwlock_rdlock, GLIBC_PRIVATE);
+#endif

@@ -51,3 +51,13 @@ __pthread_key_create (key, destr)
 }
 strong_alias (__pthread_key_create, pthread_key_create)
 hidden_def (__pthread_key_create)
+
+#ifdef SHARED
+# include <shlib-compat.h>
+strong_alias (__pthread_key_create, __pthread_key_create_2_0)
+strong_alias (__pthread_key_create, __pthread_key_create_private)
+compat_symbol (libpthread, __pthread_key_create_2_0,
+	       __pthread_key_create, GLIBC_2_0);
+compat_symbol (libpthread, __pthread_key_create_private,
+	       __pthread_key_create, GLIBC_PRIVATE);
+#endif

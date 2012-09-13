@@ -99,39 +99,51 @@ typedef pthread_key_t __libc_key_t;
 #define __rtld_lock_initialize(NAME) \
   (void) ((NAME) = (__rtld_lock_recursive_t) _RTLD_LOCK_RECURSIVE_INITIALIZER)
 
+#ifdef HAVE_ASM_SECONDARY_DIRECTIVE
+/* All pthread functions are available.  */
+# define PTFAVAIL(NAME) 1
+
+/* When secondary symbols are used, FUNC is implemented to return ELSE so
+   that we can always call FUNC.  */
+# define __libc_maybe_call(FUNC, ARGS, ELSE) FUNC ARGS
+# define __libc_ptf_call(FUNC, ARGS, ELSE) FUNC ARGS
+# define __libc_ptf_call_always(FUNC, ARGS) FUNC ARGS
+#else
 /* If we check for a weakly referenced symbol and then perform a
    normal jump to it te code generated for some platforms in case of
    PIC is unnecessarily slow.  What would happen is that the function
    is first referenced as data and then it is called indirectly
    through the PLT.  We can make this a direct jump.  */
-#ifdef __PIC__
-# define __libc_maybe_call(FUNC, ARGS, ELSE) \
-  (__extension__ ({ __typeof (FUNC) *_fn = (FUNC); \
-		    _fn != NULL ? (*_fn) ARGS : ELSE; }))
-#else
-# define __libc_maybe_call(FUNC, ARGS, ELSE) \
-  (FUNC != NULL ? FUNC ARGS : ELSE)
-#endif
+# ifdef __PIC__
+#  define __libc_maybe_call(FUNC, ARGS, ELSE) \
+   (__extension__ ({ __typeof (FUNC) *_fn = (FUNC); \
+		     _fn != NULL ? (*_fn) ARGS : ELSE; }))
+# else
+#  define __libc_maybe_call(FUNC, ARGS, ELSE) \
+   (FUNC != NULL ? FUNC ARGS : ELSE)
+# endif
 
 /* Call thread functions through the function pointer table.  */
-#if defined SHARED && IS_IN (libc)
-# define PTFAVAIL(NAME) __libc_pthread_functions_init
-# define __libc_ptf_call(FUNC, ARGS, ELSE) \
+# if defined SHARED && IS_IN (libc) \
+     && !defined HAVE_ASM_SECONDARY_DIRECTIVE
+#  define PTFAVAIL(NAME) __libc_pthread_functions_init
+#  define __libc_ptf_call(FUNC, ARGS, ELSE) \
   (__libc_pthread_functions_init ? PTHFCT_CALL (ptr_##FUNC, ARGS) : ELSE)
-# define __libc_ptf_call_always(FUNC, ARGS) \
+#  define __libc_ptf_call_always(FUNC, ARGS) \
   PTHFCT_CALL (ptr_##FUNC, ARGS)
-#elif IS_IN (libpthread)
-# define PTFAVAIL(NAME) 1
-# define __libc_ptf_call(FUNC, ARGS, ELSE) \
+# elif IS_IN (libpthread)
+#  define PTFAVAIL(NAME) 1
+#  define __libc_ptf_call(FUNC, ARGS, ELSE) \
   FUNC ARGS
-# define __libc_ptf_call_always(FUNC, ARGS) \
+#  define __libc_ptf_call_always(FUNC, ARGS) \
   FUNC ARGS
-#else
-# define PTFAVAIL(NAME) (NAME != NULL)
-# define __libc_ptf_call(FUNC, ARGS, ELSE) \
-  __libc_maybe_call (FUNC, ARGS, ELSE)
-# define __libc_ptf_call_always(FUNC, ARGS) \
+# else
+#  define PTFAVAIL(NAME) (NAME != NULL)
+#  define __libc_ptf_call(FUNC, ARGS, ELSE) \
+   __libc_maybe_call (FUNC, ARGS, ELSE)
+#  define __libc_ptf_call_always(FUNC, ARGS) \
   FUNC ARGS
+# endif
 #endif
 
 
@@ -364,6 +376,8 @@ extern int __pthread_rwlock_unlock (pthread_rwlock_t *__rwlock);
 extern int __pthread_key_create (pthread_key_t *__key,
 				 void (*__destr_function) (void *));
 
+extern int __pthread_setcancelstate (int state, int *oldstate);
+
 extern int __pthread_setspecific (pthread_key_t __key,
 				  const void *__pointer);
 
@@ -379,8 +393,9 @@ extern int __pthread_atfork (void (*__prepare) (void),
 
 
 /* Make the pthread functions weak so that we can elide them from
-   single-threaded processes.  */
-#ifndef __NO_WEAK_PTHREAD_ALIASES
+   single-threaded processes unless secondary symbols are used.  */
+#if !defined __NO_WEAK_PTHREAD_ALIASES \
+    && !defined HAVE_ASM_SECONDARY_DIRECTIVE
 # ifdef weak_extern
 weak_extern (__pthread_mutex_init)
 weak_extern (__pthread_mutex_destroy)
@@ -405,7 +420,7 @@ weak_extern (__pthread_initialize)
 weak_extern (__pthread_atfork)
 weak_extern (_pthread_cleanup_push_defer)
 weak_extern (_pthread_cleanup_pop_restore)
-weak_extern (pthread_setcancelstate)
+weak_extern (__pthread_setcancelstate)
 # else
 #  pragma weak __pthread_mutex_init
 #  pragma weak __pthread_mutex_destroy
@@ -429,7 +444,7 @@ weak_extern (pthread_setcancelstate)
 #  pragma weak __pthread_atfork
 #  pragma weak _pthread_cleanup_push_defer
 #  pragma weak _pthread_cleanup_pop_restore
-#  pragma weak pthread_setcancelstate
+#  pragma weak __pthread_setcancelstate
 # endif
 #endif
 

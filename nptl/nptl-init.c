@@ -87,10 +87,11 @@ static void nptl_freeres (void);
 
 static const struct pthread_functions pthread_functions =
   {
+# ifndef HAVE_ASM_SECONDARY_DIRECTIVE
     .ptr_pthread_attr_destroy = __pthread_attr_destroy,
-# if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
+#  if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
     .ptr___pthread_attr_init_2_0 = __pthread_attr_init_2_0,
-# endif
+#  endif
     .ptr___pthread_attr_init_2_1 = __pthread_attr_init_2_1,
     .ptr_pthread_attr_getdetachstate = __pthread_attr_getdetachstate,
     .ptr_pthread_attr_setdetachstate = __pthread_attr_setdetachstate,
@@ -127,9 +128,8 @@ static const struct pthread_functions pthread_functions =
     .ptr_pthread_mutex_lock = __pthread_mutex_lock,
     .ptr_pthread_mutex_unlock = __pthread_mutex_unlock,
     .ptr_pthread_self = __pthread_self,
-    .ptr_pthread_setcancelstate = __pthread_setcancelstate,
+    .ptr___pthread_setcancelstate = __pthread_setcancelstate,
     .ptr_pthread_setcanceltype = __pthread_setcanceltype,
-    .ptr___pthread_cleanup_upto = __pthread_cleanup_upto,
     .ptr___pthread_once = __pthread_once,
     .ptr___pthread_rwlock_rdlock = __pthread_rwlock_rdlock,
     .ptr___pthread_rwlock_wrlock = __pthread_rwlock_wrlock,
@@ -139,8 +139,10 @@ static const struct pthread_functions pthread_functions =
     .ptr___pthread_setspecific = __pthread_setspecific,
     .ptr__pthread_cleanup_push_defer = __pthread_cleanup_push_defer,
     .ptr__pthread_cleanup_pop_restore = __pthread_cleanup_pop_restore,
-    .ptr_nthreads = &__nptl_nthreads,
     .ptr___pthread_unwind = &__pthread_unwind,
+# endif
+    .ptr___pthread_cleanup_upto = __pthread_cleanup_upto,
+    .ptr_nthreads = &__nptl_nthreads,
     .ptr__nptl_deallocate_tsd = __nptl_deallocate_tsd,
 # ifdef SIGSETXID
     .ptr__nptl_setxid = __nptl_setxid,

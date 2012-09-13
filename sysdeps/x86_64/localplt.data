@@ -3,6 +3,18 @@
 # users can define their own functions and have library internals call them.
 # Linker in binutils 2.26 and newer consolidates R_X86_64_JUMP_SLOT
 # relocation with R_X86_64_GLOB_DAT relocation against the same symbol.
+# pthread functions may be preempted by libpthread at run-time.
+libc.so: __pthread_getspecific
+libc.so: __pthread_key_create
+libc.so: __pthread_once
+libc.so: __pthread_rwlock_rdlock
+libc.so: __pthread_rwlock_unlock
+libc.so: __pthread_rwlock_wrlock
+libc.so: __pthread_setcancelstate
+libc.so: __pthread_setspecific
+libc.so: __pthread_unwind
+libc.so: _pthread_cleanup_pop_restore
+libc.so: _pthread_cleanup_push_defer
 libc.so: calloc
 libc.so: free + RELA R_X86_64_GLOB_DAT
 libc.so: malloc + RELA R_X86_64_GLOB_DAT

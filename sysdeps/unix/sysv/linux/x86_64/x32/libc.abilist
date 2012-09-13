@@ -1448,6 +1448,7 @@ GLIBC_2.16
  pthread_mutex_init F
  pthread_mutex_lock F
  pthread_mutex_unlock F
+ pthread_once F
  pthread_self F
  pthread_setcancelstate F
  pthread_setcanceltype F

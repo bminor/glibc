@@ -16,6 +16,10 @@ libc {
     pthread_mutex_lock; pthread_mutex_unlock;
     pthread_self;
     pthread_setcancelstate; pthread_setcanceltype;
+#if HAVE_ASM_SECONDARY_DIRECTIVE
+    # Provide additional secondary pthread functions.
+    pthread_once;
+#endif
   }
   GLIBC_2.1 {
     pthread_attr_init;
@@ -36,6 +40,18 @@ libc {
     __libc_pthread_init;
     __libc_current_sigrtmin_private; __libc_current_sigrtmax_private;
     __libc_allocate_rtsig_private;
+#if HAVE_ASM_SECONDARY_DIRECTIVE
+    # Provide additional secondary pthread functions.
+    _pthread_cleanup_pop_restore; _pthread_cleanup_push_defer;
+    __pthread_getspecific; __pthread_setspecific;
+    __pthread_key_create;
+    __pthread_mutex_lock; __pthread_mutex_unlock;
+    __pthread_once;
+    __pthread_rwlock_rdlock; __pthread_rwlock_wrlock;
+    __pthread_rwlock_unlock;
+    __pthread_setcancelstate;
+    __pthread_unwind;
+#endif
   }
 }
 
@@ -274,6 +290,18 @@ libpthread {
     __pthread_clock_gettime; __pthread_clock_settime;
     __pthread_unwind; __pthread_get_minstack;
     __pthread_barrier_init; __pthread_barrier_wait;
+#if HAVE_ASM_SECONDARY_DIRECTIVE
+    # Provide additional secondary pthread functions.
+    _pthread_cleanup_pop_restore; _pthread_cleanup_push_defer;
+    __pthread_getspecific; __pthread_setspecific;
+    __pthread_key_create;
+    __pthread_mutex_lock; __pthread_mutex_unlock;
+    __pthread_once;
+    __pthread_rwlock_rdlock; __pthread_rwlock_wrlock;
+    __pthread_rwlock_unlock;
+    __pthread_setcancelstate;
+    __pthread_unwind;
+#endif
     __shm_directory;
   }
 }

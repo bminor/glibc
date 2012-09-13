@@ -30,7 +30,7 @@ install-lib-ldscripts := libpthread.so
 
 routines = alloca_cutoff forward libc-lowlevellock libc-cancellation \
 	   libc-cleanup libc_pthread_init libc_multiple_threads \
-	   register-atfork unregister-atfork
+	   register-atfork unregister-atfork libc-pthread-secondary
 shared-only-routines = forward
 
 libpthread-routines = nptl-init vars events version pt-interp \
@@ -170,6 +170,7 @@ CFLAGS-pthread_exit.c = -fexceptions
 # Among others, __pthread_unwind is forwarded.  This function must handle
 # exceptions.
 CFLAGS-forward.c = -fexceptions
+CFLAGS-libc-pthread-secondary.c = -fexceptions
 
 # The following are cancellation points.  Some of the functions can
 # block and therefore temporarily enable asynchronous cancellation.

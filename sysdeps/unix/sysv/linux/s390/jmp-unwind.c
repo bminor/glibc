@@ -18,10 +18,12 @@
 
 #include <setjmp.h>
 #include <stddef.h>
-#include <nptl/pthreadP.h>
+#include <bits/libc-lock.h>
 
 extern void __pthread_cleanup_upto (__jmp_buf env, char *targetframe);
+#ifndef HAVE_ASM_SECONDARY_DIRECTIVE
 #pragma weak __pthread_cleanup_upto
+#endif
 
 
 void
@@ -29,11 +31,5 @@ _longjmp_unwind (jmp_buf env, int val)
 {
   char local_var;
 
-#ifdef SHARED
-  if (__libc_pthread_functions_init)
-    PTHFCT_CALL (ptr___pthread_cleanup_upto, (env->__jmpbuf, &local_var));
-#else
-  if (__pthread_cleanup_upto != NULL)
-    __pthread_cleanup_upto (env->__jmpbuf, &local_var);
-#endif
+  __libc_ptf_call (__pthread_cleanup_upto, (env->__jmpbuf, &local_var), 0);
 }

@@ -316,3 +316,13 @@ __pthread_mutex_unlock (mutex)
 }
 strong_alias (__pthread_mutex_unlock, pthread_mutex_unlock)
 hidden_def (__pthread_mutex_unlock)
+
+#ifdef SHARED
+# include <shlib-compat.h>
+strong_alias (__pthread_mutex_unlock, __pthread_mutex_unlock_2_0)
+strong_alias (__pthread_mutex_unlock, __pthread_mutex_unlock_private)
+compat_symbol (libpthread, __pthread_mutex_unlock_2_0,
+	       __pthread_mutex_unlock, GLIBC_2_0);
+compat_symbol (libpthread, __pthread_mutex_unlock_private,
+	       __pthread_mutex_unlock, GLIBC_PRIVATE);
+#endif

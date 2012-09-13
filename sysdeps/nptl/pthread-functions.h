@@ -30,6 +30,7 @@ struct xid_command;
    the thread functions.  */
 struct pthread_functions
 {
+#ifndef HAVE_ASM_SECONDARY_DIRECTIVE
   int (*ptr_pthread_attr_destroy) (pthread_attr_t *);
   int (*ptr___pthread_attr_init_2_0) (pthread_attr_t *);
   int (*ptr___pthread_attr_init_2_1) (pthread_attr_t *);
@@ -75,9 +76,8 @@ struct pthread_functions
   int (*ptr_pthread_mutex_lock) (pthread_mutex_t *);
   int (*ptr_pthread_mutex_unlock) (pthread_mutex_t *);
   pthread_t (*ptr_pthread_self) (void);
-  int (*ptr_pthread_setcancelstate) (int, int *);
+  int (*ptr___pthread_setcancelstate) (int, int *);
   int (*ptr_pthread_setcanceltype) (int, int *);
-  void (*ptr___pthread_cleanup_upto) (__jmp_buf, char *);
   int (*ptr___pthread_once) (pthread_once_t *, void (*) (void));
   int (*ptr___pthread_rwlock_rdlock) (pthread_rwlock_t *);
   int (*ptr___pthread_rwlock_wrlock) (pthread_rwlock_t *);
@@ -89,10 +89,12 @@ struct pthread_functions
 					   void (*) (void *), void *);
   void (*ptr__pthread_cleanup_pop_restore) (struct _pthread_cleanup_buffer *,
 					    int);
-#define HAVE_PTR_NTHREADS
-  unsigned int *ptr_nthreads;
   void (*ptr___pthread_unwind) (__pthread_unwind_buf_t *)
        __attribute ((noreturn)) __cleanup_fct_attribute;
+#endif
+  void (*ptr___pthread_cleanup_upto) (__jmp_buf, char *);
+#define HAVE_PTR_NTHREADS
+  unsigned int *ptr_nthreads;
   void (*ptr__nptl_deallocate_tsd) (void);
   int (*ptr__nptl_setxid) (struct xid_command *);
   void (*ptr_freeres) (void);

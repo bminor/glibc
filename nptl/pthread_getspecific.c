@@ -66,3 +66,13 @@ __pthread_getspecific (key)
 }
 strong_alias (__pthread_getspecific, pthread_getspecific)
 hidden_def (__pthread_getspecific)
+
+#ifdef SHARED
+# include <shlib-compat.h>
+strong_alias (__pthread_getspecific, __pthread_getspecific_2_0)
+strong_alias (__pthread_getspecific, __pthread_getspecific_private)
+compat_symbol (libpthread, __pthread_getspecific_2_0,
+	       __pthread_getspecific, GLIBC_2_0);
+compat_symbol (libpthread, __pthread_getspecific_private,
+	       __pthread_getspecific, GLIBC_PRIVATE);
+#endif

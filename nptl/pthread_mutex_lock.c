@@ -516,6 +516,16 @@ __pthread_mutex_lock_full (pthread_mutex_t *mutex)
 #ifndef __pthread_mutex_lock
 strong_alias (__pthread_mutex_lock, pthread_mutex_lock)
 hidden_def (__pthread_mutex_lock)
+
+# ifdef SHARED
+# include <shlib-compat.h>
+strong_alias (__pthread_mutex_lock, __pthread_mutex_lock_2_0)
+strong_alias (__pthread_mutex_lock, __pthread_mutex_lock_private)
+compat_symbol (libpthread, __pthread_mutex_lock_2_0,
+	       __pthread_mutex_lock, GLIBC_2_0);
+compat_symbol (libpthread, __pthread_mutex_lock_private,
+	       __pthread_mutex_lock, GLIBC_PRIVATE);
+# endif
 #endif
 
 

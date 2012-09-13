@@ -6,6 +6,18 @@ libc.so: free + REL R_386_GLOB_DAT
 libc.so: malloc + REL R_386_GLOB_DAT
 libc.so: memalign
 libc.so: realloc
+# pthread functions may be preempted by libpthread at run-time.
+libc.so: __pthread_getspecific
+libc.so: __pthread_key_create
+libc.so: __pthread_once
+libc.so: __pthread_rwlock_rdlock
+libc.so: __pthread_rwlock_unlock
+libc.so: __pthread_rwlock_wrlock
+libc.so: __pthread_setcancelstate
+libc.so: __pthread_setspecific
+libc.so: __pthread_unwind
+libc.so: _pthread_cleanup_pop_restore
+libc.so: _pthread_cleanup_push_defer
 libm.so: matherr
 # The dynamic loader uses __libc_memalign internally to allocate aligned
 # TLS storage. The other malloc family of functions are expected to allow

@@ -95,3 +95,23 @@ _pthread_cleanup_pop_restore (buffer, execute)
     buffer->__routine (buffer->__arg);
 }
 strong_alias (_pthread_cleanup_pop_restore, __pthread_cleanup_pop_restore)
+
+#ifdef SHARED
+# include <shlib-compat.h>
+strong_alias (_pthread_cleanup_push_defer,
+	      _pthread_cleanup_push_defer_2_0)
+strong_alias (_pthread_cleanup_push_defer,
+	      _pthread_cleanup_push_defer_private)
+strong_alias (_pthread_cleanup_pop_restore,
+	      _pthread_cleanup_pop_restore_2_0)
+strong_alias (_pthread_cleanup_pop_restore,
+	      _pthread_cleanup_pop_restore_private)
+compat_symbol (libpthread, _pthread_cleanup_push_defer_2_0,
+	       _pthread_cleanup_push_defer, GLIBC_2_0);
+compat_symbol (libpthread, _pthread_cleanup_push_defer_private,
+	       _pthread_cleanup_push_defer, GLIBC_PRIVATE);
+compat_symbol (libpthread, _pthread_cleanup_pop_restore_2_0,
+	       _pthread_cleanup_pop_restore, GLIBC_2_0);
+compat_symbol (libpthread, _pthread_cleanup_pop_restore_private,
+	       _pthread_cleanup_pop_restore, GLIBC_PRIVATE);
+#endif

@@ -1,6 +1,18 @@
 # See scripts/check-localplt.awk for how this file is processed.
 # PLT use is required for the malloc family and for matherr because
 # users can define their own functions and have library internals call them.
+# pthread functions may be preempted by libpthread at run-time.
+libc.so: __pthread_getspecific
+libc.so: __pthread_key_create
+libc.so: __pthread_once
+libc.so: __pthread_rwlock_rdlock
+libc.so: __pthread_rwlock_unlock
+libc.so: __pthread_rwlock_wrlock
+libc.so: __pthread_setcancelstate
+libc.so: __pthread_setspecific
+libc.so: __pthread_unwind
+libc.so: _pthread_cleanup_pop_restore
+libc.so: _pthread_cleanup_push_defer
 libc.so: calloc
 libc.so: free
 libc.so: malloc

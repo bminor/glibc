@@ -26,7 +26,7 @@
 #  define __pthread_unwind __GI___pthread_unwind
 # endif
 #else
-# ifndef SHARED
+# if !defined SHARED && !defined HAVE_ASM_SECONDARY_DIRECTIVE
 	.weak __pthread_unwind
 # endif
 #endif

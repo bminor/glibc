@@ -31,7 +31,26 @@ struct pthread_functions __libc_pthread_functions attribute_hidden;
 int __libc_pthread_functions_init attribute_hidden;
 
 
-#define FORWARD2(name, rettype, decl, params, defaction) \
+#ifdef HAVE_ASM_SECONDARY_DIRECTIVE
+/* Make sure that it is used only when libpthread is not used.  */
+# define FORWARD2(name, rettype, decl, params, defaction) \
+asm (".secondary "#name);						      \
+rettype									      \
+name decl								      \
+{									      \
+  defaction;								      \
+}
+
+/* Same as FORWARD2, only without return.  */
+# define FORWARD_NORETURN(name, rettype, decl, params, defaction) \
+asm (".secondary "#name);						      \
+rettype									      \
+name decl								      \
+{									      \
+  defaction;								      \
+}
+#else
+# define FORWARD2(name, rettype, decl, params, defaction) \
 rettype									      \
 name decl								      \
 {									      \
@@ -42,7 +61,7 @@ name decl								      \
 }
 
 /* Same as FORWARD2, only without return.  */
-#define FORWARD_NORETURN(name, rettype, decl, params, defaction) \
+# define FORWARD_NORETURN(name, rettype, decl, params, defaction) \
 rettype									      \
 name decl								      \
 {									      \
@@ -51,6 +70,7 @@ name decl								      \
 									      \
   PTHFCT_CALL (ptr_##name, params);					      \
 }
+#endif
 
 #define FORWARD(name, decl, params, defretval) \
   FORWARD2 (name, int, decl, params, return defretval)
@@ -197,13 +217,19 @@ FORWARD (pthread_mutex_unlock, (pthread_mutex_t *mutex), (mutex), 0)
 FORWARD2 (pthread_self, pthread_t, (void), (), return 0)
 
 
-FORWARD (pthread_setcancelstate, (int state, int *oldstate), (state, oldstate),
-	 0)
+FORWARD (__pthread_setcancelstate, (int state, int *oldstate),
+	 (state, oldstate), 0)
+strong_alias (__pthread_setcancelstate, pthread_setcancelstate)
+#ifdef HAVE_ASM_SECONDARY_DIRECTIVE
+asm (".secondary pthread_setcancelstate");
+#endif
 
 FORWARD (pthread_setcanceltype, (int type, int *oldtype), (type, oldtype), 0)
 
+#ifndef HAVE_ASM_SECONDARY_DIRECTIVE
 FORWARD_NORETURN (__pthread_unwind,
                   void attribute_hidden __attribute ((noreturn))
                   __cleanup_fct_attribute attribute_compat_text_section,
                   (__pthread_unwind_buf_t *buf), (buf),
                   __safe_fatal ())
+#endif

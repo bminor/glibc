@@ -144,3 +144,13 @@ __pthread_once (pthread_once_t *once_control, void (*init_routine) (void))
 }
 weak_alias (__pthread_once, pthread_once)
 hidden_def (__pthread_once)
+
+#ifdef SHARED
+# include <shlib-compat.h>
+strong_alias (__pthread_once, __pthread_once_2_0)
+strong_alias (__pthread_once, __pthread_once_private)
+compat_symbol (libpthread, __pthread_once_2_0,
+	       __pthread_once, GLIBC_2_0);
+compat_symbol (libpthread, __pthread_once_private,
+	       __pthread_once, GLIBC_PRIVATE);
+#endif
