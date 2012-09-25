@@ -218,7 +218,7 @@ static int collated_compare (const void *, const void *) __THROW;
 static const char *
 next_brace_sub (const char *cp, int flags)
 {
-  unsigned int depth = 0;
+  size_t depth = 0;
   while (*cp != '\0')
     if ((flags & GLOB_NOESCAPE) == 0 && *cp == '\\')
       {
@@ -961,7 +961,7 @@ glob (pattern, flags, errfunc, pglob)
 		  && S_ISDIR (st.st_mode))
 	       : (__stat64 (dirname, &st64) == 0 && S_ISDIR (st64.st_mode)))))
 	{
-	  int newcount = pglob->gl_pathc + pglob->gl_offs;
+	  size_t newcount = pglob->gl_pathc + pglob->gl_offs;
 	  char **new_gl_pathv;
 
 	  if (newcount > UINTPTR_MAX - (1 + 1)
@@ -1060,7 +1060,7 @@ glob (pattern, flags, errfunc, pglob)
 	 appending the results to PGLOB.  */
       for (i = 0; i < dirs.gl_pathc; ++i)
 	{
-	  int old_pathc;
+	  size_t old_pathc;
 
 #ifdef	SHELL
 	  {
@@ -1115,7 +1115,7 @@ glob (pattern, flags, errfunc, pglob)
 	  /* No matches.  */
 	  if (flags & GLOB_NOCHECK)
 	    {
-	      int newcount = pglob->gl_pathc + pglob->gl_offs;
+	      size_t newcount = pglob->gl_pathc + pglob->gl_offs;
 	      char **new_gl_pathv;
 
 	      if (newcount > UINTPTR_MAX - 2
@@ -1159,7 +1159,7 @@ glob (pattern, flags, errfunc, pglob)
     }
   else
     {
-      int old_pathc = pglob->gl_pathc;
+      size_t old_pathc = pglob->gl_pathc;
       int orig_flags = flags;
 
       if (meta & 2)
