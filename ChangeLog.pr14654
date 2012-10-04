@@ -1,0 +1,32 @@
+2012-10-04  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14654]
+	* sysdeps/ieee754/dbl-64/mpa.c: Don't export __mul if NO___MUL
+	is defined.  Only export __mul if __mul is defined.
+	* sysdeps/x86_64/fpu/multiarch/Makefile (libm-sysdep_routines):
+	Replace mpa-fma4 with mul-fma4.  Add mul-avx.
+	(CFLAGS-mpa-fma4.c): Removed.
+	(CFLAGS-mul-fma4.c): New.
+	(CFLAGS-mul-avx.c): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/e_atan2-fma4.c (__add): Defined
+	to __add_avx.
+	(__dbl_mp): Defined to __dbl_mp_avx.
+	(__dvd): Defined to __dvd_avx.
+	(__sub): Defined to __sub_avx.
+	* sysdeps/x86_64/fpu/multiarch/e_log-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/mpatan-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/mpatan2-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/mpexp-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/mplog-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/mpsqrt-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/mptan-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_atan-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_tan-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/sincos32-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/slowexp-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/slowpow-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/mpa-avx.c (__mul): Removed.
+	(NO___MUL): New.
+	* sysdeps/x86_64/fpu/multiarch/mpa-fma4.c: Removed.
+	* sysdeps/x86_64/fpu/multiarch/mul-avx.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/mul-fma4.c: Likewise.

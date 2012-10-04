@@ -51,6 +51,7 @@
 # define SECTION
 #endif
 
+#ifndef __mul
 #ifndef NO___ACR
 /* mcr() compares the sizes of the mantissas of two multiple precision  */
 /* numbers. Mantissas are compared regardless of the signs of the       */
@@ -430,8 +431,10 @@ __sub(const mp_no *x, const mp_no *y, mp_no *z, int p) {
     else                      Z[0] = ZERO;
   }
 }
+#endif
 
 
+#ifndef NO___MUL
 /* Multiply two multiple precision numbers. *z is set to *x * *y. x&y      */
 /* may overlap but not x&z or y&z. In case p=1,2,3 the exact result is     */
 /* truncated to p digits. In case p>3 the error is bounded by 1.001 ulp.   */
@@ -471,8 +474,10 @@ __mul(const mp_no *x, const mp_no *y, mp_no *z, int p) {
 
   Z[0] = X[0] * Y[0];
 }
+#endif
 
 
+#ifndef __mul
 /* Invert a multiple precision number. Set *y = 1 / *x.                     */
 /* Relative error bound = 1.001*r**(1-p) for p=2, 1.063*r**(1-p) for p=3,   */
 /* 2.001*r**(1-p) for p>3.                                                  */
@@ -520,3 +525,4 @@ __dvd(const mp_no *x, const mp_no *y, mp_no *z, int p) {
   if (X[0] == ZERO)    Z[0] = ZERO;
   else                {__inv(y,&w,p);   __mul(x,&w,z,p);}
 }
+#endif
