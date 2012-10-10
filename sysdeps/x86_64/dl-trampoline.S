@@ -31,8 +31,13 @@
 	cfi_startproc
 _dl_runtime_resolve:
 	cfi_adjust_cfa_offset(16) # Incorporate PLT
+#if !defined  __CHKP__ && !defined __CHKWR__
 	subq $56,%rsp
 	cfi_adjust_cfa_offset(56)
+#else
+	subq $120,%rsp
+	cfi_adjust_cfa_offset(120)
+#endif
 	movq %rax,(%rsp)	# Preserve registers otherwise clobbered.
 	movq %rcx, 8(%rsp)
 	movq %rdx, 16(%rsp)
@@ -40,10 +45,26 @@ _dl_runtime_resolve:
 	movq %rdi, 32(%rsp)
 	movq %r8, 40(%rsp)
 	movq %r9, 48(%rsp)
+#if !defined  __CHKP__ && !defined __CHKWR__
 	movq 64(%rsp), %rsi	# Copy args pushed by PLT in register.
 	movq 56(%rsp), %rdi	# %rdi: link_map, %rsi: reloc_index
+#else
+	bndmov %bnd0, 56(%rsp)
+	bndmov %bnd1, 72(%rsp)
+	bndmov %bnd2, 88(%rsp)
+	bndmov %bnd3, 104(%rsp)
+	movq 128(%rsp), %rsi	# Copy args pushed by PLT in register.
+	movq 120(%rsp), %rdi	# %rdi: link_map, %rsi: reloc_index
+	bndldx 120(%rsp, %rdi), %bnd0
+#endif
 	call _dl_fixup		# Call resolver.
 	movq %rax, %r11		# Save return value
+#if defined  __CHKP__ || defined __CHKWR__
+	bndmov 104(%rsp), %bnd3
+	bndmov 88(%rsp), %bnd2
+	bndmov 72(%rsp), %bnd1
+	bndmov 56(%rsp), %bnd0
+#endif
 	movq 48(%rsp), %r9	# Get register content back.
 	movq 40(%rsp), %r8
 	movq 32(%rsp), %rdi
@@ -51,8 +72,13 @@ _dl_runtime_resolve:
 	movq 16(%rsp), %rdx
 	movq 8(%rsp), %rcx
 	movq (%rsp), %rax
+#if !defined  __CHKP__ && !defined __CHKWR__
 	addq $72, %rsp		# Adjust stack(PLT did 2 pushes)
 	cfi_adjust_cfa_offset(-72)
+#else
+	addq $136, %rsp		# Adjust stack(PLT did 2 pushes)
+	cfi_adjust_cfa_offset(-136)
+#endif
 	jmp *%r11		# Jump to function address.
 	cfi_endproc
 	.size _dl_runtime_resolve, .-_dl_runtime_resolve

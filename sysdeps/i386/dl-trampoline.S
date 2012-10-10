@@ -31,9 +31,29 @@ _dl_runtime_resolve:
 	cfi_adjust_cfa_offset (4)
 	pushl %edx
 	cfi_adjust_cfa_offset (4)
+#if !defined  __CHKP__ && !defined __CHKWR__
 	movl 16(%esp), %edx	# Copy args pushed by PLT in register.  Note
 	movl 12(%esp), %eax	# that `fixup' takes its parameters in regs.
+#else
+	subl $32, %esp
+	cfi_adjust_cfa_offset (32)
+	bndmov %bnd0, (%esp)
+	bndmov %bnd1, 8(%esp)
+	bndmov %bnd2, 16(%esp)
+	bndmov %bnd3, 24(%esp)
+	movl 48(%esp), %edx	# Copy args pushed by PLT in register.  Note
+	movl 44(%esp), %eax	# that `fixup' takes its parameters in regs.
+	bndldx 44(%esp, %eax), %bnd0
+#endif
 	call _dl_fixup		# Call resolver.
+#if defined  __CHKP__ || defined __CHKWR__
+	bndmov 24(%esp), %bnd3
+	bndmov 16(%esp), %bnd2
+	bndmov 8(%esp), %bnd1
+	bndmov (%esp), %bnd0
+	addl $32, %esp
+	cfi_adjust_cfa_offset (-32)
+#endif
 	popl %edx		# Get register content back.
 	cfi_adjust_cfa_offset (-4)
 	movl (%esp), %ecx
