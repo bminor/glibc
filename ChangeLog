@@ -1,3 +1,11 @@
+2012-10-14  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14716]
+	* string/test-memmem.c (check_result): New function.
+	(do_one_test): Use it.
+	(check1): New function.
+	(test_main): Use it.
+
 2012-10-12  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86/bits/byteswap.h: Include <bits/types.h>.
