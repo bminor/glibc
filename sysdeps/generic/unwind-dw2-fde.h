@@ -147,7 +147,7 @@ typedef struct dwarf_fde fde;
 static inline struct dwarf_cie *
 get_cie (struct dwarf_fde *f)
 {
-  return (void *)&f->CIE_delta - f->CIE_delta;
+  return (char *)f + offsetof (struct dwarf_fde, CIE_delta)  - f->CIE_delta;
 }
 
 static inline fde *
