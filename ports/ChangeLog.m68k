@@ -1,3 +1,9 @@
+2012-10-23  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/m68k/bits/fcntl.h: Remove all
+	definitions and declarations that are provided by
+	<bits/fcntl-linux.h> and include <bits/fcntl-linux.h>.
+
 2012-10-02  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* sysdeps/unix/sysv/linux/m68k/nptl/lowlevellock.h: Fix clone
