@@ -2,7 +2,7 @@
 default-abi := 32
 
 ifeq ($(subdir),misc)
-sysdep_routines += ioperm iopl vm86 call_pselect6 call_fallocate
+sysdep_routines += ioperm iopl vm86 call_pselect6 call_fallocate mremap
 endif
 
 ifeq ($(subdir),elf)

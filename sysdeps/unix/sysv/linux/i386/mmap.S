@@ -74,6 +74,11 @@ L(skip):
 	ja SYSCALL_ERROR_LABEL
 
 	/* Successful; return the syscall's value.  */
+	mov 8(%esp), %ecx
+#if defined  __CHKP__ || defined __CHKWR__
+	bndmk -1(%eax, %ecx), %bnd0
+#endif
+
 	ret
 
 PSEUDO_END (__mmap)

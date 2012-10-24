@@ -89,6 +89,10 @@ L(do_syscall):
 	ja SYSCALL_ERROR_LABEL
 
 	/* Successful; return the syscall's value.  */
+	mov 8(%esp), %ecx
+#if defined  __CHKP__ || defined __CHKWR__
+	bndmk -1(%eax, %ecx), %bnd0
+#endif
 	ret
 
 	cfi_adjust_cfa_offset (16)
