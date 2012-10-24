@@ -26,25 +26,12 @@
 #define __O_NOFOLLOW	0100000	/* Do not follow links.	 */
 #define __O_DIRECT	0400000	/* Direct disk access.	*/
 
-# if __WORDSIZE == 64
-/* Not necessary, files are always with 64bit off_t.  */
-#  define __O_LARGEFILE   0
-# else
-#  define __O_LARGEFILE	0200000
-# endif
-#endif
-
 #if __WORDSIZE == 64
-// XXX: The following three values look wrong
-# define F_GETLK64	7	/* Get record locking info.  */
-# define F_SETLK64	8	/* Set record locking info (non-blocking).  */
-# define F_SETLKW64	9	/* Set record locking info (blocking).  */
+/* Not necessary, files are always with 64bit off_t.  */
+# define __O_LARGEFILE  0
 #else
-# define F_GETLK64	12	/* Get record locking info.  */
-# define F_SETLK64	13	/* Set record locking info (non-blocking).  */
-# define F_SETLKW64	14	/* Set record locking info (blocking).  */
+# define __O_LARGEFILE	0200000
 #endif
-
 
 struct flock
   {
