@@ -31,12 +31,8 @@
 #define O_NOCTTY	 0x0800	/* not fcntl */
 #define O_ASYNC		 0x1000
 
-#define __O_NOFOLLOW	0x20000	/* Do not follow links.	 */
-
-#define __O_DIRECTORY	0x10000	/* Must be a directory.	 */
-#define __O_DIRECT	0x8000	/* Direct disk access hint.  */
-#define __O_NOATIME	0x40000	/* Do not set atime.  */
-#define __O_DSYNC	0x0010	/* Synchronize data.  */
+#define __O_DIRECT	 0x8000	/* Direct disk access hint.  */
+#define __O_DSYNC	 0x0010	/* Synchronize data.  */
 
 #if _MIPS_SIM == _ABI64
 /* Not necessary, files are always with 64bit off_t.  */
