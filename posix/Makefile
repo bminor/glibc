@@ -112,13 +112,12 @@ generated := $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10) \
 
 include ../Rules
 
-ifeq (no,$(cross-compiling))
+ifeq ($(run-built-tests),yes)
 # globtest and wordexp-test currently only works with shared libraries
 ifeq (yes,$(build-shared))
 tests: $(objpfx)globtest.out $(objpfx)wordexp-tst.out
 $(objpfx)globtest.out: globtest.sh $(objpfx)globtest
-	$(SHELL) $< $(common-objpfx) $(elf-objpfx) \
-		 $(rtld-installed-name)
+	$(SHELL) $< $(common-objpfx) '$(run-program-prefix)'
 $(objpfx)wordexp-tst.out: wordexp-tst.sh $(objpfx)wordexp-test
 	$(SHELL) $< $(common-objpfx) '$(run-program-prefix)'
 endif
@@ -170,8 +169,8 @@ CFLAGS-execlp.os = -fomit-frame-pointer
 tstgetopt-ARGS = -a -b -cfoobar --required foobar --optional=bazbug \
 		--none random --col --color --colour
 
-tst-exec-ARGS = -- $(built-program-cmd)
-tst-spawn-ARGS = -- $(built-program-cmd)
+tst-exec-ARGS = -- $(host-built-program-cmd)
+tst-spawn-ARGS = -- $(host-built-program-cmd)
 tst-dir-ARGS = `pwd` `cd $(common-objdir)/$(subdir); pwd` `cd $(common-objdir); pwd` $(objpfx)tst-dir
 tst-chmod-ARGS = $(objdir)
 tst-vfork3-ARGS = --test-dir=$(objpfx)
@@ -212,7 +211,7 @@ ptestcases.h: PTESTS PTESTS2C.sed
 # Run a test on the header files we use.
 # XXX Please note that for now we ignore the result of this test.
 tests: $(objpfx)annexc.out
-ifeq (no,$(cross-compiling))
+ifeq ($(run-built-tests),yes)
 tests: $(objpfx)bug-regex2-mem $(objpfx)bug-regex14-mem \
   $(objpfx)bug-regex21-mem $(objpfx)bug-regex31-mem $(objpfx)tst-rxspencer-mem\
   $(objpfx)tst-pcre-mem $(objpfx)tst-boost-mem $(objpfx)tst-getconf.out \

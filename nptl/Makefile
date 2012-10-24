@@ -439,7 +439,7 @@ CFLAGS-tst-initializers1-c99.c = $(CFLAGS-tst-initializers1-<)
 CFLAGS-tst-initializers1-gnu89.c = $(CFLAGS-tst-initializers1-<)
 CFLAGS-tst-initializers1-gnu99.c = $(CFLAGS-tst-initializers1-<)
 
-tst-cancel7-ARGS = --command "$(built-program-cmd)"
+tst-cancel7-ARGS = --command "$(host-built-program-cmd)"
 tst-cancelx7-ARGS = $(tst-cancel7-ARGS)
 tst-umask1-ARGS = $(objpfx)tst-umask1.temp
 
@@ -448,7 +448,7 @@ LDFLAGS-tst-atfork2 = -rdynamic
 tst-atfork2-ENV = MALLOC_TRACE=$(objpfx)tst-atfork2.mtrace
 $(objpfx)tst-atfork2mod.so: $(shared-thread-library)
 
-ifeq ($(cross-compiling),no)
+ifeq ($(run-built-tests),yes)
 tests: $(objpfx)tst-stack3-mem
 endif
 tst-stack3-ENV = MALLOC_TRACE=$(objpfx)tst-stack3.mtrace
@@ -472,7 +472,7 @@ LDFLAGS-tst-tls5 = $(no-as-needed)
 LDFLAGS-tst-tls5mod.so = -Wl,-soname,tst-tls5mod.so
 
 ifeq ($(build-shared),yes)
-ifeq ($(cross-compiling),no)
+ifeq ($(run-built-tests),yes)
 tests: $(objpfx)tst-tls6.out
 endif
 $(objpfx)tst-tls6.out: tst-tls6.sh $(objpfx)tst-tls5 \
@@ -583,7 +583,7 @@ generated += banner.h
 LDFLAGS-pthread.so += -e __nptl_main
 endif
 
-ifeq (no,$(cross-compiling))
+ifeq ($(run-built-tests),yes)
 ifeq (yes,$(build-shared))
 tests: $(objpfx)tst-cancel-wrappers.out
 $(objpfx)tst-cancel-wrappers.out: tst-cancel-wrappers.sh
@@ -595,7 +595,7 @@ $(objpfx)tst-cancel-wrappers.out: tst-cancel-wrappers.sh
 endif
 endif
 
-tst-exec4-ARGS = $(built-program-cmd)
+tst-exec4-ARGS = $(host-built-program-cmd)
 
 $(objpfx)tst-execstack: $(libdl)
 $(objpfx)tst-execstack.out: $(objpfx)tst-execstack-mod.so
@@ -603,7 +603,7 @@ LDFLAGS-tst-execstack = -Wl,-z,noexecstack
 
 $(objpfx)tst-fini1mod.so: $(shared-thread-library)
 
-tst-stackguard1-ARGS = --command "$(built-program-cmd) --child"
+tst-stackguard1-ARGS = --command "$(host-built-program-cmd) --child"
 tst-stackguard1-static-ARGS = --command "$(objpfx)tst-stackguard1-static --child"
 
 # The tests here better do not run in parallel
