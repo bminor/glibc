@@ -31,20 +31,19 @@
 #define O_NOCTTY	 0x0800	/* not fcntl */
 #define O_ASYNC		 0x1000
 
-// XXX: Linux kernel headers use different value
 #define __O_NOFOLLOW	0x20000	/* Do not follow links.	 */
 
-// XXX: Linux kernel headers use different value
 #define __O_DIRECTORY	0x10000	/* Must be a directory.	 */
-# define __O_DIRECT	0x8000	/* Direct disk access hint.  */
-
-// XXX: Linux kernel headers use different value
+#define __O_DIRECT	0x8000	/* Direct disk access hint.  */
 #define __O_NOATIME	0x40000	/* Do not set atime.  */
-
-// XXX: Linux kernel headers use different value
 #define __O_DSYNC	0x0010	/* Synchronize data.  */
 
-#define __O_LARGEFILE	0x2000	/* Allow large file opens.  */
+#if _MIPS_SIM == _ABI64
+/* Not necessary, files are always with 64bit off_t.  */
+# define __O_LARGEFILE  0
+#else
+# define __O_LARGEFILE	0x2000	/* Allow large file opens.  */
+#endif
 
 #ifndef __USE_FILE_OFFSET64
 # define F_GETLK	14	/* Get record locking info.  */
@@ -56,16 +55,18 @@
 # define F_SETLKW	F_SETLKW64 /* Set record locking info (blocking).  */
 #endif
 
-// XXX: Double check, Linux kernel has ifndef __mips64
-// XXX: These should not be defined for __WORDSIZE == 64 - correct?
-#define F_GETLK64	33	/* Get record locking info.  */
-#define F_SETLK64	34	/* Set record locking info (non-blocking).  */
-#define F_SETLKW64	35	/* Set record locking info (blocking).	*/
-
-#if defined __USE_BSD || defined __USE_UNIX98 || defined __USE_XOPEN2K8
-# define F_SETOWN	24	/* Get owner (process receiving SIGIO).  */
-# define F_GETOWN	23	/* Set owner (process receiving SIGIO).  */
+#if _MIPS_SIM != _ABI64
+# define F_GETLK64	33	/* Get record locking info.  */
+# define F_SETLK64	34	/* Set record locking info (non-blocking).  */
+# define F_SETLKW64	35	/* Set record locking info (blocking).	*/
+#else
+# define F_GETLK64	14	/* Get record locking info.	*/
+# define F_SETLK64	6	/* Set record locking info (non-blocking).*/
+# define F_SETLKW64	7	/* Set record locking info (blocking).  */
 #endif
+
+#define __F_SETOWN	24	/* Get owner (process receiving SIGIO).  */
+#define __F_GETOWN	23	/* Set owner (process receiving SIGIO).  */
 
 struct flock
   {
