@@ -347,6 +347,10 @@ _dl_close_worker (struct link_map *map)
 		struct link_map *tmap = (struct link_map *)
 		  ((char *) imap->l_scope[cnt]
 		   - offsetof (struct link_map, l_searchlist));
+#ifdef __CHKP__
+		tmap = __bnd_set_ptr_bounds(tmap, sizeof(struct link_map));
+#endif
+
 		assert (tmap->l_ns == nsid);
 		if (tmap->l_idx == IDX_STILL_USED)
 		  ++remain;
@@ -393,6 +397,9 @@ _dl_close_worker (struct link_map *map)
 		      struct link_map *tmap = (struct link_map *)
 			((char *) imap->l_scope[cnt]
 			 - offsetof (struct link_map, l_searchlist));
+#ifdef __CHKP__
+			tmap = __bnd_set_ptr_bounds(tmap, sizeof(struct link_map));
+#endif
 		      if (tmap->l_idx != IDX_STILL_USED)
 			{
 			  /* Remove the scope.  Or replace with own map's
