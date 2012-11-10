@@ -89,6 +89,7 @@ typedef struct
 
 
 #ifndef __ASSEMBLER__
+
 /* Get system call information.  */
 # include <sysdep.h>
 
@@ -166,10 +167,15 @@ typedef struct
 
 
 /* Return the address of the dtv for the current thread.  */
-# define THREAD_DTV() \
+# ifndef __CHKP__
+#  define THREAD_DTV() \
   ({ struct pthread *__pd;						      \
      THREAD_GETMEM (__pd, header.dtv); })
-
+# else
+#  define THREAD_DTV() \
+   ({ struct pthread *__self = THREAD_SELF;  \
+      GET_DTV(__self); })
+# endif
 
 /* Return the thread descriptor for the current thread.
 
@@ -177,18 +183,31 @@ typedef struct
    assignments like
 	pthread_descr self = thread_self();
    do not get optimized away.  */
-# define THREAD_SELF \
+# ifndef __CHKP__
+#  define THREAD_SELF \
   ({ struct pthread *__self;						      \
      asm ("mov %%fs:%c1,%0" : "=r" (__self)				      \
 	  : "i" (offsetof (struct pthread, header.self)));	 	      \
-     __self;})
+     __self; })
+# else
+#  define THREAD_SELF \
+  ({ struct pthread *__self;						      \
+     asm ("mov %%fs:%c1,%0" : "=r" (__self)				      \
+	  : "i" (offsetof (struct pthread, header.self)));	 	      \
+    /* Set first minimum bounds to make possible reading stackblock and stackblock_size. */ \
+	  __self = __bnd_set_ptr_bounds(__self, TLS_INIT_TCB_SIZE);	 	      \
+    /* Set actual correct bounds. */ \
+     (struct pthread*) __bnd_copy_ptr_bounds(__self, __bnd_set_ptr_bounds(__self->stackblock, \
+      __self->stackblock_size)); })
+# endif
 
 /* Magic for libthread_db to know how to do THREAD_SELF.  */
 # define DB_THREAD_SELF_INCLUDE  <sys/reg.h> /* For the FS constant.  */
 # define DB_THREAD_SELF CONST_THREAD_AREA (64, FS)
 
 /* Read member of the thread descriptor directly.  */
-# define THREAD_GETMEM(descr, member) \
+# ifndef __CHKP__
+#  define THREAD_GETMEM(descr, member) \
   ({ __typeof (descr->member) __value;					      \
      if (sizeof (__value) == 1)						      \
        asm volatile ("movb %%fs:%P2,%b0"				      \
@@ -202,7 +221,7 @@ typedef struct
        {								      \
 	 if (sizeof (__value) != 8)					      \
 	   /* There should not be any value with a size other than 1,	      \
-	      4 or 8.  */						      \
+	      4 or 8.  */ 						      \
 	   abort ();							      \
 									      \
 	 asm volatile ("movq %%fs:%P1,%q0"				      \
@@ -210,10 +229,15 @@ typedef struct
 		       : "i" (offsetof (struct pthread, member)));	      \
        }								      \
      __value; })
-
+# else
+#  define THREAD_GETMEM(descr, member) \
+   ({ struct pthread *__self = THREAD_SELF;  \
+      __self->member; })
+# endif
 
 /* Same as THREAD_GETMEM, but the member offset can be non-constant.  */
-# define THREAD_GETMEM_NC(descr, member, idx) \
+# ifndef __CHKP__
+#  define THREAD_GETMEM_NC(descr, member, idx) \
   ({ __typeof (descr->member[0]) __value;				      \
      if (sizeof (__value) == 1)						      \
        asm volatile ("movb %%fs:%P2(%q3),%b0"				      \
@@ -228,7 +252,7 @@ typedef struct
        {								      \
 	 if (sizeof (__value) != 8)					      \
 	   /* There should not be any value with a size other than 1,	      \
-	      4 or 8.  */						      \
+	      4 or 8.  */  						      \
 	   abort ();							      \
 									      \
 	 asm volatile ("movq %%fs:%P1(,%q2,8),%q0"			      \
@@ -237,7 +261,11 @@ typedef struct
 			 "r" (idx));					      \
        }								      \
      __value; })
-
+# else
+#  define THREAD_GETMEM_NC(descr, member, idx) \
+   ({ struct pthread *__self = THREAD_SELF;  \
+      __self->member[idx]; })
+# endif
 
 /* Loading addresses of objects on x86-64 needs to be treated special
    when generating PIC code.  */
@@ -249,7 +277,8 @@ typedef struct
 
 
 /* Same as THREAD_SETMEM, but the member offset can be non-constant.  */
-# define THREAD_SETMEM(descr, member, value) \
+# ifndef __CHKP__
+#  define THREAD_SETMEM(descr, member, value) \
   ({ if (sizeof (descr->member) == 1)					      \
        asm volatile ("movb %b0,%%fs:%P1" :				      \
 		     : "iq" (value),					      \
@@ -262,17 +291,22 @@ typedef struct
        {								      \
 	 if (sizeof (descr->member) != 8)				      \
 	   /* There should not be any value with a size other than 1,	      \
-	      4 or 8.  */						      \
+	      4 or 8.	*/					      \
 	   abort ();							      \
 									      \
 	 asm volatile ("movq %q0,%%fs:%P1" :				      \
 		       : IMM_MODE ((uint64_t) cast_to_integer (value)),	      \
 			 "i" (offsetof (struct pthread, member)));	      \
        }})
-
+# else
+#  define THREAD_SETMEM(descr, member, value) \
+   ({ struct pthread *__self = THREAD_SELF;  \
+      __self->member = value; })
+# endif
 
 /* Set member of the thread descriptor directly.  */
-# define THREAD_SETMEM_NC(descr, member, idx, value) \
+# ifndef __CHKP__
+#  define THREAD_SETMEM_NC(descr, member, idx, value) \
   ({ if (sizeof (descr->member[0]) == 1)				      \
        asm volatile ("movb %b0,%%fs:%P1(%q2)" :				      \
 		     : "iq" (value),					      \
@@ -287,7 +321,7 @@ typedef struct
        {								      \
 	 if (sizeof (descr->member[0]) != 8)				      \
 	   /* There should not be any value with a size other than 1,	      \
-	      4 or 8.  */						      \
+	      4 or 8.	*/				      \
 	   abort ();							      \
 									      \
 	 asm volatile ("movq %q0,%%fs:%P1(,%q2,8)" :			      \
@@ -295,7 +329,11 @@ typedef struct
 			 "i" (offsetof (struct pthread, member[0])),	      \
 			 "r" (idx));					      \
        }})
-
+# else
+#  define THREAD_SETMEM_NC(descr, member, idx, value) \
+   ({ struct pthread *__self = THREAD_SELF;  \
+      __self->member[idx] = value; })
+# endif
 
 /* Atomic compare and exchange on TLS, returning old value.  */
 # define THREAD_ATOMIC_CMPXCHG_VAL(descr, member, newval, oldval) \
@@ -333,8 +371,8 @@ typedef struct
 	      /* Not necessary for other sizes in the moment.  */	      \
 	      abort (); })
 
-
-# define CALL_THREAD_FCT(descr) \
+# ifndef __CHKP__
+#  define CALL_THREAD_FCT(descr) \
   ({ void *__res;							      \
      asm volatile ("movq %%fs:%P2, %%rdi\n\t"				      \
 		   "callq *%%fs:%P1"					      \
@@ -344,7 +382,11 @@ typedef struct
 		   : "di", "si", "cx", "dx", "r8", "r9", "r10", "r11",	      \
 		     "memory", "cc");					      \
      __res; })
-
+# else
+#  define CALL_THREAD_FCT(descr) \
+   ({ struct pthread *__self = THREAD_SELF;  \
+      __self->start_routine(__self->arg); })
+# endif
 
 /* Set the stack guard field in TCB head.  */
 # define THREAD_SET_STACK_GUARD(value) \
