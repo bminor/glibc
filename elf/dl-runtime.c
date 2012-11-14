@@ -164,6 +164,25 @@ _dl_profile_fixup (
 {
   void (*mcount_fct) (ElfW(Addr), ElfW(Addr)) = INTUSE(_dl_mcount);
 
+  if (l->l_reloc_result == NULL)
+    {
+      /* Resolve an IRELATIVE relocation in another DSO may reference a
+	 function defined in libc.so before l_reloc_result is allocated.
+	 For example, __get_cpu_features in libc.so is called to resolve
+	 R_X86_64_IRELATIVE relocations in x86-64 libm.so.  Skip audit and
+	 resolve the function in this case.  It is OK since we aren't
+	 supposed to audit IRELATIVE relocations.  */
+      *framesizep = -1;
+      return _dl_fixup (
+# ifdef ELF_MACHINE_RUNTIME_FIXUP_ARGS
+#  ifndef ELF_MACHINE_RUNTIME_FIXUP_PARAMS
+#   error Please define ELF_MACHINE_RUNTIME_FIXUP_PARAMS.
+#  endif
+			ELF_MACHINE_RUNTIME_FIXUP_PARAMS,
+# endif
+			l, reloc_arg);
+    }
+
   /* This is the address in the array where we store the result of previous
      relocations.  */
   struct reloc_result *reloc_result = &l->l_reloc_result[reloc_index];
