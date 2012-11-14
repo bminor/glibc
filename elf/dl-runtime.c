@@ -1,5 +1,5 @@
 /* On-demand PLT fixup for shared objects.
-   Copyright (C) 1995-2009, 2010, 2011 Free Software Foundation, Inc.
+   Copyright (C) 1995-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -166,12 +166,11 @@ _dl_profile_fixup (
 
   if (l->l_reloc_result == NULL)
     {
-      /* Resolve an IRELATIVE relocation in another DSO may reference a
-	 function defined in libc.so before l_reloc_result is allocated.
-	 For example, __get_cpu_features in libc.so is called to resolve
-	 R_X86_64_IRELATIVE relocations in x86-64 libm.so.  Skip audit and
-	 resolve the function in this case.  It is OK since we aren't
-	 supposed to audit IRELATIVE relocations.  */
+      /* ELF_DYNAMIC_RELOCATE is called before l_reloc_result is allocated.
+	 We will get here if ELF_DYNAMIC_RELOCATE calls a resolver function
+	 to resolve IRELATIVE relocation.  For example, resolver in x86-64
+	 libm.so calls __get_cpu_features defined in libc.so.  Skip audit
+	 and resolve the external function in this case.  */
       *framesizep = -1;
       return _dl_fixup (
 # ifdef ELF_MACHINE_RUNTIME_FIXUP_ARGS
