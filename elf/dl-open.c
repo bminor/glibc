@@ -240,6 +240,11 @@ dl_open_worker (void *a)
     /* This happens only if we load a DSO for 'sprof'.  */
     return;
 
+  /* Make the symbols defined in the object available for symbol resolution
+     of subsequently loaded objects if it is marked with DF_1_GLOBAL.  */
+  if (__builtin_expect (new->l_flags_1 & DF_1_GLOBAL, 0))
+    mode |= RTLD_GLOBAL;
+
   /* This object is directly loaded.  */
   ++new->l_direct_opencount;
 

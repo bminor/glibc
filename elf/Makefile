@@ -145,7 +145,7 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-audit1 tst-audit2 tst-audit8 \
 	 tst-stackguard1 tst-addr1 tst-thrlock \
 	 tst-unique1 tst-unique2 tst-unique3 tst-unique4 \
-	 tst-initorder tst-initorder2 tst-relsort1
+	 tst-initorder tst-initorder2 tst-relsort1 reldep10
 #	 reldep9
 test-srcs = tst-pathopt
 selinux-enabled := $(shell cat /selinux/enforce 2> /dev/null)
@@ -744,6 +744,10 @@ $(objpfx)nodelete2.out: $(objpfx)nodel2mod3.so
 
 $(objpfx)reldep9: $(libdl)
 $(objpfx)reldep9.out: $(objpfx)reldep9mod3.so
+
+LDFLAGS-reldep10 = -Wl,-z,global
+$(objpfx)reldep10: $(libdl)
+$(objpfx)reldep10.out: $(objpfx)reldepmod1.so $(objpfx)reldepmod3.so
 
 $(objpfx)tst-tls3: $(objpfx)tst-tlsmod1.so
 
