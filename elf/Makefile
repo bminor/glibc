@@ -214,7 +214,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-initorder2a tst-initorder2b tst-initorder2c \
 		tst-initorder2d \
 		tst-relsort1mod1 tst-relsort1mod2 tst-array2dep \
-		tst-array5dep
+		tst-array5dep reldepmod7
 ifeq (yesyes,$(have-fpie)$(build-shared))
 modules-names += tst-piemod1
 tests += tst-pie1
@@ -745,9 +745,9 @@ $(objpfx)nodelete2.out: $(objpfx)nodel2mod3.so
 $(objpfx)reldep9: $(libdl)
 $(objpfx)reldep9.out: $(objpfx)reldep9mod3.so
 
-LDFLAGS-reldep10 = -Wl,-z,global
+LDFLAGS-reldepmod7.so = -Wl,-z,global
 $(objpfx)reldep10: $(libdl)
-$(objpfx)reldep10.out: $(objpfx)reldepmod1.so $(objpfx)reldepmod3.so
+$(objpfx)reldep10.out: $(objpfx)reldepmod7.so $(objpfx)reldepmod3.so
 
 $(objpfx)tst-tls3: $(objpfx)tst-tlsmod1.so
 

@@ -13,11 +13,11 @@ main (void)
 
   mtrace ();
 
-  /* Open the two objects.  */
-  h1 = dlopen ("reldepmod1.so", RTLD_LAZY);
+  /* Open the two objects.  reldepmod7.so is marked with DF_1_GLOBAL.  */
+  h1 = dlopen ("reldepmod7.so", RTLD_LAZY);
   if (h1 == NULL)
     {
-      printf ("cannot open reldepmod1.so: %s\n", dlerror ());
+      printf ("cannot open reldepmod7.so: %s\n", dlerror ());
       exit (1);
     }
   h2 = dlopen ("reldepmod3.so", RTLD_LAZY);
@@ -62,10 +62,10 @@ main (void)
     }
 
   /* Open the first object again.   */
-  h1 = dlopen ("reldepmod1.so", RTLD_LAZY | RTLD_GLOBAL);
+  h1 = dlopen ("reldepmod7.so", RTLD_LAZY);
   if (h1 == NULL)
     {
-      printf ("cannot open reldepmod1.so the second time: %s\n", dlerror ());
+      printf ("cannot open reldepmod7.so the second time: %s\n", dlerror ());
       exit (1);
     }
 
