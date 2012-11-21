@@ -6560,32 +6560,37 @@ fi
 $as_echo "$libc_linker_feature" >&6; }
 
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for -z global" >&5
-$as_echo_n "checking for -z global... " >&6; }
-if ${libc_cv_z_global+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat > conftest.c <<EOF
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for linker that supports -z global" >&5
+$as_echo_n "checking for linker that supports -z global... " >&6; }
+libc_linker_feature=no
+if test x"$gnu_ld" = x"yes"; then
+  libc_linker_check=`$LD -v --help 2>/dev/null | grep "\-z global"`
+  if test -n "$libc_linker_check"; then
+    cat > conftest.c <<EOF
 int _start (void) { return 42; }
 EOF
-if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
-			    -fPIC -shared -o conftest.so conftest.c
-			    -Wl,-z,global -nostdlib
-			    1>&5'
+    if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
+				-Wl,-z,global -nostdlib -nostartfiles
+				-fPIC -shared -o conftest.so conftest.c
+				1>&5'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; }
-then
+    then
+      libc_linker_feature=yes
+    fi
+    rm -f conftest*
+  fi
+fi
+if test $libc_linker_feature = yes; then
   libc_cv_z_global=yes
 else
   libc_cv_z_global=no
 fi
-rm -f conftest*
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_z_global" >&5
-$as_echo "$libc_cv_z_global" >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_linker_feature" >&5
+$as_echo "$libc_linker_feature" >&6; }
 
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for -fpie" >&5
