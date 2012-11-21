@@ -51,6 +51,7 @@ all-warnings = @all_warnings@
 
 have-z-combreloc = @libc_cv_z_combreloc@
 have-z-execstack = @libc_cv_z_execstack@
+have-z-global = @libc_cv_z_global@
 have-Bgroup = @libc_cv_Bgroup@
 with-fp = @with_fp@
 old-glibc-headers = @old_glibc_headers@

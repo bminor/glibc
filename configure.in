@@ -1561,6 +1561,23 @@ LIBC_LINKER_FEATURE([-z execstack], [-Wl,-z,execstack],
 		    [libc_cv_z_execstack=yes], [libc_cv_z_execstack=no])
 AC_SUBST(libc_cv_z_execstack)
 
+AC_CACHE_CHECK(for -z global,
+	       libc_cv_z_global, [dnl
+cat > conftest.c <<EOF
+int _start (void) { return 42; }
+EOF
+if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
+			    -fPIC -shared -o conftest.so conftest.c
+			    -Wl,-z,global -nostdlib
+			    1>&AS_MESSAGE_LOG_FD])
+then
+  libc_cv_z_global=yes
+else
+  libc_cv_z_global=no
+fi
+rm -f conftest*])
+AC_SUBST(libc_cv_z_global)
+
 AC_CACHE_CHECK(for -fpie, libc_cv_fpie, [dnl
 LIBC_TRY_CC_OPTION([-fpie], [libc_cv_fpie=yes], [libc_cv_fpie=no])
 ])

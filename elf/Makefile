@@ -145,8 +145,11 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-audit1 tst-audit2 tst-audit8 \
 	 tst-stackguard1 tst-addr1 tst-thrlock \
 	 tst-unique1 tst-unique2 tst-unique3 tst-unique4 \
-	 tst-initorder tst-initorder2 tst-relsort1 reldep10
+	 tst-initorder tst-initorder2 tst-relsort1
 #	 reldep9
+ifeq (yes,$(have-z-global))
+tests += reldep10
+endif
 test-srcs = tst-pathopt
 selinux-enabled := $(shell cat /selinux/enforce 2> /dev/null)
 ifneq ($(selinux-enabled),1)
