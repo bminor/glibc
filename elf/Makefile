@@ -50,6 +50,10 @@ CFLAGS-dl-runtime.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-dl-lookup.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-dl-iterate-phdr.c = $(uses-callbacks)
 
+ifeq ($(enable-mpx), yes)
+CFLAGS-dl-init.c = -fno-check-pointers
+endif
+
 ifeq ($(unwind-find-fde),yes)
 routines += unwind-dw2-fde-glibc
 shared-only-routines += unwind-dw2-fde-glibc
