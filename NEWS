@@ -11,6 +11,9 @@ Version 2.16.1
 
   6530, 14195, 14459, 14476, 14562, 14621, 14648, 14756, 14831
 
+* CVE-2011-4609 svc_run() produces high cpu usage when accept fails with
+  EMFILE has been fixed (Bugzilla #14889).
+
 Version 2.16
 
 * The following bugs are resolved with this release:
