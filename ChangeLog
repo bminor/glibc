@@ -1,5 +1,10 @@
 2012-11-29  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/unix/sysv/linux/sysconf.c (has_cpuclock): Function removed.
+	(HAS_CPUCLOCK): Macro removed.
+	(__sysconf): Return unconditional success for _SC_MONOTONIC_CLOCK,
+	_SC_CPUTIME, and _SC_THREAD_CPUTIME.
+
 	* inet/tst-inet6_rth.c (do_test): Use a union rather than type punning.
 
 2012-11-28  Jeff Law  <law@redhat.com>
