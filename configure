@@ -4347,36 +4347,40 @@ sysnames_add_ons=
 sysnames=
 for b in $base ''; do
   for m0 in $mach ''; do
-    for v in /$vendor ''; do
-      test "$v" = / && continue
-      for o in /$ostry ''; do
-	test "$o" = / && continue
-	for m in $multi_arch_d $mach ''; do
-	  for d in $add_ons_pfx ''; do
-	    for a in $add_ons_sfx ''; do
-	      if test -n "$m0$m0sub$b$v$o$m$msub"; then
-		try_srcdir="${srcdir}/"
-		case "$d" in
-		/*) try_srcdir= ;;
-		esac
-		try="${d}sysdeps$m0$m0sub$b$v$o$m$msub$a"
-		test -n "$enable_debug_configure" &&
-		echo "$0 DEBUG: try $try" >&2
-		if test -d "$try_srcdir$try"; then
-		  sysnames="$sysnames $try"
-		  { test -n "$o" || test -n "$b"; } && os_used=t
-		  { test -n "$m" || test -n "$m0"; } && machine_used=t
-		  case x${m0:-$m} in
-		  x*/$submachine) submachine_used=t ;;
-		  esac
-		  if test -n "$d"; then
-		    case "$sysnames_add_ons" in
-		    *" $d "*) ;;
-		    *|'') sysnames_add_ons="$sysnames_add_ons $d" ;;
+    for m0sub in $mach ''; do
+      for v in /$vendor ''; do
+	test "$v" = / && continue
+	for o in /$ostry ''; do
+	  test "$o" = / && continue
+	  for m in $multi_arch_d $mach ''; do
+	    for msub in $multi_arch_d $mach ''; do
+	      for d in $add_ons_pfx ''; do
+		for a in $add_ons_sfx ''; do
+		  if test -n "$m0$m0sub$b$v$o$m$msub"; then
+		    try_srcdir="${srcdir}/"
+		    case "$d" in
+		    /*) try_srcdir= ;;
 		    esac
-		  fi
-		fi
-	      fi
+		    try="${d}sysdeps$m0$m0sub$b$v$o$m$msub$a"
+		    test -n "$enable_debug_configure" &&
+		    echo "$0 DEBUG: try $try" >&2
+		    if test -d "$try_srcdir$try"; then
+		      sysnames="$sysnames $try"
+		      { test -n "$o" || test -n "$b"; } && os_used=t
+		      { test -n "$m" || test -n "$m0"; } && machine_used=t
+		      case x${m0:-$m} in
+		      x*/$submachine) submachine_used=t ;;
+		      esac
+		      if test -n "$d"; then
+			case "$sysnames_add_ons" in
+			*" $d "*) ;;
+			*|'') sysnames_add_ons="$sysnames_add_ons $d" ;;
+			esac
+		      fi
+		    fi
+	          fi
+		done
+	      done
 	    done
 	  done
 	done

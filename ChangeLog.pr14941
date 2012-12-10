@@ -1,0 +1,5 @@
+2012-12-10  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14941]
+	* configure.in: Add m0sub and msub for multiarch check.
+	* configure: Regenerated.
