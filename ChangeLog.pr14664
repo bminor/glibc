@@ -1,0 +1,43 @@
+2012-12-09  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14664]
+	* Makerules (%.symlist): Pass installed_prefix='$(prefix)' to
+	scripts/abilist.awk.
+	* scripts/abilist.awk: Handle _nl_default_dirname which changes
+	with prefix changes.
+	* sysdeps/unix/sysv/linux/i386/nptl/libc.abilist: Replace
+	0x12 with "0xe + sizeof_prefix".
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/nptl/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/nptl/libc.abilist: Likewise.
+
+ports/
+
+2012-12-09  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14664]
+	* sysdeps/unix/sysv/linux/aarch64/nptl/libc.abilist: Replace
+	0x12 with "0xe + sizeof_prefix".
+	* sysdeps/unix/sysv/linux/alpha/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/nptl/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/nptl/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/nptl/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/nptl/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/nptl/libc.abilist: Likewise.

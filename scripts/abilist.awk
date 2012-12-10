@@ -2,6 +2,7 @@
 # into a simple format that should not change when the ABI is not changing.
 
 BEGIN {
+  installed_prefix_length = length(installed_prefix);
   if (combine_fullname)
     combine = 1;
   if (combine)
@@ -43,6 +44,7 @@ $2 == "g" || $2 == "w" && (NF == 7 || NF == 8) {
   type = $3;
   size = $5;
   sub(/^0*/, "", size);
+  hex_size = "0x" size;
   size = " 0x" size;
   version = $6;
   symbol = $NF;
@@ -95,8 +97,14 @@ $2 == "g" || $2 == "w" && (NF == 7 || NF == 8) {
 
   # Disabled -- weakness should not matter to shared library ABIs any more.
   #if (weak == "w") type = tolower(type);
-  if (desc == "")
+  if (desc == "") {
+    # Handle _nl_default_dirname which changes with prefix changes
+    if (symbol == "_nl_default_dirname") {
+      size = strtonum(hex_size) - installed_prefix_length;
+      size = sprintf(" 0x%x + sizeof_prefix", size);
+    }
     desc = " " symbol " " type size;
+  }
 
   if (combine)
     version = soname " " version (combine_fullname ? " " sofullname : "");

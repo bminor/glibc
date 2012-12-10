@@ -1145,7 +1145,7 @@ ifeq ($(versioning),yes)
 # This is handy for checking against existing library binaries.
 
 %.symlist: $(..)scripts/abilist.awk %.dynsym
-	LC_ALL=C $(AWK) -f $^ > $@T
+	LC_ALL=C $(AWK) -v installed_prefix='$(prefix)' -f $^ > $@T
 	mv -f $@T $@
 
 %.dynsym: %.so

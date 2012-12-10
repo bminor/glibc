@@ -529,7 +529,7 @@ GLIBC_2.17
  _libc_intl_domainname D 0x5
  _longjmp F
  _mcleanup F
- _nl_default_dirname D 0x12
+ _nl_default_dirname D 0xe + sizeof_prefix
  _nl_domain_bindings D 0x8
  _nl_msg_cat_cntr D 0x4
  _null_auth D 0x18
