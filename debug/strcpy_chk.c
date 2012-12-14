@@ -27,6 +27,7 @@ __strcpy_chk (dest, src, destlen)
      char *dest;
      const char *src;
      size_t destlen;
+#ifndef __CHKP__
 {
   char c;
   char *s = (char *) src;
@@ -65,3 +66,45 @@ __strcpy_chk (dest, src, destlen)
 
   return dest;
 }
+#else
+{
+  char c;
+  char *s = (char *) src;
+  char *d = (char *) dest;
+
+  while (__builtin_expect (destlen >= 4, 0))
+    {
+      c = s[0];
+      d[0] = c;
+      if (c == '\0')
+        return dest;
+      c = s[1];
+      d[1] = c;
+      if (c == '\0')
+        return dest;
+      c = s[2];
+      d[2] = c;
+      if (c == '\0')
+        return dest;
+      c = s[3];
+      d[3] = c;
+      if (c == '\0')
+        return dest;
+      destlen -= 4;
+      d += 4;
+      s += 4;
+    }
+
+  do
+    {
+      if (__builtin_expect (destlen-- == 0, 0))
+        __chk_fail ();
+      c = *s;
+      *(d++) = c;
+      s++;
+    }
+  while (c != '\0');
+
+  return dest;
+}
+#endif
