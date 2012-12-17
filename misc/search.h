@@ -35,7 +35,7 @@ struct qelem
   {
     struct qelem *q_forw;
     struct qelem *q_back;
-    char q_data[1];
+    char q_data[1] __attribute__((bnd_variable_size));
   };
 # endif
 

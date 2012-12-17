@@ -160,7 +160,7 @@ struct binding
   struct binding *next;
   char *dirname;
   char *codeset;
-  char domainname[ZERO];
+  char domainname[ZERO] __attribute__((bnd_variable_size));
 };
 
 /* A counter which is incremented each time some previous translations

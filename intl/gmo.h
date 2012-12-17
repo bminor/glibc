@@ -137,7 +137,7 @@ struct sysdep_string
     nls_uint32 segsize;
     /* Reference to system dependent string segment, or ~0 at the end.  */
     nls_uint32 sysdepref;
-  } segments[1];
+  } segments[1] __attribute__((bnd_variable_size));
 };
 
 /* Marker for the end of the segments[] array.  This has the value 0xFFFFFFFF,

@@ -51,7 +51,7 @@ typedef __ssize_t ssize_t;
 struct msgbuf
   {
     __syscall_slong_t mtype;	/* type of received/sent message */
-    char mtext[1];		/* text of the message */
+    char mtext[1] __attribute__((bnd_variable_size));		/* text of the message */
   };
 #endif
 

@@ -137,8 +137,8 @@ do_test (void)
     }
   setenv ("LIBC_FATAL_STDERR_", "1", 1);
 
-  struct A { char buf1[9]; char buf2[1]; } a;
-  struct wA { wchar_t buf1[9]; wchar_t buf2[1]; } wa;
+  struct A { char buf1[9] __attribute__((bnd_variable_size)); char buf2[1]; } a;
+  struct wA { wchar_t buf1[9] __attribute__((bnd_variable_size)); wchar_t buf2[1]; } wa;
 
   printf ("Test checking routines at fortify level %d\n",
 #ifdef __USE_FORTIFY_LEVEL

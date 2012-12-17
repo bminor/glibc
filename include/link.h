@@ -318,7 +318,7 @@ struct link_map
     {
       uintptr_t cookie;
       unsigned int bindflags;
-    } l_audit[0];
+    } l_audit[0] __attribute__((bnd_variable_size));
   };
 
 

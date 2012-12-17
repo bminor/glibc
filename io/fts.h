@@ -116,7 +116,7 @@ typedef struct _ftsent {
 	u_short fts_instr;		/* fts_set() instructions */
 
 	struct stat *fts_statp;		/* stat(2) information */
-	char fts_name[1];		/* file name */
+	char fts_name[1] __attribute__((bnd_variable_size));		/* file name */
 } FTSENT;
 
 __BEGIN_DECLS

@@ -180,7 +180,7 @@ typedef struct
 {
   size_t dls_size;		/* Size in bytes of the whole buffer.  */
   unsigned int dls_cnt;		/* Number of elements in `dls_serpath'.  */
-  Dl_serpath dls_serpath[1];	/* Actually longer, dls_cnt elements.  */
+  Dl_serpath dls_serpath[1] __attribute__((bnd_variable_size));	/* Actually longer, dls_cnt elements.  */
 } Dl_serinfo;
 #endif /* __USE_GNU */
 

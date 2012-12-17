@@ -3,7 +3,7 @@ static const union C(codestrs_t_, NOW) {
 #define P(n, s) char MF(__LINE__)[sizeof (s)];
 #include "psiginfo-data.h"
   };
-  char str[0];
+  char str[0] __attribute__((bnd_variable_size));
 } C(codestrs_, NOW) = { {
 #define P(n, s) s,
 #include "psiginfo-data.h"

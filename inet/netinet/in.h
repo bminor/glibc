@@ -319,7 +319,7 @@ struct ip_msfilter
     /* Number of source addresses.  */
     uint32_t imsf_numsrc;
     /* Source addresses.  */
-    struct in_addr imsf_slist[1];
+    struct in_addr imsf_slist[1] __attribute__((bnd_variable_size));
   };
 
 #define IP_MSFILTER_SIZE(numsrc) (sizeof (struct ip_msfilter) \
@@ -340,7 +340,7 @@ struct group_filter
     /* Number of source addresses.  */
     uint32_t gf_numsrc;
     /* Source addresses.  */
-    struct sockaddr_storage gf_slist[1];
+    struct sockaddr_storage gf_slist[1] __attribute__((bnd_variable_size));
 };
 
 #define GROUP_FILTER_SIZE(numsrc) (sizeof (struct group_filter) \

@@ -75,7 +75,7 @@ typedef union pthread_attr_t pthread_attr_t;
 typedef struct __pthread_internal_list
 {
   struct __pthread_internal_list *__prev;
-  struct __pthread_internal_list *__next;
+  struct __pthread_internal_list *__next __attribute__((bnd_variable_size));
 } __pthread_list_t;
 #else
 typedef struct __pthread_internal_slist

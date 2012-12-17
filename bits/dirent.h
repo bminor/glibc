@@ -32,7 +32,7 @@ struct dirent
     unsigned char d_namlen;	/* Length of the file name.  */
 
     /* Only this member is in the POSIX standard.  */
-    char d_name[1];		/* File name (actually longer).  */
+    char d_name[1] __attribute__((bnd_variable_size));		/* File name (actually longer).  */
   };
 
 #ifdef __USE_LARGEFILE64
@@ -43,7 +43,7 @@ struct dirent64
     unsigned char d_type;
     unsigned char d_namlen;
 
-    char d_name[1];
+    char d_name[1] __attribute__((bnd_variable_size));
   };
 #endif
 

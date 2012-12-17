@@ -189,7 +189,7 @@ struct icmp
     } id_ip;
     struct icmp_ra_addr id_radv;
     u_int32_t   id_mask;
-    u_int8_t    id_data[1];
+    u_int8_t    id_data[1] __attribute__((bnd_variable_size));
   } icmp_dun;
 #define	icmp_otime	icmp_dun.id_ts.its_otime
 #define	icmp_rtime	icmp_dun.id_ts.its_rtime

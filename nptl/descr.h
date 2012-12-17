@@ -162,7 +162,7 @@ struct pthread
   };
 
   /* This descriptor's link on the `stack_used' or `__stack_user' list.  */
-  list_t list;
+  list_t list __attribute__((bnd_variable_size));
 
   /* Thread ID - which is also a 'is this thread descriptor (and
      therefore stack) used' flag.  */
@@ -174,7 +174,10 @@ struct pthread
   /* List of robust mutexes the thread is holding.  */
 #ifdef __PTHREAD_MUTEX_HAVE_PREV
   void *robust_prev;
-  struct robust_list_head robust_head;
+  struct robust_list_head robust_head __attribute__((bnd_variable_size));
+  /* sometimes we want to cast pair {robust_prev (void *) and the
+   * first field of struct robust_list_head (void *)}
+   * to __pthread_list_t (struct consists of two pointers: __prev, __next) */
 
   /* The list above is strange.  It is basically a double linked list
      but the pointer to the next/previous element of the list points
@@ -186,7 +189,7 @@ struct pthread
 # define ENQUEUE_MUTEX_BOTH(mutex, val)					      \
   do {									      \
     __pthread_list_t *next = (__pthread_list_t *)			      \
-      ((((uintptr_t) THREAD_GETMEM (THREAD_SELF, robust_head.list)) & ~1ul)   \
+      ((char *)(((uintptr_t) THREAD_GETMEM (THREAD_SELF, robust_head.list)) & ~1ul)   \
        - QUEUE_PTR_ADJUST);						      \
     next->__prev = (void *) &mutex->__data.__list.__next;		      \
     mutex->__data.__list.__next = THREAD_GETMEM (THREAD_SELF,		      \

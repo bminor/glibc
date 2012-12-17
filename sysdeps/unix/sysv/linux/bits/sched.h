@@ -124,7 +124,7 @@ typedef unsigned long int __cpu_mask;
 /* Data structure to describe CPU mask.  */
 typedef struct
 {
-  __cpu_mask __bits[__CPU_SETSIZE / __NCPUBITS];
+  __cpu_mask __bits[__CPU_SETSIZE / __NCPUBITS] __attribute__((bnd_variable_size));
 } cpu_set_t;
 
 /* Access functions for CPU masks.  */

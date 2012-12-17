@@ -58,7 +58,7 @@ struct loaded_l10nfile
   const void *data;
 
   struct loaded_l10nfile *next;
-  struct loaded_l10nfile *successor[1];
+  struct loaded_l10nfile *successor[1] __attribute__((bnd_variable_size));
 };
 
 

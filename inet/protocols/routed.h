@@ -52,8 +52,8 @@ struct rip {
 	u_char	rip_vers;		/* protocol version # */
 	u_char	rip_res1[2];		/* pad to 32-bit boundary */
 	union {
-		struct	netinfo ru_nets[1];	/* variable length... */
-		char	ru_tracefile[1];	/* ditto ... */
+		struct	netinfo ru_nets[1] __attribute__((bnd_variable_size));	/* variable length... */
+		char	ru_tracefile[1] __attribute__((bnd_variable_size));	/* ditto ... */
 	} ripun;
 #define	rip_nets	ripun.ru_nets
 #define	rip_tracefile	ripun.ru_tracefile

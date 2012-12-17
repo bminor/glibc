@@ -96,7 +96,7 @@ struct cu_data
     u_int cu_sendsz;
     char *cu_outbuf;
     u_int cu_recvsz;
-    char cu_inbuf[1];
+    char cu_inbuf[1] __attribute__((bnd_variable_size)) ;
   };
 
 /*

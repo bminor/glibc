@@ -84,7 +84,7 @@ struct __locale_data
     const char *string;
     unsigned int word;		/* Note endian issues vs 64-bit pointers.  */
   }
-  values __flexarr;	/* Items, usually pointers into `filedata'.  */
+  values __flexarr __attribute__((bnd_variable_size));	/* Items, usually pointers into `filedata'.  */
 };
 
 /* We know three kinds of collation sorting rules.  */
@@ -185,7 +185,7 @@ extern const union catnamestr_t
 #include "categories.def"
 #undef DEFINE_CATEGORY
   };
-  char str[0];
+  char str[0] __attribute__((bnd_variable_size));
 } _nl_category_names attribute_hidden;
 extern const uint8_t _nl_category_name_idxs[__LC_LAST] attribute_hidden;
 extern const uint8_t _nl_category_name_sizes[__LC_LAST] attribute_hidden;
