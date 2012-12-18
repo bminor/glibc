@@ -487,7 +487,7 @@ small_tables_done:
    * DES round.
    *
    */
-
+#ifndef __CHKP__
   if (__data->sb0 + sizeof (__data->sb0) == __data->sb1
       && __data->sb1 + sizeof (__data->sb1) == __data->sb2
       && __data->sb2 + sizeof (__data->sb2) == __data->sb3)
@@ -497,11 +497,14 @@ small_tables_done:
 		  + (int)sizeof(__data->sb2)
 		  + (int)sizeof(__data->sb3));
   else {
+#endif
     _ufc_clearmem(__data->sb0, (int)sizeof(__data->sb0));
     _ufc_clearmem(__data->sb1, (int)sizeof(__data->sb1));
     _ufc_clearmem(__data->sb2, (int)sizeof(__data->sb2));
     _ufc_clearmem(__data->sb3, (int)sizeof(__data->sb3));
+#ifndef __CHKP__
   }
+#endif
 
   for(sg = 0; sg < 4; sg++) {
     int j1, j2;
