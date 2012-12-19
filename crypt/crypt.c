@@ -43,7 +43,13 @@ _ufc_doit_r(itr, __data, res)
   int i;
   long32 s, *k;
   long32 *sb01 = (long32*)__data->sb0;
+#ifdef __CHKP__
+  sb01 = __bnd_set_ptr_bounds (sb01, sizeof(__data->sb0) + sizeof(__data->sb1));
+#endif
   long32 *sb23 = (long32*)__data->sb2;
+#ifdef __CHKP__
+  sb23 = __bnd_set_ptr_bounds (sb23, sizeof(__data->sb2) + sizeof(__data->sb3));
+#endif
   long32 l1, l2, r1, r2;
 
   l1 = (long32)res[0]; l2 = (long32)res[1];
@@ -89,7 +95,13 @@ _ufc_doit_r(itr, __data, res)
   int i;
   long64 l, r, s, *k;
   long64 *sb01 = (long64*)__data->sb0;
+#ifdef __CHKP__
+  sb01 = __bnd_set_ptr_bounds (sb01, sizeof(__data->sb0) + sizeof(__data->sb1));
+#endif
   long64 *sb23 = (long64*)__data->sb2;
+#ifdef __CHKP__
+  sb23 = __bnd_set_ptr_bounds (sb23, sizeof(__data->sb2) + sizeof(__data->sb3));
+#endif
 
   l = (((long64)res[0]) << 32) | ((long64)res[1]);
   r = (((long64)res[2]) << 32) | ((long64)res[3]);
