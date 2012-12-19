@@ -59,6 +59,7 @@ main (void)
     }
 
   memset (buf, '/', sizeof (buf));
+  buf[sizeof(buf) - 1] = 0;
   buf[0] = '\t';
   buf[1] = ' ';
   buf[2] = 0xc3;
