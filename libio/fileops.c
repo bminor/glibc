@@ -758,6 +758,9 @@ decide_maybe_mmap (_IO_FILE *fp)
       void *p;
 
       p = __mmap64 (NULL, st.st_size, PROT_READ, MAP_SHARED, fp->_fileno, 0);
+#ifdef __CHKP__
+		p = __bnd_init_ptr_bounds(p);
+#endif
       if (p != MAP_FAILED)
 	{
 	  /* OK, we managed to map the file.  Set the buffer up and use a
