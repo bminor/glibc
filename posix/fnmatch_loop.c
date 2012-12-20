@@ -313,7 +313,7 @@ FCT (pattern, string, string_end, no_leading_period, flags, ends, alloca_used)
 		      /* Invalid character class name.  */
 		      return FNM_NOMATCH;
 
-# if defined _LIBC && ! WIDE_CHAR_VERSION
+# if defined _LIBC && ! WIDE_CHAR_VERSION && !defined __CHKP__
 		    /* The following code is glibc specific but does
 		       there a good job in speeding up the code since
 		       we can avoid the btowc() call.  */
