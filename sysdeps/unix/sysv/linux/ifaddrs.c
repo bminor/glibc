@@ -782,9 +782,11 @@ getifaddrs_internal (struct ifaddrs **ifap)
 
 		      for (i = 0; i < (preflen / 8); i++)
 			*cp++ = 0xff;
-		      c = 0xff;
-		      c <<= (8 - (preflen % 8));
-		      *cp = c;
+				if (preflen < max_prefixlen) {
+		        c = 0xff;
+		        c <<= (8 - (preflen % 8));
+		        *cp = c;
+				}
 		    }
 		}
 	    }
