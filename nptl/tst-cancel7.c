@@ -65,6 +65,9 @@ sl (void)
 
   sigset_t ss;
   sigfillset (&ss);
+#ifdef __CHKP__
+  sigdelset (&ss, SIGSEGV);
+#endif
   sigsuspend (&ss);
   exit (0);
 }

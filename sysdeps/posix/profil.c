@@ -106,6 +106,9 @@ __profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
   act.sa_handler = (sighandler_t) &profil_counter;
   act.sa_flags = SA_RESTART;
   __sigfillset (&act.sa_mask);
+#ifdef __CHKP__
+  __sigdelset (&act.sa_mask, SIGSEGV);
+#endif
   if (__sigaction (SIGPROF, &act, oact_ptr) < 0)
     return -1;
 

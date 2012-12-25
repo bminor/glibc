@@ -71,6 +71,9 @@ receiver (void)
   alarm (10);
 
   sigfillset (&ss);
+#ifdef __CHKP__
+  sigdelset(&ss, SIGSEGV);
+#endif
 
   if (pthread_sigmask (SIG_SETMASK, &ss, NULL) != 0)
     {

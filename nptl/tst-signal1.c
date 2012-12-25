@@ -68,6 +68,9 @@ receiver (void)
 
   sigfillset (&ss);
 
+#ifdef __CHKP__
+  sigdelset(&ss, SIGSEGV);
+#endif
   if (pthread_sigmask (SIG_SETMASK, &ss, NULL) != 0)
     {
       puts ("1st pthread_sigmask failed");

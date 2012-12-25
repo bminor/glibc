@@ -82,6 +82,9 @@ __gai_start_notify_thread (void)
   sigset_t ss;
   sigemptyset (&ss);
   INTERNAL_SYSCALL_DECL (err);
+#ifdef __CHKP__
+  __sigdelset(&ss, SIGSEGV);
+#endif
   INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_SETMASK, &ss, NULL, _NSIG / 8);
 }
 
@@ -106,6 +109,9 @@ __gai_create_helper_thread (pthread_t *threadp, void *(*tf) (void *),
   sigset_t oss;
   sigfillset (&ss);
   INTERNAL_SYSCALL_DECL (err);
+#ifdef __CHKP__
+  __sigdelset(&ss, SIGSEGV);
+#endif
   INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_SETMASK, &ss, &oss, _NSIG / 8);
 
   int ret = pthread_create (threadp, &attr, tf, arg);

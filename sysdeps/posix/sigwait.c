@@ -42,11 +42,17 @@ do_sigwait (const sigset_t *set, int *sig)
 
   /* Prepare set.  */
   __sigfillset (&tmp_mask);
+#ifdef __CHKP__
+  __sigdelset (&tmp_mask, SIGSEGV):
+#endif
 
   /* Unblock all signals in the SET and register our nice handler.  */
   action.sa_handler = ignore_signal;
   action.sa_flags = 0;
   __sigfillset (&action.sa_mask);	/* Block all signals for handler.  */
+#ifdef __CHKP__
+  __sigdelset (&action.sa_mask, SIGSEGV):
+#endif
 
   /* Make sure we recognize error conditions by setting WAS_SIG to a
      value which does not describe a legal signal number.  */

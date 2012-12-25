@@ -78,6 +78,9 @@ change_sigmask (int how, sigset_t *oss)
 {
   sigset_t ss;
   sigfillset (&ss);
+#ifdef __CHKP__
+  sigdelset (&ss, SIGSEGV);
+#endif
   return pthread_sigmask (how, &ss, oss);
 }
 

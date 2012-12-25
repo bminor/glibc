@@ -339,6 +339,9 @@ __sprofil (struct prof *profp, int profcnt, struct timeval *tvp,
     act.sa_handler = (sighandler_t) &profil_counter_ushort;
   act.sa_flags = SA_RESTART;
   __sigfillset (&act.sa_mask);
+#ifdef __CHKP__
+  __sigdelset (&act.sa_mask, SIGSEGV);
+#endif
   if (__sigaction (SIGPROF, &act, &prof_info.saved_action) < 0)
     return -1;
 

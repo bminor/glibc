@@ -96,6 +96,9 @@ do_test (void)
   /* Block all signals.  */
   sigset_t ss;
   sigfillset (&ss);
+#ifdef __CHKP__
+  sigdelset(&ss, SIGSEGV);
+#endif
 
   th_main = pthread_self ();
 
@@ -118,6 +121,9 @@ do_test (void)
 	};
       sigfillset (&sa.sa_mask);
 
+#ifdef __CHKP__
+       sigdelset(&ss, SIGSEGV);
+#endif
       if (sigaction (sig0 + i, &sa, NULL) != 0)
 	{
 	  printf ("sigaction for signal %d failed\n", i);
