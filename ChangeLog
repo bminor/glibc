@@ -1,3 +1,8 @@
+2013-01-09  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/gnu/netinet/tcp.h (TCPI_OPT_SYN_DATA)
+	(TCPI_OPT_ECN_SEEN): Define.  Sync with Linux 3.7.
+
 2013-01-01  David S. Miller  <davem@davemloft.net>
 
 	* po/fr.po: Update from translation team.
