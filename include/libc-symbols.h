@@ -751,22 +751,12 @@ for linking")
   extern void *name##_ifunc (void) __asm__ (#name);			\
   void *name##_ifunc (void)						\
   {									\
-    INIT_ARCH ();							\
     __typeof (name) *res = expr;					\
     return res;								\
   }									\
   __asm__ (".type " #name ", %gnu_indirect_function");
 
-/* The body of the function is supposed to use __get_cpu_features
-   which will, if necessary, initialize the data first.  */
-#define libm_ifunc(name, expr)						\
-  extern void *name##_ifunc (void) __asm__ (#name);			\
-  void *name##_ifunc (void)						\
-  {									\
-    __typeof (name) *res = expr;					\
-    return res;								\
-  }									\
-  __asm__ (".type " #name ", %gnu_indirect_function");
+#define libm_ifunc(name, expr) libc_ifunc (name, (expr))
 
 #ifdef HAVE_ASM_SET_DIRECTIVE
 # define libc_ifunc_hidden_def1(local, name)				\

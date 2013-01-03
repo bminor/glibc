@@ -109,19 +109,18 @@ extern struct cpu_features
 
 
 extern void __init_cpu_features (void) attribute_hidden;
-# define INIT_ARCH() \
-  do							\
-    if (__cpu_features.kind == arch_kind_unknown)	\
-      __init_cpu_features ();				\
-  while (0)
 
-/* Used from outside libc.so to get access to the CPU features structure.  */
-extern const struct cpu_features *__get_cpu_features (void)
-     __attribute__ ((const));
+/* Implicitly call __init_cpu_features before accessing the CPU features
+   structure.  */
 
-# ifndef NOT_IN_libc
-#  define __get_cpu_features()	(&__cpu_features)
-# endif
+extern __always_inline attribute_hidden
+const struct cpu_features *
+__get_cpu_features (void)
+{
+  if (__cpu_features.kind == arch_kind_unknown)
+    __init_cpu_features ();
+  return &__cpu_features;
+}
 
 # define HAS_CPU_FEATURE(idx, reg, bit) \
   ((__get_cpu_features ()->cpuid[idx].reg & (bit)) != 0)

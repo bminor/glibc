@@ -1,5 +1,7 @@
 ifeq ($(subdir),csu)
 aux += init-arch
+sysdep_routines += static-init-arch
+static-only-routines += static-init-arch
 tests += test-multiarch
 gen-as-const-headers += ifunc-defines.sym
 endif

@@ -19,6 +19,9 @@
 
 #include <atomic.h>
 #include <cpuid.h>
+/* Define __get_cpu_features.  */
+#undef __always_inline
+#define __always_inline
 #include "init-arch.h"
 
 
@@ -176,15 +179,4 @@ __init_cpu_features (void)
   __cpu_features.model = model;
   atomic_write_barrier ();
   __cpu_features.kind = kind;
-}
-
-#undef __get_cpu_features
-
-const struct cpu_features *
-__get_cpu_features (void)
-{
-  if (__cpu_features.kind == arch_kind_unknown)
-    __init_cpu_features ();
-
-  return &__cpu_features;
 }

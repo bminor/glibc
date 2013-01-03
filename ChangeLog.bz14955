@@ -1,0 +1,25 @@
+2013-01-03  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14955]
+	* include/libc-symbols.h (libc_ifunc): Remove INIT_ARCH.
+	(libm_ifunc): Defined to libc_ifunc.
+	* sysdeps/i386/i686/multiarch/Makefile (sysdep_routines): Add
+	static-init-arch.
+	(static-only-routines): Likewise.
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Likewise.
+	(static-only-routines): Likewise.
+	* sysdeps/i386/i686/multiarch/Versions: Removed.
+	* sysdeps/x86_64/multiarch/Versions: Likewise.
+	* sysdeps/i386/i686/multiarch/static-init-arch.c: New file.
+	* sysdeps/x86_64/multiarch/static-init-arch.c: Likewise.
+	* sysdeps/x86/Makefile (tests): Add tst-ifunc-cpu1-main.
+	(modules-names): Add tst-ifunc-cpu1-mod.
+	(tst-ifunc-cpu1-mod.so-no-z-defs): New macro.
+	($(objpfx)tst-ifunc-cpu1-main): New dependency.
+	* sysdeps/x86/tst-ifunc-cpu1-main.c: New file.
+	* sysdeps/x86/tst-ifunc-cpu1-mod.c: Likewise.
+	* sysdeps/x86_64/multiarch/init-arch.c (__always_inline): Defined
+	to empty.
+	(__get_cpu_features): Removed.
+	* sysdeps/x86_64/multiarch/init-arch.h (INIT_ARCH): Removed.
+	(__get_cpu_features): Defined as an inline function.
