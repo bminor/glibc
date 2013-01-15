@@ -1,0 +1,9 @@
+2013-01-15  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/elf.h (R_386_SIZE32): New relocation.
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Handle
+	R_386_SIZE32.
+	(elf_machine_rela): Likewise.
+	* sysdeps/x86_64/dl-machine.h (R_X86_64_SIZE): New macro.
+	(elf_machine_rela): Handle R_X86_64_SIZE64, R_X86_64_SIZE
+	and R_X86_64_SIZE32.

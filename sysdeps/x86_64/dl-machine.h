@@ -190,6 +190,13 @@ _dl_start_user:\n\
 /* The x86-64 never uses Elf64_Rel/Elf32_Rel relocations.  */
 #define ELF_MACHINE_NO_REL 1
 
+/* Size relocation.  */
+#ifdef __ILP32__
+# define R_X86_64_SIZE	R_X86_64_SIZE32
+#else
+# define R_X86_64_SIZE	R_X86_64_SIZE64
+#endif
+
 /* We define an initialization function.  This is called very early in
    _dl_sysdep_start.  */
 #define DL_PLATFORM_INIT dl_platform_init ()
@@ -286,6 +293,19 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 
       switch (r_type)
 	{
+# ifndef RTLD_BOOTSTRAP
+#  ifdef __ILP32__
+	case R_X86_64_SIZE64:
+	  /* Set to symbol size plus addend.  */
+	  *((Elf64_Addr *) (uintptr_t) reloc_addr)
+	    = (Elf64_Addr) sym->st_size + reloc->r_addend;
+	  break;
+#  endif
+
+	case R_X86_64_SIZE:
+	  /* Set to symbol size plus addend.  */
+	  value = sym->st_size;
+# endif
 	case R_X86_64_GLOB_DAT:
 	case R_X86_64_JUMP_SLOT:
 	  *reloc_addr = value + reloc->r_addend;
@@ -394,6 +414,11 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 	     relocation updates the whole 64-bit entry.  */
 	  *(Elf64_Addr *) reloc_addr = (Elf64_Addr) value + reloc->r_addend;
 	  break;
+#  ifndef __ILP32__
+	case R_X86_64_SIZE32:
+	  /* Set to symbol size plus addend.  */
+	  value = sym->st_size;
+#  endif
 	case R_X86_64_32:
 	  value += reloc->r_addend;
 	  *(unsigned int *) reloc_addr = value;
