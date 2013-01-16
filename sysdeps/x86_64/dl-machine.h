@@ -297,7 +297,7 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 #  ifdef __ILP32__
 	case R_X86_64_SIZE64:
 	  /* Set to symbol size plus addend.  */
-	  *((Elf64_Addr *) (uintptr_t) reloc_addr)
+	  *(Elf64_Addr *) (uintptr_t) reloc_addr
 	    = (Elf64_Addr) sym->st_size + reloc->r_addend;
 	  break;
 #  endif
