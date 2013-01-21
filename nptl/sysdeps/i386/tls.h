@@ -259,11 +259,24 @@ union user_desc_init
    assignments like
 	pthread_descr self = thread_self();
    do not get optimized away.  */
-# define THREAD_SELF \
+
+# ifndef __CHKP__
+#  define THREAD_SELF \
   ({ struct pthread *__self;						      \
      asm ("movl %%gs:%c1,%0" : "=r" (__self)				      \
 	  : "i" (offsetof (struct pthread, header.self)));		      \
      __self;})
+# else
+#  define THREAD_SELF \
+  ({ struct pthread *__self;						      \
+     asm ("movl %%gs:%c1,%0" : "=r" (__self)				      \
+	  : "i" (offsetof (struct pthread, header.self)));	 	      \
+    /* Set first minimum bounds to make possible reading stackblock and stackblock_size. */ \
+	  __self = __bnd_set_ptr_bounds(__self, TLS_INIT_TCB_SIZE);	 	      \
+    /* Set actual correct bounds. */ \
+     (struct pthread*) __bnd_copy_ptr_bounds(__self, __bnd_set_ptr_bounds(__self->stackblock, \
+      __self->stackblock_size)); })
+# endif
 
 /* Magic for libthread_db to know how to do THREAD_SELF.  */
 # define DB_THREAD_SELF \
@@ -272,7 +285,8 @@ union user_desc_init
 
 
 /* Read member of the thread descriptor directly.  */
-# define THREAD_GETMEM(descr, member) \
+# ifndef __CHKP__
+#  define THREAD_GETMEM(descr, member) \
   ({ __typeof (descr->member) __value;					      \
      if (sizeof (__value) == 1)						      \
        asm volatile ("movb %%gs:%P2,%b0"				      \
@@ -296,10 +310,15 @@ union user_desc_init
 			 "i" (offsetof (struct pthread, member) + 4));	      \
        }								      \
      __value; })
-
+# else
+#  define THREAD_GETMEM(descr, member) \
+   ({ struct pthread *__self = THREAD_SELF;  \
+      __self->member; })
+# endif
 
 /* Same as THREAD_GETMEM, but the member offset can be non-constant.  */
-# define THREAD_GETMEM_NC(descr, member, idx) \
+# ifndef __CHKP__
+#  define THREAD_GETMEM_NC(descr, member, idx) \
   ({ __typeof (descr->member[0]) __value;				      \
      if (sizeof (__value) == 1)						      \
        asm volatile ("movb %%gs:%P2(%3),%b0"				      \
@@ -325,10 +344,15 @@ union user_desc_init
 			  "r" (idx));					      \
        }								      \
      __value; })
-
+# else
+#  define THREAD_GETMEM_NC(descr, member, idx) \
+   ({ struct pthread *__self = THREAD_SELF;  \
+      __self->member[idx]; })
+# endif
 
 /* Same as THREAD_SETMEM, but the member offset can be non-constant.  */
-# define THREAD_SETMEM(descr, member, value) \
+# ifndef __CHKP__
+#  define THREAD_SETMEM(descr, member, value) \
   ({ if (sizeof (descr->member) == 1)					      \
        asm volatile ("movb %b0,%%gs:%P1" :				      \
 		     : "iq" (value),					      \
@@ -350,10 +374,15 @@ union user_desc_init
 			 "i" (offsetof (struct pthread, member)),	      \
 			 "i" (offsetof (struct pthread, member) + 4));	      \
        }})
-
+# else
+#  define THREAD_SETMEM(descr, member, value) \
+   ({ struct pthread *__self = THREAD_SELF;  \
+      __self->member = value; })
+#endif
 
 /* Set member of the thread descriptor directly.  */
-# define THREAD_SETMEM_NC(descr, member, idx, value) \
+# ifndef __CHKP__
+#  define THREAD_SETMEM_NC(descr, member, idx, value) \
   ({ if (sizeof (descr->member[0]) == 1)				      \
        asm volatile ("movb %b0,%%gs:%P1(%2)" :				      \
 		     : "iq" (value),					      \
@@ -377,7 +406,11 @@ union user_desc_init
 			 "i" (offsetof (struct pthread, member)),	      \
 			 "r" (idx));					      \
        }})
-
+# else
+#  define THREAD_SETMEM_NC(descr, member, idx, value) \
+   ({ struct pthread *__self = THREAD_SELF;  \
+      __self->member[idx] = value; })
+# endif
 
 /* Atomic compare and exchange on TLS, returning old value.  */
 #define THREAD_ATOMIC_CMPXCHG_VAL(descr, member, newval, oldval) \
@@ -417,7 +450,8 @@ union user_desc_init
 
 
 /* Call the user-provided thread function.  */
-#define CALL_THREAD_FCT(descr) \
+#ifndef __CHKP__
+# define CALL_THREAD_FCT(descr) \
   ({ void *__res;							      \
      int __ignore1, __ignore2;						      \
      asm volatile ("pushl %%eax\n\t"					      \
@@ -430,7 +464,11 @@ union user_desc_init
 		   : "i" (offsetof (struct pthread, start_routine)),	      \
 		     "i" (offsetof (struct pthread, arg)));		      \
      __res; })
-
+# else
+#  define CALL_THREAD_FCT(descr) \
+   ({ struct pthread *__self = THREAD_SELF;  \
+      __self->start_routine(__self->arg); })
+# endif
 
 /* Set the stack guard field in TCB head.  */
 #define THREAD_SET_STACK_GUARD(value) \
