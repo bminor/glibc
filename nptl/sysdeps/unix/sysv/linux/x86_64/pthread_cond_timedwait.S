@@ -99,6 +99,12 @@ __pthread_cond_timedwait:
 	movq	%rsi, 16(%rsp)
 	movq	%rdx, %r13
 
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov %bnd0, 72(%rsp)
+	bndmov %bnd1, 88(%rsp)
+	bndmov %bnd2, 104(%rsp)
+#endif
+
 	je	22f
 	mov	%RSI_LP, dep_mutex(%rdi)
 
@@ -128,7 +134,15 @@ __pthread_cond_timedwait:
 	/* Unlock the mutex.  */
 32:	movq	16(%rsp), %rdi
 	xorl	%esi, %esi
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov %bnd1, %bnd0
+#endif
 	callq	__pthread_mutex_unlock_usercnt
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov 72(%rsp), %bnd0
+	bndmov 88(%rsp), %bnd1
+	bndmov 104(%rsp), %bnd2
+#endif
 
 	testl	%eax, %eax
 	jne	46f
@@ -338,7 +352,15 @@ __pthread_cond_timedwait:
 	testb	%r15b, %r15b
 	jnz	64f
 
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov %bnd1, %bnd0
+#endif
 	callq	__pthread_mutex_cond_lock
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov 72(%rsp), %bnd0
+	bndmov 88(%rsp), %bnd1
+	bndmov 104(%rsp), %bnd2
+#endif
 
 63:	testq	%rax, %rax
 	cmoveq	%r14, %rax
@@ -362,7 +384,16 @@ __pthread_cond_timedwait:
 
 	cfi_restore_state
 
-64:	callq	__pthread_mutex_cond_lock_adjust
+64:
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov %bnd1, %bnd0
+#endif
+	callq	__pthread_mutex_cond_lock_adjust
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov 72(%rsp), %bnd0
+	bndmov 88(%rsp), %bnd1
+	bndmov 104(%rsp), %bnd2
+#endif
 	movq	%r14, %rax
 	jmp	48b
 
@@ -457,7 +488,15 @@ __pthread_cond_timedwait:
 	/* Unlock the mutex.  */
 2:	movq	16(%rsp), %rdi
 	xorl	%esi, %esi
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov %bnd1, %bnd0
+#endif
 	callq	__pthread_mutex_unlock_usercnt
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov 72(%rsp), %bnd0
+	bndmov 88(%rsp), %bnd1
+	bndmov 104(%rsp), %bnd2
+#endif
 
 	testl	%eax, %eax
 	jne	46b
@@ -786,7 +825,15 @@ __condvar_cleanup2:
 	cmpl	%eax, %fs:TID
 	jne	7f
 	/* We managed to get the lock.  Fix it up before returning.  */
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov %bnd1, %bnd0
+#endif
 	callq	__pthread_mutex_cond_lock_adjust
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov 72(%rsp), %bnd0
+	bndmov 88(%rsp), %bnd1
+	bndmov 104(%rsp), %bnd2
+#endif
 	jmp	8f
 
 7:	callq	__pthread_mutex_cond_lock

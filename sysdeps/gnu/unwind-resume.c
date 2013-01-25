@@ -46,6 +46,9 @@ init (void)
 void
 _Unwind_Resume (struct _Unwind_Exception *exc)
 {
+#ifdef __CHKP__
+  exc = (struct _Unwind_Exception *) __bnd_set_ptr_bounds (exc, sizeof (struct _Unwind_Exception));
+#endif
   if (__builtin_expect (libgcc_s_resume == NULL, 0))
     init ();
   libgcc_s_resume (exc);

@@ -767,6 +767,9 @@ update_get_addr (GET_ADDR_ARGS)
 void *
 __tls_get_addr (GET_ADDR_ARGS)
 {
+#ifdef __CHKP__
+  GET_ADDR_PARAM  = __bnd_init_ptr_bounds(GET_ADDR_PARAM);
+#endif
   dtv_t *dtv = THREAD_DTV ();
 
   if (__builtin_expect (dtv[0].counter != GL(dl_tls_generation), 0))

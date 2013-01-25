@@ -74,6 +74,11 @@ __pthread_cond_wait:
 	movq	%rdi, 8(%rsp)
 	movq	%rsi, 16(%rsp)
 
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov %bnd0, 32(%rsp)
+	bndmov %bnd1, 48(%rsp)
+#endif
+
 	je	15f
 	mov	%RSI_LP, dep_mutex(%rdi)
 
@@ -91,7 +96,14 @@ __pthread_cond_wait:
 	/* Unlock the mutex.  */
 2:	movq	16(%rsp), %rdi
 	xorl	%esi, %esi
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov %bnd1, %bnd0
+#endif
 	callq	__pthread_mutex_unlock_usercnt
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov 32(%rsp), %bnd0
+	bndmov 48(%rsp), %bnd1
+#endif
 
 	testl	%eax, %eax
 	jne	12f
@@ -256,7 +268,14 @@ __pthread_cond_wait:
 	testb	%r8b, %r8b
 	jnz	18f
 
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov %bnd1, %bnd0
+#endif
 	callq	__pthread_mutex_cond_lock
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov 32(%rsp), %bnd0
+	bndmov 48(%rsp), %bnd1
+#endif
 
 14:	leaq	FRAME_SIZE(%rsp), %rsp
 	cfi_adjust_cfa_offset(-FRAME_SIZE)
@@ -266,7 +285,15 @@ __pthread_cond_wait:
 
 	cfi_adjust_cfa_offset(FRAME_SIZE)
 
-18:	callq	__pthread_mutex_cond_lock_adjust
+18:
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov %bnd1, %bnd0
+#endif
+	callq	__pthread_mutex_cond_lock_adjust
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov 32(%rsp), %bnd0
+	bndmov 48(%rsp), %bnd1
+#endif
 	xorl	%eax, %eax
 	jmp	14b
 
@@ -510,9 +537,15 @@ __condvar_cleanup1:
 	cmpl	%eax, %fs:TID
 	jne	7f
 	/* We managed to get the lock.  Fix it up before returning.  */
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov %bnd1, %bnd0
+#endif
 	callq	__pthread_mutex_cond_lock_adjust
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov 32(%rsp), %bnd0
+	bndmov 48(%rsp), %bnd1
+#endif
 	jmp	8f
-
 
 7:	callq	__pthread_mutex_cond_lock
 

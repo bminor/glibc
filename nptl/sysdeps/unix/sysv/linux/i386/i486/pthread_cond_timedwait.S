@@ -94,6 +94,13 @@ __pthread_cond_timedwait:
 	je	.Lreltmo
 #endif
 
+#if defined __CHKP__ || defined __CHKWR__
+	bndldx	(%esp,%ebx,1), %bnd0
+	bndldx	28(%esp,%ebp,1), %bnd2
+	bndmov	%bnd0, 48(%esp)
+	bndmov	%bnd2, 80(%esp)
+#endif
+
 	/* Get internal lock.  */
 	movl	$1, %edx
 	xorl	%eax, %eax
@@ -109,12 +116,24 @@ __pthread_cond_timedwait:
 	   different value in there this is a bad user bug.  */
 2:	cmpl	$-1, dep_mutex(%ebx)
 	movl	24(%esp), %eax
+#if defined __CHKP__ || defined __CHKWR__
+	bndldx	4(%esp,%eax,1), %bnd1
+	bndmov	%bnd1, 64(%esp)
+#endif
 	je	17f
 	movl	%eax, dep_mutex(%ebx)
 
 	/* Unlock the mutex.  */
 17:	xorl	%edx, %edx
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov %bnd1, %bnd0
+#endif
 	call	__pthread_mutex_unlock_usercnt
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov 48(%esp), %bnd0
+	bndmov 64(%esp), %bnd1
+	bndmov 80(%esp), %bnd2
+#endif
 
 	testl	%eax, %eax
 	jne	16f
@@ -296,9 +315,25 @@ __pthread_cond_timedwait:
 	   should always succeed or else the kernel did not lock the mutex
 	   correctly.  */
 	movl	dep_mutex(%ebx), %eax
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov %bnd1, %bnd0
+#endif
 	call	__pthread_mutex_cond_lock_adjust
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov 48(%esp), %bnd0
+	bndmov 64(%esp), %bnd1
+	bndmov 80(%esp), %bnd2
+#endif
 	xorl	%edx, %edx
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov %bnd1, %bnd0
+#endif
 	call	__pthread_mutex_unlock_usercnt
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov 48(%esp), %bnd0
+	bndmov 64(%esp), %bnd1
+	bndmov 80(%esp), %bnd2
+#endif
 	jmp	8b
 
 28:	addl	$1, wakeup_seq(%ebx)
@@ -356,8 +391,15 @@ __pthread_cond_timedwait:
 	movl	16(%esp), %ecx
 	testl	%ecx, %ecx
 	jnz	27f
-
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov %bnd1, %bnd0
+#endif
 	call	__pthread_mutex_cond_lock
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov 48(%esp), %bnd0
+	bndmov 64(%esp), %bnd1
+	bndmov 80(%esp), %bnd2
+#endif
 26:	addl	$FRAME_SIZE, %esp
 	cfi_adjust_cfa_offset(-FRAME_SIZE)
 
@@ -388,7 +430,16 @@ __pthread_cond_timedwait:
 
 	cfi_restore_state
 
-27:	call	__pthread_mutex_cond_lock_adjust
+27:
+#if defined __CHKP__ || defined __CHKWR__
+        bndmov %bnd1, %bnd0
+#endif
+	call	__pthread_mutex_cond_lock_adjust
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov 48(%esp), %bnd0
+	bndmov 64(%esp), %bnd1
+	bndmov 80(%esp), %bnd2
+#endif
 	xorl	%eax, %eax
 	jmp	26b
 
@@ -529,7 +580,15 @@ __pthread_cond_timedwait:
 
 	/* Unlock the mutex.  */
 117:	xorl	%edx, %edx
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov %bnd1, %bnd0
+#endif
 	call	__pthread_mutex_unlock_usercnt
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov 48(%esp), %bnd0
+	bndmov 64(%esp), %bnd1
+	bndmov 80(%esp), %bnd2
+#endif
 
 	testl	%eax, %eax
 	jne	16b
@@ -899,10 +958,27 @@ __condvar_tw_cleanup:
 	cmpl	%ebx, %gs:TID
 	jne	8f
 	/* We managed to get the lock.  Fix it up before returning.  */
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov %bnd1, %bnd0
+#endif
 	call	__pthread_mutex_cond_lock_adjust
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov 48(%esp), %bnd0
+	bndmov 64(%esp), %bnd1
+	bndmov 80(%esp), %bnd2
+#endif
 	jmp	9f
 
-8:	call	__pthread_mutex_cond_lock
+8:
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov %bnd1, %bnd0
+#endif
+	call	__pthread_mutex_cond_lock
+#if defined __CHKP__ || defined __CHKWR__
+	bndmov 48(%esp), %bnd0
+	bndmov 64(%esp), %bnd1
+	bndmov 80(%esp), %bnd2
+#endif
 
 9:	movl	%esi, (%esp)
 .LcallUR:
