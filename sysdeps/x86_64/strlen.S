@@ -1,6 +1,5 @@
-/* strlen(str) -- determine the length of the string STR.
-   Copyright (C) 2009-2013 Free Software Foundation, Inc.
-   Contributed by Ulrich Drepper <drepper@redhat.com>.
+/* SSE2 version of strlen.
+   Copyright (C) 2012, 2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,83 +18,185 @@
 
 #include <sysdep.h>
 
+/* Used in linker - use only %xmm8-%xmm15.  */
 
-	.text
+/* Long lived register are
+	strlen(s), strnlen(s, n):
+
+	%xmm11 - zero
+	%rdi   - s
+	%r10  (s+n)	& (~(64-1))
+	%r11   s+n
+*/
+
+
+.text
 ENTRY(strlen)
+
+#define FIND_ZERO	\
+	pcmpeqb	(%rax), %xmm8;	\
+	pcmpeqb	16(%rax), %xmm9;	\
+	pcmpeqb	32(%rax), %xmm10;	\
+	pcmpeqb	48(%rax), %xmm11;	\
+	pmovmskb	%xmm8, %esi;	\
+	pmovmskb	%xmm9, %edx;	\
+	pmovmskb	%xmm10, %r8d;	\
+	pmovmskb	%xmm11, %ecx;	\
+	salq	$16, %rdx;	\
+	salq	$16, %rcx;	\
+	orq	%rsi, %rdx;	\
+	orq	%r8, %rcx;	\
+	salq	$32, %rcx;	\
+	orq	%rcx, %rdx;
+
+#ifdef AS_STRNLEN
+/* Do not read anything when n==0.  */
+	test	%rsi, %rsi
+	jne	L(n_nonzero)
 	xor	%rax, %rax
-	mov	%edi, %ecx
-	and	$0x3f, %ecx
-	pxor	%xmm0, %xmm0
-	cmp	$0x30, %ecx
+	ret
+L(n_nonzero):
+
+/* Initialize long lived registers.  */
+
+	add	%rdi, %rsi
+	mov	%rsi, %r10
+	and	$-64, %r10
+	mov	%rsi, %r11
+#endif
+
+	pxor	%xmm8, %xmm8
+	pxor	%xmm9, %xmm9
+	pxor	%xmm10, %xmm10
+	pxor	%xmm11, %xmm11
+	movq	%rdi, %rax
+	movq	%rdi, %rcx
+	andq	$4095, %rcx
+	cmpq	$4032, %rcx
+/* We cannot unify this branching as it would be ~6 cycles slower.  */
 	ja	L(next)
-	movdqu	(%rdi), %xmm1
-	pcmpeqb	%xmm1, %xmm0
-	pmovmskb %xmm0, %edx
-	test	%edx, %edx
-	jnz	L(exit_less16)
-	mov	%rdi, %rax
-	and	$-16, %rax
-	jmp	L(align16_start)
+
+#ifdef AS_STRNLEN
+# define STRNLEN_PROLOG	\
+	mov	%r11, %rsi;	\
+	subq	%rax, %rsi;	\
+	andq	$-64, %rax;	\
+	testq	$-64, %rsi;	\
+	je	L(strnlen_ret)
+#else
+# define STRNLEN_PROLOG  andq $-64, %rax;
+#endif
+
+#define PROLOG(lab)	\
+	FIND_ZERO;	\
+	movq	%rdi, %rcx;	\
+	xorq	%rax, %rcx;	\
+	STRNLEN_PROLOG;	\
+	sarq	%cl, %rdx;	\
+	test	%rdx, %rdx;	\
+	je	L(lab);	\
+	bsfq	%rdx, %rax;	\
+	ret
+
+	andq	$-16, %rax
+	PROLOG(loop)
+
 L(next):
-	mov	%rdi, %rax
-	and	$-16, %rax
-	pcmpeqb	(%rax), %xmm0
-	mov	$-1, %esi
-	sub	%rax, %rcx
-	shl	%cl, %esi
-	pmovmskb %xmm0, %edx
-	and	%esi, %edx
-	jnz	L(exit)
-L(align16_start):
-	pxor	%xmm0, %xmm0
-	pxor	%xmm1, %xmm1
-	pxor	%xmm2, %xmm2
-	pxor	%xmm3, %xmm3
-	.p2align 4
-L(align16_loop):
-	pcmpeqb	16(%rax), %xmm0
-	pmovmskb %xmm0, %edx
-	test	%edx, %edx
-	jnz	L(exit16)
+	andq	$-64, %rax
+	PROLOG(loop_init)
 
-	pcmpeqb	32(%rax), %xmm1
-	pmovmskb %xmm1, %edx
-	test	%edx, %edx
-	jnz	L(exit32)
+#ifdef AS_STRNLEN
+/* We must do this check to correctly handle strnlen (s, -1).  */
+L(strnlen_ret):
+	bts	%rsi, %rdx
+	sarq	%cl, %rdx
+	test	%rdx, %rdx
+	je	L(loop_init)
+	bsfq	%rdx, %rax
+	ret
+#endif
 
-	pcmpeqb	48(%rax), %xmm2
-	pmovmskb %xmm2, %edx
-	test	%edx, %edx
-	jnz	L(exit48)
+L(loop_init):
+	pxor	%xmm9, %xmm9
+	pxor	%xmm10, %xmm10
+	pxor	%xmm11, %xmm11
+#ifdef AS_STRNLEN
+L(loop):
 
-	pcmpeqb	64(%rax), %xmm3
-	pmovmskb %xmm3, %edx
-	lea	64(%rax), %rax
-	test	%edx, %edx
-	jz	L(align16_loop)
+	addq	$64, %rax
+	cmpq	%rax, %r10
+	je	L(exit_end)
+
+	movdqa	(%rax), %xmm8
+	pminub	16(%rax), %xmm8
+	pminub	32(%rax), %xmm8
+	pminub	48(%rax), %xmm8
+	pcmpeqb	%xmm11, %xmm8
+	pmovmskb	%xmm8, %edx
+	testl	%edx, %edx
+	jne	L(exit)
+	jmp	L(loop)
+
+L(exit_end):
+	cmp	%rax, %r11
+	je	L(first)
+	pxor	%xmm8, %xmm8
+	FIND_ZERO
+
+L(first):
+	bts	%r11, %rdx
+	bsfq	%rdx, %rdx
+	addq	%rdx, %rax
+	subq	%rdi, %rax
+	ret
+
 L(exit):
-	sub	%rdi, %rax
-L(exit_less16):
-	bsf	%rdx, %rdx
-	add	%rdx, %rax
+	pxor	%xmm8, %xmm8
+	FIND_ZERO
+
+	bsfq	%rdx, %rdx
+	addq	%rdx, %rax
+	subq	%rdi, %rax
 	ret
-	.p2align 4
-L(exit16):
-	sub	%rdi, %rax
-	bsf	%rdx, %rdx
-	lea	16(%rdx,%rax), %rax
+
+#else
+L(loop):
+
+	movdqa	64(%rax), %xmm8
+	pminub	80(%rax), %xmm8
+	pminub	96(%rax), %xmm8
+	pminub	112(%rax), %xmm8
+	pcmpeqb	%xmm11, %xmm8
+	pmovmskb	%xmm8, %edx
+	testl	%edx, %edx
+	jne	L(exit64)
+
+	subq	$-128, %rax
+
+	movdqa	(%rax), %xmm8
+	pminub	16(%rax), %xmm8
+	pminub	32(%rax), %xmm8
+	pminub	48(%rax), %xmm8
+	pcmpeqb	%xmm11, %xmm8
+	pmovmskb	%xmm8, %edx
+	testl	%edx, %edx
+	jne	L(exit0)
+	jmp	L(loop)
+
+L(exit64):
+	addq	$64, %rax
+L(exit0):
+	pxor	%xmm8, %xmm8
+	FIND_ZERO
+
+	bsfq	%rdx, %rdx
+	addq	%rdx, %rax
+	subq	%rdi, %rax
 	ret
-	.p2align 4
-L(exit32):
-	sub	%rdi, %rax
-	bsf	%rdx, %rdx
-	lea	32(%rdx,%rax), %rax
-	ret
-	.p2align 4
-L(exit48):
-	sub	%rdi, %rax
-	bsf	%rdx, %rdx
-	lea	48(%rdx,%rax), %rax
-	ret
+
+#endif
+
 END(strlen)
+#ifndef AS_STRLEN
 libc_hidden_builtin_def (strlen)
+#endif
