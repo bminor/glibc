@@ -47,6 +47,7 @@ add-chapters = $(wildcard $(foreach d, $(add-ons), ../$d/$d.texi))
 appendices = lang.texi header.texi install.texi maint.texi platform.texi \
 	     contrib.texi
 licenses = freemanuals.texi lgpl-2.1.texi fdl-1.3.texi
+tests = summary-check
 
 -include $(objpfx)texis
 $(objpfx)texis: texis.awk $(chapters) $(add-chapters) $(appendices) $(licenses)
@@ -92,6 +93,10 @@ $(objpfx)stamp-summary: summary.awk $(filter-out $(objpfx)summary.texi, \
 		> $(objpfx)summary-tmp
 	$(move-if-change) $(objpfx)summary-tmp $(objpfx)summary.texi
 	touch $@
+
+$(objpfx)summary-check.c: summary-check.awk $(objpfx)summary.texi
+	$(AWK) -f $^ > $@.new
+	mv -f $@.new $@
 
 # Generate a file which can be added to the `dir' content to provide direct
 # access to the documentation of the function, variables, and other

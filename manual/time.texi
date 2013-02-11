@@ -300,7 +300,7 @@ these are the actual amounts of time; not relative to any event.
 @xref{Creating a Process}.
 @end deftp
 
-@comment time.h
+@comment time.h (optional)
 @comment POSIX.1
 @deftypevr Macro int CLK_TCK
 This is an obsolete name for the number of clock ticks per second.  Use

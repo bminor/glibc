@@ -446,9 +446,9 @@ probably only see @code{SIGTRAP} if it is somehow executing bad
 instructions.
 @end deftypevr
 
-@comment signal.h
+@comment signal.h (optional)
 @comment BSD
-@deftypevr Macro int  SIGEMT
+@deftypevr Macro int SIGEMT
 Emulator trap; this results from certain unimplemented instructions
 which might be emulated in software, or the operating system's
 failure to properly emulate them.
@@ -456,7 +456,7 @@ failure to properly emulate them.
 
 @comment signal.h
 @comment Unix
-@deftypevr Macro int  SIGSYS
+@deftypevr Macro int SIGSYS
 Bad system call; that is to say, the instruction to trap to the
 operating system was executed, but the code number for the system call
 to perform was invalid.
@@ -798,7 +798,7 @@ Another cause of @code{SIGPIPE} is when you try to output to a socket
 that isn't connected.  @xref{Sending Data}.
 @end deftypevr
 
-@comment signal.h
+@comment signal.h (optional)
 @comment GNU
 @deftypevr Macro int SIGLOST
 @cindex lost resource signal
@@ -861,7 +861,7 @@ When the signal arrives, it should fetch the new screen size and
 reformat its display accordingly.
 @end deftypevr
 
-@comment signal.h
+@comment signal.h (optional)
 @comment BSD
 @deftypevr Macro int SIGINFO
 Information request.  On 4.4 BSD and @gnuhurdsystems{}, this signal is sent

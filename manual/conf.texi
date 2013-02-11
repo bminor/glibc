@@ -56,7 +56,7 @@ with @samp{_POSIX}, which gives the lowest value that the limit is
 allowed to have on @emph{any} POSIX system.  @xref{Minimums}.
 
 @cindex limits, program argument size
-@comment limits.h
+@comment limits.h (optional)
 @comment POSIX.1
 @deftypevr Macro int ARG_MAX
 If defined, the unvarying maximum combined length of the @var{argv} and
@@ -64,7 +64,7 @@ If defined, the unvarying maximum combined length of the @var{argv} and
 @end deftypevr
 
 @cindex limits, number of processes
-@comment limits.h
+@comment limits.h (optional)
 @comment POSIX.1
 @deftypevr Macro int CHILD_MAX
 If defined, the unvarying maximum number of processes that can exist
@@ -74,7 +74,7 @@ Resources}.
 @end deftypevr
 
 @cindex limits, number of open files
-@comment limits.h
+@comment limits.h (optional)
 @comment POSIX.1
 @deftypevr Macro int OPEN_MAX
 If defined, the unvarying maximum number of files that a single process
@@ -82,7 +82,7 @@ can have open simultaneously.  In BSD and GNU, this is controlled
 by the @code{RLIMIT_NOFILE} resource limit; @pxref{Limits on Resources}.
 @end deftypevr
 
-@comment limits.h
+@comment limits.h (optional)
 @comment POSIX.1
 @deftypevr Macro int STREAM_MAX
 If defined, the unvarying maximum number of streams that a single
@@ -90,7 +90,7 @@ process can have open simultaneously.  @xref{Opening Streams}.
 @end deftypevr
 
 @cindex limits, time zone name length
-@comment limits.h
+@comment limits.h (optional)
 @comment POSIX.1
 @deftypevr Macro int TZNAME_MAX
 If defined, the unvarying maximum length of a time zone name.
@@ -1539,7 +1539,7 @@ there is no actual limit except that imposed by the available virtual
 memory, but there is no way that the library can tell you this.)
 @end deftypevr
 
-@comment limits.h
+@comment limits.h (optional)
 @comment POSIX.2
 @deftypevr Macro int EQUIV_CLASS_MAX
 The maximum number of weights that can be assigned to an entry of the

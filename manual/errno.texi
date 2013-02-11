@@ -714,7 +714,7 @@ Directory not empty, where an empty directory was expected.  Typically,
 this error occurs when you are trying to delete a directory.
 @end deftypevr
 
-@comment errno.h
+@comment errno.h (optional)
 @comment BSD: Too many processes
 @deftypevr Macro int EPROCLIM
 @comment errno 67 @c DO NOT REMOVE
@@ -758,35 +758,35 @@ already specifies an NFS-mounted file.
 properly on @gnuhurdsystems{}, making this error code impossible.)
 @end deftypevr
 
-@comment errno.h
+@comment errno.h (optional)
 @comment BSD: RPC struct is bad
 @deftypevr Macro int EBADRPC
 @comment errno 72 @c DO NOT REMOVE
 ???
 @end deftypevr
 
-@comment errno.h
+@comment errno.h (optional)
 @comment BSD: RPC version wrong
 @deftypevr Macro int ERPCMISMATCH
 @comment errno 73 @c DO NOT REMOVE
 ???
 @end deftypevr
 
-@comment errno.h
+@comment errno.h (optional)
 @comment BSD: RPC program not available
 @deftypevr Macro int EPROGUNAVAIL
 @comment errno 74 @c DO NOT REMOVE
 ???
 @end deftypevr
 
-@comment errno.h
+@comment errno.h (optional)
 @comment BSD: RPC program version wrong
 @deftypevr Macro int EPROGMISMATCH
 @comment errno 75 @c DO NOT REMOVE
 ???
 @end deftypevr
 
-@comment errno.h
+@comment errno.h (optional)
 @comment BSD: RPC bad procedure for program
 @deftypevr Macro int EPROCUNAVAIL
 @comment errno 76 @c DO NOT REMOVE
@@ -803,7 +803,7 @@ it can result from an operation to an NFS server running another
 operating system.
 @end deftypevr
 
-@comment errno.h
+@comment errno.h (optional)
 @comment BSD: Inappropriate file type or format
 @deftypevr Macro int EFTYPE
 @comment errno 79 @c DO NOT REMOVE
@@ -814,14 +814,14 @@ On some systems @code{chmod} returns this error if you try to set the
 sticky bit on a non-directory file; @pxref{Setting Permissions}.
 @end deftypevr
 
-@comment errno.h
+@comment errno.h (optional)
 @comment BSD: Authentication error
 @deftypevr Macro int EAUTH
 @comment errno 80 @c DO NOT REMOVE
 ???
 @end deftypevr
 
-@comment errno.h
+@comment errno.h (optional)
 @comment BSD: Need authenticator
 @deftypevr Macro int ENEEDAUTH
 @comment errno 81 @c DO NOT REMOVE
@@ -865,7 +865,7 @@ While decoding a multibyte character the function came along an invalid
 or an incomplete sequence of bytes or the given wide character is invalid.
 @end deftypevr
 
-@comment errno.h
+@comment errno.h (optional)
 @comment GNU: Inappropriate operation for background process
 @deftypevr Macro int EBACKGROUND
 @comment errno 100 @c DO NOT REMOVE
@@ -877,7 +877,7 @@ it into a @code{SIGTTIN} or @code{SIGTTOU} signal.  @xref{Job Control},
 for information on process groups and these signals.
 @end deftypevr
 
-@comment errno.h
+@comment errno.h (optional)
 @comment GNU: Translator died
 @deftypevr Macro int EDIED
 @comment errno 101 @c DO NOT REMOVE
@@ -886,7 +886,7 @@ translated by a program and the translator program dies while starting
 up, before it has connected to the file.
 @end deftypevr
 
-@comment errno.h
+@comment errno.h (optional)
 @comment GNU: ?
 @deftypevr Macro int ED
 @comment errno 102 @c DO NOT REMOVE
@@ -895,21 +895,21 @@ The experienced user will know what is wrong.
 @c Don't change it.
 @end deftypevr
 
-@comment errno.h
+@comment errno.h (optional)
 @comment GNU: You really blew it this time
 @deftypevr Macro int EGREGIOUS
 @comment errno 103 @c DO NOT REMOVE
 You did @strong{what}?
 @end deftypevr
 
-@comment errno.h
+@comment errno.h (optional)
 @comment GNU: Computer bought the farm
 @deftypevr Macro int EIEIO
 @comment errno 104 @c DO NOT REMOVE
 Go home and have a glass of warm, dairy-fresh milk.
 @end deftypevr
 
-@comment errno.h
+@comment errno.h (optional)
 @comment GNU: Gratuitous error
 @deftypevr Macro int EGRATUITOUS
 @comment errno 105 @c DO NOT REMOVE

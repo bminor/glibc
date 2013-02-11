@@ -752,27 +752,27 @@ This specifies eight bits per byte.
 The following four bits are BSD extensions; these exist only on BSD
 systems and @gnuhurdsystems{}.
 
-@comment termios.h
+@comment termios.h (optional)
 @comment BSD
 @deftypevr Macro tcflag_t CCTS_OFLOW
 If this bit is set, enable flow control of output based on the CTS wire
 (RS232 protocol).
 @end deftypevr
 
-@comment termios.h
+@comment termios.h (optional)
 @comment BSD
 @deftypevr Macro tcflag_t CRTS_IFLOW
 If this bit is set, enable flow control of input based on the RTS wire
 (RS232 protocol).
 @end deftypevr
 
-@comment termios.h
+@comment termios.h (optional)
 @comment BSD
 @deftypevr Macro tcflag_t MDMBUF
 If this bit is set, enable carrier-based flow control of output.
 @end deftypevr
 
-@comment termios.h
+@comment termios.h (optional)
 @comment BSD
 @deftypevr Macro tcflag_t CIGNORE
 If this bit is set, it says to ignore the control modes and line speed
@@ -940,7 +940,7 @@ attempt to write to the terminal.  @xref{Access to the Terminal}.
 The following bits are BSD extensions; they exist only on BSD systems
 and @gnuhurdsystems{}.
 
-@comment termios.h
+@comment termios.h (optional)
 @comment BSD
 @deftypevr Macro tcflag_t ALTWERASE
 This bit determines how far the WERASE character should erase.  The
@@ -1394,7 +1394,7 @@ mechanism, the program should send a @code{SIGTSTP} signal to the
 process group of the process, not just to the process itself.
 @xref{Signaling Another Process}.
 
-@comment termios.h
+@comment termios.h (optional)
 @comment BSD
 @deftypevr Macro int VDSUSP
 @cindex DSUSP character
@@ -1501,7 +1501,7 @@ output buffer.  Typing any other character resets the flag.
 This character is available on BSD systems and @gnulinuxhurdsystems{}.
 @end deftypevr
 
-@comment termios.h
+@comment termios.h (optional)
 @comment BSD
 @deftypevr Macro int VSTATUS
 @cindex STATUS character

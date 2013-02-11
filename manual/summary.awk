@@ -88,17 +88,22 @@ $1 == "@node" { node=$2;
 	      }
 
 $1 == "@comment" && $2 ~ /\.h$/ { header="@file{" $2 "}";
+                                  optional = 0;
+                                  if ($NF == "(optional)") {
+                                    optional = 1;
+                                    --NF;
+                                  }
 				  for (i = 3; i <= NF; ++i)
 				    header=header ", @file{" $i "}"
 				}
 
-$1 == "@comment" && $2 == "(none)" { header = -1; }
+$1 == "@comment" && $2 == "(none)" { header = -1; optional = 0; }
 
 $1 == "@comment" && header != 0 { std=$2;
 				  for (i=3;i<=NF;++i) std=std " " $i }
 
 header != 0 && $1 ~ /@def|@item|@vindex/ \
-	{ defn=""; name=""; curly=0; n=1;
+	{ defn=""; name=""; curly=0; n=1; flavor="";
 	  for (i = 2; i <= NF; ++i) {
 	    if ($i ~ /^{/ && $i !~ /}/) {
 	      curly=1
@@ -124,9 +129,15 @@ header != 0 && $1 ~ /@def|@item|@vindex/ \
 		  name=word
 		++n
 	      }
+              if (flavor == "") {
+                flavor = $1;
+                if (flavor ~ /^@deftypevrx?/)
+                  flavor = flavor " {" word "}";
+              }
 	    }
 	  }
-	  printf "@comment %s%c", name, 12 # FF
+	  printf "@comment %s%s%c", name, optional ? " (optional)" : "", 12 # FF
+	  printf "@c %s %d %s%c", FILENAME, FNR, flavor, 12
 	  printf "@item%s%c%c", defn, 12, 12
 	  if (header != -1) printf "%s ", header;
 	  printf "(%s):  @ref{%s}.%c\n", std, node, 12;

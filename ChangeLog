@@ -1,3 +1,35 @@
+2013-02-11  Roland McGrath  <roland@hack.frob.com>
+
+	* manual/summary.awk: Print "@c FILE LINENO FLAVOR" lines between the
+	sort key comment and the @item.  Grok "(optional)" final token on
+	header @comment lines and put it on the leading @comment in output.
+	* manual/conf.texi (General Limits): Add (optional) for ARG_MAX,
+	CHILD_MAX, OPEN_MAX, STREAM_MAX, TZNAME_MAX.
+	(Utility Limits): Likewise for EQUIV_CLASS_MAX.
+	(Limits for Files): Likewise for LINK_MAX.
+	* manual/terminal.texi (Local Modes): Likewise for ALTWERASE and
+	NOKERNINFO.
+	(Control Modes): Likewise for CCTS_OFLOW, CRTS_IFLOW, MDMBUF, CIGNORE.
+	(Output Modes): Likewise for ONOEOT, OXTABS.
+	(Signal Characters): Likewise for VDSUSP.
+	(Other Special): Likewise for VSTATUS.
+	* manual/errno.texi (Error Codes): Likewise for EAUTH, ENEEDAUTH,
+	EBACKGROUND, EDIED, ED, EGREGIOUS, EIEIO, EGRATUITOUS, EBADRPC,
+	ERPCMISMATCH, EPROGUNAVAIL, EPROGMISMATCH, EPROCUNAVAIL, EFTYPE,
+	EPROCLIM.
+	* manual/time.texi (Processor Time): Likewise for CLK_TCK.
+	* manual/llio.texi (Access Modes): Likewise for O_READ, O_WRITE, O_EXEC.
+	(Open-time Flags): Likewise for O_SHLOCK, O_EXLOCK, O_IGNORE_CTTY,
+	O_NOLINK, O_NOTRANS.
+	* manual/signal.texi (Program Error Signals): Likewise for SIGEMT.
+	(Miscellaneous Signals): Likewise for SIGINFO.
+	(Operation Error Signals): Likewise for SIGLOST.
+	* manual/summary-check.awk: New file.
+	* manual/Makefile ($(objpfx)summary-check.c): New target.
+	(tests): New variable.
+
+	* include/sys/auxv.h: New file.
+
 2013-03-19  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	[BZ #13889]
