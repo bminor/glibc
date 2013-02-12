@@ -277,6 +277,25 @@
 	an embedded RPATH flag, which is what a compiler modified to embed a
 	non-default INTERP section would do.
 
+2011-05-30  Ulrich Drepper  <drepper@gmail.com>
+
+	[BZ #12454]
+	* elf/dl-deps.c (_dl_map_object_deps): Run initializer sorting only
+	when there are multiple maps.
+	* elf/dl-fini.c (_dl_sort_fini): Check for list of one.
+	(_dl_fini): Remove test here.
+
+	* elf/rtld.c (dl_main): Don't allow the loader to load itself.
+
+2011-02-06  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #12653]
+	* sysdeps/i386/i686/multiarch/memcpy-ssse3-rep.S: Only protect
+	MEMCPY_CHK with USE_AS_BCOPY ifdef check.
+	* sysdeps/i386/i686/multiarch/memcpy-ssse3.S: Likewise.
+	* sysdeps/x86_64/multiarch/memcpy-ssse3.S: Likewise.
+	* sysdeps/x86_64/multiarch/memcpy-ssse3-back.S: Likewise.
+
 2010-09-28  Andreas Schwab  <schwab@redhat.com>
 	    Ulrich Drepper  <drepper@gmail.com>
 
