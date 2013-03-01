@@ -1,3 +1,138 @@
+2012-11-20  Thomas Schwinge  <thomas@codesourcery.com>
+
+	* sysdeps/sh/dl-machine.h (ELF_MACHINE_RUNTIME_FIXUP_PARAMS): New
+	macro.
+
+2012-11-14  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14831]
+	* elf/Makefile (tests): Add tst-audit8.
+	($(objpfx)tst-audit8): Also depend on $(common-objpfx)math/libm.so.
+	($(objpfx)tst-audit8.out): New target.
+	(tst-audit8-ENV): New variable.
+	* elf/dl-runtime.c (_dl_profile_fixup): Call _dl_fixup to skip
+	audit if l_reloc_result is NULL.
+	(ELF_MACHINE_RUNTIME_FIXUP_PARAMS): Issue an error if it isn't
+	defined and ELF_MACHINE_RUNTIME_FIXUP_ARGS is defined.
+	* elf/tst-audit8.c: New file.
+
+2012-10-04  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14648]
+	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features):
+	Set bit_FMA_Usable if FMA is supported.
+	* sysdeps/x86_64/multiarch/init-arch.h (bit_FMA_Usable): New
+	macro.
+	(bit_FMA4_Usable): Updated.
+	(index_FMA_Usable): New macro.
+	(CPUID_FMA): Likewise
+	(HAS_FMA): Defined with bit_FMA_Usable.
+
+2012-09-28  Andreas Schwab  <schwab@linux-m68k.org>
+
+	[BZ #6530]
+	* stdio-common/vfprintf.c (process_string_arg): Revert
+	2000-07-22 change.
+
+2012-07-06  Andreas Schwab  <schwab@linux-m68k.org>
+
+	[BZ #14042]
+	* sysdeps/powerpc/powerpc32/ppc-mcount.S [SHARED]: Don't use PLT
+	for call to __mcount_internal.
+	* sysdeps/powerpc/powerpc32/Makefile (sysdep_routines)
+	(shared-only-routines) [$(subdir) = gmon]: Add compat-ppc-mcount.
+	* sysdeps/powerpc/powerpc32/compat-ppc-mcount.S: New file.
+
+2011-09-28  Jonathan Nieder  <jrnieder@gmail.com>
+
+	* stdio-common/Makefile (tst-sprintf-ENV): Set environment
+	for testcase.
+	* stdio-common/tst-sprintf.c: Include <locale.h>
+	(main): Test sprintf's handling of incomplete multibyte
+	characters.
+
+2012-09-25  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14621]
+	* posix/glob.c (next_brace_sub): Use size_t instead of unsigned
+	int as type of variable DEPTH.
+	(glob): Use size_t instead of int as type of variables NEWCOUNT
+	and OLD_PATHC.
+
+2012-09-24  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14562]
+	* malloc/arena.c (heap_trim): Properly get fencepost and adjust
+	new chunk size with MALLOC_ALIGN_MASK.
+
+2012-08-29  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #14476]
+	* Makefile (install): Also pass LD_SO=$(ld.so-version) to
+	scripts/test-installation.pl.
+	* scripts/test-installation.pl: Use LD_SO to get $ld_so_name
+	and $ld_so_version if it is set.
+
+2012-08-27  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14459]
+	* stdlib/strtod_l.c: Include <stdint.h>.
+	(NDEBUG): Do not define.
+	(round_and_return): Change EXPONENT parameter to type intmax_t.
+	Rearrange calculations to avoid internal overflow possibilities.
+	(str_to_mpn): Change EXPONENT parameter to type intmax_t *.
+	Rearrange calculations to avoid internal overflow possibilities.
+	Assert that number fits inside MPNSIZE limbs.
+	(____STRTOF_INTERNAL): Change EXPONENT variable to type intmax_t.
+	Change DIG_NO, INT_NO and LEAD_ZERO to type size_t.  Rearrange
+	calculations and add assertions to avoid internal overflow
+	possibilities.  Add casts to avoid signed/unsigned operations.
+	* stdlib/tst-strtod-overflow.c: New file.
+	* stdlib/Makefile (tests): Add tst-strtod-overflow.
+
+2012-08-15  Liubov Dmitrieva  <liubov.dmitrieva@gmail.com>
+
+	[BZ #14195]
+	* sysdeps/i386/i686/multiarch/strcmp-sssse3.S: Fix
+	segmentation fault for a case of two empty input strings.
+	* string/test-strncasecmp.c (check1): Renamed to...
+	(bz12205): ...this.
+	(bz14195): Add new testcase for two empty input strings and N > 0.
+	(test_main): Call new testcase, adapt for renamed function.
+
+2012-07-06  Mike Frysinger  <vapier@gentoo.org>
+
+	* sunrpc/rpc_clntout.c: Change <rpc/types.h> to "rpc/types.h".
+
+2012-07-16  Andreas Jaeger  <aj@suse.de>
+
+	* po/ru.po: Update from translation team.
+
+2012-07-13  Andreas Jaeger  <aj@suse.de>
+
+	* po/fr.po: Update from translation team.
+
+2012-07-11  Andreas Jaeger  <aj@suse.de>
+
+	* po/fr.po: Update from translation team.
+
+	* po/sv.po: Update from translation team
+	* po/fr.po: Another update from translation team.
+
+2012-07-04  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* catgets/Makefile ($(objpfx)de.msg): Use xopen-msg.awk instead of
+	xopen-msg.sed.
+	* catgets/xopen-msg.awk: New file.
+	* catgets/xopen-msg.sed: Removed.
+
+2012-07-04  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* intl/Makefile ($(objpfx)msgs.h): Use po2test.awk instead of
+	po2text.sed.
+	* intl/po2test.awk: New file.
+	* intl/po2test.sed: Removed.
+
 2012-12-03  Mike Frysinger  <vapier@gentoo.org>
 
 	* bits/byteswap.h [__GNUC__]: Change __GNUC_PREREQ from 4.2 to 4.3.
