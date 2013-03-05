@@ -30,6 +30,14 @@ extern void *__vdso_clock_getres;
 
 extern void *__vdso_get_tbfreq;
 
+/* Macro to return vdso_xxx value on IFUNC implementations.
+   On PPC64 the returned value is actually an OPD entry.  */
+#if defined(__PPC64__) || defined(__powerpc64__)
+#define PTR_IFUNC_RET(value)  &value
+#else
+#define PTR_IFUNC_RET(value)  value
+#endif
+
 #endif
 
 #endif /* _LIBC_VDSO_H */

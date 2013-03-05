@@ -1,3 +1,10 @@
+2013-03-04  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/bits/libc-vdso.h: Add macro to
+	return vdso values correctly in IFUNC implementations.
+	* sysdeps/unix/sysv/linux/powerpc/gettimeofday.c (__gettimeofday):
+	Optimization by	using IFUNC.
+
 2012-11-20  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* sysdeps/sh/dl-machine.h (ELF_MACHINE_RUNTIME_FIXUP_PARAMS): New
