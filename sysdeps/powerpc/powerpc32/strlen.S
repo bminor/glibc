@@ -70,7 +70,7 @@
 
 /* int [r3] strlen (char *s [r3])  */
 
-ENTRY (strlen)
+EALIGN (strlen, 5, 0)
 
 #define rTMP1	r0
 #define rRTN	r3	/* incoming STR arg, outgoing result */

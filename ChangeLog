@@ -1,6 +1,15 @@
 2013-03-07  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/multiarch/Makefile (sysdep_routines):
+	Add strlen implementations.
+	* sysdeps/powerpc/powerpc32/multiarch/ifunc-impl-list.c: Add strlen.
+	* sysdeps/powerpc/powerpc32/power7/strlen.S: Moved to...
+	* sysdeps/powerpc/powerpc32/multiarch/strlen-power7.S: ... here.
+	* sysdeps/powerpc/powerpc32/strlen.S: New file.
+
+2013-03-07  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/multiarch/Makefile (sysdep_routines):
 	Add strncmp implementations.
 	* sysdeps/powerpc/powerpc32/multiarch/ifunc-impl-list.c: Add strncmp.
 	* sysdeps/powerpc/powerpc32/multiarch/strncmp.S: New file
