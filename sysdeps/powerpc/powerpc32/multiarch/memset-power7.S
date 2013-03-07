@@ -23,7 +23,7 @@
    Returns 's'.  */
 
 	.machine  power7
-EALIGN (memset, 5, 0)
+EALIGN (__memset_power7, 5, 0)
 	CALL_MCOUNT
 
 	.align	4
@@ -427,5 +427,4 @@ L(small):
 	stw	4,4(10)
 	blr
 
-END (memset)
-libc_hidden_builtin_def (memset)
+END (__memset_power7)

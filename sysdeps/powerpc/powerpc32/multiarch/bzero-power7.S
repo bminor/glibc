@@ -1,5 +1,5 @@
-/* Optimized bzero `implementation' for PowerPC.
-   Copyright (C) 1997-2013 Free Software Foundation, Inc.
+/* Optimized bzero implementation for Power7 on 32 bits.
+   Copyright (C) 2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,30 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* Let other functions reuse the code of this file.  */
-#ifdef BZERO
-# define __bzero BZERO
-#endif
+#define BZERO __bzero_power7
+#define MEMSET_FCNT __memset_power7
 
-#include <sysdep.h>
-
-EALIGN (__bzero, 5, 0)
-
-	mr	r5,r4
-	li	r4,0
-#ifdef MEMSET_FCNT
-	b	MEMSET_FCNT@local
-#else
-	b	memset@local
-#endif
-END (__bzero)
-
-#ifdef BZERO
-libc_hidden_builtin_def (__bzero)
-#else
-# ifndef MEMSET_FCNT
-/* When BZERO and MEMSET_FCTN aren't defined, it means that this is the
-   default definition of bzero.  */
-weak_alias (__bzero, bzero)
-# endif
-#endif
+#include "../bzero.S"

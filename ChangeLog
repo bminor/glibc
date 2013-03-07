@@ -1,5 +1,23 @@
 2013-03-07  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc32/bzero.S: Port to multilib.
+	* sysdeps/powerpc/powerpc32/multiarch/Makefile (sysdep_routines):
+	Add memset and bzero implementations.
+	* sysdeps/powerpc/powerpc32/multiarch/memset.S: New file.
+	* sysdeps/powerpc/powerpc32/multiarch/ifunc-impl-list.c: Add bzero
+	and memset.
+	* sysdeps/powerpc/powerpc32/power4/memset.S: Moved to...
+	* sysdeps/powerpc/powerpc32/multiarch/memset-power4.S: ... here.
+	* sysdeps/powerpc/powerpc32/power6/memset.S:  Moved to...
+	* sysdeps/powerpc/powerpc32/multiarch/memset-power6.S:  ... here.
+	* sysdeps/powerpc/powerpc32/power7/memset.S: Moved to...
+	* sysdeps/powerpc/powerpc32/multiarch/memset-power7.S: ... here.
+	* sysdeps/powerpc/powerpc32/multiarch/bzero-power4.S: New file.
+	* sysdeps/powerpc/powerpc32/multiarch/bzero-power6.S: Likewise.
+	* sysdeps/powerpc/powerpc32/multiarch/bzero-power7.S: Likewise.
+
+2013-03-07  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc32/multiarch/Makefile (sysdep_routines):
 	Add memcmp-power7. 
 	* sysdeps/powerpc/powerpc32/multiarch/memcmp.S: Newfile.

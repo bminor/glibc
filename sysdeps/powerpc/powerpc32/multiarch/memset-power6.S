@@ -26,7 +26,7 @@
    to 0, to take advantage of the dcbz instruction.  */
 
 	.machine power6
-EALIGN (memset, 7, 0)
+EALIGN (__memset_power6, 7, 0)
 	CALL_MCOUNT
 
 #define rTMP	r0
@@ -535,5 +535,4 @@ L(medium_28t):
         stw     rCHR, -4(rMEMP)
 	stw	rCHR, -8(rMEMP)
 	blr
-END (memset)
-libc_hidden_builtin_def (memset)
+END (__memset_power6)
