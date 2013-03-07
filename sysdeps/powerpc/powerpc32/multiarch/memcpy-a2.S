@@ -23,7 +23,7 @@
 #define ZERO_AHEAD 2            /* no cache lines DST zeroing ahead  */
 
 	.machine  a2
-EALIGN (memcpy, 5, 0)
+EALIGN (__memcpy_a2, 5, 0)
 	CALL_MCOUNT
 
 	dcbt    0,r4            /* Prefetch ONE SRC cacheline  */
@@ -523,5 +523,4 @@ L(endloop2_128):
 	b       L(lessthancacheline)
 
 
-END (memcpy)
-libc_hidden_builtin_def (memcpy)
+END (__memcpy_a2)

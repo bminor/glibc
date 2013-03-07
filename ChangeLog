@@ -1,3 +1,20 @@
+2013-03-07  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+	    Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/multiarch/Makefile: New file.
+	* sysdeps/powerpc/powerpc32/multiarch/ifunc-impl-list.c: Likewise.
+	* sysdeps/powerpc/powerpc32/multiarch/memcpy.S: Likewise.
+	* sysdeps/powerpc/powerpc32/a2/memcpy.S: Moved to...
+	* sysdeps/powerpc/powerpc32/multiarch/memcpy-a2.S: ... here.
+	* sysdeps/powerpc/powerpc32/cell/memcpy.S: Moved to...
+	* sysdeps/powerpc/powerpc32/multiarch/memcpy-cell.S: ... here.
+	* sysdeps/powerpc/powerpc32/power4/memcpy.S: Moved to...
+	* sysdeps/powerpc/powerpc32/memcpy.S: ... here.
+	* sysdeps/powerpc/powerpc32/power6/memcpy.S: Moved to...
+	* sysdeps/powerpc/powerpc32/multiarch/memcpy-power6.S: ... here.
+	* sysdeps/powerpc/powerpc32/power7/memcpy.S: Moved to...
+	* sysdeps/powerpc/powerpc32/multiarch/memcpy-power7.S: ... here.
+
 2013-03-07  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
