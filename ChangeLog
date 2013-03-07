@@ -1,5 +1,16 @@
 2013-03-07  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc32/multiarch/Makefile (sysdep_routines):
+	Add strncmp implementations.
+	* sysdeps/powerpc/powerpc32/multiarch/ifunc-impl-list.c: Add strncmp.
+	* sysdeps/powerpc/powerpc32/multiarch/strncmp.S: New file
+	* sysdeps/powerpc/powerpc32/power4/strncmp.S: Moved to...
+	* sysdeps/powerpc/powerpc32/multiarch/strncmp-power4.S: ... here.
+	* sysdeps/powerpc/powerpc32/power7/strncmp.S: Moved to...
+	* sysdeps/powerpc/powerpc32/multiarch/strncmp-power7.S: ... here.
+
+2013-03-07  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc32/bzero.S: Port to multilib.
 	* sysdeps/powerpc/powerpc32/multiarch/Makefile (sysdep_routines):
 	Add memset and bzero implementations.
