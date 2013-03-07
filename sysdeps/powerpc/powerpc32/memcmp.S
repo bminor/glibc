@@ -20,7 +20,6 @@
 
 /* int [r3] memcmp (const char *s1 [r3], const char *s2 [r4], size_t size [r5])  */
 
-	.machine power4
 EALIGN (memcmp, 4, 0)
 	CALL_MCOUNT
 

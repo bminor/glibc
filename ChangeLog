@@ -1,3 +1,14 @@
+2013-03-07  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/multiarch/Makefile (sysdep_routines):
+	Add memcmp-power7. 
+	* sysdeps/powerpc/powerpc32/multiarch/memcmp.S: Newfile.
+	* sysdeps/powerpc/powerpc32/multiarch/ifunc-impl-list.c: Add memcmp.
+	* sysdeps/powerpc/powerpc32/power4/memcmp.S: Moved to...
+	* sysdeps/powerpc/powerpc32/memcmp.S: ... here.
+	* sysdeps/powerpc/powerpc32/power7/memcmp.S: Moved to...
+	* sysdeps/powerpc/powerpc32/multiarch/memcmp-power7.S: ... here.
+
 2013-03-07  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 	    Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 

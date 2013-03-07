@@ -23,7 +23,7 @@
 		    size_t size [r5])  */
 
 	.machine power7
-EALIGN (memcmp,4,0)
+EALIGN (__memcmp_power7,4,0)
 	CALL_MCOUNT
 
 #define rTMP	r0
@@ -980,6 +980,5 @@ L(dureturn25):
 	lwz	r24,20(r1)
 	lwz	1,0(1)
 	blr
-END (memcmp)
-libc_hidden_builtin_def (memcmp)
+END (__memcmp_power7)
 weak_alias (memcmp,bcmp)

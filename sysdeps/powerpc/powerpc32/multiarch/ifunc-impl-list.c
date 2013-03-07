@@ -38,6 +38,11 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   hwcap = GLRO(dl_hwcap);
 
 #ifdef SHARED
+  IFUNC_IMPL (i, name, memcmp,
+	      IFUNC_IMPL_ADD (array, i, memcmp, hwcap & PPC_FEATURE_HAS_VSX,
+			      __memcmp_power7)
+	      IFUNC_IMPL_ADD (array, i, memcmp, 1, __memcmp_ppc32))
+
   IFUNC_IMPL (i, name, memcpy,
 	      IFUNC_IMPL_ADD (array, i, memcpy, hwcap & PPC_FEATURE_HAS_VSX,
 			      __memcpy_power7)
