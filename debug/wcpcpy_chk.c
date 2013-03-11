@@ -26,6 +26,7 @@
    DEST.  Check for overflows.  */
 wchar_t *
 __wcpcpy_chk (wchar_t *dest, const wchar_t *src, size_t destlen)
+#ifndef __CHKP__
 {
   wchar_t *wcp = (wchar_t *) dest - 1;
   wint_t c;
@@ -42,3 +43,21 @@ __wcpcpy_chk (wchar_t *dest, const wchar_t *src, size_t destlen)
 
   return wcp;
 }
+#else
+{
+  dest--;
+  wint_t c;
+
+  do
+    {
+      if (__builtin_expect (destlen-- == 0, 0))
+	__chk_fail ();
+      c = src[0];
+      *++dest = c;
+      ++src;
+    }
+  while (c != L'\0');
+
+  return dest;
+}
+#endif
