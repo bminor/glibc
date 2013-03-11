@@ -30,7 +30,7 @@
 
 
 	.machine  a2
-EALIGN (memcpy, 5, 0)
+EALIGN (__memcpy_power_a2, 5, 0)
 	CALL_MCOUNT 3
 
 	dcbt    0,r4            /* Prefetch ONE SRC cacheline  */
@@ -520,5 +520,4 @@ L(endloop2_128):
 	b       L(lessthancacheline)
 
 
-END_GEN_TB (memcpy,TB_TOCLESS)
-libc_hidden_builtin_def (memcpy)
+END_GEN_TB (__memcpy_power_a2,TB_TOCLESS)

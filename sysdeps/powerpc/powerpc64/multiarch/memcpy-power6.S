@@ -41,7 +41,7 @@
    for the destination.  */
 
 	.machine	"power6"
-EALIGN (memcpy, 7, 0)
+EALIGN (__memcpy_power6, 7, 0)
 	CALL_MCOUNT 3
 
     cmpldi cr1,5,31
@@ -1163,5 +1163,4 @@ L(du_done):
     ld 31,-8(1)
     ld 3,-16(1)
     blr
-END_GEN_TB (memcpy,TB_TOCLESS)
-libc_hidden_builtin_def (memcpy)
+END_GEN_TB (__memcpy_power6,TB_TOCLESS)

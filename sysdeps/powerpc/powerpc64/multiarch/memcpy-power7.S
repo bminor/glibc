@@ -24,7 +24,7 @@
    Returns 'dst'.  */
 
 	.machine power7
-EALIGN (memcpy, 5, 0)
+EALIGN (__memcpy_power7, 5, 0)
 	CALL_MCOUNT 3
 
 	cmpldi  cr1,5,31
@@ -500,5 +500,4 @@ L(end_unaligned_loop):
 	ld	3,-16(1)
 	blr
 
-END_GEN_TB (memcpy,TB_TOCLESS)
-libc_hidden_builtin_def (memcpy)
+END_GEN_TB (__memcpy_power7,TB_TOCLESS)

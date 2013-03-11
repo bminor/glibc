@@ -1,3 +1,24 @@
+2013-03-07  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+	    Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+     * sysdeps/powerpc/powerpc64/a2/memcpy.S: Moved to multiarch folder.
+     * sysdeps/powerpc/powerpc64/cell/memcpy.S: Moved to multiarch folder.
+     * sysdeps/powerpc/powerpc64/power4/memcpy.S: Moved to multiarch folder.
+     * sysdeps/powerpc/powerpc64/power6/memcpy.S: Moved to multiarch folder.
+     * sysdeps/powerpc/powerpc64/power7/memcpy.S: Moved to multiarch folder.
+     * sysdeps/powerpc/powerpc64/multiarch/Makefile: Multiarch makefile.
+     * sysdeps/powerpc/powerpc64/multiarch/memcpy-a2.S: Moved from a2 folder.
+     * sysdeps/powerpc/powerpc64/multiarch/memcpy-cell.S: Moved from cell
+     folder.
+     * sysdeps/powerpc/powerpc64/multiarch/memcpy-power4.S: Moved from power4
+     folder.
+     * sysdeps/powerpc/powerpc64/multiarch/memcpy-power6.S: Moved from power6
+     folder.
+     * sysdeps/powerpc/powerpc64/multiarch/memcpy-power7.S: Moved from power7
+     folder.
+     * sysdeps/powerpc/powerpc64/multiarch/memcpy.S: Multiarch implementation
+     using IFUNC extension.
+
 2013-03-07  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/multiarch/Makefile (sysdep_routines):

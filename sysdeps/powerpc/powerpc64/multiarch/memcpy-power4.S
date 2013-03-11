@@ -34,7 +34,7 @@
    Each case has a optimized unrolled loop.   */
 
 	.machine power4
-EALIGN (memcpy, 5, 0)
+EALIGN (__memcpy_power4, 5, 0)
 	CALL_MCOUNT 3
 
     cmpldi cr1,5,31
@@ -93,7 +93,7 @@ EALIGN (memcpy, 5, 0)
 
   /* Move doublewords where destination and source are DW aligned.
      Use a unrolled loop to copy 4 doubleword (32-bytes) per iteration.
-     If the copy is not an exact multiple of 32 bytes, 1-3
+     If the copy is not an exact multiple of 32 bytes, 1-3 
      doublewords are copied as needed to set up the main loop.  After
      the main loop exits there may be a tail of 1-7 bytes. These byte are 
      copied a word/halfword/byte at a time as needed to preserve alignment.  */
@@ -411,5 +411,4 @@ EALIGN (memcpy, 5, 0)
     ld 31,-8(1)
     ld 3,-16(1)
     blr
-END_GEN_TB (memcpy,TB_TOCLESS)
-libc_hidden_builtin_def (memcpy)
+END_GEN_TB (__memcpy_power4,TB_TOCLESS)
