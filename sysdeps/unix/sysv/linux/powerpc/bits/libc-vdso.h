@@ -31,6 +31,8 @@ extern void *__vdso_clock_getres;
 
 extern void *__vdso_get_tbfreq;
 
+extern void *__vdso_getcpu;
+
 #endif
 
 #endif /* _LIBC_VDSO_H */
