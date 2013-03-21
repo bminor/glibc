@@ -1,3 +1,9 @@
+2013-04-03  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #15330]
+	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Allocate results and
+	order arrays from heap if bigger than alloca cutoff.
+
 2014-06-03  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #15946]
