@@ -25,11 +25,6 @@
 /* Maximum number of IFUNC implementations.  */
 #define MAX_IFUNC	5
 
-/* Some of the .  */
-#define PPC_POWER4 (PPC_FEATURE_POWER4|PPC_FEATURE_ARCH_2_05|       \
-		    PPC_FEATURE_ARCH_2_06)
-#define PPC_POWER6 (PPC_FEATURE_ARCH_2_05|PPC_FEATURE_ARCH_2_06)
-
 size_t
 __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			size_t max)
@@ -38,25 +33,34 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   size_t i = 0;
 
-  uint32_t hwcap;
-
-  hwcap = GLRO(dl_hwcap);
+  unsigned long int hwcap = GLRO(dl_hwcap);
+  /* hwcap contains only the latest supported ISA, the code checks which is
+     and fill the previous supported ones.  */
+  if (hwcap & PPC_FEATURE_ARCH_2_06)
+    hwcap |= PPC_FEATURE_ARCH_2_05 | PPC_FEATURE_POWER5_PLUS |
+             PPC_FEATURE_POWER5 | PPC_FEATURE_POWER4;
+  else if (hwcap & PPC_FEATURE_ARCH_2_05)
+    hwcap |= PPC_FEATURE_POWER5_PLUS | PPC_FEATURE_POWER5 | PPC_FEATURE_POWER4;
+  else if (hwcap & PPC_FEATURE_POWER5_PLUS)
+    hwcap |= PPC_FEATURE_POWER5 | PPC_FEATURE_POWER4;
+  else if (hwcap & PPC_FEATURE_POWER5)
+    hwcap |= PPC_FEATURE_POWER4;
 
   IFUNC_IMPL (i, name, bzero,
 	      IFUNC_IMPL_ADD (array, i, bzero, hwcap & PPC_FEATURE_HAS_VSX,
 			      __bzero_power7)
-	      IFUNC_IMPL_ADD (array, i, bzero, hwcap & PPC_POWER6,
+	      IFUNC_IMPL_ADD (array, i, bzero, hwcap & PPC_FEATURE_ARCH_2_05,
 			      __bzero_power6)
-	      IFUNC_IMPL_ADD (array, i, bzero, hwcap & PPC_POWER4,
+	      IFUNC_IMPL_ADD (array, i, bzero, hwcap & PPC_FEATURE_POWER4,
 			      __bzero_power4)
 	      IFUNC_IMPL_ADD (array, i, bzero, 1, __bzero_ppc32))
 
   IFUNC_IMPL (i, name, memset,
 	      IFUNC_IMPL_ADD (array, i, memset, hwcap & PPC_FEATURE_HAS_VSX,
 			      __memset_power7)
-	      IFUNC_IMPL_ADD (array, i, memset, hwcap & PPC_POWER6,
+	      IFUNC_IMPL_ADD (array, i, memset, hwcap & PPC_FEATURE_ARCH_2_05,
 			      __memset_power6)
-	      IFUNC_IMPL_ADD (array, i, memset, hwcap & PPC_POWER4,
+	      IFUNC_IMPL_ADD (array, i, memset, hwcap & PPC_FEATURE_POWER4,
 			      __memset_power4)
 	      IFUNC_IMPL_ADD (array, i, memset, 1, __memset_ppc32))
 
@@ -71,7 +75,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memcpy_power7)
 	      IFUNC_IMPL_ADD (array, i, memcpy, hwcap & PPC_FEATURE_ARCH_2_06,
 			      __memcpy_a2)
-	      IFUNC_IMPL_ADD (array, i, memcpy, hwcap & PPC_POWER6,
+	      IFUNC_IMPL_ADD (array, i, memcpy, hwcap & PPC_FEATURE_ARCH_2_05,
 			      __memcpy_power6)
 	      IFUNC_IMPL_ADD (array, i, memcpy,
 			      hwcap & (PPC_FEATURE_CELL_BE >> 16),
@@ -86,7 +90,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   IFUNC_IMPL (i, name, strncmp,
 	      IFUNC_IMPL_ADD (array, i, strncmp, hwcap & PPC_FEATURE_HAS_VSX,
 			      __strncmp_power7)
-	      IFUNC_IMPL_ADD (array, i, strncmp, hwcap & PPC_POWER4,
+	      IFUNC_IMPL_ADD (array, i, strncmp, hwcap & PPC_FEATURE_POWER4,
 			      __strncmp_power4)
 	      IFUNC_IMPL_ADD (array, i, strncmp, 1, __strncmp_ppc32))
 #endif
