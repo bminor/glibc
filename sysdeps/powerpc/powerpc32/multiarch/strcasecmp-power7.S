@@ -27,8 +27,8 @@
                           __locale_t loc [r5]) */
 
 #ifndef STRCMP
-# define __STRCMP __strcasecmp
-# define STRCMP   strcasecmp
+# define __STRCMP __strcasecmp_power7
+# define STRCMP   strcasecmp_power7
 #endif
 
 ENTRY (__STRCMP)
