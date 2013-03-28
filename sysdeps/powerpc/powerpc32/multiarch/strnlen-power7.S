@@ -21,7 +21,7 @@
 
 /* int [r3] strnlen (char *s [r3], int size [r4])  */
 	.machine  power7
-ENTRY (__strnlen)
+ENTRY (__strnlen_power7)
 	CALL_MCOUNT
 	dcbt	0,r3
 	clrrwi	r8,r3,2	      /* Align the address to word boundary.  */
@@ -164,6 +164,4 @@ L(loop_small):
 	cmplw	r9,r7
 	bge	L(end_max)
 	b	L(loop_small)
-END (__strnlen)
-weak_alias (__strnlen, strnlen)
-libc_hidden_builtin_def (strnlen)
+END (__strnlen_power7)
