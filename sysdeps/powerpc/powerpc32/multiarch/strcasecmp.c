@@ -23,8 +23,6 @@
   __hidden_ver1 (__strcasecmp_ppc32, __GI_strcasecmp, __strcasecmp_ppc32);
 # endif
 
-/* Redefine memmove so that the compiler won't complain about the type
-   mismatch with the IFUNC selector in strong_alias, below.  */
 # undef strcasecmp
 # define strcasecmp __redirect_strcasecmp
 # include <string.h>
