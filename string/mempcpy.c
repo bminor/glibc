@@ -22,6 +22,7 @@
 #include <string.h>
 
 #undef __mempcpy
+#undef mempcpy
 #ifdef MEMPCPY
 # define __mempcpy MEMPCPY
 #endif
