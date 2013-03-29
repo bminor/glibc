@@ -23,7 +23,7 @@
 	Returns 'dst' + 'len'.  */
 
 	.machine  power7
-EALIGN (__mempcpy, 5, 0)
+EALIGN (__mempcpy_power7, 5, 0)
 	CALL_MCOUNT
 
 	stwu	1,-32(1)
@@ -462,7 +462,4 @@ L(end_unaligned_loop):
 	addi	1,1,32
 	blr
 
-END (__mempcpy)
-libc_hidden_def (__mempcpy)
-weak_alias (__mempcpy, mempcpy)
-libc_hidden_builtin_def (mempcpy)
+END (__mempcpy_power7)
