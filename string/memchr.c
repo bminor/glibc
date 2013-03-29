@@ -50,6 +50,9 @@
 
 #undef memchr
 #undef __memchr
+#ifdef MEMCHR
+# define __memchr MEMCHR
+#endif
 
 /* Search no more than N bytes of S for C.  */
 __ptr_t
@@ -198,6 +201,8 @@ __memchr (s, c_in, n)
   return 0;
 }
 #ifdef weak_alias
+# ifndef MEMCHR
 weak_alias (__memchr, memchr)
+# endif
 #endif
 libc_hidden_builtin_def (memchr)

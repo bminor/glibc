@@ -21,7 +21,7 @@
 
 /* int [r3] memchr (char *s [r3], int byte [r4], int size [r5])  */
 	.machine  power7
-ENTRY (__memchr)
+ENTRY (__memchr_power7)
 	CALL_MCOUNT
 	dcbt	0,r3
 	clrrwi  r8,r3,2
@@ -200,6 +200,4 @@ L(loop_small):                /* loop_small has been unrolled.  */
 	li	r3,0
 	blr
 
-END (__memchr)
-weak_alias (__memchr, memchr)
-libc_hidden_builtin_def (memchr)
+END (__memchr_power7)
