@@ -34,6 +34,8 @@ ENTRY(memcpy)
 	lwz	r6,_rtld_global_ro@got(r5)
 	mtlr	r11
 	cfi_same_value (lr)
+	cmpdi	r6,0
+	beq	L(ppc32)
 	lwz	r6,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET+4(r6)
 # else
 	lis	r6,(_dl_hwcap+4)@ha
@@ -48,6 +50,7 @@ ENTRY(memcpy)
 	bne-	L(power6)
 	andis.	r7,r6,(PPC_FEATURE_CELL_BE >> 16)
 	bne-	L(powerCELL)
+L(ppc32):
 # ifdef PIC
 	lwz	r3,__memcpy_ppc32@got(r5)
 # else
@@ -102,10 +105,6 @@ END(memcpy)
 # define END(name)                                             \
   cfi_endproc;                                                 \
   ASM_SIZE_DIRECTIVE(__memcpy_ppc32)
-
-# undef libc_hidden_builtin_def
-# define libc_hidden_builtin_def(name)                         \
-  .globl __GI_memcpy; __GI_memcpy = __memcpy_ppc32
 
 #endif
 
