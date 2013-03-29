@@ -30,7 +30,7 @@
      __ret; })
 #else
 # define __GLRO(value)  GLRO(value)
-#endif 
+#endif
 
 # define INIT_ARCH() \
   unsigned long int hwcap = __GLRO(dl_hwcap);
