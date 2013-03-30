@@ -32,5 +32,22 @@
 # define __GLRO(value)  GLRO(value)
 #endif
 
+/* dl_hwcap contains only the latest supported ISA, the macro checks which is
+   and fills the previous ones.  */
 # define INIT_ARCH() \
-  unsigned long int hwcap = __GLRO(dl_hwcap);
+  unsigned long int hwcap = __GLRO(dl_hwcap); 				\
+  if (hwcap & PPC_FEATURE_ARCH_2_06)					\
+    hwcap |= PPC_FEATURE_ARCH_2_05 |					\
+	     PPC_FEATURE_POWER5_PLUS |					\
+             PPC_FEATURE_POWER5 |					\
+	     PPC_FEATURE_POWER4;					\
+  else if (hwcap & PPC_FEATURE_ARCH_2_05)				\
+    hwcap |= PPC_FEATURE_POWER5_PLUS |					\
+	     PPC_FEATURE_POWER5 |					\
+	     PPC_FEATURE_POWER4;					\
+  else if (hwcap & PPC_FEATURE_POWER5_PLUS)				\
+    hwcap |= PPC_FEATURE_POWER5 |					\
+	     PPC_FEATURE_POWER4;					\
+  else if (hwcap & PPC_FEATURE_POWER5)					\
+    hwcap |= PPC_FEATURE_POWER4;
+  
