@@ -46,7 +46,9 @@
 #include <sys/types.h>
 
 #undef memchr
-
+#ifdef RAWMEMCHR
+# define __rawmemchr RAWMEMCHR
+#endif
 
 /* Find the first occurrence of C in S.  */
 __ptr_t
@@ -178,5 +180,7 @@ __rawmemchr (s, c_in)
 	}
     }
 }
-libc_hidden_def (__rawmemchr)
+#ifndef RAWMEMCHR
 weak_alias (__rawmemchr, rawmemchr)
+#endif
+libc_hidden_def (__rawmemchr)

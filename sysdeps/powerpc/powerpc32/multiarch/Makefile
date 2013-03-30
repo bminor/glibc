@@ -7,5 +7,6 @@ sysdep_routines += memcpy-power7 memcpy-a2 memcpy-power6 memcpy-cell \
 		   strnlen-power7 strnlen-c \
 		   mempcpy-power7 mempcpy-c \
 		   memchr-power7 memchr-c \
-		   memrchr-power7 memrchr-c
+		   memrchr-power7 memrchr-c \
+		   rawmemchr-power7 rawmemchr-c
 endif

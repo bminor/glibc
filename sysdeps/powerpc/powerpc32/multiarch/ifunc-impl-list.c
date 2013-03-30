@@ -103,6 +103,13 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, memrchr, 1,
 			      __memrchr_ppc32))
 
+  IFUNC_IMPL (i, name, rawmemchr,
+	      IFUNC_IMPL_ADD (array, i, rawmemchr,
+			      hwcap & PPC_FEATURE_HAS_VSX,
+			      __rawmemchr_power7)
+	      IFUNC_IMPL_ADD (array, i, rawmemchr, 1,
+			      __rawmemchr_ppc32))
+
   IFUNC_IMPL (i, name, strlen,
 	      IFUNC_IMPL_ADD (array, i, strlen, hwcap & PPC_FEATURE_HAS_VSX,
 				__strlen_power7)
