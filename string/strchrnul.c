@@ -26,6 +26,9 @@
 
 #undef __strchrnul
 #undef strchrnul
+#ifdef STRCHRNUL
+# define __strchrnul STRCHRNUL
+#endif
 
 /* Find the first occurrence of C in S or the final NUL byte.  */
 char *
@@ -165,5 +168,6 @@ __strchrnul (s, c_in)
   /* This should never happen.  */
   return NULL;
 }
-
+#ifndef STRCHRNUL
 weak_alias (__strchrnul, strchrnul)
+#endif

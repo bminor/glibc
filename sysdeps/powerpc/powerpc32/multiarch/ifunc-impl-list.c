@@ -141,6 +141,13 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __strnlen_power7)
 	      IFUNC_IMPL_ADD (array, i, strnlen, 1,
 			      __strnlen_ppc32))
+
+  IFUNC_IMPL (i, name, strchrnul,
+	      IFUNC_IMPL_ADD (array, i, strchrnul,
+			      hwcap & PPC_FEATURE_HAS_VSX,
+			      __strchrnul_power7)
+	      IFUNC_IMPL_ADD (array, i, strchrnul, 1,
+			      __strchrnul_ppc32))
 #endif
 
   return i;
