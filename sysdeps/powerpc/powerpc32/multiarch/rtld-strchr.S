@@ -1,0 +1,1 @@
+#include "../strchr.S"
