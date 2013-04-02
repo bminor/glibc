@@ -50,4 +50,3 @@
 	     PPC_FEATURE_POWER4;					\
   else if (hwcap & PPC_FEATURE_POWER5)					\
     hwcap |= PPC_FEATURE_POWER4;
-  
