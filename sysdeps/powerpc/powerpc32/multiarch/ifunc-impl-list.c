@@ -135,6 +135,12 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, strcasecmp_l, 1,
 			      __strcasecmp_l_ppc32))
 
+  IFUNC_IMPL (i, name, strncasecmp,
+	      IFUNC_IMPL_ADD (array, i, strncasecmp,
+			      hwcap & PPC_FEATURE_HAS_VSX,
+			      __strncasecmp_power7)
+	      IFUNC_IMPL_ADD (array, i, strcasecmp, 1, __strncasecmp_ppc32))
+
   IFUNC_IMPL (i, name, strnlen,
 	      IFUNC_IMPL_ADD (array, i, strnlen,
 			      hwcap & PPC_FEATURE_HAS_VSX,
