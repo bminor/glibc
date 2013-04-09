@@ -175,6 +175,16 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __wcsrchr_power6)
 	      IFUNC_IMPL_ADD (array, i, wcsrchr, 1,
 			      __wcsrchr_ppc32))
+
+  IFUNC_IMPL (i, name, wcscpy,
+	      IFUNC_IMPL_ADD (array, i, wcscpy,
+			      hwcap & PPC_FEATURE_HAS_VSX,
+			      __wcscpy_power7)
+	      IFUNC_IMPL_ADD (array, i, wcscpy,
+			      hwcap & PPC_FEATURE_ARCH_2_05,
+			      __wcscpy_power6)
+	      IFUNC_IMPL_ADD (array, i, wcscpy, 1,
+			      __wcscpy_ppc32))
 #endif
 
   return i;

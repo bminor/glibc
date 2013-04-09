@@ -19,12 +19,19 @@
 #include <stddef.h>
 #include <wchar.h>
 
+#ifdef WCSCPY
+# define __wcscpy_power6 WCSCPY
+#endif
+#ifndef WCSCPY_ARCH
+# define WCSCPY_ARCH "power6"
+#endif
+
+__typeof (wcscpy) __wcscpy_power6
+  __attribute__ ((__target__ ("cpu=" WCSCPY_ARCH)));
 
 /* Copy SRC to DEST.  */
 wchar_t *
-wcscpy (dest, src)
-     wchar_t *dest;
-     const wchar_t *src;
+__wcscpy_power6 (wchar_t *dest, const wchar_t *src)
 {
   wint_t c,d;
   wchar_t *wcp, *wcp2;
