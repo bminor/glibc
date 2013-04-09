@@ -17,22 +17,10 @@
    <http://www.gnu.org/licenses/>.  */
 
 #ifndef NOT_IN_libc
-# ifdef SHARED
-#  undef libc_hidden_builtin_def
-#  define libc_hidden_builtin_def(name) \
-  __hidden_ver1 (__strcasecmp_l_ppc32, __GI_strcasecmp_l, __strcasecmp_l_ppc32);
-# endif
-
-/* Redefine memmove so that the compiler won't complain about the type
-   mismatch with the IFUNC selector in strong_alias, below.  */
-# undef strcasecmp_l
-# define strcasecmp_l __redirect_strcasecmp_l
 # include <string.h>
-# undef strcasecmp_l
 # define strcasecmp_l __strcasecmp_l_ppc32
-
-extern __typeof (__redirect_strcasecmp_l) __strcasecmp_l_ppc32 attribute_hidden;
-extern __typeof (__redirect_strcasecmp_l) __strcasecmp_l_power7 attribute_hidden;
+extern __typeof (__strcasecmp_l) __strcasecmp_l_ppc32 attribute_hidden;
+extern __typeof (__strcasecmp_l) __strcasecmp_l_power7 attribute_hidden;
 #endif
 
 #include "string/strcasecmp_l.c"
@@ -44,7 +32,7 @@ extern __typeof (__redirect_strcasecmp_l) __strcasecmp_l_power7 attribute_hidden
 
 /* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
    ifunc symbol properly.  */
-extern __typeof (__redirect_strcasecmp_l) __libc_strcasecmp_l;
+extern __typeof (__strcasecmp_l) __libc_strcasecmp_l;
 libc_ifunc (__libc_strcasecmp_l,
 	    (hwcap & PPC_FEATURE_HAS_VSX)
             ? __strcasecmp_l_power7

@@ -17,20 +17,10 @@
    <http://www.gnu.org/licenses/>.  */
 
 #ifndef NOT_IN_libc
-# ifdef SHARED
-#  undef libc_hidden_builtin_def
-#  define libc_hidden_builtin_def(name) \
-  __hidden_ver1 (__strcasecmp_ppc32, __GI_strcasecmp, __strcasecmp_ppc32);
-# endif
-
-# undef strcasecmp
-# define strcasecmp __redirect_strcasecmp
 # include <string.h>
-# undef strcasecmp
 # define strcasecmp __strcasecmp_ppc32
-
-extern __typeof (__redirect_strcasecmp) __strcasecmp_ppc32 attribute_hidden;
-extern __typeof (__redirect_strcasecmp) __strcasecmp_power7 attribute_hidden;
+extern __typeof (__strcasecmp) __strcasecmp_ppc32 attribute_hidden;
+extern __typeof (__strcasecmp) __strcasecmp_power7 attribute_hidden;
 #endif
 
 #include "string/strcasecmp.c"
@@ -42,7 +32,7 @@ extern __typeof (__redirect_strcasecmp) __strcasecmp_power7 attribute_hidden;
 
 /* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
    ifunc symbol properly.  */
-extern __typeof (__redirect_strcasecmp) __libc_strcasecmp;
+extern __typeof (__strcasecmp) __libc_strcasecmp;
 libc_ifunc (__libc_strcasecmp,
 	    (hwcap & PPC_FEATURE_HAS_VSX)
             ? __strcasecmp_power7
