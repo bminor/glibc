@@ -29,11 +29,11 @@
 	.section	".text"
 
 /* long [r3] lround (float x [fp1])
-   IEEE 1003.1 lround function.  IEEE specifies "round to the nearest 
+   IEEE 1003.1 lround function.  IEEE specifies "round to the nearest
    integer value, rounding halfway cases away from zero, regardless of
    the current rounding mode."  However PowerPC Architecture defines
-   "round to Nearest" as "Choose the best approximation. In case of a 
-   tie, choose the one that is even (least significant bit o).". 
+   "round to Nearest" as "Choose the best approximation. In case of a
+   tie, choose the one that is even (least significant bit o).".
    So we can't use the PowerPC "round to Nearest" mode. Instead we set
    "round toward Zero" mode and round by adding +-0.5 before rounding
    to the integer value.
@@ -46,7 +46,8 @@
    is greater/less than +-2^52 we don't need to bias the number with
    +-0.5.  */
 
-ENTRY (__llround)
+	.machine power4
+ENTRY (__llround_power4)
 	stwu    r1,-16(r1)
 	cfi_adjust_cfa_offset (16)
 #ifdef SHARED
@@ -92,17 +93,4 @@ ENTRY (__llround)
 .Lnobias:
 	fmr	fp3,fp1
 	b	.Lconvert
-	END (__llround)
-
-weak_alias (__llround, llround)
-
-strong_alias (__llround, __llroundf)
-weak_alias (__llround, llroundf)
-
-#ifdef NO_LONG_DOUBLE
-weak_alias (__llround, llroundl)
-strong_alias (__llround, __llroundl)
-#endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
-compat_symbol (libm, __llround, llroundl, GLIBC_2_1)
-#endif
+END (__llround_power4)

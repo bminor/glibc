@@ -18,19 +18,19 @@
 
 #include <sysdep.h>
 #include <math_ldbl_opt.h>
-	
+
 /* long [r3] llround (float x [fp1])
-   IEEE 1003.1 lround function.  IEEE specifies "round to the nearest 
+   IEEE 1003.1 lround function.  IEEE specifies "round to the nearest
    integer value, rounding halfway cases away from zero, regardless of
    the current rounding mode."  However PowerPC Architecture defines
-   "round to Nearest" as "Choose the best approximation. In case of a 
-   tie, choose the one that is even (least significant bit o).". 
+   "round to Nearest" as "Choose the best approximation. In case of a
+   tie, choose the one that is even (least significant bit o).".
    So we pre-round using the V2.02 Floating Round to Integer Nearest
    instruction before we use the Floating Convert to Integer Word with
    round to zero instruction.  */
 
 	.machine	"power5"
-ENTRY (__llround)
+ENTRY (__llround_power5)
 	stwu    r1,-16(r1)
 	cfi_adjust_cfa_offset (16)
 	frin	fp2,fp1
@@ -43,17 +43,4 @@ ENTRY (__llround)
 	lwz	r3,8(r1)
 	addi	r1,r1,16
 	blr
-	END (__llround)
-
-weak_alias (__llround, llround)
-
-strong_alias (__llround, __llroundf)
-weak_alias (__llround, llroundf)
-
-#ifdef NO_LONG_DOUBLE
-weak_alias (__llround, llroundl)
-strong_alias (__llround, __llroundl)
-#endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
-compat_symbol (libm, __llround, llroundl, GLIBC_2_1)
-#endif
+END (__llround_power5)
