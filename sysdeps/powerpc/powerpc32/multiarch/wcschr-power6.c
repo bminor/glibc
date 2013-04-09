@@ -18,12 +18,19 @@
 
 #include <wchar.h>
 
+#ifdef WCSCHR
+# define __wcschr_power6 WCSCHR
+#endif
+#ifndef WCSCHR_ARCH
+# define WCSCHR_ARCH "power6"
+#endif
+
+__typeof (wcschr) __wcschr_power6
+  __attribute__ ((__target__ ("cpu=" WCSCHR_ARCH)));
 
 /* Find the first occurrence of WC in WCS.  */
 wchar_t *
-wcschr (wcs, wc)
-     register const wchar_t *wcs;
-     register const wchar_t wc;
+__wcschr_power6 (register const wchar_t *wcs, register const wchar_t wc)
 {
   register const wchar_t *wcs2 = wcs + 1;
 
@@ -85,4 +92,3 @@ wcschr (wcs, wc)
 
   return NULL;
 }
-libc_hidden_def (wcschr)
