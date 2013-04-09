@@ -1,6 +1,6 @@
-/* Copyright (C) 1995-2013 Free Software Foundation, Inc.
+/* Multiple versions of wcsrchr
+   Copyright (C) 2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,25 +16,21 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <wchar.h>
+#ifndef NOT_IN_libc
+# include <wchar.h>
+# include <shlib-compat.h>
+# include "init-arch.h"
 
+extern __typeof (wcsrchr) __wcsrchr_ppc32 attribute_hidden;
+extern __typeof (wcsrchr) __wcsrchr_power6 attribute_hidden;
+extern __typeof (wcsrchr) __wcsrchr_power7 attribute_hidden;
 
-/* Find the last occurrence of WC in WCS.  */
-#ifdef WCSRCHR
-# define wcsrchr WCSRCHR
+libc_ifunc (wcsrchr,
+	     (hwcap & PPC_FEATURE_HAS_VSX)
+             ? __wcsrchr_power7 :
+	       (hwcap & PPC_FEATURE_ARCH_2_05)
+	       ? __wcsrchr_power6
+             : __wcsrchr_ppc32);
+#else
+#include "wcsmbs/wcsrchr.c"
 #endif
-
-wchar_t *
-wcsrchr (wcs, wc)
-     register const wchar_t *wcs;
-     register const wchar_t wc;
-{
-  const wchar_t *retval = NULL;
-
-  do
-    if (*wcs == wc)
-      retval = wcs;
-  while (*wcs++ != L'\0');
-
-  return (wchar_t *) retval;
-}

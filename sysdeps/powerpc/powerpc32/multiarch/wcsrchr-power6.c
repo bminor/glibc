@@ -18,12 +18,19 @@
 
 #include <wchar.h>
 
+#ifdef WCSRCHR
+# define __wcsrchr_power6 WCSRCHR
+#endif
+#ifndef WCSRCHR_ARCH
+# define WCSRCHR_ARCH "power6"
+#endif
+
+__typeof (wcsrchr) __wcsrchr_power6
+  __attribute__ ((__target__ ("cpu=" WCSRCHR_ARCH)));
 
 /* Find the last occurrence of WC in WCS.  */
 wchar_t *
-wcsrchr (wcs, wc)
-     register const wchar_t *wcs;
-     register const wchar_t wc;
+__wcsrchr_power6 (register const wchar_t *wcs, register const wchar_t wc)
 {
   register const wchar_t *wcs2 = wcs + 1;
   const wchar_t *retval = NULL;
