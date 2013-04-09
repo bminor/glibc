@@ -20,27 +20,18 @@
 #include <math_ldbl_opt.h>
 
 /* long long int[r3, r4] __llrint (double x[fp1])  */
-ENTRY (__llrint)	
+	.machine power6
+ENTRY (__llrint_power6)
 	CALL_MCOUNT
 	stwu	r1,-16(r1)
 	cfi_adjust_cfa_offset (16)
 	fctid	fp13,fp1
 	stfd	fp13,8(r1)
-	nop	/* Insure the following load is in a different dispatch group */
-	nop	/* to avoid pipe stall on POWER4&5.  */
-	nop
+/* Insure the following load is in a different dispatch group by
+   inserting "group ending nop".  */
+	ori	r1,r1,0
 	lwz	r3,8(r1)
 	lwz	r4,12(r1)
-	addi	r1,r1,16	
+	addi	r1,r1,16
 	blr
-	END (__llrint)
-
-weak_alias (__llrint, llrint)
-
-#ifdef NO_LONG_DOUBLE
-strong_alias (__llrint, __llrintl)
-weak_alias (__llrint, llrintl)
-#endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
-compat_symbol (libm, __llrint, llrintl, GLIBC_2_1)
-#endif
+END (__llrint_power6)

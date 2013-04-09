@@ -1,4 +1,4 @@
-/* Round double to long int.  PowerPC32 on PowerPC64 version.
+/* Round float to long int.  PowerPC32 on PowerPC64 version.
    Copyright (C) 2004-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -17,10 +17,10 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <math_ldbl_opt.h>
 
-/* long long int[r3, r4] __llrint (double x[fp1])  */
-ENTRY (__llrint)	
+/* long long int[r3, r4] __llrintf (float x[fp1])  */
+	.machine power6
+ENTRY (__llrintf_power6)
 	CALL_MCOUNT
 	stwu	r1,-16(r1)
 	cfi_adjust_cfa_offset (16)
@@ -31,16 +31,6 @@ ENTRY (__llrint)
 	ori	r1,r1,0
 	lwz	r3,8(r1)
 	lwz	r4,12(r1)
-	addi	r1,r1,16	
+	addi	r1,r1,16
 	blr
-	END (__llrint)
-
-weak_alias (__llrint, llrint)
-
-#ifdef NO_LONG_DOUBLE
-strong_alias (__llrint, __llrintl)
-weak_alias (__llrint, llrintl)
-#endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
-compat_symbol (libm, __llrint, llrintl, GLIBC_2_1)
-#endif
+END (__llrintf_power6)
