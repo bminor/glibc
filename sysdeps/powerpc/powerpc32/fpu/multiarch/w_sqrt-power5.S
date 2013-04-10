@@ -25,26 +25,26 @@
    sets the appropriate floating point exceptions.  Extended checking is
    only needed to set errno (via __kernel_standard) if the input value
    is negative.
-   
+
    So compare the input value against the absolute value of itself.
    This will compare equal unless the value is negative (EDOM) or a NAN,
    in which case we branch to the extend wrapper.  If equal we can return
    the result directly.
-   
+
    This part of the function looks like a leaf routine,  so no need to
    stack a frame or execute prologue/epilogue code. It is safe to
    branch directly to w_sqrt as long as the input value (f1) is
    preserved. Putting the sqrt result into f2 (float parameter 2)
    allows passing both the input value and sqrt result into the extended
    wrapper so there is no need to recompute.
-   
+
    This tactic avoids the overhead of stacking a frame for the normal
    (non-error) case.  Until gcc supports prologue shrink-wrapping
    this is the best we can do.  */
 
 	.section	".text"
-	.machine power4
-EALIGN (__sqrt, 5, 0)
+	.machine power5
+EALIGN (__sqrt_power5, 5, 0)
 	fabs	fp0,fp1
 	fsqrt	fp2,fp1
 	fcmpu	cr1,fp0,fp1
@@ -93,15 +93,4 @@ EALIGN (__sqrt, 5, 0)
 	bl	__kernel_standard@plt
 	fmr	fp12,fp1
 	b	.L4
-	END	(__sqrt)
-
-weak_alias (__sqrt, sqrt)
-
-#ifdef NO_LONG_DOUBLE
-weak_alias (__sqrt, sqrtl)
-strong_alias (__sqrt, __sqrtl)
-#endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
-compat_symbol (libm, __sqrt, sqrtl, GLIBC_2_0)
-#endif
-
+END (__sqrt_power5)

@@ -1,5 +1,5 @@
-/* Double-precision floating point square root wrapper.
-   Copyright (C) 2004-2013 Free Software Foundation, Inc.
+/* Multiple versions of w_sqrt.
+   Copyright (C) 2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,28 +17,24 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
-#include <math_private.h>
-#include <fenv_libc.h>
+#include <math_ldbl_opt.h>
+#include <shlib-compat.h>
+#include "init-arch.h"
 
-double
-__sqrt (double x)		/* wrapper sqrt */
-{
-#ifdef _IEEE_LIBM
-  return __ieee754_sqrt (x);
-#else
-  double z;
-  z = __ieee754_sqrt (x);
-  if (_LIB_VERSION == _IEEE_ || (x != x))
-    return z;
+extern __typeof (__sqrt) __sqrt_ppc32 attribute_hidden;
+extern __typeof (__sqrt) __sqrt_power4 attribute_hidden;
+extern __typeof (__sqrt) __sqrt_power5 attribute_hidden;
 
-  if (x < 0.0)
-    return __kernel_standard (x, x, 26);	/* sqrt(negative) */
-  else
-    return z;
-#endif
-}
+libc_ifunc (__sqrt,
+	    (hwcap & PPC_FEATURE_POWER5)
+	    ? __sqrt_power5 :
+	      (hwcap & PPC_FEATURE_POWER4)
+	      ? __sqrt_power4
+	    : __sqrt_ppc32);
 
 weak_alias (__sqrt, sqrt)
+
 #ifdef NO_LONG_DOUBLE
-  strong_alias (__sqrt, __sqrtl) weak_alias (__sqrt, sqrtl)
+strong_alias (__sqrt, __sqrtl)
+weak_alias (__sqrt, sqrtl)
 #endif
