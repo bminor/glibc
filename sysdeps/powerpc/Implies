@@ -1,4 +1,6 @@
 # On PowerPC we use the IBM extended long double format.
 ieee754/ldbl-128ibm
+# These supply the ABI compatibility for when long double was double.
+ieee754/ldbl-opt
 ieee754/dbl-64
 ieee754/flt-32
