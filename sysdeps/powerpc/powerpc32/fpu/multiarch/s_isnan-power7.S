@@ -29,7 +29,7 @@
 	.section    ".text"
 	.type	    __isnan, @function
 	.machine    power7
-ENTRY (__isnan)
+ENTRY (__isnan_power7)
 #ifdef SHARED
 	mflr	r11
 	cfi_register(lr,r11)
@@ -66,25 +66,10 @@ ENTRY (__isnan)
 L(NaN):
 	li      r3,1	      /* x == NaN?  */
 	blr
-	END (__isnan)
-
-hidden_def (__isnan)
-weak_alias (__isnan, isnan)
+END (__isnan_power7)
 
 /* It turns out that the 'double' version will also always work for
    single-precision.  */
-strong_alias (__isnan, __isnanf)
-hidden_def (__isnanf)
-weak_alias (__isnanf, isnanf)
-
-#ifdef NO_LONG_DOUBLE
-strong_alias (__isnan, __isnanl)
-weak_alias (__isnan, isnanl)
-#endif
-
-#ifndef IS_IN_libm
-# if LONG_DOUBLE_COMPAT(libc, GLIBC_2_0)
-compat_symbol (libc, __isnan, __isnanl, GLIBC_2_0);
-compat_symbol (libc, isnan, isnanl, GLIBC_2_0);
-# endif
-#endif
+strong_alias (__isnan_power7, __isnanf_power7)
+hidden_def (__isnanf_power7)
+weak_alias (__isnanf_power7, isnanf_power7)

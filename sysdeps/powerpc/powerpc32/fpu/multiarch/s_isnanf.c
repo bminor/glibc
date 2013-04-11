@@ -1,5 +1,5 @@
-/* isnanf().  PowerPC32 version.
-   Copyright (C) 2008-2013 Free Software Foundation, Inc.
+/* Multiple versions of s_isnanf.
+   Copyright (C) 2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,29 +16,22 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
-#include <math_ldbl_opt.h>
+#include <math.h>
+#include <shlib-compat.h>
+#include "init-arch.h"
 
-/* int __isnanf(x)  */
-	.machine power6
-EALIGN (__isnanf, 4, 0)
-	stwu	r1,-32(r1)
-	cfi_adjust_cfa_offset (32)
-	ori	r1,r1,0
-	stfs	fp1,24(r1)	/* copy FPR to GPR */
-	ori	r1,r1,0
-	lwz	r4,24(r1)
-	lis	r0,0x7f80	/* const long r0 0x7f800000 */
-	clrlwi	r4,r4,1		/* x = fabs(x) */
-	cmpw	cr7,r4,r0	/* if (fabs(x) =< inf) */
-	li	r3,0		/* then return 0 */
-	addi	r1,r1,32
-	cfi_adjust_cfa_offset (-32)
-	blelr+	cr7
-L(NaN):
-	li	r3,1		/* else return 1 */
-	blr
-	END (__isnanf)
+extern __typeof (__isnanf) __isnanf_ppc32 attribute_hidden;
+extern __typeof (__isnanf) __isnanf_power5 attribute_hidden;
+extern __typeof (__isnanf) __isnanf_power6 attribute_hidden;
+extern __typeof (__isnanf) __isnanf_power7 attribute_hidden;
 
-hidden_def (__isnanf)
+libc_ifunc (__isnanf,
+	    (hwcap & PPC_FEATURE_ARCH_2_06)
+	    ? __isnanf_power7 :
+	      (hwcap & PPC_FEATURE_ARCH_2_05)
+	      ? __isnanf_power6 :
+		(hwcap & PPC_FEATURE_POWER5)
+		? __isnanf_power5
+            : __isnanf_ppc32);
+
 weak_alias (__isnanf, isnanf)

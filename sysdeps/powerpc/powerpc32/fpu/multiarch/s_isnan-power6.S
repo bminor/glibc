@@ -21,7 +21,7 @@
 
 /* int __isnan(x)  */
 	.machine power6
-EALIGN (__isnan, 4, 0)
+EALIGN (__isnan_power6, 4, 0)
 	stwu	r1,-32(r1)
 	cfi_adjust_cfa_offset (32)
 	ori	r1,r1,0
@@ -42,20 +42,4 @@ EALIGN (__isnan, 4, 0)
 L(NaN):
 	li	r3,1		/* else return 1 */
 	blr
-	END (__isnan)
-
-hidden_def (__isnan)
-weak_alias (__isnan, isnan)
-
-#ifdef NO_LONG_DOUBLE
-strong_alias (__isnan, __isnanl)
-weak_alias (__isnan, isnanl)
-#endif
-
-#ifndef IS_IN_libm
-# if LONG_DOUBLE_COMPAT(libc, GLIBC_2_0)
-compat_symbol (libc, __isnan, __isnanl, GLIBC_2_0);
-compat_symbol (libc, isnan, isnanl, GLIBC_2_0);
-# endif
-#endif
-
+END (__isnan_power6)

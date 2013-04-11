@@ -1,4 +1,4 @@
-/* isnan().  PowerPC32 version.
+/* isnanf().  PowerPC32 version.
    Copyright (C) 2008-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -20,14 +20,14 @@
 #include <math_ldbl_opt.h>
 
 /* int __isnanf(x)  */
-	.machine power5
-EALIGN (__isnanf, 4, 0)
+	.machine power6
+EALIGN (__isnanf_power6, 4, 0)
 	stwu	r1,-32(r1)
 	cfi_adjust_cfa_offset (32)
-	stfs	fp1,28(r1)	/* copy FPR to GPR */
-	nop
-	nop
-	lwz	r4,28(r1)
+	ori	r1,r1,0
+	stfs	fp1,24(r1)	/* copy FPR to GPR */
+	ori	r1,r1,0
+	lwz	r4,24(r1)
 	lis	r0,0x7f80	/* const long r0 0x7f800000 */
 	clrlwi	r4,r4,1		/* x = fabs(x) */
 	cmpw	cr7,r4,r0	/* if (fabs(x) =< inf) */
@@ -38,8 +38,4 @@ EALIGN (__isnanf, 4, 0)
 L(NaN):
 	li	r3,1		/* else return 1 */
 	blr
-	END (__isnanf)
-
-hidden_def (__isnanf)
-weak_alias (__isnanf, isnanf)
-
+END (__isnanf_power6)

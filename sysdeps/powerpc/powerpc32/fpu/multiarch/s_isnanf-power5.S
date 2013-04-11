@@ -19,39 +19,23 @@
 #include <sysdep.h>
 #include <math_ldbl_opt.h>
 
-/* int __isnan(x)  */
-	.machine power4
-EALIGN (__isnan, 4, 0)	
-	mffs	fp0
-	mtfsb0	4*cr6+lt /* reset_fpscr_bit (FPSCR_VE) */
-	fcmpu	cr7,fp1,fp1
-	mtfsf	255,fp0
-	li	r3,0
-	beqlr+	cr7	/* (x == x) then not a NAN */
-	li	r3,1	/* else must be a NAN */
+/* int __isnanf(x)  */
+	.machine power5
+EALIGN (__isnanf_power5, 4, 0)
+	stwu	r1,-32(r1)
+	cfi_adjust_cfa_offset (32)
+	stfs	fp1,28(r1)	/* copy FPR to GPR */
+	nop
+	nop
+	lwz	r4,28(r1)
+	lis	r0,0x7f80	/* const long r0 0x7f800000 */
+	clrlwi	r4,r4,1		/* x = fabs(x) */
+	cmpw	cr7,r4,r0	/* if (fabs(x) =< inf) */
+	li	r3,0		/* then return 0 */
+	addi	r1,r1,32
+	cfi_adjust_cfa_offset (-32)
+	blelr+	cr7
+L(NaN):
+	li	r3,1		/* else return 1 */
 	blr
-	END (__isnan)
-
-hidden_def (__isnan)
-weak_alias (__isnan, isnan)
-
-/* It turns out that the 'double' version will also always work for
-   single-precision.  */
-#ifndef __isnan
-strong_alias (__isnan, __isnanf)
-hidden_def (__isnanf)
-weak_alias (__isnanf, isnanf)
-#endif
-
-#ifdef NO_LONG_DOUBLE
-strong_alias (__isnan, __isnanl)
-weak_alias (__isnan, isnanl)
-#endif
-
-#ifndef IS_IN_libm
-# if LONG_DOUBLE_COMPAT(libc, GLIBC_2_0)
-compat_symbol (libc, __isnan, __isnanl, GLIBC_2_0);
-compat_symbol (libc, isnan, isnanl, GLIBC_2_0);
-# endif
-#endif
-
+END (__isnanf_power5)
