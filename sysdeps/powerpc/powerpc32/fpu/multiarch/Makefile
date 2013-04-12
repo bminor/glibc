@@ -2,7 +2,8 @@ ifeq ($(subdir),math)
 sysdep_routines += s_isnan-power7 s_isnan-power6 s_isnan-power5 \
 		   s_isnan-ppc32 \
 		   s_isnanf-power7 s_isnanf-power6 s_isnanf-power5 \
-		   s_isnanf-ppc32
+		   s_isnanf-ppc32 \
+		   s_copysign-power6 s_copysign-ppc32
 
 libm-sysdep_routines += s_llrintf-power6 s_llrintf-power4 s_llrintf-c \
 			s_llrint-power6 s_llrint-power4 s_llrint-c \
@@ -13,7 +14,8 @@ libm-sysdep_routines += s_llrintf-power6 s_llrintf-power4 s_llrintf-c \
 			s_isnan-power7 s_isnan-power6 s_isnan-power5 \
 			s_isnan-ppc32 \
 			s_isnanf-power7 s_isnanf-power6 s_isnanf-power5 \
-			s_isnanf-ppc32
+			s_isnanf-ppc32 \
+			s_copysign-power6 s_copysign-ppc32
 
 CFLAGS-s_llround.c = -fno-builtin-llroundf
 endif

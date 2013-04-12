@@ -27,32 +27,8 @@
 	.section    ".text"
 	.type	    __copysign, @function
 	.machine    power6
-EALIGN (__copysign, 4, 0)
+EALIGN (__copysign_power6, 4, 0)
 	CALL_MCOUNT
 	fcpsgn	fp1,fp2,fp1
 	blr
-END (__copysign)
-
-hidden_def (__copysign)
-weak_alias (__copysign, copysign)
-
-/* It turns out that the 'double' version will also always work for
-   single-precision.  */
-strong_alias (__copysign, __copysignf)
-hidden_def (__copysignf)
-weak_alias (__copysignf, copysignf)
-
-#ifdef NO_LONG_DOUBLE
-strong_alias (__copysign, __copysignl)
-weak_alias (__copysign, copysignl)
-#endif
-
-#ifdef IS_IN_libm
-# if LONG_DOUBLE_COMPAT (libm, GLIBC_2_0)
-compat_symbol (libm, copysign, copysignl, GLIBC_2_0)
-# endif
-#else
-# if LONG_DOUBLE_COMPAT (libc, GLIBC_2_0)
-compat_symbol (libc, copysign, copysignl, GLIBC_2_0);
-# endif
-#endif
+END (__copysign_power6)

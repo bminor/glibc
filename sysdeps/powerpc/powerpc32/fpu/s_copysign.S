@@ -43,8 +43,10 @@ L(0):	fnabs   fp1,fp1
 weak_alias (__copysign,copysign)
 
 /* It turns out that it's safe to use this code even for single-precision.  */
+#ifndef __isnan
 weak_alias (__copysign,copysignf)
 strong_alias(__copysign,__copysignf)
+#endif
 
 #ifdef NO_LONG_DOUBLE
 weak_alias (__copysign,copysignl)
