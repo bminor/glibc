@@ -1,0 +1,4 @@
+# Configuration		ABI OS	ABI version
+# -------------		------	-----------
+
+.*-.*-nacl.*		6	22.0.0

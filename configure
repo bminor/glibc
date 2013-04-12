@@ -1,0 +1,8 @@
+libc_add_on_canonical=nacl-port
+
+case "$config_machine-$config_os" in
+arm*-nacl* | i?86-nacl*)
+  libc_commonpagesize=0x10000
+  libc_config_ok=yes
+  ;;
+esac

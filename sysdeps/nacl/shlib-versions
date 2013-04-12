@@ -1,0 +1,17 @@
+# Configuration		DEFAULT			Earliest symbol set
+# -------------		---------------		------------------------------
+.*-.*-nacl.*		DEFAULT			GLIBC_2.17
+
+# Configuration		ABI			Identifier for ABI data files
+# -------------		----------		-----------------------------
+.*-.*-nacl.*		ABI			nacl
+
+# Configuration		Library=version		Earliest symbol set (optional)
+# -------------		---------------		------------------------------
+
+.*-.*-nacl.*		libc=1
+.*-.*-nacl.*		libm=1
+
+arm.*-.*-nacl.*		ld=ld-nacl-arm.so.1
+i.86-.*-nacl.*		ld=ld-nacl-x86-32.so.1
+x86_64-.*-nacl.*	ld=ld-nacl-x86-64.so.1

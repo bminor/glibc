@@ -1,0 +1,5 @@
+libc {
+  GLIBC_2.17 {
+    nacl_interface_query;
+  }
+}
