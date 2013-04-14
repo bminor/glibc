@@ -19,11 +19,8 @@
 #include <sysdep.h>
 
 	.machine	"power5"
-EALIGN (__roundf, 4, 0)
+EALIGN (__roundf_power5plus, 4, 0)
 	frin	fp1, fp1	/* The rounding instructions are double.  */
-	frsp	fp1, fp1	/* But we need to set ooverflow for float.  */
+	frsp	fp1, fp1	/* But we need to set overflow for float.  */
 	blr
-	END (__roundf)
-
-weak_alias (__roundf, roundf)
-
+END (__roundf_power5plus)

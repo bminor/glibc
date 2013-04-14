@@ -20,17 +20,7 @@
 #include <math_ldbl_opt.h>
 
 	.machine	"power5"
-EALIGN (__round, 4, 0)
+EALIGN (__round_power5plus, 4, 0)
 	frin	fp1, fp1
 	blr
-	END (__round)
-
-weak_alias (__round, round)
-
-#ifdef NO_LONG_DOUBLE
-weak_alias (__round, roundl)
-strong_alias (__round, __roundl)
-#endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
-compat_symbol (libm, __round, roundl, GLIBC_2_1)
-#endif
+END (__round_power5plus)
