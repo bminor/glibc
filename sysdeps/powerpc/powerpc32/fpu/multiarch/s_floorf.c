@@ -1,5 +1,5 @@
-/* floor function.  PowerPC32/power5+ version.
-   Copyright (C) 2006-2013 Free Software Foundation, Inc.
+/* Multiple versions of s_floorf.
+   Copyright (C) 2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,21 +16,17 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
+#include <math.h>
 #include <math_ldbl_opt.h>
+#include <shlib-compat.h>
+#include "init-arch.h"
 
-	.machine	"power5"
-EALIGN (__floor, 4, 0)
-	frim	fp1, fp1
-	blr
-	END (__floor)
+extern __typeof (__floorf) __floorf_ppc32 attribute_hidden;
+extern __typeof (__floorf) __floorf_power5plus attribute_hidden;
 
-weak_alias (__floor, floor)
+libc_ifunc (__floorf,
+	    (hwcap & PPC_FEATURE_POWER5_PLUS)
+	    ? __floorf_power5plus
+            : __floorf_ppc32);
 
-#ifdef NO_LONG_DOUBLE
-weak_alias (__floor, floorl)
-strong_alias (__floor, __floorl)
-#endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
-compat_symbol (libm, __floor, floorl, GLIBC_2_0)
-#endif
+weak_alias (__floorf, floorf)
