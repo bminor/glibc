@@ -15,7 +15,9 @@ libm-sysdep_routines += s_llrintf-power6 s_llrintf-power4 s_llrintf-c \
 			s_isnan-ppc32 \
 			s_isnanf-power7 s_isnanf-power6 s_isnanf-power5 \
 			s_isnanf-ppc32 \
-			s_copysign-power6 s_copysign-ppc32
+			s_copysign-power6 s_copysign-ppc32 \
+			s_ceil-power5+ s_ceil-ppc32 \
+			s_ceilf-power5+ s_ceilf-ppc32
 
 CFLAGS-s_llround.c = -fno-builtin-llroundf
 endif

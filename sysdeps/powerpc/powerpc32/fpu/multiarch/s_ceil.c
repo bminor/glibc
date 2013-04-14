@@ -1,5 +1,5 @@
-/* ceilf function.  PowerPC32/power5+ version.
-   Copyright (C) 2006-2013 Free Software Foundation, Inc.
+/* Multiple versions of s_ceil.
+   Copyright (C) 2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,14 +16,25 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
+#include <math.h>
+#include <math_ldbl_opt.h>
+#include <shlib-compat.h>
+#include "init-arch.h"
 
-	.machine	"power5"
-EALIGN (__ceilf, 4, 0)
-	frip	fp1, fp1	/* The rounding instructions are double.  */
-	frsp	fp1, fp1	/* But we need to set ooverflow for float.  */
-	blr
-	END (__ceilf)
+extern __typeof (__ceil) __ceil_ppc32 attribute_hidden;
+extern __typeof (__ceil) __ceil_power5plus attribute_hidden;
 
-weak_alias (__ceilf, ceilf)
+libc_ifunc (__ceil,
+	    (hwcap & PPC_FEATURE_POWER5_PLUS)
+	    ? __ceil_power5plus
+            : __ceil_ppc32);
 
+weak_alias (__ceil, ceil)
+
+#ifdef NO_LONG_DOUBLE
+strong_alias (__ceil, __ceill)
+weak_alias (__ceil, ceill)
+#endif
+#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
+compat_symbol (libm, __ceil, ceill, GLIBC_2_0);
+#endif
