@@ -1,5 +1,5 @@
-/* trunc function.  PowerPC32/power5+ version.
-   Copyright (C) 2006-2013 Free Software Foundation, Inc.
+/* Multiple versions of s_trunc.
+   Copyright (C) 2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,21 +16,25 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
+#include <math.h>
 #include <math_ldbl_opt.h>
+#include <shlib-compat.h>
+#include "init-arch.h"
 
-	.machine	"power5"
-EALIGN (__trunc, 4, 0)
-	friz	fp1, fp1
-	blr
-	END (__trunc)
+extern __typeof (__trunc) __trunc_ppc32 attribute_hidden;
+extern __typeof (__trunc) __trunc_power5plus attribute_hidden;
+
+libc_ifunc (__trunc,
+	    (hwcap & PPC_FEATURE_POWER5_PLUS)
+	    ? __trunc_power5plus
+            : __trunc_ppc32);
 
 weak_alias (__trunc, trunc)
 
 #ifdef NO_LONG_DOUBLE
-weak_alias (__trunc, truncl)
 strong_alias (__trunc, __truncl)
+weak_alias (__trunc, truncl)
 #endif
 #if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
-compat_symbol (libm, __trunc, truncl, GLIBC_2_1)
+compat_symbol (libm, __trunc, truncl, GLIBC_2_1);
 #endif
