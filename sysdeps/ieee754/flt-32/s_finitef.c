@@ -25,7 +25,6 @@ static char rcsid[] = "$NetBSD: s_finitef.c,v 1.4 1995/05/10 20:47:18 jtc Exp $"
 #include <math.h>
 #include <math_private.h>
 
-#undef __finitef
 int __finitef(float x)
 {
 	int32_t ix;

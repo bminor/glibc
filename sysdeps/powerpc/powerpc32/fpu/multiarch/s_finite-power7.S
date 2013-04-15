@@ -29,7 +29,7 @@
 	.section    ".text"
 	.type	    __finite, @function
 	.machine    power7
-ENTRY (__finite)
+ENTRY (__finite_power7)
 #ifdef SHARED
 	mflr	r11
 	cfi_register(lr,r11)
@@ -63,32 +63,5 @@ ENTRY (__finite)
 	bltlr	cr7	      /* LT means we have a denormal.  */
 	li	r3,0
 	blr
-	END (__finite)
-
-hidden_def (__finite)
-weak_alias (__finite, finite)
-
-/* It turns out that the 'double' version will also always work for
-   single-precision.  */
-strong_alias (__finite, __finitef)
-hidden_def (__finitef)
-weak_alias (__finitef, finitef)
-
-#ifdef NO_LONG_DOUBLE
-strong_alias (__finite, __finitel)
-weak_alias (__finite, finitel)
-#endif
-
-#ifdef IS_IN_libm
-# if LONG_DOUBLE_COMPAT (libm, GLIBC_2_0)
-compat_symbol (libm, finite, finitel, GLIBC_2_0)
-# endif
-# if LONG_DOUBLE_COMPAT (libm, GLIBC_2_1)
-compat_symbol (libm, __finite, __finitel, GLIBC_2_1)
-# endif
-#else
-# if LONG_DOUBLE_COMPAT (libc, GLIBC_2_0)
-compat_symbol (libc, __finite, __finitel, GLIBC_2_0);
-compat_symbol (libc, finite, finitel, GLIBC_2_0);
-# endif
-#endif
+END (__finite_power7)
+weak_alias (__finite_power7, __finitef_power7)

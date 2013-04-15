@@ -3,7 +3,9 @@ sysdep_routines += s_isnan-power7 s_isnan-power6 s_isnan-power5 \
 		   s_isnan-ppc32 \
 		   s_isnanf-power7 s_isnanf-power6 s_isnanf-power5 \
 		   s_isnanf-ppc32 \
-		   s_copysign-power6 s_copysign-ppc32
+		   s_copysign-power6 s_copysign-ppc32 \
+		   s_finite-power7 s_finite-c \
+		   s_finitef-c
 
 libm-sysdep_routines += s_llrintf-power6 s_llrintf-power4 s_llrintf-c \
 			s_llrint-power6 s_llrint-power4 s_llrint-c \
@@ -25,7 +27,10 @@ libm-sysdep_routines += s_llrintf-power6 s_llrintf-power4 s_llrintf-c \
 			s_trunc-power5+ s_trunc-ppc32 \
 			s_truncf-power5+ s_truncf-ppc32 \
 			s_lround-power6x s_lround-power5+ s_lround-ppc32 \
-			s_lrint-power6x s_lrint-ppc32
+			s_lrint-power6x s_lrint-ppc32 \
+			s_finite-power7 s_finite-c \
+			s_finitef-c
 
 CFLAGS-s_llround.c = -fno-builtin-llroundf
+CFLAGS-s_lround.c = -fno-builtin-lroundf
 endif
