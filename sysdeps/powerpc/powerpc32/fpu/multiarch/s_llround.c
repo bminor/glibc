@@ -22,7 +22,7 @@
 #undef llroundf
 #define llroundf __redirect_llroundf
 #undef __llroundf
-#define __llroundf __redirec___llroundf
+#define __llroundf __redirect___llroundf
 #include <math.h>
 #undef llroundf
 #undef __llroundf
