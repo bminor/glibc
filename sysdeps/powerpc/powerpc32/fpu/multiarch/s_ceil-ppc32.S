@@ -8,6 +8,6 @@
 #undef compat_symbol
 #define compat_symbol(a,b,c,d)
 
-#define __floor __floor_ppc32
+#define __ceil __ceil_ppc32
 
-#include <sysdeps/powerpc/powerpc32/fpu/s_floor.S>
+#include <sysdeps/powerpc/powerpc32/fpu/s_ceil.S>
