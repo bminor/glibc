@@ -16,7 +16,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <math_ldbl_opt.h>
+#include <math.h>
+#include <math_private.h>
+
+__typeof (__logb) __logb_power7 __attribute__ ((__target__ ("cpu=power7")));
 
 /* This implementation avoids FP to INT conversions by using VSX
    bitwise instructions over FP values.  */
@@ -31,7 +34,7 @@ static const union {
 } mask = { 0x7ff0000000000000ULL };
 
 double
-__logb (double x)
+__logb_power7 (double x)
 {
   double ret;
 
@@ -67,12 +70,3 @@ __logb (double x)
   /* Test to avoid logb_downward (0.0) == -0.0.  */
   return ret == -0.0 ? 0.0 : ret;
 }
-weak_alias (__logb, logb)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__logb, __logbl)
-weak_alias (__logb, logbl)
-#endif
-
-#if LONG_DOUBLE_COMPAT (libm, GLIBC_2_0)
-compat_symbol (libm, logb, logbl, GLIBC_2_0);
-#endif

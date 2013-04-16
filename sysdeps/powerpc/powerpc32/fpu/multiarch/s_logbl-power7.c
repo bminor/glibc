@@ -20,6 +20,8 @@
 #include <math_private.h>
 #include <math_ldbl_opt.h>
 
+__typeof (__logbl) __logbl_power7 __attribute__ ((__target__ ("cpu=power7")));
+
 /* This implementation avoids FP to INT conversions by using VSX
    bitwise instructions over FP values.  */
 
@@ -33,7 +35,7 @@ static const union {
 } mask = { 0x7ff0000000000000ULL };
 
 long double
-__logbl (long double x)
+__logbl_power7 (long double x)
 {
   double xh, xl;
   double ret;
@@ -66,5 +68,3 @@ __logbl (long double x)
   /* Test to avoid logb_downward (0.0) == -0.0.  */
   return ret == -0.0 ? 0.0 : ret;
 }
-
-long_double_symbol (libm, __logbl, logbl);

@@ -33,7 +33,10 @@ libm-sysdep_routines += s_llrintf-power6 s_llrintf-power4 s_llrintf-c \
 			s_finite-power7 s_finite-c \
 			s_finitef-c \
 			s_isinf-power7 s_isinf-c \
-			s_isinff-c
+			s_isinff-c \
+			s_logbl-power7 s_logbl-c \
+			s_logb-power7 s_logb-c \
+			s_logbf-power7 s_logbf-c
 
 CFLAGS-s_llround.c = -fno-builtin-llroundf
 CFLAGS-s_lround.c = -fno-builtin-lroundf

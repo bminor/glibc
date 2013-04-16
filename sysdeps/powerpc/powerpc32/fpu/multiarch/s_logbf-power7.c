@@ -16,7 +16,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "math_private.h"
+#include <math.h>
+
+__typeof (__logbf) __logbf_power7 __attribute__ ((__target__ ("cpu=power7")));
 
 /* This implementation avoids FP to INT conversions by using VSX
    bitwise instructions over FP values.  */
@@ -32,7 +34,7 @@ static const union {
 } mask = { 0x7ff0000000000000ULL };
 
 float
-__logbf (float x)
+__logbf_power7 (float x)
 {
   /* VSX operation are all done internally as double.  */
   double ret;
@@ -57,4 +59,3 @@ __logbf (float x)
      The test is to avoid logb_downward (0.0) == -0.0.  */
   return ret == -0.0 ? 0.0 : ret;
 }
-weak_alias (__logbf, logbf)
