@@ -1,3 +1,8 @@
+2013-04-19  Roland McGrath  <roland@hack.frob.com>
+
+	* pthread_attr_getstack.c: Fail with EINVAL if the stack address has
+	not been set.
+
 2013-04-11  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S

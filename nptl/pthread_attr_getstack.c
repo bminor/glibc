@@ -31,6 +31,9 @@ __pthread_attr_getstack (attr, stackaddr, stacksize)
   assert (sizeof (*attr) >= sizeof (struct pthread_attr));
   iattr = (struct pthread_attr *) attr;
 
+  if (!(iattr->flags & ATTR_FLAG_STACKADDR))
+    return EINVAL;
+
   /* Store the result.  */
   *stackaddr = (char *) iattr->stackaddr - iattr->stacksize;
   *stacksize = iattr->stacksize;
