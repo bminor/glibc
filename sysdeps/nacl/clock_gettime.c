@@ -23,6 +23,6 @@
 int
 __clock_gettime (clockid_t clock_id, struct timespec *tp)
 {
-  return NACL_CALL (__nacl_irt_clock.clock_getres (clock_id, tp), 0);
+  return NACL_CALL (__nacl_irt_clock.clock_gettime (clock_id, tp), 0);
 }
 weak_alias (__clock_gettime, clock_gettime)
