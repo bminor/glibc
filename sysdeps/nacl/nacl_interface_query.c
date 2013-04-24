@@ -18,6 +18,8 @@
 
 #include <nacl-interfaces.h>
 
+#ifdef SHARED
+
 /* We can define this trivially using IFUNC rather than a wrapper
    because we absolutely require that we get the IRT interface query
    function pointer via AT_SYSINFO.  */
@@ -31,3 +33,16 @@ nacl_interface_query_ifunc (void)
   return &__nacl_irt_query;
 }
 asm (".type nacl_interface_query, %gnu_indirect_function");
+
+#else
+
+/* In the static library, using IFUNC is just extra overhead.  */
+
+size_t
+nacl_interface_query (const char *interface_ident,
+                      void *table, size_t tablesize)
+{
+  return __nacl_irt_query (interface_ident, table, tablesize);
+}
+
+#endif
