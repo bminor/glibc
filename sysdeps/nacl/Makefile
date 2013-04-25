@@ -54,6 +54,17 @@ $(nacl-optional-interfaces:%=$(nacl-interface-pattern)): \
 sysdep_routines += nacl_interface_query \
 		   nacl-interfaces $(nacl-interface-routines)
 
+# The Linux bits are close enough for NaCl and we want to use the existing
+# file rather than copying it into sysdeps/nacl and letting it bit rot.
+# But we certainly don't want sysdeps/unix/sysv/linux in our sysdirs list!
+# So copy the file to the build directory.
+sysdep_headers += bits/mman-linux.h
+before-compile += $(common-objpfx)bits/mman-linux.h
+$(common-objpfx)bits/mman-linux.h: \
+  $(..)sysdeps/unix/sysv/linux/bits/mman-linux.h
+	$(make-target-directory)
+	ln -f $< $@ || cp -f $< $@
+
 # XXX temp test
 others += hello
 
