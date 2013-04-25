@@ -29,8 +29,8 @@ __gettimeofday (struct timeval *tv, struct timezone *tz)
 {
   if (__glibc_unlikely (tz != NULL))
     {
-      errno = ENOTSUP;                  /* XXX ? */
-      return -1;
+      tz->tz_minuteswest = 0;
+      tz->tz_dsttime = 0;
     }
 
   return NACL_CALL (__nacl_irt_basic.gettod (tv), 0);
