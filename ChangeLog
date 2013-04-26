@@ -1,3 +1,9 @@
+2013-04-26  Roland McGrath  <roland@hack.frob.com>
+
+	[BZ #15407]
+	* sysdeps/x86_64/start.S (_start): Use cfi_adjust_cfa_offset for
+	change to the stack pointer.
+
 2013-04-26  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15406]

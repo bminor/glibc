@@ -88,6 +88,7 @@ _start:
 #else
 	popq %rsi		/* Pop the argument count.  */
 #endif
+	cfi_adjust_cfa_offset (LP_SIZE)
 	/* argv starts just at the current stack top.  */
 	mov %RSP_LP, %RDX_LP
 	/* Align the stack to a 16 byte boundary to follow the ABI.  */
@@ -95,10 +96,12 @@ _start:
 
 	/* Push garbage because we push 8 more bytes.  */
 	pushq %rax
+	cfi_adjust_cfa_offset (-8)
 
 	/* Provide the highest stack address to the user code (for stacks
 	   which grow downwards).  */
 	pushq %rsp
+	cfi_adjust_cfa_offset (-8)
 
 #ifdef SHARED
 	/* Pass address of our own entry points to .fini and .init.  */
