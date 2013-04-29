@@ -33,7 +33,7 @@
 __ptr_t
 __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 {
-  int error = __nacl_irt_memory_v0_2.mmap (&addr, len, prot, flags, fd, offset);
+  int error = __nacl_irt_memory.mmap (&addr, len, prot, flags, fd, offset);
   if (error)
     {
       errno = error;

@@ -28,7 +28,7 @@ void *__curbrk;
 int
 __brk (void *addr)
 {
-  int error = __nacl_irt_memory_v0_2.sysbrk (&addr);
+  int error = __nacl_irt_memory.sysbrk (&addr);
   if (__glibc_unlikely (error))
     {
       __set_errno (error);

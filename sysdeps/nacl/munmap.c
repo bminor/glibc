@@ -26,7 +26,7 @@
 int
 __munmap (__ptr_t addr, size_t len)
 {
-  return NACL_CALL (__nacl_irt_memory_v0_2.munmap (addr, len), 0);
+  return NACL_CALL (__nacl_irt_memory.munmap (addr, len), 0);
 }
 
 weak_alias (__munmap, munmap)

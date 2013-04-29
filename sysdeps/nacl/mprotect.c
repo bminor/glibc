@@ -28,6 +28,6 @@
 int
 __mprotect (__ptr_t addr, size_t len, int prot)
 {
-  return NACL_CALL (__nacl_irt_memory_v0_2.mprotect (addr, len, prot), 0);
+  return NACL_CALL (__nacl_irt_memory.mprotect (addr, len, prot), 0);
 }
 weak_alias (__mprotect, mprotect)
