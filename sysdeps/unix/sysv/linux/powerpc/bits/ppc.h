@@ -23,6 +23,8 @@
 # error "Never include this file directly; use <sys/platform/ppc.h> instead."
 #endif
 
+#include <stdint.h>
+
 __BEGIN_DECLS
 
 /* Read the time base frequency.   */

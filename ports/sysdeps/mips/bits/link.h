@@ -20,6 +20,7 @@
 #endif
 
 #include <sgidefs.h>
+#include <stdint.h>
 
 #if _MIPS_SIM == _ABIO32
 

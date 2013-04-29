@@ -20,6 +20,8 @@
 # error "Never include <bits/link.h> directly; use <link.h> instead."
 #endif
 
+#include <stdint.h>
+
 #if __WORDSIZE == 32
 
 typedef struct La_sparc32_regs

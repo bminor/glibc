@@ -19,6 +19,7 @@
 # error "Never include <bits/link.h> directly; use <link.h> instead."
 #endif
 
+#include <stdint.h>
 
 /* Registers for entry into PLT on ARM.  */
 typedef struct La_arm_regs
