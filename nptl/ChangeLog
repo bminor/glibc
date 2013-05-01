@@ -1,3 +1,9 @@
+2013-05-01  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	* pthread_create.c: Add missing #include <stdint.h> due to uint64_t or
+	uint32_t usage.
+	* sysdeps/pthread/createthread.c: Likewise.
+
 2013-04-22  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* pthreadP.h (check_sched_policy_attr): New inline function.
