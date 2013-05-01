@@ -19,6 +19,8 @@
 # error "Never include <bits/link.h> directly; use <link.h> instead."
 #endif
 
+#include <stdint.h>
+
 /* Registers for entry into PLT on ia64.  */
 typedef struct La_ia64_regs
 {

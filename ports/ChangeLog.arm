@@ -1,3 +1,8 @@
+2013-05-01  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	* sysdeps/arm/bits/link.h: Add missing #include <stdint.h> due to
+	uint[32|64]_t usage.
+
 2013-04-19  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/sysdep.h

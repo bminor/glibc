@@ -1,3 +1,14 @@
+2013-05-01  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/elfclass.h: Add missing #include
+	<stdint.h> due to uint[32|64]_t usage.
+	* sysdeps/unix/sysv/linux/alpha/bits/netdb.h: Likewise.
+
+2013-05-01  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	* sysdeps/alpha/bits/link.h: Add missing #include <stdint.h> due to
+	uint[32|64]_t usage.
+
 2013-03-06  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/alpha/bits/mman.h (MAP_HUGE_MASK)

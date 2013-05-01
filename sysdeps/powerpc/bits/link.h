@@ -20,6 +20,7 @@
 # error "Never include <bits/link.h> directly; use <link.h> instead."
 #endif
 
+#include <stdint.h>
 
 #if __ELF_NATIVE_CLASS == 32
 

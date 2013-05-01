@@ -20,6 +20,7 @@
 #define	__RPCSVC_NISLIB_H__
 
 #include <features.h>
+#include <stdint.h>
 
 __BEGIN_DECLS
 

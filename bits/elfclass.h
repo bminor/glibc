@@ -7,6 +7,7 @@
 #endif
 
 #include <bits/wordsize.h>
+#include <stdint.h>
 
 #define __ELF_NATIVE_CLASS __WORDSIZE
 

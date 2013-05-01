@@ -1,3 +1,8 @@
+2013-05-01  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	* sysdeps/aarch64/bits/link.h: Add missing #include <stdint.h>
+	due to uint[32|64]_t usage.
+
 2013-03-19  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/aarch64/configure.in: Set

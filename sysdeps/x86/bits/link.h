@@ -19,6 +19,7 @@
 # error "Never include <bits/link.h> directly; use <link.h> instead."
 #endif
 
+#include <stdint.h>
 
 #ifndef __x86_64__
 /* Registers for entry into PLT on IA-32.  */

@@ -33,6 +33,7 @@
 #define _RPCSVC_NIS_H 1
 
 #include <features.h>
+#include <stdint.h>
 #include <rpc/rpc.h>
 #include <rpcsvc/nis_tags.h>
 

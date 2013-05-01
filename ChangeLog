@@ -1,3 +1,22 @@
+2013-05-01  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	* bits/elfclass.h: Add missing #include <stdint.h> due to
+	uint[32|64]_t usage.
+	* bits/netdb.h: Likewise.
+	* sysdeps/powerpc/bits/link.h: Likewise.
+	* sysdeps/s390/bits/link.h: Likewise.
+	* sysdeps/sh/bits/link.h: Likewise.
+	* sysdeps/sparc/bits/link.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/ppc.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/elfclass.h: Likewise.
+	* sysdeps/x86/bits/link.h: Likewise.
+	* inet/netinet/icmp6.h: Likewise.
+	* inet/netinet/ip6.h: Likewise.
+	* nis/rpcsvc/nis.h: Likewise.
+	* nis/rpcsvc/nislib.h: Likewise.
+	* sunrpc/rpc/auth_des.h: Likewise.
+	* sunrpc/rpc/xdr.h: Likewise.
+
 2013-05-01  Richard Smith  <richard@metafoo.co.uk>
 
 	* misc/sys/cdefs.h (__extern_inline, __extern_always_inline)

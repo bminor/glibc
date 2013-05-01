@@ -40,6 +40,7 @@
 
 /* We need FILE.  */
 #include <stdio.h>
+#include <stdint.h>
 
 __BEGIN_DECLS
 

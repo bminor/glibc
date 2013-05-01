@@ -19,6 +19,7 @@
 # error "Never include <bits/netdb.h> directly; use <netdb.h> instead."
 #endif
 
+#include <stdint.h>
 
 /* Description of data base entry for a single network.  NOTE: here a
    poor assumption is made.  The network number is expected to fit

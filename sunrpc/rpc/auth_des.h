@@ -18,6 +18,7 @@
 #ifndef _RPC_AUTH_DES_H
 #define _RPC_AUTH_DES_H	1
 
+#include <stdint.h>
 #include <sys/cdefs.h>
 #include <rpc/auth.h>
 
