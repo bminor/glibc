@@ -1,4 +1,4 @@
-/* Return the time used by the program so far.  NaCl version.
+/* Convert between the NaCl ABI's `struct stat' format, and libc's.
    Copyright (C) 2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,14 +16,20 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <time.h>
 #include <nacl-interfaces.h>
 
+struct stat;
 
-/* Return the time used by the program so far (user time + system time).  */
-clock_t
-clock (void)
-{
-  nacl_abi_clock_t result;
-  return NACL_CALL (__nacl_irt_basic.clock (&result), result);
-}
+/* We use this header to define struct nacl_abi_stat.  But we must avoid
+   its excess declarations, and defining these names away is (marginally)
+   cleaner than #undef'ing __native_client__.  */
+#undef  stat
+#define stat    __avoid_nacl_stat
+#undef  fstat
+#define fstat   __avoid_nacl_fstat
+#include <native_client/src/trusted/service_runtime/include/sys/stat.h>
+#undef  stat
+#undef  fstat
+
+extern int __xstat_conv (int vers, const struct nacl_abi_stat *, void *)
+  internal_function attribute_hidden;

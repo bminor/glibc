@@ -1,4 +1,4 @@
-/* Return the time used by the program so far.  NaCl version.
+/* Get stat information from a file name.  NaCl version.
    Copyright (C) 2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,14 +16,30 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <time.h>
-#include <nacl-interfaces.h>
+/* Avoid the declaration so the compiler doesn't complain about the alias
+   with a different type signature.  It doesn't know that 'struct stat'
+   and 'struct stat64' are ABI-compatible.  */
+#define __xstat64 __xstat64_avoid
+#include <sys/stat.h>
+#undef  __xstat64
 
+#include <errno.h>
+#include <stddef.h>
 
-/* Return the time used by the program so far (user time + system time).  */
-clock_t
-clock (void)
+#include <xstatconv.h>
+
+#undef  stat
+
+/* Get file information about FILE in BUF.  */
+int
+__xstat (int vers, const char *file, struct stat *buf)
 {
-  nacl_abi_clock_t result;
-  return NACL_CALL (__nacl_irt_basic.clock (&result), result);
+  nacl_abi_stat_t abi_buf;
+  return NACL_CALL (__nacl_irt_filename.stat (file, &abi_buf),
+                    __xstat_conv (vers, &abi_buf, buf));
 }
+hidden_def (__xstat)
+weak_alias (__xstat, _xstat)
+
+strong_alias (__xstat, __xstat64)
+hidden_def (__xstat64)

@@ -22,6 +22,13 @@ $(common-objpfx)stamp-errnos: $(nacl)/errnos.awk $(..)manual/errno.texi \
 common-generated += stamp-errnos bits/errno.h
 before-compile += $(bits-errno)
 
+nacl-irt.h = $(common-objpfx)nacl-irt.h
+$(nacl-irt.h): $(nacl)/irt.sed $(naclsrc)/untrusted/irt/irt.h
+	sed -f $^ > $@.new
+	mv -f $@.new $@
+common-generated += nacl-irt.h
+before-compile += $(nacl-irt.h)
+
 ifeq ($(subdir),misc)
 
 $(objpfx)nacl-interfaces.v.i: $(nacl)/nacl-interfaces.mk.in \
@@ -68,4 +75,8 @@ $(common-objpfx)bits/mman-linux.h: \
 # XXX temp test
 others += hello
 
+endif
+
+ifeq ($(subdir),io)
+sysdep_routines += xstatconv
 endif
