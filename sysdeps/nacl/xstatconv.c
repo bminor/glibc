@@ -24,6 +24,15 @@ internal_function
 int
 __xstat_conv (int vers, const struct nacl_abi_stat *kbuf, void *ubuf)
 {
+  /* It's kosher enough just to crash here, but there are some
+     existing NaCl tests that like to see EFAULT, and that's what
+     making the IRT call with NULL would give.  */
+  if (__glibc_unlikely (ubuf == NULL))
+    {
+      __set_errno (EFAULT);
+      return -1;
+    }
+
   switch (vers)
     {
     case _STAT_VER_NACL:
