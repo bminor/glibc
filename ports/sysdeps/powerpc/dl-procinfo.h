@@ -19,6 +19,7 @@
 #ifndef _DL_PROCINFO_H
 #define _DL_PROCINFO_H 1
 
+#include <stdint.h>
 #include <ldsodefs.h>
 #include <sysdep.h>            /* This defines the PPC_FEATURE_* macros.  */
 
@@ -153,19 +154,40 @@ _dl_string_platform (const char *str)
 }
 
 #ifdef IS_IN_rtld
+
 static inline int
 __attribute__ ((unused))
-_dl_procinfo (int word)
+_dl_procinfo (unsigned int type, int word)
 {
-  _dl_printf ("AT_HWCAP:       ");
+  unsigned int first, count, str_offset;
 
-  for (int i = _DL_HWCAP_FIRST; i < _DL_HWCAP_COUNT; ++i)
+  switch(type)
+    {
+    case AT_HWCAP:
+      _dl_printf ("AT_HWCAP:       ");
+      first = _DL_HWCAP_FIRST;
+      count = MIN(_DL_HWCAP_COUNT,_DL_HWCAP2_FIRST);
+      str_offset = 0;
+      break;
+    case AT_HWCAP2:
+      _dl_printf ("AT_HWCAP2:      ");
+      first = 0;
+      count = _DL_HWCAP_COUNT - _DL_HWCAP2_FIRST;
+      str_offset = _DL_HWCAP2_FIRST;
+      break;
+    default:
+      /* This should not happen.  */
+      return -1;
+    }
+
+  for (int i = first; i < count; ++i)
     if (word & (1 << i))
-      _dl_printf (" %s", _dl_hwcap_string (i));
+      _dl_printf (" %s", _dl_hwcap_string (str_offset + i));
 
   _dl_printf ("\n");
 
   return 0;
+
 }
 #endif
 

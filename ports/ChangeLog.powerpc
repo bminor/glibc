@@ -1,3 +1,8 @@
+2013-05-03  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/dl-procinfo.h (_dl_procinfo): Add support for
+	displaying AT_HWCAP2 strings.
+
 2013-02-28  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #13550]

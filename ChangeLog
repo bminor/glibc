@@ -1,3 +1,20 @@
+2013-05-03  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	* elf/dl-support.c (_dl_aux_init): Add support for AT_HWCAP2.
+	* elf/dl-sysdep.c (_dl_sysdep_start, _dl_show_auxv): Likewise.
+	* misc/getauxval.c (__getauxval): Likewise.
+	* sysdeps/powerpc/dl-procinfo.h (_dl_procinfo): Add support for
+	displaying AT_HWCAP2 strings.
+	* elf/elf.h [AT_HWCAP2]: Add a new a_type entry.
+	* sysdeps/s390/dl-procinfo.h (_dl_procinfo): Add 'type' parameter for
+	AT_HWCAP2 support.
+	* sysdeps/i386/dl-procinfo.h: Likewise.
+	* sysdeps/generic/dl-procinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/dl-procinfo.h: (_dl_procinfo): Add
+	nop support for AT_HWCAP2.
+	* sysdeps/unix/sysv/linux/i386/dl-procinfo.h: Likewise.
+	* sysdeps/sparc/dl-procinfo.h: Likewise.
+
 2013-05-01  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/posix/opendir.c: Include <sys/param.h> to get MIN/MAX macros.

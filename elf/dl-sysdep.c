@@ -107,6 +107,10 @@ _dl_sysdep_start (void **start_argptr,
   uintptr_t new_sysinfo = 0;
 #endif
 
+  /* Don't rely on a specific order of AT_HWCAP and AT_HWCAP2.  Collate into a
+     zeroed temp and assign to _dl_hwcap after the auxv has been parsed.  */
+  uint64_t hwcap = 0;
+
   __libc_stack_end = DL_STACK_END (start_argptr);
   DL_FIND_ARG_COMPONENTS (start_argptr, _dl_argc, INTUSE(_dl_argv), _environ,
 			  GLRO(dl_auxv));
@@ -154,7 +158,10 @@ _dl_sysdep_start (void **start_argptr,
 	GLRO(dl_platform) = (void *) av->a_un.a_val;
 	break;
       case AT_HWCAP:
-	GLRO(dl_hwcap) = (unsigned long int) av->a_un.a_val;
+	hwcap |= (unsigned long int) av->a_un.a_val;
+	break;
+      case AT_HWCAP2:
+	hwcap |= ((uint64_t) av->a_un.a_val) << 32;
 	break;
       case AT_CLKTCK:
 	GLRO(dl_clktck) = av->a_un.a_val;
@@ -179,6 +186,8 @@ _dl_sysdep_start (void **start_argptr,
       DL_PLATFORM_AUXV
 #endif
       }
+
+  GLRO(dl_hwcap) = hwcap;
 
 #ifndef HAVE_AUX_SECURE
   if (seen != -1)
@@ -298,6 +307,7 @@ _dl_show_auxv (void)
 	  [AT_SYSINFO - 2] =		{ "SYSINFO:      0x", hex },
 	  [AT_SYSINFO_EHDR - 2] =	{ "SYSINFO_EHDR: 0x", hex },
 	  [AT_RANDOM - 2] =		{ "RANDOM:       0x", hex },
+	  [AT_HWCAP2 - 2] =		{ "HWCAP2:       ", hex },
 	};
       unsigned int idx = (unsigned int) (av->a_type - 2);
 
@@ -309,10 +319,12 @@ _dl_show_auxv (void)
       assert (AT_NULL == 0);
       assert (AT_IGNORE == 1);
 
-      if (av->a_type == AT_HWCAP)
+      if (av->a_type == AT_HWCAP || av->a_type == AT_HWCAP2)
 	{
-	  /* This is handled special.  */
-	  if (_dl_procinfo (av->a_un.a_val) == 0)
+	  /* HWCAP bits are translated into representative strings, per
+	     platform.  */
+	  if (_dl_procinfo (av->a_type, av->a_un.a_val) == 0)
+
 	    continue;
 	}
 

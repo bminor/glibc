@@ -1,3 +1,8 @@
+2013-05-03  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/arm/dl-procinfo.h (_dl_procinfo): Add
+	nop support for AT_HWCAP2.
+
 2013-04-19  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/arm/sysdep.h
