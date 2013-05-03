@@ -22,7 +22,6 @@
 #include <errno.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <ldsodefs.h>
 #include <sys/types.h>
 
 /* <nacl-irt.h> is massaged from native_client/src/untrusted/irt/irt.h so

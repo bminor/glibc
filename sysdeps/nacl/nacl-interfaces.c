@@ -17,9 +17,8 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
-#include "nacl-interfaces.h"
-
-#include <native_client/src/untrusted/irt/irt.h>
+#include <nacl-interfaces.h>
+#include <ldsodefs.h>
 
 
 /* These magic symbols are provided implicitly by the linker to

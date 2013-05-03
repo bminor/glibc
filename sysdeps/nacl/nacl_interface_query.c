@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <nacl-interfaces.h>
+#include <ldsodefs.h>
 
 #ifdef SHARED
 
