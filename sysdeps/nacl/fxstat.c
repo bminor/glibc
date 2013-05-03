@@ -42,4 +42,4 @@ hidden_def (__fxstat)
 weak_alias (__fxstat, _fxstat)
 
 strong_alias (__fxstat, __fxstat64)
-hidden_def (__fxstat64)
+hidden_ver (__fxstat, __fxstat64)

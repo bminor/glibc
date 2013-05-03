@@ -42,4 +42,4 @@ hidden_def (__xstat)
 weak_alias (__xstat, _xstat)
 
 strong_alias (__xstat, __xstat64)
-hidden_def (__xstat64)
+hidden_ver (__xstat, __xstat64)
