@@ -1,3 +1,8 @@
+2013-05-16  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	* sysdeps/alpha/dl-procinfo.h (_dl_procinfo): Add 'type' parameter for
+	AT_HWCAP2 support.
+
 2013-03-06  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/alpha/bits/mman.h (MAP_HUGE_MASK)
