@@ -39,7 +39,7 @@
 
 /* Using the hidden attribute here does not change the code but it
    helps to avoid warnings.  */
-extern void restore_rt (void) asm ("__restore_rt") attribute_hidden;
+extern void restore_rt (void) asm ("__restore_rt") __attribute__((__visibility__("hidden")));
 
 
 /* If ACT is not NULL, change the action for SIG to *ACT.
