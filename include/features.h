@@ -323,10 +323,11 @@
 # define __USE_REENTRANT	1
 #endif
 
+#if !defined __OPTIMIZE__ || __OPTIMIZE__ <= 0
+# undef _FORTIFY_SOURCE
+#endif
 #if defined _FORTIFY_SOURCE && _FORTIFY_SOURCE > 0
-# if !defined __OPTIMIZE__ || __OPTIMIZE__ <= 0
-#  warning _FORTIFY_SOURCE requires compiling with optimization (-O)
-# elif !__GNUC_PREREQ (4, 1)
+# if !__GNUC_PREREQ (4, 1)
 #  warning _FORTIFY_SOURCE requires GCC 4.1 or later
 # elif _FORTIFY_SOURCE > 1
 #  define __USE_FORTIFY_LEVEL 2
