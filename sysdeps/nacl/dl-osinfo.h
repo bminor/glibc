@@ -23,11 +23,12 @@
 
 #include "nacl-interfaces.h"
 
+#ifndef SHARED
 /* This doesn't really have anything to do with the purpose for
    which this macro is used in Linux configurations.  But it is
    called at the right place in __libc_start_main.  */
-
-#define DL_SYSDEP_OSCHECK(fatal)        __nacl_initialize_interfaces ()
+# define DL_SYSDEP_OSCHECK(fatal)	__nacl_initialize_interfaces ()
+#endif
 
 
 #endif /* dl-osinfo.h */

@@ -25,3 +25,6 @@
    but we too want to store its value.  */
 #define NEED_DL_SYSINFO         1
 #define DL_SYSINFO_DEFAULT      0
+
+/* sysdeps/arm/dl-sysdep.h defines this but it does not apply to NaCl.  */
+#undef  DL_ARGV_NOT_RELRO

@@ -20,7 +20,7 @@
 
 /* This is only needed for handling TEXTRELs and NaCl will never
    support TEXTRELs at all.  */
-#define CLEAR_CACHE(start, end) abort ()
+#define CLEAR_CACHE(start, end) __builtin_trap ()
 
 #endif
 
@@ -28,3 +28,25 @@
    This #include is outside the #ifndef because the parts of
    dl-machine.h used only by dynamic-link.h are outside the guard.  */
 #include <sysdeps/arm/dl-machine.h>
+
+#ifdef dl_machine_h
+
+/* Initial entry point code for the dynamic linker.
+   The C function `_dl_start' is the real entry point;
+   its return value is the user program's entry point.  */
+#undef RTLD_START
+#define RTLD_START asm ("\
+.text\n\
+.globl _start\n\
+.type _start, %function\n\
+_start:\n\
+        @ r0 has the pointer to the info block (see nacl_startup.h)\n\
+        mov r1, sp              @ Save stack base for __libc_stack_end.\n\
+        push {r0-r3}            @ Push those, maintaining alignment to 16.\n\
+        mov r0, sp              @ Pointer to {info, sp} is argument.\n\
+        sfi_bl _dl_start\n\
+        pop {r1-r4}             @ Restore stack, getting info block into r1.\n\
+        mov lr, #0              @ Return address for noreturn call.\n\
+        b _dl_start_user");
+
+#endif
