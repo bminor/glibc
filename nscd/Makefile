@@ -26,6 +26,7 @@ ifneq ($(use-nscd),no)
 routines := nscd_getpw_r nscd_getgr_r nscd_gethst_r nscd_getai \
 	    nscd_initgroups nscd_getserv_r nscd_netgroup
 aux	:= nscd_helper
+install-others = $(inst_sysconfdir)/nscd.conf
 endif
 
 # To find xmalloc.c
@@ -104,3 +105,6 @@ $(objpfx)nscd: $(shared-thread-library) $(common-objpfx)nis/libnsl.so
 else
 $(objpfx)nscd: $(static-thread-library) $(common-objpfx)nis/libnsl.a
 endif
+
+$(inst_sysconfdir)/nscd.conf: nscd.conf $(+force)
+	$(do-install)

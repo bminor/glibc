@@ -98,6 +98,7 @@ tests		+= $(tests-static)
 others		:= getconf
 install-bin	:= getconf
 install-others-programs	:= $(inst_libexecdir)/getconf
+install-others = $(inst_sysconfdir)/gai.conf
 
 before-compile	+= testcases.h ptestcases.h $(objpfx)posix-conf-vars-def.h
 
@@ -315,6 +316,9 @@ $(inst_libexecdir)/getconf: $(inst_bindir)/getconf \
 	  ln -f $< $@/$$spec.new || $(INSTALL_PROGRAM) $< $@/$$spec.new; \
 	  mv -f $@/$$spec.new $@/$$spec; \
 	done < $(objpfx)getconf.speclist
+
+$(inst_sysconfdir)/gai.conf: gai.conf $(+force)
+	$(do-install)
 
 $(objpfx)getconf.speclist: getconf-speclist.c posix-envs.def
 	$(compile.c) -E -o - \
