@@ -1,3 +1,8 @@
+2013-05-13  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	 * sysdeps/powerpc/dl-procinfo.h: Fix whitespace by correcting
+	 spaces with tabs where appropriate.
+
 2013-05-03  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/dl-procinfo.h (_dl_procinfo): Add support for
