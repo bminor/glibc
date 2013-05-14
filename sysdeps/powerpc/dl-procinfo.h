@@ -20,18 +20,21 @@
 #define _DL_PROCINFO_H 1
 
 #include <ldsodefs.h>
-#include <sysdep.h>	/* This defines the PPC_FEATURE_* macros.  */
+#include <sysdep.h>	/* This defines the PPC_FEATURE[2]_* macros.  */
 
 /* There are 25 bits used in AT_HWCAP, but they are bits 7..31.  */
 #define _DL_HWCAP_FIRST		7
+/* Where AT_HWCAP2 starts relative to _DL_HWCAP_FIRST.  */
 #define _DL_HWCAP2_FIRST	32
-#define _DL_HWCAP_COUNT		32
+
+/* The total number of used bits relative to _DL_HWCAP_FIRST.  */
+#define _DL_HWCAP_COUNT		38
 
 /* These bits influence library search.  */
 #define HWCAP_IMPORTANT		(PPC_FEATURE_HAS_ALTIVEC \
 				+ PPC_FEATURE_HAS_DFP)
 
-#define _DL_PLATFORMS_COUNT	13
+#define _DL_PLATFORMS_COUNT	14
 
 #define _DL_FIRST_PLATFORM	32
 /* Mask to filter out platforms.  */
@@ -52,6 +55,7 @@
 #define PPC_PLATFORM_PPC440		10
 #define PPC_PLATFORM_PPC464		11
 #define PPC_PLATFORM_PPC476		12
+#define PPC_PLATFORM_POWER8		13
 
 static inline const char *
 __attribute__ ((unused))
@@ -112,6 +116,9 @@ _dl_string_platform (const char *str)
 	case '7':
 	  ret = _DL_FIRST_PLATFORM + PPC_PLATFORM_POWER7;
 	  break;
+	case '8':
+	  ret = _DL_FIRST_PLATFORM + PPC_PLATFORM_POWER8;
+	  break;
 	default:
 	  return -1;
 	}
@@ -166,7 +173,7 @@ _dl_procinfo (unsigned int type, int word)
     case AT_HWCAP:
       _dl_printf ("AT_HWCAP:       ");
       first = _DL_HWCAP_FIRST;
-      count = MIN(_DL_HWCAP_COUNT,_DL_HWCAP2_FIRST);
+      count = MIN(_DL_HWCAP_COUNT, _DL_HWCAP2_FIRST);
       str_offset = 0;
       break;
     case AT_HWCAP2:

@@ -1,3 +1,32 @@
+2013-05-14  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/bits/hwcap.h: Add new AT_HWCAP2 features.
+	[PPC_FEATURE2_ARCH_2_07]: New feature bit for Power ISA 2.07.
+	[PPC_FEATURE2_HAS_HTM]: New feature bit for Hardware Transactional
+	Memory.
+	[PPC_FEATURE2_HAS_DSCR]: New feature bit for Data Stream Control
+	Register.
+	[PPC_FEATURE2_HAS_EBB]: New feature bit for Event Based Branching
+	facility.
+	[PPC_FEATURE2_HAS_ISEL]: New feature bit for Integer Select.
+	[PPC_FEATURE2_HAS_TAR]: New feature bit for Target Address Register
+	facility.
+	* sysdeps/powerpc/dl-procinfo.c (_dl_powerpc_platforms): Add power8 as
+	PPC_PLATFORM_POWER8.
+	(_dl_powerpc_cap_flags): Add arch_2_07, htm, dscr, ebb, isel, and tar
+	as hwcap strings for power8.
+	* sysdeps/powerpc/dl-procinfo.h
+	[_DL_HWCAP2_FIRST]: New define to account for the start of AT_HWCAP2.
+	[_DL_HWCAP_COUNT]: Update count to cover arch_2_07, htm, dscr, ebb,
+	isel, and tar.
+	[_DL_PLATFORMS_COUNT]: Increment for power8.
+	[PPC_PLATFORM_POWER8]: New definition.
+	(_dl_string_platform): Add return value for power8 platform string.
+	* sysdeps/powerpc/powerpc32/power8/Implies: New file.
+	* sysdeps/powerpc/powerpc64/power8/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/power8/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/power8/Implies: Likewise.
+
 2013-05-13  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/dl-procinfo.c (_dl_powerpc_platforms): Add ppc405,

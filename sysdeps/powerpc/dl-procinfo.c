@@ -45,11 +45,12 @@
 #if !defined PROCINFO_DECL && defined SHARED
   ._dl_powerpc_cap_flags
 #else
-PROCINFO_CLASS const char _dl_powerpc_cap_flags[25][10]
+PROCINFO_CLASS const char _dl_powerpc_cap_flags[31][10]
 #endif
 #ifndef PROCINFO_DECL
 = {
-    "vsx",
+    "ebb", "isel", "tar",
+    "vsx", "arch_2_07", "htm", "dscr",
     "arch_2_06", "power6x", "dfp", "pa6t",
     "arch_2_05", "ic_snoop", "smt", "booke",
     "cellbe", "power5+", "power5", "power4",
@@ -67,7 +68,7 @@ PROCINFO_CLASS const char _dl_powerpc_cap_flags[25][10]
 #if !defined PROCINFO_DECL && defined SHARED
   ._dl_powerpc_platforms
 #else
-PROCINFO_CLASS const char _dl_powerpc_platforms[13][12]
+PROCINFO_CLASS const char _dl_powerpc_platforms[14][12]
 #endif
 #ifndef PROCINFO_DECL
 = {
@@ -83,7 +84,8 @@ PROCINFO_CLASS const char _dl_powerpc_platforms[13][12]
     [PPC_PLATFORM_PPC405] = "ppc405",
     [PPC_PLATFORM_PPC440] = "ppc440",
     [PPC_PLATFORM_PPC464] = "ppc464",
-    [PPC_PLATFORM_PPC476] = "ppc476"
+    [PPC_PLATFORM_PPC476] = "ppc476",
+    [PPC_PLATFORM_POWER8] = "power8"
   }
 #endif
 #if !defined SHARED || defined PROCINFO_DECL
