@@ -53,15 +53,6 @@ weak_alias (__libc_open64, open64)
 
 stub_warning (open64)
 
-
-int
-__open64_2 (file, oflag)
-     const char *file;
-     int oflag;
-{
-  if (oflag & O_CREAT)
-    __fortify_fail ("invalid open64 call: O_CREAT without mode");
-
-  return __open64 (file, oflag);
-}
+/* __open64_2 is a generic wrapper that calls __open64.
+   So give a stub warning for that symbol too.  */
 stub_warning (__open64_2)

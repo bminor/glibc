@@ -59,12 +59,788 @@
 	* sysdeps/unix/sysv/linux/i386/dl-procinfo.h: Likewise.
 	* sysdeps/sparc/dl-procinfo.h: Likewise.
 
+2013-05-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* setjmp/tst-setjmp-fp.c: New file.
+	* setjmp/Makefile (tests): Add tst-setjmp-fp.
+	(link-libm): New variable.
+	($(objpfx)tst-setjmp-fp): Depend on $(link-libm).
+
+	* math/libm-test.inc (struct test_f_i_data): New type.
+	(RUN_TEST_LOOP_f_i): New macro.
+	(RUN_TEST_LOOP_f_i_tg): Likewise.
+	(fpclassify_test_data): New variable.
+	(fpclassify_test): Run tests with RUN_TEST_LOOP_f_i_tg.
+	(ilogb_test_data): New variable.
+	(ilogb_test): Run tests with RUN_TEST_LOOP_f_i.
+
+	* math/libm-test.inc (scalbln_test): Correct function name in END
+	call.
+
+	* math/libm-test.inc (struct test_f_f1_data): Add comment.
+	(RUN_TEST_LOOP_fI_f1): New macro.
+	(frexp_test_data): New variable.
+	(frexp_test): Run tests with RUN_TEST_LOOP_fI_f1.
+
+	* math/libm-test.inc (struct test_fF_f1_data): New type.
+	(RUN_TEST_LOOP_fF_f1): New macro.
+	(modf_test_data): New variable.
+	(modf_test): Run tests with RUN_TEST_LOOP_fF_f1.
+
+	* math/libm-test.inc (struct test_f_f1_data): New type.
+	(RUN_TEST_LOOP_f_f1): New macro.
+	(gamma_test_data): New variable.
+	(gamma_test): Run tests with RUN_TEST_LOOP_f_f1.
+	(lgamma_test_data): New variable.
+	(lgamma_test): Run tests with RUN_TEST_LOOP_f_f1.
+
+2013-05-13  Carlos O'Donell  <carlos@redhat.com>
+
+	* elf/dl-hwcaps.c (_dl_important_hwcaps): Comment vDSO hwcap loading.
+	* elf/ldconfig.c (is_hwcap_platform): Comment each hwcap check.
+	(main): Comment "tls" pseudo-hwcap.
+
+2013-05-13  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (struct test_fl_f_data): New type.
+	(RUN_TEST_LOOP_fl_f): New variable.
+	(scalbln_test_data): New variable.
+	(scalbln_test): Run tests with RUN_TEST_LOOP_fl_f.
+
+	* math/libm-test.inc (struct test_fi_f_data): New type.
+	(RUN_TEST_LOOP_fi_f): New macro.
+	(ldexp_test_data): New variable.
+	(ldexp_test): Run tests with RUN_TEST_LOOP_fi_f.
+	(scalbn_test_data): New variable.
+	(scalbn_test): Run tests with RUN_TEST_LOOP_fi_f.
+
+	* math/libm-test.inc (struct test_c_f_data): New type.
+	(RUN_TEST_LOOP_c_f): New macro.
+	(cabs_test_data): New variable.
+	(cabs_test): Run tests with RUN_TEST_LOOP_c_f.
+	(carg_test_data): New variable.
+	(carg_test): Run tests with RUN_TEST_LOOP_c_f.
+	(cimag_test_data): New variable.
+	(cimag_test): Run tests with RUN_TEST_LOOP_c_f.
+	(creal_test_data): New variable.
+	(creal_test): Run tests with RUN_TEST_LOOP_c_f.
+
+	* math/libm-test.inc (struct test_if_f_data): New type.
+	(RUN_TEST_LOOP_if_f): New macro.
+	(jn_test_data): New variable.
+	(jn_test): Run tests with RUN_TEST_LOOP_if_f.
+	(yn_test_data): New variable.
+	(yn_test): Run tests with RUN_TEST_LOOP_if_f.
+
+	* math/libm-test.inc (scalbln_test): Consistently use TEST_fl_f.
+
+2013-05-13  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* math/libm-test.inc (M_1_DIV_El): Define using decimal constant.
+	(log_test_data): Use M_1_DIV_El instead of 1.0 / M_El.
+
+2013-05-13  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* benchtests/Makefile (CPPFLAGS-nonlib): Add
+	-DUSE_CLOCK_GETTIME if USE_CLOCK_GETTIME is defined.
+	(bench-deps): Add bench-timing.h.
+	* benchtests-bench-skeleton.c: Include bench-timing.h.
+	(main): Use TIMING_* macros instead of clock_gettime.
+	* benchtests/bench-timing.h: New file.
+
+	[BZ #14582]
+	* sysdeps/ieee754/s_lib_version.c (_LIB_VERSION_INTERNAL):
+	Renamed from _LIB_VERSION.
+	(_LIB_VERSION): Set as weak alias of _LIB_VERSION_INTERNAL.
+
+2013-05-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (struct test_fff_f_data): New type.
+	(RUN_TEST_LOOP_fff_f): New macro.
+	(fma_test_data): New variable.
+	(fma_test): Run tests with RUN_TEST_LOOP_fff_f.
+	(fma_towardzero_test_data): New variable.
+	(fma_test_towardzero): Run tests with RUN_TEST_LOOP_fff_f.
+	(fma_downward_test_data): New variable.
+	(fma_test_downward): Run tests with RUN_TEST_LOOP_fff_f.
+	(fma_upward_test_data): New variable.
+	(fma_test_upward): Run tests with RUN_TEST_LOOP_fff_f.
+
+	* math/libm-test.inc (BUILD_COMPLEX_ULP): New macro.
+	(struct test_c_c_data): New type.
+	(RUN_TEST_LOOP_c_c): New macro.
+	(cacos_test_data): New variable.
+	(cacos_test): Run tests with RUN_TEST_LOOP_c_c.
+	(cacosh_test_data): New variable.
+	(cacosh_test): Run tests with RUN_TEST_LOOP_c_c.
+	(casin_test_data): New variable.
+	(casin_test): Run tests with RUN_TEST_LOOP_c_c.
+	(casinh_test_data): New variable.
+	(casinh_test): Run tests with RUN_TEST_LOOP_c_c.
+	(catan_test_data): New variable.
+	(catan_test): Run tests with RUN_TEST_LOOP_c_c.
+	(catanh_test_data): New variable.
+	(catanh_test): Run tests with RUN_TEST_LOOP_c_c.
+	(ccos_test_data): New variable.
+	(ccos_test): Run tests with RUN_TEST_LOOP_c_c.
+	(ccosh_test_data): New variable.
+	(ccosh_test): Run tests with RUN_TEST_LOOP_c_c.
+	(cexp_test_data): New variable.
+	(cexp_test): Run tests with RUN_TEST_LOOP_c_c.
+	(clog_test_data): New variable.
+	(clog_test): Run tests with RUN_TEST_LOOP_c_c.
+	(clog10_test_data): New variable.
+	(clog10_test): Run tests with RUN_TEST_LOOP_c_c.
+	(conj_test_data): New variable.
+	(conj_test): Run tests with RUN_TEST_LOOP_c_c.
+	(cproj_test_data): New variable.
+	(cproj_test): Run tests with RUN_TEST_LOOP_c_c.
+	(csin_test_data): New variable.
+	(csin_test): Run tests with RUN_TEST_LOOP_c_c.
+	(csinh_test_data): New variable.
+	(csinh_test): Run tests with RUN_TEST_LOOP_c_c.
+	(csqrt_test_data): New variable.
+	(csqrt_test): Run tests with RUN_TEST_LOOP_c_c.
+	(ctan_test_data): New variable.
+	(ctan_test): Run tests with RUN_TEST_LOOP_c_c.
+	(ctan_tonearest_test_data): New variable.
+	(ctan_test_tonearest): Run tests with RUN_TEST_LOOP_c_c.
+	(ctan_towardzero_test_data): New variable.
+	(ctan_test_towardzero): Run tests with RUN_TEST_LOOP_c_c.
+	(ctan_downward_test_data): New variable.
+	(ctan_test_downward): Run tests with RUN_TEST_LOOP_c_c.
+	(ctan_upward_test_data): New variable.
+	(ctan_test_upward): Run tests with RUN_TEST_LOOP_c_c.
+	(ctanh_test_data): New variable.
+	(ctanh_test): Run tests with RUN_TEST_LOOP_c_c.
+	(ctanh_tonearest_test_data): New variable.
+	(ctanh_test_tonearest): Run tests with RUN_TEST_LOOP_c_c.
+	(ctanh_towardzero_test_data): New variable.
+	(ctanh_test_towardzero): Run tests with RUN_TEST_LOOP_c_c.
+	(ctanh_downward_test_data): New variable.
+	(ctanh_test_downward): Run tests with RUN_TEST_LOOP_c_c.
+	(ctanh_upward_test_data): New variable.
+	(ctanh_test_upward): Run tests with RUN_TEST_LOOP_c_c.
+	* math/gen-libm-test.pl (get_ulps): Use BUILD_COMPLEX_ULP instead
+	of BUILD_COMPLEX.
+
+	* math/libm-test.inc (struct test_ff_f_data): New type.
+	(struct test_ff_f_data_nexttoward): Likewise.
+	(RUN_TEST_LOOP_2_f): New macro.
+	(RUN_TEST_LOOP_ff_f): Likewise.
+	(atan2_test_data): New variable.
+	(atan2_test): Run tests with RUN_TEST_LOOP_ff_f.
+	(copysign_test_data): New variable.
+	(copysign_test): Run tests with RUN_TEST_LOOP_ff_f.
+	(fdim_test_data): New variable.
+	(fdim_test): Run tests with RUN_TEST_LOOP_ff_f.
+	(fmax_test_data): New variable.
+	(fmax_test): Run tests with RUN_TEST_LOOP_ff_f.
+	(fmin_test_data): New variable.
+	(fmin_test): Run tests with RUN_TEST_LOOP_ff_f.
+	(fmod_test_data): New variable.
+	(fmod_test): Run tests with RUN_TEST_LOOP_ff_f.
+	(hypot_test_data): New variable.
+	(hypot_test): Run tests with RUN_TEST_LOOP_ff_f.
+	(nextafter_test_data): New variable.
+	(nextafter_test): Run tests with RUN_TEST_LOOP_ff_f.
+	(nexttoward_test_data): New variable.
+	(nexttoward_test): Run tests with RUN_TEST_LOOP_ff_f.
+	(pow_test_data): New variable.
+	(pow_test): Run tests with RUN_TEST_LOOP_ff_f.
+	(pow_tonearest_test_data): New variable.
+	(pow_test_tonearest): Run tests with RUN_TEST_LOOP_ff_f.
+	(pow_towardzero_test_data): New variable.
+	(pow_test_towardzero): Run tests with RUN_TEST_LOOP_ff_f.
+	(pow_downward_test_data): New variable.
+	(pow_test_downward): Run tests with RUN_TEST_LOOP_ff_f.
+	(pow_upward_test_data): New variable.
+	(pow_test_upward): Run tests with RUN_TEST_LOOP_ff_f.
+	(remainder_test_data): New variable.
+	(remainder_test): Run tests with RUN_TEST_LOOP_ff_f.
+	(scalb_test_data): New variable.
+	(scalb_test): Run tests with RUN_TEST_LOOP_ff_f.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+
+2013-05-11  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (fma_test): Use max_value instead of local
+	variable fltmax.
+	(nextafter_test): Likewise.
+
+	* math/libm-test.inc (acos_towardzero_test_data): New variable.
+	(acos_test_towardzero): Run tests with RUN_TEST_LOOP_f_f.
+	(acos_downward_test_data): New variable.
+	(acos_test_downward): Run tests with RUN_TEST_LOOP_f_f.
+	(acos_upward_test_data): New variable.
+	(acos_test_upward): Run tests with RUN_TEST_LOOP_f_f.
+	(acosh_test_data): New variable.
+	(acosh_test): Run tests with RUN_TEST_LOOP_f_f.
+	(asin_test_data): New variable.
+	(asin_test): Run tests with RUN_TEST_LOOP_f_f.
+	(asin_tonearest_test_data): New variable.
+	(asin_test_tonearest): Run tests with RUN_TEST_LOOP_f_f.
+	(asin_towardzero_test_data): New variable.
+	(asin_test_towardzero): Run tests with RUN_TEST_LOOP_f_f.
+	(asin_downward_test_data): New variable.
+	(asin_test_downward): Run tests with RUN_TEST_LOOP_f_f.
+	(asin_upward_test_data): New variable.
+	(asin_test_upward): Run tests with RUN_TEST_LOOP_f_f.
+	(asinh_test_data): New variable.
+	(asinh_test): Run tests with RUN_TEST_LOOP_f_f.
+	(atan_test_data): New variable.
+	(atan_test): Run tests with RUN_TEST_LOOP_f_f.
+	(atanh_test_data): New variable.
+	(atanh_test): Run tests with RUN_TEST_LOOP_f_f.
+	(cbrt_test_data): New variable.
+	(cbrt_test): Run tests with RUN_TEST_LOOP_f_f.
+	(ceil_test_data): New variable.
+	(ceil_test): Run tests with RUN_TEST_LOOP_f_f.
+	(cos_test_data): New variable.
+	(cos_test): Run tests with RUN_TEST_LOOP_f_f.
+	(cos_tonearest_test_data): New variable.
+	(cos_test_tonearest): Run tests with RUN_TEST_LOOP_f_f.
+	(cos_towardzero_test_data): New variable.
+	(cos_test_towardzero): Run tests with RUN_TEST_LOOP_f_f.
+	(cos_downward_test_data): New variable.
+	(cos_test_downward): Run tests with RUN_TEST_LOOP_f_f.
+	(cos_upward_test_data): New variable.
+	(cos_test_upward): Run tests with RUN_TEST_LOOP_f_f.
+	(cosh_test_data): New variable.
+	(cosh_test): Run tests with RUN_TEST_LOOP_f_f.
+	(cosh_tonearest_test_data): New variable.
+	(cosh_test_tonearest): Run tests with RUN_TEST_LOOP_f_f.
+	(cosh_towardzero_test_data): New variable.
+	(cosh_test_towardzero): Run tests with RUN_TEST_LOOP_f_f.
+	(cosh_downward_test_data): New variable.
+	(cosh_test_downward): Run tests with RUN_TEST_LOOP_f_f.
+	(cosh_upward_test_data): New variable.
+	(cosh_test_upward): Run tests with RUN_TEST_LOOP_f_f.
+	(erf_test_data): New variable.
+	(erf_test): Run tests with RUN_TEST_LOOP_f_f.
+	(erfc_test_data): New variable.
+	(erfc_test): Run tests with RUN_TEST_LOOP_f_f.
+	(exp_test_data): New variable.
+	(exp_test): Run tests with RUN_TEST_LOOP_f_f.
+	(exp_tonearest_test_data): New variable.
+	(exp_test_tonearest): Run tests with RUN_TEST_LOOP_f_f.
+	(exp_towardzero_test_data): New variable.
+	(exp_test_towardzero): Run tests with RUN_TEST_LOOP_f_f.
+	(exp_downward_test_data): New variable.
+	(exp_test_downward): Run tests with RUN_TEST_LOOP_f_f.
+	(exp_upward_test_data): New variable.
+	(exp_test_upward): Run tests with RUN_TEST_LOOP_f_f.
+	(exp10_test_data): New variable.
+	(exp10_test): Run tests with RUN_TEST_LOOP_f_f.
+	(exp2_test_data): New variable.
+	(exp2_test): Run tests with RUN_TEST_LOOP_f_f.
+	(expm1_test_data): New variable.
+	(expm1_test): Run tests with RUN_TEST_LOOP_f_f.
+	(fabs_test_data): New variable.
+	(fabs_test): Run tests with RUN_TEST_LOOP_f_f.
+	(floor_test_data): New variable.
+	(floor_test): Run tests with RUN_TEST_LOOP_f_f.
+	(j0_test_data): New variable.
+	(j0_test): Run tests with RUN_TEST_LOOP_f_f.
+	(j1_test_data): New variable.
+	(j1_test): Run tests with RUN_TEST_LOOP_f_f.
+	(log_test_data): New variable.
+	(log_test): Run tests with RUN_TEST_LOOP_f_f.
+	(log10_test_data): New variable.
+	(log10_test): Run tests with RUN_TEST_LOOP_f_f.
+	(log1p_test_data): New variable.
+	(log1p_test): Run tests with RUN_TEST_LOOP_f_f.
+	(log2_test_data): New variable.
+	(log2_test): Run tests with RUN_TEST_LOOP_f_f.
+	(logb_test_data): New variable.
+	(logb_test): Run tests with RUN_TEST_LOOP_f_f.
+	(logb_downward_test_data): New variable.
+	(logb_test_downward): Run tests with RUN_TEST_LOOP_f_f.
+	(nearbyint_test_data): New variable.
+	(nearbyint_test): Run tests with RUN_TEST_LOOP_f_f.
+	(rint_test_data): New variable.
+	(rint_test): Run tests with RUN_TEST_LOOP_f_f.
+	(rint_tonearest_test_data): New variable.
+	(rint_test_tonearest): Run tests with RUN_TEST_LOOP_f_f.
+	(rint_towardzero_test_data): New variable.
+	(rint_test_towardzero): Run tests with RUN_TEST_LOOP_f_f.
+	(rint_downward_test_data): New variable.
+	(rint_test_downward): Run tests with RUN_TEST_LOOP_f_f.
+	(rint_upward_test_data): New variable.
+	(rint_test_upward): Run tests with RUN_TEST_LOOP_f_f.
+	(round_test_data): New variable.
+	(round_test): Run tests with RUN_TEST_LOOP_f_f.
+	(sin_test_data): New variable.
+	(sin_test): Run tests with RUN_TEST_LOOP_f_f.
+	(sin_tonearest_test_data): New variable.
+	(sin_test_tonearest): Run tests with RUN_TEST_LOOP_f_f.
+	(sin_towardzero_test_data): New variable.
+	(sin_test_towardzero): Run tests with RUN_TEST_LOOP_f_f.
+	(sin_downward_test_data): New variable.
+	(sin_test_downward): Run tests with RUN_TEST_LOOP_f_f.
+	(sin_upward_test_data): New variable.
+	(sin_test_upward): Run tests with RUN_TEST_LOOP_f_f.
+	(sinh_test_data): New variable.
+	(sinh_test): Run tests with RUN_TEST_LOOP_f_f.
+	(sinh_tonearest_test_data): New variable.
+	(sinh_test_tonearest): Run tests with RUN_TEST_LOOP_f_f.
+	(sinh_towardzero_test_data): New variable.
+	(sinh_towardzero): Run tests with RUN_TEST_LOOP_f_f.
+	(sinh_downward_test_data): New variable.
+	(sinh_test_downward): Run tests with RUN_TEST_LOOP_f_f.
+	(sinh_upward_test_data): New variable.
+	(sinh_test_upward): Run tests with RUN_TEST_LOOP_f_f.
+	(sqrt_test_data): New variable.
+	(sqrt_test): Run tests with RUN_TEST_LOOP_f_f.
+	(tan_test_data): New variable.
+	(tan_test): Run tests with RUN_TEST_LOOP_f_f.
+	(tan_tonearest_test_data): New variable.
+	(tan_test_tonearest): Run tests with RUN_TEST_LOOP_f_f.
+	(tan_towardzero_test_data): New variable.
+	(tan_test_towardzero): Run tests with RUN_TEST_LOOP_f_f.
+	(tan_downward_test_data): New variable.
+	(tan_test_downward): Run tests with RUN_TEST_LOOP_f_f.
+	(tan_upward_test_data): New variable.
+	(tan_test_upward): Run tests with RUN_TEST_LOOP_f_f.
+	(tanh_test_data): New variable.
+	(tanh_test): Run tests with RUN_TEST_LOOP_f_f.
+	(tgamma_test_data): New variable.
+	(tgamma_test): Run tests with RUN_TEST_LOOP_f_f.
+	(trunc_test_data): New variable.
+	(trunc_test): Run tests with RUN_TEST_LOOP_f_f.
+	(y0_test_data): New variable.
+	(y0_test): Run tests with RUN_TEST_LOOP_f_f.
+	(y1_test_data): New variable.
+	(y1_test): Run tests with RUN_TEST_LOOP_f_f.
+	(significand_test_data): New variable.
+	(significand_test): Run tests with RUN_TEST_LOOP_f_f.
+
+2013-05-10  Christian Grönke  <cgr_bugs@sysgo.com>
+
+	[BZ #12387]
+	* sysdeps/unix/sysv/linux/sh/getgid.c: New file.
+
+2013-05-10  Pino Toscano  <toscano.pino@tiscali.it>
+
+	* sysdeps/mach/hurd/bits/statvfs.h: Add ST_NOATIME.
+
+2013-05-10  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #15448]
+	* sysdeps/unix/sysv/linux/bits/sched.h (__CPU_SET_S)
+	(__CPU_CLR_S, __CPU_ISSET_S): Avoid integer overflow.
+
+2013-05-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/gen-libm-test.pl (adjust_arg): New function.
+	(special_functions): Handle generating output in both functions
+	and arrays.
+	(parse_args): Likewise.
+	(generate_testfile): Handle START_DATA and END_DATA.  Pass extra
+	$in_func argument to parse_args.
+	* math/libm-test.inc (struct test_f_f_data): New type.
+	(IF_ROUND_INIT_): New macro.
+	(IF_ROUND_INIT_FE_DOWNWARD): Likewise.
+	(IF_ROUND_INIT_FE_TONEAREST): Likewise.
+	(IF_ROUND_INIT_FE_TOWARDZERO): Likewise.
+	(IF_ROUND_INIT_FE_UPWARD): Likewise.
+	(ROUND_RESTORE_): Likewise.
+	(ROUND_RESTORE_FE_DOWNWARD): Likewise.
+	(ROUND_RESTORE_FE_TONEAREST): Likewise.
+	(ROUND_RESTORE_FE_TOWARDZERO): Likewise.
+	(ROUND_RESTORE_FE_UPWARD): Likewise.
+	(RUN_TEST_LOOP_f_f): New macro.
+	(acos_test_data): New variable.
+	(acos_test): Run tests with RUN_TEST_LOOP_f_f.
+	(acos_tonearest_test_data): New variable.
+	(acos_test_tonearest): Run tests with RUN_TEST_LOOP_f_f.
+
+2013-05-10  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	* benchtests/bench-skeleton.c (startup): Fix coding style.
+
+2013-05-10  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #6809]
+	* math/w_tgamma.c (__tgamma): Also call __kernel_standard for
+	negative infinity argument.
+	* math/w_tgammaf.c (__tgammaf): Also call __kernel_standard_f for
+	negative infinity argument.
+	* math/w_tgammal.c (__tgammal): Also call __kernel_standard_l for
+	negative infinity argument.
+	* math/libm-test.inc (tgamma_test): Expect errno to be set for
+	domain errors.
+
+2013-05-10  Florian Weimer  <fweimer@redhat.com>
+
+	* elf/sprof.c (load_profdata): Use fstat64 instead of fstat.
+	* iconv/iconv_charmap.c (charmap_conversion): Likewise.
+	* iconv/iconv_prog.c (main): Likewise.
+	* locale/programs/charmap-dir.c (charmap_readdir)
+	(fopen_uncompressed): Likewise.
+	* locale/programs/locfile.c (siblings_uncached)
+	(write_locale_data): Use lstat64 instead of lstat.
+	* sunrpc/rpc_main.c (find_cpp, checkfiles): Use stat64 instead of
+	stat.
+
+2013-05-10  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #15395]
+	* sunrpc/rpc_main.c (main): Invoke setlocale and textdomain for
+	localization.
+	Include <locale.h>.
+
+2013-05-09  Carlos O'Donell  <carlos@redhat.com>
+
+	* elf/dl-close.c (_dl_close_worker): Add comments.
+
+2013-05-09  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #15359]
+	* sysdeps/ieee754/ldbl-128ibm/e_rem_pio2l.c (c): Use 106 bits for
+	high part of pi/2.
+	(__ieee754_rem_pio2l): Update comments.
+
+	[BZ #15429]
+	* sysdeps/ieee754/ldbl-128/e_rem_pio2l.c (c): Use 113 bits for
+	high part of pi/2.
+	(__ieee754_rem_pio2l): Update comments.
+
+	* math/libm-test.inc (M_SQRT_2_2): Remove macro.
+	(csqrt_test): Use M_SQRT1_2l instead of M_SQRT_2_2.
+
+	* math/libm-test.inc (carg_test): Use M_PI_34l instead of 3 *
+	M_PI_4l.
+
+	* math/libm-test.inc (M_PI_34l): Define using decimal constant.
+	(M_PI_34_LOG10El): Likewise.
+	(M_PI2_LOG10El): Likewise.
+	(M_PI4_LOG10El): Likewise.
+	(M_PI_LOG10El): Likewise.
+
+2013-05-08  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
+
+2013-05-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (PLUS_ZERO_INIT): New macro.
+	(MINUS_ZERO_INIT): Likewise.
+	(PLUS_INFTY_INIT): Likewise.
+	(MINUS_INFTY_INIT): Likewise.
+	(QNAN_VALUE_INIT): Likewise.
+	(MAX_VALUE_INIT): Likewise.
+	(MIN_VALUE_INIT): Likewise.
+	(MIN_SUBNORM_VALUE_INIT): Likewise.
+	(plus_zero): Initialize with PLUS_ZERO_INIT.
+	(minus_zero): Initialize with MINUS_ZERO_INIT.
+	(plus_infty): Initialize with PLUS_INFTY_INIT.
+	(minus_infty): Initialize with MINUS_INFTY_INIT.
+	(qnan_value): Initialize with QNAN_VALUE_INIT.
+	(max_value): Initialize with MAX_VALUE_INIT.
+	(min_value): Initialize with MIN_VALUE_INIT.
+	(min_subnorm_value): Initialize with MIN_SUBNORM_VALUE_INIT.
+
+	* math/libm-test.inc (RUN_TEST_if_f): New macro.
+	(jn_test): Use TEST_if_f instead of TEST_ff_f.
+	(ldexp_text): Use TEST_fi_i instead of TEST_ff_f.
+	(yn_test): Use TEST_if_f instead of TEST_ff_f.
+
+	* math/libm-test.inc (RUN_TEST_f_f): New macro.
+	(RUN_TEST_2_f): Likewise.
+	(RUN_TEST_ff_f): Likewise.
+	(RUN_TEST_fi_f): Likewise.
+	(RUN_TEST_fl_f): Likewise.
+	(RUN_TEST_fff_f): Likewise.
+	(RUN_TEST_c_f): Likewise.
+	(RUN_TEST_f_f1): Likewise.
+	(RUN_TEST_fF_f1): Likewise.
+	(RUN_TEST_fI_f1): Likewise.
+	(RUN_TEST_ffI_f1): Likewise.
+	(RUN_TEST_c_c): Likewise.
+	(RUN_TEST_cc_c): Likewise.
+	(RUN_TEST_f_i): Likewise.
+	(RUN_TEST_f_i_tg): Likewise.
+	(RUN_TEST_ff_i_tg): Likewise.
+	(RUN_TEST_f_b): Likewise.
+	(RUN_TEST_f_b_tg): Likewise.
+	(RUN_TEST_f_l): Likewise.
+	(RUN_TEST_f_L): Likewise.
+	(RUN_TEST_sincos): Likewise.
+	* math/gen-libm-test.pl (new_test): Take new argument to indicate
+	whether to show exceptions.  Do not include ");\n" in return
+	value.
+	(special_functions): Output call to RUN_TEST_sincos instead of
+	check_float calls.  Update calls to new_test.
+	(parse_args): Output call to single RUN_TEST_* macro instead of
+	check_* calls and other assignments.  Update calls to new_test.
+
+	[BZ #2546]
+	[BZ #2560]
+	[BZ #5159]
+	[BZ #15426]
+	* sysdeps/ieee754/k_standard.c (__kernel_standard): Copy sign of
+	input to result for tgamma overflow.
+	* sysdeps/ieee754/dbl-64/e_gamma_r.c: Include <float.h>.
+	(gamma_coeff): New variable.
+	(NCOEFF): New macro.
+	(gamma_positive): New function.
+	(__ieee754_gamma_r): Handle positive infinity, NaN, overflow and
+	underflow here.  Use gamma_positive instead of exp (lgamma) for
+	other arguments.
+	* sysdeps/ieee754/flt-32/e_gammaf_r.c: Include <float.h>.
+	(gamma_coeff): New variable.
+	(NCOEFF): New macro.
+	(gammaf_positive): New function.
+	(__ieee754_gammaf_r): Handle positive infinity, NaN, overflow and
+	underflow here.  Use gamma_positive instead of exp (lgamma) for
+	other arguments.
+	* sysdeps/ieee754/ldbl-128/e_gammal_r.c: Include <float.h>.
+	(gamma_coeff): New variable.
+	(NCOEFF): New macro.
+	(gammal_positive): New function.
+	(__ieee754_gammal_r): Handle positive infinity, NaN, overflow and
+	underflow here.  Use gamma_positive instead of exp (lgamma) for
+	other arguments.
+	* sysdeps/ieee754/ldbl-128ibm/e_gammal_r.c: Include <float.h>.
+	(gamma_coeff): New variable.
+	(NCOEFF): New macro.
+	(gammal_positive): New function.
+	(__ieee754_gammal_r): Handle positive infinity, overflow and
+	underflow here.  Handle NaN the same as positive infinity.  Remove
+	check x < 0xffffffff for negative integers.  Use gamma_positive
+	instead of exp (lgamma) for other arguments.
+	* sysdeps/ieee754/ldbl-96/e_gammal_r.c: Include <float.h>.
+	(gamma_coeff): New variable.
+	(NCOEFF): New macro.
+	(gammal_positive): New function.
+	* sysdeps/ieee754/dbl-64/gamma_product.c: New file.
+	* sysdeps/ieee754/dbl-64/gamma_productf.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/gamma_productl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/gamma_productl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/gamma_product.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/gamma_productl.c: Likewise.
+	* sysdeps/generic/math_private.h (__gamma_productf): New
+	prototype.
+	(__gamma_product): Likewise.
+	(__gamma_productl): Likewise.
+	* math/Makefile (libm-calls): Add gamma_product.
+	* math/libm-test.inc (tgamma_test): Add more tests.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
+2013-05-08  Ondřej Bílka  <neleai@seznam.cz>
+
+	* benchtests/bench-skeleton.c (main): Preheat CPU.
+
+2013-05-07  Aurelien Jarno <aurelien@aurel32.net>
+
+	* misc/sys/param.h (DEV_BSIZE): Define only if not already defined.
+
+2013-05-07  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/generic/ldsodefs.h [IS_IN_rtld]: Declare _dl_skip_args
+	and _dl_skip_args_internal.
+
+2013-05-07  Carlos O'Donell  <carlos@redhat.com>
+
+	* manual/message.texi (Message Translation): Talk about users.
+	Message to key mapping impacts design.
+
+2013-05-06  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/unix/sysv/linux/wordsize-64/glob64.c: New file.
+
+	* elf/dl-open.c: Remove declaration of _dl_sysdep_start.
+
+	* sysdeps/unix/sysv/linux/wordsize-64/glob64.c: Moved to ...
+	* sysdeps/wordsize-64/glob64.c: ... here.
+
+	* sysdeps/generic/not-cancel.h (NO_CANCELLATION): New macro.
+	(pause_not_cancel, nanosleep_not_cancel, sigsuspend_not_cancel):
+	New macros.
+
+	* debug/getlogin_r_chk.c: Moved to ...
+	* login/getlogin_r_chk.c: ... here.
+	* debug/Makefile (routines): Move getlogin_r_chk to ...
+	* login/Makefile (routines): ... here.
+	* debug/Versions (libc: GLIBC_2.4): Move getlogin_r_chk to ...
+	* login/Versions (libc: GLIBC_2.4): ... here.
+
+	* io/poll.c (__poll): Renamed from poll.
+	Add libc_hidden_def.
+	(poll): Define as weak alias.
+
+	* debug/ptsname_r_chk.c: Moved to ...
+	* login/ptsname_r_chk.c: ... here.
+	* debug/Makefile (routines): Move ptsname_r_chk to ...
+	* login/Makefile (routines): ... here.
+	* debug/Versions (libc: GLIBC_2.4): Move __ptsname_r_chk to ...
+	* login/Versions (libc: GLIBC_2.4): ... here.
+
+	* posix/getlogin.c: Moved to ...
+	* login/getlogin.c: ... here.
+	* posix/getlogin_r.c: Moved to ...
+	* login/getlogin_r.c: ... here.
+	* posix/getlogin_r.c: Moved to ...
+	* login/getlogin_r.c: ... here.
+	* posix/Makefile (routines): Move getlogin, getlogin_r, setlogin to ...
+	* login/Makefile (routines): ... here.
+	* posix/Versions (libc: GLIBC_2.0): Move setlogin to ...
+	* login/Versions (libc: GLIBC_2.0): ... here.
+
+	* resource/setrlimit.c (__setrlimit): Renamed from setrlimit.
+	(setrlimit): Define as weak alias.
+
+	* sysdeps/posix/truncate.c (__truncate): Renamed from truncate.
+	Call __ names for open, ftruncate, and close.
+	For LENGTH==0 case, just use O_TRUNC rather than calling ftruncate.
+	(truncate): Define as weak alias.
+
+2013-05-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/gen-libm-test.pl (parse_args): Initialize x before each
+	test of frexp, modf and remquo.
+
+	* math/libm-test.inc (gamma_test): Consistently use TEST_f_f1 to
+	test signgam value.
+
+2013-05-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	[BZ #15418]
+	[BZ #15419]
+	* sysdeps/powerpc/fpu/e_hypot.c: Fix spurious FP exception generated by
+	internal tests.
+	* sysdeps/powerpc/fpu/e_hypotf.c: Likewise.
+
+2013-05-06  Roland McGrath  <roland@hack.frob.com>
+
+	* elf/dl-writev.h: New file.
+	* elf/dl-misc.c: Include it.
+	(_dl_debug_vdprintf): Call _dl_writev instead of __writev et al.
+	* sysdeps/unix/sysv/linux/dl-writev.h: New file.
+
+2013-05-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (noXFails): Remove variable.
+	(noXPasses): Likewise.
+	(BUILD_COMPLEX_INT): Remove macro.
+	(print_screen): Remove xfail argument.
+	(print_screen_max_error): Likewise.
+	(update_stats): Likewise.
+	(print_max_error): Likewise.  Update calls to other affected
+	functions.
+	(print_complex_max_error): Likewise.
+	(test_single_exception): Update calls to print_screen.
+	(test_single_errno): Likewise.
+	(check_float_internal): Remove xfail argument.  Update calls to
+	other affected functions.
+	(check_float): Likewise.
+	(check_complex): Likewise.
+	(check_int): Likewise.
+	(check_long): Likewise.
+	(check_bool): Likewise.
+	(check_longlong): Likewise.
+	(main): Don't print noXFails and noXPasses.
+	* math/gen-libm-test.pl (top level): Don't mention expected
+	failure handling in comment.
+	(new_test): Don't handle expected failures.
+	(parse_args): Don't mention expected failure handling in comment.
+	(generate_testfile): Don't handle expected failures.
+	(parse_ulps): Likewise.
+	(print_ulps_file): Likewise.
+	(get_failure): Remove function.
+	(output_test): Don't handle expected failures.
+	* make/README.libm-test: Don't mention expected failure handling.
+
+	* math/libm-test.inc (plus_zero): Make const.  Add initializer.
+	(minus_zero): Likewise.
+	(plus_infty): Likewise.
+	(minus_infty): Likewise.
+	(qnan_value): Likewise.
+	(max_value): Likewise.
+	(min_value): Likewise.
+	(min_subnorm_value): Likewise.
+	(initialize): Do not initialize those variables dynamically.
+
+2013-05-03  Roland McGrath  <roland@hack.frob.com>
+
+	* io/open.c (__open_2): Moved to ...
+	* io/open_2.c: ... this new file.
+	* io/open64.c (__open64_2): Moved to ...
+	* io/open64_2.c: ... this new file.
+	* io/openat.c (__openat_2): Moved to ...
+	* io/openat_2.c: ... this new file.
+	* io/openat64.c (__openat64_2): Moved to ...
+	* io/openat64_2.c: ... this new file.
+	* io/Makefile (routines): Add them.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines): Remove them.
+	* sysdeps/unix/sysv/linux/open_2.c: File removed.
+	* sysdeps/unix/sysv/linux/open64_2.c: File removed.
+	* sysdeps/unix/sysv/linux/openat.c (__OPENAT_2): Removed.
+	* sysdeps/unix/sysv/linux/openat64.c (__OPENAT_2): Removed.
+	* sysdeps/unix/sysv/linux/wordsize-64/openat.c (__openat_2): Removed.
+	(__openat64): Add hidden_ver.
+	* sysdeps/mach/hurd/open.c (__open_2, __open64_2): Removed.
+	* sysdeps/mach/hurd/openat.c (__openat_2): Removed.
+
+	* elf/dl-sysdep.c (_dl_sysdep_start) [NEED_DL_SYSINFO]:
+	Separately conditionalize setting of GLRO(dl_sysinfo) so
+	that the GLRO(dl_sysinfo_dso) test is under [NEED_DL_SYSINFO_DSO]
+	as well, but the actual setting is only under [NEED_DL_SYSINFO].
+
+2013-04-30  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/Versions: Add __vdso_time symbol.
+	* sysdeps/unix/sysv/linux/powerpc/bits/libc-vdso.h: Add __vdso_time
+	definition.
+	(VDSO_IFUNC_RET): Cast to void * to silence compiler warning.
+	* sysdeps/unix/sysv/linux/powerpc/init-first.c
+	(_libc_vdso_platform_setup): Add __vdso_time initialization.
+	* sysdeps/unix/sysv/linux/powerpc/time.c: New file: time implementation
+	for PowerPC using vDSO where is avaliable or gettimeofday as a fallback.
+
+2013-05-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (lgamma_test): Consistently use TEST_f_f1 to
+	test signgam value.
+
+	* math/libm-test.inc (hypot_test): Do not use
+	IGNORE_ZERO_INF_SIGN.
+
+2013-05-03  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/gnu/netinet/tcp.h (TCP_TIMESTAMP): New value, from
+	Linux 3.9.
+	* sysdeps/unix/sysv/linux/bits/socket.h (PF_VSOCK, AF_VSOCK): Add.
+	(PF_MAX): Adjust for VSOCK change.
+
+2013-05-03  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
+
+2013-05-02  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #15264]
+	* localedata/locales/en_CA (LC_MESSAGES): Define yesstr and nostr.
+	* localedata/locales/es_AR (LC_MESSAGES): Copy es_ES.
+	* localedata/locales/es_ES (LC_MESSAGES): Define yesstr and nostr.
+
+2013-05-02  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/fpu/libm-test-ulps: Update.
+
+2013-05-01  Ondřej Bílka  <neleai@seznam.cz>
+
+	* string/bits/string2.h (__strcmp_cg): Call __strcmp_gc.
+
 2013-05-01  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/posix/opendir.c: Include <sys/param.h> to get MIN/MAX macros.
 
 2013-05-01  Richard Smith  <richard@metafoo.co.uk>
 
+	[BZ #14952]
 	* misc/sys/cdefs.h (__extern_inline, __extern_always_inline)
 	[__GNUC__ && (__GNUC_STDC_INLINE__ || __GNUC_GNU_INLINE__)]:
 	Use __attribute__ ((__gnu_inline__)).
@@ -10657,6 +11433,7 @@
 
 2012-07-31  Roland McGrath  <roland@hack.frob.com>
 
+	[BZ #10191]
 	* include/sys/socket.h (__libc_accept, __libc_accept4):
 	Add attribute_hidden.
 	* socket/accept4.c (__libc_accept4): Remove libc_hidden_def.

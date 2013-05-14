@@ -22,6 +22,9 @@ subdir	:= debug
 
 headers	:= execinfo.h
 
+# Note that ptsname_r_chk and getlogin_r are not here, but in
+# login/Makefile instead.  If that subdir is omitted from the
+# build, its _FORTIFY_SOURCE support will be too.
 routines  = backtrace backtracesyms backtracesymsfd noophooks \
 	    memcpy_chk memmove_chk mempcpy_chk memset_chk stpcpy_chk \
 	    strcat_chk strcpy_chk strncat_chk strncpy_chk stpncpy_chk \
@@ -30,13 +33,13 @@ routines  = backtrace backtracesyms backtracesymsfd noophooks \
 	    gets_chk chk_fail readonly-area fgets_chk fgets_u_chk \
 	    read_chk pread_chk pread64_chk recv_chk recvfrom_chk \
 	    readlink_chk readlinkat_chk getwd_chk getcwd_chk \
-	    realpath_chk ptsname_r_chk fread_chk fread_u_chk \
+	    realpath_chk fread_chk fread_u_chk \
 	    wctomb_chk wcscpy_chk wmemcpy_chk wmemmove_chk wmempcpy_chk \
 	    wcpcpy_chk wcsncpy_chk wcscat_chk wcsncat_chk wmemset_chk \
 	    wcpncpy_chk \
 	    swprintf_chk vswprintf_chk wprintf_chk fwprintf_chk \
 	    vwprintf_chk vfwprintf_chk fgetws_chk fgetws_u_chk \
-	    confstr_chk getgroups_chk ttyname_r_chk getlogin_r_chk \
+	    confstr_chk getgroups_chk ttyname_r_chk \
 	    gethostname_chk getdomainname_chk wcrtomb_chk mbsnrtowcs_chk \
 	    wcsnrtombs_chk mbsrtowcs_chk wcsrtombs_chk mbstowcs_chk \
 	    wcstombs_chk asprintf_chk vasprintf_chk dprintf_chk \

@@ -1,3 +1,44 @@
+2013-05-14  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14908]
+	* sysdeps/arm/setjmp.S (__sigsetjmp): Don't save fpscr.
+	* sysdeps/arm/__longjmp.S (__longjmp): Don't restore fpscr.
+	* sysdeps/arm/bits/setjmp.h (__jmp_buf): Don't mention fpscr in
+	comment.
+
+2013-05-13  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/arm/armv7/multiarch/memcpy.S [__ARM_NEON__]: Don't define
+	memcpy here, just __memcpy_arm and __aeabi_memcpy*.
+	* sysdeps/arm/armv7/multiarch/memcpy_neon.S [__ARM_NEON__]:
+	Define memcpy here, not __memcpy_neon.
+	* sysdeps/arm/armv7/multiarch/memcpy_vfp.S [__ARM_NEON__]:
+	Define nothing here.
+	* sysdeps/arm/armv7/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list) [__ARM_NEON__]: Don't list __memcpy_vfp;
+	use memcpy name for NEON implementation.
+
+2013-05-08  Will Newton  <will.newton@linaro.org>
+
+	* sysdeps/arm/armv7/multiarch/Makefile: New file.
+	* sysdeps/arm/armv7/multiarch/aeabi_memcpy.c: Likewise.
+	* sysdeps/arm/armv7/multiarch/ifunc-impl-list.c: Likewise.
+	* sysdeps/arm/armv7/multiarch/memcpy.S: Likewise.
+	* sysdeps/arm/armv7/multiarch/memcpy_impl.S: Likewise.
+	* sysdeps/arm/armv7/multiarch/memcpy_neon.S: Likewise.
+	* sysdeps/arm/armv7/multiarch/memcpy_vfp.S: Likewise.
+	* sysdeps/arm/armv7/configure.in: Likewise.
+	* sysdeps/arm/armv7/configure: Generated.
+
+2013-05-07  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/arm/dl-machine.h (elf_machine_dynamic): Use a plain C
+	reference to _GLOBAL_OFFSET_TABLE_ with an STV_HIDDEN declaration.
+
+2013-05-06  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/arm/dl-tlsdesc.S (_dl_tlsdesc_dynamic): Add missing sfi_breg.
+
 2013-05-03  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/arm/dl-procinfo.h (_dl_procinfo): Add
