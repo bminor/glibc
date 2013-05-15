@@ -1,5 +1,19 @@
 2013-05-14  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/dl-procinfo.c (_dl_powerpc_cap_flags): Properly
+	placed power8 hwcap strings to fix code that assumed bits incremented
+	from 0 to 31.
+	* sysdeps/powerpc/dl-procinfo.h (_dl_procinfo): Eliminate confusing
+	conditional variable definitions used to re-use a single loop
+	definition.  Replace with simpler redundant loops.  Account for
+	AT_HWCAP2 feature bits starting at bit 31 and decrementing.
+	[_DL_HWCAP_LAST]: New definition.
+	[_DL_HWCAP2_LAST]: New definition.
+	[_DL_HWCAP_COUNT]: Update to 64 to account for available bits, not
+	number of actual hwcap bits that are defined.
+
+2013-05-14  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/bits/hwcap.h: Add new AT_HWCAP2 features.
 	[PPC_FEATURE2_ARCH_2_07]: New feature bit for Power ISA 2.07.
 	[PPC_FEATURE2_HAS_HTM]: New feature bit for Hardware Transactional
