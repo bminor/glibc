@@ -108,6 +108,10 @@ typedef struct
 	  {
 	    void *si_addr;	/* Faulting insn/memory ref.  */
 	    short int si_addr_lsb;	/* Valid LSB of the reported address.  */
+# ifdef __CHKP__
+	    void *si_lower;
+	    void *si_upper;
+# endif
 	  } _sigfault;
 
 	/* SIGPOLL.  */
@@ -141,6 +145,10 @@ typedef struct
 # define si_ptr		_sifields._rt.si_sigval.sival_ptr
 # define si_addr	_sifields._sigfault.si_addr
 # define si_addr_lsb	_sifields._sigfault.si_addr_lsb
+# ifdef __CHKP__
+#  define si_lower	_sifields._sigfault.si_lower
+#  define si_upper	_sifields._sigfault.si_upper
+# endif
 # define si_band	_sifields._sigpoll.si_band
 # define si_fd		_sifields._sigpoll.si_fd
 # define si_call_addr 	_sifields._sigsys._call_addr
