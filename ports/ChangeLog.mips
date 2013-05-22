@@ -1,3 +1,10 @@
+2013-05-22  Edjunior Barbosa Machado  <emachado@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/siginfo.h (siginfo_t): Add
+	si_addr_lsb to _sifields.sifault.
+	(si_addr_lsb): Define new macro.
+	(BUS_MCEERR_AR, BUS_MCEERR_AO): Define new values.
+
 2012-12-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/fpu_control.h [__mips_soft_float] (_FPU_GETCW):
