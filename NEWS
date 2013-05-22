@@ -5,6 +5,12 @@ See the end for copying conditions.
 Please send GNU C library bug reports via <http://sourceware.org/bugzilla/>
 using `glibc' in the "product" field.
 
+Version 2.17.1
+
+* The following bugs are resolved with this release:
+  15003, 15006, 15122.
+
+
 Version 2.17
 
 * The following bugs are resolved with this release:
@@ -23,7 +29,7 @@ Version 2.17
   14767, 14783, 14784, 14785, 14793, 14796, 14797, 14801, 14803, 14805,
   14807, 14811, 14815, 14821, 14822, 14824, 14828, 14831, 14833, 14835,
   14838, 14856, 14863, 14865, 14866, 14868, 14869, 14871, 14872, 14879,
-  14889, 14893, 14898, 14914, 15003.
+  14889, 14893, 14898, 14914.
 
 * Optimization of memcpy for MIPS.
 
