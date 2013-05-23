@@ -1,3 +1,10 @@
+2013-05-23  Edjunior Machado  <emachado@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/sys/platform/ppc.h: Add __ppc_yield,
+	__ppc_mdoio and __ppc_mdoom.
+	* manual/platform.texi: Document new functions __ppc_yield,
+	__ppc_mdoio and __ppc_mdoom.
+
 2013-05-22  Edjunior Barbosa Machado  <emachado@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/bits/siginfo.h (siginfo_t): Add si_addr_lsb
