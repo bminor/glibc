@@ -40,6 +40,10 @@ ENTRY (strrchr)
 	movl STR(%esp), %esi
 	cfi_rel_offset (esi, 0)
 	movl CHR(%esp), %ecx
+#ifdef __CHKP__
+	bndldx STR(%esp,%esi,1), %bnd0
+	bndcl (%esi), %bnd0
+#endif
 
 	/* At the moment %ecx contains C.  What we need for the
 	   algorithm is C in all bytes of the dword.  Avoid
@@ -63,6 +67,9 @@ ENTRY (strrchr)
 
 	testl $3, %esi		/* correctly aligned ? */
 	jz L(19)		/* yes => begin loop */
+#ifdef __CHKP__
+	bndcu (%esi), %bnd0
+#endif
 	movb (%esi), %dl	/* load byte in question (we need it twice) */
 	cmpb %dl, %cl		/* compare byte */
 	jne L(11)			/* target found => return */
@@ -73,6 +80,9 @@ L(11):	orb %dl, %dl		/* is NUL? */
 
 	testl $3, %esi		/* correctly aligned ? */
 	jz L(19)		/* yes => begin loop */
+#ifdef __CHKP__
+	bndcu (%esi), %bnd0
+#endif
 	movb (%esi), %dl	/* load byte in question (we need it twice) */
 	cmpb %dl, %cl		/* compare byte */
 	jne L(12)			/* target found => return */
@@ -83,6 +93,9 @@ L(12):	orb %dl, %dl		/* is NUL? */
 
 	testl $3, %esi		/* correctly aligned ? */
 	jz L(19)		/* yes => begin loop */
+#ifdef __CHKP__
+	bndcu (%esi), %bnd0
+#endif
 	movb (%esi), %dl	/* load byte in question (we need it twice) */
 	cmpb %dl, %cl		/* compare byte */
 	jne L(13)			/* target found => return */
@@ -170,7 +183,11 @@ L(51):
 
 L(1):	addl $16, %esi		/* increment pointer for full round */
 
-L(19):	movl (%esi), %edx	/* get word (= 4 bytes) in question */
+L(19):
+#ifdef __CHKP__
+	bndcu (%esi), %bnd0
+#endif
+	movl (%esi), %edx	/* get word (= 4 bytes) in question */
 	movl $0xfefefeff, %edi	/* magic value */
 	addl %edx, %edi		/* add the magic value to the word.  We get
 				   carry bits reported for each byte which
@@ -214,6 +231,9 @@ L(19):	movl (%esi), %edx	/* get word (= 4 bytes) in question */
 				   the addition will not result in 0.  */
 	jnz L(3)		/* C is detected in the word => examine it */
 
+#ifdef __CHKP__
+	bndcu 4(%esi), %bnd0
+#endif
 	movl 4(%esi), %edx	/* get word (= 4 bytes) in question */
 	movl $0xfefefeff, %edi	/* magic value */
 	addl %edx, %edi		/* add the magic value to the word.  We get
@@ -238,6 +258,9 @@ L(19):	movl (%esi), %edx	/* get word (= 4 bytes) in question */
 				   the addition will not result in 0.  */
 	jnz L(31)		/* C is detected in the word => examine it */
 
+#ifdef __CHKP__
+	bndcu 8(%esi), %bnd0
+#endif
 	movl 8(%esi), %edx	/* get word (= 4 bytes) in question */
 	movl $0xfefefeff, %edi	/* magic value */
 	addl %edx, %edi		/* add the magic value to the word.  We get
@@ -262,6 +285,9 @@ L(19):	movl (%esi), %edx	/* get word (= 4 bytes) in question */
 				   the addition will not result in 0.  */
 	jnz L(32)		/* C is detected in the word => examine it */
 
+#ifdef __CHKP__
+	bndcu 12(%esi), %bnd0
+#endif
 	movl 12(%esi), %edx	/* get word (= 4 bytes) in question */
 	movl $0xfefefeff, %edi	/* magic value */
 	addl %edx, %edi		/* add the magic value to the word.  We get

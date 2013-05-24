@@ -121,6 +121,14 @@ ENTRY (FUNCTION)
 	testl %edx, %edx
 	jz L(returnNULL)
 	movl DELIM(%esp), %eax		/* Get start of delimiter set.  */
+#ifdef __CHKP__
+	bndldx STR(%esp,%edx,1),%bnd0
+	bndldx DELIM(%esp,%eax,1),%bnd1
+	bndcl (%edx), %bnd0
+	bndcu (%edx), %bnd0
+	bndcl (%eax), %bnd1
+	bndcu (%eax), %bnd1
+#endif
 
 /* For understanding the following code remember that %ecx == 0 now.
    Although all the following instruction only modify %cl we always

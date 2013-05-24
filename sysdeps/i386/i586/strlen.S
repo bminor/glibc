@@ -41,6 +41,10 @@
 ENTRY (strlen)
 
 	movl STR(%esp), %eax
+#ifdef __CHKP__
+	bndldx STR(%esp,%eax,1), %bnd0
+	bndcu (%eax),%bnd0
+#endif
 	movl $3, %edx		/* load mask (= 3) */
 
 	andl %eax, %edx		/* separate last two bits of address */
@@ -48,10 +52,16 @@ ENTRY (strlen)
 	jz L(1)			/* aligned => start loop */
 	jp L(0)			/* exactly two bits set */
 
+#ifdef __CHKP__
+	bndcu (%eax),%bnd0
+#endif
 	cmpb %dh, (%eax)	/* is byte NUL? */
 	je L(2)			/* yes => return */
 
 	incl %eax		/* increment pointer */
+#ifdef __CHKP__
+	bndcu (%eax),%bnd0
+#endif
 	cmpb %dh, (%eax)	/* is byte NUL? */
 
 	je L(2)			/* yes => return */
@@ -61,7 +71,11 @@ ENTRY (strlen)
 
 	jz L(1)
 
-L(0):	cmpb %dh, (%eax)	/* is byte NUL? */
+L(0):
+#ifdef __CHKP__
+	bndcu (%eax),%bnd0
+#endif
+	cmpb %dh, (%eax)	/* is byte NUL? */
 	je L(2)			/* yes => return */
 
 	incl %eax		/* increment pointer */
@@ -174,7 +188,11 @@ L(3):	subl $4, %eax		/* correct too early pointer increment */
 
 	incl %eax		/* increment pointer */
 
-L(2):	subl STR(%esp), %eax	/* now compute the length as difference
+L(2):
+#ifdef __CHKP__
+	bndcu (%eax),%bnd0
+#endif
+	subl STR(%esp), %eax	/* now compute the length as difference
 				   between start and terminating NUL
 				   character */
 	ret

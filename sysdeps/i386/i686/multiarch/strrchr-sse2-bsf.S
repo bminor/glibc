@@ -42,6 +42,12 @@ ENTRY (__strrchr_sse2_bsf)
 	mov	STR1(%esp), %ecx
 	movd	STR2(%esp), %xmm1
 
+# ifdef __CHKP__
+	bndldx 	STR1(%esp,%ecx,1), %bnd0
+	bndcl  	(%ecx), %bnd0
+	bndcu  	(%ecx), %bnd0
+# endif
+
 	PUSH	(%edi)
 	pxor	%xmm2, %xmm2
 	mov	%ecx, %edi
@@ -90,6 +96,9 @@ L(unaligned_return_value1):
 	jz	L(return_null)
 	bsr	%eax, %eax
 	add	%edi, %eax
+# ifdef __CHKP__
+	bndcu   (%eax), %bnd0
+# endif
 	POP	(%edi)
 	ret
 	CFI_PUSH	(%edi)
@@ -156,6 +165,9 @@ L(unaligned_return_value):
 	jz	L(return_null)
 	bsr	%eax, %eax
 	add	%edi, %eax
+# ifdef __CHKP__
+	bndcu   (%eax), %bnd0
+# endif
 	POP	(%edi)
 	ret
 	CFI_PUSH	(%edi)
@@ -175,6 +187,9 @@ L(unaligned_match):
 /* Loop start on aligned string.  */
 	.p2align 4
 L(loop):
+# ifdef __CHKP__
+        bndcu   (%edi), %bnd0
+# endif
 	movdqa	(%edi), %xmm0
 	pcmpeqb	%xmm0, %xmm2
 	add	$16, %edi
@@ -184,6 +199,9 @@ L(loop):
 	or	%eax, %ecx
 	jnz	L(matches)
 
+# ifdef __CHKP__
+        bndcu   (%edi), %bnd0
+# endif
 	movdqa	(%edi), %xmm0
 	pcmpeqb	%xmm0, %xmm2
 	add	$16, %edi
@@ -193,6 +211,9 @@ L(loop):
 	or	%eax, %ecx
 	jnz	L(matches)
 
+# ifdef __CHKP__
+        bndcu   (%edi), %bnd0
+# endif
 	movdqa	(%edi), %xmm0
 	pcmpeqb	%xmm0, %xmm2
 	add	$16, %edi
@@ -202,6 +223,9 @@ L(loop):
 	or	%eax, %ecx
 	jnz	L(matches)
 
+# ifdef __CHKP__
+        bndcu   (%edi), %bnd0
+# endif
 	movdqa	(%edi), %xmm0
 	pcmpeqb	%xmm0, %xmm2
 	add	$16, %edi
@@ -224,6 +248,9 @@ L(return_value):
 	POP	(%esi)
 
 	sub	$16, %eax
+# ifdef __CHKP__
+	bndcu   (%eax), %bnd0
+# endif
 	POP	(%edi)
 	ret
 
@@ -255,6 +282,9 @@ L(return_value_1):
 	bsr	%eax, %eax
 	add	%edi, %eax
 	sub	$16, %eax
+# ifdef __CHKP__
+	bndcu   (%eax), %bnd0
+# endif
 	POP	(%edi)
 	ret
 

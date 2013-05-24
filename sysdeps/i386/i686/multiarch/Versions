@@ -2,4 +2,11 @@ libc {
   GLIBC_PRIVATE {
     __get_cpu_features;
   }
+%ifdef __CHKP__
+  GLIBC_2.14 {
+   mpx_memcpy_nobnd;
+   mpx_memmove_nobnd;
+   mpx_mempcpy_nobnd;
+  }
+%endif
 }

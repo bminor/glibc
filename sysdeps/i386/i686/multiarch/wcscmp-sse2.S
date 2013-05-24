@@ -47,6 +47,14 @@ ENTRY (__wcscmp_sse2)
 */
 	mov	STR1(%esp), %edx
 	mov	STR2(%esp), %eax
+#ifdef __CHKP__
+	bndldx 	STR1(%esp,%edx,1), %bnd0
+	bndldx 	STR2(%esp,%eax,1), %bnd1
+	bndcl  	(%edx), %bnd0
+	bndcl  	(%eax), %bnd1
+	bndcu  	(%edx), %bnd0
+	bndcu  	(%eax), %bnd1
+#endif
 
 	mov	(%eax), %ecx
 	cmp	%ecx, (%edx)

@@ -91,6 +91,15 @@ ENTRY (MEMCMP)
 	jbe	L(less1bytes)
 # endif
 
+# ifdef __CHKP__
+	bndldx 	BLK1(%esp,%eax,1), %bnd0
+	bndldx 	BLK2(%esp,%edx,1), %bnd1
+	bndcl	(%eax), %bnd0
+	bndcl	(%edx), %bnd1
+	bndcu	(%eax), %bnd0
+	bndcu	(%edx), %bnd1
+# endif
+
 	pxor	%xmm0, %xmm0
 	cmp	$64, %ecx
 	ja	L(64bytesormore)
@@ -115,6 +124,10 @@ L(less8bytes):
 	cmpb	(%edx), %bl
 	jne	L(nonzero)
 
+# ifdef __CHKP__
+	bndcu	1(%eax), %bnd0
+	bndcu	1(%edx), %bnd1
+# endif
 	mov	1(%eax), %bl
 	cmpb	1(%edx), %bl
 	jne	L(nonzero)
@@ -122,6 +135,10 @@ L(less8bytes):
 	cmp	$2, %ecx
 	jz	L(0bytes)
 
+# ifdef __CHKP__
+	bndcu	2(%eax), %bnd0
+	bndcu	2(%edx), %bnd1
+# endif
 	mov	2(%eax), %bl
 	cmpb	2(%edx), %bl
 	jne	L(nonzero)
@@ -129,6 +146,10 @@ L(less8bytes):
 	cmp	$3, %ecx
 	jz	L(0bytes)
 
+# ifdef __CHKP__
+	bndcu	3(%eax), %bnd0
+	bndcu	3(%edx), %bnd1
+# endif
 	mov	3(%eax), %bl
 	cmpb	3(%edx), %bl
 	jne	L(nonzero)
@@ -136,6 +157,10 @@ L(less8bytes):
 	cmp	$4, %ecx
 	jz	L(0bytes)
 
+# ifdef __CHKP__
+	bndcu	4(%eax), %bnd0
+	bndcu	4(%edx), %bnd1
+# endif
 	mov	4(%eax), %bl
 	cmpb	4(%edx), %bl
 	jne	L(nonzero)
@@ -143,6 +168,10 @@ L(less8bytes):
 	cmp	$5, %ecx
 	jz	L(0bytes)
 
+# ifdef __CHKP__
+	bndcu	5(%eax), %bnd0
+	bndcu	5(%edx), %bnd1
+# endif
 	mov	5(%eax), %bl
 	cmpb	5(%edx), %bl
 	jne	L(nonzero)
@@ -150,6 +179,10 @@ L(less8bytes):
 	cmp	$6, %ecx
 	jz	L(0bytes)
 
+# ifdef __CHKP__
+	bndcu	6(%eax), %bnd0
+	bndcu	6(%edx), %bnd1
+# endif
 	mov	6(%eax), %bl
 	cmpb	6(%edx), %bl
 	je	L(0bytes)
@@ -198,6 +231,14 @@ L(return0):
 	.p2align 4
 L(less1bytes):
 	jb	L(0bytesend)
+# ifdef __CHKP__
+	bndldx 	BLK1(%esp,%eax,1), %bnd0
+	bndldx 	BLK2(%esp,%edx,1), %bnd1
+	bndcl	(%eax), %bnd0
+	bndcl	(%edx), %bnd1
+	bndcu	(%eax), %bnd0
+	bndcu	(%edx), %bnd1
+# endif
 	movzbl	(%eax), %eax
 	movzbl	(%edx), %edx
 	sub	%edx, %eax
@@ -221,18 +262,30 @@ L(64bytesormore_loop):
 	ptest	%xmm2, %xmm0
 	jnc	L(find_16diff)
 
+# ifdef __CHKP__
+	bndcu	16(%eax), %bnd0
+	bndcu	16(%edx), %bnd1
+# endif
 	movdqu	16(%eax), %xmm1
 	movdqu	16(%edx), %xmm2
 	pxor	%xmm1, %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(find_32diff)
 
+# ifdef __CHKP__
+	bndcu	32(%eax), %bnd0
+	bndcu	32(%edx), %bnd1
+# endif
 	movdqu	32(%eax), %xmm1
 	movdqu	32(%edx), %xmm2
 	pxor	%xmm1, %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(find_48diff)
 
+# ifdef __CHKP__
+	bndcu	48(%eax), %bnd0
+	bndcu	48(%edx), %bnd1
+# endif
 	movdqu	48(%eax), %xmm1
 	movdqu	48(%edx), %xmm2
 	pxor	%xmm1, %xmm2

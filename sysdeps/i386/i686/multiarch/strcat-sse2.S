@@ -95,10 +95,20 @@ ENTRY (STRCAT)
 	test	%ebx, %ebx
 	jz	L(ExitZero)
 # endif
+# ifdef __CHKP__
+	bndldx 	STR1(%esp,%eax,1), %bnd0
+	bndldx 	STR2(%esp,%esi,1), %bnd1
+	bndcl  	(%esi), %bnd1
+	bndcu  	(%esi), %bnd1
+# endif
 	cmpb	$0, (%esi)
 	mov	%esi, %ecx
 	mov	%eax, %edx
 	jz	L(ExitZero)
+# ifdef __CHKP__
+	bndcl  	(%eax), %bnd0
+	bndcu  	(%eax), %bnd0
+# endif
 
 	and	$63, %ecx
 	and	$63, %edx
@@ -113,6 +123,9 @@ ENTRY (STRCAT)
 	movdqu	(%eax), %xmm1
 	movdqu	(%esi), %xmm5
 	pcmpeqb	%xmm1, %xmm0
+# ifdef __CHKP__
+	bndcu  	16(%esi), %bnd1
+# endif
 	movdqu	16(%esi), %xmm6
 	pmovmskb %xmm0, %ecx
 	pcmpeqb	%xmm5, %xmm4
@@ -132,6 +145,9 @@ L(alignment_prolog):
 	and	$-16, %eax
 	pcmpeqb	(%eax), %xmm0
 	movdqu	(%esi), %xmm5
+# ifdef __CHKP__
+	bndcu  	16(%esi), %bnd1
+# endif
 	movdqu	16(%esi), %xmm6
 	pmovmskb %xmm0, %edx
 	pcmpeqb	%xmm5, %xmm4
@@ -148,21 +164,33 @@ L(loop_prolog):
 	pxor	%xmm3, %xmm3
 	.p2align 4
 L(align16_loop):
+# ifdef __CHKP__
+	bndcu  	16(%eax), %bnd0
+# endif
 	pcmpeqb	16(%eax), %xmm0
 	pmovmskb %xmm0, %edx
 	test	%edx, %edx
 	jnz	L(exit16)
 
+# ifdef __CHKP__
+	bndcu  	32(%eax), %bnd0
+# endif
 	pcmpeqb	32(%eax), %xmm1
 	pmovmskb %xmm1, %edx
 	test	%edx, %edx
 	jnz	L(exit32)
 
+# ifdef __CHKP__
+	bndcu  	48(%eax), %bnd0
+# endif
 	pcmpeqb	48(%eax), %xmm2
 	pmovmskb %xmm2, %edx
 	test	%edx, %edx
 	jnz	L(exit48)
 
+# ifdef __CHKP__
+	bndcu  	64(%eax), %bnd0
+# endif
 	pcmpeqb	64(%eax), %xmm3
 	pmovmskb %xmm3, %edx
 	lea	64(%eax), %eax
@@ -212,6 +240,9 @@ L(StartStrcpyPart):
 	test	%edx, %edx
 	jnz	L(CopyFrom1To16BytesTail1)
 
+# ifdef __CHKP__
+	bndcu  	15(%eax), %bnd0
+# endif
 	movdqu	%xmm5, (%eax)
 	pmovmskb %xmm7, %edx
 # ifdef USE_AS_STRNCAT
@@ -250,21 +281,33 @@ L(StrlenCore7_1):
 
 	.p2align 4
 L(align16_loop_1):
+# ifdef __CHKP__
+	bndcu  	16(%eax), %bnd0
+# endif
 	pcmpeqb	16(%eax), %xmm0
 	pmovmskb %xmm0, %edx
 	test	%edx, %edx
 	jnz	L(exit16_1)
 
+# ifdef __CHKP__
+	bndcu  	32(%eax), %bnd0
+# endif
 	pcmpeqb	32(%eax), %xmm1
 	pmovmskb %xmm1, %edx
 	test	%edx, %edx
 	jnz	L(exit32_1)
 
+# ifdef __CHKP__
+	bndcu  	48(%eax), %bnd0
+# endif
 	pcmpeqb	48(%eax), %xmm2
 	pmovmskb %xmm2, %edx
 	test	%edx, %edx
 	jnz	L(exit48_1)
 
+# ifdef __CHKP__
+	bndcu  	64(%eax), %bnd0
+# endif
 	pcmpeqb	64(%eax), %xmm3
 	pmovmskb %xmm3, %edx
 	lea	64(%eax), %eax
@@ -323,6 +366,9 @@ L(StartStrcpyPart_1):
 	test	%edx, %edx
 	jnz	L(CopyFrom1To16BytesTail)
 
+# ifdef __CHKP__
+	bndcu  	16(%esi), %bnd1
+# endif
 	pcmpeqb	16(%esi), %xmm0
 	pmovmskb %xmm0, %edx
 # ifdef USE_AS_STRNCAT
@@ -341,6 +387,9 @@ L(Unalign16Both):
 	mov	$16, %ecx
 	movdqa	(%esi, %ecx), %xmm1
 	movaps	16(%esi, %ecx), %xmm2
+# ifdef __CHKP__
+	bndcu  	15(%eax, %ecx), %bnd0
+# endif
 	movdqu	%xmm1, (%eax, %ecx)
 	pcmpeqb	%xmm2, %xmm0
 	pmovmskb %xmm0, %edx
@@ -352,6 +401,10 @@ L(Unalign16Both):
 	test	%edx, %edx
 	jnz	L(CopyFrom1To16Bytes)
 L(Unalign16BothBigN):
+# ifdef __CHKP__
+	bndcu  	16(%esi, %ecx), %bnd1
+	bndcu  	15(%eax, %ecx), %bnd0
+# endif
 	movaps	16(%esi, %ecx), %xmm3
 	movdqu	%xmm2, (%eax, %ecx)
 	pcmpeqb	%xmm3, %xmm0
@@ -364,6 +417,10 @@ L(Unalign16BothBigN):
 	test	%edx, %edx
 	jnz	L(CopyFrom1To16Bytes)
 
+# ifdef __CHKP__
+	bndcu  	16(%esi, %ecx), %bnd1
+	bndcu  	15(%eax, %ecx), %bnd0
+# endif
 	movaps	16(%esi, %ecx), %xmm4
 	movdqu	%xmm3, (%eax, %ecx)
 	pcmpeqb	%xmm4, %xmm0
@@ -376,6 +433,10 @@ L(Unalign16BothBigN):
 	test	%edx, %edx
 	jnz	L(CopyFrom1To16Bytes)
 
+# ifdef __CHKP__
+	bndcu  	16(%esi, %ecx), %bnd1
+	bndcu  	15(%eax, %ecx), %bnd0
+# endif
 	movaps	16(%esi, %ecx), %xmm1
 	movdqu	%xmm4, (%eax, %ecx)
 	pcmpeqb	%xmm1, %xmm0
@@ -388,6 +449,10 @@ L(Unalign16BothBigN):
 	test	%edx, %edx
 	jnz	L(CopyFrom1To16Bytes)
 
+# ifdef __CHKP__
+	bndcu  	16(%esi, %ecx), %bnd1
+	bndcu  	15(%eax, %ecx), %bnd0
+# endif
 	movaps	16(%esi, %ecx), %xmm2
 	movdqu	%xmm1, (%eax, %ecx)
 	pcmpeqb	%xmm2, %xmm0
@@ -400,6 +465,10 @@ L(Unalign16BothBigN):
 	test	%edx, %edx
 	jnz	L(CopyFrom1To16Bytes)
 
+# ifdef __CHKP__
+	bndcu  	16(%esi, %ecx), %bnd1
+	bndcu  	15(%eax, %ecx), %bnd0
+# endif
 	movaps	16(%esi, %ecx), %xmm3
 	movdqu	%xmm2, (%eax, %ecx)
 	pcmpeqb	%xmm3, %xmm0
@@ -412,6 +481,9 @@ L(Unalign16BothBigN):
 	test	%edx, %edx
 	jnz	L(CopyFrom1To16Bytes)
 
+# ifdef __CHKP__
+	bndcu  	15(%eax, %ecx), %bnd0
+# endif
 	movdqu	%xmm3, (%eax, %ecx)
 	mov	%esi, %edx
 	lea	16(%esi, %ecx), %esi
@@ -420,6 +492,9 @@ L(Unalign16BothBigN):
 	sub	%edx, %eax
 # ifdef USE_AS_STRNCAT
 	lea	128(%ebx, %edx), %ebx
+# endif
+# ifdef __CHKP__
+	bndcu  	(%esi), %bnd1
 # endif
 	movaps	(%esi), %xmm2
 	movaps	%xmm2, %xmm4
@@ -443,6 +518,10 @@ L(Unalign16BothBigN):
 L(Unaligned64Loop_start):
 	add	$64, %eax
 	add	$64, %esi
+# ifdef __CHKP__
+	bndcu  	(%esi), %bnd1
+	bndcu  	-1(%eax), %bnd0
+# endif
 	movdqu	%xmm4, -64(%eax)
 	movaps	(%esi), %xmm2
 	movdqa	%xmm2, %xmm4
@@ -485,11 +564,18 @@ L(Unaligned64Leave):
 	jnz	L(CopyFrom1To16BytesUnaligned_32)
 
 	bsf	%ecx, %edx
+# ifdef __CHKP__
+	bndcu  	47(%eax), %bnd0
+# endif
 	movdqu	%xmm4, (%eax)
 	movdqu	%xmm5, 16(%eax)
 	movdqu	%xmm6, 32(%eax)
 	add	$48, %esi
 	add	$48, %eax
+# ifdef __CHKP__
+	bndcu  	(%eax, %edx), %bnd0
+	bndcu  	(%esi, %edx), %bnd1
+# endif
 	BRANCH_TO_JMPTBL_ENTRY (L(ExitTable), %edx, 4)
 
 # ifdef USE_AS_STRNCAT
@@ -501,12 +587,18 @@ L(BigN):
 	test	%edx, %edx
 	jnz	L(CopyFrom1To16BytesTail)
 
+# ifdef __CHKP__
+	bndcu  	16(%esi), %bnd1
+# endif
 	pcmpeqb	16(%esi), %xmm0
 	pmovmskb %xmm0, %edx
 	test	%edx, %edx
 	jnz	L(CopyFrom1To32Bytes)
 
 	movdqu	(%esi, %ecx), %xmm1   /* copy 16 bytes */
+# ifdef __CHKP__
+	bndcu  	15(%eax), %bnd0
+# endif
 	movdqu	%xmm1, (%eax)
 	sub	%ecx, %eax
 	sub     $48, %ebx
@@ -515,6 +607,9 @@ L(BigN):
 	mov	$16, %ecx
 	movdqa	(%esi, %ecx), %xmm1
 	movaps	16(%esi, %ecx), %xmm2
+# ifdef __CHKP__
+	bndcu  	15(%eax, %ecx), %bnd0
+# endif
 	movdqu	%xmm1, (%eax, %ecx)
 	pcmpeqb	%xmm2, %xmm0
 	pmovmskb %xmm0, %edx
@@ -532,12 +627,20 @@ L(CopyFrom1To16Bytes):
 	add	%ecx, %eax
 	add	%ecx, %esi
 	bsf	%edx, %edx
+# ifdef __CHKP__
+	bndcu  	(%eax, %edx), %bnd0
+	bndcu  	(%esi, %edx), %bnd1
+# endif
 	BRANCH_TO_JMPTBL_ENTRY (L(ExitTable), %edx, 4)
 
 	.p2align 4
 L(CopyFrom1To16BytesTail):
 	add	%ecx, %esi
 	bsf	%edx, %edx
+# ifdef __CHKP__
+	bndcu  	(%eax, %edx), %bnd0
+	bndcu  	(%esi, %edx), %bnd1
+# endif
 	BRANCH_TO_JMPTBL_ENTRY (L(ExitTable), %edx, 4)
 
 	.p2align 4
@@ -546,6 +649,10 @@ L(CopyFrom1To32Bytes1):
 	add	$16, %eax
 L(CopyFrom1To16BytesTail1):
 	bsf	%edx, %edx
+# ifdef __CHKP__
+	bndcu  	(%eax, %edx), %bnd0
+	bndcu  	(%esi, %edx), %bnd1
+# endif
 	BRANCH_TO_JMPTBL_ENTRY (L(ExitTable), %edx, 4)
 
 	.p2align 4
@@ -554,34 +661,60 @@ L(CopyFrom1To32Bytes):
 	add	%ecx, %esi
 	add	$16, %edx
 	sub	%ecx, %edx
+# ifdef __CHKP__
+	bndcu  	(%eax, %edx), %bnd0
+	bndcu  	(%esi, %edx), %bnd1
+# endif
 	BRANCH_TO_JMPTBL_ENTRY (L(ExitTable), %edx, 4)
 
 	.p2align 4
 L(CopyFrom1To16BytesUnaligned_0):
 	bsf	%edx, %edx
+# ifdef __CHKP__
+	bndcu  	(%eax, %edx), %bnd0
+	bndcu  	(%esi, %edx), %bnd1
+# endif
 	BRANCH_TO_JMPTBL_ENTRY (L(ExitTable), %edx, 4)
 
 	.p2align 4
 L(CopyFrom1To16BytesUnaligned_16):
 	bsf	%ecx, %edx
+# ifdef __CHKP__
+	bndcu  	15(%eax), %bnd0
+# endif
 	movdqu	%xmm4, (%eax)
 	add	$16, %esi
 	add	$16, %eax
+# ifdef __CHKP__
+	bndcu  	(%eax, %edx), %bnd0
+	bndcu  	(%esi, %edx), %bnd1
+# endif
 	BRANCH_TO_JMPTBL_ENTRY (L(ExitTable), %edx, 4)
 
 	.p2align 4
 L(CopyFrom1To16BytesUnaligned_32):
 	bsf	%edx, %edx
+# ifdef __CHKP__
+	bndcu  	31(%eax), %bnd0
+# endif
 	movdqu	%xmm4, (%eax)
 	movdqu	%xmm5, 16(%eax)
 	add	$32, %esi
 	add	$32, %eax
+# ifdef __CHKP__
+	bndcu  	(%eax, %edx), %bnd0
+	bndcu  	(%esi, %edx), %bnd1
+# endif
 	BRANCH_TO_JMPTBL_ENTRY (L(ExitTable), %edx, 4)
 
 # ifdef USE_AS_STRNCAT
 
 	.p2align 4
 L(CopyFrom1To16BytesExit):
+# ifdef __CHKP__
+	bndcu  	(%eax, %edx), %bnd0
+	bndcu  	(%esi, %edx), %bnd1
+# endif
 	BRANCH_TO_JMPTBL_ENTRY (L(ExitTable), %edx, 4)
 
 /* Case2 */
@@ -594,6 +727,10 @@ L(CopyFrom1To16BytesCase2):
 	bsf	%edx, %edx
 	cmp	%ebx, %edx
 	jb	L(CopyFrom1To16BytesExit)
+# ifdef __CHKP__
+	bndcu  	1(%eax, %ebx), %bnd0
+	bndcu  	1(%esi, %ebx), %bnd1
+# endif
 	BRANCH_TO_JMPTBL_ENTRY (L(ExitStrncatTable), %ebx, 4)
 
 	.p2align 4
@@ -605,6 +742,10 @@ L(CopyFrom1To32BytesCase2):
 	sub	%ecx, %edx
 	cmp	%ebx, %edx
 	jb	L(CopyFrom1To16BytesExit)
+# ifdef __CHKP__
+	bndcu  	1(%eax, %ebx), %bnd0
+	bndcu  	1(%esi, %ebx), %bnd1
+# endif
 	BRANCH_TO_JMPTBL_ENTRY (L(ExitStrncatTable), %ebx, 4)
 
 L(CopyFrom1To16BytesTailCase2):
@@ -613,12 +754,20 @@ L(CopyFrom1To16BytesTailCase2):
 	bsf	%edx, %edx
 	cmp	%ebx, %edx
 	jb	L(CopyFrom1To16BytesExit)
+# ifdef __CHKP__
+	bndcu  	1(%eax, %ebx), %bnd0
+	bndcu  	1(%esi, %ebx), %bnd1
+# endif
 	BRANCH_TO_JMPTBL_ENTRY (L(ExitStrncatTable), %ebx, 4)
 
 L(CopyFrom1To16BytesTail1Case2):
 	bsf	%edx, %edx
 	cmp	%ebx, %edx
 	jb	L(CopyFrom1To16BytesExit)
+# ifdef __CHKP__
+	bndcu  	1(%eax, %ebx), %bnd0
+	bndcu  	1(%esi, %ebx), %bnd1
+# endif
 	BRANCH_TO_JMPTBL_ENTRY (L(ExitStrncatTable), %ebx, 4)
 
 /* Case2 or Case3,  Case3 */
@@ -631,6 +780,10 @@ L(CopyFrom1To16BytesCase3):
 	add	$16, %ebx
 	add	%ecx, %eax
 	add	%ecx, %esi
+# ifdef __CHKP__
+	bndcu  	1(%eax, %ebx), %bnd0
+	bndcu  	1(%esi, %ebx), %bnd1
+# endif
 	BRANCH_TO_JMPTBL_ENTRY (L(ExitStrncatTable), %ebx, 4)
 
 	.p2align 4
@@ -639,6 +792,10 @@ L(CopyFrom1To32BytesCase2OrCase3):
 	jnz	L(CopyFrom1To32BytesCase2)
 	sub	%ecx, %ebx
 	add	%ecx, %esi
+# ifdef __CHKP__
+	bndcu  	1(%eax, %ebx), %bnd0
+	bndcu  	1(%esi, %ebx), %bnd1
+# endif
 	BRANCH_TO_JMPTBL_ENTRY (L(ExitStrncatTable), %ebx, 4)
 
 	.p2align 4
@@ -647,6 +804,10 @@ L(CopyFrom1To16BytesTailCase2OrCase3):
 	jnz	L(CopyFrom1To16BytesTailCase2)
 	sub	%ecx, %ebx
 	add	%ecx, %esi
+# ifdef __CHKP__
+	bndcu  	1(%eax, %ebx), %bnd0
+	bndcu  	1(%esi, %ebx), %bnd1
+# endif
 	BRANCH_TO_JMPTBL_ENTRY (L(ExitStrncatTable), %ebx, 4)
 
 	.p2align 4
@@ -657,6 +818,10 @@ L(CopyFrom1To32Bytes1Case2OrCase3):
 L(CopyFrom1To16BytesTail1Case2OrCase3):
 	test	%edx, %edx
 	jnz	L(CopyFrom1To16BytesTail1Case2)
+# ifdef __CHKP__
+	bndcu  	1(%eax, %ebx), %bnd0
+	bndcu  	1(%esi, %ebx), %bnd1
+# endif
 	BRANCH_TO_JMPTBL_ENTRY (L(ExitStrncatTable), %ebx, 4)
 
 # endif
@@ -1110,15 +1275,27 @@ L(Unaligned64LeaveCase3):
 	and	$-16, %ecx
 	add	$48, %ebx
 	jl	L(CopyFrom1To16BytesCase3)
+# ifdef __CHKP__
+	bndcu  	15(%eax), %bnd0
+# endif
 	movdqu	%xmm4, (%eax)
 	sub	$16, %ebx
 	jb	L(CopyFrom1To16BytesCase3)
+# ifdef __CHKP__
+	bndcu  	31(%eax), %bnd0
+# endif
 	movdqu	%xmm5, 16(%eax)
 	sub	$16, %ebx
 	jb	L(CopyFrom1To16BytesCase3)
+# ifdef __CHKP__
+	bndcu  	47(%eax), %bnd0
+# endif
 	movdqu	%xmm6, 32(%eax)
 	sub	$16, %ebx
 	jb	L(CopyFrom1To16BytesCase3)
+# ifdef __CHKP__
+	bndcu  	63(%eax), %bnd0
+# endif
 	movdqu	%xmm7, 48(%eax)
 	xor	%bh, %bh
 	movb	%bh, 64(%eax)
@@ -1137,6 +1314,9 @@ L(Unaligned64LeaveCase2):
 
 	pcmpeqb	%xmm5, %xmm0
 	pmovmskb %xmm0, %edx
+# ifdef __CHKP__
+	bndcu  	15(%eax), %bnd0
+# endif
 	movdqu	%xmm4, (%eax)
 	add	$16, %ecx
 	sub	$16, %ebx
@@ -1146,6 +1326,9 @@ L(Unaligned64LeaveCase2):
 
 	pcmpeqb	%xmm6, %xmm0
 	pmovmskb %xmm0, %edx
+# ifdef __CHKP__
+	bndcu  	31(%eax), %bnd0
+# endif
 	movdqu	%xmm5, 16(%eax)
 	add	$16, %ecx
 	sub	$16, %ebx
@@ -1155,6 +1338,9 @@ L(Unaligned64LeaveCase2):
 
 	pcmpeqb	%xmm7, %xmm0
 	pmovmskb %xmm0, %edx
+# ifdef __CHKP__
+	bndcu  	47(%eax), %bnd0
+# endif
 	movdqu	%xmm6, 32(%eax)
 	lea	16(%eax, %ecx), %eax
 	lea	16(%esi, %ecx), %esi

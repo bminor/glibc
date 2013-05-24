@@ -85,6 +85,14 @@ ENTRY (STRCPY)
 	movl	LEN(%esp), %ebx
 	test	%ebx, %ebx
 	jz	L(ExitZero)
+# ifdef __CHKP__
+	bndldx 	STR1(%esp,%edi,1), %bnd0
+	bndldx 	STR2(%esp,%esi,1), %bnd1
+	bndcl  	(%esi), %bnd1
+	bndcu  	(%esi), %bnd1
+	bndcl  	(%edi), %bnd0
+	bndcu  	-1(%edi, %ebx), %bnd0
+# endif
 
 	mov	%esi, %ecx
 # ifndef USE_AS_STPCPY
@@ -111,6 +119,9 @@ ENTRY (STRCPY)
 	test	%edx, %edx
 	jnz	L(CopyFrom1To16BytesTail)
 
+# ifdef __CHKP__
+	bndcu  	16(%esi), %bnd1
+# endif
 	pcmpeqb	16(%esi), %xmm0
 	pmovmskb %xmm0, %edx
 # ifdef USE_AS_STPCPY
@@ -124,6 +135,9 @@ ENTRY (STRCPY)
 	jnz	L(CopyFrom1To32Bytes)
 
 	movdqu	(%esi, %ecx), %xmm1   /* copy 16 bytes */
+# ifdef __CHKP__
+	bndcu  	15(%edi), %bnd0
+# endif
 	movdqu	%xmm1, (%edi)
 
 	sub	%ecx, %edi
@@ -132,6 +146,10 @@ ENTRY (STRCPY)
 	.p2align 4
 L(Unalign16Both):
 	mov	$16, %ecx
+# ifdef __CHKP__
+	bndcu  	16(%esi, %ecx), %bnd1
+	bndcu  	15(%edi, %ecx), %bnd0
+# endif
 	movdqa	(%esi, %ecx), %xmm1
 	movaps	16(%esi, %ecx), %xmm2
 	movdqu	%xmm1, (%edi, %ecx)
@@ -143,6 +161,10 @@ L(Unalign16Both):
 	test	%edx, %edx
 	jnz	L(CopyFrom1To16BytesUnalignedXmm2)
 
+# ifdef __CHKP__
+	bndcu  	16(%esi, %ecx), %bnd1
+	bndcu  	15(%edi, %ecx), %bnd0
+# endif
 	movaps	16(%esi, %ecx), %xmm3
 	movdqu	%xmm2, (%edi, %ecx)
 	pcmpeqb	%xmm3, %xmm0
@@ -153,6 +175,10 @@ L(Unalign16Both):
 	test	%edx, %edx
 	jnz	L(CopyFrom1To16BytesUnalignedXmm3)
 
+# ifdef __CHKP__
+	bndcu  	16(%esi, %ecx), %bnd1
+	bndcu  	15(%edi, %ecx), %bnd0
+# endif
 	movaps	16(%esi, %ecx), %xmm4
 	movdqu	%xmm3, (%edi, %ecx)
 	pcmpeqb	%xmm4, %xmm0
@@ -163,6 +189,10 @@ L(Unalign16Both):
 	test	%edx, %edx
 	jnz	L(CopyFrom1To16BytesUnalignedXmm4)
 
+# ifdef __CHKP__
+	bndcu  	16(%esi, %ecx), %bnd1
+	bndcu  	15(%edi, %ecx), %bnd0
+# endif
 	movaps	16(%esi, %ecx), %xmm1
 	movdqu	%xmm4, (%edi, %ecx)
 	pcmpeqb	%xmm1, %xmm0
@@ -173,6 +203,10 @@ L(Unalign16Both):
 	test	%edx, %edx
 	jnz	L(CopyFrom1To16BytesUnalignedXmm1)
 
+# ifdef __CHKP__
+	bndcu  	16(%esi, %ecx), %bnd1
+	bndcu  	15(%edi, %ecx), %bnd0
+# endif
 	movaps	16(%esi, %ecx), %xmm2
 	movdqu	%xmm1, (%edi, %ecx)
 	pcmpeqb	%xmm2, %xmm0
@@ -183,6 +217,10 @@ L(Unalign16Both):
 	test	%edx, %edx
 	jnz	L(CopyFrom1To16BytesUnalignedXmm2)
 
+# ifdef __CHKP__
+	bndcu  	16(%esi, %ecx), %bnd1
+	bndcu  	15(%edi, %ecx), %bnd0
+# endif
 	movaps	16(%esi, %ecx), %xmm3
 	movdqu	%xmm2, (%edi, %ecx)
 	pcmpeqb	%xmm3, %xmm0
@@ -193,6 +231,10 @@ L(Unalign16Both):
 	test	%edx, %edx
 	jnz	L(CopyFrom1To16BytesUnalignedXmm3)
 
+# ifdef __CHKP__
+	bndcu  	16(%esi, %ecx), %bnd1
+	bndcu  	15(%edi, %ecx), %bnd0
+# endif
 	movdqu	%xmm3, (%edi, %ecx)
 	mov	%esi, %edx
 	lea	16(%esi, %ecx), %esi
@@ -202,6 +244,9 @@ L(Unalign16Both):
 	lea	128(%ebx, %edx), %ebx
 
 L(Unaligned64Loop):
+# ifdef __CHKP__
+	bndcu  	48(%esi), %bnd1
+# endif
 	movaps	(%esi), %xmm2
 	movaps	%xmm2, %xmm4
 	movaps	16(%esi), %xmm5
@@ -220,6 +265,10 @@ L(Unaligned64Loop):
 L(Unaligned64Loop_start):
 	add	$64, %edi
 	add	$64, %esi
+# ifdef __CHKP__
+	bndcu  	(%esi), %bnd1
+	bndcu  	(%edi), %bnd0
+# endif
 	movdqu	%xmm4, -64(%edi)
 	movaps	(%esi), %xmm2
 	movdqa	%xmm2, %xmm4
@@ -259,15 +308,27 @@ L(Unaligned64Leave):
 	jnz	L(CopyFrom1To16BytesUnaligned_32)
 
 	bsf	%ecx, %edx
+# ifdef __CHKP__
+	bndcu  	47(%edi), %bnd0
+# endif
 	movdqu	%xmm4, (%edi)
 	movdqu	%xmm5, 16(%edi)
 	movdqu	%xmm6, 32(%edi)
 # ifdef USE_AS_STPCPY
+#  ifdef __CHKP__
+	bndcu  	48(%edi, %edx), %bnd0
+#  endif
 	lea	48(%edi, %edx), %eax
+# endif
+# ifdef __CHKP__
+	bndcu  	63(%edi), %bnd0
 # endif
 	movdqu	%xmm7, 48(%edi)
 	add	$15, %ebx
 	sub	%edx, %ebx
+#  ifdef __CHKP__
+	bndcu  	49(%edi, %edx), %bnd0
+#  endif
 	lea	49(%edi, %edx), %edi
 	jmp	L(StrncpyFillTailWithZero)
 
@@ -288,6 +349,10 @@ L(SourceStringAlignmentZero):
 	test	%edx, %edx
 	jnz	L(CopyFrom1To16BytesTail1)
 
+# ifdef __CHKP__
+	bndcu  	15(%edi), %bnd0
+	bndcu  	16(%esi), %bnd1
+# endif
 	pcmpeqb	16(%esi), %xmm0
 	movdqu	%xmm1, (%edi)
 	pmovmskb %xmm0, %edx
@@ -313,7 +378,7 @@ L(CopyFrom1To16BytesTail):
 	bsf	%edx, %edx
 	BRANCH_TO_JMPTBL_ENTRY (L(ExitTable), %edx, 4)
 
-	.p2align 4
+	.p2align 9
 L(CopyFrom1To32Bytes1):
 	add	$16, %esi
 	add	$16, %edi
@@ -337,6 +402,9 @@ L(CopyFrom1To16BytesUnaligned_0):
 # ifdef USE_AS_STPCPY
 	lea	(%edi, %edx), %eax
 # endif
+# ifdef __CHKP__
+        bndcu   15(%edi), %bnd0
+# endif
 	movdqu	%xmm4, (%edi)
 	add	$63, %ebx
 	sub	%edx, %ebx
@@ -349,6 +417,9 @@ L(CopyFrom1To16BytesUnaligned_16):
 	movdqu	%xmm4, (%edi)
 # ifdef USE_AS_STPCPY
 	lea	16(%edi, %edx), %eax
+# endif
+# ifdef __CHKP__
+        bndcu   31(%edi), %bnd0
 # endif
 	movdqu	%xmm5, 16(%edi)
 	add	$47, %ebx
@@ -363,6 +434,9 @@ L(CopyFrom1To16BytesUnaligned_32):
 	movdqu	%xmm5, 16(%edi)
 # ifdef USE_AS_STPCPY
 	lea	32(%edi, %edx), %eax
+# endif
+# ifdef __CHKP__
+        bndcu   47(%edi), %bnd0
 # endif
 	movdqu	%xmm6, 32(%edi)
 	add	$31, %ebx
@@ -495,6 +569,9 @@ L(Exit1):
 	.p2align 4
 L(Exit2):
 	movw	(%esi), %dx
+# ifdef __CHKP__
+        bndcu   1(%edi), %bnd0
+# endif
 	movw	%dx, (%edi)
 # ifdef USE_AS_STPCPY
 	lea	1(%edi), %eax
@@ -507,6 +584,9 @@ L(Exit2):
 	.p2align 4
 L(Exit3):
 	movw	(%esi), %cx
+# ifdef __CHKP__
+        bndcu   2(%edi), %bnd0
+# endif
 	movw	%cx, (%edi)
 	movb	%dh, 2(%edi)
 # ifdef USE_AS_STPCPY
@@ -520,6 +600,9 @@ L(Exit3):
 	.p2align 4
 L(Exit4):
 	movl	(%esi), %edx
+# ifdef __CHKP__
+        bndcu   3(%edi), %bnd0
+# endif
 	movl	%edx, (%edi)
 # ifdef USE_AS_STPCPY
 	lea	3(%edi), %eax
@@ -532,6 +615,9 @@ L(Exit4):
 	.p2align 4
 L(Exit5):
 	movl	(%esi), %ecx
+# ifdef __CHKP__
+        bndcu   4(%edi), %bnd0
+# endif
 	movb	%dh, 4(%edi)
 	movl	%ecx, (%edi)
 # ifdef USE_AS_STPCPY
@@ -546,6 +632,9 @@ L(Exit5):
 L(Exit6):
 	movl	(%esi), %ecx
 	movw	4(%esi), %dx
+# ifdef __CHKP__
+        bndcu   5(%edi), %bnd0
+# endif
 	movl	%ecx, (%edi)
 	movw	%dx, 4(%edi)
 # ifdef USE_AS_STPCPY
@@ -560,6 +649,9 @@ L(Exit6):
 L(Exit7):
 	movl	(%esi), %ecx
 	movl	3(%esi), %edx
+# ifdef __CHKP__
+        bndcu   6(%edi), %bnd0
+# endif
 	movl	%ecx, (%edi)
 	movl	%edx, 3(%edi)
 # ifdef USE_AS_STPCPY
@@ -573,6 +665,9 @@ L(Exit7):
 	.p2align 4
 L(Exit8):
 	movlpd	(%esi), %xmm0
+# ifdef __CHKP__
+        bndcu   7(%edi), %bnd0
+# endif
 	movlpd	%xmm0, (%edi)
 # ifdef USE_AS_STPCPY
 	lea	7(%edi), %eax
@@ -585,6 +680,9 @@ L(Exit8):
 	.p2align 4
 L(Exit9):
 	movlpd	(%esi), %xmm0
+# ifdef __CHKP__
+        bndcu   8(%edi), %bnd0
+# endif
 	movb	%dh, 8(%edi)
 	movlpd	%xmm0, (%edi)
 # ifdef USE_AS_STPCPY
@@ -599,6 +697,9 @@ L(Exit9):
 L(Exit10):
 	movlpd	(%esi), %xmm0
 	movw	8(%esi), %dx
+# ifdef __CHKP__
+        bndcu   9(%edi), %bnd0
+# endif
 	movlpd	%xmm0, (%edi)
 	movw	%dx, 8(%edi)
 # ifdef USE_AS_STPCPY
@@ -613,6 +714,9 @@ L(Exit10):
 L(Exit11):
 	movlpd	(%esi), %xmm0
 	movl	7(%esi), %edx
+# ifdef __CHKP__
+        bndcu   10(%edi), %bnd0
+# endif
 	movlpd	%xmm0, (%edi)
 	movl	%edx, 7(%edi)
 # ifdef USE_AS_STPCPY
@@ -627,6 +731,9 @@ L(Exit11):
 L(Exit12):
 	movlpd	(%esi), %xmm0
 	movl	8(%esi), %edx
+# ifdef __CHKP__
+        bndcu   11(%edi), %bnd0
+# endif
 	movlpd	%xmm0, (%edi)
 	movl	%edx, 8(%edi)
 # ifdef USE_AS_STPCPY
@@ -641,6 +748,9 @@ L(Exit12):
 L(Exit13):
 	movlpd	(%esi), %xmm0
 	movlpd	5(%esi), %xmm1
+# ifdef __CHKP__
+        bndcu   12(%edi), %bnd0
+# endif
 	movlpd	%xmm0, (%edi)
 	movlpd	%xmm1, 5(%edi)
 # ifdef USE_AS_STPCPY
@@ -655,6 +765,9 @@ L(Exit13):
 L(Exit14):
 	movlpd	(%esi), %xmm0
 	movlpd	6(%esi), %xmm1
+# ifdef __CHKP__
+        bndcu   13(%edi), %bnd0
+# endif
 	movlpd	%xmm0, (%edi)
 	movlpd	%xmm1, 6(%edi)
 # ifdef USE_AS_STPCPY
@@ -669,6 +782,9 @@ L(Exit14):
 L(Exit15):
 	movlpd	(%esi), %xmm0
 	movlpd	7(%esi), %xmm1
+# ifdef __CHKP__
+        bndcu   14(%edi), %bnd0
+# endif
 	movlpd	%xmm0, (%edi)
 	movlpd	%xmm1, 7(%edi)
 # ifdef USE_AS_STPCPY
@@ -682,6 +798,9 @@ L(Exit15):
 	.p2align 4
 L(Exit16):
 	movdqu	(%esi), %xmm0
+# ifdef __CHKP__
+        bndcu   15(%edi), %bnd0
+# endif
 	movdqu	%xmm0, (%edi)
 # ifdef USE_AS_STPCPY
 	lea	15(%edi), %eax
@@ -694,6 +813,9 @@ L(Exit16):
 	.p2align 4
 L(Exit17):
 	movdqu	(%esi), %xmm0
+# ifdef __CHKP__
+        bndcu   16(%edi), %bnd0
+# endif
 	movdqu	%xmm0, (%edi)
 	movb	%dh, 16(%edi)
 # ifdef USE_AS_STPCPY
@@ -708,6 +830,9 @@ L(Exit17):
 L(Exit18):
 	movdqu	(%esi), %xmm0
 	movw	16(%esi), %cx
+# ifdef __CHKP__
+        bndcu   17(%edi), %bnd0
+# endif
 	movdqu	%xmm0, (%edi)
 	movw	%cx, 16(%edi)
 # ifdef USE_AS_STPCPY
@@ -722,6 +847,9 @@ L(Exit18):
 L(Exit19):
 	movdqu	(%esi), %xmm0
 	movl	15(%esi), %ecx
+# ifdef __CHKP__
+        bndcu   18(%edi), %bnd0
+# endif
 	movdqu	%xmm0, (%edi)
 	movl	%ecx, 15(%edi)
 # ifdef USE_AS_STPCPY
@@ -736,6 +864,9 @@ L(Exit19):
 L(Exit20):
 	movdqu	(%esi), %xmm0
 	movl	16(%esi), %ecx
+# ifdef __CHKP__
+        bndcu   19(%edi), %bnd0
+# endif
 	movdqu	%xmm0, (%edi)
 	movl	%ecx, 16(%edi)
 # ifdef USE_AS_STPCPY
@@ -750,6 +881,9 @@ L(Exit20):
 L(Exit21):
 	movdqu	(%esi), %xmm0
 	movl	16(%esi), %ecx
+# ifdef __CHKP__
+        bndcu   20(%edi), %bnd0
+# endif
 	movdqu	%xmm0, (%edi)
 	movl	%ecx, 16(%edi)
 	movb	%dh, 20(%edi)
@@ -765,6 +899,9 @@ L(Exit21):
 L(Exit22):
 	movdqu	(%esi), %xmm0
 	movlpd	14(%esi), %xmm3
+# ifdef __CHKP__
+        bndcu   21(%edi), %bnd0
+# endif
 	movdqu	%xmm0, (%edi)
 	movlpd	%xmm3, 14(%edi)
 # ifdef USE_AS_STPCPY
@@ -779,6 +916,9 @@ L(Exit22):
 L(Exit23):
 	movdqu	(%esi), %xmm0
 	movlpd	15(%esi), %xmm3
+# ifdef __CHKP__
+        bndcu   22(%edi), %bnd0
+# endif
 	movdqu	%xmm0, (%edi)
 	movlpd	%xmm3, 15(%edi)
 # ifdef USE_AS_STPCPY
@@ -793,6 +933,9 @@ L(Exit23):
 L(Exit24):
 	movdqu	(%esi), %xmm0
 	movlpd	16(%esi), %xmm2
+# ifdef __CHKP__
+        bndcu   23(%edi), %bnd0
+# endif
 	movdqu	%xmm0, (%edi)
 	movlpd	%xmm2, 16(%edi)
 # ifdef USE_AS_STPCPY
@@ -807,6 +950,9 @@ L(Exit24):
 L(Exit25):
 	movdqu	(%esi), %xmm0
 	movlpd	16(%esi), %xmm2
+# ifdef __CHKP__
+        bndcu   24(%edi), %bnd0
+# endif
 	movdqu	%xmm0, (%edi)
 	movlpd	%xmm2, 16(%edi)
 	movb	%dh, 24(%edi)
@@ -823,6 +969,9 @@ L(Exit26):
 	movdqu	(%esi), %xmm0
 	movlpd	16(%esi), %xmm2
 	movw	24(%esi), %cx
+# ifdef __CHKP__
+        bndcu   25(%edi), %bnd0
+# endif
 	movdqu	%xmm0, (%edi)
 	movlpd	%xmm2, 16(%edi)
 	movw	%cx, 24(%edi)
@@ -839,6 +988,9 @@ L(Exit27):
 	movdqu	(%esi), %xmm0
 	movlpd	16(%esi), %xmm2
 	movl	23(%esi), %ecx
+# ifdef __CHKP__
+        bndcu   26(%edi), %bnd0
+# endif
 	movdqu	%xmm0, (%edi)
 	movlpd	%xmm2, 16(%edi)
 	movl	%ecx, 23(%edi)
@@ -855,6 +1007,9 @@ L(Exit28):
 	movdqu	(%esi), %xmm0
 	movlpd	16(%esi), %xmm2
 	movl	24(%esi), %ecx
+# ifdef __CHKP__
+        bndcu   27(%edi), %bnd0
+# endif
 	movdqu	%xmm0, (%edi)
 	movlpd	%xmm2, 16(%edi)
 	movl	%ecx, 24(%edi)
@@ -870,6 +1025,9 @@ L(Exit28):
 L(Exit29):
 	movdqu	(%esi), %xmm0
 	movdqu	13(%esi), %xmm2
+# ifdef __CHKP__
+        bndcu   28(%edi), %bnd0
+# endif
 	movdqu	%xmm0, (%edi)
 	movdqu	%xmm2, 13(%edi)
 # ifdef USE_AS_STPCPY
@@ -884,6 +1042,9 @@ L(Exit29):
 L(Exit30):
 	movdqu	(%esi), %xmm0
 	movdqu	14(%esi), %xmm2
+# ifdef __CHKP__
+        bndcu   29(%edi), %bnd0
+# endif
 	movdqu	%xmm0, (%edi)
 	movdqu	%xmm2, 14(%edi)
 # ifdef USE_AS_STPCPY
@@ -899,6 +1060,9 @@ L(Exit30):
 L(Exit31):
 	movdqu	(%esi), %xmm0
 	movdqu	15(%esi), %xmm2
+# ifdef __CHKP__
+        bndcu   30(%edi), %bnd0
+# endif
 	movdqu	%xmm0, (%edi)
 	movdqu	%xmm2, 15(%edi)
 # ifdef USE_AS_STPCPY
@@ -913,6 +1077,9 @@ L(Exit31):
 L(Exit32):
 	movdqu	(%esi), %xmm0
 	movdqu	16(%esi), %xmm2
+# ifdef __CHKP__
+        bndcu   31(%edi), %bnd0
+# endif
 	movdqu	%xmm0, (%edi)
 	movdqu	%xmm2, 16(%edi)
 # ifdef USE_AS_STPCPY
@@ -1612,37 +1779,90 @@ ENTRY (STRCPY)
 	ENTRANCE
 	mov	STR1(%esp), %edx
 	mov	STR2(%esp), %ecx
+# ifdef __CHKP__
+	bndldx 	STR1(%esp,%edx,1), %bnd0
+	bndldx 	STR2(%esp,%ecx,1), %bnd1
+	bndcl  	(%ecx), %bnd1
+	bndcu  	(%ecx), %bnd1
+	bndcl  	(%edx), %bnd0
+	bndcu  	(%edx), %bnd0
+# endif
 
 	cmpb	$0, (%ecx)
 	jz	L(ExitTail1)
+# ifdef __CHKP__
+	bndcu  	1(%ecx), %bnd1
+# endif
 	cmpb	$0, 1(%ecx)
 	jz	L(ExitTail2)
+# ifdef __CHKP__
+	bndcu  	2(%ecx), %bnd1
+# endif
 	cmpb	$0, 2(%ecx)
 	jz	L(ExitTail3)
+# ifdef __CHKP__
+	bndcu  	3(%ecx), %bnd1
+# endif
 	cmpb	$0, 3(%ecx)
 	jz	L(ExitTail4)
+# ifdef __CHKP__
+	bndcu  	4(%ecx), %bnd1
+# endif
 	cmpb	$0, 4(%ecx)
 	jz	L(ExitTail5)
+# ifdef __CHKP__
+	bndcu  	5(%ecx), %bnd1
+# endif
 	cmpb	$0, 5(%ecx)
 	jz	L(ExitTail6)
+# ifdef __CHKP__
+	bndcu  	6(%ecx), %bnd1
+# endif
 	cmpb	$0, 6(%ecx)
 	jz	L(ExitTail7)
+# ifdef __CHKP__
+	bndcu  	7(%ecx), %bnd1
+# endif
 	cmpb	$0, 7(%ecx)
 	jz	L(ExitTail8)
+# ifdef __CHKP__
+	bndcu  	8(%ecx), %bnd1
+# endif
 	cmpb	$0, 8(%ecx)
 	jz	L(ExitTail9)
+# ifdef __CHKP__
+	bndcu  	9(%ecx), %bnd1
+# endif
 	cmpb	$0, 9(%ecx)
 	jz	L(ExitTail10)
+# ifdef __CHKP__
+	bndcu  	10(%ecx), %bnd1
+# endif
 	cmpb	$0, 10(%ecx)
 	jz	L(ExitTail11)
+# ifdef __CHKP__
+	bndcu  	11(%ecx), %bnd1
+# endif
 	cmpb	$0, 11(%ecx)
 	jz	L(ExitTail12)
+# ifdef __CHKP__
+	bndcu  	12(%ecx), %bnd1
+# endif
 	cmpb	$0, 12(%ecx)
 	jz	L(ExitTail13)
+# ifdef __CHKP__
+	bndcu  	13(%ecx), %bnd1
+# endif
 	cmpb	$0, 13(%ecx)
 	jz	L(ExitTail14)
+# ifdef __CHKP__
+	bndcu  	14(%ecx), %bnd1
+# endif
 	cmpb	$0, 14(%ecx)
 	jz	L(ExitTail15)
+# ifdef __CHKP__
+	bndcu  	15(%ecx), %bnd1
+# endif
 	cmpb	$0, 15(%ecx)
 	jz	L(ExitTail16)
 
@@ -1654,6 +1874,9 @@ ENTRY (STRCPY)
 	and	$-16, %ebx
 	pxor	%xmm0, %xmm0
 	movdqu	(%ecx), %xmm1
+# ifdef __CHKP__
+	bndcu  	15(%edx), %bnd0
+# endif
 	movdqu	%xmm1, (%edx)
 	pcmpeqb	(%ebx), %xmm0
 	pmovmskb %xmm0, %eax
@@ -1669,6 +1892,10 @@ ENTRY (STRCPY)
 	xor	%ebx, %ebx
 
 	.p2align 4
+# ifdef __CHKP__
+	bndcu  	16(%ecx), %bnd1
+	bndcu  	15(%edx), %bnd0
+# endif
 	movdqa	(%ecx), %xmm1
 	movaps	16(%ecx), %xmm2
 	movdqu	%xmm1, (%edx)
@@ -1678,6 +1905,10 @@ ENTRY (STRCPY)
 	test	%eax, %eax
 	jnz	L(CopyFrom1To16Bytes)
 
+# ifdef __CHKP__
+	bndcu  	16(%ecx, %ebx), %bnd1
+	bndcu  	15(%edx, %ebx), %bnd0
+# endif
 	movaps	16(%ecx, %ebx), %xmm3
 	movdqu	%xmm2, (%edx, %ebx)
 	pcmpeqb	%xmm3, %xmm0
@@ -1686,6 +1917,10 @@ ENTRY (STRCPY)
 	test	%eax, %eax
 	jnz	L(CopyFrom1To16Bytes)
 
+# ifdef __CHKP__
+	bndcu  	16(%ecx, %ebx), %bnd1
+	bndcu  	15(%edx, %ebx), %bnd0
+# endif
 	movaps	16(%ecx, %ebx), %xmm4
 	movdqu	%xmm3, (%edx, %ebx)
 	pcmpeqb	%xmm4, %xmm0
@@ -1694,6 +1929,10 @@ ENTRY (STRCPY)
 	test	%eax, %eax
 	jnz	L(CopyFrom1To16Bytes)
 
+# ifdef __CHKP__
+	bndcu  	16(%ecx, %ebx), %bnd1
+	bndcu  	15(%edx, %ebx), %bnd0
+# endif
 	movaps	16(%ecx, %ebx), %xmm1
 	movdqu	%xmm4, (%edx, %ebx)
 	pcmpeqb	%xmm1, %xmm0
@@ -1702,6 +1941,10 @@ ENTRY (STRCPY)
 	test	%eax, %eax
 	jnz	L(CopyFrom1To16Bytes)
 
+# ifdef __CHKP__
+	bndcu  	16(%ecx, %ebx), %bnd1
+	bndcu  	15(%edx, %ebx), %bnd0
+# endif
 	movaps	16(%ecx, %ebx), %xmm2
 	movdqu	%xmm1, (%edx, %ebx)
 	pcmpeqb	%xmm2, %xmm0
@@ -1710,6 +1953,10 @@ ENTRY (STRCPY)
 	test	%eax, %eax
 	jnz	L(CopyFrom1To16Bytes)
 
+# ifdef __CHKP__
+	bndcu  	16(%ecx, %ebx), %bnd1
+	bndcu  	15(%edx, %ebx), %bnd0
+# endif
 	movaps	16(%ecx, %ebx), %xmm3
 	movdqu	%xmm2, (%edx, %ebx)
 	pcmpeqb	%xmm3, %xmm0
@@ -1718,6 +1965,9 @@ ENTRY (STRCPY)
 	test	%eax, %eax
 	jnz	L(CopyFrom1To16Bytes)
 
+# ifdef __CHKP__
+	bndcu  	15(%edx, %ebx), %bnd0
+# endif
 	movdqu	%xmm3, (%edx, %ebx)
 	mov	%ecx, %eax
 	lea	16(%ecx, %ebx), %ecx
@@ -1726,6 +1976,9 @@ ENTRY (STRCPY)
 	sub	%eax, %edx
 
 L(Aligned64Loop):
+# ifdef __CHKP__
+	bndcu  	(%ecx), %bnd1
+# endif
 	movaps	(%ecx), %xmm2
 	movaps	%xmm2, %xmm4
 	movaps	16(%ecx), %xmm5
@@ -1742,6 +1995,10 @@ L(Aligned64Loop):
 	test	%eax, %eax
 	jnz	L(Aligned64Leave)
 L(Aligned64Loop_start):
+# ifdef __CHKP__
+	bndcu  	(%ecx), %bnd1
+	bndcu  	-1(%edx), %bnd0
+# endif
 	movdqu	%xmm4, -64(%edx)
 	movaps	(%ecx), %xmm2
 	movdqa	%xmm2, %xmm4
@@ -1771,6 +2028,9 @@ L(Aligned64Leave):
 
 	pcmpeqb	%xmm5, %xmm0
 	pmovmskb %xmm0, %eax
+# ifdef __CHKP__
+	bndcu  	-49(%edx), %bnd0
+# endif
 	movdqu	%xmm4, -64(%edx)
 	test	%eax, %eax
 	lea	16(%ebx), %ebx
@@ -1778,11 +2038,17 @@ L(Aligned64Leave):
 
 	pcmpeqb	%xmm6, %xmm0
 	pmovmskb %xmm0, %eax
+# ifdef __CHKP__
+	bndcu  	-33(%edx), %bnd0
+# endif
 	movdqu	%xmm5, -48(%edx)
 	test	%eax, %eax
 	lea	16(%ebx), %ebx
 	jnz	L(CopyFrom1To16Bytes)
 
+# ifdef __CHKP__
+	bndcu  	-17(%edx), %bnd0
+# endif
 	movdqu	%xmm6, -32(%edx)
 	pcmpeqb	%xmm7, %xmm0
 	pmovmskb %xmm0, %eax
@@ -1813,6 +2079,10 @@ L(CopyFrom1To16Bytes):
 	test	$0x40, %al
 	jnz	L(Exit7)
 	/* Exit 8 */
+# ifdef __CHKP__
+	bndcu  	7(%edx), %bnd0
+	bndcu  	7(%ecx), %bnd1
+# endif
 	movl	(%ecx), %eax
 	movl	%eax, (%edx)
 	movl	4(%ecx), %eax
@@ -1841,6 +2111,10 @@ L(ExitHigh):
 	test	$0x40, %ah
 	jnz	L(Exit15)
 	/* Exit 16 */
+# ifdef __CHKP__
+	bndcu  	15(%edx), %bnd0
+	bndcu  	15(%ecx), %bnd1
+# endif
 	movlpd	(%ecx), %xmm0
 	movlpd	%xmm0, (%edx)
 	movlpd	8(%ecx), %xmm0
@@ -1854,6 +2128,10 @@ L(ExitHigh):
 
 	.p2align 4
 L(Exit1):
+# ifdef __CHKP__
+	bndcu  	(%edx), %bnd0
+	bndcu  	(%ecx), %bnd1
+# endif
 	movb	(%ecx), %al
 	movb	%al, (%edx)
 # ifdef USE_AS_STPCPY
@@ -1865,6 +2143,10 @@ L(Exit1):
 
 	.p2align 4
 L(Exit2):
+# ifdef __CHKP__
+	bndcu  	1(%edx), %bnd0
+	bndcu  	1(%ecx), %bnd1
+# endif
 	movw	(%ecx), %ax
 	movw	%ax, (%edx)
 # ifdef USE_AS_STPCPY
@@ -1876,6 +2158,10 @@ L(Exit2):
 
 	.p2align 4
 L(Exit3):
+# ifdef __CHKP__
+	bndcu  	2(%edx), %bnd0
+	bndcu  	2(%ecx), %bnd1
+# endif
 	movw	(%ecx), %ax
 	movw	%ax, (%edx)
 	movb	2(%ecx), %al
@@ -1889,6 +2175,10 @@ L(Exit3):
 
 	.p2align 4
 L(Exit4):
+# ifdef __CHKP__
+	bndcu  	3(%edx), %bnd0
+	bndcu  	3(%ecx), %bnd1
+# endif
 	movl	(%ecx), %eax
 	movl	%eax, (%edx)
 # ifdef USE_AS_STPCPY
@@ -1900,6 +2190,10 @@ L(Exit4):
 
 	.p2align 4
 L(Exit5):
+# ifdef __CHKP__
+	bndcu  	4(%edx), %bnd0
+	bndcu  	4(%ecx), %bnd1
+# endif
 	movl	(%ecx), %eax
 	movl	%eax, (%edx)
 	movb	4(%ecx), %al
@@ -1913,6 +2207,10 @@ L(Exit5):
 
 	.p2align 4
 L(Exit6):
+# ifdef __CHKP__
+	bndcu  	5(%edx), %bnd0
+	bndcu  	5(%ecx), %bnd1
+# endif
 	movl	(%ecx), %eax
 	movl	%eax, (%edx)
 	movw	4(%ecx), %ax
@@ -1926,6 +2224,10 @@ L(Exit6):
 
 	.p2align 4
 L(Exit7):
+# ifdef __CHKP__
+	bndcu  	6(%edx), %bnd0
+	bndcu  	6(%ecx), %bnd1
+# endif
 	movl	(%ecx), %eax
 	movl	%eax, (%edx)
 	movl	3(%ecx), %eax
@@ -1939,6 +2241,10 @@ L(Exit7):
 
 	.p2align 4
 L(Exit9):
+# ifdef __CHKP__
+	bndcu  	8(%edx), %bnd0
+	bndcu  	8(%ecx), %bnd1
+# endif
 	movl	(%ecx), %eax
 	movl	%eax, (%edx)
 	movl	4(%ecx), %eax
@@ -1954,6 +2260,10 @@ L(Exit9):
 
 	.p2align 4
 L(Exit10):
+# ifdef __CHKP__
+	bndcu  	9(%edx), %bnd0
+	bndcu  	9(%ecx), %bnd1
+# endif
 	movl	(%ecx), %eax
 	movl	%eax, (%edx)
 	movl	4(%ecx), %eax
@@ -1969,6 +2279,10 @@ L(Exit10):
 
 	.p2align 4
 L(Exit11):
+# ifdef __CHKP__
+	bndcu  	10(%edx), %bnd0
+	bndcu  	10(%ecx), %bnd1
+# endif
 	movl	(%ecx), %eax
 	movl	%eax, (%edx)
 	movl	4(%ecx), %eax
@@ -1984,6 +2298,10 @@ L(Exit11):
 
 	.p2align 4
 L(Exit12):
+# ifdef __CHKP__
+	bndcu  	11(%edx), %bnd0
+	bndcu  	11(%ecx), %bnd1
+# endif
 	movl	(%ecx), %eax
 	movl	%eax, (%edx)
 	movl	4(%ecx), %eax
@@ -1999,6 +2317,10 @@ L(Exit12):
 
 	.p2align 4
 L(Exit13):
+# ifdef __CHKP__
+	bndcu  	12(%edx), %bnd0
+	bndcu  	12(%ecx), %bnd1
+# endif
 	movlpd	(%ecx), %xmm0
 	movlpd	%xmm0, (%edx)
 	movlpd	5(%ecx), %xmm0
@@ -2012,6 +2334,10 @@ L(Exit13):
 
 	.p2align 4
 L(Exit14):
+# ifdef __CHKP__
+	bndcu  	13(%edx), %bnd0
+	bndcu  	13(%ecx), %bnd1
+# endif
 	movlpd	(%ecx), %xmm0
 	movlpd	%xmm0, (%edx)
 	movlpd	6(%ecx), %xmm0
@@ -2025,6 +2351,10 @@ L(Exit14):
 
 	.p2align 4
 L(Exit15):
+# ifdef __CHKP__
+	bndcu  	14(%edx), %bnd0
+	bndcu  	14(%ecx), %bnd1
+# endif
 	movlpd	(%ecx), %xmm0
 	movlpd	%xmm0, (%edx)
 	movlpd	7(%ecx), %xmm0
@@ -2040,6 +2370,9 @@ CFI_POP (%edi)
 
 	.p2align 4
 L(ExitTail1):
+# ifdef __CHKP__
+	bndcu  	(%edx), %bnd0
+# endif
 	movb	(%ecx), %al
 	movb	%al, (%edx)
 	movl	%edx, %eax
@@ -2048,6 +2381,9 @@ L(ExitTail1):
 	.p2align 4
 L(ExitTail2):
 	movw	(%ecx), %ax
+# ifdef __CHKP__
+	bndcu  	1(%edx), %bnd0
+# endif
 	movw	%ax, (%edx)
 # ifdef USE_AS_STPCPY
 	lea	1(%edx), %eax
@@ -2059,6 +2395,9 @@ L(ExitTail2):
 	.p2align 4
 L(ExitTail3):
 	movw	(%ecx), %ax
+# ifdef __CHKP__
+	bndcu  	2(%edx), %bnd0
+# endif
 	movw	%ax, (%edx)
 	movb	2(%ecx), %al
 	movb	%al, 2(%edx)
@@ -2072,6 +2411,9 @@ L(ExitTail3):
 	.p2align 4
 L(ExitTail4):
 	movl	(%ecx), %eax
+# ifdef __CHKP__
+	bndcu  	3(%edx), %bnd0
+# endif
 	movl	%eax, (%edx)
 # ifdef USE_AS_STPCPY
 	lea	3(%edx), %eax
@@ -2083,6 +2425,9 @@ L(ExitTail4):
 	.p2align 4
 L(ExitTail5):
 	movl	(%ecx), %eax
+# ifdef __CHKP__
+	bndcu  	4(%edx), %bnd0
+# endif
 	movl	%eax, (%edx)
 	movb	4(%ecx), %al
 	movb	%al, 4(%edx)
@@ -2096,6 +2441,9 @@ L(ExitTail5):
 	.p2align 4
 L(ExitTail6):
 	movl	(%ecx), %eax
+# ifdef __CHKP__
+	bndcu  	5(%edx), %bnd0
+# endif
 	movl	%eax, (%edx)
 	movw	4(%ecx), %ax
 	movw	%ax, 4(%edx)
@@ -2109,6 +2457,9 @@ L(ExitTail6):
 	.p2align 4
 L(ExitTail7):
 	movl	(%ecx), %eax
+# ifdef __CHKP__
+	bndcu  	6(%edx), %bnd0
+# endif
 	movl	%eax, (%edx)
 	movl	3(%ecx), %eax
 	movl	%eax, 3(%edx)
@@ -2122,6 +2473,9 @@ L(ExitTail7):
 	.p2align 4
 L(ExitTail8):
 	movl	(%ecx), %eax
+# ifdef __CHKP__
+	bndcu  	7(%edx), %bnd0
+# endif
 	movl	%eax, (%edx)
 	movl	4(%ecx), %eax
 	movl	%eax, 4(%edx)
@@ -2135,6 +2489,9 @@ L(ExitTail8):
 	.p2align 4
 L(ExitTail9):
 	movl	(%ecx), %eax
+# ifdef __CHKP__
+	bndcu  	8(%edx), %bnd0
+# endif
 	movl	%eax, (%edx)
 	movl	4(%ecx), %eax
 	movl	%eax, 4(%edx)
@@ -2150,6 +2507,9 @@ L(ExitTail9):
 	.p2align 4
 L(ExitTail10):
 	movl	(%ecx), %eax
+# ifdef __CHKP__
+	bndcu  	9(%edx), %bnd0
+# endif
 	movl	%eax, (%edx)
 	movl	4(%ecx), %eax
 	movl	%eax, 4(%edx)
@@ -2165,6 +2525,9 @@ L(ExitTail10):
 	.p2align 4
 L(ExitTail11):
 	movl	(%ecx), %eax
+# ifdef __CHKP__
+	bndcu  	10(%edx), %bnd0
+# endif
 	movl	%eax, (%edx)
 	movl	4(%ecx), %eax
 	movl	%eax, 4(%edx)
@@ -2180,6 +2543,9 @@ L(ExitTail11):
 	.p2align 4
 L(ExitTail12):
 	movl	(%ecx), %eax
+# ifdef __CHKP__
+	bndcu  	11(%edx), %bnd0
+# endif
 	movl	%eax, (%edx)
 	movl	4(%ecx), %eax
 	movl	%eax, 4(%edx)
@@ -2195,6 +2561,9 @@ L(ExitTail12):
 	.p2align 4
 L(ExitTail13):
 	movlpd	(%ecx), %xmm0
+# ifdef __CHKP__
+	bndcu  	12(%edx), %bnd0
+# endif
 	movlpd	%xmm0, (%edx)
 	movlpd	5(%ecx), %xmm0
 	movlpd	%xmm0, 5(%edx)
@@ -2208,6 +2577,9 @@ L(ExitTail13):
 	.p2align 4
 L(ExitTail14):
 	movlpd	(%ecx), %xmm0
+# ifdef __CHKP__
+	bndcu  	13(%edx), %bnd0
+# endif
 	movlpd	%xmm0, (%edx)
 	movlpd	6(%ecx), %xmm0
 	movlpd	%xmm0, 6(%edx)
@@ -2221,6 +2593,9 @@ L(ExitTail14):
 	.p2align 4
 L(ExitTail15):
 	movlpd	(%ecx), %xmm0
+# ifdef __CHKP__
+	bndcu  	14(%edx), %bnd0
+# endif
 	movlpd	%xmm0, (%edx)
 	movlpd	7(%ecx), %xmm0
 	movlpd	%xmm0, 7(%edx)
@@ -2234,6 +2609,9 @@ L(ExitTail15):
 	.p2align 4
 L(ExitTail16):
 	movlpd	(%ecx), %xmm0
+# ifdef __CHKP__
+	bndcu  	15(%edx), %bnd0
+# endif
 	movlpd	%xmm0, (%edx)
 	movlpd	8(%ecx), %xmm0
 	movlpd	%xmm0, 8(%edx)

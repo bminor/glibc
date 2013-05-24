@@ -41,6 +41,11 @@
 ENTRY ( __strlen_sse2_bsf)
 	ENTRANCE
 	mov	STR(%esp), %edi
+#ifdef __CHKP__
+	bndldx 	STR(%esp,%edi,1), %bnd0
+	bndcl  	(%edi),%bnd0
+	bndcu  	(%edi),%bnd0
+#endif
 	xor	%eax, %eax
 	mov	%edi, %ecx
 	and	$0x3f, %ecx
@@ -73,21 +78,33 @@ L(align16_start):
 	pxor	%xmm3, %xmm3
 	.p2align 4
 L(align16_loop):
+#ifdef __CHKP__
+        bndcu   16(%eax), %bnd0
+#endif
 	pcmpeqb	16(%eax), %xmm0
 	pmovmskb %xmm0, %edx
 	test	%edx, %edx
 	jnz	L(exit16)
 
+#ifdef __CHKP__
+        bndcu   32(%eax), %bnd0
+#endif
 	pcmpeqb	32(%eax), %xmm1
 	pmovmskb %xmm1, %edx
 	test	%edx, %edx
 	jnz	L(exit32)
 
+#ifdef __CHKP__
+        bndcu   48(%eax), %bnd0
+#endif
 	pcmpeqb	48(%eax), %xmm2
 	pmovmskb %xmm2, %edx
 	test	%edx, %edx
 	jnz	L(exit48)
 
+#ifdef __CHKP__
+        bndcu   64(%eax), %bnd0
+#endif
 	pcmpeqb	64(%eax), %xmm3
 	pmovmskb %xmm3, %edx
 	lea	64(%eax), %eax
@@ -98,24 +115,36 @@ L(exit):
 L(exit_less16):
 	bsf	%edx, %edx
 	add	%edx, %eax
+#ifdef __CHKP__
+	bndcu 	-1(%edi, %eax), %bnd0
+#endif
 	RETURN
 L(exit16):
 	sub	%edi, %eax
 	bsf	%edx, %edx
 	add	%edx, %eax
 	add	$16, %eax
+#ifdef __CHKP__
+	bndcu 	-1(%edi, %eax), %bnd0
+#endif
 	RETURN
 L(exit32):
 	sub	%edi, %eax
 	bsf	%edx, %edx
 	add	%edx, %eax
 	add	$32, %eax
+#ifdef __CHKP__
+	bndcu 	-1(%edi, %eax), %bnd0
+#endif
 	RETURN
 L(exit48):
 	sub	%edi, %eax
 	bsf	%edx, %edx
 	add	%edx, %eax
 	add	$48, %eax
+#ifdef __CHKP__
+	bndcu	-1(%edi, %eax), %bnd0
+#endif
 	POP (%edi)
 	POP (%esi)
 	ret

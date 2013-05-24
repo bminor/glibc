@@ -42,6 +42,14 @@ ENTRY (__stpncpy)
 	movl SRC(%esp), %esi
 	cfi_rel_offset (esi, 0)
 	movl LEN(%esp), %ecx
+#ifdef __CHKP__
+	bndldx DEST(%esp,%eax,1), %bnd0
+	bndldx SRC(%esp,%esi,1), %bnd1
+	bndcl (%eax), %bnd0
+	bndcu -1(%eax, %ecx), %bnd0
+	bndcl (%esi), %bnd1
+	bndcu (%esi), %bnd1
+#endif
 
 	subl %eax, %esi		/* magic: reduce number of loop variants
 				   to one using addressing mode */

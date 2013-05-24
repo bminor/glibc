@@ -33,6 +33,14 @@ ENTRY (strpbrk)
 
 	movl STR(%esp), %edx
 	movl STOP(%esp), %eax
+#ifdef __CHKP__
+	bndldx STR(%esp,%edx,1), %bnd0
+	bndldx STOP(%esp,%eax,1), %bnd1
+	bndcl (%edx), %bnd0
+	bndcl (%eax), %bnd1
+	bndcu (%edx), %bnd0
+	bndcu (%eax), %bnd1
+#endif
 
 	/* First we create a table with flags for all possible characters.
 	   For the ASCII (7bit/8bit) or ISO-8859-X character sets which are

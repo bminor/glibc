@@ -45,6 +45,12 @@ ENTRY (MEMCHR)
 	movd	STR2(%esp), %xmm1
 	mov	LEN(%esp), %edx
 
+# ifdef __CHKP__
+	bndldx 	STR1(%esp,%ecx,1), %bnd0
+	bndcl  	(%ecx), %bnd0
+	bndcu  	-1(%ecx, %edx), %bnd0
+# endif
+
 	sub	$16, %edx
 	jbe	L(length_less16)
 

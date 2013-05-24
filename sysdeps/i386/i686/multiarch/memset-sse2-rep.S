@@ -90,6 +90,7 @@ ENTRY (__memset_sse2_rep)
 	ENTRANCE
 
 	movl	LEN(%esp), %ecx
+
 #ifdef USE_AS_BZERO
 	xor	%eax, %eax
 #else
@@ -101,6 +102,11 @@ ENTRY (__memset_sse2_rep)
 	or	%edx, %eax
 #endif
 	movl	DEST(%esp), %edx
+#ifdef __CHKP__
+	bndldx  DEST(%esp,%edx,1),%bnd0
+	bndcl  	(%edx), %bnd0
+	bndcu  	-1(%edx, %ecx), %bnd0
+#endif
 	cmp	$32, %ecx
 	jae	L(32bytesormore)
 

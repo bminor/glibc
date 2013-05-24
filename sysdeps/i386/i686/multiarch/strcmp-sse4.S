@@ -222,6 +222,12 @@ L(ascii):
 	test	REM, REM
 	je	L(eq)
 #endif
+#ifdef __CHKP__
+	bndldx 	STR1(%esp,%edx,1), %bnd0
+	bndldx 	STR2(%esp,%eax,1), %bnd1
+	bndcl  	(%edx), %bnd0
+	bndcl  	(%eax), %bnd1
+#endif
 	mov	%dx, %cx
 	and	$0xfff, %cx
 	cmp	$0xff0, %cx
@@ -280,6 +286,10 @@ L(ascii):
 	add	$16, %edx
 	add	$16, %eax
 L(first4bytes):
+#ifdef __CHKP__
+	bndcu  	(%edx), %bnd0
+	bndcu  	(%eax), %bnd1
+#endif
 	movzbl	(%eax), %ecx
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
 	movzbl	(%edx), %edi
@@ -303,6 +313,10 @@ L(first4bytes):
 	je	L(eq)
 #endif
 
+#ifdef __CHKP__
+	bndcu  	1(%edx), %bnd0
+	bndcu  	1(%eax), %bnd1
+#endif
 	movzbl	1(%eax), %ecx
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
 	movzbl	1(%edx), %edi
@@ -324,6 +338,10 @@ L(first4bytes):
 #if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
 	cmp	$2, REM
 	je	L(eq)
+#endif
+#ifdef __CHKP__
+	bndcu  	2(%edx), %bnd0
+	bndcu  	2(%eax), %bnd1
 #endif
 	movzbl	2(%eax), %ecx
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
@@ -347,6 +365,10 @@ L(first4bytes):
 	cmp	$3, REM
 	je	L(eq)
 #endif
+#ifdef __CHKP__
+	bndcu  	3(%edx), %bnd0
+	bndcu  	3(%eax), %bnd1
+#endif
 	movzbl	3(%eax), %ecx
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
 	movzbl	3(%edx), %edi
@@ -368,6 +390,10 @@ L(first4bytes):
 #if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
 	cmp	$4, REM
 	je	L(eq)
+#endif
+#ifdef __CHKP__
+	bndcu  	4(%edx), %bnd0
+	bndcu  	4(%eax), %bnd1
 #endif
 	movzbl	4(%eax), %ecx
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
@@ -391,6 +417,10 @@ L(first4bytes):
 	cmp	$5, REM
 	je	L(eq)
 #endif
+#ifdef __CHKP__
+	bndcu  	5(%edx), %bnd0
+	bndcu  	5(%eax), %bnd1
+#endif
 	movzbl	5(%eax), %ecx
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
 	movzbl	5(%edx), %edi
@@ -413,6 +443,10 @@ L(first4bytes):
 	cmp	$6, REM
 	je	L(eq)
 #endif
+#ifdef __CHKP__
+	bndcu  	6(%edx), %bnd0
+	bndcu  	6(%eax), %bnd1
+#endif
 	movzbl	6(%eax), %ecx
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
 	movzbl	6(%edx), %edi
@@ -434,6 +468,10 @@ L(first4bytes):
 #if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
 	cmp	$7, REM
 	je	L(eq)
+#endif
+#ifdef __CHKP__
+	bndcu  	7(%edx), %bnd0
+	bndcu  	7(%eax), %bnd1
 #endif
 	movzbl	7(%eax), %ecx
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
@@ -483,6 +521,10 @@ L(check_offset):
 	testl	%edx, %edx
 	jg	L(crosspage)
 L(loop):
+#ifdef __CHKP__
+	bndcu  	(%edi,%edx), %bnd0
+	bndcu  	(%esi,%edx), %bnd1
+#endif
 	movdqu	(%esi,%edx), %xmm2
 	movdqu	(%edi,%edx), %xmm1
 	TOLOWER (%xmm2, %xmm1)
@@ -497,6 +539,10 @@ L(loop):
 	add	$16, %edx
 	jle	L(loop)
 L(crosspage):
+#ifdef __CHKP__
+	bndcu  	(%edi,%edx), %bnd0
+	bndcu  	(%esi,%edx), %bnd1
+#endif
 	movzbl	(%edi,%edx), %eax
 	movzbl	(%esi,%edx), %ecx
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
@@ -625,6 +671,10 @@ L(less16bytes):
 	add	$8, %eax
 L(less4bytes):
 
+#ifdef __CHKP__
+	bndcu  	(%edx), %bnd0
+	bndcu  	(%eax), %bnd1
+#endif
 	movzbl	(%eax), %ecx
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
 	movzbl	(%edx), %edi
@@ -646,6 +696,10 @@ L(less4bytes):
 #if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
 	cmp	$1, REM
 	je	L(eq)
+#endif
+#ifdef __CHKP__
+	bndcu  	1(%edx), %bnd0
+	bndcu  	1(%eax), %bnd1
 #endif
 	movzbl	1(%eax), %ecx
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
@@ -670,6 +724,10 @@ L(less4bytes):
 	je	L(eq)
 #endif
 
+#ifdef __CHKP__
+	bndcu  	2(%edx), %bnd0
+	bndcu  	2(%eax), %bnd1
+#endif
 	movzbl	2(%eax), %ecx
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
 	movzbl	2(%edx), %edi
@@ -691,6 +749,10 @@ L(less4bytes):
 #if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
 	cmp	$3, REM
 	je	L(eq)
+#endif
+#ifdef __CHKP__
+	bndcu  	3(%edx), %bnd0
+	bndcu  	3(%eax), %bnd1
 #endif
 	movzbl	3(%eax), %ecx
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
@@ -715,6 +777,10 @@ L(more4bytes):
 	cmp	$4, REM
 	je	L(eq)
 #endif
+#ifdef __CHKP__
+	bndcu  	4(%edx), %bnd0
+	bndcu  	4(%eax), %bnd1
+#endif
 	movzbl	4(%eax), %ecx
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
 	movzbl	4(%edx), %edi
@@ -738,6 +804,10 @@ L(more4bytes):
 	cmp	$5, REM
 	je	L(eq)
 #endif
+#ifdef __CHKP__
+	bndcu  	5(%edx), %bnd0
+	bndcu  	5(%eax), %bnd1
+#endif
 	movzbl	5(%eax), %ecx
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
 	movzbl	5(%edx), %edi
@@ -760,6 +830,10 @@ L(more4bytes):
 	cmp	$6, REM
 	je	L(eq)
 #endif
+#ifdef __CHKP__
+	bndcu  	6(%edx), %bnd0
+	bndcu  	6(%eax), %bnd1
+#endif
 	movzbl	6(%eax), %ecx
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
 	movzbl	6(%edx), %edi
@@ -781,6 +855,10 @@ L(more4bytes):
 #if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
 	cmp	$7, REM
 	je	L(eq)
+#endif
+#ifdef __CHKP__
+	bndcu  	7(%edx), %bnd0
+	bndcu  	7(%eax), %bnd1
 #endif
 	movzbl	7(%eax), %ecx
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L

@@ -50,6 +50,11 @@ ENTRY (memset)
 	cfi_adjust_cfa_offset (4)
 	movl	DEST(%esp), %edx
 	movl	LEN(%esp), %ecx
+#ifdef __CHKP__
+	bndldx  DEST(%esp,%edx,1),%bnd0
+	bndcl  	(%edx), %bnd0
+	bndcu  	-1(%edx, %ecx), %bnd0
+#endif
 #if BZERO_P
 	xorl	%eax, %eax	/* fill with 0 */
 #else

@@ -40,7 +40,11 @@ ENTRY (__wcschr_sse2)
 
 	mov	STR1(%esp), %ecx
 	movd	STR2(%esp), %xmm1
-
+# ifdef __CHKP__
+	bndldx 	STR1(%esp,%ecx,1), %bnd0
+	bndcl  	(%ecx),%bnd0
+	bndcu  	(%ecx),%bnd0
+# endif
 	mov	%ecx, %eax
 	punpckldq %xmm1, %xmm1
 	pxor	%xmm2, %xmm2
@@ -90,6 +94,9 @@ L(cross_cache):
 	test	$15, %dl
 	jnz	L(return_null)
 	lea	4(%ecx), %eax
+# ifdef __CHKP__
+	bndcu  	(%eax),%bnd0
+# endif
 	ret
 
 	CFI_PUSH (%edi)
@@ -108,6 +115,9 @@ L(unaligned_no_match):
 	.p2align 4
 L(loop):
 	add	$16, %ecx
+# ifdef __CHKP__
+	bndcu  	(%ecx),%bnd0
+# endif
 	movdqa	(%ecx), %xmm0
 	pcmpeqd	%xmm0, %xmm2
 	pcmpeqd	%xmm1, %xmm0
@@ -117,6 +127,9 @@ L(loop):
 	jnz	L(matches)
 	add	$16, %ecx
 
+# ifdef __CHKP__
+	bndcu  	(%ecx),%bnd0
+# endif
 	movdqa	(%ecx), %xmm0
 	pcmpeqd	%xmm0, %xmm2
 	pcmpeqd	%xmm1, %xmm0
@@ -126,6 +139,9 @@ L(loop):
 	jnz	L(matches)
 	add	$16, %ecx
 
+# ifdef __CHKP__
+	bndcu  	(%ecx),%bnd0
+# endif
 	movdqa	(%ecx), %xmm0
 	pcmpeqd	%xmm0, %xmm2
 	pcmpeqd	%xmm1, %xmm0
@@ -135,6 +151,9 @@ L(loop):
 	jnz	L(matches)
 	add	$16, %ecx
 
+# ifdef __CHKP__
+	bndcu  	(%ecx),%bnd0
+# endif
 	movdqa	(%ecx), %xmm0
 	pcmpeqd	%xmm0, %xmm2
 	pcmpeqd	%xmm1, %xmm0
@@ -160,11 +179,17 @@ L(match_case2):
 	test	$15, %dl
 	jnz	L(return_null)
 	lea	4(%ecx), %eax
+# ifdef __CHKP__
+	bndcu  	(%eax),%bnd0
+# endif
 	ret
 
 	.p2align 4
 L(match_case2_4):
 	mov	%ecx, %eax
+# ifdef __CHKP__
+	bndcu  	(%eax),%bnd0
+# endif
 	ret
 
 	.p2align 4
@@ -176,11 +201,17 @@ L(match_higth_case2):
 	test	$15, %dh
 	jnz	L(return_null)
 	lea	12(%ecx), %eax
+# ifdef __CHKP__
+	bndcu  	(%eax),%bnd0
+# endif
 	ret
 
 	.p2align 4
 L(match_case2_12):
 	lea	8(%ecx), %eax
+# ifdef __CHKP__
+	bndcu  	(%eax),%bnd0
+# endif
 	ret
 
 	.p2align 4
@@ -191,6 +222,9 @@ L(match_case1):
 	test	$0x01, %al
 	jnz	L(exit0)
 	lea	4(%ecx), %eax
+# ifdef __CHKP__
+	bndcu  	(%eax),%bnd0
+# endif
 	ret
 
 	.p2align 4
@@ -198,16 +232,25 @@ L(match_higth_case1):
 	test	$0x01, %ah
 	jnz	L(exit3)
 	lea	12(%ecx), %eax
+# ifdef __CHKP__
+	bndcu  	(%eax),%bnd0
+# endif
 	ret
 
 	.p2align 4
 L(exit0):
 	mov	%ecx, %eax
+# ifdef __CHKP__
+	bndcu  	(%eax),%bnd0
+# endif
 	ret
 
 	.p2align 4
 L(exit3):
 	lea	8(%ecx), %eax
+# ifdef __CHKP__
+	bndcu  	(%eax),%bnd0
+# endif
 	ret
 
 	.p2align 4

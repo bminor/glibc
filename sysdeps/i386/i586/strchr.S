@@ -54,6 +54,10 @@ ENTRY (strchr)
 
 	movl STR(%esp), %eax
 	movl CHR(%esp), %edx
+#ifdef __CHKP__
+	bndldx 	STR(%esp,%eax,1), %bnd0
+	bndcl  	(%eax), %bnd0
+#endif
 
 	movl %eax, %edi		/* duplicate string pointer for later */
 	cfi_rel_offset (edi, 12)
@@ -83,6 +87,9 @@ ENTRY (strchr)
 	xorb %dl, %cl		/* load single byte and test for NUL */
 	je L(3)			/* yes => return NULL */
 
+#ifdef __CHKP__
+	bndcu 1(%eax), %bnd0
+#endif
 	movb 1(%eax), %cl	/* load single byte */
 	incl %eax
 
@@ -97,7 +104,11 @@ ENTRY (strchr)
 
 	jne L(11)
 
-L(0):	movb (%eax), %cl	/* load single byte */
+L(0):
+#ifdef __CHKP__
+	bndcu (%eax), %bnd0
+#endif
+	movb (%eax), %cl	/* load single byte */
 
 	cmpb %cl, %dl		/* is byte == C? */
 	je L(out)		/* aligned => return pointer */
@@ -115,7 +126,11 @@ L(0):	movb (%eax), %cl	/* load single byte */
 	   four instruction up to `L1' will not be executed in the loop
 	   because the same code is found at the end of the loop, but
 	   there it is executed in parallel with other instructions.  */
-L(11):	movl (%eax), %ecx
+L(11):
+#ifdef __CHKP__
+	bndcu (%eax), %bnd0
+#endif
+	movl (%eax), %ecx
 	movl $magic, %ebp
 
 	movl $magic, %edi
@@ -159,6 +174,9 @@ L(1):	xorl %ecx, %ebp			/* (word^magic) */
 		movl $magic, %esi	/* load magic value */
 		xorl %edx, %ebx		/* clear words which are C */
 
+#ifdef __CHKP__
+	bndcu   (%eax), %bnd0
+#endif
 					movl (%eax), %ecx
 		addl %ebx, %esi		/* (word+magic) */
 
@@ -189,6 +207,9 @@ L(1):	xorl %ecx, %ebp			/* (word^magic) */
 						movl $magic, %esi
 						xorl %edx, %ebx
 
+#ifdef __CHKP__
+	bndcu   (%eax), %bnd0
+#endif
 	movl (%eax), %ecx
 						addl %ebx, %esi
 
@@ -219,6 +240,9 @@ L(1):	xorl %ecx, %ebp			/* (word^magic) */
 		movl $magic, %esi
 		xorl %edx, %ebx
 
+#ifdef __CHKP__
+	bndcu   (%eax), %bnd0
+#endif
 					movl (%eax), %ecx
 		addl %ebx, %esi
 
@@ -249,6 +273,9 @@ L(1):	xorl %ecx, %ebp			/* (word^magic) */
 						movl $magic, %esi
 						xorl %edx, %ebx
 
+#ifdef __CHKP__
+	bndcu   (%eax), %bnd0
+#endif
 	movl (%eax), %ecx
 						addl %ebx, %esi
 

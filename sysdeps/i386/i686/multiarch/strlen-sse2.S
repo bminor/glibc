@@ -41,7 +41,10 @@
 #   define PUSH(REG)	pushl	REG;	CFI_PUSH (REG)
 #   define POP(REG)	popl	REG;	CFI_POP (REG)
 #   undef RETURN
-#   define RETURN	POP (%edi); CFI_PUSH(%edi); ret
+#   define RETURN	\
+	mov STR+4(%esp),%edx; 	\
+	bndcu -1(%edx,%eax), %bnd0; \
+	POP (%edi); CFI_PUSH(%edi); ret
 #  endif
 
 #  ifndef STRLEN
@@ -51,11 +54,18 @@
 	atom_text_section
 ENTRY (STRLEN)
 	mov	STR(%esp), %edx
+#  ifdef __CHKP__
+	bndldx 	STR(%esp,%edx,1), %bnd0
+#  endif
 #  ifdef USE_AS_STRNLEN
 	PUSH	(%edi)
 	movl	LEN(%esp), %edi
 	sub	$4, %edi
 	jbe	L(len_less4_prolog)
+#  endif
+#  ifdef __CHKP__
+	bndcl  	(%edx),%bnd0
+	bndcu  	(%edx),%bnd0
 #  endif
 # endif
 	xor	%eax, %eax
@@ -122,6 +132,9 @@ ENTRY (STRLEN)
 	jbe	L(len_less64)
 # endif
 
+#ifdef __CHKP__
+        bndcu   (%eax), %bnd0
+#endif
 	pcmpeqb	(%eax), %xmm0
 	pmovmskb %xmm0, %edx
 	pxor	%xmm1, %xmm1
@@ -129,6 +142,9 @@ ENTRY (STRLEN)
 	lea	16(%eax), %eax
 	jnz	L(exit)
 
+#ifdef __CHKP__
+        bndcu   (%eax), %bnd0
+#endif
 	pcmpeqb	(%eax), %xmm1
 	pmovmskb %xmm1, %edx
 	pxor	%xmm2, %xmm2
@@ -136,6 +152,9 @@ ENTRY (STRLEN)
 	lea	16(%eax), %eax
 	jnz	L(exit)
 
+#ifdef __CHKP__
+        bndcu   (%eax), %bnd0
+#endif
 	pcmpeqb	(%eax), %xmm2
 	pmovmskb %xmm2, %edx
 	pxor	%xmm3, %xmm3
@@ -143,6 +162,9 @@ ENTRY (STRLEN)
 	lea	16(%eax), %eax
 	jnz	L(exit)
 
+#ifdef __CHKP__
+        bndcu   (%eax), %bnd0
+#endif
 	pcmpeqb	(%eax), %xmm3
 	pmovmskb %xmm3, %edx
 	test	%edx, %edx
@@ -154,24 +176,36 @@ ENTRY (STRLEN)
 	jbe	L(len_less64)
 # endif
 
+#ifdef __CHKP__
+        bndcu   (%eax), %bnd0
+#endif
 	pcmpeqb	(%eax), %xmm0
 	pmovmskb %xmm0, %edx
 	test	%edx, %edx
 	lea	16(%eax), %eax
 	jnz	L(exit)
 
+#ifdef __CHKP__
+        bndcu   (%eax), %bnd0
+#endif
 	pcmpeqb	(%eax), %xmm1
 	pmovmskb %xmm1, %edx
 	test	%edx, %edx
 	lea	16(%eax), %eax
 	jnz	L(exit)
 
+#ifdef __CHKP__
+        bndcu   (%eax), %bnd0
+#endif
 	pcmpeqb	(%eax), %xmm2
 	pmovmskb %xmm2, %edx
 	test	%edx, %edx
 	lea	16(%eax), %eax
 	jnz	L(exit)
 
+#ifdef __CHKP__
+        bndcu   (%eax), %bnd0
+#endif
 	pcmpeqb	(%eax), %xmm3
 	pmovmskb %xmm3, %edx
 	test	%edx, %edx
@@ -183,24 +217,36 @@ ENTRY (STRLEN)
 	jbe	L(len_less64)
 # endif
 
+#ifdef __CHKP__
+        bndcu   (%eax), %bnd0
+#endif
 	pcmpeqb	(%eax), %xmm0
 	pmovmskb %xmm0, %edx
 	test	%edx, %edx
 	lea	16(%eax), %eax
 	jnz	L(exit)
 
+#ifdef __CHKP__
+        bndcu   (%eax), %bnd0
+#endif
 	pcmpeqb	(%eax), %xmm1
 	pmovmskb %xmm1, %edx
 	test	%edx, %edx
 	lea	16(%eax), %eax
 	jnz	L(exit)
 
+#ifdef __CHKP__
+        bndcu   (%eax), %bnd0
+#endif
 	pcmpeqb	(%eax), %xmm2
 	pmovmskb %xmm2, %edx
 	test	%edx, %edx
 	lea	16(%eax), %eax
 	jnz	L(exit)
 
+#ifdef __CHKP__
+        bndcu   (%eax), %bnd0
+#endif
 	pcmpeqb	(%eax), %xmm3
 	pmovmskb %xmm3, %edx
 	test	%edx, %edx
@@ -212,24 +258,36 @@ ENTRY (STRLEN)
 	jbe	L(len_less64)
 # endif
 
+#ifdef __CHKP__
+        bndcu   (%eax), %bnd0
+#endif
 	pcmpeqb	(%eax), %xmm0
 	pmovmskb %xmm0, %edx
 	test	%edx, %edx
 	lea	16(%eax), %eax
 	jnz	L(exit)
 
+#ifdef __CHKP__
+        bndcu   (%eax), %bnd0
+#endif
 	pcmpeqb	(%eax), %xmm1
 	pmovmskb %xmm1, %edx
 	test	%edx, %edx
 	lea	16(%eax), %eax
 	jnz	L(exit)
 
+#ifdef __CHKP__
+        bndcu   (%eax), %bnd0
+#endif
 	pcmpeqb	(%eax), %xmm2
 	pmovmskb %xmm2, %edx
 	test	%edx, %edx
 	lea	16(%eax), %eax
 	jnz	L(exit)
 
+#ifdef __CHKP__
+        bndcu   (%eax), %bnd0
+#endif
 	pcmpeqb	(%eax), %xmm3
 	pmovmskb %xmm3, %edx
 	test	%edx, %edx
@@ -250,6 +308,9 @@ L(aligned_64_loop):
 	sub	$64, %edi
 	jbe	L(len_less64)
 # endif
+#ifdef __CHKP__
+        bndcu   (%eax), %bnd0
+#endif
 	movaps	(%eax), %xmm0
 	movaps	16(%eax), %xmm1
 	movaps	32(%eax), %xmm2
@@ -535,6 +596,10 @@ L(len_less4_prolog):
 	add	$4, %edi
 	jz	L(exit_tail0)
 
+#  ifdef __CHKP__
+	bndcl  	(%edx),%bnd0
+	bndcu  	(%edx),%bnd0
+#  endif
 	cmpb	$0, (%edx)
 	jz	L(exit_tail0)
 	cmp	$1, %edi

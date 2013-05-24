@@ -58,6 +58,12 @@ ENTRY (MEMCHR)
 # endif
 	mov	%ecx, %eax
 
+# ifdef __CHKP__
+	bndldx	STR1(%esp,%ecx,1), %bnd0
+	bndcl 	(%ecx), %bnd0
+	bndcu 	(%ecx), %bnd0
+# endif
+
 	punpcklbw %xmm1, %xmm1
 	punpcklbw %xmm1, %xmm1
 
@@ -79,9 +85,18 @@ ENTRY (MEMCHR)
 # ifndef USE_AS_RAWMEMCHR
 	sub	%ecx, %edx
 	jbe	L(return_null_1)
-# endif
 	add	%ecx, %eax
+#  ifdef __CHKP__
+	bndcu 	(%eax), %bnd0
+#  endif
 	ret
+# else
+	add	%ecx, %eax
+#  ifdef __CHKP__
+	bndcu 	(%eax), %bnd0
+#  endif
+	ret
+# endif
 
 	.p2align 4
 L(unaligned_no_match_1):
@@ -163,8 +178,15 @@ L(loop_prolog):
 # ifndef USE_AS_RAWMEMCHR
 	sub	$64, %edx
 	jbe	L(exit_loop)
+#  ifdef __CHKP__
+	bndcu   (%edi), %bnd0
+#  endif
 	movdqa	(%edi), %xmm0
 # else
+
+#  ifdef __CHKP__
+	bndcu   (%edx), %bnd0
+#  endif
 	movdqa	(%edx), %xmm0
 # endif
 	pcmpeqb	%xmm1, %xmm0
@@ -173,8 +195,15 @@ L(loop_prolog):
 	jnz	L(matches)
 
 # ifndef USE_AS_RAWMEMCHR
+#  ifdef __CHKP__
+	bndcu   16(%edi), %bnd0
+#  endif
 	movdqa	16(%edi), %xmm2
 # else
+
+#  ifdef __CHKP__
+	bndcu   16(%edx), %bnd0
+#  endif
 	movdqa	16(%edx), %xmm2
 # endif
 	pcmpeqb	%xmm1, %xmm2
@@ -183,8 +212,15 @@ L(loop_prolog):
 	jnz	L(matches16)
 
 # ifndef USE_AS_RAWMEMCHR
+#  ifdef __CHKP__
+	bndcu   32(%edi), %bnd0
+#  endif
 	movdqa	32(%edi), %xmm3
 # else
+
+#  ifdef __CHKP__
+	bndcu   32(%edx), %bnd0
+#  endif
 	movdqa	32(%edx), %xmm3
 # endif
 	pcmpeqb	%xmm1, %xmm3
@@ -193,8 +229,15 @@ L(loop_prolog):
 	jnz	L(matches32)
 
 # ifndef USE_AS_RAWMEMCHR
+#  ifdef __CHKP__
+	bndcu   48(%edi), %bnd0
+#  endif
 	movdqa	48(%edi), %xmm4
 # else
+
+#  ifdef __CHKP__
+	bndcu   48(%edx), %bnd0
+#  endif
 	movdqa	48(%edx), %xmm4
 # endif
 	pcmpeqb	%xmm1, %xmm4
@@ -277,11 +320,18 @@ L(align64_loop):
 # ifndef USE_AS_RAWMEMCHR
 	sub	$64, %edx
 	jbe	L(exit_loop)
+#  ifdef __CHKP__
+	bndcu   (%edi), %bnd0
+#  endif
 	movdqa	(%edi), %xmm0
 	movdqa	16(%edi), %xmm2
 	movdqa	32(%edi), %xmm3
 	movdqa	48(%edi), %xmm4
 # else
+
+#  ifdef __CHKP__
+	bndcu   (%edx), %bnd0
+#  endif
 	movdqa	(%edx), %xmm0
 	movdqa	16(%edx), %xmm2
 	movdqa	32(%edx), %xmm3
@@ -342,9 +392,15 @@ L(align64_loop):
 
 # ifndef USE_AS_RAWMEMCHR
 	lea	48(%edi, %eax), %eax
+#  ifdef __CHKP__
+	bndcu 	(%eax), %bnd0
+#  endif
 	RETURN
 # else
 	lea	48(%edx, %eax), %eax
+#  ifdef __CHKP__
+	bndcu 	(%eax), %bnd0
+#  endif
 	ret
 # endif
 
@@ -404,9 +460,15 @@ L(matches0):
 	bsf	%eax, %eax
 # ifndef USE_AS_RAWMEMCHR
 	lea	-16(%eax, %edi), %eax
+#  ifdef __CHKP__
+	bndcu 	(%eax), %bnd0
+#  endif
 	RETURN
 # else
 	lea	-16(%eax, %edx), %eax
+#  ifdef __CHKP__
+	bndcu 	(%eax), %bnd0
+#  endif
 	ret
 # endif
 
@@ -415,9 +477,15 @@ L(matches):
 	bsf	%eax, %eax
 # ifndef USE_AS_RAWMEMCHR
 	add	%edi, %eax
+#  ifdef __CHKP__
+	bndcu 	(%eax), %bnd0
+#  endif
 	RETURN
 # else
 	add	%edx, %eax
+#  ifdef __CHKP__
+	bndcu 	(%eax), %bnd0
+#  endif
 	ret
 # endif
 
@@ -426,9 +494,15 @@ L(matches16):
 	bsf	%eax, %eax
 # ifndef USE_AS_RAWMEMCHR
 	lea	16(%eax, %edi), %eax
+#  ifdef __CHKP__
+	bndcu 	(%eax), %bnd0
+#  endif
 	RETURN
 # else
 	lea	16(%eax, %edx), %eax
+#  ifdef __CHKP__
+	bndcu 	(%eax), %bnd0
+#  endif
 	ret
 # endif
 
@@ -437,9 +511,15 @@ L(matches32):
 	bsf	%eax, %eax
 # ifndef USE_AS_RAWMEMCHR
 	lea	32(%eax, %edi), %eax
+#  ifdef __CHKP__
+	bndcu 	(%eax), %bnd0
+#  endif
 	RETURN
 # else
 	lea	32(%eax, %edx), %eax
+#  ifdef __CHKP__
+	bndcu 	(%eax), %bnd0
+#  endif
 	ret
 # endif
 

@@ -51,6 +51,11 @@ ENTRY (__memchr)
 	movl LEN(%esp), %esi	/* len: length of memory block.  */
 	cfi_rel_offset (esi, 4)
 
+#ifdef __CHKP__
+	bndldx STR(%esp,%eax,1), %bnd0
+	bndcl (%eax), %bnd0
+#endif
+
 	/* If my must not test more than three characters test
 	   them one by one.  This is especially true for 0.  */
 	cmpl $4, %esi
@@ -72,6 +77,9 @@ ENTRY (__memchr)
 
 	testb $3, %al		/* correctly aligned ? */
 	je L(2)			/* yes => begin loop */
+#ifdef __CHKP__
+	bndcu (%eax), %bnd0
+#endif
 	cmpb %dl, (%eax)	/* compare byte */
 	je L(9)			/* target found => return */
 	incl %eax		/* increment source pointer */
@@ -80,6 +88,9 @@ ENTRY (__memchr)
 
 	testb $3, %al		/* correctly aligned ? */
 	je L(2)			/* yes => begin loop */
+#ifdef __CHKP__
+	bndcu (%eax), %bnd0
+#endif
 	cmpb %dl, (%eax)	/* compare byte */
 	je L(9)			/* target found => return */
 	incl %eax		/* increment source pointer */
@@ -88,6 +99,9 @@ ENTRY (__memchr)
 
 	testb $3, %al		/* correctly aligned ? */
 	je L(2)			/* yes => begin loop */
+#ifdef __CHKP__
+	bndcu (%eax), %bnd0
+#endif
 	cmpb %dl, (%eax)	/* compare byte */
 	je L(9)			/* target found => return */
 	incl %eax		/* increment source pointer */
@@ -127,7 +141,11 @@ ENTRY (__memchr)
 
 	ALIGN (4)
 
-L(1):	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
+L(1):
+#ifdef __CHKP__
+	bndcu (%eax), %bnd0
+#endif
+	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	movl $0xfefefeff, %edi	/* magic value */
 	xorl %edx, %ecx		/* XOR with word c|c|c|c => bytes of str == c
 				   are now 0 */
@@ -162,6 +180,9 @@ L(1):	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	   (following LL(13) below).  Even the len can be compared with
 	   constants instead of decrementing each time.  */
 
+#ifdef __CHKP__
+	bndcu 4(%eax), %bnd0
+#endif
 	movl 4(%eax), %ecx	/* get word (= 4 bytes) in question */
 	movl $0xfefefeff, %edi	/* magic value */
 	xorl %edx, %ecx		/* XOR with word c|c|c|c => bytes of str == c
@@ -176,6 +197,9 @@ L(1):	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 				   the addition will not result in 0.  */
 	jnz L(7)		/* found it => return pointer */
 
+#ifdef __CHKP__
+	bndcu 8(%eax), %bnd0
+#endif
 	movl 8(%eax), %ecx	/* get word (= 4 bytes) in question */
 	movl $0xfefefeff, %edi	/* magic value */
 	xorl %edx, %ecx		/* XOR with word c|c|c|c => bytes of str == c
@@ -190,6 +214,9 @@ L(1):	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 				   the addition will not result in 0.  */
 	jnz L(6)		/* found it => return pointer */
 
+#ifdef __CHKP__
+	bndcu 12(%eax), %bnd0
+#endif
 	movl 12(%eax), %ecx	/* get word (= 4 bytes) in question */
 	movl $0xfefefeff, %edi	/* magic value */
 	xorl %edx, %ecx		/* XOR with word c|c|c|c => bytes of str == c
@@ -213,6 +240,9 @@ L(2):	subl $16, %esi
 	cmpl $4-16, %esi	/* rest < 4 bytes? */
 	jb L(3)			/* yes, than test byte by byte */
 
+#ifdef __CHKP__
+	bndcu (%eax), %bnd0
+#endif
 	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	movl $0xfefefeff, %edi	/* magic value */
 	xorl %edx, %ecx		/* XOR with word c|c|c|c => bytes of str == c
@@ -231,6 +261,9 @@ L(2):	subl $16, %esi
 	cmpl $8-16, %esi	/* rest < 8 bytes? */
 	jb L(3)			/* yes, than test byte by byte */
 
+#ifdef __CHKP__
+	bndcu (%eax), %bnd0
+#endif
 	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	movl $0xfefefeff, %edi	/* magic value */
 	xorl %edx, %ecx		/* XOR with word c|c|c|c => bytes of str == c
@@ -249,6 +282,9 @@ L(2):	subl $16, %esi
 	cmpl $12-16, %esi	/* rest < 12 bytes? */
 	jb L(3)			/* yes, than test byte by byte */
 
+#ifdef __CHKP__
+	bndcu (%eax), %bnd0
+#endif
 	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	movl $0xfefefeff, %edi	/* magic value */
 	xorl %edx, %ecx		/* XOR with word c|c|c|c => bytes of str == c
@@ -268,18 +304,27 @@ L(2):	subl $16, %esi
 L(3):	andl $3, %esi		/* mask out uninteresting bytes */
 	jz L(4)			/* no remaining bytes => return NULL */
 
+#ifdef __CHKP__
+	bndcu (%eax), %bnd0
+#endif
 	cmpb %dl, (%eax)	/* compare byte with CHR */
 	je L(9)			/* equal, than return pointer */
 	incl %eax		/* increment source pointer */
 	decl %esi		/* decrement length */
 	jz L(4)			/* no remaining bytes => return NULL */
 
+#ifdef __CHKP__
+	bndcu (%eax), %bnd0
+#endif
 	cmpb %dl, (%eax)	/* compare byte with CHR */
 	je L(9)			/* equal, than return pointer */
 	incl %eax		/* increment source pointer */
 	decl %esi		/* decrement length */
 	jz L(4)			/* no remaining bytes => return NULL */
 
+#ifdef __CHKP__
+	bndcu (%eax), %bnd0
+#endif
 	cmpb %dl, (%eax)	/* compare byte with CHR */
 	je L(9)			/* equal, than return pointer */
 

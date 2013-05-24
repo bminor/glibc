@@ -35,9 +35,19 @@ ENTRY (strcat)
 
 	movl DEST(%esp), %edx
 	movl SRC(%esp), %ecx
+#ifdef __CHKP__
+	bndldx DEST(%esp,%edx,1), %bnd0
+	bndldx SRC(%esp,%ecx,1), %bnd1
+	bndcl (%ecx), %bnd1
+	bndcu (%ecx), %bnd1
+#endif
 
 	testb $0xff, (%ecx)	/* Is source string empty? */
 	jz L(8)			/* yes => return */
+#ifdef __CHKP__
+	bndcl (%edx), %bnd0
+	bndcu (%edx), %bnd0
+#endif
 
 	/* Test the first bytes separately until destination is aligned.  */
 	testl $3, %edx		/* destination pointer aligned? */
@@ -66,7 +76,11 @@ ENTRY (strcat)
 
 L(4):	addl $16,%edx		/* increment destination pointer for round */
 
-L(1):	movl (%edx), %eax	/* get word (= 4 bytes) in question */
+L(1):
+#ifdef __CHKP__
+	bndcu (%edx), %bnd0
+#endif
+	movl (%edx), %eax	/* get word (= 4 bytes) in question */
 	movl $0xfefefeff, %edi	/* magic value */
 
 	/* If you compare this with the algorithm in memchr.S you will
@@ -98,6 +112,9 @@ L(1):	movl (%edx), %eax	/* get word (= 4 bytes) in question */
 	/* If at least one byte of the word is C we don't get 0 in %ecx.  */
 	jnz L(3)
 
+#ifdef __CHKP__
+	bndcu 4(%edx), %bnd0
+#endif
 	movl 4(%edx), %eax	/* get word from source */
 	movl $0xfefefeff, %edi	/* magic value */
 	addl %eax, %edi		/* add the magic value to the word.  We get
@@ -110,6 +127,9 @@ L(1):	movl (%edx), %eax	/* get word (= 4 bytes) in question */
 				   the addition will not result in 0.  */
 	jnz L(5)		/* one byte is NUL => stop copying */
 
+#ifdef __CHKP__
+	bndcu 8(%edx), %bnd0
+#endif
 	movl 8(%edx), %eax	/* get word from source */
 	movl $0xfefefeff, %edi	/* magic value */
 	addl %eax, %edi		/* add the magic value to the word.  We get
@@ -122,6 +142,9 @@ L(1):	movl (%edx), %eax	/* get word (= 4 bytes) in question */
 				   the addition will not result in 0.  */
 	jnz L(6)		/* one byte is NUL => stop copying */
 
+#ifdef __CHKP__
+	bndcu 12(%edx), %bnd0
+#endif
 	movl 12(%edx), %eax	/* get word from source */
 	movl $0xfefefeff, %edi	/* magic value */
 	addl %eax, %edi		/* add the magic value to the word.  We get
@@ -155,6 +178,10 @@ L(2):	subl %ecx, %edx		/* reduce number of loop variants */
 	/* Now we have to align the source pointer.  */
 	testl $3, %ecx		/* pointer correctly aligned? */
 	jz L(29)		/* yes => start copy loop */
+#ifdef __CHKP__
+	bndcu (%ecx), %bnd1
+	bndcu (%ecx, %edx), %bnd0
+#endif
 	movb (%ecx), %al	/* get first byte */
 	movb %al, (%ecx,%edx)	/* and store it */
 	andb %al, %al		/* is byte NUL? */
@@ -163,6 +190,10 @@ L(2):	subl %ecx, %edx		/* reduce number of loop variants */
 
 	testl $3, %ecx		/* pointer correctly aligned? */
 	jz L(29)		/* yes => start copy loop */
+#ifdef __CHKP__
+	bndcu (%ecx), %bnd1
+	bndcu (%ecx, %edx), %bnd0
+#endif
 	movb (%ecx), %al	/* get first byte */
 	movb %al, (%ecx,%edx)	/* and store it */
 	andb %al, %al		/* is byte NUL? */
@@ -171,6 +202,10 @@ L(2):	subl %ecx, %edx		/* reduce number of loop variants */
 
 	testl $3, %ecx		/* pointer correctly aligned? */
 	jz L(29)		/* yes => start copy loop */
+#ifdef __CHKP__
+	bndcu (%ecx), %bnd1
+	bndcu (%ecx, %edx), %bnd0
+#endif
 	movb (%ecx), %al	/* get first byte */
 	movb %al, (%ecx,%edx)	/* and store it */
 	andb %al, %al		/* is byte NUL? */
@@ -182,10 +217,18 @@ L(2):	subl %ecx, %edx		/* reduce number of loop variants */
 
 	ALIGN(4)
 
-L(28):	movl %eax, 12(%ecx,%edx)/* store word at destination */
+L(28):
+#ifdef __CHKP__
+	bndcu 12(%ecx, %edx), %bnd0
+#endif
+	movl %eax, 12(%ecx,%edx)/* store word at destination */
 	addl $16, %ecx		/* adjust pointer for full round */
 
-L(29):	movl (%ecx), %eax	/* get word from source */
+L(29):
+#ifdef __CHKP__
+	bndcu (%ecx), %bnd1
+#endif
+	movl (%ecx), %eax	/* get word from source */
 	movl $0xfefefeff, %edi	/* magic value */
 	addl %eax, %edi		/* add the magic value to the word.  We get
 				   carry bits reported for each byte which
@@ -196,8 +239,14 @@ L(29):	movl (%ecx), %eax	/* get word from source */
 	incl %edi		/* add 1: if one carry bit was *not* set
 				   the addition will not result in 0.  */
 	jnz L(9)		/* one byte is NUL => stop copying */
+#ifdef __CHKP__
+	bndcu (%ecx, %edx), %bnd0
+#endif
 	movl %eax, (%ecx,%edx)	/* store word to destination */
 
+#ifdef __CHKP__
+	bndcu 4(%ecx), %bnd1
+#endif
 	movl 4(%ecx), %eax	/* get word from source */
 	movl $0xfefefeff, %edi	/* magic value */
 	addl %eax, %edi		/* add the magic value to the word.  We get
@@ -209,8 +258,14 @@ L(29):	movl (%ecx), %eax	/* get word from source */
 	incl %edi		/* add 1: if one carry bit was *not* set
 				   the addition will not result in 0.  */
 	jnz L(91)		/* one byte is NUL => stop copying */
+#ifdef __CHKP__
+	bndcu 4(%ecx, %edx), %bnd0
+#endif
 	movl %eax, 4(%ecx,%edx)	/* store word to destination */
 
+#ifdef __CHKP__
+	bndcu 8(%ecx), %bnd1
+#endif
 	movl 8(%ecx), %eax	/* get word from source */
 	movl $0xfefefeff, %edi	/* magic value */
 	addl %eax, %edi		/* add the magic value to the word.  We get
@@ -222,8 +277,14 @@ L(29):	movl (%ecx), %eax	/* get word from source */
 	incl %edi		/* add 1: if one carry bit was *not* set
 				   the addition will not result in 0.  */
 	jnz L(92)		/* one byte is NUL => stop copying */
+#ifdef __CHKP__
+	bndcu 8(%ecx, %edx), %bnd0
+#endif
 	movl %eax, 8(%ecx,%edx)	/* store word to destination */
 
+#ifdef __CHKP__
+	bndcu 12(%ecx), %bnd1
+#endif
 	movl 12(%ecx), %eax	/* get word from source */
 	movl $0xfefefeff, %edi	/* magic value */
 	addl %eax, %edi		/* add the magic value to the word.  We get
@@ -240,15 +301,25 @@ L(93):	addl $4, %ecx		/* adjust pointer */
 L(92):	addl $4, %ecx
 L(91):	addl $4, %ecx
 
-L(9):	movb %al, (%ecx,%edx)	/* store first byte of last word */
+L(9):
+#ifdef __CHKP__
+	bndcu (%ecx, %edx), %bnd0
+#endif
+	movb %al, (%ecx,%edx)	/* store first byte of last word */
 	orb %al, %al		/* is it NUL? */
 	jz L(8)			/* yes => return */
 
+#ifdef __CHKP__
+	bndcu 1(%ecx, %edx), %bnd0
+#endif
 	movb %ah, 1(%ecx,%edx)	/* store second byte of last word */
 	orb %ah, %ah		/* is it NUL? */
 	jz L(8)			/* yes => return */
 
 	shrl $16, %eax		/* make upper bytes accessible */
+#ifdef __CHKP__
+	bndcu 2(%ecx, %edx), %bnd0
+#endif
 	movb %al, 2(%ecx,%edx)	/* store third byte of last word */
 	orb %al, %al		/* is it NUL? */
 	jz L(8)			/* yes => return */

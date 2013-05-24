@@ -36,12 +36,23 @@
 # define STR1	PARMS
 # define STR2	STR1+4
 
+# ifdef __CHKP__
+# undef RETURN
+# define RETURN bndcu (%eax),%bnd0; \
+	 POP (%edi); ret; CFI_PUSH (%edi);
+# endif
+
 	atom_text_section
 ENTRY (__wcsrchr_sse2)
 
 	ENTRANCE
 	mov	STR1(%esp), %ecx
 	movd	STR2(%esp), %xmm1
+# ifdef __CHKP__
+	bndldx 	STR1(%esp,%ecx,1), %bnd0
+	bndcl  	(%ecx),%bnd0
+	bndcu  	(%ecx),%bnd0
+# endif
 
 	mov	%ecx, %edi
 	punpckldq %xmm1, %xmm1
@@ -137,6 +148,9 @@ L(unaligned_match):
 /* Loop start on aligned string.  */
 	.p2align 4
 L(loop):
+# ifdef __CHKP__
+	bndcu  	(%edi),%bnd0
+# endif
 	movdqa	(%edi), %xmm0
 	pcmpeqd	%xmm0, %xmm2
 	add	$16, %edi
@@ -146,6 +160,9 @@ L(loop):
 	or	%eax, %ecx
 	jnz	L(matches)
 
+# ifdef __CHKP__
+	bndcu  	(%edi),%bnd0
+# endif
 	movdqa	(%edi), %xmm3
 	pcmpeqd	%xmm3, %xmm2
 	add	$16, %edi
@@ -155,6 +172,9 @@ L(loop):
 	or	%eax, %ecx
 	jnz	L(matches)
 
+# ifdef __CHKP__
+	bndcu  	(%edi),%bnd0
+# endif
 	movdqa	(%edi), %xmm4
 	pcmpeqd	%xmm4, %xmm2
 	add	$16, %edi
@@ -164,6 +184,9 @@ L(loop):
 	or	%eax, %ecx
 	jnz	L(matches)
 
+# ifdef __CHKP__
+	bndcu  	(%edi),%bnd0
+# endif
 	movdqa	(%edi), %xmm5
 	pcmpeqd	%xmm5, %xmm2
 	add	$16, %edi

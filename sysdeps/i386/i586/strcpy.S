@@ -45,6 +45,10 @@ ENTRY (STRCPY)
 	cfi_rel_offset (edi, 8)
 	movl	SRC(%esp), %esi
 	cfi_rel_offset (esi, 4)
+#ifdef __CHKP__
+	bndldx	DEST(%esp,%edi,1), %bnd0
+	bndldx	SRC(%esp,%esi,1), %bnd1
+#endif
 
 	xorl	%eax, %eax
 	leal	-1(%esi), %ecx
@@ -61,6 +65,9 @@ ENTRY (STRCPY)
 	/* 0xb is the distance between 2: and 1: but we avoid writing
 	   1f-2b because the assembler generates worse code.  */
 	leal	0xb(%edx,%ecx,8), %ecx
+# ifdef __CHKP__
+	jmp	L(1)
+# endif
 #else
 	leal	1f(,%ecx,8), %ecx
 #endif

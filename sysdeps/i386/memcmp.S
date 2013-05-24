@@ -37,6 +37,12 @@ ENTRY (memcmp)
 	cfi_rel_offset (esi, 0)
 	movl BLK2(%esp), %edi
 	movl LEN(%esp), %ecx
+#ifdef __CHKP__
+	bndldx BLK1(%esp,%esi,1), %bnd0
+	bndldx BLK2(%esp,%edi,1), %bnd1
+	bndcl (%esi), %bnd0
+	bndcl (%edi), %bnd1
+#endif
 
 	cld			/* Set direction of comparison.  */
 
@@ -59,7 +65,13 @@ ENTRY (memcmp)
 	   Note that the following operation does not change 0xffffffff.  */
 	orb $1, %al		/* Change 0 to 1.  */
 
-L(1):	popl %esi		/* Restore registers.  */
+L(1):
+#ifdef __CHKP__
+	bndcu (%esi), %bnd0
+	bndcu (%edi), %bnd1
+#endif
+	popl %esi		/* Restore registers.  */
+
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (esi)
 	movl %edx, %edi

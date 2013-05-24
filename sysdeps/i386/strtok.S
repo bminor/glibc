@@ -67,6 +67,11 @@ ENTRY (FUNCTION)
 	movl STR(%esp), %edx
 	movl DELIM(%esp), %eax
 
+#ifdef __CHKP__
+	bndldx STR(%esp,%edx,1), %bnd0
+	bndldx DELIM(%esp,%eax,1), %bnd1
+#endif
+
 #if !defined USE_AS_STRTOK_R && defined PIC
 	pushl %ebx			/* Save PIC register.  */
 	cfi_adjust_cfa_offset (4)
@@ -336,6 +341,9 @@ L(11):
 	/* Store the pointer to the next character.  */
 #ifdef USE_AS_STRTOK_R
 	movl SAVE(%esp), %ecx
+# ifdef __CHKP__
+	bndmov %bnd2, %bnd0
+# endif
 #endif
 	movl %edx, SAVE_PTR
 
@@ -351,6 +359,9 @@ L(returnNULL):
 	xorl %eax, %eax
 #ifdef USE_AS_STRTOK_R
 	movl SAVE(%esp), %ecx
+# ifdef __CHKP__
+	bndmov %bnd2, %bnd0
+# endif
 #endif
 	movl %edx, SAVE_PTR
 	jmp L(epilogue)

@@ -46,6 +46,11 @@ ENTRY (__rawmemchr)
 	movl STR(%esp), %eax
 	movl CHR(%esp), %edx
 
+#ifdef __CHKP__
+	bndldx STR(%esp,%eax,1), %bnd0
+	bndcl (%eax), %bnd0
+#endif
+
 	/* At the moment %edx contains C.  What we need for the
 	   algorithm is C in all bytes of the dword.  Avoid
 	   operations on 16 bit words because these require an
@@ -62,18 +67,27 @@ ENTRY (__rawmemchr)
 
 	testb $3, %al		/* correctly aligned ? */
 	je L(1)			/* yes => begin loop */
+#ifdef __CHKP__
+	bndcu (%eax), %bnd0
+#endif
 	cmpb %dl, (%eax)	/* compare byte */
 	je L(9)			/* target found => return */
 	incl %eax		/* increment source pointer */
 
 	testb $3, %al		/* correctly aligned ? */
 	je L(1)			/* yes => begin loop */
+#ifdef __CHKP__
+	bndcu (%eax), %bnd0
+#endif
 	cmpb %dl, (%eax)	/* compare byte */
 	je L(9)			/* target found => return */
 	incl %eax		/* increment source pointer */
 
 	testb $3, %al		/* correctly aligned ? */
 	je L(1)			/* yes => begin loop */
+#ifdef __CHKP__
+	bndcu (%eax), %bnd0
+#endif
 	cmpb %dl, (%eax)	/* compare byte */
 	je L(9)			/* target found => return */
 	incl %eax		/* increment source pointer */
@@ -108,7 +122,11 @@ ENTRY (__rawmemchr)
 	/* Each round the main loop processes 16 bytes.  */
 	ALIGN (4)
 
-L(1):	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
+L(1):
+#ifdef __CHKP__
+	bndcu (%eax), %bnd0
+#endif
+	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	movl $0xfefefeff, %edi	/* magic value */
 	xorl %edx, %ecx		/* XOR with word c|c|c|c => bytes of str == c
 				   are now 0 */
@@ -143,6 +161,9 @@ L(1):	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	   (following LL(13) below).  Even the len can be compared with
 	   constants instead of decrementing each time.  */
 
+#ifdef __CHKP__
+	bndcu 4(%eax), %bnd0
+#endif
 	movl 4(%eax), %ecx	/* get word (= 4 bytes) in question */
 	movl $0xfefefeff, %edi	/* magic value */
 	xorl %edx, %ecx		/* XOR with word c|c|c|c => bytes of str == c
@@ -157,6 +178,9 @@ L(1):	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 				   the addition will not result in 0.  */
 	jnz L(7)		/* found it => return pointer */
 
+#ifdef __CHKP__
+	bndcu 8(%eax), %bnd0
+#endif
 	movl 8(%eax), %ecx	/* get word (= 4 bytes) in question */
 	movl $0xfefefeff, %edi	/* magic value */
 	xorl %edx, %ecx		/* XOR with word c|c|c|c => bytes of str == c
@@ -171,6 +195,9 @@ L(1):	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 				   the addition will not result in 0.  */
 	jnz L(6)		/* found it => return pointer */
 
+#ifdef __CHKP__
+	bndcu 12(%eax), %bnd0
+#endif
 	movl 12(%eax), %ecx	/* get word (= 4 bytes) in question */
 	movl $0xfefefeff, %edi	/* magic value */
 	xorl %edx, %ecx		/* XOR with word c|c|c|c => bytes of str == c
@@ -211,6 +238,9 @@ L(8):	testb %cl, %cl		/* test first byte in dword */
 	/* No further test needed we we know it is one of the four bytes.  */
 
 L(9):
+#ifdef __CHKP__
+	bndcu (%eax), %bnd0
+#endif
 	popl %edi		/* pop saved register */
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (edi)

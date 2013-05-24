@@ -29,8 +29,19 @@ ENTRY (strcmp)
 
 	movl	STR1(%esp), %ecx
 	movl	STR2(%esp), %edx
+#ifdef __CHKP__
+	bndldx	STR1(%esp,%ecx,1), %bnd0
+	bndldx	STR2(%esp,%edx,1), %bnd1
+	bndcl	(%ecx), %bnd0
+	bndcl	(%edx), %bnd1
+#endif
 
-L(oop):	movb	(%ecx), %al
+L(oop):
+#ifdef __CHKP__
+	bndcu	(%ecx), %bnd0
+	bndcu	(%edx), %bnd1
+#endif
+	movb	(%ecx), %al
 	cmpb	(%edx), %al
 	jne	L(neq)
 	incl	%ecx
