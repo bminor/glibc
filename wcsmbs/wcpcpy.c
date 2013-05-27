@@ -18,8 +18,9 @@
 
 #include <wchar.h>
 
-#define __need_ptrdiff_t
-#include <stddef.h>
+#ifndef __CHKP__
+# define __need_ptrdiff_t
+# include <stddef.h>
 
 
 /* Copy SRC to DEST, returning the address of the terminating L'\0' in
@@ -42,5 +43,14 @@ __wcpcpy (dest, src)
 
   return wcp;
 }
+#else
 
+wchar_t *
+__wcpcpy (wchar_t *dst, const wchar_t *src)
+{
+  while ((*dst++ = *src++) != L'\0');
+  return dst - 1;
+}
+
+#endif
 weak_alias (__wcpcpy, wcpcpy)
