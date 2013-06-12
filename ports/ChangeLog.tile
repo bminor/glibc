@@ -1,3 +1,7 @@
+2013-06-12  Chris Metcalf  <cmetcalf@tilera.com>
+
+	* sysdeps/tile/bits/endian.h (__BYTE_ORDER): Default to little.
+
 2013-05-23  Chris Metcalf  <cmetcalf@tilera.com>
 
 	* sysdeps/tile/tilegx/Makefile ($(cflags-mcmodel-large)):
