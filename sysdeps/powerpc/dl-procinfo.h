@@ -20,11 +20,21 @@
 #define _DL_PROCINFO_H 1
 
 #include <ldsodefs.h>
-#include <sysdep.h>	/* This defines the PPC_FEATURE_* macros.  */
+#include <sysdep.h>	/* This defines the PPC_FEATURE[2]_* macros.  */
 
-/* There are 25 bits used, but they are bits 7..31.  */
+/* There are 25 bits used in AT_HWCAP, but they are bits 7..31.  The feature
+ * definitions started at bit 31 and decremented as new features were added.
+ */
+#define _DL_HWCAP_LAST		31
 #define _DL_HWCAP_FIRST		7
-#define _DL_HWCAP_COUNT		32
+
+/* AT_HWCAP2 feature bits similarily started at bit 31 and decremented as new
+   features were added.  HWCAP2 feature bits start at bit 0.  */
+#define _DL_HWCAP2_LAST		31
+
+/* The total number of available bits (including those prior to
+   _DL_HWCAP_FIRST).  Some of these bits might not be used.  */
+#define _DL_HWCAP_COUNT		64
 
 /* These bits influence library search.  */
 #define HWCAP_IMPORTANT		(PPC_FEATURE_HAS_ALTIVEC \
@@ -153,15 +163,37 @@ _dl_string_platform (const char *str)
 }
 
 #ifdef IS_IN_rtld
+
 static inline int
 __attribute__ ((unused))
-_dl_procinfo (int word)
+_dl_procinfo (unsigned int type, unsigned int word)
 {
-  _dl_printf ("AT_HWCAP:       ");
+  switch(type)
+    {
+    case AT_HWCAP:
+      _dl_printf ("AT_HWCAP:       ");
 
-  for (int i = _DL_HWCAP_FIRST; i < _DL_HWCAP_COUNT; ++i)
-    if (word & (1 << i))
-      _dl_printf (" %s", _dl_hwcap_string (i));
+      for (int i = _DL_HWCAP_FIRST; i <= _DL_HWCAP_LAST; ++i)
+	if (word & (1 << i))
+	  _dl_printf (" %s", _dl_hwcap_string (i));
+      break;
+    case AT_HWCAP2:
+      {
+	unsigned int offset = _DL_HWCAP_LAST + 1;
+
+	_dl_printf ("AT_HWCAP2:      ");
+
+        /* We have to go through them all because the kernel added the
+	   AT_HWCAP2 features starting with the high bits.  */
+	for (int i = 0; i <= _DL_HWCAP2_LAST; ++i)
+	  if (word & (1 << i))
+	    _dl_printf (" %s", _dl_hwcap_string (offset + i));
+	break;
+      }
+    default:
+      /* This should not happen.  */
+      return -1;
+    }
 
   _dl_printf ("\n");
 

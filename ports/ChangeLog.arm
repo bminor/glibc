@@ -1,3 +1,8 @@
+2013-06-13  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/arm/dl-procinfo.h (_dl_procinfo): Add
+	TYPE parameter for AT_HWCAP2 support.  Make WORD unsigned.
+
 2013-06-11  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/math-tests.h [__SOFTFP__] (EXCEPTION_TESTS_float):

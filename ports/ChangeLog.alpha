@@ -1,3 +1,8 @@
+2013-06-13  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	* sysdeps/alpha/dl-procinfo.h (_dl_procinfo): Add TYPE parameter for
+	AT_HWCAP2 support.
+
 2013-06-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/alpha/bits/atomic.h: Remove trailing whitespace.

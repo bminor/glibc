@@ -194,6 +194,10 @@ _dl_aux_init (ElfW(auxv_t) *av)
   uid_t uid = 0;
   gid_t gid = 0;
 
+  /* Don't rely on a specific order of AT_HWCAP and AT_HWCAP2.  Collate into a
+     zeroed temp and assign to _dl_hwcap after the auxv has been parsed.  */
+  uint64_t hwcap = 0;
+
   _dl_auxv = av;
   for (; av->a_type != AT_NULL; ++av)
     switch (av->a_type)
@@ -212,8 +216,12 @@ _dl_aux_init (ElfW(auxv_t) *av)
 	GL(dl_phnum) = av->a_un.a_val;
 	break;
       case AT_HWCAP:
-	GLRO(dl_hwcap) = (unsigned long int) av->a_un.a_val;
+	hwcap |= (unsigned long int) av->a_un.a_val;
 	break;
+      case AT_HWCAP2:
+	hwcap |= (uint64_t) av->a_un.a_val << 32;
+	break;
+
 #ifdef NEED_DL_SYSINFO
       case AT_SYSINFO:
 	GL(dl_sysinfo) = av->a_un.a_val;
@@ -252,6 +260,9 @@ _dl_aux_init (ElfW(auxv_t) *av)
       DL_PLATFORM_AUXV
 # endif
       }
+
+  GLRO(dl_hwcap) = hwcap;
+
   if (seen == 0xf)
     {
       __libc_enable_secure = uid != 0 || gid != 0;

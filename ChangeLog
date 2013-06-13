@@ -1,3 +1,23 @@
+2013-06-13  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	* elf/dl-support.c (_dl_aux_init): Add support for AT_HWCAP2.
+	* elf/dl-sysdep.c (_dl_sysdep_start, _dl_show_auxv): Likewise.
+	* misc/getauxval.c (__getauxval): Likewise.
+	* elf/elf.h (AT_HWCAP2): Add a new a_type entry.
+	* sysdeps/powerpc/dl-procinfo.c (_dl_powerpc_cap_flags): Extend for
+	for an additional 32 AT_HWCAP2 flags.
+	* sysdeps/powerpc/dl-procinfo.h (_dl_procinfo): Add support for
+	displaying AT_HWCAP2 strings.  Add TYPE parameter.  Make WORD unsigned
+	rather than signed.
+	* sysdeps/generic/dl-procinfo.h (_dl_procinfo): Add TYPE parameter to
+	macro prototype for AT_HWCAP2 support.
+	* sysdeps/i386/dl-procinfo.h: Likewise.
+	* sysdeps/s390/dl-procinfo.h: Likewise.
+	* sysdeps/sparc/dl-procinfo.h (_dl_procinfo): Add TYPE parameter for
+	future AT_HWCAP2 support.  Make WORD unsigned rather than signed.
+	* sysdeps/unix/sysv/linux/i386/dl-procinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/dl-procinfo.h: Likewise.
+
 2013-06-13  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	* NEWS: Fix note on clock function precision.  Text by Roland
