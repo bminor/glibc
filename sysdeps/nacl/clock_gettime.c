@@ -25,4 +25,5 @@ __clock_gettime (clockid_t clock_id, struct timespec *tp)
 {
   return NACL_CALL (__nacl_irt_clock.clock_gettime (clock_id, tp), 0);
 }
+libc_hidden_def (__clock_gettime)
 weak_alias (__clock_gettime, clock_gettime)
