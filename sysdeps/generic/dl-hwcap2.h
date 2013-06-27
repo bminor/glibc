@@ -1,7 +1,6 @@
-/* Linux/i386 version of processor capability information handling macros.
+/* HWCAP2 Availability Test
    Copyright (C) 1998-2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,30 +16,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdeps/i386/dl-procinfo.h>
-#include <ldsodefs.h>
+#ifndef _HWCAP2_H
+#define _HWCAP2_H	1
 
+/* Default to unavailable.  */
+#define HWCAP2_AVAIL		(0)
 
-#undef _dl_procinfo
-static inline int
-__attribute__ ((unused))
-_dl_procinfo (unsigned int type, unsigned long int word)
-{
-  /* This table should match the information from arch/i386/kernel/setup.c
-     in the kernel sources.  */
-  int i;
-
-  /* Handle in a more sophisticated manner if HWCAP2 is supported.  */
-  if (type == AT_HWCAP2)
-    return 0;
-
-  _dl_printf ("AT_HWCAP:   ");
-
-  for (i = 0; i < _DL_HWCAP_COUNT; ++i)
-    if (word & (1 << i))
-      _dl_printf (" %s", GLRO(dl_x86_cap_flags)[i]);
-
-  _dl_printf ("\n");
-
-  return 0;
-}
+#endif	/* dl-hwcap2.h */

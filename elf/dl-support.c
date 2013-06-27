@@ -31,6 +31,7 @@
 #include <dl-cache.h>
 #include <dl-librecon.h>
 #include <dl-procinfo.h>
+#include <dl-hwcap2.h>
 #include <unsecvars.h>
 #include <hp-timing.h>
 #include <stackinfo.h>
@@ -131,6 +132,10 @@ const ElfW(Phdr) *_dl_phdr;
 size_t _dl_phnum;
 uint64_t _dl_hwcap __attribute__ ((nocommon));
 
+#if HWCAP2_AVAIL
+uint64_t _dl_hwcap2 __attribute__ ((nocommon));
+#endif
+
 /* This is not initialized to HWCAP_IMPORTANT, matching the definition
    of _dl_important_hwcaps, below, where no hwcap strings are ever
    used.  This mask is still used to mediate the lookups in the cache
@@ -214,6 +219,11 @@ _dl_aux_init (ElfW(auxv_t) *av)
       case AT_HWCAP:
 	GLRO(dl_hwcap) = (unsigned long int) av->a_un.a_val;
 	break;
+#if HWCAP2_AVAIL
+      case AT_HWCAP2:
+	GLRO(dl_hwcap2) = (unsigned long int) av->a_un.a_val;
+	break;
+#endif
 #ifdef NEED_DL_SYSINFO
       case AT_SYSINFO:
 	GL(dl_sysinfo) = av->a_un.a_val;

@@ -408,6 +408,7 @@ struct rtld_global
     size_t count;
     void *list[50];
   } *_dl_scope_free_list;
+
 #ifdef SHARED
 };
 # define __rtld_global_attribute__
@@ -552,6 +553,14 @@ struct rtld_global_ro
   /* At startup time we set up the normal DSO data structure for it,
      and this points to it.  */
   EXTERN struct link_map *_dl_sysinfo_map;
+#endif
+
+#include <dl-hwcap2.h>
+
+#if HWCAP2_AVAIL
+  /* Mask for more hardware capabilities that are available on some
+     platforms.  */
+  EXTERN uint64_t _dl_hwcap2;
 #endif
 
 #ifdef SHARED

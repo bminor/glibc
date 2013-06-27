@@ -1,3 +1,34 @@
+2013-06-27  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
+
+	* elf/dl-support.c (_dl_hwcap2): Add a new hwcap field for more
+	hardware capabilities, conditional on HWCAP2_AVAIL.
+	(_dl_aux_init): Read AT_HWCAP2 into GLRO(dl_hwcap2), conditional on
+	HWCAP2_AVAIL.
+	* elf/dl-sysdep.c (_dl_sysdep_start): Read AT_HWCAP2 into
+	GLRO(dl_hwcap2), conditional on HWCAP2_AVAIL.
+	(_dl_show_auxv): Add support for calling _dl_procinfo when AT_HWCAP2
+	is encountered conditional on HWCAP2_AVAIL such that the default
+	mechanism is used otherwise.
+	* misc/getauxval.c (__getauxval): Return GLRO(dl_hwcap2) on AT_HWCAP2,
+	conditional on HWCAP2_AVAIL.
+	* sysdeps/generic/ldsodefs.h (rtld_global_ro): Add _dl_hwcap2 as a new
+	struct member, conditional on HWCAP2_AVAIL.
+	* sysdeps/generic/dl-hwcap2.h: New file defining HWCAP2_AVAIL as 0.
+	* ports/sysdeps/alpha/dl-procinfo.h (_dl_procinfo): Add TYPE parameter
+	to macro prototype for AT_HWCAP2 support.
+	* ports/sysdeps/mips/dl-procinfo.h: Likewise.
+	* sysdeps/generic/dl-procinfo.h: Likewise.
+	* sysdeps/i386/dl-procinfo.h: Likewise.
+	* sysdeps/s390/dl-procinfo.h: Likewise.
+	* ports/sysdeps/unix/sysv/linux/arm/dl-procinfo.h (_dl_procinfo): Add
+	TYPE parameter to macro prototype for AT_HWCAP2 support.  Make WORD
+	unsigned long int rather than signed int.  Stub in case for TYPE ==
+	AT_HWCAP2.
+	* sysdeps/powerpc/dl-procinfo.h: Likewise.
+	* sysdeps/sparc/dl-procinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/dl-procinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/dl-procinfo.h: Likewise.
+
 2013-06-26  Joseph Myers  <joseph@codesourcery.com>
 
 	* configure.in (CC): Require GCC version 4.4 or later.
