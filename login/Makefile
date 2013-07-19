@@ -29,9 +29,15 @@ routines := getutent getutent_r getutid getutline getutid_r getutline_r \
 
 CFLAGS-grantpt.c = -DLIBEXECDIR='"$(libexecdir)"'
 
-others = utmpdump pt_chown
+others = utmpdump
+
+include ../Makeconfig
+
+ifeq (yes,$(build-pt-chown))
+others += pt_chown
 others-pie = pt_chown
 install-others-programs = $(inst_libexecdir)/pt_chown
+endif
 
 subdir-dirs = programs
 vpath %.c programs
