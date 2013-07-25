@@ -1,3 +1,17 @@
+2013-02-08  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #15006]
+	* sysdeps/generic/ldconfig.h: Define FLAG_ARM_LIBSF.
+	* elf/cache.c (print_entry): Add FLAG_ARM_LIBSF support.
+
+2013-03-30  David S. Miller  <davem@davemloft.net>
+
+	* po/de.po: Update from translation team.
+
+2013-01-31  David S. Miller  <davem@davemloft.net>
+
+	* po/de.po: Update from translation team.
+
 2013-01-18  Anton Blanchard  <anton@samba.org>
 	    Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
 
@@ -20,32 +34,18 @@
 	INTERNAL_VSYSCALL_NCS macro invocation.
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h: Likewise.
 
+2013-01-11  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #15003]
+	* sysdeps/unix/sysv/linux/bits/socket.h (MSG_FASTOPEN): New
+	value. Sync with Linux 3.7.
+
 2013-01-09  Anton Blanchard  <anton@samba.org>
 
 	* sysdeps/unix/sysv/linux/powerpc/sched_getcpu.c: New file.
 	* sysdeps/unix/sysv/linux/powerpc/Versions: Add __vdso_getcpu.
 	* sysdeps/unix/sysv/linux/powerpc/bits/libc-vdso.h: Likewise.
 	* sysdeps/unix/sysv/linux/powerpc/init-first.c: Likewise.
-
-2013-02-08  Carlos O'Donell  <carlos@redhat.com>
-
-	[BZ #15006]
-	* sysdeps/generic/ldconfig.h: Define FLAG_ARM_LIBSF.
-	* elf/cache.c (print_entry): Add FLAG_ARM_LIBSF support.
-
-2013-03-30  David S. Miller  <davem@davemloft.net>
-
-	* po/de.po: Update from translation team.
-
-2013-01-31  David S. Miller  <davem@davemloft.net>
-
-	* po/de.po: Update from translation team.
-
-2013-01-11  Andreas Jaeger  <aj@suse.de>
-
-	[BZ #15003]
-	* sysdeps/unix/sysv/linux/bits/socket.h (MSG_FASTOPEN): New
-	value. Sync with Linux 3.7.
 
 2013-01-09  David S. Miller  <davem@davemloft.net>
 
