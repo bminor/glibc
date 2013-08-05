@@ -50,11 +50,11 @@ endef
 nacl-interface-pattern = $(objpfx)nacl-interface-%.c
 
 $(nacl-mandatory-interfaces:%=$(nacl-interface-pattern)): \
-  $(nacl-interface-pattern): $(nacl)/Makefile
+  $(nacl-interface-pattern): $(nacl)/Makefile $(objpfx)nacl-interfaces.v
 	$(make-target-directory)
 	$(call nacl-interface-table-command,mandatory)
 $(nacl-optional-interfaces:%=$(nacl-interface-pattern)): \
-  $(nacl-interface-pattern): $(nacl)/Makefile
+  $(nacl-interface-pattern): $(nacl)/Makefile $(objpfx)nacl-interfaces.v
 	$(make-target-directory)
 	$(call nacl-interface-table-command,optional)
 
@@ -74,6 +74,7 @@ $(common-objpfx)bits/mman-linux.h: \
 
 # XXX temp test
 others += hello
+others-static += hello
 
 endif
 
