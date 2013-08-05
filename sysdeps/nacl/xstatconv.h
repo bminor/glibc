@@ -27,9 +27,12 @@ struct stat;
 #define stat    __avoid_nacl_stat
 #undef  fstat
 #define fstat   __avoid_nacl_fstat
+#undef  lstat
+#define lstat   __avoid_nacl_lstat
 #include <native_client/src/trusted/service_runtime/include/sys/stat.h>
 #undef  stat
 #undef  fstat
+#undef  lstat
 
 extern int __xstat_conv (int vers, const struct nacl_abi_stat *, void *)
   internal_function attribute_hidden;
