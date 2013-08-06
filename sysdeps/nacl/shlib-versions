@@ -1,6 +1,6 @@
 # Configuration		DEFAULT			Earliest symbol set
 # -------------		---------------		------------------------------
-.*-.*-nacl.*		DEFAULT			GLIBC_2.17
+.*-.*-nacl.*		DEFAULT			GLIBC_2.19
 
 # Configuration		ABI			Identifier for ABI data files
 # -------------		----------		-----------------------------
