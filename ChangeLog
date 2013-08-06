@@ -1,3 +1,13 @@
+2013-08-03  David S. Miller  <davem@davemloft.net>
+
+	* po/ko.po: Update Korean translation from translation project.
+
+2013-08-01  David S. Miller  <davem@davemloft.net>
+
+	* manual/contrib.texi: Update entry for Siddhesh Poyarekar.  Add
+	entries for Will Newton, Andi Kleen, David Holsgrove, and Ondrej
+	Bilka.
+
 2012-07-06  Ryan S. Arnold  <rsa@linux.vnet.ibm.com>
 
 	* elf/get-dynamic-info.h (elf_get_dynamic_info): Remove assert()
@@ -6540,7 +6550,7 @@
 	* stdlib/Makefile (routines): Add __cxa_thread_atexit_impl.
 	(tests): Add test case tst-tls-atexit.
 	(modules-names): Add shared library for tst-tls-atexit.
-	* stdlib/Versions (GLIBC_2.17): Add __cxa_thread_atexit_impl.
+	* stdlib/Versions (GLIBC_2.18): Add __cxa_thread_atexit_impl.
 	(GLIBC_PRIVATE): Add __call_tls_dtors.
 	* stdlib/cxa_thread_atexit_impl.c: New file with helper function
 	for libstdc++.
