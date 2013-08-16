@@ -1064,7 +1064,7 @@ all-subdirs = csu assert ctype locale intl catgets math setjmp signal	    \
 	      stdlib stdio-common libio malloc string wcsmbs time dirent    \
 	      grp pwd posix io termios resource misc socket sysvipc gmon    \
 	      gnulib iconv iconvdata wctype manual shadow gshadow po argp   \
-	      crypt localedata timezone rt conform debug		    \
+	      crypt localedata rt conform debug		    \
 	      $(add-on-subdirs) dlfcn elf
 
 ifndef avoid-generated
