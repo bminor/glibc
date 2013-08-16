@@ -94,7 +94,7 @@ sem_timedwait (sem_t *sem, const struct timespec *abstime)
       rt.tv_sec = sec;
       rt.tv_nsec = nsec;
       err = do_futex_timed_wait(isem, &rt);
-      if (err != 0 && err != -EWOULDBLOCK)
+      if (err != 0 && err != -EWOULDBLOCK && err != -EAGAIN)
 	{
 	  __set_errno (-err);
 	  err = -1;
