@@ -64,7 +64,7 @@ ENTRY (__sigsetjmp)
 	add	a3, a3, a4
 	ldr	a3, [a3, #RTLD_GLOBAL_RO_DL_HWCAP_OFFSET]
 # else
-#  ifdef PIC
+#  ifdef SHARED
 	ldr	a3, 1f
 	ldr	a4, .Lrtld_global_ro
 0:	add	a3, pc, a3
@@ -120,7 +120,7 @@ ENTRY (__sigsetjmp)
 .Lrtld_local_ro:
 	.long	C_SYMBOL_NAME(_rtld_local_ro)(GOTOFF)
 # else
-#  ifdef PIC
+#  ifdef SHARED
 1:	.long	_GLOBAL_OFFSET_TABLE_ - 0b - PC_OFS
 .Lrtld_global_ro:
 	.long	C_SYMBOL_NAME(_rtld_global_ro)(GOT)
