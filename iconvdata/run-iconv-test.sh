@@ -35,7 +35,7 @@ GCONV_PATH=$codir/iconvdata
 export GCONV_PATH
 
 # We have to have some directories in the library path.
-LIBPATH=$codir:$codir/iconvdata
+LIBPATH=$codir:$codir/iconvdata:$codir/dlfcn
 
 # How the start the iconv(1) program.
 ICONV='$codir/elf/ld.so --library-path $LIBPATH --inhibit-rpath ${from}.so \
