@@ -463,7 +463,7 @@ send_again:
       while (inlen < 0 && errno == EINTR);
       if (inlen < 0)
 	{
-	  if (errno == EWOULDBLOCK)
+	  if (errno == EWOULDBLOCK || errno == EAGAIN)
 	    continue;
 	  cu->cu_error.re_errno = errno;
 	  return (cu->cu_error.re_status = RPC_CANTRECV);

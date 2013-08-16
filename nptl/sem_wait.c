@@ -68,7 +68,7 @@ __new_sem_wait (sem_t *sem)
   while (1)
     {
       err = do_futex_wait(isem);
-      if (err != 0 && err != -EWOULDBLOCK)
+      if (err != 0 && err != -EWOULDBLOCK && err != -EAGAIN)
 	{
 	  __set_errno (-err);
 	  err = -1;
@@ -113,7 +113,7 @@ __old_sem_wait (sem_t *sem)
       /* Disable asynchronous cancellation.  */
       __pthread_disable_asynccancel (oldtype);
     }
-  while (err == 0 || err == -EWOULDBLOCK);
+  while (err == 0 || err == -EWOULDBLOCK || err == -EAGAIN);
 
   __set_errno (-err);
   return -1;

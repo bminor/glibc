@@ -261,7 +261,8 @@ __pthread_mutex_trylock (mutex)
 							  private), 0, 0);
 
 	    if (INTERNAL_SYSCALL_ERROR_P (e, __err)
-		&& INTERNAL_SYSCALL_ERRNO (e, __err) == EWOULDBLOCK)
+		&& ((INTERNAL_SYSCALL_ERRNO (e, __err) == EWOULDBLOCK)
+		    || (INTERNAL_SYSCALL_ERRNO (e, __err) == EAGAIN)))
 	      {
 		THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
 

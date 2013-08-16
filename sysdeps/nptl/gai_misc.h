@@ -51,7 +51,7 @@
 	  {								      \
 	    status = lll_futex_timed_wait (futexaddr, oldval, timeout,	      \
 					   LLL_PRIVATE);		      \
-	    if (status != -EWOULDBLOCK)					      \
+	    if (status != -EWOULDBLOCK && status != -EAGAIN)		      \
 	      break;							      \
 									      \
 	    oldval = *futexaddr;					      \
@@ -66,7 +66,7 @@
 	else if (status == -ETIMEDOUT)					      \
 	  result = EAGAIN;						      \
 	else								      \
-	  assert (status == 0 || status == -EWOULDBLOCK);		      \
+	  assert (status == 0 || status == -EWOULDBLOCK || status == -EAGAIN);\
 									      \
 	pthread_mutex_lock (&__gai_requests_mutex);			      \
       }									      \
