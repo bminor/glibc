@@ -38,3 +38,9 @@ libc {
     fallocate64;
   }
 }
+librt {
+  GLIBC_2.0 {
+    # c*
+    clock_gettime; clock_settime;
+  }
+}

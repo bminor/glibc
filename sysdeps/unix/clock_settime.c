@@ -20,6 +20,7 @@
 #include <sys/time.h>
 #include <libc-internal.h>
 #include <ldsodefs.h>
+#include <shlib-compat.h>
 
 
 #if HP_TIMING_AVAIL && !defined HANDLED_CPUTIME
@@ -124,4 +125,13 @@ __clock_settime (clockid_t clock_id, const struct timespec *tp)
 
   return retval;
 }
+#ifdef __mips__
+versioned_symbol (librt, __clock_settime, clock_settime, GLIBC_2_2);
+
+# ifdef SHARED
+strong_alias (__clock_settime, __mips_clock_settime)
+compat_symbol (librt, __mips_clock_settime, clock_settime, GLIBC_2_0);
+# endif
+#else
 weak_alias (__clock_settime, clock_settime)
+#endif

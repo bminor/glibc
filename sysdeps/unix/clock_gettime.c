@@ -22,6 +22,7 @@
 #include <sys/time.h>
 #include <libc-internal.h>
 #include <ldsodefs.h>
+#include <shlib-compat.h>
 
 
 #if HP_TIMING_AVAIL
@@ -132,5 +133,15 @@ __clock_gettime (clockid_t clock_id, struct timespec *tp)
 
   return retval;
 }
+#ifdef __mips__
+versioned_symbol (librt, __clock_gettime, clock_gettime, GLIBC_2_2);
+librt_hidden_ver (__clock_gettime, clock_gettime)
+
+# ifdef SHARED
+strong_alias (__clock_gettime, __mips_clock_gettime)
+compat_symbol (librt, __mips_clock_gettime, clock_gettime, GLIBC_2_0);
+# endif
+#else
 weak_alias (__clock_gettime, clock_gettime)
 libc_hidden_def (__clock_gettime)
+#endif
