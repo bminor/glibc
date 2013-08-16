@@ -1474,6 +1474,9 @@ Inquire about the value of @code{POSIX_REC_MIN_XFER_SIZE}.
 Inquire about the value of @code{POSIX_REC_XFER_ALIGN}.
 @end table
 
+@strong{Portability Note:} On some systems, @theglibc{} does not
+enforce @code{_PC_NAME_MAX} or @code{_PC_PATH_MAX} limits.
+
 @node Utility Limits
 @section Utility Program Capacity Limits
 
