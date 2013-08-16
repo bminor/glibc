@@ -60,7 +60,11 @@ pthread_getattr_np (thread_id, attr)
   if (__glibc_likely (thread->stackblock != NULL))
     {
       iattr->stacksize = thread->stackblock_size;
+#if _STACK_GROWS_DOWN
       iattr->stackaddr = (char *) thread->stackblock + iattr->stacksize;
+#else
+      iattr->stackaddr = (char *) thread->stackblock;
+#endif
     }
   else
     {
@@ -105,7 +109,9 @@ pthread_getattr_np (thread_id, attr)
 
 	      char *line = NULL;
 	      size_t linelen = 0;
+#if _STACK_GROWS_DOWN
 	      uintptr_t last_to = 0;
+#endif
 
 	      while (! feof_unlocked (fp))
 		{
@@ -129,17 +135,24 @@ pthread_getattr_np (thread_id, attr)
 		         stack extension request.  */
 		      iattr->stacksize = (iattr->stacksize
 					  & -(intptr_t) GLRO(dl_pagesize));
-
+#if _STACK_GROWS_DOWN
 		      /* The limit might be too high.  */
 		      if ((size_t) iattr->stacksize
 			  > (size_t) iattr->stackaddr - last_to)
 			iattr->stacksize = (size_t) iattr->stackaddr - last_to;
-
+#else
+		      /* The limit might be too high.  */
+		      if ((size_t) iattr->stacksize
+			  > to - (size_t) iattr->stackaddr)
+			iattr->stacksize = to - (size_t) iattr->stackaddr;
+#endif
 		      /* We succeed and no need to look further.  */
 		      ret = 0;
 		      break;
 		    }
+#if _STACK_GROWS_DOWN
 		  last_to = to;
+#endif
 		}
 
 	      free (line);
