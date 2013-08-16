@@ -22,6 +22,7 @@
 #include <arpa/nameser.h>
 #include <resolv.h>
 #include <bits/libc-lock.h>
+#include <sys/stat.h>
 
 
 /* The following bit is copied from res_data.c (where it is #ifdef'ed
@@ -95,6 +96,20 @@ int
 __res_maybe_init (res_state resp, int preinit)
 {
 	if (resp->options & RES_INIT) {
+		static time_t last_mtime, last_check;
+		time_t now;
+		struct stat statbuf;
+
+		time (&now);
+		if (now != last_check) {
+			last_check = now;
+			if (stat (_PATH_RESCONF, &statbuf) == 0 && last_mtime != statbuf.st_mtime) {
+				last_mtime = statbuf.st_mtime;
+				atomicinclock (lock);
+				atomicinc (__res_initstamp);
+				atomicincunlock (lock);
+			}
+		}
 		if (__res_initstamp != resp->_u._ext.initstamp) {
 			if (resp->nscount > 0)
 				__res_iclose (resp, true);
