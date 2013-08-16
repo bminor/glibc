@@ -31,7 +31,7 @@ temp2=$codir/iconvdata/iconv-test.yyy
 trap "rm -f $temp1 $temp2" 1 2 3 15
 
 # We have to have some directories in the library path.
-LIBPATH=$codir:$codir/iconvdata
+LIBPATH=$codir:$codir/iconvdata:$codir/dlfcn
 
 # How the start the iconv(1) program.
 ICONV='$codir/elf/ld.so --library-path $LIBPATH --inhibit-rpath ${from}.so \
