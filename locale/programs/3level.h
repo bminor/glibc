@@ -204,6 +204,42 @@ CONCAT(TABLE,_iterate) (struct TABLE *t,
 	}
     }
 }
+
+/* GCC ATM seems to do a poor job with pointers to nested functions passed
+   to inlined functions.  Help it a little bit with this hack.  */
+#define wchead_table_iterate(tp, fn) \
+do									      \
+  {									      \
+    struct wchead_table *t = (tp);					      \
+    uint32_t index1;							      \
+    for (index1 = 0; index1 < t->level1_size; index1++)			      \
+      {									      \
+	uint32_t lookup1 = t->level1[index1];				      \
+	if (lookup1 != ((uint32_t) ~0))					      \
+	  {								      \
+	    uint32_t lookup1_shifted = lookup1 << t->q;			      \
+	    uint32_t index2;						      \
+	    for (index2 = 0; index2 < (1 << t->q); index2++)		      \
+	      {								      \
+		uint32_t lookup2 = t->level2[index2 + lookup1_shifted];	      \
+		if (lookup2 != ((uint32_t) ~0))				      \
+		  {							      \
+		    uint32_t lookup2_shifted = lookup2 << t->p;		      \
+		    uint32_t index3;					      \
+		    for (index3 = 0; index3 < (1 << t->p); index3++)	      \
+		      {							      \
+			struct element_t *lookup3			      \
+			  = t->level3[index3 + lookup2_shifted];	      \
+			if (lookup3 != NULL)				      \
+			  fn ((((index1 << t->q) + index2) << t->p) + index3, \
+			      lookup3);					      \
+		      }							      \
+		  }							      \
+	      }								      \
+	  }								      \
+      }									      \
+  } while (0)
+
 #endif
 
 #ifndef NO_ADD_LOCALE
