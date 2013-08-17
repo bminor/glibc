@@ -24,7 +24,7 @@
 
 mp_size_t
 __mpn_extract_double (mp_ptr res_ptr, mp_size_t size,
-		      int *expt, int *is_neg,
+		      int *expt, int *zero_bits, int *is_neg,
 		      double value)
 {
 #error "__mpn_extract_double is not implemented for this floating point format"

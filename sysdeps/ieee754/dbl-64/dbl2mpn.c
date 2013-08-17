@@ -28,7 +28,7 @@
 
 mp_size_t
 __mpn_extract_double (mp_ptr res_ptr, mp_size_t size,
-		      int *expt, int *is_neg,
+		      int *expt, int *zero_bits, int *is_neg,
 		      double value)
 {
   union ieee754_double u;
@@ -49,9 +49,10 @@ __mpn_extract_double (mp_ptr res_ptr, mp_size_t size,
 #else
   #error "mp_limb size " BITS_PER_MP_LIMB "not accounted for"
 #endif
+
 /* The format does not fill the last limb.  There are some zeros.  */
-#define NUM_LEADING_ZEROS (BITS_PER_MP_LIMB \
-			   - (DBL_MANT_DIG - ((N - 1) * BITS_PER_MP_LIMB)))
+#define NUM_LEADING_ZEROS (N * BITS_PER_MP_LIMB - DBL_MANT_DIG)
+  *zero_bits = NUM_LEADING_ZEROS;
 
   if (u.ieee.exponent == 0)
     {
@@ -65,37 +66,20 @@ __mpn_extract_double (mp_ptr res_ptr, mp_size_t size,
           /* It is a denormal number, meaning it has no implicit leading
 	     one bit, and its exponent is in fact the format minimum.  */
 	  int cnt;
+	  int exp = 1 - IEEE754_DOUBLE_BIAS;
+	  int n = N;
 
 	  if (res_ptr[N - 1] != 0)
-	    {
-	      count_leading_zeros (cnt, res_ptr[N - 1]);
-	      cnt -= NUM_LEADING_ZEROS;
-#if N == 2
-	      res_ptr[N - 1] = res_ptr[1] << cnt
-			       | (N - 1)
-			         * (res_ptr[0] >> (BITS_PER_MP_LIMB - cnt));
-	      res_ptr[0] <<= cnt;
-#else
-	      res_ptr[N - 1] <<= cnt;
-#endif
-	      *expt = DBL_MIN_EXP - 1 - cnt;
-	    }
+	    count_leading_zeros (cnt, res_ptr[N - 1]);
 	  else
 	    {
 	      count_leading_zeros (cnt, res_ptr[0]);
-	      if (cnt >= NUM_LEADING_ZEROS)
-		{
-		  res_ptr[N - 1] = res_ptr[0] << (cnt - NUM_LEADING_ZEROS);
-		  res_ptr[0] = 0;
-		}
-	      else
-		{
-		  res_ptr[N - 1] = res_ptr[0] >> (NUM_LEADING_ZEROS - cnt);
-		  res_ptr[0] <<= BITS_PER_MP_LIMB - (NUM_LEADING_ZEROS - cnt);
-		}
-	      *expt = DBL_MIN_EXP - 1
-		      - (BITS_PER_MP_LIMB - NUM_LEADING_ZEROS) - cnt;
+	      exp -= BITS_PER_MP_LIMB;
+	      n = 1;
 	    }
+	  *zero_bits = cnt;
+	  *expt = exp + NUM_LEADING_ZEROS - cnt;
+	  return n;
 	}
     }
   else

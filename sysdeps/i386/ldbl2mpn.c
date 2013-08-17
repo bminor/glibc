@@ -29,7 +29,7 @@
 
 mp_size_t
 __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
-			   int *expt, int *is_neg,
+			   int *expt, int *zero_bits, int *is_neg,
 			   long double value)
 {
   union ieee854_long_double u;
@@ -51,18 +51,26 @@ __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
   #error "mp_limb size " BITS_PER_MP_LIMB "not accounted for"
 #endif
 
+/* The format does not fill the last limb.  There are some zeros.  */
+#define NUM_LEADING_ZEROS (N * BITS_PER_MP_LIMB - LDBL_MANT_DIG)
+  *zero_bits = NUM_LEADING_ZEROS;
+
   if (u.ieee.exponent == 0)
     {
       /* A biased exponent of zero is a special case.
 	 Either it is a zero or it is a denormal number.  */
       if (res_ptr[0] == 0 && res_ptr[N - 1] == 0) /* Assumes N<=2.  */
-	/* It's zero.  */
-	*expt = 0;
+	{
+	  /* It's zero.  */
+	  *expt = 0;
+	  return 1;
+	}
       else
 	{
 	  /* It is a denormal number, meaning it has no implicit leading
 	     one bit, and its exponent is in fact the format minimum.  */
 	  int cnt;
+	  int exp = 1 - IEEE854_LONG_DOUBLE_BIAS;
 
 	  /* One problem with Intel's 80-bit format is that the explicit
 	     leading one in the normalized representation has to be zero
@@ -74,24 +82,17 @@ __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
 	  if (res_ptr[N - 1] != 0)
 	    {
 	      count_leading_zeros (cnt, res_ptr[N - 1]);
-	      if (cnt != 0)
-		{
-#if N == 2
-		  res_ptr[N - 1] = res_ptr[N - 1] << cnt
-				   | (res_ptr[0] >> (BITS_PER_MP_LIMB - cnt));
-		  res_ptr[0] <<= cnt;
-#else
-		  res_ptr[N - 1] <<= cnt;
-#endif
-		}
-	      *expt = LDBL_MIN_EXP - 1 - cnt;
+	      *zero_bits = cnt;
+	      *expt = exp + NUM_LEADING_ZEROS - cnt;
+	      return N;
 	    }
 	  else if (res_ptr[0] != 0)
 	    {
 	      count_leading_zeros (cnt, res_ptr[0]);
-	      res_ptr[N - 1] = res_ptr[0] << cnt;
-	      res_ptr[0] = 0;
-	      *expt = LDBL_MIN_EXP - 1 - BITS_PER_MP_LIMB - cnt;
+	      exp -= BITS_PER_MP_LIMB;
+	      *zero_bits = cnt;
+	      *expt = exp + NUM_LEADING_ZEROS - cnt;
+	      return 1;
 	    }
 	  else
 	    {
@@ -104,7 +105,7 @@ __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
 #else
 	      res_ptr[0] = 0x8000000000000000ul;
 #endif
-	      *expt = LDBL_MIN_EXP - 1;
+	      *expt = 1 - IEEE854_LONG_DOUBLE_BIAS;
 	    }
 	}
     }

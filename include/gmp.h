@@ -8,12 +8,12 @@
 
 /* Now define the internal interfaces.  */
 extern mp_size_t __mpn_extract_double (mp_ptr res_ptr, mp_size_t size,
-				       int *expt, int *is_neg,
-				       double value);
+				       int *expt, int *zero_bits,
+				       int *is_neg, double value);
 
 extern mp_size_t __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
-					    int *expt, int *is_neg,
-					    long double value);
+					    int *expt, int *zero_bits,
+					    int *is_neg, long double value);
 
 extern float __mpn_construct_float (mp_srcptr frac_ptr, int expt, int sign);
 

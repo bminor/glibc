@@ -1,5 +1,24 @@
 2013-11-16  Alan Modra  <amodra@gmail.com>
 
+	[BZ #5268]
+	* include/gmp.h (__mpn_extract_double, __mpn_extract_long_double):
+	Update prototypes.
+	* stdio-common/printf_fp.c: Likewise.
+	(__printf_fp): Use returned zero_bits.
+	* stdlib/dbl2mpn.c (__mpn_extract_double): Update funtion arguments.
+	* sysdeps/i386/ldbl2mpn.c (__mpn_extract_long_double): Don't perform
+	shifts for denormals here.  Instead return leading zero bit count
+	and adjust return value of function.
+	* sysdeps/ieee754/dbl-64/dbl2mpn.c (__mpn_extract_long_double): Likewise.
+	* sysdeps/ieee754/ldbl-128/ldbl2mpn.c (__mpn_extract_long_double):
+	Likewise.
+	* sysdeps/ieee754/ldbl-96/ldbl2mpn.c (__mpn_extract_long_double):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/ldbl2mpn.c (__mpn_extract_long_double):
+	Likewise.  Return an extra 11 bits of precision.
+
+2013-11-16  Alan Modra  <amodra@gmail.com>
+
 	* Makerules (abilist): Define and use var in abilist rules.
 	* sysdeps/unix/sysv/linux/powerpc/Makefile (abilist): Define.
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/ld-le.abilist,

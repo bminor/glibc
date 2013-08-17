@@ -134,11 +134,11 @@
   (u##size > v##size || (u##size == v##size && __mpn_cmp (u, v, u##size) >= 0))
 
 extern mp_size_t __mpn_extract_double (mp_ptr res_ptr, mp_size_t size,
-				       int *expt, int *is_neg,
-				       double value);
+				       int *expt, int *zero_bits,
+				       int *is_neg, double value);
 extern mp_size_t __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
-					    int *expt, int *is_neg,
-					    long double value);
+					    int *expt, int *zero_bits,
+					    int *is_neg, long double value);
 extern unsigned int __guess_grouping (unsigned int intdig_max,
 				      const char *grouping);
 
@@ -360,12 +360,13 @@ ___printf_fp (FILE *fp,
 	}
       else
 	{
+	  int zero_bits;
 	  fracsize = __mpn_extract_long_double (fp_input,
 						(sizeof (fp_input) /
 						 sizeof (fp_input[0])),
-						&exponent, &is_neg,
+						&exponent, &zero_bits, &is_neg,
 						fpnum.ldbl);
-	  to_shift = 1 + fracsize * BITS_PER_MP_LIMB - LDBL_MANT_DIG;
+	  to_shift = 1 + zero_bits;
 	}
     }
   else
@@ -406,11 +407,13 @@ ___printf_fp (FILE *fp,
 	}
       else
 	{
+	  int zero_bits;
 	  fracsize = __mpn_extract_double (fp_input,
 					   (sizeof (fp_input)
 					    / sizeof (fp_input[0])),
-					   &exponent, &is_neg, fpnum.dbl);
-	  to_shift = 1 + fracsize * BITS_PER_MP_LIMB - DBL_MANT_DIG;
+					   &exponent, &zero_bits, &is_neg,
+					   fpnum.dbl);
+	  to_shift = 1 + zero_bits;
 	}
     }
 

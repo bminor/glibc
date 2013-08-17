@@ -30,157 +30,121 @@
 
 mp_size_t
 __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
-			   int *expt, int *is_neg,
+			   int *expt, int *zero_bits, int *is_neg,
 			   long double value)
 {
   union ibm_extended_long_double u;
-  unsigned long long hi, lo;
+  uint64_t hi, lo;
   int ediff;
 
   u.ld = value;
 
   *is_neg = u.d[0].ieee.negative;
   *expt = (int) u.d[0].ieee.exponent - IEEE754_DOUBLE_BIAS;
+#define NUM_LEADING_ZEROS (128 - (LDBL_MANT_DIG + 11))
+  *zero_bits = NUM_LEADING_ZEROS;
 
-  lo = ((long long) u.d[1].ieee.mantissa0 << 32) | u.d[1].ieee.mantissa1;
-  hi = ((long long) u.d[0].ieee.mantissa0 << 32) | u.d[0].ieee.mantissa1;
+  lo = ((uint64_t) u.d[1].ieee.mantissa0 << 32) | u.d[1].ieee.mantissa1;
+  hi = ((uint64_t) u.d[0].ieee.mantissa0 << 32) | u.d[0].ieee.mantissa1;
 
-  /* If the lower double is not a denormal or zero then set the hidden
-     53rd bit.  */
-  if (u.d[1].ieee.exponent != 0)
-    lo |= 1ULL << 52;
-  else
-    lo = lo << 1;
-
-  /* The lower double is normalized separately from the upper.  We may
-     need to adjust the lower manitissa to reflect this.  */
-  ediff = u.d[0].ieee.exponent - u.d[1].ieee.exponent - 53;
-  if (ediff > 0)
+  if (u.d[0].ieee.exponent != 0)
     {
-      if (ediff < 64)
-	lo = lo >> ediff;
+      /* If the high double is not a denormal or zero then set the hidden
+	 53rd bit.  */
+      hi |= (uint64_t) 1 << 52;
+
+      /* If the lower double is not a denormal or zero then set the hidden
+	 53rd bit.  */
+      if (u.d[1].ieee.exponent != 0)
+	lo |= (uint64_t) 1 << 52;
       else
-	lo = 0;
-    }
-  else if (ediff < 0)
-    lo = lo << -ediff;
+	lo = lo << 1;
 
-  /* The high double may be rounded and the low double reflects the
-     difference between the long double and the rounded high double
-     value.  This is indicated by a differnce between the signs of the
-     high and low doubles.  */
-  if (u.d[0].ieee.negative != u.d[1].ieee.negative
-      && lo != 0)
-    {
-      lo = (1ULL << 53) - lo;
-      if (hi == 0)
+      /* We currently only have 53 bits in lo.  Gain a few more bits
+	 of precision.  */
+      lo = lo << 11;
+
+      /* The lower double is normalized separately from the upper.  We may
+	 need to adjust the lower manitissa to reflect this.  */
+      ediff = u.d[0].ieee.exponent - u.d[1].ieee.exponent - 53;
+      if (ediff > 0)
 	{
-	  /* we have a borrow from the hidden bit, so shift left 1.  */
-	  hi = 0x0ffffffffffffeLL | (lo >> 51);
-	  lo = 0x1fffffffffffffLL & (lo << 1);
-	  (*expt)--;
+	  if (ediff < 64)
+	    lo = lo >> ediff;
+	  else
+	    lo = 0;
 	}
-      else
-	hi--;
-    }
+      else if (ediff < 0)
+	lo = lo << -ediff;
+
+      /* The high double may be rounded and the low double reflects the
+	 difference between the long double and the rounded high double
+	 value.  This is indicated by a differnce between the signs of the
+	 high and low doubles.  */
+      if (u.d[0].ieee.negative != u.d[1].ieee.negative
+	  && lo != 0)
+	{
+	  hi--;
+	  lo = -lo;
+	  if (hi < (uint64_t) 1 << 52)
+	    {
+	      /* We have a borrow from the hidden bit, so shift left 1.  */
+	      hi = (hi << 1) | (lo >> 63);
+	      lo = lo << 1;
+	      (*expt)--;
+	    }
+	}
+
 #if BITS_PER_MP_LIMB == 32
-  /* Combine the mantissas to be contiguous.  */
-  res_ptr[0] = lo;
-  res_ptr[1] = (hi << (53 - 32)) | (lo >> 32);
-  res_ptr[2] = hi >> 11;
-  res_ptr[3] = hi >> (32 + 11);
-  #define N 4
+      res_ptr[0] = lo;
+      res_ptr[1] = lo >> 32;
+      res_ptr[2] = hi;
+      res_ptr[3] = hi >> 32;
+      return 4;
 #elif BITS_PER_MP_LIMB == 64
-  /* Combine the two mantissas to be contiguous.  */
-  res_ptr[0] = (hi << 53) | lo;
-  res_ptr[1] = hi >> 11;
-  #define N 2
+      res_ptr[0] = lo;
+      res_ptr[1] = hi;
+      return 2;
 #else
-  #error "mp_limb size " BITS_PER_MP_LIMB "not accounted for"
+# error "mp_limb size " BITS_PER_MP_LIMB "not accounted for"
 #endif
-/* The format does not fill the last limb.  There are some zeros.  */
-#define NUM_LEADING_ZEROS (BITS_PER_MP_LIMB \
-			   - (LDBL_MANT_DIG - ((N - 1) * BITS_PER_MP_LIMB)))
+    }
 
-  if (u.d[0].ieee.exponent == 0)
+  /* The high double is a denormal or zero.  The low double must
+     be zero.  A denormal is interpreted as having a biased
+     exponent of 1.  */
+  res_ptr[0] = hi;
+#if BITS_PER_MP_LIMB == 32
+  res_ptr[1] = hi >> 32;
+#endif
+  if (hi == 0)
     {
-      /* A biased exponent of zero is a special case.
-	 Either it is a zero or it is a denormal number.  */
-      if (res_ptr[0] == 0 && res_ptr[1] == 0
-	  && res_ptr[N - 2] == 0 && res_ptr[N - 1] == 0) /* Assumes N<=4.  */
-	/* It's zero.  */
-	*expt = 0;
-      else
-	{
-	  /* It is a denormal number, meaning it has no implicit leading
-	     one bit, and its exponent is in fact the format minimum.  We
-	     use DBL_MIN_EXP instead of LDBL_MIN_EXP below because the
-	     latter describes the properties of both parts together, but
-	     the exponent is computed from the high part only.  */
-	  int cnt;
-
-#if N == 2
-	  if (res_ptr[N - 1] != 0)
-	    {
-	      count_leading_zeros (cnt, res_ptr[N - 1]);
-	      cnt -= NUM_LEADING_ZEROS;
-	      res_ptr[N - 1] = res_ptr[N - 1] << cnt
-			       | (res_ptr[0] >> (BITS_PER_MP_LIMB - cnt));
-	      res_ptr[0] <<= cnt;
-	      *expt = DBL_MIN_EXP - 1 - cnt;
-	    }
-	  else
-	    {
-	      count_leading_zeros (cnt, res_ptr[0]);
-	      if (cnt >= NUM_LEADING_ZEROS)
-		{
-		  res_ptr[N - 1] = res_ptr[0] << (cnt - NUM_LEADING_ZEROS);
-		  res_ptr[0] = 0;
-		}
-	      else
-		{
-		  res_ptr[N - 1] = res_ptr[0] >> (NUM_LEADING_ZEROS - cnt);
-		  res_ptr[0] <<= BITS_PER_MP_LIMB - (NUM_LEADING_ZEROS - cnt);
-		}
-	      *expt = DBL_MIN_EXP - 1
-		- (BITS_PER_MP_LIMB - NUM_LEADING_ZEROS) - cnt;
-	    }
-#else
-	  int j, k, l;
-
-	  for (j = N - 1; j > 0; j--)
-	    if (res_ptr[j] != 0)
-	      break;
-
-	  count_leading_zeros (cnt, res_ptr[j]);
-	  cnt -= NUM_LEADING_ZEROS;
-	  l = N - 1 - j;
-	  if (cnt < 0)
-	    {
-	      cnt += BITS_PER_MP_LIMB;
-	      l--;
-	    }
-	  if (!cnt)
-	    for (k = N - 1; k >= l; k--)
-	      res_ptr[k] = res_ptr[k-l];
-	  else
-	    {
-	      for (k = N - 1; k > l; k--)
-		res_ptr[k] = res_ptr[k-l] << cnt
-			     | res_ptr[k-l-1] >> (BITS_PER_MP_LIMB - cnt);
-	      res_ptr[k--] = res_ptr[0] << cnt;
-	    }
-
-	  for (; k >= 0; k--)
-	    res_ptr[k] = 0;
-	  *expt = DBL_MIN_EXP - 1 - l * BITS_PER_MP_LIMB - cnt;
-#endif
-	}
+      /* It's zero.  */
+      *expt = 0;
+      return 1;
     }
   else
-    /* Add the implicit leading one bit for a normalized number.  */
-    res_ptr[N - 1] |= (mp_limb_t) 1 << (LDBL_MANT_DIG - 1
-					- ((N - 1) * BITS_PER_MP_LIMB));
+    {
+      int cnt;
+      int exp = 1 - IEEE754_DOUBLE_BIAS;
+      int n = 1;
 
-  return N;
+#if BITS_PER_MP_LIMB == 32
+      if (res_ptr[1] != 0)
+	{
+	  count_leading_zeros (cnt, res_ptr[1]);
+	  n = 2;
+	}
+      else
+	{
+	  count_leading_zeros (cnt, res_ptr[0]);
+	  exp -= BITS_PER_MP_LIMB;
+	}
+#else
+      count_leading_zeros (cnt, hi);
+#endif
+      *zero_bits = cnt;
+      *expt = exp + NUM_LEADING_ZEROS - cnt;
+      return n;
+    }
 }
