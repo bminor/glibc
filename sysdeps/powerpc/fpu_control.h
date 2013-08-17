@@ -56,22 +56,26 @@ extern fpu_control_t __fpu_control;
 # define _FPU_IEEE     0x000000f0
 
 /* Type of the control word.  */
-typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__SI__)));
+typedef unsigned int fpu_control_t;
 
 /* Macros for accessing the hardware control word.  */
-# define _FPU_GETCW(__cw) ( { \
-  union { double d; fpu_control_t cw[2]; } \
-    tmp __attribute__ ((__aligned__(8))); \
-  __asm__ ("mffs 0; stfd%U0 0,%0" : "=m" (tmp.d) : : "fr0"); \
-  (__cw)=tmp.cw[1]; \
-  tmp.cw[1]; } )
-# define _FPU_SETCW(__cw) { \
-  union { double d; fpu_control_t cw[2]; } \
-    tmp __attribute__ ((__aligned__(8))); \
-  tmp.cw[0] = 0xFFF80000; /* More-or-less arbitrary; this is a QNaN. */ \
-  tmp.cw[1] = __cw; \
-  __asm__ ("lfd%U0 0,%0; mtfsf 255,0" : : "m" (tmp.d) : "fr0"); \
-}
+# define _FPU_GETCW(cw)						\
+  ({union { double __d; unsigned long long __ll; } __u;		\
+    register double __fr;					\
+    __asm__ ("mffs %0" : "=f" (__fr));				\
+    __u.__d = __fr;						\
+    (cw) = (fpu_control_t) __u.__ll;				\
+    (fpu_control_t) __u.__ll;					\
+  })
+
+# define _FPU_SETCW(cw)						\
+  { union { double __d; unsigned long long __ll; } __u;		\
+    register double __fr;					\
+    __u.__ll = 0xfff80000LL << 32; /* This is a QNaN.  */	\
+    __u.__ll |= (cw) & 0xffffffffLL;				\
+    __fr = __u.__d;						\
+    __asm__ ("mtfsf 255,%0" : : "f" (__fr));			\
+  }
 
 /* Default control word set at startup.  */
 extern fpu_control_t __fpu_control;
