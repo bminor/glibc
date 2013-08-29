@@ -1,3 +1,9 @@
+2013-08-30  Will Newton  <will.newton@linaro.org>
+
+	[BZ #15909]
+	* sysdeps/unix/sysv/linux/arm/clone.S (__clone): Use blx
+	instead of mov lr, pc.
+
 2013-07-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/include/bits/setjmp.h [_ISOMAC] (JMP_BUF_REGLIST):
