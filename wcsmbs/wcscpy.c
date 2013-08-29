@@ -25,6 +25,7 @@ wchar_t *
 wcscpy (dest, src)
      wchar_t *dest;
      const wchar_t *src;
+#ifndef __CHKP__
 {
   wint_t c;
   wchar_t *wcp;
@@ -56,3 +57,11 @@ wcscpy (dest, src)
 
   return dest;
 }
+#else
+{
+  const wchar_t *ret = dest;
+  while ((*dest++ = *src++) != L'\0');
+  return ret;
+
+}
+#endif

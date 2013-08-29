@@ -26,6 +26,7 @@ char *
 strcpy (dest, src)
      char *dest;
      const char *src;
+#ifndef __CHKP__
 {
   char c;
   char *s = (char *) src;
@@ -40,4 +41,12 @@ strcpy (dest, src)
 
   return dest;
 }
+#else
+{
+  const char  *ret = dest;
+  while ((*dest++ = *src++) != '\0');
+  return ret;
+}
+#endif
+
 libc_hidden_builtin_def (strcpy)
