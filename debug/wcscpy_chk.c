@@ -23,6 +23,7 @@
 /* Copy SRC to DEST.  */
 wchar_t *
 __wcscpy_chk (wchar_t *dest, const wchar_t *src, size_t n)
+#ifndef __CHKP__
 {
   wint_t c;
   wchar_t *wcp;
@@ -58,3 +59,22 @@ __wcscpy_chk (wchar_t *dest, const wchar_t *src, size_t n)
 
   return dest;
 }
+#else
+{
+  const wchar_t *result = dest;
+  dest--;
+  wint_t c;
+
+  do
+	{
+	  if (__builtin_expect (n-- == 0, 0))
+	     __chk_fail ();
+	  c = src[0];
+	  *++dest = c;
+	  ++src;
+	}
+  while (c != L'\0');
+
+  return result;
+}
+#endif
