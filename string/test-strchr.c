@@ -219,9 +219,14 @@ do_random_tests (void)
 static void
 check1 (void)
 {
-  char s[] __attribute__((aligned(16))) = "\xff";
-  char c = '\xfe';
-  char *exp_result = stupid_STRCHR (s, c);
+  CHAR s[] __attribute__((aligned(16))) =
+#ifdef WIDE
+  L"\xff";
+#else
+  "\xff";
+#endif
+  CHAR c = '\xfe';
+  CHAR *exp_result = stupid_STRCHR (s, c);
 
   FOR_EACH_IMPL (impl, 0)
     check_result (impl, s, c, exp_result);
