@@ -91,6 +91,10 @@ __strchr_sse42:
 	CALL_MCOUNT
 	testb	%sil, %sil
 	je	__strend_sse4
+# ifdef __CHKP__
+	bndcl  (%rdi), %bnd0
+	bndcu  (%rdi), %bnd0
+# endif
 	pxor	%xmm2, %xmm2
 	movd	%esi, %xmm1
 	movl	%edi, %ecx
@@ -124,6 +128,9 @@ __strchr_sse42:
 	ja	L(return_null)
 L(unaligned_match):
 	addq	%rdi, %rax
+# ifdef __CHKP__
+	bndcu 	(%rax), %bnd0
+# endif
 	ret
 
 	.p2align 4
@@ -135,15 +142,27 @@ L(unaligned_no_match):
 L(loop):
 	addq	$16, %r8
 L(aligned_start):
+# ifdef __CHKP__
+	bndcu 	(%r8), %bnd0
+# endif
 	pcmpistri	$0x2, (%r8), %xmm1
 	jbe	L(wrap)
 	addq	$16, %r8
+# ifdef __CHKP__
+	bndcu 	(%r8), %bnd0
+# endif
 	pcmpistri	$0x2, (%r8), %xmm1
 	jbe	L(wrap)
 	addq	$16, %r8
+# ifdef __CHKP__
+	bndcu 	(%r8), %bnd0
+# endif
 	pcmpistri       $0x2, (%r8), %xmm1
 	jbe     L(wrap)
 	addq	$16, %r8
+# ifdef __CHKP__
+	bndcu 	(%r8), %bnd0
+# endif
 	pcmpistri	$0x2, (%r8), %xmm1
 	jbe	L(wrap)
 	jmp	L(loop)
@@ -159,6 +178,9 @@ L(return_null):
 	.p2align 4
 L(loop_exit):
 	leaq	(%r8,%rcx), %rax
+# ifdef __CHKP__
+	bndcu 	(%rax), %bnd0
+# endif
 	ret
 	cfi_endproc
 	.size	__strchr_sse42, .-__strchr_sse42

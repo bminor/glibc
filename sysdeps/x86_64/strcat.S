@@ -25,6 +25,11 @@
 
 	.text
 ENTRY (strcat)
+#ifdef __CHKP__
+	bndcl (%rdi), %bnd0
+	bndcl (%rsi), %bnd1
+#endif
+
 	movq %rdi, %rcx		/* Dest. register. */
 	andl $7, %ecx		/* mask alignment bits */
 	movq %rdi, %rax		/* Duplicate destination pointer.  */
@@ -36,7 +41,11 @@ ENTRY (strcat)
 	neg %ecx		/* We need to align to 8 bytes.  */
 	addl $8,%ecx
 	/* Search the first bytes directly.  */
-0:	cmpb $0x0,(%rax)	/* is byte NUL? */
+0:
+#ifdef __CHKP__
+	bndcu (%rax), %bnd0
+#endif
+	cmpb $0x0,(%rax)	/* is byte NUL? */
 	je 2f			/* yes => start copy */
 	incq %rax		/* increment pointer */
 	decl %ecx
@@ -48,6 +57,9 @@ ENTRY (strcat)
 	.p2align 4
 4:
 	/* First unroll.  */
+#ifdef __CHKP__
+	bndcu (%rax), %bnd0
+#endif
 	movq (%rax), %rcx	/* get double word (= 8 bytes) in question */
 	addq $8,%rax		/* adjust pointer for next word */
 	movq %r8, %rdx		/* magic value */
@@ -62,6 +74,9 @@ ENTRY (strcat)
 	jnz 3f			/* found NUL => return pointer */
 
 	/* Second unroll.  */
+#ifdef __CHKP__
+	bndcu (%rax), %bnd0
+#endif
 	movq (%rax), %rcx	/* get double word (= 8 bytes) in question */
 	addq $8,%rax		/* adjust pointer for next word */
 	movq %r8, %rdx		/* magic value */
@@ -76,6 +91,9 @@ ENTRY (strcat)
 	jnz 3f			/* found NUL => return pointer */
 
 	/* Third unroll.  */
+#ifdef __CHKP__
+	bndcu (%rax), %bnd0
+#endif
 	movq (%rax), %rcx	/* get double word (= 8 bytes) in question */
 	addq $8,%rax		/* adjust pointer for next word */
 	movq %r8, %rdx		/* magic value */
@@ -90,6 +108,9 @@ ENTRY (strcat)
 	jnz 3f			/* found NUL => return pointer */
 
 	/* Fourth unroll.  */
+#ifdef __CHKP__
+	bndcu (%rax), %bnd0
+#endif
 	movq (%rax), %rcx	/* get double word (= 8 bytes) in question */
 	addq $8,%rax		/* adjust pointer for next word */
 	movq %r8, %rdx		/* magic value */
@@ -163,6 +184,9 @@ ENTRY (strcat)
 	.p2align 4
 22:
 	/* 1st unroll.  */
+#ifdef __CHKP__
+	bndcu	(%rsi), %bnd1
+#endif
 	movq	(%rsi), %rax	/* Read double word (8 bytes).  */
 	addq	$8, %rsi	/* Adjust pointer for next word.  */
 	movq	%rax, %r9	/* Save a copy for NUL finding.  */
@@ -177,10 +201,16 @@ ENTRY (strcat)
 
 	jnz	23f		/* found NUL => return pointer */
 
+#ifdef __CHKP__
+	bndcu	(%rdx), %bnd0
+#endif
 	movq	%rax, (%rdx)	/* Write value to destination.  */
 	addq	$8, %rdx	/* Adjust pointer.  */
 
 	/* 2nd unroll.  */
+#ifdef __CHKP__
+	bndcu	(%rsi), %bnd1
+#endif
 	movq	(%rsi), %rax	/* Read double word (8 bytes).  */
 	addq	$8, %rsi	/* Adjust pointer for next word.  */
 	movq	%rax, %r9	/* Save a copy for NUL finding.  */
@@ -195,10 +225,16 @@ ENTRY (strcat)
 
 	jnz	23f		/* found NUL => return pointer */
 
+#ifdef __CHKP__
+	bndcu	(%rdx), %bnd0
+#endif
 	movq	%rax, (%rdx)	/* Write value to destination.  */
 	addq	$8, %rdx	/* Adjust pointer.  */
 
 	/* 3rd unroll.  */
+#ifdef __CHKP__
+	bndcu	(%rsi), %bnd1
+#endif
 	movq	(%rsi), %rax	/* Read double word (8 bytes).  */
 	addq	$8, %rsi	/* Adjust pointer for next word.  */
 	movq	%rax, %r9	/* Save a copy for NUL finding.  */
@@ -213,10 +249,16 @@ ENTRY (strcat)
 
 	jnz	23f		/* found NUL => return pointer */
 
+#ifdef __CHKP__
+	bndcu	(%rdx), %bnd0
+#endif
 	movq	%rax, (%rdx)	/* Write value to destination.  */
 	addq	$8, %rdx	/* Adjust pointer.  */
 
 	/* 4th unroll.  */
+#ifdef __CHKP__
+	bndcu	(%rsi), %bnd1
+#endif
 	movq	(%rsi), %rax	/* Read double word (8 bytes).  */
 	addq	$8, %rsi	/* Adjust pointer for next word.  */
 	movq	%rax, %r9	/* Save a copy for NUL finding.  */
@@ -231,6 +273,9 @@ ENTRY (strcat)
 
 	jnz	23f		/* found NUL => return pointer */
 
+#ifdef __CHKP__
+	bndcu	(%rdx), %bnd0
+#endif
 	movq	%rax, (%rdx)	/* Write value to destination.  */
 	addq	$8, %rdx	/* Adjust pointer.  */
 	jmp	22b		/* Next iteration.  */
@@ -239,10 +284,16 @@ ENTRY (strcat)
 	   The loop is unrolled twice.  */
 	.p2align 4
 23:
+#ifdef __CHKP__
+	bndcu	(%rdx), %bnd0
+#endif
 	movb	%al, (%rdx)	/* 1st byte.  */
 	testb	%al, %al	/* Is it NUL.  */
 	jz	24f		/* yes, finish.  */
 	incq	%rdx		/* Increment destination.  */
+#ifdef __CHKP__
+	bndcu	(%rdx), %bnd0
+#endif
 	movb	%ah, (%rdx)	/* 2nd byte.  */
 	testb	%ah, %ah	/* Is it NUL?.  */
 	jz	24f		/* yes, finish.  */

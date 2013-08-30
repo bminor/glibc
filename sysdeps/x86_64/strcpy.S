@@ -26,6 +26,10 @@
 
 	.text
 ENTRY (STRCPY)
+#ifdef __CHKP__
+	bndcl (%rdi), %bnd0
+	bndcl (%rsi), %bnd1
+#endif
 	movq %rsi, %rcx		/* Source register. */
 	andl $7, %ecx		/* mask alignment bits */
 	movq %rdi, %rdx		/* Duplicate destination pointer.  */
@@ -36,8 +40,14 @@ ENTRY (STRCPY)
 	addl $8,%ecx
 	/* Search the first bytes directly.  */
 0:
+#ifdef __CHKP__
+	bndcu	(%rsi), %bnd1
+#endif
 	movb	(%rsi), %al	/* Fetch a byte */
 	testb	%al, %al	/* Is it NUL? */
+#ifdef __CHKP__
+	bndcu	(%rdx), %bnd0
+#endif
 	movb	%al, (%rdx)	/* Store it */
 	jz	4f		/* If it was NUL, done! */
 	incq	%rsi
@@ -54,6 +64,9 @@ ENTRY (STRCPY)
 	.p2align 4
 1:
 	/* 1st unroll.  */
+#ifdef __CHKP__
+	bndcu	(%rsi), %bnd1
+#endif
 	movq	(%rsi), %rax	/* Read double word (8 bytes).  */
 	addq	$8, %rsi	/* Adjust pointer for next word.  */
 	movq	%rax, %r9	/* Save a copy for NUL finding.  */
@@ -68,10 +81,16 @@ ENTRY (STRCPY)
 
 	jnz	3f		/* found NUL => return pointer */
 
+#ifdef __CHKP__
+	bndcu	(%rdx), %bnd0
+#endif
 	movq	%rax, (%rdx)	/* Write value to destination.  */
 	addq	$8, %rdx	/* Adjust pointer.  */
 
 	/* 2nd unroll.  */
+#ifdef __CHKP__
+	bndcu	(%rsi), %bnd1
+#endif
 	movq	(%rsi), %rax	/* Read double word (8 bytes).  */
 	addq	$8, %rsi	/* Adjust pointer for next word.  */
 	movq	%rax, %r9	/* Save a copy for NUL finding.  */
@@ -86,10 +105,16 @@ ENTRY (STRCPY)
 
 	jnz	3f		/* found NUL => return pointer */
 
+#ifdef __CHKP__
+	bndcu	(%rdx), %bnd0
+#endif
 	movq	%rax, (%rdx)	/* Write value to destination.  */
 	addq	$8, %rdx	/* Adjust pointer.  */
 
 	/* 3rd unroll.  */
+#ifdef __CHKP__
+	bndcu	(%rsi), %bnd1
+#endif
 	movq	(%rsi), %rax	/* Read double word (8 bytes).  */
 	addq	$8, %rsi	/* Adjust pointer for next word.  */
 	movq	%rax, %r9	/* Save a copy for NUL finding.  */
@@ -104,10 +129,16 @@ ENTRY (STRCPY)
 
 	jnz	3f		/* found NUL => return pointer */
 
+#ifdef __CHKP__
+	bndcu	(%rdx), %bnd0
+#endif
 	movq	%rax, (%rdx)	/* Write value to destination.  */
 	addq	$8, %rdx	/* Adjust pointer.  */
 
 	/* 4th unroll.  */
+#ifdef __CHKP__
+	bndcu	(%rsi), %bnd1
+#endif
 	movq	(%rsi), %rax	/* Read double word (8 bytes).  */
 	addq	$8, %rsi	/* Adjust pointer for next word.  */
 	movq	%rax, %r9	/* Save a copy for NUL finding.  */
@@ -122,6 +153,9 @@ ENTRY (STRCPY)
 
 	jnz	3f		/* found NUL => return pointer */
 
+#ifdef __CHKP__
+	bndcu	(%rdx), %bnd0
+#endif
 	movq	%rax, (%rdx)	/* Write value to destination.  */
 	addq	$8, %rdx	/* Adjust pointer.  */
 	jmp	1b		/* Next iteration.  */
@@ -132,10 +166,16 @@ ENTRY (STRCPY)
 3:
 	/* Note that stpcpy needs to return with the value of the NUL
 	   byte.  */
+#ifdef __CHKP__
+	bndcu	(%rdx), %bnd0
+#endif
 	movb	%al, (%rdx)	/* 1st byte.  */
 	testb	%al, %al	/* Is it NUL.  */
 	jz	4f		/* yes, finish.  */
 	incq	%rdx		/* Increment destination.  */
+#ifdef __CHKP__
+	bndcu	(%rdx), %bnd0
+#endif
 	movb	%ah, (%rdx)	/* 2nd byte.  */
 	testb	%ah, %ah	/* Is it NUL?.  */
 	jz	4f		/* yes, finish.  */

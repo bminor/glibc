@@ -90,6 +90,9 @@ ENTRY (FUNCTION)
 	   the last run.  */
 	cmpq $0, %rdx
 	cmove %rax, %rdx
+#ifdef __CHKP__
+	bndldx (,%rax,1),%bnd0
+#endif
 	testq %rdx, %rdx
 	jz L(returnNULL)
 	movq %rsi, %rax		/* Get start of delimiter set.  */

@@ -23,6 +23,11 @@
 ENTRY (memcmp)
 	test	%rdx, %rdx
 	jz	L(finz)
+#ifdef __CHKP__
+	bndcl	(%rdi), %bnd0
+	bndcl	(%rsi), %bnd1
+#endif
+	pxor	%xmm0, %xmm0
 	cmpq	$1, %rdx
 	jle	L(finr1b)
 	subq	%rdi, %rsi
@@ -86,6 +91,10 @@ L(s16b):
 
 	.p2align 4,, 4
 L(finr1b):
+#ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rsi), %bnd1
+#endif
 	movzbl	(%rdi), %eax
 	movzbl  (%rsi), %edx
 L(finz1):
@@ -132,6 +141,10 @@ L(gt32):
 	andq	$15, %r8
 	jz	L(16am)
 	/* Both pointers may be misaligned.  */
+#ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rdi, %rsi), %bnd1
+#endif
 	movdqu	(%rdi),	%xmm1
 	movdqu	(%rdi, %rsi), %xmm0
 	pcmpeqb   %xmm0, %xmm1
@@ -146,6 +159,10 @@ L(16am):
 	jz      L(ATR)
 	testq	$16, %rdi
 	jz	L(A32)
+#ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rdi, %rsi), %bnd1
+#endif
 	movdqu	(%rdi, %rsi), %xmm0
 	pcmpeqb   (%rdi), %xmm0
 	pmovmskb  %xmm0, %edx
@@ -160,6 +177,10 @@ L(A32):
 	/* Pre-unroll to be ready for unrolled 64B loop.  */
 	testq	$32, %rdi
 	jz	L(A64)
+#ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rdi, %rsi), %bnd1
+#endif
 	movdqu    (%rdi,%rsi), %xmm0
 	pcmpeqb   (%rdi), %xmm0
 	pmovmskb  %xmm0, %edx
@@ -167,6 +188,10 @@ L(A32):
 	jnz       L(neq)
 	addq       $16, %rdi
 
+#ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rdi, %rsi), %bnd1
+#endif
 	movdqu    (%rdi,%rsi), %xmm0
 	pcmpeqb  (%rdi), %xmm0
 	pmovmskb  %xmm0, %edx
@@ -181,6 +206,10 @@ L(A64):
         jge	L(mt32)
 
 L(A64main):
+#ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rdi, %rsi), %bnd1
+#endif
 	movdqu    (%rdi,%rsi), %xmm0
 	pcmpeqb   (%rdi), %xmm0
 	pmovmskb  %xmm0, %edx
@@ -188,6 +217,10 @@ L(A64main):
 	jnz       L(neq)
 	addq       $16, %rdi
 
+#ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rdi, %rsi), %bnd1
+#endif
 	movdqu    (%rdi,%rsi), %xmm0
 	pcmpeqb   (%rdi), %xmm0
 	pmovmskb  %xmm0, %edx
@@ -195,6 +228,10 @@ L(A64main):
 	jnz       L(neq)
 	addq       $16, %rdi
 
+#ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rdi, %rsi), %bnd1
+#endif
 	movdqu    (%rdi,%rsi), %xmm0
 	pcmpeqb   (%rdi), %xmm0
 	pmovmskb  %xmm0, %edx
@@ -202,6 +239,10 @@ L(A64main):
 	jnz       L(neq)
 	addq       $16, %rdi
 
+#ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rdi, %rsi), %bnd1
+#endif
 	movdqu    (%rdi,%rsi), %xmm0
 	pcmpeqb  (%rdi), %xmm0
 	pmovmskb  %xmm0, %edx
@@ -219,6 +260,10 @@ L(mt32):
         jge	L(mt16)
 
 L(A32main):
+#ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rdi, %rsi), %bnd1
+#endif
 	movdqu    (%rdi,%rsi), %xmm0
 	pcmpeqb   (%rdi), %xmm0
 	pmovmskb  %xmm0, %edx
@@ -226,6 +271,10 @@ L(A32main):
 	jnz       L(neq)
 	addq       $16, %rdi
 
+#ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rdi, %rsi), %bnd1
+#endif
 	movdqu    (%rdi,%rsi), %xmm0
 	pcmpeqb  (%rdi), %xmm0
 	pmovmskb  %xmm0, %edx
@@ -258,6 +307,10 @@ L(ATR):
 	testq	$16, %rdi
 	jz	L(ATR32)
 
+#ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rdi, %rsi), %bnd1
+#endif
 	movdqa    (%rdi,%rsi), %xmm0
 	pcmpeqb   (%rdi), %xmm0
 	pmovmskb  %xmm0, %edx
@@ -273,6 +326,10 @@ L(ATR32):
 	testq	$32, %rdi
 	jz	L(ATR64)
 
+#ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rdi, %rsi), %bnd1
+#endif
 	movdqa    (%rdi,%rsi), %xmm0
 	pcmpeqb   (%rdi), %xmm0
 	pmovmskb  %xmm0, %edx
@@ -280,6 +337,10 @@ L(ATR32):
 	jnz       L(neq)
 	addq       $16, %rdi
 
+#ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rdi, %rsi), %bnd1
+#endif
 	movdqa    (%rdi,%rsi), %xmm0
 	pcmpeqb   (%rdi), %xmm0
 	pmovmskb  %xmm0, %edx
@@ -292,6 +353,10 @@ L(ATR64):
 	je	   L(mt32)
 
 L(ATR64main):
+#ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rdi, %rsi), %bnd1
+#endif
 	movdqa    (%rdi,%rsi), %xmm0
 	pcmpeqb   (%rdi), %xmm0
 	pmovmskb  %xmm0, %edx
@@ -299,6 +364,10 @@ L(ATR64main):
 	jnz       L(neq)
 	addq       $16, %rdi
 
+#ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rdi, %rsi), %bnd1
+#endif
 	movdqa    (%rdi,%rsi), %xmm0
 	pcmpeqb   (%rdi), %xmm0
 	pmovmskb  %xmm0, %edx
@@ -306,6 +375,10 @@ L(ATR64main):
 	jnz       L(neq)
 	addq       $16, %rdi
 
+#ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rdi, %rsi), %bnd1
+#endif
 	movdqa    (%rdi,%rsi), %xmm0
 	pcmpeqb   (%rdi), %xmm0
 	pmovmskb  %xmm0, %edx
@@ -313,6 +386,10 @@ L(ATR64main):
 	jnz       L(neq)
 	addq       $16, %rdi
 
+#ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rdi, %rsi), %bnd1
+#endif
 	movdqa    (%rdi,%rsi), %xmm0
 	pcmpeqb   (%rdi), %xmm0
 	pmovmskb  %xmm0, %edx
@@ -328,6 +405,10 @@ L(ATR64main):
         jge	L(mt16)
 
 L(ATR32res):
+#ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rdi, %rsi), %bnd1
+#endif
 	movdqa    (%rdi,%rsi), %xmm0
 	pcmpeqb   (%rdi), %xmm0
 	pmovmskb  %xmm0, %edx
@@ -335,6 +416,10 @@ L(ATR32res):
 	jnz       L(neq)
 	addq       $16, %rdi
 
+#ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rdi, %rsi), %bnd1
+#endif
 	movdqa    (%rdi,%rsi), %xmm0
 	pcmpeqb   (%rdi), %xmm0
 	pmovmskb  %xmm0, %edx

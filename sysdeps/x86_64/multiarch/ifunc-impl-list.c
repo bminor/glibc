@@ -44,6 +44,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, memcmp, HAS_SSSE3, __memcmp_ssse3)
 	      IFUNC_IMPL_ADD (array, i, memcmp, 1, __memcmp_sse2))
 
+#ifndef __CHKP__
+  /* We use specific version for MPX glibc */
   /* Support sysdeps/x86_64/multiarch/memmove_chk.S.  */
   IFUNC_IMPL (i, name, __memmove_chk,
 	      IFUNC_IMPL_ADD (array, i, __memmove_chk, HAS_SSSE3,
@@ -60,6 +62,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, memmove, HAS_SSSE3,
 			      __memmove_ssse3)
 	      IFUNC_IMPL_ADD (array, i, memmove, 1, __memmove_sse2))
+#endif
 
   /* Support sysdeps/x86_64/multiarch/stpncpy.S.  */
   IFUNC_IMPL (i, name, stpncpy,
@@ -207,6 +210,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, wmemcmp, 1, __wmemcmp_sse2))
 
 #ifdef SHARED
+#ifndef __CHKP__
+  /* We use specific version of memcpy, memcpy_chk, mempcpy if Intel MPX is enabled.  */
   /* Support sysdeps/x86_64/multiarch/memcpy_chk.S.  */
   IFUNC_IMPL (i, name, __memcpy_chk,
 	      IFUNC_IMPL_ADD (array, i, __memcpy_chk, HAS_SSSE3,
@@ -240,6 +245,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, mempcpy, HAS_SSSE3,
 			      __mempcpy_ssse3)
 	      IFUNC_IMPL_ADD (array, i, mempcpy, 1, __mempcpy_sse2))
+#endif
 
   /* Support sysdeps/x86_64/multiarch/strncmp.S.  */
   IFUNC_IMPL (i, name, strncmp,

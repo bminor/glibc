@@ -29,6 +29,12 @@
 
 	.text
 ENTRY (strcspn)
+# ifdef __CHKP__
+	bndcl (%rdi), %bnd0
+	bndcu (%rdi), %bnd0
+	bndcl (%rsi), %bnd1
+	bndcu (%rsi), %bnd1
+# endif
 
 	movq %rdi, %rdx		/* Save SRC.  */
 
@@ -54,21 +60,34 @@ ENTRY (strcspn)
    have a correct zero-extended 64-bit value in %rcx.  */
 
 	.p2align 4
-L(2):	movb (%rax), %cl	/* get byte from skipset */
+L(2):
+# ifdef __CHKP__
+	bndcu (%rax), %bnd1
+# endif
+	movb (%rax), %cl	/* get byte from skipset */
 	testb %cl, %cl		/* is NUL char? */
 	jz L(1)			/* yes => start compare loop */
 	movb %cl, (%rsp,%rcx)	/* set corresponding byte in skipset table */
 
+# ifdef __CHKP__
+	bndcu 1(%rax), %bnd1
+# endif
 	movb 1(%rax), %cl	/* get byte from skipset */
 	testb $0xff, %cl	/* is NUL char? */
 	jz L(1)			/* yes => start compare loop */
 	movb %cl, (%rsp,%rcx)	/* set corresponding byte in skipset table */
 
+# ifdef __CHKP__
+	bndcu 2(%rax), %bnd1
+# endif
 	movb 2(%rax), %cl	/* get byte from skipset */
 	testb $0xff, %cl	/* is NUL char? */
 	jz L(1)			/* yes => start compare loop */
 	movb %cl, (%rsp,%rcx)	/* set corresponding byte in skipset table */
 
+# ifdef __CHKP__
+	bndcu 3(%rax), %bnd1
+# endif
 	movb 3(%rax), %cl	/* get byte from skipset */
 	addq $4, %rax		/* increment skipset pointer */
 	movb %cl, (%rsp,%rcx)	/* set corresponding byte in skipset table */
@@ -89,18 +108,30 @@ L(1):	leaq -4(%rdx), %rax	/* prepare loop */
 	.p2align 4
 L(3):	addq $4, %rax		/* adjust pointer for full loop round */
 
+# ifdef __CHKP__
+	bndcu (%rax), %bnd0
+# endif
 	movb (%rax), %cl	/* get byte from string */
 	cmpb %cl, (%rsp,%rcx)	/* is it contained in skipset? */
 	je L(4)			/* yes => return */
 
+# ifdef __CHKP__
+	bndcu 1(%rax), %bnd0
+# endif
 	movb 1(%rax), %cl	/* get byte from string */
 	cmpb %cl, (%rsp,%rcx)	/* is it contained in skipset? */
 	je L(5)			/* yes => return */
 
+# ifdef __CHKP__
+	bndcu 2(%rax), %bnd0
+# endif
 	movb 2(%rax), %cl	/* get byte from string */
 	cmpb %cl, (%rsp,%rcx)	/* is it contained in skipset? */
 	jz L(6)			/* yes => return */
 
+# ifdef __CHKP__
+	bndcu 3(%rax), %bnd0
+# endif
 	movb 3(%rax), %cl	/* get byte from string */
 	cmpb %cl, (%rsp,%rcx)	/* is it contained in skipset? */
 	jne L(3)		/* no => start loop again */

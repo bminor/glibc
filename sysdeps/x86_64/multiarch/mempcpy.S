@@ -18,13 +18,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
-#include <init-arch.h>
+#if !defined  __CHKP__ && !defined __CHKWR__
+# include <sysdep.h>
+# include <init-arch.h>
 
 /* Define multiple versions only for the definition in lib and for
    DSO.  In static binaries we need mempcpy before the initialization
    happened.  */
-#if defined SHARED && !defined NOT_IN_libc
+# if defined SHARED && !defined NOT_IN_libc
 ENTRY(__mempcpy)
 	.type	__mempcpy, @gnu_indirect_function
 	cmpl	$0, KIND_OFFSET+__cpu_features(%rip)
@@ -40,38 +41,40 @@ ENTRY(__mempcpy)
 2:	ret
 END(__mempcpy)
 
-# undef ENTRY
-# define ENTRY(name) \
+#  undef ENTRY
+#  define ENTRY(name) \
 	.type __mempcpy_sse2, @function; \
 	.p2align 4; \
 	.globl __mempcpy_sse2; \
 	.hidden __mempcpy_sse2; \
 	__mempcpy_sse2: cfi_startproc; \
 	CALL_MCOUNT
-# undef END
-# define END(name) \
+#  undef END
+#  define END(name) \
 	cfi_endproc; .size __mempcpy_sse2, .-__mempcpy_sse2
 
-# undef ENTRY_CHK
-# define ENTRY_CHK(name) \
+#  undef ENTRY_CHK
+#  define ENTRY_CHK(name) \
 	.type __mempcpy_chk_sse2, @function; \
 	.globl __mempcpy_chk_sse2; \
 	.p2align 4; \
 	__mempcpy_chk_sse2: cfi_startproc; \
 	CALL_MCOUNT
-# undef END_CHK
-# define END_CHK(name) \
+#  undef END_CHK
+#  define END_CHK(name) \
 	cfi_endproc; .size __mempcpy_chk_sse2, .-__mempcpy_chk_sse2
 
-# undef libc_hidden_def
-# undef libc_hidden_builtin_def
+#  undef libc_hidden_def
+#  undef libc_hidden_builtin_def
 /* It doesn't make sense to send libc-internal mempcpy calls through a PLT.
    The speedup we get from using SSSE3 instruction is likely eaten away
    by the indirect call in the PLT.  */
-# define libc_hidden_def(name) \
+#  define libc_hidden_def(name) \
 	.globl __GI_mempcpy; __GI_mempcpy = __mempcpy_sse2
-# define libc_hidden_builtin_def(name) \
+#  define libc_hidden_builtin_def(name) \
 	.globl __GI___mempcpy; __GI___mempcpy = __mempcpy_sse2
-#endif
+# endif
 
-#include "../mempcpy.S"
+# include "../mempcpy.S"
+
+#endif

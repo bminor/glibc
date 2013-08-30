@@ -19,9 +19,22 @@
 
 #include <sysdep.h>
 
+#ifdef __CHKP__
+# define RETURN \
+      bndcu  (%rax), %bnd0; \
+      ret
+#else
+# define RETURN ret
+#endif
+
+
 	.text
 ENTRY (wcsrchr)
 
+#ifdef __CHKP__
+	bndcl	(%rdi), %bnd0
+	bndcu	(%rdi), %bnd0
+#endif
 	movd	%rsi, %xmm1
 	mov	%rdi, %rcx
 	punpckldq %xmm1, %xmm1
@@ -92,6 +105,9 @@ L(unaligned_match):
 /* Loop start on aligned string.  */
 	.p2align 4
 L(loop):
+#ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+#endif
 	movdqa	(%rdi), %xmm0
 	pcmpeqd	%xmm0, %xmm2
 	add	$16, %rdi
@@ -101,6 +117,9 @@ L(loop):
 	or	%rax, %rcx
 	jnz	L(matches)
 
+#ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+#endif
 	movdqa	(%rdi), %xmm3
 	pcmpeqd	%xmm3, %xmm2
 	add	$16, %rdi
@@ -110,6 +129,9 @@ L(loop):
 	or	%rax, %rcx
 	jnz	L(matches)
 
+#ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+#endif
 	movdqa	(%rdi), %xmm4
 	pcmpeqd	%xmm4, %xmm2
 	add	$16, %rdi
@@ -119,6 +141,9 @@ L(loop):
 	or	%rax, %rcx
 	jnz	L(matches)
 
+#ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+#endif
 	movdqa	(%rdi), %xmm5
 	pcmpeqd	%xmm5, %xmm2
 	add	$16, %rdi
@@ -145,7 +170,7 @@ L(return_value):
 	test	$15 << 4, %al
 	jnz	L(match_second_wchar)
 	lea	-16(%rdi), %rax
-	ret
+	RETURN
 
 	.p2align 4
 L(match):
@@ -175,14 +200,14 @@ L(find_zero):
 	test	$15 << 4, %al
 	jnz	L(match_second_wchar)
 	lea	-16(%rdi), %rax
-	ret
+	RETURN
 
 	.p2align 4
 L(find_zero_in_first_wchar):
 	test	$1, %rax
 	jz	L(return_value)
 	lea	-16(%rdi), %rax
-	ret
+	RETURN
 
 	.p2align 4
 L(find_zero_in_second_wchar):
@@ -192,7 +217,7 @@ L(find_zero_in_second_wchar):
 	test	$15 << 4, %al
 	jnz	L(match_second_wchar)
 	lea	-16(%rdi), %rax
-	ret
+	RETURN
 
 	.p2align 4
 L(find_zero_in_third_wchar):
@@ -204,12 +229,12 @@ L(find_zero_in_third_wchar):
 	test	$15 << 4, %al
 	jnz	L(match_second_wchar)
 	lea	-16(%rdi), %rax
-	ret
+	RETURN
 
 	.p2align 4
 L(prolog_find_zero):
 	add	%rcx, %rdi
-	mov     %rdx, %rcx
+	mov	%rdx, %rcx
 L(prolog_find_zero_1):
 	test	$15, %cl
 	jnz	L(prolog_find_zero_in_first_wchar)
@@ -228,14 +253,14 @@ L(prolog_find_zero_1):
 	test	$15 << 4, %al
 	jnz	L(match_second_wchar)
 	lea	-16(%rdi), %rax
-	ret
+	RETURN
 
 	.p2align 4
 L(prolog_find_zero_in_first_wchar):
 	test	$1, %rax
 	jz	L(return_null)
 	lea	-16(%rdi), %rax
-	ret
+	RETURN
 
 	.p2align 4
 L(prolog_find_zero_in_second_wchar):
@@ -245,7 +270,7 @@ L(prolog_find_zero_in_second_wchar):
 	test	$15 << 4, %al
 	jnz	L(match_second_wchar)
 	lea	-16(%rdi), %rax
-	ret
+	RETURN
 
 	.p2align 4
 L(prolog_find_zero_in_third_wchar):
@@ -257,22 +282,22 @@ L(prolog_find_zero_in_third_wchar):
 	test	$15 << 4, %al
 	jnz	L(match_second_wchar)
 	lea	-16(%rdi), %rax
-	ret
+	RETURN
 
 	.p2align 4
 L(match_second_wchar):
 	lea	-12(%rdi), %rax
-	ret
+	RETURN
 
 	.p2align 4
 L(match_third_wchar):
 	lea	-8(%rdi), %rax
-	ret
+	RETURN
 
 	.p2align 4
 L(match_fourth_wchar):
 	lea	-4(%rdi), %rax
-	ret
+	RETURN
 
 	.p2align 4
 L(return_null):

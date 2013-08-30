@@ -48,6 +48,13 @@ ENTRY (MEMCMP)
 # ifdef USE_AS_WMEMCMP
 	shl	$2, %rdx
 # endif
+# ifdef __CHKP__
+	testq	%rdx, %rdx
+	jz	L(NoEntryCheck)
+	bndcl	(%rdi), %bnd0
+	bndcl	(%rsi), %bnd1
+L(NoEntryCheck):
+# endif
 	pxor	%xmm0, %xmm0
 	cmp	$79, %rdx
 	ja	L(79bytesormore)
@@ -70,6 +77,10 @@ L(firstbyte):
 
 	ALIGN (4)
 L(79bytesormore):
+# ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rsi), %bnd1
+# endif
 	movdqu	(%rsi), %xmm1
 	movdqu	(%rdi), %xmm2
 	pxor	%xmm1, %xmm2
@@ -90,21 +101,37 @@ L(79bytesormore):
 L(less128bytes):
 	sub	$64, %rdx
 
+# ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rsi), %bnd1
+# endif
 	movdqu	(%rdi), %xmm2
 	pxor	(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(16bytesin256)
 
+# ifdef __CHKP__
+	bndcu	16(%rdi), %bnd0
+	bndcu	16(%rsi), %bnd1
+# endif
 	movdqu	16(%rdi), %xmm2
 	pxor	16(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(32bytesin256)
 
+# ifdef __CHKP__
+	bndcu	32(%rdi), %bnd0
+	bndcu	32(%rsi), %bnd1
+# endif
 	movdqu	32(%rdi), %xmm2
 	pxor	32(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(48bytesin256)
 
+# ifdef __CHKP__
+	bndcu	48(%rdi), %bnd0
+	bndcu	48(%rsi), %bnd1
+# endif
 	movdqu	48(%rdi), %xmm2
 	pxor	48(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
@@ -112,11 +139,19 @@ L(less128bytes):
 	cmp	$32, %rdx
 	jb	L(less32bytesin64)
 
+# ifdef __CHKP__
+	bndcu	64(%rdi), %bnd0
+	bndcu	64(%rsi), %bnd1
+# endif
 	movdqu	64(%rdi), %xmm2
 	pxor	64(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(80bytesin256)
 
+# ifdef __CHKP__
+	bndcu	80(%rdi), %bnd0
+	bndcu	80(%rsi), %bnd1
+# endif
 	movdqu	80(%rdi), %xmm2
 	pxor	80(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
@@ -139,41 +174,73 @@ L(128bytesormore):
 L(less256bytes):
 	sub	$128, %rdx
 
+# ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rsi), %bnd1
+# endif
 	movdqu	(%rdi), %xmm2
 	pxor	(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(16bytesin256)
 
+# ifdef __CHKP__
+	bndcu	16(%rdi), %bnd0
+	bndcu	16(%rsi), %bnd1
+# endif
 	movdqu	16(%rdi), %xmm2
 	pxor	16(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(32bytesin256)
 
+# ifdef __CHKP__
+	bndcu	32(%rdi), %bnd0
+	bndcu	32(%rsi), %bnd1
+# endif
 	movdqu	32(%rdi), %xmm2
 	pxor	32(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(48bytesin256)
 
+# ifdef __CHKP__
+	bndcu	48(%rdi), %bnd0
+	bndcu	48(%rsi), %bnd1
+# endif
 	movdqu	48(%rdi), %xmm2
 	pxor	48(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(64bytesin256)
 
+# ifdef __CHKP__
+	bndcu	64(%rdi), %bnd0
+	bndcu	64(%rsi), %bnd1
+# endif
 	movdqu	64(%rdi), %xmm2
 	pxor	64(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(80bytesin256)
 
+# ifdef __CHKP__
+	bndcu	80(%rdi), %bnd0
+	bndcu	80(%rsi), %bnd1
+# endif
 	movdqu	80(%rdi), %xmm2
 	pxor	80(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(96bytesin256)
 
+# ifdef __CHKP__
+	bndcu	96(%rdi), %bnd0
+	bndcu	96(%rsi), %bnd1
+# endif
 	movdqu	96(%rdi), %xmm2
 	pxor	96(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(112bytesin256)
 
+# ifdef __CHKP__
+	bndcu	112(%rdi), %bnd0
+	bndcu	112(%rsi), %bnd1
+# endif
 	movdqu	112(%rdi), %xmm2
 	pxor	112(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
@@ -188,11 +255,19 @@ L(less256bytes):
 	cmp	$32, %rdx
 	jb	L(less32bytesin128)
 
+# ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rsi), %bnd1
+# endif
 	movdqu	(%rdi), %xmm2
 	pxor	(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(16bytesin256)
 
+# ifdef __CHKP__
+	bndcu	16(%rdi), %bnd0
+	bndcu	16(%rsi), %bnd1
+# endif
 	movdqu	16(%rdi), %xmm2
 	pxor	16(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
@@ -207,81 +282,145 @@ L(less32bytesin128):
 
 L(less512bytes):
 	sub	$256, %rdx
+# ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rsi), %bnd1
+# endif
 	movdqu	(%rdi), %xmm2
 	pxor	(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(16bytesin256)
 
+# ifdef __CHKP__
+	bndcu	16(%rdi), %bnd0
+	bndcu	16(%rsi), %bnd1
+# endif
 	movdqu	16(%rdi), %xmm2
 	pxor	16(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(32bytesin256)
 
+# ifdef __CHKP__
+	bndcu	32(%rdi), %bnd0
+	bndcu	32(%rsi), %bnd1
+# endif
 	movdqu	32(%rdi), %xmm2
 	pxor	32(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(48bytesin256)
 
+# ifdef __CHKP__
+	bndcu	48(%rdi), %bnd0
+	bndcu	48(%rsi), %bnd1
+# endif
 	movdqu	48(%rdi), %xmm2
 	pxor	48(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(64bytesin256)
 
+# ifdef __CHKP__
+	bndcu	64(%rdi), %bnd0
+	bndcu	64(%rsi), %bnd1
+# endif
 	movdqu	64(%rdi), %xmm2
 	pxor	64(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(80bytesin256)
 
+# ifdef __CHKP__
+	bndcu	80(%rdi), %bnd0
+	bndcu	80(%rsi), %bnd1
+# endif
 	movdqu	80(%rdi), %xmm2
 	pxor	80(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(96bytesin256)
 
+# ifdef __CHKP__
+	bndcu	96(%rdi), %bnd0
+	bndcu	96(%rsi), %bnd1
+# endif
 	movdqu	96(%rdi), %xmm2
 	pxor	96(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(112bytesin256)
 
+# ifdef __CHKP__
+	bndcu	112(%rdi), %bnd0
+	bndcu	112(%rsi), %bnd1
+# endif
 	movdqu	112(%rdi), %xmm2
 	pxor	112(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(128bytesin256)
 
+# ifdef __CHKP__
+	bndcu	128(%rdi), %bnd0
+	bndcu	128(%rsi), %bnd1
+# endif
 	movdqu	128(%rdi), %xmm2
 	pxor	128(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(144bytesin256)
 
+# ifdef __CHKP__
+	bndcu	144(%rdi), %bnd0
+	bndcu	144(%rsi), %bnd1
+# endif
 	movdqu	144(%rdi), %xmm2
 	pxor	144(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(160bytesin256)
 
+# ifdef __CHKP__
+	bndcu	160(%rdi), %bnd0
+	bndcu	160(%rsi), %bnd1
+# endif
 	movdqu	160(%rdi), %xmm2
 	pxor	160(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(176bytesin256)
 
+# ifdef __CHKP__
+	bndcu	176(%rdi), %bnd0
+	bndcu	176(%rsi), %bnd1
+# endif
 	movdqu	176(%rdi), %xmm2
 	pxor	176(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(192bytesin256)
 
+# ifdef __CHKP__
+	bndcu	192(%rdi), %bnd0
+	bndcu	192(%rsi), %bnd1
+# endif
 	movdqu	192(%rdi), %xmm2
 	pxor	192(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(208bytesin256)
 
+# ifdef __CHKP__
+	bndcu	208(%rdi), %bnd0
+	bndcu	208(%rsi), %bnd1
+# endif
 	movdqu	208(%rdi), %xmm2
 	pxor	208(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(224bytesin256)
 
+# ifdef __CHKP__
+	bndcu	224(%rdi), %bnd0
+	bndcu	224(%rsi), %bnd1
+# endif
 	movdqu	224(%rdi), %xmm2
 	pxor	224(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(240bytesin256)
 
+# ifdef __CHKP__
+	bndcu	240(%rdi), %bnd0
+	bndcu	240(%rsi), %bnd1
+# endif
 	movdqu	240(%rdi), %xmm2
 	pxor	240(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
@@ -299,11 +438,19 @@ L(less512bytes):
 	cmp	$32, %rdx
 	jb	L(less32bytesin256)
 
+# ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rsi), %bnd1
+# endif
 	movdqu	(%rdi), %xmm2
 	pxor	(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(16bytesin256)
 
+# ifdef __CHKP__
+	bndcu	16(%rdi), %bnd0
+	bndcu	16(%rsi), %bnd1
+# endif
 	movdqu	16(%rdi), %xmm2
 	pxor	16(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
@@ -331,18 +478,34 @@ L(512bytesormore):
 	sub	$64, %rdx
 	ALIGN (4)
 L(64bytesormore_loop):
+# ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rsi), %bnd1
+# endif
 	movdqu	(%rdi), %xmm2
 	pxor	(%rsi), %xmm2
 	movdqa	%xmm2, %xmm1
 
+# ifdef __CHKP__
+	bndcu	16(%rdi), %bnd0
+	bndcu	16(%rsi), %bnd1
+# endif
 	movdqu	16(%rdi), %xmm3
 	pxor	16(%rsi), %xmm3
 	por	%xmm3, %xmm1
 
+# ifdef __CHKP__
+	bndcu	32(%rdi), %bnd0
+	bndcu	32(%rsi), %bnd1
+# endif
 	movdqu	32(%rdi), %xmm4
 	pxor	32(%rsi), %xmm4
 	por	%xmm4, %xmm1
 
+# ifdef __CHKP__
+	bndcu	48(%rdi), %bnd0
+	bndcu	48(%rsi), %bnd1
+# endif
 	movdqu	48(%rdi), %xmm5
 	pxor	48(%rsi), %xmm5
 	por	%xmm5, %xmm1
@@ -365,18 +528,34 @@ L(L2_L3_cache_unaglined):
 L(L2_L3_unaligned_128bytes_loop):
 	prefetchnta 0x1c0(%rdi)
 	prefetchnta 0x1c0(%rsi)
+# ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rsi), %bnd1
+# endif
 	movdqu	(%rdi), %xmm2
 	pxor	(%rsi), %xmm2
 	movdqa	%xmm2, %xmm1
 
+# ifdef __CHKP__
+	bndcu	16(%rdi), %bnd0
+	bndcu	16(%rsi), %bnd1
+# endif
 	movdqu	16(%rdi), %xmm3
 	pxor	16(%rsi), %xmm3
 	por	%xmm3, %xmm1
 
+# ifdef __CHKP__
+	bndcu	32(%rdi), %bnd0
+	bndcu	32(%rsi), %bnd1
+# endif
 	movdqu	32(%rdi), %xmm4
 	pxor	32(%rsi), %xmm4
 	por	%xmm4, %xmm1
 
+# ifdef __CHKP__
+	bndcu	48(%rdi), %bnd0
+	bndcu	48(%rsi), %bnd1
+# endif
 	movdqu	48(%rdi), %xmm5
 	pxor	48(%rsi), %xmm5
 	por	%xmm5, %xmm1
@@ -403,21 +582,37 @@ L(2aligned):
 L(less128bytesin2aligned):
 	sub	$64, %rdx
 
+# ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rsi), %bnd1
+# endif
 	movdqa	(%rdi), %xmm2
 	pxor	(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(16bytesin256)
 
+# ifdef __CHKP__
+	bndcu	16(%rdi), %bnd0
+	bndcu	16(%rsi), %bnd1
+# endif
 	movdqa	16(%rdi), %xmm2
 	pxor	16(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(32bytesin256)
 
+# ifdef __CHKP__
+	bndcu	32(%rdi), %bnd0
+	bndcu	32(%rsi), %bnd1
+# endif
 	movdqa	32(%rdi), %xmm2
 	pxor	32(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(48bytesin256)
 
+# ifdef __CHKP__
+	bndcu	48(%rdi), %bnd0
+	bndcu	48(%rsi), %bnd1
+# endif
 	movdqa	48(%rdi), %xmm2
 	pxor	48(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
@@ -425,11 +620,19 @@ L(less128bytesin2aligned):
 	cmp	$32, %rdx
 	jb	L(less32bytesin64in2alinged)
 
+# ifdef __CHKP__
+	bndcu	64(%rdi), %bnd0
+	bndcu	64(%rsi), %bnd1
+# endif
 	movdqa	64(%rdi), %xmm2
 	pxor	64(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(80bytesin256)
 
+# ifdef __CHKP__
+	bndcu	80(%rdi), %bnd0
+	bndcu	80(%rsi), %bnd1
+# endif
 	movdqa	80(%rdi), %xmm2
 	pxor	80(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
@@ -453,41 +656,73 @@ L(128bytesormorein2aligned):
 L(less256bytesin2alinged):
 	sub	$128, %rdx
 
+# ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rsi), %bnd1
+# endif
 	movdqa	(%rdi), %xmm2
 	pxor	(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(16bytesin256)
 
+# ifdef __CHKP__
+	bndcu	16(%rdi), %bnd0
+	bndcu	16(%rsi), %bnd1
+# endif
 	movdqa	16(%rdi), %xmm2
 	pxor	16(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(32bytesin256)
 
+# ifdef __CHKP__
+	bndcu	32(%rdi), %bnd0
+	bndcu	32(%rsi), %bnd1
+# endif
 	movdqa	32(%rdi), %xmm2
 	pxor	32(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(48bytesin256)
 
+# ifdef __CHKP__
+	bndcu	48(%rdi), %bnd0
+	bndcu	48(%rsi), %bnd1
+# endif
 	movdqa	48(%rdi), %xmm2
 	pxor	48(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(64bytesin256)
 
+# ifdef __CHKP__
+	bndcu	64(%rdi), %bnd0
+	bndcu	64(%rsi), %bnd1
+# endif
 	movdqa	64(%rdi), %xmm2
 	pxor	64(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(80bytesin256)
 
+# ifdef __CHKP__
+	bndcu	80(%rdi), %bnd0
+	bndcu	80(%rsi), %bnd1
+# endif
 	movdqa	80(%rdi), %xmm2
 	pxor	80(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(96bytesin256)
 
+# ifdef __CHKP__
+	bndcu	96(%rdi), %bnd0
+	bndcu	96(%rsi), %bnd1
+# endif
 	movdqa	96(%rdi), %xmm2
 	pxor	96(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(112bytesin256)
 
+# ifdef __CHKP__
+	bndcu	112(%rdi), %bnd0
+	bndcu	112(%rsi), %bnd1
+# endif
 	movdqa	112(%rdi), %xmm2
 	pxor	112(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
@@ -502,11 +737,19 @@ L(less256bytesin2alinged):
 	cmp	$32, %rdx
 	jb	L(less32bytesin128in2aligned)
 
+# ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rsi), %bnd1
+# endif
 	movdqu	(%rdi), %xmm2
 	pxor	(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(16bytesin256)
 
+# ifdef __CHKP__
+	bndcu	16(%rdi), %bnd0
+	bndcu	16(%rsi), %bnd1
+# endif
 	movdqu	16(%rdi), %xmm2
 	pxor	16(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
@@ -523,81 +766,145 @@ L(less32bytesin128in2aligned):
 L(256bytesormorein2aligned):
 
 	sub	$256, %rdx
+# ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rsi), %bnd1
+# endif
 	movdqa	(%rdi), %xmm2
 	pxor	(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(16bytesin256)
 
+# ifdef __CHKP__
+	bndcu	16(%rdi), %bnd0
+	bndcu	16(%rsi), %bnd1
+# endif
 	movdqa	16(%rdi), %xmm2
 	pxor	16(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(32bytesin256)
 
+# ifdef __CHKP__
+	bndcu	32(%rdi), %bnd0
+	bndcu	32(%rsi), %bnd1
+# endif
 	movdqa	32(%rdi), %xmm2
 	pxor	32(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(48bytesin256)
 
+# ifdef __CHKP__
+	bndcu	48(%rdi), %bnd0
+	bndcu	48(%rsi), %bnd1
+# endif
 	movdqa	48(%rdi), %xmm2
 	pxor	48(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(64bytesin256)
 
+# ifdef __CHKP__
+	bndcu	64(%rdi), %bnd0
+	bndcu	64(%rsi), %bnd1
+# endif
 	movdqa	64(%rdi), %xmm2
 	pxor	64(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(80bytesin256)
 
+# ifdef __CHKP__
+	bndcu	80(%rdi), %bnd0
+	bndcu	80(%rsi), %bnd1
+# endif
 	movdqa	80(%rdi), %xmm2
 	pxor	80(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(96bytesin256)
 
+# ifdef __CHKP__
+	bndcu	96(%rdi), %bnd0
+	bndcu	96(%rsi), %bnd1
+# endif
 	movdqa	96(%rdi), %xmm2
 	pxor	96(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(112bytesin256)
 
+# ifdef __CHKP__
+	bndcu	112(%rdi), %bnd0
+	bndcu	112(%rsi), %bnd1
+# endif
 	movdqa	112(%rdi), %xmm2
 	pxor	112(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(128bytesin256)
 
+# ifdef __CHKP__
+	bndcu	128(%rdi), %bnd0
+	bndcu	128(%rsi), %bnd1
+# endif
 	movdqa	128(%rdi), %xmm2
 	pxor	128(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(144bytesin256)
 
+# ifdef __CHKP__
+	bndcu	144(%rdi), %bnd0
+	bndcu	144(%rsi), %bnd1
+# endif
 	movdqa	144(%rdi), %xmm2
 	pxor	144(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(160bytesin256)
 
+# ifdef __CHKP__
+	bndcu	160(%rdi), %bnd0
+	bndcu	160(%rsi), %bnd1
+# endif
 	movdqa	160(%rdi), %xmm2
 	pxor	160(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(176bytesin256)
 
+# ifdef __CHKP__
+	bndcu	176(%rdi), %bnd0
+	bndcu	176(%rsi), %bnd1
+# endif
 	movdqa	176(%rdi), %xmm2
 	pxor	176(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(192bytesin256)
 
+# ifdef __CHKP__
+	bndcu	192(%rdi), %bnd0
+	bndcu	192(%rsi), %bnd1
+# endif
 	movdqa	192(%rdi), %xmm2
 	pxor	192(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(208bytesin256)
 
+# ifdef __CHKP__
+	bndcu	208(%rdi), %bnd0
+	bndcu	208(%rsi), %bnd1
+# endif
 	movdqa	208(%rdi), %xmm2
 	pxor	208(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(224bytesin256)
 
+# ifdef __CHKP__
+	bndcu	224(%rdi), %bnd0
+	bndcu	224(%rsi), %bnd1
+# endif
 	movdqa	224(%rdi), %xmm2
 	pxor	224(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
 	jnc	L(240bytesin256)
 
+# ifdef __CHKP__
+	bndcu	240(%rdi), %bnd0
+	bndcu	240(%rsi), %bnd1
+# endif
 	movdqa	240(%rdi), %xmm2
 	pxor	240(%rsi), %xmm2
 	ptest	%xmm2, %xmm0
@@ -648,18 +955,34 @@ L(512bytesormorein2aligned):
 	sub	$64, %rdx
 	ALIGN (4)
 L(64bytesormore_loopin2aligned):
+# ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rsi), %bnd1
+# endif
 	movdqa	(%rdi), %xmm2
 	pxor	(%rsi), %xmm2
 	movdqa	%xmm2, %xmm1
 
+# ifdef __CHKP__
+	bndcu	16(%rdi), %bnd0
+	bndcu	16(%rsi), %bnd1
+# endif
 	movdqa	16(%rdi), %xmm3
 	pxor	16(%rsi), %xmm3
 	por	%xmm3, %xmm1
 
+# ifdef __CHKP__
+	bndcu	32(%rdi), %bnd0
+	bndcu	32(%rsi), %bnd1
+# endif
 	movdqa	32(%rdi), %xmm4
 	pxor	32(%rsi), %xmm4
 	por	%xmm4, %xmm1
 
+# ifdef __CHKP__
+	bndcu	48(%rdi), %bnd0
+	bndcu	48(%rsi), %bnd1
+# endif
 	movdqa	48(%rdi), %xmm5
 	pxor	48(%rsi), %xmm5
 	por	%xmm5, %xmm1
@@ -682,18 +1005,34 @@ L(L2_L3_cache_aglined):
 L(L2_L3_aligned_128bytes_loop):
 	prefetchnta 0x1c0(%rdi)
 	prefetchnta 0x1c0(%rsi)
+# ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rsi), %bnd1
+# endif
 	movdqa	(%rdi), %xmm2
 	pxor	(%rsi), %xmm2
 	movdqa	%xmm2, %xmm1
 
+# ifdef __CHKP__
+	bndcu	16(%rdi), %bnd0
+	bndcu	16(%rsi), %bnd1
+# endif
 	movdqa	16(%rdi), %xmm3
 	pxor	16(%rsi), %xmm3
 	por	%xmm3, %xmm1
 
+# ifdef __CHKP__
+	bndcu	32(%rdi), %bnd0
+	bndcu	32(%rsi), %bnd1
+# endif
 	movdqa	32(%rdi), %xmm4
 	pxor	32(%rsi), %xmm4
 	por	%xmm4, %xmm1
 
+# ifdef __CHKP__
+	bndcu	48(%rdi), %bnd0
+	bndcu	48(%rsi), %bnd1
+# endif
 	movdqa	48(%rdi), %xmm5
 	pxor	48(%rsi), %xmm5
 	por	%xmm5, %xmm1

@@ -27,7 +27,11 @@
 #include "asm-syntax.h"
 
 #ifndef MEMCPY
-# define MEMCPY		__memcpy_ssse3_back
+# if defined  __CHKP__ || defined __CHKWR__
+#  define MEMCPY		chkp_memcpy_nobnd
+# else
+#  define MEMCPY		__memcpy_ssse3_back
+# endif
 # define MEMCPY_CHK	__memcpy_chk_ssse3_back
 #endif
 
@@ -48,7 +52,7 @@
   ud2
 
 	.section .text.ssse3,"ax",@progbits
-#if !defined USE_AS_BCOPY
+#if !defined USE_AS_BCOPY && defined MEMCPY_CHK
 ENTRY (MEMCPY_CHK)
 	cmpq	%rdx, %rcx
 	jb	HIDDEN_JUMPTARGET (__chk_fail)
@@ -56,6 +60,15 @@ END (MEMCPY_CHK)
 #endif
 
 ENTRY (MEMCPY)
+#ifdef __CHKP__
+	testq	%rdx, %rdx
+	jz	L(NoEntryCheck)
+	bndcl	(%rdi), %bnd0
+	bndcu	-1(%rdi, %rdx), %bnd0
+	bndcl	(%rsi), %bnd1
+	bndcu	-1(%rsi, %rdx), %bnd1
+#endif
+
 	mov	%rdi, %rax
 #ifdef USE_AS_MEMPCPY
 	add	%rdx, %rax
@@ -85,6 +98,15 @@ L(fwd_write_less32bytes):
 L(bk_write):
 
 	BRANCH_TO_JMPTBL_ENTRY (L(table_144_bytes_bwd), %rdx, 4)
+#endif
+
+#ifdef __CHKP__
+L(NoEntryCheck):
+	mov	%rdi, %rax
+# ifdef USE_AS_MEMPCPY
+	add	%rdx, %rax
+# endif
+	ret
 #endif
 
 	ALIGN (4)

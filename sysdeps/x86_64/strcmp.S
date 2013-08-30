@@ -128,7 +128,16 @@ libc_hidden_def (__strncasecmp)
 ENTRY (STRCMP)
 #ifdef NOT_IN_libc
 /* Simple version since we can't use SSE registers in ld.so.  */
-L(oop):	movb	(%rdi), %al
+#ifdef __CHKP__
+	bndcl	(%rdi), %bnd0
+	bndcl	(%rsi), %bnd1
+#endif
+L(oop):
+#ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+	bndcu	(%rsi), %bnd1
+#endif
+	movb	(%rdi), %al
 	cmpb	(%rsi), %al
 	jne	L(neq)
 	incq	%rdi
@@ -177,6 +186,12 @@ END (STRCMP)
 	je	LABEL(Byte0)
 	mov	%rdx, %r11
 # endif
+#ifdef __CHKP__
+	bndcl  	(%rdi), %bnd0
+	bndcu  	(%rdi), %bnd0
+	bndcl  	(%rsi), %bnd1
+	bndcu  	(%rsi), %bnd1
+#endif
 	mov	%esi, %ecx
 	mov	%edi, %eax
 /* Use 64bit AND here to avoid long NOP padding.  */
@@ -243,6 +258,10 @@ END (STRCMP)
 # endif
 	add	$16, %rsi		/* prepare to search next 16 bytes */
 	add	$16, %rdi		/* prepare to search next 16 bytes */
+#ifdef __CHKP__
+	bndcu  	(%rdi), %bnd0
+	bndcu  	(%rsi), %bnd1
+#endif
 
 	/*
 	 * Determine source and destination string offsets from 16-byte alignment.
@@ -263,6 +282,11 @@ LABEL(crosscache):
 	mov	%edx, %r8d			/* r8d is offset flag for exit tail */
 	xchg	%ecx, %eax
 	xchg	%rsi, %rdi
+#ifdef __CHKP__
+	bndmov 	%bnd0, %bnd2
+	bndmov 	%bnd1, %bnd0
+	bndmov 	%bnd2, %bnd1
+#endif
 LABEL(bigger):
 	lea	15(%rax), %r9
 	sub	%rcx, %r9
@@ -310,6 +334,10 @@ LABEL(ashr_0):
 	 */
 	.p2align 4
 LABEL(loop_ashr_0):
+#ifdef __CHKP__
+	bndcu	-1(%rdi, %rcx), %bnd0
+	bndcu	-1(%rsi, %rcx), %bnd1
+#endif
 	movdqa	(%rsi, %rcx), %xmm1
 	movdqa	(%rdi, %rcx), %xmm2
 	TOLOWER (%xmm1, %xmm2)
@@ -326,6 +354,10 @@ LABEL(loop_ashr_0):
 	jbe	LABEL(strcmp_exitz)
 # endif
 	add	$16, %rcx
+#ifdef __CHKP__
+	bndcu	-1(%rdi, %rcx), %bnd0
+	bndcu	-1(%rsi, %rcx), %bnd1
+#endif
 	movdqa	(%rsi, %rcx), %xmm1
 	movdqa	(%rdi, %rcx), %xmm2
 	TOLOWER (%xmm1, %xmm2)
@@ -377,6 +409,15 @@ LABEL(ashr_1):
 	lea	1(%rdi), %r10
 	and	$0xfff, %r10		/* offset into 4K page */
 	sub	$0x1000, %r10		/* subtract 4K pagesize */
+# ifdef __CHKP__
+	bndcu	-16(%rdi, %rcx), %bnd0
+	bndcu	-16(%rsi, %rcx), %bnd1
+	jmp 	LABEL(loop_ashr_1)
+LABEL(ashr_1_check):
+	bndcu	(%rdi, %rcx), %bnd0
+	bndcu	(%rsi, %rcx), %bnd1
+	jmp	LABEL(gobble_ashr_1)
+# endif
 
 	.p2align 4
 LABEL(loop_ashr_1):
@@ -460,7 +501,11 @@ LABEL(nibble_ashr_1):
 
 	pxor	%xmm0, %xmm0
 	sub	$0x1000, %r10		/* substract 4K from %r10 */
+# ifdef __CHKP__
+	jmp	LABEL(ashr_1_check)
+# else
 	jmp	LABEL(gobble_ashr_1)
+# endif
 
 	/*
 	 * Once find null char, determine if there is a string mismatch
@@ -507,6 +552,15 @@ LABEL(ashr_2):
 	lea	2(%rdi), %r10
 	and	$0xfff, %r10	/* offset into 4K page */
 	sub	$0x1000, %r10	/* subtract 4K pagesize */
+# ifdef __CHKP__
+	bndcu	-16(%rdi, %rcx), %bnd0
+	bndcu	-16(%rsi, %rcx), %bnd1
+	jmp 	LABEL(loop_ashr_2)
+LABEL(ashr_2_check):
+	bndcu	(%rdi, %rcx), %bnd0
+	bndcu	(%rsi, %rcx), %bnd1
+	jmp	LABEL(gobble_ashr_2)
+# endif
 
 	.p2align 4
 LABEL(loop_ashr_2):
@@ -588,7 +642,11 @@ LABEL(nibble_ashr_2):
 
 	pxor	%xmm0, %xmm0
 	sub	$0x1000, %r10
+# ifdef __CHKP__
+	jmp	LABEL(ashr_2_check)
+# else
 	jmp	LABEL(gobble_ashr_2)
+# endif
 
 	.p2align 4
 LABEL(ashr_2_exittail):
@@ -632,6 +690,15 @@ LABEL(ashr_3):
 	lea	3(%rdi), %r10
 	and	$0xfff, %r10	/* offset into 4K page */
 	sub	$0x1000, %r10	/* subtract 4K pagesize */
+# ifdef __CHKP__
+	bndcu	-16(%rdi, %rcx), %bnd0
+	bndcu	-16(%rsi, %rcx), %bnd1
+	jmp 	LABEL(loop_ashr_3)
+LABEL(ashr_3_check):
+	bndcu	(%rdi, %rcx), %bnd0
+	bndcu	(%rsi, %rcx), %bnd1
+	jmp	LABEL(gobble_ashr_3)
+# endif
 
 	.p2align 4
 LABEL(loop_ashr_3):
@@ -713,7 +780,11 @@ LABEL(nibble_ashr_3):
 
 	pxor	%xmm0, %xmm0
 	sub	$0x1000, %r10
+# ifdef __CHKP__
+	jmp	LABEL(ashr_3_check)
+# else
 	jmp	LABEL(gobble_ashr_3)
+# endif
 
 	.p2align 4
 LABEL(ashr_3_exittail):
@@ -757,6 +828,15 @@ LABEL(ashr_4):
 	lea	4(%rdi), %r10
 	and	$0xfff, %r10	/* offset into 4K page */
 	sub	$0x1000, %r10	/* subtract 4K pagesize */
+# ifdef __CHKP__
+	bndcu	-16(%rdi, %rcx), %bnd0
+	bndcu	-16(%rsi, %rcx), %bnd1
+	jmp 	LABEL(loop_ashr_4)
+LABEL(ashr_4_check):
+	bndcu	(%rdi, %rcx), %bnd0
+	bndcu	(%rsi, %rcx), %bnd1
+	jmp	LABEL(gobble_ashr_4)
+# endif
 
 	.p2align 4
 LABEL(loop_ashr_4):
@@ -838,7 +918,11 @@ LABEL(nibble_ashr_4):
 
 	pxor	%xmm0, %xmm0
 	sub	$0x1000, %r10
+# ifdef __CHKP__
+	jmp	LABEL(ashr_4_check)
+# else
 	jmp	LABEL(gobble_ashr_4)
+# endif
 
 	.p2align 4
 LABEL(ashr_4_exittail):
@@ -882,6 +966,15 @@ LABEL(ashr_5):
 	lea	5(%rdi), %r10
 	and	$0xfff, %r10	/* offset into 4K page */
 	sub	$0x1000, %r10	/* subtract 4K pagesize */
+# ifdef __CHKP__
+	bndcu	-16(%rdi, %rcx), %bnd0
+	bndcu	-16(%rsi, %rcx), %bnd1
+	jmp 	LABEL(loop_ashr_5)
+LABEL(ashr_5_check):
+	bndcu	(%rdi, %rcx), %bnd0
+	bndcu	(%rsi, %rcx), %bnd1
+	jmp	LABEL(gobble_ashr_5)
+# endif
 
 	.p2align 4
 LABEL(loop_ashr_5):
@@ -963,7 +1056,11 @@ LABEL(nibble_ashr_5):
 
 	pxor	%xmm0, %xmm0
 	sub	$0x1000, %r10
+# ifdef __CHKP__
+	jmp	LABEL(ashr_5_check)
+# else
 	jmp	LABEL(gobble_ashr_5)
+# endif
 
 	.p2align 4
 LABEL(ashr_5_exittail):
@@ -1007,6 +1104,15 @@ LABEL(ashr_6):
 	lea	6(%rdi), %r10
 	and	$0xfff, %r10	/* offset into 4K page */
 	sub	$0x1000, %r10	/* subtract 4K pagesize */
+# ifdef __CHKP__
+	bndcu	-16(%rdi, %rcx), %bnd0
+	bndcu	-16(%rsi, %rcx), %bnd1
+	jmp 	LABEL(loop_ashr_6)
+LABEL(ashr_6_check):
+	bndcu	(%rdi, %rcx), %bnd0
+	bndcu	(%rsi, %rcx), %bnd1
+	jmp	LABEL(gobble_ashr_6)
+# endif
 
 	.p2align 4
 LABEL(loop_ashr_6):
@@ -1088,7 +1194,11 @@ LABEL(nibble_ashr_6):
 
 	pxor	%xmm0, %xmm0
 	sub	$0x1000, %r10
+# ifdef __CHKP__
+	jmp	LABEL(ashr_6_check)
+# else
 	jmp	LABEL(gobble_ashr_6)
+# endif
 
 	.p2align 4
 LABEL(ashr_6_exittail):
@@ -1132,6 +1242,15 @@ LABEL(ashr_7):
 	lea	7(%rdi), %r10
 	and	$0xfff, %r10	/* offset into 4K page */
 	sub	$0x1000, %r10	/* subtract 4K pagesize */
+# ifdef __CHKP__
+	bndcu	-16(%rdi, %rcx), %bnd0
+	bndcu	-16(%rsi, %rcx), %bnd1
+	jmp 	LABEL(loop_ashr_7)
+LABEL(ashr_7_check):
+	bndcu	(%rdi, %rcx), %bnd0
+	bndcu	(%rsi, %rcx), %bnd1
+	jmp	LABEL(gobble_ashr_7)
+# endif
 
 	.p2align 4
 LABEL(loop_ashr_7):
@@ -1213,7 +1332,11 @@ LABEL(nibble_ashr_7):
 
 	pxor	%xmm0, %xmm0
 	sub	$0x1000, %r10
+# ifdef __CHKP__
+	jmp	LABEL(ashr_7_check)
+# else
 	jmp	LABEL(gobble_ashr_7)
+# endif
 
 	.p2align 4
 LABEL(ashr_7_exittail):
@@ -1257,6 +1380,15 @@ LABEL(ashr_8):
 	lea	8(%rdi), %r10
 	and	$0xfff, %r10	/* offset into 4K page */
 	sub	$0x1000, %r10	/* subtract 4K pagesize */
+# ifdef __CHKP__
+	bndcu	-16(%rdi, %rcx), %bnd0
+	bndcu	-16(%rsi, %rcx), %bnd1
+	jmp 	LABEL(loop_ashr_8)
+LABEL(ashr_8_check):
+	bndcu	(%rdi, %rcx), %bnd0
+	bndcu	(%rsi, %rcx), %bnd1
+	jmp	LABEL(gobble_ashr_8)
+# endif
 
 	.p2align 4
 LABEL(loop_ashr_8):
@@ -1338,7 +1470,11 @@ LABEL(nibble_ashr_8):
 
 	pxor	%xmm0, %xmm0
 	sub	$0x1000, %r10
+# ifdef __CHKP__
+	jmp	LABEL(ashr_8_check)
+# else
 	jmp	LABEL(gobble_ashr_8)
+# endif
 
 	.p2align 4
 LABEL(ashr_8_exittail):
@@ -1382,6 +1518,15 @@ LABEL(ashr_9):
 	lea	9(%rdi), %r10
 	and	$0xfff, %r10	/* offset into 4K page */
 	sub	$0x1000, %r10	/* subtract 4K pagesize */
+# ifdef __CHKP__
+	bndcu	-16(%rdi, %rcx), %bnd0
+	bndcu	-16(%rsi, %rcx), %bnd1
+	jmp 	LABEL(loop_ashr_9)
+LABEL(ashr_9_check):
+	bndcu	(%rdi, %rcx), %bnd0
+	bndcu	(%rsi, %rcx), %bnd1
+	jmp	LABEL(gobble_ashr_9)
+# endif
 
 	.p2align 4
 LABEL(loop_ashr_9):
@@ -1463,7 +1608,11 @@ LABEL(nibble_ashr_9):
 
 	pxor	%xmm0, %xmm0
 	sub	$0x1000, %r10
+# ifdef __CHKP__
+	jmp	LABEL(ashr_9_check)
+# else
 	jmp	LABEL(gobble_ashr_9)
+# endif
 
 	.p2align 4
 LABEL(ashr_9_exittail):
@@ -1507,6 +1656,15 @@ LABEL(ashr_10):
 	lea	10(%rdi), %r10
 	and	$0xfff, %r10	/* offset into 4K page */
 	sub	$0x1000, %r10	/* subtract 4K pagesize */
+# ifdef __CHKP__
+	bndcu	-16(%rdi, %rcx), %bnd0
+	bndcu	-16(%rsi, %rcx), %bnd1
+	jmp 	LABEL(loop_ashr_10)
+LABEL(ashr_10_check):
+	bndcu	(%rdi, %rcx), %bnd0
+	bndcu	(%rsi, %rcx), %bnd1
+	jmp	LABEL(gobble_ashr_10)
+# endif
 
 	.p2align 4
 LABEL(loop_ashr_10):
@@ -1588,7 +1746,11 @@ LABEL(nibble_ashr_10):
 
 	pxor	%xmm0, %xmm0
 	sub	$0x1000, %r10
+# ifdef __CHKP__
+	jmp	LABEL(ashr_10_check)
+# else
 	jmp	LABEL(gobble_ashr_10)
+# endif
 
 	.p2align 4
 LABEL(ashr_10_exittail):
@@ -1632,6 +1794,15 @@ LABEL(ashr_11):
 	lea	11(%rdi), %r10
 	and	$0xfff, %r10	/* offset into 4K page */
 	sub	$0x1000, %r10	/* subtract 4K pagesize */
+# ifdef __CHKP__
+	bndcu	-16(%rdi, %rcx), %bnd0
+	bndcu	-16(%rsi, %rcx), %bnd1
+	jmp 	LABEL(loop_ashr_11)
+LABEL(ashr_11_check):
+	bndcu	(%rdi, %rcx), %bnd0
+	bndcu	(%rsi, %rcx), %bnd1
+	jmp	LABEL(gobble_ashr_11)
+# endif
 
 	.p2align 4
 LABEL(loop_ashr_11):
@@ -1713,7 +1884,11 @@ LABEL(nibble_ashr_11):
 
 	pxor	%xmm0, %xmm0
 	sub	$0x1000, %r10
+# ifdef __CHKP__
+	jmp	LABEL(ashr_11_check)
+# else
 	jmp	LABEL(gobble_ashr_11)
+# endif
 
 	.p2align 4
 LABEL(ashr_11_exittail):
@@ -1757,6 +1932,15 @@ LABEL(ashr_12):
 	lea	12(%rdi), %r10
 	and	$0xfff, %r10	/* offset into 4K page */
 	sub	$0x1000, %r10	/* subtract 4K pagesize */
+# ifdef __CHKP__
+	bndcu	-16(%rdi, %rcx), %bnd0
+	bndcu	-16(%rsi, %rcx), %bnd1
+	jmp 	LABEL(loop_ashr_12)
+LABEL(ashr_12_check):
+	bndcu	(%rdi, %rcx), %bnd0
+	bndcu	(%rsi, %rcx), %bnd1
+	jmp	LABEL(gobble_ashr_12)
+# endif
 
 	.p2align 4
 LABEL(loop_ashr_12):
@@ -1838,7 +2022,11 @@ LABEL(nibble_ashr_12):
 
 	pxor	%xmm0, %xmm0
 	sub	$0x1000, %r10
+# ifdef __CHKP__
+	jmp	LABEL(ashr_12_check)
+# else
 	jmp	LABEL(gobble_ashr_12)
+# endif
 
 	.p2align 4
 LABEL(ashr_12_exittail):
@@ -1882,6 +2070,15 @@ LABEL(ashr_13):
 	lea	13(%rdi), %r10
 	and	$0xfff, %r10	/* offset into 4K page */
 	sub	$0x1000, %r10	/* subtract 4K pagesize */
+# ifdef __CHKP__
+	bndcu	-16(%rdi, %rcx), %bnd0
+	bndcu	-16(%rsi, %rcx), %bnd1
+	jmp 	LABEL(loop_ashr_13)
+LABEL(ashr_13_check):
+	bndcu	(%rdi, %rcx), %bnd0
+	bndcu	(%rsi, %rcx), %bnd1
+	jmp	LABEL(gobble_ashr_13)
+# endif
 
 	.p2align 4
 LABEL(loop_ashr_13):
@@ -1963,7 +2160,11 @@ LABEL(nibble_ashr_13):
 
 	pxor	%xmm0, %xmm0
 	sub	$0x1000, %r10
+# ifdef __CHKP__
+	jmp	LABEL(ashr_13_check)
+# else
 	jmp	LABEL(gobble_ashr_13)
+# endif
 
 	.p2align 4
 LABEL(ashr_13_exittail):
@@ -2007,6 +2208,15 @@ LABEL(ashr_14):
 	lea	14(%rdi), %r10
 	and	$0xfff, %r10	/* offset into 4K page */
 	sub	$0x1000, %r10	/* subtract 4K pagesize */
+# ifdef __CHKP__
+	bndcu	-16(%rdi, %rcx), %bnd0
+	bndcu	-16(%rsi, %rcx), %bnd1
+	jmp 	LABEL(loop_ashr_14)
+LABEL(ashr_14_check):
+	bndcu	(%rdi, %rcx), %bnd0
+	bndcu	(%rsi, %rcx), %bnd1
+	jmp	LABEL(gobble_ashr_14)
+# endif
 
 	.p2align 4
 LABEL(loop_ashr_14):
@@ -2088,7 +2298,11 @@ LABEL(nibble_ashr_14):
 
 	pxor	%xmm0, %xmm0
 	sub	$0x1000, %r10
+# ifdef __CHKP__
+	jmp	LABEL(ashr_14_check)
+# else
 	jmp	LABEL(gobble_ashr_14)
+# endif
 
 	.p2align 4
 LABEL(ashr_14_exittail):
@@ -2134,6 +2348,15 @@ LABEL(ashr_15):
 	and	$0xfff, %r10	/* offset into 4K page */
 
 	sub	$0x1000, %r10	/* subtract 4K pagesize */
+# ifdef __CHKP__
+	bndcu	-16(%rdi, %rcx), %bnd0
+	bndcu	-16(%rsi, %rcx), %bnd1
+	jmp 	LABEL(loop_ashr_15)
+LABEL(ashr_15_check):
+	bndcu	(%rdi, %rcx), %bnd0
+	bndcu	(%rsi, %rcx), %bnd1
+	jmp	LABEL(gobble_ashr_15)
+# endif
 
 	.p2align 4
 LABEL(loop_ashr_15):
@@ -2215,7 +2438,11 @@ LABEL(nibble_ashr_15):
 
 	pxor	%xmm0, %xmm0
 	sub	$0x1000, %r10
+# ifdef __CHKP__
+	jmp	LABEL(ashr_15_check)
+# else
 	jmp	LABEL(gobble_ashr_15)
+# endif
 
 	.p2align 4
 LABEL(ashr_15_exittail):
@@ -2240,6 +2467,11 @@ LABEL(less32bytes):
 	test	%r8d, %r8d
 	jz	LABEL(ret)
 	xchg	%rsi, %rdi		/* recover original order according to flag(%r8d) */
+#ifdef __CHKP__
+	bndmov	%bnd0, %bnd2
+	bndmov	%bnd1, %bnd0
+	bndmov	%bnd2, %bnd1
+#endif
 
 	.p2align 4
 LABEL(ret):
@@ -2250,6 +2482,10 @@ LABEL(less16bytes):
 	sub	%rdx, %r11
 	jbe	LABEL(strcmp_exitz)
 # endif
+/*#ifdef __CHKP__
+	bndcu	(%rdi, %rdx), %bnd0
+	bndcu	(%rsi, %rdx), %bnd1
+#endif*/
 	movzbl	(%rsi, %rdx), %ecx
 	movzbl	(%rdi, %rdx), %eax
 

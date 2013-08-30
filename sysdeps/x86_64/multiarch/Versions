@@ -2,4 +2,17 @@ libc {
   GLIBC_PRIVATE {
     __get_cpu_features;
   }
+%ifdef __CHKP__
+  GLIBC_2.17 {
+   chkp_memcpy_nobnd;
+   chkp_memmove_nobnd;
+   chkp_mempcpy_nobnd;
+   chkp_memcpy_nobnd_nochk;
+   chkp_memmove_nobnd_nochk;
+   chkp_mempcpy_nobnd_nochk;
+   chkp_memcpy_nochk;
+   chkp_memmove_nochk;
+   chkp_mempcpy_nochk;
+  }
+%endif
 }

@@ -27,6 +27,11 @@ ENTRY (memrchr)
 	sub	$16, %rdx
 	jbe	L(length_less16)
 
+#ifdef __CHKP__
+        bndcl  (%rdi), %bnd0
+        bndcu  -1(%rdi, %rdx), %bnd0
+#endif
+
 	punpcklbw	%xmm1, %xmm1
 	punpcklbw	%xmm1, %xmm1
 
@@ -284,6 +289,10 @@ L(length_less16_offset0):
 	test	%edx, %edx
 	jz	L(return_null)
 
+#ifdef __CHKP__
+        bndcl  (%rdi), %bnd0
+        bndcu  -1(%rdi, %rdx), %bnd0
+#endif
 	mov	%dl, %cl
 	pcmpeqb	(%rdi), %xmm1
 
@@ -314,6 +323,10 @@ L(length_less16):
 	and	$15, %rcx
 	jz	L(length_less16_offset0)
 
+#ifdef __CHKP__
+        bndcl  (%rdi), %bnd0
+        bndcu  -1(%rdi, %rdx), %bnd0
+#endif
 	mov	%rdi, %rcx
 	and	$15, %rcx
 	mov	%cl, %dh

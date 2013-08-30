@@ -97,6 +97,10 @@ __strrchr_sse42:
 	CALL_MCOUNT
 	testb	%sil, %sil
 	je	__strend_sse4
+# ifdef __CHKP__
+	bndcl  (%rdi), %bnd0
+	bndcu  (%rdi), %bnd0
+# endif
 	xor	%eax,%eax	/* RAX has the last occurrence of s.  */
 	movd	%esi, %xmm1
 	punpcklbw	%xmm1, %xmm1
@@ -135,6 +139,9 @@ L(unaligned_no_byte):
 	   contain the NULL terminator.  */
 	jg	L(exit)
 	addq	$16, %r8
+# ifdef __CHKP__
+	bndcu 	(%r8), %bnd0
+# endif
 
 /* Loop start on aligned string.  */
 	.p2align 4
@@ -142,6 +149,9 @@ L(loop):
 	pcmpistri	$0x4a, (%r8), %xmm1
 	jbe	L(match_or_eos)
 	addq	$16, %r8
+# ifdef __CHKP__
+	bndcu 	(%r8), %bnd0
+# endif
 	jmp	L(loop)
 	.p2align 4
 L(match_or_eos):
@@ -149,11 +159,17 @@ L(match_or_eos):
 L(match_no_eos):
 	leaq	(%r8,%rcx), %rax
 	addq	$16, %r8
+# ifdef __CHKP__
+	bndcu 	(%r8), %bnd0
+# endif
 	jmp     L(loop)
 	.p2align 4
 L(had_eos):
 	jnc     L(exit)
 	leaq	(%r8,%rcx), %rax
+# ifdef __CHKP__
+	bndcu  	(%rax), %bnd0
+# endif
 	.p2align 4
 L(exit):
 	ret

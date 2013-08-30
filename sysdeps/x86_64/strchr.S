@@ -22,6 +22,10 @@
 
 	.text
 ENTRY (strchr)
+#ifdef __CHKP__
+	bndcl	(%rdi), %bnd0
+	bndcu	(%rdi), %bnd0
+#endif
 	movd	%esi, %xmm1
 	movq	%rdi, %rcx
 	punpcklbw %xmm1, %xmm1
@@ -29,6 +33,9 @@ ENTRY (strchr)
 	pxor	%xmm2, %xmm2
 	punpcklbw %xmm1, %xmm1
 	orl	$0xffffffff, %esi
+#ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+#endif
 	movdqa	(%rdi), %xmm0
 	pshufd	$0, %xmm1, %xmm1
 	subq	%rdi, %rcx
@@ -44,7 +51,11 @@ ENTRY (strchr)
 	orl	%edx, %ecx
 	jnz	1f
 
-2:	movdqa	(%rdi), %xmm0
+2:
+#ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+#endif
+	movdqa	(%rdi), %xmm0
 	leaq	16(%rdi), %rdi
 	movdqa	%xmm0, %xmm3
 	pcmpeqb	%xmm1, %xmm0

@@ -18,6 +18,9 @@ endif
 ifeq ($(subdir),string)
 sysdep_routines += cacheinfo strcasecmp_l-nonascii strncase_l-nonascii
 gen-as-const-headers += locale-defines.sym
+ifeq ($(enable-mpx), yes)
+sysdep_routines += strcpy_chk-c stpcpy_chk-c
+endif
 endif
 
 ifeq ($(subdir),elf)

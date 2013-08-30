@@ -25,6 +25,14 @@
 #  define STRCAT  __strcat_sse2_unaligned
 # endif
 
+# ifdef __CHKP__
+#  define RETURN \
+	bndcu	-1(%rdi, %rax), %bnd0; \
+	ret
+# else
+#  define RETURN ret
+# endif
+
 # define USE_AS_STRCAT
 
 .text
@@ -37,6 +45,10 @@ ENTRY (STRCAT)
 /* Inline corresponding strlen file, temporary until new strcpy
    implementation gets merged.  */
 
+# ifdef __CHKP__
+	bndcl  (%rdi), %bnd0
+	bndcu	(%rdi), %bnd0
+# endif
 	xor	%rax, %rax
 	mov	%edi, %ecx
 	and	$0x3f, %ecx
@@ -67,84 +79,132 @@ L(align16_start):
 	pxor	%xmm1, %xmm1
 	pxor	%xmm2, %xmm2
 	pxor	%xmm3, %xmm3
+# ifdef __CHKP__
+	bndcu	16(%rax), %bnd0
+# endif
 	pcmpeqb	16(%rax), %xmm0
 	pmovmskb %xmm0, %edx
 	test	%edx, %edx
 	jnz	L(exit16)
 
+# ifdef __CHKP__
+	bndcu	32(%rax), %bnd0
+# endif
 	pcmpeqb	32(%rax), %xmm1
 	pmovmskb %xmm1, %edx
 	test	%edx, %edx
 	jnz	L(exit32)
 
+# ifdef __CHKP__
+	bndcu	48(%rax), %bnd0
+# endif
 	pcmpeqb	48(%rax), %xmm2
 	pmovmskb %xmm2, %edx
 	test	%edx, %edx
 	jnz	L(exit48)
 
+# ifdef __CHKP__
+	bndcu	64(%rax), %bnd0
+# endif
 	pcmpeqb	64(%rax), %xmm3
 	pmovmskb %xmm3, %edx
 	test	%edx, %edx
 	jnz	L(exit64)
 
+# ifdef __CHKP__
+	bndcu	80(%rax), %bnd0
+# endif
 	pcmpeqb	80(%rax), %xmm0
 	add	$64, %rax
 	pmovmskb %xmm0, %edx
 	test	%edx, %edx
 	jnz	L(exit16)
 
+# ifdef __CHKP__
+	bndcu	32(%rax), %bnd0
+# endif
 	pcmpeqb	32(%rax), %xmm1
 	pmovmskb %xmm1, %edx
 	test	%edx, %edx
 	jnz	L(exit32)
 
+# ifdef __CHKP__
+	bndcu	48(%rax), %bnd0
+# endif
 	pcmpeqb	48(%rax), %xmm2
 	pmovmskb %xmm2, %edx
 	test	%edx, %edx
 	jnz	L(exit48)
 
+# ifdef __CHKP__
+	bndcu	64(%rax), %bnd0
+# endif
 	pcmpeqb	64(%rax), %xmm3
 	pmovmskb %xmm3, %edx
 	test	%edx, %edx
 	jnz	L(exit64)
 
+# ifdef __CHKP__
+	bndcu	80(%rax), %bnd0
+# endif
 	pcmpeqb	80(%rax), %xmm0
 	add	$64, %rax
 	pmovmskb %xmm0, %edx
 	test	%edx, %edx
 	jnz	L(exit16)
 
+# ifdef __CHKP__
+	bndcu	32(%rax), %bnd0
+# endif
 	pcmpeqb	32(%rax), %xmm1
 	pmovmskb %xmm1, %edx
 	test	%edx, %edx
 	jnz	L(exit32)
 
+# ifdef __CHKP__
+	bndcu	48(%rax), %bnd0
+# endif
 	pcmpeqb	48(%rax), %xmm2
 	pmovmskb %xmm2, %edx
 	test	%edx, %edx
 	jnz	L(exit48)
 
+# ifdef __CHKP__
+	bndcu	64(%rax), %bnd0
+# endif
 	pcmpeqb	64(%rax), %xmm3
 	pmovmskb %xmm3, %edx
 	test	%edx, %edx
 	jnz	L(exit64)
 
+# ifdef __CHKP__
+	bndcu	80(%rax), %bnd0
+# endif
 	pcmpeqb	80(%rax), %xmm0
 	add	$64, %rax
 	pmovmskb %xmm0, %edx
 	test	%edx, %edx
 	jnz	L(exit16)
 
+# ifdef __CHKP__
+	bndcu	32(%rax), %bnd0
+# endif
 	pcmpeqb	32(%rax), %xmm1
 	pmovmskb %xmm1, %edx
 	test	%edx, %edx
 	jnz	L(exit32)
 
+# ifdef __CHKP__
+	bndcu	48(%rax), %bnd0
+# endif
 	pcmpeqb	48(%rax), %xmm2
 	pmovmskb %xmm2, %edx
 	test	%edx, %edx
 	jnz	L(exit48)
 
+# ifdef __CHKP__
+	bndcu	64(%rax), %bnd0
+# endif
 	pcmpeqb	64(%rax), %xmm3
 	pmovmskb %xmm3, %edx
 	test	%edx, %edx
@@ -153,6 +213,9 @@ L(align16_start):
 	test	$0x3f, %rax
 	jz	L(align64_loop)
 
+# ifdef __CHKP__
+	bndcu	80(%rax), %bnd0
+# endif
 	pcmpeqb	80(%rax), %xmm0
 	add	$80, %rax
 	pmovmskb %xmm0, %edx
@@ -162,6 +225,9 @@ L(align16_start):
 	test	$0x3f, %rax
 	jz	L(align64_loop)
 
+# ifdef __CHKP__
+	bndcu	16(%rax), %bnd0
+# endif
 	pcmpeqb	16(%rax), %xmm1
 	add	$16, %rax
 	pmovmskb %xmm1, %edx
@@ -171,6 +237,9 @@ L(align16_start):
 	test	$0x3f, %rax
 	jz	L(align64_loop)
 
+# ifdef __CHKP__
+	bndcu	16(%rax), %bnd0
+# endif
 	pcmpeqb	16(%rax), %xmm2
 	add	$16, %rax
 	pmovmskb %xmm2, %edx
@@ -180,6 +249,9 @@ L(align16_start):
 	test	$0x3f, %rax
 	jz	L(align64_loop)
 
+# ifdef __CHKP__
+	bndcu	16(%rax), %bnd0
+# endif
 	pcmpeqb	16(%rax), %xmm3
 	add	$16, %rax
 	pmovmskb %xmm3, %edx
@@ -187,8 +259,12 @@ L(align16_start):
 	jnz	L(exit)
 
 	add	$16, %rax
+
 	.p2align 4
 	L(align64_loop):
+# ifdef __CHKP__
+	bndcu	(%rax), %bnd0
+# endif
 	movaps	(%rax),	%xmm4
 	pminub	16(%rax),	%xmm4
 	movaps	32(%rax),	%xmm5

@@ -28,6 +28,14 @@ ENTRY (wcscmp)
 */
 	mov	%esi, %eax
 	mov	%edi, %edx
+
+#ifdef __CHKP__
+	bndcl  	(%rdi), %bnd0
+	bndcu  	(%rdi), %bnd0
+	bndcl  	(%rsi), %bnd1
+	bndcu  	(%rsi), %bnd1
+#endif
+
 	pxor	%xmm0, %xmm0		/* clear %xmm0 for null char checks */
 	mov	%al, %ch
 	mov	%dl, %cl

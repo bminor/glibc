@@ -1,6 +1,6 @@
-/* Multiple versions of __memmove_chk.
-   All versions must be listed in ifunc-impl-list.c.
-   Copyright (C) 2010-2013 Free Software Foundation, Inc.
+/* C-version of mempcpy for using when Intel MPX is enabled
+   in order to process with an array of pointers correctly.
+   Copyright (C) 2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,21 +17,20 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef __CHKP__
-# include <string.h>
-# include "init-arch.h"
+#include <stddef.h>
 
-# define MEMMOVE_CHK __memmove_chk_sse2
+void *
+mempcpy (void *dst, const void *src, size_t n)
+{
+  return memcpy(dst, src, n) + n;
+}
 
-extern __typeof (__memmove_chk) __memmove_chk_sse2 attribute_hidden;
-extern __typeof (__memmove_chk) __memmove_chk_ssse3 attribute_hidden;
-extern __typeof (__memmove_chk) __memmove_chk_ssse3_back attribute_hidden;
+void *
+chkp_mempcpy_nochk (void *dst, const void *src, size_t n)
+{
+  return chkp_memcpy_nochk(dst, src, n) + n;
+}
 
-# include "debug/memmove_chk.c"
-
-libc_ifunc (__memmove_chk,
-	    HAS_SSSE3
-	    ? (HAS_FAST_COPY_BACKWARD
-	       ? __memmove_chk_ssse3_back : __memmove_chk_ssse3)
-	    : __memmove_chk_sse2);
-#endif
+weak_alias (mempcpy, __GI_mempcpy)
+weak_alias (mempcpy, __GI___mempcpy)
+weak_alias (mempcpy, __mempcpy)

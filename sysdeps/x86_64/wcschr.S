@@ -22,6 +22,11 @@
 	.text
 ENTRY (wcschr)
 
+#ifdef __CHKP__
+	bndcl  	(%rdi), %bnd0
+	bndcu  	(%rdi), %bnd0
+#endif
+
 	movd	%rsi, %xmm1
 	pxor	%xmm2, %xmm2
 	mov	%rdi, %rcx
@@ -43,6 +48,9 @@ ENTRY (wcschr)
 
 	and	$-16, %rdi
 
+#ifdef __CHKP__
+	bndcu  	(%rdi), %bnd0
+#endif
 	movdqa	(%rdi), %xmm0
 	pcmpeqd	%xmm0, %xmm2
 	add	$16, %rdi
@@ -78,6 +86,9 @@ L(cross_cache):
 L(unaligned_match):
 	add	%rdi, %rax
 	add	%rcx, %rax
+#ifdef __CHKP__
+	bndcu  	(%rax), %bnd0
+#endif
 	ret
 
 	.p2align 4
@@ -91,6 +102,9 @@ L(unaligned_no_match):
 	.p2align 4
 /* Loop start on aligned string.  */
 L(loop):
+#ifdef __CHKP__
+	bndcu  	(%rdi), %bnd0
+#endif
 	movdqa	(%rdi), %xmm0
 	pcmpeqd	%xmm0, %xmm2
 	add	$16, %rdi
@@ -100,6 +114,9 @@ L(loop):
 	or	%rax, %rdx
 	jnz	L(matches)
 
+#ifdef __CHKP__
+	bndcu  	(%rdi), %bnd0
+#endif
 	movdqa	(%rdi), %xmm0
 	pcmpeqd	%xmm0, %xmm2
 	add	$16, %rdi
@@ -109,6 +126,9 @@ L(loop):
 	or	%rax, %rdx
 	jnz	L(matches)
 
+#ifdef __CHKP__
+	bndcu  	(%rdi), %bnd0
+#endif
 	movdqa	(%rdi), %xmm0
 	pcmpeqd	%xmm0, %xmm2
 	add	$16, %rdi
@@ -118,6 +138,9 @@ L(loop):
 	or	%rax, %rdx
 	jnz	L(matches)
 
+#ifdef __CHKP__
+	bndcu  	(%rdi), %bnd0
+#endif
 	movdqa	(%rdi), %xmm0
 	pcmpeqd	%xmm0, %xmm2
 	add	$16, %rdi
@@ -142,6 +165,9 @@ L(matches):
 L(match):
 	sub	$16, %rdi
 	add	%rdi, %rax
+#ifdef __CHKP__
+	bndcu  	(%rax), %bnd0
+#endif
 	ret
 
 	.p2align 4

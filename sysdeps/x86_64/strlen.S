@@ -63,6 +63,10 @@ L(n_nonzero):
 	mov	%rsi, %r11
 #endif
 
+#ifdef __CHKP__
+	bndcl	(%rdi), %bnd0
+	bndcu	(%rdi), %bnd0
+#endif
 	pxor	%xmm8, %xmm8
 	pxor	%xmm9, %xmm9
 	pxor	%xmm10, %xmm10
@@ -157,6 +161,9 @@ L(loop_init):
 L(loop):
 
 	addq	$64, %rax
+# ifdef __CHKP__
+	bndcu	(%rax), %bnd0
+# endif
 	cmpq	%rax, %r10
 	je	L(exit_end)
 
@@ -182,6 +189,9 @@ L(first):
 	bsfq	%rdx, %rdx
 	addq	%rdx, %rax
 	subq	%rdi, %rax
+# ifdef __CHKP__
+	bndcu	-1(%rdi, %rax), %bnd0
+# endif
 	ret
 
 	.p2align 4
@@ -192,6 +202,9 @@ L(exit):
 	bsfq	%rdx, %rdx
 	addq	%rdx, %rax
 	subq	%rdi, %rax
+# ifdef __CHKP__
+	bndcu	-1(%rdi, %rax), %bnd0
+# endif
 	ret
 
 #else
@@ -199,6 +212,9 @@ L(exit):
 	/* Main loop.  Unrolled twice to improve L2 cache performance on core2.  */
 	.p2align 4
 L(loop):
+# ifdef __CHKP__
+	bndcu	64(%rax), %bnd0
+# endif
 
 	movdqa	64(%rax), %xmm8
 	pminub	80(%rax), %xmm8
@@ -231,6 +247,9 @@ L(exit0):
 	bsfq	%rdx, %rdx
 	addq	%rdx, %rax
 	subq	%rdi, %rax
+# ifdef __CHKP__
+	bndcu	-1(%rdi, %rax), %bnd0
+# endif
 	ret
 
 #endif

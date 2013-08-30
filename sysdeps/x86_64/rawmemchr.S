@@ -20,10 +20,22 @@
 
 #include <sysdep.h>
 
+#ifdef __CHKP__
+# define RETURN \
+        bndcu  (%rax), %bnd0; \
+        ret
+#else
+# define RETURN ret
+#endif
+
 	.text
 ENTRY (rawmemchr)
 	movd	%rsi, %xmm1
 	mov	%rdi, %rcx
+
+#ifdef __CHKP__
+	bndcl  (%rdi), %bnd0
+#endif
 
 	punpcklbw %xmm1, %xmm1
 	punpcklbw %xmm1, %xmm1
@@ -63,7 +75,7 @@ L(crosscache):
 
 	add	%rdi, %rax
 	add	%rcx, %rax
-	ret
+	RETURN
 
 	.p2align 4
 L(unaligned_no_match):
@@ -71,24 +83,36 @@ L(unaligned_no_match):
 
 	.p2align 4
 L(loop_prolog):
+#ifdef __CHKP__
+	bndcu 	(%rdi), %bnd0
+#endif
 	movdqa	(%rdi), %xmm0
 	pcmpeqb	%xmm1, %xmm0
 	pmovmskb %xmm0, %eax
 	test	%eax, %eax
 	jnz	L(matches)
 
+#ifdef __CHKP__
+	bndcu 	16(%rdi), %bnd0
+#endif
 	movdqa	16(%rdi), %xmm2
 	pcmpeqb	%xmm1, %xmm2
 	pmovmskb %xmm2, %eax
 	test	%eax, %eax
 	jnz	L(matches16)
 
+#ifdef __CHKP__
+	bndcu 	32(%rdi), %bnd0
+#endif
 	movdqa	32(%rdi), %xmm3
 	pcmpeqb	%xmm1, %xmm3
 	pmovmskb %xmm3, %eax
 	test	%eax, %eax
 	jnz	L(matches32)
 
+#ifdef __CHKP__
+	bndcu 	48(%rdi), %bnd0
+#endif
 	movdqa	48(%rdi), %xmm4
 	pcmpeqb	%xmm1, %xmm4
 	add	$64, %rdi
@@ -99,24 +123,36 @@ L(loop_prolog):
 	test	$0x3f, %rdi
 	jz	L(align64_loop)
 
+#ifdef __CHKP__
+	bndcu 	(%rdi), %bnd0
+#endif
 	movdqa	(%rdi), %xmm0
 	pcmpeqb	%xmm1, %xmm0
 	pmovmskb %xmm0, %eax
 	test	%eax, %eax
 	jnz	L(matches)
 
+#ifdef __CHKP__
+	bndcu 	16(%rdi), %bnd0
+#endif
 	movdqa	16(%rdi), %xmm2
 	pcmpeqb	%xmm1, %xmm2
 	pmovmskb %xmm2, %eax
 	test	%eax, %eax
 	jnz	L(matches16)
 
+#ifdef __CHKP__
+	bndcu 	32(%rdi), %bnd0
+#endif
 	movdqa	32(%rdi), %xmm3
 	pcmpeqb	%xmm1, %xmm3
 	pmovmskb %xmm3, %eax
 	test	%eax, %eax
 	jnz	L(matches32)
 
+#ifdef __CHKP__
+	bndcu 	48(%rdi), %bnd0
+#endif
 	movdqa	48(%rdi), %xmm3
 	pcmpeqb	%xmm1, %xmm3
 	pmovmskb %xmm3, %eax
@@ -129,6 +165,9 @@ L(loop_prolog):
 
 	.p2align 4
 L(align64_loop):
+#ifdef __CHKP__
+	bndcu 	(%rdi), %bnd0
+#endif
 	movdqa	(%rdi), %xmm0
 	movdqa	16(%rdi), %xmm2
 	movdqa	32(%rdi), %xmm3
@@ -170,36 +209,36 @@ L(align64_loop):
 	pmovmskb %xmm1, %eax
 	bsf	%eax, %eax
 	lea	48(%rdi, %rax), %rax
-	ret
+	RETURN
 
 	.p2align 4
 L(matches0):
 	bsf	%eax, %eax
 	lea	-16(%rax, %rdi), %rax
-	ret
+	RETURN
 
 	.p2align 4
 L(matches):
 	bsf	%eax, %eax
 	add	%rdi, %rax
-	ret
+	RETURN
 
 	.p2align 4
 L(matches16):
 	bsf	%eax, %eax
 	lea	16(%rax, %rdi), %rax
-	ret
+	RETURN
 
 	.p2align 4
 L(matches32):
 	bsf	%eax, %eax
 	lea	32(%rax, %rdi), %rax
-	ret
+	RETURN
 
 	.p2align 4
 L(return_null):
 	xor	%rax, %rax
-	ret
+	RETURN
 
 END (rawmemchr)
 

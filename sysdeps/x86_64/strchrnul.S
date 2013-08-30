@@ -23,6 +23,10 @@
 
 	.text
 ENTRY (__strchrnul)
+#ifdef __CHKP__
+	bndcl 	(%rdi), %bnd0
+	bndcu 	(%rdi), %bnd0
+#endif
 	movd	%esi, %xmm1
 	movq	%rdi, %rcx
 	punpcklbw %xmm1, %xmm1
@@ -44,7 +48,11 @@ ENTRY (__strchrnul)
 	andl	%esi, %ecx
 	jnz	1f
 
-2:	movdqa	(%rdi), %xmm0
+2:
+#ifdef __CHKP__
+	bndcu 	(%rdi), %bnd0
+#endif
+	movdqa	(%rdi), %xmm0
 	leaq	16(%rdi), %rdi
 	movdqa	%xmm0, %xmm3
 	pcmpeqb	%xmm1, %xmm0
@@ -56,6 +64,9 @@ ENTRY (__strchrnul)
 
 1:	bsfl	%ecx, %edx
 	leaq	-16(%rdi,%rdx), %rax
+#ifdef __CHKP__
+	bndcu 	(%rax), %bnd0
+#endif
 	ret
 END (__strchrnul)
 

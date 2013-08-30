@@ -2,6 +2,13 @@ libc {
   GLIBC_2.14 {
     memcpy;
   }
+%ifdef __CHKP__
+  GLIBC_2.17 {
+    chkp_memset_nobnd;
+    chkp_memset_nochk;
+    chkp_memset_nobnd_nochk;
+  }
+%endif
 }
 libm {
   GLIBC_2.1 {

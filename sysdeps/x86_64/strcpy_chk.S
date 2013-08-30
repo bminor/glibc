@@ -18,6 +18,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#if !defined  __CHKP__ && !defined __CHKWR__
 #include <sysdep.h>
 #include "asm-syntax.h"
 
@@ -206,3 +207,4 @@ ENTRY (STRCPY_CHK)
 	jmp	HIDDEN_JUMPTARGET (__chk_fail)
 
 END (STRCPY_CHK)
+#endif

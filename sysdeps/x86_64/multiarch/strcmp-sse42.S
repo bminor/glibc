@@ -127,6 +127,14 @@ STRCMP_SSE42:
 	je	LABEL(Byte0)
 	mov	%rdx, %r11
 #endif
+
+#ifdef __CHKP__
+	bndcl 	(%rdi), %bnd0
+	bndcu 	(%rdi), %bnd0
+	bndcl 	(%rsi), %bnd1
+	bndcu 	(%rsi), %bnd1
+#endif
+
 	mov	%esi, %ecx
 	mov	%edi, %eax
 /* Use 64bit AND here to avoid long NOP padding.  */
@@ -210,6 +218,10 @@ LABEL(touppermask):
 #endif
 	add	$16, %rsi		/* prepare to search next 16 bytes */
 	add	$16, %rdi		/* prepare to search next 16 bytes */
+#ifdef __CHKP__
+	bndcu 	(%rdi), %bnd0
+	bndcu 	(%rsi), %bnd1
+#endif
 
 	/*
 	 * Determine source and destination string offsets from 16-byte
@@ -231,6 +243,11 @@ LABEL(crosscache):
 	mov	%edx, %r8d		/* r8d is offset flag for exit tail */
 	xchg	%ecx, %eax
 	xchg	%rsi, %rdi
+#ifdef __CHKP__
+	bndmov	%bnd0, %bnd2
+	bndmov	%bnd1, %bnd0
+	bndmov	%bnd2, %bnd1
+#endif
 LABEL(bigger):
 	movdqa	(%rdi), %xmm2
 	movdqa	(%rsi), %xmm1
@@ -280,6 +297,10 @@ LABEL(ashr_0):
 	mov	%rcx, %rdx	/* only for offset of sse4 instruction loop*/
 	.p2align 4
 LABEL(ashr_0_use):
+#ifdef __CHKP__
+	bndcu	-1(%rdi, %rdx), %bnd0
+	bndcu	-1(%rsi, %rdx), %bnd1
+#endif
 	movdqa	(%rdi,%rdx), %xmm0
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri      $0x1a,(%rsi,%rdx), %xmm0
@@ -295,6 +316,10 @@ LABEL(ashr_0_use):
 	jbe	LABEL(strcmp_exitz)
 #endif
 
+#ifdef __CHKP__
+	bndcu	-1(%rdi, %rdx), %bnd0
+	bndcu	-1(%rsi, %rdx), %bnd1
+#endif
 	movdqa	(%rdi,%rdx), %xmm0
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
 	pcmpistri      $0x1a,(%rsi,%rdx), %xmm0
@@ -320,6 +345,10 @@ LABEL(ashr_0_exit_use):
 	jbe	LABEL(strcmp_exitz)
 #endif
 	lea	-16(%rdx, %rcx), %rcx
+#ifdef __CHKP__
+	bndcu	-1(%rdi, %rcx), %bnd0
+	bndcu	-1(%rsi, %rcx), %bnd1
+#endif
 	movzbl	(%rdi, %rcx), %eax
 	movzbl	(%rsi, %rcx), %edx
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
@@ -362,6 +391,15 @@ LABEL(ashr_1):
 	and	$0xfff, %r10		/* offset into 4K page */
 	sub	$0x1000, %r10		/* subtract 4K pagesize */
 	mov	%rcx, %rdx	/* only for offset of sse4 instruction loop*/
+#ifdef __CHKP__
+	bndcu	-16(%rdi, %rdx), %bnd0
+	bndcu	-16(%rsi, %rdx), %bnd1
+	jmp	LABEL(loop_ashr_1_use)
+LABEL(ashr_1_check):
+	bndcu	(%rdi, %rdx), %bnd0
+	bndcu	(%rsi, %rdx), %bnd1
+	jmp	LABEL(nibble_ashr_1_restart_use)
+#endif
 
 	.p2align 4
 LABEL(loop_ashr_1_use):
@@ -416,7 +454,11 @@ LABEL(nibble_ashr_1_use):
 	jae	LABEL(nibble_ashr_exit_use)
 #endif
 	cmp	$14, %ecx
+#ifdef __CHKP__
+	ja	LABEL(ashr_1_check)
+#else
 	ja	LABEL(nibble_ashr_1_restart_use)
+#endif
 
 	jmp	LABEL(nibble_ashr_exit_use)
 
@@ -450,6 +492,15 @@ LABEL(ashr_2):
 	and	$0xfff, %r10	/* offset into 4K page */
 	sub	$0x1000, %r10	/* subtract 4K pagesize */
 	mov	%rcx, %rdx	/* only for offset of sse4 instruction loop*/
+#ifdef __CHKP__
+	bndcu	-16(%rdi, %rdx), %bnd0
+	bndcu	-16(%rsi, %rdx), %bnd1
+	jmp	LABEL(loop_ashr_2_use)
+LABEL(ashr_2_check):
+	bndcu	(%rdi, %rdx), %bnd0
+	bndcu	(%rsi, %rdx), %bnd1
+	jmp	LABEL(nibble_ashr_2_restart_use)
+#endif
 
 	.p2align 4
 LABEL(loop_ashr_2_use):
@@ -504,7 +555,11 @@ LABEL(nibble_ashr_2_use):
 	jae	LABEL(nibble_ashr_exit_use)
 #endif
 	cmp	$13, %ecx
+#ifdef __CHKP__
+	ja	LABEL(ashr_2_check)
+#else
 	ja	LABEL(nibble_ashr_2_restart_use)
+#endif
 
 	jmp	LABEL(nibble_ashr_exit_use)
 
@@ -539,6 +594,15 @@ LABEL(ashr_3):
 	and	$0xfff, %r10	/* offset into 4K page */
 	sub	$0x1000, %r10	/* subtract 4K pagesize */
 	mov	%rcx, %rdx	/* only for offset of sse4 instruction loop*/
+#ifdef __CHKP__
+	bndcu	-16(%rdi, %rdx), %bnd0
+	bndcu	-16(%rsi, %rdx), %bnd1
+	jmp	LABEL(loop_ashr_3_use)
+LABEL(ashr_3_check):
+	bndcu	(%rdi, %rdx), %bnd0
+	bndcu	(%rsi, %rdx), %bnd1
+	jmp	LABEL(nibble_ashr_3_restart_use)
+#endif
 
 LABEL(loop_ashr_3_use):
 	add	$16, %r10
@@ -592,7 +656,11 @@ LABEL(nibble_ashr_3_use):
 	jae	LABEL(nibble_ashr_exit_use)
 #endif
 	cmp	$12, %ecx
+#ifdef __CHKP__
+	ja	LABEL(ashr_3_check)
+#else
 	ja	LABEL(nibble_ashr_3_restart_use)
+#endif
 
 	jmp	LABEL(nibble_ashr_exit_use)
 
@@ -627,6 +695,15 @@ LABEL(ashr_4):
 	and	$0xfff, %r10	/* offset into 4K page */
 	sub	$0x1000, %r10	/* subtract 4K pagesize */
 	mov	%rcx, %rdx	/* only for offset of sse4 instruction loop*/
+#ifdef __CHKP__
+	bndcu	-16(%rdi, %rdx), %bnd0
+	bndcu	-16(%rsi, %rdx), %bnd1
+	jmp	LABEL(loop_ashr_4_use)
+LABEL(ashr_4_check):
+	bndcu	(%rdi, %rdx), %bnd0
+	bndcu	(%rsi, %rdx), %bnd1
+	jmp	LABEL(nibble_ashr_4_restart_use)
+#endif
 
 	.p2align 4
 LABEL(loop_ashr_4_use):
@@ -681,7 +758,11 @@ LABEL(nibble_ashr_4_use):
 	jae	LABEL(nibble_ashr_exit_use)
 #endif
 	cmp	$11, %ecx
+#ifdef __CHKP__
+	ja	LABEL(ashr_4_check)
+#else
 	ja	LABEL(nibble_ashr_4_restart_use)
+#endif
 
 	jmp	LABEL(nibble_ashr_exit_use)
 
@@ -716,6 +797,15 @@ LABEL(ashr_5):
 	and	$0xfff, %r10	/* offset into 4K page */
 	sub	$0x1000, %r10	/* subtract 4K pagesize */
 	mov	%rcx, %rdx	/* only for offset of sse4 instruction loop*/
+#ifdef __CHKP__
+	bndcu	-16(%rdi, %rdx), %bnd0
+	bndcu	-16(%rsi, %rdx), %bnd1
+	jmp	LABEL(loop_ashr_5_use)
+LABEL(ashr_5_check):
+	bndcu	(%rdi, %rdx), %bnd0
+	bndcu	(%rsi, %rdx), %bnd1
+	jmp	LABEL(nibble_ashr_5_restart_use)
+#endif
 
 	.p2align 4
 LABEL(loop_ashr_5_use):
@@ -771,7 +861,11 @@ LABEL(nibble_ashr_5_use):
 	jae	LABEL(nibble_ashr_exit_use)
 #endif
 	cmp	$10, %ecx
+#ifdef __CHKP__
+	ja	LABEL(ashr_5_check)
+#else
 	ja	LABEL(nibble_ashr_5_restart_use)
+#endif
 
 	jmp	LABEL(nibble_ashr_exit_use)
 
@@ -806,6 +900,15 @@ LABEL(ashr_6):
 	and	$0xfff, %r10	/* offset into 4K page */
 	sub	$0x1000, %r10	/* subtract 4K pagesize */
 	mov	%rcx, %rdx	/* only for offset of sse4 instruction loop*/
+#ifdef __CHKP__
+	bndcu	-16(%rdi, %rdx), %bnd0
+	bndcu	-16(%rsi, %rdx), %bnd1
+	jmp	LABEL(loop_ashr_6_use)
+LABEL(ashr_6_check):
+	bndcu	(%rdi, %rdx), %bnd0
+	bndcu	(%rsi, %rdx), %bnd1
+	jmp	LABEL(nibble_ashr_6_restart_use)
+#endif
 
 	.p2align 4
 LABEL(loop_ashr_6_use):
@@ -860,7 +963,11 @@ LABEL(nibble_ashr_6_use):
 	jae	LABEL(nibble_ashr_exit_use)
 #endif
 	cmp	$9, %ecx
+#ifdef __CHKP__
+	ja	LABEL(ashr_6_check)
+#else
 	ja	LABEL(nibble_ashr_6_restart_use)
+#endif
 
 	jmp	LABEL(nibble_ashr_exit_use)
 
@@ -895,6 +1002,15 @@ LABEL(ashr_7):
 	and	$0xfff, %r10	/* offset into 4K page */
 	sub	$0x1000, %r10	/* subtract 4K pagesize */
 	mov	%rcx, %rdx	/* only for offset of sse4 instruction loop*/
+#ifdef __CHKP__
+	bndcu	-16(%rdi, %rdx), %bnd0
+	bndcu	-16(%rsi, %rdx), %bnd1
+	jmp	LABEL(loop_ashr_7_use)
+LABEL(ashr_7_check):
+	bndcu	(%rdi, %rdx), %bnd0
+	bndcu	(%rsi, %rdx), %bnd1
+	jmp	LABEL(nibble_ashr_7_restart_use)
+#endif
 
 	.p2align 4
 LABEL(loop_ashr_7_use):
@@ -949,7 +1065,11 @@ LABEL(nibble_ashr_7_use):
 	jae	LABEL(nibble_ashr_exit_use)
 #endif
 	cmp	$8, %ecx
+#ifdef __CHKP__
+	ja	LABEL(ashr_7_check)
+#else
 	ja	LABEL(nibble_ashr_7_restart_use)
+#endif
 
 	jmp	LABEL(nibble_ashr_exit_use)
 
@@ -984,6 +1104,15 @@ LABEL(ashr_8):
 	and	$0xfff, %r10	/* offset into 4K page */
 	sub	$0x1000, %r10	/* subtract 4K pagesize */
 	mov	%rcx, %rdx	/* only for offset of sse4 instruction loop*/
+#ifdef __CHKP__
+	bndcu	-16(%rdi, %rdx), %bnd0
+	bndcu	-16(%rsi, %rdx), %bnd1
+	jmp	LABEL(loop_ashr_8_use)
+LABEL(ashr_8_check):
+	bndcu	(%rdi, %rdx), %bnd0
+	bndcu	(%rsi, %rdx), %bnd1
+	jmp	LABEL(nibble_ashr_8_restart_use)
+#endif
 
 	.p2align 4
 LABEL(loop_ashr_8_use):
@@ -1038,7 +1167,11 @@ LABEL(nibble_ashr_8_use):
 	jae	LABEL(nibble_ashr_exit_use)
 #endif
 	cmp	$7, %ecx
+#ifdef __CHKP__
+	ja	LABEL(ashr_8_check)
+#else
 	ja	LABEL(nibble_ashr_8_restart_use)
+#endif
 
 	jmp	LABEL(nibble_ashr_exit_use)
 
@@ -1073,6 +1206,15 @@ LABEL(ashr_9):
 	and	$0xfff, %r10	/* offset into 4K page */
 	sub	$0x1000, %r10	/* subtract 4K pagesize */
 	mov	%rcx, %rdx	/* only for offset of sse4 instruction loop*/
+#ifdef __CHKP__
+	bndcu	-16(%rdi, %rdx), %bnd0
+	bndcu	-16(%rsi, %rdx), %bnd1
+	jmp	LABEL(loop_ashr_9_use)
+LABEL(ashr_9_check):
+	bndcu	(%rdi, %rdx), %bnd0
+	bndcu	(%rsi, %rdx), %bnd1
+	jmp	LABEL(nibble_ashr_9_restart_use)
+#endif
 
 	.p2align 4
 LABEL(loop_ashr_9_use):
@@ -1128,7 +1270,11 @@ LABEL(nibble_ashr_9_use):
 	jae	LABEL(nibble_ashr_exit_use)
 #endif
 	cmp	$6, %ecx
+#ifdef __CHKP__
+	ja	LABEL(ashr_9_check)
+#else
 	ja	LABEL(nibble_ashr_9_restart_use)
+#endif
 
 	jmp	LABEL(nibble_ashr_exit_use)
 
@@ -1163,6 +1309,15 @@ LABEL(ashr_10):
 	and	$0xfff, %r10	/* offset into 4K page */
 	sub	$0x1000, %r10	/* subtract 4K pagesize */
 	mov	%rcx, %rdx	/* only for offset of sse4 instruction loop*/
+#ifdef __CHKP__
+	bndcu	-16(%rdi, %rdx), %bnd0
+	bndcu	-16(%rsi, %rdx), %bnd1
+	jmp	LABEL(loop_ashr_10_use)
+LABEL(ashr_10_check):
+	bndcu	(%rdi, %rdx), %bnd0
+	bndcu	(%rsi, %rdx), %bnd1
+	jmp	LABEL(nibble_ashr_10_restart_use)
+#endif
 
 	.p2align 4
 LABEL(loop_ashr_10_use):
@@ -1217,7 +1372,11 @@ LABEL(nibble_ashr_10_use):
 	jae	LABEL(nibble_ashr_exit_use)
 #endif
 	cmp	$5, %ecx
+#ifdef __CHKP__
+	ja	LABEL(ashr_10_check)
+#else
 	ja	LABEL(nibble_ashr_10_restart_use)
+#endif
 
 	jmp	LABEL(nibble_ashr_exit_use)
 
@@ -1252,6 +1411,15 @@ LABEL(ashr_11):
 	and	$0xfff, %r10	/* offset into 4K page */
 	sub	$0x1000, %r10	/* subtract 4K pagesize */
 	mov	%rcx, %rdx	/* only for offset of sse4 instruction loop*/
+#ifdef __CHKP__
+	bndcu	-16(%rdi, %rdx), %bnd0
+	bndcu	-16(%rsi, %rdx), %bnd1
+	jmp	LABEL(loop_ashr_11_use)
+LABEL(ashr_11_check):
+	bndcu	(%rdi, %rdx), %bnd0
+	bndcu	(%rsi, %rdx), %bnd1
+	jmp	LABEL(nibble_ashr_11_restart_use)
+#endif
 
 	.p2align 4
 LABEL(loop_ashr_11_use):
@@ -1306,7 +1474,11 @@ LABEL(nibble_ashr_11_use):
 	jae	LABEL(nibble_ashr_exit_use)
 #endif
 	cmp	$4, %ecx
+#ifdef __CHKP__
+	ja	LABEL(ashr_11_check)
+#else
 	ja	LABEL(nibble_ashr_11_restart_use)
+#endif
 
 	jmp	LABEL(nibble_ashr_exit_use)
 
@@ -1341,6 +1513,15 @@ LABEL(ashr_12):
 	and	$0xfff, %r10	/* offset into 4K page */
 	sub	$0x1000, %r10	/* subtract 4K pagesize */
 	mov	%rcx, %rdx	/* only for offset of sse4 instruction loop*/
+#ifdef __CHKP__
+	bndcu	-16(%rdi, %rdx), %bnd0
+	bndcu	-16(%rsi, %rdx), %bnd1
+	jmp	LABEL(loop_ashr_12_use)
+LABEL(ashr_12_check):
+	bndcu	(%rdi, %rdx), %bnd0
+	bndcu	(%rsi, %rdx), %bnd1
+	jmp	LABEL(nibble_ashr_12_restart_use)
+#endif
 
 	.p2align 4
 LABEL(loop_ashr_12_use):
@@ -1395,7 +1576,11 @@ LABEL(nibble_ashr_12_use):
 	jae	LABEL(nibble_ashr_exit_use)
 #endif
 	cmp	$3, %ecx
+#ifdef __CHKP__
+	ja	LABEL(ashr_12_check)
+#else
 	ja	LABEL(nibble_ashr_12_restart_use)
+#endif
 
 	jmp	LABEL(nibble_ashr_exit_use)
 
@@ -1431,6 +1616,15 @@ LABEL(ashr_13):
 	sub	$0x1000, %r10	/* subtract 4K pagesize */
 
 	mov	%rcx, %rdx	/* only for offset of sse4 instruction loop*/
+#ifdef __CHKP__
+	bndcu	-16(%rdi, %rdx), %bnd0
+	bndcu	-16(%rsi, %rdx), %bnd1
+	jmp	LABEL(loop_ashr_13_use)
+LABEL(ashr_13_check):
+	bndcu	(%rdi, %rdx), %bnd0
+	bndcu	(%rsi, %rdx), %bnd1
+	jmp	LABEL(nibble_ashr_13_restart_use)
+#endif
 
 	.p2align 4
 LABEL(loop_ashr_13_use):
@@ -1485,7 +1679,11 @@ LABEL(nibble_ashr_13_use):
 	jae	LABEL(nibble_ashr_exit_use)
 #endif
 	cmp	$2, %ecx
+#ifdef __CHKP__
+	ja	LABEL(ashr_13_check)
+#else
 	ja	LABEL(nibble_ashr_13_restart_use)
+#endif
 
 	jmp	LABEL(nibble_ashr_exit_use)
 
@@ -1521,6 +1719,15 @@ LABEL(ashr_14):
 	sub	$0x1000, %r10	/* subtract 4K pagesize */
 
 	mov	%rcx, %rdx	/* only for offset of sse4 instruction loop*/
+#ifdef __CHKP__
+	bndcu	-16(%rdi, %rdx), %bnd0
+	bndcu	-16(%rsi, %rdx), %bnd1
+	jmp	LABEL(loop_ashr_14_use)
+LABEL(ashr_14_check):
+	bndcu	(%rdi, %rdx), %bnd0
+	bndcu	(%rsi, %rdx), %bnd1
+	jmp	LABEL(nibble_ashr_14_restart_use)
+#endif
 
 	.p2align 4
 LABEL(loop_ashr_14_use):
@@ -1575,7 +1782,11 @@ LABEL(nibble_ashr_14_use):
 	jae	LABEL(nibble_ashr_exit_use)
 #endif
 	cmp	$1, %ecx
+#ifdef __CHKP__
+	ja	LABEL(ashr_14_check)
+#else
 	ja	LABEL(nibble_ashr_14_restart_use)
+#endif
 
 	jmp	LABEL(nibble_ashr_exit_use)
 
@@ -1613,6 +1824,15 @@ LABEL(ashr_15):
 	sub	$0x1000, %r10	/* subtract 4K pagesize */
 
 	mov	%rcx, %rdx	/* only for offset of sse4 instruction loop*/
+#ifdef __CHKP__
+	bndcu	-16(%rdi, %rdx), %bnd0
+	bndcu	-16(%rsi, %rdx), %bnd1
+	jmp	LABEL(loop_ashr_15_use)
+LABEL(ashr_15_check):
+	bndcu	(%rdi, %rdx), %bnd0
+	bndcu	(%rsi, %rdx), %bnd1
+	jmp	LABEL(nibble_ashr_15_restart_use)
+#endif
 
 	.p2align 4
 LABEL(loop_ashr_15_use):
@@ -1667,7 +1887,11 @@ LABEL(nibble_ashr_15_use):
 	jae	LABEL(nibble_ashr_exit_use)
 #endif
 	cmp	$0, %ecx
+#ifdef __CHKP__
+	ja	LABEL(ashr_15_check)
+#else
 	ja	LABEL(nibble_ashr_15_restart_use)
+#endif
 
 LABEL(nibble_ashr_exit_use):
 #if !defined USE_AS_STRCASECMP_L && !defined USE_AS_STRNCASECMP_L
@@ -1691,6 +1915,11 @@ LABEL(exit_use):
 	test	%r8d, %r8d
 	jz	LABEL(ret_use)
 	xchg	%eax, %edx
+#ifdef __CHKP__
+	bndmov	%bnd0, %bnd2
+	bndmov	%bnd1, %bnd0
+	bndmov	%bnd2, %bnd1
+#endif
 LABEL(ret_use):
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
 	leaq	_nl_C_LC_CTYPE_tolower+128*4(%rip), %rcx
@@ -1707,6 +1936,11 @@ LABEL(less32bytes):
 	test	%r8d, %r8d
 	jz	LABEL(ret)
 	xchg	%rsi, %rdi		/* recover original order according to flag(%r8d) */
+#ifdef __CHKP__
+	bndmov	%bnd0, %bnd2
+	bndmov	%bnd1, %bnd0
+	bndmov	%bnd2, %bnd1
+#endif
 
 	.p2align 4
 LABEL(ret):
@@ -1716,6 +1950,10 @@ LABEL(less16bytes):
 #if defined USE_AS_STRNCMP || defined USE_AS_STRNCASECMP_L
 	sub	%rdx, %r11
 	jbe	LABEL(strcmp_exitz)
+#endif
+#ifdef __CHKP__
+	bndcu	(%rdi, %rdx), %bnd0
+	bndcu	(%rsi, %rdx), %bnd1
 #endif
 	movzbl	(%rsi, %rdx), %ecx
 	movzbl	(%rdi, %rdx), %eax

@@ -33,7 +33,7 @@
 	lea	TABLE(%rip), %r11;                              \
 	movslq	(%r11, INDEX, SCALE), %rcx;                     \
 	lea	(%r11, %rcx), %rcx;                             \
-	jmp	*%rcx
+	jmp *%rcx
 
 # ifndef USE_AS_STRCAT
 
@@ -49,6 +49,16 @@ ENTRY (STRCPY)
 	mov	%rdi, %rax      /* save result */
 #  endif
 
+# endif
+
+# ifdef __CHKP__
+	bndcl	(%rdi), %bnd0
+	bndcu	(%rdi), %bnd0
+	bndcl	(%rsi), %bnd1
+	bndcu	(%rsi), %bnd1
+#  if defined USE_AS_STRNCPY && !defined USE_AS_STRCAT
+	bndcu	-1(%rdi, %rdx), %bnd0
+#  endif
 # endif
 
 	and	$63, %rcx
@@ -79,6 +89,9 @@ ENTRY (STRCPY)
 	test	%rdx, %rdx
 	jnz	L(CopyFrom1To16BytesTail)
 
+# ifdef __CHKP__
+	bndcu	16(%rsi), %bnd1
+# endif
 	pcmpeqb	16(%rsi), %xmm0
 	pmovmskb %xmm0, %rdx
 
@@ -91,6 +104,9 @@ ENTRY (STRCPY)
 	jnz	L(CopyFrom1To32Bytes)
 
 	movdqu	(%rsi, %rcx), %xmm1   /* copy 16 bytes */
+# ifdef __CHKP__
+	bndcu	15(%rdi), %bnd0
+# endif
 	movdqu	%xmm1, (%rdi)
 
 /* If source address alignment != destination address alignment */
@@ -101,6 +117,10 @@ L(Unalign16Both):
 	add	%rcx, %r8
 # endif
 	mov	$16, %rcx
+# ifdef __CHKP__
+	bndcu	16(%rsi, %rcx), %bnd1
+	bndcu	15(%rdi, %rcx), %bnd0
+# endif
 	movdqa	(%rsi, %rcx), %xmm1
 	movaps	16(%rsi, %rcx), %xmm2
 	movdqu	%xmm1, (%rdi, %rcx)
@@ -118,6 +138,10 @@ L(Unalign16Both):
 	jnz	L(CopyFrom1To16Bytes)
 # endif
 
+# ifdef __CHKP__
+	bndcu	16(%rsi, %rcx), %bnd1
+	bndcu	15(%rdi, %rcx), %bnd0
+# endif
 	movaps	16(%rsi, %rcx), %xmm3
 	movdqu	%xmm2, (%rdi, %rcx)
 	pcmpeqb	%xmm3, %xmm0
@@ -134,6 +158,10 @@ L(Unalign16Both):
 	jnz	L(CopyFrom1To16Bytes)
 # endif
 
+# ifdef __CHKP__
+	bndcu	16(%rsi, %rcx), %bnd1
+	bndcu	15(%rdi, %rcx), %bnd0
+# endif
 	movaps	16(%rsi, %rcx), %xmm4
 	movdqu	%xmm3, (%rdi, %rcx)
 	pcmpeqb	%xmm4, %xmm0
@@ -150,6 +178,10 @@ L(Unalign16Both):
 	jnz	L(CopyFrom1To16Bytes)
 # endif
 
+# ifdef __CHKP__
+	bndcu	16(%rsi, %rcx), %bnd1
+	bndcu	15(%rdi, %rcx), %bnd0
+# endif
 	movaps	16(%rsi, %rcx), %xmm1
 	movdqu	%xmm4, (%rdi, %rcx)
 	pcmpeqb	%xmm1, %xmm0
@@ -166,6 +198,10 @@ L(Unalign16Both):
 	jnz	L(CopyFrom1To16Bytes)
 # endif
 
+# ifdef __CHKP__
+	bndcu	16(%rsi, %rcx), %bnd1
+	bndcu	15(%rdi, %rcx), %bnd0
+# endif
 	movaps	16(%rsi, %rcx), %xmm2
 	movdqu	%xmm1, (%rdi, %rcx)
 	pcmpeqb	%xmm2, %xmm0
@@ -182,6 +218,10 @@ L(Unalign16Both):
 	jnz	L(CopyFrom1To16Bytes)
 # endif
 
+# ifdef __CHKP__
+	bndcu	16(%rsi, %rcx), %bnd1
+	bndcu	15(%rdi, %rcx), %bnd0
+# endif
 	movaps	16(%rsi, %rcx), %xmm3
 	movdqu	%xmm2, (%rdi, %rcx)
 	pcmpeqb	%xmm3, %xmm0
@@ -198,6 +238,10 @@ L(Unalign16Both):
 	jnz	L(CopyFrom1To16Bytes)
 # endif
 
+# ifdef __CHKP__
+	bndcu	16(%rsi, %rcx), %bnd1
+	bndcu	15(%rdi, %rcx), %bnd0
+# endif
 	movdqu	%xmm3, (%rdi, %rcx)
 	mov	%rsi, %rdx
 	lea	16(%rsi, %rcx), %rsi
@@ -208,6 +252,9 @@ L(Unalign16Both):
 	lea	128(%r8, %rdx), %r8
 # endif
 L(Unaligned64Loop):
+# ifdef __CHKP__
+	bndcu	48(%rsi), %bnd1
+# endif
 	movaps	(%rsi), %xmm2
 	movaps	%xmm2, %xmm4
 	movaps	16(%rsi), %xmm5
@@ -229,6 +276,10 @@ L(Unaligned64Loop):
 L(Unaligned64Loop_start):
 	add	$64, %rdi
 	add	$64, %rsi
+# ifdef __CHKP__
+	bndcu	(%rsi), %bnd1
+	bndcu	(%rdi), %bnd0
+# endif
 	movdqu	%xmm4, -64(%rdi)
 	movaps	(%rsi), %xmm2
 	movdqa	%xmm2, %xmm4
@@ -271,16 +322,28 @@ L(Unaligned64Leave):
 	jnz	L(CopyFrom1To16BytesUnaligned_32)
 
 	bsf	%rcx, %rdx
+# ifdef __CHKP__
+	bndcu	47(%rdi), %bnd0
+# endif
 	movdqu	%xmm4, (%rdi)
 	movdqu	%xmm5, 16(%rdi)
 	movdqu	%xmm6, 32(%rdi)
 # if defined USE_AS_STRNCPY && !defined USE_AS_STRCAT
 # ifdef USE_AS_STPCPY
+#  ifdef __CHKP__
+	bndcu	48(%rdi, %rdx), %bnd0
+#  endif
 	lea	48(%rdi, %rdx), %rax
 # endif
+#  ifdef __CHKP__
+	bndcu	63(%rdi), %bnd0
+#  endif
 	movdqu	%xmm7, 48(%rdi)
 	add	$15, %r8
 	sub	%rdx, %r8
+#  ifdef __CHKP__
+	bndcu	49(%rdi, %rdx), %bnd0
+#  endif
 	lea	49(%rdi, %rdx), %rdi
 	jmp	L(StrncpyFillTailWithZero)
 # else
@@ -309,6 +372,10 @@ L(SourceStringAlignmentLess32):
 	test	%rdx, %rdx
 	jnz	L(CopyFrom1To16BytesTail1)
 
+# ifdef __CHKP__
+	bndcu	16(%rsi), %bnd1
+	bndcu	15(%rdi), %bnd0
+# endif
 	pcmpeqb	%xmm2, %xmm0
 	movdqu	%xmm1, (%rdi)
 	pmovmskb %xmm0, %rdx
@@ -372,6 +439,9 @@ L(CopyFrom1To16BytesUnaligned_0):
 # ifdef USE_AS_STPCPY
 	lea	(%rdi, %rdx), %rax
 # endif
+#  ifdef __CHKP__
+	bndcu	15(%rdi), %bnd0
+#  endif
 	movdqu	%xmm4, (%rdi)
 	add	$63, %r8
 	sub	%rdx, %r8
@@ -384,6 +454,9 @@ L(CopyFrom1To16BytesUnaligned_0):
 	.p2align 4
 L(CopyFrom1To16BytesUnaligned_16):
 	bsf	%rcx, %rdx
+#  ifdef __CHKP__
+	bndcu	31(%rdi), %bnd0
+#  endif
 	movdqu	%xmm4, (%rdi)
 # if defined USE_AS_STRNCPY && !defined USE_AS_STRCAT
 # ifdef USE_AS_STPCPY
@@ -403,6 +476,9 @@ L(CopyFrom1To16BytesUnaligned_16):
 	.p2align 4
 L(CopyFrom1To16BytesUnaligned_32):
 	bsf	%rdx, %rdx
+#  ifdef __CHKP__
+	bndcu	47(%rdi), %bnd0
+#  endif
 	movdqu	%xmm4, (%rdi)
 	movdqu	%xmm5, 16(%rdi)
 # if defined USE_AS_STRNCPY && !defined USE_AS_STRCAT
@@ -529,6 +605,9 @@ L(CopyFrom1To16BytesTail1Case2OrCase3):
 
 	.p2align 4
 L(Exit1):
+# ifdef __CHKP__
+	bndcu	(%rdi), %bnd0
+# endif
 	mov	%dh, (%rdi)
 # ifdef USE_AS_STPCPY
 	lea	(%rdi), %rax
@@ -543,6 +622,9 @@ L(Exit1):
 	.p2align 4
 L(Exit2):
 	mov	(%rsi), %dx
+# ifdef __CHKP__
+	bndcu	1(%rdi), %bnd0
+# endif
 	mov	%dx, (%rdi)
 # ifdef USE_AS_STPCPY
 	lea	1(%rdi), %rax
@@ -557,6 +639,9 @@ L(Exit2):
 	.p2align 4
 L(Exit3):
 	mov	(%rsi), %cx
+# ifdef __CHKP__
+	bndcu	2(%rdi), %bnd0
+# endif
 	mov	%cx, (%rdi)
 	mov	%dh, 2(%rdi)
 # ifdef USE_AS_STPCPY
@@ -572,6 +657,9 @@ L(Exit3):
 	.p2align 4
 L(Exit4):
 	mov	(%rsi), %edx
+# ifdef __CHKP__
+	bndcu	3(%rdi), %bnd0
+# endif
 	mov	%edx, (%rdi)
 # ifdef USE_AS_STPCPY
 	lea	3(%rdi), %rax
@@ -586,6 +674,9 @@ L(Exit4):
 	.p2align 4
 L(Exit5):
 	mov	(%rsi), %ecx
+# ifdef __CHKP__
+	bndcu	4(%rdi), %bnd0
+# endif
 	mov	%dh, 4(%rdi)
 	mov	%ecx, (%rdi)
 # ifdef USE_AS_STPCPY
@@ -602,6 +693,9 @@ L(Exit5):
 L(Exit6):
 	mov	(%rsi), %ecx
 	mov	4(%rsi), %dx
+# ifdef __CHKP__
+	bndcu	5(%rdi), %bnd0
+# endif
 	mov	%ecx, (%rdi)
 	mov	%dx, 4(%rdi)
 # ifdef USE_AS_STPCPY
@@ -618,6 +712,9 @@ L(Exit6):
 L(Exit7):
 	mov	(%rsi), %ecx
 	mov	3(%rsi), %edx
+# ifdef __CHKP__
+	bndcu	6(%rdi), %bnd0
+# endif
 	mov	%ecx, (%rdi)
 	mov	%edx, 3(%rdi)
 # ifdef USE_AS_STPCPY
@@ -633,6 +730,9 @@ L(Exit7):
 	.p2align 4
 L(Exit8):
 	mov	(%rsi), %rdx
+# ifdef __CHKP__
+	bndcu	7(%rdi), %bnd0
+# endif
 	mov	%rdx, (%rdi)
 # ifdef USE_AS_STPCPY
 	lea	7(%rdi), %rax
@@ -647,6 +747,9 @@ L(Exit8):
 	.p2align 4
 L(Exit9):
 	mov	(%rsi), %rcx
+# ifdef __CHKP__
+	bndcu	8(%rdi), %bnd0
+# endif
 	mov	%dh, 8(%rdi)
 	mov	%rcx, (%rdi)
 # ifdef USE_AS_STPCPY
@@ -663,6 +766,9 @@ L(Exit9):
 L(Exit10):
 	mov	(%rsi), %rcx
 	mov	8(%rsi), %dx
+# ifdef __CHKP__
+	bndcu	9(%rdi), %bnd0
+# endif
 	mov	%rcx, (%rdi)
 	mov	%dx, 8(%rdi)
 # ifdef USE_AS_STPCPY
@@ -679,6 +785,9 @@ L(Exit10):
 L(Exit11):
 	mov	(%rsi), %rcx
 	mov	7(%rsi), %edx
+# ifdef __CHKP__
+	bndcu	10(%rdi), %bnd0
+# endif
 	mov	%rcx, (%rdi)
 	mov	%edx, 7(%rdi)
 # ifdef USE_AS_STPCPY
@@ -695,6 +804,9 @@ L(Exit11):
 L(Exit12):
 	mov	(%rsi), %rcx
 	mov	8(%rsi), %edx
+# ifdef __CHKP__
+	bndcu	11(%rdi), %bnd0
+# endif
 	mov	%rcx, (%rdi)
 	mov	%edx, 8(%rdi)
 # ifdef USE_AS_STPCPY
@@ -711,6 +823,9 @@ L(Exit12):
 L(Exit13):
 	mov	(%rsi), %rcx
 	mov	5(%rsi), %rdx
+# ifdef __CHKP__
+	bndcu	12(%rdi), %bnd0
+# endif
 	mov	%rcx, (%rdi)
 	mov	%rdx, 5(%rdi)
 # ifdef USE_AS_STPCPY
@@ -727,6 +842,9 @@ L(Exit13):
 L(Exit14):
 	mov	(%rsi), %rcx
 	mov	6(%rsi), %rdx
+# ifdef __CHKP__
+	bndcu	13(%rdi), %bnd0
+# endif
 	mov	%rcx, (%rdi)
 	mov	%rdx, 6(%rdi)
 # ifdef USE_AS_STPCPY
@@ -743,6 +861,9 @@ L(Exit14):
 L(Exit15):
 	mov	(%rsi), %rcx
 	mov	7(%rsi), %rdx
+# ifdef __CHKP__
+	bndcu	14(%rdi), %bnd0
+# endif
 	mov	%rcx, (%rdi)
 	mov	%rdx, 7(%rdi)
 # ifdef USE_AS_STPCPY
@@ -758,6 +879,9 @@ L(Exit15):
 	.p2align 4
 L(Exit16):
 	movdqu	(%rsi), %xmm0
+# ifdef __CHKP__
+	bndcu	15(%rdi), %bnd0
+# endif
 	movdqu	%xmm0, (%rdi)
 # ifdef USE_AS_STPCPY
 	lea	15(%rdi), %rax
@@ -772,6 +896,9 @@ L(Exit16):
 	.p2align 4
 L(Exit17):
 	movdqu	(%rsi), %xmm0
+# ifdef __CHKP__
+	bndcu	16(%rdi), %bnd0
+# endif
 	movdqu	%xmm0, (%rdi)
 	mov	%dh, 16(%rdi)
 # ifdef USE_AS_STPCPY
@@ -788,6 +915,9 @@ L(Exit17):
 L(Exit18):
 	movdqu	(%rsi), %xmm0
 	mov	16(%rsi), %cx
+# ifdef __CHKP__
+	bndcu	17(%rdi), %bnd0
+# endif
 	movdqu	%xmm0, (%rdi)
 	mov	%cx, 16(%rdi)
 # ifdef USE_AS_STPCPY
@@ -804,6 +934,9 @@ L(Exit18):
 L(Exit19):
 	movdqu	(%rsi), %xmm0
 	mov	15(%rsi), %ecx
+# ifdef __CHKP__
+	bndcu	18(%rdi), %bnd0
+# endif
 	movdqu	%xmm0, (%rdi)
 	mov	%ecx, 15(%rdi)
 # ifdef USE_AS_STPCPY
@@ -820,6 +953,9 @@ L(Exit19):
 L(Exit20):
 	movdqu	(%rsi), %xmm0
 	mov	16(%rsi), %ecx
+# ifdef __CHKP__
+	bndcu	19(%rdi), %bnd0
+# endif
 	movdqu	%xmm0, (%rdi)
 	mov	%ecx, 16(%rdi)
 # ifdef USE_AS_STPCPY
@@ -836,6 +972,9 @@ L(Exit20):
 L(Exit21):
 	movdqu	(%rsi), %xmm0
 	mov	16(%rsi), %ecx
+# ifdef __CHKP__
+	bndcu	20(%rdi), %bnd0
+# endif
 	movdqu	%xmm0, (%rdi)
 	mov	%ecx, 16(%rdi)
 	mov	%dh, 20(%rdi)
@@ -853,6 +992,9 @@ L(Exit21):
 L(Exit22):
 	movdqu	(%rsi), %xmm0
 	mov	14(%rsi), %rcx
+# ifdef __CHKP__
+	bndcu	21(%rdi), %bnd0
+# endif
 	movdqu	%xmm0, (%rdi)
 	mov	%rcx, 14(%rdi)
 # ifdef USE_AS_STPCPY
@@ -869,6 +1011,9 @@ L(Exit22):
 L(Exit23):
 	movdqu	(%rsi), %xmm0
 	mov	15(%rsi), %rcx
+# ifdef __CHKP__
+	bndcu	22(%rdi), %bnd0
+# endif
 	movdqu	%xmm0, (%rdi)
 	mov	%rcx, 15(%rdi)
 # ifdef USE_AS_STPCPY
@@ -885,6 +1030,9 @@ L(Exit23):
 L(Exit24):
 	movdqu	(%rsi), %xmm0
 	mov	16(%rsi), %rcx
+# ifdef __CHKP__
+	bndcu	23(%rdi), %bnd0
+# endif
 	movdqu	%xmm0, (%rdi)
 	mov	%rcx, 16(%rdi)
 # ifdef USE_AS_STPCPY
@@ -901,6 +1049,9 @@ L(Exit24):
 L(Exit25):
 	movdqu	(%rsi), %xmm0
 	mov	16(%rsi), %rcx
+# ifdef __CHKP__
+	bndcu	24(%rdi), %bnd0
+# endif
 	movdqu	%xmm0, (%rdi)
 	mov	%rcx, 16(%rdi)
 	mov	%dh, 24(%rdi)
@@ -919,6 +1070,9 @@ L(Exit26):
 	movdqu	(%rsi), %xmm0
 	mov	16(%rsi), %rdx
 	mov	24(%rsi), %cx
+# ifdef __CHKP__
+	bndcu	25(%rdi), %bnd0
+# endif
 	movdqu	%xmm0, (%rdi)
 	mov	%rdx, 16(%rdi)
 	mov	%cx, 24(%rdi)
@@ -937,6 +1091,9 @@ L(Exit27):
 	movdqu	(%rsi), %xmm0
 	mov	16(%rsi), %rdx
 	mov	23(%rsi), %ecx
+# ifdef __CHKP__
+	bndcu	26(%rdi), %bnd0
+# endif
 	movdqu	%xmm0, (%rdi)
 	mov	%rdx, 16(%rdi)
 	mov	%ecx, 23(%rdi)
@@ -955,6 +1112,9 @@ L(Exit28):
 	movdqu	(%rsi), %xmm0
 	mov	16(%rsi), %rdx
 	mov	24(%rsi), %ecx
+# ifdef __CHKP__
+	bndcu	27(%rdi), %bnd0
+# endif
 	movdqu	%xmm0, (%rdi)
 	mov	%rdx, 16(%rdi)
 	mov	%ecx, 24(%rdi)
@@ -972,6 +1132,9 @@ L(Exit28):
 L(Exit29):
 	movdqu	(%rsi), %xmm0
 	movdqu	13(%rsi), %xmm2
+# ifdef __CHKP__
+	bndcu	28(%rdi), %bnd0
+# endif
 	movdqu	%xmm0, (%rdi)
 	movdqu	%xmm2, 13(%rdi)
 # ifdef USE_AS_STPCPY
@@ -988,6 +1151,9 @@ L(Exit29):
 L(Exit30):
 	movdqu	(%rsi), %xmm0
 	movdqu	14(%rsi), %xmm2
+# ifdef __CHKP__
+	bndcu	29(%rdi), %bnd0
+# endif
 	movdqu	%xmm0, (%rdi)
 	movdqu	%xmm2, 14(%rdi)
 # ifdef USE_AS_STPCPY
@@ -1004,6 +1170,9 @@ L(Exit30):
 L(Exit31):
 	movdqu	(%rsi), %xmm0
 	movdqu	15(%rsi), %xmm2
+# ifdef __CHKP__
+	bndcu	30(%rdi), %bnd0
+# endif
 	movdqu	%xmm0, (%rdi)
 	movdqu	%xmm2, 15(%rdi)
 # ifdef USE_AS_STPCPY
@@ -1020,6 +1189,9 @@ L(Exit31):
 L(Exit32):
 	movdqu	(%rsi), %xmm0
 	movdqu	16(%rsi), %xmm2
+# ifdef __CHKP__
+	bndcu	31(%rdi), %bnd0
+# endif
 	movdqu	%xmm0, (%rdi)
 	movdqu	%xmm2, 16(%rdi)
 # ifdef USE_AS_STPCPY

@@ -18,14 +18,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
-#include <init-arch.h>
+#if !defined  __CHKP__ && !defined __CHKWR__
+# include <sysdep.h>
+# include <init-arch.h>
 
 /* Define multiple versions only for the definition in lib and for
    DSO.  There are no multiarch mempcpy functions for static binaries.
  */
-#ifndef NOT_IN_libc
-# ifdef SHARED
+# ifndef NOT_IN_libc
+#  ifdef SHARED
 	.text
 ENTRY(__mempcpy_chk)
 	.type	__mempcpy_chk, @gnu_indirect_function
@@ -41,7 +42,8 @@ ENTRY(__mempcpy_chk)
 	leaq	__mempcpy_chk_ssse3_back(%rip), %rax
 2:	ret
 END(__mempcpy_chk)
-# else
-#  include "../mempcpy_chk.S"
+#  else
+#   include "../mempcpy_chk.S"
+#  endif
 # endif
 #endif
