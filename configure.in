@@ -216,6 +216,33 @@ AC_ARG_ENABLE([bind-now],
 	      [bindnow=no])
 AC_SUBST(bindnow)
 
+AC_ARG_ENABLE([mpx],
+	      AC_HELP_STRING([--enable-mpx],
+			     [turn on Intel MPX extension]),
+	      [enable_mpx=$enableval],
+	      [enable_mpx=no])
+AC_SUBST(enable_mpx)
+
+AC_ARG_ENABLE([mpx-write-only],
+	      AC_HELP_STRING([--enable-mpx-write-only],
+			     [turn on Intel MPX extension]),
+	      [enable_mpx_write_only=$enableval],
+	      [enable_mpx_write_only=no])
+AC_SUBST(enable_mpx_write_only)
+
+AC_SUBST(ASFLAGS)
+
+if test "$enable_mpx" = yes ; then
+	CFLAGS="$CFLAGS -g -fcheck-pointers -mmpx -fno-chkp-check-incomplete-type -fchkp-zero-input-bounds-for-main";
+   ASFLAGS="$ASFLAGS -g -D__CHKP__ -mmpx -Wa,-madd-bnd-prefix"
+fi
+
+if test "$enable_mpx_write_only" = yes ; then
+	CFLAGS="$CFLAGS -g -fcheck-pointers -fno-chkp-check-read -mmpx -fno-chkp-check-incomplete-type -fchkp-zero-input-bounds-for-main";
+	ASFLAGS="$ASFLAGS -g -D__CHKWR__ -mmpx -Wa,-madd-bnd-prefix"
+	enable_mpx=yes
+fi
+
 dnl On some platforms we cannot use dynamic loading.  We must provide
 dnl static NSS modules.
 AC_ARG_ENABLE([static-nss],

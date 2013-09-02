@@ -177,6 +177,12 @@ setuid and owned by @code{root}.  The use of @file{pt_chown} introduces
 additional security risks to the system and you should enable it only if
 you understand and accept those risks.
 
+@item --enable-mpx
+By default, Intel MPX extension is disabled. This option turns it on.
+@item --enable-mpx-write-only
+By default, Intel MPX extension is disabled. This option turns it on for
+write only checks.
+
 @item --build=@var{build-system}
 @itemx --host=@var{host-system}
 These options are for cross-compiling.  If you specify both options and

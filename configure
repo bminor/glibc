@@ -653,6 +653,9 @@ link_obsolete_rpc
 libc_cv_nss_crypt
 all_warnings
 force_install
+ASFLAGS
+enable_mpx_write_only
+enable_mpx
 bindnow
 hardcoded_path_in_tests
 oldest_abi
@@ -747,6 +750,8 @@ enable_lock_elision
 enable_add_ons
 enable_hidden_plt
 enable_bind_now
+enable_mpx
+enable_mpx_write_only
 enable_static_nss
 enable_force_install
 enable_kernel
@@ -1409,6 +1414,8 @@ Optional Features:
                           for add-ons if no parameter given
   --disable-hidden-plt    do not hide internal function calls to avoid PLT
   --enable-bind-now       disable lazy relocations in DSOs
+  --enable-mpx            turn on Intel MPX extension
+  --enable-mpx-write-only turn on Intel MPX extension
   --enable-static-nss     build static NSS modules [default=no]
   --disable-force-install don't force installation of files from this package,
                           even if they are older than the installed files
@@ -3518,6 +3525,37 @@ else
 fi
 
 
+
+# Check whether --enable-mpx was given.
+if test "${enable_mpx+set}" = set; then :
+  enableval=$enable_mpx; enable_mpx=$enableval
+else
+  enable_mpx=no
+fi
+
+
+
+# Check whether --enable-mpx-write-only was given.
+if test "${enable_mpx_write_only+set}" = set; then :
+  enableval=$enable_mpx_write_only; enable_mpx_write_only=$enableval
+else
+  enable_mpx_write_only=no
+fi
+
+
+
+
+
+if test "$enable_mpx" = yes ; then
+	CFLAGS="$CFLAGS -g -fcheck-pointers -mmpx -fno-chkp-check-incomplete-type -fchkp-zero-input-bounds-for-main";
+   ASFLAGS="$ASFLAGS -g -D__CHKP__ -mmpx -Wa,-madd-bnd-prefix"
+fi
+
+if test "$enable_mpx_write_only" = yes ; then
+	CFLAGS="$CFLAGS -g -fcheck-pointers -fno-chkp-check-read -mmpx -fno-chkp-check-incomplete-type -fchkp-zero-input-bounds-for-main";
+	ASFLAGS="$ASFLAGS -g -D__CHKWR__ -mmpx -Wa,-madd-bnd-prefix"
+	enable_mpx=yes
+fi
 
 # Check whether --enable-static-nss was given.
 if test "${enable_static_nss+set}" = set; then :
