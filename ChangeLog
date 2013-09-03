@@ -1,3 +1,33 @@
+<<<<<<< HEAD
+=======
+2013-09-03  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #15427]
+	* sysdeps/ieee754/flt-32/e_lgammaf_r.c (__ieee754_lgammaf_r): Use
+	2**-30 instead of 2**-70 as threshold for returning -log(|x|).
+	* math/libm-test.inc (lgamma_test_data): Add more tests.
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
+2013-09-03   Ondřej Bílka  <neleai@seznam.cz>
+
+	* sysdeps/x86_64/multiarch/strcmp-sse2-unaligned.S: New file.
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c (__libc_ifunc_impl_list):
+	Add ifunc.
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines):
+	Add strcmp-sse2-unaligned
+	* sysdeps/x86_64/multiarch/strcmp.S (strcmp): Add ifunc.
+
+2013-09-02  Mike Frysinger  <vapier@gentoo.org>
+
+	* Versions.def (libc): Add GLIBC_2.19.
+
+2013-09-02  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/tst-fanotify.c: New test.
+	* sysdeps/unix/sysv/linux/Makefile (tests): Add tst-fanotify.
+
+>>>>>>> ffa3cd7... Fix lgammaf spurious underflow (bug 15427).
 2013-09-02  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14155]
