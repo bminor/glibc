@@ -12,6 +12,11 @@ Version 2.16.1
   6530, 14195, 14547, 14459, 14476, 14562, 14621, 14648, 14699, 14756, 14831,
   15078, 15754, 15755, 16072.
 
+* CVE-2013-4332 The pvalloc, valloc, memalign, posix_memalign and
+  aligned_alloc functions could allocate too few bytes or corrupt the
+  heap when passed very large allocation size values (Bugzilla #15855,
+  #15856, #15857).
+
 * CVE-2013-4237 The readdir_r function could write more than NAME_MAX bytes
   to the d_name member of struct dirent, or omit the terminating NUL
   character.  (Bugzilla #14699).
