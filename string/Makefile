@@ -59,6 +59,8 @@ tests		:= tester inl-tester noinl-tester testcopy test-ffs	\
 		   bug-strstr1 bug-strchr1 tst-strtok_r
 
 
+xtests = tst-strcoll-overflow
+
 include ../Rules
 
 tester-ENV = LANGUAGE=C

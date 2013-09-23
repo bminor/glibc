@@ -12,6 +12,12 @@ Version 2.16.1
   6530, 14195, 14547, 14459, 14476, 14562, 14621, 14648, 14756, 14831, 15078,
   15755, 16072.
 
+* CVE-2012-4412 The strcoll implementation caches indices and rules for
+  large collation sequences to optimize multiple passes.  This cache
+  computation may overflow for large collation sequences and may cause a
+  stack or buffer overflow.  This is now fixed to use a slower algorithm
+  which does not use a cache if there is an integer overflow.
+
 * CVE-2012-4424 The strcoll implementation uses malloc to cache indices and
   rules for large collation sequences to optimize multiple passes and falls
   back to alloca if malloc fails, resulting in a possible stack overflow.
