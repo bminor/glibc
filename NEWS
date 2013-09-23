@@ -45,6 +45,12 @@ Version 2.18
   15655, 15666, 15667, 15674, 15711, 15755, 15759, 15797, 15892, 15893,
   15895.
 
+* CVE-2013-4788 The pointer guard used for pointer mangling was not
+  initialized for static applications resulting in the security feature
+  being disabled. The pointer guard is now correctly initialized to a
+  random value for static applications. Existing static applications need
+  to be recompiled to take advantage of the fix (bug 15754).
+
 * CVE-2012-4412 The strcoll implementation caches indices and rules for
   large collation sequences to optimize multiple passes.  This cache
   computation may overflow for large collation sequences and may cause a
