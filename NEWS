@@ -45,6 +45,12 @@ Version 2.18
   15655, 15666, 15667, 15674, 15711, 15755, 15759, 15797, 15892, 15893,
   15895.
 
+* CVE-2012-4412 The strcoll implementation caches indices and rules for
+  large collation sequences to optimize multiple passes.  This cache
+  computation may overflow for large collation sequences and may cause a
+  stack or buffer overflow.  This is now fixed to use a slower algorithm
+  which does not use a cache if there is an integer overflow.
+
 * CVE-2013-2207 Incorrectly granting access to another user's pseudo-terminal
   has been fixed by disabling the use of pt_chown (Bugzilla #15755).
   Distributions can re-enable building and using pt_chown via the new configure
