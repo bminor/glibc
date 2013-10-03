@@ -1,3 +1,22 @@
+2013-11-16  Alan Modra  <amodra@gmail.com>
+
+	* Makerules (abilist): Define and use var in abilist rules.
+	* sysdeps/unix/sysv/linux/powerpc/Makefile (abilist): Define.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/ld-le.abilist,
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libBrokenLocale-le.abilist,
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libanl-le.abilist,
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libc-le.abilist,
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libcrypt-le.abilist,
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libdl-le.abilist,
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libm-le.abilist,
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libnsl-le.abilist,
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libpthread-le.abilist,
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libresolv-le.abilist,
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/librt-le.abilist,
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libthread_db-le.abilist,
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/libutil-le.abilist:
+	New files.
+
 2013-11-15  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/fpu/libm-test-ulps: Update.

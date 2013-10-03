@@ -1144,7 +1144,11 @@ ifeq ($(versioning),yes)
 	LC_ALL=C $(OBJDUMP) --dynamic-syms $< > $@T
 	mv -f $@T $@
 
-vpath %.abilist $(+sysdep_dirs)
+ifndef abilist
+abilist=.abilist
+endif
+
+vpath %$(abilist) $(+sysdep_dirs)
 
 # The .PRECIOUS rule prevents the files built by an implicit rule whose
 # target pattern is %.symlist from being considered "intermediate files"
@@ -1153,24 +1157,24 @@ vpath %.abilist $(+sysdep_dirs)
 .PRECIOUS: %.symlist
 generated += $(extra-libs:=.symlist)
 
-check-abi-%: $(common-objpfx)config.make %.abilist $(objpfx)%.symlist
+check-abi-%: $(common-objpfx)config.make %$(abilist) $(objpfx)%.symlist
 	$(check-abi)
-check-abi-%: $(common-objpfx)config.make %.abilist $(common-objpfx)%.symlist
+check-abi-%: $(common-objpfx)config.make %$(abilist) $(common-objpfx)%.symlist
 	$(check-abi)
 define check-abi
-	diff -p -U 0 $(filter %.abilist,$^) $(filter %.symlist,$^)
+	diff -p -U 0 $(filter %$(abilist),$^) $(filter %.symlist,$^)
 endef
 
-update-abi-%: $(objpfx)%.symlist %.abilist
+update-abi-%: $(objpfx)%.symlist %$(abilist)
 	$(update-abi)
-update-abi-%: $(common-objpfx)%.symlist %.abilist
+update-abi-%: $(common-objpfx)%.symlist %$(abilist)
 	$(update-abi)
 define update-abi
 @if cmp -s $^ 2> /dev/null; \
  then \
-      echo '+++ $(filter %.abilist,$^) is unchanged'; \
+      echo '+++ $(filter %$(abilist),$^) is unchanged'; \
  else cp -f $^; \
-      echo '*** Now check $(filter %.abilist,$^) changes for correctness ***'; \
+      echo '*** Now check $(filter %$(abilist),$^) changes for correctness ***'; \
  fi
 endef
 
