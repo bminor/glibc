@@ -1,5 +1,11 @@
 2013-11-16  Alan Modra  <amodra@gmail.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/configure.in (arch_minimum_kernel):
+	Set for powerpc*le.
+	* sysdeps/unix/sysv/linux/powerpc/configure: Regenerate.
+
+2013-11-16  Alan Modra  <amodra@gmail.com>
+
 	[BZ #5268]
 	* include/gmp.h (__mpn_extract_double, __mpn_extract_long_double):
 	Update prototypes.

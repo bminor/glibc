@@ -35,3 +35,10 @@ long double foobar (long double x) { return x; }],
     AC_MSG_ERROR([this configuration requires -mlong-double-128 IBM extended format support])
   fi
 fi
+
+case "$config_machine" in
+# FIXME: This should really be 3.12.
+# The lower version here matches common buildroot kernel headers used
+# by developers during LE bootstrap.  3.9 headers seem to work OK.
+  powerpc*le) arch_minimum_kernel=3.9 ;;
+esac
