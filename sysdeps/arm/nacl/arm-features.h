@@ -38,6 +38,9 @@
 /* Two-register addressing modes are never allowed.  */
 #define ARM_NO_INDEX_REGISTER   1
 
+/* Only ARM mode code is allowed, never Thumb mode.  */
+#define NO_THUMB
+
 #include_next <arm-features.h>
 
 #endif  /* arm-features.h */
