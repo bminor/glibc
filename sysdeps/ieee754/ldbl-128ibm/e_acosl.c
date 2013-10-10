@@ -151,11 +151,13 @@ static const long double
 long double
 __ieee754_acosl (long double x)
 {
-  long double z, r, w, p, q, s, t, f2;
+  long double a, z, r, w, p, q, s, t, f2;
   ieee854_long_double_shape_type u;
 
-  u.value = __builtin_fabsl (x);
-  if (u.value == 1.0L)
+  if (__glibc_unlikely (__isnanl (x)))
+    return x + x;
+  a = __builtin_fabsl (x);
+  if (a == 1.0L)
     {
       if (x > 0.0L)
 	return 0.0;		/* acos(1) = 0  */

@@ -135,6 +135,8 @@ __ieee754_asinl (long double x)
   int flag;
   ieee854_long_double_shape_type u;
 
+  if (__glibc_unlikely (__isnanl (x)))
+    return x + x;
   flag = 0;
   u.value = __builtin_fabsl (x);
   if (u.value == 1.0L)	/* |x|>= 1 */
