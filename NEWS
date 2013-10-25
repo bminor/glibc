@@ -10,11 +10,14 @@ Version 2.18.1
 * The following bugs are resolved with this release:
 
   14155, 14699, 15532, 15427, 15522, 15797, 15892, 15895, 15909, 15996,
-  16150.
+  16072, 16150.
 
 * CVE-2013-4237 The readdir_r function could write more than NAME_MAX bytes
   to the d_name member of struct dirent, or omit the terminating NUL
   character.  (Bugzilla #14699).
+
+* CVE-2013-4458 Stack overflow in getaddrinfo with large number of results
+  for AF_INET6 has been fixed (Bugzilla #16072).
 
 Version 2.18
 

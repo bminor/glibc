@@ -1,5 +1,6 @@
-2013-10-10  Joseph Myers  <joseph@codsourcery.com>
+2013-10-25  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
+<<<<<<< HEAD
 	* sysdeps/ieee754/ldbl-128ibm/e_acosl.c (__ieee754_acosl): Check
 	for NaNs before doing comparisons on argument.
 	* sysdeps/ieee754/ldbl-128ibm/e_asinl.c (__ieee754_asinl):
@@ -490,8 +491,12 @@
 
 	* sysdeps/unix/sysv/linux/tst-fanotify.c: New test.
 	* sysdeps/unix/sysv/linux/Makefile (tests): Add tst-fanotify.
+=======
+	[BZ #16072]
+	* sysdeps/posix/getaddrinfo.c (gethosts): Allocate tmpbuf on
+	heap for large requests.
+>>>>>>> 6f95434... Fix stack overflow due to large AF_INET6 requests
 
->>>>>>> ffa3cd7... Fix lgammaf spurious underflow (bug 15427).
 2013-09-02  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14155]
