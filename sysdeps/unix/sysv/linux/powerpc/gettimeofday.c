@@ -21,6 +21,7 @@
 
 # include <dl-vdso.h>
 # include <bits/libc-vdso.h>
+# include <dl-machine.h>
 
 void *gettimeofday_ifunc (void) __asm__ ("__gettimeofday");
 
@@ -34,7 +35,7 @@ void *
 gettimeofday_ifunc (void)
 {
   /* If the vDSO is not available we fall back syscall.  */
-  return (__vdso_gettimeofday ? PTR_IFUNC_RET(__vdso_gettimeofday)
+  return (__vdso_gettimeofday ? VDSO_IFUNC_RET (__vdso_gettimeofday)
 	  : __gettimeofday_syscall);
 }
 asm (".type __gettimeofday, %gnu_indirect_function");

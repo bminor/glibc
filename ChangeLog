@@ -1,3 +1,10 @@
+2013-11-08  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/bits/libc-vdso.h (VDSO_IFUNC_RET):
+	Add artificial ODP entry for vDSO symbol for PPC64.
+	* sysdeps/unix/sysv/linux/powerpc/gettimeofday.c: Adjust includes.
+	* sysdeps/unix/sysv/linux/powerpc/time.c: Likewise.
+
 2014-11-19  Carlos O'Donell  <carlos@redhat.com>
 	    Florian Weimer  <fweimer@redhat.com>
 	    Joseph Myers  <joseph@codesourcery.com>
