@@ -1,3 +1,21 @@
+2013-11-12  Ulrich Weigand  <Ulrich.Weigand@de.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/sysdep.h [ASSEMBLER] (PPC64_LOAD_FUNCPTR):
+	New assembler macro.
+	[ASSEMBLER] (ENTRY_1): Do not switch to .text section here ...
+	[ASSEMBLER] (ENTRY): ... but instead here ...
+	[ASSEMBLER] (EALIGN): ... and here.
+	[!ASSEMBLER] (PPC64_LOAD_FUNCPTR): New macro.
+	[!ASSEMBLER] (ENTRY_1): New macro; set up .opd entry.
+	[!ASSEMBLER] (ENTRY_2): Use it.
+	* sysdeps/powerpc/powerpc64/dl-machine.h (RTLD_START): Update for
+	ENTRY_2 changes.  Use PPC64_LOAD_FUNCPTR.
+	* sysdeps/powerpc/powerpc64/dl-trampoline.S (_dl_runtime_resolve,
+	_dl_profile_resolve): Use PPC64_LOAD_FUNCPTR.
+	* sysdeps/powerpc/powerpc64/crti.S (_init, _fini): Use ENTRY_2.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S (clone):
+	Use PPC64_LOAD_FUNCPTR.
+
 2013-11-12  Alan Modra  <amodra@gmail.com>
 
 	* elf/elf.h (R_PPC64_TLSGD, R_PPC64_TLSLD, R_PPC64_TOCSAVE): Define.
