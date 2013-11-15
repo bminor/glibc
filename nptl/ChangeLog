@@ -1,3 +1,7 @@
+2013-11-12  Ulrich Weigand  <Ulrich.Weigand@de.ibm.com>
+
+	* sysdeps/powerpc/tls.h (tcbhead_t): Add __private_ss field.
+
 2013-10-03  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #15996]
