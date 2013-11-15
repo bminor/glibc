@@ -1,5 +1,9 @@
 2013-11-16  Alan Modra  <amodra@gmail.com>
 
+	* libc-abis: PowerPC64le has ifunc too.
+
+2013-11-16  Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/unix/sysv/linux/powerpc/configure.in (arch_minimum_kernel):
 	Set for powerpc*le.
 	* sysdeps/unix/sysv/linux/powerpc/configure: Regenerate.
