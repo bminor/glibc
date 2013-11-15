@@ -1,5 +1,10 @@
 2013-11-16  Alan Modra  <amodra@gmail.com>
 
+	* NEWS: Mention powerpc64le support and bugs fixed.
+	* README: Both big-endian and little-endian powerpc64 supported.
+
+2013-11-16  Alan Modra  <amodra@gmail.com>
+
 	* libc-abis: PowerPC64le has ifunc too.
 
 2013-11-16  Alan Modra  <amodra@gmail.com>
