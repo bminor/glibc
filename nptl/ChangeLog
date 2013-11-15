@@ -1,5 +1,18 @@
 2013-11-12  Ulrich Weigand  <Ulrich.Weigand@de.ibm.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep-cancel.h
+	(CANCEL_FRAMESIZE, CANCEL_PARM_SAVE): New macros to save parameters
+	into our own stack frame instead of the caller's.
+	(PSEUDO): Use them.  Use symbolic stack frame offsets.
+	(DOCARGS_1, UNDOCARGS_1): Use CANCEL_PARM_SAVE.
+	(DOCARGS_2, UNDOCARGS_2): Likewise.
+	(DOCARGS_3, UNDOCARGS_3): Likewise.
+	(DOCARGS_4, UNDOCARGS_4): Likewise.
+	(DOCARGS_5, UNDOCARGS_5): Likewise.
+	(DOCARGS_6, UNDOCARGS_6): Likewise.
+
+2013-11-12  Ulrich Weigand  <Ulrich.Weigand@de.ibm.com>
+
 	* sysdeps/powerpc/tls.h (tcbhead_t): Add __private_ss field.
 
 2013-10-03  Siddhesh Poyarekar  <siddhesh@redhat.com>
