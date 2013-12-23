@@ -1,3 +1,10 @@
+2014-01-04  Maxim Kuvyrkov  <maxim@kugelworks.com>
+	    Ondřej Bílka  <neleai@seznam.cz>
+
+	[BZ #15073]
+	* malloc/malloc.c (_int_free): Perform sanity check only if we
+        have_lock.
+
 2013-11-11  David S. Miller  <davem@davemloft.net>
 
 	[BZ #16150]
