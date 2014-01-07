@@ -1,3 +1,8 @@
+2014-01-07  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
+	* sysdeps/aarch64/dl-trampoline.S (_dl_runtime_resolve): Correct
+	cfi_adjust_cfa_offset offset.
+
 2013-12-18  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
 
 	[BZ #15128]
