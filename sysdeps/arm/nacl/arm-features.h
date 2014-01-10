@@ -32,9 +32,6 @@
 /* Computed branch targets must be bundle-aligned, which is to 16 bytes.  */
 #define ARM_BX_ALIGN_LOG2       4
 
-/* We define bx to sfi_bx, which expands to two instructions.  */
-#define ARM_BX_NINSNS           2
-
 /* Two-register addressing modes are never allowed.  */
 #define ARM_NO_INDEX_REGISTER   1
 
