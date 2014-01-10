@@ -58,7 +58,7 @@ _dl_runtime_resolve:
 
 	ldr r1, [sp, #28]	@ r1 gets &GOT[n+3]
 
-	@ Get the 'struct link_map *' for first argument to _dl_fixup.
+	@ Get the 'struct link_map *' for the first argument to _dl_fixup.
 	sfi_breg ip, ldr r0, [\B, #-4]
 
 	@ Get the reloc offset for the second argument to _dl_fixup.
