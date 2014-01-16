@@ -1,3 +1,11 @@
+2014-01-16  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	[BZ#16430]
+	* sysdeps/unix/sysv/linux/powerpc/gettimeofday.c
+	(__GI___gettimeofday): Alias for a different internal symbol to avoid
+	local calls issues by not having a PLT stub required for IFUNC calls.
+	* sysdeps/unix/sysv/linux/powerpc/time.c (__GI_time): Likewise.
+
 2013-11-08  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/bits/libc-vdso.h (VDSO_IFUNC_RET):
@@ -26,12 +34,6 @@
 	is set.
 	(parse_dollars): Remove check for WRDE_NOCMD.
 	(parse_dquote): Likewise.
-
-2014-12-16  Florian Weimer  <fweimer@redhat.com>
-
-	[BZ #17630]
-	* resolv/nss_dns/dns-network.c (getanswer_r): Iterate over alias
-	names.
 
 2014-12-15  Jeff Law  <law@redhat.com>
 
