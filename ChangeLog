@@ -1,3 +1,18 @@
+2014-01-23  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	[BZ #14143]
+	* sysdeps/powerpc/bits/fenv.h (__fe_nomask_env): Remove declaration.
+	(__fe_mask_env): Likewise.
+	* sysdeps/powerpc/fpu/fenv_libc.h (__fe_nomask_env): Remove
+	libm_hidden_proto and add function prototype.
+	(__fe_mask_env): Add function prototype.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/fe_nomask.c
+	(__fe_nomask_env): Add compat symbol for GLIBC_2.1.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fpu/fe_mask.c
+	(__fe_mask_env): Remove compiler warnings regarding ununsed variables.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fpu/fe_nomask.c
+	(__fe_nomask_env): Add compat symbol for GLIBC_2.3.
+
 2014-01-16  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	[BZ#16430]
