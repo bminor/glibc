@@ -1,5 +1,12 @@
 2014-01-23  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	[BZ #16414]
+	* sysdeps/powerpc/powerpc64/fpu/s_truncl.S: Remove wrong
+	implementation.
+	* sysdeps/ieee754/ldbl-128ibm/s_truncl.c: Remove bogus comment.
+
+2014-01-23  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	[BZ #14143]
 	* sysdeps/powerpc/bits/fenv.h (__fe_nomask_env): Remove declaration.
 	(__fe_mask_env): Likewise.
