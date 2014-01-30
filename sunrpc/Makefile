@@ -1,4 +1,4 @@
-# Copyright (C) 1994-2004, 2005, 2006, 2011 Free Software Foundation, Inc.
+# Copyright (C) 1994-2004, 2005, 2006, 2011, 2012 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -61,6 +61,10 @@ generated-dirs := rpcsvc
 
 include ../Makeconfig
 
+ifeq ($(link-obsolete-rpc),yes)
+headers += $(headers-in-tirpc) $(headers-not-in-tirpc)
+endif
+
 ifeq ($(versioning),yes)
 need-export-routines := auth_des auth_unix clnt_gen clnt_perr clnt_tcp \
 			clnt_udp get_myaddr key_call netname pm_getport \
@@ -74,8 +78,10 @@ routines := auth_none authuxprot bindrsvprt clnt_raw clnt_simp \
 	    svc_simple xdr_float xdr_rec publickey authdes_prot \
 	    des_crypt des_impl des_soft key_prot openchild rtime svcauth_des \
 	    clnt_unix svc_unix create_xid $(need-export-routines)
+ifneq ($(link-obsolete-rpc),yes)
 # We only add the RPC for compatibility to libc.so.
 shared-only-routines = $(routines)
+endif
 endif
 
 # We do not build rpcinfo anymore.  It is not needed for a bootstrap
