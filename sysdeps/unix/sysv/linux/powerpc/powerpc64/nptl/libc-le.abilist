@@ -1,5 +1,5 @@
-GLIBC_2.18
- GLIBC_2.18 A
+GLIBC_2.17
+ GLIBC_2.17 A
  _Exit F
  _IO_2_1_stderr_ D 0xe0
  _IO_2_1_stdin_ D 0xe0
@@ -161,7 +161,6 @@ GLIBC_2.18
  __cxa_at_quick_exit F
  __cxa_atexit F
  __cxa_finalize F
- __cxa_thread_atexit_impl F
  __cyg_profile_func_enter F
  __cyg_profile_func_exit F
  __daylight D 0x4
@@ -2167,3 +2166,6 @@ GLIBC_2.18
  xencrypt F
  xprt_register F
  xprt_unregister F
+GLIBC_2.18
+ GLIBC_2.18 A
+ __cxa_thread_atexit_impl F

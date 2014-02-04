@@ -1,5 +1,5 @@
-GLIBC_2.18
- GLIBC_2.18 A
+GLIBC_2.17
+ GLIBC_2.17 A
  dladdr F
  dladdr1 F
  dlclose F

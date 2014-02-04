@@ -1,5 +1,5 @@
-GLIBC_2.18
- GLIBC_2.18 A
+GLIBC_2.17
+ GLIBC_2.17 A
  __libc_memalign F
  __libc_stack_end D 0x8
  __tls_get_addr F

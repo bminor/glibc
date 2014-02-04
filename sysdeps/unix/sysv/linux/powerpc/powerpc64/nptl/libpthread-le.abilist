@@ -1,5 +1,5 @@
-GLIBC_2.18
- GLIBC_2.18 A
+GLIBC_2.17
+ GLIBC_2.17 A
  _IO_flockfile F
  _IO_ftrylockfile F
  _IO_funlockfile F
@@ -120,7 +120,6 @@ GLIBC_2.18
  pthread_equal F
  pthread_exit F
  pthread_getaffinity_np F
- pthread_getattr_default_np F
  pthread_getattr_np F
  pthread_getconcurrency F
  pthread_getcpuclockid F
@@ -176,7 +175,6 @@ GLIBC_2.18
  pthread_rwlockattr_setpshared F
  pthread_self F
  pthread_setaffinity_np F
- pthread_setattr_default_np F
  pthread_setcancelstate F
  pthread_setcanceltype F
  pthread_setconcurrency F
@@ -224,3 +222,7 @@ GLIBC_2.18
  wait F
  waitpid F
  write F
+GLIBC_2.18
+ GLIBC_2.18 A
+ pthread_getattr_default_np F
+ pthread_setattr_default_np F

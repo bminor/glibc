@@ -1,5 +1,5 @@
-GLIBC_2.18
- GLIBC_2.18 A
+GLIBC_2.17
+ GLIBC_2.17 A
  __free_fdresult F
  __nis_default_access F
  __nis_default_group F

@@ -1,5 +1,5 @@
-GLIBC_2.18
- GLIBC_2.18 A
+GLIBC_2.17
+ GLIBC_2.17 A
  __mq_open_2 F
  aio_cancel F
  aio_cancel64 F
@@ -16,11 +16,6 @@ GLIBC_2.18
  aio_suspend64 F
  aio_write F
  aio_write64 F
- clock_getcpuclockid F
- clock_getres F
- clock_gettime F
- clock_nanosleep F
- clock_settime F
  lio_listio F
  lio_listio64 F
  mq_close F
