@@ -1,5 +1,10 @@
 2014-02-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/power5/Implies: Remove inexistent
+	paths.
+
+2014-02-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
 	* elf/get-dynamic-info.h (elf_get_dynamic_info): Fix remove of
 	assert.
 
