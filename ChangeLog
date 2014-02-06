@@ -1,3 +1,8 @@
+2014-02-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* elf/get-dynamic-info.h (elf_get_dynamic_info): Fix remove of
+	assert.
+
 2014-02-04  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* Versions.def (libm): Add GLIBC_2.3.
