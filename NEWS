@@ -9,7 +9,7 @@ Version 2.19.1
 
 * The following bugs are resolved with this release:
 
-  16545, 16623, 16882, 16885, 16916, 16932, 16943, 16958, 17048.
+  16545, 16574, 16623, 16882, 16885, 16916, 16932, 16943, 16958, 17048.
 
 * CVE-2014-4043 The posix_spawn_file_actions_addopen implementation did not
   copy the path argument.  This allowed programs to cause posix_spawn to
