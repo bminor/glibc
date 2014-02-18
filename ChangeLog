@@ -1,3 +1,9 @@
+2014-02-18  Brooks Moses  <bmoses@google.com>
+
+	[BZ #15915]
+	* Makefile (linkobj/libc_pic.a, linkobj/libc.so): Move rules to...
+	* Makerules: ...here, and adjust associated comments.
+
 2014-02-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/power5/Implies: Remove inexistent
