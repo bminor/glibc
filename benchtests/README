@@ -60,6 +60,7 @@ one to add `foo' to the bench tests:
   - include-sources: This should be assigned a comma-separated list of source
     files that need to be included to provide definitions of global variables
     and functions (specifically, this includes using "#include "source").
+  - init: Name of an initializer function to call to initialize the benchtest.
   - name: See following section for instructions on how to use this directive.
 
   Lines beginning with a single hash '#' are treated as comments.  See
