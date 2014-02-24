@@ -1,5 +1,4 @@
-/* System-specific settings for dynamic linker code.  Linux version.
-   Copyright (C) 2005-2014 Free Software Foundation, Inc.
+/* Copyright (C) 2013 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,22 +15,26 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include_next <dl-sysdep.h>
+/* Dynamic module with TLS to be accessed by a signal handler to check safety
+   of that mode. */
 
-/* On many architectures the kernel provides a virtual DSO and gives
-   AT_SYSINFO_EHDR to point us to it.  As this is introduced for new
-   machines, we should look at it for unwind information even if
-   we aren't making direct use of it.  So enable this across the board.  */
-
-#define NEED_DL_SYSINFO_DSO	1
-
-
-#ifndef __ASSEMBLER__
-/* Get version of the OS.  */
-extern int _dl_discover_osversion (void) attribute_hidden;
-# define HAVE_DL_DISCOVER_OSVERSION	1
-
+#include <semaphore.h>
 #include <signal.h>
-void _dl_mask_all_signals (sigset_t *) internal_function;
-void _dl_unmask_all_signals (sigset_t *) internal_function;
-#endif
+#include <unistd.h>
+
+/* This is an unlikely value to see in incorrectly initialized TLS
+   block -- make sure we're initialized properly. */
+static __thread intptr_t tls_data = 0xdeadbeef;
+
+void
+action (int signo, siginfo_t *info, void *ignored)
+{
+  if (tls_data != 0xdeadbeef)
+    {
+      write (STDOUT_FILENO, "wrong TLS value\n", 17);
+      _exit (1);
+    }
+
+  /* arbitrary choice, just write something unique-ish. */
+  tls_data = (intptr_t) info;
+}

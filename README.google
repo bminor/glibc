@@ -18,3 +18,20 @@ have been checked in to (or back-ported from) the upstream sources.
 When checking in changes made upstream, add an entry to this file but
 DO NOT add entries to the GNU ChangeLog files.
 
+elf/Versions
+elf/dl-misc.c
+elf/dl-open.c
+elf/dl-reloc.c
+elf/dl-tls.c
+nptl/Makefile
+nptl/allocatestack.c
+nptl/tst-tls7.c
+nptl/tst-tls7mod.c
+sysdeps/generic/ldsodefs.h
+  Revert upstream removal of async-safe TLS patches.  These patches were
+  removed at the last minute from the glibc 2.19 release, as follows:
+  https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=8b6785f0836011cace9a77f3c24e51a7379238a0
+  https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=dd654bf9ba1848bf9ed250f8ebaa5097c383dcf8
+  https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=73d61e4f6c65da714c0f8a3a233725322553ceba
+  https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=bf06bcee84d4c19a99925c0f58026a8cbd87a688
+  (ahh, not yet upstream)

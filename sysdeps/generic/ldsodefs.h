@@ -234,6 +234,11 @@ extern int _dl_name_match_p (const char *__name, const struct link_map *__map)
 extern unsigned long int _dl_higher_prime_number (unsigned long int n)
      internal_function;
 
+/* Mask every signal, returning the previous sigmask in OLD.  */
+extern void _dl_mask_all_signals (sigset_t *old) internal_function;
+/* Undo _dl_mask_all_signals.  */
+extern void _dl_unmask_signals (sigset_t *old) internal_function;
+
 /* Function used as argument for `_dl_receive_error' function.  The
    arguments are the error code, error string, and the objname the
    error occurred in.  */
@@ -983,6 +988,17 @@ extern void *_dl_allocate_tls_storage (void)
      internal_function attribute_hidden;
 extern void *_dl_allocate_tls_init (void *) internal_function;
 rtld_hidden_proto (_dl_allocate_tls_init)
+
+/* Remove all allocated dynamic TLS regions from a DTV
+   for reuse by new thread.  */
+extern void _dl_clear_dtv (dtv_t *dtv) internal_function;
+rtld_hidden_proto (_dl_clear_dtv)
+
+extern void *__signal_safe_memalign (size_t boundary, size_t size);
+extern void *__signal_safe_malloc (size_t size);
+extern void __signal_safe_free (void *ptr);
+extern void *__signal_safe_realloc (void *ptr, size_t size);
+extern void *__signal_safe_calloc (size_t nmemb, size_t size);
 
 /* Deallocate memory allocated with _dl_allocate_tls.  */
 extern void _dl_deallocate_tls (void *tcb, bool dealloc_tcb) internal_function;

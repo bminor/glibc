@@ -242,11 +242,7 @@ get_cached_stack (size_t *sizep, void **memp)
 
   /* Clear the DTV.  */
   dtv_t *dtv = GET_DTV (TLS_TPADJ (result));
-  for (size_t cnt = 0; cnt < dtv[-1].counter; ++cnt)
-    if (! dtv[1 + cnt].pointer.is_static
-	&& dtv[1 + cnt].pointer.val != TLS_DTV_UNALLOCATED)
-      free (dtv[1 + cnt].pointer.val);
-  memset (dtv, '\0', (dtv[-1].counter + 1) * sizeof (dtv_t));
+  _dl_clear_dtv (dtv);
 
   /* Re-initialize the TLS.  */
   _dl_allocate_tls_init (TLS_TPADJ (result));
@@ -1177,13 +1173,18 @@ init_one_static_tls (struct pthread *curp, struct link_map *map)
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 # endif
 
-  /* Fill in the DTV slot so that a later LD/GD access will find it.  */
-  dtv[map->l_tls_modid].pointer.val = dest;
-  dtv[map->l_tls_modid].pointer.is_static = true;
-
   /* Initialize the memory.  */
   memset (__mempcpy (dest, map->l_tls_initimage, map->l_tls_initimage_size),
 	  '\0', map->l_tls_blocksize - map->l_tls_initimage_size);
+
+  /* Fill in the DTV slot so that a later LD/GD access will find it.  */
+  dtv[map->l_tls_modid].pointer.is_static = true;
+  /* Pairs against the read barrier in tls_get_attr_tail, guaranteeing
+     any thread waiting for an update to pointer.val sees the
+     initimage write.  */
+  atomic_write_barrier ();
+  dtv[map->l_tls_modid].pointer.val = dest;
+
 }
 
 void
