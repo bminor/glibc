@@ -374,6 +374,7 @@ tests += tst-cancelx2 tst-cancelx3 tst-cancelx4 tst-cancelx5 \
 	 tst-oncex3 tst-oncex4
 ifeq ($(build-shared),yes)
 tests += tst-atfork2 tst-tls4 tst-_res1 tst-fini1 tst-compat-forwarder
+tests += tst-tls7
 tests-internal += tst-tls3 tst-tls3-malloc tst-tls5 tst-stackguard1
 tests-nolibpthread += tst-fini1
 ifeq ($(have-z-execstack),yes)
@@ -389,6 +390,7 @@ modules-names = tst-atfork2mod tst-tls3mod tst-tls4moda tst-tls4modb \
 		tst-tls5modd tst-tls5mode tst-tls5modf tst-stack4mod \
 		tst-_res1mod1 tst-_res1mod2 tst-fini1mod \
 		tst-join7mod tst-compat-forwarder-mod
+modules-names += tst-tls7mod
 ifneq ($(with-clang),yes)
 modules-names += tst-execstack-mod
 endif
@@ -406,6 +408,7 @@ tst-tls5modc.so-no-z-defs = yes
 tst-tls5modd.so-no-z-defs = yes
 tst-tls5mode.so-no-z-defs = yes
 tst-tls5modf.so-no-z-defs = yes
+tst-tls7mod.so-no-z-defs = yes
 
 ifeq ($(build-shared),yes)
 # Build all the modules even when not actually running test programs.
@@ -599,6 +602,12 @@ $(objpfx)tst-tls4.out: $(objpfx)tst-tls4moda.so $(objpfx)tst-tls4modb.so
 $(objpfx)tst-tls5: $(objpfx)tst-tls5mod.so $(shared-thread-library)
 LDFLAGS-tst-tls5 = $(no-as-needed)
 LDFLAGS-tst-tls5mod.so = -Wl,-soname,tst-tls5mod.so
+
+# ensure free(malloc()) isn't optimized out
+CFLAGS-tst-tls7.c = -fno-builtin-malloc -fno-builtin-free
+$(objpfx)tst-tls7: $(libdl) $(shared-thread-library)
+$(objpfx)tst-tls7.out: $(objpfx)tst-tls7mod.so
+$(objpfx)tst-tls7mod.so: $(shared-thread-library)
 
 ifeq ($(build-shared),yes)
 $(objpfx)tst-tls6.out: tst-tls6.sh $(objpfx)tst-tls5 \

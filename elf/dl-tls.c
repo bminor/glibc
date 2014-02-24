@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <assert.h>
+#include <atomic.h>
 #include <errno.h>
 #include <libintl.h>
 #include <signal.h>
@@ -283,7 +284,7 @@ allocate_dtv (void *result)
      initial set of modules.  This should avoid in most cases expansions
      of the dtv.  */
   dtv_length = GL(dl_tls_max_dtv_idx) + DTV_SURPLUS;
-  dtv = calloc (dtv_length + 2, sizeof (dtv_t));
+  dtv = __signal_safe_calloc (dtv_length + 2, sizeof (dtv_t));
   if (dtv != NULL)
     {
       /* This is the initial length of the dtv.  */
@@ -533,6 +534,18 @@ _dl_allocate_tls (void *mem)
 }
 rtld_hidden_def (_dl_allocate_tls)
 
+void
+internal_function
+_dl_clear_dtv (dtv_t *dtv)
+{
+  for (size_t cnt = 0; cnt < dtv[-1].counter; ++cnt)
+    if (! dtv[1 + cnt].pointer.is_static
+	&& dtv[1 + cnt].pointer.val != TLS_DTV_UNALLOCATED)
+      __signal_safe_free (dtv[1 + cnt].pointer.val);
+  memset (dtv, '\0', (dtv[-1].counter + 1) * sizeof (dtv_t));
+}
+
+rtld_hidden_def (_dl_clear_dtv)
 
 void
 _dl_deallocate_tls (void *tcb, bool dealloc_tcb)
@@ -541,11 +554,11 @@ _dl_deallocate_tls (void *tcb, bool dealloc_tcb)
 
   /* We need to free the memory allocated for non-static TLS.  */
   for (size_t cnt = 0; cnt < dtv[-1].counter; ++cnt)
-    free (dtv[1 + cnt].pointer.to_free);
+    __signal_safe_free (dtv[1 + cnt].pointer.to_free);
 
   /* The array starts with dtv[-1].  */
   if (dtv != GL(dl_initial_dtv))
-    free (dtv - 1);
+    __signal_safe_free (dtv - 1);
 
   if (dealloc_tcb)
     free (*tcb_to_pointer_to_free_location (tcb));
@@ -572,51 +585,23 @@ rtld_hidden_def (_dl_deallocate_tls)
 #  define GET_ADDR_OFFSET ti->ti_offset
 # endif
 
-/* Allocate one DTV entry.  */
-static struct dtv_pointer
-allocate_dtv_entry (size_t alignment, size_t size)
+static void
+allocate_and_init (dtv_t *dtv, struct link_map *map)
 {
-  if (powerof2 (alignment) && alignment <= _Alignof (max_align_t))
-    {
-      /* The alignment is supported by malloc.  */
-      void *ptr = malloc (size);
-      return (struct dtv_pointer) { ptr, ptr };
-    }
-
-  /* Emulate memalign to by manually aligning a pointer returned by
-     malloc.  First compute the size with an overflow check.  */
-  size_t alloc_size = size + alignment;
-  if (alloc_size < size)
-    return (struct dtv_pointer) {};
-
-  /* Perform the allocation.  This is the pointer we need to free
-     later.  */
-  void *start = malloc (alloc_size);
-  if (start == NULL)
-    return (struct dtv_pointer) {};
-
-  /* Find the aligned position within the larger allocation.  */
-  void *aligned = (void *) roundup ((uintptr_t) start, alignment);
-
-  return (struct dtv_pointer) { .val = aligned, .to_free = start };
-}
-
-static struct dtv_pointer
-allocate_and_init (struct link_map *map)
-{
-  struct dtv_pointer result = allocate_dtv_entry
-    (map->l_tls_align, map->l_tls_blocksize);
-  if (result.val == NULL)
+  void *newp;
+  newp = __signal_safe_memalign (map->l_tls_align, map->l_tls_blocksize);
+  if (newp == NULL)
     oom ();
 
-  /* Initialize the memory.  */
-  memset (__mempcpy (result.val, map->l_tls_initimage,
+  /* Initialize the memory. Since this is our thread's space, we are
+     under a signal mask, and no one has touched this section before,
+     we can safely just overwrite whatever's there.  */
+  memset (__mempcpy (newp, map->l_tls_initimage,
 		     map->l_tls_initimage_size),
 	  '\0', map->l_tls_blocksize - map->l_tls_initimage_size);
 
-  return result;
+  dtv->pointer.val = newp;
 }
-
 
 struct link_map *
 _dl_update_slotinfo (unsigned long int req_modid)
@@ -656,7 +641,15 @@ _dl_update_slotinfo (unsigned long int req_modid)
 	 the entry we need.  */
       size_t new_gen = listp->slotinfo[idx].gen;
       size_t total = 0;
+      sigset_t old;
 
+      _dl_mask_all_signals (&old);
+      /* We use the signal mask as a lock against reentrancy here.
+         Check that a signal taken before the lock didn't already
+         update us.  */
+      dtv = THREAD_DTV ();
+      if (dtv[0].counter >= listp->slotinfo[idx].gen)
+        goto out;
       /* We have to look through the entire dtv slotinfo list.  */
       listp =  GL(dl_tls_dtv_slotinfo_list);
       do
@@ -676,6 +669,8 @@ _dl_update_slotinfo (unsigned long int req_modid)
 	      if (gen <= dtv[0].counter)
 		continue;
 
+	      size_t modid = total + cnt;
+
 	      /* If there is no map this means the entry is empty.  */
 	      struct link_map *map = listp->slotinfo[cnt].map;
 	      if (map == NULL)
@@ -684,7 +679,7 @@ _dl_update_slotinfo (unsigned long int req_modid)
 		    {
 		      /* If this modid was used at some point the memory
 			 might still be allocated.  */
-		      free (dtv[total + cnt].pointer.to_free);
+		      __signal_safe_free (dtv[total + cnt].pointer.to_free);
 		      dtv[total + cnt].pointer.val = TLS_DTV_UNALLOCATED;
 		      dtv[total + cnt].pointer.to_free = NULL;
 		    }
@@ -692,9 +687,8 @@ _dl_update_slotinfo (unsigned long int req_modid)
 		  continue;
 		}
 
+	      assert (modid == map->l_tls_modid);
 	      /* Check whether the current dtv array is large enough.  */
-	      size_t modid = map->l_tls_modid;
-	      assert (total + cnt == modid);
 	      if (dtv[-1].counter < modid)
 		{
 		  /* Resize the dtv.  */
@@ -711,7 +705,7 @@ _dl_update_slotinfo (unsigned long int req_modid)
 		 dtv entry free it.  */
 	      /* XXX Ideally we will at some point create a memory
 		 pool.  */
-	      free (dtv[modid].pointer.to_free);
+	      __signal_safe_free (dtv[modid].pointer.to_free);
 	      dtv[modid].pointer.val = TLS_DTV_UNALLOCATED;
 	      dtv[modid].pointer.to_free = NULL;
 
@@ -725,6 +719,8 @@ _dl_update_slotinfo (unsigned long int req_modid)
 
       /* This will be the new maximum generation counter.  */
       dtv[0].counter = new_gen;
+   out:
+      _dl_unmask_signals (&old);
     }
 
   return the_map;
@@ -750,6 +746,39 @@ tls_get_addr_tail (GET_ADDR_ARGS, dtv_t *dtv, struct link_map *the_map)
 
       the_map = listp->slotinfo[idx].map;
     }
+#if 0
+  sigset_t old;
+  _dl_mask_all_signals (&old);
+
+  /* As with update_slotinfo, we use the sigmask as a check against
+     reentrancy.  */
+  if (dtv[GET_ADDR_MODULE].pointer.val != TLS_DTV_UNALLOCATED)
+    {
+      assert (dtv[GET_ADDR_MODULE].pointer.val != TLS_DTV_UNALLOCATED);
+      _dl_unmask_signals (&old);
+
+      return (char *) dtv[GET_ADDR_MODULE].pointer.val + GET_ADDR_OFFSET;
+    }
+
+  /* Synchronize against a parallel dlopen() forcing this variable
+     into static storage.  If that happens, we have to be more careful
+     about initializing the area, as that dlopen() will be iterating
+     the threads to do so itself.  */
+  ptrdiff_t offset;
+  if ((offset = the_map->l_tls_offset) == NO_TLS_OFFSET)
+    {
+      /* l_tls_offset starts out at NO_TLS_OFFSET, and all attempts to
+	 change it go from NO_TLS_OFFSET to some other value.  We use
+	 compare_and_exchange to ensure only one attempt succeeds.  We
+	 don't actually need any memory ordering here, but _acq is the
+	 weakest available.  */
+      (void) atomic_compare_and_exchange_bool_acq (&the_map->l_tls_offset,
+						   FORCED_DYNAMIC_TLS_OFFSET,
+						   NO_TLS_OFFSET);
+      offset = the_map->l_tls_offset;
+      assert (offset != NO_TLS_OFFSET);
+    }
+  #endif
 
   /* Make sure that, if a dlopen running in parallel forces the
      variable into static storage, we'll wait until the address in the
@@ -789,6 +818,36 @@ tls_get_addr_tail (GET_ADDR_ARGS, dtv_t *dtv, struct link_map *the_map)
   assert (result.to_free != NULL);
 
   return (char *) result.val + GET_ADDR_OFFSET;
+
+#if 0
+  if (offset == FORCED_DYNAMIC_TLS_OFFSET)
+    {
+      allocate_and_init (&dtv[GET_ADDR_MODULE], the_map);
+    }
+  else
+    {
+      void **pp = &dtv[GET_ADDR_MODULE].pointer.val;
+      while (atomic_forced_read (*pp) == TLS_DTV_UNALLOCATED)
+	{
+	  /* for lack of a better (safe) thing to do, just spin.
+	    Someone else (not us; it's done under a signal mask) set
+	    this map to a static TLS offset, and they'll iterate all
+	    threads to initialize it.  They'll eventually write
+	    to pointer.val, at which point we know they've fully
+	    completed initialization.  */
+	  atomic_delay ();
+	}
+      /* Make sure we've picked up their initialization of the actual
+	 block; this pairs against the write barrier in
+	 init_one_static_tls, guaranteeing that we see their write of
+	 the tls_initimage into the static region.  */
+      atomic_read_barrier ();
+    }
+  assert (dtv[GET_ADDR_MODULE].pointer.val != TLS_DTV_UNALLOCATED);
+  _dl_unmask_signals (&old);
+
+  return (char *) dtv[GET_ADDR_MODULE].pointer.val + GET_ADDR_OFFSET;
+#endif
 }
 
 
