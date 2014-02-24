@@ -20,8 +20,12 @@
 # Add benchmark functions in alphabetical order.
 
 subdir := benchtests
-bench := acos acosh asin asinh atan atanh cos cosh exp exp2 log log2 modf pow \
+math-bench := acos acosh asin asinh atan atanh cos cosh exp exp2 log log2 modf pow \
 	 rint sin sincos sinh sqrt tan tanh
+
+pthread-bench := sem_timedwait_test
+
+bench := $(math-bench) $(pthread-bench)
 
 # String function benchmarks.
 string-bench := bcopy bzero memccpy memchr memcmp memcpy memmem memmove \
@@ -34,27 +38,6 @@ string-bench-all := $(string-bench)
 stdlib-bench := strtod
 
 benchset := $(string-bench-all) $(stdlib-bench)
-
-LDLIBS-bench-acos = -lm
-LDLIBS-bench-acosh = -lm
-LDLIBS-bench-asin = -lm
-LDLIBS-bench-asinh = -lm
-LDLIBS-bench-atan = -lm
-LDLIBS-bench-atanh = -lm
-LDLIBS-bench-cos = -lm
-LDLIBS-bench-cosh = -lm
-LDLIBS-bench-exp = -lm
-LDLIBS-bench-exp2 = -lm
-LDLIBS-bench-log = -lm
-LDLIBS-bench-log2 = -lm
-LDLIBS-bench-pow = -lm
-LDLIBS-bench-rint = -lm
-LDLIBS-bench-sin = -lm
-LDLIBS-bench-sinh = -lm
-LDLIBS-bench-sqrt = -lm
-LDLIBS-bench-tan = -lm
-LDLIBS-bench-tanh = -lm
-LDLIBS-bench-sincos = -lm
 
 
 
@@ -70,6 +53,22 @@ include ../Rules
 
 binaries-bench := $(addprefix $(objpfx)bench-,$(bench))
 binaries-benchset := $(addprefix $(objpfx)bench-,$(benchset))
+
+# Link to pthread
+ifeq ($(build-shared),yes)
+$(addprefix $(objpfx)bench-, \
+	    $(pthread-bench)): $(objpfx)$(..)nptl/libpthread.so \
+			       $(objpfx)$(..)nptl/libpthread_nonshared.a
+else
+$(addprefix $(objpfx)bench-,$(pthread-bench)): $(objpfx)$(..)libpthread.a
+endif
+
+# Link to libm
+ifeq ($(build-shared),yes)
+$(addprefix $(objpfx)bench-, $(math-bench)): $(objpfx)$(..)math/libm.so
+else
+$(addprefix $(objpfx)bench-,$(math-bench)): $(objpfx)$(..)math/libm.a
+endif
 
 # The default duration: 10 seconds.
 ifndef BENCH_DURATION

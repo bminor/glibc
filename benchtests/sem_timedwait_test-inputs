@@ -1,0 +1,10 @@
+## includes: stdbool.h,pthread.h,semaphore.h
+## include-sources: src-sem_timedwait_test.c
+## init: init_test
+#  The sole argument differentiates between the default uncontended and
+#  the contended case.
+## args: bool
+## name: uncontended
+false
+## name: contended
+true
