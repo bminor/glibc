@@ -79,3 +79,8 @@ nptl/Makefile
   cl/51074128 from eglibc-2.18
   (ppluzhnikov, google-local)
 
+csu/Makefile
+  For bit-identical rebuilds, remove `date` invocations.
+  Forward-ported from cl/51218346 (from cl/37734-p2).
+  (ppluzhnikov, google-local)
+

@@ -162,8 +162,10 @@ $(objpfx)version-info.h: $(common-objpfx)config.make $(all-Banner-files)
 		   if [ -z "$$os" ]; then \
 		     os=Linux; \
 		   fi; \
-		   printf '"Compiled on a %s %s system on %s.\\n"\n' \
-			  "$$os" "$$version" "`date +%Y-%m-%d`";; \
+		   # GOOGLE LOCAL: removed 'on %s' and '"`date +%Y-%m-%d`"' \
+		   # to enable bit-identical rebuilds \
+		   printf '"Compiled on a %s %s system.\\n"\n' \
+			 "$$os" "$$version";; \
 	   *) ;; \
 	 esac; \
 	 files="$(all-Banner-files)";				\
