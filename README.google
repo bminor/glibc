@@ -66,3 +66,9 @@ nss/Makefile
   Likewise ibnsl and related libnss_* libraries.
   Forward-ported from cl/52538169 and cl/52538711.
   (ppluzhnikov, bmoses, google-local)
+
+hesiod/Makefile
+  For b/2476399, disable Hesiod (not used in google).
+  Forward-ported from cl/52537558.
+  (ppluzhnikov, google-local)
+  

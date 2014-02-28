@@ -20,7 +20,8 @@
 #
 subdir	:= hesiod
 
-extra-libs := libnss_hesiod
+# Google-local: Disable hesiod.
+# extra-libs := libnss_hesiod
 extra-libs-others = $(extra-libs)
 
 subdir-dirs = nss_hesiod
