@@ -59,3 +59,10 @@ nss/nss_cache/nss_cache.c
 nss/nss_cache/nss_cache.h
   Forward-port nss_borg and nss_cache from glibc-2.18
   (ppluzhnikov, google-local)
+
+nis/Makefile
+nss/Makefile
+  For b/2476399, disable libnss_db (not used in google).
+  Likewise ibnsl and related libnss_* libraries.
+  Forward-ported from cl/52538169 and cl/52538711.
+  (ppluzhnikov, bmoses, google-local)

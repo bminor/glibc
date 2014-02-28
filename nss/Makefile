@@ -32,8 +32,9 @@ routines		= nsswitch getnssent getnssent_r digits_dots \
 databases		= proto service hosts network grp pwd rpc ethers \
 			  spwd netgrp key alias sgrp
 
-others                  := getent makedb
-install-bin             := getent makedb
+# Google-local: Disable libnss_db by removing makedb.
+others                  := getent
+install-bin             := getent
 makedb-modules = xmalloc hash-string
 extra-objs		+= $(makedb-modules:=.o)
 
@@ -43,7 +44,8 @@ xtests			= bug-erange
 include ../Makeconfig
 
 # Specify rules for the nss_* modules.  We have some services.
-services		:= files db borg cache
+# Google-local: Disable libnss_db by removing db.
+services		:= files borg cache
 
 extra-libs		= $(services:%=libnss_%)
 # These libraries will be built in the `others' pass rather than
@@ -68,7 +70,8 @@ libnss_db-routines	:= $(libnss_db-dbs) db-open db-init hash-string
 generated		+= $(filter-out db-alias.c db-netgrp.c, \
 					$(addsuffix .c,$(libnss_db-dbs)))
 
-install-others		+= $(inst_vardbdir)/Makefile
+# Google-local: Disable libnss_db.
+# install-others		+= $(inst_vardbdir)/Makefile
 
 # Build static module into libc if requested
 libnss_files-inhibit-o	= $(filter-out .os,$(object-suffixes))
