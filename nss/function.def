@@ -31,6 +31,9 @@ DEFINE_ENT (files, ether)
 DEFINE_ENT (files, gr)
 DEFINE_GET (files, grgid)
 DEFINE_GET (files, grnam)
+DEFINE_ENT (cache, gr)
+DEFINE_GET (cache, grgid)
+DEFINE_GET (cache, grnam)
 
 /* hosts */
 DEFINE_ENT (files, host)
@@ -62,6 +65,11 @@ DEFINE_GETBY (files, proto, number)
 DEFINE_ENT (files, pw)
 DEFINE_GET (files, pwnam)
 DEFINE_GET (files, pwuid)
+DEFINE_GET (borg, pwnam)  /* /etc/passwd2 */
+DEFINE_GET (borg, pwuid)
+DEFINE_ENT (cache, pw)
+DEFINE_GET (cache, pwnam)
+DEFINE_GET (cache, pwuid)
 
 /* rpc */
 DEFINE_ENT (files, rpc)
@@ -76,3 +84,5 @@ DEFINE_GETBY (files, serv, port)
 /* shadow */
 DEFINE_ENT (files, sp)
 DEFINE_GET (files, spnam)
+DEFINE_ENT (cache, sp)
+DEFINE_GET (cache, spnam)

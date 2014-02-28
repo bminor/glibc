@@ -41,6 +41,7 @@ extern enum nss_status _nss_ ## service ## _getspnam_r			\
 		       (const char *name, struct spwd *pwd,		\
 			char *buffer, size_t buflen, int *errnop);
 
+DECLARE_NSS_PROTOTYPES (cache)
 DECLARE_NSS_PROTOTYPES (compat)
 DECLARE_NSS_PROTOTYPES (files)
 DECLARE_NSS_PROTOTYPES (hesiod)

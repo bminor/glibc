@@ -48,6 +48,8 @@ libnss_nisplus=2
 libnss_ldap=2
 libnss_hesiod=2
 libnss_db=2
+libnss_borg=2
+libnss_cache=2
 
 # Tests for NSS.  They must have the same NSS_SHLIB_REVISION number as
 # the rest.

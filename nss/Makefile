@@ -73,7 +73,7 @@ tests += tst-cancel-getpwuid_r
 endif
 
 # Specify rules for the nss_* modules.  We have some services.
-services		:= files db compat
+services		:= files db compat borg cache
 
 extra-libs		= $(services:%=libnss_%)
 # These libraries will be built in the `others' pass rather than
@@ -87,6 +87,8 @@ vpath %.c $(subdir-dirs) ../locale/programs ../intl
 
 libnss_files-routines	:= $(addprefix files-,$(databases)) \
 			   files-initgroups files-init
+libnss_borg-routines	:= borg-pwd
+libnss_cache-routines	:= nss_cache
 
 libnss_db-dbs		:= $(addprefix db-,\
 				       $(filter-out hosts network key alias,\
@@ -104,10 +106,14 @@ install-others		+= $(inst_vardbdir)/Makefile
 # Build static module into libc if requested
 libnss_files-inhibit-o	= $(filter-out .os,$(object-suffixes))
 libnss_db-inhibit-o	= $(filter-out .os,$(object-suffixes))
+libnss_borg-inhibit-o	= $(filter-out .os,$(object-suffixes))
+libnss_cache-inhibit-o	= $(filter-out .os,$(object-suffixes))
 libnss_compat-inhibit-o	= $(filter-out .os,$(object-suffixes))
 ifeq ($(build-static-nss),yes)
-routines                += $(libnss_files-routines)
-static-only-routines    += $(libnss_files-routines)
+routines                += $(libnss_files-routines) $(libnss_borg-routines) \
+                           $(libnss_cache-routines)
+static-only-routines    += $(libnss_files-routines) $(libnss_borg-routines) \
+                           $(libnss_cache-routines)
 tests-static		+= tst-nss-static
 endif
 extra-test-objs		+= nss_test1.os nss_test2.os
