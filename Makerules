@@ -958,9 +958,9 @@ $(inst_libdir)/libc.so: $(common-objpfx)format.lds \
 	 echo '   Use the shared library, but some functions are only in';\
 	 echo '   the static library, so try that secondarily.  */';\
 	 cat $<; \
-	 echo 'GROUP ( $(slibdir)/libc.so$(libc.so-version)' \
-	      '$(libdir)/$(patsubst %,$(libtype.oS),$(libprefix)$(libc-name))'\
-	      ' AS_NEEDED (' $(rtlddir)/$(rtld-installed-name) ') )' \
+	 echo 'GROUP ( libc.so$(libc.so-version)' \
+	      '$(patsubst %,$(libtype.oS),$(libprefix)$(libc-name))'\
+	      ' AS_NEEDED (' $(rtld-installed-name) ') )' \
 	) > $@.new
 	mv -f $@.new $@
 

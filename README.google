@@ -71,4 +71,11 @@ hesiod/Makefile
   For b/2476399, disable Hesiod (not used in google).
   Forward-ported from cl/52537558.
   (ppluzhnikov, google-local)
-  
+
+Makerules
+nptl/Makefile
+  Don't put absolute pathnames into libc.so and libpthread.so linker
+  scripts -- absolute pathnames interfere with --sysroot.
+  cl/51074128 from eglibc-2.18
+  (ppluzhnikov, google-local)
+

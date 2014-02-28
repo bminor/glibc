@@ -393,8 +393,8 @@ $(inst_libdir)/libpthread.so: $(common-objpfx)format.lds \
 	 echo '   Use the shared library, but some functions are only in';\
 	 echo '   the static library, so try that secondarily.  */';\
 	 cat $<; \
-	 echo 'GROUP ( $(slibdir)/libpthread.so$(libpthread.so-version)' \
-	      '$(libdir)/$(patsubst %,$(libtype.oS),$(libprefix)pthread)'\
+	 echo 'GROUP ( libpthread.so$(libpthread.so-version)' \
+	      '$(patsubst %,$(libtype.oS),$(libprefix)pthread)'\
 	      ')' \
 	) > $@.new
 	mv -f $@.new $@
