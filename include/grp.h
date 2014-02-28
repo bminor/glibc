@@ -53,6 +53,7 @@ extern enum nss_status _nss_ ## service ##_initgroups_dyn		   \
 			long int *size, gid_t **groupsp, long int limit,   \
 			int *errnop);
 
+DECLARE_NSS_PROTOTYPES (cache)
 DECLARE_NSS_PROTOTYPES (compat)
 DECLARE_NSS_PROTOTYPES (files)
 DECLARE_NSS_PROTOTYPES (hesiod)

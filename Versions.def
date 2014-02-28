@@ -80,6 +80,12 @@ libnss_db {
 libnss_files {
   GLIBC_PRIVATE
 }
+libnss_borg {
+  GLIBC_PRIVATE
+}
+libnss_cache {
+  GLIBC_PRIVATE
+}
 libnss_hesiod {
   GLIBC_PRIVATE
 }

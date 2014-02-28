@@ -46,3 +46,16 @@ google-nsl-stub/ypclnt.c
   dynamically link to it, and this stub satisfies that need.
   (bmoses, google-local)
 
+Versions.def
+shlib-versions
+include/grp.h
+include/pwd.h
+include/shadow.h
+nss/Makefile
+nss/Versions
+nss/function.def
+nss/nss_borg/borg-pwd.c
+nss/nss_cache/nss_cache.c
+nss/nss_cache/nss_cache.h
+  Forward-port nss_borg and nss_cache from glibc-2.18
+  (ppluzhnikov, google-local)

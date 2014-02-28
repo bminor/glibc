@@ -160,3 +160,30 @@ libnss_db {
     _nss_db_init;
   }
 }
+libnss_borg {
+  GLIBC_PRIVATE {
+    _nss_borg_setpwent;
+    _nss_borg_endpwent;
+    _nss_borg_getpwent_r;
+    _nss_borg_getpwnam_r;
+    _nss_borg_getpwuid_r;
+  }
+}
+libnss_cache {
+  GLIBC_PRIVATE {
+    _nss_cache_setpwent;
+    _nss_cache_endpwent;
+    _nss_cache_getpwent_r;
+    _nss_cache_getpwuid_r;
+    _nss_cache_getpwnam_r;
+    _nss_cache_setgrent;
+    _nss_cache_endgrent;
+    _nss_cache_getgrent_r;
+    _nss_cache_getgrgid_r;
+    _nss_cache_getgrnam_r;
+    _nss_cache_setspent;
+    _nss_cache_endspent;
+    _nss_cache_getspent_r;
+    _nss_cache_getspnam_r;
+  }
+}
