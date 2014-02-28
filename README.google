@@ -35,3 +35,14 @@ sysdeps/generic/ldsodefs.h
   https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=73d61e4f6c65da714c0f8a3a233725322553ceba
   https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=bf06bcee84d4c19a99925c0f58026a8cbd87a688
   (ahh, not yet upstream)
+
+google-nsl-stub/Makefile
+google-nsl-stub/configure
+google-nsl-stub/shlib-versions
+google-nsl-stub/ypclnt.c
+  For b/2832143 and b/10385480, add a stub libnsl library as an add-on, to
+  replace the libnsl removed in the previous change.  Although we do not use
+  libnsl normally, we have precompiled third-party binaries that need to
+  dynamically link to it, and this stub satisfies that need.
+  (bmoses, google-local)
+
