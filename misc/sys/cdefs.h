@@ -303,6 +303,13 @@
 # define __wur /* Ignore */
 #endif
 
+/* Google specific: Disable __warn_unused_result__ attribute even if
+   _FORTIFY_SOURCE is specified. Not all google3 code compiles when it's set */
+#ifdef _GOOGLE_FORTIFY_SOURCE_NO_WARN_UNUSED_RESULT
+# undef __wur
+# define __wur /* Ignore */
+#endif
+
 /* Forces a function to be always inlined.  */
 #if __GNUC_PREREQ (3,2)
 # define __always_inline __inline __attribute__ ((__always_inline__))

@@ -138,3 +138,12 @@ elf/rtld.c
   Forward-ported from cl/51332859 (from cl/51576-p2 and cl/51620-p2).
   (ppluzhnikov, google-local)
 
+misc/sys/cdefs.h
+  g/grte-team/browse_thread/thread/d08601e9f5542d94
+  Disable gcc's __warn_unused_result__ attribute in glibc headers when
+  _GOOGLE_FORTIFY_SOURCE_NO_WARN_UNUSED_RESULT is specified, even if
+  _FORTIFY_SOURCE is set.  Some google3 code does not compile when this
+  attribute is set on some glibc functions.
+  Forward-ported from cl/51334004 (from cl/53404-p2).
+  (swiecki, google-local)
+
