@@ -1636,6 +1636,10 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
       HP_TIMING_ACCUM_NT (load_time, diff);
     }
 
+
+#if ENABLE_ETC_LD_SO_PRELOAD  /* Google-local: we don't want
+				 /etc/ld.so.preload for GRTE.  */
+
   /* There usually is no ld.so.preload file, it should only be used
      for emergencies and testing.  So the open call etc should usually
      fail.  Using access() on a non-existing file is faster than using
@@ -1719,6 +1723,8 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 	  __munmap (file, file_size);
 	}
     }
+
+#endif  /* end "/etc/ld.so.preload" disable.  */
 
   if (__builtin_expect (*first_preload != NULL, 0))
     {

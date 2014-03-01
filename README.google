@@ -132,3 +132,9 @@ sysdeps/unix/grantpt.c
   Forward-ported from cl/51332316 (from cl/41538-p2).
   (ppluzhnikov, google-local)
 
+elf/rtld.c
+  For b/4268901, disable "/etc/ld.so.preload", but allow other builds to
+  re-enable it by setting -DENABLE_ETC_LD_SO_PRELOAD in CFLAGS.
+  Forward-ported from cl/51332859 (from cl/51576-p2 and cl/51620-p2).
+  (ppluzhnikov, google-local)
+
