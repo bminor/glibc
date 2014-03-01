@@ -67,12 +67,20 @@ static const char *locnames[] =
 #undef  DEFINE_CATEGORY
   };
 
+/* Google local change: we've reduced the initial archive header
+   sizes, since we use very few of the entries.  This saves ~100k.
 
+   The hash tables are sized larger than the number of entries we use.
+   The code will round their sizes up to the next power of 2, and if
+   it finds that they're >75% full will grow them as well.  We set the
+   defaults to the size that we'll end up with given what we use.
+
+   The vectors are sized exactly to hold what we use.  */
 /* Size of the initial archive header.  */
-#define INITIAL_NUM_NAMES	900
-#define INITIAL_SIZE_STRINGS	7500
-#define INITIAL_NUM_LOCREC	420
-#define INITIAL_NUM_SUMS	2000
+#define INITIAL_NUM_NAMES	5    /* (hash table of structs)  We use 3. */
+#define INITIAL_SIZE_STRINGS	32   /* (vector of bytes)        We use 32.  */
+#define INITIAL_NUM_LOCREC	2    /* (vector of structs)      We use 2.  */
+#define INITIAL_NUM_SUMS	11   /* (hash table of structs)  We use 6.  */
 
 
 /* Get and set values (possibly endian-swapped) in structures mapped
