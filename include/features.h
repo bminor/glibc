@@ -372,6 +372,9 @@
 #define __GLIBC_PREREQ(maj, min) \
 	((__GLIBC__ << 16) + __GLIBC_MINOR__ >= ((maj) << 16) + (min))
 
+/* GRTEv4 (glibc-2.19) date */
+#define __GOOGLE_GRTE_VERSION__		20140228L
+
 /* This is here only because every header file already includes this one.  */
 #ifndef __ASSEMBLER__
 # ifndef _SYS_CDEFS_H

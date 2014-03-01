@@ -100,3 +100,8 @@ sysdeps/gnu/errlist-compat.awk
   Forward-ported from part of cl/51276043 (from cl/38025-p2).
   (ppluzhnikov, google-local)
 
+include/features.h
+  Add __GOOGLE_GRTE_VERSION__ for GRTEv4 usage.
+  Forward-ported with date and comment changed from cl/51277131.
+  (ppluzhnikov, google-local)
+
