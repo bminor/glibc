@@ -29,7 +29,9 @@ dlopen (const char *file, int mode)
 {
   return __dlopen (file, mode, RETURN_ADDRESS (0));
 }
+#if 0  // Google-local
 static_link_warning (dlopen)
+#endif
 
 #else
 

@@ -126,8 +126,13 @@ versioned_symbol (libc, __sys_nerr_internal, _sys_nerr, %s);\n", \
     lastv, lastv, lastv, lastv;
 
   print "\n\
+/* Google-local:\n\
+   Disable deprecation warnings; they're emitted even if referenced\n\
+   only by debug info. */\n\
+#if 0\n\
 link_warning (sys_errlist, \"\
 `sys_errlist' is deprecated; use `strerror' or `strerror_r' instead\")\n\
 link_warning (sys_nerr, \"\
-`sys_nerr' is deprecated; use `strerror' or `strerror_r' instead\")";
+`sys_nerr' is deprecated; use `strerror' or `strerror_r' instead\")\n\
+#endif";
 }

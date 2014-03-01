@@ -92,3 +92,11 @@ sysdeps/x86_64/elf/start.S
   Forward-ported from cl/51271693 (from cl/38027-p2).
   (ppluzhnikov, google-local)
 
+dlfcn/dlmopen.c
+dlfcn/dlopen.c
+sysdeps/gnu/errlist-compat.awk
+  Disable static linking warning for dlopen and dlmopen, and disable linking
+  warning for sys_errlist and sys_nerr.
+  Forward-ported from part of cl/51276043 (from cl/38025-p2).
+  (ppluzhnikov, google-local)
+
