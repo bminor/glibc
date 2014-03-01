@@ -112,3 +112,11 @@ elf/dl-debug.c
   Forward-ported from cl/51330448 (from cl/38429-p2).
   (ppluzhnikov, google-local)
 
+include/alloca.h
+  Set __MAX_ALLOCA_CUTOFF to 8kb to avoid stack overflow, as described in
+  b/2425017.  The stack protection in //google3/thread/thread.cc creates a
+  large stack with only 64kb of remaining space, which the upstream alloca
+  heuristic is ill-equipped to deal with.
+  Forward-ported from cl/51331379 (from cl/38559-p2).
+  (ppluzhnikov, google-local) 
+
