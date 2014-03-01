@@ -84,3 +84,11 @@ csu/Makefile
   Forward-ported from cl/51218346 (from cl/37734-p2).
   (ppluzhnikov, google-local)
 
+elf/Versions
+elf/dl-init.c
+sysdeps/i386/elf/start.S
+sysdeps/x86_64/elf/start.S
+  Add __google_auxv.
+  Forward-ported from cl/51271693 (from cl/38027-p2).
+  (ppluzhnikov, google-local)
+

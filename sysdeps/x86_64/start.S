@@ -65,6 +65,7 @@ _start:
 	/* Clear the frame pointer.  The ABI suggests this be done, to mark
 	   the outermost frame obviously.  */
 	xorl %ebp, %ebp
+	call __google_init
 
 	/* Extract the arguments as encoded on the stack and set up
 	   the arguments for __libc_start_main (int (*main) (int, char **, char **),
@@ -125,6 +126,46 @@ _start:
 	hlt			/* Crash if somehow `exit' does return.	 */
 	cfi_endproc
 
+/*
+   %rsp		The stack contains the arguments and environment:
+		0(%rsp)				ra
+		1*8(%rsp)			argc
+		2*8(%rsp)			argv[0]
+		...
+		(argc+2)*8(%rsp)		NULL
+		(argc+3)*8(%rsp)		envp[0]
+		...
+		(argc+2+env_count+1)*8(%rsp)	NULL
+                (argc+2+env_count+2)*8(%rsp)	auxv[0]
+		...
+*/
+__google_init:
+	leaq __google_argc(%rip), %rbx  /* %rbx = &__google_argc  */
+	movq 8(%rsp), %rax
+	movq %rax, 0(%rbx)
+	push %rsp
+	pop %rax
+	addq $2*8, %rax
+	leaq __google_argv(%rip), %rbx
+	movq %rax, 0(%rbx)
+/* The next loop could be omitted if we are to trust argc from the kernel.  */
+1:	cmpq $0, 0(%rax)  /* while(argv[i++] != 0) skip; */
+	je 2f
+	addq $8, %rax
+	jmp 1b
+2:	addq $8, %rax
+	leaq __google_envp(%rip), %rbx
+	movq %rax, 0(%rbx)
+3:	cmpq $0, 0(%rax)  /* while (envp[i++] != 0) skip; */
+	je 4f
+	addq $8, %rax
+	jmp 3b
+4:	addq $8, %rax
+	leaq __google_auxv(%rip), %rbx
+	movq %rax, 0(%rbx)
+	ret
+
+
 /* Define a symbol for the first piece of initialized data.  */
 	.data
 	.globl __data_start
@@ -132,3 +173,13 @@ __data_start:
 	.long 0
 	.weak data_start
 	data_start = __data_start
+
+	.p2align 3
+/* The {argc,argv,envp} variables are not exposed to keep the interface narrow
+   (we don't need anything except auxv right now). If/when they are needed,
+   simply mark them with ".globl".  */
+__google_argc: .quad 0
+__google_argv: .quad 0
+__google_envp: .quad 0
+	.globl __google_auxv
+__google_auxv: .quad 0

@@ -80,6 +80,8 @@ call_init (struct link_map *l, int argc, char **argv, char **env)
 }
 
 
+ElfW(auxv_t) *__google_auxv;
+
 void
 internal_function
 _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
@@ -87,6 +89,17 @@ _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
   ElfW(Dyn) *preinit_array = main_map->l_info[DT_PREINIT_ARRAY];
   ElfW(Dyn) *preinit_array_size = main_map->l_info[DT_PREINIT_ARRAYSZ];
   unsigned int i;
+
+  /* _dl_init is called from _dl_start_user during loader startup.
+     It is also called from dl_open_worker.
+     Prevent multiple initialization of __google_auxv.  */
+  if (__google_auxv == NULL)
+    {
+      char **e;
+
+      for (e = env; *e; ++e) /* Skip.  */;
+      __google_auxv = (ElfW(auxv_t) *) ++e;
+    }
 
   if (__builtin_expect (GL(dl_initfirst) != NULL, 0))
     {
