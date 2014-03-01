@@ -97,7 +97,7 @@ dlfcn/dlopen.c
 sysdeps/gnu/errlist-compat.awk
   Disable static linking warning for dlopen and dlmopen, and disable linking
   warning for sys_errlist and sys_nerr.
-  Forward-ported from part of cl/51276043 (from cl/38025-p2).
+  Forward-ported from cl/51276043 (from part of cl/38025-p2).
   (ppluzhnikov, google-local)
 
 include/features.h
