@@ -126,3 +126,9 @@ locale/programs/locarchive.c
   Forward-ported from cl/51331729 (from cl/39296-p2).
   (cgd, google-local)
 
+sysdeps/unix/grantpt.c
+  For b/2723095, allow grantpt() to succeed even if it can't chgrp
+  the slave pty to the "tty" group.
+  Forward-ported from cl/51332316 (from cl/41538-p2).
+  (ppluzhnikov, google-local)
+

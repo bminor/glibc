@@ -31,6 +31,9 @@
 
 #include "pty-private.h"
 
+/* Needed for Google local fix for b/2723095.  */
+#include <sys/statfs.h>
+#include <linux/magic.h>
 
 /* Return the result of ptsname_r in the buffer pointed to by PTS,
    which should be of length BUF_LEN.  If it is too long to fit in
@@ -158,6 +161,17 @@ grantpt (int fd)
   /* Make sure the group of the device is that special group.  */
   if (st.st_gid != gid)
     {
+      /* Google local fix for b/2723095: if the device is on
+         a /dev/pts filesystem, don't fail when st_gid != gid (which may
+         be caused by the FS being mounted without gid=5 option, where
+         5 is the gid of the "tty" group).  */
+      struct statfs fsbuf;
+      if (__statfs (buf, &fsbuf) == 0 && fsbuf.f_type == DEVPTS_SUPER_MAGIC)
+	{
+	  retval = 0;
+	  goto cleanup;
+	}
+
       if (__chown (buf, uid, gid) < 0)
 	goto helper;
     }
