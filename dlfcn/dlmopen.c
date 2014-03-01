@@ -30,7 +30,9 @@ dlmopen (Lmid_t nsid, const char *file, int mode)
 {
   return __dlmopen (nsid, file, mode, RETURN_ADDRESS (0));
 }
+#if 0  // Google-local
 static_link_warning (dlmopen)
+#endif
 
 #else
 
