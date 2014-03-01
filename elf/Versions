@@ -62,6 +62,9 @@ ld {
 
     # Pointer protection.
     __pointer_chk_guard;
+
+    # Google-local
+    _google_dl_debug_state_hook;
     __google_auxv;
   }
 }

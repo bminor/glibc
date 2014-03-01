@@ -105,3 +105,10 @@ include/features.h
   Forward-ported with date and comment changed from cl/51277131.
   (ppluzhnikov, google-local)
 
+elf/Versions
+elf/dl-debug.c
+  Add _google_dl_debug_state_hook.  This is used by libunwind; see comment
+  in //google3/third_party/grte/google_glibc_extensions.h.
+  Forward-ported from cl/51330448 (from cl/38429-p2).
+  (ppluzhnikov, google-local)
+

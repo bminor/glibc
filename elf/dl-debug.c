@@ -65,6 +65,8 @@ _dl_debug_initialize (ElfW(Addr) ldbase, Lmid_t ns)
 }
 
 
+void (*_google_dl_debug_state_hook)(const struct r_debug *);
+
 /* This function exists solely to have a breakpoint set on it by the
    debugger.  The debugger is supposed to find this function's address by
    examining the r_brk member of struct r_debug, but GDB 4.15 in fact looks
@@ -72,5 +74,7 @@ _dl_debug_initialize (ElfW(Addr) ldbase, Lmid_t ns)
 void
 _dl_debug_state (void)
 {
+  if (_google_dl_debug_state_hook)
+    _google_dl_debug_state_hook(&_r_debug);
 }
 rtld_hidden_def (_dl_debug_state)
