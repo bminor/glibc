@@ -2494,6 +2494,8 @@ process_envvars (enum mode *modep)
   GLRO(dl_profile_output)
     = &"/var/tmp\0/var/profile"[INTUSE(__libc_enable_secure) ? 9 : 0];
 
+  GLRO(google_ld_so_cache_list) = GOOGLE_LD_SO_CACHE_LIST;
+
   while ((envline = _dl_next_ld_env_entry (&runp)) != NULL)
     {
       size_t len = 0;
@@ -2639,6 +2641,13 @@ process_envvars (enum mode *modep)
 	  /* The mode of the dynamic linker can be set.  */
 	  if (memcmp (envline, "TRACE_LOADED_OBJECTS", 20) == 0)
 	    mode = trace;
+	  break;
+
+	  /* Google local change.  */
+	case 23:
+	  if (!INTUSE(__libc_enable_secure)
+	      && memcmp (envline, "GOOGLE_LD_SO_CACHE_LIST", 23) == 0)
+	    GLRO(google_ld_so_cache_list) = &envline[24];
 	  break;
 
 	  /* We might have some extra environment variable to handle.  This

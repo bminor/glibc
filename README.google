@@ -163,3 +163,17 @@ sysdeps/unix/readdir_r.c
   Forward-ported from cl/51430993 (from cl/45000-p2).
   (ppluzhnikov, google-local)
 
+elf/Makefile
+elf/dl-cache.c
+elf/dl-support.c
+elf/rtld.c
+sysdeps/generic/ldsodefs.h
+sysdeps/generic/unsecvars.h
+  For b/2471323, implement multi-level cache search for shared libraries.
+  Currently, two-level: $prefix/etc/ld.so.conf and /etc/ld.so.conf.
+  Allow build-time configuration override via GOOGLE_LD_SO_CACHE_LIST.
+  Allow run-time override via LD_GOOGLE_LD_SO_CACHE_LIST environment
+  variable.
+  Forward-ported from cl/51433387 (from cl/38694-p2, cl/38725-p2, and
+  cl/38741-p2).
+  (ppluzhnikov, google-local)

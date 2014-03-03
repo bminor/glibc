@@ -222,6 +222,8 @@ __rtld_lock_define_initialized_recursive (, _dl_load_lock)
    that list.  */
 __rtld_lock_define_initialized_recursive (, _dl_load_write_lock)
 
+/* Colon-separated list of absolute paths to ld.so.cache files we'll load.  */
+const char *_google_ld_so_cache_list = GOOGLE_LD_SO_CACHE_LIST;
 
 #ifdef HAVE_AUX_VECTOR
 int _dl_clktck;

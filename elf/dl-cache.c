@@ -29,10 +29,19 @@
 # define _DL_PLATFORMS_COUNT 0
 #endif
 
-/* This is the starting address and the size of the mmap()ed file.  */
-static struct cache_file *cache;
-static struct cache_file_new *cache_new;
-static size_t cachesize;
+/* This struct describes a single ld.so.cache (there could be several,
+   as we want to look in $prefix/etc/ld.so.cache and in the system default
+   /etc/ld.so.cache). See b/2471323.  */
+struct cache_info {
+  const char *ld_so_cache;
+  /* This is the starting address and the size of the mmap()ed file.  */
+  struct cache_file *cache;
+  struct cache_file_new *cache_new;
+  size_t cachesize;
+};
+
+/* Dynamically allocated; last entry is sentinel with ld_so_cache == NULL.  */
+static struct cache_info *cache_info;
 
 /* 1 if cache_data + PTR points into the cache.  */
 #define _dl_cache_verify_ptr(ptr) (ptr < cache_data_size)
@@ -172,13 +181,14 @@ _dl_cache_libcmp (const char *p1, const char *p2)
 }
 
 
-/* Look up NAME in ld.so.cache and return the file name stored there, or null
-   if none is found.  The cache is loaded if it was not already.  If loading
-   the cache previously failed there will be no more attempts to load it.  */
-
+/* Look up NAME in ld.so.cache described by INFO and return the file name
+   stored there, or null if none is found.  The cache is loaded if it was not
+   already.  If loading the cache previously failed there will be no more
+   attempts to load it.  */
+static
 const char *
 internal_function
-_dl_load_cache_lookup (const char *name)
+_dl_load_cache_lookup_2 (const char *name, struct cache_info *info)
 {
   int left, right, middle;
   int cmpres;
@@ -188,12 +198,13 @@ _dl_load_cache_lookup (const char *name)
 
   /* Print a message if the loading of libs is traced.  */
   if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS, 0))
-    _dl_debug_printf (" search cache=%s\n", LD_SO_CACHE);
+    _dl_debug_printf (" search cache=%s\n", info->ld_so_cache);
 
-  if (cache == NULL)
+  if (info->cache == NULL)
     {
       /* Read the contents of the file.  */
-      void *file = _dl_sysdep_read_whole_file (LD_SO_CACHE, &cachesize,
+      void *file = _dl_sysdep_read_whole_file (info->ld_so_cache,
+					       &info->cachesize,
 					       PROT_READ);
 
       /* We can handle three different cache file formats here:
@@ -201,55 +212,58 @@ _dl_load_cache_lookup (const char *name)
 	 - the old format with the new format in it
 	 - only the new format
 	 The following checks if the cache contains any of these formats.  */
-      if (file != MAP_FAILED && cachesize > sizeof *cache
+      if (file != MAP_FAILED && info->cachesize > sizeof *info->cache
 	  && memcmp (file, CACHEMAGIC, sizeof CACHEMAGIC - 1) == 0)
 	{
 	  size_t offset;
 	  /* Looks ok.  */
-	  cache = file;
+	  info->cache = file;
 
 	  /* Check for new version.  */
-	  offset = ALIGN_CACHE (sizeof (struct cache_file)
-				+ cache->nlibs * sizeof (struct file_entry));
+	  offset =
+	    ALIGN_CACHE (sizeof (struct cache_file)
+			 + info->cache->nlibs * sizeof (struct file_entry));
 
-	  cache_new = (struct cache_file_new *) ((void *) cache + offset);
-	  if (cachesize < (offset + sizeof (struct cache_file_new))
-	      || memcmp (cache_new->magic, CACHEMAGIC_VERSION_NEW,
+	  info->cache_new =
+	    (struct cache_file_new *) ((void *) info->cache + offset);
+	  if (info->cachesize < (offset + sizeof (struct cache_file_new))
+	      || memcmp (info->cache_new->magic, CACHEMAGIC_VERSION_NEW,
 			 sizeof CACHEMAGIC_VERSION_NEW - 1) != 0)
-	    cache_new = (void *) -1;
+	    info->cache_new = (void *) -1;
 	}
-      else if (file != MAP_FAILED && cachesize > sizeof *cache_new
+      else if (file != MAP_FAILED && info->cachesize > sizeof *info->cache_new
 	       && memcmp (file, CACHEMAGIC_VERSION_NEW,
 			  sizeof CACHEMAGIC_VERSION_NEW - 1) == 0)
 	{
-	  cache_new = file;
-	  cache = file;
+	  info->cache_new = file;
+	  info->cache = file;
 	}
       else
 	{
 	  if (file != MAP_FAILED)
-	    __munmap (file, cachesize);
-	  cache = (void *) -1;
+	    __munmap (file, info->cachesize);
+	  info->cache = (void *) -1;
 	}
 
-      assert (cache != NULL);
+      assert (info->cache != NULL);
     }
 
-  if (cache == (void *) -1)
+  if (info->cache == (void *) -1)
     /* Previously looked for the cache file and didn't find it.  */
     return NULL;
 
   best = NULL;
 
-  if (cache_new != (void *) -1)
+  if (info->cache_new != (void *) -1)
     {
       uint64_t platform;
 
       /* This is where the strings start.  */
-      cache_data = (const char *) cache_new;
+      cache_data = (const char *) info->cache_new;
 
       /* Now we can compute how large the string table is.  */
-      cache_data_size = (const char *) cache + cachesize - cache_data;
+      cache_data_size =
+	(const char *) info->cache + info->cachesize - cache_data;
 
       platform = _dl_string_platform (GLRO(dl_platform));
       if (platform != (uint64_t) -1)
@@ -269,19 +283,20 @@ _dl_load_cache_lookup (const char *name)
 	  && (lib->hwcap & _DL_HWCAP_PLATFORM) != 0			      \
 	  && (lib->hwcap & _DL_HWCAP_PLATFORM) != platform)		      \
 	continue
-      SEARCH_CACHE (cache_new);
+      SEARCH_CACHE (info->cache_new);
     }
   else
     {
       /* This is where the strings start.  */
-      cache_data = (const char *) &cache->libs[cache->nlibs];
+      cache_data = (const char *) &info->cache->libs[info->cache->nlibs];
 
       /* Now we can compute how large the string table is.  */
-      cache_data_size = (const char *) cache + cachesize - cache_data;
+      cache_data_size =
+	(const char *) info->cache + info->cachesize - cache_data;
 
 #undef HWCAP_CHECK
 #define HWCAP_CHECK do {} while (0)
-      SEARCH_CACHE (cache);
+      SEARCH_CACHE (info->cache);
     }
 
   /* Print our result if wanted.  */
@@ -292,18 +307,100 @@ _dl_load_cache_lookup (const char *name)
   return best;
 }
 
+/* Parse CACHE_LIST, and build cache_info array.  */
+static
+struct cache_info *
+_dl_alloc_cache_info (const char *const cache_list)
+{
+  struct cache_info *info;
+  const char *begin;
+  int num_caches, i;
+
+  begin = cache_list;
+  num_caches = 0;
+
+  /* cache_list is a colon-separated list of absolute pathnames of
+     ld.so.cache files.  We stop at first non-absolute path (if any).  */
+  while (begin[0] == '/')
+    {
+      ++num_caches;
+      begin = strchr (begin, ':');
+      if (begin == NULL)
+	break;
+      ++begin;
+    }
+
+  /* Allocate one extra for the sentinel.  */
+  info = (struct cache_info *) calloc (num_caches + 1, sizeof (*cache_info));
+
+  begin = cache_list;
+  for (i = 0; i < num_caches; ++i)
+    {
+      const char *const end = strchr(begin, ':');
+
+      if (end == NULL)
+	info[i].ld_so_cache = strdup (begin);
+      else
+	{
+	  info[i].ld_so_cache = strndup (begin, end - begin);
+	  begin = end + 1;
+	}
+    }
+  return info;
+}
+
+/* Look up NAME in each of ld.so.cache caches in turn, and return the
+   file name stored there, or null if none is found.  */
+const char *
+internal_function
+_dl_load_cache_lookup (const char *name)
+{
+  struct cache_info *info;
+
+  /* This runs at startup, or during dlopen with loader lock held.  */
+  if (cache_info == NULL)
+    /* Caches have not been initialized yet.  */
+    cache_info = _dl_alloc_cache_info (GLRO(google_ld_so_cache_list));
+
+  for (info = cache_info; info->ld_so_cache != NULL; ++info)
+    {
+      const char *result;
+
+      result = _dl_load_cache_lookup_2 (name, info);
+      if (result != NULL)
+	return result;
+    }
+
+  return NULL;
+}
+
 #ifndef MAP_COPY
 /* If the system does not support MAP_COPY we cannot leave the file open
    all the time since this would create problems when the file is replaced.
-   Therefore we provide this function to close the file and open it again
-   once needed.  */
+   Therefore we provide this function to close the file described by INFO
+   and open it again once needed.  */
+static
+void
+_dl_unload_cache_2 (struct cache_info *info)
+{
+  if (info->cache != NULL && info->cache != (struct cache_file *) -1)
+    {
+      __munmap (info->cache, info->cachesize);
+      info->cache = NULL;
+    }
+}
+
+/* Unload all loaded ld.so.cache caches.  */
 void
 _dl_unload_cache (void)
 {
-  if (cache != NULL && cache != (struct cache_file *) -1)
-    {
-      __munmap (cache, cachesize);
-      cache = NULL;
-    }
+  struct cache_info *info;
+
+  if (cache_info == NULL)
+    /* No caches loaded yet.  */
+    return;
+
+  for (info = cache_info; info->ld_so_cache != NULL; ++info)
+    _dl_unload_cache_2 (info);
 }
 #endif

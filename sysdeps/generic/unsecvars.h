@@ -9,6 +9,7 @@
   "LD_DEBUG\0"								      \
   "LD_DEBUG_OUTPUT\0"							      \
   "LD_DYNAMIC_WEAK\0"							      \
+  "LD_GOOGLE_LD_SO_CACHE_LIST\0"					      \
   "LD_LIBRARY_PATH\0"							      \
   "LD_ORIGIN_PATH\0"							      \
   "LD_PRELOAD\0"							      \

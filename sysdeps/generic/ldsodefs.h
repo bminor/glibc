@@ -129,6 +129,13 @@ typedef struct link_map *lookup_t;
    | ((PROT_WRITE | PROT_EXEC) << (PF_W | PF_X) * 4)			      \
    | ((PROT_READ | PROT_WRITE | PROT_EXEC) << ((PF_R | PF_W | PF_X) * 4)))
 
+#ifndef GOOGLE_LD_SO_CACHE_LIST
+/* List of absolute paths to ld.so.cache files we'll load.
+   By default we use "$prefix/etc/ld.so.cache:/etc/ld.so.cache". The second
+   is needed so we can find system libraries not included in GRTE.  */
+#define GOOGLE_LD_SO_CACHE_LIST LD_SO_CACHE ":/etc/ld.so.cache"
+#endif
+
 /* The filename itself, or the main program name, if available.  */
 #define DSO_FILENAME(name) ((name)[0] ? (name)				      \
 			    : (rtld_progname ?: "<main program>"))
@@ -539,6 +546,10 @@ struct rtld_global_ro
 
   /* All search directories defined at startup.  */
   EXTERN struct r_search_path_elem *_dl_init_all_dirs;
+
+  /* Colon-separated list of absolute paths to ld.so.cache files
+     we'll load.  */
+  EXTERN const char *_google_ld_so_cache_list;
 
 #if HP_TIMING_AVAIL || HP_SMALL_TIMING_AVAIL
   /* Overhead of a high-precision timing measurement.  */
