@@ -128,7 +128,11 @@ __READDIR_R (DIR *dirp, DIRENT_TYPE *entry, DIRENT_TYPE **result)
 
       /* Skip deleted and ignored files.  */
     }
+#if 1  /* Google-local: for b/3162458, don't ignore entries with d_ino == 0  */
+  while (0);
+#else
   while (dp->d_ino == 0);
+#endif
 
   if (dp != NULL)
     {

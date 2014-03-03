@@ -155,3 +155,11 @@ stdio-common/tstdiomisc.c
   Forward-ported from cl/51376114 (from cl/41709-p2).
   (ppluzhnikov, google-local)
 
+posix/glob.c
+sysdeps/unix/readdir.c
+sysdeps/unix/readdir_r.c
+  For b/3162458, don't skip files with d_ino==0 -- our tmpfs systems
+  sometimes create them due to inode wraparound.
+  Forward-ported from cl/51430993 (from cl/45000-p2).
+  (ppluzhnikov, google-local)
+

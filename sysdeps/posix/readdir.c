@@ -107,8 +107,12 @@ __READDIR (DIR *dirp)
       dirp->filepos += reclen;
 #endif
 
+#if 1  /* Google-local: for b/3162458, don't ignore entries with d_ino == 0  */
+    } while (0);
+#else
       /* Skip deleted files.  */
     } while (dp->d_ino == 0);
+#endif
 
 #ifndef NOT_IN_libc
   __libc_lock_unlock (dirp->lock);

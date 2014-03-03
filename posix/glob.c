@@ -142,6 +142,10 @@
 # define REAL_DIR_ENTRY(dp) (dp->d_ino != 0)
 #endif /* POSIX */
 
+/* Google-local: for b/3162458, don't ignore entries with d_ino == 0  */
+#undef REAL_DIR_ENTRY
+#define REAL_DIR_ENTRY(dp) 1
+
 #include <stdlib.h>
 #include <string.h>
 
