@@ -147,3 +147,11 @@ misc/sys/cdefs.h
   Forward-ported from cl/51334004 (from cl/53404-p2).
   (swiecki, google-local)
 
+stdio-common/print_fp.c
+stdio-common/print_fphex.c
+stdio-common/tstdiomisc.c
+  Effectively revert an upstream patch to print signs on NaN values.  This
+  change causes many google3 test failures, and the signs are meaningless.
+  Forward-ported from cl/51376114 (from cl/41709-p2).
+  (ppluzhnikov, google-local)
+

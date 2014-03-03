@@ -76,9 +76,15 @@ F (void)
   snprintf (buf, sizeof buf, "%a %A %e %E %f %F %g %G",
 	    -qnanval, -qnanval, -qnanval, -qnanval,
 	    -qnanval, -qnanval, -qnanval, -qnanval);
+#if 1  // Google-local: don't print "-nan".
+  result |= strcmp (buf, "nan NAN nan NAN nan NAN nan NAN") != 0;
+  printf ("expected \"nan NAN nan NAN nan NAN nan NAN\", got \"%s\"\n",
+	  buf);
+#else
   result |= strcmp (buf, "-nan -NAN -nan -NAN -nan -NAN -nan -NAN") != 0;
   printf ("expected \"-nan -NAN -nan -NAN -nan -NAN -nan -NAN\", got \"%s\"\n",
 	  buf);
+#endif
 
   snprintf (buf, sizeof buf, "%a %A %e %E %f %F %g %G",
 	    snanval, snanval, snanval, snanval,
@@ -89,9 +95,15 @@ F (void)
   snprintf (buf, sizeof buf, "%a %A %e %E %f %F %g %G",
 	    msnanval, msnanval, msnanval, msnanval,
 	    msnanval, msnanval, msnanval, msnanval);
+#if 1  // Google-local: don't print "-nan".
+  result |= strcmp (buf, "nan NAN nan NAN nan NAN nan NAN") != 0;
+  printf ("expected \"nan NAN nan NAN nan NAN nan NAN\", got \"%s\"\n",
+	  buf);
+#else
   result |= strcmp (buf, "-nan -NAN -nan -NAN -nan -NAN -nan -NAN") != 0;
   printf ("expected \"-nan -NAN -nan -NAN -nan -NAN -nan -NAN\", got \"%s\"\n",
 	  buf);
+#endif
 
   infval = DBL_MAX * DBL_MAX;
 
@@ -116,9 +128,15 @@ F (void)
   swprintf (wbuf, sizeof wbuf / sizeof (wbuf[0]), L"%a %A %e %E %f %F %g %G",
 	    -qnanval, -qnanval, -qnanval, -qnanval,
 	    -qnanval, -qnanval, -qnanval, -qnanval);
+#if 1  // Google-local: don't print "-nan".
+  result |= wcscmp (wbuf, L"nan NAN nan NAN nan NAN nan NAN") != 0;
+  printf ("expected L\"nan NAN nan NAN nan NAN nan NAN\", got L\"%S\"\n",
+	  wbuf);
+#else
   result |= wcscmp (wbuf, L"-nan -NAN -nan -NAN -nan -NAN -nan -NAN") != 0;
   printf ("expected L\"-nan -NAN -nan -NAN -nan -NAN -nan -NAN\", got L\"%S\"\n",
 	  wbuf);
+#endif
 
   swprintf (wbuf, sizeof wbuf / sizeof (wbuf[0]), L"%a %A %e %E %f %F %g %G",
 	    snanval, snanval, snanval, snanval,
@@ -129,9 +147,15 @@ F (void)
   swprintf (wbuf, sizeof wbuf / sizeof (wbuf[0]), L"%a %A %e %E %f %F %g %G",
 	    msnanval, msnanval, msnanval, msnanval,
 	    msnanval, msnanval, msnanval, msnanval);
+#if 1  // Google-local: don't print "-nan".
+  result |= wcscmp (wbuf, L"nan NAN nan NAN nan NAN nan NAN") != 0;
+  printf ("expected L\"nan NAN nan NAN nan NAN nan NAN\", got L\"%S\"\n",
+	  wbuf);
+#else
   result |= wcscmp (wbuf, L"-nan -NAN -nan -NAN -nan -NAN -nan -NAN") != 0;
   printf ("expected L\"-nan -NAN -nan -NAN -nan -NAN -nan -NAN\", got L\"%S\"\n",
 	  wbuf);
+#endif
 
   swprintf (wbuf, sizeof wbuf / sizeof (wbuf[0]), L"%a %A %e %E %f %F %g %G",
 	    infval, infval, infval, infval, infval, infval, infval, infval);
@@ -156,9 +180,15 @@ F (void)
   snprintf (buf, sizeof buf, "%La %LA %Le %LE %Lf %LF %Lg %LG",
 	    -lqnanval, -lqnanval, -lqnanval, -lqnanval,
 	    -lqnanval, -lqnanval, -lqnanval, -lqnanval);
+#if 1  // Google-local: don't print "-nan".
+  result |= strcmp (buf, "nan NAN nan NAN nan NAN nan NAN") != 0;
+  printf ("expected \"nan NAN nan NAN nan NAN nan NAN\", got \"%s\"\n",
+	  buf);
+#else
   result |= strcmp (buf, "-nan -NAN -nan -NAN -nan -NAN -nan -NAN") != 0;
   printf ("expected \"-nan -NAN -nan -NAN -nan -NAN -nan -NAN\", got \"%s\"\n",
 	  buf);
+#endif
 
   snprintf (buf, sizeof buf, "%La %LA %Le %LE %Lf %LF %Lg %LG",
 	    lsnanval, lsnanval, lsnanval, lsnanval,
@@ -169,9 +199,15 @@ F (void)
   snprintf (buf, sizeof buf, "%La %LA %Le %LE %Lf %LF %Lg %LG",
 	    lmsnanval, lmsnanval, lmsnanval, lmsnanval,
 	    lmsnanval, lmsnanval, lmsnanval, lmsnanval);
+#if 1  // Google-local: don't print "-nan".
+  result |= strcmp (buf, "nan NAN nan NAN nan NAN nan NAN") != 0;
+  printf ("expected \"nan NAN nan NAN nan NAN nan NAN\", got \"%s\"\n",
+	  buf);
+#else
   result |= strcmp (buf, "-nan -NAN -nan -NAN -nan -NAN -nan -NAN") != 0;
   printf ("expected \"-nan -NAN -nan -NAN -nan -NAN -nan -NAN\", got \"%s\"\n",
 	  buf);
+#endif
 
   linfval = LDBL_MAX * LDBL_MAX;
 
@@ -199,9 +235,15 @@ F (void)
 	    L"%La %LA %Le %LE %Lf %LF %Lg %LG",
 	    -lqnanval, -lqnanval, -lqnanval, -lqnanval,
 	    -lqnanval, -lqnanval, -lqnanval, -lqnanval);
+#if 1  // Google-local: don't print "-nan".
+  result |= wcscmp (wbuf, L"nan NAN nan NAN nan NAN nan NAN") != 0;
+  printf ("expected L\"nan NAN nan NAN nan NAN nan NAN\", got L\"%S\"\n",
+	  wbuf);
+#else
   result |= wcscmp (wbuf, L"-nan -NAN -nan -NAN -nan -NAN -nan -NAN") != 0;
   printf ("expected L\"-nan -NAN -nan -NAN -nan -NAN -nan -NAN\", got L\"%S\"\n",
 	  wbuf);
+#endif
 
   swprintf (wbuf, sizeof wbuf / sizeof (wbuf[0]),
 	    L"%La %LA %Le %LE %Lf %LF %Lg %LG",
@@ -214,9 +256,15 @@ F (void)
 	    L"%La %LA %Le %LE %Lf %LF %Lg %LG",
 	    lmsnanval, lmsnanval, lmsnanval, lmsnanval,
 	    lmsnanval, lmsnanval, lmsnanval, lmsnanval);
+#if 1  // Google-local: don't print "-nan".
+  result |= wcscmp (wbuf, L"nan NAN nan NAN nan NAN nan NAN") != 0;
+  printf ("expected L\"nan NAN nan NAN nan NAN nan NAN\", got L\"%S\"\n",
+	  wbuf);
+#else
   result |= wcscmp (wbuf, L"-nan -NAN -nan -NAN -nan -NAN -nan -NAN") != 0;
   printf ("expected L\"-nan -NAN -nan -NAN -nan -NAN -nan -NAN\", got L\"%S\"\n",
 	  wbuf);
+#endif
 
   swprintf (wbuf, sizeof wbuf / sizeof (wbuf[0]),
 	    L"%La %LA %Le %LE %Lf %LF %Lg %LG",

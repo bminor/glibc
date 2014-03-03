@@ -167,6 +167,9 @@ __printf_fphex (FILE *fp,
       /* Check for special values: not a number or infinity.  */
       if (__isnanl (fpnum.ldbl))
 	{
+#if 1	  // Google-local: don't print "-nan".
+	  negative = 0;
+#endif
 	  if (isupper (info->spec))
 	    {
 	      special = "NAN";
@@ -180,6 +183,9 @@ __printf_fphex (FILE *fp,
 	}
       else
 	{
+#if 1	  // Google-local: move this from below due to NaN handling.
+	  negative = signbit (fpnum.ldbl);
+#endif
 	  if (__isinfl (fpnum.ldbl))
 	    {
 	      if (isupper (info->spec))
@@ -194,7 +200,9 @@ __printf_fphex (FILE *fp,
 		}
 	    }
 	}
+#if 0 // Google-local: move this up due to NaN handling.
       negative = signbit (fpnum.ldbl);
+#endif
     }
   else
 #endif	/* no long double */
@@ -204,7 +212,11 @@ __printf_fphex (FILE *fp,
       /* Check for special values: not a number or infinity.  */
       if (__isnan (fpnum.dbl.d))
 	{
+#if 1  // Google-local: don't print "-nan".
+	  negative = 0;
+#else
 	  negative = fpnum.dbl.ieee.negative != 0;
+#endif
 	  if (isupper (info->spec))
 	    {
 	      special = "NAN";

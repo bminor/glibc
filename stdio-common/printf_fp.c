@@ -332,7 +332,9 @@ ___printf_fp (FILE *fp,
       int res;
       if (__isnanl (fpnum.ldbl))
 	{
+#if 0  // Google-local: don't print "-nan".
 	  is_neg = signbit (fpnum.ldbl);
+#endif
 	  if (isupper (info->spec))
 	    {
 	      special = "NAN";
@@ -377,8 +379,10 @@ ___printf_fp (FILE *fp,
       int res;
       if (__isnan (fpnum.dbl))
 	{
+#if 0  // Google-local: don't print "-nan".
 	  union ieee754_double u = { .d = fpnum.dbl };
 	  is_neg = u.ieee.negative != 0;
+#endif
 	  if (isupper (info->spec))
 	    {
 	      special = "NAN";
