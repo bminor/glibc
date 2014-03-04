@@ -187,3 +187,9 @@ sysdeps/generic/ldsodefs.h
   Forward-ported from cl/51433604 (from cl/44863-p2).
   (ppluzhnikov, google-local)
 
+nptl/sysdeps/pthread/unwind-forcedunwind.c
+  For b/5836136, do dlsym(0, "_Unwind..."), i.e. ignore libgcc_s.so.1
+  dlopen failure.
+  Forward-ported from cl/51438157.
+  (ppluzhnikov, google-local)
+

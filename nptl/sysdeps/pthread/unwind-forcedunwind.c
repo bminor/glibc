@@ -22,6 +22,7 @@
 #include <pthreadP.h>
 #include <sysdep.h>
 #include <gnu/lib-names.h>
+#include <ldsodefs.h>
 
 static void *libgcc_s_handle;
 static void (*libgcc_s_resume) (struct _Unwind_Exception *exc);
@@ -50,6 +51,10 @@ pthread_cancel_init (void)
     }
 
   handle = __libc_dlopen (LIBGCC_S_SO);
+
+  /* Google-local: b/5836136 */
+  if (handle == NULL)
+    handle = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
 
   if (handle == NULL
       || (resume = __libc_dlsym (handle, "_Unwind_Resume")) == NULL
