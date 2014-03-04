@@ -170,8 +170,10 @@ CFLAGS-forward.c = -fexceptions
 # block and therefore temporarily enable asynchronous cancellation.
 # Those must be compiled asynchronous unwind tables.
 CFLAGS-pthread_testcancel.c = -fexceptions
-CFLAGS-pthread_join.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-pthread_timedjoin.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pthread_join.c = -fexceptions -fasynchronous-unwind-tables \
+			-fno-omit-frame-pointer
+CFLAGS-pthread_timedjoin.c = -fexceptions -fasynchronous-unwind-tables \
+			     -fno-omit-frame-pointer
 CFLAGS-pthread_once.c = $(uses-callbacks) -fexceptions \
 			-fasynchronous-unwind-tables
 CFLAGS-pthread_cond_wait.c = -fexceptions -fasynchronous-unwind-tables

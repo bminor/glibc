@@ -193,3 +193,12 @@ nptl/sysdeps/pthread/unwind-forcedunwind.c
   Forward-ported from cl/51438157.
   (ppluzhnikov, google-local)
 
+nptl/Makefile
+  For b/5013921, build pthread_join.c and pthread_timedjoin.c with
+  frame pointers.
+  Forward-ported from cl/51440285 (from cl//54512-p2).
+  Note: this is redundant with http://cr/62476718 that builds entire glibc
+  with -fno-omit-frame-pointer, but I am forward-porting it anyway in case
+  we decide to revert cr/62476718 later.
+  (ppluzhnikov, google-local)
+
