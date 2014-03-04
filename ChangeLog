@@ -1,3 +1,11 @@
+2014-12-11  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #16657]
+	* nptl/pthread_mutex_trylock.c (__pthread_mutex_trylock): Use
+	FORCE_ELISION instead of DO_ELISION.
+	* nptl/sysdeps/unix/sysv/linux/x86/force-elision.h (DO_ELISION):
+	Remove.
+
 2013-07-29  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	[BZ #17213]
