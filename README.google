@@ -177,3 +177,13 @@ sysdeps/generic/unsecvars.h
   Forward-ported from cl/51433387 (from cl/38694-p2, cl/38725-p2, and
   cl/38741-p2).
   (ppluzhnikov, google-local)
+
+elf/dl-cache.c
+elf/dl-load.c
+include/dlfcn.h
+sysdeps/generic/ldsodefs.h
+  For b/3133396, ignore system ld.so.cache when looking for
+  nss and iconv modules.
+  Forward-ported from cl/51433604 (from cl/44863-p2).
+  (ppluzhnikov, google-local)
+

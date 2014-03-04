@@ -353,7 +353,7 @@ _dl_alloc_cache_info (const char *const cache_list)
    file name stored there, or null if none is found.  */
 const char *
 internal_function
-_dl_load_cache_lookup (const char *name)
+_dl_load_cache_lookup (const char *name, int mode)
 {
   struct cache_info *info;
 
@@ -361,6 +361,16 @@ _dl_load_cache_lookup (const char *name)
   if (cache_info == NULL)
     /* Caches have not been initialized yet.  */
     cache_info = _dl_alloc_cache_info (GLRO(google_ld_so_cache_list));
+
+  if (mode & __RTLD_GOOGLE_IGNORE_HOST_LD_SO_CACHE)
+    {
+      /* We are loading a component of glibc itself (e.g. nss or iconv).
+	 Such components must not be loaded from host, only from this
+	 glibc compilation (which must always be the first component of
+	 the cache list). See b/3133396 */
+
+      return _dl_load_cache_lookup_2 (name, cache_info);
+    }
 
   for (info = cache_info; info->ld_so_cache != NULL; ++info)
     {

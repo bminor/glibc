@@ -13,6 +13,10 @@
 #define __RTLD_SECURE	0x04000000 /* Apply additional security checks.  */
 #define __RTLD_NOIFUNC	0x02000000 /* Suppress calling ifunc functions.  */
 
+/* Google-local; use only $prefix/etc/ld.so.cache.
+   See b/3133396 */
+#define __RTLD_GOOGLE_IGNORE_HOST_LD_SO_CACHE	0x01000000
+
 #define __LM_ID_CALLER	-2
 
 #ifdef SHARED
@@ -32,7 +36,8 @@ extern char **__libc_argv attribute_hidden;
 /* Now define the internal interfaces.  */
 
 #define __libc_dlopen(name) \
-  __libc_dlopen_mode (name, RTLD_LAZY | __RTLD_DLOPEN)
+  __libc_dlopen_mode (name, RTLD_LAZY | __RTLD_DLOPEN | \
+			    __RTLD_GOOGLE_IGNORE_HOST_LD_SO_CACHE)
 extern void *__libc_dlopen_mode  (const char *__name, int __mode);
 extern void *__libc_dlsym   (void *__map, const char *__name);
 extern int   __libc_dlclose (void *__map);

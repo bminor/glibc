@@ -2229,7 +2229,7 @@ _dl_map_object (struct link_map *loader, const char *name,
 	{
 	  /* Check the list of libraries in the file /etc/ld.so.cache,
 	     for compatibility with Linux's ldconfig program.  */
-	  const char *cached = _dl_load_cache_lookup (name);
+	  const char *cached = _dl_load_cache_lookup (name, mode);
 
 	  if (cached != NULL)
 	    {
