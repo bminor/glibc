@@ -23,6 +23,7 @@
 #include <sysdep.h>
 #include <gnu/lib-names.h>
 #include <unwind-resume.h>
+#include <ldsodefs.h>
 
 static void *libgcc_s_handle;
 void (*__libgcc_s_resume) (struct _Unwind_Exception *exc)
@@ -50,6 +51,14 @@ pthread_cancel_init (void)
     }
 
   handle = __libc_dlopen_mode (LIBGCC_S_SO, RTLD_NOW | __RTLD_DLOPEN);
+
+  /* Google-local: b/5836136 */
+  /* This is kind of weird to do, but has proven useful in cases where
+     the unwind support may be statically linked into us; we don't
+     want to pull in a redundant shared libgcc, we just want to use
+     the symbols we already have.  */
+  if (handle == NULL)
+    handle = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
 
   if (handle == NULL
       || (resume = __libc_dlsym (handle, "_Unwind_Resume")) == NULL
