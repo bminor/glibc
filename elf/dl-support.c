@@ -142,6 +142,12 @@ hp_timing_t _dl_cpuclock_offset;
 
 void (*_dl_init_static_tls) (struct link_map *) = &_dl_nothread_init_static_tls;
 
+/* The merged position hash table used if we have a lot of shared objects.  */
+dl_position_table_entry_t *_dl_position_hash_table;
+int _dl_position_hash_mask;
+int _dl_position_hash_cutoff = DL_POSITION_HASH_CUTOFF_DEFAULT;
+int _dl_position_hash_bits;
+
 size_t _dl_pagesize = EXEC_PAGESIZE;
 
 int _dl_inhibit_cache;

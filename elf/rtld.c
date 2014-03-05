@@ -176,6 +176,8 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
     ._dl_open = _dl_open,
     ._dl_close = _dl_close,
     ._dl_tls_get_addr_soft = _dl_tls_get_addr_soft,
+    ._dl_position_hash_cutoff = DL_POSITION_HASH_CUTOFF_DEFAULT,
+    ._dl_position_hash_bits = 0,
 #ifdef HAVE_DL_DISCOVER_OSVERSION
     ._dl_discover_osversion = _dl_discover_osversion
 #endif
@@ -1745,6 +1747,11 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
      dependencies in the executable's searchlist for symbol resolution.  */
   HP_TIMING_NOW (start);
   _dl_map_object_deps (main_map, preloads, npreloads, mode == trace, 0);
+
+  /* We have now finished loading every required (linked-in) object.
+     Set up the position hash if needed.  */
+  _dl_fill_position_hash (main_map);
+
   HP_TIMING_NOW (stop);
   HP_TIMING_DIFF (diff, start, stop);
   HP_TIMING_ACCUM_NT (load_time, diff);
@@ -2373,10 +2380,12 @@ process_dl_debug (const char *dl_debug)
 	DL_DEBUG_VERSIONS | DL_DEBUG_IMPCALLS },
       { LEN_AND_STR ("scopes"), "display scope information",
 	DL_DEBUG_SCOPES },
+      { LEN_AND_STR ("fastload"), "display fastload information",
+        DL_DEBUG_FASTLOAD },
       { LEN_AND_STR ("all"), "all previous options combined",
 	DL_DEBUG_LIBS | DL_DEBUG_RELOC | DL_DEBUG_FILES | DL_DEBUG_SYMBOLS
 	| DL_DEBUG_BINDINGS | DL_DEBUG_VERSIONS | DL_DEBUG_IMPCALLS
-	| DL_DEBUG_SCOPES },
+	| DL_DEBUG_SCOPES | DL_DEBUG_FASTLOAD },
       { LEN_AND_STR ("statistics"), "display relocation statistics",
 	DL_DEBUG_STATISTICS },
       { LEN_AND_STR ("unused"), "determined unused DSOs",
@@ -2658,6 +2667,27 @@ process_envvars (enum mode *modep)
 	  EXTRA_LD_ENVVARS
 #endif
 	}
+
+      /* Handle all fastload-related env vars here.  This may duplicate
+         effort with the switch table above, but it localizes changes
+         made by the fastload patch.  On Linux, the '15' case is used
+         by another environment variable (LIBRARY_VERSION) and much
+         change would be needed to add support adding a variable of
+         that length with the existing style.  */
+      switch (len)
+        {
+        case 15:
+          if (memcmp (envline, "FASTLOAD_CUTOFF", 15) == 0)
+	    GLRO(dl_position_hash_cutoff)
+              = __strtoul_internal (&envline[16], NULL, 0, 0);;
+          break;
+
+        case 18:
+          if (memcmp (envline, "FASTLOAD_HASH_BITS", 18) == 0)
+	    GLRO(dl_position_hash_bits)
+              = __strtoul_internal (&envline[19], NULL, 0, 0);;
+          break;
+        }
     }
 
   /* The caller wants this information.  */

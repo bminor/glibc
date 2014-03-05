@@ -27,6 +27,7 @@
 #include <stddef.h>
 #include <string.h>
 #include <stdint.h>
+#include <assert.h>
 
 #include <elf.h>
 #include <dlfcn.h>
@@ -259,6 +260,13 @@ typedef void (*receiver_fct) (int, const char *, const char *);
    The `-ldl' library functions in <dlfcn.h> provide a simple
    user interface to run-time dynamic linking.  */
 
+/* To save storage space in the hash table, we use uint16_t, which allows
+   us to support up to 64K of DSOs efficiently.  */
+typedef uint16_t dl_position_table_entry_t;
+
+/* 65535 -- max position that could be recorded in
+   dl_position_table_entry_t.  */
+#define DL_POSITION_MAX UINT16_MAX
 
 #ifndef SHARED
 # define EXTERN extern
@@ -286,6 +294,8 @@ struct rtld_global
   {
     /* A pointer to the map for the main map.  */
     struct link_map *_ns_loaded;
+    /* Tail end of the _ns_loaded link chain.  Computed on demand.  */
+    struct link_map *_ns_last;
     /* Number of object in the _dl_loaded list.  */
     unsigned int _ns_nloaded;
     /* Direct pointer to the searchlist of the main object.  */
@@ -334,7 +344,7 @@ struct rtld_global
   /* The object to be initialized first.  */
   EXTERN struct link_map *_dl_initfirst;
 
-#if HP_TIMING_AVAIL || HP_SMALL_TIMING_AVAIL
+#if HP_TIMING_AVAIL || HP_SMALL_TIMING_AVAIL || HP_TIMING_PAD
   /* Start time on CPU clock.  */
   EXTERN hp_timing_t _dl_cpuclock_offset;
 #endif
@@ -468,6 +478,9 @@ struct rtld_global_ro
 #define DL_DEBUG_HELP       (1 << 10)
 #define DL_DEBUG_PRELINK    (1 << 11)
 
+/* Google-local.  */
+#define DL_DEBUG_FASTLOAD   (1 << 12)
+
   /* OS version.  */
   EXTERN unsigned int _dl_osversion;
   /* Platform name.  */
@@ -547,11 +560,24 @@ struct rtld_global_ro
   /* All search directories defined at startup.  */
   EXTERN struct r_search_path_elem *_dl_init_all_dirs;
 
+  /* The merged hash table used if we have a lot of shared objects. */
+  EXTERN dl_position_table_entry_t *_dl_position_hash_table;
+  EXTERN int _dl_position_hash_mask;
+  EXTERN int _dl_position_hash_bits;
+  EXTERN int _dl_position_hash_cutoff;
+
+#define DL_POSITION_HASH_BITS_MAX       27  /* (1 << 27) entries.  */
+#if defined(__powerpc__) && !defined(__powerpc64__)
+#define DL_POSITION_HASH_CUTOFF_DEFAULT -1  /* Disabled.  */
+#else
+#define DL_POSITION_HASH_CUTOFF_DEFAULT 32  /* > 32 shared libs.  */
+#endif
+
   /* Colon-separated list of absolute paths to ld.so.cache files
      we'll load.  */
   EXTERN const char *_google_ld_so_cache_list;
 
-#if HP_TIMING_AVAIL || HP_SMALL_TIMING_AVAIL
+#if HP_TIMING_AVAIL || HP_SMALL_TIMING_AVAIL || HP_TIMING_PAD
   /* Overhead of a high-precision timing measurement.  */
   EXTERN hp_timing_t _dl_hp_timing_overhead;
 #endif
@@ -739,6 +765,9 @@ extern void _dl_dprintf (int fd, const char *fmt, ...)
     }									      \
   while (1)
 
+/* Fill the position hash table used if we have a lot of shared libraries.  */
+extern void _dl_fill_position_hash (struct link_map *main_map)
+    internal_function;
 
 /* This function is called by all the internal dynamic linker functions
    when they encounter an error.  ERRCODE is either an `errno' code or
@@ -969,6 +998,8 @@ extern ElfW(Addr) _dl_sysdep_start (void **start_argptr,
 extern void _dl_sysdep_start_cleanup (void)
      internal_function attribute_hidden;
 
+extern int _dl_addr_inside_object (struct link_map *l, const ElfW(Addr) addr)
+     internal_function attribute_hidden;
 
 /* Determine next available module ID.  */
 extern size_t _dl_next_tls_modid (void) internal_function attribute_hidden;
@@ -1069,6 +1100,31 @@ extern void _dl_non_dynamic_init (void) internal_function;
 
 /* Used by static binaries to check the auxiliary vector.  */
 extern void _dl_aux_init (ElfW(auxv_t) *av) internal_function;
+
+/* Find last entry in the given scope.  Cache the result.  */
+static inline struct link_map *
+_dl_last_entry (struct link_namespaces *ns)
+{
+  struct link_map *map = ns->_ns_last;
+  size_t len = 0;
+
+  if (map == NULL)
+    map = ns->_ns_loaded;
+
+  if (map == NULL)
+    return NULL;
+
+  while (map->l_next != NULL)
+    {
+      map = map->l_next;
+      /* If we have more than _ns_nloaded libraries, it's likely we are
+	 looking at a corrupt list.  Fail hard.  */
+      assert (len++ < ns->_ns_nloaded);
+    }
+
+  ns->_ns_last = map;
+  return map;
+}
 
 
 __END_DECLS

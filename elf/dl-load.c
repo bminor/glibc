@@ -2075,6 +2075,37 @@ open_path (const char *name, size_t namelen, int secure,
   return -1;
 }
 
+static int
+match_one (const char *name, struct link_map *l)
+{
+  /* If the requested name matches the soname of a loaded object,
+     use that object.  Elide this check for names that have not
+     yet been opened.  */
+  if (__builtin_expect (l->l_faked, 0) != 0
+      || __builtin_expect (l->l_removed, 0) != 0)
+    return 0;
+  if (!_dl_name_match_p (name, l))
+    {
+      const char *soname;
+
+      if (__builtin_expect (l->l_soname_added, 1)
+	  || l->l_info[DT_SONAME] == NULL)
+	return 0;
+
+      soname = ((const char *) D_PTR (l, l_info[DT_STRTAB])
+		+ l->l_info[DT_SONAME]->d_un.d_val);
+      if (strcmp (name, soname) != 0)
+	return 0;
+
+      /* We have a match on a new name -- cache it.  */
+      add_name_to_object (l, soname);
+      l->l_soname_added = 1;
+    }
+
+  /* We have a match.  */
+  return 1;
+}
+
 /* Map in the shared object file NAME.  */
 
 struct link_map *
@@ -2092,34 +2123,21 @@ _dl_map_object (struct link_map *loader, const char *name,
   assert (nsid < GL(dl_nns));
 
   /* Look for this name among those already loaded.  */
-  for (l = GL(dl_ns)[nsid]._ns_loaded; l; l = l->l_next)
+  if (name[0] == '\0')
     {
-      /* If the requested name matches the soname of a loaded object,
-	 use that object.  Elide this check for names that have not
-	 yet been opened.  */
-      if (__builtin_expect (l->l_faked, 0) != 0
-	  || __builtin_expect (l->l_removed, 0) != 0)
-	continue;
-      if (!_dl_name_match_p (name, l))
-	{
-	  const char *soname;
+      /* Special case: both main exe and vdso can have empty name;
+	 so search from head: it is important to return the map for main
+	 a.out; else dlsym(0, ...) will fail unexpectedly.  */
 
-	  if (__builtin_expect (l->l_soname_added, 1)
-	      || l->l_info[DT_SONAME] == NULL)
-	    continue;
-
-	  soname = ((const char *) D_PTR (l, l_info[DT_STRTAB])
-		    + l->l_info[DT_SONAME]->d_un.d_val);
-	  if (strcmp (name, soname) != 0)
-	    continue;
-
-	  /* We have a match on a new name -- cache it.  */
-	  add_name_to_object (l, soname);
-	  l->l_soname_added = 1;
-	}
-
-      /* We have a match.  */
-      return l;
+      for (l = GL(dl_ns)[nsid]._ns_loaded; l; l = l->l_next)
+	if (match_one (name, l))
+	  return l;
+    }
+  else
+    {
+      for (l = _dl_last_entry (&GL(dl_ns)[nsid]); l; l = l->l_prev)
+	if (match_one (name, l))
+	  return l;
     }
 
   /* Display information if we are debugging.  */

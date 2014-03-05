@@ -133,6 +133,12 @@ _dl_close_worker (struct link_map *map)
   Lmid_t nsid = map->l_ns;
   struct link_namespaces *ns = &GL(dl_ns)[nsid];
 
+  /* Recompute _ns_last next time we need it.
+     It is tempting to set _ns_last to map->l_prev, but map->l_prev might also
+     be going away as part of current dlclose, and using it may cause _ns_last
+     to become dangling.  */
+  ns->_ns_last = NULL;
+
  retry:
   dl_close_state = pending;
 

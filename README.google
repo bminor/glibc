@@ -202,3 +202,17 @@ nptl/Makefile
   we decide to revert cr/62476718 later.
   (ppluzhnikov, google-local)
 
+elf/dl-close.h
+elf/dl-load.c
+elf/dl-lookup.c
+elf/dl-support.c
+elf/dl-version.c
+elf/rtld.c
+sysdeps/generic/ldsodefs.h
+  Add "fastload" support.  This reduces the linear search for symbols when
+  loading dynamic libraries to a hash-table lookup, dramatically reducing
+  the startup time of Google3 binaries with large numbers of dynamic-library
+  dependencies.
+  Forward-ported from cl/56574617.
+  (ppluzhnikov, google-local)
+

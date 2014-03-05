@@ -33,6 +33,11 @@
 
 #define VERSTAG(tag)	(DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGIDX (tag))
 
+#ifndef ADDRIDX
+# define ADDRIDX(tag) (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM \
+		       + DT_EXTRANUM + DT_VALNUM + DT_ADDRTAGIDX (tag))
+#endif
+
 /* We need this string more than once.  */
 static const char undefined_msg[] = "undefined symbol: ";
 
@@ -68,6 +73,450 @@ struct sym_val
 # define bump_num_relocations() ((void) 0)
 #endif
 
+/* Bob Jenkins's hash function, free for any use.
+   http://burtleburtle.net/bob/hash/  */
+#define mix(a,b,c) \
+{ \
+  a -= b; a -= c; a ^= (c>>13); \
+  b -= c; b -= a; b ^= (a<<8); \
+  c -= a; c -= b; c ^= (b>>13); \
+  a -= b; a -= c; a ^= (c>>12);  \
+  b -= c; b -= a; b ^= (a<<16); \
+  c -= a; c -= b; c ^= (b>>5); \
+  a -= b; a -= c; a ^= (c>>3);  \
+  b -= c; b -= a; b ^= (a<<10); \
+  c -= a; c -= b; c ^= (b>>15); \
+}
+
+typedef unsigned int uint32 __attribute__ ((mode (SI)));
+static uint32
+hash_with_seed (const char *k, uint32 length, uint32 seed)
+{
+   uint32 a, b, c, len;
+
+   /* Set up the internal state */
+   len = length;
+   a = b = 0x9e3779b9;  /* the golden ratio; an arbitrary value */
+   c = seed;            /* the previous hash value */
+
+   /*---------------------------------------- handle most of the key */
+   while (len >= 12)
+     {
+       a += (k[0] +((uint32)k[1]<<8) +((uint32)k[2]<<16) +((uint32)k[3]<<24));
+       b += (k[4] +((uint32)k[5]<<8) +((uint32)k[6]<<16) +((uint32)k[7]<<24));
+       c += (k[8] +((uint32)k[9]<<8) +((uint32)k[10]<<16)+((uint32)k[11]<<24));
+       mix (a,b,c);
+       k += 12;
+       len -= 12;
+     }
+
+   /*------------------------------------- handle the last 11 bytes */
+   c += length;
+   switch (len)              /* all the case statements fall through */
+     {
+     case 11: c+=((uint32)k[10]<<24);
+     case 10: c+=((uint32)k[9]<<16);
+     case 9 : c+=((uint32)k[8]<<8);
+         /* the first byte of c is reserved for the length */
+     case 8 : b+=((uint32)k[7]<<24);
+     case 7 : b+=((uint32)k[6]<<16);
+     case 6 : b+=((uint32)k[5]<<8);
+     case 5 : b+=k[4];
+     case 4 : a+=((uint32)k[3]<<24);
+     case 3 : a+=((uint32)k[2]<<16);
+     case 2 : a+=((uint32)k[1]<<8);
+     case 1 : a+=k[0];
+       /* case 0: nothing left to add */
+     }
+   mix (a,b,c);
+   /*-------------------------------------------- report the result */
+   return c;
+}
+
+
+/* A hash table used to speed up lookups when we have a lot of shared
+   libraries.  We record in the table how many ELF objects in the link
+   map we can safely skip, because they are known to not contain the symbol
+   we are looking for.
+
+   Values start out at N (num objects in the main_map).  We then go through
+   each object (executable or DSO) in their order in the main_map and insert
+   pos_in_map_map into the table.
+
+   If there is already an earlier (smaller) entry in the table, we leave it
+   alone.  It could be a hash collision, or it could be an earlier
+   instance of the same symbol (eg weak __stdout definition in
+   multiple objects).
+
+   To save space, the table contains uint16_t entries, and so we can't
+   record main map positions over 65535.
+
+   It turns out that even when only 25% of slots are used, collision
+   rate is around 10%, which is quite high, and causes lookups to be slow.
+
+   So we use a second table (using a different hash seed). Hash collisions
+   using two separate hashes are quite rare.
+
+   Note that we allocate the two tables together (a single block twice
+   the size of one table).  */
+
+static void
+insert_into_hash_table_1 (int pos_in_main_map, const char *symbol_name,
+			  size_t name_len, dl_position_table_entry_t *table,
+			  int seed)
+{
+  uint32 hash = hash_with_seed (symbol_name, name_len, seed);
+  int pos = hash & GLRO(dl_position_hash_mask);
+  if (pos_in_main_map < table[pos])
+    {
+      table[pos] = pos_in_main_map;
+      if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FASTLOAD, 0))
+        _dl_debug_printf ("fastload hash for %s: [%u] = %u (table %u)\n",
+                          symbol_name, (unsigned int) pos,
+                          (unsigned int) table[pos],
+                          (GLRO(dl_position_hash_table) == table) ? 0 : 1);
+    }
+  else
+    {
+      if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FASTLOAD, 0))
+        _dl_debug_printf
+          ("fastload hash for %s: [%u] already set to %u <= %u (table %u)\n",
+           symbol_name, (unsigned int) pos,
+           (unsigned int) table[pos],
+           (unsigned int) pos_in_main_map,
+           (GLRO(dl_position_hash_table) == table) ? 0 : 1);
+    }
+}
+
+#define HASH_SEED_A 0
+#define HASH_SEED_B 5381  /* As good as any other value.  */
+
+static void
+insert_into_hash_table (int pos_in_main_map, const char *symbol_name)
+{
+  dl_position_table_entry_t *const table1 = GLRO(dl_position_hash_table);
+  const int table_size = GLRO(dl_position_hash_mask) + 1;
+  dl_position_table_entry_t *const table2 = table1 + table_size;
+  const size_t name_len = strlen (symbol_name);
+
+  insert_into_hash_table_1 (pos_in_main_map, symbol_name, name_len, table1,
+			    HASH_SEED_A);
+  insert_into_hash_table_1 (pos_in_main_map, symbol_name, name_len, table2,
+			    HASH_SEED_B);
+}
+
+static inline int
+earliest_pos_from_hash_table_1 (const char *symbol_name,
+                                const dl_position_table_entry_t *table,
+                                int seed)
+{
+  int pos;
+  uint32 hash;
+
+  hash = hash_with_seed (symbol_name, strlen (symbol_name), seed);
+  pos = hash & GLRO(dl_position_hash_mask);
+  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FASTLOAD, 0))
+    _dl_debug_printf
+      ("fastload earliest pos for %s: [%u] = %u (table %u)\n",
+       symbol_name, (unsigned int) pos, (unsigned int) table[pos],
+       (GLRO(dl_position_hash_table) == table) ? 0 : 1);
+
+  return table[pos];
+}
+
+static inline int
+earliest_pos_from_hash_table (const char *undef_name)
+{
+  dl_position_table_entry_t *const table1 = GLRO(dl_position_hash_table);
+
+  if (table1 == NULL)
+    return 0;  /* Search from the beginning of the list.  */
+  else
+    {
+      const int table_size = GLRO(dl_position_hash_mask) + 1;
+      dl_position_table_entry_t *const table2 = table1 + table_size;
+      const int skip_1 = earliest_pos_from_hash_table_1 (undef_name, table1,
+                                                         HASH_SEED_A);
+      const int skip_2 = earliest_pos_from_hash_table_1 (undef_name, table2,
+                                                         HASH_SEED_B);
+
+      /* Possibilities:
+
+       * Both skip_1 and skip_2 are positive and same:
+         there were no collisions at insertion in either table, or there
+         was double-collision with symbols from the same library.
+
+         If skip_1 == skip_2 == N (num_directly_loaded_objects), then the
+         slot was empty in both tables after they were filled (i.e. there
+         is no symbol that hashes to corresponding slot).  In that case,
+         searching first [0, N) is pointless. See b/5609692.
+
+         True skip_to == skip_1 == skip_2.
+
+       * Both skip_1 and skip_2 are positive but different:
+         there was a collision in one or both tables, or one of the slots
+         remained unfilled after all symbols have been inserted.
+         It is safe to start at max, true skip_to count can not be less
+         than max.  */
+
+      return (skip_1 < skip_2) ? skip_2 : skip_1;
+    }
+}
+
+
+static void
+fill_hash_table (const struct link_map *const map, int pos_in_main_map,
+                 int num_symbols)
+{
+  const ElfW(Sym) *const symtab = (const void *) D_PTR (map, l_info[DT_SYMTAB]);
+  const char *const strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
+  int k;
+
+  /* Iterate through the symbols defined in this map and insert them
+     into the bloom filter.  If the symbol wouldn't pass the tests in
+     do_lookup_x(), then don't insert it.  */
+  for (k = 0; k < num_symbols; k++)
+    {
+      const ElfW(Sym) *sym = &symtab[k];
+
+      if (sym->st_value == 0
+          && ELFW(ST_TYPE) (sym->st_info) != STT_TLS)
+        continue;
+
+      switch (ELFW(ST_TYPE) (sym->st_info))
+	{
+	case STT_SECTION:
+	case STT_FILE:
+	case STT_COMMON:
+	  continue;
+	default:
+	  break;
+	}
+
+      switch (ELFW(ST_BIND) (sym->st_info))
+	{
+	case STB_LOCAL:  /* Local symbols are ignored.  */
+	  continue;
+	default:
+	  break;
+	}
+
+      insert_into_hash_table (pos_in_main_map, strtab + sym->st_name);
+    }
+}
+
+static dl_position_table_entry_t *
+allocate_position_hash_table (size_t table_size, int max_pos)
+{
+  /* Implementation detail: we actually allocate two "logical" tables in a
+     single block.  */
+
+  const size_t total_size = 2 * table_size;
+  dl_position_table_entry_t *table
+    = malloc (total_size * sizeof (dl_position_table_entry_t));
+
+  if (table == NULL)
+    return NULL;
+
+  for (int k = 0; k < total_size; ++k)
+    table[k] = max_pos;
+
+  return table;
+}
+
+static int
+num_dynsyms (const struct link_map *const map)
+{
+  if (map->l_info[DT_HASH] != NULL)
+    {
+      /* If DT_HASH is present, we unconditionally use it, since it already
+         has the answer precomputed and waiting for us.  */
+      const Elf_Symndx *const hash = (void *) D_PTR (map, l_info[DT_HASH]);
+
+      if (hash != NULL)
+	{
+	  /* DT_HASH dynamic structure points to a symbol hash table
+	     with the following layout:
+
+	     nbucket
+	     nchain       (== number of symbols in dynamic symbol table)
+	     bucket[0]
+	     ...
+
+	     http://refspecs.freestandards.org/elf/TIS1.1.pdf (p. 2.19). */
+
+	  return hash[1];
+	}
+    }
+  else if (map->l_info[ADDRIDX (DT_GNU_HASH)] != NULL)
+    {
+      /* The best documentation for GNU_HASH I found:
+	 http://blogs.sun.com/ali/entry/gnu_hash_elf_sections
+
+	 _dl_setup_hash() has already set things up for us.  */
+
+      if (__builtin_expect (map->l_nbuckets < 1, 0))
+	{
+	  /* Paranoia: neither gold nor gnu-ld will construct an empty
+	     .gnu.hash, but some other linker just might.  */
+	  return 0;
+	}
+
+      /* In the GNU hash the symbol index of a symbol is determined by
+	 the offset of the symbol's entry in the hash table itself.
+
+	 We start at the last bucket map->l_gnu_chain_zero[map->l_nbuckets-1]
+	 and loop backward from the end until we find a bucket which is
+	 not zero.
+
+	 Then we walk forward to find the last entry in the chain which
+	 starts at that bucket.  The terminating entry gives us desired
+	 symbol index.  */
+
+      int last_bucket_idx = map->l_nbuckets - 1;
+
+      while (last_bucket_idx > 0 &&
+	     map->l_gnu_buckets[last_bucket_idx] == 0)
+	{
+	  --last_bucket_idx;
+	}
+
+      const Elf32_Word last_bucket = map->l_gnu_buckets[last_bucket_idx];
+
+      if (__builtin_expect (last_bucket == 0, 0))
+	{
+	  /* This shouldn't happen unless the library has only static
+	     variables with global ctors, and nothing else.  */
+	  return 0;
+	}
+
+      /* Start of the hash chain for the last non-zero bucket.  */
+      const Elf32_Word *hasharr = &map->l_gnu_chain_zero[last_bucket];
+
+      /* The chain is terminated by an entry with LSBit set.  */
+      while ((*hasharr & 1u) == 0)
+	++hasharr;
+
+      /* Size of dynamic symbol table is "index of last symbol" + 1.  */
+      return hasharr - map->l_gnu_chain_zero + 1;
+    }
+
+  return 0;
+}
+
+/* Create the fastload position hash (if requested).  Given a link_map
+   containing all required objects, iterate through all symbols. For each
+   symbol which could match in do_lookup_x, insert the index of the
+   providing object in main_map.  */
+
+void
+internal_function
+_dl_fill_position_hash (struct link_map *main_map)
+{
+  const int num_objects = main_map->l_searchlist.r_nlist;
+  const int debug_fastload = GLRO(dl_debug_mask) & DL_DEBUG_FASTLOAD;
+  int k;
+
+  /* If we have more than dl_position_hash_cutoff shared libraries,
+     fill in the hash table of earliest known positions for symbols in
+     main_map.  We'll use this in do_lookup_x().  */
+
+  /* If cutoff or size is negative, fastload is disabled.  */
+  if (GLRO(dl_position_hash_cutoff) < 0 || GLRO(dl_position_hash_bits) < 0)
+    {
+      if (__builtin_expect (debug_fastload, 0))
+        _dl_debug_printf ("fastload: disabled (configuration)\n");
+      return;
+    }
+
+  /* If we don't have enough mapped objects, fastload is disabled.  */
+  if (num_objects <= GLRO(dl_position_hash_cutoff))
+    {
+      if (__builtin_expect (debug_fastload, 0))
+        _dl_debug_printf ("fastload: disabled (too few objects,"
+                          " %u <= cutoff %u)\n",
+                          num_objects, GLRO(dl_position_hash_cutoff));
+      return;
+    }
+
+  int *ndynsyms = NULL;
+
+  if (GLRO(dl_position_hash_bits) == 0)
+    {
+      /* Table size has not been specified via LD_FASTLOAD_HASH_BITS.
+         Compute appropriate size for <= 25% load factor.  */
+
+      int total_symbols = 0;
+
+      /* It is safe to call alloca() here, because we are executing in
+	 the context of dl_main, i.e. we are on the main stack, and are
+	 not yet using much of it.  Assuming sane upper limit of 10K direct
+	 dependencies, we'll use at most 40K bytes here.  */
+      ndynsyms = alloca (num_objects * sizeof (int));
+
+      for (k = 0; k < num_objects; ++k)
+        {
+          const struct link_map *const map = main_map->l_searchlist.r_list[k];
+	  const int nsyms = num_dynsyms (map);
+
+	  ndynsyms[k] = nsyms;
+	  total_symbols += nsyms;
+	  if (__builtin_expect (debug_fastload, 0))
+	    _dl_debug_printf ("fastload: %s: %u symbols\n", map->l_name, nsyms);
+	}
+
+      /* Ensure table size is >= 4 * total_symbols.  Generally this
+         over-sizes the table by more than 4, since there usually are lots
+         of duplicate symbols (from different DSOs) as well.  */
+
+      GLRO(dl_position_hash_bits)
+        = (8 * sizeof (total_symbols)) - __builtin_clz (total_symbols) + 2;
+
+      if (__builtin_expect (debug_fastload, 0))
+        _dl_debug_printf ("fastload: will use %u hash bits for %u total "
+                          "symbols\n",
+                          GLRO(dl_position_hash_bits), total_symbols);
+    }
+
+  /* If the requested or computed table size is too large, limit it.  */
+  if (GLRO(dl_position_hash_bits) > DL_POSITION_HASH_BITS_MAX)
+    {
+      if (__builtin_expect (debug_fastload, 0))
+        _dl_debug_printf ("fastload: requested table too large"
+                          " (%u > max %u bits)\n",
+                          GLRO(dl_position_hash_bits),
+                          DL_POSITION_HASH_BITS_MAX);
+      GLRO(dl_position_hash_bits) = DL_POSITION_HASH_BITS_MAX;
+    }
+
+  int table_size = 1 << GLRO(dl_position_hash_bits);
+  GLRO(dl_position_hash_mask) = table_size - 1;
+  if (__builtin_expect (debug_fastload, 0))
+    _dl_debug_printf ("fastload: enabled with %u entry table\n", table_size);
+
+  int max_pos = num_objects < DL_POSITION_MAX ? num_objects : DL_POSITION_MAX;
+  GLRO(dl_position_hash_table) = allocate_position_hash_table (table_size,
+							       max_pos);
+  if (GLRO(dl_position_hash_table) == NULL)
+    {
+      if (__builtin_expect (debug_fastload, 0))
+	_dl_debug_printf ("fastload: failed to allocate table\n");
+      return;
+    }
+
+  /* There is no point in going beyond max_pos: the rest of the table
+     has already been saturated with max_pos value.  */
+  for (k = 0; k < max_pos; ++k)
+    {
+      const struct link_map *const map = main_map->l_searchlist.r_list[k];
+
+      /* Reuse num_dynsyms() result we computed earlier if possible:
+	 recomputing it may be somewhat expensive with DT_GNU_HASH.  */
+      const int nsyms = ndynsyms ? ndynsyms[k] : num_dynsyms (map);
+
+      fill_hash_table (map, k, nsyms);
+    }
+}
 
 /* Inner part of the lookup functions.  We return a value > 0 if we
    found the symbol, the value 0 if nothing is found and < 0 if
@@ -87,6 +536,32 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
      protected by GSCOPE.  A read barrier here might be to expensive.  */
   __asm volatile ("" : "+r" (n), "+m" (scope->r_list));
   struct link_map **list = scope->r_list;
+
+  if (scope == GL(dl_ns)[LM_ID_BASE]._ns_main_searchlist && i == 0)
+    {
+      const int skip_to = earliest_pos_from_hash_table (undef_name);
+
+      if (skip_to < n)
+	{
+	  i = skip_to;
+	  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FASTLOAD, 0))
+	    _dl_debug_printf ("fastload %s skipping to %u\n",
+			      undef_name, (unsigned int) i);
+	}
+      else
+	{
+	  /* Symbol was not found in any of the initial libraries,
+	     and no new libraries have been added.  */
+
+	  assert (skip_to == n);
+
+	  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FASTLOAD, 0))
+	    _dl_debug_printf ("fastload %s, %u >= %u (scope->r_nlist)\n",
+			      undef_name, (unsigned int) skip_to,
+			      (unsigned int) n);
+	  return 0;
+	}
+    }
 
   do
     {
