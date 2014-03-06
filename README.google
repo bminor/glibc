@@ -216,3 +216,15 @@ sysdeps/generic/ldsodefs.h
   Forward-ported from cl/56574617.
   (ppluzhnikov, google-local)
 
+sysdeps/unix/sysv/linux/i386/nptl/libc.abilist
+sysdeps/unix/sysv/linux/i386/nptl/libnsl.abilist
+sysdeps/unix/sysv/linux/x86_64/64/nptl/libc.abilist
+sysdeps/unix/sysv/linux/x86_64/64/nptl/libnsl.abilist
+  Adjust the size value on _nl_default_dirname to match the directory
+  name that we use in GRTE builds so that "make check-abi" will pass, as
+  described in the glibc wiki:
+  http://sourceware.org/glibc/wiki/Testing/Testsuite#Known_testsuite_failures
+  Also adjust list of exported symbols for google-nsl-stub.
+  Similar to cr/51166205
+  (ppluzhnikov, google-local)
+
