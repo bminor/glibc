@@ -1256,7 +1256,8 @@ endif
 
 ifeq ($(build-shared),yes)
 ifdef subdir
-tests: check-abi
+# Temporarily disable check-abi: http://b/13350520
+# tests: check-abi
 endif
 endif
 

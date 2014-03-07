@@ -228,3 +228,6 @@ sysdeps/unix/sysv/linux/x86_64/64/nptl/libnsl.abilist
   Similar to cr/51166205
   (ppluzhnikov, google-local)
 
+Makerules
+  For b/13350520, disable check-abi
+  (ppluzhnikov, google-local)
