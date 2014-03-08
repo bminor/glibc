@@ -66,5 +66,13 @@ ld {
     # Google-local
     _google_dl_debug_state_hook;
     __google_auxv;
+
+    # Expose __signal_safe* functions so we can use a different
+    # implementation (Google-local)
+    __signal_safe_calloc;
+    __signal_safe_free;
+    __signal_safe_malloc;
+    __signal_safe_memalign;
+    __signal_safe_realloc;
   }
 }

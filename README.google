@@ -231,3 +231,8 @@ sysdeps/unix/sysv/linux/x86_64/64/nptl/libnsl.abilist
 Makerules
   For b/13350520, disable check-abi
   (ppluzhnikov, google-local)
+
+elf/Versions
+  Export __signal_safe* functions from ld.so so we can use a different
+  implementation.
+  (ppluzhnikov, google-local)
