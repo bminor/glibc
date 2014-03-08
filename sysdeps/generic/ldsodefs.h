@@ -544,6 +544,9 @@ struct rtld_global_ro
   /* Location of the binary.  */
   EXTERN const char *_dl_origin_path;
 
+  /* Directory where the AT_EXECFN is found.  */
+  EXTERN const char *_google_exec_origin_dir;
+
   /* -1 if the dynamic linker should honor library load bias,
      0 if not, -2 use the default (honor biases for normal
      binaries, don't honor for PIEs).  */

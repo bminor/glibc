@@ -67,6 +67,9 @@ void *__libc_stack_end;
 /* Path where the binary is found.  */
 const char *_dl_origin_path;
 
+/* Directory where the AT_EXECFN is found.  */
+const char *_google_exec_origin_dir;
+
 /* Nonzero if runtime lookup should not update the .got/.plt.  */
 int _dl_bind_not;
 

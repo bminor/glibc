@@ -51,6 +51,12 @@ extern __typeof (__mempcpy) __mempcpy attribute_hidden;
 extern __typeof (_exit) exit_internal asm ("_exit") attribute_hidden;
 #define _exit exit_internal
 
+/* Iterate over auxv, find AT_EXECFN if any.  */
+static char * get_at_execfn(ElfW(auxv_t) *auxv);
+
+/* Given file path, return fully resolved directory path.  */
+static char * get_directory (const char *file_path);
+
 /* Helper function to handle errors while resolving symbols.  */
 static void print_unresolved (int errcode, const char *objname,
 			      const char *errsting);
@@ -72,6 +78,9 @@ enum mode { normal, list, verify, trace };
    Since all of them start with `LD_' we are a bit smarter while finding
    all the entries.  */
 static void process_envvars (enum mode *modep);
+
+/* Set GLRO(google_exec_origin_dir).  */
+static void set_exec_origin_dir(const char *exe_path);
 
 #ifdef DL_ARGV_NOT_RELRO
 int _dl_argc attribute_hidden;
@@ -1032,6 +1041,8 @@ of this helper program; chances are you did not intend to run this program.\n\
 			in LIST\n\
   --audit LIST          use objects named in LIST as auditors\n");
 
+      set_exec_origin_dir (INTUSE(_dl_argv)[1]);
+
       ++_dl_skip_args;
       --_dl_argc;
       ++_dl_argv;
@@ -1126,6 +1137,8 @@ of this helper program; chances are you did not intend to run this program.\n\
     }
   else
     {
+      set_exec_origin_dir (get_at_execfn (auxv));
+
       /* Create a link_map for the executable itself.
 	 This will be what dlopen on "" returns.  */
       main_map = _dl_new_object ((char *) "", "", lt_executable, NULL,
@@ -2809,6 +2822,81 @@ print_statistics (hp_timing_t *rtld_total_timep)
 				buf, pbuf);
     }
 #endif
+}
+
+/* Given file path, return an absolute directory path.
+   Examples: in: "/foo/bar/a.out", out: "/foo/bar/";
+   in: "./a.out", out: "/dot/resolved/to/full/path/./".  */
+static char *
+get_directory (const char *file_path)
+{
+  assert (file_path != NULL);
+
+  /* Find the end of the directory substring in file_path.  */
+  size_t path_len = strlen (file_path);
+  while (path_len > 0 && file_path[path_len - 1] != '/')
+    --path_len;
+
+  /* Allocate space and set the path prefix according to whether or not
+     this is an absolute path.  */
+  char *dest;
+  char *full_dir_path;
+  if (file_path[0] == '/')
+    {
+      full_dir_path = malloc (path_len + 1);
+      assert (full_dir_path != NULL);
+      dest = full_dir_path;
+    }
+  else
+    {
+      /* For a relative path, we need to include space for the largest
+	 possible current path, a joining '/', the relevant part of
+	 file_path, and a trailing '\0'.  */
+      full_dir_path = malloc (PATH_MAX + path_len + 2);
+      assert (full_dir_path != NULL);
+
+      char *status = __getcwd (full_dir_path, PATH_MAX);
+      assert (status != NULL);
+
+      dest = __rawmemchr (full_dir_path, '\0');
+      if (dest[-1] != '/')
+	*dest++ = '/';
+    }
+
+  if (path_len > 0)
+    dest = __mempcpy (dest, file_path, path_len);
+  *dest = '\0';
+
+  /* Confirm that the constructed path is valid.  */
+  struct stat64 st;
+  assert (__xstat64 (_STAT_VER, full_dir_path, &st) == 0);
+
+  return full_dir_path;
+}
+
+/* Set GLRO(google_exec_origin_dir).  */
+static void
+set_exec_origin_dir (const char *exe_path)
+{
+  assert (GLRO(google_exec_origin_dir) == NULL);
+
+  if (GLRO(dl_origin_path) != NULL)
+    GLRO(google_exec_origin_dir) = strdup (GLRO(dl_origin_path));
+  else if (exe_path != NULL)
+    GLRO(google_exec_origin_dir) = get_directory (exe_path);
+}
+
+/* Iterate over auxv, find AT_EXECFN if any.  */
+static char *
+get_at_execfn (ElfW(auxv_t) *auxv)
+{
+  assert (auxv != NULL);
+
+  for (; auxv->a_type != AT_NULL; ++auxv)
+    if (auxv->a_type == AT_EXECFN)
+      return (char *) auxv->a_un.a_val;
+
+  return NULL;
 }
 
 #ifndef NESTING

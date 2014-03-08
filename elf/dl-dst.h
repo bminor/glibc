@@ -65,8 +65,13 @@
 	else								      \
 	  dst_len = (l)->l_origin == (char *) -1			      \
 	    ? 0 : strlen ((l)->l_origin);				      \
-	dst_len = MAX (MAX (dst_len, GLRO(dl_platformlen)),		      \
-		       strlen (DL_DST_LIB));				      \
+                                                                              \
+	char *exec_origin = GLRO(google_exec_origin_dir);		      \
+	size_t exec_origin_len =					      \
+	  (exec_origin == NULL) ? 0 : strlen (exec_origin);		      \
+									      \
+	dst_len = MAX (MAX (MAX (dst_len, GLRO(dl_platformlen)),	      \
+			    strlen (DL_DST_LIB)), exec_origin_len);	      \
 	if (dst_len > 4)						      \
 	  __len += __cnt * (dst_len - 4);				      \
       }									      \
