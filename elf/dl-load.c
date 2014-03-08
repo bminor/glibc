@@ -306,7 +306,8 @@ _dl_dst_count (const char *name, int is_path)
       if ((len = is_dst (start, name, "ORIGIN", is_path,
 			 INTUSE(__libc_enable_secure))) != 0
 	  || (len = is_dst (start, name, "PLATFORM", is_path, 0)) != 0
-	  || (len = is_dst (start, name, "LIB", is_path, 0)) != 0)
+	  || (len = is_dst (start, name, "LIB", is_path, 0)) != 0
+	  || (len = is_dst (start, name, "EXEC_ORIGIN", is_path, 0)) != 0)
 	++cnt;
 
       name = strchr (name + len, '$');
@@ -350,6 +351,13 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result,
 	    repl = GLRO(dl_platform);
 	  else if ((len = is_dst (start, name, "LIB", is_path, 0)) != 0)
 	    repl = DL_DST_LIB;
+	  else if ((len = is_dst (start, name, "EXEC_ORIGIN", is_path, 0)) != 0)
+	    {
+	      if (INTUSE(__libc_enable_secure) != 0)
+		_dl_fatal_printf ("$EXEC_ORIGIN rpath entry not allowed in setuid/setgid executables.\n");
+
+	      repl = GLRO(google_exec_origin_dir);
+	    }
 
 	  if (repl != NULL && repl != (const char *) -1)
 	    {

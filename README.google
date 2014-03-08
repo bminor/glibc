@@ -236,3 +236,12 @@ elf/Versions
   Export __signal_safe* functions from ld.so so we can use a different
   implementation.
   (ppluzhnikov, google-local)
+
+elf/dl-dst.h
+elf/dl-load.c
+elf/dl-support.c
+elf/rtld.c
+sysdeps/generic/ldsodefs.h
+  For b/4074041, add EXEC_ORIGIN support.
+  Forward-ported from cl/56955623 and cl/59961863.
+  (bmoses, google-local)
