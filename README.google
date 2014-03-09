@@ -245,3 +245,20 @@ sysdeps/generic/ldsodefs.h
   For b/4074041, add EXEC_ORIGIN support.
   Forward-ported from cl/56955623 and cl/59961863.
   (bmoses, google-local)
+
+nptl/Versions
+nptl/pthread_key_create.c
+nptl/sysdeps/pthread/pthread.h
+nptl/sysdeps/unix/sysv/linux/bits/local_lim.h
+nptl/sysdeps/unix/sysv/linux/powerpc/bits/local_lim.h
+nptl/sysdeps/unix/sysv/linux/sparc/bits/local_lim.h
+nptl/tst-key1.c
+nptl/tst-key4.c
+ports/sysdeps/unix/sysv/linux/aarch64/nptl/bits/local_lim.h
+ports/sysdeps/unix/sysv/linux/alpha/nptl/bits/local_lim.h
+ports/sysdeps/unix/sysv/linux/mips/nptl/bits/local_lim.h
+ports/sysdeps/unix/sysv/linux/tile/bits/local_lim.h
+  Add pthread_signal_safe_key_create.
+  Forward ported from cl/59612021, cl/59817832, and cl/59176280.
+  (ahh, google-local)
+

@@ -28,7 +28,11 @@ do_test (void)
 {
   int max;
 #ifdef PTHREAD_KEYS_MAX
+#ifdef PTHREAD_SIGNAL_SAFE_KEYS_MAX
+  max = PTHREAD_KEYS_MAX - PTHREAD_SIGNAL_SAFE_KEYS_MAX;
+#else
   max = PTHREAD_KEYS_MAX;
+#endif
 #else
   max = _POSIX_THREAD_KEYS_MAX;
 #endif
