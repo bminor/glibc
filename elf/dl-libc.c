@@ -59,6 +59,7 @@ struct do_dlopen_args
 {
   /* Argument to do_dlopen.  */
   const char *name;
+  off_t offset;
   /* Opening mode.  */
   int mode;
   /* This is the caller of the dlopen() function.  */
@@ -93,7 +94,7 @@ do_dlopen (void *ptr)
 {
   struct do_dlopen_args *args = (struct do_dlopen_args *) ptr;
   /* Open and relocate the shared object.  */
-  args->map = GLRO(dl_open) (args->name, args->mode, args->caller_dlopen,
+  args->map = GLRO(dl_open) (args->name, args->offset, args->mode, args->caller_dlopen,
 			     __LM_ID_CALLER, __libc_argc, __libc_argv,
 			     __environ);
 }
@@ -186,6 +187,7 @@ __libc_dlopen_mode (const char *name, int mode)
 {
   struct do_dlopen_args args;
   args.name = name;
+  args.offset = 0;
   args.mode = mode;
   args.caller_dlopen = RETURN_ADDRESS (0);
 

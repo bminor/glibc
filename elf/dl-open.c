@@ -44,6 +44,8 @@
 struct dl_open_args
 {
   const char *file;
+  /* ELF header at offset in file.  */
+  off_t offset;
   int mode;
   /* This is the caller of the dlopen() function.  */
   const void *caller_dlopen;
@@ -221,7 +223,7 @@ dl_open_worker (void *a)
 
   /* Load the named object.  */
   struct link_map *new;
-  args->map = new = _dl_map_object (call_map, file, lt_loaded, 0,
+  args->map = new = _dl_map_object (call_map, file, args->offset, lt_loaded, 0,
 				    mode | __RTLD_CALLMAP, args->nsid);
 
   /* If the pointer returned is NULL this means the RTLD_NOLOAD flag is
@@ -531,7 +533,7 @@ TLS generation counter wrapped!  Please report this."));
 
 
 void *
-_dl_open (const char *file, int mode, const void *caller_dlopen, Lmid_t nsid,
+_dl_open (const char *file, off_t offset, int mode, const void *caller_dlopen, Lmid_t nsid,
 	  int argc, char *argv[], char *env[])
 {
   if ((mode & RTLD_BINDING_MASK) == 0)
@@ -581,6 +583,7 @@ no more namespaces available for dlmopen()"));
 
   struct dl_open_args args;
   args.file = file;
+  args.offset = offset;
   args.mode = mode;
   args.caller_dlopen = caller_dlopen;
   args.caller_dl_open = RETURN_ADDRESS (0);
