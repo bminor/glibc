@@ -40,6 +40,8 @@ struct dlmopen_args
 {
   /* Namespace ID.  */
   Lmid_t nsid;
+  /* ELF header at offset in file.  */
+  off_t offset;
   /* The arguments for dlopen_doit.  */
   const char *file;
   int mode;
@@ -70,12 +72,54 @@ dlmopen_doit (void *a)
 	GLRO(dl_signal_error) (EINVAL, NULL, NULL, N_("invalid mode"));
     }
 
-  args->new = GLRO(dl_open) (args->file ?: "", args->mode | __RTLD_DLOPEN,
+  args->new = GLRO(dl_open) (args->file ?: "",
+			     args->offset,
+			     args->mode | __RTLD_DLOPEN,
 			     args->caller,
 			     args->nsid, __dlfcn_argc, __dlfcn_argv,
 			     __environ);
 }
 
+
+static void *
+__dlmopen_common (struct dlmopen_args *args)
+{
+
+# ifdef SHARED
+  return _dlerror_run (dlmopen_doit, args) ? NULL : args->new;
+# else
+  if (_dlerror_run (dlmopen_doit, args))
+    return NULL;
+
+  __libc_register_dl_open_hook ((struct link_map *) args->new);
+  __libc_register_dlfcn_hook ((struct link_map *) args->new);
+
+  return args->new;
+# endif
+}
+
+void *
+__dlmopen_with_offset (Lmid_t nsid, const char *file, off_t offset,
+		       int mode DL_CALLER_DECL)
+{
+# ifdef SHARED
+  if (__builtin_expect (_dlfcn_hook != NULL, 0))
+    return _dlfcn_hook->dlmopen_with_offset (nsid, file, offset,
+					     mode, RETURN_ADDRESS (0));
+# endif
+
+  struct dlmopen_args args;
+  args.nsid = nsid;
+  args.file = file;
+  args.offset = offset;
+  args.mode = mode;
+  args.caller = DL_CALLER;
+
+  return __dlmopen_common (&args);
+}
+# ifdef SHARED
+strong_alias (__dlmopen_with_offset, __google_dlmopen_with_offset)
+# endif
 
 void *
 __dlmopen (Lmid_t nsid, const char *file, int mode DL_CALLER_DECL)
@@ -88,20 +132,11 @@ __dlmopen (Lmid_t nsid, const char *file, int mode DL_CALLER_DECL)
   struct dlmopen_args args;
   args.nsid = nsid;
   args.file = file;
+  args.offset = 0;
   args.mode = mode;
   args.caller = DL_CALLER;
 
-# ifdef SHARED
-  return _dlerror_run (dlmopen_doit, &args) ? NULL : args.new;
-# else
-  if (_dlerror_run (dlmopen_doit, &args))
-    return NULL;
-
-  __libc_register_dl_open_hook ((struct link_map *) args.new);
-  __libc_register_dlfcn_hook ((struct link_map *) args.new);
-
-  return args.new;
-# endif
+  return __dlmopen_common (&args);
 }
 # ifdef SHARED
 strong_alias (__dlmopen, dlmopen)

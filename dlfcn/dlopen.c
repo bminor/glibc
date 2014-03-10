@@ -33,12 +33,21 @@ dlopen (const char *file, int mode)
 static_link_warning (dlopen)
 #endif
 
+void *
+dlopen_with_offset (const char *file, off_t offset, int mode)
+{
+  return __dlopen_with_offset (file, offset, mode, RETURN_ADDRESS (0));
+}
+static_link_warning (dlopen_with_offset)
+
 #else
 
 struct dlopen_args
 {
   /* The arguments for dlopen_doit.  */
   const char *file;
+  /* ELF header at offset in file.  */
+  off_t offset;
   int mode;
   /* The return value of dlopen_doit.  */
   void *new;
@@ -65,12 +74,50 @@ dlopen_doit (void *a)
 		     | __RTLD_SPROF))
     GLRO(dl_signal_error) (0, NULL, NULL, _("invalid mode parameter"));
 
-  args->new = GLRO(dl_open) (args->file ?: "", args->mode | __RTLD_DLOPEN,
+  args->new = GLRO(dl_open) (args->file ?: "",
+			     args->offset,
+			     args->mode | __RTLD_DLOPEN,
 			     args->caller,
 			     args->file == NULL ? LM_ID_BASE : NS,
 			     __dlfcn_argc, __dlfcn_argv, __environ);
 }
 
+
+static void *
+__dlopen_common (struct dlopen_args *args)
+{
+# ifdef SHARED
+  return _dlerror_run (dlopen_doit, args) ? NULL : args->new;
+# else
+  if (_dlerror_run (dlopen_doit, args))
+    return NULL;
+
+  __libc_register_dl_open_hook ((struct link_map *) args->new);
+  __libc_register_dlfcn_hook ((struct link_map *) args->new);
+
+  return args->new;
+# endif
+}
+
+void *
+__dlopen_with_offset (const char *file, off_t offset, int mode DL_CALLER_DECL)
+{
+# ifdef SHARED
+  if (__builtin_expect (_dlfcn_hook != NULL, 0))
+    return _dlfcn_hook->dlopen_with_offset (file, offset, mode, DL_CALLER);
+# endif
+
+  struct dlopen_args args;
+  args.file = file;
+  args.offset = offset;
+  args.mode = mode;
+  args.caller = DL_CALLER;
+
+  return __dlopen_common (&args);
+}
+# ifdef SHARED
+strong_alias (__dlopen_with_offset, __google_dlopen_with_offset)
+# endif
 
 void *
 __dlopen (const char *file, int mode DL_CALLER_DECL)
@@ -82,20 +129,11 @@ __dlopen (const char *file, int mode DL_CALLER_DECL)
 
   struct dlopen_args args;
   args.file = file;
+  args.offset = 0;
   args.mode = mode;
   args.caller = DL_CALLER;
 
-# ifdef SHARED
-  return _dlerror_run (dlopen_doit, &args) ? NULL : args.new;
-# else
-  if (_dlerror_run (dlopen_doit, &args))
-    return NULL;
-
-  __libc_register_dl_open_hook ((struct link_map *) args.new);
-  __libc_register_dlfcn_hook ((struct link_map *) args.new);
-
-  return args.new;
-# endif
+  return __dlopen_common (&args);
 }
 # ifdef SHARED
 #  include <shlib-compat.h>

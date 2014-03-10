@@ -1,5 +1,6 @@
 #ifndef _DLFCN_H
 #include <dlfcn/dlfcn.h>
+#include <sys/types.h>
 #ifndef _ISOMAC
 #include <link.h>		/* For ElfW.  */
 #include <stdbool.h>
@@ -106,6 +107,8 @@ extern int _dlerror_run (void (*operate) (void *), void *args)
 struct dlfcn_hook
 {
   void *(*dlopen) (const char *file, int mode, void *dl_caller);
+  void *(*dlopen_with_offset) (const char *file, off_t offset,
+			       int mode, void *dl_caller);
   int (*dlclose) (void *handle);
   void *(*dlsym) (void *handle, const char *name, void *dl_caller);
   void *(*dlvsym) (void *handle, const char *name, const char *version,
@@ -116,6 +119,8 @@ struct dlfcn_hook
 		  void **extra_info, int flags);
   int (*dlinfo) (void *handle, int request, void *arg, void *dl_caller);
   void *(*dlmopen) (Lmid_t nsid, const char *file, int mode, void *dl_caller);
+  void *(*dlmopen_with_offset) (Lmid_t nsid, const char *file, off_t offset,
+				int mode, void *dl_caller);
   void *pad[4];
 };
 
@@ -124,7 +129,13 @@ libdl_hidden_proto (_dlfcn_hook)
 
 extern void *__dlopen (const char *file, int mode DL_CALLER_DECL)
      attribute_hidden;
+extern void *__dlopen_with_offset (const char *file, off_t offset,
+				   int mode DL_CALLER_DECL)
+     attribute_hidden;
 extern void *__dlmopen (Lmid_t nsid, const char *file, int mode DL_CALLER_DECL)
+     attribute_hidden;
+extern void *__dlmopen_with_offset (Lmid_t nsid, const char *file, off_t offset,
+				    int mode DL_CALLER_DECL)
      attribute_hidden;
 extern int __dlclose (void *handle)
      attribute_hidden;

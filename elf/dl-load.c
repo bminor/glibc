@@ -925,7 +925,8 @@ lose (int code, int fd, const char *name, char *realname, struct link_map *l,
 static
 #endif
 struct link_map *
-_dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
+_dl_map_object_from_fd (const char *name, int fd, off_t offset,
+			struct filebuf *fbp,
 			char *realname, struct link_map *loader, int l_type,
 			int mode, void **stack_endp, Lmid_t nsid)
 {
@@ -1152,7 +1153,12 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 		       & ~(GLRO(dl_pagesize) - 1));
 	  c->dataend = ph->p_vaddr + ph->p_filesz;
 	  c->allocend = ph->p_vaddr + ph->p_memsz;
-	  c->mapoff = ph->p_offset & ~(GLRO(dl_pagesize) - 1);
+	  if (offset & (GLRO(dl_pagesize) - 1))
+	    {
+	      errstring = N_("invalid offset");
+	      goto call_lose;
+	    }
+	  c->mapoff = offset + ph->p_offset & ~(GLRO(dl_pagesize) - 1);
 
 	  /* Determine whether there is a gap between the last segment
 	     and this one.  */
@@ -1674,7 +1680,8 @@ print_search_path (struct r_search_path_elem **list,
    this could mean there is something wrong in the installation and the
    user might want to know about this.  */
 static int
-open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
+open_verify (const char *name, off_t offset,
+	     struct filebuf *fbp, struct link_map *loader,
 	     int whatcode, bool *found_other_class, bool free_name)
 {
   /* This is the expected ELF header.  */
@@ -1741,6 +1748,9 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
       ElfW(Word) *abi_note;
       unsigned int osversion;
       size_t maplength;
+
+      if (__lseek (fd, offset, SEEK_SET) == -1)
+	goto close_and_out;
 
       /* We successfully opened the file.  Now verify it is a file
 	 we can use.  */
@@ -1936,7 +1946,7 @@ open_verify (const char *name, struct filebuf *fbp, struct link_map *loader,
    if MAY_FREE_DIRS is true.  */
 
 static int
-open_path (const char *name, size_t namelen, int secure,
+open_path (const char *name, size_t namelen, off_t offset, int secure,
 	   struct r_search_path_struct *sps, char **realname,
 	   struct filebuf *fbp, struct link_map *loader, int whatcode,
 	   bool *found_other_class)
@@ -1988,8 +1998,8 @@ open_path (const char *name, size_t namelen, int secure,
 	  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS, 0))
 	    _dl_debug_printf ("  trying file=%s\n", buf);
 
-	  fd = open_verify (buf, fbp, loader, whatcode, found_other_class,
-			    false);
+	  fd = open_verify (buf, offset, fbp, loader, whatcode,
+			    found_other_class, false);
 	  if (this_dir->status[cnt] == unknown)
 	    {
 	      if (fd != -1)
@@ -2118,7 +2128,7 @@ match_one (const char *name, struct link_map *l)
 
 struct link_map *
 internal_function
-_dl_map_object (struct link_map *loader, const char *name,
+_dl_map_object (struct link_map *loader, const char *name, off_t offset,
 		int type, int trace_mode, int mode, Lmid_t nsid)
 {
   int fd;
@@ -2210,7 +2220,7 @@ _dl_map_object (struct link_map *loader, const char *name,
 	  for (l = loader; l; l = l->l_loader)
 	    if (cache_rpath (l, &l->l_rpath_dirs, DT_RPATH, "RPATH"))
 	      {
-		fd = open_path (name, namelen, mode & __RTLD_SECURE,
+		fd = open_path (name, namelen, offset, mode & __RTLD_SECURE,
 				&l->l_rpath_dirs,
 				&realname, &fb, loader, LA_SER_RUNPATH,
 				&found_other_class);
@@ -2226,7 +2236,7 @@ _dl_map_object (struct link_map *loader, const char *name,
 	      && main_map != NULL && main_map->l_type != lt_loaded
 	      && cache_rpath (main_map, &main_map->l_rpath_dirs, DT_RPATH,
 			      "RPATH"))
-	    fd = open_path (name, namelen, mode & __RTLD_SECURE,
+	    fd = open_path (name, namelen, offset, mode & __RTLD_SECURE,
 			    &main_map->l_rpath_dirs,
 			    &realname, &fb, loader ?: main_map, LA_SER_RUNPATH,
 			    &found_other_class);
@@ -2234,7 +2244,8 @@ _dl_map_object (struct link_map *loader, const char *name,
 
       /* Try the LD_LIBRARY_PATH environment variable.  */
       if (fd == -1 && env_path_list.dirs != (void *) -1)
-	fd = open_path (name, namelen, mode & __RTLD_SECURE, &env_path_list,
+	fd = open_path (name, namelen, offset,
+			mode & __RTLD_SECURE, &env_path_list,
 			&realname, &fb,
 			loader ?: GL(dl_ns)[LM_ID_BASE]._ns_loaded,
 			LA_SER_LIBPATH, &found_other_class);
@@ -2243,7 +2254,7 @@ _dl_map_object (struct link_map *loader, const char *name,
       if (fd == -1 && loader != NULL
 	  && cache_rpath (loader, &loader->l_runpath_dirs,
 			  DT_RUNPATH, "RUNPATH"))
-	fd = open_path (name, namelen, mode & __RTLD_SECURE,
+	fd = open_path (name, namelen, offset, mode & __RTLD_SECURE,
 			&loader->l_runpath_dirs, &realname, &fb, loader,
 			LA_SER_RUNPATH, &found_other_class);
 
@@ -2291,7 +2302,7 @@ _dl_map_object (struct link_map *loader, const char *name,
 
 	      if (cached != NULL)
 		{
-		  fd = open_verify (cached,
+		  fd = open_verify (cached, 0,
 				    &fb, loader ?: GL(dl_ns)[nsid]._ns_loaded,
 				    LA_SER_CONFIG, &found_other_class, false);
 		  if (__builtin_expect (fd != -1, 1))
@@ -2313,7 +2324,8 @@ _dl_map_object (struct link_map *loader, const char *name,
 	  && ((l = loader ?: GL(dl_ns)[nsid]._ns_loaded) == NULL
 	      || __builtin_expect (!(l->l_flags_1 & DF_1_NODEFLIB), 1))
 	  && rtld_search_dirs.dirs != (void *) -1)
-	fd = open_path (name, namelen, mode & __RTLD_SECURE, &rtld_search_dirs,
+	fd = open_path (name, namelen, offset, mode & __RTLD_SECURE,
+			&rtld_search_dirs,
 			&realname, &fb, l, LA_SER_DEFAULT, &found_other_class);
 
       /* Add another newline when we are tracing the library loading.  */
@@ -2330,7 +2342,7 @@ _dl_map_object (struct link_map *loader, const char *name,
 	fd = -1;
       else
 	{
-	  fd = open_verify (realname, &fb,
+	  fd = open_verify (realname, offset, &fb,
 			    loader ?: GL(dl_ns)[nsid]._ns_loaded, 0,
 			    &found_other_class, true);
 	  if (__builtin_expect (fd, 0) == -1)
@@ -2392,8 +2404,8 @@ _dl_map_object (struct link_map *loader, const char *name,
     }
 
   void *stack_end = __libc_stack_end;
-  return _dl_map_object_from_fd (name, fd, &fb, realname, loader, type, mode,
-				 &stack_end, nsid);
+  return _dl_map_object_from_fd (name, fd, offset, &fb, realname, loader, type,
+				 mode, &stack_end, nsid);
 }
 
 

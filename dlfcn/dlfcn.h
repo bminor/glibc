@@ -22,6 +22,7 @@
 #include <features.h>
 #define __need_size_t
 #include <stddef.h>
+#include <sys/types.h>
 
 /* Collect various system dependent definitions and declarations.  */
 #include <bits/dlfcn.h>
@@ -55,6 +56,11 @@ __BEGIN_DECLS
    passed to `dlsym' to get symbol values from it.  */
 extern void *dlopen (const char *__file, int __mode) __THROWNL;
 
+/* Same as above, but ELF header is at OFF from the start of file.  */
+extern void *__google_dlopen_with_offset (__const char *__file,
+					  off_t offset,
+					  int __mode) __THROW;
+
 /* Unmap and close a shared object opened by `dlopen'.
    The handle cannot be used again after calling `dlclose'.  */
 extern int dlclose (void *__handle) __THROWNL __nonnull ((1));
@@ -67,6 +73,12 @@ extern void *dlsym (void *__restrict __handle,
 #ifdef __USE_GNU
 /* Like `dlopen', but request object to be allocated in a new namespace.  */
 extern void *dlmopen (Lmid_t __nsid, const char *__file, int __mode) __THROWNL;
+
+/* Same as above, but ELF header is at OFF from the start of file.  */
+extern void *__google_dlmopen_with_offset (Lmid_t __nsid,
+					   __const char *__file,
+					   off_t offset,
+					   int __mode) __THROW;
 
 /* Find the run-time address in the shared object HANDLE refers to
    of the symbol called NAME with VERSION.  */

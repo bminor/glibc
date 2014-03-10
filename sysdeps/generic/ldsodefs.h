@@ -624,8 +624,9 @@ struct rtld_global_ro
 						     int, int,
 						     struct link_map *);
   int (*_dl_check_caller) (const void *, enum allowmask);
-  void *(*_dl_open) (const char *file, int mode, const void *caller_dlopen,
-		     Lmid_t nsid, int argc, char *argv[], char *env[]);
+  void *(*_dl_open) (const char *file, off_t offset, int mode,
+		     const void *caller_dlopen, Lmid_t nsid,
+		     int argc, char *argv[], char *env[]);
   void (*_dl_close) (void *map);
   void *(*_dl_tls_get_addr_soft) (struct link_map *);
 #ifdef HAVE_DL_DISCOVER_OSVERSION
@@ -797,10 +798,12 @@ extern void _dl_receive_error (receiver_fct fct, void (*operate) (void *),
 
 
 /* Open the shared object NAME and map in its segments.
+   ELF header is at OFFSET into the file.
    LOADER's DT_RPATH is used in searching for NAME.
    If the object is already opened, returns its existing map.  */
 extern struct link_map *_dl_map_object (struct link_map *loader,
 					const char *name,
+					off_t offset,
 					int type, int trace_mode, int mode,
 					Lmid_t nsid)
      internal_function attribute_hidden;
@@ -1068,8 +1071,9 @@ extern int _dl_check_caller (const void *caller, enum allowmask mask)
 /* Open the shared object NAME, relocate it, and run its initializer if it
    hasn't already been run.  MODE is as for `dlopen' (see <dlfcn.h>).  If
    the object is already opened, returns its existing map.  */
-extern void *_dl_open (const char *name, int mode, const void *caller,
-		       Lmid_t nsid, int argc, char *argv[], char *env[])
+extern void *_dl_open (const char *name, off_t offset, int mode,
+		       const void *caller, Lmid_t nsid,
+		       int argc, char *argv[], char *env[])
      attribute_hidden;
 
 /* Free or queue for freeing scope OLD.  If other threads might be

@@ -262,3 +262,19 @@ ports/sysdeps/unix/sysv/linux/tile/bits/local_lim.h
   Forward ported from cl/59612021, cl/59817832, and cl/59176280.
   (ahh, google-local)
 
+Versions.def
+dlfcn/Versions
+dlfcn/dlfcn.h
+dlfcn/dlmopen.c
+dlfcn/dlopen.c
+dlfcn/dlopenold.c
+elf/dl-deps.c
+elf/dl-libc.c
+elf/dl-load.c
+elf/dl-open.c
+elf/rtld.c
+include/dlfcn.h
+sysdeps/generic/ldsodefs.h
+  For Google b/8315591, experimental implementation of dlopen_with_offset.
+  Forward-ported from cl/59286541, cl/59438930
+  (ppluzhnikov, google-local)

@@ -11,6 +11,9 @@ libdl {
   GLIBC_2.3.4 {
     dlmopen;
   }
+  GLIBC_2.15 {
+    __google_dlopen_with_offset; __google_dlmopen_with_offset;
+  }
   GLIBC_PRIVATE {
     _dlfcn_hook;
   }
