@@ -1,3 +1,9 @@
+2014-03-12  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #16695]
+	* nscd/netgroupcache.c (addgetnetgrentX): Factor in space for
+	key in the buffer.
+
 2014-06-20  Maciej W. Rozycki  <macro@codesourcery.com>
 
 	[BZ #16046]
