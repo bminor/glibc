@@ -1,5 +1,5 @@
 /* Private jmp_buf-related definitions.  NaCl/ARM version.
-   Copyright (C) 2013 Free Software Foundation, Inc.
+   Copyright (C) 2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,9 +30,9 @@
    The generic ARM definition includes r9 (v6), which is not
    permitted under NaCl.  We add r3 even though it's call-clobbered,
    just to keep the size the same as the generic version.  */
-#define JMP_BUF_REGLIST		{r3, v1-v5, sl, fp, sp, lr}
+#define JMP_BUF_REGLIST		{r3, v1-v5, sl, fp}
 
 /* Index of __jmp_buf where the sp register resides.  */
-#define __JMP_BUF_SP		8
+#define __JMP_BUF_SP		0
 
 #endif  /* include/bits/setjmp.h */
