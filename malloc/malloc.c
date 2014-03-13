@@ -398,8 +398,17 @@ __malloc_assert (const char *assertion, const char *file, unsigned int line,
 
 
 /* Definition for getting more memory from the OS.  */
+#if 0 /* Google-local: b/5732800: make calls go through PLT instead.  */
 #define MORECORE         (*__morecore)
 #define MORECORE_FAILURE 0
+#else
+#define __mmap           mmap
+#define __munmap         munmap
+#define __mremap         mremap
+#define __mprotect       mprotect
+#define MORECORE         sbrk
+#define MORECORE_FAILURE -1
+#endif
 void * __default_morecore (ptrdiff_t);
 void *(*__morecore)(ptrdiff_t) = __default_morecore;
 

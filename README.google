@@ -278,3 +278,12 @@ sysdeps/generic/ldsodefs.h
   For Google b/8315591, experimental implementation of dlopen_with_offset.
   Forward-ported from cl/59286541, cl/59438930
   (ppluzhnikov, google-local)
+
+malloc/malloc.c
+ports/sysdeps/unix/sysv/linux/aarch64/nptl/localplt.data
+sysdeps/generic/localplt.data
+sysdeps/unix/sysv/linux/i386/nptl/localplt.data
+sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/localplt.data
+  For b/5732800, expose calls from malloc to mmap, munmap, and sbrk.
+  Forward ported from cl/42670015, with changes.
+  (ppluzhnikov, google-local)

@@ -3,5 +3,10 @@ libc.so: calloc
 libc.so: free
 libc.so: malloc
 libc.so: memalign
+libc.so: mmap
+libc.so: mprotect
+libc.so: mremap
+libc.so: munmap
 libc.so: realloc
+libc.so: sbrk
 libm.so: matherr
