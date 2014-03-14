@@ -18,13 +18,14 @@
 
 #ifdef SHARED
 
-#include <assert.h>
-#include <ldsodefs.h>
-#include <stdint.h>
+# include <assert.h>
+# include <ldsodefs.h>
+# include <stdint.h>
+# include <nacl-interfaces.h>
 
 /* NaCl's elf32.h is incompatible with the real <elf.h>.  */
-#define NATIVE_CLIENT_SRC_INCLUDE_ELF32_H_
-#include <native_client/src/untrusted/nacl/nacl_startup.h>
+# define NATIVE_CLIENT_SRC_INCLUDE_ELF32_H_
+# include <native_client/src/untrusted/nacl/nacl_startup.h>
 
 /* The RTLD_START code sets up the pointer that gets to these
    macros as COOKIE to point to two words:
@@ -32,7 +33,7 @@
    [1] the stack base
 */
 
-#define DL_FIND_ARG_COMPONENTS(cookie, argc, argv, envp, auxp)	\
+# define DL_FIND_ARG_COMPONENTS(cookie, argc, argv, envp, auxp)	\
   do {								\
     uint32_t *_info = ((void **) (cookie))[0];			\
     (argc) = nacl_startup_argc (_info);				\
@@ -41,7 +42,7 @@
     (auxp) = nacl_startup_auxv (_info);				\
   } while (0)
 
-#define DL_STACK_END(cookie)	(((void **) (cookie))[1])
+# define DL_STACK_END(cookie)	(((void **) (cookie))[1])
 
 /* This is called from the entry point (_start), defined by the RTLD_START
    macro in the machine-specific dl-machine.h file.  At this point, dynamic
@@ -77,6 +78,8 @@ _dl_start_user (void (*user_entry) (uint32_t info[]), uint32_t info[])
   /* Call the user's entry point.  This should never return.  */
   (*user_entry) (info);
 }
+
+# define DL_SYSDEP_INIT	__nacl_initialize_interfaces ()
 
 #endif  /* SHARED */
 
