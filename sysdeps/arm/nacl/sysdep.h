@@ -1,5 +1,5 @@
 /* Assembler macros for ARM/NaCl.
-   Copyright (C) 2013 Free Software Foundation, Inc.
+   Copyright (C) 2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,10 +41,6 @@
 #include <sysdeps/arm/sysdep.h>
 
 #ifdef  __ASSEMBLER__
-
-/* We use DWARF2 CFI, not EABI unwind info.  */
-# undef  CFI_SECTIONS
-# define CFI_SECTIONS		.cfi_sections .eh_frame, .debug_frame
 
 # undef eabi_fnstart
 # define eabi_fnstart
