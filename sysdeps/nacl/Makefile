@@ -48,6 +48,12 @@ before-compile += $(nacl-irt.h)
 
 ifeq ($(subdir),misc)
 
+# We reuse the Linux file since the bits match.  The file lives in the
+# top-level source tree so we can use it without reference to any
+# sysdeps/.../linux/ directories, but it's still a sysdeps decision to
+# install it.
+sysdep_headers += bits/mman-linux.h
+
 $(objpfx)nacl-interfaces.v.i: $(nacl)/nacl-interfaces.mk.in \
 			      $(nacl)/nacl-interface-list.h
 -include $(objpfx)nacl-interfaces.v
