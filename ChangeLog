@@ -4,6 +4,10 @@
 	* nscd/netgroupcache.c (addinnetgrX): Succeed if triplet has
 	blank values.
 
+	[BZ #16759]
+	* inet/getnetgrent_r.c (get_nonempty_val): New function.
+	(nscd_getnetgrent): Use it.
+
 2015-11-24  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #17062]
