@@ -8,6 +8,10 @@
 	* inet/getnetgrent_r.c (get_nonempty_val): New function.
 	(nscd_getnetgrent): Use it.
 
+	[BZ #16760]
+	* nscd/netgroupcache.c (addgetnetgrentX): Use memmove instead
+	of stpcpy.
+
 2015-11-24  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #17062]
