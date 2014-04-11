@@ -287,3 +287,7 @@ sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/localplt.data
   For b/5732800, expose calls from malloc to mmap, munmap, and sbrk.
   Forward ported from cl/42670015, with changes.
   (ppluzhnikov, google-local)
+
+elf/rtld.c
+  For b/12342355, remove inappropriate assert in EXEC_ORIGIN support.
+  (bmoses, google-local)

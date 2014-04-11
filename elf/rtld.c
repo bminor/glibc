@@ -2909,10 +2909,6 @@ get_directory (const char *file_path)
     dest = __mempcpy (dest, file_path, path_len);
   *dest = '\0';
 
-  /* Confirm that the constructed path is valid.  */
-  struct stat64 st;
-  assert (__xstat64 (_STAT_VER, full_dir_path, &st) == 0);
-
   return full_dir_path;
 }
 
