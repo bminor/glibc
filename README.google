@@ -291,3 +291,12 @@ sysdeps/unix/sysv/linux/powerpc/powerpc64/nptl/localplt.data
 elf/rtld.c
   For b/12342355, remove inappropriate assert in EXEC_ORIGIN support.
   (bmoses, google-local)
+
+sysdeps/powerpc/powerpc32/power4/multiarch/bzero.c
+sysdeps/powerpc/powerpc32/power4/multiarch/bzero-ppc32.S
+sysdeps/powerpc/powerpc64/multiarch/memset-ppc64.S
+  For b/14302447, backport upstream patches for __bzero_ppc:
+  https://sourceware.org/bugzilla/show_bug.cgi?id=16683
+  https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=4facea473059914983b7da8dd654c06b8e3dcc41
+  https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=dd3946c615184e1957a0cb09352cac72be5d6d5b
+  (bmoses, already upstream)
