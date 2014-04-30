@@ -300,3 +300,7 @@ sysdeps/powerpc/powerpc64/multiarch/memset-ppc64.S
   https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=4facea473059914983b7da8dd654c06b8e3dcc41
   https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=dd3946c615184e1957a0cb09352cac72be5d6d5b
   (bmoses, already upstream)
+
+sysdeps/unix/sysv/linux/sys/ptrace.h
+  For b/13432624, add PTRACE_EVENT_STOP to __ptrace_eventcodes enum.
+  (bmoses, not yet upstream)
