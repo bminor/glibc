@@ -4,7 +4,9 @@
 # It doesn't perturb any struct CamelCaps cases, since such names will
 # be used only in NaCl-specific interfaces.
 /^struct \([a-z][a-z]*\);$/d
+/^#include "irt\.h"$/d
 /(/!b
 s/\([a-z0-9_][a-z0-9_]*\)_t\>/nacl_abi_\1_t/g
 s/struct \([a-z0-9_][a-z0-9_]*\)/nacl_abi_\1_t/g
 s/nacl_abi_\(u*int[3264]*_t\)/\1/g
+s/nacl_abi_\(nacl_irt_\)/\1/g

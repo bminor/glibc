@@ -20,6 +20,9 @@
 
 struct stat;
 
+/* stat.h uses nacl_abi_off_t, but irt.h defines only nacl_irt_off_t.  */
+typedef nacl_irt_off_t nacl_abi_off_t;
+
 /* We use this header to define struct nacl_abi_stat.  But we must avoid
    its excess declarations, and defining these names away is (marginally)
    cleaner than #undef'ing __native_client__.  */

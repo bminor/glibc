@@ -29,13 +29,11 @@
 
 /* These are the same in the IRT ABI as in the libc ABI.  */
 typedef blksize_t nacl_abi_blksize_t;
-typedef clockid_t nacl_abi_clockid_t;
 typedef dev_t nacl_abi_dev_t;
 typedef gid_t nacl_abi_gid_t;
 typedef ino_t nacl_abi_ino_t;
 typedef mode_t nacl_abi_mode_t;
 typedef nlink_t nacl_abi_nlink_t;
-typedef off_t nacl_abi_off_t;
 typedef size_t nacl_abi_size_t;
 typedef time_t nacl_abi_time_t;
 typedef uid_t nacl_abi_uid_t;

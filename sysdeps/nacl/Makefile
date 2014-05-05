@@ -40,7 +40,9 @@ common-generated += stamp-errnos bits/errno.h
 before-compile += $(bits-errno)
 
 nacl-irt.h = $(common-objpfx)nacl-irt.h
-$(nacl-irt.h): $(nacl)/irt.sed $(naclsrc)/untrusted/irt/irt.h
+$(nacl-irt.h): $(nacl)/irt.sed \
+	       $(naclsrc)/untrusted/irt/irt.h \
+	       $(naclsrc)/untrusted/irt/irt_dev.h
 	sed -f $^ > $@.new
 	mv -f $@.new $@
 common-generated += nacl-irt.h
