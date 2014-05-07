@@ -1,3 +1,8 @@
+2015-10-02  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Advance address pointer
+	when skipping over non-matching result from nscd.
+
 2015-09-11  Alan Modra  <amodra@gmail.com>
 
 	[BZ #17153]
