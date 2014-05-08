@@ -137,6 +137,10 @@ libpthread-static-only-routines = pthread_atfork
 
 CFLAGS-pthread_atfork.c = -DNOT_IN_libc
 
+# Google-local (b/14616463): Turn off function sections in events.c to
+# avoid folding that causes a bad debugging experience.
+CFLAGS-events.c = -fno-function-sections
+
 # Since cancellation handling is in large parts handled using exceptions
 # we have to compile some files with exception handling enabled, some
 # even with asynchronous unwind tables.

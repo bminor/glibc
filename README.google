@@ -304,3 +304,7 @@ sysdeps/powerpc/powerpc64/multiarch/memset-ppc64.S
 sysdeps/unix/sysv/linux/sys/ptrace.h
   For b/13432624, add PTRACE_EVENT_STOP to __ptrace_eventcodes enum.
   (bmoses, not yet upstream)
+
+nptl/Makefile
+  For b/14616463, add -fno-function-sections to events.c compilation.
+  (bmoses, google-local)
