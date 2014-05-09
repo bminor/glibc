@@ -1,5 +1,12 @@
 2014-05-09  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/sysdeps/unix/sysv/linux/getpid.c
+	(really_getpid): Function removed.
+	(__getpid): Rewritten.  Under [!NOT_IN_libc], use THREAD_SELF->pid if
+	it's > 0.  Otherwise always just make the system call.
+
+2014-05-09  Roland McGrath  <roland@hack.frob.com>
+
 	* sysdeps/arm/armv7/strcmp.S: Use sfi_breg prefix on loads not from sp.
 	[NO_THUMB]: Cope without cbz, cnbz, and orn instructions.
 

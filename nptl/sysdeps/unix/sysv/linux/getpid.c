@@ -21,42 +21,17 @@
 #include <sysdep.h>
 
 
-#ifndef NOT_IN_libc
-static inline __attribute__((always_inline)) pid_t really_getpid (pid_t oldval);
-
-static inline __attribute__((always_inline)) pid_t
-really_getpid (pid_t oldval)
-{
-  if (__glibc_likely (oldval == 0))
-    {
-      pid_t selftid = THREAD_GETMEM (THREAD_SELF, tid);
-      if (__glibc_likely (selftid != 0))
-	return selftid;
-    }
-
-  INTERNAL_SYSCALL_DECL (err);
-  pid_t result = INTERNAL_SYSCALL (getpid, err, 0);
-
-  /* We do not set the PID field in the TID here since we might be
-     called from a signal handler while the thread executes fork.  */
-  if (oldval == 0)
-    THREAD_SETMEM (THREAD_SELF, tid, result);
-  return result;
-}
-#endif
-
 pid_t
 __getpid (void)
 {
-#ifdef NOT_IN_libc
-  INTERNAL_SYSCALL_DECL (err);
-  pid_t result = INTERNAL_SYSCALL (getpid, err, 0);
-#else
+#ifndef NOT_IN_libc
   pid_t result = THREAD_GETMEM (THREAD_SELF, pid);
-  if (__glibc_unlikely (result <= 0))
-    result = really_getpid (result);
+  if (__glibc_likely (result > 0))
+    return result;
 #endif
-  return result;
+
+  INTERNAL_SYSCALL_DECL (err);
+  return INTERNAL_SYSCALL (getpid, err, 0);
 }
 
 libc_hidden_def (__getpid)
