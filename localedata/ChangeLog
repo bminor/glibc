@@ -1,3 +1,9 @@
+2014-07-02  Florian Weimer  <fweimer@redhat.com>
+
+	* tst-setlocale3.c: New file.
+	* Makefile (tests): Add tst-setlocale3.
+	(tst-setlocale3-ENV): New variable.
+
 2012-06-20  Petr Baudis  <pasky@ucw.cz>
 
 	* locales/mag_IN: Fix comment character.
