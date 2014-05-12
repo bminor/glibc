@@ -1,3 +1,9 @@
+2014-07-02  Florian Weimer  <fweimer@redhat.com>
+
+	* tst-setlocale3.c: New file.
+	* Makefile (tests): Add tst-setlocale3.
+	(tst-setlocale3-ENV): New variable.
+
 2013-06-13  Johan Heikkila  <johan.heikkila@gmail.com>
 
 	[BZ#15432]

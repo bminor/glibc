@@ -11,9 +11,18 @@ Version 2.18.1
 
   14143, 14155, 14547, 14699, 15532, 15427, 15522, 15680, 15723, 15734,
   15735, 15797, 15892, 15895, 15909, 15915, 15917, 15996, 16072, 16150,
-  16414, 16430, 16431, 17187, 17325.
+  16414, 16430, 16431, 17137, 17187, 17325.
 
 * Support for powerpc64le has been added.
+
+* Locale names, including those obtained from environment variables (LANG
+  and the LC_* variables), are more tightly checked for proper syntax.
+  setlocale will now fail (with EINVAL) for locale names that are overly
+  long, contain slashes without starting with a slash, or contain ".." path
+  components. (CVE-2014-0475)  Previously, some valid locale names were
+  silently replaced with the "C" locale when running in AT_SECURE mode
+  (e.g., in a SUID program).  This is no longer necessary because of the
+  additional checks.
 
 * Support for loadable gconv transliteration modules has been removed.
   The support for transliteration modules has been non-functional for
