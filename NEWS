@@ -10,7 +10,7 @@ Version 2.19.1
 * The following bugs are resolved with this release:
 
   16545, 16683, 16689, 16701, 16706, 16707, 16739, 16815, 16619, 16740,
-  17031, 17153, 17187, 17213, 17325.
+  17031, 17137, 17153, 17187, 17213, 17325.
 
 * Decoding a crafted input sequence in the character sets IBM933, IBM935,
   IBM937, IBM939, IBM1364 could result in an out-of-bounds array read,
@@ -23,6 +23,15 @@ Version 2.19.1
   normal gconv conversion modules are still supported.  Transliteration
   with //TRANSLIT is still possible, and the //IGNORE specifier
   continues to be  supported. (CVE-2014-5519)
+
+* Locale names, including those obtained from environment variables (LANG
+  and the LC_* variables), are more tightly checked for proper syntax.
+  setlocale will now fail (with EINVAL) for locale names that are overly
+  long, contain slashes without starting with a slash, or contain ".." path
+  components. (CVE-2014-0475)  Previously, some valid locale names were
+  silently replaced with the "C" locale when running in AT_SECURE mode
+  (e.g., in a SUID program).  This is no longer necessary because of the
+  additional checks.
 
 Version 2.19
 
