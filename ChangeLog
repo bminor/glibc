@@ -1,3 +1,8 @@
+2014-05-13  Sami Kerola  <kerolasa@iki.fi>
+
+	* timezone/Makefile ($(objpfx)tzselect): Use zonedir instead
+	current working directory
+
 2014-05-16  Allan McRae  <allan@archlinux.org>
 
 	* po/sv.po: Update Swedish translation from translation project.
