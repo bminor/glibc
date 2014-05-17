@@ -1,3 +1,9 @@
+2014-05-17  Jose E. Marchesi  <jose.marchesi@oracle.com>
+
+	[BZ #16958]
+	* sysdeps/sparc/sparc64/multiarch/memcpy-niagara2.S: Add missing
+	membar to avoid block loads/stores to overlap previous stores.
+
 2014-05-13  Sami Kerola  <kerolasa@iki.fi>
 
 	* timezone/Makefile ($(objpfx)tzselect): Use zonedir instead
