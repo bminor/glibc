@@ -308,3 +308,18 @@ sysdeps/unix/sysv/linux/sys/ptrace.h
 nptl/Makefile
   For b/14616463, add -fno-function-sections to events.c compilation.
   (bmoses, google-local)
+
+libio/Makefile
+libio/fileops.c
+libio/iofdopen.c
+libio/iofwide.c
+libio/libioP.h
+libio/tst-ftell-active-handler.c
+libio/wfileops.c
+  For b/15017950, backport upstream patches for PR16532 (separate
+  ftell, fseek logic) and subsequent optimization and cleanup:
+  https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=000232b9bcbf194f1e5fd0ff380000f341505405
+  https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=fa3cd24827d34a49e0a3a5cac56abbf8df74d8ac
+  https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=091eff71a5edacb5a321c6e573f09a5358540675
+  https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=d4b17258bba38f206079fbae1e7255779db1b74c
+  (bmoses, already upstream)
