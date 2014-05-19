@@ -323,3 +323,9 @@ libio/wfileops.c
   https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=091eff71a5edacb5a321c6e573f09a5358540675
   https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=d4b17258bba38f206079fbae1e7255779db1b74c
   (bmoses, already upstream)
+
+sysdeps/powerpc/powerpc64/fpu/s_copysign.S
+  For b/13737066, backport upstream patches for PR16786 (s_copysign
+  stack temp bugfix on PPC ELFv2):
+  https://sourceware.org/ml/libc-alpha/2014-04/msg00000.html
+  (bmoses, already upstream)
