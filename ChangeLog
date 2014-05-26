@@ -1,3 +1,9 @@
+2014-06-03  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #15946]
+	* resolv/res_send.c (send_dg): Reload file descriptor after
+	calling reopen.
+
 2015-03-10  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/ieee754/dbl-64/Makefile (CFLAGS-e_pow.c): Add
