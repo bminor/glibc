@@ -1,3 +1,8 @@
+2014-07-02  Florian Weimer  <fweimer@redhat.com>
+
+	* locale/setlocale.c (setlocale): Use strdup for allocating
+	composite name copy.
+
 2014-05-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
 
 	[BZ #16878]
