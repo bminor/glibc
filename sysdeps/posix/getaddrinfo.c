@@ -566,113 +566,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  int no_more;
 	  int old_res_options;
 
-	  /* If we do not have to look for IPv6 addresses or the canonical
-	     name, use the simple, old functions, which do not support
-	     IPv6 scope ids, nor retrieving the canonical name.  */
-	  if (req->ai_family == AF_INET
-	      && (req->ai_flags & AI_CANONNAME) == 0)
-	    {
-	      /* Allocate additional room for struct host_data.  */
-	      size_t tmpbuflen = (512 + MAX_NR_ALIASES * sizeof(char*)
-				  + 16 * sizeof(char));
-	      assert (tmpbuf == NULL);
-	      tmpbuf = alloca_account (tmpbuflen, alloca_used);
-	      int rc;
-	      struct hostent th;
-	      struct hostent *h;
-	      int herrno;
-
-	      while (1)
-		{
-		  rc = __gethostbyname2_r (name, AF_INET, &th, tmpbuf,
-					   tmpbuflen, &h, &herrno);
-		  if (rc != ERANGE || herrno != NETDB_INTERNAL)
-		    break;
-
-		  if (!malloc_tmpbuf
-		      && __libc_use_alloca (alloca_used + 2 * tmpbuflen))
-		    tmpbuf = extend_alloca_account (tmpbuf, tmpbuflen,
-						    2 * tmpbuflen,
-						    alloca_used);
-		  else
-		    {
-		      char *newp = realloc (malloc_tmpbuf ? tmpbuf : NULL,
-					    2 * tmpbuflen);
-		      if (newp == NULL)
-			{
-			  result = -EAI_MEMORY;
-			  goto free_and_return;
-			}
-		      tmpbuf = newp;
-		      malloc_tmpbuf = true;
-		      tmpbuflen = 2 * tmpbuflen;
-		    }
-		}
-
-	      if (rc == 0)
-		{
-		  if (h != NULL)
-		    {
-		      int i;
-		      /* We found data, count the number of addresses.  */
-		      for (i = 0; h->h_addr_list[i]; ++i)
-			;
-		      if (i > 0 && *pat != NULL)
-			--i;
-
-		      if (__libc_use_alloca (alloca_used
-					     + i * sizeof (struct gaih_addrtuple)))
-			addrmem = alloca_account (i * sizeof (struct gaih_addrtuple),
-						  alloca_used);
-		      else
-			{
-			  addrmem = malloc (i
-					    * sizeof (struct gaih_addrtuple));
-			  if (addrmem == NULL)
-			    {
-			      result = -EAI_MEMORY;
-			      goto free_and_return;
-			    }
-			  malloc_addrmem = true;
-			}
-
-		      /* Now convert it into the list.  */
-		      struct gaih_addrtuple *addrfree = addrmem;
-		      for (i = 0; h->h_addr_list[i]; ++i)
-			{
-			  if (*pat == NULL)
-			    {
-			      *pat = addrfree++;
-			      (*pat)->scopeid = 0;
-			    }
-			  (*pat)->next = NULL;
-			  (*pat)->family = AF_INET;
-			  memcpy ((*pat)->addr, h->h_addr_list[i],
-				  h->h_length);
-			  pat = &((*pat)->next);
-			}
-		    }
-		}
-	      else
-		{
-		  if (herrno == NETDB_INTERNAL)
-		    {
-		      __set_h_errno (herrno);
-		      result = -EAI_SYSTEM;
-		    }
-		  else if (herrno == TRY_AGAIN)
-		    result = -EAI_AGAIN;
-		  else
-		    /* We made requests but they turned out no data.
-		       The name is known, though.  */
-		    result = -EAI_NODATA;
-
-		  goto free_and_return;
-		}
-
-	      goto process_list;
-	    }
-
 #ifdef USE_NSCD
 	  if (__nss_not_use_nscd_hosts > 0
 	      && ++__nss_not_use_nscd_hosts > NSS_NSCD_RETRY)
@@ -805,6 +698,113 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		}
 	    }
 #endif
+
+	  /* If we do not have to look for IPv6 addresses or the canonical
+	     name, use the simple, old functions, which do not support
+	     IPv6 scope ids, nor retrieving the canonical name.  */
+	  if (req->ai_family == AF_INET
+	      && (req->ai_flags & AI_CANONNAME) == 0)
+	    {
+	      /* Allocate additional room for struct host_data.  */
+	      size_t tmpbuflen = (512 + MAX_NR_ALIASES * sizeof(char*)
+				  + 16 * sizeof(char));
+	      assert (tmpbuf == NULL);
+	      tmpbuf = alloca_account (tmpbuflen, alloca_used);
+	      int rc;
+	      struct hostent th;
+	      struct hostent *h;
+	      int herrno;
+
+	      while (1)
+		{
+		  rc = __gethostbyname2_r (name, AF_INET, &th, tmpbuf,
+					   tmpbuflen, &h, &herrno);
+		  if (rc != ERANGE || herrno != NETDB_INTERNAL)
+		    break;
+
+		  if (!malloc_tmpbuf
+		      && __libc_use_alloca (alloca_used + 2 * tmpbuflen))
+		    tmpbuf = extend_alloca_account (tmpbuf, tmpbuflen,
+						    2 * tmpbuflen,
+						    alloca_used);
+		  else
+		    {
+		      char *newp = realloc (malloc_tmpbuf ? tmpbuf : NULL,
+					    2 * tmpbuflen);
+		      if (newp == NULL)
+			{
+			  result = -EAI_MEMORY;
+			  goto free_and_return;
+			}
+		      tmpbuf = newp;
+		      malloc_tmpbuf = true;
+		      tmpbuflen = 2 * tmpbuflen;
+		    }
+		}
+
+	      if (rc == 0)
+		{
+		  if (h != NULL)
+		    {
+		      int i;
+		      /* We found data, count the number of addresses.  */
+		      for (i = 0; h->h_addr_list[i]; ++i)
+			;
+		      if (i > 0 && *pat != NULL)
+			--i;
+
+		      if (__libc_use_alloca (alloca_used
+					     + i * sizeof (struct gaih_addrtuple)))
+			addrmem = alloca_account (i * sizeof (struct gaih_addrtuple),
+						  alloca_used);
+		      else
+			{
+			  addrmem = malloc (i
+					    * sizeof (struct gaih_addrtuple));
+			  if (addrmem == NULL)
+			    {
+			      result = -EAI_MEMORY;
+			      goto free_and_return;
+			    }
+			  malloc_addrmem = true;
+			}
+
+		      /* Now convert it into the list.  */
+		      struct gaih_addrtuple *addrfree = addrmem;
+		      for (i = 0; h->h_addr_list[i]; ++i)
+			{
+			  if (*pat == NULL)
+			    {
+			      *pat = addrfree++;
+			      (*pat)->scopeid = 0;
+			    }
+			  (*pat)->next = NULL;
+			  (*pat)->family = AF_INET;
+			  memcpy ((*pat)->addr, h->h_addr_list[i],
+				  h->h_length);
+			  pat = &((*pat)->next);
+			}
+		    }
+		}
+	      else
+		{
+		  if (herrno == NETDB_INTERNAL)
+		    {
+		      __set_h_errno (herrno);
+		      result = -EAI_SYSTEM;
+		    }
+		  else if (herrno == TRY_AGAIN)
+		    result = -EAI_AGAIN;
+		  else
+		    /* We made requests but they turned out no data.
+		       The name is known, though.  */
+		    result = -EAI_NODATA;
+
+		  goto free_and_return;
+		}
+
+	      goto process_list;
+	    }
 
 	  if (__nss_hosts_database == NULL)
 	    no_more = __nss_database_lookup ("hosts", NULL,
