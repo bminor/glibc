@@ -2435,7 +2435,11 @@ getaddrinfo (const char *name, const char *service,
       return EAI_FAMILY;
     }
 
-  if (naddrs > 1)
+  /* We don't want to sort the localhost addresses used for passive
+     binding; if the caller asked for both address types, we want to
+     return IPv6+IPv4 before IPv4, because if we bind to IPv4 first,
+     the IPv6 bind will fail.  */
+  if (naddrs > 1 && (name || (hints->ai_flags & AI_PASSIVE) == 0))
     {
       /* Read the config file.  */
       __libc_once_define (static, once);
