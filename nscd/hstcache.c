@@ -233,12 +233,7 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
       bool alloca_used = false;
       dataset = NULL;
 
-      /* If the record contains more than one IP address (used for
-	 load balancing etc) don't cache the entry.  This is something
-	 the current cache handling cannot handle and it is more than
-	 questionable whether it is worthwhile complicating the cache
-	 handling just for handling such a special case. */
-      if (he == NULL && h_addr_list_cnt == 1)
+      if (he == NULL)
 	dataset = (struct dataset *) mempool_alloc (db, total + req->key_len,
 						    1);
 
@@ -312,33 +307,29 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 	      /* The data has not changed.  We will just bump the
 		 timeout value.  Note that the new record has been
 		 allocated on the stack and need not be freed.  */
-	      assert (h_addr_list_cnt == 1);
 	      dh->ttl = dataset->head.ttl;
 	      dh->timeout = dataset->head.timeout;
 	      ++dh->nreloads;
 	    }
 	  else
 	    {
-	      if (h_addr_list_cnt == 1)
+	      /* We have to create a new record.  Just allocate
+		 appropriate memory and copy it.  */
+	      struct dataset *newp
+		= (struct dataset *) mempool_alloc (db,
+						    total + req->key_len,
+						    1);
+	      if (newp != NULL)
 		{
-		  /* We have to create a new record.  Just allocate
-		     appropriate memory and copy it.  */
-		  struct dataset *newp
-		    = (struct dataset *) mempool_alloc (db,
-							total + req->key_len,
-							1);
-		  if (newp != NULL)
-		    {
-		      /* Adjust pointers into the memory block.  */
-		      addresses = (char *) newp + (addresses
-						   - (char *) dataset);
-		      aliases = (char *) newp + (aliases - (char *) dataset);
-		      assert (key_copy != NULL);
-		      key_copy = (char *) newp + (key_copy - (char *) dataset);
+		  /* Adjust pointers into the memory block.  */
+		  addresses = (char *) newp + (addresses
+					       - (char *) dataset);
+		  aliases = (char *) newp + (aliases - (char *) dataset);
+		  assert (key_copy != NULL);
+		  key_copy = (char *) newp + (key_copy - (char *) dataset);
 
-		      dataset = memcpy (newp, dataset, total + req->key_len);
-		      alloca_used = false;
-		    }
+		  dataset = memcpy (newp, dataset, total + req->key_len);
+		  alloca_used = false;
 		}
 
 	      /* Mark the old record as obsolete.  */
@@ -386,13 +377,7 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 	}
 
       /* Add the record to the database.  But only if it has not been
-	 stored on the stack.
-
-	 If the record contains more than one IP address (used for
-	 load balancing etc) don't cache the entry.  This is something
-	 the current cache handling cannot handle and it is more than
-	 questionable whether it is worthwhile complicating the cache
-	 handling just for handling such a special case. */
+	 stored on the stack.  */
       if (! alloca_used)
 	{
 	  /* If necessary, we also propagate the data to disk.  */
@@ -405,15 +390,6 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 		     + total + req->key_len, MS_ASYNC);
 	    }
 
-	  /* NB: the following code is really complicated.  It has
-	     seemlingly duplicated code paths which do the same.  The
-	     problem is that we always must add the hash table entry
-	     with the FIRST flag set first.  Otherwise we get dangling
-	     pointers in case memory allocation fails.  */
-	  assert (hst->h_addr_list[1] == NULL);
-
-	  /* Avoid adding names if more than one address is available.  See
-	     above for more info.  */
 	  assert (req->type == GETHOSTBYNAME
 		  || req->type == GETHOSTBYNAMEv6
 		  || req->type == GETHOSTBYADDR
