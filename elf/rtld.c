@@ -2717,6 +2717,19 @@ process_envvars (enum mode *modep)
 	UNSECURE_ENVVARS;
       const char *nextp;
 
+      /* We may destory the connection between __environ and the auxv[]
+	 by unsetting one or more of the insecure variables in the
+	 original environment.  Here is our last chance to record correct
+	 __google_auxv.  See b/13901604.  */
+      extern ElfW(auxv_t) *__google_auxv;
+      if (__builtin_expect (__google_auxv == NULL, 1))
+	{
+	  char **e;
+
+	  for (e = __environ; *e; ++e) /* Skip.  */;
+	  __google_auxv = (ElfW(auxv_t) *) ++e;
+	}
+
       nextp = unsecure_envvars;
       do
 	{

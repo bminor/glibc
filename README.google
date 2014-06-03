@@ -329,3 +329,9 @@ sysdeps/powerpc/powerpc64/fpu/s_copysign.S
   stack temp bugfix on PPC ELFv2):
   https://sourceware.org/ml/libc-alpha/2014-04/msg00000.html
   (bmoses, already upstream)
+
+elf/rtld.c
+  For b/13901604, set correct __google_auxv before unsetting insecure
+  environment variables.
+  (ppluzhnikov, google-local)
+
