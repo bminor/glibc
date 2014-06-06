@@ -1,5 +1,8 @@
 2014-06-06  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
+	* sysdeps/powerpc/powerpc64/power7/strncat.S [STRLEN]: Define it as
+	strlen for non SHARED builds.
+
 	* sysdeps/powerpc/powerpc32/power6x/fpu/Implies: New file.
 	* sysdeps/powerpc/powerpc64/power6x/fpu/Implies: new file.
 	* sysdeps/powerpc/powerpc64/power6x/multiarch/Implies: New file.
