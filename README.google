@@ -358,3 +358,11 @@ libio/wfileops.c
   https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=2482ae433a4249495859343ae1fba408300f2c2e
   https://sourceware.org/bugzilla/show_bug.cgi?id=16724
   (bmoses, backport)
+
+misc/mktemp.c
+stdio-common/tempnam.c
+stdio-common/tmpnam.c
+  For Crosstool v18 disable link-time warning about mktemp,tempnam and tmpnam.
+  b/6115789
+  TODO(ppluzhnikov): revert this after cleanup.
+  (ppluzhnikov, google-local)

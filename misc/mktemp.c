@@ -33,4 +33,6 @@ __mktemp (template)
 }
 weak_alias (__mktemp, mktemp)
 
+#if 0  /* Google-local: b/6115789  */
 link_warning (mktemp, "the use of `mktemp' is dangerous, better use `mkstemp'")
+#endif
