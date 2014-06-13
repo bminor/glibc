@@ -39,5 +39,7 @@ tempnam (const char *dir, const char *pfx)
   return __strdup (buf);
 }
 
+#if 0  /* Google-local: b/6115789  */
 link_warning (tempnam,
 	      "the use of `tempnam' is dangerous, better use `mkstemp'")
+#endif

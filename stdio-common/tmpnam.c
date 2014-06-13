@@ -47,5 +47,7 @@ tmpnam (char *s)
   return s;
 }
 
+#if 0  /* Google-local: b/6115789  */
 link_warning (tmpnam,
 	      "the use of `tmpnam' is dangerous, better use `mkstemp'")
+#endif
