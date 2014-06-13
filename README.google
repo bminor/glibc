@@ -343,12 +343,3 @@ tst-spawn.c
   posix_spawn_file_actions_addopen.
   https://sourceware.org/bugzilla/show_bug.cgi?id=17048
   (bmoses, backport)
-
-libio/Makefile
-libio/fileops.c
-libio/tst-ftell-append.c
-libio/wfileops.c
-  For b/15017950, backport patch to fix offset computation for append+
-  mode on switching from read.
-  https://sourceware.org/bugzilla/show_bug.cgi?id=16724
-  (bmoses, backport)

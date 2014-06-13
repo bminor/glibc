@@ -60,8 +60,7 @@ tests = tst_swprintf tst_wprintf tst_swscanf tst_wscanf tst_getwc tst_putwc   \
 	tst-wmemstream1 tst-wmemstream2 \
 	bug-memstream1 bug-wmemstream1 \
 	tst-setvbuf1 tst-popen1 tst-fgetwc bug-wsetpos tst-fseek \
-	tst-fwrite-error tst-ftell-partial-wide tst-ftell-active-handler \
-	tst-ftell-append
+	tst-fwrite-error tst-ftell-partial-wide tst-ftell-active-handler
 ifeq (yes,$(build-shared))
 # Add test-fopenloc only if shared library is enabled since it depends on
 # shared localedata objects.
@@ -161,7 +160,6 @@ tst-swscanf-ENV = LOCPATH=$(common-objpfx)localedata
 bug-ftell-ENV = LOCPATH=$(common-objpfx)localedata
 tst-fgetwc-ENV = LOCPATH=$(common-objpfx)localedata
 tst-fseek-ENV = LOCPATH=$(common-objpfx)localedata
-tst-ftell-append-ENV = LOCPATH=$(common-objpfx)localedata
 
 generated = tst-fopenloc.mtrace tst-fopenloc.check
 
