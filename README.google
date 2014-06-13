@@ -335,3 +335,11 @@ elf/rtld.c
   environment variables.
   (ppluzhnikov, google-local)
 
+posix/spawn_faction_addopen.c
+posix/spawn_faction_destroy.c
+posix/spawn_int.h
+tst-spawn.c
+  For b/15568332, backport patch to copy path argument to
+  posix_spawn_file_actions_addopen.
+  https://sourceware.org/bugzilla/show_bug.cgi?id=17048
+  (bmoses, backport)
