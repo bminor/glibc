@@ -20,23 +20,14 @@
  *
  * ARMv8-a, AArch64
  * Unaligned accesses
- *
  */
 
 #include <sysdep.h>
 
-/* By default we assume that the DC instruction can be used to zero
-   data blocks more efficiently.  In some circumstances this might be
-   unsafe, for example in an asymmetric multiprocessor environment with
-   different DC clear lengths (neither the upper nor lower lengths are
-   safe to use).  The feature can be disabled by defining DONT_USE_DC.
-
-   If code may be run in a virtualized environment, then define
-   MAYBE_VIRT.  This will cause the code to cache the system register
-   values rather than re-reading them each call.  */
-
 #define dstin		x0
-#define val		w1
+#define dstin_w		w0
+#define val		x1
+#define valw		w1
 #define count		x2
 #define tmp1		x3
 #define tmp1w		w3
@@ -44,186 +35,280 @@
 #define tmp2w		w4
 #define zva_len_x	x5
 #define zva_len		w5
-#define zva_bits_x	x6
-
-#define A_l		x7
-#define A_lw		w7
+#define zva_mask_x	x6
+#define zva_mask	w6
 #define dst		x8
-#define tmp3w		w9
+#define dst_w		w8
+#define dstend		x9
 
-ENTRY_ALIGN (__memset, 6)
+	.globl	memset
+	cfi_startproc
 
-	mov	dst, dstin		/* Preserve return value.  */
-	ands	A_lw, val, #255
-#ifndef DONT_USE_DC
-	b.eq	L(zero_mem)
-#endif
-	orr	A_lw, A_lw, A_lw, lsl #8
-	orr	A_lw, A_lw, A_lw, lsl #16
-	orr	A_l, A_l, A_l, lsl #32
-L(tail_maybe_long):
-	cmp	count, #64
-	b.ge	L(not_short)
-L(tail_maybe_tiny):
-	cmp	count, #15
-	b.le	L(tail15tiny)
-L(tail63):
-	ands	tmp1, count, #0x30
-	b.eq	L(tail15)
-	add	dst, dst, tmp1
-	cmp	tmp1w, #0x20
-	b.eq	1f
-	b.lt	2f
-	stp	A_l, A_l, [dst, #-48]
-1:
-	stp	A_l, A_l, [dst, #-32]
-2:
-	stp	A_l, A_l, [dst, #-16]
+#if HAVE_IFUNC && !defined (IS_IN_rtld)
+/* Rather than decode dczid_el0 every time, checking for zva disabled and
+   unpacking the line size, do this once in the indirect function and choose
+   an appropriate entry point which encodes these values as constants.  */
 
-L(tail15):
-	and	count, count, #15
-	add	dst, dst, count
-	stp	A_l, A_l, [dst, #-16]	/* Repeat some/all of last store. */
+	.type	memset, %gnu_indirect_function
+memset:
+	mrs	x1, dczid_el0
+	adrp	x0, 1f
+	tst	x1, #16				/* test for zva disabled */
+	and	x1, x1, #15
+	add	x0, x0, #:lo12:1f
+	csel	x1, xzr, x1, ne			/* squash index to 0 if so */
+	ldrsw	x2, [x0, x1, lsl #2]
+	add	x0, x0, x2
 	RET
+	.size	memset, .-memset
 
-L(tail15tiny):
-	/* Set up to 15 bytes.  Does not assume earlier memory
-	   being set.  */
-	tbz	count, #3, 1f
-	str	A_l, [dst], #8
-1:
-	tbz	count, #2, 1f
-	str	A_lw, [dst], #4
-1:
-	tbz	count, #1, 1f
-	strh	A_lw, [dst], #2
-1:
-	tbz	count, #0, 1f
-	strb	A_lw, [dst]
-1:
-	RET
+	.section .rodata
+1:	.long	memset_nozva - 1b		// 0
+	.long	memset_nozva - 1b		// 1
+	.long	memset_nozva - 1b		// 2
+	.long	memset_nozva - 1b		// 3
+	.long	memset_zva_64 - 1b		// 4
+	.long	memset_zva_128 - 1b		// 5
+	.long	memset_zva_256 - 1b		// 6
+	.long	memset_zva_512 - 1b		// 7
+	.long	memset_zva_1024 - 1b	// 8
+	.long	memset_zva_2048 - 1b	// 9
+	.long	memset_zva_4096 - 1b	// 10
+	.long	memset_zva_8192 - 1b	// 11
+	.long	memset_zva_16384 - 1b	// 12
+	.long	memset_zva_32768 - 1b	// 13
+	.long	memset_zva_65536 - 1b	// 14
+	.long	memset_zva_131072 - 1b	// 15
+	.previous
 
-	/* Critical loop.  Start at a new cache line boundary.  Assuming
-	 * 64 bytes per line, this ensures the entire loop is in one line.  */
+/* The 64 byte zva size is too small, and needs unrolling for efficiency.  */
+
 	.p2align 6
-L(not_short):
-	neg	tmp2, dst
-	ands	tmp2, tmp2, #15
-	b.eq	2f
-	/* Bring DST to 128-bit (16-byte) alignment.  We know that there's
-	 * more than that to set, so we simply store 16 bytes and advance by
-	 * the amount required to reach alignment.  */
-	sub	count, count, tmp2
-	stp	A_l, A_l, [dst]
-	add	dst, dst, tmp2
-	/* There may be less than 63 bytes to go now.  */
-	cmp	count, #63
-	b.le	L(tail63)
-2:
-	sub	dst, dst, #16		/* Pre-bias.  */
-	sub	count, count, #64
-1:
-	stp	A_l, A_l, [dst, #16]
-	stp	A_l, A_l, [dst, #32]
-	stp	A_l, A_l, [dst, #48]
-	stp	A_l, A_l, [dst, #64]!
-	subs	count, count, #64
-	b.ge	1b
-	tst	count, #0x3f
-	add	dst, dst, #16
-	b.ne	L(tail63)
-	RET
+	.type	memset_zva_64, %function
+memset_zva_64:
+	CALL_MCOUNT
+	and	valw, valw, #255
+	cmp	count, #256
+	ccmp	valw, #0, #0, hs	/* hs ? cmp val,0 : !z */
+	b.ne	L(nz_or_small)
 
-#ifndef DONT_USE_DC
-	/* For zeroing memory, check to see if we can use the ZVA feature to
-	 * zero entire 'cache' lines.  */
-L(zero_mem):
-	mov	A_l, #0
-	cmp	count, #63
-	b.le	L(tail_maybe_tiny)
-	neg	tmp2, dst
-	ands	tmp2, tmp2, #15
-	b.eq	1f
-	sub	count, count, tmp2
-	stp	A_l, A_l, [dst]
-	add	dst, dst, tmp2
-	cmp	count, #63
-	b.le	L(tail63)
-1:
-	/* For zeroing small amounts of memory, it's not worth setting up
-	 * the line-clear code.  */
-	cmp	count, #128
-	b.lt	L(not_short)
-#ifdef MAYBE_VIRT
-	/* For efficiency when virtualized, we cache the ZVA capability.  */
-	adrp	tmp2, L(cache_clear)
-	ldr	zva_len, [tmp2, #:lo12:L(cache_clear)]
-	tbnz	zva_len, #31, L(not_short)
-	cbnz	zva_len, L(zero_by_line)
-	mrs	tmp1, dczid_el0
-	tbz	tmp1, #4, 1f
-	/* ZVA not available.  Remember this for next time.  */
-	mov	zva_len, #~0
-	str	zva_len, [tmp2, #:lo12:L(cache_clear)]
-	b	L(not_short)
-1:
-	mov	tmp3w, #4
-	and	zva_len, tmp1w, #15	/* Safety: other bits reserved.  */
-	lsl	zva_len, tmp3w, zva_len
-	str	zva_len, [tmp2, #:lo12:L(cache_clear)]
-#else
-	mrs	tmp1, dczid_el0
-	tbnz	tmp1, #4, L(not_short)
-	mov	tmp3w, #4
-	and	zva_len, tmp1w, #15	/* Safety: other bits reserved.  */
-	lsl	zva_len, tmp3w, zva_len
-#endif
+	stp	xzr, xzr, [dstin]	/* first 16 aligned 1.  */
+	and	tmp2, dstin, #-16
+	and	dst, dstin, #-64
 
-L(zero_by_line):
-	/* Compute how far we need to go to become suitably aligned.  We're
-	 * already at quad-word alignment.  */
-	cmp	count, zva_len_x
-	b.lt	L(not_short)		/* Not enough to reach alignment.  */
-	sub	zva_bits_x, zva_len_x, #1
-	neg	tmp2, dst
-	ands	tmp2, tmp2, zva_bits_x
-	b.eq	1f			/* Already aligned.  */
-	/* Not aligned, check that there's enough to copy after alignment.  */
-	sub	tmp1, count, tmp2
-	cmp	tmp1, #64
-	ccmp	tmp1, zva_len_x, #8, ge	/* NZCV=0b1000 */
-	b.lt	L(not_short)
-	/* We know that there's at least 64 bytes to zero and that it's safe
-	 * to overrun by 64 bytes.  */
-	mov	count, tmp1
-2:
-	stp	A_l, A_l, [dst]
-	stp	A_l, A_l, [dst, #16]
-	stp	A_l, A_l, [dst, #32]
-	subs	tmp2, tmp2, #64
-	stp	A_l, A_l, [dst, #48]
+	stp	xzr, xzr, [tmp2, #16]	/* first 64 aligned 16.  */
+	add	dstend, dstin, count
 	add	dst, dst, #64
-	b.ge	2b
-	/* We've overrun a bit, so adjust dst downwards.  */
-	add	dst, dst, tmp2
-1:
-	sub	count, count, zva_len_x
-3:
-	dc	zva, dst
-	add	dst, dst, zva_len_x
-	subs	count, count, zva_len_x
-	b.ge	3b
-	ands	count, count, zva_bits_x
-	b.ne	L(tail_maybe_long)
-	RET
-#ifdef MAYBE_VIRT
-	.bss
-	.p2align 2
-L(cache_clear):
-	.space 4
-#endif
-#endif /* DONT_USE_DC */
 
-END (__memset)
-weak_alias (__memset, memset)
+	stp	xzr, xzr, [tmp2, #32]
+	sub	count, dstend, dst	/* recompute for misalign */
+	add	tmp1, dst, #64
+
+	stp	xzr, xzr, [tmp2, #48]
+	sub	count, count, #128	/* pre-bias */
+
+	stp	xzr, xzr, [tmp2, #64]
+
+	.p2align 6,,24
+0:	dc	zva, dst
+	subs	count, count, #128
+	dc	zva, tmp1
+	add	dst, dst, #128
+	add	tmp1, tmp1, #128
+	b.hs	0b
+
+	adds	count, count, #128	/* undo pre-bias */
+	b.ne	L(zva_tail)
+	RET
+
+	.size	memset_zva_64, . - memset_zva_64
+
+/* For larger zva sizes, a simple loop ought to suffice.  */
+/* ??? Needs performance testing, when such hardware becomes available.  */
+
+.macro do_zva len
+	.p2align 4
+	.type	memset_zva_\len, %function
+memset_zva_\len:
+	CALL_MCOUNT
+	and	valw, valw, #255
+	cmp	count, #\len
+	ccmp	valw, #0, #0, hs	/* hs ? cmp val,0 : !z */
+	b.ne	L(nz_or_small)
+
+	add	dstend, dstin, count
+	mov	zva_len, #\len
+	mov	zva_mask, #\len-1
+	b	memset_zva_n
+
+	.size	memset_zva_\len, . - memset_zva_\len
+.endm
+
+	do_zva 128	// 5
+	do_zva 256	// 6
+	do_zva 512	// 7
+	do_zva 1024	// 8
+	do_zva 2048	// 9
+	do_zva 4096	// 10
+	do_zva 8192	// 11
+	do_zva 16384	// 12
+	do_zva 32768	// 13
+	do_zva 65536	// 14
+	do_zva 131072	// 15
+
+	.p2align 6
+#else
+/* Without IFUNC, we must load the zva data from the dczid register.  */
+
+	.p2align 6
+	.type	memset, %function
+memset:
+	and	valw, valw, #255
+	cmp	count, #256
+	ccmp	valw, #0, #0, hs	/* hs ? cmp val,0 : !z */
+	b.ne	L(nz_or_small)
+
+	mrs	tmp1, dczid_el0
+	tbnz	tmp1, #4, L(nz_or_small)
+
+	and	tmp1w, tmp1w, #15
+	mov	zva_len, #4
+	add	dstend, dstin, count
+	lsl	zva_len, zva_len, tmp1w
+	cmp	count, zva_len_x
+	sub	zva_mask, zva_len, #1
+	b.lo	L(ge_64)
+
+	/* Fall through into memset_zva_n.  */
+	.size	memset, . - memset
+#endif /* HAVE_IFUNC */
+
+/* Main part of the zva path.  On arrival here, we've already checked for
+   minimum size and that VAL is zero.  Also, we've set up zva_len and mask. */
+
+	.type	memset_zva_n, %function
+memset_zva_n:
+	stp	xzr, xzr, [dstin]	/* first 16 aligned 1.  */
+	neg	tmp1w, dstin_w
+	sub	count, count, zva_len_x	/* pre-bias */
+	mov	dst, dstin
+	ands	tmp1w, tmp1w, zva_mask
+	b.ne	3f
+
+	.p2align 6,,16
+2:	dc	zva, dst
+	subs	count, count, zva_len_x
+	add	dst, dst, zva_len_x
+	b.hs	2b
+
+	adds	count, count, zva_len_x	/* undo pre-bias */
+	b.ne	L(zva_tail)
+	RET
+
+	.p2align 4
+3:	and	tmp2, dstin, #-16
+	sub	count, count, tmp1	/* account for misalign */
+	add	dst, dstin, tmp1
+
+	.p2align 6,,24
+4:	stp	xzr, xzr, [tmp2, #16]
+	stp	xzr, xzr, [tmp2, #32]
+	subs	tmp1w, tmp1w, #64
+	stp	xzr, xzr, [tmp2, #48]
+	stp	xzr, xzr, [tmp2, #64]!
+	b.hi	4b
+
+	b	2b
+
+	.size	memset_zva_n, . - memset_zva_n
+
+/* The non-zva path.  */
+
+	.p2align 6
+	.type	memset_nozva, %function
+memset_nozva:
+	CALL_MCOUNT
+	and	valw, valw, #255
+L(nz_or_small):
+	orr	valw, valw, valw, lsl #8  /* replicate the byte */
+	cmp	count, #64
+	orr	valw, valw, valw, lsl #16
+	add	dstend, dstin, count	  /* remember end of buffer */
+	orr	val, val, val, lsl #32
+	b.hs	L(ge_64)
+
+	/* Small data -- original count is less than 64 bytes.  */
+L(le_63):
+	cmp	count, #16
+	b.lo	L(le_15)
+	stp	val, val, [dstin]
+	tbz	count, #5, L(le_31)
+	stp	val, val, [dstin, #16]
+	stp	val, val, [dstend, #-32]
+L(le_31):
+	stp	val, val, [dstend, #-16]
+	RET
+	.p2align 6,,16
+L(le_15):
+	tbz	count, #3, L(le_7)
+	str	val, [dstin]
+	str	val, [dstend, #-8]
+	RET
+	.p2align 6,,16
+L(le_7):
+	tbz	count, #2, L(le_3)
+	str	valw, [dstin]
+	str	valw, [dstend, #-4]
+	RET
+	.p2align 6,,20
+L(le_3):
+	tbz	count, #1, L(le_1)
+	strh	valw, [dstend, #-2]
+L(le_1):
+	tbz	count, #0, L(le_0)
+	strb	valw, [dstin]
+L(le_0):
+	RET
+
+	.p2align 6
+L(ge_64):
+	and	dst, dstin, #-16	/* align the pointer / pre-bias.  */
+	stp	val, val, [dstin]	/* first 16 align 1 */
+	sub	count, dstend, dst	/* begin misalign recompute */
+	subs	count, count, #16+64	/* finish recompute + pre-bias */
+	b.ls	L(loop_tail)
+
+	.p2align 6,,24
+L(loop):
+	stp	val, val, [dst, #16]
+	stp	val, val, [dst, #32]
+	subs	count, count, #64
+	stp	val, val, [dst, #48]
+	stp	val, val, [dst, #64]!
+	b.hs	L(loop)
+
+	adds	count, count, #64	/* undo pre-bias */
+	b.ne	L(loop_tail)
+	RET
+
+	/* Tail of the zva loop.  Less than ZVA bytes, but possibly lots
+	   more than 64.  Note that dst is aligned but unbiased.  */
+L(zva_tail):
+	subs	count, count, #64	/* pre-bias */
+	sub	dst, dst, #16		/* pre-bias */
+	b.hi	L(loop)
+
+	/* Tail of the stp loop; less than 64 bytes left.
+	   Note that dst is still aligned and biased by -16.  */
+L(loop_tail):
+	stp	val, val, [dstend, #-64]
+	stp	val, val, [dstend, #-48]
+	stp	val, val, [dstend, #-32]
+	stp	val, val, [dstend, #-16]
+	RET
+
+	.size	memset_nozva, . - memset_nozva
+	cfi_endproc
+
+strong_alias (memset, __memset)
 libc_hidden_builtin_def (memset)
