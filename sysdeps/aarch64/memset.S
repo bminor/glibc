@@ -26,7 +26,6 @@
 
 #define dstin		x0
 #define dstin_w		w0
-#define val		x1
 #define valw		w1
 #define count		x2
 #define tmp1		x3
@@ -87,27 +86,26 @@ memset:
 	.type	memset_zva_64, %function
 memset_zva_64:
 	CALL_MCOUNT
-	and	valw, valw, #255
-	cmp	count, #256
-	ccmp	valw, #0, #0, hs	/* hs ? cmp val,0 : !z */
+	tst	valw, #255
 	b.ne	L(nz_or_small)
 
-	stp	xzr, xzr, [dstin]	/* first 16 aligned 1.  */
+	cmp	count, #256
+	dup	v16.16b, valw
+	add	dstend, dstin, count
+	b.lo	L(le_255)
+
+	str	q16, [dstin]		/* first 16 aligned 1.  */
 	and	tmp2, dstin, #-16
 	and	dst, dstin, #-64
 
-	stp	xzr, xzr, [tmp2, #16]	/* first 64 aligned 16.  */
-	add	dstend, dstin, count
+	stp	q16, q16, [tmp2, #16]	/* first 64 aligned 16.  */
 	add	dst, dst, #64
 
-	stp	xzr, xzr, [tmp2, #32]
+	stp	q16, q16, [tmp2, #48]
 	sub	count, dstend, dst	/* recompute for misalign */
 	add	tmp1, dst, #64
 
-	stp	xzr, xzr, [tmp2, #48]
 	sub	count, count, #128	/* pre-bias */
-
-	stp	xzr, xzr, [tmp2, #64]
 
 	.p2align 6,,24
 0:	dc	zva, dst
@@ -126,7 +124,26 @@ memset_zva_64:
 /* For larger zva sizes, a simple loop ought to suffice.  */
 /* ??? Needs performance testing, when such hardware becomes available.  */
 
-.macro do_zva len
+.macro do_zvas len
+	.p2align 4
+	.type	memset_zva_\len, %function
+memset_zva_\len:
+	CALL_MCOUNT
+	tst	valw, #255
+	b.ne	L(nz_or_small)
+
+	cmp	count, #256
+	dup	v16.16b, valw
+	add	dstend, dstin, count
+	b.lo	L(le_255)
+
+	mov	zva_len, #\len
+	b	memset_zva_n
+
+	.size	memset_zva_\len, . - memset_zva_\len
+.endm
+
+.macro do_zval len
 	.p2align 4
 	.type	memset_zva_\len, %function
 memset_zva_\len:
@@ -138,23 +155,22 @@ memset_zva_\len:
 
 	add	dstend, dstin, count
 	mov	zva_len, #\len
-	mov	zva_mask, #\len-1
 	b	memset_zva_n
 
 	.size	memset_zva_\len, . - memset_zva_\len
 .endm
 
-	do_zva 128	// 5
-	do_zva 256	// 6
-	do_zva 512	// 7
-	do_zva 1024	// 8
-	do_zva 2048	// 9
-	do_zva 4096	// 10
-	do_zva 8192	// 11
-	do_zva 16384	// 12
-	do_zva 32768	// 13
-	do_zva 65536	// 14
-	do_zva 131072	// 15
+	do_zvas 128	// 5
+	do_zvas 256	// 6
+	do_zval 512	// 7
+	do_zval 1024	// 8
+	do_zval 2048	// 9
+	do_zval 4096	// 10
+	do_zval 8192	// 11
+	do_zval 16384	// 12
+	do_zval 32768	// 13
+	do_zval 65536	// 14
+	do_zval 131072	// 15
 
 	.p2align 6
 #else
@@ -163,21 +179,26 @@ memset_zva_\len:
 	.p2align 6
 	.type	memset, %function
 memset:
-	and	valw, valw, #255
-	cmp	count, #256
-	ccmp	valw, #0, #0, hs	/* hs ? cmp val,0 : !z */
+	tst	valw, #255
 	b.ne	L(nz_or_small)
 
-	mrs	tmp1, dczid_el0
-	tbnz	tmp1, #4, L(nz_or_small)
-
-	and	tmp1w, tmp1w, #15
-	mov	zva_len, #4
+	cmp	count, #256
+	dup	v16.16b, valw
 	add	dstend, dstin, count
+	b.lo	L(le_255)
+
+	mrs	tmp1, dczid_el0
+	mov	zva_len, #4
+
+	tst	tmp1w, #16		/* dc disabled? */
+	and	tmp1w, tmp1w, #15
+
+	ccmp	tmp1w, #4, #0, eq	/* eq ? cmp len,64 : !c */
 	lsl	zva_len, zva_len, tmp1w
-	cmp	count, zva_len_x
-	sub	zva_mask, zva_len, #1
-	b.lo	L(ge_64)
+
+	ccmp	count, zva_len_x, #0, hs /* hs ? cmp count,len : !c */
+
+	b.lo	L(ge_256)		/* disabled || len<64 || count<len */
 
 	/* Fall through into memset_zva_n.  */
 	.size	memset, . - memset
@@ -188,8 +209,9 @@ memset:
 
 	.type	memset_zva_n, %function
 memset_zva_n:
-	stp	xzr, xzr, [dstin]	/* first 16 aligned 1.  */
+	stp	q16, q16, [dstin]	/* first 32 aligned 1.  */
 	neg	tmp1w, dstin_w
+	sub	zva_mask, zva_len, #1
 	sub	count, count, zva_len_x	/* pre-bias */
 	mov	dst, dstin
 	ands	tmp1w, tmp1w, zva_mask
@@ -206,16 +228,14 @@ memset_zva_n:
 	RET
 
 	.p2align 4
-3:	and	tmp2, dstin, #-16
+3:	and	tmp2, dstin, #-32
 	sub	count, count, tmp1	/* account for misalign */
 	add	dst, dstin, tmp1
 
 	.p2align 6,,24
-4:	stp	xzr, xzr, [tmp2, #16]
-	stp	xzr, xzr, [tmp2, #32]
+4:	stp	q16, q16, [tmp2, #32]
 	subs	tmp1w, tmp1w, #64
-	stp	xzr, xzr, [tmp2, #48]
-	stp	xzr, xzr, [tmp2, #64]!
+	stp	q16, q16, [tmp2, #64]!
 	b.hi	4b
 
 	b	2b
@@ -228,83 +248,92 @@ memset_zva_n:
 	.type	memset_nozva, %function
 memset_nozva:
 	CALL_MCOUNT
-	and	valw, valw, #255
 L(nz_or_small):
-	orr	valw, valw, valw, lsl #8  /* replicate the byte */
+	dup	v16.16b, valw
+	cmp	count, #256
+	add	dstend, dstin, count
+	b.hs	L(ge_256)
+
+	/* Small data -- original count is less than 256 bytes.  */
+L(le_255):
+	cmp	count, #32
+	b.lo	L(le_31)
+
+	stp	q16, q16, [dstin]
 	cmp	count, #64
-	orr	valw, valw, valw, lsl #16
-	add	dstend, dstin, count	  /* remember end of buffer */
-	orr	val, val, val, lsl #32
-	b.hs	L(ge_64)
+	b.lo	L(le_63)
 
-	/* Small data -- original count is less than 64 bytes.  */
+	stp	q16, q16, [dstin, #0x20]
+	tbz	count, #7, L(le_127)
+
+	stp	q16, q16, [dstin, #0x40]
+	stp	q16, q16, [dstin, #0x60]
+	stp	q16, q16, [dstend, #-0x80]
+	stp	q16, q16, [dstend, #-0x60]
+L(le_127):
+	stp	q16, q16, [dstend, #-0x40]
 L(le_63):
-	cmp	count, #16
-	b.lo	L(le_15)
-	stp	val, val, [dstin]
-	tbz	count, #5, L(le_31)
-	stp	val, val, [dstin, #16]
-	stp	val, val, [dstend, #-32]
-L(le_31):
-	stp	val, val, [dstend, #-16]
-	RET
-	.p2align 6,,16
-L(le_15):
-	tbz	count, #3, L(le_7)
-	str	val, [dstin]
-	str	val, [dstend, #-8]
-	RET
-	.p2align 6,,16
-L(le_7):
-	tbz	count, #2, L(le_3)
-	str	valw, [dstin]
-	str	valw, [dstend, #-4]
-	RET
-	.p2align 6,,20
-L(le_3):
-	tbz	count, #1, L(le_1)
-	strh	valw, [dstend, #-2]
-L(le_1):
-	tbz	count, #0, L(le_0)
-	strb	valw, [dstin]
-L(le_0):
+	stp	q16, q16, [dstend, #-0x20]
 	RET
 
-	.p2align 6
-L(ge_64):
-	and	dst, dstin, #-16	/* align the pointer / pre-bias.  */
-	stp	val, val, [dstin]	/* first 16 align 1 */
+	.p2align 6,,16
+L(ge_256):
+	and	dst, dstin, #-32	/* align the pointer / pre-bias.  */
+	stp	q16, q16, [dstin]	/* first 32 align 1 */
 	sub	count, dstend, dst	/* begin misalign recompute */
-	subs	count, count, #16+64	/* finish recompute + pre-bias */
-	b.ls	L(loop_tail)
+	sub	count, count, #32+128	/* finish recompute + pre-bias */
 
 	.p2align 6,,24
 L(loop):
-	stp	val, val, [dst, #16]
-	stp	val, val, [dst, #32]
-	subs	count, count, #64
-	stp	val, val, [dst, #48]
-	stp	val, val, [dst, #64]!
+	stp	q16, q16, [dst, #0x20]
+	stp	q16, q16, [dst, #0x40]
+	subs	count, count, #128
+	stp	q16, q16, [dst, #0x60]
+	stp	q16, q16, [dst, #0x80]!
 	b.hs	L(loop)
 
-	adds	count, count, #64	/* undo pre-bias */
+	adds	count, count, #128	/* undo pre-bias */
 	b.ne	L(loop_tail)
 	RET
 
 	/* Tail of the zva loop.  Less than ZVA bytes, but possibly lots
-	   more than 64.  Note that dst is aligned but unbiased.  */
+	   more than 128.  Note that dst is aligned but unbiased.  */
 L(zva_tail):
-	subs	count, count, #64	/* pre-bias */
-	sub	dst, dst, #16		/* pre-bias */
+	subs	count, count, #128	/* pre-bias */
+	sub	dst, dst, #32		/* pre-bias */
 	b.hi	L(loop)
 
-	/* Tail of the stp loop; less than 64 bytes left.
-	   Note that dst is still aligned and biased by -16.  */
+	/* Tail of the stp loop; less than 128 bytes left.
+	   Note that dst is still aligned and biased by -32.  */
 L(loop_tail):
-	stp	val, val, [dstend, #-64]
-	stp	val, val, [dstend, #-48]
-	stp	val, val, [dstend, #-32]
-	stp	val, val, [dstend, #-16]
+	stp	q16, q16, [dstend, #-0x80]
+	stp	q16, q16, [dstend, #-0x60]
+	stp	q16, q16, [dstend, #-0x40]
+	stp	q16, q16, [dstend, #-0x20]
+	RET
+
+L(le_31):
+	tbz	count, #4, L(le_15)
+	str	q16, [dstin]
+	str	q16, [dstend, #-0x10]
+	RET
+L(le_15):
+	tbz	count, #3, L(le_7)
+	str	d16, [dstin]
+	str	d16, [dstend, #-8]
+	RET
+L(le_7):
+	tbz	count, #2, L(le_3)
+	str	s16, [dstin]
+	str	s16, [dstend, #-4]
+	RET
+L(le_3):
+	tbz	count, #1, L(le_1)
+	str	h16, [dstend, #-2]
+L(le_1):
+	tbz	count, #0, L(le_0)
+	str	b16, [dstin]
+L(le_0):
 	RET
 
 	.size	memset_nozva, . - memset_nozva
