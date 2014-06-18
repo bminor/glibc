@@ -1,3 +1,11 @@
+2015-11-24  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #17062]
+	* posix/fnmatch_loop.c (FCT): Rerrange loop for skipping over rest
+	of a bracket expr not to run off the end of the string.
+	* posix/Makefile (tests): Add tst-fnmatch3.
+	* posix/tst-fnmatch3.c: New file.
+
 2015-04-29  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #18007]
