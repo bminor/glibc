@@ -59,7 +59,6 @@ _start:
 	/* Clear the frame pointer.  The ABI suggests this be done, to mark
 	   the outermost frame obviously.  */
 	xorl %ebp, %ebp
-	call __google_init
 
 	/* Extract the arguments as encoded on the stack and set up
 	   the arguments for `main': argc, argv.  envp will be determined
@@ -123,64 +122,6 @@ _start:
 	ret
 #endif
 
-/*
-  %esp		The stack contains the arguments and environment:
-		0(%esp)				ra
-		1*4(%esp)			argc
-		2*4(%esp)			argv[0]
-		...
-		(argc+2)*4(%esp)		NULL
-		(argc+3)*4(%esp)		envp[0]
-		...
-		(argc+2+env_count+1)*4(%esp)	NULL
-                (argc+2+env_count+2)*4(%esp)	auxv[0]
-		...
-*/
-
-__google_init:
-#ifdef SHARED
-	call 1b
-	addl $_GLOBAL_OFFSET_TABLE_, %ebx
-	leal __google_argc@GOTOFF(%ebx), %ecx
-#else
-	leal __google_argc, %ecx
-#endif
-	movl 4(%esp), %eax
-	movl %eax, 0(%ecx)
-	push %esp
-	pop %eax
-	addl $2*4, %eax
-#ifdef SHARED
-	leal __google_argv@GOTOFF(%ebx), %ecx
-#else
-	leal __google_argv, %ecx
-#endif
-	movl %eax, 0(%ecx)
-/* The next loop could be omitted if we are to trust argc from the kernel.  */
-1:	cmpl $0, 0(%eax)  /* while(argv[i++] != 0) skip; */
-	je 2f
-	addl $4, %eax
-	jmp 1b
-2:	addl $4, %eax
-#ifdef SHARED
-	leal __google_envp@GOTOFF(%ebx), %ecx
-#else
-	leal __google_envp, %ecx
-#endif
-	movl %eax, 0(%ecx)
-3:	cmpl $0, 0(%eax)  /* while (envp[i++] != 0) skip; */
-	je 4f
-	addl $4, %eax
-	jmp 3b
-4:	addl $4, %eax
-#ifdef SHARED
-	leal __google_auxv@GOTOFF(%ebx), %ecx
-#else
-	leal __google_auxv, %ecx
-#endif
-	movl %eax, 0(%ecx)
-	ret
-
 /* To fulfill the System V/i386 ABI we need this symbol.  Yuck, it's so
    meaningless since we don't support machines < 80386.  */
 	.section .rodata
@@ -196,14 +137,3 @@ __data_start:
 	.long 0
 	.weak data_start
 	data_start = __data_start
-
-/* The {argc,argv,envp} variables are not exposed to keep the interface narrow
-   (we don't need anything except auxv right now). If/when they are needed,
-   simply mark them with ".globl".  */
-__google_argc: .long 0
-__google_argv: .long 0
-__google_envp: .long 0
-	.globl __google_auxv
-__google_auxv: .long 0
-
-

@@ -366,3 +366,11 @@ stdio-common/tmpnam.c
   b/6115789
   TODO(ppluzhnikov): revert this after cleanup.
   (ppluzhnikov, google-local)
+
+csu/elf-init.c
+sysdeps/i386/start.S
+sysdeps/x86_64/start.S
+  For b/13901604, revert local changes to sysdeps/{i386,x86_64}/elf/start.S,
+  and initialize __google_auxv in __libc_csu_init instead.
+  (ppluzhnikov, google-local)
+

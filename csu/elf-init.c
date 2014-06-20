@@ -35,6 +35,8 @@
 
 #include <stddef.h>
 
+# include <link.h>  // For ElfW.
+
 
 /* These magic symbols are provided by the linker.  */
 extern void (*__preinit_array_start []) (int, char **, char **)
@@ -77,6 +79,18 @@ __libc_csu_init (int argc, char **argv, char **envp)
     for (i = 0; i < size; i++)
       (*__preinit_array_start [i]) (argc, argv, envp);
   }
+
+  extern ElfW(auxv_t) *__google_auxv;  /* Defined in dl-init.c  */
+  /* _dl_init() is never called for fully-static binary.
+     Initialize __google_auxv here.  */
+  if (__google_auxv == NULL)
+    {
+      char **e;
+
+      for (e = envp; *e; ++e) /* Skip.  */;
+      __google_auxv = (ElfW(auxv_t) *) ++e;
+    }
+
 #endif
 
 #ifndef NO_INITFINI
