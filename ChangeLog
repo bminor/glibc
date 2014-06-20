@@ -1,3 +1,9 @@
+2014-06-20  Maciej W. Rozycki  <macro@codesourcery.com>
+
+	[BZ #16046]
+	* elf/tst-dl-iter-static.c: New file.
+	* elf/Makefile (tests-static): Add tst-dl-iter-static.
+
 2014-06-20  Andreas Schwab  <schwab@linux-m68k.org>
 
 	[BZ #17069]
