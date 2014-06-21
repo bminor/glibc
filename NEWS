@@ -15,6 +15,12 @@ Version 2.18.1
 
 * Support for powerpc64le has been added.
 
+* CVE-2014-4043 The posix_spawn_file_actions_addopen implementation did not
+  copy the path argument.  This allowed programs to cause posix_spawn to
+  deference a dangling pointer, or use an unexpected pathname argument if
+  the string was modified after the posix_spawn_file_actions_addopen
+  invocation.
+
 * Locale names, including those obtained from environment variables (LANG
   and the LC_* variables), are more tightly checked for proper syntax.
   setlocale will now fail (with EINVAL) for locale names that are overly
