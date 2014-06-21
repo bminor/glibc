@@ -1,3 +1,7 @@
+2014-06-21  Allan McRae  <allan@archlinux.org>
+
+	* NEWS: Mention CVE-2014-4043.
+
 2014-06-12  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* posix/spawn_faction_addopen.c: Include string.h.
