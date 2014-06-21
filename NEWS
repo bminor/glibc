@@ -12,6 +12,12 @@ Version 2.16.1
   6530, 14195, 14547, 14459, 14476, 14562, 14621, 14648, 14699, 14756, 14831,
   15078, 15754, 15755, 16072, 17048, 17137, 17187, 17325.
 
+* CVE-2014-4043 The posix_spawn_file_actions_addopen implementation did not
+  copy the path argument.  This allowed programs to cause posix_spawn to
+  deference a dangling pointer, or use an unexpected pathname argument if
+  the string was modified after the posix_spawn_file_actions_addopen
+  invocation.
+
 * Decoding a crafted input sequence in the character sets IBM933, IBM935,
   IBM937, IBM939, IBM1364 could result in an out-of-bounds array read,
   resulting a denial-of-service security vulnerability in applications which
