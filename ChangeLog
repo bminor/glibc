@@ -1,3 +1,9 @@
+2014-06-23  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #17079]
+	* nss/nss_files/files-XXX.c (get_contents): Store overflow marker
+	before reading the next line.
+
 2015-10-02  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Advance address pointer
