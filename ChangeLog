@@ -1,3 +1,8 @@
+2014-06-23  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/bits/hwcap.h [PPC_FEATURE2_HAS_VEC_CRYPTO]: New
+	macro: hardware supports Vector Crypto instructions.
+
 2014-16-17  Rajalakshmi Srinivasaraghavan <raji@linux.vnet.ibm.com>
 
 	[BZ #17031]
