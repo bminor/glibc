@@ -1,3 +1,8 @@
+2014-07-07  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/memmove.c (memmove): Cleanup impplementation to use
+	glibc default one.
+
 2014-07-02  Vidya Ranganathan  <vidya@linux.vnet.ibm.com>
 	    Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
