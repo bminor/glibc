@@ -374,3 +374,8 @@ sysdeps/x86_64/start.S
   and initialize __google_auxv in __libc_csu_init instead.
   (ppluzhnikov, google-local)
 
+csu/elf-init.c
+elf/dl-support.c
+  For b/15780211, revert local change to csu/elf-init.c and move
+  initialization of __google_auxv earlier (in the fully-static link).
+  (ppluzhnikov, google-local)

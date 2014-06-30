@@ -245,6 +245,9 @@ _dl_aux_init (ElfW(auxv_t) *av)
   uid_t uid = 0;
   gid_t gid = 0;
 
+  extern ElfW(auxv_t) *__google_auxv;
+  __google_auxv = av;
+
   _dl_auxv = av;
   for (; av->a_type != AT_NULL; ++av)
     switch (av->a_type)
