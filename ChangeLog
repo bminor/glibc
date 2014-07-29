@@ -1,3 +1,9 @@
+2013-07-29  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	[BZ #17213]
+	* sysdeps/powerpc/powerpc64/entry.h: Fix TEXT_START definition for
+	powerpc64le.
+
 2014-11-11  Renlin Li  <Renlin.Li@arm.com>
 
 	[BZ #17555]
