@@ -8,5 +8,5 @@
 /(/!b
 s/\([a-z0-9_][a-z0-9_]*\)_t\>/nacl_abi_\1_t/g
 s/struct \([a-z0-9_][a-z0-9_]*\)/nacl_abi_\1_t/g
-s/nacl_abi_\(u*int[3264]*_t\)/\1/g
+s/nacl_abi_\(u*int[3264ptr]*_t\)/\1/g
 s/nacl_abi_\(nacl_irt_\)/\1/g
