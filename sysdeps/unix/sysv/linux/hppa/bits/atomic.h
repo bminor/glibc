@@ -61,42 +61,46 @@ typedef uintmax_t uatomic_max_t;
 
 #if __ASSUME_LWS_CAS
 /* The only basic operation needed is compare and exchange.  */
+static int __attribute__((noinline))
+__atomic_compare_and_exchange_val_acq (int mem, int newval, int oldval)
+{
+  volatile int lws_errno;
+  volatile int lws_ret;
+  asm volatile(
+	"0:					\n\t"
+	"copy	%2, %%r26			\n\t"
+	"copy	%3, %%r25			\n\t"
+	"copy	%4, %%r24			\n\t"
+	"ble	" _LWS "(%%sr2, %%r0)		\n\t"
+	"ldi	" _LWS_CAS ", %%r20		\n\t"
+	"ldi	" _ASM_EAGAIN ", %%r24		\n\t"
+	"cmpb,=,n %%r24, %%r21, 0b		\n\t"
+	"nop					\n\t"
+	"ldi	" _ASM_EDEADLOCK ", %%r25	\n\t"
+	"cmpb,=,n %%r25, %%r21, 0b		\n\t"
+	"nop					\n\t"
+	"stw	%%r28, %0			\n\t"
+	"stw	%%r21, %1			\n\t"
+	: "=m" (lws_ret), "=m" (lws_errno)
+	: "r" (mem), "r" (oldval), "r" (newval)
+	: _LWS_CLOBBER
+   );
+
+  if (lws_errno == -EFAULT || lws_errno == -ENOSYS)
+    ABORT_INSTRUCTION;
+
+  return lws_ret;
+}
 # define atomic_compare_and_exchange_val_acq(mem, newval, oldval)	\
-  ({									\
-     volatile int lws_errno;						\
-     volatile int lws_ret;						\
-     asm volatile(							\
-	"0:					\n\t"			\
-	"copy	%2, %%r26			\n\t"			\
-	"copy	%3, %%r25			\n\t"			\
-	"copy	%4, %%r24			\n\t"			\
-	"ble	" _LWS "(%%sr2, %%r0)		\n\t"			\
-	"ldi	" _LWS_CAS ", %%r20		\n\t"			\
-	"ldi	" _ASM_EAGAIN ", %%r24		\n\t"			\
-	"cmpb,=,n %%r24, %%r21, 0b		\n\t"			\
-	"nop					\n\t"			\
-	"ldi	" _ASM_EDEADLOCK ", %%r25	\n\t"			\
-	"cmpb,=,n %%r25, %%r21, 0b		\n\t"			\
-	"nop					\n\t"			\
-	"stw	%%r28, %0			\n\t"			\
-	"stw	%%r21, %1			\n\t"			\
-	: "=m" (lws_ret), "=m" (lws_errno)				\
-        : "r" (mem), "r" (oldval), "r" (newval)				\
-	: _LWS_CLOBBER							\
-     );									\
-									\
-     if(lws_errno == -EFAULT || lws_errno == -ENOSYS)			\
-	ABORT_INSTRUCTION;						\
-									\
-     lws_ret;								\
-   })
+   ((__typeof__(oldval))						\
+    __atomic_compare_and_exchange_val_acq ((int)mem, (int)newval, (int)oldval))
 
 # define atomic_compare_and_exchange_bool_acq(mem, newval, oldval)	\
   ({									\
-     int ret;								\
+     __typeof__(oldval) ret;						\
      ret = atomic_compare_and_exchange_val_acq(mem, newval, oldval);	\
      /* Return 1 if it was already acquired.  */			\
-     (ret != (int)oldval);						\
+     (ret != oldval);						\
    })
 #else
 # error __ASSUME_LWS_CAS is required to build glibc.
