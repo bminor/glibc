@@ -20,9 +20,9 @@
 int
 pthread_spin_unlock (pthread_spinlock_t *lock)
 {
-  int tmp = 0;
-  /* This should be a memory barrier to newer compilers */
-  __asm__ __volatile__ ("stw,ma %1,0(%0)"
-                        : : "r" (lock), "r" (tmp) : "memory");
+  /* The LWS-CAS operation on hppa is a synthetic atomic operation
+     that doesn't provide the type of coherency that we need. Therefore
+     we force that coherency by using LWS-CAS again.  */
+  atomic_exchange_rel (lock, 0);
   return 0;
 }
