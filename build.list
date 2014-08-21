@@ -1,0 +1,15 @@
+iconvprogs
+iconvdata
+ldconfig
+lddlibc4
+libmemusage
+libSegFault
+libpcprofile
+librpcsvc
+libutil
+locale_programs
+memusagestat
+nonlib
+nscd
+extramodules
+libnldbl
