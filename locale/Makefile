@@ -85,7 +85,7 @@ locale-CPPFLAGS = -DLOCALEDIR='"$(localedir)"' \
 		  -DLOCALE_ALIAS_PATH='"$(msgcatdir)"' \
 		  -Iprograms
 
-CPPFLAGS-locale-programs = -DLOCALE_PATH='$(localepath)' \
+CPPFLAGS-locale_programs = -DLOCALE_PATH='$(localepath)' \
 			   -DCHARMAP_PATH='"$(i18ndir)/charmaps"' \
 			   -DREPERTOIREMAP_PATH='"$(i18ndir)/repertoiremaps"' \
 			   -DLOCSRCDIR='"$(i18ndir)/locales"' \
@@ -96,7 +96,7 @@ CFLAGS-locfile.c = -Wno-write-strings -Wno-char-subscripts
 CFLAGS-charmap-dir.c = -Wno-write-strings
 
 # This makes sure -DNOT_IN_libc et al are passed for all these modules.
-cpp-srcs-left := $(addsuffix .c,$(localedef-modules) $(localedef-aux) \
-				$(locale-modules) $(lib-modules))
-lib := locale-programs
+cpp-srcs-left := $(localedef-modules) $(localedef-aux) $(locale-modules) \
+		 $(lib-modules)
+lib := locale_programs
 include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
