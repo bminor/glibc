@@ -22,6 +22,11 @@
 
 #define IS_IN(lib) (IN_MODULE == MODULE_##lib)
 
+/* Returns true if the current module is a versioned library.  Versioned
+   library names culled from shlib-versions files are assigned a MODULE_*
+   value lower than MODULE_OTHERS_BEGIN.  */
+#define IS_IN_LIB (IN_MODULE < MODULE_OTHERS_BEGIN)
+
 /* This file's macros are included implicitly in the compilation of every
    file in the C library by -imacros.
 
