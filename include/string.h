@@ -57,7 +57,7 @@ extern __typeof (strcasecmp_l) __strcasecmp_l;
 extern __typeof (strncasecmp_l) __strncasecmp_l;
 
 /* Alternative version which doesn't pollute glibc's namespace.  */
-#ifndef NOT_IN_libc
+#if IS_IN (libc)
 # undef strndupa
 # define strndupa(s, n)							      \
   (__extension__							      \
