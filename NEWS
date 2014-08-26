@@ -11,9 +11,16 @@ Version 2.18.1
 
   14143, 14155, 14547, 14699, 15532, 15427, 15522, 15680, 15723, 15734,
   15735, 15797, 15892, 15895, 15909, 15915, 15917, 15996, 16072, 16150,
-  16414, 16430, 16431, 17325.
+  16414, 16430, 16431, 17187, 17325.
 
 * Support for powerpc64le has been added.
+
+* Support for loadable gconv transliteration modules has been removed.
+  The support for transliteration modules has been non-functional for
+  over a decade, and the removal is prompted by security defects.  The
+  normal gconv conversion modules are still supported.  Transliteration
+  with //TRANSLIT is still possible, and the //IGNORE specifier
+  continues to be  supported. (CVE-2014-5119)
 
 * Decoding a crafted input sequence in the character sets IBM933, IBM935,
   IBM937, IBM939, IBM1364 could result in an out-of-bounds array read,
