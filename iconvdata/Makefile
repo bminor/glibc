@@ -299,6 +299,7 @@ $(objpfx)tst-iconv7.out: $(objpfx)gconv-modules \
 $(objpfx)iconv-test.out: run-iconv-test.sh $(objpfx)gconv-modules \
 			 $(addprefix $(objpfx),$(modules.so)) \
 			 $(common-objdir)/iconv/iconv_prog TESTS
+	iconv_modules="$(modules)" \
 	$(SHELL) $< $(common-objdir) '$(test-wrapper)' > $@
 
 $(objpfx)tst-tables.out: tst-tables.sh $(objpfx)gconv-modules \
