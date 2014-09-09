@@ -2019,7 +2019,7 @@ cat > conftest.c <<EOF
 # error PIC is default.
 #endif
 EOF
-if eval "${CC-cc} -S conftest.c 2>&AS_MESSAGE_LOG_FD 1>&AS_MESSAGE_LOG_FD"; then
+if eval "${CC-cc} -fno-PIE -S conftest.c 2>&AS_MESSAGE_LOG_FD 1>&AS_MESSAGE_LOG_FD"; then
   libc_cv_pic_default=no
 fi
 rm -f conftest.*])
