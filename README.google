@@ -118,7 +118,7 @@ include/alloca.h
   large stack with only 64kb of remaining space, which the upstream alloca
   heuristic is ill-equipped to deal with.
   Forward-ported from cl/51331379 (from cl/38559-p2).
-  (ppluzhnikov, google-local) 
+  (ppluzhnikov, google-local)
 
 locale/programs/locarchive.c
   Reduce starting table sizes for locale-archive file, since we use only a
@@ -379,3 +379,8 @@ elf/dl-support.c
   For b/15780211, revert local change to csu/elf-init.c and move
   initialization of __google_auxv earlier (in the fully-static link).
   (ppluzhnikov, google-local)
+
+elf/ldd.bash.in
+  Import ldd patches from Ubuntu source package.  This fixes the ability
+  of ldd to trace dependencies in non-executable dynamic libraries.
+  (bmoses, google-local)

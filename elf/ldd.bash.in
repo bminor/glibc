@@ -150,31 +150,23 @@ for file do
     echo "ldd: ${file}:" $"not regular file" >&2
     result=1
   elif test -r "$file"; then
-    test -x "$file" || echo 'ldd:' $"\
-warning: you do not have execution permission for" "\`$file'" >&2
     RTLD=
     ret=1
     for rtld in ${RTLDLIST}; do
       if test -x $rtld; then
-	verify_out=`${rtld} --verify "$file"`
-	ret=$?
-	case $ret in
-	[02]) RTLD=${rtld}; break;;
-	esac
+	dummy=`$rtld 2>&1` 
+	if test $? = 127; then
+	  verify_out=`${rtld} --verify "$file"`
+	  ret=$?
+	  case $ret in
+	  [02]) RTLD=${rtld}; break;;
+	  esac
+	fi
       fi
     done
     case $ret in
-    0)
-      # If the program exits with exit code 5, it means the process has been
-      # invoked with __libc_enable_secure.  Fall back to running it through
-      # the dynamic linker.
-      try_trace "$file"
-      rc=$?
-      if [ $rc = 5 ]; then
-	try_trace "$RTLD" "$file"
-	rc=$?
-      fi
-      [ $rc = 0 ] || result=1
+    0|2)
+      try_trace "$RTLD" "$file" || result=1
       ;;
     1)
       # This can be a non-ELF binary or no binary at all.
@@ -182,9 +174,6 @@ warning: you do not have execution permission for" "\`$file'" >&2
 	echo $"	not a dynamic executable"
 	result=1
       }
-      ;;
-    2)
-      try_trace "$RTLD" "$file" || result=1
       ;;
     *)
       echo 'ldd:' ${RTLD} $"exited with unknown exit code" "($ret)" >&2
