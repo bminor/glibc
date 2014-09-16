@@ -1,5 +1,5 @@
-/* Multiple versions of wmemcmp.
-   Copyright (C) 2015-2019 Free Software Foundation, Inc.
+/* Test for fnmatch handling of collating elements
+   Copyright (C) 2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,24 +16,26 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <ifunc-wmemcmp.h>
+#include <stdio.h>
+#include <locale.h>
+#include <fnmatch.h>
+#include <support/check.h>
 
-#if HAVE_WMEMCMP_IFUNC
-# include <wchar.h>
-# include <ifunc-resolve.h>
+static void
+do_test_locale (const char *locale)
+{
+  TEST_VERIFY_EXIT (setlocale (LC_ALL, locale) != NULL);
 
-# if HAVE_WMEMCMP_C
-extern __typeof (__wmemcmp) WMEMCMP_C attribute_hidden;
-# endif
+  TEST_VERIFY (fnmatch ("[[.ch.]]", "ch", 0) == 0);
+}
 
-# if HAVE_WMEMCMP_Z13
-extern __typeof (__wmemcmp) WMEMCMP_Z13 attribute_hidden;
-# endif
+static int
+do_test (void)
+{
+  do_test_locale ("cs_CZ.ISO-8859-2");
+  do_test_locale ("cs_CZ.UTF-8");
 
-s390_libc_ifunc_expr (__wmemcmp, __wmemcmp,
-		      (HAVE_WMEMCMP_Z13 && (hwcap & HWCAP_S390_VX))
-		      ? WMEMCMP_Z13
-		      : WMEMCMP_DEFAULT
-		      )
-weak_alias (__wmemcmp, wmemcmp)
-#endif
+  return 0;
+}
+
+#include <support/test-driver.c>

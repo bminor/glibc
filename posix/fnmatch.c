@@ -53,7 +53,6 @@
    we support a correct implementation only in glibc.  */
 #ifdef _LIBC
 # include "../locale/localeinfo.h"
-# include "../locale/elem-hash.h"
 # include "../locale/coll-lookup.h"
 # include <shlib-compat.h>
 
@@ -237,6 +236,11 @@ __wcschrnul (const wchar_t *s, wint_t c)
 #  define MEMPCPY(D, S, N) __wmempcpy (D, S, N)
 #  define MEMCHR(S, C, N) __wmemchr (S, C, N)
 #  define STRCOLL(S1, S2) wcscoll (S1, S2)
+#  ifdef _LIBC
+#   define WMEMCMP(S1, S2, N) __wmemcmp (S1, S2, N)
+#  else
+#   define WMEMCMP(S1, S2, N) wmemcmp (S1, S2, N)
+#  endif
 #  define WIDE_CHAR_VERSION 1
 /* Change the name the header defines so it doesn't conflict with
    the <locale/weight.h> version included above.  */

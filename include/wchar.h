@@ -143,6 +143,8 @@ libc_hidden_proto (wmemchr)
 libc_hidden_proto (__wmemchr)
 libc_hidden_proto (wmemset)
 libc_hidden_proto (__wmemset)
+extern int __wmemcmp (const wchar_t *__s1, const wchar_t *__s2, size_t __n)
+     __THROW __attribute_pure__;
 
 /* Now define the internal interfaces.  */
 extern int __wcscasecmp (const wchar_t *__s1, const wchar_t *__s2)

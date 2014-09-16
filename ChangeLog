@@ -1,3 +1,22 @@
+2019-02-04  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #16976]
+	[BZ #17396]
+	* posix/fnmatch_loop.c (internal_fnmatch, internal_fnwmatch): When
+	looking up collating elements match against (wide) character
+	sequence instead of name.  Correct alignment adjustment.
+	* posix/fnmatch.c: Don't include "../locale/elem-hash.h".
+	(WMEMCMP) [HANDLE_MULTIBYTE]: Define.
+	* posix/Makefile (tests): Add tst-fnmatch4 and tst-fnmatch5.
+	(LOCALES): Add cs_CZ.ISO-8859-2.
+	* posix/tst-fnmatch4.c: New file.
+	* posix/tst-fnmatch5.c: New file.
+	* include/wchar.h (__wmemcmp): Declare.
+	* wcsmbs/wmemcmp.c: Define __wmemcmp and add wmemcmp as weak alias.
+	* sysdeps/i386/i686/multiarch/wmemcmp.c: Likewise.
+	* sysdeps/x86_64/multiarch/wmemcmp.c: Likewise.
+	* sysdeps/s390/wmemcmp.c: Likewise.
+
 2019-02-04  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #24155]

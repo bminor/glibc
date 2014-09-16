@@ -1,5 +1,5 @@
-/* Multiple versions of wmemcmp.
-   Copyright (C) 2015-2019 Free Software Foundation, Inc.
+/* Test for fnmatch handling of collating elements
+   Copyright (C) 2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,24 +16,31 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <ifunc-wmemcmp.h>
+#include <fnmatch.h>
+#include <locale.h>
+#include <stdio.h>
+#include <string.h>
+#include <support/check.h>
 
-#if HAVE_WMEMCMP_IFUNC
-# include <wchar.h>
-# include <ifunc-resolve.h>
+#define LENGTH 20000000
 
-# if HAVE_WMEMCMP_C
-extern __typeof (__wmemcmp) WMEMCMP_C attribute_hidden;
-# endif
+static char pattern[LENGTH + 7];
 
-# if HAVE_WMEMCMP_Z13
-extern __typeof (__wmemcmp) WMEMCMP_Z13 attribute_hidden;
-# endif
+static int
+do_test (void)
+{
+  TEST_VERIFY_EXIT (setlocale (LC_ALL, "en_US.UTF-8") != NULL);
 
-s390_libc_ifunc_expr (__wmemcmp, __wmemcmp,
-		      (HAVE_WMEMCMP_Z13 && (hwcap & HWCAP_S390_VX))
-		      ? WMEMCMP_Z13
-		      : WMEMCMP_DEFAULT
-		      )
-weak_alias (__wmemcmp, wmemcmp)
-#endif
+  pattern[0] = '[';
+  pattern[1] = '[';
+  pattern[2] = '.';
+  memset (pattern + 3, 'a', LENGTH);
+  pattern[LENGTH + 3] = '.';
+  pattern[LENGTH + 4] = ']';
+  pattern[LENGTH + 5] = ']';
+  TEST_VERIFY (fnmatch (pattern, "a", 0) != 0);
+
+  return 0;
+}
+
+#include <support/test-driver.c>

@@ -93,6 +93,7 @@ tests		:= test-errno tstgetopt testfnm runtests runptests \
 		   bug-getopt5 tst-getopt_long1 bug-regex34 bug-regex35 \
 		   tst-pathconf tst-rxspencer-no-utf8 \
 		   tst-fnmatch3 bug-regex36 \
+		   tst-fnmatch4 tst-fnmatch5 \
 		   tst-posix_spawn-fd tst-posix_spawn-setsid \
 		   tst-posix_fadvise tst-posix_fadvise64 \
 		   tst-sysconf-empty-chroot tst-glob_symlinks tst-fexecve \
@@ -168,7 +169,8 @@ $(objpfx)wordexp-tst.out: wordexp-tst.sh $(objpfx)wordexp-test
 endif
 
 LOCALES := cs_CZ.UTF-8 da_DK.ISO-8859-1 de_DE.ISO-8859-1 de_DE.UTF-8 \
-	   en_US.UTF-8 es_US.ISO-8859-1 es_US.UTF-8 ja_JP.EUC-JP tr_TR.UTF-8
+	   en_US.UTF-8 es_US.ISO-8859-1 es_US.UTF-8 ja_JP.EUC-JP tr_TR.UTF-8 \
+	   cs_CZ.ISO-8859-2
 include ../gen-locales.mk
 
 $(objpfx)bug-regex1.out: $(gen-locales)
