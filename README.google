@@ -384,3 +384,9 @@ elf/ldd.bash.in
   Import ldd patches from Ubuntu source package.  This fixes the ability
   of ldd to trace dependencies in non-executable dynamic libraries.
   (bmoses, google-local)
+
+stdlib/secure-getenv.c
+  Export a __secure_getenv weak symbol for backwards compatibility at link
+  time.
+  (bmoses, google-local)
+
