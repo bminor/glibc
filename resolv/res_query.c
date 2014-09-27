@@ -413,13 +413,15 @@ __libc_res_nsearch(res_state statp,
 		for (domain = (const char * const *)statp->dnsrch;
 		     *domain && !done;
 		     domain++) {
+			const char *dname = domain[0];
 			searched = 1;
 
-			if (domain[0][0] == '\0' ||
-			    (domain[0][0] == '.' && domain[0][1] == '\0'))
+			if (dname[0] == '.')
+				dname++;
+			if (dname[0] == '\0')
 				root_on_list++;
 
-			ret = __libc_res_nquerydomain(statp, name, *domain,
+			ret = __libc_res_nquerydomain(statp, name, dname,
 						      class, type,
 						      answer, anslen, answerp,
 						      answerp2, nanswerp2,
