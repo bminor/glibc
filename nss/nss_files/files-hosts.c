@@ -68,11 +68,6 @@ LINE_PARSER
 	 {
 	   if (IN6_IS_ADDR_V4MAPPED (entdata->host_addr))
 	     memcpy (entdata->host_addr, entdata->host_addr + 12, INADDRSZ);
-	   else if (IN6_IS_ADDR_LOOPBACK (entdata->host_addr))
-	     {
-	       in_addr_t localhost = htonl (INADDR_LOOPBACK);
-	       memcpy (entdata->host_addr, &localhost, sizeof (localhost));
-	     }
 	   else
 	     /* Illegal address: ignore line.  */
 	     return 0;
