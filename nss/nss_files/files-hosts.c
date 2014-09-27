@@ -43,9 +43,6 @@ struct hostent_data
     char *h_addr_ptrs[2];	/* Points to that and null terminator.  */
   };
 
-#define IN_IS_ADDR_LOOPBACK(addr) \
-  (((const char *)(addr))[0] == IN_LOOPBACKNET)
-
 #define TRAILING_LIST_MEMBER		h_aliases
 #define TRAILING_LIST_SEPARATOR_P	isspace
 #include "files-parse.c"
@@ -60,29 +57,12 @@ LINE_PARSER
    if (inet_pton (af == AF_UNSPEC ? AF_INET : af, addr, entdata->host_addr)
        > 0)
      af = af == AF_UNSPEC ? AF_INET : af;
+   else if (af == AF_UNSPEC
+	    && inet_pton (AF_INET6, addr, entdata->host_addr) > 0)
+     af = AF_INET6;
    else
-     {
-       if (af == AF_INET6 && (flags & AI_V4MAPPED) != 0
-	   && inet_pton (AF_INET, addr, entdata->host_addr) > 0
-	   && !IN_IS_ADDR_LOOPBACK (entdata->host_addr))
-	 map_v4v6_address ((char *) entdata->host_addr,
-			   (char *) entdata->host_addr);
-       else if (af == AF_INET
-		&& inet_pton (AF_INET6, addr, entdata->host_addr) > 0)
-	 {
-	   if (IN6_IS_ADDR_V4MAPPED (entdata->host_addr))
-	     memcpy (entdata->host_addr, entdata->host_addr + 12, INADDRSZ);
-	   else
-	     /* Illegal address: ignore line.  */
-	     return 0;
-	 }
-       else if (af == AF_UNSPEC
-		&& inet_pton (AF_INET6, addr, entdata->host_addr) > 0)
-	 af = AF_INET6;
-       else
-	 /* Illegal address: ignore line.  */
-	 return 0;
-     }
+     /* Illegal address: ignore line.  */
+     return 0;
 
    /* We always return entries of the requested form.  */
    result->h_addrtype = af;
