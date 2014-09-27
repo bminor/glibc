@@ -43,6 +43,9 @@ struct hostent_data
     char *h_addr_ptrs[2];	/* Points to that and null terminator.  */
   };
 
+#define IN_IS_ADDR_LOOPBACK(addr) \
+  (((const char *)(addr))[0] == IN_LOOPBACKNET)
+
 #define TRAILING_LIST_MEMBER		h_aliases
 #define TRAILING_LIST_SEPARATOR_P	isspace
 #include "files-parse.c"
@@ -60,7 +63,8 @@ LINE_PARSER
    else
      {
        if (af == AF_INET6 && (flags & AI_V4MAPPED) != 0
-	   && inet_pton (AF_INET, addr, entdata->host_addr) > 0)
+	   && inet_pton (AF_INET, addr, entdata->host_addr) > 0
+	   && !IN_IS_ADDR_LOOPBACK (entdata->host_addr))
 	 map_v4v6_address ((char *) entdata->host_addr,
 			   (char *) entdata->host_addr);
        else if (af == AF_INET
