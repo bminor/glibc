@@ -99,7 +99,7 @@ others		:= getconf
 install-bin	:= getconf
 install-others-programs	:= $(inst_libexecdir)/getconf
 
-before-compile	+= testcases.h ptestcases.h
+before-compile	+= testcases.h ptestcases.h confdefs-defs.h
 
 # So they get cleaned up.
 generated += $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10) \
@@ -325,3 +325,8 @@ $(objpfx)getconf.speclist: getconf-speclist.c posix-envs.def
 # be built both makes it available for eyeball inspection and avoids the
 # surprise of things that look like compilation being done by 'make install'.
 others: $(objpfx)getconf.speclist
+
+$(objpfx)confdefs-defs.h: conf.list Makefile $(..)scripts/gen-conf.awk
+	$(make-target-directory)
+	$(AWK) -f $(..)scripts/gen-conf.awk $< > $@.tmp
+	mv -f $@.tmp $@
