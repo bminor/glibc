@@ -17,12 +17,17 @@ $2 == "{" {
   split ($1, arr, ":")
   type = arr[1]
   prefix = arr[2]
+  if (arr[3] != "")
+    sc_prefix = arr[3]
+  else
+    sc_prefix = "_SC"
   next
 }
 
 $1 == "}" {
   prefix = ""
   type = ""
+  sc_prefix = ""
   next
 }
 
@@ -37,6 +42,7 @@ $1 == "}" {
   # CONFSTR: A configuration string
   # SYSCONF: A numeric value
   # SPEC: A specification
+  sc_prefixes[prefix][$1] = sc_prefix
   conf[prefix][$1] = type
 }
 
@@ -58,6 +64,26 @@ ENDFILE {
 	printf "# endif\n"
       }
       printf "#endif\n\n"
+
+      # Build a name -> sysconf number associative array to print a C array at
+      # the end.
+      if (conf[p][c] == "SPEC") {
+	name = sprintf ("%s_%s", p, c)
+	num = sprintf ("%s_%s", sc_prefixes[p][c], c)
+	spec[name] = num
+      }
     }
   }
+
+  # Print the specification array.  Define the macro NEED_SPEC_ARRAY before
+  # including confdefs.h to make it available in the compilation unit.
+  print "#if NEED_SPEC_ARRAY"
+  print "static const struct { const char *name; int num; } specs[] ="
+  print "  {"
+  for (s in spec) {
+    printf "    { \"%s\", %s },\n", s, spec[s]
+  }
+  print "  };"
+  print "static const int nspecs = sizeof (specs) / sizeof (specs[0]);"
+  print "#endif"
 }

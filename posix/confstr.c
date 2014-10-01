@@ -21,7 +21,9 @@
 #include <string.h>
 #include <confstr.h>
 #include "../version.h"
-#include "confdefs.h"
+
+#define NEED_SPEC_ARRAY 0
+#include <confdefs.h>
 
 /* If BUF is not NULL and LEN > 0, fill in at most LEN - 1 bytes
    of BUF with the value corresponding to NAME and zero-terminate BUF.

@@ -31,6 +31,7 @@
 #include <sys/types.h>
 #include <regex.h>
 
+#define NEED_SPEC_ARRAY 0
 #include <confdefs.h>
 
 
