@@ -1,3 +1,11 @@
+2014-10-08  Roland McGrath  <roland@hack.frob.com>
+
+	[BZ #17460]
+	* nscd/nscd.c (more_help): Rewrite list of tables collection
+	using xstrdup and asprintf.
+
+	* nscd/nscd_conf.c: Remove local xstrdup declaration.
+
 2014-10-09  Allan McRae  <allan@archlinux.org>
 
 	* po/fr.po: Update French translation from translation project.
