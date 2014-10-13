@@ -699,7 +699,7 @@ void
 write_locale_data (const char *output_path, int catidx, const char *category,
 		   struct locale_file *file)
 {
-  size_t cnt, step, maxiov;
+  size_t step, maxiov;
   int fd;
   char *fname;
   const char **other_paths;
@@ -724,7 +724,7 @@ write_locale_data (const char *output_path, int catidx, const char *category,
       /* The data will be added to the archive.  For now we simply
 	 generate the image which will be written.  First determine
 	 the size.  */
-      int cnt;
+      size_t cnt;
       void *endp;
 
       to_archive[catidx].size = 0;
@@ -812,7 +812,7 @@ cannot open output file `%s' for category `%s'"), fname, category));
 
   /* Write the data using writev.  But we must take care for the
      limitation of the implementation.  */
-  for (cnt = 0; cnt < n_elem; cnt += step)
+  for (size_t cnt = 0; cnt < n_elem; cnt += step)
     {
       step = n_elem - cnt;
       if (maxiov > 0)

@@ -52,11 +52,11 @@ __scandir_cancel_handler (void *arg)
 
 
 int
-SCANDIRAT (dfd, dir, namelist, select, cmp)
+SCANDIRAT (dfd, dir, namelist, selector, cmp)
      int dfd;
      const char *dir;
      DIRENT_TYPE ***namelist;
-     int (*select) (const DIRENT_TYPE *);
+     int (*selector) (const DIRENT_TYPE *);
      int (*cmp) (const DIRENT_TYPE **, const DIRENT_TYPE **);
 {
   DIR *dp = __opendirat (dfd, dir);
@@ -79,12 +79,12 @@ SCANDIRAT (dfd, dir, namelist, select, cmp)
 
   while ((d = READDIR (dp)) != NULL)
     {
-      int use_it = select == NULL;
+      int use_it = selector == NULL;
 
       if (! use_it)
 	{
-	  use_it = select (d);
-	  /* The select function might have changed errno.  It was
+	  use_it = (*selector) (d);
+	  /* The SELECTOR function might have changed errno.  It was
 	     zero before and it need to be again to make the latter
 	     tests work.  */
 	  __set_errno (0);
@@ -95,7 +95,7 @@ SCANDIRAT (dfd, dir, namelist, select, cmp)
 	  DIRENT_TYPE *vnew;
 	  size_t dsize;
 
-	  /* Ignore errors from select or readdir */
+	  /* Ignore errors from SELECTOR or readdir.  */
 	  __set_errno (0);
 
 	  if (__glibc_unlikely (c.cnt == vsize))

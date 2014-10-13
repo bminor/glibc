@@ -977,17 +977,17 @@ insert_value (struct linereader *ldfile, const char *symstr, size_t symlen,
       void *ptr = elem;
       if (find_entry (&collate->elem_table, symstr, symlen, &ptr) != 0)
 	{
-	  void *result;
+	  void *found;
 	  struct symbol_t *sym = NULL;
 
 	  /* It's also collation element.  Therefore it's either a
 	     collating symbol or it's a character which is not
 	     supported by the character set.  In the later case we
 	     simply create a dummy entry.  */
-	  if (find_entry (&collate->sym_table, symstr, symlen, &result) == 0)
+	  if (find_entry (&collate->sym_table, symstr, symlen, &found) == 0)
 	    {
 	      /* It's a collation symbol.  */
-	      sym = (struct symbol_t *) result;
+	      sym = found;
 
 	      elem = sym->order;
 	    }
@@ -2116,7 +2116,6 @@ collate_output (struct localedef_t *locale, const struct charmap_t *charmap,
   uint32_t elem_size;
   uint32_t *elem_table;
   int i;
-  struct element_t *runp;
 
   init_locale_data (&file, nelems);
   add_locale_uint32 (&file, nrules);
@@ -2230,7 +2229,6 @@ collate_output (struct localedef_t *locale, const struct charmap_t *charmap,
 		&& (runp->mbs[runp->nmbs - 1]
 		    == runp->mbnext->mbs[runp->nmbs - 1] + 1))
 	      {
-		int i;
 		struct element_t *series_startp = runp;
 		struct element_t *curp;
 
@@ -2289,8 +2287,6 @@ collate_output (struct localedef_t *locale, const struct charmap_t *charmap,
 		/* A single entry.  Simply add the index and the length and
 		   string (except for the first character which is already
 		   tested for).  */
-		int i;
-
 		/* Output the weight info.  */
 		weightidx = output_weight (&weightpool, collate, runp);
 
@@ -2402,7 +2398,7 @@ collate_output (struct localedef_t *locale, const struct charmap_t *charmap,
      larger to avoid extremely long search times.  We can achieve
      good results with a 40% larger table than there are entries.  */
   elem_size = 0;
-  runp = collate->start;
+  struct element_t *runp = collate->start;
   while (runp != NULL)
     {
       if (runp->mbs != NULL && runp->weights != NULL && !runp->is_character)
@@ -3313,7 +3309,6 @@ error while adding equivalent collating symbol"));
 	      else
 		{
 		  struct symbol_t *symbp;
-		  void *ptr;
 
 		  if (find_entry (&collate->sym_table, startmb, lenmb,
 				  &ptr) == 0)
@@ -3535,10 +3530,10 @@ error while adding equivalent collating symbol"));
 		}
 	      else
 		{
-		  void *result;
+		  void *found;
 
 		  if (find_entry (&collate->sym_table, symstr, symlen,
-				  &result) != 0)
+				  &found) != 0)
 		    /* No collating symbol, it's an error.  */
 		    goto err_label;
 

@@ -33,7 +33,6 @@ int
 __dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
 				    size_t size, void *data), void *data)
 {
-  struct link_map *l;
   struct dl_phdr_info info;
   int ret = 0;
 
@@ -61,7 +60,7 @@ __dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
       }
 #endif
 
-  for (l = GL(dl_ns)[ns]._ns_loaded; l != NULL; l = l->l_next)
+  for (struct link_map *l = GL(dl_ns)[ns]._ns_loaded; l != NULL; l = l->l_next)
     {
       info.dlpi_addr = l->l_real->l_addr;
       info.dlpi_name = l->l_real->l_name;

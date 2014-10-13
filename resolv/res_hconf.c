@@ -386,7 +386,6 @@ void
 _res_hconf_reorder_addrs (struct hostent *hp)
 {
 #if defined SIOCGIFCONF && defined SIOCGIFNETMASK
-  int i, j;
   /* Number of interfaces.  */
   static int num_ifs = -1;
   /* We need to protect the dynamic buffer handling.  */
@@ -474,11 +473,11 @@ _res_hconf_reorder_addrs (struct hostent *hp)
     return;
 
   /* Find an address for which we have a direct connection.  */
-  for (i = 0; hp->h_addr_list[i]; ++i)
+  for (int i = 0; hp->h_addr_list[i]; ++i)
     {
       struct in_addr *haddr = (struct in_addr *) hp->h_addr_list[i];
 
-      for (j = 0; j < num_ifs; ++j)
+      for (int j = 0; j < num_ifs; ++j)
 	{
 	  u_int32_t if_addr    = ifaddrs[j].u.ipv4.addr;
 	  u_int32_t if_netmask = ifaddrs[j].u.ipv4.mask;

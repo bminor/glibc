@@ -177,13 +177,13 @@ typedef struct
 
    The contained asm must *not* be marked volatile since otherwise
    assignments like
-	pthread_descr self = thread_self();
+	pthread_descr self = THREAD_SELF;
    do not get optimized away.  */
 # define THREAD_SELF \
-  ({ struct pthread *__self;						      \
-     asm ("mov %%fs:%c1,%0" : "=r" (__self)				      \
+  ({ struct pthread *__thread_self;					      \
+     asm ("mov %%fs:%c1,%0" : "=r" (__thread_self)			      \
 	  : "i" (offsetof (struct pthread, header.self)));	 	      \
-     __self;})
+     __thread_self;})
 
 /* Magic for libthread_db to know how to do THREAD_SELF.  */
 # define DB_THREAD_SELF_INCLUDE  <sys/reg.h> /* For the FS constant.  */

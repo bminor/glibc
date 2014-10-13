@@ -1036,11 +1036,11 @@ create_initial_state (re_dfa_t *dfa)
 	    int dest_idx = dfa->edests[node_idx].elems[0];
 	    if (!re_node_set_contains (&init_nodes, dest_idx))
 	      {
-		reg_errcode_t err = re_node_set_merge (&init_nodes,
-						       dfa->eclosures
-						       + dest_idx);
-		if (err != REG_NOERROR)
-		  return err;
+		reg_errcode_t merge_err = re_node_set_merge (&init_nodes,
+                                                             dfa->eclosures
+                                                             + dest_idx);
+		if (merge_err != REG_NOERROR)
+		  return merge_err;
 		i = 0;
 	      }
 	  }

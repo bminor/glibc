@@ -154,11 +154,11 @@ do_sym (void *handle, const char *name, void *who,
 RTLD_NEXT used in code not dynamically loaded"));
 	}
 
-      struct link_map *l = match;
-      while (l->l_loader != NULL)
-	l = l->l_loader;
+      struct link_map *next = match;
+      while (next->l_loader != NULL)
+	next = next->l_loader;
 
-      result = GLRO(dl_lookup_symbol_x) (name, match, &ref, l->l_local_scope,
+      result = GLRO(dl_lookup_symbol_x) (name, match, &ref, next->l_local_scope,
 					 vers, 0, 0, match);
     }
   else

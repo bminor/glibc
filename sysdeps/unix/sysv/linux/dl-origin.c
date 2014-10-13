@@ -62,13 +62,13 @@ _dl_get_origin (void)
 	 a copy and strip out trailing slashes.  */
       if (GLRO(dl_origin_path) != NULL)
 	{
-	  size_t len = strlen (GLRO(dl_origin_path));
-	  result = (char *) malloc (len + 1);
+	  size_t path_len = strlen (GLRO(dl_origin_path));
+	  result = (char *) malloc (path_len + 1);
 	  if (result == NULL)
 	    result = (char *) -1;
 	  else
 	    {
-	      char *cp = __mempcpy (result, GLRO(dl_origin_path), len);
+	      char *cp = __mempcpy (result, GLRO(dl_origin_path), path_len);
 	      while (cp > result + 1 && cp[-1] == '/')
 		--cp;
 	      *cp = '\0';

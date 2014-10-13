@@ -635,7 +635,6 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
   struct ftw_data data;
   struct STAT st;
   int result = 0;
-  int save_err;
   int cwdfd = -1;
   char *cwd = NULL;
   char *cp;
@@ -803,8 +802,8 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
     }
 
   /* Free all memory.  */
- out_fail:
-  save_err = errno;
+ out_fail:;
+  int save_err = errno;
   __tdestroy (data.known_objects, free);
   free (data.dirbuf);
   __set_errno (save_err);

@@ -101,7 +101,7 @@ _dl_sort_fini (struct link_map **maps, size_t nmaps, char *used, Lmid_t ns)
 		  {
 		    /* If a cycle exists with a link time dependency,
 		       preserve the latter.  */
-		    struct link_map **runp = thisp->l_initfini;
+		    runp = thisp->l_initfini;
 		    if (runp != NULL)
 		      while (*runp != NULL)
 			if (__glibc_unlikely (*runp++ == maps[k]))
@@ -246,8 +246,8 @@ _dl_fini (void)
 		      ElfW(Addr) *array =
 			(ElfW(Addr) *) (l->l_addr
 					+ l->l_info[DT_FINI_ARRAY]->d_un.d_ptr);
-		      unsigned int i = (l->l_info[DT_FINI_ARRAYSZ]->d_un.d_val
-					/ sizeof (ElfW(Addr)));
+		      i = (l->l_info[DT_FINI_ARRAYSZ]->d_un.d_val
+                           / sizeof (ElfW(Addr)));
 		      while (i-- > 0)
 			((fini_t) array[i]) ();
 		    }

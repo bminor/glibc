@@ -60,7 +60,7 @@ int __pthread_force_elision attribute_hidden;
 static void
 elision_init (int argc __attribute__ ((unused)),
 	      char **argv  __attribute__ ((unused)),
-	      char **environ)
+	      char **envp)
 {
   __elision_available = HAS_RTM;
 #ifdef ENABLE_LOCK_ELISION

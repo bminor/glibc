@@ -26,8 +26,6 @@ pid_t
 tcgetsid (fd)
      int fd;
 {
-  pid_t pgrp;
-  pid_t sid;
 #ifdef TIOCGSID
   static int tiocgsid_does_not_work;
 
@@ -51,11 +49,11 @@ tcgetsid (fd)
     }
 #endif
 
-  pgrp = tcgetpgrp (fd);
+  pid_t pgrp = tcgetpgrp (fd);
   if (pgrp == -1)
     return (pid_t) -1;
 
-  sid = getsid (pgrp);
+  pid_t sid = getsid (pgrp);
   if (sid == -1 && errno == ESRCH)
     __set_errno (ENOTTY);
 

@@ -576,7 +576,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
 				  + 16 * sizeof(char));
 	      assert (tmpbuf == NULL);
 	      tmpbuf = alloca_account (tmpbuflen, alloca_used);
-	      int rc;
 	      struct hostent th;
 	      struct hostent *h;
 	      int herrno;
@@ -1154,7 +1153,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		  idn_flags |= IDNA_USE_STD3_ASCII_RULES;
 
 		char *out;
-		int rc = __idna_to_unicode_lzlz (canon, &out, idn_flags);
+                rc = __idna_to_unicode_lzlz (canon, &out, idn_flags);
 		if (rc != IDNA_SUCCESS)
 		  {
 		    if (rc == IDNA_MALLOC_ERROR)

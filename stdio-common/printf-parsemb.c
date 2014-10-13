@@ -62,7 +62,6 @@ __parse_one_specmb (const UCHAR_T *format, size_t posn,
 		    struct printf_spec *spec, size_t *max_ref_arg)
 #endif
 {
-  unsigned int n;
   size_t nargs = 0;
 
   /* Skip the '%'.  */
@@ -85,7 +84,7 @@ __parse_one_specmb (const UCHAR_T *format, size_t posn,
     {
       const UCHAR_T *begin = format;
 
-      n = read_int (&format);
+      int n = read_int (&format);
 
       if (n != 0 && *format == L_('$'))
 	/* Is positional parameter.  */
@@ -161,7 +160,7 @@ __parse_one_specmb (const UCHAR_T *format, size_t posn,
       if (ISDIGIT (*format))
 	{
 	  /* The width argument might be found in a positional parameter.  */
-	  n = read_int (&format);
+	  int n = read_int (&format);
 
 	  if (n != 0 && *format == L_('$'))
 	    {
@@ -204,7 +203,7 @@ __parse_one_specmb (const UCHAR_T *format, size_t posn,
 
 	  if (ISDIGIT (*format))
 	    {
-	      n = read_int (&format);
+	      int n = read_int (&format);
 
 	      if (n != 0 && *format == L_('$'))
 		{

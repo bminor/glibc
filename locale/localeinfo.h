@@ -113,17 +113,17 @@ enum coll_sort_rule
 /* We can map the types of the entries into a few categories.  */
 enum value_type
 {
-  none,
-  string,
-  stringarray,
-  byte,
-  bytearray,
-  word,
-  stringlist,
-  wordarray,
-  wstring,
-  wstringarray,
-  wstringlist
+  vt_none,
+  vt_string,
+  vt_stringarray,
+  vt_byte,
+  vt_bytearray,
+  vt_word,
+  vt_stringlist,
+  vt_wordarray,
+  vt_wstring,
+  vt_wstringarray,
+  vt_wstringlist
 };
 
 

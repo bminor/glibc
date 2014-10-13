@@ -217,30 +217,28 @@
 # undef INTERNAL_SYSCALL_DECL
 # define INTERNAL_SYSCALL_DECL(err) do { } while (0)
 
-# define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
+# define INTERNAL_SYSCALL_NCS(name, err, nr, args...)			      \
   ({									      \
-    unsigned long int resultvar;					      \
+    unsigned long int ncs_result;					      \
     LOAD_ARGS_##nr (args)						      \
     LOAD_REGS_##nr							      \
-    asm volatile (							      \
-    "syscall\n\t"							      \
-    : "=a" (resultvar)							      \
-    : "0" (name) ASM_ARGS_##nr : "memory", "cc", "r11", "cx");		      \
-    (long int) resultvar; })
+    asm volatile ("syscall"						      \
+		  : "=a" (ncs_result)					      \
+		  : "0" (name) ASM_ARGS_##nr : "memory", "cc", "r11", "cx");  \
+    (long int) ncs_result; })
 # undef INTERNAL_SYSCALL
 # define INTERNAL_SYSCALL(name, err, nr, args...) \
   INTERNAL_SYSCALL_NCS (__NR_##name, err, nr, ##args)
 
-# define INTERNAL_SYSCALL_NCS_TYPES(name, err, nr, args...) \
+# define INTERNAL_SYSCALL_NCS_TYPES(name, err, nr, args...)		      \
   ({									      \
-    unsigned long int resultvar;					      \
+    unsigned long int ncs_result;					      \
     LOAD_ARGS_TYPES_##nr (args)						      \
     LOAD_REGS_TYPES_##nr (args)						      \
-    asm volatile (							      \
-    "syscall\n\t"							      \
-    : "=a" (resultvar)							      \
-    : "0" (name) ASM_ARGS_##nr : "memory", "cc", "r11", "cx");		      \
-    (long int) resultvar; })
+    asm volatile ("syscall"						      \
+		  : "=a" (ncs_result)					      \
+		  : "0" (name) ASM_ARGS_##nr : "memory", "cc", "r11", "cx");  \
+    (long int) ncs_result; })
 # undef INTERNAL_SYSCALL_TYPES
 # define INTERNAL_SYSCALL_TYPES(name, err, nr, args...) \
   INTERNAL_SYSCALL_NCS_TYPES (__NR_##name, err, nr, ##args)

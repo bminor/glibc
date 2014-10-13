@@ -792,12 +792,12 @@ __strptime_internal (rp, fmt, tmp, statep LOCALE_PARAM)
 	      /* Match locale's alternate date and time format.  */
 	      if (s.decided != raw)
 		{
-		  const char *fmt = _NL_CURRENT (LC_TIME, ERA_D_T_FMT);
+		  const char *subfmt = _NL_CURRENT (LC_TIME, ERA_D_T_FMT);
 
-		  if (*fmt == '\0')
-		    fmt = _NL_CURRENT (LC_TIME, D_T_FMT);
+		  if (*subfmt == '\0')
+		    subfmt = _NL_CURRENT (LC_TIME, D_T_FMT);
 
-		  if (!recursive (fmt))
+		  if (!recursive (subfmt))
 		    {
 		      if (s.decided == loc)
 			return NULL;
@@ -806,7 +806,7 @@ __strptime_internal (rp, fmt, tmp, statep LOCALE_PARAM)
 		    }
 		  else
 		    {
-		      if (strcmp (fmt, HERE_D_T_FMT))
+		      if (strcmp (subfmt, HERE_D_T_FMT))
 			s.decided = loc;
 		      s.want_xday = 1;
 		      break;
@@ -956,12 +956,12 @@ __strptime_internal (rp, fmt, tmp, statep LOCALE_PARAM)
 	    case 'x':
 	      if (s.decided != raw)
 		{
-		  const char *fmt = _NL_CURRENT (LC_TIME, ERA_D_FMT);
+		  const char *subfmt = _NL_CURRENT (LC_TIME, ERA_D_FMT);
 
-		  if (*fmt == '\0')
-		    fmt = _NL_CURRENT (LC_TIME, D_FMT);
+		  if (*subfmt == '\0')
+		    subfmt = _NL_CURRENT (LC_TIME, D_FMT);
 
-		  if (!recursive (fmt))
+		  if (!recursive (subfmt))
 		    {
 		      if (s.decided == loc)
 			return NULL;
@@ -970,7 +970,7 @@ __strptime_internal (rp, fmt, tmp, statep LOCALE_PARAM)
 		    }
 		  else
 		    {
-		      if (strcmp (fmt, HERE_D_FMT))
+		      if (strcmp (subfmt, HERE_D_FMT))
 			s.decided = loc;
 		      break;
 		    }
@@ -982,12 +982,12 @@ __strptime_internal (rp, fmt, tmp, statep LOCALE_PARAM)
 	    case 'X':
 	      if (s.decided != raw)
 		{
-		  const char *fmt = _NL_CURRENT (LC_TIME, ERA_T_FMT);
+		  const char *subfmt = _NL_CURRENT (LC_TIME, ERA_T_FMT);
 
-		  if (*fmt == '\0')
-		    fmt = _NL_CURRENT (LC_TIME, T_FMT);
+		  if (*subfmt == '\0')
+		    subfmt = _NL_CURRENT (LC_TIME, T_FMT);
 
-		  if (!recursive (fmt))
+		  if (!recursive (subfmt))
 		    {
 		      if (s.decided == loc)
 			return NULL;
@@ -996,7 +996,7 @@ __strptime_internal (rp, fmt, tmp, statep LOCALE_PARAM)
 		    }
 		  else
 		    {
-		      if (strcmp (fmt, HERE_T_FMT))
+		      if (strcmp (subfmt, HERE_T_FMT))
 			s.decided = loc;
 		      break;
 		    }

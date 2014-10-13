@@ -75,8 +75,6 @@ do									      \
 	       found.  So we have to find the beginning.  */		      \
 	    while (middle > 0)						      \
 	      {								      \
-		__typeof__ (cache->libs[0].key) key;			      \
-									      \
 		key = cache->libs[middle - 1].key;			      \
 		/* Make sure string table indices are not bogus before	      \
 		   using them.  */					      \

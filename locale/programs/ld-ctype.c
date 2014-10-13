@@ -1700,7 +1700,6 @@ to-value character sequence is smaller than from-value sequence"));
 	    }
 	  else if (handle_digits == 2)
 	    {
-	      struct charseq *seq;
 	      /* We must store the digit values.  */
 	      if (ctype->outdigits_act >= 10)
 		{
@@ -3994,9 +3993,9 @@ allocate_arrays (struct locale_ctype_t *ctype, const struct charmap_t *charmap,
 	{
 	  /* Search for the place where to insert this string.
 	     XXX Better use a real sorting algorithm later.  */
-	  size_t idx = 0;
 	  int replace = 0;
 
+          idx = 0;
 	  while (idx < number)
 	    {
 	      int res = wcscmp ((const wchar_t *) sorted[idx]->from,
@@ -4059,7 +4058,6 @@ allocate_arrays (struct locale_ctype_t *ctype, const struct charmap_t *charmap,
       to_len = 0;
       for (size_t cnt = 0; cnt < number; ++cnt)
 	{
-	  size_t len;
 	  struct translit_to_t *srunp;
 
 	  ctype->translit_from_idx[cnt] = from_len;

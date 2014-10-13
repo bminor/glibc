@@ -1218,7 +1218,7 @@ static int
 internal_function
 parse_param (char **word, size_t *word_length, size_t *max_length,
 	     const char *words, size_t *offset, int flags, wordexp_t *pwordexp,
-	     const char *ifs, const char *ifs_white, int quoted)
+	     const char *ifs, const char *ifs_white, int param_quoted)
 {
   /* We are poised just after "$" */
   enum action
@@ -1474,7 +1474,7 @@ envsubst:
 	  return *word ? 0 : WRDE_NOSPACE;
 	}
       /* Is it `$*' or `$@' (unquoted) ? */
-      else if (*env == '*' || (*env == '@' && !quoted))
+      else if (*env == '*' || (*env == '@' && !param_quoted))
 	{
 	  size_t plist_len = 0;
 	  int p;
@@ -1500,7 +1500,7 @@ envsubst:
       else
 	{
 	  /* Must be a quoted `$@' */
-	  assert (*env == '@' && quoted);
+	  assert (*env == '@' && param_quoted);
 
 	  /* Each parameter is a separate word ("$@") */
 	  if (__libc_argc == 2)
@@ -1599,8 +1599,6 @@ envsubst:
 	  expanded = w_newword (&exp_len, &exp_maxl);
 	  for (p = pattern; p && *p; p++)
 	    {
-	      size_t offset;
-
 	      switch (*p)
 		{
 		case '"':
@@ -1634,10 +1632,11 @@ envsubst:
 		    }
 		  break;
 
-		case '$':
-		  offset = 0;
+		case '$':;
+                  size_t dollars_offset = 0;
 		  error = parse_dollars (&expanded, &exp_len, &exp_maxl, p,
-					 &offset, flags, NULL, NULL, NULL, 1);
+					 &dollars_offset, flags,
+                                         NULL, NULL, NULL, 1);
 		  if (error)
 		    {
 		      if (free_value)
@@ -1648,16 +1647,16 @@ envsubst:
 		      goto do_error;
 		    }
 
-		  p += offset;
+		  p += dollars_offset;
 		  continue;
 
 		case '~':
 		  if (quoted || exp_len)
 		    break;
 
-		  offset = 0;
+		  size_t tilde_offset = 0;
 		  error = parse_tilde (&expanded, &exp_len, &exp_maxl, p,
-				       &offset, 0);
+				       &tilde_offset, 0);
 		  if (error)
 		    {
 		      if (free_value)
@@ -1668,7 +1667,7 @@ envsubst:
 		      goto do_error;
 		    }
 
-		  p += offset;
+		  p += tilde_offset;
 		  continue;
 
 		case '\\':
@@ -1940,7 +1939,7 @@ envsubst:
   if (value == NULL)
     return 0;
 
-  if (quoted || !pwordexp)
+  if (param_quoted || !pwordexp)
     {
       /* Quoted - no field split */
       *word = w_addstr (*word, word_length, max_length, value);

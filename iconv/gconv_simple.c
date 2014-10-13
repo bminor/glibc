@@ -892,14 +892,14 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
       *outptr++ = (unsigned char) wc;					      \
     else if (__glibc_likely (wc <= 0x7fffffff))				      \
       {									      \
-	size_t step;							      \
+	size_t step_size;						      \
 	unsigned char *start;						      \
 									      \
-	for (step = 2; step < 6; ++step)				      \
-	  if ((wc & (~(uint32_t)0 << (5 * step + 1))) == 0)		      \
+	for (step_size = 2; step_size < 6; ++step_size)			      \
+	  if ((wc & (~(uint32_t)0 << (5 * step_size + 1))) == 0)	      \
 	    break;							      \
 									      \
-	if (__glibc_unlikely (outptr + step > outend))			      \
+	if (__glibc_unlikely (outptr + step_size > outend))		      \
 	  {								      \
 	    /* Too long.  */						      \
 	    result = __GCONV_FULL_OUTPUT;				      \
@@ -907,14 +907,14 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 	  }								      \
 									      \
 	start = outptr;							      \
-	*outptr = (unsigned char) (~0xff >> step);			      \
-	outptr += step;							      \
+	*outptr = (unsigned char) (~0xff >> step_size);			      \
+	outptr += step_size;						      \
 	do								      \
 	  {								      \
-	    start[--step] = 0x80 | (wc & 0x3f);				      \
+	    start[--step_size] = 0x80 | (wc & 0x3f);			      \
 	    wc >>= 6;							      \
 	  }								      \
-	while (step > 1);						      \
+	while (step_size > 1);						      \
 	start[0] |= wc;							      \
       }									      \
     else								      \

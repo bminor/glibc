@@ -1,3 +1,138 @@
+2014-10-13  Roland McGrath  <roland@hack.frob.com>
+
+	* locale/programs/ld-ctype.c (charclass_charcode_ellipsis): Remove
+	superfluous block-local variable SEQ.
+	(allocate_arrays): Remove superfluous block-local variables IDX, LEN.
+
+	* locale/programs/ld-collate.c (insert_value): Rename inner-block
+	local variable RESULT to FOUND.
+	(collate_read): Likewise.  Remove superfluous block-local variable PTR.
+	(collate_output): Use C99 mixed declaration for function-local
+	variable RUNP.  Remove superfluous block-local variables I.
+
+	* locale/programs/locarchive.c (show_archive_content): Rename
+	parameter VERBOSE to BE_VERBOSE.
+
+	* locale/programs/locfile.c (write_locale_data): Drop function-local
+	variable CNT.
+
+	* iconv/iconv_prog.c (write_output): Rename parameter OUTPUT_FILE to
+	OUTPUT_FILENAME.
+	(process_block, process_fd, process_file): Likewise.
+
+	* elf/dl-iteratephdr.c (__dl_iterate_phdr): Drop function-local
+	variable L.
+
+	* elf/dl-sym.c (do_sym): Rename block-local variable L to NEXT.
+
+	* elf/dl-cache.c (SEARCH_CACHE): Remove superfluous block-local
+	variable KEY.
+
+	* elf/dl-deps.c (_dl_map_object_deps): Rename block-local variable
+	RUNP to MAP_RUNP.
+
+	* sysdeps/unix/sysv/linux/dl-origin.c (_dl_get_origin): Rename
+	block-local variable LEN to PATH_LEN.
+
+	* elf/dl-fini.c (_dl_sort_fini): Remove superfluous block-local
+	variables RUNP and I.
+
+	* resolv/res_hconf.c (_res_hconf_reorder_addrs): Use C99 for-statement
+	declaration for I and J.
+
+	* resolv/res_init.c (res_setoptions): Rename parameter OPTIONS to OPTS.
+	Remove superfluous block-local variable I.
+
+	* sysdeps/unix/sysv/linux/ifaddrs.c (getifaddrs_internal):
+	Drop shadowing inner-block declaration of local variable IDX.
+
+	* inet/rcmd.c (rcmd_af): Drop shadowing inner-block
+	declaration of local variable NUM.
+
+	* sysdeps/unix/sysv/linux/x86/elision-conf.c
+	(elision_init): Rename parameter ENVIRON to ENVP.
+
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h
+	(lll_cond_lock, lll_cond_trylock, lll_lock, lll_robust_cond_lock):
+	Prepend _ to local variable names inside statement expression.
+	(lll_robust_lock, lll_robust_timedlock, lll_timedlock, lll_trylock):
+	Likewise.
+	* sysdeps/x86/elide.h (ELIDE_TRYLOCK): Likewise.
+	* nptl/pthreadP.h (CANCELLATION_P): Likewise.
+	* elf/dl-version.c (make_string): Likewise.
+
+	* sysdeps/unix/sysv/linux/getsysstats.c (__get_nprocs): Move
+	function-local variable L inside blocks where it's used.
+
+	* termios/tcgetsid.c (tcgetsid): Use C99 mixed declarations for PGRP
+	and PID.
+
+	* io/ftw.c (ftw_startup): Drop function-local variable SAVE_ERR.
+
+	* posix/wordexp.c (parse_param): Rename parameter QUOTED to
+	PARAM_QUOTED.  Rename inner-block locals OFFSET to DOLLARS_OFFSET and
+	TILDE_OFFSET.
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Drop shadowing inner-block
+	declaration of local variable RC.
+
+	* posix/regcomp.c (create_initial_state): Rename inner-block local
+	variable ERR to MERGE_ERR.
+
+	* dirent/scandir.c (SCANDIR): Rename parameter SELECT to SELECTOR.
+	* dirent/scandirat.c (SCANDIRAT): Likewise.
+
+	* time/strptime_l.c (__strptime_internal): Rename inner-block local
+	variables FMT to SUBFMT.
+
+	* malloc/hooks.c (realloc_check): Drop shadowing inner-block
+	declaration of local variable NB.
+
+	* stdio-common/printf-parsemb.c (__parse_one_specwc): Move
+	function-local variable N into inner blocks.
+
+	* stdio-common/vfscanf.c (__va_copy): New macro, define if not already
+	defined.
+	(_IO_vfwscanf: ARG): Always use __va_copy.  Rename local variable ARG
+	inside statement expression to ARGCOPY.
+	(_IO_vfwscanf): Rename parameter S to STREAM.
+	(inchar, ORIENT): Update uses.
+
+	* stdio-common/vfprintf.c (vfprintf): Move block-local variable
+	FUNCTION_DONE in main processing loop into an inside block so it
+	won't be shadowed.
+
+	* stdio-common/printf_fphex.c (__printf_fphex): Remove superfluous
+	block-local variable WIDTH in the SPECIAL case.
+
+	* sysdeps/x86_64/nptl/tls.h (THREAD_SELF): Rename local variable
+	__SELF inside statement expression to __THREAD_SELF.
+
+	* stdlib/strtod_l.c (____STRTOF_INTERNAL): Rename inner-block local
+	variable RETVAL to RESULT.  Move function-level START_OF_DIGITS and
+	STARTP local variables' declarations to their initialization sites.
+	(____STRTOF_INTERNAL: got_limb): Rename block-local variable CNT
+	to ZERO_COUNT.
+	(__mpn_lshift_1): Rename block-local variable I inside statement
+	expression to _I.
+
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (INTERNAL_SYSCALL_NCS):
+	Rename local variable RESULTVAR to NCS_RESULT.
+	(INTERNAL_SYSCALL_NCS_TYPES): Likewise.
+
+	* iconv/gconv_int.h (norm_add_slashes): Use _ prefix on local
+	variables inside the statement expression.
+	* stdlib/setenv.c (KNOWN_VALUE): Likewise.
+
+	* iconv/gconv_simple.c (BODY for internal_utf8_loop): Rename local
+	variable STEP to STEP_SIZE.
+
+	* locale/localeinfo.h (enum value_type): Prefix elements with "vt_".
+	* locale/programs/locale.c (DEFINE_ELEMENT): Prepend the prefix here.
+	* locale/loadlocale.c (DEFINE_ELEMENT): Likewise.
+	(_nl_intern_locale_data): Update user.
+	* locale/programs/locale.c (print_item): Likewise.
+
 2014-10-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* CANCEL-FCT-WAIVE: Remove file.

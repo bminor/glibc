@@ -433,7 +433,7 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
 
 static int
 write_output (const char *outbuf, const char *outptr, FILE **output,
-	      const char *output_file)
+	      const char *output_filename)
 {
   /* We have something to write out.  */
   int errno_save = errno;
@@ -441,9 +441,9 @@ write_output (const char *outbuf, const char *outptr, FILE **output,
   if (*output == NULL)
     {
       /* Determine output file.  */
-      if (output_file != NULL && strcmp (output_file, "-") != 0)
+      if (output_filename != NULL && strcmp (output_filename, "-") != 0)
 	{
-	  *output = fopen (output_file, "w");
+	  *output = fopen (output_filename, "w");
 	  if (*output == NULL)
 	    error (EXIT_FAILURE, errno, _("cannot open output file"));
 	}
@@ -468,7 +468,7 @@ conversion stopped due to problem in writing the output"));
 
 static int
 process_block (iconv_t cd, char *addr, size_t len, FILE **output,
-	       const char *output_file)
+	       const char *output_filename)
 {
 #define OUTBUF_SIZE	32768
   const char *start = addr;
@@ -495,7 +495,7 @@ process_block (iconv_t cd, char *addr, size_t len, FILE **output,
 
       if (outptr != outbuf)
 	{
-	  ret = write_output (outbuf, outptr, output, output_file);
+	  ret = write_output (outbuf, outptr, output, output_filename);
 	  if (ret != 0)
 	    break;
 	}
@@ -510,7 +510,7 @@ process_block (iconv_t cd, char *addr, size_t len, FILE **output,
 
 	  if (outptr != outbuf)
 	    {
-	      ret = write_output (outbuf, outptr, output, output_file);
+	      ret = write_output (outbuf, outptr, output, output_filename);
 	      if (ret != 0)
 		break;
 	    }
@@ -556,7 +556,7 @@ incomplete character or shift sequence at end of buffer"));
 
 
 static int
-process_fd (iconv_t cd, int fd, FILE **output, const char *output_file)
+process_fd (iconv_t cd, int fd, FILE **output, const char *output_filename)
 {
   /* we have a problem with reading from a desriptor since we must not
      provide the iconv() function an incomplete character or shift
@@ -630,16 +630,17 @@ process_fd (iconv_t cd, int fd, FILE **output, const char *output_file)
       }
 
   /* Now we have all the input in the buffer.  Process it in one run.  */
-  return process_block (cd, inbuf, actlen, output, output_file);
+  return process_block (cd, inbuf, actlen, output, output_filename);
 }
 
 
 static int
-process_file (iconv_t cd, FILE *input, FILE **output, const char *output_file)
+process_file (iconv_t cd, FILE *input, FILE **output,
+              const char *output_filename)
 {
   /* This should be safe since we use this function only for `stdin' and
      we haven't read anything so far.  */
-  return process_fd (cd, fileno (input), output, output_file);
+  return process_fd (cd, fileno (input), output, output_filename);
 }
 
 

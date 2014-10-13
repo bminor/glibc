@@ -83,14 +83,14 @@ elision_adapt(signed char *adapt_count, unsigned int status)
    ADAPT_COUNT is a pointer to per-lock state variable.  */
 
 #define ELIDE_TRYLOCK(adapt_count, is_lock_free, write) ({	\
-  int ret = 0;						\
+  int _ret = 0;						\
   if (__elision_aconf.retry_try_xbegin > 0)		\
     {  							\
       if (write)					\
         _xabort (_ABORT_NESTED_TRYLOCK);		\
-      ret = ELIDE_LOCK (adapt_count, is_lock_free);     \
+      _ret = ELIDE_LOCK (adapt_count, is_lock_free);     \
     }							\
-    ret;						\
+    _ret;						\
     })
 
 /* Returns true if lock defined by IS_LOCK_FREE was elided.  */

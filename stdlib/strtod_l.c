@@ -458,9 +458,9 @@ str_to_mpn (const STRING_TYPE *str, int digcnt, mp_limb_t *n, mp_size_t *nsize,
       mp_limb_t *__ptr = (ptr);						\
       if (__builtin_constant_p (count) && count == BITS_PER_MP_LIMB)	\
 	{								\
-	  mp_size_t i;							\
-	  for (i = (size) - 1; i > 0; --i)				\
-	    __ptr[i] = __ptr[i - 1];					\
+	  mp_size_t _i;							\
+	  for (_i = (size) - 1; _i > 0; --_i)				\
+	    __ptr[_i] = __ptr[_i - 1];					\
 	  __ptr[0] = (limb);						\
 	}								\
       else								\
@@ -515,8 +515,6 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 
   /* Running pointer after the last character processed in the string.  */
   const STRING_TYPE *cp, *tp;
-  /* Start of significant part of the number.  */
-  const STRING_TYPE *startp, *start_of_digits;
   /* Points at the character following the integer and fractional digits.  */
   const STRING_TYPE *expp;
   /* Total number of digit and number of digits in integer part.  */
@@ -647,7 +645,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
       if (lowc == L_('n') && STRNCASECMP (cp, L_("nan"), 3) == 0)
 	{
 	  /* Return NaN.  */
-	  FLOAT retval = NAN;
+	  FLOAT result = NAN;
 
 	  cp += 3;
 
@@ -677,7 +675,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 
 		  mant = STRTOULL (startp + 1, &endp, 0);
 		  if (endp == cp)
-		    SET_MANTISSA (retval, mant);
+		    SET_MANTISSA (result, mant);
 
 		  /* Consume the closing brace.  */
 		  ++cp;
@@ -687,7 +685,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 	  if (endptr != NULL)
 	    *endptr = (STRING_TYPE *) cp;
 
-	  return retval;
+	  return result;
 	}
 
       /* It is really a text we do not recognize.  */
@@ -707,7 +705,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
     }
 
   /* Record the start of the digits, in case we will check their grouping.  */
-  start_of_digits = startp = cp;
+  const STRING_TYPE *start_of_digits = cp;
 
   /* Ignore leading zeroes.  This helps us to avoid useless computations.  */
 #ifdef USE_WIDE_CHAR
@@ -777,7 +775,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 
   /* Remember first significant digit and read following characters until the
      decimal point, exponent character or any non-FP number character.  */
-  startp = cp;
+  const STRING_TYPE *startp = cp;
   dig_no = 0;
   while (1)
     {
@@ -1349,7 +1347,6 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
     int neg_exp;
     int more_bits;
     int need_frac_digits;
-    mp_limb_t cy;
     mp_limb_t *psrc = den;
     mp_limb_t *pdest = num;
     const struct mp_power *ttab = &_fpioconst_pow10[0];
@@ -1470,7 +1467,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 	/* Don't call `mpn_shift' with a count of zero since the specification
 	   does not allow this.  */
 	(void) __mpn_lshift (den, den, densize, cnt);
-	cy = __mpn_lshift (num, num, numsize, cnt);
+	mp_limb_t cy = __mpn_lshift (num, num, numsize, cnt);
 	if (cy != 0)
 	  num[numsize++] = cy;
       }
@@ -1502,15 +1499,15 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 #define got_limb							      \
 	      if (bits == 0)						      \
 		{							      \
-		  int cnt;						      \
+		  int zero_count;					      \
 		  if (quot == 0)					      \
-		    cnt = BITS_PER_MP_LIMB;				      \
+		    zero_count = BITS_PER_MP_LIMB;			      \
 		  else							      \
-		    count_leading_zeros (cnt, quot);			      \
-		  exponent -= cnt;					      \
-		  if (BITS_PER_MP_LIMB - cnt > MANT_DIG)		      \
+		    count_leading_zeros (zero_count, quot);		      \
+		  exponent -= zero_count;				      \
+		  if (BITS_PER_MP_LIMB - zero_count > MANT_DIG)		      \
 		    {							      \
-		      used = MANT_DIG + cnt;				      \
+		      used = MANT_DIG + zero_count;			      \
 		      retval[0] = quot >> (BITS_PER_MP_LIMB - used);	      \
 		      bits = MANT_DIG + 1;				      \
 		    }							      \
@@ -1521,7 +1518,7 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 		      if (RETURN_LIMB_SIZE > 1)				      \
 			retval[1] = 0;					      \
 		      retval[0] = quot;					      \
-		      bits = -cnt;					      \
+		      bits = -zero_count;				      \
 		    }							      \
 		}							      \
 	      else if (bits + BITS_PER_MP_LIMB <= MANT_DIG)		      \
@@ -1654,7 +1651,6 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 	  if (numsize < densize)
 	    {
 	      mp_size_t empty = densize - numsize;
-	      int i;
 
 	      if (bits <= 0)
 		exponent -= empty * BITS_PER_MP_LIMB;
@@ -1682,7 +1678,6 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 		      used = MANT_DIG - bits;
 		      if (used >= BITS_PER_MP_LIMB)
 			{
-			  int i;
 			  (void) __mpn_lshift (&retval[used
 						       / BITS_PER_MP_LIMB],
 					       retval,
@@ -1703,7 +1698,6 @@ ____STRTOF_INTERNAL (nptr, endptr, group, loc)
 	    }
 	  else
 	    {
-	      int i;
 	      assert (numsize == densize);
 	      for (i = numsize; i > 0; --i)
 		num[i] = num[i - 1];

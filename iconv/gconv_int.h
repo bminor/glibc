@@ -123,34 +123,34 @@ __libc_lock_define (extern, __gconv_lock attribute_hidden)
 
 /* The gconv functions expects the name to be in upper case and complete,
    including the trailing slashes if necessary.  */
-#define norm_add_slashes(str,suffix) \
+#define norm_add_slashes(str, suffix) \
   ({									      \
-    const char *cp = (str);						      \
-    char *result;							      \
-    char *tmp;								      \
-    size_t cnt = 0;							      \
-    const size_t suffix_len = strlen (suffix);				      \
+    const char *_cp = (str);						      \
+    char *_result;							      \
+    char *_tmp;								      \
+    size_t _cnt = 0;							      \
+    const size_t _suffix_len = strlen (suffix);				      \
 									      \
-    while (*cp != '\0')							      \
-      if (*cp++ == '/')							      \
-	++cnt;								      \
+    while (*_cp != '\0')						      \
+      if (*_cp++ == '/')						      \
+	++_cnt;								      \
 									      \
-    tmp = result = __alloca (cp - (str) + 3 + suffix_len);		      \
-    cp = (str);								      \
-    while (*cp != '\0')							      \
-      *tmp++ = __toupper_l (*cp++, _nl_C_locobj_ptr);			      \
-    if (cnt < 2)							      \
+    _tmp = _result = __alloca (_cp - (str) + 3 + _suffix_len);		      \
+    _cp = (str);							      \
+    while (*_cp != '\0')						      \
+      *_tmp++ = __toupper_l (*_cp++, _nl_C_locobj_ptr);			      \
+    if (_cnt < 2)							      \
       {									      \
-	*tmp++ = '/';							      \
-	if (cnt < 1)							      \
+	*_tmp++ = '/';							      \
+	if (_cnt < 1)							      \
 	  {								      \
-	    *tmp++ = '/';						      \
-	    if (suffix_len != 0)					      \
-	      tmp = __mempcpy (tmp, suffix, suffix_len);		      \
+	    *_tmp++ = '/';						      \
+	    if (_suffix_len != 0)					      \
+	      _tmp = __mempcpy (_tmp, suffix, _suffix_len);		      \
 	  }								      \
       }									      \
-    *tmp = '\0';							      \
-    result;								      \
+    *_tmp = '\0';							      \
+    _result;								      \
   })
 
 

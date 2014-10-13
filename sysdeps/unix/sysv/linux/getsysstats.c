@@ -144,11 +144,10 @@ __get_nprocs (void)
 
   const int flags = O_RDONLY | O_CLOEXEC;
   int fd = open_not_cancel_2 ("/sys/devices/system/cpu/online", flags);
-  char *l;
   int result = 0;
   if (fd != -1)
     {
-      l = next_line (fd, buffer, &cp, &re, buffer_end);
+      char *l = next_line (fd, buffer, &cp, &re, buffer_end);
       if (l != NULL)
 	do
 	  {
@@ -196,6 +195,7 @@ __get_nprocs (void)
     {
       result = 0;
 
+      char *l;
       while ((l = next_line (fd, buffer, &cp, &re, buffer_end)) != NULL)
 	/* The current format of /proc/stat has all the cpu* entries
 	   at the front.  We assume here that stays this way.  */

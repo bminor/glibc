@@ -1965,7 +1965,6 @@ do_positional:
 	while (1)
 	  {
 	    extern printf_function **__printf_function_table;
-	    int function_done;
 
 	    if (spec <= UCHAR_MAX
 		&& __printf_function_table != NULL
@@ -1980,7 +1979,7 @@ do_positional:
 		  ptr[i] = &args_value[specs[nspecs_done].data_arg + i];
 
 		/* Call the function.  */
-		function_done = __printf_function_table[(size_t) spec]
+		int function_done = __printf_function_table[(size_t) spec]
 		  (s, &specs[nspecs_done].info, ptr);
 
 		if (function_done != -2)
@@ -2017,8 +2016,8 @@ do_positional:
 		ptr[i] = &args_value[specs[nspecs_done].data_arg + i];
 
 	      /* Call the function.  */
-	      function_done = printf_unknown (s, &specs[nspecs_done].info,
-					      ptr);
+	      int function_done = printf_unknown (s, &specs[nspecs_done].info,
+                                                  ptr);
 
 	      /* If an error occurred we don't have information about #
 		 of chars.  */

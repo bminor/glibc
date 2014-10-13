@@ -370,7 +370,6 @@ realloc_check (void *oldmem, size_t bytes, const void *caller)
     {
       if (top_check () >= 0)
         {
-          INTERNAL_SIZE_T nb;
           checked_request2size (bytes + 1, nb);
           newmem = _int_realloc (&main_arena, oldp, oldsize, nb);
         }

@@ -157,22 +157,22 @@
 #endif
 
 #define lll_trylock(futex) \
-  ({ int ret;								      \
+  ({ int _ret;								      \
      __asm __volatile (__lll_trylock_asm				      \
-		       : "=a" (ret), "=m" (futex)			      \
+		       : "=a" (_ret), "=m" (futex)			      \
 		       : "r" (LLL_LOCK_INITIALIZER_LOCKED), "m" (futex),      \
 			 "0" (LLL_LOCK_INITIALIZER)			      \
 		       : "memory");					      \
-     ret; })
+     _ret; })
 
 #define lll_cond_trylock(futex) \
-  ({ int ret;								      \
+  ({ int _ret;								      \
      __asm __volatile (LOCK_INSTR "cmpxchgl %2, %1"			      \
-		       : "=a" (ret), "=m" (futex)			      \
+		       : "=a" (_ret), "=m" (futex)			      \
 		       : "r" (LLL_LOCK_INITIALIZER_WAITERS),		      \
 			 "m" (futex), "0" (LLL_LOCK_INITIALIZER)	      \
 		       : "memory");					      \
-     ret; })
+     _ret; })
 
 #if defined NOT_IN_libc || defined UP
 # define __lll_lock_asm_start LOCK_INSTR "cmpxchgl %4, %2\n\t"		      \
@@ -189,7 +189,7 @@
 
 #define lll_lock(futex, private) \
   (void)								      \
-    ({ int ignore1, ignore2, ignore3;					      \
+    ({ int _ignore1, _ignore2, _ignore3;				      \
        if (__builtin_constant_p (private) && (private) == LLL_PRIVATE)	      \
 	 __asm __volatile (__lll_lock_asm_start				      \
 			   "1:\tlea %2, %%" RDI_LP "\n"			      \
@@ -199,8 +199,8 @@
 			   "4:\tadd $128, %%" RSP_LP "\n"		      \
 			   ".cfi_adjust_cfa_offset -128\n"		      \
 			   "24:"					      \
-			   : "=S" (ignore1), "=&D" (ignore2), "=m" (futex),   \
-			     "=a" (ignore3)				      \
+			   : "=S" (_ignore1), "=&D" (_ignore2), "=m" (futex), \
+			     "=a" (_ignore3)				      \
 			   : "0" (1), "m" (futex), "3" (0)		      \
 			   : "cx", "r11", "cc", "memory");		      \
        else								      \
@@ -212,14 +212,14 @@
 			   "4:\tadd $128, %%" RSP_LP "\n"		      \
 			   ".cfi_adjust_cfa_offset -128\n"		      \
 			   "24:"					      \
-			   : "=S" (ignore1), "=D" (ignore2), "=m" (futex),    \
-			     "=a" (ignore3)				      \
+			   : "=S" (_ignore1), "=D" (_ignore2), "=m" (futex),  \
+			     "=a" (_ignore3)				      \
 			   : "1" (1), "m" (futex), "3" (0), "0" (private)     \
 			   : "cx", "r11", "cc", "memory");		      \
     })									      \
 
 #define lll_robust_lock(futex, id, private) \
-  ({ int result, ignore1, ignore2;					      \
+  ({ int _result, _ignore1, _ignore2;					      \
     __asm __volatile (LOCK_INSTR "cmpxchgl %4, %2\n\t"			      \
 		      "jz 24f\n"					      \
 		      "1:\tlea %2, %%" RDI_LP "\n"			      \
@@ -229,15 +229,15 @@
 		      "4:\tadd $128, %%" RSP_LP "\n"			      \
 		      ".cfi_adjust_cfa_offset -128\n"			      \
 		      "24:"						      \
-		      : "=S" (ignore1), "=D" (ignore2), "=m" (futex),	      \
-			"=a" (result)					      \
+		      : "=S" (_ignore1), "=D" (_ignore2), "=m" (futex),	      \
+			"=a" (_result)					      \
 		      : "1" (id), "m" (futex), "3" (0), "0" (private)	      \
 		      : "cx", "r11", "cc", "memory");			      \
-    result; })
+    _result; })
 
 #define lll_cond_lock(futex, private) \
   (void)								      \
-    ({ int ignore1, ignore2, ignore3;					      \
+    ({ int _ignore1, _ignore2, _ignore3;				      \
        __asm __volatile (LOCK_INSTR "cmpxchgl %4, %2\n\t"		      \
 			 "jz 24f\n"					      \
 			 "1:\tlea %2, %%" RDI_LP "\n"			      \
@@ -247,14 +247,14 @@
 			 "4:\tadd $128, %%" RSP_LP "\n"			      \
 			 ".cfi_adjust_cfa_offset -128\n"		      \
 			 "24:"						      \
-			 : "=S" (ignore1), "=D" (ignore2), "=m" (futex),      \
-			   "=a" (ignore3)				      \
+			 : "=S" (_ignore1), "=D" (_ignore2), "=m" (futex),    \
+			   "=a" (_ignore3)				      \
 			 : "1" (2), "m" (futex), "3" (0), "0" (private)	      \
 			 : "cx", "r11", "cc", "memory");		      \
     })
 
 #define lll_robust_cond_lock(futex, id, private) \
-  ({ int result, ignore1, ignore2;					      \
+  ({ int _result, _ignore1, _ignore2;					      \
     __asm __volatile (LOCK_INSTR "cmpxchgl %4, %2\n\t"			      \
 		      "jz 24f\n"					      \
 		      "1:\tlea %2, %%" RDI_LP "\n"			      \
@@ -264,15 +264,15 @@
 		      "4:\tadd $128, %%" RSP_LP "\n"			      \
 		      ".cfi_adjust_cfa_offset -128\n"			      \
 		      "24:"						      \
-		      : "=S" (ignore1), "=D" (ignore2), "=m" (futex),	      \
-			"=a" (result)					      \
+		      : "=S" (_ignore1), "=D" (_ignore2), "=m" (futex),	      \
+			"=a" (_result)					      \
 		      : "1" (id | FUTEX_WAITERS), "m" (futex), "3" (0),	      \
 			"0" (private)					      \
 		      : "cx", "r11", "cc", "memory");			      \
-    result; })
+    _result; })
 
 #define lll_timedlock(futex, timeout, private) \
-  ({ int result, ignore1, ignore2, ignore3;				      \
+  ({ int _result, _ignore1, _ignore2, _ignore3;				      \
      __asm __volatile (LOCK_INSTR "cmpxchgl %1, %4\n\t"			      \
 		       "jz 24f\n"					      \
 		       "1:\tlea %4, %%" RDI_LP "\n"			      \
@@ -283,12 +283,12 @@
 		       "4:\tadd $128, %%" RSP_LP "\n"			      \
 		       ".cfi_adjust_cfa_offset -128\n"			      \
 		       "24:"						      \
-		       : "=a" (result), "=D" (ignore1), "=S" (ignore2),	      \
-			 "=&d" (ignore3), "=m" (futex)			      \
+		       : "=a" (_result), "=D" (_ignore1), "=S" (_ignore2),    \
+			 "=&d" (_ignore3), "=m" (futex)			      \
 		       : "0" (0), "1" (1), "m" (futex), "m" (timeout),	      \
 			 "2" (private)					      \
 		       : "memory", "cx", "cc", "r10", "r11");		      \
-     result; })
+     _result; })
 
 extern int __lll_timedlock_elision (int *futex, short *adapt_count,
 					 const struct timespec *timeout,
@@ -298,7 +298,7 @@ extern int __lll_timedlock_elision (int *futex, short *adapt_count,
   __lll_timedlock_elision(&(futex), &(adapt_count), timeout, private)
 
 #define lll_robust_timedlock(futex, timeout, id, private) \
-  ({ int result, ignore1, ignore2, ignore3;				      \
+  ({ int _result, _ignore1, _ignore2, _ignore3;				      \
      __asm __volatile (LOCK_INSTR "cmpxchgl %1, %4\n\t"			      \
 		       "jz 24f\n\t"					      \
 		       "1:\tlea %4, %%" RDI_LP "\n"			      \
@@ -309,12 +309,12 @@ extern int __lll_timedlock_elision (int *futex, short *adapt_count,
 		       "4:\tadd $128, %%" RSP_LP "\n"			      \
 		       ".cfi_adjust_cfa_offset -128\n"			      \
 		       "24:"						      \
-		       : "=a" (result), "=D" (ignore1), "=S" (ignore2),       \
-			 "=&d" (ignore3), "=m" (futex)			      \
+		       : "=a" (_result), "=D" (_ignore1), "=S" (_ignore2),    \
+			 "=&d" (_ignore3), "=m" (futex)			      \
 		       : "0" (0), "1" (id), "m" (futex), "m" (timeout),	      \
 			 "2" (private)					      \
 		       : "memory", "cx", "cc", "r10", "r11");		      \
-     result; })
+     _result; })
 
 #if defined NOT_IN_libc || defined UP
 # define __lll_unlock_asm_start LOCK_INSTR "decl %0\n\t"		      \

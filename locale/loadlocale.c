@@ -47,7 +47,7 @@ static const size_t _nl_category_num_items[] =
 #define DEFINE_CATEGORY(category, category_name, items, a) \
 static const enum value_type _nl_value_type_##category[] = { NO_PAREN items };
 #define DEFINE_ELEMENT(element, element_name, optstd, type, rest...) \
-  [_NL_ITEM_INDEX (element)] = type,
+  [_NL_ITEM_INDEX (element)] = vt_##type,
 #include "categories.def"
 #undef DEFINE_CATEGORY
 
@@ -144,7 +144,7 @@ _nl_intern_locale_data (int category, const void *data, size_t datasize)
       if ((category == LC_CTYPE
 	   && cnt >= (sizeof (_nl_value_type_LC_CTYPE)
 		      / sizeof (_nl_value_type_LC_CTYPE[0])))
-	  || __builtin_expect (_nl_value_types[category][cnt] != word, 1))
+	  || __builtin_expect (_nl_value_types[category][cnt] != vt_word, 1))
 	newdata->values[cnt].string = newdata->filedata + idx;
       else
 	{

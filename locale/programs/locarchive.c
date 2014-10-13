@@ -1629,7 +1629,7 @@ dataentcmp (const void *a, const void *b)
 
 
 void
-show_archive_content (const char *fname, int verbose)
+show_archive_content (const char *fname, int be_verbose)
 {
   struct locarhandle ah;
   struct locarhead *head;
@@ -1660,7 +1660,7 @@ show_archive_content (const char *fname, int verbose)
   /* Sort the names.  */
   qsort (names, used, sizeof (struct nameent), nameentcmp);
 
-  if (verbose)
+  if (be_verbose)
     {
       struct dataent *files;
       struct sumhashent *sumhashtab;

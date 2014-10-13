@@ -82,7 +82,7 @@
 # define ungetc_not_eof(c, s)	((void) (--read_in,			      \
 					 _IO_sputbackwc (s, c)))
 # define inchar()	(c == WEOF ? ((errno = inchar_errno), WEOF)	      \
-			 : ((c = _IO_getwc_unlocked (s)),		      \
+			 : ((c = _IO_getwc_unlocked (stream)),		      \
 			    (void) (c != WEOF				      \
 				    ? ++read_in				      \
 				    : (size_t) (inchar_errno = errno)), c))
@@ -92,7 +92,7 @@
 # define ISDIGIT(Ch)	  iswdigit (Ch)
 # define ISXDIGIT(Ch)	  iswxdigit (Ch)
 # define TOLOWER(Ch)	  towlower (Ch)
-# define ORIENT	  if (_IO_fwide (s, 1) != 1) return WEOF
+# define ORIENT	  if (_IO_fwide (stream, 1) != 1) return WEOF
 # define __strtoll_internal	__wcstoll_internal
 # define __strtoull_internal	__wcstoull_internal
 # define __strtol_internal	__wcstol_internal
@@ -114,7 +114,7 @@
 # define ungetc_not_eof(c, s)	((void) (--read_in,			      \
 					 _IO_sputbackc (s, (unsigned char) c)))
 # define inchar()	(c == EOF ? ((errno = inchar_errno), EOF)	      \
-			 : ((c = _IO_getc_unlocked (s)),		      \
+			 : ((c = _IO_getc_unlocked (stream)),		      \
 			    (void) (c != EOF				      \
 				    ? ++read_in				      \
 				    : (size_t) (inchar_errno = errno)), c))
@@ -123,9 +123,9 @@
 # define ISDIGIT(Ch)	  __isdigit_l (Ch, loc)
 # define ISXDIGIT(Ch)	  __isxdigit_l (Ch, loc)
 # define TOLOWER(Ch)	  __tolower_l ((unsigned char) (Ch), loc)
-# define ORIENT	  if (_IO_vtable_offset (s) == 0			      \
-			      && _IO_fwide (s, -1) != -1)		      \
-			    return EOF
+# define ORIENT	  if (_IO_vtable_offset (stream) == 0			      \
+                      && _IO_fwide (stream, -1) != -1)			      \
+		    return EOF
 
 # define L_(Str)	Str
 # define CHAR_T		char
@@ -192,16 +192,20 @@ struct ptrs_to_free
   char **ptrs[32];
 };
 
+#ifndef __va_copy
+# define __va_copy(dst, src)	(dst) = (va_list) (src)
+#endif
+
 /* Read formatted input from S according to the format string
    FORMAT, using the argument list in ARG.
    Return the number of assignments made, or -1 for an input error.  */
 #ifdef COMPILE_WSCANF
 int
-_IO_vfwscanf (_IO_FILE *s, const wchar_t *format, _IO_va_list argptr,
+_IO_vfwscanf (_IO_FILE *stream, const wchar_t *format, _IO_va_list argptr,
 	      int *errp)
 #else
 int
-_IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
+_IO_vfscanf_internal (_IO_FILE *stream, const char *format, _IO_va_list argptr,
 		      int *errp)
 #endif
 {
@@ -303,17 +307,13 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
     }									    \
   while (0)
 
-#ifdef __va_copy
   __va_copy (arg, argptr);
-#else
-  arg = (va_list) argptr;
-#endif
 
 #ifdef ORIENT
   ORIENT;
 #endif
 
-  ARGCHECK (s, format);
+  ARGCHECK (stream, format);
 
  {
 #ifndef COMPILE_WSCANF
@@ -337,7 +337,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
  }
 
   /* Lock the stream.  */
-  LOCK_STREAM (s);
+  LOCK_STREAM (stream);
 
 
 #ifndef COMPILE_WSCANF
@@ -352,35 +352,14 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
       /* Extract the next argument, which is of type TYPE.
 	 For a %N$... spec, this is the Nth argument from the beginning;
 	 otherwise it is the next argument after the state now in ARG.  */
-#ifdef __va_copy
-# define ARG(type)	(argpos == 0 ? va_arg (arg, type) :		      \
+#define ARG(type)	(argpos == 0 ? va_arg (arg, type) :		      \
 			 ({ unsigned int pos = argpos;			      \
-			    va_list arg;				      \
-			    __va_copy (arg, argptr);			      \
+			    va_list argcopy;				      \
+			    __va_copy (argcopy, argptr);		      \
 			    while (--pos > 0)				      \
-			      (void) va_arg (arg, void *);		      \
-			    va_arg (arg, type);				      \
+			      (void) va_arg (argcopy, void *);		      \
+			    va_arg (argcopy, type);			      \
 			  }))
-#else
-# if 0
-      /* XXX Possible optimization.  */
-#  define ARG(type)	(argpos == 0 ? va_arg (arg, type) :		      \
-			 ({ va_list arg = (va_list) argptr;		      \
-			    arg = (va_list) ((char *) arg		      \
-					     + (argpos - 1)		      \
-					     * __va_rounded_size (void *));   \
-			    va_arg (arg, type);				      \
-			 }))
-# else
-#  define ARG(type)	(argpos == 0 ? va_arg (arg, type) :		      \
-			 ({ unsigned int pos = argpos;			      \
-			    va_list arg = (va_list) argptr;		      \
-			    while (--pos > 0)				      \
-			      (void) va_arg (arg, void *);		      \
-			    va_arg (arg, type);				      \
-			  }))
-# endif
-#endif
 
 #ifndef COMPILE_WSCANF
       if (!isascii ((unsigned char) *f))
@@ -396,7 +375,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		    input_error ();
 		  else if (c != (unsigned char) *f++)
 		    {
-		      ungetc_not_eof (c, s);
+		      ungetc_not_eof (c, stream);
 		      conv_error ();
 		    }
 		}
@@ -435,7 +414,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 
 	  if (__glibc_unlikely (c != fc))
 	    {
-	      ungetc (c, s);
+	      ungetc (c, stream);
 	      conv_error ();
 	    }
 
@@ -539,7 +518,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	    }
 	  /* In __isoc99_*scanf %as, %aS and %a[ extension is not
 	     supported at all.  */
-	  if (s->_flags2 & _IO_FLAGS2_SCANF_STD)
+	  if (stream->_flags2 & _IO_FLAGS2_SCANF_STD)
 	    {
 	      --f;
 	      break;
@@ -602,7 +581,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	      input_error ();
 	  while (ISSPACE (c));
 	  __set_errno (save_errno);
-	  ungetc (c, s);
+	  ungetc (c, stream);
 	  skip_space = 0;
 	}
 
@@ -614,7 +593,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	    input_error ();
 	  if (__glibc_unlikely (c != fc))
 	    {
-	      ungetc_not_eof (c, s);
+	      ungetc_not_eof (c, stream);
 	      conv_error ();
 	    }
 	  break;
@@ -1002,7 +981,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		{
 		  if (ISSPACE (c))
 		    {
-		      ungetc_not_eof (c, s);
+		      ungetc_not_eof (c, stream);
 		      break;
 		    }
 
@@ -1192,7 +1171,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 	      {
 		if (ISSPACE (c))
 		  {
-		    ungetc_not_eof (c, s);
+		    ungetc_not_eof (c, stream);
 		    break;
 		  }
 
@@ -1459,12 +1438,12 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		      wint_t extra_wcdigit = __towctrans (L'0' + n, map);
 
 		      /*  Convert it to multibyte representation.  */
-		      mbstate_t state;
-		      memset (&state, '\0', sizeof (state));
+		      mbstate_t dstate;
+		      memset (&dstate, '\0', sizeof (dstate));
 
 		      char extra_mbdigit[MB_LEN_MAX];
 		      size_t mblen
-			= __wcrtomb (extra_mbdigit, extra_wcdigit, &state);
+			= __wcrtomb (extra_mbdigit, extra_wcdigit, &dstate);
 
 		      if (mblen == (size_t) -1)
 			{
@@ -1554,9 +1533,9 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		      /* We are pushing all read characters back.  */
 		      if (cmpp > mbdigits[n])
 			{
-			  ungetc (c, s);
+			  ungetc (c, stream);
 			  while (--cmpp > mbdigits[n])
-			    ungetc_not_eof ((unsigned char) *cmpp, s);
+			    ungetc_not_eof ((unsigned char) *cmpp, stream);
 			  c = (unsigned char) *cmpp;
 			}
 
@@ -1606,9 +1585,10 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 			      /* We are pushing all read characters back.  */
 			      if (cmpp > mbdigits[n])
 				{
-				  ungetc (c, s);
+				  ungetc (c, stream);
 				  while (--cmpp > mbdigits[n])
-				    ungetc_not_eof ((unsigned char) *cmpp, s);
+				    ungetc_not_eof ((unsigned char) *cmpp,
+                                                    stream);
 				  c = (unsigned char) *cmpp;
 				}
 
@@ -1658,9 +1638,9 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 			  if (cmpp > thousands)
 			    {
 			      wpsize -= cmpp - thousands;
-			      ungetc (c, s);
+			      ungetc (c, stream);
 			      while (--cmpp > thousands)
-				ungetc_not_eof ((unsigned char) *cmpp, s);
+				ungetc_not_eof ((unsigned char) *cmpp, stream);
 			      c = (unsigned char) *cmpp;
 			    }
 			  break;
@@ -1724,9 +1704,10 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 			    if (cmpp > thousands)
 			      {
 				wpsize -= cmpp - thousands;
-				ungetc (c, s);
+				ungetc (c, stream);
 				while (--cmpp > thousands)
-				  ungetc_not_eof ((unsigned char) *cmpp, s);
+				  ungetc_not_eof ((unsigned char) *cmpp,
+                                                  stream);
 				c = (unsigned char) *cmpp;
 			      }
 			    break;
@@ -1770,14 +1751,14 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		{
 		  /* The last read character is not part of the number
 		     anymore.  */
-		  ungetc (c, s);
+		  ungetc (c, stream);
 
 		  conv_error ();
 		}
 	    }
 	  else
 	    /* The just read character is not part of the number anymore.  */
-	    ungetc (c, s);
+	    ungetc (c, stream);
 
 	  /* Convert the number.  */
 	  ADDW (L_('\0'));
@@ -1940,7 +1921,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		    }
 		  else
 		    /* Never mind.  */
-		    ungetc (c, s);
+		    ungetc (c, stream);
 		}
 	      goto scan_float;
 	    }
@@ -2005,7 +1986,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		    {
 		      /* The last read character is not part of the number
 			 anymore.  */
-		      ungetc (c, s);
+		      ungetc (c, stream);
 		      break;
 		    }
 #else
@@ -2074,7 +2055,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 			{
 			  /* The last read character is not part of the number
 			     anymore.  */
-			  ungetc (c, s);
+			  ungetc (c, stream);
 			  break;
 			}
 		    }
@@ -2117,11 +2098,11 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 #else
 	      char mbdigits[12][MB_LEN_MAX + 1];
 
-	      mbstate_t state;
-	      memset (&state, '\0', sizeof (state));
+	      mbstate_t dstate;
+	      memset (&dstate, '\0', sizeof (dstate));
 
 	      bool match_so_far = wpsize == 0;
-	      size_t mblen = __wcrtomb (mbdigits[11], wcdigits[11], &state);
+	      size_t mblen = __wcrtomb (mbdigits[11], wcdigits[11], &dstate);
 	      if (mblen != (size_t) -1)
 		{
 		  mbdigits[11][mblen] = '\0';
@@ -2161,8 +2142,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 #ifndef COMPILE_WSCANF
 		      memset (&state, '\0', sizeof (state));
 
-		      size_t mblen = __wcrtomb (mbdigits[n], wcdigits[n],
-						&state);
+                      mblen = __wcrtomb (mbdigits[n], wcdigits[n], &state);
 		      if (mblen == (size_t) -1)
 			{
 			  if (n == 10)
@@ -2274,9 +2254,10 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 			      /* We are pushing all read characters back.  */
 			      if (cmpp > mbdigits[n])
 				{
-				  ungetc (c, s);
+				  ungetc (c, stream);
 				  while (--cmpp > mbdigits[n])
-				    ungetc_not_eof ((unsigned char) *cmpp, s);
+				    ungetc_not_eof ((unsigned char) *cmpp,
+                                                    stream);
 				  c = (unsigned char) *cmpp;
 				}
 #endif
@@ -2286,7 +2267,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 			    {
 			      /* The last read character is not part
 				 of the number anymore.  */
-			      ungetc (c, s);
+			      ungetc (c, stream);
 			      break;
 			    }
 			}
@@ -2448,7 +2429,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 			    {
 			      /* The current character is not in the
 				 scanset.  */
-			      ungetc (c, s);
+			      ungetc (c, stream);
 			      goto out;
 			    }
 
@@ -2460,7 +2441,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 			    break;
 			  if ((wint_t) *runp == c && not_in)
 			    {
-			      ungetc (c, s);
+			      ungetc (c, stream);
 			      goto out;
 			    }
 
@@ -2470,7 +2451,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 
 		  if (runp == twend && !not_in)
 		    {
-		      ungetc (c, s);
+		      ungetc (c, stream);
 		      goto out;
 		    }
 
@@ -2539,7 +2520,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		{
 		  if (wp[c] == not_in)
 		    {
-		      ungetc_not_eof (c, s);
+		      ungetc_not_eof (c, stream);
 		      break;
 		    }
 
@@ -2680,7 +2661,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 			    {
 			      /* The current character is not in the
 				 scanset.  */
-			      ungetc (c, s);
+			      ungetc (c, stream);
 			      goto out2;
 			    }
 
@@ -2692,7 +2673,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 			    break;
 			  if ((wint_t) *runp == c && not_in)
 			    {
-			      ungetc (c, s);
+			      ungetc (c, stream);
 			      goto out2;
 			    }
 
@@ -2702,7 +2683,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 
 		  if (runp == twend && !not_in)
 		    {
-		      ungetc (c, s);
+		      ungetc (c, stream);
 		      goto out2;
 		    }
 
@@ -2767,7 +2748,7 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
 		{
 		  if (wp[c] == not_in)
 		    {
-		      ungetc_not_eof (c, s);
+		      ungetc_not_eof (c, stream);
 		      break;
 		    }
 
@@ -2898,12 +2879,12 @@ _IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
       do
 	c = inchar ();
       while (ISSPACE (c));
-      ungetc (c, s);
+      ungetc (c, stream);
     }
 
  errout:
   /* Unlock stream.  */
-  UNLOCK_STREAM (s);
+  UNLOCK_STREAM (stream);
 
   if (use_malloc)
     free (wp);

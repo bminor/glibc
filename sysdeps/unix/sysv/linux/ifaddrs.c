@@ -734,8 +734,8 @@ getifaddrs_internal (struct ifaddrs **ifap)
 		 address, use the name from the interface entry.  */
 	      if (ifas[ifa_index].ifa.ifa_name == NULL)
 		{
-		  int idx = map_newlink (ifam->ifa_index - 1, ifas,
-					 map_newlink_data, newlink);
+                  idx = map_newlink (ifam->ifa_index - 1, ifas,
+                                     map_newlink_data, newlink);
 		  if (__glibc_unlikely (idx == -1))
 		    goto try_again;
 		  ifas[ifa_index].ifa.ifa_name = ifas[idx].ifa.ifa_name;

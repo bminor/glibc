@@ -30,19 +30,19 @@
 
 #define make_string(string, rest...) \
   ({									      \
-    const char *all[] = { string, ## rest };				      \
-    size_t len, cnt;							      \
-    char *result, *cp;							      \
+    const char *_all[] = { string, ## rest };				      \
+    size_t _len, _cnt;							      \
+    char *_result, *_cp;						      \
 									      \
-    len = 1;								      \
-    for (cnt = 0; cnt < sizeof (all) / sizeof (all[0]); ++cnt)		      \
-      len += strlen (all[cnt]);						      \
+    _len = 1;								      \
+    for (_cnt = 0; _cnt < sizeof (_all) / sizeof (_all[0]); ++_cnt)	      \
+      _len += strlen (_all[_cnt]);					      \
 									      \
-    cp = result = alloca (len);						      \
-    for (cnt = 0; cnt < sizeof (all) / sizeof (all[0]); ++cnt)		      \
-      cp = __stpcpy (cp, all[cnt]);					      \
+    _cp = _result = alloca (_len);					      \
+    for (_cnt = 0; _cnt < sizeof (_all) / sizeof (_all[0]); ++_cnt)	      \
+      _cp = __stpcpy (_cp, _all[_cnt]);					      \
 									      \
-    result;								      \
+    _result;								      \
   })
 
 

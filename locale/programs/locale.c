@@ -138,7 +138,8 @@ struct category
 
 /* We have all categories defined in `categories.def'.  Now construct
    the description and data structure used for all categories.  */
-#define DEFINE_ELEMENT(Item, More...) { Item, ## More },
+#define DEFINE_ELEMENT(item, name, std, type, rest...) \
+  { item, name, std, vt_##type ,##rest },
 #define DEFINE_CATEGORY(category, name, items, postload) \
     static struct cat_item category##_desc[] =				      \
       {									      \
@@ -826,7 +827,7 @@ print_item (struct cat_item *item)
 {
   switch (item->value_type)
     {
-    case string:
+    case vt_string:
       if (show_keyword_name)
 	printf ("%s=\"", item->name);
       fputs (nl_langinfo (item->item_id) ? : "", stdout);
@@ -834,7 +835,7 @@ print_item (struct cat_item *item)
 	putchar ('"');
       putchar ('\n');
       break;
-    case stringarray:
+    case vt_stringarray:
       {
 	const char *val;
 	int cnt;
@@ -859,7 +860,7 @@ print_item (struct cat_item *item)
 	putchar ('\n');
       }
       break;
-    case stringlist:
+    case vt_stringlist:
       {
 	int first = 1;
 	const char *val = nl_langinfo (item->item_id) ? : "";
@@ -878,7 +879,7 @@ print_item (struct cat_item *item)
 	putchar ('\n');
       }
       break;
-    case byte:
+    case vt_byte:
       {
 	const char *val = nl_langinfo (item->item_id);
 
@@ -890,7 +891,7 @@ print_item (struct cat_item *item)
 	putchar ('\n');
       }
       break;
-    case bytearray:
+    case vt_bytearray:
       {
 	const char *val = nl_langinfo (item->item_id);
 	int cnt = val ? strlen (val) : 0;
@@ -908,7 +909,7 @@ print_item (struct cat_item *item)
 	printf ("%d\n", cnt == 0 || *val == '\177' ? -1 : *val);
       }
       break;
-    case word:
+    case vt_word:
       {
 	union { unsigned int word; char *string; } val;
 	val.string = nl_langinfo (item->item_id);
@@ -918,7 +919,7 @@ print_item (struct cat_item *item)
 	printf ("%d\n", val.word);
       }
       break;
-    case wordarray:
+    case vt_wordarray:
       {
 	int first = 1;
 	union { unsigned int *wordarray; char *string; } val;
@@ -935,9 +936,9 @@ print_item (struct cat_item *item)
 	putchar ('\n');
       }
       break;
-    case wstring:
-    case wstringarray:
-    case wstringlist:
+    case vt_wstring:
+    case vt_wstringarray:
+    case vt_wstringlist:
       /* We don't print wide character information since the same
 	 information is available in a multibyte string.  */
     default:

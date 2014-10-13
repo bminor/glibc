@@ -34,13 +34,13 @@
 
 
 int
-SCANDIR (dir, namelist, select, cmp)
+SCANDIR (dir, namelist, selector, cmp)
      const char *dir;
      DIRENT_TYPE ***namelist;
-     int (*select) (const DIRENT_TYPE *);
+     int (*selector) (const DIRENT_TYPE *);
      int (*cmp) (const DIRENT_TYPE **, const DIRENT_TYPE **);
 {
-  return SCANDIRAT (AT_FDCWD, dir, namelist, select, cmp);
+  return SCANDIRAT (AT_FDCWD, dir, namelist, selector, cmp);
 }
 
 #ifdef _DIRENT_MATCHES_DIRENT64

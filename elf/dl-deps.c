@@ -629,11 +629,11 @@ Filters not supported with LD_TRACE_PRELINKING"));
 	  unsigned int k = nlist - 1;
 	  while (k > i)
 	    {
-	      struct link_map **runp = l_initfini[k]->l_initfini;
-	      if (runp != NULL)
+	      struct link_map **map_runp = l_initfini[k]->l_initfini;
+	      if (map_runp != NULL)
 		/* Look through the dependencies of the object.  */
-		while (*runp != NULL)
-		  if (__glibc_unlikely (*runp++ == thisp))
+		while (*map_runp != NULL)
+		  if (__glibc_unlikely (*map_runp++ == thisp))
 		    {
 		      /* Move the current object to the back past the last
 			 object with it as the dependency.  */

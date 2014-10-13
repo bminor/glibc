@@ -477,14 +477,14 @@ __res_vinit(res_state statp, int preinit) {
 
 static void
 internal_function
-res_setoptions(res_state statp, const char *options, const char *source) {
-	const char *cp = options;
+res_setoptions(res_state statp, const char *opts, const char *source) {
+	const char *cp = opts;
 	int i;
 
 #ifdef DEBUG
 	if (statp->options & RES_DEBUG)
 		printf(";; res_setoptions(\"%s\", \"%s\")...\n",
-		       options, source);
+		       opts, source);
 #endif
 	while (*cp) {
 		/* skip leading and inner runs of spaces */
@@ -545,7 +545,6 @@ res_setoptions(res_state statp, const char *options, const char *source) {
 		    { STRnLEN ("use-vc"), 0, RES_USEVC }
 		  };
 #define noptions (sizeof (options) / sizeof (options[0]))
-		  int i;
 		  for (i = 0; i < noptions; ++i)
 		    if (strncmp (cp, options[i].str, options[i].len) == 0)
 		      {

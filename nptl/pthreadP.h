@@ -227,8 +227,8 @@ extern int __pthread_debug attribute_hidden;
 /* Cancellation test.  */
 #define CANCELLATION_P(self) \
   do {									      \
-    int cancelhandling = THREAD_GETMEM (self, cancelhandling);		      \
-    if (CANCEL_ENABLED_AND_CANCELED (cancelhandling))			      \
+    int _cancelhandling = THREAD_GETMEM (self, cancelhandling);		      \
+    if (CANCEL_ENABLED_AND_CANCELED (_cancelhandling))			      \
       {									      \
 	THREAD_SETMEM (self, result, PTHREAD_CANCELED);			      \
 	__do_cancel ();							      \

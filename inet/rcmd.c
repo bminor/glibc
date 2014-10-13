@@ -241,7 +241,6 @@ rcmd: socket: All ports in use\n"));
 		__write(s, "", 1);
 		lport = 0;
 	} else {
-		char num[8];
 		int s2 = rresvport_af(&lport, ai->ai_family), s3;
 		socklen_t len = ai->ai_addrlen;
 
