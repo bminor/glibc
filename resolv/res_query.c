@@ -561,10 +561,6 @@ __libc_res_nquerydomain(res_state statp,
 		       name, domain?domain:"<Nil>", class, type);
 #endif
 	if (domain == NULL) {
-		/*
-		 * Check for trailing '.';
-		 * copy without '.' if present.
-		 */
 		n = strlen(name);
 
 		/* Decrement N prior to checking it against MAXDNAME
@@ -575,11 +571,7 @@ __libc_res_nquerydomain(res_state statp,
 			RES_SET_H_ERRNO(statp, NO_RECOVERY);
 			return (-1);
 		}
-		if (name[n] == '.') {
-			strncpy(nbuf, name, n);
-			nbuf[n] = '\0';
-		} else
-			longname = name;
+		longname = name;
 	} else {
 		n = strlen(name);
 		d = strlen(domain);
