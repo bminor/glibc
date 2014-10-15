@@ -1,9 +1,4 @@
-# DEFAULT			Earliest symbol set
-# -------			-------------------
-DEFAULT				GLIBC_2.20
-
 # Library=version		Earliest symbol set (optional)
 # ---------------		------------------------------
 
-libc=1
-libm=1
+ld=ld-nacl-arm.so.1
