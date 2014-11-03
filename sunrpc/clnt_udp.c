@@ -378,9 +378,8 @@ send_again:
   anyup = 0;
   for (;;)
     {
-      switch (__poll (&fd, 1, milliseconds))
+      switch (__poll_noeintr (&fd, 1, milliseconds))
 	{
-
 	case 0:
 	  if (anyup == 0)
 	    {
@@ -407,8 +406,6 @@ send_again:
 	   * updated.
 	   */
 	case -1:
-	  if (errno == EINTR)
-	    continue;
 	  cu->cu_error.re_errno = errno;
 	  return (cu->cu_error.re_status = RPC_CANTRECV);
 	}

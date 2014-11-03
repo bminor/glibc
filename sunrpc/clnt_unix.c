@@ -551,22 +551,16 @@ readunix (char *ctptr, char *buf, int len)
 
   fd.fd = ct->ct_sock;
   fd.events = POLLIN;
-  while (TRUE)
+  switch (__poll_noeintr (&fd, 1, milliseconds))
     {
-      switch (__poll (&fd, 1, milliseconds))
-	{
-	case 0:
-	  ct->ct_error.re_status = RPC_TIMEDOUT;
-	  return -1;
+    case 0:
+      ct->ct_error.re_status = RPC_TIMEDOUT;
+      return -1;
 
-	case -1:
-	  if (errno == EINTR)
-	    continue;
-	  ct->ct_error.re_status = RPC_CANTRECV;
-	  ct->ct_error.re_errno = errno;
-	  return -1;
-	}
-      break;
+    case -1:
+      ct->ct_error.re_status = RPC_CANTRECV;
+      ct->ct_error.re_errno = errno;
+      return -1;
     }
   switch (len = __msgread (ct->ct_sock, buf, len))
     {

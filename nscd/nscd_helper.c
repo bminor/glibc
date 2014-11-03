@@ -53,29 +53,7 @@ wait_on_socket (int sock, long int usectmo)
   struct pollfd fds[1];
   fds[0].fd = sock;
   fds[0].events = POLLIN | POLLERR | POLLHUP;
-  int n = __poll (fds, 1, usectmo);
-  if (n == -1 && __builtin_expect (errno == EINTR, 0))
-    {
-      /* Handle the case where the poll() call is interrupted by a
-	 signal.  We cannot just use TEMP_FAILURE_RETRY since it might
-	 lead to infinite loops.  */
-      struct timeval now;
-      (void) __gettimeofday (&now, NULL);
-      long int end = now.tv_sec * 1000 + usectmo + (now.tv_usec + 500) / 1000;
-      long int timeout = usectmo;
-      while (1)
-	{
-	  n = __poll (fds, 1, timeout);
-	  if (n != -1 || errno != EINTR)
-	    break;
-
-	  /* Recompute the timeout time.  */
-	  (void) __gettimeofday (&now, NULL);
-	  timeout = end - (now.tv_sec * 1000 + (now.tv_usec + 500) / 1000);
-	}
-    }
-
-  return n;
+  return __poll_noeintr (fds, 1, usectmo);
 }
 
 

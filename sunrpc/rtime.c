@@ -102,9 +102,7 @@ rtime (struct sockaddr_in *addrp, struct rpc_timeval *timep,
       milliseconds = (timeout->tv_sec * 1000) + (timeout->tv_usec / 1000);
       fd.fd = s;
       fd.events = POLLIN;
-      do
-	res = __poll (&fd, 1, milliseconds);
-      while (res < 0 && errno == EINTR);
+      res = __poll_noeintr (&fd, 1, milliseconds);
       if (res <= 0)
 	{
 	  if (res == 0)

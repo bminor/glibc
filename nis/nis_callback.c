@@ -215,8 +215,7 @@ internal_nis_do_callback (struct dir_binding *bptr, netobj *cookie,
           my_pollfd[i].revents = 0;
         }
 
-      switch (i = TEMP_FAILURE_RETRY (__poll (my_pollfd, svc_max_pollfd,
-					      25*1000)))
+      switch (i = __poll_noeintr (my_pollfd, svc_max_pollfd, 25*1000))
         {
 	case -1:
 	  return NIS_CBERROR;

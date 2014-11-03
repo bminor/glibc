@@ -317,26 +317,19 @@ readtcp (char *xprtptr, char *buf, int len)
   int milliseconds = 35 * 1000;
   struct pollfd pollfd;
 
-  do
+  pollfd.fd = sock;
+  pollfd.events = POLLIN;
+  switch (__poll_noeintr (&pollfd, 1, milliseconds))
     {
-      pollfd.fd = sock;
-      pollfd.events = POLLIN;
-      switch (__poll (&pollfd, 1, milliseconds))
-	{
-	case -1:
-	  if (errno == EINTR)
-	    continue;
-	  /*FALLTHROUGH*/
-	case 0:
-	  goto fatal_err;
-	default:
-	  if ((pollfd.revents & POLLERR) || (pollfd.revents & POLLHUP)
-	      || (pollfd.revents & POLLNVAL))
-	    goto fatal_err;
-	  break;
-	}
+    case -1:
+    case 0:
+      goto fatal_err;
+    default:
+      if ((pollfd.revents & POLLERR) || (pollfd.revents & POLLHUP)
+	  || (pollfd.revents & POLLNVAL))
+	goto fatal_err;
+      break;
     }
-  while ((pollfd.revents & POLLIN) == 0);
 
   if ((len = __read (sock, buf, len)) > 0)
     return len;

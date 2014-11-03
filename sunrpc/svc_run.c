@@ -83,11 +83,9 @@ svc_run (void)
 	  my_pollfd[i].revents = 0;
 	}
 
-      switch (i = __poll (my_pollfd, max_pollfd, -1))
+      switch (i = __poll_noeintr (my_pollfd, max_pollfd, -1))
 	{
 	case -1:
-	  if (errno == EINTR)
-	    continue;
 	  perror (_("svc_run: - poll failed"));
 	  break;
 	case 0:
