@@ -41,6 +41,7 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <netinet/in.h>
+#include <socket-cloexec.h>
 #include <bits/libc-lock.h>
 #include "ifreq.h"
 #include "res_hconf.h"
@@ -410,7 +411,7 @@ _res_hconf_reorder_addrs (struct hostent *hp)
       /* Initialize interface table.  */
 
       /* The SIOCGIFNETMASK ioctl will only work on an AF_INET socket.  */
-      sd = __socket (AF_INET, SOCK_DGRAM, 0);
+      sd = __socket_cloexec (AF_INET, SOCK_DGRAM, 0, true);
       if (sd < 0)
 	return;
 

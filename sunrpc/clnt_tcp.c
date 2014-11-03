@@ -52,6 +52,7 @@
 #include <rpc/rpc.h>
 #include <sys/poll.h>
 #include <sys/socket.h>
+#include <socket-cloexec.h>
 #include <rpc/pmap_clnt.h>
 #include <wchar.h>
 
@@ -146,7 +147,7 @@ clnttcp_create (struct sockaddr_in *raddr, u_long prog, u_long vers,
    */
   if (*sockp < 0)
     {
-      *sockp = __socket (AF_INET, SOCK_STREAM, IPPROTO_TCP);
+      *sockp = __socket_cloexec (AF_INET, SOCK_STREAM, IPPROTO_TCP, true);
       (void) bindresvport (*sockp, (struct sockaddr_in *) 0);
       if ((*sockp < 0)
 	  || (__connect (*sockp, (struct sockaddr *) raddr,

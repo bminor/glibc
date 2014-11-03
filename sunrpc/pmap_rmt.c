@@ -42,6 +42,7 @@
 #include <rpc/pmap_rmt.h>
 #include <sys/poll.h>
 #include <sys/socket.h>
+#include <socket-cloexec.h>
 #include <stdio.h>
 #include <errno.h>
 #undef	 _POSIX_SOURCE		/* Ultrix <sys/param.h> needs --roland@gnu */
@@ -238,7 +239,7 @@ clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
    * initialization: create a socket, a broadcast address, and
    * preserialize the arguments into a send buffer.
    */
-  if ((sock = __socket (AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
+  if ((sock = __socket_cloexec (AF_INET, SOCK_DGRAM, IPPROTO_UDP, true)) < 0)
     {
       perror (_("Cannot create socket for broadcast rpc"));
       stat = RPC_CANTSEND;

@@ -26,6 +26,7 @@
 #include <unistd.h>
 #include <stdint.h>
 #include <sys/socket.h>
+#include <socket-cloexec.h>
 
 #include <asm/types.h>
 #include <linux/netlink.h>
@@ -353,7 +354,7 @@ __check_pf (bool *seen_ipv4, bool *seen_ipv6,
     }
   else
     {
-      int fd = __socket (PF_NETLINK, SOCK_RAW, NETLINK_ROUTE);
+      int fd = __socket_cloexec (PF_NETLINK, SOCK_RAW, NETLINK_ROUTE, true);
 
       if (__glibc_likely (fd >= 0))
 	{

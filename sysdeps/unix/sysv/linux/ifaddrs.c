@@ -29,6 +29,7 @@
 #include <string.h>
 #include <sys/ioctl.h>
 #include <sys/socket.h>
+#include <socket-cloexec.h>
 #include <sysdep.h>
 #include <time.h>
 #include <unistd.h>
@@ -251,7 +252,7 @@ __netlink_open (struct netlink_handle *h)
 {
   struct sockaddr_nl nladdr;
 
-  h->fd = __socket (PF_NETLINK, SOCK_RAW, NETLINK_ROUTE);
+  h->fd = __socket_cloexec (PF_NETLINK, SOCK_RAW, NETLINK_ROUTE, true);
   if (h->fd < 0)
     goto out;
 

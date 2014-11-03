@@ -58,6 +58,7 @@
 #include <rpc/rpc.h>
 #include <rpc/svc.h>
 #include <sys/socket.h>
+#include <socket-cloexec.h>
 #include <sys/uio.h>
 #include <sys/poll.h>
 #include <errno.h>
@@ -157,7 +158,7 @@ svcunix_create (int sock, u_int sendsize, u_int recvsize, char *path)
 
   if (sock == RPC_ANYSOCK)
     {
-      if ((sock = __socket (AF_UNIX, SOCK_STREAM, 0)) < 0)
+      if ((sock = __socket_cloexec (AF_UNIX, SOCK_STREAM, 0, true)) < 0)
 	{
 	  perror (_("svc_unix.c - AF_UNIX socket creation problem"));
 	  return (SVCXPRT *) NULL;

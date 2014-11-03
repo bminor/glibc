@@ -28,6 +28,8 @@
 #include <net/if.h>
 #include <net/if_arp.h>
 #include <sys/ioctl.h>
+#include <sys/socket.h>
+#include <socket-cloexec.h>
 
 #include <asm/types.h>
 #include <linux/netlink.h>
@@ -40,7 +42,7 @@ void
 __check_native (uint32_t a1_index, int *a1_native,
 		uint32_t a2_index, int *a2_native)
 {
-  int fd = __socket (PF_NETLINK, SOCK_RAW, NETLINK_ROUTE);
+  int fd = __socket_cloexec (PF_NETLINK, SOCK_RAW, NETLINK_ROUTE, true);
 
   struct sockaddr_nl nladdr;
   memset (&nladdr, '\0', sizeof (nladdr));

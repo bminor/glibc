@@ -45,6 +45,7 @@
 #include <sys/types.h>
 #include <sys/poll.h>
 #include <sys/socket.h>
+#include <socket-cloexec.h>
 #include <sys/time.h>
 #include <rpc/auth_des.h>
 #include <errno.h>
@@ -84,7 +85,7 @@ rtime (struct sockaddr_in *addrp, struct rpc_timeval *timep,
   else
     type = SOCK_DGRAM;
 
-  s = __socket (AF_INET, type, 0);
+  s = __socket_cloexec (AF_INET, type, 0, true);
   if (s < 0)
     return (-1);
 

@@ -38,6 +38,7 @@
 #include <rpc/pmap_prot.h>
 #include <rpc/pmap_clnt.h>
 #include <sys/socket.h>
+#include <socket-cloexec.h>
 
 /*
  * Create a socket that is locally bound to a non-reserve port. For
@@ -48,7 +49,7 @@ int
 internal_function
 __get_socket (struct sockaddr_in *saddr)
 {
-  int so = __socket (AF_INET, SOCK_STREAM, IPPROTO_TCP);
+  int so = __socket_cloexec (AF_INET, SOCK_STREAM, IPPROTO_TCP, true);
   if (so < 0)
     return -1;
 

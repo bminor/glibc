@@ -58,6 +58,7 @@
 #include <libintl.h>
 #include <rpc/rpc.h>
 #include <sys/socket.h>
+#include <socket-cloexec.h>
 #include <sys/poll.h>
 #include <errno.h>
 #include <stdlib.h>
@@ -159,7 +160,8 @@ svctcp_create (int sock, u_int sendsize, u_int recvsize)
 
   if (sock == RPC_ANYSOCK)
     {
-      if ((sock = __socket (AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
+      if ((sock = __socket_cloexec (AF_INET, SOCK_STREAM, IPPROTO_TCP,
+				    true)) < 0)
 	{
 	  perror (_("svc_tcp.c - tcp socket creation problem"));
 	  return (SVCXPRT *) NULL;

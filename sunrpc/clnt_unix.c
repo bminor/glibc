@@ -53,6 +53,7 @@
 #include <sys/uio.h>
 #include <sys/poll.h>
 #include <sys/socket.h>
+#include <socket-cloexec.h>
 #include <rpc/pmap_clnt.h>
 #include <wchar.h>
 
@@ -132,7 +133,7 @@ clntunix_create (struct sockaddr_un *raddr, u_long prog, u_long vers,
    */
   if (*sockp < 0)
     {
-      *sockp = __socket (AF_UNIX, SOCK_STREAM, 0);
+      *sockp = __socket_cloexec (AF_UNIX, SOCK_STREAM, 0, true);
       len = strlen (raddr->sun_path) + sizeof (raddr->sun_family) + 1;
       if (*sockp < 0
 	  || __connect (*sockp, (struct sockaddr *) raddr, len) < 0)

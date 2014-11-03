@@ -19,6 +19,7 @@
 #include <ifaddrs.h>
 #include <net/if.h>
 #include <sys/socket.h>
+#include <socket-cloexec.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -37,7 +38,7 @@ getifaddrs (struct ifaddrs **ifap)
   /* This implementation handles only IPv4 interfaces.
      The various ioctls below will only work on an AF_INET socket.
      Some different mechanism entirely must be used for IPv6.  */
-  int fd = __socket (AF_INET, SOCK_DGRAM, 0);
+  int fd = __socket_cloexec (AF_INET, SOCK_DGRAM, 0, true);
   struct ifreq *ifreqs;
   int nifs;
 

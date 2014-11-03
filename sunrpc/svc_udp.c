@@ -55,6 +55,7 @@
 #include <string.h>
 #include <rpc/rpc.h>
 #include <sys/socket.h>
+#include <socket-cloexec.h>
 #include <errno.h>
 #include <libintl.h>
 
@@ -132,7 +133,8 @@ svcudp_bufcreate (sock, sendsz, recvsz)
 
   if (sock == RPC_ANYSOCK)
     {
-      if ((sock = __socket (AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
+      if ((sock = __socket_cloexec (AF_INET, SOCK_DGRAM, IPPROTO_UDP,
+				    true)) < 0)
 	{
 	  perror (_("svcudp_create: socket creation problem"));
 	  return (SVCXPRT *) NULL;

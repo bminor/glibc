@@ -52,6 +52,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <net/if.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
+#include <socket-cloexec.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/un.h>
@@ -2512,7 +2513,7 @@ getaddrinfo (const char *name, const char *service,
 		  close_retry:
 		    close_not_cancel_no_status (fd);
 		  af = q->ai_family;
-		  fd = __socket (af, SOCK_DGRAM, IPPROTO_IP);
+		  fd = __socket_cloexec (af, SOCK_DGRAM, IPPROTO_IP, true);
 		}
 	      else
 		{

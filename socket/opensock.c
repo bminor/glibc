@@ -17,6 +17,7 @@
 
 #include <stdio.h>
 #include <sys/socket.h>
+#include <socket-cloexec.h>
 #include <bits/libc-lock.h>
 
 /* Return a socket of any type.  The socket can be used in subsequent
@@ -32,7 +33,7 @@ __opensock (void)
 
   if (sock_af != -1)
     {
-      fd = __socket (sock_af, SOCK_DGRAM, 0);
+      fd = __socket_cloexec (sock_af, SOCK_DGRAM, 0, true);
       if (fd != -1)
         return fd;
     }
@@ -40,28 +41,28 @@ __opensock (void)
   __libc_lock_lock (lock);
 
   if (sock_af != -1)
-    fd = __socket (sock_af, SOCK_DGRAM, 0);
+    fd = __socket_cloexec (sock_af, SOCK_DGRAM, 0, true);
 
   if (fd == -1)
     {
 #ifdef AF_INET
-      fd = __socket (sock_af = AF_INET, SOCK_DGRAM, 0);
+      fd = __socket_cloexec (sock_af = AF_INET, SOCK_DGRAM, 0, true);
 #endif
 #ifdef AF_INET6
       if (fd < 0)
-	fd = __socket (sock_af = AF_INET6, SOCK_DGRAM, 0);
+	fd = __socket_cloexec (sock_af = AF_INET6, SOCK_DGRAM, 0, true);
 #endif
 #ifdef AF_IPX
       if (fd < 0)
-	fd = __socket (sock_af = AF_IPX, SOCK_DGRAM, 0);
+	fd = __socket_cloexec (sock_af = AF_IPX, SOCK_DGRAM, 0, true);
 #endif
 #ifdef AF_AX25
       if (fd < 0)
-	fd = __socket (sock_af = AF_AX25, SOCK_DGRAM, 0);
+	fd = __socket_cloexec (sock_af = AF_AX25, SOCK_DGRAM, 0, true);
 #endif
 #ifdef AF_APPLETALK
       if (fd < 0)
-	fd = __socket (sock_af = AF_APPLETALK, SOCK_DGRAM, 0);
+	fd = __socket_cloexec (sock_af = AF_APPLETALK, SOCK_DGRAM, 0, true);
 #endif
     }
 
