@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2014 Free Software Foundation, Inc.
+/* Copyright (C) 2003-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Mackerras <paulus@au.ibm.com>, 2003.
 
@@ -338,5 +338,29 @@ extern int __lll_timedwait_tid (int *, const struct timespec *)
       __res = __lll_timedwait_tid (&(tid), (abstime));			      \
     __res;								      \
   })
+
+/* Transactional lock elision definitions.  */
+extern int __lll_timedlock_elision
+  (int *futex, short *adapt_count, const struct timespec *timeout, int private)
+  attribute_hidden;
+
+#define lll_timedlock_elision(futex, adapt_count, timeout, private)	      \
+  __lll_timedlock_elision(&(futex), &(adapt_count), timeout, private)
+
+extern int __lll_lock_elision (int *futex, short *adapt_count, int private)
+  attribute_hidden;
+
+extern int __lll_unlock_elision(int *lock, int private)
+  attribute_hidden;
+
+extern int __lll_trylock_elision(int *lock, short *adapt_count)
+  attribute_hidden;
+
+#define lll_lock_elision(futex, adapt_count, private) \
+  __lll_lock_elision (&(futex), &(adapt_count), private)
+#define lll_unlock_elision(futex, private) \
+  __lll_unlock_elision (&(futex), private)
+#define lll_trylock_elision(futex, adapt_count) \
+  __lll_trylock_elision (&(futex), &(adapt_count))
 
 #endif	/* lowlevellock.h */
