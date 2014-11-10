@@ -390,3 +390,8 @@ stdlib/secure-getenv.c
   time.
   (bmoses, google-local)
 
+elf/dl-load.c
+include/link.h
+  For b/18243822, fix dlopen_with_offset to not reuse the same link_map
+  entry when called on the same file with different offsets.
+  (ppluzhnikov, google-local)

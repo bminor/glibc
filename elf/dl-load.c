@@ -956,7 +956,8 @@ _dl_map_object_from_fd (const char *name, int fd, off_t offset,
 
   /* Look again to see if the real name matched another already loaded.  */
   for (l = GL(dl_ns)[nsid]._ns_loaded; l; l = l->l_next)
-    if (l->l_removed == 0 && l->l_ino == st.st_ino && l->l_dev == st.st_dev)
+    if (l->l_removed == 0 && l->l_ino == st.st_ino && l->l_dev == st.st_dev
+        && l->l_off == offset)
       {
 	/* The object is already loaded.
 	   Just bump its reference count and return it.  */
@@ -1064,8 +1065,26 @@ _dl_map_object_from_fd (const char *name, int fd, off_t offset,
   else
     assert (r->r_state == RT_ADD);
 
+  if (offset != 0)
+    {
+      /* Google-specific: to help GDB, and for b/18243822, turn realname
+         into "realname/@0x<offset>"  */
+      realname = realloc (realname, strlen(realname) + 16 + 4 /* "/@0x" */);
+      if (realname == NULL)
+	{
+	  errstring = N_("unable to realloc");
+	  goto call_lose_errno;
+	}
+      strcat(realname, "/@0x");
+
+      char tmp[20];
+      tmp[19] = '\0';
+      strcat(realname, _itoa(offset, &tmp[18], 16, 0));
+    }
+
   /* Enter the new object in the list of loaded objects.  */
-  l = _dl_new_object (realname, name, l_type, loader, mode, nsid);
+  l = _dl_new_object (realname, offset ? realname : name, l_type,
+		      loader, mode, nsid);
   if (__builtin_expect (l == NULL, 0))
     {
 #ifdef SHARED
@@ -1597,6 +1616,7 @@ cannot enable executable stack as shared object requires");
   /* Finally the file information.  */
   l->l_dev = st.st_dev;
   l->l_ino = st.st_ino;
+  l->l_off = offset;
 
   /* When we profile the SONAME might be needed for something else but
      loading.  Add it right away.  */

@@ -238,6 +238,12 @@ struct link_map
     dev_t l_dev;
     ino64_t l_ino;
 
+    /* Google-specific extension, intended to be part of public interface
+       to the debugger.  As such, it belongs right after l_prev... except
+       putting it there causes Google libunwind to crash due to its own
+       peeking into glibc internals (see grte_v1_glibc_link_map).  */
+    size_t l_off;  /* File offset to Elf_Ehdr.  */
+
     /* Collected information about own RUNPATH directories.  */
     struct r_search_path_struct l_runpath_dirs;
 
