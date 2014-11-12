@@ -18,6 +18,8 @@
 
 #include <nacl-interfaces.h>
 
+#define NACL_IN_TOOLCHAIN_HEADERS
+
 struct stat;
 
 /* stat.h uses nacl_abi_off_t, but irt.h defines only nacl_irt_off_t.  */
