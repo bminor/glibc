@@ -29,6 +29,13 @@
 # define TLS_INIT_TP(tcbp) \
   ((*__nacl_irt_tls.tls_init) (tcbp) == 0 ? NULL : "tls_init call failed")
 
+/* Our use of dl_sysinfo is rather different from the Linux syscall
+   entry-point case.  We never need a thread-local copy of the value.  */
+# undef SETUP_THREAD_SYSINFO
+# undef CHECK_THREAD_SYSINFO
+# define SETUP_THREAD_SYSINFO(pd) ((void) (pd))
+# define CHECK_THREAD_SYSINFO(pd) ((void) (pd))
+
 #endif /* __ASSEMBLER__ */
 
 #endif  /* tls.h */
