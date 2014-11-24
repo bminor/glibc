@@ -948,6 +948,9 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd, off_t of
   else
     assert (r->r_state == RT_ADD);
 
+#ifdef SHARED
+  // This code could be linked into 'sln', which does not have _itoa.
+  // We only care about this when this is linked into ld-linux.
   if (offset != 0)
     {
       /* Google-specific: to help GDB, and for b/18243822, turn realname
@@ -964,6 +967,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd, off_t of
       tmp[19] = '\0';
       strcat(realname, _itoa(offset, &tmp[18], 16, 0));
     }
+#endif
 
   /* Enter the new object in the list of loaded objects.  */
   l = _dl_new_object (realname, (offset ? realname : name), l_type, loader, mode, nsid);
