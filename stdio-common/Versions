@@ -58,6 +58,9 @@ libc {
     register_printf_modifier; register_printf_type; register_printf_specifier;
   }
   GLIBC_PRIVATE {
+    __gen_tempname;
+    __gen_tempname_try_file;
+
     # global variables
     _itoa_lower_digits;
   }

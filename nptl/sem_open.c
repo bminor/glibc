@@ -318,40 +318,18 @@ sem_open (const char *name, int oflag, ...)
 	      sizeof (sem_t) - sizeof (struct new_sem));
 
       tmpfname = (char *) alloca (mountpoint.dirlen + 6 + 1);
-      char *xxxxxx = __mempcpy (tmpfname, mountpoint.dir, mountpoint.dirlen);
+      strcpy (__mempcpy (tmpfname, mountpoint.dir, mountpoint.dirlen),
+              "XXXXXX");
 
-      int retries = 0;
-#define NRETRIES 50
-      while (1)
-	{
-	  /* Add the suffix for mktemp.  */
-	  strcpy (xxxxxx, "XXXXXX");
-
-	  /* We really want to use mktemp here.  We cannot use mkstemp
-	     since the file must be opened with a specific mode.  The
-	     mode cannot later be set since then we cannot apply the
-	     file create mask.  */
-	  if (__mktemp (tmpfname) == NULL)
-	    return SEM_FAILED;
-
-	  /* Open the file.  Make sure we do not overwrite anything.  */
-	  fd = __libc_open (tmpfname, O_RDWR | O_CREAT | O_EXCL, mode);
-	  if (fd == -1)
-	    {
-	      if (errno == EEXIST)
-		{
-		  if (++retries < NRETRIES)
-		    continue;
-
-		  __set_errno (EAGAIN);
-		}
-
-	      return SEM_FAILED;
-	    }
-
-	  /* We got a file.  */
-	  break;
-	}
+      /* This is just like mkstemp, but with a specific mode.  */
+      fd = __gen_tempname (tmpfname, 0,
+                           &__gen_tempname_try_file, &((int[2]) { 0, mode }));
+      if (fd < 0)
+        {
+          if (errno == EEXIST)
+            __set_errno (EAGAIN);
+          return SEM_FAILED;
+        }
 
       if (TEMP_FAILURE_RETRY (__libc_write (fd, &sem.initsem, sizeof (sem_t)))
 	  == sizeof (sem_t)

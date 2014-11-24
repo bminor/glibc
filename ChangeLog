@@ -1,5 +1,11 @@
 2014-11-24  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/sem_open.c (sem_open): Use __gen_tempname with
+	__gen_tempname_try_file and custom MODE value, rather than
+	using __mktemp and open in a loop.
+	* stdio-common/Versions (GLIBC_PRIVATE): Add __gen_tempname,
+	__gen_tempname_try_file.
+
 	* sysdeps/posix/tempname.c (__gen_tempname): Instead of FLAGS and KIND
 	arguments, take a function pointer TRY_NAME and void *TRY_NAME_ARG.
 	Call that *TRY_NAME to try a candidate name.
