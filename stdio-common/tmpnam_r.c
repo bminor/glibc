@@ -25,9 +25,10 @@ tmpnam_r (char *s)
   if (s == NULL)
     return NULL;
 
-  if (__path_search (s, L_tmpnam, NULL, NULL, 0))
+  if (__glibc_unlikely (__path_search (s, L_tmpnam, NULL, NULL, 0)))
     return NULL;
-  if (__gen_tempname (s, 0, 0, __GT_NOCREATE))
+  if (__glibc_unlikely (__gen_tempname (s, 0,
+                                        __gen_tempname_try_nocreate, NULL)))
     return NULL;
 
   return s;

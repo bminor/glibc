@@ -34,11 +34,11 @@ tmpnam (char *s)
   /* In the following call we use the buffer pointed to by S if
      non-NULL although we don't know the size.  But we limit the size
      to L_tmpnam characters in any case.  */
-  if (__builtin_expect (__path_search (tmpbuf, L_tmpnam, NULL, NULL, 0),
-			0))
+  if (__glibc_unlikely (__path_search (tmpbuf, L_tmpnam, NULL, NULL, 0)))
     return NULL;
 
-  if (__glibc_unlikely (__gen_tempname (tmpbuf, 0, 0, __GT_NOCREATE)))
+  if (__glibc_unlikely (__gen_tempname (tmpbuf, 0,
+                                        __gen_tempname_try_nocreate, NULL)))
     return NULL;
 
   if (s == NULL)

@@ -27,10 +27,10 @@
    they are replaced with a string that makes the filename unique.
    Then open the file and return a fd. */
 int
-mkstemp64 (template)
-     char *template;
+mkstemp64 (char *template)
 {
-  return __gen_tempname (template, 0, O_LARGEFILE, __GT_FILE);
+  return __gen_tempname (template, 0, &__gen_tempname_try_file,
+                         (&((int[2]) { O_LARGEFILE, 0600 })));
 }
 
 #endif

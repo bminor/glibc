@@ -1,3 +1,32 @@
+2014-11-24  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/posix/tempname.c (__gen_tempname): Instead of FLAGS and KIND
+	arguments, take a function pointer TRY_NAME and void *TRY_NAME_ARG.
+	Call that *TRY_NAME to try a candidate name.
+	(__gen_tempname_try_nocreate, __gen_tempname_try_file): New functions.
+	* stdio-common/tempname.c (__gen_tempname): Update signature.
+	* include/stdio.h: Update decl.
+	(__GT_FILE, __GT_NOCREATE, __GT_DIR): Macros removed.
+	(__GT_FILE_DEFAULTS): New macro.
+	* stdio-common/tmpnam.c: Update caller.
+	* stdio-common/tmpnam_r.c: Likewise.
+	* stdio-common/tmpfile.c: Likewise.
+	* misc/mktemp.c (__mktemp): Prototypify.  Update caller.
+	* libio/oldtmpfile.c (__old_tmpfile): Update caller.
+	* misc/mkostemp.c: Prototypify.  Update caller.
+	* misc/mkstemp.c: Likewise.
+	* misc/mkostemps.c: Likewise.
+	* misc/mkstemp64.c: Likewise.
+	* misc/mkdtemp.c (try_mkdir): New function.
+	(mkdtemp): Use it with new __gen_tempname signature.  Prototypify.
+	* misc/mkostemp.c: Prototypify.  Just call mkostemps.
+	* misc/mkstemps.c: Likewise.
+	* misc/mkstemps64.c: Likewise.
+	* misc/mkostemp64.c: Prototypify.
+	Just call mkostemp with modified flags.
+	* misc/mkostemps64.c: Prototypify.
+	Just call mkostemps with modified flags.
+
 2014-11-24  Ryan Cumming  <etaoins@gmail.com>
 
 	[BZ #17608]

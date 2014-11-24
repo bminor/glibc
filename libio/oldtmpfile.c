@@ -37,7 +37,9 @@ __old_tmpfile (void)
 
   if (__path_search (buf, FILENAME_MAX, NULL, "tmpf", 0))
     return NULL;
-  fd = __gen_tempname (buf, 0, 0, __GT_FILE);
+
+  int flags_and_mode[2] = { 0, 0 };
+  fd = __gen_tempname (buf, 0, &__gen_tempname_try_file, __GT_FILE_DEFAULTS);
   if (fd < 0)
     return NULL;
 

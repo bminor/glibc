@@ -44,7 +44,8 @@ tmpfile (void)
 #ifdef FLAGS
   flags = FLAGS;
 #endif
-  fd = __gen_tempname (buf, 0, flags, __GT_FILE);
+  fd = __gen_tempname (buf, 0, &__gen_tempname_try_file,
+                       &((int[2]) { flags, S_IRUSR | S_IWUSR }));
   if (fd < 0)
     return NULL;
 

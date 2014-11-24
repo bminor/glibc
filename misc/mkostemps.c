@@ -19,19 +19,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifndef __GT_FILE
-# define __GT_FILE 0
-#endif
-
 /* Generate a unique temporary file name from TEMPLATE.  The last six
    characters before a suffix of length SUFFIXLEN of TEMPLATE must be
    "XXXXXX"; they are replaced with a string that makes the filename
    unique.  Then open the file and return a fd. */
 int
-mkostemps (template, suffixlen, flags)
-     char *template;
-     int suffixlen;
-     int flags;
+mkostemps (char *template, int suffixlen, int flags)
 {
   if (suffixlen < 0)
     {
@@ -39,7 +32,8 @@ mkostemps (template, suffixlen, flags)
       return -1;
     }
 
-  return __gen_tempname (template, suffixlen, flags, __GT_FILE);
+  return __gen_tempname (template, suffixlen, &__gen_tempname_try_file,
+                         &((int[2]) { flags, S_IRUSR | S_IWUSR }));
 }
 
 #if !defined O_LARGEFILE || O_LARGEFILE == 0

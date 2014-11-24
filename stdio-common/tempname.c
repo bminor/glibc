@@ -36,21 +36,18 @@ __path_search (tmpl, tmpl_len, dir, pfx, try_tmpdir)
 }
 stub_warning (__path_search)
 
-/* Generate a (hopefully) unique temporary filename
-   in DIR (if applicable), using template TMPL.
-   KIND determines what to do with that name.  It may be one of:
-     __GT_FILE:		create a file and return a read-write fd.
-     __GT_BIGFILE:	same, but use open64() (or equivalent).
-     __GT_DIR:		create a directory.
-     __GT_NOCREATE:	just find a name not currently in use.
- */
+/* Generate a temporary file name based on TMPL.  TMPL must match the
+   rules for mk[s]temp (i.e. end in "XXXXXX", possibly with a suffix).
+   The name constructed does not exist at the time of the call to
+   __gen_tempname.  TMPL is overwritten with the result.
 
+   The *TRY_NAME function is called repeatedly on candidate names until
+   it returns >= 0.  If it returns -2, the next candidate name is tried.
+   If it returns -1 (with errno set), __gen_tempname fails immediately.  */
 int
-__gen_tempname (tmpl, suffixlen, flags, kind)
-     char *tmpl;
-     int suffixlen;
-     int flags;
-     int kind;
+__gen_tempname (char *tmpl, int suffixlen,
+                int (*try_name) (const char *name, void *arg),
+                void *try_name_arg)
 {
   __set_errno (ENOSYS);
   return -1;

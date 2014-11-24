@@ -28,18 +28,9 @@
    "XXXXXX"; they are replaced with a string that makes the filename
    unique.  Then open the file and return a fd. */
 int
-mkostemps64 (template, suffixlen, flags)
-     char *template;
-     int suffixlen;
-     int flags;
+mkostemps64 (char *template, int suffixlen, int flags)
 {
-  if (suffixlen < 0)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
-
-  return __gen_tempname (template, suffixlen, flags | O_LARGEFILE, __GT_FILE);
+  return mkostemps (template, sufflixen, flags | O_LARGEFILE);
 }
 
 #endif

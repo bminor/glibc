@@ -82,12 +82,22 @@ extern int __path_search (char *__tmpl, size_t __tmpl_len,
 			  const char *__dir, const char *__pfx,
 			  int __try_tempdir);
 
-extern int __gen_tempname (char *__tmpl, int __suffixlen, int __flags,
-			   int __kind);
-/* The __kind argument to __gen_tempname may be one of: */
-#  define __GT_FILE	0	/* create a file */
-#  define __GT_DIR	1	/* create a directory */
-#  define __GT_NOCREATE	2	/* just find a name not currently in use */
+/* The *TRY_NAME function is called repeatedly on candidate names until
+   it returns >= 0.  If it returns -2, the next candidate name is tried.
+   If it returns -1 (with errno set), __gen_tempname fails immediately.  */
+extern int __gen_tempname (char *__tmpl, int __suffixlen,
+                           int (*__try_name) (const char *__name, void *__arg),
+                           void *__try_name_arg);
+
+/* These are the common TRY_NAME functions.  */
+
+/* ARG is ignored.  */
+extern int __gen_tempname_try_nocreate (const char *__name, void *__arg);
+
+/* ARG is int[2] of {flags, mode}.  */
+extern int __gen_tempname_try_file (const char *__name, void *__arg);
+#define __GT_FILE_DEFAULTS	(&((int[2]) { 0, 0600 }))
+
 
 /* Print out MESSAGE on the error output and abort.  */
 extern void __libc_fatal (const char *__message)

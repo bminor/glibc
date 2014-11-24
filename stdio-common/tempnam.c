@@ -30,10 +30,11 @@ tempnam (const char *dir, const char *pfx)
 {
   char buf[FILENAME_MAX];
 
-  if (__path_search (buf, FILENAME_MAX, dir, pfx, 1))
+  if (__glibc_unlikely (__path_search (buf, sizeof buf, dir, pfx, 1)))
     return NULL;
 
-  if (__gen_tempname (buf, 0, 0, __GT_NOCREATE))
+  if (__glibc_unlikely (__gen_tempname (buf, 0,
+                                        __gen_tempname_try_nocreate, NULL)))
     return NULL;
 
   return __strdup (buf);

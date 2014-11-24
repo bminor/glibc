@@ -180,25 +180,22 @@ static const char letters[] =
    The name constructed does not exist at the time of the call to
    __gen_tempname.  TMPL is overwritten with the result.
 
-   KIND may be one of:
-   __GT_NOCREATE:	simply verify that the name does not exist
-			at the time of the call.
-   __GT_FILE:		create the file using open(O_CREAT|O_EXCL)
-			and return a read-write fd.  The file is mode 0600.
-   __GT_DIR:		create a directory, which will be mode 0700.
+   The *TRY_NAME function is called repeatedly on candidate names until
+   it returns >= 0.  If it returns -2, the next candidate name is tried.
+   If it returns -1 (with errno set), __gen_tempname fails immediately.
 
    We use a clever algorithm to get hard-to-predict names. */
 int
-__gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
+__gen_tempname (char *tmpl, int suffixlen,
+                int (*try_name) (const char *name, void *arg),
+                void *try_name_arg)
 {
   int len;
   char *XXXXXX;
   static uint64_t value;
   uint64_t random_time_bits;
   unsigned int count;
-  int fd = -1;
   int save_errno = errno;
-  struct_stat64 st;
 
   /* A lower bound on the number of temporary files to attempt to
      generate.  The maximum total number of temporary file names that
@@ -255,51 +252,46 @@ __gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
       v /= 62;
       XXXXXX[5] = letters[v % 62];
 
-      switch (kind)
-	{
-	case __GT_FILE:
-	  fd = __open (tmpl,
-		       (flags & ~O_ACCMODE)
-		       | O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR);
-	  break;
-
-	case __GT_DIR:
-	  fd = __mkdir (tmpl, S_IRUSR | S_IWUSR | S_IXUSR);
-	  break;
-
-	case __GT_NOCREATE:
-	  /* This case is backward from the other three.  __gen_tempname
-	     succeeds if __xstat fails because the name does not exist.
-	     Note the continue to bypass the common logic at the bottom
-	     of the loop.  */
-	  if (__lxstat64 (_STAT_VER, tmpl, &st) < 0)
-	    {
-	      if (errno == ENOENT)
-		{
-		  __set_errno (save_errno);
-		  return 0;
-		}
-	      else
-		/* Give up now. */
-		return -1;
-	    }
-	  continue;
-
-	default:
-	  assert (! "invalid KIND in __gen_tempname");
-	  abort ();
-	}
-
-      if (fd >= 0)
-	{
-	  __set_errno (save_errno);
+      int fd = (*try_name) (tmpl, try_name_arg);
+      if (fd != -2)
+        {
+          if (fd >= 0)
+            __set_errno (save_errno);
 	  return fd;
 	}
-      else if (errno != EEXIST)
-	return -1;
     }
 
   /* We got out of the loop because we ran out of combinations to try.  */
   __set_errno (EEXIST);
   return -1;
+}
+
+
+int
+__gen_tempname_try_nocreate (const char *name, void *arg)
+{
+  struct stat64 st;
+  if (__lxstat64 (_STAT_VER, name, &st) == 0)
+    /* This name exists.  Try another.  */
+    return -2;
+  return 0;
+}
+
+
+/* ARG is int[2] of {flags, mode}.  */
+int
+__gen_tempname_try_file (const char *name, void *arg)
+{
+  const int *args = arg;
+  int flags = args[0];
+  mode_t mode = args[1];
+
+  int fd = __open (name,
+                   (flags & ~O_ACCMODE) | O_RDWR | O_CREAT | O_EXCL,
+                   mode);
+  if (fd < 0 && errno == EEXIST)
+    /* Nothing funny went wrong, it just already exists.  Keep looking.  */
+    fd = -2;
+
+  return fd;
 }

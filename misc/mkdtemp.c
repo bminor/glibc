@@ -15,8 +15,21 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/stat.h>
+
+
+static int
+try_mkdir (const char *name, void *arg __attribute__ ((unused)))
+{
+  int result = __mkdir (name, S_IRUSR | S_IWUSR | S_IXUSR);
+  if (result < 0 && errno == EEXIST)
+    /* Nothing funny went wrong, it just already exists.  Keep looking.  */
+    result = -2;
+  return result;
+}
 
 /* Generate a unique temporary directory from TEMPLATE.
    The last six characters of TEMPLATE must be "XXXXXX";
@@ -24,10 +37,9 @@
    The directory is created, mode 700, and its name is returned.
    (This function comes from OpenBSD.) */
 char *
-mkdtemp (template)
-     char *template;
+mkdtemp (char *template)
 {
-  if (__gen_tempname (template, 0, 0, __GT_DIR))
+  if (__gen_tempname (template, 0, &try_mkdir, NULL))
     return NULL;
   else
     return template;
