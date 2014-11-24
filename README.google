@@ -395,3 +395,9 @@ include/link.h
   For b/18243822, fix dlopen_with_offset to not reuse the same link_map
   entry when called on the same file with different offsets.
   (ppluzhnikov, google-local)
+
+dlfcn/dlopen.c
+elf/dl-load.c
+  To fix AARCH64 build, make code added to dl-load.c in previous CL
+  conditional on SHARED. Disable dlopen_with_offet in fully-static links.
+  (ppluzhnikov, google-local)

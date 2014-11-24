@@ -33,13 +33,6 @@ dlopen (const char *file, int mode)
 static_link_warning (dlopen)
 #endif
 
-void *
-dlopen_with_offset (const char *file, off_t offset, int mode)
-{
-  return __dlopen_with_offset (file, offset, mode, RETURN_ADDRESS (0));
-}
-static_link_warning (dlopen_with_offset)
-
 #else
 
 struct dlopen_args
@@ -99,23 +92,13 @@ __dlopen_common (struct dlopen_args *args)
 # endif
 }
 
+# ifdef SHARED
 void *
 __dlopen_with_offset (const char *file, off_t offset, int mode DL_CALLER_DECL)
 {
-# ifdef SHARED
   if (__builtin_expect (_dlfcn_hook != NULL, 0))
     return _dlfcn_hook->dlopen_with_offset (file, offset, mode, DL_CALLER);
-# endif
-
-  struct dlopen_args args;
-  args.file = file;
-  args.offset = offset;
-  args.mode = mode;
-  args.caller = DL_CALLER;
-
-  return __dlopen_common (&args);
 }
-# ifdef SHARED
 strong_alias (__dlopen_with_offset, __google_dlopen_with_offset)
 # endif
 
