@@ -1,3 +1,9 @@
+2014-11-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #17266]
+	* misc/sys/cdefs.h: Define __extern_always_inline for clang
+	4.2 and newer.
+
 2014-11-19  Carlos O'Donell  <carlos@redhat.com>
 	    Florian Weimer  <fweimer@redhat.com>
 	    Joseph Myers  <joseph@codesourcery.com>
