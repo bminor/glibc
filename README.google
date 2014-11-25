@@ -408,3 +408,9 @@ posix/wordexp-test.c
   flag when processing certain arithmetic inputs.
   (backport)
   https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=a39208bd7fb76c1b01c127b4c61f9bfd915bfe7c
+
+sysdeps/x86_64/start.S
+  For b/18331558, use ENTRY and END macros to get a .size directive.
+  (backport)
+  https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=467fec0bb47464ff49e7075194342b028c75c72f
+
