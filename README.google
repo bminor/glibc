@@ -401,3 +401,10 @@ elf/dl-load.c
   To fix AARCH64 build, make code added to dl-load.c in previous CL
   conditional on SHARED. Disable dlopen_with_offet in fully-static links.
   (ppluzhnikov, google-local)
+
+wordexp.c
+posix/wordexp-test.c
+  For b/18473397 and CVE-2014-7817, properly handle the WRDE_NOCMD
+  flag when processing certain arithmetic inputs.
+  (backport)
+  https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=a39208bd7fb76c1b01c127b4c61f9bfd915bfe7c
