@@ -1,3 +1,8 @@
+2014-12-01  Rajalakshmi Srinivasaraghavan <raji@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/strtok.S: New file.
+	* sysdeps/powerpc/powerpc64/strtok_r.S: New file.
+
 2014-11-26  Adhemerval Zanella  <azanella@linux.ibm.com>
 
 	* csu/tst-atomic.c (do_test): Add atomic_exchange_and_add_{acq,rel}
