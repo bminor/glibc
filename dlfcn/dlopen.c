@@ -98,6 +98,14 @@ __dlopen_with_offset (const char *file, off_t offset, int mode DL_CALLER_DECL)
 {
   if (__builtin_expect (_dlfcn_hook != NULL, 0))
     return _dlfcn_hook->dlopen_with_offset (file, offset, mode, DL_CALLER);
+
+  struct dlopen_args args;
+  args.file = file;
+  args.offset = offset;
+  args.mode = mode;
+  args.caller = DL_CALLER;
+
+  return __dlopen_common (&args);
 }
 strong_alias (__dlopen_with_offset, __google_dlopen_with_offset)
 # endif

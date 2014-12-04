@@ -414,3 +414,6 @@ sysdeps/x86_64/start.S
   (backport)
   https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=467fec0bb47464ff49e7075194342b028c75c72f
 
+dlfcn/dlopen.c
+  Re-fix b/18243822 which got broken by cr/80600560 (AARCH64 build fix).
+  (ppluzhnikov, google-local)
