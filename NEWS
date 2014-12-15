@@ -10,7 +10,7 @@ Version 2.19.1
 * The following bugs are resolved with this release:
 
   16545, 16617, 16683, 16689, 16701, 16706, 16707, 16739, 16815, 16619,
-  16740, 17031, 17048, 17137, 17153, 17187, 17213, 17325.
+  16740, 17031, 17048, 17137, 17153, 17187, 17213, 17325, 17630.
 
 * Decoding a crafted input sequence in the character sets IBM933, IBM935,
   IBM937, IBM939, IBM1364 could result in an out-of-bounds array read,
@@ -41,6 +41,9 @@ Version 2.19.1
 
 * CVE-2012-3406 printf-style functions could run into a stack overflow when
   processing format strings with a large number of format specifiers.
+
+* The nss_dns implementation of getnetbyname could run into an infinite loop
+  if the DNS response contained a PTR record of an unexpected format.
 
 Version 2.19
 
