@@ -11,9 +11,12 @@ Version 2.18.1
 
   14143, 14155, 14547, 14699, 15532, 15427, 15522, 15680, 15723, 15734,
   15735, 15797, 15892, 15895, 15909, 15915, 15917, 15996, 16072, 16150,
-  16414, 16430, 16431, 17048, 17137, 17187, 17325.
+  16414, 16430, 16431, 16617, 17048, 17137, 17187, 17325.
 
 * Support for powerpc64le has been added.
+
+* CVE-2012-3406 printf-style functions could run into a stack overflow when
+  processing format strings with a large number of format specifiers.
 
 * CVE-2014-4043 The posix_spawn_file_actions_addopen implementation did not
   copy the path argument.  This allowed programs to cause posix_spawn to
