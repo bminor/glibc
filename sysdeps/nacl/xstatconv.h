@@ -25,19 +25,8 @@ struct stat;
 /* stat.h uses nacl_abi_off_t, but irt.h defines only nacl_irt_off_t.  */
 typedef nacl_irt_off_t nacl_abi_off_t;
 
-/* We use this header to define struct nacl_abi_stat.  But we must avoid
-   its excess declarations, and defining these names away is (marginally)
-   cleaner than #undef'ing __native_client__.  */
-#undef  stat
-#define stat    __avoid_nacl_stat
-#undef  fstat
-#define fstat   __avoid_nacl_fstat
-#undef  lstat
-#define lstat   __avoid_nacl_lstat
-#include <native_client/src/trusted/service_runtime/include/sys/stat.h>
-#undef  stat
-#undef  fstat
-#undef  lstat
+/* We use this header to define struct nacl_abi_stat.  */
+#include <native_client/src/trusted/service_runtime/include/bits/stat.h>
 
 extern int __xstat_conv (int vers, const struct nacl_abi_stat *, void *)
   internal_function attribute_hidden;
