@@ -23,15 +23,19 @@
 #include <time.h>
 
 
+#pragma GCC diagnostic ignored "-Wunused-value" /* XXX */
+
 /* Values for 'private' parameter of locking macros.  Note pthreadP.h
    optimizes for these exact values, though they are not required.  */
 #define LLL_PRIVATE     0
 #define LLL_SHARED      128
 
+#define FUTEX_PRIVATE_FLAG	0       /* XXX */
+
 
 /* Wait while *FUTEXP == VAL for an lll_futex_wake call on FUTEXP.  */
 #define lll_futex_wait(futexp, val, private) \
-  (- __nacl_irt_futex.futex_wait_abs (futexp, val, NULL))
+  (- __nacl_irt_futex.futex_wait_abs ((volatile int *) (futexp), val, NULL))
 
 /* Wait until a lll_futex_wake call on FUTEXP, or TIMEOUT elapses.  */
 #define lll_futex_timed_wait(futexp, val, timeout, private)             \
@@ -54,7 +58,8 @@
         _to = &_ts;                                                     \
       }                                                                 \
     if (_err == 0)                                                      \
-      _err = __nacl_irt_futex.futex_wait_abs (futexp, val, _to);        \
+      _err = __nacl_irt_futex.futex_wait_abs				\
+        ((volatile int *) (futexp), val, _to);                          \
     -_err;                                                              \
   })
 
@@ -62,7 +67,7 @@
 #define lll_futex_wake(futexp, nr, private)                     \
   ({                                                            \
     int _woken;                                                 \
-    - __nacl_irt_futex.futex_wake (futexp, nr, &_woken);	\
+    - __nacl_irt_futex.futex_wake ((volatile int *) (futexp), nr, &_woken); \
   })
 
 /* NaCl does not support the requeue operation.  The only use of this is in
