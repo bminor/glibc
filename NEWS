@@ -18,8 +18,9 @@ Version 2.18.1
 * CVE-2012-3406 printf-style functions could run into a stack overflow when
   processing format strings with a large number of format specifiers.
 
-* The nss_dns implementation of getnetbyname could run into an infinite loop
-  if the DNS response contained a PTR record of an unexpected format.
+* CVE-2014-9402 The nss_dns implementation of getnetbyname could run into an
+  infinite loop if the DNS response contained a PTR record of an unexpected
+  format.
 
 * CVE-2014-4043 The posix_spawn_file_actions_addopen implementation did not
   copy the path argument.  This allowed programs to cause posix_spawn to
