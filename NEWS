@@ -11,6 +11,8 @@ Version 2.20.1
 
   16617, 17266, 17370, 17371, 17625, 17630.
 
+* Optimized strcpy and stpcpy implementations for powerpc64/powerpc64le.
+
 * CVE-2104-7817 The wordexp function could ignore the WRDE_NOCMD flag
   under certain input conditions resulting in the execution of a shell for
   command substitution when the applicaiton did not request it. The
