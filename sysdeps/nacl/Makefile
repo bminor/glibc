@@ -95,3 +95,8 @@ endif
 ifeq ($(subdir),io)
 sysdep_routines += xstatconv
 endif
+
+ifeq ($(subdir),nptl)
+# XXX temporary hack
+libpthread-routines := $(filter-out ptw-%,$(libpthread-routines))
+endif

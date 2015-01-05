@@ -1,4 +1,4 @@
-/* Low-level locking access to futex facilities.  Stub version.
+/* Low-level locking access to futex facilities.  NaCl version.
    Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
