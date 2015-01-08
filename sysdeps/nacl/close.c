@@ -27,4 +27,5 @@ __close (int fd)
   return NACL_CALL (__nacl_irt_fdio.close (fd), 0);
 }
 libc_hidden_def (__close)
+strong_alias (__close, __libc_close)
 weak_alias (__close, close)
