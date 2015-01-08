@@ -15,6 +15,12 @@
 # License along with the GNU C Library; if not, see
 # <http://www.gnu.org/licenses/>.
 
+# The libthread_db code does not compile for NaCl because there is no
+# sys/procfs.h supplying the register layout types.  But since libthread_db
+# will probably never be useful for NaCl, just elide the directory rather
+# than implementing stuff to make it compile (and never get used).
+subdirs := $(filter-out nptl_db,$(subdirs))
+
 # The (required) --with-headers option to configure sets sysheaders to the
 # location of the native_client/.. source directory.  We'll get necessary
 # headers directly from there.
