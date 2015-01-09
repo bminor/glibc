@@ -11,8 +11,8 @@ Version 2.20.1
 
   16617, 17266, 17370, 17371, 17625, 17630.
 
-* Optimized strcpy, stpcpy, strncpy, stpncpy, and strcmp implementations for
-  powerpc64/powerpc64le.
+* Optimized strcpy, stpcpy, strncpy, stpncpy, strcmp, and strncmp
+  implementations for powerpc64/powerpc64le.
   Implemented by Adhemerval Zanella (IBM).
 
 * CVE-2104-7817 The wordexp function could ignore the WRDE_NOCMD flag
