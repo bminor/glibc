@@ -9,7 +9,7 @@ Version 2.20.1
 
 * The following bugs are resolved with this release:
 
-  16617, 17266, 17370, 17371, 17460, 17485, 17555, 17625, 17630.
+  16009, 16617, 17266, 17370, 17371, 17460, 17485, 17555, 17625, 17630.
 
 * CVE-2104-7817 The wordexp function could ignore the WRDE_NOCMD flag
   under certain input conditions resulting in the execution of a shell for
