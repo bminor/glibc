@@ -23,6 +23,10 @@
 #define STRINGIFY(x)    STRINGIFY_1 (x)
 #define STRINGIFY_1(x)  #x
 
+#if IS_IN (rtld) && PASTE (MODULE_, INTERFACE_MODULE) != MODULE_rtld
+# error "This interface is also needed in rtld."
+#endif
+
 #define SECTION(which) \
   section ("nacl_"  STRINGIFY (INTERFACE_CATEGORY) "_interface_" #which)
 
@@ -36,3 +40,4 @@ static const struct nacl_interface PASTE (desc_, INTERFACE_TYPE)
 
 struct INTERFACE_TYPE PASTE (__, INTERFACE_TYPE)
   __attribute__ ((SECTION (tables)));
+PASTE (INTERFACE_MODULE, _hidden_data_def) (PASTE (__, INTERFACE_TYPE))

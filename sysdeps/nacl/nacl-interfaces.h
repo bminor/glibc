@@ -75,8 +75,19 @@ next_nacl_interface (const struct nacl_interface *i)
                          & -align);
 }
 
-#define NACL_MANDATORY_INTERFACE(id, type)	extern struct type __##type;
-#define NACL_OPTIONAL_INTERFACE(id, type)	extern struct type __##type;
+#if IS_IN (libpthread)
+# define libpthread_hidden_proto(name)	hidden_proto (name)
+#else
+# define libpthread_hidden_proto(name)
+#endif
+
+#define DECLARE_INTERFACE(module, type) \
+  extern struct type __##type; module##_hidden_proto (__##type);
+
+#define NACL_MANDATORY_INTERFACE(module, id, type)	\
+  DECLARE_INTERFACE (module, type)
+#define NACL_OPTIONAL_INTERFACE(module, id, type)	\
+  DECLARE_INTERFACE (module, type)
 #include "nacl-interface-list.h"
 #undef	NACL_MANDATORY_INTERFACE
 #undef	NACL_OPTIONAL_INTERFACE

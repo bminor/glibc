@@ -20,6 +20,7 @@
 # will probably never be useful for NaCl, just elide the directory rather
 # than implementing stuff to make it compile (and never get used).
 subdirs := $(filter-out nptl_db,$(subdirs))
+sorted-subdirs := $(filter-out nptl_db,$(sorted-subdirs))
 
 # The (required) --with-headers option to configure sets sysheaders to the
 # location of the native_client/.. source directory.  We'll get necessary
@@ -62,16 +63,24 @@ ifeq ($(subdir),misc)
 # install it.
 sysdep_headers += bits/mman-linux.h
 
-$(objpfx)nacl-interfaces.v.i: $(nacl)/nacl-interfaces.mk.in \
+# XXX temp test
+others += hello hellow
+others-static += hello
+
+endif
+
+
+$(common-objpfx)nacl-interfaces.v.i: $(nacl)/nacl-interfaces.mk.in \
 			      $(nacl)/nacl-interface-list.h
--include $(objpfx)nacl-interfaces.v
+-include $(common-objpfx)nacl-interfaces.v
 
 nacl-all-interfaces = $(nacl-mandatory-interfaces) $(nacl-optional-interfaces)
 nacl-interface-routines = $(nacl-all-interfaces:%=nacl-interface-%)
 
 define nacl-interface-table-command
 (echo '#define INTERFACE_CATEGORY $1'; \
- echo '#define INTERFACE_TYPE $*'; \
+ echo '#define INTERFACE_MODULE $(firstword $(subst -, ,$*))'; \
+ echo '#define INTERFACE_TYPE $(word 2,$(subst -, ,$*))'; \
  echo '#define INTERFACE_STRING $(nacl-$*-string)'; \
  echo '#include "nacl-interface-table.c"' \
 ) > $@T
@@ -81,21 +90,24 @@ endef
 nacl-interface-pattern = $(objpfx)nacl-interface-%.c
 
 $(nacl-mandatory-interfaces:%=$(nacl-interface-pattern)): \
-  $(nacl-interface-pattern): $(nacl)/Makefile $(objpfx)nacl-interfaces.v
+  $(nacl-interface-pattern): $(nacl)/Makefile $(common-objpfx)nacl-interfaces.v
 	$(make-target-directory)
 	$(call nacl-interface-table-command,mandatory)
 $(nacl-optional-interfaces:%=$(nacl-interface-pattern)): \
-  $(nacl-interface-pattern): $(nacl)/Makefile $(objpfx)nacl-interfaces.v
+  $(nacl-interface-pattern): $(nacl)/Makefile $(common-objpfx)nacl-interfaces.v
 	$(make-target-directory)
 	$(call nacl-interface-table-command,optional)
 
+nacl-routines-of = $(filter nacl-interface-$1-%,$(nacl-interface-routines))
+
+ifeq ($(subdir),csu)
 sysdep_routines += nacl_interface_query \
-		   nacl-interfaces $(nacl-interface-routines)
+		   nacl-interfaces $(call nacl-routines-of,libc)
+endif
 
-# XXX temp test
-others += hello hellow
-others-static += hello
-
+ifeq ($(subdir),elf)
+sysdep-dl-routines += $(call nacl-routines-of,rtld)
+sysdep-rtld-routines += nacl-interfaces $(call nacl-routines-of,rtld)
 endif
 
 ifeq ($(subdir),io)
