@@ -28,6 +28,11 @@ CFLAGS-strpbrk-c.c += -msse4
 CFLAGS-strspn-c.c += -msse4
 endif
 
+ifeq (yes,$(config-cflags-avx))
+sysdep_routines += memcpy-rte-avx
+CFLAGS-memcpy-rte-avx.c += -mavx
+endif
+
 ifeq (yes,$(config-cflags-avx2))
 sysdep_routines += memset-avx2
 endif

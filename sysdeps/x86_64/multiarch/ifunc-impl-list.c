@@ -230,6 +230,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   /* Support sysdeps/x86_64/multiarch/memcpy.S.  */
   IFUNC_IMPL (i, name, memcpy,
 	      IFUNC_IMPL_ADD (array, i, memcpy, HAS_AVX,
+			      __memcpy_rte_avx)
+	      IFUNC_IMPL_ADD (array, i, memcpy, HAS_AVX,
 			      __memcpy_avx_unaligned)
 	      IFUNC_IMPL_ADD (array, i, memcpy, HAS_SSSE3,
 			      __memcpy_ssse3_back)

@@ -64,8 +64,8 @@ extern "C" {
  * @return
  *   Pointer to the destination data.
  */
-static inline void *
-rte_memcpy(void *dst, const void *src, size_t n) __attribute__((always_inline));
+void *
+rte_memcpy(void *dst, const void *src, size_t n);
 
 #ifdef RTE_MACHINE_CPUFLAG_AVX2
 
@@ -192,7 +192,7 @@ rte_mov256blocks(uint8_t *dst, const uint8_t *src, size_t n)
 	}
 }
 
-static inline void *
+void *
 rte_memcpy(void *dst, const void *src, size_t n)
 {
 	void *ret = dst;
@@ -488,7 +488,7 @@ rte_mov256(uint8_t *dst, const uint8_t *src)
     }                                                                 \
 })
 
-static inline void *
+void *
 rte_memcpy(void *dst, const void *src, size_t n)
 {
 	__m128i xmm0, xmm1, xmm2, xmm3, xmm4, xmm5, xmm6, xmm7, xmm8;
