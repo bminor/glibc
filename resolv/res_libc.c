@@ -22,12 +22,13 @@
 #include <arpa/nameser.h>
 #include <resolv.h>
 #include <bits/libc-lock.h>
-
+#include <sys/stat.h>
 
 /* The following bit is copied from res_data.c (where it is #ifdef'ed
    out) since res_init() should go into libc.so but the rest of that
    file should not.  */
 
+__libc_lock_define_initialized (static, lock);
 extern unsigned long long int __res_initstamp attribute_hidden;
 /* We have atomic increment operations on 64-bit platforms.  */
 #if __WORDSIZE == 64
@@ -35,7 +36,6 @@ extern unsigned long long int __res_initstamp attribute_hidden;
 # define atomicincunlock(lock) (void) 0
 # define atomicinc(var) catomic_increment (&(var))
 #else
-__libc_lock_define_initialized (static, lock);
 # define atomicinclock(lock) __libc_lock_lock (lock)
 # define atomicincunlock(lock) __libc_lock_unlock (lock)
 # define atomicinc(var) ++var
@@ -94,7 +94,18 @@ res_init(void) {
 int
 __res_maybe_init (res_state resp, int preinit)
 {
+	static time_t last_mtime;
+	struct stat statbuf;
+	int ret;
+
 	if (resp->options & RES_INIT) {
+		ret = stat (_PATH_RESCONF, &statbuf);
+		__libc_lock_lock (lock);
+		if ((ret == 0) && (last_mtime != statbuf.st_mtime)) {
+			last_mtime = statbuf.st_mtime;
+			atomicinc (__res_initstamp);
+		}
+		__libc_lock_unlock (lock);
 		if (__res_initstamp != resp->_u._ext.initstamp) {
 			if (resp->nscount > 0)
 				__res_iclose (resp, true);
