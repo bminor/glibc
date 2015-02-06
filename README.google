@@ -420,3 +420,7 @@ dlfcn/dlopen.c
 
 resolv/res_libc.c
   For b/18473393, port r9102, r11566, and r14311 from eglibc sources.
+
+resolv/nss_dns/dns-resolve.c
+  For b/18752432, backport infinite loop fix in getnetbyname (PR17630)
+  https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=11e3417af6e354f1942c68a271ae51e892b2814d
