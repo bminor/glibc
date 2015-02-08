@@ -306,6 +306,8 @@ ifndef sysincludedir
 sysincludedir = /usr/include
 endif
 
+# Directory to install systemd service files
+inst_systemdsystemunitdir = $(install_root)$(systemd-system-unit-dir)
 
 # Commands to install files.
 ifndef INSTALL_DATA

@@ -27,6 +27,10 @@ routines := nscd_getpw_r nscd_getgr_r nscd_gethst_r nscd_getai \
 	    nscd_initgroups nscd_getserv_r nscd_netgroup
 aux	:= nscd_helper
 install-others = $(inst_sysconfdir)/nscd.conf
+ifneq ($(systemd-system-unit-dir),)
+install-others += $(inst_systemdsystemunitdir)/nscd.service
+install-others += $(inst_libdir)/tmpfiles.d/nscd.conf
+endif
 endif
 
 # To find xmalloc.c
@@ -108,3 +112,11 @@ endif
 
 $(inst_sysconfdir)/nscd.conf: nscd.conf $(+force)
 	$(do-install)
+
+ifneq ($(systemd-system-unit-dir),)
+$(inst_systemdsystemunitdir)/nscd.service: nscd.service $(+force)
+	$(do-install)
+
+$(inst_libdir)/tmpfiles.d/nscd.conf: nscd.tmpfiles $(+force)
+	$(do-install)
+endif

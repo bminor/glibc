@@ -675,6 +675,7 @@ bindnow
 enable_lock_elision
 hardcoded_path_in_tests
 use_default_link
+systemdsystemunitdir
 sysheaders
 with_fp
 READELF
@@ -753,6 +754,7 @@ with_fp
 with_binutils
 with_selinux
 with_headers
+with_systemdsystemunitdir
 with_default_link
 enable_sanity_checks
 enable_shared
@@ -1454,6 +1456,8 @@ Optional Packages:
   --with-selinux          if building with SELinux support
   --with-headers=PATH     location of system headers to use (for example
                           /usr/src/linux/include) [default=compiler default]
+  --with-systemdsystemunitdir=DIR
+                          directory for systemd service files
   --with-default-link     do not use explicit linker scripts
   --with-cpu=CPU          select code for CPU variant
 
@@ -3417,6 +3421,16 @@ if test "${with_headers+set}" = set; then :
   withval=$with_headers; sysheaders=$withval
 else
   sysheaders=''
+fi
+
+
+
+
+# Check whether --with-systemdsystemunitdir was given.
+if test "${with_systemdsystemunitdir+set}" = set; then :
+  withval=$with_systemdsystemunitdir; systemdsystemunitdir=$withval
+else
+  systemdsystemunitdir=''
 fi
 
 

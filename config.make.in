@@ -94,6 +94,7 @@ use-nscd = @use_nscd@
 build-hardcoded-path-in-tests= @hardcoded_path_in_tests@
 build-pt-chown = @build_pt_chown@
 enable-lock-elision = @enable_lock_elision@
+systemd-system-unit-dir = @systemdsystemunitdir@
 
 # Build tools.
 CC = @CC@

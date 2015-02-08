@@ -127,6 +127,13 @@ AC_ARG_WITH([headers],
 	    [sysheaders=''])
 AC_SUBST(sysheaders)
 
+AC_ARG_WITH([systemdsystemunitdir],
+	    AS_HELP_STRING([--with-systemdsystemunitdir=DIR],
+			   [directory for systemd service files]),
+	    [systemdsystemunitdir=$withval],
+	    [systemdsystemunitdir=''])
+AC_SUBST(systemdsystemunitdir)
+
 AC_SUBST(use_default_link)
 AC_ARG_WITH([default-link],
 	    AC_HELP_STRING([--with-default-link],
