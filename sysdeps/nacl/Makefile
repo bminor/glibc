@@ -73,6 +73,8 @@ endif
 $(common-objpfx)nacl-interfaces.v.i: $(nacl)/nacl-interfaces.mk.in \
 			      $(nacl)/nacl-interface-list.h
 -include $(common-objpfx)nacl-interfaces.v
+common-generated += nacl-interfaces.v
+before-compile += $(common-objpfx)nacl-interfaces.v
 
 nacl-all-interfaces = $(nacl-mandatory-interfaces) $(nacl-optional-interfaces)
 nacl-interface-routines = $(nacl-all-interfaces:%=nacl-interface-%)
