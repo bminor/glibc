@@ -60,7 +60,6 @@
 /* Rather than macroizing the code any more, we can just define a few
    mnemonics as macros here.  */
 # define bl			sfi_bl
-# define bxne			sfi_blne /* Only condition now in use.  */
 # define bx			sfi_bx
 # define blx			sfi_blx
 # define bxeq			sfi_bxeq /* Only condition now in use.  */
