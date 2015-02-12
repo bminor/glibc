@@ -1,3 +1,8 @@
+2015-02-12  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/htm.h [TABORT]: Fix encoding for
+	little endian.
+
 2014-01-20  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/nptl/tls.h (tcbhead_t): Add tm_capable field.
