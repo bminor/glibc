@@ -107,10 +107,15 @@ $(addprefix $(objpfx),$(filter-out $(start-installed-name), $(csu-dummies))):\
 	$(COMPILE.c) -o $@ -x c /dev/null
 
 # These headers are used by the startup code.
-$(objpfx)abi-tag.h: $(..)abi-tags
+$(objpfx)abi-tag.h: $(..)abi-tags \
+		    $(foreach add-on,$(add-ons),\
+			      $(firstword $(wildcard \
+				$(addprefix $(firstword $(filter /%,$(add-on)) \
+					    $(..)$(add-on))/,\
+					    abi-tags))))
 	$(make-target-directory)
 	rm -f $@.new
-	sed -e 's/#.*$$//' -e '/^[	]*$$/d' $< | \
+	sed -e 's/#.*$$//' -e '/^[	]*$$/d' $^ | \
 	while read conf tagos tagver; do \
 	  test `expr '$(config-machine)-$(config-vendor)-$(config-os)' \
 		     : "$$conf"` != 0 || continue; \
@@ -124,7 +129,7 @@ $(objpfx)abi-tag.h: $(..)abi-tags
 	    echo "#endif" ) > $@.new; \
 	done
 	if test -r $@.new; then mv -f $@.new $@; \
-	else echo >&2 'This configuration not matched in $<'; exit 1; fi
+	else echo >&2 'This configuration not matched in $^'; exit 1; fi
 
 all-Banner-files = $(wildcard $(addsuffix /Banner,\
 					  $(sort $(subdir-srcdirs) \
