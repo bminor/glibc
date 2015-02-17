@@ -1,3 +1,186 @@
+2015-02-16  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #16618]
+	* stdio-common/tst-sscanf.c (main): Test for buffer overflow.
+	* stdio-common/vfscanf.c (_IO_vfscanf_internal): Compute needed
+	size in bytes. Store needed elements in wpmax. Use needed size
+	in bytes for extend_alloca.
+
+2015-02-16  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #17801]
+	* sysdeps/x86_64/multiarch/init-arch.c (__init_cpu_features):
+	Set the bit_AVX_Fast_Unaligned_Load bit for AVX2.
+	* sysdeps/x86_64/multiarch/init-arch.h (bit_AVX_Fast_Unaligned_Load):
+	New.
+	(index_AVX_Fast_Unaligned_Load): Likewise.
+	(HAS_AVX_FAST_UNALIGNED_LOAD): Likewise.
+	* sysdeps/x86_64/multiarch/memcpy.S (__new_memcpy): Check the
+	bit_AVX_Fast_Unaligned_Load bit instead of the bit_AVX_Usable bit.
+	* sysdeps/x86_64/multiarch/memcpy_chk.S (__memcpy_chk): Likewise.
+	* sysdeps/x86_64/multiarch/mempcpy.S (__mempcpy): Likewise.
+	* sysdeps/x86_64/multiarch/mempcpy_chk.S (__mempcpy_chk): Likewise.
+	* sysdeps/x86_64/multiarch/memmove.c (__libc_memmove): Replace
+	HAS_AVX with HAS_AVX_FAST_UNALIGNED_LOAD.
+	* sysdeps/x86_64/multiarch/memmove_chk.c (__memmove_chk): Likewise.
+
+2015-02-16  Leonhard Holz  <leonhard.holz@web.de>
+
+	[BZ #16009]
+	* string/strxfrm_l.c (STRXFRM): Allocate fixed size cache for
+	weights and rules. Use do_xfrm_cached if data fits in cache,
+	do_xfrm otherwise.  Moved former main loop to...
+	* (do_xfrm_cached): New function.
+	* (do_xfrm): Non-caching version of do_xfrm_cached. Uses
+	find_idx, find_position and stack_push.
+	* (find_idx): New function.
+	* (find_position): Likewise.
+	* localedata/sort-test.sh: Added test run for do_xfrm.
+	* localedata/xfrm-test.c (main): Added command line option
+	-nocache to run the test with strings that are too large for
+	the STRXFRM cache.
+
+2015-02-16  Kostya Serebryany  <konstantin.s.serebryany@gmail.com>
+	    Roland McGrath  <roland@hack.frob.com>
+
+	* locale/weight.h: Add include guard.
+	(findidx): Make static rather than auto; take new parameters
+	TABLE, INDIRECT, and EXTRA instead of getting them as outer locals.
+	* locale/weightwc.h: Likewise.
+	* posix/fnmatch_loop.c
+	(FCT): Change type of EXTRA from int32_t to wint_t.
+	Don't include either header inside the function.
+	Call FINDIDX rather than findidx, and pass new arguments.
+	#undef FINDIDX at the end of the file.
+	* posix/fnmatch.c [_LIBC]: #include <locale/weight.h> and define
+	FINDIDX before including fnmatch_loop.c for the non-wide version.
+	[_LIBC] [HANDLE_MULTIBYTE]: #define findidx to findidxwc around
+	#include <locale/weightwc.h>, and define FINDIDX to findidxwc
+	for the wide version.
+	* posix/regcomp.c [_LIBC]: #include <locale/weight.h>.
+	(build_equiv_class) [_LIBC]: Don't #include it inside the function.
+	Pass new arguments to findidx.
+	* posix/regexec.c [RE_ENABLE_I18N] [_LIBC]: #include <locale/weight.h>.
+	[RE_ENABLE_I18N] (check_node_accept_bytes) [_LIBC]:
+	Don't #include it inside the function.  Pass new arguments to findidx.
+	* posix/regex_internal.h
+	[!NOT_IN_libc] [_LIBC]: #include <locale/weight.h>.
+	(re_string_elem_size_at): Don't #include it inside the function.
+	Pass new arguments to findidx.
+	* string/strcoll_l.c: #include WEIGHT_H at top level.
+	(get_next_seq): Don't #include it inside the function.
+	Pass new arguments to findidx.
+	(get_next_seq_nocache): Likewise.
+	* string/strxfrm_l.c: #include WEIGHT_H at top level.
+	(STRXFRM): Don't #include it inside the function.
+	Pass new arguments to findidx.
+
+2014-12-16  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #17630]
+	* resolv/nss_dns/dns-network.c (getanswer_r): Iterate over alias
+	names.
+
+2014-12-15  Jeff Law  <law@redhat.com>
+
+	[BZ #16617]
+	* stdio-common/vfprintf.c (vfprintf): Allocate large specs array
+	on the heap.  (CVE-2012-3406)
+	* stdio-common/bug23-2.c, stdio-common/bug23-3.c: New file.
+	* stdio-common/bug23-4.c: New file.  Test case by Joseph Myers.
+	* stdio-common/Makefile (tests): Add bug23-2, bug23-3, bug23-4.
+
+2014-11-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #17266]
+	* misc/sys/cdefs.h: Define __extern_always_inline for clang
+	4.2 and newer.
+
+2014-11-19  Carlos O'Donell  <carlos@redhat.com>
+	    Florian Weimer  <fweimer@redhat.com>
+	    Joseph Myers  <joseph@codesourcery.com>
+	    Adam Conrad  <adconrad@0c3.net>
+	    Andreas Schwab  <schwab@suse.de>
+	    Brooks  <bmoses@google.com>
+
+	[BZ #17625]
+	* wordexp-test.c (__dso_handle): Add prototype.
+	(__register_atfork): Likewise.
+	(__app_register_atfork): New function.
+	(registered_forks): New global.
+	(register_fork): New function.
+	(test_case): Add 3 new tests for WRDE_CMDSUB.
+	(main): Call __app_register_atfork.
+	(testit): If WRDE_NOCMD set registered_forks to zero, run test, and if
+	fork count is non-zero fail the test.
+	* posix/wordexp.c (exec_comm): Return WRDE_CMDSUB if WRDE_NOCMD flag
+	is set.
+	(parse_dollars): Remove check for WRDE_NOCMD.
+	(parse_dquote): Likewise.
+
+2014-11-10  Renlin Li  <Renlin.Li@arm.com>
+
+	[BZ #17555]
+	* sysdeps/aarch64/start.S (_start): Delete x29 overwritten assignment.
+
+2014-10-22  Maciej W. Rozycki  <macro@codesourcery.com>
+
+	[BZ #17485]
+	* sysdeps/unix/sysv/linux/mips/vfork.S (__libc_vfork): Define.
+
+2014-10-08  Roland McGrath  <roland@hack.frob.com>
+
+	[BZ #17460]
+	* nscd/nscd.c (more_help): Rewrite list of tables collection
+	using xstrdup and asprintf.
+
+	* nscd/nscd_conf.c: Remove local xstrdup declaration.
+
+2014-10-09  Allan McRae  <allan@archlinux.org>
+
+	* po/fr.po: Update French translation from translation project.
+
+2014-09-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #17370]
+	* libio/wfileops.c (do_ftell_wide): Free OUT on error path.
+
+2014-09-11  Tim Lammens  <tim.lammens@gmail.com>
+
+	[BZ #17370]
+	* libio/wfileops (do_ftell_wide): Free OUT.
+
+2014-09-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
+	    Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #17266]
+	* libio/stdio.h: Check definition of __fortify_function
+	instead of __extern_always_inline to include bits/stdio2.h.
+	* math/bits/math-finite.h [__USE_XOPEN || __USE_ISOC99]: Also
+	check if __extern_always_inline is defined.
+	[__USE_MISC || __USE_XOPEN]: Likewise.
+	[__USE_ISOC99] Likewise.
+	* misc/sys/cdefs.h (__fortify_function): Define only if
+	__extern_always_inline is defined.
+	[!__cplusplus || __GNUC_PREREQ (4,3)]: Revert to defining
+	__extern_always_inline and __extern_inline only for g++-4.3
+	and newer or a compatible gcc.
+
+2014-09-15  Andreas Schwab  <schwab@linux-m68k.org>
+
+	[BZ #17371]
+	* sysdeps/unix/sysv/linux/ifaddrs.c (getifaddrs_internal): Fix
+	last change to handle zero prefix length.
+
+2014-09-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/gnu/netinet/udp.h (UDP_NO_CHECK6_TX): New macro.
+	(UDP_NO_CHECK6_RX): Likewise.
+
+2014-09-13  Allan McRae  <allan@archlinux.org>
+
+	* po/ru.po: Update Russian translation from translation project.
+
 2014-09-07  Allan McRae  <allan@archlinux.org
 
 	* version.h (RELEASE): Set to "stable".
