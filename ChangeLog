@@ -1,3 +1,9 @@
+2015-03-03  Alan Modra  <amodra@gmail.com>
+
+	[BZ #16512]
+	* scripts/localplt.awk: Strip off symbol version.
+	* NEWS: Mention bug fix.
+
 2016-08-26  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #20432]

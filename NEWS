@@ -9,8 +9,8 @@ Version 2.21.1
 
 * The following bugs are resolved with this release:
 
-  17090, 17269, 17620, 17621, 17628, 17905, 17949, 18007, 18032, 18080,
-  18240, 18287, 18508, 18694, 18887, 18985, 19048, 19682.
+  16512, 17090, 17269, 17620, 17621, 17628, 17905, 17949, 18007, 18032,
+  18080, 18240, 18287, 18508, 18694, 18887, 18985, 19048, 19682.
 
 * A stack-based buffer overflow was found in libresolv when invoked from
   libnss_dns, allowing specially crafted DNS responses to seize control
