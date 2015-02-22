@@ -1,3 +1,9 @@
+2016-02-25  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #17269]
+	* libio/wstrops.c (_IO_wstr_overflow): Guard against integer overflow
+	(enlarge_userbuf): Likewise.
+
 2016-02-25  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #19018]
