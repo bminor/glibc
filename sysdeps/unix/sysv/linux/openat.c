@@ -148,8 +148,8 @@ OPENAT_NOT_CANCEL (fd, file, oflag, mode)
 
 
 /* Open FILE with access OFLAG.  Interpret relative paths relative to
-   the directory associated with FD.  If OFLAG includes O_CREAT, a
-   third argument is the file protection.  */
+   the directory associated with FD.  If OFLAG includes O_CREAT or
+   O_TMPFILE, a fourth argument is the file protection.  */
 int
 __OPENAT (fd, file, oflag)
      int fd;
@@ -157,7 +157,7 @@ __OPENAT (fd, file, oflag)
      int oflag;
 {
   mode_t mode = 0;
-  if (oflag & O_CREAT)
+  if (__OPEN_NEEDS_MODE (oflag))
     {
       va_list arg;
       va_start (arg, oflag);

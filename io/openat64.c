@@ -23,7 +23,7 @@
 #include <sys/stat.h>
 
 /* Open FILE with access OFLAG.  Interpret relative paths relative to
-   the directory associated with FD.  If OFLAG includes O_CREAT, a
+   the directory associated with FD.  If O_CREAT or O_TMPFILE is in OFLAG, a
    third argument is the file protection.  */
 int
 __openat64 (fd, file, oflag)
@@ -53,7 +53,7 @@ __openat64 (fd, file, oflag)
 	}
     }
 
-  if (oflag & O_CREAT)
+  if (__OPEN_NEEDS_MODE (oflag))
     {
       va_list arg;
       va_start (arg, oflag);
