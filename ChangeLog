@@ -1,3 +1,10 @@
+2015-12-30  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #18032]
+	* posix/fnmatch_loop.c (FCT): Remove extra increment when skipping
+	over collating symbol inside a bracket expression.  Minor cleanup.
+	* posix/tst-fnmatch3.c (do_test): Add test case.
+
 2015-12-30  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #19018]
