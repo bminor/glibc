@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <stdbool.h>
 #include <unistd.h>
+#include <libc-internal.h>
 
 
 /* This is basically pread, but with iteration after short reads.  */
@@ -45,28 +46,6 @@ read_in_data (int fd, void *data, size_t len, off_t pos)
   return false;
 }
 
-static int
-dyncode_create (void *dst, const void *src, size_t len)
-{
-  /* XXX */
-  return ENOSYS;
-}
-
-/* XXX to be replaced by use of new IRT interface */
-static uintptr_t
-choose_location (uintptr_t hint, size_t total_length,
-                 const struct loadcmd loadcmds[], size_t nloadcmds)
-{
-  assert (loadcmds[0].prot & PROT_EXEC);
-  assert (loadcmds[0].allocend % 0x10000 == 0);
-
-  static uintptr_t next_start = 0x4000000;
-  uintptr_t start = next_start;
-  next_start += loadcmds[0].allocend - loadcmds[0].mapstart;
-
-  return start;
-}
-
 static const char *
 _dl_map_segments (struct link_map *l, int fd,
                   const ElfW(Ehdr) *header, int type,
@@ -87,8 +66,41 @@ _dl_map_segments (struct link_map *l, int fd,
                                   loadcmds[0].mapstart & GLRO(dl_use_load_bias))
            - MAP_BASE_ADDR (l));
 
-      ElfW(Addr) mapstart = choose_location (mappref, maplength,
-                                             loadcmds, nloadcmds);
+      uintptr_t mapstart;
+      if (__glibc_likely (loadcmds[0].prot & PROT_EXEC))
+        {
+          uintptr_t code_size = loadcmds[0].allocend - loadcmds[0].mapstart;
+          uintptr_t data_offset;
+          size_t data_size;
+
+          if (__glibc_likely (nloadcmds > 1))
+            {
+              data_offset = loadcmds[1].mapstart - loadcmds[0].mapstart;
+              data_size = ALIGN_UP (maplength - data_offset,
+                                    GLRO(dl_pagesize));
+            }
+          else
+            {
+              data_offset = 0;
+              data_size = 0;
+            }
+
+          int error = __nacl_irt_code_data_alloc.allocate_code_data
+            (mappref, code_size, data_offset, data_size, &mapstart);
+          if (__glibc_unlikely (error))
+            {
+              errno = error;
+              return DL_MAP_SEGMENTS_ERROR_MAP_SEGMENT;
+            }
+        }
+      else
+        {
+          void *mapped = __mmap ((void *) mappref, maplength,
+                                 PROT_NONE, MAP_ANON, -1, 0);
+          if (__glibc_unlikely (mapped == MAP_FAILED))
+            return DL_MAP_SEGMENTS_ERROR_MAP_SEGMENT;
+          mapstart = (uintptr_t) mapped;
+        }
 
       l->l_addr = mapstart - loadcmds[0].mapstart;
     }
@@ -137,9 +149,8 @@ _dl_map_segments (struct link_map *l, int fd,
                                      MAP_ANON|MAP_PRIVATE, -1, 0);
                 if (__glibc_unlikely (data == MAP_FAILED))
                   return DL_MAP_SEGMENTS_ERROR_MAP_ZERO_FILL;
-                int error
-                  = dyncode_create ((void *) (l->l_addr + c->mapstart),
-                                    data, len);
+                int error = __nacl_irt_dyncode.dyncode_create
+                  ((void *) (l->l_addr + c->mapstart), data, len);
                 __munmap (data, len);
                 if (__glibc_unlikely (error))
                   {
@@ -209,10 +220,6 @@ _dl_map_segments (struct link_map *l, int fd,
           }
 
         _dl_postprocess_loadcmd (l, header, c);
-
-        _dl_debug_printf ("XXX '%s' load[%u] at [%x,%x)\n",
-                          l->l_name, c - loadcmds,
-                          l->l_addr + c->mapstart, l->l_addr + c->allocend);
       }
 
   /* Notify ELF_PREFERRED_ADDRESS that we have to load this one

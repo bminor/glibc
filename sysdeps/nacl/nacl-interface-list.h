@@ -14,7 +14,12 @@ NACL_MANDATORY_INTERFACE (rtld,
                           NACL_IRT_TLS_v0_1, nacl_irt_tls)
 NACL_MANDATORY_INTERFACE (libc,
                           NACL_IRT_RESOURCE_OPEN_v0_1, nacl_irt_resource_open)
+NACL_MANDATORY_INTERFACE (rtld,
+                          NACL_IRT_CODE_DATA_ALLOC_v0_1,
+                          nacl_irt_code_data_alloc)
 NACL_OPTIONAL_INTERFACE (libc,
                          NACL_IRT_CLOCK_v0_1, nacl_irt_clock)
+NACL_OPTIONAL_INTERFACE (rtld,
+                         NACL_IRT_DYNCODE_v0_1, nacl_irt_dyncode)
 NACL_OPTIONAL_INTERFACE (rtld,
                          NACL_IRT_DEV_GETPID_v0_1, nacl_irt_dev_getpid)
