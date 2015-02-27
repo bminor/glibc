@@ -149,6 +149,8 @@ _dl_map_segments (struct link_map *l, int fd,
                                      MAP_ANON|MAP_PRIVATE, -1, 0);
                 if (__glibc_unlikely (data == MAP_FAILED))
                   return DL_MAP_SEGMENTS_ERROR_MAP_ZERO_FILL;
+                if (read_in_data (fd, data, len, c->mapoff))
+                  return DL_MAP_SEGMENTS_ERROR_MAP_SEGMENT;
                 int error = __nacl_irt_dyncode.dyncode_create
                   ((void *) (l->l_addr + c->mapstart), data, len);
                 __munmap (data, len);
