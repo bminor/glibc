@@ -1,4 +1,4 @@
-/* Change a file's permissions given a file descriptor.  NaCl version.
+/* Change the access and modification times of a file.  NaCl version.
    Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,13 +16,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <unistd.h>
+#include <sys/time.h>
 #include <nacl-interfaces.h>
 
-/* Change the permissions of the file referenced by FD to MODE.  */
+/* Change the access time of FILE to TVP[0] and
+   the modification time of FILE to TVP[1].  */
 int
-__fchmod (int fd, mode_t mode)
+__utimes (const char *file, const struct timeval tvp[2])
 {
-  return NACL_CALL (__nacl_irt_dev_fdio.fchmod (fd, mode), 0);
+  return NACL_CALL (__nacl_irt_dev_filename.utimes (file, tvp), 0);
 }
-weak_alias (__fchmod, fchmod)
+weak_alias (__utimes, utimes)

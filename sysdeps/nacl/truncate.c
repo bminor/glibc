@@ -1,4 +1,4 @@
-/* Change a file's permissions given a file descriptor.  NaCl version.
+/* Truncate a file (by name).  NaCl version.
    Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -19,10 +19,14 @@
 #include <unistd.h>
 #include <nacl-interfaces.h>
 
-/* Change the permissions of the file referenced by FD to MODE.  */
+/* Truncate PATH to LENGTH bytes.  */
 int
-__fchmod (int fd, mode_t mode)
+__truncate (const char *path, off_t length)
 {
-  return NACL_CALL (__nacl_irt_dev_fdio.fchmod (fd, mode), 0);
+  return NACL_CALL (__nacl_irt_dev_filename.truncate (path, length), 0);
 }
-weak_alias (__fchmod, fchmod)
+weak_alias (__truncate, truncate)
+
+/* truncate64 is the same as truncate.  */
+strong_alias (__truncate, __truncate64)
+weak_alias (__truncate64, truncate64)

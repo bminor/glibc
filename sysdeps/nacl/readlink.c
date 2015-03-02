@@ -1,4 +1,4 @@
-/* Change a file's permissions given a file descriptor.  NaCl version.
+/* Read the contents of a symbolic link.  NaCl version.
    Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -19,10 +19,14 @@
 #include <unistd.h>
 #include <nacl-interfaces.h>
 
-/* Change the permissions of the file referenced by FD to MODE.  */
-int
-__fchmod (int fd, mode_t mode)
+/* Read the contents of the symbolic link PATH into no more than
+   LEN bytes of BUF.  The contents are not null-terminated.
+   Returns the number of characters read, or -1 for errors.  */
+ssize_t
+__readlink (const char *path, char *buf, size_t len)
 {
-  return NACL_CALL (__nacl_irt_dev_fdio.fchmod (fd, mode), 0);
+  size_t nread;
+  return NACL_CALL (__nacl_irt_dev_filename.readlink (path, buf, len, &nread),
+                    nread);
 }
-weak_alias (__fchmod, fchmod)
+weak_alias (__readlink, readlink)

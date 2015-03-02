@@ -1,4 +1,4 @@
-/* Change a file's permissions given a file descriptor.  NaCl version.
+/* Make a hard link.  NaCl version.
    Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -19,10 +19,9 @@
 #include <unistd.h>
 #include <nacl-interfaces.h>
 
-/* Change the permissions of the file referenced by FD to MODE.  */
+/* Rename the file OLD to NEW.  */
 int
-__fchmod (int fd, mode_t mode)
+rename (const char *old, const char *new)
 {
-  return NACL_CALL (__nacl_irt_dev_fdio.fchmod (fd, mode), 0);
+  return NACL_CALL (__nacl_irt_dev_filename.rename (old, new), 0);
 }
-weak_alias (__fchmod, fchmod)
