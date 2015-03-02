@@ -25,3 +25,5 @@ NACL_OPTIONAL_INTERFACE (rtld,
                          NACL_IRT_DEV_GETPID_v0_1, nacl_irt_dev_getpid)
 NACL_OPTIONAL_INTERFACE (rtld,
                          NACL_IRT_DEV_FILENAME_v0_3, nacl_irt_dev_filename)
+NACL_OPTIONAL_INTERFACE (libc,
+                         NACL_IRT_DEV_FDIO_v0_3, nacl_irt_dev_fdio)
