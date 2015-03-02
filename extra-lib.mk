@@ -27,6 +27,11 @@ extra-objs := $(extra-objs)
 # The modules that go in $(lib).
 all-$(lib)-routines := $($(lib)-routines) $($(lib)-sysdep_routines)
 
+# rpcsvc library is compiled with PIC.
+ifneq (librpcsvc,$(lib))
+archive-objects += $(addprefix $(objpfx),$(patsubst %,%.o,$(all-$(lib)-routines)))
+endif
+
 # Add each flavor of library to the lists of things to build and install.
 install-lib += $(foreach o,$(object-suffixes-$(lib)),$(lib:lib%=$(libtype$o)))
 extra-objs += $(foreach o,$(filter-out .os .oS,$(object-suffixes-$(lib))),\

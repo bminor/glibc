@@ -891,10 +891,14 @@ override CXXFLAGS = $(c++-sysincludes) \
 		    $(filter-out %frame-pointer,$(+cflags)) $(sysdep-CFLAGS) \
 		    $(CFLAGS-$(suffix $@)) $(CFLAGS-$(<F)) $(CFLAGS-$(@F))
 
+# This can be changed by a sysdep makefile
+no-pie-ccflag = -fno-pie
 # If everything is compiled with -fPIC (implicitly) we must tell this by
-# defining the PIC symbol.
+# defining the PIC symbol unless -fno-pie is used to compile archives.
 ifeq (yes,$(build-pic-default))
+ifneq (-fno-pie,$(no-pie-ccflag))
 pic-default = -DPIC
+endif
 endif
 
 # Enable object files for different versions of the library.
@@ -949,6 +953,15 @@ object-suffixes-for-libc += .oS
 CFLAGS-.oS = $(CFLAGS-.o) $(PIC-ccflag)
 CPPFLAGS-.oS = $(CPPFLAGS-.o) -DPIC -DLIBC_NONSHARED=1
 libtype.oS = lib%_nonshared.a
+endif
+
+# When compiler defaults to PIE, we compile archives with -fno-pie and
+# we can't link tests against .o files for archives.  We need to link
+# against .os files for shared libraries.
+ifeq (yes,$(build-pie-default))
+test-object-suffix := .os
+else
+test-object-suffix := .o
 endif
 
 # The assembler can generate debug information too.

@@ -705,6 +705,7 @@ headers := $(headers) $(sysdep_headers)
 # replacing every ".c" in `sources' with a ".o".
 override objects := $(addprefix $(objpfx),$(sources:.c=.o))
 
+archive-objects := $(objects)
 
 # The makefile may define $(extra-libs) with `libfoo libbar'
 # to build libfoo.a et al from the modules listed in $(libfoo-routines).
@@ -716,6 +717,9 @@ extra-libs-left := $(extra-libs)
 include $(patsubst %,$(..)extra-lib.mk,$(extra-libs))
 endif
 
+# Set "archive-objects" before including extra-lib.mk which will append
+# "archive-objects".
+$(archive-objects): CFLAGS += $(no-pie-ccflag)
 
 # The makefile may define $(modules-names) to build additional modules.
 # These are built with $(build-module), except any in $(modules-names-nobuild).

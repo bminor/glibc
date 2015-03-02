@@ -246,4 +246,7 @@ gmp-objs = $(patsubst %,$(common-objpfx)stdlib/%.o,\
 $(objpfx)atest-exp: $(gmp-objs)
 $(objpfx)atest-sincos: $(gmp-objs)
 $(objpfx)atest-exp2: $(gmp-objs)
+LDFLAGS-atest-exp = $(no-pie-ldflag)
+LDFLAGS-atest-sincos = $(no-pie-ldflag)
+LDFLAGS-atest-exp2 = $(no-pie-ldflag)
 $(objpfx)test-fenv-tls: $(shared-thread-library)
