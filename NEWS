@@ -11,7 +11,7 @@ Version 2.19.1
 
   16545, 16617, 16618, 16683, 16689, 16701, 16706, 16707, 16739, 16815,
   16619, 16740, 17031, 17048, 17137, 17153, 17187, 17213, 17325, 17625,
-  17630.
+  17630, 18104.
 
 * CVE-2104-7817 The wordexp function could ignore the WRDE_NOCMD flag
   under certain input conditions resulting in the execution of a shell for
