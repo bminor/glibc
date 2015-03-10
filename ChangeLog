@@ -1,3 +1,8 @@
+2015-03-10  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	* sysdeps/ieee754/dbl-64/Makefile (CFLAGS-e_pow.c): Add
+	$(config-cflags-nofma).
+
 2015-02-05  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #16618]
