@@ -520,6 +520,318 @@
 	POWER8 isnan implementation.
 	* sysdeps/powerpc/powerpc64/power8/fpu/s_isnanf.S: New file.
 
+2014-11-11  Renlin Li  <Renlin.Li@arm.com>
+
+	[BZ #17555]
+	* ports/sysdeps/aarch64/start.S (_start): Delete x29 overwritten
+	assignment.
+
+2014-09-03  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #17325]
+	* iconvdata/ibm1364.c (BODY): Fix check for sentinel.
+	* iconvdata/ibm932.c (BODY): Replace invalid sentinel check with
+	assert.
+	* iconvdata/ibm933.c (BODY): Fix check for sentinel.
+	* iconvdata/ibm935.c (BODY): Likewise.
+	* iconvdata/ibm937.c (BODY): Likewise.
+	* iconvdata/ibm939.c (BODY): Likewise.
+	* iconvdata/ibm943.c (BODY): Replace invalid sentinel check with
+	assert.
+	* iconvdata/Makefile (iconv-test.out): Pass module list to test
+	script.
+	* iconvdata/run-iconv-test.sh: New test loop for checking for
+	decoder crashers.
+
+2014-08-26  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #17187]
+	* iconv/gconv_trans.c (struct known_trans, search_tree, lock,
+	trans_compare, open_translit, __gconv_translit_find):
+	Remove module loading code.
+
+2014-08-01  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* NEWS: Explain the s390 jmp_buf / ucontext_t ABI change
+	reversal.
+
+2014-07-31  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/s390/Makefile: Delete file.
+	* sysdeps/s390/Versions (GLIBC_2.19): Remove __setjmp.
+	* sysdeps/s390/__longjmp.c: Delete file.
+	* sysdeps/s390/bits/setjmp.h (__s390_jmp_buf):
+	Remove fields __flags and __reserved.
+	* sysdeps/s390/longjmp.c: Include setjmp/longjmp.c
+	and add versioning.
+	* sysdeps/s390/rtld-__longjmp.c: Delete file.
+	* sysdeps/s390/rtld-global-offsets.sym: Likewise.
+	* sysdeps/s390/rtld-setjmp.S: Likewise.
+	* sysdeps/s390/s390-32/__longjmp-common.c: Move to ...
+	* sysdeps/s390/s390-32/__longjmp.c: ... here.
+	* sysdeps/s390/s390-32/setjmp-common.S: Move to ...
+	* sysdeps/s390/s390-32/setjmp.S: ... here.
+	Add versioning.
+	(__sigsetjmp): Remove setting __flags field.
+	* sysdeps/s390/s390-64/__longjmp-common.c:Move to ...
+	* sysdeps/s390/s390-64/__longjmp.c: ... here.
+	* sysdeps/s390/s390-64/setjmp-common.S: Move to ...
+	* sysdeps/s390/s390-64/setjmp.S: ... here.
+	Add versioning.
+	(__sigsetjmp): Remove setting __flags field.
+	* sysdeps/s390/setjmp.S: Delete file.
+	* sysdeps/s390/sigjmp.c: Likewise.
+	* sysdeps/s390/v1-longjmp.c: Likewise.
+	* sysdeps/s390/v1-setjmp.h: Likewise.
+	* sysdeps/s390/v1-sigjmp.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/Makefile (sysdep_routines):
+	Remove v1-longjmp_chk.
+	* sysdeps/unix/sysv/linux/s390/getcontext.S: Delete file.
+	* sysdeps/unix/sysv/linux/s390/longjmp_chk.c:
+	Include debug/longjmp_chk.c and add versioning.
+	* nptl/sysdeps/unix/sysv/linux/s390/pt-longjmp.c:
+	Include nptl/sysdeps/pthread/pt-longjmp.c and add versioning.
+	* sysdeps/unix/sysv/linux/s390/rtld-getcontext.S: Delete file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/____longjmp_chk.c:
+	Include __longjmp.c.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getcontext-common.S:
+	Move to ...
+	* sysdeps/unix/sysv/linux/s390/s390-32/getcontext.S: ... here.
+	(__getcontext): Remove setting __flags field.
+	Add versioning.
+	* sysdeps/unix/sysv/linux/s390/s390-32/setcontext.S:
+	DonÂt restore upper high grps.
+	* sysdeps/unix/sysv/linux/s390/s390-32/swapcontext.S:
+	Likewise.
+	(__swapcontext): Remove setting uc_flags field.
+	* sysdeps/unix/sysv/linux/s390/s390-32/ucontext_i.sym:
+	Delete file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/____longjmp_chk.c:
+	Include __longjmp.c.
+	* sysdeps/unix/sysv/linux/s390/s390-64/getcontext-common.S:
+	Move to ...
+	* sysdeps/unix/sysv/linux/s390/s390-64/getcontext.S: ... here.
+	(__getcontext): Remove setting __flags field.
+	Add versioning.
+	* sysdeps/unix/sysv/linux/s390/s390-64/swapcontext.S:
+	(__swapcontext): Remove setting uc_flags field.
+	* unix/sysv/linux/s390/s390-64/ucontext_i.sym: Delete file.
+	* sysdeps/unix/sysv/linux/s390/sys/ucontext.h (ucontext):
+	Remove fields uc_high_gprs and __reserved.
+	* sysdeps/unix/sysv/linux/s390/ucontext_i.sym:
+	New file with reverted content.
+	* sysdeps/unix/sysv/linux/s390/v1-longjmp_chk.c: Delete file.
+	* sysdeps/unix/sysv/linux/s390/s390-32/nptl/libc.abilist:
+	Regenerated.
+	* sysdeps/unix/sysv/linux/s390/s390-64/nptl/libc.abilist:
+	Regenerated.
+
+2014-07-02  Florian Weimer  <fweimer@redhat.com>
+
+	* manual/locale.texi (Locale Names): New section documenting
+	locale name syntax.  Adjust menu and node chaining accordingly.
+	(Choosing Locale): Reference Locale Names, Locale Categories.
+	Mention setting LC_ALL=C.  Reflect that name syntax is now
+	documented.
+	(Locale Categories): New section title.  Reference Locale Names.
+	LC_ALL is an environment variable, but not a category.
+	(Setting the Locale): Remove "locale -a" invocation and LOCPATH
+	description, now in Locale Name.  Reference that section.  Locale
+	name syntax is now documented.
+
+2014-07-02  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #17137]
+	* locale/findlocale.c (name_present, valid_locale_name): New
+	functions.
+	(_nl_find_locale): Use the loc_name variable to store name
+	candidates.  Call name_present and valid_locale_name to check and
+	validate locale names.  Return an error if the locale is invalid.
+
+2014-07-02  Florian Weimer  <fweimer@redhat.com>
+
+	* locale/setlocale.c (setlocale): Use strdup for allocating
+	composite name copy.
+
+2014-05-26  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #16878]
+	* nscd/netgroupcache.c (addgetnetgrentX): Look for
+	NSS_STATUS_TRYAGAIN to indicate insufficient buffer space.
+	* nscd/nss_files/files-netgrp.c (_nss_netgroup_parseline): Use
+	NSS_STATUS_TRYAGAIN to indicate insufficient buffer space.
+
+2014-03-12  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #16695]
+	* nscd/netgroupcache.c (addgetnetgrentX): Factor in space for
+	key in the buffer.
+
+2014-06-20  Maciej W. Rozycki  <macro@codesourcery.com>
+
+	[BZ #16046]
+	* elf/tst-dl-iter-static.c: New file.
+	* elf/Makefile (tests-static): Add tst-dl-iter-static.
+
+2014-06-20  Andreas Schwab  <schwab@linux-m68k.org>
+
+	[BZ #17069]
+	* posix/regcomp.c (parse_reg_exp): Deallocate partially
+	constructed tree before returning error.
+	* posix/bug-regexp36.c: Expand test case.
+
+2014-06-19  Andreas Schwab  <schwab@linux-m68k.org>
+
+	[BZ #17069]
+	* posix/regcomp.c (parse_expression): Deallocate partially
+	constructed tree before returning error.
+	* posix/Makefile.c (tests): Add bug-regex36.
+	(generated): Add bug-regex36.mtrace.
+	(tests-special): Add $(objpfx)bug-regex36-mem.out
+	(bug-regex36-ENV): New variable.
+	($(objpfx)bug-regex36-mem.out): New rule.
+	* posix/bug-regex36.c: New file.
+
+2014-06-03  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #15946]
+	* resolv/res_send.c (send_dg): Reload file descriptor after
+	calling reopen.
+
+2014-02-18  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #16574]
+	* resolv/res_send.c (send_vc): Add parameter ansp2_malloced.
+	Store non-zero if the second buffer was newly allocated.
+	(send_dg): Likewise.
+	(__libc_res_nsend): Add parameter ansp2_malloced and pass it down
+	to send_vc and send_dg.
+	(res_nsend): Pass NULL for ansp2_malloced.
+	* resolv/res_query.c (__libc_res_nquery): Add parameter
+	answerp2_malloced and pass it down to __libc_res_nsend.
+	(res_nquery): Pass additional NULL to __libc_res_nquery.
+	(__libc_res_nsearch): Add parameter answerp2_malloced and pass it
+	down to __libc_res_nquery and __libc_res_nquerydomain.  Deallocate
+	second answer buffer if answerp2_malloced was set.
+	(res_nsearch): Pass additional NULL to __libc_res_nsearch.
+	(__libc_res_nquerydomain): Add parameter
+	answerp2_malloced and pass it down to __libc_res_nquery.
+	(res_nquerydomain): Pass additional NULL to
+	__libc_res_nquerydomain.
+	* resolv/nss_dns/dns-network.c (_nss_dns_getnetbyname_r): Pass
+	additional NULL to __libc_res_nsend and __libc_res_nquery.
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyname3_r): Pass
+	additional NULL to __libc_res_nsearch.
+	(_nss_dns_gethostbyname4_r): Revert last change.  Use new
+	parameter of __libc_res_nsearch to check for separately allocated
+	second buffer.
+	(_nss_dns_gethostbyaddr2_r): Pass additional NULL to
+	__libc_res_nquery.
+	* resolv/nss_dns/dns-canon.c (_nss_dns_getcanonname_r): Pass
+	additional NULL to __libc_res_nquery.
+	* resolv/gethnamaddr.c (gethostbyname2): Pass additional NULL to
+	__libc_res_nsearch.
+	(gethostbyaddr): Pass additional NULL to __libc_res_nquery.
+	* include/resolv.h: Update prototypes of __libc_res_nquery,
+	__libc_res_nsearch, __libc_res_nsend.
+
+2014-02-13  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #16574]
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyname4_r): Free the
+	second answer buffer if it was separately allocated.
+
+2014-05-12  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #16932]
+	* nis/nss_nis/nis-hosts.c (internal_gethostbyname2_r)
+	(_nss_nis_gethostbyname4_r): Return error if item length is larger
+	than maximum RPC packet size.
+	* nis/nss_nis/nis-initgroups.c (initgroups_netid): Likewise.
+	* nis/nss_nis/nis-network.c (_nss_nis_getnetbyname_r): Likewise.
+	* nis/nss_nis/nis-service.c (_nss_nis_getservbyname_r)
+	(_nss_nis_getservbyport_r): Likewise.
+
+2014-06-21  Allan McRae  <allan@archlinux.org>
+
+	* NEWS: Mention CVE-2014-4043.
+
+2014-06-12  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* posix/spawn_faction_addopen.c: Include string.h.
+
+2014-06-11  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #17048]
+	* posix/spawn_int.h (struct __spawn_action): Make the path string
+	non-const to support deallocation.
+	* posix/spawn_faction_addopen.c
+	(posix_spawn_file_actions_addopen): Make a copy of the pathname.
+	* posix/spawn_faction_destroy.c
+	(posix_spawn_file_actions_destroy): Adjust comment.  Deallocate
+	path in all spawn_do_open actions.
+	* posix/tst-spawn.c (do_test): Exercise the copy operation in
+	posix_spawn_file_actions_addopen.
+
+2014-06-03  Guo Yixuan  <culu.gyx@gmail.com>
+
+	[BZ #16882]
+	* nptl/sysdeps/sparc/sparc32/pthread_spin_lock.S
+	(pthread_spin_lock): Branch out of spin loop to proper location.
+	* nptl/sysdeps/sparc/sparc64/pthread_spin_lock.S
+	(pthread_spin_lock): Likewise.
+
+	* nptl/tst-spin4.c: New test.
+	* nptl/Makefile (tests): Add tst-spin4.
+
+2014-05-17  Jose E. Marchesi  <jose.marchesi@oracle.com>
+
+	[BZ #16958]
+	* sysdeps/sparc/sparc64/multiarch/memcpy-niagara2.S: Add missing
+	membar to avoid block loads/stores to overlap previous stores.
+
+2014-05-13  Sami Kerola  <kerolasa@iki.fi>
+
+	* timezone/Makefile ($(objpfx)tzselect): Use zonedir instead
+	current working directory
+
+2014-05-16  Allan McRae  <allan@archlinux.org>
+
+	* po/sv.po: Update Swedish translation from translation project.
+
+2014-05-16  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #16943]
+	* sysdeps/unix/sysv/linux/sparc/bits/resource.h: Declare prlimit
+	and prlimit64.
+
+2014-05-06  Aurelien Jarno  <aurelien@aurel32.net>
+
+        [BZ# 16916]
+        * sysdeps/unix/sysv/linux/sparc/bits/eventfd.h (EFD_SEMAPHORE):
+        Define.
+
+2014-05-04  Allan McRae  <allan@archlinux.org>
+
+	* po/eo.po: Update Esperanto translation from translation project.
+
+2014-05-01  David S. Miller  <davem@davemloft.net>
+
+	[BZ #16885]
+	* sysdeps/sparc/sparc64/strcmp.S: Fix end comparison handling when
+	multiple zero bytes exist at the end of a string.
+	Reported by Aurelien Jarno <aurelien@aurel32.net>
+
+	* string/test-strcmp.c (check): Add explicit test for situations where
+	there are multiple zero bytes after the first.
+
+2014-02-27  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #16623]
+	* sysdeps/ieee754/dbl-64/s_sin.c (__sin): Preserve sign of A
+	and DA.
+	(__cos): Likewise.
+
 2014-02-12  Dylan Alex Simon  <dylan@dylex.net>
 
 	[BZ #16545]

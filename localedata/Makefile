@@ -276,7 +276,7 @@ tst-xlocale2-ENV = $(TEST_MBWC_ENV)
 tst-strfmon1-ENV = $(TEST_MBWC_ENV)
 tst-strptime-ENV = $(TEST_MBWC_ENV)
 
-tst-setlocale-ENV = LOCPATH=$(common-objpfx)localedata LC_ALL=ja_JP.EUC-JP
+tst-setlocale-ENV = LOCPATH=$(common-objpfx)localedata LC_ALL=ja_JP.EUC-
 
 bug-iconv-trans-ENV = LOCPATH=$(common-objpfx)localedata
 
@@ -292,6 +292,7 @@ bug-setlocale1-ARGS = -- $(host-test-program-cmd)
 bug-setlocale1-static-ENV = $(bug-setlocale1-ENV)
 bug-setlocale1-static-ARGS = $(bug-setlocale1-ARGS)
 tst-setlocale2-ENV = LOCPATH=$(common-objpfx)localedata
+tst-setlocale3-ENV = LOCPATH=$(common-objpfx)localedata
 
 $(objdir)/iconvdata/gconv-modules:
 	$(MAKE) -C ../iconvdata subdir=iconvdata $@

@@ -1,5 +1,5 @@
-/* Extendible version of setjmp for System z
-   Copyright (C) 2013 Free Software Foundation, Inc.
+/* Test regcomp not leaking memory on parse errors
+   Copyright (C) 2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,5 +16,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* Build a non-versioned object for rtld-*.  */
-# include "setjmp-common.S"
+#include <mcheck.h>
+#include <regex.h>
+
+int
+main (int argc, char **argv)
+{
+  regex_t r;
+  mtrace ();
+  regcomp (&r, "[a]\\|[a]\\{-2,}", 0);
+  regfree (&r);
+}

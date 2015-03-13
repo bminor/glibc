@@ -9,9 +9,10 @@ Version 2.19.1
 
 * The following bugs are resolved with this release:
 
-  16545, 16617, 16618, 16683, 16689, 16701, 16706, 16707, 16739, 16815,
-  16619, 16740, 17031, 17048, 17137, 17153, 17187, 17213, 17325, 17625,
-  17630, 18104.
+  15946, 16545, 16574, 16617, 16618, 16683, 16689, 16695, 16701, 16706,
+  16707, 16739, 16815, 16619, 16740, 16878, 16882, 16885, 16916, 16932,
+  16943, 16958, 17031, 17048, 17069, 17137, 17153, 17187, 17213, 17263,
+  17325, 17555, 17625, 17630, 18104.
 
 * CVE-2104-7817 The wordexp function could ignore the WRDE_NOCMD flag
   under certain input conditions resulting in the execution of a shell for
@@ -29,7 +30,18 @@ Version 2.19.1
   over a decade, and the removal is prompted by security defects.  The
   normal gconv conversion modules are still supported.  Transliteration
   with //TRANSLIT is still possible, and the //IGNORE specifier
-  continues to be  supported. (CVE-2014-5519)
+  continues to be  supported. (CVE-2014-5119)
+
+* Reverted change of ABI data structures for s390 and s390x:
+  On s390 and s390x the size of struct ucontext and jmp_buf was increased in
+  2.19. This change is reverted in 2.19.1 and 2.20. The introduced 2.19 symbol
+  versions of getcontext, setjmp, _setjmp, __sigsetjmp, longjmp, _longjmp,
+  siglongjmp are preserved pointing straight to the same implementation as the
+  old ones. Given that, new callers will simply provide a too-big buffer to
+  these functions. Any applications/libraries out there that embed jmp_buf or
+  ucontext_t in an ABI-relevant data structure that have already been rebuilt
+  against 2.19 headers will have to rebuilt again. This is necessary in any
+  case to revert the breakage in their ABI caused by the glibc change.
 
 * Locale names, including those obtained from environment variables (LANG
   and the LC_* variables), are more tightly checked for proper syntax.

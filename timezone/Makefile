@@ -114,7 +114,7 @@ $(testdata)/Asia/Tokyo: asia $(zic-deps)
 
 $(objpfx)tzselect: tzselect.ksh $(common-objpfx)config.make
 	sed -e 's|/bin/bash|$(KSH)|g' \
-	    -e '/TZDIR=/s|\$$(pwd)|$(zonedir)|' \
+	    -e 's|TZDIR=[^}]*|TZDIR=$(zonedir)|' \
 	    -e '/TZVERSION=/s|see_Makefile|"$(version)"|' \
 	    -e '/PKGVERSION=/s|=.*|="$(PKGVERSION)"|' \
 	    -e '/REPORT_BUGS_TO=/s|=.*|="$(REPORT_BUGS_TO)"|' \
