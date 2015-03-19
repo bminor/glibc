@@ -22,36 +22,44 @@
 #include <link.h>
 #include <sys/mman.h>
 
-/* There is always a big gap between the executable segment and the
-   data segments.  Other code segments and data pages lie in there.
-   So we must unmap each segment individually.  */
+/* There is always a big gap between the executable segment and the data
+   segments.  Other code segments and data pages lie in there.  So we must
+   unmap each segment individually (except for a codeless module).  */
 
 static void __always_inline
 _dl_unmap_segments (struct link_map *l)
 {
-  /* Normally l_phdr points into the RODATA segment, which we will unmap in
-     one iteration of the loop.  So we cannot use it directly throughout.  */
-
-  struct { void *start; size_t size; } segments[l->l_phnum], *seg = segments;
-
-  for (const ElfW(Phdr) *ph = l->l_phdr; ph < &l->l_phdr[l->l_phnum]; ++ph)
-    if (ph->p_type == PT_LOAD)
-      {
-        seg->start = (void *) (l->l_addr + ph->p_vaddr);
-        seg->size = l->l_map_end - l->l_map_start;
-        if (seg > segments && seg[-1].start + seg[-1].size == seg->start)
-          /* Coalesce two adjacent segments into one munmap call.  */
-          seg[-1].size += seg->size;
-        else
-          ++seg;
-      }
-
-  do
+  if (l->l_contiguous)
+    /* Simple case.  */
+    __munmap ((void *) l->l_map_start, l->l_map_end - l->l_map_start);
+  else
     {
-      --seg;
-      __munmap (seg->start, seg->size);
+      /* Normally l_phdr points into the RODATA segment, which we will
+         unmap in one iteration of the loop.  So we cannot use it directly
+         throughout.  */
+
+      struct { ElfW(Addr) start, end; } segments[l->l_phnum], *seg = segments;
+
+      for (const ElfW(Phdr) *ph = l->l_phdr; ph < &l->l_phdr[l->l_phnum]; ++ph)
+        if (ph->p_type == PT_LOAD)
+          {
+            seg->start = (l->l_addr + ph->p_vaddr) & -GLRO(dl_pagesize);
+            seg->end = (l->l_addr + ph->p_vaddr + ph->p_memsz
+                        + GLRO(dl_pagesize) - 1) & -GLRO(dl_pagesize);
+            if (seg > segments && seg[-1].end == seg->start)
+              /* Coalesce two adjacent segments into one munmap call.  */
+              seg[-1].end = seg->end;
+            else
+              ++seg;
+          }
+
+      do
+        {
+          --seg;
+          __munmap ((void *) seg->start, seg->end - seg->start);
+        }
+      while (seg > segments);
     }
-  while (seg > segments);
 }
 
 #endif  /* dl-unmap-segments.h */
