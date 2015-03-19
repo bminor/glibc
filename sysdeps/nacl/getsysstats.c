@@ -29,7 +29,7 @@ __get_nprocs_conf (void)
 {
   int nprocs;
   if (__nacl_irt_basic.sysconf (NACL_ABI__SC_NPROCESSORS_ONLN, &nprocs) != 0)
-    /* On failure (which should be impossible). just report one processor.  */
+    /* On failure (which should be impossible), just report one processor.  */
     nprocs = 1;
   return nprocs;
 }
