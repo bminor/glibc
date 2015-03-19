@@ -1,5 +1,5 @@
-# XXX temporary until the compiler build can be fixed
-sysdep-CPPFLAGS += -D__ARM_NEON__=1
+# We don't really support TLSDESC, even though the compiler thinks it does.
+have-arm-tls-desc = no
 
 ifeq ($(subdir),csu)
 sysdep_routines += aeabi_read_tp
