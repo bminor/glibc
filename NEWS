@@ -21,10 +21,9 @@ Version 2.19.1
   potentially arbitrary code execution, using crafted, but syntactically
   valid DNS responses.  (CVE-2015-1781)
 
-* CVE-2014-8121 The NSS files backend would reset the file pointer used by
-  the get*ent functions if any of the query functions for the same database
-  are used during the iteration, causing a denial-of-service condition in
-  some applications.
+* CVE-2014-8121 The NSS backends shared internal state between the getXXent
+  and getXXbyYY NSS calls for the same database, causing a denial-of-service
+  condition in some applications.
 
 * CVE-2104-7817 The wordexp function could ignore the WRDE_NOCMD flag
   under certain input conditions resulting in the execution of a shell for
