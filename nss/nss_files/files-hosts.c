@@ -105,22 +105,18 @@ _nss_files_get##name##_r (proto,					      \
 			  struct STRUCTURE *result, char *buffer,	      \
 			  size_t buflen, int *errnop H_ERRNO_PROTO)	      \
 {									      \
-  uintptr_t pad = -(uintptr_t) buffer % __alignof__ (struct hostent_data);    \
+  FILE *stream = NULL;							      \
+  uintptr_t pad = -(uintptr_t) buffer % __alignof__ (struct hostent_data); \
   buffer += pad;							      \
   buflen = buflen > pad ? buflen - pad : 0;				      \
 									      \
-  __libc_lock_lock (lock);						      \
-									      \
-  /* Reset file pointer to beginning or open file.  */			      \
-  enum nss_status status = internal_setent (keep_stream);		      \
+  /* Open file.  */							      \
+  enum nss_status status = internal_setent (&stream);			      \
 									      \
   if (status == NSS_STATUS_SUCCESS)					      \
     {									      \
-      /* Tell getent function that we have repositioned the file pointer.  */ \
-      last_use = getby;							      \
-									      \
-      while ((status = internal_getent (result, buffer, buflen, errnop	      \
-					H_ERRNO_ARG EXTRA_ARGS_VALUE))	      \
+      while ((status = internal_getent (stream, result, buffer, buflen,       \
+					errnop H_ERRNO_ARG EXTRA_ARGS_VALUE)) \
 	     == NSS_STATUS_SUCCESS)					      \
 	{ break_if_match }						      \
 									      \
@@ -144,9 +140,9 @@ _nss_files_get##name##_r (proto,					      \
 	  bufferend = (char *) &result->h_aliases[naliases + 1];	      \
 									      \
 	again:								      \
-	  while ((status = internal_getent (&tmp_result_buf, tmp_buffer,      \
-					    tmp_buflen, errnop H_ERRNO_ARG    \
-					    EXTRA_ARGS_VALUE))		      \
+	  while ((status = internal_getent (stream, &tmp_result_buf,	      \
+					    tmp_buffer, tmp_buflen, errnop    \
+					    H_ERRNO_ARG EXTRA_ARGS_VALUE))    \
 		 == NSS_STATUS_SUCCESS)					      \
 	    {								      \
 	      int matches = 1;						      \
@@ -321,11 +317,8 @@ _nss_files_get##name##_r (proto,					      \
 	}								      \
 									      \
 									      \
-      if (! keep_stream)						      \
-	internal_endent ();						      \
+      internal_endent (&stream);					      \
     }									      \
-									      \
-  __libc_lock_unlock (lock);						      \
 									      \
   return status;							      \
 }
@@ -365,22 +358,18 @@ DB_LOOKUP (hostbyaddr, ,,,
 	   }, const void *addr, socklen_t len, int af)
 #undef EXTRA_ARGS_VALUE
 
-
 enum nss_status
 _nss_files_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
 			     char *buffer, size_t buflen, int *errnop,
 			     int *herrnop, int32_t *ttlp)
 {
-  __libc_lock_lock (lock);
+  FILE *stream = NULL;
 
-  /* Reset file pointer to beginning or open file.  */
-  enum nss_status status = internal_setent (keep_stream);
+  /* Open file.  */
+  enum nss_status status = internal_setent (&stream);
 
   if (status == NSS_STATUS_SUCCESS)
     {
-      /* Tell getent function that we have repositioned the file pointer.  */
-      last_use = getby;
-
       bool any = false;
       bool got_canon = false;
       while (1)
@@ -392,7 +381,7 @@ _nss_files_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
 	  buflen = buflen > pad ? buflen - pad : 0;
 
 	  struct hostent result;
-	  status = internal_getent (&result, buffer, buflen, errnop
+	  status = internal_getent (stream, &result, buffer, buflen, errnop
 				    H_ERRNO_ARG, AF_UNSPEC, 0);
 	  if (status != NSS_STATUS_SUCCESS)
 	    break;
@@ -468,8 +457,7 @@ _nss_files_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
 	  status = NSS_STATUS_SUCCESS;
 	}
 
-      if (! keep_stream)
-	internal_endent ();
+      internal_endent (&stream);
     }
   else if (status == NSS_STATUS_TRYAGAIN)
     {
@@ -481,8 +469,6 @@ _nss_files_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
       *errnop = errno;
       *herrnop = NO_DATA;
     }
-
-  __libc_lock_unlock (lock);
 
   return status;
 }
