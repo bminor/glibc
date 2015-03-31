@@ -95,8 +95,183 @@ _dl_runtime_resolve:
 _dl_runtime_profile:
 	cfi_startproc
 	cfi_adjust_cfa_offset (8)
-	@ XXX tbd
-	sfi_trap
+
+	@ We get called with:
+	@ 	lr contains the return address from this call
+	@	stack[1] contains &GOT[n+3] (pointer to function)
+	@	stack[0] points to &GOT[2]
+
+	@ Stack layout:
+	@ sp + 204		framesize returned from pltenter
+	@ sp + 12		La_arm_regs
+	@ sp + 4		Saved two arguments to _dl_profile_fixup
+	@ sp + 0		outgoing argument to _dl_profile_fixup
+	@ For now, we only save the general purpose registers.
+# define PLTEXIT_ARGS		4
+# define LA_ARM_REGS		(PLTEXIT_ARGS + 8)
+# define LA_ARM_REGS_SIZE	(4 * (4 + 1 + 1 + 42))
+# define PLTENTER_FRAMESIZE	(LA_ARM_REGS + LA_ARM_REGS_SIZE)
+# define FRAMESIZE		(((PLTENTER_FRAMESIZE + 4) + 15) & -16)
+
+	@ The NaCl ABI requires that sp be aligned to 16 bytes at call
+	@ sites.  Assuming that was met on entry to the PLT, sp is
+	@ now exactly 8 bytes misaligned.
+	sfi_sp sub sp, #(FRAMESIZE - 8)
+	cfi_def_cfa_offset (FRAMESIZE)
+
+	@ Store the argument registers in La_arm_regs.
+	strd r0, r1, [sp, #LA_ARM_REGS]
+	cfi_offset (r0, LA_ARM_REGS + 0)
+	cfi_offset (r1, LA_ARM_REGS + 4)
+	strd r2, r3, [sp, #(LA_ARM_REGS + 8)]
+	cfi_offset (r2, LA_ARM_REGS + 8)
+	cfi_offset (r3, LA_ARM_REGS + 12)
+
+	ldr ip, [sp, #(FRAMESIZE - 8)]		@ ip gets &GOT[2]
+	ldr r3, [sp, #(FRAMESIZE - 4)]		@ r3 gets &GOT[n+3]
+
+	@ Recover the incoming sp and lr and save those in La_arm_regs.
+	add r0, sp, #FRAMESIZE
+	mov r1, lr
+	strd r0, r1, [sp, #(LA_ARM_REGS + 16)]
+	cfi_offset (sp, LA_ARM_REGS + 16)
+	cfi_offset (lr, LA_ARM_REGS + 20)
+
+	@ Get the 'struct link_map *' for the first arg to _dl_profile_fixup.
+	sfi_breg ip, ldr r0, [\B, #-4]
+
+	@ Get the reloc offset for the second argument to _dl_profile_fixup.
+	compute_reloc_arg r3, ip
+
+	@ The third argument is the original return address, still in lr.
+	mov r2, lr
+
+	@ Compute the fourth argument, the La_arm_regs pointer.
+	add r3, sp, #PLTEXIT_ARGS
+
+	@ Compute the fifth argument, the address of the 'framesize'
+	@ out parameter, and store it at the top of the stack.
+	add ip, sp, #PLTENTER_FRAMESIZE
+	str ip, [sp]
+
+	@ Save away the first two arguments, which we will need
+	@ again for _dl_call_pltexit, below.
+	strd r0, r1, [sp, #PLTEXIT_ARGS]
+
+	@ This does the real work, and returns the real call target.
+	sfi_bl _dl_profile_fixup
+
+	@ The address to call is now in r0.
+
+	@ Check whether we're wrapping this function,
+	@ i.e. if the framesize out parameter is >= 0.
+	ldr	ip, [sp, #PLTENTER_FRAMESIZE]
+	cmp	ip, #0
+	bge	1f
+	cfi_remember_state
+
+	@ Save _dl_profile_fixup's return value: the real call target.
+	mov ip, r0
+
+	@ Restore the registers from the La_arm_regs (perhaps as modified
+	@ by audit modules' pltenter functions).
+	add r1, sp, #LA_ARM_REGS
+	sfi_sp sfi_breg r1, ldmia \B, {r0-r3, sp, lr}
+	cfi_def_cfa_offset (0)
+	cfi_restore (r0)
+	cfi_restore (r1)
+	cfi_restore (r2)
+	cfi_restore (r3)
+	cfi_restore (sp)
+	cfi_restore (lr)
+
+	@ Finally, jump to the newfound call target.
+	sfi_bx ip
+
+1:	cfi_restore_state
+	@ The new frame size is in ip.
+
+	@ Save the fp in the stack slot previously used for the fifth
+	@ argument to _dl_profile_fixup.
+	str fp, [sp]
+	cfi_offset (fp, 0)
+
+	@ Save the result of _dl_profile_fixup, the real call target.
+	@ We'll reuse the stack slot just used for the 'framesize'
+	@ out parameter to _dl_profile_fixup.
+	str r0, [sp, #PLTENTER_FRAMESIZE]
+
+	@ Stack layout:
+	@ fp + 264		call target
+	@ fp + 72		La_arm_regs
+	@ fp + 68		Saved two arguments to _dl_profile_fixup
+	@ fp + 64		saved fp
+	@ fp + 0		La_arm_retval
+	@ sp..fp		copied incoming stack space (plus alignment)
+	@ For now, we only save the general purpose registers.
+# define FP_LA_ARM_RETVAL	0
+# define LA_ARM_RETVAL_SIZE	(4 * (4 + 12))
+# define FP_SAVED_FP		LA_ARM_RETVAL_SIZE
+# define FP_PLTEXIT_ARGS	(FP_SAVED_FP + 4)
+# define FP_LA_ARM_REGS		(FP_PLTEXIT_ARGS + 8)
+# define FP_CALL_TARGET		(FP_LA_ARM_REGS + LA_ARM_REGS_SIZE)
+# define FP_FRAMESIZE		(FP_CALL_TARGET + 4)
+
+	sub fp, sp, #(FP_FRAMESIZE - FRAMESIZE)
+	cfi_def_cfa (fp, FP_FRAMESIZE)
+
+	sub r1, fp, ip
+	@ This doesn't need sfi_sp because we just include the
+	@ sandboxing mask along with the alignment mask.
+	bic sp, r1, #0xc000000f
+
+	@ Copy the stack arguments.  The audit modules' pltenter
+	@ function(s) decided how much needs to be copied.
+	@ Load the sp as modified by pltenter functions, rather
+	@ than what we think the incoming sp was (fp + FP_FRAMESIZE).
+	sfi_breg fp, ldr r1, [\B, #(FP_LA_ARM_REGS + 16)]
+	mov r0, sp
+	mov r2, ip
+	sfi_bl memcpy
+
+	@ Load up the arguments from La_arm_regs and call the user's function.
+	sfi_breg fp, ldr ip, [\B, #FP_CALL_TARGET]
+	sfi_breg fp, ldrd r0, r1, [\B, #FP_LA_ARM_REGS]
+	sfi_breg fp, ldrd r2, r3, [\B, #(FP_LA_ARM_REGS + 8)]
+	sfi_blx ip
+
+	@ Stash the return value registers in La_arm_retval.
+	sfi_breg fp, strd r0, r1, [\B, #FP_LA_ARM_RETVAL]
+	sfi_breg fp, strd r2, r3, [\B, #(FP_LA_ARM_RETVAL + 8)]
+
+	@ Call pltexit.  We saved the first two arguments earlier--they
+	@ are the same ones passed to _dl_profile_fixup.  The latter two
+	@ arguments are La_arm_regs and La_arm_retval blocks, respectively.
+	sfi_breg fp, ldrd r0, r1, [\B, #FP_PLTEXIT_ARGS]
+	add r2, fp, #FP_LA_ARM_REGS
+	add r3, fp, #FP_LA_ARM_RETVAL
+	sfi_bl _dl_call_pltexit
+
+	@ Reload the saved return value registers for the caller.
+	sfi_breg fp, ldrd r0, r1, [\B, #FP_LA_ARM_RETVAL]
+	sfi_breg fp, ldrd r2, r3, [\B, #(FP_LA_ARM_RETVAL + 8)]
+
+	@ Unwind the frame.
+	sfi_sp mov sp, fp
+	cfi_def_cfa_register (sp)
+	ldr fp, [sp, #FP_SAVED_FP]
+	cfi_restore (fp)
+	@ Reload the lr and sp values from La_arm_regs, where they
+	@ might have been modified by pltenter functions, rather than
+	@ computing what we think the incoming value was.
+	ldr lr, [sp, #(FP_LA_ARM_REGS + 20)]
+	cfi_restore (lr)
+	sfi_sp ldr sp, [sp, #(FP_LA_ARM_REGS + 16)]
+	cfi_def_cfa_offset (0)
+
+	@ Finally, return to the caller.
+	sfi_bx lr
+
 	cfi_endproc
 	.size _dl_runtime_profile, .-_dl_runtime_profile
 #endif
