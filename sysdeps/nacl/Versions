@@ -5,7 +5,7 @@ ld {
 }
 
 libc {
-  GLIBC_2.17 {
+  GLIBC_2.22 {
     nacl_interface_query;
   }
 

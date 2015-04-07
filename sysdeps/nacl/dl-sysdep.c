@@ -48,15 +48,15 @@
    macro in the machine-specific dl-machine.h file.  At this point, dynamic
    linking has been completed and the first argument is the application's
    entry point.  */
-attribute_hidden internal_function
+attribute_hidden internal_function __attribute__ ((noreturn))
 void
 _dl_start_user (void (*user_entry) (uint32_t info[]), uint32_t info[])
 {
   if (_dl_skip_args > 0)
     {
       /* There are some arguments that the user program should not see.
-         Just slide up the INFO pointer so its NACL_STARTUP_ARGV points
-         to what should now be argv[0], and copy back the earlier fields.  */
+	 Just slide up the INFO pointer so its NACL_STARTUP_ARGV points
+	 to what should now be argv[0], and copy back the earlier fields.  */
       assert (nacl_startup_argc (info) >= _dl_skip_args);
       assert (NACL_STARTUP_ARGV == 3);
       uint32_t envc = info[NACL_STARTUP_ENVC];
@@ -71,12 +71,15 @@ _dl_start_user (void (*user_entry) (uint32_t info[]), uint32_t info[])
 
   /* Run initializers.  */
   _dl_init (GL(dl_ns)[0]._ns_loaded,
-            nacl_startup_argc (info),
-            nacl_startup_argv (info),
-            nacl_startup_envp (info));
+	    nacl_startup_argc (info),
+	    nacl_startup_argv (info),
+	    nacl_startup_envp (info));
 
   /* Call the user's entry point.  This should never return.  */
   (*user_entry) (info);
+
+  /* Fail clearly just in case it did return.  */
+  __builtin_trap ();
 }
 
 # define DL_SYSDEP_INIT	__nacl_initialize_interfaces ()

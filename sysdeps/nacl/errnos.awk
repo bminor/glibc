@@ -1,3 +1,22 @@
+# Script to produce bits/errno.h for NaCl.
+
+# Copyright (C) 2015 Free Software Foundation, Inc.
+# This file is part of the GNU C Library.
+
+# The GNU C Library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+
+# The GNU C Library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+
+# You should have received a copy of the GNU Lesser General Public
+# License along with the GNU C Library; if not, see
+# <http://www.gnu.org/licenses/>.
+
 BEGIN { maxerrno = 0 }
 
 $1 == "#define" && $2 ~ /NACL_ABI_E[A-Z0-9_]+/ && $3 ~ /[0-9]+/ {
@@ -61,7 +80,7 @@ END {
 #define	EWOULDBLOCK	EAGAIN\n\
 #define	ENOTSUP		EOPNOTSUPP\n\
 \n\
-extern __thread int errno;\n\
+extern __thread int errno __attribute__ ((__tls_model__ (\"initial-exec\")));\n\
 #define errno errno\n\
 \n\
 #endif";

@@ -1,4 +1,4 @@
-/* Make a hard link.  NaCl version.
+/* Rename a file.  NaCl version.
    Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 

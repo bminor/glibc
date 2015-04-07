@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <errno.h>
 #include <unistd.h>
 #include <nacl-interfaces.h>
 
@@ -24,6 +25,14 @@ int
 __isatty (int fd)
 {
   int result;
-  return NACL_CALL (__nacl_irt_dev_fdio.isatty (fd, &result), result);
+  int error = __nacl_irt_dev_fdio.isatty (fd, &result);
+  if (error == 0)
+    {
+      if (result)
+	return 1;
+      error = ENOTTY;
+    }
+  errno = error;
+  return 0;
 }
 weak_alias (__isatty, isatty)

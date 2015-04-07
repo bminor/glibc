@@ -1,3 +1,5 @@
+# Makefile fragment for NaCl configurations.
+
 # Copyright (C) 2015 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -46,6 +48,8 @@ $(common-objpfx)stamp-errnos: $(nacl)/errnos.awk $(..)manual/errno.texi \
 common-generated += stamp-errnos bits/errno.h
 before-compile += $(bits-errno)
 
+# Massage NaCl's irt.h (and irt_dev.h) into something we can use.
+# See irt.sed for details.
 nacl-irt.h = $(common-objpfx)nacl-irt.h
 $(nacl-irt.h): $(nacl)/irt.sed \
 	       $(naclsrc)/untrusted/irt/irt.h \
@@ -54,21 +58,6 @@ $(nacl-irt.h): $(nacl)/irt.sed \
 	mv -f $@.new $@
 common-generated += nacl-irt.h
 before-compile += $(nacl-irt.h)
-
-ifeq ($(subdir),misc)
-
-# We reuse the Linux file since the bits match.  The file lives in the
-# top-level source tree so we can use it without reference to any
-# sysdeps/.../linux/ directories, but it's still a sysdeps decision to
-# install it.
-sysdep_headers += bits/mman-linux.h
-
-# XXX temp test
-others += hello hellow
-others-static += hello
-
-endif
-
 
 $(common-objpfx)nacl-interfaces.v.i: $(nacl)/nacl-interfaces.mk.in \
 			      $(nacl)/nacl-interface-list.h
@@ -102,6 +91,17 @@ $(nacl-optional-interfaces:%=$(nacl-interface-pattern)): \
 
 nacl-routines-of = $(filter nacl-interface-$1-%,$(nacl-interface-routines))
 
+
+# Run the NaCl code validator on binaries after we link them, so the
+# build does not succeed with any binary that won't pass validation.
+# Moving the file around makes sure that we don't leave a target
+# appearing complete after it fails validation.
+define after-link
+mv -f $1 $1.prevalidation
+$(nacl)/nacl-after-link.sh '${READELF}' $1.prevalidation
+mv -f $1.prevalidation $1
+endef
+
 ifeq ($(subdir),csu)
 sysdep_routines += nacl_interface_query \
 		   nacl-interfaces $(call nacl-routines-of,libc)
@@ -119,4 +119,12 @@ endif
 ifeq ($(subdir),nptl)
 # XXX temporary hack
 libpthread-routines := $(filter-out ptw-%,$(libpthread-routines))
+endif
+
+ifeq ($(subdir),misc)
+# We reuse the Linux file since the bits match.  The file lives in the
+# top-level source tree so we can use it without reference to any
+# sysdeps/.../linux/ directories, but it's still a sysdeps decision to
+# install it.
+sysdep_headers += bits/mman-linux.h
 endif

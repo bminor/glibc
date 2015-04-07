@@ -48,8 +48,7 @@ extern uintptr_t __stop_nacl_optional_interface_tables[]
   attribute_hidden __attribute__ ((weak));
 
 static uintptr_t *
-next_nacl_table (uintptr_t *t,
-                 const struct nacl_interface *i)
+next_nacl_table (uintptr_t *t, const struct nacl_interface *i)
 {
   return (void *) t + i->table_size;
 }
@@ -84,7 +83,7 @@ initialize_mandatory_interfaces (void)
   while (i < __stop_nacl_mandatory_interface_names)
     {
       if (__nacl_irt_query (i->name, t, i->table_size) != i->table_size)
-        missing_mandatory_interface (i);
+	missing_mandatory_interface (i);
 
       t = next_nacl_table (t, i);
       i = next_nacl_interface (i);
@@ -106,9 +105,9 @@ initialize_optional_interfaces (void)
   while (i < __stop_nacl_optional_interface_names)
     {
       size_t filled = __nacl_irt_query (i->name, t, i->table_size);
-      if (filled == 0)
-        for (size_t slot = 0; slot < i->table_size / sizeof *t; ++slot)
-          t[slot] = (uintptr_t) &nacl_missing_optional_interface;
+      if (filled != i->table_size)
+	for (size_t slot = 0; slot < i->table_size / sizeof *t; ++slot)
+	  t[slot] = (uintptr_t) &nacl_missing_optional_interface;
 
       t = next_nacl_table (t, i);
       i = next_nacl_interface (i);

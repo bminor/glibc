@@ -39,14 +39,15 @@
 .text\n\
 .globl _start\n\
 .type _start, %function\n\
+.p2align 4\n\
 _start:\n\
-        @ r0 has the pointer to the info block (see nacl_startup.h)\n\
-        mov r1, sp              @ Save stack base for __libc_stack_end.\n\
-        push {r0-r3}            @ Push those, maintaining alignment to 16.\n\
-        mov r0, sp              @ Pointer to {info, sp} is argument.\n\
-        sfi_bl _dl_start\n\
-        pop {r1-r4}             @ Restore stack, getting info block into r1.\n\
-        mov lr, #0              @ Return address for noreturn call.\n\
-        b _dl_start_user");
+	@ r0 has the pointer to the info block (see nacl_startup.h)\n\
+	mov r1, sp              @ Save stack base for __libc_stack_end.\n\
+	push {r0-r3}            @ Push those, maintaining alignment to 16.\n\
+	mov r0, sp              @ Pointer to {info, sp} is argument.\n\
+	sfi_bl _dl_start\n\
+	pop {r1-r4}             @ Restore stack, getting info block into r1.\n\
+	mov lr, #0              @ Return address for noreturn call.\n\
+	b _dl_start_user");
 
 #endif

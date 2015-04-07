@@ -24,6 +24,9 @@ void
 _exit (int status)
 {
   __nacl_irt_basic.exit (status);
+
+  /* That never returns unless something is severely and unrecoverably wrong.
+     If it ever does, try to make sure we crash.  */
   while (1)
     __builtin_trap ();
 }
