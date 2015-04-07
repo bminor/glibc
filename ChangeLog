@@ -1136,6 +1136,63 @@
 	NAME_MAX, PATH_MAX.
 	(Pathconf): Add portability note for _PC_NAME_MAX, _PC_PATH_MAX.
 
+2014-06-03  Guo Yixuan  <culu.gyx@gmail.com>
+
+	[BZ #16882]
+	* nptl/sysdeps/sparc/sparc32/pthread_spin_lock.S
+	(pthread_spin_lock): Branch out of spin loop to proper location.
+	* nptl/sysdeps/sparc/sparc64/pthread_spin_lock.S
+	(pthread_spin_lock): Likewise.
+
+	* nptl/tst-spin4.c: New test.
+	* nptl/Makefile (tests): Add tst-spin4.
+
+2014-05-17  Jose E. Marchesi  <jose.marchesi@oracle.com>
+
+	[BZ #16958]
+	* sysdeps/sparc/sparc64/multiarch/memcpy-niagara2.S: Add missing
+	membar to avoid block loads/stores to overlap previous stores.
+
+2014-05-16  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #16943]
+	* sysdeps/unix/sysv/linux/sparc/bits/resource.h: Declare prlimit
+	and prlimit64.
+
+2014-05-06  Aurelien Jarno  <aurelien@aurel32.net>
+
+        [BZ# 16916]
+        * sysdeps/unix/sysv/linux/sparc/bits/eventfd.h (EFD_SEMAPHORE):
+        Define.
+
+2014-05-01  David S. Miller  <davem@davemloft.net>
+
+	[BZ #16885]
+	* sysdeps/sparc/sparc64/strcmp.S: Fix end comparison handling when
+	multiple zero bytes exist at the end of a string.
+	Reported by Aurelien Jarno <aurelien@aurel32.net>
+
+	* string/test-strcmp.c (check): Add explicit test for situations where
+	there are multiple zero bytes after the first.
+
+2014-01-29  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #16510]
+	* sysdeps/x86/fpu/bits/mathinline.h: Check __SSE2_MATH__ instead
+	of __x86_64__ when disabling x87 inline functions.
+
+2014-01-20  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #15605]
+	* sysdeps/x86_64/x32/symbol-hacks.h: Include generic symbol-hacks.h.
+
+2014-01-04  Maxim Kuvyrkov  <maxim@kugelworks.com>
+	    Ondřej Bílka  <neleai@seznam.cz>
+
+	[BZ #15073]
+	* malloc/malloc.c (_int_free): Perform sanity check only if we
+        have_lock.
+
 2013-11-11  David S. Miller  <davem@davemloft.net>
 
 	[BZ #16150]

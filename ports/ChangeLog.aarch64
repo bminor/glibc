@@ -1,3 +1,27 @@
+2014-01-20  Tom Tromey  <tromey@redhat.com>
+
+	[BZ #16169]
+	* sysdeps/unix/sysv/linux/aarch64/clone.S (__clone): Add CFI
+	directives;  Zero x29.
+
+2014-01-07  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
+	[BZ #16387]
+	* sysdeps/aarch64/fpu/fpu_control.h (_FPU_FPCR_RM_MASK): Define.
+	* sysdeps/aarch64/soft-fp/sfp-machine.h (FP_ROUNDMODE): Adjust
+	rounding mode mask.
+
+2014-01-07  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
+	* sysdeps/aarch64/dl-trampoline.S (_dl_runtime_resolve): Correct
+	cfi_adjust_cfa_offset offset.
+
+2013-12-18  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
+
+	[BZ #15128]
+	* sysdeps/aarch64/dl-trampoline.S (_dl_runtime_resolve): Save and
+	restore q0-q7.
+
 2013-07-26  Marcus Shawcroft  <marcus.shawcroft@linaro.org>
 
 	* sysdeps/aarch64/Versions: New file.
