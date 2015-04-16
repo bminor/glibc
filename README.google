@@ -429,3 +429,7 @@ stdio-common/tst-sscanf.c
 stdio-common/vfscanf.c
   For b/19289207, backport memory allocation fix for wscanf (PR16618)
   https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=5bd80bfe9ca0d955bfbbc002781bc7b01b6bcb06
+
+socket/sys/un.h
+  Replace null dereference in the SUN_LEN macro with offsetof.
+  (nlewycky, not yet upstream)
