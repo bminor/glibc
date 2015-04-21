@@ -1,3 +1,9 @@
+2015-04-21  Arjun Shankar  <arjun.is@lostca.se>
+
+	[BZ #18287]
+	* resolv/nss_dns/dns-host.c (getanswer_r): Adjust buffer length
+	based on padding.  (CVE-2015-1781)
+
 2015-03-10  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/ieee754/dbl-64/Makefile (CFLAGS-e_pow.c): Add
