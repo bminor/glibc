@@ -10,7 +10,14 @@ Version 2.20.1
 * The following bugs are resolved with this release:
 
   16009, 16617, 16618, 17266, 17370, 17371, 17460, 17485, 17555, 17625,
-  17630, 17801.
+  17630, 17801, 18287
+
+* A buffer overflow in gethostbyname_r and related functions performing DNS
+  requests has been fixed.  If the NSS functions were called with a
+  misaligned buffer, the buffer length change due to pointer alignment was
+  not taken into account.  This could result in application crashes or,
+  potentially arbitrary code execution, using crafted, but syntactically
+  valid DNS responses.  (CVE-2015-1781)
 
 * Added support for TSX lock elision of pthread mutexes on powerpc32, powerpc64
   and powerpc64le.  This may improve lock scaling of existing programs on
