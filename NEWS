@@ -13,7 +13,14 @@ Version 2.18.1
   15723, 15734, 15735, 15797, 15892, 15895, 15909, 15915, 15917, 15946,
   15996, 16072, 16150, 16169, 16387, 16414, 16430, 16431, 16510, 16617,
   16618, 16885, 16916, 16943, 16958, 17048, 17137, 17187, 17325, 17625,
-  17630, 18104.
+  17630, 18104, 18287.
+
+* A buffer overflow in gethostbyname_r and related functions performing DNS
+  requests has been fixed.  If the NSS functions were called with a
+  misaligned buffer, the buffer length change due to pointer alignment was
+  not taken into account.  This could result in application crashes or,
+  potentially arbitrary code execution, using crafted, but syntactically
+  valid DNS responses.  (CVE-2015-1781)
 
 * Support for powerpc64le has been added.
 
