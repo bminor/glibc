@@ -12,7 +12,7 @@ Version 2.19.1
   15946, 16545, 16574, 16617, 16618, 16683, 16689, 16695, 16701, 16706,
   16707, 16739, 16815, 16619, 16740, 16878, 16882, 16885, 16916, 16932,
   16943, 16958, 17031, 17048, 17069, 17137, 17153, 17187, 17213, 17263,
-  17325, 17555, 17625, 17630, 18104, 18287.
+  17325, 17555, 17625, 17630, 18007, 18104, 18287.
 
 * A buffer overflow in gethostbyname_r and related functions performing DNS
   requests has been fixed.  If the NSS functions were called with a
@@ -20,6 +20,11 @@ Version 2.19.1
   not taken into account.  This could result in application crashes or,
   potentially arbitrary code execution, using crafted, but syntactically
   valid DNS responses.  (CVE-2015-1781)
+
+* CVE-2014-8121 The NSS files backend would reset the file pointer used by
+  the get*ent functions if any of the query functions for the same database
+  are used during the iteration, causing a denial-of-service condition in
+  some applications.
 
 * CVE-2104-7817 The wordexp function could ignore the WRDE_NOCMD flag
   under certain input conditions resulting in the execution of a shell for
