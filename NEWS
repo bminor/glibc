@@ -11,7 +11,7 @@ Version 2.19.1
 
   15946, 16545, 16574, 16623, 16657, 16695, 16743, 16878, 16882, 16885,
   16916, 16932, 16943, 16958, 17048, 17069, 17079, 17137, 17153, 17213,
-  17263, 17269, 17325, 17555, 18032, 18287.
+  17263, 17269, 17325, 17555, 18007, 18032, 18287.
 
 * A buffer overflow in gethostbyname_r and related functions performing DNS
   requests has been fixed.  If the NSS functions were called with a
@@ -57,6 +57,11 @@ Version 2.19.1
   IBM937, IBM939, IBM1364 could result in an out-of-bounds array read,
   resulting a denial-of-service security vulnerability in applications which
   use functions related to iconv. (CVE-2014-6040)
+
+* CVE-2014-8121 The NSS files backend would reset the file pointer used by
+  the get*ent functions if any of the query functions for the same database
+  are used during the iteration, causing a denial-of-service condition in
+  some applications.
 
 Version 2.19
 
