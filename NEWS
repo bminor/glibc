@@ -10,7 +10,7 @@ Version 2.20.1
 * The following bugs are resolved with this release:
 
   16009, 16617, 16618, 17266, 17370, 17371, 17460, 17485, 17555, 17625,
-  17630, 17801, 18287
+  17630, 17801, 18007, 18287.
 
 * A buffer overflow in gethostbyname_r and related functions performing DNS
   requests has been fixed.  If the NSS functions were called with a
@@ -18,6 +18,11 @@ Version 2.20.1
   not taken into account.  This could result in application crashes or,
   potentially arbitrary code execution, using crafted, but syntactically
   valid DNS responses.  (CVE-2015-1781)
+
+* CVE-2014-8121 The NSS files backend would reset the file pointer used by
+  the get*ent functions if any of the query functions for the same database
+  are used during the iteration, causing a denial-of-service condition in
+  some applications.
 
 * Added support for TSX lock elision of pthread mutexes on powerpc32, powerpc64
   and powerpc64le.  This may improve lock scaling of existing programs on
