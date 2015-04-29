@@ -37,7 +37,7 @@ install-bin             := getent makedb
 makedb-modules = xmalloc hash-string
 extra-objs		+= $(makedb-modules:=.o)
 
-tests			= test-netdb tst-nss-test1 test-digits-dots
+tests			= test-netdb tst-nss-test1 test-digits-dots tst-nss-getpwent
 xtests			= bug-erange
 
 include ../Makeconfig
