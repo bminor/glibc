@@ -349,13 +349,11 @@ $(objpfx)librtld.os: $(objpfx)dl-allobjs.os $(objpfx)rtld-libc.a
 
 generated += librtld.map librtld.mk rtld-libc.a librtld.os.map
 
-z-now-yes = -Wl,-z,now
-
 $(objpfx)ld.so: $(objpfx)librtld.os $(ld-map)
 # Link into a temporary file so that we don't touch $@ at all
 # if the sanity check below fails.
 	$(LINK.o) -nostdlib -nostartfiles -shared -o $@.new		\
-		  $(LDFLAGS-rtld) -Wl,-z,defs $(z-now-$(bind-now))	\
+		  $(LDFLAGS-rtld) -Wl,-z,defs				\
 		  $(filter-out $(map-file),$^) $(load-map-file)		\
 		  -Wl,-soname=$(rtld-installed-name)			\
 		  -Wl,-defsym=_begin=0
