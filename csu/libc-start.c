@@ -313,7 +313,7 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
 
       if (! atomic_decrement_and_test (ptr))
 	/* Not much left to do but to exit the thread, not the process.  */
-	__exit_thread ();
+	__exit_thread (false);
     }
 #else
   /* Nothing fancy, just call the function.  */

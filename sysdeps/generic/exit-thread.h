@@ -16,12 +16,16 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* This causes the current thread to exit, without affecting other
-   threads in the process if there are any.  If there are no other
-   threads left, then this has the effect of _exit (0).  */
+#include <stdbool.h>
+
+/* This causes the current thread to exit, without affecting other threads
+   in the process if there are any.  If there are no other threads left,
+   then this has the effect of _exit (0).  If DETACHED is true, then the
+   TCB returned by THREAD_SELF has been reclaimed and must not be examined
+   or touched.  */
 
 static inline void __attribute__ ((noreturn, always_inline, unused))
-__exit_thread (void)
+__exit_thread (bool detached)
 {
   while (1)
     asm ("write me!");

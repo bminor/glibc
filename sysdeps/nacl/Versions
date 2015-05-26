@@ -15,6 +15,7 @@ libc {
     __libc_open;
     __libc_close;
     __libc_fork;
+    __exit_thread;
 
     __nacl_irt_*;
   }

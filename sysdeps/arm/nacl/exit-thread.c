@@ -1,4 +1,4 @@
-/* Call to terminate the current thread.  NaCl version.
+/* Call to terminate the current thread.  NaCl/ARM version.
    Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,13 +16,23 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <stdbool.h>
+/* This bit is machine-specific: Switch stacks to SP and call FUNC (ARG).  */
+static void __attribute__ ((noreturn))
+call_on_stack (void *sp,
+               void (*func) (void *)
+                 internal_function __attribute__ ((noreturn)),
+               void *arg)
+{
+  register void *r0 asm ("r0") = arg;
+  asm volatile ("bic sp, %[sp], %[dmask]\n\t"
+                "sfi_blx %[func]"
+                :
+                : [sp] "r" (sp),
+                  [dmask] "ir" (0xc0000000),
+                  [func] "r" (func),
+                  "r" (r0));
+  __builtin_trap ();
+}
 
-/* This causes the current thread to exit, without affecting other threads
-   in the process if there are any.  If there are no other threads left,
-   then this has the effect of _exit (0).  If DETACHED is true, then the
-   TCB returned by THREAD_SELF has been reclaimed and must not be examined
-   or touched.  */
-
-extern void __exit_thread (bool detached)
-  internal_function __attribute__ ((noreturn));
+/* The rest is machine-independent.  */
+#include <sysdeps/nacl/exit-thread.c>

@@ -433,8 +433,10 @@ START_THREAD_DEFN
   if (freesize > PTHREAD_STACK_MIN)
     __madvise (pd->stackblock, freesize - PTHREAD_STACK_MIN, MADV_DONTNEED);
 
+  const bool detached = IS_DETACHED (pd);
+
   /* If the thread is detached free the TCB.  */
-  if (IS_DETACHED (pd))
+  if (detached)
     /* Free the TCB.  */
     __free_tcb (pd);
   else if (__glibc_unlikely (pd->cancelhandling & SETXID_BITMASK))
@@ -457,7 +459,7 @@ START_THREAD_DEFN
 
      The exit code is zero since in case all threads exit by calling
      'pthread_exit' the exit status must be 0 (zero).  */
-  __exit_thread ();
+  __exit_thread (detached);
 
   /* NOTREACHED */
 }

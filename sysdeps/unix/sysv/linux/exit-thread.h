@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <stdbool.h>
 #include <sysdep.h>
 
 /* This causes the current thread to exit, without affecting other
@@ -23,7 +24,7 @@
    threads left, then this has the effect of _exit (0).  */
 
 static inline void __attribute__ ((noreturn, always_inline, unused))
-__exit_thread (void)
+__exit_thread (bool detached __attribute__ ((unused)))
 {
   /* Doing this in a loop is mostly just to satisfy the compiler that the
      function really qualifies as noreturn.  It also means that in some
