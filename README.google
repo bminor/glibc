@@ -433,3 +433,8 @@ stdio-common/vfscanf.c
 socket/sys/un.h
   Replace null dereference in the SUN_LEN macro with offsetof.
   (nlewycky, not yet upstream)
+
+elf/dl-load.c
+  For b/8315591, b/20141439 correct off-by-one error that resulted in last
+  byte of l_name being random garbage.
+  (ppluzhnikov, google-local)

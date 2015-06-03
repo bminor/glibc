@@ -1082,7 +1082,7 @@ _dl_map_object_from_fd (const char *name, int fd, off_t offset,
 
       char tmp[20];
       tmp[19] = '\0';
-      strcat(realname, _itoa(offset, &tmp[18], 16, 0));
+      strcat(realname, _itoa(offset, &tmp[19], 16, 0));
     }
 #endif
 
