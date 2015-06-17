@@ -44,6 +44,33 @@
 
 # define DL_STACK_END(cookie)	(((void **) (cookie))[1])
 
+# define DL_PLATFORM_AUXV \
+  case AT_SYSINFO_EHDR: handle_sysinfo_ehdr ((void *) av->a_un.a_val);
+
+void (*__nacl_extra_r_brk) (void) attribute_hidden;
+
+static void
+handle_sysinfo_ehdr (const void *loader_ehdr)
+{
+  const ElfW(Ehdr) *ehdr = loader_ehdr;
+  const ElfW(Phdr) *phdr = loader_ehdr + ehdr->e_phoff;
+  for (uint_fast16_t i = 0; i < ehdr->e_phnum; ++i)
+    if (phdr[i].p_type == PT_DYNAMIC)
+      {
+        ElfW(Dyn) *end = (void *) (phdr[i].p_vaddr + phdr[i].p_memsz);
+	for (ElfW(Dyn) *d = (void *) phdr[i].p_vaddr; d < end; ++d)
+	  if (d->d_tag == DT_DEBUG)
+	    {
+	      const struct r_debug *r = (void *) d->d_un.d_ptr;
+	      if (r != NULL)
+		__nacl_extra_r_brk = (void (*) (void)) r->r_brk;
+              d->d_un.d_ptr = (ElfW(Addr)) &_r_debug;
+	      break;
+	    }
+	break;
+      }
+}
+
 /* This is called from the entry point (_start), defined by the RTLD_START
    macro in the machine-specific dl-machine.h file.  At this point, dynamic
    linking has been completed and the first argument is the application's

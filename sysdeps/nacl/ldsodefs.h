@@ -32,4 +32,11 @@ extern void _dl_aux_init (ElfW(auxv_t) *av) internal_function;
 /* Initialization which is normally done by the dynamic linker.  */
 extern void _dl_non_dynamic_init (void) internal_function;
 
+#ifdef SHARED
+extern void (*__nacl_extra_r_brk) (void) attribute_hidden;
+# define DL_DEBUG_STATE \
+  if (__nacl_extra_r_brk != NULL) \
+    (*__nacl_extra_r_brk) ();
+#endif
+
 #endif  /* ldsodefs.h */

@@ -72,5 +72,8 @@ _dl_debug_initialize (ElfW(Addr) ldbase, Lmid_t ns)
 void
 _dl_debug_state (void)
 {
+#ifdef DL_DEBUG_STATE
+  DL_DEBUG_STATE;
+#endif
 }
 rtld_hidden_def (_dl_debug_state)
