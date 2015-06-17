@@ -115,7 +115,7 @@ tests-static = test-fpucw-static test-fpucw-ieee-static
 test-longdouble-yes = test-ldouble test-ildoubl
 
 ifneq (no,$(PERL))
-libm-vec-tests = $(addprefix test-,$(libmvec-tests))
+#libm-vec-tests = $(addprefix test-,$(libmvec-tests))
 libm-tests = test-float test-double $(test-longdouble-$(long-double-fcts)) \
 	test-ifloat test-idouble $(libm-vec-tests)
 libm-tests.o = $(addsuffix .o,$(libm-tests))

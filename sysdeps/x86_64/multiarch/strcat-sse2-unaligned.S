@@ -275,5 +275,5 @@ L(StartStrcpyPart):
 #  define USE_AS_STRNCPY
 # endif
 
-# include "strcpy-sse2-unaligned.S"
+# include "strncpy-sse2-unaligned.S"
 #endif

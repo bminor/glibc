@@ -88,6 +88,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   /* Support sysdeps/x86_64/multiarch/stpcpy.S.  */
   IFUNC_IMPL (i, name, stpcpy,
+	      IFUNC_IMPL_ADD (array, i, strcpy, HAS_AVX2, __stpcpy_avx2)
 	      IFUNC_IMPL_ADD (array, i, stpcpy, HAS_SSSE3, __stpcpy_ssse3)
 	      IFUNC_IMPL_ADD (array, i, stpcpy, 1, __stpcpy_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, stpcpy, 1, __stpcpy_sse2))
@@ -137,6 +138,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   /* Support sysdeps/x86_64/multiarch/strcpy.S.  */
   IFUNC_IMPL (i, name, strcpy,
+	      IFUNC_IMPL_ADD (array, i, strcpy, HAS_AVX2, __strcpy_avx2)
 	      IFUNC_IMPL_ADD (array, i, strcpy, HAS_SSSE3, __strcpy_ssse3)
 	      IFUNC_IMPL_ADD (array, i, strcpy, 1, __strcpy_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, strcpy, 1, __strcpy_sse2))

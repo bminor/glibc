@@ -29,7 +29,7 @@ CFLAGS-strspn-c.c += -msse4
 endif
 
 ifeq (yes,$(config-cflags-avx2))
-sysdep_routines += memset-avx2
+sysdep_routines += memset-avx2 strcpy-avx2 stpcpy-avx2
 endif
 endif
 

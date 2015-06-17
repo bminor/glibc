@@ -28,31 +28,18 @@
 #endif
 
 #ifdef USE_AS_STPCPY
-# ifdef USE_AS_STRNCPY
-#  define STRCPY_SSSE3		__stpncpy_ssse3
-#  define STRCPY_SSE2		__stpncpy_sse2
-#  define STRCPY_SSE2_UNALIGNED __stpncpy_sse2_unaligned
-#  define __GI_STRCPY		__GI_stpncpy
-#  define __GI___STRCPY		__GI___stpncpy
-# else
 #  define STRCPY_SSSE3		__stpcpy_ssse3
 #  define STRCPY_SSE2		__stpcpy_sse2
+#  define STRCPY_AVX2		__stpcpy_avx2
 #  define STRCPY_SSE2_UNALIGNED	__stpcpy_sse2_unaligned
 #  define __GI_STRCPY		__GI_stpcpy
 #  define __GI___STRCPY		__GI___stpcpy
-# endif
 #else
-# ifdef USE_AS_STRNCPY
-#  define STRCPY_SSSE3		__strncpy_ssse3
-#  define STRCPY_SSE2		__strncpy_sse2
-#  define STRCPY_SSE2_UNALIGNED	__strncpy_sse2_unaligned
-#  define __GI_STRCPY		__GI_strncpy
-# else
 #  define STRCPY_SSSE3		__strcpy_ssse3
+#  define STRCPY_AVX2		__strcpy_avx2
 #  define STRCPY_SSE2		__strcpy_sse2
 #  define STRCPY_SSE2_UNALIGNED	__strcpy_sse2_unaligned
 #  define __GI_STRCPY		__GI_strcpy
-# endif
 #endif
 
 
@@ -64,7 +51,10 @@ ENTRY(STRCPY)
 	cmpl	$0, __cpu_features+KIND_OFFSET(%rip)
 	jne	1f
 	call	__init_cpu_features
-1:	leaq	STRCPY_SSE2_UNALIGNED(%rip), %rax
+1:	leaq	STRCPY_AVX2(%rip), %rax
+	testl   $bit_AVX_Fast_Unaligned_Load, __cpu_features+FEATURE_OFFSET+index_AVX_Fast_Unaligned_Load(%rip)
+	jnz	2f
+	leaq	STRCPY_SSE2_UNALIGNED(%rip), %rax
 	testl	$bit_Fast_Unaligned_Load, __cpu_features+FEATURE_OFFSET+index_Fast_Unaligned_Load(%rip)
 	jnz	2f
 	leaq	STRCPY_SSE2(%rip), %rax
