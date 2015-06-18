@@ -8,7 +8,7 @@ ifeq ($(subdir),string)
 
 sysdep_routines += strncat-c stpncpy-c strncpy-c strcmp-ssse3 \
 		   strcmp-sse2-unaligned strncmp-ssse3 \
-		   memcmp-sse4 memcpy-ssse3 \
+		   memcpy-ssse3 \
 		   memcpy-sse2-unaligned mempcpy-ssse3 \
 		   memmove-ssse3 memcpy-ssse3-back mempcpy-ssse3-back \
 		   memmove-avx-unaligned memcpy-avx-unaligned mempcpy-avx-unaligned \
@@ -29,10 +29,10 @@ CFLAGS-strspn-c.c += -msse4
 endif
 
 ifeq (yes,$(config-cflags-avx2))
-sysdep_routines += memset-avx2 strcpy-avx2 stpcpy-avx2
+sysdep_routines += memset-avx2 strcpy-avx2 stpcpy-avx2 memcmp-avx2
 endif
 endif
 
 ifeq ($(subdir),wcsmbs)
-sysdep_routines += wmemcmp-sse4 wmemcmp-ssse3 wmemcmp-c wcscpy-ssse3 wcscpy-c
+sysdep_routines += wmemcmp-sse2-unaligned wmemcmp-ssse3 wmemcmp-c wcscpy-ssse3 wcscpy-c
 endif

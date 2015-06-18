@@ -19,340 +19,204 @@
 
 #include <sysdep.h>
 
+#ifndef MEMCMP
+# define MEMCMP memcmp
+#endif
+
 	.text
-ENTRY (memcmp)
-	test	%rdx, %rdx
-	jz	L(finz)
-	cmpq	$1, %rdx
-	jle	L(finr1b)
-	subq	%rdi, %rsi
-	movq	%rdx, %r10
-	cmpq	$32, %r10
-	jge	L(gt32)
-	/* Handle small chunks and last block of less than 32 bytes.  */
-L(small):
-	testq	$1, %r10
-	jz	L(s2b)
-	movzbl	(%rdi),	%eax
-	movzbl	(%rdi, %rsi), %edx
-	subq    $1, %r10
-	je	L(finz1)
-	addq	$1, %rdi
-	subl	%edx, %eax
-	jnz	L(exit)
-L(s2b):
-	testq	$2, %r10
-	jz	L(s4b)
-	movzwl	(%rdi),	%eax
-	movzwl	(%rdi, %rsi), %edx
-	subq    $2, %r10
-	je	L(fin2_7)
-	addq	$2, %rdi
-	cmpl	%edx, %eax
-	jnz	L(fin2_7)
-L(s4b):
-	testq	$4, %r10
-	jz	L(s8b)
-	movl	(%rdi),	%eax
-	movl	(%rdi, %rsi), %edx
-	subq    $4, %r10
-	je	L(fin2_7)
-	addq	$4, %rdi
-	cmpl	%edx, %eax
-	jnz	L(fin2_7)
-L(s8b):
-	testq	$8, %r10
-	jz	L(s16b)
-	movq	(%rdi),	%rax
-	movq	(%rdi, %rsi), %rdx
-	subq    $8, %r10
-	je	L(fin2_7)
-	addq	$8, %rdi
-	cmpq	%rdx, %rax
-	jnz	L(fin2_7)
-L(s16b):
-	movdqu    (%rdi), %xmm1
-	movdqu    (%rdi, %rsi), %xmm0
-	pcmpeqb   %xmm0, %xmm1
-	pmovmskb  %xmm1, %edx
-	xorl	  %eax, %eax
-	subl      $0xffff, %edx
-	jz	  L(finz)
-	bsfl      %edx, %ecx
-	leaq	 (%rdi, %rcx), %rcx
-	movzbl	 (%rcx), %eax
-	movzbl	 (%rsi, %rcx), %edx
-	jmp	 L(finz1)
-
-	.p2align 4,, 4
-L(finr1b):
-	movzbl	(%rdi), %eax
-	movzbl  (%rsi), %edx
-L(finz1):
-	subl	%edx, %eax
-L(exit):
+ENTRY (MEMCMP)
+	testq	%rdx, %rdx
+	je	L(return_zero)
+#ifdef AS_WMEMCMP
+	shl	$2, %rdx
+#endif
+	pxor	%xmm4, %xmm4
+	movl	%edi, %eax
+	andl	$4095, %eax
+	cmpl	$4032, %eax
+	ja	L(cross_page_start)
+L(handle_end):
+	movl	%esi, %eax
+	andl	$4095, %eax
+	cmpl	$4032, %eax
+	ja	L(cross_page_start)
+L(back_header):
+	xor	%ecx, %ecx
+	bts	%rdx, %rcx
+	sub	$1, %rcx
+	movdqu	(%rdi), %xmm0
+	movdqu	(%rsi), %xmm1
+	pcmpeqb	%xmm1, %xmm0
+	pcmpeqb	%xmm4, %xmm0
+	pmovmskb %xmm0, %eax
+	and	%ecx, %eax
+	jne	L(different)
+	cmpq	$16, %rdx
+	ja	L(next)
 	ret
-
-	.p2align 4,, 4
-L(fin2_7):
-	cmpq	%rdx, %rax
-	jz	L(finz)
-	movq	%rax, %r11
-	subq	%rdx, %r11
-	bsfq	%r11, %rcx
-	sarq	$3, %rcx
-	salq	$3, %rcx
-	sarq	%cl, %rax
-	movzbl  %al, %eax
-	sarq	%cl, %rdx
-	movzbl  %dl, %edx
-	subl	%edx, %eax
-	ret
-
-	.p2align 4,, 4
-L(finz):
+L(next):
+	pmovmskb %xmm0, %r8d
+	movdqu	16(%rdi), %xmm2
+	movdqu	16(%rsi), %xmm6
+	movdqu	32(%rdi), %xmm1
+	pcmpeqb	%xmm6, %xmm2
+	movdqu	32(%rsi), %xmm5
+	pcmpeqb	%xmm4, %xmm2
+	pcmpeqb	%xmm5, %xmm1
+	movdqu	48(%rdi), %xmm7
+	pmovmskb %xmm2, %eax
+	movdqu	48(%rsi), %xmm3
+	pcmpeqb	%xmm4, %xmm1
+	pmovmskb %xmm1, %r9d
+	sal	$16, %eax
+	pcmpeqb	%xmm3, %xmm7
+	salq	$32, %r9
+	pcmpeqb	%xmm4, %xmm7
+	orq	%r9, %rax
+	orq	%r8, %rax
+	pmovmskb %xmm7, %r8d
+	salq	$48, %r8
+	orq	%r8, %rax
+	movq	%rax, %r8
+	andq	%rcx, %rax
+	jne	L(different)
+	cmpq	$64, %rdx
+	jb	L(return_zero)
+	movq	%r8, %rax
+	testq	%rax, %rax
+	jne	L(different)
+L(align_loop):
+	leaq	64(%rdi), %rax
+	andq	$-64, %rax
+	subq	%rdi, %rax
+	subq	%rax, %rdx
+	addq	%rax, %rdi
+	addq	%rax, %rsi
+	cmpq	$64, %rdx
+	ja	L(loop_start)
+	testq	%rdx, %rdx
+	jne	L(handle_end)
 	xorl	%eax, %eax
 	ret
 
-	/* For blocks bigger than 32 bytes
-	   1. Advance one of the addr pointer to be 16B aligned.
-	   2. Treat the case of both addr pointers aligned to 16B
-	      separately to avoid movdqu.
-	   3. Handle any blocks of greater than 64 consecutive bytes with
-	      unrolling to reduce branches.
-	   4. At least one addr pointer is 16B aligned, use memory version
-	      of pcmbeqb.
-	*/
-	.p2align 4,, 4
-L(gt32):
-	movq	%rdx, %r11
-	addq	%rdi, %r11
-	movq	%rdi, %r8
+	.p2align 4
+L(different):
+	bsfq	%rax, %rdx
+#ifdef AS_WMEMCMP
+	and	$-4, %rdx
+	mov	(%rdi,%rdx), %eax
+	mov	(%rsi,%rdx), %edx
+	subl	%edx, %eax
+	jg	L(ret1)
+	jl	L(ret_neg_1)
+	ret
+L(ret1):
+	mov $1, %eax
+	ret
+L(ret_neg_1):
+	mov $-1, %eax
+	ret
+#else
+	movzbl	(%rdi,%rdx), %eax
+	movzbl	(%rsi,%rdx), %edx
+	subl	%edx, %eax
+	ret
+#endif
+L(return_zero):
+	xor	%eax, %eax
+	ret
+	.p2align 4
+L(loop):
+	subq	$64, %rdx
+	addq	$64, %rdi
+	addq	$64, %rsi
+	cmpq	$64, %rdx
+	jbe	L(less_64_bytes)
+L(loop_start):
+	movdqu	(%rsi), %xmm0
+	movdqu	16(%rsi), %xmm1
+	pcmpeqb	(%rdi), %xmm0
+	movdqu	32(%rsi), %xmm2
+	pcmpeqb	16(%rdi), %xmm1
+	movdqu	48(%rsi), %xmm3
+	pcmpeqb	32(%rdi), %xmm2
+	pcmpeqb	48(%rdi), %xmm3
+	pminub	%xmm0, %xmm3
+	pminub	%xmm1, %xmm3
+	pminub	%xmm2, %xmm3
+	pcmpeqb	%xmm4, %xmm3
+	pmovmskb %xmm3, %eax
+	testl	%eax, %eax
+	je	L(loop)
+	shl	$48, %rax
+	pcmpeqb	%xmm4, %xmm0
+	pcmpeqb	%xmm4, %xmm1
+	pcmpeqb	%xmm4, %xmm2
+	pmovmskb %xmm0, %r8
+	pmovmskb %xmm1, %rcx
+	pmovmskb %xmm2, %r9
+	shl	$16, %ecx
+	shl	$32, %r9
+	or	%r8, %rax
+	or	%r9, %rax
+	or	%rcx, %rax
+	jmp	L(different)
 
-	andq	$15, %r8
-	jz	L(16am)
-	/* Both pointers may be misaligned.  */
-	movdqu	(%rdi),	%xmm1
-	movdqu	(%rdi, %rsi), %xmm0
-	pcmpeqb   %xmm0, %xmm1
-	pmovmskb  %xmm1, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	neg	 %r8
-	leaq    16(%rdi, %r8), %rdi
-L(16am):
-	/* Handle two 16B aligned pointers separately.  */
-	testq   $15, %rsi
-	jz      L(ATR)
-	testq	$16, %rdi
-	jz	L(A32)
-	movdqu	(%rdi, %rsi), %xmm0
-	pcmpeqb   (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq	$16, %rdi
-L(A32):
-	movq	%r11, %r10
-	andq	$-32, %r10
-	cmpq	%r10, %rdi
-        jge	L(mt16)
-	/* Pre-unroll to be ready for unrolled 64B loop.  */
-	testq	$32, %rdi
-	jz	L(A64)
-	movdqu    (%rdi,%rsi), %xmm0
-	pcmpeqb   (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
+	.p2align 4
+L(less_64_bytes):
+	testq	%rdx, %rdx
+	jne	L(handle_end)
+	xorl	%eax, %eax
+	ret
 
-	movdqu    (%rdi,%rsi), %xmm0
-	pcmpeqb  (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
 
-L(A64):
-	movq	%r11, %r10
-	andq	$-64, %r10
-	cmpq	%r10, %rdi
-        jge	L(mt32)
+	.p2align 4
+L(cross_page_start):
+	cmp	$64, %rdx
+	ja	L(back_header)
 
-L(A64main):
-	movdqu    (%rdi,%rsi), %xmm0
-	pcmpeqb   (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
+	.p2align 4
+L(cross_page):
+	test	%edx, %edx
+	je	L(return_zero)
+#ifdef AS_WMEMCMP
+	mov	(%rdi), %eax
+	mov	(%rsi), %ecx
+	subl	%ecx, %eax
+	jg	L(ret1)
+	jl	L(ret_neg_1)
+#else
+	movzbl	(%rdi), %eax
+	movzbl	(%rsi), %ecx
+	subl	%ecx, %eax
+	jne	L(return)
+	cmp	$1, %edx
+	je	L(return)
+	movzbl	1(%rdi), %eax
+	movzbl	1(%rsi), %ecx
+	subl	%ecx, %eax
+	jne	L(return)
+	cmp	$2, %edx
+	je	L(return)
+	movzbl	2(%rdi), %eax
+	movzbl	2(%rsi), %ecx
+	subl	%ecx, %eax
+	jne	L(return)
+	cmp	$3, %edx
+	je	L(return)
+	movzbl	3(%rdi), %eax
+	movzbl	3(%rsi), %ecx
+	subl	%ecx, %eax
+	jne	L(return)
+#endif
+	sub	$4, %edx
+	add	$4, %rdi
+	add	$4, %rsi
+	jmp	L(cross_page)
+L(return):
+	ret
+END(MEMCMP)
 
-	movdqu    (%rdi,%rsi), %xmm0
-	pcmpeqb   (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
-
-	movdqu    (%rdi,%rsi), %xmm0
-	pcmpeqb   (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
-
-	movdqu    (%rdi,%rsi), %xmm0
-	pcmpeqb  (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
-
-	cmpq       %rdi, %r10
-	jne       L(A64main)
-
-L(mt32):
-	movq	%r11, %r10
-	andq	$-32, %r10
-	cmpq	%r10, %rdi
-        jge	L(mt16)
-
-L(A32main):
-	movdqu    (%rdi,%rsi), %xmm0
-	pcmpeqb   (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
-
-	movdqu    (%rdi,%rsi), %xmm0
-	pcmpeqb  (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
-
-	cmpq       %rdi, %r10
-	jne       L(A32main)
-L(mt16):
-	subq       %rdi, %r11
-	je	  L(finz)
-	movq	  %r11, %r10
-	jmp	  L(small)
-
-	.p2align 4,, 4
-L(neq):
-	bsfl      %edx, %ecx
-	movzbl	 (%rdi, %rcx), %eax
-	addq	 %rdi, %rsi
-	movzbl	 (%rsi,%rcx), %edx
-	jmp	 L(finz1)
-
-	.p2align 4,, 4
-L(ATR):
-	movq	%r11, %r10
-	andq	$-32, %r10
-	cmpq	%r10, %rdi
-        jge	L(mt16)
-	testq	$16, %rdi
-	jz	L(ATR32)
-
-	movdqa    (%rdi,%rsi), %xmm0
-	pcmpeqb   (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
-	cmpq       %rdi, %r10
-	je       L(mt16)
-
-L(ATR32):
-	movq	%r11, %r10
-	andq	$-64, %r10
-	testq	$32, %rdi
-	jz	L(ATR64)
-
-	movdqa    (%rdi,%rsi), %xmm0
-	pcmpeqb   (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
-
-	movdqa    (%rdi,%rsi), %xmm0
-	pcmpeqb   (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
-
-L(ATR64):
-	cmpq       %rdi, %r10
-	je	   L(mt32)
-
-L(ATR64main):
-	movdqa    (%rdi,%rsi), %xmm0
-	pcmpeqb   (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
-
-	movdqa    (%rdi,%rsi), %xmm0
-	pcmpeqb   (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
-
-	movdqa    (%rdi,%rsi), %xmm0
-	pcmpeqb   (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
-
-	movdqa    (%rdi,%rsi), %xmm0
-	pcmpeqb   (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
-	cmpq       %rdi, %r10
-	jne       L(ATR64main)
-
-	movq	%r11, %r10
-	andq	$-32, %r10
-	cmpq	%r10, %rdi
-        jge	L(mt16)
-
-L(ATR32res):
-	movdqa    (%rdi,%rsi), %xmm0
-	pcmpeqb   (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
-
-	movdqa    (%rdi,%rsi), %xmm0
-	pcmpeqb   (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
-
-	cmpq	  %r10, %rdi
-	jne       L(ATR32res)
-
-	subq       %rdi, %r11
-	je	  L(finz)
-	movq	  %r11, %r10
-	jmp	  L(small)
-	/* Align to 16byte to improve instruction fetch.  */
-	.p2align 4,, 4
-END(memcmp)
-
-#undef bcmp
+#undef	bcmp
 weak_alias (memcmp, bcmp)
 libc_hidden_builtin_def (memcmp)

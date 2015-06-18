@@ -201,6 +201,10 @@ L(prepare_loop):
 	movdqu	%xmm2, 96(%rdi)
 	movdqu	%xmm3, 112(%rdi)
 
+#ifdef USE_AVX2
+	vpxor	%xmm5, %xmm5, %xmm5
+#endif
+
 	subq	%rsi, %rdi
 	add	$64, %rsi
 	andq	$-64, %rsi
@@ -348,10 +352,13 @@ L(cross_loop):
 	sub	$1, %rcx
 	ja	L(cross_loop)
 
+#ifdef USE_AVX2
+	vpxor	%xmm5, %xmm5, %xmm5
+#else
 	pxor	%xmm5, %xmm5
 	pxor	%xmm6, %xmm6
 	pxor	%xmm7, %xmm7
-
+#endif
 	lea	-64(%rsi), %rdx
 	andq	$-64, %rdx
 	addq	%rdx, %rdi

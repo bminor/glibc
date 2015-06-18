@@ -29,33 +29,28 @@ ENTRY(memcmp)
 	cmpl	$0, KIND_OFFSET+__cpu_features(%rip)
 	jne	1f
 	call	__init_cpu_features
-
-1:	testl	$bit_SSSE3, __cpu_features+CPUID_OFFSET+index_SSSE3(%rip)
+        testl   $bit_Fast_Unaligned_Load, __cpu_features+FEATURE_OFFSET+index_Fast_Unaligned_Load(%rip)
 	jnz	2f
-	leaq	__memcmp_sse2(%rip), %rax
-	ret
-
-2:	testl	$bit_SSE4_1, __cpu_features+CPUID_OFFSET+index_SSE4_1(%rip)
-	jz	3f
-	leaq	__memcmp_sse4_1(%rip), %rax
+1:	testl	$bit_SSSE3, __cpu_features+CPUID_OFFSET+index_SSSE3(%rip)
+	jnz	3f
+2:	leaq	__memcmp_sse2_unaligned(%rip), %rax
 	ret
 
 3:	leaq	__memcmp_ssse3(%rip), %rax
 	ret
-
 END(memcmp)
 
 # undef ENTRY
 # define ENTRY(name) \
-	.type __memcmp_sse2, @function; \
+	.type __memcmp_sse2_unaligned, @function; \
 	.p2align 4; \
-	.globl __memcmp_sse2; \
-	.hidden __memcmp_sse2; \
-	__memcmp_sse2: cfi_startproc; \
+	.globl __memcmp_sse2_unaligned; \
+	.hidden __memcmp_sse2_unaligned; \
+	__memcmp_sse2_unaligned: cfi_startproc; \
 	CALL_MCOUNT
 # undef END
 # define END(name) \
-	cfi_endproc; .size __memcmp_sse2, .-__memcmp_sse2
+	cfi_endproc; .size __memcmp_sse2_unaligned, .-__memcmp_sse2_unaligned
 
 # ifdef SHARED
 #  undef libc_hidden_builtin_def
@@ -63,7 +58,7 @@ END(memcmp)
    they will be called without setting up EBX needed for PLT which is
    used by IFUNC.  */
 #  define libc_hidden_builtin_def(name) \
-	.globl __GI_memcmp; __GI_memcmp = __memcmp_sse2
+	.globl __GI_memcmp; __GI_memcmp = __memcmp_sse2_unaligned
 # endif
 #endif
 

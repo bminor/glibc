@@ -39,10 +39,9 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   /* Support sysdeps/x86_64/multiarch/memcmp.S.  */
   IFUNC_IMPL (i, name, memcmp,
-	      IFUNC_IMPL_ADD (array, i, memcmp, HAS_SSE4_1,
-			      __memcmp_sse4_1)
+	      IFUNC_IMPL_ADD (array, i, memcmp, HAS_AVX2, __memcmp_avx2)
 	      IFUNC_IMPL_ADD (array, i, memcmp, HAS_SSSE3, __memcmp_ssse3)
-	      IFUNC_IMPL_ADD (array, i, memcmp, 1, __memcmp_sse2))
+	      IFUNC_IMPL_ADD (array, i, memcmp, 1, __memcmp_sse2_unaligned))
 
   /* Support sysdeps/x86_64/multiarch/memmove_chk.S.  */
   IFUNC_IMPL (i, name, __memmove_chk,
@@ -211,8 +210,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   /* Support sysdeps/x86_64/multiarch/wmemcmp.S.  */
   IFUNC_IMPL (i, name, wmemcmp,
-	      IFUNC_IMPL_ADD (array, i, wmemcmp, HAS_SSE4_1,
-			      __wmemcmp_sse4_1)
+	      IFUNC_IMPL_ADD (array, i, wmemcmp, 1,
+			      __wmemcmp_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, wmemcmp, HAS_SSSE3,
 			      __wmemcmp_ssse3)
 	      IFUNC_IMPL_ADD (array, i, wmemcmp, 1, __wmemcmp_sse2))
