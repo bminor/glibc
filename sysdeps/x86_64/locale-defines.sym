@@ -8,4 +8,5 @@ LOCALE_T___LOCALES		offsetof (struct __locale_struct, __locales)
 LC_CTYPE
 _NL_CTYPE_NONASCII_CASE
 LOCALE_DATA_VALUES		offsetof (struct __locale_data, values)
+LOCALE_TOLOWER			offsetof (struct __locale_struct, __ctype_tolower)
 SIZEOF_VALUES			sizeof (((struct __locale_data *) 0)->values[0])

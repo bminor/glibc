@@ -31,8 +31,8 @@
 	test	%r9, %r9;				\
 	je	LABEL(strcmp_exitz);			\
 	mov	%r9, %r11
-
-# define STRCMP_SSE42	__strncmp_sse42
+# define STRCMP_AVX2	__strncmp_avx2
+# define STRCMP_SSE2_UNALIGNED	__strncmp_sse2_unaligned
 # define STRCMP_SSSE3	__strncmp_ssse3
 # define STRCMP_SSE2	__strncmp_sse2
 # define __GI_STRCMP	__GI_strncmp
@@ -40,9 +40,8 @@
 # include "locale-defines.h"
 
 # define UPDATE_STRNCMP_COUNTER
-
-# define STRCMP_AVX	__strcasecmp_l_avx
-# define STRCMP_SSE42	__strcasecmp_l_sse42
+# define STRCMP_AVX2	__strcasecmp_avx2_l
+# define STRCMP_SSE2_UNALIGNED	__strcasecmp_sse2_unaligned_l
 # define STRCMP_SSSE3	__strcasecmp_l_ssse3
 # define STRCMP_SSE2	__strcasecmp_l_sse2
 # define __GI_STRCMP	__GI___strcasecmp_l
@@ -60,8 +59,8 @@
 	je	LABEL(strcmp_exitz);			\
 	mov	%r9, %r11
 
-# define STRCMP_AVX	__strncasecmp_l_avx
-# define STRCMP_SSE42	__strncasecmp_l_sse42
+# define STRCMP_AVX2	__strncasecmp_avx2_l
+# define STRCMP_SSE2_UNALIGNED	__strncasecmp_sse2_unaligned_l
 # define STRCMP_SSSE3	__strncasecmp_l_ssse3
 # define STRCMP_SSE2	__strncasecmp_l_sse2
 # define __GI_STRCMP	__GI___strncasecmp_l
@@ -69,8 +68,9 @@
 # define USE_AS_STRCMP
 # define UPDATE_STRNCMP_COUNTER
 # ifndef STRCMP
+#  define STRCMP_AVX2	__strcmp_avx2
+#  define STRCMP_SSE2_UNALIGNED	__strcmp_sse2_unaligned
 #  define STRCMP	strcmp
-#  define STRCMP_SSE42	__strcmp_sse42
 #  define STRCMP_SSSE3	__strcmp_ssse3
 #  define STRCMP_SSE2	__strcmp_sse2
 #  define __GI_STRCMP	__GI_strcmp
@@ -89,17 +89,16 @@ ENTRY(STRCMP)
 	jne	1f
 	call	__init_cpu_features
 1:
-#ifdef USE_AS_STRCMP
-	leaq	__strcmp_sse2_unaligned(%rip), %rax
+#  ifdef HAVE_AVX2_SUPPORT
+
+        leaq    STRCMP_AVX2(%rip), %rax
+        testl   $bit_AVX_Fast_Unaligned_Load, __cpu_features+FEATURE_OFFSET+index_AVX_Fast_Unaligned_Load(%rip)
+	jnz	3f
+#  endif
+	leaq	STRCMP_SSE2_UNALIGNED(%rip), %rax
 	testl   $bit_Fast_Unaligned_Load, __cpu_features+FEATURE_OFFSET+index_Fast_Unaligned_Load(%rip)
 	jnz     3f
-#else
-	testl	$bit_Slow_SSE4_2, __cpu_features+FEATURE_OFFSET+index_Slow_SSE4_2(%rip)
-	jnz	2f
-	leaq	STRCMP_SSE42(%rip), %rax
-	testl	$bit_SSE4_2, __cpu_features+CPUID_OFFSET+index_SSE4_2(%rip)
-	jnz	3f
-#endif
+
 2:	leaq	STRCMP_SSSE3(%rip), %rax
 	testl	$bit_SSSE3, __cpu_features+CPUID_OFFSET+index_SSSE3(%rip)
 	jnz	3f
@@ -115,21 +114,22 @@ ENTRY(__strcasecmp)
 	jne	1f
 	call	__init_cpu_features
 1:
-#  ifdef HAVE_AVX_SUPPORT
-	leaq	__strcasecmp_avx(%rip), %rax
-	testl	$bit_AVX_Usable, __cpu_features+FEATURE_OFFSET+index_AVX_Usable(%rip)
+#  ifdef HAVE_AVX2_SUPPORT
+
+        leaq    __strcasecmp_avx2(%rip), %rax
+        testl   $bit_AVX_Fast_Unaligned_Load, __cpu_features+FEATURE_OFFSET+index_AVX_Fast_Unaligned_Load(%rip)
 	jnz	3f
 #  endif
-	testl	$bit_Slow_SSE4_2, __cpu_features+FEATURE_OFFSET+index_Slow_SSE4_2(%rip)
-	jnz	2f
-	leaq	__strcasecmp_sse42(%rip), %rax
-	testl	$bit_SSE4_2, __cpu_features+CPUID_OFFSET+index_SSE4_2(%rip)
-	jnz	3f
+	leaq	__strcasecmp_sse2_unaligned(%rip), %rax
+	testl   $bit_Fast_Unaligned_Load, __cpu_features+FEATURE_OFFSET+index_Fast_Unaligned_Load(%rip)
+	jnz     3f
+
 2:	leaq	__strcasecmp_ssse3(%rip), %rax
 	testl	$bit_SSSE3, __cpu_features+CPUID_OFFSET+index_SSSE3(%rip)
 	jnz	3f
 	leaq	__strcasecmp_sse2(%rip), %rax
 3:	ret
+
 END(__strcasecmp)
 weak_alias (__strcasecmp, strcasecmp)
 # endif
@@ -141,44 +141,25 @@ ENTRY(__strncasecmp)
 	jne	1f
 	call	__init_cpu_features
 1:
-#  ifdef HAVE_AVX_SUPPORT
-	leaq	__strncasecmp_avx(%rip), %rax
-	testl	$bit_AVX_Usable, __cpu_features+FEATURE_OFFSET+index_AVX_Usable(%rip)
+#  ifdef HAVE_AVX2_SUPPORT
+
+        leaq    __strncasecmp_avx2(%rip), %rax
+        testl   $bit_AVX_Fast_Unaligned_Load, __cpu_features+FEATURE_OFFSET+index_AVX_Fast_Unaligned_Load(%rip)
 	jnz	3f
 #  endif
-	testl	$bit_Slow_SSE4_2, __cpu_features+FEATURE_OFFSET+index_Slow_SSE4_2(%rip)
-	jnz	2f
-	leaq	__strncasecmp_sse42(%rip), %rax
-	testl	$bit_SSE4_2, __cpu_features+CPUID_OFFSET+index_SSE4_2(%rip)
-	jnz	3f
+	leaq	__strncasecmp_sse2_unaligned(%rip), %rax
+	testl   $bit_Fast_Unaligned_Load, __cpu_features+FEATURE_OFFSET+index_Fast_Unaligned_Load(%rip)
+	jnz     3f
+
 2:	leaq	__strncasecmp_ssse3(%rip), %rax
 	testl	$bit_SSSE3, __cpu_features+CPUID_OFFSET+index_SSSE3(%rip)
 	jnz	3f
 	leaq	__strncasecmp_sse2(%rip), %rax
 3:	ret
+
 END(__strncasecmp)
 weak_alias (__strncasecmp, strncasecmp)
 # endif
-
-# undef LABEL
-# define LABEL(l) .L##l##_sse42
-# define GLABEL(l) l##_sse42
-# define SECTION sse4.2
-# include "strcmp-sse42.S"
-
-
-# ifdef HAVE_AVX_SUPPORT
-#  if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
-#   define LABEL(l) .L##l##_avx
-#   define GLABEL(l) l##_avx
-#   define USE_AVX 1
-#   undef STRCMP_SSE42
-#   define STRCMP_SSE42 STRCMP_AVX
-#   define SECTION avx
-#   include "strcmp-sse42.S"
-#  endif
-# endif
-
 
 # undef ENTRY
 # define ENTRY(name) \
