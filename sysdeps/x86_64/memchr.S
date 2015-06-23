@@ -1,5 +1,4 @@
-/* Copyright (C) 2011-2015 Free Software Foundation, Inc.
-   Contributed by Intel Corporation.
+/* Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,292 +17,134 @@
 
 #include <sysdep.h>
 
-/* fast SSE2 version with using pmaxub and 64 byte loop */
+/* fast SSE2 version with using 64 byte loop */
 
 	.text
 ENTRY(memchr)
-	movd	%rsi, %xmm1
-	mov	%rdi, %rcx
-
-	punpcklbw %xmm1, %xmm1
-	test	%rdx, %rdx
-	jz	L(return_null)
-	punpcklbw %xmm1, %xmm1
-
-	and	$63, %rcx
-	pshufd	$0, %xmm1, %xmm1
-
-	cmp	$48, %rcx
-	ja	L(crosscache)
-
-	movdqu	(%rdi), %xmm0
-	pcmpeqb	%xmm1, %xmm0
-	pmovmskb %xmm0, %eax
+	movd	%esi, %xmm2
+	testq	%rdx, %rdx
+	punpcklbw	%xmm2, %xmm2
+	punpcklwd	%xmm2, %xmm2
+	pshufd	$0, %xmm2, %xmm2
+	je	L(return_null)
+	movl	%edi, %eax
+	andl	$4095, %eax
+	cmpl	$4032, %eax
+	jg	L(cross_page)
+	movdqu	(%rdi), %xmm1
+	pcmpeqb	%xmm2, %xmm1
+	pmovmskb	%xmm1, %eax
 	test	%eax, %eax
-
-	jnz	L(matches_1)
-	sub	$16, %rdx
+	je	L(next_48_bytes)
+	bsf	%eax, %eax
+	cmpq	%rax, %rdx
 	jbe	L(return_null)
-	add	$16, %rdi
-	and	$15, %rcx
-	and	$-16, %rdi
-	add	%rcx, %rdx
-	sub	$64, %rdx
-	jbe	L(exit_loop)
-	jmp	L(loop_prolog)
-
-	.p2align 4
-L(crosscache):
-	and	$15, %rcx
-	and	$-16, %rdi
-	movdqa	(%rdi), %xmm0
-
-	pcmpeqb	%xmm1, %xmm0
-/* Check if there is a match.  */
-	pmovmskb %xmm0, %eax
-/* Remove the leading bytes.  */
-	sar	%cl, %eax
-	test	%eax, %eax
-	je	L(unaligned_no_match)
-/* Check which byte is a match.  */
-	bsf	%eax, %eax
-
-	sub	%rax, %rdx
+	addq	%rdi, %rax
+		ret
+.p2align	4,,10
+.p2align	3
+L(next_48_bytes):
+	movdqu	16(%rdi), %xmm1
+	movdqu	32(%rdi), %xmm3
+	pcmpeqb	%xmm2, %xmm1
+	pcmpeqb	%xmm2, %xmm3
+	movdqu	48(%rdi), %xmm4
+	pmovmskb	%xmm1, %esi
+	pmovmskb	%xmm3, %ecx
+	pcmpeqb	%xmm2, %xmm4
+	pmovmskb	%xmm4, %eax
+	salq	$32, %rcx
+	sal	$16, %esi
+	orq	%rsi, %rcx
+	salq	$48, %rax
+	orq	%rcx, %rax
+	je	L(prepare_loop)
+L(return):
+	bsf	%rax, %rax
+	cmpq	%rax, %rdx
 	jbe	L(return_null)
-	add	%rdi, %rax
-	add	%rcx, %rax
-	ret
+	addq	%rdi, %rax
+		ret
 
-	.p2align 4
-L(unaligned_no_match):
-	add	%rcx, %rdx
-	sub	$16, %rdx
-	jbe	L(return_null)
-	add	$16, %rdi
-	sub	$64, %rdx
-	jbe	L(exit_loop)
-
-	.p2align 4
-L(loop_prolog):
-	movdqa	(%rdi), %xmm0
-	pcmpeqb	%xmm1, %xmm0
-	pmovmskb %xmm0, %eax
-	test	%eax, %eax
-	jnz	L(matches)
-
-	movdqa	16(%rdi), %xmm2
-	pcmpeqb	%xmm1, %xmm2
-	pmovmskb %xmm2, %eax
-	test	%eax, %eax
-	jnz	L(matches16)
-
-	movdqa	32(%rdi), %xmm3
-	pcmpeqb	%xmm1, %xmm3
-	pmovmskb %xmm3, %eax
-	test	%eax, %eax
-	jnz	L(matches32)
-
-	movdqa	48(%rdi), %xmm4
-	pcmpeqb	%xmm1, %xmm4
-	add	$64, %rdi
-	pmovmskb %xmm4, %eax
-	test	%eax, %eax
-	jnz	L(matches0)
-
-	test	$0x3f, %rdi
-	jz	L(align64_loop)
-
-	sub	$64, %rdx
-	jbe	L(exit_loop)
-
-	movdqa	(%rdi), %xmm0
-	pcmpeqb	%xmm1, %xmm0
-	pmovmskb %xmm0, %eax
-	test	%eax, %eax
-	jnz	L(matches)
-
-	movdqa	16(%rdi), %xmm2
-	pcmpeqb	%xmm1, %xmm2
-	pmovmskb %xmm2, %eax
-	test	%eax, %eax
-	jnz	L(matches16)
-
-	movdqa	32(%rdi), %xmm3
-	pcmpeqb	%xmm1, %xmm3
-	pmovmskb %xmm3, %eax
-	test	%eax, %eax
-	jnz	L(matches32)
-
-	movdqa	48(%rdi), %xmm3
-	pcmpeqb	%xmm1, %xmm3
-	pmovmskb %xmm3, %eax
-
-	add	$64, %rdi
-	test	%eax, %eax
-	jnz	L(matches0)
-
-	mov	%rdi, %rcx
-	and	$-64, %rdi
-	and	$63, %rcx
-	add	%rcx, %rdx
-
-	.p2align 4
-L(align64_loop):
-	sub	$64, %rdx
-	jbe	L(exit_loop)
-	movdqa	(%rdi), %xmm0
-	movdqa	16(%rdi), %xmm2
-	movdqa	32(%rdi), %xmm3
-	movdqa	48(%rdi), %xmm4
-
-	pcmpeqb	%xmm1, %xmm0
-	pcmpeqb	%xmm1, %xmm2
-	pcmpeqb	%xmm1, %xmm3
-	pcmpeqb	%xmm1, %xmm4
-
-	pmaxub	%xmm0, %xmm3
-	pmaxub	%xmm2, %xmm4
-	pmaxub	%xmm3, %xmm4
-	pmovmskb %xmm4, %eax
-
-	add	$64, %rdi
-
-	test	%eax, %eax
-	jz	L(align64_loop)
-
-	sub	$64, %rdi
-
-	pmovmskb %xmm0, %eax
-	test	%eax, %eax
-	jnz	L(matches)
-
-	pmovmskb %xmm2, %eax
-	test	%eax, %eax
-	jnz	L(matches16)
-
-	movdqa	32(%rdi), %xmm3
-	pcmpeqb	%xmm1, %xmm3
-
-	pcmpeqb	48(%rdi), %xmm1
-	pmovmskb %xmm3, %eax
-	test	%eax, %eax
-	jnz	L(matches32)
-
-	pmovmskb %xmm1, %eax
-	bsf	%eax, %eax
-	lea	48(%rdi, %rax), %rax
-	ret
-
-	.p2align 4
-L(exit_loop):
-	add	$32, %rdx
-	jle	L(exit_loop_32)
-
-	movdqa	(%rdi), %xmm0
-	pcmpeqb	%xmm1, %xmm0
-	pmovmskb %xmm0, %eax
-	test	%eax, %eax
-	jnz	L(matches)
-
-	movdqa	16(%rdi), %xmm2
-	pcmpeqb	%xmm1, %xmm2
-	pmovmskb %xmm2, %eax
-	test	%eax, %eax
-	jnz	L(matches16)
-
-	movdqa	32(%rdi), %xmm3
-	pcmpeqb	%xmm1, %xmm3
-	pmovmskb %xmm3, %eax
-	test	%eax, %eax
-	jnz	L(matches32_1)
-	sub	$16, %rdx
-	jle	L(return_null)
-
-	pcmpeqb	48(%rdi), %xmm1
-	pmovmskb %xmm1, %eax
-	test	%eax, %eax
-	jnz	L(matches48_1)
-	xor	%rax, %rax
-	ret
-
-	.p2align 4
-L(exit_loop_32):
-	add	$32, %rdx
-	movdqa	(%rdi), %xmm0
-	pcmpeqb	%xmm1, %xmm0
-	pmovmskb %xmm0, %eax
-	test	%eax, %eax
-	jnz	L(matches_1)
-	sub	$16, %rdx
-	jbe	L(return_null)
-
-	pcmpeqb	16(%rdi), %xmm1
-	pmovmskb %xmm1, %eax
-	test	%eax, %eax
-	jnz	L(matches16_1)
-	xor	%rax, %rax
-	ret
-
-	.p2align 4
-L(matches0):
-	bsf	%eax, %eax
-	lea	-16(%rax, %rdi), %rax
-	ret
-
-	.p2align 4
-L(matches):
-	bsf	%eax, %eax
-	add	%rdi, %rax
-	ret
-
-	.p2align 4
-L(matches16):
-	bsf	%eax, %eax
-	lea	16(%rax, %rdi), %rax
-	ret
-
-	.p2align 4
-L(matches32):
-	bsf	%eax, %eax
-	lea	32(%rax, %rdi), %rax
-	ret
-
-	.p2align 4
-L(matches_1):
-	bsf	%eax, %eax
-	sub	%rax, %rdx
-	jbe	L(return_null)
-	add	%rdi, %rax
-	ret
-
-	.p2align 4
-L(matches16_1):
-	bsf	%eax, %eax
-	sub	%rax, %rdx
-	jbe	L(return_null)
-	lea	16(%rdi, %rax), %rax
-	ret
-
-	.p2align 4
-L(matches32_1):
-	bsf	%eax, %eax
-	sub	%rax, %rdx
-	jbe	L(return_null)
-	lea	32(%rdi, %rax), %rax
-	ret
-
-	.p2align 4
-L(matches48_1):
-	bsf	%eax, %eax
-	sub	%rax, %rdx
-	jbe	L(return_null)
-	lea	48(%rdi, %rax), %rax
-	ret
-
-	.p2align 4
+.p2align	4,,10
+.p2align	3
 L(return_null):
-	xor	%rax, %rax
+	xorl	%eax, %eax
+		ret
+.p2align	4,,10
+.p2align	4
+L(prepare_loop):
+	movq	%rdi, %rcx
+	andq	$-64, %rcx
+	subq	%rcx, %rdi
+	leaq	(%rdx, %rdi), %rsi
+.p2align	4,,10
+.p2align	3
+L(loop):
+	subq	$64, %rsi
+	jbe	L(return_null)
+		
+	movdqa	64(%rcx), %xmm0
+	movdqa	80(%rcx), %xmm1
+	movdqa	96(%rcx), %xmm3
+	movdqa	112(%rcx), %xmm4
+
+	pcmpeqb	%xmm2, %xmm0
+	pcmpeqb	%xmm2, %xmm1
+	pcmpeqb	%xmm2, %xmm3
+	pcmpeqb	%xmm2, %xmm4
+
+	pmaxub	%xmm0, %xmm1
+	pmaxub	%xmm1, %xmm3
+	pmaxub	%xmm3, %xmm4
+	addq	$64, %rcx
+	pmovmskb %xmm4, %edx
+	testl	%edx, %edx
+	je	L(loop)
+	pmovmskb %xmm3, %r8d
+	pmovmskb %xmm1, %edi
+	salq	$48, %rdx
+	pmovmskb %xmm0, %eax
+	salq	$32, %r8
+	sal	$16, %edi
+	or	%edi, %eax
+	orq	%r8, %rax
+	orq	%rax, %rdx
+	bsfq	%rdx, %rax
+	cmp	%rax, %rsi
+	jbe	L(return_null)
+	addq	%rcx, %rax
 	ret
+
+.p2align	4,,10
+.p2align	3
+L(cross_page):
+	movq	%rdi, %rsi
+	andq	$-64, %rsi
+	movdqa	(%rsi), %xmm1
+	pcmpeqb	%xmm2, %xmm1
+	pmovmskb %xmm1, %ecx
+	movdqa	16(%rsi), %xmm1
+	pcmpeqb	%xmm2, %xmm1
+	pmovmskb %xmm1, %eax
+	movdqa	32(%rsi), %xmm1
+	pcmpeqb	%xmm2, %xmm1
+	sal	$16, %eax
+	movdqa	%xmm2,	%xmm0
+	pcmpeqb	48(%rsi), %xmm0
+	pmovmskb %xmm1, %r8d
+	pmovmskb %xmm0, %r9d
+	salq	$32, %r8
+	salq	$48, %r9
+	or	%ecx, %eax
+	orq	%r9, %rax
+	orq	%r8, %rax
+	movq	%rdi, %rcx
+	subq	%rsi, %rcx
+	shrq	%cl, %rax
+	testq	%rax, %rax
+	jne	L(return)
+	jmp	L(prepare_loop)
 END(memchr)
 
 strong_alias (memchr, __memchr)
