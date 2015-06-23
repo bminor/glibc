@@ -656,6 +656,15 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 
 	      return errno;
 	    }
+	  /* We've marked this guard region unwritable, but it's
+	     possible it already became resident, the most common case
+	     being transparent hugepages; if stack + guard (+ adjacent
+	     mmap regions) were more than 2MB, the kernel might have
+	     filled in a full hugepage when we touched the thread
+	     descriptor above.  This can waste a lot of memory; mark
+	     the guard unused. This shouldn't fail, but if it does,
+	     we can't really do anything about it so ignore it. */
+	  madvise (guard, guardsize, MADV_DONTNEED);
 
 	  pd->guardsize = guardsize;
 	}
