@@ -1,5 +1,10 @@
 2015-06-24  Roland McGrath  <roland@hack.frob.com>
 
+	* nptl/descr.h (struct pthread): Change type of fields cancelhandling
+	and parent_cancelhandling from 'int' to 'unsigned int'.
+
+2015-06-24  Roland McGrath  <roland@hack.frob.com>
+
 	* nptl/descr.h (struct pthread): Change type of field setxid_futex
 	to 'unsigned int'.
 

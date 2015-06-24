@@ -256,7 +256,7 @@ struct pthread
 #define HAVE_CLEANUP_JMP_BUF
 
   /* Flags determining processing of cancellation.  */
-  int cancelhandling;
+  unsigned int cancelhandling;
   /* Bit set if cancellation is disabled.  */
 #define CANCELSTATE_BIT		0
 #define CANCELSTATE_BITMASK	(0x01 << CANCELSTATE_BIT)
@@ -322,7 +322,7 @@ struct pthread
 
   /* The parent's cancel handling at the time of the pthread_create
      call.  This might be needed to undo the effects of a cancellation.  */
-  int parent_cancelhandling;
+  unsigned int parent_cancelhandling;
 
   /* Lock to synchronize access to the descriptor.  */
   int lock;
