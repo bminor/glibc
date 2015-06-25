@@ -1,5 +1,5 @@
 /* SSE2 version of strlen.
-   Copyright (C) 2012-2015 Free Software Foundation, Inc.
+   Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,222 +18,224 @@
 
 #include <sysdep.h>
 
-/* Long lived register in strlen(s), strnlen(s, n) are:
-
-	%xmm11 - zero
-	%rdi   - s
-	%r10  (s+n) & (~(64-1))
-	%r11   s+n
-*/
 
 
 .text
 ENTRY(strlen)
-
-/* Test 64 bytes from %rax for zero. Save result as bitmask in %rdx.  */
-#define FIND_ZERO	\
-	pcmpeqb	(%rax), %xmm8;	\
-	pcmpeqb	16(%rax), %xmm9;	\
-	pcmpeqb	32(%rax), %xmm10;	\
-	pcmpeqb	48(%rax), %xmm11;	\
-	pmovmskb	%xmm8, %esi;	\
-	pmovmskb	%xmm9, %edx;	\
-	pmovmskb	%xmm10, %r8d;	\
-	pmovmskb	%xmm11, %ecx;	\
-	salq	$16, %rdx;	\
-	salq	$16, %rcx;	\
-	orq	%rsi, %rdx;	\
-	orq	%r8, %rcx;	\
-	salq	$32, %rcx;	\
-	orq	%rcx, %rdx;
-
 #ifdef AS_STRNLEN
-/* Do not read anything when n==0.  */
+	mov	%rsi, %r8
+	xor	%edx, %edx
 	test	%rsi, %rsi
-	jne	L(n_nonzero)
-	xor	%rax, %rax
-	ret
-L(n_nonzero):
-
-/* Initialize long lived registers.  */
-
-	add	%rdi, %rsi
-	mov	%rsi, %r10
-	and	$-64, %r10
-	mov	%rsi, %r11
+	je	L(return_zero)
+	cmp	$64,  %rsi
+	jae	L(dont_set)
+	bts	%rsi, %rdx
+L(dont_set):
 #endif
-
-	pxor	%xmm8, %xmm8
-	pxor	%xmm9, %xmm9
-	pxor	%xmm10, %xmm10
-	pxor	%xmm11, %xmm11
-	movq	%rdi, %rax
-	movq	%rdi, %rcx
-	andq	$4095, %rcx
-/* Offsets 4032-4047 will be aligned into 4032 thus fit into page.  */
-	cmpq	$4047, %rcx
-/* We cannot unify this branching as it would be ~6 cycles slower.  */
+	pxor	%xmm0, %xmm0
+	mov	%edi, %ecx
+	and	$4095, %ecx
+	cmp	$4032, %ecx
 	ja	L(cross_page)
-
+	movdqu	(%rdi), %xmm4
+	pcmpeqb	%xmm0, %xmm4
+	pmovmskb %xmm4, %ecx
 #ifdef AS_STRNLEN
-/* Test if end is among first 64 bytes.  */
-# define STRNLEN_PROLOG	\
-	mov	%r11, %rsi;	\
-	subq	%rax, %rsi;	\
-	andq	$-64, %rax;	\
-	testq	$-64, %rsi;	\
-	je	L(strnlen_ret)
+	or	%dx, %cx
 #else
-# define STRNLEN_PROLOG  andq $-64, %rax;
+	test	%ecx, %ecx
 #endif
-
-/* Ignore bits in mask that come before start of string.  */
-#define PROLOG(lab)	\
-	movq	%rdi, %rcx;	\
-	xorq	%rax, %rcx;	\
-	STRNLEN_PROLOG;	\
-	sarq	%cl, %rdx;	\
-	test	%rdx, %rdx;	\
-	je	L(lab);	\
-	bsfq	%rdx, %rax;	\
+	je	L(next48_bytes)
+	bsf	%ecx, %eax
 	ret
 
 #ifdef AS_STRNLEN
-	andq	$-16, %rax
-	FIND_ZERO
-#else
-	/* Test first 16 bytes unaligned.  */
-	movdqu	(%rax), %xmm12
-	pcmpeqb	%xmm8, %xmm12
-	pmovmskb	%xmm12, %edx
-	test	%edx, %edx
-	je 	L(next48_bytes)
-	bsf	%edx, %eax /* If eax is zeroed 16bit bsf can be used.  */
+L(return_zero):
+	xor	%eax, %eax
 	ret
-
+L(return_noread):
+	add	$64, %rax
+	sub	%rdi, %rax
+	ret
+#endif
+	.p2align 4
 L(next48_bytes):
-/* Same as FIND_ZERO except we do not check first 16 bytes.  */
-	andq	$-16, %rax
-	pcmpeqb 16(%rax), %xmm9
-	pcmpeqb 32(%rax), %xmm10
-	pcmpeqb 48(%rax), %xmm11
-	pmovmskb	%xmm9, %edx
-	pmovmskb	%xmm10, %r8d
-	pmovmskb	%xmm11, %ecx
-	salq	$16, %rdx
-	salq	$16, %rcx
-	orq	%r8, %rcx
+	movdqu	16(%rdi), %xmm1
+	movdqu	32(%rdi), %xmm2
+	movdqu	48(%rdi), %xmm3
+	pcmpeqb  %xmm0, %xmm1
+	pcmpeqb  %xmm0, %xmm2
+	pcmpeqb  %xmm0, %xmm3
+#ifdef AS_STRNLEN
+	pmovmskb %xmm1, %ecx
+	sal	$16, %ecx
+	or	%rcx, %rdx
+#else
+	pmovmskb %xmm1, %edx
+	sal	$16, %edx
+#endif
+	pmovmskb %xmm2, %esi
+	pmovmskb %xmm3, %ecx
+	sal	$16, %ecx
+	or	%esi, %ecx
 	salq	$32, %rcx
 	orq	%rcx, %rdx
-#endif
-
-	/* When no zero byte is found xmm9-11 are zero so we do not have to
-	   zero them.  */
-	PROLOG(loop)
+	je	L(loop_init)
+	bsfq	%rdx, %rax
+	ret
 
 	.p2align 4
 L(cross_page):
-	andq	$-64, %rax
-	FIND_ZERO
-	PROLOG(loop_init)
 
+	movq	%rdi, %rax
+	pxor	%xmm1, %xmm1
+	pxor	%xmm2, %xmm2
+	pxor	%xmm3, %xmm3
 #ifdef AS_STRNLEN
-/* We must do this check to correctly handle strnlen (s, -1).  */
-L(strnlen_ret):
-	bts	%rsi, %rdx
+	mov	%rdx, %r9
+#endif
+	andq	$-64, %rax
+	pcmpeqb	(%rax), %xmm0
+	pcmpeqb	16(%rax), %xmm1
+	pcmpeqb	32(%rax), %xmm2
+	pcmpeqb	48(%rax), %xmm3
+	pmovmskb %xmm0, %esi
+	pxor	%xmm0, %xmm0
+	pmovmskb %xmm1, %edx
+	pmovmskb %xmm2, %r10d
+	pmovmskb %xmm3, %ecx
+	sal	$16, %edx
+	sal	$16, %ecx
+	or	%esi, %edx
+	or	%r10, %rcx
+	salq	$32, %rcx
+	orq	%rcx, %rdx
+	mov	%edi, %ecx
+#ifdef AS_STRNLEN
+	salq	%cl, %r9
+	or	%r9, %rdx
+#endif
 	sarq	%cl, %rdx
 	test	%rdx, %rdx
 	je	L(loop_init)
 	bsfq	%rdx, %rax
 	ret
-#endif
 	.p2align 4
 L(loop_init):
-	pxor	%xmm9, %xmm9
-	pxor	%xmm10, %xmm10
-	pxor	%xmm11, %xmm11
+	movq	%rdi, %rax
+	andq	$-64, %rax
 #ifdef AS_STRNLEN
+	add	%rdi, %r8
+	sub	%rax, %r8
+	cmp	$64, %r8
+	je	L(return_noread)
+#endif
+	pxor	%xmm1, %xmm1
+	pxor	%xmm2, %xmm2
+#ifdef USE_AVX2
+	vpxor	%xmm0, %xmm0, %xmm0
+#endif
 	.p2align 4
 L(loop):
-
-	addq	$64, %rax
-	cmpq	%rax, %r10
-	je	L(exit_end)
-
-	movdqa	(%rax), %xmm8
-	pminub	16(%rax), %xmm8
-	pminub	32(%rax), %xmm8
-	pminub	48(%rax), %xmm8
-	pcmpeqb	%xmm11, %xmm8
-	pmovmskb	%xmm8, %edx
-	testl	%edx, %edx
-	jne	L(exit)
-	jmp	L(loop)
-
-	.p2align 4
-L(exit_end):
-	cmp	%rax, %r11
-	je	L(first) /* Do not read when end is at page boundary.  */
-	pxor	%xmm8, %xmm8
-	FIND_ZERO
-
-L(first):
-	bts	%r11, %rdx
-	bsfq	%rdx, %rdx
-	addq	%rdx, %rax
-	subq	%rdi, %rax
-	ret
-
-	.p2align 4
-L(exit):
-	pxor	%xmm8, %xmm8
-	FIND_ZERO
-
-	bsfq	%rdx, %rdx
-	addq	%rdx, %rax
-	subq	%rdi, %rax
-	ret
-
+#ifdef USE_AVX2
+	vmovdqa	64(%rax), %ymm1
+	vpminub	96(%rax), %ymm1, %ymm2
+	vpcmpeqb %ymm0, %ymm2, %ymm2
+	vpmovmskb %ymm2, %edx
 #else
+	movdqa	64(%rax), %xmm5
+	pminub	80(%rax), %xmm5
+	pminub	96(%rax), %xmm5
+	pminub	112(%rax), %xmm5
+	pcmpeqb	%xmm0, %xmm5
+	pmovmskb %xmm5, %edx
+#endif
 
-	/* Main loop.  Unrolled twice to improve L2 cache performance on core2.  */
-	.p2align 4
-L(loop):
-
-	movdqa	64(%rax), %xmm8
-	pminub	80(%rax), %xmm8
-	pminub	96(%rax), %xmm8
-	pminub	112(%rax), %xmm8
-	pcmpeqb	%xmm11, %xmm8
-	pmovmskb	%xmm8, %edx
+#ifdef AS_STRNLEN
+	sub	$64, %r8
 	testl	%edx, %edx
 	jne	L(exit64)
+	cmp	$64, %r8
+	jbe	L(exit64_zero)
+#else
+	testl	%edx, %edx
+	jne	L(exit64)
+#endif
 
 	subq	$-128, %rax
-
-	movdqa	(%rax), %xmm8
-	pminub	16(%rax), %xmm8
-	pminub	32(%rax), %xmm8
-	pminub	48(%rax), %xmm8
-	pcmpeqb	%xmm11, %xmm8
-	pmovmskb	%xmm8, %edx
+#ifdef USE_AVX2
+	vmovdqa	(%rax), %ymm1
+	vpminub	32(%rax), %ymm1, %ymm2
+	vpcmpeqb %ymm0, %ymm2, %ymm2
+	vpmovmskb %ymm2, %edx
+#else
+	movdqa	(%rax), %xmm5
+	pminub	16(%rax), %xmm5
+	pminub	32(%rax), %xmm5
+	pminub	48(%rax), %xmm5
+	pcmpeqb	%xmm0, %xmm5
+	pmovmskb %xmm5, %edx
+#endif
+#ifdef AS_STRNLEN
+	sub	$64, %r8
 	testl	%edx, %edx
 	jne	L(exit0)
+	cmp	$64, %r8
+	jbe	L(exit0_zero)
+#else
+	testl	%edx, %edx
+	jne	L(exit0)
+#endif
 	jmp	L(loop)
 
+#ifdef AS_STRNLEN
 	.p2align 4
+L(exit64_zero):
+	addq	$64, %rax
+L(exit0_zero):
+	add	%r8, %rax
+	sub	%rdi, %rax
+	ret
+#endif
+	.p2align 4
+
+
 L(exit64):
 	addq	$64, %rax
 L(exit0):
-	pxor	%xmm8, %xmm8
-	FIND_ZERO
-
+#ifdef USE_AVX2
+	sal	$32, %rdx
+#else
+	sal	$48, %rdx
+#endif
+#ifdef AS_STRNLEN
+	cmp	$64, %r8
+	jae	L(dont_set2)
+	bts	%r8, %rdx
+	L(dont_set2):
+#endif
+#ifdef USE_AVX2
+	subq    %rdi, %rax
+	vpcmpeqb %ymm0, %ymm1, %ymm1
+	vpmovmskb %ymm1, %ecx
+	vzeroupper
+	or	%rcx, %rdx
+#else
+	pcmpeqb	(%rax), %xmm0
+	pcmpeqb	16(%rax), %xmm1
+	pcmpeqb	32(%rax), %xmm2
+	subq	%rdi, %rax
+	pmovmskb %xmm0, %esi
+	pmovmskb %xmm1, %ecx
+	pmovmskb %xmm2, %r8d
+	sal	$16, %ecx
+	or	%esi, %ecx
+	salq	$32, %r8
+	orq	%r8, %rcx
+	orq	%rcx, %rdx
+#endif
 	bsfq	%rdx, %rdx
 	addq	%rdx, %rax
-	subq	%rdi, %rax
 	ret
-
-#endif
-
 END(strlen)
 libc_hidden_builtin_def (strlen)
