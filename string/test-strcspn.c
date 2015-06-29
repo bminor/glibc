@@ -31,18 +31,9 @@ IMPL (stupid_strcspn, 0)
 IMPL (simple_strcspn, 0)
 IMPL (strcspn, 1)
 
-size_t
-simple_strcspn (const char *s, const char *rej)
-{
-  const char *r, *str = s;
-  char c;
-
-  while ((c = *s++) != '\0')
-    for (r = rej; *r != '\0'; ++r)
-      if (*r == c)
-	return s - str - 1;
-  return s - str - 1;
-}
+#define AS_STRCSPN
+#define STRPBRK simple_strcspn
+#include "string/strpbrk.c"
 
 size_t
 stupid_strcspn (const char *s, const char *rej)

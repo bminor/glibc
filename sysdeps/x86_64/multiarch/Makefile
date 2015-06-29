@@ -19,7 +19,8 @@ sysdep_routines += strncat-c stpncpy-c strncpy-c strcmp-ssse3 \
 		   strcpy-sse2-unaligned strncpy-sse2-unaligned \
 		   stpcpy-sse2-unaligned stpncpy-sse2-unaligned \
 		   strcat-sse2-unaligned strncat-sse2-unaligned \
-		   strchr-sse2-no-bsf memcmp-ssse3 strstr-sse2-unaligned
+		   strchr-sse2-no-bsf memcmp-ssse3 strstr-sse2-unaligned \
+		   strcspn_sse2 strpbrk_sse2 strcspn_sse2_late strpbrk_sse2_late
 
 ifeq (yes,$(config-cflags-sse4))
 sysdep_routines += strcspn_sse42 strpbrk_sse42 strspn_sse42

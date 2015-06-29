@@ -54,22 +54,9 @@ ENTRY(STRCSPN)
 	leaq	STRCSPN_SSE42(%rip), %rax
 2:	ret
 END(STRCSPN)
-
-# undef ENTRY
-# define ENTRY(name) \
-	.type STRCSPN_SSE2, @function; \
-	.globl STRCSPN_SSE2; \
-	.align 16; \
-	STRCSPN_SSE2: cfi_startproc; \
-	CALL_MCOUNT
-# undef END
-# define END(name) \
-	cfi_endproc; .size STRCSPN_SSE2, .-STRCSPN_SSE2
 #endif
+
+#else /* HAVE_SSE4_SUPPORT */
+weak_alias (STRCSPN_SSE2, STRCSPN)
 #endif /* HAVE_SSE4_SUPPORT */
-
-#ifdef USE_AS_STRPBRK
-#include "../strpbrk.S"
-#else
-#include "../strcspn.S"
-#endif
+libc_hidden_builtin_def (STRCSPN)

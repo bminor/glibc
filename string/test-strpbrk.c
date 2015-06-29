@@ -32,18 +32,8 @@ IMPL (stupid_strpbrk, 0)
 IMPL (simple_strpbrk, 0)
 IMPL (strpbrk, 1)
 
-char *
-simple_strpbrk (const char *s, const char *rej)
-{
-  const char *r;
-  char c;
-
-  while ((c = *s++) != '\0')
-    for (r = rej; *r != '\0'; ++r)
-      if (*r == c)
-	return (char *) s - 1;
-  return NULL;
-}
+#define STRPBRK simple_strpbrk
+#include "string/strpbrk.c"
 
 char *
 stupid_strpbrk (const char *s, const char *rej)
