@@ -1,5 +1,5 @@
 /* Test for fmemopen implementation.
-   Copyright (C) 2000-2014 Free Software Foundation, Inc.
+   Copyright (C) 2000-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Hanno Mueller, kontakt@hanno.de, 2000.
 
@@ -21,19 +21,31 @@ static char buffer[] = "foobar";
 
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
 
-int
-main (void)
+static int
+do_test (void)
 {
   int ch;
   FILE *stream;
+  int ret = 0;
 
-  stream = fmemopen (buffer, strlen (buffer), "r");
+  stream = fmemopen (buffer, strlen (buffer), "r+");
 
   while ((ch = fgetc (stream)) != EOF)
     printf ("Got %c\n", ch);
 
+  fputc ('1', stream);
+  if (fflush (stream) != EOF || errno != ENOSPC)
+    {
+      printf ("fflush didn't fail with ENOSPC\n");
+      ret = 1;
+    }
+
   fclose (stream);
 
-  return 0;
+  return ret;
 }
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
