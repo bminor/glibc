@@ -44,11 +44,13 @@ __BEGIN_DECLS
 __BEGIN_NAMESPACE_STD
 /* Copy N bytes of SRC to DEST.  */
 extern void *memcpy (void *__restrict __dest, const void *__restrict __src,
-		     size_t __n) __THROW __nonnull ((1, 2));
+		     size_t __n)
+     __THROW __attribute_noplt__  __nonnull ((1, 2));
+
 /* Copy N bytes of SRC to DEST, guaranteeing
    correct behavior for overlapping strings.  */
 extern void *memmove (void *__dest, const void *__src, size_t __n)
-     __THROW __nonnull ((1, 2));
+     __THROW __attribute_noplt__ __nonnull ((1, 2));
 __END_NAMESPACE_STD
 
 /* Copy no more than N bytes of SRC to DEST, stopping when C is found.
@@ -63,20 +65,23 @@ extern void *memccpy (void *__restrict __dest, const void *__restrict __src,
 
 __BEGIN_NAMESPACE_STD
 /* Set N bytes of S to C.  */
-extern void *memset (void *__s, int __c, size_t __n) __THROW __nonnull ((1));
+extern void *memset (void *__s, int __c, size_t __n)
+     __THROW __attribute_noplt__ __nonnull ((1));
 
 /* Compare N bytes of S1 and S2.  */
 extern int memcmp (const void *__s1, const void *__s2, size_t __n)
-     __THROW __attribute_pure__ __nonnull ((1, 2));
+     __THROW __attribute_pure__ __attribute_noplt__ __nonnull ((1, 2));
 
 /* Search N bytes of S for C.  */
 #ifdef __CORRECT_ISO_CPP_STRING_H_PROTO
 extern "C++"
 {
 extern void *memchr (void *__s, int __c, size_t __n)
-      __THROW __asm ("memchr") __attribute_pure__ __nonnull ((1));
+      __THROW __asm ("memchr") __attribute_pure__
+      __attribute_noplt__ __nonnull ((1));
 extern const void *memchr (const void *__s, int __c, size_t __n)
-      __THROW __asm ("memchr") __attribute_pure__ __nonnull ((1));
+      __THROW __asm ("memchr") __attribute_pure__
+      __attribute_noplt__ __nonnull ((1));
 
 # ifdef __OPTIMIZE__
 __extern_always_inline void *
@@ -94,7 +99,7 @@ memchr (const void *__s, int __c, size_t __n) __THROW
 }
 #else
 extern void *memchr (const void *__s, int __c, size_t __n)
-      __THROW __attribute_pure__ __nonnull ((1));
+      __THROW __attribute_pure__ __attribute_noplt__ __nonnull ((1));
 #endif
 __END_NAMESPACE_STD
 
@@ -142,10 +147,10 @@ extern char *strncat (char *__restrict __dest, const char *__restrict __src,
 
 /* Compare S1 and S2.  */
 extern int strcmp (const char *__s1, const char *__s2)
-     __THROW __attribute_pure__ __nonnull ((1, 2));
+     __THROW __attribute_pure__ __attribute_noplt__ __nonnull ((1, 2));
 /* Compare N characters of S1 and S2.  */
 extern int strncmp (const char *__s1, const char *__s2, size_t __n)
-     __THROW __attribute_pure__ __nonnull ((1, 2));
+     __THROW __attribute_pure__ __attribute_noplt__ __nonnull ((1, 2));
 
 /* Compare the collated forms of S1 and S2.  */
 extern int strcoll (const char *__s1, const char *__s2)
@@ -397,7 +402,7 @@ extern void *mempcpy (void *__restrict __dest,
 __BEGIN_NAMESPACE_STD
 /* Return the length of S.  */
 extern size_t strlen (const char *__s)
-     __THROW __attribute_pure__ __nonnull ((1));
+     __THROW __attribute_pure__ __attribute_noplt__ __nonnull ((1));
 __END_NAMESPACE_STD
 
 #ifdef	__USE_XOPEN2K8

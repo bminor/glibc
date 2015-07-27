@@ -443,3 +443,12 @@ libio/fmemopen.c
 libio/test-fmemopen.c
   For b/22167761, backport fix buffer overflow for writes to memory buffer stream (PR18549)
   https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=7c2ce714d4e853aadbec13b920576fdfada520f1
+
+string/string.h
+math/bits/mathcalls.h
+misc/sys/cdefs.h
+  Re-declare hot libc functions with "noplt" attribute available GCC 4.9
+  onwards.  This attribute allows calls to these functions to avoid the
+  PLT and improves the performance of some of our code via better icache
+  and iTLB performance.
+  (tmsriram, google-local)

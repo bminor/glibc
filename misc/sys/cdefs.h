@@ -232,6 +232,15 @@
 # define __attribute_pure__ /* Ignore */
 #endif
 
+/* GCC 4.9 onwards supports function attribute "noplt".  Calls to functions
+   declared with this attribute avoid the PLT and call them indirectly via
+   a GOT entry.  */
+#if __GNUC_PREREQ (4,9) && defined(__GOOGLE_GLIBC_NOPLT)
+# define __attribute_noplt__ __attribute__ ((noplt))
+#else
+# define __attribute_noplt__ /* Ignore */
+#endif
+
 /* This declaration tells the compiler that the value is constant.  */
 #if __GNUC_PREREQ (2,5)
 # define __attribute_const__ __attribute__ ((__const__))
