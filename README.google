@@ -452,3 +452,12 @@ misc/sys/cdefs.h
   PLT and improves the performance of some of our code via better icache
   and iTLB performance.
   (tmsriram, google-local)
+
+elf/dl-tls.c
+nptl/Makefile
+nptl/tst-tls77.c
+nptl/tst-tls77mod.c
+  Fix b/19824366 with tweaks to TLS dynamic loading, and add a test.  Note that
+  upstream commit
+  https://sourceware.org/git/?p=glibc.git&a=commit&h=f8aeae347377f3dfa8cbadde057adf1827fb1d44
+  fixes this problem in a different way, so this patch is not needed upstream.

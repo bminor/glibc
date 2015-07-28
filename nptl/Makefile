@@ -300,7 +300,7 @@ tests += tst-cancelx2 tst-cancelx3 tst-cancelx4 tst-cancelx5 \
 endif
 ifeq ($(build-shared),yes)
 tests += tst-atfork2 tst-tls3 tst-tls4 tst-tls5 tst-tls7 tst-_res1 tst-fini1 \
-	 tst-stackguard1
+	 tst-stackguard1 tst-tls77
 tests-nolibpthread += tst-fini1
 ifeq ($(have-z-execstack),yes)
 tests += tst-execstack
@@ -311,7 +311,7 @@ modules-names = tst-atfork2mod tst-tls3mod tst-tls4moda tst-tls4modb \
 		tst-tls5mod tst-tls5moda tst-tls5modb tst-tls5modc \
 		tst-tls5modd tst-tls5mode tst-tls5modf \
 		tst-_res1mod1 tst-_res1mod2 tst-execstack-mod tst-fini1mod \
-		tst-tls7mod
+		tst-tls7mod tst-tls77mod
 extra-test-objs += $(addsuffix .os,$(strip $(modules-names))) tst-cleanup4aux.o
 test-extras += $(modules-names) tst-cleanup4aux
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
@@ -326,6 +326,7 @@ tst-tls5modd.so-no-z-defs = yes
 tst-tls5mode.so-no-z-defs = yes
 tst-tls5modf.so-no-z-defs = yes
 tst-tls7mod.so-no-z-defs = yes
+tst-tls77mod.so-no-z-defs = yes
 
 ifeq ($(build-shared),yes)
 # Build all the modules even when not actually running test programs.
@@ -505,6 +506,11 @@ $(objpfx)tst-tls6.out: tst-tls6.sh $(objpfx)tst-tls5 \
 	$(BASH) $< $(common-objpfx) '$(test-via-rtld-prefix)' \
 	  '$(test-wrapper-env)'
 endif
+
+$(objpfx)tst-tls77: $(libdl) $(shared-thread-library)
+LDFLAGS-tst-tls77 = -rdynamic
+$(objpfx)tst-tls77.out: $(objpfx)tst-tls77mod.so
+$(objpfx)tst-tls77mod.so: $(shared-thread-library)
 
 $(objpfx)tst-dlsym1: $(libdl) $(shared-thread-library)
 

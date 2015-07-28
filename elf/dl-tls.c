@@ -695,10 +695,15 @@ _dl_update_slotinfo (unsigned long int req_modid)
 		   memalign and not malloc.  */
 		__signal_safe_free (dtv[modid].pointer.val);
 
-	      /* This module is loaded dynamically- We defer memory
-		 allocation.  */
-	      dtv[modid].pointer.is_static = false;
-	      dtv[modid].pointer.val = TLS_DTV_UNALLOCATED;
+	      /* Google-local fix for issues solved differently upstream.  */
+	      if (map->l_tls_offset == NO_TLS_OFFSET
+		  || map->l_tls_offset == FORCED_DYNAMIC_TLS_OFFSET)
+		{
+		  /* This module is loaded dynamically- We defer memory
+		     allocation.  */
+		  dtv[modid].pointer.is_static = false;
+		  dtv[modid].pointer.val = TLS_DTV_UNALLOCATED;
+		}
 
 	      if (modid == req_modid)
 		the_map = map;
@@ -769,7 +774,7 @@ tls_get_addr_tail (GET_ADDR_ARGS, dtv_t *dtv, struct link_map *the_map)
     }
   else
     {
-      void **pp = &dtv[GET_ADDR_MODULE].pointer.val;
+      void ** volatile pp = &dtv[GET_ADDR_MODULE].pointer.val;
       while (atomic_forced_read (*pp) == TLS_DTV_UNALLOCATED)
 	{
 	  /* for lack of a better (safe) thing to do, just spin.
