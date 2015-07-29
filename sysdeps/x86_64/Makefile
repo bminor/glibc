@@ -19,6 +19,9 @@ gen-as-const-headers += locale-defines.sym
 endif
 
 ifeq ($(subdir),elf)
+CFLAGS-.os += $(if $(filter $(@F),$(patsubst %,%.os,$(all-rtld-routines))),\
+		   -mno-mmx)
+
 sysdep-dl-routines += tlsdesc dl-tlsdesc
 sysdep_routines += tlsdesc dl-tlsdesc
 sysdep-rtld-routines += tlsdesc dl-tlsdesc
