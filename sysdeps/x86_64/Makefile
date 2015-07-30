@@ -34,6 +34,11 @@ tests-pie += $(quad-pie-test)
 $(objpfx)tst-quad1pie: $(objpfx)tst-quadmod1pie.o
 $(objpfx)tst-quad2pie: $(objpfx)tst-quadmod2pie.o
 
+tests += tst-plt1
+modules-names += tst-pltmod1
+
+$(objpfx)tst-plt1: $(objpfx)tst-pltmod1.so
+
 tests += tst-audit3 tst-audit4 tst-audit5 tst-audit10
 ifeq (yes,$(config-cflags-avx))
 tests += tst-audit6 tst-audit7
