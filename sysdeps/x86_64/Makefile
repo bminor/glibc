@@ -38,6 +38,7 @@ tests += tst-plt1
 modules-names += tst-pltmod1
 
 $(objpfx)tst-plt1: $(objpfx)tst-pltmod1.so
+tst-pltmod1.so-no-z-defs = yes
 
 tests += tst-audit3 tst-audit4 tst-audit5 tst-audit10
 ifeq (yes,$(config-cflags-avx))
