@@ -1,3 +1,7 @@
+2015-08-05  Zack Weinberg  <zackw@panix.com>
+
+	* misc/regexp.h: Update comments.
+
 2015-08-05  Carlos O'Donell  <carlos@systemhalted.org>
 
 	* version.h (RELEASE): Set to "stable".
