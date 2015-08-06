@@ -1,3 +1,8 @@
+2015-08-06  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* elf/get-dynamic-info.h (elf_get_dynamic_info): Remove assert
+	if DT_RUNPATH and DT_RPATH flags are found in ld.so.
+
 2016-08-04  Carlos O'Donell  <carlos@redhat.com>
 
 	* po/de.po: Update from Translation Project.
