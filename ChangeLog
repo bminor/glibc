@@ -1,3 +1,11 @@
+2016-05-24  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #17905]
+	* catgets/Makefile (tst-catgets-mem): New test.
+	* catgets/catgets.c (catopen): Don't use unbounded alloca.
+	* catgets/open_catalog.c (__open_catalog): Likewise.
+	* catgets/tst-catgets.c (do_bz17905): Test unbounded alloca.
+
 2016-05-24  Florian Weimer  <fweimer@redhat.com>
 
 	* misc/bug18240.c (do_test): Set RLIMIT_AS.
