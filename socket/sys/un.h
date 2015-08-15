@@ -23,6 +23,11 @@
 /* Get the definition of the macro to define the common sockaddr members.  */
 #include <bits/sockaddr.h>
 
+#ifdef __USE_MISC
+# include <stddef.h>		/* For offsetof.  */
+# include <string.h>		/* For prototype of `strlen'.  */
+#endif
+
 __BEGIN_DECLS
 
 /* Structure describing the address of an AF_LOCAL (aka AF_UNIX) socket.  */
@@ -34,9 +39,6 @@ struct sockaddr_un
 
 
 #ifdef __USE_MISC
-# include <stddef.h>		/* For offsetof.  */
-# include <string.h>		/* For prototype of `strlen'.  */
-
 /* Evaluate to actual length of the `sockaddr_un' structure.  */
 # define SUN_LEN(ptr) (offsetof(struct sockaddr_un, sun_path)                 \
 		      + strlen ((ptr)->sun_path))
