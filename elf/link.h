@@ -34,6 +34,8 @@
 #include <bits/elfclass.h>		/* Defines __ELF_NATIVE_CLASS.  */
 #include <bits/link.h>
 
+__BEGIN_DECLS
+
 /* Rendezvous structure used by the run-time dynamic linker to communicate
    details of shared object loading to the debugger.  If the executable's
    dynamic section has a DT_DEBUG element, the run-time linker sets that
@@ -162,8 +164,6 @@ struct dl_phdr_info
     void *dlpi_tls_data;
   };
 
-__BEGIN_DECLS
-
 extern int dl_iterate_phdr (int (*__callback) (struct dl_phdr_info *,
 					       size_t, void *),
 			    void *__data);
@@ -187,8 +187,8 @@ extern uintptr_t la_symbind64 (Elf64_Sym *__sym, unsigned int __ndx,
 			       unsigned int *__flags, const char *__symname);
 extern unsigned int la_objclose (uintptr_t *__cookie);
 
-__END_DECLS
-
 #endif
+
+__END_DECLS
 
 #endif /* link.h */
