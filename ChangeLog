@@ -1,3 +1,11 @@
+2015-08-18  Alan Modra  <amodra@gmail.com>
+
+	[BZ #18421]
+	* sysdeps/hppa/start.S [SHARED]: Use .section .data.rel.ro and define
+	.Lp__global.
+	(_start): Load %dp via .Lp__global.
+	[!SHARED]: Use .section .rodata.
+
 2015-08-09  John David Anglin  <danglin@gcc.gnu.org>
 
 	[BZ #18480]
