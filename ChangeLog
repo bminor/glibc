@@ -1,3 +1,20 @@
+2019-06-04  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #18830]
+	* iconv/skeleton.c (FUNCTION_NAME): Use RESET_INPUT_BUFFER only if
+	no irreversible characters occurred.
+	* iconv/gconv_simple.c (internal_ucs4_loop)
+	(internal_ucs4_loop_unaligned, internal_ucs4_loop_single)
+	(ucs4_internal_loop, ucs4_internal_loop_unaligned)
+	(ucs4_internal_loop_single, internal_ucs4le_loop)
+	(internal_ucs4le_loop_unaligned, internal_ucs4le_loop_single)
+	(ucs4le_internal_loop, ucs4le_internal_loop_unaligned)
+	(ucs4le_internal_loop_single): Add const to outend.
+	* sysdeps/s390/multiarch/gconv_simple.c (internal_ucs4le_loop)
+	(ucs4_internal_loop, ucs4le_internal_loop): Likewise.
+	* iconv/Makefile (tests): Add tst-iconv7.
+	* iconv/tst-iconv7.c: New file.
+
 2018-02-18  Aurelien Jarno  <aurelien@aurel32.net>
 
 	[BZ #21508]

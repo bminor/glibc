@@ -83,6 +83,11 @@
      RESET_INPUT_BUFFER	If the input character sets allow this the macro
 			can be defined to reset the input buffer pointers
 			to cover only those characters up to the error.
+			Note that if the conversion has skipped over
+			irreversible characters (due to
+			__GCONV_IGNORE_ERRORS) there is no longer a direct
+			correspondence between input and output pointers,
+			and this macro is not called.
 
      FUNCTION_NAME	if not set the conversion function is named `gconv'.
 
@@ -597,6 +602,12 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 	  inptr = *inptrp;
 	  /* The outbuf buffer is empty.  */
 	  outstart = outbuf;
+#ifdef RESET_INPUT_BUFFER
+	  /* Remember how many irreversible characters were skipped before
+	     this round.  */
+	  size_t loop_irreversible
+	    = lirreversible + (irreversible ? *irreversible : 0);
+#endif
 
 #ifdef SAVE_RESET_STATE
 	  SAVE_RESET_STATE (1);
@@ -671,8 +682,16 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 		  if (__glibc_unlikely (outerr != outbuf))
 		    {
 #ifdef RESET_INPUT_BUFFER
-		      RESET_INPUT_BUFFER;
-#else
+		      /* RESET_INPUT_BUFFER can only work when there were
+			 no new irreversible characters skipped during
+			 this round.  */
+		      if (loop_irreversible
+			  == lirreversible + (irreversible ? *irreversible : 0))
+			{
+			  RESET_INPUT_BUFFER;
+			  goto done_reset;
+			}
+#endif
 		      /* We have a problem in one of the functions below.
 			 Undo the conversion upto the error point.  */
 		      size_t nstatus __attribute__ ((unused));
@@ -682,9 +701,9 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 		      outbuf = outstart;
 
 		      /* Restore the state.  */
-# ifdef SAVE_RESET_STATE
+#ifdef SAVE_RESET_STATE
 		      SAVE_RESET_STATE (0);
-# endif
+#endif
 
 		      if (__glibc_likely (!unaligned))
 			{
@@ -701,7 +720,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 					       lirreversiblep
 					       EXTRA_LOOP_ARGS);
 			}
-# if POSSIBLY_UNALIGNED
+#if POSSIBLY_UNALIGNED
 		      else
 			{
 			  if (FROM_DIRECTION)
@@ -720,7 +739,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 							       lirreversiblep
 							       EXTRA_LOOP_ARGS);
 			}
-# endif
+#endif
 
 		      /* We must run out of output buffer space in this
 			 rerun.  */
@@ -731,9 +750,11 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 			 the invocation counter.  */
 		      if (__glibc_unlikely (outbuf == outstart))
 			--data->__invocation_counter;
-#endif	/* reset input buffer */
 		    }
 
+#ifdef RESET_INPUT_BUFFER
+		done_reset:
+#endif
 		  /* Change the status.  */
 		  status = result;
 		}

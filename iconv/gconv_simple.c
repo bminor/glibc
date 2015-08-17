@@ -76,7 +76,7 @@ __attribute ((always_inline))
 internal_ucs4_loop (struct __gconv_step *step,
 		    struct __gconv_step_data *step_data,
 		    const unsigned char **inptrp, const unsigned char *inend,
-		    unsigned char **outptrp, unsigned char *outend,
+		    unsigned char **outptrp, const unsigned char *outend,
 		    size_t *irreversible)
 {
   const unsigned char *inptr = *inptrp;
@@ -120,7 +120,8 @@ internal_ucs4_loop_unaligned (struct __gconv_step *step,
 			      struct __gconv_step_data *step_data,
 			      const unsigned char **inptrp,
 			      const unsigned char *inend,
-			      unsigned char **outptrp, unsigned char *outend,
+			      unsigned char **outptrp,
+			      const unsigned char *outend,
 			      size_t *irreversible)
 {
   const unsigned char *inptr = *inptrp;
@@ -169,7 +170,8 @@ internal_ucs4_loop_single (struct __gconv_step *step,
 			   struct __gconv_step_data *step_data,
 			   const unsigned char **inptrp,
 			   const unsigned char *inend,
-			   unsigned char **outptrp, unsigned char *outend,
+			   unsigned char **outptrp,
+			   const unsigned char *outend,
 			   size_t *irreversible)
 {
   mbstate_t *state = step_data->__statep;
@@ -231,7 +233,7 @@ __attribute ((always_inline))
 ucs4_internal_loop (struct __gconv_step *step,
 		    struct __gconv_step_data *step_data,
 		    const unsigned char **inptrp, const unsigned char *inend,
-		    unsigned char **outptrp, unsigned char *outend,
+		    unsigned char **outptrp, const unsigned char *outend,
 		    size_t *irreversible)
 {
   int flags = step_data->__flags;
@@ -298,7 +300,8 @@ ucs4_internal_loop_unaligned (struct __gconv_step *step,
 			      struct __gconv_step_data *step_data,
 			      const unsigned char **inptrp,
 			      const unsigned char *inend,
-			      unsigned char **outptrp, unsigned char *outend,
+			      unsigned char **outptrp,
+			      const unsigned char *outend,
 			      size_t *irreversible)
 {
   int flags = step_data->__flags;
@@ -368,7 +371,8 @@ ucs4_internal_loop_single (struct __gconv_step *step,
 			   struct __gconv_step_data *step_data,
 			   const unsigned char **inptrp,
 			   const unsigned char *inend,
-			   unsigned char **outptrp, unsigned char *outend,
+			   unsigned char **outptrp,
+			   const unsigned char *outend,
 			   size_t *irreversible)
 {
   mbstate_t *state = step_data->__statep;
@@ -443,7 +447,7 @@ __attribute ((always_inline))
 internal_ucs4le_loop (struct __gconv_step *step,
 		      struct __gconv_step_data *step_data,
 		      const unsigned char **inptrp, const unsigned char *inend,
-		      unsigned char **outptrp, unsigned char *outend,
+		      unsigned char **outptrp, const unsigned char *outend,
 		      size_t *irreversible)
 {
   const unsigned char *inptr = *inptrp;
@@ -488,7 +492,8 @@ internal_ucs4le_loop_unaligned (struct __gconv_step *step,
 				struct __gconv_step_data *step_data,
 				const unsigned char **inptrp,
 				const unsigned char *inend,
-				unsigned char **outptrp, unsigned char *outend,
+				unsigned char **outptrp,
+				const unsigned char *outend,
 				size_t *irreversible)
 {
   const unsigned char *inptr = *inptrp;
@@ -540,7 +545,8 @@ internal_ucs4le_loop_single (struct __gconv_step *step,
 			     struct __gconv_step_data *step_data,
 			     const unsigned char **inptrp,
 			     const unsigned char *inend,
-			     unsigned char **outptrp, unsigned char *outend,
+			     unsigned char **outptrp,
+			     const unsigned char *outend,
 			     size_t *irreversible)
 {
   mbstate_t *state = step_data->__statep;
@@ -601,7 +607,7 @@ __attribute ((always_inline))
 ucs4le_internal_loop (struct __gconv_step *step,
 		      struct __gconv_step_data *step_data,
 		      const unsigned char **inptrp, const unsigned char *inend,
-		      unsigned char **outptrp, unsigned char *outend,
+		      unsigned char **outptrp, const unsigned char *outend,
 		      size_t *irreversible)
 {
   int flags = step_data->__flags;
@@ -671,7 +677,8 @@ ucs4le_internal_loop_unaligned (struct __gconv_step *step,
 				struct __gconv_step_data *step_data,
 				const unsigned char **inptrp,
 				const unsigned char *inend,
-				unsigned char **outptrp, unsigned char *outend,
+				unsigned char **outptrp,
+				const unsigned char *outend,
 				size_t *irreversible)
 {
   int flags = step_data->__flags;
@@ -745,7 +752,8 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 			     struct __gconv_step_data *step_data,
 			     const unsigned char **inptrp,
 			     const unsigned char *inend,
-			     unsigned char **outptrp, unsigned char *outend,
+			     unsigned char **outptrp,
+			     const unsigned char *outend,
 			     size_t *irreversible)
 {
   mbstate_t *state = step_data->__statep;
