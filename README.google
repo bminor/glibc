@@ -461,3 +461,7 @@ nptl/tst-tls77mod.c
   upstream commit
   https://sourceware.org/git/?p=glibc.git&a=commit&h=f8aeae347377f3dfa8cbadde057adf1827fb1d44
   fixes this problem in a different way, so this patch is not needed upstream.
+
+resolv/nss_dns/dns-host.c
+  For b/21023324, backport buffer overflow in getanswer_r (PR18287, CVE-2015-1781)
+  https://sourceware.org/git/?p=glibc.git;a=commit;h=2959eda9272a03386

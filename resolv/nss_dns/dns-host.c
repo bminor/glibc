@@ -613,7 +613,8 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
   int have_to_map = 0;
   uintptr_t pad = -(uintptr_t) buffer % __alignof__ (struct host_data);
   buffer += pad;
-  if (__builtin_expect (buflen < sizeof (struct host_data) + pad, 0))
+  buflen = buflen > pad ? buflen - pad : 0;
+  if (__builtin_expect (buflen < sizeof (struct host_data), 0))
     {
       /* The buffer is too small.  */
     too_small:
