@@ -404,7 +404,7 @@ ICONV_VX_NAME (internal_ucs4le_loop) (struct __gconv_step *step,
 				      const unsigned char **inptrp,
 				      const unsigned char *inend,
 				      unsigned char **outptrp,
-				      unsigned char *outend,
+				      const unsigned char *outend,
 				      size_t *irreversible)
 {
   const unsigned char *inptr = *inptrp;
@@ -504,7 +504,7 @@ ICONV_VX_NAME (ucs4_internal_loop) (struct __gconv_step *step,
 				    const unsigned char **inptrp,
 				    const unsigned char *inend,
 				    unsigned char **outptrp,
-				    unsigned char *outend,
+				    const unsigned char *outend,
 				    size_t *irreversible)
 {
   int flags = step_data->__flags;
@@ -631,7 +631,7 @@ ICONV_VX_NAME (ucs4le_internal_loop) (struct __gconv_step *step,
 				      const unsigned char **inptrp,
 				      const unsigned char *inend,
 				      unsigned char **outptrp,
-				      unsigned char *outend,
+				      const unsigned char *outend,
 				      size_t *irreversible)
 {
   int flags = step_data->__flags;
