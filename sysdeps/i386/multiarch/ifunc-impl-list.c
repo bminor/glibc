@@ -1,5 +1,5 @@
-/* Enumerate available IFUNC implementations of a function.  i686 version.
-   Copyright (C) 2012-2015 Free Software Foundation, Inc.
+/* Enumerate available IFUNC implementations of a function.  i386 version.
+   Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,6 +36,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   size_t i = 0;
 
+#if 0
   /* Support sysdeps/i386/i686/multiarch/bcopy.S.  */
   IFUNC_IMPL (i, name, bcopy,
 	      IFUNC_IMPL_ADD (array, i, bcopy, HAS_CPU_FEATURE (SSSE3),
@@ -45,6 +46,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, bcopy, HAS_CPU_FEATURE (SSE2),
 			      __bcopy_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, bcopy, 1, __bcopy_ia32))
+#endif
 
   /* Support sysdeps/i386/i686/multiarch/bzero.S.  */
   IFUNC_IMPL (i, name, bzero,
@@ -52,8 +54,14 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __bzero_sse2_rep)
 	      IFUNC_IMPL_ADD (array, i, bzero, HAS_CPU_FEATURE (SSE2),
 			      __bzero_sse2)
-	      IFUNC_IMPL_ADD (array, i, bzero, 1, __bzero_ia32))
+	      IFUNC_IMPL_ADD (array, i, bzero, HAS_I686, __bzero_i686)
+#if MINIMUM_ISA < 686
+	      IFUNC_IMPL_ADD (array, i, bzero, HAS_I586, __bzero_i586)
+	      IFUNC_IMPL_ADD (array, i, bzero, 1, __bzero_i386)
+#endif
+	      )
 
+#if 0
   /* Support sysdeps/i386/i686/multiarch/memchr.S.  */
   IFUNC_IMPL (i, name, memchr,
 	      IFUNC_IMPL_ADD (array, i, memchr, HAS_CPU_FEATURE (SSE2),
@@ -101,6 +109,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, memrchr, HAS_CPU_FEATURE (SSE2),
 			      __memrchr_sse2)
 	      IFUNC_IMPL_ADD (array, i, memrchr, 1, __memrchr_ia32))
+#endif
 
   /* Support sysdeps/i386/i686/multiarch/memset_chk.S.  */
   IFUNC_IMPL (i, name, __memset_chk,
@@ -110,8 +119,15 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, __memset_chk,
 			      HAS_CPU_FEATURE (SSE2),
 			      __memset_chk_sse2)
+	      IFUNC_IMPL_ADD (array, i, __memset_chk,
+			      HAS_I686, __memset_chk_i686)
+#if MINIMUM_ISA < 686
+	      IFUNC_IMPL_ADD (array, i, __memset_chk,
+			      HAS_I586, __memset_chk_i586)
 	      IFUNC_IMPL_ADD (array, i, __memset_chk, 1,
-			      __memset_chk_ia32))
+			      __memset_chk_i386)
+#endif
+	      )
 
   /* Support sysdeps/i386/i686/multiarch/memset.S.  */
   IFUNC_IMPL (i, name, memset,
@@ -119,8 +135,16 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memset_sse2_rep)
 	      IFUNC_IMPL_ADD (array, i, memset, HAS_CPU_FEATURE (SSE2),
 			      __memset_sse2)
-	      IFUNC_IMPL_ADD (array, i, memset, 1, __memset_ia32))
+	      IFUNC_IMPL_ADD (array, i, memset, HAS_I686,
+			      __memset_i686)
+#if MINIMUM_ISA < 686
+	      IFUNC_IMPL_ADD (array, i, memset, HAS_I586,
+			      __memset_i586)
+	      IFUNC_IMPL_ADD (array, i, memset, 1, __memset_i386)
+#endif
+	      )
 
+#if 0
   /* Support sysdeps/i386/i686/multiarch/rawmemchr.S.  */
   IFUNC_IMPL (i, name, rawmemchr,
 	      IFUNC_IMPL_ADD (array, i, rawmemchr, HAS_CPU_FEATURE (SSE2),
@@ -370,6 +394,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, strncmp, HAS_CPU_FEATURE (SSSE3),
 			      __strncmp_ssse3)
 	      IFUNC_IMPL_ADD (array, i, strncmp, 1, __strncmp_ia32))
+#endif
 #endif
 
   return i;
