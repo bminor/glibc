@@ -1,3 +1,10 @@
+2015-08-19  Andrew Senkevich  <andrew.senkevich@intel.com>
+
+	[BZ #18796]
+	* scripts/test-installation.pl: Don't add -lmvec to build options
+	if libmvec wasn't built.
+	* NEWS: Mention this fix.
+
 2015-08-10  Maxim Ostapenko  <m.ostapenko@partner.samsung.com>
 
 	[BZ #18778]
