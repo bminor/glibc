@@ -1,4 +1,4 @@
-/* Multiple versions of __memcpy_chk
+/* Multiple versions of __mempcpy_chk
    All versions must be listed in ifunc-impl-list.c.
    Copyright (C) 2010-2015 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
@@ -18,33 +18,43 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
-#include <init-arch.h>
-
 /* Define multiple versions only for the definition in lib and for
-   DSO.  There are no multiarch memcpy functions for static binaries.
+   DSO.  There are no multiarch mempcpy functions for static binaries.
  */
 #if IS_IN (libc)
+# include <sysdep.h>
+# include <init-arch.h>
+
 # ifdef SHARED
 	.text
-ENTRY(__memcpy_chk)
-	.type	__memcpy_chk, @gnu_indirect_function
+ENTRY(__mempcpy_chk)
+	.type	__mempcpy_chk, @gnu_indirect_function
 	LOAD_GOT_AND_RTLD_GLOBAL_RO
-	LOAD_FUNC_GOT_EAX (__memcpy_chk_ia32)
+# if !SUPPORT_I686
+#  if !SUPPORT_I586
+	LOAD_FUNC_GOT_EAX (__mempcpy_chk_i386)
+	HAS_ARCH_FEATURE (I586)
+	jz	2f
+#  endif
+	LOAD_FUNC_GOT_EAX (__mempcpy_chk_i586)
+	HAS_ARCH_FEATURE (I686)
+	jz	2f
+# endif
+	LOAD_FUNC_GOT_EAX (__mempcpy_chk_i686)
 	HAS_CPU_FEATURE (SSE2)
 	jz	2f
-	LOAD_FUNC_GOT_EAX (__memcpy_chk_sse2_unaligned)
+	LOAD_FUNC_GOT_EAX (__mempcpy_chk_sse2_unaligned)
 	HAS_ARCH_FEATURE (Fast_Unaligned_Load)
 	jnz	2f
 	HAS_CPU_FEATURE (SSSE3)
 	jz	2f
-	LOAD_FUNC_GOT_EAX (__memcpy_chk_ssse3)
+	LOAD_FUNC_GOT_EAX (__mempcpy_chk_ssse3)
 	HAS_CPU_FEATURE (Fast_Rep_String)
 	jz	2f
-	LOAD_FUNC_GOT_EAX (__memcpy_chk_ssse3_rep)
+	LOAD_FUNC_GOT_EAX (__mempcpy_chk_ssse3_rep)
 2:	ret
-END(__memcpy_chk)
+END(__mempcpy_chk)
 # else
-#  include "../memcpy_chk.S"
+#  include <sysdeps/i386/mempcpy_chk.S>
 # endif
 #endif

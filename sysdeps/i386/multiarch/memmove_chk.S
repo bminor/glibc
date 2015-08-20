@@ -18,16 +18,21 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
-#include <init-arch.h>
-
 /* Define multiple versions only for the definition in lib.  */
 #if IS_IN (libc)
+# include <sysdep.h>
+# include <init-arch.h>
+
 	.text
 ENTRY(__memmove_chk)
 	.type	__memmove_chk, @gnu_indirect_function
 	LOAD_GOT_AND_RTLD_GLOBAL_RO
-	LOAD_FUNC_GOT_EAX (__memmove_chk_ia32)
+# if !SUPPORT_I686
+	LOAD_FUNC_GOT_EAX (__memmove_chk_i386)
+	HAS_ARCH_FEATURE (I686)
+	jz	2f
+# endif
+	LOAD_FUNC_GOT_EAX (__memmove_chk_i686)
 	HAS_CPU_FEATURE (SSE2)
 	jz	2f
 	LOAD_FUNC_GOT_EAX (__memmove_chk_sse2_unaligned)
@@ -79,16 +84,30 @@ __memmove_chk_ssse3_rep:
 	cfi_endproc
 	.size __memmove_chk_ssse3_rep, .-__memmove_chk_ssse3_rep
 
-	.type __memmove_chk_ia32, @function
+	.type __memmove_chk_i686, @function
 	.p2align 4;
-__memmove_chk_ia32:
+__memmove_chk_i686:
 	cfi_startproc
 	CALL_MCOUNT
 	movl	12(%esp), %eax
 	cmpl	%eax, 16(%esp)
 	jb	__chk_fail
-	jmp	__memmove_ia32
+	jmp	__memmove_i686
 	cfi_endproc
-	.size __memmove_chk_ia32, .-__memmove_chk_ia32
+	.size __memmove_chk_i686, .-__memmove_chk_i686
+
+#  if !SUPPORT_I686
+	.type __memmove_chk_i386, @function
+	.p2align 4;
+__memmove_chk_i386:
+	cfi_startproc
+	CALL_MCOUNT
+	movl	12(%esp), %eax
+	cmpl	%eax, 16(%esp)
+	jb	__chk_fail
+	jmp	__memmove_i386
+	cfi_endproc
+	.size __memmove_chk_i386, .-__memmove_chk_i386
+#  endif
 # endif
 #endif
