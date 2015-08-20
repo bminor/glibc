@@ -20,5 +20,6 @@ sysdep_routines += bcopy-i386 bcopy-i686 bcopy-sse2-unaligned \
 		   memset-sse2 memset-sse2-rep \
 		   memchr-sse2-bsf memchr-sse2 \
 		   memcmp-i386 memcmp-i686 memcmp-ssse3 memcmp-sse4 \
-		   memrchr-i386 memrchr-sse2-bsf memrchr-sse2
+		   memrchr-i386 memrchr-sse2-bsf memrchr-sse2 \
+		   rawmemchr-sse2-bsf rawmemchr-sse2
 endif

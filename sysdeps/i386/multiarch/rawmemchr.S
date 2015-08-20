@@ -34,7 +34,7 @@ ENTRY(__rawmemchr)
 	LOAD_FUNC_GOT_EAX (__rawmemchr_sse2)
 	ret
 
-2:	LOAD_FUNC_GOT_EAX (__rawmemchr_ia32)
+2:	LOAD_FUNC_GOT_EAX (__rawmemchr_i386)
 	ret
 
 3:	LOAD_FUNC_GOT_EAX (__rawmemchr_sse2_bsf)
@@ -45,21 +45,21 @@ weak_alias(__rawmemchr, rawmemchr)
 
 # undef ENTRY
 # define ENTRY(name) \
-	.type __rawmemchr_ia32, @function; \
-	.globl __rawmemchr_ia32; \
+	.type __rawmemchr_i386, @function; \
+	.globl __rawmemchr_i386; \
 	.p2align 4; \
-	__rawmemchr_ia32: cfi_startproc; \
+	__rawmemchr_i386: cfi_startproc; \
 	CALL_MCOUNT
 # undef END
 # define END(name) \
-	cfi_endproc; .size __rawmemchr_ia32, .-__rawmemchr_ia32
+	cfi_endproc; .size __rawmemchr_i386, .-__rawmemchr_i386
 
 # undef libc_hidden_def
 /* IFUNC doesn't work with the hidden functions in shared library since
    they will be called without setting up EBX needed for PLT which is
    used by IFUNC.  */
 # define libc_hidden_def(name) \
-	.globl __GI___rawmemchr; __GI___rawmemchr = __rawmemchr_ia32
+	.globl __GI___rawmemchr; __GI___rawmemchr = __rawmemchr_i386
 
 #endif
-#include "../../rawmemchr.S"
+#include <sysdeps/i386/rawmemchr.S>
