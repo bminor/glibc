@@ -2,9 +2,8 @@ ifeq ($(subdir),string)
 sysdep_routines += strcmp-ssse3 \
 		   strcmp-sse4 strncmp-c strncmp-ssse3 strncmp-sse4 \
 		   varshift \
-		   strlen-sse2 strlen-sse2-bsf strncpy-c strcpy-ssse3 \
-		   strncpy-ssse3 stpcpy-ssse3 stpncpy-ssse3 strcpy-sse2 \
-		   strncpy-sse2 stpcpy-sse2 stpncpy-sse2 strcat-ssse3 \
+		   strlen-sse2 strlen-sse2-bsf \
+		   strcat-ssse3 \
 		   strcat-sse2 strncat-ssse3 strncat-sse2 strncat-c \
 		   strchr-sse2 strrchr-sse2 strchr-sse2-bsf strrchr-sse2-bsf \
 		   strnlen-sse2 strnlen-c \
