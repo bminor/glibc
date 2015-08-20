@@ -71,15 +71,17 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memchr_sse2)
 	      IFUNC_IMPL_ADD (array, i, memchr, 1, __memchr_i386))
 
-#if 0
   /* Support sysdeps/i386/i686/multiarch/memcmp.S.  */
   IFUNC_IMPL (i, name, memcmp,
 	      IFUNC_IMPL_ADD (array, i, memcmp, HAS_CPU_FEATURE (SSE4_2),
 			      __memcmp_sse4_2)
 	      IFUNC_IMPL_ADD (array, i, memcmp, HAS_CPU_FEATURE (SSSE3),
 			      __memcmp_ssse3)
-	      IFUNC_IMPL_ADD (array, i, memcmp, 1, __memcmp_ia32))
+	      IFUNC_IMPL_ADD (array, i, memcmp, HAS_I686, __memcmp_i686)
+#if MINIMUM_ISA < 686
+	      IFUNC_IMPL_ADD (array, i, memcmp, 1, __memcmp_i386)
 #endif
+	      )
 
   /* Support sysdeps/i386/i686/multiarch/memmove_chk.S.  */
   IFUNC_IMPL (i, name, __memmove_chk,

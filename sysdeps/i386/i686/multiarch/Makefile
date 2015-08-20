@@ -1,7 +1,7 @@
 ifeq ($(subdir),string)
 sysdep_routines += strcmp-ssse3 \
 		   strcmp-sse4 strncmp-c strncmp-ssse3 strncmp-sse4 \
-		   memcmp-ssse3 memcmp-sse4 varshift \
+		   varshift \
 		   strlen-sse2 strlen-sse2-bsf strncpy-c strcpy-ssse3 \
 		   strncpy-ssse3 stpcpy-ssse3 stpncpy-ssse3 strcpy-sse2 \
 		   strncpy-sse2 stpcpy-sse2 stpncpy-sse2 strcat-ssse3 \
