@@ -23,14 +23,14 @@
 #include <math.h>
 #include <init-arch.h>
 
-extern double __fma_ia32 (double x, double y, double z) attribute_hidden;
+extern double __fma_i386 (double x, double y, double z) attribute_hidden;
 extern double __fma_fma (double x, double y, double z) attribute_hidden;
 
 libm_ifunc (__fma,
-	    HAS_ARCH_FEATURE (FMA_Usable) ? __fma_fma : __fma_ia32);
+	    HAS_ARCH_FEATURE (FMA_Usable) ? __fma_fma : __fma_i386);
 weak_alias (__fma, fma)
 
-# define __fma __fma_ia32
+# define __fma __fma_i386
 #endif
 
 #include <sysdeps/ieee754/ldbl-96/s_fma.c>
