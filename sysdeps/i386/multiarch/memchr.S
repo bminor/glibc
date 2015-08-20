@@ -18,10 +18,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
-#include <init-arch.h>
-
 #if IS_IN (libc)
+# include <sysdep.h>
+# include <init-arch.h>
+
 	.text
 ENTRY(__memchr)
 	.type	__memchr, @gnu_indirect_function
@@ -34,7 +34,7 @@ ENTRY(__memchr)
 	LOAD_FUNC_GOT_EAX ( __memchr_sse2)
 	ret
 
-2:	LOAD_FUNC_GOT_EAX (__memchr_ia32)
+2:	LOAD_FUNC_GOT_EAX (__memchr_i386)
 	ret
 
 3:	LOAD_FUNC_GOT_EAX (__memchr_sse2_bsf)
@@ -45,21 +45,21 @@ weak_alias(__memchr, memchr)
 
 # undef ENTRY
 # define ENTRY(name) \
-	.type __memchr_ia32, @function; \
-	.globl __memchr_ia32; \
+	.type __memchr_i386, @function; \
+	.globl __memchr_i386; \
 	.p2align 4; \
-	__memchr_ia32: cfi_startproc; \
+	__memchr_i386: cfi_startproc; \
 	CALL_MCOUNT
 # undef END
 # define END(name) \
-	cfi_endproc; .size __memchr_ia32, .-__memchr_ia32
+	cfi_endproc; .size __memchr_i386, .-__memchr_i386
 
 # undef libc_hidden_builtin_def
 /* IFUNC doesn't work with the hidden functions in shared library since
    they will be called without setting up EBX needed for PLT which is
    used by IFUNC.  */
 # define libc_hidden_builtin_def(name) \
-	.globl __GI_memchr; __GI_memchr = __memchr_ia32
+	.globl __GI_memchr; __GI_memchr = __memchr_i386
 
 #endif
-#include "../../memchr.S"
+#include <sysdeps/i386/memchr.S>
