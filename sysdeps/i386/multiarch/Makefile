@@ -31,7 +31,9 @@ sysdep_routines += bcopy-i386 bcopy-i686 bcopy-sse2-unaligned \
 		   strcasecmp_l-ssse3 \
 		   strncase-i386 strncase_l-i386 strncase_l-sse4 \
 		   strncase_l-ssse3 \
-		   strncmp-i386 strncmp-ssse3 strncmp-sse4 
+		   strncmp-i386 strncmp-ssse3 strncmp-sse4 \
+		   strcat-i386 strcat-sse2 strcat-ssse3 \
+		   strncat-i386 strncat-sse2 strncat-ssse3
 endif
 
 ifeq (mathyes,$(subdir)$(config-cflags-avx))
