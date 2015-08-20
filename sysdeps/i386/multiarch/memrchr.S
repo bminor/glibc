@@ -34,7 +34,7 @@ ENTRY(__memrchr)
 	LOAD_FUNC_GOT_EAX (__memrchr_sse2)
 	ret
 
-2:	LOAD_FUNC_GOT_EAX (__memrchr_ia32)
+2:	LOAD_FUNC_GOT_EAX (__memrchr_i386)
 	ret
 
 3:	LOAD_FUNC_GOT_EAX (__memrchr_sse2_bsf)

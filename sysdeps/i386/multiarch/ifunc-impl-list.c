@@ -116,15 +116,13 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 #endif
 	      )
 
-#if 0
   /* Support sysdeps/i386/i686/multiarch/memrchr.S.  */
   IFUNC_IMPL (i, name, memrchr,
 	      IFUNC_IMPL_ADD (array, i, memrchr, HAS_CPU_FEATURE (SSE2),
 			      __memrchr_sse2_bsf)
 	      IFUNC_IMPL_ADD (array, i, memrchr, HAS_CPU_FEATURE (SSE2),
 			      __memrchr_sse2)
-	      IFUNC_IMPL_ADD (array, i, memrchr, 1, __memrchr_ia32))
-#endif
+	      IFUNC_IMPL_ADD (array, i, memrchr, 1, __memrchr_i386))
 
   /* Support sysdeps/i386/i686/multiarch/memset_chk.S.  */
   IFUNC_IMPL (i, name, __memset_chk,
