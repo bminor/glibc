@@ -21,7 +21,11 @@ sysdep_routines += bcopy-i386 bcopy-i686 bcopy-sse2-unaligned \
 		   memchr-sse2-bsf memchr-sse2 \
 		   memcmp-i386 memcmp-i686 memcmp-ssse3 memcmp-sse4 \
 		   memrchr-i386 memrchr-sse2-bsf memrchr-sse2 \
-		   rawmemchr-sse2-bsf rawmemchr-sse2
+		   rawmemchr-sse2-bsf rawmemchr-sse2 \
+		   stpcpy-i386 stpcpy-i586 stpcpy-sse2 stpcpy-ssse3 \
+		   stpncpy-i386 stpncpy-sse2 stpncpy-ssse3 \
+		   strcpy-i386 strcpy-i586 strcpy-sse2 strcpy-ssse3 \
+		   strncpy-i386 strncpy-sse2 strncpy-ssse3
 endif
 
 ifeq (mathyes,$(subdir)$(config-cflags-avx))
