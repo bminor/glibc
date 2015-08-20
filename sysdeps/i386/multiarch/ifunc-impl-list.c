@@ -163,15 +163,15 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 #endif
 	      )
 
-#if 0
   /* Support sysdeps/i386/i686/multiarch/rawmemchr.S.  */
   IFUNC_IMPL (i, name, rawmemchr,
 	      IFUNC_IMPL_ADD (array, i, rawmemchr, HAS_CPU_FEATURE (SSE2),
 			      __rawmemchr_sse2_bsf)
 	      IFUNC_IMPL_ADD (array, i, rawmemchr, HAS_CPU_FEATURE (SSE2),
 			      __rawmemchr_sse2)
-	      IFUNC_IMPL_ADD (array, i, rawmemchr, 1, __rawmemchr_ia32))
+	      IFUNC_IMPL_ADD (array, i, rawmemchr, 1, __rawmemchr_i386))
 
+#if 0
   /* Support sysdeps/i386/i686/multiarch/stpncpy.S.  */
   IFUNC_IMPL (i, name, stpncpy,
 	      IFUNC_IMPL_ADD (array, i, stpncpy, HAS_CPU_FEATURE (SSSE3),
