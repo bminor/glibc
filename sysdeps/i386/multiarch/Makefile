@@ -23,3 +23,9 @@ sysdep_routines += bcopy-i386 bcopy-i686 bcopy-sse2-unaligned \
 		   memrchr-i386 memrchr-sse2-bsf memrchr-sse2 \
 		   rawmemchr-sse2-bsf rawmemchr-sse2
 endif
+
+ifeq (mathyes,$(subdir)$(config-cflags-avx))
+libm-sysdep_routines += s_fma-fma s_fmaf-fma
+CFLAGS-s_fma-fma.c += -mavx -mfpmath=sse
+CFLAGS-s_fmaf-fma.c += -mavx -mfpmath=sse
+endif
