@@ -1,15 +1,10 @@
 ifeq ($(subdir),string)
-sysdep_routines += strcmp-ssse3 \
-		   strcmp-sse4 strncmp-c strncmp-ssse3 strncmp-sse4 \
-		   varshift \
+sysdep_routines += varshift \
 		   strlen-sse2 strlen-sse2-bsf \
 		   strcat-ssse3 \
 		   strcat-sse2 strncat-ssse3 strncat-sse2 strncat-c \
 		   strchr-sse2 strrchr-sse2 strchr-sse2-bsf strrchr-sse2-bsf \
-		   strnlen-sse2 strnlen-c \
-		   strcasecmp_l-c strcasecmp-c strcasecmp_l-ssse3 \
-		   strncase_l-c strncase-c strncase_l-ssse3 \
-		   strcasecmp_l-sse4 strncase_l-sse4
+		   strnlen-sse2 strnlen-c
 ifeq (yes,$(config-cflags-sse4))
 sysdep_routines += strcspn-c strpbrk-c strspn-c
 CFLAGS-varshift.c += -msse4

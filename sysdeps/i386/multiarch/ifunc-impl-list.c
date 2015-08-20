@@ -185,7 +185,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 #endif
 	     )
 
-#if 0
   /* Support sysdeps/i386/i686/multiarch/strcasecmp.S.  */
   IFUNC_IMPL (i, name, strcasecmp,
 	      IFUNC_IMPL_ADD (array, i, strcasecmp,
@@ -194,7 +193,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, strcasecmp,
 			      HAS_CPU_FEATURE (SSSE3),
 			      __strcasecmp_ssse3)
-	      IFUNC_IMPL_ADD (array, i, strcasecmp, 1, __strcasecmp_ia32))
+	      IFUNC_IMPL_ADD (array, i, strcasecmp, 1, __strcasecmp_i386))
 
   /* Support sysdeps/i386/i686/multiarch/strcasecmp_l.S.  */
   IFUNC_IMPL (i, name, strcasecmp_l,
@@ -205,8 +204,9 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      HAS_CPU_FEATURE (SSSE3),
 			      __strcasecmp_l_ssse3)
 	      IFUNC_IMPL_ADD (array, i, strcasecmp_l, 1,
-			      __strcasecmp_l_ia32))
+			      __strcasecmp_l_i386))
 
+#if 0
   /* Support sysdeps/i386/i686/multiarch/strcat.S.  */
   IFUNC_IMPL (i, name, strcat,
 	      IFUNC_IMPL_ADD (array, i, strcat, HAS_CPU_FEATURE (SSSE3),
@@ -222,6 +222,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, strchr, HAS_CPU_FEATURE (SSE2),
 			      __strchr_sse2)
 	      IFUNC_IMPL_ADD (array, i, strchr, 1, __strchr_ia32))
+#endif
 
   /* Support sysdeps/i386/i686/multiarch/strcmp.S.  */
   IFUNC_IMPL (i, name, strcmp,
@@ -229,8 +230,11 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __strcmp_sse4_2)
 	      IFUNC_IMPL_ADD (array, i, strcmp, HAS_CPU_FEATURE (SSSE3),
 			      __strcmp_ssse3)
-	      IFUNC_IMPL_ADD (array, i, strcmp, 1, __strcmp_ia32))
+	      IFUNC_IMPL_ADD (array, i, strcmp, HAS_I686, __strcmp_i686)
+#if MINIMUM_ISA < 686
+	      IFUNC_IMPL_ADD (array, i, strcmp, 1, __strcmp_i386)
 #endif
+	      )
 
   /* Support sysdeps/i386/i686/multiarch/strcpy.S.  */
   IFUNC_IMPL (i, name, strcpy,
@@ -250,6 +254,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, strcspn, HAS_CPU_FEATURE (SSE4_2),
 			      __strcspn_sse42)
 	      IFUNC_IMPL_ADD (array, i, strcspn, 1, __strcspn_ia32))
+#endif
 
   /* Support sysdeps/i386/i686/multiarch/strncase.S.  */
   IFUNC_IMPL (i, name, strncasecmp,
@@ -260,7 +265,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      HAS_CPU_FEATURE (SSSE3),
 			      __strncasecmp_ssse3)
 	      IFUNC_IMPL_ADD (array, i, strncasecmp, 1,
-			      __strncasecmp_ia32))
+			      __strncasecmp_i386))
 
   /* Support sysdeps/i386/i686/multiarch/strncase_l.S.  */
   IFUNC_IMPL (i, name, strncasecmp_l,
@@ -271,8 +276,9 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      HAS_CPU_FEATURE (SSSE3),
 			      __strncasecmp_l_ssse3)
 	      IFUNC_IMPL_ADD (array, i, strncasecmp_l, 1,
-			      __strncasecmp_l_ia32))
+			      __strncasecmp_l_i386))
 
+#if 0
   /* Support sysdeps/i386/i686/multiarch/strncat.S.  */
   IFUNC_IMPL (i, name, strncat,
 	      IFUNC_IMPL_ADD (array, i, strncat, HAS_CPU_FEATURE (SSSE3),
@@ -437,6 +443,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, strlen, HAS_CPU_FEATURE (SSE2),
 			      __strlen_sse2)
 	      IFUNC_IMPL_ADD (array, i, strlen, 1, __strlen_ia32))
+#endif
 
   /* Support sysdeps/i386/i686/multiarch/strncmp.S.  */
   IFUNC_IMPL (i, name, strncmp,
@@ -444,8 +451,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __strncmp_sse4_2)
 	      IFUNC_IMPL_ADD (array, i, strncmp, HAS_CPU_FEATURE (SSSE3),
 			      __strncmp_ssse3)
-	      IFUNC_IMPL_ADD (array, i, strncmp, 1, __strncmp_ia32))
-#endif
+	      IFUNC_IMPL_ADD (array, i, strncmp, 1, __strncmp_i386))
 #endif
 
   return i;
