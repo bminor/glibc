@@ -6,7 +6,7 @@ extern __typeof (strncasecmp_l) __strncasecmp_l_nonascii;
 #define USE_IN_EXTENDED_LOCALE_MODEL    1
 #include <string/strncase.c>
 
-strong_alias (__strncasecmp_l_nonascii, __strncasecmp_l_ia32)
+strong_alias (__strncasecmp_l_nonascii, __strncasecmp_l_i386)
 
 /* The needs of strcasecmp in libc are minimal, no need to go through
    the IFUNC.  */
