@@ -2,6 +2,8 @@
 // Author: Paul Menage
 
 // An NSS module that extends local user account lookup to the file /etc/passwd.borg
+// (Despite the suggestive name, passwd.borg is just a second file in the standard
+// passwd format, separated for various reasons. -sts 2015)
 
 #include <stdio.h>
 #include <pwd.h>
@@ -10,17 +12,10 @@
 #include <errno.h>
 #include <string.h>
 
-#ifdef NSSBORG_STANDALONE
-#include <pthread.h>
-static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-#define NSSBORG_LOCK  pthread_mutex_lock(&mutex)
-#define NSSBORG_UNLOCK pthread_mutex_unlock(&mutex)
-#else
 #include <libc-lock.h>
 __libc_lock_define_initialized (static, lock)
 #define NSSBORG_LOCK  __libc_lock_lock (lock)
 #define NSSBORG_UNLOCK  __libc_lock_unlock (lock);
-#endif
 
 static FILE *f;
 
