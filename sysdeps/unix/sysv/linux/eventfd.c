@@ -25,11 +25,16 @@ int
 eventfd (unsigned int count, int flags)
 {
 #ifdef __NR_eventfd2
-  int res = INLINE_SYSCALL (eventfd2, 2, count, flags);
 # ifndef __ASSUME_EVENTFD2
-  if (res != -1 || errno != ENOSYS)
-# endif
+  INTERNAL_SYSCALL_DECL (err);
+  int res = INTERNAL_SYSCALL (eventfd2, err, 2, count, flags);
+  if (!__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (res, err)))
     return res;
+  else if (INTERNAL_SYSCALL_ERRNO (res, err) != ENOSYS)
+    return INLINE_SYSCALL_ERROR_RETURN_VALUE (INTERNAL_SYSCALL_ERRNO (res, err));
+# else
+  return INLINE_SYSCALL (eventfd2, 2, count, flags);
+# endif
 #endif
 
 #ifndef __ASSUME_EVENTFD2

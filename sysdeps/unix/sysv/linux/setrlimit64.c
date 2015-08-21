@@ -31,9 +31,13 @@ setrlimit64 (enum __rlimit_resource resource, const struct rlimit64 *rlimits)
   return INLINE_SYSCALL (prlimit64, 4, 0, resource, rlimits, NULL);
 #else
 # ifdef __NR_prlimit64
-  int res = INLINE_SYSCALL (prlimit64, 4, 0, resource, rlimits, NULL);
-  if (res == 0 || errno != ENOSYS)
+  INTERNAL_SYSCALL_DECL (err);
+  int res = INTERNAL_SYSCALL (prlimit64, err, 4, 0, resource, rlimits,
+			      NULL);
+  if (!__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (res, err)))
     return res;
+  else if (INTERNAL_SYSCALL_ERRNO (res, err) != ENOSYS)
+    return INLINE_SYSCALL_ERROR_RETURN_VALUE (INTERNAL_SYSCALL_ERRNO (res, err));
 # endif
   struct rlimit rlimits32;
 
