@@ -443,6 +443,7 @@ libio/fmemopen.c
 libio/test-fmemopen.c
   For b/22167761, backport fix buffer overflow for writes to memory buffer stream (PR18549)
   https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=7c2ce714d4e853aadbec13b920576fdfada520f1
+  (stanshebs, backport)
 
 string/string.h
 math/bits/mathcalls.h
@@ -461,6 +462,7 @@ nptl/tst-tls77mod.c
   upstream commit
   https://sourceware.org/git/?p=glibc.git&a=commit&h=f8aeae347377f3dfa8cbadde057adf1827fb1d44
   fixes this problem in a different way, so this patch is not needed upstream.
+  (stanshebs, google-local)
 
 elf/link.h
 socket/sys/un.h
@@ -471,3 +473,8 @@ socket/sys/un.h
 resolv/nss_dns/dns-host.c
   For b/21023324, backport buffer overflow in getanswer_r (PR18287, CVE-2015-1781)
   https://sourceware.org/git/?p=glibc.git;a=commit;h=2959eda9272a03386
+  (stanshebs, backport)
+
+nss/nss_borg/borg-pwd.c
+  Improve documentation, remove dead code.
+  (stanshebs, google-local)
