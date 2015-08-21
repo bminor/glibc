@@ -1,3 +1,11 @@
+2015-08-26  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc32/sysdep.h (ABORT_TRANSACTION): Use
+	register other than r0 for tabort, it has special meaning.
+	* sysdeps/powerpc/powerpc64/sysdep.h (ABORT_TRANSACTION): Likewise
+	* sysdeps/unix.sysv/linux/powerpc/syscall.S (syscall): Abort
+	transaction before starting syscall.
+
 2015-08-06  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* elf/get-dynamic-info.h (elf_get_dynamic_info): Remove assert
