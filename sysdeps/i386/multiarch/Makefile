@@ -34,7 +34,14 @@ sysdep_routines += bcopy-i386 bcopy-i686 bcopy-sse2-unaligned \
 		   strncmp-i386 strncmp-ssse3 strncmp-sse4 \
 		   strcat-i386 strcat-sse2 strcat-ssse3 \
 		   strncat-i386 strncat-sse2 strncat-ssse3 \
-		   strchr-i386 strchr-i586 strchr-sse2-bsf strchr-sse2
+		   strchr-i386 strchr-i586 strchr-sse2-bsf strchr-sse2 \
+		   strcspn-i386 strpbrk-i386
+ifeq (yes,$(config-cflags-sse4))
+sysdep_routines += varshift strcspn-sse4 strpbrk-sse4
+CFLAGS-varshift.c += -msse4
+CFLAGS-strcspn-sse4.c += -msse4
+CFLAGS-strpbrk-sse4.c += -msse4
+endif
 endif
 
 ifeq (mathyes,$(subdir)$(config-cflags-avx))
