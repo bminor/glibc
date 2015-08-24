@@ -816,23 +816,28 @@ reused_arena (mstate avoid_arena)
     }
   while (result != next_to_use);
 
-  /* Avoid AVOID_ARENA as we have already failed to allocate memory
-     in that arena and it is currently locked.   */
+  /* Avoid AVOID_ARENA as we have already failed to allocate memory in that
+     arena.  We may however end up with AVOID_ARENA once again if it is
+     the only arena available.  */
   if (result == avoid_arena)
     result = result->next;
 
   /* Make sure that the arena we get is not corrupted.  */
   mstate begin = result;
+  bool looped = false;
+
   while (arena_is_corrupt (result) || result == avoid_arena)
     {
       result = result->next;
       if (result == begin)
-	break;
+	{
+	  looped = true;
+	  break;
+	}
     }
 
-  /* We could not find any arena that was either not corrupted or not the one
-     we wanted to avoid.  */
-  if (result == begin || result == avoid_arena)
+  /* We could not find any arena that was not corrupted.  */
+  if (looped)
     return NULL;
 
   /* No arena available without contention.  Wait for the next in line.  */
