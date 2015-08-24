@@ -1,7 +1,5 @@
-/* Multiple versions of strnlen
-   All versions must be listed in ifunc-impl-list.c.
-   Copyright (C) 2011-2015 Free Software Foundation, Inc.
-   Contributed by Intel Corporation.
+/* strlen for ld.so
+   Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,20 +16,4 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
-#include <init-arch.h>
-
-#if IS_IN (libc)
-	.text
-ENTRY(__strnlen)
-	.type	__strnlen, @gnu_indirect_function
-	LOAD_GOT_AND_RTLD_GLOBAL_RO
-	LOAD_FUNC_GOT_EAX (__strnlen_ia32)
-	HAS_CPU_FEATURE (SSE2)
-	jz	2f
-	LOAD_FUNC_GOT_EAX (__strnlen_sse2)
-2:	ret
-END(__strnlen)
-
-weak_alias(__strnlen, strnlen)
-#endif
+#include <sysdeps/i386/i586/strlen.S>
