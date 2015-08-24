@@ -38,12 +38,14 @@ sysdep_routines += bcopy-i386 bcopy-i686 bcopy-sse2-unaligned \
 		   strcspn-i386 strpbrk-i386 \
 		   strlen-i386 strlen-i586 strlen-sse2 strlen-sse2-bsf \
 		   strnlen-sse2 strnlen-i386 static-strlen \
-		   strrchr-i386 strrchr-sse2-bsf strrchr-sse2
+		   strrchr-i386 strrchr-sse2-bsf strrchr-sse2 \
+		   strspn-i386 strspn-sse4
 ifeq (yes,$(config-cflags-sse4))
-sysdep_routines += varshift strcspn-sse4 strpbrk-sse4
+sysdep_routines += varshift strcspn-sse4 strpbrk-sse4 strspn-sse4
 CFLAGS-varshift.c += -msse4
 CFLAGS-strcspn-sse4.c += -msse4
 CFLAGS-strpbrk-sse4.c += -msse4
+CFLAGS-strspn-sse4.c += -msse4
 endif
 endif
 

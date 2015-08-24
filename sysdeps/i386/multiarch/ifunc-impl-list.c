@@ -310,13 +310,13 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __strrchr_sse2)
 	      IFUNC_IMPL_ADD (array, i, strrchr, 1, __strrchr_i386))
 
-#if 0
   /* Support sysdeps/i386/i686/multiarch/strspn.S.  */
   IFUNC_IMPL (i, name, strspn,
 	      IFUNC_IMPL_ADD (array, i, strspn, HAS_CPU_FEATURE (SSE4_2),
 			      __strspn_sse42)
-	      IFUNC_IMPL_ADD (array, i, strspn, 1, __strspn_ia32))
+	      IFUNC_IMPL_ADD (array, i, strspn, 1, __strspn_i386))
 
+#if 0
   /* Support sysdeps/i386/i686/multiarch/wcschr.S.  */
   IFUNC_IMPL (i, name, wcschr,
 	      IFUNC_IMPL_ADD (array, i, wcschr, HAS_CPU_FEATURE (SSE2),
