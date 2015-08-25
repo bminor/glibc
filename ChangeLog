@@ -1,3 +1,8 @@
+2015-08-25  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/nacl/start.c (_start): Call __nacl_main instead of main
+	if the weak reference is not null.
+
 2015-08-19  Andrew Senkevich  <andrew.senkevich@intel.com>
 
 	[BZ #18796]
