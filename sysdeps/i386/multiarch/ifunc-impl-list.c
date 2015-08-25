@@ -346,15 +346,13 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __wcsrchr_sse2)
 	      IFUNC_IMPL_ADD (array, i, wcsrchr, 1, __wcsrchr_i386))
 
-#if 0
   /* Support sysdeps/i386/i686/multiarch/wmemcmp.S.  */
   IFUNC_IMPL (i, name, wmemcmp,
 	      IFUNC_IMPL_ADD (array, i, wmemcmp, HAS_CPU_FEATURE (SSE4_2),
 			      __wmemcmp_sse4_2)
 	      IFUNC_IMPL_ADD (array, i, wmemcmp, HAS_CPU_FEATURE (SSSE3),
 			      __wmemcmp_ssse3)
-	      IFUNC_IMPL_ADD (array, i, wmemcmp, 1, __wmemcmp_ia32))
-#endif
+	      IFUNC_IMPL_ADD (array, i, wmemcmp, 1, __wmemcmp_i386))
 
 #ifdef SHARED
   /* Support sysdeps/i386/i686/multiarch/memcpy_chk.S.  */
