@@ -50,7 +50,8 @@ endif
 endif
 
 ifeq ($(subdir),wcsmbs)
-sysdep_routines += wcschr-i386 wcschr-sse2 wcsrchr-i386 wcsrchr-sse2
+sysdep_routines += wcschr-i386 wcschr-sse2 wcsrchr-i386 wcsrchr-sse2 \
+		   wcscmp-i386 wcscmp-sse2
 endif
 
 ifeq (mathyes,$(subdir)$(config-cflags-avx))

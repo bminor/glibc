@@ -322,13 +322,13 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __wcschr_sse2)
 	      IFUNC_IMPL_ADD (array, i, wcschr, 1, __wcschr_i386))
 
-#if 0
   /* Support sysdeps/i386/i686/multiarch/wcscmp.S.  */
   IFUNC_IMPL (i, name, wcscmp,
 	      IFUNC_IMPL_ADD (array, i, wcscmp, HAS_CPU_FEATURE (SSE2),
 			      __wcscmp_sse2)
-	      IFUNC_IMPL_ADD (array, i, wcscmp, 1, __wcscmp_ia32))
+	      IFUNC_IMPL_ADD (array, i, wcscmp, 1, __wcscmp_i386))
 
+#if 0
   /* Support sysdeps/i386/i686/multiarch/wcscpy.S.  */
   IFUNC_IMPL (i, name, wcscpy,
 	      IFUNC_IMPL_ADD (array, i, wcscpy, HAS_CPU_FEATURE (SSSE3),
