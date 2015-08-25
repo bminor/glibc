@@ -49,6 +49,10 @@ CFLAGS-strspn-sse4.c += -msse4
 endif
 endif
 
+ifeq ($(subdir),wcsmbs)
+sysdep_routines += wcschr-i386 wcschr-sse2 wcsrchr-i386 wcsrchr-sse2
+endif
+
 ifeq (mathyes,$(subdir)$(config-cflags-avx))
 libm-sysdep_routines += s_fma-fma s_fmaf-fma
 CFLAGS-s_fma-fma.c += -mavx -mfpmath=sse

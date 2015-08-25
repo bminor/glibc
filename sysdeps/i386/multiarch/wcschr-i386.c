@@ -10,13 +10,13 @@
 # ifdef SHARED
 #  undef libc_hidden_def
 #  define libc_hidden_def(name) \
-   __hidden_ver1 (__wcschr_ia32, __GI_wcschr, __wcschr_ia32); \
-   strong_alias (__wcschr_ia32, __wcschr_ia32_1); \
-   __hidden_ver1 (__wcschr_ia32_1, __GI___wcschr, __wcschr_ia32_1);
+   __hidden_ver1 (__wcschr_i386, __GI_wcschr, __wcschr_i386); \
+   strong_alias (__wcschr_i386, __wcschr_i386_1); \
+   __hidden_ver1 (__wcschr_i386_1, __GI___wcschr, __wcschr_i386_1);
 # endif
 #endif
 
-extern __typeof (wcschr) __wcschr_ia32;
+extern __typeof (wcschr) __wcschr_i386;
 
-#define WCSCHR  __wcschr_ia32
+#define WCSCHR  __wcschr_i386
 #include <wcsmbs/wcschr.c>
