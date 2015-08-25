@@ -72,7 +72,7 @@
 #  define STRCMP	strcmp
 #  define STRCMP_SSE42	__strcmp_sse42
 #  define STRCMP_SSSE3	__strcmp_ssse3
-#  define STRCMP_SSE2	__strcmp_sse2
+#  define STRCMP_SSE2	__strcmp_sse2_unaligned
 #  define __GI_STRCMP	__GI_strcmp
 # endif
 #endif
@@ -99,7 +99,11 @@ ENTRY(STRCMP)
 2:	leaq	STRCMP_SSSE3(%rip), %rax
 	HAS_CPU_FEATURE (SSSE3)
 	jnz	3f
+#ifdef USE_AS_STRCMP
+	leaq	__strcmp_sse2(%rip), %rax
+#else
 	leaq	STRCMP_SSE2(%rip), %rax
+#endif
 3:	ret
 END(STRCMP)
 
@@ -212,4 +216,12 @@ weak_alias (__strncasecmp, strncasecmp)
 	.globl __GI_STRCMP; __GI_STRCMP = STRCMP_SSE2
 #endif
 
-#include "../strcmp.S"
+#ifdef USE_AS_STRCMP
+# if IS_IN (libc)
+#  define strcmp __strcmp_sse2_unaligned
+# endif
+# include "../strcmp.S"
+#else
+# include "strcmp-sse2.S"
+libc_hidden_builtin_def (STRCMP)
+#endif

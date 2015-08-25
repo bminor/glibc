@@ -3,4 +3,4 @@
 #define NO_NOLOCALE_ALIAS
 #define STRCMP __strcasecmp_l_ssse3
 #define __strcasecmp __strcasecmp_ssse3
-#include "../strcmp.S"
+#include "strcmp-sse2.S"
