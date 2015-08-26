@@ -1,4 +1,4 @@
-/* Multiple versions of sinf
+/* Multiple versions of sincosf
    Copyright (C) 2012-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -18,11 +18,13 @@
 
 #include <init-arch.h>
 
-extern float __sinf_sse2 (float);
-extern float __sinf_ia32 (float);
-float __sinf (float);
+extern void __sincosf_sse2 (float, float *, float *);
+extern void __sincosf_i386 (float, float *, float *);
+void __sincosf (float, float *, float *);
 
-libm_ifunc (__sinf, HAS_CPU_FEATURE (SSE2) ? __sinf_sse2 : __sinf_ia32);
-weak_alias (__sinf, sinf);
-#define SINF __sinf_ia32
-#include <sysdeps/ieee754/flt-32/s_sinf.c>
+libm_ifunc (__sincosf,
+	    HAS_CPU_FEATURE (SSE2) ? __sincosf_sse2 : __sincosf_i386);
+weak_alias (__sincosf, sincosf);
+
+#define SINCOSF __sincosf_i386
+#include <sysdeps/ieee754/flt-32/s_sincosf.c>

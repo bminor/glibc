@@ -1,4 +1,4 @@
-/* Multiple versions of expf
+/*
    Copyright (C) 2012-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,22 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <init-arch.h>
+#define __ieee754_expf __ieee754_expf_i386
+#define __expf_finite __expf_finite_i386
 
-extern double __ieee754_expf_sse2 (double);
-extern double __ieee754_expf_ia32 (double);
-
-double __ieee754_expf (double);
-libm_ifunc (__ieee754_expf,
-	    HAS_CPU_FEATURE (SSE2)
-	    ? __ieee754_expf_sse2
-	    : __ieee754_expf_ia32);
-
-extern double __expf_finite_sse2 (double);
-extern double __expf_finite_ia32 (double);
-
-double __expf_finite (double);
-libm_ifunc (__expf_finite,
-	    HAS_CPU_FEATURE (SSE2)
-	    ? __expf_finite_sse2
-	    : __expf_finite_ia32);
+#include <sysdeps/i386/fpu/e_expf.S>
