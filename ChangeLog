@@ -1,5 +1,11 @@
 2015-08-26  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/elision-lock.c
+	(__arch_compare_and_exchange_val_32_acq): Remove and use common
+	definition.  ISA 2.07B no longer requires full sync.
+
+2015-08-26  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/powerpc32/sysdep.h (ABORT_TRANSACTION): Use
 	register other than r0 for tabort, it has special meaning.
 	* sysdeps/powerpc/powerpc64/sysdep.h (ABORT_TRANSACTION): Likewise
