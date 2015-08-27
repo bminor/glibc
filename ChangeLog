@@ -1,3 +1,55 @@
+2015-08-25  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/nacl/start.c (_start): Call __nacl_main instead of main
+	if the weak reference is not null.
+
+2015-08-19  Andrew Senkevich  <andrew.senkevich@intel.com>
+
+	[BZ #18796]
+	* scripts/test-installation.pl: Don't add -lmvec to build options
+	if libmvec wasn't built.
+	* NEWS: Mention this fix.
+
+2015-08-10  Maxim Ostapenko  <m.ostapenko@partner.samsung.com>
+
+	[BZ #18778]
+	* elf/Makefile (tests): Add Add tst-nodelete2.
+	(modules-names): Add tst-nodelete2mod.
+	(tst-nodelete2mod.so-no-z-defs): New.
+	($(objpfx)tst-nodelete2): Likewise.
+	($(objpfx)tst-nodelete2.out): Likewise.
+	(LDFLAGS-tst-nodelete2): Likewise.
+	* elf/dl-close.c (_dl_close_worker): Move DF_1_NODELETE clearing
+	out of loop through all loaded libraries.
+	* elf/tst-nodelete2.c: New file.
+	* elf/tst-nodelete2mod.c: Likewise.
+
+2015-08-10  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #18781]
+	* sysdeps/unix/sysv/linux/openat.c (__OPENAT) [MORE_OFLAGS]: Add
+	MORE_OFLAGS to oflag.
+	* io/test-lfs.c (do_test): Test openat64.
+
+2015-08-08  John David Anglin  <danglin@gcc.gnu.org>
+
+	[BZ #18787]
+	* sysdeps/unix/sysv/linux/hppa/bits/atomic.h (_LWS_CLOBBER): Revise
+	clobber registers.
+	(atomic_compare_and_exchange_val_acq): Use register asms to assign
+	operand registers.  Use register %r20 for EAGAIN and EDEADLOCK checks.
+	Cast return to __typeof (oldval).
+
+2015-08-08  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/unix/sysv/linux/microblaze/sysdep.h: Wrap the whole file
+	in _LINUX_MICROBLAZE_SYSDEP_H defines.  Include sysdeps/unix/sysdep.h
+	and delete sys/syscall.h include.
+
+2015-08-07  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/hppa/dl-symaddr.c (_dl_symbol_address): Add rtld_hidden_def.
+
 2015-08-26  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/elision-lock.c
