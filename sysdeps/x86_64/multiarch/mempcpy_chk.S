@@ -30,16 +30,19 @@
 ENTRY(__mempcpy_chk)
 	.type	__mempcpy_chk, @gnu_indirect_function
 	LOAD_RTLD_GLOBAL_RO_RDX
+	leaq	__mempcpy_chk_avx_unaligned(%rip), %rax
+	HAS_ARCH_FEATURE (AVX_Fast_Unaligned_Load)
+	jnz	2f
+	leaq	__mempcpy_chk_sse2_unaligned(%rip), %rax
+	HAS_ARCH_FEATURE (Fast_Unaligned_Load)
+	jnz	2f
 	leaq	__mempcpy_chk_sse2(%rip), %rax
 	HAS_CPU_FEATURE (SSSE3)
 	jz	2f
-	leaq	__mempcpy_chk_ssse3(%rip), %rax
-	HAS_ARCH_FEATURE (Fast_Copy_Backward)
-	jz	2f
-	leaq	__mempcpy_chk_ssse3_back(%rip), %rax
-	HAS_ARCH_FEATURE (AVX_Fast_Unaligned_Load)
-	jz	2f
-	leaq	__mempcpy_chk_avx_unaligned(%rip), %rax
+	leaq    __mempcpy_chk_ssse3_back(%rip), %rax
+	HAS_CPU_FEATURE (Fast_Copy_Backward)
+	jnz	2f
+	leaq    __mempcpy_chk_ssse3(%rip), %rax
 2:	ret
 END(__mempcpy_chk)
 # else

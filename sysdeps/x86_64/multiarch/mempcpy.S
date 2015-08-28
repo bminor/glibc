@@ -28,41 +28,44 @@
 ENTRY(__mempcpy)
 	.type	__mempcpy, @gnu_indirect_function
 	LOAD_RTLD_GLOBAL_RO_RDX
+	leaq	__mempcpy_avx_unaligned(%rip), %rax
+	HAS_ARCH_FEATURE (AVX_Fast_Unaligned_Load)
+	jnz	2f
+	leaq	__mempcpy_sse2_unaligned(%rip), %rax
+	HAS_ARCH_FEATURE (Fast_Unaligned_Load)
+	jnz	2f
 	leaq	__mempcpy_sse2(%rip), %rax
 	HAS_CPU_FEATURE (SSSE3)
 	jz	2f
-	leaq	__mempcpy_ssse3(%rip), %rax
-	HAS_ARCH_FEATURE (Fast_Copy_Backward)
-	jz	2f
-	leaq	__mempcpy_ssse3_back(%rip), %rax
-	HAS_ARCH_FEATURE (AVX_Fast_Unaligned_Load)
-	jz	2f
-	leaq	__mempcpy_avx_unaligned(%rip), %rax
+	leaq    __mempcpy_ssse3_back(%rip), %rax
+	HAS_CPU_FEATURE (Fast_Copy_Backward)
+	jnz	2f
+	leaq    __mempcpy_ssse3(%rip), %rax
 2:	ret
 END(__mempcpy)
 
 # undef ENTRY
 # define ENTRY(name) \
-	.type __mempcpy_sse2, @function; \
+	.type __mempcpy_sse2_unaligned, @function; \
 	.p2align 4; \
-	.globl __mempcpy_sse2; \
-	.hidden __mempcpy_sse2; \
-	__mempcpy_sse2: cfi_startproc; \
+	.globl __mempcpy_sse2_unaligned; \
+	.hidden __mempcpy_sse2_unaligned; \
+	__mempcpy_sse2_unaligned: cfi_startproc; \
 	CALL_MCOUNT
 # undef END
 # define END(name) \
-	cfi_endproc; .size __mempcpy_sse2, .-__mempcpy_sse2
+	cfi_endproc; .size __mempcpy_sse2_unaligned, .-__mempcpy_sse2_unaligned
 
 # undef ENTRY_CHK
 # define ENTRY_CHK(name) \
-	.type __mempcpy_chk_sse2, @function; \
-	.globl __mempcpy_chk_sse2; \
+	.type __mempcpy_chk_sse2_unaligned, @function; \
+	.globl __mempcpy_chk_sse2_unaligned; \
 	.p2align 4; \
-	__mempcpy_chk_sse2: cfi_startproc; \
+	__mempcpy_chk_sse2_unaligned: cfi_startproc; \
 	CALL_MCOUNT
 # undef END_CHK
 # define END_CHK(name) \
-	cfi_endproc; .size __mempcpy_chk_sse2, .-__mempcpy_chk_sse2
+	cfi_endproc; .size __mempcpy_chk_sse2_unaligned, .-__mempcpy_chk_sse2_unaligned
 
 # undef libc_hidden_def
 # undef libc_hidden_builtin_def
@@ -70,9 +73,9 @@ END(__mempcpy)
    The speedup we get from using SSSE3 instruction is likely eaten away
    by the indirect call in the PLT.  */
 # define libc_hidden_def(name) \
-	.globl __GI_mempcpy; __GI_mempcpy = __mempcpy_sse2
+	.globl __GI_mempcpy; __GI_mempcpy = __mempcpy_sse2_unaligned
 # define libc_hidden_builtin_def(name) \
-	.globl __GI___mempcpy; __GI___mempcpy = __mempcpy_sse2
+	.globl __GI___mempcpy; __GI___mempcpy = __mempcpy_sse2_unaligned
 #endif
 
 #include "../mempcpy.S"

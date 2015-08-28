@@ -32,48 +32,49 @@ ENTRY(__new_memcpy)
 	LOAD_RTLD_GLOBAL_RO_RDX
 	leaq	__memcpy_avx_unaligned(%rip), %rax
 	HAS_ARCH_FEATURE (AVX_Fast_Unaligned_Load)
-	jz 1f
-	ret
-1:	leaq	__memcpy_sse2(%rip), %rax
-	HAS_ARCH_FEATURE (Slow_BSF)
-	jnz	2f
+	jnz	3f
 	leaq	__memcpy_sse2_unaligned(%rip), %rax
-	ret
-2:	HAS_CPU_FEATURE (SSSE3)
-	jz 3f
+	HAS_ARCH_FEATURE (Fast_Unaligned_Load)
+	jnz	3f
+	leaq	__memcpy_sse2(%rip), %rax
+	HAS_CPU_FEATURE (SSSE3)
+	jz	3f
+	leaq    __memcpy_ssse3_back(%rip), %rax
+	HAS_CPU_FEATURE (Fast_Copy_Backward)
+	jnz	3f
 	leaq    __memcpy_ssse3(%rip), %rax
 3:	ret
 END(__new_memcpy)
 
 # undef ENTRY
 # define ENTRY(name) \
-	.type __memcpy_sse2, @function; \
-	.globl __memcpy_sse2; \
-	.hidden __memcpy_sse2; \
+	.type __memcpy_sse2_unaligned, @function; \
+	.globl __memcpy_sse2_unaligned; \
+	.hidden __memcpy_sse2_unaligned; \
 	.p2align 4; \
-	__memcpy_sse2: cfi_startproc; \
+	__memcpy_sse2_unaligned: cfi_startproc; \
 	CALL_MCOUNT
 # undef END
 # define END(name) \
-	cfi_endproc; .size __memcpy_sse2, .-__memcpy_sse2
+	cfi_endproc; .size __memcpy_sse2_unaligned, .-__memcpy_sse2_unaligned
 
 # undef ENTRY_CHK
 # define ENTRY_CHK(name) \
-	.type __memcpy_chk_sse2, @function; \
-	.globl __memcpy_chk_sse2; \
+	.type __memcpy_chk_sse2_unaligned, @function; \
+	.globl __memcpy_chk_sse2_unaligned; \
 	.p2align 4; \
-	__memcpy_chk_sse2: cfi_startproc; \
+	__memcpy_chk_sse2_unaligned: cfi_startproc; \
 	CALL_MCOUNT
 # undef END_CHK
 # define END_CHK(name) \
-	cfi_endproc; .size __memcpy_chk_sse2, .-__memcpy_chk_sse2
+	cfi_endproc; .size __memcpy_chk_sse2_unaligned, .-__memcpy_chk_sse2_unaligned
 
 # undef libc_hidden_builtin_def
 /* It doesn't make sense to send libc-internal memcpy calls through a PLT.
    The speedup we get from using SSSE3 instruction is likely eaten away
    by the indirect call in the PLT.  */
 # define libc_hidden_builtin_def(name) \
-	.globl __GI_memcpy; __GI_memcpy = __memcpy_sse2
+	.globl __GI_memcpy; __GI_memcpy = __memcpy_sse2_unaligned
 
 versioned_symbol (libc, __new_memcpy, memcpy, GLIBC_2_14);
 #endif
