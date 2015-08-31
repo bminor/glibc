@@ -478,3 +478,12 @@ resolv/nss_dns/dns-host.c
 nss/nss_borg/borg-pwd.c
   Improve documentation, remove dead code.
   (stanshebs, google-local)
+
+posix/fnmatch_loop.c
+posix/Makefile
+posix/tst-fnmatch3.c
+  For b/19524869 and b/19533947, backport buffer overflow fixes in fnmatch.
+  (PR18032, PR18036)
+  https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=4a28f4d55a6cc33474c0792fe93b5942d81bf185
+  https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=c2c6d39fab901c97c18fa3a3a3658d9dc3f7df61
+  (stanshebs, backport)
