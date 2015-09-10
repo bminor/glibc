@@ -83,7 +83,7 @@ sub list_syms {
     my ($bind) = $fields[4];
     my ($ndx) = $fields[6];
     my ($sym) = $fields[7];
-    if ($bind ne "GLOBAL" && $bind ne "WEAK") {
+    if ($bind ne "GLOBAL" && $bind ne "WEAK" && $bind ne "SECOND") {
       next;
     }
     if ($sym !~ /^\w+$/) {
