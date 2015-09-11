@@ -70,4 +70,4 @@ __pthread_rwlock_init (rwlock, attr)
 
   return 0;
 }
-strong_alias (__pthread_rwlock_init, pthread_rwlock_init)
+weak_alias (__pthread_rwlock_init, pthread_rwlock_init)
