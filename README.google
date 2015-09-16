@@ -487,3 +487,10 @@ posix/tst-fnmatch3.c
   https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=4a28f4d55a6cc33474c0792fe93b5942d81bf185
   https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=c2c6d39fab901c97c18fa3a3a3658d9dc3f7df61
   (stanshebs, backport)
+
+nss/nss_files/files-XXX.c
+nss/Makefile
+nss/tst-nss-getpwent.c
+  For b/19498319, backport fix for nss_files file management (PR18007, CVE-2014-8121)
+  https://sourceware.org/git/?p=glibc.git;a=commit;h=03d2730b44cc2236318fd978afa2651753666c55
+  (stanshebs, backport)
