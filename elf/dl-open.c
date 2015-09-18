@@ -72,6 +72,31 @@ add_to_global (struct link_map *new)
     if (new->l_searchlist.r_list[cnt]->l_global == 0)
       ++to_add;
 
+  struct link_namespaces *ns = &GL(dl_ns)[new->l_ns];
+
+  if (__glibc_unlikely (new->l_ns != LM_ID_BASE
+			&& ns->_ns_main_searchlist == NULL))
+    {
+      /* An initial object was loaded with dlmopen into a distinct namespace
+	 that has no global searchlist (RTLD_GLOBAL) and RTLD_GLOBAL was used.
+	 Or that object then dlopened another object into the global
+	 searchlist.  We find ourselves with no global searchlist initialized.
+	 We have two choices, either we forbid this scenario and return an
+	 error or treat the first RTLD_GLOBAL DSOs searchlist as the global
+	 searchlist of the namespace.  We do the latter since it's the most
+	 sensible course of action since you may dlmopen other libraries which
+	 have no idea they have been isolated.  Thus RTLD_GLOBAL dlopen calls
+	 within the new namespace are restricted to the new namespace and may
+	 reference the symbols of the initial RTLD_GLOBAL dlmopen'd
+	 libraries.  */
+      ns->_ns_main_searchlist = &new->l_searchlist;
+      /* Treat this list like it is read-only.  A value of zero forces a copy
+	 later if we need to extend this list.  The list itself is already
+	 being used as the primary scope for the first loaded RTLD_GLOBAL
+	 object into the new namespace, thus we don't want to free it.  */
+      ns->_ns_global_scope_alloc = 0;
+    }
+
   /* The symbols of the new objects and its dependencies are to be
      introduced into the global scope that will be used to resolve
      references from other dynamically-loaded objects.
@@ -86,7 +111,6 @@ add_to_global (struct link_map *new)
      in an realloc() call.  Therefore we allocate a completely new
      array the first time we have to add something to the locale scope.  */
 
-  struct link_namespaces *ns = &GL(dl_ns)[new->l_ns];
   if (ns->_ns_global_scope_alloc == 0)
     {
       /* This is the first dynamic object given global scope.  */
@@ -204,15 +228,33 @@ dl_open_worker (void *a)
     {
       const void *caller_dlopen = args->caller_dlopen;
 
-      /* We have to find out from which object the caller is calling.
-	 By default we assume this is the main application.  */
-      call_map = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
+      call_map = _dl_find_dso_for_object ((ElfW(Addr)) caller_dlopen);
 
-      struct link_map *l = _dl_find_dso_for_object ((ElfW(Addr)) caller_dlopen);
+      /* We support dlmopen (ns, NULL, ...), which should do the same thing
+	 as dlopen (NULL, ...). It should provide access to the base loaded
+	 object in the namespace. In the case of LM_ID_BASE it's "" i.e. the
+	 executable, but in the event of !LM_ID_BASE we need to return the
+	 base object in the namespace.  The FILE must be adjusted if we are
+	 !LM_ID_BASE to be the name for the base object loaded into the
+	 namespace or _dl_map_object will fail.  */
+      if (call_map != NULL && call_map->l_ns != LM_ID_BASE && file[0] == '\0')
+	file = GL(dl_ns)[call_map->l_ns]._ns_loaded->l_name;
 
-      if (l)
-	call_map = l;
+      /* If we know we are using LM_ID_BASE explicitly, then fall back to
+	 the base loaded object in that namespace if we failed to find the
+	 caller.  */
+      if (call_map == NULL && args->nsid == LM_ID_BASE)
+	call_map = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
 
+      /* If we don't know know which namespace we are using then a failure to
+	 determine the namespace of the caller is now a hard error.  In the
+	 past we might have returned LM_ID_BASE, but that's invalid for dlmopen
+	 since it would lead to leakage outside of the namespace.  */
+      if (call_map == NULL && args->nsid == __LM_ID_CALLER)
+	_dl_signal_error (EINVAL, file, NULL, N_("\
+unable to determine caller's namespace"));
+
+      /* Use the caller's namespace if we were loaded into that namespace.  */
       if (args->nsid == __LM_ID_CALLER)
 	args->nsid = call_map->l_ns;
     }

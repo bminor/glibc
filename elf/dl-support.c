@@ -305,9 +305,22 @@ void
 internal_function
 _dl_non_dynamic_init (void)
 {
+  extern const ElfW(Ehdr) __ehdr_start
+	__attribute__ ((weak, visibility ("hidden")));
+  extern const ElfW(Addr) __data_start;
+
   _dl_main_map.l_origin = _dl_get_origin ();
   _dl_main_map.l_phdr = GL(dl_phdr);
   _dl_main_map.l_phnum = GL(dl_phnum);
+  /* Starting from binutils-2.23, the linker will define __ehdr_start
+     pointing at the ELF header, which is a good enough marker for the
+     start of main.  The start of data (assumed to come after text) is
+     good enough for l_map_end.  We want l_map_start and l_map_end set
+     to allow _dl_find_dso_for_object to be able to associate
+     _dl_main_map with a caller's addresses within main.  */
+  _dl_main_map.l_map_start = (ElfW(Addr)) &__ehdr_start;
+  _dl_main_map.l_text_end = (ElfW(Addr)) &__data_start;
+  _dl_main_map.l_map_end = _dl_main_map.l_text_end;
 
   if (HP_SMALL_TIMING_AVAIL)
     HP_TIMING_NOW (_dl_cpuclock_offset);

@@ -91,10 +91,17 @@ do_sym (void *handle, const char *name, void *who,
   lookup_t result;
   ElfW(Addr) caller = (ElfW(Addr)) who;
 
+  struct link_map *match = NULL;
   struct link_map *l = _dl_find_dso_for_object (caller);
-  /* If the address is not recognized the call comes from the main
-     program (we hope).  */
-  struct link_map *match = l ? l : GL(dl_ns)[LM_ID_BASE]._ns_loaded;
+
+  /* Failure to determinet the caller's namespace is a fatal
+     error since we need it for handling namespace isolation
+     correctly. Falling back to LM_ID_BASE will break isolation.  */
+  if (l == NULL)
+    GLRO(dl_signal_error) (EINVAL, NULL, NULL, N_("\
+unable to determine caller's namespace during symbol lookup"));
+
+  match = l;
 
   if (handle == RTLD_DEFAULT)
     {
