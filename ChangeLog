@@ -1,5 +1,11 @@
 2019-01-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* debug/tst-backtrace5.c (handle_signal): Avoid cancellable wrappers
+	in backtrace analysis.
+	* nptl/tst-cancel4.c (tf_write): Handle cancelled syscall with
+	side-effects.
+	(tf_send): Likewise.
+
 	* io/creat.c (LIBC_CANCEL_HANDLED): Remove macro.
 	* io/ppoll.c (LIBC_CANCEL_HANDLED): Likewise.
 	* misc/pselect.c (LIBC_CANCEL_HANDLED): Likewise.
