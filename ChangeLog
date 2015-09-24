@@ -1,3 +1,9 @@
+2015-09-24  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #19003]
+	* sysdeps/x86_64/fpu/multiarch/Makefile (CFLAGS-e_pow-fma4.c): Add
+	$(config-cflags-nofma).
+
 2016-03-07  Hongjiu Zhang  <noctuorare@gmail.com>
 
 	* elf/sln.c (makesymlink): Change struct stat to stat64, and lstat
