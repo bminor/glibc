@@ -494,3 +494,7 @@ nss/tst-nss-getpwent.c
   For b/19498319, backport fix for nss_files file management (PR18007, CVE-2014-8121)
   https://sourceware.org/git/?p=glibc.git;a=commit;h=03d2730b44cc2236318fd978afa2651753666c55
   (stanshebs, backport)
+
+elf/dl-load.c
+  For b/20141439, don't add "foo.so" as alternate name for already loaded foo.so/@0x<offset>
+  (ppluzhnikov, google-local)

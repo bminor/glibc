@@ -966,7 +966,10 @@ _dl_map_object_from_fd (const char *name, int fd, off_t offset,
 	/* If the name is not in the list of names for this object add
 	   it.  */
 	free (realname);
-	add_name_to_object (l, name);
+	if (offset == 0)
+	  /* If offset!=0, foo.so/@0x<offset> should be the *only*
+	     name for this object. b/20141439.  */
+	  add_name_to_object (l, name);
 
 	return l;
       }
