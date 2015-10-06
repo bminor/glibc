@@ -42,6 +42,10 @@ static __thread struct link_map *lm_cache;
 int
 __cxa_thread_atexit_impl (dtor_func func, void *obj, void *dso_symbol)
 {
+#ifdef PTR_MANGLE
+  PTR_MANGLE (func);
+#endif
+
   /* Prepend.  */
   struct dtor_list *new = calloc (1, sizeof (struct dtor_list));
   new->func = func;
@@ -83,9 +87,13 @@ __call_tls_dtors (void)
   while (tls_dtor_list)
     {
       struct dtor_list *cur = tls_dtor_list;
-      tls_dtor_list = tls_dtor_list->next;
+      dtor_func func = cur->func;
+#ifdef PTR_DEMANGLE
+      PTR_DEMANGLE (func);
+#endif
 
-      cur->func (cur->obj);
+      tls_dtor_list = tls_dtor_list->next;
+      func (cur->obj);
 
       __rtld_lock_lock_recursive (GL(dl_load_lock));
 

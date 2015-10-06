@@ -1,5 +1,12 @@
 2016-07-11  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #19018]
+	* stdlib/cxa_thread_atexit_impl.c (__cxa_thread_atexit_impl):
+	Mangle function pointer before storing it.
+	(__call_tls_dtors): Demangle function pointer before calling it.
+
+2016-07-11  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #18928]
 	* sysdeps/generic/ldsodefs.h (struct rtld_global_ro): Remove
 	_dl_pointer_guard member.
