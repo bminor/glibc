@@ -46,6 +46,8 @@
 #include <dl-machine-reject-phdr.h>
 #include <dl-sysdep-open.h>
 
+/* Code below to add offset to symbol names references itoa.  */
+#include <_itoa.h>
 
 #include <endian.h>
 #if BYTE_ORDER == BIG_ENDIAN
