@@ -38,6 +38,7 @@
 #include <stap-probe.h>
 
 #include <dl-dst.h>
+#include <_itoa.h>
 
 /* On some systems, no flag bits are given to specify file mapping.  */
 #ifndef MAP_FILE

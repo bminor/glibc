@@ -498,3 +498,8 @@ nss/tst-nss-getpwent.c
 elf/dl-load.c
   For b/20141439, don't add "foo.so" as alternate name for already loaded foo.so/@0x<offset>
   (ppluzhnikov, google-local)
+
+elf/dl-load.c
+  For b/22641205, #include _itoa.h
+  (ppluzhnikov, google-local)
+
