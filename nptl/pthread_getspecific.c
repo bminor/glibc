@@ -53,16 +53,10 @@ __pthread_getspecific (key)
       data = &level2[idx2nd];
     }
 
-  void *result = data->data;
-  if (result != NULL)
-    {
-      uintptr_t seq = data->seq;
+  if (__builtin_expect (data->seq != __pthread_keys[key].seq, 0))
+    return NULL;
 
-      if (__builtin_expect (seq != __pthread_keys[key].seq, 0))
-	result = data->data = NULL;
-    }
-
-  return result;
+  return data->data;
 }
 strong_alias (__pthread_getspecific, pthread_getspecific)
 hidden_def (__pthread_getspecific)

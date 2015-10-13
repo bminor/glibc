@@ -503,3 +503,7 @@ elf/dl-load.c
   For b/22641205, #include _itoa.h
   (ppluzhnikov, google-local)
 
+nptl/pthread_getspecific.c
+nptl/tst-key5.c
+  Fix for b/18722637 : make pthread_getspecific signal safe.
+  (ahh, google-local, proposed upstream)

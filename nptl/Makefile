@@ -228,7 +228,7 @@ tests = tst-typesizes \
 	tst-rwlock5 tst-rwlock6 tst-rwlock7 tst-rwlock8 tst-rwlock9 \
 	tst-rwlock10 tst-rwlock11 tst-rwlock12 tst-rwlock13 tst-rwlock14 \
 	tst-once1 tst-once2 tst-once3 tst-once4 \
-	tst-key1 tst-key2 tst-key3 tst-key4 \
+	tst-key1 tst-key2 tst-key3 tst-key4 tst-key5 \
 	tst-sem1 tst-sem2 tst-sem3 tst-sem4 tst-sem5 tst-sem6 tst-sem7 \
 	tst-sem8 tst-sem9 tst-sem10 tst-sem11 tst-sem12 tst-sem13 tst-sem14 \
 	tst-barrier1 tst-barrier2 tst-barrier3 tst-barrier4 \
@@ -608,6 +608,8 @@ tst-exec4-ARGS = $(host-test-program-cmd)
 $(objpfx)tst-execstack: $(libdl)
 $(objpfx)tst-execstack.out: $(objpfx)tst-execstack-mod.so
 LDFLAGS-tst-execstack = -Wl,-z,noexecstack
+
+LDFLAGS-tst-key5 = -lrt
 
 $(objpfx)tst-fini1mod.so: $(shared-thread-library)
 
