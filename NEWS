@@ -9,7 +9,10 @@ Version 2.22.1
 
 * The following bugs are resolved with this release:
 
-  18589, 18778, 18781, 18787, 18796, 18870, 18887, 18921, 18969.
+  18589, 18778, 18781, 18787, 18796, 18870, 18887, 18921, 18928, 18969.
+
+* The LD_POINTER_GUARD environment variable can no longer be used to
+  disable the pointer guard feature.  It is always enabled.
 
 Version 2.22
 
