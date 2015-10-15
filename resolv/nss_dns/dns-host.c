@@ -190,7 +190,7 @@ _nss_dns_gethostbyname3_r (const char *name, int af, struct hostent *result,
   host_buffer.buf = orig_host_buffer = (querybuf *) alloca (1024);
 
   n = __libc_res_nsearch (&_res, name, C_IN, type, host_buffer.buf->buf,
-			  1024, &host_buffer.ptr, NULL, NULL, NULL);
+			  1024, &host_buffer.ptr, NULL, NULL, NULL, NULL);
   if (n < 0)
     {
       switch (errno)
@@ -225,7 +225,7 @@ _nss_dns_gethostbyname3_r (const char *name, int af, struct hostent *result,
 	n = __libc_res_nsearch (&_res, name, C_IN, T_A, host_buffer.buf->buf,
 				host_buffer.buf != orig_host_buffer
 				? MAXPACKET : 1024, &host_buffer.ptr,
-				NULL, NULL, NULL);
+				NULL, NULL, NULL, NULL);
 
       if (n < 0)
 	{
@@ -308,13 +308,20 @@ _nss_dns_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
   u_char *ans2p = NULL;
   int nans2p = 0;
   int resplen2 = 0;
+  int ans2p_malloced = 0;
 
   int olderr = errno;
   enum nss_status status;
   int n = __libc_res_nsearch (&_res, name, C_IN, T_UNSPEC,
 			      host_buffer.buf->buf, 2048, &host_buffer.ptr,
-			      &ans2p, &nans2p, &resplen2);
-  if (n < 0)
+			      &ans2p, &nans2p, &resplen2, &ans2p_malloced);
+  if (n >= 0)
+    {
+      status = gaih_getanswer (host_buffer.buf, n, (const querybuf *) ans2p,
+			       resplen2, name, pat, buffer, buflen,
+			       errnop, herrnop, ttlp);
+    }
+  else
     {
       switch (errno)
 	{
@@ -341,16 +348,11 @@ _nss_dns_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
 	*errnop = EAGAIN;
       else
 	__set_errno (olderr);
-
-      if (host_buffer.buf != orig_host_buffer)
-	free (host_buffer.buf);
-
-      return status;
     }
 
-  status = gaih_getanswer(host_buffer.buf, n, (const querybuf *) ans2p,
-			  resplen2, name, pat, buffer, buflen,
-			  errnop, herrnop, ttlp);
+  /* Check whether ans2p was separately allocated.  */
+  if (ans2p_malloced)
+    free (ans2p);
 
   if (host_buffer.buf != orig_host_buffer)
     free (host_buffer.buf);
@@ -460,7 +462,7 @@ _nss_dns_gethostbyaddr2_r (const void *addr, socklen_t len, int af,
 	  strcpy (qp, "].ip6.arpa");
 	  n = __libc_res_nquery (&_res, qbuf, C_IN, T_PTR,
 				 host_buffer.buf->buf, 1024, &host_buffer.ptr,
-				 NULL, NULL, NULL);
+				 NULL, NULL, NULL, NULL);
 	  if (n >= 0)
 	    goto got_it_already;
 	}
@@ -481,14 +483,14 @@ _nss_dns_gethostbyaddr2_r (const void *addr, socklen_t len, int af,
     }
 
   n = __libc_res_nquery (&_res, qbuf, C_IN, T_PTR, host_buffer.buf->buf,
-			 1024, &host_buffer.ptr, NULL, NULL, NULL);
+			 1024, &host_buffer.ptr, NULL, NULL, NULL, NULL);
   if (n < 0 && af == AF_INET6 && (_res.options & RES_NOIP6DOTINT) == 0)
     {
       strcpy (qp, "ip6.int");
       n = __libc_res_nquery (&_res, qbuf, C_IN, T_PTR, host_buffer.buf->buf,
 			     host_buffer.buf != orig_host_buffer
 			     ? MAXPACKET : 1024, &host_buffer.ptr,
-			     NULL, NULL, NULL);
+			     NULL, NULL, NULL, NULL);
     }
   if (n < 0)
     {

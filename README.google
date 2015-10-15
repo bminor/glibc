@@ -507,3 +507,16 @@ nptl/pthread_getspecific.c
 nptl/tst-key5.c
   Fix for b/18722637 : make pthread_getspecific signal safe.
   (ahh, google-local, proposed upstream)
+
+include/resolv.h
+resolv/gethnamaddr.c
+resolv/res_query.c
+resolv/res_send.c
+resolv/nss_dns/dns-canon.c
+resolv/nss_dns/dns-host.c
+resolv/nss_dns/dns-network.c
+  For b/24580666, backport fix for memory leak in getaddrinfo() (PR16574)
+  https://sourceware.org/git/?p=glibc.git;a=commit;h=d668061994a7486a3ba9c7d5e7882d85a2883707
+  https://sourceware.org/git/?p=glibc.git;a=commit;h=ab7ac0f2cf8731fe4c3f3aea6088a7c0127b5725
+  https://sourceware.org/git/?p=glibc.git;a=commit;h=ab09bf616ad527b249aca5f2a4956fd526f0712f
+  (stanshebs, backport)
