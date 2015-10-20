@@ -54,7 +54,7 @@ tests		:= tester inl-tester noinl-tester testcopy test-ffs	\
 		   tst-strtok tst-strxfrm bug-strcoll1 tst-strfry	\
 		   bug-strtok1 $(addprefix test-,$(strop-tests))	\
 		   bug-envz1 tst-strxfrm2 tst-endian tst-svc2		\
-		   tst-strtok_r
+		   tst-strtok_r bug-strcoll2
 
 xtests = tst-strcoll-overflow
 
@@ -75,4 +75,17 @@ ifeq ($(run-built-tests),yes)
 $(objpfx)tst-svc-cmp.out: tst-svc.expect $(objpfx)tst-svc.out
 	cmp $^ > $@; \
 	$(evaluate-test)
+
+LOCALES := de_DE.UTF-8 en_US.ISO-8859-1 en_US.UTF-8 \
+           tr_TR.ISO-8859-9 tr_TR.UTF-8 cs_CZ.UTF-8 \
+	   da_DK.ISO-8859-1
+include ../gen-locales.mk
+
+$(objpfx)test-strcasecmp.out: $(gen-locales)
+$(objpfx)test-strncasecmp.out: $(gen-locales)
+$(objpfx)tst-strxfrm.out: $(gen-locales)
+$(objpfx)tst-strxfrm2.out: $(gen-locales)
+# bug-strcoll2 needs cs_CZ.UTF-8 and da_DK.ISO-8859-1.
+$(objpfx)bug-strcoll2.out: $(gen-locales)
+
 endif

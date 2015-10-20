@@ -1,3 +1,103 @@
+2015-10-20  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	[BZ #18743]
+	* sysdeps/powerpc/nptl/elide.h (__elide_lock): Move most of this
+	code to...
+	(ELIDE_LOCK): ...here.
+	(__get_new_count): New function with part of the code from
+	__elide_lock that updates the value of adapt_count after a
+	transaction abort.
+	(__elided_trylock): Moved this code to...
+	(ELIDE_TRYLOCK): ...here.
+
+2015-10-06  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19018]
+	* stdlib/cxa_thread_atexit_impl.c (__cxa_thread_atexit_impl):
+	Mangle function pointer before storing it.
+	(__call_tls_dtors): Demangle function pointer before calling it.
+
+2015-10-15  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #18928]
+	* sysdeps/generic/ldsodefs.h (struct rtld_global_ro): Remove
+	_dl_pointer_guard member.
+	* elf/rtld.c (_rtld_global_ro): Remove _dl_pointer_guard
+	initializer.
+	(security_init): Always set up pointer guard.
+	(process_envvars): Do not process LD_POINTER_GUARD.
+
+2015-10-09  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #18589]
+	* string/bug-strcoll2.c: Adjust copyright, and remove contributed by.
+	* string/Makefile ($(objpfx)bug-strcoll2.out): Depend on
+	$(gen-locales).
+
+2015-10-08  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #18589]
+	* string/Makefile (tests): Add bug-strcoll2.
+	(LOCALES): Add cs_CZ.UTF-8.
+
+2015-09-28  Martin Sebor  <msebor@redhat.com>
+
+	[BZ #18969]
+	* string/Makefile (LOCALES): Define.
+	(gen-locales.mk): Include.
+	(test-strcasecmp.out, test-strncasecmp.out, tst-strxfrm.out)
+	(tst-strxfrm2.out): Add deppendency on $(gen-locales).
+	* string/tst-strxfrm2.c (do_test): Print the name of the locale
+	on setlocale failure.
+
+2015-10-08  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #18589]
+	* string/bug-strcoll2.c: New file.
+	* locale/categories.def: Revert commit
+	f13c2a8dff2329c6692a80176262ceaaf8a6f74e.
+	* locale/langinfo.h: Likewise.
+	* locale/localeinfo.h: Likewise.
+	* locale/C-collate.c: Likewise.
+	* programs/ld-collate.c (collate_output): Likewise.
+	* string/strcoll_l.c (STRDIFF): Likewise.
+	(STRCOLL): Likewise.
+	* wcsmbs/wcscoll_l.c: Likewise.
+
+2015-09-15  Roland McGrath  <roland@hack.frob.com>
+
+	* misc/sys/param.h [!MAXHOSTNAMELEN && HOST_NAME_MAX]
+	(MAXHOSTNAMELEN): Define it to HOST_NAME_MAX.
+
+2015-09-11  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/nacl/Makefile [$(subdir) = misc] (sysdep_headers):
+	Use 'override' keyword to freeze the value here, preventing
+	the addition of sys/mtio.h by sysdeps/gnu/Makefile.
+
+2015-09-04  Roland McGrath  <roland@hack.frob.com>
+
+	[BZ #18921]
+	* sysdeps/posix/opendir.c (need_isdir_precheck) [O_DIRECTORY]:
+	Fix inverted sense of test of 'o_directory_works' value.
+	Reported by Pádraig Brady <P@draigBrady.com>, diagnosed by
+	Bernhard Voelker <mail@bernhard-voelker.de>.
+
+2015-08-31  Brett Neumeier <brett@neumeier.us>
+
+	[BZ #18870]
+	* sysdeps/sparc/sparc32/sem_open.c: Add missing #include
+
+2015-08-28  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #18887]
+	* misc/Makefile (tests): Add tst-mntent-blank-corrupt and
+	tst-mntent-blank-passno.
+	* misc/mntent_r.c (__getmntent_r): Do not read past buffer[0].
+	* misc/tst-mntent-blank-corrupt.c: New test.
+	* misc/tst-mntent-blank-passno.c: New test ripped from ...
+	* misc/tst-mntent.c (do_test): ... here.
+
 2015-08-25  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/nacl/start.c (_start): Call __nacl_main instead of main
