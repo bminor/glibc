@@ -1,3 +1,8 @@
+2015-10-27  Ludovic Courtès  <ludo@gnu.org>
+
+	* locale/loadlocale.c (_nl_intern_locale_data): Change assertion
+	on CNT to a conditional jump to 'puntdata'.
+
 2015-08-18  Alan Modra  <amodra@gmail.com>
 
 	[BZ #18421]
