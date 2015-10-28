@@ -45,8 +45,12 @@ __lll_trylock_elision (int *futex, short *adapt_count)
       if (*futex == 0)
 	return 0;
 
-      /* Lock was busy.  Fall back to normal locking.  */
-      __libc_tabort (_ABORT_LOCK_BUSY);
+      /* Lock was busy.  This is never a nested transaction.
+         End it, and set the adapt count.  */
+      __libc_tend (0);
+
+      if (aconf.skip_lock_busy > 0)
+	*adapt_count = aconf.skip_lock_busy;
     }
   else
     {
@@ -58,9 +62,6 @@ __lll_trylock_elision (int *futex, short *adapt_count)
 	  if (aconf.skip_trylock_internal_abort > 0)
 	    *adapt_count = aconf.skip_trylock_internal_abort;
 	}
-
-	if (aconf.skip_lock_busy > 0)
-	  *adapt_count = aconf.skip_lock_busy;
     }
 
 use_lock:
