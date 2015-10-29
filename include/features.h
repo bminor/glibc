@@ -308,7 +308,8 @@
 # define __USE_LARGEFILE64	1
 #endif
 
-#if defined _FILE_OFFSET_BITS && _FILE_OFFSET_BITS == 64
+#if !(defined SUPPRESS_USE_FILE_OFFSET64) && defined _FILE_OFFSET_BITS && \
+    _FILE_OFFSET_BITS == 64
 # define __USE_FILE_OFFSET64	1
 #endif
 
