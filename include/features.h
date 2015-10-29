@@ -360,7 +360,9 @@
 # define __USE_LARGEFILE64	1
 #endif
 
-#if defined _FILE_OFFSET_BITS && _FILE_OFFSET_BITS == 64
+/* Google local: Add a way to disable the auto-64-bit-offset option for functions like
+   fgetpos, which can cause mismatched signatures in C++ modules.  */
+#if !(defined SUPPRESS_USE_FILE_OFFSET64) && defined _FILE_OFFSET_BITS && _FILE_OFFSET_BITS == 64
 # define __USE_FILE_OFFSET64	1
 #endif
 
