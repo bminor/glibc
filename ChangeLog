@@ -1,3 +1,9 @@
+2016-03-15  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #19257]
+	* resolv/res_init.c (__res_iclose): Use statp->nscount instead of
+	statp->_u._ext.nscount as loop count.
+
 2016-02-17  Andrew Senkevich  <andrew.senkevich@intel.com>
 	    H.J. Lu  <hongjiu.lu@intel.com>
 
