@@ -1,3 +1,74 @@
+2015-11-24  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #17062]
+	* posix/fnmatch_loop.c (FCT): Rerrange loop for skipping over rest
+	of a bracket expr not to run off the end of the string.
+	* posix/Makefile (tests): Add tst-fnmatch3.
+	* posix/tst-fnmatch3.c: New file.
+
+2015-04-29  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #18007]
+	* nss/nss_files/files-XXX.c (CONCAT): Always enable stayopen.
+	(CVE-2014-8121)
+	* nss/tst-nss-getpwent.c: New file.
+	* nss/Makefile (tests): Add new test.
+
+2015-02-22  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #17269]
+	* libio/wstrops.c (_IO_wstr_overflow): Guard against integer overflow
+	(enlarge_userbuf): Likewise.
+
+2015-02-26  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #18032]
+	* posix/fnmatch_loop.c (FCT): Remove extra increment when skipping
+	over collating symbol inside a bracket expression.  Minor cleanup.
+
+2014-06-23  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #17079]
+	* nss/nss_files/files-XXX.c (get_contents): Store overflow marker
+	before reading the next line.
+
+2015-10-02  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Advance address pointer
+	when skipping over non-matching result from nscd.
+
+2015-09-11  Alan Modra  <amodra@gmail.com>
+
+	[BZ #17153]
+	* elf/elf.h (DT_PPC64_NUM): Correct value.
+	* NEWS: Add to fixed bug list.
+
+2014-03-20  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #16743]
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Properly skip over
+	non-matching result from nscd.
+
+2015-04-21  Arjun Shankar  <arjun.is@lostca.se>
+
+	[BZ #18287]
+	* resolv/nss_dns/dns-host.c (getanswer_r): Adjust buffer length
+	based on padding.  (CVE-2015-1781)
+
+2014-12-11  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #16657]
+	* nptl/pthread_mutex_trylock.c (__pthread_mutex_trylock): Use
+	FORCE_ELISION instead of DO_ELISION.
+	* nptl/sysdeps/unix/sysv/linux/x86/force-elision.h (DO_ELISION):
+	Remove.
+
+2013-07-29  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+
+	[BZ #17213]
+	* sysdeps/powerpc/powerpc64/entry.h: Fix TEXT_START definition for
+	powerpc64le.
+
 2015-05-11  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #18007]

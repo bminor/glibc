@@ -1,5 +1,5 @@
-/* force-elision.h: Automatic enabling of elision for mutexes
-   Copyright (C) 2013-2014 Free Software Foundation, Inc.
+/* Test for fnmatch not reading past the end of the pattern.
+   Copyright (C) 2014 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,11 +16,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* Automatically enable elision for existing user lock kinds.  */
-#define FORCE_ELISION(m, s)						\
-  if (__pthread_force_elision						\
-      && (m->__data.__kind & PTHREAD_MUTEX_ELISION_FLAGS_NP) == 0)	\
-    {									\
-      mutex->__data.__kind |= PTHREAD_MUTEX_ELISION_NP;			\
-      s;								\
-    }
+#include <fnmatch.h>
+
+int
+do_test (void)
+{
+  const char *pattern = "[[:alpha:]'[:alpha:]\0]";
+
+  return fnmatch (pattern, "a", 0) != FNM_NOMATCH;
+}
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

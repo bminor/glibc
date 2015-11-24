@@ -899,11 +899,8 @@ FCT (pattern, string, string_end, no_leading_period, flags, ends, alloca_used)
 
 	  matched:
 	    /* Skip the rest of the [...] that already matched.  */
-	    do
+	    while ((c = *p++) != L (']'))
 	      {
-	      ignore_next:
-		c = *p++;
-
 		if (c == L('\0'))
 		  /* [... (unterminated) loses.  */
 		  return FNM_NOMATCH;
@@ -931,12 +928,11 @@ FCT (pattern, string, string_end, no_leading_period, flags, ends, alloca_used)
 
 			if (c < L('a') || c >= L('z'))
 			  {
-			    p = startp;
-			    goto ignore_next;
+			    p = startp - 2;
+			    break;
 			  }
 		      }
 		    p += 2;
-		    c = *p++;
 		  }
 		else if (c == L('[') && *p == L('='))
 		  {
@@ -947,25 +943,21 @@ FCT (pattern, string, string_end, no_leading_period, flags, ends, alloca_used)
 		    if (c != L('=') || p[1] != L(']'))
 		      return FNM_NOMATCH;
 		    p += 2;
-		    c = *p++;
 		  }
 		else if (c == L('[') && *p == L('.'))
 		  {
-		    ++p;
 		    while (1)
 		      {
 			c = *++p;
-			if (c == '\0')
+			if (c == L('\0'))
 			  return FNM_NOMATCH;
 
-			if (*p == L('.') && p[1] == L(']'))
+			if (c == L('.') && p[1] == L(']'))
 			  break;
 		      }
 		    p += 2;
-		    c = *p++;
 		  }
 	      }
-	    while (c != L(']'));
 	    if (not)
 	      return FNM_NOMATCH;
 	  }
