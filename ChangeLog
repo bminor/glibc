@@ -1,3 +1,15 @@
+2015-11-27  Andrew Senkevich  <andrew.senkevich@intel.com>
+
+	[BZ #19058]
+	* math/Makefile ($(inst_libdir)/libm.so): Added libmvec_nonshared.a to
+	AS_NEEDED.
+	* sysdeps/x86/fpu/bits/math-vector.h: Removed code with asm aliases
+	workaround.
+	* sysdeps/x86_64/fpu/Makefile (libmvec-support,
+	libmvec-static-only-routines): Added new file.
+	* sysdeps/x86_64/fpu/svml_finite_alias.S: New file.
+	* NEWS: Mention this fix.
+
 2015-11-20  Roland McGrath  <roland@hack.frob.com>
 
 	* sysdeps/nacl/dl-map-segments.h (_dl_map_segments): Use
