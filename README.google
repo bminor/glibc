@@ -527,3 +527,11 @@ include/features.h
   types, this is irrelevant in Google's depot, but leads to different type
   signatures for functions that are problematic with C++ modules.
   (klimek, google-local)
+
+math/auto-libm-test-in
+math/auto-libm-test-out
+sysdeps/ieee754/dbl-64/s_sin.c
+sysdeps/x86_64/fpu/libm-test-ulps
+  For b/25873705, backport fix for broken trig functions (PR16623)
+  https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=1cadc85813d736f7682fa2eeadae639ab6b66c65
+  (stanshebs, backport)
