@@ -1,3 +1,8 @@
+2015-12-03  Andrew Senkevich  <andrew.senkevich@intel.com>
+
+	* math/Makefile ($(inst_libdir)/libm.so): Corrected path to
+	libmvec_nonshared.a
+
 2015-11-27  Andrew Senkevich  <andrew.senkevich@intel.com>
 
 	[BZ #19058]
