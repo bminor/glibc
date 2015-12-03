@@ -535,3 +535,9 @@ sysdeps/x86_64/fpu/libm-test-ulps
   For b/25873705, backport fix for broken trig functions (PR16623)
   https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=1cadc85813d736f7682fa2eeadae639ab6b66c65
   (stanshebs, backport)
+
+iconv/gconv_trans.c
+  For b/25977570, backport removal of __gconv_translit_find (PR17187)
+  https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=a1a6a401ab0a3c9f15fb7eaebbdcee24192254e8
+  (stanshebs, backport)
+
