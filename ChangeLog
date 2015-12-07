@@ -1,3 +1,9 @@
+2015-12-31  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/unix/sysv/linux/alpha/libc.abilist [GLIBC_2.22]: Move
+	to keep the file sorted.
+	* sysdeps/unix/sysv/linux/hppa/libc.abilist [GLIBC_2.22]: Likewise.
+
 2015-12-17  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	[BZ #19174]
