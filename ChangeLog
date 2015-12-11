@@ -1,3 +1,8 @@
+2015-12-11  Steve Ellcey  <sellcey@imgtec.com>
+
+	* sysdeps/ieee754/flt-32/k_rem_pio2f.c (__kernel_rem_pio2f):
+	Fix indentation.
+
 2015-09-18  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* resolv/base64.c (rcsid): Remove unused static.
