@@ -19,12 +19,16 @@
 #include <sys/times.h>
 #include <sysdep.h>
 
+#ifndef INTERNAL_SYSCALL_TIMES
+# define INTERNAL_SYSCALL_TIMES(err, buf) \
+  INTERNAL_SYSCALL (times, err, 1, buf)
+#endif
 
 clock_t
 __times (struct tms *buf)
 {
   INTERNAL_SYSCALL_DECL (err);
-  clock_t ret = INTERNAL_SYSCALL (times, err, 1, buf);
+  clock_t ret = INTERNAL_SYSCALL_TIMES (err, buf);
   if (INTERNAL_SYSCALL_ERROR_P (ret, err)
       && __builtin_expect (INTERNAL_SYSCALL_ERRNO (ret, err) == EFAULT, 0)
       && buf)
