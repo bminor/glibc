@@ -17,15 +17,15 @@
    <http://www.gnu.org/licenses/>.  */
 
 /* Inline Linux times system call.  */
-#define INTERNAL_SYSCALL_TIMES(err, buf)				\
-  ({									\
-    unsigned long long int resultvar;					\
-    LOAD_ARGS_1 (buf)							\
-    LOAD_REGS_1								\
-    asm volatile (							\
-    "syscall\n\t"							\
-    : "=a" (resultvar)							\
-    : "0" (__NR_times) ASM_ARGS_1 : "memory", "cc", "r11", "cx");	\
+#define INTERNAL_SYSCALL_TIMES(err, buf)				       \
+  ({									       \
+    unsigned long long int resultvar;					       \
+    LOAD_ARGS_1 (buf)							       \
+    LOAD_REGS_1								       \
+    asm volatile (							       \
+    "syscall\n\t"							       \
+    : "=a" (resultvar)							       \
+    : "0" (__NR_times) ASM_ARGS_1 : "memory", REGISTERS_CLOBBERED_BY_SYSCALL); \
     (long long int) resultvar; })
 
 #include <sysdeps/unix/sysv/linux/times.c>
