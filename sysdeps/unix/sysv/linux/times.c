@@ -19,14 +19,34 @@
 #include <sys/times.h>
 #include <sysdep.h>
 
+#ifndef INTERNAL_SYSCALL_TIMES_DECL
+# define INTERNAL_SYSCALL_TIMES_DECL(err) \
+  INTERNAL_SYSCALL_DECL (err)
+#endif
+
+#ifndef INTERNAL_SYSCALL_TIMES
+# define INTERNAL_SYSCALL_TIMES(err, buf) \
+  INTERNAL_SYSCALL (times, err, 1, buf)
+#endif
+
+#ifndef INTERNAL_SYSCALL_TIMES_ERROR_P
+# define INTERNAL_SYSCALL_TIMES_ERROR_P(ret, err) \
+  INTERNAL_SYSCALL_ERROR_P (ret, err)
+#endif
+
+#ifndef INTERNAL_SYSCALL_TIMES_ERRNO
+# define INTERNAL_SYSCALL_TIMES_ERRNO(ret, err) \
+  INTERNAL_SYSCALL_ERRNO (ret, err)
+#endif
 
 clock_t
 __times (struct tms *buf)
 {
-  INTERNAL_SYSCALL_DECL (err);
-  clock_t ret = INTERNAL_SYSCALL (times, err, 1, buf);
-  if (INTERNAL_SYSCALL_ERROR_P (ret, err)
-      && __builtin_expect (INTERNAL_SYSCALL_ERRNO (ret, err) == EFAULT, 0)
+  INTERNAL_SYSCALL_TIMES_DECL (err);
+  clock_t ret = INTERNAL_SYSCALL_TIMES (err, buf);
+  if (INTERNAL_SYSCALL_TIMES_ERROR_P (ret, err)
+      && (__builtin_expect (INTERNAL_SYSCALL_TIMES_ERRNO (ret, err)
+			    == EFAULT, 0))
       && buf)
     {
       /* This might be an error or not.  For architectures which have
