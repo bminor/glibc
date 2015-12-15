@@ -783,26 +783,26 @@ send_vc(res_state statp,
 		assert (anscp != NULL || ansp2 == NULL);
 		thisresplenp = &resplen;
 	} else {
-		if (*anssizp != MAXPACKET) {
+		if (*anssizp == orig_anssizp) {
 			/* No buffer allocated for the first
 			   reply.  We can try to use the rest
 			   of the user-provided buffer.  */
 #ifdef _STRING_ARCH_unaligned
 			*anssizp2 = orig_anssizp - resplen;
-			*ansp2 = *ansp + resplen;
+			*ansp2 = ans + resplen;
 #else
 			int aligned_resplen
 			  = ((resplen + __alignof__ (HEADER) - 1)
 			     & ~(__alignof__ (HEADER) - 1));
 			*anssizp2 = orig_anssizp - aligned_resplen;
-			*ansp2 = *ansp + aligned_resplen;
+			*ansp2 = ans + aligned_resplen;
 #endif
-		} else {
+		} else if (*ansp2_malloced == 0) {
 			/* The first reply did not fit into the
 			   user-provided buffer.  Maybe the second
 			   answer will.  */
 			*anssizp2 = orig_anssizp;
-			*ansp2 = *ansp;
+			*ansp2 = ans;
 		}
 
 		thisanssizp = anssizp2;
@@ -826,6 +826,8 @@ send_vc(res_state statp,
 			*thisansp = newp;
 			if (thisansp == ansp2)
 			  *ansp2_malloced = 1;
+                        else if (thisansp == anscp)
+                          *ansp = *thisansp;
 			anhp = (HEADER *) newp;
 			len = rlen;
 		} else {
@@ -1201,26 +1203,26 @@ send_dg(res_state statp,
 			assert (anscp != NULL || ansp2 == NULL);
 			thisresplenp = &resplen;
 		} else {
-			if (*anssizp != MAXPACKET) {
+			if (*anssizp == orig_anssizp) {
 				/* No buffer allocated for the first
 				   reply.  We can try to use the rest
 				   of the user-provided buffer.  */
 #ifdef _STRING_ARCH_unaligned
 				*anssizp2 = orig_anssizp - resplen;
-				*ansp2 = *ansp + resplen;
+				*ansp2 = ans + resplen;
 #else
 				int aligned_resplen
 				  = ((resplen + __alignof__ (HEADER) - 1)
 				     & ~(__alignof__ (HEADER) - 1));
 				*anssizp2 = orig_anssizp - aligned_resplen;
-				*ansp2 = *ansp + aligned_resplen;
+				*ansp2 = ans + aligned_resplen;
 #endif
-			} else {
+			} else if (*ansp2_malloced == 0) {
 				/* The first reply did not fit into the
 				   user-provided buffer.  Maybe the second
 				   answer will.  */
 				*anssizp2 = orig_anssizp;
-				*ansp2 = *ansp;
+				*ansp2 = ans;
 			}
 
 			thisanssizp = anssizp2;
@@ -1239,10 +1241,12 @@ send_dg(res_state statp,
                     ) {
 			u_char *newp = malloc (MAXPACKET);
 			if (newp != NULL) {
-				*anssizp = MAXPACKET;
-				*thisansp = ans = newp;
+				*thisanssizp = MAXPACKET;
+				*thisansp = newp;
 				if (thisansp == ansp2)
 				  *ansp2_malloced = 1;
+                                else if (thisansp == anscp)
+                                  *ansp = *thisansp;
 			}
 		}
 		HEADER *anhp = (HEADER *) *thisansp;

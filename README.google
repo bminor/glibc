@@ -541,3 +541,6 @@ iconv/gconv_trans.c
   https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=a1a6a401ab0a3c9f15fb7eaebbdcee24192254e8
   (stanshebs, backport)
 
+resolv/res_send.c
+  For b/25900273, adjust allocations to avoid segfault.
+  (bmoses, google-local)
