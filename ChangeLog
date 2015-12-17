@@ -1,3 +1,93 @@
+2015-12-17  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	[BZ #19174]
+	* sysdeps/powerpc/nptl/elide.h (__elide_lock): Fix usage of
+	.skip_lock_out_of_tbegin_retries.
+	* sysdeps/unix/sysv/linux/powerpc/elision-lock.c
+	(__lll_lock_elision): Likewise, and respect a value of
+	try_tbegin <= 0.
+
+2015-12-03  Andrew Senkevich  <andrew.senkevich@intel.com>
+
+	* math/Makefile ($(inst_libdir)/libm.so): Corrected path to
+	libmvec_nonshared.a
+
+2015-11-27  Andrew Senkevich  <andrew.senkevich@intel.com>
+
+	[BZ #19058]
+	* math/Makefile ($(inst_libdir)/libm.so): Added libmvec_nonshared.a to
+	AS_NEEDED.
+	* sysdeps/x86/fpu/bits/math-vector.h: Removed code with asm aliases
+	workaround.
+	* sysdeps/x86_64/fpu/Makefile (libmvec-support,
+	libmvec-static-only-routines): Added new file.
+	* sysdeps/x86_64/fpu/svml_finite_alias.S: New file.
+	* NEWS: Mention this fix.
+
+2015-11-20  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/nacl/dl-map-segments.h (_dl_map_segments): Use
+	__glibc_likely instead of __builtin_expect.  After falling back to
+	dyncode_create in a non-ET_DYN case, use the allocate_code_data
+	system interface to register the code pages as occupied.
+
+2015-11-14  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* config.make.in (have-glob-dat-reloc): New.
+	* configure.ac (libc_cv_has_glob_dat): New.  Set to yes if
+	target supports GLOB_DAT relocaton. AC_SUBST.
+	* configure: Regenerated.
+	* elf/Makefile (tests): Add tst-prelink.
+	(tests-special): Add $(objpfx)tst-prelink-cmp.out.
+	(tst-prelink-ENV): New.
+	($(objpfx)tst-prelink-conflict.out): Likewise.
+	($(objpfx)tst-prelink-cmp.out): Likewise.
+	* sysdeps/x86/tst-prelink.c: Moved to ...
+	* elf/tst-prelink.c: Here.
+	* sysdeps/x86/tst-prelink.exp: Moved to ...
+	* elf/tst-prelink.exp: Here.
+	* sysdeps/x86/Makefile (tests): Don't add tst-prelink.
+	(tst-prelink-ENV): Removed.
+	($(objpfx)tst-prelink-conflict.out): Likewise.
+	($(objpfx)tst-prelink-cmp.out): Likewise.
+	(tests-special): Don't add $(objpfx)tst-prelink-cmp.out.
+
+2015-11-10  Roland McGrath  <roland@hack.frob.com>
+
+	* elf/dl-load.c (open_verify): Take new argument FD.
+	Skip __open call if passed FD is not -1.
+	(_dl_map_object, open_path): Update callers.
+	* elf/dl-sysdep-open.h: New file.
+	* elf/dl-load.c: Include it.
+	(_dl_map_object): Try _dl_sysdep_open_object before ldconfig cache.
+	* sysdeps/nacl/dl-sysdep.c (_dl_sysdep_open_object): New function.
+	* sysdeps/nacl/dl-sysdep-open.h: New file.
+	* sysdeps/nacl/nacl-interface-list.h: Move nacl_irt_resource_open
+	from libc to rtld.
+
+2015-11-10  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #19178]
+	* sysdeps/x86/Makefile (tests): Add tst-prelink.
+	(tst-prelink-ENV): New.
+	($(objpfx)tst-prelink-conflict.out): Likewise.
+	($(objpfx)tst-prelink-cmp.out): Likewise.
+	(tests-special): Add $(objpfx)tst-prelink-cmp.out.
+	* sysdeps/x86/tst-prelink.c: New file.
+	* sysdeps/x86/tst-prelink.exp: Likewise.
+
+2015-11-07  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #19178]
+	* elf/dl-lookup.c (RTYPE_CLASS_VALID): New.
+	(RTYPE_CLASS_PLT): Likewise.
+	(RTYPE_CLASS_COPY): Likewise.
+	(RTYPE_CLASS_TLS): Likewise.
+	(_dl_debug_bindings): Use RTYPE_CLASS_TLS and RTYPE_CLASS_VALID
+	to set relocation type class for DL_DEBUG_PRELINK.  Keep only
+	ELF_RTYPE_CLASS_PLT and ELF_RTYPE_CLASS_COPY bits for
+	DL_DEBUG_PRELINK.
+
 2015-10-20  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	[BZ #18743]

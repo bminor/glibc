@@ -293,6 +293,13 @@ check-abi: $(objpfx)check-abi-ld.out
 tests-special += $(objpfx)check-abi-ld.out
 update-abi: update-abi-ld
 
+ifeq ($(have-glob-dat-reloc),yes)
+tests += tst-prelink
+ifeq ($(run-built-tests),yes)
+tests-special += $(objpfx)tst-prelink-cmp.out
+endif
+endif
+
 include ../Rules
 
 ifeq (yes,$(build-shared))
@@ -1211,4 +1218,14 @@ $(objpfx)tst-unused-dep.out: $(objpfx)testobj1.so
 
 $(objpfx)tst-unused-dep-cmp.out: $(objpfx)tst-unused-dep.out
 	cmp $< /dev/null > $@; \
+	$(evaluate-test)
+
+tst-prelink-ENV = LD_TRACE_PRELINKING=1
+
+$(objpfx)tst-prelink-conflict.out: $(objpfx)tst-prelink.out
+	grep stdout $< | grep conflict | $(AWK) '{ print $$10, $$11 }' > $@
+
+$(objpfx)tst-prelink-cmp.out: tst-prelink.exp \
+			      $(objpfx)tst-prelink-conflict.out
+	cmp $^ > $@; \
 	$(evaluate-test)
