@@ -1,3 +1,7 @@
+2015-12-18  Torvald Riegel  <triegel@redhat.com>
+
+	* math/atest-exp2.c (mp_exp_m1): Remove.
+
 2016-06-02  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/unix/sysv/linux/dl-openat64.c (openat64): Convert to
