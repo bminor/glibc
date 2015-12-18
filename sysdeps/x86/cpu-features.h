@@ -32,6 +32,7 @@
 #define bit_AVX512F_Usable		(1 << 12)
 #define bit_AVX512DQ_Usable		(1 << 13)
 #define bit_Prefer_MAP_32BIT_EXEC	(1 << 14)
+#define bit_Prefer_No_VZEROUPPER	(1 << 15)
 
 /* CPUID Feature flags.  */
 
@@ -91,6 +92,8 @@
 # define index_AVX512F_Usable		FEATURE_INDEX_1*FEATURE_SIZE
 # define index_AVX512DQ_Usable		FEATURE_INDEX_1*FEATURE_SIZE
 # define index_Prefer_MAP_32BIT_EXEC	FEATURE_INDEX_1*FEATURE_SIZE
+# define index_Prefer_No_VZEROUPPER	FEATURE_INDEX_1*FEATURE_SIZE
+
 
 # if defined (_LIBC) && !IS_IN (nonlib)
 #  ifdef __x86_64__
@@ -237,6 +240,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define index_AVX512F_Usable		FEATURE_INDEX_1
 # define index_AVX512DQ_Usable		FEATURE_INDEX_1
 # define index_Prefer_MAP_32BIT_EXEC	FEATURE_INDEX_1
+# define index_Prefer_No_VZEROUPPER     FEATURE_INDEX_1
 
 #endif	/* !__ASSEMBLER__ */
 
