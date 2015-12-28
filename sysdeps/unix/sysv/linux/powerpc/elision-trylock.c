@@ -31,7 +31,7 @@ int
 __lll_trylock_elision (int *futex, short *adapt_count)
 {
   /* Implement POSIX semantics by forbiding nesting elided trylocks.  */
-  __builtin_tabort (_ABORT_NESTED_TRYLOCK);
+  __libc_tabort (_ABORT_NESTED_TRYLOCK);
 
   /* Only try a transaction if it's worth it.  */
   if (*adapt_count > 0)
@@ -40,13 +40,13 @@ __lll_trylock_elision (int *futex, short *adapt_count)
       goto use_lock;
     }
 
-  if (__builtin_tbegin (0))
+  if (__libc_tbegin (0))
     {
       if (*futex == 0)
 	return 0;
 
       /* Lock was busy.  Fall back to normal locking.  */
-      __builtin_tabort (_ABORT_LOCK_BUSY);
+      __libc_tabort (_ABORT_LOCK_BUSY);
     }
   else
     {
