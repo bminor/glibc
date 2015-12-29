@@ -217,9 +217,6 @@ typedef int register_t __attribute__ ((__mode__ (__word__)));
 
 /* It also defines `fd_set' and the FD_* macros for `select'.  */
 # include <sys/select.h>
-
-/* BSD defines these symbols, so we follow.  */
-# include <sys/sysmacros.h>
 #endif /* Use misc.  */
 
 
