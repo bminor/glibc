@@ -11,9 +11,12 @@ Version 2.18.1
 
   14143, 14155, 14547, 14699, 15073, 15128, 15532, 15427, 15522, 15680,
   15723, 15734, 15735, 15797, 15892, 15895, 15909, 15915, 15917, 15946,
-  15996, 16072, 16150, 16169, 16387, 16414, 16430, 16431, 16510, 16617,
-  16618, 16885, 16916, 16943, 16958, 17048, 17137, 17187, 17325, 17625,
-  17630, 18007, 18104, 18287.
+  15996, 16009, 16072, 16150, 16169, 16387, 16414, 16430, 16431, 16510,
+  16617, 16618, 16885, 16916, 16943, 16958, 17048, 17137, 17187, 17269,
+  17325, 17625, 17630, 18007, 18032, 18104, 18287, 18928, 19018.
+
+* The LD_POINTER_GUARD environment variable can no longer be used to
+  disable the pointer guard feature.  It is always enabled.
 
 * CVE-2014-8121 The NSS backends shared internal state between the getXXent
   and getXXbyYY NSS calls for the same database, causing a denial-of-service

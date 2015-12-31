@@ -1,3 +1,49 @@
+2015-12-31  Leonhard Holz  <leonhard.holz@web.de>
+
+	[BZ #16009]
+	* string/strxfrm_l.c (STRXFRM): Allocate fixed size cache for
+	weights and rules. Use do_xfrm_cached if data fits in cache,
+	do_xfrm otherwise.  Moved former main loop to...
+	* (do_xfrm_cached): New function.
+	* (do_xfrm): Non-caching version of do_xfrm_cached. Uses
+	find_idx, find_position and stack_push.
+	* (find_idx): New function.
+	* (find_position): Likewise.
+	* localedata/sort-test.sh: Added test run for do_xfrm.
+	* localedata/xfrm-test.c (main): Added command line option
+	-nocache to run the test with strings that are too large for
+	the STRXFRM cache.
+
+2015-12-30  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #17269]
+	* libio/wstrops.c (_IO_wstr_overflow): Guard against integer overflow
+	(enlarge_userbuf): Likewise.
+
+2015-12-30  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #18032]
+	* posix/fnmatch_loop.c (FCT): Remove extra increment when skipping
+	over collating symbol inside a bracket expression.  Minor cleanup.
+	* posix/tst-fnmatch3.c (do_test): Add test case.
+
+2015-12-30  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19018]
+	* stdlib/cxa_thread_atexit_impl.c (__cxa_thread_atexit_impl):
+	Mangle function pointer before storing it.
+	(__call_tls_dtors): Demangle function pointer before calling it.
+
+2015-12-30  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #18928]
+	* sysdeps/generic/ldsodefs.h (struct rtld_global_ro): Remove
+	_dl_pointer_guard member.
+	* elf/rtld.c (_rtld_global_ro): Remove _dl_pointer_guard
+	initializer.
+	(security_init): Always set up pointer guard.
+	(process_envvars): Do not process LD_POINTER_GUARD.
+
 2015-05-11  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #18007]
