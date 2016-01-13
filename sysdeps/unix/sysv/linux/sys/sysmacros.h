@@ -34,7 +34,7 @@ extern unsigned long long int gnu_dev_makedev (unsigned int __major,
 					       unsigned int __minor)
      __THROW __attribute_const__;
 
-#ifdef __USE_EXTERN_INLINES
+#if defined __USE_EXTERN_INLINES || defined _LIBC
 __extension__ __extern_inline __attribute_const__ unsigned int
 __NTH (gnu_dev_major (unsigned long long int __dev))
 {
