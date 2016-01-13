@@ -27,7 +27,7 @@
 #endif
 
 
-#ifdef __USE_EXTERN_INLINES
+#if defined __USE_EXTERN_INLINES || defined _LIBC
 /* For -D_FORTIFY_SOURCE{,=2} bits/stdio2.h will define a different
    inline.  */
 # if !(__USE_FORTIFY_LEVEL > 0 && defined __fortify_function)
@@ -138,7 +138,8 @@ __NTH (ferror_unlocked (FILE *__stream))
 #endif /* Use extern inlines.  */
 
 
-#if defined __USE_MISC && defined __GNUC__ && defined __OPTIMIZE__ \
+#if defined __USE_MISC && defined __GNUC__ \
+    && defined __OPTIMIZE__ && !defined __OPTIMIZE_SIZE__ \
     && !defined __cplusplus
 /* Perform some simple optimizations.  */
 # define fread_unlocked(ptr, size, n, stream) \

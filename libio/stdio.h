@@ -929,7 +929,7 @@ extern void funlockfile (FILE *__stream) __THROW;
 
 /* If we are compiling with optimizing read this file.  It contains
    several optimizing inline functions and macros.  */
-#ifdef __USE_EXTERN_INLINES
+#if defined __USE_EXTERN_INLINES || defined _LIBC
 # include <bits/stdio.h>
 #endif
 #if __USE_FORTIFY_LEVEL > 0 && defined __fortify_function
