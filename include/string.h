@@ -71,6 +71,12 @@ extern __typeof (strncasecmp_l) __strncasecmp_l;
       __new[__len] = '\0';						      \
       (char *) memcpy (__new, __old, __len);				      \
     }))
+
+# ifdef __OPTIMIZE_SIZE__
+#  define strdup(s)		__strdup ((s))
+#  define strndup(s, n)		__strndup ((s), (n))
+#  define strsep(s, d)		__strsep ((s), (d))
+# endif
 #endif
 
 libc_hidden_proto (__mempcpy)
@@ -99,6 +105,7 @@ libc_hidden_proto (memmem)
 extern __typeof (memmem) __memmem;
 libc_hidden_proto (__memmem)
 libc_hidden_proto (__ffs)
+libc_hidden_proto (__strsep)
 
 libc_hidden_builtin_proto (memchr)
 libc_hidden_builtin_proto (memcpy)
