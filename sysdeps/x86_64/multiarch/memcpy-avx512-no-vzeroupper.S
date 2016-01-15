@@ -141,7 +141,7 @@ L(less_4bytes):
 
 L(less_2bytes):
 	cmp	$1, %dl
-	jb	L(less_1bytes)	
+	jb	L(less_1bytes)
 	mov	(%rsi), %cl
 	mov	%cl, (%rdi)
 L(less_1bytes):
@@ -172,7 +172,7 @@ L(512bytesormore):
 	prefetcht1 -0x100(%rcx)
 	prefetcht1 -0xC0(%rcx)
 	prefetcht1 -0x80(%rcx)
-	prefetcht1 -0x40(%rcx)	
+	prefetcht1 -0x40(%rcx)
 	vmovups	(%rsi), %zmm0
 	vmovups 0x40(%rsi), %zmm1
 	vmovups 0x80(%rsi), %zmm2
@@ -286,7 +286,7 @@ L(1024bytesormore_bkw):
 	prefetcht1 -0x180(%rcx)
 	prefetcht1 -0x1C0(%rcx)
 	prefetcht1 -0x200(%rcx)
-	
+
 /* Backward loop with unaligned memory access.  */
 L(gobble_512bytes_loop_bkw):
 	vmovups -0x40(%rcx), %zmm0
@@ -306,14 +306,14 @@ L(gobble_512bytes_loop_bkw):
 	prefetcht1 -0x180(%rcx)
 	prefetcht1 -0x1C0(%rcx)
 	prefetcht1 -0x200(%rcx)
-	vmovups %zmm0, -0x40(%r9)	
-	vmovups %zmm1, -0x80(%r9)	
-	vmovups %zmm2, -0xC0(%r9)	
-	vmovups	%zmm3, -0x100(%r9)	
-	vmovups %zmm4, -0x140(%r9)	
-	vmovups %zmm5, -0x180(%r9)	
+	vmovups %zmm0, -0x40(%r9)
+	vmovups %zmm1, -0x80(%r9)
+	vmovups %zmm2, -0xC0(%r9)
+	vmovups	%zmm3, -0x100(%r9)
+	vmovups %zmm4, -0x140(%r9)
+	vmovups %zmm5, -0x180(%r9)
 	vmovups %zmm6, -0x1C0(%r9)
-	vmovups	%zmm7, -0x200(%r9)	
+	vmovups	%zmm7, -0x200(%r9)
 	sub	$512, %r9
 	cmp	%rdi, %r9
 	ja	L(gobble_512bytes_loop_bkw)
@@ -337,7 +337,7 @@ L(preloop_large):
 	mov	%rdi, %r8
 	and	$-0x80, %rdi
 	add	$0x80, %rdi
-	sub	%rdi, %r8	
+	sub	%rdi, %r8
 	sub	%r8, %rsi
 	add	%r8, %rdx
 	prefetcht1 (%rsi)
@@ -345,14 +345,18 @@ L(preloop_large):
 	prefetcht1 0x80(%rsi)
 	prefetcht1 0xC0(%rsi)
 L(gobble_256bytes_nt_loop):
+	prefetcht1 0x200(%rsi)
+	prefetcht1 0x240(%rsi)
+	prefetcht1 0x280(%rsi)
+	prefetcht1 0x2C0(%rsi)
+	prefetchnta 0x300(%rsi)
+	prefetchnta 0x340(%rsi)
+	prefetchnta 0x380(%rsi)
+	prefetchnta 0x3C0(%rsi)
 	vmovups	(%rsi), %zmm0
-	prefetcht1 0x100(%rsi)
 	vmovups	0x40(%rsi), %zmm1
-	prefetcht1 0x140(%rsi)
 	vmovups	0x80(%rsi), %zmm2
-	prefetcht1 0x180(%rsi)
 	vmovups	0xC0(%rsi), %zmm3
-	prefetcht1 0x1C0(%rsi)
 	vmovntdq %zmm0, (%rdi)
 	vmovntdq %zmm1, 0x40(%rdi)
 	vmovntdq %zmm2, 0x80(%rdi)
@@ -378,19 +382,19 @@ L(preloop_large_bkw):
 	sub	%r8, %rcx
 	sub	%r8, %rdx
 	add	%r9, %r8
- 	prefetcht1 -0x100(%rcx)
-	prefetcht1 -0xC0(%rcx)
-	prefetcht1 -0x80(%rcx)
-	prefetcht1 -0x40(%rcx)
 L(gobble_256bytes_nt_loop_bkw):
+	prefetcht1 -0x300(%rcx)
+	prefetcht1 -0x2C0(%rcx)
+	prefetcht1 -0x280(%rcx)
+	prefetcht1 -0x240(%rcx)
+	prefetchnta -0x400(%rcx)
+	prefetchnta -0x3C0(%rcx)
+	prefetchnta -0x380(%rcx)
+	prefetchnta -0x340(%rcx)
 	vmovups	-0x100(%rcx), %zmm0
-	prefetcht1 -0x200(%rcx)
 	vmovups	-0xC0(%rcx), %zmm1
-	prefetcht1 -0x1C0(%rcx)
 	vmovups	-0x80(%rcx), %zmm2
-	prefetcht1 -0x180(%rcx)
 	vmovups	-0x40(%rcx), %zmm3
-	prefetcht1 -0x140(%rcx)
 	vmovntdq %zmm0,	-0x100(%r9)
 	vmovntdq %zmm1,	-0xC0(%r9)
 	vmovntdq %zmm2,	-0x80(%r9)
@@ -404,7 +408,5 @@ L(gobble_256bytes_nt_loop_bkw):
 	vmovups	%zmm4, -0x80(%r8)
 	vmovups	%zmm5, -0x40(%r8)
 	jmp	L(check)
-
 END (MEMCPY)
-
 #endif
