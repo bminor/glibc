@@ -656,6 +656,12 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 
 	      return errno;
 	    }
+	  /* The call to madvise(...MADV_DONTNEED) below will fail if pages
+	     are locked. Unlock the guard memory to make sure the
+	     madvise function succeeds (memory can be locked if
+	     process called mlockall(MCL_FUTURE) at some point in the
+	     past).*/
+	  munlock (guard, guardsize);
 	  /* We've marked this guard region unwritable, but it's
 	     possible it already became resident, the most common case
 	     being transparent hugepages; if stack + guard (+ adjacent

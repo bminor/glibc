@@ -544,3 +544,8 @@ iconv/gconv_trans.c
 resolv/res_send.c
   For b/25900273, adjust allocations to avoid segfault.
   (bmoses, google-local)
+
+nptl/allocatestack.c
+nptl/Makefile
+nptl/tst-basic8.c
+  For b/24399992 unlock guard pages to avoid wasting memory.
