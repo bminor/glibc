@@ -1,3 +1,10 @@
+2016-01-22  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* string/tst-endian.c: Include <libc-internal.h>.
+	(do_test): Ignore tautological-compare warnings around
+	"htobeXX (beXXtoh (i)) != i" and
+	"htoleXX (leXXtoh (i)) != i" if-statements.
+
 2015-12-18  Torvald Riegel  <triegel@redhat.com>
 
 	* math/atest-exp2.c (mp_exp_m1): Remove.
