@@ -9,7 +9,7 @@ Version 2.21.1
 
 * The following bugs are resolved with this release:
 
-  17269, 17905, 17949, 18007, 18032, 18287, 18694, 18887, 18985.
+  17269, 17905, 17949, 18007, 18032, 18240, 18287, 18694, 18887, 18985.
 
 * A buffer overflow in gethostbyname_r and related functions performing DNS
   requests has been fixed.  If the NSS functions were called with a
