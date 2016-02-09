@@ -1079,6 +1079,80 @@ static void*   malloc_atfork(size_t sz, const void *caller);
 static void      free_atfork(void* mem, const void *caller);
 #endif
 
+/* ------------------ TRACE support ------------------  */
+#define USE_MTRACE 1
+#if USE_MTRACE
+#include "mtrace.h"
+
+volatile __malloc_trace_buffer_ptr __malloc_trace_buffer = NULL;
+volatile int __malloc_trace_buffer_size = 0;
+volatile int __malloc_trace_buffer_head = 0;
+
+static __thread __malloc_trace_buffer_ptr trace_ptr;
+
+static inline void __attribute__((always_inline))
+__mtb_trace_entry (uint32_t type, int64_t size, void *ptr1)
+{
+  int head1, head2;
+  do {
+    head1 = head2 = __malloc_trace_buffer_head;
+    head2 = (head2 + 1) % __malloc_trace_buffer_size;
+  } while (catomic_compare_and_exchange_bool_acq (&__malloc_trace_buffer_head, head2, head1));
+  trace_ptr = __malloc_trace_buffer + head1;
+
+  trace_ptr->thread = syscall(__NR_gettid);
+  trace_ptr->type = type;
+  trace_ptr->path_thread_cache = 0;
+  trace_ptr->path_cpu_cache = 0;
+  trace_ptr->path_cpu_cache2 = 0;
+  trace_ptr->path_sbrk = 0;
+  trace_ptr->path_mmap = 0;
+  trace_ptr->path_munmap = 0;
+  trace_ptr->path_m_f_realloc = 0;
+  trace_ptr->path = 0;
+  trace_ptr->size = size;
+  trace_ptr->ptr1 = (uint64_t) ptr1;
+  trace_ptr->ptr2 = 0;
+}
+
+int
+__malloc_set_trace_buffer (void *bufptr, int bufsize)
+{
+  __malloc_trace_buffer = 0;
+  __malloc_trace_buffer_size = bufsize / sizeof(struct __malloc_trace_buffer_s);
+  __malloc_trace_buffer_head = 0;
+  __malloc_trace_buffer = (__malloc_trace_buffer_ptr) bufptr;
+  return sizeof(struct __malloc_trace_buffer_s);
+}
+
+void *
+__malloc_get_trace_buffer (int *bufcount, int *bufhead)
+{
+  *bufcount = __malloc_trace_buffer_size;
+  *bufhead = __malloc_trace_buffer_head;
+  return __malloc_trace_buffer;
+}
+
+#define __MTB_TRACE_ENTRY(type,size,ptr1)		   \
+  if (__builtin_expect (__malloc_trace_buffer != NULL, 0)) \
+    __mtb_trace_entry (__MTB_TYPE_##type,size,ptr1);			   \
+  else							   \
+    trace_ptr = 0;
+
+#define __MTB_TRACE_PATH(mpath)		       \
+  if (__builtin_expect (trace_ptr != NULL, 1)) \
+    trace_ptr->path_##mpath = 1;
+
+#define __MTB_TRACE_SET(var,value) \
+  if (__builtin_expect (trace_ptr != NULL, 1)) \
+    trace_ptr->var = (uint64_t) value;
+
+#else
+#define __MTB_TRACE_ENTRY(type,size,ptr1)
+#define __MTB_TRACE_PATH(mpath)
+#define __MTB_TRACE_SET(var,value)
+#endif
+
 /* ------------------ MMAP support ------------------  */
 
 
@@ -2938,6 +3012,8 @@ __libc_malloc (size_t bytes)
   int tc_idx = size2tidx (bytes);
 #endif
 
+  __MTB_TRACE_ENTRY (MALLOC,bytes,NULL);
+
 #if USE_TCACHE
   if (bytes < MAX_TCACHE_SIZE
       && tcache.entries[tc_idx] != NULL)
@@ -2945,6 +3021,8 @@ __libc_malloc (size_t bytes)
       TCacheEntry *e = tcache.entries[tc_idx];
       tcache.entries[tc_idx] = e->next;
       tcache.counts[tc_idx] --;
+      __MTB_TRACE_PATH (thread_cache);
+      __MTB_TRACE_SET(ptr2, e);
       return (void *) e;
     }
 #endif
@@ -2965,6 +3043,9 @@ __libc_malloc (size_t bytes)
 
       total_bytes = tc_bytes + tc_ibytes * TCACHE_FILL_COUNT;
 
+      __MTB_TRACE_PATH (thread_cache);
+      __MTB_TRACE_PATH (cpu_cache);
+
       arena_get (ar_ptr, total_bytes);
 
       ent = _int_malloc (ar_ptr, total_bytes);
@@ -2972,6 +3053,7 @@ __libc_malloc (size_t bytes)
 	 before.  */
       if (!ent && ar_ptr != NULL)
 	{
+	  __MTB_TRACE_PATH (cpu_cache2);
 	  LIBC_PROBE (memory_malloc_retry, 1, total_bytes);
 	  ar_ptr = arena_get_retry (ar_ptr, total_bytes);
 	  ent = _int_malloc (ar_ptr, total_bytes);
@@ -3007,10 +3089,12 @@ __libc_malloc (size_t bytes)
 	  /*m = (mchunkptr) (ent + total_bytes);
 	    m->prev_size = tc_ibytes + extra;*/
 	}
+      __MTB_TRACE_SET(ptr2, ent);
       return ent;
     }
 #endif
 
+  __MTB_TRACE_PATH (cpu_cache);
   arena_get (ar_ptr, bytes);
 
   victim = _int_malloc (ar_ptr, bytes);
@@ -3018,6 +3102,7 @@ __libc_malloc (size_t bytes)
      before.  */
   if (!victim && ar_ptr != NULL)
     {
+      __MTB_TRACE_PATH (cpu_cache2);
       LIBC_PROBE (memory_malloc_retry, 1, bytes);
       ar_ptr = arena_get_retry (ar_ptr, bytes);
       victim = _int_malloc (ar_ptr, bytes);
@@ -3028,6 +3113,7 @@ __libc_malloc (size_t bytes)
 
   assert (!victim || chunk_is_mmapped (mem2chunk (victim)) ||
           ar_ptr == arena_for_chunk (mem2chunk (victim)));
+  __MTB_TRACE_SET(ptr2, victim);
   return victim;
 }
 libc_hidden_def (__libc_malloc)
@@ -3037,6 +3123,8 @@ __libc_free (void *mem)
 {
   mstate ar_ptr;
   mchunkptr p;                          /* chunk corresponding to mem */
+
+  __MTB_TRACE_ENTRY (FREE, 0, mem);
 
   void (*hook) (void *, const void *)
     = atomic_forced_read (__free_hook);
@@ -3063,6 +3151,7 @@ __libc_free (void *mem)
           LIBC_PROBE (memory_mallopt_free_dyn_thresholds, 2,
                       mp_.mmap_threshold, mp_.trim_threshold);
         }
+      __MTB_TRACE_PATH(munmap);
       munmap_chunk (p);
       return;
     }
@@ -3084,6 +3173,8 @@ __libc_realloc (void *oldmem, size_t bytes)
     atomic_forced_read (__realloc_hook);
   if (__builtin_expect (hook != NULL, 0))
     return (*hook)(oldmem, bytes, RETURN_ADDRESS (0));
+
+  __MTB_TRACE_ENTRY(REALLOC,bytes,oldmem);
 
 #if REALLOC_ZERO_BYTES_FREES
   if (bytes == 0 && oldmem != NULL)
@@ -3133,6 +3224,8 @@ __libc_realloc (void *oldmem, size_t bytes)
       if (oldsize - SIZE_SZ >= nb)
         return oldmem;                         /* do nothing */
 
+      __MTB_TRACE_PATH (m_f_realloc);
+
       /* Must alloc, copy, free. */
       newmem = __libc_malloc (bytes);
       if (newmem == 0)
@@ -3155,6 +3248,7 @@ __libc_realloc (void *oldmem, size_t bytes)
     {
       /* Try harder to allocate memory in other arenas.  */
       LIBC_PROBE (memory_realloc_retry, 2, bytes, oldmem);
+      __MTB_TRACE_PATH (m_f_realloc);
       newp = __libc_malloc (bytes);
       if (newp != NULL)
         {
@@ -3163,6 +3257,7 @@ __libc_realloc (void *oldmem, size_t bytes)
         }
     }
 
+  __MTB_TRACE_SET (ptr2, newp);
   return newp;
 }
 libc_hidden_def (__libc_realloc)
@@ -3171,7 +3266,12 @@ void *
 __libc_memalign (size_t alignment, size_t bytes)
 {
   void *address = RETURN_ADDRESS (0);
-  return _mid_memalign (alignment, bytes, address);
+  void *rv;
+
+  __MTB_TRACE_ENTRY (MEMALIGN, bytes, NULL);
+  rv = _mid_memalign (alignment, bytes, address);
+  __MTB_TRACE_SET (ptr2, rv);
+  return rv;
 }
 
 static void *
@@ -3247,8 +3347,12 @@ __libc_valloc (size_t bytes)
 
   void *address = RETURN_ADDRESS (0);
   size_t pagesize = GLRO (dl_pagesize);
+  void *rv;
 
-  return _mid_memalign (pagesize, bytes, address);
+  __MTB_TRACE_ENTRY (VALLOC, bytes, NULL);
+  rv = _mid_memalign (pagesize, bytes, address);
+  __MTB_TRACE_SET (ptr2, rv);
+  return rv;
 }
 
 void *
