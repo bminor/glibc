@@ -24,3 +24,4 @@ execv (const char *path, char *const argv[])
 {
   return __execve (path, argv, __environ);
 }
+libc_hidden_def (execv)
