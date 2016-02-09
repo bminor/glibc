@@ -2898,16 +2898,118 @@ mremap_chunk (mchunkptr p, size_t new_size)
 
 /*------------------------ Public wrappers. --------------------------------*/
 
+#define USE_TCACHE 1
+
+#if USE_TCACHE
+#define TCACHE_SHIFT	4
+/* we want 64 entries */
+#define MAX_TCACHE_SIZE	(1024 - (1 << TCACHE_SHIFT))
+#define TCACHE_IDX	((MAX_TCACHE_SIZE >> TCACHE_SHIFT)+1)
+#define size2tidx(bytes) (((bytes)+(1<<TCACHE_SHIFT)-1)>>TCACHE_SHIFT)
+
+/* Rounds up, so...
+   idx 0   bytes 0
+   idx 1   bytes 1..8
+   idx 2   bytes 9..16
+   etc
+*/
+
+#define TCACHE_FILL_COUNT 7
+
+typedef struct TCacheEntry {
+  struct TCacheEntry *next;
+} TCacheEntry;
+
+typedef struct {
+  char counts[TCACHE_IDX];
+  TCacheEntry *entries[TCACHE_IDX];
+} TCache;
+
+static __thread TCache tcache = {{0},{0}};
+
+#endif
+
 void *
 __libc_malloc (size_t bytes)
 {
   mstate ar_ptr;
   void *victim;
+#if USE_TCACHE
+  int tc_idx = size2tidx (bytes);
+#endif
+
+#if USE_TCACHE
+  if (bytes < MAX_TCACHE_SIZE
+      && tcache.entries[tc_idx] != NULL)
+    {
+      TCacheEntry *e = tcache.entries[tc_idx];
+      tcache.entries[tc_idx] = e->next;
+      tcache.counts[tc_idx] --;
+      return (void *) e;
+    }
+#endif
 
   void *(*hook) (size_t, const void *)
     = atomic_forced_read (__malloc_hook);
   if (__builtin_expect (hook != NULL, 0))
     return (*hook)(bytes, RETURN_ADDRESS (0));
+
+#if USE_TCACHE
+  if (bytes < MAX_TCACHE_SIZE)
+    {
+      void *ent;
+      int tc_bytes = tc_idx << TCACHE_SHIFT;
+      int tc_ibytes = tc_bytes + 2*SIZE_SZ;
+      int total_bytes;
+      int i;
+
+      total_bytes = tc_bytes + tc_ibytes * TCACHE_FILL_COUNT;
+
+      arena_get (ar_ptr, total_bytes);
+
+      ent = _int_malloc (ar_ptr, total_bytes);
+      /* Retry with another arena only if we were able to find a usable arena
+	 before.  */
+      if (!ent && ar_ptr != NULL)
+	{
+	  LIBC_PROBE (memory_malloc_retry, 1, total_bytes);
+	  ar_ptr = arena_get_retry (ar_ptr, total_bytes);
+	  ent = _int_malloc (ar_ptr, total_bytes);
+	}
+      if (ar_ptr != NULL)
+	(void) mutex_unlock (&ar_ptr->mutex);
+
+      if (ent)
+	{
+	  mchunkptr m = mem2chunk (ent);
+	  TCacheEntry *e;
+	  int flags = m->size & SIZE_BITS;
+	  int old_size = m->size & ~SIZE_BITS;
+	  int extra = old_size - total_bytes - 2*SIZE_SZ;
+
+	  m->size = tc_ibytes | flags;
+	  flags |= PREV_INUSE;
+
+	  for (i = 0; i < TCACHE_FILL_COUNT; i++)
+	    {
+	      m =     (mchunkptr) (ent + i * tc_ibytes + tc_bytes);
+	      e = (TCacheEntry *) (ent + i * tc_ibytes + tc_ibytes);
+
+	      /* Not needed because the previious chunk is "in use".  */
+	      /*m->prev_size = tc_ibytes;*/
+	      m->size = tc_ibytes | flags;
+	      e->next = tcache.entries[tc_idx];
+	      tcache.entries[tc_idx] = e;
+	      tcache.counts[tc_idx] ++;
+	    }
+	  m->size = (tc_ibytes + extra) | flags;
+	  /* Not needed because our last chunk is "in use".  */
+	  /*m = (mchunkptr) (ent + total_bytes);
+	    m->prev_size = tc_ibytes + extra;*/
+	}
+      return ent;
+    }
+#endif
 
   arena_get (ar_ptr, bytes);
 
@@ -3145,6 +3247,7 @@ __libc_valloc (size_t bytes)
 
   void *address = RETURN_ADDRESS (0);
   size_t pagesize = GLRO (dl_pagesize);
+
   return _mid_memalign (pagesize, bytes, address);
 }
 
@@ -3878,6 +3981,21 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 
   check_inuse_chunk(av, p);
 
+#if USE_TCACHE
+  {
+    int tc_idx = size2tidx (size - SIZE_SZ*2);
+
+    if (size < MAX_TCACHE_SIZE
+	&& tcache.counts[tc_idx] < TCACHE_FILL_COUNT)
+      {
+	TCacheEntry *e = (TCacheEntry *) chunk2mem (p);
+	e->next = tcache.entries[tc_idx];
+	tcache.entries[tc_idx] = e;
+	tcache.counts[tc_idx] ++;
+	return;
+      }
+  }
+#endif
   /*
     If eligible, place chunk on a fastbin so it can be found
     and used quickly in malloc.
