@@ -549,3 +549,7 @@ nptl/allocatestack.c
 nptl/Makefile
 nptl/tst-basic8.c
   For b/24399992 unlock guard pages to avoid wasting memory.
+
+nptl/Makefile
+  Unbreak building of tst-key5
+  (stanshebs, google-local)

@@ -609,7 +609,7 @@ $(objpfx)tst-execstack: $(libdl)
 $(objpfx)tst-execstack.out: $(objpfx)tst-execstack-mod.so
 LDFLAGS-tst-execstack = -Wl,-z,noexecstack
 
-LDFLAGS-tst-key5 = -lrt
+$(objpfx)tst-key5: $(librt)
 
 $(objpfx)tst-fini1mod.so: $(shared-thread-library)
 
