@@ -1093,12 +1093,11 @@ static __thread __malloc_trace_buffer_ptr trace_ptr;
 static inline void __attribute__((always_inline))
 __mtb_trace_entry (uint32_t type, int64_t size, void *ptr1)
 {
-  int head1, head2;
-  do {
-    head1 = head2 = __malloc_trace_buffer_head;
-    head2 = (head2 + 1) % __malloc_trace_buffer_size;
-  } while (catomic_compare_and_exchange_bool_acq (&__malloc_trace_buffer_head, head2, head1));
-  trace_ptr = __malloc_trace_buffer + head1;
+  int head1;
+
+  head1 = catomic_exchange_and_add (&__malloc_trace_buffer_head, 1);
+
+  trace_ptr = __malloc_trace_buffer + (head1 % __malloc_trace_buffer_size);
 
   trace_ptr->thread = syscall(__NR_gettid);
   trace_ptr->type = type;
@@ -1128,8 +1127,10 @@ __malloc_set_trace_buffer (void *bufptr, int bufsize)
 void *
 __malloc_get_trace_buffer (int *bufcount, int *bufhead)
 {
-  *bufcount = __malloc_trace_buffer_size;
-  *bufhead = __malloc_trace_buffer_head;
+  if (bufcount)
+    *bufcount = __malloc_trace_buffer_size;
+  if (bufhead)
+    *bufhead = __malloc_trace_buffer_head;
   return __malloc_trace_buffer;
 }
 

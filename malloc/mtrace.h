@@ -51,14 +51,18 @@ extern volatile int __malloc_trace_buffer_head;
    chunk in BYTES.  Returns the size of __malloc_trace_buffer_s.  The
    buffer should be filled with NUL bytes before passing, such that
    each record's type is UNUSED (below).  The trace buffer may be
-   disabled by passing NULL,0 although it's up to the caller to free
-   the previous buffer first.  */
+   disabled by passing NULL,0 although it's up to the caller to obtain
+   and free/unmap the previous buffer first.  */
 int __malloc_set_trace_buffer (void *bufptr, int bufsize);
 
 /* Returns the location of the buffer (same as passed above, or NULL).
    Also fills in BUFCOUNT which is the number of records (not bytes)
    in the buffer, and BUFHEAD which is the index of the most recently
-   filled entry.  */
+   filled entry.  NOTE that BUFHEAD might be greater than bufcount; if
+   so it reflects the number of records that would have been stored
+   had there been size, and the caller must modulo that by BUFCOUNT to
+   get the ending index.  The last BUFCOUNT records are stored;
+   earlier records are overwritten. */
 void * __malloc_get_trace_buffer (int *bufcount, int *bufhead);
 
 

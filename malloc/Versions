@@ -72,5 +72,9 @@ libc {
     __libc_scratch_buffer_grow;
     __libc_scratch_buffer_grow_preserve;
     __libc_scratch_buffer_set_array_size;
+
+    # malloc trace hooks for mtrace-ctl
+    __malloc_set_trace_buffer;
+    __malloc_get_trace_buffer;
   }
 }
