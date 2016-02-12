@@ -1,3 +1,7 @@
+2016-02-12  Florian Weimer  <fweimer@redhat.com>
+
+	* misc/bug18240.c (do_test): Set RLIMIT_AS.
+
 2016-01-27  Paul Eggert  <eggert@cs.ucla.edu>
 
 	[BZ #18240]
