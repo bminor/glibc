@@ -19,9 +19,13 @@
 
 #undef strrchr
 
+#ifndef STRRCHR
+# define STRRCHR strrchr
+#endif
+
 /* Find the last occurrence of C in S.  */
 char *
-strrchr (const char *s, int c)
+STRRCHR (const char *s, int c)
 {
   const char *found, *p;
 

@@ -15,27 +15,18 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if HAVE_CONFIG_H
-# include <config.h>
-#endif
-
-#if defined _LIBC || HAVE_STRING_H
-# include <string.h>
-#else
-# include <strings.h>
-# ifndef strchr
-#  define strchr index
-# endif
-#endif
+#include <string.h>
 
 #undef strcspn
+
+#ifndef STRCSPN
+# define STRCSPN strcspn
+#endif
 
 /* Return the length of the maximum initial segment of S
    which contains no characters from REJECT.  */
 size_t
-strcspn (s, reject)
-     const char *s;
-     const char *reject;
+STRCSPN (const char *s, const char *reject)
 {
   size_t count = 0;
 

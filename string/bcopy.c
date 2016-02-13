@@ -25,4 +25,4 @@
 #define	a2		dest
 #define	a2const
 
-#include <memmove.c>
+#include <string/memmove.c>

@@ -18,13 +18,14 @@
 #include <string.h>
 
 #undef strspn
+#ifndef STRSPN
+#define STRSPN strspn
+#endif
 
 /* Return the length of the maximum initial segment
    of S which contains only characters in ACCEPT.  */
 size_t
-strspn (s, accept)
-     const char *s;
-     const char *accept;
+STRSPN (const char *s, const char *accept)
 {
   const char *p;
   const char *a;

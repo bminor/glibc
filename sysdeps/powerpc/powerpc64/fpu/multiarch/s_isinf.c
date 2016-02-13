@@ -23,10 +23,13 @@
 
 extern __typeof (__isinf) __isinf_ppc64 attribute_hidden;
 extern __typeof (__isinf) __isinf_power7 attribute_hidden;
+extern __typeof (__isinf) __isinf_power8 attribute_hidden;
 
 libc_ifunc (__isinf,
-	    (hwcap & PPC_FEATURE_ARCH_2_06)
-	    ? __isinf_power7
+	    (hwcap2 & PPC_FEATURE2_ARCH_2_07)
+	    ? __isinf_power8 :
+	      (hwcap & PPC_FEATURE_ARCH_2_06)
+	      ? __isinf_power7
             : __isinf_ppc64);
 
 weak_alias (__isinf, isinf)

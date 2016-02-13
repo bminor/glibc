@@ -15,21 +15,17 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
-
-#if defined _LIBC || defined HAVE_CONFIG_H
-# include <string.h>
-#endif
+#include <string.h>
 
 #undef strpbrk
 
+#ifndef STRPBRK
+#define STRPBRK strpbrk
+#endif
+
 /* Find the first occurrence in S of any character in ACCEPT.  */
 char *
-strpbrk (s, accept)
-     const char *s;
-     const char *accept;
+STRPBRK (const char *s, const char *accept)
 {
   while (*s != '\0')
     {

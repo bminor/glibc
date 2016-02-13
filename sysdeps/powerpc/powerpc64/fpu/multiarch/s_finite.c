@@ -23,10 +23,13 @@
 
 extern __typeof (__finite) __finite_ppc64 attribute_hidden;
 extern __typeof (__finite) __finite_power7 attribute_hidden;
+extern __typeof (__finite) __finite_power8 attribute_hidden;
 
 libc_ifunc (__finite,
-	    (hwcap & PPC_FEATURE_ARCH_2_06)
-	    ? __finite_power7
+	    (hwcap2 & PPC_FEATURE2_ARCH_2_07)
+	    ? __finite_power8 :
+	      (hwcap & PPC_FEATURE_ARCH_2_06)
+	      ? __finite_power7
             : __finite_ppc64);
 
 weak_alias (__finite, finite)

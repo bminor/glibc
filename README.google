@@ -553,3 +553,12 @@ nptl/tst-basic8.c
 nptl/Makefile
   Unbreak building of tst-key5
   (stanshebs, google-local)
+
+elf/elf.h
+math/libm-test.inc
+string/*
+sysdeps/ieee754/*
+sysdeps/powerpc/*
+  For b/18010034, backport IBM optimizations for Power8.
+  https://sourceware.org/git/?p=glibc.git;a=shortlog;h=refs/heads/ibm/2.19/master
+  (stanshebs, backport)
