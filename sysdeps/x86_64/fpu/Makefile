@@ -29,10 +29,22 @@ endif
 ifeq ($(subdir),math)
 ifeq ($(build-mathvec),yes)
 libmvec-tests += double-vlen2 double-vlen4 double-vlen4-avx2 \
-		 float-vlen4 float-vlen8 float-vlen8-avx2
+		 float-vlen4 float-vlen8 float-vlen8-avx2 libmvec-alias
+modules-names += test-libmvec-alias-mod
+test-libmvec-alias-mod.so-no-z-defs = yes
+
+$(objpfx)test-libmvec-alias: $(objpfx)test-libmvec-alias-mod.so
+$(objpfx)test-libmvec-alias-mod.so: $(objpfx)../mathvec/libmvec_nonshared.a \
+				    $(libmvec)
 
 ifeq (yes,$(config-cflags-avx512))
-libmvec-tests += double-vlen8 float-vlen16
+libmvec-tests += double-vlen8 float-vlen16 libmvec-alias-avx512
+modules-names += test-libmvec-alias-avx512-mod
+test-libmvec-alias-avx512-mod.so-no-z-defs = yes
+
+$(objpfx)test-libmvec-alias-avx512: $(objpfx)test-libmvec-alias-avx512-mod.so
+$(objpfx)test-libmvec-alias-avx512-mod.so: \
+			$(objpfx)../mathvec/libmvec_nonshared.a $(libmvec)
 endif
 
 double-vlen4-arch-ext-cflags = -mavx
@@ -42,6 +54,9 @@ double-vlen8-arch-ext-cflags = -mavx512f
 float-vlen8-arch-ext-cflags = -mavx
 float-vlen8-arch-ext2-cflags = -mavx2
 float-vlen16-arch-ext-cflags = -mavx512f
+
+CFLAGS-test-libmvec-alias-mod.c = $(double-vlen4-arch-ext2-cflags)
+CFLAGS-test-libmvec-alias-avx512-mod.c = $(double-vlen8-arch-ext-cflags)
 
 CFLAGS-test-double-vlen4-avx2.c = $(libm-test-vec-cflags)
 CFLAGS-test-double-vlen4-avx2-wrappers.c = $(double-vlen4-arch-ext2-cflags)
