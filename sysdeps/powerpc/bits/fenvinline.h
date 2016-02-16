@@ -38,8 +38,8 @@
     && (__excepts) != FE_INVALID)					      \
    ? ((__excepts) != 0							      \
       ? (__extension__ ({ __asm__ __volatile__				      \
-			  ("mtfsb1 %s0"					      \
-			   : : "i#*X"(__builtin_ffs (__excepts)));	      \
+			  ("mtfsb1 %0"					      \
+			   : : "i#*X"(__builtin_clz (__excepts)));	      \
 			  0; }))					      \
       : 0)								      \
    : (feraiseexcept) (__excepts))
@@ -51,8 +51,8 @@
     && (__excepts) != FE_INVALID)					      \
    ? ((__excepts) != 0							      \
       ? (__extension__ ({ __asm__ __volatile__				      \
-			  ("mtfsb0 %s0"					      \
-			   : : "i#*X"(__builtin_ffs (__excepts)));	      \
+			  ("mtfsb0 %0"					      \
+			   : : "i#*X"(__builtin_clz (__excepts)));	      \
 			  0; }))					      \
       : 0)								      \
    : (feclearexcept) (__excepts))

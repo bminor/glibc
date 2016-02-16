@@ -562,3 +562,7 @@ sysdeps/powerpc/*
   For b/18010034, backport IBM optimizations for Power8.
   https://sourceware.org/git/?p=glibc.git;a=shortlog;h=refs/heads/ibm/2.19/master
   (stanshebs, backport)
+
+sysdeps/powerpc/bits/fenvinline.h
+  For b/27191207, remove use of %s modifier in inline asm.
+  (stanshebs, google-local)
