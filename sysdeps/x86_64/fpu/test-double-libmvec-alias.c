@@ -16,28 +16,11 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <init-arch.h>
-
-extern double log_vlen8 (double);
-extern double exp_vlen8 (double);
-extern double pow_vlen8 (double, double);
-
-extern float logf_vlen16 (float);
-extern float expf_vlen16 (float);
-extern float powf_vlen16 (float, float);
+extern void test_finite_alias(void);
 
 int main(void)
 {
-  if (!HAS_ARCH_FEATURE (AVX512F_Usable)) return 0;
-
-  if (log_vlen8(1.0) != 0.0
-      || logf_vlen16(1.0) != 0.0) abort();
-
-  if (exp_vlen8(0.0) != 1.0
-      || expf_vlen16(0.0) != 1.0) abort();
-
-  if (pow_vlen8(1.0, 1.0) != 1.0
-      || powf_vlen16(1.0, 1.0) != 1.0) abort();
+  test_finite_alias();
 
   return 0;
 }

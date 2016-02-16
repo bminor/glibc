@@ -17,30 +17,50 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <immintrin.h>
+#include <math.h>
+#include <stdlib.h>
+#include <math-tests-arch.h>
 
-#include "test-double-vlen8.h"
-#define VEC_TYPE __m512d
+#define N 3000
+double log_arg[N];
+double log_res[N];
+double exp_arg[N];
+double exp_res[N];
+double pow_res[N];
 
-VECTOR_WRAPPER (WRAPPER_NAME (log), _ZGVeN8v___log_finite)
-VECTOR_WRAPPER (WRAPPER_NAME (exp), _ZGVeN8v___exp_finite)
-VECTOR_WRAPPER_ff (WRAPPER_NAME (pow), _ZGVeN8vv___pow_finite)
+static void init(void)
+{
+  int i;
 
-#undef FUNC
-#undef FLOAT
-#undef BUILD_COMPLEX
-#undef TEST_MSG
-#undef CHOOSE
-#undef FUNC_TEST
-#undef VEC_TYPE
-#undef VECTOR_WRAPPER
-#undef VECTOR_WRAPPER_ff
-#undef VEC_SUFF
-#undef VEC_LEN
+  for (i = 0; i < N; i += 1)
+    {
+      log_arg[i] = 1.0;
+      exp_arg[i] = 0.0;
+    }
+}
 
-#include "test-float-vlen16.h"
-#define VEC_TYPE __m512
+static void check(void)
+{
+  if (log_res[0] != 0.0) abort ();
+  if (exp_res[0] != 1.0) abort ();
+  if (pow_res[0] != 1.0) abort ();
+}
 
-VECTOR_WRAPPER (WRAPPER_NAME (logf), _ZGVeN16v___logf_finite)
-VECTOR_WRAPPER (WRAPPER_NAME (expf), _ZGVeN16v___expf_finite)
-VECTOR_WRAPPER_ff (WRAPPER_NAME (powf), _ZGVeN16vv___powf_finite)
+void test_finite_alias (void)
+{
+  int i;
+
+  CHECK_ARCH_EXT;
+
+  init();
+
+#pragma omp simd
+  for (i = 0; i < N; i += 1)
+    {
+      log_res[i] = log (log_arg[i]);
+      exp_res[i] = exp (exp_arg[i]);
+      pow_res[i] = pow (log_arg[i], log_arg[i]);
+    }
+
+  check();
+}

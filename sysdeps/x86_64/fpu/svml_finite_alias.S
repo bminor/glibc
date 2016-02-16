@@ -23,7 +23,7 @@
 
 #define ALIAS_IMPL(alias, target) \
 ENTRY (alias); \
-	jmp target@PLT; \
+	jmp *target@GOTPCREL(%rip); \
 END (alias)
 
 	.text

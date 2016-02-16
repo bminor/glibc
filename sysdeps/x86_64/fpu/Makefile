@@ -28,23 +28,35 @@ endif
 # Variables for libmvec tests.
 ifeq ($(subdir),math)
 ifeq ($(build-mathvec),yes)
-libmvec-tests += double-vlen2 double-vlen4 double-vlen4-avx2 \
-		 float-vlen4 float-vlen8 float-vlen8-avx2 libmvec-alias
-modules-names += test-libmvec-alias-mod
+libmvec-tests += double-vlen2 double-vlen4 double-vlen4-avx2 double-libmvec-alias \
+		 double-libmvec-alias-avx double-libmvec-alias-avx2 \
+		 float-vlen4 float-vlen8 float-vlen8-avx2 # float-libmvec-alias
+modules-names += test-double-libmvec-alias-mod test-double-libmvec-alias-avx-mod \
+		 test-double-libmvec-alias-avx2-mod
 test-libmvec-alias-mod.so-no-z-defs = yes
+test-libmvec-alias-avx-mod.so-no-z-defs = yes
+test-libmvec-alias-avx2-mod.so-no-z-defs = yes
 
-$(objpfx)test-libmvec-alias: $(objpfx)test-libmvec-alias-mod.so
-$(objpfx)test-libmvec-alias-mod.so: $(objpfx)../mathvec/libmvec_nonshared.a \
-				    $(libmvec)
+$(objpfx)test-double-libmvec-alias: $(objpfx)test-double-libmvec-alias-mod.so
+$(objpfx)test-double-libmvec-alias-mod.so: $(objpfx)../mathvec/libmvec_nonshared.a \
+					   $(libmvec)
+
+$(objpfx)test-double-libmvec-alias-avx: $(objpfx)test-double-libmvec-alias-avx-mod.so
+$(objpfx)test-double-libmvec-alias-avx-mod.so: $(objpfx)../mathvec/libmvec_nonshared.a \
+					   $(libmvec)
+
+$(objpfx)test-double-libmvec-alias-avx2: $(objpfx)test-double-libmvec-alias-avx2-mod.so
+$(objpfx)test-double-libmvec-alias-avx2-mod.so: $(objpfx)../mathvec/libmvec_nonshared.a \
+					   $(libmvec)
 
 ifeq (yes,$(config-cflags-avx512))
-libmvec-tests += double-vlen8 float-vlen16 libmvec-alias-avx512
-modules-names += test-libmvec-alias-avx512-mod
-test-libmvec-alias-avx512-mod.so-no-z-defs = yes
+libmvec-tests += double-vlen8 float-vlen16 double-libmvec-alias-avx512
+modules-names += test-double-libmvec-alias-avx512-mod
+test-double-libmvec-alias-avx512-mod.so-no-z-defs = yes
 
-$(objpfx)test-libmvec-alias-avx512: $(objpfx)test-libmvec-alias-avx512-mod.so
-$(objpfx)test-libmvec-alias-avx512-mod.so: \
-			$(objpfx)../mathvec/libmvec_nonshared.a $(libmvec)
+$(objpfx)test-double-libmvec-alias-avx512: $(objpfx)test-double-libmvec-alias-avx512-mod.so
+$(objpfx)test-double-libmvec-alias-avx512-mod.so: \
+				$(objpfx)../mathvec/libmvec_nonshared.a $(libmvec)
 endif
 
 double-vlen4-arch-ext-cflags = -mavx
@@ -55,8 +67,12 @@ float-vlen8-arch-ext-cflags = -mavx
 float-vlen8-arch-ext2-cflags = -mavx2
 float-vlen16-arch-ext-cflags = -mavx512f
 
-CFLAGS-test-libmvec-alias-mod.c = $(double-vlen4-arch-ext2-cflags)
-CFLAGS-test-libmvec-alias-avx512-mod.c = $(double-vlen8-arch-ext-cflags)
+libmvec-alias-cflags = $(libm-test-vec-cflags) -ffinite-math-only -fopenmp
+
+CFLAGS-test-double-libmvec-alias-mod.c = $(libmvec-alias-cflags)
+CFLAGS-test-double-libmvec-alias-avx-mod.c = $(double-vlen4-arch-ext-cflags) $(libmvec-alias-cflags) -DREQUIRE_AVX
+CFLAGS-test-double-libmvec-alias-avx2-mod.c = $(double-vlen4-arch-ext2-cflags) $(libmvec-alias-cflags) -DREQUIRE_AVX2
+CFLAGS-test-double-libmvec-alias-avx512-mod.c = $(double-vlen8-arch-ext-cflags) $(libmvec-alias-cflags) -DREQUIRE_AVX512F
 
 CFLAGS-test-double-vlen4-avx2.c = $(libm-test-vec-cflags)
 CFLAGS-test-double-vlen4-avx2-wrappers.c = $(double-vlen4-arch-ext2-cflags)
