@@ -28,35 +28,44 @@ endif
 # Variables for libmvec tests.
 ifeq ($(subdir),math)
 ifeq ($(build-mathvec),yes)
-libmvec-tests += double-vlen2 double-vlen4 double-vlen4-avx2 double-libmvec-alias \
-		 double-libmvec-alias-avx double-libmvec-alias-avx2 \
-		 float-vlen4 float-vlen8 float-vlen8-avx2 # float-libmvec-alias
-modules-names += test-double-libmvec-alias-mod test-double-libmvec-alias-avx-mod \
+libmvec-tests += double-vlen2 double-vlen4 double-vlen4-avx2 \
+		 float-vlen4 float-vlen8 float-vlen8-avx2
+tests += test-double-libmvec-alias \
+	 test-double-libmvec-alias-avx \
+	 test-double-libmvec-alias-avx2 # float-libmvec-alias
+
+modules-names += test-double-libmvec-alias-mod \
+		 test-double-libmvec-alias-avx-mod \
 		 test-double-libmvec-alias-avx2-mod
 test-libmvec-alias-mod.so-no-z-defs = yes
 test-libmvec-alias-avx-mod.so-no-z-defs = yes
 test-libmvec-alias-avx2-mod.so-no-z-defs = yes
 
-$(objpfx)test-double-libmvec-alias: $(objpfx)test-double-libmvec-alias-mod.so
-$(objpfx)test-double-libmvec-alias-mod.so: $(objpfx)../mathvec/libmvec_nonshared.a \
-					   $(libmvec)
+$(objpfx)test-double-libmvec-alias: \
+  $(objpfx)test-double-libmvec-alias-mod.so
+$(objpfx)test-double-libmvec-alias-mod.so: \
+  $(objpfx)../mathvec/libmvec_nonshared.a $(libmvec)
 
-$(objpfx)test-double-libmvec-alias-avx: $(objpfx)test-double-libmvec-alias-avx-mod.so
-$(objpfx)test-double-libmvec-alias-avx-mod.so: $(objpfx)../mathvec/libmvec_nonshared.a \
-					   $(libmvec)
+$(objpfx)test-double-libmvec-alias-avx: \
+  $(objpfx)test-double-libmvec-alias-avx-mod.so
+$(objpfx)test-double-libmvec-alias-avx-mod.so: \
+  $(objpfx)../mathvec/libmvec_nonshared.a $(libmvec)
 
-$(objpfx)test-double-libmvec-alias-avx2: $(objpfx)test-double-libmvec-alias-avx2-mod.so
-$(objpfx)test-double-libmvec-alias-avx2-mod.so: $(objpfx)../mathvec/libmvec_nonshared.a \
-					   $(libmvec)
+$(objpfx)test-double-libmvec-alias-avx2: \
+  $(objpfx)test-double-libmvec-alias-avx2-mod.so
+$(objpfx)test-double-libmvec-alias-avx2-mod.so: \
+  $(objpfx)../mathvec/libmvec_nonshared.a $(libmvec)
 
 ifeq (yes,$(config-cflags-avx512))
-libmvec-tests += double-vlen8 float-vlen16 double-libmvec-alias-avx512
+libmvec-tests += double-vlen8 float-vlen16
+tests += test-double-libmvec-alias-avx512
 modules-names += test-double-libmvec-alias-avx512-mod
 test-double-libmvec-alias-avx512-mod.so-no-z-defs = yes
 
-$(objpfx)test-double-libmvec-alias-avx512: $(objpfx)test-double-libmvec-alias-avx512-mod.so
+$(objpfx)test-double-libmvec-alias-avx512: \
+  $(objpfx)test-double-libmvec-alias-avx512-mod.so
 $(objpfx)test-double-libmvec-alias-avx512-mod.so: \
-				$(objpfx)../mathvec/libmvec_nonshared.a $(libmvec)
+  $(objpfx)../mathvec/libmvec_nonshared.a $(libmvec)
 endif
 
 double-vlen4-arch-ext-cflags = -mavx
