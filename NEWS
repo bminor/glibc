@@ -12,7 +12,7 @@ Version 2.19.1
   15946, 16545, 16574, 16623, 16657, 16695, 16743, 16758, 16759, 16760,
   16878, 16882, 16885, 16916, 16932, 16943, 16958, 17048, 17062, 17069,
   17079, 17137, 17153, 17213, 17263, 17269, 17325, 17555, 17905, 18007,
-  18032, 18080, 18240, 18287, 18508, 18905, 19779, 19879, 20010.
+  18032, 18080, 18240, 18287, 18508, 18665, 18905, 19779, 19879, 20010.
 
 * A buffer overflow in gethostbyname_r and related functions performing DNS
   requests has been fixed.  If the NSS functions were called with a
@@ -77,6 +77,20 @@ Version 2.19.1
   even after the fix for CVE-2013-4458 has been applied, potentially
   resulting in a stack overflow.  getaddrinfo now uses a heap allocation
   instead.  Reported by Michael Petlan.  (CVE-2016-3706)
+
+* A stack-based buffer overflow was found in libresolv when invoked from
+  libnss_dns, allowing specially crafted DNS responses to seize control
+  of execution flow in the DNS client.  The buffer overflow occurs in
+  the functions send_dg (send datagram) and send_vc (send TCP) for the
+  NSS module libnss_dns.so.2 when calling getaddrinfo with AF_UNSPEC
+  family.  The use of AF_UNSPEC triggers the low-level resolver code to
+  send out two parallel queries for A and AAAA.  A mismanagement of the
+  buffers used for those queries could result in the response of a query
+  writing beyond the alloca allocated buffer created by
+  _nss_dns_gethostbyname4_r.  Buffer management is simplified to remove
+  the overflow.  Thanks to the Google Security Team and Red Hat for
+  reporting the security impact of this issue, and Robert Holiday of
+  Ciena for reporting the related bug 18665. (CVE-2015-7547)
 
 Version 2.19
 
