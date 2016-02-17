@@ -1,3 +1,10 @@
+2016-02-17  Andrew Senkevich  <andrew.senkevich@intel.com>
+	    H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #19590]
+	* sysdeps/x86_64/fpu/svml_finite_alias.S (ALIAS_IMPL): Use PIC
+	relocation.
+
 2015-09-24  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #19003]
