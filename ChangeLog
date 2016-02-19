@@ -1,3 +1,10 @@
+2016-02-19  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/generic/malloc-machine.h: Assume mutex_init is always
+	available.  Do not define NO_THREADS.
+	* malloc/malloc.c: Do not check NO_THREADS.
+	* malloc/arena.c: Likewise.
+
 2016-05-02  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #20031]
