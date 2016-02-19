@@ -1,0 +1,192 @@
+#!/usr/bin/perl
+# -*- perl -*-
+
+# Arrays starting with c_ are source code to be emitted later
+
+$last_idx = 0;
+sub ptr2idx {
+    my ($ptr) = @_;
+    if ($ptr2idx{$ptr}) {
+	return $ptr2idx{$ptr};
+    }
+    # we intentionally never return zero
+    $last_idx ++;
+    $ptr2idx{$ptr} = $last_idx;
+    push (@c_ptrvars, "volatile void *p$last_idx;");
+    return $last_idx;
+}
+
+$sync_counter = 0;
+
+# thread 2 waits for thread 1
+sub sync {
+    my ($thread1, $thread2) = @_;
+    if (! $sync_init{$thread1}) {
+	push (@c_sync, "volatile char sync_${thread1} = 0;");
+	$sync_init{$thread1} = 1;
+    }
+    $sync_counter ++;
+    push (@{$c_threads{$thread1}}, "  sync_${thread1} = $sync_counter;");
+    push (@{$c_threads{$thread1}}, "  __sync_synchronize ();");
+    push (@{$c_threads{$thread2}}, "  while (sync_${thread1} < $sync_counter)");
+    push (@{$c_threads{$thread2}}, "    __sync_synchronize ();");
+}
+
+sub acq_ptr {
+    my ($ptr) = @_;
+    if ($owner{$ptr} && $owner{$ptr} ne $thread) {
+	&sync ($owner{$ptr}, $thread);
+    }
+    $owner{$ptr} = $thread;
+}
+
+$master_thread = undef;
+
+$line = 0;
+while (<>) {
+    $line ++;
+    next if /^threadid/;
+    next if /out of/;
+
+    ($thread, $type, $path, $ptr1, $size, $ptr2) = split(' ');
+    $size = hex($size);
+    $idx1 = &ptr2idx($ptr1);
+    $idx2 = &ptr2idx($ptr2);
+
+    if (! $master_thread) {
+	$master_thread = $thread;
+    } elsif (! $threads{$thread}) {
+	# make new thread start at the "right" time
+	&sync ($master_thread, $thread);
+    }
+
+    $threads{$thread} = 1;
+
+    if ($type eq "malloc") {
+	# In case another thread needs to free this chunk first
+	&acq_ptr($ptr2);
+	push (@{$c_threads{$thread}}, sprintf ("  p%d = malloc (%d); // %d %s", $idx2, $size, $line, $ptr2));
+	push (@{$c_threads{$thread}}, sprintf ("  wmem (p%d, %d);", $idx2, $size));
+	$leak{$ptr2} = $size;
+	$owner{$ptr2} = $thread;
+	$valid{$ptr2} = 1;
+    }
+
+    if ($type eq "calloc") {
+	# In case another thread needs to free this chunk first
+	&acq_ptr($ptr2);
+	push (@{$c_threads{$thread}}, sprintf ("  p%d = calloc (%d,1); // %d %s", $idx2, $size, $line, $ptr2));
+	push (@{$c_threads{$thread}}, sprintf ("  wmem (p%d, %d);", $idx2, $size));
+	$leak{$ptr2} = $size;
+	$owner{$ptr2} = $thread;
+	$valid{$ptr2} = 1;
+    }
+
+    if ($type eq "free") {
+	if ($ptr1 =~ /^0+$/) {
+	    push (@{$c_threads{$thread}}, sprintf("  free (NULL);"));
+	} elsif ($valid{$ptr1}) {
+	    # if it was allocated in another thread
+	    &acq_ptr($ptr1);
+	    push (@{$c_threads{$thread}}, sprintf("  free ((void *)p%d); // %d %s", $idx1, $line, $ptr1));
+	    delete $leak{$ptr1};
+	    $valid{$ptr1} = 0;
+	} else {
+	    push (@{$c_threads{$thread}}, sprintf("  // free (p%s) (invalid ptr $ptr1 in thread $thread)", $idx1));
+	}
+    }
+
+    if ($type eq "realloc") {
+	if ($owner{$ptr1}) {
+	    &acq_ptr($ptr1);
+	    &acq_ptr($ptr2);
+	    push (@{$c_threads{$thread}}, sprintf("  p%d = realloc ((void *)p%d, %d);", $idx2, $idx1, $size));
+	    push (@{$c_threads{$thread}}, sprintf ("  wmem (p%d, %d);", $idx2, $size));
+	    # ptr1 might be the same as ptr2, so sequence matters
+	    delete $leak{$ptr1};
+	    $leak{$ptr2} = $size;
+	    $valid{$ptr1} = 0;
+	    $valid{$ptr2} = 1;
+	}
+    }
+}
+
+print '
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h>
+#include <sys/time.h>
+
+static void
+wmem (volatile void *ptr, int count)
+{
+    char *p = (char *)ptr;
+    int i;
+    for (i=0; i<count; i+=8)
+	p[i] = 0;
+}
+';
+
+sub dump {
+    my ($x) = @_;
+    for ($i=0; $i<@{$x}; $i++) {
+	print ${$x}[$i], "\n";
+    }
+    print "\n";
+}
+&dump(\@c_ptrvars);
+&dump(\@c_sync);
+for $thread (sort keys %threads) {
+    print "pthread_t tid_$thread;\n";
+    print "void *thread_$thread(void *ignored) {\n";
+    &dump ($c_threads{$thread});
+    print "}\n\n";
+}
+
+for $p (sort keys %leak) {
+    #printf("// %16s %10d leaked\n", $p, $leak{$p});
+}
+
+print '
+
+static __inline__ int64_t rdtsc(void)
+{
+  unsigned a, d;
+  asm volatile("rdtsc" : "=a" (a), "=d" (d));
+  return ((unsigned long)a) | (((unsigned long)d) << 32);
+}
+
+int
+main()
+{
+    int64_t start;
+    int64_t end;
+    int64_t usec;
+    struct timeval tv_s, tv_e;
+
+    gettimeofday (&tv_s, NULL);
+    start = rdtsc();
+';
+
+for $thread (sort keys %threads) {
+  print "  pthread_create (&tid_$thread, NULL, thread_$thread, 0);\n";
+}
+for $thread (sort keys %threads) {
+  print "  pthread_join (tid_$thread, NULL);\n";
+}
+
+
+print '
+    end = rdtsc();
+    gettimeofday (&tv_e, NULL);
+    printf("%lld cycles\n", end - start);
+    if (tv_e.tv_usec < tv_s.tv_usec)
+	usec = (tv_e.tv_usec + 1000000 - tv_s.tv_usec) + (tv_e.tv_sec-1 - tv_s.tv_sec)*1000000;
+    else
+	usec = (tv_e.tv_usec - tv_s.tv_usec) + (tv_e.tv_sec - tv_s.tv_sec)*1000000;
+    printf("%lld usec\n", usec);
+    return 0;
+}
+';
+
+exit 0;
