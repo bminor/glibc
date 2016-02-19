@@ -1090,7 +1090,7 @@ volatile int __malloc_trace_buffer_head = 0;
 
 static __thread __malloc_trace_buffer_ptr trace_ptr;
 
-static inline void __attribute__((always_inline))
+static void
 __mtb_trace_entry (uint32_t type, int64_t size, void *ptr1)
 {
   int head1;
@@ -3031,7 +3031,10 @@ __libc_malloc (size_t bytes)
   void *(*hook) (size_t, const void *)
     = atomic_forced_read (__malloc_hook);
   if (__builtin_expect (hook != NULL, 0))
-    return (*hook)(bytes, RETURN_ADDRESS (0));
+    {
+      __MTB_TRACE_PATH (hook);
+      return (*hook)(bytes, RETURN_ADDRESS (0));
+    }
 
 #if USE_TCACHE
   if (bytes < MAX_TCACHE_SIZE)
@@ -3359,6 +3362,8 @@ __libc_valloc (size_t bytes)
 void *
 __libc_pvalloc (size_t bytes)
 {
+  void *rv;
+
   if (__malloc_initialized < 0)
     ptmalloc_init ();
 
@@ -3373,7 +3378,10 @@ __libc_pvalloc (size_t bytes)
       return 0;
     }
 
-  return _mid_memalign (pagesize, rounded_bytes, address);
+  __MTB_TRACE_ENTRY (PVALLOC, bytes, NULL);
+  rv = _mid_memalign (pagesize, rounded_bytes, address);
+  __MTB_TRACE_SET (ptr2, rv);
+  return rv;
 }
 
 void *
@@ -3389,6 +3397,7 @@ __libc_calloc (size_t n, size_t elem_size)
 
   /* size_t is unsigned so the behavior on overflow is defined.  */
   bytes = n * elem_size;
+  __MTB_TRACE_ENTRY (CALLOC, bytes, NULL);
 #define HALF_INTERNAL_SIZE_T \
   (((INTERNAL_SIZE_T) 1) << (8 * sizeof (INTERNAL_SIZE_T) / 2))
   if (__builtin_expect ((n | elem_size) >= HALF_INTERNAL_SIZE_T, 0))
@@ -3405,15 +3414,21 @@ __libc_calloc (size_t n, size_t elem_size)
   if (__builtin_expect (hook != NULL, 0))
     {
       sz = bytes;
+      __MTB_TRACE_PATH (hook);
       mem = (*hook)(sz, RETURN_ADDRESS (0));
       if (mem == 0)
+	{
+	  __MTB_TRACE_PATH (m_f_realloc);
         return 0;
+	}
 
+      __MTB_TRACE_SET (ptr2, mem);
       return memset (mem, 0, sz);
     }
 
   sz = bytes;
 
+  __MTB_TRACE_PATH (cpu_cache);
   arena_get (av, sz);
   if (av)
     {
@@ -3450,6 +3465,7 @@ __libc_calloc (size_t n, size_t elem_size)
 
   if (mem == 0 && av != NULL)
     {
+      __MTB_TRACE_PATH (cpu_cache2);
       LIBC_PROBE (memory_calloc_retry, 1, sz);
       av = arena_get_retry (av, sz);
       mem = _int_malloc (av, sz);
@@ -3463,6 +3479,7 @@ __libc_calloc (size_t n, size_t elem_size)
     return 0;
 
   p = mem2chunk (mem);
+  __MTB_TRACE_SET (ptr2, mem);
 
   /* Two optional cases in which clearing not necessary */
   if (chunk_is_mmapped (p))

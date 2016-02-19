@@ -33,7 +33,8 @@ struct __malloc_trace_buffer_s {
   uint32_t path_mmap:1; /* mmap was called */
   uint32_t path_munmap:1; /* munmap was called */
   uint32_t path_m_f_realloc:1; /* realloc became malloc/free (i.e. next few records) */
-  uint32_t path:17; /* remaining bits */
+  uint32_t path_hook:1; /* A hook was used to complete the request */
+  uint32_t path:16; /* remaining bits */
 
   uint64_t ptr1;
   uint64_t ptr2;
@@ -85,3 +86,6 @@ void * __malloc_get_trace_buffer (int *bufcount, int *bufhead);
 
 /* ptr2 = valloc (size) */
 #define __MTB_TYPE_VALLOC	6
+
+/* ptr2 = pvalloc (size) */
+#define __MTB_TYPE_PVALLOC	7

@@ -56,6 +56,7 @@ const char * const typenames[] = {
   "realloc ",
   "memalign",
   "valloc  ",
+  "pvalloc  ",
 };
 
 void __attribute__((destructor))
@@ -80,7 +81,7 @@ djend()
 
   fprintf (outf, "%d out of %d events captured\n", head, size);
 
-  fprintf (outf, "threadid type     path    ptr1             size             ptr2\n");
+  fprintf (outf, "threadid type     path     ptr1             size             ptr2\n");
   for (i=0; i<size; i++)
     {
       __malloc_trace_buffer_ptr t = buf + (i+head) % size;
@@ -90,16 +91,17 @@ djend()
 	case __MTB_TYPE_UNUSED:
 	  break;
 	default:
-	  fprintf (outf, "%08x %s %d%d%d%d%d%d%d %016x %016x %016x\n",
+	  fprintf (outf, "%08x %s %c%c%c%c%c%c%c%c %016x %016x %016x\n",
 		   t->thread,
 		   typenames[t->type],
-		   t->path_thread_cache,
-		   t->path_cpu_cache,
-		   t->path_cpu_cache2,
-		   t->path_sbrk,
-		   t->path_mmap,
-		   t->path_munmap,
-		   t->path_m_f_realloc,
+		   t->path_thread_cache ? 'T' : '-',
+		   t->path_cpu_cache ? 'c' : '-',
+		   t->path_cpu_cache2 ? 'C' : '-',
+		   t->path_sbrk ? 's' : '-',
+		   t->path_mmap ? 'M' : '-',
+		   t->path_munmap ? 'U' : '-',
+		   t->path_m_f_realloc ? 'R' : '-',
+		   t->path_hook ? 'H' : '-',
 		   t->ptr1,
 		   t->size,
 		   t->ptr2);
