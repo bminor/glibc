@@ -1822,9 +1822,6 @@ GLIBC_2.17
 GLIBC_2.18
  GLIBC_2.18 A
  __cxa_thread_atexit_impl F
-GLIBC_2.22
- GLIBC_2.22 A
- fmemopen F
 GLIBC_2.2
  GLIBC_2.2 A
  _IO_adjust_wcolumn F
@@ -2015,6 +2012,9 @@ GLIBC_2.2.4
 GLIBC_2.2.6
  GLIBC_2.2.6 A
  __nanosleep F
+GLIBC_2.22
+ GLIBC_2.22 A
+ fmemopen F
 GLIBC_2.3
  GLIBC_2.3 A
  __ctype_b_loc F

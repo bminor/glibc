@@ -1,3 +1,105 @@
+2016-02-22  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/htm.h	(__libc_tbegin): Remove
+	semicolon.
+	(__libc_tend): Likewise.
+	(__libc_tabort): Likewise.
+
+2016-02-22  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/htm.h (__libc_tbegin,
+	__libc_tabort, __libc_tend): New wrappers that enforce compiler
+	barriers to their respective compiler built-ins.
+	* sysdeps/powerpc/nptl/elide.h (__get_new_count, ELIDE_LOCK,
+	ELIDE_TRYLOCK, __elide_unlock): Use the new wrappers.
+	* sysdeps/powerpc/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/elision-lock.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/elision-trylock.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/elision-unlock.c: Likewise.
+
+2016-02-15  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #18665]
+	* resolv/nss_dns/dns-host.c (gaih_getanswer_slice): Always set
+	*herrno_p.
+	(gaih_getanswer): Document functional behviour. Return tryagain
+	if any result is tryagain.
+	* resolv/res_query.c (__libc_res_nsearch): Set buffer size to zero
+	when freed.
+	* resolv/res_send.c: Add copyright text.
+	(__libc_res_nsend): Document that MAXPACKET is expected.
+	(send_vc): Document. Remove buffer reuse.
+	(send_dg): Document. Remove buffer reuse. Set *thisanssizp to set the
+	size of the buffer. Add Dprint for truncated UDP buffer.
+
+2016-02-12  Florian Weimer  <fweimer@redhat.com>
+
+	* misc/bug18240.c (do_test): Set RLIMIT_AS.
+
+2016-01-27  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #18240]
+	* misc/hsearch_r.c (isprime, __hcreate_r): Protect against
+	unsigned int wraparound.
+
+2016-01-27  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #18240]
+	* misc/bug18240.c: New test.
+	* misc/Makefile (tests): Add it.
+
+2015-08-25  Ondřej Bílka  <neleai@seznam.cz>
+
+	[BZ #18240]
+	* misc/hsearch_r.c (__hcreate_r): Handle overflow.
+
+2015-10-27  Ludovic Courtès  <ludo@gnu.org>
+
+	* locale/loadlocale.c (_nl_intern_locale_data): Change assertion
+	on CNT to a conditional jump to 'puntdata'.
+
+2015-08-18  Alan Modra  <amodra@gmail.com>
+
+	[BZ #18421]
+	* sysdeps/hppa/start.S [SHARED]: Use .section .data.rel.ro and define
+	.Lp__global.
+	(_start): Load %dp via .Lp__global.
+	[!SHARED]: Use .section .rodata.
+
+2015-08-09  John David Anglin  <danglin@gcc.gnu.org>
+
+	[BZ #18480]
+	* sysdeps/unix/sysv/linux/hppa/sysdep.h (LOAD_ARGS_0, LOAD_ARGS_1,
+	LOAD_ARGS_2, LOAD_ARGS_3, LOAD_ARGS_4, LOAD_ARGS_5, LOAD_ARGS_6):
+	Define.
+	(LOAD_REGS_0, LOAD_REGS_1, LOAD_REGS_2, LOAD_REGS_3, LOAD_REGS_4,
+	LOAD_REGS_5, LOAD_REGS_6): Update.
+	(INTERNAL_SYSCALL): Update using new LOAD defines.
+	(INTERNAL_SYSCALL_NCS): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/syscall.c (syscall): Likewise.
+
+2015-09-26  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #18985]
+	* time/strftime_l.c (a_wkday, f_wkday, a_month, f_month): Range check.
+	(__strftime_internal): Likewise.
+	* time/tst-strftime.c (do_bz18985): New test.
+	(do_test): Call it.
+
+2015-08-08  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #17905]
+	* catgets/Makefile (tst-catgets-mem): New test.
+	* catgets/catgets.c (catopen): Don't use unbounded alloca.
+	* catgets/open_catalog.c (__open_catalog): Likewise.
+	* catgets/tst-catgets.c (do_bz17905): Test unbounded alloca.
+
+2015-12-31  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/unix/sysv/linux/alpha/libc.abilist [GLIBC_2.22]: Move
+	to keep the file sorted.
+	* sysdeps/unix/sysv/linux/hppa/libc.abilist [GLIBC_2.22]: Likewise.
+
 2015-12-17  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	[BZ #19174]
