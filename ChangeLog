@@ -1,3 +1,55 @@
+2016-02-25  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #18665]
+	* resolv/nss_dns/dns-host.c (gaih_getanswer_slice): Always set
+	*herrno_p.
+	(gaih_getanswer): Document functional behviour. Return tryagain
+	if any result is tryagain.
+	* resolv/res_query.c (__libc_res_nsearch): Set buffer size to zero
+	when freed.
+	* resolv/res_send.c: Add copyright text.
+	(__libc_res_nsend): Document that MAXPACKET is expected.
+	(send_vc): Document. Remove buffer reuse.
+	(send_dg): Document. Remove buffer reuse. Set *thisanssizp to set the
+	size of the buffer. Add Dprint for truncated UDP buffer.
+
+2016-02-25  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #18032]
+	* posix/fnmatch_loop.c (FCT): Remove extra increment when skipping
+	over collating symbol inside a bracket expression.  Minor cleanup.
+	* posix/tst-fnmatch3.c (do_test): Add test case.
+
+2016-02-25  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #17269]
+	* libio/wstrops.c (_IO_wstr_overflow): Guard against integer overflow
+	(enlarge_userbuf): Likewise.
+
+2016-02-25  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19018]
+	* stdlib/cxa_thread_atexit_impl.c (__cxa_thread_atexit_impl):
+	Mangle function pointer before storing it.
+	(__call_tls_dtors): Demangle function pointer before calling it.
+
+2016-02-25  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #18928]
+	* sysdeps/generic/ldsodefs.h (struct rtld_global_ro): Remove
+	_dl_pointer_guard member.
+	* elf/rtld.c (_rtld_global_ro): Remove _dl_pointer_guard
+	initializer.
+	(security_init): Always set up pointer guard.
+	(process_envvars): Do not process LD_POINTER_GUARD.
+
+2015-07-21  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #18694]
+	* sysdeps/unix/sysv/linux/sparc/bits/sigaction.h: Include
+	bits/wordsize.h.
+	(sigaction): Declare __glibc_reserved0 only when __WORDSIZE is 64.
+
 2015-09-01  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/sysdep.h (ABORT_TRANSACTION): Use
