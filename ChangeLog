@@ -1,3 +1,7 @@
+2016-03-01  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/alpha/fpu/libm-test-ulps: Update ULPs.
+
 2016-02-22  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/htm.h	(__libc_tbegin): Remove
