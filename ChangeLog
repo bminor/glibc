@@ -1,5 +1,11 @@
 2016-03-11  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #19758]
+	* sysdeps/unix/sysv/linux/x86_64/64/dl-librecon.h
+	(EXTRA_LD_ENVVARS): Or bit_Prefer_MAP_32BIT_EXEC.
+
+2016-03-11  H.J. Lu  <hongjiu.lu@intel.com>
+
 	[BZ #19759]
 	* sysdeps/x86/bits/string.h (_HAVE_STRING_ARCH_mempcpy): New.
 
