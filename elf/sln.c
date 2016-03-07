@@ -167,11 +167,11 @@ makesymlink (src, dest)
      const char *src;
      const char *dest;
 {
-  struct stat stats;
+  struct stat64 stats;
   const char *error;
 
   /* Destination must not be a directory. */
-  if (lstat (dest, &stats) == 0)
+  if (lstat64 (dest, &stats) == 0)
     {
       if (S_ISDIR (stats.st_mode))
 	{
