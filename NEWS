@@ -18,6 +18,7 @@ The following bugs are resolved with this release:
   [19759] Don't inline mempcpy for x86
   [19762] Use HAS_ARCH_FEATURE with Fast_Rep_String
   [19792] MIPS: backtrace yields infinite backtrace with makecontext
+  [19822] libm.so install clobbers old version
 
 
 Version 2.23
