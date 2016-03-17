@@ -29,15 +29,15 @@ void __attribute__((constructor))
 djmain()
 {
   char *e;
-  int sz;
+  size_t sz;
 
   e = getenv("MTRACE_CTL_COUNT");
   if (!e)
     e = "1000";
-  sz = atoi(e) * sizeof(struct __malloc_trace_buffer_s);
+  sz = (size_t) atol(e) * sizeof(struct __malloc_trace_buffer_s);
 
   char *buf = mmap (NULL, sz, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-  if (!buf)
+  if (buf == NULL || buf == (char *)(-1))
     err("Cannot mmap");
 
   buf[0] = 1;
@@ -64,7 +64,7 @@ djend()
 {
   char *e;
   FILE *outf;
-  int head, size, i;
+  size_t head, size, i;
 
   /* Prevent problems with recursion etc by shutting off trace right away.  */
   __malloc_trace_buffer_ptr buf = __malloc_get_trace_buffer (&size, &head);
@@ -72,14 +72,18 @@ djend()
 
   e = getenv("MTRACE_CTL_FILE");
   if (!e)
-    e = "/tmp/mtrace.out";
+    {
+      static char fname[100];
+      sprintf(fname, "/tmp/mtrace-%d.out", getpid());
+      e = fname;
+    }
 
   outf = fopen(e, "w");
   if (!outf)
     err("cannot open output file");
   setbuf (outf, NULL);
 
-  fprintf (outf, "%d out of %d events captured\n", head, size);
+  fprintf (outf, "%ld out of %ld events captured\n", (long)head, (long)size);
 
   fprintf (outf, "threadid type     path     ptr1             size             ptr2\n");
   for (i=0; i<size; i++)

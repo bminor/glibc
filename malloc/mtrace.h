@@ -45,8 +45,8 @@ typedef struct __malloc_trace_buffer_s *__malloc_trace_buffer_ptr;
 
 /* These three are only valid inside glibc proper.  */
 extern volatile __malloc_trace_buffer_ptr __malloc_trace_buffer;
-extern volatile int __malloc_trace_buffer_size;
-extern volatile int __malloc_trace_buffer_head;
+extern volatile size_t __malloc_trace_buffer_size;
+extern volatile size_t __malloc_trace_buffer_head;
 
 /* bufptr is a random chunk of memory, bufsize is the size of that
    chunk in BYTES.  Returns the size of __malloc_trace_buffer_s.  The
@@ -54,7 +54,7 @@ extern volatile int __malloc_trace_buffer_head;
    each record's type is UNUSED (below).  The trace buffer may be
    disabled by passing NULL,0 although it's up to the caller to obtain
    and free/unmap the previous buffer first.  */
-int __malloc_set_trace_buffer (void *bufptr, int bufsize);
+int __malloc_set_trace_buffer (void *bufptr, size_t bufsize);
 
 /* Returns the location of the buffer (same as passed above, or NULL).
    Also fills in BUFCOUNT which is the number of records (not bytes)
@@ -64,7 +64,7 @@ int __malloc_set_trace_buffer (void *bufptr, int bufsize);
    had there been size, and the caller must modulo that by BUFCOUNT to
    get the ending index.  The last BUFCOUNT records are stored;
    earlier records are overwritten. */
-void * __malloc_get_trace_buffer (int *bufcount, int *bufhead);
+void * __malloc_get_trace_buffer (size_t *bufcount, size_t *bufhead);
 
 
 #define __MTB_TYPE_UNUSED	0

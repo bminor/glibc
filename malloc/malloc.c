@@ -1085,15 +1085,15 @@ static void      free_atfork(void* mem, const void *caller);
 #include "mtrace.h"
 
 volatile __malloc_trace_buffer_ptr __malloc_trace_buffer = NULL;
-volatile int __malloc_trace_buffer_size = 0;
-volatile int __malloc_trace_buffer_head = 0;
+volatile size_t __malloc_trace_buffer_size = 0;
+volatile size_t __malloc_trace_buffer_head = 0;
 
 static __thread __malloc_trace_buffer_ptr trace_ptr;
 
 static void
 __mtb_trace_entry (uint32_t type, int64_t size, void *ptr1)
 {
-  int head1;
+  size_t head1;
 
   head1 = catomic_exchange_and_add (&__malloc_trace_buffer_head, 1);
 
@@ -1115,7 +1115,7 @@ __mtb_trace_entry (uint32_t type, int64_t size, void *ptr1)
 }
 
 int
-__malloc_set_trace_buffer (void *bufptr, int bufsize)
+__malloc_set_trace_buffer (void *bufptr, size_t bufsize)
 {
   __malloc_trace_buffer = 0;
   __malloc_trace_buffer_size = bufsize / sizeof(struct __malloc_trace_buffer_s);
@@ -1125,7 +1125,7 @@ __malloc_set_trace_buffer (void *bufptr, int bufsize)
 }
 
 void *
-__malloc_get_trace_buffer (int *bufcount, int *bufhead)
+__malloc_get_trace_buffer (size_t *bufcount, size_t *bufhead)
 {
   if (bufcount)
     *bufcount = __malloc_trace_buffer_size;
