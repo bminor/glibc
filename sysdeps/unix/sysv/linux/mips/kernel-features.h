@@ -19,26 +19,7 @@
 
 #include <sgidefs.h>
 
-/* Support for the accept4 syscall was added in 2.6.31.  */
-#define __ASSUME_ACCEPT4_SYSCALL	1
-
-/* Support for the recvmmsg syscall was added in 2.6.33.  */
-#if __LINUX_KERNEL_VERSION >= 0x020621
-# define __ASSUME_RECVMMSG_SYSCALL	1
-#endif
-
-/* Support for the sendmmsg syscall was added in 3.1.  */
-#if __LINUX_KERNEL_VERSION >= 0x030100
-# define __ASSUME_SENDMMSG_SYSCALL	1
-#endif
-
 #include_next <kernel-features.h>
-
-/* The n32 syscall ABI did not have a getdents64 syscall until
-   2.6.35.  */
-#if _MIPS_SIM == _ABIN32 && __LINUX_KERNEL_VERSION < 0x020623
-# undef __ASSUME_GETDENTS64_SYSCALL
-#endif
 
 /* The MIPS kernel does not support futex_atomic_cmpxchg_inatomic if
    emulating LL/SC.  */

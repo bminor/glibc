@@ -51,7 +51,7 @@ routines :=								      \
 	getaddrinfo gai_strerror wordexp				      \
 	pread pwrite pread64 pwrite64					      \
 	spawn_faction_init spawn_faction_destroy spawn_faction_addclose	      \
-	spawn_faction_addopen spawn_faction_adddup2			      \
+	spawn_faction_addopen spawn_faction_adddup2 spawn_valid_fd	      \
 	spawnattr_init spawnattr_destroy				      \
 	spawnattr_getdefault spawnattr_setdefault			      \
 	spawnattr_getflags spawnattr_setflags				      \
@@ -82,16 +82,19 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   tst-execv1 tst-execv2 tst-execl1 tst-execl2 \
 		   tst-execve1 tst-execve2 tst-execle1 tst-execle2 \
 		   tst-execvp3 tst-execvp4 tst-rfc3484 tst-rfc3484-2 \
+		   tst-execvpe1 tst-execvpe2 tst-execvpe3 tst-execvpe4 \
+		   tst-execvpe5 tst-execvpe6 \
 		   tst-rfc3484-3 \
 		   tst-getaddrinfo3 tst-fnmatch2 tst-cpucount tst-cpuset \
 		   bug-getopt1 bug-getopt2 bug-getopt3 bug-getopt4 \
 		   bug-getopt5 tst-getopt_long1 bug-regex34 bug-regex35 \
 		   tst-pathconf tst-getaddrinfo4 tst-rxspencer-no-utf8 \
-		   tst-fnmatch3 bug-regex36 tst-getaddrinfo5
+		   tst-fnmatch3 bug-regex36 tst-getaddrinfo5 \
+		   tst-posix_spawn-fd
 xtests		:= bug-ga2
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
-tests           += wordexp-test tst-exec tst-spawn
+tests           += wordexp-test tst-exec tst-spawn tst-spawn2
 endif
 tests-static	= tst-exec-static tst-spawn-static
 tests		+= $(tests-static)
@@ -228,6 +231,7 @@ tstgetopt-ARGS = -a -b -cfoobar --required foobar --optional=bazbug \
 
 tst-exec-ARGS = -- $(host-test-program-cmd)
 tst-exec-static-ARGS = $(tst-exec-ARGS)
+tst-execvpe5-ARGS = -- $(host-test-program-cmd)
 tst-spawn-ARGS = -- $(host-test-program-cmd)
 tst-spawn-static-ARGS = $(tst-spawn-ARGS)
 tst-dir-ARGS = `pwd` `cd $(common-objdir)/$(subdir); pwd` `cd $(common-objdir); pwd` $(objpfx)tst-dir

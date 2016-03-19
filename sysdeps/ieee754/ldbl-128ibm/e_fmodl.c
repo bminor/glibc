@@ -55,6 +55,13 @@ __ieee754_fmodl (long double x, long double y)
 	      return x;
 	    /* At this point the absolute value of the high doubles of
 	       x and y must be equal.  */
+	    if ((lx & 0x7fffffffffffffffLL) == 0
+		&& (ly & 0x7fffffffffffffffLL) == 0)
+	      /* Both low parts are zero.  The result should be an
+		 appropriately signed zero, but the subsequent logic
+		 could treat them as unequal, depending on the signs
+		 of the low parts.  */
+	      return Zero[(uint64_t) sx >> 63];
 	    /* If the low double of y is the same sign as the high
 	       double of y (ie. the low double increases |y|)...  */
 	    if (((ly ^ sy) & 0x8000000000000000LL) == 0
@@ -130,15 +137,11 @@ __ieee754_fmodl (long double x, long double y)
 	    x = ldbl_insert_mantissa((sx>>63), iy, hx, lx);
 	} else {		/* subnormal output */
 	    n = -1022 - iy;
-	    if(n<=48) {
-		lx = (lx>>n)|((u_int64_t)hx<<(64-n));
-		hx >>= n;
-	    } else if (n<=63) {
-		lx = (hx<<(64-n))|(lx>>n); hx = sx;
-	    } else {
-		lx = hx>>(n-64); hx = sx;
-	    }
-	    x = ldbl_insert_mantissa((sx>>63), iy, hx, lx);
+	    /* We know 1 <= N <= 52, and that there are no nonzero
+	       bits in places below 2^-1074.  */
+	    lx = (lx >> n) | ((u_int64_t) hx << (64 - n));
+	    hx >>= n;
+	    x = ldbl_insert_mantissa((sx>>63), -1023, hx, lx);
 	    x *= one;		/* create necessary signal */
 	}
 	return x;		/* exact output */

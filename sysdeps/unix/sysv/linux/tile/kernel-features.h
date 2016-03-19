@@ -17,15 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 
-/* TILE glibc support starts with 2.6.36, guaranteeing many kernel features. */
-#define __ASSUME_ACCEPT4_SYSCALL	1
-#define __ASSUME_RECVMMSG_SYSCALL	1
-
-/* Support for the sendmmsg syscall was added in 3.0.  */
-#if __LINUX_KERNEL_VERSION >= 0x030000
-# define __ASSUME_SENDMMSG_SYSCALL	1
-#endif
-
 #include_next <kernel-features.h>
 
 /* Define this if your 32-bit syscall API requires 64-bit register

@@ -105,7 +105,7 @@ $(objpfx)sotruss-lib.so: $(common-objpfx)libc.so $(objpfx)ld.so \
 $(objpfx)sotruss: sotruss.sh $(common-objpfx)config.make
 	sed -e 's%@BASH@%$(BASH)%g' \
 	    -e 's%@VERSION@%$(version)%g' \
-	    -e 's%@TEXTDOMAINDIR@%$(msgcatdir)%g' \
+	    -e 's%@TEXTDOMAINDIR@%$(localedir)%g' \
 	    -e 's%@PREFIX@%$(prefix)%g' \
 	    -e 's|@PKGVERSION@|$(PKGVERSION)|g' \
 	    -e 's|@REPORT_BUGS_TO@|$(REPORT_BUGS_TO)|g' \
@@ -163,7 +163,8 @@ endif
 endif
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-leaks1-mem.out \
-		 $(objpfx)tst-leaks1-static-mem.out $(objpfx)noload-mem.out
+		 $(objpfx)tst-leaks1-static-mem.out $(objpfx)noload-mem.out \
+		 $(objpfx)tst-ldconfig-X.out
 endif
 tlsmod17a-suffixes = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
 tlsmod18a-suffixes = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
@@ -436,7 +437,7 @@ ldd-rewrite = -e 's%@RTLD@%$(rtlddir)/$(rtld-installed-name)%g' \
 	      -e 's|@PKGVERSION@|$(PKGVERSION)|g' \
 	      -e 's|@REPORT_BUGS_TO@|$(REPORT_BUGS_TO)|g' \
 	      -e 's%@BASH@%$(BASH)%g' \
-	      -e 's%@TEXTDOMAINDIR@%$(msgcatdir)%g'
+	      -e 's%@TEXTDOMAINDIR@%$(localedir)%g'
 
 ifeq ($(ldd-rewrite-script),no)
 define gen-ldd
@@ -1251,4 +1252,8 @@ $(objpfx)tst-prelink-conflict.out: $(objpfx)tst-prelink.out
 $(objpfx)tst-prelink-cmp.out: tst-prelink.exp \
 			      $(objpfx)tst-prelink-conflict.out
 	cmp $^ > $@; \
+	$(evaluate-test)
+
+$(objpfx)tst-ldconfig-X.out : tst-ldconfig-X.sh $(objpfx)ldconfig
+	$(SHELL) $< '$(common-objpfx)' '$(test-wrapper)' '$(test-wrapper-env)' > $@; \
 	$(evaluate-test)

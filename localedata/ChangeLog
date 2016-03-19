@@ -1,3 +1,120 @@
+2016-03-16  Mike Frysinger  <vapier@gentoo.org>
+
+	* locales/POSIX: Change comment_char to % and escape_char to /.
+	* locales/iso14651_t1: Likewise.
+
+2016-03-16  Carlos O'Donell  <carlos@redhat.com>
+
+	* locales/an_ES (lang_ab): Use lowercase.
+
+2016-03-05  Mike Frysinger  <vapier@gentoo.org>
+
+	* locales/af_ZA (LC_IDENTIFICATION): Set tel & fax to "".
+	* locales/en_ZA: Likewise.
+	* locales/fa_IR: Likewise.
+	* locales/gd_GB: Likewise.
+	* locales/mhr_RU: Likewise.
+	* locales/ne_NP: Likewise.
+	* locales/niu_NU: Likewise.
+	* locales/niu_NZ: Likewise.
+	* locales/nr_ZA: Likewise.
+	* locales/nso_ZA: Likewise.
+	* locales/oc_FR: Likewise.
+	* locales/ps_AF: Likewise.
+	* locales/rw_RW: Likewise.
+	* locales/ss_ZA: Likewise.
+	* locales/st_ZA: Likewise.
+	* locales/ta_LK: Likewise.
+	* locales/the_NP: Likewise.
+	* locales/tn_ZA: Likewise.
+	* locales/ts_ZA: Likewise.
+	* locales/ve_ZA: Likewise.
+	* locales/xh_ZA: Likewise.
+	* locales/zu_ZA: Likewise.
+
+2016-02-29  Mike Frysinger  <vapier@gentoo.org>
+
+	* locales/es_PR (LC_MEASUREMENT): Change measurement to 1.
+
+2016-02-29  Mike Frysinger  <vapier@gentoo.org>
+
+	* locales/an_ES (lang_ab): Define.
+
+2016-02-19  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #16003]
+	* SUPPORTED: Delete pap_AN/UTF-8.
+	* locales/pap_AN: Delete file.
+
+2016-02-19  Mike Frysinger  <vapier@gentoo.org>
+
+	* locales/ar_SS: Set int_prefix based on public data in CLDR.
+	* locales/bn_BD: Likewise.
+	* locales/dz_BT: Likewise.
+	* locales/en_HK: Likewise.
+	* locales/en_PH: Likewise.
+	* locales/en_SG: Likewise.
+	* locales/es_DO: Likewise.
+	* locales/es_PA: Likewise.
+	* locales/es_PR: Likewise.
+	* locales/km_KH: Likewise.
+	* locales/mt_MT: Likewise.
+	* locales/ne_NP: Likewise.
+	* locales/pap_AW: Likewise.
+	* locales/the_NP: Likewise.
+	* locales/tk_TM: Likewise.
+	* locales/uz_UZ: Likewise.
+	* locales/uz_UZ@cyrillic: Likewise.
+	* locales/zh_SG: Likewise.
+
+2016-02-19  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19581]
+	* locales/sr_ME (date_fmt): Remove newline.
+	* locales/sr_RS (date_fmt): Likewise.
+	* locales/sr_RS@latin (date_fmt): Likewise.
+
+2016-02-19  Mike Frysinger  <vapier@gentoo.org>
+
+	* locales/dz_BT: Delete leading whitespace.
+	* locales/ps_AF: Likewise.
+
+2016-02-18  Mike Frysinger  <vapier@gentoo.org>
+
+	* locales/aa_DJ: Delete trailing whitespace & comments.
+	* locales/aa_ER: Likewise.
+	* locales/aa_ER@saaho: Likewise.
+	* locales/aa_ET: Likewise.
+	* locales/am_ET: Likewise.
+	* locales/ber_DZ: Likewise.
+	* locales/byn_ER: Likewise.
+	* locales/cs_CZ: Likewise.
+	* locales/fil_PH: Likewise.
+	* locales/gez_ER: Likewise.
+	* locales/gez_ER@abegede: Likewise.
+	* locales/gez_ET: Likewise.
+	* locales/gez_ET@abegede: Likewise.
+	* locales/ha_NG: Likewise.
+	* locales/ig_NG: Likewise.
+	* locales/ik_CA: Likewise.
+	* locales/iu_CA: Likewise.
+	* locales/nso_ZA: Likewise.
+	* locales/om_ET: Likewise.
+	* locales/om_KE: Likewise.
+	* locales/ps_AF: Likewise.
+	* locales/ro_RO: Likewise.
+	* locales/sid_ET: Likewise.
+	* locales/so_DJ: Likewise.
+	* locales/so_ET: Likewise.
+	* locales/so_KE: Likewise.
+	* locales/so_SO: Likewise.
+	* locales/ti_ER: Likewise.
+	* locales/ti_ET: Likewise.
+	* locales/tig_ER: Likewise.
+	* locales/wal_ET: Likewise.
+	* locales/wo_SN: Likewise.
+	* locales/yo_NG: Likewise.
+
 2016-02-08  Mike Frysinger  <vapier@gentoo.org>
 
 	* locales/an_ES: Convert to UTF-8 encodings.

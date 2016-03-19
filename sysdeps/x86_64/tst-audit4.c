@@ -1,11 +1,24 @@
-/* Test case for x86-64 preserved registers in dynamic linker.  */
+/* Test case for preserved AVX registers in dynamic linker.
+   Copyright (C) 2009-2016 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-#ifdef __AVX__
-#include <stdlib.h>
-#include <string.h>
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
 #include <cpuid.h>
-#include <immintrin.h>
 
+int tst_audit4_aux (void);
 
 static int
 avx_enabled (void)
@@ -22,31 +35,15 @@ avx_enabled (void)
   return (eax & 6) == 6;
 }
 
-
-extern __m256i audit_test (__m256i, __m256i, __m256i, __m256i,
-			   __m256i, __m256i, __m256i, __m256i);
 static int
 do_test (void)
 {
   /* Run AVX test only if AVX is supported.  */
   if (avx_enabled ())
-    {
-      __m256i ymm = _mm256_setzero_si256 ();
-      __m256i ret = audit_test (ymm, ymm, ymm, ymm, ymm, ymm, ymm, ymm);
-
-      ymm =  _mm256_set1_epi32 (0x12349876);
-      if (memcmp (&ymm, &ret, sizeof (ret)))
-	abort ();
-    }
-  return 0;
+    return tst_audit4_aux ();
+  else
+    return 77;
 }
-#else
-static int
-do_test (void)
-{
-  return 0;
-}
-#endif
 
 #define TEST_FUNCTION do_test ()
 #include "../../test-skeleton.c"

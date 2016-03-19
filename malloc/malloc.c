@@ -649,8 +649,7 @@ libc_hidden_proto (__libc_mallopt)
 	       have been freed but not use resused or consolidated)
   hblks:     current number of mmapped regions
   hblkhd:    total bytes held in mmapped regions
-  usmblks:   the maximum total allocated space. This will be greater
-		than current total if trimming has occurred.
+  usmblks:   always 0
   fsmblks:   total bytes held in fastbin blocks
   uordblks:  current total allocated space (normal or mmapped)
   fordblks:  total free space
@@ -1074,10 +1073,8 @@ static void*   realloc_check(void* oldmem, size_t bytes,
 			       const void *caller);
 static void*   memalign_check(size_t alignment, size_t bytes,
 				const void *caller);
-#ifndef NO_THREADS
 static void*   malloc_atfork(size_t sz, const void *caller);
 static void      free_atfork(void* mem, const void *caller);
-#endif
 
 /* ------------------ TRACE support ------------------  */
 #define USE_MTRACE 1
@@ -1818,10 +1815,7 @@ struct malloc_par
 
   /* Statistics */
   INTERNAL_SIZE_T mmapped_mem;
-  /*INTERNAL_SIZE_T  sbrked_mem;*/
-  /*INTERNAL_SIZE_T  max_sbrked_mem;*/
   INTERNAL_SIZE_T max_mmapped_mem;
-  INTERNAL_SIZE_T max_total_mem;  /* only kept for NO_THREADS */
 
   /* First address handed out by MORECORE/sbrk.  */
   char *sbrk_base;
@@ -2485,7 +2479,6 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
           && grow_heap (old_heap, MINSIZE + nb - old_size) == 0)
         {
           av->system_mem += old_heap->size - old_heap_size;
-          arena_mem += old_heap->size - old_heap_size;
           set_head (old_top, (((char *) old_heap + old_heap->size) - (char *) old_top)
                     | PREV_INUSE);
         }
@@ -2495,7 +2488,6 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
           heap->ar_ptr = av;
           heap->prev = old_heap;
           av->system_mem += heap->size;
-          arena_mem += heap->size;
           /* Set up the new top.  */
           top (av) = chunk_at_offset (heap, sizeof (*heap));
           set_head (top (av), (heap->size - sizeof (*heap)) | PREV_INUSE);
@@ -4398,7 +4390,7 @@ static void malloc_consolidate(mstate av)
     maxfb = &fastbin (av, NFASTBINS - 1);
     fb = &fastbin (av, 0);
     do {
-      p = atomic_exchange_acq (fb, 0);
+      p = atomic_exchange_acq (fb, NULL);
       if (p != 0) {
 	do {
 	  check_inuse_chunk(av, p);
@@ -4907,7 +4899,7 @@ int_mallinfo (mstate av, struct mallinfo *m)
     {
       m->hblks = mp_.n_mmaps;
       m->hblkhd = mp_.mmapped_mem;
-      m->usmblks = mp_.max_total_mem;
+      m->usmblks = 0;
       m->keepcost = chunksize (av->top);
     }
 }

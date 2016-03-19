@@ -1,4 +1,5 @@
-/* Copyright (C) 2012-2016 Free Software Foundation, Inc.
+/* Test case for preserved AVX512 registers in dynamic linker.
+   Copyright (C) 2012-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,13 +16,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* Test case for x86-64 preserved registers in dynamic linker.  */
-
-#ifdef __AVX512F__
-#include <stdlib.h>
-#include <string.h>
 #include <cpuid.h>
-#include <immintrin.h>
+#include <cpu-features.h>
+
+int tst_audit10_aux (void);
 
 static int
 avx512_enabled (void)
@@ -42,32 +40,15 @@ avx512_enabled (void)
   return (eax & 0xe6) == 0xe6;
 }
 
-
-extern __m512i audit_test (__m512i, __m512i, __m512i, __m512i,
-			   __m512i, __m512i, __m512i, __m512i);
 static int
 do_test (void)
 {
   /* Run AVX512 test only if AVX512 is supported.  */
   if (avx512_enabled ())
-    {
-      __m512i zmm = _mm512_setzero_si512 ();
-      __m512i ret = audit_test (zmm, zmm, zmm, zmm, zmm, zmm, zmm, zmm);
-
-      zmm = _mm512_set1_epi64 (0x12349876);
-
-      if (memcmp (&zmm, &ret, sizeof (ret)))
-	abort ();
-    }
-  return 0;
+    return tst_audit10_aux ();
+  else
+    return 77;
 }
-#else
-static int
-do_test (void)
-{
-  return 0;
-}
-#endif
 
 #define TEST_FUNCTION do_test ()
 #include "../../test-skeleton.c"

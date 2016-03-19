@@ -26,7 +26,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
-
+#include <libc-internal.h>
 
 /* We expect four arguments:
    - source directory name
@@ -319,6 +319,10 @@ main (int argc, char *argv[])
       exit (1);
     }
 
+  /* The test below covers the deprecated readdir64_r function.  */
+  DIAG_PUSH_NEEDS_COMMENT;
+  DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wdeprecated-declarations");
+
   /* Try to find the new directory.  */
   rewinddir (dir1);
   while (readdir64_r (dir1, &direntbuf.d, &d) == 0 && d != NULL)
@@ -350,6 +354,8 @@ main (int argc, char *argv[])
 	    break;
 	}
     }
+
+  DIAG_POP_NEEDS_COMMENT;
 
   if (d == NULL)
     {
@@ -439,6 +445,10 @@ main (int argc, char *argv[])
       result = 1;
     }
 
+  /* The test below covers the deprecated readdir64_r function.  */
+  DIAG_PUSH_NEEDS_COMMENT;
+  DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wdeprecated-declarations");
+
   /* We now should have a directory and a file in the new directory.  */
   rewinddir (dir2);
   while (readdir64_r (dir2, &direntbuf.d, &d) == 0 && d != NULL)
@@ -491,6 +501,8 @@ main (int argc, char *argv[])
 	  result = 1;
 	}
     }
+
+  DIAG_POP_NEEDS_COMMENT;
 
   if (stat64 ("does-not-exist", &st1) >= 0)
     {

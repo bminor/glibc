@@ -18,7 +18,7 @@ source     "Chitwanix OS Development"
 address    "Sangam Market, narayanghat, Nepal"
 contact    ""
 email      "info@chitwanix.com"
-tel        "9779845330174"
+tel        ""
 fax        ""
 language   "Chitwania Tharu"
 territory  "Nepal"
@@ -217,7 +217,7 @@ LC_TELEPHONE
 %
 tel_int_fmt "<U002B><U0025><U0063><U0020><U003B><U0025><U0061><U0020>/
 <U003B><U0025><U006C>"
-int_prefix     "<U0039><U0031>"
+int_prefix     "<U0039><U0037><U0037>"
 
 END LC_TELEPHONE
 

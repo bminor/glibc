@@ -91,9 +91,6 @@ static mstate free_list;
    acquired.  */
 static mutex_t list_lock = _LIBC_LOCK_INITIALIZER;
 
-/* Mapped memory in non-main arenas (reliable only for NO_THREADS). */
-static unsigned long arena_mem;
-
 /* Already initialized? */
 int __malloc_initialized = -1;
 
@@ -129,8 +126,6 @@ int __malloc_initialized = -1;
 
 
 /**************************************************************************/
-
-#ifndef NO_THREADS
 
 /* atfork support.  */
 
@@ -330,7 +325,6 @@ ptmalloc_unlock_all2 (void)
 
 #  define ptmalloc_unlock_all2 ptmalloc_unlock_all
 # endif
-#endif  /* !NO_THREADS */
 
 /* Initialization routine. */
 #include <string.h>
@@ -705,7 +699,6 @@ heap_trim (heap_info *heap, size_t pad)
       if (new_size + (HEAP_MAX_SIZE - prev_heap->size) < pad + MINSIZE + pagesz)
         break;
       ar_ptr->system_mem -= heap->size;
-      arena_mem -= heap->size;
       LIBC_PROBE (memory_heap_free, 2, heap, heap->size);
       delete_heap (heap);
       heap = prev_heap;
@@ -743,7 +736,6 @@ heap_trim (heap_info *heap, size_t pad)
     return 0;
 
   ar_ptr->system_mem -= extra;
-  arena_mem -= extra;
 
   /* Success. Adjust top accordingly. */
   set_head (top_chunk, (top_size - extra) | PREV_INUSE);
@@ -793,7 +785,6 @@ _int_new_arena (size_t size)
   a->attached_threads = 1;
   /*a->next = NULL;*/
   a->system_mem = a->max_system_mem = h->size;
-  arena_mem += h->size;
 
   /* Set up the top chunk, with proper alignment. */
   ptr = (char *) (a + 1);

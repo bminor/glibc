@@ -20,5 +20,5 @@
 # error "Never use <bits/string.h> directly; include <string.h> instead."
 #endif
 
-/* AArch64 implementations support efficient unaligned access.  */
-#define _STRING_ARCH_unaligned 1
+/* AArch64 uses the aligned string inline ABI.  */
+#define _STRING_INLINE_unaligned 0

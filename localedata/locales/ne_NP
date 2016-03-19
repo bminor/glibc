@@ -9,7 +9,7 @@ source     "Madan Puraskar Pustakalaya"
 address    "Rato Bangala, Patan Dhoka,Lalitpur,Nepal"
 contact    ""
 email      "info@mpp.org.np"
-tel        "977-1-5521393"
+tel        ""
 fax        ""
 language   "Nepali"
 territory  "Nepal"
@@ -213,7 +213,7 @@ LC_TELEPHONE
 %
 tel_int_fmt "<U002B><U0025><U0063><U0020><U003B><U0025><U0061><U0020>/
 <U003B><U0025><U006C>"
-int_prefix     "<U0039><U0031>"
+int_prefix     "<U0039><U0037><U0037>"
 
 END LC_TELEPHONE
 

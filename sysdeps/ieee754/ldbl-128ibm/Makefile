@@ -8,3 +8,8 @@ ifeq ($(subdir),stdlib)
 tests += tst-strtold-ldbl-128ibm
 $(objpfx)tst-strtold-ldbl-128ibm: $(libm)
 endif
+
+ifeq ($(subdir),math)
+tests += test-fmodl-ldbl-128ibm test-remainderl-ldbl-128ibm \
+	 test-remquol-ldbl-128ibm
+endif

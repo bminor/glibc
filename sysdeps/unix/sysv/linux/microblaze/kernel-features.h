@@ -39,35 +39,12 @@
 #define __ASSUME_RECVMSG_SYSCALL	1
 
 /* Support for the accept4 and recvmmsg syscalls was added in 2.6.33.  */
-#if __LINUX_KERNEL_VERSION >= 0x020621
-# define __ASSUME_ACCEPT4_SYSCALL        1
-# define __ASSUME_RECVMMSG_SYSCALL       1
-#endif
 #define __ASSUME_RECVMMSG_SYSCALL_WITH_SOCKETCALL      1
 
-/* Support for the sendmmsg syscall was added in 3.3.  */
-#if __LINUX_KERNEL_VERSION >= 0x030300
-# define __ASSUME_SENDMMSG_SYSCALL       1
-#endif
-
 /* Support for the futimesat syscall was added in 2.6.33.  */
-#if __LINUX_KERNEL_VERSION >= 0x020621
-# define __ASSUME_FUTIMESAT              1
-#endif
+#define __ASSUME_FUTIMESAT              1
 
 #include_next <kernel-features.h>
-
-/* Support for futex_atomic_cmpxchg_inatomic was added in 2.6.33.  */
-#if __LINUX_KERNEL_VERSION < 0x020621
-# undef __ASSUME_FUTEX_LOCK_PI
-# undef __ASSUME_REQUEUE_PI
-# undef __ASSUME_SET_ROBUST_LIST
-#endif
-
-/* The prlimit64 syscall was added for MicroBlaze in 2.6.37.  */
-#if __LINUX_KERNEL_VERSION < 0x020625
-# undef __ASSUME_PRLIMIT64
-#endif
 
 /* Support for the pselect6, preadv and pwritev syscalls was added in
    3.15.  */
@@ -75,4 +52,9 @@
 # undef __ASSUME_PSELECT
 # undef __ASSUME_PREADV
 # undef __ASSUME_PWRITEV
+#endif
+
+/* Support for the sendmmsg syscall was added in 3.3.  */
+#if __LINUX_KERNEL_VERSION < 0x030300
+# undef __ASSUME_SENDMMSG_SYSCALL
 #endif

@@ -123,6 +123,10 @@ tests-static = test-fpucw-static test-fpucw-ieee-static \
 # distinct from `double'.
 test-longdouble-yes = test-ldouble test-ildoubl test-ldouble-finite
 
+ifneq (,$(CXX))
+tests += test-math-isinff
+endif
+
 ifneq (no,$(PERL))
 libm-vec-tests = $(addprefix test-,$(libmvec-tests))
 libm-tests = test-float test-double $(test-longdouble-$(long-double-fcts)) \
@@ -219,6 +223,8 @@ CFLAGS-test-signgam-ullong.c = -std=c99
 CFLAGS-test-signgam-ullong-init.c = -std=c99
 CFLAGS-test-signgam-ullong-static.c = -std=c99
 CFLAGS-test-signgam-ullong-init-static.c = -std=c99
+
+CFLAGS-test-math-isinff.cc = -std=gnu++11
 
 # The -lieee module sets the _LIB_VERSION_ switch to IEEE mode
 # for error handling in the -lm functions.

@@ -46,8 +46,9 @@
 #endif
 
 #ifndef TIMEOUT
-  /* Default timeout is two seconds.  */
-# define TIMEOUT 2
+  /* Default timeout is twenty seconds.  Tests should normally complete faster
+     than this, but if they don't, that's abnormal (a bug) anyways.  */
+# define TIMEOUT 20
 #endif
 
 #define OPT_DIRECT 1000
@@ -426,23 +427,6 @@ main (int argc, char *argv[])
       core_limit.rlim_cur = 0;
       core_limit.rlim_max = 0;
       setrlimit (RLIMIT_CORE, &core_limit);
-#endif
-
-#ifdef RLIMIT_DATA
-      /* Try to avoid eating all memory if a test leaks.  */
-      struct rlimit data_limit;
-      if (getrlimit (RLIMIT_DATA, &data_limit) == 0)
-	{
-	  if (TEST_DATA_LIMIT == RLIM_INFINITY)
-	    data_limit.rlim_cur = data_limit.rlim_max;
-	  else if (data_limit.rlim_cur > (rlim_t) TEST_DATA_LIMIT)
-	    data_limit.rlim_cur = MIN ((rlim_t) TEST_DATA_LIMIT,
-				       data_limit.rlim_max);
-	  if (setrlimit (RLIMIT_DATA, &data_limit) < 0)
-	    printf ("setrlimit: RLIMIT_DATA: %m\n");
-	}
-      else
-	printf ("getrlimit: RLIMIT_DATA: %m\n");
 #endif
 
       /* We put the test process in its own pgrp so that if it bogusly
