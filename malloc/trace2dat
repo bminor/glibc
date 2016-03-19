@@ -1,0 +1,201 @@
+#!/usr/bin/perl
+# -*- perl -*-
+
+$outfile = shift @ARGV;
+
+$outfile = "trace2c.dat" unless $outfile;
+
+# Arrays starting with c_ are data code to be emitted later
+
+
+# Reserve idx 0 to be a NULL pointer
+$last_idx = 0;
+sub ptr2idx {
+    my ($ptr) = @_;
+    if ($ptr2idx{$ptr}) {
+	return $ptr2idx{$ptr};
+    }
+    if ($ptr =~ /^0+$/) {
+	return 0;
+    }
+    # we intentionally never return zero
+    $last_idx ++;
+    $ptr2idx{$ptr} = $last_idx;
+    return $last_idx;
+}
+
+sub put_int {
+    my ($val) = @_;
+    if ($val < 0) {
+	print STDERR "Error: negative value in put_int\n";
+	exit(1);
+    }
+    my ($rv) = chr($val & 127);
+    while ($val > 127) {
+	$val >>= 7;
+	$rv = chr(($val & 127) | 128) . $rv;
+    }
+    return $rv;
+}
+
+
+$sync_counter = 0;
+
+# thread 2 waits for thread 1
+sub sync {
+    my ($thread1, $thread2) = @_;
+    if (! $sync_init{$thread1}) {
+	push (@c_sync, "volatile int sync_${thread1} = 0;");
+	$sync_init{$thread1} = 1;
+    }
+    $sync_counter ++;
+    $c_threads{$thread1} .= $c_sync_w . &put_int($sync_counter);
+    $c_threads{$thread2} .= $c_sync_r . &put_int($sync_counter);
+}
+
+sub acq_ptr {
+    my ($ptr) = @_;
+    if ($owner{$ptr} && $owner{$ptr} ne $thread) {
+	&sync ($owner{$ptr}, $thread);
+    }
+    $owner{$ptr} = $thread;
+}
+
+$master_thread = undef;
+
+# These must stay in sync with trace_run.c
+$c_nop = chr(0);
+$c_done = chr(1);
+$c_malloc = chr(2);
+$c_calloc = chr(3);
+$c_realloc = chr(4);
+$c_free = chr(5);
+$c_sync_w = chr(6);
+$c_sync_r = chr(7);
+$c_alloc_ptrs = chr(8);
+$c_alloc_syncs = chr(9);
+$c_nthreads = chr(10);
+$c_start_thread = chr(11);
+
+$line = 0;
+while (<>) {
+    $line ++;
+    next if /^threadid/;
+    next if /out of/;
+
+    ($thread, $type, $path, $ptr1, $size, $ptr2) = split(' ');
+    $size = hex($size);
+    $idx1 = &ptr2idx($ptr1);
+    $idx2 = &ptr2idx($ptr2);
+
+    if (! $master_thread) {
+	$master_thread = $thread;
+    } elsif (! $threads{$thread}) {
+	# make new thread start at the "right" time
+	&sync ($master_thread, $thread);
+    }
+
+    $threads{$thread} = 1;
+
+    if ($type eq "malloc") {
+	# In case another thread needs to free this chunk first
+	&acq_ptr($ptr2);
+	$c_threads{$thread} .= $c_malloc . &put_int($idx2) . &put_int($size);
+	$leak{$ptr2} = $size;
+	$owner{$ptr2} = $thread;
+	$valid{$ptr2} = 1;
+    }
+
+    if ($type eq "calloc") {
+	# In case another thread needs to free this chunk first
+	&acq_ptr($ptr2);
+	$c_threads{$thread} .= $c_calloc . &put_int($idx2) . &put_int($size);
+	$leak{$ptr2} = $size;
+	$owner{$ptr2} = $thread;
+	$valid{$ptr2} = 1;
+    }
+
+    if ($type eq "free") {
+	if ($ptr1 =~ /^0+$/) {
+	    $c_threads{$thread} .= $c_free . &put_int(0);
+	} elsif ($valid{$ptr1}) {
+	    # if it was allocated in another thread
+	    &acq_ptr($ptr1);
+	    $c_threads{$thread} .= $c_free . &put_int($idx1);
+	    delete $leak{$ptr1};
+	    $valid{$ptr1} = 0;
+	} else {
+	    #push (@{$c_threads{$thread}}, sprintf("  // free (p%s) (invalid ptr $ptr1 in thread $thread)", $idx1));
+	}
+    }
+
+    if ($type eq "realloc") {
+	if ($owner{$ptr1}) {
+	    &acq_ptr($ptr1);
+	    &acq_ptr($ptr2);
+	    $c_threads{$thread} .= $c_realloc . &put_int($idx2) . &put_int($idx1) . &put_int($size);
+	    # ptr1 might be the same as ptr2, so sequence matters
+	    delete $leak{$ptr1};
+	    $leak{$ptr2} = $size;
+	    $valid{$ptr1} = 0;
+	    $valid{$ptr2} = 1;
+	}
+    }
+}
+print $line . " lines read\n";
+
+$nthreads = 0;
+for $thread (sort keys %threads) {
+    $c_threads{$thread} .= $c_done;
+    $nthreads ++;
+}
+
+sub code_dump {
+    my ($code) = @_;
+    for $c (split(//, $code)) {
+	print hex(ord($c)), " ";
+    }
+    print "\n";
+}
+
+sub gen_main {
+    my ($len) = @_;
+    my ($code);
+    my ($ptr) = $len;
+
+    $code = $c_alloc_ptrs . &put_int($last_idx+1);
+    &code_dump($code);
+    $code .= $c_alloc_syncs . &put_int($sync_counter+1);
+
+    # Keep these together
+    $code .= $c_nthreads . &put_int($nthreads);
+    for $thread (sort keys %threads) {
+	printf("Start thread offset %x\n", $ptr);
+	$code .= $c_start_thread . &put_int ($ptr);
+	$ptr += length($c_threads{$thread});
+    }
+
+    $code .= $c_done;
+    return length($code), $code;
+}
+
+$len = 1;
+$nlen = 2;
+while ($len != $nlen) {
+    $len = $nlen;
+    ($nlen, $maincode) = &gen_main($len);
+    print "main size $len/$nlen\n";
+}
+
+&code_dump($maincode);
+
+open(F, ">$outfile");
+print F $maincode;
+for $thread (sort keys %threads) {
+    printf "Thread $thread size %10d  " , length($c_threads{$thread});
+    &code_dump (substr($c_threads{$thread}, 0, 16));
+    print F $c_threads{$thread};
+}
+close (F);
+
+exit 0;
