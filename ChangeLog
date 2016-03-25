@@ -1,3 +1,12 @@
+2016-03-25  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19791]
+	* resolv/res_send.c (close_and_return_error): New function.
+	(send_dg): Initialize *resplen2 after reopen failure.  Call
+	close_and_return_error for error returns.  On error paths without
+	__res_iclose, initialze *resplen2 explicitly.  Update comment for
+	successful return.
+
 2016-03-21  Dylan Alex Simon  <dylan-sourceware@dylex.net>
 
 	[BZ #19822]
