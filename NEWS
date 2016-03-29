@@ -17,6 +17,10 @@ Version 2.20.1
   called with the GLOB_ALTDIRFUNC flag and encountered a long file name.
   Reported by Alexander Cherepanov.  (CVE-2016-1234)
 
+* An unnecessary stack copy in _nss_dns_getnetbyname_r was removed.  It
+  could result in a stack overflow when getnetbyname was called with an
+  overly long name.  (CVE-2016-3075)
+
 * Previously, getaddrinfo copied large amounts of address data to the stack,
   even after the fix for CVE-2013-4458 has been applied, potentially
   resulting in a stack overflow.  getaddrinfo now uses a heap allocation
