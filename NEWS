@@ -9,7 +9,10 @@ Version 2.23.1
 
 Security related changes:
 
-  [Add security related changes here]
+* The getnetbyname implementation in nss_dns had a potentially unbounded
+  alloca call (in the form of a call to strdupa), leading to a stack
+  overflow (stack exhaustion) and a crash if getnetbyname is invoked
+  on a very long name.  (CVE-2016-3075)
 
 The following bugs are resolved with this release:
 
@@ -17,9 +20,12 @@ The following bugs are resolved with this release:
   [19758] Or bit_Prefer_MAP_32BIT_EXEC in EXTRA_LD_ENVVARS
   [19759] Don't inline mempcpy for x86
   [19762] Use HAS_ARCH_FEATURE with Fast_Rep_String
-  [19791] Assertion failure in res_query.c with un-connectable name server addresses
+  [19791] Assertion failure in res_query.c with un-connectable name server
+    addresses
   [19792] MIPS: backtrace yields infinite backtrace with makecontext
   [19822] libm.so install clobbers old version
+  [19879] network: nss_dns: Stack overflow in getnetbyname implementation
+    (CVE-2016-3075)
 
 
 Version 2.23
