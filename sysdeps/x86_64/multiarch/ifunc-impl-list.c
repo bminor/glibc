@@ -48,18 +48,36 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   /* Support sysdeps/x86_64/multiarch/memmove_chk.c.  */
   IFUNC_IMPL (i, name, __memmove_chk,
+#ifdef HAVE_AVX512_ASM_SUPPORT
 	      IFUNC_IMPL_ADD (array, i, __memmove_chk,
 			      HAS_ARCH_FEATURE (AVX512F_Usable),
 			      __memmove_chk_avx512_no_vzeroupper)
 	      IFUNC_IMPL_ADD (array, i, __memmove_chk,
+			      HAS_ARCH_FEATURE (AVX512F_Usable),
+			      __memmove_chk_avx512_unaligned_2)
+	      IFUNC_IMPL_ADD (array, i, __memmove_chk,
+			      HAS_ARCH_FEATURE (AVX512F_Usable),
+			      __memmove_chk_avx512_unaligned_erms)
+#endif
+	      IFUNC_IMPL_ADD (array, i, __memmove_chk,
 			      HAS_ARCH_FEATURE (AVX_Usable),
 			      __memmove_chk_avx_unaligned)
+	      IFUNC_IMPL_ADD (array, i, __memmove_chk,
+			      HAS_ARCH_FEATURE (AVX_Usable),
+			      __memmove_chk_avx_unaligned_2)
+	      IFUNC_IMPL_ADD (array, i, __memmove_chk,
+			      HAS_ARCH_FEATURE (AVX_Usable),
+			      __memmove_chk_avx_unaligned_erms)
 	      IFUNC_IMPL_ADD (array, i, __memmove_chk,
 			      HAS_CPU_FEATURE (SSSE3),
 			      __memmove_chk_ssse3_back)
 	      IFUNC_IMPL_ADD (array, i, __memmove_chk,
 			      HAS_CPU_FEATURE (SSSE3),
 			      __memmove_chk_ssse3)
+	      IFUNC_IMPL_ADD (array, i, __memmove_chk, 1,
+			      __memmove_chk_sse2_unaligned_2)
+	      IFUNC_IMPL_ADD (array, i, __memmove_chk, 1,
+			      __memmove_chk_sse2_unaligned_erms)
 	      IFUNC_IMPL_ADD (array, i, __memmove_chk, 1,
 			      __memmove_chk_sse2))
 
@@ -69,12 +87,31 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      HAS_ARCH_FEATURE (AVX_Usable),
 			      __memmove_avx_unaligned)
 	      IFUNC_IMPL_ADD (array, i, memmove,
+			      HAS_ARCH_FEATURE (AVX_Usable),
+			      __memmove_avx_unaligned_2)
+	      IFUNC_IMPL_ADD (array, i, memmove,
+			      HAS_ARCH_FEATURE (AVX_Usable),
+			      __memmove_avx_unaligned_erms)
+#ifdef HAVE_AVX512_ASM_SUPPORT
+	      IFUNC_IMPL_ADD (array, i, memmove,
 			      HAS_ARCH_FEATURE (AVX512F_Usable),
 			      __memmove_avx512_no_vzeroupper)
+	      IFUNC_IMPL_ADD (array, i, memmove,
+			      HAS_ARCH_FEATURE (AVX512F_Usable),
+			      __memmove_avx512_unaligned_2)
+	      IFUNC_IMPL_ADD (array, i, memmove,
+			      HAS_ARCH_FEATURE (AVX512F_Usable),
+			      __memmove_avx512_unaligned_erms)
+#endif
 	      IFUNC_IMPL_ADD (array, i, memmove, HAS_CPU_FEATURE (SSSE3),
 			      __memmove_ssse3_back)
 	      IFUNC_IMPL_ADD (array, i, memmove, HAS_CPU_FEATURE (SSSE3),
 			      __memmove_ssse3)
+	      IFUNC_IMPL_ADD (array, i, memmove, 1, __memmove_erms)
+	      IFUNC_IMPL_ADD (array, i, memmove, 1,
+			      __memmove_sse2_unaligned_2)
+	      IFUNC_IMPL_ADD (array, i, memmove, 1,
+			      __memmove_sse2_unaligned_erms)
 	      IFUNC_IMPL_ADD (array, i, memmove, 1, __memmove_sse2))
 
 #ifdef HAVE_AVX2_SUPPORT
@@ -264,18 +301,36 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 #ifdef SHARED
   /* Support sysdeps/x86_64/multiarch/memcpy_chk.S.  */
   IFUNC_IMPL (i, name, __memcpy_chk,
+#ifdef HAVE_AVX512_ASM_SUPPORT
 	      IFUNC_IMPL_ADD (array, i, __memcpy_chk,
 			      HAS_ARCH_FEATURE (AVX512F_Usable),
 			      __memcpy_chk_avx512_no_vzeroupper)
 	      IFUNC_IMPL_ADD (array, i, __memcpy_chk,
+			      HAS_ARCH_FEATURE (AVX512F_Usable),
+			      __memcpy_chk_avx512_unaligned_2)
+	      IFUNC_IMPL_ADD (array, i, __memcpy_chk,
+			      HAS_ARCH_FEATURE (AVX512F_Usable),
+			      __memcpy_chk_avx512_unaligned_erms)
+#endif
+	      IFUNC_IMPL_ADD (array, i, __memcpy_chk,
 			      HAS_ARCH_FEATURE (AVX_Usable),
 			      __memcpy_chk_avx_unaligned)
+	      IFUNC_IMPL_ADD (array, i, __memcpy_chk,
+			      HAS_ARCH_FEATURE (AVX_Usable),
+			      __memcpy_chk_avx_unaligned_2)
+	      IFUNC_IMPL_ADD (array, i, __memcpy_chk,
+			      HAS_ARCH_FEATURE (AVX_Usable),
+			      __memcpy_chk_avx_unaligned_erms)
 	      IFUNC_IMPL_ADD (array, i, __memcpy_chk,
 			      HAS_CPU_FEATURE (SSSE3),
 			      __memcpy_chk_ssse3_back)
 	      IFUNC_IMPL_ADD (array, i, __memcpy_chk,
 			      HAS_CPU_FEATURE (SSSE3),
 			      __memcpy_chk_ssse3)
+	      IFUNC_IMPL_ADD (array, i, __memcpy_chk, 1,
+			      __memcpy_chk_sse2_unaligned_2)
+	      IFUNC_IMPL_ADD (array, i, __memcpy_chk, 1,
+			      __memcpy_chk_sse2_unaligned_erms)
 	      IFUNC_IMPL_ADD (array, i, __memcpy_chk, 1,
 			      __memcpy_chk_sse2))
 
@@ -284,24 +339,57 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, memcpy,
 			      HAS_ARCH_FEATURE (AVX_Usable),
 			      __memcpy_avx_unaligned)
+	      IFUNC_IMPL_ADD (array, i, memcpy,
+			      HAS_ARCH_FEATURE (AVX_Usable),
+			      __memcpy_avx_unaligned_2)
+	      IFUNC_IMPL_ADD (array, i, memcpy,
+			      HAS_ARCH_FEATURE (AVX_Usable),
+			      __memcpy_avx_unaligned_erms)
 	      IFUNC_IMPL_ADD (array, i, memcpy, HAS_CPU_FEATURE (SSSE3),
 			      __memcpy_ssse3_back)
 	      IFUNC_IMPL_ADD (array, i, memcpy, HAS_CPU_FEATURE (SSSE3),
 			      __memcpy_ssse3)
+#ifdef HAVE_AVX512_ASM_SUPPORT
 	      IFUNC_IMPL_ADD (array, i, memcpy,
 			      HAS_ARCH_FEATURE (AVX512F_Usable),
 			      __memcpy_avx512_no_vzeroupper)
+	      IFUNC_IMPL_ADD (array, i, memcpy,
+			      HAS_ARCH_FEATURE (AVX512F_Usable),
+			      __memcpy_avx512_unaligned_2)
+	      IFUNC_IMPL_ADD (array, i, memcpy,
+			      HAS_ARCH_FEATURE (AVX512F_Usable),
+			      __memcpy_avx512_unaligned_erms)
+#endif
 	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_sse2_unaligned)
+	      IFUNC_IMPL_ADD (array, i, memcpy, 1,
+			      __memcpy_sse2_unaligned_2)
+	      IFUNC_IMPL_ADD (array, i, memcpy, 1,
+			      __memcpy_sse2_unaligned_erms)
+	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_erms)
 	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_sse2))
 
   /* Support sysdeps/x86_64/multiarch/mempcpy_chk.S.  */
   IFUNC_IMPL (i, name, __mempcpy_chk,
+#ifdef HAVE_AVX512_ASM_SUPPORT
 	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk,
 			      HAS_ARCH_FEATURE (AVX512F_Usable),
 			      __mempcpy_chk_avx512_no_vzeroupper)
 	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk,
+			      HAS_ARCH_FEATURE (AVX512F_Usable),
+			      __mempcpy_chk_avx512_unaligned_2)
+	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk,
+			      HAS_ARCH_FEATURE (AVX512F_Usable),
+			      __mempcpy_chk_avx512_unaligned_erms)
+#endif
+	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk,
 			      HAS_ARCH_FEATURE (AVX_Usable),
 			      __mempcpy_chk_avx_unaligned)
+	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk,
+			      HAS_ARCH_FEATURE (AVX_Usable),
+			      __mempcpy_chk_avx_unaligned_2)
+	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk,
+			      HAS_ARCH_FEATURE (AVX_Usable),
+			      __mempcpy_chk_avx_unaligned_erms)
 	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk,
 			      HAS_CPU_FEATURE (SSSE3),
 			      __mempcpy_chk_ssse3_back)
@@ -309,20 +397,43 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      HAS_CPU_FEATURE (SSSE3),
 			      __mempcpy_chk_ssse3)
 	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk, 1,
+			      __mempcpy_chk_sse2_unaligned_2)
+	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk, 1,
+			      __mempcpy_chk_sse2_unaligned_erms)
+	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk, 1,
 			      __mempcpy_chk_sse2))
 
   /* Support sysdeps/x86_64/multiarch/mempcpy.S.  */
   IFUNC_IMPL (i, name, mempcpy,
+#ifdef HAVE_AVX512_ASM_SUPPORT
 	      IFUNC_IMPL_ADD (array, i, mempcpy,
 			      HAS_ARCH_FEATURE (AVX512F_Usable),
 			      __mempcpy_avx512_no_vzeroupper)
 	      IFUNC_IMPL_ADD (array, i, mempcpy,
+			      HAS_ARCH_FEATURE (AVX512F_Usable),
+			      __mempcpy_avx512_unaligned_2)
+	      IFUNC_IMPL_ADD (array, i, mempcpy,
+			      HAS_ARCH_FEATURE (AVX512F_Usable),
+			      __mempcpy_avx512_unaligned_erms)
+#endif
+	      IFUNC_IMPL_ADD (array, i, mempcpy,
 			      HAS_ARCH_FEATURE (AVX_Usable),
 			      __mempcpy_avx_unaligned)
+	      IFUNC_IMPL_ADD (array, i, mempcpy,
+			      HAS_ARCH_FEATURE (AVX_Usable),
+			      __mempcpy_avx_unaligned_2)
+	      IFUNC_IMPL_ADD (array, i, mempcpy,
+			      HAS_ARCH_FEATURE (AVX_Usable),
+			      __mempcpy_avx_unaligned_erms)
 	      IFUNC_IMPL_ADD (array, i, mempcpy, HAS_CPU_FEATURE (SSSE3),
 			      __mempcpy_ssse3_back)
 	      IFUNC_IMPL_ADD (array, i, mempcpy, HAS_CPU_FEATURE (SSSE3),
 			      __mempcpy_ssse3)
+	      IFUNC_IMPL_ADD (array, i, mempcpy, 1,
+			      __mempcpy_sse2_unaligned_2)
+	      IFUNC_IMPL_ADD (array, i, mempcpy, 1,
+			      __mempcpy_sse2_unaligned_erms)
+	      IFUNC_IMPL_ADD (array, i, mempcpy, 1, __mempcpy_erms)
 	      IFUNC_IMPL_ADD (array, i, mempcpy, 1, __mempcpy_sse2))
 
   /* Support sysdeps/x86_64/multiarch/strncmp.S.  */
