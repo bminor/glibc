@@ -1,7 +1,6 @@
-/* Multiple versions of memcpy
+/* Multiple versions of __memmove_chk
    All versions must be listed in ifunc-impl-list.c.
-   Copyright (C) 2010-2015 Free Software Foundation, Inc.
-   Contributed by Intel Corporation.
+   Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,51 +21,51 @@
 #include <init-arch.h>
 
 /* Define multiple versions only for the definition in lib and for
-   DSO.  In static binaries we need memcpy before the initialization
-   happened.  */
-#if defined SHARED && IS_IN (libc)
+   DSO.  There are no multiarch memmove functions for static binaries.
+ */
+#if IS_IN (libc)
+# ifdef SHARED
 	.text
-ENTRY(__new_memcpy)
-	.type	__new_memcpy, @gnu_indirect_function
+ENTRY(__memmove_chk)
+	.type	__memmove_chk, @gnu_indirect_function
 	LOAD_RTLD_GLOBAL_RO_RDX
 # ifdef HAVE_AVX512_ASM_SUPPORT
 	HAS_ARCH_FEATURE (AVX512F_Usable)
 	jz	1f
-	lea	__memcpy_avx512_no_vzeroupper(%rip), %RAX_LP
+	lea	__memmove_chk_avx512_no_vzeroupper(%rip), %RAX_LP
 	HAS_ARCH_FEATURE (Prefer_No_VZEROUPPER)
 	jnz	2f
-	lea	__memcpy_avx512_unaligned_erms(%rip), %RAX_LP
+	lea	__memmove_chk_avx512_unaligned_erms(%rip), %RAX_LP
 	HAS_CPU_FEATURE (ERMS)
 	jnz	2f
-	lea	__memcpy_avx512_unaligned(%rip), %RAX_LP
+	lea	__memmove_chk_avx512_unaligned(%rip), %RAX_LP
 	ret
 # endif
-1:	lea	__memcpy_avx_unaligned(%rip), %RAX_LP
+1:	lea	__memmove_chk_avx_unaligned(%rip), %RAX_LP
 	HAS_ARCH_FEATURE (AVX_Fast_Unaligned_Load)
 	jz	L(Fast_Unaligned_Load)
 	HAS_CPU_FEATURE (ERMS)
 	jz	2f
-	lea	__memcpy_avx_unaligned_erms(%rip), %RAX_LP
+	lea	__memmove_chk_avx_unaligned_erms(%rip), %RAX_LP
 	ret
 L(Fast_Unaligned_Load):
-	lea	__memcpy_sse2_unaligned(%rip), %RAX_LP
+	lea	__memmove_chk_sse2_unaligned(%rip), %RAX_LP
 	HAS_ARCH_FEATURE (Fast_Unaligned_Copy)
 	jz	L(SSSE3)
 	HAS_CPU_FEATURE (ERMS)
 	jz	2f
-	lea	__memcpy_sse2_unaligned_erms(%rip), %RAX_LP
+	lea	__memmove_chk_sse2_unaligned_erms(%rip), %RAX_LP
 	ret
 L(SSSE3):
 	HAS_CPU_FEATURE (SSSE3)
 	jz	2f
-	lea    __memcpy_ssse3_back(%rip), %RAX_LP
+	lea    __memmove_chk_ssse3_back(%rip), %RAX_LP
 	HAS_ARCH_FEATURE (Fast_Copy_Backward)
 	jnz	2f
-	lea	__memcpy_ssse3(%rip), %RAX_LP
+	lea	__memmove_chk_ssse3(%rip), %RAX_LP
 2:	ret
-END(__new_memcpy)
-
-# undef memcpy
-# include <shlib-compat.h>
-versioned_symbol (libc, __new_memcpy, memcpy, GLIBC_2_14);
+END(__memmove_chk)
+# else
+#  include "../memmove_chk.S"
+# endif
 #endif
