@@ -22,7 +22,10 @@ sysdep_routines += strncat-c stpncpy-c strncpy-c strcmp-ssse3 \
 		   memset-avx512-no-vzeroupper \
 		   memmove-sse2-unaligned-erms \
 		   memmove-avx-unaligned-erms \
-		   memmove-avx512-unaligned-erms
+		   memmove-avx512-unaligned-erms \
+		   memset-sse2-unaligned-erms \
+		   memset-avx2-unaligned-erms \
+		   memset-avx512-unaligned-erms
 
 ifeq (yes,$(config-cflags-sse4))
 sysdep_routines += strcspn-c strpbrk-c strspn-c varshift
