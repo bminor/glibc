@@ -1,3 +1,59 @@
+2016-04-01  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19879]
+	CVE-2016-3075
+	* resolv/nss_dns/dns-network.c (_nss_dns_getnetbyname_r): Do not
+	copy name.
+
+2016-03-25  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19791]
+	* resolv/res_send.c (close_and_return_error): New function.
+	(send_dg): Initialize *resplen2 after reopen failure.  Call
+	close_and_return_error for error returns.  On error paths without
+	__res_iclose, initialze *resplen2 explicitly.  Update comment for
+	successful return.
+
+2016-03-21  Dylan Alex Simon  <dylan-sourceware@dylex.net>
+
+	[BZ #19822]
+	* math/Makefile ($(inst_libdir)/libm.so): Write output to $@.tmp and
+	move it to the final $@ location.
+
+2016-03-15  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #19257]
+	* resolv/res_init.c (__res_iclose): Use statp->nscount instead of
+	statp->_u._ext.nscount as loop count.
+
+2016-02-17  Andrew Senkevich  <andrew.senkevich@intel.com>
+	    H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #19590]
+	* sysdeps/x86_64/fpu/svml_finite_alias.S (ALIAS_IMPL): Use PIC
+	relocation.
+
+2015-09-24  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #19003]
+	* sysdeps/x86_64/fpu/multiarch/Makefile (CFLAGS-e_pow-fma4.c): Add
+	$(config-cflags-nofma).
+
+2016-03-07  Hongjiu Zhang  <noctuorare@gmail.com>
+
+	* elf/sln.c (makesymlink): Change struct stat to stat64, and lstat
+	to lstat64.
+
+2016-03-02  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	[BZ #19682]
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list:
+	Remove socketcall syscalls.
+
+2016-03-01  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/alpha/fpu/libm-test-ulps: Update ULPs.
+
 2016-02-22  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/elision-trylock.c
