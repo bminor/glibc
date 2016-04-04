@@ -1,5 +1,25 @@
 2016-04-04  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/s390-32/dl-trampoline.S: Include dl-trampoline.h twice
+	to create a non-vector/vector version for _dl_runtime_resolve and
+	_dl_runtime_profile. Move implementation to ...
+	* sysdeps/s390/s390-32/dl-trampoline.h: ... here.
+	(_dl_runtime_resolve) Save and restore fpr/vrs.
+	(_dl_runtime_profile) Save and restore vrs and fix some issues
+	if _dl_call_pltexit is called.
+	* sysdeps/s390/s390-32/dl-machine.h (elf_machine_runtime_setup):
+	Choose the correct resolver function if running on a machine with vx.
+	* sysdeps/s390/s390-64/dl-trampoline.S: Include dl-trampoline.h twice
+	to create a non-vector/vector version for _dl_runtime_resolve and
+	_dl_runtime_profile. Move implementation to ...
+	* sysdeps/s390/s390-64/dl-trampoline.h: ... here.
+	(_dl_runtime_resolve) Save and restore fpr/vrs.
+	(_dl_runtime_profile) Save and restore vrs and fix some issues
+	* sysdeps/s390/s390-64/dl-machine.h: (elf_machine_runtime_setup):
+	Choose the correct resolver function if running on a machine with vx.
+
+2016-04-04  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* config.h.in (HAVE_S390_VX_ASM_SUPPORT): New macro undefine.
 	* sysdeps/s390/configure.ac: Add test for S390 vector instruction
 	assembler support.
