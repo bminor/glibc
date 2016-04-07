@@ -26,8 +26,10 @@
 char *simple_memcpy (char *, const char *, size_t);
 char *builtin_memcpy (char *, const char *, size_t);
 
+#if 0
 IMPL (simple_memcpy, 0)
 IMPL (builtin_memcpy, 0)
+#endif
 IMPL (memcpy, 1)
 
 char *

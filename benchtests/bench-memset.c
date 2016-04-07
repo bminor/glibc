@@ -67,11 +67,13 @@ builtin_bzero (char *s, size_t n)
 #else
 typedef CHAR *(*proto_t) (CHAR *, int, size_t);
 
+#if 0
 IMPL (SIMPLE_MEMSET, 0)
 # ifndef WIDE
 char *builtin_memset (char *, int, size_t);
 IMPL (builtin_memset, 0)
 # endif /* !WIDE */
+#endif
 IMPL (MEMSET, 1)
 
 # ifndef WIDE
