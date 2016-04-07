@@ -41,7 +41,9 @@ simple_bcopy (const char *src, char *dst, size_t n)
 #else
 typedef char *(*proto_t) (char *, const char *, size_t);
 
+#if 0
 IMPL (simple_memmove, 0)
+#endif
 IMPL (memmove, 1)
 #endif
 
