@@ -1,5 +1,16 @@
 2016-04-12  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
+	* nptl/pthread_mutex_unlock.c (lll_unlock_elision):
+	Add elision adapt_count parameter to list of arguments.
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h
+	(lll_unlock_elision): Update with new parameter list
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.h
+	(lll_unlock_elision): Likewise
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h
+	(lll_unlock_elision): Likewise
+
+2016-04-12  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
 	[BZ #19853]
 	* stdio-common/tst-sprintf3.c [TEST_N]: Refactor
 	TEST to take significant digits as second parameter.
