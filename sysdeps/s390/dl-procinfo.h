@@ -21,9 +21,9 @@
 #define _DL_PROCINFO_H	1
 #include <ldsodefs.h>
 
-#define _DL_HWCAP_COUNT 10
+#define _DL_HWCAP_COUNT 12
 
-#define _DL_PLATFORMS_COUNT	5
+#define _DL_PLATFORMS_COUNT	8
 
 /* The kernel provides up to 32 capability bits with elf_hwcap.  */
 #define _DL_FIRST_PLATFORM	32
@@ -50,6 +50,7 @@ enum
   HWCAP_S390_ETF3EH = 1 << 8,
   HWCAP_S390_HIGH_GPRS = 1 << 9,
   HWCAP_S390_TE = 1 << 10,
+  HWCAP_S390_VX = 1 << 11,
 };
 
 #define HWCAP_IMPORTANT (HWCAP_S390_ZARCH | HWCAP_S390_LDISP \
