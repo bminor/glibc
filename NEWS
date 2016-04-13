@@ -24,8 +24,8 @@ Version 2.22.1
 * The following bugs are resolved with this release:
 
   17905, 18420, 18421, 18480, 18589, 18743, 18778, 18781, 18787, 18796,
-  18870, 18887, 18921, 18928, 18969, 18985, 19003, 19018, 19058, 19174,
-  19178, 19590, 19682, 19791, 19822, 19853, 19879.
+  18870, 18887, 18921, 18928, 18969, 18985, 19003, 19018, 19048, 19058,
+  19174, 19178, 19590, 19682, 19791, 19822, 19853, 19879.
 
 * The getnetbyname implementation in nss_dns had a potentially unbounded
   alloca call (in the form of a call to strdupa), leading to a stack
@@ -34,6 +34,15 @@ Version 2.22.1
 
 * The LD_POINTER_GUARD environment variable can no longer be used to
   disable the pointer guard feature.  It is always enabled.
+
+* A defect in the malloc implementation, present since glibc 2.15 (2012) or
+  glibc 2.10 via --enable-experimental-malloc (2009), could result in the
+  unnecessary serialization of memory allocation requests across threads.
+  The defect is now corrected.  Users should see a substantial increase in
+  the concurent throughput of allocation requests for applications which
+  trigger this bug.  Affected applications typically create create and
+  destroy threads frequently.  (Bug 19048 was reported and analyzed by
+  Ericsson.)
 
 Version 2.22
 
