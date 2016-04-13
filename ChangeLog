@@ -1,5 +1,12 @@
 2016-04-13  Florian Weimer  <fweimer@redhat.com>
 
+	* malloc/tst-malloc-thread-exit.c: Include test-skeleton.c early.
+	(do_test): Limit the number of arenas, so that we can use fewer
+	outer threads.  Limit timeout to 3 seconds, in preparation for a
+	larger TIMEOUT value.
+
+2016-04-13  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #19182]
 	* malloc/arena.c (list_lock): Document lock ordering requirements.
 	(free_list_lock): New lock.
