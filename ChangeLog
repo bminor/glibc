@@ -1,5 +1,24 @@
 2016-04-13  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #19182]
+	* malloc/arena.c (list_lock): Document lock ordering requirements.
+	(free_list_lock): New lock.
+	(ptmalloc_lock_all): Comment on free_list_lock.
+	(ptmalloc_unlock_all2): Reinitialize free_list_lock.
+	(detach_arena): Update comment.  free_list_lock is now needed.
+	(_int_new_arena): Use free_list_lock around detach_arena call.
+	Acquire arena lock after list_lock.  Add comment, including FIXME
+	about incorrect synchronization.
+	(get_free_list): Switch to free_list_lock.
+	(reused_arena): Acquire free_list_lock around detach_arena call
+	and attached threads counter update.  Add two FIXMEs about
+	incorrect synchronization.
+	(arena_thread_freeres): Switch to free_list_lock.
+	* malloc/malloc.c (struct malloc_state): Update comments to
+	mention free_list_lock.
+
+2016-04-13  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #19243]
 	* malloc/arena.c (get_free_list): Remove assert and adjust
 	reference count handling.  Add comment about reused_arena
