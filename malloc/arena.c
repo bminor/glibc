@@ -139,6 +139,7 @@ int __malloc_initialized = -1;
    subsystem.  */
 
 void
+internal_function
 __malloc_fork_lock_parent (void)
 {
   if (__malloc_initialized < 1)
@@ -159,6 +160,7 @@ __malloc_fork_lock_parent (void)
 }
 
 void
+internal_function
 __malloc_fork_unlock_parent (void)
 {
   if (__malloc_initialized < 1)
@@ -175,6 +177,7 @@ __malloc_fork_unlock_parent (void)
 }
 
 void
+internal_function
 __malloc_fork_unlock_child (void)
 {
   if (__malloc_initialized < 1)

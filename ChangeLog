@@ -1,5 +1,11 @@
 2016-04-14  Florian Weimer  <fweimer@redhat.com>
 
+	* malloc/arena.c (__malloc_fork_lock_parent)
+	(__malloc_fork_unlock_parent, __malloc_fork_unlock_child): Add
+	internal_function attribute.
+
+2016-04-14  Florian Weimer  <fweimer@redhat.com>
+
 	Remove malloc hooks from fork handler.  They are no longer needed
 	because malloc runs right before fork, and no malloc calls from
 	other fork handlers are not possible anymore.
