@@ -241,6 +241,10 @@
 /* For MIN, MAX, powerof2.  */
 #include <sys/param.h>
 
+/* For ALIGN_UP et. al.  */
+#include <libc-internal.h>
+
+#include <malloc/malloc-internal.h>
 
 /*
   Debugging:

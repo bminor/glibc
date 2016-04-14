@@ -27,7 +27,7 @@ headers := $(dist-headers) obstack.h mcheck.h
 tests := mallocbug tst-malloc tst-valloc tst-calloc tst-obstack \
 	 tst-mallocstate tst-mcheck tst-mallocfork tst-trim1 \
 	 tst-malloc-usable tst-realloc tst-posix_memalign \
-	 tst-pvalloc tst-memalign tst-mallopt
+	 tst-pvalloc tst-memalign tst-mallopt tst-malloc-fork-deadlock
 test-srcs = tst-mtrace
 
 routines = malloc morecore mcheck mtrace obstack
@@ -41,6 +41,8 @@ extra-libs-others = $(extra-libs)
 
 libmemusage-routines = memusage
 libmemusage-inhibit-o = $(filter-out .os,$(object-suffixes))
+
+$(objpfx)tst-malloc-fork-deadlock: $(shared-thread-library)
 
 # These should be removed by `make clean'.
 extra-objs = mcheck-init.o libmcheck.a
