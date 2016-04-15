@@ -269,18 +269,20 @@ unsetenv (name)
   ep = __environ;
   if (ep != NULL)
     while (*ep != NULL)
-      if (!strncmp (*ep, name, len) && (*ep)[len] == '=')
-	{
-	  /* Found it.  Remove this pointer by moving later ones back.  */
-	  char **dp = ep;
+      {
+	if (!strncmp (*ep, name, len) && (*ep)[len] == '=')
+	  {
+	    /* Found it.  Remove this pointer by moving later ones back.  */
+	    char **dp = ep;
 
-	  do
-	    dp[0] = dp[1];
-	  while (*dp++);
-	  /* Continue the loop in case NAME appears again.  */
-	}
-      else
-	++ep;
+	    do
+		dp[0] = dp[1];
+	    while (*dp++);
+	    /* Continue the loop in case NAME appears again.  */
+	  }
+	else
+	  ++ep;
+      }
 
   UNLOCK;
 
