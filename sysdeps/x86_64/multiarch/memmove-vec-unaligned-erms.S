@@ -71,33 +71,33 @@
 # define PREFETCH(addr) prefetcht0 addr
 #endif
 
-/* Assume 64-byte prefetch size.  */
-#ifndef PREFETCH_SIZE
-# define PREFETCH_SIZE 64
+/* Assume 64-byte cacheline/prefetch size.  */
+#ifndef CACHELINE_SIZE
+# define CACHELINE_SIZE 64
 #endif
 
 #define PREFETCHED_LOAD_SIZE (VEC_SIZE * 4)
 
-#if PREFETCH_SIZE == 64
-# if PREFETCHED_LOAD_SIZE == PREFETCH_SIZE
+#if CACHELINE_SIZE == 64
+# if PREFETCHED_LOAD_SIZE == CACHELINE_SIZE
 #  define PREFETCH_ONE_SET(dir, base, offset) \
 	PREFETCH ((offset)base)
-# elif PREFETCHED_LOAD_SIZE == 2 * PREFETCH_SIZE
+# elif PREFETCHED_LOAD_SIZE == 2 * CACHELINE_SIZE
 #  define PREFETCH_ONE_SET(dir, base, offset) \
 	PREFETCH ((offset)base); \
-	PREFETCH ((offset + dir * PREFETCH_SIZE)base)
-# elif PREFETCHED_LOAD_SIZE == 4 * PREFETCH_SIZE
+	PREFETCH ((offset + dir * CACHELINE_SIZE)base)
+# elif PREFETCHED_LOAD_SIZE == 4 * CACHELINE_SIZE
 #  define PREFETCH_ONE_SET(dir, base, offset) \
 	PREFETCH ((offset)base); \
-	PREFETCH ((offset + dir * PREFETCH_SIZE)base); \
-	PREFETCH ((offset + dir * PREFETCH_SIZE)base); \
-	PREFETCH ((offset + dir * PREFETCH_SIZE * 2)base); \
-	PREFETCH ((offset + dir * PREFETCH_SIZE * 3)base)
+	PREFETCH ((offset + dir * CACHELINE_SIZE)base); \
+	PREFETCH ((offset + dir * CACHELINE_SIZE)base); \
+	PREFETCH ((offset + dir * CACHELINE_SIZE * 2)base); \
+	PREFETCH ((offset + dir * CACHELINE_SIZE * 3)base)
 # else
 #   error Unsupported PREFETCHED_LOAD_SIZE!
 # endif
 #else
-# error Unsupported PREFETCH_SIZE!
+# error Unsupported CACHELINE_SIZE!
 #endif
 
 #ifndef SECTION
