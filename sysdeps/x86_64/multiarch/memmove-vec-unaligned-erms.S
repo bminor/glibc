@@ -387,14 +387,14 @@ L(loop_4x_vec_forward):
 	VMOVU	VEC_SIZE(%rsi), %VEC(1)
 	VMOVU	(VEC_SIZE * 2)(%rsi), %VEC(2)
 	VMOVU	(VEC_SIZE * 3)(%rsi), %VEC(3)
-	addq	$(VEC_SIZE * 4), %rsi
-	subq	$(VEC_SIZE * 4), %rdx
+	addq	$(PREFETCHED_LOAD_SIZE), %rsi
+	subq	$(PREFETCHED_LOAD_SIZE), %rdx
 	VMOVA	%VEC(0), (%rdi)
 	VMOVA	%VEC(1), VEC_SIZE(%rdi)
 	VMOVA	%VEC(2), (VEC_SIZE * 2)(%rdi)
 	VMOVA	%VEC(3), (VEC_SIZE * 3)(%rdi)
-	addq	$(VEC_SIZE * 4), %rdi
-	cmpq	$(VEC_SIZE * 4), %rdx
+	addq	$(PREFETCHED_LOAD_SIZE), %rdi
+	cmpq	$(PREFETCHED_LOAD_SIZE), %rdx
 	ja	L(loop_4x_vec_forward)
 	/* Store the last 4 * VEC.  */
 	VMOVU	%VEC(5), (%rcx)
@@ -439,14 +439,14 @@ L(loop_4x_vec_backward):
 	VMOVU	-VEC_SIZE(%rcx), %VEC(1)
 	VMOVU	-(VEC_SIZE * 2)(%rcx), %VEC(2)
 	VMOVU	-(VEC_SIZE * 3)(%rcx), %VEC(3)
-	subq	$(VEC_SIZE * 4), %rcx
-	subq	$(VEC_SIZE * 4), %rdx
+	subq	$(PREFETCHED_LOAD_SIZE), %rcx
+	subq	$(PREFETCHED_LOAD_SIZE), %rdx
 	VMOVA	%VEC(0), (%r9)
 	VMOVA	%VEC(1), -VEC_SIZE(%r9)
 	VMOVA	%VEC(2), -(VEC_SIZE * 2)(%r9)
 	VMOVA	%VEC(3), -(VEC_SIZE * 3)(%r9)
-	subq	$(VEC_SIZE * 4), %r9
-	cmpq	$(VEC_SIZE * 4), %rdx
+	subq	$(PREFETCHED_LOAD_SIZE), %r9
+	cmpq	$(PREFETCHED_LOAD_SIZE), %rdx
 	ja	L(loop_4x_vec_backward)
 	/* Store the first 4 * VEC.  */
 	VMOVU	%VEC(4), (%rdi)
