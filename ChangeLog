@@ -1,5 +1,15 @@
 2016-04-27  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #19862]
+	* resolv/nss_dns/dns-host.c (AskedForGot): Remove.
+	(getanswer_r): Do not call syslog.
+	(gaih_getanswer_slice): Likewise.
+	* resolv/gethnamaddr.c (AskedForGot): Remove.
+	(getanswer): Do not call syslog.
+	(gethostbyaddr): Likewise.
+
+2016-04-27  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #19830]
 	* resolv/nss_dns/dns-host.c (getanswer_r): Check RDATA length.
 	(gaih_getanswer_slice): Likewise.
