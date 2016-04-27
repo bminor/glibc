@@ -566,3 +566,7 @@ sysdeps/powerpc/*
 sysdeps/powerpc/bits/fenvinline.h
   For b/27191207, remove use of %s modifier in inline asm.
   (stanshebs, google-local)
+
+nptl/sysdeps/unix/sysv/linux/register-atfork.c
+  For b/28011264, detect and work around loop in fork handler list.
+  (stanshebs, google-local)

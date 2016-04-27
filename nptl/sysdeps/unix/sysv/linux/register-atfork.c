@@ -112,6 +112,36 @@ void
 attribute_hidden
 __linkin_atfork (struct fork_handler *newp)
 {
+  /* GRTE's patches for async-signal-safe TLS can cause a race
+     condition in which ptmalloc_init is called from more than one
+     thread. (allocate_dtv normally calls calloc which invokes
+     ptmalloc_init via hook while creating the first thread, but our
+     code calls __signal_safe_calloc which does not run hooks.)
+     ptmalloc_init tries to be idempotent in case of multiple threads,
+     but in glibc-2.19, it fills in atfork hooks from an
+     un-lock-protected global static atfork_mem, which is a bad idea;
+     it can result in the same allocated object being passed to this
+     routine more than once. This function then sets the object's next
+     pointer to point to itself, resulting in a hang when the program
+     tries to exit.
+
+     This problem has been (indirectly) resolved in upstream glibc by
+     rewriting the whole thing so that thread setup is not done with
+     atforks or static variables, but the changes are extensive and
+     would not backport reliably.  Our race is somewhat difficult to
+     trigger - it requires a program to start creating threads
+     *before* any kind of memory allocation whatsoever.  So given all
+     this, the safest route is simply to detect when the fork handler
+     is already present, and skip adding it altogether.
+
+     Note that while it's conceivable that calls to pthread_atfork
+     would result in the atfork_mem object not being at the head of
+     the list, but testing seems unable to generate such a case.  */
+  struct fork_handler *scanp;
+  for (scanp = __fork_handlers; scanp != NULL; scanp = scanp->next)
+    if (newp == scanp)
+      return;
+
   do
     newp->next = __fork_handlers;
   while (catomic_compare_and_exchange_bool_acq (&__fork_handlers,
