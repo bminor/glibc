@@ -12,7 +12,7 @@ Version 2.19.1
   15946, 16545, 16574, 16623, 16657, 16695, 16743, 16758, 16759, 16760,
   16878, 16882, 16885, 16916, 16932, 16943, 16958, 17048, 17062, 17069,
   17079, 17137, 17153, 17213, 17263, 17269, 17325, 17555, 17905, 18007,
-  18032, 18240, 18287, 18905, 19879.
+  18032, 18080, 18240, 18287, 18905, 19879.
 
 * A buffer overflow in gethostbyname_r and related functions performing DNS
   requests has been fixed.  If the NSS functions were called with a
