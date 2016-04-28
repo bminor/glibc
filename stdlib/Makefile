@@ -157,3 +157,5 @@ tst-tls-atexit-lib.so-no-z-defs = yes
 
 $(objpfx)tst-tls-atexit: $(shared-thread-library) $(libdl)
 $(objpfx)tst-tls-atexit.out: $(objpfx)tst-tls-atexit-lib.so
+
+$(objpfx)tst-makecontext: $(libdl)
