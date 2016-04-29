@@ -1,5 +1,13 @@
-comment_char    %
-escape_char     /
+comment_char %
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Arabic language locale for Yemen.
 % Contributed by Kentaroh Noji <knoji@jp.ibm.com> and
 % Tetsuji Orita <orita@jp.ibm.com>.
@@ -16,20 +24,19 @@ language   "Arabic"
 territory  "Yemen"
 revision   "1.0"
 date       "2000-07-20"
-%
-category  "ar_YE:2000";LC_IDENTIFICATION
-category  "ar_YE:2000";LC_CTYPE
-category  "ar_YE:2000";LC_COLLATE
-category  "ar_YE:2000";LC_TIME
-category  "ar_YE:2000";LC_NUMERIC
-category  "ar_YE:2000";LC_MONETARY
-category  "ar_YE:2000";LC_MESSAGES
-category  "ar_YE:2000";LC_PAPER
-category  "ar_YE:2000";LC_NAME
-category  "ar_YE:2000";LC_ADDRESS
-category  "ar_YE:2000";LC_TELEPHONE
-category  "ar_YE:2000";LC_MEASUREMENT
 
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -140,11 +147,8 @@ t_fmt       "<U0025><U005A><U0020><U0025><U0049><U003A><U0025><U004D>/
 % Appropriate 12 h time representation (%r)
 t_fmt_ampm  "<U0025><U005A><U0020><U0025><U0049><U003A><U0025><U004D>/
 <U003A><U0025><U0053><U0020><U0025><U0070>"
-%
-% Appropriate date representation (date(1))   "%a %b %e %H:%M:%S %Z %Y"
-date_fmt	"<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
-<U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
-<U0025><U005A><U0020><U0025><U0059>"
+week 7;19971130;1
+first_workday 1
 END LC_TIME
 
 
@@ -154,11 +158,7 @@ END LC_MESSAGES
 
 
 LC_PAPER
-% This is the ISO_IEC TR14652 Locale definition for the
-% LC_PAPER category
-height      297
-width       210
-
+copy "i18n"
 END LC_PAPER
 
 
@@ -182,9 +182,11 @@ LC_ADDRESS
 % LC_ADDRESS
 postal_fmt  "<U0025><U007A><U0025><U0063><U0025><U0054><U0025><U0073>/
 <U0025><U0062><U0025><U0065><U0025><U0072>"
+country_name "<U0627><U0644><U064A><U0645><U0646>"
 country_ab2 "<U0059><U0045>"
 country_ab3 "<U0059><U0045><U004D>"
 country_num 887
+country_car "<U0059><U0041><U0052>"
 lang_name    "<U0627><U0644><U0639><U0631><U0628><U064A><U0629>"
 % ar
 lang_ab      "<U0061><U0072>"
@@ -206,6 +208,5 @@ END LC_TELEPHONE
 
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT

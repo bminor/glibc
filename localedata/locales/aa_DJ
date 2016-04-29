@@ -1,6 +1,12 @@
-comment_char    %
-escape_char     /
+comment_char %
+escape_char /
 
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -29,24 +35,23 @@ contact    ""
 email      "locales@geez.org"
 tel        ""
 fax        ""
-language   "aa"
-territory  "DJ"
+language   "Afar"
+territory  "Djibouti"
 revision   "0.20"
 date       "2003-07-05"
-%
-category  "i18n:2000";LC_IDENTIFICATION
-category  "i18n:2000";LC_COLLATE
-category  "i18n:2000";LC_CTYPE
-category  "i18n:2000";LC_MEASUREMENT
-category  "i18n:2000";LC_MONETARY
-category  "posix:1993";LC_NUMERIC
-category  "i18n:2000";LC_PAPER
-category  "i18n:2000";LC_TELEPHONE
-category  "i18n:2000";LC_ADDRESS
-category  "i18n:2000";LC_MESSAGES
-category  "i18n:2000";LC_NAME
-category  "i18n:2000";LC_TIME
-%
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_TIME
 END LC_IDENTIFICATION
 
 
@@ -76,15 +81,14 @@ END LC_CTYPE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT
 
 
 LC_MONETARY
 %
 int_curr_symbol       "<U0044><U004A><U0046><U0020>"
-currency_symbol       "<U0024>"
+currency_symbol       "<U0046><U0064><U006A>"
 mon_decimal_point     "<U002E>"
 mon_thousands_sep     "<U0020>"
 mon_grouping          3;3
@@ -114,12 +118,7 @@ END LC_NUMERIC
 
 
 LC_PAPER
-%
-% This is the ISO_IEC TR14652 Locale definition for the LC_PAPER category.
-%
-height      297
-width       210
-%
+copy "i18n"
 END LC_PAPER
 
 
@@ -153,7 +152,7 @@ country_post  "<U0044><U004A><U0049>"
 country_ab2   "<U0044><U004A>"
 country_ab3   "<U0044><U004A><U0049>"
 country_num   262
-% country_car   unknown
+country_car "<U0044><U004A><U0049>"
 % country_isbn  unknown, Need ISO 2108
 lang_name     "<U0051><U0061><U0066><U0061><U0072>"
 % aa
@@ -167,10 +166,7 @@ END LC_ADDRESS
 
 
 LC_MESSAGES
-%
-yesexpr "<U005E><U005B><U006F><U004F><U0079><U0059><U005D><U002E><U002A>"
-noexpr  "<U005E><U005B><U006D><U006E><U004D><U004E><U005D><U002E><U002A>"
-%
+copy "aa_ET"
 END LC_MESSAGES
 
 
@@ -273,4 +269,6 @@ d_t_fmt    "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062>/
 date_fmt    "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
 <U0020><U0025><U0072><U0020><U0025><U005A><U0020><U0025><U0059>"
 %
+week 7;19971130;1
+first_weekday 7
 END LC_TIME

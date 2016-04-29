@@ -1,11 +1,17 @@
 comment_char %
 escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Charset: UTF-8
 % Authors:
 % 2011-03-07, locales@kamusi.org
 % 2011-03-07, info@2xlibre.net
-% Distribution and use is free, also
-% for commercial purposes.
 
 LC_IDENTIFICATION
 title      "Swahili locale for Kenya"
@@ -14,23 +20,23 @@ contact    "Martin Benjamin"
 email      "locales@kamusi.org"
 tel        ""
 fax        ""
-language   "sw"
+language   "Swahili"
 territory  "Kenya"
 revision   "1.0"
 date       "2011-03-07"
-%
-category  "sw_KE:2000";LC_IDENTIFICATION
-category  "sw_KE:2000";LC_CTYPE
-category  "sw_KE:2000";LC_COLLATE
-category  "sw_KE:2000";LC_TIME
-category  "sw_KE:2000";LC_NUMERIC
-category  "sw_KE:2000";LC_MONETARY
-category  "sw_KE:2000";LC_PAPER
-category  "sw_KE:2000";LC_MEASUREMENT
-category  "sw_KE:2000";LC_MESSAGES
-category  "sw_KE:2000";LC_NAME
-category  "sw_KE:2000";LC_ADDRESS
-category  "sw_KE:2000";LC_TELEPHONE
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -88,9 +94,7 @@ abday  "<U004A><U0032>";/
        "<U0041><U006C><U0068>";/
        "<U0049><U006A>";/
        "<U004A><U0031>"
-week    7;19971130;4
-first_weekday 2
-first_workday 2
+week 7;19971130;1
 % %e %B %Y %I:%M:%S %p %Z
 d_t_fmt  "<U0025><U0065><U0020><U0025><U0042><U0020><U0025><U0059><U0020><U0025><U0049>/
 <U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070><U0020><U0025><U005A>"
@@ -118,15 +122,14 @@ copy "om_KE"
 END LC_PAPER
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "om_KE"
 END LC_MEASUREMENT
 
 LC_MESSAGES
-% ^[nNyY].*
-yesexpr  "<U005E><U005B><U006E><U004E><U0079><U0059><U005D><U002E><U002A>"
-% ^[hHlL].*
-noexpr  "<U005E><U005B><U0068><U0048><U006C><U004C><U005D><U002E><U002A>"
+yesexpr "<U005E><U005B><U002B><U0031><U006E><U004E><U0079><U0059><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U0068><U0048><U006C><U004C><U005D>"
+yesstr  "<U004E><U0064><U0069><U0079><U006F>"
+nostr   "<U0048><U0061><U0070><U0061><U006E><U0061>"
 END LC_MESSAGES
 
 LC_NAME

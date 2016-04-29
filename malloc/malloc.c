@@ -244,6 +244,7 @@
 /* For ALIGN_UP et. al.  */
 #include <libc-internal.h>
 
+#include <malloc/malloc-internal.h>
 
 /*
   Debugging:
@@ -1089,8 +1090,6 @@ static void*   realloc_check(void* oldmem, size_t bytes,
 			       const void *caller);
 static void*   memalign_check(size_t alignment, size_t bytes,
 				const void *caller);
-static void*   malloc_atfork(size_t sz, const void *caller);
-static void      free_atfork(void* mem, const void *caller);
 
 /* ------------------ TRACE support ------------------  */
 #define USE_MTRACE 1

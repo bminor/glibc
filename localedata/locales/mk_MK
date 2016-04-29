@@ -1,11 +1,17 @@
 comment_char %
 escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Macedonian language locale for Macedonia
 % Damjan Georgievski { gdamjan %% gmail.com }
 % Revision: 2.2 (2006-09-12)
 % Charsets: UTF-8, ISO-8859-5, CP1251
-% Distribution and use is free, also
-% for commercial purposes.
 
 LC_IDENTIFICATION
 title      "Macedonian locale for Macedonia"
@@ -19,19 +25,19 @@ language   "Macedonian"
 territory  "Macedonia"
 revision   "2.2"
 date       "2006-09-12"
-%
-category  "mk_MK:2000";LC_IDENTIFICATION
-category  "mk_MK:2000";LC_CTYPE
-category  "mk_MK:2000";LC_COLLATE
-category  "mk_MK:2000";LC_TIME
-category  "mk_MK:2000";LC_NUMERIC
-category  "mk_MK:2000";LC_MONETARY
-category  "mk_MK:2000";LC_MESSAGES
-category  "mk_MK:2000";LC_PAPER
-category  "mk_MK:2000";LC_NAME
-category  "mk_MK:2000";LC_ADDRESS
-category  "mk_MK:2000";LC_TELEPHONE
-category  "mk_MK:2000";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
@@ -85,9 +91,8 @@ t_fmt_ampm ""
 date_fmt "<U0025><U0061><U002C><U0020><U0025><U0064><U0020><U0025><U0062>/
 <U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
 <U0025><U005A><U0020><U0025><U0059>"
-week    7;19971130;4
-first_weekday 2 % Monday
-first_workday 2 % Monday
+week 7;19971130;1
+first_weekday 2
 END LC_TIME
 
 LC_MONETARY
@@ -115,9 +120,9 @@ grouping                  3;3
 END LC_NUMERIC
 
 LC_MESSAGES
-yesexpr "<U005E><U005B><U0414><U0434><U0044><U0064><U0059><U0079>/
-<U0031><U005D><U002E><U002A>"
-noexpr  "<U005E><U005B><U041D><U043D><U004E><U006E><U0030><U005D><U002E><U002A>"
+yesexpr "<U005E><U005B><U002B><U0031><U0414><U0434><U0044><U0064><U0059><U0079>/
+<U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U041D><U043D><U004E><U006E><U005D>"
 yesstr  "<U0434><U0430>"
 nostr   "<U043D><U0435>"
 END LC_MESSAGES
@@ -145,8 +150,7 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 <U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
 <U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
 <U004E><U0025><U0063><U0025><U004E>"
-country_name "<U004d><U0061><U0063><U0065><U0064>/
-<U006f><U006e><U0069><U0061>"
+country_name "<U041C><U0430><U043A><U0435><U0434><U043E><U043D><U0438><U0458><U0430>"
 country_post  "<U004d><U004b>"
 country_ab2 "<U004d><U004b>"
 country_ab3 "<U004d><U004b><U0044>"
@@ -161,11 +165,9 @@ lang_lib "<U006d><U0061><U0063>"
 END LC_ADDRESS
 
 LC_PAPER
-height   297
-width    210
+copy "i18n"
 END LC_PAPER
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT

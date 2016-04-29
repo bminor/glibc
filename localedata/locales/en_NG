@@ -1,5 +1,12 @@
-escape_char  /
-comment_char  %
+comment_char %
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
 
 % English language locale for Nigeria
 % Language: en
@@ -8,8 +15,6 @@ comment_char  %
 % Date: 2006-02-01
 % Users: general
 % Charset: UTF-8
-% Distribution and use is free, also
-% for commercial purposes.
 %
 % adapted from en_ZA; should be checked and verified
 
@@ -25,20 +30,19 @@ language   "English"
 territory  "Nigeria"
 revision   "0.2"
 date       "2006-02-01"
-%
-category  "en_NG:2003";LC_IDENTIFICATION
-category  "en_NG:2000";LC_CTYPE
-category  "en_NG:2000";LC_COLLATE
-category  "en_NG:2003";LC_TIME
-category  "en_NG:2000";LC_NUMERIC
-category  "en_NG:2000";LC_MONETARY
-category  "en_NG:2003";LC_MESSAGES
-category  "en_NG:2000";LC_PAPER
-category  "en_NG:2000";LC_MEASUREMENT
-category  "en_NG:2003";LC_NAME
-category  "en_NG:2003";LC_ADDRESS
-category  "en_NG:2003";LC_TELEPHONE
 
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -154,31 +158,12 @@ am_pm       "";""
 % Define time representation in 12-hour format with "am_pm", to be referenced by the "%r"
 % The "" means that this format is not supported.
 t_fmt_ampm  ""
-
-% Date representation not described in ISO/IEC 14652. Comes out as -
-% "%a %b %e %H:%M:%S %Z %Y" which is default "date" command output
-%
-% %a - abbreviated weekday name,
-% %b - abreviated month name,
-% %e - day of month as a decimal number with leading space (1 to 31),
-% %H - hour (24-hour clock) as a decimal number (00 to 23),
-% %M - minute as a decimal number (00 to 59),
-% %S - seconds as a decimal number (00 to 59),
-% %Z - time-zone name,
-% %Y - year with century as a decimal number,e.g. 2001.
-date_fmt	"<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
-<U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
-<U0025><U005A><U0020><U0025><U0059>"
+week 7;19971130;1
+first_weekday 2
 END LC_TIME
 
 LC_MESSAGES
-% The affirmative response -
-% "^[yY]"
-yesexpr     "<U005E><U005B><U0079><U0059><U005D>"
-
-% The negative response -
-% "^[nN]"
-noexpr      "<U005E><U005B><U006E><U004E><U005D>"
+copy "en_US"
 END LC_MESSAGES
 
 LC_PAPER
@@ -211,8 +196,7 @@ int_prefix     "<U0032><U0033><U0034>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "en_DK"
 END LC_MEASUREMENT
 
 LC_NAME

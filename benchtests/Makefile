@@ -38,19 +38,28 @@ string-benchset := bcopy bzero memccpy memchr memcmp memcpy memmem memmove \
 		   strcat strchr strchrnul strcmp strcpy strcspn strlen \
 		   strncasecmp strncat strncmp strncpy strnlen strpbrk strrchr \
 		   strspn strstr strcpy_chk stpcpy_chk memrchr strsep strtok \
-		   strcoll
+		   strcoll memcpy-large memmove-large memset-large
+
+# Build and run locale-dependent benchmarks only if we're building natively.
+ifeq (no,$(cross-compiling))
 wcsmbs-benchset := wcslen wcsnlen wcscpy wcpcpy wcsncpy wcpncpy wcscat wcsncat \
 		   wcscmp wcsncmp wcschr wcschrnul wcsrchr wcsspn wcspbrk wcscspn \
 		   wmemchr wmemset wmemcmp
+else
+wcsmbs-benchset :=
+endif
+
 string-benchset-all := $(string-benchset) ${wcsmbs-benchset}
 
+ifeq (no,$(cross-compiling))
 # We have to generate locales
 LOCALES := en_US.UTF-8 tr_TR.UTF-8 cs_CZ.UTF-8 fa_IR.UTF-8 fr_FR.UTF-8 \
 	   ja_JP.UTF-8 si_LK.UTF-8 en_GB.UTF-8 vi_VN.UTF-8 ar_SA.UTF-8 \
 	   da_DK.UTF-8 pl_PL.UTF-8 pt_PT.UTF-8 el_GR.UTF-8 ru_RU.UTF-8 \
-	   iw_IL.UTF-8 is_IS.UTF-8 es_ES.UTF-8 hi_IN.UTF-8 sv_SE.UTF-8 \
+	   he_IL.UTF-8 is_IS.UTF-8 es_ES.UTF-8 hi_IN.UTF-8 sv_SE.UTF-8 \
 	   hu_HU.UTF-8 it_IT.UTF-8 sr_RS.UTF-8 zh_CN.UTF-8
 include ../gen-locales.mk
+endif
 
 stdlib-benchset := strtod
 
@@ -112,7 +121,9 @@ cpp-srcs-left := $(binaries-benchset:=.c) $(binaries-bench:=.c) \
 lib := nonlib
 include $(patsubst %,$(..)cppflags-iterator.mk,$(cpp-srcs-left))
 
-extra-objs += json-lib.o
+bench-extra-objs = json-lib.o
+
+extra-objs += $(bench-extra-objs)
 
 bench-deps := bench-skeleton.c bench-timing.h Makefile
 
@@ -127,8 +138,18 @@ bench-clean:
 	rm -f $(binaries-benchset) $(addsuffix .o,$(binaries-benchset))
 	rm -f $(binaries-bench-malloc) $(addsuffix .o,$(binaries-bench-malloc))
 	rm -f $(timing-type) $(addsuffix .o,$(timing-type))
+	rm -f $(addprefix $(objpfx),$(bench-extra-objs))
 
-bench: $(timing-type) $(gen-locales) bench-set bench-func bench-malloc
+bench: bench-build bench-set bench-func bench-malloc
+# Target to only build the benchmark without running it.  We generate locales
+# only if we're building natively.
+ifeq (no,$(cross-compiling))
+bench-build: $(gen-locales) $(timing-type) $(binaries-bench) \
+	$(binaries-benchset) $(binaries-bench-malloc)
+else
+bench-build: $(timing-type) $(binaries-bench) $(binaries-benchset) \
+	$(binaries-bench-malloc)
+endif
 
 bench-set: $(binaries-benchset)
 	for run in $^; do \

@@ -35,6 +35,7 @@
 #define bit_arch_I686				(1 << 15)
 #define bit_arch_Prefer_MAP_32BIT_EXEC		(1 << 16)
 #define bit_arch_Prefer_No_VZEROUPPER		(1 << 17)
+#define bit_arch_Fast_Unaligned_Copy		(1 << 18)
 
 /* CPUID Feature flags.  */
 
@@ -52,6 +53,7 @@
 #define bit_cpu_FMA4		(1 << 16)
 
 /* COMMON_CPUID_INDEX_7.  */
+#define bit_cpu_ERMS		(1 << 9)
 #define bit_cpu_RTM		(1 << 11)
 #define bit_cpu_AVX2		(1 << 5)
 #define bit_cpu_AVX512F		(1 << 16)
@@ -83,6 +85,7 @@
 # define index_cpu_SSE4_2 COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET
 # define index_cpu_AVX	COMMON_CPUID_INDEX_1*CPUID_SIZE+CPUID_ECX_OFFSET
 # define index_cpu_AVX2	COMMON_CPUID_INDEX_7*CPUID_SIZE+CPUID_EBX_OFFSET
+# define index_cpu_ERMS	COMMON_CPUID_INDEX_7*CPUID_SIZE+CPUID_EBX_OFFSET
 
 # define index_arch_Fast_Rep_String	FEATURE_INDEX_1*FEATURE_SIZE
 # define index_arch_Fast_Copy_Backward	FEATURE_INDEX_1*FEATURE_SIZE
@@ -101,6 +104,7 @@
 # define index_arch_I686		FEATURE_INDEX_1*FEATURE_SIZE
 # define index_arch_Prefer_MAP_32BIT_EXEC FEATURE_INDEX_1*FEATURE_SIZE
 # define index_arch_Prefer_No_VZEROUPPER FEATURE_INDEX_1*FEATURE_SIZE
+# define index_arch_Fast_Unaligned_Copy	FEATURE_INDEX_1*FEATURE_SIZE
 
 
 # if defined (_LIBC) && !IS_IN (nonlib)
@@ -204,11 +208,17 @@ extern const struct cpu_features *__get_cpu_features (void)
 # endif
 
 
+/* Only used directly in cpu-features.c.  */
+# define CPU_FEATURES_CPU_P(ptr, name) \
+  ((ptr->cpuid[index_cpu_##name].reg_##name & (bit_cpu_##name)) != 0)
+# define CPU_FEATURES_ARCH_P(ptr, name) \
+  ((ptr->feature[index_arch_##name] & (bit_arch_##name)) != 0)
+
 /* HAS_* evaluates to true if we may use the feature at runtime.  */
 # define HAS_CPU_FEATURE(name) \
-  ((__get_cpu_features ()->cpuid[index_cpu_##name].reg_##name & (bit_cpu_##name)) != 0)
+   CPU_FEATURES_CPU_P (__get_cpu_features (), name)
 # define HAS_ARCH_FEATURE(name) \
-  ((__get_cpu_features ()->feature[index_arch_##name] & (bit_arch_##name)) != 0)
+   CPU_FEATURES_ARCH_P (__get_cpu_features (), name)
 
 # define index_cpu_CX8		COMMON_CPUID_INDEX_1
 # define index_cpu_CMOV		COMMON_CPUID_INDEX_1
@@ -220,6 +230,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define index_cpu_AVX2		COMMON_CPUID_INDEX_7
 # define index_cpu_AVX512F	COMMON_CPUID_INDEX_7
 # define index_cpu_AVX512DQ	COMMON_CPUID_INDEX_7
+# define index_cpu_ERMS		COMMON_CPUID_INDEX_7
 # define index_cpu_RTM		COMMON_CPUID_INDEX_7
 # define index_cpu_FMA		COMMON_CPUID_INDEX_1
 # define index_cpu_FMA4		COMMON_CPUID_INDEX_80000001
@@ -236,6 +247,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define reg_AVX2		ebx
 # define reg_AVX512F		ebx
 # define reg_AVX512DQ		ebx
+# define reg_ERMS		ebx
 # define reg_RTM		ebx
 # define reg_FMA		ecx
 # define reg_FMA4		ecx
@@ -259,6 +271,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define index_arch_I686		FEATURE_INDEX_1
 # define index_arch_Prefer_MAP_32BIT_EXEC FEATURE_INDEX_1
 # define index_arch_Prefer_No_VZEROUPPER FEATURE_INDEX_1
+# define index_arch_Fast_Unaligned_Copy	FEATURE_INDEX_1
 
 #endif	/* !__ASSEMBLER__ */
 

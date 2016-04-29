@@ -1,6 +1,13 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Amazigh Language Locale for Morocco (tifinagh)
 % Source:
 % Contact: Pablo Saratxaga
@@ -12,8 +19,6 @@ escape_char  /
 % Application: general
 % Users: general
 % Charset: UTF-8
-% Distribution and use is free, also
-% for commercial purposes.
 
 LC_IDENTIFICATION
 title "Amazigh language locale for Morocco (tifinagh)"
@@ -28,18 +33,17 @@ territory "Morocco"
 revision "0.1"
 date "2002-06-26"
 
-category ber_MA:2000;LC_IDENTIFICATION
-category ber_MA:2000;LC_CTYPE
-category ber_MA:2000;LC_COLLATE
-category ber_MA:2000;LC_TIME
-category ber_MA:2000;LC_NUMERIC
-category ber_MA:2000;LC_PAPER
-category ber_MA:2000;LC_TELEPHONE
-category ber_MA:2000;LC_MEASUREMENT
-category ber_MA:2000;LC_ADDRESS
-category ber_MA:2000;LC_MONETARY
-category ber_MA:2000;LC_MESSAGES
-
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
 END LC_IDENTIFICATION
 
 %
@@ -87,10 +91,10 @@ END LC_CTYPE
 
 LC_MESSAGES
 % FIXME: yes/no
+yesexpr "<U005E><U005B><U002B><U0031><U0042><U0062><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U0059><U0079><U004E><U006E><U005D>"
 yesstr  "<U0062><U0259><U006C><U0069>"
 nostr   "<U0079><U006F><U0078>"
-yesexpr "<U005E><U005B><U0042><U0062><U005D><U002E><U002A>"
-noexpr  "<U005E><U005B><U0059><U0079><U004E><U006E><U005D><U002E><U002A>"
 END LC_MESSAGES
 
 LC_MONETARY
@@ -171,16 +175,17 @@ d_fmt     "<U0025><U0064><U002E><U0025><U006D><U002E><U0025><U0059>"
 t_fmt     "<U0025><U0054>"
 am_pm     "";""
 t_fmt_ampm ""
+week 7;19971130;1
+first_weekday 7
+first_workday 1
 END LC_TIME
 
 LC_PAPER
-height      297
-width       210
+copy "i18n"
 END LC_PAPER
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME
@@ -203,8 +208,6 @@ LC_ADDRESS
 % LC_ADDRESS
 postal_fmt  "<U0025><U007A><U0025><U0063><U0025><U0054><U0025><U0073>/
 <U0025><U0062><U0025><U0065><U0025><U0072>"
-
-%country_name ""
 %country_post ""
 country_ab2 "<U004D><U0041>"
 country_ab3 "<U004D><U0041><U0052>"

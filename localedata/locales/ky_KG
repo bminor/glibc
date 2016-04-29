@@ -1,5 +1,13 @@
-escape_char /
 comment_char %
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % charset "UTF-8"
 
 %
@@ -18,19 +26,19 @@ language "Kyrgyz"
 territory "Kyrgyzstan"
 revision "0.2"
 date "2004-10-14"
-%
-category  "ky_KG:2000";LC_IDENTIFICATION
-category  "ky_KG:2000";LC_CTYPE
-category  "ky_KG:2000";LC_COLLATE
-category  "ky_KG:2000";LC_TIME
-category  "ky_KG:2000";LC_NUMERIC
-category  "ky_KG:2000";LC_MONETARY
-category  "ky_KG:2000";LC_MESSAGES
-category  "ky_KG:2000";LC_PAPER
-category  "ky_KG:2000";LC_NAME
-category  "ky_KG:2000";LC_ADDRESS
-category  "ky_KG:2000";LC_TELEPHONE
-category  "ky_KG:2000";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
@@ -86,11 +94,10 @@ translit_end
 END LC_CTYPE
 
 LC_MESSAGES
-% FIXED AND CHECKED by Timur 2004/10/14
-yesstr  "<U041E><U043E><U0431><U0430>"
-nostr   "<U0416><U043E><U043A>"
-yesexpr "<U005E><U005B><U041E><U043E><U0059><U0079><U005D><U002E><U002A>"
-noexpr  "<U005E><U005B><U0416><U0436><U004E><U006E><U005D><U002E><U002A>"
+yesexpr "<U005E><U005B><U002B><U0031><U041E><U043E><U0059><U0079><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U0416><U0436><U004E><U006E><U005D>"
+yesstr  "<U043E><U043E><U0431><U0430>"
+nostr   "<U0436><U043E><U043A>"
 END LC_MESSAGES
 
 LC_MONETARY
@@ -173,11 +180,12 @@ t_fmt_ampm ""
 date_fmt       "<U0025><U0061><U002C><U0020><U0025><U0065><U002D><U0025><U0062><U0020><U0025><U0059><U0020><U0436>/
 <U002C><U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
 <U0025><U005A>"
+week 7;19971130;1
+first_weekday 2
 END LC_TIME
 
 LC_PAPER
-height   297
-width    210
+copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE
@@ -187,8 +195,7 @@ int_prefix     "<U0039><U0039><U0036>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME
@@ -202,9 +209,10 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 <U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
 <U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
 <U004E><U0025><U0063><U0025><U004E>"
-country_ab2 "<U004B><U0059>"
-country_ab3 "<U004B><U0059><U0052>"
-%country_num 643
+country_name "<U041A><U044B><U0440><U0433><U044B><U0437><U0441><U0442><U0430><U043D>"
+country_ab2 "<U004B><U0047>"
+country_ab3 "<U004B><U0047><U005A>"
+country_num 417
 % KS
 country_car    "<U004B><U0053>"
 % Кыргызча

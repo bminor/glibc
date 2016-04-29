@@ -1,5 +1,13 @@
-comment_char    %
-escape_char     /
+comment_char %
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Albanian language locale for Macedonia.
 % Contributed by Agron Selimaj <linuxmaster@verizon.net>
 
@@ -15,19 +23,19 @@ language   "Albanian"
 territory  "Macedonia"
 revision   "0.01"
 date       "2010-04-06"
-%
-category  "sq_MK:2000";LC_IDENTIFICATION
-category  "sq_MK:2000";LC_CTYPE
-category  "sq_MK:2000";LC_COLLATE
-category  "sq_MK:2000";LC_TIME
-category  "sq_MK:2000";LC_NUMERIC
-category  "sq_MK:2000";LC_MONETARY
-category  "sq_MK:2000";LC_MESSAGES
-category  "sq_MK:2000";LC_PAPER
-category  "sq_MK:2000";LC_NAME
-category  "sq_MK:2000";LC_ADDRESS
-category  "sq_MK:2000";LC_TELEPHONE
-category  "sq_MK:2000";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -93,8 +101,7 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 <U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
 <U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
 <U004E><U0025><U0063><U0025><U004E>"
-country_name "<U004d><U0061><U0063><U0065><U0064>/
-<U006f><U006e><U0069><U0061>"
+country_name "<U004D><U0061><U0071><U0065><U0064><U006F><U006E><U0069>"
 country_post  "<U004d><U004b>"
 country_ab2 "<U004d><U004b>"
 country_ab3 "<U004d><U004b><U0044>"
@@ -118,6 +125,5 @@ END LC_TELEPHONE
 
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "mk_MK"
 END LC_MEASUREMENT

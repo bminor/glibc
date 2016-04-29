@@ -1,5 +1,13 @@
-comment_char    %
-escape_char     /
+comment_char %
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Maithili language locale for India.
 % Contributed by Rajesh Ranjan <rajeshkajha@yahoo.com> and
 % Sangeeta Kumari <sangeeta09@gmail.com>.
@@ -16,19 +24,19 @@ language   "Maithili"
 territory  "India"
 revision   "1.0"
 date       "2006-11-01"
-%
-category  "mai_IN:2006";LC_IDENTIFICATION
-category  "mai_IN:2006";LC_CTYPE
-category  "mai_IN:2006";LC_COLLATE
-category  "mai_IN:2006";LC_TIME
-category  "mai_IN:2006";LC_NUMERIC
-category  "mai_IN:2006";LC_MONETARY
-category  "mai_IN:2006";LC_MESSAGES
-category  "mai_IN:2006";LC_PAPER
-category  "mai_IN:2006";LC_NAME
-category  "mai_IN:2006";LC_ADDRESS
-category  "mai_IN:2006";LC_TELEPHONE
-category  "mai_IN:2006";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -73,7 +81,6 @@ LC_ADDRESS
 
 postal_fmt  "<U0025><U007A><U0025><U0063><U0025><U0054><U0025><U0073>/
 <U0025><U0062><U0025><U0065><U0025><U0072>"
-
 country_ab2 "<U0049><U004E>"
 country_ab3 "<U0049><U004E><U0044>"
 country_num 356
@@ -94,6 +101,5 @@ END LC_TELEPHONE
 
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "hi_IN"
 END LC_MEASUREMENT

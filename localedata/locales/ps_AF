@@ -1,5 +1,12 @@
-escape_char /
 comment_char %
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
 
 %%%%%%%%%%%%%%%%%%%%%%% locale definition file "ps_AF"  %%%%%%%%%%%%%%%%%%%%%%
 
@@ -29,18 +36,18 @@ territory  "Afghanistan"
 revision   "0.2"
 date       "2009-01-16"
 
-category  "ps_AF:2007";LC_IDENTIFICATION
-category  "ps_AF:2007";LC_CTYPE
-category  "ps_AF:2007";LC_COLLATE
-category  "ps_AF:2007";LC_TIME
-category  "ps_AF:2007";LC_NUMERIC
-category  "ps_AF:2007";LC_MONETARY
-category  "ps_AF:2007";LC_MESSAGES
-category  "ps_AF:2007";LC_MEASUREMENT
-category  "ps_AF:2007";LC_PAPER
-category  "ps_AF:2007";LC_NAME
-category  "ps_AF:2007";LC_ADDRESS
-category  "ps_AF:2007";LC_TELEPHONE
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -192,6 +199,7 @@ am_pm	"<U063A><U002E><U0645><U002E>";/
 	"<U063A><U002E><U0648><U002E>"
 t_fmt_ampm	"<U202B><U0025><U0049><U003A><U0025><U004D><U003A>/
 <U0025><U0053><U0020><U0025><U0070><U202C>"
+week 7;19971130;1
 first_weekday	7
 first_workday	7
 cal_direction	3
@@ -205,7 +213,7 @@ END LC_NUMERIC
 
 LC_MONETARY
 int_curr_symbol	"<U0041><U0046><U004E><U0020>"
-currency_symbol	"<U0627><U0641><U063A><U0627><U0646><U06CD>"
+currency_symbol	"<U060B>"
 mon_decimal_point	"<U066B>"
 mon_thousands_sep	"<U066C>"
 mon_grouping	3
@@ -222,20 +230,16 @@ n_sign_posn	1
 END LC_MONETARY
 
 LC_MESSAGES
-yesexpr "<U005E><U005B><U0079><U0059><U0628>/
-<U0066><U005D><U002E><U002A>"
-noexpr  "<U005E><U005B><U006E><U004E><U062E>/
-<U0646><U006F><U005D><U002E><U002A>"
+yesexpr "<U005E><U005B><U002B><U0031><U0079><U0059><U0628><U0066><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U062E><U0646><U006F><U005D>"
 END LC_MESSAGES
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT
 
 LC_PAPER
-height	297
-width	210
+copy "i18n"
 END LC_PAPER
 
 LC_NAME

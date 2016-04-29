@@ -1,5 +1,12 @@
 comment_char %
-escape_char  /
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
 
 % Bhutanese(Bhutan) locale
 %
@@ -28,19 +35,19 @@ language   "Dzongkha"
 territory  "Bhutan"
 revision   "0.3"
 date       "2004-09-03"
-%
-category  "dz_BT:2004";LC_IDENTIFICATION
-category  "dz_BT:2004";LC_CTYPE
-category  "dz_BT:2004";LC_TIME
-category  "dz_BT:2004";LC_COLLATE
-category  "dz_BT:2004";LC_NUMERIC
-category  "dz_BT:2004";LC_MONETARY
-category  "dz_BT:2004";LC_MESSAGES
-category  "dz_BT:2004";LC_PAPER
-category  "dz_BT:2004";LC_NAME
-category  "dz_BT:2004";LC_ADDRESS
-category  "dz_BT:2004";LC_TELEPHONE
-category  "dz_BT:2004";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 %%%%%%%%%%%%%%%%
@@ -512,8 +519,8 @@ END LC_COLLATE
 
 LC_MONETARY
 
-int_curr_symbol         "<U0042><U0054><U004E> "
-currency_symbol    "<U0F51><U0F44><U0F74><U0F63><U0F0B><U0F40><U0FB2><U0F58><U0F0B>"
+int_curr_symbol         "<U0042><U0054><U004E><U0020>"
+currency_symbol    "<U004E><U0075><U002E>"
 mon_decimal_point       "<U002E>"
 mon_thousands_sep       "<U002C>"
 mon_grouping            3;2;
@@ -609,14 +616,14 @@ t_fmt_ampm        "<U0F46><U0F74><U0F0B><U0F5A><U0F7C><U0F51>/
 <U0025><U0049><U0F40><U0F66><U0F62><U0F0B><U0F58><U0025><U004D>/
 <U0F40><U0F66><U0F62><U0F0B><U0F46><U0025><U0053><U0020><U0025><U0070>"
 
-
+week 7;19971130;1
 END LC_TIME
 
 LC_MESSAGES
-yesstr  "<U0F68><U0F72><U0F53>"
-nostr   "<U0F58><U0F7A><U0F53>"
-yesexpr "<U005E><U005B><U0F68><U0059><U0079><U005D><U002E><U002A>"
-noexpr  "<U005E><U005B><U0F58><U004E><U006E><U005D><U002E><U002A>"
+yesexpr "<U005E><U005B><U002B><U0031><U0F68><U0059><U0079><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U0F58><U004E><U006E><U005D>"
+yesstr  "<U0F68><U0F72><U0F53><U0F0B>"
+nostr   "<U0F58><U0F7A><U0F53><U0F0B>"
 END LC_MESSAGES
 
 LC_TELEPHONE
@@ -627,13 +634,11 @@ int_prefix     "<U0039><U0037><U0035>"
 END LC_TELEPHONE
 
 LC_PAPER
-height   297
-width    210
+copy "i18n"
 END LC_PAPER
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME
@@ -652,13 +657,13 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 <U0025><U0074><U0025><U0062><U0025><U004E><U0025><U0068><U0025><U0074>/
 <U0025><U0073><U0025><U004E><U0025><U0054><U0025><U004E><U0025><U0053>/
 <U0025><U004E><U0025><U007A><U0025><U0063><U0025><U004E>"
-% འབྲུག།
-country_name "<U0F60><U0F56><U0FB2><U0F74><U0F42><U0F0D>"
+country_name "<U0F60><U0F56><U0FB2><U0F74><U0F42>"
 %FIXME
 %country_post  ""
-country_ab2   "<U0042><U0054>"
-country_ab3   "<U0042><U0048><U0055>"
-%country_num   "<U0042><U0048><U0055>"
+country_ab2 "<U0042><U0054>"
+country_ab3 "<U0042><U0054><U004E>"
+country_num 064
+country_car "<U0042><U0048><U0054>"
 %FIXME
 %country_isbn  ""
 % རྫོང་ཁ

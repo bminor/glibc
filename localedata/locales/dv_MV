@@ -1,6 +1,13 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Dhivehi Language Locale for Maldives
 % Source:
 % Contact: Sofwathuallah Mohamed
@@ -11,8 +18,6 @@ escape_char  /
 % Date: 2006-05-13
 % Users: general
 % Charset: utf-8
-% Distribution and use is free, also
-% for commercial purposes.
 
 LC_IDENTIFICATION
 title      "Dhivehi Language Locale for Maldives"
@@ -26,19 +31,19 @@ language   "Divehi"
 territory  "Maldives"
 revision   "0.1"
 date       "2006-05-13"
-%
-category  "dv_MV:2006";LC_IDENTIFICATION
-category  "dv_MV:2006";LC_CTYPE
-category  "dv_MV:2006";LC_COLLATE
-category  "dv_MV:2006";LC_TIME
-category  "dv_MV:2006";LC_NUMERIC
-category  "dv_MV:2006";LC_MONETARY
-category  "dv_MV:2006";LC_MESSAGES
-category  "dv_MV:2006";LC_PAPER
-category  "dv_MV:2006";LC_NAME
-category  "dv_MV:2006";LC_ADDRESS
-category  "dv_MV:2006";LC_TELEPHONE
-category  "dv_MV:2006";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -142,16 +147,17 @@ t_fmt_ampm "<U0025><U0050><U0020><U0025><U0049><U003A><U0025><U004D><U003A><U002
 
 % display columns right to left ?
 cal_direction	3
+week 7;19971130;1
+first_weekday 6
 END LC_TIME
 
 LC_MESSAGES
-yesexpr     "<U005E><U005B><U0079><U0059><U005D><U002E><U002A>"
-noexpr      "<U005E><U005B><U006E><U004E><U005D><U002E><U002A>"
+yesexpr "<U005E><U005B><U002B><U0031><U0079><U0059><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U005D>"
 END LC_MESSAGES
 
 LC_PAPER
-height   297
-width    210
+copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE
@@ -163,8 +169,7 @@ int_prefix     "<U0039><U0036><U0030>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME
@@ -178,6 +183,8 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 <U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
 <U004E><U0025><U0025><U007A><U0020><U0025><U0054><U0025>/
 <U004E><U0025><U0063><U0025><U004E>"
+country_num 462
+country_car "<U004D><U0056>"
 % lang_name FIXME
 % Cannot represent Dhivehi in Thaana script
 % http://en.wikipedia.org/wiki/Maldivian_language

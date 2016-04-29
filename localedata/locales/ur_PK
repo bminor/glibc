@@ -1,6 +1,13 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Urdu Language Locale for Pakistan
 % Source:
 % Contact: Shehzad Ashiq Ali, Pablo Saratxaga
@@ -11,8 +18,6 @@ escape_char  /
 % Date: 2000-07-11
 % Users: general
 % Charset: CP1256
-% Distribution and use is free, also
-% for commercial purposes.
 
 LC_IDENTIFICATION
 title      "Urdu Language Locale for Pakistan"
@@ -26,19 +31,19 @@ language   "Urdu"
 territory  "Pakistan"
 revision   "0.3"
 date       "2000-07-11"
-%
-category  "ur_PK:2000";LC_IDENTIFICATION
-category  "ur_PK:2000";LC_CTYPE
-category  "ur_PK:2000";LC_COLLATE
-category  "ur_PK:2000";LC_TIME
-category  "ur_PK:2000";LC_NUMERIC
-category  "ur_PK:2000";LC_MONETARY
-category  "ur_PK:2000";LC_MESSAGES
-category  "ur_PK:2000";LC_PAPER
-category  "ur_PK:2000";LC_NAME
-category  "ur_PK:2000";LC_ADDRESS
-category  "ur_PK:2000";LC_TELEPHONE
-category  "ur_PK:2000";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -150,6 +155,7 @@ t_fmt_ampm "<U0025><U0050><U0020><U0025><U0049><U003A><U0025><U004D><U003A><U002
 
 % display columns right to left ?
 cal_direction	3
+week 7;19971130;1
 END LC_TIME
 
 LC_MESSAGES
@@ -161,23 +167,20 @@ LC_MESSAGES
 % <U0628> = <U0628><U0644><U0643><U0644>
 % again <U0066> and <U006F> are place holders
 % <U0646> = <U0646><U0647><U064A><U06BA>
-yesstr	"<U0628><U0644><U0643><U0644>"
-nostr	"<U0646><U0647><U064A><U06BA>"
-yesexpr	"<U005E><U005B><U0079><U0059><U0647><U0628><U0066><U005D><U002E><U002A>"
-noexpr	"<U005E><U005B><U006E><U004E><U0646><U006F><U005D><U002E><U002A>"
-
+yesexpr "<U005E><U005B><U002B><U0031><U0079><U0059><U0647><U0628><U0066><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U0646><U006F><U005D>"
+yesstr  "<U06C1><U0627><U06BA>"
+nostr   "<U0646><U06C1><U06CC><U06BA>"
 END LC_MESSAGES
 
 %Draft Finished: 17:00 09/07/2000
 
 LC_PAPER
-height      297
-width       210
+copy "i18n"
 END LC_PAPER
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME
@@ -192,7 +195,7 @@ postal_fmt    "<U0025><U0061><U0025><U004E><U0025><U0066><U0025><U004E>/
 <U0020><U0025><U0073><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
 <U004E><U0025><U0054><U0020><U0025><U007A><U0025>/
 <U004E><U0025><U0063><U0025><U004E>"
-
+country_name "<U067E><U0627><U06A9><U0633><U062A><U0627><U0646>"
 country_ab2 "<U0050><U004B>"
 country_ab3 "<U0050><U0041><U004B>"
 country_num 586
@@ -207,6 +210,7 @@ lang_lib    "<U0075><U0072><U0064>"
 END LC_ADDRESS
 
 LC_TELEPHONE
-% FIXME
-copy "en_DK"
+tel_int_fmt "<U002B><U0025><U0063><U0020><U003B><U0025><U0061><U0020><U003B><U0025><U006C>"
+int_prefix "<U0039><U0032>"
+int_select "<U0030><U0030>"
 END LC_TELEPHONE

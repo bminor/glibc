@@ -81,11 +81,6 @@
  * SOFTWARE.
  */
 
-#if defined(LIBC_SCCS) && !defined(lint)
-static const char sccsid[] = "@(#)res_send.c	8.1 (Berkeley) 6/4/93";
-static const char rcsid[] = "$BINDId: res_send.c,v 8.38 2000/03/30 20:16:51 vixie Exp $";
-#endif /* LIBC_SCCS and not lint */
-
 /*
  * Send query to name server and wait for reply.
  */
@@ -649,6 +644,18 @@ get_nsaddr (res_state statp, int n)
     return (struct sockaddr *) (void *) &statp->nsaddr_list[n];
 }
 
+/* Close the resolver structure, assign zero to *RESPLEN2 if RESPLEN2
+   is not NULL, and return zero.  */
+static int
+__attribute__ ((warn_unused_result))
+close_and_return_error (res_state statp, int *resplen2)
+{
+  __res_iclose(statp, false);
+  if (resplen2 != NULL)
+    *resplen2 = 0;
+  return 0;
+}
+
 /* The send_vc function is responsible for sending a DNS query over TCP
    to the nameserver numbered NS from the res_state STATP i.e.
    EXT(statp).nssocks[ns].  The function supports sending both IPv4 and
@@ -750,8 +757,6 @@ send_vc(res_state statp,
 	u_short len2;
 	u_char *cp;
 
-	if (resplen2 != NULL)
-	  *resplen2 = 0;
 	connreset = 0;
  same_ns:
 	truncating = 0;
@@ -777,6 +782,8 @@ send_vc(res_state statp,
 		if (statp->_vcsock < 0) {
 			*terrno = errno;
 			Perror(statp, stderr, "socket(vc)", errno);
+			if (resplen2 != NULL)
+			  *resplen2 = 0;
 			return (-1);
 		}
 		__set_errno (0);
@@ -786,8 +793,7 @@ send_vc(res_state statp,
 			    : sizeof (struct sockaddr_in6)) < 0) {
 			*terrno = errno;
 			Aerror(statp, stderr, "connect/vc", errno, nsap);
-			__res_iclose(statp, false);
-			return (0);
+			return close_and_return_error (statp, resplen2);
 		}
 		statp->_flags |= RES_F_VC;
 	}
@@ -810,8 +816,7 @@ send_vc(res_state statp,
 	if (TEMP_FAILURE_RETRY (writev(statp->_vcsock, iov, niov)) != explen) {
 		*terrno = errno;
 		Perror(statp, stderr, "write failed", errno);
-		__res_iclose(statp, false);
-		return (0);
+		return close_and_return_error (statp, resplen2);
 	}
 	/*
 	 * Receive length & response
@@ -833,7 +838,6 @@ send_vc(res_state statp,
 	if (n <= 0) {
 		*terrno = errno;
 		Perror(statp, stderr, "read failed", errno);
-		__res_iclose(statp, false);
 		/*
 		 * A long running process might get its TCP
 		 * connection reset if the remote server was
@@ -843,11 +847,13 @@ send_vc(res_state statp,
 		 * instead of failing.  We only allow one reset
 		 * per query to prevent looping.
 		 */
-		if (*terrno == ECONNRESET && !connreset) {
-			connreset = 1;
-			goto same_ns;
-		}
-		return (0);
+		if (*terrno == ECONNRESET && !connreset)
+		  {
+		    __res_iclose (statp, false);
+		    connreset = 1;
+		    goto same_ns;
+		  }
+		return close_and_return_error (statp, resplen2);
 	}
 	int rlen = ntohs (rlen16);
 
@@ -879,11 +885,11 @@ send_vc(res_state statp,
 			/* Always allocate MAXPACKET, callers expect
 			   this specific size.  */
 			u_char *newp = malloc (MAXPACKET);
-			if (newp == NULL) {
-				*terrno = ENOMEM;
-				__res_iclose(statp, false);
-				return (0);
-			}
+			if (newp == NULL)
+			  {
+			    *terrno = ENOMEM;
+			    return close_and_return_error (statp, resplen2);
+			  }
 			*thisanssizp = MAXPACKET;
 			*thisansp = newp;
 			if (thisansp == ansp2)
@@ -910,8 +916,7 @@ send_vc(res_state statp,
 		Dprint(statp->options & RES_DEBUG,
 		       (stdout, ";; undersized: %d\n", len));
 		*terrno = EMSGSIZE;
-		__res_iclose(statp, false);
-		return (0);
+		return close_and_return_error (statp, resplen2);
 	}
 
 	cp = *thisansp;
@@ -922,8 +927,7 @@ send_vc(res_state statp,
 	if (__glibc_unlikely (n <= 0))       {
 		*terrno = errno;
 		Perror(statp, stderr, "read(vc)", errno);
-		__res_iclose(statp, false);
-		return (0);
+		return close_and_return_error (statp, resplen2);
 	}
 	if (__glibc_unlikely (truncating))       {
 		/*
@@ -1114,7 +1118,11 @@ send_dg(res_state statp,
  retry_reopen:
 	retval = reopen (statp, terrno, ns);
 	if (retval <= 0)
-		return retval;
+	  {
+	    if (resplen2 != NULL)
+	      *resplen2 = 0;
+	    return retval;
+	  }
  retry:
 	evNowTime(&now);
 	evConsTime(&timeout, seconds, 0);
@@ -1127,8 +1135,6 @@ send_dg(res_state statp,
 	int recvresp2 = buf2 == NULL;
 	pfd[0].fd = EXT(statp).nssocks[ns];
 	pfd[0].events = POLLOUT;
-	if (resplen2 != NULL)
-	  *resplen2 = 0;
  wait:
 	if (need_recompute) {
 	recompute_resend:
@@ -1136,9 +1142,7 @@ send_dg(res_state statp,
 		if (evCmpTime(finish, now) <= 0) {
 		poll_err_out:
 			Perror(statp, stderr, "poll", errno);
-		err_out:
-			__res_iclose(statp, false);
-			return (0);
+			return close_and_return_error (statp, resplen2);
 		}
 		evSubTime(&timeout, &finish, &now);
 		need_recompute = 0;
@@ -1185,7 +1189,9 @@ send_dg(res_state statp,
 		  }
 
 		*gotsomewhere = 1;
-		return (0);
+		if (resplen2 != NULL)
+		  *resplen2 = 0;
+		return 0;
 	}
 	if (n < 0) {
 		if (errno == EINTR)
@@ -1253,7 +1259,7 @@ send_dg(res_state statp,
 
 		      fail_sendmmsg:
 			Perror(statp, stderr, "sendmmsg", errno);
-			goto err_out;
+			return close_and_return_error (statp, resplen2);
 		      }
 		  }
 		else
@@ -1271,7 +1277,7 @@ send_dg(res_state statp,
 		      if (errno == EINTR || errno == EAGAIN)
 			goto recompute_resend;
 		      Perror(statp, stderr, "send", errno);
-		      goto err_out;
+		      return close_and_return_error (statp, resplen2);
 		    }
 		  just_one:
 		    if (nwritten != 0 || buf2 == NULL || single_request)
@@ -1349,7 +1355,7 @@ send_dg(res_state statp,
 				goto wait;
 			}
 			Perror(statp, stderr, "recvfrom", errno);
-			goto err_out;
+			return close_and_return_error (statp, resplen2);
 		}
 		*gotsomewhere = 1;
 		if (__glibc_unlikely (*thisresplenp < HFIXEDSZ))       {
@@ -1360,7 +1366,7 @@ send_dg(res_state statp,
 			       (stdout, ";; undersized: %d\n",
 				*thisresplenp));
 			*terrno = EMSGSIZE;
-			goto err_out;
+			return close_and_return_error (statp, resplen2);
 		}
 		if ((recvresp1 || hp->id != anhp->id)
 		    && (recvresp2 || hp2->id != anhp->id)) {
@@ -1409,7 +1415,7 @@ send_dg(res_state statp,
 				? *thisanssizp : *thisresplenp);
 			/* record the error */
 			statp->_flags |= RES_F_EDNS0ERR;
-			goto err_out;
+			return close_and_return_error (statp, resplen2);
 	}
 #endif
 		if (!(statp->options & RES_INSECURE2)
@@ -1461,10 +1467,10 @@ send_dg(res_state statp,
 			    goto wait;
 			  }
 
-			__res_iclose(statp, false);
 			/* don't retry if called from dig */
 			if (!statp->pfcode)
-				return (0);
+			  return close_and_return_error (statp, resplen2);
+			__res_iclose(statp, false);
 		}
 		if (anhp->rcode == NOERROR && anhp->ancount == 0
 		    && anhp->aa == 0 && anhp->ra == 0 && anhp->arcount == 0) {
@@ -1486,6 +1492,8 @@ send_dg(res_state statp,
 			__res_iclose(statp, false);
 			// XXX if we have received one reply we could
 			// XXX use it and not repeat it over TCP...
+			if (resplen2 != NULL)
+			  *resplen2 = 0;
 			return (1);
 		}
 		/* Mark which reply we received.  */
@@ -1501,21 +1509,22 @@ send_dg(res_state statp,
 					__res_iclose (statp, false);
 					retval = reopen (statp, terrno, ns);
 					if (retval <= 0)
-						return retval;
+					  {
+					    if (resplen2 != NULL)
+					      *resplen2 = 0;
+					    return retval;
+					  }
 					pfd[0].fd = EXT(statp).nssocks[ns];
 				}
 			}
 			goto wait;
 		}
-		/*
-		 * All is well, or the error is fatal.  Signal that the
-		 * next nameserver ought not be tried.
-		 */
+		/* All is well.  We have received both responses (if
+		   two responses were requested).  */
 		return (resplen);
-	} else if (pfd[0].revents & (POLLERR | POLLHUP | POLLNVAL)) {
-		/* Something went wrong.  We can stop trying.  */
-		goto err_out;
-	}
+	} else if (pfd[0].revents & (POLLERR | POLLHUP | POLLNVAL))
+	  /* Something went wrong.  We can stop trying.  */
+	  return close_and_return_error (statp, resplen2);
 	else {
 		/* poll should not have returned > 0 in this case.  */
 		abort ();

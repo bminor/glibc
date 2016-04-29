@@ -1,5 +1,12 @@
-escape_char /
 comment_char %
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
 
 LC_IDENTIFICATION
 title                 ""
@@ -13,19 +20,18 @@ language              ""
 territory             ""
 revision              ""
 date                  "2015-12-09"
-%
-category  "i18n:2000";LC_IDENTIFICATION
-category  "i18n:2000";LC_CTYPE
-category  "i18n:2000";LC_COLLATE
-category  "i18n:2000";LC_TIME
-category  "i18n:2000";LC_NUMERIC
-category  "i18n:2000";LC_MONETARY
-category  "i18n:2000";LC_MESSAGES
-category  "i18n:2000";LC_PAPER
-category  "i18n:2000";LC_NAME
-category  "i18n:2000";LC_ADDRESS
-category  "i18n:2000";LC_TELEPHONE
 
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -2495,13 +2501,12 @@ LC_TELEPHONE
 % This is the ISO/IEC 14652 "i18n" definition for
 % the LC_TELEPHONE category.
 %
-tel_int_fmt    "<U002B><U0025><U0063><U0020><U002B><U0061><U0020><U002B>/
+tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0025><U0074><U0025>/
 <U006C>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
 % This is the ISO/IEC 14652 "i18n" definition for
-% the LC_MEASUREMENT category.
-%
-measurement    1
+% the LC_MEASUREMENT category.  It indicates metric.
+measurement 1
 END LC_MEASUREMENT

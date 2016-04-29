@@ -1,6 +1,13 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Spanish language locale for Costa Rica
 % Language: es
 % Territory: CR
@@ -8,8 +15,6 @@ escape_char  /
 % Application: general
 % Users: general
 % Charset: ISO-8859-1
-% Distribution and use is free, also
-% for commercial purposes.
 
 LC_IDENTIFICATION
 title      "Spanish locale for Costa Rica"
@@ -23,19 +28,19 @@ language   "Spanish"
 territory  "Costa Rica"
 revision   "1.1"
 date       "2009-12-23"
-%
-category  "es_CR:2000";LC_IDENTIFICATION
-category  "es_CR:2000";LC_CTYPE
-category  "es_CR:2000";LC_COLLATE
-category  "es_CR:2000";LC_TIME
-category  "es_CR:2000";LC_NUMERIC
-category  "es_CR:2000";LC_MONETARY
-category  "es_CR:2000";LC_MESSAGES
-category  "es_CR:2000";LC_PAPER
-category  "es_CR:2000";LC_NAME
-category  "es_CR:2000";LC_ADDRESS
-category  "es_CR:2000";LC_TELEPHONE
-category  "es_CR:2000";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
@@ -114,13 +119,12 @@ t_fmt_ampm "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U002
 date_fmt	"<U0025><U0061><U0020><U0025><U0065><U0020><U0025><U0062>/
 <U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
 <U0025><U005A><U0020><U0025><U0059>"
+week 7;19971130;1
 first_weekday 2
-first_workday 2
 END LC_TIME
 
 LC_PAPER
-height   279
-width    216
+copy "en_US"
 END LC_PAPER
 
 LC_TELEPHONE
@@ -132,8 +136,7 @@ int_select     "<U0030><U0030>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME

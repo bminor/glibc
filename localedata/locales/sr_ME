@@ -1,6 +1,13 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Serbian Language locale for Montenegro
 % Source: sr_YU, sr_CS locale
 % Address:
@@ -16,8 +23,6 @@ escape_char  /
 % Application: general
 % Users: general
 % Charset: UTF-8, ISO-8859-5
-% Distribution and use is free, also
-% for commercial purposes.
 
 LC_IDENTIFICATION
 title      "Serbian locale for Montenegro"
@@ -31,22 +36,19 @@ language   "Serbian"
 territory  "Montenegro"
 revision   "1.2"
 date       "2006-10-11"
-audience   "general"
-application   "GNU locale"
-abbreviation  ""
-%
-category  i18n:1997;LC_IDENTIFICATION
-category  i18n:1997;LC_CTYPE
-category  i18n:1997;LC_COLLATE
-category  i18n:1997;LC_MONETARY
-category  i18n:1997;LC_NUMERIC
-category  i18n:1997;LC_TIME
-category  i18n:1997;LC_MESSAGES
-category  i18n:1997;LC_PAPER
-category  i18n:1997;LC_NAME
-category  i18n:1997;LC_ADDRESS
-category  i18n:1997;LC_TELEPHONE
-category  i18n:1997;LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -120,9 +122,8 @@ t_fmt_ampm "<U0025><U0054>"
 date_fmt  "<U0025><U0061><U002c><U0020><U0025><U0065><U002E><U0020>/
 <U0025><U0062><U0020><U0025><U0059><U002E><U0020><U0020><U0025><U0048>/
 <U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U005A>"
-week    7;19971130;4
+week 7;19971130;1
 first_weekday 2
-first_workday 2
 END LC_TIME
 
 LC_MESSAGES
@@ -159,10 +160,12 @@ lang_ab	      "<U0073><U0072>"
 END LC_ADDRESS
 
 LC_TELEPHONE
-copy "sr_RS"
+tel_int_fmt "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025><U006C>"
+tel_dom_fmt "<U0025><U0041><U0020><U0025><U006C>"
+int_prefix "<U0033><U0038><U0032>"
+int_select "<U0039><U0039>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "sr_RS"
 END LC_MEASUREMENT

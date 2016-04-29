@@ -62,6 +62,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <stddef.h>
 
 #include "nsswitch.h"
 #include <arpa/inet.h>
@@ -118,17 +119,14 @@ _nss_dns_getnetbyname_r (const char *name, struct netent *result,
   } net_buffer;
   querybuf *orig_net_buffer;
   int anslen;
-  char *qbuf;
   enum nss_status status;
 
   if (__res_maybe_init (&_res, 0) == -1)
     return NSS_STATUS_UNAVAIL;
 
-  qbuf = strdupa (name);
-
   net_buffer.buf = orig_net_buffer = (querybuf *) alloca (1024);
 
-  anslen = __libc_res_nsearch (&_res, qbuf, C_IN, T_PTR, net_buffer.buf->buf,
+  anslen = __libc_res_nsearch (&_res, name, C_IN, T_PTR, net_buffer.buf->buf,
 			       1024, &net_buffer.ptr, NULL, NULL, NULL, NULL);
   if (anslen < 0)
     {
@@ -236,9 +234,6 @@ _nss_dns_getnetbyaddr_r (uint32_t net, int type, struct netent *result,
   return status;
 }
 
-
-#undef offsetof
-#define offsetof(Type, Member) ((size_t) &((Type *) NULL)->Member)
 
 static enum nss_status
 getanswer_r (const querybuf *answer, int anslen, struct netent *result,
@@ -348,10 +343,23 @@ getanswer_r (const querybuf *answer, int anslen, struct netent *result,
       if (n < 0 || res_dnok (bp) == 0)
 	break;
       cp += n;
+
+      if (end_of_message - cp < 10)
+	{
+	  __set_h_errno (NO_RECOVERY);
+	  return NSS_STATUS_UNAVAIL;
+	}
+
       GETSHORT (type, cp);
       GETSHORT (class, cp);
       cp += INT32SZ;		/* TTL */
-      GETSHORT (n, cp);
+      uint16_t rdatalen;
+      GETSHORT (rdatalen, cp);
+      if (end_of_message - cp < rdatalen)
+	{
+	  __set_h_errno (NO_RECOVERY);
+	  return NSS_STATUS_UNAVAIL;
+	}
 
       if (class == C_IN && type == T_PTR)
 	{
@@ -373,7 +381,7 @@ getanswer_r (const querybuf *answer, int anslen, struct netent *result,
 	      cp += n;
 	      return NSS_STATUS_UNAVAIL;
 	    }
-	  cp += n;
+	  cp += rdatalen;
          if (alias_pointer + 2 < &net_data->aliases[MAX_NR_ALIASES])
            {
              *alias_pointer++ = bp;
@@ -384,6 +392,9 @@ getanswer_r (const querybuf *answer, int anslen, struct netent *result,
              ++have_answer;
            }
 	}
+      else
+	/* Skip over unknown record data.  */
+	cp += rdatalen;
     }
 
   if (have_answer)

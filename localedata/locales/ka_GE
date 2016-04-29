@@ -1,7 +1,14 @@
-escape_char /
 comment_char %
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % charset "GEORGIAN-PS"
-% Distribution and use is free, also for commercial purposes.
 
 LC_IDENTIFICATION
 title "Georgian language locale for Georgia"
@@ -16,29 +23,25 @@ territory "Georgia"
 revision "0.6"
 date "2001-01-26"
 
-category ka_GE:2000;LC_IDENTIFICATION
-category ka_GE:2000;LC_CTYPE
-category ka_GE:2000;LC_COLLATE
-category ka_GE:2000;LC_TIME
-category ka_GE:2000;LC_NUMERIC
-category ka_GE:2000;LC_PAPER
-category ka_GE:2000;LC_NAME
-category ka_GE:2000;LC_ADDRESS
-category ka_GE:2000;LC_TELEPHONE
-category ka_GE:2000;LC_MEASUREMENT
-category ka_GE:2000;LC_MESSAGES
-category ka_GE:2000;LC_MONETARY
-
-% ISO/IEC 14652: Converted comments to LC_IDENTIFICATION
-%  added LC_PAPER, LC_MEASUREMENT, LC_TELEPHONE, LC_ADDRESS
-% -- mckinstry@computer.org, 2000-06-20
-
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_MONETARY
 END LC_IDENTIFICATION
 
 LC_ADDRESS
 postal_fmt "<U0025><U0064><U0025><U004E><U0025><U0066><U0025><U004E><U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E>/
 <U0025><U0073><U0020><U0025><U0068><U0020><U0035><U0065><U0020><U0025><U0072><U0025><U004E>/
 <U0025><U0043><U0025><U007A><U0020><U0025><U0054><U0025><U004E><U0025><U0063><U0025><U004E>"
+country_name "<U10E1><U10D0><U10E5><U10D0><U10E0><U10D7><U10D5><U10D4><U10DA><U10DD>"
 % country_post "GE" for Georgia ?
 country_ab2 "GE"
 country_ab3 "GEO"
@@ -66,7 +69,7 @@ END LC_CTYPE
 
 LC_MONETARY
 int_curr_symbol      "<U0047><U0045><U004C><U0020>"
-currency_symbol      "<U10DA>"
+currency_symbol      "<U20BE>"
 mon_decimal_point    "<U002C>"
 mon_thousands_sep    "<U002E>"
 mon_grouping         3;3
@@ -138,22 +141,23 @@ d_fmt    "<U0025><U006D><U002F><U0025><U0064><U002F><U0025><U0059>"
 t_fmt    "<U0025><U0054>"
 am_pm    "";""
 t_fmt_ampm  ""
+week 7;19971130;1
+first_weekday 2
 END LC_TIME
 
 LC_MESSAGES
-yesexpr  "<U005E><U005B><U0031><U0079><U0059><U006B><U004B><U0078><U0058><U10EE><U005D><U002E><U002A>"
-noexpr   "<U005E><U005B><U0030><U006E><U004E><U0061><U0041><U10D0><U005D><U002E><U002A>"
+yesexpr "<U005E><U005B><U002B><U0031><U0079><U0059><U006B><U004B><U0078><U0058><U10EE><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U0061><U0041><U10D0><U005D>"
+yesstr  "<U10D9><U10D8>"
+nostr   "<U10D0><U10E0><U10D0>"
 END LC_MESSAGES
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT
 
-% Default paper: A4
 LC_PAPER
-height 297
-width 210
+copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE

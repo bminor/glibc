@@ -1,6 +1,13 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Azeri Language Locale for Azerbaijan (latin)
 % Source:
 % Contact: Pablo Saratxaga
@@ -12,8 +19,6 @@ escape_char  /
 % Application: general
 % Users: general
 % Charset: UTF-8
-% Distribution and use is free, also
-% for commercial purposes.
 
 LC_IDENTIFICATION
 title "Azeri language locale for Azerbaijan (latin)"
@@ -23,23 +28,22 @@ contact "Pablo Saratxaga"
 email "pablo@mandrakesoft.com"
 tel ""
 fax ""
-language "Azeri"
+language "Azerbaijani"
 territory "Azerbaijan"
 revision "0.4"
 date "2001-01-26"
 
-category az_AZ:2000;LC_IDENTIFICATION
-category az_AZ:2000;LC_CTYPE
-category az_AZ:2000;LC_COLLATE
-category az_AZ:2000;LC_TIME
-category az_AZ:2000;LC_NUMERIC
-category az_AZ:2000;LC_PAPER
-category az_AZ:2000;LC_TELEPHONE
-category az_AZ:2000;LC_MEASUREMENT
-category az_AZ:2000;LC_ADDRESS
-category az_AZ:2000;LC_MONETARY
-category az_AZ:2000;LC_MESSAGES
-
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
 END LC_IDENTIFICATION
 
 %
@@ -200,16 +204,16 @@ END LC_CTYPE
 
 LC_MESSAGES
 % FIXME: No is "yox"; that conflicts with English "yes"... what to do .
+yesexpr "<U005E><U005B><U002B><U0031><U0042><U0062><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U0059><U0079><U004E><U006E><U005D>"
 yesstr  "<U0062><U0259><U006C><U0069>"
 nostr   "<U0079><U006F><U0078>"
-yesexpr "<U005E><U005B><U0042><U0062><U005D><U002E><U002A>"
-noexpr  "<U005E><U005B><U0059><U0079><U004E><U006E><U005D><U002E><U002A>"
 END LC_MESSAGES
 
 LC_MONETARY
 % AZN
 int_curr_symbol           "<U0041><U005A><U004E><U0020>"
-currency_symbol           "<U006D><U0061><U006E><U002E>"
+currency_symbol           "<U20BC>"
 mon_decimal_point         "<U002E>"
 mon_thousands_sep         "<U0020>"
 mon_grouping              3;3
@@ -275,21 +279,22 @@ d_fmt     "<U0025><U0064><U002E><U0025><U006D><U002E><U0025><U0059>"
 t_fmt     "<U0025><U0054>"
 am_pm     "";""
 t_fmt_ampm ""
+week 7;19971130;1
+first_weekday 2
 END LC_TIME
 
 LC_PAPER
-height      297
-width       210
+copy "i18n"
 END LC_PAPER
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT
 
 LC_ADDRESS
 % FIXME
 postal_fmt "???"
+country_name "<U0041><U007A><U0259><U0072><U0062><U0061><U0079><U0063><U0061><U006E>"
 country_ab2 "<U0041><U005A>"
 country_ab3 "<U0041><U005A><U0045>"
 country_num 031

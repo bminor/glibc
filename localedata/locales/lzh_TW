@@ -1,5 +1,13 @@
 comment_char %
 escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Charset: UTF-8
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -9,13 +17,6 @@ escape_char /
 % Prepared and contributed to glibc by Wei-Lun Chao <bluebat@member.fsf.org>
 %
 % build with: localedef -f UTF-8 -i lzh_TW lzh_TW
-%
-% This file is a part of GNU C Library (glibc) and contains locale data. The
-% Free Software Foundation does not claim any copyright interest in the
-% locale data contained in this file. The foregoing does not affect the
-% license of GNU C Library (glibc) as a whole. It does not exempt you from the
-% conditions of the license if your use would otherwise be governed by
-% that license.
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -28,22 +29,22 @@ email        "bug-glibc-locales@gnu.org"
 tel          ""
 fax          ""
 language     "Literary Chinese"
-territory    "Republic of China"
+territory    "Taiwan"
 revision     "0.1"
 date         "2013-06-02"
-%
-category  "lzh_TW:2000";LC_IDENTIFICATION
-category  "lzh_TW:2000";LC_CTYPE
-category  "lzh_TW:2000";LC_COLLATE
-category  "lzh_TW:2000";LC_TIME
-category  "lzh_TW:2000";LC_NUMERIC
-category  "lzh_TW:2000";LC_MONETARY
-category  "lzh_TW:2000";LC_PAPER
-category  "lzh_TW:2000";LC_MEASUREMENT
-category  "lzh_TW:2000";LC_MESSAGES
-category  "lzh_TW:2000";LC_NAME
-category  "lzh_TW:2000";LC_ADDRESS
-category  "lzh_TW:2000";LC_TELEPHONE
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -151,6 +152,7 @@ alt_digits    "<U3007>";/
             "<U5345>";/
             "<U5345><U4E00>"
 %
+week 7;19971130;1
 END LC_TIME
 
 LC_NUMERIC
@@ -191,20 +193,18 @@ int_n_sign_posn    1
 END LC_MONETARY
 
 LC_PAPER
-height 297
-width  210
+copy "i18n"
 END LC_PAPER
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT
 
 LC_MESSAGES
 % ^[yY是]
-yesexpr "<U005E><U005B><U0079><U0059><U662F><U005D>"
+yesexpr "<U005E><U005B><U002B><U0031><U0079><U0059><U662F><U005D>"
 % ^[nN非]
-noexpr  "<U005E><U005B><U006E><U004E><U975E><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U975E><U005D>"
 END LC_MESSAGES
 
 LC_NAME
@@ -234,6 +234,7 @@ country_ab2  "<U0054><U0057>"
 % TWN
 country_ab3  "<U0054><U0057><U004E>"
 country_num  158
+country_car "<U0052><U0043>"
 country_isbn 957
 % 漢語文言
 lang_name    "<U6F22><U8A9E><U6587><U8A00>"

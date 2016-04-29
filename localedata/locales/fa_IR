@@ -1,6 +1,13 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Persian Language Locale for Iran with UTF-8 character set
 % Source: Sharif FarsiWeb, Inc.
 % Address: 5, Shahid Ghasemi Habibollah, Azadi Ave, Tehran, Iran
@@ -14,8 +21,6 @@ escape_char  /
 % Date: 2005-04-06
 % Users: general
 % Charset: UTF-8
-% Distribution and use is free, also
-% for commercial purposes.
 
 LC_IDENTIFICATION
 title      "Persian locale for Iran"
@@ -29,19 +34,19 @@ language   "Persian"
 territory  "Iran"
 revision   "3.0"
 date       "2005-04-06"
-%
-category  "fa_IR:2005";LC_IDENTIFICATION
-category  "fa_IR:2005";LC_CTYPE
-category  "fa_IR:2005";LC_COLLATE
-category  "fa_IR:2005";LC_TIME
-category  "fa_IR:2005";LC_NUMERIC
-category  "fa_IR:2005";LC_MONETARY
-category  "fa_IR:2005";LC_MESSAGES
-category  "fa_IR:2005";LC_PAPER
-category  "fa_IR:2005";LC_NAME
-category  "fa_IR:2005";LC_ADDRESS
-category  "fa_IR:2005";LC_TELEPHONE
-category  "fa_IR:2005";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -433,21 +438,21 @@ date_fmt "<U202B><U0025><U0041><U0020>/
 <U0025><U004F><U004D><U003A>/
 <U0025><U004F><U0053><U0020>/
 <U0028><U0025><U005A><U0029><U202C>"
+week 7;19971130;1
 first_weekday 7
-first_workday 7
 cal_direction 3
+first_workday 7
 END LC_TIME
 
 LC_MESSAGES
-% This is "^[yY<ALEF MADDA><BEH>Hf].*"
-yesexpr "<U005E><U005B><U0079><U0059><U0622><U0628><U0048><U0066><U005D><U002E><U002A>"
-% This is "^[nN<KHAH><NOON>ok].*"
-noexpr  "<U005E><U005B><U006E><U004E><U062E><U0646><U006F><U006B><U005D><U002E><U002A>"
+yesexpr "<U005E><U005B><U002B><U0031><U0079><U0059><U0622><U0628><U0048><U0066><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U062E><U0646><U006F><U006B><U005D>"
+yesstr  "<U0628><U0644><U0647>"
+nostr   "<U0646><U0647>"
 END LC_MESSAGES
 
 LC_PAPER
-height   297
-width    210
+copy "i18n"
 END LC_PAPER
 
 LC_NAME
@@ -487,6 +492,5 @@ int_prefix     "<U0039><U0038>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT

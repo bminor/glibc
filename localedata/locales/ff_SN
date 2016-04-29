@@ -1,34 +1,40 @@
 comment_char %
 escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Charset: UTF-8
 % Authors:
 % 2011-03-28, admin@pulaar-fulfulde.org
 % 2011-03-28, info@2xlibre.net
-% Distribution and use is free, also
-% for commercial purposes.
 
 LC_IDENTIFICATION
 title      "Fulah locale for Senegal"
 source     "Pular-Fulfulde.org"
 contact    "Ibrahima Sarr"
 email      "admin@pulaar-fulfulde.org"
-language   "ff"
+language   "Fulah"
 territory  "Senegal"
 revision   "1.0"
 date       "2011-03-28"
-%
-category  "ff_SN:2000";LC_IDENTIFICATION
-category  "ff_SN:2000";LC_CTYPE
-category  "ff_SN:2000";LC_COLLATE
-category  "ff_SN:2000";LC_TIME
-category  "ff_SN:2000";LC_NUMERIC
-category  "ff_SN:2000";LC_MONETARY
-category  "ff_SN:2000";LC_PAPER
-category  "ff_SN:2000";LC_MEASUREMENT
-category  "ff_SN:2000";LC_MESSAGES
-category  "ff_SN:2000";LC_NAME
-category  "ff_SN:2000";LC_ADDRESS
-category  "ff_SN:2000";LC_TELEPHONE
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -86,8 +92,8 @@ abday  "<U0064><U0065><U0077>";/
        "<U006E><U0061><U0061>";/
        "<U006D><U0077><U0064>";/
        "<U0068><U0062><U0069>"
-week   7;19971129;1
-first_weekday  1
+week 7;19971130;1
+first_weekday 2
 % %a %d %b %Y %R %Z
 d_t_fmt  "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025>/
 <U0059><U0020><U0025><U0052><U0020><U0025><U005A>"
@@ -132,20 +138,18 @@ n_sign_posn     1
 END LC_MONETARY
 
 LC_PAPER
-height  297
-width   210
+copy "i18n"
 END LC_PAPER
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT
 
 LC_MESSAGES
-% ^[yYeE].*
-yesexpr  "<U005E><U005B><U0079><U0059><U0065><U0045><U005D><U002E><U002A>"
-% ^[nNaA].*
-noexpr   "<U005E><U005B><U006E><U004E><U0061><U0041><U005D><U002E><U002A>"
+yesexpr "<U005E><U005B><U002B><U0031><U0079><U0059><U0065><U0045><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U0061><U0041><U005D>"
+yesstr  "<U0045><U0065><U0079>"
+nostr   "<U0041><U006C><U0061><U0061>"
 END LC_MESSAGES
 
 LC_NAME

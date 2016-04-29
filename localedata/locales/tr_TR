@@ -1,6 +1,13 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Turkish Language Locale for Turkey
 % Source: RAP
 % Address: Sankt Jo//rgens Alle 8
@@ -16,8 +23,6 @@ escape_char  /
 % Application: general
 % Users: general
 % Charset: ISO-8859-9
-% Distribution and use is free, also
-% for commercial purposes.
 
 % Corrections by:
 %   1998-01-11T15:54:39
@@ -40,23 +45,19 @@ language   "Turkish"
 territory  "Turkey"
 revision   "1.0"
 date       "2015-12-10"
-audience   ""
-application ""
-abbreviation ""
-%
-category  "tr_TR:2000";LC_IDENTIFICATION
-category  "tr_TR:2000";LC_CTYPE
-category  "tr_TR:2000";LC_COLLATE
-category  "tr_TR:2000";LC_TIME
-category  "tr_TR:2000";LC_NUMERIC
-category  "tr_TR:2000";LC_MONETARY
-category  "tr_TR:2000";LC_MESSAGES
-category  "tr_TR:2000";LC_PAPER
-category  "tr_TR:2000";LC_NAME
-category  "tr_TR:2000";LC_ADDRESS
-category  "tr_TR:2000";LC_TELEPHONE
-category  "tr_TR:2000";LC_MEASUREMENT
 
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
@@ -4228,21 +4229,24 @@ class "combining_level3"; /
 
 translit_start
 include "translit_combining";""
+
+% TURKISH LIRA SIGN
+<U20BA> "<U0054><U004C>"
 translit_end
 END LC_CTYPE
 
 LC_MESSAGES
-yesexpr	"<U005E><U005B><U0079><U0059><U0065><U0045><U005D>"
-noexpr	"<U005E><U005B><U006E><U004E><U0068><U0048><U005D>"
-yesstr	"<U0065><U0076><U0065><U0074>"
-nostr	"<U0068><U0061><U0079><U0131><U0072>"
+yesexpr "<U005E><U005B><U002B><U0031><U0079><U0059><U0065><U0045><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U0068><U0048><U005D>"
+yesstr  "<U0065><U0076><U0065><U0074>"
+nostr   "<U0068><U0061><U0079><U0131><U0072>"
 END LC_MESSAGES
 
 LC_MONETARY
 % ISO-4217 (2004-10-25): TRY 949 2
 int_curr_symbol           "<U0054><U0052><U0059><U0020>"
 % TL
-currency_symbol           "<U0054><U004C>"
+currency_symbol           "<U20BA>"
 mon_decimal_point         "<U002C>"
 mon_thousands_sep         "<U002E>"
 mon_grouping              3;3
@@ -4299,16 +4303,12 @@ t_fmt   "<U0025><U0054>"
 am_pm   "<U00D6><U00D6>";"<U00D6><U0053>"
 t_fmt_ampm "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053>/
 <U0020><U0025><U0070>"
-date_fmt       "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
-<U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
-<U0025><U005A><U0020><U0025><U0059>"
+week 7;19971130;1
 first_weekday 2
-first_workday 2
 END LC_TIME
 
 LC_PAPER
-height   297
-width    210
+copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE
@@ -4319,8 +4319,7 @@ int_select     "<U0030><U0030>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME
@@ -4342,8 +4341,7 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 <U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
 <U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
 <U004E><U0025><U0063><U0025><U004E>"
-% Turkey
-country_name	"<U0054><U0075><U0072><U006B><U0065><U0079>"
+country_name "<U0054><U00FC><U0072><U006B><U0069><U0079><U0065>"
 % TR
 country_post	"<U0054><U0052>"
 % TR

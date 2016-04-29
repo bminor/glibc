@@ -84,7 +84,7 @@ typedef _G_va_list va_list;
 # endif
 #endif
 
-#ifdef __USE_XOPEN2K8
+#if defined __USE_UNIX98 || defined __USE_XOPEN2K
 # ifndef __off_t_defined
 # ifndef __USE_FILE_OFFSET64
 typedef __off_t off_t;
@@ -97,7 +97,9 @@ typedef __off64_t off_t;
 typedef __off64_t off64_t;
 # define __off64_t_defined
 # endif
+#endif
 
+#ifdef __USE_XOPEN2K8
 # ifndef __ssize_t_defined
 typedef __ssize_t ssize_t;
 # define __ssize_t_defined
@@ -542,7 +544,7 @@ __END_NAMESPACE_STD
    optimization for it.  */
 #define getc(_fp) _IO_getc (_fp)
 
-#ifdef __USE_POSIX
+#ifdef __USE_POSIX199506
 /* These are defined in POSIX.1:1996.
 
    These functions are possible cancellation points and therefore not
@@ -594,7 +596,7 @@ __END_NAMESPACE_STD
 extern int fputc_unlocked (int __c, FILE *__stream);
 #endif /* Use MISC.  */
 
-#ifdef __USE_POSIX
+#ifdef __USE_POSIX199506
 /* These are defined in POSIX.1:1996.
 
    These functions are possible cancellation points and therefore not
@@ -885,7 +887,7 @@ extern char *ctermid (char *__s) __THROW;
 #endif /* Use POSIX.  */
 
 
-#ifdef __USE_XOPEN
+#if (defined __USE_XOPEN && !defined __USE_XOPEN2K) || defined __USE_GNU
 /* Return the name of the current user.  */
 extern char *cuserid (char *__s);
 #endif /* Use X/Open, but not issue 6.  */
@@ -905,7 +907,7 @@ extern int obstack_vprintf (struct obstack *__restrict __obstack,
 #endif /* Use GNU.  */
 
 
-#ifdef __USE_POSIX
+#ifdef __USE_POSIX199506
 /* These are defined in POSIX.1:1996.  */
 
 /* Acquire ownership of STREAM.  */

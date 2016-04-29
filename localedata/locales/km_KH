@@ -1,7 +1,13 @@
-escape_char /
 comment_char %
+escape_char /
 
-%
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Khmer Language Locale for Cambodia
 %
 % Name:         km_KH
@@ -13,31 +19,6 @@ comment_char %
 % Charset:      UTF-8
 % Revision:     1.0
 % Date:         2005-03-15
-%
-
-%
-% Copyright (C) 2005 Open Forum of Cambodia (www.forum.org.kh)
-
-%
-% Permission is hereby granted, free of charge, to any person obtaining
-% a copy of this software and associated documentation files (the "Software"),
-% to deal in the Software without restriction, including without limitation
-% the rights to use, copy, modify, merge, publish, distribute, sublicense,
-% and/or sell copies of the Software, and to permit persons to whom the
-% Software is furnished to do so, subject to the following conditions:
-%
-% The above copyright notice and this permission notice shall be included
-% in all copies or substantial portions of the Software.
-%
-% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-% IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-% FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-% THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
-% OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-% ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-% OTHER DEALINGS IN THE SOFTWARE.
-%
-%
 
 LC_IDENTIFICATION
 title      "Khmer locale for Cambodia"
@@ -51,19 +32,19 @@ language   "Khmer"
 territory  "Cambodia"
 revision   "1.0"
 date       "2005-3-15"
-%
-category  "km_KH:2000";LC_IDENTIFICATION
-category  "km_KH:2000";LC_CTYPE
-category  "km_KH:2000";LC_COLLATE
-category  "km_KH:2000";LC_TIME
-category  "km_KH:2000";LC_NUMERIC
-category  "km_KH:2000";LC_MONETARY
-category  "km_KH:2000";LC_MESSAGES
-category  "km_KH:2000";LC_PAPER
-category  "km_KH:2000";LC_NAME
-category  "km_KH:2000";LC_ADDRESS
-category  "km_KH:2000";LC_TELEPHONE
-category  "km_KH:2000";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -1839,23 +1820,18 @@ am_pm    "<U1796><U17D2><U179A><U17B9><U1780>";"<U179B><U17D2><U1784><U17B6><U17
 %<U0020><U0025><U0045><U0079><U0020><U0025><U0048><U003A><U0025><U004D>/
 %<U003A><U0025><U0053><U0020><U0025><U005A>"
 
+week 7;19971130;1
 END LC_TIME
 
 LC_MESSAGES
-
-yesstr   "yes:YES:y:Y"
-
-nostr    "no:NO:n:N"
-
-yesexpr  "^[yY]([eE][sS])?"
-
-noexpr   "^[nN][oO]?"
-
+yesexpr "^[+1yY]([eE][sS])?"
+noexpr  "^[-0nN][oO]?"
+yesstr  "<U1794><U17B6><U1791><U002F><U1785><U17B6><U179F><U200B><U17D6><U0020><U0079>"
+nostr   "<U1791><U17C1><U200B><U17D6><U0020><U006E>"
 END LC_MESSAGES
 
 LC_PAPER
-height   297
-width    210
+copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE
@@ -1867,8 +1843,7 @@ int_prefix     "<U0038><U0035><U0035>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME
@@ -1890,10 +1865,10 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 country_name "<U1780><U1798><U17D2><U1796><U17BB><U1787><U17B6>"
 %FIXME
 %country_post  ""
-country_ab2   "<U004C><U0041>"
-country_ab3   "<U004C><U0041><U004F>"
-country_num   418
-country_car   "<U004C><U0041><U004F>"
+country_ab2 "<U004B><U0048>"
+country_ab3 "<U004B><U0048><U004D>"
+country_num 116
+country_car "<U004B><U0048>"
 %FIXME
 %country_isbn  ""
 % ភាសាខ្មែរ (Khmer)

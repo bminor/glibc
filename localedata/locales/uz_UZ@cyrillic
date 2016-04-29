@@ -1,5 +1,12 @@
-escape_char  /
-comment_char  %
+comment_char %
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
 
 % Uzbek language (cyrillic) locale for Uzbekistan
 % Source: Mashrab Kuvatov
@@ -13,8 +20,6 @@ comment_char  %
 % Date: 2003-05-30
 % Users: general
 % Charset: UTF-8
-% Distribution and use is free, also
-% for commercial purposes.
 % History:
 %
 % 2003-05-30 Mashrab Kuvatov <kmashrab@uni-bremen.de>
@@ -37,20 +42,19 @@ language   "Uzbek"
 territory  "Uzbekistan"
 revision   "0.1"
 date       "2003-05-30"
-%
-category  "uz_UZ:2000";LC_IDENTIFICATION
-category  "uz_UZ:2000";LC_CTYPE
-category  "uz_UZ:2000";LC_COLLATE
-category  "uz_UZ:2000";LC_TIME
-category  "uz_UZ:2000";LC_NUMERIC
-category  "uz_UZ:2000";LC_MONETARY
-category  "uz_UZ:2000";LC_MESSAGES
-category  "uz_UZ:2000";LC_PAPER
-category  "uz_UZ:2000";LC_NAME
-category  "uz_UZ:2000";LC_ADDRESS
-category  "uz_UZ:2000";LC_TELEPHONE
-category  "uz_UZ:2000";LC_MEASUREMENT
 
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -263,18 +267,22 @@ t_fmt       "<U0025><U0054>"
 am_pm       "";""
 t_fmt_ampm  ""
 date_fmt    "<U0025><U0064><U0020><U0025><U0042><U002C><U0020><U0025><U0059><U0020><U0439><U0438><U043B><U002C><U0020><U0025><U0041>"
+week 7;19971130;1
+first_weekday 2
 END LC_TIME
 
 LC_MESSAGES
-yesstr  "<U04B2><U0430>"
-nostr   "<U0419><U045E><U049B>"
-yesexpr "<U005E><U005B><U04B2><U04B3><U0059><U0079><U005D><U002E><U002A>"
-noexpr  "<U005E><U005B><U0419><U0439><U004E><U006E><U005D><U002E><U002A>"
+% Note: "No" is "yo‘q" which conflicts with English "yes".
+% This is why "jo‘q" & "jJ" is also accepted as "no".
+yesexpr "<U005E><U005B><U002B><U0031><U04B2><U04B3><U0048><U0068><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U0419><U0439><U004E><U006E><U0059>/
+<U0079><U004A><U006A><U005D>"
+yesstr  "<U04B3><U0430>"
+nostr   "<U0439><U045E><U049B>"
 END LC_MESSAGES
 
 LC_PAPER
-height   297
-width    210
+copy "uz_UZ"
 END LC_PAPER
 
 LC_TELEPHONE
@@ -284,8 +292,7 @@ int_prefix     "<U0039><U0039><U0038>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "uz_UZ"
 END LC_MEASUREMENT
 
 LC_NAME

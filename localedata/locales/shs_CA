@@ -1,5 +1,12 @@
+comment_char %
 escape_char /
-comment_char  %
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
 
 % Secwepemctsin (Shuswap) language locale for Canada
 % sorting according to CAN/CSA-Z243.4.1-1992
@@ -16,8 +23,6 @@ comment_char  %
 % Date: 2008-01-11
 % Application: general
 % Users: general
-% Distribution and use is free, also
-% for commercial purposes.
 
 LC_IDENTIFICATION
 title      "Secwepemctsin locale for Canada"
@@ -31,19 +36,19 @@ language   "Secwepemctsin"
 territory  "Canada"
 revision   "1.0"
 date       "2008-01-15"
-%
-category  "shs_CA:2000";LC_IDENTIFICATION
-category  "shs_CA:2000";LC_CTYPE
-category  "shs_CA:2000";LC_COLLATE
-category  "shs_CA:2000";LC_TIME
-category  "shs_CA:2000";LC_NUMERIC
-category  "shs_CA:2000";LC_MONETARY
-category  "shs_CA:2000";LC_MESSAGES
-category  "shs_CA:2000";LC_PAPER
-category  "shs_CA:2000";LC_NAME
-category  "shs_CA:2000";LC_ADDRESS
-category  "shs_CA:2000";LC_TELEPHONE
-category  "shs_CA:2000";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
@@ -120,9 +125,8 @@ d_fmt      "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0079>"
 t_fmt      "<U0025><U0072>"
 am_pm      "<U0041><U004D>";"<U0050><U004D>"
 t_fmt_ampm "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070>"
-date_fmt   "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065><U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U005A><U0020><U0025><U0059>"
 %  FIXME: found in CLDR
-first_weekday 1
+week 7;19971130;1
 END LC_TIME
 
 LC_MESSAGES
@@ -138,8 +142,7 @@ copy "en_CA"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "en_CA"
 END LC_MEASUREMENT
 
 LC_NAME

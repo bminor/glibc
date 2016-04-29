@@ -1,7 +1,14 @@
-escape_char /
 comment_char %
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % charset "UTF-8"
-% Distribution and use is free, also for commercial purposes.
 
 LC_IDENTIFICATION
 title "Inuktitut language locale for Nunavut, Canada"
@@ -12,22 +19,22 @@ email "pablo@mandriva.com"
 tel ""
 fax ""
 language "Inuktitut"
-territory "CA"
+territory "Canada"
 revision "0.1"
 date "2001-05-04"
 
-category iu_CA:2000;LC_IDENTIFICATION
-category iu_CA:2000;LC_COLLATE
-category iu_CA:2000;LC_CTYPE
-category iu_CA:2000;LC_MESSAGES
-category iu_CA:2000;LC_MONETARY
-category iu_CA:2000;LC_NUMERIC
-category iu_CA:2000;LC_TIME
-category iu_CA:2000;LC_PAPER
-category iu_CA:2000;LC_NAME
-category iu_CA:2000;LC_MEASUREMENT
-category iu_CA:2000;LC_TELEPHONE
-category iu_CA:2000;LC_ADDRESS
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_ADDRESS
 END LC_IDENTIFICATION
 
 LC_ADDRESS
@@ -116,11 +123,12 @@ d_fmt       "<U0025><U006D><U002F><U0025><U0064><U002F><U0025><U0079>"
 t_fmt       "<U0025><U0072>"
 am_pm       "<U0041><U004D>";"<U0050><U004D>"
 t_fmt_ampm  "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070>"
+week 7;19971130;1
 END LC_TIME
 
 LC_MESSAGES
-yesexpr     "<U005B><U0079><U0059><U0073><U0053><U005D><U002E><U002A>"
-noexpr      "<U005B><U006E><U004E><U005D><U002E><U002A>"
+yesexpr "<U005E><U005B><U002B><U0031><U0079><U0059><U0073><U0053><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U005D>"
 END LC_MESSAGES
 
 LC_PAPER
@@ -133,6 +141,5 @@ copy "en_CA"
 END LC_NAME
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "en_CA"
 END LC_MEASUREMENT

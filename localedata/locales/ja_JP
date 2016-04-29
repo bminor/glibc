@@ -1,5 +1,12 @@
-escape_char  /
-comment_char  %
+comment_char %
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
 
 % Name:    localedef for ja_JP
 % Version: 0.7
@@ -19,19 +26,19 @@ language   "Japanese"
 territory  "Japan"
 revision   "1.0"
 date       "2000-07-20"
-%
-category  "ja_JP:2000";LC_IDENTIFICATION
-category  "ja_JP:2000";LC_CTYPE
-category  "ja_JP:2000";LC_COLLATE
-category  "ja_JP:2000";LC_TIME
-category  "ja_JP:2000";LC_NUMERIC
-category  "ja_JP:2000";LC_MONETARY
-category  "ja_JP:2000";LC_MESSAGES
-category  "ja_JP:2000";LC_PAPER
-category  "ja_JP:2000";LC_NAME
-category  "ja_JP:2000";LC_ADDRESS
-category  "ja_JP:2000";LC_TELEPHONE
-category  "ja_JP:2000";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -14873,10 +14880,10 @@ END LC_COLLATE
 
 
 LC_MESSAGES
-yesexpr "<U005E><U0028><U005B><U0079><U0059><UFF59><UFF39><U005D>/
-<U007C><U306F><U3044><U007C><U30CF><U30A4><U0029>"
-noexpr  "<U005E><U0028><U005B><U006E><U004E><UFF4E><UFF2E><U005D>/
-<U007C><U3044><U3044><U3048><U007C><U30A4><U30A4><U30A8><U0029>"
+yesexpr "<U005E><U0028><U005B><U002B><U0031><U0079><U0059><UFF59><UFF39>/
+<U005D><U007C><U306F><U3044><U007C><U30CF><U30A4><U0029>"
+noexpr  "<U005E><U0028><U005B><U002D><U0030><U006E><U004E><UFF4E><UFF2E>/
+<U005D><U007C><U3044><U3044><U3048><U007C><U30A4><U30A4><U30A8><U0029>"
 yesstr  "<U306F><U3044>"
 nostr   "<U3044><U3044><U3048>"
 END LC_MESSAGES
@@ -15006,15 +15013,12 @@ alt_digits	"<U3007>";"<U4E00>";"<U4E8C>";"<U4E09>";"<U56DB>";"<U4E94>";/
 		"<U4E5D><U5341><U56DB>";"<U4E5D><U5341><U4E94>";/
 		"<U4E5D><U5341><U516D>";"<U4E5D><U5341><U4E03>";/
 		"<U4E5D><U5341><U516B>";"<U4E5D><U5341><U4E5D>"
+week 7;19971130;1
 END LC_TIME
 
 
 LC_PAPER
-% This is the ISO_IEC TR14652 Locale definition for the
-% LC_PAPER category
-height      297
-width       210
-
+copy "i18n"
 END LC_PAPER
 
 
@@ -15038,7 +15042,7 @@ LC_ADDRESS
 % LC_ADDRESS
 postal_fmt  "<U0025><U007A><U0025><U0063><U0025><U0054><U0025><U0073>/
 <U0025><U0062><U0025><U0065><U0025><U0072>"
-
+country_name "<U65E5><U672C>"
 country_ab2 "<U004A><U0050>"
 country_ab3 "<U004A><U0050><U004E>"
 country_num 392
@@ -15066,6 +15070,5 @@ END LC_TELEPHONE
 
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT

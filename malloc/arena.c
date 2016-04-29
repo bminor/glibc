@@ -129,145 +129,41 @@ int __malloc_initialized = -1;
 
 /* atfork support.  */
 
-static void *(*save_malloc_hook)(size_t __size, const void *);
-static void (*save_free_hook) (void *__ptr, const void *);
-static void *save_arena;
+/* The following three functions are called around fork from a
+   multi-threaded process.  We do not use the general fork handler
+   mechanism to make sure that our handlers are the last ones being
+   called, so that other fork handlers can use the malloc
+   subsystem.  */
 
-# ifdef ATFORK_MEM
-ATFORK_MEM;
-# endif
-
-/* Magic value for the thread-specific arena pointer when
-   malloc_atfork() is in use.  */
-
-# define ATFORK_ARENA_PTR ((void *) -1)
-
-/* The following hooks are used while the `atfork' handling mechanism
-   is active. */
-
-static void *
-malloc_atfork (size_t sz, const void *caller)
+void
+internal_function
+__malloc_fork_lock_parent (void)
 {
-  void *victim;
-
-  if (thread_arena == ATFORK_ARENA_PTR)
-    {
-      /* We are the only thread that may allocate at all.  */
-      if (save_malloc_hook != malloc_check)
-        {
-          return _int_malloc (&main_arena, sz);
-        }
-      else
-        {
-          if (top_check () < 0)
-            return 0;
-
-          victim = _int_malloc (&main_arena, sz + 1);
-          return mem2mem_check (victim, sz);
-        }
-    }
-  else
-    {
-      /* Suspend the thread until the `atfork' handlers have completed.
-         By that time, the hooks will have been reset as well, so that
-         mALLOc() can be used again. */
-      (void) mutex_lock (&list_lock);
-      (void) mutex_unlock (&list_lock);
-      return __libc_malloc (sz);
-    }
-}
-
-static void
-free_atfork (void *mem, const void *caller)
-{
-  mstate ar_ptr;
-  mchunkptr p;                          /* chunk corresponding to mem */
-
-  if (mem == 0)                              /* free(0) has no effect */
-    return;
-
-  p = mem2chunk (mem);         /* do not bother to replicate free_check here */
-
-  if (chunk_is_mmapped (p))                       /* release mmapped memory. */
-    {
-      munmap_chunk (p);
-      return;
-    }
-
-  ar_ptr = arena_for_chunk (p);
-  _int_free (ar_ptr, p, thread_arena == ATFORK_ARENA_PTR);
-}
-
-
-/* Counter for number of times the list is locked by the same thread.  */
-static unsigned int atfork_recursive_cntr;
-
-/* The following two functions are registered via thread_atfork() to
-   make sure that the mutexes remain in a consistent state in the
-   fork()ed version of a thread.  Also adapt the malloc and free hooks
-   temporarily, because the `atfork' handler mechanism may use
-   malloc/free internally (e.g. in LinuxThreads). */
-
-static void
-ptmalloc_lock_all (void)
-{
-  mstate ar_ptr;
-
   if (__malloc_initialized < 1)
     return;
 
   /* We do not acquire free_list_lock here because we completely
-     reconstruct free_list in ptmalloc_unlock_all2.  */
+     reconstruct free_list in __malloc_fork_unlock_child.  */
 
-  if (mutex_trylock (&list_lock))
-    {
-      if (thread_arena == ATFORK_ARENA_PTR)
-        /* This is the same thread which already locks the global list.
-           Just bump the counter.  */
-        goto out;
+  (void) mutex_lock (&list_lock);
 
-      /* This thread has to wait its turn.  */
-      (void) mutex_lock (&list_lock);
-    }
-  for (ar_ptr = &main_arena;; )
+  for (mstate ar_ptr = &main_arena;; )
     {
       (void) mutex_lock (&ar_ptr->mutex);
       ar_ptr = ar_ptr->next;
       if (ar_ptr == &main_arena)
         break;
     }
-  save_malloc_hook = __malloc_hook;
-  save_free_hook = __free_hook;
-  __malloc_hook = malloc_atfork;
-  __free_hook = free_atfork;
-  /* Only the current thread may perform malloc/free calls now.
-     save_arena will be reattached to the current thread, in
-     ptmalloc_lock_all, so save_arena->attached_threads is not
-     updated.  */
-  save_arena = thread_arena;
-  thread_arena = ATFORK_ARENA_PTR;
-out:
-  ++atfork_recursive_cntr;
 }
 
-static void
-ptmalloc_unlock_all (void)
+void
+internal_function
+__malloc_fork_unlock_parent (void)
 {
-  mstate ar_ptr;
-
   if (__malloc_initialized < 1)
     return;
 
-  if (--atfork_recursive_cntr != 0)
-    return;
-
-  /* Replace ATFORK_ARENA_PTR with save_arena.
-     save_arena->attached_threads was not changed in ptmalloc_lock_all
-     and is still correct.  */
-  thread_arena = save_arena;
-  __malloc_hook = save_malloc_hook;
-  __free_hook = save_free_hook;
-  for (ar_ptr = &main_arena;; )
+  for (mstate ar_ptr = &main_arena;; )
     {
       (void) mutex_unlock (&ar_ptr->mutex);
       ar_ptr = ar_ptr->next;
@@ -277,35 +173,23 @@ ptmalloc_unlock_all (void)
   (void) mutex_unlock (&list_lock);
 }
 
-# ifdef __linux__
-
-/* In NPTL, unlocking a mutex in the child process after a
-   fork() is currently unsafe, whereas re-initializing it is safe and
-   does not leak resources.  Therefore, a special atfork handler is
-   installed for the child. */
-
-static void
-ptmalloc_unlock_all2 (void)
+void
+internal_function
+__malloc_fork_unlock_child (void)
 {
-  mstate ar_ptr;
-
   if (__malloc_initialized < 1)
     return;
 
-  thread_arena = save_arena;
-  __malloc_hook = save_malloc_hook;
-  __free_hook = save_free_hook;
-
-  /* Push all arenas to the free list, except save_arena, which is
+  /* Push all arenas to the free list, except thread_arena, which is
      attached to the current thread.  */
   mutex_init (&free_list_lock);
-  if (save_arena != NULL)
-    ((mstate) save_arena)->attached_threads = 1;
+  if (thread_arena != NULL)
+    thread_arena->attached_threads = 1;
   free_list = NULL;
-  for (ar_ptr = &main_arena;; )
+  for (mstate ar_ptr = &main_arena;; )
     {
       mutex_init (&ar_ptr->mutex);
-      if (ar_ptr != save_arena)
+      if (ar_ptr != thread_arena)
         {
 	  /* This arena is no longer attached to any thread.  */
 	  ar_ptr->attached_threads = 0;
@@ -318,13 +202,7 @@ ptmalloc_unlock_all2 (void)
     }
 
   mutex_init (&list_lock);
-  atfork_recursive_cntr = 0;
 }
-
-# else
-
-#  define ptmalloc_unlock_all2 ptmalloc_unlock_all
-# endif
 
 /* Initialization routine. */
 #include <string.h>
@@ -394,7 +272,6 @@ ptmalloc_init (void)
 #endif
 
   thread_arena = &main_arena;
-  thread_atfork (ptmalloc_lock_all, ptmalloc_unlock_all, ptmalloc_unlock_all2);
   const char *s = NULL;
   if (__glibc_likely (_environ != NULL))
     {
@@ -468,14 +345,6 @@ ptmalloc_init (void)
     (*hook)();
   __malloc_initialized = 1;
 }
-
-/* There are platforms (e.g. Hurd) with a link-time hook mechanism. */
-#ifdef thread_atfork_static
-thread_atfork_static (ptmalloc_lock_all, ptmalloc_unlock_all,		      \
-                      ptmalloc_unlock_all2)
-#endif
-
-
 
 /* Managing heaps and arenas (for concurrent threads) */
 
@@ -822,7 +691,8 @@ _int_new_arena (size_t size)
      limit is reached).  At this point, some arena has to be attached
      to two threads.  We could acquire the arena lock before list_lock
      to make it less likely that reused_arena picks this new arena,
-     but this could result in a deadlock with ptmalloc_lock_all.  */
+     but this could result in a deadlock with
+     __malloc_fork_lock_parent.  */
 
   (void) mutex_lock (&a->mutex);
 

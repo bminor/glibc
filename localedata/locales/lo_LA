@@ -1,7 +1,13 @@
-escape_char /
 comment_char %
+escape_char /
 
-%
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Lao Lanuage Locale for Laos
 %
 % Name:         lo_LA
@@ -13,34 +19,6 @@ comment_char %
 % Charset:      UTF-8
 % Revision:     1.2
 % Date:         2003-15-09
-%
-
-%
-% Copyright (C) 2002 Anousak Souphavanh
-
-%
-% Permission is hereby granted, free of charge, to any person obtaining
-% a copy of this software and associated documentation files (the "Software"),
-% to deal in the Software without restriction, including without limitation
-% the rights to use, copy, modify, merge, publish, distribute, sublicense,
-% and/or sell copies of the Software, and to permit persons to whom the
-% Software is furnished to do so, subject to the following conditions:
-%
-% The above copyright notice and this permission notice shall be included
-% in all copies or substantial portions of the Software.
-%
-% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-% IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-% FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-% THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
-% OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-% ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-% OTHER DEALINGS IN THE SOFTWARE.
-%
-%
-%
-%  Note: I would like to give a special thank to Mr. Pablo Salatxaga @ Mandrake , email "srtxg@chanae.alphanet.ch"
-%        & Theppitak Karoonboonyanan, email: 'thep@linux.thai.net', all had guided me in the right direction.
 
 LC_IDENTIFICATION
 title      "Lao locale for Laos"
@@ -54,19 +32,19 @@ language   "Lao"
 territory  "Laos"
 revision   "1.0"
 date       "2003-4-1"
-%
-category  "lo_LA:2000";LC_IDENTIFICATION
-category  "lo_LA:2000";LC_CTYPE
-category  "lo_LA:2000";LC_COLLATE
-category  "lo_LA:2000";LC_TIME
-category  "lo_LA:2000";LC_NUMERIC
-category  "lo_LA:2000";LC_MONETARY
-category  "lo_LA:2000";LC_MESSAGES
-category  "lo_LA:2000";LC_PAPER
-category  "lo_LA:2000";LC_NAME
-category  "lo_LA:2000";LC_ADDRESS
-category  "lo_LA:2000";LC_TELEPHONE
-category  "lo_LA:2000";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -716,6 +694,7 @@ era_d_t_fmt     "<U0EA7><U0EB1><U0E99>%A<U0E97><U0EB5><U0EC8><U0020>%e<U0020>%B<
 date_fmt       "<U0025><U0061><U0020><U0025><U0065><U0020><U0025><U0062>/
 <U0020><U0025><U0045><U0079><U0020><U0025><U0048><U003A><U0025><U004D>/
 <U003A><U0025><U0053><U0020><U0025><U005A>"
+week 7;19971130;1
 END LC_TIME
 
 LC_MESSAGES
@@ -725,16 +704,15 @@ LC_MESSAGES
 % yesstr = "men" = Sala ae + Mo + MAI EK + No
 % nostr = "Bo Men" = Letter Bo +salo Or+ MAI EK + mo+ Ma Ek+ No
 
-yesexpr "<U005E><U005B><U0079><U0059><U0EA1><U005D>"
-noexpr  "<U005E><U005B><U006E><U004E><U0E9A><U005D>"
+yesexpr "<U005E><U005B><U002B><U0031><U0079><U0059><U0EA1><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U0E9A><U005D>"
 yesstr  "<U0EC1><U0EA1><U0EC8><U0E99>"
 nostr   "<U0E9A><U0ECD><U0EC8><U0EC1><U0EA1><U0EC8><U0E99>"
 
 END LC_MESSAGES
 
 LC_PAPER
-height   297
-width    210
+copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE
@@ -746,8 +724,7 @@ int_prefix     "<U0038><U0035><U0036>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME

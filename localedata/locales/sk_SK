@@ -1,6 +1,13 @@
-escape_char /
 comment_char %
-%
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Slovak Language Locale for Slovak
 % Source:
 % Address: Narcisov<a'> 56, SK-821 01 Bratislava, Slovak Republic
@@ -15,7 +22,6 @@ comment_char %
 % Application: general
 % Users: general
 % Charset: ISO-8859-2
-% Distribution and use is free, also for commercial purposes.
 
 % 1997-05-14: Odvodené z cs_CZ locale Vladimíra Michla.
 %             Collate algoritmy prevzaté bezo zmien (norma bola rovnaká),
@@ -39,22 +45,22 @@ email      "bug-glibc-locales@gnu.org"
 tel        ""
 fax        ""
 language   "Slovak"
-territory  "Slovak"
+territory  "Slovakia"
 revision   "1.0"
 date       "2000-06-29"
-%
-category  "sk_SK:2000";LC_IDENTIFICATION
-category  "sk_SK:2000";LC_CTYPE
-category  "sk_SK:2000";LC_COLLATE
-category  "sk_SK:2000";LC_TIME
-category  "sk_SK:2000";LC_NUMERIC
-category  "sk_SK:2000";LC_MONETARY
-category  "sk_SK:2000";LC_MESSAGES
-category  "sk_SK:2000";LC_PAPER
-category  "sk_SK:2000";LC_NAME
-category  "sk_SK:2000";LC_ADDRESS
-category  "sk_SK:2000";LC_TELEPHONE
-category  "sk_SK:2000";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -71,18 +77,11 @@ LC_COLLATE
 copy "cs_CZ"
 END LC_COLLATE
 
-
-%% LC_MESSAGES
-%% ekvivalenty yes/no
-%% -------------------------
-
 LC_MESSAGES
-
-yesexpr		"<U005E><U005B><U0061><U0041><U00E1><U00C1><U0079><U0059><U005D><U002E><U002A>"
-noexpr  	"<U005E><U005B><U006E><U004E><U005D><U002E><U002A>"
-yesstr		"<U00E1><U006E><U006F>"
-nostr		"<U006E><U0069><U0065>"
-
+yesexpr "<U005E><U005B><U002B><U0031><U0061><U0041><U00E1><U00C1><U0079><U0059><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U005D>"
+yesstr  "<U00E1><U006E><U006F>"
+nostr   "<U006E><U0069><U0065>"
 END LC_MESSAGES
 
 %% LC_MONETARY -- peniaze
@@ -178,13 +177,8 @@ t_fmt_ampm	"<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053>"
 
 am_pm   	"";""
 
-date_fmt       "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
-<U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
-<U0025><U005A><U0020><U0025><U0059>"
-
 week		7;19971130;4
 first_weekday	2
-first_workday	2
 
 END LC_TIME
 
@@ -192,10 +186,7 @@ END LC_TIME
 %% Koniec lokalizačného súboru pre slovenské prostredie
 
 LC_PAPER
-% FIXME
-height   297
-% FIXME
-width    210
+copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE
@@ -205,8 +196,7 @@ int_prefix     "<U0034><U0032><U0031>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME
@@ -220,6 +210,7 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 <U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
 <U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
 <U004E><U0025><U0063><U0025><U004E>"
+country_name "<U0053><U006C><U006F><U0076><U0065><U006E><U0073><U006B><U006F>"
 country_ab2 "<U0053><U004B>"
 country_ab3 "<U0053><U0056><U004B>"
 country_num 703

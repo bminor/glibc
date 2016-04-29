@@ -1,5 +1,13 @@
 comment_char %
 escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Charset: UTF-8
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -15,15 +23,6 @@ escape_char /
 %
 % build with: localedef -f UTF-8 -i ak_GH ak_GH
 %
-% This file is a part of GNU C Library (glibc) and contains locale data. The
-% Free Software Foundation does not claim any copyright interest in the
-% locale data contained in this file. The foregoing does not affect the
-% license of GNU C Library (glibc) as a whole. It does not exempt you from the
-% conditions of the license if your use would otherwise be governed by
-% that license.
-%
-%
-%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 LC_IDENTIFICATION
@@ -38,19 +37,19 @@ language     "Akan"
 territory    "Ghana"
 revision     "1.0"
 date         "2013-08-24"
-%
-category  "ak_GH:2013";LC_IDENTIFICATION
-category  "ak_GH:2013";LC_CTYPE
-category  "ak_GH:2013";LC_COLLATE
-category  "ak_GH:2013";LC_TIME
-category  "ak_GH:2013";LC_NUMERIC
-category  "ak_GH:2013";LC_MONETARY
-category  "ak_GH:2013";LC_PAPER
-category  "ak_GH:2013";LC_MEASUREMENT
-category  "ak_GH:2013";LC_MESSAGES
-category  "ak_GH:2013";LC_NAME
-category  "ak_GH:2013";LC_ADDRESS
-category  "ak_GH:2013";LC_TELEPHONE
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -117,9 +116,8 @@ t_fmt   "<U0025><U0072>"
 t_fmt_ampm "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070>"
 % Strings for AM/PM: AN/EW
 am_pm  "<U0041><U004E>";"<U0045><U0057>"
-week    7;19971130;7
-first_weekday 1
-first_workday 2
+week 7;19971130;1
+first_weekday 2
 END LC_TIME
 
 LC_NUMERIC
@@ -154,24 +152,17 @@ n_sign_posn               1
 END LC_MONETARY
 
 LC_PAPER
-% A4
-height   297
-width    210
+copy "i18n"
 END LC_PAPER
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT
 
 LC_MESSAGES
-% ^[yY].*
-yesexpr "<U005E><U005B><U0079><U0059><U005D><U002E><U002A>"
-% ^[dDnN].*
-noexpr  "<U005E><U005B><U0064><U0044><U006E><U004E><U005D><U002E><U002A>"
-% Yiw
+yesexpr "<U005E><U005B><U002B><U0031><U0079><U0059><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U0064><U0044><U006E><U004E><U005D>"
 yesstr  "<U0059><U0069><U0077>"
-% Daabi
 nostr   "<U0044><U0061><U0061><U0062><U0069>"
 END LC_MESSAGES
 
@@ -195,6 +186,7 @@ country_ab2  "<U0047><U0048>"
 % GHA
 country_ab3  "<U0047><U0048><U0041>"
 country_num  288
+country_car "<U0047><U0048>"
 country_isbn 9964
 % Akan
 lang_name    "<U0041><U006B><U0061><U006E>"

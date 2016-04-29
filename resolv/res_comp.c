@@ -64,11 +64,6 @@
  * SOFTWARE.
  */
 
-#if defined(LIBC_SCCS) && !defined(lint)
-static const char sccsid[] = "@(#)res_comp.c	8.1 (Berkeley) 6/4/93";
-static const char rcsid[] = "$BINDId: res_comp.c,v 8.15 1999/10/13 16:39:39 vixie Exp $";
-#endif /* LIBC_SCCS and not lint */
-
 #include <sys/types.h>
 #include <sys/param.h>
 #include <netinet/in.h>
@@ -246,10 +241,8 @@ void __putlong(u_int32_t src, u_char *dst) { ns_put32(src, dst); }
 libresolv_hidden_def (__putlong)
 void __putshort(u_int16_t src, u_char *dst) { ns_put16(src, dst); }
 libresolv_hidden_def (__putshort)
-#ifndef __ultrix__
 u_int32_t _getlong(const u_char *src) { return (ns_get32(src)); }
 u_int16_t _getshort(const u_char *src) { return (ns_get16(src)); }
-#endif /*__ultrix__*/
 #endif /*BIND_4_COMPAT*/
 
 

@@ -1,5 +1,13 @@
-escape_char /
 comment_char %
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Locale for Luxembourgish locale in Luxembourg
 % Contributed by Pit Wenkin <pit@wenkin.lu>, 2011
 % Charset UTF-8
@@ -16,20 +24,19 @@ language   "Luxembourgish"
 territory  "Luxembourg"
 revision   "0.2"
 date       "2011-01-28"
-%
-category  "lb_LU:2011";LC_IDENTIFICATION
-category  "lb_LU:2011";LC_CTYPE
-category  "lb_LU:2011";LC_COLLATE
-category  "lb_LU:2011";LC_MONETARY
-category  "lb_LU:2011";LC_NUMERIC
-category  "lb_LU:2011";LC_TIME
-category  "lb_LU:2011";LC_MESSAGES
-category  "lb_LU:2011";LC_PAPER
-category  "lb_LU:2011";LC_NAME
-category  "lb_LU:2011";LC_ADDRESS
-category  "lb_LU:2011";LC_TELEPHONE
-category  "lb_LU:2011";LC_MEASUREMENT
 
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -142,11 +149,13 @@ date_fmt	"<U0025><U0061><U0020><U0025><U002D><U0064><U002E><U0020>/
 
 week    7;19971130;4
 first_weekday 2
-first_workday 2
 END LC_TIME
 
 LC_MESSAGES
-copy "de_DE"
+yesexpr "<U005E><U005B><U002B><U0031><U006A><U004A><U0079><U0059><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U005D>"
+yesstr  "<U006A><U006F>"
+nostr   "<U006E><U0065><U0065>"
 END LC_MESSAGES
 
 LC_PAPER
@@ -194,6 +203,5 @@ int_select    "<U0030><U0030>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "de_DE"
 END LC_MEASUREMENT

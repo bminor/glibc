@@ -1,5 +1,12 @@
-escape_char  /
-comment_char  %
+comment_char %
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
 
 % Luganda language locale for Uganda
 % Source: Akademe ya Luganda
@@ -15,8 +22,6 @@ comment_char  %
 % Date: 2001-11-04
 % Users: general
 % Charset: ISO-8859-10
-% Distribution and use is free, also
-% for commercial purposes.
 
 LC_IDENTIFICATION
 title      "Luganda locale for Uganda"
@@ -26,23 +31,23 @@ contact    "Kizito Birabwa"
 email      "kompyuta@kizito.uklinux.net"
 tel        ""
 fax        ""
-language   "Luganda"
+language   "Ganda"
 territory  "Uganda"
 revision   "1.0"
 date       "2001-11-04"
-%
-category  "lg_UG:2001";LC_IDENTIFICATION
-category  "lg_UG:2001";LC_CTYPE
-category  "lg_UG:2001";LC_COLLATE
-category  "lg_UG:2001";LC_TIME
-category  "lg_UG:2001";LC_NUMERIC
-category  "lg_UG:2001";LC_MONETARY
-category  "lg_UG:2001";LC_MESSAGES
-category  "lg_UG:2001";LC_PAPER
-category  "lg_UG:2001";LC_NAME
-category  "lg_UG:2001";LC_ADDRESS
-category  "lg_UG:2001";LC_TELEPHONE
-category  "lg_UG:2001";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -66,7 +71,7 @@ LC_MONETARY
 int_curr_symbol         "<U0055><U0047><U0058><U0020>"
 % International currency symbol "UGX"
 %
-currency_symbol         "<U002F><U002D>"
+currency_symbol         "<U0055><U0053><U0068>"
 % Local currency symbol "/-"
 %
 mon_decimal_point       "<U002E>"
@@ -202,38 +207,19 @@ t_fmt_ampm  ""
 % field descriptor -
 % The "" means that this format is not supported.
 %
-date_fmt "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
-<U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
-<U0025><U005A><U0020><U0025><U0059>"
-% Date representation not described in ISO/IEC 14652. Comes out as -
-% "%a %b %e %H:%M:%S %Z %Y" which is
-% abbreviated weekday name,
-% day of month as a decimal number (01 to 31),
-% day of month as a decimal number with leading space (1 to 31),
-% hour (24-hour clock) as a decimal number (00 to 23),
-% minute as a decimal number (00 to 59),
-% seconds as a decimal number (00 to 59),
-% time-zone name,
-% year with century as a decimal number,e.g. 2001.
-%
+week 7;19971130;1
+first_weekday 2
 END LC_TIME
 
 LC_MESSAGES
-yesexpr     "<U005E><U005B><U0079><U0059><U005D>"
-% The affirmative response -
-% "^[yY]"
-%
-noexpr      "<U005E><U005B><U006E><U004E><U005D>"
-% The negative response -
-% "^[nN]"
-%
+yesexpr "<U005E><U005B><U002B><U0031><U0079><U0059><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U005D>"
+yesstr  "<U0059><U0065>"
+nostr   "<U004E><U0065><U0064><U0064><U0061>"
 END LC_MESSAGES
 
 LC_PAPER
-height   297
-width    210
-% Default paper size - A4
-%
+copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE
@@ -259,8 +245,7 @@ int_prefix     "<U0032><U0035><U0036>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME

@@ -1,6 +1,13 @@
 comment_char %
 escape_char /
-%
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Chinese language locale for Taiwan R.O.C.
 % charmap: BIG5-CP950
 %
@@ -25,22 +32,22 @@ email      "bug-glibc-locales@gnu.org"
 tel        ""
 fax        ""
 language   "Chinese"
-territory  "Taiwan R.O.C."
+territory  "Taiwan"
 revision   "0.2"
 date       "2000-08-02"
-%
-category  "zh_TW:2000";LC_IDENTIFICATION
-category  "zh_TW:2000";LC_CTYPE
-category  "zh_TW:2000";LC_COLLATE
-category  "zh_TW:2000";LC_TIME
-category  "zh_TW:2000";LC_NUMERIC
-category  "zh_TW:2000";LC_MONETARY
-category  "zh_TW:2000";LC_MESSAGES
-category  "zh_TW:2000";LC_PAPER
-category  "zh_TW:2000";LC_NAME
-category  "zh_TW:2000";LC_ADDRESS
-category  "zh_TW:2000";LC_TELEPHONE
-category  "zh_TW:2000";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -124,28 +131,16 @@ am_pm	"<U4E0A><U5348>";"<U4E0B><U5348>"
 % t_fmt_ampm: "%p %I<h>%M<m>%S<s>"
 t_fmt_ampm  "<U0025><U0070><U0020><U0025><U0049><U6642>/
 <U0025><U004D><U5206><U0025><U0053><U79D2>"
-
-date_fmt       "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
-<U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
-<U0025><U005A><U0020><U0025><U0059>"
-
+week 7;19971130;1
 END LC_TIME
 
 LC_MESSAGES
-% Any string starting with a Latin Y(y) or Chinese "Shi4" is recognized
-% as affirmative answer.
-% Any string starting with a Latin N(n) or Chinese "Bu4" or "Fou3" is
-% recognized as negative answer.
-% yesexpr     "^[<y><Y><CJK Shi4>]"
-% noexpr      "^[<n><N><CJK Bu4><CJK Fou3>]"
-yesexpr "<U005E><U005B><U0079><U0059><U662F><U005D>"
-noexpr  "<U005E><U005B><U006E><U004E><U4E0D><U5426><U005D>"
+yesexpr "<U005E><U005B><U002B><U0031><U0079><U0059><U662F><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U4E0D><U5426><U005D>"
 END LC_MESSAGES
 
 LC_PAPER
-% I assume A4, FIXME
-height   297
-width    210
+copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE
@@ -193,7 +188,7 @@ country_name	"<U4E2D><U83EF><U6C11><U570B>"
 country_ab2	"<U0054><U0057>"
 country_ab3	"<U0054><U0057><U004E>"
 country_num	158
-%country_car    "FIXME"
+country_car "<U0052><U0043>"
 country_isbn	"<U0039><U0035><U0037>"
 
 % Reference:	http://lcweb.loc.gov/standards/iso639-2/langhome.html
@@ -207,6 +202,5 @@ lang_lib	"<U0063><U0068><U0069>"
 END LC_ADDRESS
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT

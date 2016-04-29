@@ -1,7 +1,14 @@
 comment_char %
-escape_char  /
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % charset "UTF-8"
-% Distribution and use is free, also for commercial purposes.
 
 LC_IDENTIFICATION
 title "Walloon Language Locale for Belgium"
@@ -16,19 +23,18 @@ territory "Belgium"
 revision "0.9"
 date "2003-08-25"
 
-category i18n:2000;LC_IDENTIFICATION
-category i18n:2000;LC_COLLATE
-category i18n:2000;LC_CTYPE
-category i18n:2000;LC_MESSAGES
-category i18n:2000;LC_MONETARY
-category i18n:2000;LC_NUMERIC
-category i18n:2000;LC_TIME
-category i18n:2000;LC_PAPER
-category i18n:2000;LC_MEASUREMENT
-category i18n:2000;LC_TELEPHONE
-category i18n:2000;LC_ADDRESS
-category i18n:2000;LC_NAME
-
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_NAME
 END LC_IDENTIFICATION
 
 LC_ADDRESS
@@ -41,7 +47,7 @@ country_name "<U0042><U0065><U006C><U006A><U0069><U006B><U0065>"
 country_post "B"
 country_ab2 "BE"
 country_ab3 "BEL"
-country_num 56
+country_num 056
 country_isbn "2"
 % B
 country_car  "<U0042>"
@@ -70,14 +76,11 @@ LC_COLLATE
 copy "fr_BE"
 END LC_COLLATE
 
-% COMINTAIRE : dj' a radjouté on "a" et on "w" po les yesexpr
-% pace ki "oyi" si pout dire ossi "awè" (Lîdje), ayi (Årdene)
-% et "way" (Nivele).
 LC_MESSAGES
+yesexpr "<U005E><U005B><U002B><U0031><U006F><U004F><U0079><U0059><U0061><U0041><U0077><U0057><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U005D>"
 yesstr  "<U004F><U0079><U0069>"
 nostr   "<U004E><U0065><U006E><U0069>"
-yesexpr "<U005E><U005B><U006F><U004F><U0079><U0059><U0061><U0041><U0077><U0057><U005D><U002E><U002A>"
-noexpr  "<U005E><U005B><U006E><U004E><U005D><U002E><U002A>"
 END LC_MESSAGES
 
 % COMINTAIRE: doet esse li minme ki po fr_BE.
@@ -96,8 +99,7 @@ copy "fr_BE"
 END LC_PAPER
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "fr_BE"
 END LC_MEASUREMENT
 
 % COMINTAIRE: doet esse li minme ki po fr_BE.
@@ -166,8 +168,8 @@ d_fmt   "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
 t_fmt   "<U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053>"
 am_pm   "<U0041><U004D>";"<U0050><U004D>"
 t_fmt_ampm "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070>"
+week 7;19971130;4
 first_weekday 2
-first_workday 2
 END LC_TIME
 
 LC_NAME

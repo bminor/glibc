@@ -1,5 +1,12 @@
-escape_char  /
-comment_char  %
+comment_char %
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
 
 % English language locale for New Zealand
 % Source: RAP
@@ -15,8 +22,6 @@ comment_char  %
 % Date: 1997-11-05
 % Users: general
 % Charset: ISO-8859-1
-% Distribution and use is free, also
-% for commercial purposes.
 
 LC_IDENTIFICATION
 title      "English locale for New Zealand"
@@ -30,19 +35,19 @@ language   "English"
 territory  "New Zealand"
 revision   "1.0"
 date       "2000-06-29"
-%
-category  "en_NZ:2000";LC_IDENTIFICATION
-category  "en_NZ:2000";LC_CTYPE
-category  "en_NZ:2000";LC_COLLATE
-category  "en_NZ:2000";LC_TIME
-category  "en_NZ:2000";LC_NUMERIC
-category  "en_NZ:2000";LC_MONETARY
-category  "en_NZ:2000";LC_MESSAGES
-category  "en_NZ:2000";LC_PAPER
-category  "en_NZ:2000";LC_NAME
-category  "en_NZ:2000";LC_ADDRESS
-category  "en_NZ:2000";LC_TELEPHONE
-category  "en_NZ:2000";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -113,21 +118,15 @@ t_fmt       "<U0025><U0054>"
 am_pm       "<U0041><U004D>";"<U0050><U004D>"
 t_fmt_ampm  "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
 <U0025><U0070>"
-date_fmt	"<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
-<U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
-<U0025><U005A><U0020><U0025><U0059>"
+week 7;19971130;1
 END LC_TIME
 
 LC_MESSAGES
-yesexpr     "<U005E><U005B><U0079><U0059><U005D><U002E><U002A>"
-noexpr      "<U005E><U005B><U006E><U004E><U005D><U002E><U002A>"
+copy "en_US"
 END LC_MESSAGES
 
 LC_PAPER
-% FIXME
-height   297
-% FIXME
-width    210
+copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE
@@ -137,8 +136,7 @@ int_prefix     "<U0036><U0034>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME
@@ -152,6 +150,7 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 <U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
 <U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
 <U004E><U0025><U0063><U0025><U004E>"
+country_name "<U004E><U0065><U0077><U0020><U005A><U0065><U0061><U006C><U0061><U006E><U0064>"
 country_ab2   "<U004E><U005A>"
 country_ab3   "<U004E><U005A><U004C>"
 country_num   554

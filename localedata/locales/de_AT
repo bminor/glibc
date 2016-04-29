@@ -1,5 +1,12 @@
 comment_char %
-escape_char  /
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
 
 % German Language Locale for Austria
 % Source: O:sterreiches Normungsinstitut
@@ -14,8 +21,6 @@ escape_char  /
 % Date: 1996-10-15
 % Users: general
 % Charset: ISO-8859-1
-% Distribution and use is free, also
-% for commercial purposes.
 
 LC_IDENTIFICATION
 title      "German locale for Austria"
@@ -25,23 +30,23 @@ contact    "Gerhard Budin"
 email      "bug-glibc-locales@gnu.org"
 tel        ""
 fax        ""
-language   "German"
+language   "Austrian German"
 territory  "Austria"
 revision   "1.0"
 date       "2000-06-28"
-%
-category  "de_AT:2000";LC_IDENTIFICATION
-category  "de_AT:2000";LC_CTYPE
-category  "de_AT:2000";LC_COLLATE
-category  "de_AT:2000";LC_TIME
-category  "de_AT:2000";LC_NUMERIC
-category  "de_AT:2000";LC_MONETARY
-category  "de_AT:2000";LC_MESSAGES
-category  "de_AT:2000";LC_PAPER
-category  "de_AT:2000";LC_NAME
-category  "de_AT:2000";LC_ADDRESS
-category  "de_AT:2000";LC_TELEPHONE
-category  "de_AT:2000";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -54,8 +59,7 @@ copy "iso14651_t1"
 END LC_COLLATE
 
 LC_MESSAGES
-yesexpr "<U005E><U005B><U006A><U004A><U0079><U0059><U005D><U002E><U002A>"
-noexpr  "<U005E><U005B><U006E><U004E><U005D><U002E><U002A>"
+copy "de_DE"
 END LC_MESSAGES
 
 LC_MONETARY
@@ -116,17 +120,12 @@ d_fmt   "<U0025><U0059><U002D><U0025><U006D><U002D><U0025><U0064>"
 t_fmt   "<U0025><U0054>"
 am_pm   "";""
 t_fmt_ampm ""
-date_fmt	"<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
-<U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
-<U0025><U005A><U0020><U0025><U0059>"
 week    7;19971130;4
 first_weekday 2
-first_workday 2
 END LC_TIME
 
 LC_PAPER
-height   297
-width    210
+copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE
@@ -138,13 +137,11 @@ int_select     "<U0030><U0030>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0066>"
+copy "de_DE"
 END LC_NAME
 
 LC_ADDRESS
@@ -153,6 +150,7 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 <U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
 <U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
 <U004E><U0025><U0063><U0025><U004E>"
+country_name "<U00D6><U0073><U0074><U0065><U0072><U0072><U0065><U0069><U0063><U0068>"
 country_ab2 "<U0041><U0054>"
 country_ab3 "<U0041><U0055><U0054>"
 country_num 040

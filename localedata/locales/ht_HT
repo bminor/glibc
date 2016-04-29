@@ -1,7 +1,14 @@
 comment_char %
 escape_char /
-% Charset: UTF-8
 
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
+% Charset: UTF-8
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -17,14 +24,6 @@ escape_char /
 %
 % build with: localedef -f UTF-8 -i ht_HT ht_HT
 %
-% This file is a part of GNU C Library (glibc) and contains locale data. The
-% Free Software Foundation does not claim any copyright interest in the
-% locale data contained in this file. The foregoing does not affect the
-% license of GNU C Library (glibc) as a whole. It does not exempt you from the
-% conditions of the license if your use would otherwise be governed by
-% that license.
-%
-%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -36,23 +35,23 @@ contact      "sugarlabs.org"
 email        "libc-alpha@sourceware.org"
 tel          ""
 fax          ""
-language     "Kreyol"
+language     "Haitian Creole"
 territory    "Haiti"
 revision     "1.1"
 date         "2013-08-09"
-%
-category  "ht_HT:2000";LC_IDENTIFICATION
-category  "ht_HT:2000";LC_CTYPE
-category  "ht_HT:2000";LC_COLLATE
-category  "ht_HT:2000";LC_TIME
-category  "ht_HT:2000";LC_NUMERIC
-category  "ht_HT:2000";LC_MONETARY
-category  "ht_HT:2000";LC_PAPER
-category  "ht_HT:2000";LC_MEASUREMENT
-category  "ht_HT:2000";LC_MESSAGES
-category  "ht_HT:2000";LC_NAME
-category  "ht_HT:2000";LC_ADDRESS
-category  "ht_HT:2000";LC_TELEPHONE
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -110,9 +109,8 @@ abday         "<U0064><U0069><U006D>";/
        "<U006A><U0065><U0064>";/
        "<U0076><U0061><U006E>";/
        "<U0073><U0061><U006D>"
-week    7;19971130;7
-first_weekday 1
-first_workday 2
+week 7;19971130;1
+first_weekday 2
 % %a %d %b %Y %T %Z
 d_t_fmt       "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
 % %d/%m/%Y
@@ -121,8 +119,6 @@ d_fmt         "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
 t_fmt         "<U0025><U0054>"
 am_pm         "";""
 t_fmt_ampm    ""
-% %a %b %e %H:%M:%S %Z %Y
-date_fmt      "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065><U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U005A><U0020><U0025><U0059>"
 END LC_TIME
 
 LC_NUMERIC
@@ -152,24 +148,17 @@ n_sign_posn               1
 END LC_MONETARY
 
 LC_PAPER
-% A4
-height   297
-width    210
+copy "i18n"
 END LC_PAPER
 
 LC_MEASUREMENT
-% metric
-measurement    1
+copy "i18n"
 END LC_MEASUREMENT
 
 LC_MESSAGES
-% ^[wWoOyY].*
-yesexpr "<U005E><U005B><U0077><U0057><U006F><U004F><U0079><U0059><U005D><U002E><U002A>"
-% ^[nN].*
-noexpr  "<U005E><U005B><U006E><U004E><U005D><U002E><U002A>"
-% Wi
+yesexpr "<U005E><U005B><U002B><U0031><U0077><U0057><U006F><U004F><U0079><U0059><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U005D>"
 yesstr  "<U0057><U0069>"
-% Non
 nostr   "<U004E><U006F><U006E>"
 END LC_MESSAGES
 

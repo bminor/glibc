@@ -1,5 +1,13 @@
-escape_char /
 comment_char %
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Locale for German locale in Germany
 % Contributed by Ulrich Drepper <drepper@redhat.com>, 2000
 
@@ -15,19 +23,19 @@ language   "German"
 territory  "Germany"
 revision   "1.0"
 date       "2000-06-24"
-%
-category  "de_DE@euro:2000";LC_IDENTIFICATION
-category  "de_DE@euro:2000";LC_CTYPE
-category  "de_DE@euro:2000";LC_COLLATE
-category  "de_DE@euro:2000";LC_TIME
-category  "de_DE@euro:2000";LC_NUMERIC
-category  "de_DE@euro:2000";LC_MONETARY
-category  "de_DE@euro:2000";LC_MESSAGES
-category  "de_DE@euro:2000";LC_PAPER
-category  "de_DE@euro:2000";LC_NAME
-category  "de_DE@euro:2000";LC_ADDRESS
-category  "de_DE@euro:2000";LC_TELEPHONE
-category  "de_DE@euro:2000";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -75,6 +83,5 @@ copy "de_DE"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "de_DE"
 END LC_MEASUREMENT

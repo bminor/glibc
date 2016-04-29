@@ -1,6 +1,13 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Catalan Language Locale for Andorra
 % Language: ca
 % Territory: AD
@@ -10,8 +17,6 @@ escape_char  /
 % Application: general
 % Users: general
 % Charset: ISO-8859-15
-% Distribution and use is free, also
-% for commercial purposes.
 
 LC_IDENTIFICATION
 title      "Catalan locale for Andorra "
@@ -25,19 +30,19 @@ language   "Catalan"
 territory  "Andorra"
 revision   "1.0"
 date       "2006-01-16"
-%
-category  "ca_AD:2000";LC_IDENTIFICATION
-category  "ca_AD:2000";LC_CTYPE
-category  "ca_AD:2000";LC_COLLATE
-category  "ca_AD:2000";LC_TIME
-category  "ca_AD:2000";LC_NUMERIC
-category  "ca_AD:2000";LC_MONETARY
-category  "ca_AD:2000";LC_MESSAGES
-category  "ca_AD:2000";LC_PAPER
-category  "ca_AD:2000";LC_NAME
-category  "ca_AD:2000";LC_ADDRESS
-category  "ca_AD:2000";LC_TELEPHONE
-category  "ca_AD:2000";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
@@ -75,8 +80,7 @@ int_prefix     "<U0033><U0037><U0036>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "ca_ES"
 END LC_MEASUREMENT
 
 LC_NAME
@@ -89,9 +93,10 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 <U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
 <U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
 <U004E><U0025><U0063><U0025><U004E>"
+country_name "<U0041><U006E><U0064><U006F><U0072><U0072><U0061>"
 country_ab2 "<U0041><U0044>"
 country_ab3 "<U0041><U004E><U0044>"
-country_num 20
+country_num 020
 % AND
 country_car  "<U0041><U004E><U0044>"
 % català

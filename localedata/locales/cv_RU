@@ -1,6 +1,13 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Chuvash Language Locale for Russia
 % Language: cv
 % Territory: RU
@@ -9,8 +16,6 @@ escape_char  /
 % Application: general
 % Users: general
 % Charset: UTF-8
-% Distribution and use is free, also
-% for commercial purposes.
 %
 % Based on the ru_RO
 % Modifed by:
@@ -30,19 +35,19 @@ language   "Chuvash"
 territory  "Russia"
 revision   "1.0"
 date       "2000-06-29"
-%
-category  "cv_RU:2000";LC_IDENTIFICATION
-category  "cv_RU:2000";LC_CTYPE
-category  "cv_RU:2000";LC_COLLATE
-category  "cv_RU:2000";LC_TIME
-category  "cv_RU:2000";LC_NUMERIC
-category  "cv_RU:2000";LC_MONETARY
-category  "cv_RU:2000";LC_MESSAGES
-category  "cv_RU:2000";LC_PAPER
-category  "cv_RU:2000";LC_NAME
-category  "cv_RU:2000";LC_ADDRESS
-category  "cv_RU:2000";LC_TELEPHONE
-category  "cv_RU:2000";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
@@ -108,17 +113,15 @@ translit_end
 END LC_CTYPE
 
 LC_MESSAGES
-% "^[yY].*"
-yesexpr "<U005E><U005B><U0079><U0059><U005D><U002E><U002A>"
-% "^[nN].*"
-noexpr "<U005E><U005B><U006E><U004E><U005D><U002E><U002A>"
+yesexpr "<U005E><U005B><U002B><U0031><U0079><U0059><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U005D>"
 END LC_MESSAGES
 
 LC_MONETARY
 int_curr_symbol           "<U0052><U0055><U0042><U0020>"
 
 % "t." - short for tenke(, Chuvash name for rouble
-currency_symbol "<U0074>"
+currency_symbol "<U20BD>"
 
 mon_decimal_point         "<U002E>"
 mon_thousands_sep         "<U00A0>"
@@ -210,11 +213,8 @@ d_fmt     "<U0025><U0064><U002E><U0025><U006D><U002E><U0025><U0059>"
 t_fmt     "<U0025><U0054>"
 am_pm     "";""
 t_fmt_ampm ""
-date_fmt       "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
-<U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
-<U0025><U005A><U0020><U0025><U0059>"
+week 7;19971130;1
 first_weekday 2
-first_workday 2
 END LC_TIME
 
 LC_PAPER
@@ -226,8 +226,7 @@ copy "ru_RU"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "ru_RU"
 END LC_MEASUREMENT
 
 LC_NAME

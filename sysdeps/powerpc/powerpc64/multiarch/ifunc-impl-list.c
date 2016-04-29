@@ -101,6 +101,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   /* Support sysdeps/powerpc/powerpc64/multiarch/strlen.c.  */
   IFUNC_IMPL (i, name, strlen,
+	      IFUNC_IMPL_ADD (array, i, strlen, hwcap2 & PPC_FEATURE2_ARCH_2_07,
+			      __strlen_power8)
 	      IFUNC_IMPL_ADD (array, i, strlen, hwcap & PPC_FEATURE_HAS_VSX,
 			      __strlen_power7)
 	      IFUNC_IMPL_ADD (array, i, strlen, 1,
@@ -322,6 +324,22 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, strcat, 1,
 			     __strcat_ppc))
 
+  /* Support sysdeps/powerpc/powerpc64/multiarch/strspn.c.  */
+  IFUNC_IMPL (i, name, strspn,
+             IFUNC_IMPL_ADD (array, i, strspn,
+                             hwcap2 & PPC_FEATURE2_ARCH_2_07,
+                             __strspn_power8)
+             IFUNC_IMPL_ADD (array, i, strspn, 1,
+                             __strspn_ppc))
+
+  /* Support sysdeps/powerpc/powerpc64/multiarch/strcspn.c.  */
+  IFUNC_IMPL (i, name, strcspn,
+             IFUNC_IMPL_ADD (array, i, strcspn,
+                             hwcap2 & PPC_FEATURE2_ARCH_2_07,
+                             __strcspn_power8)
+             IFUNC_IMPL_ADD (array, i, strcspn, 1,
+                             __strcspn_ppc))
+
   /* Support sysdeps/powerpc/powerpc64/multiarch/strstr.c.  */
   IFUNC_IMPL (i, name, strstr,
              IFUNC_IMPL_ADD (array, i, strstr,
@@ -330,6 +348,14 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
              IFUNC_IMPL_ADD (array, i, strstr, 1,
                              __strstr_ppc))
 
+
+  /* Support sysdeps/powerpc/powerpc64/multiarch/strcasestr.c.  */
+  IFUNC_IMPL (i, name, strcasestr,
+	      IFUNC_IMPL_ADD (array, i, strcasestr,
+			      hwcap2 & PPC_FEATURE2_ARCH_2_07,
+			      __strcasestr_power8)
+             IFUNC_IMPL_ADD (array, i, strcasestr, 1,
+                             __strcasestr_ppc))
 
   return i;
 }

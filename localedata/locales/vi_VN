@@ -1,6 +1,13 @@
-escape_char /
 comment_char %
-%
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Vietnamese language locale for Vietnam
 % Source: glibc locale and info from vietnamese native speakers
 % Address:
@@ -14,8 +21,6 @@ comment_char %
 % Date: 2004-01-09
 % Users: general
 % Charset: UTF-8
-% Distribution and use is free, also
-% for commercial purposes.
 
 LC_IDENTIFICATION
 title      "Vietnamese language locale for Vietnam"
@@ -29,20 +34,19 @@ language   "Vietnamese"
 territory  "Vietnam"
 revision   "1.1"
 date       "2004-01-09"
-%
-category  "vi_VN:2000";LC_IDENTIFICATION
-category  "vi_VN:2000";LC_CTYPE
-category  "vi_VN:2000";LC_COLLATE
-category  "vi_VN:2000";LC_TIME
-category  "vi_VN:2000";LC_NUMERIC
-category  "vi_VN:2000";LC_MONETARY
-category  "vi_VN:2000";LC_MESSAGES
-category  "vi_VN:2000";LC_PAPER
-category  "vi_VN:2000";LC_NAME
-category  "vi_VN:2000";LC_ADDRESS
-category  "vi_VN:2000";LC_TELEPHONE
-category  "vi_VN:2000";LC_MEASUREMENT
 
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -293,20 +297,19 @@ t_fmt    "<U0025><U0054>"
 am_pm    "<U0041><U004D>";"<U0050><U004D>"
 t_fmt_ampm  "<U0025><U0049><U003A><U0025><U004D><U0020><U0025><U0070>"
 date_fmt  "<U0025><U0041><U002C><U0020><U0025><U0064><U0020><U0025><U0042><U0020><U006E><U0103><U006D><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
+week 7;19971130;1
+first_weekday 2
 END LC_TIME
 
-% yes: Va^ng / Da.
-% no: Kho^ng
 LC_MESSAGES
-yesstr   "<U0043><U00F3>"
-nostr    "<U004B><U0068><U00F4><U006E><U0067>"
-yesexpr  "<U005E><U005B><U0031><U0079><U0059><U0063><U0043><U005D><U002E><U002A>"
-noexpr   "<U005E><U005B><U0030><U006E><U004E><U006B><U004B><U005D><U002E><U002A>"
+yesexpr "<U005E><U005B><U002B><U0031><U0079><U0059><U0063><U0043><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U006B><U004B><U005D>"
+yesstr  "<U0043><U00F3>"
+nostr   "<U004B><U0068><U00F4><U006E><U0067>"
 END LC_MESSAGES
 
 LC_PAPER
-height      297
-width       210
+copy "i18n"
 END LC_PAPER
 
 LC_NAME
@@ -329,7 +332,7 @@ LC_ADDRESS
 % LC_ADDRESS
 postal_fmt  "<U0025><U007A><U0025><U0063><U0025><U0054><U0025><U0073>/
 <U0025><U0062><U0025><U0065><U0025><U0072>"
-country_name "<U0056><U0069><U1EC7><U0074><U0020><U006E><U0061><U006D>"
+country_name "<U0056><U0069><U1EC7><U0074><U0020><U004E><U0061><U006D>"
 lang_name "<U0056><U0069><U1EC7><U0074><U0020><U006E><U0067><U1EEF>"
 
 country_ab2 "<U0056><U004E>"
@@ -357,6 +360,5 @@ int_select  "<U0030><U0030>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT

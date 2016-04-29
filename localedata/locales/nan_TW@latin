@@ -1,6 +1,13 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Minnan Language Locale for Taiwan
 % Source:
 % Contact: Arne Goetje
@@ -11,8 +18,6 @@ escape_char  /
 % Date: 2008-06-16
 % Users: general
 % Charset: UTF-8
-% Distribution and use is free, also
-% for commercial purposes.
 
 LC_IDENTIFICATION
 title "Minnan language locale for Taiwan"
@@ -22,23 +27,22 @@ contact "Arne Goetje"
 email "arne@canonical.com"
 tel ""
 fax ""
-language "Minnan"
+language "Min Nan Chinese"
 territory "Taiwan"
 revision "0.1"
 date "2008-06-16"
 
-category "nan_TW@latin:2000";LC_IDENTIFICATION
-category "nan_TW@latin:2000";LC_CTYPE
-category "nan_TW@latin:2000";LC_COLLATE
-category "nan_TW@latin:2000";LC_TIME
-category "nan_TW@latin:2000";LC_NUMERIC
-category "nan_TW@latin:2000";LC_PAPER
-category "nan_TW@latin:2000";LC_TELEPHONE
-category "nan_TW@latin:2000";LC_MEASUREMENT
-category "nan_TW@latin:2000";LC_ADDRESS
-category "nan_TW@latin:2000";LC_MESSAGES
-category "nan_TW@latin:2000";LC_MONETARY
-
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_MONETARY
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -137,32 +141,22 @@ t_fmt       "<U0025><U0072>"
 am_pm       "<U0074><U00E9><U006E><U0067><U002D><U0070><U006F><U0358>";"<U0113><U002D><U0070><U006F><U0358>"
 t_fmt_ampm  "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070>"
 date_fmt    "<U0025><U0059><U0020><U0025><U0062><U0020><U0025><U0064><U0020><U0028><U0025><U0061><U0029><U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U005A>"
+week 7;19971130;1
 END LC_TIME
 
 LC_MESSAGES
-
-% "^[sS].*" for "Yes"
-yesexpr "<U005E><U005B><U0073><U0053><U005D><U002E><U002A>"
-
-% "^[mM].*" for "No"
-noexpr "<U005E><U005B><U006D><U004D><U005D><U002E><U002A>"
-
-% "Sī" for "Yes"
-yesstr "<U0053><U012B>"
-
-% "M̄-sī" for "No"
-nostr "<U004D><U0304><U002D><U0053><U012B>"
-
+yesexpr "<U005E><U005B><U002B><U0031><U0079><U0059><U0073><U0053><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U006D><U004D><U005D>"
+yesstr  "<U0053><U012B>"
+nostr   "<U004D><U0304><U002D><U0053><U012B>"
 END LC_MESSAGES
 
 LC_PAPER
-height      297
-width       210
+copy "nan_TW"
 END LC_PAPER
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "nan_TW"
 END LC_MEASUREMENT
 
 LC_NAME
@@ -192,7 +186,7 @@ country_name	"<U0054><U00E2><U0069><U002D><U006F><U00E2><U006E>"
 country_ab2	"<U0054><U0057>"
 country_ab3	"<U0054><U0057><U004E>"
 country_num	158
-%country_car    "FIXME"
+country_car "<U0052><U0043>"
 country_isbn	"<U0039><U0035><U0037>"
 %lang_name "Bân-lâm-gú, Hō-ló-oē"
 lang_name "<U0042><U00E2><U006E><U002D><U006C><U00E2><U006D><U002D><U0067><U00FA><U002C><U0020><U0048><U014D><U002D><U006C><U00F3><U002D><U006F><U0113>"

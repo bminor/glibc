@@ -149,7 +149,7 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-nodelete) \
 	 tst-initorder tst-initorder2 tst-relsort1 tst-null-argv \
 	 tst-ptrguard1 tst-tlsalign tst-tlsalign-extern tst-nodelete-opened \
-	 tst-nodelete2 tst-audit11 tst-audit12
+	 tst-nodelete2 tst-audit11 tst-audit12 tst-dlsym-error
 #	 reldep9
 ifeq ($(build-hardcoded-path-in-tests),yes)
 tests += tst-dlopen-aout
@@ -170,8 +170,9 @@ tlsmod17a-suffixes = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
 tlsmod18a-suffixes = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
 tlsmod17a-modules = $(addprefix tst-tlsmod17a, $(tlsmod17a-suffixes))
 tlsmod18a-modules = $(addprefix tst-tlsmod18a, $(tlsmod17a-suffixes))
-extra-test-objs += $(tlsmod17a-modules:=.os) $(tlsmod18a-modules:=.os)
-test-extras += tst-tlsmod17a tst-tlsmod18a
+extra-test-objs += $(tlsmod17a-modules:=.os) $(tlsmod18a-modules:=.os) \
+		   tst-tlsalign-vars.o
+test-extras += tst-tlsmod17a tst-tlsmod18a tst-tlsalign-vars
 modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		testobj1_1 failobj constload2 constload3 unloadmod \
 		dep1 dep2 dep3 dep4 vismod1 vismod2 vismod3 \
@@ -1257,3 +1258,5 @@ $(objpfx)tst-prelink-cmp.out: tst-prelink.exp \
 $(objpfx)tst-ldconfig-X.out : tst-ldconfig-X.sh $(objpfx)ldconfig
 	$(SHELL) $< '$(common-objpfx)' '$(test-wrapper)' '$(test-wrapper-env)' > $@; \
 	$(evaluate-test)
+
+$(objpfx)tst-dlsym-error: $(libdl)

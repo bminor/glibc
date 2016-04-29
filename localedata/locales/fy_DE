@@ -1,7 +1,14 @@
 comment_char %
-escape_char  /
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % charset "ISO_8859-1:1987"
-% Distribution and use is
 
 LC_IDENTIFICATION
 title "Sater Frisian and North Frisian Locale for Germany"
@@ -11,29 +18,23 @@ contact "Kenneth Christiansen, Pablo Saratxaga"
 email "kenneth@gnu.org, pablo@mandriva.com"
 tel ""
 % Fax
-language "fy"
-territory "DE"
+language "Western Frisian"
+territory "Germany"
 revision "0.1"
 date "2003-11-30"
 
-category i18n:2000;LC_IDENTIFICATION
-category i18n:2000;LC_COLLATE
-category i18n:2000;LC_CTYPE
-category i18n:2000;LC_MESSAGES
-category i18n:2000;LC_MONETARY
-category i18n:2000;LC_NUMERIC
-category i18n:2000;LC_TIME
-category i18n:2000;LC_PAPER
-category i18n:2000;LC_NAME
-category i18n:2000;LC_MEASUREMENT
-category i18n:2000;LC_TELEPHONE
-category i18n:2000;LC_ADDRESS
-
-% ISO/IEC 14652: Converted comments to LC_IDENTIFICATION
-%  added LC_PAPER, LC_MEASUREMENT, LC_TELEPHONE, LC_ADDRESS
-%  copied LC_MONETARY, LC_NUMERIC from de_DE for simplicity
-% -- mckinstry@computer.org, 2000-07-03
-
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_ADDRESS
 END LC_IDENTIFICATION
 
 LC_ADDRESS
@@ -49,7 +50,7 @@ country_ab3   "<U0044><U0045><U0055>"
 country_car   "<U0044>"
 country_num 276
 country_isbn "3"
-% FIXME country_name in Low Saxon ?
+country_name "<U0044><U00FA><U0074><U0073><U006C><U00E2><U006E>"
 % Frysk
 lang_name    "<U0046><U0072><U0079><U0073><U006B>"
 % fy
@@ -69,8 +70,10 @@ copy "en_DK"
 END LC_CTYPE
 
 LC_MESSAGES
-yesexpr "<U005E><U005B><U006A><U004A><U0079><U0059><U005D><U002E><U002A>"
-noexpr  "<U005E><U005B><U006E><U004E><U005D><U002E><U002A>"
+yesexpr "<U005E><U005B><U002B><U0031><U006A><U004A><U0079><U0059><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U005D>"
+yesstr  "<U006A><U0061>"
+nostr   "<U006E><U0065><U0065>"
 END LC_MESSAGES
 
 LC_MONETARY
@@ -90,8 +93,7 @@ copy "de_DE"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "de_DE"
 END LC_MEASUREMENT
 
 LC_NUMERIC
@@ -135,5 +137,4 @@ am_pm   "";""
 t_fmt_ampm ""
 week	7;19971130;4
 first_weekday	2
-first_workday	2
 END LC_TIME

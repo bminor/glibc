@@ -1,6 +1,13 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Tagalog Language Locale for Philippines
 % Source:
 % Contact:
@@ -11,8 +18,6 @@ escape_char  /
 % Date: 2001-01-28
 % Users: general
 % Charset: ISO-8859-1
-% Distribution and use is free, also
-% for commercial purposes.
 
 LC_IDENTIFICATION
 title "Tagalog language locale for Philippines"
@@ -27,18 +32,17 @@ territory "Philippines"
 revision "0.2"
 date "2001-01-28"
 
-category "tl_PH:2000";LC_IDENTIFICATION
-category "tl_PH:2000";LC_CTYPE
-category "tl_PH:2000";LC_COLLATE
-category "tl_PH:2000";LC_TIME
-category "tl_PH:2000";LC_NUMERIC
-category "tl_PH:2000";LC_PAPER
-category "tl_PH:2000";LC_TELEPHONE
-category "tl_PH:2000";LC_MEASUREMENT
-category "tl_PH:2000";LC_ADDRESS
-category "tl_PH:2000";LC_MESSAGES
-category "tl_PH:2000";LC_MONETARY
-
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_MONETARY
 END LC_IDENTIFICATION
 
 LC_CTYPE
@@ -80,7 +84,7 @@ END LC_COLLATE
 
 LC_MONETARY
 int_curr_symbol         "<U0050><U0048><U0050><U0020>"
-currency_symbol         "<U0050><U0068><U0050>"
+currency_symbol         "<U20B1>"
 mon_decimal_point       "<U002E>"
 mon_thousands_sep       "<U002C>"
 mon_grouping            3;3
@@ -136,6 +140,7 @@ d_fmt       "<U0025><U006D><U002F><U0025><U0064><U002F><U0025><U0079>"
 t_fmt       "<U0025><U0072>"
 am_pm       "<U0041><U004D>";"<U0050><U004D>"
 t_fmt_ampm  "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070>"
+week 7;19971130;1
 END LC_TIME
 
 LC_MESSAGES
@@ -143,13 +148,11 @@ copy "en_US"
 END LC_MESSAGES
 
 LC_PAPER
-height   279
-width    216
+copy "en_US"
 END LC_PAPER
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME
@@ -163,7 +166,6 @@ postal_fmt    "<U0025><U0061><U0025><U004E><U0025><U0066><U0025><U004E>/
 <U0020><U0025><U0073><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
 <U004E><U0025><U0054><U0020><U0025><U007A><U0025>/
 <U004E><U0025><U0063><U0025><U004E>"
-
 country_ab2 "<U0050><U0048>"
 country_ab3 "<U0050><U0048><U004C>"
 country_num 608
@@ -178,6 +180,5 @@ lang_lib    "<U0074><U0067><U006C>"
 END LC_ADDRESS
 
 LC_TELEPHONE
-% FIXME
-copy "en_US"
+copy "en_PH"
 END LC_TELEPHONE

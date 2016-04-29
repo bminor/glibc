@@ -1,6 +1,13 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Slovenian language locale for Slovenia
 % Source: USM/MZT
 % Address: Kotnikova 6,
@@ -16,8 +23,6 @@ escape_char  /
 % Application: general
 % Users: general
 % Charset: ISO-8859-2
-% Distribution and use is free, also
-% for commercial purposes.
 
 LC_IDENTIFICATION
 title      "Slovenian locale for Slovenia"
@@ -31,19 +36,19 @@ language   "Slovenian"
 territory  "Slovenia"
 revision   "1.0"
 date       "2000-06-29"
-%
-category  "sl_SI:2000";LC_IDENTIFICATION
-category  "sl_SI:2000";LC_CTYPE
-category  "sl_SI:2000";LC_COLLATE
-category  "sl_SI:2000";LC_TIME
-category  "sl_SI:2000";LC_NUMERIC
-category  "sl_SI:2000";LC_MONETARY
-category  "sl_SI:2000";LC_MESSAGES
-category  "sl_SI:2000";LC_PAPER
-category  "sl_SI:2000";LC_NAME
-category  "sl_SI:2000";LC_ADDRESS
-category  "sl_SI:2000";LC_TELEPHONE
-category  "sl_SI:2000";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
@@ -2120,8 +2125,10 @@ translit_end
 END LC_CTYPE
 
 LC_MESSAGES
-yesexpr "<U005E><U005B><U0059><U0079><U004A><U006A><U005D><U002E><U002A>"
-noexpr  "<U005E><U005B><U004E><U006E><U005D><U002E><U002A>"
+yesexpr "<U005E><U005B><U002B><U0031><U0059><U0079><U004A><U006A><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U004E><U006E><U005D>"
+yesstr  "<U0064><U0061>"
+nostr   "<U006E><U0065>"
 END LC_MESSAGES
 
 LC_MONETARY
@@ -2183,18 +2190,12 @@ d_fmt   "<U0025><U0064><U002E><U0020><U0025><U006D><U002E><U0020><U0025><U0059>"
 t_fmt   "<U0025><U0054>"
 am_pm   "";""
 t_fmt_ampm ""
-date_fmt       "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
-<U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
-<U0025><U005A><U0020><U0025><U0059>"
+week 7;19971130;1
 first_weekday 2
-first_workday 2
 END LC_TIME
 
 LC_PAPER
-% FIXME
-height   297
-% FIXME
-width    210
+copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE
@@ -2204,8 +2205,7 @@ int_prefix     "<U0033><U0038><U0036>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME
@@ -2219,6 +2219,7 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 <U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
 <U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
 <U004E><U0025><U0063><U0025><U004E>"
+country_name "<U0053><U006C><U006F><U0076><U0065><U006E><U0069><U006A><U0061>"
 country_ab2 "<U0053><U0049>"
 country_ab3 "<U0053><U0056><U004E>"
 country_num 705

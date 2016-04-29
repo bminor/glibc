@@ -1,3 +1,1300 @@
+2016-04-29  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19642]
+	* inet/getnameinfo.c (gni_host_inet_name, gni_host_inet_numeric)
+	(gni_host_inet, gni_host_local, gni_host, gni_serv_inet)
+	(gni_serv_local, gni_serv): New functions extracted from
+	getnameinfo.
+	(getnameinfo): Call gni_host and gni_serv to perform the
+	processing.  Always free scratch buffer.
+
+2016-04-29  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power8/strncpy.S: Call memset to pad the
+	remaining bytes in the dest string, with zeros.
+
+2016-04-29  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20010]
+	CVE-2016-3706
+	* sysdeps/posix/getaddrinfo.c
+	(convert_hostent_to_gaih_addrtuple): New function.
+	(gethosts): Call convert_hostent_to_gaih_addrtuple.
+	(gaih_inet): Use convert_hostent_to_gaih_addrtuple to convert
+	AF_INET data.
+
+2016-04-29  Florian Weimer  <fweimer@redhat.com>
+
+	glob: Simplify and document the interface for the GLOB_ALTDIRFUNC
+	callback function gl_readdir.
+	* posix/glob.c (NAMELEN, CONVERT_D_NAMLEN): Remove.
+	(CONVERT_DIRENT_DIRENT64): Use strcpy instead of memcpy.
+	(glob_in_dir): Remove len.  Use strdup instead of malloc and
+	memcpy to copy the name.
+	* manual/pattern.texi (Calling Glob): Document requirements for
+	implementations of the gl_readdir callback function.
+	* manual/examples/mkdirent.c: New example.
+	* posix/bug-glob2.c (my_readdir): Set d_ino to 1 unconditionally,
+	per the manual guidance.
+	* posix/tst-gnuglob.c (my_readdir): Likewise.
+
+2016-04-28  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20014]
+	* libio/stdio.h (getc_unlocked): Declare if [__USE_POSIX199506],
+	not [__USE_POSIX].
+	(getchar_unlocked): Likewise.
+	(putc_unlocked): Likewise.
+	(putchar_unlocked): Likewise.
+	(flockfile): Likewise.
+	(ftrylockfile): Likewise.
+	(funlockfile): Likewise.
+	* conform/Makefile (test-xfail-XPG3/stdio.h/conform): Remove
+	variable.
+	(test-xfail-XPG4/stdio.h/conform): Likewise.
+
+	* conform/data/langinfo.h-data [XPG3 || XPG4 || UNIX98] (YESSTR):
+	Expect constant.
+	[XPG3 || XPG4 || UNIX98] (NOSTR): Likewise.
+	* conform/Makefile (test-xfail-XPG3/langinfo.h/conform): Remove
+	variable.
+	(test-xfail-XPG4/langinfo.h/conform): Likewise.
+	(test-xfail-UNIX98/langinfo.h/conform): Likewise.
+
+	* libio/stdio.h (off_t): Also define if [__USE_UNIX98].
+	[__USE_LARGEFILE64] (off64_t): Likewise.
+	* conform/Makefile (test-xfail-UNIX98/stdio.h/conform): Remove
+	variable.
+
+2016-04-28  Florian Weimer  <fweimer@redhat.com>
+
+	* inet/getnameinfo.c (getnameinfo): Do not preserve errno.
+
+2016-04-28  Florian Weimer  <fweimer@redhat.com>
+
+	* resolv/inet_addr.c: Reindent preprocessor conditionals.
+	* resolv/res_init.c: Likewise.
+	* resolv/res_mkquery.c: Likewise.
+
+2016-04-28  Florian Weimer  <fweimer@redhat.com>
+
+	* resolv/res_init.c (isascii): Do not define.  Use definition in
+	<ctype.h>.
+	* resolv/gethnamaddr.c: Remove USE_OPTIONS_H conditional.
+	(LOG_AUTH): Remove.
+	(SPRINTF): Remove, adjust caller.
+	(MULTI_PTRS_ARE_ALIASES): Remove, always defined.
+
+2016-04-28  Florian Weimer  <fweimer@redhat.com>
+
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyaddr2_r): Remove
+	SUNSECURITY conditional.
+	* resolv/gethnamaddr.c (gethostbyaddr): Likewise.
+
+2016-04-28  Florian Weimer  <fweimer@redhat.com>
+
+	* resolv/arpa/nameser.h: Include <sys/types.h> unconditionally.
+	* resolv/gethnamaddr.c: Use include files from conf/portability.h.
+	Remove BSD-related preprocessor conditionals.
+	* conf/portability.h: Remove.
+
+2016-04-28  Florian Weimer  <fweimer@redhat.com>
+
+	* resolv/resolv.h: Remove __BIND_NOSTATIC conditional.
+	* resolv/res_data.c: Likewise.
+
+2016-04-28  Florian Weimer  <fweimer@redhat.com>
+
+	* resolv/res_comp.c: Remove code conditional on __ultrix__.
+	* resolv/res_data.c: Remove code conditional on ultrix.
+
+2016-04-28  Florian Weimer  <fweimer@redhat.com>
+
+	* resolv/res_init.c (RFC1535): Do not define.  Remove
+	RFC1535 preprocessor conditionals.
+	* resolv/README: Update.  Do not claim strict RFC 1535 compliance
+	because there configuration options which make the resolver
+	behavior different.
+
+2016-04-28  Florian Weimer  <fweimer@redhat.com>
+
+	* resolv/gethnamaddr.c (RESOLVSORT): Do not define.  Remove
+	RESOLVSORT preprocessor conditionals.
+	* resolv/nss_dns/dns-host.c: Likewise.
+	* resolv/res_init.c: Likewise.
+
+2016-04-28  Florian Weimer  <fweimer@redhat.com>
+
+	* resolv/res_data.c: Remove code conditional on BIND_UPDATE.  It
+	is never defined.
+
+2016-04-28  Florian Weimer  <fweimer@redhat.com>
+
+	* inet/inet_lnaof.c: Remove SCSS keyword.
+	* inet/inet_mkadr.c: Likewise.
+	* inet/inet_net.c: Likewise.
+	* inet/inet_netof.c: Likewise.
+	* inet/rcmd.c: Likewise.
+	* inet/rexec.c: Likewise.
+	* inet/ruserpass.c: Likewise.
+
+2016-04-28  Florian Weimer  <fweimer@redhat.com>
+
+	* resolv/inet_addr.c: Remove _LIBC conditionals.
+	* resolv/res_data.c: Likewise.
+	* resolv/res_init.c: Likewise.
+	* resolv/res_mkquery.c: Likewise.
+	* resolv/res_libc.c: Update comment.
+	* resolv/README: Update.
+
+2016-04-28  Florian Weimer  <fweimer@redhat.com>
+
+	* resolv/gethnamaddr.c: Remove SCSS keyword.
+	* resolv/herror.c: Likewise.
+	* resolv/inet_addr.c: Likewise.
+	* resolv/inet_net_ntop.c: Likewise.
+	* resolv/inet_net_pton.c: Likewise.
+	* resolv/inet_neta.c: Likewise.
+	* resolv/inet_ntop.c: Likewise.
+	* resolv/inet_pton.c: Likewise.
+	* resolv/ns_date.c: Remove RCS keyword.
+	* resolv/ns_name.c: Likewise.
+	* resolv/ns_netint.c: Likewise.
+	* resolv/ns_parse.c: Likewise.
+	* resolv/ns_print.c: Likewise.
+	* resolv/ns_samedomain.c: Likewise.
+	* resolv/ns_ttl.c: Likewise.
+	* resolv/nsap_addr.c: Likewise.
+	* resolv/res_comp.c: Remove SCSS and RCS keyword.
+	* resolv/res_data.c: Remove RCS keyword.
+	* resolv/res_debug.c: Remove SCSS and RCS keyword.
+	* resolv/res_init.c: Likewise.
+	* resolv/res_mkquery.c: Likewise.
+	* resolv/res_query.c: Likewise.
+	* resolv/res_send.c: Likewise.
+
+2016-04-27  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/data/stdio.h-data (fdopen): Expect also for
+	[XPG3 || XPG4].
+
+	* conform/data/stdio.h-data (flockfile): Also expect for [UNIX98].
+	(fseeko): Likewise.
+	(ftello): Likewise.
+	(ftrylockfile): Likewise.
+	(funlockfile): Likewise.
+	(getc_unlocked): Likewise.
+	(getchar_unlocked): Likewise.
+	(putc_unlocked): Likewise.
+	(putchar_unlocked): Likewise.
+
+2016-04-27  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19868]
+	* resolv/nss_dns/dns-network.c (getanswer_r): Implement additional
+	DNS packet syntax checks (which were not needed before).  Skip
+	over non-PTR records.
+
+2016-04-27  Florian Weimer  <fweimer@redhat.com>
+
+	* resolv/nss_dns/dns-network.c (offsetof): Remove macro
+	definition.  Include <stddef.h> instead.
+
+2016-04-27  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19831]
+	* resolv/nss_dns/dns-host.c (rrtype_to_rdata_length): New
+	function.
+	(getanswer_r): Check RDATA length against RRTYPE and QTYPE.
+	(gaih_getanswer_slice): Check RDATA length against RRTYPE.
+
+2016-04-27  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19862]
+	* resolv/nss_dns/dns-host.c (AskedForGot): Remove.
+	(getanswer_r): Do not call syslog.
+	(gaih_getanswer_slice): Likewise.
+	* resolv/gethnamaddr.c (AskedForGot): Remove.
+	(getanswer): Do not call syslog.
+	(gethostbyaddr): Likewise.
+
+2016-04-27  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/data/signal.h-data (union sigval): Expect also if
+	[XOPEN2K].
+	(struct sigevent): Likewise.
+	(SIGEV_NONE): Likewise.
+	(SIGEV_SIGNAL): Likewise.
+	(SIGEV_THREAD): Likewise.
+	(SIGRTMIN): Likewise.
+	(SIGRTMAX): Likewise.
+	* conform/Makefile (test-xfail-XOPEN2K/aio.h/conform): Remove
+	variable.
+	(test-xfail-XOPEN2K/mqueue.h/conform): Likewise.
+
+2016-04-27  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19830]
+	* resolv/nss_dns/dns-host.c (getanswer_r): Check RDATA length.
+	(gaih_getanswer_slice): Likewise.
+	* resolv/nss_dns/dns-canon.c (_nss_dns_getcanonname_r): Likewise.
+	Also check for availability of RR metadata.
+
+2016-04-27  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19825]
+	* resolv/res_send.c (send_vc): Remove early *resplen2
+	initialization.  Set *resplen2 on socket error.  Call
+	close_and_return_error for other errors.
+
+2016-04-27  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/netiucv/iucv.h
+	(SOL_IUCV, SO_IPRMDATA_MSG, SO_MSGLIMIT, SO_MSGSIZE)
+	(SCM_IUCV_TRGCLS): New define.
+
+2016-04-26  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #20005]
+	* libio/fmemopen.c (fmemopen_write): Update internal position after
+	write.
+	* stdio-common/Makefile (tests): Add tst-fmemopen4.c.
+	* stdio-common/tst-fmemopen4.c: New file..
+
+2016-04-26  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #19996]
+	* locale/langinfo.h (nl_langinfo_l): Declare if [__USE_XOPEN2K8],
+	not [__USE_XOPEN2K].
+	* conform/Makefile (test-xfail-XOPEN2K/langinfo.h/conform): Remove
+	variable.
+
+	* conform/data/stdarg.h-data [XOPEN2K] (va_copy): Require macro.
+	* conform/Makefile (test-xfail-XOPEN2K/stdarg.h/conform): Remove
+	variable.
+
+	* libio/stdio.h (off_t): Define if [__USE_XOPEN2K], not
+	[__USE_XOPEN2K8].
+	[__USE_LARGEFILE64] (off64_t): Likewise.
+	* conform/Makefile (test-xfail-XOPEN2K/stdio.h/conform): Remove
+	variable.
+
+2016-04-25  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #19989]
+	* libio/stdio.h (cuserid): Do not declare if
+	[__USE_XOPEN2K && !__USE_GNU].
+	* conform/Makefile (test-xfail-XOPEN2K8/stdio.h/conform): Remove
+	variable.
+
+2016-04-25  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile:
+	(sysdep_routines): Add P8 and PPC64 strcspn targets.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c:
+	(__libc_ifunc_impl_list): Add entries for P8 and PPC64
+	ifunc'ed strcspn.
+	* sysdeps/powerpc/powerpc64/multiarch/strspn-power8.S:
+	[EALIGN]: Removed.
+	[END]: Likewise
+	[STRSPN]: Define instead of the above to control symbol name.
+	* sysdeps/powerpc/powerpc64/multiarch/strcspn-power8.S:
+	New file.
+	* sysdeps/powerpc/powerpc64/multiarch/strcspn-ppc64.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strcspn.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/power8/strcspn.S:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/power8/strspn.S:
+	[INITIAL_MASK]: New macro.
+	[STRCSPN]: Likewise.
+	[UPDATE_MASK]: Likewise.
+	[USE_AS_STRCSPN]: Lisewise.
+
+2016-04-25  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19931]
+	* stdio-common/tst-vfprintf-width-prec.c: New file.
+	* stdio-common/Makefile (tests): Add tst-vfprintf-width-prec.
+	(tests-special): Add tst-vfprintf-width-prec-mem.out.
+	(generated): Add mtrace-related files.
+	(tst-vfprintf-width-prec-ENV): Set MALLOC_TRACE.
+	(tst-%-mem.out): New pattern rule, replaces
+	tst-printf-bz18872-mem.out.
+	* stdio-common/vfprintf.c (vfprintf): When handling a precision
+	specifier, deallocate any previously allocated work buffer.
+
+2016-04-25  Chung-Lin Tang  <cltang@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/nios2/setcontext.S (__startcontext):
+	Add nop before __startcontext, add explaining comments.
+
+2016-04-25  Samuel thibault  <samuel.thibault@ens-lyon.org>
+
+	RFC2292 macros were obsoleted by RFC3542, and should not be exposed
+	any more. Notably since IPV6_PKTINFO has been reintroduced with a
+	completely different API.
+
+	* bits/in.h (IPV6_PKTINFO): Rename to IPV6_2292PKTINFO.
+	(IPV6_HOPOPTS): Rename to IPV6_2292HOPOPTS.
+	(IPV6_DSTOPTS): Rename to IPV6_2292DSTOPTS.
+	(IPV6_RTHDR): Rename to IPV6_2292RTHDR.
+	(IPV6_PKTOPTIONS): Rename to IPV6_2292PKTOPTIONS.
+	(IPV6_HOPLIMIT): Rename to IPV6_2292HOPLIMIT.
+	(IPV6_RECVPKTINFO, IPV6_PKTINFO, IPV6_RECVHOPLIMIT, IPV6_HOPLIMIT,
+	IPV6_RECVHOPOPTS, IPV6_HOPOPTS, IPV6_RTHDRDSTOPTS, IPV6_RECVRTHDR,
+	IPV6_RTHDR, IPV6_RECVDSTOPTS, IPV6_DSTOPTS, IPV6_RECVPATHMTU,
+	IPV6_PATHMTU, IPV6_DONTFRAG): New macros.
+
+2016-04-23   H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/dl-minimal.c (__libc_memalign): Mmap one extra page.
+
+2016-04-23  Mike Frysinger  <vapier@gentoo.org>
+
+	* locale/programs/ld-time.c (time_finish): Set week_1stweek to 7
+	when it is the default of 0.
+
+2016-04-22  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/locale-defines.sym:  Add new macros.
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile:
+	(sysdep_routines): Add new strcasestr targets.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c:
+	(__libc_ifunc_impl_list): Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strcasestr-power8.S: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/strcasestr-ppc64.c: New file.
+	* sysdeps/powerpc/powerpc64/multiarch/strcasestr.c: New file.
+	* sysdeps/powerpc/powerpc64/power8/Makefile:
+	New file to add strcasestr-ppc64 to sysdep_routines.
+	* sysdeps/powerpc/powerpc64/power8/strcasestr-ppc64.c: New file.
+	* sysdeps/powerpc/powerpc64/power8/strcasestr.S: New file.
+
+2016-04-20  Siddhesh Poyarekar  <sid@reserved-bit.com>
+
+	* benchtests/Makefile (wcsmbs-benchset): Include only for
+	native builds and runs.
+	(LOCALES): Likewise.
+	(bench-build): Build timing-type here instead of the bench
+	target.  Generate locale only for native builds.
+	* benchtests/README: Add note for cross-building.
+
+	* benchtests/Makefile (bench-clean): Clean up extra-objs.
+
+	* benchtests/README: Update README to include instructions on
+	using bench-build.
+
+	* Makefile.in (bench-build): New target.
+	* Rules (PHONY): Add bench-build target.
+	* benchtests/Makefile (bench): Depend on bench-build.
+	(bench-build): New target.
+
+2016-04-19  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/profil.c (update_waiter): Initialize
+	profil_reply_port.
+	(profile_waiter): Do not initialize profil_reply_port.
+	* sysdeps/mach/hurd/profil.c (__profile_frequency): Return tick
+	frequency instead of tick length in us.
+
+2016-04-18  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	[BZ #18712]
+	* string/string-inlines.c (__STRING2_COPY_TYPE): Add, moved from string2.h.
+	(__old_mempcpy_small): Likewise.
+	(__old_strcpy_small): Likewise.
+	(__old_stpcpy_small): Likewise.
+	(__old_strpbrk_c2): Fix compat symbol name.
+	(__old_strpbrk_c3): Likewise.
+	* string/bits/string2.h (__STRING2_COPY_TYPE): Remove.
+	(__mempcpy_small): Remove.
+	(__strcpy_small): Remove.
+	(__stpcpy_small): Remove.
+
+2016-04-16  Robin van der Vliet <info@robinvandervliet.com>
+
+	[BZ #19400]
+	* locale/iso-639.def: Add the Talossan/tzl language.
+
+2016-04-16  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #16983]
+	* locale/programs/ld-address.c (address_finish): Update postal_fmt
+	comment.  Add "ln" to strchr check on postal_fmt.
+
+2016-04-16  Mike Frysinger  <vapier@gentoo.org>
+
+	* locale/programs/ld-telephone.c (telephone_finish): Add %t to the
+	default tel_int_fmt.  Add "Cet" to strchr check on tel_int_fmt and
+	tel_dom_fmt.
+
+2016-04-15  Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile:
+	(sysdep_routines): Added __strlen_power8.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c: Added
+	__strlen_power8 entry.
+	* sysdeps/powerpc/powerpc64/multiarch/strlen-power8.S: New file.
+	Implementation for POWER8.
+	* sysdeps/powerpc/powerpc64/multiarch/strlen.c: Added IFUNC selector
+	for __strlen_power8.
+	* sysdeps/powerpc/powerpc64/power8/strlen.S: New file.
+	Implementation for POWER8.
+
+2016-04-15  Mike Frysinger  <vapier@gentoo.org>
+
+	* locale/iso-4217.def: Add SSP and change ZMK to ZMW.
+
+2016-04-15   H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86/cpu-features.c (init_cpu_features): Detect Intel
+	Goldmont and Airmont processors.
+
+2016-04-15  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* string/string.h: Use __GNUC_PREREQ(3,4) for bits/string2.h.
+	* string/bits/string2.h (__STRING2_SMALL_GET16): Remove.
+	(__STRING2_SMALL_GET32): Remove.
+	(memset): Remove.
+	(__memset_1): Remove.
+	(__memset_gc): Remove.
+	(__mempcpy): Remove.
+	(mempcpy): Remove.
+	(__mempcpy_args): Remove.
+	(strchr): Remove.
+	(strcpy): Remove.
+	(strcpy_args): Remove.
+	(__stpcpy_args): Remove.
+	(__strcmp_cc): Remove.
+	(__strcmp_gc): Remove.
+	(strstr): Remove.
+
+2016-04-15  Yvan Roux  <yvan.roux@linaro.org>
+
+	* stdlib/setenv.c (unsetenv): Fix ambiguous 'else'.
+	* nis/nis_call.c (nis_server_cache_add): Likewise.
+
+2016-04-14  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/sysdep.h: Include kernel-features.h.
+
+2016-04-14  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/arena.c (__malloc_fork_lock_parent)
+	(__malloc_fork_unlock_parent, __malloc_fork_unlock_child): Add
+	internal_function attribute.
+
+2016-04-14  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* stdio-common/printf_fp.c (__printf_fp_l):
+	Rename ___printf_fp_l to __printf_fp_l and
+	remove strong alias. Use libc_hidden_def instead
+	of ldbl_hidden_def macro.
+
+2016-04-14  Florian Weimer  <fweimer@redhat.com>
+
+	Remove malloc hooks from fork handler.  They are no longer needed
+	because malloc runs right before fork, and no malloc calls from
+	other fork handlers are not possible anymore.
+	* malloc/malloc.c (malloc_atfork, free_atfork): Remove
+	declarations.
+	* malloc/arena.c (save_malloc_hook, save_free_hook, save_arena)
+	(ATFORK_ARENA_PTR, malloc_atfork, free_atfork)
+	(atfork_recursive_cntr): Remove.
+	(__malloc_fork_lock_parent): Do not override malloc hooks and
+	thread_arena.
+	(__malloc_fork_unlock_parent): Do not restore malloc hooks and
+	thread_arena.
+	(__malloc_fork_unlock_child): Do not restore malloc hooks.  Use
+	thread_arena instead of save_arena.
+
+2016-04-14  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/nptl/malloc-machine.h (ATFORK_MEM, __dso_handle)
+	(thread_atfork, thread_atfork_static): Remove.
+	* sysdeps/mach/hurd/malloc-machine.h:
+	(thread_atfork, thread_atfork_static): Remove.
+
+2016-04-14  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19431]
+	Run the malloc fork handler as late as possible to avoid deadlocks.
+	* malloc/malloc-internal.h: New file.
+	* malloc/malloc.c: Include it.
+	* malloc/arena.c (ATFORK_MEM): Remove.
+	(__malloc_fork_lock_parent): Rename from ptmalloc_lock_all.
+	Update comment.
+	(__malloc_fork_unlock_parent): Rename from ptmalloc_unlock_all.
+	(__malloc_fork_unlock_child): Rename from ptmalloc_unlock_all2.
+	Remove outdated comment.
+	(ptmalloc_init): Do not call thread_atfork.  Remove
+	thread_atfork_static.
+	* malloc/tst-malloc-fork-deadlock.c: New file.
+	* Makefile (tests): Add tst-malloc-fork-deadlock.
+	(tst-malloc-fork-deadlock): Link against libpthread.
+	* manual/memory.texi (Aligned Memory Blocks): Update safety
+	annotation comments.
+	* sysdeps/nptl/fork.c (__libc_fork): Call
+	__malloc_fork_lock_parent, __malloc_fork_unlock_parent,
+	__malloc_fork_unlock_child.
+	* sysdeps/mach/hurd/fork.c (__fork): Likewise.
+
+2016-04-14  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19613]
+	Remove union wait.
+	* bits/waitstatus.h (union wait, w_termsig, w_coredump, w_retcode)
+	(w_stopsig, w_stopval): Remove.
+	* include/sys/wait.h (__wait, __wait3, __wait4): Use int * for the
+	stat_loc argument.
+	* posix/sys/wait.h (__WAIT_INT, __WAIT_STATUS)
+	(__WAIT_STATUS_DEFN): Remove.
+	(WEXITSTATUS, WTERMSIG, WSTOPSIG, WIFEXITED, WIFSIGNALED)
+	(WIFSTOPPED, WIFCONTINUED, WCOREDUMP): Remove __WAIT_INT.
+	(wait, wait3, wait4): Use int * for the stat_loc argument.
+	* posix/wait.c (__wait): Likewise.
+	* posix/wait3.c (__wait3): Likewise.
+	* posix/wait4.c (__wait4): Likewise.
+	* stdlib/stdlib.h (__WAIT_INT, __WAIT_STATUS)
+	(__WAIT_STATUS_DEFN): Remove.
+	(WEXITSTATUS, WTERMSIG, WSTOPSIG, WIFEXITED, WIFSIGNALED)
+	(WIFSTOPPED, WIFCONTINUED): Remove __WAIT_INT.
+	* sysdeps/mach/hurd/wait4.c (__wait4): Use int * for the stat_loc
+	argument.
+	* sysdeps/posix/wait.c (__libc_wait): Likewise.
+	* sysdeps/posix/wait3.c (__wait3): Likewise.
+	* sysdeps/unix/bsd/wait.c (__libc_wait): Likewise.
+	* sysdeps/unix/bsd/wait3.c (__wait3): Likewise.
+	* sysdeps/unix/bsd/waitpid.c (__waitpid): Remove cast.
+	* sysdeps/unix/sysv/linux/wait.c (__libc_wait): Use int * for the
+	stat_loc argument.
+	* manual/process.texi (BSD Wait Functions): Remove union wait.
+
+2016-04-13  Andreas Schwab  <schwab@suse.de>
+
+	* elf/Makefile (extra-test-objs): Add tst-tlsalign-vars.o.
+	(test-extras): Add tst-tlsalign-vars.
+	* math/Makefile: Wrap long lines.
+	(libm-vec-test-wrappers): Define.
+	(test-extras): Add $(libm-vec-test-wrappers).
+	(extra-test-objs): Add $(libm-vec-test-wrappers) objects.
+	* nss/Makefile (extra-test-objs): Add nss_test1.os.
+	* stdlib/Makefile (extra-test-objs): Add $(modules-names) objects.
+	* sysdeps/x86_64/Makefile (test-extras): Add tst-quadmod1pie
+	tst-quadmod2pie tst-audit4-aux tst-audit10-aux.
+	(extra-test-objs): Add corresponding objects.
+
+2016-04-12   H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #19928]
+	* sysdeps/x86_64/cacheinfo.c (__x86_shared_non_temporal_threshold):
+	New.
+	(init_cacheinfo): Set __x86_shared_non_temporal_threshold to 6
+	times of shared cache size.
+	* sysdeps/x86_64/multiarch/memmove-avx-unaligned-erms.S
+	(VMOVNT): New.
+	* sysdeps/x86_64/multiarch/memmove-avx512-unaligned-erms.S
+	(VMOVNT): Likewise.
+	* sysdeps/x86_64/multiarch/memmove-sse2-unaligned-erms.S
+	(VMOVNT): Likewise.
+	(VMOVU): Changed to movups for smaller code sizes.
+	(VMOVA): Changed to movaps for smaller code sizes.
+	* sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S: Update
+	comments.
+	(PREFETCH): New.
+	(PREFETCH_SIZE): Likewise.
+	(PREFETCHED_LOAD_SIZE): Likewise.
+	(PREFETCH_ONE_SET): Likewise.
+	Rewrite to use forward and backward loops, which move 4 vector
+	registers at a time, to support overlapping addresses and use
+	non temporal store if size is above the threshold and there is
+	no overlap between destination and source.
+
+2016-04-12  Alex Smith  <alex.smith@imgtec.com>
+
+	* sysdeps/unix/sysv/linux/mips/Makefile (sysdep_routines):
+	Include dl-vdso.
+	* sysdeps/unix/sysv/linux/mips/Versions: Add
+	__vdso_clock_gettime.
+	* sysdeps/unix/sysv/linux/mips/init-first.c: New file.
+	* sysdeps/unix/sysv/linux/mips/libc-vdso.h: New file.
+	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h:
+	(INTERNAL_VSYSCALL_CALL): Define to be compatible with MIPS
+	definitions of INTERNAL_SYSCALL_{ERROR_P,ERRNO}.
+	(HAVE_CLOCK_GETTIME_VSYSCALL): Define.
+	(HAVE_GETTIMEOFDAY_VSYSCALL): Define.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/sysdep.h: Likewise.
+
+2016-04-11  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/arm/pwrite.c: Remove file.
+	* sysdeps/unix/sysv/linux/arm/pwrite64.c: Likewise.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/pwrite64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pwrite64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pwrite64.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/pwrite64.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list (prite): Remove
+	syscalls generation.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h
+	[__NR_pwrite64] (__NR_write): Remove define.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h
+	[__NR_pwrite64] (__NR_write): Remove define.
+	* sysdeps/unix/sysv/linux/pwrite.c [__NR_pwrite64] (__NR_pwrite):
+	Remove define.
+	(__libc_pwrite): Use SYSCALL_LL macro on offset argument.
+	* sysdeps/unix/sysv/linux/pwrite64.c [__NR_pwrite64] (__NR_pwrite):
+	Remove define.
+	(__libc_pwrite64): Use SYSCALL_LL64 macro on offset argument.
+	* sysdeps/unix/sysv/linux/sh/pwrite.c: Rewrite using default
+	Linux implementation as base.
+	* sysdeps/unix/sysv/linux/sh/pwrite64.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/arm/pread.c: Remove file.
+	* sysdeps/unix/sysv/linux/arm/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/pread.c: Likewise.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pread.c: Likewise,
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list (pread): Remove
+	syscall generation.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h
+	[__NR_pread64] (__NR_pread): Remove define.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h:
+	[__NR_pread64] (__NR_pread): Likewise.
+	* sysdeps/unix/sysv/linux/pread.c [__NR_pread64] (__NR_pread): Remove
+	define.
+	(__libc_pread): Use SYSCALL_LL macro on offset argument.
+	* sysdeps/unix/sysv/linux/pread64.c [__NR_pread64] (__NR_pread):
+	Remove define.
+	(__libc_pread64): Use SYSCALL_LL64 macro on offset argument.
+	* sysdeps/unix/sysv/linux/sh/pread.c: Rewrite using default
+	Linux implementation as base.
+	* sysdeps/unix/sysv/linux/sh/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pread.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pread64.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/generic/sysdep.h (__ALIGNMENT_ARG): Move
+	definition.
+	(__ALIGNMENT_COUNT): Likewise.
+	* sysdeps/unix/sysv/linux/sysdep.h (__ALIGNMENT_ARG): To here.
+	(__ALIGNMENT_COUNT): Likewise.
+	(SYSCALL_LL): New define.
+	(SYSCALL_LL64): Likewise.
+	* sysdeps/unix/sysv/linux/mips/kernel-features.h:
+	[_MIPS_SIM == _ABIO32] (__ASSUME_WORDSIZE64_ILP32): Define.
+	* sysdeps/unix/sysv/linux/x86_64/kernel-features.h:
+	[ILP32] (__ASUME_WORDSIZE64_ILP32): Likewise.
+
+	* sysdeps/unix/sysv/linux/arm/kernel-features.h
+	(__ASSUME_ALIGNED_REGISTER_PAIRS): Define.
+	* sysdeps/unix/sysv/linux/mips/kernel-features.h
+	[_MIPS_SIM == _ABIO32] (__ASSUME_ALIGNED_REGISTER_PAIRS): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/kernel-features.h
+	[!__powerpc64__] (__ASSUME_ALIGNED_REGISTER_PAIRS): Likewise.
+
+2016-04-11  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19865]
+	* resolv/nss_dns/dns-canon.c (_nss_dns_getcanonname_r): Restore
+	original buffer before retry.
+
+2016-04-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/generic/ldsodefs.h (struct rtld_global_ro)
+	[!HAVE_AUX_VECTOR]: Do not define _dl_auxv field.
+	* misc/getauxval.c (__getauxval) [!HAVE_AUX_VECTOR]: Do not go through
+	GLRO(dl_auxv) list.
+	* sysdeps/unix/sysv/linux/ldsodefs.h (HAVE_AUX_VECTOR): Define before
+	including <ldsodefs.h>.
+	* sysdeps/nacl/ldsodefs.h (HAVE_AUX_VECTOR): Likewise.
+
+2016-04-09  Nick Alcock  <nick.alcock@oracle.com>
+
+	* elf/rtld-Rules (rtld-compile-command.c): Add $(rtld-CFLAGS).
+	* scripts/sysd-rules.awk: Substitute in $(CFLAGS) as well as
+	$(CPPFLAGS).
+
+2016-04-09  Khem Raj  <raj.khem@gmail.com>
+
+	[BZ #17950]
+	* sysdeps/i386/Makefile [$(subdir) == elf] (CFLAGS-.os):
+	Add -mfpmath=387.
+
+2016-04-09  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/i386/configure.ac: Change == to = when calling test.
+	* sysdeps/x86_64/configure.ac: Likewise.
+	* sysdeps/i386/configure: Regenerated.
+	* sysdeps/x86_64/configure: Likewise.
+
+2016-04-08  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #16137]
+	* benchtests/Makefile (LOCALES): Change iw_IL to he_IL.
+	* benchtests/bench-strcoll.c (input_files): Likewise.
+	* benchtests/strcoll-inputs/filelist#en_US.UTF-8: Likewise.
+	* benchtests/strcoll-inputs/lorem_ipsum#iw_IL.UTF-8: Rename to ...
+	* benchtests/strcoll-inputs/lorem_ipsum#he_IL.UTF-8: ... here.
+
+2016-04-08  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #19929]
+	* include/bits/xopen_lim.h (NL_NMAX): Do not define if
+	[__USE_XOPEN2K8 && !__USE_GNU].
+	* conform/Makefile (test-xfail-XOPEN2K8/limits.h/conform): Remove
+	variable.
+
+	[BZ #19925]
+	* sysdeps/unix/sysv/linux/alpha/bits/termios.h (XCASE): Do not
+	define if [!__USE_MISC && __USE_XOPEN2K].
+	* sysdeps/unix/sysv/linux/bits/termios.h (XCASE): Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/termios.h (XCASE): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h (XCASE):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/termios.h (XCASE): Likewise.
+	* conform/Makefile (test-xfail-XOPEN2K/termios.h/conform): Remove
+	variable.
+	(test-xfail-XOPEN2K8/termios.h/conform): Likewise.
+
+2016-04-07  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile:
+	(sysdep_routines): Add new strspn targets.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c:
+	(__libc_ifunc_impl_list): Add strspn.
+	* sysdeps/powerpc/powerpc64/multiarch/strspn-power8.S:
+	New file.
+	* sysdeps/powerpc/powerpc64/multiarch/strspn-ppc64.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strspn.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/power8/strspn.S:
+	Likewise.
+
+2016-04-07  Florian Weimer  <fweimer@redhat.com>
+
+	* misc/hsearch_r.c: Include <limits.h>.
+
+2016-04-07  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/scratch_buffer_set_array_size.c: Include <limits.h>.
+
+2016-04-06   H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S
+	(MEMCPY_SYMBOL): New.
+	(MEMPCPY_SYMBOL): Likewise.
+	(MEMMOVE_CHK_SYMBOL): Likewise.
+	Replace MEMMOVE_SYMBOL with MEMMOVE_CHK_SYMBOL on __mempcpy_chk
+	symbols.  Replace MEMMOVE_SYMBOL with MEMPCPY_SYMBOL on
+	__mempcpy symbols.  Provide alias for __memcpy_chk in libc.a.
+	Provide alias for memcpy in libc.a and ld.so.
+
+2016-04-06   H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/memset-vec-unaligned-erms.S
+	(MEMSET_CHK_SYMBOL): New.  Define if not defined.
+	(__bzero): Check VEC_SIZE == 16 instead of USE_MULTIARCH.
+	Disabled fro now.
+	Replace MEMSET_SYMBOL with MEMSET_CHK_SYMBOL on __memset_chk
+	symbols.  Properly check USE_MULTIARCH on __memset symbols.
+
+2016-04-06   H.J. Lu  <hongjiu.lu@intel.com>
+
+	* benchtests/Makefile (string-benchset): Add memcpy-large,
+	memmove-large and memset-large.
+	* benchtests/bench-memcpy-large.c: New file.
+	* benchtests/bench-memmove-large.c: Likewise.
+	* benchtests/bench-memmove-large.c: Likewise.
+	* benchtests/bench-string.h (TIMEOUT): Don't redefine.
+
+2016-04-05   H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/memset-vec-unaligned-erms.S: Force
+	32-bit displacement to avoid long nop between instructions.
+
+2016-04-05   H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/memset-sse2-unaligned-erms.S: Add
+	a comment on VMOVU and VMOVA.
+
+2016-04-04  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19633]
+	Use specified locale for number formatting in strfmon_l.
+	* locale/localeinfo.h (__nl_lookup, _nl_lookup_wstr)
+	(__nl_lookup_word): New inline functions.
+	* include/printf.h (__print_fp_l): Declare.
+	* stdio-common/printf_fp.c (___printf_fp_l): Renamed from
+	___printf_fp.  Add locale argument.  Replace _NL_CURRENT with
+	_nl_lookup and _NL_CURRENT_WORD with _nl_lookup_word.
+	(___printf_fp): New function.
+	* stdlib/strfmon_l.c (__printf_fp): Remove declaration.
+	(__vstrfmon_l): Call __printf_fp_l instead of printf_fp.
+	* stdlib/tst-strfmon_l.c (do_test): New test.
+	* stdlib/Makefile (tests): Add kt.
+	(LOCALES): Build additional locales.
+	(tst-strfmon_l.out): Require locales.
+
+2016-04-03   H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/memmove-avx-unaligned-erms.S: Skip
+	if not in libc.
+	* sysdeps/x86_64/multiarch/memmove-avx512-unaligned-erms.S:
+	Likewise.
+	* sysdeps/x86_64/multiarch/memset-avx2-unaligned-erms.S:
+	Likewise.
+	* sysdeps/x86_64/multiarch/memset-avx512-unaligned-erms.S:
+	Likewise.
+
+2016-04-03   H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S:
+	(__mempcpy_erms, __memmove_erms): Moved before __mempcpy_chk
+	with unaligned_erms.
+	(__memmove_erms): Skip if source == destination.
+	(__memmove_unaligned_erms): Don't check source == destination
+	first.
+
+2016-04-01   H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86/cpu-features.c (init_cpu_features): Don't set
+	bit_arch_Fast_Copy_Backward for Intel Core proessors.
+
+2016-04-01  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* string/strcspn.c (strcspn): Use PTR_ALIGN_DOWN.
+	* string/strspn.c (strspn): Likewise.
+
+2016-04-01   H.J. Lu  <hongjiu.lu@intel.com>
+
+	* benchtests/bench-memset.c (do_test): Support 64-byte
+	alignment.
+	(test_main): Test 64-byte alignment.
+
+2016-04-01   H.J. Lu  <hongjiu.lu@intel.com>
+
+	* benchtests/bench-memmove.c (test_main): Test 64-byte
+	alignment.
+
+2016-04-01   H.J. Lu  <hongjiu.lu@intel.com>
+
+	* benchtests/bench-memcpy.c (test_main): Test 64-byte alignment.
+
+2016-04-01  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/powerpc/powerpc64/strcspn.S: Remove file.
+	* sysdeps/powerpc/powerpc64/strpbrk.S: Remove file.
+	* sysdeps/powerpc/powerpc64/strspn.S: Remove file.
+
+	* string/strpbrk.c (strpbrk): Rewrite function.
+	* string/bits/string2.h (strpbrk): Use __builtin_strpbrk.
+	(__strpbrk_c2): Likewise.
+	(__strpbrk_c3): Likewise.
+	* string/string-inlines.c
+	[SHLIB_COMPAT(libc, GLIBC_2_1_1, GLIBC_2_24)] (__strpbrk_c2):
+	Likewise.
+	[SHLIB_COMPAT(libc, GLIBC_2_1_1, GLIBC_2_24)] (__strpbrk_c3):
+	Likewise.
+
+	* string/strspn.c (strcspn): Rewrite function.
+	* string/bits/string2.h (strspn): Use __builtin_strcspn.
+	(__strspn_c1): Remove inline function.
+	(__strspn_c2): Likewise.
+	(__strspn_c3): Likewise.
+	* string/string-inlines.c
+	[SHLIB_COMPAT(libc, GLIBC_2_1_1, GLIBC_2_24)] (__strspn_c1): Add
+	compatibility symbol.
+	[SHLIB_COMPAT(libc, GLIBC_2_1_1, GLIBC_2_24)] (__strspn_c2):
+	Likewise.
+	[SHLIB_COMPAT(libc, GLIBC_2_1_1, GLIBC_2_24)] (__strspn_c3):
+	Likewise.
+	* string/string-inlines.c: Include generic version.
+
+2016-04-01  Wilco Dijkstra  <wdijkstr@arm.com>
+	    Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* string/Version (libc): Add GLIBC_2.24.
+	* string/strcspn.c (strcspn): Rewrite function.
+	* string/bits/string2.h (strcspn): Use __builtin_strcspn.
+	(__strcspn_c1): Remove inline function.
+	(__strcspn_c2): Likewise.
+	(__strcspn_c3): Likewise.
+	* string/string-inline.c
+	[SHLIB_COMPAT(libc, GLIBC_2_1_1, GLIBC_2_24)] (__strcspn_c1): Add
+	compatibility symbol.
+	[SHLIB_COMPAT(libc, GLIBC_2_1_1, GLIBC_2_24)] (__strcspn_c2):
+	Likewise.
+	[SHLIB_COMPAT(libc, GLIBC_2_1_1, GLIBC_2_24)] (__strcspn_c3):
+	Likewise.
+	* sysdeps/i386/string-inlines.c: Include generic string-inlines.c.
+
+2016-04-01  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/s390/s390-32/dl-trampoline.h (_dl_runtime_resolve):
+	Use ahi instead of aghi to adjust stack pointer.
+
+2016-03-31  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	[BZ #19853]
+	* stdio-common/tst-sprintf3.c [TEST_N]: Refactor
+	TEST to take significant digits as second parameter.
+	[TEST]: Redefine in terms of TEST_N taking 30
+	significant digits.
+	(do_test): Add test case to demonstrate precision
+	failure in the ldbl-128ibm printf.
+	* sysdeps/ieee754/ldbl-128ibm/ldbl2pm.c:
+	(__mpn_extract_long_double): Carry 7 extra intermediate
+	bits of precision to aide computing difference when
+	signs differ.
+
+2016-03-31   H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #19881]
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	memset-sse2-unaligned-erms, memset-avx2-unaligned-erms and
+	memset-avx512-unaligned-erms.
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Test __memset_chk_sse2_unaligned,
+	__memset_chk_sse2_unaligned_erms, __memset_chk_avx2_unaligned,
+	__memset_chk_avx2_unaligned_erms, __memset_chk_avx512_unaligned,
+	__memset_chk_avx512_unaligned_erms, __memset_sse2_unaligned,
+	__memset_sse2_unaligned_erms, __memset_erms,
+	__memset_avx2_unaligned, __memset_avx2_unaligned_erms,
+	__memset_avx512_unaligned_erms and __memset_avx512_unaligned.
+	* sysdeps/x86_64/multiarch/memset-avx2-unaligned-erms.S: New
+	file.
+	* sysdeps/x86_64/multiarch/memset-avx512-unaligned-erms.S:
+	Likewise.
+	* sysdeps/x86_64/multiarch/memset-sse2-unaligned-erms.S:
+	Likewise.
+	* sysdeps/x86_64/multiarch/memset-vec-unaligned-erms.S:
+	Likewise.
+
+2016-03-31   H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #19776]
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	memmove-sse2-unaligned-erms, memmove-avx-unaligned-erms and
+	memmove-avx512-unaligned-erms.
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Test
+	__memmove_chk_avx512_unaligned_2,
+	__memmove_chk_avx512_unaligned_erms,
+	__memmove_chk_avx_unaligned_2, __memmove_chk_avx_unaligned_erms,
+	__memmove_chk_sse2_unaligned_2,
+	__memmove_chk_sse2_unaligned_erms, __memmove_avx_unaligned_2,
+	__memmove_avx_unaligned_erms, __memmove_avx512_unaligned_2,
+	__memmove_avx512_unaligned_erms, __memmove_erms,
+	__memmove_sse2_unaligned_2, __memmove_sse2_unaligned_erms,
+	__memcpy_chk_avx512_unaligned_2,
+	__memcpy_chk_avx512_unaligned_erms,
+	__memcpy_chk_avx_unaligned_2, __memcpy_chk_avx_unaligned_erms,
+	__memcpy_chk_sse2_unaligned_2, __memcpy_chk_sse2_unaligned_erms,
+	__memcpy_avx_unaligned_2, __memcpy_avx_unaligned_erms,
+	__memcpy_avx512_unaligned_2, __memcpy_avx512_unaligned_erms,
+	__memcpy_sse2_unaligned_2, __memcpy_sse2_unaligned_erms,
+	__memcpy_erms, __mempcpy_chk_avx512_unaligned_2,
+	__mempcpy_chk_avx512_unaligned_erms,
+	__mempcpy_chk_avx_unaligned_2, __mempcpy_chk_avx_unaligned_erms,
+	__mempcpy_chk_sse2_unaligned_2, __mempcpy_chk_sse2_unaligned_erms,
+	__mempcpy_avx512_unaligned_2, __mempcpy_avx512_unaligned_erms,
+	__mempcpy_avx_unaligned_2, __mempcpy_avx_unaligned_erms,
+	__mempcpy_sse2_unaligned_2, __mempcpy_sse2_unaligned_erms and
+	__mempcpy_erms.
+	* sysdeps/x86_64/multiarch/memmove-avx-unaligned-erms.S: New
+	file.
+	* sysdeps/x86_64/multiarch/memmove-avx512-unaligned-erms.S:
+	Likwise.
+	* sysdeps/x86_64/multiarch/memmove-sse2-unaligned-erms.S:
+	Likwise.
+	* sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S:
+	Likwise.
+
+2016-03-31  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/s390/bits/link.h: (La_s390_vr) New typedef.
+	(La_s390_32_regs): Append vector register lr_v24-lr_v31.
+	(La_s390_64_regs): Likewise.
+	(La_s390_32_retval): Append vector register lrv_v24.
+	(La_s390_64_retval): Likeweise.
+	* sysdeps/s390/s390-32/dl-trampoline.h (_dl_runtime_profile):
+	Handle extended structs La_s390_32_regs and La_s390_32_retval.
+	* sysdeps/s390/s390-64/dl-trampoline.h (_dl_runtime_profile):
+	Handle extended structs La_s390_64_regs and La_s390_64_retval.
+
+2016-03-31  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	[BZ #19916]
+	* sysdeps/s390/s390-32/dl-trampoline.S: Include dl-trampoline.h twice
+	to create a non-vector/vector version for _dl_runtime_resolve and
+	_dl_runtime_profile. Move implementation to ...
+	* sysdeps/s390/s390-32/dl-trampoline.h: ... here.
+	(_dl_runtime_resolve) Save and restore fpr/vrs.
+	(_dl_runtime_profile) Save and restore vrs and fix some issues
+	if _dl_call_pltexit is called.
+	* sysdeps/s390/s390-32/dl-machine.h (elf_machine_runtime_setup):
+	Choose the correct resolver function if running on a machine with vx.
+	* sysdeps/s390/s390-64/dl-trampoline.S: Include dl-trampoline.h twice
+	to create a non-vector/vector version for _dl_runtime_resolve and
+	_dl_runtime_profile. Move implementation to ...
+	* sysdeps/s390/s390-64/dl-trampoline.h: ... here.
+	(_dl_runtime_resolve) Save and restore fpr/vrs.
+	(_dl_runtime_profile) Save and restore vrs and fix some issues
+	* sysdeps/s390/s390-64/dl-machine.h: (elf_machine_runtime_setup):
+	Choose the correct resolver function if running on a machine with vx.
+
+2016-03-31  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* elf/tst-dlsym-error.c: Include <string.h> for strchrnul.
+
+2016-03-31  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19509]
+	* elf/dl-lookup.c (_dl_lookup_symbol_x): Report error even if
+	skip_map != NULL.
+	* elf/tst-dlsym-error.c: New file.
+	* elf/Makefile (tests): Add tst-dlsym-error.
+	(tst-dlsym-error): Link against libdl.
+
+2016-03-29  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/microblaze/kernel-features.h
+	(__ASSUME_FUTIMESAT): Remove macro.
+	* sysdeps/unix/sysv/linux/microblaze/futimesat.c: Remove file.
+
+2016-03-29  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19879]
+	CVE-2016-3075
+	* resolv/nss_dns/dns-network.c (_nss_dns_getnetbyname_r): Do not
+	copy name.
+
+2016-03-29  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19837]
+	* nss/nss_db/db-XXX.c (_nss_db_getENTNAME_r): Propagate ERANGE
+	error if parse_line fails.
+
+2016-03-28   H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86/cpu-features.h (bit_cpu_ERMS): New.
+	(index_cpu_ERMS): Likewise.
+	(reg_ERMS): Likewise.
+
+2016-03-28  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/unix/sysv/linux/sys/personality.h (UNAME26, FDPIC_FUNCPTRS,
+	PER_LINUX_FDPIC): Add.
+
+2016-03-28   H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Remove
+	memcpy-avx512-no-vzeroupper.
+	* sysdeps/x86_64/multiarch/memcpy-avx512-no-vzeroupper.S: Renamed
+	to ...
+	* sysdeps/x86_64/multiarch/memmove-avx512-no-vzeroupper.S: This.
+	(MEMCPY): Don't define.
+	(MEMCPY_CHK): Likewise.
+	(MEMPCPY): Likewise.
+	(MEMPCPY_CHK): Likewise.
+	(MEMPCPY_CHK): Renamed to ...
+	(__mempcpy_chk_avx512_no_vzeroupper): This.
+	(MEMPCPY_CHK): Renamed to ...
+	(__mempcpy_chk_avx512_no_vzeroupper): This.
+	(MEMCPY_CHK): Renamed to ...
+	(__memmove_chk_avx512_no_vzeroupper): This.
+	(MEMCPY): Renamed to ...
+	(__memmove_avx512_no_vzeroupper): This.
+	(__memcpy_avx512_no_vzeroupper): New alias.
+	(__memcpy_chk_avx512_no_vzeroupper): Likewise.
+
+2016-03-28   H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18858]
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Remove
+	mempcpy-ssse3, mempcpy-ssse3-back, mempcpy-avx-unaligned
+	and mempcpy-avx512-no-vzeroupper.
+	* sysdeps/x86_64/multiarch/memcpy-avx-unaligned.S (MEMPCPY_CHK):
+	New.
+	(MEMPCPY): Likewise.
+	* sysdeps/x86_64/multiarch/memcpy-avx512-no-vzeroupper.S
+	(MEMPCPY_CHK): New.
+	(MEMPCPY): Likewise.
+	* sysdeps/x86_64/multiarch/memcpy-ssse3-back.S (MEMPCPY_CHK): New.
+	(MEMPCPY): Likewise.
+	* sysdeps/x86_64/multiarch/memcpy-ssse3.S (MEMPCPY_CHK): New.
+	(MEMPCPY): Likewise.
+	* sysdeps/x86_64/multiarch/mempcpy-avx-unaligned.S: Removed.
+	* sysdeps/x86_64/multiarch/mempcpy-avx512-no-vzeroupper.S:
+	Likewise.
+	* sysdeps/x86_64/multiarch/mempcpy-ssse3-back.S: Likewise.
+	* sysdeps/x86_64/multiarch/mempcpy-ssse3.S: Likewise.
+
+2016-03-28   H.J. Lu  <hongjiu.lu@intel.com>
+	     Amit Pawar  <Amit.Pawar@amd.com>
+
+	[BZ #19583]
+	* sysdeps/x86/cpu-features.c (init_cpu_features): Set
+	Fast_Unaligned_Copy with Fast_Unaligned_Load for Intel
+	processors.  Set Fast_Copy_Backward for AMD Excavator
+	processors.
+	* sysdeps/x86/cpu-features.h (bit_arch_Fast_Unaligned_Copy):
+	New.
+	(index_arch_Fast_Unaligned_Copy): Likewise.
+	* sysdeps/x86_64/multiarch/memcpy.S (__new_memcpy): Check
+	Fast_Unaligned_Copy instead of Fast_Unaligned_Load.
+
+2016-03-25  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19791]
+	* resolv/res_send.c (close_and_return_error): New function.
+	(send_dg): Initialize *resplen2 after reopen failure.  Call
+	close_and_return_error for error returns.  On error paths without
+	__res_iclose, initialze *resplen2 explicitly.  Update comment for
+	successful return.
+
+2016-03-25  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ# 19860]
+	* sysdeps/x86_64/tst-audit10.c (avx512_enabled): Always return
+	zero if the compiler does not provide the AVX512F bit.
+
+2016-03-24  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #19848]
+	* sysdeps/i386/fpu/e_powl.S (p3): Rename to p2 and change value
+	from 8 to 4.
+	(__ieee754_powl): Compare integer exponent against 4 not 8.
+	* sysdeps/x86_64/fpu/e_powl.S (p3): Rename to p2 and change value
+	from 8 to 4.
+	(__ieee754_powl): Compare integer exponent against 4 not 8.
+	* math/auto-libm-test-in: Add more tests of pow.
+	* math/auto-libm-test-out: Regenerated.
+	* sysdeps/i386/i686/fpu/multiarch/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Likewise.
+
+2016-03-23  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/unix/sysv/linux/futimens.c (futimens) [__NR_utimensat]:
+	Make code unconditional.
+	[!__NR_utimensat]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/lutimes.c (lutimes) [__NR_utimensat]:
+	Make code unconditional.
+	[!__NR_utimensat]: Remove conditional code.
+	* sysdeps/unix/sysv/linux/utimensat.c (utimensat) [__NR_utimensat]:
+	Make code unconditional.
+	[!__NR_utimensat]: Remove conditional code.
+
+2016-03-23  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/unix/sysv/linux/dl-openat64.c (openat64) [__NR_openat]:
+	Make code unconditional.
+
+2016-03-23  Nick Alcock  <nick.alcock@oracle.com>
+
+	* sysdeps/unix/sysv/linux/i386/pthread_cond_timedwait.S: Reload
+	call-clobbered %eax on retry path.
+	* sysdeps/unix/sysv/linux/i386/pthread_cond_wait.S: Likewise.
+
+2016-03-22  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/memcpy-avx-unaligned.S (MEMCPY):
+	Don't set %rcx twice before "rep movsb".
+
+2016-03-22  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #19583]
+	* sysdeps/x86/cpu-features.c (get_common_indeces): Remove
+	inline.  Check family before setting family, model and
+	extended_model.  Set AVX, AVX2, AVX512, FMA and FMA4 usable
+	bits here.
+	(init_cpu_features): Replace HAS_CPU_FEATURE and
+	HAS_ARCH_FEATURE with CPU_FEATURES_CPU_P and
+	CPU_FEATURES_ARCH_P.  Set index_arch_AVX_Fast_Unaligned_Load
+	for Intel processors with usable AVX2.  Call get_common_indeces
+	for other processors with family == NULL.
+	* sysdeps/x86/cpu-features.h (CPU_FEATURES_CPU_P): New macro.
+	(CPU_FEATURES_ARCH_P): Likewise.
+	(HAS_CPU_FEATURE): Use CPU_FEATURES_CPU_P.
+	(HAS_ARCH_FEATURE): Use CPU_FEATURES_ARCH_P.
+
+2016-03-22  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* malloc/Makefile ($(objpfx)tst-malloc-backtrace,
+	$(objpfx)tst-malloc-thread-exit, $(objpfx)tst-malloc-thread-fail): Use
+	$(shared-thread-library) instead of hardcoding the path to libpthread.
+
+2016-03-22  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_GETDENTS64_SYSCALL): Remove macro.
+	* sysdeps/unix/sysv/linux/getdents.c
+	[!__ASSUME_GETDENTS64_SYSCALL]: Remove conditional code.
+	[!have_no_getdents64_defined]: Likewise.
+	(__GETDENTS): Remove __have_no_getdents64 conditional.
+
+2016-03-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_SIGNALFD4):
+	Remove macro.
+	* sysdeps/unix/sysv/linux/signalfd.c: Do not include
+	<kernel-features.h>.
+	(signalfd) [__NR_signalfd4]: Make code unconditional.
+	(signalfd) [!__ASSUME_SIGNALFD4]: Remove conditional code.
+
+2016-03-21  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/spawni.c (__spawnix): Fix implict checks
+	style.
+
+2016-03-21  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/cancellation.S
+	(__pthread_enable_asynccancel): Use JUMPTARGET to call
+	__pthread_unwind.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S
+	(__condvar_cleanup2): Use JUMPTARGET to call _Unwind_Resume.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S
+	(__condvar_cleanup1): Likewise.
+
+2016-03-21  Dylan Alex Simon  <dylan-sourceware@dylex.net>
+
+	[BZ #19822]
+	* math/Makefile ($(inst_libdir)/libm.so): Write output to $@.tmp and
+	move it to the final $@ location.
+
+2016-03-20  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/spawni.c (__spawnix): Fix invalid memory
+	access where posix_spawn success and pid argument is null.
+	* posix/tst-spawn.c (do_test): Add posix_spawn null pid argument for
+	success case.
+
+2016-03-20  Samuel Thibault  <samuel.thibault@ens-lyon.org>:
+
+	* sysdeps/mach/hurd/i386/c++-types.data: New file.
+
+	* sysdeps/mach/hurd/libc-lock.h (_IO_lock_inexpensive): Define to 1.
+
+	* sysdeps/generic/dl-fcntl.h: New file, adds attribute_hidden to __open
+	and __fcntl.
+	* sysdeps/mach/hurd/dl-fcntl.h: New file, adds attribute_hidden to
+	__fcntl only.
+	* include/fcntl.h [IS_IN (rtld)]: Include <dl-fcntl.h> instead of
+	adding attribute_hidden to __open and __fcntl.
+
+	* sysdeps/mach/hurd/Makefile ($(common-objpfx)errnos.d): Strip
+	"-include $(common-objpfx)libc-modules.h" from CPPFLAGS, and do not
+	depend on libc-modules.h,
+	* mach/Makefile ($(objpfx)mach-syscalls.mk): Depend on libc-modules.h.
+
 2016-03-17  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_EVENTFD2):
@@ -22619,6 +23916,7 @@
 
 2014-09-20  Ondřej Bílka  <neleai@seznam.cz>
 
+	[BZ #16852]
 	* socket/recvmmsg.c (recvmmsg): Drop const argument.
 	* socket/sys/socket.h: Likewise.
 	* sysdeps/unix/sysv/linux/recvmmsg.c: Likewise.

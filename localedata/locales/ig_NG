@@ -1,6 +1,13 @@
-escape_char /
 comment_char %
-%
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % Igbo language locale for Nigeria
 % Source:
 % Contact: Pablo Saratxaga
@@ -11,8 +18,6 @@ comment_char %
 % Date: 2005-12-14
 % Users: general
 % Charset: UTF-8
-% Distribution and use is free, also
-% for commercial purposes.
 
 LC_IDENTIFICATION
 title      "Igbo locale for Nigeria"
@@ -26,19 +31,19 @@ language   "Igbo"
 territory  "Nigeria"
 revision   "0.2"
 date       "2005-12-14"
-%
-category  "ig_NG:2000";LC_IDENTIFICATION
-category  "ig_NG:2000";LC_CTYPE
-category  "ig_NG:2000";LC_COLLATE
-category  "ig_NG:2000";LC_TIME
-category  "ig_NG:2000";LC_NUMERIC
-category  "ig_NG:2000";LC_MONETARY
-category  "ig_NG:2000";LC_MESSAGES
-category  "ig_NG:2000";LC_PAPER
-category  "ig_NG:2000";LC_NAME
-category  "ig_NG:2000";LC_ADDRESS
-category  "ig_NG:2000";LC_TELEPHONE
-category  "ig_NG:2000";LC_MEASUREMENT
+
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
@@ -406,17 +411,15 @@ d_fmt       "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0079>"
 t_fmt       "<U0025><U0072>"
 am_pm       "<U0041><U004D>";"<U0050><U004D>"
 t_fmt_ampm  "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070>"
+week 7;19971130;1
+first_weekday 2
 END LC_TIME
 
 LC_MESSAGES
-% yes: Ee
-yesstr      "<U0045><U0065>"
-% ^[EeIiYy].*
-yesexpr     "<U005E><U005B><U0045><U0065><U0049><U0069><U0059><U0079><U005D><U002E><U002A>"
-% Mba
-nostr       "<U004D><U0062><U0061>"
-% ^[MmNn].*
-noexpr      "<U005E><U005B><U0030><U004D><U006D><U004E><U006E><U005D><U002E><U002A>"
+yesexpr "<U005E><U005B><U002B><U0031><U0045><U0065><U0049><U0069><U0059><U0079><U005D>"
+noexpr  "<U005E><U005B><U002D><U0030><U004D><U006D><U004E><U006E><U005D>"
+yesstr  "<U0045><U0079><U0065>"
+nostr   "<U004D><U0062><U0061>"
 END LC_MESSAGES
 
 LC_PAPER
@@ -424,8 +427,7 @@ copy "en_NG"
 END LC_PAPER
 
 LC_MEASUREMENT
-% metric
-measurement 1
+copy "en_NG"
 END LC_MEASUREMENT
 
 LC_NAME
