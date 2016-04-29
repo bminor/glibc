@@ -5,6 +5,8 @@ $outfile = shift @ARGV;
 
 $outfile = "trace2c.dat" unless $outfile;
 
+die("$outfile already exists") if -f $outfile;
+
 # Arrays starting with c_ are data code to be emitted later
 
 

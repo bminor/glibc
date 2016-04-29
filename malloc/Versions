@@ -76,5 +76,7 @@ libc {
     # malloc trace hooks for mtrace-ctl
     __malloc_set_trace_buffer;
     __malloc_get_trace_buffer;
+
+    __malloc_scan_chunks;
   }
 }

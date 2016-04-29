@@ -9,6 +9,8 @@
 #include <sys/resource.h>
 #include <fcntl.h>
 
+#include "malloc.h"
+
 /* These must stay in sync with trace2dat */
 #define C_NOP 0
 #define C_DONE 1
@@ -48,6 +50,15 @@ static int64_t diff_timeval (struct timeval e, struct timeval s)
     usec = (e.tv_usec - s.tv_usec) + (e.tv_sec - s.tv_sec)*1000000;
   return usec;
 }
+
+#if 1
+#define Q1
+#define Q2
+#else
+pthread_mutex_t genmutex = PTHREAD_MUTEX_INITIALIZER;
+#define Q1   pthread_mutex_lock(&genmutex)
+#define Q2   pthread_mutex_unlock(&genmutex)
+#endif
 
 pthread_mutex_t cmutex = PTHREAD_MUTEX_INITIALIZER;
 #define NCBUF 10
@@ -95,8 +106,14 @@ int64_t calloc_time = 0, calloc_count = 0;
 int64_t realloc_time = 0, realloc_count = 0;
 int64_t free_time = 0, free_count = 0;
 
+pthread_mutex_t stop_mutex = PTHREAD_MUTEX_INITIALIZER;
+int threads_done = 0;
+
 //#define dprintf printf
 #define dprintf(...) 1
+
+//#define mprintf printf
+#define mprintf(...) 1
 
 #define myabort() my_abort_2(me, __LINE__)
 my_abort_2 (pthread_t me, int line)
@@ -110,10 +127,20 @@ wmem (volatile void *ptr, int count)
 {
   char *p = (char *)ptr;
   int i;
+  size_t sz;
+
+  if (!p)
+    return;
+
+  //  sz = *((size_t *)ptr-1) & ~7;
+  //  fprintf(stderr, "wmem: %p size %x csize %x\n", ptr,
+  //	  count, sz);
+  //  if (sz < 4*sizeof(size_t))
+  //    abort();
   for (i=0; i<count; i+=8)
-    p[i] = 0;
+    p[i] = 0x11;
 }
-#define wmem(a,b)
+#define xwmem(a,b)
 
 static size_t get_int (unsigned char **ptr)
 {
@@ -140,6 +167,7 @@ thread_common (void *my_data_v)
   int64_t my_realloc_time = 0, my_realloc_count = 0;
   int64_t my_free_time = 0, my_free_count = 0;
   int64_t stime;
+  volatile void *tmp;
 
   while (1)
     {
@@ -162,7 +190,10 @@ thread_common (void *my_data_v)
 	  calloc_count += my_calloc_count;
 	  realloc_count += my_realloc_count;
 	  free_count += my_free_count;
+	  threads_done ++;
 	  pthread_mutex_unlock (&stat_mutex);
+	  pthread_mutex_lock(&stop_mutex);
+	  pthread_mutex_unlock(&stop_mutex);
 	  return NULL;
 
 	case C_MALLOC:
@@ -172,7 +203,12 @@ thread_common (void *my_data_v)
 	  if (p2 > n_ptrs)
 	    myabort();
 	  stime = rdtsc_s();
+	  Q1;
+	  if (ptrs[p2])
+	    free ((void *)ptrs[p2]);
 	  ptrs[p2] = malloc (sz);
+	  mprintf("%p = malloc(%lx)\n", ptrs[p2], sz);
+	  Q2;
 	  my_malloc_time += rdtsc_e() - stime;
 	  my_malloc_count ++;
 	  wmem(ptrs[p2], sz);
@@ -185,7 +221,12 @@ thread_common (void *my_data_v)
 	  if (p2 > n_ptrs)
 	    myabort();
 	  stime = rdtsc_s();
+	  Q1;
+	  if (ptrs[p2])
+	    free ((void *)ptrs[p2]);
 	  ptrs[p2] = calloc (sz, 1);
+	  mprintf("%p = calloc(%lx)\n", ptrs[p2], sz);
+	  Q2;
 	  my_calloc_time += rdtsc_e() - stime;
 	  my_calloc_count ++;
 	  wmem(ptrs[p2], sz);
@@ -196,22 +237,33 @@ thread_common (void *my_data_v)
 	  p1 = get_int (&cp);
 	  sz = get_int (&cp);
 	  dprintf("op %d:%d %d = REALLOC %d %d\n", (int)me, cp-data, p2, p1, sz);
+	  if (p1 > n_ptrs)
+	    myabort();
 	  if (p2 > n_ptrs)
 	    myabort();
 	  stime = rdtsc_s();
+	  Q1;
+	  tmp = ptrs[p1];
 	  ptrs[p2] = realloc ((void *)ptrs[p1], sz);
+	  mprintf("%p = relloc(%p,%lx)\n", ptrs[p2], tmp,sz);
+	  Q2;
 	  my_realloc_time += rdtsc_e() - stime;
 	  my_realloc_count ++;
 	  wmem(ptrs[p2], sz);
+	  if (p1 != p2)
+	    ptrs[p1] = 0;
 	  break;
 
 	case C_FREE:
 	  p1 = get_int (&cp);
-	  if (p2 > n_ptrs)
+	  if (p1 > n_ptrs)
 	    myabort();
 	  dprintf("op %d:%d FREE %d\n", (int)me, cp-data, p1);
 	  stime = rdtsc_s();
+	  Q1;
+	  mprintf("free(%p)\n", ptrs[p1]);
 	  free ((void *)ptrs[p1]);
+	  Q2;
 	  my_free_time += rdtsc_e() - stime;
 	  my_free_count ++;
 	  ptrs[p1] = 0;
@@ -276,6 +328,25 @@ my_malloc (char *msg, int size, unsigned char **cp, size_t *psz, size_t count)
   return rv;
 }
 
+static const char * const scan_names[] = {
+  "UNUSED",
+  "ARENA",
+  "HEAP",
+  "CHUNK_USED",
+  "CHUNK_FREE",
+  "FASTBIN_FREE",
+  "UNSORTED",
+  "TOP",
+  "TCACHE",
+  "USED"
+};
+
+void
+malloc_scan_callback (void *ptr, size_t length, int type)
+{
+  printf("%s: ptr %p length %llx\n", scan_names[type], ptr, length);
+}
+
 #define MY_ALLOC(T, psz)				\
   (typeof (T)) my_malloc (#T, sizeof(*T), &cp, psz, 0)
 #define MY_ALLOCN(T, count)				\
@@ -317,6 +388,8 @@ main(int argc, char **argv)
   for (i=0; i<n_data; i+=512)
     asm volatile ("# forced read %0" :: "r" (data[i]));
 
+  pthread_mutex_lock(&stop_mutex);
+
   cp = data;
   while (cp)
     {
@@ -353,11 +426,12 @@ main(int argc, char **argv)
 	  thread_idx ++;
 	  break;
 	case C_DONE:
-	  for (i=0; i<thread_idx; i++)
+	  do
 	    {
-	      dprintf("Joining thread %lld\n", (long)thread_ids[i]);
-	      pthread_join (thread_ids[i], NULL);
-	    }
+	      pthread_mutex_lock (&stat_mutex);
+	      i = threads_done;
+	      pthread_mutex_unlock (&stat_mutex);
+	    } while (i < thread_idx);
 	  cp = NULL;
 	  break;
 	}
@@ -388,5 +462,40 @@ main(int argc, char **argv)
   printf("Avg free time: %8s in %10s calls\n", comma(free_time/free_count), comma(free_count));
   printf("Total call time: %s cycles\n", comma(malloc_time+calloc_time+realloc_time+free_time));
   printf("\n");
+
+#if 0
+  /* Free any still-held chunks of memory.  */
+  for (idx=0; idx<n_ptrs; idx++)
+    if (ptrs[idx])
+      {
+	free((void *)ptrs[idx]);
+	ptrs[idx] = 0;
+      }
+#endif
+
+  /* This will fail (crash) for system glibc but that's OK.  */
+  __malloc_scan_chunks(malloc_scan_callback);
+
+  malloc_info (0, stdout);
+
+#if 1
+  /* ...or report them as used.  */
+  for (idx=0; idx<n_ptrs; idx++)
+    if (ptrs[idx])
+      {
+	char *p = (char *)ptrs[idx] - 2*sizeof(size_t);
+	size_t *sp = (size_t *)p;
+	size_t size = sp[1] & ~7;
+	malloc_scan_callback (sp, size, 9);
+      }
+#endif
+
+  /* Now that we've scanned all the per-thread caches, it's safe to
+     let them exit and clean up.  */
+  pthread_mutex_unlock(&stop_mutex);
+
+  for (i=0; i<thread_idx; i++)
+    pthread_join (thread_ids[i], NULL);
+
   return 0;
 }

@@ -89,3 +89,18 @@ void * __malloc_get_trace_buffer (size_t *bufcount, size_t *bufhead);
 
 /* ptr2 = pvalloc (size) */
 #define __MTB_TYPE_PVALLOC	7
+
+
+typedef enum {
+  MSCAN_UNUSED,
+  MSCAN_ARENA,
+  MSCAN_HEAP,
+  MSCAN_CHUNK_USED,
+  MSCAN_CHUNK_FREE,
+  MSCAN_FASTBIN_FREE,
+  MSCAN_UNSORTED,
+  MSCAN_TOP,
+  MSCAN_TCACHE
+} MSCAN_Types;
+
+void __malloc_scan_chunks (void (*callback)(void * /*ptr*/, size_t /*length*/, int /*type*/));
