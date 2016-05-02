@@ -1,3 +1,9 @@
+2016-05-02  Florian Weimer  <fweimer@redhat.com>
+
+	* hesiod/hesiod.h: Remove RCS keyword.
+	* hesiod/hesiod_p.h: Likewise.
+	* hesiod/hesiod.c: Likewise.
+
 2016-05-04  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #19787]
