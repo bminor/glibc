@@ -14,6 +14,10 @@ Security related changes:
   overflow (stack exhaustion) and a crash if getnetbyname is invoked
   on a very long name.  (CVE-2016-3075)
 
+* The glob function suffered from a stack-based buffer overflow when it was
+  called with the GLOB_ALTDIRFUNC flag and encountered a long file name.
+  Reported by Alexander Cherepanov.  (CVE-2016-1234)
+
 The following bugs are resolved with this release:
 
   [19679] gcc-4.9.3 C++ exception handling broken due to unaligned stack
