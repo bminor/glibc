@@ -13,6 +13,10 @@ Version 2.20.1
   17625, 17630, 17801, 18032, 18080, 18508, 18665, 18694, 18928, 19018,
   19682.
 
+* The glob function suffered from a stack-based buffer overflow when it was
+  called with the GLOB_ALTDIRFUNC flag and encountered a long file name.
+  Reported by Alexander Cherepanov.  (CVE-2016-1234)
+
 * Previously, getaddrinfo copied large amounts of address data to the stack,
   even after the fix for CVE-2013-4458 has been applied, potentially
   resulting in a stack overflow.  getaddrinfo now uses a heap allocation
