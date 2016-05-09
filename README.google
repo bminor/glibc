@@ -570,3 +570,8 @@ sysdeps/powerpc/bits/fenvinline.h
 nptl/sysdeps/unix/sysv/linux/register-atfork.c
   For b/28011264, detect and work around loop in fork handler list.
   (stanshebs, google-local)
+
+resolv/nss_dns/dns-network.c
+  For b/27917753, fix stack overflow in _nss_dns_getnetbyname_r (BZ19879)
+  https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=317b199b4aff8cfa27f2302ab404d2bb5032b9a4
+  (stanshebs, google-local)
