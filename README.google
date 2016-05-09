@@ -574,4 +574,10 @@ nptl/sysdeps/unix/sysv/linux/register-atfork.c
 resolv/nss_dns/dns-network.c
   For b/27917753, fix stack overflow in _nss_dns_getnetbyname_r (BZ19879)
   https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=317b199b4aff8cfa27f2302ab404d2bb5032b9a4
-  (stanshebs, google-local)
+  (stanshebs, backport)
+
+resolv/res_send.c
+  For b/28166767, fix where getaddrinfo() writes DNS queries to random file descriptors
+  under high load (BZ15946, CVE-2013-7423)
+  https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=f9d2d03254a58d92635a311a42253eeed5a40a47
+  (stanshebs, backport)
