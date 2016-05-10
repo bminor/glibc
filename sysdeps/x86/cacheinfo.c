@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#if IS_IN (libc)
+
 #include <assert.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -656,6 +658,11 @@ init_cacheinfo (void)
 #endif
     }
 
+  const struct cache_info *cache = &GLRO(dl_x86_cpu_features).cache;
+
+  if (cache->raw_data_size != 0)
+    data = cache->raw_data_size;
+
   if (data > 0)
     {
       __x86_raw_data_cache_size_half = data / 2;
@@ -665,6 +672,9 @@ init_cacheinfo (void)
       __x86_data_cache_size_half = data / 2;
       __x86_data_cache_size = data;
     }
+
+  if (cache->raw_shared_size != 0)
+    shared = cache->raw_shared_size;
 
   if (shared > 0)
     {
@@ -679,5 +689,10 @@ init_cacheinfo (void)
   /* The large memcpy micro benchmark in glibc shows that 6 times of
      shared cache size is the approximate value above which non-temporal
      store becomes faster.  */
-  __x86_shared_non_temporal_threshold = __x86_shared_cache_size * 6;
+  __x86_shared_non_temporal_threshold
+    = (cache->shared_non_temporal_threshold != 0
+       ? cache->shared_non_temporal_threshold
+       : __x86_shared_cache_size * 6);
 }
+
+#endif
