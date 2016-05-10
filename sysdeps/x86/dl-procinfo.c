@@ -1,5 +1,5 @@
-/* Data for x86-64 version of processor capability information.
-   Copyright (C) 2015-2016 Free Software Foundation, Inc.
+/* Data for x86 version of processor capability information.
+   Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,6 +15,10 @@
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
+
+#ifndef _SYSDEPS_DL_PROCINFO_C
+# error "Never include sysdeps/x86/dl-procinfo.c directly."
+#endif
 
 /* If anything should be added here check whether the size of each string
    is still ok with the given array size.
@@ -35,13 +39,18 @@
        needed.
   */
 
-#define _SYSDEPS_DL_PROCINFO_C
-
-#ifndef PROCINFO_CLASS
-# define PROCINFO_CLASS
+#if !IS_IN (ldconfig)
+# if !defined PROCINFO_DECL && defined SHARED
+  ._dl_x86_cpu_features
+# else
+PROCINFO_CLASS struct cpu_features _dl_x86_cpu_features
+# endif
+# ifndef PROCINFO_DECL
+= { }
+# endif
+# if !defined SHARED || defined PROCINFO_DECL
+;
+# else
+,
+# endif
 #endif
-
-#include <sysdeps/x86/dl-procinfo.c>
-
-#undef PROCINFO_DECL
-#undef PROCINFO_CLASS

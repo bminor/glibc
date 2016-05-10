@@ -39,25 +39,13 @@
        needed.
   */
 
+#define _SYSDEPS_DL_PROCINFO_C
+
 #ifndef PROCINFO_CLASS
 # define PROCINFO_CLASS
 #endif
 
-#if !IS_IN (ldconfig)
-# if !defined PROCINFO_DECL && defined SHARED
-  ._dl_x86_cpu_features
-# else
-PROCINFO_CLASS struct cpu_features _dl_x86_cpu_features
-# endif
-# ifndef PROCINFO_DECL
-= { }
-# endif
-# if !defined SHARED || defined PROCINFO_DECL
-;
-# else
-,
-# endif
-#endif
+#include <sysdeps/x86/dl-procinfo.c>
 
 #if !defined PROCINFO_DECL && defined SHARED
   ._dl_x86_cap_flags
