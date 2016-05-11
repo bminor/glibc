@@ -1,16 +1,3 @@
-2016-03-31  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
-
-	* elf/tst-dlsym-error.c: Include <string.h> for strchrnul.
-
-2016-03-31  Florian Weimer  <fweimer@redhat.com>
-
-	[BZ #19509]
-	* elf/dl-lookup.c (_dl_lookup_symbol_x): Report error even if
-	skip_map != NULL.
-	* elf/tst-dlsym-error.c: New file.
-	* elf/Makefile (tests): Add tst-dlsym-error.
-	(tst-dlsym-error): Link against libdl.
-
 2016-03-07  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #19610]
