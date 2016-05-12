@@ -1,3 +1,13 @@
+2016-05-12  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19703]
+	Partially async-signal-safe fork for single-threaded processes.
+	* sysdeps/nptl/fork.c (__libc_fork): Introduce multiple_threads
+	variable.  Do not acquire and reset/release malloc and libio locks
+	in single-threaded processes.
+	* malloc/tst-mallocfork2.c: New file.
+	* malloc/Makefile (tests): Add it.
+
 2016-04-14  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* stdio-common/printf_fp.c (__printf_fp_l):
