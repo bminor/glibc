@@ -26,9 +26,9 @@ err(const char *str)
 }
 
 void __attribute__((constructor))
-djmain()
+djmain(void)
 {
-  char *e;
+  const char *e;
   size_t sz;
 
   e = getenv("MTRACE_CTL_COUNT");
@@ -60,7 +60,7 @@ const char * const typenames[] = {
 };
 
 void __attribute__((destructor))
-djend()
+djend(void)
 {
   char *e;
   FILE *outf;
@@ -95,7 +95,7 @@ djend()
 	case __MTB_TYPE_UNUSED:
 	  break;
 	default:
-	  fprintf (outf, "%08x %s %c%c%c%c%c%c%c%c %016x %016x %016x\n",
+	  fprintf (outf, "%08x %s %c%c%c%c%c%c%c%c %016llx %016llx %016llx\n",
 		   t->thread,
 		   typenames[t->type],
 		   t->path_thread_cache ? 'T' : '-',
@@ -106,9 +106,9 @@ djend()
 		   t->path_munmap ? 'U' : '-',
 		   t->path_m_f_realloc ? 'R' : '-',
 		   t->path_hook ? 'H' : '-',
-		   t->ptr1,
-		   t->size,
-		   t->ptr2);
+		   (long long unsigned int) t->ptr1,
+		   (long long unsigned int) t->size,
+		   (long long unsigned int) t->ptr2);
 	  break;
 	}
     }

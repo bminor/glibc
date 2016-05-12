@@ -848,7 +848,7 @@ endif	# $(+cflags) == ""
 libio-include = -I$(..)libio
 
 # List of non-library modules that we build.
-built-modules = iconvprogs iconvdata ldconfig lddlibc4 libmemusage \
+built-modules = iconvprogs iconvdata ldconfig lddlibc4 libmemusage libmtracectl \
 		libSegFault libpcprofile librpcsvc locale-programs \
 		memusagestat nonlib nscd extramodules libnldbl
 

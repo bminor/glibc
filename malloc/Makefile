@@ -40,11 +40,14 @@ install-lib := libmcheck.a
 non-lib.a := libmcheck.a
 
 # Additional library.
-extra-libs = libmemusage
+extra-libs = libmemusage libmtracectl
 extra-libs-others = $(extra-libs)
 
 libmemusage-routines = memusage
 libmemusage-inhibit-o = $(filter-out .os,$(object-suffixes))
+
+libmtracectl-routines = mtrace-ctl
+libmtracectl-inhibit-o = $(filter-out .os,$(object-suffixes))
 
 $(objpfx)tst-malloc-backtrace: $(shared-thread-library)
 $(objpfx)tst-malloc-thread-exit: $(shared-thread-library)
