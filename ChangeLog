@@ -1,3 +1,409 @@
+2016-05-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/data/time.h-data (getdate_err): Do not expect for
+	[XPG3].
+	(getdate): Likewise.
+	* conform/Makefile (test-xfail-XPG3/time.h/conform): Remove
+	variable.
+
+	* conform/data/unistd.h-data (F_LOCK): Do not expect for [XPG3].
+	(F_ULOCK): Likewise.
+	(F_TEST): Likewise.
+	(F_TLOCK): Likewise.
+	(useconds_t): Likewise.
+	(intptr_t): Do not expect for [XPG3] or [XPG4].
+	(brk): Do not expect for [XPG3]
+	(fchown): Likewise.
+	(fchdir): Likewise.
+	(ftruncate): Likewise.
+	(getdtablesize): Likewise.
+	(gethostid): Likewise.
+	(getpagesize): Likewise.
+	(getpgid): Likewise.
+	(getsid): Likewise.
+	(getwd): Likewise.
+	(lchown): Likewise.
+	(lockf): Likewise.
+	(readlink): Likewise.
+	(sbrk): Likewise.
+	(setpgrp): Likewise.
+	(setregid): Likewise.
+	(setreuid): Likewise.
+	(symlink): Likewise.
+	(sync): Likewise.
+	(truncate): Likewise.
+	(ualarm): Likewise.
+	(usleep): Likewise.
+	(vfork): Likewise.
+	* conform/Makefile (test-xfail-XPG3/unistd.h/conform): Remove
+	variable.
+
+	[BZ #20054]
+	* posix/unistd.h (gethostname): Declare if [__USE_XOPEN_EXTENDED],
+	not [__USE_UNIX98].
+	* conform/data/unistd.h-data (gethostname): Do not expect for
+	[XPG3].
+
+	* conform/data/fcntl.h-data [!POSIX] (S_IFMT): Do not expect.
+	[!POSIX] (S_IFBLK): Likewise.
+	[!POSIX] (S_IFCHR): Likewise.
+	[!POSIX] (S_IFIFO): Likewise.
+	[!POSIX] (S_IFREG): Likewise.
+	[!POSIX] (S_IFDIR): Likewise.
+	[!POSIX] (S_IFLNK): Likewise.
+	[!POSIX] (S_IFSOCK): Likewise.
+	* conform/Makefile (test-xfail-XPG3/fcntl.h/conform): Remove
+	variable.
+	(test-xfail-XPG4/fcntl.h/conform): Likewise.
+
+2016-05-12  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* sysdeps/aarch64/memset.S (__memset):
+	Rewrite of optimized memset.
+
+2016-05-12  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19703]
+	Partially async-signal-safe fork for single-threaded processes.
+	* sysdeps/nptl/fork.c (__libc_fork): Introduce multiple_threads
+	variable.  Do not acquire and reset/release malloc and libio locks
+	in single-threaded processes.
+	* malloc/tst-mallocfork2.c: New file.
+	* malloc/Makefile (tests): Add it.
+
+2016-05-12  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet_serv): Add tmpbuf
+	argument.  Use scratch buffer instead of extend_alloca.
+	(gethosts): Use scratch buffer instead of extend_alloca.
+	(gaih_inet): Add tmpbuf argument.  Use scratch buffer instead of
+	extend_alloca.
+	(getaddrinfo): Allocate scratch buffer and pass it to gaih_inet.
+
+2016-05-11  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20055]
+	* termios/termios.h (pid_t): Define for [__USE_XOPEN_EXTENDED]
+	instead of [__USE_UNIX98].
+	(tcgetsid): Declare for [__USE_XOPEN_EXTENDED] instead of
+	[__USE_UNIX98].
+	* conform/data/termios.h-data (tcgetsid): Do not expect for
+	[XPG3].
+	* conform/Makefile (test-xfail-XPG3/termios.h/conform): Remove
+	variable.
+	(test-xfail-XPG4/termios.h/conform): Likewise.
+
+2016-05-11  Florian Weimer  <fweimer@redhat.com>
+
+	Do not use mcheck in localedef.
+	* locale/programs/localedef.c (turn_on_mcheck)
+	(__malloc_initialize_hook): Remove.
+
+2016-05-11  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/s390/s390-32/Makefile (pic-ccflag): Remove.
+	* sysdeps/s390/s390-64/Makefile: Likewise.
+
+2016-05-11  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/multiarch/Makefile (gen-as-const-headers):
+	Remove ifunc-defines.sym.
+	* sysdeps/x86_64/multiarch/Makefile (gen-as-const-headers):
+	Likewise.
+	* sysdeps/i386/i686/multiarch/ifunc-defines.sym: Removed.
+	* sysdeps/x86/rtld-global-offsets.sym: Likewise.
+	* sysdeps/x86_64/multiarch/ifunc-defines.sym: Likewise.
+	* sysdeps/x86/Makefile (gen-as-const-headers): Remove
+	rtld-global-offsets.sym.
+	* sysdeps/x86_64/multiarch/ifunc-defines.sym: Merged with ...
+	* sysdeps/x86/cpu-features-offsets.sym: This.
+	* sysdeps/x86/cpu-features.h: Include <cpu-features-offsets.h>
+	instead of <ifunc-defines.h> and <rtld-global-offsets.h>.
+
+2016-05-10  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20073]
+	* io/sys/stat.h (fchmod): Declare for
+	[__USE_POSIX199309 || __USE_XOPEN_EXTENDED], not [__USE_POSIX].
+	* conform/Makefile (test-xfail-XPG3/sys/stat.h/conform): Remove
+	variable.
+
+	* conform/data/sys/stat.h-data [XPG3] (S_IFLNK): Do not expect.
+	[XPG3] (S_IFSOCK): Likewise.
+	[XPG3] (S_ISVTX): Likewise.
+	[XPG3] (S_ISLNK): Likewise.
+	[XPG3] (S_ISSOCK): Likewise.
+	[XPG3] (fchmod): Likewise.
+	[XPG3] (lstat): Likewise.
+	[XPG3] (mknod): Likewise.
+
+	* conform/data/sys/stat.h-data (st_blksize): Do not expect for
+	[XPG3].  Expect type long and XFAIL for [XPG4].
+	(st_blocks): Likewise.
+
+	[BZ #20044]
+	* posix/unistd.h [__USE_UNIX98 && !__USE_XOPEN2K]
+	(pthread_atfork): New prototype.
+	* conform/Makefile (test-xfail-UNIX98/unistd.h/conform): Remove
+	variable.
+
+	[BZ #20043]
+	* posix/unistd.h [__USE_XOPEN && !__USE_XOPEN2K] (cuserid): New
+	prototype.
+
+2016-05-10  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20017]
+	* resolv/res_debug.c (p_secstodate): Call __gmtime_r instead of
+	gmtime.
+
+2016-05-10  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19994]
+	* sysdeps/posix/getaddrinfo.c (gethosts): Restore RES_USE_INET6
+	flag in _res.options.
+
+2016-05-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/data/sys/types.h-data (blkcnt_t): Do not expect for
+	[XPG3 || XPG4].
+	(blksize_t): Likewise.
+	(clockid_t): Likewise.
+	* conform/Makefile (test-xfail-XPG3/sys/types.h/conform): Remove
+	variable.
+	(test-xfail-XPG4/sys/types.h/conform): Likewise.
+
+2016-05-09  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/init-first.c:
+	Add VDSO_SYMBOL(getcpu).
+	(_libc_vdso_platform_setup): Initialize VDSO_SYMBOL(getcpu).
+	* sysdeps/unix/sysv/linux/s390/libc-vdso.h:
+	Add VDSO_SYMBOL(getcpu).
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h:
+	New define HAVE_GETCPU_VSYSCALL.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h: Likewise.
+
+2016-05-08  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/cacheinfo.c: Include <sysdeps/x86/cacheinfo.c>
+	instead of <sysdeps/x86_64/cacheinfo.c>.
+	* sysdeps/x86_64/cacheinfo.c: Moved to ...
+	* sysdeps/x86/cacheinfo.c: Here.
+
+2016-05-04  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/malloc-internal.h: Adjust header file guard.
+
+2016-05-04  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19787]
+	* inet/getnameinfo.c (check_sprintf_result): New function.
+	(CHECKED_SNPRINTF): New macro.
+	(gni_host_inet_numeric): Use CHECKED_SNPRINTF to write the scope
+	to the host buffer.
+	(gni_host_local): Use checked_copy to copy the host name.
+	(gni_serv_inet): Use CHECKED_SNPRINTF to write the service name.
+	(gni_serv_local): Use checked_copy to copy the service name.
+	(getnameinfo): Remove unnecessary truncation of result buffers.
+
+2016-05-04  Florian Weimer  <fweimer@redhat.com>
+
+	* inet/getnameinfo.c (gni_host_inet_numeric): Return EAI_OVERFLOW
+	in case of inet_ntop failure.
+
+2016-05-04  Florian Weimer  <fweimer@redhat.com>
+
+	* inet/getnameinfo.c (gni_host_inet_name): Use temporaries to
+	avoid long lines.
+	(gni_host_inet_numeric): Likewise.  Reduce scope of local
+	variables.
+	(gni_host_inet, gni_host_local): Add comment.
+	(gni_host): Add comment.  Use temporary to avoid long lines.
+
+2016-05-04  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power8/strncpy.S: Fix use of condition
+	registers specifiers where general purpose registers specifiers should
+	have been used.
+
+2016-05-04  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19779]
+	CVE-2016-1234
+	Avoid copying names of directory entries.
+	* posix/glob.c (DIRENT_MUST_BE, DIRENT_MIGHT_BE_SYMLINK)
+	(DIRENT_MIGHT_BE_DIR, CONVERT_D_INO, CONVERT_D_TYPE)
+	(CONVERT_DIRENT_DIRENT64, REAL_DIR_ENTRY): Remove macros.
+	(struct readdir_result): New type.
+	(D_TYPE_TO_RESULT, D_INO_TO_RESULT, READDIR_RESULT_INITIALIZER)
+	(GL_READDIR): New macros.
+	(readdir_result_might_be_symlink, readdir_result_might_be_dir)
+	(convert_dirent, convert_dirent64): New functions.
+	(glob_in_dir): Use struct readdir_result.  Call convert_dirent or
+	convert_dirent64.  Adjust references to the readdir result.
+	* sysdeps/unix/sysv/linux/i386/glob64.c:
+	(convert_dirent, GL_READDIR): Redefine for second file inclusion.
+	* posix/bug-glob2.c (LONG_NAME): Define.
+	(filesystem): Add LONG_NAME.
+	(my_DIR): Increase the size of room_for_dirent.
+
+2016-05-03  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20041]
+	* misc/sys/select.h (__need_timespec): Only define if
+	[__USE_XOPEN2K].
+	* conform/Makefile (test-xfail-XPG4/sys/time.h/conform): Remove
+	variable.
+	(test-xfail-XPG4/utmpx.h/conform): Likewise.
+	(test-xfail-UNIX98/sys/time.h/conform): Likewise.
+	(test-xfail-UNIX98/utmpx.h/conform): Likewise.
+
+2016-05-03  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+	    Segher Boessenkool  <segher@gcc.gnu.org>
+
+	[BZ #20004]
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/swapcontext.S:
+	(__novec_swapcontext): Add missing load.
+
+2016-05-02  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20023]
+	* io/fcntl.h [__USE_XOPEN && !__USE_XOPEN2K8]: Do not include
+	<time.h>.
+	* conform/Makefile (test-xfail-UNIX98/fcntl.h/conform): Remove
+	variable.
+	(test-xfail-XOPEN2K/fcntl.h/conform): Likewise.
+
+2016-05-02  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/clone.S (__clone): Fix
+	flags CLONE_VM compare.
+
+2016-05-02  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20031]
+	* hesiod/hesiod.c (get_txt_records): Return error if TXT record is
+	completely empty.
+
+2016-05-02  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19573]
+	* hesiod/Makefile (libnss_hesiod-routines): Remove hesiod-init.
+	* hesiod/nss_hesiod/hesiod-init.c: Remove file.
+	* hesiod/nss_hesiod/nss_hesiod.h: Likewise.
+	* hesiod/hesiod.h (__hesiod_res_get, __hesiod_res_set): Remove.
+	(hesiod_init, hesiod_end, hesiod_to_bind, hesiod_resolve)
+	(hesiod_free_list): Mark as hidden.
+	* hesiod/hesiod_p (struct hesiod_p): Remove res, free_res,
+	res_set, res_get.
+	* hesiod/hesiod.c: Remove unnecessary forward declarations.
+	(init, __hesiod_res_get, __hesiod_res_set): Remove.
+	(hesiod_init): Remove obsolete res_ninit call.
+	(hesiod_end): Do not free resolver state.  Do not invoke callback.
+	(hesiod_bind): Do not call init.
+	(get_txt_records): Use res_mkquery, res_send instead of
+	res_nmkquery, res_nsend.
+	* hesiod/nss_hesiod/hesiod-grp.c (lookup): Call hesiod_init
+	instead of _nss_hesiod_init.
+	(_nss_hesiod_initgroups_dyn): Likewise.
+	* hesiod/nss_hesiod/hesiod-proto.c (lookup): Likewise.
+	* hesiod/nss_hesiod/hesiod-pwd.c (lookup): Likewise.
+	* hesiod/nss_hesiod/hesiod-service.c (lookup): Likewise.
+
+2016-05-02  Florian Weimer  <fweimer@redhat.com>
+
+	* hesiod/hesiod_p.h (DEF_RHS): Remove.
+	* hesiod/hesiod.c (hesiod_init): Remove code for handling DEF_RHS.
+
+2016-05-02  Florian Weimer  <fweimer@redhat.com>
+
+	* hesiod/hesiod.h: Remove RCS keyword.
+	* hesiod/hesiod_p.h: Likewise.
+
+	* hesiod/hesiod.c: Likewise.
+
+2016-05-01  Arnas Udovičius  <arnas.udovicius@gmail.com>
+
+	[BZ #12450]
+	* locale/iso-639.def: Add Samogitian/sgs.
+
+2016-04-30  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k/Makefile (CFLAGS-gmon-start.c): Define.
+
+	* sysdeps/unix/sysv/linux/m68k/clone.S: Localize labels.
+
+2016-04-29  Stephen Gallagher  <sgallagh@redhat.com>
+	    Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #19072]
+	* grp/Makefile (headers): Add grp-merge.h
+	(routines): Add grp-merge.
+	* grp/getgrgid_r.c: Include grp-merge.h.
+	(DEEPCOPY_FN): Define.
+	(MERGE_FN): Define.
+	* grp/getgrname_r.c: Include grp-merge.h.
+	(DEEPCOPY_FN): Define.
+	(MERGE_FN): Define.
+	* grp/grp-merge.c: New file.
+	* grp/grp-merge.h: New file.
+	* include/grp-merge.h: New file.
+	* grp/Versions: Define __merge_grp@GLIBC_PRIVATE, and
+	__copy_grp@GLIBC_PRIVATE.
+	* manual/nss.texi (Actions in the NSS configuration): Describe
+	return, continue, and merge.
+	* nscd/getgrgid_r.c: Include grp/grp-merge.h.
+	(DEEPCOPY_FN): Define.
+	(MERGE_FN): Define.
+	* nscd/getgrnam_r.c: Include grp/grp-merge.h.
+	(DEEPCOPY_FN): Define.
+	(MERGE_FN): Define.
+	* nss/getXXbyYY_r.c [!DEEPCOPY_FN]: Define __copy_einval.
+	[!MERGE_FN]: Define __merge_einval.
+	(CHECK_MERGE): Define.
+	(REENTRANT_NAME): Process merge if do_merge is true.
+	* nss/getnssent_r.c (__nss_setent): Process NSS_ACTION_MERGE.
+	(__nss_getent_r): Likewise.
+	* nss/nsswitch.c (nss_parse_service_list): Likewise.
+	* nss/nsswitch.h (lookup_actions): Define NSS_ACTION_MERGE.
+
+2016-04-29  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #20012]
+	* libio/fmemopen.c (fmemopen_read): Use buffer maximum position, not
+	length to calculate the buffer to read.
+	(fmemopen_write): Set the buffer position based on bytes written.
+	(fmemopen_seek): Return EINVAL for invalid whence modes.
+
+	[BZ #19957]
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir) == nptl] (test): Remove
+	tst-getpid2.
+	(test): Add tst-clone2.
+	* sysdeps/unix/sysv/linux/tst-clone2.c: New file.
+	* sysdeps/unix/sysv/linux/aarch64/clone.S (__clone): Do not change
+	pid/tid fields for CLONE_VM.
+	* sysdeps/unix/sysv/linux/alpha/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/arm/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/clone2.S (__clone): Likewise,
+	* sysdeps/unix/sysv/linux/i386/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/mips/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/nios2/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/clone.S (__clone):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S (__clone):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/sh/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/tile/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/clone.S (__clone): Likewise.
+	* sysdeps/unix/sysv/linux/tst-getpid2.c: Remove file.
+
 2016-04-29  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #19642]
@@ -347,7 +753,7 @@
 	IPV6_RTHDR, IPV6_RECVDSTOPTS, IPV6_DSTOPTS, IPV6_RECVPATHMTU,
 	IPV6_PATHMTU, IPV6_DONTFRAG): New macros.
 
-2016-04-23   H.J. Lu  <hongjiu.lu@intel.com>
+2016-04-23  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* elf/dl-minimal.c (__libc_memalign): Mmap one extra page.
 

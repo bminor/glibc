@@ -1,3 +1,20 @@
+/* Copyright (C) 1997-2016 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
 /*
  * Copyright (c) 1996,1999 by Internet Software Consortium.
  *
@@ -20,27 +37,17 @@
  */
 
 /*
- * $BINDId: hesiod_p.h,v 1.9 1999/01/08 19:24:39 vixie Exp $
- */
-
-/*
  * hesiod_p.h -- private definitions for the hesiod library
  */
 
 #ifndef _HESIOD_P_H_INCLUDED
 #define _HESIOD_P_H_INCLUDED
 
-#define DEF_RHS		".Athena.MIT.EDU"	/* Defaults if HESIOD_CONF */
 #define DEF_LHS		".ns"			/*    file is not */
 						/*    present. */
 struct hesiod_p {
 	char *		LHS;		/* normally ".ns" */
 	char *		RHS;		/* AKA the default hesiod domain */
-	struct __res_state * res;	/* resolver context */
-	void		(*free_res)(void *);
-	void		(*res_set)(struct hesiod_p *, struct __res_state *,
-				   void (*)(void *));
-	struct __res_state * (*res_get)(struct hesiod_p *);
 	int		classes[2];	/* The class search order. */
 };
 

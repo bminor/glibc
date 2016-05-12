@@ -18,6 +18,7 @@
 
 #include <grp.h>
 
+#include <grp-merge.h>
 
 #define LOOKUP_TYPE	struct group
 #define FUNCTION_NAME	getgrgid
@@ -25,5 +26,7 @@
 #define ADD_PARAMS	gid_t gid
 #define ADD_VARIABLES	gid
 #define BUFLEN		NSS_BUFLEN_GROUP
+#define DEEPCOPY_FN	__copy_grp
+#define MERGE_FN	__merge_grp
 
 #include <nss/getXXbyYY_r.c>

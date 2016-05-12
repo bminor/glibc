@@ -875,7 +875,7 @@ extern int setlogin (const char *__name) __THROW __nonnull ((1));
 #endif
 
 
-#if defined __USE_UNIX98 || defined __USE_XOPEN2K
+#if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K
 /* Put the name of the current host in no more than LEN bytes of NAME.
    The result is null-terminated if LEN is large enough for the full
    name and the terminator.  */
@@ -1138,11 +1138,24 @@ extern void swab (const void *__restrict __from, void *__restrict __to,
 #endif
 
 
-/* The Single Unix specification demands this prototype to be here.
-   It is also found in <stdio.h>.  */
+/* Prior to Issue 6, the Single Unix Specification required these
+   prototypes to appear in this header.  They are also found in
+   <stdio.h>.  */
 #if defined __USE_XOPEN && !defined __USE_XOPEN2K
 /* Return the name of the controlling terminal.  */
 extern char *ctermid (char *__s) __THROW;
+
+/* Return the name of the current user.  */
+extern char *cuserid (char *__s);
+#endif
+
+
+/* Unix98 requires this function to be declared here.  In other
+   standards it is in <pthread.h>.  */
+#if defined __USE_UNIX98 && !defined __USE_XOPEN2K
+extern int pthread_atfork (void (*__prepare) (void),
+			   void (*__parent) (void),
+			   void (*__child) (void)) __THROW;
 #endif
 
 

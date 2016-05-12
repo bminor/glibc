@@ -1,6 +1,6 @@
-/* Copyright (C) 2000-2016 Free Software Foundation, Inc.
+/* Group merging implementation.
+   Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Mark Kettenis <kettenis@phys.uva.nl>, 2000.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,23 +16,22 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sys/cdefs.h>		/* Needs to come before <hesiod.h>.  */
-#include <hesiod.h>
-#include <resolv.h>
-#include <stddef.h>
+#ifndef _GRP_MERGE_H
+#define _GRP_MERGE_H 1
 
-#include "nss_hesiod.h"
+#include <grp.h>
 
-void *
-_nss_hesiod_init (void)
-{
-  void *context;
+/* Duplicate a grp struct (and its members). When no longer needed, the
+   calling function must free(newbuf).  */
+int
+__copy_grp (const struct group srcgrp, const size_t buflen,
+	    struct group *destgrp, char *destbuf, char **endptr)
+	    internal_function;
 
-  if (hesiod_init (&context) == -1)
-    return NULL;
+/* Merge the member lists of two grp structs together.  */
+int
+__merge_grp (struct group *savedgrp, char *savedbuf, char *savedend,
+	     size_t buflen, struct group *mergegrp, char *mergebuf)
+	     internal_function;
 
-  /* Use the default (per-thread) resolver state.  */
-  __hesiod_res_set (context, &_res, NULL);
-
-  return context;
-}
+#endif /* _GRP_MERGE_H */
