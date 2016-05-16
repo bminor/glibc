@@ -39,5 +39,4 @@
    configuration.  */
 #if __LINUX_KERNEL_VERSION < 0x030E03
 # undef __ASSUME_REQUEUE_PI
-# undef __ASSUME_SET_ROBUST_LIST
 #endif

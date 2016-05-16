@@ -91,11 +91,9 @@ __pthread_mutex_init (pthread_mutex_t *mutex,
 
   if ((imutexattr->mutexkind & PTHREAD_MUTEXATTR_FLAG_ROBUST) != 0)
     {
-#ifndef __ASSUME_SET_ROBUST_LIST
       if ((imutexattr->mutexkind & PTHREAD_MUTEXATTR_FLAG_PSHARED) != 0
 	  && __set_robust_list_avail < 0)
 	return ENOTSUP;
-#endif
 
       mutex->__data.__kind |= PTHREAD_MUTEX_ROBUST_NORMAL_NP;
     }

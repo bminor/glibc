@@ -271,10 +271,7 @@ START_THREAD_DEFN
   if (__glibc_unlikely (atomic_exchange_acq (&pd->setxid_futex, 0) == -2))
     futex_wake (&pd->setxid_futex, 1, FUTEX_PRIVATE);
 
-#ifdef __NR_set_robust_list
-# ifndef __ASSUME_SET_ROBUST_LIST
-  if (__set_robust_list_avail >= 0)
-# endif
+  if (__glibc_likely (__set_robust_list_avail >= 0))
     {
       INTERNAL_SYSCALL_DECL (err);
       /* This call should never fail because the initial call in init.c
@@ -282,7 +279,6 @@ START_THREAD_DEFN
       INTERNAL_SYSCALL (set_robust_list, err, 2, &pd->robust_head,
 			sizeof (struct robust_list_head));
     }
-#endif
 
 #ifdef SIGCANCEL
   /* If the parent was running cancellation handlers while creating
@@ -388,7 +384,6 @@ START_THREAD_DEFN
      the breakpoint reports TD_THR_RUN state rather than TD_THR_ZOMBIE.  */
   atomic_bit_set (&pd->cancelhandling, EXITING_BIT);
 
-#ifndef __ASSUME_SET_ROBUST_LIST
   /* If this thread has any robust mutexes locked, handle them now.  */
 # ifdef __PTHREAD_MUTEX_HAVE_PREV
   void *robust = pd->robust_head.list;
@@ -419,7 +414,6 @@ START_THREAD_DEFN
 	}
       while (robust != (void *) &pd->robust_head);
     }
-#endif
 
   /* Mark the memory of the stack as usable to the kernel.  We free
      everything except for the space used for the TCB itself.  */

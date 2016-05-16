@@ -64,11 +64,6 @@
    they were introduced in 2.6.17-rc1, on SH in 2.6.19-rc1.  */
 #define __ASSUME_ATFCTS	1
 
-/* Support for inter-process robust mutexes was added in 2.6.17 (but
-   some architectures lack futex_atomic_cmpxchg_inatomic in some
-   configurations).  */
-#define __ASSUME_SET_ROBUST_LIST	1
-
 /* Support for private futexes was added in 2.6.22.  */
 #define __ASSUME_PRIVATE_FUTEX	1
 
