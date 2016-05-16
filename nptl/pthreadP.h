@@ -199,10 +199,8 @@ hidden_proto (__pthread_keys)
 /* Number of threads running.  */
 extern unsigned int __nptl_nthreads attribute_hidden;
 
-#ifndef __ASSUME_SET_ROBUST_LIST
 /* Negative if we do not have the system call and we can use it.  */
 extern int __set_robust_list_avail attribute_hidden;
-#endif
 
 /* Thread Priority Protection.  */
 extern int __sched_fifo_min_prio attribute_hidden;

@@ -6,6 +6,28 @@
 
 2016-06-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* nptl/nptl-init.c [__ASSUME_SET_ROBUST_LIST]
+	(__set_robust_list_avail): Remove define.
+	[__NR_set_robust_list] (__pthread_initialize_minimal_internal):
+	Likewise.
+	* nptl/pthreadP.h [__ASSUME_SET_ROBUST_LIST]
+	(__set_robust_list_avail): Likewise.
+	* nptl/pthread_create.c
+	[__NR_set_robust_list && !__ASSUME_SET_ROBUST_LIST]
+	(START_THREAD_DEFN): Likewise.
+	* nptl/pthread_mutex_init.c [!__ASSUME_SET_ROBUST_LIST]
+	(__pthread_mutex_init): Likewise.
+	* sysdeps/unix/sysv/linux/arm/kernel-features.h
+	(__ASSUME_SET_ROBUST_LIST): Likewise.
+	* sysdeps/unix/sysv/linux/kernel-features.h:
+	(__ASSUME_SET_ROBUST_LIST): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/kernel-features.h:
+	(__ASSUME_SET_ROBUST_LIST): Likewise.
+	* sysdeps/unix/sysv/linux/mips/kernel-features.h:
+	(__ASSUME_SET_ROBUST_LIST): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/kernel-features.h:
+	(__ASSUME_SET_ROBUST_LIST): Likewise.
+
 	* nptl/pthread_mutex_init.c [__ASSUME_FUTEX_LOCK_PI]
 	(prio_inherit_missing): Remove define.
 	* sysdeps/unix/sysv/linux/arm/kernel-features.h
