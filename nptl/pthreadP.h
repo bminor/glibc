@@ -585,17 +585,22 @@ extern void __wait_lookup_done (void) attribute_hidden;
 # define PTHREAD_STATIC_FN_REQUIRE(name) __asm (".globl " #name);
 #endif
 
+extern bool __prio_inherit_missing (void);
+
 /* Test if the mutex is suitable for the FUTEX_WAIT_REQUEUE_PI operation.  */
-#if (defined lll_futex_wait_requeue_pi \
-     && defined __ASSUME_REQUEUE_PI)
-# define USE_REQUEUE_PI(mut) \
-   ((mut) && (mut) != (void *) ~0l \
-    && (((mut)->__data.__kind \
-	 & (PTHREAD_MUTEX_PRIO_INHERIT_NP | PTHREAD_MUTEX_ROBUST_NORMAL_NP)) \
-	== PTHREAD_MUTEX_PRIO_INHERIT_NP))
-#else
-# define USE_REQUEUE_PI(mut) 0
+static inline bool
+use_requeue_pi (pthread_mutex_t *mut)
+{
+#ifndef __ASSUME_REQUEUE_PI
+  if (__prio_inherit_missing ())
+    return false;
 #endif
+  return (mut) &&
+    (mut) != (void *) ~0l &&
+    (((mut)->__data.__kind
+      & (PTHREAD_MUTEX_PRIO_INHERIT_NP | PTHREAD_MUTEX_ROBUST_NORMAL_NP)) ==
+     PTHREAD_MUTEX_PRIO_INHERIT_NP);
+}
 
 /* Returns 0 if POL is a valid scheduling policy.  */
 static inline int

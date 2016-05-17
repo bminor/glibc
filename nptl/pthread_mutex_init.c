@@ -33,8 +33,9 @@ static const struct pthread_mutexattr default_mutexattr =
   };
 
 
-static bool
-prio_inherit_missing (void)
+bool
+attribute_hidden
+__prio_inherit_missing (void)
 {
 #ifdef __NR_futex
   static int tpi_supported;
@@ -72,7 +73,7 @@ __pthread_mutex_init (pthread_mutex_t *mutex,
       break;
 
     case PTHREAD_PRIO_INHERIT << PTHREAD_MUTEXATTR_PROTOCOL_SHIFT:
-      if (__glibc_unlikely (prio_inherit_missing ()))
+      if (__glibc_unlikely (__prio_inherit_missing ()))
 	return ENOTSUP;
       break;
 

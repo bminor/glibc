@@ -63,8 +63,7 @@ __pthread_cond_timedwait (pthread_cond_t *cond, pthread_mutex_t *mutex,
   int pshared = (cond->__data.__mutex == (void *) ~0l)
 		? LLL_SHARED : LLL_PRIVATE;
 
-#if (defined lll_futex_timed_wait_requeue_pi \
-     && defined __ASSUME_REQUEUE_PI)
+#ifdef lll_futex_timed_wait_requeue_pi
   int pi_flag = 0;
 #endif
 
@@ -161,8 +160,7 @@ __pthread_cond_timedwait (pthread_cond_t *cond, pthread_mutex_t *mutex,
 
 /* REQUEUE_PI was implemented after FUTEX_CLOCK_REALTIME, so it is sufficient
    to check just the former.  */
-#if (defined lll_futex_timed_wait_requeue_pi \
-     && defined __ASSUME_REQUEUE_PI)
+#ifdef lll_futex_timed_wait_requeue_pi
       /* If pi_flag remained 1 then it means that we had the lock and the mutex
 	 but a spurious waker raced ahead of us.  Give back the mutex before
 	 going into wait again.  */
@@ -171,7 +169,7 @@ __pthread_cond_timedwait (pthread_cond_t *cond, pthread_mutex_t *mutex,
 	  __pthread_mutex_cond_lock_adjust (mutex);
 	  __pthread_mutex_unlock_usercnt (mutex, 0);
 	}
-      pi_flag = USE_REQUEUE_PI (mutex);
+      pi_flag = use_requeue_pi (mutex);
 
       if (pi_flag)
 	{
@@ -250,8 +248,7 @@ __pthread_cond_timedwait (pthread_cond_t *cond, pthread_mutex_t *mutex,
   __pthread_cleanup_pop (&buffer, 0);
 
   /* Get the mutex before returning.  */
-#if (defined lll_futex_timed_wait_requeue_pi \
-     && defined __ASSUME_REQUEUE_PI)
+#ifdef lll_futex_timed_wait_requeue_pi
   if (pi_flag)
     {
       __pthread_mutex_cond_lock_adjust (mutex);

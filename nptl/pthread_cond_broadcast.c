@@ -60,9 +60,8 @@ __pthread_cond_broadcast (pthread_cond_t *cond)
 	  || PTHREAD_MUTEX_PSHARED (mut) & PTHREAD_MUTEX_PSHARED_BIT)
 	goto wake_all;
 
-#if (defined lll_futex_cmp_requeue_pi \
-     && defined __ASSUME_REQUEUE_PI)
-      if (USE_REQUEUE_PI (mut))
+#ifdef lll_futex_cmp_requeue_pi
+      if (use_requeue_pi (mut))
 	{
 	  if (lll_futex_cmp_requeue_pi (&cond->__data.__futex, 1, INT_MAX,
 					&mut->__data.__lock, futex_val,

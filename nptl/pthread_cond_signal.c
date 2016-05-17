@@ -46,11 +46,10 @@ __pthread_cond_signal (pthread_cond_t *cond)
       ++cond->__data.__wakeup_seq;
       ++cond->__data.__futex;
 
-#if (defined lll_futex_cmp_requeue_pi \
-     && defined __ASSUME_REQUEUE_PI)
+#ifdef lll_futex_cmp_requeue_pi
       pthread_mutex_t *mut = cond->__data.__mutex;
 
-      if (USE_REQUEUE_PI (mut)
+      if (use_requeue_pi (mut)
 	/* This can only really fail with a ENOSYS, since nobody can modify
 	   futex while we have the cond_lock.  */
 	  && lll_futex_cmp_requeue_pi (&cond->__data.__futex, 1, 0,
