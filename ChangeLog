@@ -6,6 +6,25 @@
 
 2016-06-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* nptl/pthreadP.h (prio_inherit_missing): Change name to
+	__prio_inherit_missing.
+	(USE_REQUEUE_PI): Remove define.
+	(use_requeue_pi): New function.
+	* nptl/pthread_cond_broadcast.c [__ASSUME_REQUEUE_PI]
+	(__pthread_cond_broadcast): Remove ifdef.
+	(USE_REQUEUE_PI): Change to use_requeue_pi.
+	* nptl/pthread_cond_signal.c [__ASSUME_REQUEUE_PI]
+	(__pthread_cond_signal): Remove ifdef.
+	(USE_REQUEUE_PI): Change to use_requeue_pi.
+	* nptl/pthread_cond_timedwait.c [__ASSUME_REQUEUE_PI]
+	(__pthread_cond_timedwait): Remove ifdef.
+	(USE_REQUEUE_PI): Change to use_requeue_pi.
+	( nptl/pthread_cond_wait.c [__ASSUME_REQUEUE_PI]
+	(__pthread_cond_wait): Remove ifdef.
+	(USE_REQUEUE_PI): Change to use_requeue_pi.
+	* nptl/pthread_mutex_init.c (prio_inherit_missing): Remove 'static'
+	qualifier and change name to __prio_inherit_missing.
+
 	* nptl/nptl-init.c [__ASSUME_SET_ROBUST_LIST]
 	(__set_robust_list_avail): Remove define.
 	[__NR_set_robust_list] (__pthread_initialize_minimal_internal):
