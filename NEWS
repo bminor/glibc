@@ -26,7 +26,7 @@ Version 2.22.1
   17905, 18420, 18421, 18480, 18589, 18743, 18778, 18781, 18787, 18796,
   18870, 18887, 18921, 18928, 18969, 18985, 19003, 19018, 19048, 19058,
   19174, 19178, 19182, 19243, 19573, 19590, 19682, 19791, 19822, 19853,
-  19879, 19779, 20010.
+  19879, 19779, 20010, 20112.
 
 * The getnetbyname implementation in nss_dns had a potentially unbounded
   alloca call (in the form of a call to strdupa), leading to a stack
@@ -53,6 +53,10 @@ Version 2.22.1
   even after the fix for CVE-2013-4458 has been applied, potentially
   resulting in a stack overflow.  getaddrinfo now uses a heap allocation
   instead.  Reported by Michael Petlan.  (CVE-2016-3706)
+
+* The Sun RPC UDP client could exhaust all available stack space when
+  flooded with crafted ICMP and UDP messages.  Reported by Aldy Hernandez'
+  alloca plugin for GCC.  (CVE-2016-4429)
 
 Version 2.22
 
