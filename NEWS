@@ -13,7 +13,7 @@ Version 2.19.1
   16878, 16882, 16885, 16916, 16932, 16943, 16958, 17048, 17062, 17069,
   17079, 17137, 17153, 17213, 17263, 17269, 17325, 17555, 17905, 18007,
   18032, 18080, 18240, 18287, 18508, 18665, 18905, 19779, 19791, 19879,
-  20010.
+  20010, 20112.
 
 * A buffer overflow in gethostbyname_r and related functions performing DNS
   requests has been fixed.  If the NSS functions were called with a
@@ -92,6 +92,10 @@ Version 2.19.1
   the overflow.  Thanks to the Google Security Team and Red Hat for
   reporting the security impact of this issue, and Robert Holiday of
   Ciena for reporting the related bug 18665. (CVE-2015-7547)
+
+* The Sun RPC UDP client could exhaust all available stack space when
+  flooded with crafted ICMP and UDP messages.  Reported by Aldy Hernandez'
+  alloca plugin for GCC.  (CVE-2016-4429)
 
 Version 2.19
 
