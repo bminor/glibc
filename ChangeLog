@@ -1,3 +1,182 @@
+2016-05-24  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19879]
+	CVE-2016-3075
+	* resolv/nss_dns/dns-network.c (_nss_dns_getnetbyname_r): Do not
+	copy name.
+
+2016-05-24  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #17905]
+	* catgets/Makefile (tst-catgets-mem): New test.
+	* catgets/catgets.c (catopen): Don't use unbounded alloca.
+	* catgets/open_catalog.c (__open_catalog): Likewise.
+	* catgets/tst-catgets.c (do_bz17905): Test unbounded alloca.
+
+2016-05-24  Florian Weimer  <fweimer@redhat.com>
+
+	* misc/bug18240.c (do_test): Set RLIMIT_AS.
+
+2016-05-24  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #18240]
+	* misc/hsearch_r.c (isprime, __hcreate_r): Protect against
+	unsigned int wraparound.
+
+2016-05-24  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #18240]
+	* misc/bug18240.c: New test.
+	* misc/Makefile (tests): Add it.
+
+2016-05-24  Ondřej Bílka  <neleai@seznam.cz>
+
+	* debug/strcpy_chk.c: Improve performance.
+	* debug/stpcpy_chk.c: Likewise.
+	* sysdeps/x86_64/strcpy_chk.S: Remove.
+	* sysdeps/x86_64/stpcpy_chk.S: Remove.
+
+	[BZ #18240]
+	* misc/hsearch_r.c (__hcreate_r): Handle overflow.
+
+2016-05-24  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19779]
+	CVE-2016-1234
+	Avoid copying names of directory entries.
+	* posix/glob.c (DIRENT_MUST_BE, DIRENT_MIGHT_BE_SYMLINK)
+	(DIRENT_MIGHT_BE_DIR, CONVERT_D_INO, CONVERT_D_TYPE)
+	(CONVERT_DIRENT_DIRENT64, REAL_DIR_ENTRY): Remove macros.
+	(struct readdir_result): New type.
+	(D_TYPE_TO_RESULT, D_INO_TO_RESULT, READDIR_RESULT_INITIALIZER)
+	(GL_READDIR): New macros.
+	(readdir_result_might_be_symlink, readdir_result_might_be_dir)
+	(convert_dirent, convert_dirent64): New functions.
+	(glob_in_dir): Use struct readdir_result.  Call convert_dirent or
+	convert_dirent64.  Adjust references to the readdir result.
+	* sysdeps/unix/sysv/linux/i386/glob64.c:
+	(convert_dirent, GL_READDIR): Redefine for second file inclusion.
+	* posix/bug-glob2.c (LONG_NAME): Define.
+	(filesystem): Add LONG_NAME.
+	(my_DIR): Increase the size of room_for_dirent.
+
+2016-05-24  Florian Weimer  <fweimer@redhat.com>
+
+	glob: Simplify and document the interface for the GLOB_ALTDIRFUNC
+	callback function gl_readdir.
+	* posix/glob.c (NAMELEN, CONVERT_D_NAMLEN): Remove.
+	(CONVERT_DIRENT_DIRENT64): Use strcpy instead of memcpy.
+	(glob_in_dir): Remove len.  Use strdup instead of malloc and
+	memcpy to copy the name.
+	* manual/pattern.texi (Calling Glob): Document requirements for
+	implementations of the gl_readdir callback function.
+	* manual/examples/mkdirent.c: New example.
+	* posix/bug-glob2.c (my_readdir): Set d_ino to 1 unconditionally,
+	per the manual guidance.
+	* posix/tst-gnuglob.c (my_readdir): Likewise.
+
+2016-05-24  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20010]
+	CVE-2016-3706
+	* sysdeps/posix/getaddrinfo.c
+	(convert_hostent_to_gaih_addrtuple): New function.
+	(gethosts): Call convert_hostent_to_gaih_addrtuple.
+	(gaih_inet): Use convert_hostent_to_gaih_addrtuple to convert
+	AF_INET data.
+
+2016-04-28  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	[BZ #18508]
+	* stdlib/Makefile ($(objpfx)tst-makecontext3):
+	Depend on $(libdl).
+	* stdlib/tst-makecontext.c (cf): Test if _Unwind_Backtrace
+	is not called infinitely times.
+	(backtrace_helper): New function.
+	(trace_arg): New struct.
+	(st1): Enlarge stack size.
+	* sysdeps/unix/sysv/linux/s390/s390-32/__makecontext_ret.S:
+	(__makecontext_ret): Omit cfi_startproc and cfi_endproc.
+	* sysdeps/unix/sysv/linux/s390/s390-64/__makecontext_ret.S:
+	Likewise.
+
+2016-04-28  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	[BZ #18080]
+	* sysdeps/unix/sysv/linux/s390/s390-32/setcontext.S
+	(__setcontext): Use SIG_SETMASK instead of SIG_BLOCK.
+	* sysdeps/unix/sysv/linux/s390/s390-64/setcontext.S
+	(__setcontext): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/swapcontext.S
+	(__swapcontext): Use SIG_SETMASK instead of SIG_BLOCK.
+	Call rt_sigprocmask syscall one time to set new signal mask
+	and retrieve the current signal mask instead of two calls.
+	* sysdeps/unix/sysv/linux/s390/s390-64/swapcontext.S
+	(__swapcontext): Likewise.
+	* stdlib/Makefile (tests): Add new testcase tst-setcontext2.
+	* stdlib/tst-setcontext2.c: New file.
+
+2016-04-09  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/x86_64/configure.ac: Change == to = when calling test.
+	* sysdeps/x86_64/configure: Likewise.
+
+2016-04-04  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/s390/bits/link.h: (La_s390_vr) New typedef.
+	(La_s390_32_regs): Append vector register lr_v24-lr_v31.
+	(La_s390_64_regs): Likewise.
+	(La_s390_32_retval): Append vector register lrv_v24.
+	(La_s390_64_retval): Likeweise.
+	* sysdeps/s390/s390-32/dl-trampoline.h (_dl_runtime_profile):
+	Handle extended structs La_s390_32_regs and La_s390_32_retval.
+	* sysdeps/s390/s390-64/dl-trampoline.h (_dl_runtime_profile):
+	Handle extended structs La_s390_64_regs and La_s390_64_retval.
+
+2016-04-04  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/s390/s390-32/dl-trampoline.S: Include dl-trampoline.h twice
+	to create a non-vector/vector version for _dl_runtime_resolve and
+	_dl_runtime_profile. Move implementation to ...
+	* sysdeps/s390/s390-32/dl-trampoline.h: ... here.
+	(_dl_runtime_resolve) Save and restore fpr/vrs.
+	(_dl_runtime_profile) Save and restore vrs and fix some issues
+	if _dl_call_pltexit is called.
+	* sysdeps/s390/s390-32/dl-machine.h (elf_machine_runtime_setup):
+	Choose the correct resolver function if running on a machine with vx.
+	* sysdeps/s390/s390-64/dl-trampoline.S: Include dl-trampoline.h twice
+	to create a non-vector/vector version for _dl_runtime_resolve and
+	_dl_runtime_profile. Move implementation to ...
+	* sysdeps/s390/s390-64/dl-trampoline.h: ... here.
+	(_dl_runtime_resolve) Save and restore fpr/vrs.
+	(_dl_runtime_profile) Save and restore vrs and fix some issues
+	* sysdeps/s390/s390-64/dl-machine.h: (elf_machine_runtime_setup):
+	Choose the correct resolver function if running on a machine with vx.
+
+2016-04-04  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* config.h.in (HAVE_S390_VX_ASM_SUPPORT): New macro undefine.
+	* sysdeps/s390/configure.ac: Add test for S390 vector instruction
+	assembler support.
+	* sysdeps/s390/configure: Regenerated.
+
+2016-04-04  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/s390/dl-procinfo.c (_dl_s390_cap_flags): Add z13.
+	* sysdeps/s390/dl-procinfo.h (_DL_PLATFORMS_COUNT): Increased.
+
+2016-04-04  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/s390/dl-procinfo.c (_dl_s390_platforms): Add vector flag.
+	* sysdeps/s390/dl-procinfo.h: Add vector capability.
+	* sysdeps/unix/sysv/linux/s390/bits/hwcap.h (HWCAP_S390_VX): Define.
+
+2016-03-02  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	[BZ #19682]
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list:
+	Remove socketcall syscalls.
+
 2016-02-25  Carlos O'Donell  <carlos@redhat.com>
 
 	[BZ #18665]
