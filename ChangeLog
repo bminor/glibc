@@ -1,3 +1,8 @@
+2016-06-02  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/unix/sysv/linux/dl-openat64.c (openat64): Convert to
+	ISO-style variadic function definition.
+
 2015-12-11  Steve Ellcey  <sellcey@imgtec.com>
 
 	* sysdeps/ieee754/flt-32/k_rem_pio2f.c (__kernel_rem_pio2f):
