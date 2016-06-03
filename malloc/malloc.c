@@ -1103,7 +1103,7 @@ volatile size_t __malloc_trace_buffer_head = 0;
 static __thread __malloc_trace_buffer_ptr trace_ptr;
 
 static void
-__mtb_trace_entry (uint32_t type, int64_t size, void *ptr1)
+__mtb_trace_entry (uint32_t type, size_t size, void *ptr1)
 {
   size_t head1;
 
@@ -1122,7 +1122,7 @@ __mtb_trace_entry (uint32_t type, int64_t size, void *ptr1)
   trace_ptr->path_m_f_realloc = 0;
   trace_ptr->path = 0;
   trace_ptr->size = size;
-  trace_ptr->ptr1 = (uint64_t) ptr1;
+  trace_ptr->ptr1 = ptr1;
   trace_ptr->ptr2 = 0;
 }
 
@@ -1158,7 +1158,7 @@ __malloc_get_trace_buffer (size_t *bufcount, size_t *bufhead)
 
 #define __MTB_TRACE_SET(var,value) \
   if (__builtin_expect (trace_ptr != NULL, 1)) \
-    trace_ptr->var = (uint64_t) value;
+    trace_ptr->var = value;
 
 #else
 #define __MTB_TRACE_ENTRY(type,size,ptr1)
@@ -3000,11 +3000,10 @@ mremap_chunk (mchunkptr p, size_t new_size)
 #define USE_TCACHE 1
 
 #if USE_TCACHE
-#define TCACHE_SHIFT	4
 /* we want 64 entries */
-#define MAX_TCACHE_SIZE	(1024 - (1 << TCACHE_SHIFT))
-#define TCACHE_IDX	((MAX_TCACHE_SIZE >> TCACHE_SHIFT)+1)
-#define size2tidx(bytes) (((bytes)+(1<<TCACHE_SHIFT)-1)>>TCACHE_SHIFT)
+#define MAX_TCACHE_SIZE		(MALLOC_ALIGNMENT * 63)
+#define TCACHE_IDX		((MAX_TCACHE_SIZE / MALLOC_ALIGNMENT) + 1)
+#define size2tidx(bytes)	(((bytes) + MALLOC_ALIGNMENT - 1) / MALLOC_ALIGNMENT)
 
 /* Rounds up, so...
    idx 0   bytes 0
@@ -3105,7 +3104,7 @@ __libc_malloc (size_t bytes)
       && tcache.initted == 1)
     {
       void *ent;
-      size_t tc_bytes = tc_idx << TCACHE_SHIFT;
+      size_t tc_bytes = tc_idx * MALLOC_ALIGNMENT;
       size_t tc_ibytes;
       size_t total_bytes;
       int i;
@@ -4414,7 +4413,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 
 #if USE_TCACHE
   {
-    int tc_idx = size2tidx (size - SIZE_SZ*2);
+    int tc_idx = size2tidx (size - SIZE_SZ);
 
     if (size < MAX_TCACHE_SIZE
 	&& tcache.counts[tc_idx] < TCACHE_FILL_COUNT

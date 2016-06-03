@@ -36,9 +36,9 @@ struct __malloc_trace_buffer_s {
   uint32_t path_hook:1; /* A hook was used to complete the request */
   uint32_t path:16; /* remaining bits */
 
-  uint64_t ptr1;
-  uint64_t ptr2;
-  uint64_t size;
+  void *ptr1;
+  void *ptr2;
+  size_t size;
 };
 
 typedef struct __malloc_trace_buffer_s *__malloc_trace_buffer_ptr;

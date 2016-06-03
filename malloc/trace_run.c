@@ -25,7 +25,11 @@
 #define C_NTHREADS 10
 #define C_START_THREAD 11
 
-static __inline__ int64_t rdtsc_s(void)
+#ifdef x86_64
+
+#define ticks_t int64_t
+
+static __inline__ ticks_t rdtsc_s(void)
 {
   unsigned a, d;
   asm volatile("cpuid" ::: "%rax", "%rbx", "%rcx", "%rdx");
@@ -33,7 +37,7 @@ static __inline__ int64_t rdtsc_s(void)
   return ((unsigned long)a) | (((unsigned long)d) << 32);
 }
 
-static __inline__ int64_t rdtsc_e(void)
+static __inline__ ticks_t rdtsc_e(void)
 {
   unsigned a, d;
   asm volatile("rdtscp" : "=a" (a), "=d" (d));
@@ -41,9 +45,31 @@ static __inline__ int64_t rdtsc_e(void)
   return ((unsigned long)a) | (((unsigned long)d) << 32);
 }
 
-static int64_t diff_timeval (struct timeval e, struct timeval s)
+#else
+
+#define ticks_t int32_t
+
+static __inline__ ticks_t rdtsc_s(void)
 {
-  int64_t usec;
+  unsigned a, d;
+  asm volatile("cpuid" ::: "%ax", "%bx", "%cx", "%dx");
+  asm volatile("rdtsc" : "=a" (a), "=d" (d));
+  return ((unsigned long)a) | (((unsigned long)d) << 16);
+}
+
+static __inline__ ticks_t rdtsc_e(void)
+{
+  unsigned a, d;
+  asm volatile("rdtscp" : "=a" (a), "=d" (d));
+  asm volatile("cpuid" ::: "%ax", "%bx", "%cx", "%dx");
+  return ((unsigned long)a) | (((unsigned long)d) << 16);
+}
+
+#endif
+
+static ticks_t diff_timeval (struct timeval e, struct timeval s)
+{
+  ticks_t usec;
   if (e.tv_usec < s.tv_usec)
     usec = (e.tv_usec + 1000000 - s.tv_usec) + (e.tv_sec-1 - s.tv_sec)*1000000;
   else
@@ -65,7 +91,7 @@ pthread_mutex_t cmutex = PTHREAD_MUTEX_INITIALIZER;
 static char cbuf[NCBUF][30];
 static int ci = 0;
 
-char *comma(int64_t x)
+char *comma(ticks_t x)
 {
   char buf[30], *bs, *bd;
   int l, i, idx;
@@ -77,7 +103,7 @@ char *comma(int64_t x)
   bs = buf;
   bd = cbuf[idx];
 
-  sprintf(buf, "%lld", x);
+  sprintf(buf, "%lld", (long long int)x);
   l = strlen(buf);
   i = l;
   while (*bs)
@@ -101,21 +127,23 @@ static unsigned char *data;
 static size_t n_data;
 
 static pthread_mutex_t stat_mutex = PTHREAD_MUTEX_INITIALIZER;
-int64_t malloc_time = 0, malloc_count = 0;
-int64_t calloc_time = 0, calloc_count = 0;
-int64_t realloc_time = 0, realloc_count = 0;
-int64_t free_time = 0, free_count = 0;
+ticks_t malloc_time = 0, malloc_count = 0;
+ticks_t calloc_time = 0, calloc_count = 0;
+ticks_t realloc_time = 0, realloc_count = 0;
+ticks_t free_time = 0, free_count = 0;
 
 pthread_mutex_t stop_mutex = PTHREAD_MUTEX_INITIALIZER;
 int threads_done = 0;
 
 //#define dprintf printf
-#define dprintf(...) 1
+#define dprintf(...) (void)1
 
 //#define mprintf printf
-#define mprintf(...) 1
+//#define MDEBUG 1
+#define mprintf(...) (void)1
 
 #define myabort() my_abort_2(me, __LINE__)
+void
 my_abort_2 (pthread_t me, int line)
 {
   fprintf(stderr, "Abort thread %d at line %d\n", (int)me, line);
@@ -127,16 +155,10 @@ wmem (volatile void *ptr, int count)
 {
   char *p = (char *)ptr;
   int i;
-  size_t sz;
 
   if (!p)
     return;
 
-  //  sz = *((size_t *)ptr-1) & ~7;
-  //  fprintf(stderr, "wmem: %p size %x csize %x\n", ptr,
-  //	  count, sz);
-  //  if (sz < 4*sizeof(size_t))
-  //    abort();
   for (i=0; i<count; i+=8)
     p[i] = 0x11;
 }
@@ -162,12 +184,14 @@ thread_common (void *my_data_v)
   pthread_t me = pthread_self ();
   size_t p1, p2, sz;
   unsigned char *cp = my_data_v;
-  int64_t my_malloc_time = 0, my_malloc_count = 0;
-  int64_t my_calloc_time = 0, my_calloc_count = 0;
-  int64_t my_realloc_time = 0, my_realloc_count = 0;
-  int64_t my_free_time = 0, my_free_count = 0;
-  int64_t stime;
+  ticks_t my_malloc_time = 0, my_malloc_count = 0;
+  ticks_t my_calloc_time = 0, my_calloc_count = 0;
+  ticks_t my_realloc_time = 0, my_realloc_count = 0;
+  ticks_t my_free_time = 0, my_free_count = 0;
+  ticks_t stime;
+#ifdef MDEBUG
   volatile void *tmp;
+#endif
 
   while (1)
     {
@@ -243,7 +267,9 @@ thread_common (void *my_data_v)
 	    myabort();
 	  stime = rdtsc_s();
 	  Q1;
+#ifdef MDEBUG
 	  tmp = ptrs[p1];
+#endif
 	  ptrs[p2] = realloc ((void *)ptrs[p1], sz);
 	  mprintf("%p = relloc(%p,%lx)\n", ptrs[p2], tmp,sz);
 	  Q2;
@@ -312,7 +338,7 @@ static void *alloc_mem (size_t amt)
 static pthread_t *thread_ids;
 
 void *
-my_malloc (char *msg, int size, unsigned char **cp, size_t *psz, size_t count)
+my_malloc (const char *msg, int size, unsigned char **cp, size_t *psz, size_t count)
 {
   void *rv;
   if (psz)
@@ -344,7 +370,7 @@ static const char * const scan_names[] = {
 void
 malloc_scan_callback (void *ptr, size_t length, int type)
 {
-  printf("%s: ptr %p length %llx\n", scan_names[type], ptr, length);
+  printf("%s: ptr %p length %llx\n", scan_names[type], ptr, (long long)length);
 }
 
 #define MY_ALLOC(T, psz)				\
@@ -355,16 +381,16 @@ malloc_scan_callback (void *ptr, size_t length, int type)
 int
 main(int argc, char **argv)
 {
-  int64_t start;
-  int64_t end;
-  int64_t usec;
+  ticks_t start=0;
+  ticks_t end;
+  ticks_t usec;
   struct timeval tv_s, tv_e;
   int fd;
   struct stat statb;
   unsigned char *cp;
   int thread_idx = 0;
   int i;
-  size_t n_threads;
+  size_t n_threads = 0;
   size_t idx;
   struct rusage res_start, res_end;
 
@@ -445,7 +471,7 @@ main(int argc, char **argv)
   printf("%s usec wall time\n", comma(usec));
 
   usec = diff_timeval (res_end.ru_utime, res_start.ru_utime);
-  printf("%s usec across %d thread%s\n", comma(usec), n_threads, n_threads == 1 ? "" : "s");
+  printf("%s usec across %d thread%s\n", comma(usec), (int)n_threads, n_threads == 1 ? "" : "s");
   printf("%s Kb Max RSS (%s -> %s)\n",
 	 comma(res_end.ru_maxrss - res_start.ru_maxrss),
 	 comma(res_start.ru_maxrss), comma(res_end.ru_maxrss));
@@ -473,12 +499,14 @@ main(int argc, char **argv)
       }
 #endif
 
+#if 0
   /* This will fail (crash) for system glibc but that's OK.  */
   __malloc_scan_chunks(malloc_scan_callback);
 
   malloc_info (0, stdout);
+#endif
 
-#if 1
+#if 0
   /* ...or report them as used.  */
   for (idx=0; idx<n_ptrs; idx++)
     if (ptrs[idx])

@@ -5,13 +5,26 @@
 #include <unistd.h>
 #include <sys/mman.h>
 
-/* Build like this:
+/* This module is a stand-alone control program for malloc's internal
+   trace buffer.  It is intended to be preloaded like this:
 
-   gcc -shared -fpic mtrace-ctl.c -o /tmp/mtrace-ctl.so ../../glibc.build/libc.so
+   LD_PRELOAD=/usr/lib/libmtracectl.so ./myprog
 
-   Invoke like this:
+   This module uses the following environment variables:
 
-   LD_PRELOAD=/tmp/mtrace-ctl.so ./myprog
+   MTRACE_CTL_COUNT - how many records to store (default: 1000).  Each
+   record is 32 bytes, and the entire buffer is mmap'd at once.  If
+   the buffer isn't big enough, it will overwrite early records with
+   newer ones.  The total number of trace records is reported in the
+   output file so that a larger buffer may be allocated on future runs.
+
+   MTRACE_CTL_FILE - the output file name (default:
+   /tmp/mtrace-$$.out).  Note that the default is per-pid but there is
+   no way to specify a per-pid pattern via this environment variable.
+
+   The output file will contain a header that says how many trace
+   records were seen (which is usually more or less than the trace
+   buffer size).  The trace buffer is then dumped one entry per line.
 
 */
 
@@ -106,9 +119,9 @@ djend(void)
 		   t->path_munmap ? 'U' : '-',
 		   t->path_m_f_realloc ? 'R' : '-',
 		   t->path_hook ? 'H' : '-',
-		   (long long unsigned int) t->ptr1,
+		   (long long unsigned int) (size_t) t->ptr1,
 		   (long long unsigned int) t->size,
-		   (long long unsigned int) t->ptr2);
+		   (long long unsigned int) (size_t) t->ptr2);
 	  break;
 	}
     }

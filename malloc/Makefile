@@ -50,6 +50,13 @@ libmemusage-inhibit-o = $(filter-out .os,$(object-suffixes))
 libmtracectl-routines = mtrace-ctl
 libmtracectl-inhibit-o = $(filter-out .os,$(object-suffixes))
 
+others: $(objpfx)trace_run
+install-bin = trace_run
+install-bin-script = trace2dat
+
+$(objpfx)trace_run: $(objpfx)trace_run.o
+	$(LINK.o) -o $@ $(objpfx)trace_run.o -lpthread
+
 $(objpfx)tst-malloc-backtrace: $(shared-thread-library)
 $(objpfx)tst-malloc-thread-exit: $(shared-thread-library)
 $(objpfx)tst-malloc-thread-fail: $(shared-thread-library)
@@ -63,7 +70,7 @@ aux := set-freeres thread-freeres
 
 # The Perl script to analyze the output of the mtrace functions.
 ifneq ($(PERL),no)
-install-bin-script = mtrace
+install-bin-script += mtrace
 generated += mtrace
 
 # The Perl script will print addresses and to do this nicely we must know
@@ -82,7 +89,7 @@ ifneq ($(cross-compiling),yes)
 # If the gd library is available we build the `memusagestat' program.
 ifneq ($(LIBGD),no)
 others: $(objpfx)memusage
-install-bin = memusagestat
+install-bin += memusagestat
 install-bin-script += memusage
 generated += memusagestat memusage
 extra-objs += memusagestat.o
@@ -146,6 +153,9 @@ tst-malloc-usable-ENV = MALLOC_CHECK_=3
 #CPPFLAGS-malloc.o += -DMALLOC_DEBUG=1
 
 sLIBdir := $(shell echo $(slibdir) | sed 's,lib\(\|64\)$$,\\\\$$LIB,')
+
+$(objpfx)trace2dat: trace2dat
+	cp $^ $@ && chmod +x $@
 
 $(objpfx)mtrace: mtrace.pl
 	rm -f $@.new
