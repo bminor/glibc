@@ -1,3 +1,10 @@
+2016-06-11  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20237]
+	* nss/nss_db/db-XXX.c (set*ent): Reset entidx to NULL.
+	(get*ent): Set entidx to NULL during initialization.  If entidx is
+	NULL, start iteration from the beginning.
+
 2016-06-30  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #20262]
