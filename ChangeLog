@@ -1,3 +1,10 @@
+2016-06-30  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #20262]
+	* nis/nss_nis/nis-initgroups.c (_nss_nis_initgroups_dyn): Return
+	NSS_STATUS_SUCCESS when done.  Return NSS_STATUS_TRYAGAIN when out
+	of memory.
+
 2016-06-21  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #20284]
