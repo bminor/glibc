@@ -1,3 +1,10 @@
+2016-06-18  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/unix/sysv/linux/mips/vfork.S (__vfork): Conditionalize
+	hidden_def, weak_alias and strong_alias on [IS_IN (libc)].
+	* sysdeps/unix/sysv/linux/sparc/sparc32/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/vfork.S: Likewise.
+
 2016-06-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* nptl/pthreadP.h (prio_inherit_missing): Change name to
