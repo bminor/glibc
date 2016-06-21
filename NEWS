@@ -34,6 +34,7 @@ The following bugs are resolved with this release:
   [19822] libm.so install clobbers old version
   [19879] network: nss_dns: Stack overflow in getnetbyname implementation
     (CVE-2016-3075)
+  [20177] $dp is not initialized correctly in sysdeps/hppa/start.S
 
 
 Version 2.23

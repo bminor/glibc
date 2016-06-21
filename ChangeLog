@@ -1,3 +1,9 @@
+2016-06-30  John David Anglin  <danglin@gcc.gnu.org>
+
+	[BZ #20277]
+	* sysdeps/hppa/start.S (_start): Correct loading of global pointer
+	when SHARED is defined.
+
 2016-06-30  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/i386/i686/fpu/multiarch/libm-test-ulps: Regenerated.
