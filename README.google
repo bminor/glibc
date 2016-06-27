@@ -581,3 +581,10 @@ resolv/res_send.c
   under high load (BZ15946, CVE-2013-7423)
   https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=f9d2d03254a58d92635a311a42253eeed5a40a47
   (stanshebs, backport)
+
+locale/findlocale.c
+locale/setlocale.c
+  For b/29130905, fix locale vulnerabilities (BZ1737, CVE-2014-0475)
+  https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=4e8f95a0df7c2300b830ec12c0ae1e161bc8a8a3
+  https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=d183645616b0533b3acee28f1a95570bffbdf50f
+  (stanshebs, backport)
