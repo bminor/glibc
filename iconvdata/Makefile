@@ -68,7 +68,7 @@ modules.so := $(addsuffix .so, $(modules))
 ifeq (yes,$(build-shared))
 tests = bug-iconv1 bug-iconv2 tst-loading tst-e2big tst-iconv4 bug-iconv4 \
 	tst-iconv6 bug-iconv5 bug-iconv6 tst-iconv7 bug-iconv8 bug-iconv9 \
-	bug-iconv10 bug-iconv11
+	bug-iconv10 bug-iconv11 bug-iconv12
 ifeq ($(have-thread-library),yes)
 tests += bug-iconv3
 endif
@@ -244,7 +244,7 @@ headers: $(addprefix $(objpfx), $(generated-modules:=.h))
 $(addprefix $(inst_gconvdir)/, $(modules.so)): \
     $(inst_gconvdir)/%: $(objpfx)% $(+force)
 	$(do-install-program)
-$(inst_gconvdir)/gconv-modules: gconv-modules $(+force)
+$(inst_gconvdir)/gconv-modules: $(objpfx)gconv-modules $(+force)
 	$(do-install)
 ifeq (no,$(cross-compiling))
 # Update the $(prefix)/lib/gconv/gconv-modules.cache file. This is necessary
@@ -309,6 +309,8 @@ $(objpfx)tst-iconv7.out: $(objpfx)gconv-modules \
 			 $(addprefix $(objpfx),$(modules.so))
 $(objpfx)bug-iconv10.out: $(objpfx)gconv-modules \
 			  $(addprefix $(objpfx),$(modules.so))
+$(objpfx)bug-iconv12.out: $(objpfx)gconv-modules \
+			  $(addprefix $(objpfx),$(modules.so))
 
 $(objpfx)iconv-test.out: run-iconv-test.sh $(objpfx)gconv-modules \
 			 $(addprefix $(objpfx),$(modules.so)) \
@@ -331,7 +333,5 @@ do-tests-clean common-mostlyclean: tst-tables-clean
 tst-tables-clean:
 	-rm -f $(objpfx)tst-*.table $(objpfx)tst-EUC-TW.irreversible
 
-ifdef objpfx
 $(objpfx)gconv-modules: gconv-modules
-	cp $^ $@
-endif
+	cat $(sysdeps-gconv-modules) $^ > $@

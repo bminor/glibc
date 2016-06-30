@@ -64,10 +64,6 @@
    configurations).  */
 #define __ASSUME_SET_ROBUST_LIST	1
 
-/* Support for PI futexes was added in 2.6.18 (but some architectures
-   lack futex_atomic_cmpxchg_inatomic in some configurations).  */
-#define __ASSUME_FUTEX_LOCK_PI	1
-
 /* Support for private futexes was added in 2.6.22.  */
 #define __ASSUME_PRIVATE_FUTEX	1
 
@@ -145,3 +141,9 @@
 # define __ASSUME_SENDMMSG_SYSCALL	1
 # define __ASSUME_SENDMMSG	1
 #endif
+
+/* On most architectures, most socket syscalls are supported for all
+   supported kernel versions, but on some socketcall architectures
+   separate syscalls were only added later.  */
+#define __ASSUME_SENDMSG_SYSCALL	1
+#define __ASSUME_RECVMSG_SYSCALL	1

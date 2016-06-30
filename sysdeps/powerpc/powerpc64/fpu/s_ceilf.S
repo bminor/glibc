@@ -27,20 +27,22 @@
 
 EALIGN (__ceilf, 4, 0)
 	CALL_MCOUNT 0
-	mffs	fp11		/* Save current FPU rounding mode.  */
 	lfs	fp13,.LC0@toc(2)
 	fabs	fp0,fp1
 	fsubs	fp12,fp13,fp13	/* generate 0.0  */
 	fcmpu	cr7,fp0,fp13	/* if (fabs(x) > TWO23)  */
+	mffs	fp11		/* Save current FPU rounding mode and
+				   "inexact" state.  */
 	fcmpu	cr6,fp1,fp12	/* if (x > 0.0)  */
-	bnllr-	cr7
+	bnl-	cr7,.L10
 	mtfsfi	7,2		/* Set rounding mode toward +inf.  */
 	ble-	cr6,.L4
 	fadds	fp1,fp1,fp13	/* x+= TWO23;  */
 	fsubs	fp1,fp1,fp13	/* x-= TWO23;  */
 	fabs	fp1,fp1		/* if (x == 0.0)  */
 				/* x = 0.0; */
-	mtfsf	0x01,fp11	/* restore previous rounding mode.  */
+	mtfsf	0xff,fp11	/* Restore previous rounding mode and
+				   "inexact" state.  */
 	blr
 .L4:
 	bge-	cr6,.L9		/* if (x < 0.0)  */
@@ -49,7 +51,14 @@ EALIGN (__ceilf, 4, 0)
 	fnabs	fp1,fp1		/* if (x == 0.0)  */
 				/* x = -0.0; */
 .L9:
-	mtfsf	0x01,fp11	/* restore previous rounding mode.  */
+	mtfsf	0xff,fp11	/* Restore previous rounding mode and
+				   "inexact" state.  */
+	blr
+.L10:
+	/* Ensure sNaN input is converted to qNaN.  */
+	fcmpu	cr7,fp1,fp1
+	beqlr	cr7
+	fadds	fp1,fp1,fp1
 	blr
 	END (__ceilf)
 

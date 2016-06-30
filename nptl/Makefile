@@ -109,12 +109,13 @@ libpthread-routines = nptl-init vars events version pt-interp \
 		      lll_timedlock_wait lll_timedwait_tid \
 		      pt-fork pt-vfork \
 		      ptw-write ptw-read ptw-close ptw-fcntl ptw-accept \
-		      ptw-connect ptw-recv ptw-recvfrom ptw-recvmsg ptw-send \
-		      ptw-sendmsg ptw-sendto ptw-fsync ptw-lseek ptw-llseek \
+		      ptw-connect ptw-recv ptw-recvfrom ptw-send \
+		      ptw-sendto ptw-fsync ptw-lseek ptw-llseek \
 		      ptw-msync ptw-nanosleep ptw-open ptw-open64 ptw-pause \
 		      ptw-pread ptw-pread64 ptw-pwrite ptw-pwrite64 \
 		      ptw-tcdrain ptw-wait ptw-waitpid ptw-msgrcv ptw-msgsnd \
 		      ptw-sigwait ptw-sigsuspend \
+		      ptw-recvmsg ptw-sendmsg \
 		      pt-raise pt-system \
 		      flockfile ftrylockfile funlockfile \
 		      sigaction \
@@ -204,10 +205,10 @@ CFLAGS-recv.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-send.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-accept.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sendto.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-sendmsg.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-connect.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-recvmsg.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-recvfrom.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-recvmsg.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-sendmsg.c = -fexceptions -fasynchronous-unwind-tables
 
 CFLAGS-pt-system.c = -fexceptions
 
@@ -254,7 +255,8 @@ tests = tst-typesizes \
 	tst-tls1 tst-tls2 \
 	tst-fork1 tst-fork2 tst-fork3 tst-fork4 \
 	tst-atfork1 \
-	tst-cancel1 tst-cancel2 tst-cancel3 tst-cancel4 tst-cancel5 \
+	tst-cancel1 tst-cancel2 tst-cancel3 tst-cancel4 tst-cancel4_1 \
+	tst-cancel4_2 tst-cancel5 \
 	tst-cancel6 tst-cancel7 tst-cancel8 tst-cancel9 tst-cancel10 \
 	tst-cancel11 tst-cancel12 tst-cancel13 tst-cancel14 tst-cancel15 \
 	tst-cancel16 tst-cancel17 tst-cancel18 tst-cancel19 tst-cancel20 \
@@ -332,8 +334,9 @@ modules-names = tst-atfork2mod tst-tls3mod tst-tls4moda tst-tls4modb \
 		tst-tls5modd tst-tls5mode tst-tls5modf tst-stack4mod \
 		tst-_res1mod1 tst-_res1mod2 tst-execstack-mod tst-fini1mod \
 		tst-join7mod
-extra-test-objs += $(addsuffix .os,$(strip $(modules-names))) tst-cleanup4aux.o
-test-extras += $(modules-names) tst-cleanup4aux
+extra-test-objs += $(addsuffix .os,$(strip $(modules-names))) \
+		   tst-cleanup4aux.o tst-cleanupx4aux.o
+test-extras += $(modules-names) tst-cleanup4aux tst-cleanupx4aux
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
 
 tst-atfork2mod.so-no-z-defs = yes
@@ -475,6 +478,7 @@ CFLAGS-tst-cleanupx1.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-tst-cleanupx2.c += -fexceptions
 CFLAGS-tst-cleanupx3.c += -fexceptions
 CFLAGS-tst-cleanupx4.c += -fexceptions
+CFLAGS-tst-cleanupx4aux.c += -fexceptions
 CFLAGS-tst-oncex3.c += -fexceptions
 CFLAGS-tst-oncex4.c += -fexceptions
 CFLAGS-tst-align.c += $(stack-align-test-flags)
@@ -518,7 +522,7 @@ clean:
 	rm -f $(tst-stack4mod.sos)
 
 $(objpfx)tst-cleanup4: $(objpfx)tst-cleanup4aux.o $(shared-thread-library)
-$(objpfx)tst-cleanupx4: $(objpfx)tst-cleanup4aux.o $(shared-thread-library)
+$(objpfx)tst-cleanupx4: $(objpfx)tst-cleanupx4aux.o $(shared-thread-library)
 
 $(objpfx)tst-tls3: $(libdl) $(shared-thread-library)
 LDFLAGS-tst-tls3 = -rdynamic

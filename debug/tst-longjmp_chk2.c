@@ -6,15 +6,27 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/time.h>
 #include <sys/resource.h>
+#include <unistd.h>
 
+static int do_test (void);
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
 
 static jmp_buf mainloop;
 static sigset_t mainsigset;
-static int pass;
+static volatile sig_atomic_t pass;
 
+static void
+write_indented (const char *str)
+{
+  for (int i = 0; i < pass; ++i)
+    write_message (" ");
+  write_message (str);
+}
 
 static void
 stackoverflow_handler (int sig)
@@ -23,13 +35,10 @@ stackoverflow_handler (int sig)
   /* Sanity check to keep test from looping forever (in case the longjmp
      chk code is slightly broken).  */
   pass++;
-  assert (pass < 5);
   sigaltstack (NULL, &altstack);
-  /* Using printf is not really kosher in signal handlers but we know
-     it will work.  */
-  printf ("%*sin signal handler\n", pass, "");
+  write_indented ("in signal handler\n");
   if (altstack.ss_flags & SS_ONSTACK)
-    printf ("%*son alternate stack\n", pass, "");
+    write_indented ("on alternate stack\n");
   siglongjmp (mainloop, pass);
 }
 
@@ -112,8 +121,10 @@ do_test (void)
   else
     printf ("disabling alternate stack succeeded \n");
 
+  /* Restore the signal handlers, in case we trigger a crash after the
+     tests above.  */
+  signal (SIGBUS, SIG_DFL);
+  signal (SIGSEGV, SIG_DFL);
+
   return 0;
 }
-
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"

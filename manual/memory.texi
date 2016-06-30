@@ -158,7 +158,7 @@ grows, but doesn't shrink when the stack shrinks.
 
 This section covers how ordinary programs manage storage for their data,
 including the famous @code{malloc} function and some fancier facilities
-special @theglibc{} and GNU Compiler.
+special to @theglibc{} and GNU Compiler.
 
 @menu
 * Memory Allocation and C::     How to get different kinds of allocation in C.
@@ -997,7 +997,7 @@ The @code{memalign} function returns a null pointer on error and sets
 There was insufficient memory available to satisfy the request.
 
 @item EINVAL
-@var{alignment} is not a power of two.
+@var{boundary} is not a power of two.
 
 @end table
 
@@ -1066,7 +1066,7 @@ systems that do not support @w{ISO C11}.
 @c  _int_memalign dup @acsfd @acsmem
 @c  mutex_unlock dup @aculock
 Using @code{valloc} is like using @code{memalign} and passing the page size
-as the value of the second argument.  It is implemented like this:
+as the value of the first argument.  It is implemented like this:
 
 @smallexample
 void *
@@ -1370,19 +1370,6 @@ should make sure to restore all the hooks to their previous value.  When
 coming back from the recursive call, all the hooks should be resaved
 since a hook might modify itself.
 
-@comment malloc.h
-@comment GNU
-@defvar __malloc_initialize_hook
-The value of this variable is a pointer to a function that is called
-once when the malloc implementation is initialized.  This is a weak
-variable, so it can be overridden in the application with a definition
-like the following:
-
-@smallexample
-void (*@var{__malloc_initialize_hook}) (void) = my_init_hook;
-@end smallexample
-@end defvar
-
 An issue to look out for is the time at which the malloc hook functions
 can be safely installed.  If the hook functions call the malloc-related
 functions recursively, it is necessary that malloc has already properly
@@ -1392,11 +1379,6 @@ complete malloc implementation of their own, it is vital that the hooks
 are assigned to @emph{before} the very first @code{malloc} call has
 completed, because otherwise a chunk obtained from the ordinary,
 un-hooked malloc may later be handed to @code{__free_hook}, for example.
-
-In both cases, the problem can be solved by setting up the hooks from
-within a user-defined function pointed to by
-@code{__malloc_initialize_hook}---then the hooks will be set up safely
-at the right time.
 
 Here is an example showing how to use @code{__malloc_hook} and
 @code{__free_hook} properly.  It installs a function that prints out
@@ -1413,11 +1395,8 @@ static void my_init_hook (void);
 static void *my_malloc_hook (size_t, const void *);
 static void my_free_hook (void*, const void *);
 
-/* Override initializing hook from the C library. */
-void (*__malloc_initialize_hook) (void) = my_init_hook;
-
 static void
-my_init_hook (void)
+my_init (void)
 @{
   old_malloc_hook = __malloc_hook;
   old_free_hook = __free_hook;
@@ -1465,6 +1444,7 @@ my_free_hook (void *ptr, const void *caller)
 
 main ()
 @{
+  my_init ();
   @dots{}
 @}
 @end smallexample
@@ -1628,7 +1608,7 @@ Return information about the current dynamic memory usage.
 
 A complicated task when programming with languages which do not use
 garbage collected dynamic memory allocation is to find memory leaks.
-Long running programs must assure that dynamically allocated objects are
+Long running programs must ensure that dynamically allocated objects are
 freed at the end of their lifetime.  If this does not happen the system
 runs out of memory, sooner or later.
 
@@ -1729,7 +1709,7 @@ main (int argc, char *argv[])
 @}
 @end example
 
-This is all what is needed if you want to trace the calls during the
+This is all that is needed if you want to trace the calls during the
 whole runtime of the program.  Alternatively you can stop the tracing at
 any time with a call to @code{muntrace}.  It is even possible to restart
 the tracing again with a new call to @code{mtrace}.  But this can cause
@@ -1738,8 +1718,8 @@ not called.  Please note that not only the application uses the traced
 functions, also libraries (including the C library itself) use these
 functions.
 
-This last point is also why it is no good idea to call @code{muntrace}
-before the program terminated.  The libraries are informed about the
+This last point is also why it is not a good idea to call @code{muntrace}
+before the program terminates.  The libraries are informed about the
 termination of the program only after the program returns from
 @code{main} or calls @code{exit} and so cannot free the memory they use
 before this time.
@@ -2167,7 +2147,7 @@ in the same obstack.
 If @var{object} is a null pointer, everything allocated in the obstack
 is freed.  Otherwise, @var{object} must be the address of an object
 allocated in the obstack.  Then @var{object} is freed, along with
-everything allocated in @var{obstack} since @var{object}.
+everything allocated in @var{obstack-ptr} since @var{object}.
 @end deftypefun
 
 Note that if @var{object} is a null pointer, the result is an
@@ -2412,7 +2392,7 @@ in the current chunk.  It is declared as follows:
 @safety{@prelim{}@mtsafe{@mtsrace{:obstack-ptr}}@assafe{}@acsafe{}}
 This returns the number of bytes that can be added safely to the current
 growing object (or to an object about to be started) in obstack
-@var{obstack} using the fast growth functions.
+@var{obstack-ptr} using the fast growth functions.
 @end deftypefun
 
 While you know there is room, you can use these fast growth functions
@@ -2822,7 +2802,7 @@ open-coded by the GNU C compiler.)
 
 @item
 Since @code{alloca} does not have separate pools for different sizes of
-block, space used for any size block can be reused for any other size.
+blocks, space used for any size block can be reused for any other size.
 @code{alloca} does not cause memory fragmentation.
 
 @item
@@ -2941,7 +2921,7 @@ The address of the end of a segment is defined to be the address of the
 last byte in the segment plus 1.
 
 The function has no effect if @var{addr} is lower than the low end of
-the data segment.  (This is considered success, by the way).
+the data segment.  (This is considered success, by the way.)
 
 The function fails if it would cause the data segment to overlap another
 segment or exceed the process' data storage limit (@pxref{Limits on
@@ -3263,7 +3243,7 @@ with @code{munlockall} and @code{munlock}.
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 
 @code{munlockall} unlocks every page in the calling process' virtual
-address space and turn off @code{MCL_FUTURE} future locking mode.
+address space and turns off @code{MCL_FUTURE} future locking mode.
 
 The return value is zero if the function succeeds.  Otherwise, it is
 @code{-1} and @code{errno} is set accordingly.  The only way this

@@ -16,26 +16,21 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc)
-# include <string.h>
-# define strncasecmp __strncasecmp_ppc
+#include <string.h>
+#include <shlib-compat.h>
+#include "init-arch.h"
+
+extern __typeof (__strncasecmp) __libc_strncasecmp;
+
 extern __typeof (__strncasecmp) __strncasecmp_ppc attribute_hidden;
 extern __typeof (__strncasecmp) __strncasecmp_power7 attribute_hidden;
-#endif
+extern __typeof (__strncasecmp) __strncasecmp_power8 attribute_hidden;
 
-#include <string/strncase.c>
-#undef strncasecmp
-
-#if IS_IN (libc)
-# include <shlib-compat.h>
-# include "init-arch.h"
-
-/* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
-   ifunc symbol properly.  */
-extern __typeof (__strncasecmp) __libc_strncasecmp;
 libc_ifunc (__libc_strncasecmp,
+	     (hwcap2 & PPC_FEATURE2_ARCH_2_07)
+             ? __strncasecmp_power8:
 	     (hwcap & PPC_FEATURE_HAS_VSX)
              ? __strncasecmp_power7
              : __strncasecmp_ppc);
+
 weak_alias (__libc_strncasecmp, strncasecmp)
-#endif

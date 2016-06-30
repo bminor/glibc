@@ -21,5 +21,10 @@
 #define PRINTF_EXPR "e"
 #define PRINTF_XEXPR "a"
 #define PRINTF_NEXPR "f"
-#define TEST_FLOAT 1
 #define BUILD_COMPLEX(real, imag) (CMPLXF ((real), (imag)))
+#define PREFIX FLT
+#define TYPE_STR "float"
+#define LIT(x) (x ## f)
+/* Use the double variants of macro constants.  */
+#define LITM(x) x
+#define FTOSTR snprintf

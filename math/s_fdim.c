@@ -19,23 +19,16 @@
 
 #include <errno.h>
 #include <math.h>
+#include <math_private.h>
 
 double
 __fdim (double x, double y)
 {
-  int clsx = fpclassify (x);
-  int clsy = fpclassify (y);
-
-  if (clsx == FP_NAN || clsy == FP_NAN)
-    /* Raise invalid flag for signaling but not quiet NaN.  */
-    return x - y;
-
-  if (x <= y)
+  if (islessequal (x, y))
     return 0.0;
 
-  double r = x - y;
-  if (fpclassify (r) == FP_INFINITE
-      && clsx != FP_INFINITE && clsy != FP_INFINITE)
+  double r = math_narrow_eval (x - y);
+  if (isinf (r) && !isinf (x) && !isinf (y))
     __set_errno (ERANGE);
 
   return r;

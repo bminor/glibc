@@ -77,7 +77,8 @@ gpl2lgpl := error.c error.h
 
 tests := tst-dirname tst-tsearch tst-fdset tst-efgcvt tst-mntent tst-hsearch \
 	 tst-error1 tst-pselect tst-insremque tst-mntent2 bug-hsearch1 \
-	 tst-mntent-blank-corrupt tst-mntent-blank-passno bug18240
+	 tst-mntent-blank-corrupt tst-mntent-blank-passno bug18240 \
+	 tst-preadvwritev tst-preadvwritev64
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-error1-mem.out
 endif
@@ -88,6 +89,10 @@ CFLAGS-lsearch.c = $(uses-callbacks)
 CFLAGS-pselect.c = -fexceptions
 CFLAGS-readv.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-writev.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-preadv.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-preadv64.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pwritev.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pwritev64.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-usleep.c = -fexceptions
 CFLAGS-syslog.c = -fexceptions
 CFLAGS-error.c = -fexceptions

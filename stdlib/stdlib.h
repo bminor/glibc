@@ -337,7 +337,7 @@ extern int rand (void) __THROW;
 extern void srand (unsigned int __seed) __THROW;
 __END_NAMESPACE_STD
 
-#ifdef __USE_POSIX
+#ifdef __USE_POSIX199506
 /* Reentrant interface according to POSIX.1.  */
 extern int rand_r (unsigned int *__seed) __THROW;
 #endif
@@ -876,7 +876,7 @@ extern void setkey (const char *__key) __THROW __nonnull ((1));
 extern int posix_openpt (int __oflag) __wur;
 #endif
 
-#ifdef __USE_XOPEN
+#ifdef __USE_XOPEN_EXTENDED
 /* The next four functions all take a master pseudo-tty fd and
    perform an operation on the associated slave:  */
 
@@ -910,6 +910,12 @@ extern int getpt (void);
    three, but may be less than NELEM), or -1 if an error occurred.  */
 extern int getloadavg (double __loadavg[], int __nelem)
      __THROW __nonnull ((1));
+#endif
+
+#if defined __USE_XOPEN_EXTENDED && !defined __USE_XOPEN2K
+/* Return the index into the active-logins file (utmp) for
+   the controlling terminal.  */
+extern int ttyslot (void) __THROW;
 #endif
 
 #include <bits/stdlib-float.h>

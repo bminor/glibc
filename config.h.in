@@ -73,6 +73,10 @@
 /* Define if assembler supports vector instructions on S390.  */
 #undef  HAVE_S390_VX_ASM_SUPPORT
 
+/* Define if gcc supports vector registers as clobbers in inline assembly
+   on S390.  */
+#undef  HAVE_S390_VX_GCC_SUPPORT
+
 /* Define if assembler supports Intel MPX.  */
 #undef  HAVE_MPX_SUPPORT
 
@@ -86,6 +90,9 @@
 /* Define this to disable the 'hidden_proto' et al macros in
    include/libc-symbols.h that avoid PLT slots in the shared objects.  */
 #undef	NO_HIDDEN
+
+/* Define this to disable lazy relocations in DSOs.  */
+#undef	BIND_NOW
 
 /* AArch64 big endian ABI */
 #undef HAVE_AARCH64_BE

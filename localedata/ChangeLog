@@ -1,3 +1,40 @@
+2016-06-16  Simion Onea  <simionea@gmail.com>
+
+	[BZ #18911]
+	* locales/ro_RO (day): Change U0163 to U021B in Tuesday.
+
+2016-06-11  Paras pradhan  <pradhanparas@gmail.com>
+
+	[BZ #1170]
+	* locales/ne_NP: Update many fields.
+
+2016-06-11  Mike Frysinger  <vapier@gentoo.org>
+
+	* unicode-gen/gen_translit_circle.py (output_head): Add write of
+	unicode_utils.COMMENT_HEADER.
+	* unicode-gen/gen_translit_cjk_compat.py (output_head): Likewise.
+	* unicode-gen/gen_translit_combining.py (output_head): Likewise.
+	* unicode-gen/gen_translit_compat.py (output_head): Likewise.
+	* unicode-gen/gen_translit_font.py (output_head): Likewise.
+	* unicode-gen/gen_translit_fraction.py (output_head): Likewise.
+	* unicode-gen/unicode_utils.py (COMMENT_HEADER): Define.
+
+2016-06-11  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #19133]
+	* locales/pt_BR (abday): Make first letter lowercase in each element.
+	(abmon): Likewise.
+	* locales/pt_PT (abday): Likewise.
+	(day): Likewise.
+	(abmon): Likewise.
+	(mon): Likewise.
+
+2016-06-11  Eduardo Trápani  <eduardo@esperanto.org.uy>
+
+	[BZ #16190]
+	* locales/eo: New locale.
+	* SUPPORTED (SUPPORTED-LOCALES): Add eo/UTF-8.
+
 2016-05-07  Neskie Manuel  <neskiem@gmail.com>
 
 	[BZ #12143]

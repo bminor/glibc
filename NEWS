@@ -33,6 +33,20 @@ Version 2.24
   group: files [SUCCESS=merge] nis
   Implemented by Stephen Gallagher (Red Hat).
 
+* The deprecated __malloc_initialize_hook variable has been removed from the
+  API.
+
+* The long unused localedef --old-style option has been removed.  It hasn't
+  done anything in over 16 years.  Scripts using this option can safely
+  drop it.
+
+* nextupl, nextup, nextupf, nextdownl, nextdown and nextdownf are added to
+  libm.  They are defined by TS 18661 and IEEE754-2008.  The nextup functions
+  return the next representable value in the direction of positive infinity
+  and the nextdown functions return the next representable value in the
+  direction of negative infinity.  These are currently enabled as GNU
+  extensions.
+
 Security related changes:
 
 * An unnecessary stack copy in _nss_dns_getnetbyname_r was removed.  It
@@ -47,6 +61,10 @@ Security related changes:
 * The glob function suffered from a stack-based buffer overflow when it was
   called with the GLOB_ALTDIRFUNC flag and encountered a long file name.
   Reported by Alexander Cherepanov.  (CVE-2016-1234)
+
+* The Sun RPC UDP client could exhaust all available stack space when
+  flooded with crafted ICMP and UDP messages.  Reported by Aldy Hernandez'
+  alloca plugin for GCC.  (CVE-2016-4429)
 
 The following bugs are resolved with this release:
 

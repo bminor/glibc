@@ -368,20 +368,8 @@ _m_printf(const char *fmt, ...)
 
 
 #ifndef MALLOC_ALIGNMENT
-# if !SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_16)
-/* This is the correct definition when there is no past ABI to constrain it.
-
-   Among configurations with a past ABI constraint, it differs from
-   2*SIZE_SZ only on powerpc32.  For the time being, changing this is
-   causing more compatibility problems due to malloc_get_state and
-   malloc_set_state than will returning blocks not adequately aligned for
-   long double objects under -mlong-double-128.  */
-
-#  define MALLOC_ALIGNMENT       (2 *SIZE_SZ < __alignof__ (long double)      \
-                                  ? __alignof__ (long double) : 2 *SIZE_SZ)
-# else
-#  define MALLOC_ALIGNMENT       (2 *SIZE_SZ)
-# endif
+# define MALLOC_ALIGNMENT       (2 * SIZE_SZ < __alignof__ (long double) \
+				 ? __alignof__ (long double) : 2 * SIZE_SZ)
 #endif
 
 /* The corresponding bit mask value */
@@ -517,6 +505,15 @@ void *(*__morecore)(ptrdiff_t) = __default_morecore;
 
 #ifndef HAVE_MREMAP
 #define HAVE_MREMAP 0
+#endif
+
+/* We may need to support __malloc_initialize_hook for backwards
+   compatibility.  */
+
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_24)
+# define HAVE_MALLOC_INIT_HOOK 1
+#else
+# define HAVE_MALLOC_INIT_HOOK 0
 #endif
 
 
@@ -1852,6 +1849,19 @@ static struct malloc_state main_arena =
   .attached_threads = 1
 };
 
+/* These variables are used for undumping support.  Chunked are marked
+   as using mmap, but we leave them alone if they fall into this
+   range.  NB: The chunk size for these chunks only includes the
+   initial size field (of SIZE_SZ bytes), there is no trailing size
+   field (unlike with regular mmapped chunks).  */
+static mchunkptr dumped_main_arena_start; /* Inclusive.  */
+static mchunkptr dumped_main_arena_end;   /* Exclusive.  */
+
+/* True if the pointer falls into the dumped arena.  Use this after
+   chunk_is_mmapped indicates a chunk is mmapped.  */
+#define DUMPED_MAIN_ARENA_CHUNK(p) \
+  ((p) >= dumped_main_arena_start && (p) < dumped_main_arena_end)
+
 /* There is only one instance of the malloc parameters.  */
 
 static struct malloc_par mp_ =
@@ -1934,7 +1944,12 @@ static void *realloc_hook_ini (void *ptr, size_t sz,
 static void *memalign_hook_ini (size_t alignment, size_t sz,
                                 const void *caller) __THROW;
 
+#if HAVE_MALLOC_INIT_HOOK
 void weak_variable (*__malloc_initialize_hook) (void) = NULL;
+compat_symbol (libc, __malloc_initialize_hook,
+	       __malloc_initialize_hook, GLIBC_2_0);
+#endif
+
 void weak_variable (*__free_hook) (void *__ptr,
                                    const void *) = NULL;
 void *weak_variable (*__malloc_hook)
@@ -2043,7 +2058,7 @@ do_check_chunk (mstate av, mchunkptr p)
           assert (prev_inuse (p));
         }
     }
-  else
+  else if (!DUMPED_MAIN_ARENA_CHUNK (p))
     {
       /* address is outside main heap  */
       if (contiguous (av) && av->top != initial_top (av))
@@ -2927,6 +2942,11 @@ munmap_chunk (mchunkptr p)
 
   assert (chunk_is_mmapped (p));
 
+  /* Do nothing if the chunk is a faked mmapped chunk in the dumped
+     main arena.  We never free this memory.  */
+  if (DUMPED_MAIN_ARENA_CHUNK (p))
+    return;
+
   uintptr_t block = (uintptr_t) p - p->prev_size;
   size_t total_size = p->prev_size + size;
 #if 0
@@ -3234,10 +3254,12 @@ __libc_free (void *mem)
 
   if (chunk_is_mmapped (p))                       /* release mmapped memory. */
     {
-      /* see if the dynamic brk/mmap threshold needs adjusting */
+      /* See if the dynamic brk/mmap threshold needs adjusting.
+	 Dumped fake mmapped chunks do not affect the threshold.  */
       if (!mp_.no_dyn_threshold
           && p->size > mp_.mmap_threshold
-          && p->size <= DEFAULT_MMAP_THRESHOLD_MAX)
+          && p->size <= DEFAULT_MMAP_THRESHOLD_MAX
+	  && !DUMPED_MAIN_ARENA_CHUNK (p))
         {
           mp_.mmap_threshold = chunksize (p);
           mp_.trim_threshold = 2 * mp_.mmap_threshold;
@@ -3290,12 +3312,15 @@ __libc_realloc (void *oldmem, size_t bytes)
   else
     ar_ptr = arena_for_chunk (oldp);
 
-  /* Little security check which won't hurt performance: the
-     allocator never wrapps around at the end of the address space.
-     Therefore we can exclude some size values which might appear
-     here by accident or by "design" from some intruder.  */
-  if (__builtin_expect ((uintptr_t) oldp > (uintptr_t) -oldsize, 0)
-      || __builtin_expect (misaligned_chunk (oldp), 0))
+  /* Little security check which won't hurt performance: the allocator
+     never wrapps around at the end of the address space.  Therefore
+     we can exclude some size values which might appear here by
+     accident or by "design" from some intruder.  We need to bypass
+     this check for dumped fake mmap chunks from the old main arena
+     because the new malloc may provide additional alignment.  */
+  if ((__builtin_expect ((uintptr_t) oldp > (uintptr_t) -oldsize, 0)
+       || __builtin_expect (misaligned_chunk (oldp), 0))
+      && !DUMPED_MAIN_ARENA_CHUNK (oldp))
     {
       malloc_printerr (check_action, "realloc(): invalid pointer", oldmem,
 		       ar_ptr);
@@ -3306,6 +3331,24 @@ __libc_realloc (void *oldmem, size_t bytes)
 
   if (chunk_is_mmapped (oldp))
     {
+      /* If this is a faked mmapped chunk from the dumped main arena,
+	 always make a copy (and do not free the old chunk).  */
+      if (DUMPED_MAIN_ARENA_CHUNK (oldp))
+	{
+	  /* Must alloc, copy, free. */
+	  void *newmem = __libc_malloc (bytes);
+	  if (newmem == 0)
+	    return NULL;
+	  /* Copy as many bytes as are available from the old chunk
+	     and fit into the new size.  NB: The overhead for faked
+	     mmapped chunks is only SIZE_SZ, not 2 * SIZE_SZ as for
+	     regular mmapped chunks.  */
+	  if (bytes > oldsize - SIZE_SZ)
+	    bytes = oldsize - SIZE_SZ;
+	  memcpy (newmem, oldmem, bytes);
+	  return newmem;
+	}
+
       void *newmem;
 
 #if HAVE_MREMAP
@@ -5139,7 +5182,12 @@ musable (void *mem)
         return malloc_check_get_size (p);
 
       if (chunk_is_mmapped (p))
-        return chunksize (p) - 2 * SIZE_SZ;
+	{
+	  if (DUMPED_MAIN_ARENA_CHUNK (p))
+	    return chunksize (p) - SIZE_SZ;
+	  else
+	    return chunksize (p) - 2 * SIZE_SZ;
+	}
       else if (inuse (p))
         return chunksize (p) - SIZE_SZ;
     }

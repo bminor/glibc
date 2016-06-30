@@ -39,13 +39,20 @@ use strict;
 
 use vars qw ($input $output $auto_input);
 use vars qw (%results);
-use vars qw (%beautify @all_floats);
+use vars qw (%beautify @all_floats %all_floats_pfx);
 use vars qw ($output_dir $ulps_file $srcdir);
 use vars qw (%auto_tests);
 
 # all_floats is sorted and contains all recognised float types
 @all_floats = ('double', 'float', 'idouble',
 	       'ifloat', 'ildouble', 'ldouble');
+
+# all_floats_pfx maps C types to their C like prefix for macros.
+%all_floats_pfx =
+  ( "double" => "DBL",
+    "ldouble" => "LDBL",
+    "float" => "FLT",
+  );
 
 %beautify =
   ( "minus_zero" => "-0",
@@ -59,6 +66,8 @@ use vars qw (%auto_tests);
     "minus_infty" => "-inf",
     "plus_infty" => "inf",
     "qnan_value" => "qNaN",
+    "snan_value" => "sNaN",
+    "snan_value_ld" => "sNaN",
   );
 
 
@@ -141,14 +150,34 @@ sub build_complex_beautify {
 # Return the text to put in an initializer for a test's exception
 # information.
 sub show_exceptions {
-  my ($ignore_result, $non_finite, $exception) = @_;
+  my ($ignore_result, $non_finite, $test_snan, $exception) = @_;
   $ignore_result = ($ignore_result ? "IGNORE_RESULT|" : "");
   $non_finite = ($non_finite ? "NON_FINITE|" : "");
+  $test_snan = ($test_snan ? "TEST_SNAN|" : "");
   if (defined $exception) {
-    return ", ${ignore_result}${non_finite}$exception";
+    return ", ${ignore_result}${non_finite}${test_snan}$exception";
   } else {
-    return ", ${ignore_result}${non_finite}0";
+    return ", ${ignore_result}${non_finite}${test_snan}0";
   }
+}
+
+# Apply the LIT(x) macro to a literal floating point constant
+# and strip any existing suffix.
+sub apply_lit {
+  my ($lit) = @_;
+  my $exp_re = "([+-])?[[:digit:]]+";
+  # Don't wrap something that does not look like a:
+  #  * Hexadecimal FP value
+  #  * Decimal FP value without a decimal point
+  #  * Decimal value with a fraction
+  return $lit if $lit !~ /([+-])?0x[[:xdigit:]\.]+[pP]$exp_re/
+		 and $lit !~ /[[:digit:]]+[eE]$exp_re/
+		 and $lit !~ /[[:digit:]]*\.[[:digit:]]*([eE]$exp_re)?/;
+
+  # Strip any existing literal suffix.
+  $lit =~ s/[lLfF]$//;
+
+  return "LIT (${lit})";
 }
 
 # Parse the arguments to TEST_x_y
@@ -163,7 +192,7 @@ sub parse_args {
   my (@plus_oflow, @minus_oflow, @plus_uflow, @minus_uflow);
   my (@errno_plus_oflow, @errno_minus_oflow);
   my (@errno_plus_uflow, @errno_minus_uflow);
-  my ($non_finite);
+  my ($non_finite, $test_snan);
 
   ($descr_args, $descr_res) = split /_/,$descr, 2;
 
@@ -180,7 +209,7 @@ sub parse_args {
       $comma = ', ';
     }
     # FLOAT, int, long int, long long int
-    if ($descr[$i] =~ /f|i|l|L/) {
+    if ($descr[$i] =~ /f|j|i|l|L/) {
       $call_args .= $comma . &beautify ($args[$current_arg]);
       ++$current_arg;
       next;
@@ -240,8 +269,12 @@ sub parse_args {
   @descr = split //,$descr_args;
   for ($i=0; $i <= $#descr; $i++) {
     # FLOAT, int, long int, long long int
-    if ($descr[$i] =~ /f|i|l|L/) {
-      $cline .= ", $args[$current_arg]";
+    if ($descr[$i] =~ /f|j|i|l|L/) {
+      if ($descr[$i] eq "f") {
+        $cline .= ", " . &apply_lit ($args[$current_arg]);
+      } else {
+        $cline .= ", $args[$current_arg]";
+      }
       $current_arg++;
       next;
     }
@@ -251,7 +284,8 @@ sub parse_args {
     }
     # complex
     if ($descr[$i] eq 'c') {
-      $cline .= ", $args[$current_arg], $args[$current_arg+1]";
+      $cline .= ", " . &apply_lit ($args[$current_arg]);
+      $cline .= ", " . &apply_lit ($args[$current_arg+1]);
       $current_arg += 2;
       next;
     }
@@ -273,13 +307,16 @@ sub parse_args {
     $cline_res = "";
     @special = ();
     foreach (@descr) {
-      if ($_ =~ /b|f|i|l|L/ ) {
+      if ($_ =~ /b|f|j|i|l|L/ ) {
 	my ($result) = $args_res[$current_arg];
 	if ($result eq "IGNORE") {
 	  $ignore_result_any = 1;
 	  $result = "0";
 	} else {
 	  $ignore_result_all = 0;
+	}
+	if ($_ eq "f") {
+	  $result = apply_lit ($result);
 	}
 	$cline_res .= ", $result";
 	$current_arg++;
@@ -298,6 +335,8 @@ sub parse_args {
 	} else {
 	  $ignore_result_all = 0;
 	}
+	$result1 = apply_lit ($result1);
+	$result2 = apply_lit ($result2);
 	$cline_res .= ", $result1, $result2";
 	$current_arg += 2;
       } elsif ($_ eq '1') {
@@ -310,10 +349,12 @@ sub parse_args {
     }
     # Determine whether any arguments or results, for any rounding
     # mode, are non-finite.
-    $non_finite = ($args =~ /qnan_value|plus_infty|minus_infty/);
+    $non_finite = ($args =~ /qnan_value|snan_value|plus_infty|minus_infty/);
+    $test_snan = ($args =~ /snan_value/);
     # Add exceptions.
     $cline_res .= show_exceptions ($ignore_result_any,
 				   $non_finite,
+				   $test_snan,
 				   ($current_arg <= $#args_res)
 				   ? $args_res[$current_arg]
 				   : undef);
@@ -326,6 +367,8 @@ sub parse_args {
       my ($run_extra) = ($extra_expected ne "IGNORE" ? 1 : 0);
       if (!$run_extra) {
 	$extra_expected = "0";
+      } else {
+	$extra_expected = apply_lit ($extra_expected);
       }
       $cline_res .= ", $run_extra, $extra_expected";
     }
@@ -551,7 +594,14 @@ sub generate_testfile {
 # Parse ulps file
 sub parse_ulps {
   my ($file) = @_;
-  my ($test, $type, $float, $eps);
+  my ($test, $type, $float, $eps, $float_regex);
+
+  # Build a basic regex to match type entries in the
+  # generated ULPS file.
+  foreach my $ftype (@all_floats) {
+    $float_regex .= "|" . $ftype;
+  }
+  $float_regex = "^" . substr ($float_regex, 1) . ":";
 
   # $type has the following values:
   # "normal": No complex variable
@@ -576,7 +626,7 @@ sub parse_ulps {
       ($test) = ($_ =~ /^Function:\s*\"([a-zA-Z0-9_]+)\"/);
       next;
     }
-    if (/^i?(float|double|ldouble):/) {
+    if (/$float_regex/) {
       ($float, $eps) = split /\s*:\s*/,$_,2;
 
       if ($eps eq "0") {
@@ -660,16 +710,13 @@ sub get_ulps {
 sub get_all_ulps_for_test {
   my ($test, $type) = @_;
   my ($ldouble, $double, $float, $ildouble, $idouble, $ifloat);
+  my ($ulps_str);
 
   if (exists $results{$test}{'has_ulps'}) {
-    # XXX use all_floats (change order!)
-    $ldouble = &get_ulps ($test, $type, "ldouble");
-    $double = &get_ulps ($test, $type, "double");
-    $float = &get_ulps ($test, $type, "float");
-    $ildouble = &get_ulps ($test, $type, "ildouble");
-    $idouble = &get_ulps ($test, $type, "idouble");
-    $ifloat = &get_ulps ($test, $type, "ifloat");
-    return "CHOOSE ($ldouble, $double, $float, $ildouble, $idouble, $ifloat)";
+    foreach $float (@all_floats) {
+      $ulps_str .= &get_ulps ($test, $type, $float) . ", ";
+    }
+    return "{" . substr ($ulps_str, 0, -2) . "}";
   } else {
     die "get_all_ulps_for_test called for \"$test\" with no ulps\n";
   }
@@ -686,6 +733,22 @@ sub output_ulps {
   print ULP "/* This file is automatically generated\n";
   print ULP "   from $ulps_filename with gen-libm-test.pl.\n";
   print ULP "   Don't change it - change instead the master files.  */\n\n";
+
+  print ULP "struct ulp_data\n";
+  print ULP "{\n";
+  print ULP "  const char *name;\n";
+  print ULP "  FLOAT max_ulp[" . @all_floats . "];\n";
+  print ULP "};\n\n";
+
+  for ($i = 0; $i <= $#all_floats; $i++) {
+    $type = $all_floats[$i];
+    print ULP "#define ULP_";
+    if ($type =~ /^i/) {
+      print ULP "I_";
+      $type = substr $type, 1;
+    }
+    print ULP "$all_floats_pfx{$type} $i\n";
+  }
 
   foreach $fct (keys %results) {
     $type = $results{$fct}{'type'};
