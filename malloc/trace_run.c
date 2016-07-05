@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 #include <pthread.h>
 #include <sys/time.h>
@@ -25,7 +26,7 @@
 #define C_NTHREADS 10
 #define C_START_THREAD 11
 
-#ifdef x86_64
+#if UINTPTR_MAX == 0xffffffffffffffff
 
 #define ticks_t int64_t
 
@@ -33,8 +34,8 @@ static __inline__ ticks_t rdtsc_s(void)
 {
   unsigned a, d;
   asm volatile("cpuid" ::: "%rax", "%rbx", "%rcx", "%rdx");
-  asm volatile("rdtsc" : "=a" (a), "=d" (d));
-  return ((unsigned long)a) | (((unsigned long)d) << 32);
+  asm volatile("rdtscp" : "=a" (a), "=d" (d));
+  return ((unsigned long long)a) | (((unsigned long long)d) << 32);
 }
 
 static __inline__ ticks_t rdtsc_e(void)
@@ -42,7 +43,7 @@ static __inline__ ticks_t rdtsc_e(void)
   unsigned a, d;
   asm volatile("rdtscp" : "=a" (a), "=d" (d));
   asm volatile("cpuid" ::: "%rax", "%rbx", "%rcx", "%rdx");
-  return ((unsigned long)a) | (((unsigned long)d) << 32);
+  return ((unsigned long long)a) | (((unsigned long long)d) << 32);
 }
 
 #else
@@ -118,6 +119,7 @@ char *comma(ticks_t x)
 }
 
 static volatile void **ptrs;
+static volatile size_t *sizes;
 static size_t n_ptrs;
 static volatile char *syncs;
 static pthread_mutex_t *mutexes;
@@ -131,6 +133,19 @@ ticks_t malloc_time = 0, malloc_count = 0;
 ticks_t calloc_time = 0, calloc_count = 0;
 ticks_t realloc_time = 0, realloc_count = 0;
 ticks_t free_time = 0, free_count = 0;
+
+size_t ideal_rss = 0;
+size_t max_ideal_rss = 0;
+static pthread_mutex_t rss_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+void atomic_rss (ssize_t delta)
+{
+  pthread_mutex_lock (&rss_mutex);
+  ideal_rss += delta;
+  if (max_ideal_rss < ideal_rss)
+    max_ideal_rss = ideal_rss;
+  pthread_mutex_unlock (&rss_mutex);
+}
 
 pthread_mutex_t stop_mutex = PTHREAD_MUTEX_INITIALIZER;
 int threads_done = 0;
@@ -159,7 +174,7 @@ wmem (volatile void *ptr, int count)
   if (!p)
     return;
 
-  for (i=0; i<count; i+=8)
+  for (i=0; i<count; i++)
     p[i] = 0x11;
 }
 #define xwmem(a,b)
@@ -178,6 +193,22 @@ static size_t get_int (unsigned char **ptr)
   }
 }
 
+static void free_wipe (size_t idx)
+{
+  char *cp = (char *)ptrs[idx];
+  if (cp == NULL)
+    return;
+  size_t sz = sizes[idx];
+  size_t i;
+  for (i=0; i<sz; i++)
+    {
+      if (i % 8 == 1)
+	cp[i] = i / 8;
+      else
+	cp[i] = 0x22;
+    }
+}
+
 static void *
 thread_common (void *my_data_v)
 {
@@ -188,7 +219,7 @@ thread_common (void *my_data_v)
   ticks_t my_calloc_time = 0, my_calloc_count = 0;
   ticks_t my_realloc_time = 0, my_realloc_count = 0;
   ticks_t my_free_time = 0, my_free_count = 0;
-  ticks_t stime;
+  ticks_t stime, etime;
 #ifdef MDEBUG
   volatile void *tmp;
 #endif
@@ -197,14 +228,14 @@ thread_common (void *my_data_v)
     {
       if (cp > data + n_data)
 	myabort();
-      dprintf("op %d:%d is %d\n", (int)me, cp-data, *cp);
+      dprintf("op %d:%ld is %d\n", (int)me, cp-data, *cp);
       switch (*cp++)
 	{
 	case C_NOP:
 	  break;
 
 	case C_DONE:
-	  dprintf("op %d:%d DONE\n", (int)me, cp-data);
+	  dprintf("op %d:%ld DONE\n", (int)me, cp-data);
 	  pthread_mutex_lock (&stat_mutex);
 	  malloc_time += my_malloc_time;
 	  calloc_time += my_calloc_time;
@@ -223,17 +254,28 @@ thread_common (void *my_data_v)
 	case C_MALLOC:
 	  p2 = get_int (&cp);
 	  sz = get_int (&cp);
-	  dprintf("op %d:%d %d = MALLOC %d\n", (int)me, cp-data, p2, sz);
+	  dprintf("op %d:%ld %ld = MALLOC %ld\n", (int)me, cp-data, p2, sz);
 	  if (p2 > n_ptrs)
 	    myabort();
 	  stime = rdtsc_s();
 	  Q1;
 	  if (ptrs[p2])
-	    free ((void *)ptrs[p2]);
+	    {
+	      free ((void *)ptrs[p2]);
+	      atomic_rss (-sizes[p2]);
+	    }
 	  ptrs[p2] = malloc (sz);
+	  sizes[p2] = sz;
 	  mprintf("%p = malloc(%lx)\n", ptrs[p2], sz);
 	  Q2;
-	  my_malloc_time += rdtsc_e() - stime;
+	  etime = rdtsc_e();
+	  if (ptrs[p2] != NULL)
+	    atomic_rss (sz);
+	  if (etime < stime)
+	    {
+	      printf("s: %llx e:%llx  d:%llx\n", (long long)stime, (long long)etime, (long long)(etime-stime));
+	    }
+	  my_malloc_time += etime - stime;
 	  my_malloc_count ++;
 	  wmem(ptrs[p2], sz);
 	  break;
@@ -241,16 +283,22 @@ thread_common (void *my_data_v)
 	case C_CALLOC:
 	  p2 = get_int (&cp);
 	  sz = get_int (&cp);
-	  dprintf("op %d:%d %d = CALLOC %d\n", (int)me, cp-data, p2, sz);
+	  dprintf("op %d:%ld %ld = CALLOC %ld\n", (int)me, cp-data, p2, sz);
 	  if (p2 > n_ptrs)
 	    myabort();
+	  if (ptrs[p2])
+	    {
+	      free ((void *)ptrs[p2]);
+	      atomic_rss (-sizes[p2]);
+	    }
 	  stime = rdtsc_s();
 	  Q1;
-	  if (ptrs[p2])
-	    free ((void *)ptrs[p2]);
 	  ptrs[p2] = calloc (sz, 1);
+	  sizes[p2] = sz;
 	  mprintf("%p = calloc(%lx)\n", ptrs[p2], sz);
 	  Q2;
+	  if (ptrs[p2])
+	    atomic_rss (sz);
 	  my_calloc_time += rdtsc_e() - stime;
 	  my_calloc_count ++;
 	  wmem(ptrs[p2], sz);
@@ -260,17 +308,21 @@ thread_common (void *my_data_v)
 	  p2 = get_int (&cp);
 	  p1 = get_int (&cp);
 	  sz = get_int (&cp);
-	  dprintf("op %d:%d %d = REALLOC %d %d\n", (int)me, cp-data, p2, p1, sz);
+	  dprintf("op %d:%ld %ld = REALLOC %ld %ld\n", (int)me, cp-data, p2, p1, sz);
 	  if (p1 > n_ptrs)
 	    myabort();
 	  if (p2 > n_ptrs)
 	    myabort();
+	  if (ptrs[p1])
+	    atomic_rss (-sizes[p1]);
+	  free_wipe(p1);
 	  stime = rdtsc_s();
 	  Q1;
 #ifdef MDEBUG
 	  tmp = ptrs[p1];
 #endif
 	  ptrs[p2] = realloc ((void *)ptrs[p1], sz);
+	  sizes[p2] = sz;
 	  mprintf("%p = relloc(%p,%lx)\n", ptrs[p2], tmp,sz);
 	  Q2;
 	  my_realloc_time += rdtsc_e() - stime;
@@ -278,13 +330,18 @@ thread_common (void *my_data_v)
 	  wmem(ptrs[p2], sz);
 	  if (p1 != p2)
 	    ptrs[p1] = 0;
+	  if (ptrs[p2])
+	    atomic_rss (sizes[p2]);
 	  break;
 
 	case C_FREE:
 	  p1 = get_int (&cp);
 	  if (p1 > n_ptrs)
 	    myabort();
-	  dprintf("op %d:%d FREE %d\n", (int)me, cp-data, p1);
+	  dprintf("op %d:%ld FREE %ld\n", (int)me, cp-data, p1);
+	  free_wipe (p1);
+	  if (ptrs[p1])
+	    atomic_rss (-sizes[p1]);
 	  stime = rdtsc_s();
 	  Q1;
 	  mprintf("free(%p)\n", ptrs[p1]);
@@ -297,7 +354,7 @@ thread_common (void *my_data_v)
 
 	case C_SYNC_W:
 	  p1 = get_int(&cp);
-	  dprintf("op %d:%d SYNC_W %d\n", (int)me, cp-data, p1);
+	  dprintf("op %d:%ld SYNC_W %ld\n", (int)me, cp-data, p1);
 	  if (p1 > n_syncs)
 	    myabort();
 	  pthread_mutex_lock (&mutexes[p1]);
@@ -309,7 +366,7 @@ thread_common (void *my_data_v)
 
 	case C_SYNC_R:
 	  p1 = get_int(&cp);
-	  dprintf("op %d:%d SYNC_R %d\n", (int)me, cp-data, p1);
+	  dprintf("op %d:%ld SYNC_R %ld\n", (int)me, cp-data, p1);
 	  if (p1 > n_syncs)
 	    myabort();
 	  pthread_mutex_lock (&mutexes[p1]);
@@ -343,7 +400,7 @@ my_malloc (const char *msg, int size, unsigned char **cp, size_t *psz, size_t co
   void *rv;
   if (psz)
     count = *psz = get_int (cp);
-  dprintf ("my_malloc for %s size %d * %d\n", msg, size, count);
+  dprintf ("my_malloc for %s size %d * %ld\n", msg, size, count);
   rv = alloc_mem(size * count);
   if (!rv)
     {
@@ -394,6 +451,8 @@ main(int argc, char **argv)
   size_t idx;
   struct rusage res_start, res_end;
 
+  mallopt (M_MXFAST, 0);
+
   if (argc < 2)
     {
       fprintf(stderr, "Usage: %s <trace2dat.outfile>\n", argv[0]);
@@ -425,6 +484,7 @@ main(int argc, char **argv)
 	  break;
 	case C_ALLOC_PTRS:
 	  ptrs = MY_ALLOC (ptrs, &n_ptrs);
+	  sizes = alloc_mem(sizeof(sizes[0]) * n_ptrs);
 	  ptrs[0] = 0;
 	  break;
 	case C_ALLOC_SYNCS:
@@ -448,7 +508,7 @@ main(int argc, char **argv)
 	case C_START_THREAD:
 	  idx = get_int (&cp);
 	  pthread_create (&thread_ids[thread_idx], NULL, thread_common, data + idx);
-	  dprintf("Starting thread %lld at offset %d %x\n", (long)thread_ids[thread_idx], (int)idx, (unsigned int)idx);
+	  dprintf("Starting thread %lld at offset %d %x\n", (long long)thread_ids[thread_idx], (int)idx, (unsigned int)idx);
 	  thread_idx ++;
 	  break;
 	case C_DONE:
@@ -475,6 +535,7 @@ main(int argc, char **argv)
   printf("%s Kb Max RSS (%s -> %s)\n",
 	 comma(res_end.ru_maxrss - res_start.ru_maxrss),
 	 comma(res_start.ru_maxrss), comma(res_end.ru_maxrss));
+  printf("%s Kb Max Ideal RSS\n", comma (max_ideal_rss / 1024));
 
   if (malloc_count == 0) malloc_count ++;
   if (calloc_count == 0) calloc_count ++;
@@ -482,6 +543,7 @@ main(int argc, char **argv)
   if (free_count == 0) free_count ++;
 
   printf("\n");
+  printf("sizeof ticks_t is %lu\n", sizeof(ticks_t));
   printf("Avg malloc time: %6s in %10s calls\n", comma(malloc_time/malloc_count), comma(malloc_count));
   printf("Avg calloc time: %6s in %10s calls\n", comma(calloc_time/calloc_count), comma(calloc_count));
   printf("Avg realloc time: %5s in %10s calls\n", comma(realloc_time/realloc_count), comma(realloc_count));
