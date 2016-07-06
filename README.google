@@ -588,3 +588,11 @@ locale/setlocale.c
   https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=4e8f95a0df7c2300b830ec12c0ae1e161bc8a8a3
   https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=d183645616b0533b3acee28f1a95570bffbdf50f
   (stanshebs, backport)
+
+nss/nss_cache/nss_cache.h
+nss/nss_cache/nss_cache.c
+  For b/29944535, import current nss_cache.c and nss_cache.h from upstream.
+  This fixes a performance issue in getgrgid_r on corp machines.
+  https://github.com/google/libnss-cache/blob/74a14a1dcc669ebe95e90d6d0e0ca36dd8c63b43/nss_cache.c
+  https://github.com/google/libnss-cache/blob/74a14a1dcc669ebe95e90d6d0e0ca36dd8c63b43/nss_cache.h
+  (mkanat, google-local)
