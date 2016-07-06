@@ -1099,6 +1099,26 @@ volatile size_t __malloc_trace_buffer_head = 0;
 
 static __thread __malloc_trace_buffer_ptr trace_ptr;
 
+static inline pid_t
+__gettid (void)
+{
+  struct pthread *pd = THREAD_SELF;
+  pid_t selftid = THREAD_GETMEM (pd, tid);
+  if (selftid == 0)
+    {
+      /* This system call is not supposed to fail.  */
+#ifdef INTERNAL_SYSCALL
+      INTERNAL_SYSCALL_DECL (err);
+      selftid = INTERNAL_SYSCALL (gettid, err, 0);
+#else
+      selftid = INLINE_SYSCALL (gettid, 0);
+#endif
+      THREAD_SETMEM (pd, tid, selftid);
+    }
+
+  return selftid;
+}
+
 static void
 __mtb_trace_entry (uint32_t type, size_t size, void *ptr1)
 {
@@ -1108,7 +1128,7 @@ __mtb_trace_entry (uint32_t type, size_t size, void *ptr1)
 
   trace_ptr = __malloc_trace_buffer + (head1 % __malloc_trace_buffer_size);
 
-  trace_ptr->thread = syscall(__NR_gettid);
+  trace_ptr->thread = __gettid ();
   trace_ptr->type = type;
   trace_ptr->path_thread_cache = 0;
   trace_ptr->path_cpu_cache = 0;
