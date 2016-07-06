@@ -1,0 +1,193 @@
+<title>Using the dj/malloc GLIBC COPR repo</title>
+<H1 align=center>Using the dj/malloc GLIBC COPR repo</H1>
+
+<p>The purpose of this document is to assist folks in testing out my
+  custom dj/malloc branch of the upstream GLIBC git repo.  This COPR
+  repo has pre-built RPMs for easy installation in a test
+  environment.</p>
+
+See <a href="https://copr.fedorainfracloud.org/coprs/djdelorie/glibc_dj_malloc/">https://copr.fedorainfracloud.org/coprs/djdelorie/glibc_dj_malloc/</a>
+for links and other information.
+
+<h2>Installing the COPR Repo</h2>
+
+<pre>
+$ <b>cd /etc/yum.repos.d/</b>
+</pre>
+
+<h3>RHEL7</h3>
+
+
+<pre>
+$ <b>wget https://copr.fedorainfracloud.org/coprs/djdelorie/glibc_dj_malloc/repo/epel-7/djdelorie-glibc_dj_malloc-epel-7.repo</b>
+
+$ <b>yum update</b>
+
+$ <b>init 6</b>
+</pre>
+
+<h3>Fedora</h3>
+
+<pre>
+$ <b>dnf copr enable djdelorie/glibc_dj_malloc</b>
+
+$ <b>dnf clean all</b>  (optional)
+$ <b>dnf update</b>
+
+$ <b>init 6</b>
+</pre>
+
+<h3>Missing Dependencies</h2>
+
+If dnf complains about missing dependencies, see if you have
+non-x86_64 variants of glibc installed, and remove them:
+
+<pre>
+$ <b>rpm -qa | grep ^glibc | grep -v x86_64</b>
+</pre>
+
+<h3>Confirming Installation</h2>
+
+<pre>
+$ <b>rpm -qa | grep glibc</b>
+glibc-all-langpacks-2.23.90-alphadj9.fc23.x86_64
+glibc-2.23.90-alphadj9.fc23.x86_64
+glibc-common-2.23.90-alphadj9.fc23.x86_64
+</pre>
+
+<h2>Capturing to the Trace Buffer</h2>
+
+<p>One key new feature in this malloc is a high-speed trace buffer
+  that records every malloc, free, etc call with a minimum of added
+  latency.  This is an improvement over the existing trace feature for
+  applications that are performance-critical.  There is a private
+  (i.e. glibc-internal) API for activating this buffer, which is
+  enabled via a provided DSO:</p>
+
+<pre>
+$ <b>LD_PRELOAD=/lib64/libmtracectl.so ls</b>
+</pre>
+
+<p>Replace lib64 with lib, or whatever suitable path you've installed
+into, for 32-bit machines or machines with non-standard layouts, which
+I don't support, but you never know...</p>
+
+<pre>
+$ <b>ls -l /tmp/mtrace-*</b>
+-rw-r--r--. 1 root root 12422 Jun  2 20:53 mtrace-1188.out
+</pre>
+
+<p>Each generated file is a plain ASCII text file, with some headers
+  followed by one line per trace record entry.  The syntax is not
+  "official" but intended to be machine-readable, and some scripts are
+  included in the COPR repo to process the generated files.</p>
+
+<pre>
+$ <b>head -1 /tmp/mtrace-1188.out</b>
+158 out of 1000 events captured
+</pre>
+
+<p>If first number is more than the second number, then the trace only
+includes the <em>last</em> however-many records.  You can specify a
+larger buffer via envirionment variables, like this:</p>
+
+<pre>
+$ <b>MTRACE_CTL_COUNT=100000 LD_PRELOAD=/lib64/libmtracectl.so ls</b>
+</pre>
+
+(again, or /lib/ for 32-bit machines)
+
+<h2>Sending Us Trace Files</h2>
+
+<p>If we ask you to send us a trace file, please rename and compress
+it to make the file easier to transfer and keep track of.</p>
+
+
+<pre>
+$ <b>cd /tmp</b>
+$ <b>gzip -9 mtrace-1188.out</b>
+$ <b>mv mtrace-1188.out.gz f24-ls-fred.mtrace.gz</b> (or whatever name fits :)
+</pre>
+
+<p>Then mail <tt>f24-ls-fred.mtrace.gz</tt> to dj@redhat.com (or
+whoever is asking for it, of course)</p>
+
+<h2>Workload Simulator</h2>
+
+<p>This build also includes a set of tools to "play back" a recorded
+trace, which can be helpful in diagnosing memory-related performance
+issues.  Such workloads might be locally generated as part of a
+benchmark suite, for example.</p>
+
+<pre>
+trace2dat <em>outfile</em> [<em>infile ...</em>]
+</pre>
+
+If an infile is not provided, input is read from stdin.
+
+<pre>
+$ trace2dat /tmp/ls.wl /tmp/mtrace-22172.out
+</pre>
+
+The resulting file is a "workload" - a data file that tells the
+simulator how to play back all the malloc/free/etc calls.  This file
+is not human-readable, but a compact binary datafile intended to be
+used only by the simulator.
+
+<pre>
+trace_run <em>workload.wl</em>
+</pre>
+
+<p>Note: trace_run only works on intel processors with the RDTSCP
+  opcode, which is only available on reasonably modern processors.  To
+  see if your processor supports this opcode, look for
+  the <b>rdtscp</b> cpu flag:
+
+<pre>
+$ <b>grep rdtscp /proc/cpuinfo</b>
+</pre>
+
+If you get lines like "flags : <lots of flags>" then you have support
+and trace_run will work.  If the grep returns nothing, you don't.
+
+<pre>
+$ <b>trace_run /tmp/ls.wl</b>
+488,004 cycles
+106 usec wall time
+0 usec across 1 thread
+0 Kb Max RSS (1,228 -> 1,228)
+
+Avg malloc time:    385 in        154 calls
+Avg calloc time:      0 in          1 calls
+Avg realloc time:     0 in          1 calls
+Avg free time:      194 in         14 calls
+Total call time: 62,033 cycles
+</pre>
+
+Note:
+see <a href="http://developers.redhat.com/blog/2016/03/11/practical-micro-benchmarking-with-ltrace-and-sched/">Practical
+Micro-Benchmarking with ltrace and sched</a> to get more stable
+numbers.
+
+<h2>Uninstalling</h2>
+
+To uninstall the custom build and revert to an official release, you
+"simly" disable the COPR repo and downgrade to the latest "released" version:
+
+<pre>
+$ <b>vi /etc/yum.repos.d/_copr_djdelorie-glibc_dj_malloc.repo</b>
+</pre>
+
+change this line from 1 to 0:
+
+<pre>
+  enabled=0
+</pre>
+
+Then:
+
+<pre>
+$ <b>dnf --allowerasing downgrade glibc</b>
+</pre>
+
+(replace "dnf" with "yum" for RHEL 7)
