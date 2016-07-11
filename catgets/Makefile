@@ -45,14 +45,14 @@ catgets-CPPFLAGS := -DNLSPATH='"$(msgcatdir)/%L/%N:$(msgcatdir)/%L/LC_MESSAGES/%
 CPPFLAGS-gencat = -DNOT_IN_libc
 
 generated = de.msg test1.cat test1.h test2.cat test2.h sample.SJIS.cat \
-	    test-gencat.h
+	    test-gencat.h tst-catgets.mtrace tst-catgets-mem.out
 generated-dirs = de
 
-tst-catgets-ENV = NLSPATH="$(objpfx)%l/%N.cat" LANG=de
+tst-catgets-ENV = NLSPATH="$(objpfx)%l/%N.cat" LANG=de MALLOC_TRACE=$(objpfx)tst-catgets.mtrace
 
 ifeq ($(run-built-tests),yes)
 tests: $(objpfx)de/libc.cat $(objpfx)test1.cat $(objpfx)test2.cat \
-       $(objpfx)test-gencat.out
+       $(objpfx)test-gencat.out $(objpfx)tst-catgets-mem.out
 # This test just checks whether the program produces any error or not.
 # The result is not tested.
 $(objpfx)test1.cat: test1.msg $(objpfx)gencat
@@ -80,4 +80,9 @@ $(objpfx)test-gencat.out: test-gencat.sh $(objpfx)test-gencat \
 $(objpfx)sample.SJIS.cat: sample.SJIS $(objpfx)gencat
 	GCONV_PATH=$(common-objpfx)iconvdata LC_ALL=C \
 	$(built-program-cmd) -H $(objpfx)test-gencat.h < $(word 1,$^) > $@
+
+$(objpfx)tst-catgets-mem.out: $(objpfx)tst-catgets.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-catgets.mtrace > $@; \
+	$(evaluate-test)
+
 endif

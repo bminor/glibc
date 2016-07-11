@@ -211,6 +211,10 @@ addgetnetgrentX (struct database_dyn *db, int fd, request_header *req,
 			    const char *nuser = data.val.triple.user;
 			    const char *ndomain = data.val.triple.domain;
 
+			    size_t hostlen = strlen (nhost ?: "") + 1;
+			    size_t userlen = strlen (nuser ?: "") + 1;
+			    size_t domainlen = strlen (ndomain ?: "") + 1;
+
 			    if (nhost == NULL || nuser == NULL || ndomain == NULL
 				|| nhost > nuser || nuser > ndomain)
 			      {
@@ -228,9 +232,6 @@ addgetnetgrentX (struct database_dyn *db, int fd, request_header *req,
 				     : last + strlen (last) + 1 - buffer);
 
 				/* We have to make temporary copies.  */
-				size_t hostlen = strlen (nhost ?: "") + 1;
-				size_t userlen = strlen (nuser ?: "") + 1;
-				size_t domainlen = strlen (ndomain ?: "") + 1;
 				size_t needed = hostlen + userlen + domainlen;
 
 				if (buflen - req->key_len - bufused < needed)
@@ -264,9 +265,12 @@ addgetnetgrentX (struct database_dyn *db, int fd, request_header *req,
 			      }
 
 			    char *wp = buffer + buffilled;
-			    wp = stpcpy (wp, nhost) + 1;
-			    wp = stpcpy (wp, nuser) + 1;
-			    wp = stpcpy (wp, ndomain) + 1;
+			    wp = memmove (wp, nhost ?: "", hostlen);
+			    wp += hostlen;
+			    wp = memmove (wp, nuser ?: "", userlen);
+			    wp += userlen;
+			    wp = memmove (wp, ndomain ?: "", domainlen);
+			    wp += domainlen;
 			    buffilled = wp - buffer;
 			    ++nentries;
 			  }
@@ -562,15 +566,19 @@ addinnetgrX (struct database_dyn *db, int fd, request_header *req,
 	{
 	  bool success = true;
 
-	  if (host != NULL)
+	  /* For the host, user and domain in each triplet, we assume success
+	     if the value is blank because that is how the wildcard entry to
+	     match anything is stored in the netgroup cache.  */
+	  if (host != NULL && *triplets != '\0')
 	    success = strcmp (host, triplets) == 0;
 	  triplets = (const char *) rawmemchr (triplets, '\0') + 1;
 
-	  if (success && user != NULL)
+	  if (success && user != NULL && *triplets != '\0')
 	    success = strcmp (user, triplets) == 0;
 	  triplets = (const char *) rawmemchr (triplets, '\0') + 1;
 
-	  if (success && (domain == NULL || strcmp (domain, triplets) == 0))
+	  if (success && (domain == NULL || *triplets == '\0'
+			  || strcmp (domain, triplets) == 0))
 	    {
 	      dataset->resp.result = 1;
 	      break;

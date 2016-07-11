@@ -1,3 +1,202 @@
+2016-07-11  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19018]
+	* stdlib/cxa_thread_atexit_impl.c (__cxa_thread_atexit_impl):
+	Mangle function pointer before storing it.
+	(__call_tls_dtors): Demangle function pointer before calling it.
+
+2016-07-11  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #18928]
+	* sysdeps/generic/ldsodefs.h (struct rtld_global_ro): Remove
+	_dl_pointer_guard member.
+	* elf/rtld.c (_rtld_global_ro): Remove _dl_pointer_guard
+	initializer.
+	(security_init): Always set up pointer guard.
+	(process_envvars): Do not process LD_POINTER_GUARD.
+
+2016-07-11  Leonhard Holz  <leonhard.holz@web.de>
+
+	[BZ #16009]
+	* string/strxfrm_l.c (STRXFRM): Allocate fixed size cache for
+	weights and rules. Use do_xfrm_cached if data fits in cache,
+	do_xfrm otherwise.  Moved former main loop to...
+	* (do_xfrm_cached): New function.
+	* (do_xfrm): Non-caching version of do_xfrm_cached. Uses
+	find_idx, find_position and stack_push.
+	* (find_idx): New function.
+	* (find_position): Likewise.
+	* localedata/sort-test.sh: Added test run for do_xfrm.
+	* localedata/xfrm-test.c (main): Added command line option
+	-nocache to run the test with strings that are too large for
+	the STRXFRM cache.
+
+2016-05-23  Florian Weimer  <fweimer@redhat.com>
+
+	CVE-2016-4429
+	[BZ #20112]
+	* sunrpc/clnt_udp.c (clntudp_call): Use malloc/free for the error
+	payload.
+
+2016-03-25  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19791]
+	* resolv/res_send.c (close_and_return_error): New function.
+	(send_dg): Initialize *resplen2 after reopen failure.  Call
+	close_and_return_error for error returns.  On error paths without
+	__res_iclose, initialze *resplen2 explicitly.  Update comment for
+	successful return.
+
+2016-02-15  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #18665]
+	* resolv/nss_dns/dns-host.c (gaih_getanswer_slice): Always set
+	*herrno_p.
+	(gaih_getanswer): Document functional behviour. Return tryagain
+	if any result is tryagain.
+	* resolv/res_query.c (__libc_res_nsearch): Set buffer size to zero
+	when freed.
+	* resolv/res_send.c: Add copyright text.
+	(__libc_res_nsend): Document that MAXPACKET is expected.
+	(send_vc): Document. Remove buffer reuse.
+	(send_dg): Document. Remove buffer reuse. Set *thisanssizp to set the
+	size of the buffer. Add Dprint for truncated UDP buffer.
+
+2016-04-29  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20010]
+	CVE-2016-3706
+	* sysdeps/posix/getaddrinfo.c
+	(convert_hostent_to_gaih_addrtuple): New function.
+	(gethosts): Call convert_hostent_to_gaih_addrtuple.
+	(gaih_inet): Use convert_hostent_to_gaih_addrtuple to convert
+	AF_INET data.
+
+2016-05-04  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19779]
+	CVE-2016-1234
+	Avoid copying names of directory entries.
+	* posix/glob.c (DIRENT_MUST_BE, DIRENT_MIGHT_BE_SYMLINK)
+	(DIRENT_MIGHT_BE_DIR, CONVERT_D_INO, CONVERT_D_TYPE)
+	(CONVERT_DIRENT_DIRENT64, REAL_DIR_ENTRY): Remove macros.
+	(struct readdir_result): New type.
+	(D_TYPE_TO_RESULT, D_INO_TO_RESULT, READDIR_RESULT_INITIALIZER)
+	(GL_READDIR): New macros.
+	(readdir_result_might_be_symlink, readdir_result_might_be_dir)
+	(convert_dirent, convert_dirent64): New functions.
+	(glob_in_dir): Use struct readdir_result.  Call convert_dirent or
+	convert_dirent64.  Adjust references to the readdir result.
+	* sysdeps/unix/sysv/linux/i386/glob64.c:
+	(convert_dirent, GL_READDIR): Redefine for second file inclusion.
+	* posix/bug-glob2.c (LONG_NAME): Define.
+	(filesystem): Add LONG_NAME.
+	(my_DIR): Increase the size of room_for_dirent.
+
+2016-04-29  Florian Weimer  <fweimer@redhat.com>
+
+	glob: Simplify and document the interface for the GLOB_ALTDIRFUNC
+	callback function gl_readdir.
+	* posix/glob.c (NAMELEN, CONVERT_D_NAMLEN): Remove.
+	(CONVERT_DIRENT_DIRENT64): Use strcpy instead of memcpy.
+	(glob_in_dir): Remove len.  Use strdup instead of malloc and
+	memcpy to copy the name.
+	* manual/pattern.texi (Calling Glob): Document requirements for
+	implementations of the gl_readdir callback function.
+	* manual/examples/mkdirent.c: New example.
+	* posix/bug-glob2.c (my_readdir): Set d_ino to 1 unconditionally,
+	per the manual guidance.
+	* posix/tst-gnuglob.c (my_readdir): Likewise.
+
+2016-04-28  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	[BZ #18508]
+	* stdlib/Makefile ($(objpfx)tst-makecontext3):
+	Depend on $(libdl).
+	* stdlib/tst-makecontext.c (cf): Test if _Unwind_Backtrace
+	is not called infinitely times.
+	(backtrace_helper): New function.
+	(trace_arg): New struct.
+	(st1): Enlarge stack size.
+	* sysdeps/unix/sysv/linux/s390/s390-32/__makecontext_ret.S:
+	(__makecontext_ret): Omit cfi_startproc and cfi_endproc.
+	* sysdeps/unix/sysv/linux/s390/s390-64/__makecontext_ret.S:
+	Likewise.
+
+2016-04-28  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	[BZ #18080]
+	* sysdeps/unix/sysv/linux/s390/s390-32/setcontext.S
+	(__setcontext): Use SIG_SETMASK instead of SIG_BLOCK.
+	* sysdeps/unix/sysv/linux/s390/s390-64/setcontext.S
+	(__setcontext): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/swapcontext.S
+	(__swapcontext): Use SIG_SETMASK instead of SIG_BLOCK.
+	Call rt_sigprocmask syscall one time to set new signal mask
+	and retrieve the current signal mask instead of two calls.
+	* sysdeps/unix/sysv/linux/s390/s390-64/swapcontext.S
+	(__swapcontext): Likewise.
+	* stdlib/Makefile (tests): Add new testcase tst-setcontext2.
+	* stdlib/tst-setcontext2.c: New file.
+
+2016-04-01  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19879]
+	CVE-2016-3075
+	* resolv/nss_dns/dns-network.c (_nss_dns_getnetbyname_r): Do not
+	copy name.
+
+2016-02-12  Florian Weimer  <fweimer@redhat.com>
+
+	* misc/bug18240.c (do_test): Set RLIMIT_AS.
+
+2016-01-27  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #18240]
+	* misc/hsearch_r.c (isprime, __hcreate_r): Protect against
+	unsigned int wraparound.
+
+2016-01-27  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #18240]
+	* misc/bug18240.c: New test.
+	* misc/Makefile (tests): Add it.
+
+2015-08-25  Ondřej Bílka  <neleai@seznam.cz>
+
+	[BZ #18240]
+	* misc/hsearch_r.c (__hcreate_r): Handle overflow.
+
+2015-09-26  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #18985]
+	* time/strftime_l.c (a_wkday, f_wkday, a_month, f_month): Range check.
+	(__strftime_internal): Likewise.
+	* time/tst-strftime.c (do_bz18985): New test.
+	(do_test): Call it.
+
+2015-08-08  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #17905]
+	* catgets/Makefile (tst-catgets-mem): New test.
+	* catgets/catgets.c (catopen): Don't use unbounded alloca.
+	* catgets/open_catalog.c (__open_catalog): Likewise.
+	* catgets/tst-catgets.c (do_bz17905): Test unbounded alloca.
+
+2015-12-20  Siddhesh Poyarekar  <siddhesh@redhat.com>
+
+	[BZ #16758]
+	* nscd/netgroupcache.c (addinnetgrX): Succeed if triplet has
+	blank values.
+
+	[BZ #16759]
+	* inet/getnetgrent_r.c (get_nonempty_val): New function.
+	(nscd_getnetgrent): Use it.
+
+	[BZ #16760]
+	* nscd/netgroupcache.c (addgetnetgrentX): Use memmove instead
+	of stpcpy.
+
 2015-11-24  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #17062]

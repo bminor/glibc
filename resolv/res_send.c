@@ -1,3 +1,20 @@
+/* Copyright (C) 2016 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
 /*
  * Copyright (c) 1985, 1989, 1993
  *    The Regents of the University of California.  All rights reserved.
@@ -360,6 +377,8 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 #ifdef USE_HOOKS
 	if (__builtin_expect (statp->qhook || statp->rhook, 0)) {
 		if (anssiz < MAXPACKET && ansp) {
+			/* Always allocate MAXPACKET, callers expect
+			   this specific size.  */
 			u_char *buf = malloc (MAXPACKET);
 			if (buf == NULL)
 				return (-1);
@@ -653,6 +672,89 @@ libresolv_hidden_def (res_nsend)
 
 /* Private */
 
+/* Close the resolver structure, assign zero to *RESPLEN2 if RESPLEN2
+   is not NULL, and return zero.  */
+static int
+__attribute__ ((warn_unused_result))
+close_and_return_error (res_state statp, int *resplen2)
+{
+  __res_iclose(statp, false);
+  if (resplen2 != NULL)
+    *resplen2 = 0;
+  return 0;
+}
+
+/* The send_vc function is responsible for sending a DNS query over TCP
+   to the nameserver numbered NS from the res_state STATP i.e.
+   EXT(statp).nssocks[ns].  The function supports sending both IPv4 and
+   IPv6 queries at the same serially on the same socket.
+
+   Please note that for TCP there is no way to disable sending both
+   queries, unlike UDP, which honours RES_SNGLKUP and RES_SNGLKUPREOP
+   and sends the queries serially and waits for the result after each
+   sent query.  This implemetnation should be corrected to honour these
+   options.
+
+   Please also note that for TCP we send both queries over the same
+   socket one after another.  This technically violates best practice
+   since the server is allowed to read the first query, respond, and
+   then close the socket (to service another client).  If the server
+   does this, then the remaining second query in the socket data buffer
+   will cause the server to send the client an RST which will arrive
+   asynchronously and the client's OS will likely tear down the socket
+   receive buffer resulting in a potentially short read and lost
+   response data.  This will force the client to retry the query again,
+   and this process may repeat until all servers and connection resets
+   are exhausted and then the query will fail.  It's not known if this
+   happens with any frequency in real DNS server implementations.  This
+   implementation should be corrected to use two sockets by default for
+   parallel queries.
+
+   The query stored in BUF of BUFLEN length is sent first followed by
+   the query stored in BUF2 of BUFLEN2 length.  Queries are sent
+   serially on the same socket.
+
+   Answers to the query are stored firstly in *ANSP up to a max of
+   *ANSSIZP bytes.  If more than *ANSSIZP bytes are needed and ANSCP
+   is non-NULL (to indicate that modifying the answer buffer is allowed)
+   then malloc is used to allocate a new response buffer and ANSCP and
+   ANSP will both point to the new buffer.  If more than *ANSSIZP bytes
+   are needed but ANSCP is NULL, then as much of the response as
+   possible is read into the buffer, but the results will be truncated.
+   When truncation happens because of a small answer buffer the DNS
+   packets header feild TC will bet set to 1, indicating a truncated
+   message and the rest of the socket data will be read and discarded.
+
+   Answers to the query are stored secondly in *ANSP2 up to a max of
+   *ANSSIZP2 bytes, with the actual response length stored in
+   *RESPLEN2.  If more than *ANSSIZP bytes are needed and ANSP2
+   is non-NULL (required for a second query) then malloc is used to
+   allocate a new response buffer, *ANSSIZP2 is set to the new buffer
+   size and *ANSP2_MALLOCED is set to 1.
+
+   The ANSP2_MALLOCED argument will eventually be removed as the
+   change in buffer pointer can be used to detect the buffer has
+   changed and that the caller should use free on the new buffer.
+
+   Note that the answers may arrive in any order from the server and
+   therefore the first and second answer buffers may not correspond to
+   the first and second queries.
+
+   It is not supported to call this function with a non-NULL ANSP2
+   but a NULL ANSCP.  Put another way, you can call send_vc with a
+   single unmodifiable buffer or two modifiable buffers, but no other
+   combination is supported.
+
+   It is the caller's responsibility to free the malloc allocated
+   buffers by detecting that the pointers have changed from their
+   original values i.e. *ANSCP or *ANSP2 has changed.
+
+   If errors are encountered then *TERRNO is set to an appropriate
+   errno value and a zero result is returned for a recoverable error,
+   and a less-than zero result is returned for a non-recoverable error.
+
+   If no errors are encountered then *TERRNO is left unmodified and
+   a the length of the first response in bytes is returned.  */
 static int
 send_vc(res_state statp,
 	const u_char *buf, int buflen, const u_char *buf2, int buflen2,
@@ -662,11 +764,7 @@ send_vc(res_state statp,
 {
 	const HEADER *hp = (HEADER *) buf;
 	const HEADER *hp2 = (HEADER *) buf2;
-	u_char *ans = *ansp;
-	int orig_anssizp = *anssizp;
-	// XXX REMOVE
-	// int anssiz = *anssizp;
-	HEADER *anhp = (HEADER *) ans;
+	HEADER *anhp = (HEADER *) *ansp;
 	struct sockaddr_in6 *nsap = EXT(statp).nsaddrs[ns];
 	int truncating, connreset, resplen, n;
 	struct iovec iov[4];
@@ -742,6 +840,8 @@ send_vc(res_state statp,
 	 * Receive length & response
 	 */
 	int recvresp1 = 0;
+	/* Skip the second response if there is no second query.
+	   To do that we mark the second response as received.  */
 	int recvresp2 = buf2 == NULL;
 	uint16_t rlen16;
  read_len:
@@ -778,33 +878,14 @@ send_vc(res_state statp,
 	u_char **thisansp;
 	int *thisresplenp;
 	if ((recvresp1 | recvresp2) == 0 || buf2 == NULL) {
+		/* We have not received any responses
+		   yet or we only have one response to
+		   receive.  */
 		thisanssizp = anssizp;
 		thisansp = anscp ?: ansp;
 		assert (anscp != NULL || ansp2 == NULL);
 		thisresplenp = &resplen;
 	} else {
-		if (*anssizp != MAXPACKET) {
-			/* No buffer allocated for the first
-			   reply.  We can try to use the rest
-			   of the user-provided buffer.  */
-#ifdef _STRING_ARCH_unaligned
-			*anssizp2 = orig_anssizp - resplen;
-			*ansp2 = *ansp + resplen;
-#else
-			int aligned_resplen
-			  = ((resplen + __alignof__ (HEADER) - 1)
-			     & ~(__alignof__ (HEADER) - 1));
-			*anssizp2 = orig_anssizp - aligned_resplen;
-			*ansp2 = *ansp + aligned_resplen;
-#endif
-		} else {
-			/* The first reply did not fit into the
-			   user-provided buffer.  Maybe the second
-			   answer will.  */
-			*anssizp2 = orig_anssizp;
-			*ansp2 = *ansp;
-		}
-
 		thisanssizp = anssizp2;
 		thisansp = ansp2;
 		thisresplenp = resplen2;
@@ -812,10 +893,14 @@ send_vc(res_state statp,
 	anhp = (HEADER *) *thisansp;
 
 	*thisresplenp = rlen;
-	if (rlen > *thisanssizp) {
-		/* Yes, we test ANSCP here.  If we have two buffers
-		   both will be allocatable.  */
-		if (__builtin_expect (anscp != NULL, 1)) {
+	/* Is the answer buffer too small?  */
+	if (*thisanssizp < rlen) {
+		/* If the current buffer is non-NULL and it's not
+		   pointing at the static user-supplied buffer then
+		   we can reallocate it.  */
+		if (thisansp != NULL && thisansp != ansp) {
+			/* Always allocate MAXPACKET, callers expect
+			   this specific size.  */
 			u_char *newp = malloc (MAXPACKET);
 			if (newp == NULL) {
 				*terrno = ENOMEM;
@@ -827,6 +912,9 @@ send_vc(res_state statp,
 			if (thisansp == ansp2)
 			  *ansp2_malloced = 1;
 			anhp = (HEADER *) newp;
+			/* A uint16_t can't be larger than MAXPACKET
+			   thus it's safe to allocate MAXPACKET but
+			   read RLEN bytes instead.  */
 			len = rlen;
 		} else {
 			Dprint(statp->options & RES_DEBUG,
@@ -990,6 +1078,66 @@ reopen (res_state statp, int *terrno, int ns)
 	return 1;
 }
 
+/* The send_dg function is responsible for sending a DNS query over UDP
+   to the nameserver numbered NS from the res_state STATP i.e.
+   EXT(statp).nssocks[ns].  The function supports IPv4 and IPv6 queries
+   along with the ability to send the query in parallel for both stacks
+   (default) or serially (RES_SINGLKUP).  It also supports serial lookup
+   with a close and reopen of the socket used to talk to the server
+   (RES_SNGLKUPREOP) to work around broken name servers.
+
+   The query stored in BUF of BUFLEN length is sent first followed by
+   the query stored in BUF2 of BUFLEN2 length.  Queries are sent
+   in parallel (default) or serially (RES_SINGLKUP or RES_SNGLKUPREOP).
+
+   Answers to the query are stored firstly in *ANSP up to a max of
+   *ANSSIZP bytes.  If more than *ANSSIZP bytes are needed and ANSCP
+   is non-NULL (to indicate that modifying the answer buffer is allowed)
+   then malloc is used to allocate a new response buffer and ANSCP and
+   ANSP will both point to the new buffer.  If more than *ANSSIZP bytes
+   are needed but ANSCP is NULL, then as much of the response as
+   possible is read into the buffer, but the results will be truncated.
+   When truncation happens because of a small answer buffer the DNS
+   packets header feild TC will bet set to 1, indicating a truncated
+   message, while the rest of the UDP packet is discarded.
+
+   Answers to the query are stored secondly in *ANSP2 up to a max of
+   *ANSSIZP2 bytes, with the actual response length stored in
+   *RESPLEN2.  If more than *ANSSIZP bytes are needed and ANSP2
+   is non-NULL (required for a second query) then malloc is used to
+   allocate a new response buffer, *ANSSIZP2 is set to the new buffer
+   size and *ANSP2_MALLOCED is set to 1.
+
+   The ANSP2_MALLOCED argument will eventually be removed as the
+   change in buffer pointer can be used to detect the buffer has
+   changed and that the caller should use free on the new buffer.
+
+   Note that the answers may arrive in any order from the server and
+   therefore the first and second answer buffers may not correspond to
+   the first and second queries.
+
+   It is not supported to call this function with a non-NULL ANSP2
+   but a NULL ANSCP.  Put another way, you can call send_vc with a
+   single unmodifiable buffer or two modifiable buffers, but no other
+   combination is supported.
+
+   It is the caller's responsibility to free the malloc allocated
+   buffers by detecting that the pointers have changed from their
+   original values i.e. *ANSCP or *ANSP2 has changed.
+
+   If an answer is truncated because of UDP datagram DNS limits then
+   *V_CIRCUIT is set to 1 and the return value non-zero to indicate to
+   the caller to retry with TCP.  The value *GOTSOMEWHERE is set to 1
+   if any progress was made reading a response from the nameserver and
+   is used by the caller to distinguish between ECONNREFUSED and
+   ETIMEDOUT (the latter if *GOTSOMEWHERE is 1).
+
+   If errors are encountered then *TERRNO is set to an appropriate
+   errno value and a zero result is returned for a recoverable error,
+   and a less-than zero result is returned for a non-recoverable error.
+
+   If no errors are encountered then *TERRNO is left unmodified and
+   a the length of the first response in bytes is returned.  */
 static int
 send_dg(res_state statp,
 	const u_char *buf, int buflen, const u_char *buf2, int buflen2,
@@ -999,8 +1147,6 @@ send_dg(res_state statp,
 {
 	const HEADER *hp = (HEADER *) buf;
 	const HEADER *hp2 = (HEADER *) buf2;
-	u_char *ans = *ansp;
-	int orig_anssizp = *anssizp;
 	struct timespec now, timeout, finish;
 	struct pollfd pfd[1];
 	int ptimeout;
@@ -1025,7 +1171,11 @@ send_dg(res_state statp,
  retry_reopen:
 	retval = reopen (statp, terrno, ns);
 	if (retval <= 0)
-		return retval;
+	  {
+	    if (resplen2 != NULL)
+	      *resplen2 = 0;
+	    return retval;
+	  }
  retry:
 	evNowTime(&now);
 	evConsTime(&timeout, seconds, 0);
@@ -1033,11 +1183,11 @@ send_dg(res_state statp,
 	int need_recompute = 0;
 	int nwritten = 0;
 	int recvresp1 = 0;
+	/* Skip the second response if there is no second query.
+           To do that we mark the second response as received.  */
 	int recvresp2 = buf2 == NULL;
 	pfd[0].fd = EXT(statp).nssocks[ns];
 	pfd[0].events = POLLOUT;
-	if (resplen2 != NULL)
-	  *resplen2 = 0;
  wait:
 	if (need_recompute) {
 	recompute_resend:
@@ -1045,9 +1195,7 @@ send_dg(res_state statp,
 		if (evCmpTime(finish, now) <= 0) {
 		poll_err_out:
 			Perror(statp, stderr, "poll", errno);
-		err_out:
-			__res_iclose(statp, false);
-			return (0);
+			return close_and_return_error (statp, resplen2);
 		}
 		evSubTime(&timeout, &finish, &now);
 		need_recompute = 0;
@@ -1094,7 +1242,9 @@ send_dg(res_state statp,
 		  }
 
 		*gotsomewhere = 1;
-		return (0);
+		if (resplen2 != NULL)
+		  *resplen2 = 0;
+		return 0;
 	}
 	if (n < 0) {
 		if (errno == EINTR)
@@ -1162,7 +1312,7 @@ send_dg(res_state statp,
 
 		      fail_sendmmsg:
 			Perror(statp, stderr, "sendmmsg", errno);
-			goto err_out;
+			return close_and_return_error (statp, resplen2);
 		      }
 		  }
 		else
@@ -1180,7 +1330,7 @@ send_dg(res_state statp,
 		      if (errno == EINTR || errno == EAGAIN)
 			goto recompute_resend;
 		      Perror(statp, stderr, "send", errno);
-		      goto err_out;
+		      return close_and_return_error (statp, resplen2);
 		    }
 		  just_one:
 		    if (nwritten != 0 || buf2 == NULL || single_request)
@@ -1196,55 +1346,56 @@ send_dg(res_state statp,
 		int *thisresplenp;
 
 		if ((recvresp1 | recvresp2) == 0 || buf2 == NULL) {
+			/* We have not received any responses
+			   yet or we only have one response to
+			   receive.  */
 			thisanssizp = anssizp;
 			thisansp = anscp ?: ansp;
 			assert (anscp != NULL || ansp2 == NULL);
 			thisresplenp = &resplen;
 		} else {
-			if (*anssizp != MAXPACKET) {
-				/* No buffer allocated for the first
-				   reply.  We can try to use the rest
-				   of the user-provided buffer.  */
-#ifdef _STRING_ARCH_unaligned
-				*anssizp2 = orig_anssizp - resplen;
-				*ansp2 = *ansp + resplen;
-#else
-				int aligned_resplen
-				  = ((resplen + __alignof__ (HEADER) - 1)
-				     & ~(__alignof__ (HEADER) - 1));
-				*anssizp2 = orig_anssizp - aligned_resplen;
-				*ansp2 = *ansp + aligned_resplen;
-#endif
-			} else {
-				/* The first reply did not fit into the
-				   user-provided buffer.  Maybe the second
-				   answer will.  */
-				*anssizp2 = orig_anssizp;
-				*ansp2 = *ansp;
-			}
-
 			thisanssizp = anssizp2;
 			thisansp = ansp2;
 			thisresplenp = resplen2;
 		}
 
 		if (*thisanssizp < MAXPACKET
-		    /* Yes, we test ANSCP here.  If we have two buffers
-		       both will be allocatable.  */
-		    && anscp
+		    /* If the current buffer is non-NULL and it's not
+		       pointing at the static user-supplied buffer then
+		       we can reallocate it.  */
+		    && (thisansp != NULL && thisansp != ansp)
 #ifdef FIONREAD
+		    /* Is the size too small?  */
 		    && (ioctl (pfd[0].fd, FIONREAD, thisresplenp) < 0
 			|| *thisanssizp < *thisresplenp)
 #endif
                     ) {
+			/* Always allocate MAXPACKET, callers expect
+			   this specific size.  */
 			u_char *newp = malloc (MAXPACKET);
 			if (newp != NULL) {
-				*anssizp = MAXPACKET;
-				*thisansp = ans = newp;
+				*thisanssizp = MAXPACKET;
+				*thisansp = newp;
 				if (thisansp == ansp2)
 				  *ansp2_malloced = 1;
 			}
 		}
+		/* We could end up with truncation if anscp was NULL
+		   (not allowed to change caller's buffer) and the
+		   response buffer size is too small.  This isn't a
+		   reliable way to detect truncation because the ioctl
+		   may be an inaccurate report of the UDP message size.
+		   Therefore we use this only to issue debug output.
+		   To do truncation accurately with UDP we need
+		   MSG_TRUNC which is only available on Linux.  We
+		   can abstract out the Linux-specific feature in the
+		   future to detect truncation.  */
+		if (__glibc_unlikely (*thisanssizp < *thisresplenp)) {
+			Dprint(statp->options & RES_DEBUG,
+			       (stdout, ";; response may be truncated (UDP)\n")
+			);
+		}
+
 		HEADER *anhp = (HEADER *) *thisansp;
 		socklen_t fromlen = sizeof(struct sockaddr_in6);
 		assert (sizeof(from) <= fromlen);
@@ -1257,7 +1408,7 @@ send_dg(res_state statp,
 				goto wait;
 			}
 			Perror(statp, stderr, "recvfrom", errno);
-			goto err_out;
+			return close_and_return_error (statp, resplen2);
 		}
 		*gotsomewhere = 1;
 		if (__builtin_expect (*thisresplenp < HFIXEDSZ, 0)) {
@@ -1268,7 +1419,7 @@ send_dg(res_state statp,
 			       (stdout, ";; undersized: %d\n",
 				*thisresplenp));
 			*terrno = EMSGSIZE;
-			goto err_out;
+			return close_and_return_error (statp, resplen2);
 		}
 		if ((recvresp1 || hp->id != anhp->id)
 		    && (recvresp2 || hp2->id != anhp->id)) {
@@ -1317,7 +1468,7 @@ send_dg(res_state statp,
 				? *thisanssizp : *thisresplenp);
 			/* record the error */
 			statp->_flags |= RES_F_EDNS0ERR;
-			goto err_out;
+			return close_and_return_error (statp, resplen2);
 	}
 #endif
 		if (!(statp->options & RES_INSECURE2)
@@ -1369,10 +1520,10 @@ send_dg(res_state statp,
 			  }
 
 		next_ns:
-			__res_iclose(statp, false);
 			/* don't retry if called from dig */
 			if (!statp->pfcode)
-				return (0);
+			  return close_and_return_error (statp, resplen2);
+			__res_iclose(statp, false);
 		}
 		if (anhp->rcode == NOERROR && anhp->ancount == 0
 		    && anhp->aa == 0 && anhp->ra == 0 && anhp->arcount == 0) {
@@ -1394,6 +1545,8 @@ send_dg(res_state statp,
 			__res_iclose(statp, false);
 			// XXX if we have received one reply we could
 			// XXX use it and not repeat it over TCP...
+			if (resplen2 != NULL)
+			  *resplen2 = 0;
 			return (1);
 		}
 		/* Mark which reply we received.  */
@@ -1409,21 +1562,22 @@ send_dg(res_state statp,
 					__res_iclose (statp, false);
 					retval = reopen (statp, terrno, ns);
 					if (retval <= 0)
-						return retval;
+					  {
+					    if (resplen2 != NULL)
+					      *resplen2 = 0;
+					    return retval;
+					  }
 					pfd[0].fd = EXT(statp).nssocks[ns];
 				}
 			}
 			goto wait;
 		}
-		/*
-		 * All is well, or the error is fatal.  Signal that the
-		 * next nameserver ought not be tried.
-		 */
+		/* All is well.  We have received both responses (if
+		   two responses were requested).  */
 		return (resplen);
-	} else if (pfd[0].revents & (POLLERR | POLLHUP | POLLNVAL)) {
-		/* Something went wrong.  We can stop trying.  */
-		goto err_out;
-	}
+	} else if (pfd[0].revents & (POLLERR | POLLHUP | POLLNVAL))
+	  /* Something went wrong.  We can stop trying.  */
+	  return close_and_return_error (statp, resplen2);
 	else {
 		/* poll should not have returned > 0 in this case.  */
 		abort ();
