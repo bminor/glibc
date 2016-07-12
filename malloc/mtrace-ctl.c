@@ -4,6 +4,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/mman.h>
+#include <fcntl.h>
+#include <errno.h>
 
 /* This module is a stand-alone control program for malloc's internal
    trace buffer.  It is intended to be preloaded like this:
@@ -30,36 +32,100 @@
 
 #include "mtrace.h"
 
+#define estr(str) write (2, str, strlen (str))
+
+#if 0
 static void
 err(const char *str)
 {
-  write (2, str, strlen(str));
-  write (2, "\n", 1);
-  exit(1);
+  estr (str);
+  estr ("\n");
 }
+#endif
 
-void __attribute__((constructor))
-djmain(void)
+/*
+ * mtrace_start - checks for buffer, allocates one if needed, starts trace.
+ * mtrace_stop - stops tracing
+ * mtrace_sync - syncs the buffer
+ * mtrace_reset - resets buffer state to intial state
+ */
+
+struct _malloc_trace_buffer_s *mtrace_buffer = NULL;
+size_t mtrace_buffer_bytesize = 0;
+
+int
+mtrace_start (void)
 {
   const char *e;
-  size_t sz;
+  char *fname;
+  int sequence = 0;
 
   e = getenv("MTRACE_CTL_COUNT");
   if (!e)
     e = "1000";
-  sz = (size_t) atol(e) * sizeof(struct __malloc_trace_buffer_s);
 
-  char *buf = mmap (NULL, sz, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-  if (buf == NULL || buf == (char *)(-1))
-    err("Cannot mmap");
+  e = getenv("MTRACE_CTL_FILE");
+  if (!e)
+    e = "/tmp/mtrace.out";
 
-  buf[0] = 1;
-  buf[sz-1] = 1;
+  fname = alloca (strlen(e) + 30);
+  sprintf(fname, "%s.%d", e, getpid());
+  while (access (fname, F_OK) == 0)
+    {
+      sequence ++;
+      sprintf(fname, "%s.%d.%d", e, getpid(), sequence);
+    }
 
-  /* This must be the last thing we do.  */
-  __malloc_set_trace_buffer ((void *)buf, sz);
-  return;
+  estr ("mtrace-ctl: writing to ");
+  estr (fname);
+  estr ("\n");
+
+  __malloc_trace_init (fname);
+  return 0;
 }
+
+void
+mtrace_stop (void)
+{
+  size_t count;
+  char line[100];
+
+  count = __malloc_trace_stop ();
+  sprintf (line, "mtrace-ctl: %lld entries recorded\n", (long long)count);
+  estr (line);
+}
+
+void
+mtrace_sync (void)
+{
+  __malloc_trace_sync ();
+  //  __malloc_trace_buffer_ptr buf = __malloc_get_trace_buffer (&size, &head);
+  //  msync (buf, size * sizeof(struct __malloc_trace_buffer_s), MS_SYNC | MS_INVALIDATE);
+}
+
+void
+mtrace_reset (void)
+{
+
+  __malloc_trace_stop ();
+  mtrace_start ();
+}
+
+void __attribute__((constructor))
+mtrace_ctor(void)
+{
+  if (mtrace_start ())
+    exit (1);
+}
+
+void __attribute__((destructor))
+mtrace_dtor(void)
+{
+  mtrace_stop ();
+  mtrace_sync ();
+}
+
+#if 0
 
 const char * const typenames[] = {
   "unused  ",
@@ -78,10 +144,6 @@ djend(void)
   char *e;
   FILE *outf;
   size_t head, size, i;
-
-  /* Prevent problems with recursion etc by shutting off trace right away.  */
-  __malloc_trace_buffer_ptr buf = __malloc_get_trace_buffer (&size, &head);
-  __malloc_set_trace_buffer (NULL, 0);
 
   e = getenv("MTRACE_CTL_FILE");
   if (!e)
@@ -130,3 +192,4 @@ djend(void)
   munmap (buf, size * sizeof(struct __malloc_trace_buffer_s));
   return;
 }
+#endif

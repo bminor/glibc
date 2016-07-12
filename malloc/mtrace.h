@@ -43,31 +43,30 @@ struct __malloc_trace_buffer_s {
 
 typedef struct __malloc_trace_buffer_s *__malloc_trace_buffer_ptr;
 
-/* These three are only valid inside glibc proper.  */
-extern volatile __malloc_trace_buffer_ptr __malloc_trace_buffer;
-extern volatile size_t __malloc_trace_buffer_size;
-extern volatile size_t __malloc_trace_buffer_head;
+/* Initialize the trace buffer and backing file.  The file is
+   overwritten if it already exists.  */
+void __malloc_trace_init (char *filename);
 
-/* bufptr is a random chunk of memory, bufsize is the size of that
-   chunk in BYTES.  Returns the size of __malloc_trace_buffer_s.  The
-   buffer should be filled with NUL bytes before passing, such that
-   each record's type is UNUSED (below).  The trace buffer may be
-   disabled by passing NULL,0 although it's up to the caller to obtain
-   and free/unmap the previous buffer first.  */
-int __malloc_set_trace_buffer (void *bufptr, size_t bufsize);
+/* All remaining functions return current count of trace records.  */
 
-/* Returns the location of the buffer (same as passed above, or NULL).
-   Also fills in BUFCOUNT which is the number of records (not bytes)
-   in the buffer, and BUFHEAD which is the index of the most recently
-   filled entry.  NOTE that BUFHEAD might be greater than bufcount; if
-   so it reflects the number of records that would have been stored
-   had there been size, and the caller must modulo that by BUFCOUNT to
-   get the ending index.  The last BUFCOUNT records are stored;
-   earlier records are overwritten. */
-void * __malloc_get_trace_buffer (size_t *bufcount, size_t *bufhead);
+/* Pause - but don't stop - tracing.  */
+size_t __malloc_trace_pause (void);
+
+/* Resume tracing where it left off when paused.  */
+size_t __malloc_trace_unpause (void);
+
+/* Stop tracing and clean up all the trace buffer mappings.  */
+size_t __malloc_trace_stop (void);
+
+/* Sync all buffer data to file (typically a no-op on Linux).  */
+size_t __malloc_trace_sync (void);
 
 
 #define __MTB_TYPE_UNUSED	0
+
+/* ptr1 is 0x1234, size is sizeof(void *) - there is one of these at
+   the beginning of the trace.  */
+#define __MTB_TYPE_MAGIC	255
 
 /* ptr2 = malloc (size) */
 #define __MTB_TYPE_MALLOC	1
@@ -104,3 +103,17 @@ typedef enum {
 } MSCAN_Types;
 
 void __malloc_scan_chunks (void (*callback)(void * /*ptr*/, size_t /*length*/, int /*type*/));
+
+/* Codes for the simulator/workload programs. */
+#define C_NOP 0
+#define C_DONE 1
+#define C_MALLOC 2
+#define C_CALLOC 3
+#define C_REALLOC 4
+#define C_FREE 5
+#define C_SYNC_W 6
+#define C_SYNC_R 7
+#define C_ALLOC_PTRS 8
+#define C_ALLOC_SYNCS 9
+#define C_NTHREADS 10
+#define C_START_THREAD 11

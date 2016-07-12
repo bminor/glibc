@@ -11,20 +11,7 @@
 #include <fcntl.h>
 
 #include "malloc.h"
-
-/* These must stay in sync with trace2dat */
-#define C_NOP 0
-#define C_DONE 1
-#define C_MALLOC 2
-#define C_CALLOC 3
-#define C_REALLOC 4
-#define C_FREE 5
-#define C_SYNC_W 6
-#define C_SYNC_R 7
-#define C_ALLOC_PTRS 8
-#define C_ALLOC_SYNCS 9
-#define C_NTHREADS 10
-#define C_START_THREAD 11
+#include "mtrace.h"
 
 #if UINTPTR_MAX == 0xffffffffffffffff
 

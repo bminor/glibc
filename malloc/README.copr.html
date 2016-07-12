@@ -74,28 +74,14 @@ I don't support, but you never know...</p>
 
 <pre>
 $ <b>ls -l /tmp/mtrace-*</b>
--rw-r--r--. 1 root root 12422 Jun  2 20:53 mtrace-1188.out
+-rw-r--r--. 1 root root 12422 Jun  2 20:53 mtrace.out.1188
 </pre>
 
-<p>Each generated file is a plain ASCII text file, with some headers
-  followed by one line per trace record entry.  The syntax is not
-  "official" but intended to be machine-readable, and some scripts are
-  included in the COPR repo to process the generated files.</p>
-
-<pre>
-$ <b>head -1 /tmp/mtrace-1188.out</b>
-158 out of 1000 events captured
-</pre>
-
-<p>If first number is more than the second number, then the trace only
-includes the <em>last</em> however-many records.  You can specify a
-larger buffer via envirionment variables, like this:</p>
-
-<pre>
-$ <b>MTRACE_CTL_COUNT=100000 LD_PRELOAD=/lib64/libmtracectl.so ls</b>
-</pre>
-
-(again, or /lib/ for 32-bit machines)
+<p>Each generated file is a binary file, specific to the architecture,
+  with one record per trace record entry.  Some programs are included
+  in the COPR repo to process the generated files.  Please make sure
+  you process these files on the same architecture as they were
+  generated on.</p>
 
 <h2>Sending Us Trace Files</h2>
 
@@ -105,8 +91,8 @@ it to make the file easier to transfer and keep track of.</p>
 
 <pre>
 $ <b>cd /tmp</b>
-$ <b>gzip -9 mtrace-1188.out</b>
-$ <b>mv mtrace-1188.out.gz f24-ls-fred.mtrace.gz</b> (or whatever name fits :)
+$ <b>gzip -9 mtrace.out.1188</b>
+$ <b>mv mtrace.out.1188.gz f24-ls-fred.mtrace.gz</b> (or whatever name fits :)
 </pre>
 
 <p>Then mail <tt>f24-ls-fred.mtrace.gz</tt> to dj@redhat.com (or
@@ -120,13 +106,13 @@ issues.  Such workloads might be locally generated as part of a
 benchmark suite, for example.</p>
 
 <pre>
-trace2dat <em>outfile</em> [<em>infile ...</em>]
+trace2wl <em>outfile</em> [<em>infile ...</em>]
 </pre>
 
 If an infile is not provided, input is read from stdin.
 
 <pre>
-$ trace2dat /tmp/ls.wl /tmp/mtrace-22172.out
+$ trace2wl /tmp/ls.wl /tmp/mtrace-22172.out
 </pre>
 
 The resulting file is a "workload" - a data file that tells the

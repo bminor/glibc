@@ -74,8 +74,11 @@ libc {
     __libc_scratch_buffer_set_array_size;
 
     # malloc trace hooks for mtrace-ctl
-    __malloc_set_trace_buffer;
-    __malloc_get_trace_buffer;
+    __malloc_trace_init;
+    __malloc_trace_pause;
+    __malloc_trace_unpause;
+    __malloc_trace_stop;
+    __malloc_trace_sync;
 
     __malloc_scan_chunks;
   }

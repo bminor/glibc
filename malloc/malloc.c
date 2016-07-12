@@ -1093,10 +1093,37 @@ static void*   memalign_check(size_t alignment, size_t bytes,
 #if USE_MTRACE
 #include "mtrace.h"
 
-volatile __malloc_trace_buffer_ptr __malloc_trace_buffer = NULL;
-volatile size_t __malloc_trace_buffer_size = 0;
-volatile size_t __malloc_trace_buffer_head = 0;
+typedef struct __malloc_trace_map_entry_s {
+  int ref_count;
+  __malloc_trace_buffer_ptr window;
+} __malloc_trace_map_entry;
 
+/* 16 Tb max file size, 64 Mb per window */
+#define TRACE_MAPPING_SIZE 67108864
+#define TRACE_N_PER_MAPPING (TRACE_MAPPING_SIZE / sizeof (struct __malloc_trace_buffer_s))
+#define TRACE_N_MAPPINGS 262144
+#define TRACE_MAX_COUNT (TRACE_N_PER_MAPPING * TRACE_N_MAPPINGS)
+
+/* Index into __malloc_trace_buffer[] */
+#define TRACE_COUNT_TO_MAPPING_NUM(count) ((count) / TRACE_N_PER_MAPPING)
+/* Index info __malloc_trace_buffer[n][] */
+#define TRACE_COUNT_TO_MAPPING_IDX(count) ((count) % TRACE_N_PER_MAPPING)
+
+/* Global mutex for the trace buffer tree itself.  */
+mutex_t __malloc_trace_mutex;
+
+/* Global counter, "full" when equal to TRACE_MAX_COUNT.  Points to
+   the next available slot, so POST-INCREMENT it.  */
+volatile size_t __malloc_trace_count = 0;
+
+/* Array of TRACE_N_MAPPINGS pointers to potentially mapped trace buffers.  */
+volatile __malloc_trace_map_entry *__malloc_trace_buffer = NULL;
+/* The file we're mapping them to.  */
+char * __malloc_trace_filename = NULL;
+
+volatile int __malloc_trace_enabled = 0;
+
+static __thread int __malloc_trace_last_num = -1;
 static __thread __malloc_trace_buffer_ptr trace_ptr;
 
 static inline pid_t
@@ -1122,11 +1149,123 @@ __gettid (void)
 static void
 __mtb_trace_entry (uint32_t type, size_t size, void *ptr1)
 {
-  size_t head1;
+  size_t my_trace_count;
+  size_t old_trace_count;
+  int my_num;
 
-  head1 = catomic_exchange_and_add (&__malloc_trace_buffer_head, 1);
+  /* START T: Log trace event.  */
+ alg_t1:
+  /* T1. Perform a load-acq of the global trace offset.  */
+  my_trace_count = atomic_load_acquire (&__malloc_trace_count);
 
-  trace_ptr = __malloc_trace_buffer + (head1 % __malloc_trace_buffer_size);
+  /* T2. If the window number is different from the current
+     thread-local window number, proceed with algorithm W below.  */
+  my_num = TRACE_COUNT_TO_MAPPING_NUM (my_trace_count);
+  if (my_num != __malloc_trace_last_num)
+    {
+      int new_window;
+      int new_ref_count;
+
+      /* START W: Switch window.  */
+
+      /* W1. Acquire the global window lock.  */
+      (void) mutex_lock (&__malloc_trace_mutex);
+
+      /* W2. If the thread-local window number is not -1, decrement the reference
+	 counter for the current thread window.  */
+      if (__malloc_trace_last_num != -1)
+	{
+	  int old_window = TRACE_COUNT_TO_MAPPING_NUM (__malloc_trace_last_num);
+	  int old_ref_count = catomic_exchange_and_add (&__malloc_trace_buffer[old_window].ref_count, -1);
+	  /* W3. If that reference counter reached 0, unmap the window. */
+	  if (old_ref_count == 1)
+	    {
+	      munmap (__malloc_trace_buffer[old_window].window, TRACE_MAPPING_SIZE);
+	      __malloc_trace_buffer[old_window].window = NULL;
+	    }
+	}
+
+      /* W4. Perform a load-relaxed of the global trace offset.  */
+      my_trace_count = atomic_load_relaxed (&__malloc_trace_count);
+
+      /* W5. Increment the reference counter of the corresponding window. */
+      new_window = TRACE_COUNT_TO_MAPPING_NUM (my_trace_count);
+      new_ref_count = catomic_exchange_and_add (&__malloc_trace_buffer[new_window].ref_count, 1);
+
+      /* W6. If the incremented reference counter is 1, perform algorithm F.  */
+      if (new_ref_count == 0)
+	{
+	  /* START F: Map window from file.  */
+
+	  /* Note: There are security issues wrt opening a file by
+	     name many times.  We know this, and the risk is low (if
+	     you have root access, there are better ways to wreak
+	     havoc).  We choose this design so that there isn't an
+	     open file handle which may interefere with, or be
+	     corrupted by, the running application.  */
+
+	  /* F1. Open the trace file.  */
+	  int trace_fd = open (__malloc_trace_filename, O_RDWR|O_CREAT, 0666);
+	  if (trace_fd < 0)
+	    {
+	      /* FIXME: Better handling of errors?  */
+	      _m_printf("Can't open trace_buffer file %s\n", __malloc_trace_filename);
+	      __malloc_trace_enabled = 0;
+	      return;
+	    }
+
+	  /* F2. Extend the file length so that it covers the end of the current
+	     window (using ftruncate, needed to avoid SIGBUS).  */
+	  ftruncate (trace_fd, (new_window + 1) * TRACE_MAPPING_SIZE);
+
+	  /* F3. Map the window from the file offset corresponding to
+	     the current window.  */
+	  void *ptr =
+	    mmap (NULL, TRACE_MAPPING_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED,
+		  trace_fd, new_window * TRACE_MAPPING_SIZE);
+	  if (ptr == NULL)
+	    {
+	      /* FIXME: Better handling of errors?  */
+	      _m_printf("Can't map trace_buffer file %s\n", __malloc_trace_filename);
+	      __malloc_trace_enabled = 0;
+	      return;
+	    }
+
+	  /* F4. Update the mapping pointer in the active window array.  */
+	  __malloc_trace_buffer[new_window].window = ptr;
+
+	  /* F5. Close the file.  */
+	  close (trace_fd);
+
+	  /* F6. Continue with step W7.  */
+	  /* END F */
+	}
+
+      /* W7. Assign the window number to the thread-local window number,
+	 switching the thread window.  */
+      __malloc_trace_last_num = new_window;
+
+      /* W8. Release the global window lock.  */
+      (void) mutex_unlock (&__malloc_trace_mutex);
+
+      /* W9. Continue at T1.  */
+      goto alg_t1;
+
+      /* END W */
+    }
+
+  /* T3. CAS-acqrel the incremented global trace offset.  If CAS
+     fails, go back to T1.  */
+  old_trace_count = catomic_exchange_and_add (&__malloc_trace_count, 1);
+  /* See if someone else incremented it while we weren't looking.  */
+  if (old_trace_count != my_trace_count)
+    goto alg_t1;
+
+  /* T4. Write the trace data.  */
+  /* At this point, __malloc_trace_buffer[my_num] is valid because we
+     DIDN'T go through algorithm W, and it's reference counted for us,
+     and my_trace_count points to our record.  */
+  trace_ptr = __malloc_trace_buffer[my_num].window + TRACE_COUNT_TO_MAPPING_IDX (my_trace_count);
 
   trace_ptr->thread = __gettid ();
   trace_ptr->type = type;
@@ -1143,28 +1282,80 @@ __mtb_trace_entry (uint32_t type, size_t size, void *ptr1)
   trace_ptr->ptr2 = 0;
 }
 
-int
-__malloc_set_trace_buffer (void *bufptr, size_t bufsize)
+/* Initialize the trace buffer and backing file.  The file is
+   overwritten if it already exists.  */
+void
+__malloc_trace_init (char *filename)
 {
-  __malloc_trace_buffer = 0;
-  __malloc_trace_buffer_size = bufsize / sizeof(struct __malloc_trace_buffer_s);
-  __malloc_trace_buffer_head = 0;
-  __malloc_trace_buffer = (__malloc_trace_buffer_ptr) bufptr;
-  return sizeof(struct __malloc_trace_buffer_s);
+  int pagesize = sysconf(_SC_PAGE_SIZE);
+  int main_length = TRACE_N_MAPPINGS * sizeof (__malloc_trace_buffer[0]);
+  int total_length = (main_length + strlen(filename) + 1 + pagesize-1) & (~(pagesize-1));
+  char *mapping;
+
+  mapping = mmap (NULL, total_length, PROT_READ | PROT_WRITE,
+		  MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  if (mapping == NULL)
+    return;
+
+  strcpy (mapping + main_length, filename);
+  __malloc_trace_filename = mapping + main_length;
+
+  __malloc_trace_buffer = (__malloc_trace_map_entry *) mapping;
+
+  mutex_init (&__malloc_trace_mutex);
+  __malloc_trace_count = 0;
+
+  __mtb_trace_entry (__MTB_TYPE_MAGIC, sizeof(void *), (void *)0x1234);
+
+  atomic_store_release (&__malloc_trace_enabled, 1);
 }
 
-void *
-__malloc_get_trace_buffer (size_t *bufcount, size_t *bufhead)
+/* All remaining functions return current count of trace records.  */
+
+/* Pause - but don't stop - tracing.  */
+size_t __malloc_trace_pause (void)
 {
-  if (bufcount)
-    *bufcount = __malloc_trace_buffer_size;
-  if (bufhead)
-    *bufhead = __malloc_trace_buffer_head;
-  return __malloc_trace_buffer;
+  atomic_store_release (&__malloc_trace_enabled, 0);
+  return atomic_load_relaxed (&__malloc_trace_count);
 }
+
+/* Resume tracing where it left off when paused.  */
+size_t __malloc_trace_unpause (void)
+{
+  if (__malloc_trace_buffer != NULL)
+    atomic_store_release (&__malloc_trace_enabled, 1);
+  return atomic_load_relaxed (&__malloc_trace_count);
+}
+
+/* Stop tracing and clean up all the trace buffer mappings.  */
+size_t __malloc_trace_stop (void)
+{
+  atomic_store_release (&__malloc_trace_enabled, 0);
+  /* FIXME: we can't actually release everything until all threads
+     have finished accessing the buffer, but we have no way of doing
+     that...  */
+
+  /* For convenience, reduce the file size to only what's needed, else
+     the minimum file size we'll see if 64 Mb.  */
+  int trace_fd = open (__malloc_trace_filename, O_RDWR|O_CREAT, 0666);
+  if (trace_fd >= 0)
+    {
+      ftruncate (trace_fd, __malloc_trace_count * sizeof (struct __malloc_trace_buffer_s));
+      close (trace_fd);
+    }
+
+  return atomic_load_relaxed (&__malloc_trace_count);
+}
+
+/* Sync all buffer data to file (typically a no-op on Linux).  */
+size_t __malloc_trace_sync (void)
+{
+  return atomic_load_relaxed (&__malloc_trace_count);
+}
+
 
 #define __MTB_TRACE_ENTRY(type,size,ptr1)		   \
-  if (__builtin_expect (__malloc_trace_buffer != NULL, 0)) \
+  if (__builtin_expect (__malloc_trace_enabled, 0)) \
     __mtb_trace_entry (__MTB_TYPE_##type,size,ptr1);			   \
   else							   \
     trace_ptr = 0;
@@ -1178,6 +1369,12 @@ __malloc_get_trace_buffer (size_t *bufcount, size_t *bufhead)
     trace_ptr->var = value;
 
 #else
+void __malloc_trace_init (char *filename) {}
+size_t __malloc_trace_pause (void) { return 0; }
+size_t __malloc_trace_unpause (void) { return 0; }
+size_t __malloc_trace_stop (void) { return 0; }
+size_t __malloc_trace_sync (void) { return 0; }
+
 #define __MTB_TRACE_ENTRY(type,size,ptr1)
 #define __MTB_TRACE_PATH(mpath)
 #define __MTB_TRACE_SET(var,value)
@@ -3155,7 +3352,7 @@ __libc_malloc (size_t bytes)
 	tc_bytes = 2 * SIZE_SZ;
       tc_ibytes = tc_bytes + 2*SIZE_SZ;
 
-      total_bytes = tc_bytes + tc_ibytes * TCACHE_FILL_COUNT
+      total_bytes = tc_bytes + tc_ibytes * TCACHE_FILL_COUNT;
 
       __MTB_TRACE_PATH (thread_cache);
       __MTB_TRACE_PATH (cpu_cache);
@@ -3320,7 +3517,11 @@ __libc_realloc (void *oldmem, size_t bytes)
 
   /* realloc of null is supposed to be same as malloc */
   if (oldmem == 0)
-    return __libc_malloc (bytes);
+    {
+      newp = __libc_malloc (bytes);
+      __MTB_TRACE_SET (ptr2, newp);
+      return newp;
+    }
 
   /* chunk corresponding to oldmem */
   const mchunkptr oldp = mem2chunk (oldmem);
@@ -3374,11 +3575,17 @@ __libc_realloc (void *oldmem, size_t bytes)
 #if HAVE_MREMAP
       newp = mremap_chunk (oldp, nb);
       if (newp)
-        return chunk2mem (newp);
+	{
+	  __MTB_TRACE_SET (ptr2, chunk2mem (newp));
+	  return chunk2mem (newp);
+	}
 #endif
       /* Note the extra SIZE_SZ overhead. */
       if (oldsize - SIZE_SZ >= nb)
-        return oldmem;                         /* do nothing */
+	{
+	  __MTB_TRACE_SET (ptr2, oldmem);
+	  return oldmem;                         /* do nothing */
+	}
 
       __MTB_TRACE_PATH (m_f_realloc);
 
@@ -3389,6 +3596,7 @@ __libc_realloc (void *oldmem, size_t bytes)
 
       memcpy (newmem, oldmem, oldsize - 2 * SIZE_SZ);
       munmap_chunk (oldp);
+      __MTB_TRACE_SET (ptr2, newmem);
       return newmem;
     }
 
@@ -3838,7 +4046,7 @@ _int_malloc (mstate av, size_t bytes)
 	     stash them in the tcache.  */
 	  if (nb-SIZE_SZ < MAX_TCACHE_SIZE)
 	    {
-	      int tc_idx = size2tidx (bytes);
+	      int tc_idx = size2tidx (nb-SIZE_SZ);
 	      mchunkptr tc_victim;
 	      int found = 0;
 
@@ -4478,7 +4686,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
   {
     int tc_idx = size2tidx (size - SIZE_SZ);
 
-    if (size < MAX_TCACHE_SIZE
+    if (size - SIZE_SZ < MAX_TCACHE_SIZE
 	&& tcache.counts[tc_idx] < TCACHE_FILL_COUNT
 	&& tcache.initted == 1)
       {
@@ -5834,75 +6042,6 @@ __malloc_info (int options, FILE *fp)
   return 0;
 }
 weak_alias (__malloc_info, malloc_info)
-
-void
-__malloc_scan_chunks (void (*cb)(void *,size_t,int))
-{
-#if USE_TCACHE
-  TCache *tc = tcache_list;
-  while (tc)
-    {
-      cb(tc, 0, MSCAN_TCACHE);
-      for (size_t i = 0; i < TCACHE_IDX; ++i)
-	{
-	  TCacheEntry *te = tc->entries[i];
-	  for (int j = 0; j < tc->counts[i]; j++)
-	    {
-	      cb(mem2chunk(te), chunksize(mem2chunk(te)), MSCAN_TCACHE);
-	      te = te->next;
-	    }
-	}
-      tc = tc->next;
-    }
-#endif
-
-  mstate ar_ptr = &main_arena;
-  do
-    {
-      cb(ar_ptr, 0, MSCAN_ARENA);
-
-      if (ar_ptr != &main_arena)
-	{
-	  heap_info *heap = heap_for_ptr (top (ar_ptr));
-	  while (heap)
-	    {
-	      cb(heap, heap->size, MSCAN_HEAP);
-
-	      heap = heap->prev;
-	    }
-	};
-
-      for (size_t i = 0; i < NFASTBINS; ++i)
-	{
-	  mchunkptr p = fastbin (ar_ptr, i);
-	  while (p != NULL)
-	    {
-	      cb(p, chunksize(p), MSCAN_FASTBIN_FREE);
-	      p = p->fd;
-	    }
-	}
-
-      mbinptr bin;
-      struct malloc_chunk *r;
-      for (size_t i = 1; i < NBINS; ++i)
-	{
-	  bin = bin_at (ar_ptr, i);
-	  r = bin->fd;
-	  if (r != NULL)
-	    while (r != bin)
-	      {
-		cb(r, chunksize(r), (i == 1) ? MSCAN_UNSORTED : MSCAN_CHUNK_FREE);
-		r = r->fd;
-	      }
-	}
-
-      cb(ar_ptr->top, chunksize(ar_ptr->top), MSCAN_TOP);
-
-      ar_ptr = ar_ptr->next;
-    }
-  while (ar_ptr != &main_arena);
-}
-
 
 strong_alias (__libc_calloc, __calloc) weak_alias (__libc_calloc, calloc)
 strong_alias (__libc_free, __cfree) weak_alias (__libc_free, cfree)

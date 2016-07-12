@@ -50,12 +50,21 @@ libmemusage-inhibit-o = $(filter-out .os,$(object-suffixes))
 libmtracectl-routines = mtrace-ctl
 libmtracectl-inhibit-o = $(filter-out .os,$(object-suffixes))
 
-others: $(objpfx)trace_run
-install-bin = trace_run
-install-bin-script = trace2dat
+others: $(objpfx)trace_run $(objpfx)trace2wl
+install-bin = trace_run trace2wl
 
 $(objpfx)trace_run: $(objpfx)trace_run.o
 	$(LINK.o) -o $@ $(objpfx)trace_run.o -lpthread
+
+ifeq (${CXX},)
+CXX = g++
+endif
+
+$(objpfx)trace2wl: $(objpfx)trace2wl.o
+	$(CXX) -g -std=gnu++11 -o $@ $(objpfx)trace2wl.o
+
+$(objpfx)trace2wl.o: trace2wl.cc
+	$(CXX) $(CXXFLAGS) -g -o $@ -c $< $(compile-mkdep-flags) -std=gnu++11
 
 $(objpfx)tst-malloc-backtrace: $(shared-thread-library)
 $(objpfx)tst-malloc-thread-exit: $(shared-thread-library)
@@ -153,9 +162,6 @@ tst-malloc-usable-ENV = MALLOC_CHECK_=3
 #CPPFLAGS-malloc.o += -DMALLOC_DEBUG=1
 
 sLIBdir := $(shell echo $(slibdir) | sed 's,lib\(\|64\)$$,\\\\$$LIB,')
-
-$(objpfx)trace2dat: trace2dat
-	cp $^ $@ && chmod +x $@
 
 $(objpfx)mtrace: mtrace.pl
 	rm -f $@.new
