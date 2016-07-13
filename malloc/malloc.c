@@ -3294,8 +3294,9 @@ __libc_malloc (size_t bytes)
   void *victim;
 
 #if USE_TCACHE
-  bytes = request2size(bytes);
-  int tc_idx = size2tidx (bytes);
+  /* int_free also calls request2size, be careful to not pad twice.  */
+  size_t tbytes = request2size(bytes);
+  int tc_idx = size2tidx (tbytes);
 
   if (tcache.initted == 0)
     {
@@ -3312,7 +3313,7 @@ __libc_malloc (size_t bytes)
   __MTB_TRACE_ENTRY (MALLOC,bytes,NULL);
 
 #if USE_TCACHE
-  if (bytes < MAX_TCACHE_SIZE
+  if (tbytes < MAX_TCACHE_SIZE
       && tcache.entries[tc_idx] != NULL
       && tcache.initted == 1)
     {
@@ -3337,7 +3338,7 @@ __libc_malloc (size_t bytes)
   /* This is fast but causes internal fragmentation, as it always
      pulls large chunks but puts small chunks, leading to a large
      backlog of small chunks.  */
-  if (bytes < MAX_TCACHE_SIZE
+  if (tbytes < MAX_TCACHE_SIZE
       && tcache.initted == 1)
     {
       void *ent;
@@ -3346,7 +3347,7 @@ __libc_malloc (size_t bytes)
       size_t total_bytes;
       int i;
 
-      assert (tc_bytes >= bytes);
+      assert (tc_bytes >= tbytes);
 
       if (tc_bytes < 2 * SIZE_SZ)
 	tc_bytes = 2 * SIZE_SZ;
