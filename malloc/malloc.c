@@ -1163,7 +1163,7 @@ __mtb_trace_entry (uint32_t type, size_t size, void *ptr1)
   my_num = TRACE_COUNT_TO_MAPPING_NUM (my_trace_count);
   if (my_num != __malloc_trace_last_num)
     {
-      int new_window;
+      long new_window;
       int new_ref_count;
 
       /* START W: Switch window.  */
