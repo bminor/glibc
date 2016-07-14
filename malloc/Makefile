@@ -50,11 +50,14 @@ libmemusage-inhibit-o = $(filter-out .os,$(object-suffixes))
 libmtracectl-routines = mtrace-ctl
 libmtracectl-inhibit-o = $(filter-out .os,$(object-suffixes))
 
-others: $(objpfx)trace_run $(objpfx)trace2wl
-install-bin = trace_run trace2wl
+others: $(objpfx)trace_run $(objpfx)trace2wl $(objpfx)trace_dump
+install-bin = trace_run trace2wl trace_dump
 
 $(objpfx)trace_run: $(objpfx)trace_run.o
 	$(LINK.o) -o $@ $(objpfx)trace_run.o -lpthread
+
+$(objpfx)trace_dump: $(objpfx)trace_dump.o
+	$(LINK.o) -o $@ $(objpfx)trace_dump.o
 
 ifeq (${CXX},)
 CXX = g++
