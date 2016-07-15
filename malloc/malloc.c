@@ -2645,6 +2645,7 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
       /* Don't try if size wraps around 0 */
       if ((unsigned long) (size) > (unsigned long) (nb))
         {
+	  __MTB_TRACE_PATH(mmap);
           mm = (char *) (MMAP (0, size, PROT_READ | PROT_WRITE, 0));
 
           if (mm != MAP_FAILED)
@@ -3187,6 +3188,7 @@ munmap_chunk (mchunkptr p)
   /* If munmap failed the process virtual memory address space is in a
      bad shape.  Just leave the block hanging around, the process will
      terminate shortly anyway since not much can be done.  */
+  __MTB_TRACE_PATH(munmap);
   __munmap ((char *) block, total_size);
 }
 
@@ -3484,7 +3486,6 @@ __libc_free (void *mem)
           LIBC_PROBE (memory_mallopt_free_dyn_thresholds, 2,
                       mp_.mmap_threshold, mp_.trim_threshold);
         }
-      __MTB_TRACE_PATH(munmap);
       munmap_chunk (p);
       return;
     }
@@ -3778,10 +3779,7 @@ __libc_calloc (size_t n, size_t elem_size)
       __MTB_TRACE_PATH (hook);
       mem = (*hook)(sz, RETURN_ADDRESS (0));
       if (mem == 0)
-	{
-	  __MTB_TRACE_PATH (m_f_realloc);
         return 0;
-	}
 
       __MTB_TRACE_SET (ptr2, mem);
       return memset (mem, 0, sz);
