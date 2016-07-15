@@ -45,13 +45,15 @@ use vars qw (%auto_tests);
 
 # all_floats is sorted and contains all recognised float types
 @all_floats = ('double', 'float', 'idouble',
-	       'ifloat', 'ildouble', 'ldouble');
+	       'ifloat', 'ildouble', 'ldouble',
+	       'ifloat128', 'float128');
 
 # all_floats_pfx maps C types to their C like prefix for macros.
 %all_floats_pfx =
   ( "double" => "DBL",
     "ldouble" => "LDBL",
     "float" => "FLT",
+    "float128" => "FLT128",
   );
 
 %beautify =

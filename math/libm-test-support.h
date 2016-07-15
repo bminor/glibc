@@ -138,12 +138,20 @@ extern const char doc[];
 #define TEST_COND_before_rounding	(!TININESS_AFTER_ROUNDING)
 #define TEST_COND_after_rounding	TININESS_AFTER_ROUNDING
 
+#ifndef TEST_FLOATN
+# define TEST_FLOATN 0
+#endif
+
+#ifndef CFLOAT
+# define CFLOAT __complex__ FLOAT
+#endif
+
 int enable_test (int);
 void init_max_error (const char *, int);
 void print_max_error (const char *);
 void print_complex_max_error (const char *);
 void check_float (const char *, FLOAT, FLOAT, int);
-void check_complex (const char *, __complex__ FLOAT, __complex__ FLOAT, int);
+void check_complex (const char *, CFLOAT, CFLOAT, int);
 void check_int (const char *, int, int, int);
 void check_long (const char *, long int, long int, int);
 void check_bool (const char *, int, int, int);
