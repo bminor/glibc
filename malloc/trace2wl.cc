@@ -276,14 +276,17 @@ main(int argc, char **argv)
 	case __MTB_TYPE_MALLOC:
 	case __MTB_TYPE_CALLOC:
 	  acq_ptr (thread, pa2);
-	  if (pa2->valid)
+	  if (pa2 && pa2->valid)
 	    printf ("%d: pointer %p malloc'd again?  %d:%s\n", i, pa2->ptr, pa2->reason_idx, pa2->reason);
 	  thread->add (r->type == __MTB_TYPE_MALLOC ? C_MALLOC : C_CALLOC);
-	  thread->add_int (pa2->idx);
+	  thread->add_int (pa2 ? pa2->idx : 0);
 	  thread->add_int (r->size);
-	  pa2->valid = 1;
-	  pa2->reason = "malloc";
-	  pa2->reason_idx = i;
+	  if (pa2)
+	    {
+	      pa2->valid = 1;
+	      pa2->reason = "malloc";
+	      pa2->reason_idx = i;
+	    }
 	  break;
 
 	case __MTB_TYPE_FREE:

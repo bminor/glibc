@@ -242,6 +242,9 @@ thread_common (void *my_data_v)
 	  p2 = get_int (&cp);
 	  sz = get_int (&cp);
 	  dprintf("op %d:%ld %ld = MALLOC %ld\n", (int)me, cp-data, p2, sz);
+	  /* we can't force malloc to return NULL (fail), so just skip it.  */
+	  if (p2 == 0)
+	    break;
 	  if (p2 > n_ptrs)
 	    myabort();
 	  stime = rdtsc_s();
@@ -271,6 +274,9 @@ thread_common (void *my_data_v)
 	  p2 = get_int (&cp);
 	  sz = get_int (&cp);
 	  dprintf("op %d:%ld %ld = CALLOC %ld\n", (int)me, cp-data, p2, sz);
+	  /* we can't force calloc to return NULL (fail), so just skip it.  */
+	  if (p2 == 0)
+	    break;
 	  if (p2 > n_ptrs)
 	    myabort();
 	  if (ptrs[p2])
@@ -303,6 +309,16 @@ thread_common (void *my_data_v)
 	  if (ptrs[p1])
 	    atomic_rss (-sizes[p1]);
 	  free_wipe(p1);
+	  /* we can't force realloc to return NULL (fail), so just skip it.  */
+	  if (p2 == 0)
+	    {
+	      if (p1)
+		{
+		  free ((void *)ptrs[p1]);
+		  ptrs[p1] = 0;
+		}
+	      break;
+	    }
 	  stime = rdtsc_s();
 	  Q1;
 #ifdef MDEBUG
