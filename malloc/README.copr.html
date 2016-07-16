@@ -155,6 +155,25 @@ see <a href="http://developers.redhat.com/blog/2016/03/11/practical-micro-benchm
 Micro-Benchmarking with ltrace and sched</a> to get more stable
 numbers.
 
+<h2>Tunables</h2>
+
+<pre>
+MALLOC_TCACHE_COUNT=<i>count</i>
+MALLOC_TCACHE_MAX=<i>bytes</i>
+</pre>
+
+<p><tt>count</tt> can be anything from 0 to whatever.</p>
+
+<p><tt>bytes</tt> can be anything from 0 to 63*2*sizeof(void *)-1 (503
+for 32-bit, 1007 for 64-bit).</p>
+
+<p><tt>mallopt</tt> parameters are (private):</p>
+
+<pre>
+#define M_TCACHE_COUNT  -9
+#define M_TCACHE_MAX  -10
+</pre>
+
 <h2>Uninstalling</h2>
 
 To uninstall the custom build and revert to an official release, you

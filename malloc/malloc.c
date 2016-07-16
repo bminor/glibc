@@ -278,6 +278,24 @@
 #define MALLOC_DEBUG 0
 #endif
 
+#define USE_TCACHE 1
+
+#if USE_TCACHE
+/* we want 64 entries */
+#define MAX_TCACHE_SIZE		(MALLOC_ALIGNMENT * 63)
+#define TCACHE_IDX		((MAX_TCACHE_SIZE / MALLOC_ALIGNMENT) + 1)
+#define size2tidx(bytes)	(((bytes) + MALLOC_ALIGNMENT - 1) / MALLOC_ALIGNMENT)
+
+/* Rounds up, so...
+   idx 0   bytes 0
+   idx 1   bytes 1..8
+   idx 2   bytes 9..16
+   etc
+*/
+
+#define TCACHE_FILL_COUNT 7
+#endif
+
 #ifdef NDEBUG
 # define assert(expr) ((void) 0)
 #else
@@ -2051,6 +2069,13 @@ struct malloc_par
 
   /* First address handed out by MORECORE/sbrk.  */
   char *sbrk_base;
+
+#if USE_TCACHE
+  /* Maximum number of buckets to use.  */
+  int tcache_max;
+  /* Maximum number of chunks in each bucket.  */
+  int tcache_count;
+#endif
 };
 
 /* There are several instances of this struct ("arenas") in this
@@ -2089,12 +2114,19 @@ static struct malloc_par mp_ =
   .trim_threshold = DEFAULT_TRIM_THRESHOLD,
 #define NARENAS_FROM_NCORES(n) ((n) * (sizeof (long) == 4 ? 2 : 8))
   .arena_test = NARENAS_FROM_NCORES (1)
+#if USE_TCACHE
+  ,
+  .tcache_count = TCACHE_FILL_COUNT,
+  .tcache_max = TCACHE_IDX-1
+#endif
 };
 
 
 /*  Non public mallopt parameters.  */
 #define M_ARENA_TEST -7
 #define M_ARENA_MAX  -8
+#define M_TCACHE_COUNT  -9
+#define M_TCACHE_MAX  -10
 
 
 /* Maximum size of memory handled in fastbins.  */
@@ -3236,22 +3268,7 @@ mremap_chunk (mchunkptr p, size_t new_size)
 
 /*------------------------ Public wrappers. --------------------------------*/
 
-#define USE_TCACHE 1
-
 #if USE_TCACHE
-/* we want 64 entries */
-#define MAX_TCACHE_SIZE		(MALLOC_ALIGNMENT * 63)
-#define TCACHE_IDX		((MAX_TCACHE_SIZE / MALLOC_ALIGNMENT) + 1)
-#define size2tidx(bytes)	(((bytes) + MALLOC_ALIGNMENT - 1) / MALLOC_ALIGNMENT)
-
-/* Rounds up, so...
-   idx 0   bytes 0
-   idx 1   bytes 1..8
-   idx 2   bytes 9..16
-   etc
-*/
-
-#define TCACHE_FILL_COUNT 7
 
 typedef struct TCacheEntry {
   struct TCacheEntry *next;
@@ -3315,7 +3332,7 @@ __libc_malloc (size_t bytes)
   __MTB_TRACE_ENTRY (MALLOC,bytes,NULL);
 
 #if USE_TCACHE
-  if (tbytes < MAX_TCACHE_SIZE
+  if (tc_idx < mp_.tcache_max
       && tcache.entries[tc_idx] != NULL
       && tcache.initted == 1)
     {
@@ -3340,7 +3357,7 @@ __libc_malloc (size_t bytes)
   /* This is fast but causes internal fragmentation, as it always
      pulls large chunks but puts small chunks, leading to a large
      backlog of small chunks.  */
-  if (tbytes < MAX_TCACHE_SIZE
+  if (tc_idx < mp_.tcache_max
       && tcache.initted == 1)
     {
       void *ent;
@@ -3355,7 +3372,7 @@ __libc_malloc (size_t bytes)
 	tc_bytes = 2 * SIZE_SZ;
       tc_ibytes = tc_bytes + 2*SIZE_SZ;
 
-      total_bytes = tc_bytes + tc_ibytes * TCACHE_FILL_COUNT;
+      total_bytes = tc_bytes + tc_ibytes * mp_.tcache_count;
 
       __MTB_TRACE_PATH (thread_cache);
       __MTB_TRACE_PATH (cpu_cache);
@@ -3397,7 +3414,7 @@ __libc_malloc (size_t bytes)
 	  m->size = tc_ibytes | flags;
 	  flags |= PREV_INUSE;
 
-	  for (i = 0; i < TCACHE_FILL_COUNT; i++)
+	  for (i = 0; i < mp_.tcache_count; i++)
 	    {
 	      m =     (mchunkptr) (ent + i * tc_ibytes + tc_bytes);
 	      e = (TCacheEntry *) (ent + i * tc_ibytes + tc_ibytes);
@@ -3914,7 +3931,7 @@ _tcache_fill (mstate av, size_t original_nb, mchunkptr chunk)
   int tc_idx = size2tidx (original_nb - SIZE_SZ);
   int bits = chunk->size & SIZE_BITS;
 
-  if (original_nb-SIZE_SZ > MAX_TCACHE_SIZE)
+  if (tc_idx > mp_.tcache_max)
     return chunk;
 
   //_m_printf("_tcache_fill %p %x %d %d %p\n", chunk, (unsigned int)original_nb, n, MALLOC_ALIGNMENT,
@@ -3949,11 +3966,11 @@ _tcache_fill (mstate av, size_t original_nb, mchunkptr chunk)
 static int
 _tcache_maxsize (INTERNAL_SIZE_T desired_size, INTERNAL_SIZE_T actual_size)
 {
-  if (desired_size-SIZE_SZ > MAX_TCACHE_SIZE)
+  if (size2tidx(desired_size-SIZE_SZ) > mp_.tcache_max)
     return desired_size;
   actual_size -= actual_size % desired_size;
-  if (actual_size > desired_size * TCACHE_FILL_COUNT)
-    actual_size = desired_size * TCACHE_FILL_COUNT;
+  if (actual_size > desired_size * mp_.tcache_count)
+    actual_size = desired_size * mp_.tcache_count;
   return actual_size;
 }
 #endif
@@ -4043,14 +4060,14 @@ _int_malloc (mstate av, size_t bytes)
 #if USE_TCACHE
 	  /* While we're here, if we see other chunk of the same size,
 	     stash them in the tcache.  */
-	  if (nb-SIZE_SZ < MAX_TCACHE_SIZE)
+	  int tc_idx = size2tidx (nb-SIZE_SZ);
+	  if (tc_idx < mp_.tcache_max)
 	    {
-	      int tc_idx = size2tidx (nb-SIZE_SZ);
 	      mchunkptr tc_victim;
 	      int found = 0;
 
 	      /* While bin not empty and tcache not full, copy chunks over.  */
-	      while (tcache.counts[tc_idx] < TCACHE_FILL_COUNT
+	      while (tcache.counts[tc_idx] < mp_.tcache_count
 		     && (pp = *fb) != NULL)
 		{
 		  do
@@ -4113,14 +4130,14 @@ _int_malloc (mstate av, size_t bytes)
 #if USE_TCACHE
 	  /* While we're here, if we see other chunk of the same size,
 	     stash them in the tcache.  */
-	  if (nb-SIZE_SZ < MAX_TCACHE_SIZE)
+	  int tc_idx = size2tidx (nb-SIZE_SZ);
+	  if (tc_idx < mp_.tcache_max)
 	    {
-	      int tc_idx = size2tidx (nb-SIZE_SZ);
 	      mchunkptr tc_victim;
 	      int found = 0;
 
 	      /* While bin not empty and tcache not full, copy chunks over.  */
-	      while (tcache.counts[tc_idx] < TCACHE_FILL_COUNT
+	      while (tcache.counts[tc_idx] < mp_.tcache_count
 		     && (tc_victim = last(bin)) != bin)
 		{
 		  if (tc_victim != 0)
@@ -4186,11 +4203,11 @@ _int_malloc (mstate av, size_t bytes)
 #if USE_TCACHE
   INTERNAL_SIZE_T tcache_nb = 0;
   //INTERNAL_SIZE_T tcache_max = 0;
-  if (nb-SIZE_SZ <= MAX_TCACHE_SIZE)
+  if (size2tidx (nb-SIZE_SZ) <= mp_.tcache_max)
     {
       //int tc_idx = size2tidx (bytes);
       tcache_nb = nb;
-      //tcache_max = nb * (TCACHE_FILL_COUNT - tcache.counts[tc_idx]);
+      //tcache_max = nb * (mp_.tcache_count - tcache.counts[tc_idx]);
     }
   int tc_idx = size2tidx (nb-SIZE_SZ);
   int return_cached = 0;
@@ -4261,7 +4278,7 @@ _int_malloc (mstate av, size_t bytes)
 #if 0 && USE_TCACHE
 	      /* This forces us to split up bigger chunks later */
 	      && tcache_nb
-		  && tcache.counts[tc_idx] < TCACHE_FILL_COUNT
+		  && tcache.counts[tc_idx] < mp_.tcache_count
 #endif
 	      )
             {
@@ -4273,7 +4290,7 @@ _int_malloc (mstate av, size_t bytes)
 	      /* Fill cache first, return to user only if cache fills.
 		 We may return one of these chunks later.  */
 	      if (tcache_nb
-		  && tcache.counts[tc_idx] < TCACHE_FILL_COUNT)
+		  && tcache.counts[tc_idx] < mp_.tcache_count)
 		{
 		  TCacheEntry *e = (TCacheEntry *) chunk2mem(victim);
 		  e->next = tcache.entries[tc_idx];
@@ -4685,8 +4702,8 @@ _int_free (mstate av, mchunkptr p, int have_lock)
   {
     int tc_idx = size2tidx (size - SIZE_SZ);
 
-    if (size - SIZE_SZ < MAX_TCACHE_SIZE
-	&& tcache.counts[tc_idx] < TCACHE_FILL_COUNT
+    if (tc_idx < mp_.tcache_max
+	&& tcache.counts[tc_idx] < mp_.tcache_count
 	&& tcache.initted == 1)
       {
 	TCacheEntry *e = (TCacheEntry *) chunk2mem (p);
@@ -5660,6 +5677,26 @@ __libc_mallopt (int param_number, int value)
           mp_.arena_max = value;
         }
       break;
+#if USE_TCACHE
+    case M_TCACHE_COUNT:
+      if (value >= 0)
+        {
+          LIBC_PROBE (memory_mallopt_tcache_count, 2, value, mp_.tcache_count);
+          mp_.tcache_count = value;
+        }
+      break;
+    case M_TCACHE_MAX:
+      if (value >= 0)
+        {
+          value = size2tidx (value);
+	  if (value < TCACHE_IDX)
+	    {
+              LIBC_PROBE (memory_mallopt_tcache_max, 2, value, mp_.tcache_max);
+	      mp_.tcache_max = value;
+            }
+        }
+      break;
+#endif
     }
   (void) mutex_unlock (&av->mutex);
   return res;
