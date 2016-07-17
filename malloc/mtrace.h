@@ -36,9 +36,23 @@ struct __malloc_trace_buffer_s {
   uint32_t path_hook:1; /* A hook was used to complete the request */
   uint32_t path:16; /* remaining bits */
 
+  /* FREE - pointer to allocation to free.
+     REALLOC - pointer to original allocation.
+     POSIX_MEMALIGN - error code */
   void *ptr1;
+  /* pointer to new allocation. */
   void *ptr2;
+  /* requested size. */
   size_t size;
+  /* FREE - internal size of deallocation.
+     REALLOC - internal size of original allocation.
+     MEMALIGN - alignment.
+     POSIX_MEMALIGN - alignment.  */
+  size_t size2;
+  /* internal size of new allocation.  */
+  size_t size3;
+  /* Pad out to 64-bytes for future uses and mmap'd window alignment.  */
+  size_t pad[2];
 };
 
 typedef struct __malloc_trace_buffer_s *__malloc_trace_buffer_ptr;
@@ -62,33 +76,35 @@ size_t __malloc_trace_stop (void);
 size_t __malloc_trace_sync (void);
 
 
-#define __MTB_TYPE_UNUSED	0
+#define __MTB_TYPE_UNUSED		0
 
 /* ptr1 is 0x1234, size is sizeof(void *) - there is one of these at
    the beginning of the trace.  */
-#define __MTB_TYPE_MAGIC	255
+#define __MTB_TYPE_MAGIC		255
 
 /* ptr2 = malloc (size) */
-#define __MTB_TYPE_MALLOC	1
+#define __MTB_TYPE_MALLOC		1
 
 /* ptr2 = calloc (size) */
-#define __MTB_TYPE_CALLOC	2
+#define __MTB_TYPE_CALLOC		2
 
 /* free (ptr1) */
-#define __MTB_TYPE_FREE		3
+#define __MTB_TYPE_FREE			3
 
 /* ptr2 = realloc (ptr1, size) */
-#define __MTB_TYPE_REALLOC	4
+#define __MTB_TYPE_REALLOC		4
 
-/* ptr2 = memalign (size, (int)ptr2) */
-#define __MTB_TYPE_MEMALIGN	5
+/* ptr2 = memalign (size2, size) */
+#define __MTB_TYPE_MEMALIGN		5
 
 /* ptr2 = valloc (size) */
-#define __MTB_TYPE_VALLOC	6
+#define __MTB_TYPE_VALLOC		6
 
 /* ptr2 = pvalloc (size) */
-#define __MTB_TYPE_PVALLOC	7
+#define __MTB_TYPE_PVALLOC		7
 
+/* ptr2 = posix_memalign (ptr1, size2, size)  */
+#define __MTB_TYPE_POSIX_MEMALIGN	8
 
 typedef enum {
   MSCAN_UNUSED,
@@ -117,3 +133,7 @@ void __malloc_scan_chunks (void (*callback)(void * /*ptr*/, size_t /*length*/, i
 #define C_ALLOC_SYNCS 9
 #define C_NTHREADS 10
 #define C_START_THREAD 11
+#define C_MEMALIGN 12
+#define C_VALLOC 13
+#define C_PVALLOC 14
+#define C_POSIX_MEMALIGN 15

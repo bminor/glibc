@@ -275,16 +275,27 @@ main(int argc, char **argv)
 
 	case __MTB_TYPE_MALLOC:
 	case __MTB_TYPE_CALLOC:
+	case __MTB_TYPE_VALLOC:
+	case __MTB_TYPE_PVALLOC:
 	  acq_ptr (thread, pa2);
 	  if (pa2 && pa2->valid)
-	    printf ("%d: pointer %p malloc'd again?  %d:%s\n", i, pa2->ptr, pa2->reason_idx, pa2->reason);
-	  thread->add (r->type == __MTB_TYPE_MALLOC ? C_MALLOC : C_CALLOC);
+	    printf ("%d: pointer %p alloc'd again?  %d:%s\n", i, pa2->ptr, pa2->reason_idx, pa2->reason);
+
+	  if (r->type == __MTB_TYPE_MALLOC)
+	    thread->add (C_MALLOC);
+	  if (r->type == __MTB_TYPE_CALLOC)
+	    thread->add (C_CALLOC);
+	  if (r->type == __MTB_TYPE_VALLOC)
+	    thread->add (C_VALLOC);
+	  if (r->type == __MTB_TYPE_PVALLOC)
+	    thread->add (C_PVALLOC);
+
 	  thread->add_int (pa2 ? pa2->idx : 0);
 	  thread->add_int (r->size);
 	  if (pa2)
 	    {
 	      pa2->valid = 1;
-	      pa2->reason = "malloc";
+	      pa2->reason = "alloc";
 	      pa2->reason_idx = i;
 	    }
 	  break;
@@ -334,6 +345,28 @@ main(int argc, char **argv)
 	    }
 
 	  break;
+
+	case __MTB_TYPE_MEMALIGN:
+	  acq_ptr (thread, pa2);
+	  if (pa2 && pa2->valid)
+	    printf ("%d: pointer %p memalign'd again?  %d:%s\n", i, pa2->ptr, pa2->reason_idx, pa2->reason);
+	  thread->add (C_MEMALIGN);
+	  thread->add_int (pa2 ? pa2->idx : 0);
+	  thread->add_int (r->size2);
+	  thread->add_int (r->size);
+	  if (pa2)
+	    {
+	      pa2->valid = 1;
+	      pa2->reason = "memalign";
+	      pa2->reason_idx = i;
+	    }
+	  break;
+
+	case __MTB_TYPE_POSIX_MEMALIGN:
+	  printf ("%d: Unsupported posix_memalign call.\n", i);
+	  exit (1);
+	  break;
+
 	}
     }
 

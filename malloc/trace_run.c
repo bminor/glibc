@@ -144,11 +144,11 @@ int threads_done = 0;
 //#define MDEBUG 1
 #define mprintf(...) (void)1
 
-#define myabort() my_abort_2(me, __LINE__)
+#define myabort() my_abort_2(thrc, __LINE__)
 void
-my_abort_2 (pthread_t me, int line)
+my_abort_2 (pthread_t thrc, int line)
 {
-  fprintf(stderr, "Abort thread %d at line %d\n", (int)me, line);
+  fprintf(stderr, "Abort thread %p at line %d\n", (void *)thrc, line);
   abort();
 }
 
@@ -199,8 +199,8 @@ static void free_wipe (size_t idx)
 static void *
 thread_common (void *my_data_v)
 {
-  pthread_t me = pthread_self ();
-  size_t p1, p2, sz;
+  pthread_t thrc = pthread_self ();
+  size_t p1, p2, sz, sz2;
   unsigned char *cp = my_data_v;
   ticks_t my_malloc_time = 0, my_malloc_count = 0;
   ticks_t my_calloc_time = 0, my_calloc_count = 0;
@@ -215,14 +215,14 @@ thread_common (void *my_data_v)
     {
       if (cp > data + n_data)
 	myabort();
-      dprintf("op %d:%ld is %d\n", (int)me, cp-data, *cp);
+      dprintf("op %p:%ld is %d\n", (void *)thrc, cp-data, *cp);
       switch (*cp++)
 	{
 	case C_NOP:
 	  break;
 
 	case C_DONE:
-	  dprintf("op %d:%ld DONE\n", (int)me, cp-data);
+	  dprintf("op %p:%ld DONE\n", (void *)thrc, cp-data);
 	  pthread_mutex_lock (&stat_mutex);
 	  malloc_time += my_malloc_time;
 	  calloc_time += my_calloc_time;
@@ -238,10 +238,46 @@ thread_common (void *my_data_v)
 	  pthread_mutex_unlock(&stop_mutex);
 	  return NULL;
 
+	case C_MEMALIGN:
+	  p2 = get_int (&cp);
+	  sz2 = get_int (&cp);
+	  sz = get_int (&cp);
+	  dprintf("op %p:%ld %ld = MEMALIGN %ld %ld\n", (void *)thrc, cp-data, p2, sz2, sz);
+	  /* we can't force memalign to return NULL (fail), so just skip it.  */
+	  if (p2 == 0)
+	    break;
+	  if (p2 > n_ptrs)
+	    myabort();
+	  stime = rdtsc_s();
+	  Q1;
+	  if (ptrs[p2])
+	    {
+	      free ((void *)ptrs[p2]);
+	      atomic_rss (-sizes[p2]);
+	    }
+	  ptrs[p2] = memalign (sz2, sz);
+	  /* Verify the alignment matches what is expected.  */
+	  if (((size_t)ptrs[p2] & (sz2 - 1)) != 0)
+	    myabort ();
+	  sizes[p2] = sz;
+	  mprintf("%p = memalign(%lx, %lx)\n", ptrs[p2], sz2, sz);
+	  Q2;
+	  etime = rdtsc_e();
+	  if (ptrs[p2] != NULL)
+	    atomic_rss (sz);
+	  if (etime < stime)
+	    {
+	      printf("s: %llx e:%llx  d:%llx\n", (long long)stime, (long long)etime, (long long)(etime-stime));
+	    }
+	  my_malloc_time += etime - stime;
+	  my_malloc_count ++;
+	  wmem(ptrs[p2], sz);
+	  break;
+
 	case C_MALLOC:
 	  p2 = get_int (&cp);
 	  sz = get_int (&cp);
-	  dprintf("op %d:%ld %ld = MALLOC %ld\n", (int)me, cp-data, p2, sz);
+	  dprintf("op %p:%ld %ld = MALLOC %ld\n", (void *)thrc, cp-data, p2, sz);
 	  /* we can't force malloc to return NULL (fail), so just skip it.  */
 	  if (p2 == 0)
 	    break;
@@ -273,7 +309,7 @@ thread_common (void *my_data_v)
 	case C_CALLOC:
 	  p2 = get_int (&cp);
 	  sz = get_int (&cp);
-	  dprintf("op %d:%ld %ld = CALLOC %ld\n", (int)me, cp-data, p2, sz);
+	  dprintf("op %p:%ld %ld = CALLOC %ld\n", (void *)thrc, cp-data, p2, sz);
 	  /* we can't force calloc to return NULL (fail), so just skip it.  */
 	  if (p2 == 0)
 	    break;
@@ -301,7 +337,7 @@ thread_common (void *my_data_v)
 	  p2 = get_int (&cp);
 	  p1 = get_int (&cp);
 	  sz = get_int (&cp);
-	  dprintf("op %d:%ld %ld = REALLOC %ld %ld\n", (int)me, cp-data, p2, p1, sz);
+	  dprintf("op %p:%ld %ld = REALLOC %ld %ld\n", (void *)thrc, cp-data, p2, p1, sz);
 	  if (p1 > n_ptrs)
 	    myabort();
 	  if (p2 > n_ptrs)
@@ -341,7 +377,7 @@ thread_common (void *my_data_v)
 	  p1 = get_int (&cp);
 	  if (p1 > n_ptrs)
 	    myabort();
-	  dprintf("op %d:%ld FREE %ld\n", (int)me, cp-data, p1);
+	  dprintf("op %p:%ld FREE %ld\n", (void *)thrc, cp-data, p1);
 	  free_wipe (p1);
 	  if (ptrs[p1])
 	    atomic_rss (-sizes[p1]);
@@ -357,7 +393,7 @@ thread_common (void *my_data_v)
 
 	case C_SYNC_W:
 	  p1 = get_int(&cp);
-	  dprintf("op %d:%ld SYNC_W %ld\n", (int)me, cp-data, p1);
+	  dprintf("op %p:%ld SYNC_W %ld\n", (void *)thrc, cp-data, p1);
 	  if (p1 > n_syncs)
 	    myabort();
 	  pthread_mutex_lock (&mutexes[p1]);
@@ -369,7 +405,7 @@ thread_common (void *my_data_v)
 
 	case C_SYNC_R:
 	  p1 = get_int(&cp);
-	  dprintf("op %d:%ld SYNC_R %ld\n", (int)me, cp-data, p1);
+	  dprintf("op %p:%ld SYNC_R %ld\n", (void *)thrc, cp-data, p1);
 	  if (p1 > n_syncs)
 	    myabort();
 	  pthread_mutex_lock (&mutexes[p1]);

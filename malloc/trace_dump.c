@@ -42,14 +42,15 @@ data_looks_like_raw_trace (unsigned char *data, long n_data)
 }
 
 const char * const typenames[] = {
-  "unused  ",
-  "malloc  ",
-  "calloc  ",
-  "free    ",
-  "realloc ",
+  "unused",
+  "malloc",
+  "calloc",
+  "free",
+  "realloc",
   "memalign",
-  "valloc  ",
-  "pvalloc  ",
+  "valloc",
+  "pvalloc",
+  "posix_memalign",
 };
 
 void
@@ -62,7 +63,8 @@ dump_raw_trace (unsigned char *data, long n_data)
 
   printf ("%ld out of %ld events captured (I think)\n", head, head);
 
-  printf ("threadid type     path     ptr1             size             ptr2\n");
+  printf ("%8s %8s %8s %16s %16s %16s %16s %16s\n",
+	  "threadid", "type", "path", "ptr1", "size", "ptr2", "size2", "size3");
 
   while (data <= edata - sizeof (struct __malloc_trace_buffer_s))
     {
@@ -73,9 +75,11 @@ dump_raw_trace (unsigned char *data, long n_data)
 	case __MTB_TYPE_UNUSED:
 	  break;
 	default:
-	  printf ("%08x %s %c%c%c%c%c%c%c%c %016llx %016llx %016llx\n",
+	  /* Consider 'memalign' to be the largest API word we want to align
+	     on so make the name 8 chars wide at a minimum.  */
+	  printf ("%08x %8s %c%c%c%c%c%c%c%c %016llx %016llx %016llx %016llx %016llx\n",
 		  t->thread,
-		  t->type == __MTB_TYPE_MAGIC ? "magic   " : typenames[t->type],
+		  t->type == __MTB_TYPE_MAGIC ? "magic" : typenames[t->type],
 		  t->path_thread_cache ? 'T' : '-',
 		  t->path_cpu_cache ? 'c' : '-',
 		  t->path_cpu_cache2 ? 'C' : '-',
@@ -86,7 +90,9 @@ dump_raw_trace (unsigned char *data, long n_data)
 		  t->path_hook ? 'H' : '-',
 		  (long long unsigned int) (size_t) t->ptr1,
 		  (long long unsigned int) t->size,
-		  (long long unsigned int) (size_t) t->ptr2);
+		  (long long unsigned int) (size_t) t->ptr2,
+		  (long long unsigned int) t->size2,
+		  (long long unsigned int) t->size3);
 	  break;
 	}
 
