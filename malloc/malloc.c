@@ -1206,7 +1206,7 @@ __mtb_trace_entry (uint32_t type, size_t size, void *ptr1)
 	 counter for the current thread window.  */
       if (__malloc_trace_last_num != -1)
 	{
-	  int old_window = TRACE_COUNT_TO_MAPPING_NUM (__malloc_trace_last_num);
+	  int old_window = __malloc_trace_last_num;
 	  int old_ref_count = catomic_exchange_and_add (&__malloc_trace_buffer[old_window].ref_count, -1);
 	  /* W3. If that reference counter reached 0, unmap the window. */
 	  if (old_ref_count == 1)
