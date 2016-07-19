@@ -125,7 +125,8 @@ struct PerAddr {
   int valid;
   const char *reason;
   int reason_idx;
-  PerAddr(void *_ptr) : owner(0), ptr(_ptr), valid(0), reason("not seen") {};
+  __malloc_trace_buffer_s *inverted;
+  PerAddr(void *_ptr) : owner(0), ptr(_ptr), valid(0), reason("not seen"), inverted(NULL) {};
 };
 
 // Don't start at zero, zero is special.
@@ -172,6 +173,167 @@ acq_ptr (PerThread *thread, PerAddr *addr)
   if (addr->owner != NULL && addr->owner != thread)
     sync_threads (addr->owner, thread);
   addr->owner = thread;
+}
+
+//------------------------------------------------------------
+
+/* These are the state variables for the whole trace.  */
+PerThread *master_thread = NULL;
+int last_tid = -1;
+PerThread *thread = NULL;
+int pending_inversions = 0;
+
+static void
+process_one_trace_record (__malloc_trace_buffer_s *r)
+{
+  int i = r - trace_records;
+
+  // Quick-skip for NULs at EOF
+  if (r->type == __MTB_TYPE_UNUSED)
+    return;
+
+  if(verbose)
+    printf("\033[32m%8x %2x (0x%p, 0x%x) =  0x%p\033[0m\n",
+	   r->thread, r->type, r->ptr1, (int)r->size, r->ptr2);
+
+  if (r->thread != last_tid)
+    {
+      thread = per_thread[r->thread];
+      if (thread == NULL)
+	thread = per_thread[r->thread] = new PerThread();
+      last_tid = r->thread;
+    }
+  if (!master_thread)
+    {
+      master_thread = thread;
+      thread->started = 1;
+    }
+  else if (!thread->started)
+    {
+      sync_threads (master_thread, thread);
+      thread->started = 1;
+    }
+
+
+  PerAddr *pa1 = get_addr(r->ptr1);
+  PerAddr *pa2 = get_addr(r->ptr2);
+
+  switch (r->type)
+    {
+    case __MTB_TYPE_UNUSED:
+    case __MTB_TYPE_MAGIC:
+      break;
+
+    case __MTB_TYPE_MALLOC:
+    case __MTB_TYPE_CALLOC:
+    case __MTB_TYPE_VALLOC:
+    case __MTB_TYPE_PVALLOC:
+      if (pa2 && pa2->valid)
+	{
+	  if (pa2->inverted)
+	    printf ("%d: pointer %p alloc'd again?  %d:%s\n", i, pa2->ptr, pa2->reason_idx, pa2->reason);
+	  pa2->inverted = r;
+	  pending_inversions ++;
+	  return;
+	}
+
+      acq_ptr (thread, pa2);
+
+      if (r->type == __MTB_TYPE_MALLOC)
+	thread->add (C_MALLOC);
+      if (r->type == __MTB_TYPE_CALLOC)
+	thread->add (C_CALLOC);
+      if (r->type == __MTB_TYPE_VALLOC)
+	thread->add (C_VALLOC);
+      if (r->type == __MTB_TYPE_PVALLOC)
+	thread->add (C_PVALLOC);
+
+      thread->add_int (pa2 ? pa2->idx : 0);
+      thread->add_int (r->size);
+      if (pa2)
+	{
+	  pa2->valid = 1;
+	  pa2->reason = "alloc";
+	  pa2->reason_idx = i;
+	}
+      break;
+
+    case __MTB_TYPE_FREE:
+      acq_ptr (thread, pa1);
+      if (pa1 == NULL)
+	{
+	  thread->add (C_FREE);
+	  thread->add_int (0);
+	}
+      else if (pa1->valid)
+	{
+	  thread->add (C_FREE);
+	  thread->add_int (pa1->idx);
+	  pa1->valid = 0;
+	  pa1->reason = "previously free'd";
+	  pa1->reason_idx = i;
+
+	  if (pa1->inverted)
+	    {
+	      process_one_trace_record (pa1->inverted);
+	      pa1->inverted = NULL;
+	      pending_inversions --;
+	    }
+	}
+      else
+	{
+	  printf("%d: invalid pointer %p passed to free: %d:%s\n", i, pa1->ptr, pa1->reason_idx, pa1->reason);
+	}
+      break;
+
+    case __MTB_TYPE_REALLOC:
+      if (pa1 && pa1->owner)
+	acq_ptr (thread, pa1);
+      if (pa2 && pa2->owner)
+	acq_ptr (thread, pa2);
+      thread->add (C_REALLOC);
+      thread->add_int (pa2 ? pa2->idx : 0);
+      thread->add_int (pa1 ? pa1->idx : 0);
+      thread->add_int (r->size);
+
+      // handle inversion here too, eventually - both the alloc and free sides.
+      if (pa1)
+	{
+	  pa1->valid = 0;
+	  pa1->reason = "previously realloc'd";
+	  pa1->reason_idx = i;
+	}
+      if (pa2)
+	{
+	  pa2->valid = 1;
+	  pa2->reason = "realloc";
+	  pa2->reason_idx = i;
+	}
+
+      break;
+
+    case __MTB_TYPE_MEMALIGN:
+      acq_ptr (thread, pa2);
+      if (pa2 && pa2->valid)
+	printf ("%d: pointer %p memalign'd again?  %d:%s\n", i, pa2->ptr, pa2->reason_idx, pa2->reason);
+      thread->add (C_MEMALIGN);
+      thread->add_int (pa2 ? pa2->idx : 0);
+      thread->add_int (r->size2);
+      thread->add_int (r->size);
+      if (pa2)
+	{
+	  pa2->valid = 1;
+	  pa2->reason = "memalign";
+	  pa2->reason_idx = i;
+	}
+      break;
+
+    case __MTB_TYPE_POSIX_MEMALIGN:
+      printf ("%d: Unsupported posix_memalign call.\n", i);
+      exit (1);
+      break;
+
+    }
 }
 
 //------------------------------------------------------------
@@ -227,148 +389,10 @@ main(int argc, char **argv)
     }
   num_trace_records = stbuf.st_size / sizeof(*trace_records);
 
-  PerThread *thread = NULL;
-  int last_tid = -1;
-  PerThread *master_thread = NULL;
-
   per_addr[0] = NULL;
 
   for (unsigned int i = 0; i < num_trace_records; i++)
-    {
-      __malloc_trace_buffer_s *r = trace_records + i;
-
-      // Quick-skip for NULs at EOF
-      if (r->type == __MTB_TYPE_UNUSED)
-	continue;
-
-      if(verbose)
-	printf("\033[32m%8x %2x (0x%p, 0x%x) =  0x%p\033[0m\n",
-	       r->thread, r->type, r->ptr1, (int)r->size, r->ptr2);
-
-      if (r->thread != last_tid)
-	{
-	  thread = per_thread[r->thread];
-	  if (thread == NULL)
-	    thread = per_thread[r->thread] = new PerThread();
-	  last_tid = r->thread;
-	}
-      if (!master_thread)
-	{
-	  master_thread = thread;
-	  thread->started = 1;
-	}
-      else if (!thread->started)
-	{
-	  sync_threads (master_thread, thread);
-	  thread->started = 1;
-	}
-
-
-      PerAddr *pa1 = get_addr(r->ptr1);
-      PerAddr *pa2 = get_addr(r->ptr2);
-
-      switch (r->type)
-	{
-	case __MTB_TYPE_UNUSED:
-	case __MTB_TYPE_MAGIC:
-	  break;
-
-	case __MTB_TYPE_MALLOC:
-	case __MTB_TYPE_CALLOC:
-	case __MTB_TYPE_VALLOC:
-	case __MTB_TYPE_PVALLOC:
-	  acq_ptr (thread, pa2);
-	  if (pa2 && pa2->valid)
-	    printf ("%d: pointer %p alloc'd again?  %d:%s\n", i, pa2->ptr, pa2->reason_idx, pa2->reason);
-
-	  if (r->type == __MTB_TYPE_MALLOC)
-	    thread->add (C_MALLOC);
-	  if (r->type == __MTB_TYPE_CALLOC)
-	    thread->add (C_CALLOC);
-	  if (r->type == __MTB_TYPE_VALLOC)
-	    thread->add (C_VALLOC);
-	  if (r->type == __MTB_TYPE_PVALLOC)
-	    thread->add (C_PVALLOC);
-
-	  thread->add_int (pa2 ? pa2->idx : 0);
-	  thread->add_int (r->size);
-	  if (pa2)
-	    {
-	      pa2->valid = 1;
-	      pa2->reason = "alloc";
-	      pa2->reason_idx = i;
-	    }
-	  break;
-
-	case __MTB_TYPE_FREE:
-	  acq_ptr (thread, pa1);
-	  if (pa1 == NULL)
-	    {
-	      thread->add (C_FREE);
-	      thread->add_int (0);
-	    }
-	  else if (pa1->valid)
-	    {
-	      thread->add (C_FREE);
-	      thread->add_int (pa1->idx);
-	      pa1->valid = 0;
-	      pa1->reason = "previously free'd";
-	      pa1->reason_idx = i;
-	    }
-	  else
-	    {
-	      printf("%d: invalid pointer %p passed to free: %d:%s\n", i, pa1->ptr, pa1->reason_idx, pa1->reason);
-	    }
-	  break;
-
-	case __MTB_TYPE_REALLOC:
-	  if (pa1 && pa1->owner)
-	    acq_ptr (thread, pa1);
-	  if (pa2 && pa2->owner)
-	    acq_ptr (thread, pa2);
-	  thread->add (C_REALLOC);
-	  thread->add_int (pa2 ? pa2->idx : 0);
-	  thread->add_int (pa1 ? pa1->idx : 0);
-	  thread->add_int (r->size);
-
-	  if (pa1)
-	    {
-	      pa1->valid = 0;
-	      pa1->reason = "previously realloc'd";
-	      pa1->reason_idx = i;
-	    }
-	  if (pa2)
-	    {
-	      pa2->valid = 1;
-	      pa2->reason = "realloc";
-	      pa2->reason_idx = i;
-	    }
-
-	  break;
-
-	case __MTB_TYPE_MEMALIGN:
-	  acq_ptr (thread, pa2);
-	  if (pa2 && pa2->valid)
-	    printf ("%d: pointer %p memalign'd again?  %d:%s\n", i, pa2->ptr, pa2->reason_idx, pa2->reason);
-	  thread->add (C_MEMALIGN);
-	  thread->add_int (pa2 ? pa2->idx : 0);
-	  thread->add_int (r->size2);
-	  thread->add_int (r->size);
-	  if (pa2)
-	    {
-	      pa2->valid = 1;
-	      pa2->reason = "memalign";
-	      pa2->reason_idx = i;
-	    }
-	  break;
-
-	case __MTB_TYPE_POSIX_MEMALIGN:
-	  printf ("%d: Unsupported posix_memalign call.\n", i);
-	  exit (1);
-	  break;
-
-	}
-    }
+    process_one_trace_record (trace_records + i);
 
   int n_threads = per_thread.size();
   PerThread *threads[n_threads];
@@ -441,6 +465,9 @@ main(int argc, char **argv)
     }
 
   close (wl_fd);
+
+  if (pending_inversions)
+    printf("%d pending inversions remain\n", pending_inversions);
 
   return 0;
 }
