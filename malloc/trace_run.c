@@ -9,6 +9,7 @@
 #include <sys/stat.h>
 #include <sys/resource.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 #include "malloc.h"
 #include "mtrace.h"
@@ -112,8 +113,6 @@ static volatile char *syncs;
 static pthread_mutex_t *mutexes;
 static pthread_cond_t *conds;
 static size_t n_syncs;
-static unsigned char *data;
-static size_t n_data;
 
 static pthread_mutex_t stat_mutex = PTHREAD_MUTEX_INITIALIZER;
 ticks_t malloc_time = 0, malloc_count = 0;
@@ -152,6 +151,78 @@ my_abort_2 (pthread_t thrc, int line)
   abort();
 }
 
+/*------------------------------------------------------------*/
+/* Wrapper around I/O routines */
+
+int io_fd;
+
+#define IOSIZE 65536
+#define IOMIN 4096
+
+static pthread_mutex_t io_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+typedef struct {
+  unsigned char buf[IOSIZE];
+  size_t incr;
+  size_t max_incr;
+  size_t buf_base;
+  size_t buf_idx;
+  int saw_eof;
+} IOPerThreadType;
+
+IOPerThreadType main_io;
+IOPerThreadType *thread_io;
+
+void
+io_init (IOPerThreadType *io, size_t file_offset, int incr)
+{
+  if (incr > IOSIZE)
+    incr = IOSIZE;
+  if (incr < IOMIN)
+    incr = IOMIN;
+
+  io->buf_base = file_offset;
+  io->buf_idx = 0;
+  io->incr = incr;
+
+  pthread_mutex_lock (&io_mutex);
+  lseek (io_fd, io->buf_base, SEEK_SET);
+  // short read OK, the eof is just to prevent runaways from bad data.
+  if (read (io_fd, io->buf, incr) < 0)
+    io->saw_eof = 1;
+  else
+    io->saw_eof = 0;
+  pthread_mutex_unlock (&io_mutex);
+}
+
+unsigned char
+io_read (IOPerThreadType *io)
+{
+  if (io->buf_idx >= io->incr)
+    io_init (io, io->buf_base + io->buf_idx, io->incr);
+  if (io->saw_eof)
+    return 0xff;
+  return io->buf [io->buf_idx++];
+}
+
+unsigned char
+io_peek (IOPerThreadType *io)
+{
+  if (io->buf_idx >= io->incr)
+    io_init (io, io->buf_base + io->buf_idx, io->incr);
+  if (io->saw_eof)
+    return 0xff;
+  return io->buf [io->buf_idx];
+}
+
+size_t
+io_pos (IOPerThreadType *io)
+{
+  return io->buf_base + io->buf_idx;
+}
+
+/*------------------------------------------------------------*/
+
 static void
 wmem (volatile void *ptr, int count)
 {
@@ -166,12 +237,12 @@ wmem (volatile void *ptr, int count)
 }
 #define xwmem(a,b)
 
-static size_t get_int (unsigned char **ptr)
+static size_t get_int (IOPerThreadType *io)
 {
   size_t rv = 0;
   while (1)
   {
-    unsigned char c = *(*ptr)++;
+    unsigned char c = io_read (io);
     rv |= (c & 0x7f);
     if (c & 0x80)
       rv <<= 7;
@@ -201,7 +272,7 @@ thread_common (void *my_data_v)
 {
   pthread_t thrc = pthread_self ();
   size_t p1, p2, sz, sz2;
-  unsigned char *cp = my_data_v;
+  IOPerThreadType *io = (IOPerThreadType *)my_data_v;
   ticks_t my_malloc_time = 0, my_malloc_count = 0;
   ticks_t my_calloc_time = 0, my_calloc_count = 0;
   ticks_t my_realloc_time = 0, my_realloc_count = 0;
@@ -213,16 +284,16 @@ thread_common (void *my_data_v)
 
   while (1)
     {
-      if (cp > data + n_data)
+      if (io->saw_eof)
 	myabort();
-      dprintf("op %p:%ld is %d\n", (void *)thrc, cp-data, *cp);
-      switch (*cp++)
+      dprintf("op %p:%ld is %d\n", (void *)thrc, io_pos (io),  io_peek (io));
+      switch (io_read (io))
 	{
 	case C_NOP:
 	  break;
 
 	case C_DONE:
-	  dprintf("op %p:%ld DONE\n", (void *)thrc, cp-data);
+	  dprintf("op %p:%ld DONE\n", (void *)thrc, io_pos (io));
 	  pthread_mutex_lock (&stat_mutex);
 	  malloc_time += my_malloc_time;
 	  calloc_time += my_calloc_time;
@@ -239,10 +310,10 @@ thread_common (void *my_data_v)
 	  return NULL;
 
 	case C_MEMALIGN:
-	  p2 = get_int (&cp);
-	  sz2 = get_int (&cp);
-	  sz = get_int (&cp);
-	  dprintf("op %p:%ld %ld = MEMALIGN %ld %ld\n", (void *)thrc, cp-data, p2, sz2, sz);
+	  p2 = get_int (io);
+	  sz2 = get_int (io);
+	  sz = get_int (io);
+	  dprintf("op %p:%ld %ld = MEMALIGN %ld %ld\n", (void *)thrc, io_pos (io), p2, sz2, sz);
 	  /* we can't force memalign to return NULL (fail), so just skip it.  */
 	  if (p2 == 0)
 	    break;
@@ -275,9 +346,9 @@ thread_common (void *my_data_v)
 	  break;
 
 	case C_MALLOC:
-	  p2 = get_int (&cp);
-	  sz = get_int (&cp);
-	  dprintf("op %p:%ld %ld = MALLOC %ld\n", (void *)thrc, cp-data, p2, sz);
+	  p2 = get_int (io);
+	  sz = get_int (io);
+	  dprintf("op %p:%ld %ld = MALLOC %ld\n", (void *)thrc, io_pos (io), p2, sz);
 	  /* we can't force malloc to return NULL (fail), so just skip it.  */
 	  if (p2 == 0)
 	    break;
@@ -307,9 +378,9 @@ thread_common (void *my_data_v)
 	  break;
 
 	case C_CALLOC:
-	  p2 = get_int (&cp);
-	  sz = get_int (&cp);
-	  dprintf("op %p:%ld %ld = CALLOC %ld\n", (void *)thrc, cp-data, p2, sz);
+	  p2 = get_int (io);
+	  sz = get_int (io);
+	  dprintf("op %p:%ld %ld = CALLOC %ld\n", (void *)thrc, io_pos (io), p2, sz);
 	  /* we can't force calloc to return NULL (fail), so just skip it.  */
 	  if (p2 == 0)
 	    break;
@@ -334,10 +405,10 @@ thread_common (void *my_data_v)
 	  break;
 
 	case C_REALLOC:
-	  p2 = get_int (&cp);
-	  p1 = get_int (&cp);
-	  sz = get_int (&cp);
-	  dprintf("op %p:%ld %ld = REALLOC %ld %ld\n", (void *)thrc, cp-data, p2, p1, sz);
+	  p2 = get_int (io);
+	  p1 = get_int (io);
+	  sz = get_int (io);
+	  dprintf("op %p:%ld %ld = REALLOC %ld %ld\n", (void *)thrc, io_pos (io), p2, p1, sz);
 	  if (p1 > n_ptrs)
 	    myabort();
 	  if (p2 > n_ptrs)
@@ -374,10 +445,10 @@ thread_common (void *my_data_v)
 	  break;
 
 	case C_FREE:
-	  p1 = get_int (&cp);
+	  p1 = get_int (io);
 	  if (p1 > n_ptrs)
 	    myabort();
-	  dprintf("op %p:%ld FREE %ld\n", (void *)thrc, cp-data, p1);
+	  dprintf("op %p:%ld FREE %ld\n", (void *)thrc, io_pos (io), p1);
 	  free_wipe (p1);
 	  if (ptrs[p1])
 	    atomic_rss (-sizes[p1]);
@@ -392,8 +463,8 @@ thread_common (void *my_data_v)
 	  break;
 
 	case C_SYNC_W:
-	  p1 = get_int(&cp);
-	  dprintf("op %p:%ld SYNC_W %ld\n", (void *)thrc, cp-data, p1);
+	  p1 = get_int(io);
+	  dprintf("op %p:%ld SYNC_W %ld\n", (void *)thrc, io_pos (io), p1);
 	  if (p1 > n_syncs)
 	    myabort();
 	  pthread_mutex_lock (&mutexes[p1]);
@@ -404,8 +475,8 @@ thread_common (void *my_data_v)
 	  break;
 
 	case C_SYNC_R:
-	  p1 = get_int(&cp);
-	  dprintf("op %p:%ld SYNC_R %ld\n", (void *)thrc, cp-data, p1);
+	  p1 = get_int(io);
+	  dprintf("op %p:%ld SYNC_R %ld\n", (void *)thrc, io_pos (io), p1);
 	  if (p1 > n_syncs)
 	    myabort();
 	  pthread_mutex_lock (&mutexes[p1]);
@@ -434,11 +505,11 @@ static void *alloc_mem (size_t amt)
 static pthread_t *thread_ids;
 
 void *
-my_malloc (const char *msg, int size, unsigned char **cp, size_t *psz, size_t count)
+my_malloc (const char *msg, int size, IOPerThreadType *io, size_t *psz, size_t count)
 {
   void *rv;
   if (psz)
-    count = *psz = get_int (cp);
+    count = *psz = get_int (io);
   dprintf ("my_malloc for %s size %d * %ld\n", msg, size, count);
   rv = alloc_mem(size * count);
   if (!rv)
@@ -470,9 +541,9 @@ malloc_scan_callback (void *ptr, size_t length, int type)
 }
 
 #define MY_ALLOC(T, psz)				\
-  (typeof (T)) my_malloc (#T, sizeof(*T), &cp, psz, 0)
+  (typeof (T)) my_malloc (#T, sizeof(*T), &main_io, psz, 0)
 #define MY_ALLOCN(T, count)				\
-  (typeof (T)) my_malloc (#T, sizeof(*T), &cp, NULL, count)
+  (typeof (T)) my_malloc (#T, sizeof(*T), &main_io, NULL, count)
 
 int
 main(int argc, char **argv)
@@ -481,14 +552,14 @@ main(int argc, char **argv)
   ticks_t end;
   ticks_t usec;
   struct timeval tv_s, tv_e;
-  int fd;
-  struct stat statb;
-  unsigned char *cp;
   int thread_idx = 0;
   int i;
   size_t n_threads = 0;
   size_t idx;
   struct rusage res_start, res_end;
+  int done;
+  size_t guessed_io_size = 4096;
+  struct stat statb;
 
   mallopt (M_MXFAST, 0);
 
@@ -497,27 +568,23 @@ main(int argc, char **argv)
       fprintf(stderr, "Usage: %s <trace2dat.outfile>\n", argv[0]);
       exit(1);
     }
-  fd = open(argv[1], O_RDONLY);
-  if (fd < 0)
+  io_fd = open(argv[1], O_RDONLY);
+  if (io_fd < 0)
     {
       fprintf(stderr, "Unable to open %s for reading\n", argv[1]);
       perror("The error was");
       exit(1);
     }
-  fstat (fd, &statb);
+  fstat (io_fd, &statb);
 
-  n_data = statb.st_size;
-  data = mmap (NULL, statb.st_size, PROT_READ, MAP_SHARED, fd, 0);
-  mlock (data, statb.st_size);
-  for (i=0; i<n_data; i+=512)
-    asm volatile ("# forced read %0" :: "r" (data[i]));
+  io_init (&main_io, 0, IOMIN);
 
   pthread_mutex_lock(&stop_mutex);
 
-  cp = data;
-  while (cp)
+  done = 0;
+  while (!done)
     {
-      switch (*cp++)
+      switch (io_read (&main_io))
 	{
 	case C_NOP:
 	  break;
@@ -527,7 +594,7 @@ main(int argc, char **argv)
 	  ptrs[0] = 0;
 	  break;
 	case C_ALLOC_SYNCS:
-	  n_syncs = get_int(&cp);
+	  n_syncs = get_int(&main_io);
 	  syncs = MY_ALLOCN (syncs, n_syncs);
 	  conds = MY_ALLOCN (conds, n_syncs);
 	  mutexes = MY_ALLOCN (mutexes, n_syncs);
@@ -539,14 +606,17 @@ main(int argc, char **argv)
 	  break;
 	case C_NTHREADS:
 	  thread_ids = MY_ALLOC (thread_ids, &n_threads);
+	  thread_io = MY_ALLOCN (thread_io, n_threads);
+	  guessed_io_size = ((statb.st_size / n_threads) < (1024*1024)) ? 65536 : 4096;
 	  /* The next thing in the workscript is thread creation */
 	  getrusage (RUSAGE_SELF, &res_start);
 	  gettimeofday (&tv_s, NULL);
 	  start = rdtsc_s();
 	  break;
 	case C_START_THREAD:
-	  idx = get_int (&cp);
-	  pthread_create (&thread_ids[thread_idx], NULL, thread_common, data + idx);
+	  idx = get_int (&main_io);
+	  io_init (& thread_io[thread_idx], idx, guessed_io_size);
+	  pthread_create (&thread_ids[thread_idx], NULL, thread_common, thread_io + thread_idx);
 	  dprintf("Starting thread %lld at offset %d %x\n", (long long)thread_ids[thread_idx], (int)idx, (unsigned int)idx);
 	  thread_idx ++;
 	  break;
@@ -557,7 +627,7 @@ main(int argc, char **argv)
 	      i = threads_done;
 	      pthread_mutex_unlock (&stat_mutex);
 	    } while (i < thread_idx);
-	  cp = NULL;
+	  done = 1;
 	  break;
 	}
     }
