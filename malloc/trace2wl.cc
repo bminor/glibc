@@ -182,6 +182,7 @@ PerThread *master_thread = NULL;
 int last_tid = -1;
 PerThread *thread = NULL;
 int pending_inversions = 0;
+int fixed_inversions = 0;
 
 static void
 process_one_trace_record (__malloc_trace_buffer_s *r)
@@ -231,8 +232,14 @@ process_one_trace_record (__malloc_trace_buffer_s *r)
       if (pa2 && pa2->valid)
 	{
 	  if (pa2->inverted)
-	    printf ("%d: pointer %p alloc'd again?  %d:%s\n", i, pa2->ptr, pa2->reason_idx, pa2->reason);
+	    {
+	      printf ("%d: pointer %p alloc'd again? (possible multi-level inversion) size %d  %d:%s\n",
+		      i, pa2->ptr, (int)r->size, pa2->reason_idx, pa2->reason);
+	      exit (1);
+	    }
+	  printf("inversion for type %d\n", r->type);
 	  pa2->inverted = r;
+	  fixed_inversions ++;
 	  pending_inversions ++;
 	  return;
 	}
@@ -468,6 +475,8 @@ main(int argc, char **argv)
 
   if (pending_inversions)
     printf("%d pending inversions remain\n", pending_inversions);
+  if (fixed_inversions)
+    printf("%d inversions fixed\n", fixed_inversions);
 
   return 0;
 }

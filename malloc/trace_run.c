@@ -413,19 +413,13 @@ thread_common (void *my_data_v)
 	    myabort();
 	  if (p2 > n_ptrs)
 	    myabort();
+	  /* we can't force realloc to return NULL (fail), so just skip it.  */
+	  if (p2 == 0)
+	    break;
+
 	  if (ptrs[p1])
 	    atomic_rss (-sizes[p1]);
 	  free_wipe(p1);
-	  /* we can't force realloc to return NULL (fail), so just skip it.  */
-	  if (p2 == 0)
-	    {
-	      if (p1)
-		{
-		  free ((void *)ptrs[p1]);
-		  ptrs[p1] = 0;
-		}
-	      break;
-	    }
 	  stime = rdtsc_s();
 	  Q1;
 #ifdef MDEBUG
