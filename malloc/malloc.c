@@ -1156,6 +1156,7 @@ __thread int __malloc_thread_trace_enabled = 1;
 
 static __thread int __malloc_trace_last_num = -1;
 static __thread __malloc_trace_buffer_ptr trace_ptr;
+static __thread struct __malloc_trace_buffer_s temporary_trace_record;
 
 static inline pid_t
 __gettid (void)
@@ -1180,9 +1181,36 @@ __gettid (void)
 static void
 __mtb_trace_entry (uint32_t type, size_t size, void *ptr1)
 {
+  trace_ptr = &temporary_trace_record;
+
+  trace_ptr->thread = __gettid ();
+  trace_ptr->type = type;
+  trace_ptr->path_thread_cache = 0;
+  trace_ptr->path_cpu_cache = 0;
+  trace_ptr->path_cpu_cache2 = 0;
+  trace_ptr->path_sbrk = 0;
+  trace_ptr->path_mmap = 0;
+  trace_ptr->path_munmap = 0;
+  trace_ptr->path_m_f_realloc = 0;
+  trace_ptr->path = 0;
+  trace_ptr->ptr1 = ptr1;
+  trace_ptr->ptr2 = 0;
+  trace_ptr->size = size;
+  trace_ptr->size2 = 0;
+  trace_ptr->size3 = 0;
+}
+
+/* Note: "record" the verb, not "record" the noun.  This call records
+   the accumulated trace data into the trace buffer, and should be
+   called when the caller "owns" the pointers being recorded, to avoid
+   trace inversion.  */
+static void
+__mtb_trace_record (void)
+{
   size_t my_trace_count;
   size_t old_trace_count;
   int my_num;
+  __malloc_trace_buffer_ptr new_trace_ptr;
 
   /* START T: Log trace event.  */
  alg_t1:
@@ -1296,23 +1324,14 @@ __mtb_trace_entry (uint32_t type, size_t size, void *ptr1)
   /* At this point, __malloc_trace_buffer[my_num] is valid because we
      DIDN'T go through algorithm W, and it's reference counted for us,
      and my_trace_count points to our record.  */
-  trace_ptr = __malloc_trace_buffer[my_num].window + TRACE_COUNT_TO_MAPPING_IDX (my_trace_count);
+  new_trace_ptr = __malloc_trace_buffer[my_num].window + TRACE_COUNT_TO_MAPPING_IDX (my_trace_count);
 
-  trace_ptr->thread = __gettid ();
-  trace_ptr->type = type;
-  trace_ptr->path_thread_cache = 0;
-  trace_ptr->path_cpu_cache = 0;
-  trace_ptr->path_cpu_cache2 = 0;
-  trace_ptr->path_sbrk = 0;
-  trace_ptr->path_mmap = 0;
-  trace_ptr->path_munmap = 0;
-  trace_ptr->path_m_f_realloc = 0;
-  trace_ptr->path = 0;
-  trace_ptr->ptr1 = ptr1;
-  trace_ptr->ptr2 = 0;
-  trace_ptr->size = size;
-  trace_ptr->size2 = 0;
-  trace_ptr->size3 = 0;
+  /* At this point, we move trace data from our temporary record
+     (where we've been recording, among other things, path data) to
+     the trace buffer.  Future trace data for this call will get
+     recorded directly to the trace buffer.  */
+  *new_trace_ptr = *trace_ptr;
+  trace_ptr = new_trace_ptr;
 }
 
 /* Initialize the trace buffer and backing file.  The file is
@@ -1339,6 +1358,7 @@ __malloc_trace_init (char *filename)
   __malloc_trace_count = 0;
 
   __mtb_trace_entry (__MTB_TYPE_MAGIC, sizeof(void *), (void *)0x1234);
+  __mtb_trace_record ();
 
   atomic_store_release (&__malloc_trace_enabled, 1);
 }
@@ -1394,10 +1414,26 @@ size_t __malloc_trace_sync (void)
    releases from __malloc_trace_pause, __malloc_trace_unpause, and
    __malloc_trace_top to ensure that all external changes are visible to the
    current thread.  */
+
+/* Note: ENTRY is for function entry, and starts a per-thread record.
+   RECORD migrates that record into the common trace buffer.  Timing
+   of the RECORD is critical to getting a valid trace record; it
+   should only be called when the function owns the pointers being
+   recorded.  I.e. malloc should RECORD after obtaining a pointer,
+   free should RECORD before free'ing it.  */
+
+/* Be careful that __MTB_TRACE_RECORD is not called inside your own
+   ENABLE/DISABLE pair (this applies to your own call frame, not a
+   nested call).  */
+
 #define __MTB_TRACE_ENTRY(type, size, ptr1)		   		      \
   if (__glibc_unlikely (atomic_load_acquire (&__malloc_trace_enabled))	      \
       && __glibc_unlikely (__malloc_thread_trace_enabled))		      \
     __mtb_trace_entry (__MTB_TYPE_##type,size,ptr1);
+#define __MTB_TRACE_RECORD()				   		      \
+  if (__glibc_unlikely (atomic_load_acquire (&__malloc_trace_enabled))	      \
+      && __glibc_unlikely (__malloc_thread_trace_enabled))		      \
+    __mtb_trace_record ();
 
 /* Ignore __malloc_thread_trace_enabled and set path bits.  This allows us to
    track the path of a call without additional traces.  For example realloc
@@ -1435,8 +1471,11 @@ size_t __malloc_trace_stop (void) { return 0; }
 size_t __malloc_trace_sync (void) { return 0; }
 
 #define __MTB_TRACE_ENTRY(type,size,ptr1)
+#define __MTB_TRACE_RECORD()
 #define __MTB_TRACE_PATH(mpath)
 #define __MTB_TRACE_SET(var,value)
+#define __MTB_THREAD_TRACE_ENABLE()
+#define __MTB_THREAD_TRACE_DISNABLE()
 #endif
 
 /* ------------------ MMAP support ------------------  */
@@ -3390,6 +3429,7 @@ __libc_malloc (size_t bytes)
       TCacheEntry *e = tcache.entries[tc_idx];
       tcache.entries[tc_idx] = e->next;
       tcache.counts[tc_idx] --;
+      __MTB_TRACE_RECORD ();
       __MTB_TRACE_PATH (thread_cache);
       __MTB_TRACE_SET (ptr2, e);
       __MTB_TRACE_SET (size3, tbytes);
@@ -3405,6 +3445,7 @@ __libc_malloc (size_t bytes)
       __MTB_THREAD_TRACE_DISABLE ();
       victim = (*hook)(bytes, RETURN_ADDRESS (0));
       __MTB_THREAD_TRACE_ENABLE ();
+      __MTB_TRACE_RECORD ();
       if (victim != NULL)
 	__MTB_TRACE_SET (size3, chunksize (mem2chunk (victim)));
       return victim;
@@ -3495,6 +3536,7 @@ __libc_malloc (size_t bytes)
       if (ar_ptr != NULL)
 	(void) mutex_unlock (&ar_ptr->mutex);
 
+      __MTB_TRACE_RECORD ();
       __MTB_TRACE_SET(ptr2, ent);
       __MTB_TRACE_SET (size3, chunksize (mem2chunk (ent)));
       return ent;
@@ -3521,6 +3563,7 @@ __libc_malloc (size_t bytes)
 
   assert (!victim || chunk_is_mmapped (mem2chunk (victim)) ||
           ar_ptr == arena_for_chunk (mem2chunk (victim)));
+  __MTB_TRACE_RECORD ();
   __MTB_TRACE_SET(ptr2, victim);
   if (victim != NULL)
     __MTB_TRACE_SET (size3, chunksize (mem2chunk (victim)));
@@ -3535,6 +3578,7 @@ __libc_free (void *mem)
   mchunkptr p;                          /* chunk corresponding to mem */
 
   __MTB_TRACE_ENTRY (FREE, 0, mem);
+  __MTB_TRACE_RECORD ();
   /* It's very important we record the free size in the trace.
      This makes verification of tracked malloc<->free's much
      easier by adding size as a way to correlate the entries also.
@@ -3603,6 +3647,7 @@ __libc_realloc (void *oldmem, size_t bytes)
       __MTB_THREAD_TRACE_DISABLE ();
       newp = (*hook)(oldmem, bytes, RETURN_ADDRESS (0));
       __MTB_THREAD_TRACE_ENABLE ();
+      __MTB_TRACE_RECORD ();
       __MTB_TRACE_SET (ptr2, newp);
       if (newp != 0)
 	__MTB_TRACE_SET (size3, chunksize (mem2chunk (newp)));
@@ -3612,6 +3657,7 @@ __libc_realloc (void *oldmem, size_t bytes)
 #if REALLOC_ZERO_BYTES_FREES
   if (bytes == 0 && oldmem != NULL)
     {
+      __MTB_TRACE_RECORD ();
       __MTB_THREAD_TRACE_DISABLE ();
       __libc_free (oldmem);
       __MTB_THREAD_TRACE_ENABLE ();
@@ -3625,6 +3671,7 @@ __libc_realloc (void *oldmem, size_t bytes)
       __MTB_THREAD_TRACE_DISABLE ();
       newp = __libc_malloc (bytes);
       __MTB_THREAD_TRACE_ENABLE ();
+      __MTB_TRACE_RECORD ();
       __MTB_TRACE_SET (ptr2, newp);
       if (newp != 0)
 	__MTB_TRACE_SET (size3, chunksize (mem2chunk (newp)));
@@ -3651,6 +3698,7 @@ __libc_realloc (void *oldmem, size_t bytes)
        || __builtin_expect (misaligned_chunk (oldp), 0))
       && !DUMPED_MAIN_ARENA_CHUNK (oldp))
     {
+      __MTB_TRACE_RECORD ();
       malloc_printerr (check_action, "realloc(): invalid pointer", oldmem,
 		       ar_ptr);
       return NULL;
@@ -3669,6 +3717,7 @@ __libc_realloc (void *oldmem, size_t bytes)
 	  __MTB_THREAD_TRACE_DISABLE ();
 	  newmem = __libc_malloc (bytes);
 	  __MTB_THREAD_TRACE_ENABLE ();
+	  __MTB_TRACE_RECORD ();
 	  if (newmem == 0)
 	    return NULL;
 
@@ -3690,6 +3739,7 @@ __libc_realloc (void *oldmem, size_t bytes)
       newp = mremap_chunk (oldp, nb);
       if (newp)
 	{
+	  __MTB_TRACE_RECORD ();
 	  __MTB_TRACE_SET (ptr2, chunk2mem (newp));
 	  __MTB_TRACE_SET (size3, chunksize ((mchunkptr) newp));
 	  return chunk2mem (newp);
@@ -3698,6 +3748,7 @@ __libc_realloc (void *oldmem, size_t bytes)
       /* Note the extra SIZE_SZ overhead. */
       if (oldsize - SIZE_SZ >= nb)
 	{
+	  __MTB_TRACE_RECORD ();
 	  __MTB_TRACE_SET (ptr2, oldmem);
 	  __MTB_TRACE_SET (size3, chunksize (mem2chunk (oldmem)));
 	  return oldmem;                         /* do nothing */
@@ -3709,6 +3760,7 @@ __libc_realloc (void *oldmem, size_t bytes)
       __MTB_THREAD_TRACE_DISABLE ();
       newmem = __libc_malloc (bytes);
       __MTB_THREAD_TRACE_ENABLE ();
+      __MTB_TRACE_RECORD ();
       if (newmem == 0)
         return 0;              /* propagate failure */
 
@@ -3721,6 +3773,8 @@ __libc_realloc (void *oldmem, size_t bytes)
 
   (void) mutex_lock (&ar_ptr->mutex);
 
+  /* We expect _int_realloc() to call MTB_TRACE_RECORD for us, if it
+     returns non-NULL.  */
   newp = _int_realloc (ar_ptr, oldp, oldsize, nb);
 
   (void) mutex_unlock (&ar_ptr->mutex);
@@ -3735,6 +3789,7 @@ __libc_realloc (void *oldmem, size_t bytes)
       __MTB_THREAD_TRACE_DISABLE ();
       newp = __libc_malloc (bytes);
       __MTB_THREAD_TRACE_ENABLE ();
+      __MTB_TRACE_RECORD ();
       if (newp != NULL)
         {
           memcpy (newp, oldmem, oldsize - SIZE_SZ);
@@ -3758,6 +3813,7 @@ __libc_memalign (size_t alignment, size_t bytes)
   __MTB_TRACE_ENTRY (MEMALIGN, bytes, NULL);
   __MTB_TRACE_SET (size2, alignment);
   rv = _mid_memalign (alignment, bytes, address);
+  __MTB_TRACE_RECORD ();
   __MTB_TRACE_SET (ptr2, rv);
   if (rv != 0)
     __MTB_TRACE_SET (size3, chunksize (mem2chunk (rv)));
@@ -3852,6 +3908,7 @@ __libc_valloc (size_t bytes)
   __MTB_TRACE_ENTRY (VALLOC, bytes, NULL);
   __MTB_TRACE_SET (size2, pagesize);
   rv = _mid_memalign (pagesize, bytes, address);
+  __MTB_TRACE_RECORD ();
   __MTB_TRACE_SET (ptr2, rv);
   if (rv != 0)
     __MTB_TRACE_SET (size3, chunksize (mem2chunk (rv)));
@@ -3880,6 +3937,7 @@ __libc_pvalloc (size_t bytes)
   __MTB_TRACE_ENTRY (PVALLOC, bytes, NULL);
   rv = _mid_memalign (pagesize, rounded_bytes, address);
   __MTB_TRACE_SET (ptr2, rv);
+  __MTB_TRACE_RECORD ();
   if (rv != 0)
     __MTB_TRACE_SET (size3, chunksize (mem2chunk (rv)));
   return rv;
@@ -3905,6 +3963,7 @@ __libc_calloc (size_t n, size_t elem_size)
     {
       if (elem_size != 0 && bytes / elem_size != n)
         {
+	  __MTB_TRACE_RECORD ();
           __set_errno (ENOMEM);
           return 0;
         }
@@ -3919,6 +3978,7 @@ __libc_calloc (size_t n, size_t elem_size)
       __MTB_THREAD_TRACE_DISABLE ();
       mem = (*hook)(sz, RETURN_ADDRESS (0));
       __MTB_THREAD_TRACE_ENABLE ();
+      __MTB_TRACE_RECORD ();
       if (mem == 0)
         return 0;
 
@@ -3975,6 +4035,8 @@ __libc_calloc (size_t n, size_t elem_size)
 
   if (av != NULL)
     (void) mutex_unlock (&av->mutex);
+
+  __MTB_TRACE_RECORD ();
 
   /* Allocation failed even after a retry.  */
   if (mem == 0)
@@ -5208,6 +5270,8 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
 
   const char *errstr = NULL;
 
+  /* We must call __MTB_TRACE_RECORD if we return non-NULL.  */
+
   /* oldmem size */
   if (__builtin_expect (oldp->size <= 2 * SIZE_SZ, 0)
       || __builtin_expect (oldsize >= av->system_mem, 0))
@@ -5250,6 +5314,7 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
           av->top = chunk_at_offset (oldp, nb);
           set_head (av->top, (newsize - nb) | PREV_INUSE);
           check_inuse_chunk (av, oldp);
+	  __MTB_TRACE_RECORD();
           return chunk2mem (oldp);
         }
 
@@ -5261,6 +5326,7 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
         {
           newp = oldp;
           unlink (av, next, bck, fwd);
+	  __MTB_TRACE_RECORD();
         }
 
       /* allocate, copy, free */
@@ -5269,6 +5335,8 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
           newmem = _int_malloc (av, nb - MALLOC_ALIGN_MASK);
           if (newmem == 0)
             return 0; /* propagate failure */
+
+	  __MTB_TRACE_RECORD();
 
           newp = mem2chunk (newmem);
           newsize = chunksize (newp);
@@ -6015,6 +6083,7 @@ __posix_memalign (void **memptr, size_t alignment, size_t size)
       || !powerof2 (alignment / sizeof (void *))
       || alignment == 0)
     {
+      __MTB_TRACE_RECORD ();
       __MTB_TRACE_SET (ptr1, (void *) EINVAL);
       return EINVAL;
     }
@@ -6022,6 +6091,7 @@ __posix_memalign (void **memptr, size_t alignment, size_t size)
   void *address = RETURN_ADDRESS (0);
   mem = _mid_memalign (alignment, size, address);
 
+  __MTB_TRACE_RECORD ();
   if (mem != NULL)
     {
       *memptr = mem;
