@@ -34,7 +34,13 @@ struct __malloc_trace_buffer_s {
   uint32_t path_munmap:1; /* munmap was called */
   uint32_t path_m_f_realloc:1; /* realloc became malloc/free (i.e. next few records) */
   uint32_t path_hook:1; /* A hook was used to complete the request */
-  uint32_t path:16; /* remaining bits */
+  uint32_t path_unsorted_add:1; /* something was added to the unsorted bin */
+  uint32_t path_unsorted_remove:1; /* something was removed from the unsorted bin */
+  uint32_t path_unsorted_empty:1; /* the unsorted bin was emptied */
+  uint32_t path_fastbin_add:1; /* something was added to a fastbin */
+  uint32_t path_fastbin_remove:1; /* something was removed from a fastbin */
+  uint32_t path_malloc_consolidate:1; /* something was removed from a fastbin */
+  uint32_t path:10; /* remaining bits */
 
   /* FREE - pointer to allocation to free.
      REALLOC - pointer to original allocation.

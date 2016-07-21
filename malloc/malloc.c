@@ -1192,6 +1192,13 @@ __mtb_trace_entry (uint32_t type, size_t size, void *ptr1)
   trace_ptr->path_mmap = 0;
   trace_ptr->path_munmap = 0;
   trace_ptr->path_m_f_realloc = 0;
+  trace_ptr->path_hook = 0;
+  trace_ptr->path_unsorted_add = 0;
+  trace_ptr->path_unsorted_remove = 0;
+  trace_ptr->path_unsorted_empty = 0;
+  trace_ptr->path_fastbin_add = 0;
+  trace_ptr->path_fastbin_remove = 0;
+  trace_ptr->path_malloc_consolidate = 0;
   trace_ptr->path = 0;
   trace_ptr->ptr1 = ptr1;
   trace_ptr->ptr2 = 0;
@@ -4284,6 +4291,7 @@ _int_malloc (mstate av, size_t bytes)
 		}
 	    }
 #endif
+          __MTB_TRACE_PATH(fastbin_remove);
           void *p = chunk2mem (victim);
           alloc_perturb (p, bytes);
           return p;
@@ -4415,6 +4423,7 @@ _int_malloc (mstate av, size_t bytes)
       int iters = 0;
       while ((victim = unsorted_chunks (av)->bk) != unsorted_chunks (av))
         {
+          __MTB_TRACE_PATH(unsorted_remove);
           bck = victim->bk;
           if (__builtin_expect (victim->size <= 2 * SIZE_SZ, 0)
               || __builtin_expect (victim->size > av->system_mem, 0))
@@ -4436,6 +4445,7 @@ _int_malloc (mstate av, size_t bytes)
               (unsigned long) (size) > (unsigned long) (nb + MINSIZE))
             {
               /* split and reattach remainder */
+	      __MTB_TRACE_PATH(unsorted_add);
               remainder_size = size - nb;
               remainder = chunk_at_offset (victim, nb);
               unsorted_chunks (av)->bk = unsorted_chunks (av)->fd = remainder;
@@ -4574,6 +4584,9 @@ _int_malloc (mstate av, size_t bytes)
           if (++iters >= MAX_ITERS)
             break;
         }
+      if (unsorted_chunks (av)->bk == unsorted_chunks (av))
+	__MTB_TRACE_PATH(unsorted_empty);
+
 
 #if USE_TCACHE
       /* If all the small chunks we found ended up cached, return one now.  */
@@ -4625,6 +4638,7 @@ _int_malloc (mstate av, size_t bytes)
                   remainder = chunk_at_offset (victim, nb);
                   /* We cannot assume the unsorted list is empty and therefore
                      have to perform a complete insert here.  */
+		  __MTB_TRACE_PATH(unsorted_add);
                   bck = unsorted_chunks (av);
                   fwd = bck->fd;
 	  if (__glibc_unlikely (fwd->bk != bck))
@@ -4737,6 +4751,7 @@ _int_malloc (mstate av, size_t bytes)
 
                   /* We cannot assume the unsorted list is empty and therefore
                      have to perform a complete insert here.  */
+		  __MTB_TRACE_PATH(unsorted_add);
                   bck = unsorted_chunks (av);
                   fwd = bck->fd;
 	  if (__glibc_unlikely (fwd->bk != bck))
@@ -4959,6 +4974,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
     fb = &fastbin (av, idx);
 
     /* Atomically link P to its fastbin: P->FD = *FB; *FB = P;  */
+    __MTB_TRACE_PATH(fastbin_add);
     mchunkptr old = *fb, old2;
     unsigned int old_idx = ~0u;
     do
@@ -5056,6 +5072,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 	been given one chance to be used in malloc.
       */
 
+      __MTB_TRACE_PATH(unsorted_add);
       bck = unsorted_chunks(av);
       fwd = bck->fd;
       if (__glibc_unlikely (fwd->bk != bck))
@@ -5170,6 +5187,8 @@ static void malloc_consolidate(mstate av)
   mchunkptr       bck;
   mchunkptr       fwd;
 
+  __MTB_TRACE_PATH(malloc_consolidate);
+
   /*
     If max_fast is 0, we know that av hasn't
     yet been initialized, in which case do so below
@@ -5197,6 +5216,7 @@ static void malloc_consolidate(mstate av)
 	  check_inuse_chunk(av, p);
 	  nextp = p->fd;
 
+          __MTB_TRACE_PATH(fastbin_remove);
 	  /* Slightly streamlined version of consolidation code in free() */
 	  size = p->size & ~(PREV_INUSE|NON_MAIN_ARENA);
 	  nextchunk = chunk_at_offset(p, size);
@@ -5218,6 +5238,7 @@ static void malloc_consolidate(mstate av)
 	    } else
 	      clear_inuse_bit_at_offset(nextchunk, 0);
 
+	    __MTB_TRACE_PATH(unsorted_add);
 	    first_unsorted = unsorted_bin->fd;
 	    unsorted_bin->fd = p;
 	    first_unsorted->bk = p;

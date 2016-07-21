@@ -77,7 +77,7 @@ dump_raw_trace (unsigned char *data, long n_data)
 	default:
 	  /* Consider 'memalign' to be the largest API word we want to align
 	     on so make the name 8 chars wide at a minimum.  */
-	  printf ("%08x %8s %c%c%c%c%c%c%c%c %016llx %016llx %016llx %016llx %016llx\n",
+	  printf ("%08x %8s %c%c%c%c%c%c%c%c%c%c%c%c%c%c %016llx %016llx %016llx %016llx %016llx\n",
 		  t->thread,
 		  t->type == __MTB_TYPE_MAGIC ? "magic" : typenames[t->type],
 		  t->path_thread_cache ? 'T' : '-',
@@ -88,6 +88,12 @@ dump_raw_trace (unsigned char *data, long n_data)
 		  t->path_munmap ? 'U' : '-',
 		  t->path_m_f_realloc ? 'R' : '-',
 		  t->path_hook ? 'H' : '-',
+		  t->path_unsorted_add ? 'U' : '-',
+		  t->path_unsorted_remove ? 'u' : '-',
+		  t->path_unsorted_empty ? 'E' : '-',
+		  t->path_fastbin_add ? 'F' : '-',
+		  t->path_fastbin_remove ? 'f' : '-',
+		  t->path_malloc_consolidate ? 'C' : '-',
 		  (long long unsigned int) (size_t) t->ptr1,
 		  (long long unsigned int) t->size,
 		  (long long unsigned int) (size_t) t->ptr2,
