@@ -3736,6 +3736,13 @@ __libc_realloc (void *oldmem, size_t bytes)
       void *newmem;
 
 #if HAVE_MREMAP
+      /* There is no time when we own both the old and new pointers
+	 here, so we have no choice but to record the trace event in a
+	 way that might lead to an inversion.  This is a rare enough
+	 case that a double inversion is too likely to worry about,
+	 and the trace converter can fix a lone single inversion.  We
+	 choose to record it inside the 'if' because it's convient to
+	 us.  */
       newp = mremap_chunk (oldp, nb);
       if (newp)
 	{
