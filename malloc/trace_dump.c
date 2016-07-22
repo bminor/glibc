@@ -11,10 +11,12 @@
 // The trace file looks like an array of struct __malloc_trace_buffer_s
 #include "mtrace.h"
 
-static size_t
+typedef long long BIG;
+
+static BIG
 get_int (unsigned char **ptr)
 {
-  size_t rv = 0;
+  BIG rv = 0;
   while (1)
   {
     unsigned char c = *(*ptr)++;
@@ -111,31 +113,31 @@ dump_workload (unsigned char *data, long n_data)
 {
   unsigned char *orig_data = data;
   unsigned char *edata = data + n_data;
-  int thread_idx = 0;
-  int n_ptrs, n_syncs, n_threads, idx, p1, p2, sz;
+  BIG thread_idx = 0;
+  BIG n_ptrs, n_syncs, n_threads, idx, p1, p2, sz;
 
   while (data < edata)
     {
-      printf("%016lx: %4d: ", data - orig_data, thread_idx);
+      printf("%016lx: %4lld: ", data - orig_data, thread_idx);
       switch (*data++)
 	{
 	case C_NOP:
 	  break;
 	case C_ALLOC_PTRS:
 	  n_ptrs = get_int(&data);
-	  printf("AllocPtrs: %d\n", n_ptrs);
+	  printf("AllocPtrs: %lld\n", n_ptrs);
 	  break;
 	case C_ALLOC_SYNCS:
 	  n_syncs = get_int(&data);
-	  printf("AllocSyncs: %d\n", n_syncs);
+	  printf("AllocSyncs: %lld\n", n_syncs);
 	  break;
 	case C_NTHREADS:
 	  n_threads = get_int (&data);
-	  printf("NThreads: %d\n", n_threads);
+	  printf("NThreads: %lld\n", n_threads);
 	  break;
 	case C_START_THREAD:
 	  idx = get_int (&data);
-	  printf("StartThread: 0x%x\n", idx);
+	  printf("StartThread: 0x%llx\n", idx);
 	  break;
 	case C_DONE:
 	  printf("Done\n");
@@ -145,35 +147,35 @@ dump_workload (unsigned char *data, long n_data)
 	case C_MALLOC:
 	  p2 = get_int (&data);
 	  sz = get_int (&data);
-	  printf("Malloc (%d) -> %d\n", sz, p2);
+	  printf("Malloc (%lld) -> %lld\n", sz, p2);
 	  break;
 
 	case C_CALLOC:
 	  p2 = get_int (&data);
 	  sz = get_int (&data);
-	  printf("Calloc (%d) -> %d\n", sz, p2);
+	  printf("Calloc (%lld) -> %lld\n", sz, p2);
 	  break;
 
 	case C_REALLOC:
 	  p2 = get_int (&data);
 	  p1 = get_int (&data);
 	  sz = get_int (&data);
-	  printf("Realloc (%d, %d) -> %d\n", p1, sz, p2);
+	  printf("Realloc (%lld, %lld) -> %lld\n", p1, sz, p2);
 	  break;
 
 	case C_FREE:
 	  p1 = get_int (&data);
-	  printf("Free (%d)\n", p1);
+	  printf("Free (%lld)\n", p1);
 	  break;
 
 	case C_SYNC_W:
 	  p1 = get_int(&data);
-	  printf("SyncW (%d)\n", p1);
+	  printf("SyncW (%lld)\n", p1);
 	  break;
 
 	case C_SYNC_R:
 	  p1 = get_int(&data);
-	  printf("SyncR (%d)\n", p1);
+	  printf("SyncR (%lld)\n", p1);
 	  break;
 
 	default:
