@@ -1,3 +1,4 @@
+#define _LARGEFILE64_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -186,7 +187,7 @@ io_init (IOPerThreadType *io, size_t file_offset, int incr)
   io->incr = incr;
 
   pthread_mutex_lock (&io_mutex);
-  lseek (io_fd, io->buf_base, SEEK_SET);
+  lseek64 (io_fd, io->buf_base, SEEK_SET);
   // short read OK, the eof is just to prevent runaways from bad data.
   if (read (io_fd, io->buf, incr) < 0)
     io->saw_eof = 1;
@@ -278,12 +279,14 @@ thread_common (void *my_data_v)
   ticks_t my_realloc_time = 0, my_realloc_count = 0;
   ticks_t my_free_time = 0, my_free_count = 0;
   ticks_t stime, etime;
+  int thread_idx = io - thread_io;
 #ifdef MDEBUG
   volatile void *tmp;
 #endif
 
   while (1)
     {
+      unsigned char this_op = io_peek (io);
       if (io->saw_eof)
 	myabort();
       dprintf("op %p:%ld is %d\n", (void *)thrc, io_pos (io),  io_peek (io));
@@ -483,6 +486,8 @@ thread_common (void *my_data_v)
 	  break;
 
 	default:
+	  printf("op %d - unsupported, thread %d addr %lu\n",
+		 this_op, thread_idx, (long unsigned int)io_pos (io));
 	  myabort();
 	}
     }
@@ -611,7 +616,7 @@ main(int argc, char **argv)
 	  idx = get_int (&main_io);
 	  io_init (& thread_io[thread_idx], idx, guessed_io_size);
 	  pthread_create (&thread_ids[thread_idx], NULL, thread_common, thread_io + thread_idx);
-	  dprintf("Starting thread %lld at offset %d %x\n", (long long)thread_ids[thread_idx], (int)idx, (unsigned int)idx);
+	  dprintf("Starting thread %lld at offset %lu %lx\n", (long long)thread_ids[thread_idx], (unsigned long)idx, (unsigned long)idx);
 	  thread_idx ++;
 	  break;
 	case C_DONE:

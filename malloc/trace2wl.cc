@@ -36,8 +36,8 @@ struct Buffer {
   BufferBlock *first_buffer;
   BufferBlock *last_buffer;
 
-  int count_total;
-  int count_last;
+  size_t count_total;
+  size_t count_last;
 
   Buffer();
   void add (char x);
@@ -121,10 +121,10 @@ PerThreadMap per_thread;
 struct PerAddr {
   PerThread *owner;
   void *ptr;
-  int idx;
+  size_t idx;
   int valid;
   const char *reason;
-  int reason_idx;
+  size_t reason_idx;
   __malloc_trace_buffer_s *inverted;
   PerAddr(void *_ptr) : owner(0), ptr(_ptr), valid(0), reason("not seen"), inverted(NULL) {};
 };
@@ -187,7 +187,7 @@ int fixed_inversions = 0;
 static void
 process_one_trace_record (__malloc_trace_buffer_s *r)
 {
-  int i = r - trace_records;
+  size_t i = r - trace_records;
 
   // Quick-skip for NULs at EOF
   if (r->type == __MTB_TYPE_UNUSED)
@@ -233,11 +233,10 @@ process_one_trace_record (__malloc_trace_buffer_s *r)
 	{
 	  if (pa2->inverted)
 	    {
-	      printf ("%d: pointer %p alloc'd again? (possible multi-level inversion) size %d  %d:%s\n",
-		      i, pa2->ptr, (int)r->size, pa2->reason_idx, pa2->reason);
-	      exit (1);
+	      printf ("%ld: pointer %p alloc'd again? (possible multi-level inversion) size %ld  %ld:%s\n",
+		      i, pa2->ptr, (long int)r->size, pa2->reason_idx, pa2->reason);
+	      //	      exit (1);
 	    }
-	  printf("inversion for type %d\n", r->type);
 	  pa2->inverted = r;
 	  fixed_inversions ++;
 	  pending_inversions ++;
@@ -289,7 +288,7 @@ process_one_trace_record (__malloc_trace_buffer_s *r)
 	}
       else
 	{
-	  printf("%d: invalid pointer %p passed to free: %d:%s\n", i, pa1->ptr, pa1->reason_idx, pa1->reason);
+	  printf("%ld: invalid pointer %p passed to free: %ld:%s\n", i, pa1->ptr, pa1->reason_idx, pa1->reason);
 	}
       break;
 
@@ -322,7 +321,7 @@ process_one_trace_record (__malloc_trace_buffer_s *r)
     case __MTB_TYPE_MEMALIGN:
       acq_ptr (thread, pa2);
       if (pa2 && pa2->valid)
-	printf ("%d: pointer %p memalign'd again?  %d:%s\n", i, pa2->ptr, pa2->reason_idx, pa2->reason);
+	printf ("%ld: pointer %p memalign'd again?  %ld:%s\n", i, pa2->ptr, pa2->reason_idx, pa2->reason);
       thread->add (C_MEMALIGN);
       thread->add_int (pa2 ? pa2->idx : 0);
       thread->add_int (r->size2);
@@ -336,7 +335,7 @@ process_one_trace_record (__malloc_trace_buffer_s *r)
       break;
 
     case __MTB_TYPE_POSIX_MEMALIGN:
-      printf ("%d: Unsupported posix_memalign call.\n", i);
+      printf ("%ld: Unsupported posix_memalign call.\n", i);
       exit (1);
       break;
 
@@ -398,12 +397,12 @@ main(int argc, char **argv)
 
   per_addr[0] = NULL;
 
-  for (unsigned int i = 0; i < num_trace_records; i++)
+  for (unsigned long i = 0; i < num_trace_records; i++)
     process_one_trace_record (trace_records + i);
 
   int n_threads = per_thread.size();
   PerThread *threads[n_threads];
-  int thread_off[n_threads];
+  size_t thread_off[n_threads];
   int i = 0;
 
   PerThreadMap::iterator iter;
@@ -416,19 +415,19 @@ main(int argc, char **argv)
       threads[i++] = iter->second;
       iter->second->add(C_DONE);
       if(verbose)
-	printf("thread: %d bytes\n", iter->second->workload.count_total);
+	printf("thread: %ld bytes\n", (long)iter->second->workload.count_total);
     }
 
   /* The location of each thread's workload depends on the size of the
      startup block, but the size of the startup block depends on the
      size of the thread's location encoding.  So, we loop until it
      stabilizes.  */
-  int old_len = 1;
-  int new_len = 2;
+  size_t old_len = 1;
+  size_t new_len = 2;
   Buffer main_loop;
   while (old_len != new_len)
     {
-      int off = new_len;
+      size_t off = new_len;
       int i;
 
       old_len = new_len;
@@ -467,7 +466,7 @@ main(int argc, char **argv)
   for (i=0; i<n_threads; i++)
     {
       if (verbose)
-	printf("Start thread[%d] offset 0x%x\n", i, thread_off[i]);
+	printf("Start thread[%d] offset 0x%lx\n", i, (long)thread_off[i]);
       threads[i]->workload.write (wl_fd);
     }
 
