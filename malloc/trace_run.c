@@ -18,6 +18,11 @@
 #if UINTPTR_MAX == 0xffffffffffffffff
 
 #define ticks_t int64_t
+/* Setting quick_run to 1 allows the simulator to model
+   only the allocation and deallocation accounting via
+   atomic_rss. The actual allocations are skipped.  This
+   mode is useful to verify the workload file.  */
+#define quick_run 0
 
 static __inline__ ticks_t rdtsc_s(void)
 {
@@ -326,10 +331,14 @@ thread_common (void *my_data_v)
 	  Q1;
 	  if (ptrs[p2])
 	    {
-	      free ((void *)ptrs[p2]);
+	      if (!quick_run)
+		free ((void *)ptrs[p2]);
 	      atomic_rss (-sizes[p2]);
 	    }
-	  ptrs[p2] = memalign (sz2, sz);
+	  if (!quick_run)
+	    ptrs[p2] = memalign (sz2, sz);
+	  else
+	    ptrs[p2] = (void *)p2;
 	  /* Verify the alignment matches what is expected.  */
 	  if (((size_t)ptrs[p2] & (sz2 - 1)) != 0)
 	    myabort ();
@@ -345,7 +354,8 @@ thread_common (void *my_data_v)
 	    }
 	  my_malloc_time += etime - stime;
 	  my_malloc_count ++;
-	  wmem(ptrs[p2], sz);
+	  if (!quick_run)
+	    wmem(ptrs[p2], sz);
 	  break;
 
 	case C_MALLOC:
@@ -361,10 +371,14 @@ thread_common (void *my_data_v)
 	  Q1;
 	  if (ptrs[p2])
 	    {
-	      free ((void *)ptrs[p2]);
+	      if (!quick_run)
+		free ((void *)ptrs[p2]);
 	      atomic_rss (-sizes[p2]);
 	    }
-	  ptrs[p2] = malloc (sz);
+	  if (!quick_run)
+	    ptrs[p2] = malloc (sz);
+	  else
+	    ptrs[p2] = (void *)p2;
 	  sizes[p2] = sz;
 	  mprintf("%p = malloc(%lx)\n", ptrs[p2], sz);
 	  Q2;
@@ -377,7 +391,8 @@ thread_common (void *my_data_v)
 	    }
 	  my_malloc_time += etime - stime;
 	  my_malloc_count ++;
-	  wmem(ptrs[p2], sz);
+	  if (!quick_run)
+	    wmem(ptrs[p2], sz);
 	  break;
 
 	case C_CALLOC:
@@ -391,12 +406,16 @@ thread_common (void *my_data_v)
 	    myabort();
 	  if (ptrs[p2])
 	    {
-	      free ((void *)ptrs[p2]);
+	      if (!quick_run)
+		free ((void *)ptrs[p2]);
 	      atomic_rss (-sizes[p2]);
 	    }
 	  stime = rdtsc_s();
 	  Q1;
-	  ptrs[p2] = calloc (sz, 1);
+	  if (!quick_run)
+	    ptrs[p2] = calloc (sz, 1);
+	  else
+	    ptrs[p2] = (void *)p2;
 	  sizes[p2] = sz;
 	  mprintf("%p = calloc(%lx)\n", ptrs[p2], sz);
 	  Q2;
@@ -404,7 +423,8 @@ thread_common (void *my_data_v)
 	    atomic_rss (sz);
 	  my_calloc_time += rdtsc_e() - stime;
 	  my_calloc_count ++;
-	  wmem(ptrs[p2], sz);
+	  if (!quick_run)
+	    wmem(ptrs[p2], sz);
 	  break;
 
 	case C_REALLOC:
@@ -422,19 +442,24 @@ thread_common (void *my_data_v)
 
 	  if (ptrs[p1])
 	    atomic_rss (-sizes[p1]);
-	  free_wipe(p1);
+	  if (!quick_run)
+	    free_wipe(p1);
 	  stime = rdtsc_s();
 	  Q1;
 #ifdef MDEBUG
 	  tmp = ptrs[p1];
 #endif
-	  ptrs[p2] = realloc ((void *)ptrs[p1], sz);
+	  if (!quick_run)
+	    ptrs[p2] = realloc ((void *)ptrs[p1], sz);
+	  else
+	    ptrs[p2] = (void *)p2;
 	  sizes[p2] = sz;
 	  mprintf("%p = relloc(%p,%lx)\n", ptrs[p2], tmp,sz);
 	  Q2;
 	  my_realloc_time += rdtsc_e() - stime;
 	  my_realloc_count ++;
-	  wmem(ptrs[p2], sz);
+	  if (!quick_run)
+	    wmem(ptrs[p2], sz);
 	  if (p1 != p2)
 	    ptrs[p1] = 0;
 	  if (ptrs[p2])
@@ -446,13 +471,15 @@ thread_common (void *my_data_v)
 	  if (p1 > n_ptrs)
 	    myabort();
 	  dprintf("op %p:%ld FREE %ld\n", (void *)thrc, io_pos (io), p1);
-	  free_wipe (p1);
+	  if (!quick_run)
+	    free_wipe (p1);
 	  if (ptrs[p1])
 	    atomic_rss (-sizes[p1]);
 	  stime = rdtsc_s();
 	  Q1;
 	  mprintf("free(%p)\n", ptrs[p1]);
-	  free ((void *)ptrs[p1]);
+	  if (!quick_run)
+	    free ((void *)ptrs[p1]);
 	  Q2;
 	  my_free_time += rdtsc_e() - stime;
 	  my_free_count ++;
@@ -560,8 +587,6 @@ main(int argc, char **argv)
   size_t guessed_io_size = 4096;
   struct stat statb;
 
-  mallopt (M_MXFAST, 0);
-
   if (argc < 2)
     {
       fprintf(stderr, "Usage: %s <trace2dat.outfile>\n", argv[0]);
@@ -630,19 +655,23 @@ main(int argc, char **argv)
 	  break;
 	}
     }
-  end = rdtsc_e();
-  gettimeofday (&tv_e, NULL);
-  getrusage (RUSAGE_SELF, &res_end);
+  if (!quick_run)
+    {
+      end = rdtsc_e();
+      gettimeofday (&tv_e, NULL);
+      getrusage (RUSAGE_SELF, &res_end);
 
-  printf("%s cycles\n", comma(end - start));
-  usec = diff_timeval (tv_e, tv_s);
-  printf("%s usec wall time\n", comma(usec));
+      printf("%s cycles\n", comma(end - start));
+      usec = diff_timeval (tv_e, tv_s);
+      printf("%s usec wall time\n", comma(usec));
 
-  usec = diff_timeval (res_end.ru_utime, res_start.ru_utime);
-  printf("%s usec across %d thread%s\n", comma(usec), (int)n_threads, n_threads == 1 ? "" : "s");
-  printf("%s Kb Max RSS (%s -> %s)\n",
-	 comma(res_end.ru_maxrss - res_start.ru_maxrss),
-	 comma(res_start.ru_maxrss), comma(res_end.ru_maxrss));
+      usec = diff_timeval (res_end.ru_utime, res_start.ru_utime);
+      printf("%s usec across %d thread%s\n",
+	     comma(usec), (int)n_threads, n_threads == 1 ? "" : "s");
+      printf("%s Kb Max RSS (%s -> %s)\n",
+	     comma(res_end.ru_maxrss - res_start.ru_maxrss),
+	     comma(res_start.ru_maxrss), comma(res_end.ru_maxrss));
+    }
   printf("%s Kb Max Ideal RSS\n", comma (max_ideal_rss / 1024));
 
   if (malloc_count == 0) malloc_count ++;
@@ -650,14 +679,17 @@ main(int argc, char **argv)
   if (realloc_count == 0) realloc_count ++;
   if (free_count == 0) free_count ++;
 
-  printf("\n");
-  printf("sizeof ticks_t is %lu\n", sizeof(ticks_t));
-  printf("Avg malloc time: %6s in %10s calls\n", comma(malloc_time/malloc_count), comma(malloc_count));
-  printf("Avg calloc time: %6s in %10s calls\n", comma(calloc_time/calloc_count), comma(calloc_count));
-  printf("Avg realloc time: %5s in %10s calls\n", comma(realloc_time/realloc_count), comma(realloc_count));
-  printf("Avg free time: %8s in %10s calls\n", comma(free_time/free_count), comma(free_count));
-  printf("Total call time: %s cycles\n", comma(malloc_time+calloc_time+realloc_time+free_time));
-  printf("\n");
+  if (!quick_run)
+    {
+      printf("\n");
+      printf("sizeof ticks_t is %lu\n", sizeof(ticks_t));
+      printf("Avg malloc time: %6s in %10s calls\n", comma(malloc_time/malloc_count), comma(malloc_count));
+      printf("Avg calloc time: %6s in %10s calls\n", comma(calloc_time/calloc_count), comma(calloc_count));
+      printf("Avg realloc time: %5s in %10s calls\n", comma(realloc_time/realloc_count), comma(realloc_count));
+      printf("Avg free time: %8s in %10s calls\n", comma(free_time/free_count), comma(free_count));
+      printf("Total call time: %s cycles\n", comma(malloc_time+calloc_time+realloc_time+free_time));
+      printf("\n");
+    }
 
 #if 0
   /* Free any still-held chunks of memory.  */
