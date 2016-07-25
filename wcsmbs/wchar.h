@@ -468,6 +468,15 @@ __extension__
 extern unsigned long long int wcstouq (const wchar_t *__restrict __nptr,
 				       wchar_t **__restrict __endptr,
 				       int __base) __THROW;
+
+/* Include _Float128 variants of strtof128 if available.  */
+#include <bits/floatn.h>
+
+#if __HAVE_FLOAT128 && __GLIBC_USE (IEC_60559_TYPES_EXT)
+extern _Float128 wcstof128 (const wchar_t *__restrict __nptr,
+			    wchar_t **__restrict __endptr) __THROW;
+#endif
+
 #endif /* Use GNU.  */
 
 #ifdef __USE_GNU
@@ -518,6 +527,13 @@ extern float wcstof_l (const wchar_t *__restrict __nptr,
 extern long double wcstold_l (const wchar_t *__restrict __nptr,
 			      wchar_t **__restrict __endptr,
 			      __locale_t __loc) __THROW;
+
+#if __HAVE_FLOAT128 && __GLIBC_USE (IEC_60559_TYPES_EXT)
+extern _Float128 wcstof128_l (const wchar_t *__restrict __nptr,
+			      wchar_t **__restrict __endptr,
+			      __locale_t __loc) __THROW;
+#endif
+
 #endif	/* use GNU */
 
 

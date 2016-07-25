@@ -69,6 +69,10 @@ Version 2.26
 * The function strfromf128, from ISO/IEC TS 18661-3:2015, is added to libc.
   It converts a _Float128 value into string.
 
+* The function strtof128, from ISO/IEC TS 18661-3:2015, is added to libc.
+  It converts a string into a floating-point number of _Float128 type.  Its
+  wide character counterpart, wsctof128, is added as a GNU extension.
+
 Security related changes:
 
 * The DNS stub resolver limits the advertised UDP buffer size to 1200 bytes,

@@ -4,6 +4,8 @@
 # ifndef _ISOMAC
 # ifdef _WCHAR_H
 
+#include <bits/floatn.h>
+
 extern __typeof (wcscasecmp_l) __wcscasecmp_l;
 extern __typeof (wcsncasecmp_l) __wcsncasecmp_l;
 extern __typeof (wcscoll_l) __wcscoll_l;
@@ -69,6 +71,17 @@ libc_hidden_proto (wcstol)
 libc_hidden_proto (wcstoll)
 libc_hidden_proto (wcstoul)
 libc_hidden_proto (wcstoull)
+
+#if __HAVE_DISTINCT_FLOAT128
+extern __typeof (wcstof128_l) __wcstof128_l;
+libc_hidden_proto (__wcstof128_l)
+extern _Float128 __wcstof128_internal (const wchar_t *__restrict __nptr,
+				       wchar_t **__restrict __endptr,
+				       int __group) __THROW;
+
+libc_hidden_proto (__wcstof128_internal)
+libc_hidden_proto (wcstof128)
+#endif
 
 libc_hidden_proto (__wcscasecmp_l)
 libc_hidden_proto (__wcsncasecmp_l)
