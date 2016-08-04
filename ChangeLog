@@ -1,3 +1,9 @@
+2016-08-04  Carlos O'Donell  <carlos@redhat.com>
+
+	* po/de.po: Update from Translation Project.
+	* po/fi.po: Likewise.
+	* po/sv.po: Likewise.
+
 2016-08-02  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #20370]
