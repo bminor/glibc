@@ -1067,7 +1067,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 	  _res.options |= old_res_options & RES_USE_INET6;
 
-	  if (h_errno == NETDB_INTERNAL)
+	  if (status == NSS_STATUS_UNAVAIL && h_errno == NETDB_INTERNAL)
 	    {
 	      result = -EAI_SYSTEM;
 	      goto free_and_return;
