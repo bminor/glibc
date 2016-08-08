@@ -64,10 +64,7 @@ CXX = g++
 endif
 
 $(objpfx)trace2wl: $(objpfx)trace2wl.o
-	$(CXX) -g -std=gnu++11 -o $@ $(objpfx)trace2wl.o
-
-$(objpfx)trace2wl.o: trace2wl.cc
-	$(CXX) $(CXXFLAGS) -g -o $@ -c $< $(compile-mkdep-flags) -std=gnu++11
+	$(LINK.o) -o $@ $(objpfx)trace2wl.o
 
 $(objpfx)tst-malloc-backtrace: $(shared-thread-library)
 $(objpfx)tst-malloc-thread-exit: $(shared-thread-library)

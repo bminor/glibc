@@ -8,12 +8,10 @@
 #include <sys/stat.h>
 #include <sys/mman.h>
 
-#include <unordered_map>
-
-// The trace file looks like an array of struct __malloc_trace_buffer_s
+/* The trace file looks like an array of struct __malloc_trace_buffer_s */
 #include "mtrace.h"
 
-// This application is "run once and exit" so there's no cleanup code.
+/* This application is "run once and exit" so there's no cleanup code. */
 
 typedef unsigned char byte;
 
@@ -27,48 +25,45 @@ int verbose = 0;
 
 #define BUFFER_SIZE 4096
 
-struct BufferBlock {
-  BufferBlock *next;
+typedef struct BufferBlock {
+  struct BufferBlock *next;
   byte buf[BUFFER_SIZE];
-};
+} BufferBlock;
 
-struct Buffer {
+typedef struct Buffer {
   BufferBlock *first_buffer;
   BufferBlock *last_buffer;
 
   size_t count_total;
   size_t count_last;
+} Buffer;
 
-  Buffer();
-  void add (char x);
-  void add_int (size_t i);
-  void write (int fd);
-  void clear (void);
-};
-
-Buffer::Buffer()
+void
+Buffer__ctor(Buffer *this)
 {
-  first_buffer = last_buffer = new BufferBlock();
-  count_total = count_last = 0;
+  this->first_buffer = this->last_buffer = (BufferBlock *) malloc (sizeof(BufferBlock));
+  this->first_buffer->next = NULL;
+  this->count_total = this->count_last = 0;
 }
 
 void
-Buffer::add (char x)
+Buffer__add (Buffer *this, char x)
 {
-  if (count_last == BUFFER_SIZE)
+  if (this->count_last == BUFFER_SIZE)
     {
-      BufferBlock *b = new BufferBlock;
-      last_buffer->next = b;
-      last_buffer = b;
-      count_last = 0;
+      BufferBlock *b = (BufferBlock *) malloc (sizeof(BufferBlock));
+      b->next = NULL;
+      this->last_buffer->next = b;
+      this->last_buffer = b;
+      this->count_last = 0;
     }
-  last_buffer->buf[count_last] = x;
-  count_last ++;
-  count_total ++;
+  this->last_buffer->buf[this->count_last] = x;
+  this->count_last ++;
+  this->count_total ++;
 }
 
 void
-Buffer::add_int (size_t val)
+Buffer__add_int (Buffer *this, size_t val)
 {
   byte buf[sizeof(size_t)*2];
   int i = 0;
@@ -80,59 +75,187 @@ Buffer::add_int (size_t val)
       buf[i++] = (val & 127) | 128;
     }
   while (i > 0)
-    add (buf[--i]);
+    Buffer__add (this, buf[--i]);
 }
 
 void
-Buffer::write (int fd)
+Buffer__write (Buffer *this, int fd)
 {
   BufferBlock *b;
-  for (b = first_buffer; b != last_buffer; b = b->next)
-    ::write (fd, b->buf, BUFFER_SIZE);
-  if (count_last)
-    ::write (fd, last_buffer->buf, count_last);
+  for (b = this->first_buffer; b != this->last_buffer; b = b->next)
+    write (fd, b->buf, BUFFER_SIZE);
+  if (this->count_last)
+    write (fd, this->last_buffer->buf, this->count_last);
 }
 
 void
-Buffer::clear (void)
+Buffer__clear (Buffer *this)
 {
-  while (first_buffer != last_buffer)
+  while (this->first_buffer != this->last_buffer)
     {
-      BufferBlock *b = first_buffer->next;
-      delete first_buffer;
-      first_buffer = b;
+      BufferBlock *b = this->first_buffer->next;
+      free (this->first_buffer);
+      this->first_buffer = b;
     }
-  count_total = count_last = 0;
+  this->count_total = this->count_last = 0;
 }
 
 //------------------------------------------------------------
 
-struct PerThread {
+typedef struct Hash {
+  /* Each page table is an array of pointers to page tables... */
+  void *pt[256];
+  int count;
+} Hash;
+
+void **
+Hash__hash (Hash *this, size_t key)
+{
+  int i, pi;
+  void **pt;
+
+  if (sizeof (size_t) >= 8)
+    key >>= 3;
+  else
+    key >>= 2;
+
+  pt = this->pt;
+  for (i=sizeof(size_t)-1; i>0; i--)
+    {
+      pi = (key >> (i*8)) & 0xff;
+      if (pt[pi] == NULL)
+	pt[pi] = (void **) calloc (256, sizeof(void *));
+      pt = pt[pi];
+    }
+
+  pi = key & 0xff;
+  return &(pt[pi]);
+}
+
+void
+Hash__ctor (Hash *this)
+{
+  memset (&this->pt, 0, sizeof(this->pt));
+  this->count = 0;
+}
+
+void *
+Hash__lookup (Hash *this, size_t key)
+{
+  void **pp = Hash__hash (this, key);
+  return *pp;
+}
+
+void
+Hash__add (Hash *this, size_t key, void *data)
+{
+  void **pp = Hash__hash (this, key);
+  *pp = data;
+  this->count ++;
+}
+
+void
+Hash__remove (Hash *this, size_t key)
+{
+  void **pp = Hash__hash (this, key);
+  *pp = NULL;
+  this->count --;
+}
+
+void
+Hash__getvals_1 (void **pt, int *count, int level)
+{
+  int i;
+  for (i=0; i<256; i++)
+    if (pt[i])
+      {
+	if (level == sizeof(size_t)-1)
+	  (*count) ++;
+	else
+	  Hash__getvals_1 ((void **) pt[i], count, level+1);
+      }
+}
+
+void
+Hash__getvals_2 (void **pt, void ***table, int level)
+{
+  int i;
+  for (i=0; i<256; i++)
+    if (pt[i])
+      {
+	if (level == sizeof(size_t)-1)
+	  *(*table)++ = pt[i];
+	else
+	  Hash__getvals_2 ((void **) pt[i], table, level+1);
+      }
+}
+
+int
+Hash__getvals (Hash *this, void ***vals)
+{
+  int count = 0;
+  void **valtmp;
+  Hash__getvals_1 (this->pt, &count, 0);
+  printf("count is %d vs %d\n", count, this->count);
+  *vals = (void **) malloc (count * sizeof (void *));
+  valtmp = (*vals);
+  Hash__getvals_2 (this->pt, &valtmp, 0);
+  printf("vals is %ld\n", valtmp - *vals);
+  return count;
+}
+
+//------------------------------------------------------------
+
+typedef struct PerThread {
   int started;
   Buffer workload;
-  PerThread() : started(0), workload() {};
-  void add (byte x) { workload.add(x); }
-  void add_int (size_t x) { workload.add_int(x); }
-};
+} PerThread;
 
-typedef std::unordered_map<int32_t, PerThread*> PerThreadMap;
-PerThreadMap per_thread;
+void
+PerThread__ctor (PerThread *this)
+{
+  this->started = 0;
+  Buffer__ctor (&(this->workload));
+}
 
-struct PerAddr {
+void
+PerThread__add (PerThread *this, byte x)
+{
+  Buffer__add (&(this->workload), x);
+}
+
+void
+PerThread__add_int (PerThread *this, size_t x)
+{
+  Buffer__add_int (&(this->workload), x);
+}
+
+Hash *per_thread;
+
+typedef struct PerAddr {
   PerThread *owner;
   void *ptr;
   size_t idx;
   int valid;
   const char *reason;
   size_t reason_idx;
-  __malloc_trace_buffer_s *inverted;
-  PerAddr(void *_ptr) : owner(0), ptr(_ptr), valid(0), reason("not seen"), inverted(NULL) {};
-};
+  struct __malloc_trace_buffer_s *inverted;
+} PerAddr;
+
+void
+PerAddr__ctor (PerAddr *this, void *_ptr)
+{
+  this->owner = NULL;
+  this->ptr = _ptr;
+  this->valid = 0;
+  this->reason = "not seen";
+  this->inverted = NULL;
+}
 
 // Don't start at zero, zero is special.
 int addr_count = 1;
 
-std::unordered_map<void *, PerAddr*> per_addr;
+Hash *per_addr;
 
 PerAddr *
 get_addr (void *ptr)
@@ -140,10 +263,12 @@ get_addr (void *ptr)
   PerAddr *p;
   if (ptr == NULL)
     return NULL;
-  p = per_addr[ptr];
+  p = Hash__lookup (per_addr, (size_t)ptr);
   if (!p)
     {
-      p = per_addr[ptr] = new PerAddr(ptr);
+      p = (PerAddr *) malloc (sizeof (PerAddr));
+      PerAddr__ctor (p, ptr);
+      Hash__add (per_addr, (size_t)ptr, p);
       p->idx = addr_count ++;
     }
   return p;
@@ -159,10 +284,10 @@ sync_threads (PerThread *trel, PerThread *tacq)
   if (trel == tacq)
     return;
   sync_counter ++;
-  trel->add (C_SYNC_W);
-  trel->add_int (sync_counter);
-  tacq->add (C_SYNC_R);
-  tacq->add_int (sync_counter);
+  PerThread__add (trel, C_SYNC_W);
+  PerThread__add_int (trel, sync_counter);
+  PerThread__add (tacq, C_SYNC_R);
+  PerThread__add_int (tacq, sync_counter);
 }
 
 void
@@ -185,7 +310,7 @@ int pending_inversions = 0;
 int fixed_inversions = 0;
 
 static void
-process_one_trace_record (__malloc_trace_buffer_s *r)
+process_one_trace_record (struct __malloc_trace_buffer_s *r)
 {
   size_t i = r - trace_records;
 
@@ -199,9 +324,13 @@ process_one_trace_record (__malloc_trace_buffer_s *r)
 
   if (r->thread != last_tid)
     {
-      thread = per_thread[r->thread];
+      thread = Hash__lookup (per_thread, r->thread);
       if (thread == NULL)
-	thread = per_thread[r->thread] = new PerThread();
+	{
+	  thread = (PerThread *) malloc (sizeof (PerThread));
+	  PerThread__ctor (thread);
+	  Hash__add (per_thread, r->thread, thread);
+	}
       last_tid = r->thread;
     }
   if (!master_thread)
@@ -246,16 +375,16 @@ process_one_trace_record (__malloc_trace_buffer_s *r)
       acq_ptr (thread, pa2);
 
       if (r->type == __MTB_TYPE_MALLOC)
-	thread->add (C_MALLOC);
+	PerThread__add (thread, C_MALLOC);
       if (r->type == __MTB_TYPE_CALLOC)
-	thread->add (C_CALLOC);
+	PerThread__add (thread, C_CALLOC);
       if (r->type == __MTB_TYPE_VALLOC)
-	thread->add (C_VALLOC);
+	PerThread__add (thread, C_VALLOC);
       if (r->type == __MTB_TYPE_PVALLOC)
-	thread->add (C_PVALLOC);
+	PerThread__add (thread, C_PVALLOC);
 
-      thread->add_int (pa2 ? pa2->idx : 0);
-      thread->add_int (r->size);
+      PerThread__add_int (thread, pa2 ? pa2->idx : 0);
+      PerThread__add_int (thread, r->size);
       if (pa2)
 	{
 	  pa2->valid = 1;
@@ -268,13 +397,13 @@ process_one_trace_record (__malloc_trace_buffer_s *r)
       acq_ptr (thread, pa1);
       if (pa1 == NULL)
 	{
-	  thread->add (C_FREE);
-	  thread->add_int (0);
+	  PerThread__add (thread, C_FREE);
+	  PerThread__add_int (thread, 0);
 	}
       else if (pa1->valid)
 	{
-	  thread->add (C_FREE);
-	  thread->add_int (pa1->idx);
+	  PerThread__add (thread, C_FREE);
+	  PerThread__add_int (thread, pa1->idx);
 	  pa1->valid = 0;
 	  pa1->reason = "previously free'd";
 	  pa1->reason_idx = i;
@@ -297,10 +426,10 @@ process_one_trace_record (__malloc_trace_buffer_s *r)
 	acq_ptr (thread, pa1);
       if (pa2 && pa2->owner)
 	acq_ptr (thread, pa2);
-      thread->add (C_REALLOC);
-      thread->add_int (pa2 ? pa2->idx : 0);
-      thread->add_int (pa1 ? pa1->idx : 0);
-      thread->add_int (r->size);
+      PerThread__add (thread, C_REALLOC);
+      PerThread__add_int (thread, pa2 ? pa2->idx : 0);
+      PerThread__add_int (thread, pa1 ? pa1->idx : 0);
+      PerThread__add_int (thread, r->size);
 
       // handle inversion here too, eventually - both the alloc and free sides.
       if (pa1)
@@ -322,10 +451,10 @@ process_one_trace_record (__malloc_trace_buffer_s *r)
       acq_ptr (thread, pa2);
       if (pa2 && pa2->valid)
 	printf ("%ld: pointer %p memalign'd again?  %ld:%s\n", i, pa2->ptr, pa2->reason_idx, pa2->reason);
-      thread->add (C_MEMALIGN);
-      thread->add_int (pa2 ? pa2->idx : 0);
-      thread->add_int (r->size2);
-      thread->add_int (r->size);
+      PerThread__add (thread, C_MEMALIGN);
+      PerThread__add_int (thread, pa2 ? pa2->idx : 0);
+      PerThread__add_int (thread, r->size2);
+      PerThread__add_int (thread, r->size);
       if (pa2)
 	{
 	  pa2->valid = 1;
@@ -335,8 +464,20 @@ process_one_trace_record (__malloc_trace_buffer_s *r)
       break;
 
     case __MTB_TYPE_POSIX_MEMALIGN:
-      printf ("%ld: Unsupported posix_memalign call.\n", i);
-      exit (1);
+      /* ptr1 is return value (0 or EINVAL etc)
+	 ptr2 is address of allocated memory
+	 size is the allocation size
+	 size2 is the alignment */
+      PerThread__add (thread, C_MEMALIGN);
+      PerThread__add_int (thread, (r->ptr1 == 0) ? pa2->idx : 0);
+      PerThread__add_int (thread, r->size2);
+      PerThread__add_int (thread, r->size);
+      if (r->ptr1 == 0)
+	{
+	  pa2->valid = 1;
+	  pa2->reason = "posix_memalign";
+	  pa2->reason_idx = i;
+	}
       break;
 
     }
@@ -349,6 +490,13 @@ main(int argc, char **argv)
 {
   int trace_fd, wl_fd;
   struct stat stbuf;
+  unsigned long i;
+
+  per_addr = (Hash *) malloc (sizeof (Hash));
+  Hash__ctor (per_addr);
+
+  per_thread = (Hash *) malloc (sizeof (Hash));
+  Hash__ctor (per_thread);
 
   if (argc > 1 && strcmp (argv[1], "-v") == 0)
     {
@@ -395,27 +543,22 @@ main(int argc, char **argv)
     }
   num_trace_records = stbuf.st_size / sizeof(*trace_records);
 
-  per_addr[0] = NULL;
-
-  for (unsigned long i = 0; i < num_trace_records; i++)
+  for (i = 0; i < num_trace_records; i++)
     process_one_trace_record (trace_records + i);
 
-  int n_threads = per_thread.size();
-  PerThread *threads[n_threads];
-  size_t thread_off[n_threads];
-  int i = 0;
+  PerThread **threads;
+  int n_threads;
+  n_threads = Hash__getvals (per_thread, (void ***)&threads);
 
-  PerThreadMap::iterator iter;
+  size_t *thread_off = (size_t *) malloc (n_threads * sizeof (size_t));
+
   if(verbose)
-    printf("%d threads\n", (int)per_thread.size());
-  for (iter = per_thread.begin();
-       iter != per_thread.end();
-       ++iter)
+    printf("%d threads\n", n_threads);
+  for (i = 0; i < n_threads; i ++)
     {
-      threads[i++] = iter->second;
-      iter->second->add(C_DONE);
+      PerThread__add(threads[i], C_DONE);
       if(verbose)
-	printf("thread: %ld bytes\n", (long)iter->second->workload.count_total);
+	printf("thread: %ld bytes\n", (long)threads[i]->workload.count_total);
     }
 
   /* The location of each thread's workload depends on the size of the
@@ -425,30 +568,31 @@ main(int argc, char **argv)
   size_t old_len = 1;
   size_t new_len = 2;
   Buffer main_loop;
+  Buffer__ctor (&main_loop);
   while (old_len != new_len)
     {
       size_t off = new_len;
       int i;
 
       old_len = new_len;
-      main_loop.clear ();
+      Buffer__clear (&main_loop);
 
-      main_loop.add (C_ALLOC_PTRS);
-      main_loop.add_int (addr_count);
-      main_loop.add (C_ALLOC_SYNCS);
-      main_loop.add_int (sync_counter);
-      main_loop.add (C_NTHREADS);
-      main_loop.add_int (n_threads);
+      Buffer__add (&main_loop, C_ALLOC_PTRS);
+      Buffer__add_int (&main_loop, addr_count);
+      Buffer__add (&main_loop, C_ALLOC_SYNCS);
+      Buffer__add_int (&main_loop, sync_counter);
+      Buffer__add (&main_loop, C_NTHREADS);
+      Buffer__add_int (&main_loop, n_threads);
 
       for (i=0; i<n_threads; i++)
 	{
 	  thread_off[i] = off;
-	  main_loop.add (C_START_THREAD);
-	  main_loop.add_int (off);
+	  Buffer__add (&main_loop, C_START_THREAD);
+	  Buffer__add_int (&main_loop, off);
 	  off += threads[i]->workload.count_total;
 	}
 
-      main_loop.add (C_DONE);
+      Buffer__add (&main_loop, C_DONE);
 
       new_len = main_loop.count_total;
     }
@@ -461,13 +605,13 @@ main(int argc, char **argv)
       exit(1);
     }
 
-  main_loop.write (wl_fd);
+  Buffer__write (&main_loop, wl_fd);
 
   for (i=0; i<n_threads; i++)
     {
       if (verbose)
-	printf("Start thread[%d] offset 0x%lx\n", i, (long)thread_off[i]);
-      threads[i]->workload.write (wl_fd);
+	printf("Start thread[%ld] offset 0x%lx\n", i, (long)thread_off[i]);
+      Buffer__write (&(threads[i]->workload), wl_fd);
     }
 
   close (wl_fd);
