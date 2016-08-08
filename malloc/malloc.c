@@ -2159,9 +2159,9 @@ struct malloc_par
 
 #if USE_TCACHE
   /* Maximum number of buckets to use.  */
-  int tcache_max;
+  size_t tcache_max;
   /* Maximum number of chunks in each bucket.  */
-  int tcache_count;
+  size_t tcache_count;
 #endif
 };
 
@@ -3413,37 +3413,6 @@ __libc_malloc (size_t bytes)
 
   __MTB_TRACE_ENTRY (MALLOC, bytes, NULL);
 
-#if USE_TCACHE
-  /* int_free also calls request2size, be careful to not pad twice.  */
-  size_t tbytes = request2size(bytes);
-  int tc_idx = size2tidx (tbytes);
-
-  if (tcache.initted == 0)
-    {
-      tcache.initted = 1;
-      (void) mutex_lock (&tcache_mutex);
-      tcache.next = tcache_list;
-      if (tcache.next)
-	tcache.next->prev = &tcache;
-      tcache_list = &tcache;
-      (void) mutex_unlock (&tcache_mutex);
-    }
-
-  if (tc_idx < mp_.tcache_max
-      && tcache.entries[tc_idx] != NULL
-      && tcache.initted == 1)
-    {
-      TCacheEntry *e = tcache.entries[tc_idx];
-      tcache.entries[tc_idx] = e->next;
-      tcache.counts[tc_idx] --;
-      __MTB_TRACE_RECORD ();
-      __MTB_TRACE_PATH (thread_cache);
-      __MTB_TRACE_SET (ptr2, e);
-      __MTB_TRACE_SET (size3, tbytes);
-      return (void *) e;
-    }
-#endif
-
   void *(*hook) (size_t, const void *)
     = atomic_forced_read (__malloc_hook);
   if (__builtin_expect (hook != NULL, 0))
@@ -3457,6 +3426,38 @@ __libc_malloc (size_t bytes)
 	__MTB_TRACE_SET (size3, chunksize (mem2chunk (victim)));
       return victim;
     }
+
+#if USE_TCACHE
+  /* int_free also calls request2size, be careful to not pad twice.  */
+  size_t tbytes = request2size(bytes);
+  size_t tc_idx = size2tidx (tbytes);
+
+  if (tcache.initted == 0)
+    {
+      tcache.initted = 1;
+      (void) mutex_lock (&tcache_mutex);
+      tcache.next = tcache_list;
+      if (tcache.next)
+	tcache.next->prev = &tcache;
+      tcache_list = &tcache;
+      (void) mutex_unlock (&tcache_mutex);
+    }
+
+  if (tc_idx < mp_.tcache_max
+      && tc_idx < TCACHE_IDX /* to appease gcc */
+      && tcache.entries[tc_idx] != NULL
+      && tcache.initted == 1)
+    {
+      TCacheEntry *e = tcache.entries[tc_idx];
+      tcache.entries[tc_idx] = e->next;
+      tcache.counts[tc_idx] --;
+      __MTB_TRACE_RECORD ();
+      __MTB_TRACE_PATH (thread_cache);
+      __MTB_TRACE_SET (ptr2, e);
+      __MTB_TRACE_SET (size3, tbytes);
+      return (void *) e;
+    }
+#endif
 
 #if 0 && USE_TCACHE
   /* This is fast but causes internal fragmentation, as it always
@@ -4130,8 +4131,8 @@ _tcache_fill (mstate av, size_t original_nb, mchunkptr chunk)
   int n = chunksize(chunk) / original_nb;
   mchunkptr m;
   TCacheEntry *e;
-  int tc_idx = size2tidx (original_nb - SIZE_SZ);
-  int bits = chunk->size & SIZE_BITS;
+  size_t tc_idx = size2tidx (original_nb - SIZE_SZ);
+  size_t bits = chunk->size & SIZE_BITS;
 
   if (tc_idx > mp_.tcache_max)
     return chunk;
@@ -4165,7 +4166,7 @@ _tcache_fill (mstate av, size_t original_nb, mchunkptr chunk)
 /* Given a chunk of size ACTUAL_SIZE and a user request of size
    DESIRED_SIZE, compute the largest ACTUAL_SIZE that would fill the
    tcache.  */
-static int
+static size_t
 _tcache_maxsize (INTERNAL_SIZE_T desired_size, INTERNAL_SIZE_T actual_size)
 {
   if (size2tidx(desired_size-SIZE_SZ) > mp_.tcache_max)
@@ -4262,7 +4263,7 @@ _int_malloc (mstate av, size_t bytes)
 #if USE_TCACHE
 	  /* While we're here, if we see other chunk of the same size,
 	     stash them in the tcache.  */
-	  int tc_idx = size2tidx (nb-SIZE_SZ);
+	  size_t tc_idx = size2tidx (nb-SIZE_SZ);
 	  if (tc_idx < mp_.tcache_max)
 	    {
 	      mchunkptr tc_victim;
@@ -4333,7 +4334,7 @@ _int_malloc (mstate av, size_t bytes)
 #if USE_TCACHE
 	  /* While we're here, if we see other chunk of the same size,
 	     stash them in the tcache.  */
-	  int tc_idx = size2tidx (nb-SIZE_SZ);
+	  size_t tc_idx = size2tidx (nb-SIZE_SZ);
 	  if (tc_idx < mp_.tcache_max)
 	    {
 	      mchunkptr tc_victim;
@@ -4408,11 +4409,11 @@ _int_malloc (mstate av, size_t bytes)
   //INTERNAL_SIZE_T tcache_max = 0;
   if (size2tidx (nb-SIZE_SZ) <= mp_.tcache_max)
     {
-      //int tc_idx = size2tidx (bytes);
+      //size_t tc_idx = size2tidx (bytes);
       tcache_nb = nb;
       //tcache_max = nb * (mp_.tcache_count - tcache.counts[tc_idx]);
     }
-  int tc_idx = size2tidx (nb-SIZE_SZ);
+  size_t tc_idx = size2tidx (nb-SIZE_SZ);
   int return_cached = 0;
 #endif
 
@@ -4910,7 +4911,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 
 #if USE_TCACHE
   {
-    int tc_idx = size2tidx (size - SIZE_SZ);
+    size_t tc_idx = size2tidx (size - SIZE_SZ);
 
     if (tc_idx < mp_.tcache_max
 	&& tcache.counts[tc_idx] < mp_.tcache_count
