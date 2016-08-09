@@ -2179,9 +2179,16 @@ GLIBC_2.24 GLIBC_2.24 A
 GLIBC_2.24 quick_exit F
 GLIBC_2.25 GLIBC_2.25 A
 GLIBC_2.25 __explicit_bzero_chk F
+GLIBC_2.25 __strtof128_internal F
+GLIBC_2.25 __wcstof128_internal F
 GLIBC_2.25 explicit_bzero F
 GLIBC_2.25 getentropy F
 GLIBC_2.25 getrandom F
 GLIBC_2.25 strfromd F
 GLIBC_2.25 strfromf F
+GLIBC_2.25 strfromf128 F
 GLIBC_2.25 strfroml F
+GLIBC_2.25 strtof128 F
+GLIBC_2.25 strtof128_l F
+GLIBC_2.25 wcstof128 F
+GLIBC_2.25 wcstof128_l F
