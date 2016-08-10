@@ -320,6 +320,7 @@ __malloc_assert (const char *assertion, const char *file, unsigned int line,
 }
 #endif
 
+#if 0
 static void
 _m_printf(const char *fmt, ...)
 {
@@ -336,6 +337,7 @@ _m_printf(const char *fmt, ...)
   strcat(buf+strlen(buf), "\033[0m");
   write(2, buf, strlen(buf));
 }
+#endif
 
 /*
   INTERNAL_SIZE_T is the word-size used for internal bookkeeping
@@ -1275,8 +1277,9 @@ __mtb_trace_record (void)
 	  if (trace_fd < 0)
 	    {
 	      /* FIXME: Better handling of errors?  */
-	      _m_printf("Can't open trace_buffer file %s\n", __malloc_trace_filename);
+	      __libc_message (0, "Can't open trace buffer file %s\n", __malloc_trace_filename);
 	      atomic_store_release (&__malloc_trace_enabled, 0);
+	      (void) mutex_unlock (&__malloc_trace_mutex);
 	      return;
 	    }
 
@@ -1292,8 +1295,9 @@ __mtb_trace_record (void)
 	  if (ptr == NULL)
 	    {
 	      /* FIXME: Better handling of errors?  */
-	      _m_printf("Can't map trace_buffer file %s\n", __malloc_trace_filename);
+	      __libc_message (0, "Can't map trace_buffer file %s\n", __malloc_trace_filename);
 	      atomic_store_release (&__malloc_trace_enabled, 0);
+	      (void) mutex_unlock (&__malloc_trace_mutex);
 	      return;
 	    }
 
@@ -1365,9 +1369,9 @@ __malloc_trace_init (char *filename)
   __malloc_trace_count = 0;
 
   __mtb_trace_entry (__MTB_TYPE_MAGIC, sizeof(void *), (void *)0x1234);
-  __mtb_trace_record ();
-
   atomic_store_release (&__malloc_trace_enabled, 1);
+  /* This will reset __malloc_trace_enabled if it fails.  */
+  __mtb_trace_record ();
 }
 
 /* All remaining functions return current count of trace records.  */
@@ -1821,10 +1825,7 @@ typedef struct malloc_chunk *mbinptr;
     FD = P->fd;								      \
     BK = P->bk;								      \
     if (__builtin_expect (FD->bk != P || BK->fd != P, 0))		      \
-      {\
-	_m_printf("%p->%p %p %p->%p\n", FD, FD->bk, P, BK, BK->fd); \
       malloc_printerr (check_action, "corrupted double-linked list", P, AV);  \
-      }									\
     else {								      \
         FD->bk = BK;							      \
         BK->fd = FD;							      \
@@ -4956,8 +4957,6 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 		    || chunksize (chunk_at_offset (p, size)) >= av->system_mem;
 	      }))
 	  {
-	    _m_printf("%p %p %lx vs %lx %lx\n", p, chunk_at_offset (p, size), chunk_at_offset (p, size)->size,
-		      2 * SIZE_SZ, av->system_mem);
 	    errstr = "free(): invalid next size (fast)";
 	    goto errout;
 	  }
