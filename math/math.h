@@ -23,7 +23,8 @@
 #ifndef	_MATH_H
 #define	_MATH_H	1
 
-#include <features.h>
+#define __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION
+#include <bits/libc-header-start.h>
 
 __BEGIN_DECLS
 
@@ -44,7 +45,27 @@ __BEGIN_DECLS
 # include <bits/nan.h>
 #endif /* __USE_ISOC99 */
 
-/* Get general and ISO C99 specific information.  */
+/* Get the architecture specific values describing the floating-point
+   evaluation.  The following symbols will get defined:
+
+    float_t	floating-point type at least as wide as `float' used
+		to evaluate `float' expressions
+    double_t	floating-point type at least as wide as `double' used
+		to evaluate `double' expressions
+
+    FP_FAST_FMA
+    FP_FAST_FMAF
+    FP_FAST_FMAL
+		If defined it indicates that the `fma' function
+		generally executes about as fast as a multiply and an add.
+		This macro is defined only iff the `fma' function is
+		implemented directly with a hardware multiply-add instructions.
+
+    FP_ILOGB0	Expands to a value returned by `ilogb (0.0)'.
+    FP_ILOGBNAN	Expands to a value returned by `ilogb (NAN)'.
+
+*/
+
 #include <bits/mathdef.h>
 
 /* The file <bits/mathcalls.h> contains the prototypes for all the
@@ -172,39 +193,6 @@ extern int signgam;
 /* ISO C99 defines some generic macros which work on any data type.  */
 #ifdef __USE_ISOC99
 
-/* Get the architecture specific values describing the floating-point
-   evaluation.  The following symbols will get defined:
-
-    float_t	floating-point type at least as wide as `float' used
-		to evaluate `float' expressions
-    double_t	floating-point type at least as wide as `double' used
-		to evaluate `double' expressions
-
-    FLT_EVAL_METHOD
-		Defined to
-		  0	if `float_t' is `float' and `double_t' is `double'
-		  1	if `float_t' and `double_t' are `double'
-		  2	if `float_t' and `double_t' are `long double'
-		  else	`float_t' and `double_t' are unspecified
-
-    INFINITY	representation of the infinity value of type `float'
-
-    FP_FAST_FMA
-    FP_FAST_FMAF
-    FP_FAST_FMAL
-		If defined it indicates that the `fma' function
-		generally executes about as fast as a multiply and an add.
-		This macro is defined only iff the `fma' function is
-		implemented directly with a hardware multiply-add instructions.
-
-    FP_ILOGB0	Expands to a value returned by `ilogb (0.0)'.
-    FP_ILOGBNAN	Expands to a value returned by `ilogb (NAN)'.
-
-    DECIMAL_DIG	Number of decimal digits supported by conversion between
-		decimal and all internal floating-point formats.
-
-*/
-
 /* All floating-point numbers can be put in one of these categories.  */
 enum
   {
@@ -328,7 +316,7 @@ enum
 
 #endif /* Use ISO C99.  */
 
-#ifdef __USE_GNU
+#if __GLIBC_USE (IEC_60559_BFP_EXT)
 /* Return nonzero value if X is a signaling NaN.  */
 # ifdef __NO_LONG_DOUBLE_MATH
 #  define issignaling(x) \
@@ -340,7 +328,7 @@ enum
       : sizeof (x) == sizeof (double)					      \
       ? __issignaling (x) : __issignalingl (x))
 # endif
-#endif /* Use GNU.  */
+#endif /* Use IEC_60559_BFP_EXT.  */
 
 #ifdef	__USE_MISC
 /* Support for various different standard error handling behaviors.  */

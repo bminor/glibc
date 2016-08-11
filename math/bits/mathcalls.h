@@ -115,9 +115,11 @@ __MATHCALL (log10,, (_Mdouble_ __x));
 __MATHCALL (modf,, (_Mdouble_ __x, _Mdouble_ *__iptr)) __nonnull ((2));
 _Mdouble_END_NAMESPACE
 
-#ifdef __USE_GNU
-/* A function missing in all standards: compute exponent to base ten.  */
+#if __GLIBC_USE (IEC_60559_FUNCS_EXT)
+/* Compute exponent to base ten.  */
 __MATHCALL (exp10,, (_Mdouble_ __x));
+#endif
+#ifdef __USE_GNU
 /* Another name occasionally used.  */
 __MATHCALL (pow10,, (_Mdouble_ __x));
 #endif
@@ -294,7 +296,7 @@ __MATHCALLX (nextafter,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 __MATHCALLX (nexttoward,, (_Mdouble_ __x, long double __y), (__const__));
 # endif
 
-#ifdef __USE_GNU
+#if __GLIBC_USE (IEC_60559_BFP_EXT)
 /* Return X - epsilon.  */
 __MATHCALL (nextdown,, (_Mdouble_ __x));
 /* Return X + epsilon.  */
@@ -377,7 +379,7 @@ __MATHCALL (fma,, (_Mdouble_ __x, _Mdouble_ __y, _Mdouble_ __z));
 __END_NAMESPACE_C99
 #endif
 
-#ifdef __USE_GNU
+#if __GLIBC_USE (IEC_60559_BFP_EXT)
 /* Test for signaling NaN.  */
 __MATHDECL_1 (int, __issignaling,, (_Mdouble_ __value))
      __attribute__ ((__const__));

@@ -290,7 +290,7 @@ tests = tst-typesizes \
 	tst-initializers1 $(addprefix tst-initializers1-,\
 			    c89 gnu89 c99 gnu99 c11 gnu11) \
 	tst-bad-schedattr \
-	tst-thread_local1 tst-mutex-errorcheck
+	tst-thread_local1 tst-mutex-errorcheck tst-robust10
 xtests = tst-setuid1 tst-setuid1-static tst-setuid2 \
 	tst-mutexpp1 tst-mutexpp6 tst-mutexpp10
 test-srcs = tst-oddstacklimit
@@ -321,8 +321,8 @@ tests += tst-cancelx2 tst-cancelx3 tst-cancelx4 tst-cancelx5 \
 	 tst-cleanupx0 tst-cleanupx1 tst-cleanupx2 tst-cleanupx3 tst-cleanupx4 \
 	 tst-oncex3 tst-oncex4
 ifeq ($(build-shared),yes)
-tests += tst-atfork2 tst-tls3 tst-tls4 tst-tls5 tst-_res1 tst-fini1 \
-	 tst-stackguard1
+tests += tst-atfork2 tst-tls3 tst-tls3-malloc tst-tls4 tst-tls5 tst-_res1 \
+	 tst-fini1 tst-stackguard1
 tests-nolibpthread += tst-fini1
 ifeq ($(have-z-execstack),yes)
 tests += tst-execstack
@@ -528,6 +528,10 @@ $(objpfx)tst-tls3: $(libdl) $(shared-thread-library)
 LDFLAGS-tst-tls3 = -rdynamic
 $(objpfx)tst-tls3.out: $(objpfx)tst-tls3mod.so
 $(objpfx)tst-tls3mod.so: $(shared-thread-library)
+
+$(objpfx)tst-tls3-malloc: $(libdl) $(shared-thread-library)
+LDFLAGS-tst-tls3-malloc = -rdynamic
+$(objpfx)tst-tls3-malloc.out: $(objpfx)tst-tls3mod.so
 
 $(objpfx)tst-tls4: $(libdl) $(shared-thread-library)
 $(objpfx)tst-tls4.out: $(objpfx)tst-tls4moda.so $(objpfx)tst-tls4modb.so

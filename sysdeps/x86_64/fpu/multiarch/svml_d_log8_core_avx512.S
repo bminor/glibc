@@ -22,7 +22,7 @@
 
 	.text
 ENTRY (_ZGVeN8v_log_knl)
-#ifndef HAVE_AVX512_ASM_SUPPORT
+#ifndef HAVE_AVX512DQ_ASM_SUPPORT
 WRAPPER_IMPL_AVX512 _ZGVdN4v_log
 #else
 /*
@@ -222,7 +222,7 @@ WRAPPER_IMPL_AVX512 _ZGVdN4v_log
         movzbl    %r12b, %r15d
         shlq      $4, %r15
         vmovsd    1160(%rsp,%r15), %xmm0
-        call      JUMPTARGET(log)
+        call      JUMPTARGET(__log_finite)
         vmovsd    %xmm0, 1224(%rsp,%r15)
         jmp       .LBL_1_8
 
@@ -230,14 +230,14 @@ WRAPPER_IMPL_AVX512 _ZGVdN4v_log
         movzbl    %r12b, %r15d
         shlq      $4, %r15
         vmovsd    1152(%rsp,%r15), %xmm0
-        call      JUMPTARGET(log)
+        call      JUMPTARGET(__log_finite)
         vmovsd    %xmm0, 1216(%rsp,%r15)
         jmp       .LBL_1_7
 #endif
 END (_ZGVeN8v_log_knl)
 
 ENTRY (_ZGVeN8v_log_skx)
-#ifndef HAVE_AVX512_ASM_SUPPORT
+#ifndef HAVE_AVX512DQ_ASM_SUPPORT
 WRAPPER_IMPL_AVX512 _ZGVdN4v_log
 #else
 /*
@@ -443,7 +443,7 @@ WRAPPER_IMPL_AVX512 _ZGVdN4v_log
         vzeroupper
         vmovsd    1160(%rsp,%r15), %xmm0
 
-        call      JUMPTARGET(log)
+        call      JUMPTARGET(__log_finite)
 
         vmovsd    %xmm0, 1224(%rsp,%r15)
         jmp       .LBL_2_8
@@ -455,7 +455,7 @@ WRAPPER_IMPL_AVX512 _ZGVdN4v_log
         vzeroupper
         vmovsd    1152(%rsp,%r15), %xmm0
 
-        call      JUMPTARGET(log)
+        call      JUMPTARGET(__log_finite)
 
         vmovsd    %xmm0, 1216(%rsp,%r15)
         jmp       .LBL_2_7

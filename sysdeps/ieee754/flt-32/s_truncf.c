@@ -48,4 +48,6 @@ __truncf (float x)
 
   return x;
 }
+#ifndef __truncf
 weak_alias (__truncf, truncf)
+#endif

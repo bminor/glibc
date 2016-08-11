@@ -33,8 +33,10 @@ __fdim (double x, double y)
 
   return r;
 }
+#ifndef __fdim
 weak_alias (__fdim, fdim)
-#ifdef NO_LONG_DOUBLE
+# ifdef NO_LONG_DOUBLE
 strong_alias (__fdim, __fdiml)
 weak_alias (__fdim, fdiml)
+# endif
 #endif

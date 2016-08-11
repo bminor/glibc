@@ -588,6 +588,9 @@ void __atomic_link_error (void);
   __atomic_compare_exchange_n ((mem), (expected), (desired), 1,		      \
     __ATOMIC_RELEASE, __ATOMIC_RELAXED); })
 
+# define atomic_exchange_relaxed(mem, desired) \
+  ({ __atomic_check_size((mem));					      \
+  __atomic_exchange_n ((mem), (desired), __ATOMIC_RELAXED); })
 # define atomic_exchange_acquire(mem, desired) \
   ({ __atomic_check_size((mem));					      \
   __atomic_exchange_n ((mem), (desired), __ATOMIC_ACQUIRE); })
@@ -608,9 +611,15 @@ void __atomic_link_error (void);
   ({ __atomic_check_size((mem));					      \
   __atomic_fetch_add ((mem), (operand), __ATOMIC_ACQ_REL); })
 
+# define atomic_fetch_and_relaxed(mem, operand) \
+  ({ __atomic_check_size((mem));					      \
+  __atomic_fetch_and ((mem), (operand), __ATOMIC_RELAXED); })
 # define atomic_fetch_and_acquire(mem, operand) \
   ({ __atomic_check_size((mem));					      \
   __atomic_fetch_and ((mem), (operand), __ATOMIC_ACQUIRE); })
+# define atomic_fetch_and_release(mem, operand) \
+  ({ __atomic_check_size((mem));					      \
+  __atomic_fetch_and ((mem), (operand), __ATOMIC_RELEASE); })
 
 # define atomic_fetch_or_relaxed(mem, operand) \
   ({ __atomic_check_size((mem));					      \
@@ -618,6 +627,13 @@ void __atomic_link_error (void);
 # define atomic_fetch_or_acquire(mem, operand) \
   ({ __atomic_check_size((mem));					      \
   __atomic_fetch_or ((mem), (operand), __ATOMIC_ACQUIRE); })
+# define atomic_fetch_or_release(mem, operand) \
+  ({ __atomic_check_size((mem));					      \
+  __atomic_fetch_or ((mem), (operand), __ATOMIC_RELEASE); })
+
+# define atomic_fetch_xor_release(mem, operand) \
+  ({ __atomic_check_size((mem));					      \
+  __atomic_fetch_xor ((mem), (operand), __ATOMIC_RELEASE); })
 
 #else /* !USE_ATOMIC_COMPILER_BUILTINS  */
 
@@ -684,6 +700,12 @@ void __atomic_link_error (void);
    *(expected) == __atg103_expected; })
 # endif
 
+/* XXX Fall back to acquire MO because archs do not define a weaker
+   atomic_exchange.  */
+# ifndef atomic_exchange_relaxed
+#  define atomic_exchange_relaxed(mem, val) \
+   atomic_exchange_acq ((mem), (val))
+# endif
 # ifndef atomic_exchange_acquire
 #  define atomic_exchange_acquire(mem, val) \
    atomic_exchange_acq ((mem), (val))
@@ -715,11 +737,23 @@ void __atomic_link_error (void);
    atomic_exchange_and_add_acq ((mem), (operand)); })
 # endif
 
+/* XXX Fall back to acquire MO because archs do not define a weaker
+   atomic_and_val.  */
+# ifndef atomic_fetch_and_relaxed
+#  define atomic_fetch_and_relaxed(mem, operand) \
+   atomic_fetch_and_acquire ((mem), (operand))
+# endif
 /* XXX The default for atomic_and_val has acquire semantics, but this is not
    documented.  */
 # ifndef atomic_fetch_and_acquire
 #  define atomic_fetch_and_acquire(mem, operand) \
    atomic_and_val ((mem), (operand))
+# endif
+# ifndef atomic_fetch_and_release
+/* XXX This unnecessarily has acquire MO.  */
+#  define atomic_fetch_and_release(mem, operand) \
+   ({ atomic_thread_fence_release ();					      \
+   atomic_and_val ((mem), (operand)); })
 # endif
 
 /* XXX The default for atomic_or_val has acquire semantics, but this is not
@@ -734,6 +768,28 @@ void __atomic_link_error (void);
 #  define atomic_fetch_or_relaxed(mem, operand) \
    atomic_fetch_or_acquire ((mem), (operand))
 # endif
+/* XXX Contains an unnecessary acquire MO because archs do not define a weaker
+   atomic_or_val.  */
+# ifndef atomic_fetch_or_release
+#  define atomic_fetch_or_release(mem, operand) \
+   ({ atomic_thread_fence_release ();					      \
+   atomic_fetch_or_acquire ((mem), (operand)); })
+# endif
+
+# ifndef atomic_fetch_xor_release
+# define atomic_fetch_xor_release(mem, operand) \
+  ({ __typeof (*(mem)) __atg104_old;					      \
+     __typeof (mem) __atg104_memp = (mem);				      \
+     __typeof (*(mem)) __atg104_op = (operand);				      \
+									      \
+     do									      \
+       __atg104_old = (*__atg104_memp);					      \
+     while (__builtin_expect						      \
+	    (atomic_compare_and_exchange_bool_rel (			      \
+		__atg104_memp, __atg104_old ^ __atg104_op, __atg104_old), 0));\
+									      \
+     __atg104_old; })
+#endif
 
 #endif /* !USE_ATOMIC_COMPILER_BUILTINS  */
 

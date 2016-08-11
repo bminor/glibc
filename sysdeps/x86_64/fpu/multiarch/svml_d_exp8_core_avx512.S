@@ -22,7 +22,7 @@
 
 	.text
 ENTRY (_ZGVeN8v_exp_knl)
-#ifndef HAVE_AVX512_ASM_SUPPORT
+#ifndef HAVE_AVX512DQ_ASM_SUPPORT
 WRAPPER_IMPL_AVX512 _ZGVdN4v_exp
 #else
 /*
@@ -223,7 +223,7 @@ WRAPPER_IMPL_AVX512 _ZGVdN4v_exp
         movzbl    %r12b, %r15d
         shlq      $4, %r15
         vmovsd    1160(%rsp,%r15), %xmm0
-        call      JUMPTARGET(exp)
+        call      JUMPTARGET(__exp_finite)
         vmovsd    %xmm0, 1224(%rsp,%r15)
         jmp       .LBL_1_8
 
@@ -231,14 +231,14 @@ WRAPPER_IMPL_AVX512 _ZGVdN4v_exp
         movzbl    %r12b, %r15d
         shlq      $4, %r15
         vmovsd    1152(%rsp,%r15), %xmm0
-        call      JUMPTARGET(exp)
+        call      JUMPTARGET(__exp_finite)
         vmovsd    %xmm0, 1216(%rsp,%r15)
         jmp       .LBL_1_7
 #endif
 END (_ZGVeN8v_exp_knl)
 
 ENTRY (_ZGVeN8v_exp_skx)
-#ifndef HAVE_AVX512_ASM_SUPPORT
+#ifndef HAVE_AVX512DQ_ASM_SUPPORT
 WRAPPER_IMPL_AVX512 _ZGVdN4v_exp
 #else
 /*
@@ -438,7 +438,7 @@ WRAPPER_IMPL_AVX512 _ZGVdN4v_exp
         vmovsd    1160(%rsp,%r15), %xmm0
         vzeroupper
         vmovsd    1160(%rsp,%r15), %xmm0
-        call      JUMPTARGET(exp)
+        call      JUMPTARGET(__exp_finite)
         vmovsd    %xmm0, 1224(%rsp,%r15)
         jmp       .LBL_2_8
 
@@ -448,7 +448,7 @@ WRAPPER_IMPL_AVX512 _ZGVdN4v_exp
         vmovsd    1152(%rsp,%r15), %xmm0
         vzeroupper
         vmovsd    1152(%rsp,%r15), %xmm0
-        call      JUMPTARGET(exp)
+        call      JUMPTARGET(__exp_finite)
         vmovsd    %xmm0, 1216(%rsp,%r15)
         jmp       .LBL_2_7
 

@@ -1,3 +1,27 @@
+2016-08-10  Martin Pitt  <martin.pitt@ubuntu.com>
+
+	[BZ #9842]
+	* locales/en_CA (d_fmt): Change to %Y-%m-%d.
+
+2016-08-10  Mike Frysinger  <vapier@gentoo.org>
+
+	* charmaps/CP10007: Change M$ to Microsoft.
+
+2016-07-07  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* locales/de_LI (postal_fmt): Fix indentation.
+	(country_name): Likewise.
+
+2016-07-06  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* locales/de_LI: New locale.
+	* SUPPORTED: Add de_LI.
+
+2016-07-04  Gunnar Hjalmarsson  <gunnarhj@ubuntu.com>
+
+	[BZ #20316]
+	* locales/id_ID (abmon, mon): Change "Peb" to "Feb".
+
 2016-06-16  Simion Onea  <simionea@gmail.com>
 
 	[BZ #18911]

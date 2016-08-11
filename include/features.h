@@ -24,6 +24,10 @@
    __STRICT_ANSI__	ISO Standard C.
    _ISOC99_SOURCE	Extensions to ISO C89 from ISO C99.
    _ISOC11_SOURCE	Extensions to ISO C99 from ISO C11.
+   __STDC_WANT_LIB_EXT2__ Extensions to ISO C99 from TR 27431-2:2010.
+   __STDC_WANT_IEC_60559_BFP_EXT__ Extensions to ISO C11 from TS 18661-1:2014.
+   __STDC_WANT_IEC_60559_FUNCS_EXT__ Extensions to ISO C11 from
+			TS 18661-4:2015.
    _POSIX_SOURCE	IEEE Std 1003.1.
    _POSIX_C_SOURCE	If ==1, like _POSIX_SOURCE; if >=2 add IEEE Std 1003.2;
 			if >=199309L, add IEEE Std 1003.1b-1993;
@@ -58,6 +62,10 @@
    These are defined by this file and are used by the
    header files to decide what to declare or define:
 
+   __GLIBC_USE (F)	Define things from feature set F.  This is defined
+			to 1 or 0; the subsequent macros are either defined
+			or undefined, and those tests should be moved to
+			__GLIBC_USE.
    __USE_ISOC11		Define ISO C11 things.
    __USE_ISOC99		Define ISO C99 things.
    __USE_ISOC95		Define ISO C90 AMD1 (C95) things.
@@ -90,7 +98,14 @@
    explicitly undefined if they are not explicitly defined.
    Feature-test macros that are not defined by the user or compiler
    but are implied by the other feature-test macros defined (or by the
-   lack of any definitions) are defined by the file.  */
+   lack of any definitions) are defined by the file.
+
+   ISO C feature test macros depend on the definition of the macro
+   when an affected header is included, not when the first system
+   header is included, and so they are handled in
+   <bits/libc-header-start.h>, which does not have a multiple include
+   guard.  Feature test macros that can be handled from the first
+   system header included are handled here.  */
 
 
 /* Undefine everything, so we get a clean slate.  */
@@ -125,19 +140,33 @@
 # define __KERNEL_STRICT_NAMES
 #endif
 
-/* Convenience macros to test the versions of glibc and gcc.
-   Use them like this:
+/* Convenience macro to test the version of gcc.
+   Use like this:
    #if __GNUC_PREREQ (2,8)
    ... code requiring gcc 2.8 or later ...
    #endif
-   Note - they won't work for gcc1 or glibc1, since the _MINOR macros
-   were not defined then.  */
+   Note: only works for GCC 2.0 and later, because __GNUC_MINOR__ was
+   added in 2.0.  */
 #if defined __GNUC__ && defined __GNUC_MINOR__
 # define __GNUC_PREREQ(maj, min) \
 	((__GNUC__ << 16) + __GNUC_MINOR__ >= ((maj) << 16) + (min))
 #else
 # define __GNUC_PREREQ(maj, min) 0
 #endif
+
+/* Similarly for clang.  Features added to GCC after version 4.2 may
+   or may not also be available in clang, and clang's definitions of
+   __GNUC(_MINOR)__ are fixed at 4 and 2 respectively.  Not all such
+   features can be queried via __has_extension/__has_feature.  */
+#if defined __clang_major__ && defined __clang_minor__
+# define __glibc_clang_prereq(maj, min) \
+  ((__clang_major__ << 16) + __clang_minor__ >= ((maj) << 16) + (min))
+#else
+# define __glibc_clang_prereq(maj, min) 0
+#endif
+
+/* Whether to use feature set F.  */
+#define __GLIBC_USE(F)	__GLIBC_USE_ ## F
 
 /* _BSD_SOURCE and _SVID_SOURCE are deprecated aliases for
    _DEFAULT_SOURCE.  If _DEFAULT_SOURCE is present we do not
@@ -357,7 +386,7 @@
 /* Major and minor version number of the GNU C library package.  Use
    these macros to test for features in specific releases.  */
 #define	__GLIBC__	2
-#define	__GLIBC_MINOR__	23
+#define	__GLIBC_MINOR__	24
 
 #define __GLIBC_PREREQ(maj, min) \
 	((__GLIBC__ << 16) + __GLIBC_MINOR__ >= ((maj) << 16) + (min))
