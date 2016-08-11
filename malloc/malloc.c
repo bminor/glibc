@@ -1248,7 +1248,7 @@ __mtb_trace_record (void)
 	  /* W3. If that reference counter reached 0, unmap the window. */
 	  if (old_ref_count == 1)
 	    {
-	      munmap (__malloc_trace_buffer[old_window].window, TRACE_MAPPING_SIZE);
+	      __munmap (__malloc_trace_buffer[old_window].window, TRACE_MAPPING_SIZE);
 	      __malloc_trace_buffer[old_window].window = NULL;
 	    }
 	}
@@ -1273,7 +1273,7 @@ __mtb_trace_record (void)
 	     corrupted by, the running application.  */
 
 	  /* F1. Open the trace file.  */
-	  int trace_fd = open (__malloc_trace_filename, O_RDWR|O_CREAT, 0666);
+	  int trace_fd = __open (__malloc_trace_filename, O_RDWR|O_CREAT, 0666);
 	  if (trace_fd < 0)
 	    {
 	      /* FIXME: Better handling of errors?  */
@@ -1285,13 +1285,13 @@ __mtb_trace_record (void)
 
 	  /* F2. Extend the file length so that it covers the end of the current
 	     window (using ftruncate, needed to avoid SIGBUS).  */
-	  ftruncate (trace_fd, (new_window + 1) * TRACE_MAPPING_SIZE);
+	  __ftruncate (trace_fd, (new_window + 1) * TRACE_MAPPING_SIZE);
 
 	  /* F3. Map the window from the file offset corresponding to
 	     the current window.  */
 	  void *ptr =
-	    mmap (NULL, TRACE_MAPPING_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED,
-		  trace_fd, new_window * TRACE_MAPPING_SIZE);
+	    __mmap (NULL, TRACE_MAPPING_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED,
+		    trace_fd, new_window * TRACE_MAPPING_SIZE);
 	  if (ptr == NULL)
 	    {
 	      /* FIXME: Better handling of errors?  */
@@ -1305,7 +1305,7 @@ __mtb_trace_record (void)
 	  __malloc_trace_buffer[new_window].window = ptr;
 
 	  /* F5. Close the file.  */
-	  close (trace_fd);
+	  __close (trace_fd);
 
 	  /* F6. Continue with step W7.  */
 	  /* END F */
@@ -1350,13 +1350,13 @@ __mtb_trace_record (void)
 void
 __malloc_trace_init (char *filename)
 {
-  int pagesize = sysconf(_SC_PAGE_SIZE);
+  int pagesize = __sysconf(_SC_PAGE_SIZE);
   int main_length = TRACE_N_MAPPINGS * sizeof (__malloc_trace_buffer[0]);
   int total_length = (main_length + strlen(filename) + 1 + pagesize-1) & (~(pagesize-1));
   char *mapping;
 
-  mapping = mmap (NULL, total_length, PROT_READ | PROT_WRITE,
-		  MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  mapping = __mmap (NULL, total_length, PROT_READ | PROT_WRITE,
+		    MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   if (mapping == NULL)
     return;
 
@@ -1401,11 +1401,11 @@ size_t __malloc_trace_stop (void)
 
   /* For convenience, reduce the file size to only what's needed, else
      the minimum file size we'll see if 64 Mb.  */
-  int trace_fd = open (__malloc_trace_filename, O_RDWR|O_CREAT, 0666);
+  int trace_fd = __open (__malloc_trace_filename, O_RDWR|O_CREAT, 0666);
   if (trace_fd >= 0)
     {
-      ftruncate (trace_fd, __malloc_trace_count * sizeof (struct __malloc_trace_buffer_s));
-      close (trace_fd);
+      __ftruncate (trace_fd, __malloc_trace_count * sizeof (struct __malloc_trace_buffer_s));
+      __close (trace_fd);
     }
 
   return atomic_load_relaxed (&__malloc_trace_count);
