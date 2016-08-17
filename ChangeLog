@@ -1,3 +1,8 @@
+2016-08-17  Florian Weimer  <fweimer@redhat.com>
+
+	Reduce time to expected nptl/tst-once5 failure.
+	* nptl/tst-once5.cc (TIMEOUT): Define.
+
 2016-08-18  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #16907]
