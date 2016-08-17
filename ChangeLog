@@ -1,3 +1,8 @@
+2019-03-16  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* hurd/hurd/signal.h (_hurd_critical_section_lock): Document how EINTR
+	should be handled.
+
 2019-03-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/syscall-names.list: Update kernel
