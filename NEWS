@@ -22,6 +22,12 @@ Security related changes:
   flooded with crafted ICMP and UDP messages.  Reported by Aldy Hernandez'
   alloca plugin for GCC.  (CVE-2016-4429)
 
+* On ARM EABI (32-bit), generating a backtrace for execution contexts which
+  have been created with makecontext could fail to terminate due to a
+  missing .cantunwind annotation.  This has been observed to lead to a hang
+  (denial of service) in some Go applications compiled with gccgo.  Reported
+  by Andreas Schwab.  (CVE-2016-6323)
+
 The following bugs are resolved with this release:
 
   [19679] gcc-4.9.3 C++ exception handling broken due to unaligned stack
