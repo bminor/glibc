@@ -1,3 +1,9 @@
+2016-08-15  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #20435]
+	* ports/sysdeps/unix/sysv/linux/arm/setcontext.S (__startcontext):
+	Mark as .cantunwind.
+
 2015-02-24  Eric Rannaud  <e@nanocritical.com>
 
 	[BZ #17523]

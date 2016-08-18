@@ -96,6 +96,12 @@ Version 2.19.1
 * The Sun RPC UDP client could exhaust all available stack space when
   flooded with crafted ICMP and UDP messages.  Reported by Aldy Hernandez'
   alloca plugin for GCC.  (CVE-2016-4429)
+
+* On ARM EABI (32-bit), generating a backtrace for execution contexts which
+  have been created with makecontext could fail to terminate due to a
+  missing .cantunwind annotation.  This has been observed to lead to a hang
+  (denial of service) in some Go applications compiled with gccgo.  Reported
+  by Andreas Schwab.  (CVE-2016-6323)
 
 Version 2.19
 
