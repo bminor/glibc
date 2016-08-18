@@ -1,3 +1,9 @@
+2016-08-15  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #20435]
+	* sysdeps/unix/sysv/linux/arm/setcontext.S (__startcontext): Mark
+	as .cantunwind.
+
 2016-06-21  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #20284]

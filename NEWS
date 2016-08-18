@@ -7,6 +7,12 @@ using `glibc' in the "product" field.
 
 Version 2.22.1
 
+* On ARM EABI (32-bit), generating a backtrace for execution contexts which
+  have been created with makecontext could fail to terminate due to a
+  missing .cantunwind annotation.  This has been observed to lead to a hang
+  (denial of service) in some Go applications compiled with gccgo.  Reported
+  by Andreas Schwab.  (CVE-2016-6323)
+
 * A stack-based buffer overflow was found in libresolv when invoked from
   libnss_dns, allowing specially crafted DNS responses to seize control
   of execution flow in the DNS client.  The buffer overflow occurs in
