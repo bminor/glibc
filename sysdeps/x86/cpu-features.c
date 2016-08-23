@@ -134,6 +134,20 @@ init_cpu_features (struct cpu_features *cpu_features)
 	      break;
 	    }
 	}
+
+      /* To avoid SSE transition penalty, use _dl_runtime_resolve_slow.
+         If XGETBV suports ECX == 1, use _dl_runtime_resolve_opt.  */
+      cpu_features->feature[index_Use_dl_runtime_resolve_slow]
+	|= bit_Use_dl_runtime_resolve_slow;
+      if (cpu_features->max_cpuid >= 0xd)
+	{
+	  unsigned int eax;
+
+	  __cpuid_count (0xd, 1, eax, ebx, ecx, edx);
+	  if ((eax & (1 << 2)) != 0)
+	    cpu_features->feature[index_Use_dl_runtime_resolve_opt]
+	      |= bit_Use_dl_runtime_resolve_opt;
+	}
     }
   /* This spells out "AuthenticAMD".  */
   else if (ebx == 0x68747541 && ecx == 0x444d4163 && edx == 0x69746e65)
