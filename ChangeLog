@@ -1,5 +1,7 @@
 2016-09-02  Roland McGrath  <roland@hack.frob.com>
 
+	* sysdeps/arm/nacl/libc.abilist: Add GLIBC_2.24 A.
+
 	* sysdeps/nacl/dup.c: Add libc_hidden_def.
 
 2016-09-02  Roland McGrath  <roland@hack.frob.com>
