@@ -1,3 +1,10 @@
+2016-09-20  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* nptl/Makefile (tests): Add tst-exec5.
+	* nptl/tst-exec5.c: New file.
+	* sysdeps/unix/sysv/linux/spawni.c (__spawni): Correctly enable and disable
+	asynchronous cancellation.
+
 2016-09-19  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	[BZ #20615]
