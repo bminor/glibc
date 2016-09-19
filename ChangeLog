@@ -1,3 +1,116 @@
+2016-09-19  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	[BZ #20615]
+	* sysdeps/powerpc/powerpc32/power9/multiarch/Implies: Replace
+	fpu directory by non-fpu.
+	* sysdeps/powerpc/powerpc64/power9/fpu/Implies: Remove dependency
+	on non-fpu directory from a fpu directory.
+
+2016-09-02  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/arm/nacl/libc.abilist: Add GLIBC_2.24 A.
+
+	* sysdeps/nacl/dup.c: Add libc_hidden_def.
+
+2016-09-02  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/posix/wait3.c: Don't treat STAT_LOC as a union, since it's
+	not any more.
+
+2016-09-02  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/nacl/clock.c (clock): nacl_abi_clock_t -> nacl_irt_clock_t
+
+2016-08-17  Florian Weimer  <fweimer@redhat.com>
+
+	Reduce time to expected nptl/tst-once5 failure.
+	* nptl/tst-once5.cc (TIMEOUT): Define.
+
+2016-08-18  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #16907]
+	* argp/argp.h: Switch to __BEGIN_DECLS and __END_DECLS.
+	(__THROW, __NTH, __attribute__, __restrict): Remove definitions.
+	* argp/argp-fmtstream.h: Add __BEGIN_DECLS and __END_DECLS.
+	(__attribute__): Remove definition.
+
+2016-08-15  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #20435]
+	* sysdeps/unix/sysv/linux/arm/setcontext.S (__startcontext): Mark
+	as .cantunwind.
+
+2016-08-17  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20452]
+	Avoid additional copies of objects in libc.a in static libraries.
+	* sysdeps/ia64/nptl/Makefile (libpthread-shared-only-routines):
+	Add ptw-sysdep, ptw-sigblock, ptw-sigprocmask.
+	* sysdeps/mips/Makefile (librt-shared-only-routines): Add
+	rt-sysdep.
+	* sysdeps/mips/nptl/Makefile (libpthread-shared-only-routines):
+	Add nptl-sysdep.
+	* sysdeps/s390/nptl/Makefile (libpthread-shared-only-routines):
+	Add ptw-sysdep.
+	* sysdeps/unix/alpha/Makefile (librt-shared-only-routines): Add
+	rt-sysdep.
+	* sysdeps/unix/sysv/linux/alpha/Makefile
+	(libpthread-shared-only-routines): Add ptw-sysdep,
+	ptw-sigprocmask, ptw-rt_sigaction.
+	* sysdeps/unix/sysv/linux/ia64/Makefile
+	(librt-shared-only-routines): Add rt-sysdep.
+	* sysdeps/unix/sysv/linux/i386/Makefile
+	(libpthread-shared-only-routines): Add libc-do-syscall.
+	* sysdeps/unix/sysv/linux/microblaze/Makefile
+	(libpthread-shared-only-routines): Add sysdep.
+	* sysdeps/unix/sysv/linux/powerpc/Makefile
+	(librt-shared-only-routines): Add rt-sysdep.
+	(libpthread-shared-only-routines): Add sysdep.
+	* sysdeps/unix/sysv/linux/s390/Makefile
+	(librt-shared-only-routines): Add rt-sysdep.
+	* sysdeps/unix/sysv/linux/sparc/Makefile
+	(librt-shared-only-routines): Add rt-sysdep.
+	(libpthread-shared-only-routines): Add sysdep.
+	* sysdeps/unix/sysv/linux/tile/Makefile
+	(libpthread-shared-only-routines): Likewise.
+
+2016-08-05  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/Makefile
+	[$(subdir) = math && $(have-as-vis3) = yes] (libm-sysdep_routines):
+	Remove s_fdimf-vis3, s_fdim-vis3.
+	* sysdeps/sparc/sparc32/fpu/s_fdim.S: Delete file.
+	* sysdeps/sparc/sparc32/fpu/s_fdimf.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fdim-vis3.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fdim.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fdimf-vis3.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fdimf.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_fdim.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_fdimf.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/s_fdim.S: Likewise.
+	* sysdeps/sparc/sparc64/fpu/s_fdimf.S: Likewise.
+
+2016-08-02  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_nearbyint-vis3.S
+	(__nearbyint_vis3): Don't check for sNaN before float register is
+	loaded with the incoming argument.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_nearbyintf-vis3.S
+	(__nearbyintf_vis3): Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_nearbyint.S (__nearbyint):
+	Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_nearbyintf.S (__nearbyintf):
+	Likewise.
+
+2016-08-03  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/powerpc/ifunc-sel.h (ifunc_sel): Replace beqlr instructions
+	by beq instructions jumping to the end of the function.
+	* sysdeps/powerpc/ifunc-sel.h (ifunc_sel): Add "11", "12", "cr0" to the
+	clobber list. Use "i" constraint instead of "X".
+	(ifunc_one): Add "12" to the clobber list. Use "i" constraint instead
+	of "X".
+
 2015-08-06  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* elf/get-dynamic-info.h (elf_get_dynamic_info): Remove assert

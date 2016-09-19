@@ -5,6 +5,17 @@ See the end for copying conditions.
 Please send GNU C library bug reports via <http://sourceware.org/bugzilla/>
 using `glibc' in the "product" field.
 
+Version 2.24.1
+
+Security related changes:
+
+* On ARM EABI (32-bit), generating a backtrace for execution contexts which
+  have been created with makecontext could fail to terminate due to a
+  missing .cantunwind annotation.  This has been observed to lead to a hang
+  (denial of service) in some Go applications compiled with gccgo.  Reported
+  by Andreas Schwab.  (CVE-2016-6323)
+
+
 Version 2.24
 
 * The minimum Linux kernel version that this version of the GNU C Library
