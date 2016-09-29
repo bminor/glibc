@@ -2283,7 +2283,10 @@ typedef Elf32_Addr Elf32_Conflict;
 #define DT_PPC64_OPD	(DT_LOPROC + 1)
 #define DT_PPC64_OPDSZ	(DT_LOPROC + 2)
 #define DT_PPC64_OPT	(DT_LOPROC + 3)
-#define DT_PPC64_NUM    4
+/* This should have the value 4, to match with the four tag values
+   above, but the change needs to be coordinated with an update to
+   L_INFO_ELEMENTS in libunwind/google_link.h.  */
+#define DT_PPC64_NUM    3
 
 /* PowerPC64 specific values for the DT_PPC64_OPT Dyn entry.  */
 #define PPC64_OPT_TLS		1

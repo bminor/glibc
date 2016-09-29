@@ -607,3 +607,7 @@ posix/Makefile
 posix/tst-getaddrinfo6.c
   For b/29615899, fix error handling in getaddrinfo.
   (stanshebs, google-local)
+
+elf/elf.h
+  For b/31273149, revert the value of DT_PPC64_NUM from 4 to 3.
+  (stanshebs, google-local)
