@@ -1,9 +1,6 @@
-// Copyright 2004 Google Inc.
-// Author: Paul Menage
-
-// An NSS module that extends local user account lookup to the file /etc/passwd.borg
-// (Despite the suggestive name, passwd.borg is just a second file in the standard
-// passwd format, separated for various reasons. -sts 2015)
+// An NSS module that extends local user account lookup to the files
+// /etc/passwd.borg and /etc/passwd.borg.base
+// passwd.borg.base is a subset of passwd.borg that is used as a fallback.
 
 #include <stdio.h>
 #include <pwd.h>
@@ -18,6 +15,7 @@ __libc_lock_define_initialized (static, lock)
 #define NSSBORG_UNLOCK  __libc_lock_unlock (lock);
 
 static FILE *f;
+static FILE *fb;
 
 #define DEBUG(fmt, ...)
 
@@ -29,7 +27,10 @@ static enum nss_status _nss_borg_setpwent_locked(void) {
   DEBUG("Opening passwd.borg\n");
   f = fopen("/etc/passwd.borg", "r");
 
-  if (f) {
+  DEBUG("Opening passwd.borg.base\n");
+  fb = fopen("/etc/passwd.borg.base", "r");
+
+  if (f||fb) {
     return NSS_STATUS_SUCCESS;
   } else {
     return NSS_STATUS_UNAVAIL;
@@ -58,6 +59,11 @@ static enum nss_status _nss_borg_endpwent_locked(void) {
     fclose(f);
     f = NULL;
   }
+  DEBUG("Closing passwd.borg.base\n");
+  if (fb) {
+    fclose(fb);
+    fb = NULL;
+  }
   return NSS_STATUS_SUCCESS;
 }
 
@@ -81,8 +87,13 @@ static enum nss_status _nss_borg_getpwent_r_locked(struct passwd *result,
 
   enum nss_status ret;
 
-  if (fgetpwent_r(f, result, buffer, buflen, &result) == 0) {
-    DEBUG("Returning user %d:%s\n", result->pw_uid, result->pw_name);
+  if (f != NULL
+      && fgetpwent_r(f, result, buffer, buflen, &result) == 0) {
+    DEBUG("Returning borg user %d:%s\n", result->pw_uid, result->pw_name);
+    ret = NSS_STATUS_SUCCESS;
+  } else if (fb != NULL
+             && getpwent_r(fb, result, buffer, buflen, &result) == 0) {
+    DEBUG("Returning base user %d:%s\n", result->pw_uid, result->pw_name);
     ret = NSS_STATUS_SUCCESS;
   } else {
     *errnop = errno;
