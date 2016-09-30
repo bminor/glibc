@@ -87,12 +87,12 @@ static enum nss_status _nss_borg_getpwent_r_locked(struct passwd *result,
 
   enum nss_status ret;
 
-  if (f != NULL
-      && fgetpwent_r(f, result, buffer, buflen, &result) == 0) {
+  if (
+      f != NULL && (fgetpwent_r(f, result, buffer, buflen, &result) == 0)) {
     DEBUG("Returning borg user %d:%s\n", result->pw_uid, result->pw_name);
     ret = NSS_STATUS_SUCCESS;
-  } else if (fb != NULL
-             && getpwent_r(fb, result, buffer, buflen, &result) == 0) {
+  } else if (
+      fb != NULL && (fgetpwent_r(fb, result, buffer, buflen, &result) == 0)) {
     DEBUG("Returning base user %d:%s\n", result->pw_uid, result->pw_name);
     ret = NSS_STATUS_SUCCESS;
   } else {
