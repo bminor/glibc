@@ -31,9 +31,37 @@ ifeq ($(subdir),math)
 ifeq ($(build-mathvec),yes)
 libmvec-tests += double-vlen2 double-vlen4 double-vlen4-avx2 \
 		 float-vlen4 float-vlen8 float-vlen8-avx2
+tests += test-double-libmvec-sincos test-double-libmvec-sincos-avx \
+	 test-double-libmvec-sincos-avx2 test-float-libmvec-sincosf \
+	 test-float-libmvec-sincosf-avx test-float-libmvec-sincosf-avx2
+
+$(objpfx)test-double-libmvec-sincos: \
+  $(objpfx)test-double-libmvec-sincos.o $(objpfx)init-arch.o $(libmvec)
+
+$(objpfx)test-double-libmvec-sincos-avx: \
+  $(objpfx)test-double-libmvec-sincos-avx.o $(objpfx)init-arch.o $(libmvec)
+
+$(objpfx)test-double-libmvec-sincos-avx2: \
+  $(objpfx)test-double-libmvec-sincos-avx2.o $(objpfx)init-arch.o $(libmvec)
+
+$(objpfx)test-float-libmvec-sincosf: \
+  $(objpfx)test-float-libmvec-sincosf.o $(objpfx)init-arch.o $(libmvec)
+
+$(objpfx)test-float-libmvec-sincosf-avx: \
+  $(objpfx)test-float-libmvec-sincosf-avx.o $(objpfx)init-arch.o $(libmvec)
+
+$(objpfx)test-float-libmvec-sincosf-avx2: \
+  $(objpfx)test-float-libmvec-sincosf-avx2.o $(objpfx)init-arch.o $(libmvec)
 
 ifeq (yes,$(config-cflags-avx512))
 libmvec-tests += double-vlen8 float-vlen16
+tests += test-double-libmvec-sincos-avx512 test-float-libmvec-sincosf-avx512
+
+$(objpfx)test-double-libmvec-sincos-avx512: \
+  $(objpfx)test-double-libmvec-sincos-avx512.o $(objpfx)init-arch.o $(libmvec)
+
+$(objpfx)test-float-libmvec-sincosf-avx512: \
+  $(objpfx)test-float-libmvec-sincosf-avx512.o $(objpfx)init-arch.o $(libmvec)
 endif
 
 double-vlen4-arch-ext-cflags = -mavx
@@ -44,11 +72,22 @@ float-vlen8-arch-ext-cflags = -mavx
 float-vlen8-arch-ext2-cflags = -mavx2
 float-vlen16-arch-ext-cflags = -mavx512f
 
+libmvec-sincos-cflags = $(libm-test-fast-math-cflags) -fno-inline -fopenmp -Wno-unknown-pragmas
+
 CFLAGS-test-double-vlen4-avx2.c = $(libm-test-vec-cflags)
 CFLAGS-test-double-vlen4-avx2-wrappers.c = $(double-vlen4-arch-ext2-cflags)
 
 CFLAGS-test-float-vlen8-avx2.c = $(libm-test-vec-cflags)
 CFLAGS-test-float-vlen8-avx2-wrappers.c = $(float-vlen8-arch-ext2-cflags)
 
+CFLAGS-test-double-libmvec-sincos.c = $(libmvec-sincos-cflags)
+CFLAGS-test-double-libmvec-sincos-avx.c = $(libmvec-sincos-cflags) $(double-vlen4-arch-ext-cflags) -DREQUIRE_AVX
+CFLAGS-test-double-libmvec-sincos-avx2.c = $(libmvec-sincos-cflags) $(double-vlen4-arch-ext2-cflags) -DREQUIRE_AVX2
+CFLAGS-test-double-libmvec-sincos-avx512.c = $(libmvec-sincos-cflags) $(double-vlen8-arch-ext-cflags) -DREQUIRE_AVX512F
+
+CFLAGS-test-float-libmvec-sincosf.c = $(libmvec-sincos-cflags)
+CFLAGS-test-float-libmvec-sincosf-avx.c = $(libmvec-sincos-cflags) $(float-vlen8-arch-ext-cflags) -DREQUIRE_AVX
+CFLAGS-test-float-libmvec-sincosf-avx2.c = $(libmvec-sincos-cflags) $(float-vlen8-arch-ext2-cflags) -DREQUIRE_AVX2
+CFLAGS-test-float-libmvec-sincosf-avx512.c = $(libmvec-sincos-cflags) $(float-vlen16-arch-ext-cflags) -DREQUIRE_AVX512F
 endif
 endif
