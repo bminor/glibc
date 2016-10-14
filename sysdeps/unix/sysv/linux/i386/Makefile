@@ -18,6 +18,7 @@ endif
 # libpthread uses six-argument inline syscalls.
 ifeq ($(subdir),nptl)
 libpthread-sysdep_routines += libc-do-syscall
+libpthread-shared-only-routines += libc-do-syscall
 endif
 
 ifeq ($(subdir),resource)

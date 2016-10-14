@@ -29,6 +29,318 @@
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h
 	(lll_unlock_elision): Likewise
 
+2016-08-17  Florian Weimer  <fweimer@redhat.com>
+
+	Reduce time to expected nptl/tst-once5 failure.
+	* nptl/tst-once5.cc (TIMEOUT): Define.
+
+2016-08-18  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #16907]
+	* argp/argp.h: Switch to __BEGIN_DECLS and __END_DECLS.
+	(__THROW, __NTH, __attribute__, __restrict): Remove definitions.
+	* argp/argp-fmtstream.h: Add __BEGIN_DECLS and __END_DECLS.
+	(__attribute__): Remove definition.
+
+2016-06-11  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20222]
+	* libio/iofopncook.c (_IO_cookie_read): Demangle callback pointer.
+	(_IO_cookie_write): Likewise.
+	(_IO_cookie_seek): Likewise.
+	(_IO_cookie_close): Likewise.
+	(_IO_old_cookie_seek): Likewise.
+	(set_callbacks): New function.
+	(_IO_cookie_init): Call set_callbacks to copy callbacks.
+
+2016-03-29  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19837]
+	* nss/nss_db/db-XXX.c (_nss_db_getENTNAME_r): Propagate ERANGE
+	error if parse_line fails.
+
+2016-06-11  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20237]
+	* nss/nss_db/db-XXX.c (set*ent): Reset entidx to NULL.
+	(get*ent): Set entidx to NULL during initialization.  If entidx is
+	NULL, start iteration from the beginning.
+
+2016-06-30  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #20262]
+	* nis/nss_nis/nis-initgroups.c (_nss_nis_initgroups_dyn): Return
+	NSS_STATUS_SUCCESS when done.  Return NSS_STATUS_TRYAGAIN when out
+	of memory.
+
+2016-08-15  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #20435]
+	* sysdeps/unix/sysv/linux/arm/setcontext.S (__startcontext): Mark
+	as .cantunwind.
+
+2016-06-21  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20284]
+	* malloc/arena.c (reused_arena): Do not return NULL if we start
+	out with a non-corrupted arena.
+
+2016-08-17  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20452]
+	Avoid additional copies of objects in libc.a in static libraries.
+	* sysdeps/ia64/nptl/Makefile (libpthread-shared-only-routines):
+	Add ptw-sysdep, ptw-sigblock, ptw-sigprocmask.
+	* sysdeps/mips/Makefile (librt-shared-only-routines): Add
+	rt-sysdep.
+	* sysdeps/mips/nptl/Makefile (libpthread-shared-only-routines):
+	Add nptl-sysdep.
+	* sysdeps/s390/nptl/Makefile (libpthread-shared-only-routines):
+	Add ptw-sysdep.
+	* sysdeps/unix/alpha/Makefile (librt-shared-only-routines): Add
+	rt-sysdep.
+	* sysdeps/unix/sysv/linux/alpha/Makefile
+	(libpthread-shared-only-routines): Add ptw-sysdep,
+	ptw-sigprocmask, ptw-rt_sigaction.
+	* sysdeps/unix/sysv/linux/ia64/Makefile
+	(librt-shared-only-routines): Add rt-sysdep.
+	* sysdeps/unix/sysv/linux/i386/Makefile
+	(libpthread-shared-only-routines): Add libc-do-syscall.
+	* sysdeps/unix/sysv/linux/microblaze/Makefile
+	(libpthread-shared-only-routines): Add sysdep.
+	* sysdeps/unix/sysv/linux/powerpc/Makefile
+	(librt-shared-only-routines): Add rt-sysdep.
+	(libpthread-shared-only-routines): Add sysdep.
+	* sysdeps/unix/sysv/linux/s390/Makefile
+	(librt-shared-only-routines): Add rt-sysdep.
+	* sysdeps/unix/sysv/linux/sparc/Makefile
+	(librt-shared-only-routines): Add rt-sysdep.
+	(libpthread-shared-only-routines): Add sysdep.
+	* sysdeps/unix/sysv/linux/tile/Makefile
+	(libpthread-shared-only-routines): Likewise.
+
+2016-08-02  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20370]
+	* malloc/arena.c (get_free_list): Update comment.  Assert that
+	arenas on the free list have no attached threads.
+	(remove_from_free_list): New function.
+	(reused_arena): Call it.
+
+2016-06-30  John David Anglin  <danglin@gcc.gnu.org>
+
+	[BZ #20277]
+	* sysdeps/hppa/start.S (_start): Correct loading of global pointer
+	when SHARED is defined.
+
+2016-06-21  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/unix/sysv/linux/mips/vfork.S (__vfork): Rename into
+	__libc_vfork.
+	(__vfork) [IS_IN (libc)]: Remove alias.
+	(__libc_vfork) [IS_IN (libc)]: Define as an alias.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/vfork.S: Likewise.
+
+2016-06-18  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/unix/sysv/linux/mips/vfork.S (__vfork): Conditionalize
+	hidden_def, weak_alias and strong_alias on [IS_IN (libc)].
+	* sysdeps/unix/sysv/linux/sparc/sparc32/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/vfork.S: Likewise.
+
+2016-01-22  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* string/tst-endian.c: Include <libc-internal.h>.
+	(do_test): Ignore tautological-compare warnings around
+	"htobeXX (beXXtoh (i)) != i" and
+	"htoleXX (leXXtoh (i)) != i" if-statements.
+
+2015-12-18  Torvald Riegel  <triegel@redhat.com>
+
+	* math/atest-exp2.c (mp_exp_m1): Remove.
+
+2016-06-02  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/unix/sysv/linux/dl-openat64.c (openat64): Convert to
+	ISO-style variadic function definition.
+
+2015-12-11  Steve Ellcey  <sellcey@imgtec.com>
+
+	* sysdeps/ieee754/flt-32/k_rem_pio2f.c (__kernel_rem_pio2f):
+	Fix indentation.
+
+2015-09-18  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* resolv/base64.c (rcsid): Remove unused static.
+	* sysdeps/ieee754/dbl-64/atnat2.h (qpi1): Remove unused
+	static.  (tqpi1): Likewise.
+	* sysdeps/ieee754/dbl-64/uexp.h (one): Likewise.
+	* sysdeps/ieee754/dbl-64/upow.h (sqrt_2): Likewise.
+	* sysdeps/ieee754/flt-32/e_log10f.c (one): Likewise.
+	* sysdeps/ieee754/flt-32/s_cosf.c (one): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_lgammal_r.c (zero): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_erfl.c (half): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_log1pl.c (maxlog): Likewise.
+	* timezone/private.h (time_t_min): Likewise.  (time_t_max):
+	Likewise.
+
+2016-04-15  Yvan Roux  <yvan.roux@linaro.org>
+
+	* stdlib/setenv.c (unsetenv): Fix ambiguous 'else'.
+	* nis/nis_call.c (nis_server_cache_add): Likewise.
+
+2016-06-01  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19861]
+	Do not use IFUNC resolver with potentially unrelocated symbol.
+	* nptl/pt-fork.c [HAVE_IFUNC]: Remove.
+	(DEFINE_FORK): Remove macro and inline definition.
+	(fork_alias): Renamed from fork_ifunc.
+	(__fork_alias): Renamed from __fork_ifunc.
+
+2016-05-23  Florian Weimer  <fweimer@redhat.com>
+
+	CVE-2016-4429
+	[BZ #20112]
+	* sunrpc/clnt_udp.c (clntudp_call): Use malloc/free for the error
+	payload.
+
+2016-05-02  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19573]
+	* hesiod/Makefile (libnss_hesiod-routines): Remove hesiod-init.
+	* hesiod/nss_hesiod/hesiod-init.c: Remove file.
+	* hesiod/nss_hesiod/nss_hesiod.h: Likewise.
+	* hesiod/hesiod.h (__hesiod_res_get, __hesiod_res_set): Remove.
+	(hesiod_init, hesiod_end, hesiod_to_bind, hesiod_resolve)
+	(hesiod_free_list): Mark as hidden.
+	* hesiod/hesiod_p (struct hesiod_p): Remove res, free_res,
+	res_set, res_get.
+	* hesiod/hesiod.c: Remove unnecessary forward declarations.
+	(init, __hesiod_res_get, __hesiod_res_set): Remove.
+	(hesiod_init): Remove obsolete res_ninit call.
+	(hesiod_end): Do not free resolver state.  Do not invoke callback.
+	(hesiod_bind): Do not call init.
+	(get_txt_records): Use res_mkquery, res_send instead of
+	res_nmkquery, res_nsend.
+	* hesiod/nss_hesiod/hesiod-grp.c (lookup): Call hesiod_init
+	instead of _nss_hesiod_init.
+	(_nss_hesiod_initgroups_dyn): Likewise.
+	* hesiod/nss_hesiod/hesiod-proto.c (lookup): Likewise.
+	* hesiod/nss_hesiod/hesiod-pwd.c (lookup): Likewise.
+	* hesiod/nss_hesiod/hesiod-service.c (lookup): Likewise.
+
+2016-05-02  Florian Weimer  <fweimer@redhat.com>
+
+	* hesiod/hesiod.h: Remove RCS keyword.
+	* hesiod/hesiod_p.h: Likewise.
+	* hesiod/hesiod.c: Likewise.
+
+2016-04-29  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20010]
+	CVE-2016-3706
+	* sysdeps/posix/getaddrinfo.c
+	(convert_hostent_to_gaih_addrtuple): New function.
+	(gethosts): Call convert_hostent_to_gaih_addrtuple.
+	(gaih_inet): Use convert_hostent_to_gaih_addrtuple to convert
+	AF_INET data.
+
+2016-05-04  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19779]
+	CVE-2016-1234
+	Avoid copying names of directory entries.
+	* posix/glob.c (DIRENT_MUST_BE, DIRENT_MIGHT_BE_SYMLINK)
+	(DIRENT_MIGHT_BE_DIR, CONVERT_D_INO, CONVERT_D_TYPE)
+	(CONVERT_DIRENT_DIRENT64, REAL_DIR_ENTRY): Remove macros.
+	(struct readdir_result): New type.
+	(D_TYPE_TO_RESULT, D_INO_TO_RESULT, READDIR_RESULT_INITIALIZER)
+	(GL_READDIR): New macros.
+	(readdir_result_might_be_symlink, readdir_result_might_be_dir)
+	(convert_dirent, convert_dirent64): New functions.
+	(glob_in_dir): Use struct readdir_result.  Call convert_dirent or
+	convert_dirent64.  Adjust references to the readdir result.
+	* sysdeps/unix/sysv/linux/i386/glob64.c:
+	(convert_dirent, GL_READDIR): Redefine for second file inclusion.
+	* posix/bug-glob2.c (LONG_NAME): Define.
+	(filesystem): Add LONG_NAME.
+	(my_DIR): Increase the size of room_for_dirent.
+
+2016-04-29  Florian Weimer  <fweimer@redhat.com>
+
+	glob: Simplify and document the interface for the GLOB_ALTDIRFUNC
+	callback function gl_readdir.
+	* posix/glob.c (NAMELEN, CONVERT_D_NAMLEN): Remove.
+	(CONVERT_DIRENT_DIRENT64): Use strcpy instead of memcpy.
+	(glob_in_dir): Remove len.  Use strdup instead of malloc and
+	memcpy to copy the name.
+	* manual/pattern.texi (Calling Glob): Document requirements for
+	implementations of the gl_readdir callback function.
+	* manual/examples/mkdirent.c: New example.
+	* posix/bug-glob2.c (my_readdir): Set d_ino to 1 unconditionally,
+	per the manual guidance.
+	* posix/tst-gnuglob.c (my_readdir): Likewise.
+
+2016-04-13  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/arena.c (list_lock): Update comment.
+
+2016-04-13  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/tst-malloc-thread-exit.c: Include test-skeleton.c early.
+	(do_test): Limit the number of arenas, so that we can use fewer
+	outer threads.  Limit timeout to 3 seconds, in preparation for a
+	larger TIMEOUT value.
+
+2016-04-13  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19182]
+	* malloc/arena.c (list_lock): Document lock ordering requirements.
+	(free_list_lock): New lock.
+	(ptmalloc_lock_all): Comment on free_list_lock.
+	(ptmalloc_unlock_all2): Reinitialize free_list_lock.
+	(detach_arena): Update comment.  free_list_lock is now needed.
+	(_int_new_arena): Use free_list_lock around detach_arena call.
+	Acquire arena lock after list_lock.  Add comment, including FIXME
+	about incorrect synchronization.
+	(get_free_list): Switch to free_list_lock.
+	(reused_arena): Acquire free_list_lock around detach_arena call
+	and attached threads counter update.  Add two FIXMEs about
+	incorrect synchronization.
+	(arena_thread_freeres): Switch to free_list_lock.
+	* malloc/malloc.c (struct malloc_state): Update comments to
+	mention free_list_lock.
+
+2016-04-13  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19243]
+	* malloc/arena.c (get_free_list): Remove assert and adjust
+	reference count handling.  Add comment about reused_arena
+	interaction.
+	(reused_arena): Add comments abount get_free_list interaction.
+	* malloc/tst-malloc-thread-exit.c: New file.
+	* malloc/Makefile (tests): Add tst-malloc-thread-exit.
+	(tst-malloc-thread-exit): Link against libpthread.
+
+2016-04-13  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ# 19048]
+	* malloc/malloc.c (struct malloc_state): Update comment.  Add
+	attached_threads member.
+	(main_arena): Initialize attached_threads.
+	* malloc/arena.c (list_lock): Update comment.
+	(ptmalloc_lock_all, ptmalloc_unlock_all): Likewise.
+	(ptmalloc_unlock_all2): Reinitialize arena reference counts.
+	(deattach_arena): New function.
+	(_int_new_arena): Initialize arena reference count and deattach
+	replaced arena.
+	(get_free_list, reused_arena): Update reference count and deattach
+	replaced arena.
+	(arena_thread_freeres): Update arena reference count and only put
+	unreferenced arenas on the free list.
+
 2016-04-12  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 
 	[BZ #19853]
