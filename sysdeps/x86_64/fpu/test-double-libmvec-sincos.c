@@ -1,5 +1,5 @@
-/* Wrapper part of tests for AVX ISA versions of vector math functions.
-   Copyright (C) 2014-2015 Free Software Foundation, Inc.
+/* Test for vector sincos ABI.
+   Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,22 +16,30 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "test-float-vlen8.h"
-#include "test-math-vector-sincos.h"
-#include <immintrin.h>
+#include <math-tests-arch.h>
 
-#define VEC_TYPE __m256
+extern int test_sincos_abi (void);
 
-VECTOR_WRAPPER (WRAPPER_NAME (cosf), _ZGVcN8v_cosf)
-VECTOR_WRAPPER (WRAPPER_NAME (sinf), _ZGVcN8v_sinf)
-VECTOR_WRAPPER (WRAPPER_NAME (logf), _ZGVcN8v_logf)
-VECTOR_WRAPPER (WRAPPER_NAME (expf), _ZGVcN8v_expf)
-VECTOR_WRAPPER_ff (WRAPPER_NAME (powf), _ZGVcN8vv_powf)
+int arch_check = 1;
 
-#define VEC_INT_TYPE __m128i
+static void
+check_arch (void)
+{
+  INIT_ARCH_EXT;
+  CHECK_ARCH_EXT;
+  arch_check = 0;
+}
 
-#ifndef __ILP32__
-VECTOR_WRAPPER_fFF_4 (WRAPPER_NAME (sincosf), _ZGVcN8vvv_sincosf)
-#else
-VECTOR_WRAPPER_fFF_3 (WRAPPER_NAME (sincosf), _ZGVcN8vvv_sincosf)
-#endif
+static int
+do_test (void)
+{
+  check_arch ();
+
+  if (arch_check)
+    return 77;
+
+  return test_sincos_abi ();
+}
+
+#define TEST_FUNCTION do_test ()
+#include "../../../test-skeleton.c"

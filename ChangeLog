@@ -1,3 +1,119 @@
+2016-10-14  Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/bits/hwcap.h: Add PPC_FEATURE2_HTM_NOSC.
+	* sysdeps/powerpc/dl-procinfo.c:
+	(_dl_powerpc_cap_flags): Added descriptor for this hwcap
+	feature so it shows when LD_SHOW_AUXV=1.
+
+2016-10-14  Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/dl-procinfo.c:
+	(_dl_powerpc_cap_flags): Added missing strings for some
+	hwcap features.
+	* sysdeps/powerpc/dl-procinfo.h: Updated hwcap bit count.
+
+2016-10-13  H.J. Lu <hjl.tools@gmail.com>
+
+	[BZ #20384]
+	* sysdeps/x86_64/fpu/Makefile (extra-test-objs): Add
+	test-double-libmvec-sincos-avx-main.o,
+	test-double-libmvec-sincos-avx2-main.o,
+	test-double-libmvec-sincos-main.o,
+	test-float-libmvec-sincosf-avx-main.o,
+	test-float-libmvec-sincosf-avx2-main.o and
+	test-float-libmvec-sincosf-main.o.
+	test-float-libmvec-sincosf-avx512-main.o.
+	($(objpfx)test-double-libmvec-sincos): Also link with
+	$(objpfx)test-double-libmvec-sincos-main.o.
+	($(objpfx)test-double-libmvec-sincos-avx): Also link with
+	$(objpfx)test-double-libmvec-sincos-avx-main.o.
+	($(objpfx)test-double-libmvec-sincos-avx2): Also link with
+	$(objpfx)test-double-libmvec-sincos-avx2-main.o.
+	($(objpfx)test-float-libmvec-sincosf): Also link with
+	$(objpfx)test-float-libmvec-sincosf-main.o.
+	($(objpfx)test-float-libmvec-sincosf-avx): Also link with
+	$(objpfx)test-float-libmvec-sincosf-avx2-main.o.
+	[$(config-cflags-avx512) == yes] (extra-test-objs): Add
+	test-double-libmvec-sincos-avx512-main.o and
+	($(objpfx)test-double-libmvec-sincos-avx512): Also link with
+	$(objpfx)test-double-libmvec-sincos-avx512-main.o.
+	($(objpfx)test-float-libmvec-sincosf-avx512): Also link with
+	$(objpfx)test-float-libmvec-sincosf-avx512-main.o.
+	(CFLAGS-test-double-libmvec-sincos.c): Removed.
+	(CFLAGS-test-float-libmvec-sincosf.c): Likewise.
+	(CFLAGS-test-double-libmvec-sincos-main.c): New.
+	(CFLAGS-test-double-libmvec-sincos-avx-main.c): Likewise.
+	(CFLAGS-test-double-libmvec-sincos-avx2-main.c): Likewise.
+	(CFLAGS-test-float-libmvec-sincosf-main.c): Likewise.
+	(CFLAGS-test-float-libmvec-sincosf-avx-main.c): Likewise.
+	(CFLAGS-test-float-libmvec-sincosf-avx2-main.c): Likewise.
+	(CFLAGS-test-float-libmvec-sincosf-avx512-main.c): Likewise.
+	(CFLAGS-test-double-libmvec-sincos-avx.c): Set to -DREQUIRE_AVX.
+	(CFLAGS-test-float-libmvec-sincosf-avx.c ): Likewise.
+	(CFLAGS-test-double-libmvec-sincos-avx2.c): Set to
+	-DREQUIRE_AVX2.
+	(CFLAGS-test-float-libmvec-sincosf-avx2.c ): Likewise.
+	(CFLAGS-test-double-libmvec-sincos-avx512.c): Set to
+	-DREQUIRE_AVX512F.
+	(CFLAGS-test-float-libmvec-sincosf-avx512.c): Likewise.
+	* sysdeps/x86_64/fpu/test-double-libmvec-sincos.c: Rewritten.
+	* sysdeps/x86_64/fpu/test-float-libmvec-sincosf.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-libmvec-sincos-avx-main.c: New
+	file.
+	* sysdeps/x86_64/fpu/test-double-libmvec-sincos-avx2-main.c:
+	Likewise.
+	* sysdeps/x86_64/fpu/test-double-libmvec-sincos-avx512-main.c:
+	Likewise.
+	* sysdeps/x86_64/fpu/test-double-libmvec-sincos-main.c:
+	Likewise.
+	* sysdeps/x86_64/fpu/test-float-libmvec-sincosf-avx-main.c:
+	Likewise.
+	* sysdeps/x86_64/fpu/test-float-libmvec-sincosf-avx2-main.c:
+	Likewise.
+	* sysdeps/x86_64/fpu/test-float-libmvec-sincosf-avx512-main.c:
+	Likewise.
+	* sysdeps/x86_64/fpu/test-float-libmvec-sincosf-main.c:
+	Likewise.
+
+2016-10-13  Andrew Senkevich  <andrew.senkevich@intel.com>
+
+	[BZ #20024]
+	* sysdeps/x86/fpu/test-math-vector-sincos.h: New.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincos2_core_sse4.S: Fixed ABI
+	of this implementation of vector function.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincos4_core_avx2.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sincos8_core_avx512.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sincosf16_core_avx512.S:
+	Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sincosf4_core_sse4.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sincosf8_core_avx2.S: Likewise.
+	* sysdeps/x86_64/fpu/svml_d_sincos2_core.S: Likewise.
+	* sysdeps/x86_64/fpu/svml_d_sincos4_core.S: Likewise.
+	* sysdeps/x86_64/fpu/svml_d_sincos4_core_avx.S: Likewise.
+	* sysdeps/x86_64/fpu/svml_d_sincos8_core.S: Likewise.
+	* sysdeps/x86_64/fpu/svml_s_sincosf16_core.S: Likewise.
+	* sysdeps/x86_64/fpu/svml_s_sincosf4_core.S: Likewise.
+	* sysdeps/x86_64/fpu/svml_s_sincosf8_core.S: Likewise.
+	* sysdeps/x86_64/fpu/svml_s_sincosf8_core_avx.S: Likewise.
+	* sysdeps/x86_64/fpu/test-double-vlen2-wrappers.c: Use another wrapper
+	for testing vector sincos with fixed ABI.
+	* sysdeps/x86_64/fpu/test-double-vlen4-avx2-wrappers.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-vlen4-wrappers.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-vlen8-wrappers.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-vlen16-wrappers.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-vlen4-wrappers.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-vlen8-avx2-wrappers.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-vlen8-wrappers.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-libmvec-sincos-avx.c: New test.
+	* sysdeps/x86_64/fpu/test-double-libmvec-sincos-avx2.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-libmvec-sincos-avx512.c: Likewise.
+	* sysdeps/x86_64/fpu/test-double-libmvec-sincos.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-libmvec-sincosf-avx.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-libmvec-sincosf-avx2.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-libmvec-sincosf-avx512.c: Likewise.
+	* sysdeps/x86_64/fpu/test-float-libmvec-sincosf.c: Likewise.
+	* sysdeps/x86_64/fpu/Makefile: Added new tests.
+
 2016-10-14  Anton Blanchard  <anton@samba.org>
 
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile
