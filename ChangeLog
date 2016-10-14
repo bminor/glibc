@@ -1,3 +1,8 @@
+2016-10-14  Steve Ellcey  <sellcey@caviumnetworks.com>
+
+	* sysdeps/ieee754/dbl-64/e_pow.c (checkint) Make conditions explicitly
+	boolean.
+
 2017-07-19  DJ Delorie  <dj@delorie.com>
 
 	[BZ #21654]
