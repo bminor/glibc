@@ -1,3 +1,8 @@
+2016-10-18  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power8/fpu/math_private.h (GET_FLOAT_WORD):
+	(SET_FLOAT_WORD): New macros.
+
 2016-09-19  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	[BZ #20615]
