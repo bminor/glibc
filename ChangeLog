@@ -1,3 +1,12 @@
+2016-11-15  Denis Kaganovich  <mahatma@eu.by>
+	    Magnus Granberg  <zorry@gentoo.org>
+	    Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #20662]
+	* configure.ac (libc_cv_predef_stack_protector): Also check for
+	__stack_chk_fail_local symbols.
+	* configure: Regenerated.
+
 2016-11-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/Makefile ($(linknamespace-header-tests)): Also depend on
