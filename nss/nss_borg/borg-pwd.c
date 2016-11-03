@@ -86,13 +86,16 @@ static enum nss_status _nss_borg_getpwent_r_locked(struct passwd *result,
                                                    int *errnop) {
 
   enum nss_status ret;
-
+  // Save a copy of the buffer address, in case first call errors
+  // and sets it to 0.
+  struct passwd *sparecopy = result;
   if (
       f != NULL && (fgetpwent_r(f, result, buffer, buflen, &result) == 0)) {
     DEBUG("Returning borg user %d:%s\n", result->pw_uid, result->pw_name);
     ret = NSS_STATUS_SUCCESS;
   } else if (
-      fb != NULL && (fgetpwent_r(fb, result, buffer, buflen, &result) == 0)) {
+	     // Yes, this is one of those cases where an assign makes sense.
+	     fb != NULL && (result = sparecopy) && (fgetpwent_r(fb, result, buffer, buflen, &result) == 0)) {
     DEBUG("Returning base user %d:%s\n", result->pw_uid, result->pw_name);
     ret = NSS_STATUS_SUCCESS;
   } else {
