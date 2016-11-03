@@ -1,3 +1,8 @@
+2016-11-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/Makefile ($(linknamespace-header-tests)): Also depend on
+	$(linknamespace-symlists-tests).
+
 2016-11-06  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* iconv/gconv.h (__gconv_info): Define __data element using a
