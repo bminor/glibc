@@ -159,6 +159,9 @@ endif
 tst-mcheck-ENV = MALLOC_CHECK_=3
 tst-malloc-usable-ENV = MALLOC_CHECK_=3
 
+ifeq ($(experimental-malloc),yes)
+CPPFLAGS-malloc.c += -DUSE_TCACHE
+endif
 # Uncomment this for test releases.  For public releases it is too expensive.
 #CPPFLAGS-malloc.o += -DMALLOC_DEBUG=1
 
