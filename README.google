@@ -611,3 +611,7 @@ posix/tst-getaddrinfo6.c
 elf/elf.h
   For b/31273149, revert the value of DT_PPC64_NUM from 4 to 3.
   (stanshebs, google-local)
+
+nss/nss_borg/borg-pwd.c
+  Add /etc/passwd.borg.base as fallback passwd file. (b/30413914, b/32608777)
+  (mrothwell/stanshebs, google-local)
