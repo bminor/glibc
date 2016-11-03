@@ -66,6 +66,9 @@ Version 2.26
 * The port to Native Client running on ARMv7-A (--host=arm-nacl) has been
   removed.
 
+* The function strfromf128, from ISO/IEC TS 18661-3:2015, is added to libc.
+  It converts a _Float128 value into string.
+
 Security related changes:
 
 * The DNS stub resolver limits the advertised UDP buffer size to 1200 bytes,

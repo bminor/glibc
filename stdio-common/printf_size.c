@@ -104,6 +104,9 @@ __printf_size (FILE *fp, const struct printf_info *info,
     {
       union ieee754_double dbl;
       long double ldbl;
+#if __HAVE_DISTINCT_FLOAT128
+      _Float128 f128;
+#endif
     }
   fpnum;
   const void *ptr = &fpnum;
@@ -119,6 +122,32 @@ __printf_size (FILE *fp, const struct printf_info *info,
   int wide = info->wide;
 
   /* Fetch the argument value.	*/
+#if __HAVE_DISTINCT_FLOAT128
+  if (info->is_binary128)
+    {
+      fpnum.f128 = *(const _Float128 *) args[0];
+
+      /* Check for special values: not a number or infinity.  */
+      if (isnan (fpnum.f128))
+	{
+	  special = "nan";
+	  wspecial = L"nan";
+	}
+      else if (isinf (fpnum.f128))
+	{
+	  is_neg = signbit (fpnum.f128);
+	  special = "inf";
+	  wspecial = L"inf";
+	}
+      else
+	while (fpnum.f128 >= divisor && tag[1] != '\0')
+	  {
+	    fpnum.f128 /= divisor;
+	    ++tag;
+	  }
+    }
+  else
+#endif /* __HAVE_DISTINCT_FLOAT128 */
 #ifndef __NO_LONG_DOUBLE_MATH
   if (info->is_long_double && sizeof (long double) > sizeof (double))
     {
