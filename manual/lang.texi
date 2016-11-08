@@ -560,7 +560,7 @@ recommend instead adding a prototype for the function you are calling.
 The result of subtracting two pointers in C is always an integer, but the
 precise data type varies from C compiler to C compiler.  Likewise, the
 data type of the result of @code{sizeof} also varies between compilers.
-ISO defines standard aliases for these two types, so you can refer to
+ISO C defines standard aliases for these two types, so you can refer to
 them in a portable fashion.  They are defined in the header file
 @file{stddef.h}.
 @pindex stddef.h
@@ -651,6 +651,88 @@ this:
 @smallexample
 sizeof (@var{type}) * CHAR_BIT
 @end smallexample
+@end table
+
+That expression includes padding bits as well as value and sign bits.
+On all systems supported by @theglibc{}, standard integer types other
+than @code{_Bool} do not have any padding bits.  TS 18661-1:2014
+defines additional macros for the width of integer types (the number
+of value and sign bits); these macros can also be used in @code{#if}
+preprocessor directives, whereas @code{sizeof} cannot.  The following
+macros are defined in @file{limits.h}.
+
+@table @code
+@comment limits.h
+@comment ISO
+@item CHAR_WIDTH
+@comment limits.h
+@comment ISO
+@itemx SCHAR_WIDTH
+@comment limits.h
+@comment ISO
+@itemx UCHAR_WIDTH
+@comment limits.h
+@comment ISO
+@itemx SHRT_WIDTH
+@comment limits.h
+@comment ISO
+@itemx USHRT_WIDTH
+@comment limits.h
+@comment ISO
+@itemx INT_WIDTH
+@comment limits.h
+@comment ISO
+@itemx UINT_WIDTH
+@comment limits.h
+@comment ISO
+@itemx LONG_WIDTH
+@comment limits.h
+@comment ISO
+@itemx ULONG_WIDTH
+@comment limits.h
+@comment ISO
+@itemx LLONG_WIDTH
+@comment limits.h
+@comment ISO
+@itemx ULLONG_WIDTH
+
+These are the widths of the types @code{char}, @code{signed char},
+@code{unsigned char}, @code{short int}, @code{unsigned short int},
+@code{int}, @code{unsigned int}, @code{long int}, @code{unsigned long
+int}, @code{long long int} and @code{unsigned long long int},
+respectively.
+@end table
+
+Further such macros are defined in @file{stdint.h}.  Apart from those
+for types specified by width (@pxref{Integers}), the following are
+defined.
+
+@table @code
+@comment stdint.h
+@comment ISO
+@item INTPTR_WIDTH
+@comment stdint.h
+@comment ISO
+@itemx UINTPTR_WIDTH
+@comment stdint.h
+@comment ISO
+@itemx PTRDIFF_WIDTH
+@comment stdint.h
+@comment ISO
+@itemx SIG_ATOMIC_WIDTH
+@comment stdint.h
+@comment ISO
+@itemx SIZE_WIDTH
+@comment stdint.h
+@comment ISO
+@itemx WCHAR_WIDTH
+@comment stdint.h
+@comment ISO
+@itemx WINT_WIDTH
+
+These are the widths of the types @code{intptr_t}, @code{uintptr_t},
+@code{ptrdiff_t}, @code{sig_atomic_t}, @code{size_t}, @code{wchar_t}
+and @code{wint_t}, respectively.
 @end table
 
 @node Range of Type
@@ -1061,7 +1143,7 @@ macros are supposed to be at least @code{10}.
 @comment ISO
 @item FLT_MIN_EXP
 This is the smallest possible exponent value for type @code{float}.
-More precisely, is the minimum negative integer such that the value
+More precisely, it is the minimum negative integer such that the value
 @code{FLT_RADIX} raised to this power minus 1 can be represented as a
 normalized floating point number of type @code{float}.
 

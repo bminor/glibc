@@ -45,30 +45,13 @@
  * SOFTWARE.
  */
 
-/*
- *	$BINDId: nameser.h,v 8.37 2000/03/30 21:16:49 vixie Exp $
- */
-
 #ifndef _ARPA_NAMESER_H_
 #define _ARPA_NAMESER_H_
 
-/*! \file */
-
-#define BIND_4_COMPAT
-
 #include <sys/param.h>
 #include <sys/types.h>
-#include <sys/cdefs.h>
+#include <stdint.h>
 
-/*%
- * Revision information.  This is the release date in YYYYMMDD format.
- * It can change every day so the right thing to do with it is use it
- * in preprocessor commands such as "#if (__NAMESER > 19931104)".  Do not
- * compare for equality; rather, use it to determine whether your libbind.a
- * contains a new enough lib/nameser/ to support the feature you need.
- */
-
-#define __NAMESER	19991006	/*%< New interface version stamp. */
 /*
  * Define constants based on RFC 883, RFC 1034, RFC 1035
  */
@@ -80,9 +63,9 @@
 #define NS_HFIXEDSZ	12	/*%< #/bytes of fixed data in header */
 #define NS_QFIXEDSZ	4	/*%< #/bytes of fixed data in query */
 #define NS_RRFIXEDSZ	10	/*%< #/bytes of fixed data in r record */
-#define NS_INT32SZ	4	/*%< #/bytes of data in a u_int32_t */
-#define NS_INT16SZ	2	/*%< #/bytes of data in a u_int16_t */
-#define NS_INT8SZ	1	/*%< #/bytes of data in a u_int8_t */
+#define NS_INT32SZ	4	/*%< #/bytes of data in a uint32_t */
+#define NS_INT16SZ	2	/*%< #/bytes of data in a uint16_t */
+#define NS_INT8SZ	1	/*%< #/bytes of data in a uint8_t */
 #define NS_INADDRSZ	4	/*%< IPv4 T_A */
 #define NS_IN6ADDRSZ	16	/*%< IPv6 T_AAAA */
 #define NS_CMPRSFLGS	0xc0	/*%< Flag bits indicating name compression. */
@@ -108,12 +91,12 @@ typedef enum __ns_sect {
  * leading _'s on the member names.  Use the accessor functions, not the _'s.
  */
 typedef struct __ns_msg {
-	const u_char	*_msg, *_eom;
-	u_int16_t	_id, _flags, _counts[ns_s_max];
-	const u_char	*_sections[ns_s_max];
-	ns_sect		_sect;
-	int		_rrnum;
-	const u_char	*_msg_ptr;
+	const unsigned char	*_msg, *_eom;
+	uint16_t		_id, _flags, _counts[ns_s_max];
+	const unsigned char	*_sections[ns_s_max];
+	ns_sect			_sect;
+	int			_rrnum;
+	const unsigned char	*_msg_ptr;
 } ns_msg;
 
 /* Private data structure - do not use from outside library. */
@@ -132,12 +115,12 @@ extern const struct _ns_flagdata _ns_flagdata[];
  * This is a parsed record.  It is caller allocated and has no dynamic data.
  */
 typedef	struct __ns_rr {
-	char		name[NS_MAXDNAME];
-	u_int16_t	type;
-	u_int16_t	rr_class;
-	u_int32_t	ttl;
-	u_int16_t	rdlength;
-	const u_char *	rdata;
+	char			name[NS_MAXDNAME];
+	uint16_t		type;
+	uint16_t		rr_class;
+	uint32_t		ttl;
+	uint16_t		rdlength;
+	const unsigned char *	rdata;
 } ns_rr;
 
 /* Accessor macros - this is part of the public interface. */
@@ -300,17 +283,6 @@ typedef enum __ns_type {
 	ns_t_max = 65536
 } ns_type;
 
-/* Exclusively a QTYPE? (not also an RTYPE) */
-#define	ns_t_qt_p(t) (ns_t_xfr_p(t) || (t) == ns_t_any || \
-		      (t) == ns_t_mailb || (t) == ns_t_maila)
-/* Some kind of meta-RR? (not a QTYPE, but also not an RTYPE) */
-#define	ns_t_mrr_p(t) ((t) == ns_t_tsig || (t) == ns_t_opt)
-/* Exclusively an RTYPE? (not also a QTYPE or a meta-RR) */
-#define ns_t_rr_p(t) (!ns_t_qt_p(t) && !ns_t_mrr_p(t))
-#define ns_t_udp_p(t) ((t) != ns_t_axfr && (t) != ns_t_zxfr)
-#define ns_t_xfr_p(t) ((t) == ns_t_axfr || (t) == ns_t_ixfr || \
-		       (t) == ns_t_zxfr)
-
 /*%
  * Values for class field
  */
@@ -326,15 +298,7 @@ typedef enum __ns_class {
 	ns_c_max = 65536
 } ns_class;
 
-/* DNSSEC constants. */
-
-typedef enum __ns_key_types {
-	ns_kt_rsa = 1,		/*%< key type RSA/MD5 */
-	ns_kt_dh  = 2,		/*%< Diffie Hellman */
-	ns_kt_dsa = 3,		/*%< Digital Signature Standard (MANDATORY) */
-	ns_kt_private = 254	/*%< Private key type starts with OID */
-} ns_key_types;
-
+/* Certificate type values in CERT resource records.  */
 typedef enum __ns_cert_types {
 	cert_t_pkix = 1,	/*%< PKIX (X.509v3) */
 	cert_t_spki = 2,	/*%< SPKI */
@@ -342,82 +306,6 @@ typedef enum __ns_cert_types {
 	cert_t_url  = 253,	/*%< URL private type */
 	cert_t_oid  = 254	/*%< OID private type */
 } ns_cert_types;
-
-/* Flags field of the KEY RR rdata. */
-#define	NS_KEY_TYPEMASK		0xC000	/*%< Mask for "type" bits */
-#define	NS_KEY_TYPE_AUTH_CONF	0x0000	/*%< Key usable for both */
-#define	NS_KEY_TYPE_CONF_ONLY	0x8000	/*%< Key usable for confidentiality */
-#define	NS_KEY_TYPE_AUTH_ONLY	0x4000	/*%< Key usable for authentication */
-#define	NS_KEY_TYPE_NO_KEY	0xC000	/*%< No key usable for either; no key */
-/* The type bits can also be interpreted independently, as single bits: */
-#define	NS_KEY_NO_AUTH		0x8000	/*%< Key unusable for authentication */
-#define	NS_KEY_NO_CONF		0x4000	/*%< Key unusable for confidentiality */
-#define	NS_KEY_RESERVED2	0x2000	/* Security is *mandatory* if bit=0 */
-#define	NS_KEY_EXTENDED_FLAGS	0x1000	/*%< reserved - must be zero */
-#define	NS_KEY_RESERVED4	0x0800  /*%< reserved - must be zero */
-#define	NS_KEY_RESERVED5	0x0400  /*%< reserved - must be zero */
-#define	NS_KEY_NAME_TYPE	0x0300	/*%< these bits determine the type */
-#define	NS_KEY_NAME_USER	0x0000	/*%< key is assoc. with user */
-#define	NS_KEY_NAME_ENTITY	0x0200	/*%< key is assoc. with entity eg host */
-#define	NS_KEY_NAME_ZONE	0x0100	/*%< key is zone key */
-#define	NS_KEY_NAME_RESERVED	0x0300	/*%< reserved meaning */
-#define	NS_KEY_RESERVED8	0x0080  /*%< reserved - must be zero */
-#define	NS_KEY_RESERVED9	0x0040  /*%< reserved - must be zero */
-#define	NS_KEY_RESERVED10	0x0020  /*%< reserved - must be zero */
-#define	NS_KEY_RESERVED11	0x0010  /*%< reserved - must be zero */
-#define	NS_KEY_SIGNATORYMASK	0x000F	/*%< key can sign RR's of same name */
-#define	NS_KEY_RESERVED_BITMASK ( NS_KEY_RESERVED2 | \
-				  NS_KEY_RESERVED4 | \
-				  NS_KEY_RESERVED5 | \
-				  NS_KEY_RESERVED8 | \
-				  NS_KEY_RESERVED9 | \
-				  NS_KEY_RESERVED10 | \
-				  NS_KEY_RESERVED11 )
-#define NS_KEY_RESERVED_BITMASK2 0xFFFF /*%< no bits defined here */
-/* The Algorithm field of the KEY and SIG RR's is an integer, {1..254} */
-#define	NS_ALG_MD5RSA		1	/*%< MD5 with RSA */
-#define	NS_ALG_DH               2	/*%< Diffie Hellman KEY */
-#define	NS_ALG_DSA              3	/*%< DSA KEY */
-#define	NS_ALG_DSS              NS_ALG_DSA
-#define	NS_ALG_EXPIRE_ONLY	253	/*%< No alg, no security */
-#define	NS_ALG_PRIVATE_OID	254	/*%< Key begins with OID giving alg */
-/* Protocol values  */
-/* value 0 is reserved */
-#define NS_KEY_PROT_TLS         1
-#define NS_KEY_PROT_EMAIL       2
-#define NS_KEY_PROT_DNSSEC      3
-#define NS_KEY_PROT_IPSEC       4
-#define NS_KEY_PROT_ANY		255
-
-/* Signatures */
-#define	NS_MD5RSA_MIN_BITS	 512	/*%< Size of a mod or exp in bits */
-#define	NS_MD5RSA_MAX_BITS	4096
-	/* Total of binary mod and exp */
-#define	NS_MD5RSA_MAX_BYTES	((NS_MD5RSA_MAX_BITS+7/8)*2+3)
-	/* Max length of text sig block */
-#define	NS_MD5RSA_MAX_BASE64	(((NS_MD5RSA_MAX_BYTES+2)/3)*4)
-#define NS_MD5RSA_MIN_SIZE	((NS_MD5RSA_MIN_BITS+7)/8)
-#define NS_MD5RSA_MAX_SIZE	((NS_MD5RSA_MAX_BITS+7)/8)
-
-#define NS_DSA_SIG_SIZE         41
-#define NS_DSA_MIN_SIZE         213
-#define NS_DSA_MAX_BYTES        405
-
-/* Offsets into SIG record rdata to find various values */
-#define	NS_SIG_TYPE	0	/*%< Type flags */
-#define	NS_SIG_ALG	2	/*%< Algorithm */
-#define	NS_SIG_LABELS	3	/*%< How many labels in name */
-#define	NS_SIG_OTTL	4	/*%< Original TTL */
-#define	NS_SIG_EXPIR	8	/*%< Expiration time */
-#define	NS_SIG_SIGNED	12	/*%< Signature time */
-#define	NS_SIG_FOOT	16	/*%< Key footprint */
-#define	NS_SIG_SIGNER	18	/*%< Domain name of who signed it */
-/* How RR types are represented as bit-flags in NXT records */
-#define	NS_NXT_BITS 8
-#define	NS_NXT_BIT_SET(  n,p) (p[(n)/NS_NXT_BITS] |=  (0x80>>((n)%NS_NXT_BITS)))
-#define	NS_NXT_BIT_CLEAR(n,p) (p[(n)/NS_NXT_BITS] &= ~(0x80>>((n)%NS_NXT_BITS)))
-#define	NS_NXT_BIT_ISSET(n,p) (p[(n)/NS_NXT_BITS] &   (0x80>>((n)%NS_NXT_BITS)))
-#define NS_NXT_MAX 127
 
 /*%
  * EDNS0 extended flags and option codes, host order.
@@ -429,34 +317,34 @@ typedef enum __ns_cert_types {
  * Inline versions of get/put short/long.  Pointer is advanced.
  */
 #define NS_GET16(s, cp) do { \
-	const u_char *t_cp = (const u_char *)(cp); \
-	(s) = ((u_int16_t)t_cp[0] << 8) \
-	    | ((u_int16_t)t_cp[1]) \
+	const unsigned char *t_cp = (const unsigned char *)(cp); \
+	(s) = ((uint16_t)t_cp[0] << 8) \
+	    | ((uint16_t)t_cp[1]) \
 	    ; \
 	(cp) += NS_INT16SZ; \
 } while (0)
 
 #define NS_GET32(l, cp) do { \
-	const u_char *t_cp = (const u_char *)(cp); \
-	(l) = ((u_int32_t)t_cp[0] << 24) \
-	    | ((u_int32_t)t_cp[1] << 16) \
-	    | ((u_int32_t)t_cp[2] << 8) \
-	    | ((u_int32_t)t_cp[3]) \
+	const unsigned char *t_cp = (const unsigned char *)(cp); \
+	(l) = ((uint32_t)t_cp[0] << 24) \
+	    | ((uint32_t)t_cp[1] << 16) \
+	    | ((uint32_t)t_cp[2] << 8) \
+	    | ((uint32_t)t_cp[3]) \
 	    ; \
 	(cp) += NS_INT32SZ; \
 } while (0)
 
 #define NS_PUT16(s, cp) do { \
-	u_int16_t t_s = (u_int16_t)(s); \
-	u_char *t_cp = (u_char *)(cp); \
+	uint16_t t_s = (uint16_t)(s); \
+	unsigned char *t_cp = (unsigned char *)(cp); \
 	*t_cp++ = t_s >> 8; \
 	*t_cp   = t_s; \
 	(cp) += NS_INT16SZ; \
 } while (0)
 
 #define NS_PUT32(l, cp) do { \
-	u_int32_t t_l = (u_int32_t)(l); \
-	u_char *t_cp = (u_char *)(cp); \
+	uint32_t t_l = (uint32_t)(l); \
+	unsigned char *t_cp = (unsigned char *)(cp); \
 	*t_cp++ = t_l >> 24; \
 	*t_cp++ = t_l >> 16; \
 	*t_cp++ = t_l >> 8; \
@@ -466,66 +354,53 @@ typedef enum __ns_cert_types {
 
 __BEGIN_DECLS
 int		ns_msg_getflag (ns_msg, int) __THROW;
-u_int		ns_get16 (const u_char *) __THROW;
-u_long		ns_get32 (const u_char *) __THROW;
-void		ns_put16 (u_int, u_char *) __THROW;
-void		ns_put32 (u_long, u_char *) __THROW;
-int		ns_initparse (const u_char *, int, ns_msg *) __THROW;
-int		ns_skiprr (const u_char *, const u_char *, ns_sect, int)
-     __THROW;
+unsigned int	ns_get16 (const unsigned char *) __THROW;
+unsigned long	ns_get32 (const unsigned char *) __THROW;
+void		ns_put16 (unsigned int, unsigned char *) __THROW;
+void		ns_put32 (unsigned long, unsigned char *) __THROW;
+int		ns_initparse (const unsigned char *, int, ns_msg *) __THROW;
+int		ns_skiprr (const unsigned char *, const unsigned char *,
+			   ns_sect, int) __THROW;
 int		ns_parserr (ns_msg *, ns_sect, int, ns_rr *) __THROW;
 int		ns_sprintrr (const ns_msg *, const ns_rr *,
 			     const char *, const char *, char *, size_t)
      __THROW;
-int		ns_sprintrrf (const u_char *, size_t, const char *,
-			      ns_class, ns_type, u_long, const u_char *,
-			      size_t, const char *, const char *,
-			      char *, size_t) __THROW;
-int		ns_format_ttl (u_long, char *, size_t) __THROW;
-int		ns_parse_ttl (const char *, u_long *) __THROW;
-u_int32_t	ns_datetosecs (const char *, int *) __THROW;
-int		ns_name_ntol (const u_char *, u_char *, size_t) __THROW;
-int		ns_name_ntop (const u_char *, char *, size_t) __THROW;
-int		ns_name_pton (const char *, u_char *, size_t) __THROW;
-int		ns_name_unpack (const u_char *, const u_char *,
-				const u_char *, u_char *, size_t) __THROW;
-int		ns_name_pack (const u_char *, u_char *, int,
-			      const u_char **, const u_char **) __THROW;
-int		ns_name_uncompress (const u_char *, const u_char *,
-				    const u_char *, char *, size_t) __THROW;
-int		ns_name_compress (const char *, u_char *, size_t,
-				  const u_char **, const u_char **) __THROW;
-int		ns_name_skip (const u_char **, const u_char *) __THROW;
-void		ns_name_rollback (const u_char *, const u_char **,
-				  const u_char **) __THROW;
-int		ns_sign (u_char *, int *, int, int, void *,
-			 const u_char *, int, u_char *, int *, time_t) __THROW;
-int		ns_sign2 (u_char *, int *, int, int, void *,
-			  const u_char *, int, u_char *, int *, time_t,
-			  u_char **, u_char **) __THROW;
-int		ns_sign_tcp (u_char *, int *, int, int,
-			     ns_tcp_tsig_state *, int) __THROW;
-int		ns_sign_tcp2 (u_char *, int *, int, int,
-			      ns_tcp_tsig_state *, int,
-			      u_char **, u_char **) __THROW;
-int		ns_sign_tcp_init (void *, const u_char *, int,
-				  ns_tcp_tsig_state *) __THROW;
-u_char		*ns_find_tsig (u_char *, u_char *) __THROW;
-int		ns_verify (u_char *, int *, void *, const u_char *, int,
-			   u_char *, int *, time_t *, int) __THROW;
-int		ns_verify_tcp (u_char *, int *, ns_tcp_tsig_state *, int)
+int		ns_sprintrrf (const unsigned char *, size_t, const char *,
+			      ns_class, ns_type, unsigned long,
+			      const unsigned char *, size_t, const char *,
+			      const char *, char *, size_t) __THROW;
+int		ns_format_ttl (unsigned long, char *, size_t) __THROW;
+int		ns_parse_ttl (const char *, unsigned long *) __THROW;
+uint32_t	ns_datetosecs (const char *, int *) __THROW;
+int		ns_name_ntol (const unsigned char *, unsigned char *, size_t)
      __THROW;
-int		ns_verify_tcp_init (void *, const u_char *, int,
-				    ns_tcp_tsig_state *) __THROW;
+int		ns_name_ntop (const unsigned char *, char *, size_t) __THROW;
+int		ns_name_pton (const char *, unsigned char *, size_t) __THROW;
+int		ns_name_unpack (const unsigned char *, const unsigned char *,
+				const unsigned char *, unsigned char *, size_t)
+     __THROW;
+int		ns_name_pack (const unsigned char *, unsigned char *, int,
+			      const unsigned char **, const unsigned char **)
+     __THROW;
+int		ns_name_uncompress (const unsigned char *,
+				    const unsigned char *,
+				    const unsigned char *,
+				    char *, size_t) __THROW;
+int		ns_name_compress (const char *, unsigned char *, size_t,
+				  const unsigned char **,
+				  const unsigned char **) __THROW;
+int		ns_name_skip (const unsigned char **, const unsigned char *)
+     __THROW;
+void		ns_name_rollback (const unsigned char *,
+				  const unsigned char **,
+				  const unsigned char **) __THROW;
 int		ns_samedomain (const char *, const char *) __THROW;
 int		ns_subdomain (const char *, const char *) __THROW;
 int		ns_makecanon (const char *, char *, size_t) __THROW;
 int		ns_samename (const char *, const char *) __THROW;
 __END_DECLS
 
-#ifdef BIND_4_COMPAT
 #include <arpa/nameser_compat.h>
-#endif
 
 #endif /* !_ARPA_NAMESER_H_ */
 /*! \file */

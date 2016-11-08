@@ -81,6 +81,7 @@
 #include <sys/socket.h>
 #include <sys/time.h>
 #include <sys/types.h>
+#include <inet/net-internal.h>
 
 #include <not-cancel.h>
 
@@ -143,8 +144,8 @@ __res_vinit(res_state statp, int preinit) {
 	statp->pfcode = 0;
 	statp->_vcsock = -1;
 	statp->_flags = 0;
-	statp->qhook = NULL;
-	statp->rhook = NULL;
+	statp->__glibc_unused_qhook = NULL;
+	statp->__glibc_unused_rhook = NULL;
 	statp->_u._ext.nscount = 0;
 	for (n = 0; n < MAXNS; n++)
 	    statp->_u._ext.nsaddrs[n] = NULL;
@@ -283,26 +284,12 @@ __res_vinit(res_state statp, int preinit) {
 				sa6->sin6_flowinfo = 0;
 				sa6->sin6_addr = a6;
 
-				if (__glibc_likely (el == NULL))
-				    sa6->sin6_scope_id = 0;
-				else {
-				    int try_numericscope = 1;
-				    if (IN6_IS_ADDR_LINKLOCAL (&a6)
-					|| IN6_IS_ADDR_MC_LINKLOCAL (&a6)) {
-					sa6->sin6_scope_id
-					  = __if_nametoindex (el + 1);
-					if (sa6->sin6_scope_id != 0)
-					    try_numericscope = 0;
-				    }
-
-				    if (try_numericscope) {
-					char *end;
-					sa6->sin6_scope_id
-					  = (uint32_t) strtoul (el + 1, &end,
-								10);
-					if (*end != '\0')
-					    sa6->sin6_scope_id = 0;
-				    }
+				sa6->sin6_scope_id = 0;
+				if (__glibc_likely (el != NULL)) {
+				  /* Ignore errors, for backwards
+				     compatibility.  */
+				  (void) __inet6_scopeid_pton
+				    (&a6, el + 1, &sa6->sin6_scope_id);
 				}
 
 				statp->nsaddr_list[nserv].sin_family = 0;
@@ -451,11 +438,7 @@ res_setoptions(res_state statp, const char *options, const char *source) {
 		  } options[] = {
 #define STRnLEN(str) str, sizeof (str) - 1
 		    { STRnLEN ("inet6"), 0, RES_USE_INET6 },
-		    { STRnLEN ("ip6-bytestring"), 0, RES_USEBSTRING },
-		    { STRnLEN ("no-ip6-dotint"), 0, RES_NOIP6DOTINT },
-		    { STRnLEN ("ip6-dotint"), 1, ~RES_NOIP6DOTINT },
 		    { STRnLEN ("rotate"), 0, RES_ROTATE },
-		    { STRnLEN ("no-check-names"), 0, RES_NOCHECKNAME },
 		    { STRnLEN ("edns0"), 0, RES_USE_EDNS0 },
 		    { STRnLEN ("single-request-reopen"), 0, RES_SNGLKUPREOP },
 		    { STRnLEN ("single-request"), 0, RES_SNGLKUP },
@@ -542,7 +525,6 @@ res_nclose(res_state statp)
 }
 libc_hidden_def (__res_nclose)
 
-#ifdef _LIBC_REENTRANT
 /* This is called when a thread is exiting to free resources held in _res.  */
 static void __attribute__ ((section ("__libc_thread_freeres_fn")))
 res_thread_freeres (void)
@@ -558,4 +540,3 @@ res_thread_freeres (void)
 }
 text_set_element (__libc_thread_subfreeres, res_thread_freeres);
 text_set_element (__libc_subfreeres, res_thread_freeres);
-#endif

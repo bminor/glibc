@@ -1,6 +1,3643 @@
+2016-11-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* nptl/Makefile (libpthread-routines): Remove ptw-llseek and add
+	ptw-lseek64.
+	* sysdeps/unix/sysv/linux/Makefile (sysdeps_routines): Remove llseek.
+	* sysdeps/unix/sysv/linux/alpha/Makefile  (sysdeps_routines):
+	Likewise.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/llseek.c: Remove file.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/lseek.c: Remove file.
+	* sysdeps/unix/sysv/linux/mips/mips64/llseek.c: Likewise.
+	* sysdeps/unix/sysv/linux/llseek.c: Remove file.
+	* sysdeps/unix/sysv/linux/lseek.c: New file.
+	* sysdeps/unix/sysv/linux/lseek64.c: Add default Linux implementation.
+	* sysdeps/unix/sysv/linux/mips/mips64/syscalls.list: Remove lseek and
+	__libc_lseek64 from auto-generation.
+	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/lseek64.S: New file.
+
+2016-11-07  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* nptl/tst-basic1.c (tf, do_test): Use write_message.
+	* nptl/tst-cleanup1.c (do_test): Likewise.
+	* nptl/tst-cleanup3.c (do_test): Likewise.
+	* nptl/tst-key1.c (do_test): Likewise.
+	* nptl/tst-key2.c (tf, do_test): Likewise.
+	* nptl/tst-key3.c (tf, do_test): Likewise.
+	* nptl/tst-stdio1.c (do_test): Likewise.
+	* nptl/tst-stdio2.c (do_test): Likewise.
+
+	* nptl/tst-kill3.c (handler): Use write_message in place of write.
+	* nptl/tst-kill6.c (handler): Likewise.
+	* nptl/tst-tls2.c (CB): Likewise.
+	* nptl/tst-tls3.c (CB): Likewise.
+
+2016-11-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/check-installed-headers.sh: Ignore sys/sysctl.h for x32.
+
+2016-11-07  Yury Norov  <ynorov@caviumnetworks.com>
+	    Steve Ellcey  <sellcey@caviumnetworks.com>
+
+	* sysdeps/unix/sysv/linux/alpha/kernel-features.h: #define
+	  __ASSUME_ST_INO_64_BIT as 0
+	* sysdeps/unix/sysv/linux/sh/kernel-features.h: Likewise.
+	* sysdeps/unix/sysv/linux/fxstat64.c: Replace #ifdef with #if
+	  over the code where __ASSUME_ST_INO_64_BIT is used.
+	* sysdeps/unix/sysv/linux/lxstat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/xstat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/xstatconv.c: Likewise.
+
+2016-11-07  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/aarch64/nptl/bits/pthreadtypes.h (struct __pthread_mutex_s):
+	Document ABI exposure of the __kind offset.
+	* sysdeps/arm/nptl/bits/pthreadtypes.h (struct __pthread_mutex_s):
+	Mention reason for the __kind offset exposure in the ABI.
+	* sysdeps/hppa/nptl/bits/pthreadtypes.h (struct __pthread_mutex_s):
+	Likewise.
+	* sysdeps/ia64/nptl/bits/pthreadtypes.h (struct __pthread_mutex_s):
+	Likewise.
+	* sysdeps/m68k/nptl/bits/pthreadtypes.h (struct __pthread_mutex_s):
+	Likewise.
+	* sysdeps/microblaze/nptl/bits/pthreadtypes.h
+	(struct __pthread_mutex_s): Likewise.
+	* sysdeps/mips/nptl/bits/pthreadtypes.h (struct __pthread_mutex_s):
+	Likewise.
+	* sysdeps/nios2/nptl/bits/pthreadtypes.h (struct __pthread_mutex_s):
+	Likewise.
+	* sysdeps/s390/nptl/bits/pthreadtypes.h (struct __pthread_mutex_s):
+	Likewise.
+	* sysdeps/sh/nptl/bits/pthreadtypes.h (struct __pthread_mutex_s):
+	Likewise.
+	* sysdeps/sparc/nptl/bits/pthreadtypes.h (struct __pthread_mutex_s):
+	Likewise.
+	* sysdeps/tile/nptl/bits/pthreadtypes.h (struct __pthread_mutex_s):
+	Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/pthreadtypes.h
+	(struct __pthread_mutex_s): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h
+	(struct __pthread_mutex_s): Likewise.
+	* sysdeps/x86/bits/pthreadtypes.h (struct __pthread_mutex_s):
+	Likewise.
+
+2016-11-07  Steve Ellcey  <sellcey@caviumnetworks.com>
+
+	* test-skeleton.c: Document do_test usage.
+
+2016-11-06  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* iconv/gconv.h (__gconv_info): Define __data element using a
+	zero-length array.
+
+2016-11-04  Steve Ellcey  <sellcey@caviumnetworks.com>
+
+	* math/test-tgmath2.c: Split up test function.
+
+2016-11-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* Rules (tests-expected): New variable, depending on
+	$(run-built-tests).
+	(tests): Pass $(tests-expected) to merge-test-results.sh, not
+	$(tests).
+
+	* Rules [$(run-built-tests) = no] (tests): Do not depend on
+	$(tests-unsupported).
+
+2016-11-04  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/sparc/bits/wordsize.h
+	(__WORDSIZE_TIME64_COMPAT32): Define for both 32 and  64 bits.
+
+2016-11-04  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20768]
+	* sysdeps/alpha/fpu/feholdexcpt.c (__feholdexcept): Call
+	__fegetenv instead of fegetenv.
+
+	[BZ #14139]
+	* manual/libm-err-tab.pl (%pplatforms): Initialize to empty.
+	(find_files): Obtain platform name from libm-test-ulps-name and
+	store in %pplatforms.
+	(canonicalize_platform): Remove.
+	(print_platforms): Use $pplatforms directly.
+	(by_platforms): Do not allow for platforms missing from
+	%pplatforms.
+	* sysdeps/aarch64/libm-test-ulps-name: New file.
+	* sysdeps/alpha/fpu/libm-test-ulps-name: Likewise.
+	* sysdeps/arm/libm-test-ulps-name: Likewise.
+	* sysdeps/generic/libm-test-ulps-name: Likewise.
+	* sysdeps/hppa/fpu/libm-test-ulps-name: Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps-name: Likewise.
+	* sysdeps/i386/i686/fpu/multiarch/libm-test-ulps-name: Likewise.
+	* sysdeps/ia64/fpu/libm-test-ulps-name: Likewise.
+	* sysdeps/m68k/coldfire/fpu/libm-test-ulps-name: Likewise.
+	* sysdeps/m68k/m680x0/fpu/libm-test-ulps-name: Likewise.
+	* sysdeps/microblaze/libm-test-ulps-name: Likewise.
+	* sysdeps/mips/mips32/libm-test-ulps-name: Likewise.
+	* sysdeps/mips/mips64/libm-test-ulps-name: Likewise.
+	* sysdeps/nios2/libm-test-ulps-name: Likewise.
+	* sysdeps/powerpc/fpu/libm-test-ulps-name: Likewise.
+	* sysdeps/powerpc/nofpu/libm-test-ulps-name: Likewise.
+	* sysdeps/s390/fpu/libm-test-ulps-name: Likewise.
+	* sysdeps/sh/libm-test-ulps-name: Likewise.
+	* sysdeps/sparc/fpu/libm-test-ulps-name: Likewise.
+	* sysdeps/tile/libm-test-ulps-name: Likewise.
+	* sysdeps/x86_64/fpu/libm-test-ulps-name: Likewise.
+
+	* sysdeps/unix/sysv/linux/mips/sys/user.h: Include <stddef.h>.
+
+	* sysdeps/unix/sysv/linux/mips/Makefile [$(subdir) = elf]
+	(test-xfail-check-execstack): New variable.
+
+	* sysdeps/mips/localplt.data: New file.
+
+2016-11-04  Yury Norov  <ynorov@caviumnetworks.com>
+	    Steve Ellcey  <sellcey@caviumnetworks.com>
+
+	* bits/wordsize.h: Add documentation.
+	* sysdeps/aarch64/bits/wordsize.h : New file
+	* sysdeps/generic/stdint.h (PTRDIFF_MIN, PTRDIFF_MAX): Update
+	definitions.
+	(SIZE_MAX): Change ifdef to if in __WORDSIZE32_SIZE_ULONG check.
+	* sysdeps/gnu/bits/utmp.h (__WORDSIZE_TIME64_COMPAT32): Check
+	with #if instead of #ifdef.
+	* sysdeps/gnu/bits/utmpx.h (__WORDSIZE_TIME64_COMPAT32): Ditto.
+	* sysdeps/mips/bits/wordsize.h (__WORDSIZE32_SIZE_ULONG,
+	__WORDSIZE32_PTRDIFF_LONG, __WORDSIZE_TIME64_COMPAT32):
+	Add or change defines.
+	* sysdeps/powerpc/powerpc32/bits/wordsize.h: Likewise.
+	* sysdeps/powerpc/powerpc64/bits/wordsize.h: Likewise.
+	* sysdeps/s390/s390-32/bits/wordsize.h: Likewise.
+	* sysdeps/s390/s390-64/bits/wordsize.h: Likewise.
+	* sysdeps/sparc/sparc32/bits/wordsize.h: Likewise.
+	* sysdeps/sparc/sparc64/bits/wordsize.h: Likewise.
+	* sysdeps/tile/tilegx/bits/wordsize.h: Likewise.
+	* sysdeps/tile/tilepro/bits/wordsize.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/wordsize.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/wordsize.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/wordsize.h: Likewise.
+	* sysdeps/wordsize-32/bits/wordsize.h: Likewise.
+	* sysdeps/wordsize-64/bits/wordsize.h: Likewise.
+	* sysdeps/x86/bits/wordsize.h: Likewise.
+
+2016-11-04  Wilco Dijkstra  <wdijkstr@arm.com>
+	    Kevin Petit  <kevin.petit@arm.com>
+
+	* sysdeps/aarch64/memchr.S (__memchr): New file.
+
+2016-11-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/tile/preconfigure: Accept tilegx* instead of tilegx.
+
+2016-11-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/Makefile ($(linknamespace-header-tests)): Also depend on
+	$(linknamespace-symlists-tests).
+
+2016-11-02  Steve Ellcey  <sellcey@caviumnetworks.com>
+
+	* time/tst-strptime2.c: Ignore -Wformat-length warning.
+
+2016-11-02  Florian Weimer  <fweimer@redhat.com>
+	    Carlos O'Donell  <carlos@redhat.com>
+
+	[Bug #20729]
+	* resolv/res_send.c (send_vc): Revert DIAG_IGNORE_Os_NEEDS_COMMENT
+	change to non -Os related diagnostic.  Use DIAG_IGNORE_Os_NEEDS_COMMENT
+	for -Os related change.
+
+2016-11-01  Steve Ellcey  <sellcey@caviumnetworks.com>
+
+	* stdio-common/tst-printf.c: Ignore -Wformat-length warning.
+
+2016-11-01  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #19673]
+	* manual/math.texi (Exponents and Logarithms): Correct description
+	of clog10.
+
+2016-10-31  Carlos O'Donell  <carlos@redhat.com>
+
+	[Bz #20729]
+	* locale/weight.h: Include libc-internal.h.
+	* locale/weightwc.h: Likewise.
+	* nptl/nptl_dbP.h: Likewise.
+
+2016-10-31  Brent W. Baccala  <cosine@freesoft.org>
+
+	* sysdeps/mach/hurd/dl-sysdep.c (__mmap): Do not deallocate memobj_wr
+	when it is MACH_PORT_NULL.
+
+2016-10-31  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #20707]
+	* posix/glob.c (glob): Initialize pglob before checking for
+	GLOB_BRACE.  Don't call glob recursively if pattern contains no
+	valid brace expression despite GLOB_BRACE.
+	* posix/globtest.sh: Test it.
+
+2016-10-28  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #20729]
+	* include/libc-internal.h (DIAG_IGNORE_Os_NEEDS_COMMENT):
+	Define.
+	* iconvdata/iso-2022-cn-ext.c: Include libc-internal.h and ignore
+	-Wmaybe-uninitialized for BODY macro only for -Os compiles.
+	* locale/weight.h (findix): Ignore -Wmaybe-uninitialized error
+	for seq2.back_us and seq1.back_us only for -Os compiles.
+	* locale/weightwc.h (findix): Likewise.
+	* nptl_db/thread_dbP.h: Ignore -Wmaybe-uninitialized error for
+	DB_GET_FIELD_ADDRESS only for -Os compiles.
+	* resolv/res_send (reopen): Ignore -Wmaybe-uninitialized error
+	for slen only for -Os compiles.
+	* string/strcoll_l.c (get_next_seq): Ignore
+	-Wmaybe-uninitialized for seq2.save_idx and seq1.save_idx only
+	for -Os compiles.
+
+	* elf/Makefile (CFALGS-tst-linkall-static): Remove.
+	* include/crypt.h: New file.
+
+2016-10-28  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* dlfcn/bug-atexit3-lib.cc (write_message): New function, copied
+	from test-skeleton.c.
+	(statclass): Replace calls to write with calls to write_message.
+
+2016-10-28  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/math.h
+	[__GLIBC_USE (IEC_60559_BFP_EXT) && __GNUC_PREREQ (3, 3)] (SNANF):
+	New macro.
+	[__GLIBC_USE (IEC_60559_BFP_EXT) && __GNUC_PREREQ (3, 3)] (SNAN):
+	Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT) && __GNUC_PREREQ (3, 3)] (SNANL):
+	Likewise.
+	* manual/arith.texi (Infinity and NaN): Document SNANF, SNAN and
+	SNANL.
+	* math/test-double.h (snan_value_MACRO): New macro.
+	* math/test-float.h (snan_value_MACRO): Likewise.
+	* math/test-ldouble.h (snan_value_MACRO): Likewise.
+	* math/libm-test.inc (issignaling_test_data): Add tests of
+	snan_value_MACRO.
+
+2016-10-28  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* nptl/pthread_rwlock_unlock.c: Add a comment explaining its
+	behavior when eliding a lock not held by the current thread.
+	* sysdeps/powerpc/nptl/elide.h: Likewise.
+
+2016-10-28  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	[BZ #20728]
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S: Replace a
+	branch to _exit() by a function call.
+
+2016-10-28  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/malloc.c: Update chunk layout comments.
+	(chunk_main_arena): Update comment.
+
+2016-10-28  Florian Weimer  <fweimer@redhat.com>
+
+	* crypt/sha256.c, crypt/sha256-block.c,
+	sysdeps/sparc/sparc64/multiarch/sha256-block.c: Rename
+	sha256_process_block to __sha256_process_block.
+	* crypt/sha512.c, crypt/sha512-block.c,
+	sysdeps/sparc/sparc64/multiarch/sha512-block.c: Rename
+	sha512_process_block to __sha512_process_block.
+
+2016-10-28  Carlos O'Donell  <carlos@redhat.com>
+
+	* elf/Makefile (CFLAGS-tst-linkall-static): Define.
+
+	* math/test-nan-overflow.c: Include stdlib.h for malloc.
+
+2016-10-28  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #20019]
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Check IFUNC
+	definition in unrelocated shared library.
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): Likewise.
+
+2016-10-28  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20729]
+	Support i386 builds with CFLAGS which imply -fno-omit-frame-pointer.
+	* sysdeps/unix/sysv/linux/i386/Makefile
+	(uses-6-syscall-arguments): Define.
+	[subdir == misc] (CFLAGS-epoll_pwait.o, CFLAGS-epoll_pwait.os)
+	(CFLAGS-mmap.o, CFLAGS-mmap.os, CFLAGS-mmap64.o, CFLAGS-mmap64.os)
+	(CFLAGS-pselect.o, CFLAGS-pselect.os, CFLAGS-rtld-mmap.os): Use it.
+	[subdir = sysvipc] (CFLAGS-semtimedop.o, CFLAGS-semtimedop.os):
+	Likewise.
+	[subdir = io] (CFLAGS-posix_fadvise64.o, CFLAGS-posix_fadvise64.os)
+	(CFLAGS-posix_fallocate.o, CFLAGS-posix_fallocate.os)
+	(CFLAGS-posix_fallocate64.o, CFLAGS-posix_fallocate64.os)
+	(CFLAGS-sync_file_range.o, CFLAGS-sync_file_range.os)
+	(CFLAGS-fallocate.o, CFLAGS-fallocate.os, CFLAGS-fallocate64.o)
+	(CFLAGS-fallocate64.os): Likewise.
+	[subdir = nptl] (CFLAGS-pthread_rwlock_timedrdlock.o)
+	(CFLAGS-pthread_rwlock_timedrdlock.os)
+	(CFLAGS-pthread_rwlock_timedwrlock.o)
+	(CFLAGS-pthread_rwlock_timedwrlock.os, CFLAGS-sem_wait.o)
+	(CFLAGS-sem_wait.os, CFLAGS-sem_timedwait.o)
+	(CFLAGS-sem_timedwait.os): Likewise.
+
+2016-10-28  Florian Weimer  <fweimer@redhat.com>
+
+	* elf/tst-linkall-static.c: New file.
+	* elf/Makefile (tests-static): Add tst-linkall-static.
+	(tst-linkall-static): Link against static libraries.
+
+2016-10-27  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/malloc.c (sysmalloc): Initialize previous size field of
+	mmaped chunks.
+
+2016-10-28  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/malloc.c (struct malloc_chunk): Rename prev_size, size
+	members to mchunk_prev_size, mchunk_size.
+	(chunk_main_arena): Reverse sense and rename from
+	chunk_non_main_arena.
+	(prev_inuse, chunk_is_mmapped, chunk_main_arena): Use
+	mchunk_size instead of size.
+	(set_non_main_arena): Define.
+	(chunksize): Use chunksize_nomask instead of direct member access.
+	(chunksize_nomask): Define.
+	(next_chunk): Use chunksize instead of direct member access.
+	(prev_size, set_prev_size): Define.
+	(prev_chunk): Use prev_size instead of direct member access.
+	(inuse, set_inuse, clear_inuse): Use chunksize and mchunk_size member.
+	(inuse_bit_at_offset, set_inuse_bit_at_offset)
+	(clear_inuse_bit_at_offset): Use mchunk_size member instead of size.
+	(mchunk_prev_size, mchunk_size): Poison tokens.
+	(unlink): Use chunksize_nomask, prev_size accessors.
+	(do_check_remalloced_chunk): Use chunk_main_arena accessor.
+	(do_check_free_chunk): Use prev_size accessor.
+	(sysmalloc): Use set_prev_size, set_head accessors.
+	(munmap_chunk, mremap_chunk): Use prev_size accessor.
+	(__libc_free): Use chunksize_nomask accessor.
+	(_int_malloc): Use set_non_main_arena, chunksize_nomask,
+	chunk_main_arena accessors.
+	(_int_free): Use chunksize_nomask, prev_size accessors.
+	(malloc_consolidate): Use chunksize, prev_size accessors.
+	(_int_realloc): Use chunksize_nomask accessor.
+	(_int_memalign): Use set_prev_size accessor.
+	(__malloc_info): Use chunksize_nomask accessor.
+	* malloc/hooks.c (mem2chunk_check): Use prev_size, prev_inuse
+	accessors.
+	* malloc/arena.c (arena_for_chunk): Use chunk_main_arena accessor.
+	(heap_trim): Use chunksize_nomask, prev_size accessors.
+
+2016-10-28  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #19380]
+	* stdlib/strtod_l.c (round_and_return): Force "inexact" exception
+	for inexact results.
+	* stdlib/gen-tst-strtod-round.c (string_to_fp): Return indication
+	of inexact result where mpfr_subnormalize is the only inexact
+	step.
+	* stdlib/tst-strtod-round-data.h: Regenerated.
+	* stdlib/tst-strtod-round-skeleton.c [!FE_INEXACT] (FE_INEXACT):
+	Define to 0.
+	(GEN_ONE_TEST): Test inexact exceptions raised are as expected.
+
+2016-10-27  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/unix/sysv/linux/sparc/sys/user.h: Include stddef.h
+
+2016-10-27  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* malloc/malloc.c (do_set_mallopt_check): New function.
+	(do_set_mmap_threshold): Likewise.
+	(do_set_mmaps_max): Likewise.
+	(do_set_top_pad): Likewise.
+	(do_set_perturb_byte): Likewise.
+	(do_set_trim_threshold): Likewise.
+	(do_set_arena_max): Likewise.
+	(do_set_arena_test): Likewise.
+	(__libc_mallopt): Use them.
+
+2016-10-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/bits/mathcalls.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(canonicalize): New declaration.
+	* math/Versions (canonicalize): New libm symbol at version
+	GLIBC_2.25.
+	(canonicalizef): Likewise.
+	(canonicalizel): Likewise.
+	* math/Makefile (gen-libm-calls): Add s_canonicalizeF.
+	* math/s_canonicalize_template.c: New file.
+	* math/libm-test.inc: Update comment on functions tested and
+	testing of NaN payloads.
+	(TEST_NAN_PAYLOAD): New macro.
+	(NO_TEST_INLINE): Update value.
+	(XFAIL_TEST): Likewise.
+	(ERRNO_UNCHANGED): Likewise.
+	(ERRNO_EDOM): Likewise.
+	(ERRNO_ERANGE): Likewise.
+	(IGNORE_RESULT): Likewise.
+	(NON_FINITE): Likewise.
+	(TEST_SNAN): Likewise.
+	(NO_TEST_MATHVEC): Likewise.
+	(TEST_NAN_PAYLOAD_CANONICALIZE): New macro.
+	(check_float_internal): Check NaN payloads if TEST_NAN_PAYLOAD.
+	(struct test_Ffp_b1_data): New type.
+	(RUN_TEST_Ffp_b1): New macro.
+	(RUN_TEST_LOOP_Ffp_b1): Likewise.
+	(canonicalize_test_data): New array.
+	(canonicalize_test): New function.
+	(main): Call canonicalize_test.
+	* manual/arith.texi (FP Bit Twiddling): Document canonicalize,
+	canonicalizef and canonicalizel.
+	* manual/libm-err-tab.pl: Update comment on interfaces without
+	ulps tabulated.
+	* sysdeps/ieee754/ldbl-opt/nldbl-canonicalize.c: New file.
+	* sysdeps/ieee754/ldbl-opt/s_canonicalizel.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/Makefile (libnldbl-calls): Add
+	canonicalize.
+	(CFLAGS-nldbl-canonicalize.c): New variable.
+	* sysdeps/ieee754/ldbl-128ibm/test-iscanonical-ldbl-128ibm.c: Move
+	to ...
+	* sysdeps/ieee754/ldbl-128ibm/test-canonical-ldbl-128ibm.c:
+	... here.
+	(do_test): Also test canonicalizel.
+	* sysdeps/ieee754/ldbl-128ibm/Makefile (tests): Change
+	test-iscanonical-ldbl-128ibm to test-canonical-ldbl-128ibm.
+	* sysdeps/ieee754/ldbl-128ibm/include/bits/iscanonical.h: New
+	file.
+	* sysdeps/ieee754/ldbl-128ibm/s_iscanonicall.c (__iscanonicall):
+	Use libm_hidden_def.
+	* sysdeps/ieee754/ldbl-96/test-iscanonical-ldbl-96.c: Move to ...
+	* sysdeps/ieee754/ldbl-96/test-canonical-ldbl-96.c: ... here.
+	(do_test): Also test canonicalizel.
+	* sysdeps/ieee754/ldbl-96/Makefile (tests): Change
+	test-iscanonical-ldbl-96 to test-canonical-ldbl-96.
+	* sysdeps/ieee754/ldbl-96/include/bits/iscanonical.h: New file.
+	* sysdeps/ieee754/ldbl-96/s_iscanonicall.c (__iscanonicall): Use
+	libm_hidden_def.
+	* sysdeps/generic/math-tests.h (SNAN_TESTS_PRESERVE_PAYLOAD): New
+	macro.
+	* sysdeps/mips/math-tests.h [__mips_hard_float && !__mips_nan2008]
+	(SNAN_TESTS_PRESERVE_PAYLOAD): Likewise.
+	* sysdeps/nacl/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+
+	* sysdeps/ieee754/ldbl-opt/nldbl-getpayload.c: New file.
+	* sysdeps/ieee754/ldbl-opt/Makefile (libnldbl-calls): Add
+	getpayload.
+	(CFLAGS-nldbl-getpayload.c): New variable.
+
+2016-10-26  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* stdio-common/vfscanf.c (_IO_vfwscanf): Use read_int to parse
+	integer from the format string.
+
+2016-10-26  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19473]
+	* malloc/malloc.h (malloc_get_state, malloc_set_state): Remove
+	declarations.
+	* malloc/malloc.c (malloc_get_state, malloc_set_state): Remove
+	weak aliases.
+	* malloc/hooks.c (__malloc_get_state): Remove definition.
+	(malloc_get_state): New stub implementation as
+	compatibility symbol.
+	(malloc_set_state): Rename from __malloc_set_state.  Turn into
+	compat symbol.
+	* malloc/tst-mallocstate.c: Rewrite to approximate how Emacs uses
+	malloc_set_state.
+	* malloc/Makefile (LDFLAGS-tst-mallocstate): Link with -rdynamic.
+
+2016-10-26  Florian Weimer  <fweimer@redhat.com>
+
+	* iconvdata/iso646.c (enum variant): Drop illegal_var.
+	(names): Turn into concatenation of strings.
+	(gconv_init): Adapt iteration over names.
+
+2016-10-26  Florian Weimer  <fweimer@redhat.com>
+
+	* iconvdata/ibm930.h (__ucs4_to_ibm930sb): Remove indirection and
+	make const.
+	* iconvdata/ibm933.h (__ucs4_to_ibm933sb): Likewise.
+	* iconvdata/ibm935.h (__ucs4_to_ibm935sb): Likewise.
+	* iconvdata/ibm939.h (__ucs4_to_ibm939sb): Likewise.
+	* iconvdata/ibm930.c [TO_LOOP] (BODY): Store converted single-byte
+	character in sbconv.
+	* iconvdata/ibm933.c [TO_LOOP] (BODY): Likewise.
+	* iconvdata/ibm935.c [TO_LOOP] (BODY): Likewise.
+	* iconvdata/ibm939.c [TO_LOOP] (BODY): Likewise.
+
+2016-10-26  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* malloc/malloc.c (M_ARENA_TEST, M_ARENA_MAX): Remove.
+
+	* manual/memory.texi (M_TOP_PAD): Remove reference to sbrk.
+	(M_TRIM_THRESHOLD): Likewise.
+
+	* manual/memory.texi (M_ARENA_TEST): Add documentation.
+	(M_ARENA_MAX): Likewise.
+	* malloc/malloc.c: Remove obsolete comment.
+
+	* manual/memory.texi: Add environment variable alternatives to
+	setting mallopt parameters.
+
+2016-10-26  Carlos O'Donell  <carlos@redhat.com>
+
+	* include/atomic.h
+	[USE_COMPILER_ATOMIC_BUILTINS && !atomic_fetch_xor_release]
+	(atomic_fetch_xor_release): Use	atomic_compare_exchange_weak_release.
+
+2016-10-25  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* stdlib/Makefile (tests): Add tst-strfrom and tst-strfrom-locale.
+	* stdlib/tst-strfrom.h: New file.
+	* stdlib/tst-strfrom.c: New file.
+	* stdlib/tst-strfrom-locale.c: New file.
+
+	* stdlib/bug-strtod.c: Refactor based on GEN_TEST_STRTOD_FOREACH.
+	* stdlib/bug-strtod2.c: Likewise.
+	* stdlib/tst-strtod-round-skeleton.c: Likewise.
+	* stdlib/tst-strtod6.c: Likewise.
+	* stdlib/tst-strtod.h (GEN_TEST_STRTOD_FOREACH): Use strfrom.
+
+2016-10-25  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
+
+	* NEWS: Mention the addition of strfromd, strfromf, and strfroml.
+	* manual/arith.texi: Document strfromd, strfromf, strfroml.
+	* stdlib/Makefile: Add strfromd, strfromf, and strfroml.
+	* stdlib/Versions (GLIBC_2.25): Add strfromd, strfromf, and strfroml.
+	* stdlib/stdlib.h (strfromd): New declaration.
+	(strfromf): Likewise.
+	(strfroml): Likewise.
+	* stdlib/strfrom-skeleton.c: New file.  Generic implementation for
+	strfrom.
+	* stdlib/strfromd.c: New file.
+	* stdlib/strfromf.c: Likewise.
+	* stdlib/strfroml.c: Likewise.
+	* stdlib/bits/stdlib-ldbl.h: Add redirection from strfroml to strfromd.
+	* sysdeps/ieee754/ldbl-opt/Makefile: Add rule for nldbl-strfroml.c.
+	* sysdeps/ieee754/ldbl-opt/nldbl-strfroml.c: New file;
+	* sysdeps/arm/nacl/libc.abilist: Update.
+	* sysdeps/unix/sysv/linux/aarch64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/fpu/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nofpu/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc-le.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist: Likewise.
+
+2016-10-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/powerpc/powerpc32/power6/memset.S (memset): Use cmplwi
+	instead of cmpli.
+	* sysdeps/powerpc/powerpc64/power6/memset.S (memset): Use cmpldi
+	instead of cmpli.
+
+2016-10-24  Yury Norov  <ynorov@caviumnetworks.com>
+
+	* sysdeps/unix/sysv/linux/fxstat.c: Remove useless cast.
+	* sysdeps/unix/sysv/linux/lxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/xstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/fxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/lxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/xstat.c: Likewise.
+
+2016-10-24  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/pread.c (__libc_pread): Use SYSCALL_LL_PRW.
+	* sysdeps/unix/sysv/linux/pwrite.c (__libc_pwrite): Likewise.
+	* sysdeps/unix/sysv/linux/pread64.c (__libc_pread64): Use
+	SYSCALL_LL64_PRW.
+	* sysdeps/unix/sysv/linux/pwrite64.c (__libc_pwrite64): Likewise.
+	* sysdeps/unix/sysv/linux/sh/kernel-features.h: Define
+	__ASSUME_PRW_DUMMY_ARG.
+	* sysdeps/unix/sysv/linux/sh/pread.c: Remove file.
+	* sysdeps/unix/sysv/linux/sh/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pwrite64.c: Likewise.
+	* sysdeps/unix/sysv/linux/sysdep.h: Define SYSCALL_LL_PRW and
+	SYSCALL_LL_PRW64 based on __ASSUME_PRW_DUMMY_ARG.
+
+2016-10-24  Steve Ellcey  <sellcey@caviumnetworks.com>
+
+	* sysdeps/unix/sysv/linux/tst-setgetname.c: Increase buffer size.
+
+2016-10-22  Florian Weimer  <fweimer@redhat.com>
+
+	* math/math.h [__cplusplus] (iszero): Wrap C++ bits in extern
+	"C++", to override a potential extern "C" directive around the
+	header file inclusion.
+
+2016-10-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* benchtests/Makefile (CFLAGS-bench-sqrt.c): New variable.
+
+2016-10-21  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/fpu/fenv_private.h:
+	(_FPU_MASK_ALL): Rename to...
+	(_FPU_ALL_TRAPS): New macro representing ISA VE OE UE ZE and
+	XE FPSCR bits.
+
+	(_FPU_MASK_RN): New macro to mask out ISA RN bits in FPSCR.
+
+	(_FPU_MASK_ROUNDING): Rename to...
+	(_FPU_MASK_NOT_RN_NI): New macro to mask out all but ISA RN and
+	NI bits.
+
+	(_FPU_MASK_EXCEPT_ROUND): Rename to...
+	(_FPU_MASK_TRAPS_RN): New macro to mask out exception enable
+	bits and rounding bits.
+
+	(__libc_feholdbits_ppc): New inline function to mask, set,
+	and pontentially clear FSPCR bits, and change MSR[FE] bits.
+	(libc_feholdexcept_ppc): Redefine using __libc_feholdbits_ppc.
+	(libc_feholdexcept_setround_ppc): Likewise.
+
+	(__libc_femergeenv_ppc): New function to dynamically mask both
+	old and new FP environments and merge.
+	(libc_fesetenv_ppc): Redefine in terms of __libc_femergeenv_ppc.
+	(libc_feresetround_ppc): Likewise.
+	(libc_feupdateenv_test_ppc): Likewise.
+	(libc_feupdateenv_ppc): Likewise.
+
+	(libc_feholdsetround_ppc_ctx): Fix usage to include masking
+	of ISA RN bits, and update macro names.
+	(libc_feholdexcept_setround_ppc_ctx): Remove as it is
+	effectively the same as the previously mentioned function.
+
+	(libc_feupdateenv_ppc_ctx): Replace libc_feupdatedenv_test_ppc
+	usage with fe_resetround_ppc.
+
+	(libc_feholdexcept_setround_ctx): Remove, this doesn't appear
+	to be used.
+	(libc_feholdexcept_setround_ctxf): Likewise.
+	(libc_feholdexcept_setround_ctxl): Likewise.
+
+2016-10-21  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20715]
+	* math/math.h [__cplusplus] (iszero): Define as function template.
+	* math/Makefile [CXX] (tests): Add test-math-iszero.
+	(CFLAGS-test-math-iszero.cc): Set.
+	* math/test-math-iszero.cc: New file.
+
+2016-10-20  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20660]
+	* sysdeps/arm/e_sqrt.c: New file.
+	* sysdeps/arm/e_sqrtf.c: Likewise.
+
+2016-10-19  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20718]
+	* sysdeps/powerpc/powerpc32/fpu/s_copysignl.S (__copysignl): Do
+	not use floating-point comparisons to test sign.
+	* sysdeps/powerpc/powerpc64/fpu/s_copysignl.S (__copysignl):
+	Likewise.
+
+	* math/bits/mathcalls.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(getpayload): New declaration.
+	* math/Versions (getpayload): New libm symbol at version
+	GLIBC_2.25.
+	(getpayloadf): Likewise.
+	(getpayloadl): Likewise.
+	* math/Makefile (libm-calls): Add s_getpayloadF.
+	* math/libm-test.inc: Include <nan-high-order-bit.h>.
+	(struct test_f_f_data): Add comment.
+	(RUN_TEST_fp_f): New macro.
+	(RUN_TEST_LOOP_fp_f): Likewise.
+	(getpayload_test_data): New array.
+	(getpayload_test): New function.
+	(main): Call getpayload_test.
+	* math/gen-libm-test.pl (parse_args): Handle 'p' in argument
+	descriptor.
+	* manual/arith.texi (FP Bit Twiddling): Document getpayload,
+	getpayloadf and getpayloadl.
+	* manual/libm-err-tab.pl: Update comment on interfaces without
+	ulps tabulated.
+	* sysdeps/ieee754/dbl-64/s_getpayload.c: New file.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_getpayload.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_getpayloadf.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_getpayloadl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_getpayloadl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_getpayloadl.c: Likewise.
+	* sysdeps/nacl/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+
+2016-10-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir) = math] (tests): Move
+	tst-fallocate{64}.
+	* sysdeps/unix/sysv/linux/tst-fallocate-common.c: Check for EOPNOTSUPP
+	on syscall return.
+
+2016-10-17  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #20689]
+	* sysdeps/x86/cpu-features.c: Only enable FMA and AVX2 if AVX is
+	usable.
+
+2016-10-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/generic/nan-high-order-bit.h: New file.
+	* sysdeps/hppa/nan-high-order-bit.h: Likewise.
+	* sysdeps/mips/nan-high-order-bit.h: Likewise.
+	* sysdeps/hppa/math_private.h: Remove file.
+	* sysdeps/mips/math_private.h (HIGH_ORDER_BIT_IS_SET_FOR_SNAN): Do
+	not define here.
+	* sysdeps/ieee754/dbl-64/s_issignaling.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/dbl-64/s_totalorder.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/dbl-64/s_totalordermag.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_issignaling.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_totalorder.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_totalordermag.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/flt-32/s_issignalingf.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/flt-32/s_totalorderf.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/flt-32/s_totalordermagf.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/ldbl-128/s_issignalingl.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/ldbl-128/s_totalorderl.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/ldbl-128/s_totalordermagl.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/ldbl-128ibm/s_issignalingl.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/ldbl-128ibm/s_totalorderl.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/ldbl-128ibm/s_totalordermagl.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/ldbl-96/s_issignalingl.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/ldbl-96/s_totalorderl.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+	* sysdeps/ieee754/ldbl-96/s_totalordermagl.c: Include
+	<nan-high-order-bit.h>.
+	[HIGH_ORDER_BIT_IS_SET_FOR_SNAN]: Test with #if not #ifdef.
+
+2016-10-17  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/s390/fpu/fix-fp-int-compare-invalid.h: New file.
+
+2016-09-22  John David Anglin  <dave.anglin@bell.net>
+
+	* sysdeps/unix/sysv/linux/hppa/atomic-machine.h: Don't include
+	abort-instr.h.
+	(EFAULT): Remove conditional define.
+	(ENOSYS): Likewise.
+	(atomic_compare_and_exchange_val_acq): Use instruction nullification
+	instead of conditional branch instructions.
+
+2016-10-15  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/bits/mathcalls.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(totalordermag): New declaration.
+	* math/tgmath.h [__GLIBC_USE (IEC_60559_BFP_EXT)] (totalordermag):
+	New macro.
+	* math/Versions (totalordermag): New libm symbol at version
+	GLIBC_2.25.
+	(totalordermagf): Likewise.
+	(totalordermagl): Likewise.
+	* math/Makefile (libm-calls): Add s_totalordermagF.
+	* math/libm-test.inc (totalordermag_test_data): New array.
+	(totalordermag_test): New function.
+	(main): Call totalordermag_test.
+	* math/test-tgmath.c (NCALLS): Increase to 125.
+	(F(compile_test)): Call totalordermag.
+	(F(totalordermag)): New function.
+	* manual/arith.texi (FP Comparison Functions): Document
+	totalordermag, totalordermagf and totalordermagl.
+	* manual/libm-err-tab.pl: Update comment on interfaces without
+	ulps tabulated.
+	* sysdeps/ieee754/dbl-64/s_totalordermag.c: New file.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_totalordermag.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_totalordermagf.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_totalordermagl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_totalordermagl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_totalordermagl.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/nldbl-totalordermag.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/Makefile (libnldbl-calls): Add
+	totalordermag.
+	(CFLAGS-nldbl-totalordermag.c): New variable.
+	* sysdeps/ieee754/ldbl-128ibm/test-totalorderl-ldbl-128ibm.c
+	(do_test): Also test totalordermagl.
+	* sysdeps/ieee754/ldbl-96/test-totalorderl-ldbl-96.c (do_test):
+	Likewise.
+	* sysdeps/nacl/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+
+2016-10-14  Steve Ellcey  <sellcey@caviumnetworks.com>
+
+	* sysdeps/ieee754/dbl-64/e_pow.c (checkint) Make conditions explicitly
+	boolean.
+
+2016-10-13  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/s_ccosh_template.c (M_DECL_FUNC (__ccosh)): Instead of
+	raising FE_INVALID with feraisexcept in case where part of
+	argument is infinite, subtract that part of argument from itself.
+	* math/s_cexp_template.c (M_DECL_FUNC (__cexp)): Likewise.
+	* math/s_csin_template.c (M_DECL_FUNC (__csin)): Likewise.
+	* math/s_csinh_template.c (M_DECL_FUNC (__csinh)): Likewise.
+
+2016-10-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test.inc (totalorder_test_data): Add more tests.
+
+2016-10-12  Adhemerval Zanela  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/posix_fadvise64.c:
+	Undefine weak_alias and add a comment why mips64 require
+	versioning.
+
+2016-10-12  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #20647]
+	* sysdeps/x86/cacheinfo.c (handle_intel): Return -1 if the
+	maximum CPUID level is less than 2.
+
+2016-10-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/bits/mathcalls.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(totalorder): New declaration.
+	* math/tgmath.h [__GLIBC_USE (IEC_60559_BFP_EXT)] (totalorder):
+	New macro.
+	* math/Versions (totalorder): New libm symbol at version
+	GLIBC_2.25.
+	(totalorderf): Likewise.
+	(totalorderl): Likewise.
+	* math/Makefile (libm-calls): Add s_totalorderF.
+	* math/gen-libm-test.pl (parse_args): Escape quotes in test name
+	string.
+	* math/libm-test.inc (PAYLOAD_DIG): New macro.
+	(qnan_value_pl): Likewise.
+	(snan_value_pl): Likewise.
+	(qnan_value): Define using qnan_value_pl.
+	(snan_value): Define using snan_value_pl.
+	(struct test_ff_i_data): Add comment about which tests use this
+	structure.
+	(RUN_TEST_ff_b): New macro.
+	(RUN_TEST_LOOP_ff_b): Likewise.
+	(totalorder_test_data): New array.
+	(totalorder_test): New function.
+	(main): Call totalorder_test.
+	* math/test-tgmath.c (NCALLS): Increase to 122.
+	(F(compile_test)): Call totalorder.
+	(F(totalorder)): New function.
+	* manual/arith.texi (FP Comparison Functions): Document
+	totalorder, totalorderf and totalorderl.
+	* manual/libm-err-tab.pl: Update comment on interfaces without
+	ulps tabulated.
+	* sysdeps/ieee754/dbl-64/s_totalorder.c: New file.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_totalorder.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_totalorderf.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_totalorderl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_totalorderl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_totalorderl.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/nldbl-totalorder.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/Makefile (libnldbl-calls): Add
+	totalorder.
+	(CFLAGS-nldbl-totalorder.c): New variable.
+	* sysdeps/ieee754/ldbl-128ibm/test-totalorderl-ldbl-128ibm.c: New
+	file.
+	* sysdeps/ieee754/ldbl-128ibm/Makefile [$(subdir) = math] (tests):
+	Add test-totalorderl-ldbl-128ibm.
+	* sysdeps/ieee754/ldbl-96/test-totalorderl-ldbl-96.c: New file.
+	* sysdeps/ieee754/ldbl-96/Makefile [$(subdir) = math] (tests): Add
+	test-totalorderl-ldbl-96.
+	* sysdeps/nacl/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+
+2016-10-11  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/Makefile (tests): Add tst-sync_file_range.
+	* sysdeps/unix/sysv/linux/mips/mips32/sync_file_range.c: Remove file.
+	* sysdeps/sysv/linux/powerpc/powerpc64/sync_file_range.c: Likewise.
+	* sysdeps/unix/sysv/linux/sync_file_range.c: Use SYSCALL_LL64 and
+	remove ENOSYS implementation.
+	* sysdeps/unix/sysv/linux/tst-sync_file_range.c (sync_file_range):
+	Consolidate all Linux implementations.
+
+2016-10-11  Florian Weimer  <fweimer@redhat.com>
+
+	* resolv/Makefile (+cflags): Do not set -Wno-write-strings.
+	* resolv/herror.c (herror): Cast away const-ness.
+	* resolv/res_debug.c (__p_class_syms, __p_default_section_syms)
+	(__p_update_section_syms, __p_type_syms, __p_rcode_syms): Likewise.
+
+2016-10-11  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/s_ccosh_template.c (M_DECL_FUNC (__ccosh)): Use M_NAN
+	instead of M_NAN + M_NAN.
+	* math/s_csinh_template.c (M_DECL_FUNC (__csinh)): Likewise.
+
+2016-10-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* misc/getauxval.c [!HAVE_AUX_VECTOR] (__getauxval): Do not define
+	unused variable 'p'.
+
+2016-10-09  Alan Modra  <amodra@gmail.com>
+	    Andreas Schwab  <schwab@linux-m68k.org>
+
+	[BZ #20554]
+	* sysdeps/powerpc/powerpc32/ppc-mcount.S (_mcount)
+	[PIC && !SHARED]: Set up PIC register for PLT call.
+
+2016-10-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/math.h [__GLIBC_USE (IEC_60559_BFP_EXT)] (iseqsig): Define
+	conditional on value of [__FLT_EVAL_METHOD__].
+	* math/test-iseqsig-excess-precision.c: New file.
+	* math/Makefile (tests): Add test-iseqsig-excess-precision.
+
+2016-10-07  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* math/s_iseqsig_template.c: Include math-private.h.
+
+	* posix/Makefile (tests): Add tst-posix_fadvise and tst-posix_fadvise64.
+	* posix/tst-posix_fadvise.c: New file.
+	* posix/tst-posix_fadvise64.c: Likewise.
+	* posix/tst-posix_fadvise-common.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/kernel-features.h
+	(__ASSUME_FADVISE64_64_6ARG): Define.
+	* sysdeps/unix/sysv/linux/powerpc/kernel-features.h
+	[!__powerpc64__] (__ASSUME_FADVISE64_64_6ARG): Define.
+	* sysdeps/unix/sysv/linux/tile/kernel-features.h
+	[!LP64] (__ASSUME_FADVISE64_64_NO_ALIGN): Define.
+	* sysdeps/unix/sysv/linux/arm/posix_fadvise64.c: Remove file.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/posix_fadvise.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/posix_fadvise64.S: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/posix_fadvise.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/posix_fadvise64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/posix_fadvise.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/posix_fadvise64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/posix_fadvise.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/posix_fadvise.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/posix_fadvise64.c:
+	Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/posix_fadvise.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/posix_fadvise64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/posix_fadvise64.c
+	(SHLIB_COMPAT(libc, GLIBC_2_2, GLIBC_2_3_3) [__posix_fadvise64_l64]:
+	Alias to __posix_fadvise64_l32.
+	(SHLIB_COMPAT(libc, GLIBC_2_2, GLIBC_2_3_3) [__posix_fadvise64_l32]:
+	Add compat definition to posix_fadvise64.
+	(SHLIB_COMPAT(libc, GLIBC_2_2, GLIBC_2_3_3) [__posix_fadvise64_l64]:
+	Add versioned definition to posix_fadvise64.
+	* sysdeps/unix/sysv/linux/posix_fadvise.c (posix_fadvise): Build iff
+	__OFF_T_MATCHES_OFF64_T is defined, use INTERNAL_SYSCALL_CALL, add
+	__ASSUME_FADVISE64_64_6ARG/__ASSUME_FADVISE64_64_NO_ALIGN support.
+	* sysdeps/unix/sysv/linux/posix_fadvise64.c (posix_fadvise64): Add
+	__ASSUME_FADVISE64_64_NO_ALIGN support and use INTERNAL_SYSCALL_CALL.
+
+	* io/Makefile (tests): Add tst-posix_fallocate and
+	tst-posix_fallocate64.
+	* io/tst-posix_fallocate-common.c: New file.
+	* io/tst-posix_fallocate.c: Likewise.
+	* io/tst-posix_fallocate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/posix_fallocate.c: Remove
+	file.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/posix_fallocate64.c:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/posix_fallocate.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/posix_fallocate64.c:
+	Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/posix_fallocate.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/posix_fallocate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/posix_fallocate.c (posix_fallocate): Use
+	SYSCALL_LL to pass both offset and len arguments.
+	* sysdeps/unix/sysv/linux/posix_fallocate64.c (posix_fallocate64):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list (pwrite64): Add
+	__libc_pwrite64 alias used by posix_fallocate64.
+
+	* sysdeps/unix/sysv/linux/Makefile (test): Add tst-fallocate and
+	tst-fallocate64.
+	* sysdeps/unix/sysv/linux/tst-fallocate.c: New file.
+	* sysdeps/unix/sysv/linux/tst-fallocate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/tst-fallocate-common.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/fallocate.c: Remove file.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/fallocate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/fallocate.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/fallocate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/fallocate.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/fallocate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/fallocate.c (fallocate): Use SYSCALL_LL
+	macro on offset argument.
+	* sysdeps/unix/sysv/linux/fallocate64.c (fallocate64): Use
+	SYSCALL_LL64 on offset argument.
+
+	* sysdeps/unix/sysv/linux/Makefile (test): Add tst-fallocate and
+	tst-fallocate64.
+	* sysdeps/unix/sysv/linux/tst-fallocate.c: New file.
+	* sysdeps/unix/sysv/linux/tst-fallocate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/tst-fallocate-common.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/fallocate.c: Remove file.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/fallocate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/fallocate.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/fallocate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/fallocate.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/fallocate64.c: Likewise.
+	* sysdeps/unix/sysv/linux/fallocate.c (fallocate): Use SYSCALL_LL
+	macro on offset argument.
+	* sysdeps/unix/sysv/linux/fallocate64.c (fallocate64): Use
+	SYSCALL_LL64 on offset argument.
+	* test-skeleton.c (FAIL_RET): Add macro.
+	(FAIL_EXIT): Likewise.
+	(FAIL_EXIT1): Likewise.
+	(_FAIL): Likewise.
+
+2016-10-07  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20629]
+	resolv: Remove RES_USEBSTRING and its implementation.
+	* resolv/resolv.h (RES_USEBSTRING): Remove.
+	* resolv/ns_name.c (NS_TYPE_ELT, DNS_LABELTYPE_BITSTRING)
+	(digitvalue, encode_bitstring, decode_bitstring): Remove.
+	(ns_name_ntop, ns_name_pton, ns_name_unpack, ns_name_skip)
+	(labellen): Remove extended label types support.
+	* resolv/res_debug.c (p_option): Remove RES_USEBSTRING handling.
+	* resolv/res_init.c (res_setoptions): Likewise.
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyaddr2_r): Likewise.
+
+2016-10-07  Florian Weimer  <fweimer@redhat.com>
+
+	resolv: Remove RES_NOIP6DOTINT and its implementation.
+	* resolv/resolv.h (RES_DEFAULT): Remove RES_NOIP6DOTINT.
+	(RES_NOIP6DOTINT): Remove.
+	* resolv/gethnamaddr.c (gethostbyaddr): Remove RES_NOIP6DOTINT
+	handling.
+	* resolv/res_debug.c (p_option): Likewise.
+	* resolv/res_init.c (res_setoptions): Likewise.
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyaddr2_r): Likewise.
+
+2016-10-07  Florian Weimer  <fweimer@redhat.com>
+
+	resolv: Deprecate unimplemented flags.
+	* misc/sys/cdefs.h (__glibc_macro_warning1)
+	(__glibc_macro_warning): Define.
+	* resolv/resolv.h (RES_AAONLY, RES_PRIMARY, RES_NOCHECKNAME)
+	(RES_KEEPTSIG): Mark as deprecated.
+	* resolv/res_debug.c (p_option): Remove RES_AAONLY, RES_PRIMARY,
+	RES_NOCHECKNAME, RES_KEEPTSIG.
+	* resolv/res_init.c (res_setoptions): Remove RES_NOCHECKNAME handling.
+
+2016-10-07  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* nptl/pt-longjmp.c (DEFINE_LONGJMP): Use libc_ifunc macro.
+	* sysdeps/unix/sysv/linux/s390/pt-longjmp.c (longjmp, siglongjmp):
+	Use strong_alias to create symbols for glibc verison 2.19.
+
+2016-10-07  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* nptl/pt-vfork.c (DEFINE_VFORK): Use libc_ifunc macro.
+
+2016-10-07  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* nptl/pt-system.c (system_ifunc): Use libc_ifunc macro.
+
+2016-10-07  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* rt/clock-compat.c (COMPAT_REDIRECT): Use libc_ifunc macro.
+
+2016-10-07  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/gettimeofday.c (__gettimeofday):
+	Use libc_ifunc_hidden and libc_hidden_def macro. Redirect ifunced function
+	in header for using it as type for ifunc function because __GI_* symbols
+	for ppc32 do not target the ifunc symbols.
+	* sysdeps/unix/sysv/linux/powerpc/time.c (time): Likewise.
+
+2016-10-07  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/x86/gettimeofday.c (__gettimeofday):
+	Use libc_ifunc_hidden macro. Use libc_hidden_def instead of
+	libc_ifunc_hidden_def.
+	* sysdeps/unix/sysv/linux/x86/time.c (time): Likewise.
+	* sysdeps/unix/sysv/linux/i386/gettimeofday.c (__gettimeofday):
+	Redirect ifunced function in header for using it as type of ifunc'ed
+	function. Redefine libc_hidden_def to use fallback non ifunc'ed
+	function for __GI_* symbol.
+	* sysdeps/unix/sysv/linux/i386/time.c (time): Likewise.
+	* include/libc-symbols.h
+	(libc_ifunc_hidden_def, libc_ifunc_hidden_def1): Delete macro.
+
+2016-10-07  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	[BZ #20478]
+	* sysdeps/s390/multiarch/ifunc-resolve.h
+	(s390_vx_libc_ifunc2, s390_libc_ifunc): Use __ifunc from libc-symbols.h
+	to create ifunc symbols.
+	(s390_vx_libc_ifunc_init, s390_vx_libc_ifunc_redirected
+	, s390_vx_libc_ifunc2_redirected, s390_libc_ifunc_init): New define.
+	* sysdeps/s390/multiarch/memchr.c: Redirect ifunced function in header
+	for using it as type for ifunc function.
+	* sysdeps/s390/multiarch/mempcpy.c: Likewise.
+	* sysdeps/s390/multiarch/rawmemchr.c: Likewise.
+	* sysdeps/s390/multiarch/stpcpy.c: Likewise.
+	* sysdeps/s390/multiarch/stpncpy.c: Likewise.
+	* sysdeps/s390/multiarch/strcat.c: Likewise.
+	* sysdeps/s390/multiarch/strchr.c: Likewise.
+	* sysdeps/s390/multiarch/strcmp.c: Likewise.
+	* sysdeps/s390/multiarch/strcpy.c: Likewise.
+	* sysdeps/s390/multiarch/strcspn.c: Likewise.
+	* sysdeps/s390/multiarch/strlen.c: Likewise.
+	* sysdeps/s390/multiarch/strncmp.c: Likewise.
+	* sysdeps/s390/multiarch/strncpy.c: Likewise.
+	* sysdeps/s390/multiarch/strnlen.c: Likewise.
+	* sysdeps/s390/multiarch/strpbrk.c: Likewise.
+	* sysdeps/s390/multiarch/strrchr.c: Likewise.
+	* sysdeps/s390/multiarch/strspn.c: Likewise.
+	* sysdeps/s390/multiarch/wcschr.c: Likewise.
+	* sysdeps/s390/multiarch/wcscmp.c: Likewise.
+	* sysdeps/s390/multiarch/wcspbrk.c: Likewise.
+	* sysdeps/s390/multiarch/wcsspn.c: Likewise.
+	* sysdeps/s390/multiarch/wmemchr.c: Likewise.
+	* sysdeps/s390/multiarch/wmemset.c: Likewise.
+	* sysdeps/s390/s390-32/multiarch/memcmp.c: Likewise.
+	* sysdeps/s390/s390-32/multiarch/memcpy.c: Likewise.
+	* sysdeps/s390/s390-32/multiarch/memset.c: Likewise.
+	* sysdeps/s390/s390-64/multiarch/memcmp.c: Likewise.
+	* sysdeps/s390/s390-64/multiarch/memcpy.c: Likewise.
+	* sysdeps/s390/s390-64/multiarch/memset.c: Likewise.
+
+2016-10-07  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* include/libc-symbols.h (__ifunc_resolver):
+	New macro is used by __ifunc* macros.
+	(__ifunc): New macro uses gcc attribute ifunc or inline assembly
+	depending on HAVE_GCC_IFUNC.
+	(libc_ifunc, libm_ifunc): Use __ifunc as base macro.
+	(libc_ifunc_redirected, libc_ifunc_hidden, libm_ifunc_init): New macro.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_finite.c:
+	Redirect ifunced function in header for using as type for ifunc function.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_finitef.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_isinf.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_isinff.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_isnan.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/memcmp.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/memcpy.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/memmove.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/mempcpy.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/memset.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/rawmemchr.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/strchr.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/strlen.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/strncmp.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/strnlen.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_finite.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_finitef.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isinf.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isinff.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isnan.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memcmp.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/mempcpy.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/rawmemchr.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/stpncpy.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strcat.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strchr.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strcmp.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strcpy.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strncmp.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strncpy.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strnlen.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strrchr.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strstr.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/wcschr.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_isnanf.c:
+	Add libc_hidden_def() and use libc_ifunc_hidden() macro
+	instead of libc_ifunc() macro.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isnanf.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/stpcpy.c: Likewise.
+
+2016-10-07  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* config.h.in (HAVE_GCC_IFUNC): New undef.
+	* configure.ac: Add check if gcc supports attribute ifunc feature.
+	* configure: Regenerated.
+	* manual/install.texi: Add recommendation for gcc with
+	indirect-function support.
+	* INSTALL: Regenerated.
+
+2016-10-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/math.h [__GLIBC_USE (IEC_60559_BFP_EXT)] (iseqsig): New
+	macro.
+	* math/bits/mathcalls.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(__iseqsig): New declaration.
+	* math/s_iseqsig_template.c: New file.
+	* math/Versions (__iseqsigf): New libm symbol at version
+	GLIBC_2.25.
+	(__iseqsig): Likewise.
+	(__iseqsigl): Likewise.
+	* math/libm-test.inc (iseqsig_test_data): New array.
+	(iseqsig_test): New function.
+	(main): Call iseqsig_test.
+	* math/Makefile (gen-libm-calls): Add s_iseqsigF.
+	* manual/arith.texi (FP Comparison Functions): Document iseqsig.
+	* manual/libm-err-tab.pl: Update comment on interfaces without
+	ulps tabulated.
+	* sysdeps/generic/fix-fp-int-compare-invalid.h: New file.
+	* sysdeps/powerpc/fpu/fix-fp-int-compare-invalid.h: Likewise.
+	* sysdeps/x86/fpu/fix-fp-int-compare-invalid.h: Likewise.
+	* sysdeps/nacl/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+
+2016-10-06  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/ieee754/dbl-64/s_sin.c (reduce_and_compute, do_sincos_1,
+	do_sincos_2, sloww, sloww1): Update comments.
+
+	* sysdeps/ieee754/dbl-64/s_sincos.c (__sincos): Adjust calls to
+	do_sincos_1 and do_sincos_2 to pass a boolean shift_quadrant.
+
+	* sysdeps/ieee754/dbl-64/s_sin.c (reduce_and_compute): Make
+	K boolean and rename it.
+	(__sin): Adjust.
+	(__cos): Adjust.
+
+2016-10-06  Rical Jasan  <ricaljasan@pacific.net>
+	    Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* manual/nss.texi: Fix typos in the manual.
+
+2016-10-06  Rical Jasan  <ricaljasan@pacific.net>
+
+	* manual/contrib.texi: Fix typos in the manual.
+
+	* manual/maint.texi: Fix typos in the manual.
+
+	* manual/install.texi: Fix typos in the manual.
+	* INSTALL: Regenerated.
+
+	* manual/lang.texi: Fix typos in the manual.
+
+	* manual/probes.texi: Fix typos in the manual.
+
+	* manual/threads.texi: Fix typos in the manual.
+
+	* manual/debug.texi: Fix typos in the manual.
+
+	* manual/crypt.texi: Fix typos in the manual.
+
+	* manual/conf.texi: Fix typos in the manual.
+
+	* manual/sysinfo.texi: Fix typos in the manual.
+
+	* manual/users.texi: Fix typos in the manual.
+
+	* manual/job.texi: Fix typos in the manual.
+
+	* manual/process.texi: Fix typos in the manual.
+
+	* manual/argp.texi: Fix typos in the manual.
+	* manual/getopt.texi: Likewise.
+	* manual/startup.texi: Likewise.
+
+	* manual/signal.texi: Fix typos in the manual.
+
+	* manual/setjmp.texi: Fix typos in the manual.
+
+	* manual/resource.texi: Fix typos in the manual.
+
+	* manual/time.texi: Fix typos in the manual.
+
+	* manual/arith.texi: Fix typos in the manual.
+
+	* manual/math.texi: Fix typos in the manual.
+
+	* manual/syslog.texi: Fix typos in the manual.
+
+	* manual/terminal.texi: Fix typos in the manual.
+
+	* manual/socket.texi: Fix typos in the manual.
+
+	* manual/filesys.texi: Fix typos in the manual.
+
+	* manual/llio.texi: Fix typos in the manual.
+
+	* manual/stdio.text: Fix typos in the manual.
+
+2016-10-05  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/ieee754/dbl-64/s_sin.c (do_sincos_1): Check N
+	instead of K1.
+
+	* sysdeps/ieee754/dbl-64/s_sin.c (do_sincos_1): Rename K to
+	SHIFT_QUADRANT and make it bool.
+	(do_sincos_2): Likewise.
+	(sloww): Likewise.
+	(sloww1): Likewise.
+	(__sin): Adjust calls to do_sincos_1 and do_sincos_2.
+	(__cos): Likewise.
+
+2016-10-05  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/fpu/libm-test-ulps: Regenerated.
+
+2016-10-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* include/limits.h [__GLIBC_USE (IEC_60559_BFP_EXT)] (LONG_WIDTH):
+	Define to __WORDSIZE, not conditional on [LONG_MAX ==
+	0x7fffffffL].
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (ULONG_WIDTH): Likewise.
+
+2016-10-04  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/sys/platform/ppc.h (__ppc_get_timebase): Replace
+	inline by __inline__.
+	(__ppc_yield, __ppc_mdoio, __ppc_mdoom, __ppc_set_ppr_med): Likewise.
+	(__ppc_set_ppr_med_low, __ppc_set_ppr_low): Likewise.
+	(__ppc_set_ppr_very_low, __ppc_set_ppr_med_high): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h: Require
+	sigset_t from signal.h.
+	* sysdeps/unix/sysv/linux/powerpc/sys/user.h: Include stddef.h,
+	which is already required.
+
+2016-10-04  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/s390/fpu/libm-test-ulps: Regenerated.
+
+2016-10-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/gnu/netinet/tcp.h (TCP_REPAIR_WINDOW): New macro.
+	(struct tcp_repair_window): New type.
+
+2016-10-02  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* libio/tst-memstream3.c: Include string.h.
+
+2016-09-30  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #18241]
+	[BZ #20181]
+	* libio/Makefile (test): Add tst-memstream3 and tst-wmemstream3.
+	* libio/memstream.c (_IO_mem_sync): Only append a null byte if
+	write position is at the end the buffer.
+	* libio/wmemstream.c (_IO_wmem_sync): Likewise.
+	* libio/strops.c (_IO_str_switch_to_get_mode): New function.
+	(_IO_str_seekoff): Set correct offset from negative displacement and
+	set EINVAL for invalid ones.
+	* libio/wstrops.c (enlarge_userbuf): Use correct function to calculate
+	buffer length.
+	(_IO_wstr_switch_to_get_mode): New function.
+	(_IO_wstr_seekoff): Set correct offset from negative displacement and
+	set EINVAL for invalid ones.
+	* libio/tst-memstream3.c: New file.
+	* libio/tst-wmemstream3.c: Likewise.
+	* manual/examples/memstrm.c: Remove warning when priting size_t.
+
+2016-09-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/dbl-64/dla.h [__FP_FAST_FMA] (DLA_FMS): Define
+	macro to use __builtin_fma.
+	* sysdeps/x86_64/fpu/dla.h: Remove file.
+
+	* sysdeps/ieee754/ldbl-128ibm/bits/iscanonical.h
+	[__NO_LONG_DOUBLE_MATH] (__iscanonicall): Do not declare.
+	[__NO_LONG_DOUBLE_MATH] (iscanonical): Define to evaluate to 1.
+
+2016-09-30  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #20292]
+	* elf/Makefile (routines): Add dl-addr-obj.
+	[ifeq (yesyes,$(have-fpie)$(build-shared))] (tests): Add
+	tst-_dl_addr_inside_object.
+	[ifeq (yesyes,$(have-fpie)$(build-shared))] (tests-pie): Likewise.
+	[ifeq (yesyes,$(have-fpie)$(build-shared))]
+	($(objpfx)tst-_dl_addr_inside_object): Add $(objpfx)dl-addr-obj.os.
+	[ifeq (yesyes,$(have-fpie)$(build-shared))]
+	(CFLAGS-tst-_dl_addr_inside_object.c): Add $(PIE-ccflag).
+	* elf/dl-addr.c: Remove _dl_addr_inside_object function.
+	* elf/dl-open.c: Likewise.
+	* elf/dl-addr-obj.c: New file.
+	* elf/tst-_dl_addr_inside_object.c: New file.
+
+2016-09-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/math.h [__GLIBC_USE (IEC_60559_BFP_EXT)]: Include
+	<bits/iscanonical.h>.
+	* bits/iscanonical.h: New file.
+	* math/s_iscanonicall.c: Likewise.
+	* math/Versions (__iscanonicall): New libm symbol at version
+	GLIBC_2.25.
+	* math/libm-test.inc (iscanonical_test_data): New array.
+	(iscanonical_test): New function.
+	(main): Call iscanonical_test.
+	* math/Makefile (headers): Add bits/iscanonical.h.
+	(type-ldouble-routines): Add s_iscanonicall.
+	* manual/arith.texi (Floating Point Classes): Document
+	iscanonical.
+	* manual/libm-err-tab.pl: Update comment on interfaces without
+	ulps tabulated.
+	* sysdeps/ieee754/ldbl-128ibm/bits/iscanonical.h: New file.
+	* sysdeps/ieee754/ldbl-128ibm/s_iscanonicall.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/test-iscanonical-ldbl-128ibm.c:
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/Makefile (tests): Add
+	test-iscanonical-ldbl-128ibm.
+	* sysdeps/ieee754/ldbl-96/bits/iscanonical.h: New file.
+	* sysdeps/ieee754/ldbl-96/s_iscanonicall.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/test-iscanonical-ldbl-96.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+
+2016-09-29  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* string/bits/string3.h: Remove C++ style comments.
+
+2016-09-29  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/ieee754/dbl-64/s_sin.c (do_sincos_1): Use copysign
+	instead of ternary condition.
+	(do_sincos_2): Likewise.
+	(__sin): Likewise.
+	(__cos): Likewise.
+	(slow): Likewise.
+	(sloww): Likewise.
+	(sloww1): Likewise.
+	(bsloww): Likewise.
+	(bsloww1): Likewise.
+
+	* sysdeps/ieee754/dbl-64/s_sin.c (do_cos_slow): use copysign
+	instead of ternary condition.
+	(do_sin_slow): Likewise.
+	(do_sincos_1): Likewise.
+	(do_sincos_2): Likewise.
+	(__cos): Likewise.
+	(sloww): Likewise.
+	(sloww1): Likewise.
+	(sloww2): Likewise.
+	(bsloww): Likewise.
+	(bsloww1): Likewise.
+	(bsloww2): Likewise.
+
+	* sysdeps/ieee754/dbl-64/s_sin.c (slow1): Consolidate sign
+	check from here...
+	(slow2): ... and here...
+	(__sin): ... to here.
+
+2016-09-28  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/math.h
+	[__GLIBC_USE (IEC_60559_BFP_EXT) && !__SUPPORT_SNAN__] (iszero):
+	Cast argument to its own type.
+	* math/test-iszero-excess-precision.c: New file.
+	* math/Makefile (tests): Add test-iszero-excess-precision.
+	(CFLAGS-test-iszero-excess-precision.c): New variable.
+
+2016-09-28  Rasmus Villemoes <rv@rasmusvillemoes.dk>
+
+	* sysdeps/unix/sysv/linux/spawni.c (posix_spawn_args): Remove pipe
+	field, add err field.
+	(__spawni_child): Report error through err member instead of pipe.
+	(__spawnix): Likewise.
+
+2016-09-28  Zack Weinberg  <zackw@panix.com>
+
+	* scripts/check-installed-headers.sh: Generalize treatment of
+	sys/elf.h to all target architectures.
+
+	* sysdeps/unix/sysv/linux/s390/sys/ucontext.h: Restore accidentally-
+	deleted typedef ucontext_t.
+
+2016-09-26  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysdep.h (__INTERNAL_SYSCALL0): New macro.
+	(__INTERNAL_SYSCALL1): Likewise.
+	(__INTERNAL_SYSCALL2): Likewise.
+	(__INTERNAL_SYSCALL3): Likewise.
+	(__INTERNAL_SYSCALL4): Likewise.
+	(__INTERNAL_SYSCALL5): Likewise.
+	(__INTERNAL_SYSCALL6): Likewise.
+	(__INTERNAL_SYSCALL7): Likewise.
+	(__INTERNAL_SYSCALL_NARGS_X): Likewise.
+	(__INTERNAL_SYSCALL_NARGS): Likewise.
+	(__INTERNAL_SYSCALL_DISP): Likewise.
+	(INTERNAL_SYSCALL_CALL): Likewise.
+	(__SYSCALL0): Rename to __INLINE_SYSCALL0.
+	(__SYSCALL1): Rename to __INLINE_SYSCALL1.
+	(__SYSCALL2): Rename to __INLINE_SYSCALL2.
+	(__SYSCALL3): Rename to __INLINE_SYSCALL3.
+	(__SYSCALL4): Rename to __INLINE_SYSCALL4.
+	(__SYSCALL5): Rename to __INLINE_SYSCALL5.
+	(__SYSCALL6): Rename to __INLINE_SYSCALL6.
+	(__SYSCALL7): Rename to __INLINE_SYSCALL7.
+	(__SYSCALL_NARGS_X): Rename to __INLINE_SYSCALL_NARGS_X.
+	(__SYSCALL_NARGS): Rename to __INLINE_SYSCALL_NARGS.
+	(__SYSCALL_DISP): Rename to __INLINE_SYSCALL_DISP.
+	(__SYSCALL_CALL): Rename to INLINE_SYSCALL_CALL.
+	(SYSCALL_CANCEL): Replace __SYSCALL_CALL with INLINE_SYSCALL_CALL.
+
+2016-09-23  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/math.h [__GLIBC_USE (IEC_60559_BFP_EXT)] (iszero): New
+	macro.
+	* math/libm-test.inc (iszero_test_data): New array.
+	(iszero_test): New function.
+	(main): Call iszero_test.
+	* manual/arith.texi (Floating Point Classes): Document iszero.
+	* manual/libm-err-tab.pl: Update comment on interfaces without
+	ulps tabulated.
+
+2016-09-23  Zack Weinberg  <zackw@panix.com>
+
+	* scripts/check-installed-headers.sh: New script.
+	* Rules: In each directory that defines header files to be installed,
+	run check-installed-headers.sh on them as a special test.
+	* Makefile: Likewise for the headers installed at top level.
+
+	* include/aliases.h, include/alloca.h, include/argz.h
+	* include/arpa/nameser.h, include/arpa/nameser_compat.h
+	* include/elf.h, include/envz.h, include/err.h
+	* include/execinfo.h, include/fpu_control.h, include/getopt.h
+	* include/gshadow.h, include/ifaddrs.h, include/libintl.h
+	* include/link.h, include/malloc.h, include/mcheck.h
+	* include/mntent.h, include/netinet/ether.h
+	* include/nss.h, include/obstack.h, include/printf.h
+	* include/pty.h, include/resolv.h, include/rpc/auth.h
+	* include/rpc/auth_des.h, include/rpc/auth_unix.h
+	* include/rpc/clnt.h, include/rpc/des_crypt.h
+	* include/rpc/key_prot.h, include/rpc/netdb.h
+	* include/rpc/pmap_clnt.h, include/rpc/pmap_prot.h
+	* include/rpc/pmap_rmt.h, include/rpc/rpc.h
+	* include/rpc/rpc_msg.h, include/rpc/svc.h
+	* include/rpc/svc_auth.h, include/rpc/xdr.h
+	* include/rpcsvc/nis_callback.h, include/rpcsvc/nislib.h
+	* include/rpcsvc/yp.h, include/rpcsvc/ypclnt.h
+	* include/rpcsvc/ypupd.h, include/shadow.h
+	* include/stdio_ext.h, include/sys/epoll.h
+	* include/sys/file.h, include/sys/gmon.h, include/sys/ioctl.h
+	* include/sys/prctl.h, include/sys/profil.h
+	* include/sys/statfs.h, include/sys/sysctl.h
+	* include/sys/sysinfo.h, include/ttyent.h, include/utmp.h
+	* sysdeps/arm/nacl/include/bits/setjmp.h
+	* sysdeps/mips/include/sys/asm.h
+	* sysdeps/unix/sysv/linux/include/sys/sysinfo.h
+	* sysdeps/unix/sysv/linux/include/sys/timex.h
+	* sysdeps/x86/fpu/include/bits/fenv.h:
+	Add #ifndef _ISOMAC guard around internal declarations.
+	Add multiple-inclusion guard if not already present.
+
+2016-09-23  Zack Weinberg  <zackw@panix.com>
+
+	* sysdeps/generic/sys/ucontext.h
+	* sysdeps/arm/sys/ucontext.h
+	* sysdeps/i386/sys/ucontext.h
+	* sysdeps/m68k/sys/ucontext.h
+	* sysdeps/mips/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/aarch64/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/alpha/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/arm/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/hppa/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/ia64/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/m68k/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/mips/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/nios2/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/s390/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/sh/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/sparc/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/tile/sys/ucontext.h
+	* sysdeps/unix/sysv/linux/x86/sys/ucontext.h:
+	Include both bits/sigcontext.h and bits/sigstack.h.
+	Fix grammar error in comment, if present.
+
+	* bits/sigstack.h
+	* sysdeps/unix/sysv/linux/aarch64/bits/sigstack.h
+	* sysdeps/unix/sysv/linux/alpha/bits/sigstack.h
+	* sysdeps/unix/sysv/linux/bits/sigstack.h
+	* sysdeps/unix/sysv/linux/ia64/bits/sigstack.h
+	* sysdeps/unix/sysv/linux/mips/bits/sigstack.h
+	* sysdeps/unix/sysv/linux/powerpc/bits/sigstack.h
+	* sysdeps/unix/sysv/linux/sparc/bits/sigstack.h
+	* bits/sigcontext.h
+	* sysdeps/mach/hurd/i386/bits/sigcontext.h
+	* sysdeps/unix/sysv/linux/bits/sigcontext.h
+	* sysdeps/unix/sysv/linux/ia64/bits/sigcontext.h
+	* sysdeps/unix/sysv/linux/sparc/bits/sigcontext.h:
+	Add multiple inclusion guard.  Permit inclusion by sys/ucontext.h
+	as well as signal.h, if this was not already allowed.  Request
+	definition of size_t if necessary.  Minimize semantically-null
+	differences across files.
+
+2016-09-23  Zack Weinberg  <zackw@panix.com>
+
+	* time/time.h, bits/time.h, sysdeps/unix/sysv/linux/bits/time.h:
+	Remove all logic conditional on __need macros.	Move all the
+	conditionally defined types to their own headers...
+	* time/bits/types/clock_t.h: Define clock_t here.
+	* time/bits/types/clockid_t.h: Define clockid_t here.
+	* time/bits/types/struct_itimerspec.h: Define struct itimerspec here.
+	* time/bits/types/struct_timespec.h: Define struct timespec here.
+	* time/bits/types/struct_timeval.h: Define struct timeval here.
+	* time/bits/types/struct_tm.h: Define struct tm here.
+	* time/bits/types/time_t.h: Define time_t here.
+	* time/bits/types/timer_t.h: Define timer_t here.
+	* time/Makefile: Install the new headers.
+
+	* bits/resource.h, io/fcntl.h, io/sys/poll.h, io/sys/stat.h
+	* io/utime.h, misc/sys/select.h, posix/sched.h, posix/sys/times.h
+	* posix/sys/types.h, resolv/netdb.h, rt/aio.h, rt/mqueue.h
+	* signal/signal.h, pthread/semaphore.h, sysdeps/nptl/pthread.h
+	* sysdeps/unix/sysv/linux/alpha/bits/resource.h
+	* sysdeps/unix/sysv/linux/alpha/sys/acct.h
+	* sysdeps/unix/sysv/linux/bits/resource.h
+	* sysdeps/unix/sysv/linux/bits/timex.h
+	* sysdeps/unix/sysv/linux/mips/bits/resource.h
+	* sysdeps/unix/sysv/linux/net/ppp_defs.h
+	* sysdeps/unix/sysv/linux/sparc/bits/resource.h
+	* sysdeps/unix/sysv/linux/sys/acct.h
+	* sysdeps/unix/sysv/linux/sys/timerfd.h
+	* sysvipc/sys/msg.h, sysvipc/sys/sem.h, sysvipc/sys/shm.h
+	* time/sys/time.h, time/sys/timeb.h
+	Use the new bits/types headers.
+
+	* include/time.h: Remove __need logic.
+	* include/bits/time.h
+	* include/bits/types/clock_t.h, include/bits/types/clockid_t.h
+	* include/bits/types/time_t.h, include/bits/types/timer_t.h
+	* include/bits/types/struct_itimerspec.h
+	* include/bits/types/struct_timespec.h
+	* include/bits/types/struct_timeval.h
+	* include/bits/types/struct_tm.h:
+	New wrapper headers.
+
+2016-09-23  Zack Weinberg  <zackw@panix.com>
+
+	* sysdeps/mach/hurd/net/if_ppp.h
+	* sysdeps/unix/sysv/linux/net/if_ppp.h:
+	Only define struct ifpppstatsreq and struct ifpppcstatsreq
+	if __USE_MISC is defined, to ensure struct ifreq is declared.
+
+	* inet/netinet/ether.h: Condition all function prototypes
+	on __USE_MISC, to ensure struct ether_addr is declared.
+
+	* socket/bits/types/struct_osockaddr.h: New header.
+	* include/bits/types/struct_osockaddr.h: New wrapper.
+	* socket/Makefile: Install the new header.
+	* socket/sys/socket.h, inet/protocols/talkd.h:
+	Refer to bits/types/struct_osockaddr.h for the definition of
+	struct osockaddr.
+
+2016-09-23  Zack Weinberg  <zackw@panix.com>
+
+	* bits/in.h, gmon/sys/gmon.h, inet/netinet/igmp.h
+	* inet/protocols/routed.h, inet/protocols/talkd.h
+	* inet/protocols/timed.h, io/fts.h, nptl_db/thread_db.h
+	* resolv/arpa/nameser.h, resolv/resolv.h, sunrpc/rpc/rpc_des.h
+	* sysdeps/generic/netinet/if_ether.h
+	* sysdeps/generic/netinet/in_systm.h
+	* sysdeps/generic/netinet/ip.h, sysdeps/generic/netinet/tcp.h
+	* sysdeps/gnu/netinet/ip_icmp.h, sysdeps/gnu/netinet/tcp.h
+	* sysdeps/gnu/netinet/udp.h, sysdeps/mach/hurd/net/ethernet.h
+	* sysdeps/mach/hurd/net/if_arp.h
+	* sysdeps/mach/hurd/net/if_ppp.h
+	* sysdeps/mach/hurd/net/route.h, sysdeps/mach/sys/reboot.h
+	* sysdeps/unix/sysv/linux/bits/in.h
+	* sysdeps/unix/sysv/linux/net/ethernet.h
+	* sysdeps/unix/sysv/linux/net/if_arp.h
+	* sysdeps/unix/sysv/linux/net/if_ppp.h
+	* sysdeps/unix/sysv/linux/net/if_shaper.h
+	* sysdeps/unix/sysv/linux/net/route.h
+	* sysdeps/unix/sysv/linux/netinet/if_ether.h
+	* sysdeps/unix/sysv/linux/netinet/if_fddi.h
+	* sysdeps/unix/sysv/linux/netinet/if_tr.h
+	* sysdeps/unix/sysv/linux/netipx/ipx.h
+	* sysdeps/unix/sysv/linux/sys/acct.h
+	* include/arpa/nameser.h, include/resolv.h:
+	Change all uses of u_char to unsigned char,
+	u_short and ushort to unsigned short, u_int and uint to unsigned int,
+	u_long and ulong to unsigned long, u_int8_t to uint8_t,
+	u_int16_t to uint16_t, u_int32_t to uint32_t, quad_t to int64_t,
+	and u_int64_t and u_quad_t to uint64_t.
+
+	* mach/sys/reboot.h: Remove two casts of integer literals
+	to the types they already have.
+
+	* bits/in.h: Correct error in description of IP_MULTICAST_LOOP.
+	* sysdeps/unix/sysv/linux/bits/in.h: Likewise.
+	* sysdeps/unix/sysv/linux/netinet/if_ether.h: Change a comment
+	from referring to 'unsigned char' to 'uint8_t' for consistency with
+	the macro definition below.
+
+	* gmon/sys/gmon.h, inet/netinet/igmp.h, inet/protocols/talkd.h
+	* io/fts.h, resolv/arpa/nameser.h, resolv/resolv.h
+	* sunrpc/rpc/rpc_des.h, sysdeps/generic/netinet/ip.h
+	* sysdeps/gnu/netinet/tcp.h, sysdeps/gnu/netinet/udp.h
+	* sysdeps/mach/hurd/net/if_ppp.h, sysdeps/unix/sysv/linux/net/if_ppp.h
+	* sysdeps/unix/sysv/linux/sys/acct.h
+	* include/arpa/nameser.h, include/resolv.h:
+	Fix indentation disrupted by mechanical edits.
+
+	* inet/protocols/talkd.h, resolv/arpa/nameser.h
+	* sysdeps/generic/netinet/in_systm.h
+	* sysdeps/gnu/netinet/ip_icmp.h, sysdeps/gnu/netinet/tcp.h
+	* sysdeps/gnu/netinet/udp.h
+	* sysdeps/unix/sysv/linux/net/ethernet.h
+	* sysdeps/unix/sysv/linux/net/if_arp.h
+	* sysdeps/unix/sysv/linux/net/if_ppp.h
+	* sysdeps/unix/sysv/linux/net/if_shaper.h
+	* sysdeps/unix/sysv/linux/netinet/if_fddi.h
+	* sysdeps/unix/sysv/linux/netinet/if_tr.h
+	* sysdeps/unix/sysv/linux/netipx/ipx.h
+	* sysdeps/unix/sysv/linux/sys/acct.h
+	Include stdint.h for uintNN_t definitions.
+	Don't include sys/cdefs.h, features.h, or asm/types.h directly.
+
+2016-09-23  Zack Weinberg  <zackw@panix.com>
+
+	* rpcsvc/nislib.h: Include rpcsvc/nis.h.
+	* sysdeps/unix/sysv/linux/netrose/rose.h:
+	Include sys/socket.h and netax25/ax25.h.
+
+	* inet/netinet/icmp6.h, inet/netinet/ip6.h
+	* resolv/arpa/nameser_compat.h:
+	Use __BYTE_ORDER etc. instead of BYTE_ORDER etc.
+
+	* sysdeps/unix/sysv/linux/sys/quota.h:
+	Use __caddr_t instead of caddr_t.
+	* sysdeps/unix/sysv/linux/sys/timerfd.h:
+	Use __clockid_t instead of clockid_t.
+
+	* sysvipc/sys/ipc.h: Remove unnecessary #warning.
+
+	* argp/argp.h: Check whether _LIBC is defined before expanding it.
+	* posix/glob.h: Check whether __USE_XOPEN2K8 is defined instead of
+	expanding it.
+
+	* misc/sys/cdefs.h: Tidy up conditional nest defining __flexarr.
+	Define __glibc_c99_flexarr_available to 1 when the compiler
+	supports C99-compatible flexible array members, 0 otherwise.
+	* sysdeps/unix/sysv/linux/bits/socket.h
+	* sysdeps/mach/hurd/bits/socket.h
+	* bits/socket.h: Use __glibc_c99_flexarr_available in
+	definitions of struct cmsghdr and CMSG_DATA.
+
+2016-09-23  Florian Weimer  <fweimer@redhat.com>
+
+	* manual/nss.texi (NSS Modules Interface): Adjust function return
+	type to enum nss_status.  Document errnop argument.  Clarify
+	h_errnop semantics.  Fix cross-reference formatting.
+	(NSS Module Function Internals): Mention that *errnop needs to be
+	set on failure, but not to zero.
+
+2016-09-23  Florian Weimer  <fweimer@redhat.com>
+
+	* io/tst-open-tmpfile.c (wrap_open64, wrap_openat64)
+	(get_random_name): New functions.
+	(check_wrapper_flags_mode): Use linkat to give the new file a name
+	determined by get_random_name.
+	(do_test): Add calls to test open64 and openat64.
+
+2016-09-23  Florian Weimer  <fweimer@redhat.com>
+
+	* test-skeleton.c: Remove #include <stdarg.h>.
+
+2016-09-21  Alexandre Oliva <aoliva@redhat.com>
+
+	[BZ #19826]
+	* elf/dl-tls.c (_dl_allocate_tls_init): Restore DTV early
+	initialization of static TLS entries.
+	* elf/dl-reloc.c (_dl_nothread_init_static_tls): Likewise.
+	* nptl/allocatestack.c (init_one_static_tls): Likewise.
+
+2016-09-22  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* hurd/hurdmalloc.c (malloc_fork_prepare): Rename to
+	_hurd_malloc_fork_prepare.
+	(malloc_fork_parent): Rename to _hurd_malloc_fork_parent.
+	(malloc_fork_child): Rename to _hurd_malloc_fork_child.
+	(_hurd_fork_prepare_hook): Drop malloc_fork_prepare.
+	(_hurd_fork_parent_hook): Drop malloc_fork_parent.
+	(_hurd_fork_child_hook): Drop malloc_fork_child.
+	* hurd/hurdmalloc.h (_hurd_malloc_fork_prepare,
+	_hurd_malloc_fork_parent, _hurd_malloc_fork_child): Add declarations.
+	* sysdeps/mach/hurd/fork.c (__fork): Call __malloc_fork_lock_parent
+	after locking locks (notably hurd_dtable_lock). Call
+	_hurd_malloc_fork_prepare after that. Call _hurd_malloc_fork_parent
+	before __malloc_fork_unlock_parent and _hurd_malloc_fork_child before
+	__malloc_fork_unlock_child.
+	* sysdeps/mach/i386/syscall.S (syscall): Push back syscall number.
+
+2016-09-21  James Greenhalgh  <james.greenhalgh@arm.com>
+
+	* soft-fp/extendhftf2.c: New.
+	* soft-fp/fixhfti.c: Likewise.
+	* soft-fp/fixunshfti.c: Likewise.
+	* soft-fp/floattihf.c: Likewise.
+	* soft-fp/floatuntihf.c: Likewise.
+	* soft-fp/half.h: Likewise.
+	* soft-fp/trunctfhf2.c: Likewise.
+
+2016-09-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/math.h [__GLIBC_USE (IEC_60559_BFP_EXT)] (issubnormal): New
+	macro.
+	* math/libm-test.inc (issubnormal_test_data): New array.
+	(issubnormal_test): New function.
+	* manual/arith.texi (Floating Point Classes): Document
+	issubnormal.
+	* manual/libm-err-tab.pl: Update comment on interfaces without
+	ulps tabulated.
+
+	* sysdeps/generic/stdint.h: Define
+	__GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION and include
+	<bits/libc-header-start.h> instead of including <features.h>.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (INT8_WIDTH): New macro.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (UINT8_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (INT16_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (UINT16_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (INT32_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (UINT32_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (INT64_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (UINT64_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (INT_LEAST8_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (UINT_LEAST8_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (INT_LEAST16_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (UINT_LEAST16_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (INT_LEAST32_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (UINT_LEAST32_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (INT_LEAST64_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (UINT_LEAST64_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (INT_FAST8_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (UINT_FAST8_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (INT_FAST16_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (UINT_FAST16_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (INT_FAST32_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (UINT_FAST32_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (INT_FAST64_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (UINT_FAST64_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (INTPTR_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (UINTPTR_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (INTMAX_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (UINTMAX_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (PTRDIFF_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (SIG_ATOMIC_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (SIZE_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (WCHAR_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (WINT_WIDTH): Likewise.
+	* manual/arith.texi (Integers): Document these macros for types
+	specified by width properties.
+	* manual/lang.texi (Width of Type): Document these macros for
+	other standard typedefs.
+	* stdlib/tst-width-stdint.c: New file.
+	* stdlib/Makefile (tests): Add tst-width-stdint.
+
+2016-09-21  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20016]
+	* resolv/res_send.c (__libc_res_nsend): Remove USE_HOOK code.
+	* resolv/res_data.c (res_send_setqhook, res_send_setrhook):
+	Move ...
+	* resolv/compat-hooks.c (res_send_setqhook, res_send_setrhook):
+	... here, as compatibility symbols in a new file.
+	* resolv/Makefile (libresolv-routines): Add compat-hooks.
+	* resolv/res_init.c (__res_vinit): Adjust member names.
+	* include/resolv.h (res_send_setqhook, res_send_setrhook): Remove.
+	* resolv/resolv.h (res_sendhookact, res_send_qhook)
+	(res_send_rhook): Remove.
+	(struct __res_state): Rename qhook, rhook members.
+
+2016-09-21  Florian Weimer  <fweimer@redhat.com>
+
+	malloc: Use __libc_lock wrappers.
+	* malloc/arena.c (list_lock, free_list_lock): Define using
+	__libc_lock_define_initialized.
+	(arena_lock): Adjust formatting.
+	* malloc/malloc.c (struct malloc_state): Define mutex using
+	__libc_lock_define.
+	* sysdeps/generic/malloc-machine.h (mutex_t, mutex_init)
+	(mutex_lock, mutex_trylock, mutex_unlock): Remove.
+	* sysdeps/mach/hurd/malloc-machine.h (mutex_t, mutex_lock)
+	(mutex_unlock, mutex_trylock): Remove.
+	(__pthread_initialize): Remove unused macro.
+	* sysdeps/nptl/malloc-machine.h (mutex_t, mutex_lock)
+	(mutex_unlock, mutex_trylock): Remove.
+
+2016-09-21  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20592]
+	Remove RR type classification macros.
+	* resolv/arpa/nameser.h (ns_t_qt_p, ns_t_mrr_p, ns_t_rr_p)
+	(ns_t_udp_p, ns_t_xfr_p): Remove.
+
+2016-09-21  Florian Weimer  <fweimer@redhat.com>
+
+	Remove misleading version information.
+	* resolv/arpa/nameser.h (__NAMESER): Remove.
+	* resolv/arpa/nameser_compat.h (__BIND): Remove.
+
+2016-09-21  Florian Weimer  <fweimer@redhat.com>
+
+	Remove the always-defined BIND_4_COMPAT macro.
+	* resolv/arpa/nameser.h: Unconditionally include
+	<arpa/nameser_compat.h>.
+	(BIND_4_COMPAT): Remove.
+	* resolv/res_comp.c: Do not check BIND_4_COMPAT.
+
+2016-09-21  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20591]
+	Remove obsolete DNSSEC support.
+	* resolv/arpa/nameser.h (ns_key_types, NS_KEY_*, NS_ALG_*)
+	(NS_MD5_RSA_*, NS_DSA_*, NS_NXT_*, ns_sign, ns_sign2, ns_sign_tcp)
+	(ns_sign_tcp2, ns_sign_tcp_init, ns_find_tsig, ns_verify)
+	(ns_verify_tcp, ns_verify_tcp_init): Remove.
+	(ns_cert_types): Add comment.
+	* resolv/ns_print.c (ns_sprintrrf): Do not handle DNSSEC records
+	separately.
+	(KEY_RSA, KEY_HMAC_MD5, dst_s_id_calc, dst_s_get_int16)
+	(dst_s_dns_key_id): Remove.
+	* resolv/res_debug.c (__p_key_syms, __p_cert_syms): Remove unused
+	variables.
+
+2016-09-21  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20524]
+	* manual/string.texi (String/Array Comparison): Clarify the
+	strverscmp behavior.
+
+2016-09-21  Florian Weimer  <fweimer@redhat.com>
+
+	* test-skeleton.c (xasprintf): Add function.
+	* io/tst-open-tmpfile.c: New test.
+	* io/Makefile (tests): Add it.
+
+2016-09-21  Florian Weimer  <fweimer@redhat.com>
+
+	Avoid running $(CXX) during build to obtain header file paths.
+	* configure.ac (CXX_SYSINCLUDES, CXX_CMATH_HEADER): Set.
+	* config.make.in (c++-cstdlib-header, c++-cmath-header): Define.
+	* Makerules (cstdlib, cmath): Remove variables.  Use
+	$(c++-cstdlib-header), $(c++-cmath-header) instead.
+	* configure: Regenerate.
+
+2016-09-21  Florian Weimer  <fweimer@redhat.com>
+
+	* Makeconfig (all-object-suffixes): Include .op only if
+	$(build-profile).
+
+2016-09-21  Florian Weimer  <fweimer@redhat.com>
+
+	* elf/sln.c: Remove HAVE_CONFIG_H, S_ISDIR, S_ISLNK preprocessor
+	conditionals.  Do not define PATH_MAX.
+
+2016-09-20  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* posix/Makefile (tests): Add tst-spawn3.
+	* posix/tst-spawn3.c: New file.
+	* sysdeps/unix/sysv/linux/spawni.c (__spawni_child): Close file descriptor
+	if it is already opened for open action.
+
+	* sysdeps/unix/sysv/linux/spawni.c (__spawnix): Correctly block and unblock
+	all signals when executing the clone vfork child.
+	(SIGALL_SET): Remove macro.
+
+	* nptl/Makefile (tests): Add tst-exec5.
+	* nptl/tst-exec5.c: New file.
+	* sysdeps/unix/sysv/linux/spawni.c (__spawni): Correctly enable and disable
+	asynchronous cancellation.
+
+2016-09-20  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* hurd/exc2signal.c: #include <hurd/signal.h>
+	(_hurd_exception2signal): Replace 'exception', 'code', 'subcode',
+	'sigcode', 'error' parameters with 'detail' parameter.  Fix code
+	accordingly.
+	* mach/mach_error.c (mach_error): Fix old-style function definition.
+	* mach/errstring.c (mach_error_type, mach_error_string): Likewise.
+
+2016-09-20  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* math/Makefile (libm-calls): Remove s_nanF.
+	(gen-libm-calls): Add s_nanF.
+
+	* math/s_nan.c: Refactor into ...
+	* math/s_nan_template.c: New file.
+
+	* math/s_nanf.c: Removed.
+	* math/s_nanl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_nan.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_nanl.c: Removed.
+
+	* sysdeps/ieee754/ldbl-opt/math-type-macros-double.h:
+	(LDOUBLE_nanl_libm_version): New macro.
+
+	* sysdeps/generic/math-type-macros-double.h:
+	(M_STRTO_NAN): New macro.
+	* sysdeps/generic/math-type-macros-float.h: Likewise.
+	* sysdeps/generic/math-type-macros-ldouble.h: Likewise.
+
+	* sysdeps/generic/math-type-macros.h: Document
+	M_STRTO_NAN.
+
+2016-09-20  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* math/s_nanf.c: Remove __nanf undef.
+	* math/s_nan.c: Remove __nan undef.
+	* math/s_nanl.c: Remove __nanl undef.
+
+	* sysdeps/generic/math_private.h (__nan): Remove macro
+	override.
+	(__nanf): Likewise.
+	(__nanl): Likewise.
+
+2016-09-20  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* math/Makefile (gen-all-calls): New variable.
+	(generated): Replace gen-libm-calls with gen-all-calls.
+	(gen-libm-templates.stmp): Likewise.  Also, ensure
+	the output directory exists or is created and add
+	dependency on the Makefile.
+	(calls): Move s_ldexpF into gen-calls.
+	(gen-calls): New variable.
+
+	* math/s_ldexpf.c: Removed.
+	* math/s_ldexpl.c: Removed.
+	* math/s_ldexp.c: Refactored into ...
+	* math/s_ldexp_template.c: New file.
+
+	* sysdeps/generic/math-type-macros-double.h: Remove
+	redundant fall-through definition of declare_mgen_alias.
+	(declare_mgen_alias_2): New macro.
+
+	* sysdeps/generc/math-type-macros.h (declare_mgen_alias_2):
+	New macro for function aliased to two exported symbols.
+
+	* sysdeps/ieee754/ldbl-opt/s_ldexp.c: Update to use
+	new template file.
+	sysdeps/ieee754/ldbl-opt/s_ldexpl.c: Likewise.
+
+2016-09-20  Florian Weimer  <fweimer@redhat.com>
+
+	* Makeconfig (all-object-suffixes): Remove .og.
+	* Makerules (elide-routines.og): Remove.
+	* sysdeps/i386/i686/Makefile (CFLAGS-.og, ASFLAGS-.og): Remove.
+	* sysdeps/sparc/sparc32/sparcv9/Makefile (ASFLAGS-.og): Remove.
+	* sysdeps/sparc/sparc64/Makefile (ASFLAGS-.op): Remove.
+
+2016-09-20  Florian Weimer  <fweimer@redhat.com>
+
+	* scripts/sysd-rules.awk (BEGIN): Only generate rtld patterns for
+	.os objects.
+
+2016-09-19  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	[BZ #20615]
+	* sysdeps/powerpc/powerpc32/power9/multiarch/Implies: Replace
+	fpu directory by non-fpu.
+	* sysdeps/powerpc/powerpc64/power9/fpu/Implies: Remove dependency
+	on non-fpu directory from a fpu directory.
+
+2016-09-19  Joseph Myers  <joseph@codesourcery.com>
+
+	* include/limits.h: Define
+	__GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION and include
+	<bits/libc-header-start.h> instead of including <features.h>.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (CHAR_WIDTH): New macro.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (SCHAR_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (UCHAR_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (SHRT_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (USHRT_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (INT_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (UINT_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (LONG_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (ULONG_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (LLONG_WIDTH): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (ULLONG_WIDTH): Likewise.
+	* manual/lang.texi (Width of Type): Document these macros.
+	* stdlib/tst-width.c: New file.
+	* stdlib/Makefile (tests): Add tst-width.
+
+2016-09-18  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* intl/dcigettext.c (PATH_MAX): Call __pathconf instead of pathconf.
+	* sysdeps/posix/dup.c (__dup): Call __fcntl instead of fcntl.
+
+2016-09-15  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* nptl/sem_init.c (__new_sem_init): Init pad value to 0.
+	* sysdeps/sparc/sparc32/sem_open.c: Remove file.
+	* sysdeps/sparc/sparc32/sparcv9/sem_open.c: Likewise.
+
+2016-09-15  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #18243]
+	* rt/Makefile (test): Add tst-shm-cancel.
+	* rt/tst-shm-cancel.c: New file.
+	* sysdeps/posix/shm_open.c: Disable asynchronous cancellation.
+
+	[BZ #18243]
+	* nptl/pthreadP.h (__pthread_testcancel): Add prototype and hidden_proto.
+	* nptl/pthread_testcancel.c (pthread_cancel): Add internal aliais
+	definition.
+	* nptl/sem_timedwait.c (sem_timedwait): Add cancellation check for
+	uncontended case.
+	* nptl/sem_wait.c (__new_sem_wait): Likewise.
+	* nptl/tst-cancel12.c (cleanup): Remove wrong cancellation point.
+	(tf): Fix check for uncontended case.
+	(do_test): Likewise.
+	* nptl/tst-cancel13.c (cleanup): Remove wrong cancellation point.
+	(tf): Fix check for uncontended case.
+	(do_test): Likewise.
+	* nptl/tst-cancel14.c (cleanup): Remove wrong cancellation point.
+	(tf): Fix check for uncontended case.
+	(do_test): Likewise.
+	* nptl/tst-cancel15.c (cleanup): Remove wrong cancellation point.
+	(tf): Fix check for uncontended case.
+	(do_test): Likewise.
+
+	* sysdeps/sparc/sparc32/sem_wait.c: Remove file.
+	* sysdeps/sparc/sparc32/sparcv9/sem_wait.c: Likewise.
+
+	[BZ #15765]
+	* nptl/Makefile (tests): Add tst-sem16.
+	* nptl/tst-sem16.c: New file.
+	* nptl/sem_open.c (sem_open): Disable asynchronous cancellation.
+
+	* nptl/sem_open.c (sem_open): Init pad value to 0.
+	* sysdeps/sparc/sparc32/sem_open.c: Remove file.
+	* sysdeps/sparc/sparc32/sparcv9/sem_open.c: Likewise.
+
+2016-09-15  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20611]
+	* inet/Makefile (routines): Add inet6_scopeid_pton.
+	(tests): Add tst-inet6_scopeid_pton.
+	* inet/inet6_scopeid_pton.c: New file.
+	* inet/net-internal.h: Likewise.
+	* inet/tst-inet6_scopeid_pton.c: New test.
+	* inet/Versions (GLIBC_PRIVATE): Add __inet6_scopeid_pton.
+	* resolv/res_init.c (__res_vinit): Use __inet6_scopeid_pton.
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Likewise.
+
+2016-09-14  Florian Weimer  <fweimer@redhat.com>
+
+	Remove support for compiling wrappers with PTW.
+	* sysdeps/nptl/Makeconfig: Drop ptw- support.
+	* nptl/Makefile (pthread-compat-wrappers): Define.
+	(libpthread-routines): Use pthread-compat-wrappers.
+	* sysdeps/unix/sysv/linux/alpha/Makefile
+	(libpthread-routines, libpthread-shared-only-routines): Remove
+	ptw- prefix.
+	* sysdeps/s390/nptl/Makefile
+	(libpthread-routines, libpthread-shared-only-routines): Likewise.
+	* sysdeps/ia64/nptl/Makefile
+	(libpthread-routines, libpthread-shared-only-routines): Likewise.
+	* sysdeps/nacl/Makefile (libpthread-routines): Use
+	pthread-compat-wrappers to filter the routines list instead of the
+	ptw- prefix.
+
+2016-09-13  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* sysdeps/ieee754/ldbl-128/e_acoshl.c: Wrap long double literals
+	with L() and remove explicit suffix, convert real literals
+	which can be equivalentally substituted with integers, and
+	transform -L(x) to L(-x).
+
+	* sysdeps/ieee754/ldbl-128/e_acosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_asinl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_atan2l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_atanhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_coshl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_exp10l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_expl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_gammal_r.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_hypotl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_j0l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_j1l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_jnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_lgammal_r.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_log10l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_log2l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_logl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_powl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_rem_pio2l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_remainderl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_sinhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/k_cosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/k_sincosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/k_sinl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/k_tanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/lgamma_negl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_asinhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_atanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_cbrtl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_cosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_erfl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_expm1l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_fmal.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_frexpl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_llrintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_llroundl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_log1pl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_lrintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_lroundl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nearbyintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nextafterl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_remquol.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_scalblnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_scalbnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_sincosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_sinl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_tanhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_tanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/t_expl.h: Likewise.
+	* sysdeps/ieee754/ldbl-128/t_sincosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/x2y2m1l.c: Likewise.
+
+2016-09-13  Florian Weimer  <fweimer@redhat.com>
+
+	* resolv/res_init.c: Remove _LIBC_REENTRANT; it is always defined.
+
+2016-09-10  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* malloc/Makefile (tests): Remove individual static test names
+	and just add all of tests-static.
+
+	* csu/libc-start.c (__libc_csu_irel): Remove declaration.
+
+2016-09-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fetestexceptflag.c: New
+	file.
+
+	* sysdeps/sparc/fpu/fegetmode.c: New file.
+	* sysdeps/sparc/fpu/fesetmode.c: Likewise.
+
+	* sysdeps/sh/sh4/fpu/fegetmode.c: New file.
+	* sysdeps/sh/sh4/fpu/fesetmode.c: Likewise.
+
+	* sysdeps/s390/fpu/fegetmode.c: New file.
+	* sysdeps/s390/fpu/fesetmode.c: Likewise.
+
+	* sysdeps/powerpc/fpu/fegetmode.c: New file.
+	* sysdeps/powerpc/fpu/fesetmode.c: Likewise.
+	* sysdeps/powerpc/nofpu/fegetmode.c: Likewise.
+	* sysdeps/powerpc/nofpu/fesetmode.c: Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fegetmode.c: Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fesetmode.c: Likewise.
+
+	* sysdeps/mips/fpu/fegetmode.c: New file.
+	* sysdeps/mips/fpu/fesetmode.c: Likewise.
+
+	* sysdeps/m68k/fpu/fegetmode.c: New file.
+	* sysdeps/m69k/fpu/fesetmode.c: Likewise.
+
+	* sysdeps/ia64/fpu/fegetmode.c: New file.
+	* sysdeps/ia64/fpu/fesetmode.c: Likewise.
+
+	* sysdeps/hppa/fpu/fegetmode.c: New file.
+	* sysdeps/hppa/fpu/fesetmode.c: Likewise.
+
+	* sysdeps/arm/fegetmode.c: New file.
+	* sysdeps/arm/fesetmode.c: Likewise.
+
+	* sysdeps/alpha/fpu/fegetmode.c: New file.
+	* sysdeps/alpha/fpu/fesetmode.c: Likewise.
+
+	* sysdeps/aarch64/fpu/fegetmode.c: New file.
+	* sysdeps/aarch64/fpu/fesetmode.c: Likewise.
+
+	* math/fegetmode.c: New file.
+	* math/fesetmode.c: Likewise.
+	* sysdeps/i386/fpu/fegetmode.c: Likewise.
+	* sysdeps/i386/fpu/fesetmode.c: Likewise.
+	* sysdeps/x86_64/fpu/fegetmode.c: Likewise.
+	* sysdeps/x86_64/fpu/fesetmode.c: Likewise.
+	* math/fenv.h: Update comment on inclusion of <bits/fenv.h>.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (fegetmode): New function
+	declaration.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (fesetmode): Likewise.
+	* bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)] (femode_t): New
+	typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* sysdeps/aarch64/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(femode_t): New typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* sysdeps/alpha/fpu/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(femode_t): New typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* sysdeps/arm/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(femode_t): New typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* sysdeps/hppa/fpu/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(femode_t): New typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* sysdeps/ia64/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(femode_t): New typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* sysdeps/m68k/fpu/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(femode_t): New typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* sysdeps/microblaze/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(femode_t): New typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* sysdeps/mips/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(femode_t): New typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* sysdeps/nios2/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(femode_t): New typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* sysdeps/powerpc/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(femode_t): New typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (__fe_dfl_mode): New variable
+	declaration.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* sysdeps/s390/fpu/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(femode_t): New typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* sysdeps/sh/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(femode_t): New typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* sysdeps/sparc/fpu/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(femode_t): New typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* sysdeps/tile/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(femode_t): New typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* sysdeps/x86/fpu/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(femode_t): New typedef.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (FE_DFL_MODE): New macro.
+	* manual/arith.texi (FE_DFL_MODE): Document macro.
+	(fegetmode): Document function.
+	(fesetmode): Likewise.
+	* math/Versions (fegetmode): New libm symbol at version
+	GLIBC_2.25.
+	(fesetmode): Likewise.
+	* math/Makefile (libm-support): Add fegetmode and fesetmode.
+	(tests): Add test-femode and test-femode-traps.
+	* math/test-femode-traps.c: New file.
+	* math/test-femode.c: Likewise.
+	* sysdeps/powerpc/fpu/fenv_const.c (__fe_dfl_mode): Declare as
+	alias for __fe_dfl_env.
+	* sysdeps/powerpc/nofpu/fenv_const.c (__fe_dfl_mode): Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fenv_const.c
+	(__fe_dfl_mode): Likewise.
+	* sysdeps/powerpc/Versions (__fe_dfl_mode): New libm symbol at
+	version GLIBC_2.25.
+	* sysdeps/nacl/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+
+2016-09-06  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #20495]
+	[BZ #20508]
+	* sysdeps/x86/cpu-features.c (init_cpu_features): For Intel
+	processors, set Use_dl_runtime_resolve_slow and set
+	Use_dl_runtime_resolve_opt if XGETBV suports ECX == 1.
+	* sysdeps/x86/cpu-features.h (bit_arch_Use_dl_runtime_resolve_opt):
+	New.
+	(bit_arch_Use_dl_runtime_resolve_slow): Likewise.
+	(index_arch_Use_dl_runtime_resolve_opt): Likewise.
+	(index_arch_Use_dl_runtime_resolve_slow): Likewise.
+	* sysdeps/x86_64/dl-machine.h (elf_machine_runtime_setup): Use
+	_dl_runtime_resolve_avx512_opt and _dl_runtime_resolve_avx_opt
+	if Use_dl_runtime_resolve_opt is set.  Use
+	_dl_runtime_resolve_slow if Use_dl_runtime_resolve_slow is set.
+	* sysdeps/x86_64/dl-trampoline.S: Include <cpu-features.h>.
+	(_dl_runtime_resolve_opt): New.  Defined for AVX and AVX512.
+	(_dl_runtime_resolve): Add one for _dl_runtime_resolve_sse_vex.
+	* sysdeps/x86_64/dl-trampoline.h (_dl_runtime_resolve_avx_slow):
+	New.
+	(_dl_runtime_resolve_opt): Likewise.
+	(_dl_runtime_profile): Define only if _dl_runtime_profile is
+	defined.
+
+2016-09-06  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/localplt.data: Mark ld.so:
+	__libc_memalign with "+ RELA R_390_GLOB_DAT".
+
+2016-09-06  Florian Weimer  <fweimer@redhat.com>
+
+	Convert malloc to __libc_lock.  Automated part, using this Perl
+	s/// command:
+	  s/(?:\(void\)\s*)?mutex_((?:|un|try)lock|init)
+	    \s*\(\&([^\)]+)\)/__libc_lock_$1\ ($2)/gx;
+	* malloc/malloc.c, malloc/arena.c, malloc/hooks.c: Perform
+	conversion.
+
+2016-09-05  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* conform/Makefile (conformtest-header-tests): Pass -I. to $(PERL).
+	(linknamespace-symlists-tests): Likewise.
+	(linknamespace-header-tests): Likewise.
+
+2016-09-03  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #19810]
+	* elf/dl-open.c (dl_open_worker): Set DF_1_NODELETE flag later.
+	* elf/tst-noload.c: New test case.
+	* elf/Makefile (tests): Add tst-noload.
+
+2016-09-02  Roland McGrath  <roland@hack.frob.com>
+
+	* sysdeps/nacl/dup.c: Add libc_hidden_def.
+
+	* sysdeps/posix/wait3.c: Don't treat STAT_LOC as a union, since it's
+	not any more.
+
+	* sysdeps/nacl/clock.c (clock): nacl_abi_clock_t -> nacl_irt_clock_t
+
+2016-09-02  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/ieee754/dbl-64/s_sin.c (do_cos): Mark as inline.
+	(do_cos_slow): Likewise.
+	(do_sin): Likewise.
+	(do_sin_slow): Likewise.
+	(slow): Likewise.
+	(slow1): Likewise.
+	(slow2): Likewise.
+	(sloww): Likewise.
+	(sloww1): Likewise.
+	(sloww2): Likewise.
+	(bsloww): Likewise.
+	(bsloww1): Likewise.
+	(bsloww2): Likewise.
+	(cslow2): Likewise.
+
+	* sysdeps/ieee754/dbl-64/s_sin.c (__sin): Use do_sin.
+
+	* sysdeps/ieee754/dbl-64/s_sin.c (do_cos): Accept X and DX as input
+	arguments.  Consolidate input partitioning from callers here.
+	(do_cos_slow): Likewise.
+	(do_sin): Likewise.
+	(do_sin_slow): Likewise.
+	(do_sincos_1): Remove the no longer necessary input partitioning.
+	(do_sincos_2): Likewise.
+	(__sin): Likewise.
+	(__cos): Likewise.
+	(slow1): Likewise.
+	(slow2): Likewise.
+	(sloww1): Likewise.
+	(sloww2): Likewise.
+	(bsloww1): Likewise.
+	(bsloww2): Likewise.
+	(cslow2): Likewise.
+
+2016-09-02  Florian Weimer  <fweimer@redhat.com>
+
+	* stdio-common/vfscanf.c (_IO_vfwscanf): Use MB_LEN_MAX instead of
+	MB_CUR_MAX to avoid race condition.  Avoid pointer arithmetic
+	outside of allocated array.
+
+2016-09-02  Florian Weimer  <fweimer@redhat.com>
+
+	* stdio-common/vfprintf.c (process_string_arg): Use MB_LEN_MAX
+	instead of MB_CUR_MAX to avoid variable-length array.
+
+2016-09-01  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* math/Makefile (libm-calls): Remove k_rem_pio2F.
+	(type-double-routines): Add k_rem_pio2.
+	(type-float-routines): Add k_rem_pio2f.
+
+	* sysdeps/generic/math_private.h:
+	(__kernel_rem_pio2l): Removed.
+
+	* math/k_rem_pio2l.c: Removed.
+	* sysdeps/i386/fpu/k_rem_pio2l.c: Removed.
+	* sysdeps/ia64/fpu/k_rem_pio2l.c: Removed.
+	* sysdeps/m68k/m680x0/fpu/k_rem_pio2l.c: Removed.
+	* sysdeps/x86_64/fpu/k_rem_pio2l.c: Removed.
+
+2016-09-01  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* math/Makefile (gen-libm-calls): Add s_fmin
+	(libm-calls): Remove above.
+
+	* math/s_fmin.c: Refactor into ...
+	* math/s_fmin_template.c: New file.
+
+	* math/s_fminf.c: Removed.
+	* math/s_fminl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/math-type-macros-double.h:
+	(LDOUBLE_fmin_libm_version): New macro.
+
+	* sysdeps/ieee754/ldbl-opt/s_fmin.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_fminl.c: Removed.
+
+2016-09-01  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* math/Makefile: (gen-libm-calls): Add s_fmax.
+	(libm-calls): Remove above.
+
+	* math/s_fmax.c: Refactor into ...
+	* math/s_fmax_template.c: New file.
+	* math/s_fmaxf.c: Removed.
+	* math/s_fmaxl.c: Removed.
+
+	* sysdeps/ieee754/ldbl-opt/math-type-macros-double.h:
+	(LDOUBLE_fmaxl_libm_version): New macro.
+
+	* sysdeps/ieee754/ldbl-opt/s_fmax.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_fmaxl.c: Removed.
+
+	* sysdeps/aarch64/fpu/s_fmax.c: Append fpu/ to include of
+	s_fmin.c to pick the aarch64 version of the file.
+	* sysdeps/aarch64/fpu/s_fmaxf.c: Likewise.
+	* sysdeps/aarch64/fpu/s_fminf.c: Likewise.
+
+2016-09-01  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* math/Makefile: (gen-libm-calls): Add s_nextdown.
+	(libm-calls): Remove above.
+
+	* math/s_nextdown.c: Refactor into ...
+	* math/s_nextdown_template.c: New file.
+	* math/s_nextdownf.c: Removed.
+	* math/s_nextdownl.c: Removed.
+
+	* sysdeps/ieee754/ldbl-opt/s_nextdownl.c: New file.
+
+2016-09-01  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* math/Makefile (gen-libm-calls): Add s_fdim.
+	(libm-calls): Move to above.
+
+	* math/s_fdim.c: Renamed and refactored into to ...
+	* math/s_fdim_template.c: New file.
+	* math/s_fdiml.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_fdim.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_fdiml.c: Removed.
+
+	* sysdeps/generic/math-type-macros-double.h:
+	(declare_mgen_alias): Don't declare if already declared.
+	* sysdeps/ieee754/ldbl-opt/math-type-macros-ldouble.h:
+	Likewise.
+
+	* sysdeps/ieee754/ldbl-opt/math-type-macros-double.h:
+	(declare_mgen_alias): Don't declare if already declared.
+	(M_LIBM_NEED_COMPAT): Likewise.
+	(declare_mgen_libm_compat): Likewise.
+	(LDOUBLE_fdiml_libm_version): New macro.
+
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fdim.c:
+	Include math/s_fdim.c now that ldbl-opt version is not needed.
+	(declare_mgen_alias): New macro to disable aliasing.
+
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fdimf-vis3.c:
+	(declare_mgen_alias): Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fdimf.c:
+	(declare_mgen_alias): Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fdim-vis3.c:
+	(declare_mgen_alias): Likewise.
+	(M_LIBM_NEED_COMPAT): Likewise.
+
+2016-09-01  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20525]
+	* sysdeps/unix/sysv/linux/sys/quota.h: Update copyright.
+	Include <linux/quota.h>.
+	(fs_to_dq_blocks): Hard-code BLOCK_SIZE as 1024, to match dbtob
+	and btodb.
+	(_LINUX_QUOTA_VERSION, MAXQUOTAS, USRQUOTA, GRPQUOTA, INITQFNAMES)
+	(SUBCMDMASK, SUBCMDSHIFT, QCMD, Q_QUOTAON, Q_QUOTAOFF, Q_GETQUOTA)
+	(Q_SETQUOTA, Q_SETUSE, Q_SYNC, Q_SETQLIM, Q_GETSTATS, Q_RSQUASH)
+	(Q_GETFMT, Q_GETINFO, Q_SETINFO, Q_GETNEXTQUOTA, QIF_BLIMITS)
+	(QIF_SPACE, QIF_ILIMITS, QIF_INODES, QIF_BTIME, QIF_ITIME)
+	(QIF_LIMITS, QIF_USAGE, QIF_TIMES, QIF_ALL, IIF_BGRACE)
+	(IIF_IGRACE, IIF_FLAGS, IIF_ALL): Remove.
+	(struct dqblock, struct dqinfo): Use __uint64_t and __uint32_t
+	types.
+	* sysdeps/unix/sysv/linux/tst-quota.c: New test.
+	* sysdeps/unix/sysv/linux/Makefile (tests): Add it.
+
+2016-08-31  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* sysdeps/ieee754/ldbl-128/e_gammal_r.c:
+	(gammal_positive): Fix spacing.
+	(__ieee754_gammal_r): Likewise.
+
+2016-08-31  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* sysdeps/ieee754/ldbl-128/math_ldbl.h:
+	(_Float128): Define as long double, always.
+	(L): Apply long double type suffix, always.
+
+	* sysdeps/ieee754/ldbl-128/e_acoshl.c: Rename long double
+	_Float128, excepting comments.
+
+	* sysdeps/ieee754/ldbl-128/e_acosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_atan2l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_atanhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_coshl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_exp10l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_expl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_fmodl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_gammal_r.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_hypotl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_ilogbl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_j0l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_j1l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_jnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_lgammal_r.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_log10l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_log2l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_logl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_powl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_rem_pio2l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_remainderl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_sinhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/gamma_productl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/k_cosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/k_sincosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/k_sinl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/k_tanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/lgamma_negl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/lgamma_productl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_asinhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_atanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_cbrtl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_ceill.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_copysignl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_cosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_erfl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_expm1l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_fabsl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_finitel.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_floorl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_fmal.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_fpclassifyl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_frexpl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_isinfl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_isnanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_issignalingl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_llrintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_llroundl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_log1pl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_logbl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_lrintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_lroundl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_modfl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nearbyintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nextafterl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nextupl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_remquol.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_rintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_roundl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_scalblnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_scalbnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_sincosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_sinl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_tanhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_tanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_truncl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/t_expl.h: Likewise.
+	* sysdeps/ieee754/ldbl-128/x2y2m1l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_asinl.c: Likewise.
+
+	* sysdeps/ieee754/ldbl-128/s_signbitl.c: Rename long double
+	_Float128, and include math_private.h.
+	* sysdeps/ieee754/ldbl-128/t_sincosl.c: Likewise.
+
+	* sysdeps/ieee754/ldbl-128ibm/e_expl.c (L): Define using
+	long double semantics.
+	(_Float128): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_j0l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_j1l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_lgammal_r.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_cbrtl.c: Likewise.
+
+2016-08-31  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* config.h.in (HAVE_S390_MIN_Z196_ZARCH_ASM_SUPPORT): New undefine.
+	* sysdeps/s390/configure.ac: Add test for z196 zarch support.
+	* sysdeps/s390/configure: Regenerated.
+	* sysdeps/s390/fpu/fraiseexcpt.c (__feraiseexcept): Use ledbra
+	instruction for raising over-/underflow if z196 zarch is supported
+	by default.
+	* sysdeps/s390/fpu/fsetexcptflg.c (fesetexceptflag): Correct comment.
+
+2016-08-30  Svante Signell  <svante.signell@gmail.com>
+
+	* sysdeps/mach/hurd/adjtime.c (__adjtime): When OLDDELTA is NULL, make
+	it point to a dumb buffer for RPC to fill it.
+
+2016-08-30  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/ieee754/dbl-64/s_sin.c (do_cos_slow): Use ternary
+	instead of if/else.
+	(do_sin_slow): Likewise.
+	(do_sincos_1): Use fabs instead of if/else.
+	(do_sincos_2): Likewise.
+	(__sin): Likewise.
+	(__cos): Likewise.
+	(slow2): Likewise.
+	(sloww): Likewise.
+	(sloww1): Likewise.  Drop argument M.
+	(sloww2): Use fabs instead of if/else.
+	(bsloww): Likewise.
+	(bsloww1): Likewise.
+	(bsloww2): Likewise.
+
+	* sysdeps/ieee754/dbl-64/s_sin.c (reduce_and_compute): Add
+	fall through comment.
+	(do_sincos_1): Likewise.
+
+	* sysdeps/ieee754/dbl-64/s_sin.c (reduce_and_compute):
+	Consolidate switch cases 0 and 2.
+
+2016-08-29  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* math/Makefile (libm-gen-calls): Add cpow, clog, clog10, cexp, cproj.
+	(libm-calls): Remove the above.
+
+	* math/s_cexp_template.c: Update using type-generic macros.
+	* math/s_clog10_template.c: Likewise.
+	* math/s_cpow_template.c: Likewise.
+	* math/s_clog_template.c: Likewise.
+	* math/s_cproj_template.c: Likewise.
+	* math/s_csqrt_template.c: Likewise.
+
+	* math/s_cexp.c: Removed.
+	* math/s_cexpf.c: Removed.
+	* math/s_cexpl.c: Removed.
+	* math/s_clog10.c: Removed.
+	* math/s_clog10f.c: Removed.
+	* math/s_clog10l.c: Removed.
+	* math/s_cpow.c: Removed.
+	* math/s_cpowf.c: Removed.
+	* math/s_cpowl.c: Removed.
+	* math/s_clog.c: Removed.
+	* math/s_clogf.c: Removed.
+	* math/s_clogl.c: Removed.
+	* math/s_cproj.c: Removed.
+	* math/s_cprojf.c: Removed.
+	* math/s_cprojl.c: Removed.
+	* math/s_csqrt.c: Removed.
+	* math/s_csqrtf.c: Removed.
+	* math/s_csqrtl.c: Removed.
+
+	* sysdeps/alpha/fpu/s_cexpf.c: Update using templated version.
+	* sysdeps/alpha/fpu/s_clog10f.c: Update using templated version.
+	* sysdeps/alpha/fpu/s_clogf.c: Update using templated version.
+	* sysdeps/alpha/fpu/s_cpowf.c: Update using templated version.
+	* sysdeps/alpha/fpu/s_cprojf.c: Update using templated version.
+	* sysdeps/alpha/fpu/s_csqrtf.c: Update using templated version.
+
+	* sysdeps/ieee754/ldbl-opt/s_cexp.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_cexpl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_clog.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_clog10.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_clog10l.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_cpow.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_cpowl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_cproj.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_cprojl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_csqrt.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_csqrtl.c: Removed.
+
+	* sysdeps/ieee754/ldbl-opt/s_clogl.c: Update using templated
+	version.
+
+	* sysdeps/m68k/m680x0/fpu/s_cexp.c: Refactor into.
+	* sysdeps/m68k/m680x0/fpu/s_cexp_template.c: New file.
+	* sysdeps/m68k/m680x0/fpu/s_cexpf.c: Removed.
+	* sysdeps/m68k/m680x0/fpu/s_cexpl.c: Removed.
+
+2016-08-29  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* s_cexp_template.c: Copy of s_cexp.c.
+	* s_clog_template.c: Copy of s_clog.c.
+	* s_clog10_template.c: Copy of s_clog10.c.
+	* s_cpow_template.c: Copy of s_cpow.c.
+	* s_cproj_template.c: Copy of s_cproj.c.
+	* s_csqrt_template.c: Copy of s_csqrt.c.
+
+2016-08-29  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	[BZ #20517]
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fdim.c:
+	Include ldbl-opt/s_fdim.c to ensure fdiml@GLIBC_2.1 is
+	exported.
+
+2016-08-29  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/fetestexceptflag.c: New file.
+	* sysdeps/s390/fpu/fetestexceptflag.c: Likewise.  Comment by
+	Stefan Liebler.
+	* math/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]
+	(fetestexceptflag): New function declaration.
+	* manual/arith.texi (fetestexceptflag): Document function.
+	* math/Versions (fetestexceptflag): New libm symbol at version
+	GLIBC_2.25.
+	* math/Makefile (libm-support): Add fetestexceptflag.
+	(tests): Add test-fetestexceptflag.
+	* math/test-fetestexceptflag.c: New file.
+	* sysdeps/nacl/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+
+2016-08-26  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20432]
+	Avoid strong references to malloc-internal symbols when linking
+	statically, to support statically interposed mallocs.
+	* include/libc-symbols.h (call_function_static_weak): New macro.
+	* malloc/Makefile (tests): Add tst-interpose-nothread,
+	tst-interpose-thread, tst-interpose-static-nothread,
+	tst-interpose-static-thread.
+	(tests-static): Add tst-interpose-static-nothread,
+	tst-interpose-static-thread.
+	(extra-tests-objs): Add tst-interpose-aux-nothread.o,
+	tst-interpose-aux-thread.o.
+	(test-extras): Add tst-interpose-aux-nothread,
+	tst-interpose-aux-thread.
+	(tst-interpose-nothread, tst-interpose-static-nothread): Link with
+	tst-interpose-aux-nothread.o.
+	(tst-interpose-thread, tst-interpose-static-thread): Link with
+	tst-interpose-aux-thread.o and libthread.
+	* malloc/tst-interpose-aux-nothread.c: New file.
+	* malloc/tst-interpose-aux-thread.c: Likewise.
+	* malloc/tst-interpose-aux.c: Likewise.
+	* malloc/tst-interpose-aux.h: Likewise.
+	* malloc/tst-interpose-nothread.c: Likewise.
+	* malloc/tst-interpose-skeleton.c: Likewise.
+	* malloc/tst-interpose-static-nothread.c: Likewise.
+	* malloc/tst-interpose-static-thread.c: Likewise.
+	* malloc/tst-interpose-thread.c: Likewise.
+	* nptl/tst-tls3-malloc.c: Use new interposed malloc.
+	* sysdeps/mach/hurd/fork.c (__fork): Only call
+	__malloc_fork_lock_parent, __malloc_fork_unlock_parent,
+	__malloc_fork_unlock_child if defined.
+	* sysdeps/nptl/fork.c (__libc_fork): Likewise.
+
+2016-08-26  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* test-skeleton.c (delayed_exit_thread): Add initializer on struct
+	timespec C99 designated initialization.
+
+2016-08-26  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #19946]
+	Avoid expected SIGALRM signals.
+	* test-skeleton.c (xpthread_sigmask, xpthread_mutex_lock)
+	(xpthread_spin_lock, xpthread_cond_wait, xpthread_barrier_wait)
+	(xpthread_create, xpthread_detach, xpthread_join)
+	(delayed_exit_thread, delayed_exit): New functions.
+	* nptl/tst-cond3 (EXPECTED_SIGNAL): Remove.
+	(tf): Use xpthread_cond_wait.
+	(do_test): Likewise.  Replace alarm with delayed_exit.
+	* nptl/tst-eintr1.c (EXPECTED_SIGNAL, TIMEOUT): Remove.
+	(do_test): Call delayed_exit.  Report failure.
+	* nptl/tst-eintr2.c (EXPECTED_SIGNAL, TIMEOUT): Remove.
+	(do_test): Call delayed_exit.
+	* nptl/tst-eintr3.c (EXPECTED_SIGNAL, TIMEOUT): Remove.
+	(do_test): Call delayed_exit.  Use xpthread_join.  Report error.
+	* nptl/tst-eintr4.c (EXPECTED_SIGNAL, TIMEOUT): Remove.
+	(do_test): Call delayed_exit.  Use xpthread_barrier_wait.  Report
+	error.
+	* nptl/tst-eintr5.c (EXPECTED_SIGNAL, TIMEOUT): Remove.
+	(do_test): Call delayed_exit.  Use xpthread_cond_wait.  Report
+	error.
+	* nptl/tst-exit2.c (EXPECTED_SIGNAL): Remove.
+	(do_test): Call delayed_exit.
+	* nptl/tst-exit3.c (EXPECTED_SIGNAL): Remove.
+	(do_test): Call delayed_exit.
+	* nptl/tst-mutex6.c (EXPECTED_SIGNAL): Remove.
+	(do_test): Call delayed_exit instead of alarm.  Use
+	xpthread_mutex_lock.
+	* nptl/tst-rwlock5.c (EXPECTED_SIGNAL): Remove.
+	(do_test): Call delayed_exit instead of alarm.  Use
+	xpthread_mutex_lock.
+	* nptl/tst-sem2.c (EXPECTED_SIGNAL): Remove.
+	(do_test): Call delayed_exit instead of alarm.
+	* nptl/tst-spin3.c (EXPECTED_SIGNAL): Remove.
+	(do_test): Call delayed_exit instead of alarm.  Use
+	xpthread_spin_lock.
+	* nptl/tst-stdio1.c (EXPECTED_SIGNAL): Remove.
+	(do_test): Call delayed_exit instead of alarm.  Use
+	xpthread_join.
+
+2016-08-26  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/dl-trampoline.h (_dl_runtime_resolve): Don't
+	adjust CFA when allocating register save area on re-aligned
+	stack.
+
+2016-08-26  Florian Weimer  <fweimer@redhat.com>
+
+	* string/tst-cmp.c: New test.
+	* string/Makefile (tests): Add it.
+
+2016-08-25  Mark Wielaard  <mark@klomp.org>
+
+	* misc/tsearch.c (struct node_t): Reduce to 3 pointers if
+	USE_MALLOC_LOW_BIT.  Define pointer/value accessors.
+	(check_tree_recurse): Use newly defined accessors.
+	(check_tree): Likewise.
+	(maybe_split_for_insert): Likewise.
+	(__tfind): Likewise.
+	(__tdelete): Likewise.
+	(trecurse): Likewise.
+	(tdestroy_recurse): Likewise.
+	(__tsearch): Likewise. And add asserts for malloc alignment.
+	(__twalk): Cast root to node in case CHECK_TREE is defined.
+
+2016-08-21  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* scripts/check-local-headers.sh (exclude): Add mach_debug/.
+
+2016-08-19  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* math/Makefile (libm-gen-calls): Add
+	catan, catanh, ctan, ctanh.
+	(libm-calls): Remove the above.
+
+	* math/s_catan_template.c: Update using type-generic macros.
+	* math/s_catanh_template.c: Likewise.
+	* math/s_ctan_template.c: Likewise.
+	* math/s_ctanh_template.c: Likewise.
+
+	* math/s_catanf.c: Removed.
+	* math/s_catan.c: Removed.
+	* math/s_catanl.c: Removed.
+	* math/s_catanhf.c: Removed.
+	* math/s_catanh.c: Removed.
+	* math/s_catanhl.c: Removed.
+	* math/s_ctanf.c: Removed.
+	* math/s_ctan.c: Removed.
+	* math/s_ctanl.c: Removed.
+	* math/s_ctanhf.c: Removed.
+	* math/s_ctanh.c: Removed.
+	* math/s_ctanhl.c: Removed.
+
+	* sysdeps/ieee754/ldbl-opt/s_catanhl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_catanl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_ctan.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_ctanh.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_ctanhl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_ctanl.c: Removed.
+
+	* sysdeps/alpha/fpu/s_catanf.c: Update to use template file.
+	* sysdeps/alpha/fpu/s_catanhf.c: Likewise.
+	* sysdeps/alpha/fpu/s_ctanf.c: Likewise.
+	* sysdeps/alpha/fpu/s_ctanhf.c: Likewise.
+
+2016-08-19  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* s_catan_template.c: Copy of s_catan.c.
+	* s_catanh_template.c: Copy of s_catanh.c.
+	* s_ctan_template.c: Copy of s_ctan.c.
+	* s_ctanh_template.c: Copy of s_ctanh.c.
+
+2016-08-19  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* math/Makefile (gen-libm-calls): Move
+	casin, casinh, csin, csinh here.
+	(libm-calls): Remove the above.
+
+	* math/s_casin_template.c: Update using type-generic macros.
+	* math/s_casinh_template.c: Likewise.
+	* math/s_csin_template.c: Likewise.
+	* math/s_csinh_template.c: Likewise.
+	* math/k_casinh_template.c: Likewise.
+
+	* math/s_casinf.c: Removed.
+	* math/s_casin.c: Removed.
+	* math/s_casinl.c: Removed.
+	* math/s_casinh.c: Removed.
+	* math/s_casinhf.c: Removed.
+	* math/s_casinhl.c: Removed.
+	* math/s_csin.c: Removed.
+	* math/s_csinf.c: Removed.
+	* math/s_csinl.c: Removed.
+	* math/s_csinh.c: Removed.
+	* math/s_csinhf.c: Removed.
+	* math/s_csinhl.c: Removed.
+	* math/k_casinh.c: Removed.
+	* math/k_casinhf.c: Removed.
+	* math/k_casinhl.c: Removed.
+
+	* sysdeps/alpha/fpu/s_casinf.c: Refactor using templated version.
+	* sysdeps/alpha/fpu/s_casinhf.c: Likewise.
+	* sysdeps/alpha/fpu/s_csinf.c: Likewise.
+	* sysdeps/alpha/fpu/s_csinhf.c: Likewise.
+
+	* sysdeps/ieee754/ldbl-opt/s_casin.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_casinh.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_casinhl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_casinl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_csin.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_csinh.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_csinhl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_csinl.c: Removed.
+
+	* sysdeps/m68k/m680x0/fpu/s_csin.c: Refactor into ...
+	* sysdeps/m68k/m680x0/fpu/s_csin_template.c: New file.
+	* sysdeps/m68k/m680x0/fpu/s_csinf.c: Removed.
+	* sysdeps/m68k/m680x0/fpu/s_csinl.c: Removed.
+
+	* sysdeps/m68k/m680x0/fpu/s_csinh.c: Refactor into.
+	* sysdeps/m68k/m680x0/fpu/s_csinh_template.c: New file.
+	* sysdeps/m68k/m680x0/fpu/s_csinhf.c: Removed.
+	* sysdeps/m68k/m680x0/fpu/s_csinhl.c: Removed.
+
+2016-08-19  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* s_casin_template.c: Copy of s_casin.c.
+	* s_casinh_template.c: Copy of s_casinh.c.
+	* s_csin_template.c: Copy of s_csin.c.
+	* s_csinh_template.c: Copy of s_csinh.c.
+	* k_casinh_template.c: Copy of k_casinh.c.
+
+2016-08-19  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86/cpu-features.h (bit_YMM_state): Set to (1 << 2).
+
+2016-08-19  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* sysdeps/ieee754/ldbl-128/gamma_productl.c:
+	(mul_split) Remove, rename as mul_splitl, remove
+	redundant float.h include, and include via mul_splitl.h
+
+	* sysdeps/ieee754/ldbl-128/lgamma_productl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/x2y2m1l.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/gamma_product.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/lgamma_product.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/x2y2m1.c: Likewise.
+
+	* math/mul_splitl.h: New file.
+
+	* sysdeps/ieee754/dbl-64/gamma_product.c (mul_split):
+	Move into mul_split.h, and remove redundant float.h include.
+
+	* sysdeps/ieee754/dbl-64/lgamma_product.c: Likewise.
+	* sysdeps/ieee754/dbl-64/x2y2m1.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_fmal.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/x2y2m1.c: Likewise.
+
+	* math/mul_split.h: New file.
+
+2016-08-19  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* math/Makefile (libm-gen-calls): Move
+	s_cacos, s_cacosh, s_ccos, s_ccosh from ...
+	(libm-calls): Remove above.
+
+	* math/s_cacos_template.c: Update using type-generic macros.
+	* math/s_cacosh_template.c: Likewise.
+	* math/s_ccos_template.c: Likewise.
+	* math/s_ccosh_template.c: Likwise.
+
+	* math/s_cacosf.c: Removed.
+	* math/s_cacos.c: Removed.
+	* math/s_cacosl.c: Removed.
+	* math/s_cacoshf.c: Removed.
+	* math/s_cacosh.c: Removed.
+	* math/s_cacoshl.c: Removed.
+	* math/s_ccosf.c: Removed.
+	* math/s_ccos.c: Removed.
+	* math/s_ccosl.c: Removed.
+	* math/s_ccoshf.c: Removed.
+	* math/s_ccosh.c: Removed.
+	* math/s_ccoshl.c: Removed.
+
+	* sysdeps/ieee754/ldbl-opt/s_cacoshl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_cacosl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_ccos.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_ccosh.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_ccoshl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/s_ccosl.c: Removed.
+
+	* sysdeps/m68k/m680x0/fpu/s_ccosh.c: Refactor into.
+	* sysdeps/m68k/m680x0/fpu/s_ccosh_template.c: New file.
+	* sysdeps/m68k/m680x0/fpu/s_ccoshf.c: Removed.
+	* sysdeps/m68k/m680x0/fpu/s_ccoshl.c: Removed.
+
+	* sysdeps/alpha/fpu/s_cacosf.c: Update to use template file.
+	* sysdeps/alpha/fpu/s_cacoshf.c: Likewise.
+	* sysdeps/alpha/fpu/s_ccosf.c: Likewise.
+	* sysdeps/alpha/fpu/s_ccoshf.c: Likewise.
+
+2016-08-19  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* s_cacos_template.c: Copy of s_cacos.c.
+	* s_cacosh_template.c: Copy of s_cacosh.c.
+	* s_ccos_template.c: Copy of s_ccos.c.
+	* s_ccosh_template.c: Copy of s_ccosh.c.
+
+2016-08-19  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* stdlib/tst-strtod-round-skeleton.c:
+	Refactored from tst-strtod-round.c.
+
+	(L_): New macro to apply literal modifier.
+	(FNPFX): New macro to select str or wcs prefix.
+	(CHAR): New macro to choose wchar_t or char.
+	(STRM): New macro to choose printf for tested character type.
+
+	(STRTO): New macro to choose appropriate string -> real function.
+	(FNPFXS): Stringitized version of FNPFX.
+	(STR): Support for above macro.
+	(STRX): Likewise.
+
+	(TEST): Update with above macros.
+	(test): Likewise.
+	(GEN_ONE_TEST): Likewise.
+	(test_in_one_mode): Likewise.
+
+	* stdlib/tst-strtod-round.c: New file.
+	* wcsmbs/tst-wcstod-round.c: New file.
+
+	* wcsmbs/Makefile: (tests): Add tst-wcstod-round
+	(tst-wcstod-round): Add libm depencency for fesetround.
+
+2016-08-19  Zack Weinberg  <zackw@panix.com>
+
+	* debug/tst-chk1.c: Add tests for fortification of bcopy and bzero.
+
+2016-08-18  Torvald Riegel  <triegel@redhat.com>
+
+	[BZ #20477]
+	* resolv/res_hconf.c (do_init): Use atomic access.
+	* resolv/res_hconf.h: Add comments.
+	* nscd/aicache.c (addhstaiX): Call _res_hconf_init unconditionally.
+	* nss/getXXbyYY_r.c (REENTRANT_NAME): Likewise.
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Likewise.
+
+2016-08-18  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/ieee754/dbl-64/k_rem_pio2.c (__kernel_rem_pio2):
+	Use DIAG_*_NEEDS_COMMENT macro to get rid of array-bounds warning.
+	* sysdeps/ieee754/flt-32/k_rem_pio2f.c (__kernel_rem_pio2f):
+	Likewise.
+
+2016-08-18  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #16907]
+	* argp/argp.h: Switch to __BEGIN_DECLS and __END_DECLS.
+	(__THROW, __NTH, __attribute__, __restrict): Remove definitions.
+	* argp/argp-fmtstream.h: Add __BEGIN_DECLS and __END_DECLS.
+	(__attribute__): Remove definition.
+
+2016-08-17  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* sysdeps/ieee754/ldbl-128/e_asinl.c:
+	Remove unused sqrtl declaration.
+
+2016-08-17  Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
+
+	* math/Makefile: (gen-libm-templates.stmp): New rule.
+	(libm-calls): Move carg conj cimag and cabs into ...
+	(gen-libm-calls): New variable.
+	(generated): Inform Make objects from gen-libm-calls
+	may be generated.
+
+	* sysdeps/generic/math-type-macros.h: New file.
+	* sysdeps/generic/math-type-macros-float.h: Likewise.
+	* sysdeps/generic/math-type-macros-double.h: Likewise.
+	* sysdeps/generic/math-type-macros-ldouble.h: Likewise.
+	* sysdeps/ieee754/ldbl-opt/math-type-macros-double.h: Likewise.
+	* sysdeps/ieee754/ldbl-opt/math-type-macros-ldouble.h: Likewise.
+
+	* math/cabs.c: Refactor into
+	* math/cabs_template.c: new file.
+	* math/cabsf.c: Removed.
+	* math/cabsl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/cabsf.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/cabsl.c: Removed.
+
+	* math/carg.c: Refactor into
+	* math/carg_template.c: new file.
+	* math/cargf.c: Removed.
+	* math/cargl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/cargf.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/cargl.c: Removed.
+
+	* math/conj.c: Refactor into
+	* math/conj_template.c: new file.
+	* math/conjf.c: Removed.
+	* math/conjl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/conjf.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/conjl.c: Removed.
+
+	* math/cimag.c: Refactor into
+	* math/cimag_template.c: new file.
+	* math/cimagf.c: Removed.
+	* math/cimagl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/cimagf.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/cimagl.c: Removed.
+
+	* math/cimag.c: Refactor into
+	* math/cimag_template.c: new file.
+	* math/cimagf.c: Removed.
+	* math/cimagl.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/cimagf.c: Removed.
+	* sysdeps/ieee754/ldbl-opt/cimagl.c: Removed.
+
+2016-08-17  Florian Weimer  <fweimer@redhat.com>
+
+	Reduce time to expected nptl/tst-once5 failure.
+	* nptl/tst-once5.cc (TIMEOUT): Define.
+
+2016-08-17  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20452]
+	Avoid additional copies of objects in libc.a in static libraries.
+	* sysdeps/ia64/nptl/Makefile (libpthread-shared-only-routines):
+	Add ptw-sysdep, ptw-sigblock, ptw-sigprocmask.
+	* sysdeps/mips/Makefile (librt-shared-only-routines): Add
+	rt-sysdep.
+	* sysdeps/mips/nptl/Makefile (libpthread-shared-only-routines):
+	Add nptl-sysdep.
+	* sysdeps/s390/nptl/Makefile (libpthread-shared-only-routines):
+	Add ptw-sysdep.
+	* sysdeps/unix/alpha/Makefile (librt-shared-only-routines): Add
+	rt-sysdep.
+	* sysdeps/unix/sysv/linux/alpha/Makefile
+	(libpthread-shared-only-routines): Add ptw-sysdep,
+	ptw-sigprocmask, ptw-rt_sigaction.
+	* sysdeps/unix/sysv/linux/ia64/Makefile
+	(librt-shared-only-routines): Add rt-sysdep.
+	* sysdeps/unix/sysv/linux/i386/Makefile
+	(libpthread-shared-only-routines): Add libc-do-syscall.
+	* sysdeps/unix/sysv/linux/microblaze/Makefile
+	(libpthread-shared-only-routines): Add sysdep.
+	* sysdeps/unix/sysv/linux/powerpc/Makefile
+	(librt-shared-only-routines): Add rt-sysdep.
+	(libpthread-shared-only-routines): Add sysdep.
+	* sysdeps/unix/sysv/linux/s390/Makefile
+	(librt-shared-only-routines): Add rt-sysdep.
+	* sysdeps/unix/sysv/linux/sparc/Makefile
+	(librt-shared-only-routines): Add rt-sysdep.
+	(libpthread-shared-only-routines): Add sysdep.
+	* sysdeps/unix/sysv/linux/tile/Makefile
+	(libpthread-shared-only-routines): Likewise.
+
+2016-08-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* soft-fp/extended.h [_FP_W_TYPE_SIZE < 64] (FP_UNPACK_RAW_E):
+	Mask implicit bit out of unpacked value.
+	[_FP_W_TYPE_SIZE < 64] (FP_UNPACK_RAW_EP): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_UNPACK_RAW_E): Likewise.
+	[_FP_W_TYPE_SIZE >= 64] (FP_UNPACK_RAW_EP): Likewise.
+
+	* sysdeps/sparc/fpu/fesetexcept.c: New file.
+
+	* sysdeps/sh/sh4/fpu/fesetexcept.c: New file.
+
+	* sysdeps/s390/fpu/fesetexcept.c: New file.
+
+	* sysdeps/powerpc/fpu/fesetexcept.c: New file.
+	* sysdeps/powerpc/nofpu/fesetexcept.c: Likewise.
+	* sysdeps/powerpc/powerpc32/e500/nofpu/fesetexcept.c: Likewise.
+
+	* sysdeps/mips/fpu/fesetexcept.c: New file.
+
+	* sysdeps/m68k/fpu/fesetexcept.c: New file.
+
+	* sysdeps/ia64/fpu/fesetexcept.c: New file.
+
+	* sysdeps/hppa/fpu/fesetexcept.c: New file.
+
+	* sysdeps/arm/fesetexcept.c: New file.
+
+	* sysdeps/alpha/fpu/fesetexcept.c: New file.
+
+	* sysdeps/aarch64/fpu/fesetexcept.c: New file.
+
+	* math/fesetexcept.c: New file.
+	* sysdeps/i386/fpu/fesetexcept.c: Likewise.
+	* sysdeps/x86_64/fpu/fesetexcept.c: Likewise.
+	* math/fenv.h: Define
+	__GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION and include
+	<bits/libc-header-start.h> instead of including <features.h>.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (fesetexcept): New function
+	declaration.
+	* manual/arith.texi (fesetexcept): Document function.
+	* math/Versions (fesetexcept): New libm symbol at version
+	GLIBC_2.25.
+	* math/Makefile (libm-support): Add fesetexcept.
+	(tests): Add test-fesetexcept and test-fesetexcept-traps.
+	* math/test-fesetexcept.c: New file.
+	* math/test-fesetexcept-traps.c: Likewise.
+	* sysdeps/nacl/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx32/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx/tilegx64/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+
+2016-08-16  Florian Weimer  <fweimer@redhat.com>
+
+	* nptl/tst-tls3.c (default_stack_size_in_mb, stack_size_in_mb):
+	New.
+	(do_test): Apply default_stack_size_in_mb if not set.
+	* nptl/tst-tls3-malloc.c (stack_size_in_mb): Override default.
+
 2016-08-15  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #20435]
+	CVE-2016-6323
 	* sysdeps/unix/sysv/linux/arm/setcontext.S (__startcontext): Mark
 	as .cantunwind.
 

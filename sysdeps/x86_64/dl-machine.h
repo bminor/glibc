@@ -68,7 +68,10 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
   Elf64_Addr *got;
   extern void _dl_runtime_resolve_sse (ElfW(Word)) attribute_hidden;
   extern void _dl_runtime_resolve_avx (ElfW(Word)) attribute_hidden;
+  extern void _dl_runtime_resolve_avx_slow (ElfW(Word)) attribute_hidden;
+  extern void _dl_runtime_resolve_avx_opt (ElfW(Word)) attribute_hidden;
   extern void _dl_runtime_resolve_avx512 (ElfW(Word)) attribute_hidden;
+  extern void _dl_runtime_resolve_avx512_opt (ElfW(Word)) attribute_hidden;
   extern void _dl_runtime_profile_sse (ElfW(Word)) attribute_hidden;
   extern void _dl_runtime_profile_avx (ElfW(Word)) attribute_hidden;
   extern void _dl_runtime_profile_avx512 (ElfW(Word)) attribute_hidden;
@@ -118,9 +121,26 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	     indicated by the offset on the stack, and then jump to
 	     the resolved address.  */
 	  if (HAS_ARCH_FEATURE (AVX512F_Usable))
-	    *(ElfW(Addr) *) (got + 2) = (ElfW(Addr)) &_dl_runtime_resolve_avx512;
+	    {
+	      if (HAS_ARCH_FEATURE (Use_dl_runtime_resolve_opt))
+		*(ElfW(Addr) *) (got + 2)
+		  = (ElfW(Addr)) &_dl_runtime_resolve_avx512_opt;
+	      else
+		*(ElfW(Addr) *) (got + 2)
+		  = (ElfW(Addr)) &_dl_runtime_resolve_avx512;
+	    }
 	  else if (HAS_ARCH_FEATURE (AVX_Usable))
-	    *(ElfW(Addr) *) (got + 2) = (ElfW(Addr)) &_dl_runtime_resolve_avx;
+	    {
+	      if (HAS_ARCH_FEATURE (Use_dl_runtime_resolve_opt))
+		*(ElfW(Addr) *) (got + 2)
+		  = (ElfW(Addr)) &_dl_runtime_resolve_avx_opt;
+	      else if (HAS_ARCH_FEATURE (Use_dl_runtime_resolve_slow))
+		*(ElfW(Addr) *) (got + 2)
+		  = (ElfW(Addr)) &_dl_runtime_resolve_avx_slow;
+	      else
+		*(ElfW(Addr) *) (got + 2)
+		  = (ElfW(Addr)) &_dl_runtime_resolve_avx;
+	    }
 	  else
 	    *(ElfW(Addr) *) (got + 2) = (ElfW(Addr)) &_dl_runtime_resolve_sse;
 	}
@@ -311,7 +331,23 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 			       0)
 	  && __builtin_expect (sym->st_shndx != SHN_UNDEF, 1)
 	  && __builtin_expect (!skip_ifunc, 1))
-	value = ((ElfW(Addr) (*) (void)) value) ();
+	{
+# ifndef RTLD_BOOTSTRAP
+	  if (sym_map != map
+	      && sym_map->l_type != lt_executable
+	      && !sym_map->l_relocated)
+	    {
+	      const char *strtab
+		= (const char *) D_PTR (map, l_info[DT_STRTAB]);
+	      _dl_fatal_printf ("\
+%s: Relink `%s' with `%s' for IFUNC symbol `%s'\n",
+				RTLD_PROGNAME, map->l_name,
+				sym_map->l_name,
+				strtab + refsym->st_name);
+	    }
+# endif
+	  value = ((ElfW(Addr) (*) (void)) value) ();
+	}
 
       switch (r_type)
 	{

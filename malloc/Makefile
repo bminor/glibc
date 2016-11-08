@@ -30,7 +30,15 @@ tests := mallocbug tst-malloc tst-valloc tst-calloc tst-obstack \
 	 tst-pvalloc tst-memalign tst-mallopt tst-scratch_buffer \
 	 tst-malloc-backtrace tst-malloc-thread-exit \
 	 tst-malloc-thread-fail tst-malloc-fork-deadlock \
-	 tst-mallocfork2
+	 tst-mallocfork2 \
+	 tst-interpose-nothread \
+	 tst-interpose-thread \
+
+tests-static := \
+	 tst-interpose-static-nothread \
+	 tst-interpose-static-thread \
+
+tests += $(tests-static)
 test-srcs = tst-mtrace
 
 routines = malloc morecore mcheck mtrace obstack \
@@ -43,6 +51,15 @@ non-lib.a := libmcheck.a
 # Additional library.
 extra-libs = libmemusage libmtracectl
 extra-libs-others = $(extra-libs)
+
+# Helper objects for some tests.
+extra-tests-objs += \
+  tst-interpose-aux-nothread.o \
+  tst-interpose-aux-thread.o \
+
+test-extras = \
+  tst-interpose-aux-nothread \
+  tst-interpose-aux-thread \
 
 libmemusage-routines = memusage
 libmemusage-inhibit-o = $(filter-out .os,$(object-suffixes))
@@ -70,6 +87,9 @@ $(objpfx)tst-malloc-backtrace: $(shared-thread-library)
 $(objpfx)tst-malloc-thread-exit: $(shared-thread-library)
 $(objpfx)tst-malloc-thread-fail: $(shared-thread-library)
 $(objpfx)tst-malloc-fork-deadlock: $(shared-thread-library)
+
+# Export the __malloc_initialize_hook variable to libc.so.
+LDFLAGS-tst-mallocstate = -rdynamic
 
 # These should be removed by `make clean'.
 extra-objs = mcheck-init.o libmcheck.a
@@ -189,3 +209,10 @@ $(foreach o,$(all-object-suffixes),$(objpfx)malloc$(o)): arena.c hooks.c
 # Compile the tests with a flag which suppresses the mallopt call in
 # the test skeleton.
 $(tests:%=$(objpfx)%.o): CPPFLAGS += -DTEST_NO_MALLOPT
+
+$(objpfx)tst-interpose-nothread: $(objpfx)tst-interpose-aux-nothread.o
+$(objpfx)tst-interpose-thread: \
+  $(objpfx)tst-interpose-aux-thread.o $(shared-thread-library)
+$(objpfx)tst-interpose-static-nothread: $(objpfx)tst-interpose-aux-nothread.o
+$(objpfx)tst-interpose-static-thread: \
+  $(objpfx)tst-interpose-aux-thread.o $(static-thread-library)

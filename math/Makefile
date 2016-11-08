@@ -27,7 +27,7 @@ headers		:= math.h bits/mathcalls.h bits/mathinline.h bits/huge_val.h \
 		   fpu_control.h complex.h bits/cmathcalls.h fenv.h \
 		   bits/fenv.h bits/fenvinline.h bits/mathdef.h tgmath.h \
 		   bits/math-finite.h bits/math-vector.h \
-		   bits/libm-simd-decl-stubs.h
+		   bits/libm-simd-decl-stubs.h bits/iscanonical.h
 
 # FPU support code.
 aux		:= setfpucw fpu_control
@@ -41,14 +41,24 @@ libm-support = s_lib_version s_matherr s_signgam			\
 	       fclrexcpt fgetexcptflg fraiseexcpt fsetexcptflg		\
 	       ftestexcept fegetround fesetround fegetenv feholdexcpt	\
 	       fesetenv feupdateenv t_exp fedisblxcpt feenablxcpt	\
-	       fegetexcept
+	       fegetexcept fesetexcept fetestexceptflag fegetmode	\
+	       fesetmode
+
+# Wrappers for these functions generated per type using a file named
+# <func>_template.c and the appropriate math-type-macros-<TYPE>.h.
+gen-libm-calls = cargF conjF cimagF crealF cabsF s_cacosF		  \
+	         s_cacoshF s_ccosF s_ccoshF s_casinF s_csinF s_casinhF	  \
+		 k_casinhF s_csinhF k_casinhF s_csinhF s_catanhF s_catanF \
+		 s_ctanF s_ctanhF s_cexpF s_clogF s_cprojF s_csqrtF	  \
+		 s_cpowF s_clog10F s_fdimF s_nextdownF s_fmaxF s_fminF	  \
+		 s_nanF s_iseqsigF s_canonicalizeF
 
 libm-calls =								  \
 	e_acosF e_acoshF e_asinF e_atan2F e_atanhF e_coshF e_expF e_fmodF \
 	e_hypotF e_j0F e_j1F e_jnF e_lgammaF_r e_logF e_log10F e_powF	  \
 	e_rem_pio2F e_remainderF e_scalbF e_sinhF e_sqrtF e_gammaF_r	  \
 	e_ilogbF							  \
-	k_cosF k_rem_pio2F k_sinF k_tanF s_asinhF s_atanF s_cbrtF	  \
+	k_cosF k_sinF k_tanF s_asinhF s_atanF s_cbrtF			  \
 	s_ceilF s_cosF s_erfF s_expm1F s_fabsF				  \
 	s_floorF s_log1pF w_log1pF s_logbF				  \
 	s_nextafterF s_nexttowardF s_rintF s_scalblnF w_scalblnF	  \
@@ -57,15 +67,13 @@ libm-calls =								  \
 	w_tgammaF w_hypotF w_j0F w_j1F w_jnF w_lgammaF w_lgammaF_r	  \
 	w_logF w_log10F w_powF w_remainderF w_scalbF w_sinhF w_sqrtF	  \
 	w_ilogbF							  \
-	s_fpclassifyF s_fmaxF s_fminF s_fdimF s_nanF s_truncF		  \
+	s_fpclassifyF s_truncF						  \
 	s_remquoF e_log2F e_exp2F s_roundF s_nearbyintF s_sincosF	  \
-	conjF cimagF crealF cabsF cargF s_cexpF s_csinhF s_ccoshF s_clogF \
-	s_catanF s_casinF s_ccosF s_csinF s_ctanF s_ctanhF s_cacosF	  \
-	s_casinhF s_cacoshF s_catanhF s_csqrtF s_cpowF s_cprojF s_clog10F \
 	s_fmaF s_lrintF s_llrintF s_lroundF s_llroundF e_exp10F w_log2F	  \
-	s_issignalingF $(calls:s_%=m_%) x2y2m1F k_casinhF		  \
+	s_issignalingF $(calls:s_%=m_%) x2y2m1F				  \
 	gamma_productF lgamma_negF lgamma_productF			  \
-	s_nextupF s_nextdownF
+	s_nextupF s_totalorderF s_totalordermagF s_getpayloadF		  \
+	$(gen-libm-calls)
 
 libm-compat-calls-ldouble-yes = w_lgamma_compatl k_standardl
 libm-compat-calls = w_lgamma_compatf w_lgamma_compat k_standard k_standardf \
@@ -87,18 +95,18 @@ types = $(type-ldouble-$(long-double-fcts)) double float
 
 # long double support
 type-ldouble-suffix := l
-type-ldouble-routines := t_sincosl k_sincosl
+type-ldouble-routines := t_sincosl k_sincosl s_iscanonicall
 type-ldouble-yes := ldouble
 
 # double support
 type-double-suffix :=
 type-double-routines := branred doasin dosincos halfulp mpa mpatan2	\
 		       mpatan mpexp mplog mpsqrt mptan sincos32 slowexp	\
-		       slowpow sincostab
+		       slowpow sincostab k_rem_pio2
 
 # float support
 type-float-suffix := f
-type-float-routines :=
+type-float-routines := k_rem_pio2f
 
 
 # Apply suffix to each type in arg 1
@@ -114,7 +122,8 @@ libm-routines = $(strip $(libm-support) $(libm-compat-calls)		\
 # In libm-calls (above), list m_foo in place of s_foo for any
 # routine that should be compiled separately for its libc and libm versions.
 calls = s_isinfF s_isnanF s_finiteF s_copysignF s_modfF s_scalbnF s_frexpF \
-	s_ldexpF s_signbitF
+	s_signbitF $(gen-calls)
+gen-calls = s_ldexpF
 generated += $(foreach s,.c .S,$(call type-foreach, $(calls:s_%=m_%$(s))))
 routines = $(call type-foreach, $(calls))
 
@@ -146,14 +155,17 @@ tests = test-matherr test-fenv atest-exp atest-sincos atest-exp2 basic-test \
 	test-nearbyint-except-2 test-signgam-uchar test-signgam-uchar-init \
 	test-signgam-uint test-signgam-uint-init test-signgam-ullong \
 	test-signgam-ullong-init test-nan-overflow test-nan-payload \
-	test-fexcept test-fexcept-traps $(tests-static)
+	test-fexcept test-fexcept-traps test-fesetexcept \
+	test-fesetexcept-traps test-fetestexceptflag test-femode \
+	test-femode-traps test-iszero-excess-precision \
+	test-iseqsig-excess-precision $(tests-static)
 tests-static = test-fpucw-static test-fpucw-ieee-static \
 	       test-signgam-uchar-static test-signgam-uchar-init-static \
 	       test-signgam-uint-static test-signgam-uint-init-static \
 	       test-signgam-ullong-static test-signgam-ullong-init-static
 
 ifneq (,$(CXX))
-tests += test-math-isinff
+tests += test-math-isinff test-math-iszero
 endif
 
 ifneq (no,$(PERL))
@@ -255,6 +267,10 @@ CFLAGS-test-signgam-ullong-static.c = -std=c99
 CFLAGS-test-signgam-ullong-init-static.c = -std=c99
 
 CFLAGS-test-math-isinff.cc = -std=gnu++11
+CFLAGS-test-math-iszero.cc = -std=gnu++11
+
+CFLAGS-test-iszero-excess-precision.c = -fexcess-precision=standard
+CFLAGS-test-iseqsig-excess-precision.c = -fexcess-precision=standard
 
 # The -lieee module sets the _LIB_VERSION_ switch to IEEE mode
 # for error handling in the -lm functions.
@@ -263,6 +279,32 @@ non-lib.a += libieee.a
 extra-objs += libieee.a ieee-math.o
 
 include ../Rules
+
+gen-all-calls = $(gen-libm-calls) $(gen-calls)
+
+generated += $(addsuffix .c,$(call type-foreach,$(gen-all-calls))) \
+	     gen-libm-templates.stmp
+
+# Create wrappers in the math build directory.
+$(objpfx)gen-libm-templates.stmp: Makefile
+	$(make-target-directory)
+	for gcall in $(gen-all-calls); do                                 \
+	  func=$${gcall%F*}$${gcall#*F};                                  \
+	  for type in $(foreach t,$(types),$(t)__$(type-$(t)-suffix)); do \
+	    suff=$${type#*__};                                            \
+	    type=$${type%__*};                                            \
+	    file=$(objpfx)$${gcall%F*}$${suff}$${gcall#*F}.c;             \
+	    (                                                             \
+	      echo "#include <math-type-macros-$${type}.h>";              \
+	      echo "#include <$${func}_template.c>";                      \
+	    ) > $${file};                                                 \
+	  done;                                                           \
+	done;                                                             \
+	echo > $(@)
+
+# Add dependency to ensure the generator runs prior.
+$(foreach t, $(call type-foreach, $(gen-all-calls)), \
+             $(objpfx)$(t).c): $(objpfx)gen-libm-templates.stmp
 
 ifneq (no,$(PERL))
 # This must come after the inclusion of sysdeps Makefiles via Rules.
@@ -303,6 +345,12 @@ endef
 object-suffixes-left := $(all-object-suffixes)
 include $(o-iterator)
 
+# Likewise, for those generated files shared with libc.
+define o-iterator-doit
+$(objpfx)m_%$o: $(objpfx)s_%.c $(before-compile); $$(compile-command.c)
+endef
+object-suffixes-left := $(all-object-suffixes)
+include $(o-iterator)
 
 # This file defines the default _LIB_VERSION variable that controls
 # the error return conventions for the math functions.

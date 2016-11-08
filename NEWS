@@ -32,9 +32,100 @@ Version 2.25
   presently cannot avoid being compiled under _GNU_SOURCE, exacerbating the
   problem.
 
+* New <fenv.h> features from TS 18661-1:2014 are added to libm: the
+  fesetexcept, fetestexceptflag, fegetmode and fesetmode functions,
+  the femode_t type and the FE_DFL_MODE macro.
+
+* Integer width macros from TS 18661-1:2014 are added to <limits.h>:
+  CHAR_WIDTH, SCHAR_WIDTH, UCHAR_WIDTH, SHRT_WIDTH, USHRT_WIDTH, INT_WIDTH,
+  UINT_WIDTH, LONG_WIDTH, ULONG_WIDTH, LLONG_WIDTH, ULLONG_WIDTH; and to
+  <stdint.h>: INT8_WIDTH, UINT8_WIDTH, INT16_WIDTH, UINT16_WIDTH,
+  INT32_WIDTH, UINT32_WIDTH, INT64_WIDTH, UINT64_WIDTH, INT_LEAST8_WIDTH,
+  UINT_LEAST8_WIDTH, INT_LEAST16_WIDTH, UINT_LEAST16_WIDTH,
+  INT_LEAST32_WIDTH, UINT_LEAST32_WIDTH, INT_LEAST64_WIDTH,
+  UINT_LEAST64_WIDTH, INT_FAST8_WIDTH, UINT_FAST8_WIDTH, INT_FAST16_WIDTH,
+  UINT_FAST16_WIDTH, INT_FAST32_WIDTH, UINT_FAST32_WIDTH, INT_FAST64_WIDTH,
+  UINT_FAST64_WIDTH, INTPTR_WIDTH, UINTPTR_WIDTH, INTMAX_WIDTH,
+  UINTMAX_WIDTH, PTRDIFF_WIDTH, SIG_ATOMIC_WIDTH, SIZE_WIDTH, WCHAR_WIDTH,
+  WINT_WIDTH.
+
+* New <math.h> features are added from TS 18661-1:2014:
+
+  - Signaling NaN macros: SNANF, SNAN, SNANL.
+
+  - Comparison macros: iseqsig.
+
+  - Classification macros: iscanonical, issubnormal, iszero.
+
+  - Total order functions: totalorder, totalorderf, totalorderl,
+    totalordermag, totalordermagf, totalordermagl.
+
+  - Canonicalize functions: canonicalize, canonicalizef, canonicalizel.
+
+  - NaN functions: getpayload, getpayloadf, getpayloadl.
+
+* The functions strfromd, strfromf, and strfroml, from ISO/IEC TS 18661-1:2014,
+  are added to libc.  They convert a floating-point number into string.
+
+* The <sys/quota.h> header now includes the <linux/quota.h> header.  Support
+  for the Linux quota interface which predates kernel version 2.4.22 has
+  been removed.
+
+* The malloc_get_state and malloc_set_state functions have been removed.
+  Already-existing binaries that dynamically link to these functions will
+  get a hidden implementation in which malloc_get_state is a stub.  As far
+  as we know, these functions are used only by GNU Emacs and this change
+  will not adversely affect already-built Emacs executables.  Any undumped
+  Emacs executables, which normally exist only during an Emacs build, should
+  be rebuilt by re-running “./configure; make” in the Emacs build tree.
+
+* The “ip6-dotint” and “no-ip6-dotint” resolver options, and the
+  corresponding RES_NOIP6DOTINT flag from <resolv.h> have been removed.
+  “no-ip6-dotint” had already been the default, and support for the
+  “ip6-dotint” option was removed from the Internet in 2006.
+
+* The "ip6-bytestring" resolver option and the corresponding RES_NOIP6DOTINT
+  flag from <resolv.h> have been removed.  The option relied on a
+  backwards-incompatible DNS extension which was never deployed on the
+  Internet.
+
+* The flags RES_AAONLY, RES_PRIMARY, RES_NOCHECKNAME, RES_KEEPTSIG defined
+  in the <resolv.h> header file have been deprecated.  They were already
+  unimplemented.
+
+* DNSSEC-related declarations and definitions have been removed from the
+  <arpa/nameser.h> header file, and libresolv will no longer attempt to
+  decode the data part of DNSSEC record types.  Previous versions of glibc
+  only implemented minimal support for the previous version of DNSSEC, which
+  is incompatible with the currently deployed version.
+
+* The resource record type classification macros ns_t_qt_p, ns_t_mrr_p,
+  ns_t_rr_p, ns_t_udp_p, ns_t_xfr_p have been removed from the
+  <arpa/nameser.h> header file because the distinction between RR types and
+  meta-RR types is not officially standardized, subject to revision, and
+  thus not suitable for encoding in a macro.
+
+* The types res_sendhookact, res_send_qhook, re_send_rhook, and the qhook
+  and rhook members of the res_state type in <resolv.h> have been removed.
+  The glibc stub resolver did not support these hooks, but the header file
+  did not reflect that.
+
+* For multi-arch support it is recommended to use a GCC which has
+  been built with support for GNU indirect functions.  This ensures
+  that correct debugging information is generated for functions
+  selected by IFUNC resolvers.  This support can either be enabled by
+  configuring GCC with '--enable-gnu-indirect-function', or by
+  enabling it by default by setting 'default_gnu_indirect_function'
+  variable for a particular architecture in the GCC source file
+  'gcc/config.gcc'.
+
 Security related changes:
 
-  [Add security related changes here]
+  On ARM EABI (32-bit), generating a backtrace for execution contexts which
+  have been created with makecontext could fail to terminate due to a
+  missing .cantunwind annotation.  This has been observed to lead to a hang
+  (denial of service) in some Go applications compiled with gccgo.  Reported
+  by Andreas Schwab.  (CVE-2016-6323)
 
 The following bugs are resolved with this release:
 

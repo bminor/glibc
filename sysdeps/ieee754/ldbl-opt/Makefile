@@ -24,6 +24,7 @@ libnldbl-calls = asprintf dprintf fprintf fscanf fwprintf fwscanf iovfscanf \
 		 vdprintf_chk obstack_printf_chk obstack_vprintf_chk \
 		 syslog syslog_chk vsyslog vsyslog_chk \
 		 strfmon strfmon_l \
+		 strfroml \
 		 strtold strtold_l strtoldint wcstold wcstold_l wcstoldint \
 		 qecvt qfcvt qgcvt qecvt_r qfcvt_r \
 		 isinf isnan finite signbit scalb log2 lgamma_r ceil \
@@ -41,7 +42,8 @@ libnldbl-calls = asprintf dprintf fprintf fscanf fwprintf fwscanf iovfscanf \
 		 isoc99_vscanf isoc99_vfscanf isoc99_vsscanf \
 		 isoc99_wscanf isoc99_fwscanf isoc99_swscanf \
 		 isoc99_vwscanf isoc99_vfwscanf isoc99_vswscanf \
-		 nextup nextdown
+		 nextup nextdown totalorder totalordermag getpayload \
+		 canonicalize
 libnldbl-routines = $(libnldbl-calls:%=nldbl-%)
 libnldbl-inhibit-o = $(object-suffixes)
 libnldbl-static-only-routines = $(libnldbl-routines)
@@ -57,6 +59,7 @@ CFLAGS-nldbl-atanh.c = -fno-builtin-atanhl
 CFLAGS-nldbl-cabs.c = -fno-builtin-cabsl
 CFLAGS-nldbl-cacos.c = -fno-builtin-cacosl
 CFLAGS-nldbl-cacosh.c = -fno-builtin-cacoshl
+CFLAGS-nldbl-canonicalize.c = -fno-builtin-canonicalizel
 CFLAGS-nldbl-carg.c = -fno-builtin-cargl
 CFLAGS-nldbl-casin.c = -fno-builtin-casinl
 CFLAGS-nldbl-casinh.c = -fno-builtin-casinhl
@@ -98,6 +101,7 @@ CFLAGS-nldbl-fmin.c = -fno-builtin-fminl
 CFLAGS-nldbl-fmod.c = -fno-builtin-fmodl
 CFLAGS-nldbl-frexp.c = -fno-builtin-frexpl
 CFLAGS-nldbl-gamma.c = -fno-builtin-gammal
+CFLAGS-nldbl-getpayload.c = -fno-builtin-getpayloadl
 CFLAGS-nldbl-hypot.c = -fno-builtin-hypotl
 CFLAGS-nldbl-ilogb.c = -fno-builtin-ilogbl
 CFLAGS-nldbl-isinf.c = -fno-builtin-isinfl
@@ -142,6 +146,8 @@ CFLAGS-nldbl-sqrt.c = -fno-builtin-sqrtl
 CFLAGS-nldbl-tan.c = -fno-builtin-tanl
 CFLAGS-nldbl-tanh.c = -fno-builtin-tanhl
 CFLAGS-nldbl-tgamma.c = -fno-builtin-tgammal
+CFLAGS-nldbl-totalorder.c = -fno-builtin-totalorderl
+CFLAGS-nldbl-totalordermag.c = -fno-builtin-totalordermagl
 CFLAGS-nldbl-trunc.c = -fno-builtin-truncl
 CFLAGS-nldbl-y0.c = -fno-builtin-y0l
 CFLAGS-nldbl-y1.c = -fno-builtin-y1l

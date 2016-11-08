@@ -22,7 +22,8 @@
 #ifndef _STDINT_H
 #define _STDINT_H	1
 
-#include <features.h>
+#define __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION
+#include <bits/libc-header-start.h>
 #include <bits/wchar.h>
 #include <bits/wordsize.h>
 
@@ -248,8 +249,13 @@ typedef unsigned long long int	uintmax_t;
 #  define PTRDIFF_MIN		(-9223372036854775807L-1)
 #  define PTRDIFF_MAX		(9223372036854775807L)
 # else
-#  define PTRDIFF_MIN		(-2147483647-1)
-#  define PTRDIFF_MAX		(2147483647)
+#  if __WORDSIZE32_PTRDIFF_LONG
+#   define PTRDIFF_MIN		(-2147483647L-1)
+#   define PTRDIFF_MAX		(2147483647L)
+#  else
+#   define PTRDIFF_MIN		(-2147483647-1)
+#   define PTRDIFF_MAX		(2147483647)
+#  endif
 # endif
 
 /* Limits of `sig_atomic_t'.  */
@@ -260,7 +266,7 @@ typedef unsigned long long int	uintmax_t;
 # if __WORDSIZE == 64
 #  define SIZE_MAX		(18446744073709551615UL)
 # else
-#  ifdef __WORDSIZE32_SIZE_ULONG
+#  if __WORDSIZE32_SIZE_ULONG
 #   define SIZE_MAX		(4294967295UL)
 #  else
 #   define SIZE_MAX		(4294967295U)
@@ -306,5 +312,48 @@ typedef unsigned long long int	uintmax_t;
 #  define INTMAX_C(c)	c ## LL
 #  define UINTMAX_C(c)	c ## ULL
 # endif
+
+#if __GLIBC_USE (IEC_60559_BFP_EXT)
+
+# define INT8_WIDTH 8
+# define UINT8_WIDTH 8
+# define INT16_WIDTH 16
+# define UINT16_WIDTH 16
+# define INT32_WIDTH 32
+# define UINT32_WIDTH 32
+# define INT64_WIDTH 64
+# define UINT64_WIDTH 64
+
+# define INT_LEAST8_WIDTH 8
+# define UINT_LEAST8_WIDTH 8
+# define INT_LEAST16_WIDTH 16
+# define UINT_LEAST16_WIDTH 16
+# define INT_LEAST32_WIDTH 32
+# define UINT_LEAST32_WIDTH 32
+# define INT_LEAST64_WIDTH 64
+# define UINT_LEAST64_WIDTH 64
+
+# define INT_FAST8_WIDTH 8
+# define UINT_FAST8_WIDTH 8
+# define INT_FAST16_WIDTH __WORDSIZE
+# define UINT_FAST16_WIDTH __WORDSIZE
+# define INT_FAST32_WIDTH __WORDSIZE
+# define UINT_FAST32_WIDTH __WORDSIZE
+# define INT_FAST64_WIDTH 64
+# define UINT_FAST64_WIDTH 64
+
+# define INTPTR_WIDTH __WORDSIZE
+# define UINTPTR_WIDTH __WORDSIZE
+
+# define INTMAX_WIDTH 64
+# define UINTMAX_WIDTH 64
+
+# define PTRDIFF_WIDTH __WORDSIZE
+# define SIG_ATOMIC_WIDTH 32
+# define SIZE_WIDTH __WORDSIZE
+# define WCHAR_WIDTH 32
+# define WINT_WIDTH 32
+
+#endif
 
 #endif /* stdint.h */

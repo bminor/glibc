@@ -73,7 +73,7 @@ static __thread mstate thread_arena attribute_tls_model_ie;
    members of struct malloc_state objects.  No other locks must be
    acquired after free_list_lock has been acquired.  */
 
-static mutex_t free_list_lock = _LIBC_LOCK_INITIALIZER;
+__libc_lock_define_initialized (static, free_list_lock);
 static size_t narenas = 1;
 static mstate free_list;
 
@@ -89,7 +89,7 @@ static mstate free_list;
    acquired, no arena lock must have been acquired, but it is
    permitted to acquire arena locks subsequently, while list_lock is
    acquired.  */
-static mutex_t list_lock = _LIBC_LOCK_INITIALIZER;
+__libc_lock_define_initialized (static, list_lock);
 
 /* Already initialized? */
 int __malloc_initialized = -1;
@@ -112,7 +112,7 @@ int __malloc_initialized = -1;
 
 #define arena_lock(ptr, size) do {					      \
       if (ptr && !arena_is_corrupt (ptr))				      \
-        (void) mutex_lock (&ptr->mutex);				      \
+        __libc_lock_lock (ptr->mutex);					      \
       else								      \
         ptr = arena_get2 ((size), NULL);				      \
   } while (0)
@@ -122,7 +122,7 @@ int __malloc_initialized = -1;
 #define heap_for_ptr(ptr) \
   ((heap_info *) ((unsigned long) (ptr) & ~(HEAP_MAX_SIZE - 1)))
 #define arena_for_chunk(ptr) \
-  (chunk_non_main_arena (ptr) ? heap_for_ptr (ptr)->ar_ptr : &main_arena)
+  (chunk_main_arena (ptr) ? &main_arena : heap_for_ptr (ptr)->ar_ptr)
 
 
 /**************************************************************************/
@@ -145,11 +145,11 @@ __malloc_fork_lock_parent (void)
   /* We do not acquire free_list_lock here because we completely
      reconstruct free_list in __malloc_fork_unlock_child.  */
 
-  (void) mutex_lock (&list_lock);
+  __libc_lock_lock (list_lock);
 
   for (mstate ar_ptr = &main_arena;; )
     {
-      (void) mutex_lock (&ar_ptr->mutex);
+      __libc_lock_lock (ar_ptr->mutex);
       ar_ptr = ar_ptr->next;
       if (ar_ptr == &main_arena)
         break;
@@ -165,12 +165,12 @@ __malloc_fork_unlock_parent (void)
 
   for (mstate ar_ptr = &main_arena;; )
     {
-      (void) mutex_unlock (&ar_ptr->mutex);
+      __libc_lock_unlock (ar_ptr->mutex);
       ar_ptr = ar_ptr->next;
       if (ar_ptr == &main_arena)
         break;
     }
-  (void) mutex_unlock (&list_lock);
+  __libc_lock_unlock (list_lock);
 }
 
 void
@@ -182,13 +182,13 @@ __malloc_fork_unlock_child (void)
 
   /* Push all arenas to the free list, except thread_arena, which is
      attached to the current thread.  */
-  mutex_init (&free_list_lock);
+  __libc_lock_init (free_list_lock);
   if (thread_arena != NULL)
     thread_arena->attached_threads = 1;
   free_list = NULL;
   for (mstate ar_ptr = &main_arena;; )
     {
-      mutex_init (&ar_ptr->mutex);
+      __libc_lock_init (ar_ptr->mutex);
       if (ar_ptr != thread_arena)
         {
 	  /* This arena is no longer attached to any thread.  */
@@ -201,7 +201,7 @@ __malloc_fork_unlock_child (void)
         break;
     }
 
-  mutex_init (&list_lock);
+  __libc_lock_init (list_lock);
 }
 
 /* Initialization routine. */
@@ -574,12 +574,12 @@ heap_trim (heap_info *heap, size_t pad)
       /* fencepost must be properly aligned.  */
       misalign = ((long) p) & MALLOC_ALIGN_MASK;
       p = chunk_at_offset (prev_heap, prev_size - misalign);
-      assert (p->size == (0 | PREV_INUSE)); /* must be fencepost */
+      assert (chunksize_nomask (p) == (0 | PREV_INUSE)); /* must be fencepost */
       p = prev_chunk (p);
       new_size = chunksize (p) + (MINSIZE - 2 * SIZE_SZ) + misalign;
       assert (new_size > 0 && new_size < (long) (2 * MINSIZE));
       if (!prev_inuse (p))
-        new_size += p->prev_size;
+        new_size += prev_size (p);
       assert (new_size > 0 && new_size < HEAP_MAX_SIZE);
       if (new_size + (HEAP_MAX_SIZE - prev_heap->size) < pad + MINSIZE + pagesz)
         break;
@@ -682,9 +682,9 @@ _int_new_arena (size_t size)
   LIBC_PROBE (memory_arena_new, 2, a, size);
   mstate replaced_arena = thread_arena;
   thread_arena = a;
-  mutex_init (&a->mutex);
+  __libc_lock_init (a->mutex);
 
-  (void) mutex_lock (&list_lock);
+  __libc_lock_lock (list_lock);
 
   /* Add the new arena to the global list.  */
   a->next = main_arena.next;
@@ -694,11 +694,11 @@ _int_new_arena (size_t size)
   atomic_write_barrier ();
   main_arena.next = a;
 
-  (void) mutex_unlock (&list_lock);
+  __libc_lock_unlock (list_lock);
 
-  (void) mutex_lock (&free_list_lock);
+  __libc_lock_lock (free_list_lock);
   detach_arena (replaced_arena);
-  (void) mutex_unlock (&free_list_lock);
+  __libc_lock_unlock (free_list_lock);
 
   /* Lock this arena.  NB: Another thread may have been attached to
      this arena because the arena is now accessible from the
@@ -710,7 +710,7 @@ _int_new_arena (size_t size)
      but this could result in a deadlock with
      __malloc_fork_lock_parent.  */
 
-  (void) mutex_lock (&a->mutex);
+  __libc_lock_lock (a->mutex);
 
   return a;
 }
@@ -724,7 +724,7 @@ get_free_list (void)
   mstate result = free_list;
   if (result != NULL)
     {
-      (void) mutex_lock (&free_list_lock);
+      __libc_lock_lock (free_list_lock);
       result = free_list;
       if (result != NULL)
 	{
@@ -736,12 +736,12 @@ get_free_list (void)
 
 	  detach_arena (replaced_arena);
 	}
-      (void) mutex_unlock (&free_list_lock);
+      __libc_lock_unlock (free_list_lock);
 
       if (result != NULL)
         {
           LIBC_PROBE (memory_arena_reuse_free_list, 1, result);
-          (void) mutex_lock (&result->mutex);
+          __libc_lock_lock (result->mutex);
 	  thread_arena = result;
         }
     }
@@ -786,7 +786,7 @@ reused_arena (mstate avoid_arena)
   result = next_to_use;
   do
     {
-      if (!arena_is_corrupt (result) && !mutex_trylock (&result->mutex))
+      if (!arena_is_corrupt (result) && !__libc_lock_trylock (result->mutex))
         goto out;
 
       /* FIXME: This is a data race, see _int_new_arena.  */
@@ -813,14 +813,14 @@ reused_arena (mstate avoid_arena)
 
   /* No arena available without contention.  Wait for the next in line.  */
   LIBC_PROBE (memory_arena_reuse_wait, 3, &result->mutex, result, avoid_arena);
-  (void) mutex_lock (&result->mutex);
+  __libc_lock_lock (result->mutex);
 
 out:
   /* Attach the arena to the current thread.  */
   {
     /* Update the arena thread attachment counters.   */
     mstate replaced_arena = thread_arena;
-    (void) mutex_lock (&free_list_lock);
+    __libc_lock_lock (free_list_lock);
     detach_arena (replaced_arena);
 
     /* We may have picked up an arena on the free list.  We need to
@@ -835,7 +835,7 @@ out:
 
     ++result->attached_threads;
 
-    (void) mutex_unlock (&free_list_lock);
+    __libc_lock_unlock (free_list_lock);
   }
 
   LIBC_PROBE (memory_arena_reuse, 2, result, avoid_arena);
@@ -906,17 +906,17 @@ arena_get_retry (mstate ar_ptr, size_t bytes)
   LIBC_PROBE (memory_arena_retry, 2, bytes, ar_ptr);
   if (ar_ptr != &main_arena)
     {
-      (void) mutex_unlock (&ar_ptr->mutex);
+      __libc_lock_unlock (ar_ptr->mutex);
       /* Don't touch the main arena if it is corrupt.  */
       if (arena_is_corrupt (&main_arena))
 	return NULL;
 
       ar_ptr = &main_arena;
-      (void) mutex_lock (&ar_ptr->mutex);
+      __libc_lock_lock (ar_ptr->mutex);
     }
   else
     {
-      (void) mutex_unlock (&ar_ptr->mutex);
+      __libc_lock_unlock (ar_ptr->mutex);
       ar_ptr = arena_get2 (bytes, ar_ptr);
     }
 
@@ -931,7 +931,7 @@ arena_thread_freeres (void)
 
   if (a != NULL)
     {
-      (void) mutex_lock (&free_list_lock);
+      __libc_lock_lock (free_list_lock);
       /* If this was the last attached thread for this arena, put the
 	 arena on the free list.  */
       assert (a->attached_threads > 0);
@@ -940,7 +940,7 @@ arena_thread_freeres (void)
 	  a->next_free = free_list;
 	  free_list = a;
 	}
-      (void) mutex_unlock (&free_list_lock);
+      __libc_lock_unlock (free_list_lock);
     }
 }
 text_set_element (__libc_thread_subfreeres, arena_thread_freeres);

@@ -29,10 +29,21 @@
 
 #define THE_SIG SIGUSR1
 
+/* The stack size can be overriden.  With a sufficiently large stack
+   size, thread stacks for terminated threads are freed, but this does
+   not happen with the default size of 1 MiB.  */
+enum { default_stack_size_in_mb = 1 };
+static long stack_size_in_mb;
 
 #define N 10
 static pthread_t th[N];
 
+
+static int do_test (void);
+
+#define TIMEOUT 5
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
 
 #define CB(n) \
 static void								      \
@@ -40,7 +51,7 @@ cb##n (void)								      \
 {									      \
   if (th[n] != pthread_self ())						      \
     {									      \
-      write (STDOUT_FILENO, "wrong callback\n", 15);			      \
+      write_message ("wrong callback\n");				      \
       _exit (1);							      \
     }									      \
 }
@@ -72,6 +83,9 @@ int nsigs;
 int
 do_test (void)
 {
+  if (stack_size_in_mb == 0)
+    stack_size_in_mb = default_stack_size_in_mb;
+
   if ((uintptr_t) pthread_self () & (TCB_ALIGNMENT - 1))
     {
       puts ("initial thread's struct pthread not aligned enough");
@@ -127,7 +141,7 @@ do_test (void)
       exit (1);
     }
 
-  if (pthread_attr_setstacksize (&a, 1 * 1024 * 1024) != 0)
+  if (pthread_attr_setstacksize (&a, stack_size_in_mb * 1024 * 1024) != 0)
     {
       puts ("attr_setstacksize failed");
       return 1;
@@ -199,8 +213,3 @@ do_test (void)
 
   return 0;
 }
-
-
-#define TIMEOUT 5
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"

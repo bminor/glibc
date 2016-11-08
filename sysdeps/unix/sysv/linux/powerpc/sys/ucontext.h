@@ -19,11 +19,14 @@
 #define _SYS_UCONTEXT_H	1
 
 #include <features.h>
+#define __need_sigset_t
 #include <signal.h>
 
-/* We need the signal context definitions even if they are not used
-   included in <signal.h>.  */
+/* We need the signal context definitions even if they are not exposed
+   by <signal.h>.  */
 #include <bits/sigcontext.h>
+#include <bits/sigstack.h>
+
 
 #if __WORDSIZE == 32
 

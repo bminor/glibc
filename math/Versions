@@ -214,4 +214,12 @@ libm {
     nextup; nextupf; nextupl;
     nextdown; nextdownf; nextdownl;
   }
+  GLIBC_2.25 {
+    fesetexcept; fetestexceptflag; fegetmode; fesetmode;
+    __iscanonicall; __iseqsigf; __iseqsig; __iseqsigl;
+    totalorder; totalorderf; totalorderl;
+    totalordermag; totalordermagf; totalordermagl;
+    getpayload; getpayloadf; getpayloadl;
+    canonicalize; canonicalizef; canonicalizel;
+  }
 }

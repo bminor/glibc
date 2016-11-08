@@ -2,6 +2,8 @@
 
 #include <resolv/arpa/nameser.h>
 
+# ifndef _ISOMAC
+
 /* If the machine allows unaligned access we can do better than using
    the NS_GET16, NS_GET32, NS_PUT16, and NS_PUT32 macros from the
    installed header.  */
@@ -47,8 +49,8 @@ extern const struct _ns_flagdata _ns_flagdata[] attribute_hidden;
 
 #endif
 
-extern u_int		__ns_get16 (const u_char *) __THROW;
-extern u_long		__ns_get32 (const u_char *) __THROW;
+extern unsigned int	__ns_get16 (const unsigned char *) __THROW;
+extern unsigned long	__ns_get32 (const unsigned char *) __THROW;
 
 #define ns_msg_getflag(handle, flag) \
   (((handle)._flags & _ns_flagdata[flag].mask) >> _ns_flagdata[flag].shift)
@@ -74,4 +76,5 @@ libresolv_hidden_proto (ns_samename)
 libresolv_hidden_proto (ns_makecanon)
 libresolv_hidden_proto (ns_format_ttl)
 
+# endif /* !_ISOMAC */
 #endif

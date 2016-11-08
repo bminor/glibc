@@ -229,6 +229,10 @@ sub parse_args {
       ++$current_arg;
       next;
     }
+    # Argument passed via pointer.
+    if ($descr[$i] =~ /p/) {
+      next;
+    }
     # &FLOAT, &int - simplify call by not showing argument.
     if ($descr[$i] =~ /F|I/) {
       next;
@@ -280,6 +284,7 @@ sub parse_args {
   # Put the C program line together
   # Reset some variables to start again
   $current_arg = 1;
+  $call_args =~ s/\"/\\\"/g;
   $cline = "{ \"$call_args\"";
   @descr = split //,$descr_args;
   for ($i=0; $i <= $#descr; $i++) {
@@ -293,8 +298,8 @@ sub parse_args {
       $current_arg++;
       next;
     }
-    # &FLOAT, &int
-    if ($descr[$i] =~ /F|I/) {
+    # &FLOAT, &int, argument passed via pointer
+    if ($descr[$i] =~ /F|I|p/) {
       next;
     }
     # complex

@@ -25,22 +25,22 @@
 /* Coefficients B_2k / 2k(2k-1) of x^-(2k-1) inside exp in Stirling's
    approximation to gamma function.  */
 
-static const long double gamma_coeff[] =
+static const _Float128 gamma_coeff[] =
   {
-    0x1.5555555555555555555555555555p-4L,
-    -0xb.60b60b60b60b60b60b60b60b60b8p-12L,
-    0x3.4034034034034034034034034034p-12L,
-    -0x2.7027027027027027027027027028p-12L,
-    0x3.72a3c5631fe46ae1d4e700dca8f2p-12L,
-    -0x7.daac36664f1f207daac36664f1f4p-12L,
-    0x1.a41a41a41a41a41a41a41a41a41ap-8L,
-    -0x7.90a1b2c3d4e5f708192a3b4c5d7p-8L,
-    0x2.dfd2c703c0cfff430edfd2c703cp-4L,
-    -0x1.6476701181f39edbdb9ce625987dp+0L,
-    0xd.672219167002d3a7a9c886459cp+0L,
-    -0x9.cd9292e6660d55b3f712eb9e07c8p+4L,
-    0x8.911a740da740da740da740da741p+8L,
-    -0x8.d0cc570e255bf59ff6eec24b49p+12L,
+    L(0x1.5555555555555555555555555555p-4),
+    L(-0xb.60b60b60b60b60b60b60b60b60b8p-12),
+    L(0x3.4034034034034034034034034034p-12),
+    L(-0x2.7027027027027027027027027028p-12),
+    L(0x3.72a3c5631fe46ae1d4e700dca8f2p-12),
+    L(-0x7.daac36664f1f207daac36664f1f4p-12),
+    L(0x1.a41a41a41a41a41a41a41a41a41ap-8),
+    L(-0x7.90a1b2c3d4e5f708192a3b4c5d7p-8),
+    L(0x2.dfd2c703c0cfff430edfd2c703cp-4),
+    L(-0x1.6476701181f39edbdb9ce625987dp+0),
+    L(0xd.672219167002d3a7a9c886459cp+0),
+    L(-0x9.cd9292e6660d55b3f712eb9e07c8p+4),
+    L(0x8.911a740da740da740da740da741p+8),
+    L(-0x8.d0cc570e255bf59ff6eec24b49p+12),
   };
 
 #define NCOEFF (sizeof (gamma_coeff) / sizeof (gamma_coeff[0]))
@@ -49,42 +49,42 @@ static const long double gamma_coeff[] =
    2^(*EXP2_ADJ), where R is the return value and *EXP2_ADJ is set to
    avoid overflow or underflow in intermediate calculations.  */
 
-static long double
-gammal_positive (long double x, int *exp2_adj)
+static _Float128
+gammal_positive (_Float128 x, int *exp2_adj)
 {
   int local_signgam;
-  if (x < 0.5L)
+  if (x < L(0.5))
     {
       *exp2_adj = 0;
       return __ieee754_expl (__ieee754_lgammal_r (x + 1, &local_signgam)) / x;
     }
-  else if (x <= 1.5L)
+  else if (x <= L(1.5))
     {
       *exp2_adj = 0;
       return __ieee754_expl (__ieee754_lgammal_r (x, &local_signgam));
     }
-  else if (x < 12.5L)
+  else if (x < L(12.5))
     {
       /* Adjust into the range for using exp (lgamma).  */
       *exp2_adj = 0;
-      long double n = __ceill (x - 1.5L);
-      long double x_adj = x - n;
-      long double eps;
-      long double prod = __gamma_productl (x_adj, 0, n, &eps);
+      _Float128 n = __ceill (x - L(1.5));
+      _Float128 x_adj = x - n;
+      _Float128 eps;
+      _Float128 prod = __gamma_productl (x_adj, 0, n, &eps);
       return (__ieee754_expl (__ieee754_lgammal_r (x_adj, &local_signgam))
-	      * prod * (1.0L + eps));
+	      * prod * (1 + eps));
     }
   else
     {
-      long double eps = 0;
-      long double x_eps = 0;
-      long double x_adj = x;
-      long double prod = 1;
-      if (x < 24.0L)
+      _Float128 eps = 0;
+      _Float128 x_eps = 0;
+      _Float128 x_adj = x;
+      _Float128 prod = 1;
+      if (x < 24)
 	{
 	  /* Adjust into the range for applying Stirling's
 	     approximation.  */
-	  long double n = __ceill (24.0L - x);
+	  _Float128 n = __ceill (24 - x);
 	  x_adj = x + n;
 	  x_eps = (x - (x_adj - n));
 	  prod = __gamma_productl (x_adj - n, x_eps, n, &eps);
@@ -93,25 +93,25 @@ gammal_positive (long double x, int *exp2_adj)
 	 Compute gamma (X_ADJ + X_EPS) using Stirling's approximation,
 	 starting by computing pow (X_ADJ, X_ADJ) with a power of 2
 	 factored out.  */
-      long double exp_adj = -eps;
-      long double x_adj_int = __roundl (x_adj);
-      long double x_adj_frac = x_adj - x_adj_int;
+      _Float128 exp_adj = -eps;
+      _Float128 x_adj_int = __roundl (x_adj);
+      _Float128 x_adj_frac = x_adj - x_adj_int;
       int x_adj_log2;
-      long double x_adj_mant = __frexpl (x_adj, &x_adj_log2);
+      _Float128 x_adj_mant = __frexpl (x_adj, &x_adj_log2);
       if (x_adj_mant < M_SQRT1_2l)
 	{
 	  x_adj_log2--;
-	  x_adj_mant *= 2.0L;
+	  x_adj_mant *= 2;
 	}
       *exp2_adj = x_adj_log2 * (int) x_adj_int;
-      long double ret = (__ieee754_powl (x_adj_mant, x_adj)
-			 * __ieee754_exp2l (x_adj_log2 * x_adj_frac)
-			 * __ieee754_expl (-x_adj)
-			 * __ieee754_sqrtl (2 * M_PIl / x_adj)
-			 / prod);
+      _Float128 ret = (__ieee754_powl (x_adj_mant, x_adj)
+		       * __ieee754_exp2l (x_adj_log2 * x_adj_frac)
+		       * __ieee754_expl (-x_adj)
+		       * __ieee754_sqrtl (2 * M_PIl / x_adj)
+		       / prod);
       exp_adj += x_eps * __ieee754_logl (x_adj);
-      long double bsum = gamma_coeff[NCOEFF - 1];
-      long double x_adj2 = x_adj * x_adj;
+      _Float128 bsum = gamma_coeff[NCOEFF - 1];
+      _Float128 x_adj2 = x_adj * x_adj;
       for (size_t i = 1; i <= NCOEFF - 1; i++)
 	bsum = bsum / x_adj2 + gamma_coeff[NCOEFF - 1 - i];
       exp_adj += bsum / x_adj;
@@ -119,12 +119,12 @@ gammal_positive (long double x, int *exp2_adj)
     }
 }
 
-long double
-__ieee754_gammal_r (long double x, int *signgamp)
+_Float128
+__ieee754_gammal_r (_Float128 x, int *signgamp)
 {
   int64_t hx;
   u_int64_t lx;
-  long double ret;
+  _Float128 ret;
 
   GET_LDOUBLE_WORDS64 (hx, lx, x);
 
@@ -154,7 +154,7 @@ __ieee754_gammal_r (long double x, int *signgamp)
       return x + x;
     }
 
-  if (x >= 1756.0L)
+  if (x >= 1756)
     {
       /* Overflow.  */
       *signgamp = 0;
@@ -163,33 +163,33 @@ __ieee754_gammal_r (long double x, int *signgamp)
   else
     {
       SET_RESTORE_ROUNDL (FE_TONEAREST);
-      if (x > 0.0L)
+      if (x > 0)
 	{
 	  *signgamp = 0;
 	  int exp2_adj;
 	  ret = gammal_positive (x, &exp2_adj);
 	  ret = __scalbnl (ret, exp2_adj);
 	}
-      else if (x >= -LDBL_EPSILON / 4.0L)
+      else if (x >= -LDBL_EPSILON / 4)
 	{
 	  *signgamp = 0;
-	  ret = 1.0L / x;
+	  ret = 1 / x;
 	}
       else
 	{
-	  long double tx = __truncl (x);
-	  *signgamp = (tx == 2.0L * __truncl (tx / 2.0L)) ? -1 : 1;
-	  if (x <= -1775.0L)
+	  _Float128 tx = __truncl (x);
+	  *signgamp = (tx == 2 * __truncl (tx / 2)) ? -1 : 1;
+	  if (x <= -1775)
 	    /* Underflow.  */
 	    ret = LDBL_MIN * LDBL_MIN;
 	  else
 	    {
-	      long double frac = tx - x;
-	      if (frac > 0.5L)
-		frac = 1.0L - frac;
-	      long double sinpix = (frac <= 0.25L
-				    ? __sinl (M_PIl * frac)
-				    : __cosl (M_PIl * (0.5L - frac)));
+	      _Float128 frac = tx - x;
+	      if (frac > L(0.5))
+		frac = 1 - frac;
+	      _Float128 sinpix = (frac <= L(0.25)
+				  ? __sinl (M_PIl * frac)
+				  : __cosl (M_PIl * (L(0.5) - frac)));
 	      int exp2_adj;
 	      ret = M_PIl / (-x * sinpix
 			     * gammal_positive (-x, &exp2_adj));

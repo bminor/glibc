@@ -46,6 +46,7 @@ routines	:=							      \
 	drand48_r erand48_r lrand48_r nrand48_r mrand48_r jrand48_r	      \
 	srand48_r seed48_r lcong48_r					      \
 	drand48-iter							      \
+	strfromf strfromd strfroml					      \
 	strtol strtoul strtoll strtoull					      \
 	strtol_l strtoul_l strtoll_l strtoull_l				      \
 	strtof strtod strtold						      \
@@ -77,7 +78,8 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
 		   tst-tininess tst-strtod-underflow tst-tls-atexit	    \
 		   tst-setcontext3 tst-tls-atexit-nodelete		    \
 		   tst-strtol-locale tst-strtod-nan-locale tst-strfmon_l    \
-		   tst-quick_exit tst-thread-quick_exit
+		   tst-quick_exit tst-thread-quick_exit tst-width	    \
+		   tst-width-stdint tst-strfrom tst-strfrom-locale
 tests-static	:= tst-secure-getenv
 ifeq ($(have-cxx-thread_local),yes)
 CFLAGS-tst-quick_exit.o = -std=c++11
@@ -121,6 +123,12 @@ CFLAGS-fmtmsg.c = -fexceptions
 CFLAGS-strfmon.c = $(libio-mtsafe)
 CFLAGS-strfmon_l.c = $(libio-mtsafe)
 
+# The strfrom class of functions call __printf_fp in order to convert the
+# floating-point value to characters.  This requires the value of IO_MTSAFE_IO.
+CFLAGS-strfromd.c = $(libio-mtsafe)
+CFLAGS-strfromf.c = $(libio-mtsafe)
+CFLAGS-strfroml.c = $(libio-mtsafe)
+
 CFLAGS-tst-bsearch.c = $(stack-align-test-flags)
 CFLAGS-tst-qsort.c = $(stack-align-test-flags)
 CFLAGS-tst-makecontext.c += -funwind-tables
@@ -150,6 +158,8 @@ $(objpfx)tst-strtod5.out: $(gen-locales)
 $(objpfx)tst-strtol-locale.out: $(gen-locales)
 $(objpfx)tst-strtod-nan-locale.out: $(gen-locales)
 $(objpfx)tst-strfmon_l.out: $(gen-locales)
+$(objpfx)tst-strfrom.out: $(gen-locales)
+$(objpfx)tst-strfrom-locale.out: $(gen-locales)
 endif
 
 # Testdir has to be named stdlib and needs to be writable

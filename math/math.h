@@ -45,6 +45,15 @@ __BEGIN_DECLS
 # include <bits/nan.h>
 #endif /* __USE_ISOC99 */
 
+#if __GLIBC_USE (IEC_60559_BFP_EXT)
+/* Signaling NaN macros, if supported.  */
+# if __GNUC_PREREQ (3, 3)
+#  define SNANF (__builtin_nansf (""))
+#  define SNAN (__builtin_nans (""))
+#  define SNANL (__builtin_nansl (""))
+# endif
+#endif
+
 /* Get the architecture specific values describing the floating-point
    evaluation.  The following symbols will get defined:
 
@@ -317,6 +326,8 @@ enum
 #endif /* Use ISO C99.  */
 
 #if __GLIBC_USE (IEC_60559_BFP_EXT)
+# include <bits/iscanonical.h>
+
 /* Return nonzero value if X is a signaling NaN.  */
 # ifdef __NO_LONG_DOUBLE_MATH
 #  define issignaling(x) \
@@ -328,6 +339,30 @@ enum
       : sizeof (x) == sizeof (double)					      \
       ? __issignaling (x) : __issignalingl (x))
 # endif
+
+/* Return nonzero value if X is subnormal.  */
+# define issubnormal(x) (fpclassify (x) == FP_SUBNORMAL)
+
+/* Return nonzero value if X is zero.  */
+# ifndef __cplusplus
+#  ifdef __SUPPORT_SNAN__
+#   define iszero(x) (fpclassify (x) == FP_ZERO)
+#  else
+#   define iszero(x) (((__typeof (x)) (x)) == 0)
+#  endif
+# else	/* __cplusplus */
+extern "C++" {
+template <class __T> inline bool
+iszero (__T __val)
+{
+#  ifdef __SUPPORT_SNAN__
+  return fpclassify (__val) == FP_ZERO;
+#  else
+  return __val == 0;
+#  endif
+}
+} /* extern C++ */
+# endif	/* __cplusplus */
 #endif /* Use IEC_60559_BFP_EXT.  */
 
 #ifdef	__USE_MISC
@@ -517,6 +552,39 @@ extern int matherr (struct exception *__exc);
       fpclassify (__u) == FP_NAN || fpclassify (__v) == FP_NAN; }))
 # endif
 
+#endif
+
+#if __GLIBC_USE (IEC_60559_BFP_EXT)
+/* Return X == Y but raising "invalid" and setting errno if X or Y is
+   a NaN.  */
+# ifdef __NO_LONG_DOUBLE_MATH
+#  if (__FLT_EVAL_METHOD__ == 1			\
+       || __FLT_EVAL_METHOD__ == 2		\
+       || __FLT_EVAL_METHOD__ > 32)
+#   define iseqsig(x, y) __iseqsig ((x), (y))
+#  else
+#   define iseqsig(x, y)			\
+  (sizeof ((x) + (y)) == sizeof (float)		\
+   ? __iseqsigf ((x), (y))			\
+   : __iseqsig ((x), (y)))
+#  endif
+# else
+#  if __FLT_EVAL_METHOD__ == 2 || __FLT_EVAL_METHOD__ > 64
+#   define iseqsig(x, y) __iseqsigl ((x), (y))
+#  elif __FLT_EVAL_METHOD__ == 1 || __FLT_EVAL_METHOD__ > 32
+#   define iseqsig(x, y)			\
+  (sizeof ((x) + (y)) <= sizeof (double)	\
+   ? __iseqsig ((x), (y))			\
+   : __iseqsigl ((x), (y)))
+#  else
+#   define iseqsig(x, y)			\
+  (sizeof ((x) + (y)) == sizeof (float)		\
+   ? __iseqsigf ((x), (y))			\
+   : sizeof ((x) + (y)) == sizeof (double)	\
+   ? __iseqsig ((x), (y))			\
+   : __iseqsigl ((x), (y)))
+#  endif
+# endif
 #endif
 
 __END_DECLS

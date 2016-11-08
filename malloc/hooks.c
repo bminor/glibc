@@ -192,7 +192,7 @@ mem2chunk_check (void *mem, unsigned char **magic_p)
            ((char *) p < mp_.sbrk_base ||
             ((char *) p + sz) >= (mp_.sbrk_base + main_arena.system_mem))) ||
           sz < MINSIZE || sz & MALLOC_ALIGN_MASK || !inuse (p) ||
-          (!prev_inuse (p) && (p->prev_size & MALLOC_ALIGN_MASK ||
+          (!prev_inuse (p) && ((prev_size (p) & MALLOC_ALIGN_MASK) != 0 ||
                                (contig && (char *) prev_chunk (p) < mp_.sbrk_base) ||
                                next_chunk (prev_chunk (p)) != p)))
         return NULL;
@@ -215,9 +215,9 @@ mem2chunk_check (void *mem, unsigned char **magic_p)
            offset != 0x20 && offset != 0x40 && offset != 0x80 && offset != 0x100 &&
            offset != 0x200 && offset != 0x400 && offset != 0x800 && offset != 0x1000 &&
            offset < 0x2000) ||
-          !chunk_is_mmapped (p) || (p->size & PREV_INUSE) ||
-          ((((unsigned long) p - p->prev_size) & page_mask) != 0) ||
-          ((p->prev_size + sz) & page_mask) != 0)
+          !chunk_is_mmapped (p) || prev_inuse (p) ||
+          ((((unsigned long) p - prev_size (p)) & page_mask) != 0) ||
+          ((prev_size (p) + sz) & page_mask) != 0)
         return NULL;
 
       for (sz -= 1; (c = ((unsigned char *) p)[sz]) != magic; sz -= c)
@@ -291,9 +291,9 @@ malloc_check (size_t sz, const void *caller)
       return NULL;
     }
 
-  (void) mutex_lock (&main_arena.mutex);
+  __libc_lock_lock (main_arena.mutex);
   victim = (top_check () >= 0) ? _int_malloc (&main_arena, sz + 1) : NULL;
-  (void) mutex_unlock (&main_arena.mutex);
+  __libc_lock_unlock (main_arena.mutex);
   return mem2mem_check (victim, sz);
 }
 
@@ -305,11 +305,11 @@ free_check (void *mem, const void *caller)
   if (!mem)
     return;
 
-  (void) mutex_lock (&main_arena.mutex);
+  __libc_lock_lock (main_arena.mutex);
   p = mem2chunk_check (mem, NULL);
   if (!p)
     {
-      (void) mutex_unlock (&main_arena.mutex);
+      __libc_lock_unlock (main_arena.mutex);
 
       malloc_printerr (check_action, "free(): invalid pointer", mem,
 		       &main_arena);
@@ -317,12 +317,12 @@ free_check (void *mem, const void *caller)
     }
   if (chunk_is_mmapped (p))
     {
-      (void) mutex_unlock (&main_arena.mutex);
+      __libc_lock_unlock (main_arena.mutex);
       munmap_chunk (p);
       return;
     }
   _int_free (&main_arena, p, 1);
-  (void) mutex_unlock (&main_arena.mutex);
+  __libc_lock_unlock (main_arena.mutex);
 }
 
 static void *
@@ -345,9 +345,9 @@ realloc_check (void *oldmem, size_t bytes, const void *caller)
       free_check (oldmem, NULL);
       return NULL;
     }
-  (void) mutex_lock (&main_arena.mutex);
+  __libc_lock_lock (main_arena.mutex);
   const mchunkptr oldp = mem2chunk_check (oldmem, &magic_p);
-  (void) mutex_unlock (&main_arena.mutex);
+  __libc_lock_unlock (main_arena.mutex);
   if (!oldp)
     {
       malloc_printerr (check_action, "realloc(): invalid pointer", oldmem,
@@ -357,7 +357,7 @@ realloc_check (void *oldmem, size_t bytes, const void *caller)
   const INTERNAL_SIZE_T oldsize = chunksize (oldp);
 
   checked_request2size (bytes + 1, nb);
-  (void) mutex_lock (&main_arena.mutex);
+  __libc_lock_lock (main_arena.mutex);
 
   if (chunk_is_mmapped (oldp))
     {
@@ -400,7 +400,7 @@ realloc_check (void *oldmem, size_t bytes, const void *caller)
   if (newmem == NULL)
     *magic_p ^= 0xFF;
 
-  (void) mutex_unlock (&main_arena.mutex);
+  __libc_lock_unlock (main_arena.mutex);
 
   return mem2mem_check (newmem, bytes);
 }
@@ -440,13 +440,14 @@ memalign_check (size_t alignment, size_t bytes, const void *caller)
       alignment = a;
     }
 
-  (void) mutex_lock (&main_arena.mutex);
+  __libc_lock_lock (main_arena.mutex);
   mem = (top_check () >= 0) ? _int_memalign (&main_arena, alignment, bytes + 1) :
         NULL;
-  (void) mutex_unlock (&main_arena.mutex);
+  __libc_lock_unlock (main_arena.mutex);
   return mem2mem_check (mem, bytes);
 }
 
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_25)
 
 /* Get/set state: malloc_get_state() records the current state of all
    malloc variables (_except_ for the actual heap contents and `hook'
@@ -492,60 +493,21 @@ struct malloc_save_state
   unsigned long narenas;
 };
 
+/* Dummy implementation which always fails.  We need to provide this
+   symbol so that existing Emacs binaries continue to work with
+   BIND_NOW.  */
 void *
-__malloc_get_state (void)
+attribute_compat_text_section
+malloc_get_state (void)
 {
-  struct malloc_save_state *ms;
-  int i;
-  mbinptr b;
-
-  ms = (struct malloc_save_state *) __libc_malloc (sizeof (*ms));
-  if (!ms)
-    return 0;
-
-  (void) mutex_lock (&main_arena.mutex);
-  malloc_consolidate (&main_arena);
-  ms->magic = MALLOC_STATE_MAGIC;
-  ms->version = MALLOC_STATE_VERSION;
-  ms->av[0] = 0;
-  ms->av[1] = 0; /* used to be binblocks, now no longer used */
-  ms->av[2] = top (&main_arena);
-  ms->av[3] = 0; /* used to be undefined */
-  for (i = 1; i < NBINS; i++)
-    {
-      b = bin_at (&main_arena, i);
-      if (first (b) == b)
-        ms->av[2 * i + 2] = ms->av[2 * i + 3] = 0; /* empty bin */
-      else
-        {
-          ms->av[2 * i + 2] = first (b);
-          ms->av[2 * i + 3] = last (b);
-        }
-    }
-  ms->sbrk_base = mp_.sbrk_base;
-  ms->sbrked_mem_bytes = main_arena.system_mem;
-  ms->trim_threshold = mp_.trim_threshold;
-  ms->top_pad = mp_.top_pad;
-  ms->n_mmaps_max = mp_.n_mmaps_max;
-  ms->mmap_threshold = mp_.mmap_threshold;
-  ms->check_action = check_action;
-  ms->max_sbrked_mem = main_arena.max_system_mem;
-  ms->max_total_mem = 0;
-  ms->n_mmaps = mp_.n_mmaps;
-  ms->max_n_mmaps = mp_.max_n_mmaps;
-  ms->mmapped_mem = mp_.mmapped_mem;
-  ms->max_mmapped_mem = mp_.max_mmapped_mem;
-  ms->using_malloc_checking = using_malloc_checking;
-  ms->max_fast = get_max_fast ();
-  ms->arena_test = mp_.arena_test;
-  ms->arena_max = mp_.arena_max;
-  ms->narenas = narenas;
-  (void) mutex_unlock (&main_arena.mutex);
-  return (void *) ms;
+  __set_errno (ENOSYS);
+  return NULL;
 }
+compat_symbol (libc, malloc_get_state, malloc_get_state, GLIBC_2_0);
 
 int
-__malloc_set_state (void *msptr)
+attribute_compat_text_section
+malloc_set_state (void *msptr)
 {
   struct malloc_save_state *ms = (struct malloc_save_state *) msptr;
 
@@ -612,6 +574,9 @@ __malloc_set_state (void *msptr)
 
   return 0;
 }
+compat_symbol (libc, malloc_set_state, malloc_set_state, GLIBC_2_0);
+
+#endif	/* SHLIB_COMPAT */
 
 /*
  * Local variables:

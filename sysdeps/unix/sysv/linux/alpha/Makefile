@@ -10,7 +10,7 @@ ifeq ($(subdir),misc)
 sysdep_headers += alpha/ptrace.h alpha/regdef.h sys/io.h
 
 sysdep_routines += ieee_get_fp_control ieee_set_fp_control \
-		   ioperm llseek
+		   ioperm
 
 # Support old timeval32 entry points
 sysdep_routines += osf_select osf_gettimeofday osf_settimeofday \
@@ -39,5 +39,6 @@ endif   # math
 
 ifeq ($(subdir),nptl)
 # pull in __syscall_error routine, __sigprocmask, __syscall_rt_sigaction
-libpthread-routines += ptw-sysdep ptw-sigprocmask ptw-rt_sigaction
+libpthread-routines += sysdep sigprocmask rt_sigaction
+libpthread-shared-only-routines += sysdep sigprocmask rt_sigaction
 endif

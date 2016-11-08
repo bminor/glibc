@@ -70,6 +70,9 @@
 /* Define if assembler supports AVX512DQ.  */
 #undef  HAVE_AVX512DQ_ASM_SUPPORT
 
+/* Define if assembler supports z196 zarch instructions as default on S390.  */
+#undef  HAVE_S390_MIN_Z196_ZARCH_ASM_SUPPORT
+
 /* Define if assembler supports vector instructions on S390.  */
 #undef  HAVE_S390_VX_ASM_SUPPORT
 
@@ -170,6 +173,9 @@
 
 /* Define to 1 if STT_GNU_IFUNC support actually works.  */
 #define HAVE_IFUNC 0
+
+/* Define if gcc supports attribute ifunc.  */
+#undef HAVE_GCC_IFUNC
 
 /* Define if the linker defines __ehdr_start.  */
 #undef HAVE_EHDR_START

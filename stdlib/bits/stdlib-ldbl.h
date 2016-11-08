@@ -30,6 +30,10 @@ __END_NAMESPACE_C99
 __LDBL_REDIR1_DECL (strtold_l, strtod_l)
 #endif
 
+#if __GLIBC_USE (IEC_60559_BFP_EXT)
+__LDBL_REDIR1_DECL (strfroml, strfromd)
+#endif
+
 #ifdef __USE_MISC
 __LDBL_REDIR1_DECL (qecvt, ecvt)
 __LDBL_REDIR1_DECL (qfcvt, fcvt)

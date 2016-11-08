@@ -28,48 +28,12 @@
 #define __need_error_t
 #include <errno.h>
 
-#ifndef __THROW
-# define __THROW
-#endif
-#ifndef __NTH
-# define __NTH(fct) fct __THROW
-#endif
-
-#ifndef __attribute__
-/* This feature is available in gcc versions 2.5 and later.  */
-# if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 5) || \
-  defined __STRICT_ANSI__
-#  define __attribute__(Spec) /* empty */
-# endif
-/* The __-protected variants of `format' and `printf' attributes
-   are accepted by gcc versions 2.6.4 (effectively 2.7) and later.  */
-# if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 7) || \
-  defined __STRICT_ANSI__
-#  define __format__ format
-#  define __printf__ printf
-# endif
-#endif
-
-/* GCC 2.95 and later have "__restrict"; C99 compilers have
-   "restrict", and "configure" may have defined "restrict".  */
-#ifndef __restrict
-# if ! (2 < __GNUC__ || (2 == __GNUC__ && 95 <= __GNUC_MINOR__))
-#  if defined restrict || 199901L <= __STDC_VERSION__
-#   define __restrict restrict
-#  else
-#   define __restrict
-#  endif
-# endif
-#endif
-
 #ifndef __error_t_defined
 typedef int error_t;
 # define __error_t_defined
 #endif
 
-#ifdef  __cplusplus
-extern "C" {
-#endif
+__BEGIN_DECLS
 
 /* A description of a particular option.  A pointer to an array of
    these is passed in the OPTIONS field of an argp structure.  Each option
@@ -547,7 +511,7 @@ extern void *__argp_input (const struct argp *__restrict __argp,
 
 #ifdef __USE_EXTERN_INLINES
 
-# if !_LIBC
+# if !(defined _LIBC && _LIBC)
 #  define __argp_usage argp_usage
 #  define __argp_state_help argp_state_help
 #  define __option_is_short _option_is_short
@@ -582,7 +546,7 @@ __NTH (__option_is_end (const struct argp_option *__opt))
   return !__opt->key && !__opt->name && !__opt->doc && !__opt->group;
 }
 
-# if !_LIBC
+# if !(defined _LIBC && _LIBC)
 #  undef __argp_usage
 #  undef __argp_state_help
 #  undef __option_is_short
@@ -590,8 +554,6 @@ __NTH (__option_is_end (const struct argp_option *__opt))
 # endif
 #endif /* Use extern inlines.  */
 
-#ifdef  __cplusplus
-}
-#endif
+__END_DECLS
 
 #endif /* argp.h */

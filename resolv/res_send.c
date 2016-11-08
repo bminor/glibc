@@ -364,22 +364,6 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 		return (-1);
 	}
 
-#ifdef USE_HOOKS
-	if (__glibc_unlikely (statp->qhook || statp->rhook))       {
-		if (anssiz < MAXPACKET && ansp) {
-			/* Always allocate MAXPACKET, callers expect
-			   this specific size.  */
-			u_char *buf = malloc (MAXPACKET);
-			if (buf == NULL)
-				return (-1);
-			memcpy (buf, ans, HFIXEDSZ);
-			*ansp = buf;
-			ans = buf;
-			anssiz = MAXPACKET;
-		}
-	}
-#endif
-
 	DprintQ((statp->options & RES_DEBUG) || (statp->pfcode & RES_PRF_QUERY),
 		(stdout, ";; res_send()\n"), buf, buflen);
 	v_circuit = ((statp->options & RES_USEVC)
@@ -468,47 +452,10 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 	    {
 #ifdef DEBUG
 		char tmpbuf[40];
-#endif
-#if defined USE_HOOKS || defined DEBUG
 		struct sockaddr *nsap = get_nsaddr (statp, ns);
 #endif
 
 	    same_ns:
-#ifdef USE_HOOKS
-		if (__glibc_unlikely (statp->qhook != NULL))       {
-			int done = 0, loops = 0;
-
-			do {
-				res_sendhookact act;
-
-				struct sockaddr_in *nsap4;
-				nsap4 = (struct sockaddr_in *) nsap;
-				act = (*statp->qhook)(&nsap4, &buf, &buflen,
-						      ans, anssiz, &resplen);
-				nsap = (struct sockaddr_in6 *) nsap4;
-				switch (act) {
-				case res_goahead:
-					done = 1;
-					break;
-				case res_nextns:
-					__res_iclose(statp, false);
-					goto next_ns;
-				case res_done:
-					return (resplen);
-				case res_modified:
-					/* give the hook another try */
-					if (++loops < 42) /*doug adams*/
-						break;
-					/*FALLTHROUGH*/
-				case res_error:
-					/*FALLTHROUGH*/
-				default:
-					return (-1);
-				}
-			} while (!done);
-		}
-#endif
-
 		Dprint(statp->options & RES_DEBUG,
 		       (stdout, ";; Querying server (# %d) address = %s\n",
 			ns + 1, inet_ntop(nsap->sa_family,
@@ -571,38 +518,6 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 		    (statp->options & RES_STAYOPEN) == 0) {
 			__res_iclose(statp, false);
 		}
-#ifdef USE_HOOKS
-		if (__glibc_unlikely (statp->rhook))       {
-			int done = 0, loops = 0;
-
-			do {
-				res_sendhookact act;
-
-				act = (*statp->rhook)((struct sockaddr_in *)
-						      nsap, buf, buflen,
-						      ans, anssiz, &resplen);
-				switch (act) {
-				case res_goahead:
-				case res_done:
-					done = 1;
-					break;
-				case res_nextns:
-					__res_iclose(statp, false);
-					goto next_ns;
-				case res_modified:
-					/* give the hook another try */
-					if (++loops < 42) /*doug adams*/
-						break;
-					/*FALLTHROUGH*/
-				case res_error:
-					/*FALLTHROUGH*/
-				default:
-					return (-1);
-				}
-			} while (!done);
-
-		}
-#endif
 		return (resplen);
  next_ns: ;
 	   } /*foreach ns*/
@@ -1015,7 +930,16 @@ reopen (res_state statp, int *terrno, int ns)
 		 * error message is received.  We can thus detect
 		 * the absence of a nameserver without timing out.
 		 */
+		/* With GCC 5.3 when compiling with -Os the compiler
+		   emits a warning that slen may be used uninitialized,
+		   but that is never true.  Both slen and
+		   EXT(statp).nssocks[ns] are initialized together or
+		   the function return -1 before control flow reaches
+		   the call to connect with slen.  */
+		DIAG_PUSH_NEEDS_COMMENT;
+		DIAG_IGNORE_Os_NEEDS_COMMENT (5, "-Wmaybe-uninitialized");
 		if (connect(EXT(statp).nssocks[ns], nsap, slen) < 0) {
+		DIAG_POP_NEEDS_COMMENT;
 			Aerror(statp, stderr, "connect(dg)", errno, nsap);
 			__res_iclose(statp, false);
 			return (0);

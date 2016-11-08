@@ -80,6 +80,29 @@ $(common-objpfx)dummy.c:
 	(echo 'extern void __dummy__ (void);'; \
 	 echo 'void __dummy__ (void) { }') > $@
 common-generated += dummy.o dummy.c
+
+ifneq "$(headers)" ""
+# Special test of all the installed headers in this directory.
+tests-special += $(objpfx)check-installed-headers-c.out
+libof-check-installed-headers-c := nonlib
+$(objpfx)check-installed-headers-c.out: \
+    $(..)scripts/check-installed-headers.sh $(headers)
+	$(SHELL) $(..)scripts/check-installed-headers.sh c \
+	  "$(CC) $(filter-out -std=%,$(CFLAGS)) -D_ISOMAC $(+includes)" \
+	  $(headers) > $@; \
+	$(evaluate-test)
+
+ifneq "$(CXX)" ""
+tests-special += $(objpfx)check-installed-headers-cxx.out
+libof-check-installed-headers-cxx := nonlib
+$(objpfx)check-installed-headers-cxx.out: \
+    $(..)scripts/check-installed-headers.sh $(headers)
+	$(SHELL) $(..)scripts/check-installed-headers.sh c++ \
+	  "$(CXX) $(filter-out -std=%,$(CXXFLAGS)) -D_ISOMAC $(+includes)" \
+	  $(headers) > $@; \
+	$(evaluate-test)
+endif
+endif
 
 # This makes all the auxiliary and test programs.
 
@@ -91,7 +114,8 @@ else
 others: $(addprefix $(objpfx),$(extra-objs))
 endif
 ifeq ($(run-built-tests),no)
-tests: $(addprefix $(objpfx),$(tests) $(test-srcs)) $(tests-special)
+tests: $(addprefix $(objpfx),$(filter-out $(tests-unsupported),$(tests)) \
+			     $(test-srcs)) $(tests-special)
 xtests: tests $(xtests-special)
 else
 tests: $(tests:%=$(objpfx)%.out) $(tests-special)
@@ -100,9 +124,14 @@ endif
 
 tests-special-notdir = $(patsubst $(objpfx)%, %, $(tests-special))
 xtests-special-notdir = $(patsubst $(objpfx)%, %, $(xtests-special))
+ifeq ($(run-built-tests),no)
+tests-expected =
+else
+tests-expected = $(tests)
+endif
 tests:
 	$(..)scripts/merge-test-results.sh -s $(objpfx) $(subdir) \
-	  $(sort $(tests) $(tests-special-notdir:.out=)) \
+	  $(sort $(tests-expected) $(tests-special-notdir:.out=)) \
 	  > $(objpfx)subdir-tests.sum
 xtests:
 	$(..)scripts/merge-test-results.sh -s $(objpfx) $(subdir) \

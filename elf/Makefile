@@ -23,7 +23,7 @@ include ../Makeconfig
 
 headers		= elf.h bits/elfclass.h link.h bits/link.h
 routines	= $(all-dl-routines) dl-support dl-iteratephdr \
-		  dl-addr enbl-secure dl-profstub \
+		  dl-addr dl-addr-obj enbl-secure dl-profstub \
 		  dl-origin dl-libc dl-sym dl-tsd dl-sysdep
 
 # The core dynamic linking functions are in libc for the static and
@@ -122,7 +122,8 @@ tests = tst-tls1 tst-tls2 tst-tls9 tst-leaks1 \
 tests-static = tst-tls1-static tst-tls2-static tst-stackguard1-static \
 	       tst-leaks1-static tst-array1-static tst-array5-static \
 	       tst-ptrguard1-static tst-dl-iter-static \
-	       tst-tlsalign-static tst-tlsalign-extern-static
+	       tst-tlsalign-static tst-tlsalign-extern-static \
+	       tst-linkall-static
 ifeq (yes,$(build-shared))
 tests-static += tst-tls9-static
 tst-tls9-static-ENV = \
@@ -149,7 +150,7 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-nodelete) \
 	 tst-initorder tst-initorder2 tst-relsort1 tst-null-argv \
 	 tst-ptrguard1 tst-tlsalign tst-tlsalign-extern tst-nodelete-opened \
-	 tst-nodelete2 tst-audit11 tst-audit12 tst-dlsym-error
+	 tst-nodelete2 tst-audit11 tst-audit12 tst-dlsym-error tst-noload
 #	 reldep9
 ifeq ($(build-hardcoded-path-in-tests),yes)
 tests += tst-dlopen-aout
@@ -317,6 +318,16 @@ tests += tst-prelink
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-prelink-cmp.out
 endif
+endif
+
+# The test requires shared _and_ PIE because the executable
+# unit test driver must be able to link with the shared object
+# that is going to eventually go into an installed DSO.
+ifeq (yesyes,$(have-fpie)$(build-shared))
+tests += tst-_dl_addr_inside_object
+tests-pie += tst-_dl_addr_inside_object
+$(objpfx)tst-_dl_addr_inside_object: $(objpfx)dl-addr-obj.os
+CFLAGS-tst-_dl_addr_inside_object.c += $(PIE-ccflag)
 endif
 
 include ../Rules
@@ -554,6 +565,7 @@ $(objpfx)tst-null-argv: $(objpfx)tst-null-argv-lib.so
 $(objpfx)tst-tlsalign: $(objpfx)tst-tlsalign-lib.so
 $(objpfx)tst-nodelete-opened.out: $(objpfx)tst-nodelete-opened-lib.so
 $(objpfx)tst-nodelete-opened: $(libdl)
+$(objpfx)tst-noload: $(libdl)
 
 $(objpfx)tst-tlsalign-extern: $(objpfx)tst-tlsalign-vars.o
 $(objpfx)tst-tlsalign-extern-static: $(objpfx)tst-tlsalign-vars.o
@@ -1267,3 +1279,13 @@ $(objpfx)tst-ldconfig-X.out : tst-ldconfig-X.sh $(objpfx)ldconfig
 	$(evaluate-test)
 
 $(objpfx)tst-dlsym-error: $(libdl)
+
+$(objpfx)tst-linkall-static: \
+  $(common-objpfx)math/libm.a \
+  $(common-objpfx)crypt/libcrypt.a \
+  $(common-objpfx)resolv/libresolv.a \
+  $(common-objpfx)dlfcn/libdl.a \
+  $(common-objpfx)login/libutil.a \
+  $(common-objpfx)rt/librt.a \
+  $(common-objpfx)resolv/libanl.a \
+  $(static-thread-library) \

@@ -634,12 +634,41 @@ if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS \
 fi
 rm -f conftest*])
 
+# Check if gcc supports attribute ifunc as it is used in libc_ifunc macro.
+AC_CACHE_CHECK([for gcc attribute ifunc support],
+	       libc_cv_gcc_indirect_function, [dnl
+cat > conftest.c <<EOF
+extern int func (int);
+int used_func (int a)
+{
+  return a;
+}
+static void *resolver ()
+{
+  return &used_func;
+}
+extern __typeof (func) func __attribute__ ((ifunc ("resolver")));
+EOF
+libc_cv_gcc_indirect_function=no
+if ${CC-cc} -c conftest.c -o conftest.o 1>&AS_MESSAGE_LOG_FD \
+   2>&AS_MESSAGE_LOG_FD ; then
+  if $READELF -s conftest.o | grep IFUNC >/dev/null 2>&AS_MESSAGE_LOG_FD; then
+    libc_cv_gcc_indirect_function=yes
+  fi
+fi
+rm -f conftest*])
+
 if test x"$libc_cv_ld_gnu_indirect_function" != xyes; then
   if test x"$multi_arch" = xyes; then
     AC_MSG_ERROR([--enable-multi-arch support requires assembler and linker support])
   else
     multi_arch=no
   fi
+fi
+if test x"$libc_cv_gcc_indirect_function" != xyes &&
+   test x"$multi_arch" = xyes; then
+  AC_MSG_WARN([--enable-multi-arch support recommends a gcc with gnu-indirect-function support.
+Please use a gcc which supports it by default or configure gcc with --enable-gnu-indirect-function])
 fi
 multi_arch_d=
 if test x"$multi_arch" != xno; then
@@ -1038,6 +1067,18 @@ if test -n "$sysheaders"; then
 fi
 AC_SUBST(SYSINCLUDES)
 AC_SUBST(CXX_SYSINCLUDES)
+
+# Obtain some C++ header file paths.  This is used to make a local
+# copy of those headers in Makerules.
+if test -n "$CXX"; then
+  find_cxx_header () {
+    echo "#include <$1>" | $CXX -M -MP -x c++ - | sed -n "/$1:/{s/:\$//;p}"
+  }
+  CXX_CSTDLIB_HEADER="$(find_cxx_header cstdlib)"
+  CXX_CMATH_HEADER="$(find_cxx_header cmath)"
+fi
+AC_SUBST(CXX_CSTDLIB_HEADER)
+AC_SUBST(CXX_CMATH_HEADER)
 
 # Test if LD_LIBRARY_PATH contains the notation for the current directory
 # since this would lead to problems installing/building glibc.
@@ -1768,6 +1809,10 @@ AC_SUBST(libc_cv_gcc_unwind_find_fde)
 # usable even though the assembler knows how to generate the symbol type.
 if test x"$libc_cv_ld_gnu_indirect_function" = xyes; then
   AC_DEFINE(HAVE_IFUNC)
+fi
+
+if test x"$libc_cv_gcc_indirect_function" = xyes; then
+  AC_DEFINE(HAVE_GCC_IFUNC)
 fi
 
 # This is far from the AC_ARG_ENABLE that sets it so that a sysdeps

@@ -33,6 +33,18 @@ routines = alloca_cutoff forward libc-lowlevellock libc-cancellation \
 	   register-atfork unregister-atfork
 shared-only-routines = forward
 
+# We need to provide certain routines for compatibility with existing
+# binaries.
+pthread-compat-wrappers = \
+		      write read close fcntl accept \
+		      connect recv recvfrom send \
+		      sendto fsync lseek lseek64 \
+		      msync nanosleep open open64 pause \
+		      pread pread64 pwrite pwrite64 \
+		      tcdrain wait waitpid msgrcv msgsnd \
+		      sigwait sigsuspend \
+		      recvmsg sendmsg
+
 libpthread-routines = nptl-init vars events version pt-interp \
 		      pthread_create pthread_exit pthread_detach \
 		      pthread_join pthread_tryjoin pthread_timedjoin \
@@ -108,14 +120,7 @@ libpthread-routines = nptl-init vars events version pt-interp \
 		      lowlevellock lowlevelrobustlock \
 		      lll_timedlock_wait lll_timedwait_tid \
 		      pt-fork pt-vfork \
-		      ptw-write ptw-read ptw-close ptw-fcntl ptw-accept \
-		      ptw-connect ptw-recv ptw-recvfrom ptw-send \
-		      ptw-sendto ptw-fsync ptw-lseek ptw-llseek \
-		      ptw-msync ptw-nanosleep ptw-open ptw-open64 ptw-pause \
-		      ptw-pread ptw-pread64 ptw-pwrite ptw-pwrite64 \
-		      ptw-tcdrain ptw-wait ptw-waitpid ptw-msgrcv ptw-msgsnd \
-		      ptw-sigwait ptw-sigsuspend \
-		      ptw-recvmsg ptw-sendmsg \
+		      $(pthread-compat-wrappers) \
 		      pt-raise pt-system \
 		      flockfile ftrylockfile funlockfile \
 		      sigaction \
@@ -241,7 +246,7 @@ tests = tst-typesizes \
 	tst-key1 tst-key2 tst-key3 tst-key4 \
 	tst-sem1 tst-sem2 tst-sem3 tst-sem4 tst-sem5 tst-sem6 tst-sem7 \
 	tst-sem8 tst-sem9 tst-sem10 tst-sem11 tst-sem12 tst-sem13 tst-sem14 \
-	tst-sem15 \
+	tst-sem15 tst-sem16 \
 	tst-barrier1 tst-barrier2 tst-barrier3 tst-barrier4 tst-barrier5 \
 	tst-align tst-align3 \
 	tst-basic1 tst-basic2 tst-basic3 tst-basic4 tst-basic5 tst-basic6 \
@@ -268,7 +273,7 @@ tests = tst-typesizes \
 	tst-flock1 tst-flock2 \
 	tst-signal1 tst-signal2 tst-signal3 tst-signal4 tst-signal5 \
 	tst-signal6 tst-signal7 \
-	tst-exec1 tst-exec2 tst-exec3 tst-exec4 \
+	tst-exec1 tst-exec2 tst-exec3 tst-exec4 tst-exec5 \
 	tst-exit1 tst-exit2 tst-exit3 \
 	tst-stdio1 tst-stdio2 \
 	tst-stack1 tst-stack2 tst-stack3 tst-stack4 tst-pthread-getattr \

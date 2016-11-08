@@ -20,6 +20,7 @@ These functions are declared in the header files @file{math.h} and
 * Complex Numbers::             The types.  Writing complex constants.
 * Operations on Complex::       Projection, conjugation, decomposition.
 * Parsing of Numbers::          Converting strings to numbers.
+* Printing of Floats::          Converting floating-point numbers to strings.
 * System V Number Conversion::  An archaic way to convert numbers to strings.
 @end menu
 
@@ -110,7 +111,9 @@ minimum possible values for each integer data type.  The macro names
 follow these examples: @code{INT32_MAX}, @code{UINT8_MAX},
 @code{INT_FAST32_MIN}, @code{INT_LEAST64_MIN}, @code{UINTMAX_MAX},
 @code{INTMAX_MAX}, @code{INTMAX_MIN}.  Note that there are no macros for
-unsigned integer minima.  These are always zero.
+unsigned integer minima.  These are always zero.  Similiarly, there
+are macros such as @code{INTMAX_WIDTH} for the width of these types.
+Those macros for integer type widths come from TS 18661-1:2014.
 @cindex maximum possible integer
 @cindex minimum possible integer
 
@@ -162,7 +165,7 @@ The remainder from the division.
 @deftypefun div_t div (int @var{numerator}, int @var{denominator})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Functions in this section are pure, and thus safe.
-This function @code{div} computes the quotient and remainder from
+The function @code{div} computes the quotient and remainder from
 the division of @var{numerator} by @var{denominator}, returning the
 result in a structure of type @code{div_t}.
 
@@ -359,6 +362,23 @@ You should therefore use the specific macros whenever possible.
 
 @comment math.h
 @comment ISO
+@deftypefn {Macro} int iscanonical (@emph{float-type} @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+In some floating-point formats, some values have canonical (preferred)
+and noncanonical encodings (for IEEE interchange binary formats, all
+encodings are canonical).  This macro returns a nonzero value if
+@var{x} has a canonical encoding.  It is from TS 18661-1:2014.
+
+Note that some formats have multiple encodings of a value which are
+all equally canonical; @code{iscanonical} returns a nonzero value for
+all such encodings.  Also, formats may have encodings that do not
+correspond to any valid value of the type.  In ISO C terms these are
+@dfn{trap representations}; in @theglibc{}, @code{iscanonical} returns
+zero for such encodings.
+@end deftypefn
+
+@comment math.h
+@comment ISO
 @deftypefn {Macro} int isfinite (@emph{float-type} @var{x})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This macro returns a nonzero value if @var{x} is finite: not plus or
@@ -402,6 +422,22 @@ to
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This macro returns a nonzero value if @var{x} is a signaling NaN
 (sNaN).  It is from TS 18661-1:2014.
+@end deftypefn
+
+@comment math.h
+@comment ISO
+@deftypefn {Macro} int issubnormal (@emph{float-type} @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+This macro returns a nonzero value if @var{x} is subnormal.  It is
+from TS 18661-1:2014.
+@end deftypefn
+
+@comment math.h
+@comment ISO
+@deftypefn {Macro} int iszero (@emph{float-type} @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+This macro returns a nonzero value if @var{x} is zero.  It is from TS
+18661-1:2014.
 @end deftypefn
 
 Another set of floating-point classification functions was provided by
@@ -532,7 +568,7 @@ Division: @math{0/0} or @math{@infinity{}/@infinity{}}.
 Remainder: @math{x} REM @math{y}, where @math{y} is zero or @math{x} is
 infinite.
 @item
-Square root if the operand is less then zero.  More generally, any
+Square root if the operand is less than zero.  More generally, any
 mathematical function evaluated outside its domain produces this
 exception.
 @item
@@ -675,6 +711,15 @@ such as by defining @code{_GNU_SOURCE}, and then you must include
 @file{math.h}.)
 @end deftypevr
 
+@comment math.h
+@comment ISO
+@deftypevr Macro float SNANF
+@deftypevrx Macro double SNAN
+@deftypevrx Macro {long double} SNANL
+These macros, defined by TS 18661-1:2014, are constant expressions for
+signaling NaNs.
+@end deftypevr
+
 @w{IEEE 754} also allows for another unusual value: negative zero.  This
 value is produced when you divide a positive number by negative
 infinity, or when a negative result is smaller than the limits of
@@ -759,6 +804,18 @@ non-zero value otherwise.
 
 @comment fenv.h
 @comment ISO
+@deftypefun int fesetexcept (int @var{excepts})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+This function sets the supported exception flags indicated by
+@var{excepts}, like @code{feraiseexcept}, but without causing enabled
+traps to be taken.  @code{fesetexcept} is from TS 18661-1:2014.
+
+The function returns zero in case the operation was successful, a
+non-zero value otherwise.
+@end deftypefun
+
+@comment fenv.h
+@comment ISO
 @deftypefun int fetestexcept (int @var{excepts})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Test whether the exception flags indicated by the parameter @var{except}
@@ -821,6 +878,17 @@ non-zero value otherwise.
 Note that the value stored in @code{fexcept_t} bears no resemblance to
 the bit mask returned by @code{fetestexcept}.  The type may not even be
 an integer.  Do not attempt to modify an @code{fexcept_t} variable.
+
+@comment fenv.h
+@comment ISO
+@deftypefun int fetestexceptflag (const fexcept_t *@var{flagp}, int @var{excepts})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+Test whether the exception flags indicated by the parameter
+@var{excepts} are set in the variable pointed to by @var{flagp}.  If
+any of them are, a nonzero value is returned which specifies which
+exceptions are set.  Otherwise the result is zero.
+@code{fetestexceptflag} is from TS 18661-1:2014.
+@end deftypefun
 
 @node Math Error Reporting
 @subsection Error Reporting by Mathematical Functions
@@ -969,7 +1037,7 @@ the calculation was negative, the result is @dfn{negative zero}.
 Negative zero can also result from some operations on infinity, such as
 @math{4/-@infinity{}}.
 
-At any time one of the above four rounding modes is selected.  You can
+At any time, one of the above four rounding modes is selected.  You can
 find out which one with this function:
 
 @comment fenv.h
@@ -990,7 +1058,7 @@ To change the rounding mode, use this function:
 Changes the currently selected rounding mode to @var{round}.  If
 @var{round} does not correspond to one of the supported rounding modes
 nothing is changed.  @code{fesetround} returns zero if it changed the
-rounding mode, a nonzero value if the mode is not supported.
+rounding mode, or a nonzero value if the mode is not supported.
 @end deftypefun
 
 You should avoid changing the rounding mode if possible.  It can be an
@@ -1104,6 +1172,39 @@ non-zero value otherwise.
 @end deftypefun
 
 @noindent
+TS 18661-1:2014 defines additional functions to save and restore
+floating-point control modes (such as the rounding mode and whether
+traps are enabled) while leaving other status (such as raised flags)
+unchanged.
+
+@vindex FE_DFL_MODE
+The special macro @code{FE_DFL_MODE} may be passed to
+@code{fesetmode}.  It represents the floating-point control modes at
+program start.
+
+@comment fenv.h
+@comment ISO
+@deftypefun int fegetmode (femode_t *@var{modep})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+Store the floating-point control modes in the variable pointed to by
+@var{modep}.
+
+The function returns zero in case the operation was successful, a
+non-zero value otherwise.
+@end deftypefun
+
+@comment fenv.h
+@comment ISO
+@deftypefun int fesetmode (const femode_t *@var{modep})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+Set the floating-point control modes to those described by
+@var{modep}.
+
+The function returns zero in case the operation was successful, a
+non-zero value otherwise.
+@end deftypefun
+
+@noindent
 To control for individual exceptions if raising them causes a trap to
 occur, you can use the following two functions.
 
@@ -1113,8 +1214,8 @@ occur, you can use the following two functions.
 @comment GNU
 @deftypefun int feenableexcept (int @var{excepts})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-This functions enables traps for each of the exceptions as indicated by
-the parameter @var{except}.  The individual exceptions are described in
+This function enables traps for each of the exceptions as indicated by
+the parameter @var{excepts}.  The individual exceptions are described in
 @ref{Status bit operations}.  Only the specified exceptions are
 enabled, the status of the other exceptions is not changed.
 
@@ -1126,8 +1227,8 @@ operation was successful, @code{-1} otherwise.
 @comment GNU
 @deftypefun int fedisableexcept (int @var{excepts})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-This functions disables traps for each of the exceptions as indicated by
-the parameter @var{except}.  The individual exceptions are described in
+This function disables traps for each of the exceptions as indicated by
+the parameter @var{excepts}.  The individual exceptions are described in
 @ref{Status bit operations}.  Only the specified exceptions are
 disabled, the status of the other exceptions is not changed.
 
@@ -1763,6 +1864,56 @@ The argument @var{tagp} is used in an unspecified manner.  On @w{IEEE
 selects one.  On other systems it may do nothing.
 @end deftypefun
 
+@comment math.h
+@comment ISO
+@deftypefun int canonicalize (double *@var{cx}, const double *@var{x})
+@comment math.h
+@comment ISO
+@deftypefunx int canonicalizef (float *@var{cx}, const float *@var{x})
+@comment math.h
+@comment ISO
+@deftypefunx int canonicalizel (long double *@var{cx}, const long double *@var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+In some floating-point formats, some values have canonical (preferred)
+and noncanonical encodings (for IEEE interchange binary formats, all
+encodings are canonical).  These functions, defined by TS
+18661-1:2014, attempt to produce a canonical version of the
+floating-point value pointed to by @var{x}; if that value is a
+signaling NaN, they raise the invalid exception and produce a quiet
+NaN.  If a canonical value is produced, it is stored in the object
+pointed to by @var{cx}, and these functions return zero.  Otherwise
+(if a canonical value could not be produced because the object pointed
+to by @var{x} is not a valid representation of any floating-point
+value), the object pointed to by @var{cx} is unchanged and a nonzero
+value is returned.
+
+Note that some formats have multiple encodings of a value which are
+all equally canonical; when such an encoding is used as an input to
+this function, any such encoding of the same value (or of the
+corresponding quiet NaN, if that value is a signaling NaN) may be
+produced as output.
+@end deftypefun
+
+@comment math.h
+@comment ISO
+@deftypefun double getpayload (const double *@var{x})
+@comment math.h
+@comment ISO
+@deftypefunx float getpayloadf (const float *@var{x})
+@comment math.h
+@comment ISO
+@deftypefunx {long double} getpayloadl (const long double *@var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+IEEE 754 defines the @dfn{payload} of a NaN to be an integer value
+encoded in the representation of the NaN.  Payloads are typically
+propagated from NaN inputs to the result of a floating-point
+operation.  These functions, defined by TS 18661-1:2014, return the
+payload of the NaN pointed to by @var{x} (returned as a positive
+integer, or positive zero, represented as a floating-point number); if
+@var{x} is not a NaN, they return an unspecified value.  They raise no
+floating-point exceptions even for signaling NaNs.
+@end deftypefun
+
 @node FP Comparison Functions
 @subsection Floating-Point Comparison Functions
 @cindex unordered comparison
@@ -1782,7 +1933,11 @@ undesirable.  @w{ISO C99} therefore defines comparison functions that
 do not raise exceptions when NaN is examined.  All of the functions are
 implemented as macros which allow their arguments to be of any
 floating-point type.  The macros are guaranteed to evaluate their
-arguments only once.
+arguments only once.  TS 18661-1:2014 adds such a macro for an
+equality comparison that @emph{does} raise an exception for a NaN
+argument; it also adds functions that provide a total ordering on all
+floating-point values, including NaNs, without raising any exceptions
+even for signaling NaNs.
 
 @comment math.h
 @comment ISO
@@ -1840,6 +1995,52 @@ expression is true if @var{x} or @var{y} are NaN.
 This macro determines whether its arguments are unordered.  In other
 words, it is true if @var{x} or @var{y} are NaN, and false otherwise.
 @end deftypefn
+
+@comment math.h
+@comment ISO
+@deftypefn Macro int iseqsig (@emph{real-floating} @var{x}, @emph{real-floating} @var{y})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+This macro determines whether its arguments are equal.  It is
+equivalent to @code{(@var{x}) == (@var{y})}, but it raises the invalid
+exception and sets @code{errno} to @code{EDOM} is either argument is a
+NaN.
+@end deftypefn
+
+@comment math.h
+@comment ISO
+@deftypefun int totalorder (double @var{x}, double @var{y})
+@comment ISO
+@deftypefunx int totalorderf (float @var{x}, float @var{y})
+@comment ISO
+@deftypefunx int totalorderl (long double @var{x}, long double @var{y})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These functions determine whether the total order relationship,
+defined in IEEE 754-2008, is true for @var{x} and @var{y}, returning
+nonzero if it is true and zero if it is false.  No exceptions are
+raised even for signaling NaNs.  The relationship is true if they are
+the same floating-point value (including sign for zero and NaNs, and
+payload for NaNs), or if @var{x} comes before @var{y} in the following
+order: negative quiet NaNs, in order of decreasing payload; negative
+signaling NaNs, in order of decreasing payload; negative infinity;
+finite numbers, in ascending order, with negative zero before positive
+zero; positive infinity; positive signaling NaNs, in order of
+increasing payload; positive quiet NaNs, in order of increasing
+payload.
+@end deftypefun
+
+@comment math.h
+@comment ISO
+@deftypefun int totalordermag (double @var{x}, double @var{y})
+@comment ISO
+@deftypefunx int totalordermagf (float @var{x}, float @var{y})
+@comment ISO
+@deftypefunx int totalordermagl (long double @var{x}, long double @var{y})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These functions determine whether the total order relationship,
+defined in IEEE 754-2008, is true for the absolute values of @var{x}
+and @var{y}, returning nonzero if it is true and zero if it is false.
+No exceptions are raised even for signaling NaNs.
+@end deftypefun
 
 Not all machines provide hardware support for these operations.  On
 machines that don't, the macros can be very slow.  Therefore, you should
@@ -2644,6 +2845,46 @@ is provided mostly for compatibility with existing code; using
 which take an additional argument, the locale to use in conversion.
 
 See also @ref{Parsing of Integers}.
+
+@node Printing of Floats
+@section Printing of Floats
+
+@pindex stdlib.h
+The @samp{strfrom} functions are declared in @file{stdlib.h}.
+
+@comment stdlib.h
+@comment ISO/IEC TS 18661-1
+@deftypefun int strfromd (char *restrict @var{string}, size_t @var{size}, const char *restrict @var{format}, double @var{value})
+@deftypefunx int strfromf (char *restrict @var{string}, size_t @var{size}, const char *restrict @var{format}, float @var{value})
+@deftypefunx int strfroml (char *restrict @var{string}, size_t @var{size}, const char *restrict @var{format}, long double @var{value})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
+@comment these functions depend on __printf_fp and __printf_fphex, which are
+@comment AS-unsafe (ascuheap) and AC-unsafe (acsmem).
+The functions @code{strfromd} (``string-from-double''), @code{strfromf}
+(``string-from-float''), and @code{strfroml} (``string-from-long-double'')
+convert the floating-point number @var{value} to a string of characters and
+stores them into the area pointed to by @var{string}.  The conversion
+writes at most @var{size} characters and respects the format specified by
+@var{format}.
+
+The format string must start with the character @samp{%}.  An optional
+precision follows, which starts with a period, @samp{.}, and may be
+followed by a decimal integer, representing the precision.  If a decimal
+integer is not specified after the period, the precision is taken to be
+zero.  The character @samp{*} is not allowed.  Finally, the format string
+ends with one of the following conversion specifiers: @samp{a}, @samp{A},
+@samp{e}, @samp{E}, @samp{f}, @samp{F}, @samp{g} or @samp{G} (@pxref{Table
+of Output Conversions}).  Invalid format strings result in undefined
+behavior.
+
+These functions return the number of characters that would have been
+written to @var{string} had @var{size} been sufficiently large, not
+counting the terminating null character.  Thus, the null-terminated output
+has been completely written if and only if the returned value is less than
+@var{size}.
+
+These functions were introduced by ISO/IEC TS 18661-1.
+@end deftypefun
 
 @node System V Number Conversion
 @section Old-fashioned System V number-to-string functions

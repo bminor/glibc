@@ -14,7 +14,7 @@ endif
 ifeq ($(subdir),misc)
 include $(firstword $(wildcard $(sysdirs:=/sysctl.mk)))
 
-sysdep_routines += clone llseek umount umount2 readahead \
+sysdep_routines += clone umount umount2 readahead \
 		   setfsuid setfsgid epoll_pwait signalfd \
 		   eventfd eventfd_read eventfd_write prlimit \
 		   personality
@@ -42,7 +42,8 @@ sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h \
 		  bits/socket_type.h bits/syscall.h bits/sysctl.h \
 		  bits/mman-linux.h
 
-tests += tst-clone tst-clone2 tst-fanotify tst-personality
+tests += tst-clone tst-clone2 tst-fanotify tst-personality tst-quota \
+	 tst-sync_file_range
 
 # Generate the list of SYS_* macros for the system calls (__NR_* macros).
 
@@ -172,6 +173,8 @@ ifeq ($(subdir),io)
 sysdep_routines += xstatconv internal_statvfs internal_statvfs64 \
 		   sync_file_range fallocate fallocate64
 sysdep_headers += bits/fcntl-linux.h
+
+tests += tst-fallocate tst-fallocate64
 endif
 
 ifeq ($(subdir),elf)

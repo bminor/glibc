@@ -132,8 +132,8 @@ double __mpcos (double x, double dx, bool reduce_range);
 static double slow (double x);
 static double slow1 (double x);
 static double slow2 (double x);
-static double sloww (double x, double dx, double orig, int n);
-static double sloww1 (double x, double dx, double orig, int m, int n);
+static double sloww (double x, double dx, double orig, bool shift_quadrant);
+static double sloww1 (double x, double dx, double orig, bool shift_quadrant);
 static double sloww2 (double x, double dx, double orig, int n);
 static double bsloww (double x, double dx, double orig, int n);
 static double bsloww1 (double x, double dx, double orig, int n);
@@ -141,14 +141,22 @@ static double bsloww2 (double x, double dx, double orig, int n);
 int __branred (double x, double *a, double *aa);
 static double cslow2 (double x);
 
-/* Given a number partitioned into U and X such that U is an index into the
-   sin/cos table, this macro computes the cosine of the number by combining
-   the sin and cos of X (as computed by a variation of the Taylor series) with
-   the values looked up from the sin/cos table to get the result in RES and a
-   correction value in COR.  */
-static double
-do_cos (mynumber u, double x, double *corp)
+/* Given a number partitioned into X and DX, this function computes the cosine
+   of the number by combining the sin and cos of X (as computed by a variation
+   of the Taylor series) with the values looked up from the sin/cos table to
+   get the result in RES and a correction value in COR.  */
+static inline double
+__always_inline
+do_cos (double x, double dx, double *corp)
 {
+  mynumber u;
+
+  if (x < 0)
+    dx = -dx;
+
+  u.x = big + fabs (x);
+  x = fabs (x) - (u.x - big) + dx;
+
   double xx, s, sn, ssn, c, cs, ccs, res, cor;
   xx = x * x;
   s = x + x * xx * (sn3 + xx * sn5);
@@ -161,11 +169,20 @@ do_cos (mynumber u, double x, double *corp)
   return res;
 }
 
-/* A more precise variant of DO_COS where the number is partitioned into U, X
-   and DX.  EPS is the adjustment to the correction COR.  */
-static double
-do_cos_slow (mynumber u, double x, double dx, double eps, double *corp)
+/* A more precise variant of DO_COS.  EPS is the adjustment to the correction
+   COR.  */
+static inline double
+__always_inline
+do_cos_slow (double x, double dx, double eps, double *corp)
 {
+  mynumber u;
+
+  if (x <= 0)
+    dx = -dx;
+
+  u.x = big + fabs (x);
+  x = fabs (x) - (u.x - big);
+
   double xx, y, x1, x2, e1, e2, res, cor;
   double s, sn, ssn, c, cs, ccs;
   xx = x * x;
@@ -181,22 +198,26 @@ do_cos_slow (mynumber u, double x, double dx, double eps, double *corp)
   cor = cor + ((cs - y) - e1 * x1);
   res = y + cor;
   cor = (y - res) + cor;
-  if (cor > 0)
-    cor = 1.0005 * cor + eps;
-  else
-    cor = 1.0005 * cor - eps;
+  cor = 1.0005 * cor + __copysign (eps, cor);
   *corp = cor;
   return res;
 }
 
-/* Given a number partitioned into U and X and DX such that U is an index into
-   the sin/cos table, this macro computes the sine of the number by combining
-   the sin and cos of X (as computed by a variation of the Taylor series) with
-   the values looked up from the sin/cos table to get the result in RES and a
-   correction value in COR.  */
-static double
-do_sin (mynumber u, double x, double dx, double *corp)
+/* Given a number partitioned into X and DX, this function computes the sine of
+   the number by combining the sin and cos of X (as computed by a variation of
+   the Taylor series) with the values looked up from the sin/cos table to get
+   the result in RES and a correction value in COR.  */
+static inline double
+__always_inline
+do_sin (double x, double dx, double *corp)
 {
+  mynumber u;
+
+  if (x <= 0)
+    dx = -dx;
+  u.x = big + fabs (x);
+  x = fabs (x) - (u.x - big);
+
   double xx, s, sn, ssn, c, cs, ccs, cor, res;
   xx = x * x;
   s = x + (dx + x * xx * (sn3 + xx * sn5));
@@ -209,11 +230,19 @@ do_sin (mynumber u, double x, double dx, double *corp)
   return res;
 }
 
-/* A more precise variant of res = do_sin where the number is partitioned into U, X
-   and DX.  EPS is the adjustment to the correction COR.  */
-static double
-do_sin_slow (mynumber u, double x, double dx, double eps, double *corp)
+/* A more precise variant of DO_SIN.  EPS is the adjustment to the correction
+   COR.  */
+static inline double
+__always_inline
+do_sin_slow (double x, double dx, double eps, double *corp)
 {
+  mynumber u;
+
+  if (x <= 0)
+    dx = -dx;
+  u.x = big + fabs (x);
+  x = fabs (x) - (u.x - big);
+
   double xx, y, x1, x2, c1, c2, res, cor;
   double s, sn, ssn, c, cs, ccs;
   xx = x * x;
@@ -229,43 +258,38 @@ do_sin_slow (mynumber u, double x, double dx, double eps, double *corp)
   cor = cor + ((sn - y) + c1 * x1);
   res = y + cor;
   cor = (y - res) + cor;
-  if (cor > 0)
-    cor = 1.0005 * cor + eps;
-  else
-    cor = 1.0005 * cor - eps;
+  cor = 1.0005 * cor + __copysign (eps, cor);
   *corp = cor;
   return res;
 }
 
-/* Reduce range of X and compute sin of a + da.  K is the amount by which to
-   rotate the quadrants.  This allows us to use the same routine to compute cos
-   by simply rotating the quadrants by 1.  */
+/* Reduce range of X and compute sin of a + da. When SHIFT_QUADRANT is true,
+   the routine returns the cosine of a + da by rotating the quadrant once and
+   computing the sine of the result.  */
 static inline double
 __always_inline
-reduce_and_compute (double x, unsigned int k)
+reduce_and_compute (double x, bool shift_quadrant)
 {
   double retval = 0, a, da;
   unsigned int n = __branred (x, &a, &da);
-  k = (n + k) % 4;
+  int4 k = (n + shift_quadrant) % 4;
   switch (k)
     {
-      case 0:
-	if (a * a < 0.01588)
-	  retval = bsloww (a, da, x, n);
-	else
-	  retval = bsloww1 (a, da, x, n);
-	break;
-      case 2:
-	if (a * a < 0.01588)
-	  retval = bsloww (-a, -da, x, n);
-	else
-	  retval = bsloww1 (-a, -da, x, n);
-	break;
+    case 2:
+      a = -a;
+      da = -da;
+      /* Fall through.  */
+    case 0:
+      if (a * a < 0.01588)
+	retval = bsloww (a, da, x, n);
+      else
+	retval = bsloww1 (a, da, x, n);
+      break;
 
-      case 1:
-      case 3:
-	retval = bsloww2 (a, da, x, n);
-	break;
+    case 1:
+    case 3:
+      retval = bsloww2 (a, da, x, n);
+      break;
     }
   return retval;
 }
@@ -291,63 +315,45 @@ reduce_sincos_1 (double x, double *a, double *da)
   return n;
 }
 
-/* Compute sin (A + DA).  cos can be computed by shifting the quadrant N
-   clockwise.  */
+/* Compute sin (A + DA).  cos can be computed by passing SHIFT_QUADRANT as
+   true, which results in shifting the quadrant N clockwise.  */
 static double
 __always_inline
-do_sincos_1 (double a, double da, double x, int4 n, int4 k)
+do_sincos_1 (double a, double da, double x, int4 n, bool shift_quadrant)
 {
-  double xx, retval, res, cor, y;
-  mynumber u;
-  int m;
+  double xx, retval, res, cor;
   double eps = fabs (x) * 1.2e-30;
 
-  int k1 = (n + k) & 3;
+  int k1 = (n + shift_quadrant) & 3;
   switch (k1)
     {			/* quarter of unit circle */
     case 2:
       a = -a;
       da = -da;
+      /* Fall through.  */
     case 0:
       xx = a * a;
       if (xx < 0.01588)
 	{
 	  /* Taylor series.  */
 	  res = TAYLOR_SIN (xx, a, da, cor);
-	  cor = (cor > 0) ? 1.02 * cor + eps : 1.02 * cor - eps;
-	  retval = (res == res + cor) ? res : sloww (a, da, x, k);
+	  cor = 1.02 * cor + __copysign (eps, cor);
+	  retval = (res == res + cor) ? res : sloww (a, da, x, shift_quadrant);
 	}
       else
 	{
-	  if (a > 0)
-	    m = 1;
-	  else
-	    {
-	      m = 0;
-	      a = -a;
-	      da = -da;
-	    }
-	  u.x = big + a;
-	  y = a - (u.x - big);
-	  res = do_sin (u, y, da, &cor);
-	  cor = (cor > 0) ? 1.035 * cor + eps : 1.035 * cor - eps;
-	  retval = ((res == res + cor) ? ((m) ? res : -res)
-		    : sloww1 (a, da, x, m, k));
+	  res = do_sin (a, da, &cor);
+	  cor = 1.035 * cor + __copysign (eps, cor);
+	  retval = ((res == res + cor) ? __copysign (res, a)
+		    : sloww1 (a, da, x, shift_quadrant));
 	}
       break;
 
     case 1:
     case 3:
-      if (a < 0)
-	{
-	  a = -a;
-	  da = -da;
-	}
-      u.x = big + a;
-      y = a - (u.x - big) + da;
-      res = do_cos (u, y, &cor);
-      cor = (cor > 0) ? 1.025 * cor + eps : 1.025 * cor - eps;
-      retval = ((res == res + cor) ? ((k1 & 2) ? -res : res)
+      res = do_cos (a, da, &cor);
+      cor = 1.025 * cor + __copysign (eps, cor);
+      retval = ((res == res + cor) ? ((n & 2) ? -res : res)
 		: sloww2 (a, da, x, n));
       break;
     }
@@ -381,18 +387,17 @@ reduce_sincos_2 (double x, double *a, double *da)
   return n;
 }
 
-/* Compute sin (A + DA).  cos can be computed by shifting the quadrant N
-   clockwise.  */
+/* Compute sin (A + DA).  cos can be computed by passing SHIFT_QUADRANT as
+   true, which results in shifting the quadrant N clockwise.  */
 static double
 __always_inline
-do_sincos_2 (double a, double da, double x, int4 n, int4 k)
+do_sincos_2 (double a, double da, double x, int4 n, bool shift_quadrant)
 {
   double res, retval, cor, xx;
-  mynumber u;
 
   double eps = 1.0e-24;
 
-  k = (n + k) & 3;
+  int4 k = (n + shift_quadrant) & 3;
 
   switch (k)
     {
@@ -406,45 +411,22 @@ do_sincos_2 (double a, double da, double x, int4 n, int4 k)
 	{
 	  /* Taylor series.  */
 	  res = TAYLOR_SIN (xx, a, da, cor);
-	  cor = (cor > 0) ? 1.02 * cor + eps : 1.02 * cor - eps;
+	  cor = 1.02 * cor + __copysign (eps, cor);
 	  retval = (res == res + cor) ? res : bsloww (a, da, x, n);
 	}
       else
 	{
-	  double t, db, y;
-	  int m;
-	  if (a > 0)
-	    {
-	      m = 1;
-	      t = a;
-	      db = da;
-	    }
-	  else
-	    {
-	      m = 0;
-	      t = -a;
-	      db = -da;
-	    }
-	  u.x = big + t;
-	  y = t - (u.x - big);
-	  res = do_sin (u, y, db, &cor);
-	  cor = (cor > 0) ? 1.035 * cor + eps : 1.035 * cor - eps;
-	  retval = ((res == res + cor) ? ((m) ? res : -res)
+	  res = do_sin (a, da, &cor);
+	  cor = 1.035 * cor + __copysign (eps, cor);
+	  retval = ((res == res + cor) ? __copysign (res, a)
 		    : bsloww1 (a, da, x, n));
 	}
       break;
 
     case 1:
     case 3:
-      if (a < 0)
-	{
-	  a = -a;
-	  da = -da;
-	}
-      u.x = big + a;
-      double y = a - (u.x - big) + da;
-      res = do_cos (u, y, &cor);
-      cor = (cor > 0) ? 1.025 * cor + eps : 1.025 * cor - eps;
+      res = do_cos (a, da, &cor);
+      cor = 1.025 * cor + __copysign (eps, cor);
       retval = ((res == res + cor) ? ((n & 2) ? -res : res)
 		: bsloww2 (a, da, x, n));
       break;
@@ -465,7 +447,7 @@ SECTION
 #endif
 __sin (double x)
 {
-  double xx, res, t, cor, y, s, c, sn, ssn, cs, ccs;
+  double xx, res, t, cor;
   mynumber u;
   int4 k, m;
   double retval = 0;
@@ -495,40 +477,19 @@ __sin (double x)
 /*---------------------------- 0.25<|x|< 0.855469---------------------- */
   else if (k < 0x3feb6000)
     {
-      u.x = (m > 0) ? big + x : big - x;
-      y = (m > 0) ? x - (u.x - big) : x + (u.x - big);
-      xx = y * y;
-      s = y + y * xx * (sn3 + xx * sn5);
-      c = xx * (cs2 + xx * (cs4 + xx * cs6));
-      SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
-      if (m <= 0)
-        {
-          sn = -sn;
-	  ssn = -ssn;
-	}
-      cor = (ssn + s * ccs - sn * c) + cs * s;
-      res = sn + cor;
-      cor = (sn - res) + cor;
+      res = do_sin (x, 0, &cor);
       retval = (res == res + 1.096 * cor) ? res : slow1 (x);
+      retval = __copysign (retval, x);
     }				/*   else  if (k < 0x3feb6000)    */
 
 /*----------------------- 0.855469  <|x|<2.426265  ----------------------*/
   else if (k < 0x400368fd)
     {
 
-      y = (m > 0) ? hp0 - x : hp0 + x;
-      if (y >= 0)
-	{
-	  u.x = big + y;
-	  y = (y - (u.x - big)) + hp1;
-	}
-      else
-	{
-	  u.x = big - y;
-	  y = (-hp1) - (y + (u.x - big));
-	}
-      res = do_cos (u, y, &cor);
-      retval = (res == res + 1.020 * cor) ? ((m > 0) ? res : -res) : slow2 (x);
+      t = hp0 - fabs (x);
+      res = do_cos (t, hp1, &cor);
+      retval = (res == res + 1.020 * cor) ? res : slow2 (x);
+      retval = __copysign (retval, x);
     }				/*   else  if (k < 0x400368fd)    */
 
 #ifndef IN_SINCOS
@@ -537,7 +498,7 @@ __sin (double x)
     {
       double a, da;
       int4 n = reduce_sincos_1 (x, &a, &da);
-      retval = do_sincos_1 (a, da, x, n, 0);
+      retval = do_sincos_1 (a, da, x, n, false);
     }				/*   else  if (k <  0x419921FB )    */
 
 /*---------------------105414350 <|x|< 281474976710656 --------------------*/
@@ -546,12 +507,12 @@ __sin (double x)
       double a, da;
 
       int4 n = reduce_sincos_2 (x, &a, &da);
-      retval = do_sincos_2 (a, da, x, n, 0);
+      retval = do_sincos_2 (a, da, x, n, false);
     }				/*   else  if (k <  0x42F00000 )   */
 
 /* -----------------281474976710656 <|x| <2^1024----------------------------*/
   else if (k < 0x7ff00000)
-    retval = reduce_and_compute (x, 0);
+    retval = reduce_and_compute (x, false);
 
 /*--------------------- |x| > 2^1024 ----------------------------------*/
   else
@@ -599,10 +560,7 @@ __cos (double x)
 
   else if (k < 0x3feb6000)
     {				/* 2^-27 < |x| < 0.855469 */
-      y = fabs (x);
-      u.x = big + y;
-      y = y - (u.x - big);
-      res = do_cos (u, y, &cor);
+      res = do_cos (x, 0, &cor);
       retval = (res == res + 1.020 * cor) ? res : cslow2 (x);
     }				/*   else  if (k < 0x3feb6000)    */
 
@@ -615,27 +573,15 @@ __cos (double x)
       if (xx < 0.01588)
 	{
 	  res = TAYLOR_SIN (xx, a, da, cor);
-	  cor = (cor > 0) ? 1.02 * cor + 1.0e-31 : 1.02 * cor - 1.0e-31;
-	  retval = (res == res + cor) ? res : sloww (a, da, x, 1);
+	  cor = 1.02 * cor + __copysign (1.0e-31, cor);
+	  retval = (res == res + cor) ? res : sloww (a, da, x, true);
 	}
       else
 	{
-	  if (a > 0)
-	    {
-	      m = 1;
-	    }
-	  else
-	    {
-	      m = 0;
-	      a = -a;
-	      da = -da;
-	    }
-	  u.x = big + a;
-	  y = a - (u.x - big);
-	  res = do_sin (u, y, da, &cor);
-	  cor = (cor > 0) ? 1.035 * cor + 1.0e-31 : 1.035 * cor - 1.0e-31;
-	  retval = ((res == res + cor) ? ((m) ? res : -res)
-		    : sloww1 (a, da, x, m, 1));
+	  res = do_sin (a, da, &cor);
+	  cor = 1.035 * cor + __copysign (1.0e-31, cor);
+	  retval = ((res == res + cor) ? __copysign (res, a)
+		    : sloww1 (a, da, x, true));
 	}
 
     }				/*   else  if (k < 0x400368fd)    */
@@ -646,7 +592,7 @@ __cos (double x)
     {				/* 2.426265<|x|< 105414350 */
       double a, da;
       int4 n = reduce_sincos_1 (x, &a, &da);
-      retval = do_sincos_1 (a, da, x, n, 1);
+      retval = do_sincos_1 (a, da, x, n, true);
     }				/*   else  if (k <  0x419921FB )    */
 
   else if (k < 0x42F00000)
@@ -654,12 +600,12 @@ __cos (double x)
       double a, da;
 
       int4 n = reduce_sincos_2 (x, &a, &da);
-      retval = do_sincos_2 (a, da, x, n, 1);
+      retval = do_sincos_2 (a, da, x, n, true);
     }				/*   else  if (k <  0x42F00000 )    */
 
   /* 281474976710656 <|x| <2^1024 */
   else if (k < 0x7ff00000)
-    retval = reduce_and_compute (x, 1);
+    retval = reduce_and_compute (x, true);
 
   else
     {
@@ -677,8 +623,8 @@ __cos (double x)
 /* precision  and if still doesn't accurate enough by mpsin   or dubsin */
 /************************************************************************/
 
-static double
-SECTION
+static inline double
+__always_inline
 slow (double x)
 {
   double res, cor, w[2];
@@ -688,9 +634,9 @@ slow (double x)
 
   __dubsin (fabs (x), 0, w);
   if (w[0] == w[0] + 1.000000001 * w[1])
-    return (x > 0) ? w[0] : -w[0];
+    return __copysign (w[0], x);
 
-  return (x > 0) ? __mpsin (x, 0, false) : -__mpsin (-x, 0, false);
+  return __copysign (__mpsin (fabs (x), 0, false), x);
 }
 
 /*******************************************************************************/
@@ -698,104 +644,83 @@ slow (double x)
 /* and if result still doesn't accurate enough by mpsin   or dubsin            */
 /*******************************************************************************/
 
-static double
-SECTION
+static inline double
+__always_inline
 slow1 (double x)
 {
-  mynumber u;
-  double w[2], y, cor, res;
-  y = fabs (x);
-  u.x = big + y;
-  y = y - (u.x - big);
-  res = do_sin_slow (u, y, 0, 0, &cor);
+  double w[2], cor, res;
+
+  res = do_sin_slow (x, 0, 0, &cor);
   if (res == res + cor)
-    return (x > 0) ? res : -res;
+    return res;
 
   __dubsin (fabs (x), 0, w);
   if (w[0] == w[0] + 1.000000005 * w[1])
-    return (x > 0) ? w[0] : -w[0];
+    return w[0];
 
-  return (x > 0) ? __mpsin (x, 0, false) : -__mpsin (-x, 0, false);
+  return __mpsin (fabs (x), 0, false);
 }
 
 /**************************************************************************/
 /*  Routine compute sin(x) for   0.855469  <|x|<2.426265  by  __sincostab.tbl  */
 /* and if result still doesn't accurate enough by mpsin   or dubsin       */
 /**************************************************************************/
-static double
-SECTION
+static inline double
+__always_inline
 slow2 (double x)
 {
-  mynumber u;
-  double w[2], y, y1, y2, cor, res, del;
+  double w[2], y, y1, y2, cor, res;
 
-  y = fabs (x);
-  y = hp0 - y;
-  if (y >= 0)
-    {
-      u.x = big + y;
-      y = y - (u.x - big);
-      del = hp1;
-    }
-  else
-    {
-      u.x = big - y;
-      y = -(y + (u.x - big));
-      del = -hp1;
-    }
-  res = do_cos_slow (u, y, del, 0, &cor);
+  double t = hp0 - fabs (x);
+  res = do_cos_slow (t, hp1, 0, &cor);
   if (res == res + cor)
-    return (x > 0) ? res : -res;
+    return res;
 
   y = fabs (x) - hp0;
   y1 = y - hp1;
   y2 = (y - y1) - hp1;
   __docos (y1, y2, w);
   if (w[0] == w[0] + 1.000000005 * w[1])
-    return (x > 0) ? w[0] : -w[0];
+    return w[0];
 
-  return (x > 0) ? __mpsin (x, 0, false) : -__mpsin (-x, 0, false);
+  return __mpsin (fabs (x), 0, false);
 }
 
-/***************************************************************************/
-/*  Routine compute sin(x+dx) (Double-Length number) where x is small enough*/
-/* to use Taylor series around zero and   (x+dx)                            */
-/* in first or third quarter of unit circle.Routine receive also            */
-/* (right argument) the  original   value of x for computing error of      */
-/* result.And if result not accurate enough routine calls mpsin1 or dubsin */
-/***************************************************************************/
-
-static double
-SECTION
-sloww (double x, double dx, double orig, int k)
+/* Compute sin(x + dx) where X is small enough to use Taylor series around zero
+   and (x + dx) in the first or third quarter of the unit circle.  ORIG is the
+   original value of X for computing error of the result.  If the result is not
+   accurate enough, the routine calls mpsin or dubsin.  SHIFT_QUADRANT rotates
+   the unit circle by 1 to compute the cosine instead of sine.  */
+static inline double
+__always_inline
+sloww (double x, double dx, double orig, bool shift_quadrant)
 {
   double y, t, res, cor, w[2], a, da, xn;
   mynumber v;
   int4 n;
   res = TAYLOR_SLOW (x, dx, cor);
 
-  if (cor > 0)
-    cor = 1.0005 * cor + fabs (orig) * 3.1e-30;
-  else
-    cor = 1.0005 * cor - fabs (orig) * 3.1e-30;
+  double eps = fabs (orig) * 3.1e-30;
+
+  cor = 1.0005 * cor + __copysign (eps, cor);
 
   if (res == res + cor)
     return res;
 
-  (x > 0) ? __dubsin (x, dx, w) : __dubsin (-x, -dx, w);
-  if (w[1] > 0)
-    cor = 1.000000001 * w[1] + fabs (orig) * 1.1e-30;
-  else
-    cor = 1.000000001 * w[1] - fabs (orig) * 1.1e-30;
+  a = fabs (x);
+  da = (x > 0) ? dx : -dx;
+  __dubsin (a, da, w);
+  eps = fabs (orig) * 1.1e-30;
+  cor = 1.000000001 * w[1] + __copysign (eps, w[1]);
 
   if (w[0] == w[0] + cor)
-    return (x > 0) ? w[0] : -w[0];
+    return __copysign (w[0], x);
 
   t = (orig * hpinv + toint);
   xn = t - toint;
   v.x = t;
   y = (orig - xn * mp1) - xn * mp2;
-  n = (v.i[LOW_HALF] + k) & 3;
+  n = (v.i[LOW_HALF] + shift_quadrant) & 3;
   da = xn * pp3;
   t = y - da;
   da = (y - t) - da;
@@ -808,50 +733,44 @@ sloww (double x, double dx, double orig, int k)
       a = -a;
       da = -da;
     }
-  (a > 0) ? __dubsin (a, da, w) : __dubsin (-a, -da, w);
-  if (w[1] > 0)
-    cor = 1.000000001 * w[1] + fabs (orig) * 1.1e-40;
-  else
-    cor = 1.000000001 * w[1] - fabs (orig) * 1.1e-40;
+  x = fabs (a);
+  dx = (a > 0) ? da : -da;
+  __dubsin (x, dx, w);
+  eps = fabs (orig) * 1.1e-40;
+  cor = 1.000000001 * w[1] + __copysign (eps, w[1]);
 
   if (w[0] == w[0] + cor)
-    return (a > 0) ? w[0] : -w[0];
+    return __copysign (w[0], a);
 
-  return k ? __mpcos (orig, 0, true) : __mpsin (orig, 0, true);
+  return shift_quadrant ? __mpcos (orig, 0, true) : __mpsin (orig, 0, true);
 }
 
-/***************************************************************************/
-/*  Routine compute sin(x+dx)   (Double-Length number) where x in first or  */
-/*  third quarter of unit circle.Routine receive also (right argument) the  */
-/*  original   value of x for computing error of result.And if result not  */
-/* accurate enough routine calls  mpsin1   or dubsin                       */
-/***************************************************************************/
-
-static double
-SECTION
-sloww1 (double x, double dx, double orig, int m, int k)
+/* Compute sin(x + dx) where X is in the first or third quarter of the unit
+   circle.  ORIG is the original value of X for computing error of the result.
+   If the result is not accurate enough, the routine calls mpsin or dubsin.
+   SHIFT_QUADRANT rotates the unit circle by 1 to compute the cosine instead of
+   sine.  */
+static inline double
+__always_inline
+sloww1 (double x, double dx, double orig, bool shift_quadrant)
 {
-  mynumber u;
-  double w[2], y, cor, res;
+  double w[2], cor, res;
 
-  u.x = big + x;
-  y = x - (u.x - big);
-  res = do_sin_slow (u, y, dx, 3.1e-30 * fabs (orig), &cor);
+  res = do_sin_slow (x, dx, 3.1e-30 * fabs (orig), &cor);
 
   if (res == res + cor)
-    return (m > 0) ? res : -res;
+    return __copysign (res, x);
 
-  __dubsin (x, dx, w);
+  dx = (x > 0 ? dx : -dx);
+  __dubsin (fabs (x), dx, w);
 
-  if (w[1] > 0)
-    cor = 1.000000005 * w[1] + 1.1e-30 * fabs (orig);
-  else
-    cor = 1.000000005 * w[1] - 1.1e-30 * fabs (orig);
+  double eps = 1.1e-30 * fabs (orig);
+  cor = 1.000000005 * w[1] + __copysign (eps, w[1]);
 
   if (w[0] == w[0] + cor)
-    return (m > 0) ? w[0] : -w[0];
+    return __copysign (w[0], x);
 
-  return (k == 1) ? __mpcos (orig, 0, true) : __mpsin (orig, 0, true);
+  return shift_quadrant ? __mpcos (orig, 0, true) : __mpsin (orig, 0, true);
 }
 
 /***************************************************************************/
@@ -861,26 +780,22 @@ sloww1 (double x, double dx, double orig, int m, int k)
 /* accurate enough routine calls  mpsin1   or dubsin                       */
 /***************************************************************************/
 
-static double
-SECTION
+static inline double
+__always_inline
 sloww2 (double x, double dx, double orig, int n)
 {
-  mynumber u;
-  double w[2], y, cor, res;
+  double w[2], cor, res;
 
-  u.x = big + x;
-  y = x - (u.x - big);
-  res = do_cos_slow (u, y, dx, 3.1e-30 * fabs (orig), &cor);
+  res = do_cos_slow (x, dx, 3.1e-30 * fabs (orig), &cor);
 
   if (res == res + cor)
     return (n & 2) ? -res : res;
 
-  __docos (x, dx, w);
+  dx = x > 0 ? dx : -dx;
+  __docos (fabs (x), dx, w);
 
-  if (w[1] > 0)
-    cor = 1.000000005 * w[1] + 1.1e-30 * fabs (orig);
-  else
-    cor = 1.000000005 * w[1] - 1.1e-30 * fabs (orig);
+  double eps = 1.1e-30 * fabs (orig);
+  cor = 1.000000005 * w[1] + __copysign (eps, w[1]);
 
   if (w[0] == w[0] + cor)
     return (n & 2) ? -w[0] : w[0];
@@ -896,25 +811,24 @@ sloww2 (double x, double dx, double orig, int n)
 /* result.And if result not accurate enough routine calls other routines    */
 /***************************************************************************/
 
-static double
-SECTION
+static inline double
+__always_inline
 bsloww (double x, double dx, double orig, int n)
 {
-  double res, cor, w[2];
+  double res, cor, w[2], a, da;
 
   res = TAYLOR_SLOW (x, dx, cor);
-  cor = (cor > 0) ? 1.0005 * cor + 1.1e-24 : 1.0005 * cor - 1.1e-24;
+  cor = 1.0005 * cor + __copysign (1.1e-24, cor);
   if (res == res + cor)
     return res;
 
-  (x > 0) ? __dubsin (x, dx, w) : __dubsin (-x, -dx, w);
-  if (w[1] > 0)
-    cor = 1.000000001 * w[1] + 1.1e-24;
-  else
-    cor = 1.000000001 * w[1] - 1.1e-24;
+  a = fabs (x);
+  da = (x > 0) ? dx : -dx;
+  __dubsin (a, da, w);
+  cor = 1.000000001 * w[1] + __copysign (1.1e-24, w[1]);
 
   if (w[0] == w[0] + cor)
-    return (x > 0) ? w[0] : -w[0];
+    return __copysign (w[0], x);
 
   return (n & 1) ? __mpcos (orig, 0, true) : __mpsin (orig, 0, true);
 }
@@ -926,30 +840,23 @@ bsloww (double x, double dx, double orig, int n)
 /* And if result not  accurate enough routine calls  other routines         */
 /***************************************************************************/
 
-static double
-SECTION
+static inline double
+__always_inline
 bsloww1 (double x, double dx, double orig, int n)
 {
-  mynumber u;
-  double w[2], y, cor, res;
+  double w[2], cor, res;
 
-  y = fabs (x);
-  u.x = big + y;
-  y = y - (u.x - big);
-  dx = (x > 0) ? dx : -dx;
-  res = do_sin_slow (u, y, dx, 1.1e-24, &cor);
+  res = do_sin_slow (x, dx, 1.1e-24, &cor);
   if (res == res + cor)
     return (x > 0) ? res : -res;
 
+  dx = (x > 0) ? dx : -dx;
   __dubsin (fabs (x), dx, w);
 
-  if (w[1] > 0)
-    cor = 1.000000005 * w[1] + 1.1e-24;
-  else
-    cor = 1.000000005 * w[1] - 1.1e-24;
+  cor = 1.000000005 * w[1] + __copysign (1.1e-24, w[1]);
 
   if (w[0] == w[0] + cor)
-    return (x > 0) ? w[0] : -w[0];
+    return __copysign (w[0], x);
 
   return (n & 1) ? __mpcos (orig, 0, true) : __mpsin (orig, 0, true);
 }
@@ -961,27 +868,20 @@ bsloww1 (double x, double dx, double orig, int n)
 /* And if result not accurate enough routine calls  other routines          */
 /***************************************************************************/
 
-static double
-SECTION
+static inline double
+__always_inline
 bsloww2 (double x, double dx, double orig, int n)
 {
-  mynumber u;
-  double w[2], y, cor, res;
+  double w[2], cor, res;
 
-  y = fabs (x);
-  u.x = big + y;
-  y = y - (u.x - big);
-  dx = (x > 0) ? dx : -dx;
-  res = do_cos_slow (u, y, dx, 1.1e-24, &cor);
+  res = do_cos_slow (x, dx, 1.1e-24, &cor);
   if (res == res + cor)
     return (n & 2) ? -res : res;
 
+  dx = (x > 0) ? dx : -dx;
   __docos (fabs (x), dx, w);
 
-  if (w[1] > 0)
-    cor = 1.000000005 * w[1] + 1.1e-24;
-  else
-    cor = 1.000000005 * w[1] - 1.1e-24;
+  cor = 1.000000005 * w[1] + __copysign (1.1e-24, w[1]);
 
   if (w[0] == w[0] + cor)
     return (n & 2) ? -w[0] : w[0];
@@ -994,22 +894,17 @@ bsloww2 (double x, double dx, double orig, int n)
 /* precision  and if still doesn't accurate enough by mpcos   or docos  */
 /************************************************************************/
 
-static double
-SECTION
+static inline double
+__always_inline
 cslow2 (double x)
 {
-  mynumber u;
-  double w[2], y, cor, res;
+  double w[2], cor, res;
 
-  y = fabs (x);
-  u.x = big + y;
-  y = y - (u.x - big);
-  res = do_cos_slow (u, y, 0, 0, &cor);
+  res = do_cos_slow (x, 0, 0, &cor);
   if (res == res + cor)
     return res;
 
-  y = fabs (x);
-  __docos (y, 0, w);
+  __docos (fabs (x), 0, w);
   if (w[0] == w[0] + 1.000000005 * w[1])
     return w[0];
 

@@ -108,12 +108,6 @@ __fork (void)
       /* Run things that prepare for forking before we create the task.  */
       RUN_HOOK (_hurd_fork_prepare_hook, ());
 
-      /* Acquire malloc locks.  This needs to come last because fork
-	 handlers may use malloc, and the libio list lock has an
-	 indirect malloc dependency as well (via the getdelim
-	 function).  */
-      __malloc_fork_lock_parent ();
-
       /* Lock things that want to be locked before we fork.  */
       {
 	void *const *p;
@@ -123,6 +117,13 @@ __fork (void)
 	  __mutex_lock (*p);
       }
       __mutex_lock (&_hurd_siglock);
+
+      /* Acquire malloc locks.  This needs to come last because fork
+	 handlers may use malloc, and the libio list lock has an
+	 indirect malloc dependency as well (via the getdelim
+	 function).  */
+      call_function_static_weak (__malloc_fork_lock_parent);
+      _hurd_malloc_fork_prepare ();
 
       newtask = MACH_PORT_NULL;
       thread = sigthread = MACH_PORT_NULL;
@@ -612,7 +613,8 @@ __fork (void)
 	}
 
       /* Release malloc locks.  */
-      __malloc_fork_unlock_parent ();
+      _hurd_malloc_fork_parent ();
+      call_function_static_weak (__malloc_fork_unlock_parent);
 
       /* Run things that want to run in the parent to restore it to
 	 normality.  Usually prepare hooks and parent hooks are
@@ -666,7 +668,8 @@ __fork (void)
       __sigemptyset (&_hurdsig_traced);
 
       /* Release malloc locks.  */
-      __malloc_fork_unlock_child ();
+      _hurd_malloc_fork_child ();
+      call_function_static_weak (__malloc_fork_unlock_child);
 
       /* Run things that want to run in the child task to set up.  */
       RUN_HOOK (_hurd_fork_child_hook, ());
