@@ -76,10 +76,6 @@ $(objpfx)trace_run: $(objpfx)trace_run.o
 $(objpfx)trace_dump: $(objpfx)trace_dump.o
 	$(LINK.o) -o $@ $(objpfx)trace_dump.o
 
-ifeq (${CXX},)
-CXX = g++
-endif
-
 $(objpfx)trace2wl: $(objpfx)trace2wl.o
 	$(LINK.o) -o $@ $(objpfx)trace2wl.o
 
@@ -87,6 +83,10 @@ $(objpfx)tst-malloc-backtrace: $(shared-thread-library)
 $(objpfx)tst-malloc-thread-exit: $(shared-thread-library)
 $(objpfx)tst-malloc-thread-fail: $(shared-thread-library)
 $(objpfx)tst-malloc-fork-deadlock: $(shared-thread-library)
+
+ifeq ($(experimental-malloc),yes)
+CPPFLAGS-malloc.c += -DUSE_TCACHE
+endif
 
 # Export the __malloc_initialize_hook variable to libc.so.
 LDFLAGS-tst-mallocstate = -rdynamic

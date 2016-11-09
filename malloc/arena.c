@@ -229,10 +229,11 @@ next_env_entry (char ***position)
 
           /* Save current position for next visit.  */
           *position = ++current;
+
           break;
         }
 
-      *position = ++current;
+      ++current;
     }
 
   return result;
@@ -277,9 +278,7 @@ ptmalloc_init (void)
       char **runp = _environ;
       char *envline;
 
-      while (*runp)
-	{
-	  if (__builtin_expect ((envline = next_env_entry (&runp)) != NULL,
+      while (__builtin_expect ((envline = next_env_entry (&runp)) != NULL,
                                0))
         {
           size_t len = strcspn (envline, "=");
@@ -320,12 +319,15 @@ ptmalloc_init (void)
                   if (memcmp (envline, "ARENA_TEST", 10) == 0)
                     __libc_mallopt (M_ARENA_TEST, atoi (&envline[11]));
                 }
+#if USE_TCACHE
               if (!__builtin_expect (__libc_enable_secure, 0))
                 {
                   if (memcmp (envline, "TCACHE_MAX", 10) == 0)
                     __libc_mallopt (M_TCACHE_MAX, atoi (&envline[11]));
                 }
+#endif
               break;
+#if USE_TCACHE
             case 12:
               if (!__builtin_expect (__libc_enable_secure, 0))
                 {
@@ -333,6 +335,7 @@ ptmalloc_init (void)
                     __libc_mallopt (M_TCACHE_COUNT, atoi (&envline[13]));
                 }
 	      break;
+#endif
             case 15:
               if (!__builtin_expect (__libc_enable_secure, 0))
                 {
@@ -346,7 +349,6 @@ ptmalloc_init (void)
               break;
             }
         }
-	}
     }
   if (s && s[0])
     {

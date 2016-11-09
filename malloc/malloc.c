@@ -1068,7 +1068,7 @@ typedef struct __malloc_trace_map_entry_s {
 #define TRACE_COUNT_TO_MAPPING_IDX(count) ((count) % TRACE_N_PER_MAPPING)
 
 /* Global mutex for the trace buffer tree itself.  */
-libc_lock_define_initialized (static, __malloc_trace_mutex);
+__libc_lock_define_initialized (static, __malloc_trace_mutex);
 
 /* Global counter, "full" when equal to TRACE_MAX_COUNT.  Points to
    the next available slot, so POST-INCREMENT it.  */
@@ -3358,7 +3358,7 @@ tcache_thread_freeres (void)
 {
   if (tcache.initted == 1)
     {
-      libc_lock_lock (tcache_mutex);
+      __libc_lock_lock (tcache_mutex);
       tcache.initted = 2;
       if (tcache.next)
 	tcache.next->prev = tcache.prev;
@@ -3366,7 +3366,7 @@ tcache_thread_freeres (void)
 	tcache.prev->next = tcache.next;
       else
 	tcache_list = tcache.next;
-      libc_lock_unlock (tcache_mutex);
+      __libc_lock_unlock (tcache_mutex);
     }
 }
 text_set_element (__libc_thread_subfreeres, tcache_thread_freeres);
@@ -4206,7 +4206,6 @@ _int_malloc (mstate av, size_t bytes)
 
   if ((unsigned long) (nb) <= (unsigned long) (get_max_fast ()))
     {
-
       idx = fastbin_index (nb);
       mfastbinptr *fb = &fastbin (av, idx);
       mchunkptr pp = *fb;
