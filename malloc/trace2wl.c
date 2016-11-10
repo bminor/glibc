@@ -7,6 +7,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
+#include <getopt.h>
+#include <time.h>
 
 /* The trace file looks like an array of struct __malloc_trace_buffer_s */
 #include "mtrace.h"
@@ -19,11 +21,20 @@ struct __malloc_trace_buffer_s *trace_records;
 size_t num_trace_records;
 
 int verbose = 0;
+int use_file_buffers = 0;
 
 //------------------------------------------------------------
 // File data buffers
 
+static int tmpfile_idx = 0;
+static char *tmpdir;
+static int tmpdir_len;
+
 #define BUFFER_SIZE 4096
+
+/* If we're using memory buffers, we chain from first_buffer to
+   last_buffer as a linked list.  If we're using disk buffers, we only
+   use last_buffer, which points to a fixed buffer.  */
 
 typedef struct BufferBlock {
   struct BufferBlock *next;
@@ -31,6 +42,8 @@ typedef struct BufferBlock {
 } BufferBlock;
 
 typedef struct Buffer {
+  char *filename;
+  int fd;
   BufferBlock *first_buffer;
   BufferBlock *last_buffer;
 
@@ -41,6 +54,13 @@ typedef struct Buffer {
 void
 Buffer__ctor(Buffer *this)
 {
+  if (use_file_buffers)
+    {
+      this->filename = (char *) malloc (tmpdir_len + 7);
+      sprintf (this->filename, "%s%06d", tmpdir, tmpfile_idx);
+      tmpfile_idx ++;
+      this->fd = -1;
+    }
   this->first_buffer = this->last_buffer = (BufferBlock *) malloc (sizeof(BufferBlock));
   this->first_buffer->next = NULL;
   this->count_total = this->count_last = 0;
@@ -51,10 +71,27 @@ Buffer__add (Buffer *this, char x)
 {
   if (this->count_last == BUFFER_SIZE)
     {
-      BufferBlock *b = (BufferBlock *) malloc (sizeof(BufferBlock));
-      b->next = NULL;
-      this->last_buffer->next = b;
-      this->last_buffer = b;
+      if (use_file_buffers)
+	{
+	  if (this->fd == -1)
+	    {
+	      this->fd = open(this->filename, O_WRONLY|O_CREAT|O_TRUNC, 0666);
+	      if (this->fd < 0)
+		{
+		  fprintf(stderr, "cannot create temporary file %s for writing\n", this->filename);
+		  perror("The error was");
+		  exit(1);
+		}
+	    }
+	  write (this->fd, this->last_buffer->buf, BUFFER_SIZE);
+	}
+      else
+	{
+	  BufferBlock *b = (BufferBlock *) malloc (sizeof(BufferBlock));
+	  b->next = NULL;
+	  this->last_buffer->next = b;
+	  this->last_buffer = b;
+	}
       this->count_last = 0;
     }
   this->last_buffer->buf[this->count_last] = x;
@@ -81,22 +118,67 @@ Buffer__add_int (Buffer *this, size_t val)
 void
 Buffer__write (Buffer *this, int fd)
 {
-  BufferBlock *b;
-  for (b = this->first_buffer; b != this->last_buffer; b = b->next)
-    write (fd, b->buf, BUFFER_SIZE);
+  if (use_file_buffers)
+    {
+      byte buf[BUFFER_SIZE];
+      int count;
+      struct stat s;
+
+      if (this->fd != -1)
+	close (this->fd);
+
+      if (this->count_total != this->count_last)
+	{
+	  if (stat(this->filename, &s) < 0)
+	    {
+	      fprintf(stderr, "Cannot stat %s\n", this->filename);
+	      perror("The error was");
+	      exit(1);
+	    }
+	  if (s.st_size != this->count_total - this->count_last)
+	    {
+	      fprintf(stderr, "File %s is %ld, not %ld-%ld !\n", this->filename, s.st_size, this->count_total, this->count_last);
+	      exit(1);
+	    }
+
+	  this->fd = open (this->filename, O_RDONLY);
+	  while ((count = read (this->fd, buf, BUFFER_SIZE)) > 0)
+	    write (fd, buf, count);
+	  unlink (this->filename);
+	}
+
+      this->fd = -1;
+    }
+  else
+    {
+      BufferBlock *b;
+
+      for (b = this->first_buffer; b != this->last_buffer; b = b->next)
+	write (fd, b->buf, BUFFER_SIZE);
+    }
+
   if (this->count_last)
     write (fd, this->last_buffer->buf, this->count_last);
+  this->count_last = 0;
 }
 
 void
 Buffer__clear (Buffer *this)
 {
-  while (this->first_buffer != this->last_buffer)
+  if (use_file_buffers)
     {
-      BufferBlock *b = this->first_buffer->next;
-      free (this->first_buffer);
-      this->first_buffer = b;
+      if (this->fd != -1)
+	close (this->fd);
+      unlink (this->filename);
+      this->fd = -1;
     }
+  else
+    while (this->first_buffer != this->last_buffer)
+      {
+	BufferBlock *b = this->first_buffer->next;
+	free (this->first_buffer);
+	this->first_buffer = b;
+      }
   this->count_total = this->count_last = 0;
 }
 
@@ -232,14 +314,36 @@ PerThread__add_int (PerThread *this, size_t x)
 
 Hash *per_thread;
 
+typedef enum {
+  R_no_reason,
+  R_not_seen,
+  R_alloc,
+  R_previously_freed,
+  R_previously_realloced,
+  R_realloc,
+  R_memalign,
+  R_posix_memalign
+} Reasons;
+
+const char *reasons_str[] = {
+  "",
+  "not seen",
+  "alloc",
+  "previously free'd",
+  "previously realloc'd",
+  "realloc",
+  "memalign",
+  "posix memalign"
+};
+
 typedef struct PerAddr {
   PerThread *owner;
   void *ptr;
   size_t idx;
-  int valid;
-  const char *reason;
   size_t reason_idx;
   struct __malloc_trace_buffer_s *inverted;
+  unsigned char valid;
+  unsigned char reason;
 } PerAddr;
 
 void
@@ -248,12 +352,12 @@ PerAddr__ctor (PerAddr *this, void *_ptr)
   this->owner = NULL;
   this->ptr = _ptr;
   this->valid = 0;
-  this->reason = "not seen";
+  this->reason = R_not_seen;
   this->inverted = NULL;
 }
 
 // Don't start at zero, zero is special.
-int addr_count = 1;
+size_t addr_count = 1;
 
 Hash *per_addr;
 
@@ -274,7 +378,7 @@ get_addr (void *ptr)
   return p;
 }
 
-int sync_counter = 0;
+size_t sync_counter = 0;
 
 // Insert a release/acquire pair to transfer ownership of data
 // from thread TREL to thread TACK
@@ -318,7 +422,7 @@ process_one_trace_record (struct __malloc_trace_buffer_s *r)
   if (r->type == __MTB_TYPE_UNUSED)
     return;
 
-  if(verbose)
+  if (verbose > 1)
     printf("\033[32m%8x %2x (0x%p, 0x%x) =  0x%p\033[0m\n",
 	   r->thread, r->type, r->ptr1, (int)r->size, r->ptr2);
 
@@ -363,7 +467,7 @@ process_one_trace_record (struct __malloc_trace_buffer_s *r)
 	  if (pa2->inverted)
 	    {
 	      printf ("%ld: pointer %p alloc'd again? (possible multi-level inversion) size %ld  %ld:%s\n",
-		      i, pa2->ptr, (long int)r->size, pa2->reason_idx, pa2->reason);
+		      i, pa2->ptr, (long int)r->size, pa2->reason_idx, reasons_str[pa2->reason]);
 	      //	      exit (1);
 	    }
 	  pa2->inverted = r;
@@ -388,7 +492,7 @@ process_one_trace_record (struct __malloc_trace_buffer_s *r)
       if (pa2)
 	{
 	  pa2->valid = 1;
-	  pa2->reason = "alloc";
+	  pa2->reason = R_alloc;
 	  pa2->reason_idx = i;
 	}
       break;
@@ -405,7 +509,7 @@ process_one_trace_record (struct __malloc_trace_buffer_s *r)
 	  PerThread__add (thread, C_FREE);
 	  PerThread__add_int (thread, pa1->idx);
 	  pa1->valid = 0;
-	  pa1->reason = "previously free'd";
+	  pa1->reason = R_previously_freed;
 	  pa1->reason_idx = i;
 
 	  if (pa1->inverted)
@@ -417,7 +521,8 @@ process_one_trace_record (struct __malloc_trace_buffer_s *r)
 	}
       else
 	{
-	  printf("%ld: invalid pointer %p passed to free: %ld:%s\n", i, pa1->ptr, pa1->reason_idx, pa1->reason);
+	  printf("%ld: invalid pointer %p passed to free: %ld:%s\n",
+		 i, pa1->ptr, pa1->reason_idx, reasons_str[pa1->reason]);
 	}
       break;
 
@@ -435,13 +540,13 @@ process_one_trace_record (struct __malloc_trace_buffer_s *r)
       if (pa1)
 	{
 	  pa1->valid = 0;
-	  pa1->reason = "previously realloc'd";
+	  pa1->reason = R_previously_realloced;
 	  pa1->reason_idx = i;
 	}
       if (pa2)
 	{
 	  pa2->valid = 1;
-	  pa2->reason = "realloc";
+	  pa2->reason = R_realloc;
 	  pa2->reason_idx = i;
 	}
 
@@ -450,7 +555,8 @@ process_one_trace_record (struct __malloc_trace_buffer_s *r)
     case __MTB_TYPE_MEMALIGN:
       acq_ptr (thread, pa2);
       if (pa2 && pa2->valid)
-	printf ("%ld: pointer %p memalign'd again?  %ld:%s\n", i, pa2->ptr, pa2->reason_idx, pa2->reason);
+	printf ("%ld: pointer %p memalign'd again?  %ld:%s\n",
+		i, pa2->ptr, pa2->reason_idx, reasons_str[pa2->reason]);
       PerThread__add (thread, C_MEMALIGN);
       PerThread__add_int (thread, pa2 ? pa2->idx : 0);
       PerThread__add_int (thread, r->size2);
@@ -458,7 +564,7 @@ process_one_trace_record (struct __malloc_trace_buffer_s *r)
       if (pa2)
 	{
 	  pa2->valid = 1;
-	  pa2->reason = "memalign";
+	  pa2->reason = R_memalign;
 	  pa2->reason_idx = i;
 	}
       break;
@@ -475,7 +581,7 @@ process_one_trace_record (struct __malloc_trace_buffer_s *r)
       if (r->ptr1 == 0)
 	{
 	  pa2->valid = 1;
-	  pa2->reason = "posix_memalign";
+	  pa2->reason = R_posix_memalign;
 	  pa2->reason_idx = i;
 	}
       break;
@@ -485,12 +591,81 @@ process_one_trace_record (struct __malloc_trace_buffer_s *r)
 
 //------------------------------------------------------------
 
+static const char * const month_abbrevs[] = {
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+};
+
+static struct option longopts[] = {
+  { "verbose", 0, NULL, 'v' },
+  { "progress", 0, NULL, 'p' },
+  { "file-buffers", 0, NULL, 'f' },
+  { "tmpdir", 1, NULL, 't' },
+  { NULL, 0, NULL, 0 }
+};
+
+static void
+print_help (void)
+{
+  fprintf (stderr, "Usage: trace2wl [options] <outputfile.wl> <inputfile.mtrace>\n");
+  fprintf (stderr, "  -v  --verbose        print stats about workload\n");
+  fprintf (stderr, "  -p  --progress       show progress info\n");
+  fprintf (stderr, "  -f  --file-buffers   use temporary files to store intermediate buffers\n");
+  fprintf (stderr, "  -t <file>  --tmpdir=<file>   overrides $TMPDIR or /tmp\n");
+  exit(1);
+}
+
 int
 main(int argc, char **argv)
 {
   int trace_fd, wl_fd;
   struct stat stbuf;
   unsigned long i;
+  int opt;
+  const char *tmp = NULL;
+  size_t timer_divisor, old_percent_done=0;
+  time_t start_time, cur_time;
+  int show_progress = 0;
+
+  while ((opt = getopt_long (argc, argv, "vhpft:", longopts, NULL)) != -1)
+    {
+      switch (opt) {
+      case 'v':
+	verbose ++;
+	break;
+      case 'p':
+	show_progress ++;
+	break;
+      case 'f':
+	use_file_buffers ++;
+	break;
+      case 't':
+	tmp = optarg;
+	printf("tmpdir: %s\n", tmp);
+	break;
+      case 'h':
+      default:
+	print_help();
+      }
+    }
+
+  if (use_file_buffers)
+    {
+      if (tmp == NULL)
+	{
+	  tmp = getenv("TMPDIR");
+	  printf("$TMPDIR: %s", tmp);
+	  if (tmp == NULL)
+	    {
+	      tmp = "/tmp";
+	      printf(" (using %s)", tmp);
+	    }
+	  printf("\n");
+	}
+      tmpdir = (char *) malloc (strlen(tmp) + strlen("/wl__") + 50);
+      sprintf(tmpdir, "%s/wl_%d_", tmp, getpid());
+      tmpdir_len = strlen(tmpdir);
+    }
 
   per_addr = (Hash *) malloc (sizeof (Hash));
   Hash__ctor (per_addr);
@@ -498,36 +673,26 @@ main(int argc, char **argv)
   per_thread = (Hash *) malloc (sizeof (Hash));
   Hash__ctor (per_thread);
 
-  if (argc > 1 && strcmp (argv[1], "-v") == 0)
-    {
-      verbose ++;
-      argc --;
-      argv ++;
-    }
+  if (argc-optind != 2)
+    print_help();
 
-  if (argc != 3)
+  if (access (argv[optind], F_OK) == 0)
     {
-      fprintf (stderr, "Usage: %s <outputfile.wl> <inputfile.mtrace>\n", argv[0]);
+      fprintf (stderr, "Error: output file %s already exists, will not overwrite\n", argv[optind]);
       exit(1);
     }
 
-  if (access (argv[1], F_OK) == 0)
-    {
-      fprintf (stderr, "Error: output file %s already exists, will not overwrite\n", argv[1]);
-      exit(1);
-    }
-
-  trace_fd = open (argv[2], O_RDONLY, 0666);
+  trace_fd = open (argv[optind+1], O_RDONLY, 0666);
   if (trace_fd < 0)
     {
-      fprintf (stderr, "Can't open %s for reading\n", argv[2]);
+      fprintf (stderr, "Can't open %s for reading\n", argv[optind+1]);
       perror("The error was");
       exit(1);
     }
 
-  if (stat (argv[2], &stbuf) < 0)
+  if (stat (argv[optind+1], &stbuf) < 0)
     {
-      fprintf (stderr, "Can't stat %s for reading\n", argv[2]);
+      fprintf (stderr, "Can't stat %s for reading\n", argv[optind+1]);
       perror("The error was");
       exit(1);
     }
@@ -537,14 +702,36 @@ main(int argc, char **argv)
     mmap (NULL, stbuf.st_size, PROT_READ, MAP_SHARED, trace_fd, 0);
   if (trace_records == (void *)(-1))
     {
-      fprintf (stderr, "Can't map %s for reading\n", argv[2]);
+      fprintf (stderr, "Can't map %s for reading\n", argv[optind+1]);
       perror("The error was");
       exit(1);
     }
   num_trace_records = stbuf.st_size / sizeof(*trace_records);
+  timer_divisor = num_trace_records / 100;
+  time(&start_time);
 
   for (i = 0; i < num_trace_records; i++)
-    process_one_trace_record (trace_records + i);
+    {
+      if (show_progress)
+	{
+	  int percent_done = i / timer_divisor;
+	  if (percent_done != old_percent_done)
+	    {
+	      struct tm *tm;
+	      old_percent_done = percent_done;
+	      time(&cur_time);
+	      cur_time = cur_time + (cur_time - start_time) * 100 / percent_done;
+	      tm = localtime(&cur_time);
+	      printf(" %3d%% done, ETA %3s %2d %2d:%02d \r", percent_done,
+		     month_abbrevs[tm->tm_mon], tm->tm_mday,
+		     tm->tm_hour, tm->tm_min);
+	      fflush (stdout);
+	    }
+	}
+      process_one_trace_record (trace_records + i);
+    }
+  if (show_progress)
+    printf(" 100%% done, writing out buffers...\033[K\n");
 
   PerThread **threads;
   int n_threads;
@@ -597,10 +784,10 @@ main(int argc, char **argv)
       new_len = main_loop.count_total;
     }
 
-  wl_fd = open (argv[1], O_CREAT|O_EXCL|O_RDWR, 0666);
+  wl_fd = open (argv[optind], O_CREAT|O_EXCL|O_RDWR, 0666);
   if (wl_fd < 0)
     {
-      fprintf (stderr, "Can't open %s for writing\n", argv[1]);
+      fprintf (stderr, "Can't open %s for writing\n", argv[optind]);
       perror("The error was");
       exit(1);
     }
@@ -609,7 +796,7 @@ main(int argc, char **argv)
 
   for (i=0; i<n_threads; i++)
     {
-      if (verbose)
+      if (verbose || show_progress)
 	printf("Start thread[%ld] offset 0x%lx\n", i, (long)thread_off[i]);
       Buffer__write (&(threads[i]->workload), wl_fd);
     }
