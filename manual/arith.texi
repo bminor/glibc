@@ -2990,23 +2990,38 @@ double} is a separate type).
 These functions have been GNU extensions and are new to @w{ISO C99}.
 @end deftypefun
 
+@comment stdlib.h
+@comment ISO/IEC TS 18661-3
+@deftypefun _Float128 strtof128 (const char *@var{string}, char **@var{tailptr})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
+The @code{strtof128} function (``string-to-float128'') is like
+@code{strtod}, except that it returns a @code{_Float128} value.
+
+The @code{strtof128} function was introduced in @w{ISO/IEC TS 18661-3}.
+@end deftypefun
+
 @comment wchar.h
 @comment ISO
 @deftypefun double wcstod (const wchar_t *restrict @var{string}, wchar_t **restrict @var{tailptr})
-@comment stdlib.h
+@comment wchar.h
 @comment ISO
 @deftypefunx float wcstof (const wchar_t *@var{string}, wchar_t **@var{tailptr})
-@comment stdlib.h
+@comment wchar.h
 @comment ISO
 @deftypefunx {long double} wcstold (const wchar_t *@var{string}, wchar_t **@var{tailptr})
+@comment wchar.h
+@deftypefunx _Float128 wcstof128 (const wchar_t *@var{string}, wchar_t **@var{tailptr})
 @safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
-The @code{wcstod}, @code{wcstof}, and @code{wcstol} functions are
-equivalent in nearly all aspect to the @code{strtod}, @code{strtof}, and
-@code{strtold} functions but it handles wide character string.
+The @code{wcstod}, @code{wcstof}, @code{wcstol}, and @code{wcstof128}
+functions are equivalent in nearly all aspect to the @code{strtod},
+@code{strtof}, @code{strtold}, and @code{strtof128} functions but they
+handle wide character string.
 
 The @code{wcstod} function was introduced in @w{Amendment 1} of @w{ISO
 C90}.  The @code{wcstof} and @code{wcstold} functions were introduced in
-@w{ISO C99}.
+@w{ISO C99}.  The @code{wcstof128} function is not in any standard, but is
+added to provide completeness for the non-deprecated interface of wide
+character string to floating-point conversion functions.
 @end deftypefun
 
 @comment stdlib.h
@@ -3062,6 +3077,18 @@ has been completely written if and only if the returned value is less than
 @var{size}.
 
 These functions were introduced by ISO/IEC TS 18661-1.
+@end deftypefun
+
+@comment stdlib.h
+@comment ISO/IEC TS 18661-3
+@deftypefun int strfromf128 (char *restrict @var{string}, size_t @var{size}, const char *restrict @var{format}, _Float128 @var{value})
+@safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
+@comment this function depends on __printf_fp and __printf_fphex, which are
+@comment AS-unsafe (ascuheap) and AC-unsafe (acsmem).
+The @code{strfromf128} function (``string-from-float128'') is like
+@code{strfromd}, except that @var{value} has floating type _Float128.
+
+The @code{strfromf128} function was introduced by ISO/IEC TS 18661-3.
 @end deftypefun
 
 @node System V Number Conversion
