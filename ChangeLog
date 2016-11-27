@@ -1,3 +1,9 @@
+2019-07-17  Daniil Zhilin  <generalfailer@protonmail.com>
+
+	[BZ #24200]
+	* localedata/locales/ga_IE (first_weekday): Add, set to 2 (Monday).
+	* localedata/locales/en_IE (first_weekday): Likewise.
+
 2019-07-12  Mike Crowe  <mac@mcrowe.com>
 
 	* nptl/pthread_cond_wait.c: (__pthread_cond_clockwait): Remove code

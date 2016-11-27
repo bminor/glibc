@@ -119,6 +119,7 @@ d_fmt       "%d.%m.%y"
 t_fmt       "%T"
 am_pm       "";""
 t_fmt_ampm  ""
+first_weekday 2
 week 7;19971130;4
 END LC_TIME
 
