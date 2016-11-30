@@ -998,16 +998,7 @@ _dl_add_to_slotinfo (struct link_map *l, bool do_add)
 		+ TLS_SLOTINFO_SURPLUS * sizeof (struct dtv_slotinfo));
       if (listp == NULL)
 	{
-	  /* We ran out of memory.  We will simply fail this
-	     call but don't undo anything we did so far.  The
-	     application will crash or be terminated anyway very
-	     soon.  */
-
-	  /* We have to do this since some entries in the dtv
-	     slotinfo array might already point to this
-	     generation.  */
-	  ++GL(dl_tls_generation);
-
+	  /* We ran out of memory while resizing the dtv slotinfo list.  */
 	  _dl_signal_error (ENOMEM, "dlopen", NULL, N_("\
 cannot create TLS data structures"));
 	}
