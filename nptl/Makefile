@@ -355,20 +355,25 @@ tests += tst-cancelx7 tst-cancelx17 tst-cleanupx4
 
 ifeq ($(build-shared),yes)
 tests += tst-compat-forwarder tst-audit-threads
-tests-internal += tst-tls3 tst-tls3-malloc tst-tls5 tst-stackguard1
+tests-internal += tst-tls3 tst-tls3-malloc tst-tls5 tst-stackguard1 tst-tls7
 ifeq ($(have-z-execstack),yes)
 tests += tst-execstack
 endif
 endif
+
+one-hundred = $(foreach x,0 1 2 3 4 5 6 7 8 9, \
+  0$x 1$x 2$x 3$x 4$x 5$x 6$x 7$x 8$x 9$x)
+tst-tls7mod-deps = $(one-hundred:%=tst-tls7mod-dep-%.so)
 
 modules-names = tst-tls3mod \
 		tst-tls5mod tst-tls5moda tst-tls5modb tst-tls5modc \
 		tst-tls5modd tst-tls5mode tst-tls5modf tst-stack4mod \
 		tst-execstack-mod \
 		tst-compat-forwarder-mod tst-audit-threads-mod1 \
-		tst-audit-threads-mod2
+		tst-audit-threads-mod2 \
+		tst-tls7mod tst-tls7mod-dep
 extra-test-objs += $(addsuffix .os,$(strip $(modules-names))) \
-		   tst-cleanup4aux.o tst-cleanupx4aux.o
+		   tst-cleanup4aux.o tst-cleanupx4aux.o $(tst-tls7mod-deps)
 test-extras += tst-cleanup4aux tst-cleanupx4aux
 
 tst-tls3mod.so-no-z-defs = yes
@@ -516,6 +521,12 @@ $(objpfx)tst-tls6.out: tst-tls6.sh $(objpfx)tst-tls5 \
 	  '$(test-wrapper-env)' '$(run-program-env)'; \
 	$(evaluate-test)
 endif
+
+$(objpfx)tst-tls7: $(libdl) $(shared-thread-library)
+$(objpfx)tst-tls7.out: $(objpfx)tst-tls7mod.so
+$(objpfx)tst-tls7mod.so: $(tst-tls7mod-deps:%=$(objpfx)%)
+$(tst-tls7mod-deps:%=$(objpfx)%): $(objpfx)tst-tls7mod-dep.so
+	cp -f $< $@
 
 $(objpfx)tst-dlsym1: $(libdl) $(shared-thread-library)
 
