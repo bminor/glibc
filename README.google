@@ -615,3 +615,8 @@ elf/elf.h
 nss/nss_borg/borg-pwd.c
   Add /etc/passwd.borg.base as fallback passwd file. (b/30413914, b/32608777)
   (mrothwell/stanshebs, google-local)
+
+nss/nss_files/files-XXX.c
+  For b/26276654, don't ignore too long lines in nss_files (BZ17079, CVE-2015-5277)
+  https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=commit;h=3fd498242948b1fa944c56646ec9b156387dd310
+  (stanshebs, backport)
