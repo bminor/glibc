@@ -1,3 +1,9 @@
+2017-01-05  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21026]
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/syscalls.list
+	(readahead): New syscall entry.
+
 2017-04-07  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #21258]
