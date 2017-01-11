@@ -620,3 +620,8 @@ nss/nss_files/files-XXX.c
   For b/26276654, don't ignore too long lines in nss_files (BZ17079, CVE-2015-5277)
   https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=commit;h=3fd498242948b1fa944c56646ec9b156387dd310
   (stanshebs, backport)
+
+posix/fnmatch_loop.c
+  Don't read past end of pattern in fnmatch (BZ17062)
+  https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=commit;h=b3a9f56ba59c3d8eadd3135a1c25c37a63151450
+  (stanshebs, backport)
