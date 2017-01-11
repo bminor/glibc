@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-2016 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -154,6 +154,14 @@
 				   + (__tgmath_real_type (Val2)) 0	      \
 				   + (__tgmath_real_type (Val3)) 0))	      \
 		       Fct##f (Val1, Val2, Val3)))
+
+# define __TGMATH_TERNARY_FIRST_REAL_RET_ONLY(Val1, Val2, Val3, RetType, Fct) \
+     (__extension__ ((sizeof (Val1) == sizeof (double)			\
+		      || __builtin_classify_type (Val1) != 8)		\
+		     ? (RetType) Fct (Val1, Val2, Val3)			\
+		     : (sizeof (Val1) == sizeof (float))		\
+		     ? (RetType) Fct##f (Val1, Val2, Val3)		\
+		     : (RetType) __tgml(Fct) (Val1, Val2, Val3)))
 
 /* XXX This definition has to be changed as soon as the compiler understands
    the imaginary keyword.  */
@@ -438,6 +446,30 @@
      __TGMATH_TERNARY_REAL_ONLY (Val1, Val2, Val3, fma)
 
 #if __GLIBC_USE (IEC_60559_BFP_EXT)
+/* Round X to nearest integer value, rounding halfway cases to even.  */
+# define roundeven(Val) __TGMATH_UNARY_REAL_ONLY (Val, roundeven)
+
+# define fromfp(Val1, Val2, Val3)					\
+  __TGMATH_TERNARY_FIRST_REAL_RET_ONLY (Val1, Val2, Val3, __intmax_t, fromfp)
+
+# define ufromfp(Val1, Val2, Val3)					\
+  __TGMATH_TERNARY_FIRST_REAL_RET_ONLY (Val1, Val2, Val3, __uintmax_t, ufromfp)
+
+# define fromfpx(Val1, Val2, Val3)					\
+  __TGMATH_TERNARY_FIRST_REAL_RET_ONLY (Val1, Val2, Val3, __intmax_t, fromfpx)
+
+# define ufromfpx(Val1, Val2, Val3)					\
+  __TGMATH_TERNARY_FIRST_REAL_RET_ONLY (Val1, Val2, Val3, __uintmax_t, ufromfpx)
+
+/* Like ilogb, but returning long int.  */
+# define llogb(Val) __TGMATH_UNARY_REAL_RET_ONLY (Val, long int, llogb)
+
+/* Return value with maximum magnitude.  */
+# define fmaxmag(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2, fmaxmag)
+
+/* Return value with minimum magnitude.  */
+# define fminmag(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2, fminmag)
+
 /* Total order operation.  */
 # define totalorder(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2,	\
 							   totalorder)

@@ -1,5 +1,5 @@
 /* Initialization code run first thing by the ELF startup code.  Common version
-   Copyright (C) 1995-2016 Free Software Foundation, Inc.
+   Copyright (C) 1995-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -72,8 +72,6 @@ _init (int argc, char **argv, char **envp)
   __environ = envp;
 
 #ifndef SHARED
-  __libc_init_secure ();
-
   /* First the initialization which normally would be done by the
      dynamic linker.  */
   _dl_non_dynamic_init ();

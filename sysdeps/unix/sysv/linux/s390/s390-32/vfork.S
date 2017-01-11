@@ -1,4 +1,4 @@
-/* Copyright (C) 2004-2016 Free Software Foundation, Inc.
+/* Copyright (C) 2004-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2004.
 
@@ -28,21 +28,9 @@
    and the process ID of the new process to the old process.  */
 
 ENTRY (__libc_vfork)
-	ear	%r4,%a0
-	lhi	%r1,1
-	icm	%r3,15,PID(%r4)
-	sll	%r1,31
-	je	1f
-	lcr	%r1,%r3
-1:	st	%r1,PID(%r4)
-
 	/* Do vfork system call.  */
 	svc	SYS_ify (vfork)
 
-	ltr	%r2,%r2
-	je	1f
-	st	%r3,PID(%r4)
-1:
 	/* Check for error.  */
 	lhi	%r4,-4095
 	clr	%r2,%r4

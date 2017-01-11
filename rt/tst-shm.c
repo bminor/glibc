@@ -1,5 +1,5 @@
 /* Test program for POSIX shm_* functions.
-   Copyright (C) 2000-2016 Free Software Foundation, Inc.
+   Copyright (C) 2000-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2000.
 
@@ -199,9 +199,13 @@ do_test (void)
   return (!WIFEXITED (status1) || WEXITSTATUS (status1) != 0
 	  || !WIFEXITED (status2) || WEXITSTATUS (status2) != 0);
 }
-#define TEST_FUNCTION do_test ()
 
-#define CLEANUP_HANDLER shm_unlink ("/glibc-shm-test");
+static void
+cleanup_handler (void)
+{
+  shm_unlink ("/glibc-shm-test");
+}
 
+#define CLEANUP_HANDLER cleanup_handler
 
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

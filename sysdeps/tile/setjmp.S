@@ -1,4 +1,4 @@
-/* Copyright (C) 2011-2016 Free Software Foundation, Inc.
+/* Copyright (C) 2011-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2011.
 
@@ -44,3 +44,4 @@ ENTRY(__sigsetjmp)
 	j plt(__sigjmp_save)
 	jrp lr   /* Keep the backtracer happy. */
 END(__sigsetjmp)
+hidden_def (__sigsetjmp)

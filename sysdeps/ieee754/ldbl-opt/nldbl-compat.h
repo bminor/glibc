@@ -1,5 +1,5 @@
 /* Prototypes for compatibility double == long double entry points.
-   Copyright (C) 2006-2016 Free Software Foundation, Inc.
+   Copyright (C) 2006-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@cygnus.com>, 2006.
 
@@ -24,6 +24,7 @@
 #define __NO_LONG_DOUBLE_MATH	1
 #include <stdarg.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <printf.h>
 #include <wchar.h>

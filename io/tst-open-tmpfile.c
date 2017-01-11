@@ -1,5 +1,5 @@
 /* Test open and openat with O_TMPFILE.
-   Copyright (C) 2016 Free Software Foundation, Inc.
+   Copyright (C) 2016-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,10 +28,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-static int do_test (void);
-
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/support.h>
 
 #ifdef O_TMPFILE
 typedef int (*wrapper_func) (const char *, int, mode_t);
@@ -317,3 +314,5 @@ do_test (void)
 }
 
 #endif  /* O_TMPFILE */
+
+#include <support/test-driver.c>

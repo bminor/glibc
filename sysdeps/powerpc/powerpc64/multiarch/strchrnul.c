@@ -1,5 +1,5 @@
 /* Multiple versions of strchrnul.
-   Copyright (C) 2013-2016 Free Software Foundation, Inc.
+   Copyright (C) 2013-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,10 +23,13 @@
 
 extern __typeof (__strchrnul) __strchrnul_ppc attribute_hidden;
 extern __typeof (__strchrnul) __strchrnul_power7 attribute_hidden;
+extern __typeof (__strchrnul) __strchrnul_power8 attribute_hidden;
 
 /* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
    ifunc symbol properly.  */
 libc_ifunc (__strchrnul,
+	    (hwcap2 & PPC_FEATURE2_ARCH_2_07)
+	    ? __strchrnul_power8 :
 	    (hwcap & PPC_FEATURE_HAS_VSX)
             ? __strchrnul_power7
             : __strchrnul_ppc);

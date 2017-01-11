@@ -1,4 +1,4 @@
-/* Copyright (C) 2011-2016 Free Software Foundation, Inc.
+/* Copyright (C) 2011-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2011.
 
@@ -26,6 +26,7 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
+#if !XSTAT_IS_XSTAT64
 #include "overflow.h"
 
 /* Get information about the file NAME in BUF.  */
@@ -42,3 +43,4 @@ __fxstatat (int vers, int fd, const char *file, struct stat *buf, int flag)
   return -1;
 }
 libc_hidden_def (__fxstatat)
+#endif

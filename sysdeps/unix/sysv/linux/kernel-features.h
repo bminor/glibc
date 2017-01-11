@@ -1,6 +1,6 @@
 /* Set flags signalling availability of kernel features based on given
    kernel version number.
-   Copyright (C) 1999-2016 Free Software Foundation, Inc.
+   Copyright (C) 1999-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -147,3 +147,7 @@
    separate syscalls were only added later.  */
 #define __ASSUME_SENDMSG_SYSCALL	1
 #define __ASSUME_RECVMSG_SYSCALL	1
+
+/* Support for SysV IPC through wired syscalls.  All supported architectures
+   either support ipc syscall and/or all the ipc correspondent syscalls.  */
+#define __ASSUME_DIRECT_SYSVIPC_SYSCALLS	1

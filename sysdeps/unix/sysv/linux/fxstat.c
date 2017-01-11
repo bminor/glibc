@@ -1,5 +1,5 @@
 /* fxstat using old-style Unix fstat system call.
-   Copyright (C) 1991-2016 Free Software Foundation, Inc.
+   Copyright (C) 1991-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -54,7 +54,7 @@ __fxstat (int vers, int fd, struct stat *buf)
 
 hidden_def (__fxstat)
 weak_alias (__fxstat, _fxstat);
-#ifdef XSTAT_IS_XSTAT64
+#if XSTAT_IS_XSTAT64
 #undef __fxstat64
 strong_alias (__fxstat, __fxstat64);
 hidden_ver (__fxstat, __fxstat64)

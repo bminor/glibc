@@ -1,5 +1,5 @@
 /* Cache handling for host lookup.
-   Copyright (C) 2004-2016 Free Software Foundation, Inc.
+   Copyright (C) 2004-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2004.
 
@@ -25,6 +25,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <sys/mman.h>
+#include <resolv/resolv-internal.h>
 #include <resolv/res_hconf.h>
 
 #include "dbg_log.h"
@@ -110,7 +111,7 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
      IPv6 addresses.  Currently this is decided by setting the
      RES_USE_INET6 bit in _res.options.  */
   int old_res_options = _res.options;
-  _res.options &= ~RES_USE_INET6;
+  _res.options &= ~DEPRECATED_RES_USE_INET6;
 
   size_t tmpbuf6len = 1024;
   char *tmpbuf6 = alloca (tmpbuf6len);
@@ -535,7 +536,7 @@ next_nip:
    }
 
  out:
-  _res.options |= old_res_options & RES_USE_INET6;
+  _res.options |= old_res_options & DEPRECATED_RES_USE_INET6;
 
   if (dataset != NULL && !alloca_used)
     {

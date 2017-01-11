@@ -1,5 +1,5 @@
 /* Prototype declarations for math functions; helper file for <math.h>.
-   Copyright (C) 1996-2016 Free Software Foundation, Inc.
+   Copyright (C) 1996-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -315,6 +315,11 @@ __MATHCALL (scalbn,, (_Mdouble_ __x, int __n));
 __MATHDECL (int,ilogb,, (_Mdouble_ __x));
 #endif
 
+#if __GLIBC_USE (IEC_60559_BFP_EXT)
+/* Like ilogb, but returning long int.  */
+__MATHDECL (long int, llogb,, (_Mdouble_ __x));
+#endif
+
 #ifdef __USE_ISOC99
 /* Return X times (2 to the Nth power).  */
 __MATHCALL (scalbln,, (_Mdouble_ __x, long int __n));
@@ -380,6 +385,37 @@ __END_NAMESPACE_C99
 #endif
 
 #if __GLIBC_USE (IEC_60559_BFP_EXT)
+/* Round X to nearest integer value, rounding halfway cases to even.  */
+__MATHCALLX (roundeven,, (_Mdouble_ __x), (__const__));
+
+/* Round X to nearest signed integer value, not raising inexact, with
+   control of rounding direction and width of result.  */
+__MATHDECL (__intmax_t, fromfp,, (_Mdouble_ __x, int __round,
+				  unsigned int __width));
+
+/* Round X to nearest unsigned integer value, not raising inexact,
+   with control of rounding direction and width of result.  */
+__MATHDECL (__uintmax_t, ufromfp,, (_Mdouble_ __x, int __round,
+				    unsigned int __width));
+
+/* Round X to nearest signed integer value, raising inexact for
+   non-integers, with control of rounding direction and width of
+   result.  */
+__MATHDECL (__intmax_t, fromfpx,, (_Mdouble_ __x, int __round,
+				   unsigned int __width));
+
+/* Round X to nearest unsigned integer value, raising inexact for
+   non-integers, with control of rounding direction and width of
+   result.  */
+__MATHDECL (__uintmax_t, ufromfpx,, (_Mdouble_ __x, int __round,
+				     unsigned int __width));
+
+/* Return value with maximum magnitude.  */
+__MATHCALLX (fmaxmag,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
+
+/* Return value with minimum magnitude.  */
+__MATHCALLX (fminmag,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
+
 /* Test equality.  */
 __MATHDECL_1 (int, __iseqsig,, (_Mdouble_ __x, _Mdouble_ __y));
 
@@ -400,6 +436,12 @@ __MATHDECL_1 (int, canonicalize,, (_Mdouble_ *__cx, const _Mdouble_ *__x));
 
 /* Get NaN payload.  */
 __MATHCALL (getpayload,, (const _Mdouble_ *__x));
+
+/* Set quiet NaN payload.  */
+__MATHDECL_1 (int, setpayload,, (_Mdouble_ *__x, _Mdouble_ __payload));
+
+/* Set signaling NaN payload.  */
+__MATHDECL_1 (int, setpayloadsig,, (_Mdouble_ *__x, _Mdouble_ __payload));
 #endif
 
 #if defined __USE_MISC || (defined __USE_XOPEN_EXTENDED \

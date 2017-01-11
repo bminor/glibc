@@ -1,5 +1,5 @@
 /* strcpy/stpcpy - copy a string returning pointer to start/end.
-   Copyright (C) 2013-2016 Free Software Foundation, Inc.
+   Copyright (C) 2013-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -91,6 +91,8 @@
 #define MIN_PAGE_SIZE (1 << MIN_PAGE_P2)
 
 ENTRY_ALIGN (STRCPY, 6)
+	DELOUSE (0)
+	DELOUSE (1)
 	/* For moderately short strings, the fastest way to do the copy is to
 	   calculate the length of the string in the same way as strlen, then
 	   essentially do a memcpy of the result.  This avoids the need for

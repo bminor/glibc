@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2016 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2017 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 
@@ -39,6 +39,13 @@
  */
         .text
 ENTRY(__clone)
+	DELOUSE (0)
+	DELOUSE (1)
+	DELOUSE (2)
+	DELOUSE (3)
+	DELOUSE (4)
+	DELOUSE (5)
+	DELOUSE (6)
 	/* Save args for the child.  */
 	mov	x10, x0
 	mov	x11, x2
@@ -71,16 +78,6 @@ thread_start:
 	cfi_startproc
 	cfi_undefined (x30)
 	mov	x29, 0
-
-	tbnz	x11, #CLONE_VM_BIT, 1f
-
-	mov	x8, #SYS_ify(getpid)
-	svc	0x0
-	mrs	x1, tpidr_el0
-	sub	x1, x1, #PTHREAD_SIZEOF
-	str	w0, [x1, #PTHREAD_PID_OFFSET]
-	str	w0, [x1, #PTHREAD_TID_OFFSET]
-1:
 
 	/* Pick the function arg and execute.  */
 	mov	x0, x12

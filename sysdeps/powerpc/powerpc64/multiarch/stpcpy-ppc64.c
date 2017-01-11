@@ -1,5 +1,5 @@
 /* Multiarch stpcpy for PPC64.
-   Copyright (C) 2015-2016 Free Software Foundation, Inc.
+   Copyright (C) 2015-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,9 +27,7 @@ extern __typeof (stpcpy) __stpcpy_ppc attribute_hidden;
 #define strlen __strlen_ppc
 
 #undef weak_alias
-#define weak_alias(name, aliasname) \
-  extern __typeof (__stpcpy_ppc) aliasname \
-    __attribute__ ((weak, alias ("__stpcpy_ppc")));
+#define weak_alias(name, aliasname)
 
 #undef libc_hidden_def
 #define libc_hidden_def(name)

@@ -1,6 +1,6 @@
 /* Test backtrace and backtrace_symbols for signal frames, where a
    system call was interrupted by a signal.
-   Copyright (C) 2011-2016 Free Software Foundation, Inc.
+   Copyright (C) 2011-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,10 +31,6 @@
 #ifndef SIGACTION_FLAGS
 # define SIGACTION_FLAGS 0
 #endif
-
-static int do_test (void);
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
 
 /* The backtrace should include at least handle_signal, a signal
    trampoline, read, 3 * fn, and do_test.  */
@@ -133,9 +129,11 @@ fn (int c, int flags)
   return 0;
 }
 
-NO_INLINE static int
+NO_INLINE int
 do_test (void)
 {
   fn (2, SIGACTION_FLAGS);
   return ret;
 }
+
+#include <support/test-driver.c>

@@ -1,4 +1,4 @@
-/* Copyright (C) 2011-2016 Free Software Foundation, Inc.
+/* Copyright (C) 2011-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2011.
 
@@ -41,7 +41,7 @@ __xstat (int vers, const char *name, struct stat *buf)
 
 hidden_def (__xstat)
 weak_alias (__xstat, _xstat);
-#ifdef XSTAT_IS_XSTAT64
+#if XSTAT_IS_XSTAT64
 #undef __xstat64
 strong_alias (__xstat, __xstat64);
 hidden_ver (__xstat, __xstat64)

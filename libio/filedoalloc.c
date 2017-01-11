@@ -1,4 +1,4 @@
-/* Copyright (C) 1993-2016 Free Software Foundation, Inc.
+/* Copyright (C) 1993-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -94,7 +94,7 @@ _IO_file_doallocate (_IO_FILE *fp)
 	    fp->_flags |= _IO_LINE_BUF;
 	}
 #if _IO_HAVE_ST_BLKSIZE
-      if (st.st_blksize > 0)
+      if (st.st_blksize > 0 && st.st_blksize < _IO_BUFSIZ)
 	size = st.st_blksize;
 #endif
     }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2016 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,4 +35,5 @@ __snprintf (char *s, size_t maxlen, const char *format, ...)
 
   return done;
 }
+libc_hidden_def (__snprintf)
 ldbl_weak_alias (__snprintf, snprintf)

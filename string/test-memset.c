@@ -1,5 +1,5 @@
 /* Test memset functions.
-   Copyright (C) 1999-2016 Free Software Foundation, Inc.
+   Copyright (C) 1999-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
 
@@ -19,7 +19,11 @@
 
 #define TEST_MAIN
 #ifdef TEST_BZERO
-# define TEST_NAME "bzero"
+# ifdef TEST_EXPLICIT_BZERO
+#  define TEST_NAME "explicit_bzero"
+# else
+#  define TEST_NAME "bzero"
+# endif
 #else
 # ifndef WIDE
 #  define TEST_NAME "memset"
@@ -56,7 +60,11 @@ void builtin_bzero (char *, size_t);
 
 IMPL (simple_bzero, 0)
 IMPL (builtin_bzero, 0)
+#ifdef TEST_EXPLICIT_BZERO
+IMPL (explicit_bzero, 1)
+#else
 IMPL (bzero, 1)
+#endif
 
 void
 simple_bzero (char *s, size_t n)

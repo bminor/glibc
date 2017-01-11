@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2016 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -73,6 +73,9 @@ do_test (void)
 
   puts ("parent: wait for condition");
 
+  /* This test will fail on spurious wake-ups, which are allowed; however,
+     the current implementation shouldn't produce spurious wake-ups in the
+     scenario we are testing here.  */
   err = pthread_cond_wait (&cond, &mut);
   if (err != 0)
     error (EXIT_FAILURE, err, "parent: cannot wait fir signal");

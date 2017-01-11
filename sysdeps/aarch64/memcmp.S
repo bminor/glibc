@@ -1,6 +1,6 @@
 /* memcmp - compare memory
 
-   Copyright (C) 2013-2016 Free Software Foundation, Inc.
+   Copyright (C) 2013-2017 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 
@@ -47,6 +47,9 @@
 #define mask		x13
 
 ENTRY_ALIGN (memcmp, 6)
+	DELOUSE (0)
+	DELOUSE (1)
+	DELOUSE (2)
 	cbz	limit, L(ret0)
 	eor	tmp1, src1, src2
 	tst	tmp1, #7

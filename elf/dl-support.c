@@ -1,5 +1,5 @@
 /* Support for dynamic linking code in static libc.
-   Copyright (C) 1996-2016 Free Software Foundation, Inc.
+   Copyright (C) 1996-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -354,8 +354,10 @@ _dl_non_dynamic_init (void)
 	  cp = (const char *) __rawmemchr (cp, '\0') + 1;
 	}
 
+#if !HAVE_TUNABLES
       if (__access ("/etc/suid-debug", F_OK) != 0)
 	__unsetenv ("MALLOC_CHECK_");
+#endif
     }
 
 #ifdef DL_PLATFORM_INIT

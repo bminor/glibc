@@ -1,6 +1,6 @@
 /* Read decimal floating point numbers.
    This file is part of the GNU C Library.
-   Copyright (C) 1995-2016 Free Software Foundation, Inc.
+   Copyright (C) 1995-2017 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 /* The actual implementation for all floating point sizes is in strtod.c.
    These macros tell it to produce the `float' version, `strtof'.  */
 
-#include <bits/wordsize.h>
+#include <bits/long-double.h>
 
 #ifdef __LONG_DOUBLE_MATH_OPTIONAL
 # include <wchar.h>

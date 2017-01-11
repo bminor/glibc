@@ -1,5 +1,5 @@
 /* strcat with SSE2
-   Copyright (C) 2011-2016 Free Software Foundation, Inc.
+   Copyright (C) 2011-2017 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
 
@@ -227,6 +227,8 @@ L(StartStrcpyPart):
 	pxor	%xmm0, %xmm0
 # ifdef USE_AS_STRNCAT
 	add	%ecx, %ebx
+	sbb	%edx, %edx
+	or	%edx, %ebx
 # endif
 	sub	%ecx, %eax
 	jmp	L(Unalign16Both)

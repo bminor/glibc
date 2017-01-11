@@ -1,4 +1,4 @@
-/* Copyright (C) 1998-2016 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -168,7 +168,7 @@ __statvfs_getflags (const char *name, int fstype, int fd)
 	      char *cp = mntbuf.mnt_opts;
 	      char *opt;
 
-	      while ((opt = strsep (&cp, ",")) != NULL)
+	      while ((opt = __strsep (&cp, ",")) != NULL)
 		if (strcmp (opt, "ro") == 0)
 		  result |= ST_RDONLY;
 		else if (strcmp (opt, "nosuid") == 0)

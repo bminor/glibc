@@ -1,6 +1,6 @@
 /* Set flags signalling availability of kernel features based on given
    kernel version number.
-   Copyright (C) 2008-2016 Free Software Foundation, Inc.
+   Copyright (C) 2008-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -54,3 +54,6 @@
 # undef __ASSUME_REQUEUE_PI
 # undef __ASSUME_SET_ROBUST_LIST
 #endif
+
+/* m68k only supports ipc syscall.  */
+#undef __ASSUME_DIRECT_SYSVIPC_SYSCALLS

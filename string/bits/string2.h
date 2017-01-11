@@ -1,5 +1,5 @@
 /* Machine-independant string function optimizations.
-   Copyright (C) 1997-2016 Free Software Foundation, Inc.
+   Copyright (C) 1997-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -52,7 +52,7 @@
 #define __string2_1bptr_p(__x) \
   ((size_t)(const void *)((__x) + 1) - (size_t)(const void *)(__x) == 1)
 
-/* Set N bytes of S to C.  */
+/* Set N bytes of S to 0.  */
 #if !defined _HAVE_STRING_ARCH_memset
 # define __bzero(s, n) __builtin_memset (s, '\0', n)
 #endif
@@ -179,135 +179,6 @@ extern void *__rawmemchr (const void *__s, int __c);
 # define strpbrk(s, accept) __builtin_strpbrk (s, accept)
 #endif
 
-
-#if !defined _HAVE_STRING_ARCH_strtok_r || defined _FORCE_INLINES
-# ifndef _HAVE_STRING_ARCH_strtok_r
-#  define __strtok_r(s, sep, nextp) \
-  (__extension__ (__builtin_constant_p (sep) && __string2_1bptr_p (sep)	      \
-		  && ((const char *) (sep))[0] != '\0'			      \
-		  && ((const char *) (sep))[1] == '\0'			      \
-		  ? __strtok_r_1c (s, ((const char *) (sep))[0], nextp)       \
-		  : __strtok_r (s, sep, nextp)))
-# endif
-
-__STRING_INLINE char *__strtok_r_1c (char *__s, char __sep, char **__nextp);
-__STRING_INLINE char *
-__strtok_r_1c (char *__s, char __sep, char **__nextp)
-{
-  char *__result;
-  if (__s == NULL)
-    __s = *__nextp;
-  while (*__s == __sep)
-    ++__s;
-  __result = NULL;
-  if (*__s != '\0')
-    {
-      __result = __s++;
-      while (*__s != '\0')
-	if (*__s++ == __sep)
-	  {
-	    __s[-1] = '\0';
-	    break;
-	  }
-    }
-  *__nextp = __s;
-  return __result;
-}
-# ifdef __USE_POSIX
-#  define strtok_r(s, sep, nextp) __strtok_r (s, sep, nextp)
-# endif
-#endif
-
-
-#if !defined _HAVE_STRING_ARCH_strsep || defined _FORCE_INLINES
-# ifndef _HAVE_STRING_ARCH_strsep
-
-extern char *__strsep_g (char **__stringp, const char *__delim);
-#  define __strsep(s, reject) \
-  __extension__								      \
-  ({ char __r0, __r1, __r2;						      \
-     (__builtin_constant_p (reject) && __string2_1bptr_p (reject)	      \
-      && (__r0 = ((const char *) (reject))[0],				      \
-	  ((const char *) (reject))[0] != '\0')				      \
-      ? ((__r1 = ((const char *) (reject))[1],				      \
-	 ((const char *) (reject))[1] == '\0')				      \
-	 ? __strsep_1c (s, __r0)					      \
-	 : ((__r2 = ((const char *) (reject))[2], __r2 == '\0')		      \
-	    ? __strsep_2c (s, __r0, __r1)				      \
-	    : (((const char *) (reject))[3] == '\0'			      \
-	       ? __strsep_3c (s, __r0, __r1, __r2)			      \
-	       : __strsep_g (s, reject))))				      \
-      : __strsep_g (s, reject)); })
-# endif
-
-__STRING_INLINE char *__strsep_1c (char **__s, char __reject);
-__STRING_INLINE char *
-__strsep_1c (char **__s, char __reject)
-{
-  char *__retval = *__s;
-  if (__retval != NULL && (*__s = strchr (__retval, __reject)) != NULL)
-    *(*__s)++ = '\0';
-  return __retval;
-}
-
-__STRING_INLINE char *__strsep_2c (char **__s, char __reject1, char __reject2);
-__STRING_INLINE char *
-__strsep_2c (char **__s, char __reject1, char __reject2)
-{
-  char *__retval = *__s;
-  if (__retval != NULL)
-    {
-      char *__cp = __retval;
-      while (1)
-	{
-	  if (*__cp == '\0')
-	    {
-	      __cp = NULL;
-	  break;
-	    }
-	  if (*__cp == __reject1 || *__cp == __reject2)
-	    {
-	      *__cp++ = '\0';
-	      break;
-	    }
-	  ++__cp;
-	}
-      *__s = __cp;
-    }
-  return __retval;
-}
-
-__STRING_INLINE char *__strsep_3c (char **__s, char __reject1, char __reject2,
-				   char __reject3);
-__STRING_INLINE char *
-__strsep_3c (char **__s, char __reject1, char __reject2, char __reject3)
-{
-  char *__retval = *__s;
-  if (__retval != NULL)
-    {
-      char *__cp = __retval;
-      while (1)
-	{
-	  if (*__cp == '\0')
-	    {
-	      __cp = NULL;
-	  break;
-	    }
-	  if (*__cp == __reject1 || *__cp == __reject2 || *__cp == __reject3)
-	    {
-	      *__cp++ = '\0';
-	      break;
-	    }
-	  ++__cp;
-	}
-      *__s = __cp;
-    }
-  return __retval;
-}
-# ifdef __USE_MISC
-#  define strsep(s, reject) __strsep (s, reject)
-# endif
-#endif
 
 /* We need the memory allocation functions for inline strdup().
    Referring to stdlib.h (even minimally) is not allowed

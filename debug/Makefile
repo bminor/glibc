@@ -1,4 +1,4 @@
-# Copyright (C) 1998-2016 Free Software Foundation, Inc.
+# Copyright (C) 1998-2017 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -48,9 +48,16 @@ routines  = backtrace backtracesyms backtracesymsfd noophooks \
 	    vdprintf_chk obprintf_chk \
 	    longjmp_chk ____longjmp_chk \
 	    fdelt_chk poll_chk ppoll_chk \
+	    explicit_bzero_chk \
 	    stack_chk_fail fortify_fail \
 	    $(static-only-routines)
 static-only-routines := warning-nop stack_chk_fail_local
+
+# Building the stack-protector failure routines with stack protection
+# makes no sense.
+
+CFLAGS-stack_chk_fail.c = $(no-stack-protector)
+CFLAGS-stack_chk_fail_local.c = $(no-stack-protector)
 
 CFLAGS-backtrace.c = -fno-omit-frame-pointer
 CFLAGS-sprintf_chk.c = $(libio-mtsafe)

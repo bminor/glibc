@@ -1,5 +1,5 @@
 /* Return information about the filesystem on which FILE resides.
-   Copyright (C) 1996-2016 Free Software Foundation, Inc.
+   Copyright (C) 1996-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,9 +18,21 @@
 
 #include <errno.h>
 #include <string.h>
-#include <sys/statfs.h>
 #include <stddef.h>
 #include <sysdep.h>
+#include <kernel_stat.h>
+
+/* Hide the prototypes for __statfs and statfs so that GCC will not
+   complain about the different function signatures if they are aliased
+   to  __stat64.  If STATFS_IS_STATFS64 is not zero then the statfs and
+   statfs64 structures have an identical layout but different type names.  */
+
+#if STATFS_IS_STATFS64
+# define __statfs __statfs_disable
+# define statfs statfs_disable
+#endif
+#include <sys/statfs.h>
+
 #include <kernel-features.h>
 
 
@@ -72,3 +84,12 @@ __statfs64 (const char *file, struct statfs64 *buf)
 #endif
 }
 weak_alias (__statfs64, statfs64)
+
+#undef __statfs
+#undef statfs
+
+#if STATFS_IS_STATFS64
+weak_alias (__statfs64, __statfs)
+weak_alias (__statfs64, statfs)
+libc_hidden_ver (__statfs64, __statfs)
+#endif

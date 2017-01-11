@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2016 Free Software Foundation, Inc.
+# Copyright (C) 1991-2017 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -108,24 +108,46 @@ endif
 
 .PHONY: others tests bench bench-build
 
+# Test programs for the pretty printers.
+tests-printers-programs := $(addprefix $(objpfx),$(tests-printers))
+
+# .out files with the output of running the pretty printer tests.
+tests-printers-out := $(patsubst %,$(objpfx)%.out,$(tests-printers))
+
+ifndef PYTHON
+# Mark tests-printers tests as unsupported if we don't have PYTHON.
+tests-unsupported += $(tests-printers)
+endif
+
 ifeq ($(build-programs),yes)
 others: $(addprefix $(objpfx),$(others) $(sysdep-others) $(extra-objs))
 else
 others: $(addprefix $(objpfx),$(extra-objs))
 endif
+
+# Generate constant files for Python pretty printers if required.
+others: $(py-const)
+
 ifeq ($(run-built-tests),no)
-tests: $(addprefix $(objpfx),$(tests) $(test-srcs)) $(tests-special)
+tests: $(addprefix $(objpfx),$(filter-out $(tests-unsupported),$(tests)) \
+			     $(test-srcs)) $(tests-special) \
+			     $(tests-printers-programs)
 xtests: tests $(xtests-special)
 else
-tests: $(tests:%=$(objpfx)%.out) $(tests-special)
+tests: $(tests:%=$(objpfx)%.out) $(tests-special) $(tests-printers-out)
 xtests: tests $(xtests:%=$(objpfx)%.out) $(xtests-special)
 endif
 
 tests-special-notdir = $(patsubst $(objpfx)%, %, $(tests-special))
 xtests-special-notdir = $(patsubst $(objpfx)%, %, $(xtests-special))
+ifeq ($(run-built-tests),no)
+tests-expected =
+else
+tests-expected = $(tests) $(tests-printers)
+endif
 tests:
 	$(..)scripts/merge-test-results.sh -s $(objpfx) $(subdir) \
-	  $(sort $(tests) $(tests-special-notdir:.out=)) \
+	  $(sort $(tests-expected) $(tests-special-notdir:.out=)) \
 	  > $(objpfx)subdir-tests.sum
 xtests:
 	$(..)scripts/merge-test-results.sh -s $(objpfx) $(subdir) \
@@ -172,6 +194,7 @@ endif
 
 ifneq "$(strip $(binaries-shared-tests))" ""
 $(addprefix $(objpfx),$(binaries-shared-tests)): %: %.o \
+  $(link-extra-libs-tests) \
   $(sort $(filter $(common-objpfx)lib%,$(link-libc))) \
   $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
 	$(+link-tests)
@@ -179,6 +202,7 @@ endif
 
 ifneq "$(strip $(binaries-pie-tests))" ""
 $(addprefix $(objpfx),$(binaries-pie-tests)): %: %.o \
+  $(link-extra-libs-tests) \
   $(sort $(filter $(common-objpfx)lib%,$(link-libc))) \
   $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
 	$(+link-pie-tests)
@@ -200,6 +224,7 @@ endif
 
 ifneq "$(strip $(binaries-static-tests))" ""
 $(addprefix $(objpfx),$(binaries-static-tests)): %: %.o \
+  $(link-extra-libs-tests) \
   $(sort $(filter $(common-objpfx)lib%,$(link-libc-static-tests))) \
   $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
 	$(+link-static-tests)
@@ -234,6 +259,31 @@ $(tests-unsupported:%=$(objpfx)%.out): $(objpfx)%.out: Makefile
 endif
 
 endif	# tests
+
+ifdef PYTHON
+ifneq "$(strip $(tests-printers))" ""
+
+# Static pattern rule for building the test programs for the pretty printers.
+$(tests-printers-programs): %: %.o $(tests-printers-libs) \
+  $(sort $(filter $(common-objpfx)lib%,$(link-libc-static-tests))) \
+  $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
+	$(+link-printers-tests)
+
+# Add the paths to the generated constants file and test_common_printers.py
+# to PYTHONPATH so the test scripts can find them.
+py-env := PYTHONPATH=$(py-const-dir):$(..)scripts:$${PYTHONPATH}
+
+# Static pattern rule that matches the test-* targets to their .c and .py
+# prerequisites.  It'll run the corresponding test script for each test program
+# we compiled and place its output in the corresponding .out file.
+# The pretty printer files and test_common_printers.py must be present for all.
+$(tests-printers-out): $(objpfx)%.out: $(objpfx)% %.py %.c $(pretty-printers) \
+		       $(..)scripts/test_printers_common.py
+	$(test-wrapper-env) $(py-env) \
+	    $(PYTHON) $*.py $*.c $(objpfx)$* $(pretty-printers) > $@; \
+	$(evaluate-test)
+endif
+endif
 
 
 .PHONY: distclean realclean subdir_distclean subdir_realclean \

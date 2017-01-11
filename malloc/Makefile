@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2016 Free Software Foundation, Inc.
+# Copyright (C) 1991-2017 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -37,6 +37,12 @@ tests := mallocbug tst-malloc tst-valloc tst-calloc tst-obstack \
 tests-static := \
 	 tst-interpose-static-nothread \
 	 tst-interpose-static-thread \
+	 tst-malloc-usable-static \
+
+ifneq (no,$(have-tunables))
+tests += tst-malloc-usable-tunables
+tests-static += tst-malloc-usable-static-tunables
+endif
 
 tests += $(tests-static)
 test-srcs = tst-mtrace
@@ -158,6 +164,9 @@ endif
 
 tst-mcheck-ENV = MALLOC_CHECK_=3
 tst-malloc-usable-ENV = MALLOC_CHECK_=3
+tst-malloc-usable-static-ENV = $(tst-malloc-usable-ENV)
+tst-malloc-usable-tunables-ENV = GLIBC_TUNABLES=glibc.malloc.check=3
+tst-malloc-usable-static-tunables-ENV = $(tst-malloc-usable-tunables-ENV)
 
 ifeq ($(experimental-malloc),yes)
 CPPFLAGS-malloc.c += -DUSE_TCACHE

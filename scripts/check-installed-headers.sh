@@ -1,5 +1,5 @@
 #! /bin/sh
-# Copyright (C) 2016 Free Software Foundation, Inc.
+# Copyright (C) 2016-2017 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 #
 # The GNU C Library is free software; you can redistribute it and/or
@@ -66,6 +66,7 @@ trap "rm -f '$cih_test_c'" 0
 
 failed=0
 is_x86_64=unknown
+is_x32=unknown
 for header in "$@"; do
     # Skip various headers for which this test gets a false failure.
     case "$header" in
@@ -82,6 +83,28 @@ for header in "$@"; do
         # instead, plus an inclusion of that header.
         (sys/elf.h)
             continue;;
+
+	# sys/sysctl.h is unsupported for x32.
+	(sys/sysctl.h)
+            case "$is_x32" in
+                (yes) continue;;
+                (no)  ;;
+                (unknown)
+                    cat >"$cih_test_c" <<EOF
+#if defined __x86_64__ && defined __ILP32__
+# error "is x32"
+#endif
+EOF
+                    if $cc_cmd -fsyntax-only "$cih_test_c" > /dev/null 2>&1
+                    then
+                        is_x32=no
+                    else
+                        is_x32=yes
+                        continue
+                    fi
+                ;;
+            esac
+	    ;;
 
         # sys/vm86.h is "unsupported on x86-64" and errors out on that target.
         (sys/vm86.h)
@@ -120,7 +143,6 @@ EOF
    inappropriate for this test.  */
 #undef _LIBC
 #undef _GNU_SOURCE
-#undef _REENTRANT
 /* The library mode is selected here rather than on the command line to
    ensure that this selection wins. */
 $expanded_lib_mode

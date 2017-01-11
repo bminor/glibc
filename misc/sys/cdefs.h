@@ -1,4 +1,4 @@
-/* Copyright (C) 1992-2016 Free Software Foundation, Inc.
+/* Copyright (C) 1992-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -439,6 +439,7 @@
 #endif
 
 #include <bits/wordsize.h>
+#include <bits/long-double.h>
 
 #if defined __LONG_DOUBLE_MATH_OPTIONAL && defined __NO_LONG_DOUBLE_MATH
 # define __LDBL_COMPAT 1
@@ -473,8 +474,11 @@
 #endif
 
 /* __glibc_macro_warning (MESSAGE) issues warning MESSAGE.  This is
-   intended for use in preprocessor macros.  */
-#if __GNUC_PREREQ (4,8)
+   intended for use in preprocessor macros.
+
+   Note: MESSAGE must be a _single_ string; concatenation of string
+   literals is not supported.  */
+#if __GNUC_PREREQ (4,8) || __glibc_clang_prereq (3,5)
 # define __glibc_macro_warning1(message) _Pragma (#message)
 # define __glibc_macro_warning(message) \
   __glibc_macro_warning1 (GCC warning message)

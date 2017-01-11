@@ -1,5 +1,5 @@
 /* POSIX.1 sigaction call for Linux/SPARC64.
-   Copyright (C) 1997-2016 Free Software Foundation, Inc.
+   Copyright (C) 1997-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Miguel de Icaza <miguel@nuclecu.unam.mx> and
 		  Jakub Jelinek <jj@ultra.linux.cz>.
@@ -66,7 +66,9 @@ libc_hidden_def (__libc_sigaction)
 #include <nptl/sigaction.c>
 
 
-static void
+static
+inhibit_stack_protector
+void
 __rt_sigreturn_stub (void)
 {
   __asm__ ("mov %0, %%g1\n\t"

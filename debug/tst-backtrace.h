@@ -1,6 +1,6 @@
 /* Test backtrace and backtrace_symbols: common code for examining
    backtraces.
-   Copyright (C) 2013-2016 Free Software Foundation, Inc.
+   Copyright (C) 2013-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +33,7 @@ volatile int x;
 
 /* Use this attribute to prevent inlining, so that all expected frames
    are present.  */
-#define NO_INLINE __attribute__ ((noinline))
+#define NO_INLINE __attribute__ ((noinline, noclone, weak))
 
 /* Look for a match in SYM from backtrace_symbols to NAME, a fragment
    of a function name.  Ignore the filename before '(', but presume

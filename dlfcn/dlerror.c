@@ -1,5 +1,5 @@
 /* Return error detail for failing <dlfcn.h> functions.
-   Copyright (C) 1995-2016 Free Software Foundation, Inc.
+   Copyright (C) 1995-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -160,8 +160,8 @@ _dlerror_run (void (*operate) (void *), void *args)
       result->errstring = NULL;
     }
 
-  result->errcode = GLRO(dl_catch_error) (&result->objname, &result->errstring,
-					  &result->malloced, operate, args);
+  result->errcode = _dl_catch_error (&result->objname, &result->errstring,
+				     &result->malloced, operate, args);
 
   /* If no error we mark that no error string is available.  */
   result->returned = result->errstring == NULL;

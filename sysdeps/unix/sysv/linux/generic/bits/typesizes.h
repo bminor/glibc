@@ -1,5 +1,5 @@
 /* bits/typesizes.h -- underlying types for *_t.  For the generic Linux ABI.
-   Copyright (C) 2011-2016 Free Software Foundation, Inc.
+   Copyright (C) 2011-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2011.
 
@@ -70,6 +70,11 @@
 
 /* Same for ino_t and ino64_t.  */
 # define __INO_T_MATCHES_INO64_T	1
+
+/* And for __rlim_t and __rlim64_t.  */
+# define __RLIM_T_MATCHES_RLIM64_T	1
+#else
+# define __RLIM_T_MATCHES_RLIM64_T	0
 #endif
 
 /* Number of descriptors that can fit in an `fd_set'.  */

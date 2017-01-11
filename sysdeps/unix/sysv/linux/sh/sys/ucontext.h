@@ -1,4 +1,4 @@
-/* Copyright (C) 1999-2016 Free Software Foundation, Inc.
+/* Copyright (C) 1999-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -76,7 +76,6 @@ enum
 };
 #endif
 
-#if (defined(__SH4__) || defined(__SH4A__))
 typedef int freg_t;
 
 /* Number of FPU registers.  */
@@ -102,20 +101,6 @@ typedef struct
     unsigned int fpul;
     unsigned int ownedfp;
   } mcontext_t;
-#else
-/* Context to describe whole processor state.  */
-typedef struct
-  {
-    unsigned int oldmask;
-    gregset_t gregs;
-    unsigned int pc;
-    unsigned int pr;
-    unsigned int sr;
-    unsigned int gbr;
-    unsigned int mach;
-    unsigned int macl;
-  } mcontext_t;
-#endif /* __SH_FPU_ANY__ */
 
 /* Userlevel context.  */
 typedef struct ucontext

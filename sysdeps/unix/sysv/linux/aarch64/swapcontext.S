@@ -1,6 +1,6 @@
 /* Modify saved context.
 
-   Copyright (C) 2009-2016 Free Software Foundation, Inc.
+   Copyright (C) 2009-2017 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 
@@ -27,6 +27,7 @@
 
 	.text
 ENTRY(__swapcontext)
+	DELOUSE (0)
 	/* Set the value returned when swapcontext() returns in this context. */
 	str	xzr,      [x0, oX0 +  0 * SZREG]
 

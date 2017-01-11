@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2016 Free Software Foundation, Inc.
+/* Copyright (C) 2013-2017 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 
@@ -51,6 +51,9 @@
 #define endloop		x15
 
 ENTRY_ALIGN_AND_PAD (strncmp, 6, 7)
+	DELOUSE (0)
+	DELOUSE (1)
+	DELOUSE (2)
 	cbz	limit, L(ret0)
 	eor	tmp1, src1, src2
 	mov	zeroones, #REP8_01

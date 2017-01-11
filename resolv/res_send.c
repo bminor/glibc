@@ -1,4 +1,4 @@
-/* Copyright (C) 2016 Free Software Foundation, Inc.
+/* Copyright (C) 2016-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -424,8 +424,7 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 	 * Some resolvers want to even out the load on their nameservers.
 	 * Note that RES_BLAST overrides RES_ROTATE.
 	 */
-	if (__builtin_expect ((statp->options & RES_ROTATE) != 0, 0) &&
-	    (statp->options & RES_BLAST) == 0) {
+	if (__builtin_expect ((statp->options & RES_ROTATE) != 0, 0)) {
 		struct sockaddr_in ina;
 		struct sockaddr_in6 *inp;
 		int lastns = statp->nscount - 1;
@@ -579,7 +578,7 @@ close_and_return_error (res_state statp, int *resplen2)
    Please note that for TCP there is no way to disable sending both
    queries, unlike UDP, which honours RES_SNGLKUP and RES_SNGLKUPREOP
    and sends the queries serially and waits for the result after each
-   sent query.  This implemetnation should be corrected to honour these
+   sent query.  This implementation should be corrected to honour these
    options.
 
    Please also note that for TCP we send both queries over the same
@@ -664,7 +663,7 @@ send_vc(res_state statp,
 	   a false-positive.
 	 */
 	DIAG_PUSH_NEEDS_COMMENT;
-	DIAG_IGNORE_Os_NEEDS_COMMENT (5, "-Wmaybe-uninitialized");
+	DIAG_IGNORE_NEEDS_COMMENT (5, "-Wmaybe-uninitialized");
 	int resplen;
 	DIAG_POP_NEEDS_COMMENT;
 	struct iovec iov[4];
@@ -937,7 +936,7 @@ reopen (res_state statp, int *terrno, int ns)
 		   the function return -1 before control flow reaches
 		   the call to connect with slen.  */
 		DIAG_PUSH_NEEDS_COMMENT;
-		DIAG_IGNORE_NEEDS_COMMENT (5, "-Wmaybe-uninitialized");
+		DIAG_IGNORE_Os_NEEDS_COMMENT (5, "-Wmaybe-uninitialized");
 		if (connect(EXT(statp).nssocks[ns], nsap, slen) < 0) {
 		DIAG_POP_NEEDS_COMMENT;
 			Aerror(statp, stderr, "connect(dg)", errno, nsap);

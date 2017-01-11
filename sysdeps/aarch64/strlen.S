@@ -1,4 +1,4 @@
-/* Copyright (C) 2012-2016 Free Software Foundation, Inc.
+/* Copyright (C) 2012-2017 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 
@@ -85,6 +85,8 @@
 	   boundary.  */
 
 ENTRY_ALIGN (__strlen, 6)
+	DELOUSE (0)
+	DELOUSE (1)
 	and	tmp1, srcin, MIN_PAGE_SIZE - 1
 	mov	zeroones, REP8_01
 	cmp	tmp1, MIN_PAGE_SIZE - 16

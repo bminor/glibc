@@ -1,4 +1,4 @@
-# Copyright (C) 1994-2016 Free Software Foundation, Inc.
+# Copyright (C) 1994-2017 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -39,14 +39,26 @@ extra-libs := libresolv libnss_dns
 ifeq ($(have-thread-library),yes)
 extra-libs += libanl
 routines += gai_sigqueue
-tests += tst-res_hconf_reorder
+
+tests += \
+  tst-bug18665 \
+  tst-bug18665-tcp \
+  tst-res_hconf_reorder \
+  tst-res_use_inet6 \
+  tst-resolv-basic \
+  tst-resolv-network \
+  tst-resolv-search \
+
+# This test sends millions of packets and is rather slow.
+xtests += tst-resolv-qtypes
 endif
 extra-libs-others = $(extra-libs)
-libresolv-routines := gethnamaddr res_comp res_debug	\
+libresolv-routines := res_comp res_debug \
 		      res_data res_mkquery res_query res_send		\
 		      inet_net_ntop inet_net_pton inet_neta base64	\
 		      ns_parse ns_name ns_netint ns_ttl ns_print	\
-		      ns_samedomain ns_date compat-hooks
+		      ns_samedomain ns_date \
+		      compat-hooks compat-gethnamaddr
 
 libanl-routines := gai_cancel gai_error gai_misc gai_notify gai_suspend \
 		   getaddrinfo_a
@@ -84,13 +96,6 @@ generated += mtrace-tst-leaks.out tst-leaks.mtrace \
 
 include ../Rules
 
-CPPFLAGS += -Dgethostbyname=res_gethostbyname \
-	    -Dgethostbyname2=res_gethostbyname2 \
-	    -Dgethostbyaddr=res_gethostbyaddr \
-	    -Dgetnetbyname=res_getnetbyname \
-	    -Dgetnetbyaddr=res_getnetbyaddr
-
-CFLAGS-libresolv += $(stack-protector)
 CFLAGS-res_hconf.c = -fexceptions
 
 # The DNS NSS modules needs the resolver.
@@ -114,3 +119,14 @@ tst-leaks2-ENV = MALLOC_TRACE=$(objpfx)tst-leaks2.mtrace
 $(objpfx)mtrace-tst-leaks2.out: $(objpfx)tst-leaks2.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks2.mtrace > $@; \
 	$(evaluate-test)
+
+$(objpfx)tst-bug18665-tcp: $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-bug18665: $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-res_use_inet6: $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-resolv-basic: $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-resolv-network: $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-resolv-qtypes: $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-resolv-search: $(objpfx)libresolv.so $(shared-thread-library)
+
+# This test case uses the deprecated RES_USE_INET6 resolver option.
+CFLAGS-tst-res_use_inet6.c += -Wno-error

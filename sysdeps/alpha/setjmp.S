@@ -1,4 +1,4 @@
-/* Copyright (C) 1992-2016 Free Software Foundation, Inc.
+/* Copyright (C) 1992-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -96,6 +96,7 @@ $sigsetjmp_local:
 #endif
 
 END(__sigsetjmp)
+hidden_def (__sigsetjmp)
 
 /* Put these traditional entry points in the same file so that we can
    elide much of the nonsense in trying to jmp to the real function.  */

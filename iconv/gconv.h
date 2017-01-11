@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-2016 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -139,7 +139,7 @@ typedef struct __gconv_info
 {
   size_t __nsteps;
   struct __gconv_step *__steps;
-  __extension__ struct __gconv_step_data __data __flexarr;
+  __extension__ struct __gconv_step_data __data[0];
 } *__gconv_t;
 
 /* Transliteration using the locale's data.  */

@@ -43,7 +43,8 @@ libnldbl-calls = asprintf dprintf fprintf fscanf fwprintf fwscanf iovfscanf \
 		 isoc99_wscanf isoc99_fwscanf isoc99_swscanf \
 		 isoc99_vwscanf isoc99_vfwscanf isoc99_vswscanf \
 		 nextup nextdown totalorder totalordermag getpayload \
-		 canonicalize
+		 canonicalize setpayload setpayloadsig llogb fmaxmag fminmag \
+		 roundeven fromfp ufromfp fromfpx ufromfpx
 libnldbl-routines = $(libnldbl-calls:%=nldbl-%)
 libnldbl-inhibit-o = $(object-suffixes)
 libnldbl-static-only-routines = $(libnldbl-routines)
@@ -97,9 +98,13 @@ CFLAGS-nldbl-finite.c = -fno-builtin-finitel
 CFLAGS-nldbl-floor.c = -fno-builtin-floorl
 CFLAGS-nldbl-fma.c = -fno-builtin-fmal
 CFLAGS-nldbl-fmax.c = -fno-builtin-fmaxl
+CFLAGS-nldbl-fmaxmag.c = -fno-builtin-fmaxmagl
 CFLAGS-nldbl-fmin.c = -fno-builtin-fminl
+CFLAGS-nldbl-fminmag.c = -fno-builtin-fminmagl
 CFLAGS-nldbl-fmod.c = -fno-builtin-fmodl
 CFLAGS-nldbl-frexp.c = -fno-builtin-frexpl
+CFLAGS-nldbl-fromfp.c = -fno-builtin-fromfpl
+CFLAGS-nldbl-fromfpx.c = -fno-builtin-fromfpxl
 CFLAGS-nldbl-gamma.c = -fno-builtin-gammal
 CFLAGS-nldbl-getpayload.c = -fno-builtin-getpayloadl
 CFLAGS-nldbl-hypot.c = -fno-builtin-hypotl
@@ -112,6 +117,7 @@ CFLAGS-nldbl-jn.c = -fno-builtin-jnl
 CFLAGS-nldbl-ldexp.c = -fno-builtin-ldexpl
 CFLAGS-nldbl-lgamma.c = -fno-builtin-lgammal
 CFLAGS-nldbl-lgamma_r.c = -fno-builtin-lgammal_r
+CFLAGS-nldbl-llogb.c = -fno-builtin-llogbl
 CFLAGS-nldbl-llrint.c = -fno-builtin-llrintl
 CFLAGS-nldbl-llround.c = -fno-builtin-llroundl
 CFLAGS-nldbl-log.c = -fno-builtin-logl
@@ -135,9 +141,12 @@ CFLAGS-nldbl-remainder.c = -fno-builtin-remainderl -fno-builtin-dreml
 CFLAGS-nldbl-remquo.c = -fno-builtin-remquol
 CFLAGS-nldbl-rint.c = -fno-builtin-rintl
 CFLAGS-nldbl-round.c = -fno-builtin-roundl
+CFLAGS-nldbl-roundeven.c = -fno-builtin-roundevenl
 CFLAGS-nldbl-scalb.c = -fno-builtin-scalbl
 CFLAGS-nldbl-scalbln.c = -fno-builtin-scalblnl
 CFLAGS-nldbl-scalbn.c = -fno-builtin-scalbnl
+CFLAGS-nldbl-setpayload.c = -fno-builtin-setpayloadl
+CFLAGS-nldbl-setpayloadsig.c = -fno-builtin-setpayloadsigl
 CFLAGS-nldbl-significand.c = -fno-builtin-significandl
 CFLAGS-nldbl-sin.c = -fno-builtin-sinl
 CFLAGS-nldbl-sincos.c = -fno-builtin-sincosl
@@ -149,6 +158,8 @@ CFLAGS-nldbl-tgamma.c = -fno-builtin-tgammal
 CFLAGS-nldbl-totalorder.c = -fno-builtin-totalorderl
 CFLAGS-nldbl-totalordermag.c = -fno-builtin-totalordermagl
 CFLAGS-nldbl-trunc.c = -fno-builtin-truncl
+CFLAGS-nldbl-ufromfp.c = -fno-builtin-ufromfpl
+CFLAGS-nldbl-ufromfpx.c = -fno-builtin-ufromfpxl
 CFLAGS-nldbl-y0.c = -fno-builtin-y0l
 CFLAGS-nldbl-y1.c = -fno-builtin-y1l
 CFLAGS-nldbl-yn.c = -fno-builtin-ynl

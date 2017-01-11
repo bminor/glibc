@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2016 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -154,15 +154,13 @@ extern size_t strxfrm (char *__restrict __dest,
 __END_NAMESPACE_STD
 
 #ifdef __USE_XOPEN2K8
-/* The following functions are equivalent to the both above but they
-   take the locale they use for the collation as an extra argument.
-   This is not standardsized but something like will come.  */
 # include <xlocale.h>
 
-/* Compare the collated forms of S1 and S2 using rules from L.  */
+/* Compare the collated forms of S1 and S2, using sorting rules from L.  */
 extern int strcoll_l (const char *__s1, const char *__s2, __locale_t __l)
      __THROW __attribute_pure__ __nonnull ((1, 2, 3));
-/* Put a transformation of SRC into no more than N bytes of DEST.  */
+/* Put a transformation of SRC into no more than N bytes of DEST,
+   using sorting rules from L.  */
 extern size_t strxfrm_l (char *__dest, const char *__src, size_t __n,
 			 __locale_t __l) __THROW __nonnull ((2, 4));
 #endif
@@ -454,6 +452,10 @@ extern void bcopy (const void *__src, void *__dest, size_t __n)
 
 /* Set N bytes of S to 0.  */
 extern void bzero (void *__s, size_t __n) __THROW __nonnull ((1));
+
+/* As bzero, but the compiler will not delete a call to this
+   function, even if S is dead after the call.  */
+extern void explicit_bzero (void *__s, size_t __n) __THROW __nonnull ((1));
 
 /* Compare N bytes of S1 and S2 (same as memcmp).  */
 extern int bcmp (const void *__s1, const void *__s2, size_t __n)

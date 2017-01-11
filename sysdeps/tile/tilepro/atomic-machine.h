@@ -1,4 +1,4 @@
-/* Copyright (C) 2011-2016 Free Software Foundation, Inc.
+/* Copyright (C) 2011-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2011.
 
@@ -82,6 +82,16 @@ int __atomic_update_32 (volatile int *mem, int mask, int addend)
 #define atomic_or_val(mem, mask)                        \
   ({ __typeof (mask) __att1_v = (mask);                 \
     __atomic_update ((mem), ~__att1_v, __att1_v); })
+
+/*
+ * We must use the kernel atomics for atomic_store, since otherwise an
+ * unsynchronized store could become visible after another core's
+ * kernel-atomic implementation had read the memory word in question,
+ * but before it had written the updated value to it, which would
+ * cause the unsynchronized store to be lost.
+ */
+#define atomic_store_relaxed(mem, val) atomic_exchange_acq (mem, val)
+#define atomic_store_release(mem, val) atomic_exchange_rel (mem, val)
 
 #include <sysdeps/tile/atomic-machine.h>
 

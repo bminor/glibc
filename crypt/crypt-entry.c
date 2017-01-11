@@ -1,7 +1,7 @@
 /*
  * UFC-crypt: ultra fast crypt(3) implementation
  *
- * Copyright (C) 1991-2016 Free Software Foundation, Inc.
+ * Copyright (C) 1991-2017 Free Software Foundation, Inc.
  *
  * The GNU C Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -141,6 +141,15 @@ __crypt_r (const char *key, const char *salt,
    * And convert back to 6 bit ASCII
    */
   _ufc_output_conversion_r (res[0], res[1], salt, data);
+
+  /*
+   * Erase key-dependent intermediate data.  Data dependent only on
+   * the salt is not considered sensitive.
+   */
+  explicit_bzero (ktab, sizeof (ktab));
+  explicit_bzero (data->keysched, sizeof (data->keysched));
+  explicit_bzero (res, sizeof (res));
+
   return data->crypt_3_buf;
 }
 weak_alias (__crypt_r, crypt_r)

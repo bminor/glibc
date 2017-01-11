@@ -1,5 +1,5 @@
 /* Verify that backtrace does not deadlock on itself on memory corruption.
-   Copyright (C) 2015-2016 Free Software Foundation, Inc.
+   Copyright (C) 2015-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,8 +16,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-
+#include <signal.h>
 #include <stdlib.h>
+
+#include <support/support.h>
 
 #define SIZE 4096
 
@@ -29,13 +31,6 @@ call_free (void *ptr)
   free (ptr);
   *(size_t *)(ptr - sizeof (size_t)) = 1;
 }
-
-int do_test (void);
-
-#define TEST_FUNCTION do_test ()
-#define EXPECTED_SIGNAL SIGABRT
-
-#include "../test-skeleton.c"
 
 int
 do_test (void)
@@ -53,3 +48,6 @@ do_test (void)
      doesn't optimize out that malloc call.  */
   return (ptr1 == ptr2);
 }
+
+#define EXPECTED_SIGNAL SIGABRT
+#include <support/test-driver.c>

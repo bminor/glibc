@@ -1,4 +1,4 @@
-# Copyright (C) 1994-2016 Free Software Foundation, Inc.
+# Copyright (C) 1994-2017 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -78,17 +78,14 @@ routines := auth_none authuxprot bindrsvprt clnt_raw clnt_simp \
 	    des_crypt des_impl des_soft key_prot openchild rtime svcauth_des \
 	    getrpcent getrpcbyname getrpcbynumber \
 	    getrpcent_r getrpcbyname_r getrpcbynumber_r \
-	    clnt_unix svc_unix create_xid $(need-export-routines)
+	    clnt_unix svc_unix create_xid $(need-export-routines) \
+	    rpc_gethostbyname
 ifneq ($(link-obsolete-rpc),yes)
 # We only add the RPC for compatibility to libc.so.
 shared-only-routines = $(routines)
 endif
 endif
 
-# We do not build rpcinfo anymore.  It is not needed for a bootstrap
-# and not wanted on complete systems.
-# others := rpcinfo
-# install-sbin := rpcinfo
 install-bin := rpcgen
 rpcgen-objs = rpc_main.o rpc_hout.o rpc_cout.o rpc_parse.o \
 	      rpc_scan.o rpc_util.o rpc_svcout.o rpc_clntout.o \
@@ -101,6 +98,11 @@ xtests := tst-getmyaddr
 
 ifeq ($(have-thread-library),yes)
 xtests += thrsvc
+endif
+
+ifeq ($(run-built-tests),yes)
+rpcgen-tests := $(objpfx)bug20790.out
+tests-special += $(rpcgen-tests)
 endif
 
 headers += $(rpcsvc:%.x=rpcsvc/%.h)
@@ -225,3 +227,10 @@ endif
 endif
 
 $(objpfx)thrsvc: $(common-objpfx)linkobj/libc.so $(shared-thread-library)
+
+ifeq ($(run-built-tests),yes)
+$(rpcgen-tests): $(objpfx)%.out: %.x $(objpfx)rpcgen
+	-rm -f $@
+	$(built-program-cmd) -c $< -o $@; \
+	$(evaluate-test)
+endif

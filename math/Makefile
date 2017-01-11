@@ -1,4 +1,4 @@
-# Copyright (C) 1996-2016 Free Software Foundation, Inc.
+# Copyright (C) 1996-2017 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,9 @@ headers		:= math.h bits/mathcalls.h bits/mathinline.h bits/huge_val.h \
 		   fpu_control.h complex.h bits/cmathcalls.h fenv.h \
 		   bits/fenv.h bits/fenvinline.h bits/mathdef.h tgmath.h \
 		   bits/math-finite.h bits/math-vector.h \
-		   bits/libm-simd-decl-stubs.h bits/iscanonical.h
+		   bits/libm-simd-decl-stubs.h bits/iscanonical.h \
+		   bits/flt-eval-method.h bits/fp-fast.h bits/fp-logb.h \
+		   bits/long-double.h
 
 # FPU support code.
 aux		:= setfpucw fpu_control
@@ -51,7 +53,8 @@ gen-libm-calls = cargF conjF cimagF crealF cabsF s_cacosF		  \
 		 k_casinhF s_csinhF k_casinhF s_csinhF s_catanhF s_catanF \
 		 s_ctanF s_ctanhF s_cexpF s_clogF s_cprojF s_csqrtF	  \
 		 s_cpowF s_clog10F s_fdimF s_nextdownF s_fmaxF s_fminF	  \
-		 s_nanF s_iseqsigF s_canonicalizeF
+		 s_nanF s_iseqsigF s_canonicalizeF w_ilogbF w_llogbF	  \
+		 w_log1pF w_scalblnF s_fmaxmagF s_fminmagF
 
 libm-calls =								  \
 	e_acosF e_acoshF e_asinF e_atan2F e_atanhF e_coshF e_expF e_fmodF \
@@ -60,20 +63,27 @@ libm-calls =								  \
 	e_ilogbF							  \
 	k_cosF k_sinF k_tanF s_asinhF s_atanF s_cbrtF			  \
 	s_ceilF s_cosF s_erfF s_expm1F s_fabsF				  \
-	s_floorF s_log1pF w_log1pF s_logbF				  \
-	s_nextafterF s_nexttowardF s_rintF s_scalblnF w_scalblnF	  \
-	s_significandF s_sinF s_tanF s_tanhF w_acosF w_acoshF w_asinF	  \
-	w_atan2F w_atanhF w_coshF w_expF w_exp2F w_exp10F w_fmodF	  \
-	w_tgammaF w_hypotF w_j0F w_j1F w_jnF w_lgammaF w_lgammaF_r	  \
-	w_logF w_log10F w_powF w_remainderF w_scalbF w_sinhF w_sqrtF	  \
-	w_ilogbF							  \
+	s_floorF s_log1pF s_logbF				  \
+	s_nextafterF s_nexttowardF s_rintF s_scalblnF			  \
+	s_significandF s_sinF s_tanF s_tanhF				  \
+	w_expF								  \
+	w_lgammaF w_lgammaF_r						  \
 	s_fpclassifyF s_truncF						  \
 	s_remquoF e_log2F e_exp2F s_roundF s_nearbyintF s_sincosF	  \
-	s_fmaF s_lrintF s_llrintF s_lroundF s_llroundF e_exp10F w_log2F	  \
+	s_fmaF s_lrintF s_llrintF s_lroundF s_llroundF e_exp10F		  \
 	s_issignalingF $(calls:s_%=m_%) x2y2m1F				  \
 	gamma_productF lgamma_negF lgamma_productF			  \
 	s_nextupF s_totalorderF s_totalordermagF s_getpayloadF		  \
-	$(gen-libm-calls)
+	s_setpayloadF s_setpayloadsigF s_roundevenF s_fromfpF s_ufromfpF  \
+	s_fromfpxF s_ufromfpxF $(gen-libm-calls)
+
+libm-compat-calls-auto =						\
+	w_acosF_compat w_acoshF_compat w_asinF_compat w_atan2F_compat	\
+	w_atanhF_compat w_coshF_compat w_exp2F_compat w_exp10F_compat	\
+	w_fmodF_compat w_hypotF_compat w_j0F_compat w_j1F_compat	\
+	w_jnF_compat w_log2F_compat w_log10F_compat w_logF_compat	\
+	w_powF_compat w_remainderF_compat w_scalbF_compat		\
+	w_sinhF_compat w_sqrtF_compat w_tgammaF_compat
 
 libm-compat-calls-ldouble-yes = w_lgamma_compatl k_standardl
 libm-compat-calls = w_lgamma_compatf w_lgamma_compat k_standard k_standardf \
@@ -113,6 +123,7 @@ type-float-routines := k_rem_pio2f
 type-foreach = $(foreach t,$(types),$(subst F,$(type-$(t)-suffix),$(1)))
 
 libm-routines = $(strip $(libm-support) $(libm-compat-calls)		\
+			$(call type-foreach, $(libm-compat-calls-auto))	\
 			$(call type-foreach, $(libm-calls))		\
 			$(foreach t, $(types), $(type-$(t)-routines))) 	\
 
@@ -128,10 +139,10 @@ generated += $(foreach s,.c .S,$(call type-foreach, $(calls:s_%=m_%$(s))))
 routines = $(call type-foreach, $(calls))
 
 ifeq ($(build-mathvec),yes)
-# We need to install libm.so as linker script
-# for more comfortable use of vector math library.
-install-lib-ldscripts := libm.so
-install_subdir: $(inst_libdir)/libm.so
+# We need to install libm.so and libm.a as linker scripts
+# for transparent use of vector math library.
+install-lib-ldscripts := libm.so libm.a
+install-others = $(inst_libdir)/libm.so $(inst_libdir)/libm.a
 $(inst_libdir)/libm.so: $(common-objpfx)format.lds \
 			$(libm) \
 			$(libmvec) \
@@ -140,6 +151,20 @@ $(inst_libdir)/libm.so: $(common-objpfx)format.lds \
 	 cat $<; \
 	 echo 'GROUP ( $(slibdir)/libm.so$(libm.so-version) ' \
 	      'AS_NEEDED ( $(libdir)/libmvec_nonshared.a $(slibdir)/libmvec.so$(libmvec.so-version) ) )' \
+	) > $@.new
+	mv -f $@.new $@
+
+$(inst_libdir)/libm-$(version).a: $(objpfx)libm.a \
+				  $(+force)
+	$(do-install)
+
+$(inst_libdir)/libm.a: $(common-objpfx)format.lds \
+		       $(inst_libdir)/libm-$(version).a \
+		       $(objpfx)../mathvec/libmvec.a \
+		       $(+force)
+	(echo '/* GNU ld script'; echo '*/';\
+	 cat $<; \
+	 echo 'GROUP ( $(libdir)/libm-$(version).a $(libdir)/libmvec.a )' \
 	) > $@.new
 	mv -f $@.new $@
 endif
@@ -158,7 +183,9 @@ tests = test-matherr test-fenv atest-exp atest-sincos atest-exp2 basic-test \
 	test-fexcept test-fexcept-traps test-fesetexcept \
 	test-fesetexcept-traps test-fetestexceptflag test-femode \
 	test-femode-traps test-iszero-excess-precision \
-	test-iseqsig-excess-precision $(tests-static)
+	test-iseqsig-excess-precision test-flt-eval-method \
+	test-fp-ilogb-constants test-fp-llogb-constants \
+	test-fe-snans-always-signal $(tests-static)
 tests-static = test-fpucw-static test-fpucw-ieee-static \
 	       test-signgam-uchar-static test-signgam-uchar-init-static \
 	       test-signgam-uint-static test-signgam-uint-init-static \
@@ -271,6 +298,9 @@ CFLAGS-test-math-iszero.cc = -std=gnu++11
 
 CFLAGS-test-iszero-excess-precision.c = -fexcess-precision=standard
 CFLAGS-test-iseqsig-excess-precision.c = -fexcess-precision=standard
+CFLAGS-test-flt-eval-method.c = -fexcess-precision=standard
+
+CFLAGS-test-fe-snans-always-signal.c = -fsignaling-nans
 
 # The -lieee module sets the _LIB_VERSION_ switch to IEEE mode
 # for error handling in the -lm functions.

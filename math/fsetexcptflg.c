@@ -1,5 +1,5 @@
 /* Set floating-point environment exception handling.
-   Copyright (C) 1997-2016 Free Software Foundation, Inc.
+   Copyright (C) 1997-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -23,8 +23,9 @@
 int
 __fesetexceptflag (const fexcept_t *flagp, int excepts)
 {
-  /* This always fails unless nothing needs to be done.  */
-  return (excepts != 0);
+  /* This always succeeds, as all exceptions are always clear
+     (including in the saved state) so nothing needs to be done.  */
+  return 0;
 }
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
 strong_alias (__fesetexceptflag, __old_fesetexceptflag)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2016 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Pat Beirne <patb@corelcomputer.com>
 
@@ -70,16 +70,6 @@ PSEUDO_END (__clone)
 1:
 	.fnstart
 	.cantunwind
-	tst	ip, #CLONE_VM
-	bne	2f
-	GET_TLS (lr)
-	mov	r1, r0
-	ldr	r7, =SYS_ify(getpid)
-	swi	0x0
-	NEGOFF_ADJ_BASE (r1, TID_OFFSET)
-	str	r0, NEGOFF_OFF1 (r1, TID_OFFSET)
-	str	r0, NEGOFF_OFF2 (r1, PID_OFFSET, TID_OFFSET)
-2:
 	@ pick the function arg and call address off the stack and execute
 	ldr	r0, [sp, #4]
 	ldr 	ip, [sp], #8

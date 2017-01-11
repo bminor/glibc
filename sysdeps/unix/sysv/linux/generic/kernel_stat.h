@@ -1,4 +1,4 @@
-/* Copyright (C) 2011-2016 Free Software Foundation, Inc.
+/* Copyright (C) 2011-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2011.
 
@@ -23,4 +23,8 @@
 /* We provide separate 32-bit API versions that check for EOVERFLOW. */
 #if __WORDSIZE == 64
 # define XSTAT_IS_XSTAT64 1
+#else
+# define XSTAT_IS_XSTAT64 0
 #endif
+
+#define STATFS_IS_STATFS64 0

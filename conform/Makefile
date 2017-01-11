@@ -1,4 +1,4 @@
-# Copyright (C) 1999-2016 Free Software Foundation, Inc.
+# Copyright (C) 1999-2017 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -209,18 +209,23 @@ $(linknamespace-symlists-tests): $(objpfx)symlist-%: list-header-symbols.pl
 	$(evaluate-test)
 
 linknamespace-libs-isoc = $(common-objpfx)libc.a $(common-objpfx)math/libm.a
-linknamespace-libs = $(linknamespace-libs-isoc) \
-		     $(common-objpfx)rt/librt.a $(static-thread-library)
+linknamespace-libs-thr = $(linknamespace-libs-isoc) \
+			 $(common-objpfx)rt/librt.a $(static-thread-library)
+linknamespace-libs-posix = $(linknamespace-libs-thr) \
+			   $(common-objpfx)dlfcn/libdl.a
+linknamespace-libs-xsi = $(linknamespace-libs-posix) \
+			 $(common-objpfx)crypt/libcrypt.a
 linknamespace-libs-ISO = $(linknamespace-libs-isoc)
 linknamespace-libs-ISO99 = $(linknamespace-libs-isoc)
 linknamespace-libs-ISO11 = $(linknamespace-libs-isoc)
-linknamespace-libs-XPG3 = $(linknamespace-libs-isoc)
-linknamespace-libs-XPG4 = $(linknamespace-libs-isoc)
-linknamespace-libs-POSIX = $(linknamespace-libs)
-linknamespace-libs-UNIX98 = $(linknamespace-libs)
-linknamespace-libs-XOPEN2K = $(linknamespace-libs)
-linknamespace-libs-POSIX2008 = $(linknamespace-libs)
-linknamespace-libs-XOPEN2K8 = $(linknamespace-libs)
+linknamespace-libs-XPG3 = $(linknamespace-libs-isoc) \
+			  $(common-objpfx)crypt/libcrypt.a
+linknamespace-libs-XPG4 = $(linknamespace-libs-XPG3)
+linknamespace-libs-POSIX = $(linknamespace-libs-thr)
+linknamespace-libs-UNIX98 = $(linknamespace-libs-xsi)
+linknamespace-libs-XOPEN2K = $(linknamespace-libs-xsi)
+linknamespace-libs-POSIX2008 = $(linknamespace-libs-posix)
+linknamespace-libs-XOPEN2K8 = $(linknamespace-libs-xsi)
 
 $(linknamespace-symlist-stdlibs-tests): $(objpfx)symlist-stdlibs-%: \
 					$(linknamespace-libs)
@@ -229,6 +234,7 @@ $(linknamespace-symlist-stdlibs-tests): $(objpfx)symlist-stdlibs-%: \
 
 $(linknamespace-header-tests): $(objpfx)%/linknamespace.out: \
 			       linknamespace.pl \
+			       $(linknamespace-symlists-tests) \
 			       $(linknamespace-symlist-stdlibs-tests)
 	(set -e; std_hdr=$*; std=$${std_hdr%%/*}; hdr=$${std_hdr#*/}; \
 	 mkdir -p $(@D)/scratch; \

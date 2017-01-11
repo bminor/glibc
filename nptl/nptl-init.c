@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2016 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -69,10 +69,6 @@ int __have_futex_clock_realtime;
 /* Version of the library, used in libthread_db to detect mismatches.  */
 static const char nptl_version[] __attribute_used__ = VERSION;
 
-
-#ifndef SHARED
-extern void __libc_setup_tls (size_t tcbsize, size_t tcbalign);
-#endif
 
 #ifdef SHARED
 static
@@ -184,18 +180,12 @@ __nptl_set_robust (struct pthread *self)
 static void
 sigcancel_handler (int sig, siginfo_t *si, void *ctx)
 {
-  /* Determine the process ID.  It might be negative if the thread is
-     in the middle of a fork() call.  */
-  pid_t pid = THREAD_GETMEM (THREAD_SELF, pid);
-  if (__glibc_unlikely (pid < 0))
-    pid = -pid;
-
   /* Safety check.  It would be possible to call this function for
      other signals and send a signal from another process.  This is not
      correct and might even be a security problem.  Try to catch as
      many incorrect invocations as possible.  */
   if (sig != SIGCANCEL
-      || si->si_pid != pid
+      || si->si_pid != __getpid()
       || si->si_code != SI_TKILL)
     return;
 
@@ -243,19 +233,14 @@ struct xid_command *__xidcmd attribute_hidden;
 static void
 sighandler_setxid (int sig, siginfo_t *si, void *ctx)
 {
-  /* Determine the process ID.  It might be negative if the thread is
-     in the middle of a fork() call.  */
-  pid_t pid = THREAD_GETMEM (THREAD_SELF, pid);
   int result;
-  if (__glibc_unlikely (pid < 0))
-    pid = -pid;
 
   /* Safety check.  It would be possible to call this function for
      other signals and send a signal from another process.  This is not
      correct and might even be a security problem.  Try to catch as
      many incorrect invocations as possible.  */
   if (sig != SIGSETXID
-      || si->si_pid != pid
+      || si->si_pid != __getpid ()
       || si->si_code != SI_TKILL)
     return;
 
@@ -299,18 +284,6 @@ static bool __nptl_initial_report_events __attribute_used__;
 void
 __pthread_initialize_minimal_internal (void)
 {
-#ifndef SHARED
-  /* Unlike in the dynamically linked case the dynamic linker has not
-     taken care of initializing the TLS data structures.  */
-  __libc_setup_tls (TLS_TCB_SIZE, TLS_TCB_ALIGN);
-
-  /* We must prevent gcc from being clever and move any of the
-     following code ahead of the __libc_setup_tls call.  This function
-     will initialize the thread register which is subsequently
-     used.  */
-  __asm __volatile ("");
-#endif
-
   /* Minimal initialization of the thread descriptor.  */
   struct pthread *pd = THREAD_SELF;
   __pthread_initialize_pids (pd);
@@ -467,10 +440,6 @@ __pthread_initialize_minimal_internal (void)
   lll_unlock (__default_pthread_attr_lock, LLL_PRIVATE);
 
 #ifdef SHARED
-  /* Transfer the old value from the dynamic linker's internal location.  */
-  *__libc_dl_error_tsd () = *(*GL(dl_error_catch_tsd)) ();
-  GL(dl_error_catch_tsd) = &__libc_dl_error_tsd;
-
   /* Make __rtld_lock_{,un}lock_recursive use pthread_mutex_{,un}lock,
      keep the lock count from the ld.so implementation.  */
   GL(dl_rtld_lock_recursive) = (void *) __pthread_mutex_lock;

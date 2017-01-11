@@ -1,5 +1,5 @@
 /* Initialize pid and tid fields of struct pthread.  Linux version.
-   Copyright (C) 2015-2016 Free Software Foundation, Inc.
+   Copyright (C) 2015-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,5 +26,5 @@ static inline void
 __pthread_initialize_pids (struct pthread *pd)
 {
   INTERNAL_SYSCALL_DECL (err);
-  pd->pid = pd->tid = INTERNAL_SYSCALL (set_tid_address, err, 1, &pd->tid);
+  pd->tid = INTERNAL_SYSCALL_CALL (set_tid_address, err, &pd->tid);
 }

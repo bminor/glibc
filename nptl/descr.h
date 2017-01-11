@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2016 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -167,8 +167,8 @@ struct pthread
      therefore stack) used' flag.  */
   pid_t tid;
 
-  /* Process ID - thread group ID in kernel speak.  */
-  pid_t pid;
+  /* Ununsed.  */
+  pid_t pid_ununsed;
 
   /* List of robust mutexes the thread is holding.  */
 #ifdef __PTHREAD_MUTEX_HAVE_PREV

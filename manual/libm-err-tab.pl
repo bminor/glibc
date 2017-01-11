@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-# Copyright (C) 1999-2016 Free Software Foundation, Inc.
+# Copyright (C) 1999-2017 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Andreas Jaeger <aj@suse.de>, 1999.
 
@@ -48,20 +48,7 @@ use vars qw (%results @all_floats %suffices @all_functions);
   );
 
 # Pretty description of platform
-%pplatforms =
-  ( "i386/fpu" => "ix86",
-    "generic" => "Generic",
-    "alpha/fpu" => "Alpha",
-    "ia64/fpu" => "IA64",
-    "m68k/fpu" => "M68k",
-    "mips/fpu" => "MIPS",
-    "powerpc/fpu" => "PowerPC",
-    "sparc/sparc32/fpu" => "Sparc 32-bit",
-    "sparc/sparc64/fpu" => "Sparc 64-bit",
-    "sh/sh4/fpu" => "SH4",
-    "s390/fpu" => "S/390",
-    "arm" => "ARM"
-  );
+%pplatforms = ();
 
 @all_functions =
   ( "acos", "acosh", "asin", "asinh", "atan", "atanh",
@@ -70,17 +57,19 @@ use vars qw (%results @all_floats %suffices @all_functions);
     "clog", "clog10", "conj", "copysign", "cos", "cosh", "cpow", "cproj",
     "creal", "csin", "csinh", "csqrt", "ctan", "ctanh", "erf", "erfc",
     "exp", "exp10", "exp2", "expm1", "fabs", "fdim", "floor", "fma",
-    "fmax", "fmin", "fmod", "frexp", "gamma", "hypot",
-    "ilogb", "j0", "j1", "jn", "lgamma", "lrint",
+    "fmax", "fmaxmag", "fmin", "fminmag", "fmod", "frexp", "fromfp", "fromfpx",
+    "gamma", "hypot",
+    "ilogb", "j0", "j1", "jn", "lgamma", "llogb", "lrint",
     "llrint", "log", "log10", "log1p", "log2", "logb", "lround",
     "llround", "modf", "nearbyint", "nextafter", "nextdown", "nexttoward",
-    "nextup", "pow", "remainder", "remquo", "rint", "round", "scalb",
-    "scalbn", "sin", "sincos", "sinh", "sqrt", "tan", "tanh", "tgamma",
-    "trunc", "y0", "y1", "yn" );
+    "nextup", "pow", "remainder", "remquo", "rint", "round", "roundeven",
+    "scalb", "scalbn", "sin", "sincos", "sinh", "sqrt", "tan", "tanh",
+    "tgamma", "trunc", "ufromfp", "ufromfpx", "y0", "y1", "yn" );
 # canonicalize, fpclassify, getpayload, iscanonical, isnormal,
 # isfinite, isinf, isnan, issignaling, issubnormal, iszero, signbit,
 # iseqsig, isgreater, isgreaterequal, isless, islessequal,
-# islessgreater, isunordered, totalorder, totalordermag
+# islessgreater, isunordered, setpayload, setpayloadsig,
+# totalorder, totalordermag
 # are not tabulated.
 
 if ($#ARGV == 0) {
@@ -99,6 +88,13 @@ sub find_files {
   if ($_ eq 'libm-test-ulps') {
     # print "Parsing $File::Find::name\n";
     push @platforms, $File::Find::dir;
+    my ($file, $name);
+    $file = "${File::Find::name}-name";
+    open NAME, $file or die ("Can't open $file: $!");
+    $name = <NAME>;
+    chomp $name;
+    close NAME;
+    $pplatforms{$File::Find::dir} = $name;
     &parse_ulps ($File::Find::name, $File::Find::dir);
   }
 }
@@ -161,15 +157,6 @@ sub get_value {
 	  ? $results{$fct}{$platform}{$type}{$float} : "0");
 }
 
-sub canonicalize_platform {
-  my ($platform) = @_;
-
-  $platform =~ s|^(.*/sysdeps/)||;
-
-
-  return exists $pplatforms{$platform} ? $pplatforms{$platform} : $platform;
-}
-
 sub print_platforms {
   my (@p) = @_;
   my ($fct, $platform, $float, $first, $i, $platform_no, $platform_total);
@@ -183,7 +170,7 @@ sub print_platforms {
   print '@item Function ';
   foreach (@p) {
     print ' @tab ';
-    print &canonicalize_platform ($_);
+    print $pplatforms{$_};
   }
   print "\n";
 
@@ -226,10 +213,5 @@ sub print_all {
 }
 
 sub by_platforms {
-  my ($pa, $pb);
-
-  $pa = $pplatforms{$a} ? $pplatforms{$a} : $a;
-  $pb = $pplatforms{$b} ? $pplatforms{$b} : $b;
-
-  return $pa cmp $pb;
+  return $pplatforms{$a} cmp $pplatforms{$b};
 }

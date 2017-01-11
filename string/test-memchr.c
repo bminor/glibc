@@ -1,5 +1,5 @@
 /* Test memchr functions.
-   Copyright (C) 1999-2016 Free Software Foundation, Inc.
+   Copyright (C) 1999-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
 
@@ -71,12 +71,11 @@ do_one_test (impl_t *impl, const CHAR *s, int c, size_t n, CHAR *exp_res)
 }
 
 static void
-do_test (size_t align, size_t pos, size_t len, int seek_char)
+do_test (size_t align, size_t pos, size_t len, size_t n, int seek_char)
 {
   size_t i;
   CHAR *result;
 
-  align &= 7;
   if ((align + len) * sizeof (CHAR) >= page_size)
     return;
 
@@ -103,7 +102,7 @@ do_test (size_t align, size_t pos, size_t len, int seek_char)
     }
 
   FOR_EACH_IMPL (impl, 0)
-    do_one_test (impl, (CHAR *) (buf + align), seek_char, len, result);
+    do_one_test (impl, (CHAR *) (buf + align), seek_char, n, result);
 }
 
 static void
@@ -167,7 +166,7 @@ do_random_tests (void)
 int
 test_main (void)
 {
-  size_t i;
+  size_t i, j;
 
   test_init ();
 
@@ -178,15 +177,35 @@ test_main (void)
 
   for (i = 1; i < 8; ++i)
     {
-      do_test (0, 16 << i, 2048, 23);
-      do_test (i, 64, 256, 23);
-      do_test (0, 16 << i, 2048, 0);
-      do_test (i, 64, 256, 0);
+      do_test (0, 16 << i, 2048, 2048, 23);
+      do_test (i, 64, 256, 256, 23);
+      do_test (0, 16 << i, 2048, 2048, 0);
+      do_test (i, 64, 256, 256, 0);
+
+      /* Check for large input sizes and for these cases we need to
+	 make sure the byte is within the size range (that's why
+	 7 << i must be smaller than 2048).  */
+      do_test (0, 7 << i, 2048, SIZE_MAX, 23);
+      do_test (0, 2048 - i, 2048, SIZE_MAX, 23);
+      do_test (i, 64, 256, SIZE_MAX, 23);
+      do_test (0, 7 << i, 2048, SIZE_MAX, 0);
+      do_test (0, 2048 - i, 2048, SIZE_MAX, 0);
+      do_test (i, 64, 256, SIZE_MAX, 0);
     }
+
+  for (i = 1; i < 64; ++i)
+    {
+      for (j = 1; j < 64; j++)
+        {
+	  do_test (0, 64 - j, 64, SIZE_MAX, 23);
+	  do_test (i, 64 - j, 64, SIZE_MAX, 23);
+        }
+    }
+
   for (i = 1; i < 32; ++i)
     {
-      do_test (0, i, i + 1, 23);
-      do_test (0, i, i + 1, 0);
+      do_test (0, i, i + 1, i + 1, 23);
+      do_test (0, i, i + 1, i + 1, 0);
     }
 
   do_random_tests ();

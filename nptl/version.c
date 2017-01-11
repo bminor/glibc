@@ -1,5 +1,5 @@
 /* Entry point for libpthread DSO.
-   Copyright (C) 2002-2016 Free Software Foundation, Inc.
+   Copyright (C) 2002-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -23,7 +23,7 @@
 
 static const char banner[] =
 #include "banner.h"
-"Copyright (C) 2016 Free Software Foundation, Inc.\n\
+"Copyright (C) 2017 Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.\n\
 There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A\n\
 PARTICULAR PURPOSE.\n"

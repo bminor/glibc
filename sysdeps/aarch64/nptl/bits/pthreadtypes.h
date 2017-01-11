@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2016 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2017 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 
@@ -21,17 +21,31 @@
 
 #include <endian.h>
 
-#define __SIZEOF_PTHREAD_ATTR_T        64
-#define __SIZEOF_PTHREAD_MUTEX_T       48
-#define __SIZEOF_PTHREAD_MUTEXATTR_T    8
-#define __SIZEOF_PTHREAD_COND_T        48
-#define __SIZEOF_PTHREAD_COND_COMPAT_T 48
-#define __SIZEOF_PTHREAD_CONDATTR_T     8
-#define __SIZEOF_PTHREAD_RWLOCK_T      56
-#define __SIZEOF_PTHREAD_RWLOCKATTR_T   8
-#define __SIZEOF_PTHREAD_BARRIER_T     32
-#define __SIZEOF_PTHREAD_BARRIERATTR_T  8
+#ifdef __ILP32__
+# define __SIZEOF_PTHREAD_ATTR_T        32
+# define __SIZEOF_PTHREAD_MUTEX_T       32
+# define __SIZEOF_PTHREAD_MUTEXATTR_T    4
+# define __SIZEOF_PTHREAD_COND_T        48
+# define __SIZEOF_PTHREAD_COND_COMPAT_T 48
+# define __SIZEOF_PTHREAD_CONDATTR_T     4
+# define __SIZEOF_PTHREAD_RWLOCK_T      48
+# define __SIZEOF_PTHREAD_RWLOCKATTR_T   8
+# define __SIZEOF_PTHREAD_BARRIER_T     20
+# define __SIZEOF_PTHREAD_BARRIERATTR_T  4
+#else
+# define __SIZEOF_PTHREAD_ATTR_T        64
+# define __SIZEOF_PTHREAD_MUTEX_T       48
+# define __SIZEOF_PTHREAD_MUTEXATTR_T    8
+# define __SIZEOF_PTHREAD_COND_T        48
+# define __SIZEOF_PTHREAD_COND_COMPAT_T 48
+# define __SIZEOF_PTHREAD_CONDATTR_T     8
+# define __SIZEOF_PTHREAD_RWLOCK_T      56
+# define __SIZEOF_PTHREAD_RWLOCKATTR_T   8
+# define __SIZEOF_PTHREAD_BARRIER_T     32
+# define __SIZEOF_PTHREAD_BARRIERATTR_T  8
+#endif
 
+#define __PTHREAD_RWLOCK_INT_FLAGS_SHARED 1
 
 /* Thread identifiers.  The structure of the attribute type is not
    exposed on purpose.  */
@@ -65,6 +79,8 @@ typedef union
     unsigned int __count;
     int __owner;
     unsigned int __nusers;
+    /* KIND must stay at this position in the structure to maintain
+       binary compatibility with static initializers.  */
     int __kind;
     int __spins;
     __pthread_list_t __list;
@@ -90,17 +106,30 @@ typedef union
 {
   struct
   {
-    int __lock;
-    unsigned int __futex;
-    __extension__ unsigned long long int __total_seq;
-    __extension__ unsigned long long int __wakeup_seq;
-    __extension__ unsigned long long int __woken_seq;
-    void *__mutex;
-    unsigned int __nwaiters;
-    unsigned int __broadcast_seq;
+    __extension__ union
+    {
+      __extension__ unsigned long long int __wseq;
+      struct {
+	unsigned int __low;
+	unsigned int __high;
+      } __wseq32;
+    };
+    __extension__ union
+    {
+      __extension__ unsigned long long int __g1_start;
+      struct {
+	unsigned int __low;
+	unsigned int __high;
+      } __g1_start32;
+    };
+    unsigned int __g_refs[2];
+    unsigned int __g_size[2];
+    unsigned int __g1_orig_size;
+    unsigned int __wrefs;
+    unsigned int __g_signals[2];
   } __data;
   char __size[__SIZEOF_PTHREAD_COND_T];
-  long int __align;
+  __extension__ long long int __align;
 } pthread_cond_t;
 
 typedef union
@@ -125,13 +154,13 @@ typedef union
 {
   struct
   {
-    int __lock;
-    unsigned int __nr_readers;
-    unsigned int __readers_wakeup;
-    unsigned int __writer_wakeup;
-    unsigned int __nr_readers_queued;
-    unsigned int __nr_writers_queued;
-    int __writer;
+    unsigned int __readers;
+    unsigned int __writers;
+    unsigned int __wrphase_futex;
+    unsigned int __writers_futex;
+    unsigned int __pad3;
+    unsigned int __pad4;
+    int __cur_writer;
     int __shared;
     unsigned long int __pad1;
     unsigned long int __pad2;

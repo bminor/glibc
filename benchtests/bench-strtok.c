@@ -1,5 +1,5 @@
 /* Measure strtok functions.
-   Copyright (C) 2013-2016 Free Software Foundation, Inc.
+   Copyright (C) 2013-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,13 +20,41 @@
 #define TEST_NAME "strtok"
 #include "bench-string.h"
 
-#define STRTOK strtok_string
-#include <string/strtok.c>
+char *
+oldstrtok (char *s, const char *delim)
+{
+  static char *olds;
+  char *token;
 
+  if (s == NULL)
+    s = olds;
+
+  /* Scan leading delimiters.  */
+  s += strspn (s, delim);
+  if (*s == '\0')
+    {
+      olds = s;
+      return NULL;
+    }
+
+  /* Find the end of the token.  */
+  token = s;
+  s = strpbrk (token, delim);
+  if (s == NULL)
+    /* This token finishes the string.  */
+    olds = __rawmemchr (token, '\0');
+  else
+    {
+      /* Terminate the token and make OLDS point past it.  */
+      *s = '\0';
+      olds = s + 1;
+    }
+  return token;
+}
 
 typedef char *(*proto_t) (const char *, const char *);
 
-IMPL (strtok_string, 0)
+IMPL (oldstrtok, 0)
 IMPL (strtok, 1)
 
 static void
@@ -149,4 +177,4 @@ test_main (void)
   return ret;
 }
 
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

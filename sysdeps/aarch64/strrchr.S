@@ -1,6 +1,6 @@
 /* strrchr: find the last instance of a character in a string.
 
-   Copyright (C) 2014-2016 Free Software Foundation, Inc.
+   Copyright (C) 2014-2017 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 
@@ -68,6 +68,7 @@
    identify exactly which byte is causing the termination, and why.  */
 
 ENTRY(strrchr)
+	DELOUSE (0)
 	cbz	x1, L(null_search)
 	/* Magic constant 0x40100401 to allow us to identify which lane
 	   matches the requested byte.  Magic constant 0x80200802 used

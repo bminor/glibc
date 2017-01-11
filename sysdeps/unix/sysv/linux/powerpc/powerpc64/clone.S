@@ -1,5 +1,5 @@
 /* Wrapper around clone system call.  PowerPC64 version.
-   Copyright (C) 1997-2016 Free Software Foundation, Inc.
+   Copyright (C) 1997-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -77,15 +77,6 @@ ENTRY (__clone)
 	cmpdi	cr1,r3,0
 	crandc	cr1*4+eq,cr1*4+eq,cr0*4+so
 	bne-	cr1,L(parent)		/* The '-' is to minimise the race.  */
-
-	/* If CLONE_VM is set do not update the pid/tid field.  */
-	rldicl.	r0,r29,56,63		/* flags & CLONE_VM.  */
-	bne+	cr0,L(oldpid)
-
-	DO_CALL(SYS_ify(getpid))
-	stw	r3,TID(r13)
-	stw	r3,PID(r13)
-L(oldpid):
 
 	std	r2,FRAME_TOC_SAVE(r1)
 	/* Call procedure.  */

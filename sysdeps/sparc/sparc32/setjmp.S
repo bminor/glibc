@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2016 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,6 +53,7 @@ ENTRY (__sigsetjmp)
 	call	__sigjmp_save
 	 mov	%g1, %o7
 END(__sigsetjmp)
+hidden_def (__sigsetjmp)
 
 weak_extern(_setjmp)
 weak_extern(setjmp)

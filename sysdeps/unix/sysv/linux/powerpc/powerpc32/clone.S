@@ -1,5 +1,5 @@
 /* Wrapper around clone system call.
-   Copyright (C) 1997-2016 Free Software Foundation, Inc.
+   Copyright (C) 1997-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -75,15 +75,6 @@ ENTRY (__clone)
 	cmpwi	cr1,r3,0
 	crandc	cr1*4+eq,cr1*4+eq,cr0*4+so
 	bne-	cr1,L(parent)		/* The '-' is to minimise the race.  */
-
-	/* If CLONE_VM is set do not update the pid/tid field.  */
-	andi.	r0,r28,CLONE_VM
-	bne+	cr0,L(oldpid)
-
-	DO_CALL(SYS_ify(getpid))
-	stw	r3,TID(r2)
-	stw	r3,PID(r2)
-L(oldpid):
 
 	/* Call procedure.  */
 	mtctr	r30

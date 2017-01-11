@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2016 Free Software Foundation, Inc.
+# Copyright (C) 1991-2017 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,8 @@ include ../Makeconfig
 
 headers	:= string.h strings.h memory.h endian.h bits/endian.h \
 	   argz.h envz.h byteswap.h bits/byteswap.h bits/byteswap-16.h \
-	   bits/string.h bits/string2.h bits/string3.h
+	   bits/string.h bits/string2.h bits/string3.h \
+	   bits/strings_fortified.h bits/uintn-identity.h
 
 routines	:= strcat strchr strcmp strcoll strcpy strcspn		\
 		   strverscmp strdup strndup				\
@@ -41,20 +42,22 @@ routines	:= strcat strchr strcmp strcoll strcpy strcspn		\
 				     addsep replace)			\
 		   envz basename					\
 		   strcoll_l strxfrm_l string-inlines memrchr		\
-		   xpg-strerror strerror_l
+		   xpg-strerror strerror_l explicit_bzero
 
 strop-tests	:= memchr memcmp memcpy memmove mempcpy memset memccpy	\
 		   stpcpy stpncpy strcat strchr strcmp strcpy strcspn	\
 		   strlen strncmp strncpy strpbrk strrchr strspn memmem	\
 		   strstr strcasestr strnlen strcasecmp strncasecmp	\
-		   strncat rawmemchr strchrnul bcopy bzero memrchr
+		   strncat rawmemchr strchrnul bcopy bzero memrchr	\
+		   explicit_bzero
 tests		:= tester inl-tester noinl-tester testcopy test-ffs	\
 		   tst-strlen stratcliff tst-svc tst-inlcall		\
 		   bug-strncat1 bug-strspn1 bug-strpbrk1 tst-bswap	\
 		   tst-strtok tst-strxfrm bug-strcoll1 tst-strfry	\
 		   bug-strtok1 $(addprefix test-,$(strop-tests))	\
 		   bug-envz1 tst-strxfrm2 tst-endian tst-svc2		\
-		   tst-strtok_r bug-strcoll2 tst-cmp
+		   tst-strtok_r bug-strcoll2 tst-cmp tst-xbzero-opt	\
+		   test-endian-types
 
 xtests = tst-strcoll-overflow
 
@@ -70,6 +73,11 @@ CFLAGS-tst-strlen.c = -fno-builtin
 CFLAGS-stratcliff.c = -fno-builtin
 CFLAGS-test-ffs.c = -fno-builtin
 CFLAGS-tst-inlcall.c = -fno-builtin
+CFLAGS-tst-xbzero-opt.c = -O3
+
+# Called during TLS initialization.
+CFLAGS-memcpy.c = $(no-stack-protector)
+CFLAGS-wordcopy.c = $(no-stack-protector)
 
 ifeq ($(run-built-tests),yes)
 $(objpfx)tst-svc-cmp.out: tst-svc.expect $(objpfx)tst-svc.out

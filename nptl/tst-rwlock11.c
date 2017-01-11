@@ -1,5 +1,5 @@
 /* Test program for timedout read/write lock functions.
-   Copyright (C) 2003-2016 Free Software Foundation, Inc.
+   Copyright (C) 2003-2017 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,5 +16,5 @@
    License along with the GNU C Library; see the file COPYING.LIB.  If
    not, see <http://www.gnu.org/licenses/>.  */
 
-#define INIT PTHREAD_RWLOCK_INITIALIZER
+#define KIND PTHREAD_RWLOCK_PREFER_READER_NP
 #include "tst-rwlock9.c"

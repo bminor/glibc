@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2016 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab (schwab@issan.informatik.uni-dortmund.de)
 
@@ -98,19 +98,6 @@ ENTRY (__clone)
 	cfi_startproc
 	cfi_undefined (pc)	/* Mark end of stack */
 	subl	%fp, %fp	/* terminate the stack frame */
-	/* Check and see if we need to reset the PID.  */
-	andl	#CLONE_VM, %d1
-	jne	1f
-	movel	#SYS_ify (getpid), %d0
-	trap	#0
-	movel	%a0, -(%sp)
-	movel	%d0, -(%sp)
-	bsrl	__m68k_read_tp@PLTPC
-	movel	(%sp)+, %d0
-	movel	%d0, PID_OFFSET(%a0)
-	movel	%d0, TID_OFFSET(%a0)
-	movel	(%sp)+, %a0
-1:
 	jsr	(%a0)
 	movel	%d0, %d1
 	movel	#SYS_ify (exit), %d0

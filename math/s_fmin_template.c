@@ -1,5 +1,5 @@
 /* Return minimum numeric value of X and Y.
-   Copyright (C) 1997-2016 Free Software Foundation, Inc.
+   Copyright (C) 1997-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -23,7 +23,14 @@
 FLOAT
 M_DECL_FUNC (__fmin) (FLOAT x, FLOAT y)
 {
-  return (islessequal (x, y) || isnan (y)) ? x : y;
+  if (islessequal (x, y))
+    return x;
+  else if (isgreater (x, y))
+    return y;
+  else if (issignaling (x) || issignaling (y))
+    return x + y;
+  else
+    return isnan (y) ? x : y;
 }
 declare_mgen_alias (__fmin, fmin);
 

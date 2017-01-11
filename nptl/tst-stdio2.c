@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2016 Free Software Foundation, Inc.
+/* Copyright (C) 2002-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -22,6 +22,11 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+
+static int do_test (void);
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
 
 static void *tf (void *a)
 {
@@ -55,7 +60,7 @@ do_test (void)
 
   if (pthread_create (&th, NULL, tf, NULL) != 0)
     {
-      write (2, "create failed\n", 14);
+      write_message ("create failed\n");
       _exit (1);
     }
 
@@ -75,7 +80,3 @@ do_test (void)
 
   return 0;
 }
-
-
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"

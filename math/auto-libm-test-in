@@ -1,5 +1,5 @@
 # libm test inputs for gen-auto-libm-tests.c.
-# Copyright (C) 1997-2016 Free Software Foundation, Inc.
+# Copyright (C) 1997-2017 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 #
 # The GNU C Library is free software; you can redistribute it and/or
@@ -587,8 +587,8 @@ cbrt 0x1.bd0098p-104
 cbrt -0x3.300d34p+0
 cbrt 0x6.247f5p-4
 cbrt -0x3.48648028cb464p+0
-cbrt max
-cbrt -max
+cbrt max xfail:ibm128-libgcc
+cbrt -max xfail:ibm128-libgcc
 cbrt min
 cbrt -min
 cbrt min_subnorm
@@ -1175,9 +1175,8 @@ cosh 0x2.f5d128p+0
 cosh -0xd.0c03p+0
 cosh -0x3.d04328728b72cp-4
 cosh 0x1.629188p+4
-# GCC bug 59666: results on directed rounding may be incorrect.
-cosh max no-test-inline xfail-rounding:ibm128
-cosh -max no-test-inline xfail-rounding:ibm128
+cosh max no-test-inline
+cosh -max no-test-inline
 cosh min
 cosh -min
 cosh min_subnorm
@@ -1191,23 +1190,22 @@ cosh 0x5.96a7ep+4
 cosh 0x5.96a7e8p+4
 cosh -0x5.96a7ep+4
 cosh -0x5.96a7e8p+4
-# GCC bug 59666: results on directed rounding may be incorrect.
-cosh 0x2.c679d1f73f0fap+8 xfail-rounding:ibm128
-cosh 0x2.c679d1f73f0fcp+8 xfail-rounding:ibm128
-cosh -0x2.c679d1f73f0fap+8 xfail-rounding:ibm128
-cosh -0x2.c679d1f73f0fcp+8 xfail-rounding:ibm128
-cosh 0x2.c679d1f73f0fb624d358b213a7p+8 xfail-rounding:ibm128
-cosh 0x2.c679d1f73f0fb624d358b213a8p+8 xfail-rounding:ibm128
-cosh -0x2.c679d1f73f0fb624d358b213a7p+8 xfail-rounding:ibm128
-cosh -0x2.c679d1f73f0fb624d358b213a8p+8 xfail-rounding:ibm128
-cosh 0x2.c5d37700c6bb03a4p+12 no-test-inline xfail-rounding:ibm128
-cosh 0x2.c5d37700c6bb03a8p+12 no-test-inline xfail-rounding:ibm128
-cosh -0x2.c5d37700c6bb03a4p+12 no-test-inline xfail-rounding:ibm128
-cosh -0x2.c5d37700c6bb03a8p+12 no-test-inline xfail-rounding:ibm128
-cosh 0x2.c5d37700c6bb03a6c24b6c9b494cp+12 no-test-inline xfail-rounding:ibm128
-cosh 0x2.c5d37700c6bb03a6c24b6c9b494ep+12 no-test-inline xfail-rounding:ibm128
-cosh -0x2.c5d37700c6bb03a6c24b6c9b494cp+12 no-test-inline xfail-rounding:ibm128
-cosh -0x2.c5d37700c6bb03a6c24b6c9b494ep+12 no-test-inline xfail-rounding:ibm128
+cosh 0x2.c679d1f73f0fap+8
+cosh 0x2.c679d1f73f0fcp+8
+cosh -0x2.c679d1f73f0fap+8
+cosh -0x2.c679d1f73f0fcp+8
+cosh 0x2.c679d1f73f0fb624d358b213a7p+8 xfail-rounding:ibm128-libgcc
+cosh 0x2.c679d1f73f0fb624d358b213a8p+8 xfail-rounding:ibm128-libgcc
+cosh -0x2.c679d1f73f0fb624d358b213a7p+8 xfail-rounding:ibm128-libgcc
+cosh -0x2.c679d1f73f0fb624d358b213a8p+8 xfail-rounding:ibm128-libgcc
+cosh 0x2.c5d37700c6bb03a4p+12 no-test-inline
+cosh 0x2.c5d37700c6bb03a8p+12 no-test-inline
+cosh -0x2.c5d37700c6bb03a4p+12 no-test-inline
+cosh -0x2.c5d37700c6bb03a8p+12 no-test-inline
+cosh 0x2.c5d37700c6bb03a6c24b6c9b494cp+12 no-test-inline
+cosh 0x2.c5d37700c6bb03a6c24b6c9b494ep+12 no-test-inline
+cosh -0x2.c5d37700c6bb03a6c24b6c9b494cp+12 no-test-inline
+cosh -0x2.c5d37700c6bb03a6c24b6c9b494ep+12 no-test-inline
 
 cpow 1 0 0 0 ignore-zero-inf-sign
 cpow 2 0 10 0 ignore-zero-inf-sign
@@ -1410,9 +1408,8 @@ ctan 1 45
 ctan 1 47
 ctan 1 355
 ctan 1 365
-# GCC bug 59666: results on directed rounding may be incorrect.
-ctan 1 5680 xfail-rounding:ibm128
-ctan 1 5690 xfail-rounding:ibm128
+ctan 1 5680
+ctan 1 5690
 
 ctan 0x3.243f6cp-1 0
 
@@ -1420,11 +1417,10 @@ ctan 0x1p127 1
 ctan 0x1p1023 1
 ctan 0x1p16383 1
 
-# GCC bug 59666: results on directed rounding may be incorrect.
-ctan 50000 50000 xfail-rounding:ibm128
-ctan 50000 -50000 xfail-rounding:ibm128
-ctan -50000 50000 xfail-rounding:ibm128
-ctan -50000 -50000 xfail-rounding:ibm128
+ctan 50000 50000
+ctan 50000 -50000
+ctan -50000 50000
+ctan -50000 -50000
 
 ctan 0x1.921fb6p+0 0x1p-149
 ctan 0x1.921fb54442d18p+0 0x1p-1074
@@ -1453,9 +1449,8 @@ ctanh 45 1
 ctanh 47 1
 ctanh 355 1
 ctanh 365 1
-# GCC bug 59666: results on directed rounding may be incorrect.
-ctanh 5680 1 xfail-rounding:ibm128
-ctanh 5690 1 xfail-rounding:ibm128
+ctanh 5680 1
+ctanh 5690 1
 
 ctanh 0 0x3.243f6cp-1
 
@@ -1463,11 +1458,10 @@ ctanh 1 0x1p127
 ctanh 1 0x1p1023
 ctanh 1 0x1p16383
 
-# GCC bug 59666: results on directed rounding may be incorrect.
-ctanh 50000 50000 xfail-rounding:ibm128
-ctanh 50000 -50000 xfail-rounding:ibm128
-ctanh -50000 50000 xfail-rounding:ibm128
-ctanh -50000 -50000 xfail-rounding:ibm128
+ctanh 50000 50000
+ctanh 50000 -50000
+ctanh -50000 50000
+ctanh -50000 -50000
 
 ctanh 0x1p-149 0x1.921fb6p+0
 ctanh 0x1p-1074 0x1.921fb54442d18p+0
@@ -1672,14 +1666,12 @@ exp 0.75
 exp 50.0
 exp 88.72269439697265625
 exp 709.75
-# GCC bug 59666: results on directed rounding may be incorrect.
-exp 1000.0 xfail-rounding:ibm128
-exp 710 xfail-rounding:ibm128
+exp 1000.0
+exp 710
 exp -1234
-# GCC bug 59666: results on directed rounding may be incorrect.
-exp 0x2.c679d1f73f0fb628p+8 xfail-rounding:ibm128
-exp 1e5 xfail-rounding:ibm128
-exp max xfail-rounding:ibm128
+exp 0x2.c679d1f73f0fb628p+8
+exp 1e5
+exp max
 exp -7.4444006192138124e+02
 exp -0x1.75f113c30b1c8p+9
 exp -max
@@ -1722,10 +1714,10 @@ exp 0x2.c5c85fdf473dep+8
 exp 0x2.c5c85fdf473ep+8
 exp -0x2.c4657baf579a6p+8
 exp -0x2.c4657baf579a4p+8
-exp 0x2.c5c85fdf473de6ab278ece600fp+8
-exp 0x2.c5c85fdf473de6ab278ece601p+8
-exp -0x2.9fa8dcb9092a538b3f2ee2ca67p+8
-exp -0x2.9fa8dcb9092a538b3f2ee2ca66p+8
+exp 0x2.c5c85fdf473de6ab278ece600fp+8 xfail-rounding:ibm128-libgcc
+exp 0x2.c5c85fdf473de6ab278ece601p+8 xfail-rounding:ibm128-libgcc
+exp -0x2.9fa8dcb9092a538b3f2ee2ca67p+8 xfail-rounding:ibm128-libgcc
+exp -0x2.9fa8dcb9092a538b3f2ee2ca66p+8 xfail-rounding:ibm128-libgcc
 exp 0x2.c5c85fdf473de6acp+12
 exp 0x2.c5c85fdf473de6bp+12
 exp -0x2.c5b2319c4843accp+12
@@ -1757,22 +1749,17 @@ exp10 36
 exp10 -36
 exp10 305
 exp10 -305
-# GCC bug 59666: results on directed rounding may be incorrect.
-exp10 4932 xfail-rounding:ibm128
+exp10 4932
 exp10 -4932
 exp10 -0x1.343793004f503232p12
-# GCC bug 59666: results on directed rounding may be incorrect.
-exp10 1e5 xfail-rounding:ibm128
+exp10 1e5
 exp10 -1e5
-# GCC bug 59666: results on directed rounding may be incorrect.
-exp10 1e6 xfail-rounding:ibm128
+exp10 1e6
 exp10 -1e6
-# GCC bug 59666: results on directed rounding may be incorrect.
-exp10 max xfail-rounding:ibm128
+exp10 max
 exp10 -max
 exp10 0.75
-# GCC bug 59666: results on directed rounding may be incorrect.
-exp10 0x1.348e45573a1dd72cp+8 xfail-rounding:ibm128
+exp10 0x1.348e45573a1dd72cp+8
 exp10 -0x1.33aa03p+8
 exp10 -0x1.33ad17p+8
 exp10 -0x1.33afcap+8
@@ -1802,10 +1789,10 @@ exp10 0x1.34413509f79fep+8
 exp10 0x1.34413509f79ffp+8
 exp10 -0x1.33a7146f72a42p+8
 exp10 -0x1.33a7146f72a41p+8
-exp10 0x1.34413509f79fef2f625b0205a88p+8
-exp10 0x1.34413509f79fef2f625b0205a9p+8
-exp10 -0x1.23b2b470ae9318183ba772361cp+8
-exp10 -0x1.23b2b470ae9318183ba772361b8p+8
+exp10 0x1.34413509f79fef2f625b0205a88p+8 xfail:ibm128-libgcc
+exp10 0x1.34413509f79fef2f625b0205a9p+8 xfail:ibm128-libgcc
+exp10 -0x1.23b2b470ae9318183ba772361cp+8 xfail-rounding:ibm128-libgcc
+exp10 -0x1.23b2b470ae9318183ba772361b8p+8 xfail-rounding:ibm128-libgcc
 exp10 0x1.34413509f79fef3p+12
 exp10 0x1.34413509f79fef32p+12
 exp10 -0x1.343793004f503232p+12
@@ -1901,8 +1888,8 @@ exp2 0x3.ffffffffffffep+8
 exp2 0x4.0000000000004p+8
 exp2 -0x3.fe00000000002p+8
 exp2 -0x3.fdffffffffffep+8
-exp2 0x3.fffffffffffffffa3aae26b51fp+8
-exp2 0x3.fffffffffffffffa3aae26b52p+8
+exp2 0x3.fffffffffffffffa3aae26b51fp+8 xfail-rounding:ibm128-libgcc
+exp2 0x3.fffffffffffffffa3aae26b52p+8 xfail-rounding:ibm128-libgcc
 exp2 -0x3.c9000000000000000000000001p+8
 exp2 -0x3.c8ffffffffffffffffffffffffp+8
 exp2 0x3.fffffffffffffffcp+12
@@ -1955,8 +1942,7 @@ expm1 90
 expm1 100
 expm1 127.0
 expm1 500.0
-# GCC bug 59666: results on directed rounding may be incorrect.
-expm1 11356.25 xfail-rounding:ibm128
+expm1 11356.25
 expm1 -10.0
 expm1 -16.0
 expm1 -17.0
@@ -1977,9 +1963,8 @@ expm1 -100.0
 expm1 -1000.0
 expm1 -10000.0
 expm1 -100000.0
-# GCC bug 59666: results on directed rounding may be incorrect.
-expm1 100000.0 xfail-rounding:ibm128
-expm1 max xfail-rounding:ibm128
+expm1 100000.0
+expm1 max
 expm1 -max
 expm1 0x1p-2
 expm1 -0x1p-2
@@ -2051,13 +2036,13 @@ fma -1.0 -1.0 -1.0
 
 fma 0 0 1
 fma 0 0 2
-fma 0 0 max
+fma 0 0 max xfail-rounding:ibm128-libgcc
 fma 0 1 1
 fma 1 0 1
 fma 0 1 2
 fma 1 0 2
-fma 0 1 max
-fma 1 0 max
+fma 0 1 max xfail-rounding:ibm128-libgcc
+fma 1 0 max xfail-rounding:ibm128-libgcc
 
 # Bug 6801: errno setting may be missing.
 fma min min 0 missing-errno
@@ -2346,7 +2331,7 @@ hypot min_subnorm min_subnorm no-test-inline
 hypot min min_subnorm no-test-inline
 hypot 0x1.fp127 0x1.fp127
 hypot 0x1.fp1023 0x1.fp1023
-hypot 0x1.fp16383 0x1.fp16383 no-test-inline
+hypot 0x1.fp16383 0x1.fp16383 no-test-inline xfail-rounding:ibm128-libgcc
 
 hypot 0x1p-127 0x1p-149
 hypot 0x1p-1023 0x1p-1074
@@ -2574,9 +2559,9 @@ lgamma -0x1p-16494
 lgamma 0x3.12be0cp+120
 lgamma 0x3.12be6p+120
 lgamma 0x5.d53649e2d4674p+1012
-lgamma 0x5.d53649e2d46c8p+1012
-lgamma 0x5.d53649e2d469dbc1f01e99fd52p+1012 xfail:binary64
-lgamma 0x5.d53649e2d469dbc1f01e99fd7cp+1012 xfail:binary64
+lgamma 0x5.d53649e2d46c8p+1012 xfail-rounding:ibm128-libgcc
+lgamma 0x5.d53649e2d469dbc1f01e99fd52p+1012 xfail:binary64 xfail-rounding:ibm128-libgcc
+lgamma 0x5.d53649e2d469dbc1f01e99fd7cp+1012 xfail:binary64 xfail-rounding:ibm128-libgcc
 lgamma 0x5.c6aa645fffef5f5p+16368
 lgamma 0x5.c6aa645fffef5ff8p+16368
 lgamma 0x5.c6aa645fffef5fa912b9b480f7acp+16368 xfail:intel96 xfail:m68k96
@@ -3241,11 +3226,11 @@ pow -0 0x1fffffe
 pow -0 0x1.fffffffffffffp+52
 pow -0 0x1.fffffffffffffp+53
 pow -0 0x1.fffffffffffffffep+63
-pow -0 0x1.fffffffffffffffep+64
-pow -0 0x1.ffffffffffffffffffffffffff8p+105
-pow -0 0x1.ffffffffffffffffffffffffff8p+106
-pow -0 0x1.ffffffffffffffffffffffffffffp+112
-pow -0 0x1.ffffffffffffffffffffffffffffp+113
+pow -0 0x1.fffffffffffffffep+64 xfail-rounding:ibm128-libgcc
+pow -0 0x1.ffffffffffffffffffffffffff8p+105 xfail-rounding:ibm128-libgcc
+pow -0 0x1.ffffffffffffffffffffffffff8p+106 xfail-rounding:ibm128-libgcc
+pow -0 0x1.ffffffffffffffffffffffffffffp+112 xfail-rounding:ibm128-libgcc
+pow -0 0x1.ffffffffffffffffffffffffffffp+113 xfail-rounding:ibm128-libgcc
 
 # pow (+0, y) == +0 for y > 0 and not an odd integer.
 pow 0.0 4
@@ -3276,11 +3261,11 @@ pow -1.0 -0x1fffffe
 pow -1.0 -0x1.fffffffffffffp+52
 pow -1.0 -0x1.fffffffffffffp+53
 pow -1.0 -0x1.fffffffffffffffep+63
-pow -1.0 -0x1.fffffffffffffffep+64
-pow -1.0 -0x1.ffffffffffffffffffffffffff8p+105
-pow -1.0 -0x1.ffffffffffffffffffffffffff8p+106
-pow -1.0 -0x1.ffffffffffffffffffffffffffffp+112
-pow -1.0 -0x1.ffffffffffffffffffffffffffffp+113
+pow -1.0 -0x1.fffffffffffffffep+64 xfail-rounding:ibm128-libgcc
+pow -1.0 -0x1.ffffffffffffffffffffffffff8p+105 xfail-rounding:ibm128-libgcc
+pow -1.0 -0x1.ffffffffffffffffffffffffff8p+106 xfail-rounding:ibm128-libgcc
+pow -1.0 -0x1.ffffffffffffffffffffffffffffp+112 xfail-rounding:ibm128-libgcc
+pow -1.0 -0x1.ffffffffffffffffffffffffffffp+113 xfail-rounding:ibm128-libgcc
 pow -1.0 -max
 
 pow -1.0 0xffffff
@@ -3288,11 +3273,11 @@ pow -1.0 0x1fffffe
 pow -1.0 0x1.fffffffffffffp+52
 pow -1.0 0x1.fffffffffffffp+53
 pow -1.0 0x1.fffffffffffffffep+63
-pow -1.0 0x1.fffffffffffffffep+64
-pow -1.0 0x1.ffffffffffffffffffffffffff8p+105
-pow -1.0 0x1.ffffffffffffffffffffffffff8p+106
-pow -1.0 0x1.ffffffffffffffffffffffffffffp+112
-pow -1.0 0x1.ffffffffffffffffffffffffffffp+113
+pow -1.0 0x1.fffffffffffffffep+64 xfail-rounding:ibm128-libgcc
+pow -1.0 0x1.ffffffffffffffffffffffffff8p+105 xfail-rounding:ibm128-libgcc
+pow -1.0 0x1.ffffffffffffffffffffffffff8p+106 xfail-rounding:ibm128-libgcc
+pow -1.0 0x1.ffffffffffffffffffffffffffffp+112 xfail-rounding:ibm128-libgcc
+pow -1.0 0x1.ffffffffffffffffffffffffffffp+113 xfail-rounding:ibm128-libgcc
 pow -1.0 max
 
 pow -2.0 126
@@ -3920,8 +3905,8 @@ sinh 0x5.96a7ep+4
 sinh 0x5.96a7e8p+4
 sinh 0x2.c679d1f73f0fap+8
 sinh 0x2.c679d1f73f0fcp+8
-sinh 0x2.c679d1f73f0fb624d358b213a7p+8
-sinh 0x2.c679d1f73f0fb624d358b213a8p+8
+sinh 0x2.c679d1f73f0fb624d358b213a7p+8 xfail-rounding:ibm128-libgcc
+sinh 0x2.c679d1f73f0fb624d358b213a8p+8 xfail-rounding:ibm128-libgcc
 sinh 0x2.c5d37700c6bb03a4p+12 no-test-inline
 sinh 0x2.c5d37700c6bb03a8p+12 no-test-inline
 sinh 0x2.c5d37700c6bb03a6c24b6c9b494cp+12 no-test-inline

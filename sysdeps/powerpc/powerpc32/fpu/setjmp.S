@@ -1,5 +1,5 @@
 /* non altivec (old) version of setjmp for PowerPC.
-   Copyright (C) 1995-2016 Free Software Foundation, Inc.
+   Copyright (C) 1995-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,6 +32,7 @@ versioned_symbol (libc, __vmx__sigsetjmp, __sigsetjmp, GLIBC_2_3_4)
 # define __sigsetjmp_symbol __vmx__sigsetjmp
 # define __sigjmp_save_symbol __vmx__sigjmp_save
 # include "setjmp-common.S"
+libc_hidden_ver (__vmx__sigsetjmp, __sigsetjmp)
 
 # if defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4)
 #  define __NO_VMX__

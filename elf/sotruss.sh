@@ -1,5 +1,5 @@
 #! @BASH@
-# Copyright (C) 2011-2016 Free Software Foundation, Inc.
+# Copyright (C) 2011-2017 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -75,7 +75,7 @@ while test $# -gt 0; do
     printf $"Copyright (C) %s Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-" "2016"
+" "2017"
     printf $"Written by %s.\n" "Ulrich Drepper"
     exit 0
     ;;

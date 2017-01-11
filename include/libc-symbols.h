@@ -1,6 +1,6 @@
 /* Support macros for making weak and strong aliases for symbols,
    and for using symbol sets and linker warnings with GNU ld.
-   Copyright (C) 1995-2016 Free Software Foundation, Inc.
+   Copyright (C) 1995-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,8 +52,6 @@
 
 /* Enable declarations of GNU extensions, since we are compiling them.  */
 #define _GNU_SOURCE	1
-/* And we also need the data for the reentrant functions.  */
-#define _REENTRANT	1
 
 #include <config.h>
 
@@ -337,6 +335,16 @@ for linking")
 #define attribute_tls_model_ie __attribute__ ((tls_model ("initial-exec")))
 
 #define attribute_relro __attribute__ ((section (".data.rel.ro")))
+
+
+/* Used to disable stack protection in sensitive places, like ifunc
+   resolvers and early static TLS init.  */
+#ifdef HAVE_CC_NO_STACK_PROTECTOR
+# define inhibit_stack_protector \
+    __attribute__ ((__optimize__ ("-fno-stack-protector")))
+#else
+# define inhibit_stack_protector
+#endif
 
 /* The following macros are used for PLT bypassing within libc.so
    (and if needed other libraries similarly).
@@ -739,7 +747,7 @@ for linking")
 
 /* Helper / base  macros for indirect function symbols.  */
 #define __ifunc_resolver(type_name, name, expr, arg, init, classifier)	\
-  classifier void *name##_ifunc (arg)					\
+  classifier inhibit_stack_protector void *name##_ifunc (arg)					\
   {									\
     init ();								\
     __typeof (type_name) *res = expr;					\

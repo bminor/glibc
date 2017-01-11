@@ -1,6 +1,6 @@
 /* Set flags signalling availability of kernel features based on given
    kernel version number.  S/390 version.
-   Copyright (C) 1999-2016 Free Software Foundation, Inc.
+   Copyright (C) 1999-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -48,3 +48,6 @@
 # undef __ASSUME_SENDMSG_SYSCALL
 # undef __ASSUME_RECVMSG_SYSCALL
 #endif
+
+/* s390 only supports ipc syscall.  */
+#undef __ASSUME_DIRECT_SYSVIPC_SYSCALLS

@@ -1,6 +1,6 @@
 /* Set flags signalling availability of kernel features based on given
    kernel version number.
-   Copyright (C) 1999-2016 Free Software Foundation, Inc.
+   Copyright (C) 1999-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,6 +32,8 @@
    pairs to start with an even-number register.  */
 #if _MIPS_SIM == _ABIO32
 # define __ASSUME_ALIGNED_REGISTER_PAIRS	1
+/* mips32 only supports ipc syscall.  */
+# undef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
 #endif
 
 /* Define that mips64-n32 is a ILP32 ABI to set the correct interface to

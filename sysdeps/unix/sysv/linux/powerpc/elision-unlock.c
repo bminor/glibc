@@ -1,5 +1,5 @@
 /* elision-unlock.c: Commit an elided pthread lock.
-   Copyright (C) 2015-2016 Free Software Foundation, Inc.
+   Copyright (C) 2015-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,13 +28,16 @@ __lll_unlock_elision (int *lock, short *adapt_count, int pshared)
     __libc_tend (0);
   else
     {
-      lll_unlock ((*lock), pshared);
+      /* Update adapt_count in the critical section to prevent a
+	 write-after-destroy error as mentioned in BZ 20822.  The
+	 following update of adapt_count has to be contained within
+	 the critical region of the fall-back lock in order to not violate
+	 the mutex destruction requirements.  */
+      short __tmp = atomic_load_relaxed (adapt_count);
+      if (__tmp > 0)
+	atomic_store_relaxed (adapt_count, __tmp--);
 
-      /* Update the adapt count AFTER completing the critical section.
-         Doing this here prevents unneeded stalling when entering
-         a critical section.  Saving about 8% runtime on P8.  */
-      if (*adapt_count > 0)
-	(*adapt_count)--;
+      lll_unlock ((*lock), pshared);
     }
   return 0;
 }

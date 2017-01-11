@@ -1,5 +1,5 @@
 /* elision-conf.h: Lock elision tunable parameters.
-   Copyright (C) 2013-2016 Free Software Foundation, Inc.
+   Copyright (C) 2013-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +33,6 @@ struct elision_config
 
 extern struct elision_config __elision_aconf attribute_hidden;
 
-extern int __elision_available attribute_hidden;
 extern int __pthread_force_elision attribute_hidden;
 
 /* Tell the test suite to test elision for this architecture.  */

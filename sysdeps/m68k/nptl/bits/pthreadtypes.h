@@ -1,4 +1,4 @@
-/* Copyright (C) 2010-2016 Free Software Foundation, Inc.
+/* Copyright (C) 2010-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Maxim Kuvyrkov <maxim@codesourcery.com>, 2010.
 
@@ -64,7 +64,7 @@ typedef union
     unsigned int __count;
     int __owner;
     /* KIND must stay at this position in the structure to maintain
-       binary compatibility.  */
+       binary compatibility with static initializers.  */
     int __kind;
     unsigned int __nusers;
     __extension__ union
@@ -88,19 +88,33 @@ typedef union
 
 
 /* Data structure for conditional variable handling.  The structure of
-   the attribute type is deliberately not exposed.  */
+   the attribute type is not exposed on purpose.  */
 typedef union
 {
   struct
   {
-    int __lock __attribute__ ((__aligned__ (4)));
-    unsigned int __futex;
-    __extension__ unsigned long long int __total_seq;
-    __extension__ unsigned long long int __wakeup_seq;
-    __extension__ unsigned long long int __woken_seq;
-    void *__mutex;
-    unsigned int __nwaiters;
-    unsigned int __broadcast_seq;
+    __extension__ union
+    {
+      __extension__ unsigned long long int __wseq;
+      struct {
+	unsigned int __low;
+	unsigned int __high;
+      } __wseq32;
+    };
+    __extension__ union
+    {
+      __extension__ unsigned long long int __g1_start;
+      struct {
+	unsigned int __low;
+	unsigned int __high;
+      } __g1_start32;
+    };
+    /* Enforce proper alignment of fields used as futex words.  */
+    unsigned int __g_refs[2] __attribute__ ((__aligned__ (4)));
+    unsigned int __g_size[2];
+    unsigned int __g1_orig_size;
+    unsigned int __wrefs;
+    unsigned int __g_signals[2];
   } __data;
   char __size[__SIZEOF_PTHREAD_COND_T];
   __extension__ long long int __align;
@@ -128,19 +142,19 @@ typedef union
 {
   struct
   {
-    int __lock __attribute__ ((__aligned__ (4)));
-    unsigned int __nr_readers;
-    unsigned int __readers_wakeup;
-    unsigned int __writer_wakeup;
-    unsigned int __nr_readers_queued;
-    unsigned int __nr_writers_queued;
+    unsigned int __readers  __attribute__ ((__aligned__ (4)));
+    unsigned int __writers;
+    unsigned int __wrphase_futex;
+    unsigned int __writers_futex;
+    unsigned int __pad3;
+    unsigned int __pad4;
     unsigned char __pad1;
     unsigned char __pad2;
     unsigned char __shared;
     /* FLAGS must stay at this position in the structure to maintain
        binary compatibility.  */
     unsigned char __flags;
-    int __writer;
+    int __cur_writer;
   } __data;
   char __size[__SIZEOF_PTHREAD_RWLOCK_T];
   long int __align;

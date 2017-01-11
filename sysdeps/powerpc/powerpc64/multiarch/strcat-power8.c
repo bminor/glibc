@@ -1,4 +1,4 @@
-/* Copyright (C) 2015-2016 Free Software Foundation, Inc.
+/* Copyright (C) 2015-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,4 +27,4 @@ extern typeof (strlen) __strlen_power7;
 
 #define strcpy __strcpy_power8
 #define strlen __strlen_power7
-#include <sysdeps/powerpc/strcat.c>
+#include <string/strcat.c>

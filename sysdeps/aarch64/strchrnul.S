@@ -1,6 +1,6 @@
 /* strchrnul - find a character or nul in a string
 
-   Copyright (C) 2014-2016 Free Software Foundation, Inc.
+   Copyright (C) 2014-2017 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 
@@ -60,6 +60,7 @@
    identify exactly which byte is causing the termination.  */
 
 ENTRY (__strchrnul)
+	DELOUSE (0)
 	/* Magic constant 0x40100401 to allow us to identify which lane
 	   matches the termination condition.  */
 	mov	wtmp2, #0x0401

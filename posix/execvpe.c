@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2016 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,8 +38,8 @@
 static void
 maybe_script_execute (const char *file, char *const argv[], char *const envp[])
 {
-  ptrdiff_t argc = 0;
-  while (argv[argc++] != NULL)
+  ptrdiff_t argc;
+  for (argc = 0; argv[argc] != NULL; argc++)
     {
       if (argc == INT_MAX - 1)
 	{
@@ -48,8 +48,14 @@ maybe_script_execute (const char *file, char *const argv[], char *const envp[])
 	}
     }
 
-  /* Construct an argument list for the shell.  */
-  char *new_argv[argc + 1];
+  /* Construct an argument list for the shell based on original arguments:
+     1. Empty list (argv = { NULL }, argc = 1 }: new argv will contain 3
+	arguments - default shell, script to execute, and ending NULL.
+     2. Non empty argument list (argc = { ..., NULL }, argc > 1}: new argv
+	will contain also the default shell and the script to execute.  It
+	will also skip the script name in arguments and only copy script
+	arguments.  */
+  char *new_argv[argc > 1 ? 2 + argc : 3];
   new_argv[0] = (char *) _PATH_BSHELL;
   new_argv[1] = (char *) file;
   if (argc > 1)
@@ -91,10 +97,11 @@ __execvpe (const char *file, char *const argv[], char *const envp[])
   /* Although GLIBC does not enforce NAME_MAX, we set it as the maximum
      size to avoid unbounded stack allocation.  Same applies for
      PATH_MAX.  */
-  size_t file_len = __strnlen (file, NAME_MAX + 1);
+  size_t file_len = __strnlen (file, NAME_MAX) + 1;
   size_t path_len = __strnlen (path, PATH_MAX - 1) + 1;
 
-  if ((file_len > NAME_MAX)
+  /* NAME_MAX does not include the terminating null character.  */
+  if ((file_len - 1 > NAME_MAX)
       || !__libc_alloca_cutoff (path_len + file_len + 1))
     {
       errno = ENAMETOOLONG;
@@ -103,6 +110,9 @@ __execvpe (const char *file, char *const argv[], char *const envp[])
 
   const char *subp;
   bool got_eacces = false;
+  /* The resulting string maximum size would be potentially a entry
+     in PATH plus '/' (path_len + 1) and then the the resulting file name
+     plus '\0' (file_len since it already accounts for the '\0').  */
   char buffer[path_len + file_len + 1];
   for (const char *p = path; ; p = subp)
     {
@@ -123,7 +133,7 @@ __execvpe (const char *file, char *const argv[], char *const envp[])
          execute.  */
       char *pend = mempcpy (buffer, p, subp - p);
       *pend = '/';
-      memcpy (pend + (p < subp), file, file_len + 1);
+      memcpy (pend + (p < subp), file, file_len);
 
       __execve (buffer, argv, envp);
 

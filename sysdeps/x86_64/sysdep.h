@@ -1,5 +1,5 @@
 /* Assembler macros for x86-64.
-   Copyright (C) 2001-2016 Free Software Foundation, Inc.
+   Copyright (C) 2001-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -89,13 +89,14 @@ lose:									      \
   END (name)
 
 #undef JUMPTARGET
-#ifdef PIC
+#ifdef SHARED
 # ifdef BIND_NOW
 #  define JUMPTARGET(name)	*name##@GOTPCREL(%rip)
 # else
 #  define JUMPTARGET(name)	name##@PLT
 # endif
 #else
+/* For static archives, branch to target directly.  */
 # define JUMPTARGET(name)	name
 #endif
 

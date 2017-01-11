@@ -1,5 +1,5 @@
 /* Special .init and .fini section support for MIPS (n64).
-   Copyright (C) 1995-2016 Free Software Foundation, Inc.
+   Copyright (C) 1995-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,6 +40,12 @@
 
 #include <libc-symbols.h>
 
+#ifdef __mips_micromips
+# define JALR_RELOC R_MICROMIPS_JALR
+#else
+# define JALR_RELOC R_MIPS_JALR
+#endif
+
 #ifndef PREINIT_FUNCTION
 # define PREINIT_FUNCTION __gmon_start__
 #endif
@@ -71,12 +77,13 @@ _init:
 	ld $2,%got_disp(PREINIT_FUNCTION)($28)
 	beq $2,$0,.Lno_weak_fn
 	ld $25,%call16(PREINIT_FUNCTION)($28)
-	.reloc 1f,R_MIPS_JALR,PREINIT_FUNCTION
+	.reloc 1f,JALR_RELOC,PREINIT_FUNCTION
 1:	jalr $25
 .Lno_weak_fn:
+	.insn
 #else
 	ld $25,%got_disp(PREINIT_FUNCTION)($28)
-	.reloc 1f,R_MIPS_JALR,PREINIT_FUNCTION
+	.reloc 1f,JALR_RELOC,PREINIT_FUNCTION
 1:	jalr $25
 #endif
 

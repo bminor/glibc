@@ -1,5 +1,5 @@
 /* Load a shared object at run time.
-   Copyright (C) 1995-2016 Free Software Foundation, Inc.
+   Copyright (C) 1995-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -61,7 +61,7 @@ dlopen_doit (void *a)
   if (args->mode & ~(RTLD_BINDING_MASK | RTLD_NOLOAD | RTLD_DEEPBIND
 		     | RTLD_GLOBAL | RTLD_LOCAL | RTLD_NODELETE
 		     | __RTLD_SPROF))
-    GLRO(dl_signal_error) (0, NULL, NULL, _("invalid mode parameter"));
+    _dl_signal_error (0, NULL, NULL, _("invalid mode parameter"));
 
   args->new = GLRO(dl_open) (args->file ?: "", args->mode | __RTLD_DLOPEN,
 			     args->caller,

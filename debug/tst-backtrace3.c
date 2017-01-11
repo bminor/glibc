@@ -1,5 +1,5 @@
 /* Test backtrace and backtrace_symbols for recursive calls.
-   Copyright (C) 2010-2016 Free Software Foundation, Inc.
+   Copyright (C) 2010-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,10 +23,6 @@
 #include <string.h>
 
 #include "tst-backtrace.h"
-
-static int do_test (void);
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
 
 /* The backtrace should include at least 3 * fn, and do_test.  */
 #define NUM_FUNCTIONS 4
@@ -75,9 +71,11 @@ fn (int c)
   return x;
 }
 
-NO_INLINE static int
+NO_INLINE int
 do_test (void)
 {
   fn (2);
   return ret;
 }
+
+#include <support/test-driver.c>

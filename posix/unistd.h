@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2016 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -849,7 +849,7 @@ extern int tcsetpgrp (int __fd, __pid_t __pgrp_id) __THROW;
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern char *getlogin (void);
-#if defined __USE_REENTRANT || defined __USE_POSIX199506
+#ifdef __USE_POSIX199506
 /* Return at most NAME_LEN characters of the login name of the user in NAME.
    If it cannot be determined or some other error occurred, return the error
    code.  Otherwise return 0.
@@ -1157,6 +1157,11 @@ extern int pthread_atfork (void (*__prepare) (void),
 			   void (*__child) (void)) __THROW;
 #endif
 
+#ifdef __USE_MISC
+/* Write LENGTH bytes of randomness starting at BUFFER.  Return 0 on
+   success or -1 on error.  */
+int getentropy (void *__buffer, size_t __length) __wur;
+#endif
 
 /* Define some macros helping to catch buffer overflows.  */
 #if __USE_FORTIFY_LEVEL > 0 && defined __fortify_function

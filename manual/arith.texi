@@ -720,6 +720,20 @@ These macros, defined by TS 18661-1:2014, are constant expressions for
 signaling NaNs.
 @end deftypevr
 
+@comment fenv.h
+@comment ISO
+@deftypevr Macro int FE_SNANS_ALWAYS_SIGNAL
+This macro, defined by TS 18661-1:2014, is defined to @code{1} in
+@file{fenv.h} to indicate that functions and operations with signaling
+NaN inputs and floating-point results always raise the invalid
+exception and return a quiet NaN, even in cases (such as @code{fmax},
+@code{hypot} and @code{pow}) where a quiet NaN input can produce a
+non-NaN result.  Because some compiler optimizations may not handle
+signaling NaNs correctly, this macro is only defined if compiler
+support for signaling NaNs is enabled.  That support can be enabled
+with the GCC option @option{-fsignaling-nans}.
+@end deftypevr
+
 @w{IEEE 754} also allows for another unusual value: negative zero.  This
 value is produced when you divide a positive number by negative
 infinity, or when a negative result is smaller than the limits of
@@ -925,6 +939,11 @@ guaranteed; it is intended that @theglibc{} should set it when the
 underflow is to an appropriately signed zero, but not necessarily for
 other underflows.
 
+When a math function has an argument that is a signaling NaN,
+@theglibc{} does not consider this a domain error, so @code{errno} is
+unchanged, but the invalid exception is still raised (except for a few
+functions that are specified to handle signaling NaNs differently).
+
 Some of the math functions are defined mathematically to result in a
 complex value over parts of their domains.  The most familiar example of
 this is taking the square root of a negative number.  The complex math
@@ -996,31 +1015,27 @@ down.
 various rounding modes.  Each one will be defined if and only if the FPU
 supports the corresponding rounding mode.
 
-@table @code
+@vtable @code
 @comment fenv.h
 @comment ISO
-@vindex FE_TONEAREST
 @item FE_TONEAREST
 Round to nearest.
 
 @comment fenv.h
 @comment ISO
-@vindex FE_UPWARD
 @item FE_UPWARD
 Round toward @math{+@infinity{}}.
 
 @comment fenv.h
 @comment ISO
-@vindex FE_DOWNWARD
 @item FE_DOWNWARD
 Round toward @math{-@infinity{}}.
 
 @comment fenv.h
 @comment ISO
-@vindex FE_TOWARDZERO
 @item FE_TOWARDZERO
 Round toward zero.
-@end table
+@end vtable
 
 Underflow is an unusual case.  Normally, @w{IEEE 754} floating point
 numbers are always normalized (@pxref{Floating Point Concepts}).
@@ -1480,6 +1495,37 @@ result can actually be represented as an @code{int}---for very large
 numbers, this is impossible.  The functions listed here return the
 result as a @code{double} instead to get around this problem.
 
+The @code{fromfp} functions use the following macros, from TS
+18661-1:2014, to specify the direction of rounding.  These correspond
+to the rounding directions defined in IEEE 754-2008.
+
+@vtable @code
+@comment math.h
+@comment ISO
+@item FP_INT_UPWARD
+Round toward @math{+@infinity{}}.
+
+@comment math.h
+@comment ISO
+@item FP_INT_DOWNWARD
+Round toward @math{-@infinity{}}.
+
+@comment math.h
+@comment ISO
+@item FP_INT_TOWARDZERO
+Round toward zero.
+
+@comment math.h
+@comment ISO
+@item FP_INT_TONEARESTFROMZERO
+Round to nearest, ties round away from zero.
+
+@comment math.h
+@comment ISO
+@item FP_INT_TONEAREST
+Round to nearest, ties round to even.
+@end vtable
+
 @comment math.h
 @comment ISO
 @deftypefun double ceil (double @var{x})
@@ -1577,6 +1623,20 @@ current rounding mode).
 
 @comment math.h
 @comment ISO
+@deftypefun double roundeven (double @var{x})
+@comment math.h
+@comment ISO
+@deftypefunx float roundevenf (float @var{x})
+@comment math.h
+@comment ISO
+@deftypefunx {long double} roundevenl (long double @var{x})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These functions, from TS 18661-1:2014, are similar to @code{round},
+but they round halfway cases to even instead of away from zero.
+@end deftypefun
+
+@comment math.h
+@comment ISO
 @deftypefun {long int} lrint (double @var{x})
 @comment math.h
 @comment ISO
@@ -1629,6 +1689,56 @@ These functions are just like @code{round}, but they return a
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions are just like @code{round}, but they return a
 @code{long long int} instead of a floating-point number.
+@end deftypefun
+
+@comment math.h
+@comment ISO
+@deftypefun intmax_t fromfp (double @var{x}, int @var{round}, unsigned int @var{width})
+@comment math.h
+@comment ISO
+@deftypefunx intmax_t fromfpf (float @var{x}, int @var{round}, unsigned int @var{width})
+@comment math.h
+@comment ISO
+@deftypefunx intmax_t fromfpl (long double @var{x}, int @var{round}, unsigned int @var{width})
+@comment math.h
+@comment ISO
+@deftypefunx uintmax_t ufromfp (double @var{x}, int @var{round}, unsigned int @var{width})
+@comment math.h
+@comment ISO
+@deftypefunx uintmax_t ufromfpf (float @var{x}, int @var{round}, unsigned int @var{width})
+@comment math.h
+@comment ISO
+@deftypefunx uintmax_t ufromfpl (long double @var{x}, int @var{round}, unsigned int @var{width})
+@comment math.h
+@comment ISO
+@deftypefunx intmax_t fromfpx (double @var{x}, int @var{round}, unsigned int @var{width})
+@comment math.h
+@comment ISO
+@deftypefunx intmax_t fromfpxf (float @var{x}, int @var{round}, unsigned int @var{width})
+@comment math.h
+@comment ISO
+@deftypefunx intmax_t fromfpxl (long double @var{x}, int @var{round}, unsigned int @var{width})
+@comment math.h
+@comment ISO
+@deftypefunx uintmax_t ufromfpx (double @var{x}, int @var{round}, unsigned int @var{width})
+@comment math.h
+@comment ISO
+@deftypefunx uintmax_t ufromfpxf (float @var{x}, int @var{round}, unsigned int @var{width})
+@comment math.h
+@comment ISO
+@deftypefunx uintmax_t ufromfpxl (long double @var{x}, int @var{round}, unsigned int @var{width})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These functions, from TS 18661-1:2014, convert a floating-point number
+to an integer according to the rounding direction @var{round} (one of
+the @code{FP_INT_*} macros).  If the integer is outside the range of a
+signed or unsigned (depending on the return type of the function) type
+of width @var{width} bits (or outside the range of the return type, if
+@var{width} is larger), or if @var{x} is infinite or NaN, or if
+@var{width} is zero, a domain error occurs and an unspecified value is
+returned.  The functions with an @samp{x} in their names raise the
+inexact exception when a domain error does not occur and the argument
+is not an integer; the other functions do not raise the inexact
+exception.
 @end deftypefun
 
 
@@ -1914,6 +2024,42 @@ integer, or positive zero, represented as a floating-point number); if
 floating-point exceptions even for signaling NaNs.
 @end deftypefun
 
+@comment math.h
+@comment ISO
+@deftypefun int setpayload (double *@var{x}, double @var{payload})
+@comment math.h
+@comment ISO
+@deftypefunx int setpayloadf (float *@var{x}, float @var{payload})
+@comment math.h
+@comment ISO
+@deftypefunx int setpayloadl (long double *@var{x}, long double @var{payload})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These functions, defined by TS 18661-1:2014, set the object pointed to
+by @var{x} to a quiet NaN with payload @var{payload} and a zero sign
+bit and return zero.  If @var{payload} is not a positive-signed
+integer that is a valid payload for a quiet NaN of the given type, the
+object pointed to by @var{x} is set to positive zero and a nonzero
+value is returned.  They raise no floating-point exceptions.
+@end deftypefun
+
+@comment math.h
+@comment ISO
+@deftypefun int setpayloadsig (double *@var{x}, double @var{payload})
+@comment math.h
+@comment ISO
+@deftypefunx int setpayloadsigf (float *@var{x}, float @var{payload})
+@comment math.h
+@comment ISO
+@deftypefunx int setpayloadsigl (long double *@var{x}, long double @var{payload})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These functions, defined by TS 18661-1:2014, set the object pointed to
+by @var{x} to a signaling NaN with payload @var{payload} and a zero
+sign bit and return zero.  If @var{payload} is not a positive-signed
+integer that is a valid payload for a signaling NaN of the given type,
+the object pointed to by @var{x} is set to positive zero and a nonzero
+value is returned.  They raise no floating-point exceptions.
+@end deftypefun
+
 @node FP Comparison Functions
 @subsection Floating-Point Comparison Functions
 @cindex unordered comparison
@@ -2002,7 +2148,7 @@ words, it is true if @var{x} or @var{y} are NaN, and false otherwise.
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This macro determines whether its arguments are equal.  It is
 equivalent to @code{(@var{x}) == (@var{y})}, but it raises the invalid
-exception and sets @code{errno} to @code{EDOM} is either argument is a
+exception and sets @code{errno} to @code{EDOM} if either argument is a
 NaN.
 @end deftypefn
 
@@ -2098,6 +2244,38 @@ and @var{y}.
 
 If an argument is NaN, the other argument is returned.  If both arguments
 are NaN, NaN is returned.
+@end deftypefun
+
+@comment math.h
+@comment ISO
+@deftypefun double fminmag (double @var{x}, double @var{y})
+@comment math.h
+@comment ISO
+@deftypefunx float fminmagf (float @var{x}, float @var{y})
+@comment math.h
+@comment ISO
+@deftypefunx {long double} fminmagl (long double @var{x}, long double @var{y})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These functions, from TS 18661-1:2014, return whichever of the two
+values @var{x} and @var{y} has the smaller absolute value.  If both
+have the same absolute value, or either is NaN, they behave the same
+as the @code{fmin} functions.
+@end deftypefun
+
+@comment math.h
+@comment ISO
+@deftypefun double fmaxmag (double @var{x}, double @var{y})
+@comment math.h
+@comment ISO
+@deftypefunx float fmaxmagf (float @var{x}, float @var{y})
+@comment math.h
+@comment ISO
+@deftypefunx {long double} fmaxmagl (long double @var{x}, long double @var{y})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These functions, from TS 18661-1:2014, return whichever of the two
+values @var{x} and @var{y} has the greater absolute value.  If both
+have the same absolute value, or either is NaN, they behave the same
+as the @code{fmax} functions.
 @end deftypefun
 
 @comment math.h

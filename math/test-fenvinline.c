@@ -1,5 +1,5 @@
 /* Test for fenv inline implementations.
-   Copyright (C) 2015-2016 Free Software Foundation, Inc.
+   Copyright (C) 2015-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -326,8 +326,9 @@ do_test (void)
 
   /* raise all exceptions and test if all are raised  */
   feraiseexcept (FE_ALL_EXCEPT);
-  test_exceptions ("feraiseexcept (FE_ALL_EXCEPT) raises all exceptions",
-                   ALL_EXC);
+  if (EXCEPTION_TESTS (float))
+    test_exceptions ("feraiseexcept (FE_ALL_EXCEPT) raises all exceptions",
+		     ALL_EXC);
 
   /* Same test, but using double as argument  */
   feclearexcept ((double)FE_ALL_EXCEPT);
@@ -335,10 +336,12 @@ do_test (void)
                    NO_EXC);
 
   feraiseexcept ((double)FE_ALL_EXCEPT);
-  test_exceptions ("feraiseexcept ((double)FE_ALL_EXCEPT) raises all exceptions",
-                   ALL_EXC);
+  if (EXCEPTION_TESTS (float))
+    test_exceptions ("feraiseexcept ((double)FE_ALL_EXCEPT) raises all exceptions",
+		     ALL_EXC);
 
-  test_exceptionflag ();
+  if (EXCEPTION_TESTS (float))
+    test_exceptionflag ();
 
   test_fesetround ();
 

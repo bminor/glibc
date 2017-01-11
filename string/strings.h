@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2016 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -135,5 +135,13 @@ extern int strncasecmp_l (const char *__s1, const char *__s2,
 __END_DECLS
 
 #endif	/* string.h  */
+
+#if __GNUC_PREREQ (3,4) && __USE_FORTIFY_LEVEL > 0 \
+    && defined __fortify_function
+/* Functions with security checks.  */
+# if defined __USE_MISC || !defined __USE_XOPEN2K8
+#  include <bits/strings_fortified.h>
+# endif
+#endif
 
 #endif	/* strings.h  */

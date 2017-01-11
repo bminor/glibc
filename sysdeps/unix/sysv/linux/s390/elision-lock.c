@@ -1,5 +1,5 @@
 /* Elided pthread mutex lock.
-   Copyright (C) 2014-2016 Free Software Foundation, Inc.
+   Copyright (C) 2014-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
 #include <pthread.h>
 #include <pthreadP.h>
 #include <lowlevellock.h>
-#include <htmintrin.h>
+#include <htm.h>
 #include <elision-conf.h>
 #include <stdint.h>
 
@@ -45,38 +45,40 @@
 int
 __lll_lock_elision (int *futex, short *adapt_count, EXTRAARG int private)
 {
-  if (*adapt_count > 0)
+  /* adapt_count can be accessed concurrently; these accesses can be both
+     inside of transactions (if critical sections are nested and the outer
+     critical section uses lock elision) and outside of transactions.  Thus,
+     we need to use atomic accesses to avoid data races.  However, the
+     value of adapt_count is just a hint, so relaxed MO accesses are
+     sufficient.
+     Do not begin a transaction if another cpu has locked the
+     futex with normal locking.  If adapt_count is zero, it remains and the
+     next pthread_mutex_lock call will try to start a transaction again.  */
+    if (atomic_load_relaxed (futex) == 0
+	&& atomic_load_relaxed (adapt_count) <= 0 && aconf.try_tbegin > 0)
     {
-      /* Lost updates are possible, but harmless.  Due to races this might lead
-	 to *adapt_count becoming less than zero.  */
-      (*adapt_count)--;
-      goto use_lock;
-    }
-
-  __asm__ volatile (".machinemode \"zarch_nohighgprs\"\n\t"
-		    ".machine \"all\""
-		    : : : "memory");
-
-  int try_tbegin;
-  for (try_tbegin = aconf.try_tbegin;
-       try_tbegin > 0;
-       try_tbegin--)
-    {
-      unsigned status;
-      if (__builtin_expect
-	  ((status = __builtin_tbegin((void *)0)) == _HTM_TBEGIN_STARTED, 1))
+      int status = __libc_tbegin_retry ((void *) 0, aconf.try_tbegin - 1);
+      if (__builtin_expect (status == _HTM_TBEGIN_STARTED,
+			    _HTM_TBEGIN_STARTED))
 	{
-	  if (*futex == 0)
+	  /* Check the futex to make sure nobody has touched it in the
+	     mean time.  This forces the futex into the cache and makes
+	     sure the transaction aborts if some other cpu uses the
+	     lock (writes the futex).  */
+	  if (__builtin_expect (atomic_load_relaxed (futex) == 0, 1))
+	    /* Lock was free.  Return to user code in a transaction.  */
 	    return 0;
+
 	  /* Lock was busy.  Fall back to normal locking.  */
-	  if (__builtin_expect (__builtin_tx_nesting_depth (), 1))
+	  if (__builtin_expect (__libc_tx_nesting_depth () <= 1, 1))
 	    {
 	      /* In a non-nested transaction there is no need to abort,
-		 which is expensive.  */
-	      __builtin_tend ();
+		 which is expensive.  Simply end the started transaction.  */
+	      __libc_tend ();
+	      /* Don't try to use transactions for the next couple of times.
+		 See above for why relaxed MO is sufficient.  */
 	      if (aconf.skip_lock_busy > 0)
-		*adapt_count = aconf.skip_lock_busy;
-	      goto use_lock;
+		atomic_store_relaxed (adapt_count, aconf.skip_lock_busy);
 	    }
 	  else /* nesting depth is > 1 */
 	    {
@@ -89,31 +91,33 @@ __lll_lock_elision (int *futex, short *adapt_count, EXTRAARG int private)
 		 is zero.
 		 The adapt_count of this inner mutex is not changed,
 		 because using the default lock with the inner mutex
-		 would abort the outer transaction.
-	      */
-	      __builtin_tabort (_HTM_FIRST_USER_ABORT_CODE | 1);
+		 would abort the outer transaction.  */
+	      __libc_tabort (_HTM_FIRST_USER_ABORT_CODE | 1);
+	      __builtin_unreachable ();
 	    }
+	}
+      else if (status != _HTM_TBEGIN_TRANSIENT)
+	{
+	  /* A persistent abort (cc 1 or 3) indicates that a retry is
+	     probably futile.  Use the normal locking now and for the
+	     next couple of calls.
+	     Be careful to avoid writing to the lock.  See above for why
+	     relaxed MO is sufficient.  */
+	  if (aconf.skip_lock_internal_abort > 0)
+	    atomic_store_relaxed (adapt_count,
+				  aconf.skip_lock_internal_abort);
 	}
       else
 	{
-	  if (status != _HTM_TBEGIN_TRANSIENT)
-	    {
-	      /* A persistent abort (cc 1 or 3) indicates that a retry is
-		 probably futile.  Use the normal locking now and for the
-		 next couple of calls.
-		 Be careful to avoid writing to the lock.  */
-	      if (aconf.skip_lock_internal_abort > 0)
-		*adapt_count = aconf.skip_lock_internal_abort;
-	      goto use_lock;
-	    }
+	  /* The transaction failed for some retries with
+	     _HTM_TBEGIN_TRANSIENT.  Use the normal locking now and for the
+	     next couple of calls.  */
+	  if (aconf.skip_lock_out_of_tbegin_retries > 0)
+	    atomic_store_relaxed (adapt_count,
+				  aconf.skip_lock_out_of_tbegin_retries);
 	}
     }
 
-  /* Same logic as above, but for for a number of temporary failures in a
-     row.  */
-  if (aconf.skip_lock_out_of_tbegin_retries > 0 && aconf.try_tbegin > 0)
-    *adapt_count = aconf.skip_lock_out_of_tbegin_retries;
-
-  use_lock:
+  /* Use normal locking as fallback path if transaction does not succeed.  */
   return LLL_LOCK ((*futex), private);
 }

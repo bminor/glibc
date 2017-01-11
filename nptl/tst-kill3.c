@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2016 Free Software Foundation, Inc.
+/* Copyright (C) 2003-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -25,6 +25,12 @@
 #include <sys/time.h>
 
 
+static int do_test (void);
+
+#define TIMEOUT 5
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"
+
 static pthread_cond_t c = PTHREAD_COND_INITIALIZER;
 static pthread_mutex_t m = PTHREAD_MUTEX_INITIALIZER;
 static pthread_barrier_t b;
@@ -33,7 +39,7 @@ static pthread_barrier_t b;
 static void
 handler (int sig)
 {
-  write (1, "handler called\n", 15);
+  write_message ("handler called\n");
   _exit (1);
 }
 
@@ -151,8 +157,3 @@ do_test (void)
 
   return 0;
 }
-
-
-#define TIMEOUT 5
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"

@@ -1,5 +1,5 @@
-/* sparc-specific implemetation of profiling support.
-   Copyright (C) 2008-2016 Free Software Foundation, Inc.
+/* sparc-specific implementation of profiling support.
+   Copyright (C) 2008-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David S. Miller <davem@davemloft.net>, 2008.
 

@@ -1,4 +1,4 @@
-# Copyright (C) 2002-2016 Free Software Foundation, Inc.
+# Copyright (C) 2002-2017 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -38,7 +38,7 @@ shared-only-routines = forward
 pthread-compat-wrappers = \
 		      write read close fcntl accept \
 		      connect recv recvfrom send \
-		      sendto fsync lseek llseek \
+		      sendto fsync lseek lseek64 \
 		      msync nanosleep open open64 pause \
 		      pread pread64 pwrite pwrite64 \
 		      tcdrain wait waitpid msgrcv msgsnd \
@@ -83,7 +83,7 @@ libpthread-routines = nptl-init vars events version pt-interp \
 		      pthread_rwlockattr_getkind_np \
 		      pthread_rwlockattr_setkind_np \
 		      pthread_cond_init pthread_cond_destroy \
-		      pthread_cond_wait pthread_cond_timedwait \
+		      pthread_cond_wait \
 		      pthread_cond_signal pthread_cond_broadcast \
 		      old_pthread_cond_init old_pthread_cond_destroy \
 		      old_pthread_cond_wait old_pthread_cond_timedwait \
@@ -186,7 +186,6 @@ CFLAGS-pthread_timedjoin.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pthread_once.c = $(uses-callbacks) -fexceptions \
 			-fasynchronous-unwind-tables
 CFLAGS-pthread_cond_wait.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-pthread_cond_timedwait.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sem_wait.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sem_timedwait.c = -fexceptions -fasynchronous-unwind-tables
 
@@ -238,10 +237,11 @@ tests = tst-typesizes \
 	tst-robust6 tst-robust7 tst-robust8 tst-robust9 \
 	tst-robustpi1 tst-robustpi2 tst-robustpi3 tst-robustpi4 tst-robustpi5 \
 	tst-robustpi6 tst-robustpi7 tst-robustpi8 tst-robustpi9 \
-	tst-rwlock1 tst-rwlock2 tst-rwlock2a tst-rwlock3 tst-rwlock4 \
-	tst-rwlock5 tst-rwlock6 tst-rwlock7 tst-rwlock8 tst-rwlock9 \
-	tst-rwlock10 tst-rwlock11 tst-rwlock12 tst-rwlock13 tst-rwlock14 \
-	tst-rwlock15 tst-rwlock16 \
+	tst-rwlock1 tst-rwlock2 tst-rwlock2a tst-rwlock2b tst-rwlock3 \
+	tst-rwlock4 tst-rwlock5 tst-rwlock6 tst-rwlock7 tst-rwlock8 \
+	tst-rwlock9 tst-rwlock10 tst-rwlock11 tst-rwlock12 tst-rwlock13 \
+	tst-rwlock14 tst-rwlock15 tst-rwlock16 tst-rwlock17 tst-rwlock18 \
+	tst-rwlock19 \
 	tst-once1 tst-once2 tst-once3 tst-once4 tst-once5 \
 	tst-key1 tst-key2 tst-key3 tst-key4 \
 	tst-sem1 tst-sem2 tst-sem3 tst-sem4 tst-sem5 tst-sem6 tst-sem7 \
@@ -308,10 +308,37 @@ test-xfail-tst-once5 = yes
 tests-nolibpthread = tst-unload
 
 gen-as-const-headers = pthread-errnos.sym \
-		       lowlevelcond.sym lowlevelrwlock.sym \
 		       unwindbuf.sym \
 		       lowlevelrobustlock.sym pthread-pi-defines.sym
 
+gen-py-const-headers := nptl_lock_constants.pysym
+pretty-printers := nptl-printers.py
+tests-printers := test-mutexattr-printers test-mutex-printers \
+		  test-condattr-printers test-cond-printers \
+		  test-rwlockattr-printers test-rwlock-printers
+
+# We must specify both CFLAGS and CPPFLAGS to override any
+# compiler options the user might have provided that conflict
+# with what we need e.g. user specifies CPPFLAGS with -O2 and
+# we need -O0.
+CFLAGS-test-mutexattr-printers.c := $(CFLAGS-printers-tests)
+CFLAGS-test-mutex-printers.c := $(CFLAGS-printers-tests)
+CFLAGS-test-condattr-printers.c := $(CFLAGS-printers-tests)
+CFLAGS-test-cond-printers.c := $(CFLAGS-printers-tests)
+CFLAGS-test-rwlockattr-printers.c := $(CFLAGS-printers-tests)
+CFLAGS-test-rwlock-printers.c := $(CFLAGS-printers-tests)
+CPPFLAGS-test-mutexattr-printers.c := $(CFLAGS-printers-tests)
+CPPFLAGS-test-mutex-printers.c := $(CFLAGS-printers-tests)
+CPPFLAGS-test-condattr-printers.c := $(CFLAGS-printers-tests)
+CPPFLAGS-test-cond-printers.c := $(CFLAGS-printers-tests)
+CPPFLAGS-test-rwlockattr-printers.c := $(CFLAGS-printers-tests)
+CPPFLAGS-test-rwlock-printers.c := $(CFLAGS-printers-tests)
+
+ifeq ($(build-shared),yes)
+tests-printers-libs := $(shared-thread-library)
+else
+tests-printers-libs := $(static-thread-library)
+endif
 
 LDFLAGS-pthread.so = -Wl,--enable-new-dtags,-z,nodelete,-z,initfirst
 

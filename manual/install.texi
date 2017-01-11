@@ -164,6 +164,17 @@ time.  Consult the @file{timezone} subdirectory for more details.
 @item --enable-lock-elision=yes
 Enable lock elision for pthread mutexes by default.
 
+@item --enable-stack-protector
+@itemx --enable-stack-protector=strong
+@itemx --enable-stack-protector=all
+Compile the C library and all other parts of the glibc package
+(including the threading and math libraries, NSS modules, and
+transliteration modules) using the GCC @option{-fstack-protector},
+@option{-fstack-protector-strong} or @option{-fstack-protector-all}
+options to detect stack overruns.  Only the dynamic linker and a small
+number of routines called directly from assembler are excluded from this
+protection.
+
 @pindex pt_chown
 @findex grantpt
 @item --enable-pt_chown
@@ -188,6 +199,26 @@ configure with @option{--disable-werror}.
 @item --disable-mathvec
 By default for x86_64, @theglibc{} is built with the vector math library.
 Use this option to disable the vector math library.
+
+@item --enable-tunables
+Tunables support allows additional library parameters to be customized at
+runtime.  This is an experimental feature and affects startup time and is thus
+disabled by default.  This option can take the following values:
+
+@table @code
+@item no
+This is the default if the option is not passed to configure. This disables
+tunables.
+
+@item yes
+This is the default if the option is passed to configure. This enables tunables
+and selects the default frontend (currently @samp{valstring}).
+
+@item valstring
+This enables tunables and selects the @samp{valstring} frontend for tunables.
+This frontend allows users to specify tunables as a colon-separated list in a
+single environment variable @env{GLIBC_TUNABLES}.
+@end table
 
 @item --build=@var{build-system}
 @itemx --host=@var{host-system}
@@ -255,6 +286,36 @@ all problems found and exiting with error status if any problems
 occurred.  You can specify @samp{stop-on-test-failure=y} when running
 @code{make check} to make the test run stop and exit with an error
 status immediately when a failure occurs.
+
+The @glibcadj{} pretty printers come with their own set of scripts for testing,
+which run together with the rest of the testsuite through @code{make check}.
+These scripts require the following tools to run successfully:
+
+@itemize @bullet
+@item
+Python 2.7.6/3.4.3 or later
+
+Python is required for running the printers' test scripts.
+
+@item PExpect 4.0
+
+The printer tests drive GDB through test programs and compare its output
+to the printers'.  PExpect is used to capture the output of GDB, and should be
+compatible with the Python version in your system.
+
+@item
+GDB 7.8 or later with support for Python 2.7.6/3.4.3 or later
+
+GDB itself needs to be configured with Python support in order to use the
+pretty printers.  Notice that your system having Python available doesn't imply
+that GDB supports it, nor that your system's Python and GDB's have the same
+version.
+@end itemize
+
+@noindent
+If these tools are absent, the printer tests will report themselves as
+@code{UNSUPPORTED}.  Notice that some of the printer tests require @theglibc{}
+to be compiled with debugging symbols.
 
 To format the @cite{GNU C Library Reference Manual} for printing, type
 @w{@code{make dvi}}.  You need a working @TeX{} installation to do

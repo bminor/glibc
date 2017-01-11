@@ -1,4 +1,4 @@
-/* Copyright (C) 2012-2016 Free Software Foundation, Inc.
+/* Copyright (C) 2012-2017 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 
@@ -49,6 +49,8 @@
 	/* Start of performance-critical section  -- one 64B cache line.  */
 ENTRY_ALIGN(strcmp, 6)
 
+	DELOUSE (0)
+	DELOUSE (1)
 	eor	tmp1, src1, src2
 	mov	zeroones, #REP8_01
 	tst	tmp1, #7

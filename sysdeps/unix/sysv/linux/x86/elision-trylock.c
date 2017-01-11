@@ -1,5 +1,5 @@
 /* elision-trylock.c: Lock eliding trylock for pthreads.
-   Copyright (C) 2013-2016 Free Software Foundation, Inc.
+   Copyright (C) 2013-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,8 +36,10 @@ __lll_trylock_elision (int *futex, short *adapt_count)
      return an error.  */
   _xabort (_ABORT_NESTED_TRYLOCK);
 
-  /* Only try a transaction if it's worth it.  */
-  if (*adapt_count <= 0)
+  /* Only try a transaction if it's worth it.  See __lll_lock_elision for
+     why we need atomic accesses.  Relaxed MO is sufficient because this is
+     just a hint.  */
+  if (atomic_load_relaxed (adapt_count) <= 0)
     {
       unsigned status;
 
@@ -55,16 +57,18 @@ __lll_trylock_elision (int *futex, short *adapt_count)
       if (!(status & _XABORT_RETRY))
         {
           /* Internal abort.  No chance for retry.  For future
-             locks don't try speculation for some time.  */
-          if (*adapt_count != aconf.skip_trylock_internal_abort)
-            *adapt_count = aconf.skip_trylock_internal_abort;
+             locks don't try speculation for some time.  See above for MO.  */
+          if (atomic_load_relaxed (adapt_count)
+              != aconf.skip_lock_internal_abort)
+            atomic_store_relaxed (adapt_count, aconf.skip_lock_internal_abort);
         }
       /* Could do some retries here.  */
     }
   else
     {
-      /* Lost updates are possible, but harmless.  */
-      (*adapt_count)--;
+      /* Lost updates are possible but harmless (see above).  */
+      atomic_store_relaxed (adapt_count,
+	  atomic_load_relaxed (adapt_count) - 1);
     }
 
   return lll_trylock (*futex);

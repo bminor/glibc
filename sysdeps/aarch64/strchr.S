@@ -1,6 +1,6 @@
 /* strchr - find a character in a string
 
-   Copyright (C) 2014-2016 Free Software Foundation, Inc.
+   Copyright (C) 2014-2017 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 
@@ -62,6 +62,7 @@
 /* Locals and temporaries.  */
 
 ENTRY (strchr)
+	DELOUSE (0)
 	mov	wtmp2, #0x0401
 	movk	wtmp2, #0x4010, lsl #16
 	dup	vrepchr.16b, chrin

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2016 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +18,13 @@
 #include <errno.h>
 #include <stddef.h>
 #include <unistd.h>
+
+/* Test for access to FILE without setting errno.   */
+int
+__access_noerrno (const char *file, int type)
+{
+  return -1;
+}
 
 /* Test for access to FILE.  */
 int

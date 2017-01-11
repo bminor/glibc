@@ -1,5 +1,5 @@
 /* Test static linking against multiple libraries, to find symbol conflicts.
-   Copyright (C) 2016 Free Software Foundation, Inc.
+   Copyright (C) 2016-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,9 @@ void *references[] =
   {
     &pow,                       /* libm */
     &pthread_create,            /* libpthread */
+#if USE_CRYPT
     &crypt,                     /* libcrypt */
+#endif
     &res_send,                  /* libresolv */
     &dlopen,                    /* libdl */
     &login,                     /* libutil */

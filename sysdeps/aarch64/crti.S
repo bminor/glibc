@@ -1,5 +1,5 @@
 /* Special .init and .fini section support for AArch64.
-   Copyright (C) 1995-2016 Free Software Foundation, Inc.
+   Copyright (C) 1995-2017 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 
@@ -39,6 +39,7 @@
    they can be called as functions.  The symbols _init and _fini are
    magic and cause the linker to emit DT_INIT and DT_FINI.  */
 
+#include <sysdep.h>
 #include <libc-symbols.h>
 
 #ifndef PREINIT_FUNCTION
@@ -60,7 +61,7 @@
 	.type	call_weak_fn, %function
 call_weak_fn:
 	adrp	x0, :got:PREINIT_FUNCTION
-	ldr	x0, [x0, #:got_lo12:PREINIT_FUNCTION]
+	ldr	PTR_REG (0), [x0, #:got_lo12:PREINIT_FUNCTION]
 	cbz	x0, 1f
 	b	PREINIT_FUNCTION
 1:

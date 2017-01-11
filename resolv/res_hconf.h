@@ -1,4 +1,4 @@
-/* Copyright (C) 1993-2016 Free Software Foundation, Inc.
+/* Copyright (C) 1993-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger (davidm@azstarnet.com).
 
@@ -41,8 +41,6 @@ struct hconf
   const char *trimdomain[TRIMDOMAINS_MAX];
   unsigned int flags;
 #  define HCONF_FLAG_INITED	(1 << 0) /* initialized? */
-#  define HCONF_FLAG_SPOOF	(1 << 1) /* refuse spoofed addresses */
-#  define HCONF_FLAG_SPOOFALERT	(1 << 2) /* syslog warning of spoofed */
 #  define HCONF_FLAG_REORDER	(1 << 3) /* list best address first */
 #  define HCONF_FLAG_MULTI	(1 << 4) /* see comments for gethtbyname() */
 };

@@ -1,6 +1,6 @@
 /* strnlen - calculate the length of a string with limit.
 
-   Copyright (C) 2013-2016 Free Software Foundation, Inc.
+   Copyright (C) 2013-2017 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 
@@ -50,6 +50,9 @@
 #define REP8_80 0x8080808080808080
 
 ENTRY_ALIGN_AND_PAD (__strnlen, 6, 9)
+	DELOUSE (0)
+	DELOUSE (1)
+	DELOUSE (2)
 	cbz	limit, L(hit_limit)
 	mov	zeroones, #REP8_01
 	bic	src, srcin, #15

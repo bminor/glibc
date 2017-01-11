@@ -1,5 +1,5 @@
 /* Wrapper for __scalblnl handles setting errno.
-   Copyright (C) 2014-2016 Free Software Foundation, Inc.
+   Copyright (C) 2014-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,10 +16,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <math_ldbl_opt.h>
-#undef weak_alias
-#define weak_alias(name, alias)
-#include <math/w_scalblnl.c>
+#define declare_mgen_alias(from, to)
+#include <math-type-macros-ldouble.h>
+#include <w_scalbln_template.c>
 #if IS_IN (libm)
 long_double_symbol (libm, __w_scalblnl, scalblnl);
 #else

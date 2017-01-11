@@ -1,5 +1,5 @@
 /* Elided pthread mutex trylock.
-   Copyright (C) 2014-2016 Free Software Foundation, Inc.
+   Copyright (C) 2014-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
 #include <pthread.h>
 #include <pthreadP.h>
 #include <lowlevellock.h>
-#include <htmintrin.h>
+#include <htm.h>
 #include <elision-conf.h>
 
 #define aconf __elision_aconf
@@ -30,15 +30,11 @@
 int
 __lll_trylock_elision (int *futex, short *adapt_count)
 {
-  __asm__ __volatile__ (".machinemode \"zarch_nohighgprs\"\n\t"
-			".machine \"all\""
-			: : : "memory");
-
   /* Implement POSIX semantics by forbiding nesting elided trylocks.
      Sorry.  After the abort the code is re-executed
      non transactional and if the lock was already locked
      return an error.  */
-  if (__builtin_tx_nesting_depth () > 0)
+  if (__libc_tx_nesting_depth () > 0)
     {
       /* Note that this abort may terminate an outermost transaction that
 	 was created outside glibc.
@@ -46,49 +42,57 @@ __lll_trylock_elision (int *futex, short *adapt_count)
 	 them to use the default lock instead of retrying transactions
 	 until their try_tbegin is zero.
       */
-      __builtin_tabort (_HTM_FIRST_USER_ABORT_CODE | 1);
+      __libc_tabort (_HTM_FIRST_USER_ABORT_CODE | 1);
+      __builtin_unreachable ();
     }
 
-  /* Only try a transaction if it's worth it.  */
-  if (*adapt_count <= 0)
+  /* adapt_count can be accessed concurrently; these accesses can be both
+     inside of transactions (if critical sections are nested and the outer
+     critical section uses lock elision) and outside of transactions.  Thus,
+     we need to use atomic accesses to avoid data races.  However, the
+     value of adapt_count is just a hint, so relaxed MO accesses are
+     sufficient.
+     Do not begin a transaction if another cpu has locked the
+     futex with normal locking.  If adapt_count is zero, it remains and the
+     next pthread_mutex_lock call will try to start a transaction again.  */
+    if (atomic_load_relaxed (futex) == 0
+	&& atomic_load_relaxed (adapt_count) <= 0 && aconf.try_tbegin > 0)
     {
-      unsigned status;
-
-      if (__builtin_expect
-	  ((status = __builtin_tbegin ((void *)0)) == _HTM_TBEGIN_STARTED, 1))
+      int status = __libc_tbegin ((void *) 0);
+      if (__builtin_expect (status  == _HTM_TBEGIN_STARTED,
+			    _HTM_TBEGIN_STARTED))
 	{
-	  if (*futex == 0)
+	  /* Check the futex to make sure nobody has touched it in the
+	     mean time.  This forces the futex into the cache and makes
+	     sure the transaction aborts if some other cpu uses the
+	     lock (writes the futex).  */
+	  if (__builtin_expect (atomic_load_relaxed (futex) == 0, 1))
+	    /* Lock was free.  Return to user code in a transaction.  */
 	    return 0;
-	  /* Lock was busy.  Fall back to normal locking.  */
-	  /* Since we are in a non-nested transaction there is no need to abort,
-	     which is expensive.  */
-	  __builtin_tend ();
+
+	  /* Lock was busy.  Fall back to normal locking.  Since we are in
+	     a non-nested transaction there is no need to abort, which is
+	     expensive.  Simply end the started transaction.  */
+	  __libc_tend ();
 	  /* Note: Changing the adapt_count here might abort a transaction on a
 	     different cpu, but that could happen anyway when the futex is
-	     acquired, so there's no need to check the nesting depth here.  */
+	     acquired, so there's no need to check the nesting depth here.
+	     See above for why relaxed MO is sufficient.  */
 	  if (aconf.skip_lock_busy > 0)
-	    *adapt_count = aconf.skip_lock_busy;
+	    atomic_store_relaxed (adapt_count, aconf.skip_lock_busy);
 	}
-      else
+      else if (status != _HTM_TBEGIN_TRANSIENT)
 	{
-	  if (status != _HTM_TBEGIN_TRANSIENT)
-	    {
-	      /* A persistent abort (cc 1 or 3) indicates that a retry is
-		 probably futile.  Use the normal locking now and for the
-		 next couple of calls.
-		 Be careful to avoid writing to the lock.  */
-	      if (aconf.skip_trylock_internal_abort > 0)
-		*adapt_count = aconf.skip_trylock_internal_abort;
-	    }
+	  /* A persistent abort (cc 1 or 3) indicates that a retry is
+	     probably futile.  Use the normal locking now and for the
+	     next couple of calls.
+	     Be careful to avoid writing to the lock.  */
+	  if (aconf.skip_trylock_internal_abort > 0)
+	    *adapt_count = aconf.skip_trylock_internal_abort;
 	}
       /* Could do some retries here.  */
     }
-  else
-    {
-      /* Lost updates are possible, but harmless.  Due to races this might lead
-	 to *adapt_count becoming less than zero.  */
-      (*adapt_count)--;
-    }
 
+  /* Use normal locking as fallback path if transaction does not succeed.  */
   return lll_trylock (*futex);
 }

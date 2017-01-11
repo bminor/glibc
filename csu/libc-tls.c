@@ -1,5 +1,5 @@
 /* Initialization code for TLS in statically linked application.
-   Copyright (C) 2002-2016 Free Software Foundation, Inc.
+   Copyright (C) 2002-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -102,14 +102,14 @@ init_static_tls (size_t memsz, size_t align)
 }
 
 void
-__libc_setup_tls (size_t tcbsize, size_t tcbalign)
+__libc_setup_tls (void)
 {
   void *tlsblock;
   size_t memsz = 0;
   size_t filesz = 0;
   void *initimage = NULL;
   size_t align = 0;
-  size_t max_align = tcbalign;
+  size_t max_align = TCB_ALIGNMENT;
   size_t tcb_offset;
   const ElfW(Phdr) *phdr;
 
@@ -142,9 +142,9 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
      _dl_allocate_tls_storage (in elf/dl-tls.c) does using __libc_memalign
      and dl_tls_static_align.  */
   tcb_offset = roundup (memsz + GL(dl_tls_static_size), max_align);
-  tlsblock = __sbrk (tcb_offset + tcbsize + max_align);
+  tlsblock = __sbrk (tcb_offset + TLS_INIT_TCB_SIZE + max_align);
 #elif TLS_DTV_AT_TP
-  tcb_offset = roundup (tcbsize, align ?: 1);
+  tcb_offset = roundup (TLS_INIT_TCB_SIZE, align ?: 1);
   tlsblock = __sbrk (tcb_offset + memsz + max_align
 		     + TLS_PRE_TCB_SIZE + GL(dl_tls_static_size));
   tlsblock += TLS_PRE_TCB_SIZE;
@@ -214,32 +214,4 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
 #endif
 
   init_static_tls (memsz, MAX (TLS_TCB_ALIGN, max_align));
-}
-
-/* This is called only when the data structure setup was skipped at startup,
-   when there was no need for it then.  Now we have dynamically loaded
-   something needing TLS, or libpthread needs it.  */
-int
-internal_function
-_dl_tls_setup (void)
-{
-  init_slotinfo ();
-  init_static_tls (
-#if TLS_TCB_AT_TP
-		   TLS_TCB_SIZE,
-#else
-		   0,
-#endif
-		   TLS_TCB_ALIGN);
-  return 0;
-}
-
-
-/* This is the minimal initialization function used when libpthread is
-   not used.  */
-void
-__attribute__ ((weak))
-__pthread_initialize_minimal (void)
-{
-  __libc_setup_tls (TLS_INIT_TCB_SIZE, TLS_INIT_TCB_ALIGN);
 }

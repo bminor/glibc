@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-2016 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -16,33 +16,19 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
 #include <sys/msg.h>
 #include <ipc_priv.h>
-
 #include <sysdep-cancel.h>
-#include <sys/syscall.h>
-
-/* Kludge to work around Linux' restriction of only up to five
-   arguments to a system call.  */
-struct ipc_kludge
-  {
-    void *msgp;
-    long int msgtyp;
-  };
-
 
 ssize_t
 __libc_msgrcv (int msqid, void *msgp, size_t msgsz, long int msgtyp,
 	       int msgflg)
 {
-  /* The problem here is that Linux' calling convention only allows up to
-     fives parameters to a system call.  */
-  struct ipc_kludge tmp;
-
-  tmp.msgp = msgp;
-  tmp.msgtyp = msgtyp;
-
-  return SYSCALL_CANCEL (ipc, IPCOP_msgrcv, msqid, msgsz, msgflg, &tmp);
+#ifdef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
+  return SYSCALL_CANCEL (msgrcv, msqid, msgp, msgsz, msgtyp, msgflg);
+#else
+  return SYSCALL_CANCEL (ipc, IPCOP_msgrcv, msqid, msgsz, msgflg,
+			 MSGRCV_ARGS (msgp, msgtyp));
+#endif
 }
 weak_alias (__libc_msgrcv, msgrcv)

@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2016 Free Software Foundation, Inc.
+# Copyright (C) 1991-2017 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -79,7 +79,10 @@ gpl2lgpl := error.c error.h
 tests := tst-dirname tst-tsearch tst-fdset tst-efgcvt tst-mntent tst-hsearch \
 	 tst-error1 tst-pselect tst-insremque tst-mntent2 bug-hsearch1 \
 	 tst-mntent-blank-corrupt tst-mntent-blank-passno bug18240 \
-	 tst-preadvwritev tst-preadvwritev64 tst-makedev
+	 tst-preadvwritev tst-preadvwritev64 tst-makedev tst-empty \
+	 tst-atomic tst-atomic-long
+tests-static := tst-empty
+
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-error1-mem.out
 endif
@@ -104,6 +107,13 @@ CFLAGS-getsysstats.c = -fexceptions
 CFLAGS-getusershell.c = -fexceptions
 CFLAGS-err.c = -fexceptions
 CFLAGS-tst-tsearch.c = $(stack-align-test-flags)
+
+# Called during static library initialization, so turn stack-protection
+# off for non-shared builds.
+CFLAGS-sbrk.o = $(no-stack-protector)
+CFLAGS-sbrk.op = $(no-stack-protector)
+CFLAGS-brk.o = $(no-stack-protector)
+CFLAGS-brk.op = $(no-stack-protector)
 
 include ../Rules
 

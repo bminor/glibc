@@ -1,5 +1,5 @@
 /* Measure __strcpy_chk functions.
-   Copyright (C) 2013-2016 Free Software Foundation, Inc.
+   Copyright (C) 2013-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,8 +53,7 @@ simple_strcpy_chk (char *dst, const char *src, size_t len)
 #include <setjmp.h>
 #include <signal.h>
 
-static int test_main (void);
-#include "../test-skeleton.c"
+#include <support/support.h>
 
 volatile int chk_fail_ok;
 jmp_buf chk_fail_buf;
@@ -241,3 +240,5 @@ test_main (void)
 
   return 0;
 }
+
+#include <support/test-driver.c>

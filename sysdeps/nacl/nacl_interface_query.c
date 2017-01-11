@@ -1,5 +1,5 @@
 /* NaCl function exposing IRT interface query.
-   Copyright (C) 2015-2016 Free Software Foundation, Inc.
+   Copyright (C) 2015-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,6 +29,7 @@ extern TYPE_nacl_irt_query nacl_interface_query_ifunc (void)
   asm ("nacl_interface_query");
 
 TYPE_nacl_irt_query
+inhibit_stack_protector
 nacl_interface_query_ifunc (void)
 {
   return &__nacl_irt_query;

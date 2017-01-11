@@ -1,5 +1,5 @@
 /* Test fegetexceptflag and fesetexceptflag.
-   Copyright (C) 2016 Free Software Foundation, Inc.
+   Copyright (C) 2016-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -61,7 +61,13 @@ test_set (int initial, const fexcept_t *saved, int mask, int expected)
   if (ret != 0)
     {
       puts ("feraiseexcept failed");
-      result = 1;
+      if (initial == 0 || EXCEPTION_TESTS (float))
+	{
+	  puts ("failure of feraiseexcept was unexpected");
+	  result = 1;
+	}
+      else
+	puts ("failure of feraiseexcept OK, skipping further tests");
       return result;
     }
   ret = fesetexceptflag (saved, mask);

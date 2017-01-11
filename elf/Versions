@@ -26,13 +26,16 @@ libc {
     _dl_open_hook;
     _dl_sym; _dl_vsym;
     __libc_dlclose; __libc_dlopen_mode; __libc_dlsym;
+
+    # Internal error handling support.  Interposes the functions in ld.so.
+    _dl_signal_error; _dl_catch_error;
   }
 }
 
 ld {
   GLIBC_2.0 {
-    # Function from libc.so which must be shared with libc.
-    __libc_memalign; calloc; free; malloc; realloc;
+    # Functions which are interposed from libc.so.
+    calloc; free; malloc; realloc;
 
     _r_debug;
   }
@@ -56,7 +59,7 @@ ld {
     _dl_allocate_tls; _dl_allocate_tls_init;
     _dl_argv; _dl_find_dso_for_object; _dl_get_tls_static_info;
     _dl_deallocate_tls; _dl_make_stack_executable; _dl_out_of_memory;
-    _dl_rtld_di_serinfo; _dl_starting_up; _dl_tls_setup;
+    _dl_rtld_di_serinfo; _dl_starting_up;
     _rtld_global; _rtld_global_ro;
 
     # Only here for gdb while a better method is developed.
@@ -64,5 +67,11 @@ ld {
 
     # Pointer protection.
     __pointer_chk_guard;
+
+    # Internal error handling support.  Interposed by libc.so.
+    _dl_signal_error; _dl_catch_error;
+
+    # Set value of a tunable.
+    __tunable_set_val;
   }
 }

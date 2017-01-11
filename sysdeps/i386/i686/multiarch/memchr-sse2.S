@@ -1,5 +1,5 @@
 /* Optimized memchr with sse2 without bsf
-   Copyright (C) 2011-2016 Free Software Foundation, Inc.
+   Copyright (C) 2011-2017 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
 
@@ -118,8 +118,14 @@ L(crosscache):
 # ifndef USE_AS_RAWMEMCHR
 	jnz	L(match_case2_prolog1)
 	lea	-16(%edx), %edx
+        /* Calculate the last acceptable address and check for possible
+           addition overflow by using satured math:
+           edx = ecx + edx
+           edx |= -(edx < ecx)  */
 	add	%ecx, %edx
-	jle	L(return_null)
+	sbb	%eax, %eax
+	or	%eax, %edx
+	jbe	L(return_null)
 	lea	16(%edi), %edi
 # else
 	jnz	L(match_case1_prolog1)

@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2016 Free Software Foundation, Inc.
+# Copyright (C) 1991-2017 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -51,8 +51,8 @@ aux := check_pf check_native ifreq
 
 tests := htontest test_ifindex tst-ntoa tst-ether_aton tst-network \
 	 tst-gethnm test-ifaddrs bug-if1 test-inet6_opt tst-ether_line \
-	 tst-getni1 tst-getni2 tst-inet6_rth tst-checks tst-sockaddr \
-	 tst-inet6_scopeid_pton
+	 tst-getni1 tst-getni2 tst-inet6_rth tst-checks tst-checks-posix \
+	 tst-sockaddr tst-inet6_scopeid_pton test-hnto-types
 
 include ../Rules
 
@@ -86,6 +86,7 @@ CFLAGS-either_hton.c = -fexceptions
 CFLAGS-getnetgrent.c = -fexceptions
 CFLAGS-getnetgrent_r.c = -fexceptions
 
+CFLAGS-tst-checks-posix.c = -std=c99
 CFLAGS-tst-sockaddr.c = -fno-strict-aliasing
 
 endif

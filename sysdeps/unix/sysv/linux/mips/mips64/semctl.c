@@ -1,4 +1,4 @@
-/* Copyright (C) 2007-2016 Free Software Foundation, Inc.
+/* Copyright (C) 2007-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,39 +15,11 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <stdarg.h>
-#include <sys/sem.h>
-#include <ipc_priv.h>
-#include <sysdep.h>
-
-/* Define a `union semun' suitable for Linux here.  */
-union semun
-{
-  int val;			/* value for SETVAL */
-  struct semid_ds *buf;		/* buffer for IPC_STAT & IPC_SET */
-  unsigned short int *array;	/* array for GETALL & SETALL */
-  struct seminfo *__buf;	/* buffer for IPC_INFO */
-};
-
-int __semctl (int semid, int semnum, int cmd, ...);
-
-int
-__semctl (int semid, int semnum, int cmd, ...)
-{
-  union semun arg;
-  va_list ap;
-
-  va_start (ap, cmd);
-
-  /* Get the argument.  */
-  arg = va_arg (ap, union semun);
-
-  va_end (ap);
-
-  return INLINE_SYSCALL (semctl, 4, semid, semnum, cmd | __IPC_64,
-			 arg.array);
-}
-
 #include <shlib-compat.h>
-versioned_symbol (libc, __semctl, semctl, GLIBC_2_0);
+
+#undef SHLIB_COMPAT
+#define SHLIB_COMPAT(a, b, c) 0
+
+#define DEFAULT_VERSION GLIBC_2_0
+
+#include <sysdeps/unix/sysv/linux/semctl.c>

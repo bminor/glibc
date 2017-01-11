@@ -135,6 +135,17 @@ will be used, and CFLAGS sets optimization options for the compiler.
 '--enable-lock-elision=yes'
      Enable lock elision for pthread mutexes by default.
 
+'--enable-stack-protector'
+'--enable-stack-protector=strong'
+'--enable-stack-protector=all'
+     Compile the C library and all other parts of the glibc package
+     (including the threading and math libraries, NSS modules, and
+     transliteration modules) using the GCC '-fstack-protector',
+     '-fstack-protector-strong' or '-fstack-protector-all' options to
+     detect stack overruns.  Only the dynamic linker and a small number
+     of routines called directly from assembler are excluded from this
+     protection.
+
 '--enable-pt_chown'
      The file 'pt_chown' is a helper binary for 'grantpt' (*note
      Pseudo-Terminals: Allocation.) that is installed setuid root to fix
@@ -157,6 +168,27 @@ will be used, and CFLAGS sets optimization options for the compiler.
 '--disable-mathvec'
      By default for x86_64, the GNU C Library is built with the vector
      math library.  Use this option to disable the vector math library.
+
+'--enable-tunables'
+     Tunables support allows additional library parameters to be
+     customized at runtime.  This is an experimental feature and affects
+     startup time and is thus disabled by default.  This option can take
+     the following values:
+
+     'no'
+          This is the default if the option is not passed to configure.
+          This disables tunables.
+
+     'yes'
+          This is the default if the option is passed to configure.
+          This enables tunables and selects the default frontend
+          (currently 'valstring').
+
+     'valstring'
+          This enables tunables and selects the 'valstring' frontend for
+          tunables.  This frontend allows users to specify tunables as a
+          colon-separated list in a single environment variable
+          'GLIBC_TUNABLES'.
 
 '--build=BUILD-SYSTEM'
 '--host=HOST-SYSTEM'
@@ -223,6 +255,33 @@ problems found and exiting with error status if any problems occurred.
 You can specify 'stop-on-test-failure=y' when running 'make check' to
 make the test run stop and exit with an error status immediately when a
 failure occurs.
+
+   The GNU C Library pretty printers come with their own set of scripts
+for testing, which run together with the rest of the testsuite through
+'make check'.  These scripts require the following tools to run
+successfully:
+
+   * Python 2.7.6/3.4.3 or later
+
+     Python is required for running the printers' test scripts.
+
+   * PExpect 4.0
+
+     The printer tests drive GDB through test programs and compare its
+     output to the printers'.  PExpect is used to capture the output of
+     GDB, and should be compatible with the Python version in your
+     system.
+
+   * GDB 7.8 or later with support for Python 2.7.6/3.4.3 or later
+
+     GDB itself needs to be configured with Python support in order to
+     use the pretty printers.  Notice that your system having Python
+     available doesn't imply that GDB supports it, nor that your
+     system's Python and GDB's have the same version.
+
+If these tools are absent, the printer tests will report themselves as
+'UNSUPPORTED'.  Notice that some of the printer tests require the GNU C
+Library to be compiled with debugging symbols.
 
    To format the 'GNU C Library Reference Manual' for printing, type
 'make dvi'.  You need a working TeX installation to do this.  The

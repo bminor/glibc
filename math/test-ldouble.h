@@ -1,5 +1,5 @@
 /* Common definitions for libm tests for long double.
-   Copyright (C) 1997-2016 Free Software Foundation, Inc.
+   Copyright (C) 1997-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,13 +18,10 @@
 
 #define FUNC(function) function##l
 #define FLOAT long double
-#define PRINTF_EXPR "Le"
-#define PRINTF_XEXPR "La"
-#define PRINTF_NEXPR "Lf"
 #define BUILD_COMPLEX(real, imag) (CMPLXL ((real), (imag)))
 #define PREFIX LDBL
 #define TYPE_STR "ldouble"
 #define LIT(x) (x ## L)
 #define LITM(x) x ## l
-#define FTOSTR snprintf
+#define FTOSTR strfroml
 #define snan_value_MACRO SNANL

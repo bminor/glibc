@@ -1,5 +1,5 @@
 /* Test strncat functions.
-   Copyright (C) 2011-2016 Free Software Foundation, Inc.
+   Copyright (C) 2011-2017 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -284,12 +284,23 @@ test_main (void)
       do_test (0, 0, 8, 8, n, SMALL_CHAR);
       do_test (0, 8, 8, 8, n, SMALL_CHAR);
 
+      do_test (0, 2, 2, 2, SIZE_MAX, SMALL_CHAR);
+      do_test (0, 0, 4, 4, SIZE_MAX, SMALL_CHAR);
+      do_test (4, 0, 4, 4, SIZE_MAX, BIG_CHAR);
+      do_test (0, 0, 8, 8, SIZE_MAX, SMALL_CHAR);
+      do_test (0, 8, 8, 8, SIZE_MAX, SMALL_CHAR);
+
       for (i = 1; i < 8; ++i)
 	{
 	  do_test (0, 0, 8 << i, 8 << i, n, SMALL_CHAR);
 	  do_test (8 - i, 2 * i, 8 << i, 8 << i, n, SMALL_CHAR);
 	  do_test (0, 0, 8 << i, 2 << i, n, SMALL_CHAR);
 	  do_test (8 - i, 2 * i, 8 << i, 2 << i, n, SMALL_CHAR);
+
+	  do_test (0, 0, 8 << i, 8 << i, SIZE_MAX, SMALL_CHAR);
+	  do_test (8 - i, 2 * i, 8 << i, 8 << i, SIZE_MAX, SMALL_CHAR);
+	  do_test (0, 0, 8 << i, 2 << i, SIZE_MAX, SMALL_CHAR);
+	  do_test (8 - i, 2 * i, 8 << i, 2 << i, SIZE_MAX, SMALL_CHAR);
 	}
 
       for (i = 1; i < 8; ++i)
@@ -297,6 +308,10 @@ test_main (void)
 	  do_test (i, 2 * i, 8 << i, 1, n, SMALL_CHAR);
 	  do_test (2 * i, i, 8 << i, 1, n, BIG_CHAR);
 	  do_test (i, i, 8 << i, 10, n, SMALL_CHAR);
+
+	  do_test (i, 2 * i, 8 << i, 1, SIZE_MAX, SMALL_CHAR);
+	  do_test (2 * i, i, 8 << i, 1, SIZE_MAX, BIG_CHAR);
+	  do_test (i, i, 8 << i, 10, SIZE_MAX, SMALL_CHAR);
 	}
     }
 

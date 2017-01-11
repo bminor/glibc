@@ -1,4 +1,4 @@
-# Copyright (C) 2013-2016 Free Software Foundation, Inc.
+# Copyright (C) 2013-2017 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -18,13 +18,12 @@
 # Makefile for benchmark tests.  The only useful target here is `bench`.
 # Add benchmark functions in alphabetical order.
 
-PYTHON := python
-
 subdir := benchtests
 
 include ../Makeconfig
 bench-math := acos acosh asin asinh atan atanh cos cosh exp exp2 log log2 \
-	      modf pow rint sin sincos sinh sqrt tan tanh
+	      modf pow rint sin sincos sinh sqrt tan tanh fmin fmax fminf \
+	      fmaxf
 
 bench-pthread := pthread_once
 
@@ -73,6 +72,10 @@ benchset := $(string-benchset-all) $(stdlib-benchset) $(stdio-common-benchset) \
 CFLAGS-bench-ffs.c += -fno-builtin
 CFLAGS-bench-ffsll.c += -fno-builtin
 CFLAGS-bench-sqrt.c += -fno-builtin
+CFLAGS-bench-fmin.c += -fno-builtin
+CFLAGS-bench-fminf.c += -fno-builtin
+CFLAGS-bench-fmax.c += -fno-builtin
+CFLAGS-bench-fmaxf.c += -fno-builtin
 
 bench-malloc := malloc-thread
 
@@ -141,7 +144,15 @@ bench-clean:
 	rm -f $(timing-type) $(addsuffix .o,$(timing-type))
 	rm -f $(addprefix $(objpfx),$(bench-extra-objs))
 
+# Define the bench target only if the target has a usable python installation.
+ifdef PYTHON
 bench: bench-build bench-set bench-func bench-malloc
+else
+bench:
+	@echo "The bench target needs python to run."
+	@exit 1
+endif
+
 # Target to only build the benchmark without running it.  We generate locales
 # only if we're building natively.
 ifeq (no,$(cross-compiling))
@@ -192,6 +203,7 @@ bench-func: $(binaries-bench)
 
 $(timing-type) $(binaries-bench) $(binaries-benchset) \
 	$(binaries-bench-malloc): %: %.o $(objpfx)json-lib.o \
+	$(link-extra-libs-tests) \
   $(sort $(filter $(common-objpfx)lib%,$(link-libc))) \
   $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
 	$(+link-tests)

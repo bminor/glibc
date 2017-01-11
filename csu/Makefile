@@ -1,5 +1,5 @@
 # Makefile for csu code for GNU C library.
-# Copyright (C) 1995-2016 Free Software Foundation, Inc.
+# Copyright (C) 1995-2017 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -42,8 +42,13 @@ install-lib = $(start-installed-name) g$(start-installed-name) $(csu-dummies)
 generated += version-info.h
 before-compile += $(objpfx)version-info.h
 
-tests := tst-empty tst-atomic tst-atomic-long
-tests-static := tst-empty
+# No tests are allowed in the csu/ subdirectory because the startup
+# code is compiled with special flags.
+tests =
+
+CFLAGS-.o += $(no-stack-protector)
+CFLAGS-.op += $(no-stack-protector)
+CFLAGS-.os += $(no-stack-protector)
 
 ifeq (yes,$(build-shared))
 extra-objs += S$(start-installed-name) gmon-start.os

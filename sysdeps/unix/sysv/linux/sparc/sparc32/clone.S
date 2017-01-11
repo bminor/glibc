@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2016 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@tamu.edu).
 
@@ -79,13 +79,6 @@ END(__clone)
 
 	.type	__thread_start,@function
 __thread_start:
-	andcc	%g4, CLONE_VM, %g0
-	bne	1f
-	set	__NR_getpid,%g1
-	ta	0x10
-	st	%o0,[%g7 + PID]
-	st	%o0,[%g7 + TID]
-1:
 	mov	%g0, %fp	/* terminate backtrace */
 	call	%g2
 	 mov	%g3,%o0

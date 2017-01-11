@@ -1,5 +1,5 @@
 /* cacheflush - flush contents of instruction and/or data cache.
-   Copyright (C) 2015-2016 Free Software Foundation, Inc.
+   Copyright (C) 2015-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,9 +20,6 @@
 #define _SYS_CACHECTL_H 1
 
 #include <features.h>
-
-/* Get the kernel definition for the op bits.  */
-#include <asm/cachectl.h>
 
 __BEGIN_DECLS
 

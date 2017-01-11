@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2016 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -82,10 +82,23 @@ extern void __assert (const char *__assertion, const char *__file, int __line)
 
 __END_DECLS
 
-# define assert(expr)							\
-  ((expr)								\
-   ? __ASSERT_VOID_CAST (0)						\
-   : __assert_fail (#expr, __FILE__, __LINE__, __ASSERT_FUNCTION))
+/* When possible, define assert so that it does not add extra
+   parentheses around EXPR.  Otherwise, those added parentheses would
+   suppress warnings we'd expect to be detected by gcc's -Wparentheses.  */
+# if !defined __GNUC__ || defined __STRICT_ANSI__
+#  define assert(expr)							\
+    ((expr)								\
+     ? __ASSERT_VOID_CAST (0)						\
+     : __assert_fail (#expr, __FILE__, __LINE__, __ASSERT_FUNCTION))
+# else
+#  define assert(expr)							\
+    ({									\
+      if (expr)								\
+        ; /* empty */							\
+      else								\
+        __assert_fail (#expr, __FILE__, __LINE__, __ASSERT_FUNCTION);	\
+    })
+# endif
 
 # ifdef	__USE_GNU
 #  define assert_perror(errnum)						\

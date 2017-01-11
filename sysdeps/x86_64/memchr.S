@@ -1,4 +1,4 @@
-/* Copyright (C) 2011-2016 Free Software Foundation, Inc.
+/* Copyright (C) 2011-2017 Free Software Foundation, Inc.
    Contributed by Intel Corporation.
    This file is part of the GNU C Library.
 
@@ -76,7 +76,13 @@ L(crosscache):
 
 	.p2align 4
 L(unaligned_no_match):
+        /* Calculate the last acceptable address and check for possible
+           addition overflow by using satured math:
+           rdx = rcx + rdx
+           rdx |= -(rdx < rcx)  */
 	add	%rcx, %rdx
+	sbb	%rax, %rax
+	or	%rax, %rdx
 	sub	$16, %rdx
 	jbe	L(return_null)
 	add	$16, %rdi

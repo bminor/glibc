@@ -1,5 +1,5 @@
 /* Get NaN payload.  ldbl-128 version.
-   Copyright (C) 2016 Free Software Foundation, Inc.
+   Copyright (C) 2016-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,8 +20,8 @@
 #include <math_private.h>
 #include <stdint.h>
 
-long double
-getpayloadl (const long double *x)
+_Float128
+getpayloadl (const _Float128 *x)
 {
   uint64_t hx, lx;
   GET_LDOUBLE_WORDS64 (hx, lx, *x);
@@ -51,7 +51,7 @@ getpayloadl (const long double *x)
       lx <<= shift;
     }
   hx = (hx & 0xffffffffffffULL) | ((0x3fffULL + 127 - lz) << 48);
-  long double ret;
+  _Float128 ret;
   SET_LDOUBLE_WORDS64 (ret, hx, lx);
   return ret;
 }

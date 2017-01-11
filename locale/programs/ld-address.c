@@ -1,4 +1,4 @@
-/* Copyright (C) 1998-2016 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -485,8 +485,8 @@ address_read (struct linereader *ldfile, struct localedef_t *result,
 		address->cat = arg->val.str.startmb;			      \
 	      else							      \
 		{							      \
-		  char *numbuf = (char *) xmalloc (11);			      \
-		  snprintf (numbuf, 11, "%ld", arg->val.num);		      \
+		  char *numbuf = (char *) xmalloc (21);			      \
+		  snprintf (numbuf, 21, "%ld", arg->val.num);		      \
 		  address->cat = numbuf;				      \
 		}							      \
 	    }								      \

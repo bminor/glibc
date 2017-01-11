@@ -101,7 +101,7 @@
 #include <errno.h>
 #include <math.h>
 #include <netdb.h>
-#include <resolv.h>
+#include <resolv/resolv-internal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -372,9 +372,8 @@ const struct res_sym __p_update_section_syms[] attribute_hidden = {
 };
 
 /*
- * Names of RR types and qtypes.  Types and qtypes are the same, except
- * that T_ANY is a qtype but not a type.  (You can ask for records of type
- * T_ANY, but you can't have any records of that type in the database.)
+ * Names of RR types and qtypes.  The list is incomplete because its
+ * size is part of the ABI.
  */
 extern const struct res_sym __p_type_syms[];
 libresolv_hidden_proto (__p_type_syms)
@@ -418,13 +417,13 @@ const struct res_sym __p_type_syms[] = {
   {ns_t_tsig,   (char *) "TSIG",  (char *) "transaction signature"},
   {ns_t_ixfr,   (char *) "IXFR",  (char *) "incremental zone transfer"},
   {ns_t_axfr,   (char *) "AXFR",  (char *) "zone transfer"},
-  {ns_t_zxfr,   (char *) "ZXFR",  (char *) "compressed zone transfer"},
   {ns_t_mailb,  (char *) "MAILB", (char *) "mailbox-related data (deprecated)"},
   {ns_t_maila,  (char *) "MAILA", (char *) "mail agent (deprecated)"},
   {ns_t_naptr,  (char *) "NAPTR", (char *) "URN Naming Authority"},
   {ns_t_kx,     (char *) "KX",    (char *) "Key Exchange"},
   {ns_t_cert,   (char *) "CERT",  (char *) "Certificate"},
   {ns_t_any,    (char *) "ANY",   (char *) "\"any\""},
+  {0, NULL, NULL},		/* Padding to preserve ABI.  */
   {0, NULL, NULL}
 };
 libresolv_hidden_data_def (__p_type_syms)
@@ -556,9 +555,8 @@ p_option(u_long option) {
 	case RES_INSECURE1:	return "insecure1";
 	case RES_INSECURE2:	return "insecure2";
 	case RES_NOALIASES:	return "noaliases";
-	case RES_USE_INET6:	return "inet6";
+	case DEPRECATED_RES_USE_INET6:	return "inet6";
 	case RES_ROTATE:	return "rotate";
-	case RES_BLAST:		return "blast";
 	case RES_USE_EDNS0:	return "edns0";
 	case RES_SNGLKUP:	return "single-request";
 	case RES_SNGLKUPREOP:	return "single-request-reopen";

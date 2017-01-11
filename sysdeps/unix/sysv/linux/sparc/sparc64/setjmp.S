@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-2016 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@tamu.edu).
 
@@ -61,6 +61,7 @@ __sigsetjmp_local:
 	 mov	%g1, %o0
 
 END(__sigsetjmp)
+hidden_def (__sigsetjmp)
 
 weak_extern(_setjmp)
 weak_extern(setjmp)

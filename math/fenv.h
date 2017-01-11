@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-2016 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -143,6 +143,14 @@ extern int fesetmode (const femode_t *__modep) __THROW;
 /* Include optimization.  */
 #ifdef __OPTIMIZE__
 # include <bits/fenvinline.h>
+#endif
+
+/* NaN support.  */
+
+#if (__GLIBC_USE (IEC_60559_BFP_EXT)		\
+     && defined FE_INVALID			\
+     && defined __SUPPORT_SNAN__)
+# define FE_SNANS_ALWAYS_SIGNAL	1
 #endif
 
 #ifdef __USE_GNU

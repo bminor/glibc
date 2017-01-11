@@ -1,5 +1,5 @@
 /* Convert between the kernel's `struct stat' format, and libc's.
-   Copyright (C) 1991-2016 Free Software Foundation, Inc.
+   Copyright (C) 1991-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -91,7 +91,7 @@ __xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 int
 __xstat64_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
 {
-#ifdef XSTAT_IS_XSTAT64
+#if XSTAT_IS_XSTAT64
   return xstat_conv (vers, kbuf, ubuf);
 #else
   switch (vers)

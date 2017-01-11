@@ -1,4 +1,4 @@
-/* Copyright (C) 2001-2016 Free Software Foundation, Inc.
+/* Copyright (C) 2001-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -90,14 +90,6 @@ L(thread_start):
 	/* Clear the frame pointer.  The ABI suggests this be done, to mark
 	   the outermost frame obviously.  */
 	xorl	%ebp, %ebp
-
-	andq	$CLONE_VM, %rdi
-	jne	1f
-	movl	$SYS_ify(getpid), %eax
-	syscall
-	movl	%eax, %fs:PID
-	movl	%eax, %fs:TID
-1:
 
 	/* Set up arguments for the function call.  */
 	popq	%rax		/* Function to call.  */

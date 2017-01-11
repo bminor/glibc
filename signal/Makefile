@@ -1,4 +1,4 @@
-# Copyright (C) 1991-2016 Free Software Foundation, Inc.
+# Copyright (C) 1991-2017 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -48,3 +48,5 @@ CFLAGS-sigsuspend.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sigtimedwait.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sigwait.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sigwaitinfo.c = -fexceptions -fasynchronous-unwind-tables
+
+CFLAGS-sigreturn.c = $(no-stack-protector)
