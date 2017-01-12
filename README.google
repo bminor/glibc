@@ -625,3 +625,7 @@ posix/fnmatch_loop.c
   Don't read past end of pattern in fnmatch (BZ17062)
   https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=commit;h=b3a9f56ba59c3d8eadd3135a1c25c37a63151450
   (stanshebs, backport)
+
+nss/tst-nss-getpwent.c
+  Work around b/34251679 by restricting to nss_files module
+  (stanshebs, google-local)

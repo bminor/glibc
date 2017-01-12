@@ -32,6 +32,10 @@ do_test (void)
   uid_t first_uid = 0;
   char *last_name = NULL;
   uid_t last_uid = 0;
+
+  // Google local: restrict to nss_files module, avoids b/34251679 in nss_cache
+  __nss_configure_lookup("passwd", "files");
+
   setpwent ();
   while ((pw  = getpwent ()) != NULL)
     {
