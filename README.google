@@ -629,3 +629,9 @@ posix/fnmatch_loop.c
 nss/tst-nss-getpwent.c
   Work around b/34251679 by restricting to nss_files module
   (stanshebs, google-local)
+
+time/strftime_l.c
+time/tst-strftime.c
+  Fix where out of range data to strftime() causes a segfault (BZ18985, CVE-2015-8776)
+  https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=d36c75fc0d44deec29635dd239b0fbd206ca49b7
+  (stanshebs, backport)
