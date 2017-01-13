@@ -1736,6 +1736,9 @@ struct malloc_par
   size_t tcache_max;
   /* Maximum number of chunks in each bucket.  */
   size_t tcache_count;
+  /* Maximum number of chunks to remove from the unsorted list, which
+     don't match.  */
+  size_t tcache_unsorted_limit;
 #endif
 };
 
@@ -1778,7 +1781,8 @@ static struct malloc_par mp_ =
 #if USE_TCACHE
   ,
   .tcache_count = TCACHE_FILL_COUNT,
-  .tcache_max = TCACHE_IDX-1
+  .tcache_max = TCACHE_IDX-1,
+  .tcache_unsorted_limit = 0 /* No limit */
 #endif
 };
 
@@ -1786,6 +1790,7 @@ static struct malloc_par mp_ =
 #if USE_TCACHE
 #define M_TCACHE_COUNT  -9
 #define M_TCACHE_MAX  -10
+#define M_TCACHE_UNSORTED_LIMIT  -11
 #endif
 
 /* Maximum size of memory handled in fastbins.  */
@@ -3437,6 +3442,10 @@ _int_malloc (mstate av, size_t bytes)
   mchunkptr fwd;                    /* misc temp for linking */
   mchunkptr bck;                    /* misc temp for linking */
 
+#if USE_TCACHE
+  size_t tcache_unsorted_count;	    /* count of unsorted chunks processed */
+#endif
+
   const char *errstr = NULL;
 
   /*
@@ -3637,6 +3646,8 @@ _int_malloc (mstate av, size_t bytes)
     tcache_nb = nb;
   size_t tc_idx = size2tidx (nb-SIZE_SZ);
   int return_cached = 0;
+
+  tcache_unsorted_count = 0;
 #endif
 
   for (;; )
@@ -3787,6 +3798,21 @@ _int_malloc (mstate av, size_t bytes)
           victim->fd = fwd;
           fwd->bk = victim;
           bck->fd = victim;
+
+#if USE_TCACHE
+      /* If we've processed as many chunks as we're allowed while
+	 filling the cache, return one of the cached ones.  */
+      tcache_unsorted_count ++;
+      if (return_cached
+	  && mp_.tcache_unsorted_limit > 0
+	  && tcache_unsorted_count > mp_.tcache_unsorted_limit)
+	{
+	  TCacheEntry *e = tcache.entries[tc_idx];
+	  tcache.entries[tc_idx] = e->next;
+	  tcache.counts[tc_idx] --;
+	  return (void *) e;
+	}
+#endif
 
 #define MAX_ITERS       10000
           if (++iters >= MAX_ITERS)
@@ -5067,6 +5093,34 @@ do_set_arena_max (size_t value)
   return 1;
 }
 
+#ifdef USE_TCACHE
+static inline int
+__always_inline
+do_set_tcache_max (size_t value)
+{
+  LIBC_PROBE (memory_mallopt_tcache_max, 2, value, mp_.tcache_max);
+  mp_.tcache_max = value;
+  return 1;
+}
+
+static inline int
+__always_inline
+do_set_tcache_count (size_t value)
+{
+  LIBC_PROBE (memory_mallopt_tcache_count, 2, value, mp_.tcache_count);
+  mp_.tcache_count = value;
+  return 1;
+}
+
+static inline int
+__always_inline
+do_set_tcache_unsorted_limit (size_t value)
+{
+  LIBC_PROBE (memory_mallopt_tcache_unsorted_limit, 2, value, mp_.tcache_unsorted_limit);
+  mp_.tcache_unsorted_limit = value;
+  return 1;
+}
+#endif
 
 int
 __libc_mallopt (int param_number, int value)
@@ -5130,21 +5184,19 @@ __libc_mallopt (int param_number, int value)
 #if USE_TCACHE
     case M_TCACHE_COUNT:
       if (value >= 0)
-        {
-          LIBC_PROBE (memory_mallopt_tcache_count, 2, value, mp_.tcache_count);
-          mp_.tcache_count = value;
-        }
+	do_set_tcache_max (value);
       break;
     case M_TCACHE_MAX:
       if (value >= 0)
         {
           value = size2tidx (value);
 	  if (value < TCACHE_IDX)
-	    {
-              LIBC_PROBE (memory_mallopt_tcache_max, 2, value, mp_.tcache_max);
-	      mp_.tcache_max = value;
-            }
+	    do_set_tcache_max (value);
         }
+      break;
+    case M_TCACHE_UNSORTED_LIMIT:
+      if (value >= 0)
+	do_set_tcache_unsorted_limit (value);
       break;
 #endif
     }

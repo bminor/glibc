@@ -64,5 +64,17 @@ glibc {
       env_alias: MALLOC_ARENA_TEST
       minval: 1
     }
+    tcache_max {
+      type: SIZE_T
+      env_alias: MALLOC_TCACHE_MAX
+    }
+    tcache_count {
+      type: SIZE_T
+      env_alias: MALLOC_TCACHE_COUNT
+    }
+    tcache_unsorted_limit {
+      type: SIZE_T
+      env_alias: MALLOC_TCACHE_UNSORTED_LIMIT
+    }
   }
 }
