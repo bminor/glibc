@@ -649,3 +649,11 @@ misc/hsearch_r.c
   https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=b5cba5cff937e5336ff23380785da80cab09146c
   https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=3c9e8d9477aba0f514171bb4706670052544479b
   (stanshebs, backport)
+
+catgets/Makefile
+catgets/catgets.c
+catgets/open_catalog.c
+catgets/tst-catgets.c
+  Fix catopen() Multiple unbounded stack allocations (BZ17905, CVE-2015-8779)
+  https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=0f58539030e436449f79189b6edab17d7479796e
+  (stanshebs, backport)
