@@ -657,3 +657,8 @@ catgets/tst-catgets.c
   Fix catopen() Multiple unbounded stack allocations (BZ17905, CVE-2015-8779)
   https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=0f58539030e436449f79189b6edab17d7479796e
   (stanshebs, backport)
+
+ports/sysdeps/unix/sysv/linux/arm/setcontext.S
+  Missing unwind info in __startcontext causes infinite loop (BZ20435, CVE-2016-6323)
+  https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=9e2ff6c9cc54c0b4402b8d49e4abe7000fde7617
+  (stanshebs, backport)
