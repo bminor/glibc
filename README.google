@@ -635,3 +635,9 @@ time/tst-strftime.c
   Fix where out of range data to strftime() causes a segfault (BZ18985, CVE-2015-8776)
   https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=d36c75fc0d44deec29635dd239b0fbd206ca49b7
   (stanshebs, backport)
+
+elf/rtld.c
+sysdeps/generic/ldsodefs.h
+  Always enable pointer guard (BZ18928, CVE-2015-8777)
+  https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=a014cecd82b71b70a6a843e250e06b541ad524f7
+  (stanshebs, backport)
