@@ -1,7 +1,6 @@
-/* Return quiet nan.
-   Copyright (C) 1997-2014 Free Software Foundation, Inc.
+/* Convert string for NaN payload to corresponding NaN.  For float.
+   Copyright (C) 1997-2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,17 +16,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ieee754.h>
-
-
-#undef __nanf
-float
-__nanf (const char *tagp)
-{
-  return __strtof_nan (tagp, NULL, 0);
-}
-weak_alias (__nanf, nanf)
+#define	FLOAT		float
+#define SET_MANTISSA(flt, mant)			\
+  do						\
+    {						\
+      union ieee754_float u;			\
+      u.f = (flt);				\
+      u.ieee_nan.mantissa = (mant);		\
+      if (u.ieee.mantissa != 0)			\
+	(flt) = u.f;				\
+    }						\
+  while (0)

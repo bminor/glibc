@@ -1,7 +1,7 @@
-/* Return quiet nan.
-   Copyright (C) 1997-2014 Free Software Foundation, Inc.
+/* Convert string for NaN payload to corresponding NaN.  Wide strings,
+   long double.
+   Copyright (C) 2015 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -18,16 +18,13 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ieee754.h>
 
+/* This function is unused if long double and double have the same
+   representation.  */
+#ifndef __NO_LONG_DOUBLE_MATH
+# include "../stdlib/strtod_nan_wide.h"
+# include <strtod_nan_ldouble.h>
 
-#undef __nanf
-float
-__nanf (const char *tagp)
-{
-  return __strtof_nan (tagp, NULL, 0);
-}
-weak_alias (__nanf, nanf)
+# define STRTOD_NAN __wcstold_nan
+# include "../stdlib/strtod_nan_main.c"
+#endif

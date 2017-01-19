@@ -662,3 +662,42 @@ ports/sysdeps/unix/sysv/linux/arm/setcontext.S
   Missing unwind info in __startcontext causes infinite loop (BZ20435, CVE-2016-6323)
   https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=9e2ff6c9cc54c0b4402b8d49e4abe7000fde7617
   (stanshebs, backport)
+
+include/stdlib.h
+include/wchar.h
+math/Makefile
+math/s_nan.c
+math/s_nanf.c
+math/s_nanl.c
+math/test-nan-overflow.c
+math/test-nan-payload.c
+stdlib/Makefile
+stdlib/Versions
+stdlib/strtod_l.c
+stdlib/strtod_nan.c
+stdlib/strtod_nan_double.h
+stdlib/strtod_nan_float.h
+stdlib/strtod_nan_main.c
+stdlib/strtod_nan_narrow.h
+stdlib/strtod_nan_wide.h
+stdlib/strtof_l.c
+stdlib/strtof_nan.c
+stdlib/strtold_nan.c
+sysdeps/ieee754/ldbl-128/strtod_nan_ldouble.h
+sysdeps/ieee754/ldbl-128/strtold_l.c
+sysdeps/ieee754/ldbl-128ibm/strtod_nan_ldouble.h
+sysdeps/ieee754/ldbl-128ibm/strtold_l.c
+sysdeps/ieee754/ldbl-64-128/strtold_l.c
+sysdeps/ieee754/ldbl-96/strtod_nan_ldouble.h
+sysdeps/ieee754/ldbl-96/strtold_l.c
+wcsmbs/Makefile
+wcsmbs/wcstod_l.c
+wcsmbs/wcstod_nan.c
+wcsmbs/wcstof_l.c
+wcsmbs/wcstof_nan.c
+wcsmbs/wcstold_l.c
+wcsmbs/wcstold_nan.c
+  Fix nan functions handling of payload strings (BZ16962, CVE-2014-9761)
+  https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=e02cabecf0d025ec4f4ddee290bdf7aadb873bb3
+  https://sourceware.org/git/gitweb.cgi?p=glibc.git;h=8f5e8b01a1da2a207228f2072c934fa5918554b8
+  (stanshebs, backport)
