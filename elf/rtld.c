@@ -41,6 +41,7 @@
 #include <tls.h>
 #include <stap-probe.h>
 #include <stackinfo.h>
+#include <dl-ifunc.h>
 
 #include <assert.h>
 
@@ -2114,10 +2115,11 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
       HP_TIMING_ACCUM_NT (relocate_time, add);
     }
 
-  /* Activate RELRO protection.  In the prelink case, this was already
-     done earlier.  */
+  /* Perform delayed IFUNC relocations and activate RELRO protection.
+     In the prelink case, this was already done earlier.  */
   if (! prelinked)
     {
+      _dl_ifunc_apply_relocations (main_map);
       /* Make sure that this covers the dynamic linker as well.
 	 TODO: rtld_multiple_ref is always true because libc.so needs
 	 the dynamic linker internally.  */

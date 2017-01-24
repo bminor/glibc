@@ -35,7 +35,7 @@
 #include <atomic.h>
 
 #include <dl-dst.h>
-
+#include <dl-ifunc.h>
 
 extern int __libc_multiple_libcs;	/* Defined in init-first.c.  */
 
@@ -552,6 +552,7 @@ TLS generation counter wrapped!  Please report this."));
 	}
     }
 
+  _dl_ifunc_apply_relocations (new);
   _dl_relocate_apply_relro (new);
 
   /* Notify the debugger all new objects have been relocated.  */
@@ -673,6 +674,7 @@ no more namespaces available for dlmopen()"));
 	  if ((mode & __RTLD_AUDIT) == 0)
 	    GL(dl_tls_dtv_gaps) = true;
 
+	  _dl_ifunc_clear_relocations (args.map);
 	  _dl_close_worker (args.map, true);
 	}
 

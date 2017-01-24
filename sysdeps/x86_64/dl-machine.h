@@ -27,6 +27,7 @@
 #include <tls.h>
 #include <dl-tlsdesc.h>
 #include <cpu-features.c>
+#include <dl-ifunc.h>
 
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int __attribute__ ((unused))
@@ -326,29 +327,20 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
       ElfW(Addr) value = (sym == NULL ? 0
 			  : (ElfW(Addr)) sym_map->l_addr + sym->st_value);
 
+# ifndef RTLD_BOOTSTRAP
       if (sym != NULL
 	  && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC,
 			       0)
 	  && __builtin_expect (sym->st_shndx != SHN_UNDEF, 1)
 	  && __builtin_expect (!skip_ifunc, 1))
 	{
-# ifndef RTLD_BOOTSTRAP
-	  if (sym_map != map
-	      && sym_map->l_type != lt_executable
-	      && !sym_map->l_relocated)
-	    {
-	      const char *strtab
-		= (const char *) D_PTR (map, l_info[DT_STRTAB]);
-	      _dl_fatal_printf ("\
-%s: Relink `%s' with `%s' for IFUNC symbol `%s'\n",
-				RTLD_PROGNAME, map->l_name,
-				sym_map->l_name,
-				strtab + refsym->st_name);
-	    }
-# endif
-	  value = ((ElfW(Addr) (*) (void)) value) ();
+	  _dl_ifunc_record_reloc (map, reloc, reloc_addr, sym_map, sym);
+	  return;
 	}
+# endif	/* !RTLD_BOOTSTRAP */
 
+      /* This switch statement needs to be kept in sync with the
+	 switch statement in _dl_ifunc_process_relocation.  */
       switch (r_type)
 	{
 # ifndef RTLD_BOOTSTRAP
@@ -528,9 +520,7 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 	  break;
 #  endif
 	case R_X86_64_IRELATIVE:
-	  value = map->l_addr + reloc->r_addend;
-	  value = ((ElfW(Addr) (*) (void)) value) ();
-	  *reloc_addr = value;
+	  _dl_ifunc_record_reloc (map, reloc, reloc_addr, map, NULL);
 	  break;
 	default:
 	  _dl_reloc_bad_type (map, r_type, 0);

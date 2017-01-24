@@ -60,6 +60,7 @@ struct r_search_path_elem;
 
 /* Forward declaration.  */
 struct link_map;
+struct dl_ifunc_relocation;
 
 /* Structure to describe a single list of scope elements.  The lookup
    functions get passed an array of pointers to such structures.  */
@@ -317,6 +318,11 @@ struct link_map
        done.  */
     ElfW(Addr) l_relro_addr;
     size_t l_relro_size;
+
+#ifdef HAVE_IFUNC
+    /* Deferred IFUNC relocations.  Only used during relocation.  */
+    struct dl_ifunc_relocation *l_ifunc_relocations;
+#endif
 
     unsigned long long int l_serial;
 
