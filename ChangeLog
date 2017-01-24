@@ -1,3 +1,13 @@
+2017-01-24  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/generic/ldsodefs.h (_dl_relocate_apply_relro): Declare.
+	* elf/rtld.c (relocate_doit): Add comment.
+	(dl_main): Call _dl_relocate_apply_relro.
+	* elf/dl-open.c (dl_open_worker): Likewise.
+	* elf/dl-reloc.c (_dl_relocate_object): Do not call
+	_dl_protect_relro.
+	(_dl_relocate_apply_relro): New function.
+
 2017-01-20  DJ Delorie  <dj@redhat.com>
 
 	* elf/dl-tunables.c (tunable_set_val_if_valid_range): Split into ...
