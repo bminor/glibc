@@ -1,7 +1,6 @@
-/* Store current representation for exceptions.
-   Copyright (C) 1997-2017 Free Software Foundation, Inc.
+/* Old SysV permission definition for Linux.  Tile version.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,20 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <fenv.h>
-#include <shlib-compat.h>
+#include <sys/ipc.h>  /* For __key_t  */
 
-int
-__fegetexceptflag (fexcept_t *flagp, int excepts)
-{
-  /* Nothing to do.  */
-  *flagp = 0;
-  return 0;
-}
-#if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__fegetexceptflag, __old_fegetexceptflag)
-compat_symbol (libm, __old_fegetexceptflag, fegetexceptflag, GLIBC_2_1);
-#endif
-versioned_symbol (libm, __fegetexceptflag, fegetexceptflag, GLIBC_2_2);
-
-stub_warning (fegetexceptflag)
+#define __IPC_64	0x0

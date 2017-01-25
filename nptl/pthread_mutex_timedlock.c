@@ -140,6 +140,9 @@ pthread_mutex_timedlock (pthread_mutex_t *mutex,
     case PTHREAD_MUTEX_ROBUST_ADAPTIVE_NP:
       THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending,
 		     &mutex->__data.__list.__next);
+      /* We need to set op_pending before starting the operation.  Also
+	 see comments at ENQUEUE_MUTEX.  */
+      __asm ("" ::: "memory");
 
       oldval = mutex->__data.__lock;
       /* This is set to FUTEX_WAITERS iff we might have shared the
@@ -147,9 +150,16 @@ pthread_mutex_timedlock (pthread_mutex_t *mutex,
 	 set to avoid lost wake-ups.  We have the same requirement in the
 	 simple mutex algorithm.  */
       unsigned int assume_other_futex_waiters = 0;
-      do
+      while (1)
 	{
-	again:
+	  /* Try to acquire the lock through a CAS from 0 (not acquired) to
+	     our TID | assume_other_futex_waiters.  */
+	  if (__glibc_likely ((oldval == 0)
+			      && (atomic_compare_and_exchange_bool_acq
+				  (&mutex->__data.__lock,
+				   id | assume_other_futex_waiters, 0) == 0)))
+	      break;
+
 	  if ((oldval & FUTEX_OWNER_DIED) != 0)
 	    {
 	      /* The previous owner died.  Try locking the mutex.  */
@@ -162,7 +172,7 @@ pthread_mutex_timedlock (pthread_mutex_t *mutex,
 	      if (newval != oldval)
 		{
 		  oldval = newval;
-		  goto again;
+		  continue;
 		}
 
 	      /* We got the mutex.  */
@@ -170,7 +180,12 @@ pthread_mutex_timedlock (pthread_mutex_t *mutex,
 	      /* But it is inconsistent unless marked otherwise.  */
 	      mutex->__data.__owner = PTHREAD_MUTEX_INCONSISTENT;
 
+	      /* We must not enqueue the mutex before we have acquired it.
+		 Also see comments at ENQUEUE_MUTEX.  */
+	      __asm ("" ::: "memory");
 	      ENQUEUE_MUTEX (mutex);
+	      /* We need to clear op_pending after we enqueue the mutex.  */
+	      __asm ("" ::: "memory");
 	      THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
 
 	      /* Note that we deliberately exit here.  If we fall
@@ -186,6 +201,8 @@ pthread_mutex_timedlock (pthread_mutex_t *mutex,
 	      int kind = PTHREAD_MUTEX_TYPE (mutex);
 	      if (kind == PTHREAD_MUTEX_ROBUST_ERRORCHECK_NP)
 		{
+		  /* We do not need to ensure ordering wrt another memory
+		     access.  Also see comments at ENQUEUE_MUTEX. */
 		  THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending,
 				 NULL);
 		  return EDEADLK;
@@ -193,6 +210,8 @@ pthread_mutex_timedlock (pthread_mutex_t *mutex,
 
 	      if (kind == PTHREAD_MUTEX_ROBUST_RECURSIVE_NP)
 		{
+		  /* We do not need to ensure ordering wrt another memory
+		     access.  */
 		  THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending,
 				 NULL);
 
@@ -209,33 +228,97 @@ pthread_mutex_timedlock (pthread_mutex_t *mutex,
 		}
 	    }
 
-	  result = lll_robust_timedlock (mutex->__data.__lock, abstime,
-					 id | assume_other_futex_waiters,
-					 PTHREAD_ROBUST_MUTEX_PSHARED (mutex));
-	  /* See above.  We set FUTEX_WAITERS and might have shared this flag
-	     with other threads; thus, we need to preserve it.  */
-	  assume_other_futex_waiters = FUTEX_WAITERS;
+	  /* We are about to block; check whether the timeout is invalid.  */
+	  if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
+	    return EINVAL;
+	  /* Work around the fact that the kernel rejects negative timeout
+	     values despite them being valid.  */
+	  if (__glibc_unlikely (abstime->tv_sec < 0))
+	    return ETIMEDOUT;
+#if (!defined __ASSUME_FUTEX_CLOCK_REALTIME \
+     || !defined lll_futex_timed_wait_bitset)
+	  struct timeval tv;
+	  struct timespec rt;
 
-	  if (__builtin_expect (mutex->__data.__owner
-				== PTHREAD_MUTEX_NOTRECOVERABLE, 0))
+	  /* Get the current time.  */
+	  (void) __gettimeofday (&tv, NULL);
+
+	  /* Compute relative timeout.  */
+	  rt.tv_sec = abstime->tv_sec - tv.tv_sec;
+	  rt.tv_nsec = abstime->tv_nsec - tv.tv_usec * 1000;
+	  if (rt.tv_nsec < 0)
 	    {
-	      /* This mutex is now not recoverable.  */
-	      mutex->__data.__count = 0;
-	      lll_unlock (mutex->__data.__lock,
-			  PTHREAD_ROBUST_MUTEX_PSHARED (mutex));
-	      THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
-	      return ENOTRECOVERABLE;
+	      rt.tv_nsec += 1000000000;
+	      --rt.tv_sec;
 	    }
 
-	  if (result == ETIMEDOUT || result == EINVAL)
-	    goto out;
+	  /* Already timed out?  */
+	  if (rt.tv_sec < 0)
+	    return ETIMEDOUT;
+#endif
 
-	  oldval = result;
+	  /* We cannot acquire the mutex nor has its owner died.  Thus, try
+	     to block using futexes.  Set FUTEX_WAITERS if necessary so that
+	     other threads are aware that there are potentially threads
+	     blocked on the futex.  Restart if oldval changed in the
+	     meantime.  */
+	  if ((oldval & FUTEX_WAITERS) == 0)
+	    {
+	      if (atomic_compare_and_exchange_bool_acq (&mutex->__data.__lock,
+							oldval | FUTEX_WAITERS,
+							oldval)
+		  != 0)
+		{
+		  oldval = mutex->__data.__lock;
+		  continue;
+		}
+	      oldval |= FUTEX_WAITERS;
+	    }
+
+	  /* It is now possible that we share the FUTEX_WAITERS flag with
+	     another thread; therefore, update assume_other_futex_waiters so
+	     that we do not forget about this when handling other cases
+	     above and thus do not cause lost wake-ups.  */
+	  assume_other_futex_waiters |= FUTEX_WAITERS;
+
+	  /* Block using the futex.  */
+#if (!defined __ASSUME_FUTEX_CLOCK_REALTIME \
+     || !defined lll_futex_timed_wait_bitset)
+	  lll_futex_timed wait (&mutex->__data.__lock, oldval,
+				&rt, PTHREAD_ROBUST_MUTEX_PSHARED (mutex));
+#else
+	  int err = lll_futex_timed_wait_bitset (&mutex->__data.__lock,
+	      oldval, abstime, FUTEX_CLOCK_REALTIME,
+	      PTHREAD_ROBUST_MUTEX_PSHARED (mutex));
+	  /* The futex call timed out.  */
+	  if (err == -ETIMEDOUT)
+	    return -err;
+#endif
+	  /* Reload current lock value.  */
+	  oldval = mutex->__data.__lock;
 	}
-      while ((oldval & FUTEX_OWNER_DIED) != 0);
+
+      /* We have acquired the mutex; check if it is still consistent.  */
+      if (__builtin_expect (mutex->__data.__owner
+			    == PTHREAD_MUTEX_NOTRECOVERABLE, 0))
+	{
+	  /* This mutex is now not recoverable.  */
+	  mutex->__data.__count = 0;
+	  int private = PTHREAD_ROBUST_MUTEX_PSHARED (mutex);
+	  lll_unlock (mutex->__data.__lock, private);
+	  /* FIXME This violates the mutex destruction requirements.  See
+	     __pthread_mutex_unlock_full.  */
+	  THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
+	  return ENOTRECOVERABLE;
+	}
 
       mutex->__data.__count = 1;
+      /* We must not enqueue the mutex before we have acquired it.
+	 Also see comments at ENQUEUE_MUTEX.  */
+      __asm ("" ::: "memory");
       ENQUEUE_MUTEX (mutex);
+      /* We need to clear op_pending after we enqueue the mutex.  */
+      __asm ("" ::: "memory");
       THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
       break;
 
@@ -256,10 +339,15 @@ pthread_mutex_timedlock (pthread_mutex_t *mutex,
 	int robust = mutex->__data.__kind & PTHREAD_MUTEX_ROBUST_NORMAL_NP;
 
 	if (robust)
-	  /* Note: robust PI futexes are signaled by setting bit 0.  */
-	  THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending,
-			 (void *) (((uintptr_t) &mutex->__data.__list.__next)
-				   | 1));
+	  {
+	    /* Note: robust PI futexes are signaled by setting bit 0.  */
+	    THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending,
+			   (void *) (((uintptr_t) &mutex->__data.__list.__next)
+				     | 1));
+	    /* We need to set op_pending before starting the operation.  Also
+	       see comments at ENQUEUE_MUTEX.  */
+	    __asm ("" ::: "memory");
+	  }
 
 	oldval = mutex->__data.__lock;
 
@@ -268,12 +356,16 @@ pthread_mutex_timedlock (pthread_mutex_t *mutex,
 	  {
 	    if (kind == PTHREAD_MUTEX_ERRORCHECK_NP)
 	      {
+		/* We do not need to ensure ordering wrt another memory
+		   access.  */
 		THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
 		return EDEADLK;
 	      }
 
 	    if (kind == PTHREAD_MUTEX_RECURSIVE_NP)
 	      {
+		/* We do not need to ensure ordering wrt another memory
+		   access.  */
 		THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
 
 		/* Just bump the counter.  */
@@ -360,7 +452,12 @@ pthread_mutex_timedlock (pthread_mutex_t *mutex,
 	    /* But it is inconsistent unless marked otherwise.  */
 	    mutex->__data.__owner = PTHREAD_MUTEX_INCONSISTENT;
 
+	    /* We must not enqueue the mutex before we have acquired it.
+	       Also see comments at ENQUEUE_MUTEX.  */
+	    __asm ("" ::: "memory");
 	    ENQUEUE_MUTEX_PI (mutex);
+	    /* We need to clear op_pending after we enqueue the mutex.  */
+	    __asm ("" ::: "memory");
 	    THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
 
 	    /* Note that we deliberately exit here.  If we fall
@@ -383,6 +480,8 @@ pthread_mutex_timedlock (pthread_mutex_t *mutex,
 						  PTHREAD_ROBUST_MUTEX_PSHARED (mutex)),
 			      0, 0);
 
+	    /* To the kernel, this will be visible after the kernel has
+	       acquired the mutex in the syscall.  */
 	    THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
 	    return ENOTRECOVERABLE;
 	  }
@@ -390,7 +489,12 @@ pthread_mutex_timedlock (pthread_mutex_t *mutex,
 	mutex->__data.__count = 1;
 	if (robust)
 	  {
+	    /* We must not enqueue the mutex before we have acquired it.
+	       Also see comments at ENQUEUE_MUTEX.  */
+	    __asm ("" ::: "memory");
 	    ENQUEUE_MUTEX_PI (mutex);
+	    /* We need to clear op_pending after we enqueue the mutex.  */
+	    __asm ("" ::: "memory");
 	    THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
 	  }
 	}
