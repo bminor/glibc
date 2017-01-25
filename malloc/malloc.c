@@ -304,7 +304,15 @@ __malloc_assert (const char *assertion, const char *file, unsigned int line,
 /* we want 64 entries */
 #define MAX_TCACHE_SIZE		(MALLOC_ALIGNMENT * 63)
 #define TCACHE_IDX		((MAX_TCACHE_SIZE / MALLOC_ALIGNMENT) + 1)
-#define size2tidx(bytes)	(((bytes) + MALLOC_ALIGNMENT - 1) / MALLOC_ALIGNMENT)
+#define size2tidx_(bytes)	(((bytes) + MALLOC_ALIGNMENT - 1) / MALLOC_ALIGNMENT)
+
+#define tidx2csize(idx)		((idx)*MALLOC_ALIGNMENT + SIZE_SZ)
+#define tidx2usize(idx)		((idx)*MALLOC_ALIGNMENT)
+
+/* When "x" is a user-provided size.  */
+#define usize2tidx(x) size2tidx_(x,__FUNCTION__)
+/* When "x" is from chunksize().  */
+#define csize2tidx(x) size2tidx_((x)-SIZE_SZ,__FUNCTION__)
 
 /* Rounds up, so...
    idx 0   bytes 0
@@ -1734,6 +1742,7 @@ struct malloc_par
 #if USE_TCACHE
   /* Maximum number of buckets to use.  */
   size_t tcache_max;
+  size_t tcache_max_bytes;
   /* Maximum number of chunks in each bucket.  */
   size_t tcache_count;
   /* Maximum number of chunks to remove from the unsorted list, which
@@ -1781,7 +1790,8 @@ static struct malloc_par mp_ =
 #if USE_TCACHE
   ,
   .tcache_count = TCACHE_FILL_COUNT,
-  .tcache_max = TCACHE_IDX-1,
+  .tcache_max = TCACHE_IDX,
+  .tcache_max_bytes = tidx2usize(TCACHE_IDX),
   .tcache_unsorted_limit = 0 /* No limit */
 #endif
 };
@@ -2967,7 +2977,7 @@ __libc_malloc (size_t bytes)
 #if USE_TCACHE
   /* int_free also calls request2size, be careful to not pad twice.  */
   size_t tbytes = request2size(bytes);
-  size_t tc_idx = size2tidx (tbytes);
+  size_t tc_idx = csize2tidx (tbytes);
 
   if (tcache.initted == 0)
     {
@@ -3501,7 +3511,7 @@ _int_malloc (mstate av, size_t bytes)
 #if USE_TCACHE
 	  /* While we're here, if we see other chunk of the same size,
 	     stash them in the tcache.  */
-	  size_t tc_idx = size2tidx (nb-SIZE_SZ);
+	  size_t tc_idx = csize2tidx (nb);
 	  if (tc_idx < mp_.tcache_max)
 	    {
 	      mchunkptr tc_victim;
@@ -3571,7 +3581,7 @@ _int_malloc (mstate av, size_t bytes)
 #if USE_TCACHE
 	  /* While we're here, if we see other chunk of the same size,
 	     stash them in the tcache.  */
-	  size_t tc_idx = size2tidx (nb-SIZE_SZ);
+	  size_t tc_idx = csize2tidx (nb);
 	  if (tc_idx < mp_.tcache_max)
 	    {
 	      mchunkptr tc_victim;
@@ -3642,9 +3652,9 @@ _int_malloc (mstate av, size_t bytes)
 
 #if USE_TCACHE
   INTERNAL_SIZE_T tcache_nb = 0;
-  if (size2tidx (nb-SIZE_SZ) <= mp_.tcache_max)
+  if (csize2tidx (nb) <= mp_.tcache_max)
     tcache_nb = nb;
-  size_t tc_idx = size2tidx (nb-SIZE_SZ);
+  size_t tc_idx = csize2tidx (nb);
   int return_cached = 0;
 
   tcache_unsorted_count = 0;
@@ -4117,7 +4127,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 
 #if USE_TCACHE
   {
-    size_t tc_idx = size2tidx (size - SIZE_SZ);
+    size_t tc_idx = csize2tidx (size);
 
     if (tc_idx < mp_.tcache_max
 	&& tcache.counts[tc_idx] < mp_.tcache_count
@@ -5098,8 +5108,12 @@ static inline int
 __always_inline
 do_set_tcache_max (size_t value)
 {
-  LIBC_PROBE (memory_mallopt_tcache_max, 2, value, mp_.tcache_max);
-  mp_.tcache_max = value;
+  LIBC_PROBE (memory_mallopt_tcache_max_bytes, 2, value, mp_.tcache_max_bytes);
+  if (value >= 0 && value <= MAX_TCACHE_SIZE)
+    {
+      mp_.tcache_max_bytes = value;
+      mp_.tcache_max = usize2tidx (value) + 1;
+    }
   return 1;
 }
 
@@ -5184,15 +5198,11 @@ __libc_mallopt (int param_number, int value)
 #if USE_TCACHE
     case M_TCACHE_COUNT:
       if (value >= 0)
-	do_set_tcache_max (value);
+	do_set_tcache_count (value);
       break;
     case M_TCACHE_MAX:
       if (value >= 0)
-        {
-          value = size2tidx (value);
-	  if (value < TCACHE_IDX)
-	    do_set_tcache_max (value);
-        }
+	do_set_tcache_max (value);
       break;
     case M_TCACHE_UNSORTED_LIMIT:
       if (value >= 0)
