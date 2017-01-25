@@ -310,9 +310,9 @@ __malloc_assert (const char *assertion, const char *file, unsigned int line,
 #define tidx2usize(idx)		((idx)*MALLOC_ALIGNMENT)
 
 /* When "x" is a user-provided size.  */
-#define usize2tidx(x) size2tidx_(x,__FUNCTION__)
+#define usize2tidx(x) size2tidx_(x)
 /* When "x" is from chunksize().  */
-#define csize2tidx(x) size2tidx_((x)-SIZE_SZ,__FUNCTION__)
+#define csize2tidx(x) size2tidx_((x)-SIZE_SZ)
 
 /* Rounds up, so...
    idx 0   bytes 0
