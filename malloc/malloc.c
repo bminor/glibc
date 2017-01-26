@@ -1791,7 +1791,7 @@ static struct malloc_par mp_ =
   ,
   .tcache_count = TCACHE_FILL_COUNT,
   .tcache_max = TCACHE_IDX,
-  .tcache_max_bytes = tidx2usize(TCACHE_IDX),
+  .tcache_max_bytes = tidx2usize (TCACHE_IDX),
   .tcache_unsorted_limit = 0 /* No limit */
 #endif
 };
@@ -3518,7 +3518,7 @@ _int_malloc (mstate av, size_t bytes)
 		      e->next = tcache.entries[tc_idx];
 		      tcache.entries[tc_idx] = e;
 		      ++tcache.counts[tc_idx];
-		      found ++;
+		      ++found;
 	            }
 		}
 	    }
@@ -3587,7 +3587,7 @@ _int_malloc (mstate av, size_t bytes)
 		      e->next = tcache.entries[tc_idx];
 		      tcache.entries[tc_idx] = e;
 		      ++tcache.counts[tc_idx];
-		      found ++;
+		      ++found;
 	            }
 		}
 	    }
