@@ -298,30 +298,30 @@ __malloc_assert (const char *assertion, const char *file, unsigned int line,
 #endif
 
 #ifndef USE_TCACHE
-#define USE_TCACHE 0
+# define USE_TCACHE 0
 #endif
 #if USE_TCACHE
-/* we want 64 entries */
-#define MAX_TCACHE_SIZE		(MALLOC_ALIGNMENT * 63)
-#define TCACHE_IDX		((MAX_TCACHE_SIZE / MALLOC_ALIGNMENT) + 1)
-#define size2tidx_(bytes)	(((bytes) + MALLOC_ALIGNMENT - 1) / MALLOC_ALIGNMENT)
+/* We want 64 entries.  This is an arbitrary limit, which tunables can reduce.  */
+# define MAX_TCACHE_SIZE	(MALLOC_ALIGNMENT * 63)
+# define TCACHE_IDX		((MAX_TCACHE_SIZE / MALLOC_ALIGNMENT) + 1)
+# define size2tidx_(bytes)	(((bytes) + MALLOC_ALIGNMENT - 1) / MALLOC_ALIGNMENT)
 
-#define tidx2csize(idx)		((idx)*MALLOC_ALIGNMENT + SIZE_SZ)
-#define tidx2usize(idx)		((idx)*MALLOC_ALIGNMENT)
+# define tidx2csize(idx)	((idx)*MALLOC_ALIGNMENT + SIZE_SZ)
+# define tidx2usize(idx)	((idx)*MALLOC_ALIGNMENT)
 
 /* When "x" is a user-provided size.  */
-#define usize2tidx(x) size2tidx_(x)
+# define usize2tidx(x) size2tidx_(x)
 /* When "x" is from chunksize().  */
-#define csize2tidx(x) size2tidx_((x)-SIZE_SZ)
+# define csize2tidx(x) size2tidx_((x)-SIZE_SZ)
 
 /* Rounds up, so...
    idx 0   bytes 0
    idx 1   bytes 1..8
    idx 2   bytes 9..16
-   etc
-*/
+   etc.  */
 
-#define TCACHE_FILL_COUNT 7
+/* This is another arbitrary limit, which tunables can change.  */
+# define TCACHE_FILL_COUNT 7
 #endif
 
 
@@ -1798,9 +1798,9 @@ static struct malloc_par mp_ =
 
 /*  Non public mallopt parameters.  */
 #if USE_TCACHE
-#define M_TCACHE_COUNT  -9
-#define M_TCACHE_MAX  -10
-#define M_TCACHE_UNSORTED_LIMIT  -11
+# define M_TCACHE_COUNT  -9
+# define M_TCACHE_MAX  -10
+# define M_TCACHE_UNSORTED_LIMIT  -11
 #endif
 
 /* Maximum size of memory handled in fastbins.  */
@@ -2932,33 +2932,27 @@ typedef struct TCacheEntry {
   struct TCacheEntry *next;
 } TCacheEntry;
 
+/* There is one of these for each thread, which contains the
+   per-thread cache (hence "TCache").  Keeping overall size low is
+   mildly important.  INITTED makes sure we don't use the cache when
+   we're shutting down the thread.  Note that COUNTS and ENTRIES are
+   redundant, this is for performance reasons.  */
 typedef struct TCache {
-  struct TCache *prev, *next;
-  char initted; /* 0 = uninitted, 1 = normal, anything else = shutting down */
+  /* 0 = uninitted, 1 = normal, anything else = shutting down */
+  char initted;
   char counts[TCACHE_IDX];
   TCacheEntry *entries[TCACHE_IDX];
 } TCache;
-
-static TCache *tcache_list = NULL;
-__libc_lock_define_initialized (static, tcache_mutex);
 
 static __thread TCache tcache = {0,0,0,{0},{0}};
 
 static void __attribute__ ((section ("__libc_thread_freeres_fn")))
 tcache_thread_freeres (void)
 {
+  /* We should flush the cache out to the main arena also, but most of
+     the time we're just exiting the process completely.  */
   if (tcache.initted == 1)
-    {
-      __libc_lock_lock (tcache_mutex);
-      tcache.initted = 2;
-      if (tcache.next)
-	tcache.next->prev = tcache.prev;
-      if (tcache.prev)
-	tcache.prev->next = tcache.next;
-      else
-	tcache_list = tcache.next;
-      __libc_lock_unlock (tcache_mutex);
-    }
+    tcache.initted = 2;
 }
 text_set_element (__libc_thread_subfreeres, tcache_thread_freeres);
 
@@ -2978,17 +2972,6 @@ __libc_malloc (size_t bytes)
   /* int_free also calls request2size, be careful to not pad twice.  */
   size_t tbytes = request2size(bytes);
   size_t tc_idx = csize2tidx (tbytes);
-
-  if (tcache.initted == 0)
-    {
-      tcache.initted = 1;
-      __libc_lock_lock (tcache_mutex);
-      tcache.next = tcache_list;
-      if (tcache.next)
-	tcache.next->prev = &tcache;
-      tcache_list = &tcache;
-      __libc_lock_unlock (tcache_mutex);
-    }
 
   if (tc_idx < mp_.tcache_max
       && tc_idx < TCACHE_IDX /* to appease gcc */
@@ -3509,7 +3492,7 @@ _int_malloc (mstate av, size_t bytes)
             }
           check_remalloced_chunk (av, victim, nb);
 #if USE_TCACHE
-	  /* While we're here, if we see other chunk of the same size,
+	  /* While we're here, if we see other chunks of the same size,
 	     stash them in the tcache.  */
 	  size_t tc_idx = csize2tidx (nb);
 	  if (tc_idx < mp_.tcache_max)
@@ -3579,7 +3562,7 @@ _int_malloc (mstate av, size_t bytes)
 		set_non_main_arena (victim);
               check_malloced_chunk (av, victim, nb);
 #if USE_TCACHE
-	  /* While we're here, if we see other chunk of the same size,
+	  /* While we're here, if we see other chunks of the same size,
 	     stash them in the tcache.  */
 	  size_t tc_idx = csize2tidx (nb);
 	  if (tc_idx < mp_.tcache_max)
