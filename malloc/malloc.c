@@ -2970,7 +2970,7 @@ __libc_malloc (size_t bytes)
     return (*hook)(bytes, RETURN_ADDRESS (0));
 #if USE_TCACHE
   /* int_free also calls request2size, be careful to not pad twice.  */
-  size_t tbytes = request2size(bytes);
+  size_t tbytes = request2size (bytes);
   size_t tc_idx = csize2tidx (tbytes);
 
   if (tc_idx < mp_.tcache_max
@@ -2980,7 +2980,7 @@ __libc_malloc (size_t bytes)
     {
       TCacheEntry *e = tcache.entries[tc_idx];
       tcache.entries[tc_idx] = e->next;
-      tcache.counts[tc_idx] --;
+      --tcache.counts[tc_idx];
       return (void *) e;
     }
 #endif
@@ -3514,10 +3514,10 @@ _int_malloc (mstate av, size_t bytes)
 	                 != tc_victim);
 		  if (tc_victim != 0)
 		    {
-		      TCacheEntry *e = (TCacheEntry *) chunk2mem(tc_victim);
+		      TCacheEntry *e = (TCacheEntry *) chunk2mem (tc_victim);
 		      e->next = tcache.entries[tc_idx];
 		      tcache.entries[tc_idx] = e;
-		      tcache.counts[tc_idx] ++;
+		      ++tcache.counts[tc_idx];
 		      found ++;
 	            }
 		}
@@ -3572,7 +3572,7 @@ _int_malloc (mstate av, size_t bytes)
 
 	      /* While bin not empty and tcache not full, copy chunks over.  */
 	      while (tcache.counts[tc_idx] < mp_.tcache_count
-		     && (tc_victim = last(bin)) != bin)
+		     && (tc_victim = last (bin)) != bin)
 		{
 		  if (tc_victim != 0)
 		    {
@@ -3583,16 +3583,13 @@ _int_malloc (mstate av, size_t bytes)
 		      bin->bk = bck;
 		      bck->fd = bin;
 
-		      TCacheEntry *e = (TCacheEntry *) chunk2mem(tc_victim);
+		      TCacheEntry *e = (TCacheEntry *) chunk2mem (tc_victim);
 		      e->next = tcache.entries[tc_idx];
 		      tcache.entries[tc_idx] = e;
-		      tcache.counts[tc_idx] ++;
+		      ++tcache.counts[tc_idx];
 		      found ++;
-		      //_m_printf("snarf chunk %p %lx %p %lx\n", tc_victim, nb,
-		      //	chunk_at_offset(tc_victim, nb), chunk_at_offset(tc_victim, nb)->size);
 	            }
 		}
-	      //_m_printf("%d chunks found in smallbin\n", found);
 	    }
 #endif
               void *p = chunk2mem (victim);
@@ -3709,10 +3706,10 @@ _int_malloc (mstate av, size_t bytes)
 	      if (tcache_nb
 		  && tcache.counts[tc_idx] < mp_.tcache_count)
 		{
-		  TCacheEntry *e = (TCacheEntry *) chunk2mem(victim);
+		  TCacheEntry *e = (TCacheEntry *) chunk2mem (victim);
 		  e->next = tcache.entries[tc_idx];
 		  tcache.entries[tc_idx] = e;
-		  tcache.counts[tc_idx] ++;
+		  ++tcache.counts[tc_idx];
 		  return_cached = 1;
 		  continue;
 		}
@@ -3795,14 +3792,14 @@ _int_malloc (mstate av, size_t bytes)
 #if USE_TCACHE
       /* If we've processed as many chunks as we're allowed while
 	 filling the cache, return one of the cached ones.  */
-      tcache_unsorted_count ++;
+      ++tcache_unsorted_count;
       if (return_cached
 	  && mp_.tcache_unsorted_limit > 0
 	  && tcache_unsorted_count > mp_.tcache_unsorted_limit)
 	{
 	  TCacheEntry *e = tcache.entries[tc_idx];
 	  tcache.entries[tc_idx] = e->next;
-	  tcache.counts[tc_idx] --;
+	  --tcache.counts[tc_idx];
 	  return (void *) e;
 	}
 #endif
@@ -3818,7 +3815,7 @@ _int_malloc (mstate av, size_t bytes)
 	{
 	  TCacheEntry *e = tcache.entries[tc_idx];
 	  tcache.entries[tc_idx] = e->next;
-	  tcache.counts[tc_idx] --;
+	  --tcache.counts[tc_idx];
 	  return (void *) e;
 	}
 #endif
@@ -4119,7 +4116,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 	TCacheEntry *e = (TCacheEntry *) chunk2mem (p);
 	e->next = tcache.entries[tc_idx];
 	tcache.entries[tc_idx] = e;
-	tcache.counts[tc_idx] ++;
+	++tcache.counts[tc_idx];
 	return;
       }
   }
