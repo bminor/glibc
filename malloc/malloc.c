@@ -2944,7 +2944,7 @@ typedef struct TCache {
   TCacheEntry *entries[TCACHE_IDX];
 } TCache;
 
-static __thread TCache tcache = {0,0,0,{0},{0}};
+static __thread TCache tcache = {0,{0},{0}};
 
 static void __attribute__ ((section ("__libc_thread_freeres_fn")))
 tcache_thread_freeres (void)
