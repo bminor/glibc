@@ -5083,7 +5083,7 @@ do_set_arena_max (size_t value)
   return 1;
 }
 
-#ifdef USE_TCACHE
+#if USE_TCACHE
 static inline int
 __always_inline
 do_set_tcache_max (size_t value)

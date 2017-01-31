@@ -236,9 +236,11 @@ DL_TUNABLE_CALLBACK_FNDECL (set_perturb_byte, int32_t)
 DL_TUNABLE_CALLBACK_FNDECL (set_trim_threshold, size_t)
 DL_TUNABLE_CALLBACK_FNDECL (set_arena_max, size_t)
 DL_TUNABLE_CALLBACK_FNDECL (set_arena_test, size_t)
+#if USE_TCACHE
 DL_TUNABLE_CALLBACK_FNDECL (set_tcache_max, size_t)
 DL_TUNABLE_CALLBACK_FNDECL (set_tcache_count, size_t)
 DL_TUNABLE_CALLBACK_FNDECL (set_tcache_unsorted_limit, size_t)
+#endif
 #else
 /* Initialization routine. */
 #include <string.h>
