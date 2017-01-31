@@ -1791,7 +1791,7 @@ static struct malloc_par mp_ =
   ,
   .tcache_count = TCACHE_FILL_COUNT,
   .tcache_max = TCACHE_IDX,
-  .tcache_max_bytes = tidx2usize (TCACHE_IDX),
+  .tcache_max_bytes = tidx2usize (TCACHE_IDX-1),
   .tcache_unsorted_limit = 0 /* No limit */
 #endif
 };
@@ -3632,9 +3632,9 @@ _int_malloc (mstate av, size_t bytes)
 
 #if USE_TCACHE
   INTERNAL_SIZE_T tcache_nb = 0;
-  if (csize2tidx (nb) <= mp_.tcache_max)
-    tcache_nb = nb;
   size_t tc_idx = csize2tidx (nb);
+  if (tc_idx < mp_.tcache_max)
+    tcache_nb = nb;
   int return_cached = 0;
 
   tcache_unsorted_count = 0;
