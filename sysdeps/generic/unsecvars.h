@@ -4,6 +4,7 @@
 #define UNSECURE_ENVVARS \
   "GCONV_PATH\0"							      \
   "GETCONF_DIR\0"							      \
+  "GLIBC_TUNABLES\0"							      \
   "HOSTALIASES\0"							      \
   "LD_AUDIT\0"								      \
   "LD_DEBUG\0"								      \
