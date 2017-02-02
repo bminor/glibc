@@ -1,3 +1,7 @@
+2017-04-06  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/generic/unsecvars.h: Add GLIBC_TUNABLES.
+
 2017-04-06  Denis Kaganovich  <mahatma@eu.by>
 	    Magnus Granberg  <zorry@gentoo.org>
 	    Mike Frysinger  <vapier@gentoo.org>
