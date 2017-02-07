@@ -209,6 +209,7 @@ static unsigned int atfork_recursive_cntr;
    subsystem.  */
 
 void
+internal_function
 __malloc_fork_lock_parent (void)
 {
   mstate ar_ptr;
@@ -251,6 +252,7 @@ out:
 }
 
 void
+internal_function
 __malloc_fork_unlock_parent (void)
 {
   mstate ar_ptr;
@@ -278,6 +280,7 @@ __malloc_fork_unlock_parent (void)
 }
 
 void
+internal_function
 __malloc_fork_unlock_child (void)
 {
   mstate ar_ptr;
