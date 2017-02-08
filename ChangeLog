@@ -1,3 +1,158 @@
+2017-02-02  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/generic/unsecvars.h: Add GLIBC_TUNABLES.
+
+2017-01-23  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+	    Steven Munroe  <sjmunroe@us.ibm.com>
+	    Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	[BZ #20822]
+	* sysdeps/unix/sysv/linux/powerpc/elision-lock.c
+	(__lll_lock_elision): Access adapt_count via C11 atomics.
+	* sysdeps/unix/sysv/linux/powerpc/elision-trylock.c
+	(__lll_trylock_elision): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/elision-unlock.c
+	(__lll_unlock_elision):  Update adapt_count variable inside the
+	critical section using C11 atomics.
+
+2016-12-24  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #11941]
+	* elf/dl-close.c (_dl_close): Take dl_load_lock to examine map.
+	Remove assert (map->l_init_called); if DF_1_NODELETE is set.
+	* elf/Makefile [ifeq (yes,$(build-shared))] (tests): Add
+	tst-nodelete-dlclose.
+	(modules-names): Add tst-nodelete-dlclose-dso and
+	tst-nodelete-dlclose-plugin.
+	($(objpfx)tst-nodelete-dlclose-dso.so): Define.
+	($(objpfx)tst-nodelete-dlclose-plugin.so): Define.
+	($(objpfx)tst-nodelete-dlclose): Define.
+	($(objpfx)tst-nodelete-dlclose.out): Define.
+
+2016-08-02  Aurelien Jarno  <aurelien@aurel32.net>
+
+2016-08-02  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/alpha/fpu/s_ceil.c (__ceil): Add argument with itself
+	when it is a NaN.
+	[_IEEE_FP_INEXACT] Remove.
+	* sysdeps/alpha/fpu/s_ceilf.c (__ceilf): Likewise.
+	* sysdeps/alpha/fpu/s_floor.c (__floor): Add argument with itself
+	when it is a NaN.
+	[_IEEE_FP_INEXACT] Remove.
+	* sysdeps/alpha/fpu/s_floorf.c (__floorf): Likewise.
+	* sysdeps/alpha/fpu/s_rint.c (__rint): Add argument with itself
+	when it is a NaN.
+	* sysdeps/alpha/fpu/s_rintf.c (__rintf): Likewise.
+	* sysdeps/alpha/fpu/s_trunc.c (__trunc): Return the input value
+	when its absolute value is greater than 0x1.0p52.
+	[_IEEE_FP_INEXACT] Remove.
+	* sysdeps/alpha/fpu/s_truncf.c (__truncf): Return the input value
+	when its absolute value is greater than 0x1.0p23.
+	[_IEEE_FP_INEXACT] Remove.
+
+2016-11-30  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #20495]
+	[BZ #20508]
+	* sysdeps/x86/cpu-features.c (init_cpu_features): For Intel
+	processors, set Use_dl_runtime_resolve_slow and set
+	Use_dl_runtime_resolve_opt if XGETBV suports ECX == 1.
+	* sysdeps/x86/cpu-features.h (bit_arch_Use_dl_runtime_resolve_opt):
+	New.
+	(bit_arch_Use_dl_runtime_resolve_slow): Likewise.
+	(index_arch_Use_dl_runtime_resolve_opt): Likewise.
+	(index_arch_Use_dl_runtime_resolve_slow): Likewise.
+	* sysdeps/x86_64/dl-machine.h (elf_machine_runtime_setup): Use
+	_dl_runtime_resolve_avx512_opt and _dl_runtime_resolve_avx_opt
+	if Use_dl_runtime_resolve_opt is set.  Use
+	_dl_runtime_resolve_slow if Use_dl_runtime_resolve_slow is set.
+	* sysdeps/x86_64/dl-trampoline.S: Include <cpu-features.h>.
+	(_dl_runtime_resolve_opt): New.  Defined for AVX and AVX512.
+	(_dl_runtime_resolve): Add one for _dl_runtime_resolve_sse_vex.
+	* sysdeps/x86_64/dl-trampoline.h (_dl_runtime_resolve_avx_slow):
+	New.
+	(_dl_runtime_resolve_opt): Likewise.
+	(_dl_runtime_profile): Define only if _dl_runtime_profile is
+	defined.
+
+2016-11-24  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/x86_64/memcpy_chk.S (__memcpy_chk): Check for SHARED
+	instead of PIC.
+
+2016-11-23  Matthew Fortune  <Matthew.Fortune@imgtec.com>
+	    Maciej W. Rozycki  <macro@imgtec.com>
+
+	* sysdeps/mips/mips32/crti.S (_init): Add `.insn' pseudo-op at
+	`.Lno_weak_fn' label.
+	* sysdeps/mips/mips64/n32/crti.S (_init): Likewise.
+	* sysdeps/mips/mips64/n64/crti.S (_init): Likewise.
+
+2016-11-22  Adhemerval Zanella  <adhemerva.zanella@linaro.org>
+
+	[BZ #20847]
+	* posix/execvpe.c (maybe_script_execute): Remove write past allocated
+	array bounds.
+	(__execvpe): Likewise.
+
+2016-11-15  Denis Kaganovich  <mahatma@eu.by>
+	    Magnus Granberg  <zorry@gentoo.org>
+	    Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #20662]
+	* configure.ac (libc_cv_predef_stack_protector): Also check for
+	__stack_chk_fail_local symbols.
+	* configure: Regenerated.
+
+2016-11-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/Makefile ($(linknamespace-header-tests)): Also depend on
+	$(linknamespace-symlists-tests).
+
+2016-11-06  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* iconv/gconv.h (__gconv_info): Define __data element using a
+	zero-length array.
+
+2016-10-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/powerpc/powerpc32/power6/memset.S (memset): Use cmplwi
+	instead of cmpli.
+	* sysdeps/powerpc/powerpc64/power6/memset.S (memset): Use cmpldi
+	instead of cmpli.
+
+2016-10-24  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/pread.c (__libc_pread): Use SYSCALL_LL_PRW.
+	* sysdeps/unix/sysv/linux/pwrite.c (__libc_pwrite): Likewise.
+	* sysdeps/unix/sysv/linux/pread64.c (__libc_pread64): Use
+	SYSCALL_LL64_PRW.
+	* sysdeps/unix/sysv/linux/pwrite64.c (__libc_pwrite64): Likewise.
+	* sysdeps/unix/sysv/linux/sh/kernel-features.h: Define
+	__ASSUME_PRW_DUMMY_ARG.
+	* sysdeps/unix/sysv/linux/sh/pread.c: Remove file.
+	* sysdeps/unix/sysv/linux/sh/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pwrite64.c: Likewise.
+	* sysdeps/unix/sysv/linux/sysdep.h: Define SYSCALL_LL_PRW and
+	SYSCALL_LL_PRW64 based on __ASSUME_PRW_DUMMY_ARG.
+
+2016-10-05  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/fpu/libm-test-ulps: Regenerated.
+
+2016-09-20  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/spawni.c (__spawnix): Correctly block and unblock
+	all signals when executing the clone vfork child.
+	(SIGALL_SET): Remove macro.
+
+	* nptl/Makefile (tests): Add tst-exec5.
+	* nptl/tst-exec5.c: New file.
+	* sysdeps/unix/sysv/linux/spawni.c (__spawni): Correctly enable and disable
+	asynchronous cancellation.
+
 2016-10-18  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/power8/fpu/math_private.h (GET_FLOAT_WORD):

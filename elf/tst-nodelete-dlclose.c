@@ -1,6 +1,6 @@
-/* Copyright (C) 1997-2016 Free Software Foundation, Inc.
+/* Bug 11941: Improper assert map->l_init_called in dlclose.
+   Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ralf Baechle <ralf@gnu.org>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,8 +16,21 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* SH4 ABI does not really require argument alignment for 64-bits, but
-   the kernel interface for pread adds a dummy long argument before the
-   offset.  */
-#define __ALIGNMENT_ARG
-#include <sysdeps/unix/sysv/linux/pwrite64.c>
+/* This simulates an application using the primary DSO which loads the
+   plugin DSO.  */
+#include <stdio.h>
+#include <stdlib.h>
+
+extern void primary (void);
+
+static int
+do_test (void)
+{
+  printf ("INFO: Starting application.\n");
+  primary ();
+  printf ("INFO: Exiting application.\n");
+  return 0;
+}
+
+#define TEST_FUNCTION do_test ()
+#include "../test-skeleton.c"

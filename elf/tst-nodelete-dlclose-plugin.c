@@ -1,6 +1,6 @@
-/* Copyright (C) 1997-2016 Free Software Foundation, Inc.
+/* Bug 11941: Improper assert map->l_init_called in dlclose.
+   Copyright (C) 2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,8 +16,25 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* SH4 ABI does not really require argument alignment for 64-bits, but
-   the kernel interface for pwrite adds a dummy long argument before the
-   offset.  */
-#define __ALIGNMENT_ARG
-#include <sysdeps/unix/sysv/linux/pwrite.c>
+/* This DSO simulates a plugin with a dependency on the
+   primary DSO loaded by the appliation.  */
+#include <stdio.h>
+
+extern void primary_reference (void);
+
+void
+plugin_func (void)
+{
+  printf ("INFO: Calling plugin function.\n");
+  /* Need a reference to the DSO to ensure that a potential --as-needed
+     doesn't remove the DT_NEEDED entry which we rely upon to ensure
+     destruction ordering.  */
+  primary_reference ();
+}
+
+__attribute__ ((destructor))
+static void
+plugin_dtor (void)
+{
+  printf ("INFO: Calling plugin destructor.\n");
+}

@@ -58,10 +58,6 @@
    normal program exit with the exit code 127.  */
 #define SPAWN_ERROR	127
 
-/* We need to block both SIGCANCEL and SIGSETXID.  */
-#define SIGALL_SET \
-  ((__sigset_t) { .__val = {[0 ...  _SIGSET_NWORDS-1 ] =  -1 } })
-
 #ifdef __ia64__
 # define CLONE(__fn, __stack, __stacksize, __flags, __args) \
   __clone2 (__fn, __stack, __stacksize, __flags, __args, 0, 0, 0)
@@ -340,7 +336,9 @@ __spawnix (pid_t * pid, const char *file,
     }
 
   /* Disable asynchronous cancellation.  */
-  int cs = LIBC_CANCEL_ASYNC ();
+  int state;
+  __libc_ptf_call (__pthread_setcancelstate,
+                   (PTHREAD_CANCEL_DISABLE, &state), 0);
 
   args.file = file;
   args.exec = exec;
@@ -351,7 +349,7 @@ __spawnix (pid_t * pid, const char *file,
   args.envp = envp;
   args.xflags = xflags;
 
-  __sigprocmask (SIG_BLOCK, &SIGALL_SET, &args.oldmask);
+  __libc_signal_block_all (&args.oldmask);
 
   /* The clone flags used will create a new child that will run in the same
      memory space (CLONE_VM) and the execution of calling thread will be
@@ -384,9 +382,9 @@ __spawnix (pid_t * pid, const char *file,
   if ((ec == 0) && (pid != NULL))
     *pid = new_pid;
 
-  __sigprocmask (SIG_SETMASK, &args.oldmask, 0);
+  __libc_signal_restore_set (&args.oldmask);
 
-  LIBC_CANCEL_RESET (cs);
+  __libc_ptf_call (__pthread_setcancelstate, (state, NULL), 0);
 
   return ec;
 }
