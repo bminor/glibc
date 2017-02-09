@@ -5,6 +5,12 @@ See the end for copying conditions.
 Please send GNU C library bug reports via <http://sourceware.org/bugzilla/>
 using `glibc' in the "product" field.
 
+Version 2.25.1
+
+The following bugs are resolved with this release:
+
+  [21109] Tunables broken on big-endian
+
 Version 2.25
 
 * The feature test macro __STDC_WANT_LIB_EXT2__, from ISO/IEC TR
