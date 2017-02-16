@@ -2934,27 +2934,75 @@ typedef struct TCacheEntry {
 
 /* There is one of these for each thread, which contains the
    per-thread cache (hence "TCache").  Keeping overall size low is
-   mildly important.  INITTED makes sure we don't use the cache when
-   we're shutting down the thread.  Note that COUNTS and ENTRIES are
-   redundant, this is for performance reasons.  */
+   mildly important.  Note that COUNTS and ENTRIES are redundant, this
+   is for performance reasons.  */
 typedef struct TCache {
-  /* 0 = uninitted, 1 = normal, anything else = shutting down */
-  char initted;
   char counts[TCACHE_IDX];
   TCacheEntry *entries[TCACHE_IDX];
 } TCache;
 
-static __thread TCache tcache = {0,{0},{0}};
+static __thread char tcache_shutting_down = 0;
+static __thread TCache *tcache = NULL;
 
 static void __attribute__ ((section ("__libc_thread_freeres_fn")))
 tcache_thread_freeres (void)
 {
-  /* We should flush the cache out to the main arena also, but most of
-     the time we're just exiting the process completely.  */
-  if (tcache.initted == 1)
-    tcache.initted = 2;
+  int i;
+  TCache *tcache_tmp = tcache;
+
+  if (!tcache)
+    return;
+
+  tcache = NULL;
+
+  for (i=0; i<TCACHE_IDX; i++) {
+    while (tcache_tmp->entries[i])
+      {
+	TCacheEntry *e = tcache_tmp->entries[i];
+	tcache_tmp->entries[i] = e->next;
+	__libc_free (e);
+      }
+  }
+
+  __libc_free (tcache_tmp);
+
+  tcache_shutting_down = 1;
 }
 text_set_element (__libc_thread_subfreeres, tcache_thread_freeres);
+
+static void
+tcache_init(void)
+{
+  mstate ar_ptr;
+  void *victim = 0;
+  const size_t bytes = sizeof (TCache);
+
+  if (tcache_shutting_down)
+    return;
+
+  arena_get (ar_ptr, bytes);
+  victim = _int_malloc (ar_ptr, bytes);
+  if (!victim && ar_ptr != NULL)
+    {
+      ar_ptr = arena_get_retry (ar_ptr, bytes);
+      victim = _int_malloc (ar_ptr, bytes);
+    }
+
+
+  if (ar_ptr != NULL)
+    __libc_lock_unlock (ar_ptr->mutex);
+
+  if (victim)
+    {
+      tcache = (TCache *) victim;
+      memset (tcache, 0, sizeof (TCache));
+    }
+
+}
+
+#define MAYBE_INIT_TCACHE() \
+  if (__glibc_unlikely (tcache == NULL)) \
+    tcache_init();
 
 #endif
 
@@ -2973,14 +3021,16 @@ __libc_malloc (size_t bytes)
   size_t tbytes = request2size (bytes);
   size_t tc_idx = csize2tidx (tbytes);
 
+  MAYBE_INIT_TCACHE ();
+
   if (tc_idx < mp_.tcache_max
       && tc_idx < TCACHE_IDX /* to appease gcc */
-      && tcache.entries[tc_idx] != NULL
-      && tcache.initted == 1)
+      && tcache
+      && tcache->entries[tc_idx] != NULL)
     {
-      TCacheEntry *e = tcache.entries[tc_idx];
-      tcache.entries[tc_idx] = e->next;
-      --tcache.counts[tc_idx];
+      TCacheEntry *e = tcache->entries[tc_idx];
+      tcache->entries[tc_idx] = e->next;
+      --(tcache->counts[tc_idx]);
       return (void *) e;
     }
 #endif
@@ -3043,6 +3093,10 @@ __libc_free (void *mem)
       return;
     }
 
+#if USE_TCACHE
+  MAYBE_INIT_TCACHE ();
+#endif
+
   ar_ptr = arena_for_chunk (p);
   _int_free (ar_ptr, p, 0);
 }
@@ -3080,7 +3134,12 @@ __libc_realloc (void *oldmem, size_t bytes)
   if (chunk_is_mmapped (oldp))
     ar_ptr = NULL;
   else
-    ar_ptr = arena_for_chunk (oldp);
+    {
+#if USE_TCACHE
+      MAYBE_INIT_TCACHE ();
+#endif
+      ar_ptr = arena_for_chunk (oldp);
+    }
 
   /* Little security check which won't hurt performance: the allocator
      never wrapps around at the end of the address space.  Therefore
@@ -3305,6 +3364,10 @@ __libc_calloc (size_t n, size_t elem_size)
 
   sz = bytes;
 
+#if USE_TCACHE
+  MAYBE_INIT_TCACHE ();
+#endif
+
   arena_get (av, sz);
   if (av)
     {
@@ -3495,13 +3558,13 @@ _int_malloc (mstate av, size_t bytes)
 	  /* While we're here, if we see other chunks of the same size,
 	     stash them in the tcache.  */
 	  size_t tc_idx = csize2tidx (nb);
-	  if (tc_idx < mp_.tcache_max)
+	  if (tcache && tc_idx < mp_.tcache_max)
 	    {
 	      mchunkptr tc_victim;
 	      int found = 0;
 
 	      /* While bin not empty and tcache not full, copy chunks over.  */
-	      while (tcache.counts[tc_idx] < mp_.tcache_count
+	      while (tcache->counts[tc_idx] < mp_.tcache_count
 		     && (pp = *fb) != NULL)
 		{
 		  do
@@ -3515,9 +3578,9 @@ _int_malloc (mstate av, size_t bytes)
 		  if (tc_victim != 0)
 		    {
 		      TCacheEntry *e = (TCacheEntry *) chunk2mem (tc_victim);
-		      e->next = tcache.entries[tc_idx];
-		      tcache.entries[tc_idx] = e;
-		      ++tcache.counts[tc_idx];
+		      e->next = tcache->entries[tc_idx];
+		      tcache->entries[tc_idx] = e;
+		      ++(tcache->counts[tc_idx]);
 		      ++found;
 	            }
 		}
@@ -3565,13 +3628,13 @@ _int_malloc (mstate av, size_t bytes)
 	  /* While we're here, if we see other chunks of the same size,
 	     stash them in the tcache.  */
 	  size_t tc_idx = csize2tidx (nb);
-	  if (tc_idx < mp_.tcache_max)
+	  if (tcache && tc_idx < mp_.tcache_max)
 	    {
 	      mchunkptr tc_victim;
 	      int found = 0;
 
 	      /* While bin not empty and tcache not full, copy chunks over.  */
-	      while (tcache.counts[tc_idx] < mp_.tcache_count
+	      while (tcache->counts[tc_idx] < mp_.tcache_count
 		     && (tc_victim = last (bin)) != bin)
 		{
 		  if (tc_victim != 0)
@@ -3584,9 +3647,9 @@ _int_malloc (mstate av, size_t bytes)
 		      bck->fd = bin;
 
 		      TCacheEntry *e = (TCacheEntry *) chunk2mem (tc_victim);
-		      e->next = tcache.entries[tc_idx];
-		      tcache.entries[tc_idx] = e;
-		      ++tcache.counts[tc_idx];
+		      e->next = tcache->entries[tc_idx];
+		      tcache->entries[tc_idx] = e;
+		      ++(tcache->counts[tc_idx]);
 		      ++found;
 	            }
 		}
@@ -3633,7 +3696,7 @@ _int_malloc (mstate av, size_t bytes)
 #if USE_TCACHE
   INTERNAL_SIZE_T tcache_nb = 0;
   size_t tc_idx = csize2tidx (nb);
-  if (tc_idx < mp_.tcache_max)
+  if (tcache && tc_idx < mp_.tcache_max)
     tcache_nb = nb;
   int return_cached = 0;
 
@@ -3704,12 +3767,12 @@ _int_malloc (mstate av, size_t bytes)
 	      /* Fill cache first, return to user only if cache fills.
 		 We may return one of these chunks later.  */
 	      if (tcache_nb
-		  && tcache.counts[tc_idx] < mp_.tcache_count)
+		  && tcache->counts[tc_idx] < mp_.tcache_count)
 		{
 		  TCacheEntry *e = (TCacheEntry *) chunk2mem (victim);
-		  e->next = tcache.entries[tc_idx];
-		  tcache.entries[tc_idx] = e;
-		  ++tcache.counts[tc_idx];
+		  e->next = tcache->entries[tc_idx];
+		  tcache->entries[tc_idx] = e;
+		  ++(tcache->counts[tc_idx]);
 		  return_cached = 1;
 		  continue;
 		}
@@ -3797,9 +3860,9 @@ _int_malloc (mstate av, size_t bytes)
 	  && mp_.tcache_unsorted_limit > 0
 	  && tcache_unsorted_count > mp_.tcache_unsorted_limit)
 	{
-	  TCacheEntry *e = tcache.entries[tc_idx];
-	  tcache.entries[tc_idx] = e->next;
-	  --tcache.counts[tc_idx];
+	  TCacheEntry *e = tcache->entries[tc_idx];
+	  tcache->entries[tc_idx] = e->next;
+	  --(tcache->counts[tc_idx]);
 	  return (void *) e;
 	}
 #endif
@@ -3813,9 +3876,9 @@ _int_malloc (mstate av, size_t bytes)
       /* If all the small chunks we found ended up cached, return one now.  */
       if (return_cached)
 	{
-	  TCacheEntry *e = tcache.entries[tc_idx];
-	  tcache.entries[tc_idx] = e->next;
-	  --tcache.counts[tc_idx];
+	  TCacheEntry *e = tcache->entries[tc_idx];
+	  tcache->entries[tc_idx] = e->next;
+	  --(tcache->counts[tc_idx]);
 	  return (void *) e;
 	}
 #endif
@@ -4109,14 +4172,14 @@ _int_free (mstate av, mchunkptr p, int have_lock)
   {
     size_t tc_idx = csize2tidx (size);
 
-    if (tc_idx < mp_.tcache_max
-	&& tcache.counts[tc_idx] < mp_.tcache_count
-	&& tcache.initted == 1)
+    if (tcache
+	&& tc_idx < mp_.tcache_max
+	&& tcache->counts[tc_idx] < mp_.tcache_count)
       {
 	TCacheEntry *e = (TCacheEntry *) chunk2mem (p);
-	e->next = tcache.entries[tc_idx];
-	tcache.entries[tc_idx] = e;
-	++tcache.counts[tc_idx];
+	e->next = tcache->entries[tc_idx];
+	tcache->entries[tc_idx] = e;
+	++(tcache->counts[tc_idx]);
 	return;
       }
   }
