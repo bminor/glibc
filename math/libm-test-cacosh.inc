@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include "libm-test-driver.c"
+
 static const struct test_c_c_data cacosh_test_data[] =
   {
     TEST_c_c (cacosh, 0, 0, 0.0, lit_pi_2_d),
@@ -696,6 +698,12 @@ static void
 cacosh_test (void)
 {
   ALL_RM_TEST (cacosh, 0, cacosh_test_data, RUN_TEST_LOOP_c_c, END_COMPLEX);
+}
+
+static void
+do_test (void)
+{
+  cacosh_test ();
 }
 
 /*
