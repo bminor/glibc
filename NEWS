@@ -11,6 +11,7 @@ The following bugs are resolved with this release:
 
   [21109] Tunables broken on big-endian
   [21115] sunrpc: Use-after-free in error path in clntudp_call
+  [20257] sunrpc: clntudp_call does not enforce timeout when receiving data
 
 Version 2.25
 
