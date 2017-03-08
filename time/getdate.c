@@ -95,7 +95,7 @@ check_mday (int year, int mon, int mday)
 	return 1;
       break;
     case 1:
-      if (mday >= 1 && mday <= (__isleap (year) ? 29 : 28))
+      if (mday >= 1 && mday <= (__time_isleap (year) ? 29 : 28))
 	return 1;
       break;
     }

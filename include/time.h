@@ -3,6 +3,7 @@
 
 #ifndef _ISOMAC
 # include <xlocale.h>
+# include <stdbool.h>
 
 __BEGIN_DECLS
 
@@ -31,8 +32,8 @@ struct tm;
 /* Defined in mktime.c.  */
 extern const unsigned short int __mon_yday[2][13] attribute_hidden;
 
-/* Defined in localtime.c.  */
-extern struct tm _tmbuf attribute_hidden;
+bool __time_isleap (int year) internal_function;
+libc_hidden_proto (__time_isleap)
 
 /* Defined in tzset.c.  */
 extern char *__tzstring (const char *string);

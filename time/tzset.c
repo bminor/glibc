@@ -24,7 +24,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <libc-symbols.h>
+#include <shlib-compat.h>
 
+#include <time/time-variables.h>
 #include <timezone/tzfile.h>
 
 char *__tzname[2] = { (char *) "GMT", (char *) "GMT" };
@@ -457,7 +460,7 @@ compute_change (tz_rule *rule, int year)
 	 add SECSPERDAY times the day number-1 to the time of
 	 January 1, midnight, to get the day.  */
       t += (rule->d - 1) * SECSPERDAY;
-      if (rule->d >= 60 && __isleap (year))
+      if (rule->d >= 60 && __time_isleap (year))
 	t += SECSPERDAY;
       break;
 
@@ -473,7 +476,7 @@ compute_change (tz_rule *rule, int year)
 	unsigned int i;
 	int d, m1, yy0, yy1, yy2, dow;
 	const unsigned short int *myday =
-	  &__mon_yday[__isleap (year)][rule->m];
+	  &__mon_yday[__time_isleap (year)][rule->m];
 
 	/* First add SECSPERDAY for each day in months before M.  */
 	t += myday[-1] * SECSPERDAY;

@@ -65,4 +65,7 @@ libc {
   GLIBC_2.16 {
     timespec_get;
   }
+  GLIBC_PRIVATE {
+    __time_isleap;
+  }
 }

@@ -26,6 +26,7 @@
 #include <wchar.h>
 #include <stdint.h>
 #include <sys/uio.h>
+#include <time.h>
 
 #include <assert.h>
 
@@ -353,7 +354,8 @@ No definition for %s category found"), "LC_TIME"));
 			   > days_per_month[time->era_entries[idx].start_date[1]])
 		       || (time->era_entries[idx].start_date[1] == 2
 			   && time->era_entries[idx].start_date[2] == 29
-			   && !__isleap (time->era_entries[idx].start_date[0])))
+			   && !__time_isleap (time->era_entries[idx]
+					      .start_date[0])))
 		      && !be_quiet)
 			  WITH_CUR_LOCALE (error (0, 0, _("\
 %s: starting date is invalid in string %Zd in `era' field"),
@@ -430,7 +432,8 @@ No definition for %s category found"), "LC_TIME"));
 			   > days_per_month[time->era_entries[idx].stop_date[1]])
 		       || (time->era_entries[idx].stop_date[1] == 2
 			   && time->era_entries[idx].stop_date[2] == 29
-			   && !__isleap (time->era_entries[idx].stop_date[0])))
+			   && !__time_isleap (time->era_entries[idx]
+					      .stop_date[0])))
 		      && !be_quiet)
 			  WITH_CUR_LOCALE (error (0, 0, _("\
 %s: invalid stopping date in string %Zd in `era' field"),

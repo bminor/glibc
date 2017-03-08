@@ -19,6 +19,9 @@
 #include <time.h>
 #include <sys/time.h>
 
+/* For __tzname, __timezone, __daylight.  */
+#include <time/time-variables.h>
+
 /* Get the current time of day and timezone information,
    putting it into *TV and *TZ.  If TZ is NULL, *TZ is not filled.
    Returns 0 on success, -1 on errors.  */

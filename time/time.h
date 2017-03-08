@@ -160,16 +160,8 @@ extern char *ctime_r (const time_t *__restrict __timer,
 		      char *__restrict __buf) __THROW;
 #endif	/* POSIX */
 
-
-/* Defined in localtime.c.  */
-extern char *__tzname[2];	/* Current timezone names.  */
-extern int __daylight;		/* If daylight-saving time is ever in use.  */
-extern long int __timezone;	/* Seconds west of UTC.  */
-
-
 #ifdef	__USE_POSIX
-/* Same as above.  */
-extern char *tzname[2];
+extern char *tzname[2];   /* Current timezone names.  */
 
 /* Set time conversion information from the TZ environment variable.
    If TZ is not defined, a locale-dependent default is used.  */
@@ -177,8 +169,8 @@ extern void tzset (void) __THROW;
 #endif
 
 #if defined __USE_MISC || defined __USE_XOPEN
-extern int daylight;
-extern long int timezone;
+extern int daylight;        /* If daylight-saving time is ever in use.  */
+extern long int timezone;   /* Seconds west of UTC.  */
 #endif
 
 #ifdef __USE_MISC
@@ -186,13 +178,6 @@ extern long int timezone;
    This call is restricted to the superuser.  */
 extern int stime (const time_t *__when) __THROW;
 #endif
-
-
-/* Nonzero if YEAR is a leap year (every 4 years,
-   except every 100th isn't, and every 400th is).  */
-#define __isleap(year)	\
-  ((year) % 4 == 0 && ((year) % 100 != 0 || (year) % 400 == 0))
-
 
 #ifdef __USE_MISC
 /* Miscellaneous functions many Unices inherited from the public domain

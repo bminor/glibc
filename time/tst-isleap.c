@@ -1,5 +1,5 @@
-/* Convert `time_t' to `struct tm' in UTC.
-   Copyright (C) 1991-2017 Free Software Foundation, Inc.
+/* Test leap year processing.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,22 +17,24 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <time.h>
-#include <time/time-variables.h>
+#include <support/check.h>
 
-/* Return the `struct tm' representation of *T in UTC,
-   using *TP to store the result.  */
-struct tm *
-__gmtime_r (const time_t *t, struct tm *tp)
+static int
+do_test (void)
 {
-  return __tz_convert (t, 0, tp);
+  TEST_VERIFY (!__time_isleap (-100));
+  TEST_VERIFY (__time_isleap (0));
+  TEST_VERIFY (!__time_isleap (100));
+  TEST_VERIFY (!__time_isleap (200));
+  TEST_VERIFY (!__time_isleap (300));
+  TEST_VERIFY (__time_isleap (400));
+  TEST_VERIFY (!__time_isleap (1900));
+  TEST_VERIFY (__time_isleap (1996));
+  TEST_VERIFY (__time_isleap (2000));
+  TEST_VERIFY (__time_isleap (2004));
+  TEST_VERIFY (__time_isleap (2008));
+  TEST_VERIFY (!__time_isleap (2100));
+  return 0;
 }
-libc_hidden_def (__gmtime_r)
-weak_alias (__gmtime_r, gmtime_r)
 
-
-/* Return the `struct tm' representation of *T in UTC.	*/
-struct tm *
-gmtime (const time_t *t)
-{
-  return __tz_convert (t, 0, &_tmbuf);
-}
+#include <support/test-driver.c>

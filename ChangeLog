@@ -1,3 +1,35 @@
+2017-03-08  Florian Weimer  <fweimer@redhat.com>
+
+	Isolate global timezone variables in <time/time-variables.h>.
+	* time/time-variables.h: New file.
+	* time/time.h (__tzname, __daylight, __timezone): Remove private
+	declarations.
+	(tzname, daylight, timezone): Update comments.
+	(__isleap): Remove definition.
+	* include/time.h (__time_isleap): Declare.
+	* time/Makefile (routines): Add isleap.
+	(tests): Add tst-isleap.
+	* time/Versions (GLIBC_PRIVATE): Export __time_isleap.
+	* time/dysize.c (dysize): Call __time_isleap
+	instead of __isleap.
+	* time/getdate.c (check_mday): Likewise.
+	* time/offtime.c (__offtime): Likewise.
+	* time/gmtime.c: Include <time/time-variables.h>.
+	* time/localtime.c: Likewise.
+	* time/tzfile.c: Likewise.
+	* time/tzset.c: Likewise.
+	(__tzname, __daylight, __timezone): Turn into compat symbols.
+	(compute_change): Call __time_isleap instead of __isleap.
+	* time/strftime_l.c: Include <time/time-variables.h>.  Reorganize
+	includes.
+	(tzname): Declare for !_LIBC only.
+	(__isleap): Define as __time_isleap.
+	* time/isleap.c: New file.
+	* time/tst-isleap.c: Likewise.
+	* locale/programs/ld-time.c (time_finish): Call __time_isleap
+	instead of __isleap.
+	* sysdeps/posix/gettimeofday.c: Include <time/time-variables.h>.
+
 2017-03-08  Yury Norov <ynorov@caviumnetworks.com>
 	    Zack Weinberg  <zackw@panix.com>
 

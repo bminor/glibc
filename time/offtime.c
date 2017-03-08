@@ -57,7 +57,7 @@ __offtime (const time_t *t, long int offset, struct tm *tp)
 #define DIV(a, b) ((a) / (b) - ((a) % (b) < 0))
 #define LEAPS_THRU_END_OF(y) (DIV (y, 4) - DIV (y, 100) + DIV (y, 400))
 
-  while (days < 0 || days >= (__isleap (y) ? 366 : 365))
+  while (days < 0 || days >= (__time_isleap (y) ? 366 : 365))
     {
       /* Guess a corrected year, assuming 365 days per year.  */
       time_t yg = y + days / 365 - (days % 365 < 0);
@@ -76,7 +76,7 @@ __offtime (const time_t *t, long int offset, struct tm *tp)
       return 0;
     }
   tp->tm_yday = days;
-  ip = __mon_yday[__isleap(y)];
+  ip = __mon_yday[__time_isleap (y)];
   for (y = 11; days < (long int) ip[y]; --y)
     continue;
   days -= ip[y];

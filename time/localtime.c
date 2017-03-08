@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <time.h>
+#include <time/time-variables.h>
 
 /* The C Standard says that localtime and gmtime return the same pointer.  */
 struct tm _tmbuf;

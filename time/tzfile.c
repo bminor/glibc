@@ -26,6 +26,7 @@
 #include <sys/stat.h>
 #include <stdint.h>
 
+#include <time/time-variables.h>
 #include <timezone/tzfile.h>
 
 int __use_tzfile;

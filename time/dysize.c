@@ -20,5 +20,5 @@
 int
 dysize (int year)
 {
-  return __isleap (year) ? 366 : 365;
+  return __time_isleap (year) ? 366 : 365;
 }

@@ -1,5 +1,5 @@
-/* Convert `time_t' to `struct tm' in UTC.
-   Copyright (C) 1991-2017 Free Software Foundation, Inc.
+/* Leap year detection.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,22 +17,11 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <time.h>
-#include <time/time-variables.h>
 
-/* Return the `struct tm' representation of *T in UTC,
-   using *TP to store the result.  */
-struct tm *
-__gmtime_r (const time_t *t, struct tm *tp)
+bool
+internal_function
+__time_isleap (int year)
 {
-  return __tz_convert (t, 0, tp);
+  return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
 }
-libc_hidden_def (__gmtime_r)
-weak_alias (__gmtime_r, gmtime_r)
-
-
-/* Return the `struct tm' representation of *T in UTC.	*/
-struct tm *
-gmtime (const time_t *t)
-{
-  return __tz_convert (t, 0, &_tmbuf);
-}
+libc_hidden_def (__time_isleap)
