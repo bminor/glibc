@@ -18,6 +18,7 @@
 
 #include <time.h>
 #include <time/time-variables.h>
+#include <time/time-private.h>
 
 /* The C Standard says that localtime and gmtime return the same pointer.  */
 struct tm _tmbuf;
@@ -28,7 +29,7 @@ struct tm _tmbuf;
 struct tm *
 __localtime_r (const time_t *t, struct tm *tp)
 {
-  return __tz_convert (t, 1, tp);
+  return __tz_convert (t, /* reentrant */ true, /* localtime */ true, tp);
 }
 weak_alias (__localtime_r, localtime_r)
 
@@ -37,6 +38,7 @@ weak_alias (__localtime_r, localtime_r)
 struct tm *
 localtime (const time_t *t)
 {
-  return __tz_convert (t, 1, &_tmbuf);
+  return __tz_convert (t, /* reentrant */ false, /* localtime */ true,
+                       &_tmbuf);
 }
 libc_hidden_def (localtime)

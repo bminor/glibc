@@ -27,44 +27,29 @@
 #include <libc-symbols.h>
 #include <shlib-compat.h>
 
-#include <time/time-variables.h>
+#include <time/time-private.h>
 #include <timezone/tzfile.h>
 
-char *__tzname[2] = { (char *) "GMT", (char *) "GMT" };
-int __daylight = 0;
-long int __timezone = 0L;
+static void update_vars (const struct tzdata *tzdata);
 
-weak_alias (__tzname, tzname)
-weak_alias (__daylight, daylight)
-weak_alias (__timezone, timezone)
+/* Global time zone data object.  Contains parsed timezone file and
+   timezone rule data.  */
+static struct tzdata global_tzdata;
 
-/* This locks all the state variables in tzfile.c and this file.  */
+/* Access to global_tzdata is protected by this lock.  Also covers the
+   other global variables in this file.  */
 __libc_lock_define_initialized (static, tzset_lock)
 
-/* This structure contains all the information about a
-   timezone given in the POSIX standard TZ envariable.  */
-typedef struct
-  {
-    const char *name;
+/* We cache the computed time of change for a
+   given year so we don't have to recompute it.  */
+struct tzrule_cache
+{
+  time_t change;        /* When to change to this zone.  */
+  int computed_for;     /* Year above is computed for.  */
+};
 
-    /* When to change.  */
-    enum { J0, J1, M } type;	/* Interpretation of:  */
-    unsigned short int m, n, d;	/* Month, week, day.  */
-    int secs;			/* Time of day.  */
+static struct tzrule_cache global_tzrule_cache[2];
 
-    long int offset;		/* Seconds east of GMT (west if < 0).  */
-
-    /* We cache the computed time of change for a
-       given year so we don't have to recompute it.  */
-    time_t change;	/* When to change to this zone.  */
-    int computed_for;	/* Year above is computed for.  */
-  } tz_rule;
-
-/* tz_rules[0] is standard, tz_rules[1] is daylight.  */
-static tz_rule tz_rules[2];
-
-
-static void compute_change (tz_rule *rule, int year) __THROW internal_function;
 static void tzset_internal (int always);
 
 /* List of buffers containing time zone strings. */
@@ -123,19 +108,6 @@ __tzstring (const char *s)
   return __tzstring_len (s, strlen (s));
 }
 
-static char *old_tz;
-
-static void
-internal_function
-update_vars (void)
-{
-  __daylight = tz_rules[0].offset != tz_rules[1].offset;
-  __timezone = -tz_rules[0].offset;
-  __tzname[0] = (char *) tz_rules[0].name;
-  __tzname[1] = (char *) tz_rules[1].name;
-}
-
-
 static unsigned int
 compute_offset (unsigned int ss, unsigned int mm, unsigned int hh)
 {
@@ -149,10 +121,10 @@ compute_offset (unsigned int ss, unsigned int mm, unsigned int hh)
 }
 
 /* Parses the time zone name at *TZP, and writes a pointer to an
-   interned string to tz_rules[WHICHRULE].name.  On success, advances
-   *TZP, and returns true.  Returns false otherwise.  */
+   interned string to TZDATA->tz_rules[WHICHRULE].name.  On success,
+   advances *TZP, and returns true.  Returns false otherwise.  */
 static bool
-parse_tzname (const char **tzp, int whichrule)
+parse_tzname (struct tzdata *tzdata, const char **tzp, int whichrule)
 {
   const char *start = *tzp;
   const char *p = start;
@@ -179,17 +151,17 @@ parse_tzname (const char **tzp, int whichrule)
   const char *name = __tzstring_len (start, len);
   if (name == NULL)
     return false;
-  tz_rules[whichrule].name = name;
+  tzdata->tz_rules[whichrule].name = name;
 
   *tzp = p;
   return true;
 }
 
 /* Parses the time zone offset at *TZP, and writes it to
-   tz_rules[WHICHRULE].offset.  Returns true if the parse was
+   TZDATA->tz_rules[WHICHRULE].offset.  Returns true if the parse was
    successful.  */
 static bool
-parse_offset (const char **tzp, int whichrule)
+parse_offset (struct tzdata *tzdata, const char **tzp, int whichrule)
 {
   const char *tz = *tzp;
   if (whichrule == 0
@@ -209,30 +181,30 @@ parse_offset (const char **tzp, int whichrule)
   int consumed = 0;
   if (sscanf (tz, "%hu%n:%hu%n:%hu%n",
 	      &hh, &consumed, &mm, &consumed, &ss, &consumed) > 0)
-    tz_rules[whichrule].offset = sign * compute_offset (ss, mm, hh);
+    tzdata->tz_rules[whichrule].offset = sign * compute_offset (ss, mm, hh);
   else
     /* Nothing could be parsed. */
     if (whichrule == 0)
       {
 	/* Standard time defaults to offset zero.  */
-	tz_rules[0].offset = 0;
+	tzdata->tz_rules[0].offset = 0;
 	return false;
       }
       else
 	/* DST defaults to one hour later than standard time.  */
-	tz_rules[1].offset = tz_rules[0].offset + (60 * 60);
+	tzdata->tz_rules[1].offset = tzdata->tz_rules[0].offset + (60 * 60);
   *tzp = tz + consumed;
   return true;
 }
 
 /* Parses the standard <-> DST rules at *TZP.  Updates
-   tz_rule[WHICHRULE].  On success, advances *TZP and returns true.
-   Otherwise, returns false.  */
+   TZDATA->tz_rule[WHICHRULE].  On success, advances *TZP and returns
+   true.  Otherwise, returns false.  */
 static bool
-parse_rule (const char **tzp, int whichrule)
+parse_rule (struct tzdata *tzdata, const char **tzp, int whichrule)
 {
   const char *tz = *tzp;
-  tz_rule *tzr = &tz_rules[whichrule];
+  struct tz_rule *tzr = &tzdata->tz_rules[whichrule];
 
   /* Ignore comma to support string following the incorrect
      specification in early POSIX.1 printings.  */
@@ -273,7 +245,7 @@ parse_rule (const char **tzp, int whichrule)
 	 Below is the equivalent of "M3.2.0,M11.1.0" [/2 not needed
 	 since 2:00AM is the default].  */
       tzr->type = M;
-      if (tzr == &tz_rules[0])
+      if (tzr == &tzdata->tz_rules[0])
 	{
 	  tzr->m = 3;
 	  tzr->n = 2;
@@ -314,55 +286,51 @@ parse_rule (const char **tzp, int whichrule)
     /* Default to 2:00 AM.  */
     tzr->secs = 2 * 60 * 60;
 
-  tzr->computed_for = -1;
   *tzp = tz;
   return true;
 }
 
-/* Parse the POSIX TZ-style string.  */
 void
-__tzset_parse_tz (const char *tz)
+internal_function
+__tzset_parse_tz (struct tzdata *tzdata, const char *tz)
 {
-  /* Clear out old state and reset to unnamed UTC.  */
-  memset (tz_rules, '\0', sizeof tz_rules);
-  tz_rules[0].name = tz_rules[1].name = "";
+  /* Set to unnamed UTC.  */
+  tzdata->tz_rules[0].name = tzdata->tz_rules[1].name = "";
 
   /* Get the standard timezone name.  */
-  if (parse_tzname (&tz, 0) && parse_offset (&tz, 0))
+  if (parse_tzname (tzdata, &tz, 0) && parse_offset (tzdata, &tz, 0))
     {
       /* Get the DST timezone name (if any).  */
       if (*tz != '\0')
 	{
-	  if (parse_tzname (&tz, 1))
+	  if (parse_tzname (tzdata, &tz, 1))
 	    {
-	      parse_offset (&tz, 1);
+	      parse_offset (tzdata, &tz, 1);
 	      if (*tz == '\0' || (tz[0] == ',' && tz[1] == '\0'))
 		{
 		  /* There is no rule.  See if there is a default rule
 		     file.  */
-		  __tzfile_default (tz_rules[0].name, tz_rules[1].name,
-				    tz_rules[0].offset, tz_rules[1].offset);
-		  if (__use_tzfile)
+		  __tzfile_default (tzdata, tzdata->tz_rules[0].name, tzdata->tz_rules[1].name,
+				    tzdata->tz_rules[0].offset, tzdata->tz_rules[1].offset);
+		  if (tzdata->use_tzfile)
 		    {
-		      free (old_tz);
-		      old_tz = NULL;
+		      free (tzdata->old_tz);
+		      tzdata->old_tz = NULL;
 		      return;
 		    }
 		}
 	    }
 	  /* Figure out the standard <-> DST rules.  */
-	  if (parse_rule (&tz, 0))
-	    parse_rule (&tz, 1);
+	  if (parse_rule (tzdata, &tz, 0))
+	    parse_rule (tzdata, &tz, 1);
 	}
       else
 	{
 	  /* There is no DST.  */
-	  tz_rules[1].name = tz_rules[0].name;
-	  tz_rules[1].offset = tz_rules[0].offset;
+	  tzdata->tz_rules[1].name = tzdata->tz_rules[0].name;
+	  tzdata->tz_rules[1].offset = tzdata->tz_rules[0].offset;
 	}
     }
-
-  update_vars ();
 }
 
 /* Interpret the TZ envariable.  */
@@ -389,7 +357,8 @@ tzset_internal (int always)
     ++tz;
 
   /* Check whether the value changed since the last run.  */
-  if (old_tz != NULL && tz != NULL && strcmp (tz, old_tz) == 0)
+  if (global_tzdata.old_tz != NULL && tz != NULL
+      && strcmp (tz, global_tzdata.old_tz) == 0)
     /* No change, simply return.  */
     return;
 
@@ -397,45 +366,47 @@ tzset_internal (int always)
     /* No user specification; use the site-wide default.  */
     tz = TZDEFAULT;
 
-  tz_rules[0].name = NULL;
-  tz_rules[1].name = NULL;
+  global_tzdata.tz_rules[0].name = NULL;
+  global_tzdata.tz_rules[1].name = NULL;
+
+  /* Invalidate the tzrule cache.  */
+  global_tzrule_cache[0].computed_for = -1;
+  global_tzrule_cache[1].computed_for = -1;
 
   /* Save the value of `tz'.  */
-  free (old_tz);
-  old_tz = tz ? __strdup (tz) : NULL;
+  free (global_tzdata.old_tz);
+  global_tzdata.old_tz = tz ? __strdup (tz) : NULL;
 
   /* Try to read a data file.  */
-  __tzfile_read (tz, 0, NULL);
-  if (__use_tzfile)
+  __tzfile_read (&global_tzdata, tz, 0, NULL);
+  if (global_tzdata.use_tzfile)
     return;
 
   /* No data file found.  Default to UTC if nothing specified.  */
-
   if (tz == NULL || *tz == '\0'
       || (TZDEFAULT != NULL && strcmp (tz, TZDEFAULT) == 0))
     {
-      memset (tz_rules, '\0', sizeof tz_rules);
-      tz_rules[0].name = tz_rules[1].name = "UTC";
-      if (J0 != 0)
-	tz_rules[0].type = tz_rules[1].type = J0;
-      tz_rules[0].change = tz_rules[1].change = (time_t) -1;
-      update_vars ();
+      memset (global_tzdata.tz_rules, '\0', sizeof (global_tzdata.tz_rules));
+      global_tzdata.tz_rules[0].name = global_tzdata.tz_rules[1].name = "UTC";
+      global_tzrule_cache[0].change = global_tzrule_cache[1].change = -1;
+      update_vars (&global_tzdata);
       return;
     }
-
-  __tzset_parse_tz (tz);
+  __tzset_parse_tz (&global_tzdata, tz);
+  update_vars (&global_tzdata);
 }
 
 /* Figure out the exact time (as a time_t) in YEAR
    when the change described by RULE will occur and
    put it in RULE->change, saving YEAR in RULE->computed_for.  */
 static void
-internal_function
-compute_change (tz_rule *rule, int year)
+compute_change (const struct tz_rule *rule,
+		struct tzrule_cache *cache,
+		int year)
 {
   time_t t;
 
-  if (year != -1 && rule->computed_for == year)
+  if (year != -1 && cache->computed_for == year)
     /* Operations on times in 2 BC will be slower.  Oh well.  */
     return;
 
@@ -511,8 +482,8 @@ compute_change (tz_rule *rule, int year)
   /* T is now the Epoch-relative time of 0:00:00 GMT on the day we want.
      Just add the time of day and local offset from GMT, and we're done.  */
 
-  rule->change = t - rule->offset + rule->secs;
-  rule->computed_for = year;
+  cache->change = t - rule->offset + rule->secs;
+  cache->computed_for = year;
 }
 
 
@@ -520,10 +491,13 @@ compute_change (tz_rule *rule, int year)
    `__timezone', and `__daylight' accordingly.  */
 void
 internal_function
-__tz_compute (time_t timer, struct tm *tm, int use_localtime)
+__tz_compute (const struct tzdata *tzdata,
+	      time_t timer, struct tm *tm, int use_localtime)
 {
-  compute_change (&tz_rules[0], 1900 + tm->tm_year);
-  compute_change (&tz_rules[1], 1900 + tm->tm_year);
+  compute_change (&tzdata->tz_rules[0], &global_tzrule_cache[0],
+		  1900 + tm->tm_year);
+  compute_change (&tzdata->tz_rules[1], &global_tzrule_cache[1],
+		  1900 + tm->tm_year);
 
   if (use_localtime)
     {
@@ -532,16 +506,16 @@ __tz_compute (time_t timer, struct tm *tm, int use_localtime)
       /* We have to distinguish between northern and southern
 	 hemisphere.  For the latter the daylight saving time
 	 ends in the next year.  */
-      if (__builtin_expect (tz_rules[0].change
-			    > tz_rules[1].change, 0))
-	isdst = (timer < tz_rules[1].change
-		 || timer >= tz_rules[0].change);
+      if (__builtin_expect (global_tzrule_cache[0].change
+			    > global_tzrule_cache[1].change, 0))
+	isdst = (timer < global_tzrule_cache[1].change
+		 || timer >= global_tzrule_cache[0].change);
       else
-	isdst = (timer >= tz_rules[0].change
-		 && timer < tz_rules[1].change);
+	isdst = (timer >= global_tzrule_cache[0].change
+		 && timer < global_tzrule_cache[1].change);
       tm->tm_isdst = isdst;
-      tm->tm_zone = __tzname[isdst];
-      tm->tm_gmtoff = tz_rules[isdst].offset;
+      tm->tm_zone = tzdata->tzname[isdst];
+      tm->tm_gmtoff = tzdata->tz_rules[isdst].offset;
     }
 }
 
@@ -555,21 +529,17 @@ __tzset (void)
 
   tzset_internal (1);
 
-  if (!__use_tzfile)
-    {
-      /* Set `tzname'.  */
-      __tzname[0] = (char *) tz_rules[0].name;
-      __tzname[1] = (char *) tz_rules[1].name;
-    }
+  if (!global_tzdata.use_tzfile)
+    update_vars (&global_tzdata);
 
   __libc_lock_unlock (tzset_lock);
 }
 weak_alias (__tzset, tzset)
-
-/* Return the `struct tm' representation of *TIMER in the local timezone.
-   Use local time if USE_LOCALTIME is nonzero, UTC otherwise.  */
+
 struct tm *
-__tz_convert (const time_t *timer, int use_localtime, struct tm *tp)
+internal_function
+__tz_convert (const time_t *timer, bool use_reentrant,
+	      bool use_localtime, struct tm *tp)
 {
   long int leap_correction;
   int leap_extra_secs;
@@ -585,17 +555,17 @@ __tz_convert (const time_t *timer, int use_localtime, struct tm *tp)
   /* Update internal database according to current TZ setting.
      POSIX.1 8.3.7.2 says that localtime_r is not required to set tzname.
      This is a good idea since this allows at least a bit more parallelism.  */
-  tzset_internal (tp == &_tmbuf && use_localtime);
+  tzset_internal (!use_reentrant && use_localtime);
 
-  if (__use_tzfile)
-    __tzfile_compute (*timer, use_localtime, &leap_correction,
+  if (global_tzdata.use_tzfile)
+    __tzfile_compute (&global_tzdata, *timer, use_localtime, &leap_correction,
 		      &leap_extra_secs, tp);
   else
     {
       if (! __offtime (timer, 0, tp))
 	tp = NULL;
       else
-	__tz_compute (*timer, tp, use_localtime);
+	__tz_compute (&global_tzdata, *timer, tp, use_localtime);
       leap_correction = 0L;
       leap_extra_secs = 0;
     }
@@ -630,6 +600,26 @@ libc_freeres_fn (free_mem)
       tzstring_list = tzstring_list->next;
       free (old);
     }
-  free (old_tz);
-  old_tz = NULL;
+}
+
+/* Do this at the very end, so that the code above does not
+   accidentally use any of these global variables.  */
+
+#include <time/time-variables.h>
+
+char *__tzname[2] = { (char *) "GMT", (char *) "GMT" };
+int __daylight = 0;
+long int __timezone = 0L;
+
+weak_alias (__tzname, tzname)
+weak_alias (__daylight, daylight)
+weak_alias (__timezone, timezone)
+
+static void
+update_vars (const struct tzdata *tzdata)
+{
+  __daylight = tzdata->tz_rules[0].offset != tzdata->tz_rules[1].offset;
+  __timezone = -tzdata->tz_rules[0].offset;
+  __tzname[0] = (char *) tzdata->tz_rules[0].name;
+  __tzname[1] = (char *) tzdata->tz_rules[1].name;
 }
