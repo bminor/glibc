@@ -25,8 +25,8 @@
 #include <sys/param.h>
 #include <sys/types.h>
 #include <_itoa.h>
+#include <libc-pointer-arith.h>
 #include "dynamic-link.h"
-#include <libc-internal.h>
 
 /* Statistics function.  */
 #ifdef SHARED
@@ -136,12 +136,6 @@ _dl_nothread_init_static_tls (struct link_map *map)
 #else
 # error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 #endif
-
-  /* Fill in the DTV slot so that a later LD/GD access will find it.  */
-  dtv_t *dtv = THREAD_DTV ();
-  assert (map->l_tls_modid <= dtv[-1].counter);
-  dtv[map->l_tls_modid].pointer.to_free = NULL;
-  dtv[map->l_tls_modid].pointer.val = dest;
 
   /* Initialize the memory.  */
   memset (__mempcpy (dest, map->l_tls_initimage, map->l_tls_initimage_size),

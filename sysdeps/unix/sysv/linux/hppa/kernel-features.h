@@ -24,3 +24,6 @@
 #endif
 
 #include_next <kernel-features.h>
+
+#define __ASSUME_RECV_SYSCALL   1
+#define __ASSUME_SEND_SYSCALL	1

@@ -10,15 +10,11 @@ syscall_clock_gettime	EXTRA	clock_gettime	Ei:ip		__syscall_clock_gettime
 
 
 # proper socket implementations:
-accept		-	accept		Ci:iBN	__libc_accept	__accept accept
 bind		-	bind		i:ipi	__bind		bind
-connect		-	connect		Ci:ipi	__libc_connect	__connect connect
 getpeername	-	getpeername	i:ipp	__getpeername	getpeername
 getsockname	-	getsockname	i:ipp	__getsockname	getsockname
 getsockopt	-	getsockopt	i:iiiBN	__getsockopt	getsockopt
 listen		-	listen		i:ii	__listen	listen
-recvfrom	-	recvfrom	Ci:ibniBN	__libc_recvfrom	__recvfrom recvfrom
-sendto		-	sendto		Ci:ibnibn	__libc_sendto	__sendto sendto
 setsockopt	-	setsockopt	i:iiibn	__setsockopt	setsockopt
 shutdown	-	shutdown	i:ii	__shutdown	shutdown
 socket		-	socket		i:iii	__socket	socket

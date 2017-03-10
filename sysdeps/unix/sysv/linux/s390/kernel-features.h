@@ -25,21 +25,17 @@
 # define __ASSUME_SOCKET_SYSCALL             1
 # define __ASSUME_SOCKETPAIR_SYSCALL         1
 # define __ASSUME_BIND_SYSCALL               1
-# define __ASSUME_CONNECT_SYSCALL            1
 # define __ASSUME_LISTEN_SYSCALL             1
-# define __ASSUME_ACCEPT4_FOR_ACCEPT_SYSCALL 1
 # define __ASSUME_GETSOCKOPT_SYSCALL         1
 # define __ASSUME_SETSOCKOPT_SYSCALL         1
 # define __ASSUME_GETSOCKNAME_SYSCALL        1
 # define __ASSUME_GETPEERNAME_SYSCALL        1
-# define __ASSUME_SENDTO_SYSCALL             1
-# define __ASSUME_SENDTO_FOR_SEND_SYSCALL    1
-# define __ASSUME_RECVFROM_SYSCALL           1
-# define __ASSUME_RECVFROM_FOR_RECV_SYSCALL  1
 # define __ASSUME_SHUTDOWN_SYSCALL           1
 #endif
 
 #include_next <kernel-features.h>
+
+#undef __ASSUME_ACCEPT_SYSCALL
 
 #if __LINUX_KERNEL_VERSION < 0x040300
 # undef __ASSUME_ACCEPT4_SYSCALL
@@ -47,6 +43,9 @@
 # undef __ASSUME_SENDMMSG_SYSCALL
 # undef __ASSUME_SENDMSG_SYSCALL
 # undef __ASSUME_RECVMSG_SYSCALL
+# undef __ASSUME_CONNECT_SYSCALL
+# undef __ASSUME_RECVFROM_SYSCALL
+# undef __ASSUME_SENDTO_SYSCALL
 #endif
 
 /* s390 only supports ipc syscall.  */

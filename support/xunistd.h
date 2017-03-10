@@ -33,6 +33,11 @@ pid_t xwaitpid (pid_t, int *status, int flags);
 /* Write the buffer.  Retry on short writes.  */
 void xwrite (int, const void *, size_t);
 
+/* Invoke mmap with a zero file offset.  */
+void *xmmap (void *addr, size_t length, int prot, int flags, int fd);
+
+void xmunmap (void *addr, size_t length);
+
 __END_DECLS
 
 #endif /* SUPPORT_XUNISTD_H */

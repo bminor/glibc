@@ -5,12 +5,8 @@ socket		-	socket		i:iii	__socket	socket
 socketpair	-	socketpair	i:iiif	__socketpair	socketpair
 bind		-	bind		i:ipi	__bind		bind
 listen		-	listen		i:ii	__listen	listen
-accept		-	accept		Ci:iBN	__libc_accept	__accept accept
-connect		-	connect		Ci:ipi	__libc_connect	__connect connect
 getsockname	-	getsockname	i:ipp	__getsockname	getsockname
 getpeername	-	getpeername	i:ipp	__getpeername	getpeername
-sendto		-	sendto		Ci:ibnibn	__libc_sendto	__sendto sendto
-recvfrom	-	recvfrom	Ci:ibniBN	__libc_recvfrom	__recvfrom recvfrom
 setsockopt	-	setsockopt	i:iiibn	__setsockopt	setsockopt
 getsockopt	-	getsockopt	i:iiiBN	__getsockopt	getsockopt
 shutdown	-	shutdown	i:ii	__shutdown	shutdown

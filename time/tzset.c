@@ -25,8 +25,6 @@
 #include <string.h>
 #include <time.h>
 
-
-#define NOID
 #include <timezone/tzfile.h>
 
 char *__tzname[2] = { (char *) "GMT", (char *) "GMT" };
@@ -39,12 +37,6 @@ weak_alias (__timezone, timezone)
 
 /* This locks all the state variables in tzfile.c and this file.  */
 __libc_lock_define_initialized (static, tzset_lock)
-
-
-#define	min(a, b)	((a) < (b) ? (a) : (b))
-#define	max(a, b)	((a) > (b) ? (a) : (b))
-#define	sign(x)		((x) < 0 ? -1 : 1)
-
 
 /* This structure contains all the information about a
    timezone given in the POSIX standard TZ envariable.  */
@@ -70,8 +62,7 @@ static tz_rule tz_rules[2];
 
 
 static void compute_change (tz_rule *rule, int year) __THROW internal_function;
-static void tzset_internal (int always, int explicit)
-     __THROW internal_function;
+static void tzset_internal (int always);
 
 /* List of buffers containing time zone strings. */
 struct tzstring_l
@@ -128,24 +119,7 @@ __tzstring (const char *s)
 {
   return __tzstring_len (s, strlen (s));
 }
-
-/* Maximum length of a timezone name.  tzset_internal keeps this up to date
-   (never decreasing it) when ! __use_tzfile.
-   tzfile.c keeps it up to date when __use_tzfile.  */
-size_t __tzname_cur_max;
 
-long int
-__tzname_max (void)
-{
-  __libc_lock_lock (tzset_lock);
-
-  tzset_internal (0, 0);
-
-  __libc_lock_unlock (tzset_lock);
-
-  return __tzname_cur_max;
-}
-
 static char *old_tz;
 
 static void
@@ -156,22 +130,19 @@ update_vars (void)
   __timezone = -tz_rules[0].offset;
   __tzname[0] = (char *) tz_rules[0].name;
   __tzname[1] = (char *) tz_rules[1].name;
-
-  /* Keep __tzname_cur_max up to date.  */
-  size_t len0 = strlen (__tzname[0]);
-  size_t len1 = strlen (__tzname[1]);
-  if (len0 > __tzname_cur_max)
-    __tzname_cur_max = len0;
-  if (len1 > __tzname_cur_max)
-    __tzname_cur_max = len1;
 }
 
 
 static unsigned int
-__attribute_noinline__
 compute_offset (unsigned int ss, unsigned int mm, unsigned int hh)
 {
-  return min (ss, 59) + min (mm, 59) * 60 + min (hh, 24) * 60 * 60;
+  if (ss > 59)
+    ss = 59;
+  if (mm > 59)
+    mm = 59;
+  if (hh > 24)
+    hh = 24;
+  return ss + mm * 60 + hh * 60 * 60;
 }
 
 /* Parses the time zone name at *TZP, and writes a pointer to an
@@ -393,8 +364,7 @@ __tzset_parse_tz (const char *tz)
 
 /* Interpret the TZ envariable.  */
 static void
-internal_function
-tzset_internal (int always, int explicit)
+tzset_internal (int always)
 {
   static int is_initialized;
   const char *tz;
@@ -405,12 +375,6 @@ tzset_internal (int always, int explicit)
 
   /* Examine the TZ environment variable.  */
   tz = getenv ("TZ");
-  if (tz == NULL && !explicit)
-    /* Use the site-wide default.  This is a file name which means we
-       would not see changes to the file if we compare only the file
-       name for change.  We want to notice file changes if tzset() has
-       been called explicitly.  Leave TZ as NULL in this case.  */
-    tz = TZDEFAULT;
   if (tz && *tz == '\0')
     /* User specified the empty string; use UTC explicitly.  */
     tz = "Universal";
@@ -586,7 +550,7 @@ __tzset (void)
 {
   __libc_lock_lock (tzset_lock);
 
-  tzset_internal (1, 1);
+  tzset_internal (1);
 
   if (!__use_tzfile)
     {
@@ -618,7 +582,7 @@ __tz_convert (const time_t *timer, int use_localtime, struct tm *tp)
   /* Update internal database according to current TZ setting.
      POSIX.1 8.3.7.2 says that localtime_r is not required to set tzname.
      This is a good idea since this allows at least a bit more parallelism.  */
-  tzset_internal (tp == &_tmbuf && use_localtime, 1);
+  tzset_internal (tp == &_tmbuf && use_localtime);
 
   if (__use_tzfile)
     __tzfile_compute (*timer, use_localtime, &leap_correction,

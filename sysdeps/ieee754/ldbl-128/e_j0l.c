@@ -829,17 +829,12 @@ _Float128
   _Float128 xx, xinv, z, p, q, c, s, cc, ss;
 
   if (! isfinite (x))
-    {
-      if (x != x)
-	return x + x;
-      else
-	return 0;
-    }
+    return 1 / (x + x * x);
   if (x <= 0)
     {
       if (x < 0)
 	return (zero / (zero * x));
-      return -HUGE_VALL + x;
+      return -1 / zero; /* -inf and divide by zero exception.  */
     }
   xx = fabsl (x);
   if (xx <= 0x1p-57)

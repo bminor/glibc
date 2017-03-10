@@ -108,7 +108,7 @@
 .Lsyscall_error:						\
 	adrp	x1, :gottprel:errno;				\
 	neg	w2, w0;						\
-	ldr	x1, [x1, :gottprel_lo12:errno];			\
+	ldr	PTR_REG(1), [x1, :gottprel_lo12:errno];		\
 	mrs	x3, tpidr_el0;					\
 	mov	x0, -1;						\
 	str	w2, [x1, x3];					\
@@ -156,6 +156,10 @@
 # define HAVE_CLOCK_GETRES_VSYSCALL	1
 # define HAVE_CLOCK_GETTIME_VSYSCALL	1
 # define HAVE_GETTIMEOFDAY_VSYSCALL	1
+
+/* Previously AArch64 used the generic version without the libc_hidden_def
+   which lead in a non existent __send symbol in libc.so.  */
+# undef HAVE_INTERNAL_SEND_SYMBOL
 
 /* Define a macro which expands into the inline wrapper code for a system
    call.  */

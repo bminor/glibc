@@ -41,8 +41,17 @@ void xpthread_check_return (const char *function, int value);
 void xpthread_barrier_init (pthread_barrier_t *barrier,
                             pthread_barrierattr_t *attr, unsigned int count);
 void xpthread_barrier_destroy (pthread_barrier_t *barrier);
+void xpthread_mutexattr_destroy (pthread_mutexattr_t *);
+void xpthread_mutexattr_init (pthread_mutexattr_t *);
+void xpthread_mutexattr_setprotocol (pthread_mutexattr_t *, int);
+void xpthread_mutexattr_setpshared (pthread_mutexattr_t *, int);
+void xpthread_mutexattr_setrobust (pthread_mutexattr_t *, int);
+void xpthread_mutexattr_settype (pthread_mutexattr_t *, int);
+void xpthread_mutex_init (pthread_mutex_t *, const pthread_mutexattr_t *);
+void xpthread_mutex_destroy (pthread_mutex_t *);
 void xpthread_mutex_lock (pthread_mutex_t *mutex);
 void xpthread_mutex_unlock (pthread_mutex_t *mutex);
+void xpthread_mutex_consistent (pthread_mutex_t *);
 void xpthread_spin_lock (pthread_spinlock_t *lock);
 void xpthread_spin_unlock (pthread_spinlock_t *lock);
 void xpthread_cond_wait (pthread_cond_t * cond, pthread_mutex_t * mutex);
@@ -52,6 +61,12 @@ void xpthread_detach (pthread_t thr);
 void xpthread_cancel (pthread_t thr);
 void *xpthread_join (pthread_t thr);
 void xpthread_once (pthread_once_t *guard, void (*func) (void));
+void xpthread_attr_destroy (pthread_attr_t *attr);
+void xpthread_attr_init (pthread_attr_t *attr);
+void xpthread_attr_setdetachstate (pthread_attr_t *attr,
+				   int detachstate);
+void xpthread_attr_setstacksize (pthread_attr_t *attr,
+				 size_t stacksize);
 
 /* This function returns non-zero if pthread_barrier_wait returned
    PTHREAD_BARRIER_SERIAL_THREAD.  */

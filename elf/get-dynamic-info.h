@@ -16,8 +16,11 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+/* This file is included multiple times and therefore lacks a header
+   file inclusion guard.  */
+
 #include <assert.h>
-#include <libc-internal.h>
+#include <libc-diag.h>
 
 #ifndef RESOLVE_MAP
 static

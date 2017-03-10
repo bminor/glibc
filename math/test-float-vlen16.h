@@ -20,12 +20,7 @@
 #include "test-math-no-inline.h"
 #include "test-math-vector.h"
 
-#define TEST_MSG "testing float vector math (without inline functions)\n"
-
-#define EXCEPTION_TESTS_float 0
 #define ROUNDING_TESTS_float(MODE) ((MODE) == FE_TONEAREST)
 
 #define VEC_SUFF _vlen16
 #define VEC_LEN 16
-
-#define FUNC_TEST(function) function ## f ## _VEC_SUFF

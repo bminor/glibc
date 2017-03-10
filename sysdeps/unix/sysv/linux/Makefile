@@ -20,7 +20,7 @@ sysdep_routines += clone umount umount2 readahead \
 		   personality
 
 CFLAGS-gethostid.c = -fexceptions
-CFLAGS-tst-writev.c += "-DARTIFICIAL_LIMIT=0x80000000-__getpagesize()"
+CFLAGS-tst-writev.c += "-DARTIFICIAL_LIMIT=(0x80000000-sysconf(_SC_PAGESIZE))"
 
 # Note that bits/mman-linux.h is listed here though the file lives in the
 # top-level bits/ subdirectory instead of here in sysdeps/.../linux/bits/.
@@ -43,7 +43,7 @@ sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h \
 		  bits/mman-linux.h
 
 tests += tst-clone tst-clone2 tst-fanotify tst-personality tst-quota \
-	 tst-sync_file_range
+	 tst-sync_file_range test-errno
 
 # Generate the list of SYS_* macros for the system calls (__NR_* macros).
 

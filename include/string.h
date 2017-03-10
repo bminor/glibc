@@ -1,6 +1,6 @@
 #ifndef _STRING_H
 
-#ifndef _ISOMAC
+#if !defined _ISOMAC && !defined __cplusplus
 #include <sys/types.h>
 
 extern void *__memccpy (void *__dest, const void *__src,
@@ -41,6 +41,8 @@ extern void *__memrchr (const void *__s, int __c, size_t __n)
 extern void *__memchr (const void *__s, int __c, size_t __n)
      __attribute_pure__;
 
+extern void __bzero (void *__s, size_t __n) __THROW __nonnull ((1));
+
 extern int __ffs (int __i) __attribute__ ((const));
 
 extern char *__strerror_r (int __errnum, char *__buf, size_t __buflen);
@@ -53,7 +55,7 @@ extern char *__strerror_r (int __errnum, char *__buf, size_t __buflen);
    above are defined as macros in the headers.  */
 #include <string/string.h>
 
-#ifndef _ISOMAC
+#if !defined _ISOMAC && !defined __cplusplus
 extern __typeof (strcoll_l) __strcoll_l;
 extern __typeof (strxfrm_l) __strxfrm_l;
 extern __typeof (strcasecmp_l) __strcasecmp_l;
@@ -159,15 +161,6 @@ extern __typeof (strsep) strsep attribute_hidden;
 extern __typeof (mempcpy) mempcpy __asm__ ("__mempcpy");
 extern __typeof (stpcpy) stpcpy __asm__ ("__stpcpy");
 #endif
-
-# ifndef _ISOMAC
-#  ifndef index
-#   define index(s, c)	(strchr ((s), (c)))
-#  endif
-#  ifndef rindex
-#   define rindex(s, c)	(strrchr ((s), (c)))
-#  endif
-# endif
 
 extern void *__memcpy_chk (void *__restrict __dest,
 			   const void *__restrict __src, size_t __len,
