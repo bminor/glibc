@@ -306,13 +306,13 @@ __malloc_assert (const char *assertion, const char *file, unsigned int line,
 # define TCACHE_IDX		((MAX_TCACHE_SIZE / MALLOC_ALIGNMENT) + 1)
 # define size2tidx_(bytes)	(((bytes) + MALLOC_ALIGNMENT - 1) / MALLOC_ALIGNMENT)
 
-# define tidx2csize(idx)	((idx)*MALLOC_ALIGNMENT + SIZE_SZ)
-# define tidx2usize(idx)	((idx)*MALLOC_ALIGNMENT)
+# define tidx2csize(idx)	((idx) * MALLOC_ALIGNMENT + SIZE_SZ)
+# define tidx2usize(idx)	((idx) * MALLOC_ALIGNMENT)
 
 /* When "x" is a user-provided size.  */
-# define usize2tidx(x) size2tidx_(x)
+# define usize2tidx(x) size2tidx_ (x)
 /* When "x" is from chunksize().  */
-# define csize2tidx(x) size2tidx_((x)-SIZE_SZ)
+# define csize2tidx(x) size2tidx_ ((x) - SIZE_SZ)
 
 /* Rounds up, so...
    idx 0   bytes 0
@@ -2944,6 +2944,24 @@ typedef struct TCache {
 static __thread char tcache_shutting_down = 0;
 static __thread TCache *tcache = NULL;
 
+static void
+tcache_put (mchunkptr chunk, size_t tc_idx)
+{
+  TCacheEntry *e = (TCacheEntry *) chunk2mem (chunk);
+  e->next = tcache->entries[tc_idx];
+  tcache->entries[tc_idx] = e;
+  ++(tcache->counts[tc_idx]);
+}
+
+static void *
+tcache_get (size_t tc_idx)
+{
+  TCacheEntry *e = tcache->entries[tc_idx];
+  tcache->entries[tc_idx] = e->next;
+  --(tcache->counts[tc_idx]);
+  return (void *) e;
+}
+
 static void __attribute__ ((section ("__libc_thread_freeres_fn")))
 tcache_thread_freeres (void)
 {
@@ -2955,7 +2973,7 @@ tcache_thread_freeres (void)
 
   tcache = NULL;
 
-  for (i=0; i<TCACHE_IDX; i++) {
+  for (i = 0; i < TCACHE_IDX; ++i) {
     while (tcache_tmp->entries[i])
       {
 	TCacheEntry *e = tcache_tmp->entries[i];
@@ -3004,6 +3022,8 @@ tcache_init(void)
   if (__glibc_unlikely (tcache == NULL)) \
     tcache_init();
 
+#else
+#define MAYBE_INIT_TCACHE()
 #endif
 
 void *
@@ -3028,10 +3048,7 @@ __libc_malloc (size_t bytes)
       && tcache
       && tcache->entries[tc_idx] != NULL)
     {
-      TCacheEntry *e = tcache->entries[tc_idx];
-      tcache->entries[tc_idx] = e->next;
-      --(tcache->counts[tc_idx]);
-      return (void *) e;
+      return tcache_get (tc_idx);
     }
 #endif
 
@@ -3093,9 +3110,7 @@ __libc_free (void *mem)
       return;
     }
 
-#if USE_TCACHE
   MAYBE_INIT_TCACHE ();
-#endif
 
   ar_ptr = arena_for_chunk (p);
   _int_free (ar_ptr, p, 0);
@@ -3135,9 +3150,7 @@ __libc_realloc (void *oldmem, size_t bytes)
     ar_ptr = NULL;
   else
     {
-#if USE_TCACHE
       MAYBE_INIT_TCACHE ();
-#endif
       ar_ptr = arena_for_chunk (oldp);
     }
 
@@ -3364,9 +3377,7 @@ __libc_calloc (size_t n, size_t elem_size)
 
   sz = bytes;
 
-#if USE_TCACHE
   MAYBE_INIT_TCACHE ();
-#endif
 
   arena_get (av, sz);
   if (av)
@@ -3577,10 +3588,7 @@ _int_malloc (mstate av, size_t bytes)
 	                 != tc_victim);
 		  if (tc_victim != 0)
 		    {
-		      TCacheEntry *e = (TCacheEntry *) chunk2mem (tc_victim);
-		      e->next = tcache->entries[tc_idx];
-		      tcache->entries[tc_idx] = e;
-		      ++(tcache->counts[tc_idx]);
+		      tcache_put (tc_victim, tc_idx);
 		      ++found;
 	            }
 		}
@@ -3646,10 +3654,7 @@ _int_malloc (mstate av, size_t bytes)
 		      bin->bk = bck;
 		      bck->fd = bin;
 
-		      TCacheEntry *e = (TCacheEntry *) chunk2mem (tc_victim);
-		      e->next = tcache->entries[tc_idx];
-		      tcache->entries[tc_idx] = e;
-		      ++(tcache->counts[tc_idx]);
+		      tcache_put (tc_victim, tc_idx);
 		      ++found;
 	            }
 		}
@@ -3769,10 +3774,7 @@ _int_malloc (mstate av, size_t bytes)
 	      if (tcache_nb
 		  && tcache->counts[tc_idx] < mp_.tcache_count)
 		{
-		  TCacheEntry *e = (TCacheEntry *) chunk2mem (victim);
-		  e->next = tcache->entries[tc_idx];
-		  tcache->entries[tc_idx] = e;
-		  ++(tcache->counts[tc_idx]);
+		  tcache_put (victim, tc_idx);
 		  return_cached = 1;
 		  continue;
 		}
@@ -3860,10 +3862,7 @@ _int_malloc (mstate av, size_t bytes)
 	  && mp_.tcache_unsorted_limit > 0
 	  && tcache_unsorted_count > mp_.tcache_unsorted_limit)
 	{
-	  TCacheEntry *e = tcache->entries[tc_idx];
-	  tcache->entries[tc_idx] = e->next;
-	  --(tcache->counts[tc_idx]);
-	  return (void *) e;
+	  return tcache_get (tc_idx);
 	}
 #endif
 
@@ -3876,10 +3875,7 @@ _int_malloc (mstate av, size_t bytes)
       /* If all the small chunks we found ended up cached, return one now.  */
       if (return_cached)
 	{
-	  TCacheEntry *e = tcache->entries[tc_idx];
-	  tcache->entries[tc_idx] = e->next;
-	  --(tcache->counts[tc_idx]);
-	  return (void *) e;
+	  return tcache_get (tc_idx);
 	}
 #endif
 
@@ -4176,10 +4172,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 	&& tc_idx < mp_.tcache_max
 	&& tcache->counts[tc_idx] < mp_.tcache_count)
       {
-	TCacheEntry *e = (TCacheEntry *) chunk2mem (p);
-	e->next = tcache->entries[tc_idx];
-	tcache->entries[tc_idx] = e;
-	++(tcache->counts[tc_idx]);
+	tcache_put (p, tc_idx);
 	return;
       }
   }
