@@ -1,3 +1,8 @@
+2017-03-15  Mike Frysinger  <vapier@gentoo.org>
+
+	* sysdeps/x86_64/mempcpy_chk.S (__mempcpy_chk): Check for SHARED
+	instead of PIC.
+
 2017-03-15  John David Anglin  <danglin@gcc.gnu.org>
 
 	* sysdeps/hppa/dl-machine.h (DL_STACK_END): Define.
