@@ -1,3 +1,9 @@
+2017-04-03  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #21253]
+	* sysdeps/unix/sysv/linux/spawni.c (__spawnix): Increase argv_size
+	slack space by 32KiB.
+
 2017-03-31  Slava Barinov  <v.barinov@samsung.com>
 
 	[BZ #21289]
