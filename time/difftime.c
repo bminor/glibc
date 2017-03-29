@@ -31,9 +31,9 @@
    time_t is known to be an integer type.  */
 
 static double
-subtract (time_t time1, time_t time0)
+subtract (__time64_t time1, __time64_t time0)
 {
-  if (! TYPE_SIGNED (time_t))
+  if (! TYPE_SIGNED (__time64_t))
     return time1 - time0;
   else
     {
@@ -76,9 +76,9 @@ subtract (time_t time1, time_t time0)
              1 is unsigned in C, so it need not be compared to zero.  */
 
 	  uintmax_t hdt = dt / 2;
-	  time_t ht1 = time1 / 2;
-	  time_t ht0 = time0 / 2;
-	  time_t dht = ht1 - ht0;
+	  __time64_t ht1 = time1 / 2;
+	  __time64_t ht0 = time0 / 2;
+	  __time64_t dht = ht1 - ht0;
 
 	  if (2 < dht - hdt + 1)
 	    {
@@ -99,18 +99,18 @@ subtract (time_t time1, time_t time0)
 
 /* Return the difference between TIME1 and TIME0.  */
 double
-__difftime (time_t time1, time_t time0)
+__difftime64 (__time64_t time1, __time64_t time0)
 {
   /* Convert to double and then subtract if no double-rounding error could
      result.  */
 
-  if (TYPE_BITS (time_t) <= DBL_MANT_DIG
-      || (TYPE_FLOATING (time_t) && sizeof (time_t) < sizeof (long double)))
+  if (TYPE_BITS (__time64_t) <= DBL_MANT_DIG
+      || (TYPE_FLOATING (__time64_t) && sizeof (__time64_t) < sizeof (long double)))
     return (double) time1 - (double) time0;
 
   /* Likewise for long double.  */
 
-  if (TYPE_BITS (time_t) <= LDBL_MANT_DIG || TYPE_FLOATING (time_t))
+  if (TYPE_BITS (__time64_t) <= LDBL_MANT_DIG || TYPE_FLOATING (__time64_t))
     return (long double) time1 - (long double) time0;
 
   /* Subtract the smaller integer from the larger, convert the difference to
@@ -118,4 +118,17 @@ __difftime (time_t time1, time_t time0)
 
   return time1 < time0 ? - subtract (time0, time1) : subtract (time1, time0);
 }
+
+/* Provide a 32-bit wrapper if needed */
+
+#if __TIMESIZE != 64
+
+double
+__difftime (time_t time1, time_t time0)
+{
+  return __difftime64 (time1, time0);
+}
+
+#endif
+
 strong_alias (__difftime, difftime)

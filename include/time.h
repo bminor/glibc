@@ -129,6 +129,12 @@ extern char * __strptime_internal (const char *rp, const char *fmt,
 				   struct tm *tm, void *statep,
 				   locale_t locparam) attribute_hidden;
 
+#if __TIMESIZE == 64
+# define __difftime64 __difftime
+#else
+extern double __difftime64 (__time64_t time1, __time64_t time0);
+#endif
+
 extern double __difftime (time_t time1, time_t time0);
 
 
