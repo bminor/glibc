@@ -42,6 +42,7 @@ The following bugs are resolved with this release:
     (CVE-2016-3075)
   [20177] $dp is not initialized correctly in sysdeps/hppa/start.S
   [20357] Incorrect cos result for 1.5174239687223976
+  [21289] Fix symbol redirect for fts_set
 
 
 Version 2.23
