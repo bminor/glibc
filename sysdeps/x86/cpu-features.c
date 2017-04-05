@@ -18,6 +18,7 @@
 
 #include <cpuid.h>
 #include <cpu-features.h>
+#include <dl-hwcap.h>
 
 static void
 get_common_indeces (struct cpu_features *cpu_features,
@@ -302,4 +303,12 @@ no_cpuid:
   cpu_features->family = family;
   cpu_features->model = model;
   cpu_features->kind = kind;
+
+  /* Reuse dl_hwcap and dl_hwcap_mask for x86.  */
+  GLRO(dl_hwcap) = 0;
+  if (CPU_FEATURES_CPU_P (cpu_features, SSE2))
+    GLRO(dl_hwcap) |= HWCAP_X86_SSE2;
+  if (CPU_FEATURES_ARCH_P (cpu_features, AVX2_Usable))
+    GLRO(dl_hwcap) |= HWCAP_X86_AVX2;
+  GLRO(dl_hwcap_mask) = HWCAP_IMPORTANT;
 }

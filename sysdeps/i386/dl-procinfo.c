@@ -79,6 +79,22 @@ PROCINFO_CLASS const char _dl_x86_cap_flags[32][8]
 #endif
 
 #if !defined PROCINFO_DECL && defined SHARED
+  ._dl_x86_hwcap_flags
+#else
+PROCINFO_CLASS const char _dl_x86_hwcap_flags[2][8]
+#endif
+#ifndef PROCINFO_DECL
+= {
+    "sse2", "avx2"
+  }
+#endif
+#if !defined SHARED || defined PROCINFO_DECL
+;
+#else
+,
+#endif
+
+#if !defined PROCINFO_DECL && defined SHARED
   ._dl_x86_platforms
 #else
 PROCINFO_CLASS const char _dl_x86_platforms[4][5]

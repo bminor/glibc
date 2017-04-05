@@ -53,5 +53,21 @@ PROCINFO_CLASS struct cpu_features _dl_x86_cpu_features
 ,
 #endif
 
+#if !defined PROCINFO_DECL && defined SHARED
+  ._dl_x86_hwcap_flags
+#else
+PROCINFO_CLASS const char _dl_x86_hwcap_flags[2][8]
+#endif
+#ifndef PROCINFO_DECL
+= {
+    "sse2", "avx2"
+  }
+#endif
+#if !defined SHARED || defined PROCINFO_DECL
+;
+#else
+,
+#endif
+
 #undef PROCINFO_DECL
 #undef PROCINFO_CLASS
