@@ -1,3 +1,7 @@
+2017-04-11  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* posix/globtest.sh: Add cleanup routine on trap 0.
+
 2017-03-31  Slava Barinov  <v.barinov@samsung.com>
 
 	[BZ #21289]
