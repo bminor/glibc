@@ -63,6 +63,9 @@ Version 2.22.1
 * The Sun RPC UDP client could exhaust all available stack space when
   flooded with crafted ICMP and UDP messages.  Reported by Aldy Hernandez'
   alloca plugin for GCC.  (CVE-2016-4429)
+
+* A use-after-free vulnerability in clntudp_call in the Sun RPC system has been
+  fixed (CVE-2017-12133).
 
 Version 2.22
 
