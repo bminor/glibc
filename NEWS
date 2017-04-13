@@ -7,6 +7,11 @@ using `glibc' in the "product" field.
 
 Version 2.25.1
 
+Security related changes:
+
+* The DNS stub resolver limits the advertised UDP buffer size to 1200 bytes,
+  to avoid fragmentation-based spoofing attacks.
+
 The following bugs are resolved with this release:
 
   [20257] sunrpc: clntudp_call does not enforce timeout when receiving data
