@@ -40,6 +40,9 @@ ifeq ($(have-thread-library),yes)
 extra-libs += libanl
 routines += gai_sigqueue
 tests += tst-res_hconf_reorder
+
+# This test sends millions of packets and is rather slow.
+xtests += tst-resolv-qtypes
 endif
 extra-libs-others = $(extra-libs)
 libresolv-routines := gethnamaddr res_comp res_debug	\
@@ -117,3 +120,5 @@ tst-leaks2-ENV = MALLOC_TRACE=$(objpfx)tst-leaks2.mtrace
 $(objpfx)mtrace-tst-leaks2.out: $(objpfx)tst-leaks2.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks2.mtrace > $@; \
 	$(evaluate-test)
+
+$(objpfx)tst-resolv-qtypes: $(objpfx)libresolv.so $(shared-thread-library)

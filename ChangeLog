@@ -1,3 +1,68 @@
+2017-01-05  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21026]
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/syscalls.list
+	(readahead): New syscall entry.
+
+2017-04-07  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #21258]
+	* sysdeps/x86_64/dl-trampoline.S (_dl_runtime_resolve_opt):
+	Define only if _dl_runtime_resolve is defined to
+	_dl_runtime_resolve_sse_vex.
+	* sysdeps/x86_64/dl-trampoline.h (_dl_runtime_resolve_opt):
+	Fallthrough to _dl_runtime_resolve_sse_vex.
+
+2017-04-03  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #21253]
+	* sysdeps/unix/sysv/linux/spawni.c (__spawnix): Increase argv_size
+	slack space by 32KiB.
+
+2017-03-31  Slava Barinov  <v.barinov@samsung.com>
+
+	[BZ #21289]
+	* io/fts.h (fts_set): Replace __REDIRECT with __REDIRECT_NTH.
+
+2017-03-20  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #21275]
+	* sysdeps/unix/sysv/linux/spawni.c [__ia64__] (CLONE): Rename
+	__stack to __stackbase.
+	(STACK): Invert _STACK_GROWS_DOWN and _STACK_GROWS_UP order of
+	checks so we can include defined(__ia64__) first.
+
+2017-03-15  John David Anglin  <danglin@gcc.gnu.org>
+
+	* sysdeps/hppa/dl-machine.h (DL_STACK_END): Define.
+	(RTLD_START): Don't record stack end address in _dl_start_user.
+
+2017-01-30  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #21081]
+	* sysdeps/x86_64/multiarch/memset-vec-unaligned-erms.S
+	(L(stosb)): Add VZEROUPPER before ret.
+
+2016-11-28  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #20750]
+	* sysdeps/x86_64/sysdep.h (JUMPTARGET): Check SHARED instead
+	of PIC.
+
+2016-12-31  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #18784]
+	CVE-2015-5180
+	* include/arpa/nameser_compat.h (T_QUERY_A_AND_AAAA): Rename from
+	T_UNSPEC.  Adjust value.
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyname4_r): Use it.
+	* resolv/res_query.c (__libc_res_nquery): Likewise.
+	* resolv/res_mkquery.c (res_nmkquery): Check for out-of-range
+	QTYPEs.
+	* resolv/tst-resolv-qtypes.c: New file.
+	* resolv/Makefile (xtests): Add tst-resolv-qtypes.
+	(tst-resolv-qtypes): Link against libresolv and libpthread.
+
 2017-02-02  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* sysdeps/generic/unsecvars.h: Add GLIBC_TUNABLES.
