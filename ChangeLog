@@ -1,3 +1,10 @@
+2017-04-28  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	[BZ #21280]
+	* sysdeps/powerpc/power7/fpu/s_logbl.c (__logbl): Ignore the
+	signal of subnormals and adjust the exponent of power of 2 down
+	when low part has opposite sign.
+
 2017-07-26  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #21666]
