@@ -297,30 +297,27 @@ __malloc_assert (const char *assertion, const char *file, unsigned int line,
 }
 #endif
 
-#ifndef USE_TCACHE
-# define USE_TCACHE 0
-#endif
 #if USE_TCACHE
 /* We want 64 entries.  This is an arbitrary limit, which tunables can reduce.  */
-# define MAX_TCACHE_SIZE	(MALLOC_ALIGNMENT * 63)
-# define TCACHE_IDX		((MAX_TCACHE_SIZE / MALLOC_ALIGNMENT) + 1)
-# define size2tidx_(bytes)	(((bytes) + MALLOC_ALIGNMENT - 1) / MALLOC_ALIGNMENT)
+# define TCACHE_MAX_BINS		64
+# define MAX_TCACHE_SIZE	tidx2usize (TCACHE_MAX_BINS-1)
 
-# define tidx2csize(idx)	((idx) * MALLOC_ALIGNMENT + SIZE_SZ)
-# define tidx2usize(idx)	((idx) * MALLOC_ALIGNMENT)
+/* Only used to pre-fill the tunables.  */
+# define tidx2usize(idx)	(((size_t) idx) * MALLOC_ALIGNMENT + MINSIZE - SIZE_SZ)
 
-/* When "x" is a user-provided size.  */
-# define usize2tidx(x) size2tidx_ (x)
 /* When "x" is from chunksize().  */
-# define csize2tidx(x) size2tidx_ ((x) - SIZE_SZ)
+# define csize2tidx(x) (((x) - MINSIZE + MALLOC_ALIGNMENT - 1) / MALLOC_ALIGNMENT)
+/* When "x" is a user-provided size.  */
+# define usize2tidx(x) csize2tidx (request2size (x))
 
-/* Rounds up, so...
-   idx 0   bytes 0
-   idx 1   bytes 1..8
-   idx 2   bytes 9..16
+/* With rounding and alignment, the bins are...
+   idx 0   bytes 0..24 (64-bit) or 0..12 (32-bit)
+   idx 1   bytes 25..40 or 13..20
+   idx 2   bytes 41..56 or 21..28
    etc.  */
 
-/* This is another arbitrary limit, which tunables can change.  */
+/* This is another arbitrary limit, which tunables can change.  Each
+   tcache bin will hold at most this number of chunks.  */
 # define TCACHE_FILL_COUNT 7
 #endif
 
@@ -1741,12 +1738,12 @@ struct malloc_par
 
 #if USE_TCACHE
   /* Maximum number of buckets to use.  */
-  size_t tcache_max;
+  size_t tcache_bins;
   size_t tcache_max_bytes;
   /* Maximum number of chunks in each bucket.  */
   size_t tcache_count;
   /* Maximum number of chunks to remove from the unsorted list, which
-     don't match.  */
+     aren't used to prefill the cache.  */
   size_t tcache_unsorted_limit;
 #endif
 };
@@ -1790,18 +1787,11 @@ static struct malloc_par mp_ =
 #if USE_TCACHE
   ,
   .tcache_count = TCACHE_FILL_COUNT,
-  .tcache_max = TCACHE_IDX,
-  .tcache_max_bytes = tidx2usize (TCACHE_IDX-1),
-  .tcache_unsorted_limit = 0 /* No limit */
+  .tcache_bins = TCACHE_MAX_BINS,
+  .tcache_max_bytes = tidx2usize (TCACHE_MAX_BINS-1),
+  .tcache_unsorted_limit = 0 /* No limit.  */
 #endif
 };
-
-/*  Non public mallopt parameters.  */
-#if USE_TCACHE
-# define M_TCACHE_COUNT  -9
-# define M_TCACHE_MAX  -10
-# define M_TCACHE_UNSORTED_LIMIT  -11
-#endif
 
 /* Maximum size of memory handled in fastbins.  */
 static INTERNAL_SIZE_T global_max_fast;
@@ -2928,35 +2918,43 @@ mremap_chunk (mchunkptr p, size_t new_size)
 
 #if USE_TCACHE
 
-typedef struct TCacheEntry {
-  struct TCacheEntry *next;
-} TCacheEntry;
+/* We overlay this structure on the user-data portion of a chunk when
+   the chunk is stored in the per-thread cache.  */
+typedef struct tcache_entry {
+  struct tcache_entry *next;
+} tcache_entry;
 
 /* There is one of these for each thread, which contains the
-   per-thread cache (hence "TCache").  Keeping overall size low is
-   mildly important.  Note that COUNTS and ENTRIES are redundant, this
-   is for performance reasons.  */
-typedef struct TCache {
-  char counts[TCACHE_IDX];
-  TCacheEntry *entries[TCACHE_IDX];
-} TCache;
+   per-thread cache (hence "tcache_perthread_struct").  Keeping
+   overall size low is mildly important.  Note that COUNTS and ENTRIES
+   are redundant, this is for performance reasons.  */
+typedef struct tcache_perthread_struct {
+  char counts[TCACHE_MAX_BINS];
+  tcache_entry *entries[TCACHE_MAX_BINS];
+} tcache_perthread_struct;
 
 static __thread char tcache_shutting_down = 0;
-static __thread TCache *tcache = NULL;
+static __thread tcache_perthread_struct *tcache = NULL;
 
+/* Caller must ensure that we know tc_idx is valid and there's room
+   for more chunks.  */
 static void
 tcache_put (mchunkptr chunk, size_t tc_idx)
 {
-  TCacheEntry *e = (TCacheEntry *) chunk2mem (chunk);
+  tcache_entry *e = (tcache_entry *) chunk2mem (chunk);
+  assert (tc_idx < TCACHE_MAX_BINS);
   e->next = tcache->entries[tc_idx];
   tcache->entries[tc_idx] = e;
   ++(tcache->counts[tc_idx]);
 }
 
+/* Caller must ensure that we know tc_idx is valid and there's
+   available chunks to remove.  */
 static void *
 tcache_get (size_t tc_idx)
 {
-  TCacheEntry *e = tcache->entries[tc_idx];
+  tcache_entry *e = tcache->entries[tc_idx];
+  assert (tc_idx < TCACHE_MAX_BINS);
   tcache->entries[tc_idx] = e->next;
   --(tcache->counts[tc_idx]);
   return (void *) e;
@@ -2966,17 +2964,17 @@ static void __attribute__ ((section ("__libc_thread_freeres_fn")))
 tcache_thread_freeres (void)
 {
   int i;
-  TCache *tcache_tmp = tcache;
+  tcache_perthread_struct *tcache_tmp = tcache;
 
   if (!tcache)
     return;
 
   tcache = NULL;
 
-  for (i = 0; i < TCACHE_IDX; ++i) {
+  for (i = 0; i < TCACHE_MAX_BINS; ++i) {
     while (tcache_tmp->entries[i])
       {
-	TCacheEntry *e = tcache_tmp->entries[i];
+	tcache_entry *e = tcache_tmp->entries[i];
 	tcache_tmp->entries[i] = e->next;
 	__libc_free (e);
       }
@@ -2993,7 +2991,7 @@ tcache_init(void)
 {
   mstate ar_ptr;
   void *victim = 0;
-  const size_t bytes = sizeof (TCache);
+  const size_t bytes = sizeof (tcache_perthread_struct);
 
   if (tcache_shutting_down)
     return;
@@ -3010,10 +3008,15 @@ tcache_init(void)
   if (ar_ptr != NULL)
     __libc_lock_unlock (ar_ptr->mutex);
 
+  /* In a low memory situation, we may not be able to allocate memory
+     - in which case, we just keep trying later.  However, we
+     typically do this very early, so either there is sufficient
+     memory, or there isn't enough memory to do non-trivial
+     allocations anyway.  */
   if (victim)
     {
-      tcache = (TCache *) victim;
-      memset (tcache, 0, sizeof (TCache));
+      tcache = (tcache_perthread_struct *) victim;
+      memset (tcache, 0, sizeof (tcache_perthread_struct));
     }
 
 }
@@ -3043,8 +3046,8 @@ __libc_malloc (size_t bytes)
 
   MAYBE_INIT_TCACHE ();
 
-  if (tc_idx < mp_.tcache_max
-      && tc_idx < TCACHE_IDX /* to appease gcc */
+  if (tc_idx < mp_.tcache_bins
+      && tc_idx < TCACHE_MAX_BINS /* to appease gcc */
       && tcache
       && tcache->entries[tc_idx] != NULL)
     {
@@ -3542,19 +3545,22 @@ _int_malloc (mstate av, size_t bytes)
      can try it without checking, which saves some time on this fast path.
    */
 
+#define REMOVE_FB(fb, victim, pp)			\
+  do							\
+    {							\
+      victim = pp;					\
+      if (victim == NULL)				\
+	break;						\
+    }							\
+  while ((pp = catomic_compare_and_exchange_val_acq (fb, victim->fd, victim)) \
+	 != victim);					\
+
   if ((unsigned long) (nb) <= (unsigned long) (get_max_fast ()))
     {
       idx = fastbin_index (nb);
       mfastbinptr *fb = &fastbin (av, idx);
       mchunkptr pp = *fb;
-      do
-        {
-          victim = pp;
-          if (victim == NULL)
-            break;
-        }
-      while ((pp = catomic_compare_and_exchange_val_acq (fb, victim->fd, victim))
-             != victim);
+      REMOVE_FB (fb, victim, pp);
       if (victim != 0)
         {
           if (__builtin_expect (fastbin_index (chunksize (victim)) != idx, 0))
@@ -3569,27 +3575,18 @@ _int_malloc (mstate av, size_t bytes)
 	  /* While we're here, if we see other chunks of the same size,
 	     stash them in the tcache.  */
 	  size_t tc_idx = csize2tidx (nb);
-	  if (tcache && tc_idx < mp_.tcache_max)
+	  if (tcache && tc_idx < mp_.tcache_bins)
 	    {
 	      mchunkptr tc_victim;
-	      int found = 0;
 
 	      /* While bin not empty and tcache not full, copy chunks over.  */
 	      while (tcache->counts[tc_idx] < mp_.tcache_count
 		     && (pp = *fb) != NULL)
 		{
-		  do
-		    {
-	              tc_victim = pp;
-	              if (tc_victim == NULL)
-	                break;
-	            }
-	          while ((pp = catomic_compare_and_exchange_val_acq (fb, tc_victim->fd, tc_victim))
-	                 != tc_victim);
+		  REMOVE_FB (fb, tc_victim, pp);
 		  if (tc_victim != 0)
 		    {
 		      tcache_put (tc_victim, tc_idx);
-		      ++found;
 	            }
 		}
 	    }
@@ -3636,10 +3633,9 @@ _int_malloc (mstate av, size_t bytes)
 	  /* While we're here, if we see other chunks of the same size,
 	     stash them in the tcache.  */
 	  size_t tc_idx = csize2tidx (nb);
-	  if (tcache && tc_idx < mp_.tcache_max)
+	  if (tcache && tc_idx < mp_.tcache_bins)
 	    {
 	      mchunkptr tc_victim;
-	      int found = 0;
 
 	      /* While bin not empty and tcache not full, copy chunks over.  */
 	      while (tcache->counts[tc_idx] < mp_.tcache_count
@@ -3655,7 +3651,6 @@ _int_malloc (mstate av, size_t bytes)
 		      bck->fd = bin;
 
 		      tcache_put (tc_victim, tc_idx);
-		      ++found;
 	            }
 		}
 	    }
@@ -3701,7 +3696,7 @@ _int_malloc (mstate av, size_t bytes)
 #if USE_TCACHE
   INTERNAL_SIZE_T tcache_nb = 0;
   size_t tc_idx = csize2tidx (nb);
-  if (tcache && tc_idx < mp_.tcache_max)
+  if (tcache && tc_idx < mp_.tcache_bins)
     tcache_nb = nb;
   int return_cached = 0;
 
@@ -4169,7 +4164,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
     size_t tc_idx = csize2tidx (size);
 
     if (tcache
-	&& tc_idx < mp_.tcache_max
+	&& tc_idx < mp_.tcache_bins
 	&& tcache->counts[tc_idx] < mp_.tcache_count)
       {
 	tcache_put (p, tc_idx);
@@ -5144,11 +5139,11 @@ static inline int
 __always_inline
 do_set_tcache_max (size_t value)
 {
-  LIBC_PROBE (memory_mallopt_tcache_max_bytes, 2, value, mp_.tcache_max_bytes);
   if (value >= 0 && value <= MAX_TCACHE_SIZE)
     {
+      LIBC_PROBE (memory_tunable_tcache_max_bytes, 2, value, mp_.tcache_max_bytes);
       mp_.tcache_max_bytes = value;
-      mp_.tcache_max = usize2tidx (value) + 1;
+      mp_.tcache_bins = csize2tidx (request2size(value)) + 1;
     }
   return 1;
 }
@@ -5157,7 +5152,7 @@ static inline int
 __always_inline
 do_set_tcache_count (size_t value)
 {
-  LIBC_PROBE (memory_mallopt_tcache_count, 2, value, mp_.tcache_count);
+  LIBC_PROBE (memory_tunable_tcache_count, 2, value, mp_.tcache_count);
   mp_.tcache_count = value;
   return 1;
 }
@@ -5166,7 +5161,7 @@ static inline int
 __always_inline
 do_set_tcache_unsorted_limit (size_t value)
 {
-  LIBC_PROBE (memory_mallopt_tcache_unsorted_limit, 2, value, mp_.tcache_unsorted_limit);
+  LIBC_PROBE (memory_tunable_tcache_unsorted_limit, 2, value, mp_.tcache_unsorted_limit);
   mp_.tcache_unsorted_limit = value;
   return 1;
 }
@@ -5231,20 +5226,6 @@ __libc_mallopt (int param_number, int value)
       if (value > 0)
 	do_set_arena_test (value);
       break;
-#if USE_TCACHE
-    case M_TCACHE_COUNT:
-      if (value >= 0)
-	do_set_tcache_count (value);
-      break;
-    case M_TCACHE_MAX:
-      if (value >= 0)
-	do_set_tcache_max (value);
-      break;
-    case M_TCACHE_UNSORTED_LIMIT:
-      if (value >= 0)
-	do_set_tcache_unsorted_limit (value);
-      break;
-#endif
     }
   __libc_lock_unlock (av->mutex);
   return res;

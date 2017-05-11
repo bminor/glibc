@@ -78,15 +78,15 @@ glibc {
     }
     tcache_max {
       type: SIZE_T
-      env_alias: MALLOC_TCACHE_MAX
+      security_level: SXID_IGNORE
     }
     tcache_count {
       type: SIZE_T
-      env_alias: MALLOC_TCACHE_COUNT
+      security_level: SXID_IGNORE
     }
     tcache_unsorted_limit {
       type: SIZE_T
-      env_alias: MALLOC_TCACHE_UNSORTED_LIMIT
+      security_level: SXID_IGNORE
     }
   }
 }

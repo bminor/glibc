@@ -330,7 +330,8 @@ ptmalloc_init (void)
 #if USE_TCACHE
   TUNABLE_SET_VAL_WITH_CALLBACK (tcache_max, NULL, set_tcache_max);
   TUNABLE_SET_VAL_WITH_CALLBACK (tcache_count, NULL, set_tcache_count);
-  TUNABLE_SET_VAL_WITH_CALLBACK (tcache_unsorted_limit, NULL, set_tcache_unsorted_limit);
+  TUNABLE_SET_VAL_WITH_CALLBACK (tcache_unsorted_limit, NULL,
+				 set_tcache_unsorted_limit);
 #endif
   __libc_lock_unlock (main_arena.mutex);
 #else
@@ -381,23 +382,7 @@ ptmalloc_init (void)
                   if (memcmp (envline, "ARENA_TEST", 10) == 0)
                     __libc_mallopt (M_ARENA_TEST, atoi (&envline[11]));
                 }
-#if USE_TCACHE
-              if (!__builtin_expect (__libc_enable_secure, 0))
-                {
-                  if (memcmp (envline, "TCACHE_MAX", 10) == 0)
-                    __libc_mallopt (M_TCACHE_MAX, atoi (&envline[11]));
-                }
-#endif
               break;
-#if USE_TCACHE
-            case 12:
-              if (!__builtin_expect (__libc_enable_secure, 0))
-                {
-                  if (memcmp (envline, "TCACHE_COUNT", 12) == 0)
-                    __libc_mallopt (M_TCACHE_COUNT, atoi (&envline[13]));
-                }
-	      break;
-#endif
             case 15:
               if (!__builtin_expect (__libc_enable_secure, 0))
                 {
@@ -407,15 +392,6 @@ ptmalloc_init (void)
                     __libc_mallopt (M_MMAP_THRESHOLD, atoi (&envline[16]));
                 }
               break;
-#if USE_TCACHE
-            case 21:
-              if (!__builtin_expect (__libc_enable_secure, 0))
-                {
-                  if (memcmp (envline, "TCACHE_UNSORTED_LIMIT", 21) == 0)
-                    __libc_mallopt (M_TCACHE_UNSORTED_LIMIT, atoi (&envline[22]));
-                }
-	      break;
-#endif
             default:
               break;
             }
