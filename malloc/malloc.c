@@ -2927,7 +2927,8 @@ typedef struct tcache_entry {
 /* There is one of these for each thread, which contains the
    per-thread cache (hence "tcache_perthread_struct").  Keeping
    overall size low is mildly important.  Note that COUNTS and ENTRIES
-   are redundant, this is for performance reasons.  */
+   are redundant (we could have just counted the linked list each
+   time), this is for performance reasons.  */
 typedef struct tcache_perthread_struct {
   char counts[TCACHE_MAX_BINS];
   tcache_entry *entries[TCACHE_MAX_BINS];
@@ -2955,6 +2956,7 @@ tcache_get (size_t tc_idx)
 {
   tcache_entry *e = tcache->entries[tc_idx];
   assert (tc_idx < TCACHE_MAX_BINS);
+  assert (tcache->entries[tc_idx] > 0);
   tcache->entries[tc_idx] = e->next;
   --(tcache->counts[tc_idx]);
   return (void *) e;
