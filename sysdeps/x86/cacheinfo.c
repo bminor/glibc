@@ -745,6 +745,9 @@ intel_bug_no_cache_info:
 #endif
     }
 
+  if (cpu_features->cache.data_size != 0)
+    data = cpu_features->cache.data_size;
+
   if (data > 0)
     {
       __x86_raw_data_cache_size_half = data / 2;
@@ -754,6 +757,9 @@ intel_bug_no_cache_info:
       __x86_data_cache_size_half = data / 2;
       __x86_data_cache_size = data;
     }
+
+  if (cpu_features->cache.shared_size != 0)
+    shared = cpu_features->cache.shared_size;
 
   if (shared > 0)
     {
@@ -768,7 +774,10 @@ intel_bug_no_cache_info:
   /* The large memcpy micro benchmark in glibc shows that 6 times of
      shared cache size is the approximate value above which non-temporal
      store becomes faster.  */
-  __x86_shared_non_temporal_threshold = __x86_shared_cache_size * 6;
+  __x86_shared_non_temporal_threshold
+    = (cpu_features->cache.non_temporal_threshold != 0
+       ? cpu_features->cache.non_temporal_threshold
+       : __x86_shared_cache_size * 6);
 }
 
 #endif

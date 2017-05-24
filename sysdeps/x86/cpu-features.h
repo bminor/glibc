@@ -185,6 +185,18 @@
 
 #else	/* __ASSEMBLER__ */
 
+struct cache_info
+{
+  /* Data cache size for use in memory and string routines, typically
+     L1 size.  */
+  long int data_size;
+  /* Shared cache size for use in memory and string routines, typically
+     L2 or L3 size.  */
+  long int shared_size;
+  /* Threshold to use non temporal store.  */
+  long int non_temporal_threshold;
+};
+
 enum
   {
     COMMON_CPUID_INDEX_1 = 0,
@@ -214,6 +226,7 @@ struct cpu_features
   unsigned int family;
   unsigned int model;
   unsigned int feature[FEATURE_INDEX_MAX];
+  struct cache_info cache;
 };
 
 /* Used from outside of glibc to get access to the CPU features
