@@ -25,7 +25,7 @@ include ../Makeconfig
 aux			:= nis_hash
 
 ifeq ($(build-obsolete-nsl),yes)
-headers			:= $(wildcard rpcsvc/*.[hx])
+#headers			:= $(wildcard rpcsvc/*.[hx])
 
 # These are the databases available for the nis (and perhaps later nisplus)
 # service.  This must be a superset of the services in nss.

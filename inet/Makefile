@@ -24,7 +24,10 @@ include ../Makeconfig
 
 headers	:= netinet/ether.h netinet/in.h netinet/in_systm.h \
 	   netinet/if_ether.h netinet/igmp.h \
-	   netinet/tcp.h netinet/ip.h $(wildcard arpa/*.h protocols/*.h) \
+	   netinet/tcp.h netinet/ip.h \
+	   arpa/ftp.h arpa/inet.h arpa/telnet.h arpa/tftp.h \
+	   protocols/routed.h protocols/rwhod.h protocols/talkd.h \
+	   protocols/timed.h \
 	   aliases.h ifaddrs.h netinet/ip6.h netinet/icmp6.h bits/in.h
 
 routines := htonl htons		\

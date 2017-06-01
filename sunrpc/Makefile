@@ -60,7 +60,7 @@ generated += $(rpcsvc:%.x=rpcsvc/%.h) $(rpcsvc:%.x=x%.c) $(rpcsvc:%.x=x%.stmp) \
 generated-dirs += rpcsvc
 
 ifeq ($(link-obsolete-rpc),yes)
-headers += $(headers-sunrpc)
+#headers += $(headers-sunrpc)
 endif
 
 ifeq ($(build-shared),yes)
@@ -112,7 +112,7 @@ endif
 endif
 
 ifeq ($(link-obsolete-rpc),yes)
-headers += $(rpcsvc:%.x=rpcsvc/%.h)
+#headers += $(rpcsvc:%.x=rpcsvc/%.h)
 extra-libs := librpcsvc
 extra-libs-others := librpcsvc # Make it in `others' pass, not `lib' pass.
 librpcsvc-routines = $(rpcsvc:%.x=x%)
