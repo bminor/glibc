@@ -1,5 +1,11 @@
 2017-06-02  Florian Weimer  <fweimer@redhat.com>
 
+	* sysdeps/posix/getaddrinfo.c (gethosts): Eliminate another
+	strdupa.
+	(getcanonname): Use __strdup instead of strdup.
+
+2017-06-02  Florian Weimer  <fweimer@redhat.com>
+
 	* sysdeps/posix/getaddrinfo.c (getcanonname): New function.
 	(gaih_inet): Remove malloc_canonbuf variable.  Call getcanonname.
 
