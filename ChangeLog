@@ -1,3 +1,8 @@
+2017-06-03  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Call __strdup instead
+	of strdup.
+
 2017-06-02  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (gethosts): Eliminate another
