@@ -1,3 +1,9 @@
+2017-06-07  Arjun Shankar  <arjun.is@lostca.se>
+
+	* sysdeps/unix/sysv/linux/tst-clone2.c: Do not
+	include test-skeleton.c.
+	Include support/check.h and support/test-driver.c.
+
 2016-11-24  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/nptl/fork.c (__libc_fork): Remove pid cache setting.
