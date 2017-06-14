@@ -1,3 +1,8 @@
+2017-06-14  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/i386/i686/multiarch/strcspn-c.c: Add IS_IN (libc) guard.
+	* sysdeps/i386/i686/multiarch/varshift.c: Likewise.
+
 2017-03-07  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	[BZ #21209]
