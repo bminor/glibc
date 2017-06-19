@@ -1,3 +1,10 @@
+2017-06-19  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #21624]
+	CVE-2017-1000366
+	* elf/rtld.c (process_envvars): Ignore LD_LIBRARY_PATH for
+	__libc_enable_secure.
+
 2017-04-11  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* posix/globtest.sh: Add cleanup routine on trap 0.
