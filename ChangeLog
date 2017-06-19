@@ -1,5 +1,12 @@
 2017-06-19  Florian Weimer  <fweimer@redhat.com>
 
+	* elf/rtld.c (SECURE_NAME_LIMIT, SECURE_PATH_LIMIT): Define.
+	(dso_name_valid_for_suid): New function.
+	(handle_ld_preload): Likewise.
+	(dl_main): Call it.  Remove alloca.
+
+2017-06-19  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #21624]
 	CVE-2017-1000366
 	* elf/rtld.c (process_envvars): Ignore LD_LIBRARY_PATH for
