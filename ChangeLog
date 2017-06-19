@@ -1,3 +1,10 @@
+2017-06-19  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #21624]
+	CVE-2017-1000366
+	* elf/rtld.c (process_envvars): Ignore LD_LIBRARY_PATH for
+	__libc_enable_secure.
+
 2017-02-01  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/m68k/m680x0/m68020/atomic-machine.h

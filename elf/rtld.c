@@ -2437,7 +2437,8 @@ process_envvars (enum mode *modep)
 
 	case 12:
 	  /* The library search path.  */
-	  if (memcmp (envline, "LIBRARY_PATH", 12) == 0)
+	  if (!__libc_enable_secure
+	      && memcmp (envline, "LIBRARY_PATH", 12) == 0)
 	    {
 	      library_path = &envline[13];
 	      break;
