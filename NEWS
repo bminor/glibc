@@ -43,6 +43,7 @@ The following bugs are resolved with this release:
   [20177] $dp is not initialized correctly in sysdeps/hppa/start.S
   [20357] Incorrect cos result for 1.5174239687223976
   [21289] Fix symbol redirect for fts_set
+  [21624] Unsafe alloca allows local attackers to alias stack and heap (CVE-2017-1000366)
 
 
 Version 2.23
