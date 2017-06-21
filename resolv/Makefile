@@ -43,6 +43,7 @@ routines += gai_sigqueue
 tests += \
   tst-bug18665 \
   tst-bug18665-tcp \
+  tst-inet_pton \
   tst-res_hconf_reorder \
   tst-res_use_inet6 \
   tst-resolv-basic \
