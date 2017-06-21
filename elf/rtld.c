@@ -99,13 +99,120 @@ uintptr_t __pointer_chk_guard_local
 strong_alias (__pointer_chk_guard_local, __pointer_chk_guard)
 #endif
 
+/* Length limits for names and paths, to protect the dynamic linker,
+   particularly when __libc_enable_secure is active.  */
+#ifdef NAME_MAX
+# define SECURE_NAME_LIMIT NAME_MAX
+#else
+# define SECURE_NAME_LIMIT 255
+#endif
+#ifdef PATH_MAX
+# define SECURE_PATH_LIMIT PATH_MAX
+#else
+# define SECURE_PATH_LIMIT 1024
+#endif
 
-/* List of auditing DSOs.  */
+/* Check that AT_SECURE=0, or that the passed name does not contain
+   directories and is not overly long.  Reject empty names
+   unconditionally.  */
+static bool
+dso_name_valid_for_suid (const char *p)
+{
+  if (__glibc_unlikely (__libc_enable_secure))
+    {
+      /* Ignore pathnames with directories for AT_SECURE=1
+	 programs, and also skip overlong names.  */
+      size_t len = strlen (p);
+      if (len >= SECURE_NAME_LIMIT || memchr (p, '/', len) != NULL)
+	return false;
+    }
+  return *p != '\0';
+}
+
+/* LD_AUDIT variable contents.  Must be processed before the
+   audit_list below.  */
+const char *audit_list_string;
+
+/* Cyclic list of auditing DSOs.  audit_list->next is the first
+   element.  */
 static struct audit_list
 {
   const char *name;
   struct audit_list *next;
 } *audit_list;
+
+/* Iterator for audit_list_string followed by audit_list.  */
+struct audit_list_iter
+{
+  /* Tail of audit_list_string still needing processing, or NULL.  */
+  const char *audit_list_tail;
+
+  /* The list element returned in the previous iteration.  NULL before
+     the first element.  */
+  struct audit_list *previous;
+
+  /* Scratch buffer for returning a name which is part of
+     audit_list_string.  */
+  char fname[SECURE_NAME_LIMIT];
+};
+
+/* Initialize an audit list iterator.  */
+static void
+audit_list_iter_init (struct audit_list_iter *iter)
+{
+  iter->audit_list_tail = audit_list_string;
+  iter->previous = NULL;
+}
+
+/* Iterate through both audit_list_string and audit_list.  */
+static const char *
+audit_list_iter_next (struct audit_list_iter *iter)
+{
+  if (iter->audit_list_tail != NULL)
+    {
+      /* First iterate over audit_list_string.  */
+      while (*iter->audit_list_tail != '\0')
+	{
+	  /* Split audit list at colon.  */
+	  size_t len = strcspn (iter->audit_list_tail, ":");
+	  if (len > 0 && len < sizeof (iter->fname))
+	    {
+	      memcpy (iter->fname, iter->audit_list_tail, len);
+	      iter->fname[len] = '\0';
+	    }
+	  else
+	    /* Do not return this name to the caller.  */
+	    iter->fname[0] = '\0';
+
+	  /* Skip over the substring and the following delimiter.  */
+	  iter->audit_list_tail += len;
+	  if (*iter->audit_list_tail == ':')
+	    ++iter->audit_list_tail;
+
+	  /* If the name is valid, return it.  */
+	  if (dso_name_valid_for_suid (iter->fname))
+	    return iter->fname;
+	  /* Otherwise, wrap around and try the next name.  */
+	}
+      /* Fall through to the procesing of audit_list.  */
+    }
+
+  if (iter->previous == NULL)
+    {
+      if (audit_list == NULL)
+	/* No pre-parsed audit list.  */
+	return NULL;
+      /* Start of audit list.  The first list element is at
+	 audit_list->next (cyclic list).  */
+      iter->previous = audit_list->next;
+      return iter->previous->name;
+    }
+  if (iter->previous == audit_list)
+    /* Cyclic list wrap-around.  */
+    return NULL;
+  iter->previous = iter->previous->next;
+  return iter->previous->name;
+}
 
 #ifndef HAVE_INLINED_SYSCALLS
 /* Set nonzero during loading and initialization of executable and
@@ -730,6 +837,42 @@ static const char *preloadlist attribute_relro;
 /* Nonzero if information about versions has to be printed.  */
 static int version_info attribute_relro;
 
+/* The LD_PRELOAD environment variable gives list of libraries
+   separated by white space or colons that are loaded before the
+   executable's dependencies and prepended to the global scope list.
+   (If the binary is running setuid all elements containing a '/' are
+   ignored since it is insecure.)  Return the number of preloads
+   performed.  */
+unsigned int
+handle_ld_preload (const char *preloadlist, struct link_map *main_map)
+{
+  unsigned int npreloads = 0;
+  const char *p = preloadlist;
+  char fname[SECURE_PATH_LIMIT];
+
+  while (*p != '\0')
+    {
+      /* Split preload list at space/colon.  */
+      size_t len = strcspn (p, " :");
+      if (len > 0 && len < sizeof (fname))
+	{
+	  memcpy (fname, p, len);
+	  fname[len] = '\0';
+	}
+      else
+	fname[0] = '\0';
+
+      /* Skip over the substring and the following delimiter.  */
+      p += len;
+      if (*p != '\0')
+	++p;
+
+      if (dso_name_valid_for_suid (fname))
+	npreloads += do_preload (fname, main_map, "LD_PRELOAD");
+    }
+  return npreloads;
+}
+
 static void
 dl_main (const ElfW(Phdr) *phdr,
 	 ElfW(Word) phnum,
@@ -1257,11 +1400,13 @@ of this helper program; chances are you did not intend to run this program.\n\
     GL(dl_rtld_map).l_tls_modid = _dl_next_tls_modid ();
 
   /* If we have auditing DSOs to load, do it now.  */
-  if (__glibc_unlikely (audit_list != NULL))
+  bool need_security_init = true;
+  if (__glibc_unlikely (audit_list != NULL)
+      || __glibc_unlikely (audit_list_string != NULL))
     {
-      /* Iterate over all entries in the list.  The order is important.  */
       struct audit_ifaces *last_audit = NULL;
-      struct audit_list *al = audit_list->next;
+      struct audit_list_iter al_iter;
+      audit_list_iter_init (&al_iter);
 
       /* Since we start using the auditing DSOs right away we need to
 	 initialize the data structures now.  */
@@ -1272,9 +1417,14 @@ of this helper program; chances are you did not intend to run this program.\n\
 	 use different values (especially the pointer guard) and will
 	 fail later on.  */
       security_init ();
+      need_security_init = false;
 
-      do
+      while (true)
 	{
+	  const char *name = audit_list_iter_next (&al_iter);
+	  if (name == NULL)
+	    break;
+
 	  int tls_idx = GL(dl_tls_max_dtv_idx);
 
 	  /* Now it is time to determine the layout of the static TLS
@@ -1283,7 +1433,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	     no DF_STATIC_TLS bit is set.  The reason is that we know
 	     glibc will use the static model.  */
 	  struct dlmopen_args dlmargs;
-	  dlmargs.fname = al->name;
+	  dlmargs.fname = name;
 	  dlmargs.map = NULL;
 
 	  const char *objname;
@@ -1296,7 +1446,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	    not_loaded:
 	      _dl_error_printf ("\
 ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
-				al->name, err_str);
+				name, err_str);
 	      if (malloced)
 		free ((char *) err_str);
 	    }
@@ -1400,10 +1550,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 		  goto not_loaded;
 		}
 	    }
-
-	  al = al->next;
 	}
-      while (al != audit_list->next);
 
       /* If we have any auditing modules, announce that we already
 	 have two objects loaded.  */
@@ -1481,23 +1628,8 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 
   if (__glibc_unlikely (preloadlist != NULL))
     {
-      /* The LD_PRELOAD environment variable gives list of libraries
-	 separated by white space or colons that are loaded before the
-	 executable's dependencies and prepended to the global scope
-	 list.  If the binary is running setuid all elements
-	 containing a '/' are ignored since it is insecure.  */
-      char *list = strdupa (preloadlist);
-      char *p;
-
       HP_TIMING_NOW (start);
-
-      /* Prevent optimizing strsep.  Speed is not important here.  */
-      while ((p = (strsep) (&list, " :")) != NULL)
-	if (p[0] != '\0'
-	    && (__builtin_expect (! __libc_enable_secure, 1)
-		|| strchr (p, '/') == NULL))
-	  npreloads += do_preload (p, main_map, "LD_PRELOAD");
-
+      npreloads += handle_ld_preload (preloadlist, main_map);
       HP_TIMING_NOW (stop);
       HP_TIMING_DIFF (diff, start, stop);
       HP_TIMING_ACCUM_NT (load_time, diff);
@@ -1682,7 +1814,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
   if (tcbp == NULL)
     tcbp = init_tls ();
 
-  if (__glibc_likely (audit_list == NULL))
+  if (__glibc_likely (need_security_init))
     /* Initialize security features.  But only if we have not done it
        earlier.  */
     security_init ();
@@ -2313,9 +2445,7 @@ process_dl_audit (char *str)
   char *p;
 
   while ((p = (strsep) (&str, ":")) != NULL)
-    if (p[0] != '\0'
-	&& (__builtin_expect (! __libc_enable_secure, 1)
-	    || strchr (p, '/') == NULL))
+    if (dso_name_valid_for_suid (p))
       {
 	/* This is using the local malloc, not the system malloc.  The
 	   memory can never be freed.  */
@@ -2379,7 +2509,7 @@ process_envvars (enum mode *modep)
 	      break;
 	    }
 	  if (memcmp (envline, "AUDIT", 5) == 0)
-	    process_dl_audit (&envline[6]);
+	    audit_list_string = &envline[6];
 	  break;
 
 	case 7:
@@ -2423,7 +2553,8 @@ process_envvars (enum mode *modep)
 
 	case 10:
 	  /* Mask for the important hardware capabilities.  */
-	  if (memcmp (envline, "HWCAP_MASK", 10) == 0)
+	  if (!__libc_enable_secure
+	      && memcmp (envline, "HWCAP_MASK", 10) == 0)
 	    GLRO(dl_hwcap_mask) = __strtoul_internal (&envline[11], NULL,
 						      0, 0);
 	  break;
@@ -2437,7 +2568,8 @@ process_envvars (enum mode *modep)
 
 	case 12:
 	  /* The library search path.  */
-	  if (memcmp (envline, "LIBRARY_PATH", 12) == 0)
+	  if (!__libc_enable_secure
+	      && memcmp (envline, "LIBRARY_PATH", 12) == 0)
 	    {
 	      library_path = &envline[13];
 	      break;

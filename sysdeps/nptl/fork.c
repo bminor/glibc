@@ -131,16 +131,6 @@ __libc_fork (void)
       call_function_static_weak (__malloc_fork_lock_parent);
     }
 
-#ifndef NDEBUG
-  pid_t ppid = THREAD_GETMEM (THREAD_SELF, tid);
-#endif
-
-  /* We need to prevent the getpid() code to update the PID field so
-     that, if a signal arrives in the child very early and the signal
-     handler uses getpid(), the value returned is correct.  */
-  pid_t parentpid = THREAD_GETMEM (THREAD_SELF, pid);
-  THREAD_SETMEM (THREAD_SELF, pid, -parentpid);
-
 #ifdef ARCH_FORK
   pid = ARCH_FORK ();
 #else
@@ -153,14 +143,9 @@ __libc_fork (void)
     {
       struct pthread *self = THREAD_SELF;
 
-      assert (THREAD_GETMEM (self, tid) != ppid);
-
       /* See __pthread_once.  */
       if (__fork_generation_pointer != NULL)
 	*__fork_generation_pointer += __PTHREAD_ONCE_FORK_GEN_INCR;
-
-      /* Adjust the PID field for the new process.  */
-      THREAD_SETMEM (self, pid, THREAD_GETMEM (self, tid));
 
 #if HP_TIMING_AVAIL
       /* The CPU clock of the thread and process have to be set to zero.  */
@@ -231,11 +216,6 @@ __libc_fork (void)
     }
   else
     {
-      assert (THREAD_GETMEM (THREAD_SELF, tid) == ppid);
-
-      /* Restore the PID value.  */
-      THREAD_SETMEM (THREAD_SELF, pid, parentpid);
-
       /* Release acquired locks in the multi-threaded case.  */
       if (multiple_threads)
 	{

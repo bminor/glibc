@@ -1,3 +1,211 @@
+2017-06-14  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/i386/i686/multiarch/strcspn-c.c: Add IS_IN (libc) guard.
+	* sysdeps/i386/i686/multiarch/varshift.c: Likewise.
+
+2017-03-07  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	[BZ #21209]
+	* elf/rtld.c (process_envvars): Ignore LD_HWCAP_MASK for
+	AT_SECURE processes.
+	* sysdeps/generic/unsecvars.h: Add LD_HWCAP_MASK.
+
+2017-06-19  Florian Weimer  <fweimer@redhat.com>
+
+	* elf/rtld.c (audit_list_string): New variable.
+	(audit_list): Update comment.
+	(struct audit_list_iter): Define.
+	(audit_list_iter_init, audit_list_iter_next): New function.
+	(dl_main): Use struct audit_list_iter to process audit modules.
+	(process_dl_audit): Call dso_name_valid_for_suid.
+	(process_envvars): Set audit_list_string instead of calling
+	process_dl_audit.
+
+2017-06-19  Florian Weimer  <fweimer@redhat.com>
+
+	* elf/rtld.c (SECURE_NAME_LIMIT, SECURE_PATH_LIMIT): Define.
+	(dso_name_valid_for_suid): New function.
+	(handle_ld_preload): Likewise.
+	(dl_main): Call it.  Remove alloca.
+
+2017-06-19  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #21624]
+	CVE-2017-1000366
+	* elf/rtld.c (process_envvars): Ignore LD_LIBRARY_PATH for
+	__libc_enable_secure.
+
+2017-02-01  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/m68k/m680x0/m68020/atomic-machine.h
+	(__arch_compare_and_exchange_val_64_acq, atomic_exchange_acq)
+	(atomic_exchange_and_add, atomic_add): Add casts to 64 bit asm
+	operands.
+
+2017-05-12  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #21386]
+	* sysdeps/nptl/fork.c (__libc_fork): Remove assertions on the
+	parent PID.  The assertion in the child is incorrect with PID
+	namespaces.
+
+2017-06-07  Arjun Shankar  <arjun.is@lostca.se>
+
+	* sysdeps/unix/sysv/linux/tst-clone2.c: Do not
+	include test-skeleton.c.
+	Include support/check.h and support/test-driver.c.
+
+2016-11-24  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/nptl/fork.c (__libc_fork): Remove pid cache setting.
+	* nptl/allocatestack.c (allocate_stack): Likewise.
+	(__reclaim_stacks): Likewise.
+	(setxid_signal_thread): Obtain pid through syscall.
+	* nptl/nptl-init.c (sigcancel_handler): Likewise.
+	(sighandle_setxid): Likewise.
+	* nptl/pthread_cancel.c (pthread_cancel): Likewise.
+	* sysdeps/unix/sysv/linux/pthread_kill.c (__pthread_kill): Likewise.
+	* sysdeps/unix/sysv/linux/pthread_sigqueue.c (pthread_sigqueue):
+	Likewise.
+	* sysdeps/unix/sysv/linux/createthread.c (create_thread): Likewise.
+	* sysdeps/unix/sysv/linux/raise.c (raise): Remove old behaviour
+	comment.
+	* sysdeps/unix/sysv/linux/getpid.c: Remove file.
+	* nptl/descr.h (struct pthread): Change comment about pid value.
+	* nptl/pthread_getattr_np.c (pthread_getattr_np): Remove thread
+	pid assert.
+	* sysdeps/unix/sysv/linux/pthread-pids.h (__pthread_initialize_pids):
+	Do not set pid value.
+	* nptl_db/td_ta_thr_iter.c (iterate_thread_list): Remove thread
+	pid cache check.
+	* nptl_db/td_thr_validate.c (td_thr_validate): Likewise.
+	* sysdeps/aarch64/nptl/tcb-offsets.sym: Remove pid offset.
+	* sysdeps/alpha/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/arm/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/hppa/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/i386/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/ia64/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/m68k/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/microblaze/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/mips/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/nios2/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/powerpc/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/s390/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/sh/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/sparc/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/tile/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/x86_64/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/clone.S: Remove pid and tid caching.
+	* sysdeps/unix/sysv/linux/alpha/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/arm/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/clone2.S: Likewise.
+	* sysdeps/unix/sysv/linux/mips/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/tile/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/vfork.S: Remove pid set and reset.
+	* sysdeps/unix/sysv/linux/alpha/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/arm/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/mips/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/tile/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/pt-vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/tst-clone2.c (f): Remove direct pthread
+	struct access.
+	(clone_test): Remove function.
+	(do_test): Rewrite to take in consideration pid is not cached anymore.
+
+2016-09-26  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysdep.h (__INTERNAL_SYSCALL0): New macro.
+	(__INTERNAL_SYSCALL1): Likewise.
+	(__INTERNAL_SYSCALL2): Likewise.
+	(__INTERNAL_SYSCALL3): Likewise.
+	(__INTERNAL_SYSCALL4): Likewise.
+	(__INTERNAL_SYSCALL5): Likewise.
+	(__INTERNAL_SYSCALL6): Likewise.
+	(__INTERNAL_SYSCALL7): Likewise.
+	(__INTERNAL_SYSCALL_NARGS_X): Likewise.
+	(__INTERNAL_SYSCALL_NARGS): Likewise.
+	(__INTERNAL_SYSCALL_DISP): Likewise.
+	(INTERNAL_SYSCALL_CALL): Likewise.
+	(__SYSCALL0): Rename to __INLINE_SYSCALL0.
+	(__SYSCALL1): Rename to __INLINE_SYSCALL1.
+	(__SYSCALL2): Rename to __INLINE_SYSCALL2.
+	(__SYSCALL3): Rename to __INLINE_SYSCALL3.
+	(__SYSCALL4): Rename to __INLINE_SYSCALL4.
+	(__SYSCALL5): Rename to __INLINE_SYSCALL5.
+	(__SYSCALL6): Rename to __INLINE_SYSCALL6.
+	(__SYSCALL7): Rename to __INLINE_SYSCALL7.
+	(__SYSCALL_NARGS_X): Rename to __INLINE_SYSCALL_NARGS_X.
+	(__SYSCALL_NARGS): Rename to __INLINE_SYSCALL_NARGS.
+	(__SYSCALL_DISP): Rename to __INLINE_SYSCALL_DISP.
+	(__SYSCALL_CALL): Rename to INLINE_SYSCALL_CALL.
+	(SYSCALL_CANCEL): Replace __SYSCALL_CALL with INLINE_SYSCALL_CALL.
+
+2017-04-28  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #21396]
+	* sysdeps/x86/cpu-features.c (init_cpu_features): Set
+	Prefer_No_AVX512 if AVX512ER isn't available.
+	* sysdeps/x86/cpu-features.h (bit_arch_Prefer_No_AVX512): New.
+	(index_arch_Prefer_No_AVX512): Likewise.
+	* sysdeps/x86_64/multiarch/memcpy.S (__new_memcpy): Don't use
+	AVX512 version if Prefer_No_AVX512 is set.
+	* sysdeps/x86_64/multiarch/memcpy_chk.S (__memcpy_chk):
+	Likewise.
+	* sysdeps/x86_64/multiarch/memmove.S (__libc_memmove): Likewise.
+	* sysdeps/x86_64/multiarch/memmove_chk.S (__memmove_chk):
+	Likewise.
+	* sysdeps/x86_64/multiarch/mempcpy.S (__mempcpy): Likewise.
+	* sysdeps/x86_64/multiarch/mempcpy_chk.S (__mempcpy_chk):
+	Likewise.
+	* sysdeps/x86_64/multiarch/memset.S (memset): Likewise.
+	* sysdeps/x86_64/multiarch/memset_chk.S (__memset_chk):
+	Likewise.
+
+2017-04-28  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86/cpu-features.c (init_cpu_features): Set
+	Prefer_No_VZEROUPPER if AVX512ER is available.
+	* sysdeps/x86/cpu-features.h
+	(bit_cpu_AVX512PF): New.
+	(bit_cpu_AVX512ER): Likewise.
+	(bit_cpu_AVX512CD): Likewise.
+	(bit_cpu_AVX512BW): Likewise.
+	(bit_cpu_AVX512VL): Likewise.
+	(index_cpu_AVX512PF): Likewise.
+	(index_cpu_AVX512ER): Likewise.
+	(index_cpu_AVX512CD): Likewise.
+	(index_cpu_AVX512BW): Likewise.
+	(index_cpu_AVX512VL): Likewise.
+	(reg_AVX512PF): Likewise.
+	(reg_AVX512ER): Likewise.
+	(reg_AVX512CD): Likewise.
+	(reg_AVX512BW): Likewise.
+	(reg_AVX512VL): Likewise.
+
 2016-08-26  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #20432]
