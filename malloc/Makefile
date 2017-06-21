@@ -36,6 +36,7 @@ tests := mallocbug tst-malloc tst-valloc tst-calloc tst-obstack \
 	 tst-dynarray \
 	 tst-dynarray-fail \
 	 tst-dynarray-at-fail \
+	 tst-alloc_buffer \
 
 tests-static := \
 	 tst-interpose-static-nothread \
@@ -58,6 +59,11 @@ routines = malloc morecore mcheck mtrace obstack \
   dynarray_finalize \
   dynarray_resize \
   dynarray_resize_clear \
+  alloc_buffer_alloc_array \
+  alloc_buffer_allocate \
+  alloc_buffer_copy_bytes  \
+  alloc_buffer_copy_string \
+  alloc_buffer_create_failure \
 
 install-lib := libmcheck.a
 non-lib.a := libmcheck.a
