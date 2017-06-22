@@ -149,6 +149,34 @@ ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-fmtmsg.out
 endif
 
+ifdef PYTHON
+# Pretty-printer for errno.  The .pysym file is itself generated from
+# errnos.texi, and can be augmented by sysdeps Makefiles, primarily for
+# the sake of the Hurd, which has a bunch of extra error constants.
+pretty-printers := errno-printer.py
+tests-printers := test-errno-printer
+gen-py-const-headers := errno_constants.pysym
+vpath %.pysym $(objpfx)
+
+define sysd-add-errno-constants
+:
+endef
+$(objpfx)errno_constants.pysym: make-errno-constants.awk \
+				$(..)manual/errno.texi
+	($(AWK) -f make-errno-constants.awk $(..)manual/errno.texi; \
+	$(sysd-add-errno-constants)) > $@T
+	mv -f $@T $@
+
+# We must specify both CFLAGS and CPPFLAGS to override any
+# compiler options the user might have provided that conflict
+# with what we need e.g. user specifies CPPFLAGS with -O2 and
+# we need -O0.
+CFLAGS-test-errno-printer.c := $(CFLAGS-printers-tests)
+CPPFLAGS-test-errno-printer.c := $(CFLAGS-printers-tests)
+
+tests-special += $(objpfx)test-errno-constants.out
+endif
+
 include ../Rules
 
 ifeq ($(run-built-tests),yes)
@@ -220,3 +248,13 @@ $(objpfx)tst-setcontext3.out: tst-setcontext3.sh $(objpfx)tst-setcontext3
 	$(evaluate-test)
 
 $(objpfx)tst-makecontext: $(libdl)
+
+# Note: errno_constants.py depends on errno.h and everything it
+# includes, as well as on errno_constants.pysym, so we don't need to
+# specify that this test also depends on both.
+$(objpfx)test-errno-constants.out: \
+		test-errno-constants.py $(objpfx)errno_constants.py
+	$(PYTHON) $< $(objpfx) $(CC) $(CFLAGS) $(CPPFLAGS) > $@; \
+	$(evaluate-test)
+
+libof-test-errno-constants = testsuite

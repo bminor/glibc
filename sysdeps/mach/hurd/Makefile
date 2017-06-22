@@ -98,6 +98,16 @@ $(common-objpfx)stamp-errnos: $(hurd)/errnos.awk $(errno.texinfo) \
 	touch $@
 
 common-generated += errnos.d stamp-errnos
+
+# Augmentations to the errno pretty-printer.
+ifeq ($(subdir),stdlib)
+define sysd-add-errno-constants
+$(AWK) -f $(hurd)/hurd-add-errno-constants.awk $(mach-errnos-deps)
+endef
+$(objpfx)errno_constants.pysym: \
+    $(hurd)/hurd-add-errno-constants.awk $(mach-errnos-deps)
+endif
+
 
 # We install the real libc.a as libcrt.a and as libc.a we install a linker
 # script which does -( -lcrt -lmachuser -lhurduser -).
