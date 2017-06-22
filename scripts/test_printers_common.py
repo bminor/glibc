@@ -54,11 +54,7 @@ if not pexpect.which(gdb_bin):
     print('gdb 7.8 or newer must be installed to test the pretty printers.')
     exit(UNSUPPORTED)
 
-timeout = 5
-TIMEOUTFACTOR = os.environ.get('TIMEOUTFACTOR')
-
-if TIMEOUTFACTOR:
-    timeout = int(TIMEOUTFACTOR)
+timeout = int(os.environ.get('TIMEOUTFACTOR', '5'))
 
 try:
     # Check the gdb version.
@@ -93,15 +89,39 @@ try:
     # If everything's ok, spawn the gdb process we'll use for testing.
     gdb = pexpect.spawn(gdb_invocation, echo=False, timeout=timeout,
                         encoding=encoding)
-    gdb_prompt = u'\(gdb\)'
+    logfile = os.environ.get("TEST_PRINTERS_LOG")
+    if logfile is not None:
+        gdb.logfile = open(logfile, "wt")
+
+    gdb_prompt = u'(?:\A|\r\n)\(gdb\) '
     gdb.expect(gdb_prompt)
 
 except pexpect.ExceptionPexpect as exception:
     print('Error: {0}'.format(exception))
     exit(FAIL)
 
-def test(command, pattern=None):
-    """Sends 'command' to gdb and expects the given 'pattern'.
+def send_command(command):
+    """Sends 'command' to gdb, and returns all output up to but not
+    including the next gdb prompt.  If a gdb prompt is not detected
+    in a timely fashion, raises pexpect.TIMEOUT.
+
+    Args:
+        command (string): The command we'll send to gdb.
+    """
+
+    gdb.sendline(command)
+
+    # PExpect does a non-greedy match for '+' and '*', since it can't
+    # look ahead on the gdb output stream.  Therefore, we must include
+    # the gdb prompt in the match to ensure that all of the output of
+    # the command is captured.
+    gdb.expect(u'(.*?){}'.format(gdb_prompt))
+    return gdb.match.group(1)
+
+
+def test(command, pattern=None, unsupported_pattern=None):
+    """Sends 'command' to gdb and expects the given 'pattern'.  If
+       the match fails, the test fails.
 
     If 'pattern' is None, simply consumes everything up to and including
     the gdb prompt.
@@ -109,43 +129,31 @@ def test(command, pattern=None):
     Args:
         command (string): The command we'll send to gdb.
         pattern (raw string): A pattern the gdb output should match.
+        unsupported_pattern (raw string): If the gdb output fails to
+            match 'pattern', but it _does_ match this, then the test
+            is marked unsupported rather than failing outright.
 
     Returns:
         string: The string that matched 'pattern', or an empty string if
             'pattern' was None.
     """
+    output = send_command(command)
+    if pattern is None:
+        return None
 
-    match = ''
+    match = re.search(pattern, output, re.DOTALL)
+    if not match:
+        if (unsupported_pattern is not None
+            and re.search(unsupported_pattern, output, re.DOTALL)):
+            exit(UNSUPPORTED)
+        else:
+            print('Response does not match the expected pattern.\n'
+                  'Command: {0}\n'
+                  'Expected pattern: {1}\n'
+                  'Response: {2}'.format(command, pattern, output))
+            exit(FAIL)
 
-    gdb.sendline(command)
-
-    if pattern:
-        # PExpect does a non-greedy match for '+' and '*'.  Since it can't look
-        # ahead on the gdb output stream, if 'pattern' ends with a '+' or a '*'
-        # we may end up matching only part of the required output.
-        # To avoid this, we'll consume 'pattern' and anything that follows it
-        # up to and including the gdb prompt, then extract 'pattern' later.
-        index = gdb.expect([u'{0}.+{1}'.format(pattern, gdb_prompt),
-                            pexpect.TIMEOUT])
-
-        if index == 0:
-            # gdb.after now contains the whole match.  Extract the text that
-            # matches 'pattern'.
-            match = re.match(pattern, gdb.after, re.DOTALL).group()
-        elif index == 1:
-            # We got a timeout exception.  Print information on what caused it
-            # and bail out.
-            error = ('Response does not match the expected pattern.\n'
-                     'Command: {0}\n'
-                     'Expected pattern: {1}\n'
-                     'Response: {2}'.format(command, pattern, gdb.before))
-
-            raise pexpect.TIMEOUT(error)
-    else:
-        # Consume just the the gdb prompt.
-        gdb.expect(gdb_prompt)
-
-    return match
+    return match.group(0)
 
 def init_test(test_bin, printer_files, printer_names):
     """Loads the test binary file and the required pretty printers to gdb.

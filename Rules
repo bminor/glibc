@@ -265,6 +265,10 @@ endif	# tests
 ifdef PYTHON
 ifneq "$(strip $(tests-printers))" ""
 
+cpp-srcs-left := $(tests-printers)
+lib := testsuite
+include $(patsubst %,$(..)libof-iterator.mk,$(cpp-srcs-left))
+
 # Static pattern rule for building the test programs for the pretty printers.
 $(tests-printers-programs): %: %.o $(tests-printers-libs) \
   $(sort $(filter $(common-objpfx)lib%,$(link-libc-static-tests))) \
