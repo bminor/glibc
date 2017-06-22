@@ -33,8 +33,12 @@
 
 __BEGIN_DECLS
 
+/* This type cues the GDB pretty-printer for errno (errno-printer.py)
+   to show a symbolic name for the error.  */
+typedef int __error_t;
+
 /* The error code set by various library functions.  */
-extern int *__errno_location (void) __THROW __attribute_const__;
+extern __error_t *__errno_location (void) __THROW __attribute_const__;
 # define errno (*__errno_location ())
 
 # ifdef __USE_GNU
@@ -45,11 +49,11 @@ extern int *__errno_location (void) __THROW __attribute_const__;
 extern char *program_invocation_name;
 extern char *program_invocation_short_name;
 
-/* bits/errno.h may have defined this type.  If it didn't, provide a
-   fallback definition.  */
+/* User namespace version of __error_t.  This is used to make the return
+   values of certain GNU extension functions more self-documenting.  */
 #  ifndef __error_t_defined
 #   define __error_t_defined 1
-typedef int error_t;
+typedef __error_t error_t;
 #  endif
 
 # endif /* __USE_GNU */

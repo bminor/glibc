@@ -23,6 +23,7 @@
 #include <hurd.h>
 #include <link.h>
 #include <unistd.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include <sys/mman.h>
@@ -69,7 +70,7 @@ struct hurd_startup_data *_dl_hurd_data;
 
 /* This is used only within ld.so, via dl-minimal.c's __errno_location.  */
 #undef errno
-int errno attribute_hidden;
+__error_t errno attribute_hidden;
 
 /* Defining these variables here avoids the inclusion of hurdsig.c.  */
 unsigned long int __hurd_sigthread_stack_base;

@@ -28,8 +28,8 @@ int rtld_errno attribute_hidden;
 
 #else
 
-__thread int errno;
-extern __thread int __libc_errno __attribute__ ((alias ("errno")))
+__thread __error_t errno;
+extern __thread __error_t __libc_errno __attribute__ ((alias ("errno")))
   attribute_hidden;
 
 #endif

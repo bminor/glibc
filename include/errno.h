@@ -18,7 +18,7 @@
 
 #  undef  errno
 #  define errno rtld_errno
-extern int rtld_errno attribute_hidden;
+extern __error_t rtld_errno attribute_hidden;
 
 # elif IS_IN_LIB
 
@@ -30,13 +30,13 @@ extern int rtld_errno attribute_hidden;
 #  else
 #   define errno errno		/* For #ifndef errno tests.  */
 #  endif
-extern __thread int errno attribute_tls_model_ie;
+extern __thread __error_t errno attribute_tls_model_ie;
 
 # endif	/* IS_IN_LIB */
 
 # define __set_errno(val) (errno = (val))
 
-extern int *__errno_location (void) __THROW __attribute_const__
+extern __error_t *__errno_location (void) __THROW __attribute_const__
 #  if RTLD_PRIVATE_ERRNO
      attribute_hidden
 #  endif

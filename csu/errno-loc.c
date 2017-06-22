@@ -20,7 +20,7 @@
 #include <errno.h>
 #include <tls.h>
 
-int *
+__error_t *
 __errno_location (void)
 {
   return &errno;

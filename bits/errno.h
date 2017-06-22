@@ -37,14 +37,13 @@
    expand to "integer constant expressions with type int, positive
    values, and suitable for use in #if directives".  Moreover, all of
    their names must begin with a capital E, followed immediately by
-   either another capital letter, or a digit.  It is OK to define
-   macros that are not error constants, but only in the implementation
-   namespace.
+   either another capital letter, or a digit.
 
    errno.h is sometimes included from assembly language.  Therefore,
-   when __ASSEMBLER__ is defined, bits/errno.h may only define macros;
-   it may not make any other kind of C declaration or definition.
-   Also, the error constants should, if at all possible, expand to
-   simple decimal or hexadecimal numbers.  */
+   bits/errno.h may only define macros; it may not make any other kind
+   of C declaration or definition.  Also, the error constants should,
+   if at all possible, expand to simple decimal or hexadecimal
+   numbers.  It is OK to define macros that are not error constants,
+   but only in the implementation namespace.  */
 
 #endif /* bits/errno.h.  */

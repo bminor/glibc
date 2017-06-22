@@ -19,7 +19,7 @@
 #include <errno.h>
 #include <hurd/threadvar.h>
 
-int *
+__error_t *
 __errno_location (void)
 {
   return (int *) __hurd_threadvar_location (_HURD_THREADVAR_ERRNO);
