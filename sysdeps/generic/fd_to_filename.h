@@ -16,10 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#define FD_TO_FILENAME_SIZE 0
+
 /* In general there is no generic way to query filename for an open
    file descriptor.  */
 static inline const char *
-fd_to_filename (int fd)
+fd_to_filename (int fd, char *buf)
 {
   return NULL;
 }

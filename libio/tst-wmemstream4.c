@@ -1,5 +1,5 @@
-/* Query filename corresponding to an open FD.  Linux version.
-   Copyright (C) 2001-2018 Free Software Foundation, Inc.
+/* Test for open_wmemstream BZ #21037.
+   Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,20 +16,5 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sys/stat.h>
-
-#define FD_TO_FILENAME_SIZE ((sizeof ("/proc/self/fd/") - 1) \
-			     + (sizeof ("4294967295") - 1) + 1)
-
-static inline const char *
-fd_to_filename (unsigned int fd, char *buf)
-{
-  *_fitoa_word (fd, __stpcpy (buf, "/proc/self/fd/"), 10, 0) = '\0';
-
-  /* We must make sure the file exists.  */
-  struct stat64 st;
-  if (__lxstat64 (_STAT_VER, buf, &st) < 0)
-    /* /proc is not mounted or something else happened.  */
-    return NULL;
-  return buf;
-}
+#define TEST_WCHAR
+#include <libio/tst-memstream4.c>

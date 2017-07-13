@@ -24,27 +24,33 @@
    This exception applies to code released by its copyright holders
    in files containing the exception.  */
 
-#include "libioP.h"
-#include "stdio.h"
+#include <stdio.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include <unistd.h>
 
+#include <libioP.h>
 #include <fd_to_filename.h>
-
-#include <kernel-features.h>
 
 FILE *
 freopen64 (const char *filename, const char *mode, FILE *fp)
 {
-  FILE *result;
+  FILE *result = NULL;
+  char fdfilename[FD_TO_FILENAME_SIZE];
+
   CHECK_FILE (fp, NULL);
-  if (!(fp->_flags & _IO_IS_FILEBUF))
-    return NULL;
+
   _IO_acquire_lock (fp);
+  /* First flush the stream (failure should be ignored).  */
+  _IO_SYNC (fp);
+
+  if (!(fp->_flags & _IO_IS_FILEBUF))
+    goto end;
+
   int fd = _IO_fileno (fp);
-  const char *gfilename = (filename == NULL && fd >= 0
-			   ? fd_to_filename (fd) : filename);
+  const char *gfilename
+    = filename != NULL ? filename : fd_to_filename (fd, fdfilename);
+
   fp->_flags2 |= _IO_FLAGS2_NOCLOSE;
   _IO_file_close_it (fp);
   _IO_JUMPS_FILE_plus (fp) = &_IO_file_jumps;
@@ -84,8 +90,6 @@ freopen64 (const char *filename, const char *mode, FILE *fp)
     __close (fd);
 
 end:
-  if (filename == NULL)
-    free ((char *) gfilename);
   _IO_release_lock (fp);
   return result;
 }
