@@ -68,6 +68,7 @@ The following bugs are resolved with this release:
   [21386] Assertion in fork for distinct parent PID is incorrect
   [21624] Unsafe alloca allows local attackers to alias stack and heap (CVE-2017-1000366)
   [21654] nss: Fix invalid cast in group merging
+  [21744] tunables: Use direct syscall for access
   [21778] Robust mutex may deadlock
   [21915] getaddrinfo: incorrect result handling for NSS service modules
   [21922] getaddrinfo with AF_INET(6) returns EAI_NONAME, not EAI_NODATA
