@@ -1,5 +1,5 @@
-/* brk system call for Linux/i386.
-   Copyright (C) 1995-2017 Free Software Foundation, Inc.
+/* Linux/i386 definitions of functions used by static libc main startup.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,27 +16,21 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <startup.h>
-#include <errno.h>
-#include <unistd.h>
-#include <sysdep.h>
+#ifdef BUILD_PIE_DEFAULT
+# include <abort-instr.h>
 
-/* This must be initialized data because commons can't have aliases.  */
-void *__curbrk = 0;
+/* Can't use "call *%gs:SYSINFO_OFFSET" during statup in static PIE.  */
+# define I386_USE_SYSENTER 0
 
-/* Old braindamage in GCC's crtstuff.c requires this symbol in an attempt
-   to work around different old braindamage in the old Linux ELF dynamic
-   linker.  */
-weak_alias (__curbrk, ___brk_addr)
-
-int
-__brk (void *addr)
+__attribute__ ((__noreturn__))
+static inline void
+_startup_fatal (const char *message __attribute__ ((unused)))
 {
-  INTERNAL_SYSCALL_DECL (err);
-  void *newbrk = (void *) INTERNAL_SYSCALL (brk, err, 1, addr);
-  __curbrk = newbrk;
-  if (newbrk < addr)
-    return INLINE_SYSCALL_ERROR_RETURN_VALUE (ENOMEM);
-  return 0;
+  /* This is only called very early during startup in static PIE.
+     FIXME: How can it be improved?  */
+  ABORT_INSTRUCTION;
+  __builtin_unreachable ();
 }
-weak_alias (__brk, brk)
+#else
+# include_next <startup.h>
+#endif

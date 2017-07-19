@@ -47,6 +47,12 @@
 #undef	STACK_PROTECTOR_LEVEL
 #endif
 
+/* When PIC is defined and SHARED isn't defined, we are building PIE
+   by default.  */
+#if defined PIC && !defined SHARED
+# define BUILD_PIE_DEFAULT
+#endif
+
 /* Define if the regparm attribute shall be used for local functions
    (gcc on ix86 only).  */
 #undef	USE_REGPARMS
