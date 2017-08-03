@@ -1,3 +1,7 @@
+2017-08-03  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* stdlib/getentropy.c (getentropy): Change return type to int.
+
 2017-04-28  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	[BZ #21280]
