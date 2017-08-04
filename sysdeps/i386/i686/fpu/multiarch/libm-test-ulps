@@ -42,7 +42,7 @@ ldouble: 4
 Function: "acosh_upward":
 double: 1
 idouble: 1
-ildouble: 4
+ildouble: 5
 ldouble: 3
 
 Function: "asin":
@@ -900,8 +900,8 @@ double: 3
 float: 3
 idouble: 3
 ifloat: 3
-ildouble: 7
-ldouble: 7
+ildouble: 8
+ldouble: 8
 
 Function: Imaginary part of "clog10_upward":
 double: 1
@@ -1591,8 +1591,8 @@ double: 3
 float: 4
 idouble: 3
 ifloat: 4
-ildouble: 5
-ldouble: 5
+ildouble: 6
+ldouble: 6
 
 Function: "hypot":
 double: 1
@@ -1743,8 +1743,8 @@ double: 3
 float: 4
 idouble: 3
 ifloat: 4
-ildouble: 5
-ldouble: 5
+ildouble: 6
+ldouble: 6
 
 Function: "log":
 double: 1
