@@ -1,3 +1,9 @@
+2017-08-06  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #21871]
+	* sysdeps/x86/cpu-features.c (init_cpu_features): Set
+	bit_arch_Use_dl_runtime_resolve_opt only with AVX512F.
+
 2017-08-04  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/i386/i686/fpu/multiarch/libm-test-ulps: Regenerated.
