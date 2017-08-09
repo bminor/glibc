@@ -1,3 +1,8 @@
+2017-08-09  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/s390/pt-longjmp.c: Update reference to
+	renamed alias.
+
 2017-08-08  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #21041]
