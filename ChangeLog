@@ -1,3 +1,9 @@
+2017-08-08  Helge Deller  <deller@gmx.de>
+
+	[BZ #21049]
+        * sysdeps/hppa/__longjmp.c (__longjmp): Move call to CHECK_SP up
+        to avoid clobbering r26.
+
 2017-08-06  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #21871]
