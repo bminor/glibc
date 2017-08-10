@@ -1,3 +1,8 @@
+2019-09-06  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* sysdeps/aarch64/memcmp.S (memcmp):
+	Rewrite of optimized memcmp.
+
 2019-07-12  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #24699]
