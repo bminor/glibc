@@ -10,6 +10,7 @@ Version 2.26.1
 The following bugs are resolved with this release:
 
   [21885] getaddrinfo: Release resolver context on error in gethosts
+  [21932] Unpaired __resolv_context_get in generic get*_r implementation
 
 Version 2.26
 
