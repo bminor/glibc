@@ -1,3 +1,10 @@
+2017-08-11  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #21242]
+	* assert/assert.h [__GNUC__ && !__STRICT_ANSI__] (assert):
+	Suppress pedantic warning resulting from statement expression.
+	(__ASSERT_FUNCTION): Add missing __extension__.
+
 2017-08-10  Florian Weimer  <fweimer@redhat.com>
 
 	* malloc/malloc.c (get_max_fast): Reimplement as an inline
