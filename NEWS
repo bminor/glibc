@@ -16,6 +16,9 @@ Deprecated and removed features, and other changes affecting compatibility:
 
 * On GNU/Linux, the obsolete Linux constant PTRACE_SEIZE_DEVEL is no longer
   defined by <sys/ptrace.h>.
+* The nonstandard siginfo_t fields 'si_int' and 'si_ptr' are deprecated, and
+  will be removed in a future release.  Programs should instead use
+  'si_value.sival_int' and 'si_value.sival_ptr', respectively.
 
 * libm no longer supports SVID error handling (calling a user-provided
   matherr function on error) or the _LIB_VERSION variable to control error
@@ -27,7 +30,18 @@ Deprecated and removed features, and other changes affecting compatibility:
 
 Changes to build and runtime requirements:
 
-  [Add changes to build and runtime requirements here]
+* Some headers now make unconditional use of the C2011 'anonymous union'
+  feature.  In order to compile a program that uses any of these headers,
+  you must use a compiler that supports this feature, even when conforming
+  to an earlier language standard.  This has been true of GCC and Clang for
+  many years.  The structures and headers affected are:
+
+    - siginfo_t (signal.h, sys/wait.h)
+
+  The advantage of this change is that these headers define many fewer
+  macros with surprising expansions (for instance, the identifier 'si_pid'
+  used to be a macro expanding to '_sifields._kill.si_pid' on GNU/Linux
+  systems).
 
 Security related changes:
 

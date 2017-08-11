@@ -4,9 +4,10 @@
 
 #define __SI_BAND_TYPE int
 
-#define __SI_SIGFAULT_ADDL \
-  int _si_trapno;
-
-#define si_trapno	_sifields._sigfault._si_trapno
+#ifdef __USE_GNU
+# define __SI_SIGFAULT_ADDL  int si_trapno;
+#else
+# define __SI_SIGFAULT_ADDL  int __si_trapno;
+#endif
 
 #endif

@@ -92,7 +92,7 @@ timer_helper_thread (void *arg)
 	{
 	  if (si.si_code == SI_TIMER)
 	    {
-	      struct timer *tk = (struct timer *) si.si_ptr;
+	      struct timer *tk = (struct timer *) si.si_value.sival_ptr;
 
 	      /* Check the timer is still used and will not go away
 		 while we are reading the values here.  */

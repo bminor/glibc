@@ -95,9 +95,10 @@ do_test (void)
       return 1;
     }
 
-  if (si.si_int != (int) p)
+  if (si.si_value.sival_int != (int) p)
     {
-      printf ("expected PID %d, got si_int %d\n", (int) p, si.si_int);
+      printf ("expected PID %d, got si_int %d\n",
+	      (int) p, si.si_value.sival_int);
       kill (p, SIGKILL);
       return 1;
     }
