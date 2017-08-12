@@ -106,36 +106,34 @@ typedef union
 
 /* Data structure for conditional variable handling.  The structure of
    the attribute type is not exposed on purpose. However, this structure
-   is exposed via PTHREAD_COND_INITIALIZER, and because of this, the
-   Linuxthreads version sets the first four ints to one. In the NPTL
-   version we must check, in every function using pthread_cond_t,
-   for the static Linuxthreads initializer and clear the appropriate
-   words. */
+   is exposed via PTHREAD_COND_INITIALIZER.  Support for Linuxthreads has
+   been dropped but we still need to retain the alignment of the original
+   lock field from Linuxthreads.  */
 typedef union
 {
   struct
   {
-    /* In the old Linuxthreads pthread_cond_t, this is the
-       start of the 4-word lock structure, the next four words
-       are set all to 1 by the Linuxthreads
-       PTHREAD_COND_INITIALIZER.  */
-    int __lock __attribute__ ((__aligned__(16)));
-    /* Tracks the initialization of this structure:
-       0  initialized with NPTL PTHREAD_COND_INITIALIZER.
-       1  initialized with Linuxthreads PTHREAD_COND_INITIALIZER.
-       2  initialization in progress.  */
-    int __initializer;
-    unsigned int __futex;
-    void *__mutex;
-    /* In the old Linuxthreads this would have been the start
-       of the pthread_fastlock status word.  */
-    __extension__ unsigned long long int __total_seq;
-    __extension__ unsigned long long int __wakeup_seq;
-    __extension__ unsigned long long int __woken_seq;
-    unsigned int __nwaiters;
-    unsigned int __broadcast_seq;
-    /* The NPTL pthread_cond_t is exactly the same size as
-       the Linuxthreads version, there are no words to spare.  */
+    __extension__ union
+    {
+      __extension__ unsigned long long int __wseq;
+      struct {
+	unsigned int __low;
+	unsigned int __high;
+      } __wseq32;
+    };
+    __extension__ union
+    {
+      __extension__ unsigned long long int __g1_start;
+      struct {
+	unsigned int __low;
+	unsigned int __high;
+      } __g1_start32;
+    };
+    unsigned int __g_refs[2] __attribute__ ((__aligned__(16)));
+    unsigned int __g_size[2];
+    unsigned int __g1_orig_size;
+    unsigned int __wrefs;
+    unsigned int __g_signals[2];
   } __data;
   char __size[__SIZEOF_PTHREAD_COND_T];
   __extension__ long long int __align;

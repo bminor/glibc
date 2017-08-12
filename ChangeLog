@@ -1,3 +1,24 @@
+2017-08-12  John David Anglin  <danglin@gcc.gnu.org>
+
+	[BZ #21016]
+	* sysdeps/hppa/nptl/bits/pthreadtypes.h: Update pthread_cond_t typedef.
+	* sysdeps/unix/sysv/linux/hppa/pthread.h: Include
+	bits/types/struct_timespec.h.
+	(PTHREAD_MUTEX_INITIALIZER): Revise define.
+	(PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP): Likewise.
+	(PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP): Likewise.
+	(PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP): Likewise.
+	(PTHREAD_RWLOCK_INITIALIZER): Likewise.
+	(PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP): Likewise.
+	(PTHREAD_COND_INITIALIZER): Likewise.
+	Remove old definitions.
+	* sysdeps/unix/sysv/linux/hppa/internaltypes.h: Delete.
+	* sysdeps/unix/sysv/linux/hppa/pthread_cond_broadcast.c: Delete.
+	* sysdeps/unix/sysv/linux/hppa/pthread_cond_destroy.c: Delete.
+	* sysdeps/unix/sysv/linux/hppa/pthread_cond_init.c: Delete.
+	* sysdeps/unix/sysv/linux/hppa/pthread_cond_signal.c: Delete.
+	* sysdeps/unix/sysv/linux/hppa/pthread_cond_wait.c: Delete.
+
 2017-08-11  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #21242]
