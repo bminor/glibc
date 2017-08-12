@@ -1,4 +1,10 @@
 2017-08-12  John David Anglin  <danglin@gcc.gnu.org>
+
+	[BZ 19170]
+	* sysdeps/hppa/dl-trampoline.S (_dl_runtime_resolve): Return to caller
+	if _dl_fixup fails.
+
+2017-08-12  John David Anglin  <danglin@gcc.gnu.org>
 	    Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #21512]

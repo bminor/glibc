@@ -82,6 +82,21 @@ _dl_runtime_resolve:
 	bl	_dl_fixup,%rp
 	copy	%r21,%r19		/* set fixup func ltp */
 
+	/* While the linker will set a function pointer to NULL when it
+	   encounters an undefined weak function, we need to dynamically
+	   detect removed weak functions.  The issue arises because a weak
+	   __gmon_start__ function was added to shared executables to work
+	   around issues in _init that are now resolved.  The presence of
+	   __gmon_start__ in every shared library breaks the linker
+	   `--as-needed' option.  This __gmon_start__ function does nothing
+	   but removal is tricky.  Depending on the binding, removal can
+	   cause an application using it to fault.  The call to _dl_fixup
+	   returns NULL when a function isn't resolved.  In order to help
+	   with __gmon_start__ removal, we return directly to the caller
+	   when _dl_fixup returns NULL.  This check could be removed when
+	   BZ 19170 is fixed.  */
+	comib,=	0,%r28,1f
+
 	/* Load up the returned func descriptor */
 	copy	%r28, %r22
 	copy	%r29, %r19
@@ -107,6 +122,13 @@ _dl_runtime_resolve:
 	/* Jump to new function, but return to previous function */
 	bv	%r0(%r22)
 	ldw	-20(%sp),%rp
+
+1:
+	/* Return to previous function */
+	ldw	-148(%sp),%rp
+	bv	%r0(%rp)
+	ldo	-128(%sp),%sp
+
         .EXIT
         .PROCEND
 	cfi_endproc
