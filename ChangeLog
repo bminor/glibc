@@ -1,3 +1,11 @@
+2017-08-12  John David Anglin  <danglin@gcc.gnu.org>
+	    Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #21512]
+	* sysdeps/unix/sysv/linux/aarch64/clone.S (__clone): Call exit
+	syscall instead of jump to _exit.
+	* sysdeps/unix/sysv/linux/hppa/localplt.data: Remove _exit entry.
+
 2017-08-12  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/hppa/ipc_priv.h: New file.
