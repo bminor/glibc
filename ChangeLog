@@ -1,3 +1,7 @@
+2017-08-12  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/hppa/ipc_priv.h: New file.
+
 2017-08-12  John David Anglin  <danglin@gcc.gnu.org>
 
 	* sysdeps/unix/sysv/linux/hppa/clone.S (__clone): Add .cfi annotation.
