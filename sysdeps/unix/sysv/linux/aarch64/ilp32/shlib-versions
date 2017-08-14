@@ -1,0 +1,7 @@
+DEFAULT			GLIBC_2.27
+
+%ifdef HAVE_AARCH64_BE
+ld=ld-linux-aarch64_be_ilp32.so.1
+%else
+ld=ld-linux-aarch64_ilp32.so.1
+%endif
