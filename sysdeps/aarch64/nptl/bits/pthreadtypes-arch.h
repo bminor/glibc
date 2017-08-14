@@ -67,5 +67,6 @@ struct __pthread_rwlock_arch_t
 };
 
 #define __PTHREAD_RWLOCK_ELISION_EXTRA 0
+#define __PTHREAD_RWLOCK_INT_FLAGS_SHARED 1
 
 #endif	/* bits/pthreadtypes.h */

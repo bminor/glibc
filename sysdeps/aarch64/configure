@@ -163,12 +163,19 @@ rm -f conftest*
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_aarch64_be" >&5
 $as_echo "$libc_cv_aarch64_be" >&6; }
+
+if test $aarch64_config_abi = ilp32; then
+  $as_echo "#define HAVE_AARCH64_ILP32 1" >>confdefs.h
+
+fi
+
 if test $libc_cv_aarch64_be = yes; then
   $as_echo "#define HAVE_AARCH64_BE 1" >>confdefs.h
 
-  config_vars="$config_vars
-default-abi = lp64_be"
+  libc_aarch64_be=_be
 else
-  config_vars="$config_vars
-default-abi = lp64"
+  libc_aarch64_be=
 fi
+
+config_vars="$config_vars
+default-abi = ${aarch64_config_abi}${libc_aarch64_be}"

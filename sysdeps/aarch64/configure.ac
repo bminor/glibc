@@ -14,9 +14,16 @@ AC_CACHE_CHECK([for big endian],
                       yes
                      #endif
   ], libc_cv_aarch64_be=yes, libc_cv_aarch64_be=no)])
+
+if test $aarch64_config_abi = ilp32; then
+  AC_DEFINE(HAVE_AARCH64_ILP32)
+fi
+
 if test $libc_cv_aarch64_be = yes; then
   AC_DEFINE(HAVE_AARCH64_BE)
-  LIBC_CONFIG_VAR([default-abi], [lp64_be])
+  libc_aarch64_be=_be
 else
-  LIBC_CONFIG_VAR([default-abi], [lp64])
+  libc_aarch64_be=
 fi
+
+LIBC_CONFIG_VAR([default-abi], [${aarch64_config_abi}${libc_aarch64_be}])

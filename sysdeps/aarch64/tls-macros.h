@@ -32,8 +32,9 @@
 	    "x30", "memory", "cc");			\
      (int *) (__result); })
 
-#define TLS_IE(x)					\
-  ({ register unsigned long __result asm ("x0");	\
+#ifdef __LP64__
+# define TLS_IE(x)					\
+  ({ register unsigned long __result;			\
      register unsigned long __t;			\
      asm ("mrs	%1, tpidr_el0; "			\
 	  "adrp	%0, :gottprel:" #x "; "			\
@@ -41,6 +42,17 @@
 	  "add	%0, %0, %1"				\
 	  : "=r" (__result), "=r" (__t));		\
      (int *) (__result); })
+#else
+# define TLS_IE(x)					\
+  ({ register unsigned long __result;			\
+     register unsigned long __t;			\
+     asm ("mrs	%1, tpidr_el0; "			\
+	  "adrp	%0, :gottprel:" #x "; "			\
+	  "ldr	%w0, [%0, #:gottprel_lo12:" #x "]; "	\
+	  "add	%0, %0, %1"				\
+	  : "=r" (__result), "=r" (__t));		\
+     (int *) (__result); })
+#endif
 
 #define TLS_LE(x)					\
   ({ register unsigned long __result asm ("x0");	\

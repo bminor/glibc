@@ -18,4 +18,8 @@
 
 #include <sys/ipc.h>  /* For __key_t  */
 
-#define __IPC_64	0x0
+#ifdef __LP64__
+# define __IPC_64	0x0
+#else /* __ILP32  */
+# define __IPC_64	0x100
+#endif

@@ -41,7 +41,11 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
       ret = process_elf32_file (file_name, lib, flag, osversion, soname,
 				file_contents, file_length);
 
-      if (!ret && EF_ARM_EABI_VERSION (elf32_header->e_flags) == EF_ARM_EABI_VER5)
+      if (!ret && elf_header->e_machine == EM_AARCH64)
+	*flag = FLAG_AARCH64_LIB32|FLAG_ELF_LIBC6;
+      else if (!ret
+	       && EF_ARM_EABI_VERSION (elf32_header->e_flags)
+		  == EF_ARM_EABI_VER5)
 	{
 	  if (elf32_header->e_flags & EF_ARM_ABI_FLOAT_HARD)
 	    *flag = FLAG_ARM_LIBHF|FLAG_ELF_LIBC6;

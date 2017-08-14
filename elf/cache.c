@@ -101,6 +101,9 @@ print_entry (const char *lib, int flag, unsigned int osversion,
     case FLAG_AARCH64_LIB64:
       fputs (",AArch64", stdout);
       break;
+    case FLAG_AARCH64_LIB32:
+      fputs (",ILP32", stdout);
+      break;
     /* Uses the ARM soft-float ABI.  */
     case FLAG_ARM_LIBSF:
       fputs (",soft-float", stdout);
