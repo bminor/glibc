@@ -465,7 +465,8 @@ else  # not build-pie-default
 +link-before-libc = $(CC) -nostdlib -nostartfiles -o $@ \
 	      $(sysdep-LDFLAGS) $(LDFLAGS) $(LDFLAGS-$(@F)) \
 	      $(combreloc-LDFLAGS) $(relro-LDFLAGS) $(hashstyle-LDFLAGS) \
-	      $(addprefix $(csu-objpfx),$(start-installed-name)) \
+	      $(or $(CRT-$(@F)), $ \
+		$(addprefix $(csu-objpfx),$(start-installed-name))) \
 	      $(+preinit) $(+prector) \
 	      $(filter-out $(addprefix $(csu-objpfx),start.o \
 						     $(start-installed-name))\
