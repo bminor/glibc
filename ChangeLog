@@ -1,3 +1,9 @@
+2017-08-20  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
+	* sysdeps/unix/sysv/linux/i386/glob64.c (__old_glob64): Add
+	libc_hidden_proto and libc_hidden_def.
+
 2017-10-20  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #22321]
