@@ -11,6 +11,7 @@ The following bugs are resolved with this release:
 
   [21242] assert: Suppress pedantic warning caused by statement expression
   [21885] getaddrinfo: Release resolver context on error in gethosts
+  [21930] Do not use __builtin_types_compatible_p in C++ mode
   [21932] Unpaired __resolv_context_get in generic get*_r implementation
 
 Version 2.26
