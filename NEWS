@@ -23,6 +23,7 @@ The following bugs are resolved with this release:
   [21289] Fix symbol redirect for fts_set
   [21386] Assertion in fork for distinct parent PID is incorrect
   [21624] Unsafe alloca allows local attackers to alias stack and heap (CVE-2017-1000366)
+  [21972] assert macro requires operator== (int) for its argument type
 
 Version 2.25
 
