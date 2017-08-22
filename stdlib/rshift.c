@@ -42,7 +42,10 @@ mpn_rshift (register mp_ptr wp,
   register mp_size_t i;
   mp_limb_t retval;
 
-  assert (usize != 0 && cnt != 0);
+#ifdef DEBUG
+  if (usize == 0 || cnt == 0)
+    abort ();
+#endif
 
   sh_1 = cnt;
 
