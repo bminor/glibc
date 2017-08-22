@@ -1,3 +1,8 @@
+2017-08-22  Joseph Myers  <joseph@codesourcery.com>
+
+	* assert/Makefile [$(have-cxx-thread_local)]: Move conditional
+	variable definitions above inclusion of ../Rules.
+
 2017-08-28  Gabriel F. T. Gomes  <gftg@linux.vnet.ibm.com>
 
 	[BZ #21930]
