@@ -1,3 +1,13 @@
+2017-07-28  Torvald Riegel  <triegel@redhat.com>
+	    Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #21298]
+	* nptl/Makefile (tests): Add tst-rwlock20.
+	* nptl/pthread_rwlock_common.c (__pthread_rwlock_rdlock_full): Fix
+	explicit hand-over.
+	(__pthread_rwlock_wrlock_full): Likewise.
+	* nptl/tst-rwlock20.c: New file.
+
 2017-08-21  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #21972]

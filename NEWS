@@ -21,6 +21,7 @@ The following bugs are resolved with this release:
   [21209] Ignore and remove LD_HWCAP_MASK for AT_SECURE programs
   [21242] assert: Suppress pedantic warning caused by statement expression
   [21289] Fix symbol redirect for fts_set
+  [21298] rwlock can deadlock on frequent reader/writer phase switching
   [21386] Assertion in fork for distinct parent PID is incorrect
   [21624] Unsafe alloca allows local attackers to alias stack and heap (CVE-2017-1000366)
   [21972] assert macro requires operator== (int) for its argument type
