@@ -1,4 +1,13 @@
 2017-12-12  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #21672]
+	* nptl/allocatestack.c [_STACK_GROWS_DOWN] (setup_stack_prot):
+	Set to use !NEED_SEPARATE_REGISTER_STACK as well.
+	(advise_stack_range): New function.
+	* nptl/pthread_create.c (START_THREAD_DEFN): Move logic to mark
+	stack non required to advise_stack_range at allocatestack.c
+
+2017-12-12  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 	    Sergei Trofimovich  <slyfox@inbox.ru>
 
 	[BZ #21908]
