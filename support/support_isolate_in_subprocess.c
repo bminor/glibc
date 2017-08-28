@@ -1,5 +1,5 @@
-/* Implementation of the TEST_VERIFY and TEST_VERIFY_EXIT macros.
-   Copyright (C) 2016-2017 Free Software Foundation, Inc.
+/* Run a function in a subprocess.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,21 +17,22 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <support/check.h>
-
-#include <stdio.h>
-#include <stdlib.h>
+#include <support/xunistd.h>
 
 void
-support_test_verify_impl (const char *file, int line, const char *expr)
+support_isolate_in_subprocess (void (*callback) (void *), void *closure)
 {
-  support_record_failure ();
-  printf ("error: %s:%d: not true: %s\n", file, line, expr);
-}
+  pid_t pid = xfork ();
+  if (pid == 0)
+    {
+      /* Child process.  */
+      callback (closure);
+      _exit (0);
+    }
 
-void
-support_test_verify_exit_impl (int status, const char *file, int line,
-                               const char *expr)
-{
-  support_test_verify_impl (file, line, expr);
-  exit (status);
+  /* Parent process.  */
+  int status;
+  xwaitpid (pid, &status, 0);
+  if (status != 0)
+    FAIL_EXIT1 ("child process exited with status %d", status);
 }

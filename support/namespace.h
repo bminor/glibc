@@ -35,6 +35,13 @@ __BEGIN_DECLS
    single-threaded processes.  */
 bool support_become_root (void);
 
+/* Return true if this process can perform a chroot operation.  In
+   general, this is only possible if support_become_root has been
+   called.  Note that the actual test is performed in a subprocess,
+   after fork, so that the file system root of the original process is
+   not changed.  */
+bool support_can_chroot (void);
+
 /* Enter a network namespace (and a UTS namespace if possible) and
    configure the loopback interface.  Return true if a network
    namespace could be created.  Print diagnostics to standard output.
@@ -47,6 +54,43 @@ bool support_enter_network_namespace (void);
 /* Return true if support_enter_network_namespace managed to enter a
    UTS namespace.  */
 bool support_in_uts_namespace (void);
+
+/* Invoke CALLBACK (CLOSURE) in a subprocess created using fork.
+   Terminate the calling process if the subprocess exits with a
+   non-zero exit status.  */
+void support_isolate_in_subprocess (void (*callback) (void *), void *closure);
+
+/* Describe the setup of a chroot environment, for
+   support_chroot_create below.  */
+struct support_chroot_configuration
+{
+  /* File contents.  The files are not created if the field is
+     NULL.  */
+  const char *resolv_conf;
+};
+
+/* The result of the creation of a chroot.  */
+struct support_chroot
+{
+  /* Path information.  All these paths are relative to the parent
+     chroot.  */
+
+  /* Path to the chroot directory.  */
+  char *path_chroot;
+
+  /* Path to the /etc/resolv.conf file.  */
+  char *path_resolv_conf;
+};
+
+/* Create a chroot environment.  The returned data should be freed
+   using support_chroot_free below.  The files will be deleted when
+   the process exits.  This function does not enter the chroot.  */
+struct support_chroot *support_chroot_create
+  (struct support_chroot_configuration);
+
+/* Deallocate the chroot information created by
+   support_chroot_create.  */
+void support_chroot_free (struct support_chroot *);
 
 __END_DECLS
 

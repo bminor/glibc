@@ -35,7 +35,12 @@ libsupport-routines = \
   oom_error \
   resolv_test \
   set_fortify_handler \
+  support-xstat \
   support_become_root \
+  support_can_chroot \
+  support_capture_subprocess \
+  support_capture_subprocess_check \
+  support_chroot \
   support_enter_network_namespace \
   support_format_address_family \
   support_format_addrinfo \
@@ -43,17 +48,24 @@ libsupport-routines = \
   support_format_herrno \
   support_format_hostent \
   support_format_netent \
+  support_isolate_in_subprocess \
   support_record_failure \
   support_run_diff \
+  support_shared_allocate \
+  support_write_file_string \
   support_test_main \
   support_test_verify_impl \
   temp_file \
   write_message \
   xaccept \
+  xaccept4 \
   xasprintf \
   xbind \
   xcalloc \
+  xchroot \
+  xclose \
   xconnect \
+  xdup2 \
   xfclose \
   xfopen \
   xfork \
@@ -61,13 +73,18 @@ libsupport-routines = \
   xlisten \
   xmalloc \
   xmemstream \
+  xmkdir \
   xmmap \
+  xmprotect \
   xmunmap \
+  xopen \
+  xpipe \
   xpoll \
   xpthread_attr_destroy \
   xpthread_attr_init \
   xpthread_attr_setdetachstate \
   xpthread_attr_setstacksize \
+  xpthread_attr_setguardsize \
   xpthread_barrier_destroy \
   xpthread_barrier_init \
   xpthread_barrier_wait \
@@ -89,6 +106,12 @@ libsupport-routines = \
   xpthread_mutexattr_setrobust \
   xpthread_mutexattr_settype \
   xpthread_once \
+  xpthread_rwlock_init \
+  xpthread_rwlock_rdlock \
+  xpthread_rwlock_wrlock \
+  xpthread_rwlock_unlock \
+  xpthread_rwlockattr_init \
+  xpthread_rwlockattr_setkind_np \
   xpthread_sigmask \
   xpthread_spin_lock \
   xpthread_spin_unlock \
@@ -111,6 +134,8 @@ endif
 tests = \
   README-testing \
   tst-support-namespace \
+  tst-support_capture_subprocess \
+  tst-support_format_dns_packet \
   tst-support_record_failure \
 
 ifeq ($(run-built-tests),yes)
@@ -124,5 +149,7 @@ $(objpfx)tst-support_record_failure-2.out: tst-support_record_failure-2.sh \
 	  > $@; \
 	$(evaluate-test)
 endif
+
+$(objpfx)tst-support_format_dns_packet: $(common-objpfx)resolv/libresolv.so
 
 include ../Rules

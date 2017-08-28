@@ -1,5 +1,5 @@
-/* Implementation of the TEST_VERIFY and TEST_VERIFY_EXIT macros.
-   Copyright (C) 2016-2017 Free Software Foundation, Inc.
+/* pthread_attr_setguardsize with error checking.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,22 +16,11 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <support/check.h>
-
-#include <stdio.h>
-#include <stdlib.h>
+#include <support/xthread.h>
 
 void
-support_test_verify_impl (const char *file, int line, const char *expr)
+xpthread_attr_setguardsize (pthread_attr_t *attr, size_t guardsize)
 {
-  support_record_failure ();
-  printf ("error: %s:%d: not true: %s\n", file, line, expr);
-}
-
-void
-support_test_verify_exit_impl (int status, const char *file, int line,
-                               const char *expr)
-{
-  support_test_verify_impl (file, line, expr);
-  exit (status);
+  xpthread_check_return ("pthread_attr_setguardize",
+			 pthread_attr_setguardsize (attr, guardsize));
 }

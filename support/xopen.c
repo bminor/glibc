@@ -1,5 +1,5 @@
-/* Implementation of the TEST_VERIFY and TEST_VERIFY_EXIT macros.
-   Copyright (C) 2016-2017 Free Software Foundation, Inc.
+/* open64 with error checking.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,21 +17,14 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <support/check.h>
+#include <support/xunistd.h>
+#include <fcntl.h>
 
-#include <stdio.h>
-#include <stdlib.h>
-
-void
-support_test_verify_impl (const char *file, int line, const char *expr)
+int
+xopen (const char *path, int flags, mode_t mode)
 {
-  support_record_failure ();
-  printf ("error: %s:%d: not true: %s\n", file, line, expr);
-}
-
-void
-support_test_verify_exit_impl (int status, const char *file, int line,
-                               const char *expr)
-{
-  support_test_verify_impl (file, line, expr);
-  exit (status);
+  int ret = open64 (path, flags, mode);
+  if (ret < 0)
+    FAIL_EXIT1 ("open64 (\"%s\", 0x%x, 0%o): %m", path, flags, mode);
+  return ret;
 }

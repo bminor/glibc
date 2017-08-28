@@ -1,5 +1,5 @@
-/* Implementation of the TEST_VERIFY and TEST_VERIFY_EXIT macros.
-   Copyright (C) 2016-2017 Free Software Foundation, Inc.
+/* stat64 with error checking.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,22 +16,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+/* NB: Non-standard file name to avoid sysdeps override for xstat.  */
+
 #include <support/check.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-
-void
-support_test_verify_impl (const char *file, int line, const char *expr)
-{
-  support_record_failure ();
-  printf ("error: %s:%d: not true: %s\n", file, line, expr);
-}
+#include <support/xunistd.h>
+#include <sys/stat.h>
 
 void
-support_test_verify_exit_impl (int status, const char *file, int line,
-                               const char *expr)
+xstat (const char *path, struct stat64 *result)
 {
-  support_test_verify_impl (file, line, expr);
-  exit (status);
+  if (stat64 (path, result) != 0)
+    FAIL_EXIT1 ("stat64 (\"%s\"): %m", path);
 }

@@ -25,16 +25,17 @@
 #include <support/support.h>
 
 #include <paths.h>
-#include <search.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 /* List of temporary files.  */
 static struct temp_name_list
 {
-  struct qelem q;
+  struct temp_name_list *next;
   char *name;
+  pid_t owner;
 } *temp_name_list;
 
 /* Location of the temporary files.  Set by the test skeleton via
@@ -50,10 +51,9 @@ add_temp_file (const char *name)
   if (newname != NULL)
     {
       newp->name = newname;
-      if (temp_name_list == NULL)
-	temp_name_list = (struct temp_name_list *) &newp->q;
-      else
-	insque (newp, temp_name_list);
+      newp->next = temp_name_list;
+      newp->owner = getpid ();
+      temp_name_list = newp;
     }
   else
     free (newp);
@@ -97,13 +97,22 @@ support_set_test_dir (const char *path)
 void
 support_delete_temp_files (void)
 {
+  pid_t pid = getpid ();
   while (temp_name_list != NULL)
     {
-      remove (temp_name_list->name);
+      /* Only perform the removal if the path was registed in the same
+	 process, as identified by the PID.  (This assumes that the
+	 parent process which registered the temporary file sticks
+	 around, to prevent PID reuse.)  */
+      if (temp_name_list->owner == pid)
+	{
+	  if (remove (temp_name_list->name) != 0)
+	    printf ("warning: could not remove temporary file: %s: %m\n",
+		    temp_name_list->name);
+	}
       free (temp_name_list->name);
 
-      struct temp_name_list *next
-	= (struct temp_name_list *) temp_name_list->q.q_forw;
+      struct temp_name_list *next = temp_name_list->next;
       free (temp_name_list);
       temp_name_list = next;
     }
@@ -116,9 +125,7 @@ support_print_temp_files (FILE *f)
     {
       struct temp_name_list *n;
       fprintf (f, "temp_files=(\n");
-      for (n = temp_name_list;
-           n != NULL;
-           n = (struct temp_name_list *) n->q.q_forw)
+      for (n = temp_name_list; n != NULL; n = n->next)
         fprintf (f, "  '%s'\n", n->name);
       fprintf (f, ")\n");
     }

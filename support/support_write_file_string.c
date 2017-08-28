@@ -1,5 +1,5 @@
-/* Implementation of the TEST_VERIFY and TEST_VERIFY_EXIT macros.
-   Copyright (C) 2016-2017 Free Software Foundation, Inc.
+/* Write a string to a file.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,22 +16,24 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <fcntl.h>
+#include <string.h>
 #include <support/check.h>
-
-#include <stdio.h>
-#include <stdlib.h>
+#include <xunistd.h>
 
 void
-support_test_verify_impl (const char *file, int line, const char *expr)
+support_write_file_string (const char *path, const char *contents)
 {
-  support_record_failure ();
-  printf ("error: %s:%d: not true: %s\n", file, line, expr);
-}
-
-void
-support_test_verify_exit_impl (int status, const char *file, int line,
-                               const char *expr)
-{
-  support_test_verify_impl (file, line, expr);
-  exit (status);
+  int fd = xopen (path, O_CREAT | O_TRUNC | O_WRONLY, 0666);
+  const char *end = contents + strlen (contents);
+  for (const char *p = contents; p < end; )
+    {
+      ssize_t ret = write (fd, p, end - p);
+      if (ret < 0)
+        FAIL_EXIT1 ("cannot write to \"%s\": %m", path);
+      if (ret == 0)
+        FAIL_EXIT1 ("zero-length write to \"%s\"", path);
+      p += ret;
+    }
+  xclose (fd);
 }

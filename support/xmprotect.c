@@ -1,5 +1,5 @@
-/* Implementation of the TEST_VERIFY and TEST_VERIFY_EXIT macros.
-   Copyright (C) 2016-2017 Free Software Foundation, Inc.
+/* mprotect with error checking.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,21 +17,12 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <support/check.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-
-void
-support_test_verify_impl (const char *file, int line, const char *expr)
-{
-  support_record_failure ();
-  printf ("error: %s:%d: not true: %s\n", file, line, expr);
-}
+#include <support/xunistd.h>
+#include <sys/mman.h>
 
 void
-support_test_verify_exit_impl (int status, const char *file, int line,
-                               const char *expr)
+xmprotect (void *addr, size_t length, int prot)
 {
-  support_test_verify_impl (file, line, expr);
-  exit (status);
+  if (mprotect (addr, length, prot) != 0)
+    FAIL_EXIT1 ("mprotect (%p, %zu, 0x%x): %m", addr, length, prot);
 }
