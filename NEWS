@@ -7,6 +7,16 @@ using `glibc' in the "product" field.
 
 Version 2.26.1
 
+Major new features:
+
+* In order to support faster and safer process termination the malloc API
+  family of functions will no longer print a failure address and stack
+  backtrace after detecting heap corruption.  The goal is to minimize the
+  amount of work done after corruption is detected and to avoid potential
+  security issues in continued process execution.  Reducing shutdown time
+  leads to lower overall process restart latency, so there is benefit both
+  from a security and performance perspective.
+
 Security related changes:
 
   CVE-2009-5064: The ldd script would sometimes run the program under

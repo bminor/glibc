@@ -1,3 +1,12 @@
+2017-08-30  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #21754]
+	* malloc/malloc.c (malloc_printerr): Always terminate the process,
+	without printing a backtrace.  Do not leak any information in the
+	error message.
+	* manual/memory.texi (Heap Consistency Checking): Update.
+	* manual/tunables.texi (Memory Allocation Tunables): Likewise.
+
 2017-11-17  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/bits/hwcap.h (PPC_FEATURE2_HTM_NO_SUSPEND): New
