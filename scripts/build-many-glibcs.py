@@ -160,8 +160,16 @@ class Context(object):
                         os_name='linux-gnu',
                         extra_glibcs=[{'variant': 'disable-multi-arch',
                                        'cfg': ['--disable-multi-arch']}])
+        self.add_config(arch='aarch64',
+                        os_name='linux-gnu',
+                        variant='ilp32',
+                        gcc_cfg=['--with-multilib-list=ilp32'])
         self.add_config(arch='aarch64_be',
                         os_name='linux-gnu')
+        self.add_config(arch='aarch64_be',
+                        os_name='linux-gnu',
+                        variant='ilp32',
+                        gcc_cfg=['--with-multilib-list=ilp32'])
         self.add_config(arch='arc',
                         os_name='linux-gnu',
                         gcc_cfg=['--disable-multilib', '--with-cpu=hs38'])
