@@ -46,7 +46,12 @@ struct ipc_perm
     __gid_t gid;			/* Owner's group ID.  */
     __uid_t cuid;			/* Creator's user ID.  */
     __gid_t cgid;			/* Creator's group ID.  */
+#ifdef __LP64__
     unsigned int mode;			/* Read/write permission.  */
+#else
+    unsigned short int mode;		/* Read/write permission.  */
+    unsigned short int __pad0;
+#endif
     unsigned short int __seq;		/* Sequence number.  */
     unsigned short int __pad1;
     __syscall_ulong_t __glibc_reserved1;
