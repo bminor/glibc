@@ -1,3 +1,11 @@
+2017-08-31  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #22051]
+	* Makerules (build-module-helper-objlist): Filter out
+	$(elf-objpfx)sofini.os.
+	(build-shlib-objlist): Append $(elf-objpfx)sofini.os if it is
+	needed.
+
 2017-07-29  Torvald Riegel  <triegel@redhat.com>
 	    Carlos O'Donell  <carlos@redhat.com>
 
