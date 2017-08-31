@@ -1,5 +1,10 @@
 2017-08-31  Florian Weimer  <fweimer@redhat.com>
 
+	* malloc/malloc.c (_int_free): Remove locked variable and related
+	asserts.
+
+2017-08-31  Florian Weimer  <fweimer@redhat.com>
+
 	* malloc/malloc.c (top_check): Change return type to void.  Remove
 	internal_function.
 	* malloc/hooks.c (top_check): Likewise.
