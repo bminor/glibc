@@ -944,7 +944,10 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 	  _res.options |= old_res_options & DEPRECATED_RES_USE_INET6;
 
-	  if (h_errno == NETDB_INTERNAL)
+	  /* If we have a failure which sets errno, report it using
+	     EAI_SYSTEM.  */
+	  if ((status == NSS_STATUS_TRYAGAIN || status == NSS_STATUS_UNAVAIL)
+	      && h_errno == NETDB_INTERNAL)
 	    {
 	      result = -EAI_SYSTEM;
 	      goto free_and_return;
