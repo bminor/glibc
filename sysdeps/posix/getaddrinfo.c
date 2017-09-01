@@ -246,11 +246,10 @@ convert_hostent_to_gaih_addrtuple (const struct addrinfo *req,
   char *localcanon = NULL;						      \
   no_data = 0;								      \
   while (1) {								      \
-    rc = 0;								      \
     status = DL_CALL_FCT (fct, (name, _family, &th,			      \
 				tmpbuf->data, tmpbuf->length,		      \
-				&rc, &herrno, NULL, &localcanon));	      \
-    if (rc != ERANGE || herrno != NETDB_INTERNAL)			      \
+				&errno, &herrno, NULL, &localcanon));	      \
+    if (errno != ERANGE || herrno != NETDB_INTERNAL)			      \
       break;								      \
     if (!scratch_buffer_grow (tmpbuf))					      \
       {									      \
@@ -258,11 +257,11 @@ convert_hostent_to_gaih_addrtuple (const struct addrinfo *req,
 	goto free_and_return;						      \
       }									      \
   }									      \
-  if (status == NSS_STATUS_SUCCESS && rc == 0)				      \
+  if (status == NSS_STATUS_SUCCESS && errno == 0)			      \
     h = &th;								      \
   else									      \
     h = NULL;								      \
-  if (rc != 0)								      \
+  if (errno != 0)							      \
     {									      \
       if (herrno == NETDB_INTERNAL)					      \
 	{								      \
@@ -330,9 +329,8 @@ getcanonname (service_user *nip, struct gaih_addrtuple *at, const char *name)
     {
       char buf[256];
       int herrno;
-      int rc;
       if (DL_CALL_FCT (cfct, (at->name ?: name, buf, sizeof (buf),
-			      &s, &rc, &herrno)) != NSS_STATUS_SUCCESS)
+			      &s, &errno, &herrno)) != NSS_STATUS_SUCCESS)
 	/* If the canonical name cannot be determined, use the passed
 	   string.  */
 	s = (char *) name;
@@ -348,7 +346,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
   const struct gaih_typeproto *tp = gaih_inet_typeproto;
   struct gaih_servtuple *st = (struct gaih_servtuple *) &nullserv;
   struct gaih_addrtuple *at = NULL;
-  int rc;
   bool got_ipv6 = false;
   const char *canon = NULL;
   const char *orig_name = name;
@@ -390,7 +387,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	      st = (struct gaih_servtuple *)
 		alloca_account (sizeof (struct gaih_servtuple), alloca_used);
 
-	      if ((rc = gaih_inet_serv (service->name, tp, req, st, tmpbuf)))
+	      int rc = gaih_inet_serv (service->name, tp, req, st, tmpbuf);
+	      if (__glibc_unlikely (rc != 0))
 		return rc;
 	    }
 	  else
@@ -490,7 +488,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    idn_flags |= IDNA_USE_STD3_ASCII_RULES;
 
 	  char *p = NULL;
-	  rc = __idna_to_ascii_lz (name, &p, idn_flags);
+	  int rc = __idna_to_ascii_lz (name, &p, idn_flags);
 	  if (rc != IDNA_SUCCESS)
 	    {
 	      /* No need to jump to free_and_return here.  */
@@ -790,15 +788,14 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 		  while (1)
 		    {
-		      rc = 0;
 		      status = DL_CALL_FCT (fct4, (name, pat,
 						   tmpbuf->data, tmpbuf->length,
-						   &rc, &herrno,
+						   &errno, &herrno,
 						   NULL));
 		      if (status == NSS_STATUS_SUCCESS)
 			break;
 		      if (status != NSS_STATUS_TRYAGAIN
-			  || rc != ERANGE || herrno != NETDB_INTERNAL)
+			  || errno != ERANGE || herrno != NETDB_INTERNAL)
 			{
 			  if (herrno == TRY_AGAIN)
 			    no_data = EAI_AGAIN;
