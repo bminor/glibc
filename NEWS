@@ -22,6 +22,7 @@ The following bugs are resolved with this release:
   [21780] posix: Set p{read,write}v2 to return ENOTSUP
   [21871] x86-64: Use _dl_runtime_resolve_opt only with AVX512F
   [21885] getaddrinfo: Release resolver context on error in gethosts
+  [21915] getaddrinfo: incorrect result handling for NSS service modules
   [21922] getaddrinfo with AF_INET(6) returns EAI_NONAME, not EAI_NODATA
   [21930] Do not use __builtin_types_compatible_p in C++ mode
   [21932] Unpaired __resolv_context_get in generic get*_r implementation
