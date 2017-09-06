@@ -57,6 +57,16 @@ extern int sem_wait (sem_t *__sem);
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
+#ifdef __USE_TIME_BITS64
+# if defined(__REDIRECT)
+extern struct tm * __REDIRECT (sem_timedwait,
+                               (sem_t *__restrict __sem,
+                                const struct timespec *__restrict __abstime),
+       __sem_timedwait64);
+# else
+# define sem_timedwait __sem_timedwait64
+# endif
+#endif
 extern int sem_timedwait (sem_t *__restrict __sem,
 			  const struct timespec *__restrict __abstime);
 #endif

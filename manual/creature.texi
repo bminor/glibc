@@ -165,6 +165,34 @@ This macro was introduced as part of the Large File Support extension
 (LFS).
 @end defvr
 
+@defvr Macro _TIME_BITS
+This macro determines the bit size of @code{time_t} (and therefore the
+bit size of all @code{time_t} derived types and the prototypes of all
+related functions). If @code{_TIME_BITS} is undefined, the bit size of
+time_t equals the bit size of the architecture.
+
+If @code{_TIME_BITS} is undefined, or if @code{_TIME_BITS} is defined
+to the value @code{32} and @code{__WORDSIZE} is defined to the value
+@code{32}, or or if @code{_TIME_BITS} is defined to the value @code{64}
+and @code{__WORDSIZE} is defined to the value @code{64}, nothing changes.
+
+If @code{_TIME_BITS} is defined to the value @code{64} and if
+@code{__WORDSIZE} is defined to the value @code{32}, then the @w{64 bit}
+time API and implementation are used even though the architecture word
+size is @code{32}. Also, if the kernel provides @w{64 bit} time support,
+it is used; otherwise, the @w{32 bit} kernel time support is used (with
+no provision to address kernel Y2038 shortcomings).
+
+If @code{_TIME_BITS} is defined to the value @code{32} and if
+@code{__WORDSIZE} is defined to the value @code{64}, then a compile-time
+error is emitted.
+
+If @code{_TIME_BITS} is defined to a value different from both @code{32}
+and @code{64}, then a compile-time error is emitted.
+
+This macro was introduced as part of the Y2038 support.
+@end defvr
+
 @defvr Macro _ISOC99_SOURCE
 @standards{GNU, (none)}
 If this macro is defined, features from ISO C99 are included.  Since

@@ -84,6 +84,15 @@ extern int setrlimit64 (__rlimit_resource_t __resource,
 
 /* Return resource usage information on process indicated by WHO
    and put it in *USAGE.  Returns 0 for success, -1 for failure.  */
+#ifdef __USE_TIME_BITS64
+# if defined(__REDIRECT)
+extern int __REDIRECT (getrusage, (__rusage_who_t __who,
+				   struct rusage *__usage),
+     __getrusage64) __THROW;
+# else
+# define getrusage __getrusage64
+# endif
+#endif
 extern int getrusage (__rusage_who_t __who, struct rusage *__usage) __THROW;
 
 /* Return the highest priority of any process specified by WHICH and WHO

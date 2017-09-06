@@ -58,6 +58,15 @@ struct msgbuf
 __BEGIN_DECLS
 
 /* Message queue control operation.  */
+#ifdef __USE_TIME_BITS64
+# if defined(__REDIRECT)
+extern int __REDIRECT (msgctl, (int __msqid, int __cmd,
+                       struct msqid_ds *__buf),
+                       __msgctl64) __THROW;
+# else
+# define msgctl __msgctl64
+# endif
+#endif
 extern int msgctl (int __msqid, int __cmd, struct msqid_ds *__buf) __THROW;
 
 /* Get messages queue.  */

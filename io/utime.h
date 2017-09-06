@@ -27,20 +27,30 @@
 __BEGIN_DECLS
 
 #include <bits/types.h>
+#include <bits/types/time_t.h>
 
 #if defined __USE_XOPEN || defined __USE_XOPEN2K
 # include <bits/types/time_t.h>
 #endif
 
-/* Structure describing file times.  */
+/* Structure describing file times, 32- or 64-bit time.  */
 struct utimbuf
   {
-    __time_t actime;		/* Access time.  */
-    __time_t modtime;		/* Modification time.  */
+    time_t actime;		/* Access time.  */
+    time_t modtime;		/* Modification time.  */
   };
 
 /* Set the access and modification times of FILE to those given in
    *FILE_TIMES.  If FILE_TIMES is NULL, set them to the current time.  */
+#ifdef __USE_TIME_BITS64
+# if defined(__REDIRECT)
+extern int __REDIRECT (utime, (const char *__file,
+     const struct utimbuf *__file_times),
+     __utime64) __THROW __nonnull ((1));
+# else
+# define utime __utime64
+# endif
+#endif
 extern int utime (const char *__file,
 		  const struct utimbuf *__file_times)
      __THROW __nonnull ((1));

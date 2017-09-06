@@ -364,6 +364,25 @@
 # define __USE_FILE_OFFSET64	1
 #endif
 
+/* we need to know the word size in order to check the time size */
+#include <bits/wordsize.h>
+
+#if defined _TIME_BITS
+# if _TIME_BITS == 64
+#  if ! defined(_FILE_OFFSET_BITS) || _FILE_OFFSET_BITS != 64
+#   error _TIME_BIT==64 is allowed only when _FILE_OFFSET_BITS==64
+#  elif __WORDSIZE == 32
+#   define __USE_TIME_BITS64	1
+#  endif
+# elif __TIME_BITS == 32
+#  if __WORDSIZE > 32
+#   error __TIME_BITS=32 is not compatible with __WORDSIZE > 32
+#  endif
+# else
+#  error Invalid _TIME_BITS value (can only be 32 or 64)
+# endif
+#endif
+
 #if defined _DEFAULT_SOURCE
 # define __USE_MISC	1
 #endif

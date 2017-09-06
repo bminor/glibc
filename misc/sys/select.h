@@ -99,6 +99,18 @@ __BEGIN_DECLS
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
+#ifdef __USE_TIME_BITS64
+# if defined(__REDIRECT)
+extern int __REDIRECT (select, (int __nfds,
+                                fd_set *__restrict __readfds,
+                                fd_set *__restrict __writefds,
+                                fd_set *__restrict __exceptfds,
+                                struct timeval *__restrict __timeout),
+                       __select64);
+# else
+# define select __select64
+# endif
+#endif
 extern int select (int __nfds, fd_set *__restrict __readfds,
 		   fd_set *__restrict __writefds,
 		   fd_set *__restrict __exceptfds,
@@ -111,6 +123,19 @@ extern int select (int __nfds, fd_set *__restrict __readfds,
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
+#ifdef __USE_TIME_BITS64
+# if defined(__REDIRECT)
+extern int __REDIRECT (pselect, (int __nfds,
+                                 fd_set *__restrict __readfds,
+                                 fd_set *__restrict __writefds,
+                                 fd_set *__restrict __exceptfds,
+                                 const struct timespec *__restrict __timeout,
+                                 const __sigset_t *__restrict __sigmask),
+                       __pselect64);
+# else
+# define pselect __pselect64
+# endif
+#endif
 extern int pselect (int __nfds, fd_set *__restrict __readfds,
 		    fd_set *__restrict __writefds,
 		    fd_set *__restrict __exceptfds,

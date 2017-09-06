@@ -44,11 +44,30 @@ extern int timerfd_create (__clockid_t __clock_id, int __flags) __THROW;
 /* Set next expiration time of interval timer source UFD to UTMR.  If
    FLAGS has the TFD_TIMER_ABSTIME flag set the timeout value is
    absolute.  Optionally return the old expiration time in OTMR.  */
+#ifdef __USE_TIME_BITS64
+# if defined(__REDIRECT)
+extern int __REDIRECT (timerfd_settime, (int __ufd, int __flags,
+                       const struct itimerspec *__utmr,
+                       struct itimerspec *__otmr),__timerfd_settime64)
+                       __THROW;
+# else
+# define timerfd_settime __timerfd_settime64
+# endif
+#endif
 extern int timerfd_settime (int __ufd, int __flags,
 			    const struct itimerspec *__utmr,
 			    struct itimerspec *__otmr) __THROW;
 
 /* Return the next expiration time of UFD.  */
+#ifdef __USE_TIME_BITS64
+# if defined(__REDIRECT)
+extern int __REDIRECT (timerfd_gettime, (int __ufd,
+                       struct itimerspec *__otmr),__timerfd_gettime64)
+                       __THROW;
+# else
+# define timerfd_gettime __timerfd_gettime64
+# endif
+#endif
 extern int timerfd_gettime (int __ufd, struct itimerspec *__otmr) __THROW;
 
 __END_DECLS

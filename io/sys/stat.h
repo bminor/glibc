@@ -210,14 +210,27 @@ extern int stat (const char *__restrict __file,
 extern int fstat (int __fd, struct stat *__buf) __THROW __nonnull ((2));
 #else
 # ifdef __REDIRECT_NTH
+#  ifdef __USE_TIME_BITS64
+extern int __REDIRECT_NTH (stat, (const char *__restrict __file,
+				  struct stat *__restrict __buf), __stat64_time64)
+     __nonnull ((1, 2));
+extern int __REDIRECT_NTH (fstat, (int __fd, struct stat *__buf), __fstat64_time64)
+     __nonnull ((2));
+#  else
 extern int __REDIRECT_NTH (stat, (const char *__restrict __file,
 				  struct stat *__restrict __buf), stat64)
      __nonnull ((1, 2));
 extern int __REDIRECT_NTH (fstat, (int __fd, struct stat *__buf), fstat64)
      __nonnull ((2));
+#  endif
 # else
-#  define stat stat64
-#  define fstat fstat64
+#  ifdef __USE_TIME_BITS64
+#   define stat stat64_time64
+#   define fstat fstat64_time64
+#  else
+#   define stat stat64
+#   define fstat fstat64
+#  endif
 # endif
 #endif
 #ifdef __USE_LARGEFILE64
@@ -260,12 +273,23 @@ extern int lstat (const char *__restrict __file,
 		  struct stat *__restrict __buf) __THROW __nonnull ((1, 2));
 # else
 #  ifdef __REDIRECT_NTH
+#   ifdef __USE_TIME_BITS64
+extern int __REDIRECT_NTH (lstat,
+			   (const char *__restrict __file,
+			    struct stat *__restrict __buf), __lstat64_time64)
+     __nonnull ((1, 2));
+#   else
 extern int __REDIRECT_NTH (lstat,
 			   (const char *__restrict __file,
 			    struct stat *__restrict __buf), lstat64)
      __nonnull ((1, 2));
+#   endif
 #  else
-#   define lstat lstat64
+#   ifdef __USE_TIME_BITS64
+#    define lstat __lstat64_time64
+#   else
+#    define lstat lstat64
+#   endif
 #  endif
 # endif
 # ifdef __USE_LARGEFILE64
@@ -357,6 +381,15 @@ extern int mkfifoat (int __fd, const char *__path, __mode_t __mode)
 #ifdef __USE_ATFILE
 /* Set file access and modification times relative to directory file
    descriptor.  */
+#ifdef __USE_TIME_BITS64
+# if defined(__REDIRECT)
+extern int __REDIRECT (utimensat, (int __fd, const char *__path,
+           const struct timespec __times[2], int __flags),
+           __utimensat64) __THROW __nonnull((2));
+# else
+# define utimensat __utimensat64
+# endif
+#endif
 extern int utimensat (int __fd, const char *__path,
 		      const struct timespec __times[2],
 		      int __flags)
@@ -365,6 +398,14 @@ extern int utimensat (int __fd, const char *__path,
 
 #ifdef __USE_XOPEN2K8
 /* Set file access and modification times of the file associated with FD.  */
+#ifdef __USE_TIME_BITS64
+# if defined(__REDIRECT)
+extern int __REDIRECT (futimens, (int __fd, const struct timespec __times[2]),
+           __futimens64) __THROW;
+# else
+# define futimens __futimens64
+# endif
+#endif
 extern int futimens (int __fd, const struct timespec __times[2]) __THROW;
 #endif
 
@@ -403,6 +444,21 @@ extern int __fxstatat (int __ver, int __fildes, const char *__filename,
      __THROW __nonnull ((3, 4));
 #else
 # ifdef __REDIRECT_NTH
+#  ifdef __USE_TIME_BITS64
+extern int __REDIRECT_NTH (__fxstat, (int __ver, int __fildes,
+				      struct stat *__stat_buf), __fxstat64_time64)
+     __nonnull ((3));
+extern int __REDIRECT_NTH (__xstat, (int __ver, const char *__filename,
+				     struct stat *__stat_buf), __xstat64_time64)
+     __nonnull ((2, 3));
+extern int __REDIRECT_NTH (__lxstat, (int __ver, const char *__filename,
+				      struct stat *__stat_buf), __lxstat64_time64)
+     __nonnull ((2, 3));
+extern int __REDIRECT_NTH (__fxstatat, (int __ver, int __fildes,
+					const char *__filename,
+					struct stat *__stat_buf, int __flag),
+			   __fxstatat64_time64) __nonnull ((3, 4));
+#  else
 extern int __REDIRECT_NTH (__fxstat, (int __ver, int __fildes,
 				      struct stat *__stat_buf), __fxstat64)
      __nonnull ((3));
@@ -416,11 +472,18 @@ extern int __REDIRECT_NTH (__fxstatat, (int __ver, int __fildes,
 					const char *__filename,
 					struct stat *__stat_buf, int __flag),
 			   __fxstatat64) __nonnull ((3, 4));
+#  endif
 
 # else
-#  define __fxstat __fxstat64
-#  define __xstat __xstat64
-#  define __lxstat __lxstat64
+#  ifdef __USE_TIME_BITS64
+#   define __fxstat __fxstat64_time64
+#   define __xstat __xstat64_time64
+#   define __lxstat __lxstat64_time64
+#  else
+#   define __fxstat __fxstat64
+#   define __xstat __xstat64
+#   define __lxstat __lxstat64
+#  endif
 # endif
 #endif
 

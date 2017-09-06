@@ -68,14 +68,42 @@ struct __ntptimeval64
 __BEGIN_DECLS
 
 extern int __adjtimex (struct timex *__ntx) __THROW;
+
+#ifdef __USE_TIME_BITS64
+# if defined(__REDIRECT)
+extern time_t __REDIRECT (adjtimex, (struct timex *__ntx),
+     __adjtimex64) __THROW;
+# else
+# define adjtimex __adjtimex64
+# endif
+#endif
 extern int adjtimex (struct timex *__ntx) __THROW;
 
-#ifdef __REDIRECT_NTH
+#if __WORDSIZE > 32 || ! defined(__USE_TIME_BITS64)
+# ifdef __REDIRECT_NTH
 extern int __REDIRECT_NTH (ntp_gettime, (struct ntptimeval *__ntv),
 			   ntp_gettimex);
-#else
+# else
 extern int ntp_gettimex (struct ntptimeval *__ntv) __THROW;
+#  define ntp_gettime ntp_gettimex
+# endif
+#else
+# if defined(__REDIRECT)
+extern time_t __REDIRECT (ntp_gettimex, (struct ntptimeval *__ntv),
+                          __ntp_gettimex64) __THROW;
+# else
+# define ntp_gettimex __ntp_gettimex64
+# endif
 # define ntp_gettime ntp_gettimex
+#endif
+
+#ifdef __USE_TIME_BITS64
+# if defined(__REDIRECT)
+extern int __REDIRECT (ntp_adjtime, (struct timex *__tntx),
+                       __ntp_adjtime64) __THROW;
+# else
+# define ntp_adjtime __ntp_adjtime64
+# endif
 #endif
 extern int ntp_adjtime (struct timex *__tntx) __THROW;
 

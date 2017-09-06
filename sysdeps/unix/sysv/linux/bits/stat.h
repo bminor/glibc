@@ -119,11 +119,11 @@ struct stat64
     struct timespec st_mtim;		/* Time of last modification.  */
     struct timespec st_ctim;		/* Time of last status change.  */
 # else
-    __time_t st_atime;			/* Time of last access.  */
+    time_t st_atime;			/* Time of last access.  */
     unsigned long int st_atimensec;	/* Nscecs of last access.  */
-    __time_t st_mtime;			/* Time of last modification.  */
+    time_t st_mtime;			/* Time of last modification.  */
     unsigned long int st_mtimensec;	/* Nsecs of last modification.  */
-    __time_t st_ctime;			/* Time of last status change.  */
+    time_t st_ctime;			/* Time of last status change.  */
     unsigned long int st_ctimensec;	/* Nsecs of last status change.  */
 # endif
     __ino64_t st_ino;			/* File serial number.		*/
