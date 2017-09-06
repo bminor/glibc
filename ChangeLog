@@ -1,3 +1,8 @@
+2017-09-06  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/dynarray_emplace_enlarge.c
+	(__libc_dynarray_emplace_enlarge): Add missing else.
+
 2017-08-30  Florian Weimer  <fweimer@redhat.com>
 
 	* malloc/dynarray_emplace_enlarge.c
