@@ -68,8 +68,66 @@ hp_timing_settime (clockid_t clock_id, const struct timespec *tp)
 }
 #endif
 
-
 /* Set CLOCK to value TP.  */
+int
+__clock_settime64 (clockid_t clock_id, const struct __timespec64 *tp)
+{
+#ifndef HANDLED_REALTIME
+  struct timeval tv32;
+#endif
+  int retval = -1;
+
+  /* Make sure the time cvalue is OK.  */
+  if (! IS_VALID_NANOSECONDS(tp->tv_nsec))
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
+
+  switch (clock_id)
+    {
+#define HANDLE_REALTIME64 \
+      if (timespec64_to_timeval (tp, &tv32))				\
+        {								\
+	  retval = __settimeofday (&tv32, NULL);			\
+      else								\
+        {								\
+          __set_errno (EOVERFLOW);					\
+	  retval = -1;							\
+        }
+
+#ifdef SYSDEP_SETTIME64
+      SYSDEP_SETTIME64;
+#endif
+
+#ifndef HANDLED_REALTIME
+    case CLOCK_REALTIME:
+      HANDLE_REALTIME64;
+      break;
+#endif
+
+    default:
+#ifdef SYSDEP_SETTIME64_CPU
+      SYSDEP_SETTIME64_CPU;
+#endif
+#ifndef HANDLED_CPUTIME
+# if HP_TIMING_AVAIL
+      if (CPUCLOCK_WHICH (clock_id) == CLOCK_PROCESS_CPUTIME_ID
+	  || CPUCLOCK_WHICH (clock_id) == CLOCK_THREAD_CPUTIME_ID)
+	retval = hp_timing_settime (clock_id, tp);
+      else
+# endif
+	{
+	  __set_errno (EINVAL);
+	  retval = -1;
+	}
+#endif
+      break;
+    }
+
+  return retval;
+}
+
 int
 __clock_settime (clockid_t clock_id, const struct timespec *tp)
 {
