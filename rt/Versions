@@ -39,5 +39,6 @@ librt {
   }
   GLIBC_2.29 {
    __timer_gettime64;
+   __timer_settime64;
   }
 }
