@@ -13,6 +13,9 @@ libc {
     # Non-standard function.
     semtimedop;
   }
+  GLIBC_2.28 {
+    __msgctl64;
+  }
   GLIBC_PRIVATE {
     # Cancellation point entries.
     __libc_msgrcv; __libc_msgsnd;
