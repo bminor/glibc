@@ -30,3 +30,12 @@ __futimes (int fd, const struct timeval tvp[2])
 weak_alias (__futimes, futimes)
 
 stub_warning (futimes)
+
+int
+__futimes64 (int fd, const struct __timeval64 tvp[2])
+{
+  __set_errno (ENOSYS);
+  return -1;
+}
+
+stub_warning (__futimes64)
