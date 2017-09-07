@@ -1,4 +1,6 @@
-/* Copyright (C) 1991-2018 Free Software Foundation, Inc.
+/* Set the current time of day and timezone information.
+
+   Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,25 +17,23 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <sysdep.h>
 #include <errno.h>
 #include <sys/time.h>
 
-/* Set the current time of day and timezone information.
-   This call is restricted to the super-user.  */
-int
-__settimeofday (const struct timeval *tv, const struct timezone *tz)
+int __settimeofday64(const struct __timeval64 *tv,
+                       const struct timezone *tz)
 {
-  __set_errno (ENOSYS);
-  return -1;
-}
-stub_warning (settimeofday)
+  struct timeval tv32;
 
-weak_alias (__settimeofday, settimeofday)
+  if (tv && tv->tv_sec > INT_MAX)
+    {
+      __set_errno(EOVERFLOW);
+      return -1;
+    }
 
-int
-__settimeofday64 (const struct timeval *tv, const struct timezone *tz)
-{
-  __set_errno (ENOSYS);
-  return -1;
+  tv32.tv_sec = tv->tv_sec;
+  tv32.tv_usec = tv->tv_usec;
+
+  return __settimeofday(&tv32, tz);
 }
-stub_warning (__settimeofday64)

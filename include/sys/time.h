@@ -29,6 +29,8 @@ extern int __gettimeofday64 (struct __timeval64 *__tv,
 extern int __settimeofday (const struct timeval *__tv,
 			   const struct timezone *__tz)
 	attribute_hidden;
+extern int __settimeofday64 (const struct __timeval64 *__tv,
+			     const struct timezone *__tz);
 extern int __adjtime (const struct timeval *__delta,
 		      struct timeval *__olddelta);
 extern int __getitimer (enum __itimer_which __which,
