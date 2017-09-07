@@ -23,12 +23,11 @@
 #include <sys/param.h>
 #include <libc-internal.h>
 
-
 #if HP_TIMING_AVAIL
 static long int nsec;		/* Clock frequency of the processor.  */
 
 static int
-hp_timing_getres (struct timespec *res)
+hp_timing_getres (struct __timespec64 *res)
 {
   if (__glibc_unlikely (nsec == 0))
     {
@@ -56,7 +55,7 @@ hp_timing_getres (struct timespec *res)
 #endif
 
 static inline int
-realtime_getres (struct timespec *res)
+realtime_getres (struct __timespec64 *res)
 {
   long int clk_tck = __sysconf (_SC_CLK_TCK);
 
@@ -73,17 +72,16 @@ realtime_getres (struct timespec *res)
   return -1;
 }
 
-
 /* Get resolution of clock.  */
 int
-__clock_getres (clockid_t clock_id, struct timespec *res)
+__clock_getres_time64 (clockid_t clock_id, struct __timespec64 *res)
 {
   int retval = -1;
 
   switch (clock_id)
     {
-#ifdef SYSDEP_GETRES
-      SYSDEP_GETRES;
+#ifdef SYSDEP_GETRES64
+      SYSDEP_GETRES64;
 #endif
 
 #ifndef HANDLED_REALTIME
@@ -93,8 +91,8 @@ __clock_getres (clockid_t clock_id, struct timespec *res)
 #endif	/* handled REALTIME */
 
     default:
-#ifdef SYSDEP_GETRES_CPU
-      SYSDEP_GETRES_CPU;
+#ifdef SYSDEP_GETRES_CPU64
+      SYSDEP_GETRES_CPU64;
 #endif
 #if HP_TIMING_AVAIL
       if ((clock_id & ((1 << CLOCK_IDFIELD_SIZE) - 1))
@@ -113,6 +111,21 @@ __clock_getres (clockid_t clock_id, struct timespec *res)
 #endif
     }
 
+  return retval;
+}
+
+int
+__clock_getres (clockid_t clock_id, struct timespec *res)
+{
+  struct __timespec64 ts64;
+  int retval = __clock_getres_time64 (clock_id, &ts64);
+  if (retval == 0)
+    {
+      // We assume we never run with a CPU clock period greater than
+      // 2**31 seconds and therefore we do not check the seconds field
+      res->tv_sec = ts64.tv_sec;
+      res->tv_nsec = ts64.tv_nsec;
+    }
   return retval;
 }
 weak_alias (__clock_getres, clock_getres)

@@ -44,6 +44,8 @@ extern int __clock_gettime64 (clockid_t __clock_id,
 			      struct __timespec64 *__tp) __THROW;
 extern int __clock_settime64 (clockid_t __clock_id,
 			       const struct __timespec64 *__tp) __THROW;
+extern int __clock_getres_time64 (clockid_t __clock_id,
+				  struct __timespec64 *__res) __THROW;
 
 /* Now define the internal interfaces.  */
 struct tm;
