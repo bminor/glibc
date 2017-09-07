@@ -20,6 +20,7 @@
 
 #include <bits/types.h>
 #include <bits/types/struct_timeval.h>
+#include <bits/types/struct_timeval64.h>
 
 /* These definitions from linux/timex.h as of 3.18.  */
 

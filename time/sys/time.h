@@ -23,6 +23,7 @@
 #include <bits/types.h>
 #include <bits/types/time_t.h>
 #include <bits/types/struct_timeval.h>
+#include <bits/types/struct_timeval64.h>
 
 #ifndef __suseconds_t_defined
 typedef __suseconds_t suseconds_t;

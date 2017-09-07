@@ -21,6 +21,7 @@
 
 #include <bits/types.h>
 #include <bits/types/struct_timeval.h>
+#include <bits/types/struct_timeval64.h>
 
 /* Structure which says how much of each resource has been used.  If
    the system does not keep track of a particular value, the struct

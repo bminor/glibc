@@ -192,6 +192,7 @@ enum __rusage_who
 };
 
 #include <bits/types/struct_timeval.h>
+#include <bits/types/struct_timeval64.h>
 #include <bits/types/struct_rusage.h>
 
 /* Priority limits.  */

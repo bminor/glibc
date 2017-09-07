@@ -27,7 +27,7 @@ headers := time.h sys/time.h sys/timeb.h bits/time.h			\
 	   bits/types/struct_itimerspec.h				\
 	   bits/types/struct_timespec.h bits/types/struct_timeval.h	\
 	   bits/types/struct_tm.h bits/types/timer_t.h			\
-	   bits/types/time_t.h
+	   bits/types/time_t.h						\
 
 routines := offtime asctime clock ctime ctime_r difftime \
 	    gmtime localtime mktime time		 \

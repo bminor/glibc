@@ -35,6 +35,7 @@
 /* Get definition of timer specification structures.  */
 #include <bits/types/time_t.h>
 #include <bits/types/struct_timeval.h>
+#include <bits/types/struct_timeval64.h>
 #ifdef __USE_XOPEN2K
 # include <bits/types/struct_timespec.h>
 #endif
