@@ -31,6 +31,7 @@ headers := time.h sys/time.h sys/timeb.h bits/time.h			\
 
 routines := offtime asctime clock ctime ctime_r difftime \
 	    gmtime localtime mktime time		 \
+	    time64					 \
 	    gettimeofday settimeofday adjtime tzset	 \
 	    gettimeofday64 settimeofday64		 \
 	    tzfile getitimer setitimer			 \

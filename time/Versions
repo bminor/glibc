@@ -82,5 +82,6 @@ libc {
     __lutimes64;
     __gettimeofday64;
     __settimeofday64;
+    __time64;
   }
 }
