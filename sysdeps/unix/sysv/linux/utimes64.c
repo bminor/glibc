@@ -1,5 +1,4 @@
-/* utimes -- Change access and modification times of file.  Stub version.
-   Copyright (C) 1991-2018 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,40 +15,34 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sys/time.h>
 #include <errno.h>
 #include <stddef.h>
+#include <utime.h>
+#include <sys/time.h>
+#include <sysdep.h>
+#include <fcntl.h>
 
-/* Change the access time of FILE to TVP[0] and
-   the modification time of FILE to TVP[1].  */
-int
-__utimes (const char *file, const struct timeval tvp[2])
-{
-  if (file == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
-
-  __set_errno (ENOSYS);
-  return -1;
-}
-
-weak_alias (__utimes, utimes)
-
-stub_warning (utimes)
+/* 64-bit-time variant */
 
 int
 __utimes64 (const char *file, const struct __timeval64 tvp[2])
 {
-  if (file == NULL)
+  struct timespec ts32[2], *tsp32 = NULL;
+
+  if (tvp != NULL)
     {
-      __set_errno (EINVAL);
-      return -1;
+      if (tvp[0].tv_sec > INT_MAX || tvp[1].tv_sec > INT_MAX)
+        {
+          __set_errno(EOVERFLOW);
+          return -1;
+        }
+      ts32[0].tv_sec = tvp[0].tv_sec;
+      ts32[0].tv_nsec = tvp[0].tv_usec * 1000;
+      ts32[1].tv_sec = tvp[1].tv_sec;
+      ts32[1].tv_nsec = tvp[1].tv_usec * 1000;
+      tsp32 = ts32;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
+  /* use utimensat rather than utimes which not all arches can use */
+  return INLINE_SYSCALL (utimensat, 4, AT_FDCWD, file, tsp32, 0);
 }
-
-stub_warning (__utimes64)

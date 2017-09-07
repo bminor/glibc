@@ -50,6 +50,9 @@ extern int __clock_nanosleep64 (clockid_t __clock_id, int __flags,
 				const struct __timespec64 *__req,
 				struct __timespec64 *__rem);
 
+extern int __utimes64 (const char *file,
+                       const struct __timeval64 tvp[2]);
+
 /* Now define the internal interfaces.  */
 struct tm;
 
