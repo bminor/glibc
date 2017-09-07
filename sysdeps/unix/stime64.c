@@ -1,4 +1,6 @@
-/* Copyright (C) 1992-2018 Free Software Foundation, Inc.
+/* Set the system clock on a unix system 
+
+   Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,39 +18,30 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
+#include <stddef.h>		/* For NULL.  */
+#include <sys/time.h>
 #include <time.h>
-#include <stddef.h>
 
 /* Set the system clock to *WHEN.  */
 
 int
-stime (const time_t *when)
-{
-  if (when == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
-
-  __set_errno (ENOSYS);
-  return -1;
-}
-
-stub_warning (stime)
-
-/* 64-bit time version */
-
-int
 __stime64 (const __time64_t *when)
 {
+  struct __timeval64 tv;
+
   if (when == NULL)
     {
       __set_errno (EINVAL);
       return -1;
     }
 
-  __set_errno (ENOSYS);
-  return -1;
-}
+  if (*when > INT_MAX)
+    {
+      __set_errno (EOVERFLOW);
+      return -1;
+    }
 
-stub_warning (__stime64)
+  tv.tv_sec = *when;
+  tv.tv_usec = 0;
+  return __settimeofday64 (&tv, (struct timezone *) 0);
+}
