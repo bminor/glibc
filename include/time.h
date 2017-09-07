@@ -4,6 +4,7 @@
 #ifndef _ISOMAC
 # include <bits/types/locale_t.h>
 # include <bits/types/struct___timespec64.h>
+# include <bits/types/struct___timeval64.h>
 # include <stdbool.h>
 
 extern __typeof (strftime_l) __strftime_l;
@@ -32,6 +33,36 @@ libc_hidden_proto (__mktime64)
 libc_hidden_proto (__timelocal64)
 #endif
 
+/* 64-bit time version of the current struct timex */
+struct __timex64
+{
+  unsigned int modes;		/* mode selector */
+  __syscall_slong_t offset;	/* time offset (usec) */
+  __syscall_slong_t freq;	/* frequency offset (scaled ppm) */
+  __syscall_slong_t maxerror;	/* maximum error (usec) */
+  __syscall_slong_t esterror;	/* estimated error (usec) */
+  int status;			/* clock command/status */
+  __syscall_slong_t constant;	/* pll time constant */
+  __syscall_slong_t precision;	/* clock precision (usec) (ro) */
+  __syscall_slong_t tolerance;	/* clock frequency tolerance (ppm) (ro) */
+  struct __timeval64 time;	/* (read only, except for ADJ_SETOFFSET) */
+  __syscall_slong_t tick;	/* (modified) usecs between clock ticks */
+  __syscall_slong_t ppsfreq;	/* pps frequency (scaled ppm) (ro) */
+  __syscall_slong_t jitter;	/* pps jitter (us) (ro) */
+  int shift;			/* interval duration (s) (shift) (ro) */
+  __syscall_slong_t stabil;	/* pps stability (scaled ppm) (ro) */
+  __syscall_slong_t jitcnt;	/* jitter limit exceeded (ro) */
+  __syscall_slong_t calcnt;	/* calibration intervals (ro) */
+  __syscall_slong_t errcnt;	/* calibration errors (ro) */
+  __syscall_slong_t stbcnt;	/* stability limit exceeded (ro) */
+
+  int tai;			/* TAI offset (ro) */
+
+  /* ??? */
+  int  :32; int  :32; int  :32; int  :32;
+  int  :32; int  :32; int  :32; int  :32;
+  int  :32; int  :32; int  :32;
+};
 
 extern __typeof (clock_getres) __clock_getres;
 extern __typeof (clock_gettime) __clock_gettime;
