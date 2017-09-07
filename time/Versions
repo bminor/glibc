@@ -87,5 +87,6 @@ libc {
     __utimes64;
     __adjtime64;
     __adjtimex64;
+    __getitimer64;
   }
 }
