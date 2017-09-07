@@ -110,6 +110,16 @@ struct itimerval
     struct timeval it_value;
   };
 
+/* 64-BIT-TIME Type of the second argument to `getitimer' and
+   the second and third arguments `setitimer'.  */
+struct __itimerval64
+  {
+    /* Value to put into `it_value' when the timer expires.  */
+    struct __timeval64 it_interval;
+    /* Time to the next timer expiration.  */
+    struct __timeval64 it_value;
+  };
+
 #if defined __USE_GNU && !defined __cplusplus
 /* Use the nicer parameter type only in GNU mode and not for C++ since the
    strict C++ rules prevent the automatic promotion.  */
