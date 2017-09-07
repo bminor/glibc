@@ -38,7 +38,7 @@ shm-routines   := shm_open shm_unlink
 mq-routines    := mq_open mq_close mq_unlink mq_getattr mq_setattr	\
 		  mq_notify mq_send mq_receive mq_timedsend		\
 		  mq_timedreceive					\
-		  mq_timedreceiv_time64
+		  mq_timedreceiv_time64 mq_timedsend_time64
 
 routines = $(clock-routines)
 
