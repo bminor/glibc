@@ -132,6 +132,9 @@ libc {
     fcntl64;
     statx;
   }
+  GLIBC_2.29 {
+    __fxstat64_time64;
+  }
   GLIBC_PRIVATE {
     __libc_fcntl64;
     __fcntl_nocancel;

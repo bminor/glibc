@@ -50,3 +50,10 @@ fstat64 (int fd, struct stat64 *buf)
 {
   return __fxstat64 (_STAT_VER, fd, buf);
 }
+
+int
+attribute_hidden
+__fstat64_time64 (int fd, struct __stat64_t64 *buf)
+{
+  return __fxstat64_time64 (_STAT_VER, fd, buf);
+}
