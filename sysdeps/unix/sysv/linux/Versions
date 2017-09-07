@@ -171,6 +171,7 @@ libc {
     mlock2;
     pkey_alloc; pkey_free; pkey_set; pkey_get; pkey_mprotect;
     __ntp_gettime64;
+    __ntp_gettimex64;
   }
   GLIBC_PRIVATE {
     # functions used in other libraries

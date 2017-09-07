@@ -16,6 +16,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sys/timex.h>
+#include <include/time.h>
 
 #ifndef MOD_OFFSET
 # define modes mode
@@ -31,6 +32,29 @@ ntp_gettimex (struct ntptimeval *ntv)
   tntx.modes = 0;
   result = __adjtimex (&tntx);
   ntv->time = tntx.time;
+  ntv->maxerror = tntx.maxerror;
+  ntv->esterror = tntx.esterror;
+  ntv->tai = tntx.tai;
+  ntv->__glibc_reserved1 = 0;
+  ntv->__glibc_reserved2 = 0;
+  ntv->__glibc_reserved3 = 0;
+  ntv->__glibc_reserved4 = 0;
+  return result;
+}
+
+/* The 64-bit-time version */
+
+int
+__ntp_gettimex64 (struct __ntptimeval64 *ntv)
+{
+  struct timex tntx;
+  int result;
+
+  tntx.modes = 0;
+  result = __adjtimex (&tntx);
+  ntv->time.tv_sec = tntx.time.tv_sec;
+  ntv->time.tv_usec = tntx.time.tv_usec;
+  ntv->maxerror = tntx.maxerror;
   ntv->maxerror = tntx.maxerror;
   ntv->esterror = tntx.esterror;
   ntv->tai = tntx.tai;
