@@ -46,6 +46,7 @@
 # include <bits/types/clockid_t.h>
 # include <bits/types/timer_t.h>
 # include <bits/types/struct_itimerspec.h>
+# include <bits/types/struct_itimerspec64.h>
 struct sigevent;
 #endif
 

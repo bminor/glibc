@@ -20,6 +20,7 @@
 
 #include <time.h>
 #include <bits/types/struct_itimerspec.h>
+#include <bits/types/struct_itimerspec64.h>
 
 /* Get the platform-dependent flags.  */
 #include <bits/timerfd.h>
