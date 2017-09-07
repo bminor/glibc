@@ -1,5 +1,4 @@
-/* utime -- change access and modification times of file.  Stub version.
-   Copyright (C) 1991-2018 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,41 +15,32 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <sysdep.h>
 #include <errno.h>
-#include <stddef.h>
 #include <utime.h>
+#include <time.h>
+#include <sys/types.h>
+#include <sys/time.h>
 
 
 /* Set the access and modification times of FILE to those given in TIMES.
    If TIMES is NULL, set them to the current time.  */
 int
-utime (const char *file, const struct utimbuf *times)
-{
-  if (file == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
-
-  __set_errno (ENOSYS);
-  return -1;
-}
-libc_hidden_def (utime)
-
-stub_warning (utime)
-
-/* 64-bit time version */
-
-int
 __utime64 (const char *file, const struct __utimbuf64 *times)
 {
-  if (file == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
+  struct __timeval64 timevals[2];
+  struct __timeval64 *tvp;
 
-  __set_errno (ENOSYS);
-  return -1;
+  if (times != NULL)
+    {
+      timevals[0].tv_sec = (time_t) times->actime;
+      timevals[0].tv_usec = 0L;
+      timevals[1].tv_sec = (time_t) times->modtime;
+      timevals[1].tv_usec = 0L;
+      tvp = timevals;
+    }
+  else
+    tvp = NULL;
+
+  return __utimes64 (file, tvp);
 }
-stub_warning (__utime64)

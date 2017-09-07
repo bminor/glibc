@@ -137,6 +137,7 @@ libc {
     __xstat64_time64;
     __lxstat64_time64;
     __fxstatat64_time64;
+    __utime64;
   }
   GLIBC_PRIVATE {
     __libc_fcntl64;

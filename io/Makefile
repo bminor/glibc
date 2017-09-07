@@ -28,7 +28,7 @@ headers := sys/stat.h bits/stat.h sys/statfs.h bits/statfs.h sys/vfs.h \
 	   bits/statx.h utime.h ftw.h fts.h sys/sendfile.h
 
 routines :=								\
-	utime								\
+	utime utime64							\
 	mkfifo mkfifoat							\
 	stat fstat lstat stat64 fstat64 lstat64 fstatat fstatat64	\
 	xstat fxstat lxstat xstat64 fxstat64 lxstat64 statx		\
