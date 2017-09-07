@@ -49,8 +49,8 @@
 #define LINKAGE
 #endif
 
-LINKAGE int
-ADJTIME (const struct TIMEVAL *itv, struct TIMEVAL *otv)
+int __adjtime64 (const struct __timeval64 *itv,
+                 struct __timeval64 *otv)
 {
   struct TIMEX tntx;
 
@@ -88,6 +88,77 @@ ADJTIME (const struct TIMEVAL *itv, struct TIMEVAL *otv)
   return 0;
 }
 
-#ifdef NO_LOCAL_ADJTIME
-weak_alias (__adjtime, adjtime)
-#endif
+int
+__adjtimex64(struct __timex64 *tx)
+{
+  struct timex tx32;
+
+  if (tx == NULL)
+    {
+      __set_errno (EFAULT);
+      return -1;
+    }
+
+  if ((tx->modes & ADJ_SETOFFSET) != 0 && tx->time.tv_sec > INT_MAX)
+    {
+      __set_errno (EOVERFLOW);
+      return -1;
+    }
+
+  /* Implement with existing 32-bit time syscall */
+
+  /* Just copy everything */
+  tx32.modes = tx->modes;
+  tx32.offset = tx->offset;
+  tx32.freq = tx->freq;
+  tx32.maxerror = tx->maxerror;
+  tx32.esterror = tx->esterror;
+  tx32.status = tx->status;
+  tx32.constant = tx->constant;
+  tx32.precision = tx->precision;
+  tx32.tolerance = tx->tolerance;
+  tx32.time.tv_sec = tx->time.tv_sec;
+  tx32.time.tv_usec = tx->time.tv_usec;
+  tx32.tick = tx->tick;
+  tx32.ppsfreq = tx->ppsfreq;
+  tx32.jitter = tx->jitter;
+  tx32.shift = tx->shift;
+  tx32.stabil = tx->stabil;
+  tx32.jitcnt = tx->jitcnt;
+  tx32.calcnt = tx->calcnt;
+  tx32.errcnt = tx->errcnt;
+  tx32.stbcnt = tx->stbcnt;
+
+  tx32.tai = tx->tai;
+  /* WARNING -- anonymous fields after TAI are not copied. */
+
+  int result = ADJTIMEX(&tx32);
+
+  if (result == 0)
+    {
+      /* Just copy back everything */
+      tx->modes = tx32.modes;
+      tx->offset = tx32.offset;
+      tx->freq = tx32.freq;
+      tx->maxerror = tx32.maxerror;
+      tx->esterror = tx32.esterror;
+      tx->status = tx32.status;
+      tx->constant = tx32.constant;
+      tx->precision = tx32.precision;
+      tx->tolerance = tx32.tolerance;
+      tx->time.tv_sec = tx32.time.tv_sec;
+      tx->time.tv_usec = tx32.time.tv_usec;
+      tx->tick = tx32.tick;
+      tx->ppsfreq = tx32.ppsfreq;
+      tx->jitter = tx32.jitter;
+      tx->shift = tx32.shift;
+      tx->stabil = tx32.stabil;
+      tx->jitcnt = tx32.jitcnt;
+      tx->calcnt = tx32.calcnt;
+      tx->errcnt = tx32.errcnt;
+      tx->stbcnt = tx32.stbcnt;
+    }
+
+  return result;
+}
+weak_alias (__adjtimex64, __ntp_adjtime64);

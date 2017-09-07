@@ -31,3 +31,13 @@ __adjtime (const struct timeval *delta, struct timeval *olddelta)
 stub_warning (adjtime)
 
 weak_alias (__adjtime, adjtime)
+
+/* 64-bit time version */
+
+int
+__adjtime64 (const struct __timeval64 *delta, struct __timeval64 *olddelta)
+{
+  __set_errno (ENOSYS);
+  return -1;
+}
+stub_warning (__adjtime64)
