@@ -35,3 +35,22 @@ pthread_rwlock_timedrdlock (pthread_rwlock_t *rwlock,
 
   return __pthread_rwlock_rdlock_full (rwlock, abstime);
 }
+
+/* 64-bit time version */
+
+int
+__pthread_rwlock_timedrdlock64 (pthread_rwlock_t *rwlock,
+    const struct __timespec64 *abstime)
+{
+  /* Make sure the passed in timeout value is valid.  Note that the previous
+     implementation assumed that this check *must* not be performed if there
+     would in fact be no blocking; however, POSIX only requires that "the
+     validity of the abstime parameter need not be checked if the lock can be
+     immediately acquired" (i.e., we need not but may check it).  */
+  /* ??? Just move this to __pthread_rwlock_rdlock_full?  */
+  if (__glibc_unlikely (abstime->tv_nsec >= 1000000000
+      || abstime->tv_nsec < 0))
+    return EINVAL;
+
+  return __pthread_rwlock_rdlock_full64 (rwlock, abstime);
+}

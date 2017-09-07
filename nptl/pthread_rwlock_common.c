@@ -507,6 +507,240 @@ __pthread_rwlock_rdlock_full (pthread_rwlock_t *rwlock,
   return 0;
 }
 
+/* 64-bit time version */
+
+static __always_inline int
+__pthread_rwlock_rdlock_full64 (pthread_rwlock_t *rwlock,
+    const struct __timespec64 *abstime)
+{
+  unsigned int r;
+
+  /* Make sure we are not holding the rwlock as a writer.  This is a deadlock
+     situation we recognize and report.  */
+  if (__glibc_unlikely (atomic_load_relaxed (&rwlock->__data.__cur_writer)
+      == THREAD_GETMEM (THREAD_SELF, tid)))
+    return EDEADLK;
+
+  /* If we prefer writers, recursive rdlock is disallowed, we are in a read
+     phase, and there are other readers present, we try to wait without
+     extending the read phase.  We will be unblocked by either one of the
+     other active readers, or if the writer gives up WRLOCKED (e.g., on
+     timeout).
+     If there are no other readers, we simply race with any existing primary
+     writer; it would have been a race anyway, and changing the odds slightly
+     will likely not make a big difference.  */
+  if (rwlock->__data.__flags == PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP)
+    {
+      r = atomic_load_relaxed (&rwlock->__data.__readers);
+      while (((r & PTHREAD_RWLOCK_WRPHASE) == 0)
+	      && ((r & PTHREAD_RWLOCK_WRLOCKED) != 0)
+	      && ((r >> PTHREAD_RWLOCK_READER_SHIFT) > 0))
+	{
+	  /* TODO Spin first.  */
+	  /* Try setting the flag signaling that we are waiting without having
+	     incremented the number of readers.  Relaxed MO is fine because
+	     this is just about waiting for a state change in __readers.  */
+	  if (atomic_compare_exchange_weak_relaxed
+	      (&rwlock->__data.__readers, &r, r | PTHREAD_RWLOCK_RWAITING))
+	    {
+	      /* Wait for as long as the flag is set.  An ABA situation is
+		 harmless because the flag is just about the state of
+		 __readers, and all threads set the flag under the same
+		 conditions.  */
+	      while ((atomic_load_relaxed (&rwlock->__data.__readers)
+		  & PTHREAD_RWLOCK_RWAITING) != 0)
+		{
+		  int private = __pthread_rwlock_get_private (rwlock);
+		  int err = futex_abstimed_wait64 (&rwlock->__data.__readers,
+		      r, abstime, private);
+		  /* We ignore EAGAIN and EINTR.  On time-outs, we can just
+		     return because we don't need to clean up anything.  */
+		  if (err == ETIMEDOUT)
+		    return err;
+		}
+	      /* It makes sense to not break out of the outer loop here
+		 because we might be in the same situation again.  */
+	    }
+	  else
+	    {
+	      /* TODO Back-off.  */
+	    }
+	}
+    }
+  /* Register as a reader, using an add-and-fetch so that R can be used as
+     expected value for future operations.  Acquire MO so we synchronize with
+     prior writers as well as the last reader of the previous read phase (see
+     below).  */
+  r = atomic_fetch_add_acquire (&rwlock->__data.__readers,
+      (1 << PTHREAD_RWLOCK_READER_SHIFT)) + (1 << PTHREAD_RWLOCK_READER_SHIFT);
+
+  /* Check whether there is an overflow in the number of readers.  We assume
+     that the total number of threads is less than half the maximum number
+     of readers that we have bits for in __readers (i.e., with 32-bit int and
+     PTHREAD_RWLOCK_READER_SHIFT of 3, we assume there are less than
+     1 << (32-3-1) concurrent threads).
+     If there is an overflow, we use a CAS to try to decrement the number of
+     readers if there still is an overflow situation.  If so, we return
+     EAGAIN; if not, we are not a thread causing an overflow situation, and so
+     we just continue.  Using a fetch-add instead of the CAS isn't possible
+     because other readers might release the lock concurrently, which could
+     make us the last reader and thus responsible for handing ownership over
+     to writers (which requires a CAS too to make the decrement and ownership
+     transfer indivisible).  */
+  while (__glibc_unlikely (r >= PTHREAD_RWLOCK_READER_OVERFLOW))
+    {
+      /* Relaxed MO is okay because we just want to undo our registration and
+	 cannot have changed the rwlock state substantially if the CAS
+	 succeeds.  */
+      if (atomic_compare_exchange_weak_relaxed (&rwlock->__data.__readers, &r,
+	  r - (1 << PTHREAD_RWLOCK_READER_SHIFT)))
+	return EAGAIN;
+    }
+
+  /* We have registered as a reader, so if we are in a read phase, we have
+     acquired a read lock.  This is also the reader--reader fast-path.
+     Even if there is a primary writer, we just return.  If writers are to
+     be preferred and we are the only active reader, we could try to enter a
+     write phase to let the writer proceed.  This would be okay because we
+     cannot have acquired the lock previously as a reader (which could result
+     in deadlock if we would wait for the primary writer to run).  However,
+     this seems to be a corner case and handling it specially not be worth the
+     complexity.  */
+  if (__glibc_likely ((r & PTHREAD_RWLOCK_WRPHASE) == 0))
+    return 0;
+
+  /* If there is no primary writer but we are in a write phase, we can try
+     to install a read phase ourself.  */
+  while (((r & PTHREAD_RWLOCK_WRPHASE) != 0)
+      && ((r & PTHREAD_RWLOCK_WRLOCKED) == 0))
+    {
+       /* Try to enter a read phase: If the CAS below succeeds, we have
+	 ownership; if it fails, we will simply retry and reassess the
+	 situation.
+	 Acquire MO so we synchronize with prior writers.  */
+      if (atomic_compare_exchange_weak_acquire (&rwlock->__data.__readers, &r,
+	  r ^ PTHREAD_RWLOCK_WRPHASE))
+	{
+	  /* We started the read phase, so we are also responsible for
+	     updating the write-phase futex.  Relaxed MO is sufficient.
+	     Note that there can be no other reader that we have to wake
+	     because all other readers will see the read phase started by us
+	     (or they will try to start it themselves); if a writer started
+	     the read phase, we cannot have started it.  Furthermore, we
+	     cannot discard a PTHREAD_RWLOCK_FUTEX_USED flag because we will
+	     overwrite the value set by the most recent writer (or the readers
+	     before it in case of explicit hand-over) and we know that there
+	     are no waiting readers.  */
+	  atomic_store_relaxed (&rwlock->__data.__wrphase_futex, 0);
+	  return 0;
+	}
+      else
+	{
+	  /* TODO Back off before retrying.  Also see above.  */
+	}
+    }
+
+  if ((r & PTHREAD_RWLOCK_WRPHASE) != 0)
+    {
+      /* We are in a write phase, and there must be a primary writer because
+	 of the previous loop.  Block until the primary writer gives up the
+	 write phase.  This case requires explicit hand-over using
+	 __wrphase_futex.
+	 However, __wrphase_futex might not have been set to 1 yet (either
+	 because explicit hand-over to the writer is still ongoing, or because
+	 the writer has started the write phase but does not yet have updated
+	 __wrphase_futex).  The least recent value of __wrphase_futex we can
+	 read from here is the modification of the last read phase (because
+	 we synchronize with the last reader in this read phase through
+	 __readers; see the use of acquire MO on the fetch_add above).
+	 Therefore, if we observe a value of 0 for __wrphase_futex, we need
+	 to subsequently check that __readers now indicates a read phase; we
+	 need to use acquire MO for this so that if we observe a read phase,
+	 we will also see the modification of __wrphase_futex by the previous
+	 writer.  We then need to load __wrphase_futex again and continue to
+	 wait if it is not 0, so that we do not skip explicit hand-over.
+	 Relaxed MO is sufficient for the load from __wrphase_futex because
+	 we just use it as an indicator for when we can proceed; we use
+	 __readers and the acquire MO accesses to it to eventually read from
+	 the proper stores to __wrphase_futex.  */
+      unsigned int wpf;
+      bool ready = false;
+      for (;;)
+	{
+	  while (((wpf = atomic_load_relaxed (&rwlock->__data.__wrphase_futex))
+	      | PTHREAD_RWLOCK_FUTEX_USED) == (1 | PTHREAD_RWLOCK_FUTEX_USED))
+	    {
+	      int private = __pthread_rwlock_get_private (rwlock);
+	      if (((wpf & PTHREAD_RWLOCK_FUTEX_USED) == 0)
+		  && !atomic_compare_exchange_weak_relaxed
+		      (&rwlock->__data.__wrphase_futex,
+		       &wpf, wpf | PTHREAD_RWLOCK_FUTEX_USED))
+		continue;
+	      int err = futex_abstimed_wait64 (&rwlock->__data.__wrphase_futex,
+		  1 | PTHREAD_RWLOCK_FUTEX_USED, abstime, private);
+	      if (err == ETIMEDOUT)
+		{
+		  /* If we timed out, we need to unregister.  If no read phase
+		     has been installed while we waited, we can just decrement
+		     the number of readers.  Otherwise, we just acquire the
+		     lock, which is allowed because we give no precise timing
+		     guarantees, and because the timeout is only required to
+		     be in effect if we would have had to wait for other
+		     threads (e.g., if futex_wait would time-out immediately
+		     because the given absolute time is in the past).  */
+		  r = atomic_load_relaxed (&rwlock->__data.__readers);
+		  while ((r & PTHREAD_RWLOCK_WRPHASE) != 0)
+		    {
+		      /* We don't need to make anything else visible to
+			 others besides unregistering, so relaxed MO is
+			 sufficient.  */
+		      if (atomic_compare_exchange_weak_relaxed
+			  (&rwlock->__data.__readers, &r,
+			   r - (1 << PTHREAD_RWLOCK_READER_SHIFT)))
+			return ETIMEDOUT;
+		      /* TODO Back-off.  */
+		    }
+		  /* Use the acquire MO fence to mirror the steps taken in the
+		     non-timeout case.  Note that the read can happen both
+		     in the atomic_load above as well as in the failure case
+		     of the CAS operation.  */
+		  atomic_thread_fence_acquire ();
+		  /* We still need to wait for explicit hand-over, but we must
+		     not use futex_wait anymore because we would just time out
+		     in this case and thus make the spin-waiting we need
+		     unnecessarily expensive.  */
+		  while ((atomic_load_relaxed (&rwlock->__data.__wrphase_futex)
+		      | PTHREAD_RWLOCK_FUTEX_USED)
+		      == (1 | PTHREAD_RWLOCK_FUTEX_USED))
+		    {
+		      /* TODO Back-off?  */
+		    }
+		  ready = true;
+		  break;
+		}
+	      /* If we got interrupted (EINTR) or the futex word does not have the
+		 expected value (EAGAIN), retry.  */
+	    }
+	  if (ready)
+	    /* See below.  */
+	    break;
+	  /* We need acquire MO here so that we synchronize with the lock
+	     release of the writer, and so that we observe a recent value of
+	     __wrphase_futex (see below).  */
+	  if ((atomic_load_acquire (&rwlock->__data.__readers)
+	      & PTHREAD_RWLOCK_WRPHASE) == 0)
+	    /* We are in a read phase now, so the least recent modification of
+	       __wrphase_futex we can read from is the store by the writer
+	       with value 1.  Thus, only now we can assume that if we observe
+	       a value of 0, explicit hand-over is finished. Retry the loop
+	       above one more time.  */
+	    ready = true;
+	}
+    }
+
+  return 0;
+}
+
 
 static __always_inline void
 __pthread_rwlock_wrunlock (pthread_rwlock_t *rwlock)
@@ -920,6 +1154,363 @@ __pthread_rwlock_wrlock_full (pthread_rwlock_t *rwlock,
     }
 
  done:
+  atomic_store_relaxed (&rwlock->__data.__cur_writer,
+      THREAD_GETMEM (THREAD_SELF, tid));
+  return 0;
+}
+
+/* 64-bit time version */
+
+static __always_inline int
+__pthread_rwlock_wrlock_full64 (pthread_rwlock_t *rwlock,
+    const struct __timespec64 *abstime)
+{
+  /* Make sure we are not holding the rwlock as a writer.  This is a deadlock
+     situation we recognize and report.  */
+  if (__glibc_unlikely (atomic_load_relaxed (&rwlock->__data.__cur_writer)
+      == THREAD_GETMEM (THREAD_SELF, tid)))
+    return EDEADLK;
+
+  /* First we try to acquire the role of primary writer by setting WRLOCKED;
+     if it was set before, there already is a primary writer.  Acquire MO so
+     that we synchronize with previous primary writers.
+
+     We do not try to change to a write phase right away using a fetch_or
+     because we would have to reset it again and wake readers if there are
+     readers present (some readers could try to acquire the lock more than
+     once, so setting a write phase in the middle of this could cause
+     deadlock).  Changing to a write phase eagerly would only speed up the
+     transition from a read phase to a write phase in the uncontended case,
+     but it would slow down the contended case if readers are preferred (which
+     is the default).
+     We could try to CAS from a state with no readers to a write phase, but
+     this could be less scalable if readers arrive and leave frequently.  */
+  bool may_share_futex_used_flag = false;
+  unsigned int r = atomic_fetch_or_acquire (&rwlock->__data.__readers,
+      PTHREAD_RWLOCK_WRLOCKED);
+  if (__glibc_unlikely ((r & PTHREAD_RWLOCK_WRLOCKED) != 0))
+    {
+      /* There is another primary writer.  */
+      bool prefer_writer =
+	  (rwlock->__data.__flags != PTHREAD_RWLOCK_PREFER_READER_NP);
+      if (prefer_writer)
+	{
+	  /* We register as a waiting writer, so that we can make use of
+	     writer--writer hand-over.  Relaxed MO is fine because we just
+	     want to register.  We assume that the maximum number of threads
+	     is less than the capacity in __writers.  */
+	  atomic_fetch_add_relaxed (&rwlock->__data.__writers, 1);
+	}
+      for (;;)
+	{
+	  /* TODO Spin until WRLOCKED is 0 before trying the CAS below.
+	     But pay attention to not delay trying writer--writer hand-over
+	     for too long (which we must try eventually anyway).  */
+	  if ((r & PTHREAD_RWLOCK_WRLOCKED) == 0)
+	    {
+	      /* Try to become the primary writer or retry.  Acquire MO as in
+		 the fetch_or above.  */
+	      if (atomic_compare_exchange_weak_acquire
+		  (&rwlock->__data.__readers, &r,
+		      r | PTHREAD_RWLOCK_WRLOCKED))
+		{
+		  if (prefer_writer)
+		    {
+		      /* Unregister as a waiting writer.  Note that because we
+			 acquired WRLOCKED, WRHANDOVER will not be set.
+			 Acquire MO on the CAS above ensures that
+			 unregistering happens after the previous writer;
+			 this sorts the accesses to __writers by all
+			 primary writers in a useful way (e.g., any other
+			 primary writer acquiring after us or getting it from
+			 us through WRHANDOVER will see both our changes to
+			 __writers).
+			 ??? Perhaps this is not strictly necessary for
+			 reasons we do not yet know of.  */
+		      atomic_fetch_add_relaxed (&rwlock->__data.__writers,
+			  -1);
+		    }
+		  break;
+		}
+	      /* Retry if the CAS fails (r will have been updated).  */
+	      continue;
+	    }
+	  /* If writer--writer hand-over is available, try to become the
+	     primary writer this way by grabbing the WRHANDOVER token.  If we
+	     succeed, we own WRLOCKED.  */
+	  if (prefer_writer)
+	    {
+	      unsigned int w = atomic_load_relaxed
+		  (&rwlock->__data.__writers);
+	      if ((w & PTHREAD_RWLOCK_WRHANDOVER) != 0)
+		{
+		  /* Acquire MO is required here so that we synchronize with
+		     the writer that handed over WRLOCKED.  We also need this
+		     for the reload of __readers below because our view of
+		     __readers must be at least as recent as the view of the
+		     writer that handed over WRLOCKED; we must avoid an ABA
+		     through WRHANDOVER, which could, for example, lead to us
+		     assuming we are still in a write phase when in fact we
+		     are not.  */
+		  if (atomic_compare_exchange_weak_acquire
+		      (&rwlock->__data.__writers,
+		       &w, (w - PTHREAD_RWLOCK_WRHANDOVER - 1)))
+		    {
+		      /* Reload so our view is consistent with the view of
+			 the previous owner of WRLOCKED.  See above.  */
+		      r = atomic_load_relaxed (&rwlock->__data.__readers);
+		      break;
+		    }
+		  /* We do not need to reload __readers here.  We should try
+		     to perform writer--writer hand-over if possible; if it
+		     is not possible anymore, we will reload __readers
+		     elsewhere in this loop.  */
+		  continue;
+		}
+	    }
+	  /* We did not acquire WRLOCKED nor were able to use writer--writer
+	     hand-over, so we block on __writers_futex.  */
+	  int private = __pthread_rwlock_get_private (rwlock);
+	  unsigned int wf = atomic_load_relaxed
+	      (&rwlock->__data.__writers_futex);
+	  if (((wf & ~(unsigned int) PTHREAD_RWLOCK_FUTEX_USED) != 1)
+	      || ((wf != (1 | PTHREAD_RWLOCK_FUTEX_USED))
+		  && !atomic_compare_exchange_weak_relaxed
+		      (&rwlock->__data.__writers_futex, &wf,
+		       1 | PTHREAD_RWLOCK_FUTEX_USED)))
+	    {
+	      /* If we cannot block on __writers_futex because there is no
+		 primary writer, or we cannot set PTHREAD_RWLOCK_FUTEX_USED,
+		 we retry.  We must reload __readers here in case we cannot
+		 block on __writers_futex so that we can become the primary
+		 writer and are not stuck in a loop that just continuously
+		 fails to block on __writers_futex.  */
+	      r = atomic_load_relaxed (&rwlock->__data.__readers);
+	      continue;
+	    }
+	  /* We set the flag that signals that the futex is used, or we could
+	     have set it if we had been faster than other waiters.  As a
+	     result, we may share the flag with an unknown number of other
+	     writers.  Therefore, we must keep this flag set when we acquire
+	     the lock.  We do not need to do this when we do not reach this
+	     point here because then we are not part of the group that may
+	     share the flag, and another writer will wake one of the writers
+	     in this group.  */
+	  may_share_futex_used_flag = true;
+	  int err = futex_abstimed_wait64 (&rwlock->__data.__writers_futex,
+	      1 | PTHREAD_RWLOCK_FUTEX_USED, abstime, private);
+	  if (err == ETIMEDOUT)
+	    {
+	      if (prefer_writer)
+		{
+		  /* We need to unregister as a waiting writer.  If we are the
+		     last writer and writer--writer hand-over is available,
+		     we must make use of it because nobody else will reset
+		     WRLOCKED otherwise.  (If we use it, we simply pretend
+		     that this happened before the timeout; see
+		     pthread_rwlock_rdlock_full for the full reasoning.)
+		     Also see the similar code above.  */
+		  unsigned int w = atomic_load_relaxed
+		      (&rwlock->__data.__writers);
+		  while (!atomic_compare_exchange_weak_acquire
+		      (&rwlock->__data.__writers, &w,
+			  (w == PTHREAD_RWLOCK_WRHANDOVER + 1 ? 0 : w - 1)))
+		    {
+		      /* TODO Back-off.  */
+		    }
+		  if (w == PTHREAD_RWLOCK_WRHANDOVER + 1)
+		    {
+		      /* We must continue as primary writer.  See above.  */
+		      r = atomic_load_relaxed (&rwlock->__data.__readers);
+		      break;
+		    }
+		}
+	      /* We cleaned up and cannot have stolen another waiting writer's
+		 futex wake-up, so just return.  */
+	      return ETIMEDOUT;
+	    }
+	  /* If we got interrupted (EINTR) or the futex word does not have the
+	     expected value (EAGAIN), retry after reloading __readers.  */
+	  r = atomic_load_relaxed (&rwlock->__data.__readers);
+	}
+      /* Our snapshot of __readers is up-to-date at this point because we
+	 either set WRLOCKED using a CAS or were handed over WRLOCKED from
+	 another writer whose snapshot of __readers we inherit.  */
+    }
+
+  /* If we are in a read phase and there are no readers, try to start a write
+     phase.  */
+  while (((r & PTHREAD_RWLOCK_WRPHASE) == 0)
+      && ((r >> PTHREAD_RWLOCK_READER_SHIFT) == 0))
+    {
+      /* Acquire MO so that we synchronize with prior writers and do
+	 not interfere with their updates to __writers_futex, as well
+	 as regarding prior readers and their updates to __wrphase_futex,
+	 respectively.  */
+      if (atomic_compare_exchange_weak_acquire (&rwlock->__data.__readers,
+	  &r, r | PTHREAD_RWLOCK_WRPHASE))
+	{
+	  /* We have started a write phase, so need to enable readers to wait.
+	     See the similar case in__pthread_rwlock_rdlock_full.  */
+	  atomic_store_relaxed (&rwlock->__data.__wrphase_futex, 1);
+	  /* Make sure we fall through to the end of the function.  */
+	  r |= PTHREAD_RWLOCK_WRPHASE;
+	  break;
+	}
+      /* TODO Back-off.  */
+    }
+
+  /* We are the primary writer; enable blocking on __writers_futex.  Relaxed
+     MO is sufficient for futex words; acquire MO on the previous
+     modifications of __readers ensures that this store happens after the
+     store of value 0 by the previous primary writer.  */
+  atomic_store_relaxed (&rwlock->__data.__writers_futex,
+      1 | (may_share_futex_used_flag ? PTHREAD_RWLOCK_FUTEX_USED : 0));
+
+  if (__glibc_unlikely ((r & PTHREAD_RWLOCK_WRPHASE) == 0))
+    {
+      /* We are not in a read phase and there are readers (because of the
+	 previous loop).  Thus, we have to wait for explicit hand-over from
+	 one of these readers.
+	 We basically do the same steps as for the similar case in
+	 __pthread_rwlock_rdlock_full, except that we additionally might try
+	 to directly hand over to another writer and need to wake up
+	 other writers or waiting readers (i.e., PTHREAD_RWLOCK_RWAITING).  */
+      unsigned int wpf;
+      bool ready = false;
+      for (;;)
+	{
+	  while (((wpf = atomic_load_relaxed (&rwlock->__data.__wrphase_futex))
+	      | PTHREAD_RWLOCK_FUTEX_USED) == PTHREAD_RWLOCK_FUTEX_USED)
+	    {
+	      int private = __pthread_rwlock_get_private (rwlock);
+	      if (((wpf & PTHREAD_RWLOCK_FUTEX_USED) == 0)
+		  && !atomic_compare_exchange_weak_relaxed
+		      (&rwlock->__data.__wrphase_futex, &wpf,
+		       PTHREAD_RWLOCK_FUTEX_USED))
+		continue;
+	      int err = futex_abstimed_wait64 (&rwlock->__data.__wrphase_futex,
+		  PTHREAD_RWLOCK_FUTEX_USED, abstime, private);
+	      if (err == ETIMEDOUT)
+		{
+		  if (rwlock->__data.__flags
+		      != PTHREAD_RWLOCK_PREFER_READER_NP)
+		    {
+		      /* We try writer--writer hand-over.  */
+		      unsigned int w = atomic_load_relaxed
+			  (&rwlock->__data.__writers);
+		      if (w != 0)
+			{
+			  /* We are about to hand over WRLOCKED, so we must
+			     release __writers_futex too; otherwise, we'd have
+			     a pending store, which could at least prevent
+			     other threads from waiting using the futex
+			     because it could interleave with the stores
+			     by subsequent writers.  In turn, this means that
+			     we have to clean up when we do not hand over
+			     WRLOCKED.
+			     Release MO so that another writer that gets
+			     WRLOCKED from us can take over our view of
+			     __readers.  */
+			  unsigned int wf = atomic_exchange_relaxed
+			      (&rwlock->__data.__writers_futex, 0);
+			  while (w != 0)
+			    {
+			      if (atomic_compare_exchange_weak_release
+				  (&rwlock->__data.__writers, &w,
+				      w | PTHREAD_RWLOCK_WRHANDOVER))
+				{
+				  /* Wake other writers.  */
+				  if ((wf & PTHREAD_RWLOCK_FUTEX_USED) != 0)
+				    futex_wake
+					(&rwlock->__data.__writers_futex, 1,
+					 private);
+				  return ETIMEDOUT;
+				}
+			      /* TODO Back-off.  */
+			    }
+			  /* We still own WRLOCKED and someone else might set
+			     a write phase concurrently, so enable waiting
+			     again.  Make sure we don't loose the flag that
+			     signals whether there are threads waiting on
+			     this futex.  */
+			  atomic_store_relaxed
+			      (&rwlock->__data.__writers_futex, wf);
+			}
+		    }
+		  /* If we timed out and we are not in a write phase, we can
+		     just stop being a primary writer.  Otherwise, we just
+		     acquire the lock.  */
+		  r = atomic_load_relaxed (&rwlock->__data.__readers);
+		  if ((r & PTHREAD_RWLOCK_WRPHASE) == 0)
+		    {
+		      /* We are about to release WRLOCKED, so we must release
+			 __writers_futex too; see the handling of
+			 writer--writer hand-over above.  */
+		      unsigned int wf = atomic_exchange_relaxed
+			  (&rwlock->__data.__writers_futex, 0);
+		      while ((r & PTHREAD_RWLOCK_WRPHASE) == 0)
+			{
+			  /* While we don't need to make anything from a
+			     caller's critical section visible to other
+			     threads, we need to ensure that our changes to
+			     __writers_futex are properly ordered.
+			     Therefore, use release MO to synchronize with
+			     subsequent primary writers.  Also wake up any
+			     waiting readers as they are waiting because of
+			     us.  */
+			  if (atomic_compare_exchange_weak_release
+			      (&rwlock->__data.__readers, &r,
+			       (r ^ PTHREAD_RWLOCK_WRLOCKED)
+			       & ~(unsigned int) PTHREAD_RWLOCK_RWAITING))
+			    {
+			      /* Wake other writers.  */
+			      if ((wf & PTHREAD_RWLOCK_FUTEX_USED) != 0)
+				futex_wake (&rwlock->__data.__writers_futex,
+				    1, private);
+			      /* Wake waiting readers.  */
+			      if ((r & PTHREAD_RWLOCK_RWAITING) != 0)
+				futex_wake (&rwlock->__data.__readers,
+				    INT_MAX, private);
+			      return ETIMEDOUT;
+			    }
+			}
+		      /* We still own WRLOCKED and someone else might set a
+			 write phase concurrently, so enable waiting again.
+			 Make sure we don't loose the flag that signals
+			 whether there are threads waiting on this futex.  */
+		      atomic_store_relaxed (&rwlock->__data.__writers_futex,
+			  wf);
+		    }
+		  /* Use the acquire MO fence to mirror the steps taken in the
+		     non-timeout case.  Note that the read can happen both
+		     in the atomic_load above as well as in the failure case
+		     of the CAS operation.  */
+		  atomic_thread_fence_acquire ();
+		  /* We still need to wait for explicit hand-over, but we must
+		     not use futex_wait anymore.  */
+		  while ((atomic_load_relaxed
+		      (&rwlock->__data.__wrphase_futex)
+		       | PTHREAD_RWLOCK_FUTEX_USED)
+		      == PTHREAD_RWLOCK_FUTEX_USED)
+		    {
+		      /* TODO Back-off.  */
+		    }
+		  ready = true;
+		  break;
+		}
+	      /* If we got interrupted (EINTR) or the futex word does not have
+		 the expected value (EAGAIN), retry.  */
+	    }
+	  /* See pthread_rwlock_rdlock_full.  */
+	  if (ready)
+	    break;
+	  if ((atomic_load_acquire (&rwlock->__data.__readers)
+	      & PTHREAD_RWLOCK_WRPHASE) != 0)
+	    ready = true;
+	}
+    }
+
   atomic_store_relaxed (&rwlock->__data.__cur_writer,
       THREAD_GETMEM (THREAD_SELF, tid));
   return 0;

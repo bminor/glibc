@@ -38,3 +38,21 @@ sem_timedwait (sem_t *sem, const struct timespec *abstime)
   else
     return __new_sem_wait_slow((struct new_sem *) sem, abstime);
 }
+
+int
+__sem_timedwait64 (sem_t *sem, const struct __timespec64 *abstime)
+{
+  if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
+
+  /* Check sem_wait.c for a more detailed explanation why it is required.  */
+  __pthread_testcancel ();
+
+  if (__new_sem_wait_fast ((struct new_sem *) sem, 0) == 0)
+    return 0;
+  else
+    return __new_sem_wait_slow64 ((struct new_sem *) sem, abstime);
+}

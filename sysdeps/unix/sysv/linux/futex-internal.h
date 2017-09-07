@@ -131,6 +131,32 @@ futex_reltimed_wait (unsigned int *futex_word, unsigned int expected,
     }
 }
 
+/* 64-bit time version */
+static __always_inline int
+futex_reltimed_wait64 (unsigned int *futex_word, unsigned int expected,
+		         const struct __timespec64 *reltime, int private)
+{
+  int err = lll_futex_timed_wait64 (futex_word, expected, reltime,
+                                      private);
+  switch (err)
+    {
+    case 0:
+    case -EAGAIN:
+    case -EINTR:
+    case -ETIMEDOUT:
+      return -err;
+
+    case -EFAULT: /* Must have been caused by a glibc or application bug.  */
+    case -EINVAL: /* Either due to wrong alignment or due to the timeout not
+		     being normalized.  Must have been caused by a glibc or
+		     application bug.  */
+    case -ENOSYS: /* Must have been caused by a glibc bug.  */
+    /* No other errors are documented at this time.  */
+    default:
+      futex_fatal_error ();
+    }
+}
+
 /* See sysdeps/nptl/futex-internal.h for details.  */
 static __always_inline int
 futex_reltimed_wait_cancelable (unsigned int *futex_word,
@@ -140,6 +166,37 @@ futex_reltimed_wait_cancelable (unsigned int *futex_word,
   int oldtype;
   oldtype = __pthread_enable_asynccancel ();
   int err = lll_futex_timed_wait (futex_word, expected, reltime, private);
+  __pthread_disable_asynccancel (oldtype);
+  switch (err)
+    {
+    case 0:
+    case -EAGAIN:
+    case -EINTR:
+    case -ETIMEDOUT:
+      return -err;
+
+    case -EFAULT: /* Must have been caused by a glibc or application bug.  */
+    case -EINVAL: /* Either due to wrong alignment or due to the timeout not
+		     being normalized.  Must have been caused by a glibc or
+		     application bug.  */
+    case -ENOSYS: /* Must have been caused by a glibc bug.  */
+    /* No other errors are documented at this time.  */
+    default:
+      futex_fatal_error ();
+    }
+}
+
+/* 64-bit time version */
+
+static __always_inline int
+futex_reltimed_wait_cancelable64 (unsigned int *futex_word,
+				    unsigned int expected,
+			            const struct __timespec64 *reltime,
+                                    int private)
+{
+  int oldtype;
+  oldtype = __pthread_enable_asynccancel ();
+  int err = lll_futex_timed_wait64 (futex_word, expected, reltime, private);
   __pthread_disable_asynccancel (oldtype);
   switch (err)
     {
@@ -190,6 +247,36 @@ futex_abstimed_wait (unsigned int *futex_word, unsigned int expected,
     }
 }
 
+/* 64-bit time version */
+static __always_inline int
+futex_abstimed_wait64 (unsigned int *futex_word, unsigned int expected,
+		         const struct __timespec64 *abstime, int private)
+{
+  /* Work around the fact that the kernel rejects negative timeout values
+     despite them being valid.  */
+  if (__glibc_unlikely ((abstime != NULL) && (abstime->tv_sec < 0)))
+    return ETIMEDOUT;
+  int err = lll_futex_timed_wait_bitset64 (futex_word, expected, abstime,
+					     FUTEX_CLOCK_REALTIME, private);
+  switch (err)
+    {
+    case 0:
+    case -EAGAIN:
+    case -EINTR:
+    case -ETIMEDOUT:
+      return -err;
+
+    case -EFAULT: /* Must have been caused by a glibc or application bug.  */
+    case -EINVAL: /* Either due to wrong alignment or due to the timeout not
+		     being normalized.  Must have been caused by a glibc or
+		     application bug.  */
+    case -ENOSYS: /* Must have been caused by a glibc bug.  */
+    /* No other errors are documented at this time.  */
+    default:
+      futex_fatal_error ();
+    }
+}
+
 /* See sysdeps/nptl/futex-internal.h for details.  */
 static __always_inline int
 futex_abstimed_wait_cancelable (unsigned int *futex_word,
@@ -204,6 +291,42 @@ futex_abstimed_wait_cancelable (unsigned int *futex_word,
   oldtype = __pthread_enable_asynccancel ();
   int err = lll_futex_timed_wait_bitset (futex_word, expected, abstime,
 					 FUTEX_CLOCK_REALTIME, private);
+  __pthread_disable_asynccancel (oldtype);
+  switch (err)
+    {
+    case 0:
+    case -EAGAIN:
+    case -EINTR:
+    case -ETIMEDOUT:
+      return -err;
+
+    case -EFAULT: /* Must have been caused by a glibc or application bug.  */
+    case -EINVAL: /* Either due to wrong alignment or due to the timeout not
+		     being normalized.  Must have been caused by a glibc or
+		     application bug.  */
+    case -ENOSYS: /* Must have been caused by a glibc bug.  */
+    /* No other errors are documented at this time.  */
+    default:
+      futex_fatal_error ();
+    }
+}
+
+/* 64-bit time version */
+
+static __always_inline int
+futex_abstimed_wait_cancelable64 (unsigned int *futex_word,
+				    unsigned int expected,
+			            const struct __timespec64 *abstime,
+                                    int private)
+{
+  /* Work around the fact that the kernel rejects negative timeout values
+     despite them being valid.  */
+  if (__glibc_unlikely ((abstime != NULL) && (abstime->tv_sec < 0)))
+    return ETIMEDOUT;
+  int oldtype;
+  oldtype = __pthread_enable_asynccancel ();
+  int err = lll_futex_timed_wait_bitset64 (futex_word, expected, abstime,
+					     FUTEX_CLOCK_REALTIME, private);
   __pthread_disable_asynccancel (oldtype);
   switch (err)
     {

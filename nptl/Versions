@@ -269,12 +269,21 @@ libpthread {
   GLIBC_2.22 {
   }
 
+<<<<<<< HEAD
   # C11 thread symbols.
   GLIBC_2.28 {
     thrd_create; thrd_detach; thrd_exit; thrd_join;
     mtx_init; mtx_lock; mtx_timedlock; mtx_trylock; mtx_unlock; mtx_destroy;
     call_once; cnd_broadcast; cnd_destroy; cnd_init; cnd_signal;
     cnd_timedwait; cnd_wait; tss_create; tss_delete; tss_get; tss_set;
+  }
+
+  GLIBC_2.29 {
+    __pthread_rwlock_rdlock64;
+    __pthread_rwlock_wrlock64;
+    __pthread_mutex_timedlock64;
+    __sem_timedwait64;
+    __pthread_cond_timedwait64;
   }
 
   GLIBC_PRIVATE {

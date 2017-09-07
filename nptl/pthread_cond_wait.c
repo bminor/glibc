@@ -647,6 +647,280 @@ __pthread_cond_wait_common (pthread_cond_t *cond, pthread_mutex_t *mutex,
   return (err != 0) ? err : result;
 }
 
+/* 64-bit time variant */
+
+static __always_inline int
+__pthread_cond_wait_common64 (pthread_cond_t *cond, pthread_mutex_t *mutex,
+    const struct __timespec64 *abstime)
+{
+  const int maxspin = 0;
+  int err;
+  int result = 0;
+
+  LIBC_PROBE (cond_wait, 2, cond, mutex);
+
+  /* Acquire a position (SEQ) in the waiter sequence (WSEQ).  We use an
+     atomic operation because signals and broadcasts may update the group
+     switch without acquiring the mutex.  We do not need release MO here
+     because we do not need to establish any happens-before relation with
+     signalers (see __pthread_cond_signal); modification order alone
+     establishes a total order of waiters/signals.  We do need acquire MO
+     to synchronize with group reinitialization in
+     __condvar_quiesce_and_switch_g1.  */
+  uint64_t wseq = __condvar_fetch_add_wseq_acquire (cond, 2);
+  /* Find our group's index.  We always go into what was G2 when we acquired
+     our position.  */
+  unsigned int g = wseq & 1;
+  uint64_t seq = wseq >> 1;
+
+  /* Increase the waiter reference count.  Relaxed MO is sufficient because
+     we only need to synchronize when decrementing the reference count.  */
+  unsigned int flags = atomic_fetch_add_relaxed (&cond->__data.__wrefs, 8);
+  int private = __condvar_get_private (flags);
+
+  /* Now that we are registered as a waiter, we can release the mutex.
+     Waiting on the condvar must be atomic with releasing the mutex, so if
+     the mutex is used to establish a happens-before relation with any
+     signaler, the waiter must be visible to the latter; thus, we release the
+     mutex after registering as waiter.
+     If releasing the mutex fails, we just cancel our registration as a
+     waiter and confirm that we have woken up.  */
+  err = __pthread_mutex_unlock_usercnt (mutex, 0);
+  if (__glibc_unlikely (err != 0))
+    {
+      __condvar_cancel_waiting (cond, seq, g, private);
+      __condvar_confirm_wakeup (cond, private);
+      return err;
+    }
+
+  /* Now wait until a signal is available in our group or it is closed.
+     Acquire MO so that if we observe a value of zero written after group
+     switching in __condvar_quiesce_and_switch_g1, we synchronize with that
+     store and will see the prior update of __g1_start done while switching
+     groups too.  */
+  unsigned int signals = atomic_load_acquire (cond->__data.__g_signals + g);
+
+  do
+    {
+      while (1)
+	{
+	  /* Spin-wait first.
+	     Note that spinning first without checking whether a timeout
+	     passed might lead to what looks like a spurious wake-up even
+	     though we should return ETIMEDOUT (e.g., if the caller provides
+	     an absolute timeout that is clearly in the past).  However,
+	     (1) spurious wake-ups are allowed, (2) it seems unlikely that a
+	     user will (ab)use pthread_cond_wait as a check for whether a
+	     point in time is in the past, and (3) spinning first without
+	     having to compare against the current time seems to be the right
+	     choice from a performance perspective for most use cases.  */
+	  unsigned int spin = maxspin;
+	  while (signals == 0 && spin > 0)
+	    {
+	      /* Check that we are not spinning on a group that's already
+		 closed.  */
+	      if (seq < (__condvar_load_g1_start_relaxed (cond) >> 1))
+		goto done;
+
+	      /* TODO Back off.  */
+
+	      /* Reload signals.  See above for MO.  */
+	      signals = atomic_load_acquire (cond->__data.__g_signals + g);
+	      spin--;
+	    }
+
+	  /* If our group will be closed as indicated by the flag on signals,
+	     don't bother grabbing a signal.  */
+	  if (signals & 1)
+	    goto done;
+
+	  /* If there is an available signal, don't block.  */
+	  if (signals != 0)
+	    break;
+
+	  /* No signals available after spinning, so prepare to block.
+	     We first acquire a group reference and use acquire MO for that so
+	     that we synchronize with the dummy read-modify-write in
+	     __condvar_quiesce_and_switch_g1 if we read from that.  In turn,
+	     in this case this will make us see the closed flag on __g_signals
+	     that designates a concurrent attempt to reuse the group's slot.
+	     We use acquire MO for the __g_signals check to make the
+	     __g1_start check work (see spinning above).
+	     Note that the group reference acquisition will not mask the
+	     release MO when decrementing the reference count because we use
+	     an atomic read-modify-write operation and thus extend the release
+	     sequence.  */
+	  atomic_fetch_add_acquire (cond->__data.__g_refs + g, 2);
+	  if (((atomic_load_acquire (cond->__data.__g_signals + g) & 1) != 0)
+	      || (seq < (__condvar_load_g1_start_relaxed (cond) >> 1)))
+	    {
+	      /* Our group is closed.  Wake up any signalers that might be
+		 waiting.  */
+	      __condvar_dec_grefs (cond, g, private);
+	      goto done;
+	    }
+
+	  // Now block.
+	  struct _pthread_cleanup_buffer buffer;
+	  struct _condvar_cleanup_buffer cbuffer;
+	  cbuffer.wseq = wseq;
+	  cbuffer.cond = cond;
+	  cbuffer.mutex = mutex;
+	  cbuffer.private = private;
+	  __pthread_cleanup_push (&buffer, __condvar_cleanup_waiting, &cbuffer);
+
+	  if (abstime == NULL)
+	    {
+	      /* Block without a timeout.  */
+	      err = futex_wait_cancelable (
+		  cond->__data.__g_signals + g, 0, private);
+	    }
+	  else
+	    {
+	      /* Block, but with a timeout.
+		 Work around the fact that the kernel rejects negative timeout
+		 values despite them being valid.  */
+	      if (__glibc_unlikely (abstime->tv_sec < 0))
+	        err = ETIMEDOUT;
+
+	      else if ((flags & __PTHREAD_COND_CLOCK_MONOTONIC_MASK) != 0)
+		{
+		  /* CLOCK_MONOTONIC is requested.  */
+		  struct timespec rt;
+		  struct __timespec64 rt64;
+		  if (__clock_gettime (CLOCK_MONOTONIC, &rt) != 0)
+		    __libc_fatal ("clock_gettime does not support "
+				  "CLOCK_MONOTONIC");
+		  /* Convert the absolute timeout value to a relative
+		     timeout.  */
+		  rt64.tv_sec = abstime->tv_sec - rt.tv_sec;
+		  rt64.tv_nsec = abstime->tv_nsec - rt.tv_nsec;
+		  if (rt64.tv_nsec < 0)
+		    {
+		      rt64.tv_nsec += 1000000000;
+		      --rt64.tv_sec;
+		    }
+		  /* Did we already time out?  */
+		  if (__glibc_unlikely (rt64.tv_sec < 0))
+		    err = ETIMEDOUT;
+		  else
+		    err = futex_reltimed_wait_cancelable64
+			(cond->__data.__g_signals + g, 0, &rt64, private);
+		}
+	      else
+		{
+		  /* Use CLOCK_REALTIME.  */
+		  err = futex_abstimed_wait_cancelable64
+		      (cond->__data.__g_signals + g, 0, abstime, private);
+		}
+	    }
+
+	  __pthread_cleanup_pop (&buffer, 0);
+
+	  if (__glibc_unlikely (err == ETIMEDOUT))
+	    {
+	      __condvar_dec_grefs (cond, g, private);
+	      /* If we timed out, we effectively cancel waiting.  Note that
+		 we have decremented __g_refs before cancellation, so that a
+		 deadlock between waiting for quiescence of our group in
+		 __condvar_quiesce_and_switch_g1 and us trying to acquire
+		 the lock during cancellation is not possible.  */
+	      __condvar_cancel_waiting (cond, seq, g, private);
+	      result = ETIMEDOUT;
+	      goto done;
+	    }
+	  else
+	    __condvar_dec_grefs (cond, g, private);
+
+	  /* Reload signals.  See above for MO.  */
+	  signals = atomic_load_acquire (cond->__data.__g_signals + g);
+	}
+
+    }
+  /* Try to grab a signal.  Use acquire MO so that we see an up-to-date value
+     of __g1_start below (see spinning above for a similar case).  In
+     particular, if we steal from a more recent group, we will also see a
+     more recent __g1_start below.  */
+  while (!atomic_compare_exchange_weak_acquire (cond->__data.__g_signals + g,
+						&signals, signals - 2));
+
+  /* We consumed a signal but we could have consumed from a more recent group
+     that aliased with ours due to being in the same group slot.  If this
+     might be the case our group must be closed as visible through
+     __g1_start.  */
+  uint64_t g1_start = __condvar_load_g1_start_relaxed (cond);
+  if (seq < (g1_start >> 1))
+    {
+      /* We potentially stole a signal from a more recent group but we do not
+	 know which group we really consumed from.
+	 We do not care about groups older than current G1 because they are
+	 closed; we could have stolen from these, but then we just add a
+	 spurious wake-up for the current groups.
+	 We will never steal a signal from current G2 that was really intended
+	 for G2 because G2 never receives signals (until it becomes G1).  We
+	 could have stolen a signal from G2 that was conservatively added by a
+	 previous waiter that also thought it stole a signal -- but given that
+	 that signal was added unnecessarily, it's not a problem if we steal
+	 it.
+	 Thus, the remaining case is that we could have stolen from the current
+	 G1, where "current" means the __g1_start value we observed.  However,
+	 if the current G1 does not have the same slot index as we do, we did
+	 not steal from it and do not need to undo that.  This is the reason
+	 for putting a bit with G2's index into__g1_start as well.  */
+      if (((g1_start & 1) ^ 1) == g)
+	{
+	  /* We have to conservatively undo our potential mistake of stealing
+	     a signal.  We can stop trying to do that when the current G1
+	     changes because other spinning waiters will notice this too and
+	     __condvar_quiesce_and_switch_g1 has checked that there are no
+	     futex waiters anymore before switching G1.
+	     Relaxed MO is fine for the __g1_start load because we need to
+	     merely be able to observe this fact and not have to observe
+	     something else as well.
+	     ??? Would it help to spin for a little while to see whether the
+	     current G1 gets closed?  This might be worthwhile if the group is
+	     small or close to being closed.  */
+	  unsigned int s = atomic_load_relaxed (cond->__data.__g_signals + g);
+	  while (__condvar_load_g1_start_relaxed (cond) == g1_start)
+	    {
+	      /* Try to add a signal.  We don't need to acquire the lock
+		 because at worst we can cause a spurious wake-up.  If the
+		 group is in the process of being closed (LSB is true), this
+		 has an effect similar to us adding a signal.  */
+	      if (((s & 1) != 0)
+		  || atomic_compare_exchange_weak_relaxed
+		       (cond->__data.__g_signals + g, &s, s + 2))
+		{
+		  /* If we added a signal, we also need to add a wake-up on
+		     the futex.  We also need to do that if we skipped adding
+		     a signal because the group is being closed because
+		     while __condvar_quiesce_and_switch_g1 could have closed
+		     the group, it might stil be waiting for futex waiters to
+		     leave (and one of those waiters might be the one we stole
+		     the signal from, which cause it to block using the
+		     futex).  */
+		  futex_wake (cond->__data.__g_signals + g, 1, private);
+		  break;
+		}
+	      /* TODO Back off.  */
+	    }
+	}
+    }
+
+ done:
+
+  /* Confirm that we have been woken.  We do that before acquiring the mutex
+     to allow for execution of pthread_cond_destroy while having acquired the
+     mutex.  */
+  __condvar_confirm_wakeup (cond, private);
+
+  /* Woken up; now re-acquire the mutex.  If this doesn't fail, return RESULT,
+     which is set to ETIMEDOUT if a timeout occured, or zero otherwise.  */
+  err = __pthread_mutex_cond_lock (mutex);
+  /* XXX Abort on errors that are disallowed by POSIX?  */
+  return (err != 0) ? err : result;
+}
+
 
 /* See __pthread_cond_wait_common.  */
 int
@@ -665,6 +939,17 @@ __pthread_cond_timedwait (pthread_cond_t *cond, pthread_mutex_t *mutex,
   if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
     return EINVAL;
   return __pthread_cond_wait_common (cond, mutex, abstime);
+}
+
+int
+__pthread_cond_timedwait64 (pthread_cond_t *cond, pthread_mutex_t *mutex,
+    const struct __timespec64 *abstime)
+{
+  /* Check parameter validity.  This should also tell the compiler that
+     it can assume that abstime is not NULL.  */
+  if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
+    return EINVAL;
+  return __pthread_cond_wait_common64 (cond, mutex, abstime);
 }
 
 versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,

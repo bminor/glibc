@@ -82,12 +82,34 @@
 		     __lll_private_flag (FUTEX_WAIT, private),  \
 		     val, timeout)
 
+#define lll_futex_timed_wait64(futexp, val, timeout, private)     \
+  ({                                                                       \
+    struct timespec ts;                                                    \
+    ts.tv_sec = timeout->tv_sec;                                           \
+    ts.tv_nsec = timeout->tv_nsec;                                         \
+    lll_futex_syscall (4, futexp,                                 	   \
+		       __lll_private_flag (FUTEX_WAIT, private),  	   \
+		       val, &ts);					   \
+  })
+
 #define lll_futex_timed_wait_bitset(futexp, val, timeout, clockbit, private) \
   lll_futex_syscall (6, futexp,                                         \
 		     __lll_private_flag (FUTEX_WAIT_BITSET | (clockbit), \
 					 private),                      \
 		     val, timeout, NULL /* Unused.  */,                 \
 		     FUTEX_BITSET_MATCH_ANY)
+
+#define lll_futex_timed_wait_bitset64(futexp, val, timeout, clockbit, private) \
+  ({                                                                       \
+    struct timespec ts;                                                    \
+    ts.tv_sec = timeout->tv_sec;                                           \
+    ts.tv_nsec = timeout->tv_nsec;                                         \
+    lll_futex_syscall (6, futexp,                                          \
+		       __lll_private_flag (FUTEX_WAIT_BITSET | (clockbit), \
+		                           private),                       \
+		       val, &ts, NULL /* Unused.  */,                      \
+		       FUTEX_BITSET_MATCH_ANY);                            \
+  })
 
 #define lll_futex_wake(futexp, nr, private)                             \
   lll_futex_syscall (4, futexp,                                         \

@@ -71,4 +71,43 @@
       }									      \
   } while (0)
 
+#define AIO_MISC_WAIT_T64(result, futex, timeout, cancel)		      \
+  do {									      \
+    volatile unsigned int *futexaddr = &futex;				      \
+    unsigned int oldval = futex;					      \
+									      \
+    if (oldval != 0)							      \
+      {									      \
+	pthread_mutex_unlock (&__aio_requests_mutex);			      \
+									      \
+	int oldtype;							      \
+	if (cancel)							      \
+	  oldtype = LIBC_CANCEL_ASYNC ();				      \
+									      \
+	int status;							      \
+	do								      \
+	  {								      \
+	    status = futex_reltimed_wait64 ((unsigned int *) futexaddr,     \
+					      oldval, timeout, FUTEX_PRIVATE);\
+	    if (status != EAGAIN)					      \
+	      break;							      \
+									      \
+	    oldval = *futexaddr;					      \
+	  }								      \
+	while (oldval != 0);						      \
+									      \
+	if (cancel)							      \
+	  LIBC_CANCEL_RESET (oldtype);					      \
+									      \
+	if (status == EINTR)						      \
+	  result = EINTR;						      \
+	else if (status == ETIMEDOUT)					      \
+	  result = EAGAIN;						      \
+	else								      \
+	  assert (status == 0 || status == EAGAIN);			      \
+									      \
+	pthread_mutex_lock (&__aio_requests_mutex);			      \
+      }									      \
+  } while (0)
+
 #include_next <aio_misc.h>

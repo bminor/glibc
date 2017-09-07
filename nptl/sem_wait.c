@@ -43,6 +43,30 @@ __new_sem_wait (sem_t *sem)
 }
 versioned_symbol (libpthread, __new_sem_wait, sem_wait, GLIBC_2_1);
 
+/* 64-bit time version */
+
+int
+__new_sem_wait64 (sem_t *sem)
+{
+  /* We need to check whether we need to act upon a cancellation request here
+     because POSIX specifies that cancellation points "shall occur" in
+     sem_wait and sem_timedwait, which also means that they need to check
+     this regardless whether they block or not (unlike "may occur"
+     functions).  See the POSIX Rationale for this requirement: Section
+     "Thread Cancellation Overview" [1] and austin group issue #1076 [2]
+     for thoughs on why this may be a suboptimal design.
+
+     [1] http://pubs.opengroup.org/onlinepubs/9699919799/xrat/V4_xsh_chap02.html
+     [2] http://austingroupbugs.net/view.php?id=1076 for thoughts on why this
+   */
+  __pthread_testcancel ();
+
+  if (__new_sem_wait_fast ((struct new_sem *) sem, 0) == 0)
+    return 0;
+  else
+    return __new_sem_wait_slow64 ((struct new_sem *) sem, NULL);
+}
+
 #if SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_1)
 int
 attribute_compat_text_section

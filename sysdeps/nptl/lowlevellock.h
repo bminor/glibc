@@ -122,6 +122,10 @@ extern void __lll_lock_wait (int *futex, int private) attribute_hidden;
 extern int __lll_timedlock_wait (int *futex, const struct timespec *,
 				 int private) attribute_hidden;
 
+extern int __lll_timedlock_wait64 (int *futex,
+                                     const struct __timespec64 *,
+				     int private) attribute_hidden;
+
 
 /* As __lll_lock, but with a timeout.  If the timeout occurs then return
    ETIMEDOUT.  If ABSTIME is invalid, return EINVAL.  */
@@ -137,6 +141,19 @@ extern int __lll_timedlock_wait (int *futex, const struct timespec *,
   })
 #define lll_timedlock(futex, abstime, private)  \
   __lll_timedlock (&(futex), abstime, private)
+
+#define __lll_timedlock64(futex, abstime, private)                \
+  ({                                                                \
+    int *__futex = (futex);                                         \
+    int __val = 0;                                                  \
+                                                                    \
+    if (__glibc_unlikely                                            \
+        (atomic_compare_and_exchange_bool_acq (__futex, 1, 0)))     \
+      __val = __lll_timedlock_wait64 (__futex, abstime, private); \
+    __val;                                                          \
+  })
+#define lll_timedlock64(futex, abstime, private)  \
+  __lll_timedlock64 (&(futex), abstime, private)
 
 
 /* This is an expression rather than a statement even though its value is

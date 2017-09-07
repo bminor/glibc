@@ -57,3 +57,40 @@ __lll_timedlock_wait (int *futex, const struct timespec *abstime, int private)
 
   return 0;
 }
+
+/* 64-bit time version */
+
+int
+__lll_timedlock_wait64 (int *futex, const struct __timespec64 *abstime, int private)
+{
+  /* Reject invalid timeouts.  */
+  if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
+    return EINVAL;
+
+  /* Try locking.  */
+  while (atomic_exchange_acq (futex, 2) != 0)
+    {
+      struct timeval tv;
+
+      /* Get the current time.  */
+      (void) __gettimeofday (&tv, NULL);
+
+      /* Compute relative timeout.  */
+      struct timespec rt;
+      rt.tv_sec = abstime->tv_sec - tv.tv_sec;
+      rt.tv_nsec = abstime->tv_nsec - tv.tv_usec * 1000;
+      if (rt.tv_nsec < 0)
+        {
+          rt.tv_nsec += 1000000000;
+          --rt.tv_sec;
+        }
+
+      if (rt.tv_sec < 0)
+        return ETIMEDOUT;
+
+      /* If *futex == 2, wait until woken or timeout.  */
+      lll_futex_timed_wait (futex, 2, &rt, private);
+    }
+
+  return 0;
+}

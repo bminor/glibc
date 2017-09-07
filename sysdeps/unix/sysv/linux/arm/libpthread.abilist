@@ -27,6 +27,9 @@ GLIBC_2.28 tss_create F
 GLIBC_2.28 tss_delete F
 GLIBC_2.28 tss_get F
 GLIBC_2.28 tss_set F
+GLIBC_2.29 __pthread_cond_timedwait64 F
+GLIBC_2.29 __pthread_mutex_timedlock64 F
+GLIBC_2.29 __sem_timedwait64 F
 GLIBC_2.4 _IO_flockfile F
 GLIBC_2.4 _IO_ftrylockfile F
 GLIBC_2.4 _IO_funlockfile F
