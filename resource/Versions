@@ -22,6 +22,9 @@ libc {
     # s*
     setrlimit64;
   }
+  GLIBC_2.29 {
+    __getrusage64;
+  }
   GLIBC_PRIVATE {
     __getrlimit;
   }
