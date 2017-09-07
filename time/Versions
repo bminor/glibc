@@ -76,5 +76,6 @@ libc {
     __clock_nanosleep64;
     __timespec_get64;
     __utimensat_time64;
+    __futimens64;
   }
 }

@@ -32,3 +32,11 @@ futimens (int fd, const struct timespec tsp[2])
   return -1;
 }
 stub_warning (futimens)
+
+int
+__futimens64 (int fd, const struct __timespec64 tsp[2])
+{
+  __set_errno (ENOSYS);
+  return -1;
+}
+stub_warning (__futimens64)
