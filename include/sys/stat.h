@@ -2,6 +2,28 @@
 #include <io/sys/stat.h>
 
 #ifndef _ISOMAC
+
+/* Used for 64-bit time implementations */
+struct __stat64_t64
+  {
+    __dev_t st_dev;			/* Device.  */
+
+    __ino_t __st_ino;			/* 32bit file serial number.	*/
+    __mode_t st_mode;			/* File mode.  */
+    __nlink_t st_nlink;			/* Link count.  */
+    __uid_t st_uid;			/* User ID of the file's owner.	*/
+    __gid_t st_gid;			/* Group ID of the file's group.*/
+    __dev_t st_rdev;			/* Device number, if device.  */
+    __off64_t st_size;			/* Size of file, in bytes.  */
+    __blksize_t st_blksize;		/* Optimal block size for I/O.  */
+
+    __blkcnt64_t st_blocks;		/* Number 512-byte blocks allocated. */
+    struct __timespec64 st_atim;		/* Time of last access.  */
+    struct __timespec64 st_mtim;		/* Time of last modification.  */
+    struct __timespec64 st_ctim;		/* Time of last status change.  */
+    __ino64_t st_ino;			/* File serial number.		*/
+  };
+
 /* Now define the internal interfaces. */
 extern int __stat (const char *__file, struct stat *__buf);
 extern int __fstat (int __fd, struct stat *__buf);
