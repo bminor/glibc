@@ -155,7 +155,8 @@ __STD_TYPE __CLOCK_T_TYPE __clock_t;	/* Type of CPU usage counts.  */
 __STD_TYPE __RLIM_T_TYPE __rlim_t;	/* Type for resource measurement.  */
 __STD_TYPE __RLIM64_T_TYPE __rlim64_t;	/* Type for resource measurement (LFS).  */
 __STD_TYPE __ID_T_TYPE __id_t;		/* General type for IDs.  */
-__STD_TYPE __TIME_T_TYPE __time_t;	/* Seconds since the Epoch.  */
+__STD_TYPE __TIME_T_TYPE __time_t;	/* Seconds since the Epoch, Y2038-unsafe.  */
+__STD_TYPE __TIME64_T_TYPE __time64_t;	/* Seconds since the Epoch, Y2038-safe.  */
 __STD_TYPE __USECONDS_T_TYPE __useconds_t; /* Count of microseconds.  */
 __STD_TYPE __SUSECONDS_T_TYPE __suseconds_t; /* Signed count of microseconds.  */
 
