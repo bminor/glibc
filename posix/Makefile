@@ -63,7 +63,7 @@ routines :=								      \
 	spawnattr_setsigmask spawnattr_setschedpolicy spawnattr_setschedparam \
 	posix_madvise							      \
 	get_child_max sched_cpucount sched_cpualloc sched_cpufree	      \
-	sched_rr_gi64
+	sched_rr_gi64 nanosleep64
 
 aux		:= init-posix environ
 tests		:= test-errno tstgetopt testfnm runtests runptests \
