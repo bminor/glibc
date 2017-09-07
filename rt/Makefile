@@ -32,7 +32,8 @@ clock-routines := get_clockfreq clock_getcpuclockid			\
 		  clock_getres clock_gettime clock_settime		\
 		  clock_nanosleep
 timer-routines := timer_create timer_delete timer_getoverr		\
-		  timer_gettime timer_settime
+		  timer_gettime timer_settime                           \
+		  timerfd_gettime64
 shm-routines   := shm_open shm_unlink
 mq-routines    := mq_open mq_close mq_unlink mq_getattr mq_setattr	\
 		  mq_notify mq_send mq_receive mq_timedsend		\
