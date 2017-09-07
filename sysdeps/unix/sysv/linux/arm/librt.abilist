@@ -1,3 +1,4 @@
+GLIBC_2.29 __timer_gettime64 F
 GLIBC_2.4 aio_cancel F
 GLIBC_2.4 aio_cancel64 F
 GLIBC_2.4 aio_error F

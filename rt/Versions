@@ -37,4 +37,7 @@ librt {
   GLIBC_2.7 {
    __mq_open_2;
   }
+  GLIBC_2.29 {
+   __timer_gettime64;
+  }
 }

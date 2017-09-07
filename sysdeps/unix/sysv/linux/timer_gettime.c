@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <sysdep.h>
+#include <y2038-support.h>
 #include "kernel-posix-timers.h"
 
 
@@ -36,6 +37,38 @@ timer_gettime (timer_t timerid, struct itimerspec *value)
 
   /* Delete the kernel timer object.  */
   int res = INLINE_SYSCALL (timer_gettime, 2, kt->ktimerid, value);
+
+  return res;
+}
+
+/* 64-bit time version */
+
+int
+__timer_gettime64 (timer_t timerid, struct __itimerspec64 *value)
+{
+  struct itimerspec value32;
+  struct timer *kt = (struct timer *) timerid;
+  int res;
+
+#ifdef __NR_timer_gettime64
+  if (__y2038_get_kernel_support () > 0)
+    {
+      res = INLINE_SYSCALL (timer_gettime, 2, kt->ktimerid, value);
+      if (res == 0 || errno != ENOSYS)
+        return res;
+      __y2038_set_kernel_support (-1);
+    }
+#endif
+
+  res = INLINE_SYSCALL (timer_gettime, 2, kt->ktimerid, &value32);
+
+  if (res == 0)
+    {
+      value->it_value.tv_sec = value32.it_value.tv_sec;
+      value->it_value.tv_nsec = value32.it_value.tv_nsec;
+      value->it_interval.tv_sec = value32.it_interval.tv_sec;
+      value->it_interval.tv_nsec = value32.it_interval.tv_nsec;
+    }
 
   return res;
 }
