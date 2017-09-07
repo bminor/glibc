@@ -31,3 +31,11 @@ __lutimes (const char *file, const struct timeval tvp[2])
 weak_alias (__lutimes, lutimes)
 
 stub_warning (lutimes)
+
+int
+__lutimes64 (const char *file, const struct __timeval64 tvp[2])
+{
+  __set_errno (ENOSYS);
+  return -1;
+}
+stub_warning (__lutimes64)
