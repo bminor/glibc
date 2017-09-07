@@ -30,3 +30,12 @@ utimensat (int fd, const char *file, const struct timespec tsp[2],
   return -1;
 }
 stub_warning (utimensat)
+
+int
+__utimensat_time64 (int fd, const char *file, const struct __timespec64 tsp[2],
+	   int flags)
+{
+  __set_errno (ENOSYS);
+  return -1;
+}
+stub_warning (__utimensat_time64)
