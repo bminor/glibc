@@ -30,3 +30,13 @@ libc_hidden_def (__sigtimedwait)
 weak_alias (__sigtimedwait, sigtimedwait)
 
 stub_warning (sigtimedwait)
+
+int
+__sigtimedwait_time64 (const sigset_t *set, siginfo_t *info,
+		const struct __timespec64 *timeout)
+{
+  __set_errno (ENOSYS);
+  return -1;
+}
+
+stub_warning (__sigtimedwait_time64)

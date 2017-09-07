@@ -77,5 +77,6 @@ libc {
     __timespec_get64;
     __utimensat_time64;
     __futimens64;
+    __sigtimedwait_time64;
   }
 }
