@@ -44,3 +44,24 @@ timespec_get (struct timespec *ts, int base)
 
   return base;
 }
+
+/* 64-bit time version */
+
+/* We don't have a 64-bit-time syscall yet, so just convert arguments
+ * between 64-bit and 32-bit time, and use the 32-bit implementation.
+ * 
+ * We could do the reverse and make the 32-bit time implementation a
+ * wrapper around the 64-bit-time implementation, but then 32-bit-time
+ * uses would incur two conversions instead of zero right now.
+ */
+int
+__timespec_get64 (struct __timespec64 *ts, int base)
+{
+  struct timespec ts32;
+  int res = timespec_get (&ts32, base);
+  if (res != base)
+    {
+      timespec_to_timespec64(&ts32, ts);
+    }
+  return res;
+}

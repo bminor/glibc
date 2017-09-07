@@ -74,5 +74,6 @@ libc {
     __clock_settime64;
     __clock_getres_time64;
     __clock_nanosleep64;
+    __timespec_get64;
   }
 }
