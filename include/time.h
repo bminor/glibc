@@ -3,6 +3,7 @@
 
 #ifndef _ISOMAC
 # include <bits/types/locale_t.h>
+# include <bits/types/struct___timespec64.h>
 # include <stdbool.h>
 
 extern __typeof (strftime_l) __strftime_l;
@@ -166,5 +167,90 @@ fits_in_time_t (__time64_t t64)
   return t == t64;
 }
 
+/* Convert a known valid struct timeval into a struct __timespec64.  */
+static inline void
+valid_timeval_to_timespec64 (const struct timeval *tv32,
+			     struct __timespec64 *ts64)
+{
+  ts64->tv_sec = tv32->tv_sec;
+  ts64->tv_nsec = tv32->tv_usec * 1000;
+}
+
+/* Convert a known valid struct timespec into a struct __timespec64.  */
+static inline void
+valid_timespec_to_timespec64 (const struct timespec *ts32,
+			      struct __timespec64 *ts64)
+{
+  ts64->tv_sec = ts32->tv_sec;
+  ts64->tv_nsec = ts32->tv_nsec;
+  /* We only need to zero ts64->tv_pad if we pass it to the kernel.  */
+}
+
+/* Convert a known valid struct __timespec64 into a struct timespec.  */
+static inline void
+valid_timespec64_to_timespec (const struct __timespec64 *ts64,
+			      struct timespec *ts32)
+{
+  ts32->tv_sec = (time_t) ts64->tv_sec;
+  ts32->tv_nsec = ts64->tv_nsec;
+}
+
+/* Convert a known valid struct __timespec64 into a struct timeval.  */
+static inline void
+valid_timespec64_to_timeval (const struct __timespec64 *ts64,
+			     struct timeval *tv32)
+{
+  tv32->tv_sec = (time_t) ts64->tv_sec;
+  tv32->tv_usec = ts64->tv_nsec / 1000;
+}
+
+/* Check if a value lies with the valid nanoseconds range.  */
+#define IS_VALID_NANOSECONDS(ns) (ns >= 0 && ns <= 999999999)
+
+/* Check and convert a struct timespec into a struct __timespec64.  */
+static inline bool
+timespec_to_timespec64 (const struct timespec *ts32,
+					   struct __timespec64 *ts64)
+{
+  /* Check that ts32 holds a valid count of nanoseconds.  */
+  if (! IS_VALID_NANOSECONDS (ts32->tv_nsec))
+    return false;
+  /* All ts32 fields can fit in ts64, so copy them.  */
+  valid_timespec_to_timespec64 (ts32, ts64);
+  /* We only need to zero ts64->tv_pad if we pass it to the kernel.  */
+  return true;
+}
+
+/* Check and convert a struct __timespec64 into a struct timespec.  */
+static inline bool
+timespec64_to_timespec (const struct __timespec64 *ts64,
+					   struct timespec *ts32)
+{
+  /* Check that tv_nsec holds a valid count of nanoseconds.  */
+  if (! IS_VALID_NANOSECONDS (ts64->tv_nsec))
+    return false;
+  /* Check that tv_sec can fit in a __time_t.  */
+  if (! fits_in_time_t (ts64->tv_sec))
+    return false;
+  /* All ts64 fields can fit in ts32, so copy them.  */
+  valid_timespec64_to_timespec (ts64, ts32);
+  return true;
+}
+
+/* Check and convert a struct __timespec64 into a struct timeval.  */
+static inline bool
+timespec64_to_timeval (const struct __timespec64 *ts64,
+					  struct timeval *tv32)
+{
+  /* Check that tv_nsec holds a valid count of nanoseconds.  */
+  if (! IS_VALID_NANOSECONDS (ts64->tv_nsec))
+    return false;
+  /* Check that tv_sec can fit in a __time_t.  */
+  if (! fits_in_time_t (ts64->tv_sec))
+    return false;
+  /* All ts64 fields can fit in tv32, so copy them.  */
+  valid_timespec64_to_timeval (ts64, tv32);
+  return true;
+}
 #endif
 #endif
