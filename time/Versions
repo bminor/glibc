@@ -80,5 +80,6 @@ libc {
     __sigtimedwait_time64;
     __futimes64;
     __lutimes64;
+    __gettimeofday64;
   }
 }

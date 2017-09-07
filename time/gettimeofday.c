@@ -16,7 +16,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
-#include <sys/time.h>
 
 /* Get the current time of day and timezone information,
    putting it into *TV and *TZ.  If TZ is NULL, *TZ is not filled.
@@ -32,3 +31,13 @@ weak_alias (__gettimeofday, gettimeofday)
 libc_hidden_weak (gettimeofday)
 
 stub_warning (gettimeofday)
+
+/* 64-bit time version */
+
+int
+__gettimeofday64 (struct timeval *tv, struct timezone *tz)
+{
+  __set_errno (ENOSYS);
+  return -1;
+}
+stub_warning (__gettimeofday64)
