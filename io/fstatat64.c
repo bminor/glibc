@@ -50,3 +50,10 @@ fstatat64 (int fd, const char *file, struct stat64 *buf, int flag)
 {
   return __fxstatat64 (_STAT_VER, fd, file, buf, flag);
 }
+
+int
+attribute_hidden
+__fstatat64_time64 (int fd, const char *file, struct __stat64_t64 *buf, int flag)
+{
+  return __fxstatat64_time64 (_STAT_VER, fd, file, buf, flag);
+}
