@@ -22,5 +22,10 @@ extern int __pselect64 (int __nfds, fd_set *__readfds,
 			const struct __timespec64 *__timeout,
 			const __sigset_t *__sigmask);
 
+extern int __select64 (int __nfds, fd_set *__restrict __readfds,
+		       fd_set *__restrict __writefds,
+		       fd_set *__restrict __exceptfds,
+		       struct __timeval64 *__restrict __timeout);
+
 #endif
 #endif

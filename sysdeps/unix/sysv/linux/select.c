@@ -21,6 +21,7 @@
 #include <sys/select.h>
 #include <errno.h>
 #include <sysdep-cancel.h>
+#include <y2038-support.h>
 
 /* Check the first NFDS descriptors each in READFDS (if not NULL) for read
    readiness, in WRITEFDS (if not NULL) for write readiness, and in EXCEPTFDS
@@ -69,3 +70,73 @@ libc_hidden_def (__select)
 
 weak_alias (__select, select)
 weak_alias (__select, __libc_select)
+
+/* 64-bit time version */
+
+int
+__select64 (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
+	      struct __timeval64 *timeout)
+{
+#ifdef __NR_select
+  struct timeval tval32, *timeout32 = NULL;
+#else
+  int result;
+  struct timespec ts32, *tsp32 = NULL;
+#endif
+
+#ifdef __NR_pselect6_time64
+  int res;
+  if (__y2038_linux_support > 0)
+  {
+    res = SYSCALL_CANCEL (pselect6_time64, nfds, readfds, writefds,
+			  exceptfds, timeout, NULL);
+    if (res == 0 || errno != ENOSYS)
+      return res;
+    __y2038_linux_support = -1;
+  }
+#endif
+
+#ifdef __NR_select
+  if (timeout != NULL)
+    {
+      if (timeout->tv_sec > INT_MAX)
+      {
+        errno = EOVERFLOW;
+        return -1;
+      }
+      tval32.tv_sec = timeout->tv_sec;
+      tval32.tv_usec = timeout->tv_usec;
+      timeout32 = &tval32;
+    }
+
+  return SYSCALL_CANCEL (select, nfds, readfds, writefds, exceptfds,
+			 timeout32);
+#else
+  if (timeout)
+    {
+      if (timeout->tv_sec > INT_MAX)
+      {
+        errno = EOVERFLOW;
+        return -1;
+      }
+      ts32.tv_sec = timeout->tv_sec;
+      ts32.tv_nsec = timeout->tv_usec * 1000;
+      tsp32 = &ts32;
+    }
+
+  result = SYSCALL_CANCEL (pselect6, nfds, readfds, writefds, exceptfds, tsp32,
+			   NULL);
+
+  if (timeout)
+    {
+      /* Linux by default will update the timeout after a pselect6 syscall
+         (though the pselect() glibc call suppresses this behavior).
+         Since select() on Linux has the same behavior as the pselect6
+         syscall, we update the timeout here.  */
+      timeout->tv_sec = ts32.tv_sec;
+      timeout->tv_usec = ts32.tv_nsec / 1000;
+    }
+
+  return result;
+#endif
+}
