@@ -1,4 +1,21 @@
 2017-09-11  H.J. Lu  <hongjiu.lu@intel.com>
+	    Florian Weimer <fweimer@redhat.com>
+
+	* configure.ac (find_cxx_header): Suppress compiler error message.
+	* configure: Regenerated.
+
+	[BZ #21573]
+	* Makerules [$(c++-bits-std_abs-h) != ""] (before-compile): Add
+	$(common-objpfx)bits/std_abs.h.
+	[$(c++-bits-std_abs-h) != ""] ($(common-objpfx)bits/std_abs.h):
+	New target.
+	* config.make.in (c++-bits-std_abs-h): New.
+	* configure.ac (find_cxx_header): Use "\,$1," with sed.
+	(CXX_BITS_STD_ABS_H): New.
+	(AC_SUBST(CXX_BITS_STD_ABS_H)): Likewise.
+	* configure: Regenerated.
+
+2017-09-11  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #21982]
 	* string/stratcliff.c (do_test): Declare size, nchars, inner,
