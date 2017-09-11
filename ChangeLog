@@ -1,5 +1,8 @@
 2017-10-10  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* po/sv.po: Update translations.
+	* po/fr.po: Likewise.
+
 	* sysdeps/aarch64/multiarch/memcpy_falkor.S: Fix code style in
 	comments.
 
