@@ -1,3 +1,9 @@
+2017-09-13  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/oldglob.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/Makefile
+	[$(subdir) = csu] (sysdep_routines): Remove rule.
+
 2017-09-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/arm/glob64.c: Remove file.
