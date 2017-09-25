@@ -1,5 +1,4 @@
 GLIBC_2.27 GLIBC_2.27 A
-GLIBC_2.27 _LIB_VERSION D 0x4
 GLIBC_2.27 __acos_finite F
 GLIBC_2.27 __acosf_finite F
 GLIBC_2.27 __acosh_finite F
@@ -346,7 +345,6 @@ GLIBC_2.27 lrintl F
 GLIBC_2.27 lround F
 GLIBC_2.27 lroundf F
 GLIBC_2.27 lroundl F
-GLIBC_2.27 matherr F
 GLIBC_2.27 modf F
 GLIBC_2.27 modff F
 GLIBC_2.27 modfl F
@@ -369,9 +367,6 @@ GLIBC_2.27 nextup F
 GLIBC_2.27 nextupf F
 GLIBC_2.27 nextupl F
 GLIBC_2.27 pow F
-GLIBC_2.27 pow10 F
-GLIBC_2.27 pow10f F
-GLIBC_2.27 pow10l F
 GLIBC_2.27 powf F
 GLIBC_2.27 powl F
 GLIBC_2.27 remainder F

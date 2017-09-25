@@ -312,11 +312,8 @@ GLIBC_2.27 __newlocale F
 GLIBC_2.27 __nl_langinfo_l F
 GLIBC_2.27 __nss_configure_lookup F
 GLIBC_2.27 __nss_database_lookup F
-GLIBC_2.27 __nss_group_lookup F
 GLIBC_2.27 __nss_hostname_digits_dots F
-GLIBC_2.27 __nss_hosts_lookup F
 GLIBC_2.27 __nss_next F
-GLIBC_2.27 __nss_passwd_lookup F
 GLIBC_2.27 __obstack_printf_chk F
 GLIBC_2.27 __obstack_vprintf_chk F
 GLIBC_2.27 __open F
