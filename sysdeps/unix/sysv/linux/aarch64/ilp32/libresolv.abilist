@@ -50,7 +50,6 @@ GLIBC_2.27 __sym_ntos F
 GLIBC_2.27 __sym_ston F
 GLIBC_2.27 _getlong F
 GLIBC_2.27 _getshort F
-GLIBC_2.27 _res_opcodes D 0x40
 GLIBC_2.27 inet_net_ntop F
 GLIBC_2.27 inet_net_pton F
 GLIBC_2.27 inet_neta F
