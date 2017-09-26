@@ -1,3 +1,9 @@
+2017-10-23  Alexey Makhalov  <amakhalov@vmware.com>
+
+	* elf/dl-tunables.c (do_tunable_update_val): Range checking fix.
+	* scripts/gen-tunables.awk: Set unspecified minval and/or maxval
+	values to correct default value for given type.
+
 2017-10-19  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #22322]
