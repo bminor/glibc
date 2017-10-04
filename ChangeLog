@@ -1,3 +1,8 @@
+2017-10-04  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* math/test-math-iscanonical.cc (error): Replace bool with int.
+	(do_test): Return errors != 0.
+
 2017-10-03  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
 	[BZ #22235]
