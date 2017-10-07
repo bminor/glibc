@@ -1,3 +1,8 @@
+2017-07-19  DJ Delorie  <dj@delorie.com>
+
+	[BZ #21654]
+	* grp/grp-merge.c (libc_hidden_def): Fix cast-after-dereference.
+
 2017-07-14  DJ Delorie  <dj@redhat.com>
 
 	[BZ #21654]
