@@ -24,6 +24,7 @@ The following bugs are resolved with this release:
   [21298] rwlock can deadlock on frequent reader/writer phase switching
   [21386] Assertion in fork for distinct parent PID is incorrect
   [21624] Unsafe alloca allows local attackers to alias stack and heap (CVE-2017-1000366)
+  [21654] nss: Fix invalid cast in group merging
   [21778] Robust mutex may deadlock
   [21972] assert macro requires operator== (int) for its argument type
 
