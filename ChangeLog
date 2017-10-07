@@ -1,3 +1,9 @@
+2016-12-21  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20978]
+	* nis/nss_nisplus/nisplus-alias.c (_nss_nisplus_getaliasbyname_r):
+	Compare name == NULL, not name != NULL.
+
 2016-11-08  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #20790]
