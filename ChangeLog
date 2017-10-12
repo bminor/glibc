@@ -1,3 +1,10 @@
+2017-11-07  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #22273]
+	* sysdeps/unix/sysv/linux/spawni.c (__spawnix): Handle the case where
+	the auxiliary process is terminated by a signal before calling _exit
+	or execve.
+
 2017-09-13  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/s390/s390-32/oldglob.c: New file.
