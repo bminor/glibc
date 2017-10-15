@@ -1,0 +1,9 @@
+#include <sysdep.h>
+#include <pthread.h>
+
+PREV			offsetof (struct __pthread_internal_list, __prev)
+NEXT			offsetof (struct __pthread_internal_list, __next)
+
+#if __PTHREAD_MUTEX_HAVE_PREV != 1
+#error __PTHREAD_MUTEX_HAVE_PREV must be 1
+#endif
