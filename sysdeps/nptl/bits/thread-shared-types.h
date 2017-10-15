@@ -59,7 +59,15 @@
 
 /* Common definition of pthread_mutex_t. */
 
-#if __WORDSIZE == 64
+#ifndef __PTHREAD_MUTEX_HAVE_PREV
+# if __WORDSIZE == 64
+#  define __PTHREAD_MUTEX_HAVE_PREV 1
+# else
+#  define __PTHREAD_MUTEX_HAVE_PREV 0
+# endif
+#endif
+
+#if __PTHREAD_MUTEX_HAVE_PREV
 typedef struct __pthread_internal_list
 {
   struct __pthread_internal_list *__prev;
@@ -74,7 +82,7 @@ typedef struct __pthread_internal_slist
 
 /* Lock elision support.  */
 #if __PTHREAD_MUTEX_LOCK_ELISION
-# if __WORDSIZE == 64
+# if __PTHREAD_MUTEX_HAVE_PREV
 #  define __PTHREAD_SPINS_DATA	\
   short __spins;		\
   short __elision
@@ -101,17 +109,16 @@ struct __pthread_mutex_s
   int __lock __LOCK_ALIGNMENT;
   unsigned int __count;
   int __owner;
-#if __WORDSIZE == 64
+#if __PTHREAD_MUTEX_HAVE_PREV
   unsigned int __nusers;
 #endif
   /* KIND must stay at this position in the structure to maintain
      binary compatibility with static initializers.  */
   int __kind;
   __PTHREAD_COMPAT_PADDING_MID
-#if __WORDSIZE == 64
+#if __PTHREAD_MUTEX_HAVE_PREV
   __PTHREAD_SPINS_DATA;
   __pthread_list_t __list;
-# define __PTHREAD_MUTEX_HAVE_PREV      1
 #else
   unsigned int __nusers;
   __extension__ union
