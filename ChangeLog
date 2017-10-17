@@ -1,3 +1,8 @@
+2017-10-17  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* malloc/malloc.c (tcache_put): Inline.
+	(tcache_get): Inline.
+
 2017-10-13  James Clarke  <jrtc27@jrtc27.com>
 
 	* sysdeps/powerpc/powerpc32/dl-machine.h (elf_machine_rela):
