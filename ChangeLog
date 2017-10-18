@@ -1,3 +1,8 @@
+2017-10-18  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* malloc/malloc.c (malloc_state): Use int for have_fastchunks since
+	not all targets support atomics on bool.
+
 2017-10-17  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* malloc/malloc.c (FASTCHUNKS_BIT): Remove.
