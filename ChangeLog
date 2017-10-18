@@ -1,3 +1,8 @@
+2017-10-18  Renlin Li  <renlin.li@arm.com>
+
+	* sysdeps/aarch64/dl-machine.h (elf_machine_load_address): Use
+	_DYNAMIC symbol to calculate load address.
+
 2018-01-19  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #22715]
