@@ -1,5 +1,12 @@
 2017-10-19  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #21666]
+	* misc/regexp.c (loc1): Add __attribute__ ((nocommon));
+	(loc2): Likewise.
+	(locs): Likewise.
+
+2017-10-19  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/dl-trampoline.h (_dl_runtime_resolve): Don't
 	adjust CFA when allocating register save area on re-aligned
 	stack.
