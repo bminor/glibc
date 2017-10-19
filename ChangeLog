@@ -1,3 +1,9 @@
+2017-10-19  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #22322]
+	* sysdeps/mips/bits/long-double.h: Move to ....
+	* sysdeps/mips/ieee754/bits/long-double.h: ... here.
+
 2017-10-22  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #21265]
