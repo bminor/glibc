@@ -1,3 +1,9 @@
+2017-10-19  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/dl-trampoline.h (_dl_runtime_resolve): Don't
+	adjust CFA when allocating register save area on re-aligned
+	stack.
+
 2017-06-14  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/i386/i686/multiarch/strcspn-c.c: Add IS_IN (libc) guard.
