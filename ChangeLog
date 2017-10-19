@@ -1,3 +1,7 @@
+2017-10-19  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* malloc/malloc.c (_int_free): Fix deadlock bug in consistency check.
+
 2017-08-31  Florian Weimer  <fweimer@redhat.com>
 
 	* malloc/malloc.c (_int_free): Remove locked variable and related
