@@ -95,6 +95,11 @@ Version 2.22.1
 * CVE-2018-6551: The malloc function, when called with an object size near
   the value of SIZE_MAX, would return a pointer to a buffer which is too
   small, instead of NULL.
+
+* CVE-2017-15670: The glob function, when invoked with GLOB_TILDE, suffered
+  from a one-byte overflow during ~ operator processing (either on the stack
+  or the heap, depending on the length of the user name).
+
 
 Version 2.22
 
