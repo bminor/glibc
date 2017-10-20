@@ -36,6 +36,7 @@ The following bugs are resolved with this release:
   [21972] assert macro requires operator== (int) for its argument type
   [21982] string: stratcliff.c: error: assuming signed overflow does not
     occur with -O3
+  [21987] Fix sparc32 bits/long-double.h
   [22051] libc: zero terminator in the middle of glibc's .eh_frame
   [22078] nss_files performance issue in hosts multi mode
   [22093] x86: Add x86_64 to x86-64 HWCAP
@@ -46,6 +47,7 @@ The following bugs are resolved with this release:
   [22225] math: nearbyint arithmetic moved before feholdexcept
   [22235] Add C++ versions of iscanonical for ldbl-96 and ldbl-128ibm
   [22296] Let signbit use the builtin in C++ mode with gcc < 6.x
+  [22320] glob: Fix one-byte overflow (CVE-2017-15670)
   [22321] sysconf: Fix missing definition of UIO_MAXIOV on Linux
   [22325] glibc: Memory leak in glob with GLOB_TILDE (CVE-2017-15671)
 
