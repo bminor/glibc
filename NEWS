@@ -21,6 +21,10 @@ Security related changes:
   question type which is outside the range of valid question type values.
   (CVE-2015-5180)
 
+* CVE-2017-15670: The glob function, when invoked with GLOB_TILDE, suffered
+  from a one-byte overflow during ~ operator processing (either on the stack
+  or the heap, depending on the length of the user name).
+
 The following bugs are resolved with this release:
 
   [20790] Fix rpcgen buffer overrun
