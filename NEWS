@@ -38,6 +38,7 @@ The following bugs are resolved with this release:
   [22146] Let fpclassify use the builtin when optimizing for size in C++ mode
   [22225] math: nearbyint arithmetic moved before feholdexcept
   [22235] Add C++ versions of iscanonical for ldbl-96 and ldbl-128ibm
+  [22321] sysconf: Fix missing definition of UIO_MAXIOV on Linux
 
 Version 2.26
 
