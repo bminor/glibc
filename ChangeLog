@@ -1,5 +1,8 @@
 2017-11-07  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/spawni.c (__spawnix): Use 0 instead of
+	WNOHANG in waitpid call.
+
 	[BZ #22273]
 	* sysdeps/unix/sysv/linux/spawni.c (__spawnix): Handle the case where
 	the auxiliary process is terminated by a signal before calling _exit
