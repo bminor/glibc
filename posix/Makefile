@@ -93,7 +93,7 @@ tests		:= test-errno tstgetopt testfnm runtests runptests \
 		   tst-fnmatch3 bug-regex36 tst-getaddrinfo5 \
 		   tst-posix_spawn-fd tst-posix_spawn-setsid \
 		   tst-posix_fadvise tst-posix_fadvise64 \
-		   tst-sysconf-empty-chroot
+		   tst-sysconf-empty-chroot tst-glob-tilde
 tests-internal	:= bug-regex5 bug-regex20 bug-regex33 \
 		   tst-rfc3484 tst-rfc3484-2 tst-rfc3484-3
 xtests		:= bug-ga2
@@ -141,7 +141,8 @@ tests-special += $(objpfx)bug-regex2-mem.out $(objpfx)bug-regex14-mem.out \
 		 $(objpfx)tst-rxspencer-no-utf8-mem.out $(objpfx)tst-pcre-mem.out \
 		 $(objpfx)tst-boost-mem.out $(objpfx)tst-getconf.out \
 		 $(objpfx)bug-glob2-mem.out $(objpfx)tst-vfork3-mem.out \
-		 $(objpfx)tst-fnmatch-mem.out $(objpfx)bug-regex36-mem.out
+		 $(objpfx)tst-fnmatch-mem.out $(objpfx)bug-regex36-mem.out \
+		 $(objpfx)tst-glob-tilde-mem.out
 xtests-special += $(objpfx)bug-ga2-mem.out
 endif
 
@@ -348,6 +349,12 @@ bug-glob2-ENV = MALLOC_TRACE=$(objpfx)bug-glob2.mtrace
 
 $(objpfx)bug-glob2-mem.out: $(objpfx)bug-glob2.out
 	$(common-objpfx)malloc/mtrace $(objpfx)bug-glob2.mtrace > $@; \
+	$(evaluate-test)
+
+tst-glob-tilde-ENV = MALLOC_TRACE=$(objpfx)tst-glob-tilde.mtrace
+
+$(objpfx)tst-glob-tilde-mem.out: $(objpfx)tst-glob-tilde.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-glob-tilde.mtrace > $@; \
 	$(evaluate-test)
 
 $(inst_libexecdir)/getconf: $(inst_bindir)/getconf \
