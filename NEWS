@@ -37,6 +37,7 @@ The following bugs are resolved with this release:
     occur with -O3
   [22051] libc: zero terminator in the middle of glibc's .eh_frame
   [22078] nss_files performance issue in hosts multi mode
+  [22093] x86: Add x86_64 to x86-64 HWCAP
   [22095] resolv: Fix memory leak with OOM during resolv.conf parsing
   [22096] resolv: __resolv_conf_attach must not free passed conf object
   [22111] malloc: per thread cache is not returned when thread exits
