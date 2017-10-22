@@ -866,11 +866,11 @@ glob (pattern, flags, errfunc, pglob)
 		  char *p = mempcpy (newp, dirname + 1,
 				     unescape - dirname - 1);
 		  char *q = unescape;
-		  while (*q != '\0')
+		  while (q != end_name)
 		    {
 		      if (*q == '\\')
 			{
-			  if (q[1] == '\0')
+			  if (q + 1 == end_name)
 			    {
 			      /* "~fo\\o\\" unescape to user_name "foo\\",
 				 but "~fo\\o\\/" unescape to user_name
