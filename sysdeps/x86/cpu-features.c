@@ -18,6 +18,7 @@
 
 #include <cpuid.h>
 #include <cpu-features.h>
+#include <libc-internal.h>
 
 static inline void
 get_common_indeces (struct cpu_features *cpu_features,
@@ -225,6 +226,71 @@ init_cpu_features (struct cpu_features *cpu_features)
 	  /* Determine if FMA4 is usable.  */
 	  if (HAS_CPU_FEATURE (FMA4))
 	    cpu_features->feature[index_FMA4_Usable] |= bit_FMA4_Usable;
+
+	  /* For _dl_runtime_resolve, set xsave_state_size to xsave area
+	     size + integer register save size and align it to 64 bytes.  */
+	  if (cpu_features->max_cpuid >= 0xd)
+	    {
+	      unsigned int eax, ebx, ecx, edx;
+
+	      __cpuid_count (0xd, 0, eax, ebx, ecx, edx);
+	      if (ebx != 0)
+		{
+		  cpu_features->xsave_state_size
+		= ALIGN_UP (ebx + STATE_SAVE_OFFSET, 64);
+
+		  __cpuid_count (0xd, 1, eax, ebx, ecx, edx);
+
+		  /* Check if XSAVEC is available.  */
+		  if ((eax & (1 << 1)) != 0)
+		    {
+		      unsigned int xstate_comp_offsets[32];
+		      unsigned int xstate_comp_sizes[32];
+		      unsigned int i;
+
+		      xstate_comp_offsets[0] = 0;
+		      xstate_comp_offsets[1] = 160;
+		      xstate_comp_offsets[2] = 576;
+		      xstate_comp_sizes[0] = 160;
+		      xstate_comp_sizes[1] = 256;
+
+		      for (i = 2; i < 32; i++)
+			{
+			  if ((STATE_SAVE_MASK & (1 << i)) != 0)
+			    {
+			      __cpuid_count (0xd, i, eax, ebx, ecx, edx);
+			      xstate_comp_sizes[i] = eax;
+			    }
+			  else
+			    {
+			      ecx = 0;
+			      xstate_comp_sizes[i] = 0;
+			    }
+
+			  if (i > 2)
+			    {
+			      xstate_comp_offsets[i]
+				= (xstate_comp_offsets[i - 1]
+				   + xstate_comp_sizes[i -1]);
+			      if ((ecx & (1 << 1)) != 0)
+				xstate_comp_offsets[i]
+			      = ALIGN_UP (xstate_comp_offsets[i], 64);
+			    }
+			}
+
+		      /* Use XSAVEC.  */
+		      unsigned int size
+			= xstate_comp_offsets[31] + xstate_comp_sizes[31];
+		      if (size)
+			{
+			  cpu_features->xsave_state_size
+			    = ALIGN_UP (size + STATE_SAVE_OFFSET, 64);
+			  cpu_features->feature[index_XSAVEC_Usable]
+			    |= bit_XSAVEC_Usable;
+			}
+		    }
+		}
+	    }
 	}
     }
 
