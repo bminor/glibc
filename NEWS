@@ -25,6 +25,11 @@ Security related changes:
   from a one-byte overflow during ~ operator processing (either on the stack
   or the heap, depending on the length of the user name).
 
+* CVE-2017-15671: The glob function, when invoked with GLOB_TILDE,
+  would sometimes fail to free memory allocated during ~ operator
+  processing, leading to a memory leak and, potentially, to a denial
+  of service.
+
 The following bugs are resolved with this release:
 
   [20790] Fix rpcgen buffer overrun
