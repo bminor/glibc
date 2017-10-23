@@ -203,7 +203,8 @@ tests-static = test-fpucw-static test-fpucw-ieee-static \
 	       test-signgam-ullong-static test-signgam-ullong-init-static
 
 ifneq (,$(CXX))
-tests += test-math-isinff test-math-iszero
+tests += test-math-isinff test-math-iszero test-math-issignaling \
+	 test-math-iscanonical
 endif
 
 ifneq (no,$(PERL))
@@ -350,6 +351,8 @@ CFLAGS-test-signgam-ullong-init-static.c = -std=c99
 
 CFLAGS-test-math-isinff.cc = -std=gnu++11
 CFLAGS-test-math-iszero.cc = -std=gnu++11
+CFLAGS-test-math-issignaling.cc = -std=gnu++11
+CFLAGS-test-math-iscanonical.cc = -std=gnu++11
 
 CFLAGS-test-iszero-excess-precision.c = -fexcess-precision=standard
 CFLAGS-test-iseqsig-excess-precision.c = -fexcess-precision=standard

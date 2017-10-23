@@ -782,7 +782,8 @@ for linking")
 
 /* Helper / base  macros for indirect function symbols.  */
 #define __ifunc_resolver(type_name, name, expr, arg, init, classifier)	\
-  classifier inhibit_stack_protector void *name##_ifunc (arg)					\
+  classifier inhibit_stack_protector					\
+  __typeof (type_name) *name##_ifunc (arg)				\
   {									\
     init ();								\
     __typeof (type_name) *res = expr;					\
@@ -809,7 +810,7 @@ for linking")
 
 # define __ifunc(type_name, name, expr, arg, init)			\
   extern __typeof (type_name) name;					\
-  void *name##_ifunc (arg) __asm__ (#name);				\
+  __typeof (type_name) *name##_ifunc (arg) __asm__ (#name);		\
   __ifunc_resolver (type_name, name, expr, arg, init,)			\
  __asm__ (".type " #name ", %gnu_indirect_function");
 

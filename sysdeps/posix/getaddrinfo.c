@@ -241,48 +241,43 @@ convert_hostent_to_gaih_addrtuple (const struct addrinfo *req,
 
 #define gethosts(_family, _type) \
  {									      \
-  int herrno;								      \
   struct hostent th;							      \
-  struct hostent *h;							      \
   char *localcanon = NULL;						      \
   no_data = 0;								      \
-  while (1) {								      \
-    rc = 0;								      \
-    status = DL_CALL_FCT (fct, (name, _family, &th,			      \
-				tmpbuf->data, tmpbuf->length,		      \
-				&rc, &herrno, NULL, &localcanon));	      \
-    if (rc != ERANGE || herrno != NETDB_INTERNAL)			      \
-      break;								      \
-    if (!scratch_buffer_grow (tmpbuf))					      \
-      {									      \
-	__resolv_context_enable_inet6 (res_ctx, res_enable_inet6);	      \
-	__resolv_context_put (res_ctx);					      \
-	result = -EAI_MEMORY;						      \
-	goto free_and_return;						      \
-      }									      \
-  }									      \
-  if (status == NSS_STATUS_SUCCESS && rc == 0)				      \
-    h = &th;								      \
-  else									      \
-    h = NULL;								      \
-  if (rc != 0)								      \
+  while (1)								      \
     {									      \
-      if (herrno == NETDB_INTERNAL)					      \
+      status = DL_CALL_FCT (fct, (name, _family, &th,			      \
+				  tmpbuf->data, tmpbuf->length,		      \
+				  &errno, &h_errno, NULL, &localcanon));      \
+      if (status != NSS_STATUS_TRYAGAIN || h_errno != NETDB_INTERNAL	      \
+	  || errno != ERANGE)						      \
+	break;								      \
+      if (!scratch_buffer_grow (tmpbuf))				      \
 	{								      \
-	  __set_h_errno (herrno);					      \
+	  __resolv_context_enable_inet6 (res_ctx, res_enable_inet6);	      \
+	  __resolv_context_put (res_ctx);				      \
+	  result = -EAI_MEMORY;						      \
+	  goto free_and_return;						      \
+	}								      \
+    }									      \
+  if (status == NSS_STATUS_NOTFOUND					      \
+      || status == NSS_STATUS_TRYAGAIN || status == NSS_STATUS_UNAVAIL)	      \
+    {									      \
+      if (h_errno == NETDB_INTERNAL)					      \
+	{								      \
 	  __resolv_context_enable_inet6 (res_ctx, res_enable_inet6);	      \
 	  __resolv_context_put (res_ctx);				      \
 	  result = -EAI_SYSTEM;						      \
 	  goto free_and_return;						      \
 	}								      \
-      if (herrno == TRY_AGAIN)						      \
+      if (h_errno == TRY_AGAIN)						      \
 	no_data = EAI_AGAIN;						      \
       else								      \
-	no_data = herrno == NO_DATA;					      \
+	no_data = h_errno == NO_DATA;					      \
     }									      \
-  else if (h != NULL)							      \
+  else if (status == NSS_STATUS_SUCCESS)				      \
     {									      \
-      if (!convert_hostent_to_gaih_addrtuple (req, _family,h, &addrmem))      \
+      if (!convert_hostent_to_gaih_addrtuple (req, _family, &th, &addrmem))   \
 	{								      \
 	  __resolv_context_enable_inet6 (res_ctx, res_enable_inet6);	      \
 	  __resolv_context_put (res_ctx);				      \
@@ -334,10 +329,8 @@ getcanonname (service_user *nip, struct gaih_addrtuple *at, const char *name)
   if (cfct != NULL)
     {
       char buf[256];
-      int herrno;
-      int rc;
       if (DL_CALL_FCT (cfct, (at->name ?: name, buf, sizeof (buf),
-			      &s, &rc, &herrno)) != NSS_STATUS_SUCCESS)
+			      &s, &errno, &h_errno)) != NSS_STATUS_SUCCESS)
 	/* If the canonical name cannot be determined, use the passed
 	   string.  */
 	s = (char *) name;
@@ -353,7 +346,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
   const struct gaih_typeproto *tp = gaih_inet_typeproto;
   struct gaih_servtuple *st = (struct gaih_servtuple *) &nullserv;
   struct gaih_addrtuple *at = NULL;
-  int rc;
   bool got_ipv6 = false;
   const char *canon = NULL;
   const char *orig_name = name;
@@ -395,7 +387,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	      st = (struct gaih_servtuple *)
 		alloca_account (sizeof (struct gaih_servtuple), alloca_used);
 
-	      if ((rc = gaih_inet_serv (service->name, tp, req, st, tmpbuf)))
+	      int rc = gaih_inet_serv (service->name, tp, req, st, tmpbuf);
+	      if (__glibc_unlikely (rc != 0))
 		return rc;
 	    }
 	  else
@@ -420,13 +413,9 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		    alloca_account (sizeof (struct gaih_servtuple),
 				    alloca_used);
 
-		  if ((rc = gaih_inet_serv (service->name,
-					    tp, req, newp, tmpbuf)))
-		    {
-		      if (rc)
-			continue;
-		      return rc;
-		    }
+		  if (gaih_inet_serv (service->name,
+				      tp, req, newp, tmpbuf) != 0)
+		    continue;
 
 		  *pst = newp;
 		  pst = &(newp->next);
@@ -499,7 +488,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    idn_flags |= IDNA_USE_STD3_ASCII_RULES;
 
 	  char *p = NULL;
-	  rc = __idna_to_ascii_lz (name, &p, idn_flags);
+	  int rc = __idna_to_ascii_lz (name, &p, idn_flags);
 	  if (rc != IDNA_SUCCESS)
 	    {
 	      /* No need to jump to free_and_return here.  */
@@ -600,14 +589,13 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	      int rc;
 	      struct hostent th;
 	      struct hostent *h;
-	      int herrno;
 
 	      while (1)
 		{
 		  rc = __gethostbyname2_r (name, AF_INET, &th,
 					   tmpbuf->data, tmpbuf->length,
-					   &h, &herrno);
-		  if (rc != ERANGE || herrno != NETDB_INTERNAL)
+					   &h, &h_errno);
+		  if (rc != ERANGE || h_errno != NETDB_INTERNAL)
 		    break;
 		  if (!scratch_buffer_grow (tmpbuf))
 		    {
@@ -629,15 +617,20 @@ gaih_inet (const char *name, const struct gaih_service *service,
 			}
 		      *pat = addrmem;
 		    }
+		  else
+		    {
+		      if (h_errno == NO_DATA)
+			result = -EAI_NODATA;
+		      else
+			result = -EAI_NONAME;
+		      goto free_and_return;
+		    }
 		}
 	      else
 		{
-		  if (herrno == NETDB_INTERNAL)
-		    {
-		      __set_h_errno (herrno);
-		      result = -EAI_SYSTEM;
-		    }
-		  else if (herrno == TRY_AGAIN)
+		  if (h_errno == NETDB_INTERNAL)
+		    result = -EAI_SYSTEM;
+		  else if (h_errno == TRY_AGAIN)
 		    result = -EAI_AGAIN;
 		  else
 		    /* We made requests but they turned out no data.
@@ -660,8 +653,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    {
 	      /* Try to use nscd.  */
 	      struct nscd_ai_result *air = NULL;
-	      int herrno;
-	      int err = __nscd_getai (name, &air, &herrno);
+	      int err = __nscd_getai (name, &air, &h_errno);
 	      if (air != NULL)
 		{
 		  /* Transform into gaih_addrtuple list.  */
@@ -752,9 +744,9 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		goto free_and_return;
 	      else if (__nss_not_use_nscd_hosts == 0)
 		{
-		  if (herrno == NETDB_INTERNAL && errno == ENOMEM)
+		  if (h_errno == NETDB_INTERNAL && errno == ENOMEM)
 		    result = -EAI_MEMORY;
-		  else if (herrno == TRY_AGAIN)
+		  else if (h_errno == TRY_AGAIN)
 		    result = -EAI_AGAIN;
 		  else
 		    result = -EAI_SYSTEM;
@@ -793,24 +785,21 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 	      if (fct4 != NULL)
 		{
-		  int herrno;
-
 		  while (1)
 		    {
-		      rc = 0;
 		      status = DL_CALL_FCT (fct4, (name, pat,
 						   tmpbuf->data, tmpbuf->length,
-						   &rc, &herrno,
+						   &errno, &h_errno,
 						   NULL));
 		      if (status == NSS_STATUS_SUCCESS)
 			break;
 		      if (status != NSS_STATUS_TRYAGAIN
-			  || rc != ERANGE || herrno != NETDB_INTERNAL)
+			  || errno != ERANGE || h_errno != NETDB_INTERNAL)
 			{
-			  if (herrno == TRY_AGAIN)
+			  if (h_errno == TRY_AGAIN)
 			    no_data = EAI_AGAIN;
 			  else
-			    no_data = herrno == NO_DATA;
+			    no_data = h_errno == NO_DATA;
 			  break;
 			}
 
@@ -940,13 +929,17 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		    }
 		  else
 		    {
+		      /* Could not locate any of the lookup functions.
+			 The NSS lookup code does not consistently set
+			 errno, so we need to supply our own error
+			 code here.  The root cause could either be a
+			 resource allocation failure, or a missing
+			 service function in the DSO (so it should not
+			 be listed in /etc/nsswitch.conf).  Assume the
+			 former, and return EBUSY.  */
 		      status = NSS_STATUS_UNAVAIL;
-		      /* Could not load any of the lookup functions.  Indicate
-		         an internal error if the failure was due to a system
-			 error other than the file not being found.  We use the
-			 errno from the last failed callback.  */
-		      if (errno != 0 && errno != ENOENT)
-			__set_h_errno (NETDB_INTERNAL);
+		     __set_h_errno (NETDB_INTERNAL);
+		     __set_errno (EBUSY);
 		    }
 		}
 
@@ -962,7 +955,10 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  __resolv_context_enable_inet6 (res_ctx, res_enable_inet6);
 	  __resolv_context_put (res_ctx);
 
-	  if (h_errno == NETDB_INTERNAL)
+	  /* If we have a failure which sets errno, report it using
+	     EAI_SYSTEM.  */
+	  if ((status == NSS_STATUS_TRYAGAIN || status == NSS_STATUS_UNAVAIL)
+	      && h_errno == NETDB_INTERNAL)
 	    {
 	      result = -EAI_SYSTEM;
 	      goto free_and_return;

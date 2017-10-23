@@ -22,6 +22,8 @@
 #include <arpa/nameser.h>
 #include <netdb.h>
 #include <resolv/resolv-internal.h>
+#include <scratch_buffer.h>
+#include <alloc_buffer.h>
 
 
 /* Get implementation for some internal functions.  */
@@ -115,6 +117,219 @@ DB_LOOKUP (hostbyaddr, ,,,
 	   }, const void *addr, socklen_t len, int af)
 #undef EXTRA_ARGS_VALUE
 
+/* Type of the address and alias arrays.  */
+#define DYNARRAY_STRUCT array
+#define DYNARRAY_ELEMENT char *
+#define DYNARRAY_PREFIX array_
+#include <malloc/dynarray-skeleton.c>
+
+static enum nss_status
+gethostbyname3_multi (FILE * stream, const char *name, int af,
+		      struct hostent *result, char *buffer, size_t buflen,
+		      int *errnop, int *herrnop, int flags)
+{
+  assert (af == AF_INET || af == AF_INET6);
+
+  /* We have to get all host entries from the file.  */
+  struct scratch_buffer tmp_buffer;
+  scratch_buffer_init (&tmp_buffer);
+  struct hostent tmp_result_buf;
+  struct array addresses;
+  array_init (&addresses);
+  struct array aliases;
+  array_init (&aliases);
+  enum nss_status status;
+
+  /* Preserve the addresses and aliases encountered so far.  */
+  for (size_t i = 0; result->h_addr_list[i] != NULL; ++i)
+    array_add (&addresses, result->h_addr_list[i]);
+  for (size_t i = 0; result->h_aliases[i] != NULL; ++i)
+    array_add (&aliases, result->h_aliases[i]);
+
+  /* The output buffer re-uses now-unused space at the end of the
+     buffer, starting with the aliases array.  It comes last in the
+     data produced by internal_getent.  (The alias names themselves
+     are still located in the line read in internal_getent, which is
+     stored at the beginning of the buffer.)  */
+  struct alloc_buffer outbuf;
+  {
+    char *bufferend = (char *) result->h_aliases;
+    outbuf = alloc_buffer_create (bufferend, buffer + buflen - bufferend);
+  }
+
+  while (true)
+    {
+      status = internal_getent (stream, &tmp_result_buf, tmp_buffer.data,
+				tmp_buffer.length, errnop, herrnop, af,
+				flags);
+      /* Enlarge the buffer if necessary.  */
+      if (status == NSS_STATUS_TRYAGAIN && *herrnop == NETDB_INTERNAL
+	  && *errnop == ERANGE)
+	{
+	  if (!scratch_buffer_grow (&tmp_buffer))
+	    {
+	      *errnop = ENOMEM;
+	      /* *herrnop and status already have the right value.  */
+	      break;
+	    }
+	  /* Loop around and retry with a larger buffer.  */
+	}
+      else if (status == NSS_STATUS_SUCCESS)
+	{
+	  /* A line was read.  Check that it matches the search
+	     criteria.  */
+
+	  int matches = 1;
+	  struct hostent *old_result = result;
+	  result = &tmp_result_buf;
+	  /* The following piece is a bit clumsy but we want to use
+	     the `LOOKUP_NAME_CASE' value.  The optimizer should do
+	     its job.  */
+	  do
+	    {
+	      LOOKUP_NAME_CASE (h_name, h_aliases)
+		result = old_result;
+	    }
+	  while ((matches = 0));
+
+	  /* If the line matches, we need to copy the addresses and
+	     aliases, so that we can reuse tmp_buffer for the next
+	     line.  */
+	  if (matches)
+	    {
+	      /* Record the addresses.  */
+	      for (size_t i = 0; tmp_result_buf.h_addr_list[i] != NULL; ++i)
+		{
+		  /* Allocate the target space in the output buffer,
+		     depending on the address family.  */
+		  void *target;
+		  if (af == AF_INET)
+		    {
+		      assert (tmp_result_buf.h_length == 4);
+		      target = alloc_buffer_alloc (&outbuf, struct in_addr);
+		    }
+		  else if (af == AF_INET6)
+		    {
+		      assert (tmp_result_buf.h_length == 16);
+		      target = alloc_buffer_alloc (&outbuf, struct in6_addr);
+		    }
+		  else
+		    __builtin_unreachable ();
+
+		  if (target == NULL)
+		    {
+		      /* Request a larger output buffer.  */
+		      *errnop = ERANGE;
+		      *herrnop = NETDB_INTERNAL;
+		      status = NSS_STATUS_TRYAGAIN;
+		      break;
+		    }
+		  memcpy (target, tmp_result_buf.h_addr_list[i],
+			  tmp_result_buf.h_length);
+		  array_add (&addresses, target);
+		}
+
+	      /* Record the aliases.  */
+	      for (size_t i = 0; tmp_result_buf.h_aliases[i] != NULL; ++i)
+		{
+		  char *alias = tmp_result_buf.h_aliases[i];
+		  array_add (&aliases,
+			     alloc_buffer_copy_string (&outbuf, alias));
+		}
+
+	      /* If the real name is different add, it also to the
+		 aliases.  This means that there is a duplication in
+		 the alias list but this is really the user's
+		 problem.  */
+	      {
+		char *new_name = tmp_result_buf.h_name;
+		if (strcmp (old_result->h_name, new_name) != 0)
+		  array_add (&aliases,
+			     alloc_buffer_copy_string (&outbuf, new_name));
+	      }
+
+	      /* Report memory allocation failures during the
+		 expansion of the temporary arrays.  */
+	      if (array_has_failed (&addresses) || array_has_failed (&aliases))
+		{
+		  *errnop = ENOMEM;
+		  *herrnop = NETDB_INTERNAL;
+		  status = NSS_STATUS_UNAVAIL;
+		  break;
+		}
+
+	      /* Request a larger output buffer if we ran out of room.  */
+	      if (alloc_buffer_has_failed (&outbuf))
+		{
+		  *errnop = ERANGE;
+		  *herrnop = NETDB_INTERNAL;
+		  status = NSS_STATUS_TRYAGAIN;
+		  break;
+		}
+
+	      result = old_result;
+	    } /* If match was found.  */
+
+	  /* If no match is found, loop around and fetch another
+	     line.  */
+
+	} /* status == NSS_STATUS_SUCCESS.  */
+      else
+	/* internal_getent returned an error.  */
+	break;
+    } /* while (true) */
+
+  /* Propagate the NSS_STATUS_TRYAGAIN error to the caller.  It means
+     that we may not have loaded the complete result.
+     NSS_STATUS_NOTFOUND, however, means that we reached the end of
+     the file successfully.  */
+  if (status != NSS_STATUS_TRYAGAIN)
+    status = NSS_STATUS_SUCCESS;
+
+  if (status == NSS_STATUS_SUCCESS)
+    {
+      /* Copy the address and alias arrays into the output buffer and
+	 add NULL terminators.  The pointed-to elements were directly
+	 written into the output buffer above and do not need to be
+	 copied again.  */
+      size_t addresses_count = array_size (&addresses);
+      size_t aliases_count = array_size (&aliases);
+      char **out_addresses = alloc_buffer_alloc_array
+	(&outbuf, char *, addresses_count + 1);
+      char **out_aliases = alloc_buffer_alloc_array
+	(&outbuf, char *, aliases_count + 1);
+      if (out_addresses == NULL || out_aliases == NULL)
+	{
+	  /* The output buffer is not large enough.  */
+	  *errnop = ERANGE;
+	  *herrnop = NETDB_INTERNAL;
+	  status = NSS_STATUS_TRYAGAIN;
+	  /* Fall through to function exit.  */
+	}
+      else
+	{
+	  /* Everything is allocated in place.  Make the copies and
+	     adjust the array pointers.  */
+	  memcpy (out_addresses, array_begin (&addresses),
+		  addresses_count * sizeof (char *));
+	  out_addresses[addresses_count] = NULL;
+	  memcpy (out_aliases, array_begin (&aliases),
+		  aliases_count * sizeof (char *));
+	  out_aliases[aliases_count] = NULL;
+
+	  result->h_addr_list = out_addresses;
+	  result->h_aliases = out_aliases;
+
+	  status = NSS_STATUS_SUCCESS;
+	}
+    }
+
+  scratch_buffer_free (&tmp_buffer);
+  array_free (&addresses);
+  array_free (&aliases);
+  return status;
+}
+
 enum nss_status
 _nss_files_gethostbyname3_r (const char *name, int af, struct hostent *result,
 			     char *buffer, size_t buflen, int *errnop,
@@ -143,199 +358,8 @@ _nss_files_gethostbyname3_r (const char *name, int af, struct hostent *result,
 
       if (status == NSS_STATUS_SUCCESS
 	  && _res_hconf.flags & HCONF_FLAG_MULTI)
-	{
-	  /* We have to get all host entries from the file.  */
-	  size_t tmp_buflen = MIN (buflen, 4096);
-	  char tmp_buffer_stack[tmp_buflen]
-	    __attribute__ ((__aligned__ (__alignof__ (struct hostent_data))));
-	  char *tmp_buffer = tmp_buffer_stack;
-	  struct hostent tmp_result_buf;
-	  int naddrs = 1;
-	  int naliases = 0;
-	  char *bufferend;
-	  bool tmp_buffer_malloced = false;
-
-	  while (result->h_aliases[naliases] != NULL)
-	    ++naliases;
-
-	  bufferend = (char *) &result->h_aliases[naliases + 1];
-
-	again:
-	  while ((status = internal_getent (stream, &tmp_result_buf, tmp_buffer,
-					    tmp_buflen, errnop, herrnop, af,
-					    flags))
-		 == NSS_STATUS_SUCCESS)
-	    {
-	      int matches = 1;
-	      struct hostent *old_result = result;
-	      result = &tmp_result_buf;
-	      /* The following piece is a bit clumsy but we want to use the
-		 `LOOKUP_NAME_CASE' value.  The optimizer should do its
-		 job.  */
-	      do
-		{
-		  LOOKUP_NAME_CASE (h_name, h_aliases)
-		  result = old_result;
-		}
-	      while ((matches = 0));
-
-	      if (matches)
-		{
-		  /* We could be very clever and try to recycle a few bytes
-		     in the buffer instead of generating new arrays.  But
-		     we are not doing this here since it's more work than
-		     it's worth.  Simply let the user provide a bit bigger
-		     buffer.  */
-		  char **new_h_addr_list;
-		  char **new_h_aliases;
-		  int newaliases = 0;
-		  size_t newstrlen = 0;
-		  int cnt;
-
-		  /* Count the new aliases and the length of the strings.  */
-		  while (tmp_result_buf.h_aliases[newaliases] != NULL)
-		    {
-		      char *cp = tmp_result_buf.h_aliases[newaliases];
-		      ++newaliases;
-		      newstrlen += strlen (cp) + 1;
-		    }
-		  /* If the real name is different add it also to the
-		     aliases.  This means that there is a duplication
-		     in the alias list but this is really the user's
-		     problem.  */
-		  if (strcmp (old_result->h_name,
-			      tmp_result_buf.h_name) != 0)
-		    {
-		      ++newaliases;
-		      newstrlen += strlen (tmp_result_buf.h_name) + 1;
-		    }
-
-		  /* Make sure bufferend is aligned.  */
-		  assert ((bufferend - (char *) 0) % sizeof (char *) == 0);
-
-		  /* Now we can check whether the buffer is large enough.
-		     16 is the maximal size of the IP address.  */
-		  if (bufferend + 16 + (naddrs + 2) * sizeof (char *)
-		      + roundup (newstrlen, sizeof (char *))
-		      + (naliases + newaliases + 1) * sizeof (char *)
-		      >= buffer + buflen)
-		    {
-		      *errnop = ERANGE;
-		      *herrnop = NETDB_INTERNAL;
-		      status = NSS_STATUS_TRYAGAIN;
-		      goto out;
-		    }
-
-		  new_h_addr_list =
-		    (char **) (bufferend
-			       + roundup (newstrlen, sizeof (char *))
-			       + 16);
-		  new_h_aliases =
-		    (char **) ((char *) new_h_addr_list
-			       + (naddrs + 2) * sizeof (char *));
-
-		  /* Copy the old data in the new arrays.  */
-		  for (cnt = 0; cnt < naddrs; ++cnt)
-		    new_h_addr_list[cnt] = old_result->h_addr_list[cnt];
-
-		  for (cnt = 0; cnt < naliases; ++cnt)
-		    new_h_aliases[cnt] = old_result->h_aliases[cnt];
-
-		  /* Store the new strings.  */
-		  cnt = 0;
-		  while (tmp_result_buf.h_aliases[cnt] != NULL)
-		    {
-		      new_h_aliases[naliases++] = bufferend;
-		      bufferend = (__stpcpy (bufferend,
-					     tmp_result_buf.h_aliases[cnt])
-				   + 1);
-		      ++cnt;
-		    }
-
-		  if (cnt < newaliases)
-		    {
-		      new_h_aliases[naliases++] = bufferend;
-		      bufferend = __stpcpy (bufferend,
-					    tmp_result_buf.h_name) + 1;
-		    }
-
-		  /* Final NULL pointer.  */
-		  new_h_aliases[naliases] = NULL;
-
-		  /* Round up the buffer end address.  */
-		  bufferend += (sizeof (char *)
-				- ((bufferend - (char *) 0)
-				   % sizeof (char *))) % sizeof (char *);
-
-		  /* Now the new address.  */
-		  new_h_addr_list[naddrs++] =
-		    memcpy (bufferend, tmp_result_buf.h_addr,
-			    tmp_result_buf.h_length);
-
-		  /* Also here a final NULL pointer.  */
-		  new_h_addr_list[naddrs] = NULL;
-
-		  /* Store the new array pointers.  */
-		  old_result->h_aliases = new_h_aliases;
-		  old_result->h_addr_list = new_h_addr_list;
-
-		  /* Compute the new buffer end.  */
-		  bufferend = (char *) &new_h_aliases[naliases + 1];
-		  assert (bufferend <= buffer + buflen);
-
-		  result = old_result;
-		}
-	    }
-
-	  if (status == NSS_STATUS_TRYAGAIN)
-	    {
-	      size_t newsize = 2 * tmp_buflen;
-	      if (tmp_buffer_malloced)
-		{
-		  char *newp = realloc (tmp_buffer, newsize);
-		  if (newp != NULL)
-		    {
-		      assert ((((uintptr_t) newp)
-			       & (__alignof__ (struct hostent_data) - 1))
-			      == 0);
-		      tmp_buffer = newp;
-		      tmp_buflen = newsize;
-		      goto again;
-		    }
-		}
-	      else if (!__libc_use_alloca (buflen + newsize))
-		{
-		  tmp_buffer = malloc (newsize);
-		  if (tmp_buffer != NULL)
-		    {
-		      assert ((((uintptr_t) tmp_buffer)
-			       & (__alignof__ (struct hostent_data) - 1))
-			      == 0);
-		      tmp_buffer_malloced = true;
-		      tmp_buflen = newsize;
-		      goto again;
-		    }
-		}
-	      else
-		{
-		  tmp_buffer
-		    = extend_alloca (tmp_buffer, tmp_buflen,
-				     newsize
-				     + __alignof__ (struct hostent_data));
-		  tmp_buffer = (char *) (((uintptr_t) tmp_buffer
-					  + __alignof__ (struct hostent_data)
-					  - 1)
-					 & ~(__alignof__ (struct hostent_data)
-					     - 1));
-		  goto again;
-		}
-	    }
-	  else
-	    status = NSS_STATUS_SUCCESS;
-	out:
-	  if (tmp_buffer_malloced)
-	    free (tmp_buffer);
-	}
+	status = gethostbyname3_multi
+	  (stream, name, af, result, buffer, buflen, errnop, herrnop, flags);
 
       internal_endent (&stream);
     }

@@ -402,7 +402,13 @@ enum
 
 /* Return number of classification appropriate for X.  */
 # if __GNUC_PREREQ (4,4) && !defined __SUPPORT_SNAN__			      \
-     && !defined __OPTIMIZE_SIZE__
+     && (!defined __OPTIMIZE_SIZE__ || defined __cplusplus)
+     /* The check for __cplusplus allows the use of the builtin, even
+	when optimization for size is on.  This is provided for
+	libstdc++, only to let its configure test work when it is built
+	with -Os.  No further use of this definition of fpclassify is
+	expected in C++ mode, since libstdc++ provides its own version
+	of fpclassify in cmath (which undefines fpclassify).  */
 #  define fpclassify(x) __builtin_fpclassify (FP_NAN, FP_INFINITE,	      \
      FP_NORMAL, FP_SUBNORMAL, FP_ZERO, x)
 # else
@@ -412,6 +418,15 @@ enum
 /* Return nonzero value if sign of X is negative.  */
 # if __GNUC_PREREQ (6,0)
 #  define signbit(x) __builtin_signbit (x)
+# elif defined __cplusplus
+  /* In C++ mode, __MATH_TG cannot be used, because it relies on
+     __builtin_types_compatible_p, which is a C-only builtin.
+     The check for __cplusplus allows the use of the builtin instead of
+     __MATH_TG. This is provided for libstdc++, only to let its configure
+     test work. No further use of this definition of signbit is expected
+     in C++ mode, since libstdc++ provides its own version of signbit
+     in cmath (which undefines signbit). */
+#  define signbit(x) __builtin_signbitl (x)
 # elif __GNUC_PREREQ (4,0)
 #  define signbit(x) __MATH_TG ((x), __builtin_signbit, (x))
 # else
@@ -474,7 +489,32 @@ enum
 # include <bits/iscanonical.h>
 
 /* Return nonzero value if X is a signaling NaN.  */
-# define issignaling(x) __MATH_TG ((x), __issignaling, (x))
+# ifndef __cplusplus
+#  define issignaling(x) __MATH_TG ((x), __issignaling, (x))
+# else
+   /* In C++ mode, __MATH_TG cannot be used, because it relies on
+      __builtin_types_compatible_p, which is a C-only builtin.  On the
+      other hand, overloading provides the means to distinguish between
+      the floating-point types.  The overloading resolution will match
+      the correct parameter (regardless of type qualifiers (i.e.: const
+      and volatile)).  */
+extern "C++" {
+inline int issignaling (float __val) { return __issignalingf (__val); }
+inline int issignaling (double __val) { return __issignaling (__val); }
+inline int
+issignaling (long double __val)
+{
+#  ifdef __NO_LONG_DOUBLE_MATH
+  return __issignaling (__val);
+#  else
+  return __issignalingl (__val);
+#  endif
+}
+#  if __HAVE_DISTINCT_FLOAT128
+inline int issignaling (_Float128 __val) { return __issignalingf128 (__val); }
+#  endif
+} /* extern C++ */
+# endif
 
 /* Return nonzero value if X is subnormal.  */
 # define issubnormal(x) (fpclassify (x) == FP_SUBNORMAL)
@@ -488,15 +528,40 @@ enum
 #  endif
 # else	/* __cplusplus */
 extern "C++" {
+#  ifdef __SUPPORT_SNAN__
+inline int
+iszero (float __val)
+{
+  return __fpclassifyf (__val) == FP_ZERO;
+}
+inline int
+iszero (double __val)
+{
+  return __fpclassify (__val) == FP_ZERO;
+}
+inline int
+iszero (long double __val)
+{
+#   ifdef __NO_LONG_DOUBLE_MATH
+  return __fpclassify (__val) == FP_ZERO;
+#   else
+  return __fpclassifyl (__val) == FP_ZERO;
+#   endif
+}
+#   if __HAVE_DISTINCT_FLOAT128
+inline int
+iszero (_Float128 __val)
+{
+  return __fpclassifyf128 (__val) == FP_ZERO;
+}
+#   endif
+#  else
 template <class __T> inline bool
 iszero (__T __val)
 {
-#  ifdef __SUPPORT_SNAN__
-  return fpclassify (__val) == FP_ZERO;
-#  else
   return __val == 0;
-#  endif
 }
+#  endif
 } /* extern C++ */
 # endif	/* __cplusplus */
 #endif /* Use IEC_60559_BFP_EXT.  */

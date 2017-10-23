@@ -42,10 +42,6 @@ extern void __new_globfree (glob_t *__pglob);
 #undef globfree64
 
 versioned_symbol (libc, __new_glob, glob, GLIBC_2_1);
-versioned_symbol (libc, __new_globfree, globfree, GLIBC_2_1);
 libc_hidden_ver (__new_glob, glob)
-libc_hidden_ver (__new_globfree, globfree)
 
 weak_alias (__new_glob, glob64)
-weak_alias (__new_globfree, globfree64)
-libc_hidden_ver (__new_globfree, globfree64)
