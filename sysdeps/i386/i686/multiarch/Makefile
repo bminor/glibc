@@ -30,7 +30,8 @@ sysdep_routines += bzero-sse2 memset-sse2 memcpy-ssse3 mempcpy-ssse3 \
 		   mempcpy-ia32 memset-ia32 strcat-ia32 strchr-ia32 \
 		   strrchr-ia32 strcpy-ia32 strcmp-ia32 strcspn-ia32 \
 		   strpbrk-ia32 strspn-ia32 strlen-ia32 stpcpy-ia32 \
-		   stpncpy-ia32
+		   stpncpy-ia32 \
+		   stpcpy-i386 strcpy-i386 stpcpy-stosb strcpy-stosb
 CFLAGS-varshift.c += -msse4
 CFLAGS-strcspn-c.c += -msse4
 CFLAGS-strpbrk-c.c += -msse4
