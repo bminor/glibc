@@ -29,6 +29,34 @@
 # define STRCPY strcpy
 #endif
 
+#ifdef PIC
+# define JMPTBL(I, B)	I - B
+
+/* Load an entry in a jump table into EDX and branch to it. TABLE is a
+   jump table with relative offsets.  INDEX is a register contains the
+   index into the jump table.  SCALE is the scale of INDEX.  */
+
+# define BRANCH_TO_JMPTBL_ENTRY(TABLE, INDEX, SCALE)		\
+	/* We first load PC into EDX.  */			\
+	SETUP_PIC_REG(dx);					\
+	/* Get the address of the jump table.  */		\
+	addl	$(TABLE - .), %edx;				\
+	/* Get the entry and convert the relative offset to the \
+	   absolute address.  */				\
+	addl	(%edx,INDEX,SCALE), %edx;			\
+	/* We loaded the jump table and adjusted EDX. Go.  */  \
+	jmp	*%edx
+#else
+# define JMPTBL(I, B)	I
+
+/* Branch to an entry in a jump table.  TABLE is a jump table with
+   absolute offsets.  INDEX is a register contains the index into the
+   jump	table.  SCALE is the scale of INDEX.  */
+
+# define BRANCH_TO_JMPTBL_ENTRY(TABLE, INDEX, SCALE)		\
+	jmp	*TABLE(,INDEX,SCALE)
+#endif
+
 #define magic 0xfefefeff
 
 	.text
@@ -53,41 +81,32 @@ ENTRY (STRCPY)
 	cfi_rel_offset (ebx, 0)
 	andl	$3, %ecx
 
-#ifdef PIC
-	call	2f
-	cfi_adjust_cfa_offset (4)
-2:	popl	%edx
-	cfi_adjust_cfa_offset (-4)
-	/* 0xb is the distance between 2: and 1: but we avoid writing
-	   1f-2b because the assembler generates worse code.  */
-	leal	0xb(%edx,%ecx,8), %ecx
-#else
-	leal	1f(,%ecx,8), %ecx
-#endif
+	BRANCH_TO_JMPTBL_ENTRY (L(SrcTable), %ecx, 4)
 
-	jmp	*%ecx
-
-	.align 8
-1:
+	.p2align 4
+L(Src0):
 	orb	(%esi), %al
 	jz	L(end)
 	stosb
 	xorl	%eax, %eax
 	incl	%esi
 
+L(Src1):
 	orb	(%esi), %al
 	jz	L(end)
 	stosb
 	xorl	%eax, %eax
 	incl	%esi
 
+L(Src2):
 	orb	(%esi), %al
 	jz	L(end)
 	stosb
 	xorl	%eax, %eax
 	incl	%esi
 
-L(1):	movl	(%esi), %ecx
+L(Src3):
+	movl	(%esi), %ecx
 	leal	4(%esi),%esi
 
 	subl	%ecx, %eax
@@ -107,7 +126,7 @@ L(1):	movl	(%esi), %ecx
 	movl	%edx, (%edi)
 	leal	4(%edi),%edi
 
-	jmp	L(1)
+	jmp	L(Src3)
 
 L(3):	movl	%ecx, %edx
 
@@ -164,6 +183,15 @@ L(end2):
 
 	ret
 END (STRCPY)
+
+	.p2align 2
+	.section .rodata
+L(SrcTable):
+	.int	JMPTBL (L(Src0), L(SrcTable))
+	.int	JMPTBL (L(Src1), L(SrcTable))
+	.int	JMPTBL (L(Src2), L(SrcTable))
+	.int	JMPTBL (L(Src3), L(SrcTable))
+
 #ifndef USE_AS_STPCPY
 libc_hidden_builtin_def (strcpy)
 #endif
