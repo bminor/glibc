@@ -401,16 +401,6 @@ tests: $(test-modules)
 endif
 
 ifeq ($(build-shared),yes)
-
-# Set the `multidir' variable by grabbing the variable from the compiler.
-# We do it once and save the result in a generated makefile.
--include $(objpfx)multidir.mk
-$(objpfx)multidir.mk: $(common-objpfx)config.make
-	$(make-target-directory)
-	dir=`$(CC) $(CFLAGS) $(CPPFLAGS) -print-multi-directory`; \
-	echo "multidir := $$dir" > $@T
-	mv -f $@T $@
-
 crti-objs := crti.o
 crtn-objs := crtn.o
 ifneq (,$(patsubst .,,$(multidir)))
