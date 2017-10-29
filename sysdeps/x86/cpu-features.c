@@ -430,6 +430,11 @@ no_cpuid:
 
       if (platform != NULL)
 	GLRO(dl_platform) = platform;
+# ifdef __ILP32__
+      /* Set dl_platform to "x86_64" since kernel may set it to "i686".  */
+      else
+	GLRO(dl_platform) = "x86_64";
+# endif
     }
 #else
   GLRO(dl_hwcap) = 0;
