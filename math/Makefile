@@ -204,7 +204,7 @@ tests-static = test-fpucw-static test-fpucw-ieee-static \
 
 ifneq (,$(CXX))
 tests += test-math-isinff test-math-iszero test-math-issignaling \
-	 test-math-iscanonical
+	 test-math-iscanonical test-math-iseqsig
 endif
 
 ifneq (no,$(PERL))

@@ -100,6 +100,7 @@ The following bugs are resolved with this release:
   [22322] libc: [mips64] wrong bits/long-double.h installed
   [22325] glibc: Memory leak in glob with GLOB_TILDE (CVE-2017-15671)
   [22375] malloc returns pointer from tcache instead of NULL (CVE-2017-17426)
+  [22377] Provide a C++ version of iseqsig
   [22636] PTHREAD_STACK_MIN is too small on x86-64
   [22627] $ORIGIN in $LD_LIBRARY_PATH is substituted twice
   [22637] nptl: Fix stack guard size accounting

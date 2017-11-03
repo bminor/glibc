@@ -1,3 +1,13 @@
+2017-12-19  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
+	[BZ #22377]
+	* math/Makefile [C++] (tests): Add test for iseqsig.
+	* math/math.h [C++] (iseqsig): New implementation, which does
+	not rely on __MATH_TG/__builtin_types_compatible_p.
+	* math/test-math-iseqsig.cc: New file.
+	* sysdeps/powerpc/powerpc64le/Makefile
+	(CFLAGS-test-math-iseqsig.cc): New variable.
+
 2017-10-18  Renlin Li  <renlin.li@arm.com>
 
 	* sysdeps/aarch64/dl-machine.h (elf_machine_load_address): Use
