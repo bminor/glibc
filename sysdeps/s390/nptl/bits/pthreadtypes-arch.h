@@ -37,13 +37,6 @@
 #define __SIZEOF_PTHREAD_RWLOCKATTR_T 8
 #define __SIZEOF_PTHREAD_BARRIERATTR_T 4
 
-/* Definitions for internal mutex struct.  */
-#define __PTHREAD_COMPAT_PADDING_MID
-#define __PTHREAD_COMPAT_PADDING_END
-#define __PTHREAD_MUTEX_LOCK_ELISION    1
-#define __PTHREAD_MUTEX_NUSERS_AFTER_KIND  (__WORDSIZE != 64)
-#define __PTHREAD_MUTEX_USE_UNION          (__WORDSIZE != 64)
-
 #define __LOCK_ALIGNMENT
 #define __ONCE_ALIGNMENT
 

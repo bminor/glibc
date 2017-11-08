@@ -35,12 +35,6 @@
 # error "rv32i-based systems are not supported"
 #endif
 
-#define __PTHREAD_COMPAT_PADDING_MID
-#define __PTHREAD_COMPAT_PADDING_END
-#define __PTHREAD_MUTEX_LOCK_ELISION		0
-#define __PTHREAD_MUTEX_USE_UNION	 	0
-#define __PTHREAD_MUTEX_NUSERS_AFTER_KIND	0
-
 #define __LOCK_ALIGNMENT
 #define __ONCE_ALIGNMENT
 

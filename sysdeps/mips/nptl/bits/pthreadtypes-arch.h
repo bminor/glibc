@@ -38,13 +38,6 @@
 #define __SIZEOF_PTHREAD_RWLOCKATTR_T 8
 #define __SIZEOF_PTHREAD_BARRIERATTR_T 4
 
-/* Data structure for mutex handling. */
-#define __PTHREAD_COMPAT_PADDING_MID
-#define __PTHREAD_COMPAT_PADDING_END
-#define __PTHREAD_MUTEX_LOCK_ELISION    0
-#define __PTHREAD_MUTEX_NUSERS_AFTER_KIND  (_MIPS_SIM != _ABI64)
-#define __PTHREAD_MUTEX_USE_UNION          (_MIPS_SIM != _ABI64)
-
 #define __LOCK_ALIGNMENT
 #define __ONCE_ALIGNMENT
 
