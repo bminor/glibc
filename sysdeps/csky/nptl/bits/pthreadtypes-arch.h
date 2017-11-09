@@ -34,28 +34,4 @@
 #define __LOCK_ALIGNMENT
 #define __ONCE_ALIGNMENT
 
-/* Paddings in this structure are not strictly necessary on C-SKY.
-   They are left for extensibility as most other architecture do so.  */
-struct __pthread_rwlock_arch_t
-{
-  unsigned int __readers;
-  unsigned int __writers;
-  unsigned int __wrphase_futex;
-  unsigned int __writers_futex;
-  unsigned int __pad3;
-  unsigned int __pad4;
-#if __BYTE_ORDER == __BIG_ENDIAN
-  unsigned char __pad1;
-  unsigned char __pad2;
-  unsigned char __shared;
-  unsigned char __flags;
-#else
-  unsigned char __flags;
-  unsigned char __shared;
-  unsigned char __pad1;
-  unsigned char __pad2;
-#endif
-  int __cur_writer;
-};
-
-#endif
+#endif /* bits/pthreadtypes.h */

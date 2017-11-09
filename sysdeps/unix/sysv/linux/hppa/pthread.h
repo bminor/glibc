@@ -104,23 +104,13 @@ enum
   PTHREAD_RWLOCK_DEFAULT_NP = PTHREAD_RWLOCK_PREFER_READER_NP
 };
 
-/* Define __PTHREAD_RWLOCK_INT_FLAGS_SHARED to 1 if pthread_rwlock_t
-   has the shared field.  All 64-bit architectures have the shared field
-   in pthread_rwlock_t.  */
-#ifndef __PTHREAD_RWLOCK_INT_FLAGS_SHARED
-# if __WORDSIZE == 64
-#  define __PTHREAD_RWLOCK_INT_FLAGS_SHARED 1
-# endif
-#endif
-
 
 /* Read-write lock initializers.  */
 # define PTHREAD_RWLOCK_INITIALIZER \
-  { { { 0, 0, 0, 0 }, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }
+  { { __PTHREAD_RWLOCK_INITIALIZER (PTHREAD_RWLOCK_DEFAULT_NP) } }
 # ifdef __USE_GNU
 #  define PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP \
-   { { { 0, 0, 0, 0 }, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \
-       PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP, 0, 0, 0 } }
+  { { __PTHREAD_RWLOCK_INITIALIZER (PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP) } }
 # endif
 #endif  /* Unix98 or XOpen2K */
 

@@ -34,21 +34,4 @@
 #define __LOCK_ALIGNMENT __attribute__ ((__aligned__ (4)))
 #define __ONCE_ALIGNMENT __attribute__ ((__aligned__ (4)))
 
-struct __pthread_rwlock_arch_t
-{
-  unsigned int __readers  __attribute__ ((__aligned__ (4)));
-  unsigned int __writers;
-  unsigned int __wrphase_futex;
-  unsigned int __writers_futex;
-  unsigned int __pad3;
-  unsigned int __pad4;
-  unsigned char __pad1;
-  unsigned char __pad2;
-  unsigned char __shared;
-  /* FLAGS must stay at this position in the structure to maintain
-     binary compatibility.  */
-  unsigned char __flags;
-  int __cur_writer;
-};
-
 #endif	/* bits/pthreadtypes.h */

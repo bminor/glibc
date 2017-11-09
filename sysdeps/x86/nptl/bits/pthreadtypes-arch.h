@@ -50,34 +50,6 @@
 #define __LOCK_ALIGNMENT
 #define __ONCE_ALIGNMENT
 
-struct __pthread_rwlock_arch_t
-{
-  unsigned int __readers;
-  unsigned int __writers;
-  unsigned int __wrphase_futex;
-  unsigned int __writers_futex;
-  unsigned int __pad3;
-  unsigned int __pad4;
-#ifdef __x86_64__
-  int __cur_writer;
-  int __shared;
-  unsigned long int __pad1;
-  unsigned long int __pad2;
-  /* FLAGS must stay at this position in the structure to maintain
-     binary compatibility.  */
-  unsigned int __flags;
-# define __PTHREAD_RWLOCK_INT_FLAGS_SHARED	1
-#else
-  /* FLAGS must stay at this position in the structure to maintain
-     binary compatibility.  */
-  unsigned char __flags;
-  unsigned char __shared;
-  unsigned char __pad1;
-  unsigned char __pad2;
-  int __cur_writer;
-#endif
-};
-
 #ifndef __x86_64__
 /* Extra attributes for the cleanup functions.  */
 # define __cleanup_fct_attribute __attribute__ ((__regparm__ (1)))

@@ -23,7 +23,7 @@ subdir	:= nptl
 include ../Makeconfig
 
 headers := pthread.h semaphore.h bits/semaphore.h threads.h \
-	   bits/struct_mutex.h
+	   bits/struct_mutex.h bits/struct_rwlock.h
 
 extra-libs := libpthread
 extra-libs-others := $(extra-libs)

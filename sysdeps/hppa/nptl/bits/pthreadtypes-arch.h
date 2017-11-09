@@ -43,36 +43,4 @@
 #define __LOCK_ALIGNMENT __attribute__ ((__aligned__(16)))
 #define __ONCE_ALIGNMENT
 
-struct __pthread_rwlock_arch_t
-{
-  /* In the old Linuxthreads pthread_rwlock_t, this is the
-     start of the 4-word 16-byte aligned lock structure. The
-     next four words are all set to 1 by the Linuxthreads
-     PTHREAD_RWLOCK_INITIALIZER. We ignore them in NPTL.  */
-  int __compat_padding[4] __attribute__ ((__aligned__(16)));
-  unsigned int __readers;
-  unsigned int __writers;
-  unsigned int __wrphase_futex;
-  unsigned int __writers_futex;
-  unsigned int __pad3;
-  unsigned int __pad4;
-  int __cur_writer;
-  /* An unused word, reserved for future use. It was added
-     to maintain the location of the flags from the Linuxthreads
-     layout of this structure.  */
-  int __reserved1;
-  /* FLAGS must stay at this position in the structure to maintain
-     binary compatibility.  */
-  unsigned char __pad2;
-  unsigned char __pad1;
-  unsigned char __shared;
-  unsigned char __flags;
-  /* The NPTL pthread_rwlock_t is 4 words smaller than the
-     Linuxthreads version. One word is in the middle of the
-     structure, the other three are at the end.  */
-  int __reserved2;
-  int __reserved3;
-  int __reserved4;
-};
-
 #endif	/* bits/pthreadtypes.h */

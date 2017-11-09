@@ -39,10 +39,7 @@
 
    Same idea but for the once locking primitive:
 
-   __ONCE_ALIGNMENT - for pthread_once_t/once_flag definition.
-
-   And finally the internal pthread_rwlock_t (struct __pthread_rwlock_arch_t)
-   must be defined.  */
+   __ONCE_ALIGNMENT - for pthread_once_t/once_flag definition.  */
 
 #include <bits/pthreadtypes-arch.h>
 
@@ -75,6 +72,19 @@ typedef struct __pthread_internal_slist
       It should initialize the mutex internal flag.  */
 
 #include <bits/struct_mutex.h>
+
+/* Arch-sepecific read-write lock definitions.  A generic implementation is
+   provided by struct_rwlock.h.  If required, an architecture can override it
+   by defining:
+
+   1. struct __pthread_rwlock_arch_t (used on pthread_rwlock_t definition).
+      It should contain at least the internal members defined in the
+      generic version.
+
+   2. The macro __PTHREAD_RWLOCK_INITIALIZER used for static initialization.
+      It should initialize the rwlock internal type.  */
+
+#include <bits/struct_rwlock.h>
 
 
 /* Common definition of pthread_cond_t. */
