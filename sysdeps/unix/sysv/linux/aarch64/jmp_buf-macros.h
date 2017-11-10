@@ -3,4 +3,8 @@
 #define JMP_BUF_ALIGN 8
 #define SIGJMP_BUF_ALIGN 8
 #define MASK_WAS_SAVED_OFFSET 176
-#define SAVED_MASK_OFFSET 184
+#ifdef __ILP32__
+# define SAVED_MASK_OFFSET 180
+#else
+# define SAVED_MASK_OFFSET 184
+#endif
