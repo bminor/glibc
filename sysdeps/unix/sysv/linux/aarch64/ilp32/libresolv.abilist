@@ -20,7 +20,6 @@ GLIBC_2.27 __p_fqnname F
 GLIBC_2.27 __p_option F
 GLIBC_2.27 __p_query F
 GLIBC_2.27 __p_rcode F
-GLIBC_2.27 __p_secstodate F
 GLIBC_2.27 __p_time F
 GLIBC_2.27 __p_type F
 GLIBC_2.27 __p_type_syms D 0x228
