@@ -1247,6 +1247,7 @@ GLIBC_2.27 memccpy F
 GLIBC_2.27 memchr F
 GLIBC_2.27 memcmp F
 GLIBC_2.27 memcpy F
+GLIBC_2.27 memfd_create F
 GLIBC_2.27 memfrob F
 GLIBC_2.27 memmem F
 GLIBC_2.27 memmove F
@@ -1710,6 +1711,8 @@ GLIBC_2.27 strfmon F
 GLIBC_2.27 strfmon_l F
 GLIBC_2.27 strfromd F
 GLIBC_2.27 strfromf F
+GLIBC_2.27 strfromf128 F
+GLIBC_2.27 strfromf64x F
 GLIBC_2.27 strfroml F
 GLIBC_2.27 strfry F
 GLIBC_2.27 strftime F
@@ -1733,6 +1736,10 @@ GLIBC_2.27 strstr F
 GLIBC_2.27 strtod F
 GLIBC_2.27 strtod_l F
 GLIBC_2.27 strtof F
+GLIBC_2.27 strtof128 F
+GLIBC_2.27 strtof128_l F
+GLIBC_2.27 strtof64x F
+GLIBC_2.27 strtof64x_l F
 GLIBC_2.27 strtof_l F
 GLIBC_2.27 strtoimax F
 GLIBC_2.27 strtok F
@@ -1946,6 +1953,10 @@ GLIBC_2.27 wcsstr F
 GLIBC_2.27 wcstod F
 GLIBC_2.27 wcstod_l F
 GLIBC_2.27 wcstof F
+GLIBC_2.27 wcstof128 F
+GLIBC_2.27 wcstof128_l F
+GLIBC_2.27 wcstof64x F
+GLIBC_2.27 wcstof64x_l F
 GLIBC_2.27 wcstof_l F
 GLIBC_2.27 wcstoimax F
 GLIBC_2.27 wcstok F

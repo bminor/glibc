@@ -5,7 +5,6 @@ GLIBC_2.27 __nis_default_group F
 GLIBC_2.27 __nis_default_owner F
 GLIBC_2.27 __nis_default_ttl F
 GLIBC_2.27 __nis_finddirectory F
-GLIBC_2.27 __nis_hash F
 GLIBC_2.27 __nisbind_connect F
 GLIBC_2.27 __nisbind_create F
 GLIBC_2.27 __nisbind_destroy F
