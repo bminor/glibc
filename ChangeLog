@@ -1,3 +1,10 @@
+2017-11-12  Paul Eggert  <eggert@cs.ucla.edu>
+
+	timezone: pacify GCC -Wstringop-truncation
+	Problem reported by Martin Sebor in:
+	https://sourceware.org/ml/libc-alpha/2017-11/msg00336.html
+	* timezone/zic.c (writezone): Use memcpy, not strncpy.
+
 2017-11-15  Martin Sebor  <msebor@redhat.com>
 
 	* misc/sys/cdefs.h (__attribute_nonstring__): New macro.
