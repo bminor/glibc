@@ -1,3 +1,15 @@
+2017-11-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* string/tester.c (test_stpncpy): Disable -Wstringop-truncation
+	for stpncpy calls for GCC 8.
+	(test_strncat): Disable -Wstringop-truncation warning for strncat
+	calls for GCC 8.  Disable -Wstringop-overflow= warning for one
+	strncat call for GCC 7.
+	(test_strncpy): Disable -Wstringop-truncation warning for strncpy
+	calls for GCC 8.
+	(test_memcmp): Use memcpy instead of strncpy for calls not copying
+	trailing NUL.
+
 2017-12-18  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #22446]
