@@ -1,5 +1,10 @@
 2017-11-15  Luke Shumaker  <lukeshu@parabola.nu>
 
+	* sysdeps/unix/sysv/linux/ttyname.h (is_pty): Change return type from
+	int to bool.
+
+2017-11-15  Luke Shumaker  <lukeshu@parabola.nu>
+
 	* sysdeps/unix/sysv/linux/ttyname.h (is_pty): Update doc reference.
 
 2017-11-15  Luke Shumaker  <lukeshu@parabola.nu>
