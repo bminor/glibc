@@ -1,3 +1,9 @@
+2017-11-15  Martin Sebor  <msebor@redhat.com>
+
+	* misc/sys/cdefs.h (__attribute_nonstring__): New macro.
+	* sysdeps/gnu/bits/utmp.h (struct utmp): Use it.
+	* sysdeps/unix/sysv/linux/s390/bits/utmp.h (struct utmp): Same.
+
 2017-11-22  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #22447]
