@@ -99,6 +99,7 @@
 	* sysdeps/unix/sysv/linux/arc/configure: New file.
 	* sysdeps/unix/sysv/linux/arc/configure.ac: New file.
 	* sysdeps/unix/sysv/linux/arc/shlib-versions: New file.
+	* scripts/build-many-glibcs.py: Enable building for ARC.
 
 2019-08-01  Carlos O'Donell <carlos@redhat.com>
 

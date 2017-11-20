@@ -155,6 +155,9 @@ class Context(object):
                                        'cfg': ['--disable-multi-arch']}])
         self.add_config(arch='aarch64_be',
                         os_name='linux-gnu')
+        self.add_config(arch='arc',
+                        os_name='linux-gnu',
+                        gcc_cfg=['--disable-multilib', '--with-cpu=archs'])
         self.add_config(arch='alpha',
                         os_name='linux-gnu')
         self.add_config(arch='arm',
@@ -1259,6 +1262,7 @@ class Config(object):
     def install_linux_headers(self, cmdlist):
         """Install Linux kernel headers."""
         arch_map = {'aarch64': 'arm64',
+                    'arc': 'arc',
                     'alpha': 'alpha',
                     'arm': 'arm',
                     'csky': 'csky',
