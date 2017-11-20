@@ -512,6 +512,8 @@ Library with support for IEEE long double.
 @c powerpc64le performs an autoconf test to verify the compiler compiles with
 @c commands like "$CC -c foo.c -mabi=ibmlongdouble -mlong-double-128".
 
+For ARC architecture builds, GCC 8.3 or higher is needed.
+
 For multi-arch support it is recommended to use a GCC which has been built with
 support for GNU indirect functions.  This ensures that correct debugging
 information is generated for functions selected by IFUNC resolvers.  This
@@ -536,6 +538,8 @@ verified to work to build @theglibc{}.
 For PowerPC 64-bits little-endian (powerpc64le), @command{objcopy} is required
 to support @option{--update-section}.  This option requires binutils 2.26 or
 newer.
+
+ARC architecture needs @code{binutils} 2.32 or higher for TLS related fixes.
 
 @item
 GNU @code{texinfo} 4.7 or later
