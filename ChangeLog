@@ -1,3 +1,9 @@
+2017-11-21  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power7/memcpy.S: Replace
+	lxvd2x/stxvd2x with lvx/stvx.
+	* sysdeps/powerpc/powerpc64/power7/memmove.S: Likewise.
+
 2017-10-04  Florian Weimer  <fweimer@redhat.com>
 
 	* scripts/check-local-headers.sh: Ignore nspr4 header file
