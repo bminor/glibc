@@ -1,3 +1,10 @@
+2017-11-22  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #22447]
+	* sysdeps/unix/getlogin_r.c (__getlogin_r): Use __strnlen not
+	strlen to compute length of ut_user and set trailing NUL byte of
+	result explicitly.
+
 2018-10-19  Ilya Yu. Malakhov  <malakhov@mcst.ru>
 
 	[BZ #23562]
