@@ -1,3 +1,260 @@
+2017-11-17  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/bits/hwcap.h (PPC_FEATURE2_HTM_NO_SUSPEND): New
+	macro.
+
+2017-08-09  Andreas Schwab  <schwab@suse.de>
+
+	* nptl/Makefile (tests) [$(build-shared) = yes]: Add
+	tst-compat-forwarder.
+	(modules-names): Add tst-compat-forwarder-mod.
+	($(objpfx)tst-compat-forwarder): Depend on
+	$(objpfx)tst-compat-forwarder-mod.so.
+	* nptl/tst-compat-forwarder.c: New file.
+	* nptl/tst-compat-forwarder-mod.c: New file.
+
+2017-08-09  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/s390/pt-longjmp.c: Update reference to
+	renamed alias.
+
+2017-08-08  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #21041]
+	* nptl/pt-longjmp.c (longjmp, siglongjmp): Don't use IFUNC resolver.
+	* nptl/pt-system.c (system): Likewise.
+
+2017-11-21  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power7/memcpy.S: Replace
+	lxvd2x/stxvd2x with lvx/stvx.
+	* sysdeps/powerpc/powerpc64/power7/memmove.S: Likewise.
+
+2017-10-04  Florian Weimer  <fweimer@redhat.com>
+
+	* scripts/check-local-headers.sh: Ignore nspr4 header file
+	directory in addition to nspr.
+
+2017-10-04  Guido Trentalancia  <guido@trentalancia.net>
+
+	[BZ #17956]
+	* configure.ac (--enable-nss-crypt): Use NSPR include directory.
+	* configure: Regenerate.
+	* crypt/Makefile (nss-cpp-flags): New variable.
+	(CPPFLAGS-sha256-crypt.c, CPPFLAGS-sha512-crypt.c)
+	(CPPFLAGS-md5-crypt.c): Use it.
+	* scripts/check-local-headers.sh: Ignore nspr header file
+	directory.
+
+2017-10-18  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* malloc/malloc.c (malloc_state): Use int for have_fastchunks since
+	not all targets support atomics on bool.
+
+2017-10-17  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* malloc/malloc.c (FASTCHUNKS_BIT): Remove.
+	(have_fastchunks): Remove.
+	(clear_fastchunks): Remove.
+	(set_fastchunks): Remove.
+	(malloc_state): Add have_fastchunks.
+	(malloc_init_state): Use have_fastchunks.
+	(do_check_malloc_state): Remove incorrect invariant checks.
+	(_int_malloc): Use have_fastchunks.
+	(_int_free): Likewise.
+	(malloc_consolidate): Likewise.
+
+2017-10-17  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* malloc/malloc.c (tcache_put): Inline.
+	(tcache_get): Inline.
+
+2017-10-13  James Clarke  <jrtc27@jrtc27.com>
+
+	* sysdeps/powerpc/powerpc32/dl-machine.h (elf_machine_rela):
+	Assign sym_map to be map for local symbols, as TLS relocations
+	use sym_map to determine whether the symbol is defined and to
+	extract the TLS information.
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela): Likewise.
+
+2017-08-23  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/fpu/libm-test-ulps: Regenerated.
+
+2017-11-07  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #22298]
+	* nptl/allocatestack.c (allocate_stack): Check if
+	__PTHREAD_MUTEX_HAVE_PREV is non-zero, instead if
+	__PTHREAD_MUTEX_HAVE_PREV is defined.
+	* nptl/descr.h (pthread): Likewise.
+	* nptl/nptl-init.c (__pthread_initialize_minimal_internal):
+	Likewise.
+	* nptl/pthread_create.c (START_THREAD_DEFN): Likewise.
+	* sysdeps/nptl/fork.c (__libc_fork): Likewise.
+	* sysdeps/nptl/pthread.h (PTHREAD_MUTEX_INITIALIZER): Likewise.
+	* sysdeps/nptl/bits/thread-shared-types.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION): New
+	defines.
+	(__pthread_internal_list): Check __PTHREAD_MUTEX_USE_UNION instead
+	of __WORDSIZE for internal layout.
+	(__pthread_mutex_s): Check __PTHREAD_MUTEX_NUSERS_AFTER_KIND instead
+	of __WORDSIZE for internal __nusers layout and __PTHREAD_MUTEX_USE_UNION
+	instead of __WORDSIZE whether to use an union for __spins and __list
+	fields.
+	(__PTHREAD_MUTEX_HAVE_PREV): Define also for __PTHREAD_MUTEX_USE_UNION
+	case.
+	* sysdeps/aarch64/nptl/bits/pthreadtypes-arch.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION): New
+	defines.
+	* sysdeps/alpha/nptl/bits/pthreadtypes-arch.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION):
+	Likewise.
+	* sysdeps/arm/nptl/bits/pthreadtypes-arch.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION):
+	Likewise.
+	* sysdeps/hppa/nptl/bits/pthreadtypes-arch.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION):
+	Likewise.
+	* sysdeps/ia64/nptl/bits/pthreadtypes-arch.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION):
+	Likewise.
+	* sysdeps/m68k/nptl/bits/pthreadtypes-arch.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION):
+	Likewise.
+	* sysdeps/microblaze/nptl/bits/pthreadtypes-arch.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION):
+	Likewise.
+	* sysdeps/mips/nptl/bits/pthreadtypes-arch.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION):
+	Likewise.
+	* sysdeps/nios2/nptl/bits/pthreadtypes-arch.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION):
+	Likewise.
+	* sysdeps/powerpc/nptl/bits/pthreadtypes-arch.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION):
+	Likewise.
+	* sysdeps/s390/nptl/bits/pthreadtypes-arch.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION):
+	Likewise.
+	* sysdeps/sh/nptl/bits/pthreadtypes-arch.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION):
+	Likewise.
+	* sysdeps/sparc/nptl/bits/pthreadtypes-arch.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION):
+	Likewise.
+	* sysdeps/tile/nptl/bits/pthreadtypes-arch.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION):
+	Likewise.
+	* sysdeps/x86/nptl/bits/pthreadtypes-arch.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION):
+	Likewise.
+
+	* nptl/pthreadP.h (ASSERT_PTHREAD_STRING,
+	ASSERT_PTHREAD_INTERNAL_OFFSET): New macro.
+	* nptl/pthread_mutex_init.c (__pthread_mutex_init): Add build time
+	checks for internal pthread_mutex_t offsets.
+	* sysdeps/aarch64/nptl/pthread-offsets.h
+	(__PTHREAD_MUTEX_NUSERS_OFFSET, __PTHREAD_MUTEX_KIND_OFFSET,
+	__PTHREAD_MUTEX_SPINS_OFFSET, __PTHREAD_MUTEX_ELISION_OFFSET,
+	__PTHREAD_MUTEX_LIST_OFFSET): New macro.
+	* sysdeps/alpha/nptl/pthread-offsets.h: Likewise.
+	* sysdeps/arm/nptl/pthread-offsets.h: Likewise.
+	* sysdeps/hppa/nptl/pthread-offsets.h: Likewise.
+	* sysdeps/i386/nptl/pthread-offsets.h: Likewise.
+	* sysdeps/ia64/nptl/pthread-offsets.h: Likewise.
+	* sysdeps/m68k/nptl/pthread-offsets.h: Likewise.
+	* sysdeps/microblaze/nptl/pthread-offsets.h: Likewise.
+	* sysdeps/mips/nptl/pthread-offsets.h: Likewise.
+	* sysdeps/nios2/nptl/pthread-offsets.h: Likewise.
+	* sysdeps/powerpc/nptl/pthread-offsets.h: Likewise.
+	* sysdeps/s390/nptl/pthread-offsets.h: Likewise.
+	* sysdeps/sh/nptl/pthread-offsets.h: Likewise.
+	* sysdeps/sparc/nptl/pthread-offsets.h: Likewise.
+	* sysdeps/tile/nptl/pthread-offsets.h: Likewise.
+	* sysdeps/x86_64/nptl/pthread-offsets.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/spawni.c (__spawnix): Use 0 instead of
+	WNOHANG in waitpid call.
+
+	[BZ #22273]
+	* sysdeps/unix/sysv/linux/spawni.c (__spawnix): Handle the case where
+	the auxiliary process is terminated by a signal before calling _exit
+	or execve.
+
+2017-09-13  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/oldglob.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/Makefile
+	[$(subdir) = csu] (sysdep_routines): Remove rule.
+
+2017-09-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/arm/glob64.c: Remove file.
+	* sysdeps/unix/sysv/linux/i386/glob64.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/glob64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/glob64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/globfree64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/glob64.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/glob64.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/glob64.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/globfree64.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/glob.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/globfree.c: Likewise.
+	* sysdeps/wordsize-64/glob.c: Likewise.
+	* sysdeps/wordsize-64/glob64.c: Likewise.
+	* sysdeps/wordsize-64/globfree.c: Likewise.
+	* sysdeps/wordsize-64/globfree64.c: Likewise.
+	* sysdeps/unix/sysv/linux/glob.c: New file.
+	* sysdeps/unix/sysv/linux/glob64.c: Likewise.
+	* sysdeps/unix/sysv/linux/globfree.c: Likewise.
+	* sysdeps/unix/sysv/linux/globfree64.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/glob64.c: Likewise.
+	* sysdeps/unix/sysv/linux/oldglob.c [SHLIB_COMPAT]: Also
+	adds !GLOB_NO_OLD_VERSION as an extra condition.
+	* sysdeps/unix/sysv/linux/i386/alphasort64.c: Include olddirent.h
+	using relative path instead of absolute one.
+	* sysdeps/unix/sysv/linux/i386/getdents64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/readdir64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/readdir64_r.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/versionsort64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/olddirent.h: Move to ...
+	* sysdeps/unix/sysv/linux//olddirent.h: ... here.
+
+2017-10-26  Valery Reznic <valery_reznic@yahoo.com>
+	    H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #22299]
+	* sysdeps/x86/cpu-features.c (init_cpu_features): Don't set
+	GLRO(dl_platform) to NULL.
+	* sysdeps/x86_64/Makefile (tests): Add tst-platform-1.
+	(modules-names): Add tst-platformmod-1 and
+	x86_64/tst-platformmod-2.
+	(CFLAGS-tst-platform-1.c): New.
+	(CFLAGS-tst-platformmod-1.c): Likewise.
+	(CFLAGS-tst-platformmod-2.c): Likewise.
+	(LDFLAGS-tst-platformmod-2.so): Likewise.
+	($(objpfx)tst-platform-1): Likewise.
+	($(objpfx)tst-platform-1.out): Likewise.
+	(tst-platform-1-ENV): Likewise.
+	($(objpfx)x86_64/tst-platformmod-2.os): Likewise.
+	* sysdeps/x86_64/tst-platform-1.c: New file.
+	* sysdeps/x86_64/tst-platformmod-1.c: Likewise.
+	* sysdeps/x86_64/tst-platformmod-2.c: Likewise.
+
+2017-10-23  Alexey Makhalov  <amakhalov@vmware.com>
+
+	* elf/dl-tunables.c (do_tunable_update_val): Range checking fix.
+	* scripts/gen-tunables.awk: Set unspecified minval and/or maxval
+	values to correct default value for given type.
+
+2017-10-19  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #22322]
+	* sysdeps/mips/bits/long-double.h: Move to ....
+	* sysdeps/mips/ieee754/bits/long-double.h: ... here.
+
 2017-10-17  Romain Naour  <romain.naour@gmail.com>  (tiny change)
 
 	[BZ #22296]
