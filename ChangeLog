@@ -1,3 +1,9 @@
+2017-10-15  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #22052]
+	* malloc/hooks.c (realloc_check): Use DIAG_IGNORE_NEEDS_COMMENT
+	to silence -O3 -Wall warning with GCC 7.
+
 2017-11-30  Arjun Shankar  <arjun@redhat.com>
 
 	[BZ #22375]
