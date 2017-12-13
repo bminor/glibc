@@ -18,6 +18,9 @@
 /* Default stack size.  */
 #define ARCH_STACK_DEFAULT_SIZE	(32 * 1024 * 1024)
 
+/* Minimum guard size.  */
+#define ARCH_MIN_GUARD_SIZE 0
+
 /* IA-64 uses a normal stack and a register stack.  */
 #define NEED_SEPARATE_REGISTER_STACK
 

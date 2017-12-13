@@ -521,6 +521,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
     {
       /* Allocate some anonymous memory.  If possible use the cache.  */
       size_t guardsize;
+      size_t reported_guardsize;
       size_t reqsize;
       void *mem;
       const int prot = (PROT_READ | PROT_WRITE
@@ -531,8 +532,17 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       assert (size != 0);
 
       /* Make sure the size of the stack is enough for the guard and
-	 eventually the thread descriptor.  */
+	 eventually the thread descriptor.  On some targets there is
+	 a minimum guard size requirement, ARCH_MIN_GUARD_SIZE, so
+	 internally enforce it (unless the guard was disabled), but
+	 report the original guard size for backward compatibility:
+	 before POSIX 2008 the guardsize was specified to be one page
+	 by default which is observable via pthread_attr_getguardsize
+	 and pthread_getattr_np.  */
       guardsize = (attr->guardsize + pagesize_m1) & ~pagesize_m1;
+      reported_guardsize = guardsize;
+      if (guardsize > 0 && guardsize < ARCH_MIN_GUARD_SIZE)
+	guardsize = ARCH_MIN_GUARD_SIZE;
       if (guardsize < attr->guardsize || size + guardsize < guardsize)
 	/* Arithmetic overflow.  */
 	return EINVAL;
@@ -740,7 +750,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       /* The pthread_getattr_np() calls need to get passed the size
 	 requested in the attribute, regardless of how large the
 	 actually used guardsize is.  */
-      pd->reported_guardsize = guardsize;
+      pd->reported_guardsize = reported_guardsize;
     }
 
   /* Initialize the lock.  We have to do this unconditionally since the

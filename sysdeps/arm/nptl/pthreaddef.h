@@ -18,6 +18,9 @@
 /* Default stack size.  */
 #define ARCH_STACK_DEFAULT_SIZE	(2 * 1024 * 1024)
 
+/* Minimum guard size.  */
+#define ARCH_MIN_GUARD_SIZE 0
+
 /* Required stack pointer alignment at beginning.  SSE requires 16
    bytes.  */
 #define STACK_ALIGN		16
