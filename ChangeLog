@@ -1,3 +1,11 @@
+2017-12-14  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #22606]
+	CVE-2017-1000408
+	* elf/dl-load.c (system_dirs): Update comment.
+	(nsystem_dirs_len): Use array_length.
+	(_dl_init_paths): Use nsystem_dirs_len to compute the array size.
+
 2017-11-02  Florian Weimer  <fweimer@redhat.com>
 
 	Add array_length and array_end macros.
