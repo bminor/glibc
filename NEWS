@@ -76,6 +76,11 @@ Version 2.22.1
   vulnerability per se because no trust boundary is crossed if the fix for
   CVE-2017-1000366 has been applied, but it is mentioned here only because
   of the CVE assignment.)  Reported by Qualys.
+
+* CVE-2017-1000408: Incorrect array size computation in _dl_init_paths leads
+  to the allocation of too much memory.  (This is not a security bug per se,
+  it is mentioned here only because of the CVE assignment.)  Reported by
+  Qualys.
 
 Version 2.22
 
