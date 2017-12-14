@@ -1,3 +1,10 @@
+2017-12-19  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+	    James Clarke <jrtc27@jrtc27.com>
+
+	[BZ #22603]
+	* sysdeps/ia64/memchr.S (__memchr): Avoid overflow in pointer
+	addition.
+
 2018-01-08  Dmitry V. Levin  <ldv@altlinux.org>
 
 	* sysdeps/unix/sysv/linux/tst-ttyname.c (do_in_chroot_1): Skip the
