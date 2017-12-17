@@ -1,3 +1,9 @@
+2017-12-18  Dmitry V. Levin  <ldv@altlinux.org>
+
+	[BZ #22627]
+	* elf/dl-load.c (_dl_init_paths): Remove _dl_dst_substitute preparatory
+	code and invocation.
+
 2017-11-18  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/unix/sysv/linux/tst-ttyname.c

@@ -91,6 +91,7 @@ The following bugs are resolved with this release:
   [22322] libc: [mips64] wrong bits/long-double.h installed
   [22325] glibc: Memory leak in glob with GLOB_TILDE (CVE-2017-15671)
   [22375] malloc returns pointer from tcache instead of NULL (CVE-2017-17426)
+  [22627] $ORIGIN in $LD_LIBRARY_PATH is substituted twice
 
 Version 2.26
 
