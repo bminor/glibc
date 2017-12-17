@@ -53,6 +53,7 @@ The following bugs are resolved with this release:
   [21778] Robust mutex may deadlock
   [21972] assert macro requires operator== (int) for its argument type
   [22322] libc: [mips64] wrong bits/long-double.h installed
+  [22627] $ORIGIN in $LD_LIBRARY_PATH is substituted twice
 
 Version 2.25
 
