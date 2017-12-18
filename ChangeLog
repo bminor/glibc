@@ -1,3 +1,8 @@
+2017-12-18  Joseph Myers  <joseph@codesourcery.com>
+
+	* nptl/tst-attr3.c: Include <libc-diag.h>.
+	(do_test) [__GNUC_PREREQ (7, 0)]: Ignore -Wrestrict for two tests.
+
 2017-11-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* string/bug-strncat1.c: Include <libc-diag.h>.
