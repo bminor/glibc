@@ -1,3 +1,8 @@
+2017-12-18  Joseph Myers  <joseph@codesourcery.com>
+
+	* string/tester.c (test_strncat): Also disable -Warray-bounds
+	warnings for two tests.
+
 2017-11-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* string/tester.c (test_stpncpy): Disable -Wstringop-truncation
