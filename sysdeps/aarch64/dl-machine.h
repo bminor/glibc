@@ -172,8 +172,8 @@ _dl_start_user:							\n\
 	cmp	x0, #0						\n\
 	bne	1b						\n\
 	// Update _dl_argv					\n\
-	adrp	x3, _dl_argv					\n\
-	str	x2, [x3, #:lo12:_dl_argv]			\n\
+	adrp	x3, __GI__dl_argv				\n\
+	str	x2, [x3, #:lo12:__GI__dl_argv]			\n\
 .L_done_stack_adjust:						\n\
 	// compute envp						\n\
 	add	x3, x2, x1, lsl #3				\n\

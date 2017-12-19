@@ -1,5 +1,5 @@
-/* Two glob variants with 64-bit support, for dirent64 and __olddirent64.
-   Copyright (C) 1998-2016 Free Software Foundation, Inc.
+/* Test case for preserved AVX registers in dynamic linker.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,27 +16,34 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <dirent.h>
-#include <glob.h>
-#include <sys/stat.h>
-#include <shlib-compat.h>
+#include <cpuid.h>
 
-#define dirent dirent64
-#define __readdir(dirp) __readdir64 (dirp)
+int tst_avx_aux (void);
 
-#define glob_t glob64_t
-#define glob(pattern, flags, errfunc, pglob) \
-  __glob64 (pattern, flags, errfunc, pglob)
-#define globfree(pglob) globfree64 (pglob)
+static int
+avx_enabled (void)
+{
+  unsigned int eax, ebx, ecx, edx;
 
-#undef stat
-#define stat stat64
-#undef __stat
-#define __stat(file, buf) __xstat64 (_STAT_VER, file, buf)
+  if (__get_cpuid (1, &eax, &ebx, &ecx, &edx) == 0
+      || (ecx & (bit_AVX | bit_OSXSAVE)) != (bit_AVX | bit_OSXSAVE))
+    return 0;
 
-#define COMPILE_GLOB64	1
+  /* Check the OS has AVX and SSE saving enabled.  */
+  asm ("xgetbv" : "=a" (eax), "=d" (edx) : "c" (0));
 
-#include <posix/glob.c>
+  return (eax & 6) == 6;
+}
 
-versioned_symbol (libc, __glob64, glob64, GLIBC_2_2);
-libc_hidden_ver (__glob64, glob64)
+static int
+do_test (void)
+{
+  /* Run AVX test only if AVX is supported.  */
+  if (avx_enabled ())
+    return tst_avx_aux ();
+  else
+    return 77;
+}
+
+#define TEST_FUNCTION do_test ()
+#include "../../test-skeleton.c"

@@ -1,3 +1,299 @@
+2017-12-14  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #22607]
+	CVE-2017-1000409
+	* elf/dl-load.c (_dl_init_paths): Compute number of components in
+	the expanded path string.
+
+2017-12-14  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #22606]
+	CVE-2017-1000408
+	* elf/dl-load.c (system_dirs): Update comment.
+	(nsystem_dirs_len): Use array_length.
+	(_dl_init_paths): Use nsystem_dirs_len to compute the array size.
+
+2017-11-02  Florian Weimer  <fweimer@redhat.com>
+
+	Add array_length and array_end macros.
+	* include/array_length.h: New file.
+
+2017-11-02  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #22332]
+	* posix/tst-glob-tilde.c (do_noescape): New variable.
+	(one_test): Process it.
+	(do_test): Set do_noescape.  Add unescaping test case.
+
+2017-10-22  Paul Eggert <eggert@cs.ucla.edu>
+
+	[BZ #22332]
+	* posix/glob.c (__glob): Fix buffer overflow during GLOB_TILDE
+	unescaping.
+
+2017-10-21  Florian Weimer  <fweimer@redhat.com>
+
+	* posix/Makefile (tests): Add tst-glob-tilde.
+	(tests-special): Add tst-glob-tilde-mem.out
+	(tst-glob-tilde-ENV): Set MALLOC_TRACE.
+	(tst-glob-tilde-mem.out): Add mtrace check.
+	* posix/tst-glob-tilde.c: New file.
+
+2017-10-20  Paul Eggert <eggert@cs.ucla.edu>
+
+	[BZ #22320]
+	CVE-2017-15670
+	* posix/glob.c (__glob): Fix one-byte overflow.
+
+2017-09-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #1062]
+	CVE-2017-15671
+	* posix/Makefile (routines): Add globfree, globfree64, and
+	glob_pattern_p.
+	* posix/flexmember.h: New file.
+	* posix/glob_internal.h: Likewise.
+	* posix/glob_pattern_p.c: Likewise.
+	* posix/globfree.c: Likewise.
+	* posix/globfree64.c: Likewise.
+	* sysdeps/gnu/globfree64.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/globfree.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/globfree64.c: Likewise.
+	* sysdeps/unix/sysv/linux/oldglob.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/globfree64.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/globfree.c: Likewise.
+	* sysdeps/wordsize-64/globfree.c: Likewise.
+	* sysdeps/wordsize-64/globfree64.c: Likewise.
+	* posix/glob.c (HAVE_CONFIG_H): Use !_LIBC instead.
+	[NDEBUG): Remove comments.
+	(GLOB_ONLY_P, _AMIGA, VMS): Remove define.
+	(dirent_type): New type.  Use uint_fast8_t not
+	uint8_t, as C99 does not require uint8_t.
+	(DT_UNKNOWN, DT_DIR, DT_LNK): New macros.
+	(struct readdir_result): Use dirent_type.  Do not define skip_entry
+	unless it is needed; this saves a byte on platforms lacking d_ino.
+	(readdir_result_type, readdir_result_skip_entry):
+	New functions, replacing ...
+	(readdir_result_might_be_symlink, readdir_result_might_be_dir):
+	 these functions, which were removed.  This makes the callers
+	easier to read.  All callers changed.
+	(D_INO_TO_RESULT): Now empty if there is no d_ino.
+	(size_add_wrapv, glob_use_alloca): New static functions.
+	(glob, glob_in_dir): Check for size_t overflow in several places,
+	and fix some size_t checks that were not quite right.
+	Remove old code using SHELL since Bash no longer
+	uses this.
+	(glob, prefix_array): Separate MS code better.
+	(glob_in_dir): Remove old Amiga and VMS code.
+	(globfree, __glob_pattern_type, __glob_pattern_p): Move to
+	separate files.
+	(glob_in_dir): Do not rely on undefined behavior in accessing
+	struct members beyond their bounds.  Use a flexible array member
+	instead
+	(link_stat): Rename from link_exists2_p and return -1/0 instead of
+	0/1.  Caller changed.
+	(glob): Fix memory leaks.
+	* posix/glob64 (globfree64): Move to separate file.
+	* sysdeps/gnu/glob64.c (NO_GLOB_PATTERN_P): Remove define.
+	(globfree64): Remove hidden alias.
+	* sysdeps/unix/sysv/linux/Makefile (sysdeps_routines): Add
+	oldglob.
+	* sysdeps/unix/sysv/linux/alpha/glob.c (__new_globfree): Move to
+	separate file.
+	* sysdeps/unix/sysv/linux/i386/glob64.c (NO_GLOB_PATTERN_P): Remove
+	define.
+	Move compat code to separate file.
+	* sysdeps/wordsize-64/glob.c (globfree): Move definitions to
+	separate file.
+
+2017-08-20  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #18822]
+	* sysdeps/unix/sysv/linux/i386/glob64.c (__old_glob64): Add
+	libc_hidden_proto and libc_hidden_def.
+
+2017-10-22  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #21265]
+	* sysdeps/x86/cpu-features-offsets.sym (XSAVE_STATE_SIZE_OFFSET):
+	New.
+	* sysdeps/x86/cpu-features.c: Include <libc-internal.h>.
+	(get_common_indeces): Set xsave_state_size and
+	bit_arch_XSAVEC_Usable if needed.
+	(init_cpu_features): Remove bit_arch_Use_dl_runtime_resolve_slow
+	and bit_arch_Use_dl_runtime_resolve_opt.
+	* sysdeps/x86/cpu-features.h (bit_arch_Use_dl_runtime_resolve_opt):
+	Removed.
+	(bit_arch_Use_dl_runtime_resolve_slow): Likewise.
+	(bit_arch_Prefer_No_AVX512): Updated.
+	(bit_arch_MathVec_Prefer_No_AVX512): Likewise.
+	(bit_arch_XSAVEC_Usable): New.
+	(STATE_SAVE_OFFSET): Likewise.
+	(STATE_SAVE_MASK): Likewise.
+	[__ASSEMBLER__]: Include <cpu-features-offsets.h>.
+	(cpu_features): Add xsave_state_size.
+	(index_arch_Use_dl_runtime_resolve_opt): Removed.
+	(index_arch_Use_dl_runtime_resolve_slow): Likewise.
+	(index_arch_XSAVEC_Usable): New.
+	* sysdeps/x86_64/dl-machine.h (elf_machine_runtime_setup):
+	Replace _dl_runtime_resolve_sse, _dl_runtime_resolve_avx,
+	_dl_runtime_resolve_avx_slow, _dl_runtime_resolve_avx_opt,
+	_dl_runtime_resolve_avx512 and _dl_runtime_resolve_avx512_opt
+	with _dl_runtime_resolve_fxsave, _dl_runtime_resolve_xsave and
+	_dl_runtime_resolve_xsavec.
+	* sysdeps/x86_64/dl-trampoline.S (DL_RUNTIME_UNALIGNED_VEC_SIZE):
+	Removed.
+	(DL_RUNTIME_RESOLVE_REALIGN_STACK): Check STATE_SAVE_ALIGNMENT
+	instead of VEC_SIZE.
+	(REGISTER_SAVE_BND0): Removed.
+	(REGISTER_SAVE_BND1): Likewise.
+	(REGISTER_SAVE_BND3): Likewise.
+	(REGISTER_SAVE_RAX): Always defined to 0.
+	(VMOV): Removed.
+	(_dl_runtime_resolve_avx): Likewise.
+	(_dl_runtime_resolve_avx_slow): Likewise.
+	(_dl_runtime_resolve_avx_opt): Likewise.
+	(_dl_runtime_resolve_avx512): Likewise.
+	(_dl_runtime_resolve_avx512_opt): Likewise.
+	(_dl_runtime_resolve_sse): Likewise.
+	(_dl_runtime_resolve_sse_vex): Likewise.
+	(USE_FXSAVE): New.
+	(_dl_runtime_resolve_fxsave): Likewise.
+	(USE_XSAVE): Likewise.
+	(_dl_runtime_resolve_xsave): Likewise.
+	(USE_XSAVEC): Likewise.
+	(_dl_runtime_resolve_xsavec): Likewise.
+	* sysdeps/x86_64/dl-trampoline.h (_dl_runtime_resolve_avx512):
+	Removed.
+	(_dl_runtime_resolve_avx512_opt): Likewise.
+	(_dl_runtime_resolve_avx): Likewise.
+	(_dl_runtime_resolve_avx_opt): Likewise.
+	(_dl_runtime_resolve_sse): Likewise.
+	(_dl_runtime_resolve_sse_vex): Likewise.
+	(_dl_runtime_resolve_fxsave): New.
+	(_dl_runtime_resolve_xsave): Likewise.
+	(_dl_runtime_resolve_xsavec): Likewise.
+
+2017-10-19  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/Makefile (tests): Add tst-sse, tst-avx and
+	tst-avx512.
+	(test-extras): Add tst-avx-aux and tst-avx512-aux.
+	(extra-test-objs): Add tst-avx-aux.o and tst-avx512-aux.o.
+	(modules-names): Add tst-ssemod, tst-avxmod and tst-avx512mod.
+	($(objpfx)tst-sse): New rule.
+	($(objpfx)tst-avx): Likewise.
+	($(objpfx)tst-avx512): Likewise.
+	(CFLAGS-tst-avx-aux.c): New.
+	(CFLAGS-tst-avxmod.c): Likewise.
+	(CFLAGS-tst-avx512-aux.c): Likewise.
+	(CFLAGS-tst-avx512mod.c): Likewise.
+	* sysdeps/x86_64/tst-avx-aux.c: New file.
+	* sysdeps/x86_64/tst-avx.c: Likewise.
+	* sysdeps/x86_64/tst-avx512-aux.c: Likewise.
+	* sysdeps/x86_64/tst-avx512.c: Likewise.
+	* sysdeps/x86_64/tst-avx512mod.c: Likewise.
+	* sysdeps/x86_64/tst-avxmod.c: Likewise.
+	* sysdeps/x86_64/tst-sse.c: Likewise.
+	* sysdeps/x86_64/tst-ssemod.c: Likewise.
+
+2017-10-19  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/dl-trampoline.h (_dl_runtime_resolve): Don't
+	adjust CFA when allocating register save area on re-aligned
+	stack.
+
+2016-12-21  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20978]
+	* nis/nss_nisplus/nisplus-alias.c (_nss_nisplus_getaliasbyname_r):
+	Compare name == NULL, not name != NULL.
+
+2016-11-08  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #20790]
+	* sunrpc/rpc_parse.c (get_prog_declaration): Increase buffer size
+	to MAXLINESIZE.
+	* sunrpc/bug20790.x: New file.
+	* sunrpc/Makefile [$(run-built-tests) = yes] (rpcgen-tests): New
+	variable.
+	[$(run-built-tests) = yes] (tests-special): Add $(rpcgen-tests).
+	[$(run-built-tests) = yes] ($(rpcgen-tests)): New rule.
+
+2016-10-14  Steve Ellcey  <sellcey@caviumnetworks.com>
+
+	* sysdeps/ieee754/dbl-64/e_pow.c (checkint) Make conditions explicitly
+	boolean.
+
+2017-07-19  DJ Delorie  <dj@delorie.com>
+
+	[BZ #21654]
+	* grp/grp-merge.c (libc_hidden_def): Fix cast-after-dereference.
+
+2017-07-14  DJ Delorie  <dj@redhat.com>
+
+	[BZ #21654]
+	* grp/grp_merge.c (__copy_grp): Align char** to minimum pointer
+	alignment not char alignment.
+	(__merge_grp): Likewise.
+
+2017-08-06  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #21871]
+	* sysdeps/x86/cpu-features.c (init_cpu_features): Set
+	bit_arch_Use_dl_runtime_resolve_opt only with AVX512F.
+
+2017-02-27  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #21115]
+	* sunrpc/clnt_udp.c (clntudp_call): Free ancillary data later.
+	* sunrpc/Makefile (tests): Add tst-udp-error.
+	(tst-udp-error): Link against libc.so explicitly.
+	* sunrpc/tst-udp-error: New file.
+
+2017-01-24  James Clarke  <jrtc27@jrtc27.com>
+
+	* sysdeps/unix/sysv/linux/sh/sh3/ucontext_i.sym: Use new REG_R*
+	constants instead of the old R* ones.
+	* sysdeps/unix/sysv/linux/sh/sh4/ucontext_i.sym: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sys/ucontext.h (NGPREG): Rename...
+	(NGREG): ... to this, to fit in with other architectures.
+	(gpregset_t): Use new NGREG macro.
+	[__USE_GNU]: Remove condition; all architectures other than tile
+	are unconditional.
+	(R*): Rename to REG_R*.
+
+2017-07-26  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #21666]
+	* misc/regexp.c (loc1): Add __attribute__ ((nocommon));
+	(loc2): Likewise.
+	(locs): Likewise.
+
+2017-07-12  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* sysdeps/aarch64/dl-machine.h (RTLD_START_1): Change _dl_argv to the
+	hidden __GI__dl_argv symbol.
+
+2016-09-05  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* conform/Makefile (conformtest-header-tests): Pass -I. to $(PERL).
+	(linknamespace-symlists-tests): Likewise.
+	(linknamespace-header-tests): Likewise.
+
+2017-07-06  Florian Weimer  <fweimer@redhat.com>
+	    H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #21609]
+	* sysdeps/x86_64/Makefile (sysdep-dl-routines): Add tls_get_addr.
+	(gen-as-const-headers): Add rtld-offsets.sym.
+	* sysdeps/x86_64/dl-tls.c: New file.
+	* sysdeps/x86_64/rtld-offsets.sym: Likwise.
+	* sysdeps/x86_64/tls_get_addr.S: Likewise.
+	* sysdeps/x86_64/dl-tls.h: Add multiple inclusion guards.
+	* sysdeps/x86_64/tlsdesc.sym (TI_MODULE_OFFSET): New.
+	(TI_OFFSET_OFFSET): Likwise.
+
 2017-06-14  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/i386/i686/multiarch/strcspn-c.c: Add IS_IN (libc) guard.

@@ -96,11 +96,16 @@ rpcgen-objs = rpc_main.o rpc_hout.o rpc_cout.o rpc_parse.o \
 extra-objs = $(rpcgen-objs) $(addprefix cross-,$(rpcgen-objs))
 others += rpcgen
 
-tests = tst-xdrmem tst-xdrmem2 test-rpcent
+tests = tst-xdrmem tst-xdrmem2 test-rpcent tst-udp-error
 xtests := tst-getmyaddr
 
 ifeq ($(have-thread-library),yes)
 xtests += thrsvc
+endif
+
+ifeq ($(run-built-tests),yes)
+rpcgen-tests := $(objpfx)bug20790.out
+tests-special += $(rpcgen-tests)
 endif
 
 headers += $(rpcsvc:%.x=rpcsvc/%.h)
@@ -153,6 +158,7 @@ BUILD_CPPFLAGS += $(sunrpc-CPPFLAGS)
 $(objpfx)tst-getmyaddr: $(common-objpfx)linkobj/libc.so
 $(objpfx)tst-xdrmem: $(common-objpfx)linkobj/libc.so
 $(objpfx)tst-xdrmem2: $(common-objpfx)linkobj/libc.so
+$(objpfx)tst-udp-error: $(common-objpfx)linkobj/libc.so
 
 $(objpfx)rpcgen: $(addprefix $(objpfx),$(rpcgen-objs))
 
@@ -225,3 +231,9 @@ endif
 endif
 
 $(objpfx)thrsvc: $(common-objpfx)linkobj/libc.so $(shared-thread-library)
+
+ifeq ($(run-built-tests),yes)
+$(rpcgen-tests): $(objpfx)%.out: %.x $(objpfx)rpcgen
+	$(built-program-cmd) -c $< -o $@; \
+	$(evaluate-test)
+endif
