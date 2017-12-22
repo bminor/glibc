@@ -1,5 +1,5 @@
-/* Compare struct hostent values against a formatted string.
-   Copyright (C) 2016-2017 Free Software Foundation, Inc.
+/* Error-checking, allocating wrapper for readlink.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,28 +16,29 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <support/check_nss.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <scratch_buffer.h>
 #include <support/check.h>
-#include <support/format_nss.h>
-#include <support/run_diff.h>
+#include <support/support.h>
+#include <xunistd.h>
 
-void
-check_hostent (const char *query_description, struct hostent *h,
-               const char *expected)
+char *
+xreadlink (const char *path)
 {
-  char *formatted = support_format_hostent (h);
-  if (strcmp (formatted, expected) != 0)
+  struct scratch_buffer buf;
+  scratch_buffer_init (&buf);
+
+  while (true)
     {
-      support_record_failure ();
-      printf ("error: hostent comparison failure\n");
-      if (query_description != NULL)
-        printf ("query: %s\n", query_description);
-      support_run_diff ("expected", expected,
-                        "actual", formatted);
+      ssize_t count = readlink (path, buf.data, buf.length);
+      if (count < 0)
+        FAIL_EXIT1 ("readlink (\"%s\"): %m", path);
+      if (count < buf.length)
+        {
+          char *result = xstrndup (buf.data, count);
+          scratch_buffer_free (&buf);
+          return result;
+        }
+      if (!scratch_buffer_grow (&buf))
+        FAIL_EXIT1 ("scratch_buffer_grow in xreadlink");
     }
-  free (formatted);
 }

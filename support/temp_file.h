@@ -32,6 +32,11 @@ void add_temp_file (const char *name);
    *FILENAME.  */
 int create_temp_file (const char *base, char **filename);
 
+/* Create a temporary directory and schedule it for deletion.  BASE is
+   used as a prefix for the unique directory name, which the function
+   returns.  The caller should free this string.  */
+char *support_create_temp_directory (const char *base);
+
 __END_DECLS
 
 #endif /* SUPPORT_TEMP_FILE_H */

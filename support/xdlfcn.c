@@ -1,5 +1,5 @@
-/* Compare struct hostent values against a formatted string.
-   Copyright (C) 2016-2017 Free Software Foundation, Inc.
+/* Support functionality for using dlopen/dlclose/dlsym.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,28 +16,44 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <support/check_nss.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <stddef.h>
 #include <support/check.h>
-#include <support/format_nss.h>
-#include <support/run_diff.h>
+#include <support/xdlfcn.h>
+
+void *
+xdlopen (const char *filename, int flags)
+{
+  void *dso = dlopen (filename, flags);
+
+  if (dso == NULL)
+    FAIL_EXIT1 ("error: dlopen: %s\n", dlerror ());
+
+  /* Clear any errors.  */
+  dlerror ();
+
+  return dso;
+}
+
+void *
+xdlsym (void *handle, const char *symbol)
+{
+  void *sym = dlsym (handle, symbol);
+
+  if (sym == NULL)
+    FAIL_EXIT1 ("error: dlsym: %s\n", dlerror ());
+
+  /* Clear any errors.  */
+  dlerror ();
+
+  return sym;
+}
 
 void
-check_hostent (const char *query_description, struct hostent *h,
-               const char *expected)
+xdlclose (void *handle)
 {
-  char *formatted = support_format_hostent (h);
-  if (strcmp (formatted, expected) != 0)
-    {
-      support_record_failure ();
-      printf ("error: hostent comparison failure\n");
-      if (query_description != NULL)
-        printf ("query: %s\n", query_description);
-      support_run_diff ("expected", expected,
-                        "actual", formatted);
-    }
-  free (formatted);
+  if (dlclose (handle) != 0)
+    FAIL_EXIT1 ("error: dlclose: %s\n", dlerror ());
+
+  /* Clear any errors.  */
+  dlerror ();
 }

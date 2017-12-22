@@ -1,4 +1,4 @@
-/* Write a string to a file.
+/* Error-checking wrapper for signal.
    Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,24 +16,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <fcntl.h>
-#include <string.h>
 #include <support/check.h>
-#include <support/xunistd.h>
+#include <support/xsignal.h>
 
-void
-support_write_file_string (const char *path, const char *contents)
+sighandler_t
+xsignal (int sig, sighandler_t handler)
 {
-  int fd = xopen (path, O_CREAT | O_TRUNC | O_WRONLY, 0666);
-  const char *end = contents + strlen (contents);
-  for (const char *p = contents; p < end; )
-    {
-      ssize_t ret = write (fd, p, end - p);
-      if (ret < 0)
-        FAIL_EXIT1 ("cannot write to \"%s\": %m", path);
-      if (ret == 0)
-        FAIL_EXIT1 ("zero-length write to \"%s\"", path);
-      p += ret;
-    }
-  xclose (fd);
+  sighandler_t result = signal (sig, handler);
+  if (result == SIG_ERR)
+    FAIL_EXIT1 ("signal (%d, %p): %m", sig, handler);
+  return result;
 }

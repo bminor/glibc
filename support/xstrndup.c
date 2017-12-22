@@ -1,4 +1,4 @@
-/* Support functionality for using signals.
+/* strndup with error checking.
    Copyright (C) 2016-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,27 +16,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef SUPPORT_SIGNAL_H
-#define SUPPORT_SIGNAL_H
+#include <support/support.h>
 
-#include <signal.h>
-#include <sys/cdefs.h>
+#include <string.h>
 
-__BEGIN_DECLS
-
-/* The following functions call the corresponding libc functions and
-   terminate the process on error.  */
-
-void xraise (int sig);
-sighandler_t xsignal (int sig, sighandler_t handler);
-void xsigaction (int sig, const struct sigaction *newact,
-                 struct sigaction *oldact);
-
-/* The following functions call the corresponding libpthread functions
-   and terminate the process on error.  */
-
-void xpthread_sigmask (int how, const sigset_t *set, sigset_t *oldset);
-
-__END_DECLS
-
-#endif /* SUPPORT_SIGNAL_H */
+char *
+xstrndup (const char *s, size_t length)
+{
+  char *p = strndup (s, length);
+  if (p == NULL)
+    oom_error ("strndup", length);
+  return p;
+}

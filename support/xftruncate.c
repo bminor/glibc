@@ -1,5 +1,5 @@
-/* Compare struct hostent values against a formatted string.
-   Copyright (C) 2016-2017 Free Software Foundation, Inc.
+/* ftruncate with error checking.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,28 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <support/check_nss.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <support/check.h>
-#include <support/format_nss.h>
-#include <support/run_diff.h>
+#include <support/xunistd.h>
 
 void
-check_hostent (const char *query_description, struct hostent *h,
-               const char *expected)
+xftruncate (int fd, long long length)
 {
-  char *formatted = support_format_hostent (h);
-  if (strcmp (formatted, expected) != 0)
-    {
-      support_record_failure ();
-      printf ("error: hostent comparison failure\n");
-      if (query_description != NULL)
-        printf ("query: %s\n", query_description);
-      support_run_diff ("expected", expected,
-                        "actual", formatted);
-    }
-  free (formatted);
+  if (ftruncate64 (fd, length) != 0)
+    FAIL_EXIT1 ("ftruncate64 (%d, %lld): %m", fd, length);
 }

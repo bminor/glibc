@@ -1,5 +1,5 @@
-/* Compare struct hostent values against a formatted string.
-   Copyright (C) 2016-2017 Free Software Foundation, Inc.
+/* Enter a mount namespace.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,28 +16,30 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <support/check_nss.h>
+#include <support/namespace.h>
 
+#include <sched.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <support/check.h>
-#include <support/format_nss.h>
-#include <support/run_diff.h>
+#include <sys/mount.h>
 
-void
-check_hostent (const char *query_description, struct hostent *h,
-               const char *expected)
+bool
+support_enter_mount_namespace (void)
 {
-  char *formatted = support_format_hostent (h);
-  if (strcmp (formatted, expected) != 0)
+#ifdef CLONE_NEWNS
+  if (unshare (CLONE_NEWNS) == 0)
     {
-      support_record_failure ();
-      printf ("error: hostent comparison failure\n");
-      if (query_description != NULL)
-        printf ("query: %s\n", query_description);
-      support_run_diff ("expected", expected,
-                        "actual", formatted);
+      /* On some systems, / is marked as MS_SHARED, which means that
+         mounts within the namespace leak to the rest of the system,
+         which is not what we want.  */
+      if (mount ("none", "/", NULL, MS_REC | MS_PRIVATE, NULL) != 0)
+        {
+          printf ("warning: making the mount namespace private failed: %m\n");
+          return false;
+        }
+      return true;
     }
-  free (formatted);
+  else
+    printf ("warning: unshare (CLONE_NEWNS) failed: %m\n");
+#endif /* CLONE_NEWNS */
+  return false;
 }

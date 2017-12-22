@@ -86,6 +86,19 @@ create_temp_file (const char *base, char **filename)
   return fd;
 }
 
+char *
+support_create_temp_directory (const char *base)
+{
+  char *path = xasprintf ("%s/%sXXXXXX", test_dir, base);
+  if (mkdtemp (path) == NULL)
+    {
+      printf ("error: mkdtemp (\"%s\"): %m", path);
+      exit (1);
+    }
+  add_temp_file (path);
+  return path;
+}
+
 /* Helper functions called by the test skeleton follow.  */
 
 void

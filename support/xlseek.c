@@ -1,4 +1,4 @@
-/* Write a string to a file.
+/* lseek with error checking.
    Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,24 +16,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <fcntl.h>
-#include <string.h>
 #include <support/check.h>
 #include <support/xunistd.h>
 
-void
-support_write_file_string (const char *path, const char *contents)
+long long
+xlseek (int fd, long long offset, int whence)
 {
-  int fd = xopen (path, O_CREAT | O_TRUNC | O_WRONLY, 0666);
-  const char *end = contents + strlen (contents);
-  for (const char *p = contents; p < end; )
-    {
-      ssize_t ret = write (fd, p, end - p);
-      if (ret < 0)
-        FAIL_EXIT1 ("cannot write to \"%s\": %m", path);
-      if (ret == 0)
-        FAIL_EXIT1 ("zero-length write to \"%s\"", path);
-      p += ret;
-    }
-  xclose (fd);
+  long long result = lseek64 (fd, offset, whence);
+  if (result < 0)
+    FAIL_EXIT1 ("lseek64 (%d, %lld, %d): %m", fd, offset, whence);
+  return result;
 }
