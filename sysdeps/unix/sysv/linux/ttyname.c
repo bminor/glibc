@@ -35,16 +35,14 @@
 char *__ttyname;
 #endif
 
-static char *getttyname (const char *dev, dev_t mydev,
-			 ino64_t myino, int save, int *dostat)
-     internal_function;
-
+static char *getttyname (const char *dev, const struct stat64 *mytty,
+			 int save, int *dostat);
 
 libc_freeres_ptr (static char *getttyname_name);
 
 static char *
-internal_function attribute_compat_text_section
-getttyname (const char *dev, dev_t mydev, ino64_t myino, int save, int *dostat)
+attribute_compat_text_section
+getttyname (const char *dev, const struct stat64 *mytty, int save, int *dostat)
 {
   static size_t namelen;
   struct stat64 st;
@@ -65,7 +63,7 @@ getttyname (const char *dev, dev_t mydev, ino64_t myino, int save, int *dostat)
     *((char *) __mempcpy (getttyname_name, dev, devlen - 1)) = '/';
 
   while ((d = __readdir64 (dirstream)) != NULL)
-    if ((d->d_fileno == myino || *dostat)
+    if ((d->d_fileno == mytty->st_ino || *dostat)
 	&& strcmp (d->d_name, "stdin")
 	&& strcmp (d->d_name, "stdout")
 	&& strcmp (d->d_name, "stderr"))
@@ -87,12 +85,7 @@ getttyname (const char *dev, dev_t mydev, ino64_t myino, int save, int *dostat)
 	  }
 	memcpy (&getttyname_name[devlen], d->d_name, dlen);
 	if (__xstat64 (_STAT_VER, getttyname_name, &st) == 0
-#ifdef _STATBUF_ST_RDEV
-	    && S_ISCHR (st.st_mode) && st.st_rdev == mydev
-#else
-	    && d->d_fileno == myino && st.st_dev == mydev
-#endif
-	   )
+	    && is_mytty (mytty, &st))
 	  {
 	    (void) __closedir (dirstream);
 #if 0
@@ -169,12 +162,7 @@ ttyname (int fd)
       /* Verify readlink result, fall back on iterating through devices.  */
       if (ttyname_buf[0] == '/'
 	  && __xstat64 (_STAT_VER, ttyname_buf, &st1) == 0
-#ifdef _STATBUF_ST_RDEV
-	  && S_ISCHR (st1.st_mode)
-	  && st1.st_rdev == st.st_rdev
-#endif
-	  && st1.st_ino == st.st_ino
-	  && st1.st_dev == st.st_dev)
+	  && is_mytty (&st, &st1))
 	return ttyname_buf;
 
       /* If the link doesn't exist, then it points to a device in another
@@ -188,11 +176,7 @@ ttyname (int fd)
 
   if (__xstat64 (_STAT_VER, "/dev/pts", &st1) == 0 && S_ISDIR (st1.st_mode))
     {
-#ifdef _STATBUF_ST_RDEV
-      name = getttyname ("/dev/pts", st.st_rdev, st.st_ino, save, &dostat);
-#else
-      name = getttyname ("/dev/pts", st.st_dev, st.st_ino, save, &dostat);
-#endif
+      name = getttyname ("/dev/pts", &st, save, &dostat);
     }
   else
     {
@@ -202,21 +186,13 @@ ttyname (int fd)
 
   if (!name && dostat != -1)
     {
-#ifdef _STATBUF_ST_RDEV
-      name = getttyname ("/dev", st.st_rdev, st.st_ino, save, &dostat);
-#else
-      name = getttyname ("/dev", st.st_dev, st.st_ino, save, &dostat);
-#endif
+      name = getttyname ("/dev", &st, save, &dostat);
     }
 
   if (!name && dostat != -1)
     {
       dostat = 1;
-#ifdef _STATBUF_ST_RDEV
-      name = getttyname ("/dev", st.st_rdev, st.st_ino, save, &dostat);
-#else
-      name = getttyname ("/dev", st.st_dev, st.st_ino, save, &dostat);
-#endif
+      name = getttyname ("/dev", &st, save, &dostat);
     }
 
   return name;
