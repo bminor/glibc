@@ -6,6 +6,13 @@
 # linked executables, forcing to link the loader after libgcc link.
 f128-loader-link = -Wl,--as-needed $(elf-objpfx)ld.so -Wl,--no-as-needed
 
+# Bootstrapping code for enabling IEEE 128.  This can be removed and
+# any indirections simplified once IEEE 128 long double is enabled.
+type-ldouble-CFLAGS =
+ifeq ($(ibm128-fcts),yes)
+type-ldouble-CFLAGS += -mabi=ibmlongdouble
+endif
+
 ifeq ($(subdir),math)
 # sqrtf128 requires emulation before POWER9.
 CPPFLAGS += -I../soft-fp
@@ -33,6 +40,42 @@ $(foreach test, \
 	  test-math-iszero, \
 	  $(objpfx)$(test)): \
   gnulib-tests += $(f128-loader-link)
+
+CFLAGS-s_logbl-power7.c += $(type-ldouble-CFLAGS)
+CFLAGS-s_logbl-ppc64.c += $(type-ldouble-CFLAGS)
+
+$(foreach suf,$(all-object-suffixes),\
+          $(objpfx)s_copysignl$(suf) \
+          $(objpfx)s_fabsl$(suf)): \
+  ASFLAGS += $(type-ldouble-CFLAGS)
+
+$(foreach suf,$(all-object-suffixes),\
+         $(objpfx)libm-test-%ibm128$(suf) \
+         $(objpfx)test-iibm128%$(suf) $(objpfx)test-ibm128%$(suf)): \
+  CFLAGS += $(type-ldouble-CFLAGS)
+
+# Newer GCC (>7) doesn't like -mabi=* and -mlong-double-64
+$(foreach suf,$(all-object-suffixes),\
+         $(objpfx)test-narrow-macros-ldbl-64$(suf) \
+         $(objpfx)test-nldbl-redirect$(suf) \
+         $(objpfx)test-redirection-ldbl-64$(suf) \
+         ): sysdep-CFLAGS := $(filter-out -mabi=ieeelongdouble,$(sysdep-CFLAGS))
+
+endif
+
+# Newer GCC (>7) doesn't like -mabi=* and -mlong-double-64
+ifeq ($(subdir),misc)
+$(foreach suf,$(all-object-suffixes),\
+         $(objpfx)tst-nldbl-warn$(suf) \
+         $(objpfx)tst-nldbl-error$(suf) \
+         ): sysdep-CFLAGS := $(filter-out -mabi=ieeelongdouble,$(sysdep-CFLAGS))
+endif
+
+# Newer GCC (>7) doesn't like -mabi=* and -mlong-double-64
+ifeq ($(subdir),argp)
+$(foreach suf,$(all-object-suffixes),\
+         $(objpfx)tst-nldbl-argp$(suf) \
+         ): sysdep-CFLAGS := $(filter-out -mabi=ieeelongdouble,$(sysdep-CFLAGS))
 endif
 
 # Append flags to string <-> _Float128 routines.
@@ -80,3 +123,18 @@ CFLAGS-printf_fp.c = -mfloat128
 CFLAGS-printf_fphex.c = -mfloat128
 CFLAGS-printf_size.c = -mfloat128
 endif
+
+
+$(foreach suf,$(all-object-suffixes),$(objpfx)nldbl-%$(suf)): \
+  CFLAGS += $(type-ldouble-CFLAGS)
+
+ldbl-ibm128-files = $(objpfx)nldbl-%$(suf) \
+		    $(objpfx)libm-test-%ibm128$(suf) \
+		    $(objpfx)test-iibm128%$(suf) $(objpfx)test-ibm128%$(suf) \
+		    $(objpfx)test-tgmath3-%$(suf)
+
+# Remove -mabi=ieeelongdouble from ldbl-ibm128 files.
+$(foreach suf,$(all-object-suffixes), $(ldbl-ibm128-files)) \
+	  $(foreach r,$(ldbl-128ibm-routines) $(ldbl-tests), \
+		    $(objpfx)$(r)$(suf)): \
+  sysdep-CFLAGS := $(filter-out -mabi=ieeelongdouble,$(sysdep-CFLAGS))
