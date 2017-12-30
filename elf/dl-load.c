@@ -432,31 +432,40 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 {
   char *cp;
   size_t nelems = 0;
-  char *to_free;
 
   while ((cp = __strsep (&rpath, sep)) != NULL)
     {
       struct r_search_path_elem *dirp;
+      char *to_free = NULL;
+      size_t len = 0;
 
-      to_free = cp = expand_dynamic_string_token (l, cp, 1);
-
-      size_t len = strlen (cp);
-
-      /* `strsep' can pass an empty string.  This has to be
-	 interpreted as `use the current directory'. */
-      if (len == 0)
+      /* `strsep' can pass an empty string.  */
+      if (*cp != '\0')
 	{
-	  static const char curwd[] = "./";
-	  cp = (char *) curwd;
+	  to_free = cp = expand_dynamic_string_token (l, cp, 1);
+
+	  /* expand_dynamic_string_token can return NULL in case of empty
+	     path or memory allocation failure.  */
+	  if (cp == NULL)
+	    continue;
+
+	  /* Compute the length after dynamic string token expansion and
+	     ignore empty paths.  */
+	  len = strlen (cp);
+	  if (len == 0)
+	    {
+	      free (to_free);
+	      continue;
+	    }
+
+	  /* Remove trailing slashes (except for "/").  */
+	  while (len > 1 && cp[len - 1] == '/')
+	    --len;
+
+	  /* Now add one if there is none so far.  */
+	  if (len > 0 && cp[len - 1] != '/')
+	    cp[len++] = '/';
 	}
-
-      /* Remove trailing slashes (except for "/").  */
-      while (len > 1 && cp[len - 1] == '/')
-	--len;
-
-      /* Now add one if there is none so far.  */
-      if (len > 0 && cp[len - 1] != '/')
-	cp[len++] = '/';
 
       /* Make sure we don't use untrusted directories if we run SUID.  */
       if (__glibc_unlikely (check_trusted) && !is_trusted_path (cp, len))
@@ -619,6 +628,14 @@ decompose_rpath (struct r_search_path_struct *sps,
   /* Free the copied RPATH string.  `fillin_rpath' make own copies if
      necessary.  */
   free (copy);
+
+  /* There is no path after expansion.  */
+  if (result[0] == NULL)
+    {
+      free (result);
+      sps->dirs = (struct r_search_path_elem **) -1;
+      return false;
+    }
 
   sps->dirs = result;
   /* The caller will change this value if we haven't used a real malloc.  */
