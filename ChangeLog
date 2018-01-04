@@ -1,3 +1,9 @@
+2017-06-24  Dmitry Bilunov  <kmeaw@kmeaw.com>
+
+	[BZ #21295]
+	* sysdeps/posix/getaddrinfo.c (convert_hostent_to_gaih_addrtuple):
+	Append addresses at the end of the list.
+
 2017-05-11  Florian Weimer  <fweimer@redhat.com>
 
 	* support/support_format_addrinfo.c (format_ai_flags_1): Renamed

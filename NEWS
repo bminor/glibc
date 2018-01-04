@@ -50,6 +50,7 @@ The following bugs are resolved with this release:
   [21242] assert: Suppress pedantic warning caused by statement expression
   [21265] x86-64: Use fxsave/xsave/xsavec in _dl_runtime_resolve
   [21289] Fix symbol redirect for fts_set
+  [21295] getaddrinfo: Merge IPv6 addresses and IPv4 addresses
   [21298] rwlock can deadlock on frequent reader/writer phase switching
   [21359] resolv: Support an exactly sized buffer in ns_name_pack
   [21386] Assertion in fork for distinct parent PID is incorrect
