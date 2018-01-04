@@ -1,3 +1,7 @@
+2018-01-04  Florian Weimer  <fweimer@redhat.com>
+
+	* include/libc-pointer-arith.h: New file.
+
 2017-09-01  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #21915]
