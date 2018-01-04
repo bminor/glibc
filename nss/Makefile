@@ -54,6 +54,11 @@ tests			= test-netdb tst-nss-test1 test-digits-dots \
 			  $(tests-static)
 xtests			= bug-erange
 
+# Tests which need libdl
+ifeq (yes,$(build-shared))
+tests += tst-nss-files-hosts-erange
+endif
+
 # If we have a thread library then we can test cancellation against
 # some routines like getpwuid_r.
 ifeq (yes,$(have-thread-library))
@@ -135,3 +140,5 @@ $(objpfx)tst-nss-test1.out: $(objpfx)/libnss_test1.so$(libnss_test1.so-version)
 ifeq (yes,$(have-thread-library))
 $(objpfx)tst-cancel-getpwuid_r: $(shared-thread-library)
 endif
+
+$(objpfx)tst-nss-files-hosts-erange: $(libdl)
