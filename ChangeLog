@@ -1,5 +1,9 @@
 2018-01-04  Florian Weimer  <fweimer@redhat.com>
 
+	* malloc/malloc-internal.h (check_mul_overflow_size_t): New.
+
+2018-01-04  Florian Weimer  <fweimer@redhat.com>
+
 	* include/libc-pointer-arith.h: New file.
 
 2017-09-01  Florian Weimer  <fweimer@redhat.com>
