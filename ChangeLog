@@ -1,3 +1,12 @@
+2018-01-08  Florian Weimer  <fweimer@redhat.com>
+
+	* nptl/tst-thread-exit-clobber.cc: New file.
+	* nptl/Makefile (CFLAGS-tst-thread-exit-clobber.o): Compile in
+	C++11 mode.
+	(LDLIBS-tst-thread-exit-clobber): Link with libstdc++.
+	(tests): Add tst-thread-exit-clobber.
+	[!CXX] (tests-unsupported): Add tst-thread-exit-clobber.
+
 2018-01-12  Dmitry V. Levin  <ldv@altlinux.org>
 
 	[BZ #22679]
