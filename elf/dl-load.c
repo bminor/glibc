@@ -438,7 +438,23 @@ add_name_to_object (struct link_map *l, const char *name)
   newname->name = memcpy (newname + 1, name, name_len);
   newname->next = NULL;
   newname->dont_free = 0;
-  lastp->next = newname;
+  /* CONCURRENCY NOTES:
+
+     Make sure the initialization of newname happens before its address is
+     read from the lastp->next store below.
+
+     GL(dl_load_lock) is held here (and by other writers, e.g. dlclose), so
+     readers of libname_list->next (e.g. _dl_check_caller or the reads above)
+     can use that for synchronization, however the read in _dl_name_match_p
+     may be executed without holding the lock during _dl_runtime_resolve
+     (i.e. lazy symbol resolution when a function of library l is called).
+
+     The release MO store below synchronizes with the acquire MO load in
+     _dl_name_match_p.  Other writes need to synchronize with that load too,
+     however those happen either early when the process is single threaded
+     (dl_main) or when the library is unloaded (dlclose) and the user has to
+     synchronize library calls with unloading.  */
+  atomic_store_release (&lastp->next, newname);
 }
 
 /* Standard search directories.  */
