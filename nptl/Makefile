@@ -300,7 +300,7 @@ tests = tst-typesizes \
 	tst-bad-schedattr \
 	tst-thread_local1 tst-mutex-errorcheck tst-robust10 \
 	tst-robust-fork tst-create-detached \
-	tst-thread-exit-clobber
+	tst-thread-exit-clobber tst-minstack-cancel tst-minstack-exit
 
 xtests = tst-setuid1 tst-setuid1-static tst-setuid2 \
 	tst-mutexpp1 tst-mutexpp6 tst-mutexpp10
