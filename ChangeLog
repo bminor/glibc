@@ -1,3 +1,8 @@
+2018-01-11  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/x86/cpu-features.c (init_cpu_features): Move check for
+	XSAVE out of the AVX check.
+
 2017-10-22  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #21265]

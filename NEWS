@@ -47,6 +47,7 @@ The following bugs are resolved with this release:
   [21289] Fix symbol redirect for fts_set
   [21624] Unsafe alloca allows local attackers to alias stack and heap (CVE-2017-1000366)
   [21666] Avoid .symver on common symbols
+  [22641] x86: Fix mis-merge of XSAVE ld.so trampoline selection
 
 
 Version 2.23
