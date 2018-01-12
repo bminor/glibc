@@ -63,6 +63,7 @@ The following bugs are resolved with this release:
 
   [16750] ldd: Never run file directly.
   [17956] crypt: Use NSPR header files in addition to NSS header files
+  [20532] getaddrinfo: More robust handling of dlopen failures
   [21242] assert: Suppress pedantic warning caused by statement expression
   [21265] x86-64: Use fxsave/xsave/xsavec in _dl_runtime_resolve
   [21780] posix: Set p{read,write}v2 to return ENOTSUP
