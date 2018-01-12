@@ -273,7 +273,7 @@ LT_LABELSUFFIX(name,_name_end): ; \
   END_2(name)
 
 #if !IS_IN(rtld) && defined (ENABLE_LOCK_ELISION)
-# define ABORT_TRANSACTION \
+# define ABORT_TRANSACTION_IMPL \
     cmpdi    13,0;		\
     beq      1f;		\
     lwz      0,TM_CAPABLE(13);	\
@@ -284,8 +284,9 @@ LT_LABELSUFFIX(name,_name_end): ; \
     .align 4;                   \
 1:
 #else
-# define ABORT_TRANSACTION
+# define ABORT_TRANSACTION_IMPL
 #endif
+#define ABORT_TRANSACTION ABORT_TRANSACTION_IMPL
 
 #define DO_CALL(syscall) \
     ABORT_TRANSACTION \
