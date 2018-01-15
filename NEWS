@@ -71,6 +71,7 @@ The following bugs are resolved with this release:
   [21609] x86-64: Align the stack in __tls_get_addr
   [21624] Unsafe alloca allows local attackers to alias stack and heap (CVE-2017-1000366)
   [21654] nss: Fix invalid cast in group merging
+  [22637] nptl: Fix stack guard size accounting
   [22644] string: memmove-sse2-unaligned on 32bit x86 produces garbage when
     crossing 2GB threshold (CVE-2017-18269)
   [22715] x86-64: Properly align La_x86_64_retval to VEC_SIZE
