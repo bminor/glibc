@@ -101,6 +101,7 @@ The following bugs are resolved with this release:
   [22325] glibc: Memory leak in glob with GLOB_TILDE (CVE-2017-15671)
   [22375] malloc returns pointer from tcache instead of NULL (CVE-2017-17426)
   [22627] $ORIGIN in $LD_LIBRARY_PATH is substituted twice
+  [22637] nptl: Fix stack guard size accounting
   [22679] getcwd(3) can succeed without returning an absolute path
     (CVE-2018-1000001)
 
