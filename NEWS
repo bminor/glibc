@@ -67,6 +67,7 @@ The following bugs are resolved with this release:
   [22078] nss_files performance issue in hosts multi mode
   [22322] libc: [mips64] wrong bits/long-double.h installed
   [22627] $ORIGIN in $LD_LIBRARY_PATH is substituted twice
+  [22637] nptl: Fix stack guard size accounting
   [22679] getcwd(3) can succeed without returning an absolute path
     (CVE-2018-1000001)
 
