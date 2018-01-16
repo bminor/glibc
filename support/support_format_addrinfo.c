@@ -1,5 +1,5 @@
 /* Convert struct addrinfo values to a string.
-   Copyright (C) 2016-2017 Free Software Foundation, Inc.
+   Copyright (C) 2016-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@
 #include <arpa/inet.h>
 #include <errno.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <support/support.h>
 #include <support/xmemstream.h>
 

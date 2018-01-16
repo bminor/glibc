@@ -1,5 +1,5 @@
 /* POSIX-specific extra functions.
-   Copyright (C) 2016-2017 Free Software Foundation, Inc.
+   Copyright (C) 2016-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,8 +36,17 @@ void xpipe (int[2]);
 void xdup2 (int, int);
 int xopen (const char *path, int flags, mode_t);
 void xstat (const char *path, struct stat64 *);
+void xfstat (int fd, struct stat64 *);
 void xmkdir (const char *path, mode_t);
 void xchroot (const char *path);
+void xunlink (const char *path);
+long xsysconf (int name);
+long long xlseek (int fd, long long offset, int whence);
+void xftruncate (int fd, long long length);
+
+/* Read the link at PATH.  The caller should free the returned string
+   with free.  */
+char *xreadlink (const char *path);
 
 /* Close the file descriptor.  Ignore EINTR errors, but terminate the
    process on other errors.  */

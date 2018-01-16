@@ -1,5 +1,5 @@
 /* Implementation of the TEST_VERIFY and TEST_VERIFY_EXIT macros.
-   Copyright (C) 2016-2017 Free Software Foundation, Inc.
+   Copyright (C) 2016-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,14 +18,17 @@
 
 #include <support/check.h>
 
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 void
 support_test_verify_impl (const char *file, int line, const char *expr)
 {
+  int saved_errno = errno;
   support_record_failure ();
   printf ("error: %s:%d: not true: %s\n", file, line, expr);
+  errno = saved_errno;
 }
 
 void

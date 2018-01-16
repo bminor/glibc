@@ -1,5 +1,5 @@
 /* Setup a chroot environment for use within tests.
-   Copyright (C) 2017 Free Software Foundation, Inc.
+   Copyright (C) 2017-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,11 +45,7 @@ struct support_chroot *
 support_chroot_create (struct support_chroot_configuration conf)
 {
   struct support_chroot *chroot = xmalloc (sizeof (*chroot));
-
-  chroot->path_chroot = xasprintf ("%s/tst-resolv-res_init-XXXXXX", test_dir);
-  if (mkdtemp (chroot->path_chroot) == NULL)
-    FAIL_EXIT1 ("mkdtemp (\"%s\"): %m", chroot->path_chroot);
-  add_temp_file (chroot->path_chroot);
+  chroot->path_chroot = support_create_temp_directory ("tst-resolv-res_init-");
 
   /* Create the /etc directory in the chroot environment.  */
   char *path_etc = xasprintf ("%s/etc", chroot->path_chroot);

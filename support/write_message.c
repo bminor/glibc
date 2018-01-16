@@ -1,5 +1,5 @@
 /* Write a message to standard output.
-   Copyright (C) 2016-2017 Free Software Foundation, Inc.
+   Copyright (C) 2016-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,12 +18,15 @@
 
 #include <support/support.h>
 
+#include <errno.h>
 #include <string.h>
 #include <unistd.h>
 
 void
 write_message (const char *message)
 {
+  int saved_errno = errno;
   ssize_t unused __attribute__ ((unused));
   unused = write (STDOUT_FILENO, message, strlen (message));
+  errno = saved_errno;
 }
