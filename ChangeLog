@@ -1,5 +1,11 @@
 2018-01-16  Florian Weimer  <fweimer@redhat.com>
 
+	* nptl/Makefile [$(have-cxx-thread_local)] (tests-unsupported):
+	Move tst-thread-exit-clobber ...
+	[$(CXX)] (tests-unsupported): ... to here.
+
+2018-01-16  Florian Weimer  <fweimer@redhat.com>
+
 	* nptl/Makefile (CFLAGS-tst-minstack-throw.o): Compile in C++11
 	mode with GNU extensions.
 
