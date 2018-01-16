@@ -221,6 +221,7 @@ CFLAGS-tst-thread_local1.o = -std=gnu++11
 LDLIBS-tst-thread_local1 = -lstdc++
 CFLAGS-tst-thread-exit-clobber.o = -std=gnu++11
 LDLIBS-tst-thread-exit-clobber = -lstdc++
+CFLAGS-tst-minstack-throw.o = -std=gnu++11
 LDLIBS-tst-minstack-throw = -lstdc++
 
 tests = tst-typesizes \
