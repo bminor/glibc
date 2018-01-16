@@ -1,3 +1,9 @@
+2018-01-16  Florian Weimer  <fweimer@redhat.com>
+
+	* nptl/Makefile [$(have-cxx-thread_local)] (tests-unsupported):
+	Move tst-thread-exit-clobber ...
+	[$(CXX)] (tests-unsupported): ... to here.
+
 2018-01-11  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/gnu/unwind-resume.c (__libgcc_s_init): Update comment
