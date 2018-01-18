@@ -141,6 +141,40 @@ _dl_nothread_init_static_tls (struct link_map *map)
 	  '\0', map->l_tls_blocksize - map->l_tls_initimage_size);
 }
 
+#ifndef NESTING
+
+    /* String table object symbols.  */
+
+static struct link_map *glob_l;
+static struct r_scope_elem **glob_scope;
+static const char *glob_strtab;
+
+/* This macro is used as a callback from the ELF_DYNAMIC_RELOCATE code.  */
+#define RESOLVE_MAP(ref, version, r_type) \
+    ((ELFW(ST_BIND) ((*ref)->st_info) != STB_LOCAL			      \
+      && __glibc_likely (!dl_symbol_visibility_binds_local_p (*ref)))	      \
+     ? ((__builtin_expect ((*ref) == glob_l->l_lookup_cache.sym, 0)		      \
+	 && elf_machine_type_class (r_type) == glob_l->l_lookup_cache.type_class) \
+	? (bump_num_cache_relocations (),				      \
+	   (*ref) = glob_l->l_lookup_cache.ret,				      \
+	   glob_l->l_lookup_cache.value)					      \
+	: ({ lookup_t _lr;						      \
+	     int _tc = elf_machine_type_class (r_type);			      \
+	     glob_l->l_lookup_cache.type_class = _tc;			      \
+	     glob_l->l_lookup_cache.sym = (*ref);				      \
+	     const struct r_found_version *v = NULL;			      \
+	     if ((version) != NULL && (version)->hash != 0)		      \
+	       v = (version);						      \
+	     _lr = _dl_lookup_symbol_x (glob_strtab + (*ref)->st_name, glob_l, (ref),   \
+					glob_scope, v, _tc,			      \
+					DL_LOOKUP_ADD_DEPENDENCY, NULL);      \
+	     glob_l->l_lookup_cache.ret = (*ref);				      \
+	     glob_l->l_lookup_cache.value = _lr; }))				      \
+     : glob_l)
+
+#include "dynamic-link.h"
+
+#endif /* n NESTING */
 
 void
 _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
@@ -227,6 +261,8 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
   {
     /* Do the actual relocation of the object's GOT and other data.  */
 
+#ifdef NESTING
+
     /* String table object symbols.  */
     const char *strtab = (const void *) D_PTR (l, l_info[DT_STRTAB]);
 
@@ -254,6 +290,14 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
      : l)
 
 #include "dynamic-link.h"
+
+#else
+
+    glob_l = l;
+    glob_scope = scope;
+    glob_strtab = (const void *) D_PTR (glob_l, l_info[DT_STRTAB]);
+
+#endif /* NESTING */
 
     ELF_DYNAMIC_RELOCATE (l, lazy, consider_profiling, skip_ifunc);
 
