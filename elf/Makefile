@@ -201,7 +201,9 @@ endif
 test-srcs = tst-pathopt
 selinux-enabled := $(shell cat /selinux/enforce 2> /dev/null)
 ifneq ($(selinux-enabled),1)
+ifneq ($(with-clang),yes)
 tests-execstack-yes = tst-execstack tst-execstack-needed tst-execstack-prog
+endif
 endif
 endif
 tests += $(tests-execstack-$(have-z-execstack))
