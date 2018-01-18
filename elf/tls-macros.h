@@ -1,7 +1,7 @@
 /* Macros to support TLS testing in times of missing compiler support.  */
 
 #define COMMON_INT_DEF(x) \
-  asm (".tls_common " #x ",4,4")
+  __thread int x;
 /* XXX Until we get compiler support we don't need declarations.  */
 #define COMMON_INT_DECL(x)
 
