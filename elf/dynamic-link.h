@@ -16,6 +16,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef NESTING
+#define auto static
+#endif
+
 /* This macro is used as a callback from elf_machine_rel{a,} when a
    static TLS reloc is about to be performed.  Since (in dl-load.c) we
    permit dynamic loading of objects that might use such relocs, we

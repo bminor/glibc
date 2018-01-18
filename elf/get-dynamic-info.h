@@ -22,6 +22,8 @@
 #include <assert.h>
 #include <libc-diag.h>
 
+#if defined NESTING || !defined SAW_EGDI
+
 #ifndef RESOLVE_MAP
 static
 #else
@@ -184,3 +186,11 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
     info[DT_RPATH] = NULL;
 #endif
 }
+
+#endif
+
+#ifndef NESTING
+#ifndef SAW_EGDI
+#define SAW_EGDI
+#endif
+#endif /* n NESTING */
