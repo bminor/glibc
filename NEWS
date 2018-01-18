@@ -63,6 +63,14 @@ Security related changes:
   succeeds without returning an absolute path due to unexpected behaviour
   of the Linux kernel getcwd syscall.  Reported by halfdog.
 
+  CVE-2018-6485: The posix_memalign and memalign functions, when called with
+  an object size near the value of SIZE_MAX, would return a pointer to a
+  buffer which is too small, instead of NULL.  Reported by Jakub Wilk.
+
+  CVE-2018-6551: The malloc function, when called with an object size near
+  the value of SIZE_MAX, would return a pointer to a buffer which is too
+  small, instead of NULL.
+
 The following bugs are resolved with this release:
 
   [16750] ldd: Never run file directly.
