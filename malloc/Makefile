@@ -37,6 +37,7 @@ tests := mallocbug tst-malloc tst-valloc tst-calloc tst-obstack \
 	 tst-dynarray-fail \
 	 tst-dynarray-at-fail \
 	 tst-alloc_buffer \
+	 tst-malloc-too-large \
 
 tests-static := \
 	 tst-interpose-static-nothread \
