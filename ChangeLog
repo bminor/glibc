@@ -1,3 +1,9 @@
+2018-01-19  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #22715]
+	* sysdeps/x86_64/dl-trampoline.h (_dl_runtime_profile): Properly
+	align La_x86_64_retval to VEC_SIZE.
+
 2018-01-11  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/x86/cpu-features.c (init_cpu_features): Move check for

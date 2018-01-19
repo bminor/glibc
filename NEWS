@@ -48,6 +48,7 @@ The following bugs are resolved with this release:
   [21624] Unsafe alloca allows local attackers to alias stack and heap (CVE-2017-1000366)
   [21666] Avoid .symver on common symbols
   [22641] x86: Fix mis-merge of XSAVE ld.so trampoline selection
+  [22715] x86-64: Properly align La_x86_64_retval to VEC_SIZE
 
 
 Version 2.23
