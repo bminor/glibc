@@ -829,7 +829,9 @@ endif
 # We have to assume that glibc functions are called in any rounding
 # mode and also change the rounding mode in a few functions. So,
 # disable any optimization that assume default rounding mode.
+ifeq ($(with-clang),no)
 +math-flags = -frounding-math
+endif
 
 # We might want to compile with some stack-protection flag.
 ifneq ($(stack-protector),)
@@ -894,6 +896,19 @@ endif	# +cflags
 ifeq	"$(strip $(+cflags))" ""
 +cflags	:= $(default_cflags)
 endif	# $(+cflags) == ""
+
+# For now, manually add known-needed clang flags here.
+ifeq ($(with-clang),yes)
++cflags += -fheinous-gnu-extensions
+# Don't complain about __sigsetjmp.
++cflags += -Wno-builtin-requires-header
+# clang takes gnu89 as requiring a warning about duplicates, gcc does not
++cflags += -Wno-duplicate-decl-specifier
+# Non-string format arguments come from debugging prints in ld.so.
++cflags += -Wno-format-security
+
++cflags += -no-integrated-as
+endif	# with-clang == yes
 
 +cflags += $(cflags-cpu) $(+gccwarn) $(+merge-constants) $(+math-flags) \
 	   $(+stack-protector)
@@ -1044,6 +1059,10 @@ ifndef ASFLAGS
 ASFLAGS := $(filter -g% -fdebug-prefix-map=%,$(CFLAGS))
 endif
 ASFLAGS += -Werror=undef $(ASFLAGS-config) $(asflags-cpu)
+
+ifeq ($(with-clang),yes)
+ASFLAGS += -no-integrated-as
+endif	# with-clang == yes
 
 ifndef BUILD_CC
 BUILD_CC = $(CC)
