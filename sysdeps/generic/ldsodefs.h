@@ -710,7 +710,11 @@ _dl_dprintf (int fd, const char *fmt, ...)
 {
   /* Use local declaration to avoid includign <stdio.h>.  */
   extern int __dprintf(int fd, const char *format, ...) attribute_hidden;
+#if defined(__clang__)
+  __dprintf (fd, fmt);
+#else
   __dprintf (fd, fmt, __builtin_va_arg_pack ());
+#endif
 }
 #endif
 
