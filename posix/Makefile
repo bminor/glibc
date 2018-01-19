@@ -117,6 +117,8 @@ install-others-programs	:= $(inst_libexecdir)/getconf
 
 before-compile	+= $(objpfx)posix-conf-vars-def.h
 
+CFLAGS-regex.c += -Wno-error
+
 # So they get cleaned up.
 generated += $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10) \
 	     annexc annexc.out wordexp-tst.out bug-regex2-mem.out \
