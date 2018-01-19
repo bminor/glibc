@@ -21,26 +21,25 @@
 #include <stdio.h>
 #include <string.h>
 
+int failures = 0;
+
+void
+try (const char *name, long long int param, int value, int expected)
+{
+  if (value != expected)
+    {
+      printf ("%s(%#llx) expected %d got %d\n",
+	      name, param, expected, value);
+      ++failures;
+    }
+  else
+    printf ("%s(%#llx) as expected %d\n", name, param, value);
+}
+
 int
 do_test (void)
 {
-  int failures = 0;
   int i;
-
-  auto void try (const char *name, long long int param, int value,
-		 int expected);
-
-  void try (const char *name, long long int param, int value, int expected)
-    {
-      if (value != expected)
-	{
-	  printf ("%s(%#llx) expected %d got %d\n",
-		  name, param, expected, value);
-	  ++failures;
-	}
-      else
-	printf ("%s(%#llx) as expected %d\n", name, param, value);
-    }
 
 #define TEST(fct, type) \
   try (#fct, 0, fct ((type) 0), 0);					      \
