@@ -653,7 +653,7 @@ $(common-objpfx)shlib.lds: $(common-objpfx)config.make $(..)Makerules
 common-generated += shlib.lds
 
 shlib-lds = $(common-objpfx)shlib.lds
-shlib-lds-flags = -T $(shlib-lds)
+shlib-lds-flags = -Wl,-T,$(shlib-lds)
 endif
 
 define build-shlib
@@ -705,7 +705,7 @@ LDFLAGS-c.so = -nostdlib -nostartfiles
 # But we still want to link libc.so against $(libc.so-gnulib).
 LDLIBS-c.so += $(libc.so-gnulib)
 # Give libc.so an entry point and make it directly runnable itself.
-LDFLAGS-c.so += -e __libc_main
+LDFLAGS-c.so += -Wl,-e,__libc_main
 # Pre-link the objects of libc_pic.a so that we can locally resolve
 # COMMON symbols before we link against ld.so.  This is because ld.so
 # contains some of libc_pic.a already, which will prevent the COMMONs

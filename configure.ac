@@ -137,6 +137,13 @@ AC_ARG_WITH([selinux],
 			   [if building with SELinux support]),
 	    [with_selinux=$withval],
 	    [with_selinux=auto])
+dnl This is a temporary hack, to help sort out wired-in GCC assumptions.
+AC_ARG_WITH([clang],
+	    AC_HELP_STRING([--with-clang],
+			   [if building with clang (temporary)]),
+	    [with_clang=$withval],
+	    [with_clang=no])
+LIBC_CONFIG_VAR([with-clang], [$with_clang])
 
 AC_ARG_WITH([headers],
 	    AC_HELP_STRING([--with-headers=PATH],
@@ -433,6 +440,16 @@ AC_ARG_ENABLE([tunables],
 AC_SUBST(have_tunables)
 if test "$have_tunables" = yes; then
   AC_DEFINE(HAVE_TUNABLES)
+fi
+
+AC_ARG_ENABLE([float128],
+	      AC_HELP_STRING([--disable-float128],
+			     [disable float128 support]),
+	      [enable_float128=$enableval],
+	      [enable_float128=yes])
+AC_SUBST(enable_float128)
+if test "$enable_float128" = yes; then
+  AC_DEFINE(WANT_FLOAT128)
 fi
 
 # The abi-tags file uses a fairly simplistic model for name recognition that
@@ -958,7 +975,9 @@ AC_CHECK_PROG_VER(BISON, bison, --version,
 AC_CACHE_CHECK([if $CC is sufficient to build libc], libc_cv_compiler_ok, [
 AC_TRY_COMPILE([], [
 #if !defined __GNUC__ || __GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 9)
+#if !defined __clang__
 #error insufficient compiler
+#endif
 #endif],
 	       [libc_cv_compiler_ok=yes],
 	       [libc_cv_compiler_ok=no])])
@@ -1502,7 +1521,7 @@ char *foo (const char *a, const char *b)
 }
 EOF
 dnl
-if AC_TRY_COMMAND([${CC-cc} -O3 -S conftest.c -o - | grep -F "my_strstr" > /dev/null]);
+if AC_TRY_COMMAND([${CC-cc} -O3 -S conftest.c -o - | grep -F "strstr" > /dev/null]);
 then
   libc_cv_gcc_builtin_redirection=yes
 else
@@ -1545,7 +1564,7 @@ __attribute__ ((__optimize__ ("-fno-tree-loop-distribute-patterns")))
 foo (void) {}
 EOF
 libc_cv_cc_loop_to_function=no
-if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS -c conftest.c])
+if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS -Werror -c conftest.c])
 then
   libc_cv_cc_loop_to_function=yes
 fi
@@ -1811,7 +1830,10 @@ AC_SUBST(libc_cv_pie_default)
 
 # Set the `multidir' variable by grabbing the variable from the compiler.
 # We do it once and save the result in a generated makefile.
+libc_cv_multidir=.
+if test "$with_clang" = no; then
 libc_cv_multidir=`${CC-cc} $CFLAGS $CPPFLAGS -print-multi-directory`
+fi
 AC_SUBST(libc_cv_multidir)
 
 if test "$static_pie" = yes; then

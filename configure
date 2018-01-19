@@ -669,6 +669,7 @@ stack_protector
 libc_cv_ssp
 libc_cv_with_fp
 base_machine
+enable_float128
 have_tunables
 build_pt_chown
 build_nscd
@@ -730,6 +731,7 @@ infodir
 docdir
 oldincludedir
 includedir
+runstatedir
 localstatedir
 sharedstatedir
 sysconfdir
@@ -759,6 +761,7 @@ with_gd_include
 with_gd_lib
 with_binutils
 with_selinux
+with_clang
 with_headers
 with_default_link
 enable_sanity_checks
@@ -787,6 +790,7 @@ enable_build_nscd
 enable_nscd
 enable_pt_chown
 enable_tunables
+enable_float128
 enable_mathvec
 with_cpu
 '
@@ -840,6 +844,7 @@ datadir='${datarootdir}'
 sysconfdir='${prefix}/etc'
 sharedstatedir='${prefix}/com'
 localstatedir='${prefix}/var'
+runstatedir='${localstatedir}/run'
 includedir='${prefix}/include'
 oldincludedir='/usr/include'
 docdir='${datarootdir}/doc/${PACKAGE_TARNAME}'
@@ -1092,6 +1097,15 @@ do
   | -silent | --silent | --silen | --sile | --sil)
     silent=yes ;;
 
+  -runstatedir | --runstatedir | --runstatedi | --runstated \
+  | --runstate | --runstat | --runsta | --runst | --runs \
+  | --run | --ru | --r)
+    ac_prev=runstatedir ;;
+  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
+  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
+  | --run=* | --ru=* | --r=*)
+    runstatedir=$ac_optarg ;;
+
   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
     ac_prev=sbindir ;;
   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
@@ -1229,7 +1243,7 @@ fi
 for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
 		datadir sysconfdir sharedstatedir localstatedir includedir \
 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
-		libdir localedir mandir
+		libdir localedir mandir runstatedir
 do
   eval ac_val=\$$ac_var
   # Remove trailing slashes.
@@ -1382,6 +1396,7 @@ Fine tuning of the installation directories:
   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
+  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
@@ -1459,6 +1474,7 @@ Optional Features:
   --enable-pt_chown       Enable building and installing pt_chown
   --enable-tunables       Enable tunables support. Known values are 'yes',
                           'no' and 'valstring'
+  --disable-float128      disable float128 support
   --enable-mathvec        Enable building and installing mathvec [default
                           depends on architecture]
 
@@ -1472,6 +1488,7 @@ Optional Packages:
   --with-gd-lib=DIR       find libgd library files in DIR
   --with-binutils=PATH    specify location of binutils (as and ld)
   --with-selinux          if building with SELinux support
+  --with-clang            if building with clang (temporary)
   --with-headers=PATH     location of system headers to use (for example
                           /usr/src/linux/include) [default=compiler default]
   --with-default-link     do not use explicit linker scripts
@@ -3312,6 +3329,16 @@ else
 fi
 
 
+# Check whether --with-clang was given.
+if test "${with_clang+set}" = set; then :
+  withval=$with_clang; with_clang=$withval
+else
+  with_clang=no
+fi
+
+config_vars="$config_vars
+with-clang = $with_clang"
+
 
 # Check whether --with-headers was given.
 if test "${with_headers+set}" = set; then :
@@ -3718,6 +3745,19 @@ fi
 
 if test "$have_tunables" = yes; then
   $as_echo "#define HAVE_TUNABLES 1" >>confdefs.h
+
+fi
+
+# Check whether --enable-float128 was given.
+if test "${enable_float128+set}" = set; then :
+  enableval=$enable_float128; enable_float128=$enableval
+else
+  enable_float128=yes
+fi
+
+
+if test "$enable_float128" = yes; then
+  $as_echo "#define WANT_FLOAT128 1" >>confdefs.h
 
 fi
 
@@ -5030,7 +5070,9 @@ main ()
 {
 
 #if !defined __GNUC__ || __GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 9)
+#if !defined __clang__
 #error insufficient compiler
+#endif
 #endif
   ;
   return 0;
@@ -6170,7 +6212,7 @@ char *foo (const char *a, const char *b)
   return __builtin_strstr (a, b);
 }
 EOF
-if { ac_try='${CC-cc} -O3 -S conftest.c -o - | grep -F "my_strstr" > /dev/null'
+if { ac_try='${CC-cc} -O3 -S conftest.c -o - | grep -F "strstr" > /dev/null'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -6251,7 +6293,7 @@ __attribute__ ((__optimize__ ("-fno-tree-loop-distribute-patterns")))
 foo (void) {}
 EOF
 libc_cv_cc_loop_to_function=no
-if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -c conftest.c'
+if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -Werror -c conftest.c'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -6771,7 +6813,10 @@ libc_cv_pie_default=$libc_cv_cc_pie_default
 
 # Set the `multidir' variable by grabbing the variable from the compiler.
 # We do it once and save the result in a generated makefile.
+libc_cv_multidir=.
+if test "$with_clang" = no; then
 libc_cv_multidir=`${CC-cc} $CFLAGS $CPPFLAGS -print-multi-directory`
+fi
 
 
 if test "$static_pie" = yes; then
