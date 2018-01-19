@@ -105,6 +105,7 @@ The following bugs are resolved with this release:
   [22637] nptl: Fix stack guard size accounting
   [22679] getcwd(3) can succeed without returning an absolute path
     (CVE-2018-1000001)
+  [22715] x86-64: Properly align La_x86_64_retval to VEC_SIZE
 
 Version 2.26
 
