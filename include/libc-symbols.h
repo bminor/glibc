@@ -459,9 +459,19 @@ for linking")
   __hidden_proto (name, , __GI_##name, ##attrs)
 #  define hidden_tls_proto(name, attrs...) \
   __hidden_proto (name, __thread, __GI_##name, ##attrs)
+#ifndef __clang__
 #  define __hidden_proto(name, thread, internal, attrs...)	     \
   extern thread __typeof (name) name __asm__ (__hidden_asmname (#internal)) \
   __hidden_proto_hiddenattr (attrs);
+#else
+# define __hidden_proto(name, thread, internal, attrs...)	     \
+  extern thread __typeof (name) name \
+  __hidden_proto_hiddenattr (attrs); \
+  _Pragma (__redefine(name, internal))
+/* Note that this macro does not use __hidden_asmname, since it produces a string.  */
+#  define __redefine(name, internal) __stringize(redefine_extname name internal)
+#  define __stringize(X) #X
+#endif
 #  define __hidden_asmname(name) \
   __hidden_asmname1 (__USER_LABEL_PREFIX__, name)
 #  define __hidden_asmname1(prefix, name) __hidden_asmname2(prefix, name)
