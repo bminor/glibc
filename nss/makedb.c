@@ -618,6 +618,47 @@ next_prime (size_t seed)
   return seed;
 }
 
+#ifndef NESTING
+static struct database *globdb;
+static size_t max_chainlength;
+static char *wp;
+static size_t nhashentries;
+static bool copy_string;
+
+void add_key(const void *nodep, const VISIT which, const int depth)
+{
+  if (which != leaf && which != postorder)
+    return;
+
+  const struct dbentry *dbe = *(const struct dbentry **) nodep;
+
+  ptrdiff_t stridx;
+  if (copy_string)
+    {
+      stridx = wp - globdb->keystrtab;
+      wp = stpcpy (wp, dbe->str) + 1;
+    }
+  else
+    stridx = 0;
+
+  size_t hidx = dbe->hashval % nhashentries;
+  size_t hval2 = 1 + dbe->hashval % (nhashentries - 2);
+  size_t chainlength = 0;
+
+  while (globdb->hashtable[hidx] != ~((stridx_t) 0))
+    {
+      ++chainlength;
+      if ((hidx += hval2) >= nhashentries)
+	hidx -= nhashentries;
+    }
+
+  globdb->hashtable[hidx] = ((globdb->extra_string ? valstrlen : 0)
+			 + dbe->validx);
+  globdb->keyidxtab[hidx] = stridx;
+
+  max_chainlength = MAX (max_chainlength, chainlength);
+}
+#endif
 
 static void
 compute_tables (void)
@@ -649,6 +690,7 @@ compute_tables (void)
 	db->keyidxtab = db->hashtable + nhashentries_max;
 	db->keystrtab = (char *) (db->keyidxtab + nhashentries_max);
 
+#ifdef NESTING
 	static size_t max_chainlength;
 	static char *wp;
 	static size_t nhashentries;
@@ -687,6 +729,9 @@ compute_tables (void)
 
 	  max_chainlength = MAX (max_chainlength, chainlength);
 	}
+#else
+	globdb = db;
+#endif
 
 	copy_string = false;
 	nhashentries = nhashentries_min;
