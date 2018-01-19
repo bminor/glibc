@@ -113,6 +113,8 @@ others		:= getconf
 install-bin	:= getconf
 install-others-programs	:= $(inst_libexecdir)/getconf
 
+CFLAGS-regex.c += -Wno-error
+
 before-compile	+= testcases.h ptestcases.h $(objpfx)posix-conf-vars-def.h
 
 # So they get cleaned up.
