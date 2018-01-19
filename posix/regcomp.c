@@ -2765,6 +2765,262 @@ build_collating_symbol (bitset_t sbcset, const unsigned char *name)
 }
 #endif /* not _LIBC */
 
+#ifndef NESTING
+
+/* Local function for parse_bracket_exp used in _LIBC environment.
+   Seek the collating symbol entry corresponding to NAME.
+   Return the index of the symbol in the SYMB_TABLE,
+   or -1 if not found.  */
+
+static int32_t
+__attribute__ ((always_inline))
+seek_collating_symbol_entry (const unsigned char *name, size_t name_len,
+			     int32_t *symb_table, int32_t table_size,
+			     unsigned char *extra)
+{
+  int32_t elem;
+
+  for (elem = 0; elem < table_size; elem++)
+    if (symb_table[2 * elem] != 0)
+      {
+	int32_t idx = symb_table[2 * elem + 1];
+	/* Skip the name of collating element name.  */
+	idx += 1 + extra[idx];
+	if (/* Compare the length of the name.  */
+	    name_len == extra[idx]
+	    /* Compare the name.  */
+	    && memcmp (name, &extra[idx + 1], name_len) == 0)
+	  /* Yep, this is the entry.  */
+	  return elem;
+      }
+  return -1;
+}
+
+/* Local function for parse_bracket_exp used in _LIBC environment.
+   Look up the collation sequence value of BR_ELEM.
+   Return the value if succeeded, UINT_MAX otherwise.  */
+
+static unsigned int
+__attribute__ ((always_inline))
+lookup_collation_sequence_value (bracket_elem_t *br_elem, uint32_t nrules,
+				 unsigned char *collseqmb, char *collseqwc,
+				 int32_t *symb_table, int32_t table_size,
+				 unsigned char *extra)
+{
+  if (br_elem->type == SB_CHAR)
+    {
+      /*
+	if (MB_CUR_MAX == 1)
+      */
+      if (nrules == 0)
+	return collseqmb[br_elem->opr.ch];
+      else
+	{
+	  wint_t wc = __btowc (br_elem->opr.ch);
+	  return __collseq_table_lookup (collseqwc, wc);
+	}
+    }
+  else if (br_elem->type == MB_CHAR)
+    {
+      if (nrules != 0)
+	return __collseq_table_lookup (collseqwc, br_elem->opr.wch);
+    }
+  else if (br_elem->type == COLL_SYM)
+    {
+      size_t sym_name_len = strlen ((char *) br_elem->opr.name);
+      if (nrules != 0)
+	{
+	  int32_t elem, idx;
+	  elem = seek_collating_symbol_entry (br_elem->opr.name,
+					      sym_name_len,
+					      symb_table, table_size,
+					      extra);
+	  if (elem != -1)
+	    {
+	      /* We found the entry.  */
+	      idx = symb_table[2 * elem + 1];
+	      /* Skip the name of collating element name.  */
+	      idx += 1 + extra[idx];
+	      /* Skip the byte sequence of the collating element.  */
+	      idx += 1 + extra[idx];
+	      /* Adjust for the alignment.  */
+	      idx = (idx + 3) & ~3;
+	      /* Skip the multibyte collation sequence value.  */
+	      idx += sizeof (unsigned int);
+	      /* Skip the wide char sequence of the collating element.  */
+	      idx += sizeof (unsigned int) *
+		(1 + *(unsigned int *) (extra + idx));
+	      /* Return the collation sequence value.  */
+	      return *(unsigned int *) (extra + idx);
+	    }
+	  else if (sym_name_len == 1)
+	    {
+	      /* No valid character.  Match it as a single byte
+		 character.  */
+	      return collseqmb[br_elem->opr.name[0]];
+	    }
+	}
+      else if (sym_name_len == 1)
+	return collseqmb[br_elem->opr.name[0]];
+    }
+  return UINT_MAX;
+}
+
+/* Local function for parse_bracket_exp used in _LIBC environment.
+   Build the range expression which starts from START_ELEM, and ends
+   at END_ELEM.  The result are written to MBCSET and SBCSET.
+   RANGE_ALLOC is the allocated size of mbcset->range_starts, and
+   mbcset->range_ends, is a pointer argument since we may
+   update it.  */
+
+static reg_errcode_t
+__attribute__ ((always_inline))
+build_range_exp (bitset_t sbcset, re_charset_t *mbcset, int *range_alloc,
+		 bracket_elem_t *start_elem, bracket_elem_t *end_elem,
+		 re_dfa_t *dfa, reg_syntax_t syntax, uint32_t nrules,
+		 unsigned char *collseqmb, char *collseqwc,
+		 int32_t *symb_table, int32_t table_size,
+		 unsigned char *extra)
+{
+  unsigned int ch;
+  uint32_t start_collseq;
+  uint32_t end_collseq;
+
+  /* Equivalence Classes and Character Classes can't be a range
+     start/end.  */
+  if (BE (start_elem->type == EQUIV_CLASS || start_elem->type == CHAR_CLASS
+	  || end_elem->type == EQUIV_CLASS || end_elem->type == CHAR_CLASS,
+	  0))
+    return REG_ERANGE;
+
+  start_collseq = lookup_collation_sequence_value (start_elem, nrules, collseqmb, collseqwc,
+						   symb_table, table_size, extra);
+  end_collseq = lookup_collation_sequence_value (end_elem, nrules, collseqmb, collseqwc,
+						 symb_table, table_size, extra);
+  /* Check start/end collation sequence values.  */
+  if (BE (start_collseq == UINT_MAX || end_collseq == UINT_MAX, 0))
+    return REG_ECOLLATE;
+  if (BE ((syntax & RE_NO_EMPTY_RANGES) && start_collseq > end_collseq, 0))
+    return REG_ERANGE;
+
+  /* Got valid collation sequence values, add them as a new entry.
+     However, if we have no collation elements, and the character set
+     is single byte, the single byte character set that we
+     build below suffices. */
+  if (nrules > 0 || dfa->mb_cur_max > 1)
+    {
+      /* Check the space of the arrays.  */
+      if (BE (*range_alloc == mbcset->nranges, 0))
+	{
+	  /* There is not enough space, need realloc.  */
+	  uint32_t *new_array_start;
+	  uint32_t *new_array_end;
+	  int new_nranges;
+
+	  /* +1 in case of mbcset->nranges is 0.  */
+	  new_nranges = 2 * mbcset->nranges + 1;
+	  new_array_start = re_realloc (mbcset->range_starts, uint32_t,
+					new_nranges);
+	  new_array_end = re_realloc (mbcset->range_ends, uint32_t,
+				      new_nranges);
+
+	  if (BE (new_array_start == NULL || new_array_end == NULL, 0))
+	    return REG_ESPACE;
+
+	  mbcset->range_starts = new_array_start;
+	  mbcset->range_ends = new_array_end;
+	  *range_alloc = new_nranges;
+	}
+
+      mbcset->range_starts[mbcset->nranges] = start_collseq;
+      mbcset->range_ends[mbcset->nranges++] = end_collseq;
+    }
+
+  /* Build the table for single byte characters.  */
+  for (ch = 0; ch < SBC_MAX; ch++)
+    {
+      uint32_t ch_collseq;
+      /*
+	if (MB_CUR_MAX == 1)
+      */
+      if (nrules == 0)
+	ch_collseq = collseqmb[ch];
+      else
+	ch_collseq = __collseq_table_lookup (collseqwc, __btowc (ch));
+      if (start_collseq <= ch_collseq && ch_collseq <= end_collseq)
+	bitset_set (sbcset, ch);
+    }
+  return REG_NOERROR;
+}
+
+/* Local function for parse_bracket_exp used in _LIBC environment.
+   Build the collating element which is represented by NAME.
+   The result are written to MBCSET and SBCSET.
+   COLL_SYM_ALLOC is the allocated size of mbcset->coll_sym, is a
+   pointer argument since we may update it.  */
+
+static reg_errcode_t
+__attribute__ ((always_inline))
+build_collating_symbol (bitset_t sbcset, re_charset_t *mbcset,
+			int *coll_sym_alloc, const unsigned char *name,
+			uint32_t nrules, int32_t *symb_table, int32_t table_size,
+			unsigned char *extra)
+{
+  int32_t elem, idx;
+  size_t name_len = strlen ((const char *) name);
+  if (nrules != 0)
+    {
+      elem = seek_collating_symbol_entry (name, name_len, symb_table,
+					  table_size, extra);
+      if (elem != -1)
+	{
+	  /* We found the entry.  */
+	  idx = symb_table[2 * elem + 1];
+	  /* Skip the name of collating element name.  */
+	  idx += 1 + extra[idx];
+	}
+      else if (name_len == 1)
+	{
+	  /* No valid character, treat it as a normal
+	     character.  */
+	  bitset_set (sbcset, name[0]);
+	  return REG_NOERROR;
+	}
+      else
+	return REG_ECOLLATE;
+
+      /* Got valid collation sequence, add it as a new entry.  */
+      /* Check the space of the arrays.  */
+      if (BE (*coll_sym_alloc == mbcset->ncoll_syms, 0))
+	{
+	  /* Not enough, realloc it.  */
+	  /* +1 in case of mbcset->ncoll_syms is 0.  */
+	  int new_coll_sym_alloc = 2 * mbcset->ncoll_syms + 1;
+	  /* Use realloc since mbcset->coll_syms is NULL
+	     if *alloc == 0.  */
+	  int32_t *new_coll_syms = re_realloc (mbcset->coll_syms, int32_t,
+					       new_coll_sym_alloc);
+	  if (BE (new_coll_syms == NULL, 0))
+	    return REG_ESPACE;
+	  mbcset->coll_syms = new_coll_syms;
+	  *coll_sym_alloc = new_coll_sym_alloc;
+	}
+      mbcset->coll_syms[mbcset->ncoll_syms++] = idx;
+      return REG_NOERROR;
+    }
+  else
+    {
+      if (BE (name_len != 1, 0))
+	return REG_ECOLLATE;
+      else
+	{
+	  bitset_set (sbcset, name[0]);
+	  return REG_NOERROR;
+	}
+    }
+}
+#endif /* n NESTING */
+
 /* This function parse bracket expression like "[abc]", "[a-c]",
    "[[.a-a.]]" etc.  */
 
@@ -2779,6 +3035,8 @@ parse_bracket_exp (re_string_t *regexp, re_dfa_t *dfa, re_token_t *token,
   int32_t table_size;
   const int32_t *symb_table;
   const unsigned char *extra;
+
+# ifdef NESTING
 
   /* Local function for parse_bracket_exp used in _LIBC environment.
      Seek the collating symbol entry corresponding to NAME.
@@ -3016,6 +3274,7 @@ parse_bracket_exp (re_string_t *regexp, re_dfa_t *dfa, re_token_t *token,
 	    }
 	}
     }
+# endif /* NESTING */
 #endif
 
   re_token_t br_token;
@@ -3157,8 +3416,15 @@ parse_bracket_exp (re_string_t *regexp, re_dfa_t *dfa, re_token_t *token,
 	  token_len = peek_token_bracket (token, regexp, syntax);
 
 #ifdef _LIBC
+# ifdef NESTING
 	  *err = build_range_exp (sbcset, mbcset, &range_alloc,
 				  &start_elem, &end_elem);
+# else /* n NESTING */
+	  *err = build_range_exp (sbcset, mbcset, &range_alloc,
+				  &start_elem, &end_elem,
+				  dfa, syntax, nrules, collseqmb, collseqwc,
+				  symb_table, table_size, extra);
+# endif /* NESTING */
 #else
 # ifdef RE_ENABLE_I18N
 	  *err = build_range_exp (sbcset,
@@ -3211,7 +3477,11 @@ parse_bracket_exp (re_string_t *regexp, re_dfa_t *dfa, re_token_t *token,
 #ifdef RE_ENABLE_I18N
 					     mbcset, &coll_sym_alloc,
 #endif /* RE_ENABLE_I18N */
-					     start_elem.opr.name);
+					     start_elem.opr.name
+#ifndef NESTING
+					     , nrules, symb_table, table_size, extra
+#endif /* NESTING */
+					     );
 	      if (BE (*err != REG_NOERROR, 0))
 		goto parse_bracket_exp_free_return;
 	      break;
