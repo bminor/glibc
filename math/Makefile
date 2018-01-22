@@ -361,9 +361,11 @@ tgmath3-macros = atan2 cbrt ceil copysign erf erfc exp2 expm1 fdim floor \
 		 fromfp fromfpx ufromfp ufromfpx totalorder totalordermag \
 		 scalb
 tgmath3-macro-tests = $(addprefix test-tgmath3-,$(tgmath3-macros))
+# Suppress these tests with clang for now, multiple issues
+ifneq ($(with-clang),yes)
 tests += $(tgmath3-macro-tests)
 generated += $(addsuffix .c,$(tgmath3-macro-tests))
-
+endif
 $(tgmath3-macro-tests:%=$(objpfx)%.o): CFLAGS += -fno-builtin
 
 $(foreach m,$(tgmath3-macros),\
