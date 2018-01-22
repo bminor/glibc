@@ -37,7 +37,7 @@
    produce a tail-call to __libc_vfork, consider including the version
    in sysdeps/unix/sysv/linux/aarch64/pt-vfork.c.  */
 
-#if !HAVE_IFUNC
+#if 0 /*!HAVE_IFUNC*/
 # error "must write pt-vfork for this machine or get IFUNC support"
 #endif
 
