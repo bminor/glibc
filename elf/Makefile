@@ -306,7 +306,9 @@ tests-pie += vismain
 CFLAGS-vismain.c += $(PIE-ccflag)
 endif
 endif
+ifneq ($(with-clang),yes)
 modules-execstack-yes = tst-execstack-mod
+endif
 extra-test-objs += $(addsuffix .os,$(strip $(modules-names)))
 
 # filtmod1.so has a special rule
