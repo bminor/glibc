@@ -308,8 +308,11 @@ libm-test-incs = $(foreach f,$(libm-test-funcs-all),libm-test-$(f).inc)
 endif
 
 ifdef PYTHON
+# Suppress these tests with clang for now, multiple issues
+ifneq ($(with-clang),yes)
 tests += test-tgmath3
 generated += test-tgmath3.c
+endif
 CFLAGS-test-tgmath3.c += -fno-builtin
 
 $(objpfx)test-tgmath3.c: gen-tgmath-tests.py
