@@ -354,8 +354,13 @@
 /* GCC 4.3 and above allow passing all anonymous arguments of an
    __extern_always_inline function to some other vararg function.  */
 #if __GNUC_PREREQ (4,3)
+#if defined(__clang__)
+# define __va_arg_pack() __VA_ARGS__
+# define __va_arg_pack_len() 0
+#else
 # define __va_arg_pack() __builtin_va_arg_pack ()
 # define __va_arg_pack_len() __builtin_va_arg_pack_len ()
+#endif
 #endif
 
 /* It is possible to compile containing GCC extensions even if GCC is
