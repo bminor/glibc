@@ -114,6 +114,10 @@ enum
 
 /* Internal function.  Terminate the process using __libc_fatal.  */
 void __libc_alloc_buffer_create_failure (void *start, size_t size);
+/* clang wants a hidden proto ahead of use. */
+#ifndef _ISOMAC
+libc_hidden_proto (__libc_alloc_buffer_create_failure)
+#endif
 
 /* Create a new allocation buffer.  The byte range from START to START
    + SIZE - 1 must be valid, and the allocation buffer allocates
@@ -132,6 +136,10 @@ alloc_buffer_create (void *start, size_t size)
 /* Internal function.  See alloc_buffer_allocate below.  */
 struct alloc_buffer __libc_alloc_buffer_allocate (size_t size, void **pptr)
   __attribute__ ((nonnull (2)));
+/* clang wants a hidden proto ahead of use. */
+#ifndef _ISOMAC
+libc_hidden_proto (__libc_alloc_buffer_allocate)
+#endif
 
 /* Allocate a buffer of SIZE bytes using malloc.  The returned buffer
    is in a failed state if malloc fails.  *PPTR points to the start of
@@ -342,6 +350,10 @@ alloc_buffer_copy_bytes (struct alloc_buffer *buf, const void *src, size_t size)
 struct alloc_buffer __libc_alloc_buffer_copy_string (struct alloc_buffer,
 						     const char *)
   __attribute__ ((nonnull (2)));
+/* clang wants a hidden proto ahead of use. */
+#ifndef _ISOMAC
+libc_hidden_proto (__libc_alloc_buffer_copy_string)
+#endif
 
 /* Copy the string at SRC into the buffer, including its null
    terminator.  If there is not enough room in the buffer, the buffer
