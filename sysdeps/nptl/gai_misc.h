@@ -74,7 +74,11 @@
 
 
 #define gai_start_notify_thread __gai_start_notify_thread
+/* For some reason, with clang this define causes a linktime failure
+   building libanl.so.  */
+#ifndef __clang__
 #define gai_create_helper_thread __gai_create_helper_thread
+#endif
 
 extern inline void
 __gai_start_notify_thread (void)
