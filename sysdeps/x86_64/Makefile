@@ -127,7 +127,10 @@ $(objpfx)tst-sse: $(objpfx)tst-ssemod.so
 $(objpfx)tst-avx: $(objpfx)tst-avx-aux.o $(objpfx)tst-avxmod.so
 $(objpfx)tst-avx512: $(objpfx)tst-avx512-aux.o $(objpfx)tst-avx512mod.so
 
-AVX-CFLAGS=-mavx -mno-vzeroupper
+AVX-CFLAGS = -mavx
+ifneq ($(with-clang),yes)
+AVX-CFLAGS += -mno-vzeroupper
+endif
 CFLAGS-tst-audit4-aux.c += $(AVX-CFLAGS)
 CFLAGS-tst-auditmod4a.c += $(AVX-CFLAGS)
 CFLAGS-tst-auditmod4b.c += $(AVX-CFLAGS)
