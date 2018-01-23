@@ -5,7 +5,7 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-#ifdef __SSE2_MATH__
+#if defined(__SSE2_MATH__) && !defined(__clang__)
 # define math_opt_barrier(x)						\
   ({ __typeof(x) __x;							\
      if (sizeof (x) <= sizeof (double)					\
