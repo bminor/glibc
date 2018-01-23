@@ -69,6 +69,8 @@ __ieee754_log (double x)
   number num;
   mp_no mpx, mpy, mpy1, mpy2, mperr;
 
+  volatile double zero = 0.0;
+
 #include "ulog.tbl"
 #include "ulog.h"
 
@@ -81,9 +83,9 @@ __ieee754_log (double x)
   if (__glibc_unlikely (ux < 0x00100000))
     {
       if (__glibc_unlikely (((ux & 0x7fffffff) | dx) == 0))
-	return MHALF / 0.0;     /* return -INF */
+	return MHALF / zero;     /* return -INF */
       if (__glibc_unlikely (ux < 0))
-	return (x - x) / 0.0;   /* return NaN  */
+	return (x - x) / zero;   /* return NaN  */
       n -= 54;
       x *= two54.d;             /* scale x     */
       num.d = x;
