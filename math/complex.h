@@ -52,23 +52,40 @@ __BEGIN_DECLS
 #undef I
 #define I _Complex_I
 
+#if defined(__clang__)
+/* Clang casts types to _Complex instead of using __builtin_complex.  */
+#define __CMPLX(x, y, t) (+(_Complex t){(t)(x), (t)(y)})
+#define CMPLX(x, y) __CMPLX(x, y, double)
+#define CMPLXF(x, y) __CMPLX(x, y, float)
+#define CMPLXL(x, y) __CMPLX(x, y, long double)
+#else
 #if defined __USE_ISOC11 && __GNUC_PREREQ (4, 7)
 /* Macros to expand into expression of specified complex type.  */
 # define CMPLX(x, y) __builtin_complex ((double) (x), (double) (y))
 # define CMPLXF(x, y) __builtin_complex ((float) (x), (float) (y))
 # define CMPLXL(x, y) __builtin_complex ((long double) (x), (long double) (y))
 #endif
+#endif /* __clang __ */
 
 #if __HAVE_FLOAT16 && __GLIBC_USE (IEC_60559_TYPES_EXT)
 # define CMPLXF16(x, y) __builtin_complex ((_Float16) (x), (_Float16) (y))
 #endif
 
 #if __HAVE_FLOAT32 && __GLIBC_USE (IEC_60559_TYPES_EXT)
+#if defined(__clang__)
+/* The typedef _Float32 does not seem to work here.  */
+# define CMPLXF32(x, y) __CMPLX(x, y, float)
+#else
 # define CMPLXF32(x, y) __builtin_complex ((_Float32) (x), (_Float32) (y))
+#endif /* __clang __ */
 #endif
 
 #if __HAVE_FLOAT64 && __GLIBC_USE (IEC_60559_TYPES_EXT)
+#if defined(__clang__)
+# define CMPLXF64(x, y) __CMPLX(x, y, double)
+#else
 # define CMPLXF64(x, y) __builtin_complex ((_Float64) (x), (_Float64) (y))
+#endif /* __clang __ */
 #endif
 
 #if __HAVE_FLOAT128 && __GLIBC_USE (IEC_60559_TYPES_EXT)
@@ -76,11 +93,19 @@ __BEGIN_DECLS
 #endif
 
 #if __HAVE_FLOAT32X && __GLIBC_USE (IEC_60559_TYPES_EXT)
+#if defined(__clang__)
+# define CMPLXF32X(x, y) __CMPLX(x, y, double)
+#else
 # define CMPLXF32X(x, y) __builtin_complex ((_Float32x) (x), (_Float32x) (y))
 #endif
+#endif /* __clang __ */
 
 #if __HAVE_FLOAT64X && __GLIBC_USE (IEC_60559_TYPES_EXT)
+#if defined(__clang__)
+# define CMPLXF64X(x, y) __CMPLX(x, y, long double)
+#else
 # define CMPLXF64X(x, y) __builtin_complex ((_Float64x) (x), (_Float64x) (y))
+#endif /* __clang __ */
 #endif
 
 #if __HAVE_FLOAT128X && __GLIBC_USE (IEC_60559_TYPES_EXT)
