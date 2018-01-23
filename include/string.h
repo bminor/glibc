@@ -163,12 +163,14 @@ extern __typeof (strnlen) strnlen attribute_hidden;
 extern __typeof (strsep) strsep attribute_hidden;
 #endif
 
+#ifndef __clang__
 #if (!IS_IN (libc) || !defined SHARED) \
   && !defined NO_MEMPCPY_STPCPY_REDIRECT
 /* Redirect calls to __builtin_mempcpy and __builtin_stpcpy to call
    __mempcpy and __stpcpy if not inlined.  */
 extern __typeof (mempcpy) mempcpy __asm__ ("__mempcpy");
 extern __typeof (stpcpy) stpcpy __asm__ ("__stpcpy");
+#endif
 #endif
 
 extern void *__memcpy_chk (void *__restrict __dest,
