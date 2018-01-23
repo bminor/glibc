@@ -38,7 +38,7 @@ static char rcsid[] = "$NetBSD: k_standard.c,v 1.6 1995/05/10 20:46:35 jtc Exp $
 # if 0
 static const double zero = 0.0;	/* used as const */
 # else
-static double zero = 0.0;	/* used as const */
+volatile static double zero = 0.0;	/* used as const */
 # endif
 
 /*
