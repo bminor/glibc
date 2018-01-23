@@ -20,7 +20,11 @@
 
 #ifdef FE_INVALID
 # ifndef FE_SNANS_ALWAYS_SIGNAL
+#  ifdef __clang__
+#  warning "FE_SNANS_ALWAYS_SIGNAL not defined, fix clang please"
+#  else
 #  error "FE_SNANS_ALWAYS_SIGNAL not defined"
+#  endif
 # endif
 #else
 # ifdef FE_SNANS_ALWAYS_SIGNAL
