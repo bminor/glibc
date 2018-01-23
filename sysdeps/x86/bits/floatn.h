@@ -21,6 +21,8 @@
 
 #include <features.h>
 
+#define capture(sym, val) extern int sym[val]
+
 /* Defined to 1 if the current compiler invocation provides a
    floating-point type with the IEEE 754 binary128 format, and this
    glibc includes corresponding *f128 interfaces for it.  The required
@@ -55,6 +57,9 @@
 
 #ifndef __ASSEMBLER__
 
+capture(i_have_float128, __HAVE_FLOAT128);
+capture(i_have_distinct_float128, __HAVE_DISTINCT_FLOAT128);
+
 /* Defined to concatenate the literal suffix to be used with _Float128
    types, if __HAVE_FLOAT128 is 1. */
 # if __HAVE_FLOAT128
@@ -83,8 +88,24 @@ typedef _Complex float __cfloat128 __attribute__ ((__mode__ (__TC__)));
 
 /* The type _Float128 exists only since GCC 7.0.  */
 #  if !__GNUC_PREREQ (7, 0) || defined __cplusplus
+/* need a clang 5.0 case here? */
 typedef __float128 _Float128;
 #  endif
+
+#if defined __clang__
+
+#if 0 /* clang 5.0 or less */
+#define __builtin_huge_valf128() ((_Float128) __builtin_huge_val ())
+#define __builtin_inff128() ((_Float128) __builtin_inf ())
+#define __builtin_nanf128(x) ((_Float128) __builtin_nan (x))
+#define __builtin_nansf128(x) ((_Float128) __builtin_nans (x))
+
+#define __builtin_copysignf128(x,y) ((_Float128) __builtin_copysign ((double)(x),(double)(y)))
+#define __builtin_fabsf128(x) ((_Float128) __builtin_fabs ((double)(x)))
+#endif
+#define __builtin_signbitf128(x) (__builtin_signbit (x))
+
+#else /* GCC */
 
 /* __builtin_huge_valf128 doesn't exist before GCC 7.0.  */
 #  if !__GNUC_PREREQ (7, 0)
@@ -112,7 +133,13 @@ typedef __float128 _Float128;
 #   define __builtin_signbitf128 __signbitf128
 #  endif
 
+#endif /* clang or GCC */
+
 # endif
+
+#if !__HAVE_FLOAT128 && defined __clang__
+typedef long double _Float128;
+#endif
 
 #endif /* !__ASSEMBLER__.  */
 
