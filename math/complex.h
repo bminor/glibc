@@ -52,7 +52,7 @@ __BEGIN_DECLS
 #undef I
 #define I _Complex_I
 
-#if defined(__clang__)
+#if defined __USE_ISOC11 && defined __clang__
 /* Clang casts types to _Complex instead of using __builtin_complex.  */
 #define __CMPLX(x, y, t) (+(_Complex t){(t)(x), (t)(y)})
 #define CMPLX(x, y) __CMPLX(x, y, double)
