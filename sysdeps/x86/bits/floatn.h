@@ -21,7 +21,9 @@
 
 #include <features.h>
 
+#if 0 /* for macro expansion debugging */
 #define capture(sym, val) extern int sym[val]
+#endif
 
 /* Defined to 1 if the current compiler invocation provides a
    floating-point type with the IEEE 754 binary128 format, and this
@@ -57,8 +59,10 @@
 
 #ifndef __ASSEMBLER__
 
+#if 0 /* for macro expansion debugging */
 capture(i_have_float128, __HAVE_FLOAT128);
 capture(i_have_distinct_float128, __HAVE_DISTINCT_FLOAT128);
+#endif
 
 /* Defined to concatenate the literal suffix to be used with _Float128
    types, if __HAVE_FLOAT128 is 1. */
