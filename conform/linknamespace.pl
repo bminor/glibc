@@ -27,7 +27,9 @@ use Getopt::Long;
 GetOptions ('header=s' => \$header, 'standard=s' => \$standard,
 	    'flags=s' => \$flags, 'cc=s' => \$CC, 'tmpdir=s' => \$tmpdir,
 	    'stdsyms=s' => \$stdsyms_file, 'libsyms=s' => \$libsyms_file,
-	    'readelf=s' => \$READELF);
+	    'readelf=s' => \$READELF, 'withclang=s' => \$withclang);
+
+$debug = 1;
 
 # Load the list of symbols that are OK.
 %stdsyms = ();
@@ -162,7 +164,7 @@ foreach my $sym (@sym_data) {
 # detected by this script if the same namespace issue applies for
 # static linking.
 
-@c_syms = list_exported_functions ("$CC $flags", $standard, $header, $tmpdir);
+@c_syms = list_exported_functions ("$CC $flags", $standard, $header, $tmpdir, $withclang);
 $cincfile = "$tmpdir/undef-$$.c";
 $cincfile_o = "$tmpdir/undef-$$.o";
 $cincfile_sym = "$tmpdir/undef-$$.sym";
@@ -177,9 +179,11 @@ system ("$CC $flags -D_ISOMAC $CFLAGS{$standard} -c $cincfile -o $cincfile_o")
 system ("LC_ALL=C $READELF -W -s $cincfile_o > $cincfile_sym")
   && die ("readelf failed\n");
 @elf_syms = list_syms ($cincfile_sym);
-unlink ($cincfile) || die ("unlink $cincfile: $!\n");
-unlink ($cincfile_o) || die ("unlink $cincfile_o: $!\n");
-unlink ($cincfile_sym) || die ("unlink $cincfile_sym: $!\n");
+if (!$debug) {
+  unlink ($cincfile) || die ("unlink $cincfile: $!\n");
+  unlink ($cincfile_o) || die ("unlink $cincfile_o: $!\n");
+  unlink ($cincfile_sym) || die ("unlink $cincfile_sym: $!\n");
+}
 
 %seen_where = ();
 %files_seen = ();
@@ -207,7 +211,31 @@ while (%current_undef) {
 	  $seen_where{$ssym} = "$current_undef{$sym} -> [$file] $ssym";
 	}
       }
+      # A clang build can leave strong undefined symbols in the file,
+      # instead of GC'ing them; filter them out.
       foreach my $usym (@{$strong_undef_syms{$file}}) {
+	  $alsoseen = 0;
+	  foreach my $ssym (@{$seen_syms{$file}}) {
+	      if ($ssym eq $usym) {
+		  if ($debug) {
+		      print "$usym is strong undef also seen in $file, skipping\n";
+		  }
+		  $alsoseen = 1;
+		  last;
+	      }
+	  }
+	  if ($alsoseen) {
+	      next;
+	  }
+	  if ($debug) {
+	      foreach my $file2 (@{$sym_objs{$sym}}) {
+		  foreach my $ssym (@{$seen_syms{$file2}}) {
+		      if ($ssym eq $usym) {
+			  print " seen in $file2";
+		      }
+		  }
+	      }
+	  }
 	if (!defined ($all_undef{$usym})) {
 	  $all_undef{$usym} = "$current_undef{$sym} -> [$file] $usym";
 	  $new_undef{$usym} = "$current_undef{$sym} -> [$file] $usym";
@@ -220,14 +248,27 @@ while (%current_undef) {
 
 $ret = 0;
 foreach my $sym (sort keys %seen_where) {
+  if ($debug) {
+      print "RAW $seen_where{$sym}\n";
+  }
   if ($sym =~ /^_/) {
     next;
   }
   if (defined ($stdsyms{$sym})) {
+    if ($debug) {
+	print "$sym IS IN stdsyms\n";
+    }
     next;
+  }
+  if ($debug) {
+      print "FINAL ";
   }
   print "$seen_where{$sym}\n";
   $ret = 1;
+}
+
+if ($debug) {
+    print "Return result is $ret\n";
 }
 
 exit $ret;

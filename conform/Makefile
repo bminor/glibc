@@ -178,6 +178,7 @@ $(conformtest-header-tests): $(objpfx)%/conform.out: \
 	 $(PERL) -I. conformtest.pl --tmpdir=$(@D)/scratch --cc='$(CC)' \
 		 --flags='$(conformtest-cc-flags)' --standard=$$std \
 		 --headers=$$hdr $(conformtest-xfail) $(conformtest-cross) \
+		 --withclang='$(with-clang)' \
 		 > $@); \
 	$(evaluate-test)
 
@@ -185,6 +186,7 @@ $(linknamespace-symlists-tests): $(objpfx)symlist-%: list-header-symbols.pl
 	$(PERL) -I. -w $< --tmpdir=$(objpfx) --cc='$(CC)' \
 		--flags='$(conformtest-cc-flags)' --standard=$* \
 		--headers="$(strip $(conformtest-headers-$*))" \
+		--withclang='$(with-clang)' \
 		> $@ 2> $@.err; \
 	$(evaluate-test)
 
@@ -225,6 +227,7 @@ $(linknamespace-header-tests): $(objpfx)%/linknamespace.out: \
 		 --stdsyms=$(objpfx)symlist-$$std --header=$$hdr \
 		 --libsyms=$(objpfx)symlist-stdlibs-$$std \
 		 --readelf='$(READELF)' \
+		 --withclang='$(with-clang)' \
 		 > $@ 2>&1); \
 	$(evaluate-test)
 

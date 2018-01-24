@@ -39,20 +39,26 @@ $CFLAGS{"POSIX2008"} = "-std=c99 -D_POSIX_C_SOURCE=200809L";
 # Return a list of functions exported by a header, empty if an include
 # of the header does not compile.
 sub list_exported_functions {
-  my ($cc, $standard, $header, $tmpdir) = @_;
+  my ($cc, $standard, $header, $tmpdir, $withclang) = @_;
   my ($cc_all) = "$cc -D_ISOMAC $CFLAGS{$standard}";
   my ($tmpfile) = "$tmpdir/list-$$.c";
   my ($auxfile) = "$tmpdir/list-$$.c.aux";
+  my ($astfile) = "$tmpdir/list-$$.c.ast";
   my ($ret);
   my (%res) = ();
   open (TMPFILE, ">$tmpfile") || die ("open $tmpfile: $!\n");
   print TMPFILE "#include <$header>\n";
   close (TMPFILE) || die ("close $tmpfile: $!\n");
+  if ($withclang ne "yes") {
   $ret = system "$cc_all -c $tmpfile -o /dev/null -aux-info $auxfile > /dev/null";
+  } else {
+    $ret = system "$cc_all -c $tmpfile -o /dev/null -Xclang -ast-dump |grep FunctionDecl > $astfile";
+  }
   unlink ($tmpfile) || die ("unlink $tmpfile: $!\n");
   if ($ret != 0) {
     return;
   }
+  if ($withclang ne "yes") {
   open (AUXFILE, "<$auxfile") || die ("open $auxfile: $!\n");
   while (<AUXFILE>) {
     s|/\*.*?\*/||g;
@@ -70,5 +76,20 @@ sub list_exported_functions {
   }
   close (AUXFILE) || die ("close $auxfile: $!\n");
   unlink ($auxfile) || die ("unlink $auxfile: $!\n");
+  } else {
+  open (ASTFILE, "<$astfile") || die ("open $astfile: $!\n");
+  while (<ASTFILE>) {
+    s/^.*:[0-9][0-9]*:[0-9][0-9]* //g;
+    s/^.*:[0-9][0-9]* implicit //g;
+    s/^.*:[0-9][0-9]* //g;
+    if (/(\w+)\s* /) {
+      $res{$1} = 1;
+    } else {
+      die ("couldn't parse -ast-dump output: $_\n");
+    }
+  }
+  close (ASTFILE) || die ("close $astfile: $!\n");
+  unlink ($astfile) || die ("unlink $astfile: $!\n");
+  }
   return sort keys %res;
 }
