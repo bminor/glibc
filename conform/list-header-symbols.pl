@@ -24,7 +24,7 @@ use GlibcConform;
 use Getopt::Long;
 
 GetOptions ('headers=s' => \$headers, 'standard=s' => \$standard,
-	    'flags=s' => \$flags, 'cc=s' => \$CC, 'tmpdir=s' => \$tmpdir);
+	    'flags=s' => \$flags, 'cc=s' => \$CC, 'tmpdir=s' => \$tmpdir, 'withclang=s' => \$withclang);
 @headers = split (/\s+/, $headers);
 
 # Extra symbols possibly not found through -aux-info but still
@@ -67,7 +67,7 @@ $extra_syms{"POSIX2008"} = ["errno", "setjmp", "va_end", "environ",
 %user_syms = ();
 
 foreach my $header (@headers) {
-  @syms = list_exported_functions ("$CC $flags", $standard, $header, $tmpdir);
+  @syms = list_exported_functions ("$CC $flags", $standard, $header, $tmpdir, $withclang);
   foreach my $sym (@syms) {
     if ($sym !~ /^_/) {
       $user_syms{$sym} = 1;

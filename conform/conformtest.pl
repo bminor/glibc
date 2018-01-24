@@ -11,7 +11,7 @@ $cross = "";
 $xfail_str = "";
 GetOptions ('headers=s' => \@headers, 'standard=s' => \$standard,
 	    'flags=s' => \$flags, 'cc=s' => \$CC, 'tmpdir=s' => \$tmpdir,
-	    'cross' => \$cross, 'xfail=s' => \$xfail_str);
+	    'cross' => \$cross, 'xfail=s' => \$xfail_str, 'withclang=s' => \$withclang);
 @headers = split(/,/,join(',',@headers));
 
 # List of the headers we are testing.
@@ -270,9 +270,17 @@ sub checknamespace {
   close (TESTFILE);
 
   undef %errors;
+  if ($withclang eq "yes") {
+    open (CONTENT, "$CC $CFLAGS_namespace -E $fnamebase.c -P -Wp,-dM | sed -e '/^# [1-9]/d' -e '/^[[:space:]]*\$/d' |");
+  } else {
   open (CONTENT, "$CC $CFLAGS_namespace -E $fnamebase.c -P -Wp,-dN | sed -e '/^# [1-9]/d' -e '/^[[:space:]]*\$/d' |");
+  }
   loop: while (<CONTENT>) {
     chop;
+    if ($withclang eq "yes") {
+      # Filter extra output coming from -dM
+      s/^(#[^ ]+ [^ (]+).*$/$1/g;
+    }
     if (/^#define (.*)/) {
       newtoken ($1, @allow);
     } elsif (/^#undef (.*)/) {
