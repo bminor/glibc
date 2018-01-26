@@ -169,7 +169,6 @@ GLIBC_2.27 pthread_rwlockattr_getpshared F
 GLIBC_2.27 pthread_rwlockattr_init F
 GLIBC_2.27 pthread_rwlockattr_setkind_np F
 GLIBC_2.27 pthread_rwlockattr_setpshared F
-GLIBC_2.27 pthread_self F
 GLIBC_2.27 pthread_setaffinity_np F
 GLIBC_2.27 pthread_setattr_default_np F
 GLIBC_2.27 pthread_setcancelstate F
