@@ -537,7 +537,6 @@ extern int _IO_new_do_write (FILE *, const char *, size_t);
 extern int _IO_old_do_write (FILE *, const char *, size_t);
 extern int _IO_wdo_write (FILE *, const wchar_t *, size_t);
 libc_hidden_proto (_IO_wdo_write)
-extern int _IO_flush_all_lockp (int);
 extern int _IO_flush_all (void);
 libc_hidden_proto (_IO_flush_all)
 extern void _IO_flush_all_linebuffered (void);

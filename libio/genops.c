@@ -682,7 +682,7 @@ _IO_adjust_column (unsigned start, const char *line, int count)
 libc_hidden_def (_IO_adjust_column)
 
 int
-_IO_flush_all_lockp (int do_lock)
+_IO_flush_all (void)
 {
   int result = 0;
   FILE *fp;
@@ -695,8 +695,7 @@ _IO_flush_all_lockp (int do_lock)
   for (fp = (FILE *) _IO_list_all; fp != NULL; fp = fp->_chain)
     {
       run_fp = fp;
-      if (do_lock)
-	_IO_flockfile (fp);
+      _IO_flockfile (fp);
 
       if (((fp->_mode <= 0 && fp->_IO_write_ptr > fp->_IO_write_base)
 	   || (_IO_vtable_offset (fp) == 0
@@ -706,8 +705,7 @@ _IO_flush_all_lockp (int do_lock)
 	  && _IO_OVERFLOW (fp, EOF) == EOF)
 	result = EOF;
 
-      if (do_lock)
-	_IO_funlockfile (fp);
+      _IO_funlockfile (fp);
       run_fp = NULL;
     }
 
@@ -717,14 +715,6 @@ _IO_flush_all_lockp (int do_lock)
 #endif
 
   return result;
-}
-
-
-int
-_IO_flush_all (void)
-{
-  /* We want locking.  */
-  return _IO_flush_all_lockp (1);
 }
 libc_hidden_def (_IO_flush_all)
 
@@ -791,6 +781,9 @@ _IO_unbuffer_all (void)
     {
       int legacy = 0;
 
+      run_fp = fp;
+      _IO_flockfile (fp);
+
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
       if (__glibc_unlikely (_IO_vtable_offset (fp) != 0))
 	legacy = 1;
@@ -800,18 +793,6 @@ _IO_unbuffer_all (void)
 	  /* Iff stream is un-orientated, it wasn't used. */
 	  && (legacy || fp->_mode != 0))
 	{
-#ifdef _IO_MTSAFE_IO
-	  int cnt;
-#define MAXTRIES 2
-	  for (cnt = 0; cnt < MAXTRIES; ++cnt)
-	    if (fp->_lock == NULL || _IO_lock_trylock (*fp->_lock) == 0)
-	      break;
-	    else
-	      /* Give the other thread time to finish up its use of the
-		 stream.  */
-	      __sched_yield ();
-#endif
-
 	  if (! legacy && ! dealloc_buffers && !(fp->_flags & _IO_USER_BUF))
 	    {
 	      fp->_flags |= _IO_USER_BUF;
@@ -825,17 +806,15 @@ _IO_unbuffer_all (void)
 
 	  if (! legacy && fp->_mode > 0)
 	    _IO_wsetb (fp, NULL, NULL, 0);
-
-#ifdef _IO_MTSAFE_IO
-	  if (cnt < MAXTRIES && fp->_lock != NULL)
-	    _IO_lock_unlock (*fp->_lock);
-#endif
 	}
 
       /* Make sure that never again the wide char functions can be
 	 used.  */
       if (! legacy)
 	fp->_mode = -1;
+
+      _IO_funlockfile (fp);
+      run_fp = NULL;
     }
 
 #ifdef _IO_MTSAFE_IO
@@ -861,9 +840,7 @@ __libio_freemem (void)
 int
 _IO_cleanup (void)
 {
-  /* We do *not* want locking.  Some threads might use streams but
-     that is their problem, we flush them underneath them.  */
-  int result = _IO_flush_all_lockp (0);
+  int result = _IO_flush_all ();
 
   /* We currently don't have a reliable mechanism for making sure that
      C++ static destructors are executed in the correct order.
