@@ -87,6 +87,10 @@ Version 2.22.1
   dynamic linker.  (The glibc project disputes that this is a security
   vulnerability; only trusted binaries must be examined using the ldd
   script.)
+
+* CVE-2018-6485: The posix_memalign and memalign functions, when called with
+  an object size near the value of SIZE_MAX, would return a pointer to a
+  buffer which is too small, instead of NULL.  Reported by Jakub Wilk.
 
 Version 2.22
 
