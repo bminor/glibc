@@ -53,6 +53,7 @@ The following bugs are resolved with this release:
   [22644] memmove-sse2-unaligned on 32bit x86 produces garbage when crossing
     2GB threshold
   [22735] Misleading typo in time.h source comment regarding CLOCKS_PER_SECOND
+  [22753] libc: preadv2/pwritev2 fallback code should handle offset=-1
   [22786] Stack buffer overflow in realpath() if input size is close
     to SSIZE_MAX
   [22797] Linux: use reserved name __key in pkey_get
