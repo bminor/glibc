@@ -1,3 +1,8 @@
+2018-02-02  Sean McKean  <smckean83@gmail.com>
+
+	[BZ #22735]
+	* time/time.h (clock): Reference CLOCKS_PER_SEC in comment.
+
 2018-02-10  Dmitry V. Levin  <ldv@altlinux.org>
 
 	[BZ #22433]
