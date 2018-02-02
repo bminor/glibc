@@ -1,3 +1,334 @@
+2018-01-19  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	[BZ #22685]
+	* sysdeps/powerpc/powerpc32/sysdep.h (ABORT_TRANSACTION_IMPL): Renamed
+	from ABORT_TRANSACTION.
+	(ABORT_TRANSACTION): Redirect to ABORT_TRANSACTION_IMPL.
+	* sysdeps/powerpc/powerpc64/sysdep.h (ABORT_TRANSACTION,
+	ABORT_TRANSACTION_IMPL): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/not-errno.h: New file.  Reuse
+	Linux code, but remove the code that aborts transactions.
+
+2017-12-19  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
+	[BZ #22377]
+	* math/Makefile [C++] (tests): Add test for iseqsig.
+	* math/math.h [C++] (iseqsig): New implementation, which does
+	not rely on __MATH_TG/__builtin_types_compatible_p.
+	* math/test-math-iseqsig.cc: New file.
+	* sysdeps/powerpc/powerpc64le/Makefile
+	(CFLAGS-test-math-iseqsig.cc): New variable.
+
+2017-10-18  Renlin Li  <renlin.li@arm.com>
+
+	* sysdeps/aarch64/dl-machine.h (elf_machine_load_address): Use
+	_DYNAMIC symbol to calculate load address.
+
+2018-01-19  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #22715]
+	* sysdeps/x86_64/dl-trampoline.h (_dl_runtime_profile): Properly
+	align La_x86_64_retval to VEC_SIZE.
+
+2018-01-16  Florian Weimer  <fweimer@redhat.com>
+
+	* nptl/Makefile [$(have-cxx-thread_local)] (tests-unsupported):
+	Move tst-thread-exit-clobber ...
+	[$(CXX)] (tests-unsupported): ... to here.
+
+2018-01-16  Florian Weimer  <fweimer@redhat.com>
+
+	* nptl/Makefile (CFLAGS-tst-minstack-throw.o): Compile in C++11
+	mode with GNU extensions.
+
+2018-01-15  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #22636]
+	* nptl/tst-minstack-throw.cc: New file.
+	* nptl/Makefile (tests): Add tst-minstack-throw.
+	(LDLIBS-tst-minstack-throw): Link with libstdc++.
+	[!CXX] (tests-unsupported): Add tst-minstack-throw.
+
+2018-01-11  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #22636]
+	* nptl/Makefile (tests): Add tst-minstack-cancel, tst-minstack-exit.
+	* nptl/tst-minstack-cancel.c, nptl/tst-minstack-exit.c: New files.
+
+2018-01-10  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #22636]
+	* sysdeps/nptl/unwind-forcedunwind.c (pthread_cancel_init): Open
+	libgcc.so with RTLD_NOW, to avoid lazy binding during unwind.
+
+2018-01-08  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	[BZ #22637]
+	* nptl/descr.h (stackblock, stackblock_size): Update comments.
+	* nptl/allocatestack.c (allocate_stack): Add guardsize to stacksize.
+	* nptl/nptl-init.c (__pthread_get_minstack): Remove guardsize from
+	stacksize.
+	* nptl/pthread_getattr_np.c (pthread_getattr_np): Likewise.
+
+2018-01-08  Florian Weimer  <fweimer@redhat.com>
+
+	* nptl/tst-thread-exit-clobber.cc: New file.
+	* nptl/Makefile (CFLAGS-tst-thread-exit-clobber.o): Compile in
+	C++11 mode.
+	(LDLIBS-tst-thread-exit-clobber): Link with libstdc++.
+	(tests): Add tst-thread-exit-clobber.
+	[!CXX] (tests-unsupported): Add tst-thread-exit-clobber.
+
+2018-01-12  Dmitry V. Levin  <ldv@altlinux.org>
+
+	[BZ #22679]
+	CVE-2018-1000001
+	* sysdeps/unix/sysv/linux/getcwd.c (__getcwd): Fall back to
+	generic_getcwd if the path returned by getcwd syscall is not absolute.
+	* io/tst-getcwd-abspath.c: New test.
+	* io/Makefile (tests): Add tst-getcwd-abspath.
+
+2017-12-19  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+	    James Clarke <jrtc27@jrtc27.com>
+
+	[BZ #22603]
+	* sysdeps/ia64/memchr.S (__memchr): Avoid overflow in pointer
+	addition.
+
+2018-01-08  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* sysdeps/unix/sysv/linux/tst-ttyname.c (do_in_chroot_1): Skip the
+	test instead of failing in case of ENOENT returned by posix_openpt.
+
+2017-12-29  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #22611]
+	* malloc/tst-realloc.c (do_test): Remove the test checking that errno
+	is unchanged on success.
+
+2017-12-30  Aurelien Jarno  <aurelien@aurel32.net>
+	    Dmitry V. Levin  <ldv@altlinux.org>
+
+	[BZ #22625]
+	CVE-2017-16997
+	* elf/dl-load.c (fillin_rpath): Check for empty tokens before dynamic
+	string token expansion. Check for NULL pointer or empty string possibly
+	returned by expand_dynamic_string_token.
+	(decompose_rpath): Check for empty path after dynamic string
+	token expansion.
+
+2017-12-18  Dmitry V. Levin  <ldv@altlinux.org>
+
+	[BZ #22627]
+	* elf/dl-load.c (_dl_init_paths): Remove _dl_dst_substitute preparatory
+	code and invocation.
+
+2017-11-18  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/unix/sysv/linux/tst-ttyname.c
+	(become_root_in_mount_ns): Remove.
+	(do_in_chroot_1): Call support_enter_mount_namespace.
+	(do_in_chroot_2): Likewise.
+	(do_test): Call support_become_root early.
+
+2017-11-15  Luke Shumaker  <lukeshu@parabola.nu>
+
+	[BZ #22145]
+	* sysdeps/unix/sysv/linux/tst-ttyname.c: New file.
+	* sysdeps/unix/sysv/linux/Makefile: Add tst-ttyname to tests.
+
+2017-11-15  Luke Shumaker  <lukeshu@parabola.nu>
+
+	[BZ #22145]
+	* sysdeps/unix/sysv/linux/ttyname.c (ttyname):
+	Defer is_pty check until end of the function.
+	* sysdeps/unix/sysv/linux/ttyname_r.c (__ttyname_r): Likewise.
+
+2017-11-15  Luke Shumaker  <lukeshu@parabola.nu>
+
+	[BZ #22145]
+	* sysdeps/unix/sysv/linux/ttyname.h (is_mytty): New function.
+	* sysdeps/unix/sysv/linux/ttyname.c (getttyname): Call is_mytty.
+	(ttyname): Likewise.
+	* sysdeps/unix/sysv/linux/ttyname_r.c (getttyname_r): Likewise.
+	(__ttyname_r): Likewise.
+
+2017-11-15  Luke Shumaker  <lukeshu@parabola.nu>
+
+	* sysdeps/unix/sysv/linux/ttyname.h (is_pty): Change return type from
+	int to bool.
+
+2017-11-15  Luke Shumaker  <lukeshu@parabola.nu>
+
+	* sysdeps/unix/sysv/linux/ttyname.h (is_pty): Update doc reference.
+
+2017-11-15  Luke Shumaker  <lukeshu@parabola.nu>
+
+	* manual/terminal.texi (Is It a Terminal):
+	Mention ENODEV for ttyname and ttyname_r.
+
+2017-12-14  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #22607]
+	CVE-2017-1000409
+	* elf/dl-load.c (_dl_init_paths): Compute number of components in
+	the expanded path string.
+
+2017-12-14  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #22606]
+	CVE-2017-1000408
+	* elf/dl-load.c (system_dirs): Update comment.
+	(nsystem_dirs_len): Use array_length.
+	(_dl_init_paths): Use nsystem_dirs_len to compute the array size.
+
+2017-11-02  Florian Weimer  <fweimer@redhat.com>
+
+	Add array_length and array_end macros.
+	* include/array_length.h: New file.
+
+2017-10-27  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/fpu/libm-test-ulps: Regenerated for GCC 7 with
+	"-O2 -march=i586".
+
+2017-12-13  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/ia64/fpu/libm-test-ulps: Update.
+
+2017-12-12  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #21672]
+	* nptl/allocatestack.c [_STACK_GROWS_DOWN] (setup_stack_prot):
+	Set to use !NEED_SEPARATE_REGISTER_STACK as well.
+	(advise_stack_range): New function.
+	* nptl/pthread_create.c (START_THREAD_DEFN): Move logic to mark
+	stack non required to advise_stack_range at allocatestack.c
+
+2017-12-12  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+	    Sergei Trofimovich  <slyfox@inbox.ru>
+
+	[BZ #21908]
+	* sysdeps/unix/sysv/linux/m68k/mmap_internal.h (MMAP2_PAGE_SHIFT):
+	Rename to MMAP2_PAGE_UNIT.
+	* sysdeps/unix/sysv/linux/ia64/mmap_internal.h: New file.
+	* sysdeps/unix/sysv/linux/mmap.c: Include mmap_internal iff
+	__OFF_T_MATCHES_OFF64_T is not defined.
+	* sysdeps/unix/sysv/linux/mmap_internal.h (page_unit): Declare as
+	uint64_t.
+	(MMAP2_PAGE_UNIT) [MMAP2_PAGE_UNIT == -1]: Redefine to page_unit.
+	(page_unit) [MMAP2_PAGE_UNIT != -1]: Remove definition.
+
+2017-12-12  James Clarke <jrtc27@jrtc27.com>
+
+	* sysdeps/unix/sysv/linux/ia64/ipc_priv.h: New file defining
+	__IPC_64 to 0 to avoid IPC_64 being set.
+
+2017-10-15  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #22052]
+	* malloc/hooks.c (realloc_check): Use DIAG_IGNORE_NEEDS_COMMENT
+	to silence -O3 -Wall warning with GCC 7.
+
+2017-11-30  Arjun Shankar  <arjun@redhat.com>
+
+	[BZ #22375]
+	CVE-2017-17426
+	* malloc/malloc.c (__libc_malloc): Use checked_request2size
+	instead of request2size.
+
+2017-11-02  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #22332]
+	* posix/tst-glob-tilde.c (do_noescape): New variable.
+	(one_test): Process it.
+	(do_test): Set do_noescape.  Add unescaping test case.
+
+2017-10-22  Paul Eggert <eggert@cs.ucla.edu>
+
+	[BZ #22332]
+	* posix/glob.c (__glob): Fix buffer overflow during GLOB_TILDE
+	unescaping.
+
+2017-10-23  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* malloc/malloc.c (_int_malloc): Add SINGLE_THREAD_P path.
+
+2017-10-23  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* malloc/malloc.c (__libc_malloc): Add SINGLE_THREAD_P path.
+	(__libc_realloc): Likewise.
+	(_mid_memalign): Likewise.
+	(__libc_calloc): Likewise.
+
+2017-10-20  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* malloc/malloc.c (sysdep-cancel.h): Add include.
+
+2017-10-20  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* malloc/malloc.c (_int_free): Add SINGLE_THREAD_P fast paths.
+
+2017-10-19  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* malloc/malloc.c (_int_free): Fix deadlock bug in consistency check.
+
+2017-08-31  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/malloc.c (_int_free): Remove locked variable and related
+	asserts.
+
+2017-08-31  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/malloc.c (top_check): Change return type to void.  Remove
+	internal_function.
+	* malloc/hooks.c (top_check): Likewise.
+	(malloc_check, realloc_check, memalign_check): Adjust.
+
+2017-08-30  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/malloc.c (ARENA_CORRUPTION_BIT, arena_is_corrupt)
+	(set_arena_corrupt): Remove definitions.
+	(mtrim): Do not check for corrupt arena.
+	* malloc/arena.c (arena_lock, reused_arena, arena_get_retry):
+	Likewise.
+
+2017-08-30  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #21754]
+	* malloc/arena.c (TUNABLE_CALLBACK set_mallopt_check): Do not set
+	check_action.
+	(ptmalloc_init): Do not set or use check_action.
+	* malloc/hooks.c (malloc_check_get_size, realloc_check): Adjust
+	call to malloc_printerr.  Remove return statement.
+	(free_check): Likewise.  Remove arena unlock.
+	(top_check): Update comment.  Adjust call to malloc_printerr.
+	Remove heap repair code.
+	* malloc/malloc.c (unlink): Adjust calls to malloc_printerr.
+	(DEFAULT_CHECK_ACTION, check_action): Remove definitions.
+	(sysmalloc): Adjust call to malloc_printerr.
+	(munmap_chunk, __libc_realloc): Likewise.  Remove return
+	statement.
+	(_int_malloc, int_realloc): Likewise.  Remove errstr variable.
+	Remove errout label and corresponding gotos.
+	(_int_free): Likewise.  Remove arena unlock.
+	(do_set_mallopt_check): Do not set check_action.
+	(malloc_printerr): Adjust parameter list.  Do not mark arena as
+	corrupt.
+	* manual/memory.texi (Malloc Tunable Parameters): Remove TODO
+	comment.
+	* manual/probes.texi (Memory Allocation Probes): Remove
+	memory_mallopt_check_action.
+
+2017-08-30  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #21754]
+	* malloc/malloc.c (malloc_printerr): Always terminate the process,
+	without printing a backtrace.  Do not leak any information in the
+	error message.
+	* manual/memory.texi (Heap Consistency Checking): Update.
+	* manual/tunables.texi (Memory Allocation Tunables): Likewise.
+
 2017-11-17  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/bits/hwcap.h (PPC_FEATURE2_HTM_NO_SUSPEND): New
@@ -733,6 +1064,7 @@
 
 2017-09-01  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #20532]
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Make reporting of NSS
 	function lookup failures more reliable.
 

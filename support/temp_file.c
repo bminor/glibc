@@ -1,5 +1,5 @@
 /* Temporary file handling for tests.
-   Copyright (C) 1998-2017 Free Software Foundation, Inc.
+   Copyright (C) 1998-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -84,6 +84,19 @@ create_temp_file (const char *base, char **filename)
     free (fname);
 
   return fd;
+}
+
+char *
+support_create_temp_directory (const char *base)
+{
+  char *path = xasprintf ("%s/%sXXXXXX", test_dir, base);
+  if (mkdtemp (path) == NULL)
+    {
+      printf ("error: mkdtemp (\"%s\"): %m", path);
+      exit (1);
+    }
+  add_temp_file (path);
+  return path;
 }
 
 /* Helper functions called by the test skeleton follow.  */

@@ -1,5 +1,5 @@
 /* Declarations for temporary file handling.
-   Copyright (C) 2016-2017 Free Software Foundation, Inc.
+   Copyright (C) 2016-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,6 +31,11 @@ void add_temp_file (const char *name);
    FILENAME is not NULL.  In this case, the caller is expected to free
    *FILENAME.  */
 int create_temp_file (const char *base, char **filename);
+
+/* Create a temporary directory and schedule it for deletion.  BASE is
+   used as a prefix for the unique directory name, which the function
+   returns.  The caller should free this string.  */
+char *support_create_temp_directory (const char *base);
 
 __END_DECLS
 

@@ -1,5 +1,5 @@
 /* Common extra functions.
-   Copyright (C) 2016-2017 Free Software Foundation, Inc.
+   Copyright (C) 2016-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -68,6 +68,7 @@ void *xrealloc (void *p, size_t n);
 char *xasprintf (const char *format, ...)
   __attribute__ ((format (printf, 1, 2), malloc));
 char *xstrdup (const char *);
+char *xstrndup (const char *, size_t);
 
 __END_DECLS
 

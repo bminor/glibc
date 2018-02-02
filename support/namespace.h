@@ -1,5 +1,5 @@
 /* Entering namespaces for test case isolation.
-   Copyright (C) 2016-2017 Free Software Foundation, Inc.
+   Copyright (C) 2016-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -50,6 +50,11 @@ bool support_can_chroot (void);
    call support_become_root before this function so that the process
    has sufficient privileges.  */
 bool support_enter_network_namespace (void);
+
+/* Enter a mount namespace and mark / as private (not shared).  If
+   this function returns true, mount operations in this process will
+   not affect the host system afterwards.  */
+bool support_enter_mount_namespace (void);
 
 /* Return true if support_enter_network_namespace managed to enter a
    UTS namespace.  */

@@ -17,9 +17,14 @@ $(foreach suf,$(all-object-suffixes),$(objpfx)test-float128%$(suf)): CFLAGS += -
 $(foreach suf,$(all-object-suffixes),$(objpfx)test-ifloat128%$(suf)): CFLAGS += -mfloat128
 CFLAGS-libm-test-support-float128.c += -mfloat128
 CFLAGS-test-math-iscanonical.cc += -mfloat128
+CFLAGS-test-math-iseqsig.cc += -mfloat128
 CFLAGS-test-math-issignaling.cc += -mfloat128
 CFLAGS-test-math-iszero.cc += -mfloat128
-$(objpfx)test-float128% $(objpfx)test-ifloat128% $(objpfx)test-math-iszero: \
+$(foreach test, \
+	  test-float128% test-ifloat128% \
+	  test-math-iscanonical test-math-iseqsig test-math-issignaling \
+	  test-math-iszero, \
+	  $(objpfx)$(test)): \
   gnulib-tests += $(f128-loader-link)
 endif
 

@@ -16,13 +16,15 @@
    not, see <http://www.gnu.org/licenses/>.  */
 
 #include <unistd.h>
+#include <stdbool.h>
 #include <sys/sysmacros.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 
 /* Return true if this is a UNIX98 pty device, as defined in
-   linux/Documentation/devices.txt.  */
-static inline int
+   linux/Documentation/devices.txt (on linux < 4.10) or
+   linux/Documentation/admin-guide/devices.txt (on linux >= 4.10).  */
+static inline bool
 is_pty (struct stat64 *sb)
 {
 #ifdef _STATBUF_ST_RDEV
@@ -31,4 +33,16 @@ is_pty (struct stat64 *sb)
 #else
   return false;
 #endif
+}
+
+static inline bool
+is_mytty (const struct stat64 *mytty, const struct stat64 *maybe)
+{
+  return (maybe->st_ino == mytty->st_ino
+	  && maybe->st_dev == mytty->st_dev
+#ifdef _STATBUF_ST_RDEV
+	  && S_ISCHR (maybe->st_mode)
+	  && maybe->st_rdev == mytty->st_rdev
+#endif
+	  );
 }

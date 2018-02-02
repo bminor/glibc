@@ -1,5 +1,5 @@
 /* Convert a struct hostent object to a string.
-   Copyright (C) 2016-2017 Free Software Foundation, Inc.
+   Copyright (C) 2016-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +19,9 @@
 #include <support/format_nss.h>
 
 #include <arpa/inet.h>
+#include <errno.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <support/support.h>
 #include <support/xmemstream.h>
 
@@ -41,10 +43,15 @@ support_format_hostent (struct hostent *h)
 {
   if (h == NULL)
     {
-      char *value = support_format_herrno (h_errno);
-      char *result = xasprintf ("error: %s\n", value);
-      free (value);
-      return result;
+      if (h_errno == NETDB_INTERNAL)
+        return xasprintf ("error: NETDB_INTERNAL (errno %d, %m)\n", errno);
+      else
+        {
+          char *value = support_format_herrno (h_errno);
+          char *result = xasprintf ("error: %s\n", value);
+          free (value);
+          return result;
+        }
     }
 
   struct xmemstream mem;

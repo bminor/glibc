@@ -1,5 +1,5 @@
 /* Check that a DNS packet buffer has the expected contents.
-   Copyright (C) 2016-2017 Free Software Foundation, Inc.
+   Copyright (C) 2016-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <support/check.h>
 #include <support/format_nss.h>
 #include <support/run_diff.h>

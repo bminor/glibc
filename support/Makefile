@@ -1,5 +1,5 @@
 # Makefile for support library, used only at build and test time
-# Copyright (C) 2016-2017 Free Software Foundation, Inc.
+# Copyright (C) 2016-2018 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -32,15 +32,18 @@ libsupport-routines = \
   check_netent \
   delayed_exit \
   ignore_stderr \
+  next_to_fault \
   oom_error \
   resolv_test \
   set_fortify_handler \
+  support-xfstat \
   support-xstat \
   support_become_root \
   support_can_chroot \
   support_capture_subprocess \
   support_capture_subprocess_check \
   support_chroot \
+  support_enter_mount_namespace \
   support_enter_network_namespace \
   support_format_address_family \
   support_format_addrinfo \
@@ -52,6 +55,7 @@ libsupport-routines = \
   support_record_failure \
   support_run_diff \
   support_shared_allocate \
+  support_test_compare_failure \
   support_write_file_string \
   support_test_main \
   support_test_verify_impl \
@@ -65,12 +69,15 @@ libsupport-routines = \
   xchroot \
   xclose \
   xconnect \
+  xdlfcn \
   xdup2 \
   xfclose \
   xfopen \
   xfork \
+  xftruncate \
   xgetsockname \
   xlisten \
+  xlseek \
   xmalloc \
   xmemstream \
   xmkdir \
@@ -83,8 +90,8 @@ libsupport-routines = \
   xpthread_attr_destroy \
   xpthread_attr_init \
   xpthread_attr_setdetachstate \
-  xpthread_attr_setstacksize \
   xpthread_attr_setguardsize \
+  xpthread_attr_setstacksize \
   xpthread_barrier_destroy \
   xpthread_barrier_init \
   xpthread_barrier_wait \
@@ -108,19 +115,26 @@ libsupport-routines = \
   xpthread_once \
   xpthread_rwlock_init \
   xpthread_rwlock_rdlock \
-  xpthread_rwlock_wrlock \
   xpthread_rwlock_unlock \
+  xpthread_rwlock_wrlock \
   xpthread_rwlockattr_init \
   xpthread_rwlockattr_setkind_np \
   xpthread_sigmask \
   xpthread_spin_lock \
   xpthread_spin_unlock \
+  xraise \
+  xreadlink \
   xrealloc \
   xrecvfrom \
   xsendto \
   xsetsockopt \
+  xsigaction \
+  xsignal \
   xsocket \
   xstrdup \
+  xstrndup \
+  xsysconf \
+  xunlink \
   xwaitpid \
   xwrite \
 
@@ -137,6 +151,8 @@ tests = \
   tst-support_capture_subprocess \
   tst-support_format_dns_packet \
   tst-support_record_failure \
+  tst-test_compare \
+  tst-xreadlink \
 
 ifeq ($(run-built-tests),yes)
 tests-special = \
