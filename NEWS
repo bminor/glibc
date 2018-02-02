@@ -135,6 +135,7 @@ The following bugs are resolved with this release:
     (CVE-2018-1000001)
   [22685] powerpc: Fix syscalls during early process initialization
   [22715] x86-64: Properly align La_x86_64_retval to VEC_SIZE
+  [22753] libc: preadv2/pwritev2 fallback code should handle offset=-1
   [22774] malloc: Integer overflow in malloc (CVE-2018-6551)
   [22786] Fix path length overflow in realpath
   [23005] resolv: Fix crash in resolver on memory allocation failure
