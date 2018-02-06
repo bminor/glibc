@@ -17,7 +17,13 @@ RCSID("$NetBSD: s_log1p.S,v 1.7 1995/05/09 00:10:58 jtc Exp $")
 		-1 + sqrt(2) / 2 <= x <= 1 - sqrt(2) / 2
 	   0.29 is a safe value.
 	*/
+#if defined(__clang__)
+/* Necessary in the absence of a .tfloat directive in the assembler.  */
+limit:
+	.byte 0xe1, 0x7a, 0x14, 0xae, 0x47, 0xe1, 0x7a, 0x94, 0xfd, 0x3f
+#else
 limit:	.tfloat 0.29
+#endif
 	/* Please note:	 we use a double value here.  Since 1.0 has
 	   an exact representation this does not effect the accuracy
 	   but it helps to optimize the code.  */
