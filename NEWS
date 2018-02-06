@@ -91,6 +91,10 @@ Version 2.22.1
 * CVE-2018-6485: The posix_memalign and memalign functions, when called with
   an object size near the value of SIZE_MAX, would return a pointer to a
   buffer which is too small, instead of NULL.  Reported by Jakub Wilk.
+
+* CVE-2018-6551: The malloc function, when called with an object size near
+  the value of SIZE_MAX, would return a pointer to a buffer which is too
+  small, instead of NULL.
 
 Version 2.22
 
