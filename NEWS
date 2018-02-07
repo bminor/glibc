@@ -11,6 +11,7 @@ The following bugs are resolved with this release:
 
   [22638] sparc: static binaries are broken if glibc is built by gcc
     configured with --enable-default-pie
+  [22797] Linux: use reserved name __key in pkey_get
 
 
 Version 2.27
