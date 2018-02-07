@@ -70,9 +70,12 @@ float_vector _sOne 0x3f800000
 float_vector _sLn2 0x3f317218
 
 /* SP infinity, +/- */
+/* clang integrated assembler doesn't think subtract yields an absolute, skip.  */
+#if !defined(__clang__)
 .if .-__svml_slog_data != _sInfs
 .err
 .endif
+#endif
 	.long	0x7f800000
 	.long	0xff800000
 	.rept	56
@@ -80,9 +83,12 @@ float_vector _sLn2 0x3f317218
 	.endr
 
 /* SP one, +/- */
+/* clang integrated assembler doesn't think subtract yields an absolute, skip.  */
+#if !defined(__clang__)
 .if .-__svml_slog_data != _sOnes
 .err
 .endif
+#endif
 	.long	0x3f800000
 	.long	0xbf800000
 	.rept	56
@@ -90,9 +96,12 @@ float_vector _sLn2 0x3f317218
 	.endr
 
 /* SP zero +/- */
+/* clang integrated assembler doesn't think subtract yields an absolute, skip.  */
+#if !defined(__clang__)
 .if .-__svml_slog_data != _sZeros
 .err
 .endif
+#endif
 	.long	0x00000000
 	.long	0x80000000
 	.rept	56

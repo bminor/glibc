@@ -46,9 +46,12 @@ float_vector _ABSMASK 0x7fffffff
 float_vector _DOMAINRANGE 0x42ae9a00
 
 /* Log(2) lookup High+Low table for logarithmic part */
+/* clang integrated assembler doesn't think subtract yields an absolute, skip.  */
+#if !defined(__clang__)
 .if .-__svml_spow_data != _Log_HA_table
 .err
 .endif
+#endif
 	.quad	0xc086232bdd7a8300
 	.quad	0xbe1ce91eef3fb100
 	.quad	0xc086232fdc7ad828
@@ -1080,9 +1083,12 @@ float_vector _DOMAINRANGE 0x42ae9a00
 	.endr
 
 /* Log(2) lookup table for logarithmic part */
+/* clang integrated assembler doesn't think subtract yields an absolute, skip.  */
+#if !defined(__clang__)
 .if .-__svml_spow_data != _Log_LA_table
 .err
 .endif
+#endif
 	.quad	0x8000000000000000
 	.quad	0xbf5ff802a9ab10e6
 	.quad	0xbf6ff00aa2b10bc0
@@ -1650,9 +1656,12 @@ double_vector _Bias1 0x408ff00000000000
 double_vector _L2 0x3fe62e42fefa39ef
 
 /* dInfs = DP infinity, +/- == */
+/* clang integrated assembler doesn't think subtract yields an absolute, skip.  */
+#if !defined(__clang__)
 .if .-__svml_spow_data != _dInfs
 .err
 .endif
+#endif
 	.quad	0x7ff0000000000000
 	.quad	0xfff0000000000000
 	.rept	48
@@ -1660,9 +1669,12 @@ double_vector _L2 0x3fe62e42fefa39ef
 	.endr
 
 /* dOnes = DP one, +/- == */
+/* clang integrated assembler doesn't think subtract yields an absolute, skip.  */
+#if !defined(__clang__)
 .if .-__svml_spow_data != _dOnes
 .err
 .endif
+#endif
 	.quad	0x3ff0000000000000
 	.quad	0xbff0000000000000
 	.rept	48
@@ -1670,17 +1682,23 @@ double_vector _L2 0x3fe62e42fefa39ef
 	.endr
 
 /* dZeros = DP zero +/- == */
+/* clang integrated assembler doesn't think subtract yields an absolute, skip.  */
+#if !defined(__clang__)
 .if .-__svml_spow_data != _dZeros
 .err
 .endif
+#endif
 	.quad	0x0000000000000000
 	.quad	0x8000000000000000
 	.rept	48
 	.byte	0
 	.endr
+/* clang integrated assembler doesn't think subtract yields an absolute, skip.  */
+#if !defined(__clang__)
 .if .-__svml_spow_data != __dbT
 .err
 .endif
+#endif
 	.quad	0x3feffffffc27dd9e
 	.quad	0x3ff00162f1a4047d
 	.quad	0x3ff002c603f68252

@@ -30,9 +30,12 @@
 __svml_dpow_data:
 
 /* Lookup log(2) table (for HSW): */
+/* clang integrated assembler doesn't think subtract yields an absolute, skip.  */
+#if !defined(__clang__)
 .if .-__svml_dpow_data != _hsw_log2_table
 .err
 .endif
+#endif
 	.quad	0xc08ff00000000000
 	.quad	0x0000000000000000
 	.quad	0xc08ff005c3e0ffc2
@@ -1064,9 +1067,12 @@ __svml_dpow_data:
 	.endr
 
 /* Lookup exp(2) table (for HSW): */
+/* clang integrated assembler doesn't think subtract yields an absolute, skip.  */
+#if !defined(__clang__)
 .if .-__svml_dpow_data != _hsw_dTe
 .err
 .endif
+#endif
 	.quad	0x3ff0000000000000
 	.quad	0x3ff00b1afa5abcbf
 	.quad	0x3ff0163da9fb3335
@@ -1395,9 +1401,12 @@ double_vector _hsw_dce2 0x3fcebfbdff82c54d
 double_vector _hsw_dce1 0x3fe62e42fefa39b9
 
 /* Reciprocal lookup table for log part (non HSW): */
+/* clang integrated assembler doesn't think subtract yields an absolute, skip.  */
+#if !defined(__clang__)
 .if .-__svml_dpow_data != _rcp_t1
 .err
 .endif
+#endif
 	.quad	0x3ff7154740000000
 	.quad	0x3ff70f8340000000
 	.quad	0x3ff709c240000000
@@ -2429,9 +2438,12 @@ double_vector _hsw_dce1 0x3fe62e42fefa39b9
 	.endr
 
 /* Log(2) lookup table for log part (non HSW): */
+/* clang integrated assembler doesn't think subtract yields an absolute, skip.  */
+#if !defined(__clang__)
 .if .-__svml_dpow_data != _log2_t1
 .err
 .endif
+#endif
 	.rept	2
 	.quad	0x0000000000000000
 	.endr
@@ -4489,9 +4501,12 @@ double_vector _hsw_dce1 0x3fe62e42fefa39b9
 	.endr
 
 /* Exp(2) lookup table for exp part (non HSW) */
+/* clang integrated assembler doesn't think subtract yields an absolute, skip.  */
+#if !defined(__clang__)
 .if .-__svml_dpow_data != _exp2_tbl
 .err
 .endif
+#endif
 	.quad	0x3ff0000000000000
 	.quad	0x0000000000000000
 	.quad	0x3ff0163da9fb3335
