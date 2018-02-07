@@ -907,7 +907,6 @@ ifeq ($(with-clang),yes)
 # Non-string format arguments come from debugging prints in ld.so.
 +cflags += -Wno-format-security
 
-+cflags += -no-integrated-as
 endif	# with-clang == yes
 
 +cflags += $(cflags-cpu) $(+gccwarn) $(+merge-constants) $(+math-flags) \
@@ -1059,10 +1058,6 @@ ifndef ASFLAGS
 ASFLAGS := $(filter -g% -fdebug-prefix-map=%,$(CFLAGS))
 endif
 ASFLAGS += -Werror=undef $(ASFLAGS-config) $(asflags-cpu)
-
-ifeq ($(with-clang),yes)
-ASFLAGS += -no-integrated-as
-endif	# with-clang == yes
 
 ifndef BUILD_CC
 BUILD_CC = $(CC)
