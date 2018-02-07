@@ -45,7 +45,8 @@
 #ifdef __ILP32__
 # define PRESERVE_BND_REGS_PREFIX
 #else
-# ifdef HAVE_MPX_SUPPORT
+/* clang integrated assembler does not like "bnd" by itself on a line. */
+# if defined(HAVE_MPX_SUPPORT) && !defined(__clang__)
 #  define PRESERVE_BND_REGS_PREFIX bnd
 # else
 #  define PRESERVE_BND_REGS_PREFIX .byte 0xf2
