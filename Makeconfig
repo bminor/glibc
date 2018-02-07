@@ -917,9 +917,6 @@ ifeq ($(with-clang),yes)
 # Non-string format arguments come from debugging prints in ld.so.
 +cflags += -Wno-format-security
 
-# Is this still needed?
-+cflags += -no-integrated-as
-
 ifeq ($(with-lld),yes)
 LDFLAGS.so += -fuse-ld=lld
 LDFLAGS-rtld += -fuse-ld=lld
@@ -1075,10 +1072,6 @@ ifndef ASFLAGS
 ASFLAGS := $(filter -g% -fdebug-prefix-map=%,$(CFLAGS))
 endif
 override ASFLAGS += -Werror=undef $(ASFLAGS-config) $(asflags-cpu)
-
-ifeq ($(with-clang),yes)
-ASFLAGS += -no-integrated-as
-endif	# with-clang == yes
 
 ifndef BUILD_CC
 BUILD_CC = $(CC)

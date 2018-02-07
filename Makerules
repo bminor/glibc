@@ -225,6 +225,11 @@ sed-remove-dotdot := -e 's@  *\([^ 	\/$$][^ 	\]*\)@ $$(..)\1@g' \
 		     -e 's@^\([^ 	\/$$][^ 	\]*\)@$$(..)\1@g'
 endif
 
+MOARFLAGS =
+ifeq ($(with-clang),yes)
+MOARFLAGS = -no-integrated-as
+endif
+
 ifdef gen-py-const-headers
 # We'll use a static pattern rule to match .pysym files with their
 # corresponding generated .py files.
@@ -249,7 +254,7 @@ $(py-const): $(py-const-dir)%.py: %.pysym $(py-const-script) \
 	     $(common-before-compile)
 	$(make-target-directory)
 	$(PYTHON) $(py-const-script) --python \
-		  --cc="$(CC) $(CFLAGS) $(CPPFLAGS)" $< \
+		  --cc="$(CC) $(MOARFLAGS) $(CFLAGS) $(CPPFLAGS)" $< \
 		  > $@.tmp
 	mv -f $@.tmp $@
 
@@ -268,7 +273,7 @@ ifdef gen-as-const-headers
 # may lead to build hang on a many-core machine.
 $(common-objpfx)%.h $(common-objpfx)%.h.d: $(..)scripts/gen-as-const.py \
 					   %.sym $(common-before-compile)
-	$(PYTHON) $< --cc="$(CC) $(CFLAGS) $(CPPFLAGS) -DGEN_AS_CONST_HEADERS \
+	$(PYTHON) $< --cc="$(CC) $(MOARFLAGS) $(CFLAGS) $(CPPFLAGS) -DGEN_AS_CONST_HEADERS \
 			   -MD -MP -MF $(@:.h=.h.d)T \
 			   -MT '$(@:.h=.h.d) $(@:.h.d=.h)'" \
 		  $(filter %.sym,$^) > $(@:.h.d=.h)T
