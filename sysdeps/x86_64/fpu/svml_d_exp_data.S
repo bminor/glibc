@@ -29,9 +29,12 @@
 __svml_dexp_data:
 
 /* Lookup table of 2^(j/2^K): */
+/* clang integrated assembler doesn't think subtract yields an absolute, skip.  */
+#if !defined(__clang__)
 .if .-__svml_dexp_data != __dbT
 .err
 .endif
+#endif
 	.quad	0x3ff0000000000000
 	.quad	0x3ff002c605e2e8cf
 	.quad	0x3ff0058c86da1c0a

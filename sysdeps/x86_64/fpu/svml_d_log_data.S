@@ -30,9 +30,12 @@ __svml_dlog_data:
 
 /* Lookup table in high+low parts and 9-bit index for
    -log(mRcp), where mRcp is mantissa of 1/x 9-bit accurate reciprocal:  */
+/* clang integrated assembler doesn't think subtract yields an absolute, skip.  */
+#if !defined(__clang__)
 .if .-__svml_dlog_data != _Log_HA_table
 .err
 .endif
+#endif
 	.quad	0xc086232bdd7a8300
 	.quad	0xbe1ce91eef3fb100
 	.quad	0xc086232fdc7ad828
@@ -1066,9 +1069,12 @@ __svml_dlog_data:
 /* Lookup table with 9-bit index for
    -log(mRcp), where mRcp is mantissa of 1/x 9-bit accurate reciprocal:
  */
+/* clang integrated assembler doesn't think subtract yields an absolute, skip.  */
+#if !defined(__clang__)
 .if .-__svml_dlog_data != _Log_LA_table
 .err
 .endif
+#endif
 	.quad	0x8000000000000000
 	.quad	0xbf5ff802a9ab10e6
 	.quad	0xbf6ff00aa2b10bc0
@@ -1630,9 +1636,12 @@ double_vector _L2 0x3fe62e42fefa39ef
 
 /* General purpose constants:
    DP infinities, +/-  */
+/* clang integrated assembler doesn't think subtract yields an absolute, skip.  */
+#if !defined(__clang__)
 .if .-__svml_dlog_data != _dInfs
 .err
 .endif
+#endif
 	.quad	0x7ff0000000000000
 	.quad	0xfff0000000000000
 	.rept	48
@@ -1640,9 +1649,12 @@ double_vector _L2 0x3fe62e42fefa39ef
 	.endr
 
 /* DP 1.0, +/- */
+/* clang integrated assembler doesn't think subtract yields an absolute, skip.  */
+#if !defined(__clang__)
 .if .-__svml_dlog_data != _dOnes
 .err
 .endif
+#endif
 	.quad	0x3ff0000000000000
 	.quad	0xbff0000000000000
 	.rept	48
@@ -1650,9 +1662,12 @@ double_vector _L2 0x3fe62e42fefa39ef
 	.endr
 
 /* DP 0.0, +/- */
+/* clang integrated assembler doesn't think subtract yields an absolute, skip.  */
+#if !defined(__clang__)
 .if .-__svml_dlog_data != _dZeros
 .err
 .endif
+#endif
 	.quad	0x0000000000000000
 	.quad	0x8000000000000000
 	.rept	48

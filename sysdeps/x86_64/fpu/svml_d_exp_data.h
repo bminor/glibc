@@ -32,18 +32,24 @@
 #define __iDomainRange                	8768
 
 .macro double_vector offset value
+/* clang integrated assembler doesn't think subtract yields an absolute, skip.  */
+#if !defined(__clang__)
 .if .-__svml_dexp_data != \offset
 .err
 .endif
+#endif
 .rept 8
 .quad \value
 .endr
 .endm
 
 .macro float_vector offset value
+/* clang integrated assembler doesn't think subtract yields an absolute, skip.  */
+#if !defined(__clang__)
 .if .-__svml_dexp_data != \offset
 .err
 .endif
+#endif
 .rept 16
 .long \value
 .endr
