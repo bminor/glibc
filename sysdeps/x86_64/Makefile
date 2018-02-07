@@ -1,6 +1,13 @@
 # The i387 `long double' is a distinct type we support.
 long-double-fcts = yes
 
+ifeq ($(with-clang),yes)
+# Clang integrated assembler objects to AVX-512 instructions if not specifically
+# allowed. (-mavx512 is the preferred option but does not work in 5.0)
+ASFLAGS-.o += -march=knl
+ASFLAGS-.os += -march=knl
+endif
+
 ifeq ($(subdir),csu)
 gen-as-const-headers += link-defines.sym
 endif
