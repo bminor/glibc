@@ -100,5 +100,8 @@ extern int __nldbl___obstack_vprintf_chk (struct obstack *, int, const char *,
 					  _G_va_list) __THROW;
 extern void __nldbl___vsyslog_chk (int, int, const char *, va_list);
 
+/* The original declarations of these were hidden by the including
+   file.  */
+extern double __nldbl_daddl (double, double) __THROW;
 
 #endif /* __NLDBL_COMPAT_H */
