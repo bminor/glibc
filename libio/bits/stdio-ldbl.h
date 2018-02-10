@@ -26,9 +26,7 @@ __LDBL_REDIR_DECL (sprintf)
 __LDBL_REDIR_DECL (vfprintf)
 __LDBL_REDIR_DECL (vprintf)
 __LDBL_REDIR_DECL (vsprintf)
-#if defined __USE_ISOC99 && !defined __USE_GNU \
-    && !defined __REDIRECT \
-    && (defined __STRICT_ANSI__ || defined __USE_XOPEN2K)
+#if !__GLIBC_USE (DEPRECATED_SCANF)
 __LDBL_REDIR1_DECL (fscanf, __nldbl___isoc99_fscanf)
 __LDBL_REDIR1_DECL (scanf, __nldbl___isoc99_scanf)
 __LDBL_REDIR1_DECL (sscanf, __nldbl___isoc99_sscanf)
@@ -44,8 +42,7 @@ __LDBL_REDIR_DECL (vsnprintf)
 #endif
 
 #ifdef	__USE_ISOC99
-# if !defined __USE_GNU && !defined __REDIRECT \
-     && (defined __STRICT_ANSI__ || defined __USE_XOPEN2K)
+# if !__GLIBC_USE (DEPRECATED_SCANF)
 __LDBL_REDIR1_DECL (vfscanf, __nldbl___isoc99_vfscanf)
 __LDBL_REDIR1_DECL (vscanf, __nldbl___isoc99_vscanf)
 __LDBL_REDIR1_DECL (vsscanf, __nldbl___isoc99_vsscanf)

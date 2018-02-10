@@ -15,14 +15,19 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+/* This test exercises the deprecated GNU %as, %aS, and %a[...] scanf
+   modifiers, which are not available to programs compiled as C99
+   anymore; therefore, this file is compiled with -std=gnu89 and C99
+   syntax must not be used.  */
+
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
 
-#if __GLIBC_USE_DEPRECATED_SCANF
-# error "This file should not be compiled with deprecated scanf"
+#if !__GLIBC_USE_DEPRECATED_SCANF
+# error "This file should be compiled with deprecated scanf"
 #endif
 
 #define FAIL() \
@@ -75,7 +80,7 @@ main (void)
     FAIL ();
   else if (f != 0.25 || memcmp (c, "s x", 3) != 0)
     FAIL ();
-  if (xsscanf (" 1.25s x", "%ms%2c", &sp, c) != 2)
+  if (xsscanf (" 1.25s x", "%as%2c", &sp, c) != 2)
     FAIL ();
   else
     {
@@ -88,7 +93,7 @@ main (void)
     FAIL ();
   else if (d != 2.25 || memcmp (c, " x", 2) != 0)
     FAIL ();
-  if (xsscanf (" 3.25S x", "%4mS%3c", &lsp, c) != 2)
+  if (xsscanf (" 3.25S x", "%4aS%3c", &lsp, c) != 2)
     FAIL ();
   else
     {
@@ -97,7 +102,7 @@ main (void)
       memset (lsp, 'x', sizeof L"3.25");
       free (lsp);
     }
-  if (xsscanf ("4.25[0-9.] x", "%m[0-9.]%8c", &sp, c) != 2)
+  if (xsscanf ("4.25[0-9.] x", "%a[0-9.]%8c", &sp, c) != 2)
     FAIL ();
   else
     {
@@ -134,7 +139,7 @@ main (void)
 	FAIL ();
       if (fseek (fp, 0, SEEK_SET) != 0)
 	FAIL ();
-      if (xfscanf (fp, "%ms%2c", &sp, c) != 2)
+      if (xfscanf (fp, "%as%2c", &sp, c) != 2)
 	FAIL ();
       else
 	{
@@ -148,7 +153,7 @@ main (void)
 	FAIL ();
       else
 	{
-	  if (xscanf ("%ms%2c", &sp, c) != 2)
+	  if (xscanf ("%as%2c", &sp, c) != 2)
 	    FAIL ();
 	  else
 	    {

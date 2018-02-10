@@ -17,6 +17,11 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+/* This file may define some of the deprecated scanf variants.  */
+#include <features.h>
+#undef __GLIBC_USE_DEPRECATED_SCANF
+#define __GLIBC_USE_DEPRECATED_SCANF 1
+
 #include <stdarg.h>
 #include <stdio.h>
 #include <libio/strfile.h>

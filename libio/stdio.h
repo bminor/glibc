@@ -399,13 +399,11 @@ extern int scanf (const char *__restrict __format, ...) __wur;
 extern int sscanf (const char *__restrict __s,
 		   const char *__restrict __format, ...) __THROW;
 
-#if defined __USE_ISOC99 && !defined __USE_GNU \
-    && (!defined __LDBL_COMPAT || !defined __REDIRECT) \
-    && (defined __STRICT_ANSI__ || defined __USE_XOPEN2K)
+/* For historical reasons, the C99-compliant versions of the scanf
+   functions are at alternative names.  When __LDBL_COMPAT is in
+   effect, this is handled in bits/stdio-ldbl.h.  */
+#if !__GLIBC_USE (DEPRECATED_SCANF) && !defined __LDBL_COMPAT
 # ifdef __REDIRECT
-/* For strict ISO C99 or POSIX compliance disallow %as, %aS and %a[
-   GNU extension which conflicts with valid %a followed by letter
-   s, S or [.  */
 extern int __REDIRECT (fscanf, (FILE *__restrict __stream,
 				const char *__restrict __format, ...),
 		       __isoc99_fscanf) __wur;
@@ -447,13 +445,9 @@ extern int vsscanf (const char *__restrict __s,
 		    const char *__restrict __format, __gnuc_va_list __arg)
      __THROW __attribute__ ((__format__ (__scanf__, 2, 0)));
 
-# if !defined __USE_GNU \
-     && (!defined __LDBL_COMPAT || !defined __REDIRECT) \
-     && (defined __STRICT_ANSI__ || defined __USE_XOPEN2K)
-#  ifdef __REDIRECT
-/* For strict ISO C99 or POSIX compliance disallow %as, %aS and %a[
-   GNU extension which conflicts with valid %a followed by letter
-   s, S or [.  */
+/* Same redirection as above for the v*scanf family.  */
+# if !__GLIBC_USE (DEPRECATED_SCANF)
+#  if defined __REDIRECT && !defined __LDBL_COMPAT
 extern int __REDIRECT (vfscanf,
 		       (FILE *__restrict __s,
 			const char *__restrict __format, __gnuc_va_list __arg),
@@ -467,7 +461,7 @@ extern int __REDIRECT_NTH (vsscanf,
 			    const char *__restrict __format,
 			    __gnuc_va_list __arg), __isoc99_vsscanf)
      __attribute__ ((__format__ (__scanf__, 2, 0)));
-#  else
+#  elif !defined __REDIRECT
 extern int __isoc99_vfscanf (FILE *__restrict __s,
 			     const char *__restrict __format,
 			     __gnuc_va_list __arg) __wur;

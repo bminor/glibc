@@ -33,3 +33,4 @@ __isoc99_sscanf (const char *s, const char *format, ...)
 
   return done;
 }
+libc_hidden_def (__isoc99_sscanf)

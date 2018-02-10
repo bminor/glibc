@@ -68,6 +68,23 @@ Deprecated and removed features, and other changes affecting compatibility:
   used by the Linux kernel.  This affects the size and layout of those
   structures.
 
+* An archaic GNU extension to scanf, under which '%as', '%aS', and '%a[...]'
+  meant to scan a string and allocate space for it with malloc, is now
+  restricted to programs compiled in C89 or C++98 mode with _GNU_SOURCE
+  defined.  This extension conflicts with C99's use of '%a' to scan a
+  hexadecimal floating-point number, which is now available to programs
+  compiled as C99 or C++11 or higher, regardless of _GNU_SOURCE.
+
+  POSIX.1-2008 includes the feature of allocating a buffer for string input
+  with malloc, using the modifier letter 'm' instead.  Programs using
+  '%as', '%aS', or '%a[...]' with the old GNU meaning should change to
+  '%ms', '%mS', or '%m[...]' respectively.  Programs that wish to use the
+  C99 '%a' no longer need to avoid _GNU_SOURCE.
+
+  GCC's -Wformat warnings can detect most uses of this extension, as long
+  as all functions that call vscanf, vfscanf, or vsscanf are annotated with
+  __attribute__ ((format (scanf, ...))).
+
 Changes to build and runtime requirements:
 
 * Python 3.4 or later is required to build the GNU C Library.

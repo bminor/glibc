@@ -15,6 +15,11 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+/* This file defines one of the deprecated scanf variants.  */
+#include <features.h>
+#undef __GLIBC_USE_DEPRECATED_SCANF
+#define __GLIBC_USE_DEPRECATED_SCANF 1
+
 #include <stdarg.h>
 #include <libio/strfile.h>
 
@@ -34,6 +39,5 @@ __sscanf (const char *s, const char *format, ...)
 
   return done;
 }
-ldbl_hidden_def (__sscanf, sscanf)
 ldbl_strong_alias (__sscanf, sscanf)
 ldbl_strong_alias (__sscanf, _IO_sscanf)

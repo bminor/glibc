@@ -27,9 +27,7 @@ __LDBL_REDIR_DECL (swprintf);
 __LDBL_REDIR_DECL (vfwprintf);
 __LDBL_REDIR_DECL (vwprintf);
 __LDBL_REDIR_DECL (vswprintf);
-# if defined __USE_ISOC99 && !defined __USE_GNU \
-     && !defined __REDIRECT \
-     && (defined __STRICT_ANSI__ || defined __USE_XOPEN2K)
+# if !__GLIBC_USE (DEPRECATED_SCANF)
 __LDBL_REDIR1_DECL (fwscanf, __nldbl___isoc99_fwscanf)
 __LDBL_REDIR1_DECL (wscanf, __nldbl___isoc99_wscanf)
 __LDBL_REDIR1_DECL (swscanf, __nldbl___isoc99_swscanf)
@@ -42,8 +40,7 @@ __LDBL_REDIR_DECL (swscanf);
 
 #ifdef __USE_ISOC99
 __LDBL_REDIR1_DECL (wcstold, wcstod);
-# if !defined __USE_GNU && !defined __REDIRECT \
-     && (defined __STRICT_ANSI__ || defined __USE_XOPEN2K)
+# if !__GLIBC_USE (DEPRECATED_SCANF)
 __LDBL_REDIR1_DECL (vfwscanf, __nldbl___isoc99_vfwscanf)
 __LDBL_REDIR1_DECL (vwscanf, __nldbl___isoc99_vwscanf)
 __LDBL_REDIR1_DECL (vswscanf, __nldbl___isoc99_vswscanf)

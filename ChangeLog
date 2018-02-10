@@ -1,3 +1,68 @@
+2019-01-03  Zack Weinberg  <zackw@panix.com>
+
+	* include/features.h (__GLIBC_USE_DEPRECATED_SCANF): New __GLIBC_USE
+	parameter.  Only use deprecated scanf when __USE_GNU is defined
+	and __STDC_VERSION__ is less than 199901L or __cplusplus is less
+	than 201103L, whichever is relevant for the language being compiled.
+
+	* libio/stdio.h, libio/bits/stdio-ldbl.h: Decide whether to redirect
+	scanf, fscanf, sscanf, vscanf, vfscanf, and vsscanf to their
+	__isoc99_ variants based only on __GLIBC_USE (DEPRECATED_SCANF).
+	* wcsmbs/wchar.h: wcsmbs/bits/wchar-ldbl.h: Likewise for
+	wscanf, fwscanf, swscanf, vwscanf, vfwscanf, and vswscanf.
+
+	* libio/iovsscanf.c
+	* libio/fwscanf.c
+	* libio/iovswscanf.c
+	* libio/swscanf.c
+	* libio/vscanf.c
+	* libio/vwscanf.c
+	* libio/wscanf.c
+	* stdio-common/fscanf.c
+	* stdio-common/scanf.c
+	* stdio-common/vfscanf.c
+	* stdio-common/vfwscanf.c
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.c
+	* sysdeps/ieee754/ldbl-opt/nldbl-fscanf.c
+	* sysdeps/ieee754/ldbl-opt/nldbl-fwscanf.c
+	* sysdeps/ieee754/ldbl-opt/nldbl-iovfscanf.c
+	* sysdeps/ieee754/ldbl-opt/nldbl-scanf.c
+	* sysdeps/ieee754/ldbl-opt/nldbl-sscanf.c
+	* sysdeps/ieee754/ldbl-opt/nldbl-swscanf.c
+	* sysdeps/ieee754/ldbl-opt/nldbl-vfscanf.c
+	* sysdeps/ieee754/ldbl-opt/nldbl-vfwscanf.c
+	* sysdeps/ieee754/ldbl-opt/nldbl-vscanf.c
+	* sysdeps/ieee754/ldbl-opt/nldbl-vsscanf.c
+	* sysdeps/ieee754/ldbl-opt/nldbl-vswscanf.c
+	* sysdeps/ieee754/ldbl-opt/nldbl-vwscanf.c
+	* sysdeps/ieee754/ldbl-opt/nldbl-wscanf.c:
+	Override __GLIBC_USE_DEPRECATED_SCANF to 1.
+
+	* stdio-common/sscanf.c: Likewise.  Remove ldbl_hidden_def for __sscanf.
+	* stdio-common/isoc99_sscanf.c: Add libc_hidden_def for __isoc99_sscanf.
+	* include/stdio.h: Provide libc_hidden_proto for __isoc99_sscanf,
+	not sscanf.
+	[!__GLIBC_USE (DEPRECATED_SCANF)]: Define sscanf as __isoc99_scanf
+	with a preprocessor macro.
+
+	* stdio-common/bug21.c, stdio-common/scanf14.c:
+	Use %ms instead of %as, %mS instead of %aS, %m[] instead of %a[];
+	remove DIAG_IGNORE_NEEDS_COMMENT for -Wformat.
+	* stdio-common/scanf16.c: Likewise.  Add __attribute__ ((format (scanf)))
+	to xscanf, xfscanf, xsscanf.
+
+	* stdio-common/scanf14a.c: New copy of scanf14.c which still uses
+	%as, %aS, %a[].  Remove DIAG_IGNORE_NEEDS_COMMENT for -Wformat.
+	* stdio-common/scanf16a.c: New copy of scanf16.c which still uses
+	%as, %aS, %a[].  Add __attribute__ ((format (scanf))) to xscanf,
+	xfscanf, xsscanf.
+	* stdio-common/scanf15.c, stdio-common/scanf17.c: No need to
+	override feature selection macros or provide definitions of u_char etc.
+	* stdio-common/Makefile (tests): Add scanf14a and scanf16a.
+	(CFLAGS-scanf15.c, CFLAGS-scanf17.c): Remove.
+	(CFLAGS-scanf14a.c, CFLAGS-scanf16a.c): New.  Compile these files
+	with -std=gnu89.
+
 2019-01-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add

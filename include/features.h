@@ -140,6 +140,7 @@
 #undef	__USE_FORTIFY_LEVEL
 #undef	__KERNEL_STRICT_NAMES
 #undef	__GLIBC_USE_DEPRECATED_GETS
+#undef	__GLIBC_USE_DEPRECATED_SCANF
 
 /* Suppress kernel-name space pollution unless user expressedly asks
    for it.  */
@@ -399,6 +400,27 @@
 # define __GLIBC_USE_DEPRECATED_GETS 0
 #else
 # define __GLIBC_USE_DEPRECATED_GETS 1
+#endif
+
+/* GNU formerly extended the scanf functions with modified format
+   specifiers %as, %aS, and %a[...] that allocate a buffer for the
+   input using malloc.  This extension conflicts with ISO C99, which
+   defines %a as a standalone format specifier that reads a floating-
+   point number; moreover, POSIX.1-2008 provides the same feature
+   using the modifier letter 'm' instead (%ms, %mS, %m[...]).
+
+   We now follow C99 unless GNU extensions are active and the compiler
+   is specifically in C89 or C++98 mode (strict or not).  For
+   instance, with GCC, -std=gnu11 will have C99-compliant scanf with
+   or without -D_GNU_SOURCE, but -std=c89 -D_GNU_SOURCE will have the
+   old extension.  */
+#if defined __USE_GNU &&						\
+  (defined __cplusplus							\
+   ? (__cplusplus < 201103L && !defined __GXX_EXPERIMENTAL_CXX0X__)	\
+   : (!defined __STDC_VERSION__ || __STDC_VERSION__ < 199901L))
+# define __GLIBC_USE_DEPRECATED_SCANF 1
+#else
+# define __GLIBC_USE_DEPRECATED_SCANF 0
 #endif
 
 /* Get definitions of __STDC_* predefined macros, if the compiler has

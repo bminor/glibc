@@ -1,8 +1,28 @@
+/* Copyright (C) 2007-2019 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
-#include <libc-diag.h>
+
+#if __GLIBC_USE_DEPRECATED_SCANF
+# error "This file should not be compiled with deprecated scanf"
+#endif
 
 #define FAIL() \
   do {							\
@@ -24,14 +44,7 @@ main (void)
     FAIL ();
   else if (f != 0.25 || memcmp (c, "s x", 3) != 0)
     FAIL ();
-  /* GCC in C99 mode treats %a as the C99 format expecting float *,
-     but glibc with _GNU_SOURCE treats %as as the GNU allocation
-     extension, so resulting in "warning: format '%a' expects argument
-     of type 'float *', but argument 3 has type 'char **'".  This
-     applies to the other %as, %aS and %a[] formats below as well.  */
-  DIAG_PUSH_NEEDS_COMMENT;
-  DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wformat");
-  if (sscanf (" 1.25s x", "%as%2c", &sp, c) != 2)
+  if (sscanf (" 1.25s x", "%ms%2c", &sp, c) != 2)
     FAIL ();
   else
     {
@@ -40,15 +53,11 @@ main (void)
       memset (sp, 'x', sizeof "1.25s");
       free (sp);
     }
-  DIAG_POP_NEEDS_COMMENT;
   if (sscanf (" 2.25s x", "%las%2c", &d, c) != 2)
     FAIL ();
   else if (d != 2.25 || memcmp (c, " x", 2) != 0)
     FAIL ();
-  /* See explanation above.  */
-  DIAG_PUSH_NEEDS_COMMENT;
-  DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wformat");
-  if (sscanf (" 3.25S x", "%4aS%3c", &lsp, c) != 2)
+  if (sscanf (" 3.25S x", "%4mS%3c", &lsp, c) != 2)
     FAIL ();
   else
     {
@@ -57,7 +66,7 @@ main (void)
       memset (lsp, 'x', sizeof L"3.25");
       free (lsp);
     }
-  if (sscanf ("4.25[0-9.] x", "%a[0-9.]%8c", &sp, c) != 2)
+  if (sscanf ("4.25[0-9.] x", "%m[0-9.]%8c", &sp, c) != 2)
     FAIL ();
   else
     {
@@ -66,7 +75,6 @@ main (void)
       memset (sp, 'x', sizeof "4.25");
       free (sp);
     }
-  DIAG_POP_NEEDS_COMMENT;
   if (sscanf ("5.25[0-9.] x", "%la[0-9.]%2c", &d, c) != 2)
     FAIL ();
   else if (d != 5.25 || memcmp (c, " x", 2) != 0)
@@ -95,10 +103,7 @@ main (void)
 	FAIL ();
       if (fseek (fp, 0, SEEK_SET) != 0)
 	FAIL ();
-      /* See explanation above.  */
-      DIAG_PUSH_NEEDS_COMMENT;
-      DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wformat");
-      if (fscanf (fp, "%as%2c", &sp, c) != 2)
+      if (fscanf (fp, "%ms%2c", &sp, c) != 2)
 	FAIL ();
       else
 	{
@@ -107,16 +112,12 @@ main (void)
 	  memset (sp, 'x', sizeof "1.25s");
 	  free (sp);
 	}
-      DIAG_POP_NEEDS_COMMENT;
 
       if (freopen (fname, "r", stdin) == NULL)
 	FAIL ();
       else
 	{
-	  /* See explanation above.  */
-	  DIAG_PUSH_NEEDS_COMMENT;
-	  DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wformat");
-	  if (scanf ("%as%2c", &sp, c) != 2)
+	  if (scanf ("%ms%2c", &sp, c) != 2)
 	    FAIL ();
 	  else
 	    {
@@ -125,7 +126,6 @@ main (void)
 	      memset (sp, 'x', sizeof "1.25s");
 	      free (sp);
 	    }
-	  DIAG_POP_NEEDS_COMMENT;
 	}
 
       fclose (fp);

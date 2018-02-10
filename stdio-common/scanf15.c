@@ -1,17 +1,28 @@
-#undef _GNU_SOURCE
-#define _XOPEN_SOURCE 600
-#undef _LIBC
-#undef _IO_MTSAFE_IO
-/* The following macro definitions are a hack.  They word around disabling
-   the GNU extension while still using a few internal headers.  */
-#define u_char unsigned char
-#define u_short unsigned short
-#define u_int unsigned int
-#define u_long unsigned long
+/* Copyright (C) 2007-2019 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
+
+#if __GLIBC_USE_DEPRECATED_SCANF
+# error "This file should not be compiled with deprecated scanf"
+#endif
 
 #define FAIL() \
   do {							\

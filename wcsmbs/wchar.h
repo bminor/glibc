@@ -632,13 +632,11 @@ extern int swscanf (const wchar_t *__restrict __s,
 		    const wchar_t *__restrict __format, ...)
      __THROW /* __attribute__ ((__format__ (__wscanf__, 2, 3))) */;
 
-# if defined __USE_ISOC99 && !defined __USE_GNU \
-     && (!defined __LDBL_COMPAT || !defined __REDIRECT) \
-     && (defined __STRICT_ANSI__ || defined __USE_XOPEN2K)
+/* For historical reasons, the C99-compliant versions of the scanf
+   functions are at alternative names.  When __LDBL_COMPAT is in
+   effect, this is handled in bits/wchar-ldbl.h.  */
+#if !__GLIBC_USE (DEPRECATED_SCANF) && !defined __LDBL_COMPAT
 #  ifdef __REDIRECT
-/* For strict ISO C99 or POSIX compliance disallow %as, %aS and %a[
-   GNU extension which conflicts with valid %a followed by letter
-   s, S or [.  */
 extern int __REDIRECT (fwscanf, (__FILE *__restrict __stream,
 				 const wchar_t *__restrict __format, ...),
 		       __isoc99_fwscanf)

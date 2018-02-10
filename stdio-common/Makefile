@@ -65,6 +65,8 @@ tests := tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 tst-vfprintf-mbs-prec \
 	 tst-scanf-round \
 	 tst-renameat2 tst-bz11319 tst-bz11319-fortify2 \
+	 scanf14a scanf16a \
+
 
 test-srcs = tst-unbputc tst-printf tst-printfsz-islongdouble
 
@@ -146,13 +148,11 @@ CFLAGS-isoc99_scanf.c += -fexceptions
 CFLAGS-errlist.c += $(fno-unit-at-a-time)
 CFLAGS-siglist.c += $(fno-unit-at-a-time)
 
-# The following is a hack since we must compile scanf1{5,7}.c without any
-# GNU extension.  The latter are needed, though, when internal headers
-# are used.  So made sure we see the installed headers first.
-CFLAGS-scanf15.c += -I../libio -I../stdlib -I../wcsmbs -I../time -I../string \
-		   -I../wctype
-CFLAGS-scanf17.c += -I../libio -I../stdlib -I../wcsmbs -I../time -I../string \
-		   -I../wctype
+# scanf14a.c and scanf16a.c test a deprecated extension which is no
+# longer visible under most conformance levels; see the source files
+# for more detail.
+CFLAGS-scanf14a.c += -std=gnu89
+CFLAGS-scanf16a.c += -std=gnu89
 
 CFLAGS-bug3.c += -DOBJPFX=\"$(objpfx)\"
 CFLAGS-bug4.c += -DOBJPFX=\"$(objpfx)\"

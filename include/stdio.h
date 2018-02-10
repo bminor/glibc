@@ -64,8 +64,18 @@ extern int __isoc99_vscanf (const char *__restrict __format,
 extern int __isoc99_vsscanf (const char *__restrict __s,
 			     const char *__restrict __format,
 			     __gnuc_va_list __arg) __THROW;
+libc_hidden_proto (__isoc99_sscanf)
 libc_hidden_proto (__isoc99_vsscanf)
 libc_hidden_proto (__isoc99_vfscanf)
+
+/* Internal uses of sscanf should call the C99-compliant version.
+   Unfortunately, symbol redirection is not transitive, so the
+   __REDIRECT in the public header does not link up with the above
+   libc_hidden_proto.  Bridge the gap with a macro.  */
+#  if !__GLIBC_USE (DEPRECATED_SCANF)
+#   undef sscanf
+#   define sscanf __isoc99_sscanf
+#  endif
 
 /* Prototypes for compatibility functions.  */
 extern FILE *__new_tmpfile (void);
@@ -171,7 +181,6 @@ libc_hidden_proto (__dprintf)
 libc_hidden_proto (fprintf)
 libc_hidden_proto (vfprintf)
 libc_hidden_proto (sprintf)
-libc_hidden_proto (sscanf)
 libc_hidden_proto (fwrite)
 libc_hidden_proto (perror)
 libc_hidden_proto (remove)
