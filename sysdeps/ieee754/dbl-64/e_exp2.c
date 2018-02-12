@@ -1,7 +1,6 @@
-/* Double-precision floating point 2^x.
-   Copyright (C) 1997-2018 Free Software Foundation, Inc.
+/* Double-precision 2^x function.
+   Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Geoffrey Keating <geoffk@ozemail.com.au>
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,120 +16,130 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* The basic design here is from
-   Shmuel Gal and Boris Bachelis, "An Accurate Elementary Mathematical
-   Library for the IEEE Floating Point Standard", ACM Trans. Math. Soft.,
-   17 (1), March 1991, pp. 26-45.
-   It has been slightly modified to compute 2^x instead of e^x.
-   */
-#include <stdlib.h>
-#include <float.h>
-#include <ieee754.h>
 #include <math.h>
-#include <fenv.h>
-#include <inttypes.h>
+#include <stdint.h>
 #include <math-barriers.h>
-#include <math_private.h>
-#include <fenv_private.h>
-#include <math-underflow.h>
+#include <math-narrow-eval.h>
+#include "math_config.h"
 
-#include "t_exp2.h"
+#define N (1 << EXP_TABLE_BITS)
+#define Shift __exp_data.exp2_shift
+#define T __exp_data.tab
+#define C1 __exp_data.exp2_poly[0]
+#define C2 __exp_data.exp2_poly[1]
+#define C3 __exp_data.exp2_poly[2]
+#define C4 __exp_data.exp2_poly[3]
+#define C5 __exp_data.exp2_poly[4]
 
-static const double TWO1023 = 8.988465674311579539e+307;
-static const double TWOM1000 = 9.3326361850321887899e-302;
+/* Handle cases that may overflow or underflow when computing the result that
+   is scale*(1+TMP) without intermediate rounding.  The bit representation of
+   scale is in SBITS, however it has a computed exponent that may have
+   overflown into the sign bit so that needs to be adjusted before using it as
+   a double.  (int32_t)KI is the k used in the argument reduction and exponent
+   adjustment of scale, positive k here means the result may overflow and
+   negative k means the result may underflow.  */
+static inline double
+specialcase (double_t tmp, uint64_t sbits, uint64_t ki)
+{
+  double_t scale, y;
+
+  if ((ki & 0x80000000) == 0)
+    {
+      /* k > 0, the exponent of scale might have overflowed by 1.  */
+      sbits -= 1ull << 52;
+      scale = asdouble (sbits);
+      y = 2 * (scale + scale * tmp);
+      return check_oflow (y);
+    }
+  /* k < 0, need special care in the subnormal range.  */
+  sbits += 1022ull << 52;
+  scale = asdouble (sbits);
+  y = scale + scale * tmp;
+  if (y < 1.0)
+    {
+      /* Round y to the right precision before scaling it into the subnormal
+	 range to avoid double rounding that can cause 0.5+E/2 ulp error where
+	 E is the worst-case ulp error outside the subnormal range.  So this
+	 is only useful if the goal is better than 1 ulp worst-case error.  */
+      double_t hi, lo;
+      lo = scale - y + scale * tmp;
+      hi = 1.0 + y;
+      lo = 1.0 - hi + y + lo;
+      y = math_narrow_eval (hi + lo) - 1.0;
+      /* Avoid -0.0 with downward rounding.  */
+      if (WANT_ROUNDING && y == 0.0)
+	y = 0.0;
+      /* The underflow exception needs to be signaled explicitly.  */
+      math_force_eval (math_opt_barrier (0x1p-1022) * 0x1p-1022);
+    }
+  y = 0x1p-1022 * y;
+  return check_uflow (y);
+}
+
+/* Top 12 bits of a double (sign and exponent bits).  */
+static inline uint32_t
+top12 (double x)
+{
+  return asuint64 (x) >> 52;
+}
 
 double
 __ieee754_exp2 (double x)
 {
-  static const double himark = (double) DBL_MAX_EXP;
-  static const double lomark = (double) (DBL_MIN_EXP - DBL_MANT_DIG - 1);
+  uint32_t abstop;
+  uint64_t ki, idx, top, sbits;
+  /* double_t for better performance on targets with FLT_EVAL_METHOD==2.  */
+  double_t kd, r, r2, scale, tail, tmp;
 
-  /* Check for usual case.  */
-  if (__glibc_likely (isless (x, himark)))
+  abstop = top12 (x) & 0x7ff;
+  if (__glibc_unlikely (abstop - top12 (0x1p-54)
+			>= top12 (512.0) - top12 (0x1p-54)))
     {
-      /* Exceptional cases:  */
-      if (__glibc_unlikely (!isgreaterequal (x, lomark)))
+      if (abstop - top12 (0x1p-54) >= 0x80000000)
+	/* Avoid spurious underflow for tiny x.  */
+	/* Note: 0 is common input.  */
+	return WANT_ROUNDING ? 1.0 + x : 1.0;
+      if (abstop >= top12 (1024.0))
 	{
-	  if (isinf (x))
-	    /* e^-inf == 0, with no error.  */
-	    return 0;
-	  else
-	    /* Underflow */
-	    return TWOM1000 * TWOM1000;
+	  if (asuint64 (x) == asuint64 (-INFINITY))
+	    return 0.0;
+	  if (abstop >= top12 (INFINITY))
+	    return 1.0 + x;
+	  if (!(asuint64 (x) >> 63))
+	    return __math_oflow (0);
+	  else if (asuint64 (x) >= asuint64 (-1075.0))
+	    return __math_uflow (0);
 	}
-
-      static const double THREEp42 = 13194139533312.0;
-      int tval, unsafe;
-      double rx, x22, result;
-      union ieee754_double ex2_u, scale_u;
-
-      if (fabs (x) < DBL_EPSILON / 4.0)
-	return 1.0 + x;
-
-      {
-	SET_RESTORE_ROUND_NOEX (FE_TONEAREST);
-
-	/* 1. Argument reduction.
-	   Choose integers ex, -256 <= t < 256, and some real
-	   -1/1024 <= x1 <= 1024 so that
-	   x = ex + t/512 + x1.
-
-	   First, calculate rx = ex + t/512.  */
-	rx = x + THREEp42;
-	rx -= THREEp42;
-	x -= rx;  /* Compute x=x1. */
-	/* Compute tval = (ex*512 + t)+256.
-	   Now, t = (tval mod 512)-256 and ex=tval/512  [that's mod, NOT %;
-	   and /-round-to-nearest not the usual c integer /].  */
-	tval = (int) (rx * 512.0 + 256.0);
-
-	/* 2. Adjust for accurate table entry.
-	   Find e so that
-	   x = ex + t/512 + e + x2
-	   where -1e6 < e < 1e6, and
-	   (double)(2^(t/512+e))
-	   is accurate to one part in 2^-64.  */
-
-	/* 'tval & 511' is the same as 'tval%512' except that it's always
-	   positive.
-	   Compute x = x2.  */
-	x -= exp2_deltatable[tval & 511];
-
-	/* 3. Compute ex2 = 2^(t/512+e+ex).  */
-	ex2_u.d = exp2_accuratetable[tval & 511];
-	tval >>= 9;
-	/* x2 is an integer multiple of 2^-54; avoid intermediate
-	   underflow from the calculation of x22 * x.  */
-	unsafe = abs (tval) >= -DBL_MIN_EXP - 56;
-	ex2_u.ieee.exponent += tval >> unsafe;
-	scale_u.d = 1.0;
-	scale_u.ieee.exponent += tval - (tval >> unsafe);
-
-	/* 4. Approximate 2^x2 - 1, using a fourth-degree polynomial,
-	   with maximum error in [-2^-10-2^-30,2^-10+2^-30]
-	   less than 10^-19.  */
-
-	x22 = (((.0096181293647031180
-		 * x + .055504110254308625)
-		* x + .240226506959100583)
-	       * x + .69314718055994495) * ex2_u.d;
-	math_opt_barrier (x22);
-      }
-
-      /* 5. Return (2^x2-1) * 2^(t/512+e+ex) + 2^(t/512+e+ex).  */
-      result = x22 * x + ex2_u.d;
-
-      if (!unsafe)
-	return result;
-      else
-	{
-	  result *= scale_u.d;
-	  math_check_force_underflow_nonneg (result);
-	  return result;
-	}
+      if (2 * asuint64 (x) > 2 * asuint64 (928.0))
+	/* Large x is special cased below.  */
+	abstop = 0;
     }
-  else
-    /* Return x, if x is a NaN or Inf; or overflow, otherwise.  */
-    return TWO1023 * x;
+
+  /* exp2(x) = 2^(k/N) * 2^r, with 2^r in [2^(-1/2N),2^(1/2N)].  */
+  /* x = k/N + r, with int k and r in [-1/2N, 1/2N].  */
+  kd = math_narrow_eval (x + Shift);
+  ki = asuint64 (kd); /* k.  */
+  kd -= Shift; /* k/N for int k.  */
+  r = x - kd;
+  /* 2^(k/N) ~= scale * (1 + tail).  */
+  idx = 2 * (ki % N);
+  top = ki << (52 - EXP_TABLE_BITS);
+  tail = asdouble (T[idx]);
+  /* This is only a valid scale when -1023*N < k < 1024*N.  */
+  sbits = T[idx + 1] + top;
+  /* exp2(x) = 2^(k/N) * 2^r ~= scale + scale * (tail + 2^r - 1).  */
+  /* Evaluation is optimized assuming superscalar pipelined execution.  */
+  r2 = r * r;
+  /* Without fma the worst case error is 0.5/N ulp larger.  */
+  /* Worst case error is less than 0.5+0.86/N+(abs poly error * 2^53) ulp.  */
+  tmp = tail + r * C1 + r2 * (C2 + r * C3) + r2 * r2 * (C4 + r * C5);
+  if (__glibc_unlikely (abstop == 0))
+    return specialcase (tmp, sbits, ki);
+  scale = asdouble (sbits);
+  /* Note: tmp == 0 or |tmp| > 2^-65 and scale > 2^-928, so there
+     is no spurious underflow here even without fma.  */
+  return scale + scale * tmp;
 }
+#ifndef __ieee754_exp2
 strong_alias (__ieee754_exp2, __exp2_finite)
+#endif

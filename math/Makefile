@@ -42,7 +42,7 @@ extra-libs-others = $(extra-libs)
 libm-support = s_lib_version s_matherr s_signgam			\
 	       fclrexcpt fgetexcptflg fraiseexcpt fsetexcptflg		\
 	       ftestexcept fegetround fesetround fegetenv feholdexcpt	\
-	       fesetenv feupdateenv t_exp fedisblxcpt feenablxcpt	\
+	       fesetenv feupdateenv fedisblxcpt feenablxcpt	\
 	       fegetexcept fesetexcept fetestexceptflag fegetmode	\
 	       fesetmode
 
@@ -127,7 +127,7 @@ type-ldouble-yes := ldouble
 type-double-suffix :=
 type-double-routines := branred doasin dosincos mpa mpatan2	\
 		       k_rem_pio2 mpatan mpsqrt mptan sincos32	\
-		       sincostab
+		       sincostab math_err e_exp_data
 
 # float support
 type-float-suffix := f

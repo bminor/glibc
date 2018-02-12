@@ -108,12 +108,12 @@ __ieee754_pow (double x, double y)
 	a2 = (a - a1) + aa;
 
 	/* Maximum relative error RElog of log1 is 1.0e-21 (69.7 bits).
-	   Maximum relative error REexp of __exp1 is 8.8e-22 (69.9 bits).
+	   Maximum relative error REexp of __exp1 is 1.0e-18 (59.8 bits).
 	   We actually compute exp ((1 + RElog) * log (x) * y) * (1 + REexp).
 	   Since RElog/REexp are tiny and log (x) * y is at most log (DBL_MAX),
 	   this is equivalent to pow (x, y) * (1 + 710 * RElog + REexp).
-	   So the relative error is 710 * 1.0e-21 + 8.8e-22 = 7.1e-19
-	   (60.2 bits).  The worst-case ULP error is 0.5064.  */
+	   So the relative error is 710 * 1.0e-21 + 1.0e-18 = 1.7e-18
+	   (59 bits).  The worst-case ULP error is 0.515.  */
 
 	retval = __exp1 (a1, a2);
       }
