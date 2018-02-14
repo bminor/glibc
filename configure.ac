@@ -144,6 +144,13 @@ AC_ARG_WITH([clang],
 	    [with_clang=$withval],
 	    [with_clang=no])
 LIBC_CONFIG_VAR([with-clang], [$with_clang])
+dnl This is a temporary hack, to help with BFD LD vs LLD debugging.
+AC_ARG_WITH([lld],
+	    AC_HELP_STRING([--with-lld],
+			   [if building/linking with lld (temporary)]),
+	    [with_lld=$withval],
+	    [with_lld=no])
+LIBC_CONFIG_VAR([with-lld], [$with_lld])
 
 AC_ARG_WITH([headers],
 	    AC_HELP_STRING([--with-headers=PATH],
@@ -928,12 +935,15 @@ AC_PROG_LN_S
 
 LIBC_PROG_BINUTILS
 
+if test "$with_clang" = no; then
 # Accept binutils 2.25 or newer.
 AC_CHECK_PROG_VER(AS, $AS, --version,
 		  [GNU assembler.* \([0-9]*\.[0-9.]*\)],
 		  [2.1[0-9][0-9]*|2.2[5-9]*|2.[3-9][0-9]*|[3-9].*|[1-9][0-9]*],
 		  AS=: critic_missing="$critic_missing as")
+fi
 
+if test "$with_lld" = no; then
 if test -n "`$LD --version | sed -n 's/^GNU \(gold\).*$/\1/p'`"; then
   # Accept gold 1.14 or higher
   AC_CHECK_PROG_VER(LD, $LD, --version,
@@ -945,6 +955,7 @@ else
 		    [GNU ld.* \([0-9][0-9]*\.[0-9.]*\)],
 		    [2.1[0-9][0-9]*|2.2[5-9]*|2.[3-9][0-9]*|[3-9].*|[1-9][0-9]*],
 		    LD=: critic_missing="$critic_missing GNU ld")
+fi
 fi
 
 # These programs are version sensitive.

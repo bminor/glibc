@@ -762,6 +762,7 @@ with_gd_lib
 with_binutils
 with_selinux
 with_clang
+with_lld
 with_headers
 with_default_link
 enable_sanity_checks
@@ -1489,6 +1490,7 @@ Optional Packages:
   --with-binutils=PATH    specify location of binutils (as and ld)
   --with-selinux          if building with SELinux support
   --with-clang            if building with clang (temporary)
+  --with-lld              if building/linking with lld (temporary)
   --with-headers=PATH     location of system headers to use (for example
                           /usr/src/linux/include) [default=compiler default]
   --with-default-link     do not use explicit linker scripts
@@ -3339,6 +3341,16 @@ fi
 config_vars="$config_vars
 with-clang = $with_clang"
 
+# Check whether --with-lld was given.
+if test "${with_lld+set}" = set; then :
+  withval=$with_lld; with_lld=$withval
+else
+  with_lld=no
+fi
+
+config_vars="$config_vars
+with-lld = $with_lld"
+
 
 # Check whether --with-headers was given.
 if test "${with_headers+set}" = set; then :
@@ -4478,6 +4490,7 @@ $as_echo "$libc_cv_prog_ld_gnu" >&6; }
 gnu_ld=$libc_cv_prog_ld_gnu
 
 
+if test "$with_clang" = no; then
 # Accept binutils 2.25 or newer.
 for ac_prog in $AS
 do
@@ -4542,7 +4555,9 @@ if test $ac_verc_fail = yes; then
   AS=: critic_missing="$critic_missing as"
 fi
 
+fi
 
+if test "$with_lld" = no; then
 if test -n "`$LD --version | sed -n 's/^GNU \(gold\).*$/\1/p'`"; then
   # Accept gold 1.14 or higher
   for ac_prog in $LD
@@ -4672,6 +4687,7 @@ if test $ac_verc_fail = yes; then
   LD=: critic_missing="$critic_missing GNU ld"
 fi
 
+fi
 fi
 
 # These programs are version sensitive.

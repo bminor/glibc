@@ -444,9 +444,10 @@ $(objpfx)librtld.map: $(objpfx)dl-allobjs.os $(common-objpfx)libc_pic.a
 	rm -f $@.o
 	mv -f $@T $@
 
+# For lld, add to regexp below for optional address and size to be at front of line.
 $(objpfx)librtld.mk: $(objpfx)librtld.map Makefile
 	LC_ALL=C \
-	sed -n 's@^$(common-objpfx)\([^(]*\)(\([^)]*\.os\)) *.*$$@\1 \2@p' \
+	sed -n 's@^[0-9a-f ]*$(common-objpfx)\([^(]*\)(\([^)]*\.os\)) *.*$$@\1 \2@p' \
 	    $< | \
 	while read lib file; do \
 	  case $$lib in \

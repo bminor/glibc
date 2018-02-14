@@ -521,8 +521,13 @@ CFLAGS-printers-tests := -O0 -ggdb3 -DIS_IN_build
 
 ifeq (yes,$(build-shared))
 # These indicate whether to link using the built ld.so or the installed one.
+ifeq ($(with-lld),no)
 installed-rtld-LDFLAGS = -Wl,-dynamic-linker=$(rtlddir)/$(rtld-installed-name)
 built-rtld-LDFLAGS = -Wl,-dynamic-linker=$(elf-objpfx)ld.so
+else
+installed-rtld-LDFLAGS = -Wl,-dynamic-linker,$(rtlddir)/$(rtld-installed-name)
+built-rtld-LDFLAGS = -Wl,-dynamic-linker,$(elf-objpfx)ld.so
+endif
 
 ifndef rtld-LDFLAGS
 rtld-LDFLAGS = $(installed-rtld-LDFLAGS)
@@ -906,6 +911,12 @@ ifeq ($(with-clang),yes)
 +cflags += -Wno-duplicate-decl-specifier
 # Non-string format arguments come from debugging prints in ld.so.
 +cflags += -Wno-format-security
+
+ifeq ($(with-lld),yes)
+LDFLAGS.so += -fuse-ld=lld
+LDFLAGS-rtld += -fuse-ld=lld
+LDFLAGS += -fuse-ld=lld
+endif
 
 endif	# with-clang == yes
 

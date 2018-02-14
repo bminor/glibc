@@ -392,7 +392,13 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
 #endif
   _dl_setup_hash (&GL(dl_rtld_map));
   GL(dl_rtld_map).l_real = &GL(dl_rtld_map);
+#if defined(__clang__)
+  /* Work around an lld complaint that _begin cannot have a reloc and
+     also be absolute because of _begin=0 on linker line.  */
+  GL(dl_rtld_map).l_map_start = (ElfW(Addr)) 0;
+#else
   GL(dl_rtld_map).l_map_start = (ElfW(Addr)) _begin;
+#endif
   GL(dl_rtld_map).l_map_end = (ElfW(Addr)) _end;
   GL(dl_rtld_map).l_text_end = (ElfW(Addr)) _etext;
   /* Copy the TLS related data if necessary.  */
