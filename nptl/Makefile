@@ -678,14 +678,14 @@ $(objpfx)tst-cleanup0-cmp.out: tst-cleanup0.expect $(objpfx)tst-cleanup0.out
 	$(evaluate-test)
 
 $(objpfx)crti.o: $(objpfx)pt-crti.o
-	ln -f $< $@
+	$(LN_S) -f $< $@
 
 ifneq ($(multidir),.)
 $(objpfx)$(multidir)/crti.o: $(objpfx)crti.o $(objpfx)$(multidir)/
-	ln -f $< $@
+	$(LN_S) -f $< $@
 
 $(objpfx)$(multidir)/crtn.o: $(objpfx)crtn.o $(objpfx)$(multidir)/
-	ln -f $< $@
+	$(LN_S) -f $< $@
 endif
 
 generated += libpthread_nonshared.a \

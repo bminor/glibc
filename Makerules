@@ -737,7 +737,7 @@ endif
 ifeq (,$(filter sunrpc,$(subdirs)))
 $(common-objpfx)linkobj/libc_pic.a: $(common-objpfx)libc_pic.a
 	$(make-target-directory)
-	ln -f $< $@
+	$(LN_S) -f $< $@
 else
 $(common-objpfx)linkobj/libc_pic.a: $(common-objpfx)libc_pic.a \
 				    $(common-objpfx)sunrpc/librpc_compat_pic.a
@@ -1095,7 +1095,7 @@ mv -f $@.new $@
 endef
 define make-link-multidir
 $(make-target-directory)
-ln -f $(objpfx)/$(@F) $@
+$(LN_S) -f $(objpfx)/$(@F) $@
 endef
 endif
 

@@ -163,7 +163,7 @@ endif
 $(objpfx)x86_64/tst-x86_64mod-1.os: $(objpfx)tst-x86_64mod-1.os
 	$(make-target-directory)
 	rm -f $@
-	ln $< $@
+	$(LN_S) $< $@
 
 do-tests-clean common-mostlyclean: tst-x86_64-1-clean
 
@@ -174,4 +174,4 @@ tst-x86_64-1-clean:
 $(objpfx)x86_64/tst-platformmod-2.os: $(objpfx)tst-platformmod-2.os
 	$(make-target-directory)
 	rm -f $@
-	ln $< $@
+	$(LN_S) $< $@
