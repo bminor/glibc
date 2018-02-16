@@ -1,3 +1,8 @@
+2018-02-19  Rical Jasan  <ricaljasan@pacific.net>
+
+	[BZ #6889]
+	* manual/filesys.texi (get_current_dir_name): Clarify behaviour.
+
 2018-02-16  Rical Jasan  <ricaljasan@pacific.net>
 
 	* manual/platform.texi (__riscv_flush_icache): Fix @deftypefun
