@@ -1,3 +1,8 @@
+2018-02-16  Rical Jasan  <ricaljasan@pacific.net>
+
+	* manual/platform.texi (__riscv_flush_icache): Fix @deftypefun
+	syntax.
+
 2018-02-09  Rical Jasan  <ricaljasan@pacific.net>
 
 	* manual/creature.texi: Convert references to gcc.info to gcc.
