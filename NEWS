@@ -13,6 +13,7 @@ The following bugs are resolved with this release:
     configured with --enable-default-pie
   [22735] Misleading typo in time.h source comment regarding CLOCKS_PER_SECOND
   [22797] Linux: use reserved name __key in pkey_get
+  [22818] posix/tst-glob_lstat_compat failure on alpha
   [22827] RISC-V ELF64 parser mis-reads flag in ldconfig
 
 
