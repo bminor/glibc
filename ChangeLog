@@ -1,3 +1,9 @@
+2018-02-18  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #22818]
+	* posix/tst-glob_lstat_compat.c [__alpha__] (glob): Access
+	the GLIBC_2.1 version.
+
 2018-02-02  Sean McKean  <smckean83@gmail.com>
 
 	[BZ #22735]
