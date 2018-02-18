@@ -488,6 +488,7 @@ The following bugs are resolved with this release:
   [21326] libc: C99 functions are not declared for C++11 and later if
     _GNU_SOURCE is not predefined by g++
   [21457] libc: sys/ucontext.h namespace
+  [21508] locale: intl/tst-gettext failure with latest msgfmt
   [21530] libc: tmpfile() should be implemented using O_TMPFILE
   [21660] math: GCC fails to compile a formula with tgmath.h
   [21672] nptl: sys-libs/glibc on ia64 crashes on thread exit: signal
