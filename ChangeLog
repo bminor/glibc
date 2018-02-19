@@ -1,5 +1,8 @@
 2018-02-20  Rical Jasan  <ricaljasan@pacific.net>
 
+	* manual/creature.texi (_ISOC99_SOURCE): Update the dated
+	description.
+
 	[BZ #16335]
 	* manual/creature.texi (_POSIX_C_SOURCE): Document special values
 	of 199606L, 200112L, and 200809L.
