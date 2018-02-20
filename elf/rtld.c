@@ -324,7 +324,7 @@ DL_SYSINFO_IMPLEMENTATION
    is fine, too.  The latter is important here.  We can avoid setting
    up a temporary link map for ld.so if we can mark _rtld_global as
    hidden.  */
-#if 0 //def PI_STATIC_AND_HIDDEN
+#ifdef PI_STATIC_AND_HIDDEN
 # define DONT_USE_BOOTSTRAP_MAP	1
 #endif
 
