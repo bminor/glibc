@@ -67,9 +67,6 @@
 .err
 .endif
 #endif
-.short 0x1234
-.long .-__svml_d_trig_data
-.short 0x4321
 .rept 8
 .quad \value
 .endr
