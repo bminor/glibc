@@ -227,7 +227,7 @@ LOCAL_OBJECT_END(T_table)
 
 
 .section .text
-GLOBAL_LIBM_ENTRY(exp2)
+WEAK_LIBM_ENTRY(exp2)
 
 
 {.mfi
@@ -493,8 +493,14 @@ OUT_RANGE_exp2:
 }
 ;;
 
-GLOBAL_LIBM_END(exp2)
-libm_alias_double_other (exp2, exp2)
+WEAK_LIBM_END(exp2)
+libm_alias_double_other (__exp2, exp2)
+#ifdef SHARED
+.symver exp2,exp2@@GLIBC_2.29
+.weak __exp2_compat
+.set __exp2_compat,__exp2
+.symver __exp2_compat,exp2@GLIBC_2.2
+#endif
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

@@ -20,6 +20,9 @@
 #include <stdint.h>
 #include <math-barriers.h>
 #include <math-narrow-eval.h>
+#include <math-svid-compat.h>
+#include <shlib-compat.h>
+#include <libm-alias-double.h>
 #include "math_config.h"
 
 #define N (1 << EXP_TABLE_BITS)
@@ -91,7 +94,7 @@ top12 (double x)
 
 double
 SECTION
-__ieee754_exp (double x)
+__exp (double x)
 {
   uint32_t abstop;
   uint64_t ki, idx, top, sbits;
@@ -153,6 +156,14 @@ __ieee754_exp (double x)
      is no spurious underflow here even without fma.  */
   return scale + scale * tmp;
 }
-#ifndef __ieee754_exp
-strong_alias (__ieee754_exp, __exp_finite)
+#ifndef __exp
+hidden_def (__exp)
+strong_alias (__exp, __ieee754_exp)
+strong_alias (__exp, __exp_finite)
+# if LIBM_SVID_COMPAT
+versioned_symbol (libm, __exp, exp, GLIBC_2_29);
+libm_alias_double_other (__exp, exp)
+# else
+libm_alias_double (__exp, exp)
+# endif
 #endif

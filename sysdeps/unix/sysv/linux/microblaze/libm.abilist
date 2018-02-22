@@ -765,3 +765,5 @@ GLIBC_2.28 fmul F
 GLIBC_2.28 fmull F
 GLIBC_2.28 fsub F
 GLIBC_2.28 fsubl F
+GLIBC_2.29 exp F
+GLIBC_2.29 exp2 F

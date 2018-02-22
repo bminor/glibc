@@ -739,6 +739,12 @@ EXP_UNDERFLOW_ZERO:
 
 GLOBAL_IEEE754_END(exp)
 libm_alias_double_other (__exp, exp)
+#ifdef SHARED
+.symver exp,exp@@GLIBC_2.29
+.weak __exp_compat
+.set __exp_compat,__exp
+.symver __exp_compat,exp@GLIBC_2.2
+#endif
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

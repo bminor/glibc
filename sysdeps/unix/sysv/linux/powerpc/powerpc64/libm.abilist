@@ -488,6 +488,8 @@ GLIBC_2.28 fmul F
 GLIBC_2.28 fmull F
 GLIBC_2.28 fsub F
 GLIBC_2.28 fsubl F
+GLIBC_2.29 exp F
+GLIBC_2.29 exp2 F
 GLIBC_2.3 _LIB_VERSION D 0x4
 GLIBC_2.3 __clog10 F
 GLIBC_2.3 __clog10f F
