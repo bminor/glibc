@@ -71,8 +71,11 @@
 #define _LIBC	1
 
 /* Some files must be compiled with optimization on.  */
+/* This is a nuisance while experimenting; re-enable when done.  */
+#if 0
 #if !defined __ASSEMBLER__ && !defined __OPTIMIZE__
 # error "glibc cannot be compiled without optimization"
+#endif
 #endif
 
 /* -ffast-math cannot be applied to the C library, as it alters the ABI.
@@ -207,10 +210,15 @@
 
 /* Tacking on "\n\t#" to the section name makes gcc put it's bogus
    section attributes on what looks like a comment to the assembler.  */
+/* Clang sees newline and helpfully adds additional quotes; disable that.  */
+#if defined(__clang__)
+# define __sec_comment
+#else
 #ifdef HAVE_SECTION_QUOTES
 # define __sec_comment "\"\n\t#\""
 #else
 # define __sec_comment "\n\t#"
+#endif
 #endif
 #define link_warning(symbol, msg) \
   __make_section_unallocated (".gnu.warning." #symbol) \
