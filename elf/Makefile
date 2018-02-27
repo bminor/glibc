@@ -62,6 +62,9 @@ rtld-routines	= rtld $(all-dl-routines) dl-sysdep dl-environ dl-minimal \
   dl-error-minimal dl-conflict
 all-rtld-routines = $(rtld-routines) $(sysdep-rtld-routines)
 
+# Hack around a clang alias+optimization problem.
+CFLAGS-rtld.c += -O0
+
 CFLAGS-dl-runtime.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-dl-lookup.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-dl-iterate-phdr.c += $(uses-callbacks)
@@ -282,6 +285,8 @@ $(objpfx)tst-gnu2-tls1: $(objpfx)tst-gnu2-tls1mod.so
 tst-gnu2-tls1mod.so-no-z-defs = yes
 CFLAGS-tst-gnu2-tls1mod.c += -mtls-dialect=gnu2
 endif
+# Somehow configure is failing to notice that lld can't do protected data.
+ifeq ($(with-lld),no)
 ifeq (yes,$(have-protected-data))
 modules-names += tst-protected1moda tst-protected1modb
 tests += tst-protected1a tst-protected1b
@@ -296,6 +301,7 @@ tst-protected1modb.so-no-z-defs = yes
 test-xfail-tst-protected1a = yes
 test-xfail-tst-protected1b = yes
 endif
+endif # lld
 ifeq (yesyes,$(have-fpie)$(build-shared))
 modules-names += tst-piemod1
 tests += tst-pie1 tst-pie2
