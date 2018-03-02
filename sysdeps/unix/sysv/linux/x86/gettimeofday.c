@@ -18,7 +18,8 @@
 
 #include <sys/time.h>
 
-#ifdef SHARED
+/* Clang ifunc support works, but differently enough that this code breaks.  */
+#if defined(SHARED) && !defined(__clang__)
 
 # include <dl-vdso.h>
 # include <errno.h>
