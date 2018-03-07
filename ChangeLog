@@ -1,6 +1,26 @@
 2018-12-05  Zack Weinberg  <zackw@panix.com>
 	    Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
+	* misc/syslog.c: Include libioP.h, not iolibio.h.
+	(__vsyslog_internal): New function with the former body of
+	__vsyslog_chk; takes mode_flags argument same as
+	__v*printf_internal.  Call __vfprintf_internal directly.
+
+	(__vsyslog_chk): Now a wrapper around __vsyslog_internal.
+	Remove libc_hidden_def.
+	(__syslog, __syslog_chk): Use __vsyslog_internal.
+	(__vsyslog): Move to just below __syslog.  Use __vsyslog_internal.
+
+	* include/sys/syslog.h: Add multiple inclusion guard.
+	Add prototype for __vsyslog_internal.
+	Remove declaration and libc_hidden_proto for __vsyslog_chk.
+
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.c (__nldbl___vsyslog_chk):
+	Use __vsyslog_internal.
+
+2018-12-05  Zack Weinberg  <zackw@panix.com>
+	    Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
 	* libio/libioP.h (__vfprintf_internal, __vfwprintf_internal)
 	(__vasprintf_internal, __vdprintf_internal, __obstack_vprintf_internal)
 	(__vsprintf_internal, __vsnprintf_internal, __vswprintf_internal):

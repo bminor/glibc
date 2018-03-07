@@ -53,7 +53,7 @@ static char sccsid[] = "@(#)syslog.c	8.4 (Berkeley) 3/18/94";
 
 #include <stdarg.h>
 
-#include <libio/iolibio.h>
+#include <libio/libioP.h>
 #include <math_ldbl_opt.h>
 
 #include <kernel-features.h>
@@ -114,11 +114,18 @@ __syslog(int pri, const char *fmt, ...)
 	va_list ap;
 
 	va_start(ap, fmt);
-	__vsyslog_chk(pri, -1, fmt, ap);
+	__vsyslog_internal(pri, fmt, ap, 0);
 	va_end(ap);
 }
 ldbl_hidden_def (__syslog, syslog)
 ldbl_strong_alias (__syslog, syslog)
+
+void
+__vsyslog(int pri, const char *fmt, va_list ap)
+{
+	__vsyslog_internal(pri, fmt, ap, 0);
+}
+ldbl_weak_alias (__vsyslog, vsyslog)
 
 void
 __syslog_chk(int pri, int flag, const char *fmt, ...)
@@ -126,12 +133,19 @@ __syslog_chk(int pri, int flag, const char *fmt, ...)
 	va_list ap;
 
 	va_start(ap, fmt);
-	__vsyslog_chk(pri, flag, fmt, ap);
+	__vsyslog_internal(pri, fmt, ap, (flag > 0) ? PRINTF_FORTIFY : 0);
 	va_end(ap);
 }
 
 void
 __vsyslog_chk(int pri, int flag, const char *fmt, va_list ap)
+{
+	__vsyslog_internal(pri, fmt, ap, (flag > 0) ? PRINTF_FORTIFY : 0);
+}
+
+void
+__vsyslog_internal(int pri, const char *fmt, va_list ap,
+		   unsigned int mode_flags)
 {
 	struct tm now_tm;
 	time_t now;
@@ -215,11 +229,8 @@ __vsyslog_chk(int pri, int flag, const char *fmt, va_list ap)
 	    __set_errno (saved_errno);
 
 	    /* We have the header.  Print the user's format into the
-               buffer.  */
-	    if (flag == -1)
-	      vfprintf (f, fmt, ap);
-	    else
-	      __vfprintf_chk (f, flag, fmt, ap);
+	       buffer.  */
+	    __vfprintf_internal (f, fmt, ap, mode_flags);
 
 	    /* Close the memory stream; this will finalize the data
 	       into a malloc'd buffer in BUF.  */
@@ -316,15 +327,6 @@ __vsyslog_chk(int pri, int flag, const char *fmt, va_list ap)
 	if (buf != failbuf)
 		free (buf);
 }
-libc_hidden_def (__vsyslog_chk)
-
-void
-__vsyslog(int pri, const char *fmt, va_list ap)
-{
-  __vsyslog_chk (pri, -1, fmt, ap);
-}
-ldbl_hidden_def (__vsyslog, vsyslog)
-ldbl_weak_alias (__vsyslog, vsyslog)
 
 static struct sockaddr_un SyslogAddr;	/* AF_UNIX address of local logger */
 

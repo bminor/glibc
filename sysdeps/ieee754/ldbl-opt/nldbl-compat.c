@@ -843,7 +843,7 @@ attribute_compat_text_section
 __nldbl___vsyslog_chk (int pri, int flag, const char *fmt, va_list ap)
 {
   set_no_long_double ();
-  __vsyslog_chk (pri, flag, fmt, ap);
+  __vsyslog_internal (pri, fmt, ap, (flag > 0) ? PRINTF_FORTIFY : 0);
   clear_no_long_double ();
 }
 libc_hidden_def (__nldbl___vsyslog_chk)
