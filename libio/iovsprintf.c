@@ -28,7 +28,8 @@
 #include "strfile.h"
 
 int
-__IO_vsprintf (char *string, const char *format, va_list args)
+__vsprintf_internal (char *string, const char *format, va_list args,
+		     unsigned int mode_flags)
 {
   _IO_strfile sf;
   int ret;
@@ -39,11 +40,16 @@ __IO_vsprintf (char *string, const char *format, va_list args)
   _IO_no_init (&sf._sbf._f, _IO_USER_LOCK, -1, NULL, NULL);
   _IO_JUMPS (&sf._sbf) = &_IO_str_jumps;
   _IO_str_init_static_internal (&sf, string, -1, string);
-  ret = _IO_vfprintf (&sf._sbf._f, format, args);
+  ret = __vfprintf_internal (&sf._sbf._f, format, args, mode_flags);
   _IO_putc_unlocked ('\0', &sf._sbf._f);
   return ret;
 }
-ldbl_hidden_def (__IO_vsprintf, _IO_vsprintf)
 
-ldbl_strong_alias (__IO_vsprintf, _IO_vsprintf)
-ldbl_weak_alias (__IO_vsprintf, vsprintf)
+int
+__vsprintf (char *string, const char *format, va_list args)
+{
+  return __vsprintf_internal (string, format, args, 0);
+}
+
+ldbl_strong_alias (__vsprintf, _IO_vsprintf)
+ldbl_weak_alias (__vsprintf, vsprintf)

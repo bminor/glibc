@@ -16,9 +16,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <stdarg.h>
-#include <stdio.h>
 #include <libioP.h>
-#define vsprintf(s, f, a) _IO_vsprintf (s, f, a)
 
 /* Write formatted output into S, according to the format string FORMAT.  */
 /* VARARGS2 */
@@ -29,7 +27,7 @@ __sprintf (char *s, const char *format, ...)
   int done;
 
   va_start (arg, format);
-  done = vsprintf (s, format, arg);
+  done = __vsprintf_internal (s, format, arg, 0);
   va_end (arg);
 
   return done;

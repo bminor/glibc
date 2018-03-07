@@ -24,15 +24,13 @@
    This exception applies to code released by its copyright holders
    in files containing the exception.  */
 
-#include <malloc.h>
 #include <string.h>
-#include "libioP.h"
-#include "stdio.h"
-#include <stdio_ext.h>
-#include "strfile.h"
+#include <stdlib.h>
+#include <strfile.h>
 
 int
-_IO_vasprintf (char **result_ptr, const char *format, va_list args)
+__vasprintf_internal (char **result_ptr, const char *format, va_list args,
+		      unsigned int mode_flags)
 {
   /* Initial size of the buffer to be used.  Will be doubled each time an
      overflow occurs.  */
@@ -56,7 +54,7 @@ _IO_vasprintf (char **result_ptr, const char *format, va_list args)
   sf._sbf._f._flags &= ~_IO_USER_BUF;
   sf._s._allocate_buffer_unused = (_IO_alloc_type) malloc;
   sf._s._free_buffer_unused = (_IO_free_type) free;
-  ret = _IO_vfprintf (&sf._sbf._f, format, args);
+  ret = __vfprintf_internal (&sf._sbf._f, format, args, mode_flags);
   if (ret < 0)
     {
       free (sf._sbf._f._IO_buf_base);
@@ -85,4 +83,10 @@ _IO_vasprintf (char **result_ptr, const char *format, va_list args)
   (*result_ptr)[needed - 1] = '\0';
   return ret;
 }
-ldbl_weak_alias (_IO_vasprintf, vasprintf)
+
+int
+__vasprintf (char **result_ptr, const char *format, va_list args)
+{
+  return __vasprintf_internal (result_ptr, format, args, 0);
+}
+ldbl_weak_alias (__vasprintf, vasprintf)

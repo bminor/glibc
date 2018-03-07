@@ -80,7 +80,7 @@ ___vsprintf_chk (char *s, int flags, size_t slen, const char *format,
   if (flags > 0)
     f._sbf._f._flags2 |= _IO_FLAGS2_FORTIFY;
 
-  ret = _IO_vfprintf (&f._sbf._f, format, args);
+  ret = __vfprintf_internal (&f._sbf._f, format, args, 0);
 
   *f._sbf._f._IO_write_ptr = '\0';
   return ret;

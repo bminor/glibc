@@ -53,7 +53,7 @@ vpprintf (io_t port, const char *format, va_list arg)
   _IO_cookie_init (&temp_f.cfile, _IO_NO_READS,
 		   (void *) port, (cookie_io_functions_t) { write: do_write });
 
-  done = _IO_vfprintf (&temp_f.cfile.__fp.file, format, arg);
+  done = __vfprintf_internal (&temp_f.cfile.__fp.file, format, arg, 0);
 
   return done;
 }

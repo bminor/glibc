@@ -91,7 +91,7 @@ __obstack_vprintf_chk (struct obstack *obstack, int flags, const char *format,
   if (flags > 0)
     new_f.ofile.file.file._flags2 |= _IO_FLAGS2_FORTIFY;
 
-  result = _IO_vfprintf (&new_f.ofile.file.file, format, args);
+  result = __vfprintf_internal (&new_f.ofile.file.file, format, args, 0);
 
   /* Shrink the buffer to the space we really currently need.  */
   obstack_blank_fast (obstack, (new_f.ofile.file.file._IO_write_ptr

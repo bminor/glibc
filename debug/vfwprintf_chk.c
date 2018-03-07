@@ -30,7 +30,7 @@ __vfwprintf_chk (FILE *fp, int flag, const wchar_t *format, va_list ap)
   if (flag > 0)
     fp->_flags2 |= _IO_FLAGS2_FORTIFY;
 
-  done = _IO_vfwprintf (fp, format, ap);
+  done = __vfwprintf_internal (fp, format, ap, 0);
 
   if (flag > 0)
     fp->_flags2 &= ~_IO_FLAGS2_FORTIFY;

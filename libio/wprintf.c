@@ -29,7 +29,7 @@ __wprintf (const wchar_t *format, ...)
   int done;
 
   va_start (arg, format);
-  done = __vfwprintf (stdout, format, arg);
+  done = __vfwprintf_internal (stdout, format, arg, 0);
   va_end (arg);
 
   return done;

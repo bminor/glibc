@@ -25,9 +25,9 @@
 /* Write formatted output to stdout according to the
    format string FORMAT, using the argument list in ARG.  */
 int
-__vprintf (const char *format, __gnuc_va_list arg)
+__vprintf (const char *format, va_list ap)
 {
-  return vfprintf (stdout, format, arg);
+  return __vfprintf_internal (stdout, format, ap, 0);
 }
 
 ldbl_strong_alias (__vprintf, vprintf)

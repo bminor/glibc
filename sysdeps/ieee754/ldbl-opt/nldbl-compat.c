@@ -166,7 +166,7 @@ __nldbl_vfprintf (FILE *s, const char *fmt, va_list ap)
 {
   int done;
   set_no_long_double ();
-  done = _IO_vfprintf (s, fmt, ap);
+  done = __vfprintf_internal (s, fmt, ap, 0);
   clear_no_long_double ();
   return done;
 }
@@ -175,15 +175,16 @@ strong_alias (__nldbl_vfprintf, __nldbl__IO_vfprintf)
 
 int
 attribute_compat_text_section
-__nldbl__IO_vsprintf (char *string, const char *fmt, va_list ap)
+__nldbl___vsprintf (char *string, const char *fmt, va_list ap)
 {
   int done;
   __no_long_double = 1;
-  done = _IO_vsprintf (string, fmt, ap);
+  done = __vsprintf_internal (string, fmt, ap, 0);
   __no_long_double = 0;
   return done;
 }
-weak_alias (__nldbl__IO_vsprintf, __nldbl_vsprintf)
+strong_alias (__nldbl___vsprintf, __nldbl__IO_vsprintf)
+weak_alias (__nldbl___vsprintf, __nldbl_vsprintf)
 libc_hidden_def (__nldbl_vsprintf)
 
 int
@@ -193,7 +194,7 @@ __nldbl_obstack_vprintf (struct obstack *obstack, const char *fmt,
 {
   int done;
   __no_long_double = 1;
-  done = _IO_obstack_vprintf (obstack, fmt, ap);
+  done = __obstack_vprintf_internal (obstack, fmt, ap, 0);
   __no_long_double = 0;
   return done;
 }
@@ -245,7 +246,7 @@ __nldbl_vasprintf (char **result_ptr, const char *fmt, va_list ap)
 {
   int res;
   __no_long_double = 1;
-  res = _IO_vasprintf (result_ptr, fmt, ap);
+  res = __vasprintf_internal (result_ptr, fmt, ap, 0);
   __no_long_double = 0;
   return res;
 }
@@ -257,7 +258,7 @@ __nldbl_vdprintf (int d, const char *fmt, va_list arg)
 {
   int res;
   set_no_long_double ();
-  res = _IO_vdprintf (d, fmt, arg);
+  res = __vdprintf_internal (d, fmt, arg, 0);
   clear_no_long_double ();
   return res;
 }
@@ -269,7 +270,7 @@ __nldbl_vfwprintf (FILE *s, const wchar_t *fmt, va_list ap)
 {
   int res;
   set_no_long_double ();
-  res = _IO_vfwprintf (s, fmt, ap);
+  res = __vfwprintf_internal (s, fmt, ap, 0);
   clear_no_long_double ();
   return res;
 }
@@ -289,7 +290,7 @@ __nldbl_vsnprintf (char *string, size_t maxlen, const char *fmt,
 {
   int res;
   __no_long_double = 1;
-  res = _IO_vsnprintf (string, maxlen, fmt, ap);
+  res = __vsnprintf_internal (string, maxlen, fmt, ap, 0);
   __no_long_double = 0;
   return res;
 }
@@ -303,7 +304,7 @@ __nldbl_vswprintf (wchar_t *string, size_t maxlen, const wchar_t *fmt,
 {
   int res;
   __no_long_double = 1;
-  res = _IO_vswprintf (string, maxlen, fmt, ap);
+  res = __vswprintf_internal (string, maxlen, fmt, ap, 0);
   __no_long_double = 0;
   return res;
 }

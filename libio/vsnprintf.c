@@ -90,8 +90,8 @@ const struct _IO_jump_t _IO_strn_jumps libio_vtable attribute_hidden =
 
 
 int
-_IO_vsnprintf (char *string, size_t maxlen, const char *format,
-	       va_list args)
+__vsnprintf_internal (char *string, size_t maxlen, const char *format,
+		      va_list args, unsigned int mode_flags)
 {
   _IO_strnfile sf;
   int ret;
@@ -111,11 +111,17 @@ _IO_vsnprintf (char *string, size_t maxlen, const char *format,
   _IO_JUMPS (&sf.f._sbf) = &_IO_strn_jumps;
   string[0] = '\0';
   _IO_str_init_static_internal (&sf.f, string, maxlen - 1, string);
-  ret = _IO_vfprintf (&sf.f._sbf._f, format, args);
+  ret = __vfprintf_internal (&sf.f._sbf._f, format, args, mode_flags);
 
   if (sf.f._sbf._f._IO_buf_base != sf.overflow_buf)
     *sf.f._sbf._f._IO_write_ptr = '\0';
   return ret;
 }
-ldbl_weak_alias (_IO_vsnprintf, __vsnprintf)
-ldbl_weak_alias (_IO_vsnprintf, vsnprintf)
+
+int
+___vsnprintf (char *string, size_t maxlen, const char *format, va_list args)
+{
+  return __vsnprintf_internal (string, maxlen, format, args, 0);
+}
+ldbl_weak_alias (___vsnprintf, __vsnprintf)
+ldbl_weak_alias (___vsnprintf, vsnprintf)

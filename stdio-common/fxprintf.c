@@ -27,7 +27,7 @@ static int
 locked_vfxprintf (FILE *fp, const char *fmt, va_list ap)
 {
   if (_IO_fwide (fp, 0) <= 0)
-    return _IO_vfprintf (fp, fmt, ap);
+    return __vfprintf_internal (fp, fmt, ap, 0);
 
   /* We must convert the narrow format string to a wide one.
      Each byte can produce at most one wide character.  */
@@ -53,7 +53,7 @@ locked_vfxprintf (FILE *fp, const char *fmt, va_list ap)
   res = __mbsrtowcs (wfmt, &fmt, len, &mbstate);
 
   if (res != -1)
-    res = _IO_vfwprintf (fp, wfmt, ap);
+    res = __vfwprintf_internal (fp, wfmt, ap, 0);
 
   if (used_malloc)
     free (wfmt);

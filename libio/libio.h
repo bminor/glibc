@@ -255,8 +255,6 @@ extern int _IO_ftrylockfile (FILE *) __THROW;
 
 extern int _IO_vfscanf (FILE * __restrict, const char * __restrict,
 			__gnuc_va_list, int *__restrict);
-extern int _IO_vfprintf (FILE *__restrict, const char *__restrict,
-			 __gnuc_va_list);
 extern __ssize_t _IO_padn (FILE *, int, __ssize_t);
 extern size_t _IO_sgetn (FILE *, void *, size_t);
 
@@ -298,8 +296,6 @@ weak_extern (_IO_stdin_used);
 
 extern int _IO_vfwscanf (FILE * __restrict, const wchar_t * __restrict,
 			 __gnuc_va_list, int *__restrict);
-extern int _IO_vfwprintf (FILE *__restrict, const wchar_t *__restrict,
-			  __gnuc_va_list);
 extern __ssize_t _IO_wpadn (FILE *, wint_t, __ssize_t);
 extern void _IO_free_wbackup_area (FILE *) __THROW;
 
@@ -319,7 +315,6 @@ libc_hidden_proto (_IO_free_wbackup_area)
 libc_hidden_proto (_IO_padn)
 libc_hidden_proto (_IO_putc)
 libc_hidden_proto (_IO_sgetn)
-libc_hidden_proto (_IO_vfprintf)
 
 #ifdef _IO_MTSAFE_IO
 # undef _IO_peekc

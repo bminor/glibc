@@ -63,7 +63,7 @@ __vasprintf_chk (char **result_ptr, int flags, const char *format,
   if (flags > 0)
     sf._sbf._f._flags2 |= _IO_FLAGS2_FORTIFY;
 
-  ret = _IO_vfprintf (&sf._sbf._f, format, args);
+  ret = __vfprintf_internal (&sf._sbf._f, format, args, 0);
   if (ret < 0)
     {
       free (sf._sbf._f._IO_buf_base);

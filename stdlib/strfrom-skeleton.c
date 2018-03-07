@@ -106,7 +106,7 @@ STRFROM (char *dest, size_t size, const char *format, FLOAT f)
     }
 
   /* The following code to prepare the virtual file has been adapted from the
-     function _IO_vsnprintf from libio.  */
+     function __vsnprintf_internal from libio.  */
 
   if (size == 0)
     {

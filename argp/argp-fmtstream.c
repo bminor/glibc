@@ -42,7 +42,6 @@
 #ifdef _LIBC
 # include <wchar.h>
 # include <libio/libioP.h>
-# define __vsnprintf(s, l, f, a) _IO_vsnprintf (s, l, f, a)
 #endif
 
 #define INIT_BUF_SIZE 200
@@ -413,7 +412,7 @@ __argp_fmtstream_printf (struct argp_fmtstream *fs, const char *fmt, ...)
 
       va_start (args, fmt);
       avail = fs->end - fs->p;
-      out = __vsnprintf (fs->p, avail, fmt, args);
+      out = __vsnprintf_internal (fs->p, avail, fmt, args, 0);
       va_end (args);
       if ((size_t) out >= avail)
 	size_guess = out + 1;

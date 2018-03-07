@@ -32,7 +32,7 @@ __fwprintf_chk (FILE *fp, int flag, const wchar_t *format, ...)
     fp->_flags2 |= _IO_FLAGS2_FORTIFY;
 
   va_start (ap, format);
-  done = _IO_vfwprintf (fp, format, ap);
+  done = __vfwprintf_internal (fp, format, ap, 0);
   va_end (ap);
 
   if (flag > 0)

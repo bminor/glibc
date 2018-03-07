@@ -33,7 +33,7 @@ __wprintf_chk (int flag, const wchar_t *format, ...)
     stdout->_flags2 |= _IO_FLAGS2_FORTIFY;
 
   va_start (ap, format);
-  done = _IO_vfwprintf (stdout, format, ap);
+  done = __vfwprintf_internal (stdout, format, ap, 0);
   va_end (ap);
 
   if (flag > 0)

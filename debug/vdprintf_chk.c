@@ -55,7 +55,7 @@ __vdprintf_chk (int d, int flags, const char *format, va_list arg)
   if (flags > 0)
     tmpfil.file._flags2 |= _IO_FLAGS2_FORTIFY;
 
-  done = _IO_vfprintf (&tmpfil.file, format, arg);
+  done = __vfprintf_internal (&tmpfil.file, format, arg, 0);
 
   _IO_FINISH (&tmpfil.file);
 

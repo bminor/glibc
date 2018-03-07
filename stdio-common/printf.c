@@ -30,7 +30,7 @@ __printf (const char *format, ...)
   int done;
 
   va_start (arg, format);
-  done = vfprintf (stdout, format, arg);
+  done = __vfprintf_internal (stdout, format, arg, 0);
   va_end (arg);
 
   return done;
@@ -38,5 +38,4 @@ __printf (const char *format, ...)
 
 #undef _IO_printf
 ldbl_strong_alias (__printf, printf);
-/* This is for libg++.  */
 ldbl_strong_alias (__printf, _IO_printf);

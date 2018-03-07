@@ -31,7 +31,7 @@ __vwprintf_chk (int flag, const wchar_t *format, va_list ap)
   if (flag > 0)
     stdout->_flags2 |= _IO_FLAGS2_FORTIFY;
 
-  done = _IO_vfwprintf (stdout, format, ap);
+  done = __vfwprintf_internal (stdout, format, ap, 0);
 
   if (flag > 0)
     stdout->_flags2 &= ~_IO_FLAGS2_FORTIFY;

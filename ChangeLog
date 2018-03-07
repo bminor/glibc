@@ -1,6 +1,88 @@
 2018-12-05  Zack Weinberg  <zackw@panix.com>
 	    Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
+	* libio/libioP.h (__vfprintf_internal, __vfwprintf_internal)
+	(__vasprintf_internal, __vdprintf_internal, __obstack_vprintf_internal)
+	(__vsprintf_internal, __vsnprintf_internal, __vswprintf_internal):
+	New functions.
+	(PRINTF_LDBL_IS_DBL, PRINTF_FORTIFY): New constants.
+	(_IO_vasprintf, _IO_vdprintf, _IO_vsnprintf): Remove prototypes.
+
+	* stdio-common/vfprintf-internal.c: Rename from vfprintf.c.
+	Include wctype.h here if COMPILE_WPRINTF is defined.
+	Define __vfprintf_internal or __vfwprintf_internal, depending
+	on COMPILE_WPRINTF.
+	Temporarily, on entry to this function, update mode_flags
+	according to the environmental settings corresponding to
+	PRINTF_LDBL_IS_DBL and PRINTF_FORTIFY.
+	Throughout, check mode_flags instead of __ldbl_is_dbl and
+	_IO_FLAGS2_FORTIFY on the destination FILE.
+	* stdio-common/vfwprintf-internal.c: Rename from vfwprintf.c.
+	Include vfprintf-internal.c.  Don't include wctype.h.
+	* stdio-common/vfprintf.c: New file.  Just define __vfprintf
+	as a wrapper around __vfprintf_internal, with aliases _IO_vfprintf
+	and vfprintf.
+	* stdio-common/vfwprintf.c: New file.  Just define __vfwprintf
+	as a wrapper around __vfwprintf_internal, with aliases _IO_vfwprintf
+	and vfwprintf.
+	* stdio-common/Makefile: Add vfprintf-internal and vfwprintf-internal.
+
+	* libio/iovdprintf.c (_IO_vdprintf): Rename to __vdprintf_internal
+	and add mode_flags argument; use __vfprintf_internal.
+	(__vdprintf): New function.  Alias vdprintf to this.
+	* libio/iovsprintf.c (_IO_vsprintf, __vsprintf): Similarly.
+	* libio/vasprintf.c (_IO_vasprintf, __vasprintf): Similarly.
+	* libio/obprintf.c (_IO_obstack_vprintf, __obstack_vprintf): Similarly.
+	(__obstack_printf): Use __obstack_printf_internal.
+	* libio/vsnprintf.c (_IO_vsnprintf, ___vsnprintf): Similarly, with
+	public aliases __vsnprintf and vsnprintf.
+	Remove use of ldbl_hidden_def, since __vsnprintf is no longer
+	called internally.
+	* libio/vswprintf (_IO_vswprintf, __vswprintf): Similarly, with
+	public aliases _IO_vsprintf and vsprintf.
+	* libio/swprintf.c (__swprintf): Use __vswprintf_internal.
+	* stdio-common/asprintf.c (__asprintf): Use __vasprintf_internal.
+	* stdio-common/dprintf.c (__dprintf): Use __vdprintf_internal.
+	* stdio-common/snprintf.c (__snprintf): Use __vsprintf_internal.
+	* stdio-common/sprintf.c (__sprintf): Use __vsprintf_internal.
+
+	* debug/obprintf_chk.c, debug/vasprintf_chk.c, debug/vdprintf_chk.c
+	* debug/vsnprintf_chk.c, debug/vsprintf_chk.c, hurd/vpprintf.c
+	* stdio-common/fprintf.c, stdio-common/fxprintf.c
+	* stdio-common/printf.c: Use __vfprintf_internal.
+
+	* debug/fwprintf_chk.c, debug/vfwprintf_chk.c, debug/vswprintf_chk.c
+	* debug/vwprintf_chk.c, debug/wprintf_chk.c, libio/fwprintf.c
+	* libio/vwprintf.c, libio/wprintf.c: Use __vfwprintf_internal.
+
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.c: Use __vsprintf_internal,
+	__obstack_vprintf_internal, __vasprintf_internal, __vdprintf_internal,
+	__vsnprintf_internal, __vswprintf_internal, __vfprintf_internal, and
+	__vfwprintf_internal.
+
+	* libio/libio.h: Remove libc_hidden_proto and declaration for
+	_IO_vfprintf.
+	Remove declaration of _IO_vfwprintf.
+	* libio/iolibio.h: Remove libc_hidden_proto and declaration for
+	_IO_vsprintf.
+	Remove declarations of _IO_vswprintf, _IO_obstack_printf, and
+	_IO_obstack_printf.
+	* include/stdio.h: Add prototype for __vasprintf.
+	(__vsnprintf): Remove declaration, because there are no more
+	internal calls.
+	* include/wchar.h (__vfwprintf, __vswprintf): Remove
+	declaration, because there are no more internal calls.
+
+	* argp/argp-fmtstream.c (__argp_fmtstream_printf): Use
+	__vsnprintf_internal, instead of _IO_vsnprintf.
+	* argp/argp-help.c (__argp_error, __argp_failure): Use
+	__vasprintf_internal, instead of _IO_vasprintf.
+	* argp/argp-namefrob.h (__vsnprintf): Do not undefined then
+	redefine, because there are no more internal calls.
+
+2018-12-05  Zack Weinberg  <zackw@panix.com>
+	    Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
 	* stdio-common/vfscanf-internal.c: Don't look at __ldbl_is_dbl.
 	* sysdeps/ieee754/ldbl-opt/ndlbl-compat.c:
 	Include libio/strfile.h instead of libioP.h.

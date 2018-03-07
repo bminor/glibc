@@ -60,7 +60,7 @@ ___vsnprintf_chk (char *s, size_t maxlen, int flags, size_t slen,
     sf.f._sbf._f._flags2 |= _IO_FLAGS2_FORTIFY;
 
   _IO_str_init_static_internal (&sf.f, s, maxlen - 1, s);
-  ret = _IO_vfprintf (&sf.f._sbf._f, format, args);
+  ret = __vfprintf_internal (&sf.f._sbf._f, format, args, 0);
 
   if (sf.f._sbf._f._IO_buf_base != sf.overflow_buf)
     *sf.f._sbf._f._IO_write_ptr = '\0';

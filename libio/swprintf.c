@@ -28,7 +28,7 @@ __swprintf (wchar_t *s, size_t n, const wchar_t *format, ...)
   int done;
 
   va_start (arg, format);
-  done = __vswprintf (s, n, format, arg);
+  done = __vswprintf_internal (s, n, format, arg, 0);
   va_end (arg);
 
   return done;

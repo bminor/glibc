@@ -29,7 +29,7 @@ __fprintf (FILE *stream, const char *format, ...)
   int done;
 
   va_start (arg, format);
-  done = vfprintf (stream, format, arg);
+  done = __vfprintf_internal (stream, format, arg, 0);
   va_end (arg);
 
   return done;

@@ -98,8 +98,6 @@
 #define __strerror_r strerror_r
 #undef __strndup
 #define __strndup strndup
-#undef __vsnprintf
-#define __vsnprintf vsnprintf
 
 #if defined(HAVE_DECL_CLEARERR_UNLOCKED) && !HAVE_DECL_CLEARERR_UNLOCKED
 # define clearerr_unlocked(x) clearerr (x)
