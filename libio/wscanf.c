@@ -30,7 +30,7 @@ __wscanf (const wchar_t *format, ...)
   int done;
 
   va_start (arg, format);
-  done = _IO_vfwscanf (stdin, format, arg, NULL);
+  done = __vfwscanf_internal (stdin, format, arg, 0);
   va_end (arg);
 
   return done;

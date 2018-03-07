@@ -330,16 +330,20 @@ __nldbl_wprintf (const wchar_t *fmt, ...)
   return done;
 }
 
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_29)
 int
 attribute_compat_text_section
 __nldbl__IO_vfscanf (FILE *s, const char *fmt, va_list ap, int *errp)
 {
   int res;
   set_no_long_double ();
-  res = _IO_vfscanf (s, fmt, ap, errp);
+  res = __vfscanf_internal (s, fmt, ap, 0);
   clear_no_long_double ();
+  if (__glibc_unlikely (errp != 0))
+    *errp = (res == -1);
   return res;
 }
+#endif
 
 int
 attribute_compat_text_section
@@ -347,7 +351,7 @@ __nldbl___vfscanf (FILE *s, const char *fmt, va_list ap)
 {
   int res;
   set_no_long_double ();
-  res = _IO_vfscanf (s, fmt, ap, NULL);
+  res = __vfscanf_internal (s, fmt, ap, 0);
   clear_no_long_double ();
   return res;
 }
@@ -423,7 +427,7 @@ __nldbl_vfwscanf (FILE *s, const wchar_t *fmt, va_list ap)
 {
   int res;
   set_no_long_double ();
-  res = _IO_vfwscanf (s, fmt, ap, NULL);
+  res = __vfwscanf_internal (s, fmt, ap, 0);
   clear_no_long_double ();
   return res;
 }
@@ -1027,7 +1031,6 @@ compat_symbol (libc, __nldbl_vdprintf, vdprintf, GLIBC_2_0);
 compat_symbol (libc, __nldbl_vsnprintf, vsnprintf, GLIBC_2_0);
 compat_symbol (libc, __nldbl_vsprintf, vsprintf, GLIBC_2_0);
 compat_symbol (libc, __nldbl__IO_sscanf, _IO_sscanf, GLIBC_2_0);
-compat_symbol (libc, __nldbl__IO_vfscanf, _IO_vfscanf, GLIBC_2_0);
 compat_symbol (libc, __nldbl___vfscanf, __vfscanf, GLIBC_2_0);
 compat_symbol (libc, __nldbl___vsscanf, __vsscanf, GLIBC_2_0);
 compat_symbol (libc, __nldbl_fscanf, fscanf, GLIBC_2_0);
@@ -1040,6 +1043,12 @@ compat_symbol (libc, __nldbl___printf_fp, __printf_fp, GLIBC_2_0);
 compat_symbol (libc, __nldbl_strfmon, strfmon, GLIBC_2_0);
 compat_symbol (libc, __nldbl_syslog, syslog, GLIBC_2_0);
 compat_symbol (libc, __nldbl_vsyslog, vsyslog, GLIBC_2_0);
+/* This function is not in public headers, but was exported until
+   version 2.29.  For platforms that are newer than that, there's no
+   need to expose the symbol.  */
+# if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_29)
+compat_symbol (libc, __nldbl__IO_vfscanf, _IO_vfscanf, GLIBC_2_0);
+# endif
 #endif
 #if LONG_DOUBLE_COMPAT(libc, GLIBC_2_1)
 compat_symbol (libc, __nldbl___asprintf, __asprintf, GLIBC_2_1);

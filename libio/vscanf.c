@@ -32,6 +32,6 @@
 int
 _IO_vscanf (const char *format, va_list args)
 {
-  return _IO_vfscanf (_IO_stdin, format, args, NULL);
+  return __vfscanf_internal (_IO_stdin, format, args, 0);
 }
 ldbl_weak_alias (_IO_vscanf, vscanf)

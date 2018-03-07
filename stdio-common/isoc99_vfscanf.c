@@ -27,7 +27,7 @@ __isoc99_vfscanf (FILE *stream, const char *format, va_list args)
 
   _IO_acquire_lock_clear_flags2 (stream);
   stream->_flags2 |= _IO_FLAGS2_SCANF_STD;
-  done = _IO_vfscanf (stream, format, args, NULL);
+  done = __vfscanf_internal (stream, format, args, 0);
   _IO_release_lock (stream);
   return done;
 }

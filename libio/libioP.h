@@ -704,6 +704,28 @@ extern off64_t _IO_seekpos_unlocked (FILE *, off64_t, int)
 
 #endif /* _G_HAVE_MMAP */
 
+/* Flags for __vfscanf_internal and __vfwscanf_internal.
+
+   SCANF_LDBL_IS_DBL indicates whether long double values are to be
+   handled as having the same format as double, in which case the flag
+   should be set to one, or as another format, otherwise.
+
+   SCANF_ISOC99_A, when set to one, indicates that the ISO C99 or POSIX
+   behavior of the scanf functions is to be used, i.e. automatic
+   allocation for input strings with %as, %aS and %a[, a GNU extension,
+   is disabled. This is the behavior that the __isoc99_scanf family of
+   functions use.  When the flag is set to zero, automatic allocation is
+   enabled.  */
+#define SCANF_LDBL_IS_DBL 0x0001
+#define SCANF_ISOC99_A    0x0002
+
+extern int __vfscanf_internal (FILE *fp, const char *format, va_list argp,
+			       unsigned int flags)
+  attribute_hidden;
+extern int __vfwscanf_internal (FILE *fp, const wchar_t *format, va_list argp,
+				unsigned int flags)
+  attribute_hidden;
+
 extern int _IO_vscanf (const char *, va_list) __THROW;
 
 #ifdef _IO_MTSAFE_IO

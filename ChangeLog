@@ -1,3 +1,70 @@
+2018-12-05  Zack Weinberg  <zackw@panix.com>
+	    Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
+	* libio/libioP.h (SCANF_LDBL_IS_DBL, SCANF_ISOC99_A): New constants.
+	(__vfscanf_internal, __vfwscanf_internal): New function prototypes.
+	* libio/libio.h: Remove libc_hidden_proto for _IO_vfscanf.
+	* libio/strfile.h: Add multiple inclusion guard.
+	(_IO_strfile_read, _IO_strfile_readw): New inline functions.
+
+	* sysdeps/generic/math_ldbl_opt.h: Include shlib-compat.h, for
+	consistency with the other version of this file.
+	(ldbl_compat_symbol): New macro.
+	* sysdeps/ieee754/ldbl-opt/math_ldbl_opt.h (ldbl_compat_symbol):
+	New macro.
+
+	* stdio-common/vfscanf-internal.c: Rename from vfscanf.c.
+	Define __vfscanf_internal or __vfwscanf_internal, depending on
+	COMPILE_WSCANF; don't define any other public symbols.
+	Remove errval and code to set errp.
+	Temporarily check __ldbl_is_dbl and _IO_FLAGS2_SCANF_STD as well
+	as the mode_flags argument.
+	(encode_error, conv_error, input_error): Don't set errval.
+	* stdio-common/vfwscanf-internal.c: Rename from vfwscanf.c.
+	Include vfscanf-internal.c.
+	* stdio-common/vfscanf.c: New file defining the public entry
+	point vfscanf, which calls __vfscanf_internal.
+	* stdio-common/vfwscanf.c: New file defining the public entry
+	point vfwscanf, which calls __vfwscanf_internal.
+
+	* stdio-common/iovfscanf.c: New file.
+	* stdio-common/iovfwscanf.c: Likewise.
+
+	* stdio-common/Makefile (routines): Add vfscanf-internal,
+	vfwscanf-internal, iovfscanf, iovfwscanf.
+	* stdio-common/Versions: Mention GLIBC_2.29, so that
+	it can be used in SHLIB_COMPAT expressions.
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.c (__nldbl__IO_vfscanf):
+	Wrap definition and compat_symbol line in #if SHLIB_COMPAT.
+	Call __vfscanf_internal, instead of _IO_vfscanf.
+	(__nldbl___vfscanf): Call __vfscanf_internal, instead of
+	_IO_vfscanf.
+	(__nldbl_vfwscanf): Call __vfwscanf_internal, instead of
+	_IO_vfwscanf.
+
+	* libio/iovsscanf.c: Clean up includes, when possible.  Use
+	_IO_strfile_read or _IO_strfile_readw, when needed.  Call
+	__vfscanf_internal or __vfwscanf_internal directly.
+	* libio/iovswscanf.c: Likewise.
+	* libio/swscanf.c: Likewise.
+	* libio/vscanf.c: Likewise.
+	* libio/vwscanf.c: Likewise.
+	* libio/wscanf.c: Likewise.
+	* stdio-common/isoc99_fscanf.c: Likewise.
+	* stdio-common/isoc99_scanf.c: Likewise.
+	* stdio-common/isoc99_sscanf.c: Likewise.
+	* stdio-common/isoc99_vfscanf.c: Likewise.
+	* stdio-common/isoc99_vscanf.c: Likewise.
+	* stdio-common/isoc99_vsscanf.c: Likewise.
+	* stdio-common/scanf.c: Likewise.
+	* stdio-common/sscanf.c: Likewise.
+	* wcsmbs/isoc99_fwscanf.c: Likewise.
+	* wcsmbs/isoc99_swscanf.c: Likewise.
+	* wcsmbs/isoc99_vfwscanf.c: Likewise.
+	* wcsmbs/isoc99_vswscanf.c: Likewise.
+	* wcsmbs/isoc99_vwscanf.c: Likewise.
+	* wcsmbs/isoc99_wscanf.c: Likewise.
+
 2018-12-05  Albert ARIBAUD <albert.aribaud@3adev.fr>
 
 	* include/time.h

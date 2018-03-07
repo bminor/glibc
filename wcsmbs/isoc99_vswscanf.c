@@ -24,24 +24,16 @@
    This exception applies to code released by its copyright holders
    in files containing the exception.  */
 
-#include <libioP.h>
 #include <wchar.h>
-#include "../libio/strfile.h"
+#include <libio/strfile.h>
 
 int
 __isoc99_vswscanf (const wchar_t *string, const wchar_t *format, va_list args)
 {
-  int ret;
   _IO_strfile sf;
   struct _IO_wide_data wd;
-#ifdef _IO_MTSAFE_IO
-  sf._sbf._f._lock = NULL;
-#endif
-  _IO_no_init (&sf._sbf._f, _IO_USER_LOCK, 0, &wd, &_IO_wstr_jumps);
-  _IO_fwide (&sf._sbf._f, 1);
-  _IO_wstr_init_static (&sf._sbf._f, (wchar_t *)string, 0, NULL);
-  sf._sbf._f._flags2 |= _IO_FLAGS2_SCANF_STD;
-  ret = _IO_vfwscanf ((FILE *) &sf._sbf, format, args, NULL);
-  return ret;
+  FILE *f = _IO_strfile_readw (&sf, &wd, string);
+  f->_flags2 |= _IO_FLAGS2_SCANF_STD;
+  return __vfwscanf_internal (f, format, args, 0);
 }
 libc_hidden_def (__isoc99_vswscanf)

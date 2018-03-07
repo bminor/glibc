@@ -39,7 +39,8 @@ routines	:=							      \
 	flockfile ftrylockfile funlockfile				      \
 	isoc99_scanf isoc99_vscanf isoc99_fscanf isoc99_vfscanf isoc99_sscanf \
 	isoc99_vsscanf							      \
-	psiginfo gentempfd
+	psiginfo gentempfd						      \
+	vfscanf-internal vfwscanf-internal iovfscanf iovfwscanf
 
 aux	:= errlist siglist printf-parsemb printf-parsewc fxprintf
 

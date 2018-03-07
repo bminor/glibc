@@ -28,7 +28,7 @@ __isoc99_vwscanf (const wchar_t *format, va_list args)
 
   _IO_acquire_lock_clear_flags2 (stdin);
   stdin->_flags2 |= _IO_FLAGS2_SCANF_STD;
-  done = _IO_vfwscanf (stdin, format, args, NULL);
+  done = __vfwscanf_internal (stdin, format, args, 0);
   _IO_release_lock (stdin);
   return done;
 }

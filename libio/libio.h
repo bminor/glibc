@@ -321,7 +321,6 @@ libc_hidden_proto (_IO_padn)
 libc_hidden_proto (_IO_putc)
 libc_hidden_proto (_IO_sgetn)
 libc_hidden_proto (_IO_vfprintf)
-libc_hidden_proto (_IO_vfscanf)
 
 #ifdef _IO_MTSAFE_IO
 # undef _IO_peekc

@@ -60,6 +60,9 @@ libc {
   GLIBC_2.28 {
     renameat2;
   }
+  GLIBC_2.29 {
+    # SHLIB_COMPAT(GLIBC_2_0, GLIBC_2_29) used in iovfscanf.c etc.
+  }
   GLIBC_PRIVATE {
     # global variables
     _itoa_lower_digits;

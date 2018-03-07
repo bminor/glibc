@@ -24,23 +24,14 @@
    This exception applies to code released by its copyright holders
    in files containing the exception.  */
 
-#include <libioP.h>
-#include <stdio.h>
-#include "../libio/strfile.h"
+#include <libio/strfile.h>
 
 int
 __isoc99_vsscanf (const char *string, const char *format, va_list args)
 {
-  int ret;
   _IO_strfile sf;
-#ifdef _IO_MTSAFE_IO
-  sf._sbf._f._lock = NULL;
-#endif
-  _IO_no_init (&sf._sbf._f, _IO_USER_LOCK, -1, NULL, NULL);
-  _IO_JUMPS (&sf._sbf) = &_IO_str_jumps;
-  _IO_str_init_static_internal (&sf, (char*)string, 0, NULL);
-  sf._sbf._f._flags2 |= _IO_FLAGS2_SCANF_STD;
-  ret = _IO_vfscanf (&sf._sbf._f, format, args, NULL);
-  return ret;
+  FILE *f = _IO_strfile_read (&sf, string);
+  f->_flags2 |= _IO_FLAGS2_SCANF_STD;
+  return __vfscanf_internal (f, format, args, 0);
 }
 libc_hidden_def (__isoc99_vsscanf)

@@ -16,26 +16,24 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <stdarg.h>
-#include <stdio.h>
-#include <libioP.h>
-#define __vsscanf(s, f, a) _IO_vsscanf (s, f, a)
+#include <libio/strfile.h>
 
 /* Read formatted input from S, according to the format string FORMAT.  */
-/* VARARGS2 */
+
 int
 __sscanf (const char *s, const char *format, ...)
 {
   va_list arg;
   int done;
+  _IO_strfile sf;
+  FILE *f = _IO_strfile_read (&sf, s);
 
   va_start (arg, format);
-  done = __vsscanf (s, format, arg);
+  done = __vfscanf_internal (f, format, arg, 0);
   va_end (arg);
 
   return done;
 }
 ldbl_hidden_def (__sscanf, sscanf)
 ldbl_strong_alias (__sscanf, sscanf)
-#undef _IO_sscanf
-/* This is for libg++.  */
 ldbl_strong_alias (__sscanf, _IO_sscanf)

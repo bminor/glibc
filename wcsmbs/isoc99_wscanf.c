@@ -33,7 +33,7 @@ __isoc99_wscanf (const wchar_t *format, ...)
   stdin->_flags2 |= _IO_FLAGS2_SCANF_STD;
 
   va_start (arg, format);
-  done = _IO_vfwscanf (stdin, format, arg, NULL);
+  done = __vfwscanf_internal (stdin, format, arg, 0);
   va_end (arg);
 
   _IO_release_lock (stdin);

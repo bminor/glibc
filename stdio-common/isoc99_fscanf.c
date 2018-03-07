@@ -31,7 +31,7 @@ __isoc99_fscanf (FILE *stream, const char *format, ...)
   stream->_flags2 |= _IO_FLAGS2_SCANF_STD;
 
   va_start (arg, format);
-  done = _IO_vfscanf (stream, format, arg, NULL);
+  done = __vfscanf_internal (stream, format, arg, 0);
   va_end (arg);
 
   _IO_release_lock (stream);

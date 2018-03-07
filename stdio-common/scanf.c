@@ -30,7 +30,7 @@ __scanf (const char *format, ...)
   int done;
 
   va_start (arg, format);
-  done = _IO_vfscanf (stdin, format, arg, NULL);
+  done = __vfscanf_internal (stdin, format, arg, 0);
   va_end (arg);
 
   return done;

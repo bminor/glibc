@@ -16,19 +16,20 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <stdarg.h>
-#include <stdio.h>
-#include <libioP.h>
+#include <libio/strfile.h>
 
 /* Read formatted input from S, according to the format string FORMAT.  */
-/* VARARGS2 */
 int
 __isoc99_sscanf (const char *s, const char *format, ...)
 {
   va_list arg;
   int done;
+  _IO_strfile sf;
+  FILE *f = _IO_strfile_read (&sf, s);
+  f->_flags2 |= _IO_FLAGS2_SCANF_STD;
 
   va_start (arg, format);
-  done = __isoc99_vsscanf (s, format, arg);
+  done = __vfscanf_internal (f, format, arg, 0);
   va_end (arg);
 
   return done;

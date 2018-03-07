@@ -34,7 +34,7 @@ __isoc99_scanf (const char *format, ...)
   stdin->_flags2 |= _IO_FLAGS2_SCANF_STD;
 
   va_start (arg, format);
-  done = _IO_vfscanf (stdin, format, arg, NULL);
+  done = __vfscanf_internal (stdin, format, arg, 0);
   va_end (arg);
 
 #ifdef _IO_MTSAFE_IO
