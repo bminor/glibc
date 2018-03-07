@@ -45,12 +45,15 @@ fi
 case "$1" in
     (c)
         lang_modes="$c_modes"
-        cih_test_c=$(mktemp ${TMPDIR-/tmp}/cih_test_XXXXXX.c)
+	# GOOGLE ONLY: Through an unfortunate combination of circumstances,
+	# the mktemp used here may be as old as 6.12 from 2008, which does
+	# not like having an underscore instead of a dot.
+        cih_test_c=$(mktemp ${TMPDIR-/tmp}/cih_test.XXXXXX.c)
         already="$skip_obsolete_type_check"
     ;;
     (c++)
         lang_modes="$cxx_modes"
-        cih_test_c=$(mktemp ${TMPDIR-/tmp}/cih_test_XXXXXX.cc)
+        cih_test_c=$(mktemp ${TMPDIR-/tmp}/cih_test.XXXXXX.cc)
         # The obsolete-type check can be skipped for C++; it is
         # sufficient to do it for C.
         already="*"
