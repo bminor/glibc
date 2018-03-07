@@ -332,10 +332,6 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
   struct char_buffer charbuf;
   scratch_buffer_init (&charbuf.scratch);
 
-  /* Temporarily honor the environmental mode bits.  */
-  if (__ldbl_is_dbl)
-    mode_flags |= SCANF_LDBL_IS_DBL;
-
 #ifdef __va_copy
   __va_copy (arg, argptr);
 #else

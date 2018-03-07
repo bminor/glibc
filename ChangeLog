@@ -1,6 +1,29 @@
 2018-12-05  Zack Weinberg  <zackw@panix.com>
 	    Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
+	* stdio-common/vfscanf-internal.c: Don't look at __ldbl_is_dbl.
+	* sysdeps/ieee754/ldbl-opt/ndlbl-compat.c:
+	Include libio/strfile.h instead of libioP.h.
+	(__nldbl_IO_vfscanf, __ndlbl___vfscanf, __nldbl_sscanf)
+	(__nldbl___vsscanf, __nldbl_vscanf, __nldbl_fscanf)
+	(__nldbl_scanf, __nldbl_vfwscanf, __nldbl_swscanf)
+	(__nldbl_vswscanf, __nldbl_vwscanf, __nldbl_fwscanf)
+	(__nldbl_wscanf): Call __vfscanf_internal / __vfwscanf_internal
+	directly, passing SCANF_LDBL_IS_DBL.  Set up a strfile if
+	necessary.  Do not set __no_long_double.  Normalize variable names.
+	(__nldbl___isoc99_vfscanf, __nldbl___isoc99_sscanf)
+	(__nldbl___isoc99_vsscanf, __nldbl___isoc99_vscanf)
+	(__nldbl___isoc99_fscanf, __nldbl___isoc99_scanf)
+	(__nldbl___isoc99_vfwscanf, __nldbl___isoc99_swscanf)
+	(__nldbl___isoc99_vswscanf, __nldbl___isoc99_vwscanf)
+	(__nldbl___isoc99_fwscanf, __nldbl___isoc99_wscanf):
+	Call __vfscanf_internal / __vfwscanf_internal directly, passing
+	SCANF_LDBL_IS_DBL | SCANF_ISOC99_A.  Set up a strfile if necessary.
+	Do not set __no_long_double.  Normalize variable names.
+
+2018-12-05  Zack Weinberg  <zackw@panix.com>
+	    Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
 	* stdio-common/isoc99_scanf.c
 	* stdio-common/isoc99_fscanf.c
 	* stdio-common/isoc99_sscanf.c

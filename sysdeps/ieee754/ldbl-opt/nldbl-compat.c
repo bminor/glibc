@@ -19,7 +19,7 @@
 
 #include <stdarg.h>
 #include <stdio.h>
-#include <libioP.h>
+#include <libio/strfile.h>
 #include <math.h>
 #include <wchar.h>
 #include <printf.h>
@@ -335,13 +335,10 @@ int
 attribute_compat_text_section
 __nldbl__IO_vfscanf (FILE *s, const char *fmt, va_list ap, int *errp)
 {
-  int res;
-  set_no_long_double ();
-  res = __vfscanf_internal (s, fmt, ap, 0);
-  clear_no_long_double ();
+  int ret = __vfscanf_internal (s, fmt, ap, SCANF_LDBL_IS_DBL);
   if (__glibc_unlikely (errp != 0))
-    *errp = (res == -1);
-  return res;
+    *errp = (ret == -1);
+  return ret;
 }
 #endif
 
@@ -349,11 +346,7 @@ int
 attribute_compat_text_section
 __nldbl___vfscanf (FILE *s, const char *fmt, va_list ap)
 {
-  int res;
-  set_no_long_double ();
-  res = __vfscanf_internal (s, fmt, ap, 0);
-  clear_no_long_double ();
-  return res;
+  return __vfscanf_internal (s, fmt, ap, SCANF_LDBL_IS_DBL);
 }
 weak_alias (__nldbl___vfscanf, __nldbl_vfscanf)
 libc_hidden_def (__nldbl_vfscanf)
@@ -362,26 +355,26 @@ int
 attribute_compat_text_section
 __nldbl_sscanf (const char *s, const char *fmt, ...)
 {
-  va_list arg;
-  int done;
+  _IO_strfile sf;
+  FILE *f = _IO_strfile_read (&sf, s);
+  va_list ap;
+  int ret;
 
-  va_start (arg, fmt);
-  done = __nldbl_vsscanf (s, fmt, arg);
-  va_end (arg);
+  va_start (ap, fmt);
+  ret = __vfscanf_internal (f, fmt, ap, SCANF_LDBL_IS_DBL);
+  va_end (ap);
 
-  return done;
+  return ret;
 }
 strong_alias (__nldbl_sscanf, __nldbl__IO_sscanf)
 
 int
 attribute_compat_text_section
-__nldbl___vsscanf (const char *string, const char *fmt, va_list ap)
+__nldbl___vsscanf (const char *s, const char *fmt, va_list ap)
 {
-  int res;
-  __no_long_double = 1;
-  res = _IO_vsscanf (string, fmt, ap);
-  __no_long_double = 0;
-  return res;
+  _IO_strfile sf;
+  FILE *f = _IO_strfile_read (&sf, s);
+  return __vfscanf_internal (f, fmt, ap, SCANF_LDBL_IS_DBL);
 }
 weak_alias (__nldbl___vsscanf, __nldbl_vsscanf)
 libc_hidden_def (__nldbl_vsscanf)
@@ -390,46 +383,42 @@ int
 attribute_compat_text_section weak_function
 __nldbl_vscanf (const char *fmt, va_list ap)
 {
-  return __nldbl_vfscanf (stdin, fmt, ap);
+  return __vfscanf_internal (stdin, fmt, ap, SCANF_LDBL_IS_DBL);
 }
 
 int
 attribute_compat_text_section
 __nldbl_fscanf (FILE *stream, const char *fmt, ...)
 {
-  va_list arg;
-  int done;
+  va_list ap;
+  int ret;
 
-  va_start (arg, fmt);
-  done = __nldbl_vfscanf (stream, fmt, arg);
-  va_end (arg);
+  va_start (ap, fmt);
+  ret = __vfscanf_internal (stream, fmt, ap, SCANF_LDBL_IS_DBL);
+  va_end (ap);
 
-  return done;
+  return ret;
 }
 
 int
 attribute_compat_text_section
 __nldbl_scanf (const char *fmt, ...)
 {
-  va_list arg;
-  int done;
+  va_list ap;
+  int ret;
 
-  va_start (arg, fmt);
-  done = __nldbl_vfscanf (stdin, fmt, arg);
-  va_end (arg);
+  va_start (ap, fmt);
+  ret = __vfscanf_internal (stdin, fmt, ap, SCANF_LDBL_IS_DBL);
+  va_end (ap);
 
-  return done;
+  return ret;
 }
 
 int
 attribute_compat_text_section
 __nldbl_vfwscanf (FILE *s, const wchar_t *fmt, va_list ap)
 {
-  int res;
-  set_no_long_double ();
-  res = __vfwscanf_internal (s, fmt, ap, 0);
-  clear_no_long_double ();
-  return res;
+  return __vfwscanf_internal (s, fmt, ap, SCANF_LDBL_IS_DBL);
 }
 libc_hidden_def (__nldbl_vfwscanf)
 
@@ -437,25 +426,28 @@ int
 attribute_compat_text_section
 __nldbl_swscanf (const wchar_t *s, const wchar_t *fmt, ...)
 {
-  va_list arg;
-  int done;
+  _IO_strfile sf;
+  struct _IO_wide_data wd;
+  FILE *f = _IO_strfile_readw (&sf, &wd, s);
+  va_list ap;
+  int ret;
 
-  va_start (arg, fmt);
-  done = __nldbl_vswscanf (s, fmt, arg);
-  va_end (arg);
+  va_start (ap, fmt);
+  ret = __vfwscanf_internal (f, fmt, ap, SCANF_LDBL_IS_DBL);
+  va_end (ap);
 
-  return done;
+  return ret;
 }
 
 int
 attribute_compat_text_section
-__nldbl_vswscanf (const wchar_t *string, const wchar_t *fmt, va_list ap)
+__nldbl_vswscanf (const wchar_t *s, const wchar_t *fmt, va_list ap)
 {
-  int res;
-  __no_long_double = 1;
-  res = vswscanf (string, fmt, ap);
-  __no_long_double = 0;
-  return res;
+  _IO_strfile sf;
+  struct _IO_wide_data wd;
+  FILE *f = _IO_strfile_readw (&sf, &wd, s);
+
+  return __vfwscanf_internal (f, fmt, ap, SCANF_LDBL_IS_DBL);
 }
 libc_hidden_def (__nldbl_vswscanf)
 
@@ -463,35 +455,35 @@ int
 attribute_compat_text_section weak_function
 __nldbl_vwscanf (const wchar_t *fmt, va_list ap)
 {
-  return __nldbl_vfwscanf (stdin, fmt, ap);
+  return __vfwscanf_internal (stdin, fmt, ap, SCANF_LDBL_IS_DBL);
 }
 
 int
 attribute_compat_text_section
 __nldbl_fwscanf (FILE *stream, const wchar_t *fmt, ...)
 {
-  va_list arg;
-  int done;
+  va_list ap;
+  int ret;
 
-  va_start (arg, fmt);
-  done = __nldbl_vfwscanf (stream, fmt, arg);
-  va_end (arg);
+  va_start (ap, fmt);
+  ret = __vfwscanf_internal (stream, fmt, ap, SCANF_LDBL_IS_DBL);
+  va_end (ap);
 
-  return done;
+  return ret;
 }
 
 int
 attribute_compat_text_section
 __nldbl_wscanf (const wchar_t *fmt, ...)
 {
-  va_list arg;
-  int done;
+  va_list ap;
+  int ret;
 
-  va_start (arg, fmt);
-  done = __nldbl_vfwscanf (stdin, fmt, arg);
-  va_end (arg);
+  va_start (ap, fmt);
+  ret = __vfwscanf_internal (stdin, fmt, ap, SCANF_LDBL_IS_DBL);
+  va_end (ap);
 
-  return done;
+  return ret;
 }
 
 int
@@ -866,11 +858,7 @@ int
 attribute_compat_text_section
 __nldbl___isoc99_vfscanf (FILE *s, const char *fmt, va_list ap)
 {
-  int res;
-  set_no_long_double ();
-  res = __isoc99_vfscanf (s, fmt, ap);
-  clear_no_long_double ();
-  return res;
+  return __vfscanf_internal (s, fmt, ap, SCANF_LDBL_IS_DBL | SCANF_ISOC99_A);
 }
 libc_hidden_def (__nldbl___isoc99_vfscanf)
 
@@ -878,25 +866,26 @@ int
 attribute_compat_text_section
 __nldbl___isoc99_sscanf (const char *s, const char *fmt, ...)
 {
-  va_list arg;
-  int done;
+  _IO_strfile sf;
+  FILE *f = _IO_strfile_read (&sf, s);
+  va_list ap;
+  int ret;
 
-  va_start (arg, fmt);
-  done = __nldbl___isoc99_vsscanf (s, fmt, arg);
-  va_end (arg);
+  va_start (ap, fmt);
+  ret = __vfscanf_internal (f, fmt, ap, SCANF_LDBL_IS_DBL | SCANF_ISOC99_A);
+  va_end (ap);
 
-  return done;
+  return ret;
 }
 
 int
 attribute_compat_text_section
-__nldbl___isoc99_vsscanf (const char *string, const char *fmt, va_list ap)
+__nldbl___isoc99_vsscanf (const char *s, const char *fmt, va_list ap)
 {
-  int res;
-  __no_long_double = 1;
-  res = __isoc99_vsscanf (string, fmt, ap);
-  __no_long_double = 0;
-  return res;
+  _IO_strfile sf;
+  FILE *f = _IO_strfile_read (&sf, s);
+
+  return __vfscanf_internal (f, fmt, ap, SCANF_LDBL_IS_DBL | SCANF_ISOC99_A);
 }
 libc_hidden_def (__nldbl___isoc99_vsscanf)
 
@@ -904,46 +893,44 @@ int
 attribute_compat_text_section
 __nldbl___isoc99_vscanf (const char *fmt, va_list ap)
 {
-  return __nldbl___isoc99_vfscanf (stdin, fmt, ap);
+  return __vfscanf_internal (stdin, fmt, ap,
+			     SCANF_LDBL_IS_DBL | SCANF_ISOC99_A);
 }
 
 int
 attribute_compat_text_section
-__nldbl___isoc99_fscanf (FILE *stream, const char *fmt, ...)
+__nldbl___isoc99_fscanf (FILE *s, const char *fmt, ...)
 {
-  va_list arg;
-  int done;
+  va_list ap;
+  int ret;
 
-  va_start (arg, fmt);
-  done = __nldbl___isoc99_vfscanf (stream, fmt, arg);
-  va_end (arg);
+  va_start (ap, fmt);
+  ret = __vfscanf_internal (s, fmt, ap, SCANF_LDBL_IS_DBL | SCANF_ISOC99_A);
+  va_end (ap);
 
-  return done;
+  return ret;
 }
 
 int
 attribute_compat_text_section
 __nldbl___isoc99_scanf (const char *fmt, ...)
 {
-  va_list arg;
-  int done;
+  va_list ap;
+  int ret;
 
-  va_start (arg, fmt);
-  done = __nldbl___isoc99_vfscanf (stdin, fmt, arg);
-  va_end (arg);
+  va_start (ap, fmt);
+  ret = __vfscanf_internal (stdin, fmt, ap,
+			    SCANF_LDBL_IS_DBL | SCANF_ISOC99_A);
+  va_end (ap);
 
-  return done;
+  return ret;
 }
 
 int
 attribute_compat_text_section
 __nldbl___isoc99_vfwscanf (FILE *s, const wchar_t *fmt, va_list ap)
 {
-  int res;
-  set_no_long_double ();
-  res = __isoc99_vfwscanf (s, fmt, ap);
-  clear_no_long_double ();
-  return res;
+  return __vfwscanf_internal (s, fmt, ap, SCANF_LDBL_IS_DBL | SCANF_ISOC99_A);
 }
 libc_hidden_def (__nldbl___isoc99_vfwscanf)
 
@@ -951,26 +938,28 @@ int
 attribute_compat_text_section
 __nldbl___isoc99_swscanf (const wchar_t *s, const wchar_t *fmt, ...)
 {
-  va_list arg;
-  int done;
+  _IO_strfile sf;
+  struct _IO_wide_data wd;
+  FILE *f = _IO_strfile_readw (&sf, &wd, s);
+  va_list ap;
+  int ret;
 
-  va_start (arg, fmt);
-  done = __nldbl___isoc99_vswscanf (s, fmt, arg);
-  va_end (arg);
+  va_start (ap, fmt);
+  ret = __vfwscanf_internal (f, fmt, ap, SCANF_LDBL_IS_DBL | SCANF_ISOC99_A);
+  va_end (ap);
 
-  return done;
+  return ret;
 }
 
 int
 attribute_compat_text_section
-__nldbl___isoc99_vswscanf (const wchar_t *string, const wchar_t *fmt,
-			   va_list ap)
+__nldbl___isoc99_vswscanf (const wchar_t *s, const wchar_t *fmt, va_list ap)
 {
-  int res;
-  __no_long_double = 1;
-  res = __isoc99_vswscanf (string, fmt, ap);
-  __no_long_double = 0;
-  return res;
+  _IO_strfile sf;
+  struct _IO_wide_data wd;
+  FILE *f = _IO_strfile_readw (&sf, &wd, s);
+
+  return __vfwscanf_internal (f, fmt, ap, SCANF_LDBL_IS_DBL | SCANF_ISOC99_A);
 }
 libc_hidden_def (__nldbl___isoc99_vswscanf)
 
@@ -978,35 +967,37 @@ int
 attribute_compat_text_section
 __nldbl___isoc99_vwscanf (const wchar_t *fmt, va_list ap)
 {
-  return __nldbl___isoc99_vfwscanf (stdin, fmt, ap);
+  return __vfwscanf_internal (stdin, fmt, ap,
+			     SCANF_LDBL_IS_DBL | SCANF_ISOC99_A);
 }
 
 int
 attribute_compat_text_section
-__nldbl___isoc99_fwscanf (FILE *stream, const wchar_t *fmt, ...)
+__nldbl___isoc99_fwscanf (FILE *s, const wchar_t *fmt, ...)
 {
-  va_list arg;
-  int done;
+  va_list ap;
+  int ret;
 
-  va_start (arg, fmt);
-  done = __nldbl___isoc99_vfwscanf (stream, fmt, arg);
-  va_end (arg);
+  va_start (ap, fmt);
+  ret = __vfwscanf_internal (s, fmt, ap, SCANF_LDBL_IS_DBL | SCANF_ISOC99_A);
+  va_end (ap);
 
-  return done;
+  return ret;
 }
 
 int
 attribute_compat_text_section
 __nldbl___isoc99_wscanf (const wchar_t *fmt, ...)
 {
-  va_list arg;
-  int done;
+  va_list ap;
+  int ret;
 
-  va_start (arg, fmt);
-  done = __nldbl___isoc99_vfwscanf (stdin, fmt, arg);
-  va_end (arg);
+  va_start (ap, fmt);
+  ret = __vfwscanf_internal (stdin, fmt, ap,
+			     SCANF_LDBL_IS_DBL | SCANF_ISOC99_A);
+  va_end (ap);
 
-  return done;
+  return ret;
 }
 
 #if LONG_DOUBLE_COMPAT(libc, GLIBC_2_0)
