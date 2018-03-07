@@ -15,27 +15,16 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <stdarg.h>
-#include <stdio.h>
-#include <wchar.h>
-#include "../libio/libioP.h"
+#include <libio/libioP.h>
 
 
 /* Write formatted output to stdout from the format string FORMAT.  */
 int
 __vwprintf_chk (int flag, const wchar_t *format, va_list ap)
 {
-  int done;
+  /* For flag > 0 (i.e. __USE_FORTIFY_LEVEL > 1) request that %n
+     can only come from read-only format strings.  */
+  unsigned int mode = (flag > 0) ? PRINTF_FORTIFY : 0;
 
-  _IO_acquire_lock_clear_flags2 (stdout);
-  if (flag > 0)
-    stdout->_flags2 |= _IO_FLAGS2_FORTIFY;
-
-  done = __vfwprintf_internal (stdout, format, ap, 0);
-
-  if (flag > 0)
-    stdout->_flags2 &= ~_IO_FLAGS2_FORTIFY;
-  _IO_release_lock (stdout);
-
-  return done;
+  return __vfwprintf_internal (stdout, format, ap, mode);
 }

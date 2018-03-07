@@ -17,99 +17,23 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-
-#include <stdlib.h>
-#include <libioP.h>
-#include "../libio/strfile.h"
-#include <assert.h>
-#include <string.h>
-#include <errno.h>
-#include <obstack.h>
+#include <libio/libioP.h>
 #include <stdarg.h>
-#include <stdio_ext.h>
-
-
-struct _IO_obstack_file
-{
-  struct _IO_FILE_plus file;
-  struct obstack *obstack;
-};
-
-extern const struct _IO_jump_t _IO_obstack_jumps libio_vtable attribute_hidden;
-
-int
-__obstack_vprintf_chk (struct obstack *obstack, int flags, const char *format,
-		       va_list args)
-{
-  struct obstack_FILE
-    {
-      struct _IO_obstack_file ofile;
-    } new_f;
-  int result;
-  int size;
-  int room;
-
-#ifdef _IO_MTSAFE_IO
-  new_f.ofile.file.file._lock = NULL;
-#endif
-
-  _IO_no_init (&new_f.ofile.file.file, _IO_USER_LOCK, -1, NULL, NULL);
-  _IO_JUMPS (&new_f.ofile.file) = &_IO_obstack_jumps;
-  room = obstack_room (obstack);
-  size = obstack_object_size (obstack) + room;
-  if (size == 0)
-    {
-      /* We have to handle the allocation a bit different since the
-	 `_IO_str_init_static' function would handle a size of zero
-	 different from what we expect.  */
-
-      /* Get more memory.  */
-      obstack_make_room (obstack, 64);
-
-      /* Recompute how much room we have.  */
-      room = obstack_room (obstack);
-      size = room;
-
-      assert (size != 0);
-    }
-
-  _IO_str_init_static_internal ((struct _IO_strfile_ *) &new_f.ofile,
-				obstack_base (obstack),
-				size, obstack_next_free (obstack));
-  /* Now allocate the rest of the current chunk.  */
-  assert (size == (new_f.ofile.file.file._IO_write_end
-		   - new_f.ofile.file.file._IO_write_base));
-  assert (new_f.ofile.file.file._IO_write_ptr
-	  == (new_f.ofile.file.file._IO_write_base
-	      + obstack_object_size (obstack)));
-  obstack_blank_fast (obstack, room);
-
-  new_f.ofile.obstack = obstack;
-
-  /* For flags > 0 (i.e. __USE_FORTIFY_LEVEL > 1) request that %n
-     can only come from read-only format strings.  */
-  if (flags > 0)
-    new_f.ofile.file.file._flags2 |= _IO_FLAGS2_FORTIFY;
-
-  result = __vfprintf_internal (&new_f.ofile.file.file, format, args, 0);
-
-  /* Shrink the buffer to the space we really currently need.  */
-  obstack_blank_fast (obstack, (new_f.ofile.file.file._IO_write_ptr
-				- new_f.ofile.file.file._IO_write_end));
-
-  return result;
-}
-libc_hidden_def (__obstack_vprintf_chk)
 
 
 int
-__obstack_printf_chk (struct obstack *obstack, int flags, const char *format,
+__obstack_printf_chk (struct obstack *obstack, int flag, const char *format,
 		      ...)
 {
-  int result;
+  /* For flag > 0 (i.e. __USE_FORTIFY_LEVEL > 1) request that %n
+     can only come from read-only format strings.  */
+  unsigned int mode = (flag > 0) ? PRINTF_FORTIFY : 0;
   va_list ap;
+  int ret;
+
   va_start (ap, format);
-  result = __obstack_vprintf_chk (obstack, flags, format, ap);
+  ret = __obstack_vprintf_internal (obstack, format, ap, mode);
   va_end (ap);
-  return result;
+
+  return ret;
 }

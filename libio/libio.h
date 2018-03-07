@@ -90,7 +90,6 @@ typedef union
 /* Bits for the _flags2 field.  */
 #define _IO_FLAGS2_MMAP 1
 #define _IO_FLAGS2_NOTCANCEL 2
-#define _IO_FLAGS2_FORTIFY 4
 #define _IO_FLAGS2_USER_WBUF 8
 #define _IO_FLAGS2_NOCLOSE 32
 #define _IO_FLAGS2_CLOEXEC 64

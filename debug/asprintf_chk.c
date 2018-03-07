@@ -15,22 +15,24 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <libioP.h>
 #include <stdarg.h>
-#include <stdio.h>
+#include <libio/libioP.h>
 
 
 /* Write formatted output from FORMAT to a string which is
    allocated with malloc and stored in *STRING_PTR.  */
 int
-__asprintf_chk (char **result_ptr, int flags, const char *format, ...)
+__asprintf_chk (char **result_ptr, int flag, const char *format, ...)
 {
-  va_list arg;
-  int done;
+  /* For flag > 0 (i.e. __USE_FORTIFY_LEVEL > 1) request that %n
+     can only come from read-only format strings.  */
+  unsigned int mode = (flag > 0) ? PRINTF_FORTIFY : 0;
+  va_list ap;
+  int ret;
 
-  va_start (arg, format);
-  done = __vasprintf_chk (result_ptr, flags, format, arg);
-  va_end (arg);
+  va_start (ap, format);
+  ret = __vasprintf_internal (result_ptr, format, ap, mode);
+  va_end (ap);
 
-  return done;
+  return ret;
 }

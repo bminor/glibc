@@ -179,7 +179,7 @@ __nldbl___vsprintf (char *string, const char *fmt, va_list ap)
 {
   int done;
   __no_long_double = 1;
-  done = __vsprintf_internal (string, fmt, ap, 0);
+  done = __vsprintf_internal (string, -1, fmt, ap, 0);
   __no_long_double = 0;
   return done;
 }
@@ -579,7 +579,7 @@ __nldbl___vfprintf_chk (FILE *s, int flag, const char *fmt, va_list ap)
 {
   int res;
   set_no_long_double ();
-  res = __vfprintf_chk (s, flag, fmt, ap);
+  res = __vfprintf_internal (s, fmt, ap, (flag > 0) ? PRINTF_FORTIFY : 0);
   clear_no_long_double ();
   return res;
 }
@@ -591,7 +591,7 @@ __nldbl___vfwprintf_chk (FILE *s, int flag, const wchar_t *fmt, va_list ap)
 {
   int res;
   set_no_long_double ();
-  res = __vfwprintf_chk (s, flag, fmt, ap);
+  res = __vfwprintf_internal (s, fmt, ap, (flag > 0) ? PRINTF_FORTIFY : 0);
   clear_no_long_double ();
   return res;
 }
@@ -609,9 +609,13 @@ attribute_compat_text_section
 __nldbl___vsnprintf_chk (char *string, size_t maxlen, int flag, size_t slen,
 			 const char *fmt, va_list ap)
 {
+  if (__glibc_unlikely (slen < maxlen))
+    __chk_fail ();
+
   int res;
   __no_long_double = 1;
-  res = __vsnprintf_chk (string, maxlen, flag, slen, fmt, ap);
+  res = __vsnprintf_internal (string, maxlen, fmt, ap,
+			      (flag > 0) ? PRINTF_FORTIFY : 0);
   __no_long_double = 0;
   return res;
 }
@@ -622,9 +626,13 @@ attribute_compat_text_section
 __nldbl___vsprintf_chk (char *string, int flag, size_t slen, const char *fmt,
 			va_list ap)
 {
+  if (slen == 0)
+    __chk_fail ();
+
   int res;
   __no_long_double = 1;
-  res = __vsprintf_chk (string, flag, slen, fmt, ap);
+  res = __vsprintf_internal (string, slen, fmt, ap,
+			     (flag > 0) ? PRINTF_FORTIFY : 0);
   __no_long_double = 0;
   return res;
 }
@@ -635,9 +643,13 @@ attribute_compat_text_section
 __nldbl___vswprintf_chk (wchar_t *string, size_t maxlen, int flag, size_t slen,
 			 const wchar_t *fmt, va_list ap)
 {
+  if (__glibc_unlikely (slen < maxlen))
+    __chk_fail ();
+
   int res;
   __no_long_double = 1;
-  res = __vswprintf_chk (string, maxlen, flag, slen, fmt, ap);
+  res = __vswprintf_internal (string, maxlen, fmt, ap,
+			      (flag > 0) ? PRINTF_FORTIFY : 0);
   __no_long_double = 0;
   return res;
 }
@@ -670,7 +682,8 @@ __nldbl___vasprintf_chk (char **ptr, int flag, const char *fmt, va_list arg)
 {
   int res;
   __no_long_double = 1;
-  res = __vasprintf_chk (ptr, flag, fmt, arg);
+  res = __vasprintf_internal (ptr, fmt, arg,
+			      (flag > 0) ? PRINTF_FORTIFY : 0);
   __no_long_double = 0;
   return res;
 }
@@ -696,7 +709,7 @@ __nldbl___vdprintf_chk (int d, int flag, const char *fmt, va_list arg)
 {
   int res;
   set_no_long_double ();
-  res = __vdprintf_chk (d, flag, fmt, arg);
+  res = __vdprintf_internal (d, fmt, arg, (flag > 0) ? PRINTF_FORTIFY : 0);
   clear_no_long_double ();
   return res;
 }
@@ -723,7 +736,8 @@ __nldbl___obstack_vprintf_chk (struct obstack *obstack, int flag,
 {
   int res;
   __no_long_double = 1;
-  res = __obstack_vprintf_chk (obstack, flag, fmt, arg);
+  res = __obstack_vprintf_internal (obstack, fmt, arg,
+				    (flag > 0) ? PRINTF_FORTIFY : 0);
   __no_long_double = 0;
   return res;
 }

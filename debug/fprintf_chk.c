@@ -16,29 +16,23 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <stdarg.h>
-#include <stdio.h>
-#include "../libio/libioP.h"
+#include <libio/libioP.h>
 
 
 /* Write formatted output to FP from the format string FORMAT.  */
 int
 ___fprintf_chk (FILE *fp, int flag, const char *format, ...)
 {
+  /* For flag > 0 (i.e. __USE_FORTIFY_LEVEL > 1) request that %n
+     can only come from read-only format strings.  */
+  unsigned int mode = (flag > 0) ? PRINTF_FORTIFY : 0;
   va_list ap;
-  int done;
-
-  _IO_acquire_lock_clear_flags2 (fp);
-  if (flag > 0)
-    fp->_flags2 |= _IO_FLAGS2_FORTIFY;
+  int ret;
 
   va_start (ap, format);
-  done = vfprintf (fp, format, ap);
+  ret = __vfprintf_internal (fp, format, ap, mode);
   va_end (ap);
 
-  if (flag > 0)
-    fp->_flags2 &= ~_IO_FLAGS2_FORTIFY;
-  _IO_release_lock (fp);
-
-  return done;
+  return ret;
 }
 ldbl_strong_alias (___fprintf_chk, __fprintf_chk)

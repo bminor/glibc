@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2018 Free Software Foundation, Inc.
+/* Print output of stream to given obstack.
+   Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,23 +16,16 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <stdarg.h>
 #include <libio/libioP.h>
 
 
-/* Write formatted output to FP from the format string FORMAT.  */
 int
-__fwprintf_chk (FILE *fp, int flag, const wchar_t *format, ...)
+__obstack_vprintf_chk (struct obstack *obstack, int flag, const char *format,
+		       va_list ap)
 {
   /* For flag > 0 (i.e. __USE_FORTIFY_LEVEL > 1) request that %n
      can only come from read-only format strings.  */
   unsigned int mode = (flag > 0) ? PRINTF_FORTIFY : 0;
-  va_list ap;
-  int ret;
 
-  va_start (ap, format);
-  ret = __vfwprintf_internal (fp, format, ap, mode);
-  va_end (ap);
-
-  return ret;
+  return __obstack_vprintf_internal (obstack, format, ap, mode);
 }

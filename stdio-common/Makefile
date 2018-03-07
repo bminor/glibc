@@ -64,7 +64,7 @@ tests := tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 tst-vfprintf-user-type \
 	 tst-vfprintf-mbs-prec \
 	 tst-scanf-round \
-	 tst-renameat2 \
+	 tst-renameat2 tst-bz11319 tst-bz11319-fortify2 \
 
 test-srcs = tst-unbputc tst-printf tst-printfsz-islongdouble
 
@@ -163,6 +163,10 @@ CFLAGS-test_rdwr.c += -DOBJPFX=\"$(objpfx)\"
 
 # tst-gets.c tests a deprecated function.
 CFLAGS-tst-gets.c += -Wno-deprecated-declarations
+
+# BZ #11319 was first fixed for regular vdprintf, then reopened because
+# the fortified version had the same bug.
+CFLAGS-tst-bz11319-fortify2.c += -D_FORTIFY_SOURCE=2
 
 CPPFLAGS += $(libio-mtsafe)
 

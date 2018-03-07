@@ -216,8 +216,6 @@ extern int __vswprintf_chk (wchar_t *__restrict __s, size_t __n,
 			    const wchar_t *__restrict __format,
 			    __gnuc_va_list __arg)
      /* __attribute__ ((__format__ (__wprintf__, 5, 0))) */;
-libc_hidden_proto (__vfwprintf_chk)
-libc_hidden_proto (__vswprintf_chk)
 
 extern int __isoc99_fwscanf (__FILE *__restrict __stream,
 			     const wchar_t *__restrict __format, ...);

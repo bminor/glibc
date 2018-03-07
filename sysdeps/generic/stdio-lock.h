@@ -54,15 +54,8 @@ __libc_lock_define_recursive (typedef, _IO_lock_t)
 	__attribute__((cleanup (_IO_acquire_lock_fct)))			      \
 	= (_fp);							      \
     _IO_flockfile (_IO_acquire_lock_file);
-#  define _IO_acquire_lock_clear_flags2(_fp) \
-  do {									      \
-    FILE *_IO_acquire_lock_file						      \
-	__attribute__((cleanup (_IO_acquire_lock_clear_flags2_fct)))	      \
-	= (_fp);							      \
-    _IO_flockfile (_IO_acquire_lock_file);
 # else
 #  define _IO_acquire_lock(_fp) _IO_acquire_lock_needs_exceptions_enabled
-#  define _IO_acquire_lock_clear_flags2(_fp) _IO_acquire_lock (_fp)
 # endif
 # define _IO_release_lock(_fp) ; } while (0)
 

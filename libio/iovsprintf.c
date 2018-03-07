@@ -27,8 +27,47 @@
 #include "libioP.h"
 #include "strfile.h"
 
+static int __THROW
+_IO_str_chk_overflow (FILE *fp, int c)
+{
+  /* If we get here, the user-supplied buffer would be overrun by
+     further output.  */
+  __chk_fail ();
+}
+
+static const struct _IO_jump_t _IO_str_chk_jumps libio_vtable =
+{
+  JUMP_INIT_DUMMY,
+  JUMP_INIT(finish, _IO_str_finish),
+  JUMP_INIT(overflow, _IO_str_chk_overflow),
+  JUMP_INIT(underflow, _IO_str_underflow),
+  JUMP_INIT(uflow, _IO_default_uflow),
+  JUMP_INIT(pbackfail, _IO_str_pbackfail),
+  JUMP_INIT(xsputn, _IO_default_xsputn),
+  JUMP_INIT(xsgetn, _IO_default_xsgetn),
+  JUMP_INIT(seekoff, _IO_str_seekoff),
+  JUMP_INIT(seekpos, _IO_default_seekpos),
+  JUMP_INIT(setbuf, _IO_default_setbuf),
+  JUMP_INIT(sync, _IO_default_sync),
+  JUMP_INIT(doallocate, _IO_default_doallocate),
+  JUMP_INIT(read, _IO_default_read),
+  JUMP_INIT(write, _IO_default_write),
+  JUMP_INIT(seek, _IO_default_seek),
+  JUMP_INIT(close, _IO_default_close),
+  JUMP_INIT(stat, _IO_default_stat),
+  JUMP_INIT(showmanyc, _IO_default_showmanyc),
+  JUMP_INIT(imbue, _IO_default_imbue)
+};
+
+/* This function is called by regular vsprintf with maxlen set to -1,
+   and by vsprintf_chk with maxlen set to the size of the output
+   string.  In the former case, _IO_str_chk_overflow will never be
+   called; in the latter case it will crash the program if the buffer
+   overflows.  */
+
 int
-__vsprintf_internal (char *string, const char *format, va_list args,
+__vsprintf_internal (char *string, size_t maxlen,
+		     const char *format, va_list args,
 		     unsigned int mode_flags)
 {
   _IO_strfile sf;
@@ -38,17 +77,22 @@ __vsprintf_internal (char *string, const char *format, va_list args,
   sf._sbf._f._lock = NULL;
 #endif
   _IO_no_init (&sf._sbf._f, _IO_USER_LOCK, -1, NULL, NULL);
-  _IO_JUMPS (&sf._sbf) = &_IO_str_jumps;
-  _IO_str_init_static_internal (&sf, string, -1, string);
+  _IO_JUMPS (&sf._sbf) = &_IO_str_chk_jumps;
+  string[0] = '\0';
+  _IO_str_init_static_internal (&sf, string,
+				(maxlen == -1) ? -1 : maxlen - 1,
+				string);
+
   ret = __vfprintf_internal (&sf._sbf._f, format, args, mode_flags);
-  _IO_putc_unlocked ('\0', &sf._sbf._f);
+
+  *sf._sbf._f._IO_write_ptr = '\0';
   return ret;
 }
 
 int
 __vsprintf (char *string, const char *format, va_list args)
 {
-  return __vsprintf_internal (string, format, args, 0);
+  return __vsprintf_internal (string, -1, format, args, 0);
 }
 
 ldbl_strong_alias (__vsprintf, _IO_vsprintf)

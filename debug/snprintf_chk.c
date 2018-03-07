@@ -15,25 +15,29 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <libioP.h>
 #include <stdarg.h>
-#include <stdio.h>
+#include <libio/libioP.h>
 
 
 /* Write formatted output into S, according to the format
    string FORMAT, writing no more than MAXLEN characters.  */
-/* VARARGS5 */
 int
-___snprintf_chk (char *s, size_t maxlen, int flags, size_t slen,
+___snprintf_chk (char *s, size_t maxlen, int flag, size_t slen,
 		 const char *format, ...)
 {
-  va_list arg;
-  int done;
+  if (__glibc_unlikely (slen < maxlen))
+    __chk_fail ();
 
-  va_start (arg, format);
-  done = __vsnprintf_chk (s, maxlen, flags, slen, format, arg);
-  va_end (arg);
+  /* For flag > 0 (i.e. __USE_FORTIFY_LEVEL > 1) request that %n
+     can only come from read-only format strings.  */
+  unsigned int mode = (flag > 0) ? PRINTF_FORTIFY : 0;
+  va_list ap;
+  int ret;
 
-  return done;
+  va_start (ap, format);
+  ret = __vsnprintf_internal (s, maxlen, format, ap, mode);
+  va_end (ap);
+
+  return ret;
 }
 ldbl_strong_alias (___snprintf_chk, __snprintf_chk)

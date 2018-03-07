@@ -677,9 +677,16 @@ extern int __obstack_vprintf_internal (struct obstack *ob, const char *fmt,
 				       va_list ap, unsigned int mode_flags)
     attribute_hidden;
 
-extern int __vsprintf_internal (char *string, const char *format, va_list ap,
+/* Note: __vsprintf_internal, unlike vsprintf, does take a maxlen argument,
+   because it's called by both vsprintf and vsprintf_chk.  If maxlen is
+   not set to -1, overrunning the buffer will cause a prompt crash.
+   This is the behavior of ordinary (v)sprintf functions, thus they call
+   __vsprintf_internal with that argument set to -1.  */
+extern int __vsprintf_internal (char *string, size_t maxlen,
+				const char *format, va_list ap,
 				unsigned int mode_flags)
     attribute_hidden;
+
 extern int __vsnprintf_internal (char *string, size_t maxlen,
 				 const char *format, va_list ap,
 				 unsigned int mode_flags)
@@ -818,26 +825,10 @@ _IO_acquire_lock_fct (FILE **p)
     _IO_funlockfile (fp);
 }
 
-static inline void
-__attribute__ ((__always_inline__))
-_IO_acquire_lock_clear_flags2_fct (FILE **p)
-{
-  FILE *fp = *p;
-  fp->_flags2 &= ~(_IO_FLAGS2_FORTIFY);
-  if ((fp->_flags & _IO_USER_LOCK) == 0)
-    _IO_funlockfile (fp);
-}
-
 #if !defined _IO_MTSAFE_IO && IS_IN (libc)
 # define _IO_acquire_lock(_fp)						      \
-  do {									      \
-    FILE *_IO_acquire_lock_file = NULL
-# define _IO_acquire_lock_clear_flags2(_fp)				      \
-  do {									      \
-    FILE *_IO_acquire_lock_file = (_fp)
+  do {
 # define _IO_release_lock(_fp)						      \
-    if (_IO_acquire_lock_file != NULL)					      \
-      _IO_acquire_lock_file->_flags2 &= ~(_IO_FLAGS2_FORTIFY);		      \
   } while (0)
 #endif
 

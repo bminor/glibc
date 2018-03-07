@@ -216,11 +216,6 @@ libc_hidden_proto (__open_memstream)
 libc_hidden_proto (__libc_fatal)
 rtld_hidden_proto (__libc_fatal)
 libc_hidden_proto (__vsprintf_chk)
-libc_hidden_proto (__vsnprintf_chk)
-libc_hidden_proto (__vfprintf_chk)
-libc_hidden_proto (__vasprintf_chk)
-libc_hidden_proto (__vdprintf_chk)
-libc_hidden_proto (__obstack_vprintf_chk)
 
 extern FILE * __fmemopen (void *buf, size_t len, const char *mode);
 libc_hidden_proto (__fmemopen)

@@ -27,7 +27,7 @@ __sprintf (char *s, const char *format, ...)
   int done;
 
   va_start (arg, format);
-  done = __vsprintf_internal (s, format, arg, 0);
+  done = __vsprintf_internal (s, -1, format, arg, 0);
   va_end (arg);
 
   return done;

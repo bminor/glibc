@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2018 Free Software Foundation, Inc.
+/* Regression test for bug 11319.
+   Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,23 +16,34 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <stdarg.h>
-#include <libio/libioP.h>
+#define _GNU_SOURCE 1
 
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-/* Write formatted output to FP from the format string FORMAT.  */
-int
-__fwprintf_chk (FILE *fp, int flag, const wchar_t *format, ...)
+#include <support/check.h>
+#include <support/temp_file.h>
+#include <support/xunistd.h>
+
+static int
+do_test (void)
 {
-  /* For flag > 0 (i.e. __USE_FORTIFY_LEVEL > 1) request that %n
-     can only come from read-only format strings.  */
-  unsigned int mode = (flag > 0) ? PRINTF_FORTIFY : 0;
-  va_list ap;
-  int ret;
+  char *tempfile;
+  int fd;
 
-  va_start (ap, format);
-  ret = __vfwprintf_internal (fp, format, ap, mode);
-  va_end (ap);
+  /* Create a temporary file and open it in read-only mode.  */
+  TEST_VERIFY_EXIT (create_temp_file ("tst-bz11319", &tempfile));
+  fd = xopen (tempfile, O_RDONLY, 0660);
 
-  return ret;
+  /* Try and write to the temporary file to intentionally fail, then
+     check that dprintf (or __dprintf_chk) return EOF.  */
+  TEST_COMPARE (dprintf (fd, "%d", 0), EOF);
+
+  xclose (fd);
+  free (tempfile);
+
+  return 0;
 }
+
+#include <support/test-driver.c>

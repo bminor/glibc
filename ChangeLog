@@ -1,6 +1,95 @@
 2018-12-05  Zack Weinberg  <zackw@panix.com>
 	    Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
+	[BZ #11319]
+	* libio/iovsprintf.c (_IO_str_chk_overflow, libio_vtable):
+	Moved here from debug/vsprintf_chk.c.
+	(__vsprintf_internal): Add 'maxlen' argument.  Change the setup
+	and completion logic for the strfile to match exactly what
+	__vsprintf_chk used to do, except, when maxlen is -1, pass -1 to
+	_IO_str_init_static_internal instead of maxlen-1.
+	(__vsprintf): Pass -1 as maxlen to __vsprintf_internal.
+	* stdio-common/sprintf.c (__sprintf): Pass -1 as maxlen to
+	__vsprintf_internal.
+
+	* debug/vsprintf_chk.c (__vsprintf_chk)
+	* debug/sprintf_chk.c (__sprintf_chk):
+	Directly call __vsprintf_internal, passing PRINTF_FORTIFY if
+	'flags' argument is positive, and slen as maxlen.  No need to lock
+	the FILE and/or construct a temporary FILE.  Minimize and normalize
+	header inclusions and variable names.  Do not libc_hidden_def anything.
+
+	* debug/asprintf_chk.c (__asprintf_chk)
+	* debug/dprintf_chk.c (__dprintf_chk)
+	* debug/fprintf_chk.c (__fprintf_chk)
+	* debug/fwprintf_chk.c (__fwprintf_chk)
+	* debug/printf_chk.c (__printf_chk)
+	* debug/snprintf_chk.c (__snprintf_chk)
+	* debug/swprintf_chk.c (__swprintf_chk)
+	* debug/vasprintf_chk.c (__vasprintf_chk)
+	* debug/vdprintf_chk.c (__vdprintf_chk)
+	* debug/vfprintf_chk.c (__vfprintf_chk)
+	* debug/vfwprintf_chk.c (__vfwprintf_chk)
+	* debug/vprintf_chk.c (__vprintf_chk)
+	* debug/vsnprintf_chk.c (__vsnprintf_chk)
+	* debug/vswprintf_chk.c (__vswprintf_chk)
+	* debug/vwprintf_chk.c (__vwprintf_chk)
+	* debug/wprintf_chk.c (__wprintf_chk):
+	Directly call the corresponding vxxprintf_internal function, passing
+	PRINTF_FORTIFY if 'flag' argument is positive.	No need to lock
+	the FILE and/or construct a temporary FILE.  Minimize and normalize
+	header inclusions and variable names.  Do not libc_hidden_def anything.
+
+	* debug/obprintf_chk.c (__obstack_printf_chk): Directly call
+	__obstack_vprintf_internal.
+	(__obstack_vprintf_chk): Convert into a wrapper that calls
+	__obstack_vprintf_internal (these two functions already had the
+	same code) and move to new file...
+	* debug/vobprintf_chk.c (__obstack_vprintf_chk): ... here.  New
+	file.
+	* debug/obprintf.c (__obstack_vprintf_internal): Remove the checking of
+	the flags argument and the setting of _IO_FLAGS2_FORTIFY.
+	* debug/Makefile (routines): Add vobprintf_chk.
+
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.c
+	(__nldbl___vsprintf): Pass -1 as maxlen to __vsprintf_internal.
+	(__nldbl___vfprintf_chk, __nldbl___vsnprintf_chk)
+	(__nldbl___vsprintf_chk, __nldbl___vswprintf_chk)
+	(__nldbl___vasprintf_chk, __nldbl___vdprintf_chk)
+	(__nldbl___obstack_vfprintf_chk):
+	Directly call the corresponding vxxprintf_internal function,
+	passing PRINTF_FORTIFY if 'flag' argument is positive.  If necessary,
+	duplicate comparison of slen with 0 or maxlen from the corresponding
+	non-__nldbl function.
+
+	* include/stdio.h (__vsnprintf_chk, __vfprintf_chk, __vasprintf_chk)
+	(__vdprintf_chk, __obstack_vfprintf_chk): Remove libc_hidden_proto.
+	* include/wchar.h (__vfwprintf_chk, __vswprintf_chk):
+	Remove libc_hidden_proto.
+
+	* stdio-common/vfprintf-internal.c
+	(__vfprintf_internal, __vfwprintf_internal):
+	Do not check _IO_FLAGS2_FORTIFY.
+	* libio/libio.h (_IO_FLAGS2_FORTIFY): Remove.
+	* libio/libioP.h: Update prototype of __vsprintf_internal and add
+	a comment explaining why it has the maxlen argument.
+	(_IO_acquire_lock_clear_flags2_fct): Remove.
+	(_IO_acquire_lock_clear_flags2): Remove.
+	(_IO_release_lock): Remove conditional statement which will
+	now never execute.
+	(_IO_acquire_lock): Remove variable which is now unused.
+	* sysdeps/generic/stdio-lock.h (_IO_acquire_lock_clear_flags2): Remove.
+	* sysdeps/nptl/stdio-lock.h (_IO_acquire_lock_clear_flags2): Remove.
+
+	* stdio-common/Makefile (tests): Add tst-bz11319 and
+	tst-bz11319-fortify2.
+	(CFLAGS-tst-bz11319-fortify2.c): New macro.
+	* stdio-common/tst-bz11319-fortify2.c: New file.
+	* stdio-common/tst-bz11319.c: Likewise.
+
+2018-12-05  Zack Weinberg  <zackw@panix.com>
+	    Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
 	* misc/syslog.c: Include libioP.h, not iolibio.h.
 	(__vsyslog_internal): New function with the former body of
 	__vsyslog_chk; takes mode_flags argument same as

@@ -1283,8 +1283,6 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap, unsigned int mode_flags)
   /* Temporarily honor environmental settings.  */
   if (__ldbl_is_dbl)
     mode_flags |= PRINTF_LDBL_IS_DBL;
-  if (s->_flags2 & _IO_FLAGS2_FORTIFY)
-    mode_flags |= PRINTF_FORTIFY;
 
   /* Orient the stream.  */
 #ifdef ORIENT

@@ -15,21 +15,23 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <libioP.h>
 #include <stdarg.h>
-#include <stdio.h>
+#include <libio/libioP.h>
 
 
 /* Write formatted output to D, according to the format string FORMAT.  */
 int
-__dprintf_chk (int d, int flags, const char *format, ...)
+__dprintf_chk (int d, int flag, const char *format, ...)
 {
-  va_list arg;
-  int done;
+  /* For flag > 0 (i.e. __USE_FORTIFY_LEVEL > 1) request that %n
+     can only come from read-only format strings.  */
+  unsigned int mode = (flag > 0) ? PRINTF_FORTIFY : 0;
+  va_list ap;
+  int ret;
 
-  va_start (arg, format);
-  done = __vdprintf_chk (d, flags, format, arg);
-  va_end (arg);
+  va_start (ap, format);
+  ret = __vdprintf_internal (d, format, ap, mode);
+  va_end (ap);
 
-  return done;
+  return ret;
 }

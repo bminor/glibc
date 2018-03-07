@@ -24,41 +24,14 @@
    This exception applies to code released by its copyright holders
    in files containing the exception.  */
 
-#include <libioP.h>
-#include <stdio_ext.h>
+#include <libio/libioP.h>
 
 int
-__vdprintf_chk (int d, int flags, const char *format, va_list arg)
+__vdprintf_chk (int d, int flag, const char *format, va_list ap)
 {
-  struct _IO_FILE_plus tmpfil;
-  struct _IO_wide_data wd;
-  int done;
-
-#ifdef _IO_MTSAFE_IO
-  tmpfil.file._lock = NULL;
-#endif
-  _IO_no_init (&tmpfil.file, _IO_USER_LOCK, 0, &wd, &_IO_wfile_jumps);
-  _IO_JUMPS (&tmpfil) = &_IO_file_jumps;
-  _IO_new_file_init_internal (&tmpfil);
-  if (_IO_file_attach (&tmpfil.file, d) == NULL)
-    {
-      _IO_un_link (&tmpfil);
-      return EOF;
-    }
-  tmpfil.file._flags |= _IO_DELETE_DONT_CLOSE;
-
-  _IO_mask_flags (&tmpfil.file, _IO_NO_READS,
-		  _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
-
-  /* For flags > 0 (i.e. __USE_FORTIFY_LEVEL > 1) request that %n
+  /* For flag > 0 (i.e. __USE_FORTIFY_LEVEL > 1) request that %n
      can only come from read-only format strings.  */
-  if (flags > 0)
-    tmpfil.file._flags2 |= _IO_FLAGS2_FORTIFY;
+  unsigned int mode = (flag > 0) ? PRINTF_FORTIFY : 0;
 
-  done = __vfprintf_internal (&tmpfil.file, format, arg, 0);
-
-  _IO_FINISH (&tmpfil.file);
-
-  return done;
+  return __vdprintf_internal (d, format, ap, mode);
 }
-libc_hidden_def (__vdprintf_chk)

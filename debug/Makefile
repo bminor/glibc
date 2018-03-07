@@ -45,7 +45,7 @@ routines  = backtrace backtracesyms backtracesymsfd noophooks \
 	    gethostname_chk getdomainname_chk wcrtomb_chk mbsnrtowcs_chk \
 	    wcsnrtombs_chk mbsrtowcs_chk wcsrtombs_chk mbstowcs_chk \
 	    wcstombs_chk asprintf_chk vasprintf_chk dprintf_chk \
-	    vdprintf_chk obprintf_chk \
+	    vdprintf_chk obprintf_chk vobprintf_chk \
 	    longjmp_chk ____longjmp_chk \
 	    fdelt_chk poll_chk ppoll_chk \
 	    explicit_bzero_chk \
