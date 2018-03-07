@@ -786,7 +786,7 @@ __attribute__ ((__always_inline__))
 _IO_acquire_lock_clear_flags2_fct (FILE **p)
 {
   FILE *fp = *p;
-  fp->_flags2 &= ~(_IO_FLAGS2_FORTIFY | _IO_FLAGS2_SCANF_STD);
+  fp->_flags2 &= ~(_IO_FLAGS2_FORTIFY);
   if ((fp->_flags & _IO_USER_LOCK) == 0)
     _IO_funlockfile (fp);
 }
@@ -800,8 +800,7 @@ _IO_acquire_lock_clear_flags2_fct (FILE **p)
     FILE *_IO_acquire_lock_file = (_fp)
 # define _IO_release_lock(_fp)						      \
     if (_IO_acquire_lock_file != NULL)					      \
-      _IO_acquire_lock_file->_flags2 &= ~(_IO_FLAGS2_FORTIFY		      \
-                                          | _IO_FLAGS2_SCANF_STD);	      \
+      _IO_acquire_lock_file->_flags2 &= ~(_IO_FLAGS2_FORTIFY);		      \
   } while (0)
 #endif
 

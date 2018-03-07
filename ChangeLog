@@ -1,6 +1,32 @@
 2018-12-05  Zack Weinberg  <zackw@panix.com>
 	    Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
+	* stdio-common/isoc99_scanf.c
+	* stdio-common/isoc99_fscanf.c
+	* stdio-common/isoc99_sscanf.c
+	* stdio-common/isoc99_vscanf.c
+	* stdio-common/isoc99_vfscanf.c
+	* stdio-common/isoc99_vsscanf.c
+	* wcsmbs/isoc99_wscanf.c
+	* wcsmbs/isoc99_fwscanf.c
+	* wcsmbs/isoc99_swscanf.c
+	* wcsmbs/isoc99_vwscanf.c
+	* wcsmbs/isoc99_vfwscanf.c
+	* wcsmbs/isoc99_vswscanf.c:
+	Pass SCANF_ISOC99_A to __vfscanf_internal and/or __vfwscanf_internal.
+	Do not set _IO_FLAGS2_SCANF_STD on the FILE passed to that function.
+	No need to lock and unlock the FILE passed to that function.
+
+	* stdio-common/vfscanf-internal.c
+	(__vfscanf_internal, __vfwscanf_internal):
+	Don't look at _IO_FLAGS2_SCANF_STD.
+	* libio/libioP.h (_IO_acquire_lock_clear_flags2_fct)
+	(_IO_release_lock): Don't clear _IO_FLAGS2_SCANF_STD.
+	* libio/libio.h (_IO_FLAGS2_SCANF_STD): Delete.
+
+2018-12-05  Zack Weinberg  <zackw@panix.com>
+	    Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
 	* libio/libioP.h (SCANF_LDBL_IS_DBL, SCANF_ISOC99_A): New constants.
 	(__vfscanf_internal, __vfwscanf_internal): New function prototypes.
 	* libio/libio.h: Remove libc_hidden_proto for _IO_vfscanf.

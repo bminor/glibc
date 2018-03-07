@@ -335,8 +335,6 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
   /* Temporarily honor the environmental mode bits.  */
   if (__ldbl_is_dbl)
     mode_flags |= SCANF_LDBL_IS_DBL;
-  if (s->_flags2 & _IO_FLAGS2_SCANF_STD)
-    mode_flags |= SCANF_ISOC99_A;
 
 #ifdef __va_copy
   __va_copy (arg, argptr);

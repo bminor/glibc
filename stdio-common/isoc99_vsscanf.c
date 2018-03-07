@@ -31,7 +31,6 @@ __isoc99_vsscanf (const char *string, const char *format, va_list args)
 {
   _IO_strfile sf;
   FILE *f = _IO_strfile_read (&sf, string);
-  f->_flags2 |= _IO_FLAGS2_SCANF_STD;
-  return __vfscanf_internal (f, format, args, 0);
+  return __vfscanf_internal (f, format, args, SCANF_ISOC99_A);
 }
 libc_hidden_def (__isoc99_vsscanf)

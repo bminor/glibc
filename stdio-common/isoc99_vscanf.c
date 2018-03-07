@@ -19,15 +19,8 @@
 #include <stdio.h>
 
 /* Read formatted input from STDIN according to the format string FORMAT.  */
-/* VARARGS2 */
 int
 __isoc99_vscanf (const char *format, va_list args)
 {
-  int done;
-
-  _IO_acquire_lock_clear_flags2 (stdin);
-  stdin->_flags2 |= _IO_FLAGS2_SCANF_STD;
-  done = __vfscanf_internal (stdin, format, args, 0);
-  _IO_release_lock (stdin);
-  return done;
+  return __vfscanf_internal (stdin, format, args, SCANF_ISOC99_A);
 }

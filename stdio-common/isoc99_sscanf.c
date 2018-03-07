@@ -26,10 +26,9 @@ __isoc99_sscanf (const char *s, const char *format, ...)
   int done;
   _IO_strfile sf;
   FILE *f = _IO_strfile_read (&sf, s);
-  f->_flags2 |= _IO_FLAGS2_SCANF_STD;
 
   va_start (arg, format);
-  done = __vfscanf_internal (f, format, arg, 0);
+  done = __vfscanf_internal (f, format, arg, SCANF_ISOC99_A);
   va_end (arg);
 
   return done;

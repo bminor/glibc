@@ -28,10 +28,9 @@ __isoc99_swscanf (const wchar_t *s, const wchar_t *format, ...)
   _IO_strfile sf;
   struct _IO_wide_data wd;
   FILE *f = _IO_strfile_readw (&sf, &wd, s);
-  f->_flags2 |= _IO_FLAGS2_SCANF_STD;
 
   va_start (arg, format);
-  done = __vfwscanf_internal (f, format, arg, 0);
+  done = __vfwscanf_internal (f, format, arg, SCANF_ISOC99_A);
   va_end (arg);
 
   return done;

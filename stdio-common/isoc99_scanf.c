@@ -19,26 +19,16 @@
 #include <stdio.h>
 #include <libioP.h>
 
-
 /* Read formatted input from stdin according to the format string FORMAT.  */
-/* VARARGS1 */
 int
 __isoc99_scanf (const char *format, ...)
 {
   va_list arg;
   int done;
 
-#ifdef _IO_MTSAFE_IO
-  _IO_acquire_lock_clear_flags2 (stdin);
-#endif
-  stdin->_flags2 |= _IO_FLAGS2_SCANF_STD;
-
   va_start (arg, format);
-  done = __vfscanf_internal (stdin, format, arg, 0);
+  done = __vfscanf_internal (stdin, format, arg, SCANF_ISOC99_A);
   va_end (arg);
 
-#ifdef _IO_MTSAFE_IO
-  _IO_release_lock (stdin);
-#endif
   return done;
 }

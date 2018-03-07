@@ -22,20 +22,15 @@
 
 
 /* Read formatted input from stdin according to the format string FORMAT.  */
-/* VARARGS1 */
 int
 __isoc99_wscanf (const wchar_t *format, ...)
 {
   va_list arg;
   int done;
 
-  _IO_acquire_lock_clear_flags2 (stdin);
-  stdin->_flags2 |= _IO_FLAGS2_SCANF_STD;
-
   va_start (arg, format);
-  done = __vfwscanf_internal (stdin, format, arg, 0);
+  done = __vfwscanf_internal (stdin, format, arg, SCANF_ISOC99_A);
   va_end (arg);
 
-  _IO_release_lock (stdin);
   return done;
 }
