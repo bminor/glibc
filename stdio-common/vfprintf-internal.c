@@ -1280,10 +1280,6 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap, unsigned int mode_flags)
      0 if unknown.  */
   int readonly_format = 0;
 
-  /* Temporarily honor environmental settings.  */
-  if (__ldbl_is_dbl)
-    mode_flags |= PRINTF_LDBL_IS_DBL;
-
   /* Orient the stream.  */
 #ifdef ORIENT
   ORIENT;

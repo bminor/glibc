@@ -8,7 +8,7 @@ endif
 
 ifeq ($(subdir),math)
 libm-routines += s_nexttowardfd
-routines += math_ldbl_opt nldbl-compat
+routines += nldbl-compat
 
 extra-libs += libnldbl
 libnldbl-calls = asprintf dprintf fprintf fscanf fwprintf fwscanf iovfscanf \

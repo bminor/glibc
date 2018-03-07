@@ -40,10 +40,3 @@
   weak_alias (local, symbol)
 # endif
 #endif
-
-#ifndef __ASSEMBLER__
-/* Set temporarily to non-zero if long double should be considered
-   the same as double.  */
-extern __thread int __no_long_double attribute_tls_model_ie attribute_hidden;
-# define __ldbl_is_dbl __builtin_expect (__no_long_double, 0)
-#endif

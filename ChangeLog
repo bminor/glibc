@@ -1,6 +1,48 @@
 2018-12-05  Zack Weinberg  <zackw@panix.com>
 	    Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
+	* stdio-common/vfprintf-internal.c
+	(__vfprintf_internal, __vfwprintf_internal): Don't use __ldbl_is_dbl.
+	* sysdeps/generic/math_ldbl_opt.h: Remove __ldbl_is_dbl.
+	* sysdeps/ieee754/ldbl-opt/math_ldbl_opt.h: Remove __ldbl_is_dbl
+	and __no_long_double.
+	* sysdeps/ieee754/ldbl-opt/math_ldbl_opt.c: Remove file.
+	* sysdeps/ieee754/ldbl-opt/Makefile (routines): Remove math_ldbl_opt.
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.c: Remove
+	libc_hidden_proto and libc_hidden_def from all __nldbl_*printf*
+	and __nldbl_*syslog* functions.
+	(__nldbl_cleanup, set_no_long_double, clear_no_long_double): Remove.
+	(__nldbl___asprintf, __nldbl_dprintf, __nldbl_fprintf)
+	(__nldbl_fwprintf, __nldbl_printf, __nldbl_sprintf)
+	(__nldbl_vfprintf, __nldbl___vsprintf, __nldbl_obstack_vprintf)
+	(__ndlbl_obstack_printf, __nldbl_snprintf, __nldbl_swprintf)
+	(__nldbl_vasprintf, __nldbl_vdprintf, __nldbl_vfwprintf)
+	(__nldbl_vprintf, __nldbl_vsnprintf, __ndlbl_vswprintf)
+	(__nldbl_vwprintf, __nldbl_wprintf):
+	Directly call the appropriate __v*printf_internal routine, passing
+	PRINTF_LDBL_IS_DBL.  Do not mess with __no_long_double. Normalize
+	variable names.
+	(__nldbl___fprintf_chk, __nldbl___fwprintf_chk)
+	(__nldbl___printf_chk, __nldbl___snprintf_chk)
+	(__nldbl___sprintf_chk, __nldbl___swprintf_chk)
+	(__nldbl___vfprintf_chk, __nldbl___vfwprintf_chk)
+	(__nldbl___vprintf_chk, __nldbl___vsnprintf_chk)
+	(__nldbl___vsprintf_chk, __nldbl___vswprintf_chk)
+	(__nldbl___vwprintf_chk, __nldbl___wprintf_chk)
+	(__nldbl___vasprintf_chk, __nldbl___asprintf_chk)
+	(__nldbl___vdprintf_chk, __nldbl___dprintf_chk)
+	(__nldbl___obstack_vprintf_chk, __nldbl___obstack_printf_chk):
+	Likewise, and also pass PRINTF_FORTIFY when appropriate.
+	(__nldbl_syslog, __nldbl_vsyslog):
+	Directly call __vsyslog_internal, passing PRINTF_LDBL_IS_DBL.
+	(__nldbl_syslog_chk): Likewise, and also pass PRINTF_FORTIFY when
+	appropriate.
+	(__nldbl_vsyslog_chk): Likewise, and also pass PRINTF_FORTIFY when
+	appropriate.
+
+2018-12-05  Zack Weinberg  <zackw@panix.com>
+	    Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
 	[BZ #11319]
 	* libio/iovsprintf.c (_IO_str_chk_overflow, libio_vtable):
 	Moved here from debug/vsprintf_chk.c.

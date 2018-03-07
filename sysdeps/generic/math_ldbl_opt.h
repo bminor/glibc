@@ -15,4 +15,3 @@
 #define ldbl_weak_alias(name, aliasname) weak_alias (name, aliasname)
 #define ldbl_compat_symbol(lib, local, symbol, version) \
   compat_symbol (lib, local, symbol, version)
-#define __ldbl_is_dbl 0
