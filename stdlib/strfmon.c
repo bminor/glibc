@@ -30,7 +30,8 @@ __strfmon (char *s, size_t maxsize, const char *format, ...)
 
   va_start (ap, format);
 
-  ssize_t res = __vstrfmon_l (s, maxsize, _NL_CURRENT_LOCALE, format, ap);
+  ssize_t res = __vstrfmon_l_internal (s, maxsize, _NL_CURRENT_LOCALE,
+				       format, ap, 0);
 
   va_end (ap);
 

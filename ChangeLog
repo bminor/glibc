@@ -1,3 +1,28 @@
+2018-11-16  Zack Weinberg  <zackw@panix.com>
+	    Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
+	* include/monetary.h (STRFMON_LDBL_IS_DBL): New constant.
+	(__vstrfmon_l): Rename to __vstrfmon_l_internal and add flags
+	argument.
+	* stdlib/strfmon_l.c (__vstrfmon_l): Rename to __vstrfmon_l_internal
+	and add flags argument.	 Check flags instead of __ldbl_is_dbl when
+	deciding whether to set is_long_double.
+	(__strfmon_l): Call __vstrfmon_l_internal instead of __vstrfmon_l,
+	passing zero for flags argument.
+	* stdlib/strfmon.c (strfmon): Same change as made to __strfmon_l.
+
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.c
+	(__nldbl___vstrfmon, __nldbl___vstrfmon_l)
+	(__nldbl_strfmon, __nldbl___strfmon_l): Call __vstrfmon_l_internal
+	directly, passing STRFMON_LDBL_IS_DBL for flags argument.  Normalize
+	variable names.  Remove libc_hidden_def/libc_hidden_proto from
+	__nldbl___vstrfmon and __nldbl___vstrfmon_l, because they are no
+	longer called from within the library.
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.h: Don't use NLDBL_DECL
+	for __nldbl___vstrfmon_l, declare it explicitly.
+
+	* manual/locale.texi: Update a reference to vstrfmon_l in comments.
+
 2018-11-15  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/bits/fcntl.h (F_GETLK64, F_SETLK64, F_SETLKW64): New

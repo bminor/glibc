@@ -51,8 +51,6 @@ libc_hidden_proto (__nldbl___vswprintf_chk)
 libc_hidden_proto (__nldbl___vasprintf_chk)
 libc_hidden_proto (__nldbl___vdprintf_chk)
 libc_hidden_proto (__nldbl___obstack_vprintf_chk)
-libc_hidden_proto (__nldbl___vstrfmon)
-libc_hidden_proto (__nldbl___vstrfmon_l)
 libc_hidden_proto (__nldbl___isoc99_vsscanf)
 libc_hidden_proto (__nldbl___isoc99_vfscanf)
 libc_hidden_proto (__nldbl___isoc99_vswscanf)
@@ -780,12 +778,13 @@ attribute_compat_text_section
 __nldbl_strfmon (char *s, size_t maxsize, const char *format, ...)
 {
   va_list ap;
-  ssize_t res;
+  ssize_t ret;
 
   va_start (ap, format);
-  res = __nldbl___vstrfmon (s, maxsize, format, ap);
+  ret = __vstrfmon_l_internal (s, maxsize, _NL_CURRENT_LOCALE, format, ap,
+			       STRFMON_LDBL_IS_DBL);
   va_end (ap);
-  return res;
+  return ret;
 }
 
 ssize_t
@@ -794,12 +793,13 @@ __nldbl___strfmon_l (char *s, size_t maxsize, locale_t loc,
 		     const char *format, ...)
 {
   va_list ap;
-  ssize_t res;
+  ssize_t ret;
 
   va_start (ap, format);
-  res = __nldbl___vstrfmon_l (s, maxsize, loc, format, ap);
+  ret = __vstrfmon_l_internal (s, maxsize, loc, format, ap,
+			       STRFMON_LDBL_IS_DBL);
   va_end (ap);
-  return res;
+  return ret;
 }
 weak_alias (__nldbl___strfmon_l, __nldbl_strfmon_l)
 
@@ -807,28 +807,18 @@ ssize_t
 attribute_compat_text_section
 __nldbl___vstrfmon (char *s, size_t maxsize, const char *format, va_list ap)
 {
-  ssize_t res;
-  __no_long_double = 1;
-  res = __vstrfmon_l (s, maxsize, _NL_CURRENT_LOCALE, format, ap);
-  __no_long_double = 0;
-  va_end (ap);
-  return res;
+  return __vstrfmon_l_internal (s, maxsize, _NL_CURRENT_LOCALE, format, ap,
+				STRFMON_LDBL_IS_DBL);
 }
-libc_hidden_def (__nldbl___vstrfmon)
 
 ssize_t
 attribute_compat_text_section
 __nldbl___vstrfmon_l (char *s, size_t maxsize, locale_t loc,
 		      const char *format, va_list ap)
 {
-  ssize_t res;
-  __no_long_double = 1;
-  res = __vstrfmon_l (s, maxsize, loc, format, ap);
-  __no_long_double = 0;
-  va_end (ap);
-  return res;
+  return __vstrfmon_l_internal (s, maxsize, loc, format, ap,
+				STRFMON_LDBL_IS_DBL);
 }
-libc_hidden_def (__nldbl___vstrfmon_l)
 
 void
 attribute_compat_text_section

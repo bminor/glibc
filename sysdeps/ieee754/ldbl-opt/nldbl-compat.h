@@ -64,7 +64,6 @@ NLDBL_DECL (vsyslog);
 NLDBL_DECL (qecvt);
 NLDBL_DECL (qfcvt);
 NLDBL_DECL (qgcvt);
-NLDBL_DECL (__vstrfmon_l);
 NLDBL_DECL (__isoc99_scanf);
 NLDBL_DECL (__isoc99_fscanf);
 NLDBL_DECL (__isoc99_sscanf);
@@ -78,9 +77,12 @@ NLDBL_DECL (__isoc99_vwscanf);
 NLDBL_DECL (__isoc99_vfwscanf);
 NLDBL_DECL (__isoc99_vswscanf);
 
-/* This one does not exist in the normal interface, only
-   __nldbl___vstrfmon really exists.  */
+/* These do not exist in the normal interface, but must exist in the
+   __nldbl interface so that they can be called from libnldbl.  */
 extern ssize_t __nldbl___vstrfmon (char *, size_t, const char *, va_list)
+  __THROW;
+extern ssize_t __nldbl___vstrfmon_l (char *, size_t, locale_t, const char *,
+				     va_list)
   __THROW;
 
 /* These don't use __typeof because they were not declared by the headers,

@@ -1209,10 +1209,11 @@ numbers according to these rules.
 
 @deftypefun ssize_t strfmon (char *@var{s}, size_t @var{maxsize}, const char *@var{format}, @dots{})
 @safety{@prelim{}@mtsafe{@mtslocale{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
-@c It (and strfmon_l) both call vstrfmon_l, which, besides accessing the
-@c locale object passed to it, accesses the active locale through
-@c isdigit (but to_digit assumes ASCII digits only).  It may call
-@c __printf_fp (@mtslocale @ascuheap @acsmem) and guess_grouping (safe).
+@c It (and strfmon_l) both call __vstrfmon_l_internal, which, besides
+@c accessing the locale object passed to it, accesses the active
+@c locale through isdigit (but to_digit assumes ASCII digits only).
+@c It may call __printf_fp (@mtslocale @ascuheap @acsmem) and
+@c guess_grouping (safe).
 The @code{strfmon} function is similar to the @code{strftime} function
 in that it takes a buffer, its size, a format string,
 and values to write into the buffer as text in a form specified
