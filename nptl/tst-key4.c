@@ -24,7 +24,11 @@
 
 
 #ifdef PTHREAD_KEYS_MAX
+#ifdef PTHREAD_SIGNAL_SAFE_KEYS_MAX
+const int max = PTHREAD_KEYS_MAX - PTHREAD_SIGNAL_SAFE_KEYS_MAX;
+#else
 const int max = PTHREAD_KEYS_MAX;
+#endif
 #else
 const int max = _POSIX_THREAD_KEYS_MAX;
 #endif

@@ -1113,6 +1113,20 @@ extern int pthread_key_create (pthread_key_t *__key,
 			       void (*__destr_function) (void *))
      __THROW __nonnull ((1));
 
+/* Exactly as pthread_key_create, but returns an async-signal-safe key:
+   getspecific, setspecific, and key_delete are async-signal-safe when
+   used with the returned key. The number of signal_safe keys is *extremely*
+   limited (PTHREAD_SIGNAL_SAFE_KEY_MAX); you are highly recommended to use
+   pthread_key_create unless it's absolutely necessary.  This function
+   is async-signal-safe. */
+#if !defined(IS_IN_libpthread)
+__attribute__((weak))
+#endif
+extern int __google_pthread_signal_safe_key_create (pthread_key_t *__key,
+						    void (*__destr_function) (void *))
+    __THROW  __nonnull ((1));
+
+
 /* Destroy KEY.  */
 extern int pthread_key_delete (pthread_key_t __key) __THROW;
 

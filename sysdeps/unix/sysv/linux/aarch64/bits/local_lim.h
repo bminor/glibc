@@ -63,6 +63,7 @@
 #define _POSIX_THREAD_KEYS_MAX	128
 /* This is the value this implementation supports.  */
 #define PTHREAD_KEYS_MAX	1024
+#define PTHREAD_SIGNAL_SAFE_KEYS_MAX	4
 
 /* Controlling the iterations of destructors for thread-specific data.  */
 #define _POSIX_THREAD_DESTRUCTOR_ITERATIONS	4
