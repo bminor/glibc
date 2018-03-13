@@ -18,7 +18,8 @@
 
 #include <time.h>
 
-#ifdef SHARED
+/* Clang ifunc support works, but differently enough that this code breaks.  */
+#if defined(SHARED) && !defined(__clang__)
 
 #include <dl-vdso.h>
 #include <errno.h>
@@ -57,3 +58,5 @@ time (time_t *t)
 }
 
 #endif
+
+libc_hidden_weak (time)
