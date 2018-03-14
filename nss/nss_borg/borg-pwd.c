@@ -16,7 +16,7 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 #define NSSBORG_LOCK  pthread_mutex_lock(&mutex)
 #define NSSBORG_UNLOCK pthread_mutex_unlock(&mutex)
 #else
-#include <bits/libc-lock.h>
+#include <libc-lock.h>
 __libc_lock_define_initialized (static, lock)
 #define NSSBORG_LOCK  __libc_lock_lock (lock)
 #define NSSBORG_UNLOCK  __libc_lock_unlock (lock);
