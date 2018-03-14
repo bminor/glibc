@@ -1,5 +1,10 @@
 2019-09-06  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* sysdeps/aarch64/strncmp.S (strncmp): Use a separate shift
+	instruction to unbreak builds with binutils 2.26 and older.
+
+2019-09-06  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
 	* sysdeps/aarch64/strncmp.S (count): New macro.
 	(strncmp): Store misaligned length in SRC1 in COUNT.
 	(mutual_align): Adjust.
