@@ -7,6 +7,12 @@ using `glibc' in the "product" field.
 
 Version 2.27.1
 
+Major new features:
+
+* Nominative and genitive month names are now supported for the Catalan and
+  Czech languages.  The Catalan and Greek languages now support abbreviated
+  alternative month names.
+
 The following bugs are resolved with this release:
 
   [6889] 'PWD' mentioned but not specified
@@ -20,9 +26,13 @@ The following bugs are resolved with this release:
   [22807] PTRACE_* constants missing for powerpc
   [22818] posix/tst-glob_lstat_compat failure on alpha
   [22827] RISC-V ELF64 parser mis-reads flag in ldconfig
+  [22848] ca_ES: update date definitions from CLDR
   [22918] multiple common of `__nss_shadow_database'
   [22919] sparc32: backtrace yields infinite backtrace with makecontext
   [22926] FTBFS on powerpcspe
+  [22932] lt_LT: Update of abbreviated month names from CLDR required
+  [22937] Greek (el_GR, el_CY) locales actually need ab_alt_mon
+  [22963] cs_CZ: Add alternative month names
 
 
 Version 2.27
