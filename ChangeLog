@@ -1,5 +1,10 @@
 2019-09-06  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* sysdeps/aarch64/strncmp.S (strncmp): Use lsr instead of
+	mov + lsr.
+
+2019-09-06  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
 	* sysdeps/aarch64/strncmp.S (strncmp): Use a separate shift
 	instruction to unbreak builds with binutils 2.26 and older.
 
