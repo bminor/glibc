@@ -49,8 +49,7 @@ _IO_setvbuf (FILE *fp, char *buf, int mode, size_t size)
 		 buffering has not been explicitly set".  In both
 		 cases, _IO_LINE_BUF is off.  If this is a tty, and
 		 _IO_filedoalloc later gets called, it cannot know if
-		 it should set the _IO_LINE_BUF flag (because that is
-		 the default), or not (because we have explicitly asked
+		 it should set the _IO_LINE_BUF flag (because that is		 the default), or not (because we have explicitly asked
 		 for fully buffered mode).  So we make sure a buffer
 		 gets allocated now, and explicitly turn off line
 		 buffering.

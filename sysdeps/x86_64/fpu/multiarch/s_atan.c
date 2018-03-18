@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <math.h>
 #include <libm-alias-double.h>
 
 extern double __redirect_atan (double);
@@ -24,6 +25,7 @@ extern double __redirect_atan (double);
 #include "ifunc-avx-fma4.h"
 
 libc_ifunc_redirected (__redirect_atan, __atan, IFUNC_SELECTOR ());
+libm_hidden_def (__atan)
 libm_alias_double (__atan, atan)
 
 #define __atan __atan_sse2

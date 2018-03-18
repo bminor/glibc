@@ -34,8 +34,8 @@
    Otherwise, `glob' returns zero.  */
 int
 GLOB_ATTRIBUTE
-glob64 (const char *pattern, int flags,
-	int (*errfunc) (const char *, int), glob64_t *pglob)
+__glob64 (const char *pattern, int flags,
+          int (*errfunc) (const char *, int), glob64_t *pglob)
 {
   if (pattern == NULL || pglob == NULL || (flags & ~__GLOB_FLAGS) != 0)
     {
@@ -46,6 +46,8 @@ glob64 (const char *pattern, int flags,
   __set_errno (ENOSYS);
   return GLOB_NOSYS;
 }
-libc_hidden_def (glob64)
+libc_hidden_def (__glob64)
+weak_alias (__glob64, glob64)
+libc_hidden_weak (glob64)
 
 stub_warning (glob64)

@@ -42,4 +42,5 @@ float __frexpf(float x, int *eptr)
 	SET_FLOAT_WORD(x,hx);
 	return x;
 }
+libm_hidden_def (__frexpf)
 libm_alias_float (__frexp, frexp)

@@ -35,6 +35,7 @@ M_DECL_FUNC (__sqrt) (FLOAT x)
     __set_errno (EDOM);
   return M_SUF (__ieee754_sqrt) (x);
 }
+libm_hidden_def (M_SUF (__sqrt))
 declare_mgen_alias (__sqrt, sqrt)
 
 #endif /* __USE_WRAPPER_TEMPLATE.  */

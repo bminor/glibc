@@ -1,0 +1,37 @@
+# This file is used by check-localplt-2.sh.
+# Blank lines and lines beginning with '#' are ignored.
+# All other lines should be in the form
+# LIBRARY: SYMBOL
+# Calls from LIBRARY to SYMBOL via the PLT, or equivalent,
+# are allowed.  LIBRARY may be '*' to indicate that calls
+# to SYMBOL are allowed from any library.
+
+# To allow for interposition, all calls to malloc and related
+# functions should go through the PLT.
+*: malloc
+*: calloc
+*: realloc
+*: free
+
+# Similarly for matherr.
+libm.so: matherr
+
+# __pthread_unwind has stub definitions in ld.so and libc.so, but both
+# libraries should call the definition in libpthread.so if it's loaded.
+libc.so: __pthread_unwind
+ld.so: __pthread_unwind
+
+# FIXME: These symbols _should_ be getting called directly, but
+# aren't, due to nasty interactions between GCC's builtin function
+# optimizations and our symbol hacks.
+*: __GI_memcmp
+*: __GI_memcpy
+*: __GI_mempcpy
+*: __GI_memset
+*: __GI_stpcpy
+*: __GI_strchr
+*: __GI_strcpy
+*: __GI_strlen
+*: __GI_fwrite
+*: __GI_fwrite_unlocked
+*: _Unwind_Resume

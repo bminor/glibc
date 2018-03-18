@@ -102,7 +102,8 @@ static const uint64_t K[80] =
   };
 
 void __sha512_process_block (const void *buffer, size_t len,
-			     struct sha512_ctx *ctx);
+			     struct sha512_ctx *ctx)
+  attribute_hidden;
 
 /* Initialize structure containing state of computation.
    (FIPS 180-2:5.3.3)  */

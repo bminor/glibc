@@ -43,14 +43,20 @@ void _ufc_clearmem (char *start, int cnt);
 #define _ufc_clearmem(start, cnt)   memset(start, 0, cnt)
 #endif
 extern char *__md5_crypt_r (const char *key, const char *salt, char *buffer,
-			    int buflen);
-extern char *__md5_crypt (const char *key, const char *salt);
+			    int buflen)
+  attribute_hidden;
+extern char *__md5_crypt (const char *key, const char *salt)
+  attribute_hidden;
 extern char *__sha256_crypt_r (const char *key, const char *salt,
-			       char *buffer, int buflen);
-extern char *__sha256_crypt (const char *key, const char *salt);
+			       char *buffer, int buflen)
+  attribute_hidden;
+extern char *__sha256_crypt (const char *key, const char *salt)
+  attribute_hidden;
 extern char *__sha512_crypt_r (const char *key, const char *salt,
-			       char *buffer, int buflen);
-extern char *__sha512_crypt (const char *key, const char *salt);
+			       char *buffer, int buflen)
+  attribute_hidden;
+extern char *__sha512_crypt (const char *key, const char *salt)
+  attribute_hidden;
 
 /* Define our magic string to mark salt for MD5 encryption
    replacement.  This is meant to be the same as for other MD5 based

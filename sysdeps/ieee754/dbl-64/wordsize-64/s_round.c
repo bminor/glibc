@@ -62,4 +62,5 @@ __round (double x)
   INSERT_WORDS64 (x, i0);
   return x;
 }
+libm_hidden_def (__round)
 libm_alias_double (__round, round)

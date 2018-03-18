@@ -61,4 +61,5 @@ __strchrnul (const char *s, int c)
     g = z;
   return ((char *) p) + (g >> 3);
 }
+libc_hidden_def (__strchrnul)
 weak_alias (__strchrnul, strchrnul)

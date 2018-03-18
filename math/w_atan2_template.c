@@ -34,6 +34,7 @@ M_DECL_FUNC (__atan2) (FLOAT y, FLOAT x)
     __set_errno (ERANGE);
   return z;
 }
+libm_hidden_def (M_SUF (__atan2))
 declare_mgen_alias (__atan2, atan2)
 
 #endif /* __USE_WRAPPER_TEMPLATE.  */

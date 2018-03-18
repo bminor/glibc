@@ -82,8 +82,10 @@ static const char md5_salt_prefix[] = "$1$";
 
 /* Prototypes for local functions.  */
 extern char *__md5_crypt_r (const char *key, const char *salt,
-			    char *buffer, int buflen);
-extern char *__md5_crypt (const char *key, const char *salt);
+			    char *buffer, int buflen)
+  attribute_hidden;
+extern char *__md5_crypt (const char *key, const char *salt)
+  attribute_hidden;
 
 
 /* This entry point is equivalent to the `crypt' function in Unix

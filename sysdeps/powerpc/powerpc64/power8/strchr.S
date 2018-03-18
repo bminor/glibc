@@ -371,7 +371,11 @@ L(end1):
 	blr
 END (FUNC_NAME)
 
-#ifndef USE_AS_STRCHRNUL
+#ifdef USE_AS_STRCHRNUL
+#ifndef STRCHRNUL
+libc_hidden_builtin_def (__strchrnul)
+#endif
+#else
 weak_alias (strchr, index)
 libc_hidden_builtin_def (strchr)
 #endif

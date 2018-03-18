@@ -9,11 +9,13 @@
 
 extern int _IO_fclose (FILE*);
 extern int _IO_new_fclose (FILE*);
+libc_hidden_proto (_IO_new_fclose)
 extern int _IO_old_fclose (FILE*);
 extern FILE *_IO_fdopen (int, const char*) __THROW;
 libc_hidden_proto (_IO_fdopen)
 extern FILE *_IO_old_fdopen (int, const char*) __THROW;
 extern FILE *_IO_new_fdopen (int, const char*) __THROW;
+libc_hidden_proto (_IO_new_fdopen)
 extern int _IO_fflush (FILE*);
 libc_hidden_proto (_IO_fflush)
 extern int _IO_fgetpos (FILE*, __fpos_t*);
@@ -22,6 +24,7 @@ extern char* _IO_fgets (char*, int, FILE*);
 extern FILE *_IO_fopen (const char*, const char*);
 extern FILE *_IO_old_fopen (const char*, const char*);
 extern FILE *_IO_new_fopen (const char*, const char*);
+libc_hidden_proto (_IO_new_fopen)
 extern FILE *_IO_fopen64 (const char*, const char*);
 extern FILE *__fopen_internal (const char*, const char*, int)
 	attribute_hidden;
@@ -49,7 +52,8 @@ libc_hidden_proto (_IO_setvbuf)
 extern int _IO_sscanf (const char*, const char*, ...) __THROW;
 extern int _IO_sprintf (char *, const char*, ...) __THROW;
 extern int _IO_ungetc (int, FILE*) __THROW;
-extern int _IO_vsscanf (const char *, const char *, __gnuc_va_list) __THROW;
+extern int _IO_vsscanf (const char *, const char *, __gnuc_va_list)
+  __THROW attribute_hidden;
 extern int _IO_vsprintf (char*, const char*, __gnuc_va_list) __THROW;
 libc_hidden_proto (_IO_vsprintf)
 extern int _IO_vswprintf (wchar_t*, size_t, const wchar_t*, __gnuc_va_list)
@@ -57,7 +61,7 @@ extern int _IO_vswprintf (wchar_t*, size_t, const wchar_t*, __gnuc_va_list)
 
 struct obstack;
 extern int _IO_obstack_vprintf (struct obstack *, const char *, __gnuc_va_list)
-       __THROW;
+       __THROW attribute_hidden;
 extern int _IO_obstack_printf (struct obstack *, const char *, ...) __THROW;
 #define _IO_clearerr(FP) ((FP)->_flags &= ~(_IO_ERR_SEEN|_IO_EOF_SEEN))
 #define _IO_fseek(__fp, __offset, __whence) \

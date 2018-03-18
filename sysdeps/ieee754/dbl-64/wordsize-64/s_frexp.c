@@ -63,4 +63,5 @@ __frexp (double x, int *eptr)
   *eptr = e;
   return x;
 }
+libm_hidden_def (__frexp)
 libm_alias_double (__frexp, frexp)

@@ -79,7 +79,7 @@ _IO_new_fgetpos (FILE *fp, __fpos_t *posp)
   _IO_release_lock (fp);
   return result;
 }
-
+libc_hidden_def (_IO_new_fgetpos)
 strong_alias (_IO_new_fgetpos, __new_fgetpos)
 versioned_symbol (libc, _IO_new_fgetpos, _IO_fgetpos, GLIBC_2_2);
 versioned_symbol (libc, __new_fgetpos, fgetpos, GLIBC_2_2);

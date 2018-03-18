@@ -84,4 +84,5 @@ _Float128 __sinl(_Float128 x)
 	    }
 	}
 }
+libm_hidden_def (__sinl)
 libm_alias_ldouble (__sin, sin)

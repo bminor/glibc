@@ -33,5 +33,6 @@ __sqrt (double x)
 
   return __ieee754_sqrt (x);
 }
+libm_hidden_def (__sqrt)
 libm_alias_double (__sqrt, sqrt)
 #endif

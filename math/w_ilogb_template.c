@@ -35,4 +35,5 @@ M_DECL_FUNC (__ilogb) (FLOAT x)
     }
   return r;
 }
+libm_hidden_def (M_SUF (__ilogb))
 declare_mgen_alias (__ilogb, ilogb)

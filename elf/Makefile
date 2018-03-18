@@ -346,7 +346,7 @@ ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-pathopt.out $(objpfx)tst-rtld-load-self.out
 endif
 tests-special += $(objpfx)check-textrel.out $(objpfx)check-execstack.out \
-		 $(objpfx)check-localplt.out
+		 $(objpfx)check-localplt.out $(objpfx)check-localplt-2.out
 endif
 
 ifeq ($(run-built-tests),yes)
@@ -1132,6 +1132,23 @@ $(objpfx)check-localplt.out: $(..)scripts/check-localplt.awk \
 	  LC_ALL=C $(AWK) -f $< $(filter %localplt.data,$^) - \
 	  > $@; \
 	$(evaluate-test)
+
+$(objpfx)check-localplt-2.out: $(..)scripts/check-localplt-2.sh \
+			       localplt-common.data localplt.data \
+			       $(localplt-built-dso:.so=_pic.a)
+	AWK="$(AWK)" $(SHELL) $(..)scripts/check-localplt-2.sh \
+	  $(filter %.data, $^) -- $(filter %.a, $^) > $@; \
+	$(evaluate-test)
+
+# check-localplt-2 needs _pic.a libraries for every entry in
+# $(localplt-built-dso).
+$(objpfx)ld_pic.a: $(objpfx)rtld-libc.a $(all-rtld-routines:%=$(objpfx)%.os)
+	-rm -f $@.new
+	cp $< $@.new
+	$(AR) cq$(verbose) $@.new $(filter-out %rtld-libc.a, $^)
+	mv -f $@.new $@
+
+generated += $(objpfx)ld_pic.a
 endif
 
 $(objpfx)tst-dlopenrpathmod.so: $(libdl)

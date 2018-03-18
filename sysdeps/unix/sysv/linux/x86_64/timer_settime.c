@@ -24,6 +24,7 @@
 #include <sysdeps/unix/sysv/linux/timer_settime.c>
 
 #undef timer_settime
+librt_hidden_def (__timer_settime_new)
 versioned_symbol (librt, __timer_settime_new, timer_settime, GLIBC_2_3_3);
 
 

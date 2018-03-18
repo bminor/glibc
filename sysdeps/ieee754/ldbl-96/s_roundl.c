@@ -90,4 +90,5 @@ __roundl (long double x)
   SET_LDOUBLE_WORDS (x, se, i0, i1);
   return x;
 }
+libm_hidden_def (__roundl)
 libm_alias_ldouble (__round, round)

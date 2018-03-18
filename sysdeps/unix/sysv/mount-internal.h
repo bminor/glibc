@@ -1,5 +1,4 @@
-/* Multiple versions of __rintf.
-   Copyright (C) 2017-2018 Free Software Foundation, Inc.
+/* Copyright (C) 2011-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -13,17 +12,15 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, see
+   License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <math.h>
-#include <libm-alias-float.h>
+#ifndef _MOUNT_INTERNAL_H
+#define _MOUNT_INTERNAL_H 1
 
-extern typeof (__rintf) __redirect_rintf;
+#include <sys/mount.h>
 
-#define SYMBOL_NAME rintf
-#include "ifunc-sse4_1.h"
+extern typeof (umount2) __umount2;
+libc_hidden_proto (__umount2);
 
-libc_ifunc_redirected (__redirect_rintf, __rintf, IFUNC_SELECTOR ());
-libm_hidden_def (__rintf)
-libm_alias_float (__rint, rint)
+#endif

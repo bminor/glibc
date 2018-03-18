@@ -57,4 +57,5 @@ __nearbyintf(float x)
 	libc_fesetenvf (&env);
 	return t;
 }
+libm_hidden_def (__nearbyintf)
 libm_alias_float (__nearbyint, nearbyint)

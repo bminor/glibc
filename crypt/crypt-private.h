@@ -42,35 +42,46 @@
 
 /* crypt.c */
 extern void _ufc_doit_r (ufc_long itr, struct crypt_data * __restrict __data,
-			 ufc_long *res);
+			 ufc_long *res)
+  attribute_hidden;
 
 
 /* crypt_util.c */
-extern void __init_des_r (struct crypt_data * __restrict __data);
-extern void __init_des (void);
+extern void __init_des_r (struct crypt_data * __restrict __data)
+  attribute_hidden;
+extern void __init_des (void)
+  attribute_hidden;
 
 extern bool _ufc_setup_salt_r (const char *s,
-			       struct crypt_data * __restrict __data);
+			       struct crypt_data * __restrict __data)
+  attribute_hidden;
 extern void _ufc_mk_keytab_r (const char *key,
-			      struct crypt_data * __restrict __data);
+			      struct crypt_data * __restrict __data)
+  attribute_hidden;
 extern void _ufc_dofinalperm_r (ufc_long *res,
-				struct crypt_data * __restrict __data);
+				struct crypt_data * __restrict __data)
+  attribute_hidden;
 extern void _ufc_output_conversion_r (ufc_long v1, ufc_long v2,
 				      const char *salt,
-				      struct crypt_data * __restrict __data);
+				      struct crypt_data * __restrict __data)
+  attribute_hidden;
 
 extern void __setkey_r (const char *__key,
-			     struct crypt_data * __restrict __data);
+			     struct crypt_data * __restrict __data)
+  attribute_hidden;
 extern void __encrypt_r (char * __restrict __block, int __edflag,
-			      struct crypt_data * __restrict __data);
+			      struct crypt_data * __restrict __data)
+  attribute_hidden;
 
 /* crypt-entry.c */
 extern char *__crypt_r (const char *__key, const char *__salt,
-			     struct crypt_data * __restrict __data);
+			     struct crypt_data * __restrict __data)
+  attribute_hidden;
 extern char *fcrypt (const char *key, const char *salt);
 
 extern void __b64_from_24bit (char **cp, int *buflen,
 			      unsigned int b2, unsigned int b1, unsigned int b0,
-			      int n);
+			      int n)
+  attribute_hidden;
 
 #endif  /* crypt-private.h */

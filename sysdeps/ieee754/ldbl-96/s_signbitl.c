@@ -24,3 +24,6 @@ __signbitl (long double x)
 {
   return __builtin_signbitl (x);
 }
+#if IS_IN (libc) || IS_IN (libm)
+hidden_def (__signbitl)
+#endif

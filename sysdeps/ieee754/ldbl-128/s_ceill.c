@@ -64,4 +64,5 @@ _Float128 __ceill(_Float128 x)
 	SET_LDOUBLE_WORDS64(x,i0,i1);
 	return x;
 }
+libm_hidden_def (__ceill)
 libm_alias_ldouble (__ceil, ceil)

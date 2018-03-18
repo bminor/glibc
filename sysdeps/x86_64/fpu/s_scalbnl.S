@@ -15,3 +15,6 @@ ENTRY(__scalbnl)
 	fstp	%st(1)
 	ret
 END (__scalbnl)
+#if IS_IN (libc) || IS_IN (libm)
+hidden_def (__scalbnl)
+#endif

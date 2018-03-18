@@ -53,5 +53,5 @@ __nextupl (_Float128 x)
   SET_LDOUBLE_WORDS64 (x, hx, lx);
   return x;
 }
-
+libm_hidden_def (__nextupl)
 libm_alias_ldouble (__nextup, nextup)

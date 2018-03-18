@@ -199,3 +199,4 @@ L(loop_small):
 END (MEMRCHR)
 weak_alias (__memrchr, memrchr)
 libc_hidden_builtin_def (memrchr)
+libc_hidden_builtin_def (__memrchr)

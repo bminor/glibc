@@ -31,8 +31,6 @@ extern struct hostent *_gethtbyname2 (const char *__name, int __af);
 struct hostent *_gethtbyaddr (const char *addr, size_t __len, int __af);
 extern uint32_t _getlong (const unsigned char *__src);
 extern uint16_t _getshort (const unsigned char *__src);
-extern int res_ourserver_p (const res_state __statp,
-			    const struct sockaddr_in6 *__inp);
 extern void __res_iclose (res_state statp, bool free_addr);
 libc_hidden_proto (__res_ninit)
 libc_hidden_proto (__res_nclose)

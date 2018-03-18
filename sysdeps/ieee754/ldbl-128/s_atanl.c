@@ -250,5 +250,5 @@ __atanl (_Float128 x)
   else
     return u;
 }
-
+libm_hidden_def (__atanl)
 libm_alias_ldouble (__atan, atan)

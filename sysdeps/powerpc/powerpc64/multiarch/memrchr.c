@@ -33,7 +33,7 @@ libc_ifunc (__memrchr,
 	      (hwcap & PPC_FEATURE_HAS_VSX)
 	      ? __memrchr_power7
 	    : __memrchr_ppc);
-
+libc_hidden_def (__memrchr)
 weak_alias (__memrchr, memrchr)
 #else
 #include <string/memrchr.c>

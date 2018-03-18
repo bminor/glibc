@@ -32,5 +32,6 @@
 
 # include <posix/glob.c>
 
+libc_hidden_def (__glob_lstat_compat)
 compat_symbol (libc, __glob_lstat_compat, glob, GLIBC_2_0);
 #endif

@@ -17,15 +17,17 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+# include <string.h>
+
 /* Define multiple versions only for the definition in libc.  */
 #if IS_IN (libc)
-# define memrchr __redirect_memrchr
-# include <string.h>
-# undef memrchr
+
+extern typeof (__memrchr) __redirect_memrchr;
 
 # define SYMBOL_NAME memrchr
 # include "ifunc-avx2.h"
 
 libc_ifunc_redirected (__redirect_memrchr, __memrchr, IFUNC_SELECTOR ());
+libc_hidden_def (__memrchr)
 weak_alias (__memrchr, memrchr)
 #endif

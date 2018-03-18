@@ -133,5 +133,5 @@ M_DECL_FUNC (__ccosh) (CFLOAT x)
 
   return retval;
 }
-
+libm_hidden_def (M_SUF (__ccosh))
 declare_mgen_alias (__ccosh, ccosh);

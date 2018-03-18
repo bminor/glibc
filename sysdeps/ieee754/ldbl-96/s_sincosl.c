@@ -74,4 +74,5 @@ __sincosl (long double x, long double *sinx, long double *cosx)
 	}
     }
 }
+libm_hidden_def (__sincosl)
 libm_alias_ldouble (__sincos, sincos)

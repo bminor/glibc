@@ -177,6 +177,7 @@ _IO_new_proc_open (FILE *fp, const char *command, const char *mode)
   _IO_mask_flags (fp, read_or_write, _IO_NO_READS|_IO_NO_WRITES);
   return fp;
 }
+libc_hidden_def (_IO_new_proc_open)
 
 FILE *
 _IO_new_popen (const char *command, const char *mode)

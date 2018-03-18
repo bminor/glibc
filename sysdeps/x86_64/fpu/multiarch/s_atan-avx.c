@@ -1,3 +1,5 @@
+#include <math.h>
+
 #define __atan __atan_avx
 #define __add __add_avx
 #define __dbl_mp __dbl_mp_avx

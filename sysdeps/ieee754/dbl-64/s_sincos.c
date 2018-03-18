@@ -107,4 +107,5 @@ __sincos (double x, double *sinx, double *cosx)
 
   *sinx = *cosx = x / x;
 }
+libm_hidden_def (__sincos)
 libm_alias_double (__sincos, sincos)

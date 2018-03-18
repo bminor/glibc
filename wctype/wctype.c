@@ -45,4 +45,5 @@ __wctype (const char *property)
   i = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_CLASS_OFFSET) + result;
   return (wctype_t) _NL_CURRENT_DATA (LC_CTYPE)->values[i].string;
 }
+libc_hidden_def (__wctype)
 weak_alias (__wctype, wctype)

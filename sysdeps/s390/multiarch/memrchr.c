@@ -21,6 +21,7 @@
 # include <ifunc-resolve.h>
 
 s390_vx_libc_ifunc (__memrchr)
+libc_hidden_def (__memrchr)
 weak_alias (__memrchr, memrchr)
 
 #else

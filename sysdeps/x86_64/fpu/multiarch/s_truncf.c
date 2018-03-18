@@ -16,16 +16,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <math.h>
 #include <libm-alias-float.h>
 
-#define truncf __redirect_truncf
-#define __truncf __redirect___truncf
-#include <math.h>
-#undef truncf
-#undef __truncf
+extern typeof (__truncf) __redirect_truncf;
 
 #define SYMBOL_NAME truncf
 #include "ifunc-sse4_1.h"
 
 libc_ifunc_redirected (__redirect_truncf, __truncf, IFUNC_SELECTOR ());
+libm_hidden_def (__truncf)
 libm_alias_float (__trunc, trunc)

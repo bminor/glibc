@@ -250,18 +250,27 @@ fabsf128 (_Float128 x)
 
 
 /* Prototypes for functions of the IBM Accurate Mathematical Library.  */
-extern double __exp1 (double __x, double __xx);
-extern double __sin (double __x);
-extern double __cos (double __x);
-extern int __branred (double __x, double *__a, double *__aa);
-extern void __doasin (double __x, double __dx, double __v[]);
-extern void __dubsin (double __x, double __dx, double __v[]);
-extern void __dubcos (double __x, double __dx, double __v[]);
-extern double __sin32 (double __x, double __res, double __res1);
-extern double __cos32 (double __x, double __res, double __res1);
-extern double __mpsin (double __x, double __dx, bool __range_reduce);
-extern double __mpcos (double __x, double __dx, bool __range_reduce);
-extern void __docos (double __x, double __dx, double __v[]);
+extern double __exp1 (double __x, double __xx) attribute_hidden;
+extern double __sin (double __x) attribute_hidden;
+extern double __cos (double __x) attribute_hidden;
+extern int __branred (double __x, double *__a, double *__aa)
+  attribute_hidden;
+extern void __doasin (double __x, double __dx, double __v[])
+  attribute_hidden;
+extern void __dubsin (double __x, double __dx, double __v[])
+  attribute_hidden;
+extern void __dubcos (double __x, double __dx, double __v[])
+  attribute_hidden;
+extern double __sin32 (double __x, double __res, double __res1)
+  attribute_hidden;
+extern double __cos32 (double __x, double __res, double __res1)
+  attribute_hidden;
+extern double __mpsin (double __x, double __dx, bool __range_reduce)
+  attribute_hidden;
+extern double __mpcos (double __x, double __dx, bool __range_reduce)
+  attribute_hidden;
+extern void __docos (double __x, double __dx, double __v[])
+  attribute_hidden;
 
 #ifndef math_opt_barrier
 # define math_opt_barrier(x) \

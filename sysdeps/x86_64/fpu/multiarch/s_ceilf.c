@@ -17,15 +17,13 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <libm-alias-float.h>
-
-#define ceilf __redirect_ceilf
-#define __ceilf __redirect___ceilf
 #include <math.h>
-#undef ceilf
-#undef __ceilf
+
+extern typeof (__ceilf) __redirect_ceilf;
 
 #define SYMBOL_NAME ceilf
 #include "ifunc-sse4_1.h"
 
 libc_ifunc_redirected (__redirect_ceilf, __ceilf, IFUNC_SELECTOR ());
+libm_hidden_def (__ceilf)
 libm_alias_float (__ceil, ceil)

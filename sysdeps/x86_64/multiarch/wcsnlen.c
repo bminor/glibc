@@ -18,10 +18,11 @@
    <http://www.gnu.org/licenses/>.  */
 
 /* Define multiple versions only for the definition in libc.  */
+#include <wchar.h>
+
 #if IS_IN (libc)
-# define __wcsnlen __redirect_wcsnlen
-# include <wchar.h>
-# undef __wcsnlen
+
+extern typeof (__wcsnlen) __redirect_wcsnlen;
 
 # define SYMBOL_NAME wcsnlen
 # include <init-arch.h>
@@ -47,5 +48,6 @@ IFUNC_SELECTOR (void)
 }
 
 libc_ifunc_redirected (__redirect_wcsnlen, __wcsnlen, IFUNC_SELECTOR ());
-weak_alias (__wcsnlen, wcsnlen);
+libc_hidden_def (__wcsnlen)
+weak_alias (__wcsnlen, wcsnlen)
 #endif

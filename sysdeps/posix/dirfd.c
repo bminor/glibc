@@ -26,5 +26,5 @@ __dirfd (DIR *dirp)
 {
   return dirp->fd;
 }
-
+libc_hidden_def (__dirfd)
 weak_alias (__dirfd, dirfd)

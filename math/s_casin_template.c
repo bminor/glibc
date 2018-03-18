@@ -59,5 +59,5 @@ M_DECL_FUNC (__casin) (CFLOAT x)
 
   return res;
 }
-
+libm_hidden_def (M_SUF (__casin))
 declare_mgen_alias (__casin, casin)

@@ -26,6 +26,6 @@ __dirfd (DIR *dirp)
   __set_errno (ENOSYS);
   return -1;
 }
-
+libc_hidden_def (__dirfd)
 weak_alias (__dirfd, dirfd)
 stub_warning (dirfd)

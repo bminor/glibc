@@ -562,5 +562,6 @@ L(SP_ONE):
 	ASM_SIZE_DIRECTIVE(L(SP_ONE))
 
 #ifndef __sincosf
+libm_hidden_def (__sincosf)
 libm_alias_float (__sincos, sincos)
 #endif

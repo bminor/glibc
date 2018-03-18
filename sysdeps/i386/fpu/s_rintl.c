@@ -4,8 +4,9 @@
  * Public domain.
  */
 
-#include <libm-alias-ldouble.h>
+#include <math.h>
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 
 long double
 __rintl (long double x)
@@ -15,5 +16,5 @@ __rintl (long double x)
   asm ("frndint" : "=t" (res) : "0" (x));
   return res;
 }
-
+libm_hidden_def (__rintl)
 libm_alias_ldouble (__rint, rint)

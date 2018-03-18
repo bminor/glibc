@@ -59,4 +59,5 @@ long double __frexpl(long double x, int *eptr)
 	SET_LDOUBLE_EXP(x,se);
 	return x;
 }
+libm_hidden_def (__frexpl)
 libm_alias_ldouble (__frexp, frexp)

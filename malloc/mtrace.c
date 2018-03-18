@@ -38,7 +38,6 @@
 
 #include <libio/iolibio.h>
 #define setvbuf(s, b, f, l) _IO_setvbuf (s, b, f, l)
-#define fwrite(buf, size, count, fp) _IO_fwrite (buf, size, count, fp)
 
 #include <kernel-features.h>
 
@@ -304,7 +303,7 @@ mtrace (void)
           /* Be sure it doesn't malloc its buffer!  */
           malloc_trace_buffer = mtb;
           setvbuf (mallstream, malloc_trace_buffer, _IOFBF, TRACE_BUFFER_SIZE);
-          fprintf (mallstream, "= Start\n");
+          fputs ("= Start\n", mallstream);
           tr_old_free_hook = __free_hook;
           __free_hook = tr_freehook;
           tr_old_malloc_hook = __malloc_hook;
@@ -343,6 +342,6 @@ muntrace (void)
   __realloc_hook = tr_old_realloc_hook;
   __memalign_hook = tr_old_memalign_hook;
 
-  fprintf (f, "= End\n");
+  fputs ("= End\n", f);
   fclose (f);
 }

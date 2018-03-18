@@ -92,14 +92,14 @@ psiginfo (const siginfo_t *pinfo, const char *s)
 	  if (pinfo->si_signo - SIGRTMIN < SIGRTMAX - pinfo->si_signo)
 	    {
 	      if (pinfo->si_signo == SIGRTMIN)
-		fprintf (fp, "SIGRTMIN (");
+		fputs ("SIGRTMIN (", fp);
 	      else
 		fprintf (fp, "SIGRTMIN+%d (", pinfo->si_signo - SIGRTMIN);
 	    }
 	  else
 	    {
 	      if (pinfo->si_signo == SIGRTMAX)
-		fprintf (fp, "SIGRTMAX (");
+		fputs ("SIGRTMAX (", fp);
 	      else
 		fprintf (fp, "SIGRTMAX-%d (", SIGRTMAX - pinfo->si_signo);
 	    }

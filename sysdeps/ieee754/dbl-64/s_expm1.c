@@ -256,4 +256,5 @@ __expm1 (double x)
     }
   return y;
 }
+libm_hidden_def (__expm1)
 libm_alias_double (__expm1, expm1)

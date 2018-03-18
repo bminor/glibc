@@ -21,9 +21,23 @@
 #include <kernel_stat.h>
 #include <shlib-compat.h>
 
+#ifndef GLOB_LSTAT_VERSION
+# define GLOB_LSTAT_VERSION GLIBC_2_0
+#endif
+
+#if SHLIB_COMPAT(libc, GLOB_LSTAT_VERSION, GLIBC_2_27)
+
+#if XSTAT_IS_XSTAT64
 #define glob64 __no_glob64_decl
+#define __glob64 __no___glob64_decl
+#define __glob64_lstat_compat __no_glob64_lstat_compat_decl
+#endif
+
 #include <glob.h>
+
 #undef glob64
+#undef __glob64
+#undef __glob64_lstat_compat
 
 #define __glob __glob_lstat_compat
 
@@ -33,12 +47,7 @@
 #define GLOB_NO_LSTAT
 
 #include <posix/glob.c>
-
-#ifndef GLOB_LSTAT_VERSION
-# define GLOB_LSTAT_VERSION GLIBC_2_0
-#endif
-
-#if SHLIB_COMPAT(libc, GLOB_LSTAT_VERSION, GLIBC_2_27)
+libc_hidden_def (__glob_lstat_compat)
 compat_symbol (libc, __glob_lstat_compat, glob, GLOB_LSTAT_VERSION);
 # if XSTAT_IS_XSTAT64
 strong_alias (__glob_lstat_compat, __glob64_lstat_compat)

@@ -65,5 +65,6 @@ __strncasecmp (const char *s1, const char *s2, size_t n LOCALE_PARAM)
   return result;
 }
 #ifndef __strncasecmp
+libc_hidden_def (__strncasecmp)
 weak_alias (__strncasecmp, strncasecmp)
 #endif

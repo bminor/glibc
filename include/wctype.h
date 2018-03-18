@@ -16,7 +16,9 @@ libc_hidden_proto (towupper)
 extern int __iswspace (wint_t __wc);
 extern int __iswctype (wint_t __wc, wctype_t __desc);
 extern wctype_t __wctype (const char *__property);
+libc_hidden_proto (__wctype)
 extern wctrans_t __wctrans (const char *__property);
+libc_hidden_proto (__wctrans)
 extern wint_t __towctrans (wint_t __wc, wctrans_t __desc);
 
 extern __typeof (iswalnum) __iswalnum __THROW __attribute_pure__;

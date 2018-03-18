@@ -34,4 +34,5 @@ ENTRY(__ceill)
 
 	ret
 END (__ceill)
+libm_hidden_def (__ceill)
 libm_alias_ldouble (__ceil, ceil)

@@ -33,4 +33,5 @@ ENTRY(__floorl)
 
 	ret
 END (__floorl)
+libm_hidden_def (__floorl)
 libm_alias_ldouble (__floor, floor)

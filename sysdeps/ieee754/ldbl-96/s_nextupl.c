@@ -81,5 +81,5 @@ __nextupl (long double x)
   SET_LDOUBLE_WORDS (x, esx, hx, lx);
   return x;
 }
-
+libm_hidden_def (__nextupl)
 libm_alias_ldouble (__nextup, nextup)

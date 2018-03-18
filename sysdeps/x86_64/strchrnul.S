@@ -24,4 +24,5 @@
 #define AS_STRCHRNUL
 #include "strchr.S"
 
+libc_hidden_def (__strchrnul)
 weak_alias (__strchrnul, strchrnul)

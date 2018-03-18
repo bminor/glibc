@@ -9,5 +9,6 @@ PSEUDO (__umount2, umount2, 2)
 #endif
 	ret
 PSEUDO_END(__umount2)
+libc_hidden_def (__umount2)
 weak_alias (__umount2, umount2)
 #endif

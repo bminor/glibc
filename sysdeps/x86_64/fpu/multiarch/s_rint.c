@@ -16,16 +16,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <math.h>
 #include <libm-alias-double.h>
 
-#define rint __redirect_rint
-#define __rint __redirect___rint
-#include <math.h>
-#undef rint
-#undef __rint
+extern typeof (__rint) __redirect_rint;
 
 #define SYMBOL_NAME rint
 #include "ifunc-sse4_1.h"
 
 libc_ifunc_redirected (__redirect_rint, __rint, IFUNC_SELECTOR ());
+libm_hidden_def (__rint)
 libm_alias_double (__rint, rint)

@@ -52,4 +52,5 @@ _Float128 __frexpl(_Float128 x, int *eptr)
 	SET_LDOUBLE_MSW64(x,hx);
 	return x;
 }
+libm_hidden_def (__frexpl)
 libm_alias_ldouble (__frexp, frexp)

@@ -8,11 +8,16 @@ libc_hidden_proto (globfree)
 libc_hidden_proto (globfree64)
 
 /* Now define the internal interfaces.  */
-extern int __glob_pattern_p (const char *__pattern, int __quote);
-extern int __glob64 (const char *__pattern, int __flags,
-		     int (*__errfunc) (const char *, int),
-		     glob64_t *__pglob);
+extern typeof (glob_pattern_p) __glob_pattern_p;
+libc_hidden_proto (__glob_pattern_p)
+extern typeof (glob) __glob;
+libc_hidden_proto (__glob)
+extern typeof (glob) __glob_lstat_compat;
+libc_hidden_proto (__glob_lstat_compat)
+extern typeof (glob64) __glob64;
 libc_hidden_proto (__glob64)
+extern typeof (glob64) __glob64_lstat_compat;
+libc_hidden_proto (__glob64_lstat_compat)
 #endif
 
 #endif

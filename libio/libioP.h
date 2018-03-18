@@ -343,6 +343,7 @@ struct _IO_cookie_file
 
 FILE *_IO_fopencookie (void *cookie, const char *mode,
                        cookie_io_functions_t io_functions);
+libc_hidden_proto (_IO_fopencookie)
 
 
 /* Iterator type for walking global linked list of _IO_FILE objects. */
@@ -351,8 +352,8 @@ typedef FILE *_IO_ITER;
 
 /* Generic functions */
 
-extern void _IO_switch_to_main_get_area (FILE *) __THROW;
-extern void _IO_switch_to_backup_area (FILE *) __THROW;
+extern void _IO_switch_to_main_get_area (FILE *) __THROW attribute_hidden;
+extern void _IO_switch_to_backup_area (FILE *) __THROW attribute_hidden;
 extern int _IO_switch_to_get_mode (FILE *);
 libc_hidden_proto (_IO_switch_to_get_mode)
 extern void _IO_init_internal (FILE *, int) attribute_hidden;
@@ -442,7 +443,7 @@ extern int _IO_default_pbackfail (FILE *, int) __THROW;
 libc_hidden_proto (_IO_default_pbackfail)
 extern wint_t _IO_wdefault_pbackfail (FILE *, wint_t) __THROW;
 libc_hidden_proto (_IO_wdefault_pbackfail)
-extern FILE* _IO_default_setbuf (FILE *, char *, ssize_t);
+extern FILE* _IO_default_setbuf (FILE *, char *, ssize_t) attribute_hidden;
 extern size_t _IO_default_xsputn (FILE *, const void *, size_t);
 libc_hidden_proto (_IO_default_xsputn)
 extern size_t _IO_wdefault_xsputn (FILE *, const void *, size_t);
@@ -480,24 +481,29 @@ extern const struct _IO_codecvt __libio_codecvt attribute_hidden;
 extern int _IO_do_write (FILE *, const char *, size_t);
 libc_hidden_proto (_IO_do_write)
 extern int _IO_new_do_write (FILE *, const char *, size_t);
+libc_hidden_proto (_IO_new_do_write)
 extern int _IO_old_do_write (FILE *, const char *, size_t);
 extern int _IO_wdo_write (FILE *, const wchar_t *, size_t);
 libc_hidden_proto (_IO_wdo_write)
-extern int _IO_flush_all_lockp (int);
+extern int _IO_flush_all_lockp (int) attribute_hidden;
 extern int _IO_flush_all (void);
 libc_hidden_proto (_IO_flush_all)
-extern int _IO_cleanup (void);
+extern int _IO_cleanup (void) attribute_hidden;
 extern void _IO_flush_all_linebuffered (void);
 libc_hidden_proto (_IO_flush_all_linebuffered)
 extern int _IO_new_fgetpos (FILE *, __fpos_t *);
+libc_hidden_proto (_IO_new_fgetpos)
 extern int _IO_old_fgetpos (FILE *, __fpos_t *);
 extern int _IO_new_fsetpos (FILE *, const __fpos_t *);
+libc_hidden_proto (_IO_new_fsetpos)
 extern int _IO_old_fsetpos (FILE *, const __fpos_t *);
 extern int _IO_new_fgetpos64 (FILE *, __fpos64_t *);
+libc_hidden_proto (_IO_new_fgetpos64)
 extern int _IO_old_fgetpos64 (FILE *, __fpos64_t *);
 extern int _IO_new_fsetpos64 (FILE *, const __fpos64_t *);
+libc_hidden_proto (_IO_new_fsetpos64)
 extern int _IO_old_fsetpos64 (FILE *, const __fpos64_t *);
-extern void _IO_old_init (FILE *fp, int flags) __THROW;
+extern void _IO_old_init (FILE *fp, int flags) __THROW attribute_hidden;
 
 
 #define _IO_do_flush(_f) \
@@ -554,8 +560,8 @@ libc_hidden_proto (_IO_file_close)
 extern int _IO_file_close_mmap (FILE *) __THROW;
 extern int _IO_file_underflow (FILE *);
 libc_hidden_proto (_IO_file_underflow)
-extern int _IO_file_underflow_mmap (FILE *);
-extern int _IO_file_underflow_maybe_mmap (FILE *);
+extern int _IO_file_underflow_mmap (FILE *) attribute_hidden;
+extern int _IO_file_underflow_maybe_mmap (FILE *) attribute_hidden;
 extern int _IO_file_overflow (FILE *, int);
 libc_hidden_proto (_IO_file_overflow)
 #define _IO_file_is_open(__fp) ((__fp)->_fileno != -1)
@@ -583,10 +589,12 @@ extern void _IO_new_file_finish (FILE *, int);
 extern FILE* _IO_new_file_fopen (FILE *, const char *, const char *,
 				     int);
 extern void _IO_no_init (FILE *, int, int, struct _IO_wide_data *,
-			 const struct _IO_jump_t *) __THROW;
+			 const struct _IO_jump_t *)
+  __THROW attribute_hidden;
 extern void _IO_new_file_init_internal (struct _IO_FILE_plus *)
   __THROW attribute_hidden;
 extern FILE* _IO_new_file_setbuf (FILE *, char *, ssize_t);
+libc_hidden_proto (_IO_new_file_setbuf)
 extern FILE* _IO_file_setbuf_mmap (FILE *, char *, ssize_t);
 extern int _IO_new_file_sync (FILE *);
 extern int _IO_new_file_underflow (FILE *);
@@ -623,10 +631,10 @@ extern off64_t _IO_wfile_seekoff (FILE *, off64_t, int, int);
 libc_hidden_proto (_IO_wfile_seekoff)
 
 /* Jumptable functions for proc_files. */
-extern FILE* _IO_proc_open (FILE *, const char *, const char *)
-     __THROW;
-extern FILE* _IO_new_proc_open (FILE *, const char *, const char *)
-     __THROW;
+extern FILE* _IO_proc_open (FILE *, const char *, const char *) __THROW;
+libc_hidden_proto (_IO_proc_open)
+extern FILE* _IO_new_proc_open (FILE *, const char *, const char *);
+libc_hidden_proto (_IO_new_proc_open)
 extern FILE* _IO_old_proc_open (FILE *, const char *, const char *);
 extern int _IO_proc_close (FILE *) __THROW;
 extern int _IO_new_proc_close (FILE *) __THROW;
@@ -641,28 +649,30 @@ extern int _IO_str_pbackfail (FILE *, int) __THROW;
 libc_hidden_proto (_IO_str_pbackfail)
 extern off64_t _IO_str_seekoff (FILE *, off64_t, int, int) __THROW;
 libc_hidden_proto (_IO_str_seekoff)
-extern void _IO_str_finish (FILE *, int) __THROW;
+extern void _IO_str_finish (FILE *, int) __THROW attribute_hidden;
 
 /* Other strfile functions */
 struct _IO_strfile_;
-extern ssize_t _IO_str_count (FILE *) __THROW;
+extern ssize_t _IO_str_count (FILE *) __THROW attribute_hidden;
 
 /* And the wide character versions.  */
 extern void _IO_wstr_init_static (FILE *, wchar_t *, size_t, wchar_t *)
-     __THROW;
-extern ssize_t _IO_wstr_count (FILE *) __THROW;
-extern wint_t _IO_wstr_overflow (FILE *, wint_t) __THROW;
+     __THROW attribute_hidden;
+extern ssize_t _IO_wstr_count (FILE *) __THROW attribute_hidden;
+extern wint_t _IO_wstr_overflow (FILE *, wint_t) __THROW attribute_hidden;
 extern wint_t _IO_wstr_underflow (FILE *) __THROW;
 extern off64_t _IO_wstr_seekoff (FILE *, off64_t, int, int)
      __THROW;
 extern wint_t _IO_wstr_pbackfail (FILE *, wint_t) __THROW;
-extern void _IO_wstr_finish (FILE *, int) __THROW;
+extern void _IO_wstr_finish (FILE *, int) __THROW attribute_hidden;
 
-extern int _IO_vasprintf (char **result_ptr, const char *format,
-			  va_list args) __THROW;
-extern int _IO_vdprintf (int d, const char *format, va_list arg);
+extern int _IO_vasprintf (char **result_ptr, const char *format, va_list ap)
+  __THROW attribute_hidden;
+extern int _IO_vdprintf (int d, const char *format, va_list ap)
+  attribute_hidden;
 extern int _IO_vsnprintf (char *string, size_t maxlen,
-			  const char *format, va_list args) __THROW;
+			  const char *format, va_list ap)
+  __THROW attribute_hidden;
 
 
 extern size_t _IO_getline (FILE *,char *, size_t, int, int);
@@ -670,17 +680,21 @@ libc_hidden_proto (_IO_getline)
 extern size_t _IO_getline_info (FILE *,char *, size_t,
 				    int, int, int *);
 libc_hidden_proto (_IO_getline_info)
-extern ssize_t _IO_getdelim (char **, size_t *, int, FILE *);
-extern size_t _IO_getwline (FILE *,wchar_t *, size_t, wint_t, int);
-extern size_t _IO_getwline_info (FILE *,wchar_t *, size_t,
-				     wint_t, int, wint_t *);
+extern ssize_t _IO_getdelim (char **, size_t *, int, FILE *)
+     attribute_hidden;
+extern size_t _IO_getwline (FILE *, wchar_t *, size_t, wint_t, int)
+     attribute_hidden;
+extern size_t _IO_getwline_info (FILE *, wchar_t *, size_t,
+                                 wint_t, int, wint_t *)
+     attribute_hidden;
 
 extern struct _IO_FILE_plus *_IO_list_all;
 libc_hidden_proto (_IO_list_all)
 extern void (*_IO_cleanup_registration_needed) (void);
 
 extern void _IO_str_init_static_internal (struct _IO_strfile_ *, char *,
-					  size_t, char *) __THROW;
+					  size_t, char *)
+     __THROW attribute_hidden;
 extern off64_t _IO_seekoff_unlocked (FILE *, off64_t, int, int)
      attribute_hidden;
 extern off64_t _IO_seekpos_unlocked (FILE *, off64_t, int)

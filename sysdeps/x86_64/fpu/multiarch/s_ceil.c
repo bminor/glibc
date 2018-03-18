@@ -16,16 +16,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <math.h>
 #include <libm-alias-double.h>
 
-#define ceil __redirect_ceil
-#define __ceil __redirect___ceil
-#include <math.h>
-#undef ceil
-#undef __ceil
+extern typeof (__ceil) __redirect_ceil;
 
 #define SYMBOL_NAME ceil
 #include "ifunc-sse4_1.h"
 
 libc_ifunc_redirected (__redirect_ceil, __ceil, IFUNC_SELECTOR ());
+libm_hidden_def (__ceil)
 libm_alias_double (__ceil, ceil)

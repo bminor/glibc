@@ -1,3 +1,5 @@
+#include <math.h>
+
 #define __ieee754_log __ieee754_log_avx
 #define SECTION __attribute__ ((section (".text.avx")))
 

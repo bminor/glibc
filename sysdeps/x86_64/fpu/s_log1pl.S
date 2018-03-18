@@ -72,3 +72,4 @@ ENTRY(__log1pl)
 	ret
 
 END (__log1pl)
+libm_hidden_def (__log1pl)

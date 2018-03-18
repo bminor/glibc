@@ -24,6 +24,7 @@
 #include <sysdeps/unix/sysv/linux/timer_getoverr.c>
 
 #undef timer_getoverrun
+librt_hidden_def (__timer_getoverrun_new)
 versioned_symbol (librt, __timer_getoverrun_new, timer_getoverrun,
 		  GLIBC_2_3_3);
 

@@ -151,9 +151,12 @@ extern int __wcsncasecmp (const wchar_t *__s1, const wchar_t *__s2,
 			  size_t __n)
      __attribute_pure__;
 extern size_t __wcslen (const wchar_t *__s) __attribute_pure__;
+libc_hidden_proto (__wcslen)
 extern size_t __wcsnlen (const wchar_t *__s, size_t __maxlen)
      __attribute_pure__;
+libc_hidden_proto (__wcsnlen)
 extern wchar_t *__wcscat (wchar_t *dest, const wchar_t *src);
+libc_hidden_proto (__wcscat)
 extern wint_t __btowc (int __c) attribute_hidden;
 extern int __mbsinit (const __mbstate_t *__ps);
 extern size_t __mbrtowc (wchar_t *__restrict __pwc,
@@ -182,9 +185,11 @@ extern size_t __wcsnrtombs (char *__restrict __dst,
      attribute_hidden;
 extern wchar_t *__wcsncpy (wchar_t *__restrict __dest,
 			   const wchar_t *__restrict __src, size_t __n);
+libc_hidden_proto (__wcsncpy)
 extern wchar_t *__wcpcpy (wchar_t *__dest, const wchar_t *__src);
 extern wchar_t *__wcpncpy (wchar_t *__dest, const wchar_t *__src,
 			   size_t __n);
+libc_hidden_proto (__wcpncpy)
 extern wchar_t *__wmemcpy (wchar_t *__s1, const wchar_t *s2,
 			   size_t __n) attribute_hidden;
 extern wchar_t *__wmempcpy (wchar_t *__restrict __s1,
@@ -194,6 +199,7 @@ extern wchar_t *__wmemmove (wchar_t *__s1, const wchar_t *__s2,
 			    size_t __n) attribute_hidden;
 extern wchar_t *__wcschrnul (const wchar_t *__s, wchar_t __wc)
      __attribute_pure__;
+libc_hidden_proto (__wcschrnul)
 
 extern wchar_t *__wmemset_chk (wchar_t *__s, wchar_t __c, size_t __n,
 			       size_t __ns) __THROW;

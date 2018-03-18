@@ -19,7 +19,7 @@
 /* Since the generic Linux syscall ABI doesn't have an oldumount system call,
    do what the kernel does down here.  */
 
-extern long int __umount2 (const char *name, int flags);
+#include <mount-internal.h>
 
 long int
 __umount (const char *name)

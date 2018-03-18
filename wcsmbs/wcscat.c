@@ -49,5 +49,6 @@ __wcscat (wchar_t *dest, const wchar_t *src)
   return dest;
 }
 #ifndef WCSCAT
+libc_hidden_def (__wcscat)
 weak_alias (__wcscat, wcscat)
 #endif

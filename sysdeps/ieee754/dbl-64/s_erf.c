@@ -295,6 +295,7 @@ __erf (double x)
   else
     return r / x - one;
 }
+libm_hidden_def (__erf)
 libm_alias_double (__erf, erf)
 
 double
@@ -418,4 +419,5 @@ __erfc (double x)
 	return two - tiny;
     }
 }
+libm_hidden_def (__erfc)
 libm_alias_double (__erfc, erfc)

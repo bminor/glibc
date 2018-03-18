@@ -51,5 +51,5 @@ __nextup (double x)
   INSERT_WORDS (x, hx, lx);
   return x;
 }
-
+libm_hidden_def (__nextup)
 libm_alias_double (__nextup, nextup)

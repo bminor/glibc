@@ -47,16 +47,22 @@ struct sha256_ctx
   };
 };
 
+#ifdef _ISOMAC
+#define attribute_hidden /* nothing */
+#endif
+
 /* Initialize structure containing state of computation.
    (FIPS 180-2: 5.3.2)  */
-extern void __sha256_init_ctx (struct sha256_ctx *ctx) __THROW;
+extern void __sha256_init_ctx (struct sha256_ctx *ctx)
+  __THROW attribute_hidden;
 
 /* Starting with the result of former calls of this function (or the
    initialization function update the context for the next LEN bytes
    starting at BUFFER.
    It is NOT required that LEN is a multiple of 64.  */
 extern void __sha256_process_bytes (const void *buffer, size_t len,
-				    struct sha256_ctx *ctx) __THROW;
+				    struct sha256_ctx *ctx)
+  __THROW attribute_hidden;
 
 /* Process the remaining bytes in the buffer and put result from CTX
    in first 32 bytes following RESBUF.
@@ -64,6 +70,6 @@ extern void __sha256_process_bytes (const void *buffer, size_t len,
    IMPORTANT: On some systems it is required that RESBUF is correctly
    aligned for a 32 bits value.  */
 extern void *__sha256_finish_ctx (struct sha256_ctx *ctx, void *resbuf)
-  __THROW;
+  __THROW attribute_hidden;
 
 #endif /* sha256.h */

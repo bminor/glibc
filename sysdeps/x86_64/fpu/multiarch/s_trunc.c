@@ -16,16 +16,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <math.h>
 #include <libm-alias-double.h>
 
-#define trunc __redirect_trunc
-#define __trunc __redirect___trunc
-#include <math.h>
-#undef trunc
-#undef __trunc
+extern typeof (__trunc) __redirect_trunc;
 
 #define SYMBOL_NAME trunc
 #include "ifunc-sse4_1.h"
 
 libc_ifunc_redirected (__redirect_trunc, __trunc, IFUNC_SELECTOR ());
+libm_hidden_def (__trunc)
 libm_alias_double (__trunc, trunc)

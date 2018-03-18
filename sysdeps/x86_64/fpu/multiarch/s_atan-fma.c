@@ -1,3 +1,5 @@
+#include <math.h>
+
 #define __atan __atan_fma
 #define __add __add_fma
 #define __dbl_mp __dbl_mp_fma

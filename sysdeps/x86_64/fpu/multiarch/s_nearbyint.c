@@ -16,17 +16,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <math.h>
 #include <libm-alias-double.h>
 
-#define nearbyint __redirect_nearbyint
-#define __nearbyint __redirect___nearbyint
-#include <math.h>
-#undef nearbyint
-#undef __nearbyint
+extern typeof (__nearbyint) __redirect_nearbyint;
 
 #define SYMBOL_NAME nearbyint
 #include "ifunc-sse4_1.h"
 
 libc_ifunc_redirected (__redirect_nearbyint, __nearbyint,
 		       IFUNC_SELECTOR ());
+libm_hidden_def (__nearbyint)
 libm_alias_double (__nearbyint, nearbyint)

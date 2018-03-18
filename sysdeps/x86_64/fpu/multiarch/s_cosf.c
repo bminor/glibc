@@ -16,13 +16,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <math.h>
 #include <libm-alias-float.h>
 
-extern float __redirect_cosf (float);
+extern typeof (__cosf) __redirect_cosf;
 
 #define SYMBOL_NAME cosf
 #include "ifunc-fma.h"
 
 libc_ifunc_redirected (__redirect_cosf, __cosf, IFUNC_SELECTOR ());
-
+libm_hidden_def (__cosf)
 libm_alias_float (__cos, cos)

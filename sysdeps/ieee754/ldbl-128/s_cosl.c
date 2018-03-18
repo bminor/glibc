@@ -84,4 +84,5 @@ _Float128 __cosl(_Float128 x)
 	    }
 	}
 }
+libm_hidden_def (__cosl)
 libm_alias_ldouble (__cos, cos)

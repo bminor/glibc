@@ -44,6 +44,7 @@ __ceilf(float x)
 	SET_FLOAT_WORD(x,i0);
 	return x;
 }
+libm_hidden_def (__ceilf)
 #ifndef __ceilf
 libm_alias_float (__ceil, ceil)
 #endif

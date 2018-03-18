@@ -54,4 +54,5 @@ __truncl (_Float128 x)
 
   return x;
 }
+libm_hidden_def (__truncl)
 libm_alias_ldouble (__trunc, trunc)

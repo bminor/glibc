@@ -3056,7 +3056,7 @@ ldbl_weak_alias (__vfwscanf, vfwscanf)
 int
 ___vfscanf (FILE *s, const char *format, va_list argptr)
 {
-  return _IO_vfscanf_internal (s, format, argptr, NULL);
+  return _IO_vfscanf (s, format, argptr, NULL);
 }
 ldbl_strong_alias (_IO_vfscanf_internal, _IO_vfscanf)
 ldbl_hidden_def (_IO_vfscanf_internal, _IO_vfscanf)

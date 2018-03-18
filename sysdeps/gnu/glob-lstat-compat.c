@@ -20,6 +20,8 @@
 #include <sys/stat.h>
 #include <shlib-compat.h>
 
+#if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_27)
+
 #define glob64 __no_glob64_decl
 #include <glob.h>
 #undef glob64
@@ -33,6 +35,6 @@
 
 #include <posix/glob.c>
 
-#if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_27)
+libc_hidden_def (__glob_lstat_compat)
 compat_symbol (libc, __glob_lstat_compat, glob, GLIBC_2_0);
 #endif

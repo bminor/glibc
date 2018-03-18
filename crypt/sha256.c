@@ -81,7 +81,8 @@ static const uint32_t K[64] =
     0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
   };
 
-void __sha256_process_block (const void *, size_t, struct sha256_ctx *);
+extern void __sha256_process_block (const void *, size_t, struct sha256_ctx *)
+  attribute_hidden;
 
 /* Initialize structure containing state of computation.
    (FIPS 180-2:5.3.2)  */

@@ -234,5 +234,5 @@ L(exit_tail7):
 	ret
 
 END (__wcslen)
-
+libc_hidden_def (__wcslen)
 weak_alias(__wcslen, wcslen)

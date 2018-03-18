@@ -86,4 +86,5 @@ long double __sinl(long double x)
 	    }
 	}
 }
+libm_hidden_def (__sinl)
 libm_alias_ldouble (__sin, sin)

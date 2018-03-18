@@ -56,7 +56,7 @@ _IO_new_fsetpos64 (FILE *fp, const fpos64_t *posp)
   _IO_release_lock (fp);
   return result;
 }
-
+libc_hidden_def (_IO_new_fsetpos64)
 strong_alias (_IO_new_fsetpos64, __new_fsetpos64)
 versioned_symbol (libc, __new_fsetpos64, fsetpos64, GLIBC_2_2);
 versioned_symbol (libc, _IO_new_fsetpos64, _IO_fsetpos64, GLIBC_2_2);

@@ -60,4 +60,5 @@ __nearbyint(double x)
 	libc_fesetenv (&env);
 	return t;
 }
+libm_hidden_def (__nearbyint)
 libm_alias_double (__nearbyint, nearbyint)

@@ -377,4 +377,5 @@ L(length_less16_part2_return):
 	ret
 
 END (__memrchr)
+libc_hidden_def (__memrchr)
 weak_alias (__memrchr, memrchr)

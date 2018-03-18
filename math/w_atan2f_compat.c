@@ -41,5 +41,6 @@ __atan2f (float y, float x)
     __set_errno (ERANGE);
   return z;
 }
+libm_hidden_def (__atan2f)
 libm_alias_float (__atan2, atan2)
 #endif

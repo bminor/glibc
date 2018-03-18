@@ -18,9 +18,12 @@
 
 #ifndef _BITS_FENV_H
 
-#if defined _LIBC && defined __USE_EXTERN_INLINES
+/* The installed version of bits/fenv.h only declares
+   __feraiseexcept_renamed when _LIBC is not defined.  */
+#if defined __USE_EXTERN_INLINES && defined _LIBC
 # if defined SHARED && !defined NO_HIDDEN && IS_IN (libm)
-extern int __REDIRECT_NTH (__feraiseexcept_renamed, (int), __GI_feraiseexcept);
+extern int __REDIRECT_NTH (__feraiseexcept_renamed, (int),
+                           __GI_feraiseexcept) attribute_hidden;
 # else
 extern int __REDIRECT_NTH (__feraiseexcept_renamed, (int), feraiseexcept);
 # endif
@@ -28,15 +31,13 @@ extern int __REDIRECT_NTH (__feraiseexcept_renamed, (int), feraiseexcept);
 
 #include_next <bits/fenv.h>
 
-# ifndef _ISOMAC
+#if defined __USE_EXTERN_INLINES && !defined _ISOMAC
 
 /* Ensure __feraiseexcept calls in glibc are optimized the same as
    feraiseexcept calls.  */
 
-#ifdef __USE_EXTERN_INLINES
 __BEGIN_DECLS
 
-extern int __REDIRECT_NTH (____feraiseexcept_renamed, (int), __feraiseexcept);
 __extern_inline int
 __NTH (__feraiseexcept (int __excepts))
 {
@@ -47,11 +48,10 @@ __NTH (__feraiseexcept (int __excepts))
       return 0;
     }
 
-  return ____feraiseexcept_renamed (__excepts);
+  return __feraiseexcept_renamed (__excepts);
 }
 
 __END_DECLS
-#endif
 
-# endif /* _ISOMAC */
+#endif /* __USE_EXTERN_INLINES && !_ISOMAC */
 #endif /* bits/fenv.h */

@@ -24,6 +24,7 @@
 #include <sysdeps/unix/sysv/linux/timer_delete.c>
 
 #undef timer_delete
+librt_hidden_def (__timer_delete_new)
 versioned_symbol (librt, __timer_delete_new, timer_delete, GLIBC_2_3_3);
 
 

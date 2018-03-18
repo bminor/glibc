@@ -34,4 +34,5 @@ ENTRY(__truncl)
 	fldenv	-28(%rsp)
 	ret
 END(__truncl)
+libm_hidden_def (__truncl)
 libm_alias_ldouble (__trunc, trunc)

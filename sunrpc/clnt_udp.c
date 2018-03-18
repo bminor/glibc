@@ -58,7 +58,7 @@
 #include <inet/net-internal.h>
 #include <shlib-compat.h>
 
-extern u_long _create_xid (void);
+extern u_long _create_xid (void) attribute_hidden;
 
 /*
  * UDP bases client side rpc operations

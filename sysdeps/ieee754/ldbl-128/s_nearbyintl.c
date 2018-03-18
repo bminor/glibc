@@ -65,4 +65,5 @@ _Float128 __nearbyintl(_Float128 x)
 	fesetenv (&env);
 	return t;
 }
+libm_hidden_def (__nearbyintl)
 libm_alias_ldouble (__nearbyint, nearbyint)

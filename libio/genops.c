@@ -108,9 +108,8 @@ libc_hidden_def (_IO_link_in)
 
 /* Return minimum _pos markers
    Assumes the current get area is the main get area. */
-ssize_t _IO_least_marker (FILE *fp, char *end_p);
 
-ssize_t
+static ssize_t
 _IO_least_marker (FILE *fp, char *end_p)
 {
   ssize_t least_so_far = end_p - fp->_IO_read_base;

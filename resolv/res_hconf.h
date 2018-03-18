@@ -47,8 +47,8 @@ struct hconf
 extern struct hconf _res_hconf;
 
 extern void _res_hconf_init (void) attribute_hidden;
-extern void _res_hconf_trim_domain (char *domain);
-extern void _res_hconf_trim_domains (struct hostent *hp);
-extern void _res_hconf_reorder_addrs (struct hostent *hp);
+extern void _res_hconf_trim_domain (char *domain) attribute_hidden;
+extern void _res_hconf_trim_domains (struct hostent *hp) attribute_hidden;
+extern void _res_hconf_reorder_addrs (struct hostent *hp) attribute_hidden;
 
 #endif /* _RES_HCONF_H_ */

@@ -35,5 +35,6 @@ __hypotf(float x, float y)
 
 	return z;
 }
+libm_hidden_def (__hypotf)
 libm_alias_float (__hypot, hypot)
 #endif

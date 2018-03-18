@@ -45,4 +45,5 @@ __wctrans (const char *property)
   i = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MAP_OFFSET) + cnt;
   return (wctrans_t) _NL_CURRENT_DATA (LC_CTYPE)->values[i].string;
 }
+libc_hidden_def (__wctrans)
 weak_alias (__wctrans, wctrans)

@@ -40,6 +40,7 @@ M_DECL_FUNC (__log) (FLOAT x)
     }
   return M_SUF (__ieee754_log) (x);
 }
+libm_hidden_def (M_SUF (__log))
 declare_mgen_alias (__log, log)
 
 #endif /* __USE_WRAPPER_TEMPLATE.  */

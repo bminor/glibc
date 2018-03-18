@@ -17,19 +17,19 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <string.h>
+
 /* Define multiple versions only for the definition in libc.  */
 #if IS_IN (libc)
-# define strncasecmp __redirect_strncasecmp
-# define __strncasecmp __redirect___strncasecmp
-# include <string.h>
-# undef strncasecmp
-# undef __strncasecmp
+
+extern typeof (__strncasecmp) __redirect_strncasecmp;
 
 # define SYMBOL_NAME strncasecmp
 # include "ifunc-strcasecmp.h"
 
 libc_ifunc_redirected (__redirect_strncasecmp, __strncasecmp,
 		       IFUNC_SELECTOR ());
-
+libc_hidden_def (__strncasecmp)
 weak_alias (__strncasecmp, strncasecmp)
+
 #endif

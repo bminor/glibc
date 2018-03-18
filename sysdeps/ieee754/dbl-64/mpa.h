@@ -35,6 +35,9 @@
 /* Common types and definition                                          */
 /************************************************************************/
 
+#ifndef _MPA_H
+#define _MPA_H 1
+
 #include <mpa-arch.h>
 
 /* The mp_no structure holds the details of a multi-precision floating point
@@ -106,18 +109,26 @@ extern const mp_no __mptwo;
 #define  HALF      0x1.0p-1		/* 1/2 */
 #define  MHALF     -0x1.0p-1		/* -1/2 */
 
-int __acr (const mp_no *, const mp_no *, int);
-void __cpy (const mp_no *, mp_no *, int);
-void __mp_dbl (const mp_no *, double *, int);
-void __dbl_mp (double, mp_no *, int);
-void __add (const mp_no *, const mp_no *, mp_no *, int);
-void __sub (const mp_no *, const mp_no *, mp_no *, int);
-void __mul (const mp_no *, const mp_no *, mp_no *, int);
-void __sqr (const mp_no *, mp_no *, int);
-void __dvd (const mp_no *, const mp_no *, mp_no *, int);
+int __acr (const mp_no *, const mp_no *, int) attribute_hidden;
+void __cpy (const mp_no *, mp_no *, int) attribute_hidden;
+void __mp_dbl (const mp_no *, double *, int) attribute_hidden;
+void __dbl_mp (double, mp_no *, int) attribute_hidden;
+void __add (const mp_no *, const mp_no *, mp_no *, int)
+  attribute_hidden;
+void __sub (const mp_no *, const mp_no *, mp_no *, int)
+  attribute_hidden;
+void __mul (const mp_no *, const mp_no *, mp_no *, int)
+  attribute_hidden;
+void __sqr (const mp_no *, mp_no *, int)
+  attribute_hidden;
+void __dvd (const mp_no *, const mp_no *, mp_no *, int)
+  attribute_hidden;
 
-extern void __mpatan (mp_no *, mp_no *, int);
-extern void __mpatan2 (mp_no *, mp_no *, mp_no *, int);
-extern void __mpsqrt (mp_no *, mp_no *, int);
-extern void __c32 (mp_no *, mp_no *, mp_no *, int);
-extern int __mpranred (double, mp_no *, int);
+extern void __mpatan (mp_no *, mp_no *, int) attribute_hidden;
+extern void __mpatan2 (mp_no *, mp_no *, mp_no *, int) attribute_hidden;
+extern void __mpsqrt (mp_no *, mp_no *, int) attribute_hidden;
+extern void __mptan (double, mp_no *, int) attribute_hidden;
+extern void __c32 (mp_no *, mp_no *, mp_no *, int) attribute_hidden;
+extern int __mpranred (double, mp_no *, int) attribute_hidden;
+
+#endif

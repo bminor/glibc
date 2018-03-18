@@ -25,58 +25,73 @@
 #define __MSUF_R(x) __MSUF_R_S (x, _MSUF_)
 
 /* IEEE style elementary functions.  */
-extern _Mdouble_ __MSUF (__ieee754_acos) (_Mdouble_);
-extern _Mdouble_ __MSUF (__ieee754_acosh) (_Mdouble_);
-extern _Mdouble_ __MSUF (__ieee754_asin) (_Mdouble_);
-extern _Mdouble_ __MSUF (__ieee754_atan2) (_Mdouble_, _Mdouble_);
-extern _Mdouble_ __MSUF (__ieee754_atanh) (_Mdouble_);
-extern _Mdouble_ __MSUF (__ieee754_cosh) (_Mdouble_);
-extern _Mdouble_ __MSUF (__ieee754_exp) (_Mdouble_);
-extern _Mdouble_ __MSUF (__ieee754_exp10) (_Mdouble_);
-extern _Mdouble_ __MSUF (__ieee754_exp2) (_Mdouble_);
-extern _Mdouble_ __MSUF (__ieee754_fmod) (_Mdouble_, _Mdouble_);
-extern _Mdouble_ __MSUF (__ieee754_gamma) (_Mdouble_);
-extern _Mdouble_ __MSUF_R (__ieee754_gamma) (_Mdouble_, int *);
-extern _Mdouble_ __MSUF (__ieee754_hypot) (_Mdouble_, _Mdouble_);
-extern _Mdouble_ __MSUF (__ieee754_j0) (_Mdouble_);
-extern _Mdouble_ __MSUF (__ieee754_j1) (_Mdouble_);
-extern _Mdouble_ __MSUF (__ieee754_jn) (int, _Mdouble_);
-extern _Mdouble_ __MSUF (__ieee754_lgamma) (_Mdouble_);
-extern _Mdouble_ __MSUF_R (__ieee754_lgamma) (_Mdouble_, int *);
-extern _Mdouble_ __MSUF (__ieee754_log) (_Mdouble_);
-extern _Mdouble_ __MSUF (__ieee754_log10) (_Mdouble_);
-extern _Mdouble_ __MSUF (__ieee754_log2) (_Mdouble_);
-extern _Mdouble_ __MSUF (__ieee754_pow) (_Mdouble_, _Mdouble_);
-extern _Mdouble_ __MSUF (__ieee754_remainder) (_Mdouble_, _Mdouble_);
-extern _Mdouble_ __MSUF (__ieee754_sinh) (_Mdouble_);
-extern _Mdouble_ __MSUF (__ieee754_sqrt) (_Mdouble_);
-extern _Mdouble_ __MSUF (__ieee754_y0) (_Mdouble_);
-extern _Mdouble_ __MSUF (__ieee754_y1) (_Mdouble_);
-extern _Mdouble_ __MSUF (__ieee754_yn) (int, _Mdouble_);
+extern _Mdouble_ __MSUF (__ieee754_acos) (_Mdouble_) attribute_hidden;
+extern _Mdouble_ __MSUF (__ieee754_acosh) (_Mdouble_) attribute_hidden;
+extern _Mdouble_ __MSUF (__ieee754_asin) (_Mdouble_) attribute_hidden;
+extern _Mdouble_ __MSUF (__ieee754_atan2) (_Mdouble_, _Mdouble_)
+  attribute_hidden;
+extern _Mdouble_ __MSUF (__ieee754_atanh) (_Mdouble_) attribute_hidden;
+extern _Mdouble_ __MSUF (__ieee754_cosh) (_Mdouble_) attribute_hidden;
+extern _Mdouble_ __MSUF (__ieee754_exp) (_Mdouble_) attribute_hidden;
+extern _Mdouble_ __MSUF (__ieee754_exp10) (_Mdouble_) attribute_hidden;
+extern _Mdouble_ __MSUF (__ieee754_exp2) (_Mdouble_) attribute_hidden;
+extern _Mdouble_ __MSUF (__ieee754_fmod) (_Mdouble_, _Mdouble_)
+  attribute_hidden;
+extern _Mdouble_ __MSUF (__ieee754_gamma) (_Mdouble_) attribute_hidden;
+extern _Mdouble_ __MSUF_R (__ieee754_gamma) (_Mdouble_, int *)
+  attribute_hidden;
+extern _Mdouble_ __MSUF (__ieee754_hypot) (_Mdouble_, _Mdouble_)
+  attribute_hidden;
+extern _Mdouble_ __MSUF (__ieee754_j0) (_Mdouble_) attribute_hidden;
+extern _Mdouble_ __MSUF (__ieee754_j1) (_Mdouble_) attribute_hidden;
+extern _Mdouble_ __MSUF (__ieee754_jn) (int, _Mdouble_) attribute_hidden;
+extern _Mdouble_ __MSUF (__ieee754_lgamma) (_Mdouble_) attribute_hidden;
+extern _Mdouble_ __MSUF_R (__ieee754_lgamma) (_Mdouble_, int *)
+  attribute_hidden;
+extern _Mdouble_ __MSUF (__ieee754_log) (_Mdouble_) attribute_hidden;
+extern _Mdouble_ __MSUF (__ieee754_log10) (_Mdouble_) attribute_hidden;
+extern _Mdouble_ __MSUF (__ieee754_log2) (_Mdouble_) attribute_hidden;
+extern _Mdouble_ __MSUF (__ieee754_pow) (_Mdouble_, _Mdouble_)
+  attribute_hidden;
+extern _Mdouble_ __MSUF (__ieee754_remainder) (_Mdouble_, _Mdouble_)
+  attribute_hidden;
+extern _Mdouble_ __MSUF (__ieee754_sinh) (_Mdouble_) attribute_hidden;
+extern _Mdouble_ __MSUF (__ieee754_sqrt) (_Mdouble_) attribute_hidden;
+extern _Mdouble_ __MSUF (__ieee754_y0) (_Mdouble_) attribute_hidden;
+extern _Mdouble_ __MSUF (__ieee754_y1) (_Mdouble_) attribute_hidden;
+extern _Mdouble_ __MSUF (__ieee754_yn) (int, _Mdouble_) attribute_hidden;
 
-extern _Mdouble_ __MSUF (__ieee754_scalb) (_Mdouble_, _Mdouble_);
-extern int __MSUF (__ieee754_ilogb) (_Mdouble_);
+extern _Mdouble_ __MSUF (__ieee754_scalb) (_Mdouble_, _Mdouble_)
+  attribute_hidden;
+extern int __MSUF (__ieee754_ilogb) (_Mdouble_) attribute_hidden;
 
-extern int32_t __MSUF (__ieee754_rem_pio2) (_Mdouble_, _Mdouble_ *);
+extern int32_t __MSUF (__ieee754_rem_pio2) (_Mdouble_, _Mdouble_ *)
+  attribute_hidden;
 
 /* fdlibm kernel functions.  */
-extern _Mdouble_ __MSUF (__kernel_sin) (_Mdouble_, _Mdouble_, int);
-extern _Mdouble_ __MSUF (__kernel_cos) (_Mdouble_, _Mdouble_);
-extern _Mdouble_ __MSUF (__kernel_tan) (_Mdouble_, _Mdouble_, int);
+extern _Mdouble_ __MSUF (__kernel_sin) (_Mdouble_, _Mdouble_, int)
+  attribute_hidden;
+extern _Mdouble_ __MSUF (__kernel_cos) (_Mdouble_, _Mdouble_)
+  attribute_hidden;
+extern _Mdouble_ __MSUF (__kernel_tan) (_Mdouble_, _Mdouble_, int)
+  attribute_hidden;
 
 #if defined __MATH_DECLARING_LONG_DOUBLE || defined __MATH_DECLARING_FLOATN
 extern void __MSUF (__kernel_sincos) (_Mdouble_, _Mdouble_,
-				      _Mdouble_ *, _Mdouble_ *, int);
+				      _Mdouble_ *, _Mdouble_ *, int)
+  attribute_hidden;
 #endif
 
 #if !defined __MATH_DECLARING_LONG_DOUBLE || defined __MATH_DECLARING_FLOATN
 extern int __MSUF (__kernel_rem_pio2) (_Mdouble_ *, _Mdouble_ *, int,
-				       int, int, const int32_t *);
+				       int, int, const int32_t *)
+  attribute_hidden;
 #endif
 
 /* Internal functions.  */
 #if !defined __MATH_DECLARING_LONG_DOUBLE || !defined NO_LONG_DOUBLE
-extern _Mdouble_ __MSUF (__copysign) (_Mdouble_ x, _Mdouble_ __y);
+extern _Mdouble_ __MSUF (__copysign) (_Mdouble_ x, _Mdouble_ __y)
+  attribute_hidden;
 
 extern inline _Mdouble_
 __MSUF (__copysign) (_Mdouble_ x, _Mdouble_ __y)
@@ -88,7 +103,8 @@ __MSUF (__copysign) (_Mdouble_ x, _Mdouble_ __y)
 /* Return X^2 + Y^2 - 1, computed without large cancellation error.
    It is given that 1 > X >= Y >= epsilon / 2, and that X^2 + Y^2 >=
    0.5.  */
-extern _Mdouble_ __MSUF (__x2y2m1) (_Mdouble_ x, _Mdouble_ y);
+extern _Mdouble_ __MSUF (__x2y2m1) (_Mdouble_ x, _Mdouble_ y)
+  attribute_hidden;
 
 /* Compute the product of X + X_EPS, X + X_EPS + 1, ..., X + X_EPS + N
    - 1, in the form R * (1 + *EPS) where the return value R is an
@@ -98,12 +114,14 @@ extern _Mdouble_ __MSUF (__x2y2m1) (_Mdouble_ x, _Mdouble_ y);
    X is small enough that factors quadratic in it can be
    neglected.  */
 extern _Mdouble_ __MSUF (__gamma_product) (_Mdouble_ x, _Mdouble_ x_eps,
-					   int n, _Mdouble_ *eps);
+					   int n, _Mdouble_ *eps)
+  attribute_hidden;
 
 /* Compute lgamma of a negative argument X, if it is in a range
    (depending on the floating-point format) for which expansion around
    zeros is used, setting *SIGNGAMP accordingly.  */
-extern _Mdouble_ __MSUF (__lgamma_neg) (_Mdouble_ x, int *signgamp);
+extern _Mdouble_ __MSUF (__lgamma_neg) (_Mdouble_ x, int *signgamp)
+  attribute_hidden;
 
 /* Compute the product of 1 + (T / (X + X_EPS)), 1 + (T / (X + X_EPS +
    1)), ..., 1 + (T / (X + X_EPS + N - 1)), minus 1.  X is such that
@@ -112,7 +130,8 @@ extern _Mdouble_ __MSUF (__lgamma_neg) (_Mdouble_ x, int *signgamp);
    neglected.  */
 #if !defined __MATH_DECLARING_FLOAT
 extern _Mdouble_ __MSUF (__lgamma_product) (_Mdouble_ t, _Mdouble_ x,
-					    _Mdouble_ x_eps, int n);
+					    _Mdouble_ x_eps, int n)
+  attribute_hidden;
 #endif
 
 #undef __MSUF_X

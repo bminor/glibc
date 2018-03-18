@@ -41,5 +41,6 @@ __atan2 (double y, double x)
     __set_errno (ERANGE);
   return z;
 }
+libm_hidden_def (__atan2)
 libm_alias_double (__atan2, atan2)
 #endif

@@ -111,5 +111,5 @@ M_DECL_FUNC (__clog) (CFLOAT x)
 
   return result;
 }
-
+libm_hidden_def (M_SUF (__clog))
 declare_mgen_alias (__clog, clog)

@@ -30,6 +30,6 @@
 
 libc_ifunc_redirected (__redirect_strncasecmp, __strncasecmp,
 		       IFUNC_SELECTOR ());
-
+libc_hidden_def (__strncasecmp)
 weak_alias (__strncasecmp, strncasecmp)
 #endif

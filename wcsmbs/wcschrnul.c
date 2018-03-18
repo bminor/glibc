@@ -34,5 +34,6 @@ __wcschrnul (const wchar_t *wcs, const wchar_t wc)
   return (wchar_t *) wcs;
 }
 #ifndef WCSCHRNUL
+libc_hidden_def (__wcschrnul)
 weak_alias (__wcschrnul, wcschrnul)
 #endif

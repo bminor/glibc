@@ -46,6 +46,7 @@ __rintf(float x)
 	w = TWO23[sx]+x;
 	return w-TWO23[sx];
 }
+libm_hidden_def (__rintf)
 #ifndef __rintf
 libm_alias_float (__rint, rint)
 #endif

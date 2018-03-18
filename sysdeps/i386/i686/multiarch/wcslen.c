@@ -17,15 +17,17 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <wchar.h>
+
 /* Define multiple versions only for the definition in libc.  */
 #if IS_IN (libc)
-# define __wcslen __redirect_wcslen
-# include <wchar.h>
-# undef __wcslen
+
+extern typeof (__wcslen) __redirect_wcslen;
 
 # define SYMBOL_NAME wcslen
 # include "ifunc-sse2.h"
 
 libc_ifunc_redirected (__redirect_wcslen, __wcslen, IFUNC_SELECTOR ());
-weak_alias (__wcslen, wcslen);
+libc_hidden_def (__wcslen)
+weak_alias (__wcslen, wcslen)
 #endif

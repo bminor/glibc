@@ -50,6 +50,7 @@ __floorf(float x)
 	SET_FLOAT_WORD(x,i0);
 	return x;
 }
+libm_hidden_def (__floorf)
 #ifndef __floorf
 libm_alias_float (__floor, floor)
 #endif

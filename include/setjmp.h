@@ -17,7 +17,8 @@ extern void ____longjmp_chk (__jmp_buf __env, int __val)
    Always returns zero, for convenience.  */
 extern int __sigjmp_save (jmp_buf __env, int __savemask);
 
-extern void _longjmp_unwind (jmp_buf env, int val);
+extern void _longjmp_unwind (jmp_buf env, int val)
+  attribute_hidden;
 
 extern void __libc_siglongjmp (sigjmp_buf env, int val)
 	  __attribute__ ((noreturn));

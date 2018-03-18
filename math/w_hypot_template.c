@@ -35,6 +35,7 @@ M_DECL_FUNC (__hypot) (FLOAT x, FLOAT y)
     __set_errno (ERANGE);
   return z;
 }
+libm_hidden_def (M_SUF (__hypot))
 declare_mgen_alias (__hypot, hypot)
 
 #endif /* __USE_WRAPPER_TEMPLATE.  */

@@ -21,6 +21,7 @@
 # include <ifunc-resolve.h>
 
 s390_vx_libc_ifunc (__wcsnlen)
+libc_hidden_def (__wcsnlen)
 weak_alias (__wcsnlen, wcsnlen)
 
 #else

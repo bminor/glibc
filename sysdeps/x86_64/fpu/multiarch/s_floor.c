@@ -16,16 +16,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <math.h>
 #include <libm-alias-double.h>
 
-#define floor __redirect_floor
-#define __floor __redirect___floor
-#include <math.h>
-#undef floor
-#undef __floor
+extern typeof (__floor) __redirect_floor;
 
 #define SYMBOL_NAME floor
 #include "ifunc-sse4_1.h"
 
 libc_ifunc_redirected (__redirect_floor, __floor, IFUNC_SELECTOR ());
+libm_hidden_def (__floor)
 libm_alias_double (__floor, floor)

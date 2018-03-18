@@ -73,7 +73,8 @@ struct loaded_l10nfile
    names.  The return value is dynamically allocated and has to be
    freed by the caller.  */
 extern const char *_nl_normalize_codeset (const char *codeset,
-					  size_t name_len);
+					  size_t name_len)
+  attribute_hidden;
 
 /* Lookup a locale dependent file.
    *L10NFILE_LIST denotes a pool of lookup results of locale dependent
@@ -95,13 +96,15 @@ _nl_make_l10nflist (struct loaded_l10nfile **l10nfile_list,
 		    const char *language, const char *territory,
 		    const char *codeset, const char *normalized_codeset,
 		    const char *modifier,
-		    const char *filename, int do_allocate);
+		    const char *filename, int do_allocate)
+  attribute_hidden;
 
 /* Lookup the real locale name for a locale alias NAME, or NULL if
    NAME is not a locale alias (but possibly a real locale name).
    The return value is statically allocated and must not be freed.  */
 /* Part of the libintl ABI only for the sake of the gettext.m4 macro.  */
-extern LIBINTL_DLL_EXPORTED const char *_nl_expand_alias (const char *name);
+extern LIBINTL_DLL_EXPORTED const char *_nl_expand_alias (const char *name)
+  attribute_hidden;
 
 /* Split a locale name NAME into its pieces: language, modifier,
    territory, codeset.
@@ -121,6 +124,7 @@ extern LIBINTL_DLL_EXPORTED const char *_nl_expand_alias (const char *name);
 extern int _nl_explode_name (char *name, const char **language,
 			     const char **modifier, const char **territory,
 			     const char **codeset,
-			     const char **normalized_codeset);
+			     const char **normalized_codeset)
+  attribute_hidden;
 
 #endif	/* loadinfo.h */

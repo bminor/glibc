@@ -16,12 +16,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <math.h>
 #include <libm-alias-float.h>
 
-#define powf __redirect_powf
-#define __DECL_SIMD___redirect_powf
-#include <math.h>
-#undef powf
+extern typeof (__powf) __redirect_powf;
 
 #define SYMBOL_NAME powf
 #include "ifunc-fma.h"

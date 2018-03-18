@@ -44,5 +44,6 @@ __log (double x)
 
   return  __ieee754_log (x);
 }
+libm_hidden_def (__log)
 libm_alias_double (__log, log)
 #endif

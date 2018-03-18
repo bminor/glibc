@@ -208,7 +208,7 @@ static int		sock_eq(struct sockaddr_in6 *, struct sockaddr_in6 *);
  * author:
  *	paul vixie, 29may94
  */
-int
+static int
 res_ourserver_p(const res_state statp, const struct sockaddr_in6 *inp)
 {
 	int ns;

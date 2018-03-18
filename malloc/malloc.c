@@ -5005,7 +5005,7 @@ __malloc_stats (void)
       if (ar_ptr == &main_arena)
         break;
     }
-  fprintf (stderr, "Total (incl. mmap):\n");
+  fputs ("Total (incl. mmap):\n", stderr);
   fprintf (stderr, "system bytes     = %10u\n", system_b);
   fprintf (stderr, "in use bytes     = %10u\n", in_use_b);
   fprintf (stderr, "max mmap regions = %10u\n", (unsigned int) mp_.max_n_mmaps);

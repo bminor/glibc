@@ -17,18 +17,18 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <string.h>
+
 /* Define multiple versions only for the definition in libc.  */
 #if IS_IN (libc)
-# define strchrnul __redirect_strchrnul
-# define __strchrnul __redirect___strchrnul
-# include <string.h>
-# undef __strchrnul
-# undef strchrnul
+
+extern typeof (__strchrnul) __redirect_strchrnul;
 
 # define SYMBOL_NAME strchrnul
 # include "ifunc-avx2.h"
 
 libc_ifunc_redirected (__redirect_strchrnul, __strchrnul,
 		       IFUNC_SELECTOR ());
+libc_hidden_def (__strchrnul)
 weak_alias (__strchrnul, strchrnul)
 #endif

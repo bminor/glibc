@@ -46,5 +46,6 @@ __wcsnlen (const wchar_t *s, size_t maxlen)
   return len;
 }
 #ifndef WCSNLEN
+libc_hidden_def (__wcsnlen)
 weak_alias (__wcsnlen, wcsnlen)
 #endif

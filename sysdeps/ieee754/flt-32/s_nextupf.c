@@ -43,5 +43,5 @@ __nextupf (float x)
   SET_FLOAT_WORD (x, hx);
   return x;
 }
-
+libm_hidden_def (__nextupf)
 libm_alias_float (__nextup, nextup)

@@ -35,7 +35,7 @@
 #include <shlib-compat.h>
 #include "des.h"
 
-extern int _des_crypt (char *, unsigned, struct desparams *);
+extern int _des_crypt (char *, unsigned, struct desparams *) attribute_hidden;
 
 /*
  * Copy 8 bytes

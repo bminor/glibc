@@ -335,8 +335,9 @@ __erfl (long double x)
   else
     return r / x - one;
 }
-
+libm_hidden_def (__erfl)
 libm_alias_ldouble (__erf, erf)
+
 long double
 __erfcl (long double x)
 {
@@ -448,5 +449,5 @@ __erfcl (long double x)
 	return two - tiny;
     }
 }
-
+libm_hidden_def (__erfcl)
 libm_alias_ldouble (__erfc, erfc)

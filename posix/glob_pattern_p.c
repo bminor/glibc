@@ -30,4 +30,5 @@ __glob_pattern_p (const char *pattern, int quote)
 {
   return __glob_pattern_type (pattern, quote) == GLOBPAT_SPECIAL;
 }
+libc_hidden_def (__glob_pattern_p)
 weak_alias (__glob_pattern_p, glob_pattern_p)

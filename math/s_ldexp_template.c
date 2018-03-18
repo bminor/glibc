@@ -26,7 +26,7 @@ M_SUF (__ldexp) (FLOAT value, int exp)
 	if(!isfinite(value)||value==0) __set_errno (ERANGE);
 	return value;
 }
-
+libm_hidden_def (M_SUF (__ldexp))
 declare_mgen_alias (__ldexp, ldexp)
 strong_alias (M_SUF (__ldexp), M_SUF (__wrap_scalbn))
 declare_mgen_alias (__wrap_scalbn, scalbn)

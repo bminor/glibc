@@ -25,6 +25,7 @@
 #include <sysdeps/unix/sysv/linux/timer_create.c>
 
 #undef timer_create
+librt_hidden_def (__timer_create_new)
 versioned_symbol (librt, __timer_create_new, timer_create, GLIBC_2_3_3);
 
 

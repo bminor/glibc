@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <math.h>
 #include <libm-alias-double.h>
 
 extern double __redirect_sin (double);
@@ -25,6 +26,7 @@ extern double __redirect_cos (double);
 #include "ifunc-avx-fma4.h"
 
 libc_ifunc_redirected (__redirect_sin, __sin, IFUNC_SELECTOR ());
+libm_hidden_def (__sin)
 libm_alias_double (__sin, sin)
 
 #undef SYMBOL_NAME
@@ -32,6 +34,7 @@ libm_alias_double (__sin, sin)
 #include "ifunc-avx-fma4.h"
 
 libc_ifunc_redirected (__redirect_cos, __cos, IFUNC_SELECTOR ());
+libm_hidden_def (__cos)
 libm_alias_double (__cos, cos)
 
 #define __cos __cos_sse2

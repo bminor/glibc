@@ -803,8 +803,9 @@ __erfl (_Float128 x)
     y = -y;
   return( y );
 }
-
+libm_hidden_def (__erfl)
 libm_alias_ldouble (__erf, erf)
+
 _Float128
 __erfcl (_Float128 x)
 {
@@ -945,5 +946,5 @@ __erfcl (_Float128 x)
 	return two - tiny;
     }
 }
-
+libm_hidden_def (__erfcl)
 libm_alias_ldouble (__erfc, erfc)

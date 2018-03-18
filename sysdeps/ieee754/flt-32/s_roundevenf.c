@@ -67,4 +67,5 @@ __roundevenf (float x)
   SET_FLOAT_WORD (x, ix);
   return x;
 }
+libm_hidden_def (__roundevenf)
 libm_alias_float (__roundeven, roundeven)

@@ -22,6 +22,8 @@
 #include <libc-lock.h>
 #include <rpc/rpc.h>
 
+extern unsigned long _create_xid (void) attribute_hidden;
+
 /* The RPC code is not threadsafe, but new code should be threadsafe. */
 
 __libc_lock_define_initialized (static, createxid_lock)

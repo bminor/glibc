@@ -147,4 +147,5 @@ M_DECL_FUNC (__cexp) (CFLOAT x)
 
   return retval;
 }
+libm_hidden_def (M_SUF (__cexp))
 declare_mgen_alias (__cexp, cexp)

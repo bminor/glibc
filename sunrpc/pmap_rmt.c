@@ -53,7 +53,7 @@
 
 #define MAX_BROADCAST_SIZE 1400
 
-extern u_long _create_xid (void);
+extern u_long _create_xid (void) attribute_hidden;
 
 static const struct timeval timeout = {3, 0};
 

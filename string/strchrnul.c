@@ -162,5 +162,5 @@ STRCHRNUL (const char *s, int c_in)
   /* This should never happen.  */
   return NULL;
 }
-
+libc_hidden_def (__strchrnul)
 weak_alias (__strchrnul, strchrnul)

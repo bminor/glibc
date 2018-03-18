@@ -157,4 +157,5 @@ M_DECL_FUNC (__csqrt) (CFLOAT x)
 
   return res;
 }
+libm_hidden_def (M_SUF (__csqrt))
 declare_mgen_alias (__csqrt, csqrt)

@@ -193,10 +193,6 @@ extern FILE *_IO_stderr attribute_hidden;
 
 struct _IO_cookie_file;
 
-/* Initialize one of those.  */
-extern void _IO_cookie_init (struct _IO_cookie_file *__cfile, int __read_write,
-			     void *__cookie, cookie_io_functions_t __fns);
-
 extern int __underflow (FILE *);
 extern wint_t __wunderflow (FILE *);
 extern wint_t __wuflow (FILE *);
@@ -269,7 +265,7 @@ extern void _IO_free_backup_area (FILE *) __THROW;
 
 extern wint_t _IO_getwc (FILE *__fp);
 extern wint_t _IO_putwc (wchar_t __wc, FILE *__fp);
-extern int _IO_fwide (FILE *__fp, int __mode) __THROW;
+extern int _IO_fwide (FILE *__fp, int __mode) __THROW attribute_hidden;
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 #  define _IO_fwide_maybe_incompatible \
@@ -298,10 +294,13 @@ weak_extern (_IO_stdin_used);
      __result; })
 
 extern int _IO_vfwscanf (FILE * __restrict, const wchar_t * __restrict,
-			 __gnuc_va_list, int *__restrict);
+			 __gnuc_va_list, int *__restrict)
+  attribute_hidden;
 extern int _IO_vfwprintf (FILE *__restrict, const wchar_t *__restrict,
-			  __gnuc_va_list);
-extern __ssize_t _IO_wpadn (FILE *, wint_t, __ssize_t);
+			  __gnuc_va_list)
+  attribute_hidden;
+extern __ssize_t _IO_wpadn (FILE *, wint_t, __ssize_t)
+  attribute_hidden;
 extern void _IO_free_wbackup_area (FILE *) __THROW;
 
 #ifdef __LDBL_COMPAT

@@ -147,7 +147,7 @@ set_callbacks (cookie_io_functions_t *target,
   *target = source;
 }
 
-void
+static void
 _IO_cookie_init (struct _IO_cookie_file *cfile, int read_write,
 		 void *cookie, cookie_io_functions_t io_functions)
 {
@@ -213,7 +213,7 @@ _IO_fopencookie (void *cookie, const char *mode,
 
   return (FILE *) &new_f->cfile.__fp;
 }
-
+libc_hidden_def (_IO_fopencookie)
 versioned_symbol (libc, _IO_fopencookie, fopencookie, GLIBC_2_2);
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)

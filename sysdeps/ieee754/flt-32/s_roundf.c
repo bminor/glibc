@@ -61,4 +61,5 @@ __roundf (float x)
   SET_FLOAT_WORD (x, i0);
   return x;
 }
+libm_hidden_def (__roundf)
 libm_alias_float (__round, round)

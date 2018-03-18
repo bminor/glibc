@@ -160,6 +160,7 @@ _IO_new_fdopen (int fd, const char *mode)
     }
   return &new_f->fp.file;
 }
+libc_hidden_def (_IO_new_fdopen)
 libc_hidden_ver (_IO_new_fdopen, _IO_fdopen)
 
 strong_alias (_IO_new_fdopen, __new_fdopen)

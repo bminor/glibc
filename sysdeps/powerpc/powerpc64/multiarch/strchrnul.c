@@ -33,7 +33,7 @@ libc_ifunc (__strchrnul,
 	    (hwcap & PPC_FEATURE_HAS_VSX)
             ? __strchrnul_power7
             : __strchrnul_ppc);
-
+libc_hidden_def (__strchrnul)
 weak_alias (__strchrnul, strchrnul)
 #else
 #include <string/strchrnul.c>

@@ -1162,6 +1162,7 @@ __glob (const char *pattern, int flags, int (*errfunc) (const char *, int),
 }
 #if defined _LIBC && !defined __glob
 versioned_symbol (libc, __glob, glob, GLIBC_2_27);
+libc_hidden_def (__glob)
 libc_hidden_ver (__glob, glob)
 #endif
 

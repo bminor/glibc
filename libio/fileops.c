@@ -396,6 +396,7 @@ _IO_new_file_setbuf (FILE *fp, char *p, ssize_t len)
 
   return fp;
 }
+libc_hidden_def (_IO_new_file_setbuf)
 libc_hidden_ver (_IO_new_file_setbuf, _IO_file_setbuf)
 
 
@@ -432,6 +433,7 @@ _IO_new_do_write (FILE *fp, const char *data, size_t to_do)
   return (to_do == 0
 	  || (size_t) new_do_write (fp, data, to_do) == to_do) ? 0 : EOF;
 }
+libc_hidden_def (_IO_new_do_write)
 libc_hidden_ver (_IO_new_do_write, _IO_do_write)
 
 static size_t

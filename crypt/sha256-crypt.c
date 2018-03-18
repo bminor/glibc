@@ -94,8 +94,10 @@ static const char sha256_rounds_prefix[] = "rounds=";
 
 /* Prototypes for local functions.  */
 extern char *__sha256_crypt_r (const char *key, const char *salt,
-			       char *buffer, int buflen);
-extern char *__sha256_crypt (const char *key, const char *salt);
+			       char *buffer, int buflen)
+  attribute_hidden;
+extern char *__sha256_crypt (const char *key, const char *salt)
+  attribute_hidden;
 
 
 char *

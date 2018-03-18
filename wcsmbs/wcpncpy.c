@@ -83,5 +83,6 @@ __wcpncpy (wchar_t *dest, const wchar_t *src, size_t n)
 }
 
 #ifndef WCPNCPY
+libc_hidden_def (__wcpncpy)
 weak_alias (__wcpncpy, wcpncpy)
 #endif

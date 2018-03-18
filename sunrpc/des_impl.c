@@ -372,7 +372,7 @@ static const char shifts2[16] =
 
 static void des_set_key (unsigned char *, unsigned long *);
 static void des_encrypt (unsigned long *, unsigned long *, int);
-int _des_crypt (char *, unsigned, struct desparams *);
+int _des_crypt (char *, unsigned, struct desparams *) attribute_hidden;
 
 static void
 des_set_key (unsigned char *key, unsigned long *schedule)

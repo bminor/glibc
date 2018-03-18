@@ -191,7 +191,6 @@ MEMRCHR
   return 0;
 }
 #ifndef MEMRCHR
-# ifdef weak_alias
+libc_hidden_def (__memrchr)
 weak_alias (__memrchr, memrchr)
-# endif
 #endif

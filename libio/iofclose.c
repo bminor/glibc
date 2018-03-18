@@ -79,6 +79,7 @@ _IO_new_fclose (FILE *fp)
 
   return status;
 }
+libc_hidden_def (_IO_new_fclose)
 
 versioned_symbol (libc, _IO_new_fclose, _IO_fclose, GLIBC_2_1);
 strong_alias (_IO_new_fclose, __new_fclose)

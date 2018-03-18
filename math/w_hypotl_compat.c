@@ -36,5 +36,6 @@ __hypotl(long double x, long double y)
 
 	return z;
 }
+libm_hidden_def (__hypotl)
 libm_alias_ldouble (__hypot, hypot)
 #endif

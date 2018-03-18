@@ -133,10 +133,13 @@ extern int _sys_nerr_internal attribute_hidden;
 libc_hidden_proto (__asprintf)
 #  if IS_IN (libc)
 extern FILE *_IO_new_fopen (const char*, const char*);
+libc_hidden_proto (_IO_new_fopen)
 #   define fopen(fname, mode) _IO_new_fopen (fname, mode)
 extern FILE *_IO_new_fdopen (int, const char*);
+libc_hidden_proto (_IO_new_fdopen)
 #   define fdopen(fd, mode) _IO_new_fdopen (fd, mode)
 extern int _IO_new_fclose (FILE*);
+libc_hidden_proto (_IO_new_fclose)
 #   define fclose(fp) _IO_new_fclose (fp)
 extern int _IO_fputs (const char*, FILE*);
 libc_hidden_proto (_IO_fputs)
@@ -146,8 +149,10 @@ libc_hidden_proto (_IO_fputs)
 libc_hidden_proto (fputs)
 #   define fputs(str, fp) _IO_fputs (str, fp)
 extern int _IO_new_fsetpos (FILE *, const __fpos_t *);
+libc_hidden_proto (_IO_new_fsetpos)
 #   define fsetpos(fp, posp) _IO_new_fsetpos (fp, posp)
 extern int _IO_new_fgetpos (FILE *, __fpos_t *);
+libc_hidden_proto (_IO_new_fgetpos)
 #   define fgetpos(fp, posp) _IO_new_fgetpos (fp, posp)
 #  endif
 

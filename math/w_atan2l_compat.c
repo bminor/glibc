@@ -41,5 +41,6 @@ __atan2l (long double y, long double x)
     __set_errno (ERANGE);
   return z;
 }
+libm_hidden_def (__atan2l)
 libm_alias_ldouble (__atan2, atan2)
 #endif

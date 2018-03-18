@@ -21,11 +21,15 @@
 #define _GETOPT_INT_H	1
 
 #include <getopt.h>
+#ifndef attribute_hidden
+# define attribute_hidden /* nothing */
+#endif
 
 extern int _getopt_internal (int ___argc, char **___argv,
 			     const char *__shortopts,
 			     const struct option *__longopts, int *__longind,
-			     int __long_only, int __posixly_correct);
+			     int __long_only, int __posixly_correct)
+  attribute_hidden;
 
 
 /* Reentrant versions which can handle parsing multiple argument
@@ -102,17 +106,20 @@ extern int _getopt_internal_r (int ___argc, char **___argv,
 			       const char *__shortopts,
 			       const struct option *__longopts, int *__longind,
 			       int __long_only, struct _getopt_data *__data,
-			       int __posixly_correct);
+			       int __posixly_correct)
+  attribute_hidden;
 
 extern int _getopt_long_r (int ___argc, char **___argv,
 			   const char *__shortopts,
 			   const struct option *__longopts, int *__longind,
-			   struct _getopt_data *__data);
+			   struct _getopt_data *__data)
+  attribute_hidden;
 
 extern int _getopt_long_only_r (int ___argc, char **___argv,
 				const char *__shortopts,
 				const struct option *__longopts,
 				int *__longind,
-				struct _getopt_data *__data);
+				struct _getopt_data *__data)
+  attribute_hidden;
 
 #endif /* getopt_int.h */

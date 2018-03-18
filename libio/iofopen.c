@@ -85,7 +85,7 @@ _IO_new_fopen (const char *filename, const char *mode)
 {
   return __fopen_internal (filename, mode, 1);
 }
-
+libc_hidden_def (_IO_new_fopen)
 strong_alias (_IO_new_fopen, __new_fopen)
 versioned_symbol (libc, _IO_new_fopen, _IO_fopen, GLIBC_2_1);
 versioned_symbol (libc, __new_fopen, fopen, GLIBC_2_1);

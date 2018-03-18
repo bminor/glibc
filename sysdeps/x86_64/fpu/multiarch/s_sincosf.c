@@ -16,13 +16,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <math.h>
 #include <libm-alias-float.h>
 
-extern void __redirect_sincosf (float, float *, float *);
+extern typeof (__sincosf) __redirect_sincosf;
 
 #define SYMBOL_NAME sincosf
 #include "ifunc-fma.h"
 
 libc_ifunc_redirected (__redirect_sincosf, __sincosf, IFUNC_SELECTOR ());
-
+libm_hidden_def (__sincosf)
 libm_alias_float (__sincos, sincos)

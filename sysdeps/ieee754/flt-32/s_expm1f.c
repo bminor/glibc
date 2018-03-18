@@ -128,4 +128,5 @@ __expm1f(float x)
 	}
 	return y;
 }
+libm_hidden_def (__expm1f)
 libm_alias_float (__expm1, expm1)

@@ -71,4 +71,5 @@ __sincosl (_Float128 x, _Float128 *sinx, _Float128 *cosx)
 	}
     }
 }
+libm_hidden_def (__sincosl)
 libm_alias_ldouble (__sincos, sincos)

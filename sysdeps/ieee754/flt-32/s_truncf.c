@@ -49,6 +49,7 @@ __truncf (float x)
 
   return x;
 }
+libm_hidden_def (__truncf)
 #ifndef __truncf
 libm_alias_float (__trunc, trunc)
 #endif

@@ -16,17 +16,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <math.h>
 #include <libm-alias-float.h>
 
-#define nearbyintf __redirect_nearbyintf
-#define __nearbyintf __redirect___nearbyintf
-#include <math.h>
-#undef nearbyintf
-#undef __nearbyintf
+extern typeof (__nearbyintf) __redirect_nearbyintf;
 
 #define SYMBOL_NAME nearbyintf
 #include "ifunc-sse4_1.h"
 
 libc_ifunc_redirected (__redirect_nearbyintf, __nearbyintf,
 		       IFUNC_SELECTOR ());
+libm_hidden_def (__nearbyintf)
 libm_alias_float (__nearbyint, nearbyint)

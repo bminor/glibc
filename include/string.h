@@ -88,6 +88,7 @@ libc_hidden_proto (__stpncpy)
 libc_hidden_proto (__rawmemchr)
 libc_hidden_proto (__strcasecmp)
 libc_hidden_proto (__strcasecmp_l)
+libc_hidden_proto (__strncasecmp)
 libc_hidden_proto (__strncasecmp_l)
 extern __typeof (strncat) __strncat;
 libc_hidden_proto (__strncat)
@@ -95,6 +96,7 @@ libc_hidden_proto (__strdup)
 libc_hidden_proto (__strndup)
 libc_hidden_proto (__strerror_r)
 libc_hidden_proto (__strverscmp)
+libc_hidden_proto (__strchrnul)
 libc_hidden_proto (basename)
 extern char *__basename (const char *__filename) __THROW __nonnull ((1));
 libc_hidden_proto (__basename)
@@ -109,6 +111,7 @@ libc_hidden_proto (__strnlen)
 libc_hidden_proto (memmem)
 extern __typeof (memmem) __memmem;
 libc_hidden_proto (__memmem)
+libc_hidden_proto (__memrchr)
 libc_hidden_proto (__ffs)
 
 #if IS_IN (libc)

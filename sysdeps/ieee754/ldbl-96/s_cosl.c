@@ -86,4 +86,5 @@ long double __cosl(long double x)
 	    }
 	}
 }
+libm_hidden_def (__cosl)
 libm_alias_ldouble (__cos, cos)

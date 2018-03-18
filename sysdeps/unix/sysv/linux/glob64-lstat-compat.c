@@ -21,6 +21,8 @@
 #include <kernel_stat.h>
 
 #if !XSTAT_IS_XSTAT64
+# if SHLIB_COMPAT(libc, GLIBC_2_2, GLIBC_2_27)
+
 # include <glob.h>
 # include <dirent.h>
 # include <sys/stat.h>
@@ -45,12 +47,14 @@
 
 # include <posix/glob.c>
 
-# if SHLIB_COMPAT(libc, GLIBC_2_2, GLIBC_2_27)
+libc_hidden_def (__glob64_lstat_compat)
+
 #  ifndef GLOB_NO_OLD_VERSION
 #   define GLOB_LSTAT_START_VER GLIBC_2_2
 #  else
 #   define GLOB_LSTAT_START_VER GLIBC_2_1
 #  endif
 compat_symbol (libc, __glob64_lstat_compat, glob64, GLOB_LSTAT_START_VER);
-# endif
-#endif /* XSTAT_IS_XSTAT64  */
+
+# endif /* SHLIB_COMPAT */
+#endif /* XSTAT_IS_XSTAT64 */

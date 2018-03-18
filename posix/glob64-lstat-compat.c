@@ -31,6 +31,6 @@
 # define GLOB_NO_LSTAT
 
 # include <posix/glob64.c>
-
+libc_hidden_def (__glob64_lstat_compat)
 compat_symbol (libc, __glob64_lstat_compat, glob64, GLIBC_2_0);
 #endif

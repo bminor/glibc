@@ -1,3 +1,5 @@
+#include <math.h>
+
 #define __cos __cos_fma
 #define __sin __sin_fma
 #define __docos __docos_fma

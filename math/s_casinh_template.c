@@ -67,5 +67,5 @@ M_DECL_FUNC (__casinh) (CFLOAT x)
 
   return res;
 }
-
+libm_hidden_def (M_SUF (__casinh))
 declare_mgen_alias (__casinh, casinh)

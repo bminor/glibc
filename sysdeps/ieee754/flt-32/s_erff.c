@@ -153,6 +153,7 @@ float __erff(float x)
 	r  =  __ieee754_expf(-z*z-(float)0.5625)*__ieee754_expf((z-x)*(z+x)+R/S);
 	if(hx>=0) return one-r/x; else return  r/x-one;
 }
+libm_hidden_def (__erff)
 libm_alias_float (__erf, erf)
 
 float __erfcf(float x)
@@ -228,4 +229,5 @@ float __erfcf(float x)
 		return two-tiny;
 	}
 }
+libm_hidden_def (__erfcf)
 libm_alias_float (__erfc, erfc)

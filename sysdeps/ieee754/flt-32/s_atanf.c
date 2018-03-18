@@ -99,4 +99,5 @@ float __atanf(float x)
 	    return (hx<0)? -z:z;
 	}
 }
+libm_hidden_def (__atanf)
 libm_alias_float (__atan, atan)

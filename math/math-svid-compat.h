@@ -66,9 +66,10 @@ extern int __matherr (struct exception *__exc);
 
 #ifdef _LIBC
 /* fdlibm kernel function */
-extern double __kernel_standard (double, double, int);
-extern float __kernel_standard_f (float, float, int);
-extern long double __kernel_standard_l (long double, long double, int);
+extern double __kernel_standard (double, double, int) attribute_hidden;
+extern float __kernel_standard_f (float, float, int) attribute_hidden;
+extern long double __kernel_standard_l (long double, long double, int)
+  attribute_hidden;
 
 # include <shlib-compat.h>
 # define LIBM_SVID_COMPAT SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_27)

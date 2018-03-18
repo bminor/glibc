@@ -42,5 +42,6 @@ __wcslen (const wchar_t *s)
   return len;
 }
 #ifndef WCSLEN
+libc_hidden_def (__wcslen)
 weak_alias (__wcslen, wcslen)
 #endif

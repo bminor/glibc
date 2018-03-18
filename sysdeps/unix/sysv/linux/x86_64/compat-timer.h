@@ -16,6 +16,9 @@
    License along with the GNU C Library; see the file COPYING.LIB.  If
    not, see <http://www.gnu.org/licenses/>.  */
 
+#ifndef _COMPAT_TIMER_H
+#define _COMPAT_TIMER_H 1
+
 #include <signal.h>
 #include <time.h>
 #include <sys/types.h>
@@ -27,12 +30,17 @@ extern timer_t __compat_timer_list[OLD_TIMER_MAX] attribute_hidden;
 
 extern int __timer_create_new (clockid_t clock_id, struct sigevent *evp,
 			       timer_t *timerid);
+librt_hidden_proto (__timer_create_new)
 extern int __timer_delete_new (timer_t timerid);
+librt_hidden_proto (__timer_delete_new)
 extern int __timer_getoverrun_new (timer_t timerid);
+librt_hidden_proto (__timer_getoverrun_new)
 extern int __timer_gettime_new (timer_t timerid, struct itimerspec *value);
+librt_hidden_proto (__timer_gettime_new)
 extern int __timer_settime_new (timer_t timerid, int flags,
 				const struct itimerspec *value,
 				struct itimerspec *ovalue);
+librt_hidden_proto (__timer_settime_new)
 
 
 extern int __timer_create_old (clockid_t clock_id, struct sigevent *evp,
@@ -43,3 +51,5 @@ extern int __timer_gettime_old (int timerid, struct itimerspec *value);
 extern int __timer_settime_old (int timerid, int flags,
 				const struct itimerspec *value,
 				struct itimerspec *ovalue);
+
+#endif

@@ -16,16 +16,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <math.h>
 #include <libm-alias-float.h>
 
-#define floorf __redirect_floorf
-#define __floorf __redirect___floorf
-#include <math.h>
-#undef floorf
-#undef __floorf
+extern typeof (__floorf) __redirect_floorf;
 
 #define SYMBOL_NAME floorf
 #include "ifunc-sse4_1.h"
 
 libc_ifunc_redirected (__redirect_floorf, __floorf, IFUNC_SELECTOR ());
+libm_hidden_def (__floorf)
 libm_alias_float (__floor, floor)

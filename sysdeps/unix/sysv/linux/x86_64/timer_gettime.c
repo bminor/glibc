@@ -24,6 +24,7 @@
 #include <sysdeps/unix/sysv/linux/timer_gettime.c>
 
 #undef timer_gettime
+librt_hidden_def (__timer_gettime_new)
 versioned_symbol (librt, __timer_gettime_new, timer_gettime, GLIBC_2_3_3);
 
 

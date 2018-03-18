@@ -91,7 +91,7 @@ static struct hostent *res_gethostbyname2_context (struct resolv_context *,
 static void map_v4v6_address (const char *src, char *dst) __THROW;
 static void map_v4v6_hostent (struct hostent *hp, char **bp, int *len) __THROW;
 
-extern void addrsort (char **, int) __THROW;
+static void addrsort (char **, int) __THROW;
 
 # if PACKETSZ > 65536
 #  define	MAXPACKET	PACKETSZ
@@ -894,7 +894,7 @@ map_v4v6_hostent (struct hostent *hp, char **bpp, int *lenp)
 	}
 }
 
-extern void
+static void
 addrsort (char **ap, int num)
 {
 	int i, j;

@@ -56,7 +56,7 @@
 #include <wchar.h>
 #include <shlib-compat.h>
 
-extern u_long _create_xid (void);
+extern u_long _create_xid (void) attribute_hidden;
 
 #define MCALL_MSG_SIZE 24
 

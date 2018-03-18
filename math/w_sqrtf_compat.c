@@ -33,5 +33,6 @@ __sqrtf (float x)
 
   return __ieee754_sqrtf (x);
 }
+libm_hidden_def (__sqrtf)
 libm_alias_float (__sqrt, sqrt)
 #endif

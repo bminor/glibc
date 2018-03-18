@@ -60,4 +60,5 @@ _Float128 __rintl(_Float128 x)
 	w = TWO112[sx]+x;
 	return w-TWO112[sx];
 }
+libm_hidden_def (__rintl)
 libm_alias_ldouble (__rint, rint)

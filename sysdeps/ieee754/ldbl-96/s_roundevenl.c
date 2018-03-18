@@ -123,4 +123,5 @@ __roundevenl (long double x)
   SET_LDOUBLE_WORDS (x, se, hx, lx);
   return x;
 }
+libm_hidden_def (__roundevenl)
 libm_alias_ldouble (__roundeven, roundeven)

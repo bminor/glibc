@@ -84,5 +84,6 @@ __wcsncpy (wchar_t *dest, const wchar_t *src, size_t n)
   return s;
 }
 #ifndef WCSNCPY
+libc_hidden_def (__wcsncpy)
 weak_alias (__wcsncpy, wcsncpy)
 #endif
