@@ -61,4 +61,27 @@ L(syse1):
 L(syse1):
 #endif
 
+/* Make a "sibling call" to DEST -- that is, transfer control to DEST
+   as-if it had been the function called by the caller of this function.
+   DEST is likely to be defined in a different shared object.  Only
+   ever used immediately after ENTRY.  Must not touch the stack at
+   all, and must preserve all argument and call-saved registers.  */
+#define SIBCALL(dest)							      \
+/* There's no PLT on MIPS/n64, we are expected to load the address by
+   hand, but the usual gp register on MIPS ($28) is call-saved so we
+   can't use it.  Use $at ($1) instead.  */
+#define SIBCALL(dest)							      \
+  .set	nomips16;							      \
+  .set	noreorder;							      \
+  .set	nomacro;							      \
+  .set	noat;								      \
+0:	lui	$1,	%hi(%neg(%gp_rel(0b)));				      \
+	daddiu	$1, $1, %lo(%neg(%gp_rel(0b)));				      \
+	daddu	$1, $1, $25;						      \
+	ld	$1, %call16(dest)($1);					      \
+	nop;								      \
+	.reloc	1f, R_MIPS_JALR, dest;					      \
+1:	jr	$25;							      \
+	nop
+
 #endif

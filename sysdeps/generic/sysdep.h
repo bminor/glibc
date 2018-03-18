@@ -33,9 +33,20 @@
 # ifndef JUMPTARGET
 #  define JUMPTARGET(sym)	sym
 # endif
+
+/* Make a "sibling call" to DEST -- that is, transfer control to DEST
+   as-if it had been the function called by the caller of this function.
+   DEST is likely to be defined in a different shared object.  Only
+   ever used immediately after ENTRY.  Must not touch the stack at
+   all, and must preserve all argument and call-saved registers.  */
+# ifndef SIBCALL
+#  define SIBCALL(dest)				\
+  .error "Missing definition of SIBCALL"
+# endif
 #endif
 
-/* Makros to generate eh_frame unwind information.  */
+
+/* Macros to generate eh_frame unwind information.  */
 #ifdef __ASSEMBLER__
 # define cfi_startproc			.cfi_startproc
 # define cfi_endproc			.cfi_endproc

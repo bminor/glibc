@@ -120,9 +120,10 @@ libpthread-routines = nptl-init vars events version pt-interp \
 		      cancellation \
 		      lowlevellock \
 		      lll_timedlock_wait lll_timedwait_tid \
-		      pt-fork pt-vfork \
+		      pt-fork \
 		      $(pthread-compat-wrappers) \
 		      pt-raise pt-system \
+		      pt-compat-stubs \
 		      flockfile ftrylockfile funlockfile \
 		      sigaction \
 		      herrno res pt-allocrtsig \
@@ -146,7 +147,7 @@ libpthread-routines = nptl-init vars events version pt-interp \
 #		      pthread_setresgid
 
 libpthread-shared-only-routines = version pt-interp pt-allocrtsig \
-				  unwind-forcedunwind
+				  pt-compat-stubs unwind-forcedunwind
 
 # Since cancellation handling is in large parts handled using exceptions
 # we have to compile some files with exception handling enabled, some

@@ -359,6 +359,46 @@ LT_LABELSUFFIX(name,_name_end): ; \
 #define	PSEUDO_END_ERRVAL(name) \
   END (name)
 
+/* Make a "sibling call" to DEST -- that is, transfer control to DEST
+   as-if it had been the function called by the caller of this function.
+   DEST is likely to be defined in a different shared object.  Only
+   ever used immediately after ENTRY.  Must not touch the stack at
+   all, and must preserve all argument and call-saved registers.
+
+   The linker will not allow sibling calls through the PLT on
+   PowerPC-64, and even if it did, it wouldn't be safe, because the
+   PLT stub would clobber our caller's save slot for r2.  Instead we
+   must perform a manual indirect jump.  Even this is only safe
+   because the functions that use SIBCALL are never called from within
+   their own shared object; if they were, DEST would return to code
+   that wasn't expecting to need to restore r2.  */
+#define SIBCALL_ENTRY(name) ENTRY_TOCLESS(name)
+#undef SIBCALL
+#if _CALL_ELF != 2
+#define SIBCALL(dest)				\
+	addis	11, 2, 1f@toc@ha;		\
+	ld	11,    1f@toc@l(11);		\
+	ld	12, 0(11);			\
+	ld	 2, 8(11);			\
+	mtctr	12;				\
+	ld	11, 16(11);			\
+	bctr;					\
+	.section ".toc","aw";			\
+1:	.quad dest;				\
+	.previous
+#else
+#define SIBCALL(dest)				\
+0:	addis	12, 12, 1f-0b @ha;		\
+	addi	12, 12, 1f-0b @l;		\
+	ld	12, 0(12);			\
+	mtctr	12;				\
+	bctr;					\
+	.section ".data.rel.ro","aw",@progbits;	\
+1:	.quad dest;				\
+	.previous
+
+#endif
+
 #else /* !__ASSEMBLER__ */
 
 #if _CALL_ELF != 2

@@ -54,3 +54,28 @@ L(syse1):
   bne a3, zero, 99b;							      \
 L(syse1):
 #endif
+
+/* Make a "sibling call" to DEST -- that is, transfer control to DEST
+   as-if it had been the function called by the caller of this function.
+   DEST is likely to be defined in a different shared object.  Only
+   ever used immediately after ENTRY.  Must not touch the stack at
+   all, and must preserve all argument and call-saved registers.  */
+#ifdef __PIC__
+#define SIBCALL(dest)							      \
+	.set	nomips16;						      \
+	.set	noreorder;						      \
+	.cpload $25;							      \
+	.set	nomacro;						      \
+	lw	$25, %call16(dest)($28);				      \
+	nop;								      \
+	.reloc	1f, R_MIPS_JALR, dest;					      \
+1:	jr	$25;							      \
+	nop
+#else
+#define SIBCALL(dest)							      \
+	.set	nomips16;						      \
+	.set	noreorder;						      \
+	.set	nomacro;						      \
+	j	dest;							      \
+	nop
+#endif

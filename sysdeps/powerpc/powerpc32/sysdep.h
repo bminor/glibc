@@ -90,6 +90,14 @@ GOT_LABEL:			;					      \
   cfi_endproc;								      \
   ASM_SIZE_DIRECTIVE(name)
 
+/* Make a "sibling call" to DEST -- that is, transfer control to DEST
+   as-if it had been the function called by the caller of this function.
+   DEST is likely to be defined in a different shared object.  Only
+   ever used immediately after ENTRY.  Must not touch the stack at
+   all, and must preserve all argument and call-saved registers.  */
+#define SIBCALL(dest)							      \
+  b	JUMPTARGET(dest)
+
 #if !IS_IN(rtld) && !defined(__SPE__)
 # define ABORT_TRANSACTION_IMPL \
     cmpwi    2,0;		\

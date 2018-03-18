@@ -148,6 +148,16 @@ __LABEL(name)						\
 #undef PSEUDO_END_ERRVAL
 #define PSEUDO_END_ERRVAL(sym)  END(sym)
 
+/* Make a "sibling call" to DEST -- that is, transfer control to DEST
+   as-if it had been the function called by the caller of this function.
+   DEST is likely to be defined in a different shared object.  Only
+   ever used immediately after ENTRY.  Must not touch the stack at
+   all, and must preserve all argument and call-saved registers.  */
+#define SIBCALL(dest)				\
+	ldgp	gp, 0(pv);			\
+	lda	pv, dest;			\
+	jmp	(pv), dest
+
 #define ret_ERRVAL ret
 
 #define r0	v0

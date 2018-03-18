@@ -46,6 +46,15 @@
 #define ENTRY_CHK(name) ENTRY (name)
 #define END_CHK(name) END (name)
 
+/* Make a "sibling call" to DEST -- that is, transfer control to DEST
+   as-if it had been the function called by the caller of this function.
+   DEST is likely to be defined in a different shared object.  Only
+   ever used immediately after ENTRY.  Must not touch the stack at
+   all, and must preserve all argument and call-saved registers.  */
+#undef SIBCALL
+#define SIBCALL(dest)                           \
+  jmp JUMPTARGET(dest)
+
 /* Since C identifiers are not normally prefixed with an underscore
    on this system, the asm identifier `syscall_error' intrudes on the
    C name space.  Make sure we use an innocuous name.  */

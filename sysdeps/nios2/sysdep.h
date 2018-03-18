@@ -53,7 +53,7 @@
 # else
 #  define CALL_MCOUNT				\
   mov r8, ra;					\
-  call _mount;					\
+  call _mcount;					\
   mov ra, r8;					\
   ret;
 # endif
@@ -61,5 +61,26 @@
 #else
 # define CALL_MCOUNT		/* Do nothing.  */
 #endif
+
+/* Make a "sibling call" to DEST -- that is, transfer control to DEST
+   as-if it had been the function called by the caller of this function.
+   DEST is likely to be defined in a different shared object.  Only
+   ever used immediately after ENTRY.  Must not touch the stack at
+   all, and must preserve all argument and call-saved registers.  */
+#undef SIBCALL
+#ifdef __PIC__
+#define SIBCALL(dest)				\
+  nextpc  r2;					\
+1:						\
+  movhi	  r3, %hiadj(_gp_got - 1b);		\
+  addi	  r3, r3, %lo(_gp_got - 1b);		\
+  addi	  r2, r2, r3;				\
+  ldw	  r2, %call(dest)(r2);			\
+  jmp	  r2
+#else
+#define SIBCALL(dest)				\
+  jmpi	  dest
+#endif
+
 
 #endif	/* __ASSEMBLER__ */
