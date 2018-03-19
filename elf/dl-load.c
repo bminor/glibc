@@ -275,9 +275,9 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result)
 	    repl = GLRO(dl_platform);
 	  else if ((len = is_dst (start, name, "LIB", 0)) != 0)
 	    repl = DL_DST_LIB;
-	  else if ((len = is_dst (start, name, "EXEC_ORIGIN", is_path, 0)) != 0)
+	  else if ((len = is_dst (start, name, "EXEC_ORIGIN", 0)) != 0)
 	    {
-	      if (INTUSE(__libc_enable_secure) != 0)
+	      if (__libc_enable_secure)
 		_dl_fatal_printf ("$EXEC_ORIGIN rpath entry not allowed in setuid/setgid executables.\n");
 
 	      repl = GLRO(google_exec_origin_dir);

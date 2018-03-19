@@ -1041,7 +1041,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 			in LIST\n\
   --audit LIST          use objects named in LIST as auditors\n");
 
-      set_exec_origin_dir (INTUSE(_dl_argv)[1]);
+      set_exec_origin_dir (_dl_argv[1]);
 
       ++_dl_skip_args;
       --_dl_argc;
