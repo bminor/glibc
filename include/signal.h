@@ -59,5 +59,7 @@ extern __typeof (__sigaction) __sigaction attribute_hidden;
 extern __typeof (__libc_sigaction) __libc_sigaction attribute_hidden;
 #  endif
 
+extern typeof (pthread_kill) __pthread_kill attribute_hidden;
+
 # endif /* _ISOMAC */
 #endif /* signal.h */

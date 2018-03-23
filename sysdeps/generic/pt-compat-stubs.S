@@ -131,6 +131,9 @@
         define_stub(pause)
         compat_stub(pause, pause, GLIBC_2_0)
 
+	define_stub(raise)
+	compat_stub(raise, raise, GLIBC_2_0)
+
         define_stub(read)
         compat_stub(read, read, GLIBC_2_0)
         compat_stub(read, __read, GLIBC_2_0)
@@ -170,6 +173,9 @@
         define_stub(write)
         compat_stub(write, write, GLIBC_2_0)
         compat_stub(write, __write, GLIBC_2_0)
+
+        define_stub(pthread_kill)
+        compat_stub(pthread_kill, pthread_kill, GLIBC_2_0)
 
 #endif
 

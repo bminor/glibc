@@ -36,14 +36,14 @@
 #define SIGSETXID       (__SIGRTMIN + 1)
 
 
-/* Return is sig is used internally.  */
+/* Return whether sig is used internally.  */
 static inline int
 __is_internal_signal (int sig)
 {
   return (sig == SIGCANCEL) || (sig == SIGSETXID);
 }
 
-/* Remove internal glibc signal from the mask.  */
+/* Remove internal glibc signals from the mask.  */
 static inline void
 __clear_internal_signals (sigset_t *set)
 {
@@ -54,7 +54,8 @@ __clear_internal_signals (sigset_t *set)
 #define SIGALL_SET \
   ((__sigset_t) { .__val = {[0 ...  _SIGSET_NWORDS-1 ] =  -1 } })
 
-/* Block all signals, including internal glibc ones.  */
+/* Block all signals, including internal glibc ones; write the previous
+   signal mask to SET.  */
 static inline int
 __libc_signal_block_all (sigset_t *set)
 {
@@ -63,7 +64,8 @@ __libc_signal_block_all (sigset_t *set)
 			   set, _NSIG / 8);
 }
 
-/* Block all application signals (excluding internal glibc ones).  */
+/* Block all application signals (excluding internal glibc ones); write
+   the previous signal mask to SET.  */
 static inline int
 __libc_signal_block_app (sigset_t *set)
 {
@@ -74,7 +76,7 @@ __libc_signal_block_app (sigset_t *set)
 			   _NSIG / 8);
 }
 
-/* Restore current process signal mask.  */
+/* Restore process signal mask according to SET.  */
 static inline int
 __libc_signal_restore_set (const sigset_t *set)
 {

@@ -20,12 +20,14 @@
 
 /* Raise the signal SIG.  */
 int
-raise (int sig)
+__libc_raise (int sig)
 {
   __set_errno (ENOSYS);
   return -1;
 }
-weak_alias (raise, gsignal)
+strong_alias (__libc_raise, raise)
+libc_hidden_def (raise)
+weak_alias (__libc_raise, gsignal)
 
 stub_warning (raise)
 stub_warning (gsignal)

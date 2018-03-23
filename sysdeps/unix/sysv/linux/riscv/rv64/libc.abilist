@@ -2094,3 +2094,5 @@ GLIBC_2.27 xdrstdio_create F
 GLIBC_2.27 xencrypt F
 GLIBC_2.27 xprt_register F
 GLIBC_2.27 xprt_unregister F
+GLIBC_2.28 GLIBC_2.28 A
+GLIBC_2.28 pthread_kill F

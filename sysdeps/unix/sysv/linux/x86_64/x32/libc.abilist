@@ -2148,3 +2148,5 @@ GLIBC_2.27 wcstof64 F
 GLIBC_2.27 wcstof64_l F
 GLIBC_2.27 wcstof64x F
 GLIBC_2.27 wcstof64x_l F
+GLIBC_2.28 GLIBC_2.28 A
+GLIBC_2.28 pthread_kill F

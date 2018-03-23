@@ -37,7 +37,6 @@
 #include <futex-internal.h>
 #include <kernel-features.h>
 #include <libc-pointer-arith.h>
-#include <pthread-pids.h>
 
 #ifndef TLS_MULTIPLE_THREADS_IN_TCB
 /* Pointer to the corresponding variable in libc.  */
@@ -283,9 +282,9 @@ static bool __nptl_initial_report_events __attribute_used__;
 void
 __pthread_initialize_minimal_internal (void)
 {
-  /* Minimal initialization of the thread descriptor.  */
+  /* Minimal initialization of the thread descriptor.
+     pd->tid was set during TLS initialization.  */
   struct pthread *pd = THREAD_SELF;
-  __pthread_initialize_pids (pd);
   THREAD_SETMEM (pd, specific[0], &pd->specific_1stblock[0]);
   THREAD_SETMEM (pd, user_stack, true);
   if (LLL_LOCK_INITIALIZER != 0)

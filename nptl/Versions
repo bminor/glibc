@@ -28,6 +28,9 @@ libc {
     pthread_cond_wait; pthread_cond_signal;
     pthread_cond_broadcast; pthread_cond_timedwait;
   }
+  GLIBC_2.28 {
+    pthread_kill;
+  }
   GLIBC_PRIVATE {
     __libc_alloca_cutoff;
     # Internal libc interface to libpthread
@@ -36,6 +39,9 @@ libc {
     __libc_pthread_init;
     __libc_current_sigrtmin_private; __libc_current_sigrtmax_private;
     __libc_allocate_rtsig_private;
+    # Used by compat stubs
+    __libc_pthread_kill;
+    __libc_raise;
   }
 }
 

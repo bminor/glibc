@@ -22,10 +22,10 @@
 #include <tls.h>
 #include <sysdep.h>
 #include <unistd.h>
-
+#include <internal-signals.h>
 
 int
-__pthread_kill (pthread_t threadid, int signo)
+__libc_pthread_kill (pthread_t threadid, int signo)
 {
   struct pthread *pd = (struct pthread *) threadid;
 
@@ -42,18 +42,18 @@ __pthread_kill (pthread_t threadid, int signo)
     /* Not a valid thread handle.  */
     return ESRCH;
 
-  /* Disallow sending the signal we use for cancellation, timers,
-     for the setxid implementation.  */
-  if (signo == SIGCANCEL || signo == SIGTIMER || signo == SIGSETXID)
+  /* Disallow sending the signals we use for cancellation, timers,
+     setxid, etc.  */
+  if (__is_internal_signal (signo))
     return EINVAL;
 
   /* We have a special syscall to do the work.  */
   INTERNAL_SYSCALL_DECL (err);
 
-  pid_t pid = __getpid ();
-
+  pid_t pid = INTERNAL_SYSCALL_CALL (getpid, err);
   int val = INTERNAL_SYSCALL_CALL (tgkill, err, pid, tid, signo);
   return (INTERNAL_SYSCALL_ERROR_P (val, err)
 	  ? INTERNAL_SYSCALL_ERRNO (val, err) : 0);
 }
-strong_alias (__pthread_kill, pthread_kill)
+strong_alias (__libc_pthread_kill, __pthread_kill)
+weak_alias (__libc_pthread_kill, pthread_kill)

@@ -29,7 +29,7 @@ extra-libs-others := $(extra-libs)
 
 routines = alloca_cutoff forward libc-lowlevellock libc-cancellation \
 	   libc-cleanup libc_pthread_init libc_multiple_threads \
-	   register-atfork pthread_atfork pthread_self
+	   register-atfork pthread_atfork pthread_self pthread_kill
 shared-only-routines = forward
 static-only-routines = pthread_atfork
 
@@ -90,7 +90,7 @@ libpthread-routines = nptl-init vars events version pt-interp \
 		      pthread_barrierattr_setpshared \
 		      pthread_key_create pthread_key_delete \
 		      pthread_getspecific pthread_setspecific \
-		      pthread_sigmask pthread_kill pthread_sigqueue \
+		      pthread_sigmask pthread_sigqueue \
 		      pthread_cancel pthread_testcancel \
 		      pthread_setcancelstate pthread_setcanceltype \
 		      pthread_once \
@@ -108,7 +108,6 @@ libpthread-routines = nptl-init vars events version pt-interp \
 		      cancellation \
 		      lowlevellock \
 		      lll_timedlock_wait lll_timedwait_tid \
-		      pt-raise \
 		      pt-compat-stubs \
 		      flockfile ftrylockfile funlockfile \
 		      sigaction \

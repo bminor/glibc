@@ -1,3 +1,5 @@
+#ifndef _INCLUDE_PTHREAD_H
+#define _INCLUDE_PTHREAD_H 1
 #include_next <pthread.h>
 
 #ifndef _ISOMAC
@@ -11,6 +13,9 @@ extern int __pthread_barrier_init (pthread_barrier_t *__restrict __barrier,
 extern int __pthread_barrier_wait (pthread_barrier_t *__barrier)
      __THROWNL __nonnull ((1));
 
+extern pthread_t __pthread_self (void) __THROW attribute_hidden;
+
 /* This function is called to initialize the pthread library.  */
 extern void __pthread_initialize (void) __attribute__ ((weak));
+#endif
 #endif

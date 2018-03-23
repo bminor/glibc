@@ -41,6 +41,7 @@
 #include <tls.h>
 #include <stap-probe.h>
 #include <stackinfo.h>
+#include <pthread-pids.h>
 
 #include <assert.h>
 
@@ -740,6 +741,14 @@ cannot allocate TLS data structures for initial thread\n");
   if (__glibc_unlikely (lossage != NULL))
     _dl_fatal_printf ("cannot set up thread-local storage: %s\n", lossage);
   tls_init_tp_called = true;
+
+  /* Initialize only as much of the initial thread's descriptor as is
+     necessary even when libpthread is not loaded.  More will be done
+     by __pthread_initialize_minimal if libpthread is loaded.  This
+     needs to happen before anything that could possibly call raise,
+     but cannot happen before TLS is initialized.  */
+  struct pthread *pd = THREAD_SELF;
+  __pthread_initialize_pids (pd);
 
   return tcbp;
 }

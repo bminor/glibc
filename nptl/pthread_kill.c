@@ -22,7 +22,7 @@
 
 
 int
-__pthread_kill (pthread_t threadid, int signo)
+__libc_pthread_kill (pthread_t threadid, int signo)
 {
   struct pthread *pd = (struct pthread *) threadid;
 
@@ -33,6 +33,7 @@ __pthread_kill (pthread_t threadid, int signo)
 
   return ENOSYS;
 }
-strong_alias (__pthread_kill, pthread_kill)
+strong_alias (__libc_pthread_kill, __pthread_kill)
+weak_alias (__libc_pthread_kill, pthread_kill)
 
 stub_warning (pthread_kill)

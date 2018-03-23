@@ -23,7 +23,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <sys/param.h>
-
+#include <pthread-pids.h>
 
 #ifdef SHARED
  #error makefile bug, this file is for static only
@@ -215,4 +215,12 @@ __libc_setup_tls (void)
 #endif
 
   init_static_tls (memsz, MAX (TLS_TCB_ALIGN, max_align));
+
+  /* Initialize only as much of the initial thread's descriptor as is
+     necessary even when libpthread is not loaded.  More will be done
+     by __pthread_initialize_minimal if libpthread is loaded.  This
+     needs to happen before anything that could possibly call raise,
+     but cannot happen before TLS is initialized.  */
+  struct pthread *pd = THREAD_SELF;
+  __pthread_initialize_pids (pd);
 }

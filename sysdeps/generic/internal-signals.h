@@ -1,4 +1,4 @@
-/* Special use of signals internally.  Stub version.
+/* Special use of signals internally.  Generic version.
    Copyright (C) 2014-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -15,3 +15,52 @@
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
+
+#ifndef __INTERNAL_SIGNALS_H
+# define __INTERNAL_SIGNALS_H
+
+#include <signal.h>
+#include <sigsetops.h>
+
+/* Return whether sig is used internally.  */
+static inline int
+__is_internal_signal (int sig)
+{
+  return 0;
+}
+
+/* Remove internal glibc signals from the mask.  */
+static inline void
+__clear_internal_signals (sigset_t *set)
+{
+}
+
+/* Block all signals, including internal glibc ones; write the previous
+   signal mask to SET.  */
+static inline int
+__libc_signal_block_all (sigset_t *set)
+{
+  sigset_t allset;
+  __sigfillset (&allset);
+  return __sigprocmask (SIG_BLOCK, &allset, set);
+}
+
+/* Block all application signals (excluding internal glibc ones); write
+   the previous signal mask to SET.  */
+static inline int
+__libc_signal_block_app (sigset_t *set)
+{
+  sigset_t allset;
+  __sigfillset (&allset);
+  __clear_internal_signals (&allset);
+  return __sigprocmask (SIG_BLOCK, &allset, set);
+}
+
+/* Restore process signal mask according to SET.  */
+static inline int
+__libc_signal_restore_set (const sigset_t *set)
+{
+  return __sigprocmask (SIG_SETMASK, set, NULL);
+}
+
+#endif
