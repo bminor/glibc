@@ -45,6 +45,7 @@ __waitpid (pid_t pid, int *stat_loc, int options)
   return (pid_t) -1;
 }
 libc_hidden_def (__waitpid)
+strong_alias (__waitpid, __libc_waitpid)
 weak_alias (__waitpid, waitpid)
 
 stub_warning (waitpid)

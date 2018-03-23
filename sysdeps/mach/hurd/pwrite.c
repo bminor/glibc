@@ -25,7 +25,7 @@
 ssize_t
 __libc_pwrite (int fd, const void *buf, size_t nbytes, off_t offset)
 {
-  return __libc_pwrite64 (fd, buf, nbytes, (off64_t) offset);
+  return __pwrite64 (fd, buf, nbytes, (off64_t) offset);
 }
 
 #ifndef __libc_pwrite

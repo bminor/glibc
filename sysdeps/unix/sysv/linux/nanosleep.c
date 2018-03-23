@@ -28,6 +28,7 @@ __nanosleep (const struct timespec *requested_time,
   return SYSCALL_CANCEL (nanosleep, requested_time, remaining);
 }
 hidden_def (__nanosleep)
+strong_alias (__nanosleep, __libc_nanosleep)
 weak_alias (__nanosleep, nanosleep)
 
 int

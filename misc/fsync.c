@@ -20,11 +20,11 @@
 
 /* Make all changes done to FD actually appear on disk.  */
 int
-fsync (int fd)
+__libc_fsync (int fd)
 {
   __set_errno (ENOSYS);
   return -1;
 }
-
-
+weak_alias (__libc_fsync, fsync)
+libc_hidden_weak (fsync)
 stub_warning (fsync)

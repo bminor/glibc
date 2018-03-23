@@ -51,4 +51,8 @@ libc {
   }
   GLIBC_2.21 {
   }
+  GLIBC_PRIVATE {
+    # called from libpthread
+    __libc_sigwait;
+  }
 }

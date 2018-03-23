@@ -22,7 +22,7 @@
 
 /* Make all changes done to FD actually appear on disk.  */
 int
-fsync (int fd)
+__libc_fsync (int fd)
 {
   error_t err = HURD_DPORT_USE (fd, __file_sync (port, 1, 0));
   if (err)
@@ -35,3 +35,4 @@ fsync (int fd)
     }
   return 0;
 }
+weak_alias (__libc_fsync, fsync)

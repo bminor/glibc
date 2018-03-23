@@ -20,7 +20,8 @@
 #include <sysdep-cancel.h>
 
 int
-msync (void *addr, size_t length, int flags)
+__libc_msync (void *addr, size_t length, int flags)
 {
   return SYSCALL_CANCEL (msync, addr, length, flags);
 }
+weak_alias (__libc_msync, msync)

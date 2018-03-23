@@ -1,6 +1,5 @@
-/* Synchronize a file's in-core state with storage device Linux
-   implementation.
-   Copyright (C) 2017-2018 Free Software Foundation, Inc.
+/* ABI compatibility stubs for libpthread.  PowerPC/Linux version.
+   Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,13 +16,17 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <unistd.h>
-#include <sysdep-cancel.h>
+/* AltiVec support was added to setjmp/longjmp in 2.3.4,
+   requiring a new symbol version.  */
+#define LONGJMP_2_0_DEST       __novmx__libc_siglongjmp
+#define LONGJMP_2_0_UNTIL_VER  GLIBC_2_3_4
 
-/* Make all changes done to FD actually appear on disk.  */
-int
-__libc_fsync (int fd)
-{
-  return SYSCALL_CANCEL (fsync, fd);
-}
-weak_alias (__libc_fsync, fsync)
+#include <sysdeps/generic/pt-compat-stubs.S>
+
+#if SHLIB_COMPAT (libpthread, GLIBC_2_3_4, GLIBC_2_28)
+
+	define_stub_with_dest(vmx_longjmp, __libc_longjmp)
+	compat_stub(vmx_longjmp, longjmp, GLIBC_2_3_4)
+	compat_stub(vmx_longjmp, siglongjmp, GLIBC_2_3_4)
+
+#endif

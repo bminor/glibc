@@ -24,10 +24,11 @@
    unpredictable before this is done.  */
 
 int
-msync (void *addr, size_t len, int flags)
+__libc_msync (void *addr, size_t len, int flags)
 {
   __set_errno (ENOSYS);
   return -1;
 }
-
+weak_alias (__libc_msync, msync)
+libc_hidden_weak (msync)
 stub_warning (msync)

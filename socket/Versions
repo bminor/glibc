@@ -40,5 +40,9 @@ libc {
   GLIBC_PRIVATE {
     __sendmmsg;
     __recv; __socket;
+    __libc_accept;
+    __libc_connect;
+    __libc_recv; __libc_recvfrom; __libc_recvmsg;
+    __libc_send; __libc_sendto; __libc_sendmsg;
   }
 }

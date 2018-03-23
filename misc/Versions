@@ -162,6 +162,7 @@ libc {
     __madvise;
     __mktemp;
     __libc_ifunc_impl_list;
+    __libc_fsync;  __libc_msync;
     __tdelete; __tfind; __tsearch; __twalk;
     __mmap; __munmap; __mprotect;
     __sched_get_priority_min; __sched_get_priority_max;

@@ -24,12 +24,12 @@
    peer and *ADDR_LEN to the address's actual length, and return the
    new socket's descriptor, or -1 for errors.  */
 int
-accept (int fd, __SOCKADDR_ARG addr, socklen_t *addr_len)
+__libc_accept (int fd, __SOCKADDR_ARG addr, socklen_t *addr_len)
 {
   __set_errno (ENOSYS);
   return -1;
 }
-libc_hidden_def (accept)
-
+weak_alias (__libc_accept, accept)
+libc_hidden_weak (accept)
 
 stub_warning (accept)

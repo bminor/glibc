@@ -33,18 +33,6 @@ routines = alloca_cutoff forward libc-lowlevellock libc-cancellation \
 shared-only-routines = forward
 static-only-routines = pthread_atfork
 
-# We need to provide certain routines for compatibility with existing
-# binaries.
-pthread-compat-wrappers = \
-		      write read close fcntl accept \
-		      connect recv recvfrom send \
-		      sendto fsync lseek lseek64 \
-		      msync nanosleep open open64 pause \
-		      pread pread64 pwrite pwrite64 \
-		      tcdrain wait waitpid msgrcv msgsnd \
-		      sigwait sigsuspend \
-		      recvmsg sendmsg
-
 libpthread-routines = nptl-init vars events version pt-interp \
 		      pthread_create pthread_exit pthread_detach \
 		      pthread_join pthread_tryjoin pthread_timedjoin \
@@ -116,13 +104,11 @@ libpthread-routines = nptl-init vars events version pt-interp \
 		      sem_wait sem_timedwait sem_post \
 		      cleanup cleanup_defer cleanup_compat \
 		      cleanup_defer_compat unwind \
-		      pt-longjmp pt-cleanup\
+		      pt-cleanup \
 		      cancellation \
 		      lowlevellock \
 		      lll_timedlock_wait lll_timedwait_tid \
-		      pt-fork \
-		      $(pthread-compat-wrappers) \
-		      pt-raise pt-system \
+		      pt-raise \
 		      pt-compat-stubs \
 		      flockfile ftrylockfile funlockfile \
 		      sigaction \
@@ -189,41 +175,6 @@ CFLAGS-pthread_once.c += $(uses-callbacks) -fexceptions \
 CFLAGS-pthread_cond_wait.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sem_wait.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sem_timedwait.c += -fexceptions -fasynchronous-unwind-tables
-
-# These are the function wrappers we have to duplicate here.
-CFLAGS-fcntl.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-lockf.c += -fexceptions
-CFLAGS-pread.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-pread64.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-pwrite.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-pwrite64.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-wait.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-waitpid.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-sigwait.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-msgrcv.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-msgsnd.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-tcdrain.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-open.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-open64.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-pause.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-recv.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-send.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-accept.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-sendto.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-connect.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-recvfrom.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-recvmsg.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-sendmsg.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-close.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-read.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-write.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-nanosleep.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-sigsuspend.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-msync.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-fdatasync.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-fsync.c += -fexceptions -fasynchronous-unwind-tables
-
-CFLAGS-pt-system.c += -fexceptions
 
 LDLIBS-tst-once5 = -lstdc++
 CFLAGS-tst-thread_local1.o = -std=gnu++11

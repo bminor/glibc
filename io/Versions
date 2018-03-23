@@ -128,4 +128,14 @@ libc {
   GLIBC_2.27 {
     copy_file_range;
   }
+  GLIBC_PRIVATE {
+    # called from libpthread
+    __libc_close;
+    __libc_fcntl;
+    __libc_lseek; __libc_lseek64;
+    __libc_open; __libc_open64;
+    __libc_read;
+    __libc_write;
+    __write_nocancel;
+  }
 }

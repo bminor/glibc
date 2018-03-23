@@ -33,7 +33,7 @@
    unpredictable before this is done.  */
 
 int
-msync (void *addr, size_t len, int flags)
+__libc_msync (void *addr, size_t len, int flags)
 {
   vm_sync_t sync_flags = 0;
   kern_return_t err;
@@ -53,4 +53,5 @@ msync (void *addr, size_t len, int flags)
     }
   return 0;
 }
+weak_alias (__libc_msync, msync)
 #endif

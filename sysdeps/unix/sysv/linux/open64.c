@@ -76,6 +76,7 @@ libc_hidden_def (__open64_nocancel)
 
 #ifdef __OFF_T_MATCHES_OFF64_T
 strong_alias (__libc_open64, __libc_open)
+libc_hidden_def (__libc_open)
 strong_alias (__libc_open64, __open)
 libc_hidden_weak (__open)
 weak_alias (__libc_open64, open)

@@ -97,7 +97,7 @@ COPY_FILE_RANGE (int infd, __off64_t *pinoff,
       if (pinoff == NULL)
         read_count = read (infd, buf, to_read);
       else
-        read_count = __libc_pread64 (infd, buf, to_read, *pinoff);
+        read_count = __pread64 (infd, buf, to_read, *pinoff);
       if (read_count == 0)
         /* End of file reached prematurely.  */
         return copied;
@@ -119,7 +119,7 @@ COPY_FILE_RANGE (int infd, __off64_t *pinoff,
           if (poutoff == NULL)
             write_count = write (outfd, p, end - p);
           else
-            write_count = __libc_pwrite64 (outfd, p, end - p, *poutoff);
+            write_count = __pwrite64 (outfd, p, end - p, *poutoff);
           if (write_count < 0)
             {
               /* Adjust the input read position to match what we have
@@ -136,7 +136,7 @@ COPY_FILE_RANGE (int infd, __off64_t *pinoff,
                       /* We are on an error recovery path, so we
                          cannot deal with failure here.  */
                       int save_errno = errno;
-                      (void) __libc_lseek64 (infd, -overread, SEEK_CUR);
+                      (void) __lseek64 (infd, -overread, SEEK_CUR);
                       __set_errno (save_errno);
                     }
                 }

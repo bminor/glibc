@@ -23,7 +23,7 @@
 ssize_t
 __libc_pread (int fd, void *buf, size_t nbytes, off_t offset)
 {
-  return __libc_pread64 (fd, buf, nbytes, (off64_t) offset);
+  return __pread64 (fd, buf, nbytes, (off64_t) offset);
 }
 
 #ifndef __libc_pread
