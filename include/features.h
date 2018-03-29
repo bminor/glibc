@@ -422,6 +422,11 @@
 #define __GLIBC_PREREQ(maj, min) \
 	((__GLIBC__ << 16) + __GLIBC_MINOR__ >= ((maj) << 16) + (min))
 
+/* The official GRTE release date, expressed numerically.  It is very
+   occasionally used to test whether a particular GRTE addition to
+   glibc can be assumed to be available.  */
+#define __GOOGLE_GRTE_VERSION__ 20180301L
+
 /* This is here only because every header file already includes this one.  */
 #ifndef __ASSEMBLER__
 # ifndef _SYS_CDEFS_H
