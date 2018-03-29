@@ -180,6 +180,7 @@ tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-tls16 tst-tls17 tst-tls18 tst-tls19 tst-tls-dlinfo \
 	 tst-align tst-align2 $(tests-execstack-$(have-z-execstack)) \
 	 tst-dlmodcount tst-dlopenrpath tst-deep1 \
+	 tst-dlopen-offset \
 	 tst-dlmopen1 tst-dlmopen3 \
 	 unload3 unload4 unload5 unload6 unload7 unload8 tst-global1 order2 \
 	 tst-audit1 tst-audit2 tst-audit8 tst-audit9 \
@@ -277,6 +278,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-audit12mod1 tst-audit12mod2 tst-audit12mod3 tst-auditmod12 \
 		tst-latepthreadmod $(tst-tls-many-dynamic-modules) \
 		tst-nodelete-dlclose-dso tst-nodelete-dlclose-plugin \
+		tst-dlopen-offset-mod1 tst-dlopen-offset-mod2 tst-dlopen-offset-mod3 \
 		tst-main1mod tst-libc_dlvsym-dso
 ifeq (yes,$(have-mtls-dialect-gnu2))
 tests += tst-gnu2-tls1
@@ -1457,3 +1459,10 @@ $(objpfx)tst-libc_dlvsym-static: $(common-objpfx)dlfcn/libdl.a
 tst-libc_dlvsym-static-ENV = \
   LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)dlfcn
 $(objpfx)tst-libc_dlvsym-static.out: $(objpfx)tst-libc_dlvsym-dso.so
+
+$(objpfx)tst-dlopen-offset: $(libdl)
+$(objpfx)tst-dlopen-offset.out: $(objpfx)tst-dlopen-offset-comb.so
+$(objpfx)tst-dlopen-offset-comb.so: $(objpfx)tst-dlopen-offset-mod1.so $(objpfx)tst-dlopen-offset-mod2.so $(objpfx)tst-dlopen-offset-mod3.so
+	dd if=$(objpfx)tst-dlopen-offset-mod1.so of=$(objpfx)tst-dlopen-offset-comb.so bs=1024 seek=64
+	dd if=$(objpfx)tst-dlopen-offset-mod2.so of=$(objpfx)tst-dlopen-offset-comb.so bs=1024 seek=128
+	dd if=$(objpfx)tst-dlopen-offset-mod3.so of=$(objpfx)tst-dlopen-offset-comb.so bs=1024 seek=192
