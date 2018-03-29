@@ -1,3 +1,8 @@
+2018-03-29  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/tst-bz21269.c (do_test): Also
+	capture SIGBUS.
+
 2018-03-23  Andrew Senkevich  <andrew.senkevich@intel.com>
 	    Max Horn  <max@quendi.de>
 
