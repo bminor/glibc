@@ -66,7 +66,7 @@
 	  dst_len = (l)->l_origin == (char *) -1			      \
 	    ? 0 : strlen ((l)->l_origin);				      \
                                                                               \
-	char *exec_origin = GLRO(google_exec_origin_dir);		      \
+	const char *exec_origin = GLRO(google_exec_origin_dir);		      \
 	size_t exec_origin_len =					      \
 	  (exec_origin == NULL) ? 0 : strlen (exec_origin);		      \
 									      \

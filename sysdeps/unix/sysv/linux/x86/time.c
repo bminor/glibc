@@ -59,4 +59,6 @@ time (time_t *t)
 
 #endif
 
+#if defined(__clang__)
 libc_hidden_weak (time)
+#endif

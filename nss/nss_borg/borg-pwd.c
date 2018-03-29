@@ -70,7 +70,7 @@ static enum nss_status _nss_borg_endpwent_locked(void) {
 // _nss_borg_endpwent()
 // Called by NSS to close the passwd file
 
-enum nss_status _nss_borg_endpwent() {
+enum nss_status _nss_borg_endpwent(void) {
   enum nss_status ret;
   NSSBORG_LOCK;
   ret = _nss_borg_endpwent_locked();
