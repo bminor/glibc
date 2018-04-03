@@ -1262,7 +1262,9 @@ ildouble: 1
 ldouble: 1
 
 Function: "cos":
+double: 1
 float128: 1
+idouble: 1
 ifloat128: 1
 ildouble: 1
 ldouble: 1
@@ -2526,7 +2528,9 @@ Function: "pow_vlen8_avx2":
 float: 3
 
 Function: "sin":
+double: 1
 float128: 1
+idouble: 1
 ifloat128: 1
 ildouble: 1
 ldouble: 1
@@ -2576,7 +2580,9 @@ Function: "sin_vlen8_avx2":
 float: 1
 
 Function: "sincos":
+double: 1
 float128: 1
+idouble: 1
 ifloat128: 1
 ildouble: 1
 ldouble: 1
