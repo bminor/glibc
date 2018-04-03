@@ -353,6 +353,7 @@ open_file (const char *file_name, int flags,
 }
 
 check_no_hidden(__open);
+check_no_hidden (__open64);
 int weak_function
 __open (const char *file_name, int mode, ...)
 {
@@ -363,6 +364,7 @@ __open (const char *file_name, int mode, ...)
   else
     return (int)port;
 }
+weak_alias (__open, __open64)
 
 check_no_hidden(__close);
 int weak_function
@@ -373,9 +375,9 @@ __close (int fd)
   return 0;
 }
 
-check_no_hidden(__libc_read);
+check_no_hidden(__read);
 __ssize_t weak_function
-__libc_read (int fd, void *buf, size_t nbytes)
+__read (int fd, void *buf, size_t nbytes)
 {
   error_t err;
   char *data;
@@ -395,11 +397,11 @@ __libc_read (int fd, void *buf, size_t nbytes)
 
   return nread;
 }
-libc_hidden_weak (__libc_read)
+libc_hidden_weak (__read)
 
-check_no_hidden(__libc_write);
+check_no_hidden(__write);
 __ssize_t weak_function
-__libc_write (int fd, const void *buf, size_t nbytes)
+__write (int fd, const void *buf, size_t nbytes)
 {
   error_t err;
   mach_msg_type_number_t nwrote;
@@ -412,7 +414,7 @@ __libc_write (int fd, const void *buf, size_t nbytes)
 
   return nwrote;
 }
-libc_hidden_weak (__libc_write)
+libc_hidden_weak (__write)
 
 /* This is only used for printing messages (see dl-misc.c).  */
 check_no_hidden(__writev);
