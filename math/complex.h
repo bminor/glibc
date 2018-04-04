@@ -95,9 +95,11 @@ __BEGIN_DECLS
 
 #define __MATHCALL(function, args)	\
   __MATHDECL (_Mdouble_complex_,function, args)
-#define __MATHDECL(type, function, args) \
+#define __MATHDECL_IMPL(type, function, args) \
   __MATHDECL_1(type, function, args); \
   __MATHDECL_1(type, __CONCAT(__,function), args)
+#define __MATHDECL(type, function, args) \
+  __MATHDECL_IMPL(type, function, args)
 #define __MATHDECL_1_IMPL(type, function, args) \
   extern type __MATH_PRECNAME(function) args __THROW
 #define __MATHDECL_1(type, function, args) \
@@ -124,13 +126,28 @@ __BEGIN_DECLS
 #  undef __MATHDECL_1
 #  define __MATHDECL_1(type, function, args) \
   extern type __REDIRECT_NTH(__MATH_PRECNAME(function), args, function)
+# elif __LONG_DOUBLE_USES_FLOAT128 == 1
+#  undef __MATHDECL_1
+#  undef __MATHDECL
+#  define __REDIR_TO(function) \
+  __ ## function ## ieee128
+#  define __MATHDECL_1(type, function, alias, args) \
+  extern type __REDIRECT_NTH(__MATH_PRECNAME(function), args, alias)
+#define __MATHDECL(type, function, args) \
+  __MATHDECL_1(type, function, __REDIR_TO(function), args); \
+  __MATHDECL_1(type, __CONCAT(__,function), __REDIR_TO(function), args)
 # endif
 
 # define _Mdouble_ 		long double
 # define __MATH_PRECNAME(name)	name##l
 # include <bits/cmathcalls.h>
-# if defined __LDBL_COMPAT
+# if defined __LDBL_COMPAT \
+     || __LONG_DOUBLE_USES_FLOAT128 == 1
+#  undef __REDIR_TO
 #  undef __MATHDECL_1
+#  undef __MATHDECL
+#define __MATHDECL(type, function, args) \
+  __MATHDECL_IMPL(type, function, args)
 #  define __MATHDECL_1(type, function, args) \
   __MATHDECL_1_IMPL(type, function, args)
 # endif
