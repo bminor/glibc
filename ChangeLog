@@ -1,3 +1,60 @@
+2018-01-18  Arjun Shankar  <arjun@redhat.com>
+
+	[BZ #22343]
+	[BZ #22774]
+	CVE-2018-6485
+	CVE-2018-6551
+	* malloc/malloc.c (checked_request2size): call REQUEST_OUT_OF_RANGE
+	after padding.
+	(_int_memalign): check for integer overflow before calling
+	_int_malloc.
+	* malloc/tst-malloc-too-large.c: New test.
+	* malloc/Makefile: Add tst-malloc-too-large.
+
+2017-11-02  Florian Weimer  <fweimer@redhat.com>
+
+	Add array_length and array_end macros.
+	* include/array_length.h: New file.
+
+2017-12-14  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #22606]
+	CVE-2017-1000408
+	* elf/dl-load.c (system_dirs): Update comment.
+	(nsystem_dirs_len): Use array_length.
+	(_dl_init_paths): Use nsystem_dirs_len to compute the array size.
+
+2017-12-14  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #22607]
+	CVE-2017-1000409
+	* elf/dl-load.c (_dl_init_paths): Compute number of components in
+	the expanded path string.
+
+2017-12-30  Aurelien Jarno  <aurelien@aurel32.net>
+	    Dmitry V. Levin  <ldv@altlinux.org>
+
+	[BZ #22625]
+	* elf/dl-load.c (fillin_rpath): Check for empty tokens before dynamic
+	string token expansion. Check for NULL pointer or empty string possibly
+	returned by expand_dynamic_string_token.
+	(decompose_rpath): Check for empty path after dynamic string
+	token expansion.
+
+2017-02-27  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #21115]
+	* sunrpc/clnt_udp.c (clntudp_call): Free ancillary data later.
+	* sunrpc/Makefile (tests): Add tst-udp-error.
+	(tst-udp-error): Link against libc.so explicitly.
+	* sunrpc/tst-udp-error: New file.
+
+2017-08-16  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #16750]
+	CVE-2009-5064
+	* elf/ldd.bash.in: Never run file directly.
+
 2016-10-14  Carlos Eduardo Seo  <cseo@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/bits/hwcap.h: Add PPC_FEATURE2_HTM_NOSC.

@@ -36,6 +36,7 @@
 #include <caller.h>
 #include <sysdep.h>
 #include <stap-probe.h>
+#include <array_length.h>
 
 #include <dl-dst.h>
 #include <dl-load.h>
@@ -102,7 +103,9 @@ static size_t ncapstr attribute_relro;
 static size_t max_capstrlen attribute_relro;
 
 
-/* Get the generated information about the trusted directories.  */
+/* Get the generated information about the trusted directories.  Use
+   an array of concatenated strings to avoid relocations.  See
+   gen-trusted-dirs.awk.  */
 #include "trusted-dirs.h"
 
 static const char system_dirs[] = SYSTEM_DIRS;
@@ -110,9 +113,7 @@ static const size_t system_dirs_len[] =
 {
   SYSTEM_DIRS_LEN
 };
-#define nsystem_dirs_len \
-  (sizeof (system_dirs_len) / sizeof (system_dirs_len[0]))
-
+#define nsystem_dirs_len array_length (system_dirs_len)
 
 static bool
 is_trusted_path (const char *path, size_t len)
@@ -432,31 +433,40 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 {
   char *cp;
   size_t nelems = 0;
-  char *to_free;
 
   while ((cp = __strsep (&rpath, sep)) != NULL)
     {
       struct r_search_path_elem *dirp;
+      char *to_free = NULL;
+      size_t len = 0;
 
-      to_free = cp = expand_dynamic_string_token (l, cp, 1);
-
-      size_t len = strlen (cp);
-
-      /* `strsep' can pass an empty string.  This has to be
-	 interpreted as `use the current directory'. */
-      if (len == 0)
+      /* `strsep' can pass an empty string.  */
+      if (*cp != '\0')
 	{
-	  static const char curwd[] = "./";
-	  cp = (char *) curwd;
+	  to_free = cp = expand_dynamic_string_token (l, cp, 1);
+
+	  /* expand_dynamic_string_token can return NULL in case of empty
+	     path or memory allocation failure.  */
+	  if (cp == NULL)
+	    continue;
+
+	  /* Compute the length after dynamic string token expansion and
+	     ignore empty paths.  */
+	  len = strlen (cp);
+	  if (len == 0)
+	    {
+	      free (to_free);
+	      continue;
+	    }
+
+	  /* Remove trailing slashes (except for "/").  */
+	  while (len > 1 && cp[len - 1] == '/')
+	    --len;
+
+	  /* Now add one if there is none so far.  */
+	  if (len > 0 && cp[len - 1] != '/')
+	    cp[len++] = '/';
 	}
-
-      /* Remove trailing slashes (except for "/").  */
-      while (len > 1 && cp[len - 1] == '/')
-	--len;
-
-      /* Now add one if there is none so far.  */
-      if (len > 0 && cp[len - 1] != '/')
-	cp[len++] = '/';
 
       /* Make sure we don't use untrusted directories if we run SUID.  */
       if (__glibc_unlikely (check_trusted) && !is_trusted_path (cp, len))
@@ -620,6 +630,14 @@ decompose_rpath (struct r_search_path_struct *sps,
      necessary.  */
   free (copy);
 
+  /* There is no path after expansion.  */
+  if (result[0] == NULL)
+    {
+      free (result);
+      sps->dirs = (struct r_search_path_elem **) -1;
+      return false;
+    }
+
   sps->dirs = result;
   /* The caller will change this value if we haven't used a real malloc.  */
   sps->malloced = 1;
@@ -687,9 +705,8 @@ _dl_init_paths (const char *llp)
 		 + ncapstr * sizeof (enum r_dir_status))
 		/ sizeof (struct r_search_path_elem));
 
-  rtld_search_dirs.dirs[0] = (struct r_search_path_elem *)
-    malloc ((sizeof (system_dirs) / sizeof (system_dirs[0]))
-	    * round_size * sizeof (struct r_search_path_elem));
+  rtld_search_dirs.dirs[0] = malloc (nsystem_dirs_len * round_size
+				     * sizeof (*rtld_search_dirs.dirs[0]));
   if (rtld_search_dirs.dirs[0] == NULL)
     {
       errstring = N_("cannot create cache for search path");
@@ -775,8 +792,6 @@ _dl_init_paths (const char *llp)
 
   if (llp != NULL && *llp != '\0')
     {
-      size_t nllp;
-      const char *cp = llp;
       char *llp_tmp;
 
 #ifdef SHARED
@@ -799,13 +814,10 @@ _dl_init_paths (const char *llp)
 
       /* Decompose the LD_LIBRARY_PATH contents.  First determine how many
 	 elements it has.  */
-      nllp = 1;
-      while (*cp)
-	{
-	  if (*cp == ':' || *cp == ';')
-	    ++nllp;
-	  ++cp;
-	}
+      size_t nllp = 1;
+      for (const char *cp = llp_tmp; *cp != '\0'; ++cp)
+	if (*cp == ':' || *cp == ';')
+	  ++nllp;
 
       env_path_list.dirs = (struct r_search_path_elem **)
 	malloc ((nllp + 1) * sizeof (struct r_search_path_elem *));
