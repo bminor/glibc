@@ -18,13 +18,14 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <time.h>
+#include <bits/types/struct_timespec64.h>
 #include "pthreadP.h"
 
 
 #if HP_TIMING_AVAIL
 int
-__pthread_clock_gettime (clockid_t clock_id, hp_timing_t freq,
-			 struct timespec *tp)
+__pthread_clock_gettime64 (clockid_t clock_id, hp_timing_t freq,
+			   struct __timespec64 *tp)
 {
   hp_timing_t tsc;
 
@@ -63,5 +64,37 @@ __pthread_clock_gettime (clockid_t clock_id, hp_timing_t freq,
   tp->tv_nsec = ((tsc % freq) * 1000000000ull) / freq;
 
   return 0;
+}
+
+int
+__pthread_clock_gettime (clockid_t clock_id, hp_timing_t freq,
+			   struct timespec *tp)
+{
+  struct __timespec64 ts64;
+  int res;
+
+  if (tp == NULL)
+    {
+      __set_errno(EINVAL);
+      res = -1;
+    }
+  else
+    {
+      int res = __pthread_clock_gettime64 (clock_id, freq, &ts64);
+      if (res == 0)
+	{
+	  if (fits_in_time_t (ts64.tv_time))
+	    {
+	      tp->tv_sec = ts64.tv_sec;
+	      tp->tv_nsec = ts64.tv_nsec;
+	    }
+	  else
+	    {
+	      set_errno(EOVERFLOW);
+	      res = -1;
+	    }
+	}
+    }
+  return res;
 }
 #endif

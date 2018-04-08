@@ -40,6 +40,9 @@ extern __typeof (clock_settime) __clock_settime;
 extern __typeof (clock_nanosleep) __clock_nanosleep;
 extern __typeof (clock_getcpuclockid) __clock_getcpuclockid;
 
+extern int __clock_gettime64 (clockid_t __clock_id,
+			      struct __timespec64 *__tp) __THROW;
+
 /* Now define the internal interfaces.  */
 struct tm;
 

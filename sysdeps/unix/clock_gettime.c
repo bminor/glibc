@@ -32,12 +32,12 @@ static hp_timing_t freq;
 
 
 /* This function is defined in the thread library.  */
-extern int __pthread_clock_gettime (clockid_t clock_id, hp_timing_t freq,
-				    struct timespec *tp)
+extern int __pthread_clock_gettime64 (clockid_t clock_id, hp_timing_t freq,
+				      struct __timespec64 *tp)
      __attribute__ ((__weak__));
 
 static int
-hp_timing_gettime (clockid_t clock_id, struct timespec *tp)
+hp_timing_gettime (clockid_t clock_id, struct __timespec64 *tp)
 {
   hp_timing_t tsc;
 
@@ -55,7 +55,7 @@ hp_timing_gettime (clockid_t clock_id, struct timespec *tp)
 
   if (clock_id != CLOCK_PROCESS_CPUTIME_ID
       && __pthread_clock_gettime != NULL)
-    return __pthread_clock_gettime (clock_id, freq, tp);
+    return __pthread_clock_gettime64 (clock_id, freq, tp);
 
   /* Get the current counter.  */
   HP_TIMING_NOW (tsc);
@@ -76,20 +76,20 @@ hp_timing_gettime (clockid_t clock_id, struct timespec *tp)
 
 
 static inline int
-realtime_gettime (struct timespec *tp)
+realtime_gettime (struct __timespec64 *tp)
 {
   struct timeval tv;
   int retval = __gettimeofday (&tv, NULL);
   if (retval == 0)
     /* Convert into `timespec'.  */
-    TIMEVAL_TO_TIMESPEC (&tv, tp);
+    valid_timeval_to_timespec64 (&tv, tp);
   return retval;
 }
 
 
 /* Get current value of CLOCK and store it in TP.  */
 int
-__clock_gettime (clockid_t clock_id, struct timespec *tp)
+__clock_gettime64 (clockid_t clock_id, struct __timespec64 *tp)
 {
   int retval = -1;
 
@@ -103,9 +103,9 @@ __clock_gettime (clockid_t clock_id, struct timespec *tp)
     case CLOCK_REALTIME:
       {
 	struct timeval tv;
-	retval = __gettimeofday (&tv, NULL);
+	retval = __gettimeofday (&tv32, NULL);
 	if (retval == 0)
-	  TIMEVAL_TO_TIMESPEC (&tv, tp);
+	  valid_timeval_to_timespec64 (&tv32, tp);
       }
       break;
 #endif
@@ -131,6 +131,37 @@ __clock_gettime (clockid_t clock_id, struct timespec *tp)
     }
 
   return retval;
+}
+
+int
+__clock_gettime (clockid_t clock_id, struct timespec *tp)
+{
+  struct __timespec64 ts64;
+  int res;
+
+  if (tp == NULL)
+    {
+      __set_errno(EINVAL);
+      res = -1;
+    }
+  else
+    {
+      res = __clock_gettime64 (clock_id, &ts64);
+      if (res == 0)
+	{
+	  if (fits_in_time_t (ts64.tv_sec))
+	    {
+	      tp->tv_sec = ts64.tv_sec;
+	      tp->tv_nsec = ts64.tv_nsec;
+	    }
+	  else
+	    {
+	      __set_errno(EOVERFLOW);
+	      res = -1;
+	    }
+	}
+    }
+  return res;
 }
 weak_alias (__clock_gettime, clock_gettime)
 libc_hidden_def (__clock_gettime)
