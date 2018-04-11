@@ -65,4 +65,9 @@ libc {
   GLIBC_2.16 {
     timespec_get;
   }
+  GLIBC_2.28 {
+    __ctime64; __ctime64_r;
+    __gmtime64; __gmtime64_r;
+    __localtime64; __localtime64_r;
+  }
 }

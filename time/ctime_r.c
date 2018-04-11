@@ -18,12 +18,27 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <time.h>
+#include <errno.h>
 
 /* Return a string as returned by asctime which is the representation
-   of *T in that form.  Reentrant version.  */
+   of *T in that form.  Reentrant Y2038-proof version.  */
+char *
+__ctime64_r (const __time64_t *t, char *buf)
+{
+  struct tm tm;
+  return __asctime_r (__localtime64_r (t, &tm), buf);
+}
+
+/* The 32-bit-time wrapper.  */
 char *
 ctime_r (const time_t *t, char *buf)
 {
-  struct tm tm;
-  return __asctime_r (__localtime_r (t, &tm), buf);
+  __time64_t t64;
+  if (t == NULL)
+    {
+      __set_errno (EINVAL);
+      return NULL;
+    }
+  t64 = *t;
+  return __ctime64_r (&t64, buf);
 }

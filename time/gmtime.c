@@ -17,21 +17,49 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <time.h>
+#include <errno.h>
 
-/* Return the `struct tm' representation of *T in UTC,
-   using *TP to store the result.  */
+/* Return the `struct tm' representation of 64-bit-time *T
+   in UTC, using *TP to store the result.  */
+struct tm *
+__gmtime64_r (const __time64_t *t, struct tm *tp)
+{
+  return __tz_convert (*t, 0, tp);
+}
+
+/* The 32-bit-time wrapper.  */
 struct tm *
 __gmtime_r (const time_t *t, struct tm *tp)
 {
-  return __tz_convert (t, 0, tp);
+  __time64_t t64;
+  if (t == NULL)
+    {
+      __set_errno (EINVAL);
+      return NULL;
+    }
+  t64 = *t;
+  return __gmtime64_r (&t64, tp);
 }
 libc_hidden_def (__gmtime_r)
 weak_alias (__gmtime_r, gmtime_r)
 
+/* Return the `struct tm' representation of 64-bit-time *T in UTC.	*/
+struct tm *
+__gmtime64 (const __time64_t *t)
+{
+  return __tz_convert (*t, 0, &_tmbuf);
+}
 
-/* Return the `struct tm' representation of *T in UTC.	*/
+/* The 32-bit-time wrapper. */
 struct tm *
 gmtime (const time_t *t)
 {
-  return __tz_convert (t, 0, &_tmbuf);
+  __time64_t t64;
+  if (t == NULL)
+    {
+      __set_errno (EINVAL);
+      return NULL;
+    }
+  t64 = *t;
+  return __gmtime64 (&t64);
 }

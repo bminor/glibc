@@ -635,16 +635,10 @@ __tzfile_compute (internal_time_t timer, int use_localtime,
 
 	  /* Convert to broken down structure.  If this fails do not
 	     use the string.  */
-	  {
-	    time_t truncated = timer;
-	    if (__glibc_unlikely (truncated != timer
-				  || ! __offtime (&truncated, 0, tp)))
-	      goto use_last;
-	  }
+	  if (__glibc_unlikely (! __offtime (timer, 0, tp)))
+	    goto use_last;
 
-	  /* Use the rules from the TZ string to compute the change.
-	     timer fits into time_t due to the truncation check
-	     above.  */
+	  /* Use the rules from the TZ string to compute the change.  */
 	  __tz_compute (timer, tp, 1);
 
 	  /* If tzspec comes from posixrules loaded by __tzfile_default,

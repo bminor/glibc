@@ -16,13 +16,28 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <time.h>
+#include <errno.h>
 
 /* Return a string as returned by asctime which
    is the representation of *T in that form.  */
 char *
+__ctime64 (const __time64_t *t)
+{
+  /* Apply the same rule as ctime:
+     make ctime64 (t) is equivalent to asctime (localtime64 (t)).  */
+  return asctime (__localtime64 (t));
+}
+
+/* The 32-bit time wrapper.  */
+char *
 ctime (const time_t *t)
 {
-  /* The C Standard says ctime (t) is equivalent to asctime (localtime (t)).
-     In particular, ctime and asctime must yield the same pointer.  */
-  return asctime (localtime (t));
+  __time64_t t64;
+  if (t == NULL)
+    {
+      __set_errno (EINVAL);
+      return NULL;
+    }
+  t64 = *t;
+  return __ctime64 (&t64);
 }
