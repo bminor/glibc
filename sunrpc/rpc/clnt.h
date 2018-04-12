@@ -344,6 +344,18 @@ extern CLIENT * __REDIRECT (clntudp_create,(struct sockaddr_in *__raddr,
 extern CLIENT *clntudp_create (struct sockaddr_in *__raddr, u_long __program,
 			       u_long __version, struct timeval __wait_resend,
 			       int *__sockp) __THROW;
+#ifdef __USE_TIME_BITS64
+# if defined(__REDIRECT)
+extern CLIENT * __REDIRECT (clntudp_bufcreate,(struct sockaddr_in *__raddr,
+				               u_long __program, u_long __version,
+				               struct __timeval64 __wait_resend,
+					       int *__sockp, u_int __sendsz,
+					       u_int __recvsz),
+                            __clntudp_bufcreate64) __THROW;
+# else
+# define clntudp_bufcreate __clntudp_bufcreate64
+# endif
+#endif
 extern CLIENT *clntudp_bufcreate (struct sockaddr_in *__raddr,
 				  u_long __program, u_long __version,
 				  struct timeval __wait_resend, int *__sockp,

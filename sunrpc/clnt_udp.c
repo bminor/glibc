@@ -663,3 +663,21 @@ __clntudp_create64 (struct sockaddr_in *raddr, u_long program, u_long version,
 
   return clntudp_create (raddr, program, version, wait32, sockp);
 }
+
+CLIENT *
+__clntudp_bufcreate64 (struct sockaddr_in *raddr, u_long program, u_long version,
+		       struct __timeval64 wait, int *sockp, u_int sendsz,
+		       u_int recvsz)
+{
+  struct timeval wait32;
+
+  if (wait.tv_sec > INT_MAX)
+  {
+    return NULL;
+  }
+
+  wait32.tv_sec = wait.tv_sec;
+  wait32.tv_usec = wait.tv_usec;
+
+  return clntudp_bufcreate (raddr, program, version, wait32, sockp, sendsz, recvsz);
+}
