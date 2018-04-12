@@ -644,3 +644,22 @@ clntudp_destroy (CLIENT *cl)
   mem_free ((caddr_t) cu, (sizeof (*cu) + cu->cu_sendsz + cu->cu_recvsz));
   mem_free ((caddr_t) cl, sizeof (CLIENT));
 }
+
+/* 64-bit time versions */
+
+CLIENT *
+__clntudp_create64 (struct sockaddr_in *raddr, u_long program, u_long version,
+		    struct __timeval64 wait, int *sockp)
+{
+  struct timeval wait32;
+
+  if (wait.tv_sec > INT32_MAX || wait.tv_sec < INT32_MIN)
+  {
+    return NULL;
+  }  
+
+  wait32.tv_sec = wait.tv_sec;
+  wait32.tv_usec = wait.tv_usec;
+
+  return clntudp_create (raddr, program, version, wait32, sockp);
+}
