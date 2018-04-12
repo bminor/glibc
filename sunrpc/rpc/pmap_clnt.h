@@ -71,6 +71,21 @@ extern bool_t pmap_set (const u_long __program, const u_long __vers,
 extern bool_t pmap_unset (const u_long __program, const u_long __vers)
      __THROW;
 extern struct pmaplist *pmap_getmaps (struct sockaddr_in *__address) __THROW;
+#ifdef __USE_TIME_BITS64
+# if defined(__REDIRECT)
+extern enum clnt_stat __REDIRECT (pmap_rmtcall, (struct sockaddr_in *__addr,
+                                                 const u_long __prog,
+                                                 const u_long __vers,
+                                                 const u_long __proc,
+                                                 xdrproc_t __xdrargs,
+                                                 caddr_t __argsp, xdrproc_t __xdrres,
+                                                 caddr_t __resp, struct timeval __tout,
+                                                 u_long *__port_ptr),
+                                  __pmap_rmtcall64) __THROW;
+# else
+# define pmap_rmtcall __pmap_rmtcall64
+# endif
+#endif
 extern enum clnt_stat pmap_rmtcall (struct sockaddr_in *__addr,
 				    const u_long __prog,
 				    const u_long __vers,

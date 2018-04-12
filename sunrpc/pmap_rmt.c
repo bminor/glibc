@@ -390,3 +390,26 @@ done_broad:
   return stat;
 }
 libc_hidden_nolink_sunrpc (clnt_broadcast, GLIBC_2_0)
+
+/* 64-bit-time version */
+
+/* The 64-bit-time version of pmap_rmtcall.
+ * Only handles 64-bit-time timeouts smaller than 2^^31 seconds.
+ */
+enum clnt_stat
+__pmap_rmtcall64 (struct sockaddr_in *addr, u_long prog, u_long vers,
+		  u_long proc, xdrproc_t xdrargs, caddr_t argsp,
+		  xdrproc_t xdrres, caddr_t resp,
+		  struct __timeval64 tout, u_long *port_ptr)
+{
+  struct timeval tout32;
+  if (tout.tv_sec > INT_MAX)
+  {
+    return RPC_SYSTEMERROR;
+  }
+  tout32.tv_sec = tout.tv_sec;
+  tout32.tv_usec = tout.tv_usec;
+  
+  return pmap_rmtcall (addr, prog, vers, proc, xdrargs, argsp, xdrres,
+                       resp, tout32, port_ptr);
+}
