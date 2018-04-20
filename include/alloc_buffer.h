@@ -213,6 +213,10 @@ alloc_buffer_alloc_bytes (struct alloc_buffer *buf, size_t length)
 static __always_inline size_t
 __alloc_buffer_assert_size (size_t size)
 {
+  /* clang does not presently support the __error__ attribute, and for
+     some reason the fallback case for __errordecl results in error()
+     being called unconditionally.  So skip over this for now.  */
+#ifndef __clang__
   if (!__builtin_constant_p (size))
     {
       __errordecl (error, "type size is not constant");
@@ -223,6 +227,7 @@ __alloc_buffer_assert_size (size_t size)
       __errordecl (error, "type size is zero");
       error ();
     }
+#endif
   return size;
 }
 
@@ -231,6 +236,8 @@ __alloc_buffer_assert_size (size_t size)
 static __always_inline size_t
 __alloc_buffer_assert_align (size_t align)
 {
+  /* As above - skip until we have a better idea for clang here.  */
+#ifndef __clang__
   if (!__builtin_constant_p (align))
     {
       __errordecl (error, "type alignment is not constant");
@@ -246,6 +253,7 @@ __alloc_buffer_assert_align (size_t align)
       __errordecl (error, "type alignment is not a power of two");
       error ();
     }
+#endif
   return align;
 }
 
