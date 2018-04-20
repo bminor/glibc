@@ -18,6 +18,9 @@
 
 #include <math.h>
 #include <stdint.h>
+#include <math-svid-compat.h>
+#include <shlib-compat.h>
+#include <libm-alias-double.h>
 #include "math_config.h"
 
 #define T __log_data.tab
@@ -42,7 +45,7 @@ top16 (double x)
 
 double
 SECTION
-__ieee754_log (double x)
+__log (double x)
 {
   /* double_t for better performance on targets with FLT_EVAL_METHOD==2.  */
   double_t w, z, r, r2, r3, y, invc, logc, kd, hi, lo;
@@ -127,6 +130,13 @@ __ieee754_log (double x)
   y = lo + r2 * A[0] + r * r2 * (A[1] + r * A[2] + r2 * (A[3] + r * A[4])) + hi;
   return y;
 }
-#ifndef __ieee754_log
-strong_alias (__ieee754_log, __log_finite)
+#ifndef __log
+strong_alias (__log, __ieee754_log)
+strong_alias (__log, __log_finite)
+# if LIBM_SVID_COMPAT
+versioned_symbol (libm, __log, log, GLIBC_2_29);
+libm_alias_double_other (__log, log)
+# else
+libm_alias_double (__log, log)
+# endif
 #endif

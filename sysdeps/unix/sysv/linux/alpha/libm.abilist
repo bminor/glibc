@@ -1045,6 +1045,7 @@ GLIBC_2.28 fsub F
 GLIBC_2.28 fsubl F
 GLIBC_2.29 exp F
 GLIBC_2.29 exp2 F
+GLIBC_2.29 log F
 GLIBC_2.3.4 __c1_cabsf F
 GLIBC_2.3.4 __c1_cacosf F
 GLIBC_2.3.4 __c1_cacoshf F

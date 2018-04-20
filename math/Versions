@@ -577,6 +577,6 @@ libm {
   }
   GLIBC_2.29 {
     # No SVID compatible error handling.
-    exp; exp2;
+    exp; exp2; log;
   }
 }

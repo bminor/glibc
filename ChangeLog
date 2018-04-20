@@ -1,5 +1,48 @@
 2018-11-21  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
+	* math/Versions (GLIBC_2.29): Add log.
+	* math/w_log_compat.c (__log_compat): Change to versioned compat
+	symbol.
+	* math/w_log.c: New file.
+	* sysdeps/i386/fpu/w_log.c: New file.
+	* sysdeps/ia64/fpu/e_log.S: Update.
+	* sysdeps/ieee754/dbl-64/e_log.c (__ieee754_log): Rename to __log
+	and add necessary aliases.
+	* sysdeps/ieee754/dbl-64/w_log.c: New file.
+	* sysdeps/m68k/m680x0/fpu/w_log.c: New file.
+	* sysdeps/mach/hurd/i386/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/arm/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/hppa/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/microblaze/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/mips/mips32/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/nios2/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist: Update.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/sh/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Update.
+	* sysdeps/x86_64/fpu/multiarch/e_log-avx.c (__ieee754_log): Rename to
+	__log.
+	* sysdeps/x86_64/fpu/multiarch/e_log-fma.c (__ieee754_log): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/e_log-fma4.c (__ieee754_log): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/e_log.c (__ieee754_log): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/w_log.c: New file.
+
+2018-11-21  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
 	* math/Versions (GLIBC_2.29): Add exp and exp2.
 	* math/w_exp2_compat.c (__exp2_compat): Change to versioned compat
 	symbol, handle NO_LONG_DOUBLE and LONG_DOUBLE_COMPAT explicitly.

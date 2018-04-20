@@ -1670,6 +1670,12 @@ log_libm_err:
 };;
 GLOBAL_IEEE754_END(log)
 libm_alias_double_other (__log, log)
+#ifdef SHARED
+.symver log,log@@GLIBC_2.29
+.weak __log_compat
+.set __log_compat,__log
+.symver __log_compat,log@GLIBC_2.2
+#endif
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

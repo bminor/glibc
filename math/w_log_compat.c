@@ -23,10 +23,12 @@
 #include <libm-alias-double.h>
 
 
-#if LIBM_SVID_COMPAT
+#if LIBM_SVID_COMPAT && (SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_29) \
+			 || defined NO_LONG_DOUBLE \
+			 || defined LONG_DOUBLE_COMPAT)
 /* wrapper log(x) */
 double
-__log (double x)
+__log_compat (double x)
 {
   if (__builtin_expect (islessequal (x, 0.0), 0) && _LIB_VERSION != _IEEE_)
     {
@@ -44,5 +46,17 @@ __log (double x)
 
   return  __ieee754_log (x);
 }
-libm_alias_double (__log, log)
+# if SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_29)
+compat_symbol (libm, __log_compat, log, GLIBC_2_0);
+# endif
+# ifdef NO_LONG_DOUBLE
+weak_alias (__log_compat, logl)
+# endif
+# ifdef LONG_DOUBLE_COMPAT
+/* Work around gas bug "multiple versions for symbol".  */
+weak_alias (__log_compat, __log_compat_alias)
+
+LONG_DOUBLE_COMPAT_CHOOSE_libm_logl (
+  compat_symbol (libm, __log_compat_alias, logl, FIRST_VERSION_libm_logl), );
+# endif
 #endif

@@ -1070,3 +1070,4 @@ GLIBC_2.28 fsub F
 GLIBC_2.28 fsubl F
 GLIBC_2.29 exp F
 GLIBC_2.29 exp2 F
+GLIBC_2.29 log F
