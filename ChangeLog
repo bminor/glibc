@@ -1,3 +1,8 @@
+2018-04-28  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #23069]
+	* sysdeps/unix/sysv/linux/riscv/kernel_sigaction.h: New file.
+
 2018-03-29  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/tst-bz21269.c (do_test): Also
