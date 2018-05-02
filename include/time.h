@@ -58,13 +58,13 @@ extern void __tzset_parse_tz (const char *tz) attribute_hidden;
 extern void __tz_compute (internal_time_t timer, struct tm *tm, int use_localtime)
   __THROW attribute_hidden;
 
-/* Subroutine of `mktime'.  Return the `time_t' representation of TP and
-   normalize TP, given that a `struct tm *' maps to a `time_t' as performed
+/* Subroutine of `mktime'.  Return the `__time64_t' representation of TP and
+   normalize TP, given that a `struct tm *' maps to a `__time64_t' as performed
    by FUNC.  Keep track of next guess for time_t offset in *OFFSET.  */
-extern time_t __mktime_internal (struct tm *__tp,
-				 struct tm *(*__func) (const time_t *,
+extern __time64_t __mktime_internal (struct tm *__tp,
+				 struct tm *(*__func) (const __time64_t *,
 						       struct tm *),
-				 time_t *__offset) attribute_hidden;
+				 __time64_t *__offset) attribute_hidden;
 extern struct tm *__localtime_r (const time_t *__timer,
 				 struct tm *__tp) attribute_hidden;
 

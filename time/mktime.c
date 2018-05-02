@@ -35,6 +35,7 @@
 #include <time.h>
 
 #include <limits.h>
+#include <errno.h>
 
 #include <string.h>		/* For the real memcpy prototype.  */
 
@@ -277,13 +278,13 @@ time_t_int_add_ok (time_t a, int b)
    If TP is null, return a value not equal to *T; this avoids false matches.
    If overflow occurs, yield the minimal or maximal value, except do not
    yield a value equal to *T.  */
-static time_t
+static __time64_t
 guess_time_tm (long_int year, long_int yday, int hour, int min, int sec,
-	       const time_t *t, const struct tm *tp)
+	       const __time64_t *t, const struct tm *tp)
 {
   if (tp)
     {
-      time_t d = ydhms_diff (year, yday, hour, min, sec,
+      __time64_t d = ydhms_diff (year, yday, hour, min, sec,
 			     tp->tm_year, tp->tm_yday,
 			     tp->tm_hour, tp->tm_min, tp->tm_sec);
       if (time_t_add_ok (*t, d))
@@ -304,17 +305,17 @@ guess_time_tm (long_int year, long_int yday, int hour, int min, int sec,
    If *T is out of range for conversion, adjust it so that
    it is the nearest in-range value and then convert that.  */
 static struct tm *
-ranged_convert (struct tm *(*convert) (const time_t *, struct tm *),
-		time_t *t, struct tm *tp)
+ranged_convert (struct tm *(*convert) (const __time64_t *, struct tm *),
+		__time64_t *t, struct tm *tp)
 {
   struct tm *r = convert (t, tp);
 
   if (!r && *t)
     {
-      time_t bad = *t;
-      time_t ok = 0;
+      __time64_t bad = *t;
+      __time64_t ok = 0;
 
-      /* BAD is a known unconvertible time_t, and OK is a known good one.
+      /* BAD is a known unconvertible __time64_t, and OK is a known good one.
 	 Use binary search to narrow the range between BAD and OK until
 	 they differ by 1.  */
       while (bad != ok + (bad < 0 ? -1 : 1))
@@ -346,12 +347,12 @@ ranged_convert (struct tm *(*convert) (const time_t *, struct tm *),
    compared to what the result would be for UTC without leap seconds.
    If *OFFSET's guess is correct, only one CONVERT call is needed.
    This function is external because it is used also by timegm.c.  */
-time_t
+__time64_t
 __mktime_internal (struct tm *tp,
-		   struct tm *(*convert) (const time_t *, struct tm *),
-		   time_t *offset)
+		   struct tm *(*convert) (const __time64_t *, struct tm *),
+		   __time64_t *offset)
 {
-  time_t t, gt, t0, t1, t2;
+  __time64_t t, gt, t0, t1, t2;
   struct tm tm;
 
   /* The maximum number of probes (calls to CONVERT) should be enough
@@ -382,7 +383,7 @@ __mktime_internal (struct tm *tp,
 
   /* The other values need not be in range:
      the remaining code handles minor overflows correctly,
-     assuming int and time_t arithmetic wraps around.
+     assuming int and __time64_t arithmetic wraps around.
      Major overflows are caught at the end.  */
 
   /* Calculate day of year from year, month, and day of month.
@@ -393,7 +394,7 @@ __mktime_internal (struct tm *tp,
   long_int lmday = mday;
   long_int yday = mon_yday + lmday;
 
-  time_t guessed_offset = *offset;
+  __time64_t guessed_offset = *offset;
 
   int sec_requested = sec;
 
@@ -415,8 +416,8 @@ __mktime_internal (struct tm *tp,
 
   if (TIME_T_MAX / INT_MAX / 366 / 24 / 60 / 60 < 3)
     {
-      /* time_t isn't large enough to rule out overflows, so check
-	 for major overflows.  A gross check suffices, since if t0
+      /* __time64_t is large enough to rule out overflows, but check
+	 for major overflows anyway.  A gross check suffices, since if t0
 	 has overflowed, it is off by a multiple of TIME_T_MAX -
 	 TIME_T_MIN + 1.  So ignore any component of the difference
 	 that is bounded by a small value.  */
@@ -533,7 +534,7 @@ __mktime_internal (struct tm *tp,
 	for (direction = -1; direction <= 1; direction += 2)
 	  if (time_t_int_add_ok (t, delta * direction))
 	    {
-	      time_t ot = t + delta * direction;
+	      __time64_t ot = t + delta * direction;
 	      struct tm otm;
 	      ranged_convert (convert, &ot, &otm);
 	      if (! isdst_differ (isdst, otm.tm_isdst))
@@ -575,11 +576,11 @@ __mktime_internal (struct tm *tp,
    offset in seconds.  'int' should be good enough for GNU code.  We
    can't fix this unilaterally though, as other modules invoke
    __mktime_internal.  */
-static time_t localtime_offset;
+static __time64_t localtime_offset;
 
 /* Convert *TP to a time_t value.  */
-time_t
-mktime (struct tm *tp)
+__time64_t
+__mktime64 (struct tm *tp)
 {
 #ifdef _LIBC
   /* POSIX.1 8.1.1 requires that whenever mktime() is called, the
@@ -588,7 +589,22 @@ mktime (struct tm *tp)
   __tzset ();
 #endif
 
-  return __mktime_internal (tp, __localtime_r, &localtime_offset);
+  return __mktime_internal (tp, __localtime64_r, &localtime_offset);
+}
+
+#ifdef weak_alias
+weak_alias (__mktime64, __timelocal64)
+#endif
+
+/* The 32-bit-time wrapper.  */
+time_t
+mktime (struct tm *tp)
+{
+  __time64_t t64 = __mktime64 (tp);
+  if (fits_in_time_t (t64))
+    return (time_t) t64;
+  __set_errno(EOVERFLOW);
+  return (time_t) -1;
 }
 
 #ifdef weak_alias
