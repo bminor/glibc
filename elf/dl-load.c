@@ -1511,6 +1511,7 @@ open_verify (const char *name, int fd, off_t offset,
       ElfW(Ehdr) *ehdr;
       ElfW(Phdr) *phdr, *ph;
       ElfW(Word) *abi_note;
+      ElfW(Word) *abi_note_malloced = NULL;
       unsigned int osversion;
       size_t maplength;
 
@@ -1685,10 +1686,25 @@ open_verify (const char *name, int fd, off_t offset,
 	      abi_note = (void *) (fbp->buf + ph->p_offset);
 	    else
 	      {
-		abi_note = alloca (size);
+		/* Note: __libc_use_alloca is not usable here, because
+		   thread info may not have been set up yet.  */
+		if (size < __MAX_ALLOCA_CUTOFF)
+		  abi_note = alloca (size);
+		else
+		  {
+		    /* There could be multiple PT_NOTEs.  */
+		    abi_note_malloced = realloc (abi_note_malloced, size);
+		    if (abi_note_malloced == NULL)
+		      goto read_error;
+
+		    abi_note = abi_note_malloced;
+		  }
 		__lseek (fd, ph->p_offset, SEEK_SET);
 		if (__libc_read (fd, (void *) abi_note, size) != size)
-		  goto read_error;
+		  {
+		    free (abi_note_malloced);
+		    goto read_error;
+		  }
 	      }
 
 	    while (memcmp (abi_note, &expected_note, sizeof (expected_note)))
@@ -1723,6 +1739,7 @@ open_verify (const char *name, int fd, off_t offset,
 
 	    break;
 	  }
+      free (abi_note_malloced);
     }
 
   return fd;
