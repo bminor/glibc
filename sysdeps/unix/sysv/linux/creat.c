@@ -35,6 +35,4 @@ __creat (const char *file, mode_t mode)
 }
 weak_alias (__creat, creat)
 
-LIBC_CANCEL_HANDLED ();
-
 #endif

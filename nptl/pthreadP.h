@@ -325,27 +325,17 @@ __do_cancel (void)
 /* Same as CANCEL_RESET, but for use in libc.so.  */
 # define LIBC_CANCEL_RESET(oldtype) \
   __libc_disable_asynccancel (oldtype)
-# define LIBC_CANCEL_HANDLED() \
-  __asm (".globl " __SYMBOL_PREFIX "__libc_enable_asynccancel"); \
-  __asm (".globl " __SYMBOL_PREFIX "__libc_disable_asynccancel")
 #elif IS_IN (libpthread)
 # define LIBC_CANCEL_ASYNC() CANCEL_ASYNC ()
 # define LIBC_CANCEL_RESET(val) CANCEL_RESET (val)
-# define LIBC_CANCEL_HANDLED() \
-  __asm (".globl " __SYMBOL_PREFIX "__pthread_enable_asynccancel"); \
-  __asm (".globl " __SYMBOL_PREFIX "__pthread_disable_asynccancel")
 #elif IS_IN (librt)
 # define LIBC_CANCEL_ASYNC() \
   __librt_enable_asynccancel ()
 # define LIBC_CANCEL_RESET(val) \
   __librt_disable_asynccancel (val)
-# define LIBC_CANCEL_HANDLED() \
-  __asm (".globl " __SYMBOL_PREFIX "__librt_enable_asynccancel"); \
-  __asm (".globl " __SYMBOL_PREFIX "__librt_disable_asynccancel")
 #else
 # define LIBC_CANCEL_ASYNC()	0 /* Just a dummy value.  */
 # define LIBC_CANCEL_RESET(val)	((void)(val)) /* Nothing, but evaluate it.  */
-# define LIBC_CANCEL_HANDLED()	/* Nothing.  */
 #endif
 
 

@@ -38,5 +38,3 @@ __libc_pause (void)
   return __sigsuspend (&set);
 }
 weak_alias (__libc_pause, pause)
-
-LIBC_CANCEL_HANDLED ();		/* sigsuspend handles our cancellation.  */

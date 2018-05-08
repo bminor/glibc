@@ -37,6 +37,3 @@ __sigwait (const sigset_t *set, int *sig)
 libc_hidden_def (__sigwait)
 weak_alias (__sigwait, sigwait)
 strong_alias (__sigwait, __libc_sigwait)
-
-/* __sigtimedwait handles cancellation.  */
-LIBC_CANCEL_HANDLED ();

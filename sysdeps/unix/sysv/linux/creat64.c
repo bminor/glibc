@@ -37,5 +37,3 @@ weak_alias (__creat64, creat64)
 strong_alias (__creat64, __creat)
 weak_alias (__creat64, creat)
 #endif
-
-LIBC_CANCEL_HANDLED ();

@@ -1,3 +1,24 @@
+2019-01-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* io/creat.c (LIBC_CANCEL_HANDLED): Remove macro.
+	* io/ppoll.c (LIBC_CANCEL_HANDLED): Likewise.
+	* misc/pselect.c (LIBC_CANCEL_HANDLED): Likewise.
+	* nptl/pthreadP.h (LIBC_CANCEL_HANDLED): Likewise.
+	* sysdeps/generic/sysdep-cancel.h (LIBC_CANCEL_HANDLED): Likewise.
+	* sysdeps/mach/hurd/sysdep-cancel.h (LIBC_CANCEL_HANDLED): Likewise.
+	* sysdeps/posix/pause.c (LIBC_CANCEL_HANDLED): Likewise.
+	* sysdeps/posix/sigpause.c (LIBC_CANCEL_HANDLED): Likewise.
+	* sysdeps/unix/sysv/linux/creat.c (LIBC_CANCEL_HANDLED): Likewise.
+	* sysdeps/unix/sysv/linux/creat64.c (LIBC_CANCEL_HANDLED): Likewise.
+	* sysdeps/unix/sysv/linux/sigwait.c (LIBC_CANCEL_HANDLED): Likewise.
+	* sysdeps/unix/sysv/linux/sigwaitinfo.c (LIBC_CANCEL_HANDLED):
+	Likewise.
+	* nptl/Makefile [$(run-built-tests) = yes] (tests-special): Remove
+	tst-cancel-wrappers.sh.
+	(generated): Remove tst-cancel-wrappers.out.
+	(tst-cancel-wrappers.out): Remove rule.
+	* nptl/tst-cancel-wrappers.sh: Remove file.
+
 2019-01-03  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* sysdeps/unix/sysv/linux/aarch64/bits/hwcap.h: Add comment.

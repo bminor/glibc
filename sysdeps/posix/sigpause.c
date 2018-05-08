@@ -70,6 +70,3 @@ __xpg_sigpause (int sig)
   return __sigpause (sig, 1);
 }
 strong_alias (__xpg_sigpause, __libc___xpg_sigpause)
-
-/* __sigsuspend handles cancellation.  */
-LIBC_CANCEL_HANDLED ();

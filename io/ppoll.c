@@ -70,7 +70,5 @@ ppoll (struct pollfd *fds, nfds_t nfds, const struct timespec *timeout,
 }
 
 #ifndef ppoll
-/* __poll handles cancellation.  */
-LIBC_CANCEL_HANDLED ();
 libc_hidden_def (ppoll);
 #endif
