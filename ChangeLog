@@ -1,5 +1,8 @@
 2019-01-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/x86_64/nptl/tls.h (THREAD_ATOMIC_CMPXCHG_VAL,
+	THREAD_ATOMIC_AND, THREAD_ATOMIC_BIT_SET): Remove macros.
+
 	* debug/tst-backtrace5.c (handle_signal): Avoid cancellable wrappers
 	in backtrace analysis.
 	* nptl/tst-cancel4.c (tf_write): Handle cancelled syscall with
