@@ -110,11 +110,17 @@ prepare_test_buffer (unsigned char *buf)
     abort ();
 }
 
+/* Use a volatile global to ensure that aggressive compilers don't
+   decide that the test buffer is unused and evaporate it.  */
+
+volatile unsigned char *vol_glob;
+
 static void
 setup_no_clear (void)
 {
   unsigned char buf[TEST_BUFFER_SIZE];
   prepare_test_buffer (buf);
+  vol_glob = buf;
 }
 
 static void
@@ -123,6 +129,7 @@ setup_ordinary_clear (void)
   unsigned char buf[TEST_BUFFER_SIZE];
   prepare_test_buffer (buf);
   memset (buf, 0, TEST_BUFFER_SIZE);
+  vol_glob = buf;
 }
 
 static void
