@@ -69,7 +69,7 @@ test_setup (void)
 static void
 test_large_allocations (size_t size)
 {
-  void * ptr_to_realloc;
+  void *volatile ptr_to_realloc;
 
   test_setup ();
   TEST_VERIFY (malloc (size) == NULL);

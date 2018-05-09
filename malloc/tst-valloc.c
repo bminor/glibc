@@ -34,7 +34,7 @@ merror (const char *msg)
 static int
 do_test (void)
 {
-  void *p;
+  void *volatile p;
   unsigned long pagesize = getpagesize ();
   unsigned long ptrval;
   int save;

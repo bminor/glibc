@@ -33,7 +33,7 @@ merror (const char *msg)
 static int
 do_test (void)
 {
-  void *p, *q;
+  void *volatile p, *volatile q;
   int save;
 
   errno = 0;
