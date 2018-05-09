@@ -3,6 +3,8 @@
 
 int
 __attribute__((noinline))
+/* Workaround for clang/lld failing to override this from a module.  */
+__attribute__((weak))
 baz (int x)
 {
   abort ();
