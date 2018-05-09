@@ -35,8 +35,8 @@ call_free (void *ptr)
 int
 do_test (void)
 {
-  void *ptr1 = malloc (SIZE);
-  void *ptr2 = malloc (SIZE);
+  void *volatile ptr1 = malloc (SIZE);
+  void *volatile ptr2 = malloc (SIZE);
 
   /* Avoid unwanted output to TTY after an expected memory corruption.  */
   ignore_stderr();
