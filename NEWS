@@ -46,6 +46,7 @@ The following bugs are resolved with this release:
   [23069] sigaction broken on riscv64-linux-gnu
   [23137] s390: pthread_join sometimes block indefinitely (on 31bit and libc
     build with -Os)
+  [23152] gd_GB: Fix typo in "May" (abbreviated)
 
 
 Version 2.27
