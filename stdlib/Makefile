@@ -80,7 +80,7 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
 		   tst-strtol-locale tst-strtod-nan-locale tst-strfmon_l    \
 		   tst-quick_exit tst-thread-quick_exit tst-width	    \
 		   tst-width-stdint tst-strfrom tst-strfrom-locale	    \
-		   tst-getrandom
+		   tst-getrandom test-bz22786
 tests-internal	:= tst-strtod1i tst-strtod3 tst-strtod4 tst-strtod5i \
 		   tst-tls-atexit tst-tls-atexit-nodelete
 tests-static	:= tst-secure-getenv
