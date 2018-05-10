@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <init-arch.h>
+#include <x86-math-features.h>
 
 extern __typeof (REDIRECT_NAME) OPTIMIZE (sse2) attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (fma) attribute_hidden;
@@ -24,10 +25,10 @@ extern __typeof (REDIRECT_NAME) OPTIMIZE (fma) attribute_hidden;
 static inline void *
 IFUNC_SELECTOR (void)
 {
-  const struct cpu_features* cpu_features = __get_cpu_features ();
+  unsigned int features = __x86_math_features ();
 
-  if (CPU_FEATURES_ARCH_P (cpu_features, FMA_Usable)
-      && CPU_FEATURES_ARCH_P (cpu_features, AVX2_Usable))
+  if ((features & x86_math_feature_fma)
+      && (features & x86_math_feature_avx2))
     return OPTIMIZE (fma);
 
   return OPTIMIZE (sse2);

@@ -15,6 +15,8 @@ libm-sysdep_routines += e_exp-fma e_log-fma e_pow-fma s_atan-fma \
 			halfulp-fma mpexp-fma \
 			mpatan2-fma mpatan-fma mpsqrt-fma mptan-fma
 
+libm-sysdep_routines += x86-math-features
+
 CFLAGS-doasin-fma.c = -mfma -mavx2
 CFLAGS-dosincos-fma.c = -mfma -mavx2
 CFLAGS-e_asin-fma.c = -mfma -mavx2
