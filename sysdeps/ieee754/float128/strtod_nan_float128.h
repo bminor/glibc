@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <ieee754_float128.h>
+
 #define FLOAT		_Float128
 #define SET_MANTISSA(flt, mant)				\
   do							\

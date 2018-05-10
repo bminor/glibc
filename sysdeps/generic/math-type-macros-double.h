@@ -27,6 +27,8 @@
 #define CFLOAT _Complex double
 #define M_STRTO_NAN __strtod_nan
 
+#include <stdlib/strtod_nan_double.h>
+
 #include <libm-alias-double.h>
 
 #ifndef declare_mgen_alias

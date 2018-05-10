@@ -32,6 +32,8 @@
 
 #define M_MLIT(c) c ## f128
 
+#include <strtod_nan_float128.h>
+
 #include <libm-alias-float128.h>
 
 #ifndef declare_mgen_alias
