@@ -17,22 +17,35 @@ The following bugs are resolved with this release:
 
   [6889] 'PWD' mentioned but not specified
   [16335] Feature test macro documentation incomplete and out of date
+  [17343] Signed integer overflow in /stdlib/random_r.c
+  [20419] files with large allocated notes crash in open_verify
   [21269] i386 sigaction sa_restorer handling is wrong
   [22342] NSCD not properly caching netgroup
   [22638] sparc: static binaries are broken if glibc is built by gcc
     configured with --enable-default-pie
+  [22644] memmove-sse2-unaligned on 32bit x86 produces garbage when crossing
+    2GB threshold
   [22735] Misleading typo in time.h source comment regarding CLOCKS_PER_SECOND
+  [22786] Stack buffer overflow in realpath() if input size is close
+    to SSIZE_MAX
   [22797] Linux: use reserved name __key in pkey_get
   [22807] PTRACE_* constants missing for powerpc
   [22818] posix/tst-glob_lstat_compat failure on alpha
   [22827] RISC-V ELF64 parser mis-reads flag in ldconfig
   [22848] ca_ES: update date definitions from CLDR
+  [22884] RISCV fmax/fmin handle signalling NANs incorrectly
   [22918] multiple common of `__nss_shadow_database'
   [22919] sparc32: backtrace yields infinite backtrace with makecontext
   [22926] FTBFS on powerpcspe
   [22932] lt_LT: Update of abbreviated month names from CLDR required
   [22937] Greek (el_GR, el_CY) locales actually need ab_alt_mon
+  [22947] FAIL: misc/tst-preadvwritev2
   [22963] cs_CZ: Add alternative month names
+  [23005] Crash in __res_context_send after memory allocation failure
+  [23037] initialize msg_flags to zero for sendmmsg() calls
+  [23069] sigaction broken on riscv64-linux-gnu
+  [23137] s390: pthread_join sometimes block indefinitely (on 31bit and libc
+    build with -Os)
 
 
 Version 2.27
