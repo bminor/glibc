@@ -1,5 +1,36 @@
 2019-01-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* nptl/pthread_join_common.c (__pthread_timedjoin_ex): Use
+	lll_wait_tid with timeout.
+	* nptl/sem_wait.c (__old_sem_wait): Use lll_futex_wait_cancel.
+	* sysdeps/nptl/aio_misc.h (AIO_MISC_WAIT): Use
+	futex_reltimed_wait_cancelable for cancelabla mode.
+	* sysdeps/nptl/gai_misc.h (GAI_MISC_WAIT): Likewise.
+	* sysdeps/posix/open64.c (__libc_open64): Do not call cancelation
+	macros.
+	* sysdeps/posix/sigwait.c (__sigwait): Likewise.
+	* sysdeps/posix/waitid.c (__sigwait): Likewise.
+	* sysdeps/unix/sysdep.h (__SYSCALL_CANCEL_CALL,
+	SYSCALL_CANCEL_NCS): New macro.
+	* sysdeps/nptl/lowlevellock.h (lll_wait_tid): Add timeout argument.
+	(lll_timedwait_tid): Remove macro.
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h (lll_wait_tid):
+	Likewise.
+	(lll_timedwait_tid): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/lowlevellock.h (lll_wait_tid):
+	Likewise.
+	(lll_timedwait_tid): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h (lll_wait_tid):
+	Likewise.
+	(lll_timedwait_tid): Likewise.
+	* sysdeps/unix/sysv/linux/clock_nanosleep.c (__clock_nanosleep):
+	Use INTERNAL_SYSCALL_CANCEL.
+	* sysdeps/unix/sysv/linux/futex-internal.h
+	(futex_reltimed_wait_cancelable): Use LIBC_CANCEL_{ASYNC,RESET}
+	instead of __pthread_{enable,disable}_asynccancel.
+	* sysdeps/unix/sysv/linux/lowlevellock-futex.h
+	(lll_futex_wait_cancel): New macro.
+
 	* sysdeps/i386/nptl/tls.h (THREAD_ATOMIC_CMPXCHG_VAL,
 	THREAD_ATOMIC_AND, THREAD_ATOMIC_BIT_SET): Remove macros.
 

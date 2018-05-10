@@ -151,16 +151,8 @@ OUR_WAITID (idtype_t idtype, id_t id, siginfo_t *infop, int options)
 int
 __waitid (idtype_t idtype, id_t id, siginfo_t *infop, int options)
 {
-  if (SINGLE_THREAD_P)
-    return do_waitid (idtype, id, infop, options);
-
-  int oldtype = LIBC_CANCEL_ASYNC ();
-
-  int result = do_waitid (idtype, id, infop, options);
-
-  LIBC_CANCEL_RESET (oldtype);
-
-  return result;
+  /* __waitpid should be a cancellation point.  */
+  return do_waitid (idtype, id, infop, options);
 }
 weak_alias (__waitid, waitid)
 strong_alias (__waitid, __libc_waitid)

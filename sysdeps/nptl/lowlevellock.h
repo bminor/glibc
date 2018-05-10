@@ -175,33 +175,29 @@ extern int __lll_timedlock_wait (int *futex, const struct timespec *,
 #define LLL_LOCK_INITIALIZER		(0)
 #define LLL_LOCK_INITIALIZER_LOCKED	(1)
 
+extern int __lll_timedwait_tid (int *, const struct timespec *)
+     attribute_hidden;
 
 /* The kernel notifies a process which uses CLONE_CHILD_CLEARTID via futex
    wake-up when the clone terminates.  The memory location contains the
    thread ID while the clone is running and is reset to zero by the kernel
    afterwards.  The kernel up to version 3.16.3 does not use the private futex
-   operations for futex wake-up when the clone terminates.  */
-#define lll_wait_tid(tid)				\
-  do {							\
-    __typeof (tid) __tid;				\
-    /* We need acquire MO here so that we synchronize	\
-       with the kernel's store to 0 when the clone	\
-       terminates. (see above)  */			\
-    while ((__tid = atomic_load_acquire (&(tid))) != 0)	\
-      lll_futex_wait (&(tid), __tid, LLL_SHARED);	\
-  } while (0)
-
-extern int __lll_timedwait_tid (int *, const struct timespec *)
-     attribute_hidden;
-
-/* As lll_wait_tid, but with a timeout.  If the timeout occurs then return
-   ETIMEDOUT.  If ABSTIME is invalid, return EINVAL.  */
-#define lll_timedwait_tid(tid, abstime) \
-  ({							\
-    int __res = 0;					\
-    if ((tid) != 0)					\
-      __res = __lll_timedwait_tid (&(tid), (abstime));	\
-    __res;						\
+   operations for futex wake-up when the clone terminates.
+   If ABSTIME is not NULL, is used a timeout for futex call.  If the timeout
+   occurs then return ETIMEOUT, if ABSTIME is invalid, return EINVAL.
+   The futex operation are issues with cancellable versions.  */
+#define lll_wait_tid(tid, abstime)					\
+  ({									\
+    int __res = 0;							\
+    __typeof (tid) __tid;						\
+    if (abstime != NULL)						\
+      __res = __lll_timedwait_tid (&(tid), (abstime));			\
+    else								\
+      /* We need acquire MO here so that we synchronize with the 	\
+	 kernel's store to 0 when the clone terminates. (see above)  */	\
+      while ((__tid = atomic_load_acquire (&(tid))) != 0)		\
+        lll_futex_wait_cancel (&(tid), __tid, LLL_SHARED);		\
+    __res;								\
   })
 
 

@@ -125,6 +125,17 @@
 					 private),                      \
 		     nr_wake, nr_move, mutex, val)
 
+
+/* Cancellable futex macros.  */
+#define lll_futex_wait_cancel(futexp, val, private) \
+  ({                                                                   \
+    int __oldtype = CANCEL_ASYNC ();				       \
+    long int __err = lll_futex_wait (futexp, val, LLL_SHARED);	       \
+    CANCEL_RESET (__oldtype);					       \
+    __err;							       \
+  })
+
+
 #endif  /* !__ASSEMBLER__  */
 
 #endif  /* lowlevellock-futex.h */
