@@ -1,5 +1,10 @@
 2019-09-06  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* sysdeps/aarch64/multiarch/memcpy_falkor.S (__memcpy_falkor):
+	Use multiple registers to copy data in loop tail.
+
+2019-09-06  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
 	* sysdeps/aarch64/strncmp.S (strncmp): Use lsr instead of
 	mov + lsr.
 
