@@ -48,7 +48,7 @@ case "$1" in
 	# GOOGLE ONLY: Through an unfortunate combination of circumstances,
 	# the mktemp used here may be as old as 6.12 from 2008, which does
 	# not like having an underscore instead of a dot.
-        cih_test_c=$(mktemp ${TMPDIR-/tmp}/cih_test.XXXXXX.c)
+        cih_test_c=$(mktemp ${TMPDIR-/tmp}/cih_test.XXXXXX)
         already="$skip_obsolete_type_check"
     ;;
     (c++)
@@ -103,7 +103,7 @@ for header in "$@"; do
 # error "is x32"
 #endif
 EOF
-                    if $cc_cmd -fsyntax-only "$cih_test_c" > /dev/null 2>&1
+                    if $cc_cmd -xc -fsyntax-only "$cih_test_c" > /dev/null 2>&1
                     then
                         is_x32=no
                     else
@@ -125,7 +125,7 @@ EOF
 #error "is x86-64"
 #endif
 EOF
-                    if $cc_cmd -fsyntax-only "$cih_test_c" > /dev/null 2>&1
+                    if $cc_cmd -xc -fsyntax-only "$cih_test_c" > /dev/null 2>&1
                     then
                         is_x86_64=no
                     else
@@ -157,9 +157,9 @@ $expanded_lib_mode
 #include <$header>
 int avoid_empty_translation_unit;
 EOF
-            if $cc_cmd -fsyntax-only $lang_mode "$cih_test_c" 2>&1
+            if $cc_cmd -xc -fsyntax-only $lang_mode "$cih_test_c" 2>&1
             then
-                includes=$($cc_cmd -fsyntax-only -H $lang_mode \
+                includes=$($cc_cmd -xc -fsyntax-only -H $lang_mode \
                               "$cih_test_c" 2>&1 | sed -ne 's/^[.][.]* //p')
                 for h in $includes; do
                     # Don't repeat work.
