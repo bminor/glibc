@@ -139,6 +139,7 @@ The following bugs are resolved with this release:
   [23024] getlogin_r: return early when linux sentinel value is set
   [23037] resolv: Fully initialize struct mmsghdr in send_dg
   [23137] s390: Fix blocking pthread_join
+  [23171] Fix parameter type in C++ version of iseqsig
   [23196] __mempcpy_avx512_no_vzeroupper mishandles large copies
   [23236] Harden function pointers in _IO_str_fields
 
