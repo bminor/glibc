@@ -75,6 +75,7 @@ The following bugs are resolved with this release:
     build with -Os)
   [23152] gd_GB: Fix typo in "May" (abbreviated)
   [23166] sunrpc: Remove stray exports without --enable-obsolete-rpc
+  [23171] Fix parameter type in C++ version of iseqsig
   [23196] __mempcpy_avx512_no_vzeroupper mishandles large copies
   [23236] Harden function pointers in _IO_str_fields
   [23259] Unsubstituted ${ORIGIN} remains in DT_NEEDED for AT_SECURE
