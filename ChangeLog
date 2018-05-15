@@ -1,3 +1,7 @@
+2018-12-19  Andreas Schwab  <schwab@suse.de>
+
+	* nscd/connections.c (check_use): Don't abort on invalid len.
+
 2019-05-17  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* malloc/malloc.c (MAX_TCACHE_COUNT): Increase to UINT16_MAX.
