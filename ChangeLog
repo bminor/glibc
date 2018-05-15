@@ -1,3 +1,7 @@
+2018-12-19  Andreas Schwab  <schwab@suse.de>
+
+	* nscd/connections.c (check_use): Don't abort on invalid len.
+
 2018-12-18  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/fcntl.c (__libc_fcntl): Test against 64bit `cmd'
