@@ -47,6 +47,7 @@ The following bugs are resolved with this release:
   [23137] s390: pthread_join sometimes block indefinitely (on 31bit and libc
     build with -Os)
   [23152] gd_GB: Fix typo in "May" (abbreviated)
+  [23166] sunrpc: Remove stray exports without --enable-obsolete-rpc
 
 
 Version 2.27
