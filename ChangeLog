@@ -1,3 +1,9 @@
+2018-04-09  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23037]
+	* resolv/res_send.c (send_dg): Use designated initializers instead
+	of assignment to zero-initialize other fields of struct mmsghdr.
+
 2018-01-18  Arjun Shankar  <arjun@redhat.com>
 
 	[BZ #22343]
