@@ -125,6 +125,7 @@ The following bugs are resolved with this release:
   [23005] resolv: Fix crash in resolver on memory allocation failure
   [23024] getlogin_r: return early when linux sentinel value is set
   [23037] resolv: Fully initialize struct mmsghdr in send_dg
+  [23137] s390: Fix blocking pthread_join
 
 Version 2.26
 
