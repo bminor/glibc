@@ -1,3 +1,10 @@
+2018-05-18  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #22639]
+	* time/tzset.c (SECSPERDAY): Cast to time_t.
+	* time/tst-y2039.c: New file.
+	* time/Makefile (tests): Add tst-y2039.
+
 2018-02-12  Zack Weinberg  <zackw@panix.com>
 
 	[BZ #19239]
