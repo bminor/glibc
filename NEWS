@@ -74,6 +74,10 @@ Security related changes:
   the value of SIZE_MAX, would return a pointer to a buffer which is too
   small, instead of NULL.
 
+  CVE-2018-11236: Very long pathname arguments to realpath function could
+  result in an integer overflow and buffer overflow.  Reported by Alexey
+  Izbyshev.
+
   CVE-2018-11237: The mempcpy implementation for the Intel Xeon Phi
   architecture could write beyond the target buffer, resulting in a buffer
   overflow.  Reported by Andreas Schwab.
