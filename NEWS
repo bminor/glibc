@@ -48,6 +48,13 @@ The following bugs are resolved with this release:
     build with -Os)
   [23152] gd_GB: Fix typo in "May" (abbreviated)
   [23166] sunrpc: Remove stray exports without --enable-obsolete-rpc
+  [23196] __mempcpy_avx512_no_vzeroupper mishandles large copies
+
+Security related changes:
+
+  CVE-2018-11237: The mempcpy implementation for the Intel Xeon Phi
+  architecture could write beyond the target buffer, resulting in a buffer
+  overflow.  Reported by Andreas Schwab.
 
 
 Version 2.27
