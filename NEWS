@@ -59,6 +59,9 @@ Security related changes:
   for AT_SECURE or SUID binaries could be used to load libraries from the
   current directory.
 
+  CVE-2017-18269: An SSE2-based memmove implementation for the i386
+  architecture could corrupt memory.  Reported by Max Horn.
+
   CVE-2018-1000001: Buffer underflow in realpath function when getcwd function
   succeeds without returning an absolute path due to unexpected behaviour
   of the Linux kernel getcwd syscall.  Reported by halfdog.
