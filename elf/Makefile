@@ -170,8 +170,8 @@ tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 	 constload1 order noload filter \
 	 reldep reldep2 reldep3 reldep4 nodelete nodelete2 \
 	 nodlopen nodlopen2 lateglobal initfirst global \
-	 restest2 next dblload dblunload reldep5 reldep6 reldep7 reldep8 \
-	 tst-tls4 tst-tls5 \
+	 restest2 next dblload dblunload reldep5 reldep6 reldep6a \
+	 reldep7 reldep8 tst-tls4 tst-tls5 \
 	 tst-tls10 tst-tls11 tst-tls12 tst-tls13 tst-tls14 tst-tls15 \
 	 tst-tls16 tst-tls17 tst-tls18 tst-tls19 tst-tls-dlinfo \
 	 tst-align tst-align2 \
@@ -328,7 +328,7 @@ tests-internal += \
 	 ifuncmain1staticpic \
 	 ifuncmain2 ifuncmain2pic ifuncmain3 ifuncmain4 \
 	 ifuncmain5 ifuncmain5pic ifuncmain5staticpic \
-	 ifuncmain7 ifuncmain7pic
+	 ifuncmain7 ifuncmain7pic ifuncpreload1
 ifunc-test-modules = ifuncdep1 ifuncdep1pic ifuncdep2 ifuncdep2pic \
 		     ifuncdep5 ifuncdep5pic
 extra-test-objs += $(ifunc-test-modules:=.o)
@@ -339,7 +339,8 @@ ifunc-pie-tests = ifuncmain1pie ifuncmain1vispie ifuncmain1staticpie \
 tests-internal += $(ifunc-pie-tests)
 tests-pie += $(ifunc-pie-tests)
 endif
-modules-names += ifuncmod1 ifuncmod3 ifuncmod5 ifuncmod6
+modules-names += ifuncmod1 ifuncmod3 ifuncmod5 ifuncmod6 \
+		 ifuncpreloadmod1a ifuncpreloadmod1b
 endif
 endif
 
@@ -884,6 +885,10 @@ $(objpfx)reldep5.out: $(objpfx)reldepmod5.so $(objpfx)reldepmod6.so
 
 $(objpfx)reldep6: $(libdl)
 $(objpfx)reldep6.out: $(objpfx)reldep6mod3.so $(objpfx)reldep6mod4.so
+
+$(objpfx)reldep6a: $(libdl)
+$(objpfx)reldep6a.out: $(objpfx)reldep6mod3.so $(objpfx)reldep6mod4.so
+reldep6a-ENV = LD_BIND_NOW=1
 
 $(objpfx)reldep7: $(libdl)
 $(objpfx)reldep7.out: $(objpfx)reldep7mod1.so $(objpfx)reldep7mod2.so
@@ -1454,3 +1459,8 @@ tst-libc_dlvsym-static-ENV = \
 $(objpfx)tst-libc_dlvsym-static.out: $(objpfx)tst-libc_dlvsym-dso.so
 
 $(objpfx)tst-big-note: $(objpfx)tst-big-note-lib.so
+
+$(objpfx)ifuncpreload1: $(objpfx)ifuncpreloadmod1a.so
+$(objpfx)ifuncpreload1.out: $(objpfx)ifuncpreloadmod1b.so
+ifuncpreload1-ENV = \
+  LD_PRELOAD=$(objpfx)ifuncpreloadmod1b.so LD_BIND_NOW=1
