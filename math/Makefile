@@ -145,10 +145,15 @@ type-float128-yes := float128
 # _Float64x may be supported, only as an alias type.
 type-float64x-yes := float64x
 
+# IBM long double support in additional to IEEE 128 long double support
+type-ibm128-suffix := l
+type-ibm128-yes := ibm128
+
 types = $(types-basic) $(type-float128-$(float128-fcts))
 test-types = $(test-types-basic) $(type-float128-$(float128-fcts)) \
 	     float32 float64 $(type-float128-$(float128-alias-fcts)) \
-	     float32x $(type-float64x-$(float64x-alias-fcts))
+	     float32x $(type-float64x-$(float64x-alias-fcts)) \
+	     $(type-ibm128-$(ibm128-fcts))
 
 # Pairs of types for which narrowing functions should be tested (this
 # variable has more entries than libm-narrow-types because it includes
