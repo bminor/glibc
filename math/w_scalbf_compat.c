@@ -41,18 +41,15 @@ sysv_scalbf (float x, float fn)
 
   return z;
 }
-#endif
 
 
 /* Wrapper scalbf */
 float
 __scalbf (float x, float fn)
 {
-#if LIBM_SVID_COMPAT
   if (__glibc_unlikely (_LIB_VERSION == _SVID_))
     return sysv_scalbf (x, fn);
   else
-#endif
     {
       float z = __ieee754_scalbf (x, fn);
 
@@ -79,3 +76,4 @@ __scalbf (float x, float fn)
     }
 }
 weak_alias (__scalbf, scalbf)
+#endif

@@ -48,7 +48,7 @@ libm-support = s_lib_version s_matherr s_signgam			\
 
 # Wrappers for these functions generated per type using a file named
 # <func>_template.c and the appropriate math-type-macros-<TYPE>.h.
-gen-libm-calls = cargF conjF cimagF crealF cabsF s_cacosF		  \
+gen-libm-calls = cargF conjF cimagF crealF cabsF e_scalbF s_cacosF	  \
 	         s_cacoshF s_ccosF s_ccoshF s_casinF s_csinF s_casinhF	  \
 		 k_casinhF s_csinhF k_casinhF s_csinhF s_catanhF s_catanF \
 		 s_ctanF s_ctanhF s_cexpF s_clogF s_cprojF s_csqrtF	  \
@@ -58,13 +58,14 @@ gen-libm-calls = cargF conjF cimagF crealF cabsF s_cacosF		  \
 		 w_log1pF w_scalblnF s_fmaxmagF s_fminmagF w_acosF	  \
 		 w_acoshF w_asinF w_atan2F w_atanhF w_coshF w_exp10F	  \
 		 w_exp2F w_fmodF w_hypotF w_j0F w_j1F w_jnF w_logF	  \
-		 w_log10F w_log2F w_powF w_remainderF w_sinhF w_sqrtF	  \
+		 w_log10F w_log2F w_powF w_remainderF w_scalbF		  \
+		 w_sinhF w_sqrtF					  \
 		 w_tgammaF w_lgammaF w_lgammaF_r w_expF e_exp2F
 
 libm-calls =								  \
 	e_acosF e_acoshF e_asinF e_atan2F e_atanhF e_coshF e_expF e_fmodF \
 	e_hypotF e_j0F e_j1F e_jnF e_lgammaF_r e_logF e_log10F e_powF	  \
-	e_remainderF e_scalbF e_sinhF e_sqrtF e_gammaF_r	  \
+	e_remainderF e_sinhF e_sqrtF e_gammaF_r				  \
 	e_ilogbF							  \
 	k_tanF s_asinhF s_atanF s_cbrtF					  \
 	s_ceilF s_cosF s_erfF s_expm1F s_fabsF				  \

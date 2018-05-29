@@ -1,3 +1,3 @@
 #define SUFF f
 #define float_type float
-#include <e_scalb.c>
+#include <sysdeps/m68k/m680x0/fpu/e_scalb.c>
