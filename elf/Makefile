@@ -455,10 +455,12 @@ $(objpfx)librtld.map: $(objpfx)dl-allobjs.os $(common-objpfx)libc_pic.a
 	mv -f $@T $@
 
 # For lld, add to regexp below for optional address and size to be at front of line.
+# Also, Google b/79865038 reports that make 3.81 can segfault while iterating over
+# the repeated lib+file entries in the map; work around with sort -u .
 $(objpfx)librtld.mk: $(objpfx)librtld.map Makefile
 	LC_ALL=C \
 	sed -n 's@^[0-9a-f ]*$(common-objpfx)\([^(]*\)(\([^)]*\.os\)) *.*$$@\1 \2@p' \
-	    $< | \
+	    $< | LC_ALL=C sort -u | \
 	while read lib file; do \
 	  case $$lib in \
 	  libc_pic.a) \
