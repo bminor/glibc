@@ -1030,7 +1030,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	    break;
 	  }
 
-      if (__builtin_expect (mode, normal) == verify)
+      if (__glibc_unlikely (mode == verify))
 	{
 	  const char *objname;
 	  const char *err_str = NULL;
@@ -1060,7 +1060,7 @@ of this helper program; chances are you did not intend to run this program.\n\
       /* Now the map for the main executable is available.  */
       main_map = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
 
-      if (__builtin_expect (mode, normal) == normal
+      if (__glibc_likely (mode == normal)
 	  && GL(dl_rtld_map).l_info[DT_SONAME] != NULL
 	  && main_map->l_info[DT_SONAME] != NULL
 	  && strcmp ((const char *) D_PTR (&GL(dl_rtld_map), l_info[DT_STRTAB])
@@ -1291,7 +1291,7 @@ of this helper program; chances are you did not intend to run this program.\n\
       _dl_setup_hash (main_map);
     }
 
-  if (__builtin_expect (mode, normal) == verify)
+  if (__glibc_unlikely (mode == verify))
     {
       /* We were called just to verify that this is a dynamic
 	 executable using us as the program interpreter.  Exit with an
@@ -1749,7 +1749,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
       rtld_multiple_ref = true;
 
       GL(dl_rtld_map).l_prev = main_map->l_searchlist.r_list[i - 1];
-      if (__builtin_expect (mode, normal) == normal)
+      if (__glibc_likely (mode == normal))
 	{
 	  GL(dl_rtld_map).l_next = (i + 1 < main_map->l_searchlist.r_nlist
 				    ? main_map->l_searchlist.r_list[i + 1]
@@ -1803,7 +1803,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
        earlier.  */
     security_init ();
 
-  if (__builtin_expect (mode, normal) != normal)
+  if (__glibc_unlikely (mode != normal))
     {
       /* We were run just to list the shared libraries.  It is
 	 important that we do this before real relocation, because the
@@ -1905,7 +1905,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 			  (size_t) l->l_map_start);
 	}
 
-      if (__builtin_expect (mode, trace) != trace)
+      if (__glibc_unlikely (mode != trace))
 	for (i = 1; i < (unsigned int) _dl_argc; ++i)
 	  {
 	    const ElfW(Sym) *ref = NULL;
@@ -2034,8 +2034,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
     }
 
   if (main_map->l_info[ADDRIDX (DT_GNU_LIBLIST)]
-      && ! __builtin_expect (GLRO(dl_profile) != NULL, 0)
-      && ! __builtin_expect (GLRO(dl_dynamic_weak), 0))
+      && __glibc_likely (GLRO(dl_profile) == NULL && GLRO(dl_dynamic_weak) == 0))
     {
       ElfW(Lib) *liblist, *liblistend;
       struct link_map **r_list, **r_listend, *l;
@@ -2176,7 +2175,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 	     implementation in ld.so.  */
 	  struct libname_list *lnp = l->l_libname->next;
 
-	  while (__builtin_expect (lnp != NULL, 0))
+	  while (__glibc_unlikely (lnp != NULL))
 	    {
 	      lnp->dont_free = 1;
 	      lnp = lnp->next;
@@ -2630,7 +2629,7 @@ process_envvars (enum mode *modep)
 
   /* Extra security for SUID binaries.  Remove all dangerous environment
      variables.  */
-  if (__builtin_expect (__libc_enable_secure, 0))
+  if (__glibc_unlikely (__libc_enable_secure))
     {
       static const char unsecure_envvars[] =
 #ifdef EXTRA_UNSECURE_ENVVARS

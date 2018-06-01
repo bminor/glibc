@@ -48,7 +48,7 @@ _dl_next_tls_modid (void)
 {
   size_t result;
 
-  if (__builtin_expect (GL(dl_tls_dtv_gaps), false))
+  if (__glibc_unlikely (GL(dl_tls_dtv_gaps) != 0))
     {
       size_t disp = 0;
       struct dtv_slotinfo_list *runp = GL(dl_tls_dtv_slotinfo_list);

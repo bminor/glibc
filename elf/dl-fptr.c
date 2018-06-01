@@ -227,8 +227,8 @@ _dl_make_fptr (struct link_map *map, const ElfW(Sym) *sym,
       ElfW(Addr) fdesc
 	= make_fdesc (ip, map->l_info[DT_PLTGOT]->d_un.d_ptr);
 
-      if (__builtin_expect (COMPARE_AND_SWAP (&ftab[symidx], (ElfW(Addr)) NULL,
-					      fdesc), 1))
+      if (__glibc_likely (COMPARE_AND_SWAP (&ftab[symidx], (ElfW(Addr)) NULL,
+                                            fdesc) == 1))
 	{
 	  /* Noone has updated the entry and the new function
 	     descriptor has been installed.  */

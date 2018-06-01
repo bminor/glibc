@@ -120,8 +120,8 @@ _dl_fini (void)
 		      || l->l_info[DT_FINI] != NULL)
 		    {
 		      /* When debugging print a message first.  */
-		      if (__builtin_expect (GLRO(dl_debug_mask)
-					    & DL_DEBUG_IMPCALLS, 0))
+		      if (__glibc_unlikely ((GLRO(dl_debug_mask)
+                                             & DL_DEBUG_IMPCALLS) != 0))
 			_dl_debug_printf ("\ncalling fini: %s [%lu]\n\n",
 					  DSO_FILENAME (l->l_name),
 					  ns);
@@ -146,7 +146,7 @@ _dl_fini (void)
 
 #ifdef SHARED
 		  /* Auditing checkpoint: another object closed.  */
-		  if (!do_audit && __builtin_expect (GLRO(dl_naudit) > 0, 0))
+		  if (!do_audit && __glibc_unlikely (GLRO(dl_naudit) > 0))
 		    {
 		      struct audit_ifaces *afct = GLRO(dl_audit);
 		      for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)

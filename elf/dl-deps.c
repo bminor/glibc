@@ -236,7 +236,7 @@ _dl_map_object_deps (struct link_map *map,
 	  orig = runp;
 
 	  for (d = l->l_ld; d->d_tag != DT_NULL; ++d)
-	    if (__builtin_expect (d->d_tag, DT_NEEDED) == DT_NEEDED)
+	    if (__glibc_likely (d->d_tag == DT_NEEDED))
 	      {
 		/* Map in the needed object.  */
 		struct link_map *dep;
@@ -291,8 +291,8 @@ _dl_map_object_deps (struct link_map *map,
 		args.name = name;
 
 		/* Say that we are about to load an auxiliary library.  */
-		if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS,
-				      0))
+		if (__glibc_unlikely ((GLRO(dl_debug_mask) & DL_DEBUG_LIBS)
+				      != 0))
 		  _dl_debug_printf ("load auxiliary object=%s"
 				    " requested by file=%s\n",
 				    name,
@@ -484,7 +484,7 @@ _dl_map_object_deps (struct link_map *map,
 
   for (nlist = 0, runp = known; runp; runp = runp->next)
     {
-      if (__builtin_expect (trace_mode, 0) && runp->map->l_faked)
+      if (__glibc_unlikely (trace_mode != 0) && runp->map->l_faked)
 	/* This can happen when we trace the loading.  */
 	--map->l_searchlist.r_nlist;
       else
@@ -495,7 +495,7 @@ _dl_map_object_deps (struct link_map *map,
       runp->map->l_reserved = 0;
     }
 
-  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_PRELINK, 0) != 0
+  if (__glibc_unlikely ((GLRO(dl_debug_mask) & DL_DEBUG_PRELINK) != 0)
       && map == GL(dl_ns)[LM_ID_BASE]._ns_loaded)
     {
       /* If we are to compute conflicts, we have to build local scope
@@ -525,8 +525,8 @@ Filters not supported with LD_TRACE_PRELINKING"));
 	  for (j = 0; j < cnt; j++)
 	    {
 	      l_initfini[j]->l_reserved = 0;
-	      if (j && __builtin_expect (l_initfini[j]->l_info[DT_SYMBOLIC]
-					 != NULL, 0))
+	      if (j && __glibc_unlikely (l_initfini[j]->l_info[DT_SYMBOLIC]
+					 != NULL))
 		l->l_symbolic_in_local_scope = true;
 	    }
 

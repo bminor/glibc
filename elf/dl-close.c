@@ -271,8 +271,8 @@ _dl_close_worker (struct link_map *map, bool force)
 	  if (imap->l_init_called)
 	    {
 	      /* When debugging print a message first.  */
-	      if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS,
-				    0))
+	      if (__glibc_unlikely ((GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS)
+				    != 0))
 		_dl_debug_printf ("\ncalling fini: %s [%lu]\n\n",
 				  imap->l_name, nsid);
 
@@ -782,7 +782,7 @@ _dl_close_worker (struct link_map *map, bool force)
     }
 #endif
 
-  if (__builtin_expect (ns->_ns_loaded == NULL, 0)
+  if (__glibc_unlikely (ns->_ns_loaded == NULL)
       && nsid == GL(dl_nns) - 1)
     do
       --GL(dl_nns);
@@ -833,7 +833,7 @@ _dl_close (void *_map)
      should be a detectable case and given that dlclose should be threadsafe
      we need this to be a reliable detection.
      This is bug 20990. */
-  if (__builtin_expect (map->l_direct_opencount, 1) == 0)
+  if (__glibc_unlikely (map->l_direct_opencount == 0))
     {
       __rtld_lock_unlock_recursive (GL(dl_load_lock));
       _dl_signal_error (0, map->l_name, NULL, N_("shared object not open"));

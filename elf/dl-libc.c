@@ -359,7 +359,7 @@ libc_freeres_fn (free_mem)
 	  l->l_initfini = NULL;
 	}
 
-      if (__builtin_expect (GL(dl_ns)[ns]._ns_global_scope_alloc, 0) != 0
+      if (__glibc_unlikely (GL(dl_ns)[ns]._ns_global_scope_alloc != 0)
 	  && (GL(dl_ns)[ns]._ns_main_searchlist->r_nlist
 	      // XXX Check whether we need NS-specific initial_searchlist
 	      == GLRO(dl_initial_searchlist).r_nlist))

@@ -289,7 +289,7 @@ _dl_load_cache_lookup (const char *name)
     }
 
   /* Print our result if wanted.  */
-  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS, 0)
+  if (__glibc_unlikely ((GLRO(dl_debug_mask) & DL_DEBUG_LIBS) != 0)
       && best != NULL)
     _dl_debug_printf ("  trying file=%s\n", best);
 

@@ -31,7 +31,7 @@ _dl_next_ld_env_entry (char ***position)
 
   while (*current != NULL)
     {
-      if (__builtin_expect ((*current)[0] == 'L', 0)
+      if (__glibc_unlikely ((*current)[0] == 'L')
 	  && (*current)[1] == 'D' && (*current)[2] == '_')
 	{
 	  result = &(*current)[3];

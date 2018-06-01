@@ -92,7 +92,7 @@ checking for version `%s' in file %s [%lu] required by file %s [%lu]\n",
     {
       /* Currently the version number of the definition entry is 1.
 	 Make sure all we see is this version.  */
-      if (__builtin_expect (def->vd_version, 1) != 1)
+      if (__glibc_unlikely (def->vd_version != 1))
 	{
 	  char buf[20];
 	  buf[sizeof (buf) - 1] = '\0';
@@ -111,8 +111,7 @@ checking for version `%s' in file %s [%lu] required by file %s [%lu]\n",
 	  ElfW(Verdaux) *aux = (ElfW(Verdaux) *) ((char *) def + def->vd_aux);
 
 	  /* To be safe, compare the string as well.  */
-	  if (__builtin_expect (strcmp (string, strtab + aux->vda_name), 0)
-	      == 0)
+	  if (__glibc_likely (strcmp (string, strtab + aux->vda_name) == 0))
 	    /* Bingo!  */
 	    return 0;
 	}
@@ -182,7 +181,7 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
 
       /* Currently the version number of the needed entry is 1.
 	 Make sure all we see is this version.  */
-      if (__builtin_expect (ent->vn_version, 1) != 1)
+      if (__glibc_unlikely (ent->vn_version != 1))
 	{
 	  char buf[20];
 	  buf[sizeof (buf) - 1] = '\0';
@@ -206,8 +205,8 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
 
 	  /* Make sure this is no stub we created because of a missing
 	     dependency.  */
-	  if (__builtin_expect (! trace_mode, 1)
-	      || ! __builtin_expect (needed->l_faked, 0))
+	  if (__glibc_likely (! trace_mode)
+	      || __glibc_likely (! needed->l_faked))
 	    {
 	      /* NEEDED is the map for the file we need.  Now look for the
 		 dependency symbols.  */

@@ -81,7 +81,7 @@ _dl_fixup (
 
    /* Look up the target symbol.  If the normal lookup rules are not
       used don't look in the global scope.  */
-  if (__builtin_expect (ELFW(ST_VISIBILITY) (sym->st_other), 0) == 0)
+  if (__glibc_likely (ELFW(ST_VISIBILITY) (sym->st_other) == 0))
     {
       const struct r_found_version *version = NULL;
 
@@ -138,7 +138,7 @@ _dl_fixup (
   value = elf_machine_plt_value (l, reloc, value);
 
   if (sym != NULL
-      && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC, 0))
+      && __glibc_unlikely (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC))
     value = elf_ifunc_invoke (DL_FIXUP_VALUE_ADDR (value));
 
   /* Finally, fix up the plt itself.  */
@@ -204,7 +204,7 @@ _dl_profile_fixup (
 
       /* Look up the target symbol.  If the symbol is marked STV_PROTECTED
 	 don't look in the global scope.  */
-      if (__builtin_expect (ELFW(ST_VISIBILITY) (refsym->st_other), 0) == 0)
+      if (__glibc_likely (ELFW(ST_VISIBILITY) (refsym->st_other) == 0))
 	{
 	  const struct r_found_version *version = NULL;
 
@@ -243,8 +243,8 @@ _dl_profile_fixup (
 				       SYMBOL_ADDRESS (result, defsym, false));
 
 	  if (defsym != NULL
-	      && __builtin_expect (ELFW(ST_TYPE) (defsym->st_info)
-				   == STT_GNU_IFUNC, 0))
+	      && __glibc_unlikely (ELFW(ST_TYPE) (defsym->st_info)
+				   == STT_GNU_IFUNC))
 	    value = elf_ifunc_invoke (DL_FIXUP_VALUE_ADDR (value));
 	}
       else
@@ -253,8 +253,8 @@ _dl_profile_fixup (
 	     address) is also known.  */
 	  value = DL_FIXUP_MAKE_VALUE (l, SYMBOL_ADDRESS (l, refsym, true));
 
-	  if (__builtin_expect (ELFW(ST_TYPE) (refsym->st_info)
-				== STT_GNU_IFUNC, 0))
+	  if (__glibc_unlikely (ELFW(ST_TYPE) (refsym->st_info)
+				== STT_GNU_IFUNC))
 	    value = elf_ifunc_invoke (DL_FIXUP_VALUE_ADDR (value));
 
 	  result = l;

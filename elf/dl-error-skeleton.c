@@ -131,8 +131,8 @@ void
 _dl_signal_cexception (int errcode, struct dl_exception *exception,
 		       const char *occasion)
 {
-  if (__builtin_expect (GLRO(dl_debug_mask)
-			& ~(DL_DEBUG_STATISTICS|DL_DEBUG_PRELINK), 0))
+  if (__glibc_unlikely ((GLRO(dl_debug_mask)
+			 & ~(DL_DEBUG_STATISTICS|DL_DEBUG_PRELINK)) != 0))
     _dl_debug_printf ("%s: error: %s: %s (%s)\n",
 		      exception->objname, occasion,
 		      exception->errstring, receiver ? "continued" : "fatal");
@@ -152,8 +152,8 @@ void
 _dl_signal_cerror (int errcode, const char *objname, const char *occation,
 		   const char *errstring)
 {
-  if (__builtin_expect (GLRO(dl_debug_mask)
-			& ~(DL_DEBUG_STATISTICS|DL_DEBUG_PRELINK), 0))
+  if (__glibc_unlikely ((GLRO(dl_debug_mask)
+			 & ~(DL_DEBUG_STATISTICS|DL_DEBUG_PRELINK)) != 0))
     _dl_debug_printf ("%s: error: %s: %s (%s)\n", objname, occation,
 		      errstring, receiver ? "continued" : "fatal");
 
@@ -191,7 +191,7 @@ _dl_catch_exception (struct dl_exception *exception,
   catch_hook = &c;
 
   /* Do not save the signal mask.  */
-  if (__builtin_expect (__sigsetjmp (c.env, 0), 0) == 0)
+  if (__glibc_likely (__sigsetjmp (c.env, 0) == 0))
     {
       (*operate) (args);
       catch_hook = old;

@@ -31,7 +31,7 @@ determine_info (const ElfW(Addr) addr, struct link_map *match, Dl_info *info,
   info->dli_fbase = (void *) match->l_map_start;
 
   /* If this is the main program the information is incomplete.  */
-  if (__builtin_expect (match->l_name[0], 'a') == '\0'
+  if (__glibc_unlikely (match->l_name[0] == '\0')
       && match->l_type == lt_executable)
     info->dli_fname = _dl_argv[0];
 

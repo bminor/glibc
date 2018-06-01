@@ -36,13 +36,13 @@ call_init (struct link_map *l, int argc, char **argv, char **env)
   l->l_init_called = 1;
 
   /* Check for object which constructors we do not run here.  */
-  if (__builtin_expect (l->l_name[0], 'a') == '\0'
+  if (__glibc_unlikely (l->l_name[0] == '\0')
       && l->l_type == lt_executable)
     return;
 
   /* Are there any constructors?  */
   if (l->l_info[DT_INIT] == NULL
-      && __builtin_expect (l->l_info[DT_INIT_ARRAY] == NULL, 1))
+      && __glibc_likely (l->l_info[DT_INIT_ARRAY] == NULL))
     return;
 
   /* Print a debug message if wanted.  */
@@ -88,7 +88,7 @@ _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
     }
 
   /* Don't do anything if there is no preinit array.  */
-  if (__builtin_expect (preinit_array != NULL, 0)
+  if (__glibc_unlikely (preinit_array != NULL)
       && preinit_array_size != NULL
       && (i = preinit_array_size->d_un.d_val / sizeof (ElfW(Addr))) > 0)
     {

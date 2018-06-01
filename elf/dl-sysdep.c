@@ -247,7 +247,7 @@ _dl_sysdep_start (void **start_argptr,
   /* If this is a SUID program we make sure that FDs 0, 1, and 2 are
      allocated.  If necessary we are doing it ourself.  If it is not
      possible we stop the program.  */
-  if (__builtin_expect (__libc_enable_secure, 0))
+  if (__glibc_unlikely (__libc_enable_secure))
     __libc_check_standard_fds ();
 
   (*dl_main) (phdr, phnum, &user_entry, GLRO(dl_auxv));
@@ -332,10 +332,10 @@ _dl_show_auxv (void)
 	{
 	  const char *val = (char *) av->a_un.a_val;
 
-	  if (__builtin_expect (auxvars[idx].form, dec) == dec)
+	  if (__glibc_likely (auxvars[idx].form == dec))
 	    val = _itoa ((unsigned long int) av->a_un.a_val,
 			 buf + sizeof buf - 1, 10, 0);
-	  else if (__builtin_expect (auxvars[idx].form, hex) == hex)
+	  else if (__glibc_likely (auxvars[idx].form == hex))
 	    val = _itoa ((unsigned long int) av->a_un.a_val,
 			 buf + sizeof buf - 1, 16, 0);
 

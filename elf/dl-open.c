@@ -442,7 +442,7 @@ dl_open_worker (void *a)
 	 therefore is not yet initialized.  */
       else if (! imap->l_init_called
 	       /* Only if the module defines thread local data.  */
-	       && __builtin_expect (imap->l_tls_blocksize > 0, 0))
+	       && __glibc_unlikely (imap->l_tls_blocksize > 0))
 	{
 	  /* Now that we know the object is loaded successfully add
 	     modules containing TLS data to the slot info table.  We
@@ -463,7 +463,7 @@ dl_open_worker (void *a)
     }
 
   /* Bump the generation number if necessary.  */
-  if (any_tls && __builtin_expect (++GL(dl_tls_generation) == 0, 0))
+  if (any_tls && __glibc_unlikely (++GL(dl_tls_generation) == 0))
     _dl_fatal_printf (N_("\
 TLS generation counter wrapped!  Please report this."));
 

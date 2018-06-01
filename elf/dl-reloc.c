@@ -95,8 +95,7 @@ _dl_try_allocate_static_tls (struct link_map *map)
   if (map->l_real->l_relocated)
     {
 #ifdef SHARED
-      if (__builtin_expect (THREAD_DTV()[0].counter != GL(dl_tls_generation),
-			    0))
+      if (__glibc_unlikely (THREAD_DTV()[0].counter != GL(dl_tls_generation)))
 	/* Update the slot information data for at least the generation of
 	   the DSO we are allocating data for.  */
 	(void) _dl_update_slotinfo (map->l_tls_modid);
@@ -174,7 +173,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
      do not do this if we are profiling, of course.  */
   // XXX Correct for auditing?
   if (!consider_profiling
-      && __builtin_expect (l->l_info[DT_BIND_NOW] != NULL, 0))
+      && __glibc_unlikely (l->l_info[DT_BIND_NOW] != NULL))
     lazy = 0;
 
   if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_RELOC))
@@ -234,7 +233,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 #define RESOLVE_MAP(ref, version, r_type) \
     ((ELFW(ST_BIND) ((*ref)->st_info) != STB_LOCAL			      \
       && __glibc_likely (!dl_symbol_visibility_binds_local_p (*ref)))	      \
-     ? ((__builtin_expect ((*ref) == l->l_lookup_cache.sym, 0)		      \
+     ? ((__glibc_unlikely ((*ref) == l->l_lookup_cache.sym)		      \
 	 && elf_machine_type_class (r_type) == l->l_lookup_cache.type_class)  \
 	? (bump_num_cache_relocations (),				      \
 	   (*ref) = l->l_lookup_cache.ret,				      \
@@ -285,7 +284,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
   l->l_relocated = 1;
 
   /* Undo the segment protection changes.  */
-  while (__builtin_expect (textrels != NULL, 0))
+  while (__glibc_unlikely (textrels != NULL))
     {
       if (__mprotect (textrels->start, textrels->len, textrels->prot) < 0)
 	{
@@ -344,7 +343,7 @@ _dl_reloc_bad_type (struct link_map *map, unsigned int type, int plt)
 
   cp = __stpcpy (msgbuf, msg[plt]);
 #if __ELF_NATIVE_CLASS == 64
-  if (__builtin_expect(type > 0xff, 0))
+  if (__glibc_unlikely (type > 0xff))
     {
       *cp++ = DIGIT (type >> 28);
       *cp++ = DIGIT (type >> 24);

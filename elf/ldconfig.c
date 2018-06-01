@@ -820,7 +820,7 @@ search_dir (const struct dir_entry *entry)
 	  new_entry->next = NULL;
 	  if (!is_link
 	      && direntry->d_type != DT_UNKNOWN
-	      && __builtin_expect (lstat64 (real_file_name, &lstat_buf), 0))
+	      && __glibc_unlikely (lstat64 (real_file_name, &lstat_buf) != 0))
 	    {
 	      error (0, errno, _("Cannot lstat %s"), file_name);
 	      free (new_entry->path);
@@ -852,7 +852,7 @@ search_dir (const struct dir_entry *entry)
       /* Call lstat64 if not done yet.  */
       if (!is_link
 	  && direntry->d_type != DT_UNKNOWN
-	  && __builtin_expect (lstat64 (real_file_name, &lstat_buf), 0))
+	  && __glibc_unlikely (lstat64 (real_file_name, &lstat_buf) != 0))
 	{
 	  error (0, errno, _("Cannot lstat %s"), file_name);
 	  continue;
