@@ -62,6 +62,7 @@ The following bugs are resolved with this release:
   [23152] gd_GB: Fix typo in "May" (abbreviated)
   [23166] sunrpc: Remove stray exports without --enable-obsolete-rpc
   [23196] __mempcpy_avx512_no_vzeroupper mishandles large copies
+  [23236] Harden function pointers in _IO_str_fields
 
 
 Version 2.27
