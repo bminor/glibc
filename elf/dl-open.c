@@ -494,6 +494,8 @@ TLS generation counter wrapped!  Please report this."));
 	}
     }
 
+  _dl_relocate_apply_relro (new);
+
   /* Notify the debugger all new objects have been relocated.  */
   if (relocation_in_progress)
     LIBC_PROBE (reloc_complete, 3, args->nsid, r, new);

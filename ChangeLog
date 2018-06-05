@@ -1,3 +1,13 @@
+2018-06-05  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/generic/ldsodefs.h (_dl_relocate_apply_relro): Declare.
+	* elf/rtld.c (relocate_doit): Add comment.
+	(dl_main): Call _dl_relocate_apply_relro.
+	* elf/dl-open.c (dl_open_worker): Likewise.
+	* elf/dl-reloc.c (_dl_relocate_object): Do not call
+	_dl_protect_relro.
+	(_dl_relocate_apply_relro): New function.
+
 2019-04-11  Florian Weimer  <fweimer@redhat.com>
 
 	* resolv/nss_dns/dns-network.c (getanswer_r): Do not replace root

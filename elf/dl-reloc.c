@@ -295,13 +295,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 
       textrels = textrels->next;
     }
-
-  /* In case we can protect the data now that the relocations are
-     done, do it.  */
-  if (l->l_relro_size != 0)
-    _dl_protect_relro (l);
 }
-
 
 void
 _dl_protect_relro (struct link_map *l)
@@ -319,6 +313,19 @@ _dl_protect_relro (struct link_map *l)
       static const char errstring[] = N_("\
 cannot apply additional memory protection after relocation");
       _dl_signal_error (errno, l->l_name, NULL, errstring);
+    }
+}
+
+void
+_dl_relocate_apply_relro (struct link_map *new)
+{
+  struct link_map **lp = new->l_searchlist.r_list;
+  struct link_map **end = lp + new->l_searchlist.r_nlist;
+  for (; lp < end; ++lp)
+    {
+      struct link_map *l = *lp;
+      if (l->l_relro_size)
+	_dl_protect_relro (l);
     }
 }
 

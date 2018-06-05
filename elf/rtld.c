@@ -591,6 +591,7 @@ struct version_check_args
   int dotrace;
 };
 
+/* Callback function used during tracing.  */
 static void
 relocate_doit (void *a)
 {
@@ -2312,6 +2313,17 @@ ERROR: '%s': cannot process note segment.\n", _dl_argv[0]);
       _dl_relocate_object (&GL(dl_rtld_map), main_map->l_scope, 0, 0);
 
       rtld_timer_accum (&relocate_time, start);
+    }
+
+  /* Activate RELRO protection.  In the prelink case, this was already
+     done earlier.  */
+  if (! prelinked)
+    {
+      /* Make sure that this covers the dynamic linker as well.
+	 TODO: rtld_multiple_ref is always true because libc.so needs
+	 the dynamic linker internally.  */
+      assert (rtld_multiple_ref);
+      _dl_relocate_apply_relro (main_map);
     }
 
   /* Do any necessary cleanups for the startup OS interface code.
