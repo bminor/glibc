@@ -23,7 +23,7 @@ static char rcsid[] = "$NetBSD: $";
 #include <math-barriers.h>
 #include <math_private.h>
 
-float __nexttowardf(float x, long double y)
+float __nexttowardf(float x, _Float128 y)
 {
 	int32_t hx,ix;
 	int64_t hy,iy;
@@ -38,7 +38,7 @@ float __nexttowardf(float x, long double y)
 	   ((iy>=0x7fff000000000000LL)&&((iy-0x7fff000000000000LL)|ly)!=0))
 				/* y is nan */
 	   return x+y;
-	if((long double) x==y) return y;	/* x=y, return y */
+	if((_Float128) x==y) return y;		/* x=y, return y */
 	if(ix==0) {				/* x == 0 */
 	    float u;
 	    SET_FLOAT_WORD(x,(uint32_t)((hy>>32)&0x80000000)|1);/* return +-minsub*/

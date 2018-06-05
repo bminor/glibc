@@ -91,6 +91,9 @@ libm {
     __nearbyintieee128;
     __nextafterieee128;
     __nextdownieee128;
+    __nexttowardf_to_ieee128;
+    __nexttowardieee128;
+    __nexttoward_to_ieee128;
     __nextupieee128;
     __powieee128;
     __remainderieee128;
