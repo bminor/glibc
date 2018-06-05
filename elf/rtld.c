@@ -574,6 +574,7 @@ struct version_check_args
   int dotrace;
 };
 
+/* Callback function used during tracing.  */
 static void
 relocate_doit (void *a)
 {
@@ -2249,6 +2250,17 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
       HP_TIMING_NOW (stop);
       HP_TIMING_DIFF (add, start, stop);
       HP_TIMING_ACCUM_NT (relocate_time, add);
+    }
+
+  /* Activate RELRO protection.  In the prelink case, this was already
+     done earlier.  */
+  if (! prelinked)
+    {
+      /* Make sure that this covers the dynamic linker as well.
+	 TODO: rtld_multiple_ref is always true because libc.so needs
+	 the dynamic linker internally.  */
+      assert (rtld_multiple_ref);
+      _dl_relocate_apply_relro (main_map);
     }
 
   /* Do any necessary cleanups for the startup OS interface code.

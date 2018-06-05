@@ -937,6 +937,11 @@ extern void _dl_relocate_object (struct link_map *map,
 				 int reloc_mode, int consider_profiling)
      attribute_hidden;
 
+/* Apply RELRO protection for all objects on the search path of NEW.
+   This is the final step of relocation processing for freshly loaded
+   objects.  */
+void _dl_relocate_apply_relro (struct link_map *new) attribute_hidden;
+
 /* Protect PT_GNU_RELRO area.  */
 extern void _dl_protect_relro (struct link_map *map) attribute_hidden;
 
