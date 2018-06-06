@@ -35,7 +35,7 @@
 #include <libc-internal.h>
 
 #include <dl-dst.h>
-
+#include <dl-delayed-reloc.h>
 
 /* We must be careful not to leave us in an inconsistent state.  Thus we
    catch any error and re-raise it after cleaning up.  */
@@ -324,6 +324,9 @@ dl_open_worker (void *a)
   while (l != NULL);
   _dl_sort_maps (maps, nmaps, NULL, false);
 
+  struct dl_delayed_reloc_global delayed_relocations;
+  _dl_delayed_reloc_init (&delayed_relocations);
+
   int relocation_in_progress = 0;
 
   for (unsigned int i = nmaps; i-- > 0; )
@@ -491,6 +494,7 @@ TLS generation counter wrapped!  Please report this."));
 	}
     }
 
+  _dl_delayed_reloc_apply ();
   _dl_relocate_apply_relro (new);
 
   /* Notify the debugger all new objects have been relocated.  */
@@ -608,6 +612,7 @@ no more namespaces available for dlmopen()"));
 	  if ((mode & __RTLD_AUDIT) == 0)
 	    GL(dl_tls_dtv_gaps) = true;
 
+	  _dl_delayed_reloc_clear ();
 	  _dl_close_worker (args.map, true);
 	}
 

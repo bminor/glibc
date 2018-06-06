@@ -41,6 +41,7 @@
 #include <tls.h>
 #include <stap-probe.h>
 #include <stackinfo.h>
+#include <dl-delayed-reloc.h>
 
 #include <assert.h>
 
@@ -2110,6 +2111,9 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 	_dl_show_scope (l, 0);
     }
 
+  /* Used to keep track of delayed IFUNC relocations.  */
+  struct dl_delayed_reloc_global delayed_relocations;
+
   if (prelinked)
     {
       if (main_map->l_info [ADDRIDX (DT_GNU_CONFLICT)] != NULL)
@@ -2166,6 +2170,9 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
       GLRO(dl_lazy) |= consider_profiling;
 
       HP_TIMING_NOW (start);
+
+      _dl_delayed_reloc_init (&delayed_relocations);
+
       unsigned i = main_map->l_searchlist.r_nlist;
       while (i-- > 0)
 	{
@@ -2252,10 +2259,11 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
       HP_TIMING_ACCUM_NT (relocate_time, add);
     }
 
-  /* Activate RELRO protection.  In the prelink case, this was already
-     done earlier.  */
+  /* Perform delayed IFUNC relocations and activate RELRO protection.
+     In the prelink case, this was already done earlier.  */
   if (! prelinked)
     {
+      _dl_delayed_reloc_apply ();
       /* Make sure that this covers the dynamic linker as well.
 	 TODO: rtld_multiple_ref is always true because libc.so needs
 	 the dynamic linker internally.  */

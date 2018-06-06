@@ -202,6 +202,9 @@ struct link_map
     unsigned int l_free_initfini:1; /* Nonzero if l_initfini can be
 				       freed, ie. not allocated with
 				       the dummy malloc in ld.so.  */
+    /* Link maps has pending delayed (IFUNC) relocations.  Only used
+       during relocation.  */
+    unsigned int l_delayed_relocations:1;
 
 #include <link_map.h>
 

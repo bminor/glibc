@@ -33,7 +33,7 @@ dl-routines	= $(addprefix dl-,load lookup object reloc deps hwcaps \
 				  runtime init fini debug misc \
 				  version profile tls origin scope \
 				  execstack open close trampoline \
-				  exception sort-maps)
+				  exception sort-maps delayed-reloc)
 ifeq (yes,$(use-ldconfig))
 dl-routines += dl-cache
 endif

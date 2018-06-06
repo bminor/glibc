@@ -27,6 +27,7 @@
 #include <tls.h>
 #include <dl-tlsdesc.h>
 #include <cpu-features.c>
+#include <dl-delayed-reloc.h>
 
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int __attribute__ ((unused))
@@ -314,22 +315,21 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 	  && __glibc_likely (!skip_ifunc))
 	{
 # ifndef RTLD_BOOTSTRAP
-	  if (sym_map != map
-	      && sym_map->l_type != lt_executable
-	      && !sym_map->l_relocated)
+	  if (!sym_map->l_relocated || sym_map->l_delayed_relocations)
 	    {
-	      const char *strtab
-		= (const char *) D_PTR (map, l_info[DT_STRTAB]);
-	      _dl_error_printf ("\
-%s: Relink `%s' with `%s' for IFUNC symbol `%s'\n",
-				RTLD_PROGNAME, map->l_name,
-				sym_map->l_name,
-				strtab + refsym->st_name);
+	      /* If the target map has not yet been fully relocated,
+		 delay the processing of the relocation until
+		 later.  */
+	      _dl_delayed_reloc_record
+		(map, refsym, reloc, reloc_addr, sym_map, sym);
+	      return;
 	    }
 # endif
 	  value = ((ElfW(Addr) (*) (void)) value) ();
 	}
 
+      /* This switch statement needs to be kept in sync with the
+	 switch statement in _dl_delayed_reloc_machine.  */
       switch (r_type)
 	{
 # ifndef RTLD_BOOTSTRAP
@@ -496,8 +496,14 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 	    /* This can happen in trace mode if an object could not be
 	       found.  */
 	    break;
-	  memcpy (reloc_addr_arg, (void *) value,
-		  MIN (sym->st_size, refsym->st_size));
+	  if (sym_map->l_delayed_relocations)
+	    /* The relocation result could depend on earlier delayed
+	       relocations.  */
+	    _dl_delayed_reloc_record
+	      (map, refsym, reloc, reloc_addr, sym_map, sym);
+	  else
+	    memcpy (reloc_addr_arg, (void *) value,
+		    MIN (sym->st_size, refsym->st_size));
 	  if (__glibc_unlikely (sym->st_size > refsym->st_size)
 	      || (__glibc_unlikely (sym->st_size < refsym->st_size)
 		  && GLRO(dl_verbose)))
@@ -509,9 +515,19 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 	  break;
 #  endif
 	case R_X86_64_IRELATIVE:
-	  value = map->l_addr + reloc->r_addend;
-	  value = ((ElfW(Addr) (*) (void)) value) ();
-	  *reloc_addr = value;
+	  if (map->l_delayed_relocations)
+	    /* We need to delay these IFUNC relocation because the
+	       IFUNC resolver may pick up the address of a symbol
+	       which in turn is determined by a (delayed) IFUNC
+	       relocation.  */
+	    _dl_delayed_reloc_record
+	      (map, refsym, reloc, reloc_addr, map, NULL);
+	  else
+	    {
+	      value = map->l_addr + reloc->r_addend;
+	      value = ((ElfW(Addr) (*) (void)) value) ();
+	      *reloc_addr = value;
+	    }
 	  break;
 	default:
 	  _dl_reloc_bad_type (map, r_type, 0);
