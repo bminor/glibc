@@ -1,3 +1,20 @@
+2018-06-06  Florian Weimer  <fweimer@redhat.com>
+
+	* elf/Makefile (dl-routines): Add delayed-reloc.
+	* elf/rtld.c (dl_main): Call _dl_delayed_reloc_init,
+	_dl_delayed_reloc_apply.
+	* elf/dl-open.c (dl_open_worker): Likewise.
+	(dl_open): Call _dl_delayed_reloc_clear.
+	* include/link.h (struct link_map): Add l_delayed_relocations.
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): Replace warning
+	about relocations against STT_GNU_IFUNC symbols in not-fully
+	relocated objects with delayed relocation recording.  Delay
+	R_X86_64_COPY and R_X86_64_IRELATIVE relocations if necessary.
+	* elf/dl-delayed-reloc.c: New file.
+	* elf/dl-delayed-reloc.h: Likewise.
+	* sysdeps/generic/dl-delayed-reloc-machine.h: Likewise.
+	* sysdeps/x86_64/dl-delayed-reloc-machine.h: Likewise.
+
 2018-06-05  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/generic/ldsodefs.h (_dl_relocate_apply_relro): Declare.

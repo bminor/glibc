@@ -43,6 +43,7 @@
 #include <stap-probe.h>
 #include <stackinfo.h>
 #include <not-cancel.h>
+#include <dl-delayed-reloc.h>
 
 #include <assert.h>
 
@@ -2185,6 +2186,9 @@ ERROR: '%s': cannot process note segment.\n", _dl_argv[0]);
 
   _rtld_main_check (main_map, _dl_argv[0]);
 
+  /* Used to keep track of delayed IFUNC relocations.  */
+  struct dl_delayed_reloc_global delayed_relocations;
+
   if (prelinked)
     {
       if (main_map->l_info [ADDRIDX (DT_GNU_CONFLICT)] != NULL)
@@ -2236,6 +2240,9 @@ ERROR: '%s': cannot process note segment.\n", _dl_argv[0]);
 
       RTLD_TIMING_VAR (start);
       rtld_timer_start (&start);
+
+      _dl_delayed_reloc_init (&delayed_relocations);
+
       unsigned i = main_map->l_searchlist.r_nlist;
       while (i-- > 0)
 	{
@@ -2315,10 +2322,11 @@ ERROR: '%s': cannot process note segment.\n", _dl_argv[0]);
       rtld_timer_accum (&relocate_time, start);
     }
 
-  /* Activate RELRO protection.  In the prelink case, this was already
-     done earlier.  */
+  /* Perform delayed IFUNC relocations and activate RELRO protection.
+     In the prelink case, this was already done earlier.  */
   if (! prelinked)
     {
+      _dl_delayed_reloc_apply ();
       /* Make sure that this covers the dynamic linker as well.
 	 TODO: rtld_multiple_ref is always true because libc.so needs
 	 the dynamic linker internally.  */
