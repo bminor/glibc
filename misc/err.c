@@ -38,19 +38,20 @@ extern char *__progname;
 }
 
 void
-vwarnx (const char *format, __gnuc_va_list ap)
+__vwarnx_internal (const char *format, __gnuc_va_list ap,
+		   unsigned int mode_flags)
 {
   flockfile (stderr);
   __fxprintf (stderr, "%s: ", __progname);
   if (format != NULL)
-    __vfxprintf (stderr, format, ap);
+    __vfxprintf (stderr, format, ap, mode_flags);
   __fxprintf (stderr, "\n");
   funlockfile (stderr);
 }
-libc_hidden_def (vwarnx)
 
 void
-vwarn (const char *format, __gnuc_va_list ap)
+__vwarn_internal (const char *format, __gnuc_va_list ap,
+		   unsigned int mode_flags)
 {
   int error = errno;
 
@@ -58,7 +59,7 @@ vwarn (const char *format, __gnuc_va_list ap)
   if (format != NULL)
     {
       __fxprintf (stderr, "%s: ", __progname);
-      __vfxprintf (stderr, format, ap);
+      __vfxprintf (stderr, format, ap, mode_flags);
       __set_errno (error);
       __fxprintf (stderr, ": %m\n");
     }
@@ -69,8 +70,20 @@ vwarn (const char *format, __gnuc_va_list ap)
     }
   funlockfile (stderr);
 }
+
+void
+vwarn (const char *format, __gnuc_va_list ap)
+{
+  __vwarn_internal (format, ap, 0);
+}
 libc_hidden_def (vwarn)
 
+void
+vwarnx (const char *format, __gnuc_va_list ap)
+{
+  __vwarnx_internal (format, ap, 0);
+}
+libc_hidden_def (vwarnx)
 
 void
 warn (const char *format, ...)

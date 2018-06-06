@@ -1,3 +1,31 @@
+2019-02-21  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
+	* argp/argp-help.c (__argp_error_internal): New function,
+	renamed from __argp_error, but that takes a 'mode_flags'
+	parameter to control the format of long double parameters.
+	(__argp_error): Converted into a call __argp_error_internal.
+	(__argp_failure_internal): New function, renamed from
+	__argp_failure, but that takes a 'mode_flags' parameter.
+	(__argp_failure): Converted into a call __argp_failure_internal.
+	* misc/err.c (__vwarnx_internal): New function, renamed from
+	vwarnx, but that takes a 'mode_flags' parameter.
+	(vwarnx): Converted into a call to __vwarnx_internal.
+	(__vwarn_internal): New function, renamed from vwarn, but that
+	takes a 'mode_flags' parameter.
+	(vwarn): Converted into a call to __vwarn_internal.
+	* misc/error.c (error_tail): Add 'mode_flags' parameter. Update
+	call to __vfxprintf with 'mode_flags'.
+	(__error_internal): New function, renamed from error, but that
+	takes a 'mode_flags' parameter.
+	(error): Converted into a call to __error_internal.
+	(__error_at_line_internal): New function, renamed from
+	error_at_line, but that takes a 'mode_flags' parameter.
+	(error_at_line): Converted into a call to
+	__error_at_line_internal.
+	* include/stdio.h (__vfxprintf): Add mode_flags parameter.
+	* stdio-common/fxprintf.c (locked_vfxprintf, __vfxprintf):
+	Likewise.
+
 2019-02-20  Martin Liska  <mliska@suse.cz>
 
 	* math/Makefile: Install math-vector-fortran.h.
