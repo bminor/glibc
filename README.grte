@@ -1,0 +1,61 @@
+This file documents Google's modified version of glibc, known as GRTE
+(Google Run Time Environment).  GRTE serves as the common C library for
+internal Google applications running on production systems.
+
+While GRTE is nearly identical to stock glibc, it does have a number
+of local changes.  These run the gamut from patches that were
+submitted but not accepted for trunk glibc, to workarounds for quirks
+of Google infrastructure, to extensions that are critical for the
+proper functioning of applications.  The ideal, however, is to have no
+local changes at all.
+
+GRTE versions are identified by a small integer, which generally
+corresponds to a particular glibc version.  GRTE v4 is based on
+glibc-2.19, while GRTE v5 is based on glibc-2.27, for instance.
+
+BUILDING GRTE WITH GCC
+
+When using GCC, GRTE v4 and later will build with native
+configure/make in the usual way for glibc.  For v4, nscd does not
+work, so add --disable-nscd when configuring.
+
+Supported architectures include x86_64 and ppc64le.
+
+Testsuites will likely have some additional failures.
+
+BUILDING GRTE WITH CLANG
+
+GRTE v5 and later can also be built with clang and (optionally) lld.
+LLVM support for GNU source code continues to evolve (as of June
+2018), so the process is less straightforward, and likely to change
+from what is documented here.  There are a number of glibc patches
+that make this work, including additional configure options mentioned
+below.
+
+The minimum version of clang is 6.0.0.  If lld is to be used for linking,
+it needs to be newer than 6.0.0.
+
+Configure:
+
+  CC=path-to-llvm/clang CXX=path-to-llvm/clang \
+    ../glibc/configure --disable-werror --with-clang --disable-float128 \
+      --with-lld --with-default-link --prefix=/something
+
+To build with BFD ld as linker, omit the "--with-lld
+--with-default-link".  (Gold has had problems in the past.)
+
+Build:
+
+  make
+  make install
+
+To test:
+
+  make check
+
+Testsuite results will show many unexpected failures beyond the
+GCC-compiled results; about 390 for x86-64.  These are a combination
+of known bugs in clang, and issues with conformance to old standards
+predating clang.  Note that the clang build still needs symlinks to
+libgcc and libstdc++ in the installed library directory, so that
+thread cancellation tests pass.
