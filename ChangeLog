@@ -10,6 +10,7 @@
 	* sysdeps/unix/sysv/linux/spawni.c (__spawni): Do not interpret invalid
 	binaries as shell scripts.
 	* sysdeps/posix/spawni.c (__spawni): Likewise.
+	* NEWS: Add BZ#22264.
 
 2018-06-01  Florian Weimer  <fweimer@redhat.com>
 
