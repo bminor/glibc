@@ -154,3 +154,17 @@
    */
 
 #define __ASSUME_CLONE_DEFAULT 1
+
+/* Support for Y2038-proof times.
+
+   If defined, the underlying kernel always provides a set of syscalls
+   (__NR_* names and numbers) which can handle times beyond Y2038.
+
+   If undefined, whether the underlying kernel provides this set or not
+   must be checked dynamically.
+
+   Definition is commented out until Y2038 syscalls are merged in the
+   kernel.
+   */
+
+/* #define __ASSUME_KERNEL_Y2038_SUPPORT 1 */

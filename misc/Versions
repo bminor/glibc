@@ -158,6 +158,8 @@ libc {
   GLIBC_2.26 {
     preadv2; preadv64v2; pwritev2; pwritev64v2;
   }
+  GLIBC_2.29 {
+  }
   GLIBC_PRIVATE {
     __madvise;
     __mktemp;
@@ -166,5 +168,7 @@ libc {
     __mmap; __munmap; __mprotect;
     __sched_get_priority_min; __sched_get_priority_max;
     __libc_allocate_once_slow;
+    __y2038_get_kernel_support;
+    __y2038_set_kernel_support;
   }
 }

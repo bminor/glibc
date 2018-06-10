@@ -71,7 +71,7 @@ routines := brk sbrk sstk ioctl \
 	    fgetxattr flistxattr fremovexattr fsetxattr getxattr \
 	    listxattr lgetxattr llistxattr lremovexattr lsetxattr \
 	    removexattr setxattr getauxval ifunc-impl-list makedev \
-	    allocate_once
+	    allocate_once y2038-support
 
 generated += tst-error1.mtrace tst-error1-mem.out \
   tst-allocate_once.mtrace tst-allocate_once-mem.out
