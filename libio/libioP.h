@@ -759,9 +759,21 @@ extern off64_t _IO_seekpos_unlocked (FILE *, off64_t, int)
    allocation for input strings with %as, %aS and %a[, a GNU extension,
    is disabled. This is the behavior that the __isoc99_scanf family of
    functions use.  When the flag is set to zero, automatic allocation is
-   enabled.  */
-#define SCANF_LDBL_IS_DBL 0x0001
-#define SCANF_ISOC99_A    0x0002
+   enabled.
+
+   SCANF_LDBL_USES_FLOAT128 is used on platforms where the long double
+   format used to be different from the IEC 60559 double format *and*
+   also different from the Quadruple 128-bits IEC 60559 format (such as
+   the IBM Extended Precision format on powerpc or the 80-bits IEC 60559
+   format on x86), but was later converted to the Quadruple 128-bits IEC
+   60559 format, which is the same format that the _Float128 always has
+   (hence the `USES_FLOAT128' suffix in the name of the flag).  When set
+   to one, this macros indicates that long double values are to be
+   handled as having this new format.  Otherwise, they should be handled
+   as the previous format on that platform.  */
+#define SCANF_LDBL_IS_DBL		0x0001
+#define SCANF_ISOC99_A			0x0002
+#define SCANF_LDBL_USES_FLOAT128	0x0004
 
 extern int __vfscanf_internal (FILE *fp, const char *format, va_list argp,
 			       unsigned int flags)

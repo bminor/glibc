@@ -1,3 +1,15 @@
+2018-12-07  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
+	* libio/libioP.h (SCANF_LDBL_USES_FLOAT128): New macro to be
+	used as a mask for the mode argument of __vfscanf_internal and
+	__vfwscanf_internal.
+	* stdio-common/vfscanf-internal.c
+	[defined COMPILE_WSCANF && __HAVE_FLOAT128_UNLIKE_LDBL]
+	(__strtof128_internal): Define to __wcstof128_internal.
+	[__HAVE_FLOAT128_UNLIKE_LDBL] (__vfscanf_internal): Call
+	__strtof128_internal or __wcstof128_internal when the format of
+	long double is the same as _Float128.
+
 2018-12-05  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* include/unistd.h (__confstr): Add prototype and hidden prototype.

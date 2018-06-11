@@ -98,6 +98,9 @@
 # define __strtold_internal	__wcstold_internal
 # define __strtod_internal	__wcstod_internal
 # define __strtof_internal	__wcstof_internal
+# if __HAVE_FLOAT128_UNLIKE_LDBL
+#  define __strtof128_internal	__wcstof128_internal
+# endif
 
 # define L_(Str)	L##Str
 # define CHAR_T		wchar_t
@@ -2420,6 +2423,17 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 	      done = EOF;
 	      goto errout;
 	    }
+#if __HAVE_FLOAT128_UNLIKE_LDBL
+	  if ((flags & LONGDBL) \
+	       && (mode_flags & SCANF_LDBL_USES_FLOAT128) != 0)
+	    {
+	      _Float128 d = __strtof128_internal
+		(char_buffer_start (&charbuf), &tw, flags & GROUP);
+	      if (!(flags & SUPPRESS) && tw != char_buffer_start (&charbuf))
+		*ARG (_Float128 *) = d;
+	    }
+	  else
+#endif
 	  if ((flags & LONGDBL) \
 	      && __glibc_likely ((mode_flags & SCANF_LDBL_IS_DBL) == 0))
 	    {
