@@ -1,5 +1,17 @@
 2018-09-12  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
+	* NEWS: Mention log2 improvements.
+	* math/Makefile (type-double-routines): Add e_log2_data.
+	* sysdeps/i386/fpu/e_log2_data.c: New file.
+	* sysdeps/ia64/fpu/e_log2_data.c: New file.
+	* sysdeps/ieee754/dbl-64/e_log2.c: Rewrite.
+	* sysdeps/ieee754/dbl-64/e_log2_data.c: New file.
+	* sysdeps/ieee754/dbl-64/math_config.h (__log2_data): Add.
+	* sysdeps/ieee754/dbl-64/wordsize-64/e_log2.c: Remove.
+	* sysdeps/m68k/m680x0/fpu/e_log2_data.c: New file.
+
+2018-09-12  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
 	* NEWS: Mention log improvement.
 	* math/Makefile (type-double-routines): Add e_log_data.
 	* sysdeps/i386/fpu/e_log_data.c: New file.

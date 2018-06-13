@@ -1,133 +1,141 @@
-/* Adapted for log2 by Ulrich Drepper <drepper@cygnus.com>.  */
-/*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
- */
+/* Double-precision log2(x) function.
+   Copyright (C) 2018 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-/* __ieee754_log2(x)
- * Return the logarithm to base 2 of x
- *
- * Method :
- *   1. Argument Reduction: find k and f such that
- *			x = 2^k * (1+f),
- *	   where  sqrt(2)/2 < 1+f < sqrt(2) .
- *
- *   2. Approximation of log(1+f).
- *	Let s = f/(2+f) ; based on log(1+f) = log(1+s) - log(1-s)
- *		 = 2s + 2/3 s**3 + 2/5 s**5 + .....,
- *		 = 2s + s*R
- *      We use a special Reme algorithm on [0,0.1716] to generate
- *	a polynomial of degree 14 to approximate R The maximum error
- *	of this polynomial approximation is bounded by 2**-58.45. In
- *	other words,
- *			2      4      6      8      10      12      14
- *	    R(z) ~ Lg1*s +Lg2*s +Lg3*s +Lg4*s +Lg5*s  +Lg6*s  +Lg7*s
- *	(the values of Lg1 to Lg7 are listed in the program)
- *	and
- *	    |      2          14          |     -58.45
- *	    | Lg1*s +...+Lg7*s    -  R(z) | <= 2
- *	    |                             |
- *	Note that 2s = f - s*f = f - hfsq + s*hfsq, where hfsq = f*f/2.
- *	In order to guarantee error in log below 1ulp, we compute log
- *	by
- *		log(1+f) = f - s*(f - R)	(if f is not too large)
- *		log(1+f) = f - (hfsq - s*(hfsq+R)).	(better accuracy)
- *
- *	3. Finally,  log(x) = k + log(1+f).
- *			    = k+(f-(hfsq-(s*(hfsq+R))))
- *
- * Special cases:
- *	log2(x) is NaN with signal if x < 0 (including -INF) ;
- *	log2(+INF) is +INF; log(0) is -INF with signal;
- *	log2(NaN) is that NaN with no signal.
- *
- * Constants:
- * The hexadecimal values are the intended ones for the following
- * constants. The decimal values may be used, provided that the
- * compiler will convert from decimal to binary accurately enough
- * to produce the hexadecimal values shown.
- */
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
-#include <math_private.h>
-#include <fix-int-fp-convert-zero.h>
+#include <stdint.h>
+#include "math_config.h"
 
-static const double ln2 = 0.69314718055994530942;
-static const double two54 = 1.80143985094819840000e+16; /* 43500000 00000000 */
-static const double Lg1 = 6.666666666666735130e-01;     /* 3FE55555 55555593 */
-static const double Lg2 = 3.999999999940941908e-01;     /* 3FD99999 9997FA04 */
-static const double Lg3 = 2.857142874366239149e-01;     /* 3FD24924 94229359 */
-static const double Lg4 = 2.222219843214978396e-01;     /* 3FCC71C5 1D8E78AF */
-static const double Lg5 = 1.818357216161805012e-01;     /* 3FC74664 96CB03DE */
-static const double Lg6 = 1.531383769920937332e-01;     /* 3FC39A09 D078C69F */
-static const double Lg7 = 1.479819860511658591e-01;     /* 3FC2F112 DF3E5244 */
+#define T __log2_data.tab
+#define T2 __log2_data.tab2
+#define B __log2_data.poly1
+#define A __log2_data.poly
+#define InvLn2hi __log2_data.invln2hi
+#define InvLn2lo __log2_data.invln2lo
+#define N (1 << LOG2_TABLE_BITS)
+#define OFF 0x3fe6000000000000
 
-static const double zero = 0.0;
+/* Top 16 bits of a double.  */
+static inline uint32_t
+top16 (double x)
+{
+  return asuint64 (x) >> 48;
+}
 
 double
 __ieee754_log2 (double x)
 {
-  double hfsq, f, s, z, R, w, t1, t2, dk;
-  int32_t k, hx, i, j;
-  uint32_t lx;
+  /* double_t for better performance on targets with FLT_EVAL_METHOD==2.  */
+  double_t z, r, r2, r4, y, invc, logc, kd, hi, lo, t1, t2, t3, p;
+  uint64_t ix, iz, tmp;
+  uint32_t top;
+  int k, i;
 
-  EXTRACT_WORDS (hx, lx, x);
+  ix = asuint64 (x);
+  top = top16 (x);
 
-  k = 0;
-  if (hx < 0x00100000)
-    {                           /* x < 2**-1022  */
-      if (__glibc_unlikely (((hx & 0x7fffffff) | lx) == 0))
-	return -two54 / fabs (x);        /* log(+-0)=-inf */
-      if (__glibc_unlikely (hx < 0))
-	return (x - x) / (x - x);       /* log(-#) = NaN */
-      k -= 54;
-      x *= two54;               /* subnormal number, scale up x */
-      GET_HIGH_WORD (hx, x);
-    }
-  if (__glibc_unlikely (hx >= 0x7ff00000))
-    return x + x;
-  k += (hx >> 20) - 1023;
-  hx &= 0x000fffff;
-  i = (hx + 0x95f64) & 0x100000;
-  SET_HIGH_WORD (x, hx | (i ^ 0x3ff00000));     /* normalize x or x/2 */
-  k += (i >> 20);
-  dk = (double) k;
-  f = x - 1.0;
-  if ((0x000fffff & (2 + hx)) < 3)
-    {                           /* |f| < 2**-20 */
-      if (f == zero)
-	{
-	  if (FIX_INT_FP_CONVERT_ZERO && dk == 0.0)
-	    dk = 0.0;
-	  return dk;
-	}
-      R = f * f * (0.5 - 0.33333333333333333 * f);
-      return dk - (R - f) / ln2;
-    }
-  s = f / (2.0 + f);
-  z = s * s;
-  i = hx - 0x6147a;
-  w = z * z;
-  j = 0x6b851 - hx;
-  t1 = w * (Lg2 + w * (Lg4 + w * Lg6));
-  t2 = z * (Lg1 + w * (Lg3 + w * (Lg5 + w * Lg7)));
-  i |= j;
-  R = t2 + t1;
-  if (i > 0)
+#define LO asuint64 (1.0 - 0x1.5b51p-5)
+#define HI asuint64 (1.0 + 0x1.6ab2p-5)
+  if (__glibc_unlikely (ix - LO < HI - LO))
     {
-      hfsq = 0.5 * f * f;
-      return dk - ((hfsq - (s * (hfsq + R))) - f) / ln2;
+      /* Handle close to 1.0 inputs separately.  */
+      /* Fix sign of zero with downward rounding when x==1.  */
+      if (WANT_ROUNDING && __glibc_unlikely (ix == asuint64 (1.0)))
+	return 0;
+      r = x - 1.0;
+#ifdef __FP_FAST_FMA
+      hi = r * InvLn2hi;
+      lo = r * InvLn2lo + __builtin_fma (r, InvLn2hi, -hi);
+#else
+      double_t rhi, rlo;
+      rhi = asdouble (asuint64 (r) & -1ULL << 32);
+      rlo = r - rhi;
+      hi = rhi * InvLn2hi;
+      lo = rlo * InvLn2hi + r * InvLn2lo;
+#endif
+      r2 = r * r; /* rounding error: 0x1p-62.  */
+      r4 = r2 * r2;
+      /* Worst-case error is less than 0.54 ULP (0.55 ULP without fma).  */
+      p = r2 * (B[0] + r * B[1]);
+      y = hi + p;
+      lo += hi - y + p;
+      lo += r4 * (B[2] + r * B[3] + r2 * (B[4] + r * B[5])
+		  + r4 * (B[6] + r * B[7] + r2 * (B[8] + r * B[9])));
+      y += lo;
+      return y;
     }
-  else
+  if (__glibc_unlikely (top - 0x0010 >= 0x7ff0 - 0x0010))
     {
-      return dk - ((s * (f - R)) - f) / ln2;
+      /* x < 0x1p-1022 or inf or nan.  */
+      if (ix * 2 == 0)
+	return __math_divzero (1);
+      if (ix == asuint64 (INFINITY)) /* log(inf) == inf.  */
+	return x;
+      if ((top & 0x8000) || (top & 0x7ff0) == 0x7ff0)
+	return __math_invalid (x);
+      /* x is subnormal, normalize it.  */
+      ix = asuint64 (x * 0x1p52);
+      ix -= 52ULL << 52;
     }
+
+  /* x = 2^k z; where z is in range [OFF,2*OFF) and exact.
+     The range is split into N subintervals.
+     The ith subinterval contains z and c is near its center.  */
+  tmp = ix - OFF;
+  i = (tmp >> (52 - LOG2_TABLE_BITS)) % N;
+  k = (int64_t) tmp >> 52; /* arithmetic shift */
+  iz = ix - (tmp & 0xfffULL << 52);
+  invc = T[i].invc;
+  logc = T[i].logc;
+  z = asdouble (iz);
+  kd = (double_t) k;
+
+  /* log2(x) = log2(z/c) + log2(c) + k.  */
+  /* r ~= z/c - 1, |r| < 1/(2*N).  */
+#ifdef __FP_FAST_FMA
+  /* rounding error: 0x1p-55/N.  */
+  r = __builtin_fma (z, invc, -1.0);
+  t1 = r * InvLn2hi;
+  t2 = r * InvLn2lo + __builtin_fma (r, InvLn2hi, -t1);
+#else
+  double_t rhi, rlo;
+  /* rounding error: 0x1p-55/N + 0x1p-65.  */
+  r = (z - T2[i].chi - T2[i].clo) * invc;
+  rhi = asdouble (asuint64 (r) & -1ULL << 32);
+  rlo = r - rhi;
+  t1 = rhi * InvLn2hi;
+  t2 = rlo * InvLn2hi + r * InvLn2lo;
+#endif
+
+  /* hi + lo = r/ln2 + log2(c) + k.  */
+  t3 = kd + logc;
+  hi = t3 + t1;
+  lo = t3 - hi + t1 + t2;
+
+  /* log2(r+1) = r/ln2 + r^2*poly(r).  */
+  /* Evaluation is optimized assuming superscalar pipelined execution.  */
+  r2 = r * r; /* rounding error: 0x1p-54/N^2.  */
+  r4 = r2 * r2;
+  /* Worst-case error if |y| > 0x1p-4: 0.547 ULP (0.550 ULP without fma).
+     ~ 0.5 + 2/N/ln2 + abs-poly-error*0x1p56 ULP (+ 0.003 ULP without fma).  */
+  p = A[0] + r * A[1] + r2 * (A[2] + r * A[3]) + r4 * (A[4] + r * A[5]);
+  y = lo + r2 * p + hi;
+  return y;
 }
-
+#ifndef __ieee754_log2
 strong_alias (__ieee754_log2, __log2_finite)
+#endif

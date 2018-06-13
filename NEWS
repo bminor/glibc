@@ -16,7 +16,7 @@ Major new features:
   to set the install root if you wish to install into a non-default
   configured location.
 
-* Optimized generic exp, exp2, log, sinf, cosf, sincosf and tanf.
+* Optimized generic exp, exp2, log, log2, sinf, cosf, sincosf and tanf.
 
 * The reallocarray function is now declared under _DEFAULT_SOURCE, not just
   for _GNU_SOURCE, to match BSD environments.
