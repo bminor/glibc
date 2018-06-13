@@ -26,7 +26,8 @@ headers		= argp.h
 routines	= $(addprefix argp-, ba fmtstream fs-xinl help parse pv \
 				     pvh xinl eexst)
 
-tests		= argp-test tst-argp1 bug-argp1 tst-argp2 bug-argp2
+tests		= argp-test tst-argp1 bug-argp1 tst-argp2 bug-argp2 \
+		  tst-ldbl-argp
 
 CFLAGS-argp-help.c += $(uses-callbacks) -fexceptions
 CFLAGS-argp-parse.c += $(uses-callbacks)

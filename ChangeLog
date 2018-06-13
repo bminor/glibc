@@ -1,3 +1,8 @@
+2018-11-06  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
+	* argp/Makefile (tests): Add tst-ldbl-argp.
+	* argp/tst-ldbl-argp.c: New file.
+
 2018-11-05  Arjun Shankar  <arjun@redhat.com>
 
 	* iconv/gconv_conf.c (__gconv_read_conf): Remove NULL check for
