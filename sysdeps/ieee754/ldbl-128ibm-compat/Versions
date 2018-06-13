@@ -47,6 +47,14 @@ libm {
     __exp2ieee128;
     __expieee128;
     __expm1ieee128;
+    __f32addieee128;
+    __f32divieee128;
+    __f32mulieee128;
+    __f32subieee128;
+    __f64addieee128;
+    __f64divieee128;
+    __f64mulieee128;
+    __f64subieee128;
     __fabsieee128;
     __fdimieee128;
     __floorieee128;

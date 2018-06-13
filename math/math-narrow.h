@@ -352,19 +352,6 @@
   weak_alias (__f64 ## func ## f128, f64 ## func ## f128)	\
   weak_alias (__f64 ## func ## f128, f32x ## func ## f128)
 
-#if __HAVE_FLOAT64X_LONG_DOUBLE
-# define libm_alias_float32_float128(func)	\
-  libm_alias_float32_float128_main (func)
-# define libm_alias_float64_float128(func)	\
-  libm_alias_float64_float128_main (func)
-#else
-# define libm_alias_float32_float128(func)			\
-  libm_alias_float32_float128_main (func)			\
-  weak_alias (__f32 ## func ## f128, f32 ## func ## f64x)
-# define libm_alias_float64_float128(func)			\
-  libm_alias_float64_float128_main (func)			\
-  weak_alias (__f64 ## func ## f128, f64 ## func ## f64x)	\
-  weak_alias (__f64 ## func ## f128, f32x ## func ## f64x)
-#endif
+#include <math-narrow-alias-float128.h>
 
 #endif /* math-narrow.h.  */
