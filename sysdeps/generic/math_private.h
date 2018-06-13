@@ -225,7 +225,6 @@ do {								\
 
 
 /* Prototypes for functions of the IBM Accurate Mathematical Library.  */
-extern double __exp1 (double __x, double __xx);
 extern double __sin (double __x);
 extern double __cos (double __x);
 extern int __branred (double __x, double *__a, double *__aa);

@@ -21,6 +21,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <nan-high-order-bit.h>
 #include <stdint.h>
 
 #ifndef WANT_ROUNDING
@@ -76,6 +77,15 @@ asdouble (uint64_t i)
     double f;
   } u = {i};
   return u.f;
+}
+
+static inline int
+issignaling_inline (double x)
+{
+  uint64_t ix = asuint64 (x);
+  if (HIGH_ORDER_BIT_IS_SET_FOR_SNAN)
+    return (ix & 0x7ff8000000000000) == 0x7ff8000000000000;
+  return 2 * (ix ^ 0x0008000000000000) > 2 * 0x7ff8000000000000ULL;
 }
 
 #define NOINLINE __attribute__ ((noinline))
@@ -164,5 +174,17 @@ extern const struct log2_data
   struct {double chi, clo;} tab2[1 << LOG2_TABLE_BITS];
 #endif
 } __log2_data attribute_hidden;
+
+#define POW_LOG_TABLE_BITS 7
+#define POW_LOG_POLY_ORDER 8
+extern const struct pow_log_data
+{
+  double ln2hi;
+  double ln2lo;
+  double poly[POW_LOG_POLY_ORDER - 1]; /* First coefficient is 1.  */
+  /* Note: the pad field is unused, but allows slightly faster indexing.  */
+  /* See e_pow_log_data.c for details.  */
+  struct {double invc, pad, logc, logctail;} tab[1 << POW_LOG_TABLE_BITS];
+} __pow_log_data attribute_hidden;
 
 #endif

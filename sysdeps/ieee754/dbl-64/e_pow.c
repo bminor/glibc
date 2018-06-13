@@ -1,360 +1,380 @@
-/*
- * IBM Accurate Mathematical Library
- * written by International Business Machines Corp.
- * Copyright (C) 2001-2018 Free Software Foundation, Inc.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation; either version 2.1 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program; if not, see <http://www.gnu.org/licenses/>.
- */
-/***************************************************************************/
-/*  MODULE_NAME: upow.c                                                    */
-/*                                                                         */
-/*  FUNCTIONS: upow                                                        */
-/*             log1                                                        */
-/*             checkint                                                    */
-/* FILES NEEDED: dla.h endian.h mpa.h mydefs.h                             */
-/*               root.tbl uexp.tbl upow.tbl                                */
-/* An ultimate power routine. Given two IEEE double machine numbers y,x    */
-/* it computes the correctly rounded (to nearest) value of x^y.            */
-/* Assumption: Machine arithmetic operations are performed in              */
-/* round to nearest mode of IEEE 754 standard.                             */
-/*                                                                         */
-/***************************************************************************/
+/* Double-precision x^y function.
+   Copyright (C) 2018 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
 #include <math.h>
-#include "endian.h"
-#include "upow.h"
-#include <dla.h>
-#include "mydefs.h"
-#include "MathLib.h"
-#include "upow.tbl"
-#include <math_private.h>
-#include <fenv_private.h>
-#include <math-underflow.h>
-#include <fenv.h>
+#include <stdint.h>
+#include <math-barriers.h>
+#include <math-narrow-eval.h>
+#include "math_config.h"
+
+/*
+Worst-case error: 0.54 ULP (~= ulperr_exp + 1024*Ln2*relerr_log*2^53)
+relerr_log: 1.3 * 2^-68 (Relative error of log, 1.5 * 2^-68 without fma)
+ulperr_exp: 0.509 ULP (ULP error of exp, 0.511 ULP without fma)
+*/
+
+#define T __pow_log_data.tab
+#define A __pow_log_data.poly
+#define Ln2hi __pow_log_data.ln2hi
+#define Ln2lo __pow_log_data.ln2lo
+#define N (1 << POW_LOG_TABLE_BITS)
+#define OFF 0x3fe6955500000000
+
+/* Top 12 bits of a double (sign and exponent bits).  */
+static inline uint32_t
+top12 (double x)
+{
+  return asuint64 (x) >> 52;
+}
+
+/* Compute y+TAIL = log(x) where the rounded result is y and TAIL has about
+   additional 15 bits precision.  IX is the bit representation of x, but
+   normalized in the subnormal range using the sign bit for the exponent.  */
+static inline double_t
+log_inline (uint64_t ix, double_t *tail)
+{
+  /* double_t for better performance on targets with FLT_EVAL_METHOD==2.  */
+  double_t z, r, y, invc, logc, logctail, kd, hi, t1, t2, lo, lo1, lo2, p;
+  uint64_t iz, tmp;
+  int k, i;
+
+  /* x = 2^k z; where z is in range [OFF,2*OFF) and exact.
+     The range is split into N subintervals.
+     The ith subinterval contains z and c is near its center.  */
+  tmp = ix - OFF;
+  i = (tmp >> (52 - POW_LOG_TABLE_BITS)) % N;
+  k = (int64_t) tmp >> 52; /* arithmetic shift */
+  iz = ix - (tmp & 0xfffULL << 52);
+  z = asdouble (iz);
+  kd = (double_t) k;
+
+  /* log(x) = k*Ln2 + log(c) + log1p(z/c-1).  */
+  invc = T[i].invc;
+  logc = T[i].logc;
+  logctail = T[i].logctail;
+
+  /* Note: 1/c is j/N or j/N/2 where j is an integer in [N,2N) and
+     |z/c - 1| < 1/N, so r = z/c - 1 is exactly representible.  */
+#ifdef __FP_FAST_FMA
+  r = __builtin_fma (z, invc, -1.0);
+#else
+  /* Split z such that rhi, rlo and rhi*rhi are exact and |rlo| <= |r|.  */
+  double_t zhi = asdouble ((iz + (1ULL << 31)) & (-1ULL << 32));
+  double_t zlo = z - zhi;
+  double_t rhi = zhi * invc - 1.0;
+  double_t rlo = zlo * invc;
+  r = rhi + rlo;
+#endif
+
+  /* k*Ln2 + log(c) + r.  */
+  t1 = kd * Ln2hi + logc;
+  t2 = t1 + r;
+  lo1 = kd * Ln2lo + logctail;
+  lo2 = t1 - t2 + r;
+
+  /* Evaluation is optimized assuming superscalar pipelined execution.  */
+  double_t ar, ar2, ar3, lo3, lo4;
+  ar = A[0] * r; /* A[0] = -0.5.  */
+  ar2 = r * ar;
+  ar3 = r * ar2;
+  /* k*Ln2 + log(c) + r + A[0]*r*r.  */
+#ifdef __FP_FAST_FMA
+  hi = t2 + ar2;
+  lo3 = __builtin_fma (ar, r, -ar2);
+  lo4 = t2 - hi + ar2;
+#else
+  double_t arhi = A[0] * rhi;
+  double_t arhi2 = rhi * arhi;
+  hi = t2 + arhi2;
+  lo3 = rlo * (ar + arhi);
+  lo4 = t2 - hi + arhi2;
+#endif
+  /* p = log1p(r) - r - A[0]*r*r.  */
+  p = (ar3
+       * (A[1] + r * A[2] + ar2 * (A[3] + r * A[4] + ar2 * (A[5] + r * A[6]))));
+  lo = lo1 + lo2 + lo3 + lo4 + p;
+  y = hi + lo;
+  *tail = hi - y + lo;
+  return y;
+}
+
+#undef N
+#undef T
+#define N (1 << EXP_TABLE_BITS)
+#define InvLn2N __exp_data.invln2N
+#define NegLn2hiN __exp_data.negln2hiN
+#define NegLn2loN __exp_data.negln2loN
+#define Shift __exp_data.shift
+#define T __exp_data.tab
+#define C2 __exp_data.poly[5 - EXP_POLY_ORDER]
+#define C3 __exp_data.poly[6 - EXP_POLY_ORDER]
+#define C4 __exp_data.poly[7 - EXP_POLY_ORDER]
+#define C5 __exp_data.poly[8 - EXP_POLY_ORDER]
+#define C6 __exp_data.poly[9 - EXP_POLY_ORDER]
+
+/* Handle cases that may overflow or underflow when computing the result that
+   is scale*(1+TMP) without intermediate rounding.  The bit representation of
+   scale is in SBITS, however it has a computed exponent that may have
+   overflown into the sign bit so that needs to be adjusted before using it as
+   a double.  (int32_t)KI is the k used in the argument reduction and exponent
+   adjustment of scale, positive k here means the result may overflow and
+   negative k means the result may underflow.  */
+static inline double
+specialcase (double_t tmp, uint64_t sbits, uint64_t ki)
+{
+  double_t scale, y;
+
+  if ((ki & 0x80000000) == 0)
+    {
+      /* k > 0, the exponent of scale might have overflowed by <= 460.  */
+      sbits -= 1009ull << 52;
+      scale = asdouble (sbits);
+      y = 0x1p1009 * (scale + scale * tmp);
+      return check_oflow (y);
+    }
+  /* k < 0, need special care in the subnormal range.  */
+  sbits += 1022ull << 52;
+  /* Note: sbits is signed scale.  */
+  scale = asdouble (sbits);
+  y = scale + scale * tmp;
+  if (fabs (y) < 1.0)
+    {
+      /* Round y to the right precision before scaling it into the subnormal
+	 range to avoid double rounding that can cause 0.5+E/2 ulp error where
+	 E is the worst-case ulp error outside the subnormal range.  So this
+	 is only useful if the goal is better than 1 ulp worst-case error.  */
+      double_t hi, lo, one = 1.0;
+      if (y < 0.0)
+	one = -1.0;
+      lo = scale - y + scale * tmp;
+      hi = one + y;
+      lo = one - hi + y + lo;
+      y = math_narrow_eval (hi + lo) - one;
+      /* Fix the sign of 0.  */
+      if (y == 0.0)
+	y = asdouble (sbits & 0x8000000000000000);
+      /* The underflow exception needs to be signaled explicitly.  */
+      math_force_eval (math_opt_barrier (0x1p-1022) * 0x1p-1022);
+    }
+  y = 0x1p-1022 * y;
+  return check_uflow (y);
+}
+
+#define SIGN_BIAS (0x800 << EXP_TABLE_BITS)
+
+/* Computes sign*exp(x+xtail) where |xtail| < 2^-8/N and |xtail| <= |x|.
+   The sign_bias argument is SIGN_BIAS or 0 and sets the sign to -1 or 1.  */
+static inline double
+exp_inline (double x, double xtail, uint32_t sign_bias)
+{
+  uint32_t abstop;
+  uint64_t ki, idx, top, sbits;
+  /* double_t for better performance on targets with FLT_EVAL_METHOD==2.  */
+  double_t kd, z, r, r2, scale, tail, tmp;
+
+  abstop = top12 (x) & 0x7ff;
+  if (__glibc_unlikely (abstop - top12 (0x1p-54)
+			>= top12 (512.0) - top12 (0x1p-54)))
+    {
+      if (abstop - top12 (0x1p-54) >= 0x80000000)
+	{
+	  /* Avoid spurious underflow for tiny x.  */
+	  /* Note: 0 is common input.  */
+	  double_t one = WANT_ROUNDING ? 1.0 + x : 1.0;
+	  return sign_bias ? -one : one;
+	}
+      if (abstop >= top12 (1024.0))
+	{
+	  /* Note: inf and nan are already handled.  */
+	  if (asuint64 (x) >> 63)
+	    return __math_uflow (sign_bias);
+	  else
+	    return __math_oflow (sign_bias);
+	}
+      /* Large x is special cased below.  */
+      abstop = 0;
+    }
+
+  /* exp(x) = 2^(k/N) * exp(r), with exp(r) in [2^(-1/2N),2^(1/2N)].  */
+  /* x = ln2/N*k + r, with int k and r in [-ln2/2N, ln2/2N].  */
+  z = InvLn2N * x;
+#if TOINT_INTRINSICS
+  /* z - kd is in [-0.5, 0.5] in all rounding modes.  */
+  kd = roundtoint (z);
+  ki = converttoint (z);
+#else
+  /* z - kd is in [-1, 1] in non-nearest rounding modes.  */
+  kd = math_narrow_eval (z + Shift);
+  ki = asuint64 (kd);
+  kd -= Shift;
+#endif
+  r = x + kd * NegLn2hiN + kd * NegLn2loN;
+  /* The code assumes 2^-200 < |xtail| < 2^-8/N.  */
+  r += xtail;
+  /* 2^(k/N) ~= scale * (1 + tail).  */
+  idx = 2 * (ki % N);
+  top = (ki + sign_bias) << (52 - EXP_TABLE_BITS);
+  tail = asdouble (T[idx]);
+  /* This is only a valid scale when -1023*N < k < 1024*N.  */
+  sbits = T[idx + 1] + top;
+  /* exp(x) = 2^(k/N) * exp(r) ~= scale + scale * (tail + exp(r) - 1).  */
+  /* Evaluation is optimized assuming superscalar pipelined execution.  */
+  r2 = r * r;
+  /* Without fma the worst case error is 0.25/N ulp larger.  */
+  /* Worst case error is less than 0.5+1.11/N+(abs poly error * 2^53) ulp.  */
+  tmp = tail + r + r2 * (C2 + r * C3) + r2 * r2 * (C4 + r * C5);
+  if (__glibc_unlikely (abstop == 0))
+    return specialcase (tmp, sbits, ki);
+  scale = asdouble (sbits);
+  /* Note: tmp == 0 or |tmp| > 2^-200 and scale > 2^-739, so there
+     is no spurious underflow here even without fma.  */
+  return scale + scale * tmp;
+}
+
+/* Returns 0 if not int, 1 if odd int, 2 if even int.  The argument is
+   the bit representation of a non-zero finite floating-point value.  */
+static inline int
+checkint (uint64_t iy)
+{
+  int e = iy >> 52 & 0x7ff;
+  if (e < 0x3ff)
+    return 0;
+  if (e > 0x3ff + 52)
+    return 2;
+  if (iy & ((1ULL << (0x3ff + 52 - e)) - 1))
+    return 0;
+  if (iy & (1ULL << (0x3ff + 52 - e)))
+    return 1;
+  return 2;
+}
+
+/* Returns 1 if input is the bit representation of 0, infinity or nan.  */
+static inline int
+zeroinfnan (uint64_t i)
+{
+  return 2 * i - 1 >= 2 * asuint64 (INFINITY) - 1;
+}
 
 #ifndef SECTION
 # define SECTION
 #endif
 
-static const double huge = 1.0e300, tiny = 1.0e-300;
-
-double __exp1 (double x, double xx);
-static double log1 (double x, double *delta);
-static int checkint (double x);
-
-/* An ultimate power routine. Given two IEEE double machine numbers y, x it
-   computes the correctly rounded (to nearest) value of X^y.  */
 double
 SECTION
 __ieee754_pow (double x, double y)
 {
-  double z, a, aa, t, a1, a2, y1, y2;
-  mynumber u, v;
-  int k;
-  int4 qx, qy;
-  v.x = y;
-  u.x = x;
-  if (v.i[LOW_HALF] == 0)
-    {				/* of y */
-      qx = u.i[HIGH_HALF] & 0x7fffffff;
-      /* Is x a NaN?  */
-      if ((((qx == 0x7ff00000) && (u.i[LOW_HALF] != 0)) || (qx > 0x7ff00000))
-	  && (y != 0 || issignaling (x)))
-	return x + x;
-      if (y == 1.0)
-	return x;
-      if (y == 2.0)
-	return x * x;
-      if (y == -1.0)
-	return 1.0 / x;
-      if (y == 0)
-	return 1.0;
-    }
-  /* else */
-  if (((u.i[HIGH_HALF] > 0 && u.i[HIGH_HALF] < 0x7ff00000) ||	/* x>0 and not x->0 */
-       (u.i[HIGH_HALF] == 0 && u.i[LOW_HALF] != 0)) &&
-      /*   2^-1023< x<= 2^-1023 * 0x1.0000ffffffff */
-      (v.i[HIGH_HALF] & 0x7fffffff) < 0x4ff00000)
-    {				/* if y<-1 or y>1   */
-      double retval;
+  uint32_t sign_bias = 0;
+  uint64_t ix, iy;
+  uint32_t topx, topy;
 
-      {
-	SET_RESTORE_ROUND (FE_TONEAREST);
-
-	/* Avoid internal underflow for tiny y.  The exact value of y does
-	   not matter if |y| <= 2**-64.  */
-	if (fabs (y) < 0x1p-64)
-	  y = y < 0 ? -0x1p-64 : 0x1p-64;
-	z = log1 (x, &aa);	/* x^y  =e^(y log (X)) */
-	t = y * CN;
-	y1 = t - (t - y);
-	y2 = y - y1;
-	t = z * CN;
-	a1 = t - (t - z);
-	a2 = (z - a1) + aa;
-	a = y1 * a1;
-	aa = y2 * a1 + y * a2;
-	a1 = a + aa;
-	a2 = (a - a1) + aa;
-
-	/* Maximum relative error RElog of log1 is 1.0e-21 (69.7 bits).
-	   Maximum relative error REexp of __exp1 is 1.0e-18 (59.8 bits).
-	   We actually compute exp ((1 + RElog) * log (x) * y) * (1 + REexp).
-	   Since RElog/REexp are tiny and log (x) * y is at most log (DBL_MAX),
-	   this is equivalent to pow (x, y) * (1 + 710 * RElog + REexp).
-	   So the relative error is 710 * 1.0e-21 + 1.0e-18 = 1.7e-18
-	   (59 bits).  The worst-case ULP error is 0.515.  */
-
-	retval = __exp1 (a1, a2);
-      }
-
-      if (isinf (retval))
-	retval = huge * huge;
-      else if (retval == 0)
-	retval = tiny * tiny;
-      else
-	math_check_force_underflow_nonneg (retval);
-      return retval;
-    }
-
-  if (x == 0)
+  ix = asuint64 (x);
+  iy = asuint64 (y);
+  topx = top12 (x);
+  topy = top12 (y);
+  if (__glibc_unlikely (topx - 0x001 >= 0x7ff - 0x001
+			|| (topy & 0x7ff) - 0x3be >= 0x43e - 0x3be))
     {
-      if (((v.i[HIGH_HALF] & 0x7fffffff) == 0x7ff00000 && v.i[LOW_HALF] != 0)
-	  || (v.i[HIGH_HALF] & 0x7fffffff) > 0x7ff00000)	/* NaN */
-	return y + y;
-      if (fabs (y) > 1.0e20)
-	return (y > 0) ? 0 : 1.0 / 0.0;
-      k = checkint (y);
-      if (k == -1)
-	return y < 0 ? 1.0 / x : x;
-      else
-	return y < 0 ? 1.0 / 0.0 : 0.0;	/* return 0 */
-    }
-
-  qx = u.i[HIGH_HALF] & 0x7fffffff;	/*   no sign   */
-  qy = v.i[HIGH_HALF] & 0x7fffffff;	/*   no sign   */
-
-  if (qx >= 0x7ff00000 && (qx > 0x7ff00000 || u.i[LOW_HALF] != 0))	/* NaN */
-    return x + y;
-  if (qy >= 0x7ff00000 && (qy > 0x7ff00000 || v.i[LOW_HALF] != 0))	/* NaN */
-    return x == 1.0 && !issignaling (y) ? 1.0 : y + y;
-
-  /* if x<0 */
-  if (u.i[HIGH_HALF] < 0)
-    {
-      k = checkint (y);
-      if (k == 0)
+      /* Note: if |y| > 1075 * ln2 * 2^53 ~= 0x1.749p62 then pow(x,y) = inf/0
+	 and if |y| < 2^-54 / 1075 ~= 0x1.e7b6p-65 then pow(x,y) = +-1.  */
+      /* Special cases: (x < 0x1p-126 or inf or nan) or
+	 (|y| < 0x1p-65 or |y| >= 0x1p63 or nan).  */
+      if (__glibc_unlikely (zeroinfnan (iy)))
 	{
-	  if (qy == 0x7ff00000)
+	  if (2 * iy == 0)
+	    return issignaling_inline (x) ? x + y : 1.0;
+	  if (ix == asuint64 (1.0))
+	    return issignaling_inline (y) ? x + y : 1.0;
+	  if (2 * ix > 2 * asuint64 (INFINITY)
+	      || 2 * iy > 2 * asuint64 (INFINITY))
+	    return x + y;
+	  if (2 * ix == 2 * asuint64 (1.0))
+	    return 1.0;
+	  if ((2 * ix < 2 * asuint64 (1.0)) == !(iy >> 63))
+	    return 0.0; /* |x|<1 && y==inf or |x|>1 && y==-inf.  */
+	  return y * y;
+	}
+      if (__glibc_unlikely (zeroinfnan (ix)))
+	{
+	  double_t x2 = x * x;
+	  if (ix >> 63 && checkint (iy) == 1)
 	    {
-	      if (x == -1.0)
-		return 1.0;
-	      else if (x > -1.0)
-		return v.i[HIGH_HALF] < 0 ? INF.x : 0.0;
-	      else
-		return v.i[HIGH_HALF] < 0 ? 0.0 : INF.x;
+	      x2 = -x2;
+	      sign_bias = 1;
 	    }
-	  else if (qx == 0x7ff00000)
-	    return y < 0 ? 0.0 : INF.x;
-	  return (x - x) / (x - x);	/* y not integer and x<0 */
+	  if (WANT_ERRNO && 2 * ix == 0 && iy >> 63)
+	    return __math_divzero (sign_bias);
+	  /* Without the barrier some versions of clang hoist the 1/x2 and
+	     thus division by zero exception can be signaled spuriously.  */
+	  return iy >> 63 ? math_opt_barrier (1 / x2) : x2;
 	}
-      else if (qx == 0x7ff00000)
+      /* Here x and y are non-zero finite.  */
+      if (ix >> 63)
 	{
-	  if (k < 0)
-	    return y < 0 ? nZERO.x : nINF.x;
-	  else
-	    return y < 0 ? 0.0 : INF.x;
+	  /* Finite x < 0.  */
+	  int yint = checkint (iy);
+	  if (yint == 0)
+	    return __math_invalid (x);
+	  if (yint == 1)
+	    sign_bias = SIGN_BIAS;
+	  ix &= 0x7fffffffffffffff;
+	  topx &= 0x7ff;
 	}
-      /* if y even or odd */
-      if (k == 1)
-	return __ieee754_pow (-x, y);
-      else
+      if ((topy & 0x7ff) - 0x3be >= 0x43e - 0x3be)
 	{
-	  double retval;
-	  {
-	    SET_RESTORE_ROUND (FE_TONEAREST);
-	    retval = -__ieee754_pow (-x, y);
-	  }
-	  if (isinf (retval))
-	    retval = -huge * huge;
-	  else if (retval == 0)
-	    retval = -tiny * tiny;
-	  return retval;
+	  /* Note: sign_bias == 0 here because y is not odd.  */
+	  if (ix == asuint64 (1.0))
+	    return 1.0;
+	  if ((topy & 0x7ff) < 0x3be)
+	    {
+	      /* |y| < 2^-65, x^y ~= 1 + y*log(x).  */
+	      if (WANT_ROUNDING)
+		return ix > asuint64 (1.0) ? 1.0 + y : 1.0 - y;
+	      else
+		return 1.0;
+	    }
+	  return (ix > asuint64 (1.0)) == (topy < 0x800) ? __math_oflow (0)
+							 : __math_uflow (0);
+	}
+      if (topx == 0)
+	{
+	  /* Normalize subnormal x so exponent becomes negative.  */
+	  ix = asuint64 (x * 0x1p52);
+	  ix &= 0x7fffffffffffffff;
+	  ix -= 52ULL << 52;
 	}
     }
-  /* x>0 */
 
-  if (qx == 0x7ff00000)		/* x= 2^-0x3ff */
-    return y > 0 ? x : 0;
-
-  if (qy > 0x45f00000 && qy < 0x7ff00000)
-    {
-      if (x == 1.0)
-	return 1.0;
-      if (y > 0)
-	return (x > 1.0) ? huge * huge : tiny * tiny;
-      if (y < 0)
-	return (x < 1.0) ? huge * huge : tiny * tiny;
-    }
-
-  if (x == 1.0)
-    return 1.0;
-  if (y > 0)
-    return (x > 1.0) ? INF.x : 0;
-  if (y < 0)
-    return (x < 1.0) ? INF.x : 0;
-  return 0;			/* unreachable, to make the compiler happy */
+  double_t lo;
+  double_t hi = log_inline (ix, &lo);
+  double_t ehi, elo;
+#ifdef __FP_FAST_FMA
+  ehi = y * hi;
+  elo = y * lo + __builtin_fma (y, hi, -ehi);
+#else
+  double_t yhi = asdouble (iy & -1ULL << 27);
+  double_t ylo = y - yhi;
+  double_t lhi = asdouble (asuint64 (hi) & -1ULL << 27);
+  double_t llo = hi - lhi + lo;
+  ehi = yhi * lhi;
+  elo = ylo * lhi + y * llo; /* |elo| < |ehi| * 2^-25.  */
+#endif
+  return exp_inline (ehi, elo, sign_bias);
 }
-
 #ifndef __ieee754_pow
 strong_alias (__ieee754_pow, __pow_finite)
 #endif
-
-/* Compute log(x) (x is left argument). The result is the returned double + the
-   parameter DELTA.  */
-static double
-SECTION
-log1 (double x, double *delta)
-{
-  unsigned int i, j;
-  int m;
-  double uu, vv, eps, nx, e, e1, e2, t, t1, t2, res, add = 0;
-  mynumber u, v;
-#ifdef BIG_ENDI
-  mynumber /**/ two52 = {{0x43300000, 0x00000000}};	/* 2**52  */
-#else
-# ifdef LITTLE_ENDI
-  mynumber /**/ two52 = {{0x00000000, 0x43300000}};	/* 2**52  */
-# endif
-#endif
-
-  u.x = x;
-  m = u.i[HIGH_HALF];
-  if (m < 0x00100000)		/* Handle denormal x.  */
-    {
-      x = x * t52.x;
-      add = -52.0;
-      u.x = x;
-      m = u.i[HIGH_HALF];
-    }
-
-  if ((m & 0x000fffff) < 0x0006a09e)
-    {
-      u.i[HIGH_HALF] = (m & 0x000fffff) | 0x3ff00000;
-      two52.i[LOW_HALF] = (m >> 20);
-    }
-  else
-    {
-      u.i[HIGH_HALF] = (m & 0x000fffff) | 0x3fe00000;
-      two52.i[LOW_HALF] = (m >> 20) + 1;
-    }
-
-  v.x = u.x + bigu.x;
-  uu = v.x - bigu.x;
-  i = (v.i[LOW_HALF] & 0x000003ff) << 2;
-  if (two52.i[LOW_HALF] == 1023)	/* Exponent of x is 0.  */
-    {
-      if (i > 1192 && i < 1208)	/* |x-1| < 1.5*2**-10  */
-	{
-	  t = x - 1.0;
-	  t1 = (t + 5.0e6) - 5.0e6;
-	  t2 = t - t1;
-	  e1 = t - 0.5 * t1 * t1;
-	  e2 = (t * t * t * (r3 + t * (r4 + t * (r5 + t * (r6 + t
-							   * (r7 + t * r8)))))
-		- 0.5 * t2 * (t + t1));
-	  res = e1 + e2;
-	  *delta = (e1 - res) + e2;
-	  /* Max relative error is 1.464844e-24, so accurate to 79.1 bits.  */
-	  return res;
-	}			/* |x-1| < 1.5*2**-10  */
-      else
-	{
-	  v.x = u.x * (ui.x[i] + ui.x[i + 1]) + bigv.x;
-	  vv = v.x - bigv.x;
-	  j = v.i[LOW_HALF] & 0x0007ffff;
-	  j = j + j + j;
-	  eps = u.x - uu * vv;
-	  e1 = eps * ui.x[i];
-	  e2 = eps * (ui.x[i + 1] + vj.x[j] * (ui.x[i] + ui.x[i + 1]));
-	  e = e1 + e2;
-	  e2 = ((e1 - e) + e2);
-	  t = ui.x[i + 2] + vj.x[j + 1];
-	  t1 = t + e;
-	  t2 = ((((t - t1) + e) + (ui.x[i + 3] + vj.x[j + 2])) + e2 + e * e
-		* (p2 + e * (p3 + e * p4)));
-	  res = t1 + t2;
-	  *delta = (t1 - res) + t2;
-	  /* Max relative error is 1.0e-24, so accurate to 79.7 bits.  */
-	  return res;
-	}
-    }
-  else				/* Exponent of x != 0.  */
-    {
-      eps = u.x - uu;
-      nx = (two52.x - two52e.x) + add;
-      e1 = eps * ui.x[i];
-      e2 = eps * ui.x[i + 1];
-      e = e1 + e2;
-      e2 = (e1 - e) + e2;
-      t = nx * ln2a.x + ui.x[i + 2];
-      t1 = t + e;
-      t2 = ((((t - t1) + e) + nx * ln2b.x + ui.x[i + 3] + e2) + e * e
-	    * (q2 + e * (q3 + e * (q4 + e * (q5 + e * q6)))));
-      res = t1 + t2;
-      *delta = (t1 - res) + t2;
-      /* Max relative error is 1.0e-21, so accurate to 69.7 bits.  */
-      return res;
-    }
-}
-
-
-/* This function receives a double x and checks if it is an integer.  If not,
-   it returns 0, else it returns 1 if even or -1 if odd.  */
-static int
-SECTION
-checkint (double x)
-{
-  union
-  {
-    int4 i[2];
-    double x;
-  } u;
-  int k;
-  unsigned int m, n;
-  u.x = x;
-  m = u.i[HIGH_HALF] & 0x7fffffff;	/* no sign */
-  if (m >= 0x7ff00000)
-    return 0;			/*  x is +/-inf or NaN  */
-  if (m >= 0x43400000)
-    return 1;			/*  |x| >= 2**53   */
-  if (m < 0x40000000)
-    return 0;			/* |x| < 2,  can not be 0 or 1  */
-  n = u.i[LOW_HALF];
-  k = (m >> 20) - 1023;		/*  1 <= k <= 52   */
-  if (k == 52)
-    return (n & 1) ? -1 : 1;	/* odd or even */
-  if (k > 20)
-    {
-      if (n << (k - 20) != 0)
-	return 0;		/* if not integer */
-      return (n << (k - 21) != 0) ? -1 : 1;
-    }
-  if (n)
-    return 0;			/*if  not integer */
-  if (k == 20)
-    return (m & 1) ? -1 : 1;
-  if (m << (k + 12) != 0)
-    return 0;
-  return (m << (k + 11) != 0) ? -1 : 1;
-}

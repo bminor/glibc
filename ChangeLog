@@ -1,3 +1,26 @@
+2018-09-19  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* NEWS: Mention pow improvements.
+	* math/Makefile (type-double-routines): Add e_pow_log_data.
+	* sysdeps/generic/math_private.h (__exp1): Remove.
+	* sysdeps/i386/fpu/e_pow_log_data.c: New file.
+	* sysdeps/ia64/fpu/e_pow_log_data.c: New file.
+	* sysdeps/ieee754/dbl-64/Makefile (CFLAGS-e_pow.c): Allow fma
+	contraction.
+	* sysdeps/ieee754/dbl-64/e_exp.c (__exp1): Remove.
+	(exp_inline): Remove.
+	(__ieee754_exp): Only single double input is handled.
+	* sysdeps/ieee754/dbl-64/e_pow.c: Rewrite.
+	* sysdeps/ieee754/dbl-64/e_pow_log_data.c: New file.
+	* sysdeps/ieee754/dbl-64/math_config.h (issignaling_inline): Define.
+	(__pow_log_data): Define.
+	* sysdeps/ieee754/dbl-64/upow.h: Remove.
+	* sysdeps/ieee754/dbl-64/upow.tbl: Remove.
+	* sysdeps/m68k/m680x0/fpu/e_pow_log_data.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/Makefile (CFLAGS-e_pow-fma.c): Allow fma
+	contraction.
+	(CFLAGS-e_pow-fma4.c): Likewise.
+
 2018-09-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Simplify tzfile fstat failure code

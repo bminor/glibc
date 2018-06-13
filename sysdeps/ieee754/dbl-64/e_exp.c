@@ -85,10 +85,13 @@ top12 (double x)
   return asuint64 (x) >> 52;
 }
 
-/* Computes exp(x+xtail) where |xtail| < 2^-8/N and |xtail| <= |x|.
-   If hastail is 0 then xtail is assumed to be 0 too.  */
-static inline double
-exp_inline (double x, double xtail, int hastail)
+#ifndef SECTION
+# define SECTION
+#endif
+
+double
+SECTION
+__ieee754_exp (double x)
 {
   uint32_t abstop;
   uint64_t ki, idx, top, sbits;
@@ -131,9 +134,6 @@ exp_inline (double x, double xtail, int hastail)
   kd -= Shift;
 #endif
   r = x + kd * NegLn2hiN + kd * NegLn2loN;
-  /* The code assumes 2^-200 < |xtail| < 2^-8/N.  */
-  if (hastail)
-    r += xtail;
   /* 2^(k/N) ~= scale * (1 + tail).  */
   idx = 2 * (ki % N);
   top = ki << (52 - EXP_TABLE_BITS);
@@ -149,29 +149,10 @@ exp_inline (double x, double xtail, int hastail)
   if (__glibc_unlikely (abstop == 0))
     return specialcase (tmp, sbits, ki);
   scale = asdouble (sbits);
-  /* Note: tmp == 0 or |tmp| > 2^-200 and scale > 2^-739, so there
+  /* Note: tmp == 0 or |tmp| > 2^-65 and scale > 2^-739, so there
      is no spurious underflow here even without fma.  */
   return scale + scale * tmp;
-}
-
-#ifndef SECTION
-# define SECTION
-#endif
-
-double
-SECTION
-__ieee754_exp (double x)
-{
-  return exp_inline (x, 0, 0);
 }
 #ifndef __ieee754_exp
 strong_alias (__ieee754_exp, __exp_finite)
 #endif
-
-/* Compute e^(x+xx).  */
-double
-SECTION
-__exp1 (double x, double xx)
-{
-  return exp_inline (x, xx, 1);
-}
