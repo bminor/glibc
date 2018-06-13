@@ -1,167 +1,132 @@
-/*
- * IBM Accurate Mathematical Library
- * written by International Business Machines Corp.
- * Copyright (C) 2001-2018 Free Software Foundation, Inc.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation; either version 2.1 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program; if not, see <http://www.gnu.org/licenses/>.
- */
-/*********************************************************************/
-/*                                                                   */
-/*      MODULE_NAME:ulog.c                                           */
-/*                                                                   */
-/*      FUNCTION:ulog                                                */
-/*                                                                   */
-/*      FILES NEEDED: dla.h endian.h mpa.h mydefs.h ulog.h           */
-/*                    ulog.tbl                                       */
-/*                                                                   */
-/* An ultimate log routine. Given an IEEE double machine number x    */
-/* it computes the rounded (to nearest) value of log(x).	     */
-/* Assumption: Machine arithmetic operations are performed in        */
-/* round to nearest mode of IEEE 754 standard.                       */
-/*                                                                   */
-/*********************************************************************/
+/* Double-precision log(x) function.
+   Copyright (C) 2018 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-#include "endian.h"
-#include <dla.h>
-#include "mpa.h"
-#include "MathLib.h"
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
 #include <math.h>
-#include <math_private.h>
+#include <stdint.h>
+#include "math_config.h"
+
+#define T __log_data.tab
+#define T2 __log_data.tab2
+#define B __log_data.poly1
+#define A __log_data.poly
+#define Ln2hi __log_data.ln2hi
+#define Ln2lo __log_data.ln2lo
+#define N (1 << LOG_TABLE_BITS)
+#define OFF 0x3fe6000000000000
+
+/* Top 16 bits of a double.  */
+static inline uint32_t
+top16 (double x)
+{
+  return asuint64 (x) >> 48;
+}
 
 #ifndef SECTION
 # define SECTION
 #endif
 
-/*********************************************************************/
-/* An ultimate log routine. Given an IEEE double machine number x    */
-/* it computes the rounded (to nearest) value of log(x).	     */
-/*********************************************************************/
 double
 SECTION
 __ieee754_log (double x)
 {
-  int i, j, n, ux, dx;
-  double dbl_n, u, p0, q, r0, w, nln2a, luai, lubi, lvaj, lvbj,
-	 sij, ssij, ttij, A, B, B0, polI, polII, t8, a, aa, b, bb, c;
-#ifndef DLA_FMS
-  double t1, t2, t3, t4, t5;
+  /* double_t for better performance on targets with FLT_EVAL_METHOD==2.  */
+  double_t w, z, r, r2, r3, y, invc, logc, kd, hi, lo;
+  uint64_t ix, iz, tmp;
+  uint32_t top;
+  int k, i;
+
+  ix = asuint64 (x);
+  top = top16 (x);
+
+#define LO asuint64 (1.0 - 0x1p-4)
+#define HI asuint64 (1.0 + 0x1.09p-4)
+  if (__glibc_unlikely (ix - LO < HI - LO))
+    {
+      /* Handle close to 1.0 inputs separately.  */
+      /* Fix sign of zero with downward rounding when x==1.  */
+      if (WANT_ROUNDING && __glibc_unlikely (ix == asuint64 (1.0)))
+	return 0;
+      r = x - 1.0;
+      r2 = r * r;
+      r3 = r * r2;
+      y = r3 * (B[1] + r * B[2] + r2 * B[3]
+		+ r3 * (B[4] + r * B[5] + r2 * B[6]
+			+ r3 * (B[7] + r * B[8] + r2 * B[9] + r3 * B[10])));
+      /* Worst-case error is around 0.507 ULP.  */
+      w = r * 0x1p27;
+      double_t rhi = r + w - w;
+      double_t rlo = r - rhi;
+      w = rhi * rhi * B[0]; /* B[0] == -0.5.  */
+      hi = r + w;
+      lo = r - hi + w;
+      lo += B[0] * rlo * (rhi + r);
+      y += lo;
+      y += hi;
+      return y;
+    }
+  if (__glibc_unlikely (top - 0x0010 >= 0x7ff0 - 0x0010))
+    {
+      /* x < 0x1p-1022 or inf or nan.  */
+      if (ix * 2 == 0)
+	return __math_divzero (1);
+      if (ix == asuint64 (INFINITY)) /* log(inf) == inf.  */
+	return x;
+      if ((top & 0x8000) || (top & 0x7ff0) == 0x7ff0)
+	return __math_invalid (x);
+      /* x is subnormal, normalize it.  */
+      ix = asuint64 (x * 0x1p52);
+      ix -= 52ULL << 52;
+    }
+
+  /* x = 2^k z; where z is in range [OFF,2*OFF) and exact.
+     The range is split into N subintervals.
+     The ith subinterval contains z and c is near its center.  */
+  tmp = ix - OFF;
+  i = (tmp >> (52 - LOG_TABLE_BITS)) % N;
+  k = (int64_t) tmp >> 52; /* arithmetic shift */
+  iz = ix - (tmp & 0xfffULL << 52);
+  invc = T[i].invc;
+  logc = T[i].logc;
+  z = asdouble (iz);
+
+  /* log(x) = log1p(z/c-1) + log(c) + k*Ln2.  */
+  /* r ~= z/c - 1, |r| < 1/(2*N).  */
+#ifdef __FP_FAST_FMA
+  /* rounding error: 0x1p-55/N.  */
+  r = __builtin_fma (z, invc, -1.0);
+#else
+  /* rounding error: 0x1p-55/N + 0x1p-66.  */
+  r = (z - T2[i].chi - T2[i].clo) * invc;
 #endif
-  number num;
+  kd = (double_t) k;
 
-#include "ulog.tbl"
-#include "ulog.h"
+  /* hi + lo = r + log(c) + k*Ln2.  */
+  w = kd * Ln2hi + logc;
+  hi = w + r;
+  lo = w - hi + r + kd * Ln2lo;
 
-  /* Treating special values of x ( x<=0, x=INF, x=NaN etc.). */
-
-  num.d = x;
-  ux = num.i[HIGH_HALF];
-  dx = num.i[LOW_HALF];
-  n = 0;
-  if (__glibc_unlikely (ux < 0x00100000))
-    {
-      if (__glibc_unlikely (((ux & 0x7fffffff) | dx) == 0))
-	return MHALF / 0.0;     /* return -INF */
-      if (__glibc_unlikely (ux < 0))
-	return (x - x) / 0.0;   /* return NaN  */
-      n -= 54;
-      x *= two54.d;             /* scale x     */
-      num.d = x;
-    }
-  if (__glibc_unlikely (ux >= 0x7ff00000))
-    return x + x;               /* INF or NaN  */
-
-  /* Regular values of x */
-
-  w = x - 1;
-  if (__glibc_likely (fabs (w) > U03))
-    goto case_03;
-
-  /* log (1) is +0 in all rounding modes.  */
-  if (w == 0.0)
-    return 0.0;
-
-  /*--- The case abs(x-1) < 0.03 */
-
-  t8 = MHALF * w;
-  EMULV (t8, w, a, aa, t1, t2, t3, t4, t5);
-  EADD (w, a, b, bb);
-  /* Evaluate polynomial II */
-  polII = b7.d + w * b8.d;
-  polII = b6.d + w * polII;
-  polII = b5.d + w * polII;
-  polII = b4.d + w * polII;
-  polII = b3.d + w * polII;
-  polII = b2.d + w * polII;
-  polII = b1.d + w * polII;
-  polII = b0.d + w * polII;
-  polII *= w * w * w;
-  c = (aa + bb) + polII;
-
-  /* Here b contains the high part of the result, and c the low part.
-     Maximum error is b * 2.334e-19, so accuracy is >61 bits.
-     Therefore max ULP error of b + c is ~0.502.  */
-  return b + c;
-
-  /*--- The case abs(x-1) > 0.03 */
-case_03:
-
-  /* Find n,u such that x = u*2**n,   1/sqrt(2) < u < sqrt(2)  */
-  n += (num.i[HIGH_HALF] >> 20) - 1023;
-  num.i[HIGH_HALF] = (num.i[HIGH_HALF] & 0x000fffff) | 0x3ff00000;
-  if (num.d > SQRT_2)
-    {
-      num.d *= HALF;
-      n++;
-    }
-  u = num.d;
-  dbl_n = (double) n;
-
-  /* Find i such that ui=1+(i-75)/2**8 is closest to u (i= 0,1,2,...,181) */
-  num.d += h1.d;
-  i = (num.i[HIGH_HALF] & 0x000fffff) >> 12;
-
-  /* Find j such that vj=1+(j-180)/2**16 is closest to v=u/ui (j= 0,...,361) */
-  num.d = u * Iu[i].d + h2.d;
-  j = (num.i[HIGH_HALF] & 0x000fffff) >> 4;
-
-  /* Compute w=(u-ui*vj)/(ui*vj) */
-  p0 = (1 + (i - 75) * DEL_U) * (1 + (j - 180) * DEL_V);
-  q = u - p0;
-  r0 = Iu[i].d * Iv[j].d;
-  w = q * r0;
-
-  /* Evaluate polynomial I */
-  polI = w + (a2.d + a3.d * w) * w * w;
-
-  /* Add up everything */
-  nln2a = dbl_n * LN2A;
-  luai = Lu[i][0].d;
-  lubi = Lu[i][1].d;
-  lvaj = Lv[j][0].d;
-  lvbj = Lv[j][1].d;
-  EADD (luai, lvaj, sij, ssij);
-  EADD (nln2a, sij, A, ttij);
-  B0 = (((lubi + lvbj) + ssij) + ttij) + dbl_n * LN2B;
-  B = polI + B0;
-
-  /* Here A contains the high part of the result, and B the low part.
-     Maximum abs error is 6.095e-21 and min log (x) is 0.0295 since x > 1.03.
-     Therefore max ULP error of A + B is ~0.502.  */
-  return A + B;
+  /* log(x) = lo + (log1p(r) - r) + hi.  */
+  r2 = r * r; /* rounding error: 0x1p-54/N^2.  */
+  /* Worst case error if |y| > 0x1p-4: 0.519 ULP (0.520 ULP without fma).
+     0.5 + 2.06/N + abs-poly-error*2^56 ULP (+ 0.001 ULP without fma).  */
+  y = lo + r2 * A[0] + r * r2 * (A[1] + r * A[2] + r2 * (A[3] + r * A[4])) + hi;
+  return y;
 }
-
 #ifndef __ieee754_log
 strong_alias (__ieee754_log, __log_finite)
 #endif
