@@ -397,7 +397,8 @@ extern struct rtld_global_ro _rtld_local_ro
 
 
 static void dl_main (const ElfW(Phdr) *phdr, ElfW(Word) phnum,
-		     ElfW(Addr) *user_entry, ElfW(auxv_t) *auxv);
+		     ElfW(Addr) *user_entry, ElfW(auxv_t) *auxv,
+		     void **start_argptr);
 
 /* These two variables cannot be moved into .data.rel.ro.  */
 static struct libname_list _dl_rtld_libname;
@@ -1307,10 +1308,59 @@ rtld_setup_main_map (struct link_map *main_map)
 }
 
 static void
+_dl_start_args_adjust (void **start_argptr, int skip_args)
+{
+  void **sp = start_argptr;
+  void **p;
+  long argc;
+  char **argv;
+
+  if (skip_args == 0)
+    return;
+
+  /* Adjust argc on stack.  */
+  argc = (long) sp[0] - skip_args;
+  sp[0] = (void *) argc;
+
+  argv = (char **) (sp + 1); /* Necessary aliasing violation.  */
+  p = sp + skip_args;
+  /* Shuffle argv down.  */
+  do
+    *++sp = *++p;
+  while (*p != NULL);
+
+  /* Shuffle envp down.  */
+  do
+    *++sp = *++p;
+  while (*p != NULL);
+
+  /* Update globals in rtld.  */
+  _dl_argv = argv;
+  _environ = argv + argc + 1;
+#ifdef HAVE_AUX_VECTOR
+  GLRO(dl_auxv) = (ElfW(auxv_t) *) (sp + 1); /* Aliasing violation.  */
+
+  /* Shuffle auxv down. */
+  void *a, *b; /* Use a pair of pointers for an auxv entry.  */
+  unsigned long a_type;
+  do
+    {
+      a_type = ((ElfW(auxv_t) *) (p + 1))->a_type;
+      a = *++p;
+      b = *++p;
+      *++sp = a;
+      *++sp = b;
+    }
+  while (a_type != AT_NULL);
+#endif
+}
+
+static void
 dl_main (const ElfW(Phdr) *phdr,
 	 ElfW(Word) phnum,
 	 ElfW(Addr) *user_entry,
-	 ElfW(auxv_t) *auxv)
+	 ElfW(auxv_t) *auxv,
+	 void **start_argptr)
 {
   struct link_map *main_map;
   size_t file_size;
@@ -1359,6 +1409,7 @@ dl_main (const ElfW(Phdr) *phdr,
       rtld_is_main = true;
 
       char *argv0 = NULL;
+      int skip_args = 0;
 
       /* Note the place where the dynamic linker actually came from.  */
       GL(dl_rtld_map).l_name = rtld_progname;
@@ -1373,7 +1424,7 @@ dl_main (const ElfW(Phdr) *phdr,
 		GLRO(dl_lazy) = -1;
 	      }
 
-	    ++_dl_skip_args;
+	    ++skip_args;
 	    --_dl_argc;
 	    ++_dl_argv;
 	  }
@@ -1382,14 +1433,14 @@ dl_main (const ElfW(Phdr) *phdr,
 	    if (state.mode != rtld_mode_help)
 	      state.mode = rtld_mode_verify;
 
-	    ++_dl_skip_args;
+	    ++skip_args;
 	    --_dl_argc;
 	    ++_dl_argv;
 	  }
 	else if (! strcmp (_dl_argv[1], "--inhibit-cache"))
 	  {
 	    GLRO(dl_inhibit_cache) = 1;
-	    ++_dl_skip_args;
+	    ++skip_args;
 	    --_dl_argc;
 	    ++_dl_argv;
 	  }
@@ -1399,7 +1450,7 @@ dl_main (const ElfW(Phdr) *phdr,
 	    state.library_path = _dl_argv[2];
 	    state.library_path_source = "--library-path";
 
-	    _dl_skip_args += 2;
+	    skip_args += 2;
 	    _dl_argc -= 2;
 	    _dl_argv += 2;
 	  }
@@ -1408,7 +1459,7 @@ dl_main (const ElfW(Phdr) *phdr,
 	  {
 	    GLRO(dl_inhibit_rpath) = _dl_argv[2];
 
-	    _dl_skip_args += 2;
+	    skip_args += 2;
 	    _dl_argc -= 2;
 	    _dl_argv += 2;
 	  }
@@ -1416,14 +1467,14 @@ dl_main (const ElfW(Phdr) *phdr,
 	  {
 	    audit_list_add_string (&state.audit_list, _dl_argv[2]);
 
-	    _dl_skip_args += 2;
+	    skip_args += 2;
 	    _dl_argc -= 2;
 	    _dl_argv += 2;
 	  }
 	else if (! strcmp (_dl_argv[1], "--preload") && _dl_argc > 2)
 	  {
 	    state.preloadarg = _dl_argv[2];
-	    _dl_skip_args += 2;
+	    skip_args += 2;
 	    _dl_argc -= 2;
 	    _dl_argv += 2;
 	  }
@@ -1431,7 +1482,7 @@ dl_main (const ElfW(Phdr) *phdr,
 	  {
 	    argv0 = _dl_argv[2];
 
-	    _dl_skip_args += 2;
+	    skip_args += 2;
 	    _dl_argc -= 2;
 	    _dl_argv += 2;
 	  }
@@ -1439,7 +1490,7 @@ dl_main (const ElfW(Phdr) *phdr,
 		 && _dl_argc > 2)
 	  {
 	    state.glibc_hwcaps_prepend = _dl_argv[2];
-	    _dl_skip_args += 2;
+	    skip_args += 2;
 	    _dl_argc -= 2;
 	    _dl_argv += 2;
 	  }
@@ -1447,7 +1498,7 @@ dl_main (const ElfW(Phdr) *phdr,
 		 && _dl_argc > 2)
 	  {
 	    state.glibc_hwcaps_mask = _dl_argv[2];
-	    _dl_skip_args += 2;
+	    skip_args += 2;
 	    _dl_argc -= 2;
 	    _dl_argv += 2;
 	  }
@@ -1456,7 +1507,7 @@ dl_main (const ElfW(Phdr) *phdr,
 	  {
 	    state.mode = rtld_mode_list_tunables;
 
-	    ++_dl_skip_args;
+	    ++skip_args;
 	    --_dl_argc;
 	    ++_dl_argv;
 	  }
@@ -1465,7 +1516,7 @@ dl_main (const ElfW(Phdr) *phdr,
 	  {
 	    state.mode = rtld_mode_list_diagnostics;
 
-	    ++_dl_skip_args;
+	    ++skip_args;
 	    --_dl_argc;
 	    ++_dl_argv;
 	  }
@@ -1511,7 +1562,7 @@ dl_main (const ElfW(Phdr) *phdr,
 	    _dl_usage (ld_so_name, NULL);
 	}
 
-      ++_dl_skip_args;
+      ++skip_args;
       --_dl_argc;
       ++_dl_argv;
 
@@ -1610,6 +1661,8 @@ dl_main (const ElfW(Phdr) *phdr,
       /* Set the argv[0] string now that we've processed the executable.  */
       if (argv0 != NULL)
         _dl_argv[0] = argv0;
+      /* Adjust arguments for the application entry point.  */
+      _dl_start_args_adjust (start_argptr, skip_args);
     }
   else
     {

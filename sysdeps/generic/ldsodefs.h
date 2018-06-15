@@ -1165,7 +1165,8 @@ extern ElfW(Addr) _dl_sysdep_start (void **start_argptr,
 				    void (*dl_main) (const ElfW(Phdr) *phdr,
 						     ElfW(Word) phnum,
 						     ElfW(Addr) *user_entry,
-						     ElfW(auxv_t) *auxv))
+						     ElfW(auxv_t) *auxv,
+						     void **start_argptr))
      attribute_hidden;
 
 extern void _dl_sysdep_start_cleanup (void) attribute_hidden;
