@@ -98,7 +98,8 @@ _dl_sysdep_parse_arguments (void **start_argptr,
 ElfW(Addr)
 _dl_sysdep_start (void **start_argptr,
 		  void (*dl_main) (const ElfW(Phdr) *phdr, ElfW(Word) phnum,
-				   ElfW(Addr) *user_entry, ElfW(auxv_t) *auxv))
+				   ElfW(Addr) *user_entry, ElfW(auxv_t) *auxv,
+				   void **start_argptr))
 {
   __libc_stack_end = DL_STACK_END (start_argptr);
 
@@ -138,7 +139,7 @@ _dl_sysdep_start (void **start_argptr,
     __libc_check_standard_fds ();
 
   (*dl_main) (dl_main_args.phdr, dl_main_args.phnum,
-              &dl_main_args.user_entry, GLRO(dl_auxv));
+	      &dl_main_args.user_entry, GLRO(dl_auxv), start_argptr);
   return dl_main_args.user_entry;
 }
 
