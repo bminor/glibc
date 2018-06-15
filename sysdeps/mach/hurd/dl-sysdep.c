@@ -76,6 +76,7 @@ _dl_sysdep_start (void **start_argptr,
 {
   void go (intptr_t *argdata)
     {
+      char *orig_argv0;
       char **p;
 
       /* Cache the information in various global variables.  */
@@ -83,6 +84,8 @@ _dl_sysdep_start (void **start_argptr,
       _dl_argv = 1 + (char **) argdata;
       _environ = &_dl_argv[_dl_argc + 1];
       for (p = _environ; *p++;); /* Skip environ pointers and terminator.  */
+
+      orig_argv0 = _dl_argv[0];
 
       if ((void *) p == _dl_argv[0])
 	{
@@ -173,30 +176,23 @@ _dl_sysdep_start (void **start_argptr,
 
       /* The call above might screw a few things up.
 
-	 First of all, if _dl_skip_args is nonzero, we are ignoring
-	 the first few arguments.  However, if we have no Hurd startup
-	 data, it is the magical convention that ARGV[0] == P.  The
+	 P is the location after the terminating NULL of the list of
+	 environment variables.  It has to point to the Hurd startup
+	 data or if that's missing then P == ARGV[0] must hold. The
 	 startup code in init-first.c will get confused if this is not
 	 the case, so we must rearrange things to make it so.  We'll
-	 overwrite the origional ARGV[0] at P with ARGV[_dl_skip_args].
+	 recompute P and move the Hurd data or the new ARGV[0] there.
 
-	 Secondly, if we need to be secure, it removes some dangerous
-	 environment variables.  If we have no Hurd startup date this
-	 changes P (since that's the location after the terminating
-	 NULL in the list of environment variables).  We do the same
-	 thing as in the first case but make sure we recalculate P.
-	 If we do have Hurd startup data, we have to move the data
-	 such that it starts just after the terminating NULL in the
-	 environment list.
+	 Note: directly invoked ld.so can move arguments and env vars.
 
 	 We use memmove, since the locations might overlap.  */
-      if (__libc_enable_secure || _dl_skip_args)
+
+      char **newp;
+      for (newp = _environ; *newp++;);
+
+      if (newp != p || _dl_argv[0] != orig_argv0)
 	{
-	  char **newp;
-
-	  for (newp = _environ; *newp++;);
-
-	  if (_dl_argv[-_dl_skip_args] == (char *) p)
+	  if (orig_argv0 == (char *) p)
 	    {
 	      if ((char *) newp != _dl_argv[0])
 		{
