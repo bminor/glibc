@@ -103,6 +103,7 @@ libm {
     __scalbnieee128;
     __setpayloadieee128;
     __setpayloadsigieee128;
+    __significandieee128;
     __sincosieee128;
     __sinhieee128;
     __sinieee128;
