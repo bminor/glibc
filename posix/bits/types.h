@@ -25,6 +25,7 @@
 
 #include <features.h>
 #include <bits/wordsize.h>
+#include <bits/timesize.h>
 
 /* Convenience types.  */
 typedef unsigned char __u_char;
@@ -138,6 +139,7 @@ __extension__ typedef unsigned long long int __uintmax_t;
 # error
 #endif
 #include <bits/typesizes.h>	/* Defines __*_T_TYPE macros.  */
+#include <bits/time64.h>	/* Defines __TIME*_T_TYPE macros.  */
 
 
 __STD_TYPE __DEV_T_TYPE __dev_t;	/* Type of device numbers.  */
@@ -210,6 +212,12 @@ __STD_TYPE __U32_TYPE __socklen_t;
    even in the presence of asynchronous interrupts.
    It is not currently necessary for this to be machine-specific.  */
 typedef int __sig_atomic_t;
+
+#if __TIMESIZE == 64
+# define __time64_t __time_t
+#else
+__STD_TYPE __TIME64_T_TYPE __time64_t;	/* Seconds since the Epoch.  */
+#endif
 
 #undef __STD_TYPE
 

@@ -29,7 +29,7 @@ headers	:= stdlib.h bits/stdlib.h bits/stdlib-ldbl.h bits/stdlib-float.h      \
 	   ucontext.h sys/ucontext.h bits/indirect-return.h		      \
 	   alloca.h fmtmsg.h						      \
 	   bits/stdlib-bsearch.h sys/random.h bits/stdint-intn.h	      \
-	   bits/stdint-uintn.h
+	   bits/stdint-uintn.h bits/time64.h				      \
 
 routines	:=							      \
 	atof atoi atol atoll						      \
