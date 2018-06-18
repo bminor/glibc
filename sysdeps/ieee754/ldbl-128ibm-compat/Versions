@@ -90,6 +90,7 @@ libm {
     __rintieee128;
     __roundevenieee128;
     __roundieee128;
+    __scalbieee128;
     __scalblnieee128;
     __scalbnieee128;
     __setpayloadieee128;
