@@ -21,21 +21,50 @@
 /* The C Standard says that localtime and gmtime return the same pointer.  */
 struct tm _tmbuf;
 
-
 /* Return the `struct tm' representation of *T in local time,
    using *TP to store the result.  */
 struct tm *
+__localtime64_r (const __time64_t *t, struct tm *tp)
+{
+  return __tz_convert (*t, 1, tp);
+}
+
+/* Provide a 32-bit wrapper if needed */
+
+#if __TIMESIZE != 64
+
+struct tm *
 __localtime_r (const time_t *t, struct tm *tp)
 {
-  return __tz_convert (t, 1, tp);
+  __time64_t t64 = *t;
+  return __localtime64_r (&t64, tp);
 }
-weak_alias (__localtime_r, localtime_r)
 
+#endif
+
+/* This always works because either __TIMESIZE != 64 and __localtime_r
+   exists or __TIMESIZE == 64 and the definition of __localtime64_r above
+   actually defined __localtime_r.  */
+weak_alias (__localtime_r, localtime_r)
 
 /* Return the `struct tm' representation of *T in local time.  */
 struct tm *
+__localtime64 (const __time64_t *t)
+{
+  return __tz_convert (*t, 1, &_tmbuf);
+}
+libc_hidden_def (__localtime64)
+
+/* Provide a 32-bit wrapper if needed */
+
+#if __TIMESIZE != 64
+
+struct tm *
 localtime (const time_t *t)
 {
-  return __tz_convert (t, 1, &_tmbuf);
+  __time64_t t64 = *t;
+  return __localtime64 (&t64);
 }
 libc_hidden_def (localtime)
+
+#endif

@@ -16,7 +16,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <ctype.h>
-#include <errno.h>
 #include <libc-lock.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -27,7 +26,7 @@
 
 #include <timezone/tzfile.h>
 
-#define SECSPERDAY ((time_t) 86400)
+#define SECSPERDAY ((__time64_t) 86400)
 
 char *__tzname[2] = { (char *) "GMT", (char *) "GMT" };
 int __daylight = 0;
@@ -55,7 +54,7 @@ typedef struct
 
     /* We cache the computed time of change for a
        given year so we don't have to recompute it.  */
-    time_t change;	/* When to change to this zone.  */
+    __time64_t change;	/* When to change to this zone.  */
     int computed_for;	/* Year above is computed for.  */
   } tz_rule;
 
@@ -416,7 +415,7 @@ tzset_internal (int always)
       tz_rules[0].name = tz_rules[1].name = "UTC";
       if (J0 != 0)
 	tz_rules[0].type = tz_rules[1].type = J0;
-      tz_rules[0].change = tz_rules[1].change = (time_t) -1;
+      tz_rules[0].change = tz_rules[1].change = -1;
       update_vars ();
       return;
     }
@@ -424,13 +423,13 @@ tzset_internal (int always)
   __tzset_parse_tz (tz);
 }
 
-/* Figure out the exact time (as a time_t) in YEAR
+/* Figure out the exact time (as a __time64_t) in YEAR
    when the change described by RULE will occur and
    put it in RULE->change, saving YEAR in RULE->computed_for.  */
 static void
 compute_change (tz_rule *rule, int year)
 {
-  time_t t;
+  __time64_t t;
 
   if (year != -1 && rule->computed_for == year)
     /* Operations on times in 2 BC will be slower.  Oh well.  */
@@ -516,7 +515,7 @@ compute_change (tz_rule *rule, int year)
 /* Figure out the correct timezone for TM and set `__tzname',
    `__timezone', and `__daylight' accordingly.  */
 void
-__tz_compute (time_t timer, struct tm *tm, int use_localtime)
+__tz_compute (__time64_t timer, struct tm *tm, int use_localtime)
 {
   compute_change (&tz_rules[0], 1900 + tm->tm_year);
   compute_change (&tz_rules[1], 1900 + tm->tm_year);
@@ -562,19 +561,13 @@ __tzset (void)
 }
 weak_alias (__tzset, tzset)
 
-/* Return the `struct tm' representation of *TIMER in the local timezone.
+/* Return the `struct tm' representation of TIMER in the local timezone.
    Use local time if USE_LOCALTIME is nonzero, UTC otherwise.  */
 struct tm *
-__tz_convert (const time_t *timer, int use_localtime, struct tm *tp)
+__tz_convert (__time64_t timer, int use_localtime, struct tm *tp)
 {
   long int leap_correction;
   int leap_extra_secs;
-
-  if (timer == NULL)
-    {
-      __set_errno (EINVAL);
-      return NULL;
-    }
 
   __libc_lock_lock (tzset_lock);
 
@@ -584,14 +577,14 @@ __tz_convert (const time_t *timer, int use_localtime, struct tm *tp)
   tzset_internal (tp == &_tmbuf && use_localtime);
 
   if (__use_tzfile)
-    __tzfile_compute (*timer, use_localtime, &leap_correction,
+    __tzfile_compute (timer, use_localtime, &leap_correction,
 		      &leap_extra_secs, tp);
   else
     {
       if (! __offtime (timer, 0, tp))
 	tp = NULL;
       else
-	__tz_compute (*timer, tp, use_localtime);
+	__tz_compute (timer, tp, use_localtime);
       leap_correction = 0L;
       leap_extra_secs = 0;
     }

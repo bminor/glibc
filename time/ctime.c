@@ -20,9 +20,22 @@
 /* Return a string as returned by asctime which
    is the representation of *T in that form.  */
 char *
-ctime (const time_t *t)
+__ctime64 (const __time64_t *t)
 {
   /* The C Standard says ctime (t) is equivalent to asctime (localtime (t)).
      In particular, ctime and asctime must yield the same pointer.  */
-  return asctime (localtime (t));
+  return asctime (__localtime64 (t));
 }
+
+/* Provide a 32-bit wrapper if needed */
+
+#if __TIMESIZE != 64
+
+char *
+ctime (const time_t *t)
+{
+  __time64_t t64 = *t;
+  return __ctime64 (&t64);
+}
+
+#endif

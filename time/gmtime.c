@@ -18,20 +18,49 @@
 
 #include <time.h>
 
-/* Return the `struct tm' representation of *T in UTC,
+/* Return the `struct tm' representation of T in UTC,
    using *TP to store the result.  */
+struct tm *
+__gmtime64_r (const __time64_t *t, struct tm *tp)
+{
+  return __tz_convert (*t, 0, tp);
+}
+
+/* Provide a 32-bit wrapper if needed */
+
+#if __TIMESIZE != 64
+
 struct tm *
 __gmtime_r (const time_t *t, struct tm *tp)
 {
-  return __tz_convert (t, 0, tp);
+  __time64_t t64 = *t;
+  return __gmtime64_r (&t64, tp);
 }
+
+#endif
+
+/* This always works because either __TIMESIZE != 64 and __gmtime_r exists
+   or __TIMESIZE == 64 and the definition of __gmtime64_r above actually
+   defined __gmtime_r.  */
 libc_hidden_def (__gmtime_r)
 weak_alias (__gmtime_r, gmtime_r)
 
+/* Return the `struct tm' representation of 64-bit-time *T in UTC.	*/
+struct tm *
+__gmtime64 (const __time64_t *t)
+{
+  return __tz_convert (*t, 0, &_tmbuf);
+}
 
-/* Return the `struct tm' representation of *T in UTC.	*/
+/* Provide a 32-bit wrapper if needed */
+
+#if __TIMESIZE != 64
+
 struct tm *
 gmtime (const time_t *t)
 {
-  return __tz_convert (t, 0, &_tmbuf);
+  __time64_t t64 = *t;
+  return __gmtime64 (&t64);
 }
+
+#endif
