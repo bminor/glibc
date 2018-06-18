@@ -1,3 +1,9 @@
+2018-06-01  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/i386/i686/fpu/multiarch/libm-test-ulps: Update from master
+	branch, commit e02c026f38505cd474ff1bdaa88fc671804f5805.
+	* sysdeps/i386/fpu/libm-test-ulps: Likewise.
+
 2018-06-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #23264]
