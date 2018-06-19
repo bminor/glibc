@@ -279,8 +279,13 @@ enum
 #define __MATHDECLX(type, function,suffix, args, attrib) \
   __MATHDECL_1(type, function,suffix, args) __attribute__ (attrib); \
   __MATHDECL_1(type, __CONCAT(__,function),suffix, args) __attribute__ (attrib)
-#define __MATHDECL_1(type, function,suffix, args) \
+#define __MATHDECL_1_IMPL(type, function, suffix, args) \
   extern type __MATH_PRECNAME(function,suffix) args __THROW
+#define __MATHDECL_1(type, function, suffix, args) \
+  __MATHDECL_1_IMPL(type, function, suffix, args)
+
+#define __MATHREDIR(type, function, suffix, args, to) \
+  extern type __REDIRECT_NTH (__MATH_PRECNAME (function, suffix), args, to)
 
 #define _Mdouble_		double
 #define __MATH_PRECNAME(name,r)	__CONCAT(name,r)
@@ -331,11 +336,8 @@ extern long double __REDIRECT_NTH (nexttowardl,
 #   endif
 
 #   undef __MATHDECL_1
-#   define __MATHDECL_2(type, function,suffix, args, alias) \
-  extern type __REDIRECT_NTH(__MATH_PRECNAME(function,suffix), \
-			     args, alias)
 #   define __MATHDECL_1(type, function,suffix, args) \
-  __MATHDECL_2(type, function,suffix, args, __CONCAT(function,suffix))
+  __MATHREDIR(type, function, suffix, args, __CONCAT(function,suffix))
 #  endif
 
 /* Include the file of declarations again, this time using `long double'
@@ -353,6 +355,11 @@ extern long double __REDIRECT_NTH (nexttowardl,
 #  undef __MATH_DECLARING_DOUBLE
 #  undef __MATH_DECLARING_FLOATN
 
+#  if defined __LDBL_COMPAT
+#   undef __MATHDECL_1
+#   define __MATHDECL_1(type, function, suffix, args) \
+  __MATHDECL_1_IMPL(type, function, suffix, args)
+#  endif
 # endif /* !(__NO_LONG_DOUBLE_MATH && _LIBC) || __LDBL_COMPAT */
 
 #endif	/* Use ISO C99.  */
@@ -479,6 +486,7 @@ extern long double __REDIRECT_NTH (nexttowardl,
 # undef __MATH_DECLARING_FLOATN
 #endif /* __HAVE_DISTINCT_FLOAT128X || (__HAVE_FLOAT128X && !_LIBC).  */
 
+#undef	__MATHDECL_1_IMPL
 #undef	__MATHDECL_1
 #undef	__MATHDECL
 #undef	__MATHCALL

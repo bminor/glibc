@@ -98,8 +98,10 @@ __BEGIN_DECLS
 #define __MATHDECL(type, function, args) \
   __MATHDECL_1(type, function, args); \
   __MATHDECL_1(type, __CONCAT(__,function), args)
-#define __MATHDECL_1(type, function, args) \
+#define __MATHDECL_1_IMPL(type, function, args) \
   extern type __MATH_PRECNAME(function) args __THROW
+#define __MATHDECL_1(type, function, args) \
+  __MATHDECL_1_IMPL(type, function, args)
 
 #define _Mdouble_ 		double
 #define __MATH_PRECNAME(name)	name
@@ -127,6 +129,11 @@ __BEGIN_DECLS
 # define _Mdouble_ 		long double
 # define __MATH_PRECNAME(name)	name##l
 # include <bits/cmathcalls.h>
+# if defined __LDBL_COMPAT
+#  undef __MATHDECL_1
+#  define __MATHDECL_1(type, function, args) \
+  __MATHDECL_1_IMPL(type, function, args)
+# endif
 #endif
 #undef	_Mdouble_
 #undef	__MATH_PRECNAME
@@ -215,6 +222,7 @@ __BEGIN_DECLS
 # undef _Mdouble_complex_
 #endif
 
+#undef	__MATHDECL_1_IMPL
 #undef	__MATHDECL_1
 #undef	__MATHDECL
 #undef	__MATHCALL
