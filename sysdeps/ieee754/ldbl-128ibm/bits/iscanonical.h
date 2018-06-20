@@ -23,8 +23,12 @@
 #ifdef __NO_LONG_DOUBLE_MATH
 # define iscanonical(x) ((void) (__typeof (x)) (x), 1)
 #else
+# if __LONG_DOUBLE_USES_FLOAT128 == 1
+# define __iscanonicall(x) ((void) (__typeof (x)) (x), 1)
+# else
 extern int __iscanonicall (long double __x)
      __THROW __attribute__ ((__const__));
+# endif
 # define __iscanonicalf(x) ((void) (__typeof (x)) (x), 1)
 # define __iscanonical(x) ((void) (__typeof (x)) (x), 1)
 # if __HAVE_DISTINCT_FLOAT128
@@ -50,7 +54,9 @@ extern "C++" {
 inline int iscanonical (float __val) { return __iscanonicalf (__val); }
 inline int iscanonical (double __val) { return __iscanonical (__val); }
 inline int iscanonical (long double __val) { return __iscanonicall (__val); }
-#  if __HAVE_DISTINCT_FLOAT128
+/* When using an IEEE 128-bit long double, _Float128 is defined as long double
+   in C++.  */
+#  if __HAVE_DISTINCT_FLOAT128 && __HAVE_FLOAT128_UNLIKE_LDBL
 inline int iscanonical (_Float128 __val) { return __iscanonicalf128 (__val); }
 #  endif
 }

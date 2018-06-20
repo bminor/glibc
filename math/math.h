@@ -283,6 +283,10 @@ enum
   extern type __MATH_PRECNAME(function,suffix) args __THROW
 #define __MATHDECL_1(type, function, suffix, args) \
   __MATHDECL_1_IMPL(type, function, suffix, args)
+/* Ignore the alias by default.  The alias is only useful with
+   redirections.  */
+#define __MATHDECL_ALIAS(type, function, suffix, args, alias) \
+  __MATHDECL_1(type, function, suffix, args)
 
 #define __MATHREDIR(type, function, suffix, args, to) \
   extern type __REDIRECT_NTH (__MATH_PRECNAME (function, suffix), args, to)
@@ -338,6 +342,35 @@ extern long double __REDIRECT_NTH (nexttowardl,
 #   undef __MATHDECL_1
 #   define __MATHDECL_1(type, function,suffix, args) \
   __MATHREDIR(type, function, suffix, args, __CONCAT(function,suffix))
+
+#  elif __LONG_DOUBLE_USES_FLOAT128 == 1
+#   ifdef __REDIRECT_NTH
+#    ifdef __USE_ISOC99
+extern float __REDIRECT_NTH (nexttowardf, (float __x, long double __y),
+			    __nexttowardf_to_ieee128)
+  __attribute__ ((__const__));
+extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
+			     __nexttoward_to_ieee128)
+  __attribute__ ((__const__));
+
+#define __dremieee128 __remainderieee128
+#define __gammaieee128 __lgammaieee128
+
+#    endif
+#   endif
+
+#   undef __MATHDECL_1
+#   undef __MATHDECL_ALIAS
+
+#   define __REDIRTO(function, suffix) \
+  __ ## function ## ieee128 ## suffix
+#   define __REDIRTO_ALT(function, suffix) \
+  __ ## function ## f128 ## suffix
+
+#   define __MATHDECL_1(type, function, suffix, args) \
+  __MATHREDIR (type, function, suffix, args, __REDIRTO (function, suffix))
+#   define __MATHDECL_ALIAS(type, function, suffix, args, alias) \
+  __MATHREDIR (type, function, suffix, args, __REDIRTO_ALT (alias, suffix))
 #  endif
 
 /* Include the file of declarations again, this time using `long double'
@@ -350,15 +383,22 @@ extern long double __REDIRECT_NTH (nexttowardl,
 #  define __MATH_DECLARE_LDOUBLE   1
 #  include <bits/mathcalls-helper-functions.h>
 #  include <bits/mathcalls.h>
+
 #  undef _Mdouble_
 #  undef __MATH_PRECNAME
 #  undef __MATH_DECLARING_DOUBLE
 #  undef __MATH_DECLARING_FLOATN
 
-#  if defined __LDBL_COMPAT
+#  if defined __LDBL_COMPAT \
+      || __LONG_DOUBLE_USES_FLOAT128 == 1
+#   undef __REDIRTO
+#   undef __REDIRTO_ALT
 #   undef __MATHDECL_1
+#   undef __MATHDECL_ALIAS
 #   define __MATHDECL_1(type, function, suffix, args) \
   __MATHDECL_1_IMPL(type, function, suffix, args)
+#   define __MATHDECL_ALIAS(type, function, suffix, args, alias) \
+  __MATHDECL_1(type, function, suffix, args)
 #  endif
 # endif /* !(__NO_LONG_DOUBLE_MATH && _LIBC) || __LDBL_COMPAT */
 
@@ -488,6 +528,7 @@ extern long double __REDIRECT_NTH (nexttowardl,
 
 #undef	__MATHDECL_1_IMPL
 #undef	__MATHDECL_1
+#undef	__MATHDECL_ALIAS
 #undef	__MATHDECL
 #undef	__MATHCALL
 
@@ -521,12 +562,18 @@ extern long double __REDIRECT_NTH (nexttowardl,
 #  undef __MATHCALL_NARROW
 #  define __MATHCALL_NARROW(func, redir, nargs) \
   __MATHCALL_NARROW_REDIR (func, redir, nargs)
+# elif __LONG_DOUBLE_USES_FLOAT128 == 1
+#  define __MATHCALL_REDIR_NAME(name) __ ## f32 ## name ## ieee128
+#  undef __MATHCALL_NARROW
+#  define __MATHCALL_NARROW(func, redir, nargs) \
+  __MATHCALL_NARROW_REDIR (func, redir, nargs)
 # endif
 # include <bits/mathcalls-narrow.h>
 # undef _Mret_
 # undef _Marg_
 # undef __MATHCALL_NAME
-# ifdef __LDBL_COMPAT
+# if defined __LDBL_COMPAT \
+     || __LONG_DOUBLE_USES_FLOAT128 == 1
 #  undef __MATHCALL_REDIR_NAME
 #  undef __MATHCALL_NARROW
 #  define __MATHCALL_NARROW(func, redir, nargs) \
@@ -541,12 +588,18 @@ extern long double __REDIRECT_NTH (nexttowardl,
 #  undef __MATHCALL_NARROW
 #  define __MATHCALL_NARROW(func, redir, nargs) \
   __MATHCALL_NARROW_REDIR (func, redir, nargs)
+# elif __LONG_DOUBLE_USES_FLOAT128 == 1
+#  define __MATHCALL_REDIR_NAME(name) __ ## f64 ## name ## ieee128
+#  undef __MATHCALL_NARROW
+#  define __MATHCALL_NARROW(func, redir, nargs) \
+  __MATHCALL_NARROW_REDIR (func, redir, nargs)
 # endif
 # include <bits/mathcalls-narrow.h>
 # undef _Mret_
 # undef _Marg_
 # undef __MATHCALL_NAME
-# ifdef __LDBL_COMPAT
+# if defined __LDBL_COMPAT \
+     || __LONG_DOUBLE_USES_FLOAT128 == 1
 #  undef __MATHCALL_REDIR_NAME
 #  undef __MATHCALL_NARROW
 #  define __MATHCALL_NARROW(func, redir, nargs) \
