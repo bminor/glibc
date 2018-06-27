@@ -910,7 +910,7 @@ data8 0xEAC0C6E7DD24392F , 0x00003FFF
 LOCAL_OBJECT_END(pow_tbl2)
 
 .section .text
-GLOBAL_LIBM_ENTRY(pow)
+WEAK_LIBM_ENTRY(pow)
 
 // Get exponent of x.  Will be used to calculate K.
 { .mfi
@@ -2233,8 +2233,14 @@ POW_OVER_UNDER_ERROR:
 }
 ;;
 
-GLOBAL_LIBM_END(pow)
-libm_alias_double_other (pow, pow)
+WEAK_LIBM_END(pow)
+libm_alias_double_other (__pow, pow)
+#ifdef SHARED
+.symver pow,pow@@GLIBC_2.29
+.weak __pow_compat
+.set __pow_compat,__pow
+.symver __pow_compat,pow@GLIBC_2.2
+#endif
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

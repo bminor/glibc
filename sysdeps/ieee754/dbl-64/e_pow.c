@@ -20,6 +20,9 @@
 #include <stdint.h>
 #include <math-barriers.h>
 #include <math-narrow-eval.h>
+#include <math-svid-compat.h>
+#include <shlib-compat.h>
+#include <libm-alias-double.h>
 #include "math_config.h"
 
 /*
@@ -276,7 +279,7 @@ zeroinfnan (uint64_t i)
 
 double
 SECTION
-__ieee754_pow (double x, double y)
+__pow (double x, double y)
 {
   uint32_t sign_bias = 0;
   uint64_t ix, iy;
@@ -375,6 +378,13 @@ __ieee754_pow (double x, double y)
 #endif
   return exp_inline (ehi, elo, sign_bias);
 }
-#ifndef __ieee754_pow
-strong_alias (__ieee754_pow, __pow_finite)
+#ifndef __pow
+strong_alias (__pow, __ieee754_pow)
+strong_alias (__pow, __pow_finite)
+# if LIBM_SVID_COMPAT
+versioned_symbol (libm, __pow, pow, GLIBC_2_29);
+libm_alias_double_other (__pow, pow)
+# else
+libm_alias_double (__pow, pow)
+# endif
 #endif

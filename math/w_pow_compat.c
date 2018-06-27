@@ -22,10 +22,12 @@
 #include <libm-alias-double.h>
 
 
-#if LIBM_SVID_COMPAT
+#if LIBM_SVID_COMPAT && (SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_29) \
+			 || defined NO_LONG_DOUBLE \
+			 || defined LONG_DOUBLE_COMPAT)
 /* wrapper pow */
 double
-__pow (double x, double y)
+__pow_compat (double x, double y)
 {
   double z = __ieee754_pow (x, y);
   if (__glibc_unlikely (!isfinite (z)))
@@ -60,5 +62,17 @@ __pow (double x, double y)
 
   return z;
 }
-libm_alias_double (__pow, pow)
+# if SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_29)
+compat_symbol (libm, __pow_compat, pow, GLIBC_2_0);
+# endif
+# ifdef NO_LONG_DOUBLE
+weak_alias (__pow_compat, powl)
+# endif
+# ifdef LONG_DOUBLE_COMPAT
+/* Work around gas bug "multiple versions for symbol".  */
+weak_alias (__pow_compat, __pow_compat_alias)
+
+LONG_DOUBLE_COMPAT_CHOOSE_libm_powl (
+  compat_symbol (libm, __pow_compat_alias, powl, FIRST_VERSION_libm_powl), );
+# endif
 #endif

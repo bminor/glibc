@@ -814,6 +814,7 @@ GLIBC_2.29 exp F
 GLIBC_2.29 exp2 F
 GLIBC_2.29 log F
 GLIBC_2.29 log2 F
+GLIBC_2.29 pow F
 GLIBC_2.4 __clog10l F
 GLIBC_2.4 __finitel F
 GLIBC_2.4 __fpclassifyl F
