@@ -29,6 +29,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "../locale/localeinfo.h"
+#include <bits/floatn.h>
 
 
 #define out_char(Ch)							      \
@@ -96,6 +97,9 @@ __vstrfmon_l_internal (char *s, size_t maxsize, locale_t loc,
       {
 	double dbl;
 	long double ldbl;
+#if __HAVE_DISTINCT_FLOAT128
+	_Float128 f128;
+#endif
       }
       fpnum;
       int int_format;
@@ -106,6 +110,7 @@ __vstrfmon_l_internal (char *s, size_t maxsize, locale_t loc,
       int group;
       char pad;
       int is_long_double;
+      int is_binary128;
       int p_sign_posn;
       int n_sign_posn;
       int sign_posn;
@@ -150,6 +155,7 @@ __vstrfmon_l_internal (char *s, size_t maxsize, locale_t loc,
       group = 1;			/* Print digits grouped.  */
       pad = ' ';			/* Fill character is <SP>.  */
       is_long_double = 0;		/* Double argument by default.  */
+      is_binary128 = 0;			/* Long double argument by default.  */
       p_sign_posn = -2;			/* This indicates whether the */
       n_sign_posn = -2;			/* '(' flag is given.  */
       width = -1;			/* No width specified so far.  */
@@ -270,6 +276,10 @@ __vstrfmon_l_internal (char *s, size_t maxsize, locale_t loc,
 	  ++fmt;
 	  if (__glibc_likely ((flags & STRFMON_LDBL_IS_DBL) == 0))
 	    is_long_double = 1;
+#if __HAVE_DISTINCT_FLOAT128
+	  if (__glibc_likely ((flags & STRFMON_LDBL_USES_FLOAT128) != 0))
+	    is_binary128 = is_long_double;
+#endif
 	}
 
       /* Handle format specifier.  */
@@ -324,10 +334,22 @@ __vstrfmon_l_internal (char *s, size_t maxsize, locale_t loc,
       /* Now it's time to get the value.  */
       if (is_long_double == 1)
 	{
-	  fpnum.ldbl = va_arg (ap, long double);
-	  is_negative = fpnum.ldbl < 0;
-	  if (is_negative)
-	    fpnum.ldbl = -fpnum.ldbl;
+#if __HAVE_DISTINCT_FLOAT128
+	  if (is_binary128 == 1)
+	    {
+	      fpnum.f128 = va_arg (ap, _Float128);
+	      is_negative = fpnum.f128 < 0;
+	      if (is_negative)
+	        fpnum.f128 = -fpnum.f128;
+	    }
+	  else
+#endif
+	  {
+	    fpnum.ldbl = va_arg (ap, long double);
+	    is_negative = fpnum.ldbl < 0;
+	    if (is_negative)
+	      fpnum.ldbl = -fpnum.ldbl;
+	  }
 	}
       else
 	{
@@ -517,6 +539,7 @@ __vstrfmon_l_internal (char *s, size_t maxsize, locale_t loc,
       info.width = left_prec + (right_prec ? (right_prec + 1) : 0);
       info.spec = 'f';
       info.is_long_double = is_long_double;
+      info.is_binary128 = is_binary128;
       info.group = group;
       info.pad = pad;
       info.extra = 1;		/* This means use values from LC_MONETARY.  */

@@ -205,5 +205,8 @@ libc {
 
     __errorieee128;
     __error_at_lineieee128;
+
+    __strfmonieee128;
+    __strfmon_lieee128;
   }
 }

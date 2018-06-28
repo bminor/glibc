@@ -214,6 +214,18 @@ CFLAGS-test-syslog-chk-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
 CFLAGS-test-syslog-chk-ibm128.c += -mabi=ibmlongdouble -Wno-psabi
 endif
 
+ifeq ($(subdir),stdlib)
+ldbl-extra-routines += strfmon strfmon_l
+
+# Printing long double values with IEEE binary128 format reuses part
+# of the internal float128 implementation (__printf_fp, __printf_fphex,
+# and __float128 variables and union members).  Thus, the compilation of
+# the following files, must have -mfloat128 passed to the compiler.
+# Also, guarantee that they are compiled in IBM long double mode.
+CFLAGS-strfmon.c += -mfloat128 -mabi=ibmlongdouble
+CFLAGS-strfmon_l.c += -mfloat128 -mabi=ibmlongdouble
+endif
+
 # Add IEEE binary128 files as make targets.
 routines += $(foreach r,$(ldbl-extra-routines),ieee128-$(r))
 

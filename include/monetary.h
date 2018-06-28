@@ -15,5 +15,6 @@ __vstrfmon_l_internal (char *s, size_t maxsize, locale_t loc,
    same format as double, in which case the flag should be set to one,
    or as another format, otherwise.  */
 #define STRFMON_LDBL_IS_DBL 0x0001
+#define STRFMON_LDBL_USES_FLOAT128  0x0002
 
 #endif
