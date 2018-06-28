@@ -142,6 +142,7 @@ The following bugs are resolved with this release:
   [23171] Fix parameter type in C++ version of iseqsig
   [23196] __mempcpy_avx512_no_vzeroupper mishandles large copies
   [23236] Harden function pointers in _IO_str_fields
+  [23349] Various glibc headers no longer compatible with <linux/time.h>
 
 Version 2.26
 

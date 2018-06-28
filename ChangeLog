@@ -1,3 +1,9 @@
+2018-06-28  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23349]
+	* time/bits/types/struct_timespec.h: Change header inclusion guard to
+	_STRUCT_TIMESPEC.
+
 2018-05-24  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
 	[BZ #23171]
