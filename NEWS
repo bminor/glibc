@@ -120,6 +120,7 @@ The following bugs are resolved with this release:
   [22299] x86-64: Don't set GLRO(dl_platform) to NULL
   [22320] glob: Fix one-byte overflow (CVE-2017-15670)
   [22321] sysconf: Fix missing definition of UIO_MAXIOV on Linux
+  [22442] if_nametoindex: Check length of ifname before copying it
   [22322] libc: [mips64] wrong bits/long-double.h installed
   [22325] glibc: Memory leak in glob with GLOB_TILDE (CVE-2017-15671)
   [22342] NSCD not properly caching netgroup
