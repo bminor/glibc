@@ -45,6 +45,7 @@ The following bugs are resolved with this release:
   [18018] Additional $ORIGIN handling issues (CVE-2011-0536)
   [20419] files with large allocated notes crash in open_verify
   [21269] i386 sigaction sa_restorer handling is wrong
+  [21812] getifaddrs: Don't return ifa entries with NULL names
   [21942] _dl_dst_substitute incorrectly handles $ORIGIN: with AT_SECURE=1
   [22342] NSCD not properly caching netgroup
   [22638] sparc: static binaries are broken if glibc is built by gcc
