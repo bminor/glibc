@@ -1,3 +1,8 @@
+2018-06-29  Sylvain Lesage  <severo@rednegra.net>
+
+	[BZ #22996]
+	* localedata/locales/es_BO (LC_PAPER): Change to “copy "en_US"”.
+
 2018-07-06  Florian Weimer  <fweimer@redhat.com>
 
 	* conform/conformtest.pl (checknamespace): Escape literal braces
