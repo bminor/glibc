@@ -1,5 +1,13 @@
 2018-06-26  Florian Weimer  <fweimer@redhat.com>
 
+	* libio/Makefile (tests-internal): Add tst-vtables,
+	tst-vtables-interposed.
+	* libio/tst-vtables.c: New file.
+	* libio/tst-vtables-common.c: Likewise.
+	* libio/tst-vtables-interposed.c: Likewise.
+
+2018-06-26  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #23313]
 	* libio/vtables.c (check_stdfiles_vtables): New ELF constructor.
 
