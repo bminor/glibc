@@ -1,5 +1,12 @@
 2019-03-01  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
+	* sysdeps/ieee754/ldbl-opt/Makefile
+	[subdir == argp] (tests-internal): Add tst-nldbl-argp.
+	[subdir == argp] ($(objpfx)tst-nldbl-argp.c): New rule.
+	[subdir == argp] (CFLAGS-tst-nldbl-argp.c): New variable.
+
+2019-03-01  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
 	[BZ #23983]
 	* argp/Makefile (headers): Add bits/argp-ldbl.h.
 	* argp/argp.h [defined __LDBL_COMPAT]: Include bits/argp-ldbl.h.

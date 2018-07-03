@@ -179,3 +179,13 @@ CFLAGS-test-nldbl-redirect.c += -mlong-double-64
 $(objpfx)test-nldbl-redirect: $(objpfx)libnldbl_nonshared.a
 
 endif
+
+# Tests for argp.h functions (reusing the relevant tests from argp/)
+ifeq ($(subdir),argp)
+tests-internal += tst-nldbl-argp
+
+$(objpfx)tst-nldbl-argp.c: tst-ldbl-argp.c
+	cp $< $@
+
+CFLAGS-tst-nldbl-argp.c += -mlong-double-64
+endif
