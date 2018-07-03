@@ -146,6 +146,7 @@ The following bugs are resolved with this release:
   [23236] Harden function pointers in _IO_str_fields
   [23313] libio: Disable vtable validation in case of interposition
   [23349] Various glibc headers no longer compatible with <linux/time.h>
+  [23363] stdio-common/tst-printf.c has non-free license
 
 Version 2.26
 
