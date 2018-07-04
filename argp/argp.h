@@ -554,6 +554,10 @@ __NTH (__option_is_end (const struct argp_option *__opt))
 # endif
 #endif /* Use extern inlines.  */
 
+#ifdef __LDBL_COMPAT
+# include <bits/argp-ldbl.h>
+#endif
+
 __END_DECLS
 
 #endif /* argp.h */

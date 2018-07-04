@@ -26,6 +26,7 @@
 
 /* Avoid long double prototypes.  */
 #define __NO_LONG_DOUBLE_MATH	1
+#include <argp.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -76,6 +77,8 @@ NLDBL_DECL (__isoc99_swscanf);
 NLDBL_DECL (__isoc99_vwscanf);
 NLDBL_DECL (__isoc99_vfwscanf);
 NLDBL_DECL (__isoc99_vswscanf);
+NLDBL_DECL (argp_error);
+NLDBL_DECL (argp_failure);
 
 /* These do not exist in the normal interface, but must exist in the
    __nldbl interface so that they can be called from libnldbl.  */

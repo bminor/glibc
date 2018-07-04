@@ -78,6 +78,9 @@ libc {
     __nldbl___dprintf_chk; __nldbl___vdprintf_chk;
     __nldbl___obstack_printf_chk; __nldbl___obstack_vprintf_chk;
   }
+  GLIBC_2.30 {
+    __nldbl_argp_error; __nldbl_argp_failure;
+  }
 }
 libm {
   NLDBL_VERSION {

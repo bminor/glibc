@@ -1,3 +1,31 @@
+2019-03-01  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
+	[BZ #23983]
+	* argp/Makefile (headers): Add bits/argp-ldbl.h.
+	* argp/argp.h [defined __LDBL_COMPAT]: Include bits/argp-ldbl.h.
+	* argp/bits/argp-ldbl.h: New file.
+	* include/argp.h: Include stdarg.h.  Add prototypes for internal
+	functions: __argp_error_internal and __argp_failure_internal.
+	* include/bits/argp-ldbl.h: New file.
+	* sysdeps/ieee754/ldbl-opt/Versions (libc): Add
+	__nldbl_argp_error and __nldbl_argp_failure.
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.c: Include argp.h.
+	(__nldbl_argp_error, __nldbl_argp_failure): New functions.
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.h: Include argp.h.
+	Redirect argp_error and argp_failure calls.
+	* sysdeps/unix/sysv/linux/alpha/libc.abilist: Update.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist: Likewise.
+
 2019-03-01  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #20419]
