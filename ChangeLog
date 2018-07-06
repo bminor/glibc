@@ -1,3 +1,8 @@
+2018-07-06  Florian Weimer  <fweimer@redhat.com>
+
+	* conform/conformtest.pl (checknamespace): Escape literal braces
+	in regular expressions.
+
 2018-06-21  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #23253]
