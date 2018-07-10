@@ -258,9 +258,9 @@ extern unsigned long int _dl_higher_prime_number (unsigned long int n)
 uint64_t _dl_strtoul (const char *, char **) attribute_hidden;
 
 /* Mask every signal, returning the previous sigmask in OLD.  */
-extern void _dl_mask_all_signals (sigset_t *old) internal_function;
+extern void _dl_mask_all_signals (sigset_t *old);
 /* Undo _dl_mask_all_signals.  */
-extern void _dl_unmask_signals (sigset_t *old) internal_function;
+extern void _dl_unmask_signals (sigset_t *old);
 
 /* Function used as argument for `_dl_receive_error' function.  The
    arguments are the error code, error string, and the objname the
@@ -1103,7 +1103,7 @@ rtld_hidden_proto (_dl_allocate_tls_init)
 
 /* Remove all allocated dynamic TLS regions from a DTV
    for reuse by new thread.  */
-extern void _dl_clear_dtv (dtv_t *dtv) internal_function;
+extern void _dl_clear_dtv (dtv_t *dtv);
 rtld_hidden_proto (_dl_clear_dtv)
 
 extern void *__signal_safe_memalign (size_t boundary, size_t size);

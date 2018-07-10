@@ -535,11 +535,10 @@ _dl_allocate_tls (void *mem)
 rtld_hidden_def (_dl_allocate_tls)
 
 void
-internal_function
 _dl_clear_dtv (dtv_t *dtv)
 {
   for (size_t cnt = 0; cnt < dtv[-1].counter; ++cnt)
-    if (! dtv[1 + cnt].pointer.is_static
+    if (/*! dtv[1 + cnt].pointer.is_static */ 1
 	&& dtv[1 + cnt].pointer.val != TLS_DTV_UNALLOCATED)
       __signal_safe_free (dtv[1 + cnt].pointer.val);
   memset (dtv, '\0', (dtv[-1].counter + 1) * sizeof (dtv_t));
@@ -746,7 +745,6 @@ tls_get_addr_tail (GET_ADDR_ARGS, dtv_t *dtv, struct link_map *the_map)
 
       the_map = listp->slotinfo[idx].map;
     }
-#if 0
   sigset_t old;
   _dl_mask_all_signals (&old);
 
@@ -754,7 +752,6 @@ tls_get_addr_tail (GET_ADDR_ARGS, dtv_t *dtv, struct link_map *the_map)
      reentrancy.  */
   if (dtv[GET_ADDR_MODULE].pointer.val != TLS_DTV_UNALLOCATED)
     {
-      assert (dtv[GET_ADDR_MODULE].pointer.val != TLS_DTV_UNALLOCATED);
       _dl_unmask_signals (&old);
 
       return (char *) dtv[GET_ADDR_MODULE].pointer.val + GET_ADDR_OFFSET;
@@ -778,48 +775,7 @@ tls_get_addr_tail (GET_ADDR_ARGS, dtv_t *dtv, struct link_map *the_map)
       offset = the_map->l_tls_offset;
       assert (offset != NO_TLS_OFFSET);
     }
-  #endif
 
-  /* Make sure that, if a dlopen running in parallel forces the
-     variable into static storage, we'll wait until the address in the
-     static TLS block is set up, and use that.  If we're undecided
-     yet, make sure we make the decision holding the lock as well.  */
-  if (__glibc_unlikely (the_map->l_tls_offset
-			!= FORCED_DYNAMIC_TLS_OFFSET))
-    {
-      __rtld_lock_lock_recursive (GL(dl_load_lock));
-      if (__glibc_likely (the_map->l_tls_offset == NO_TLS_OFFSET))
-	{
-	  the_map->l_tls_offset = FORCED_DYNAMIC_TLS_OFFSET;
-	  __rtld_lock_unlock_recursive (GL(dl_load_lock));
-	}
-      else if (__glibc_likely (the_map->l_tls_offset
-			       != FORCED_DYNAMIC_TLS_OFFSET))
-	{
-#if TLS_TCB_AT_TP
-	  void *p = (char *) THREAD_SELF - the_map->l_tls_offset;
-#elif TLS_DTV_AT_TP
-	  void *p = (char *) THREAD_SELF + the_map->l_tls_offset + TLS_PRE_TCB_SIZE;
-#else
-# error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
-#endif
-	  __rtld_lock_unlock_recursive (GL(dl_load_lock));
-
-	  dtv[GET_ADDR_MODULE].pointer.to_free = NULL;
-	  dtv[GET_ADDR_MODULE].pointer.val = p;
-
-	  return (char *) p + GET_ADDR_OFFSET;
-	}
-      else
-	__rtld_lock_unlock_recursive (GL(dl_load_lock));
-    }
-  struct dtv_pointer result = allocate_and_init (the_map);
-  dtv[GET_ADDR_MODULE].pointer = result;
-  assert (result.to_free != NULL);
-
-  return (char *) result.val + GET_ADDR_OFFSET;
-
-#if 0
   if (offset == FORCED_DYNAMIC_TLS_OFFSET)
     {
       allocate_and_init (&dtv[GET_ADDR_MODULE], the_map);
@@ -835,7 +791,7 @@ tls_get_addr_tail (GET_ADDR_ARGS, dtv_t *dtv, struct link_map *the_map)
 	    threads to initialize it.  They'll eventually write
 	    to pointer.val, at which point we know they've fully
 	    completed initialization.  */
-	  atomic_delay ();
+	  atomic_spin_nop ();
 	}
       /* Make sure we've picked up their initialization of the actual
 	 block; this pairs against the write barrier in
@@ -847,7 +803,6 @@ tls_get_addr_tail (GET_ADDR_ARGS, dtv_t *dtv, struct link_map *the_map)
   _dl_unmask_signals (&old);
 
   return (char *) dtv[GET_ADDR_MODULE].pointer.val + GET_ADDR_OFFSET;
-#endif
 }
 
 

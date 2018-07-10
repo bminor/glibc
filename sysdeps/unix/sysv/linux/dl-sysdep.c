@@ -134,7 +134,6 @@ _dl_discover_osversion (void)
 
 /* Mask every signal, returning the previous sigmask in OLD.  */
 void
-internal_function
 _dl_mask_all_signals (sigset_t *old)
 {
   int ret;
@@ -165,7 +164,6 @@ _dl_mask_all_signals (sigset_t *old)
 
 /* Return sigmask to what it was before a call to _dl_mask_all_signals.  */
 void
-internal_function
 _dl_unmask_signals (sigset_t *old)
 {
   int ret;
