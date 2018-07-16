@@ -1355,6 +1355,12 @@ pop_fail_stack (struct re_fail_stack_t *fs, Idx *pidx, Idx nregs,
   return fs->stack[num].node;
 }
 
+
+#define DYNARRAY_STRUCT  regmatch_list
+#define DYNARRAY_ELEMENT regmatch_t
+#define DYNARRAY_PREFIX  regmatch_list_
+#include <malloc/dynarray-skeleton.c>
+
 /* Set the positions where the subexpressions are starts/ends to registers
    PMATCH.
    Note: We assume that pmatch[0] is already set, and
@@ -1370,8 +1376,8 @@ set_regs (const regex_t *preg, const re_match_context_t *mctx, size_t nmatch,
   re_node_set eps_via_nodes;
   struct re_fail_stack_t *fs;
   struct re_fail_stack_t fs_body = { 0, 2, NULL };
-  regmatch_t *prev_idx_match;
-  bool prev_idx_match_malloced = false;
+  struct regmatch_list prev_match;
+  regmatch_list_init (&prev_match);
 
   DEBUG_ASSERT (nmatch > 1);
   DEBUG_ASSERT (mctx->state_log != NULL);
@@ -1388,18 +1394,13 @@ set_regs (const regex_t *preg, const re_match_context_t *mctx, size_t nmatch,
   cur_node = dfa->init_node;
   re_node_set_init_empty (&eps_via_nodes);
 
-  if (__libc_use_alloca (nmatch * sizeof (regmatch_t)))
-    prev_idx_match = (regmatch_t *) alloca (nmatch * sizeof (regmatch_t));
-  else
+  if (!regmatch_list_resize (&prev_match, nmatch))
     {
-      prev_idx_match = re_malloc (regmatch_t, nmatch);
-      if (prev_idx_match == NULL)
-	{
-	  free_fail_stack_return (fs);
-	  return REG_ESPACE;
-	}
-      prev_idx_match_malloced = true;
+      regmatch_list_free (&prev_match);
+      free_fail_stack_return (fs);
+      return REG_ESPACE;
     }
+  regmatch_t *prev_idx_match = regmatch_list_begin (&prev_match);
   memcpy (prev_idx_match, pmatch, sizeof (regmatch_t) * nmatch);
 
   for (idx = pmatch[0].rm_so; idx <= pmatch[0].rm_eo ;)
@@ -1417,8 +1418,7 @@ set_regs (const regex_t *preg, const re_match_context_t *mctx, size_t nmatch,
 	      if (reg_idx == nmatch)
 		{
 		  re_node_set_free (&eps_via_nodes);
-		  if (prev_idx_match_malloced)
-		    re_free (prev_idx_match);
+		  regmatch_list_free (&prev_match);
 		  return free_fail_stack_return (fs);
 		}
 	      cur_node = pop_fail_stack (fs, &idx, nmatch, pmatch,
@@ -1427,8 +1427,7 @@ set_regs (const regex_t *preg, const re_match_context_t *mctx, size_t nmatch,
 	  else
 	    {
 	      re_node_set_free (&eps_via_nodes);
-	      if (prev_idx_match_malloced)
-		re_free (prev_idx_match);
+	      regmatch_list_free (&prev_match);
 	      return REG_NOERROR;
 	    }
 	}
@@ -1442,8 +1441,7 @@ set_regs (const regex_t *preg, const re_match_context_t *mctx, size_t nmatch,
 	  if (__glibc_unlikely (cur_node == -2))
 	    {
 	      re_node_set_free (&eps_via_nodes);
-	      if (prev_idx_match_malloced)
-		re_free (prev_idx_match);
+	      regmatch_list_free (&prev_match);
 	      free_fail_stack_return (fs);
 	      return REG_ESPACE;
 	    }
@@ -1453,15 +1451,13 @@ set_regs (const regex_t *preg, const re_match_context_t *mctx, size_t nmatch,
 	  else
 	    {
 	      re_node_set_free (&eps_via_nodes);
-	      if (prev_idx_match_malloced)
-		re_free (prev_idx_match);
+	      regmatch_list_free (&prev_match);
 	      return REG_NOMATCH;
 	    }
 	}
     }
   re_node_set_free (&eps_via_nodes);
-  if (prev_idx_match_malloced)
-    re_free (prev_idx_match);
+  regmatch_list_free (&prev_match);
   return free_fail_stack_return (fs);
 }
 
