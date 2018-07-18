@@ -1157,6 +1157,61 @@ $(common-objpfx)dl-tunable-list.stmp: \
 	touch $@
 endif
 
+# Generate version maps, but wait until sysdep-subdirs is known
+ifeq ($(sysd-sorted-done),t)
+ifeq ($(build-shared),yes)
+-include $(common-objpfx)sysd-versions
+-include $(common-objpfx)Versions.mk
+$(addprefix $(common-objpfx),$(version-maps)): $(common-objpfx)sysd-versions
+common-generated += $(version-maps)
+postclean-generated += sysd-versions Versions.all abi-versions.h \
+		       Versions.def Versions.v.i Versions.v Versions.mk
+
+ifndef avoid-generated
+ifneq ($(sysd-versions-subdirs),$(sorted-subdirs) $(config-sysdirs))
+sysd-versions-force = FORCE
+FORCE:
+endif
+
+$(common-objpfx)Versions.def: $(..)scripts/versionlist.awk \
+			      $(common-objpfx)Versions.v
+	LC_ALL=C $(AWK) -f $^ > $@T
+	mv -f $@T $@
+
+$(common-objpfx)Versions.all: $(..)scripts/firstversions.awk \
+			      $(common-objpfx)soversions.i \
+			      $(common-objpfx)Versions.def
+	{ while read which lib version setname; do \
+	    test x"$$which" = xDEFAULT || continue; \
+	    test -z "$$setname" || echo "$$lib : $$setname"; \
+	  done < $(word 2,$^); \
+	  cat $(word 3,$^); \
+	} | LC_ALL=C $(AWK) -f $< > $@T
+	mv -f $@T $@
+$(common-objpfx)Versions.mk: $(..)scripts/haveversions.awk \
+			     $(common-objpfx)Versions.all
+	$(AWK) -f $^ > $@T
+	mv -f $@T $@
+# See %.v/%.v.i implicit rules in Makeconfig.
+$(common-objpfx)Versions.v.i: $(wildcard $(subdirs:%=$(..)%/Versions)) \
+			      $(wildcard $(sysdirs:%=%/Versions)) \
+			      $(sysd-versions-force)
+$(common-objpfx)sysd-versions: $(common-objpfx)versions.stmp
+$(common-objpfx)versions.stmp: $(common-objpfx)Versions.all \
+			       $(common-objpfx)Versions.v \
+			       $(..)scripts/versions.awk
+	( echo 'sysd-versions-subdirs = $(subdirs) $(config-sysdirs)' ; \
+	  cat $(word 2,$^) \
+	  | LC_ALL=C $(AWK) -v buildroot=$(common-objpfx) -v defsfile=$< \
+			    -v move_if_change='$(move-if-change)' \
+			    -f $(word 3,$^); \
+	) > $(common-objpfx)sysd-versionsT
+	mv -f $(common-objpfx)sysd-versionsT $(common-objpfx)sysd-versions
+	touch $@
+endif # avoid-generated
+endif # $(build-shared) = yes
+endif # sysd-sorted-done
+
 # The name under which the run-time dynamic linker is installed.
 # We are currently going for the convention that `/lib/ld.so.1'
 # names the SVR4/ELF ABI-compliant dynamic linker.

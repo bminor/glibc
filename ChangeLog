@@ -1,3 +1,21 @@
+2018-09-24  Andreas Schwab  <schwab@suse.de>
+
+	* scripts/haveversions.awk: New file.
+	* Makerules ($(common-objpfx)Versions.def)
+	($(common-objpfx)Versions.all, $(common-objpfx)Versions.v.i)
+	($(common-objpfx)sysd-versions, $(common-objpfx)versions.stmp):
+	Move rules ...
+	* Makeconfig ($(common-objpfx)Versions.def)
+	($(common-objpfx)Versions.all, $(common-objpfx)Versions.v.i)
+	($(common-objpfx)sysd-versions, $(common-objpfx)versions.stmp):
+	... here.
+	($(common-objpfx)Versions.mk): New rule.  Include it.
+	* nis/Makefile [!have-GLIBC_2.28]: Don't build any targets.
+	Emit error if build-obsolete-nsl = yes.
+	* manual/install.texi (Configuring and compiling): Describe
+	--enable-obsolete-nsl as unavaiable after version 2.28.
+	* INSTALL: Regenerate.
+
 2018-09-21  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* NEWS: Add note about new TLE support on powerpc64le.

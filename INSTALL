@@ -227,7 +227,10 @@ if 'CFLAGS' is specified it must enable optimization.  For example:
      By default, libnsl is only built as shared library for backward
      compatibility and the NSS modules libnss_compat, libnss_nis and
      libnss_nisplus are not built at all.  Use this option to enable
-     libnsl with all depending NSS modules and header files.
+     libnsl with all depending NSS modules and header files.  For
+     architectures and ABIs that have been added after version 2.28 of
+     the GNU C Library this option is not available, and the libnsl
+     compatibility library is not built.
 
 '--disable-crypt'
      Do not install the passphrase-hashing library 'libcrypt' or the

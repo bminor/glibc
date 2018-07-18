@@ -22,6 +22,14 @@ subdir	:= nis
 
 include ../Makeconfig
 
+ifndef have-GLIBC_2.28
+
+ifeq ($(build-obsolete-nsl),yes)
+$(error --enabe-obsolete-nsl is not available)
+endif
+
+else
+
 ifeq ($(build-obsolete-nsl),yes)
 headers			:= $(wildcard rpcsvc/*.[hx])
 
@@ -79,6 +87,8 @@ $(inst_libdir)/libnsl.so:
 libnsl-inhibit-o = $(filter-out .os,$(object-suffixes))
 
 endif # not $(build-obsolete-nsl)
+
+endif # have-GLIBC_2.28
 
 include ../Rules
 
