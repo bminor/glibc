@@ -325,6 +325,12 @@ routines += $(foreach r,$(ldbl-extra-routines),ieee128-$(r))
 # always be built in IBM long double mode, with additional support for
 # IEEE binary128, through the use of -mabi=ibmlongdouble and -mfloat128.
 ldbl-ibm128-files := $(objpfx)test-%-ibm128^ \
+		     $(objpfx)iovdprintf^ \
+		     $(objpfx)iovsprintf^ \
+		     $(objpfx)iovsscanf^ \
+		     $(objpfx)iovswscanf^ \
+		     $(objpfx)iovfscanf^ \
+		     $(objpfx)iovfwscanf^ \
 		     $(foreach r,$(ldbl-extra-routines),$(objpfx)$(r)^) \
 		     $(foreach r,$(ldbl-extra-routines),$(objpfx)$(r)-internal^)
 obj-suf-foreach = $(foreach suf,$(all-object-suffixes),$(subst ^,$(suf),$(1)))
