@@ -1,5 +1,16 @@
 2019-02-01  Feng Xue  <fxue@os.amperecomputing.com>
 
+	* sysdeps/aarch64/multiarch/Makefile (sysdep_routines):
+	Add memset_emag.
+	* sysdeps/aarch64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add __memset_emag to memset ifunc.
+	* sysdeps/aarch64/multiarch/memset.c (libc_ifunc):
+	Add IS_EMAG check for ifunc dispatch.
+	* sysdeps/aarch64/multiarch/memset_base64.S: New file.
+	* sysdeps/aarch64/multiarch/memset_emag.S: New file.
+
+2019-02-01  Feng Xue  <fxue@os.amperecomputing.com>
+
 	* manual/tunables.texi (Tunable glibc.cpu.name): Add emag.
 	* sysdeps/unix/sysv/linux/aarch64/cpu-features.c (cpu_list):
 	Add emag.
