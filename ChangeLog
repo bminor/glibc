@@ -1,3 +1,11 @@
+2019-02-01  Feng Xue  <fxue@os.amperecomputing.com>
+
+	* manual/tunables.texi (Tunable glibc.cpu.name): Add emag.
+	* sysdeps/unix/sysv/linux/aarch64/cpu-features.c (cpu_list):
+	Add emag.
+	* sysdeps/unix/sysv/linux/aarch64/cpu-features.h (IS_EMAG):
+	New macro.
+
 2019-02-01  Stefan Liebler  <stli@linux.ibm.com>
 
 	* posix/tst-spawn do_test(): Move waitpid before posix_spawn.

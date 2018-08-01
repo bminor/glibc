@@ -54,6 +54,9 @@
 #define IS_ARES(midr) (MIDR_IMPLEMENTOR(midr) == 'A'			      \
 			&& MIDR_PARTNUM(midr) == 0xd0c)
 
+#define IS_EMAG(midr) (MIDR_IMPLEMENTOR(midr) == 'P'			      \
+                       && MIDR_PARTNUM(midr) == 0x000)
+
 struct cpu_features
 {
   uint64_t midr_el1;
