@@ -142,10 +142,7 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
   assert (info[DT_FLAGS] == NULL
 	  || (info[DT_FLAGS]->d_un.d_val & ~DF_BIND_NOW) == 0);
 #endif
-#if defined RTLD_BOOTSTRAP || defined STATIC_PIE_BOOTSTRAP
-  assert (info[DT_RUNPATH] == NULL);
-  assert (info[DT_RPATH] == NULL);
-#else
+#if ! defined RTLD_BOOTSTRAP && ! defined STATIC_PIE_BOOTSTRAP
   if (info[DT_FLAGS] != NULL)
     {
       /* Flags are used.  Translate to the old form where available.
