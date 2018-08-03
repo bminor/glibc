@@ -530,12 +530,21 @@ __signal_safe_memalign (size_t boundary, size_t size)
 void * weak_function
 __signal_safe_malloc (size_t size)
 {
+  if (!GLRO(dl_async_signal_safe))
+    return malloc (size);
+
   return __signal_safe_memalign (1, size);
 }
 
 void weak_function
 __signal_safe_free (void *ptr)
 {
+  if (!GLRO(dl_async_signal_safe))
+    {
+      free (ptr);
+      return;
+    }
+
   if (ptr == NULL)
     return;
 
@@ -549,6 +558,9 @@ __signal_safe_free (void *ptr)
 void * weak_function
 __signal_safe_realloc (void *ptr, size_t size)
 {
+  if (!GLRO(dl_async_signal_safe))
+    return realloc (ptr, size);
+
   if (size == 0)
     {
       __signal_safe_free (ptr);
@@ -567,7 +579,8 @@ __signal_safe_realloc (void *ptr, size_t size)
   if (new_ptr == NULL)
     return NULL;
 
-  memcpy (new_ptr, ptr, old_size);
+  /* Copy over the old block (but not its header).  */
+  memcpy (new_ptr, ptr, old_size - sizeof (*header));
   __signal_safe_free (ptr);
 
   return new_ptr;
@@ -576,6 +589,9 @@ __signal_safe_realloc (void *ptr, size_t size)
 void * weak_function
 __signal_safe_calloc (size_t nmemb, size_t size)
 {
+  if (!GLRO(dl_async_signal_safe))
+    return calloc (nmemb, size);
+
   void *ptr = __signal_safe_malloc (nmemb * size);
   if (ptr == NULL)
     return NULL;

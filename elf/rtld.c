@@ -2502,6 +2502,9 @@ process_envvars (enum mode *modep)
   enum mode mode = normal;
   char *debug_output = NULL;
 
+  /* Enable async-signal-safe TLS by default.  */
+  GLRO(dl_async_signal_safe) = 1;
+
   /* This is the default place for profiling data file.  */
   GLRO(dl_profile_output)
     = &"/var/tmp\0/var/profile"[__libc_enable_secure ? 9 : 0];
@@ -2525,6 +2528,10 @@ process_envvars (enum mode *modep)
 	  /* Warning level, verbose or not.  */
 	  if (memcmp (envline, "WARN", 4) == 0)
 	    GLRO(dl_verbose) = envline[5] != '\0';
+#if 0 /* enable to get runtime control over async signal safety */
+	  if (memcmp (envline, "SAFE", 4) == 0)
+	    GLRO(dl_async_signal_safe) = 1;
+#endif
 	  break;
 
 	case 5:
@@ -2537,7 +2544,12 @@ process_envvars (enum mode *modep)
 	  if (memcmp (envline, "AUDIT", 5) == 0)
 	    audit_list_string = &envline[6];
 	  break;
-
+#if 0 /* enable to get runtime control over async signal safety */
+	case 6:
+	  if (memcmp (envline, "UNSAFE", 6) == 0)
+	    GLRO(dl_async_signal_safe) = 0;
+	  break;
+#endif
 	case 7:
 	  /* Print information about versions.  */
 	  if (memcmp (envline, "VERBOSE", 7) == 0)
@@ -2665,6 +2677,16 @@ process_envvars (enum mode *modep)
 
   /* The caller wants this information.  */
   *modep = mode;
+
+#if 0 /* enable this to help debug async-safe TLS */
+  if (GLRO(dl_debug_mask))
+    {
+      if (GLRO(dl_async_signal_safe))
+	_dl_printf ("TLS is async-signal-safe\n");
+      else
+	_dl_printf ("TLS is NOT async-signal-safe\n");
+    }
+#endif /* for async-safe TLS */
 
   /* Extra security for SUID binaries.  Remove all dangerous environment
      variables.  */

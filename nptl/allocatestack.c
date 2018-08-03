@@ -1231,6 +1231,7 @@ __nptl_setxid (struct xid_command *cmdp)
 static inline void __attribute__((always_inline))
 init_one_static_tls (struct pthread *curp, struct link_map *map)
 {
+  dtv_t *dtv = GET_DTV (TLS_TPADJ (curp));
 # if TLS_TCB_AT_TP
   void *dest = (char *) curp - map->l_tls_offset;
 # elif TLS_DTV_AT_TP
@@ -1243,15 +1244,11 @@ init_one_static_tls (struct pthread *curp, struct link_map *map)
   memset (__mempcpy (dest, map->l_tls_initimage, map->l_tls_initimage_size),
 	  '\0', map->l_tls_blocksize - map->l_tls_initimage_size);
 
-#if 0 /* still needed? dtv refs gone in current code */
-  /* Fill in the DTV slot so that a later LD/GD access will find it.  */
-  dtv[map->l_tls_modid].pointer.is_static = true;
   /* Pairs against the read barrier in tls_get_attr_tail, guaranteeing
      any thread waiting for an update to pointer.val sees the
      initimage write.  */
   atomic_write_barrier ();
   dtv[map->l_tls_modid].pointer.val = dest;
-#endif
 }
 
 void

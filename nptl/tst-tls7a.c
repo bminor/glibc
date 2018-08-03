@@ -20,7 +20,6 @@
    from a signal handler.  */
 
 #include <assert.h>
-#include <atomic.h>
 #include <dlfcn.h>
 #include <pthread.h>
 #include <semaphore.h>
@@ -34,7 +33,9 @@ spin (void *ignored)
   while (1)
     {
       /* busywork */
-      free (malloc (128));
+      void *volatile p;
+      p = malloc (128);
+      free (p);
     }
 
   /* never reached */
@@ -48,7 +49,7 @@ action (int signo, siginfo_t *info, void *ignored)
 {
   sem_t *sem = info->si_value.sival_ptr;
 
-  atomic_read_barrier ();
+  __asm ("" ::: "memory");  // atomic_read_barrier
   assert (tls7mod_action != NULL);
   (*tls7mod_action) (signo, info, ignored);
 
@@ -75,7 +76,7 @@ do_test (void)
 
   for (int i = 0; i < NITERS; ++i)
     {
-      void *h = dlopen ("tst-tls7mod.so", RTLD_LAZY);
+      void *h = dlopen ("tst-tls7amod.so", RTLD_LAZY);
       if (h == NULL)
         {
           puts ("dlopen failed");
@@ -88,7 +89,7 @@ do_test (void)
           puts ("dlsym for action failed");
           exit (1);
         }
-      atomic_write_barrier ();
+      __asm ("" ::: "memory");  // atomic_write_barrier
 
       struct sigaction sa;
       sa.sa_sigaction = action;

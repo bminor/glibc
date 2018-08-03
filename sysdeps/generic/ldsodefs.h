@@ -521,6 +521,9 @@ struct rtld_global_ro
      linking.  */
   EXTERN int _dl_dynamic_weak;
 
+  /* Nonzero if TLS handling should be async-signal-safe.  */
+  EXTERN int _dl_async_signal_safe;
+
   /* Default floating-point control word.  */
   EXTERN fpu_control_t _dl_fpu_control;
 

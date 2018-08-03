@@ -73,6 +73,9 @@ const char *_google_exec_origin_dir;
 /* Nonzero if runtime lookup should not update the .got/.plt.  */
 int _dl_bind_not;
 
+/* Nonzero if TLS handling should be async-signal-safe.  */
+int _dl_async_signal_safe;
+
 /* A dummy link map for the executable, used by dlopen to access the global
    scope.  We don't export any symbols ourselves, so this can be minimal.  */
 static struct link_map _dl_main_map =

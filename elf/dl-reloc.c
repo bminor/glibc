@@ -72,6 +72,9 @@ _dl_try_allocate_static_tls (struct link_map *map)
 
   size_t offset = GL(dl_tls_static_used) + (freebytes - n * map->l_tls_align
 					    - map->l_tls_firstbyte_offset);
+
+  if (!GLRO(dl_async_signal_safe))
+    map->l_tls_offset = GL(dl_tls_static_used) = offset;
 #elif TLS_DTV_AT_TP
   /* dl_tls_static_used includes the TCB at the beginning.  */
   size_t offset = (ALIGN_UP(GL(dl_tls_static_used)
@@ -83,9 +86,15 @@ _dl_try_allocate_static_tls (struct link_map *map)
   if (used > GL(dl_tls_static_size))
     goto fail;
 
+  if (!GLRO(dl_async_signal_safe)) {
+    map->l_tls_offset = offset;
+    map->l_tls_firstbyte_offset = GL(dl_tls_static_used);
+    GL(dl_tls_static_used) = used;
+  }
 #else
 # error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 #endif
+  if (GLRO(dl_async_signal_safe)) {
   /* We've computed the new value we want, now try to install it.  */
   ptrdiff_t val;
   if ((val = map->l_tls_offset) == NO_TLS_OFFSET)
@@ -110,14 +119,15 @@ _dl_try_allocate_static_tls (struct link_map *map)
       goto fail;
     }
   /* We installed the value; now update the globals.  */
-#if TLS_TCB_AT_TP
+#if TLS_TCB_AT_TP // second
   GL(dl_tls_static_used) = offset;
-#elif TLS_DTV_AT_TP
+#elif TLS_DTV_AT_TP // second
   map->l_tls_firstbyte_offset = GL(dl_tls_static_used);
   GL(dl_tls_static_used) = used;
-#else
-# error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
-#endif
+#else // second
+# error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"  // second
+#endif // second
+  }
 
   /* If the object is not yet relocated we cannot initialize the
      static TLS region.  Delay it.  */
@@ -147,12 +157,14 @@ _dl_allocate_static_tls (struct link_map *map)
      (including this one) and update this map's TLS entry. A signal handler
      accessing TLS would try to do the same update and break.  */
   sigset_t old;
-  _dl_mask_all_signals (&old);
+  if (GLRO(dl_async_signal_safe))
+    _dl_mask_all_signals (&old);
   int err = -1;
   if (map->l_tls_offset != FORCED_DYNAMIC_TLS_OFFSET)
     err = _dl_try_allocate_static_tls (map);
 
-  _dl_unmask_signals (&old);
+  if (GLRO(dl_async_signal_safe))
+    _dl_unmask_signals (&old);
   if (err != 0)
     {
       _dl_signal_error (0, map->l_name, NULL, N_("\
