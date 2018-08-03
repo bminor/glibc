@@ -1,5 +1,10 @@
 2019-09-13  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* string/strcasestr.c (STRCASESTR): Simplify and speedup first match.
+	* string/strstr.c (AVAILABLE): Likewise.
+
+2019-09-13  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* benchtests/bench-strcasestr.c: Rename __strnlen to strnlen.
 	* benchtests/bench-strstr.c: Likewise.
 	* string/memmem.c (FASTSEARCH): Define.
