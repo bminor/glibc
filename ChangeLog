@@ -3,6 +3,8 @@
 	* sysdeps/riscv/rvf/math_private.h (libc_feholdexcept_setround_riscv):
 	Fix rounding save-restore bug.
 
+	* sysdeps/riscv/rv64/rvd/libm-test-ulps: Update.
+
 2018-08-14  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #23521]
