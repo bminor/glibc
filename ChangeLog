@@ -1,3 +1,8 @@
+2019-09-13  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* string/strcasestr.c (STRCASESTR): Simplify and speedup first match.
+	* string/strstr.c (AVAILABLE): Likewise.
+
 2019-09-06  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* manual/tunables.texi (glibc.cpu.name): Add ares tunable.
