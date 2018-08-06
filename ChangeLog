@@ -1,5 +1,10 @@
 2018-11-06  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
+	* misc/Makefile (tests): Add tst-ldbl-warn.
+	* misc/tst-ldbl-warn.c: New file.
+
+2018-11-06  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
 	* argp/Makefile (tests): Add tst-ldbl-argp.
 	* argp/tst-ldbl-argp.c: New file.
 
