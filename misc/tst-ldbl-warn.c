@@ -59,9 +59,21 @@ do_one_test (int select, const char *format, va_list args,
 
   stderr = old_stderr;
 
-  /* Close the in-memory stream and check the output buffer.  */
+  /* Close the in-memory stream.  */
   xfclose_memstream (&stream);
-  TEST_COMPARE_STRING (stream.buffer, expected);
+
+  /* Filter out the name of the program (which should always end with
+     warn), so that the test case can be reused by ldbl-opt and
+     ldbl-128ibm-compat.  */
+  const char *needle = "warn: ";
+  char *message;
+  message = strstr (stream.buffer, needle);
+  if (message == NULL)
+    FAIL_EXIT1 ("test case error");
+  message += strlen (needle);
+
+  /* Check that the rest of the output is as expected.  */
+  TEST_COMPARE_STRING (message, expected);
 
   if (stream.buffer != NULL)
     free (stream.buffer);
@@ -74,13 +86,11 @@ do_test_call_varg (const char *format, ...)
 
   va_start (args, format);
   do_one_test (VWARN, format, args, 0, 0, 0, 0,
-	       "tst-ldbl-warn: "
 	       "-1.000000 - -2.000000 - -3.000000 - -4.000000: Success\n");
   va_end (args);
 
   va_start (args, format);
   do_one_test (VWARNX, format, args, 0, 0, 0, 0,
-	       "tst-ldbl-warn: "
 	       "-1.000000 - -2.000000 - -3.000000 - -4.000000\n");
   va_end (args);
 }
@@ -92,10 +102,8 @@ do_test_call_rarg (const char *format, long double arg1, double arg2,
   va_list args;
   memset (&args, 0, sizeof (args));
   do_one_test (WARN, format, args, arg1, arg2, arg3, arg4,
-	       "tst-ldbl-warn: "
 	       "-1.000000 - -2.000000 - -3.000000 - -4.000000: Success\n");
   do_one_test (WARNX, format, args, arg1, arg2, arg3, arg4,
-	       "tst-ldbl-warn: "
 	       "-1.000000 - -2.000000 - -3.000000 - -4.000000\n");
 }
 

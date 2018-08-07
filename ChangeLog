@@ -1,5 +1,21 @@
 2019-03-01  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
+	* misc/tst-ldbl-error.c (do_one_test): Adapt for reuse by nldbl
+	tests.
+	(do_test): Likewise.
+	* misc/tst-ldbl-warn.c (do_one_test): Likewise.
+	(do_test_call_varg): Likewise.
+	(do_test_call_rarg): Likewise.
+	* sysdeps/ieee754/ldbl-opt/Makefile
+	[subdir == misc] (tests-internal): Add tst-nldbl-warn,
+	tst-nldbl-error.
+	($(objpfx)tst-nldbl-warn.c): New rule.
+	($(objpfx)tst-nldbl-error.c): Likewise.
+	(CFLAGS-tst-nldbl-warn.c, CFLAGS-tst-nldbl-error.c):
+	New variables.
+
+2019-03-01  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
 	[BZ #23984]
 	* include/bits/error-ldbl.h: New file.
 	* include/error.h: Include stdarg.h.  Declare internal functions

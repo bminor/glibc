@@ -85,14 +85,15 @@ do_one_test (void *callback, const char *expected, ...)
   /* Call 'callback', which fills in the output and error buffers.  */
   result = support_capture_subprocess (callback, NULL);
 
-  /* The functions err, errx, verr, and verrx print just the program
-     name followed by a colon, whereas error and error_at_line print the
-     whole path to the program.  Since the whole path depends on the
-     working directory used to build and test glibc, remove it from the
-     comparison against the expected result.  */
-  const char *needle = "tst-ldbl-error:";
+  /* Filter out the name of the program (which should always end with
+     -error), so that the test case can be reused by ldbl-opt and
+     ldbl-128ibm-compat.  */
+  const char *needle = "-error:";
   char *message;
   message = strstr (result.err.buffer, needle);
+  if (message == NULL)
+    FAIL_EXIT1 ("test case error");
+  message += strlen (needle);
 
   /* Verify that the output message is as expected.  */
   TEST_COMPARE_STRING (message, expected);
@@ -104,12 +105,12 @@ static int
 do_test (void)
 {
   struct tests tests[] = {
-    { &callback_err, "tst-ldbl-error: -1.000000: Success\n" },
-    { &callback_errx, "tst-ldbl-error: -1.000000\n" },
-    { &callback_verr, "tst-ldbl-error: -1.000000: Success\n" },
-    { &callback_verrx, "tst-ldbl-error: -1.000000\n" },
-    { &callback_error, "tst-ldbl-error: -1.000000\n" },
-    { &callback_error_at_line, "tst-ldbl-error::0: -1.000000\n" }
+    { &callback_err, " -1.000000: Success\n" },
+    { &callback_errx, " -1.000000\n" },
+    { &callback_verr, " -1.000000: Success\n" },
+    { &callback_verrx, " -1.000000\n" },
+    { &callback_error, " -1.000000\n" },
+    { &callback_error_at_line, ":0: -1.000000\n" }
   };
 
   for (int i = 0; i < sizeof (tests) / sizeof (tests[0]); i++)
