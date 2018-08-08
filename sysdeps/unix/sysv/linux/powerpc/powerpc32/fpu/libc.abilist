@@ -2167,6 +2167,8 @@ GLIBC_2.3.4 xdr_u_quad_t F
 GLIBC_2.30 __nldbl_argp_error F
 GLIBC_2.30 __nldbl_argp_failure F
 GLIBC_2.30 __nldbl_err F
+GLIBC_2.30 __nldbl_error F
+GLIBC_2.30 __nldbl_error_at_line F
 GLIBC_2.30 __nldbl_errx F
 GLIBC_2.30 __nldbl_verr F
 GLIBC_2.30 __nldbl_verrx F

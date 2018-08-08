@@ -24,6 +24,7 @@
 
 #include <argp.h>
 #include <err.h>
+#include <error.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <libio/strfile.h>
@@ -1070,6 +1071,27 @@ void
 __nldbl_vwarnx (const char *format, __gnuc_va_list ap)
 {
   __vwarnx_internal (format, ap, PRINTF_LDBL_IS_DBL);
+}
+
+void
+__nldbl_error (int status, int errnum, const char *message, ...)
+{
+  va_list ap;
+  va_start (ap, message);
+  __error_internal (status, errnum, message, ap, PRINTF_LDBL_IS_DBL);
+  va_end (ap);
+}
+
+void
+__nldbl_error_at_line (int status, int errnum, const char *file_name,
+		       unsigned int line_number, const char *message,
+		       ...)
+{
+  va_list ap;
+  va_start (ap, message);
+  __error_at_line_internal (status, errnum, file_name, line_number,
+			    message, ap, PRINTF_LDBL_IS_DBL);
+  va_end (ap);
 }
 
 #if LONG_DOUBLE_COMPAT(libc, GLIBC_2_0)

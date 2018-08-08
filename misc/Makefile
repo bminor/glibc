@@ -37,7 +37,7 @@ headers	:= sys/uio.h bits/uio-ext.h bits/uio_lim.h \
 	   bits/syslog.h bits/syslog-ldbl.h bits/syslog-path.h bits/error.h \
 	   bits/select2.h bits/hwcap.h sys/auxv.h \
 	   sys/sysmacros.h bits/sysmacros.h bits/types/struct_iovec.h \
-	   bits/err-ldbl.h
+	   bits/err-ldbl.h bits/error-ldbl.h
 
 routines := brk sbrk sstk ioctl \
 	    readv writev preadv preadv64 pwritev pwritev64 \

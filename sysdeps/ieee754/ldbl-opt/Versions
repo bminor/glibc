@@ -82,6 +82,7 @@ libc {
     __nldbl_argp_error; __nldbl_argp_failure;
     __nldbl_warn; __nldbl_vwarn; __nldbl_warnx; __nldbl_vwarnx;
     __nldbl_err; __nldbl_verr; __nldbl_errx; __nldbl_verrx;
+    __nldbl_error; __nldbl_error_at_line;
   }
 }
 libm {

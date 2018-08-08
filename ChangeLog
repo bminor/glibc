@@ -1,6 +1,35 @@
 2019-03-01  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
 	[BZ #23984]
+	* include/bits/error-ldbl.h: New file.
+	* include/error.h: Include stdarg.h.  Declare internal functions
+	__error_internal and __error_at_line_internal.
+	* misc/Makefile (headers): Add bits/error-ldbl.h.
+	* misc/bits/error-ldbl.h: New file.
+	* misc/error.h [__LDBL_COMPAT]: Include bits/error-ldbl.h and
+	avoid the inclusion of bits/error.h.
+	* sysdeps/ieee754/ldbl-opt/Versions (libc): Add __nldbl_error,
+	and __nldbl_error_at_line.
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.c: Include error.h.
+	(__nldbl_error, __ndlbl_error_at_line): New functions.
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.h: Include error.h.
+	Redirect error and error_at_line.
+	* sysdeps/unix/sysv/linux/alpha/libc.abilist: Update.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist: Likewise.
+
+2019-03-01  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
+	[BZ #23984]
 	* include/bits/err-ldbl.h: New file.
 	* include/err.h: Add prototypes for the internal functions:
 	__vwarnx_internal and __vwarn_internal.

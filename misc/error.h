@@ -47,9 +47,15 @@ extern unsigned int error_message_count;
    variable controls whether this mode is selected or not.  */
 extern int error_one_per_line;
 
-
-#if defined __extern_always_inline && defined __va_arg_pack
-# include <bits/error.h>
+#ifdef __LDBL_COMPAT
+# include <bits/error-ldbl.h>
+#else
+/* Do not inline error and error_at_line when long double has the same
+   size of double, because that would invalidate the redirections to the
+   compatibility functions.  */
+# if defined __extern_always_inline && defined __va_arg_pack
+#  include <bits/error.h>
+# endif
 #endif
 
 __END_DECLS

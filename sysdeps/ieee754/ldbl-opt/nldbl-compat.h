@@ -28,6 +28,7 @@
 #define __NO_LONG_DOUBLE_MATH	1
 #include <argp.h>
 #include <err.h>
+#include <error.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -88,6 +89,8 @@ NLDBL_DECL (err);
 NLDBL_DECL (verr);
 NLDBL_DECL (errx);
 NLDBL_DECL (verrx);
+NLDBL_DECL (error);
+NLDBL_DECL (error_at_line);
 
 /* These do not exist in the normal interface, but must exist in the
    __nldbl interface so that they can be called from libnldbl.  */
