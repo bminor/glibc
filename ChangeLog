@@ -1,5 +1,38 @@
 2019-03-01  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
+	[BZ #23984]
+	* include/bits/err-ldbl.h: New file.
+	* include/err.h: Add prototypes for the internal functions:
+	__vwarnx_internal and __vwarn_internal.
+	* misc/Makefile (headers): Add bits/err-ldbl.h.
+	* misc/bits/err-ldbl.h: New file.
+	* misc/err.h: Include bits/err-ldbl.h when __LDBL_COMPAT is
+	defined, i.e.: when -mlong-double-64 is in use.
+	* sysdeps/ieee754/ldbl-opt/Versions (libc): Add __nldbl_warn,
+	__nldbl_vwarn, __nldbl_warnx, __nldbl_vwarnx, __nldbl_err,
+	__nldbl_verr, __nldbl_errx, and __nldbl_verrx.
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.c: Include err.h.
+	(VA_CALL): New macro.
+	(__nldbl_vwarn, __nldbl_vwarnx, __nldbl_warn, __nldbl_warnx)
+	(__nldbl_verr, __nldbl_verrx, __nldbl_err, __nldbl_errx): New
+	functions.
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.h: Include err.h and
+	declare prototypes for the new functions.
+	* sysdeps/unix/sysv/linux/alpha/libc.abilist: Update.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist: Likewise.
+
+2019-03-01  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
 	* sysdeps/ieee754/ldbl-opt/Makefile
 	[subdir == argp] (tests-internal): Add tst-nldbl-argp.
 	[subdir == argp] ($(objpfx)tst-nldbl-argp.c): New rule.

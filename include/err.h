@@ -1,6 +1,15 @@
 #ifndef _ERR_H
 #include <misc/err.h>
 
+/* Prototypes for internal err.h functions.  */
+void
+__vwarnx_internal (const char *format, __gnuc_va_list ap,
+		   unsigned int mode_flags);
+
+void
+__vwarn_internal (const char *format, __gnuc_va_list ap,
+		   unsigned int mode_flags);
+
 # ifndef _ISOMAC
 
 libc_hidden_proto (warn)

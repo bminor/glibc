@@ -23,6 +23,7 @@
 #define __GLIBC_USE_DEPRECATED_SCANF 1
 
 #include <argp.h>
+#include <err.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <libio/strfile.h>
@@ -1009,6 +1010,66 @@ __nldbl_argp_failure (const struct argp_state *state, int status,
   __argp_failure_internal (state, status, errnum, fmt, ap,
 			   PRINTF_LDBL_IS_DBL);
   va_end (ap);
+}
+
+#define VA_CALL(call)							\
+{									\
+  va_list ap;								\
+  va_start (ap, format);						\
+  call (format, ap, PRINTF_LDBL_IS_DBL);				\
+  va_end (ap);								\
+}
+
+void
+__nldbl_err (int status, const char *format, ...)
+{
+  VA_CALL (__vwarn_internal)
+  exit (status);
+}
+
+void
+__nldbl_errx (int status, const char *format, ...)
+{
+  VA_CALL (__vwarnx_internal)
+  exit (status);
+}
+
+void
+__nldbl_verr (int status, const char *format, __gnuc_va_list ap)
+{
+  __vwarn_internal (format, ap, PRINTF_LDBL_IS_DBL);
+  exit (status);
+}
+
+void
+__nldbl_verrx (int status, const char *format, __gnuc_va_list ap)
+{
+  __vwarnx_internal (format, ap, PRINTF_LDBL_IS_DBL);
+  exit (status);
+}
+
+void
+__nldbl_warn (const char *format, ...)
+{
+  VA_CALL (__vwarn_internal)
+}
+
+void
+__nldbl_warnx (const char *format, ...)
+{
+  VA_CALL (__vwarnx_internal)
+}
+
+void
+__nldbl_vwarn (const char *format, __gnuc_va_list ap)
+{
+  __vwarn_internal (format, ap, PRINTF_LDBL_IS_DBL);
+}
+
+void
+__nldbl_vwarnx (const char *format, __gnuc_va_list ap)
+{
+  __vwarnx_internal (format, ap, PRINTF_LDBL_IS_DBL);
 }
 
 #if LONG_DOUBLE_COMPAT(libc, GLIBC_2_0)

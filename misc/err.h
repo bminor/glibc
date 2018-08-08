@@ -52,6 +52,10 @@ extern void errx (int __status, const char *__format, ...)
 extern void verrx (int __status, const char *, __gnuc_va_list)
      __attribute__ ((__noreturn__, __format__ (__printf__, 2, 0)));
 
+#ifdef __LDBL_COMPAT
+# include <bits/err-ldbl.h>
+#endif
+
 __END_DECLS
 
 #endif	/* err.h */
