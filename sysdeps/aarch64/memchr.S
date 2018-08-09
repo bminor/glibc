@@ -26,6 +26,10 @@
  * Neon Available.
  */
 
+#ifndef MEMCHR
+# define MEMCHR __memchr
+#endif
+
 /* Arguments and results.  */
 #define srcin		x0
 #define chrin		w1
@@ -59,7 +63,7 @@
  * identify exactly which byte has matched.
  */
 
-ENTRY (__memchr)
+ENTRY (MEMCHR)
 	/* Do not dereference srcin if no bytes to compare.  */
 	cbz	cntin, L(zero_length)
 	/*
@@ -152,6 +156,6 @@ L(tail):
 L(zero_length):
 	mov	result, #0
 	ret
-END (__memchr)
-weak_alias (__memchr, memchr)
+END (MEMCHR)
+weak_alias (MEMCHR, memchr)
 libc_hidden_builtin_def (memchr)

@@ -1,5 +1,17 @@
 2019-02-01  Feng Xue  <fxue@os.amperecomputing.com>
 
+	* sysdeps/aarch64/memchr.S (__memchr): Rename to MEMCHR.
+	[!MEMCHR](MEMCHR): Set to __memchr.
+	* sysdeps/aarch64/multiarch/Makefile (sysdep_routines):
+	Add memchr_generic and memchr_nosimd.
+	* sysdeps/aarch64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add memchr ifuncs.
+	* sysdeps/aarch64/multiarch/memchr.c: New file.
+	* sysdeps/aarch64/multiarch/memchr_generic.S: Likewise.
+	* sysdeps/aarch64/multiarch/memchr_nosimd.S: Likewise.
+
+2019-02-01  Feng Xue  <fxue@os.amperecomputing.com>
+
 	* sysdeps/aarch64/multiarch/Makefile (sysdep_routines):
 	Add memset_emag.
 	* sysdeps/aarch64/multiarch/ifunc-impl-list.c
