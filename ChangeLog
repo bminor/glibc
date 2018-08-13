@@ -1,3 +1,10 @@
+2018-08-13  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/syscall-names.list: Update kernel
+	version to 4.18.
+	(io_pgetevents): New syscall.
+	(rseq): Likewise.
+
 2018-11-08  Alexandra Hájková  <ahajkova@redhat.com>
 
 	[BZ #17630]
