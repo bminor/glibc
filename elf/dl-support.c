@@ -147,7 +147,6 @@ dl_position_table_entry_t *_dl_position_hash_table;
 int _dl_position_hash_mask;
 int _dl_position_hash_cutoff = DL_POSITION_HASH_CUTOFF_DEFAULT;
 int _dl_position_hash_bits;
-int _dl_enable_fastload = 1;
 
 size_t _dl_pagesize = EXEC_PAGESIZE;
 

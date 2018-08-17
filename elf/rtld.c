@@ -293,7 +293,6 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
     ._dl_tls_get_addr_soft = _dl_tls_get_addr_soft,
     ._dl_position_hash_cutoff = DL_POSITION_HASH_CUTOFF_DEFAULT,
     ._dl_position_hash_bits = 0,
-    ._dl_enable_fastload = 1,
 #ifdef HAVE_DL_DISCOVER_OSVERSION
     ._dl_discover_osversion = _dl_discover_osversion
 #endif
@@ -1773,7 +1772,6 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 
   /* We have now finished loading every required (linked-in) object.
      Set up the position hash if needed.  */
-  if (GLRO(dl_enable_fastload) == 1)
   _dl_fill_position_hash (main_map);
 
   HP_TIMING_NOW (stop);
@@ -2704,12 +2702,6 @@ process_envvars (enum mode *modep)
           if (memcmp (envline, "FASTLOAD_CUTOFF", 15) == 0)
 	    GLRO(dl_position_hash_cutoff)
               = _dl_strtoul (&envline[16], NULL);;
-          break;
-
-        case 16:
-          if (memcmp (envline, "FASTLOAD_ENABLED", 16) == 0)
-	    GLRO(dl_enable_fastload)
-              = _dl_strtoul (&envline[17], NULL);;
           break;
 
         case 18:

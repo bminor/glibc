@@ -793,8 +793,6 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
   __asm volatile ("" : "+r" (n), "+m" (scope->r_list));
   struct link_map **list = scope->r_list;
 
-  if (GLRO(dl_enable_fastload))
-  {
   if (scope == GL(dl_ns)[LM_ID_BASE]._ns_main_searchlist && i == 0)
     {
       const int skip_to = earliest_pos_from_hash_table (undef_name);
@@ -820,7 +818,6 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 	  return 0;
 	}
     }
-  }
 
   do
     {

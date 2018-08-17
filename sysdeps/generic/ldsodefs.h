@@ -594,7 +594,6 @@ struct rtld_global_ro
   EXTERN int _dl_position_hash_mask;
   EXTERN int _dl_position_hash_bits;
   EXTERN int _dl_position_hash_cutoff;
-  EXTERN int _dl_enable_fastload;
 
 #define DL_POSITION_HASH_BITS_MAX       27  /* (1 << 27) entries.  */
 #if defined(__powerpc__) && !defined(__powerpc64__)

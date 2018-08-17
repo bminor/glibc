@@ -1948,7 +1948,7 @@ _dl_map_object (struct link_map *loader, const char *name, off_t offset,
   assert (nsid < GL(dl_nns));
 
   /* Look for this name among those already loaded.  */
-  if (!GLRO(dl_enable_fastload) || name[0] == '\0')
+  if (name[0] == '\0')
     {
       /* Special case: both main exe and vdso can have empty name;
 	 so search from head: it is important to return the map for main

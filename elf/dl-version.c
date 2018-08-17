@@ -34,7 +34,7 @@ find_needed (const char *name, struct link_map *map)
   struct link_map *tmap;
   unsigned int n;
 
-  if (!GLRO(dl_enable_fastload) || name[0] == '\0')
+  if (name[0] == '\0')
     {
       /* Special case: both main exe and vdso can have empty name;
 	 so search from head: it is important to return the map for main
@@ -51,6 +51,7 @@ find_needed (const char *name, struct link_map *map)
 	if (_dl_name_match_p (name, tmap))
 	  return tmap;
     }
+
   /* The required object is not in the global scope, look to see if it is
      a dependency of the current object.  */
   for (n = 0; n < map->l_searchlist.r_nlist; n++)
