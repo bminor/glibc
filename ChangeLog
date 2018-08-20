@@ -1,3 +1,7 @@
+2018-08-17  Istvan Kurucsai  <pistukem@gmail.com>
+
+	* malloc/malloc.c (_int_malloc): Additional binning code checks.
+
 2019-04-23  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #18035]
