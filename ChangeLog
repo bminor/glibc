@@ -1,3 +1,8 @@
+2018-08-28  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #17426]
+	* localedata/locales/en_IN (d_fmt): Use "%d/%m/%y".
+
 2018-08-27  DJ Delorie  <dj@redhat.com>
 
 	* support/Makefile (others): Don't list programs explicitly as a
