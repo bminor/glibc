@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.27.9000\n"
 "POT-Creation-Date: 2018-07-26 22:19-0400\n"
-"PO-Revision-Date: 2018-08-03 17:09+0300\n"
+"PO-Revision-Date: 2018-08-20 18:38+0300\n"
 "Last-Translator: Viktar Siarheichyk <vics@eq.by>\n"
 "Language-Team: Belarusian <debian-l10n-belarusian@lists.debian.org>\n"
 "Language: be\n"
@@ -1919,62 +1919,62 @@ msgstr "%s: зашмат правілаў; першы запіс меў толь
 #: locale/programs/ld-collate.c:623
 #, c-format
 msgid "%s: not enough sorting rules"
-msgstr ""
+msgstr "%s: недастаткова правілаў сартавання"
 
 #: locale/programs/ld-collate.c:788
 #, c-format
 msgid "%s: empty weight string not allowed"
-msgstr ""
+msgstr "%s: пусты радок вагі не дазваляецца"
 
 #: locale/programs/ld-collate.c:883
 #, c-format
 msgid "%s: weights must use the same ellipsis symbol as the name"
-msgstr ""
+msgstr "%s: вагі мусяць ужываць той жа сімвал эліпсісу, што і назва"
 
 #: locale/programs/ld-collate.c:939
 #, c-format
 msgid "%s: too many values"
-msgstr ""
+msgstr "%s: зашмат значэнняў"
 
 #: locale/programs/ld-collate.c:1059 locale/programs/ld-collate.c:1234
 #, c-format
 msgid "order for `%.*s' already defined at %s:%Zu"
-msgstr ""
+msgstr "парадак для `%.*s' ужо вызначаны ў %s:%Zu"
 
 #: locale/programs/ld-collate.c:1109
 #, c-format
 msgid "%s: the start and the end symbol of a range must stand for characters"
-msgstr ""
+msgstr "%s: пачатковы і канцавы сімвалы дыяпазону мусяць прадстаўляць знакі"
 
 #: locale/programs/ld-collate.c:1136
 #, c-format
 msgid "%s: byte sequences of first and last character must have the same length"
-msgstr ""
+msgstr "%s: байтавыя паслядоўнасці першага і апошняга знакаў мусяць быць аднолькавай даўжыні"
 
 #: locale/programs/ld-collate.c:1178
 #, c-format
 msgid "%s: byte sequence of first character of range is not lower than that of the last character"
-msgstr ""
+msgstr "%s: байтавая паслядоўнасць першага знаку дыяпазону не меншая за паслядоўнасць апошняга знаку"
 
 #: locale/programs/ld-collate.c:1303
 #, c-format
 msgid "%s: symbolic range ellipsis must not directly follow `order_start'"
-msgstr ""
+msgstr "%s: эліпсіс сімвалічнага дыяпазону не можа ісці адразу за `order_start'"
 
 #: locale/programs/ld-collate.c:1307
 #, c-format
 msgid "%s: symbolic range ellipsis must not be directly followed by `order_end'"
-msgstr ""
+msgstr "%s: за эліпсісам сімвалічнага дыяпазону не можа адразу ісці `order_end'"
 
 #: locale/programs/ld-collate.c:1327 locale/programs/ld-ctype.c:1363
 #, c-format
 msgid "`%s' and `%.*s' are not valid names for symbolic range"
-msgstr ""
+msgstr "`%s' і `%.*s' не ёсць правільнымі назвамі для сімвалічнага дыяпазону"
 
 #: locale/programs/ld-collate.c:1377 locale/programs/ld-collate.c:3708
 #, c-format
 msgid "%s: order for `%.*s' already defined at %s:%Zu"
-msgstr ""
+msgstr "%s: парадак для `%.*s' ужо вызначаны ў %s:%Zu"
 
 #: locale/programs/ld-collate.c:1386
 #, c-format
@@ -1984,41 +1984,41 @@ msgstr "%s: `%s' павінен быць знакам"
 #: locale/programs/ld-collate.c:1580
 #, c-format
 msgid "%s: `position' must be used for a specific level in all sections or none"
-msgstr ""
+msgstr "%s: `position' мусіць ужывацца для пэўнага ўзроўню ўва ўсіх секцыях альбо ў ніводнай"
 
 #: locale/programs/ld-collate.c:1604
 #, c-format
 msgid "symbol `%s' not defined"
-msgstr ""
+msgstr "сімвал `%s' не вызначаны"
 
 #: locale/programs/ld-collate.c:1680 locale/programs/ld-collate.c:1785
 #, c-format
 msgid "symbol `%s' has the same encoding as"
-msgstr ""
+msgstr "сімвал `%s' мае тое ж кадаванне, што і"
 
 #: locale/programs/ld-collate.c:1684 locale/programs/ld-collate.c:1789
 #, c-format
 msgid "symbol `%s'"
-msgstr ""
+msgstr "сімвал `%s'"
 
 #: locale/programs/ld-collate.c:1852
 msgid "too many errors; giving up"
-msgstr ""
+msgstr "зашмат памылак; канец"
 
 #: locale/programs/ld-collate.c:2508 locale/programs/ld-collate.c:3896
 #, c-format
 msgid "%s: nested conditionals not supported"
-msgstr ""
+msgstr "%s: нельга ўкладаць умовы адна ў адну"
 
 #: locale/programs/ld-collate.c:2526
 #, c-format
 msgid "%s: more than one 'else'"
-msgstr ""
+msgstr "%s: болей за адзін 'else'"
 
 #: locale/programs/ld-collate.c:2701
 #, c-format
 msgid "%s: duplicate definition of `%s'"
-msgstr ""
+msgstr "%s: паўторнае азначэнне `%s'"
 
 #: locale/programs/ld-collate.c:2737
 #, c-format
@@ -2511,11 +2511,11 @@ msgstr ""
 
 #: locale/programs/linereader.c:496
 msgid "unterminated symbolic name"
-msgstr "незавершаная знакавая назва"
+msgstr "незавершаная сімвалічная назва"
 
 #: locale/programs/linereader.c:623
 msgid "illegal escape sequence at end of string"
-msgstr ""
+msgstr "немагчымая escape-паслядоўнасць у канцы радку"
 
 #: locale/programs/linereader.c:627 locale/programs/linereader.c:847
 msgid "unterminated string"
@@ -2524,45 +2524,45 @@ msgstr "незавершаны радок"
 #: locale/programs/linereader.c:808
 #, c-format
 msgid "symbol `%.*s' not in charmap"
-msgstr ""
+msgstr "сімвалу `%.*s' у знаказборы няма"
 
 #: locale/programs/linereader.c:829
 #, c-format
 msgid "symbol `%.*s' not in repertoire map"
-msgstr ""
+msgstr "сімвалу `%.*s' у табліцы рэпертуару няма"
 
 #: locale/programs/locale-spec.c:130
 #, c-format
 msgid "unknown name \"%s\""
-msgstr ""
+msgstr "невядомая назва \"%s\""
 
 #: locale/programs/locale.c:70
 msgid "System information:"
-msgstr ""
+msgstr "Інфармацыя аб сістэме:"
 
 #: locale/programs/locale.c:72
 msgid "Write names of available locales"
-msgstr ""
+msgstr "Выдаць назвы наяўных лакаляў"
 
 #: locale/programs/locale.c:74
 msgid "Write names of available charmaps"
-msgstr ""
+msgstr "Выдаць назвы наяўных знаказбораў"
 
 #: locale/programs/locale.c:75
 msgid "Modify output format:"
-msgstr "Фармат вываду зьмяненьня:"
+msgstr "Змяніць фармат вываду:"
 
 #: locale/programs/locale.c:76
 msgid "Write names of selected categories"
-msgstr ""
+msgstr "Выдаць назвы выбраных катэгорыяў"
 
 #: locale/programs/locale.c:77
 msgid "Write names of selected keywords"
-msgstr ""
+msgstr "Выдаць назвы выбраных ключавых словаў"
 
 #: locale/programs/locale.c:78
 msgid "Print more information"
-msgstr ""
+msgstr "Выдаць дадатковую інфармацыю"
 
 #: locale/programs/locale.c:83
 msgid "Get locale-specific information."
@@ -2573,31 +2573,33 @@ msgid ""
 "NAME\n"
 "[-a|-m]"
 msgstr ""
+"НАЗВА\n"
+"[-a|-m]"
 
 #: locale/programs/locale.c:190
 #, c-format
 msgid "Cannot set LC_CTYPE to default locale"
-msgstr ""
+msgstr "Не ўдаецца прызначыць LC_CTYPE на стандартную лакаль"
 
 #: locale/programs/locale.c:192
 #, c-format
 msgid "Cannot set LC_MESSAGES to default locale"
-msgstr ""
+msgstr "Не ўдаецца прызначыць LC_MESSAGES на стандартную лакаль"
 
 #: locale/programs/locale.c:205
 #, c-format
 msgid "Cannot set LC_COLLATE to default locale"
-msgstr ""
+msgstr "Не ўдаецца прызначыць LC_COLLATE на стандартную лакаль"
 
 #: locale/programs/locale.c:221
 #, c-format
 msgid "Cannot set LC_ALL to default locale"
-msgstr ""
+msgstr "Не ўдаецца прызначыць LC_ALL на стандартную лакаль"
 
 #: locale/programs/locale.c:521
 #, c-format
 msgid "while preparing output"
-msgstr "пад час падрыхтоўкі вываду"
+msgstr "падчас падрыхтоўкі вываду"
 
 #: locale/programs/localedef.c:112
 msgid "Input Files:"
@@ -2605,43 +2607,43 @@ msgstr "Файлы ўводу:"
 
 #: locale/programs/localedef.c:114
 msgid "Symbolic character names defined in FILE"
-msgstr ""
+msgstr "сімвалічныя назвы знакаў вызначаныя ў ФАЙЛЫ"
 
 #: locale/programs/localedef.c:116
 msgid "Source definitions are found in FILE"
-msgstr ""
+msgstr "Зыходныя азначэнні знаходзяцца ў ФАЙЛЫ"
 
 #: locale/programs/localedef.c:118
 msgid "FILE contains mapping from symbolic names to UCS4 values"
-msgstr ""
+msgstr "ФАЙЛ утрымлівае прывязку сімвалічных назваў да значэнняў UCS4 values"
 
 #: locale/programs/localedef.c:122
 msgid "Create output even if warning messages were issued"
-msgstr ""
+msgstr "Вывесці нават калі былі папярэджанні"
 
 #: locale/programs/localedef.c:123
 msgid "Optional output file prefix"
-msgstr ""
+msgstr "Неабавязковы прэфікс файлаў вываду"
 
 #: locale/programs/localedef.c:124
 msgid "Strictly conform to POSIX"
-msgstr ""
+msgstr "Дакладна адпавядаць POSIX"
 
 #: locale/programs/localedef.c:126
 msgid "Suppress warnings and information messages"
-msgstr ""
+msgstr "Стрымаць папярэджанні і інфармацыйныя паведамленні"
 
 #: locale/programs/localedef.c:127
 msgid "Print more messages"
-msgstr ""
+msgstr "Друкаваць болей паведамленняў"
 
 #: locale/programs/localedef.c:128 locale/programs/localedef.c:131
 msgid "<warnings>"
-msgstr ""
+msgstr "<папярэджанні>"
 
 #: locale/programs/localedef.c:129
 msgid "Comma-separated list of warnings to disable; supported warnings are: ascii, intcurrsym"
-msgstr ""
+msgstr "Спіс папярэджанняў праз коску; магчымыя папярэджанні: ascii, intcurrsym"
 
 #: locale/programs/localedef.c:132
 msgid "Comma-separated list of warnings to enable; supported warnings are: ascii, intcurrsym"
