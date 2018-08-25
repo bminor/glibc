@@ -1,3 +1,8 @@
+2018-08-24  DJ Delorie  <dj@delorie.com>
+
+	* support/Makefile (LDLIBS-links-dso-program): Add -lgcc and
+	$(libunwind).
+
 2018-08-24  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
         [BZ #23400]

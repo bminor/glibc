@@ -165,7 +165,7 @@ ifeq (,$(CXX))
 LINKS_DSO_PROGRAM = links-dso-program-c
 else
 LINKS_DSO_PROGRAM = links-dso-program
-LDLIBS-links-dso-program = -lstdc++ -lgcc_s
+LDLIBS-links-dso-program = -lstdc++ -lgcc -lgcc_s $(libunwind)
 endif
 
 others: \
