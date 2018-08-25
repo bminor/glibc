@@ -26,28 +26,20 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <support/check.h>
+#include <support/support.h>
+#include <support/temp_file.h>
 #include <support/test-driver.h>
 #include <libc-diag.h>
 
 static int
 do_test (void)
 {
-  const char dir[] = "bz22786";
-  const char lnk[] = "bz22786/symlink";
+  const char *dir = support_create_temp_directory ("bz22786.");
+  const char *lnk = xasprintf ("%s/symlink", dir);
+  const size_t path_len = (size_t) INT_MAX + strlen (lnk) + 1;
 
-  rmdir (dir);
-  if (mkdir (dir, 0755) != 0 && errno != EEXIST)
-    {
-      printf ("mkdir %s: %m\n", dir);
-      return EXIT_FAILURE;
-    }
-  if (symlink (".", lnk) != 0 && errno != EEXIST)
-    {
-      printf ("symlink (%s, %s): %m\n", dir, lnk);
-      return EXIT_FAILURE;
-    }
-
-  const size_t path_len = (size_t) INT_MAX + 1;
+  TEST_VERIFY_EXIT (symlink (".", lnk) == 0);
 
   DIAG_PUSH_NEEDS_COMMENT;
 #if __GNUC_PREREQ (7, 0)
@@ -55,20 +47,14 @@ do_test (void)
      allocation to succeed for the test to work.  */
   DIAG_IGNORE_NEEDS_COMMENT (7, "-Walloc-size-larger-than=");
 #endif
-  char *path = malloc (path_len);
+  char *path = xmalloc (path_len);
   DIAG_POP_NEEDS_COMMENT;
 
-  if (path == NULL)
-    {
-      printf ("malloc (%zu): %m\n", path_len);
-      return EXIT_UNSUPPORTED;
-    }
-
-  /* Construct very long path = "bz22786/symlink/aaaa....."  */
-  char *p = mempcpy (path, lnk, sizeof (lnk) - 1);
+  /* Construct very long path = "/tmp/bz22786.XXXX/symlink/aaaa....."  */
+  char *p = mempcpy (path, lnk, strlen (lnk));
   *(p++) = '/';
-  memset (p, 'a', path_len - (path - p) - 2);
-  p[path_len - (path - p) - 1] = '\0';
+  memset (p, 'a', path_len - (p - path) - 2);
+  p[path_len - (p - path) - 1] = '\0';
 
   /* This call crashes before the fix for bz22786 on 32-bit platforms.  */
   p = realpath (path, NULL);
@@ -81,7 +67,6 @@ do_test (void)
 
   /* Cleanup.  */
   unlink (lnk);
-  rmdir (dir);
 
   return 0;
 }
