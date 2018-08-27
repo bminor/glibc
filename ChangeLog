@@ -1,3 +1,11 @@
+2018-08-27 Martin Kuchta  <martin.kuchta@netapp.com>
+	   Torvald Riegel  <triegel@redhat.com>
+
+	[BZ #23538]
+	* nptl/pthread_cond_common.c (__condvar_quiesce_and_switch_g1):
+	Update r to include the set wake-request flag if waiters are
+	remaining after spinning.
+
 2018-08-03  DJ Delorie  <dj@redhat.com>
 
 	* sysdeps/riscv/rvf/math_private.h (libc_feholdexcept_setround_riscv):
