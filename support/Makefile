@@ -168,16 +168,6 @@ LINKS_DSO_PROGRAM = links-dso-program
 LDLIBS-links-dso-program = -lstdc++ -lgcc -lgcc_s $(libunwind)
 endif
 
-others: \
-	$(objpfx)test-container \
-	$(objpfx)shell-container \
-	$(objpfx)echo-container \
-	$(objpfx)true-container \
-	$(objpfx)$(LINKS_DSO_PROGRAM)
-
-ifeq ($(build-programs),yes)
-endif
-
 LDLIBS-test-container = $(libsupport)
 
 others += test-container

@@ -1,3 +1,8 @@
+2018-08-27  DJ Delorie  <dj@redhat.com>
+
+	* support/Makefile (others): Don't list programs explicitly as a
+	dependency of "others".
+
 2018-08-27  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/generic/math-tests-trap-force.h: New file.
