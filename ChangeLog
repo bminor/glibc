@@ -1,3 +1,7 @@
+2018-08-27  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/gnu/netinet/udp.h (UDP_SEGMENT): New macro.
+
 2018-08-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	regex: fix uninitialized memory access
