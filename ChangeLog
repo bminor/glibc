@@ -1,3 +1,11 @@
+2018-08-27  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/generic/math-tests-trap-force.h: New file.
+	* sysdeps/generic/math-tests.h: Include <math-tests-trap-force.h>.
+	(EXCEPTION_SET_FORCES_TRAP): Do not define here.
+	* sysdeps/powerpc/math-tests.h: Remove file.
+	* sysdeps/powerpc/fpu/math-tests-trap-force.h: New file.
+
 2018-08-27 Martin Kuchta  <martin.kuchta@netapp.com>
 	   Torvald Riegel  <triegel@redhat.com>
 

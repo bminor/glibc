@@ -1,5 +1,6 @@
-/* Configuration for math tests.  PowerPC version.
-   Copyright (C) 2013-2018 Free Software Foundation, Inc.
+/* Configuration for math tests: support for setting exception flags
+   without causing enabled traps.  Generic version.
+   Copyright (C) 2016-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,10 +17,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef __NO_FPRS__
-/* Setting exception flags in FPSCR results in enabled traps for those
-   exceptions being taken.  */
-# define EXCEPTION_SET_FORCES_TRAP 1
-#endif
+#ifndef _MATH_TESTS_TRAP_FORCE_H
+#define _MATH_TESTS_TRAP_FORCE_H 1
 
-#include_next <math-tests.h>
+/* Indicate whether exception traps, if enabled, occur whenever an
+   exception flag is set explicitly, so it is not possible to set flag
+   bits with traps enabled without causing traps to be taken.  If
+   traps cannot be enabled, the value of this macro does not
+   matter.  */
+#define EXCEPTION_SET_FORCES_TRAP 0
+
+#endif /* math-tests-trap-force.h.  */

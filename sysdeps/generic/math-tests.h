@@ -41,18 +41,10 @@
 
 #define EXCEPTION_TESTS(TYPE) MATH_TESTS_TG (EXCEPTION_TESTS_, , TYPE)
 
-/* Indicate whether exception traps, if enabled, occur whenever an
-   exception flag is set explicitly, so it is not possible to set flag
-   bits with traps enabled without causing traps to be taken.  If
-   traps cannot be enabled, the value of this macro does not
-   matter.  */
-#ifndef EXCEPTION_SET_FORCES_TRAP
-# define EXCEPTION_SET_FORCES_TRAP 0
-#endif
-
 #include <math-tests-exceptions.h>
 #include <math-tests-rounding.h>
 #include <math-tests-snan.h>
 #include <math-tests-snan-cast.h>
 #include <math-tests-snan-payload.h>
 #include <math-tests-trap.h>
+#include <math-tests-trap-force.h>
