@@ -671,6 +671,41 @@ if ${CC-cc} -c conftest.c -o conftest.o 1>&AS_MESSAGE_LOG_FD \
 fi
 rm -f conftest*])
 
+# Check if linker supports textrel relocation with ifunc (used on elf/tests).
+# Note that it relies on libc_cv_ld_gnu_indirect_function test above.
+AC_CACHE_CHECK([whether the linker supports textrels along with ifunc],
+               libc_cv_textrel_ifunc, [dnl
+cat > conftest.S <<EOF
+.type foo,%gnu_indirect_function
+foo:
+.globl _start
+_start:
+.globl __start
+__start:
+.data
+#ifdef _LP64
+.quad foo
+#else
+.long foo
+#endif
+.text
+.globl address
+address:
+#ifdef _LP64
+.quad address
+#else
+.long address
+#endif
+EOF
+libc_cv_textrel_ifunc=no
+if test $libc_cv_ld_gnu_indirect_function = yes; then
+   if AC_TRY_COMMAND(${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -nostartfiles -nostdlib $no_ssp -pie -o conftest conftest.S); then
+     libc_cv_textrel_ifunc=yes
+   fi
+fi
+rm -f conftest*])
+AC_SUBST(libc_cv_textrel_ifunc)
+
 # Check if gcc warns about alias for function with incompatible types.
 AC_CACHE_CHECK([if compiler warns about alias for function with incompatible types],
 	       libc_cv_gcc_incompatible_alias, [dnl

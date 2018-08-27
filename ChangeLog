@@ -1,3 +1,18 @@
+2018-09-25  Adam J. Richte  <adam_richter2004@yahoo.com>
+	    Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+	    Fangrui Song  <maskray@google.com>
+
+	[BZ #20480]
+	* config.make.in (have-textrel_ifunc): New define.
+	* configure.ac: Add check if linker supports textrel relocation with
+	ifunc.
+	* elf/Makefile [have-textrel_ifunc == yes] (ifunc-pie-tests): Add
+	tst-ifunc-textrel.
+	(CFLAGS-tst-ifunc-textrel.c): New rule.
+	* elf/dl-reloc.c (_dl_relocate_object): Use all required flags on
+	DT_TEXTREL segments, not only PROT_READ and PROT_WRITE.
+	* elf/tst-ifunc-textrel.c: New file.
+
 2018-09-25  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/sys/procfs.h: Include

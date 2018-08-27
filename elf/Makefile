@@ -340,6 +340,9 @@ test-internal-extras += $(ifunc-test-modules)
 ifeq (yes,$(have-fpie))
 ifunc-pie-tests = ifuncmain1pie ifuncmain1vispie ifuncmain1staticpie \
 		  ifuncmain5pie ifuncmain6pie ifuncmain7pie
+ifeq (yes,$(have-textrel_ifunc))
+ifunc-pie-tests += tst-ifunc-textrel
+endif
 tests-internal += $(ifunc-pie-tests)
 tests-pie += $(ifunc-pie-tests)
 endif
@@ -1269,6 +1272,7 @@ CFLAGS-ifuncmain1staticpie.c += $(pie-ccflag)
 CFLAGS-ifuncmain5pie.c += $(pie-ccflag)
 CFLAGS-ifuncmain6pie.c += $(pie-ccflag)
 CFLAGS-ifuncmain7pie.c += $(pie-ccflag)
+CFLAGS-tst-ifunc-textrel.c += $(pic-ccflag)
 
 $(objpfx)ifuncmain1pie: $(objpfx)ifuncmod1.so
 $(objpfx)ifuncmain1staticpie: $(objpfx)ifuncdep1pic.o

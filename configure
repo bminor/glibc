@@ -664,6 +664,7 @@ INSTALL_PROGRAM
 sysnames
 submachine
 multi_arch
+libc_cv_textrel_ifunc
 no_stack_protector
 stack_protector
 libc_cv_ssp
@@ -4051,6 +4052,52 @@ rm -f conftest*
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_gcc_indirect_function" >&5
 $as_echo "$libc_cv_gcc_indirect_function" >&6; }
+
+# Check if linker supports textrel relocation with ifunc (used on elf/tests).
+# Note that it relies on libc_cv_ld_gnu_indirect_function test above.
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether the linker supports textrels along with ifunc" >&5
+$as_echo_n "checking whether the linker supports textrels along with ifunc... " >&6; }
+if ${libc_cv_textrel_ifunc+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat > conftest.S <<EOF
+.type foo,%gnu_indirect_function
+foo:
+.globl _start
+_start:
+.globl __start
+__start:
+.data
+#ifdef _LP64
+.quad foo
+#else
+.long foo
+#endif
+.text
+.globl address
+address:
+#ifdef _LP64
+.quad address
+#else
+.long address
+#endif
+EOF
+libc_cv_textrel_ifunc=no
+if test $libc_cv_ld_gnu_indirect_function = yes; then
+   if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -nostartfiles -nostdlib $no_ssp -pie -o conftest conftest.S'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then
+     libc_cv_textrel_ifunc=yes
+   fi
+fi
+rm -f conftest*
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_textrel_ifunc" >&5
+$as_echo "$libc_cv_textrel_ifunc" >&6; }
+
 
 # Check if gcc warns about alias for function with incompatible types.
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking if compiler warns about alias for function with incompatible types" >&5
