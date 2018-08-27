@@ -1,3 +1,23 @@
+2018-09-21  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* NEWS: Add note about new TLE support on powerpc64le.
+	* sysdeps/powerpc/nptl/tcb-offsets.sym (TM_CAPABLE): Remove.
+	* sysdeps/powerpc/nptl/tls.h (tcbhead_t): Rename tm_capable to
+	__ununsed1.
+	(TLS_INIT_TP, TLS_DEFINE_INIT_TP): Remove tm_capable setup.
+	(THREAD_GET_TM_CAPABLE, THREAD_SET_TM_CAPABLE): Remove macros.
+	* sysdeps/powerpc/powerpc32/sysdep.h,
+	sysdeps/powerpc/powerpc64/sysdep.h (ABORT_TRANSACTION_IMPL,
+	ABORT_TRANSACTION): Remove macros.
+	* sysdeps/powerpc/sysdep.h (ABORT_TRANSACTION): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/elision-conf.c (elision_init): Set
+	__pthread_force_elision iff PPC_FEATURE2_HTM_NOSC is set.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h,
+	sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h
+	sysdeps/unix/sysv/linux/powerpc/syscall.S (ABORT_TRANSACTION): Remove
+	usage.
+	* sysdeps/unix/sysv/linux/powerpc/not-errno.h: Remove file.
+
 2019-01-13  Jim Wilson  <jimw@sifive.com>
 
 	[BZ #24040]

@@ -263,24 +263,7 @@ LT_LABELSUFFIX(name,_name_end): ; \
   TRACEBACK_MASK(name,mask);	\
   END_2(name)
 
-#if !IS_IN(rtld)
-# define ABORT_TRANSACTION_IMPL \
-    cmpdi    13,0;		\
-    beq      1f;		\
-    lwz      0,TM_CAPABLE(13);	\
-    cmpwi    0,0;		\
-    beq	     1f;		\
-    li       11,_ABORT_SYSCALL;	\
-    tabort.  11;		\
-    .p2align 4;			\
-1:
-#else
-# define ABORT_TRANSACTION_IMPL
-#endif
-#define ABORT_TRANSACTION ABORT_TRANSACTION_IMPL
-
 #define DO_CALL(syscall) \
-    ABORT_TRANSACTION \
     li 0,syscall; \
     sc
 

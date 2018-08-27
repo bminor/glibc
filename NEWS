@@ -7,6 +7,17 @@ using `glibc' in the "product" field.
 
 Version 2.28.1
 
+Deprecated and removed features, and other changes affecting compatibility:
+
+* For powercp64le ABI, Transactional Lock Elision is now enabled iff kernel
+  indicates that it will abort the transaction prior to entering the kernel
+  (PPC_FEATURE2_HTM_NOSC on hwcap2).  On older kernels the transaction is
+  suspended, and this caused some undefined side-effects issues by aborting
+  transactions manually.  Glibc avoided it by abort transactions manually on
+  each syscall, but it lead to performance issues on newer kernels where the
+  HTM state is saved and restore lazily (the state being saved even when the
+  process actually does not use HTM).
+
 The following bugs are resolved with this release:
 
   [19444] build failures with -O1 due to -Wmaybe-uninitialized

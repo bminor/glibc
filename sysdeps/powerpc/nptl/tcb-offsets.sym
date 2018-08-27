@@ -21,7 +21,6 @@ DSO_SLOT2			(offsetof (tcbhead_t, dso_slot2) - TLS_TCB_OFFSET - sizeof (tcbhead_
 #ifdef __powerpc64__
 TCB_AT_PLATFORM			(offsetof (tcbhead_t, at_platform) - TLS_TCB_OFFSET - sizeof(tcbhead_t))
 #endif
-TM_CAPABLE			(offsetof (tcbhead_t, tm_capable) - TLS_TCB_OFFSET - sizeof (tcbhead_t))
 #ifndef __powerpc64__
 TCB_AT_PLATFORM			(offsetof (tcbhead_t, at_platform) - TLS_TCB_OFFSET - sizeof(tcbhead_t))
 PADDING				(offsetof (tcbhead_t, padding) - TLS_TCB_OFFSET - sizeof(tcbhead_t))

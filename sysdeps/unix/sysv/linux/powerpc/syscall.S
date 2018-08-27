@@ -18,7 +18,6 @@
 #include <sysdep.h>
 
 ENTRY (syscall)
-	ABORT_TRANSACTION
 	mr   r0,r3
 	mr   r3,r4
 	mr   r4,r5

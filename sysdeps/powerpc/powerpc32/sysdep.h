@@ -90,24 +90,7 @@ GOT_LABEL:			;					      \
   cfi_endproc;								      \
   ASM_SIZE_DIRECTIVE(name)
 
-#if !IS_IN(rtld) && !defined(__SPE__)
-# define ABORT_TRANSACTION_IMPL \
-    cmpwi    2,0;		\
-    beq      1f;		\
-    lwz      0,TM_CAPABLE(2);	\
-    cmpwi    0,0;		\
-    beq	     1f;		\
-    li       11,_ABORT_SYSCALL;	\
-    tabort.  11;		\
-    .align 4;			\
-1:
-#else
-# define ABORT_TRANSACTION_IMPL
-#endif
-#define ABORT_TRANSACTION ABORT_TRANSACTION_IMPL
-
 #define DO_CALL(syscall)						      \
-    ABORT_TRANSACTION							      \
     li 0,syscall;							      \
     sc
 
