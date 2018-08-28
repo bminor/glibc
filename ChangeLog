@@ -1,3 +1,10 @@
+2018-08-28  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23578]
+	* posix/tst-regcomp-truncated.c: New file.
+	* posix/Makefile (tests): Add it.
+	(tst-regcomp-truncated.out): Depend on generated locales.
+
 2018-08-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	[BZ #23578]
