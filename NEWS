@@ -163,6 +163,7 @@ The following bugs are resolved with this release:
   [23363] stdio-common/tst-printf.c has non-free license
   [23456] Wrong index_cpu_LZCNT
   [23459] COMMON_CPUID_INDEX_80000001 isn't populated for Intel processors
+  [23520] nscd: nscd: Use-after-free in addgetnetgrentX and its callers
   [23538] pthread_cond_broadcast: Fix waiters-after-spinning case
   [23562] signal: Use correct type for si_band in siginfo_t
   [23579] libc: Errors misreported in preadv2
