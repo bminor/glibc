@@ -871,8 +871,9 @@ main (int argc, char **argv)
   /* The unshare here gives us our own spaces and capabilities.  */
   if (unshare (CLONE_NEWUSER | CLONE_NEWPID | CLONE_NEWNS) < 0)
     {
-      /* Older kernels may not support all the options.  */
-      if (errno == EINVAL)
+      /* Older kernels may not support all the options, or security
+	 policy may block this call.  */
+      if (errno == EINVAL || errno == EPERM)
 	FAIL_UNSUPPORTED ("unable to unshare user/fs: %s", strerror (errno));
       else
 	FAIL_EXIT1 ("unable to unshare user/fs: %s", strerror (errno));

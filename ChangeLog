@@ -1,5 +1,10 @@
 2018-08-28  Florian Weimer  <fweimer@redhat.com>
 
+	* support/test-container.c (main): Treat unshare failure with
+	EPERM as an unsupported test.
+
+2018-08-28  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #23520]
 	nscd: Fix use-after-free in addgetnetgrentX and its callers.
 	* nscd/netgroupcache.c
