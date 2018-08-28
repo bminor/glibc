@@ -1,3 +1,7 @@
+2018-08-28  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* string/memmem.c: Use memcmp for first match.
+
 2018-08-28  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	[BZ #17426]
