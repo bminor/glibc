@@ -45,7 +45,6 @@
     f = f__;								      \
   } while (0)
 
-#include <sysdeps/i386/fpu/fenv_private.h>
 #include_next <math_private.h>
 
 #ifdef __SSE4_1__

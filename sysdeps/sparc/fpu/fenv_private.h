@@ -1,5 +1,5 @@
-#ifndef FENV_PRIVATE_H
-#define FENV_PRIVATE_H 1
+#ifndef SPARC_FENV_PRIVATE_H
+#define SPARC_FENV_PRIVATE_H 1
 
 #include <fenv.h>
 
@@ -179,4 +179,6 @@ libc_feholdsetround_sparc_ctx (struct rm_ctx *ctx, int round)
 #define libc_feholdsetroundf_ctx         libc_feholdsetround_sparc_ctx
 #define libc_feholdsetroundl_ctx         libc_feholdsetround_sparc_ctx
 
-#endif /* FENV_PRIVATE_H */
+#include_next <fenv_private.h>
+
+#endif /* SPARC_FENV_PRIVATE_H */

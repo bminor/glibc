@@ -1,3 +1,43 @@
+2018-08-28  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/aarch64/fpu/fenv_private.h: New file.  Based on ....
+	* sysdeps/aarch64/fpu/math_private.h: ... this file.  All contents
+	moved to fenv_private.h except for ...
+	(TOINT_INTRINSICS): Kept in math_private.h.
+	(roundtoint): Likewise.
+	(converttoint): Likewise.
+	* sysdeps/arm/fenv_private.h: Change multiple-include guard to
+	[ARM_FENV_PRIVATE_H].  Include next <fenv_private.h>.
+	* sysdeps/arm/math_private.h: Remove.
+	* sysdeps/generic/fenv_private.h: New file.  Contents moved from
+	....
+	* sysdeps/generic/math_private.h: ... this file.  Include
+	<stdbool.h>.  Do not include <fenv.h> or <get-rounding-mode.h>.
+	Include <fenv_private.h>.  Remove functions and macros moved to
+	fenv_private.h.
+	* sysdeps/i386/fpu/math_private.h: Remove.
+	* sysdeps/mips/math_private.h: Move to ....
+	* sysdeps/mips/fpu/fenv_private.h: ... here.  Change
+	multiple-include guard to [MIPS_FENV_PRIVATE_H].  Remove
+	[__mips_hard_float] conditional.  Include next <fenv_private.h>.
+	* sysdeps/powerpc/fpu/fenv_private.h: Change multiple-include
+	guard to [POWERPC_FENV_PRIVATE_H].  Include next <fenv_private.h>.
+	* sysdeps/powerpc/fpu/math_private.h: Do not include
+	<fenv_private.h>.
+	* sysdeps/riscv/rvf/math_private.h: Move to ....
+	* sysdeps/riscv/rvf/fenv_private.h: ... here.  Change
+	multiple-include guard to [RISCV_FENV_PRIVATE_H].  Include next
+	<fenv_private.h>.
+	* sysdeps/sparc/fpu/fenv_private.h: Change multiple-include guard
+	to [SPARC_FENV_PRIVATE_H].  Include next <fenv_private.h>.
+	* sysdeps/sparc/fpu/math_private.h: Remove.
+	* sysdeps/i386/fpu/fenv_private.h: Move to ....
+	* sysdeps/x86/fpu/fenv_private.h: ... here.  Change
+	multiple-include guard to [X86_FENV_PRIVATE_H].  Include next
+	<fenv_private.h>.
+	* sysdeps/x86_64/fpu/math_private.h: Do not include
+	<sysdeps/i386/fpu/fenv_private.h>.
+
 2018-08-28  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #23578]

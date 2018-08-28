@@ -1,5 +1,5 @@
-#ifndef FENV_PRIVATE_H
-#define FENV_PRIVATE_H 1
+#ifndef X86_FENV_PRIVATE_H
+#define X86_FENV_PRIVATE_H 1
 
 #include <bits/floatn.h>
 #include <fenv.h>
@@ -492,4 +492,6 @@ libc_feupdateenv_387_ctx (struct rm_ctx *ctx)
 
 #undef __mxcsr
 
-#endif /* FENV_PRIVATE_H */
+#include_next <fenv_private.h>
+
+#endif /* X86_FENV_PRIVATE_H */

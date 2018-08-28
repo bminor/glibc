@@ -16,8 +16,8 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef FENV_PRIVATE_H
-#define FENV_PRIVATE_H 1
+#ifndef POWERPC_FENV_PRIVATE_H
+#define POWERPC_FENV_PRIVATE_H 1
 
 #include <fenv.h>
 #include <fenv_libc.h>
@@ -224,5 +224,7 @@ libc_feresetround_ppc_ctx (struct rm_ctx *ctx)
 #define libc_feupdateenv_ctx             libc_feupdateenv_ppc_ctx
 #define libc_feupdateenvf_ctx            libc_feupdateenv_ppc_ctx
 #define libc_feupdateenvl_ctx            libc_feupdateenv_ppc_ctx
+
+#include_next <fenv_private.h>
 
 #endif

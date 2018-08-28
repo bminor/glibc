@@ -16,8 +16,8 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef FENV_PRIVATE_H
-#define FENV_PRIVATE_H 1
+#ifndef ARM_FENV_PRIVATE_H
+#define ARM_FENV_PRIVATE_H 1
 
 #include <fenv.h>
 #include <fpu_control.h>
@@ -246,4 +246,6 @@ libc_fesetenv_vfp_ctx (struct rm_ctx *ctx)
 
 #endif
 
-#endif /* FENV_PRIVATE_H */
+#include_next <fenv_private.h>
+
+#endif /* ARM_FENV_PRIVATE_H */

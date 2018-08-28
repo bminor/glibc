@@ -22,7 +22,6 @@
 #include <sysdep.h>
 #include <ldsodefs.h>
 #include <dl-procinfo.h>
-#include <fenv_private.h>
 
 #include_next <math_private.h>
 

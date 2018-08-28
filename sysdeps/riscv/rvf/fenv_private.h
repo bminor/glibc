@@ -16,8 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef RISCV_MATH_PRIVATE_H
-#define RISCV_MATH_PRIVATE_H 1
+#ifndef RISCV_FENV_PRIVATE_H
+#define RISCV_FENV_PRIVATE_H 1
 
 #include <fenv.h>
 #include <fpu_control.h>
@@ -156,6 +156,6 @@ libc_feresetround_riscv (fenv_t *envp)
 #define libc_feresetroundf libc_feresetround_riscv
 #define libc_feresetroundl libc_feresetround_riscv
 
-#include_next <math_private.h>
+#include_next <fenv_private.h>
 
 #endif
