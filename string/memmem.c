@@ -70,6 +70,10 @@ __memmem (const void *haystack_start, size_t haystack_len,
       haystack_len -= haystack - (const unsigned char *) haystack_start;
       if (haystack_len < needle_len)
 	return NULL;
+      /* Check whether we have a match.  This improves performance since we
+	 avoid the initialization overhead of the two-way algorithm.  */
+      if (memcmp (haystack, needle, needle_len) == 0)
+	return (void *) haystack;
       return two_way_short_needle (haystack, haystack_len, needle, needle_len);
     }
   else
