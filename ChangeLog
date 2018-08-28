@@ -1,3 +1,15 @@
+2018-08-28  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23520]
+	nscd: Fix use-after-free in addgetnetgrentX and its callers.
+	* nscd/netgroupcache.c
+	(addgetnetgrentX): Add tofreep parameter.  Do not free
+	heap-allocated buffer.
+	(addinnetgrX): Free buffer allocated bt addgetnetgrentX.
+	(addgetnetgrentX_ignore): New function.
+	(addgetnetgrent): Call it.
+	(readdgetnetgrent): Likewise.
+
 2018-08-16  DJ Delorie  <dj@delorie.com>
 
 	* malloc/malloc.c (_int_free): Check for corrupt prev_size vs size.
