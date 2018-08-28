@@ -12,6 +12,7 @@ The following bugs are resolved with this release:
   [23497] readdir64@GLIBC_2.1 cannot parse the kernel directory stream
   [23521] nss_files aliases database file stream leak
   [23538] pthread_cond_broadcast: Fix waiters-after-spinning case
+  [23578] regex: Fix memory overread in re_compile_pattern
 
 
 Version 2.28

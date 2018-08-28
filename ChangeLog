@@ -1,3 +1,18 @@
+2018-08-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #23578]
+	regex: fix uninitialized memory access
+	I introduced this bug into gnulib in commit
+	8335a4d6c7b4448cd0bcb6d0bebf1d456bcfdb17 dated 2006-04-10;
+	eventually it was merged into glibc.  The bug was found by
+	project-repo <bugs@feusi.co> and reported here:
+	https://lists.gnu.org/r/sed-devel/2018-08/msg00017.html
+	Diagnosis and draft fix reported by Assaf Gordon here:
+	https://lists.gnu.org/r/bug-gnulib/2018-08/msg00071.html
+	https://lists.gnu.org/r/bug-gnulib/2018-08/msg00142.html
+	* posix/regex_internal.c (build_wcs_upper_buffer):
+	Fix bug when mbrtowc returns 0.
+
 2018-08-27 Martin Kuchta  <martin.kuchta@netapp.com>
 	   Torvald Riegel  <triegel@redhat.com>
 
