@@ -1,3 +1,17 @@
+2018-09-28  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #23579]
+	* misc/tst-preadvwritev2-common.c (do_test_with_invalid_fd,
+	do_test_with_invalid_iov): New tests.
+	* misc/tst-preadvwritev2.c, misc/tst-preadvwritev64v2.c (do_test):
+	Call do_test_with_invalid_fd and do_test_with_invalid_iov.
+	* sysdeps/unix/sysv/linux/preadv2.c (preadv2): Use fallback code iff
+	errno is ENOSYS.
+	* sysdeps/unix/sysv/linux/preadv64v2.c (preadv64v2): Likewise.
+	* sysdeps/unix/sysv/linux/pwritev2.c (pwritev2): Likewise.
+	* sysdeps/unix/sysv/linux/pwritev64v2.c (pwritev64v2): Likewise.
+	* NEWS: Add bug fixed.
+
 2018-09-27  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #23717]

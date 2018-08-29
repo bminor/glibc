@@ -32,6 +32,8 @@ do_test (void)
 {
   do_test_with_invalid_flags ();
   do_test_without_offset ();
+  do_test_with_invalid_fd ();
+  do_test_with_invalid_iov ();
 
   return do_test_with_offset (0);
 }

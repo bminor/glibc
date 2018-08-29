@@ -13,6 +13,7 @@ The following bugs are resolved with this release:
   [23521] nss_files aliases database file stream leak
   [23538] pthread_cond_broadcast: Fix waiters-after-spinning case
   [23578] regex: Fix memory overread in re_compile_pattern
+  [23579] libc: Errors misreported in preadv2
   [23606] Missing ENDBR32 in sysdeps/i386/start.S
   [23679] gethostid: Missing NULL check for gethostbyname_r result
   [23717] Fix stack overflow in stdlib/tst-setcontext9
