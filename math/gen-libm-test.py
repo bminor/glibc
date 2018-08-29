@@ -308,9 +308,7 @@ def apply_lit(arg, macro):
 def gen_test_args_res(descr_args, descr_res, args, res_rm):
     """Generate a test given the arguments and per-rounding-mode results."""
     # Determine whether any arguments or results, for any rounding
-    # mode, are non-finite.  (For consistency with the old perl
-    # script, this does not handle infinities resulting from
-    # ROUNDING_MAP.)
+    # mode, are non-finite.
     non_finite = False
     test_snan = False
     all_args_res = list(args)
@@ -320,7 +318,8 @@ def gen_test_args_res(descr_args, descr_res, args, res_rm):
         if 'snan_value' in a:
             test_snan = True
             non_finite = True
-        elif 'qnan_value' in a or 'plus_infty' in a or 'minus_infty' in a:
+        elif ('qnan_value' in a or 'plus_infty' in a or 'minus_infty' in a
+              or 'plus_oflow' in a or 'minus_oflow' in a):
             non_finite = True
     # Process the arguments.
     args_disp = []

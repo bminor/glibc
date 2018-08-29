@@ -1,3 +1,8 @@
+2018-08-29  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/gen-libm-test.py (gen_test_args_res): Also treat plus_oflow
+	and minus_oflow as non-finite.
+
 2018-08-28  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/aarch64/fpu/fenv_private.h: New file.  Based on ....
