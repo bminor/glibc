@@ -28,7 +28,7 @@ pwritev2 (int fd, const struct iovec *vector, int count, off_t offset,
 # ifdef __NR_pwritev2
   ssize_t result = SYSCALL_CANCEL (pwritev2, fd, vector, count,
 				   LO_HI_LONG (offset), flags);
-  if (result >= 0)
+  if (result >= 0 || errno != ENOSYS)
     return result;
 # endif
   /* Trying to emulate the pwritev2 syscall flags is troublesome:
