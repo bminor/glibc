@@ -549,7 +549,7 @@ extern void *calloc (size_t __nmemb, size_t __size)
 extern void *realloc (void *__ptr, size_t __size)
      __THROW __attribute_warn_unused_result__;
 
-#ifdef __USE_GNU
+#ifdef __USE_MISC
 /* Re-allocate the previously allocated block in PTR, making the new
    block large enough for NMEMB elements of SIZE bytes each.  */
 /* __attribute_malloc__ is not used, because if reallocarray returns

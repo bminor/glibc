@@ -18,6 +18,9 @@ Major new features:
 
 * Optimized generic sinf, cosf, sincosf and tanf.
 
+* The reallocarray function is now declared under _DEFAULT_SOURCE, not just
+  for _GNU_SOURCE, to match BSD environments.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The glibc.tune tunable namespace has been renamed to glibc.cpu and the
