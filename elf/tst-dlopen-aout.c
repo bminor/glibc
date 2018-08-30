@@ -27,6 +27,7 @@
 #include <dlfcn.h>
 #include <stdio.h>
 #include <pthread.h>
+#include <support/xthread.h>
 
 __thread int x;
 
@@ -45,7 +46,6 @@ do_test (int argc, char *argv[])
     {
       pthread_t thr;
       void *p;
-      int rc;
 
       p = dlopen (argv[0], RTLD_LAZY);
       if (p != NULL)
@@ -53,11 +53,11 @@ do_test (int argc, char *argv[])
           fprintf (stderr, "dlopen unexpectedly succeeded\n");
           return 1;
         }
-      rc = pthread_create (&thr, NULL, fn, NULL);
-      assert (rc == 0);
-
-      rc = pthread_join (thr, NULL);
-      assert (rc == 0);
+      /* We create threads to force TLS allocation, which triggers
+	 the original bug i.e. running out of surplus slotinfo entries
+	 for TLS.  */
+      thr = xpthread_create (NULL, fn, NULL);
+      xpthread_join (thr);
     }
 
   return 0;
