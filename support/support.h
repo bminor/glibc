@@ -27,6 +27,8 @@
 #include <sys/cdefs.h>
 /* For mode_t.  */
 #include <sys/stat.h>
+/* For ssize_t and off64_t.  */
+#include <sys/types.h>
 
 __BEGIN_DECLS
 
@@ -93,6 +95,9 @@ extern const char support_objdir_root[];
 extern const char support_install_prefix[];
 /* Corresponds to the install's lib/ or lib64/ directory.  */
 extern const char support_libdir_prefix[];
+
+extern ssize_t support_copy_file_range (int, off64_t *, int, off64_t *,
+					size_t, unsigned int);
 
 __END_DECLS
 

@@ -383,8 +383,7 @@ copy_one_file (const char *sname, const char *dname)
   if (dfd < 0)
     FAIL_EXIT1 ("unable to open %s for writing\n", dname);
 
-  if (copy_file_range (sfd, 0, dfd, 0, st.st_size, 0) != st.st_size)
-    FAIL_EXIT1 ("cannot copy file %s to %s\n", sname, dname);
+  xcopy_file_range (sfd, 0, dfd, 0, st.st_size, 0);
 
   xclose (sfd);
   xclose (dfd);

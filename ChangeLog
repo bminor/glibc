@@ -1,3 +1,17 @@
+2018-08-31  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #23597]
+	* support/Makefile (libsupport-routines): Add
+	support_copy_file_range and xcopy_file_range.
+	* support/support.h: Include <sys/types.h>.
+	(support_copy_file_range): New prototype.
+	* support/support_copy_file_range.c: New file.  Copied and
+	modified from io/copy_file_range-compat.c.
+	* support/test-container.c (copy_one_file): Call xcopy_file_rang
+	instead of copy_file_range.
+	* support/xcopy_file_range.c: New file.
+	* support/xunistd.h (xcopy_file_range): New prototype.
+
 2018-08-30  Carlos O'Donell  <carlos@redhat.com>
 
 	* elf/tst-dlopen-aout.c: Include support/xthread.h. Use

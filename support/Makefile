@@ -43,6 +43,7 @@ libsupport-routines = \
   support_capture_subprocess \
   support_capture_subprocess_check \
   support_chroot \
+  support_copy_file_range \
   support_descriptor_supports_holes \
   support_enter_mount_namespace \
   support_enter_network_namespace \
@@ -74,6 +75,7 @@ libsupport-routines = \
   xchroot \
   xclose \
   xconnect \
+  xcopy_file_range \
   xdlfcn \
   xdup2 \
   xfclose \
