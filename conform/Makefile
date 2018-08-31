@@ -120,7 +120,9 @@ linknamespace-symlists-base := $(foreach std,$(conformtest-standards),\
 					     symlist-$(std))
 linknamespace-symlists-tests := $(addprefix $(objpfx),\
 					    $(linknamespace-symlists-base))
+ifdef PYTHON
 tests-special += $(linknamespace-symlists-tests)
+endif
 
 linknamespace-symlist-stdlibs-base := $(foreach std,$(conformtest-standards),\
 						    symlist-stdlibs-$(std))
@@ -128,7 +130,9 @@ linknamespace-symlist-stdlibs-tests := \
 	$(addprefix $(objpfx),\
 		    $(linknamespace-symlist-stdlibs-base))
 
+ifdef PYTHON
 tests-special += $(linknamespace-symlist-stdlibs-tests)
+endif
 
 linknamespace-header-base := $(foreach std,\
 				       $(conformtest-standards),\
@@ -137,7 +141,9 @@ linknamespace-header-base := $(foreach std,\
 						 $(std)/$(h)/linknamespace.out))
 linknamespace-header-tests := $(addprefix $(objpfx),\
 					  $(linknamespace-header-base))
+ifdef PYTHON
 tests-special += $(linknamespace-header-tests)
+endif
 
 include ../Rules
 
@@ -181,11 +187,10 @@ $(conformtest-header-tests): $(objpfx)%/conform.out: \
 		 > $@); \
 	$(evaluate-test)
 
-$(linknamespace-symlists-tests): $(objpfx)symlist-%: list-header-symbols.pl
-	$(PERL) -I. -w $< --tmpdir=$(objpfx) --cc='$(CC)' \
-		--flags='$(conformtest-cc-flags)' --standard=$* \
-		--headers="$(strip $(conformtest-headers-$*))" \
-		> $@ 2> $@.err; \
+$(linknamespace-symlists-tests): $(objpfx)symlist-%: list-header-symbols.py
+	$(PYTHON) $< --cc='$(CC)' --flags='$(conformtest-cc-flags)' \
+		  --standard=$* --headers="$(strip $(conformtest-headers-$*))" \
+		  > $@ 2> $@.err; \
 	$(evaluate-test)
 
 linknamespace-libs-isoc = $(common-objpfx)libc.a $(common-objpfx)math/libm.a
