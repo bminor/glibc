@@ -3,6 +3,7 @@
 
 #ifndef _ISOMAC
 # include <bits/types/locale_t.h>
+# include <stdbool.h>
 
 extern __typeof (strftime_l) __strftime_l;
 libc_hidden_proto (__strftime_l)
@@ -15,6 +16,21 @@ libc_hidden_proto (timelocal)
 libc_hidden_proto (localtime)
 libc_hidden_proto (strftime)
 libc_hidden_proto (strptime)
+
+#if __TIMESIZE == 64
+# define __timegm64 timegm
+# define __mktime64 mktime
+# define __timelocal64 timelocal
+#else
+extern __time64_t __timegm64 (struct tm *__tp) __THROW;
+extern __time64_t __mktime64 (struct tm *__tp) __THROW;
+/* Another name for `__mktime64'.  */
+extern __time64_t __timelocal64 (struct tm *__tp) __THROW;
+
+libc_hidden_proto (__mktime64)
+libc_hidden_proto (__timelocal64)
+#endif
+
 
 extern __typeof (clock_getres) __clock_getres;
 extern __typeof (clock_gettime) __clock_gettime;
@@ -49,13 +65,13 @@ extern void __tzset_parse_tz (const char *tz) attribute_hidden;
 extern void __tz_compute (__time64_t timer, struct tm *tm, int use_localtime)
   __THROW attribute_hidden;
 
-/* Subroutine of `mktime'.  Return the `time_t' representation of TP and
-   normalize TP, given that a `struct tm *' maps to a `time_t' as performed
+/* Subroutine of mktime.  Return the __time64_t representation of TP and
+   normalize TP, given that a struct tm * maps to a __time64_t as performed
    by FUNC.  Record next guess for localtime-gmtime offset in *OFFSET.  */
-extern time_t __mktime_internal (struct tm *__tp,
-				 struct tm *(*__func) (const time_t *,
-						       struct tm *),
-				 long int *__offset) attribute_hidden;
+extern __time64_t __mktime_internal (struct tm *__tp,
+				     struct tm *(*__func) (const __time64_t *,
+							   struct tm *),
+				     long int *__offset) attribute_hidden;
 
 /* nis/nis_print.c needs ctime, so even if ctime is not declared here,
    we define __ctime64 as ctime so that nis/nis_print.c can get linked
@@ -141,6 +157,14 @@ extern double __difftime (time_t time1, time_t time0);
 /* Use in the clock_* functions.  Size of the field representing the
    actual clock ID.  */
 #define CLOCK_IDFIELD_SIZE	3
+
+/* Check whether a time64_t value fits in a time_t.  */
+static inline bool
+fits_in_time_t (__time64_t t64)
+{
+  time_t t = t64;
+  return t == t64;
+}
 
 #endif
 #endif

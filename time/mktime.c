@@ -51,6 +51,7 @@
 
 #include <time.h>
 
+#include <errno.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -125,11 +126,11 @@ my_tzset (void)
    to be subtracted from each other, and sometimes with an offset
    added to them, without worrying about overflow.
 
-   Much of the code uses long_int to represent time_t values, to
-   lessen the hassle of dealing with platforms where time_t is
-   unsigned, and because long_int should suffice to represent all
-   time_t values that mktime can generate even on platforms where
-   time_t is excessively wide.  */
+   Much of the code uses long_int to represent __time64_t values, to
+   lessen the hassle of dealing with Gnulib-using platforms where
+   __time64_t is time_t and time_t is unsigned, and because long_int
+   should suffice to represent all __time64_t values that mktime can
+   generate even on platforms where __time64_t is excessively wide.  */
 
 #if INT_MAX <= LONG_MAX / 3 / 366 / 24 / 60 / 60
 typedef long int long_int;
@@ -157,16 +158,17 @@ shr (long_int a, int b)
 	  : a / (one << b) - (a % (one << b) < 0));
 }
 
-/* Bounds for the intersection of time_t and long_int.  */
+/* Bounds for the intersection of __time64_t and long_int.  */
 
 static long_int const mktime_min
-  = ((TYPE_SIGNED (time_t) && TYPE_MINIMUM (time_t) < TYPE_MINIMUM (long_int))
-     ? TYPE_MINIMUM (long_int) : TYPE_MINIMUM (time_t));
+  = ((TYPE_SIGNED (__time64_t)
+      && TYPE_MINIMUM (__time64_t) < TYPE_MINIMUM (long_int))
+     ? TYPE_MINIMUM (long_int) : TYPE_MINIMUM (__time64_t));
 static long_int const mktime_max
-  = (TYPE_MAXIMUM (long_int) < TYPE_MAXIMUM (time_t)
-     ? TYPE_MAXIMUM (long_int) : TYPE_MAXIMUM (time_t));
+  = (TYPE_MAXIMUM (long_int) < TYPE_MAXIMUM (__time64_t)
+     ? TYPE_MAXIMUM (long_int) : TYPE_MAXIMUM (__time64_t));
 
-verify (TYPE_IS_INTEGER (time_t));
+verify (TYPE_IS_INTEGER (__time64_t));
 
 #define EPOCH_YEAR 1970
 #define TM_YEAR_BASE 1900
@@ -247,11 +249,11 @@ long_int_avg (long_int a, long_int b)
   return shr (a, 1) + shr (b, 1) + ((a | b) & 1);
 }
 
-/* Return a time_t value corresponding to (YEAR-YDAY HOUR:MIN:SEC),
+/* Return a __time64_t value corresponding to (YEAR-YDAY HOUR:MIN:SEC),
    assuming that T corresponds to *TP and that no clock adjustments
    occurred between *TP and the desired time.
    Although T and the returned value are of type long_int,
-   they represent time_t values and must be in time_t range.
+   they represent __time64_t values and must be in __time64_t range.
    If TP is null, return a value not equal to T; this avoids false matches.
    YEAR and YDAY must not be so large that multiplying them by three times the
    number of seconds in a year (or day, respectively) would overflow long_int.
@@ -282,22 +284,22 @@ guess_time_tm (long_int year, long_int yday, int hour, int min, int sec,
 }
 
 /* Use CONVERT to convert T to a struct tm value in *TM.  T must be in
-   range for time_t.  Return TM if successful, NULL if T is out of
+   range for __time64_t.  Return TM if successful, NULL if T is out of
    range for CONVERT.  */
 static struct tm *
-convert_time (struct tm *(*convert) (const time_t *, struct tm *),
+convert_time (struct tm *(*convert) (const __time64_t *, struct tm *),
 	      long_int t, struct tm *tm)
 {
-  time_t x = t;
+  __time64_t x = t;
   return convert (&x, tm);
 }
 
 /* Use CONVERT to convert *T to a broken down time in *TP.
    If *T is out of range for conversion, adjust it so that
    it is the nearest in-range value and then convert that.
-   A value is in range if it fits in both time_t and long_int.  */
+   A value is in range if it fits in both __time64_t and long_int.  */
 static struct tm *
-ranged_convert (struct tm *(*convert) (const time_t *, struct tm *),
+ranged_convert (struct tm *(*convert) (const __time64_t *, struct tm *),
 		long_int *t, struct tm *tp)
 {
   struct tm *r;
@@ -339,15 +341,15 @@ ranged_convert (struct tm *(*convert) (const time_t *, struct tm *),
 }
 
 
-/* Convert *TP to a time_t value, inverting
+/* Convert *TP to a __time64_t value, inverting
    the monotonic and mostly-unit-linear conversion function CONVERT.
    Use *OFFSET to keep track of a guess at the offset of the result,
    compared to what the result would be for UTC without leap seconds.
    If *OFFSET's guess is correct, only one CONVERT call is needed.
    This function is external because it is used also by timegm.c.  */
-time_t
+__time64_t
 __mktime_internal (struct tm *tp,
-		   struct tm *(*convert) (const time_t *, struct tm *),
+		   struct tm *(*convert) (const __time64_t *, struct tm *),
 		   mktime_offset_t *offset)
 {
   long_int t, gt, t0, t1, t2, dt;
@@ -518,9 +520,9 @@ __mktime_internal (struct tm *tp,
 
 #if defined _LIBC || NEED_MKTIME_WORKING || NEED_MKTIME_WINDOWS
 
-/* Convert *TP to a time_t value.  */
-time_t
-mktime (struct tm *tp)
+/* Convert *TP to a __time64_t value.  */
+__time64_t
+__mktime64 (struct tm *tp)
 {
   /* POSIX.1 8.1.1 requires that whenever mktime() is called, the
      time zone names contained in the external variable 'tzname' shall
@@ -529,7 +531,7 @@ mktime (struct tm *tp)
 
 # if defined _LIBC || NEED_MKTIME_WORKING
   static mktime_offset_t localtime_offset;
-  return __mktime_internal (tp, __localtime_r, &localtime_offset);
+  return __mktime_internal (tp, __localtime64_r, &localtime_offset);
 # else
 #  undef mktime
   return mktime (tp);
@@ -538,12 +540,36 @@ mktime (struct tm *tp)
 #endif /* _LIBC || NEED_MKTIME_WORKING || NEED_MKTIME_WINDOWS */
 
 #ifdef weak_alias
+weak_alias (__mktime64, __timelocal64)
+#endif
+
+#ifdef _LIBC
+libc_hidden_def (__mktime64)
+libc_hidden_weak (__timelocal64)
+#endif
+
+#if __TIMESIZE != 64
+
+/* The 32-bit-time wrapper.  */
+time_t
+mktime (struct tm *tp)
+{
+  __time64_t t64 = __mktime64 (tp);
+  if (fits_in_time_t (t64))
+    return t64;
+  __set_errno (EOVERFLOW);
+  return -1;
+}
+
+#ifdef weak_alias
 weak_alias (mktime, timelocal)
 #endif
 
 #ifdef _LIBC
 libc_hidden_def (mktime)
 libc_hidden_weak (timelocal)
+#endif
+
 #endif
 
 #if DEBUG_MKTIME

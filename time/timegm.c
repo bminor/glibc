@@ -24,11 +24,26 @@
 #include <time.h>
 
 #include "mktime-internal.h"
+#include <errno.h>
+
+__time64_t
+__timegm64 (struct tm *tmp)
+{
+  static long int gmtime_offset;
+  tmp->tm_isdst = 0;
+  return __mktime_internal (tmp, __gmtime64_r, &gmtime_offset);
+}
+
+#if __TIMESIZE != 64
 
 time_t
 timegm (struct tm *tmp)
 {
-  static mktime_offset_t gmtime_offset;
-  tmp->tm_isdst = 0;
-  return __mktime_internal (tmp, __gmtime_r, &gmtime_offset);
+  __time64_t t64 = __timegm64 (tmp);
+  if (fits_in_time_t (t64))
+    return t64;
+  __set_errno (EOVERFLOW);
+  return -1;
 }
+
+#endif
