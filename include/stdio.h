@@ -98,7 +98,8 @@ enum __libc_message_action
   do_backtrace	= 1 << 1	/* Backtrace.  */
 };
 
-/* Print out MESSAGE on the error output and abort.  */
+/* Print out MESSAGE (which should end with a newline) on the error output
+   and abort.  */
 extern void __libc_fatal (const char *__message)
      __attribute__ ((__noreturn__));
 extern void __libc_message (enum __libc_message_action action,

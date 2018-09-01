@@ -56,7 +56,7 @@ elf_irela (const Elf32_Rela *reloc)
   else if (r_type == R_SPARC_NONE)
     ;
   else
-    __libc_fatal ("unexpected reloc type in static binary");
+    __libc_fatal ("Unexpected reloc type in static binary.\n");
 }
 
 #endif /* dl-irel.h */

@@ -1,3 +1,25 @@
+2018-08-31  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #20271]
+	* include/stdio.h (__libc_fatal): Mention newline in comment.
+	* grp/initgroups.c (internal_getgrouplist): Add missing newline.
+	* nptl/pthread_cond_wait.c (__pthread_cond_wait_common): Likewise.
+	* nscd/initgrcache.c (addinitgroupsX): Likewise.
+	* nss/nsswitch.c (__nss_next2): Likewise.
+	* sysdeps/aarch64/dl-irel.h (elf_irela): Likewise.
+	* sysdeps/arm/dl-irel.h (elf_irel): Likewise.
+	* sysdeps/generic/unwind-dw2.c (execute_cfa_program): Likewise.
+	* sysdeps/i386/dl-irel.h (elf_irel): Likewise.
+	* sysdeps/powerpc/powerpc32/dl-irel.h (elf_irel): Likewise.
+	* sysdeps/powerpc/powerpc64/dl-irel.h (elf_irel): Likewise.
+	* sysdeps/s390/dl-irel.h (elf_irel): Likewise.
+	* sysdeps/sparc/sparc32/dl-irel.h (elf_irel): Likewise.
+	* sysdeps/sparc/sparc64/dl-irel.h (elf_irel): Likewise.
+	* sysdeps/x86_64/dl-irel.h (elf_irel): Likewise.
+	* sysdeps/nptl/futex-internal.h (futex_wake): Likewise.
+	* sysdeps/unix/sysv/linux/netlink_assert_response.c
+	(__netlink_assert_response): Likewise.
+
 2018-08-28  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #23520]
