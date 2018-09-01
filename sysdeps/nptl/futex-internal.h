@@ -197,7 +197,7 @@ futex_wake (unsigned int* futex_word, int processes_to_wake, int private);
 static __always_inline __attribute__ ((__noreturn__)) void
 futex_fatal_error (void)
 {
-  __libc_fatal ("The futex facility returned an unexpected error code.");
+  __libc_fatal ("The futex facility returned an unexpected error code.\n");
 }
 
 #endif  /* futex-internal.h */

@@ -159,7 +159,7 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 
       /* This is really only for debugging.  */
       if (NSS_STATUS_TRYAGAIN > status || status > NSS_STATUS_RETURN)
-	__libc_fatal ("illegal status in internal_getgrouplist");
+	__libc_fatal ("Illegal status in internal_getgrouplist.\n");
 
       any_success |= status == NSS_STATUS_SUCCESS;
 

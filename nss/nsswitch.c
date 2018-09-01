@@ -235,7 +235,7 @@ __nss_next2 (service_user **ni, const char *fct_name, const char *fct2_name,
       /* This is really only for debugging.  */
       if (__builtin_expect (NSS_STATUS_TRYAGAIN > status
 			    || status > NSS_STATUS_RETURN, 0))
-	 __libc_fatal ("illegal status in __nss_next");
+	 __libc_fatal ("Illegal status in __nss_next.\n");
 
        if (nss_next_action (*ni, status) == NSS_ACTION_RETURN)
 	 return 1;

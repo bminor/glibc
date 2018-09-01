@@ -72,12 +72,12 @@ __netlink_assert_response (int fd, ssize_t result)
           char message[200];
           if (family < 0)
             __snprintf (message, sizeof (message),
-                        "Unexpected error %d on netlink descriptor %d",
+                        "Unexpected error %d on netlink descriptor %d.\n",
                         error_code, fd);
           else
             __snprintf (message, sizeof (message),
                         "Unexpected error %d on netlink descriptor %d"
-                        " (address family %d)",
+                        " (address family %d).\n",
                         error_code, fd, family);
           __libc_fatal (message);
         }
