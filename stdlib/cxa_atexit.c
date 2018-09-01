@@ -36,6 +36,10 @@ __internal_atexit (void (*func) (void *), void *arg, void *d,
 {
   struct exit_function *new;
 
+  /* As a QoI issue we detect NULL early with an assertion instead
+     of a SIGSEGV at program exit when the handler is run (bug 20544).  */
+  assert (func != NULL);
+
   __libc_lock_lock (__exit_funcs_lock);
   new = __new_exitfn (listp);
 
