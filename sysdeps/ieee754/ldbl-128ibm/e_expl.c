@@ -65,6 +65,7 @@
 #include <fenv.h>
 #include <inttypes.h>
 #include <math_private.h>
+#include <fenv_private.h>
 
 
 #include "t_expl.h"

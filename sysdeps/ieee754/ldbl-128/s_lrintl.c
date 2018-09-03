@@ -24,6 +24,7 @@
 #include <math.h>
 
 #include <math_private.h>
+#include <fenv_private.h>
 #include <libm-alias-ldouble.h>
 #include <fix-fp-int-convert-overflow.h>
 

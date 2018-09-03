@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <fenv_private.h>
 #include <mul_splitl.h>
 
 /* Compute the product of X + X_EPS, X + X_EPS + 1, ..., X + X_EPS + N

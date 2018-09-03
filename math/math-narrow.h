@@ -26,6 +26,7 @@
 #include <ieee754.h>
 #include <math-barriers.h>
 #include <math_private.h>
+#include <fenv_private.h>
 
 /* Carry out a computation using round-to-odd.  The computation is
    EXPR; the union type in which to store the result is UNION and the

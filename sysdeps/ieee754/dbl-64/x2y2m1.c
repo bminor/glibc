@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <fenv_private.h>
 #include <mul_split.h>
 #include <stdlib.h>
 

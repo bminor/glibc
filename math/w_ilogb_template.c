@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <limits.h>
 #include <math_private.h>
+#include <fenv_private.h>
 
 /* wrapper ilogb */
 int

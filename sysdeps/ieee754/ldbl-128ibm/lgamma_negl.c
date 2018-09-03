@@ -19,6 +19,7 @@
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <fenv_private.h>
 
 static const long double lgamma_zeros[][2] =
   {

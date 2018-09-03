@@ -39,6 +39,7 @@
 #include "uexp.tbl"
 #include <math-barriers.h>
 #include <math_private.h>
+#include <fenv_private.h>
 #include <fenv.h>
 #include <float.h>
 #include "eexp.tbl"

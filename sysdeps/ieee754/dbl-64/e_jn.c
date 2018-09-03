@@ -41,6 +41,7 @@
 #include <math.h>
 #include <math-narrow-eval.h>
 #include <math_private.h>
+#include <fenv_private.h>
 #include <math-underflow.h>
 
 static const double

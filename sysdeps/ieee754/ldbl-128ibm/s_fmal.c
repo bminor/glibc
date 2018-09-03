@@ -22,6 +22,7 @@
 #include <math.h>
 #include <math-barriers.h>
 #include <math_private.h>
+#include <fenv_private.h>
 #include <math-underflow.h>
 #include <math_ldbl_opt.h>
 #include <mul_split.h>

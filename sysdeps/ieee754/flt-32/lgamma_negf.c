@@ -20,6 +20,7 @@
 #include <math.h>
 #include <math-narrow-eval.h>
 #include <math_private.h>
+#include <fenv_private.h>
 
 static const float lgamma_zeros[][2] =
   {

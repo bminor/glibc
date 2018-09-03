@@ -18,6 +18,7 @@
 
 #include <fenv.h>
 #include <math_private.h>
+#include <fenv_private.h>
 #include <fpu_control.h>
 
 int

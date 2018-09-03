@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <fenv_private.h>
 
 int
 __isnanf (float x)

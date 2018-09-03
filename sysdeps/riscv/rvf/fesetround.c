@@ -18,6 +18,7 @@
 
 #include <fenv.h>
 #include <math_private.h>
+#include <fenv_private.h>
 
 int
 __fesetround (int round)

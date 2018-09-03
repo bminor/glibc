@@ -39,6 +39,7 @@
 #include "root.tbl"
 #include <math-barriers.h>
 #include <math_private.h>
+#include <fenv_private.h>
 
 /*********************************************************************/
 /* An ultimate sqrt routine. Given an IEEE double machine number x   */

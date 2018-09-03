@@ -20,6 +20,7 @@
 #include <fenv.h>
 #include <math.h>
 #include <math_private.h>
+#include <fenv_private.h>
 #include <stdbool.h>
 #include <fix-fp-int-compare-invalid.h>
 

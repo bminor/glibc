@@ -23,6 +23,7 @@
 #include <math.h>
 
 #include <math_private.h>
+#include <fenv_private.h>
 #include <libm-alias-ldouble.h>
 
 static const long double two63[2] =

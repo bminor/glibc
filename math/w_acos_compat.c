@@ -19,6 +19,7 @@
 #include <fenv.h>
 #include <math.h>
 #include <math_private.h>
+#include <fenv_private.h>
 #include <math-svid-compat.h>
 #include <libm-alias-double.h>
 

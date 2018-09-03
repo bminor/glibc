@@ -35,6 +35,7 @@
 #include "MathLib.h"
 #include <math.h>
 #include <math_private.h>
+#include <fenv_private.h>
 
 /**************************************************************************/
 /* An ultimate remainder routine. Given two IEEE double machine numbers x */

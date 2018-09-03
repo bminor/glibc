@@ -19,6 +19,7 @@
 #include <math.h>
 #include <math-barriers.h>
 #include <math_private.h>
+#include <fenv_private.h>
 #include <libm-alias-float.h>
 
 static const float
