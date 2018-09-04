@@ -132,7 +132,7 @@ am_pm       "<U0C09>.";"<U0C38><U0C3E>."
 d_t_fmt     "%B %d %A %Y %p%I.%M.%S %Z"
 %
 % Appropriate date representation
-d_fmt       "%B %d %A %Y"
+d_fmt       "%d-%m-%y"
 %
 % Appropriate time representation
 t_fmt       "%p%I.%M.%S %Z"

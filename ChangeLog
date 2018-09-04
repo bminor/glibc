@@ -1,3 +1,42 @@
+2018-09-05  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #17426]
+	* localedata/locales/anp_IN (d_fmt): Use "%-d//%-m//%y".
+	* localedata/locales/ar_IN (d_fmt): Likewise.
+	* localedata/locales/bhb_IN (d_fmt): Likewise.
+	* localedata/locales/bho_IN (d_fmt): Likewise.
+	* localedata/locales/bn_BD (d_fmt): Likewise.
+	* localedata/locales/bn_IN (d_fmt): Likewise.
+	* localedata/locales/doi_IN (d_fmt): Likewise.
+	* localedata/locales/gu_IN (d_fmt): Likewise.
+	* localedata/locales/hi_IN (d_fmt): Likewise.
+	* localedata/locales/hne_IN (d_fmt): Likewise.
+	* localedata/locales/kn_IN (d_fmt): Likewise.
+	* localedata/locales/mag_IN (d_fmt): Likewise.
+	* localedata/locales/mai_IN (d_fmt): Likewise.
+	* localedata/locales/mjw_IN (d_fmt): Likewise.
+	* localedata/locales/ml_IN (d_fmt): Likewise.
+	* localedata/locales/mni_IN (d_fmt): Likewise.
+	* localedata/locales/mr_IN (d_fmt): Likewise.
+	* localedata/locales/pa_IN (d_fmt): Likewise.
+	* localedata/locales/raj_IN (d_fmt): Likewise.
+	* localedata/locales/sat_IN (d_fmt): Likewise.
+	* localedata/locales/sd_IN (d_fmt): Likewise.
+	* localedata/locales/sd_IN@devanagari (d_fmt): Likewise.
+	* localedata/locales/ta_IN (d_fmt): Likewise.
+	* localedata/locales/ta_LK (d_fmt): Likewise.
+	* localedata/locales/tcy_IN (d_fmt): Likewise.
+	* localedata/locales/ur_IN (d_fmt): Likewise.
+
+	* localedata/locales/brx_IN (d_fmt): Use "%-m//%-d//%y".
+	* localedata/locales/ks_IN (d_fmt): Likewise.
+	* localedata/locales/ks_IN@devanagari (d_fmt): Likewise.
+
+	* localedata/locales/kok_IN (d_fmt): Use "%-d-%-m-%y".
+	* localedata/locales/ne_NP (d_fmt): Use "%y//%-m//%-d".
+	* localedata/locales/sa_IN (d_fmt): Use "%-d-%m-%y".
+	* localedata/locales/te_IN (d_fmt): Use "%d-%m-%y".
+
 2018-09-05  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* NEWS: Mention exp and exp2 improvements.
