@@ -21,7 +21,6 @@
 #include <math.h>
 
 #include <math_private.h>
-#include <fenv_private.h>
 #include <libm-alias-double.h>
 
 /* For LP64, lround is an alias for llround.  */

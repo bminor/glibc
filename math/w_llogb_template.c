@@ -20,7 +20,7 @@
 #include <errno.h>
 #include <limits.h>
 #include <math_private.h>
-#include <fenv_private.h>
+#include <fenv.h>
 
 long int
 M_DECL_FUNC (__llogb) (FLOAT x)

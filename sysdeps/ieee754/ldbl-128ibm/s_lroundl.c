@@ -20,7 +20,6 @@
 #include <math.h>
 #include <fenv.h>
 #include <math_private.h>
-#include <fenv_private.h>
 #include <math_ldbl_opt.h>
 #include <float.h>
 #include <ieee754.h>

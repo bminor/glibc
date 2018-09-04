@@ -18,7 +18,7 @@
 
 #include <math.h>
 #include <math_private.h>
-#include <fenv_private.h>
+#include <fenv.h>
 #include <fenv_libc.h>
 #include <inttypes.h>
 #include <stdint.h>

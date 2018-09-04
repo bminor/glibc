@@ -57,6 +57,96 @@ struct rm_ctx
 #  define FE_HAVE_ROUNDING_MODES 0
 # endif
 
+/* When no floating-point exceptions are defined in <fenv.h>, make
+   feraiseexcept ignore its argument so that unconditional
+   feraiseexcept calls do not cause errors for undefined exceptions.
+   Define it to expand to a void expression so that any calls testing
+   the result of feraiseexcept do produce errors.  */
+# if FE_ALL_EXCEPT == 0
+#  define feraiseexcept(excepts) ((void) 0)
+#  define __feraiseexcept(excepts) ((void) 0)
+# endif
+
+/* Similarly, most <fenv.h> functions have trivial implementations in
+   the absence of support for floating-point exceptions and rounding
+   modes.  */
+
+# if !FE_HAVE_ROUNDING_MODES
+#  if FE_ALL_EXCEPT == 0
+extern inline int
+fegetenv (fenv_t *__e)
+{
+  return 0;
+}
+
+extern inline int
+__fegetenv (fenv_t *__e)
+{
+  return 0;
+}
+
+extern inline int
+feholdexcept (fenv_t *__e)
+{
+  return 0;
+}
+
+extern inline int
+__feholdexcept (fenv_t *__e)
+{
+  return 0;
+}
+
+extern inline int
+fesetenv (const fenv_t *__e)
+{
+  return 0;
+}
+
+extern inline int
+__fesetenv (const fenv_t *__e)
+{
+  return 0;
+}
+
+extern inline int
+feupdateenv (const fenv_t *__e)
+{
+  return 0;
+}
+
+extern inline int
+__feupdateenv (const fenv_t *__e)
+{
+  return 0;
+}
+#  endif
+
+extern inline int
+fegetround (void)
+{
+  return FE_TONEAREST;
+}
+
+extern inline int
+__fegetround (void)
+{
+  return FE_TONEAREST;
+}
+
+extern inline int
+fesetround (int __d)
+{
+  return 0;
+}
+
+extern inline int
+__fesetround (int __d)
+{
+  return 0;
+}
+# endif
+
 #endif
 
 #endif

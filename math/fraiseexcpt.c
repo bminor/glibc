@@ -20,6 +20,9 @@
 #include <fenv.h>
 #include <shlib-compat.h>
 
+#undef __feraiseexcept
+#undef feraiseexcept
+
 int
 __feraiseexcept (int excepts)
 {
