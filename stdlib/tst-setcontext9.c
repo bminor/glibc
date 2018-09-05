@@ -41,26 +41,55 @@ f2 (void)
 }
 
 static void
-f1 (void)
+f1b (void)
 {
-  puts ("start f1");
-  if (getcontext (&ctx[2]) != 0)
-    {
-      printf ("%s: getcontext: %m\n", __FUNCTION__);
-      exit (EXIT_FAILURE);
-    }
   if (done)
     {
-      puts ("set context in f1");
+      puts ("set context in f1b");
       if (setcontext (&ctx[3]) != 0)
 	{
 	  printf ("%s: setcontext: %m\n", __FUNCTION__);
 	  exit (EXIT_FAILURE);
 	}
     }
+  exit (EXIT_FAILURE);
+}
+
+static void
+f1a (void)
+{
+  char st2[32768];
+  puts ("start f1a");
+  if (getcontext (&ctx[2]) != 0)
+    {
+      printf ("%s: getcontext: %m\n", __FUNCTION__);
+      exit (EXIT_FAILURE);
+    }
+  ctx[2].uc_stack.ss_sp = st2;
+  ctx[2].uc_stack.ss_size = sizeof st2;
+  ctx[2].uc_link = &ctx[0];
+  makecontext (&ctx[2], (void (*) (void)) f1b, 0);
   f2 ();
 }
 
+/* The execution path through the test looks like this:
+   do_test (call)
+   -> "making contexts"
+   -> "swap contexts"
+   f1a (via swapcontext to ctx[1], with alternate stack)
+   -> "start f1a"
+   f2 (call)
+   -> "swap contexts in f2"
+   f1b (via swapcontext to ctx[2], with alternate stack)
+   -> "set context in f1b"
+   do_test (via setcontext to ctx[3], main stack)
+   -> "setcontext"
+   f2 (via setcontext to ctx[4], with alternate stack)
+   -> "end f2"
+
+   We must use an alternate stack for f1b, because if we don't then the
+   result of executing an earlier caller may overwrite registers
+   spilled to the stack in f2.  */
 static int
 do_test (void)
 {
@@ -79,7 +108,7 @@ do_test (void)
   ctx[1].uc_stack.ss_sp = st1;
   ctx[1].uc_stack.ss_size = sizeof st1;
   ctx[1].uc_link = &ctx[0];
-  makecontext (&ctx[1], (void (*) (void)) f1, 0);
+  makecontext (&ctx[1], (void (*) (void)) f1a, 0);
   puts ("swap contexts");
   if (swapcontext (&ctx[3], &ctx[1]) != 0)
     {

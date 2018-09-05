@@ -1,3 +1,9 @@
+2018-09-19  Carlos O'Donell  <carlos@redhat.com>
+
+	* stdlib/tst-setcontext9.c (f1): Rename to...
+	(f1a): ... this.
+	(f1b): New function implementing lower half of f1 in alternate stack.
+
 2018-09-20  Florian Weimer  <fweimer@redhat.com>
 
 	* misc/tst-gethostid.c: New file.
