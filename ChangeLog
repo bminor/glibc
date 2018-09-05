@@ -1,3 +1,11 @@
+2018-09-05  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/generic/math_private.h
+	[__HAVE_DISTINCT_FLOAT128 && !__GNUC_PREREQ (7, 0)] (__isinff128):
+	Move this inline function ....
+	[__HAVE_DISTINCT_FLOAT128] (fabsf128): And this one ....
+	* include/math.h [!_ISOMAC]: To here....
+
 2018-09-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/generic/fenv_private.h [FE_ALL_EXCEPT == 0]: Move this

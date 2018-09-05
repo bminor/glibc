@@ -222,29 +222,6 @@ do {								\
 # undef _Mdouble_
 #endif
 
-#if __HAVE_DISTINCT_FLOAT128
-
-/* __builtin_isinf_sign is broken in GCC < 7 for float128.  */
-# if ! __GNUC_PREREQ (7, 0)
-#  include <ieee754_float128.h>
-extern inline int
-__isinff128 (_Float128 x)
-{
-  int64_t hx, lx;
-  GET_FLOAT128_WORDS64 (hx, lx, x);
-  lx |= (hx & 0x7fffffffffffffffLL) ^ 0x7fff000000000000LL;
-  lx |= -lx;
-  return ~(lx >> 63) & (hx >> 62);
-}
-# endif
-
-extern inline _Float128
-fabsf128 (_Float128 x)
-{
-  return __builtin_fabsf128 (x);
-}
-#endif
-
 
 
 /* Prototypes for functions of the IBM Accurate Mathematical Library.  */
