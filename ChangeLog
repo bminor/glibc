@@ -1,5 +1,7 @@
 2018-09-05  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/alpha/fpu/math_private.h: Remove.
+
 	* sysdeps/generic/math_private.h
 	[__HAVE_DISTINCT_FLOAT128 && !__GNUC_PREREQ (7, 0)] (__isinff128):
 	Move this inline function ....
