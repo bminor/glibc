@@ -1,3 +1,33 @@
+2018-09-05  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* NEWS: Mention exp and exp2 improvements.
+	* math/Makefile (libm-support): Remove t_exp.
+	(type-double-routines): Add math_err and e_exp_data.
+	* sysdeps/aarch64/libm-test-ulps: Update.
+	* sysdeps/arm/libm-test-ulps: Update.
+	* sysdeps/i386/fpu/e_exp_data.c: New file.
+	* sysdeps/i386/fpu/math_err.c: New file.
+	* sysdeps/i386/fpu/t_exp.c: Remove.
+	* sysdeps/ia64/fpu/e_exp_data.c: New file.
+	* sysdeps/ia64/fpu/math_err.c: New file.
+	* sysdeps/ia64/fpu/t_exp.c: Remove.
+	* sysdeps/ieee754/dbl-64/e_exp.c: Rewrite.
+	* sysdeps/ieee754/dbl-64/e_exp2.c: Rewrite.
+	* sysdeps/ieee754/dbl-64/e_exp_data.c: New file.
+	* sysdeps/ieee754/dbl-64/e_pow.c (__ieee754_pow): Update error bound.
+	* sysdeps/ieee754/dbl-64/eexp.tbl: Remove.
+	* sysdeps/ieee754/dbl-64/math_config.h: New file.
+	* sysdeps/ieee754/dbl-64/math_err.c: New file.
+	* sysdeps/ieee754/dbl-64/t_exp.c: Remove.
+	* sysdeps/ieee754/dbl-64/t_exp2.h: Remove.
+	* sysdeps/ieee754/dbl-64/uexp.h: Remove.
+	* sysdeps/ieee754/dbl-64/uexp.tbl: Remove.
+	* sysdeps/m68k/m680x0/fpu/e_exp_data.c: New file.
+	* sysdeps/m68k/m680x0/fpu/math_err.c: New file.
+	* sysdeps/m68k/m680x0/fpu/t_exp.c: Remove.
+	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Update.
+
 2018-09-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/alpha/fpu/math_private.h: Remove.
