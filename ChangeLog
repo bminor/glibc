@@ -1,5 +1,9 @@
 2018-09-06  Stefan Liebler  <stli@linux.ibm.com>
 
+	* sysdeps/s390/fpu/libm-test-ulps: Regenerated.
+
+2018-09-06  Stefan Liebler  <stli@linux.ibm.com>
+
 	* sysdeps/unix/sysv/linux/spawni.c (maybe_script_execute):
 	Increment size of new_argv by one.
 
