@@ -1,3 +1,16 @@
+2018-12-15  Assaf Gordon  <assafgordon@gmail.com>
+
+	regex: fix heap-use-after-free error
+	[BZ #18040]
+	Problem reported by Saito Takaaki <tails.saito@gmail.com> in
+	https://debbugs.gnu.org/32592
+	Call stack get_subexp->get_subexp_sub->clean_state_log_if_needed may
+	call extend_buffers which reallocates the re_string_t internal buffer.
+	Local variable 'buf' was not updated in such case, resulting in
+	use-after-free.
+	* posix/regexec.c (get_subexp): Update 'buf' after call to
+	get_subexp_sub.
+
 2018-12-15  Florian Weimer  <fweimer@redhat.com>
 
 	* support/blob_repeat.c (check_mul_overflow_size_t): New function.
