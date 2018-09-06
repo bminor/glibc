@@ -2786,6 +2786,8 @@ get_subexp (re_match_context_t *mctx, Idx bkref_node, Idx bkref_str_idx)
 	  buf = (const char *) re_string_get_buffer (&mctx->input);
 	  if (err == REG_NOMATCH)
 	    continue;
+	  if (__glibc_unlikely (err != REG_NOERROR))
+	    return err;
 	}
     }
   return REG_NOERROR;

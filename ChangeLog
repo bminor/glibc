@@ -1,3 +1,10 @@
+2018-12-15  Paul Eggert  <eggert@cs.ucla.edu>
+
+	regex: fix storage-exhaustion error
+	[BZ #18040]
+	* posix/regexec.c (get_subexp):
+	Do not continue if storage is exhausted.
+
 2018-12-15  Assaf Gordon  <assafgordon@gmail.com>
 
 	regex: fix heap-use-after-free error
