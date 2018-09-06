@@ -101,7 +101,7 @@ maybe_script_execute (struct posix_spawn_args *args)
       ptrdiff_t argc = args->argc;
 
       /* Construct an argument list for the shell.  */
-      char *new_argv[argc + 1];
+      char *new_argv[argc + 2];
       new_argv[0] = (char *) _PATH_BSHELL;
       new_argv[1] = (char *) args->file;
       if (argc > 1)
