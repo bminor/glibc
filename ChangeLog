@@ -1,3 +1,8 @@
+2018-09-06  Stefan Liebler  <stli@linux.ibm.com>
+
+	* sysdeps/unix/sysv/linux/spawni.c (maybe_script_execute):
+	Increment size of new_argv by one.
+
 2018-08-28  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #23578]
