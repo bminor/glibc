@@ -1,3 +1,13 @@
+2018-09-10  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #10797]
+	* localedata/locales/de_CH (mon_thousands_sep): Use "<U2019>" (Right
+	Single Quotation Mark).
+	(thousands_sep): Likewise.
+	* localedata/locales/it_CH (LC_NUMERIC): Use “copy "de_CH"”.
+	* localedata/locales/it_IT (thousands_sep): Use ".".
+	(grouping): Use "3;3".
+
 2018-09-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/build-many-glibcs.py (Context.add_all_configs): Add

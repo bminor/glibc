@@ -62,9 +62,7 @@ copy  "de_CH"
 END LC_MONETARY
 
 LC_NUMERIC
-decimal_point             ","
-thousands_sep             "'"
-grouping                  3;3
+copy  "de_CH"
 END LC_NUMERIC
 
 LC_TIME
