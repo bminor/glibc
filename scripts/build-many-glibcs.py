@@ -91,13 +91,14 @@ class Context(object):
     """The global state associated with builds in a given directory."""
 
     def __init__(self, topdir, parallelism, keep, replace_sources, strip,
-                 action):
+                 full_gcc, action):
         """Initialize the context."""
         self.topdir = topdir
         self.parallelism = parallelism
         self.keep = keep
         self.replace_sources = replace_sources
         self.strip = strip
+        self.full_gcc = full_gcc
         self.srcdir = os.path.join(topdir, 'src')
         self.versions_json = os.path.join(self.srcdir, 'versions.json')
         self.build_state_json = os.path.join(topdir, 'build-state.json')
@@ -1122,6 +1123,8 @@ class Context(object):
         """Run a copy of this script with given options."""
         cmd = [sys.executable, sys.argv[0], '--keep=none',
                '-j%d' % self.parallelism]
+        if self.full_gcc:
+            cmd.append('--full-gcc')
         cmd.extend(opts)
         cmd.extend([self.topdir, action])
         sys.stdout.flush()
@@ -1328,15 +1331,13 @@ class Config(object):
 
     def build_gcc(self, cmdlist, bootstrap):
         """Build GCC."""
-        # libsanitizer commonly breaks because of glibc header
-        # changes, or on unusual targets.  libssp is of little
-        # relevance with glibc's own stack checking support.
-        # libcilkrts does not support GNU/Hurd (and has been removed
-        # in GCC 8, so --disable-libcilkrts can be removed once glibc
-        # no longer supports building with older GCC versions).
+        # libssp is of little relevance with glibc's own stack
+        # checking support.  libcilkrts does not support GNU/Hurd (and
+        # has been removed in GCC 8, so --disable-libcilkrts can be
+        # removed once glibc no longer supports building with older
+        # GCC versions).
         cfg_opts = list(self.gcc_cfg)
-        cfg_opts += ['--disable-libsanitizer', '--disable-libssp',
-                     '--disable-libcilkrts']
+        cfg_opts += ['--disable-libssp', '--disable-libcilkrts']
         host_libs = self.ctx.host_libraries_installdir
         cfg_opts += ['--with-gmp=%s' % host_libs,
                      '--with-mpfr=%s' % host_libs,
@@ -1359,14 +1360,20 @@ class Config(object):
                          '--disable-libitm',
                          '--disable-libmpx',
                          '--disable-libquadmath',
+                         '--disable-libsanitizer',
                          '--without-headers', '--with-newlib',
                          '--with-glibc-version=%s' % self.ctx.glibc_version
                          ]
             cfg_opts += self.first_gcc_cfg
         else:
             tool_build = 'gcc'
-            cfg_opts += ['--enable-languages=c,c++', '--enable-shared',
-                         '--enable-threads']
+            # libsanitizer commonly breaks because of glibc header
+            # changes, or on unusual targets.
+            if not self.ctx.full_gcc:
+                cfg_opts += ['--disable-libsanitizer']
+            langs = 'all' if self.ctx.full_gcc else 'c,c++'
+            cfg_opts += ['--enable-languages=%s' % langs,
+                         '--enable-shared', '--enable-threads']
         self.build_cross_tool(cmdlist, 'gcc', tool_build, cfg_opts)
 
 
@@ -1658,6 +1665,8 @@ def get_parser():
                         'with the wrong version of a component')
     parser.add_argument('--strip', action='store_true',
                         help='Strip installed glibc libraries')
+    parser.add_argument('--full-gcc', action='store_true',
+                        help='Build GCC with all languages and libsanitizer')
     parser.add_argument('topdir',
                         help='Toplevel working directory')
     parser.add_argument('action',
@@ -1676,7 +1685,7 @@ def main(argv):
     opts = parser.parse_args(argv)
     topdir = os.path.abspath(opts.topdir)
     ctx = Context(topdir, opts.parallelism, opts.keep, opts.replace_sources,
-                  opts.strip, opts.action)
+                  opts.strip, opts.full_gcc, opts.action)
     ctx.run_builds(opts.action, opts.configs)
 
 

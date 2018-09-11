@@ -1,3 +1,13 @@
+2018-09-11  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/build-many-glibcs.py (Context.__init__): Add full_gcc
+	argument.
+	(Config.build_gcc): Use --disable-libsanitizer for first GCC
+	build, but not for second build if --full-gcc.  Use
+	--enable-languages=all for second build if --full-gcc.
+	(get_parser): Add --full-gcc option.
+	(main): Update call to Context.
+
 2018-09-10  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	[BZ #10797]
