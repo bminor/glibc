@@ -1,5 +1,12 @@
 2018-09-11  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/x86_64/fpu/math_private.h (MOVD): Remove macro.
+	(MOVQ): Likewise.
+	(EXTRACT_WORDS64): Likewise.
+	(INSERT_WORDS64): Likewise.
+	(GET_FLOAT_WORD): Likewise.
+	(SET_FLOAT_WORD): Likewise.
+
 	* scripts/build-many-glibcs.py (Context.__init__): Add full_gcc
 	argument.
 	(Config.build_gcc): Use --disable-libsanitizer for first GCC
