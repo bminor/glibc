@@ -1,3 +1,11 @@
+2018-11-28  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #22834]
+	[BZ #17490]
+	* NEWS: Add new semantic for atfork with popen and system.
+	* libio/iopopen.c (_IO_new_proc_open): use posix_spawn instead of
+	fork and execl.
+
 2018-11-30  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
 
 	[BZ #23690]

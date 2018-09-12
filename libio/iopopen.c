@@ -34,7 +34,8 @@
 #include <not-cancel.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <kernel-features.h>
+#include <spawn.h>
+#include <paths.h>
 
 struct _IO_proc_file
 {
@@ -59,13 +60,60 @@ unlock (void *not_used)
 }
 #endif
 
+/* POSIX states popen shall ensure that any streams from previous popen()
+   calls that remain open in the parent process should be closed in the new
+   child process.
+   To avoid a race-condition between checking which file descriptors need to
+   be close (by transversing the proc_file_chain list) and the insertion of a
+   new one after a successful posix_spawn this function should be called
+   with proc_file_chain_lock acquired.  */
+static bool
+spawn_process (posix_spawn_file_actions_t *fa, FILE *fp, const char *command,
+	       int do_cloexec, int pipe_fds[2], int parent_end, int child_end,
+	       int child_pipe_fd)
+{
+
+  for (struct _IO_proc_file *p = proc_file_chain; p; p = p->next)
+    {
+      int fd = _IO_fileno ((FILE *) p);
+
+      /* If any stream from previous popen() calls has fileno
+	 child_pipe_fd, it has been already closed by the adddup2 action
+	 above.  */
+      if (fd != child_pipe_fd
+	  && __posix_spawn_file_actions_addclose (fa, fd) != 0)
+	return false;
+    }
+
+  if (__posix_spawn (&((_IO_proc_file *) fp)->pid, _PATH_BSHELL, fa, 0,
+		     (char *const[]){ (char*) "sh", (char*) "-c",
+		     (char *) command, NULL }, __environ) != 0)
+    return false;
+
+  __close_nocancel (pipe_fds[child_end]);
+
+  if (!do_cloexec)
+    /* Undo the effects of the pipe2 call which set the
+       close-on-exec flag.  */
+    __fcntl (pipe_fds[parent_end], F_SETFD, 0);
+
+  _IO_fileno (fp) = pipe_fds[parent_end];
+
+  ((_IO_proc_file *) fp)->next = proc_file_chain;
+  proc_file_chain = (_IO_proc_file *) fp;
+
+  return true;
+}
+
 FILE *
 _IO_new_proc_open (FILE *fp, const char *command, const char *mode)
 {
   int read_or_write;
+  /* These are indexes for pipe_fds.  */
   int parent_end, child_end;
   int pipe_fds[2];
-  pid_t child_pid;
+  int child_pipe_fd;
+  bool spawn_ok;
 
   int do_read = 0;
   int do_write = 0;
@@ -108,71 +156,61 @@ _IO_new_proc_open (FILE *fp, const char *command, const char *mode)
 
   if (do_read)
     {
-      parent_end = pipe_fds[0];
-      child_end = pipe_fds[1];
+      parent_end = 0;
+      child_end = 1;
       read_or_write = _IO_NO_WRITES;
+      child_pipe_fd = 1;
     }
   else
     {
-      parent_end = pipe_fds[1];
-      child_end = pipe_fds[0];
+      parent_end = 1;
+      child_end = 0;
       read_or_write = _IO_NO_READS;
+      child_pipe_fd = 0;
     }
 
-  ((_IO_proc_file *) fp)->pid = child_pid = __fork ();
-  if (child_pid == 0)
+  posix_spawn_file_actions_t fa;
+  /* posix_spawn_file_actions_init does not fail.  */
+  __posix_spawn_file_actions_init (&fa);
+
+  /* The descriptor is already the one the child will use.  In this case
+     it must be moved to another one otherwise, there is no safe way to
+     remove the close-on-exec flag in the child without creating a FD leak
+     race in the parent.  */
+  if (pipe_fds[child_end] == child_pipe_fd)
     {
-      int child_std_end = do_read ? 1 : 0;
-      struct _IO_proc_file *p;
-
-      if (child_end != child_std_end)
-	__dup2 (child_end, child_std_end);
-      else
-	/* The descriptor is already the one we will use.  But it must
-	   not be marked close-on-exec.  Undo the effects.  */
-	__fcntl (child_end, F_SETFD, 0);
-      /* POSIX.2:  "popen() shall ensure that any streams from previous
-         popen() calls that remain open in the parent process are closed
-	 in the new child process." */
-      for (p = proc_file_chain; p; p = p->next)
-	{
-	  int fd = _IO_fileno ((FILE *) p);
-
-	  /* If any stream from previous popen() calls has fileno
-	     child_std_end, it has been already closed by the dup2 syscall
-	     above.  */
-	  if (fd != child_std_end)
-	    __close_nocancel (fd);
-	}
-
-      execl ("/bin/sh", "sh", "-c", command, (char *) 0);
-      _exit (127);
-    }
-  __close_nocancel (child_end);
-  if (child_pid < 0)
-    {
-      __close_nocancel (parent_end);
-      return NULL;
+      int tmp = __fcntl (child_pipe_fd, F_DUPFD_CLOEXEC, 0);
+      if (tmp < 0)
+	goto spawn_failure;
+      __close_nocancel (pipe_fds[child_end]);
+      pipe_fds[child_end] = tmp;
     }
 
-  if (!do_cloexec)
-    /* Undo the effects of the pipe2 call which set the
-       close-on-exec flag.  */
-    __fcntl (parent_end, F_SETFD, 0);
+  if (__posix_spawn_file_actions_adddup2 (&fa, pipe_fds[child_end],
+      child_pipe_fd) != 0)
+    goto spawn_failure;
 
-  _IO_fileno (fp) = parent_end;
-
-  /* Link into proc_file_chain. */
 #ifdef _IO_MTSAFE_IO
   _IO_cleanup_region_start_noarg (unlock);
   _IO_lock_lock (proc_file_chain_lock);
 #endif
-  ((_IO_proc_file *) fp)->next = proc_file_chain;
-  proc_file_chain = (_IO_proc_file *) fp;
+  spawn_ok = spawn_process (&fa, fp, command, do_cloexec, pipe_fds,
+			    parent_end, child_end, child_pipe_fd);
 #ifdef _IO_MTSAFE_IO
   _IO_lock_unlock (proc_file_chain_lock);
   _IO_cleanup_region_end (0);
 #endif
+
+  __posix_spawn_file_actions_destroy (&fa);
+
+  if (!spawn_ok)
+    {
+    spawn_failure:
+      __close_nocancel (pipe_fds[child_end]);
+      __close_nocancel (pipe_fds[parent_end]);
+      __set_errno (ENOMEM);
+      return NULL;
+    }
 
   _IO_mask_flags (fp, read_or_write, _IO_NO_READS|_IO_NO_WRITES);
   return fp;
