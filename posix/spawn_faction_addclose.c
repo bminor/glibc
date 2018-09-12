@@ -24,8 +24,8 @@
 /* Add an action to FILE-ACTIONS which tells the implementation to call
    `close' for the given file descriptor during the `spawn' call.  */
 int
-posix_spawn_file_actions_addclose (posix_spawn_file_actions_t *file_actions,
-				   int fd)
+__posix_spawn_file_actions_addclose (posix_spawn_file_actions_t *file_actions,
+				     int fd)
 {
   struct __spawn_action *rec;
 
@@ -48,3 +48,5 @@ posix_spawn_file_actions_addclose (posix_spawn_file_actions_t *file_actions,
 
   return 0;
 }
+weak_alias (__posix_spawn_file_actions_addclose,
+	    posix_spawn_file_actions_addclose)

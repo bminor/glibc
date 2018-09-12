@@ -22,7 +22,7 @@
 
 /* Deallocate the file actions.  */
 int
-posix_spawn_file_actions_destroy (posix_spawn_file_actions_t *file_actions)
+__posix_spawn_file_actions_destroy (posix_spawn_file_actions_t *file_actions)
 {
   /* Free the paths in the open actions.  */
   for (int i = 0; i < file_actions->__used; ++i)
@@ -44,3 +44,5 @@ posix_spawn_file_actions_destroy (posix_spawn_file_actions_t *file_actions)
   free (file_actions->__actions);
   return 0;
 }
+weak_alias (__posix_spawn_file_actions_destroy,
+	    posix_spawn_file_actions_destroy)

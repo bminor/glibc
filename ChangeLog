@@ -1,3 +1,28 @@
+2018-09-24  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* include/spawn.h (__posix_spawn, posix_spawn_file_actions_addclose,
+	__posix_spawn_file_actions_adddup2, __posix_spawn_file_actions_destroy,
+	__posix_spawn_file_actions_init, __posix_spawnattr_init,
+	__posix_spawnattr_destroy, __posix_spawnattr_setflags,
+	__posix_spawnattr_setsigdefault, __posix_spawnattr_setsigmask): New
+	prototype.
+	* posix/spawn.c (__posix_spawn): Add libc_hidden_def.
+	* posix/spawn_faction_addclose.c
+	(__posix_spawn_file_actions_addclose): Add hidden definition.
+	* posix/spawn_faction_adddup2.c
+	(__posix_spawn_file_actions_adddup2): Likewise.
+	* posix/spawn_faction_destroy.c
+	(__posix_spawn_file_actions_destroy): Likewise.
+	* posix/spawn_faction_init.c (__posix_spawn_file_actions_init):
+	Likewise.
+	* posix/spawnattr_destroy.c (__posix_spawnattr_destroy): Likewise.
+	* posix/spawnattr_init.c (__posix_spawnattr_init): Likewise.
+	* posix/spawnattr_setdefault.c (__posix_spawnattr_setsigdefault):
+	Likewise.
+	* posix/spawnattr_setflags.c (__posix_spawnattr_setflags): Likewise.
+	* posix/spawnattr_setsigmask.c (__posix_spawnattr_setsigmask):
+	Likewise.
+
 2018-10-24  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #18093]

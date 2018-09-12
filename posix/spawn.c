@@ -30,6 +30,7 @@ __posix_spawn (pid_t *pid, const char *path,
   return __spawni (pid, path, file_actions, attrp, argv, envp, 0);
 }
 versioned_symbol (libc, __posix_spawn, posix_spawn, GLIBC_2_15);
+libc_hidden_def (__posix_spawn)
 
 
 #if SHLIB_COMPAT (libc, GLIBC_2_2, GLIBC_2_15)

@@ -19,8 +19,9 @@
 
 /* Initialize data structure for file attribute for `spawn' call.  */
 int
-posix_spawnattr_destroy (posix_spawnattr_t *attr)
+__posix_spawnattr_destroy (posix_spawnattr_t *attr)
 {
   /* Nothing to do in the moment.  */
   return 0;
 }
+weak_alias (__posix_spawnattr_destroy, posix_spawnattr_destroy)

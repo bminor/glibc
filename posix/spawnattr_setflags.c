@@ -30,7 +30,7 @@
 
 /* Store flags in the attribute structure.  */
 int
-posix_spawnattr_setflags (posix_spawnattr_t *attr, short int flags)
+__posix_spawnattr_setflags (posix_spawnattr_t *attr, short int flags)
 {
   /* Check no invalid bits are set.  */
   if (flags & ~ALL_FLAGS)
@@ -41,3 +41,4 @@ posix_spawnattr_setflags (posix_spawnattr_t *attr, short int flags)
 
   return 0;
 }
+weak_alias (__posix_spawnattr_setflags, posix_spawnattr_setflags)

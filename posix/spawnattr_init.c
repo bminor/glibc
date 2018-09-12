@@ -20,7 +20,7 @@
 
 /* Initialize data structure for file attribute for `spawn' call.  */
 int
-posix_spawnattr_init (posix_spawnattr_t *attr)
+__posix_spawnattr_init (posix_spawnattr_t *attr)
 {
   /* All elements have to be initialized to the default values which
      is generally zero.  */
@@ -28,3 +28,4 @@ posix_spawnattr_init (posix_spawnattr_t *attr)
 
   return 0;
 }
+weak_alias (__posix_spawnattr_init, posix_spawnattr_init)

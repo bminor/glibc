@@ -24,8 +24,8 @@
 /* Add an action to FILE-ACTIONS which tells the implementation to call
    `dup2' for the given file descriptors during the `spawn' call.  */
 int
-posix_spawn_file_actions_adddup2 (posix_spawn_file_actions_t *file_actions,
-				  int fd, int newfd)
+__posix_spawn_file_actions_adddup2 (posix_spawn_file_actions_t *file_actions,
+				    int fd, int newfd)
 {
   struct __spawn_action *rec;
 
@@ -49,3 +49,5 @@ posix_spawn_file_actions_adddup2 (posix_spawn_file_actions_t *file_actions,
 
   return 0;
 }
+weak_alias (__posix_spawn_file_actions_adddup2,
+	    posix_spawn_file_actions_adddup2)
