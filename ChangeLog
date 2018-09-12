@@ -1,3 +1,7 @@
+2018-09-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* elf/Makefile (modules-names-tests): New variable.
+
 2018-09-12  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* NEWS: Mention log2 improvements.
