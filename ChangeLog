@@ -1,3 +1,11 @@
+2018-09-21  H.J. Lu  <hongjiu.lu@intel.com>
+	    Xuepeng Guo  <xuepeng.guo@intel.com>
+
+	[BZ #23606]
+	* sysdeps/i386/start.S: Include <sysdep.h>
+	(_start): Use ENTRY/END to insert ENDBR32 at entry when CET is
+	enabled.  Add cfi_undefined (eip).
+
 2018-09-19  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	[BZ #23637]
