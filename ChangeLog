@@ -1,3 +1,13 @@
+2018-09-21  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #10425]
+	* localedata/locales/it_IT (d_t_fmt): Use "%a %-d %b %Y, %T".
+	(date_fmt): Use "%a %-d %b %Y, %T, %Z".
+	* localedata/locales/it_CH (d_t_fmt): Use "%a %-d %b %Y, %T"
+	which is the same as in it_IT.
+	(d_fmt): Use "%d.%m.%Y" which is the same as in de_CH.
+	(date_fmt): Use "%a %-d %b %Y, %T, %Z" which is the same as in it_IT.
+
 2018-09-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* include/math.h [!_ISOMAC && !(__FINITE_MATH_ONLY__ &&
