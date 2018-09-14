@@ -349,7 +349,11 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 
 #endif /* NESTING */
 
-    ELF_DYNAMIC_RELOCATE (l, lazy, consider_profiling, skip_ifunc);
+    ELF_DYNAMIC_RELOCATE (l, lazy, consider_profiling, skip_ifunc
+#ifndef NESTING
+			  , NULL
+#endif
+			  );
 
 #ifndef PROF
     if (__glibc_unlikely (consider_profiling)

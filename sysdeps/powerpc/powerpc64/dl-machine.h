@@ -684,7 +684,11 @@ elf_machine_rela (struct link_map *map,
 		  const Elf64_Sym *sym,
 		  const struct r_found_version *version,
 		  void *const reloc_addr_arg,
-		  int skip_ifunc)
+		  int skip_ifunc
+#ifndef NESTING
+		  , struct link_map *boot_map
+#endif
+		  )
 {
   Elf64_Addr *const reloc_addr = reloc_addr_arg;
   const int r_type = ELF64_R_TYPE (reloc->r_info);
@@ -707,7 +711,11 @@ elf_machine_rela (struct link_map *map,
 
   /* We need SYM_MAP even in the absence of TLS, for elf_machine_fixup_plt
      and STT_GNU_IFUNC.  */
+#if !defined NESTING && defined RTLD_BOOTSTRAP
+  struct link_map *sym_map = boot_map;
+#else
   struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
+#endif
   Elf64_Addr value = ((sym_map == NULL ? 0 : sym_map->l_addr + sym->st_value)
 		      + reloc->r_addend);
 

@@ -95,7 +95,11 @@ _dl_resolve_conflicts (struct link_map *l, ElfW(Rela) *conflict,
 
     for (; conflict < conflictend; ++conflict)
       elf_machine_rela (l, conflict, NULL, NULL, (void *) conflict->r_offset,
-			0);
+			0
+#ifndef NESTING
+			, NULL
+#endif
+			);
   }
 #endif
 }

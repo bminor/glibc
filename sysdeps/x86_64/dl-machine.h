@@ -267,7 +267,11 @@ auto inline void
 __attribute__ ((always_inline))
 elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 		  const ElfW(Sym) *sym, const struct r_found_version *version,
-		  void *const reloc_addr_arg, int skip_ifunc)
+		  void *const reloc_addr_arg, int skip_ifunc
+#ifndef NESTING
+		  , struct link_map *boot_map
+#endif
+		  )
 {
   ElfW(Addr) *const reloc_addr = reloc_addr_arg;
   const unsigned long int r_type = ELFW(R_TYPE) (reloc->r_info);
@@ -305,7 +309,11 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 # ifndef RTLD_BOOTSTRAP
       const ElfW(Sym) *const refsym = sym;
 # endif
+#if !defined NESTING && defined RTLD_BOOTSTRAP
+  struct link_map *sym_map = boot_map;
+#else
       struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
+#endif
       ElfW(Addr) value = (sym == NULL ? 0
 			  : (ElfW(Addr)) sym_map->l_addr + sym->st_value);
 

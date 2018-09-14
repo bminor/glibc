@@ -458,7 +458,6 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
 #ifdef DONT_USE_BOOTSTRAP_MAP
 # define bootstrap_map GL(dl_rtld_map)
 #else
-struct dl_start_final_info info;
 # define bootstrap_map info.l
 #endif
 
@@ -474,7 +473,11 @@ struct dl_start_final_info info;
 static ElfW(Addr) __attribute_used__
 _dl_start (void *arg)
 {
-#ifdef NESTING
+#ifndef NESTING
+#ifndef DONT_USE_BOOTSTRAP_MAP
+  struct dl_start_final_info info;
+#endif /* DUBM */
+#else /* NESTING */
 #ifdef DONT_USE_BOOTSTRAP_MAP
 # define bootstrap_map GL(dl_rtld_map)
 #else
@@ -536,7 +539,11 @@ _dl_start (void *arg)
       /* Relocate ourselves so we can do normal function calls and
 	 data access using the global offset table.  */
 
-      ELF_DYNAMIC_RELOCATE (&bootstrap_map, 0, 0, 0);
+      ELF_DYNAMIC_RELOCATE (&bootstrap_map, 0, 0, 0
+#ifndef NESTING
+			    , &bootstrap_map
+#endif
+			    );
     }
   bootstrap_map.l_relocated = 1;
 
