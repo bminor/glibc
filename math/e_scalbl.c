@@ -24,7 +24,7 @@ static long double
 __attribute__ ((noinline))
 invalid_fn (long double x, long double fn)
 {
-  if (__rintl (fn) != fn)
+  if (rintl (fn) != fn)
     return (fn - fn) / (fn - fn);
   else if (fn > 65000.0L)
     return __scalbnl (x, 65000);

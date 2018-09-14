@@ -4,6 +4,7 @@
  * Public domain.
  */
 
+#define NO_MATH_REDIRECT
 #include <libm-alias-ldouble.h>
 #include <math_private.h>
 

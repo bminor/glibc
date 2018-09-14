@@ -24,7 +24,7 @@ static float
 __attribute__ ((noinline))
 invalid_fn (float x, float fn)
 {
-  if (__rintf (fn) != fn)
+  if (rintf (fn) != fn)
     return (fn - fn) / (fn - fn);
   else if (fn > 65000.0f)
     return __scalbnf (x, 65000);

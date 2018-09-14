@@ -24,7 +24,7 @@ static double
 __attribute__ ((noinline))
 invalid_fn (double x, double fn)
 {
-  if (__rint (fn) != fn)
+  if (rint (fn) != fn)
     return (fn - fn) / (fn - fn);
   else if (fn > 65000.0)
     return __scalbn (x, 65000);

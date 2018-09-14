@@ -471,11 +471,11 @@ __kernel_standard(double x, double y, int type)
 		if (_LIB_VERSION == _SVID_) {
 		  exc.retval = HUGE;
 		  y *= 0.5;
-		  if(x<zero&&__rint(y)!=y) exc.retval = -HUGE;
+		  if(x<zero&&rint(y)!=y) exc.retval = -HUGE;
 		} else {
 		  exc.retval = HUGE_VAL;
 		  y *= 0.5;
-		  if(x<zero&&__rint(y)!=y) exc.retval = -HUGE_VAL;
+		  if(x<zero&&rint(y)!=y) exc.retval = -HUGE_VAL;
 		}
 		if (_LIB_VERSION == _POSIX_)
 		  __set_errno (ERANGE);
@@ -491,7 +491,7 @@ __kernel_standard(double x, double y, int type)
 		exc.name = CSTR ("pow");
 		exc.retval =  zero;
 		y *= 0.5;
-		if (x < zero && __rint (y) != y)
+		if (x < zero && rint (y) != y)
 		  exc.retval = -zero;
 		if (_LIB_VERSION == _POSIX_)
 		  __set_errno (ERANGE);

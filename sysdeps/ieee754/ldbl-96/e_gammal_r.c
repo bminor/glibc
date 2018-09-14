@@ -141,7 +141,7 @@ __ieee754_gammal_r (long double x, int *signgamp)
       *signgamp = 0;
       return x + x;
     }
-  if (__builtin_expect ((es & 0x8000) != 0, 0) && __rintl (x) == x)
+  if (__builtin_expect ((es & 0x8000) != 0, 0) && rintl (x) == x)
     {
       /* Return value for integer x < 0 is NaN with invalid exception.  */
       *signgamp = 0;

@@ -73,14 +73,14 @@ __kernel_standard_l (long double x, long double y, int type)
 	{
 	  exc.retval = HUGE;
 	  y *= 0.5;
-	  if (x < zero && __rintl (y) != y)
+	  if (x < zero && rintl (y) != y)
 	    exc.retval = -HUGE;
 	}
       else
 	{
 	  exc.retval = HUGE_VAL;
 	  y *= 0.5;
-	  if (x < zero && __rintl (y) != y)
+	  if (x < zero && rintl (y) != y)
 	    exc.retval = -HUGE_VAL;
 	}
       if (_LIB_VERSION == _POSIX_)
@@ -97,7 +97,7 @@ __kernel_standard_l (long double x, long double y, int type)
       exc.name = (char *) "powl";
       exc.retval = zero;
       y *= 0.5;
-      if (x < zero && __rintl (y) != y)
+      if (x < zero && rintl (y) != y)
 	exc.retval = -zero;
       if (_LIB_VERSION == _POSIX_)
 	__set_errno (ERANGE);

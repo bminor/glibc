@@ -27,6 +27,7 @@ static char rcsid[] = "$NetBSD: $";
  *	Inexact flag raised if x not equal to rintl(x).
  */
 
+#define NO_MATH_REDIRECT
 #include <math.h>
 #include <math_private.h>
 #include <libm-alias-ldouble.h>

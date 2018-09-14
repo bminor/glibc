@@ -26,7 +26,7 @@
 long long int
 __llrint (double x)
 {
-  double rx = __rint (x);
+  double rx = rint (x);
   if (HAVE_PPC_FCTIDZ || rx != x)
     return (long long int) rx;
   else

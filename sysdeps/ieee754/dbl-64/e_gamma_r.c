@@ -129,7 +129,7 @@ __ieee754_gamma_r (double x, int *signgamp)
       return 1.0 / x;
     }
   if (__builtin_expect (hx < 0, 0)
-      && (uint32_t) hx < 0xfff00000 && __rint (x) == x)
+      && (uint32_t) hx < 0xfff00000 && rint (x) == x)
     {
       /* Return value for integer x < 0 is NaN with invalid exception.  */
       *signgamp = 0;

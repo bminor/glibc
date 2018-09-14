@@ -24,7 +24,7 @@
 long long int
 __llrintf (float x)
 {
-  float rx = __rintf (x);
+  float rx = rintf (x);
   if (HAVE_PPC_FCTIDZ || rx != x)
     return (long long int) rx;
   else

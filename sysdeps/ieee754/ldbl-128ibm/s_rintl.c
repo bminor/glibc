@@ -20,6 +20,7 @@
 /* This has been coded in assembler because GCC makes such a mess of it
    when it's coded in C.  */
 
+#define NO_MATH_REDIRECT
 #include <math.h>
 #include <fenv.h>
 #include <math-barriers.h>

@@ -1,6 +1,56 @@
 2018-09-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* include/math.h [!_ISOMAC && !(__FINITE_MATH_ONLY__ &&
+	__FINITE_MATH_ONLY__ > 0) && !NO_MATH_REDIRECT] (rint): Redirect
+	using MATH_REDIRECT.
+	* sysdeps/aarch64/fpu/s_rint.c: Define NO_MATH_REDIRECT before
+	header inclusion.
+	* sysdeps/aarch64/fpu/s_rintf.c: Likewise.
+	* sysdeps/alpha/fpu/s_rint.c: Likewise.
+	* sysdeps/alpha/fpu/s_rintf.c: Likewise.
+	* sysdeps/i386/fpu/s_rintl.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_rint.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_rint.c: Likewise.
+	* sysdeps/ieee754/float128/s_rintf128.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_rintf.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_rintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_rintl.c: Likewise.
+	* sysdeps/m68k/coldfire/fpu/s_rint.c: Likewise.
+	* sysdeps/m68k/coldfire/fpu/s_rintf.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_rint.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_rintf.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_rintl.c: Likewise.
+	* sysdeps/powerpc/fpu/s_rint.c: Likewise.
+	* sysdeps/powerpc/fpu/s_rintf.c: Likewise.
+	* sysdeps/riscv/rv64/rvd/s_rint.c: Likewise.
+	* sysdeps/riscv/rvf/s_rintf.c: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_rint.c: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_rintf.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_rint.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_rintf.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_rint.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_rintf.c: Likewise.
+	* sysdeps/x86_64/fpu/math_private.h: Remove file.
+	* math/e_scalb.c (invalid_fn): Use rint functions instead of
+	__rint variants.
+	* math/e_scalbf.c (invalid_fn): Likewise.
+	* math/e_scalbl.c (invalid_fn): Likewise.
+	* sysdeps/ieee754/dbl-64/e_gamma_r.c (__ieee754_gamma_r):
+	Likewise.
+	* sysdeps/ieee754/flt-32/e_gammaf_r.c (__ieee754_gammaf_r):
+	Likewise.
+	* sysdeps/ieee754/k_standard.c (__kernel_standard): Likewise.
+	* sysdeps/ieee754/k_standardl.c (__kernel_standard_l): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_gammal_r.c (__ieee754_gammal_r):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_gammal_r.c (__ieee754_gammal_r):
+	Likewise.
+	* sysdeps/ieee754/ldbl-96/e_gammal_r.c (__ieee754_gammal_r):
+	Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_llrint.c (__llrint): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_llrintf.c (__llrintf): Likewise.
+
+	* include/math.h [!_ISOMAC && !(__FINITE_MATH_ONLY__ &&
 	__FINITE_MATH_ONLY__ > 0) && !NO_MATH_REDIRECT] (MATH_REDIRECT):
 	New macro.
 	[!_ISOMAC && !(__FINITE_MATH_ONLY__ && __FINITE_MATH_ONLY__ > 0)
