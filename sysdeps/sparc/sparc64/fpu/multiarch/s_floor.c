@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#define NO_MATH_REDIRECT
 #include <sparc-ifunc.h>
 #include <math.h>
 #include <libm-alias-double.h>

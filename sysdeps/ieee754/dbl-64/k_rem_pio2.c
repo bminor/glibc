@@ -196,7 +196,7 @@ recompute:
 
   /* compute n */
   z = __scalbn (z, q0);                 /* actual value of z */
-  z -= 8.0 * __floor (z * 0.125);               /* trim off integer >= 8 */
+  z -= 8.0 * floor (z * 0.125);               /* trim off integer >= 8 */
   n = (int32_t) z;
   z -= (double) n;
   ih = 0;

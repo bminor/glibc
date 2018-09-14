@@ -136,7 +136,7 @@ __expm1l (_Float128 x)
 
   /* Express x = ln 2 (k + remainder), remainder not exceeding 1/2. */
   xx = C1 + C2;			/* ln 2. */
-  px = __floorl (0.5 + x / xx);
+  px = floorl (0.5 + x / xx);
   k = px;
   /* remainder times ln 2 */
   x -= px * C1;

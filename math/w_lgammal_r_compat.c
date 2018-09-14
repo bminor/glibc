@@ -32,7 +32,7 @@ __lgammal_r(long double x, int *signgamp)
 	if(__builtin_expect(!isfinite(y), 0)
 	   && isfinite(x) && _LIB_VERSION != _IEEE_)
 		return __kernel_standard(x, x,
-					 __floorl(x)==x&&x<=0.0
+					 floorl(x)==x&&x<=0.0
 					 ? 215 /* lgamma pole */
 					 : 214); /* lgamma overflow */
 

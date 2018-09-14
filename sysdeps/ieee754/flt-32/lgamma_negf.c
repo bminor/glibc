@@ -197,7 +197,7 @@ __lgamma_negf (float x, int *signgamp)
 {
   /* Determine the half-integer region X lies in, handle exact
      integers and determine the sign of the result.  */
-  int i = __floorf (-2 * x);
+  int i = floorf (-2 * x);
   if ((i & 1) == 0 && i == -2 * x)
     return 1.0f / 0.0f;
   float xn = ((i & 1) == 0 ? -i / 2 : (-i - 1) / 2);
@@ -214,7 +214,7 @@ __lgamma_negf (float x, int *signgamp)
      approximations to an adjusted version of the gamma function.  */
   if (i < 2)
     {
-      int j = __floorf (-8 * x) - 16;
+      int j = floorf (-8 * x) - 16;
       float xm = (-33 - 2 * j) * 0.0625f;
       float x_adj = x - xm;
       size_t deg = poly_deg[j];

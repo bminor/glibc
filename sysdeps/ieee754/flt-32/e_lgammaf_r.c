@@ -104,10 +104,10 @@ sin_pif(float x)
      * argument reduction, make sure inexact flag not raised if input
      * is an integer
      */
-	z = __floorf(y);
+	z = floorf(y);
 	if(z!=y) {				/* inexact anyway */
 	    y  *= (float)0.5;
-	    y   = (float)2.0*(y - __floorf(y));	/* y = |x| mod 2.0 */
+	    y   = (float)2.0*(y - floorf(y));	/* y = |x| mod 2.0 */
 	    n   = (int) (y*(float)4.0);
 	} else {
 	    if(ix>=0x4b800000) {

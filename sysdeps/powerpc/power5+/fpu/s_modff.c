@@ -35,7 +35,7 @@ __modff (float x, float *iptr)
 
   if (x >= 0.0)
     {
-      *iptr = __floorf (x);
+      *iptr = floorf (x);
       return __copysignf (x - *iptr, x);
     }
   else

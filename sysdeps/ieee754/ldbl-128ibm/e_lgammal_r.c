@@ -726,11 +726,11 @@ __ieee754_lgammal_r (long double x, int *signgamp)
       if (x < -2 && x > -48)
 	return __lgamma_negl (x, signgamp);
       q = -x;
-      p = __floorl (q);
+      p = floorl (q);
       if (p == q)
 	return (one / fabsl (p - p));
       long double halfp = p * 0.5L;
-      if (halfp == __floorl (halfp))
+      if (halfp == floorl (halfp))
 	*signgamp = -1;
       else
 	*signgamp = 1;
@@ -751,7 +751,7 @@ __ieee754_lgammal_r (long double x, int *signgamp)
   if (x < 13.5L)
     {
       p = 0;
-      nx = __floorl (x + 0.5L);
+      nx = floorl (x + 0.5L);
       nn = nx;
       switch (nn)
 	{

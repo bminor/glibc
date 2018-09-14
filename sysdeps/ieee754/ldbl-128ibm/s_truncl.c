@@ -47,7 +47,7 @@ __truncl (long double x)
       else
 	{
 	  /* The high part is a nonzero integer.  */
-	  lo = xh > 0 ? __floor (xl) : __ceil (xl);
+	  lo = xh > 0 ? floor (xl) : __ceil (xl);
 	  xh = hi;
 	  xl = lo;
 	  ldbl_canonicalize_int (&xh, &xl);

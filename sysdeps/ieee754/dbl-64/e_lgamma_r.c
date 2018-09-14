@@ -168,10 +168,10 @@ sin_pi(double x)
      * argument reduction, make sure inexact flag not raised if input
      * is an integer
      */
-	z = __floor(y);
+	z = floor(y);
 	if(z!=y) {				/* inexact anyway */
 	    y  *= 0.5;
-	    y   = 2.0*(y - __floor(y));		/* y = |x| mod 2.0 */
+	    y   = 2.0*(y - floor(y));		/* y = |x| mod 2.0 */
 	    n   = (int) (y*4.0);
 	} else {
 	    if(ix>=0x43400000) {

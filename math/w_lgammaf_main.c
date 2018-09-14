@@ -28,7 +28,7 @@ LGFUNC (__lgammaf) (float x)
 	if(__builtin_expect(!isfinite(y), 0)
 	   && isfinite(x) && _LIB_VERSION != _IEEE_)
 		return __kernel_standard_f(x, x,
-					   __floorf(x)==x&&x<=0.0f
+					   floorf(x)==x&&x<=0.0f
 					   ? 115 /* lgamma pole */
 					   : 114); /* lgamma overflow */
 

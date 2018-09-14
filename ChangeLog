@@ -1,3 +1,79 @@
+2018-09-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* include/math.h [!_ISOMAC && !(__FINITE_MATH_ONLY__ &&
+	__FINITE_MATH_ONLY__ > 0) && !NO_MATH_REDIRECT] (MATH_REDIRECT):
+	New macro.
+	[!_ISOMAC && !(__FINITE_MATH_ONLY__ && __FINITE_MATH_ONLY__ > 0)
+	&& !NO_MATH_REDIRECT] (MATH_REDIRECT_LDBL): Likewise.
+	[!_ISOMAC && !(__FINITE_MATH_ONLY__ && __FINITE_MATH_ONLY__ > 0)
+	&& !NO_MATH_REDIRECT] (MATH_REDIRECT_F128): Likewise.
+	[!_ISOMAC && !(__FINITE_MATH_ONLY__ && __FINITE_MATH_ONLY__ > 0)
+	&& !NO_MATH_REDIRECT] (MATH_REDIRECT_UNARY_ARGS): Likewise.
+	[!_ISOMAC && !(__FINITE_MATH_ONLY__ && __FINITE_MATH_ONLY__ > 0)
+	&& !NO_MATH_REDIRECT] (sqrt): Redirect using MATH_REDIRECT.
+	[!_ISOMAC && !(__FINITE_MATH_ONLY__ && __FINITE_MATH_ONLY__ > 0)
+	&& !NO_MATH_REDIRECT] (floor): Likewise.
+	* sysdeps/aarch64/fpu/s_floor.c: Define NO_MATH_REDIRECT before
+	header inclusion.
+	* sysdeps/aarch64/fpu/s_floorf.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_floor.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_floor.c: Likewise.
+	* sysdeps/ieee754/float128/s_floorf128.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_floorf.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_floorl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_floorl.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_floor_template.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_floor.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_floorf.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_floor.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_floorf.c: Likewise.
+	* sysdeps/riscv/rv64/rvd/s_floor.c: Likewise.
+	* sysdeps/riscv/rvf/s_floorf.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_floor.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_floorf.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_floor.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_floorf.c: Likewise.
+	* sysdeps/powerpc/fpu/math_private.h [_ARCH_PWR5X] (__floor):
+	Remove macro.
+	[_ARCH_PWR5X] (__floorf): Likewise.
+	* sysdeps/x86_64/fpu/math_private.h [__SSE4_1__] (__floor): Remove
+	inline function.
+	[__SSE4_1__] (__floorf): Likewise.
+	* math/w_lgamma_main.c (LGFUNC (__lgamma)): Use floor functions
+	instead of __floor variants.
+	* math/w_lgamma_r_compat.c (__lgamma_r): Likewise.
+	* math/w_lgammaf_main.c (LGFUNC (__lgammaf)): Likewise.
+	* math/w_lgammaf_r_compat.c (__lgammaf_r): Likewise.
+	* math/w_lgammal_main.c (LGFUNC (__lgammal)): Likewise.
+	* math/w_lgammal_r_compat.c (__lgammal_r): Likewise.
+	* math/w_tgamma_compat.c (__tgamma): Likewise.
+	* math/w_tgamma_template.c (M_DECL_FUNC (__tgamma)): Likewise.
+	* math/w_tgammaf_compat.c (__tgammaf): Likewise.
+	* math/w_tgammal_compat.c (__tgammal): Likewise.
+	* sysdeps/ieee754/dbl-64/e_lgamma_r.c (sin_pi): Likewise.
+	* sysdeps/ieee754/dbl-64/k_rem_pio2.c (__kernel_rem_pio2):
+	Likewise.
+	* sysdeps/ieee754/dbl-64/lgamma_neg.c (__lgamma_neg): Likewise.
+	* sysdeps/ieee754/flt-32/e_lgammaf_r.c (sin_pif): Likewise.
+	* sysdeps/ieee754/flt-32/lgamma_negf.c (__lgamma_negf): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_lgammal_r.c (__ieee754_lgammal_r):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128/e_powl.c (__ieee754_powl): Likewise.
+	* sysdeps/ieee754/ldbl-128/lgamma_negl.c (__lgamma_negl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128/s_expm1l.c (__expm1l): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_lgammal_r.c (__ieee754_lgammal_r):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_powl.c (__ieee754_powl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/lgamma_negl.c (__lgamma_negl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_expm1l.c (__expm1l): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_truncl.c (__truncl): Likewise.
+	* sysdeps/ieee754/ldbl-96/e_lgammal_r.c (sin_pi): Likewise.
+	* sysdeps/ieee754/ldbl-96/lgamma_negl.c (__lgamma_negl): Likewise.
+	* sysdeps/powerpc/power5+/fpu/s_modf.c (__modf): Likewise.
+	* sysdeps/powerpc/power5+/fpu/s_modff.c (__modff): Likewise.
+
 2018-09-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* elf/Makefile (modules-names-tests): New variable.

@@ -28,7 +28,7 @@ __lgamma_r(double x, int *signgamp)
 	if(__builtin_expect(!isfinite(y), 0)
 	   && isfinite(x) && _LIB_VERSION != _IEEE_)
 		return __kernel_standard(x, x,
-					 __floor(x)==x&&x<=0.0
+					 floor(x)==x&&x<=0.0
 					 ? 15 /* lgamma pole */
 					 : 14); /* lgamma overflow */
 

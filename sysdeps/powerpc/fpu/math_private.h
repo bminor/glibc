@@ -97,26 +97,6 @@ __ieee754_sqrtf128 (_Float128 __x)
      __z; })
 # endif
 
-# ifndef __floor
-#  define __floor(x)			\
-    ({ double __z;			\
-     __asm __volatile (			\
-	"	frim %0,%1\n"		\
-		: "=f" (__z)		\
-		: "f" (x));		\
-     __z; })
-# endif
-# ifndef __floorf
-#  define __floorf(x)			\
-    ({ float __z;			\
-     __asm __volatile (			\
-	"	frim %0,%1\n"		\
-	"	frsp %0,%0\n"		\
-		: "=f" (__z)		\
-		: "f" (x));		\
-     __z; })
-# endif
-
 #endif	/* defined _ARCH_PWR5X */
 
 #endif /* _PPC_MATH_PRIVATE_H_ */

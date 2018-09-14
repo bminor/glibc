@@ -776,11 +776,11 @@ __ieee754_lgammal_r (_Float128 x, int *signgamp)
       if (x < -2 && x > -50)
 	return __lgamma_negl (x, signgamp);
       q = -x;
-      p = __floorl (q);
+      p = floorl (q);
       if (p == q)
 	return (one / fabsl (p - p));
       _Float128 halfp = p * L(0.5);
-      if (halfp == __floorl (halfp))
+      if (halfp == floorl (halfp))
 	*signgamp = -1;
       else
 	*signgamp = 1;
@@ -801,7 +801,7 @@ __ieee754_lgammal_r (_Float128 x, int *signgamp)
   if (x < L(13.5))
     {
       p = 0;
-      nx = __floorl (x + L(0.5));
+      nx = floorl (x + L(0.5));
       nn = nx;
       switch (nn)
 	{

@@ -36,7 +36,7 @@ __modf (double x, double *iptr)
 
   if (x >= 0.0)
     {
-      *iptr = __floor (x);
+      *iptr = floor (x);
       return __copysign (x - *iptr, x);
     }
   else

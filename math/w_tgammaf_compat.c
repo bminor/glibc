@@ -32,7 +32,7 @@ __tgammaf(float x)
 	  if (x == (float)0.0)
 	    /* tgammaf pole */
 	    return __kernel_standard_f(x, x, 150);
-	  else if(__floorf(x)==x&&x<0.0f)
+	  else if(floorf(x)==x&&x<0.0f)
 	    /* tgammaf domain */
 	    return __kernel_standard_f(x, x, 141);
 	  else if (y == 0)

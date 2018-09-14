@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#define NO_MATH_REDIRECT
 #include <libm-alias-double.h>
 
 #define floor __redirect_floor

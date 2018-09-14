@@ -33,7 +33,7 @@ __tgamma(double x)
 	   && _LIB_VERSION != _IEEE_) {
 	  if (x == 0.0)
 	    return __kernel_standard(x,x,50); /* tgamma pole */
-	  else if(__floor(x)==x&&x<0.0)
+	  else if(floor(x)==x&&x<0.0)
 	    return __kernel_standard(x,x,41); /* tgamma domain */
 	  else if (y == 0)
 	    __set_errno (ERANGE); /* tgamma underflow */
