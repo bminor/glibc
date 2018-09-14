@@ -1,5 +1,17 @@
 2018-09-14  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #23649]
+	* sysdeps/unix/sysv/linux/microblaze/sys/procfs.h (struct
+	elf_prpsinfo): Use unsigned int for pr_uid and pr_gid.
+	* sysdeps/unix/sysv/linux/mips/sys/procfs.h (struct elf_prpsinfo):
+	Likewise.
+	* sysdeps/unix/sysv/linux/nios2/sys/procfs.h (struct
+	elf_prpsinfo): Likewise.
+	* sysdeps/unix/sysv/linux/riscv/sys/procfs.h (struct
+	elf_prpsinfo): Likewise.
+	* sysdeps/unix/sysv/linux/sys/procfs.h (struct elf_prpsinfo):
+	Likewise.
+
 	* include/math.h [!_ISOMAC && !(__FINITE_MATH_ONLY__ &&
 	__FINITE_MATH_ONLY__ > 0) && !NO_MATH_REDIRECT] (rint): Redirect
 	using MATH_REDIRECT.

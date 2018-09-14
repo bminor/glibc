@@ -26,6 +26,11 @@ Deprecated and removed features, and other changes affecting compatibility:
 * The glibc.tune tunable namespace has been renamed to glibc.cpu and the
   tunable glibc.tune.cpu has been renamed to glibc.cpu.name.
 
+* The type of the pr_uid and pr_gid members of struct elf_prpsinfo, defined
+  in <sys/procfs.h>, has been corrected to match the type actually used by
+  the Linux kernel.  This affects the size and layout of that structure on
+  MicroBlaze, MIPS (n64 ABI only), Nios II and RISC-V.
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]

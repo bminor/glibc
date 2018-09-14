@@ -97,8 +97,8 @@ struct elf_prpsinfo
 #else
     unsigned long int pr_flag;		/* Flags.  */
 #endif
-    long pr_uid;
-    long pr_gid;
+    unsigned int pr_uid;
+    unsigned int pr_gid;
     int pr_pid, pr_ppid, pr_pgrp, pr_sid;
     /* Lots missing */
     char pr_fname[16];			/* Filename of executable.  */
