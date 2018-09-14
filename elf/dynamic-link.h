@@ -74,7 +74,11 @@ elf_machine_rel_relative (ElfW(Addr) l_addr, const ElfW(Rel) *reloc,
 auto inline void __attribute__((always_inline))
 elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 		  const ElfW(Sym) *sym, const struct r_found_version *version,
-		  void *const reloc_addr, int skip_ifunc);
+		  void *const reloc_addr, int skip_ifunc
+#ifndef NESTING
+		  , struct link_map *boot_map
+#endif
+		  );
 auto inline void __attribute__((always_inline))
 elf_machine_rela_relative (ElfW(Addr) l_addr, const ElfW(Rela) *reloc,
 			   void *const reloc_addr);
@@ -117,6 +121,60 @@ elf_machine_lazy_rel (struct link_map *map,
    consumes precisely the very end of the DT_REL*, or DT_JMPREL and DT_REL*
    are completely separate and there is a gap between them.  */
 
+#ifndef NESTING
+# define _ELF_DYNAMIC_DO_RELOC(RELOC, reloc, map, do_lazy, skip_ifunc, test_rel, boot_map) \
+  do {									      \
+    struct { ElfW(Addr) start, size;					      \
+	     __typeof (((ElfW(Dyn) *) 0)->d_un.d_val) nrelative; int lazy; }  \
+      ranges[2] = { { 0, 0, 0, 0 }, { 0, 0, 0, 0 } };			      \
+									      \
+    if ((map)->l_info[DT_##RELOC])					      \
+      {									      \
+	ranges[0].start = D_PTR ((map), l_info[DT_##RELOC]);		      \
+	ranges[0].size = (map)->l_info[DT_##RELOC##SZ]->d_un.d_val;	      \
+	if (map->l_info[VERSYMIDX (DT_##RELOC##COUNT)] != NULL)		      \
+	  ranges[0].nrelative						      \
+	    = map->l_info[VERSYMIDX (DT_##RELOC##COUNT)]->d_un.d_val;	      \
+      }									      \
+    if ((map)->l_info[DT_PLTREL]					      \
+	&& (!test_rel || (map)->l_info[DT_PLTREL]->d_un.d_val == DT_##RELOC)) \
+      {									      \
+	ElfW(Addr) start = D_PTR ((map), l_info[DT_JMPREL]);		      \
+	ElfW(Addr) size = (map)->l_info[DT_PLTRELSZ]->d_un.d_val;	      \
+									      \
+	if (ranges[0].start + ranges[0].size == (start + size))		      \
+	  ranges[0].size -= size;					      \
+	if (ELF_DURING_STARTUP						      \
+	    || (!(do_lazy)						      \
+		&& (ranges[0].start + ranges[0].size) == start))	      \
+	  {								      \
+	    /* Combine processing the sections.  */			      \
+	    ranges[0].size += size;					      \
+	  }								      \
+	else								      \
+	  {								      \
+	    ranges[1].start = start;					      \
+	    ranges[1].size = size;					      \
+	    ranges[1].lazy = (do_lazy);					      \
+	  }								      \
+      }									      \
+									      \
+    if (ELF_DURING_STARTUP)						      \
+      elf_dynamic_do_##reloc ((map), ranges[0].start, ranges[0].size,	      \
+			      ranges[0].nrelative, 0, skip_ifunc, boot_map);	\
+    else								      \
+      {									      \
+	int ranges_index;						      \
+	for (ranges_index = 0; ranges_index < 2; ++ranges_index)	      \
+	  elf_dynamic_do_##reloc ((map),				      \
+				  ranges[ranges_index].start,		      \
+				  ranges[ranges_index].size,		      \
+				  ranges[ranges_index].nrelative,	      \
+				  ranges[ranges_index].lazy,		      \
+				  skip_ifunc, boot_map);				\
+      }									      \
+  } while (0)
+#else /* NESTING */
 # define _ELF_DYNAMIC_DO_RELOC(RELOC, reloc, map, do_lazy, skip_ifunc, test_rel) \
   do {									      \
     struct { ElfW(Addr) start, size;					      \
@@ -169,6 +227,7 @@ elf_machine_lazy_rel (struct link_map *map,
 				  skip_ifunc);				      \
       }									      \
   } while (0)
+#endif /* NESTING */
 
 # if ELF_MACHINE_NO_REL || ELF_MACHINE_NO_RELA
 #  define _ELF_CHECK_REL 0
@@ -176,6 +235,34 @@ elf_machine_lazy_rel (struct link_map *map,
 #  define _ELF_CHECK_REL 1
 # endif
 
+#ifndef NESTING
+# if ! ELF_MACHINE_NO_REL
+#  include "do-rel.h"
+#  define ELF_DYNAMIC_DO_REL(map, lazy, skip_ifunc, boot_map)			\
+  _ELF_DYNAMIC_DO_RELOC (REL, Rel, map, lazy, skip_ifunc, _ELF_CHECK_REL, boot_map)
+# else
+#  define ELF_DYNAMIC_DO_REL(map, lazy, skip_ifunc, boot_map) /* Nothing to do.  */
+# endif
+
+# if ! ELF_MACHINE_NO_RELA
+#  define DO_RELA
+#  include "do-rel.h"
+#  define ELF_DYNAMIC_DO_RELA(map, lazy, skip_ifunc, boot_map)			\
+  _ELF_DYNAMIC_DO_RELOC (RELA, Rela, map, lazy, skip_ifunc, _ELF_CHECK_REL, boot_map)
+# else
+#  define ELF_DYNAMIC_DO_RELA(map, lazy, skip_ifunc, boot_map) /* Nothing to do.  */
+# endif
+
+/* This can't just be an inline function because GCC is too dumb
+   to inline functions containing inlines themselves.  */
+# define ELF_DYNAMIC_RELOCATE(map, lazy, consider_profile, skip_ifunc, boot_map) \
+  do {									      \
+    int edr_lazy = elf_machine_runtime_setup ((map), (lazy),		      \
+					      (consider_profile));	      \
+    ELF_DYNAMIC_DO_REL ((map), edr_lazy, skip_ifunc, boot_map);			\
+    ELF_DYNAMIC_DO_RELA ((map), edr_lazy, skip_ifunc, boot_map);			\
+  } while (0)
+#else /* NESTING */
 # if ! ELF_MACHINE_NO_REL
 #  include "do-rel.h"
 #  define ELF_DYNAMIC_DO_REL(map, lazy, skip_ifunc) \
@@ -202,5 +289,6 @@ elf_machine_lazy_rel (struct link_map *map,
     ELF_DYNAMIC_DO_REL ((map), edr_lazy, skip_ifunc);			      \
     ELF_DYNAMIC_DO_RELA ((map), edr_lazy, skip_ifunc);			      \
   } while (0)
+#endif /* NESTING */
 
 #endif
