@@ -1,5 +1,10 @@
 2018-09-14  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #23656]
+	* sysdeps/unix/sysv/linux/mips/sys/procfs.h (struct elf_prstatus):
+	Remove [_MIPS_SIM = _ABIN32] conditional case.
+	(struct elf_prpsinfo): Likewise.
+
 	[BZ #23649]
 	* sysdeps/unix/sysv/linux/microblaze/sys/procfs.h (struct
 	elf_prpsinfo): Use unsigned int for pr_uid and pr_gid.

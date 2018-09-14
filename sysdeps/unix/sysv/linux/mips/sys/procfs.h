@@ -64,13 +64,8 @@ struct elf_prstatus
   {
     struct elf_siginfo pr_info;		/* Info associated with signal.  */
     short int pr_cursig;		/* Current signal.  */
-#if _MIPS_SIM == _ABIN32
-    __extension__ unsigned long long int pr_sigpend;
-    __extension__ unsigned long long int pr_sighold;
-#else
     unsigned long int pr_sigpend;	/* Set of pending signals.  */
     unsigned long int pr_sighold;	/* Set of held signals.  */
-#endif
     __pid_t pr_pid;
     __pid_t pr_ppid;
     __pid_t pr_pgrp;
@@ -92,11 +87,7 @@ struct elf_prpsinfo
     char pr_sname;			/* Char for pr_state.  */
     char pr_zomb;			/* Zombie.  */
     char pr_nice;			/* Nice val.  */
-#if _MIPS_SIM == _ABIN32
-    __extension__ unsigned long long int pr_flag;
-#else
     unsigned long int pr_flag;		/* Flags.  */
-#endif
     unsigned int pr_uid;
     unsigned int pr_gid;
     int pr_pid, pr_ppid, pr_pgrp, pr_sid;

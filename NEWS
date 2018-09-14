@@ -31,6 +31,12 @@ Deprecated and removed features, and other changes affecting compatibility:
   the Linux kernel.  This affects the size and layout of that structure on
   MicroBlaze, MIPS (n64 ABI only), Nios II and RISC-V.
 
+* For the MIPS n32 ABI, the type of the pr_sigpend and pr_sighold members of
+  struct elf_prstatus, and the pr_flag member of struct elf_prpsinfo,
+  defined in <sys/procfs.h>, has been corrected to match the type actually
+  used by the Linux kernel.  This affects the size and layout of those
+  structures.
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]
