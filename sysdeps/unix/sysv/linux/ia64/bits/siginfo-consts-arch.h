@@ -5,9 +5,7 @@
 /* `si_code' values for SIGILL signal.  */
 enum
 {
-  ILL_BADIADDR = ILL_BADSTK + 1, /* Unimplemented instruction address. */
-#define ILL_BADIADDR ILL_BADIADDR
-  ILL_BREAK
+  ILL_BREAK = ILL_BADIADDR + 1
 #define ILL_BREAK ILL_BREAK
 };
 
@@ -31,15 +29,6 @@ enum
 {
   SEGV_PSTKOVF = SEGV_ACCERR + 1
 #define SEGV_PSTKOVF SEGV_PSTKOVF
-};
-
-/* `si_code' values for SIGTRAP signal.  */
-enum
-{
-  TRAP_BRANCH = TRAP_TRACE + 1,
-#define TRAP_BRANCH TRAP_BRANCH
-  TRAP_HWBKPT
-#define TRAP_HWBKPT TRAP_HWBKPT
 };
 
 #endif

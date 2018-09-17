@@ -1,3 +1,22 @@
+2018-09-17  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21286]
+	* sysdeps/unix/sysv/linux/bits/siginfo-consts.h (SI_DETHREAD): New
+	constant.
+	[__USE_XOPEN_EXTENDED || __USE_XOPEN2K8] (ILL_BADIADDR): Likewise.
+	[__USE_XOPEN_EXTENDED || __USE_XOPEN2K8] (FPE_FLTUNK): Likewise.
+	[__USE_XOPEN_EXTENDED || __USE_XOPEN2K8] (FPE_CONDTRAP): Likewise.
+	[__USE_XOPEN_EXTENDED || __USE_XOPEN2K8] (SEGV_ACCADI): Likewise.
+	[__USE_XOPEN_EXTENDED || __USE_XOPEN2K8] (SEGV_ADIDERR): Likewise.
+	[__USE_XOPEN_EXTENDED || __USE_XOPEN2K8] (SEGV_ADIPERR): Likewise.
+	[__USE_XOPEN_EXTENDED] (TRAP_BRANCH): Likewise.
+	[__USE_XOPEN_EXTENDED] (TRAP_HWBKPT): Likewise.
+	[__USE_XOPEN_EXTENDED] (TRAP_UNK): Likweise.
+	* sysdeps/unix/sysv/linux/ia64/bits/siginfo-consts-arch.h
+	(ILL_BADIADDR): Remove constant.
+	(TRAP_BRANCH): Likewise.
+	(TRAP_HWBKPT): Likewise.
+
 2018-09-14  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #23656]

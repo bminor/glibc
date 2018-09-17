@@ -35,7 +35,9 @@
 enum
 {
   SI_ASYNCNL = -60,		/* Sent by asynch name lookup completion.  */
-  SI_TKILL = -6,		/* Sent by tkill.  */
+  SI_DETHREAD = -7,		/* Sent by execve killing subsidiary
+				   threads.  */
+  SI_TKILL,			/* Sent by tkill.  */
   SI_SIGIO,			/* Sent by queued SIGIO. */
 #if __SI_ASYNCIO_AFTER_SIGIO
   SI_ASYNCIO,			/* Sent by AIO completion.  */
@@ -51,6 +53,7 @@ enum
   SI_KERNEL = 0x80		/* Send by kernel.  */
 
 #define SI_ASYNCNL	SI_ASYNCNL
+#define SI_DETHREAD	SI_DETHREAD
 #define SI_TKILL	SI_TKILL
 #define SI_SIGIO	SI_SIGIO
 #define SI_ASYNCIO	SI_ASYNCIO
@@ -81,8 +84,10 @@ enum
 #  define ILL_PRVREG	ILL_PRVREG
   ILL_COPROC,			/* Coprocessor error.  */
 #  define ILL_COPROC	ILL_COPROC
-  ILL_BADSTK			/* Internal stack error.  */
+  ILL_BADSTK,			/* Internal stack error.  */
 #  define ILL_BADSTK	ILL_BADSTK
+  ILL_BADIADDR			/* Unimplemented instruction address.  */
+#  define ILL_BADIADDR ILL_BADIADDR
 };
 
 /* `si_code' values for SIGFPE signal.  */
@@ -102,8 +107,12 @@ enum
 #  define FPE_FLTRES	FPE_FLTRES
   FPE_FLTINV,			/* Floating point invalid operation.  */
 #  define FPE_FLTINV	FPE_FLTINV
-  FPE_FLTSUB			/* Subscript out of range.  */
+  FPE_FLTSUB,			/* Subscript out of range.  */
 #  define FPE_FLTSUB	FPE_FLTSUB
+  FPE_FLTUNK = 14,		/* Undiagnosed floating-point exception.  */
+#  define FPE_FLTUNK	FPE_FLTUNK
+  FPE_CONDTRAP			/* Trap on condition.  */
+#  define FPE_CONDTRAP	FPE_CONDTRAP
 };
 
 /* `si_code' values for SIGSEGV signal.  */
@@ -115,8 +124,14 @@ enum
 #  define SEGV_ACCERR	SEGV_ACCERR
   SEGV_BNDERR,			/* Bounds checking failure.  */
 #  define SEGV_BNDERR	SEGV_BNDERR
-  SEGV_PKUERR			/* Protection key checking failure.  */
+  SEGV_PKUERR,			/* Protection key checking failure.  */
 #  define SEGV_PKUERR	SEGV_PKUERR
+  SEGV_ACCADI,			/* ADI not enabled for mapped object.  */
+#  define SEGV_ACCADI	SEGV_ACCADI
+  SEGV_ADIDERR,			/* Disrupting MCD error.  */
+#  define SEGV_ADIDERR	SEGV_ADIDERR
+  SEGV_ADIPERR			/* Precise MCD exception.  */
+#  define SEGV_ADIPERR	SEGV_ADIPERR
 };
 
 /* `si_code' values for SIGBUS signal.  */
@@ -141,8 +156,14 @@ enum
 {
   TRAP_BRKPT = 1,		/* Process breakpoint.  */
 #  define TRAP_BRKPT	TRAP_BRKPT
-  TRAP_TRACE			/* Process trace trap.  */
+  TRAP_TRACE,			/* Process trace trap.  */
 #  define TRAP_TRACE	TRAP_TRACE
+  TRAP_BRANCH,			/* Process taken branch trap.  */
+#  define TRAP_BRANCH	TRAP_BRANCH
+  TRAP_HWBKPT,			/* Hardware breakpoint/watchpoint.  */
+#  define TRAP_HWBKPT	TRAP_HWBKPT
+  TRAP_UNK			/* Undiagnosed trap.  */
+#  define TRAP_UNK	TRAP_UNK
 };
 # endif
 
