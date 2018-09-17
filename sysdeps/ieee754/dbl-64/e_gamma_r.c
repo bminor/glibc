@@ -61,7 +61,7 @@ gamma_positive (double x, int *exp2_adj)
     {
       /* Adjust into the range for using exp (lgamma).  */
       *exp2_adj = 0;
-      double n = __ceil (x - 1.5);
+      double n = ceil (x - 1.5);
       double x_adj = x - n;
       double eps;
       double prod = __gamma_product (x_adj, 0, n, &eps);
@@ -78,7 +78,7 @@ gamma_positive (double x, int *exp2_adj)
 	{
 	  /* Adjust into the range for applying Stirling's
 	     approximation.  */
-	  double n = __ceil (12.0 - x);
+	  double n = ceil (12.0 - x);
 	  x_adj = math_narrow_eval (x + n);
 	  x_eps = (x - (x_adj - n));
 	  prod = __gamma_product (x_adj - n, x_eps, n, &eps);

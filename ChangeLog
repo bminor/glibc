@@ -1,5 +1,43 @@
 2018-09-17  Joseph Myers  <joseph@codesourcery.com>
 
+	* include/math.h [!_ISOMAC && !(__FINITE_MATH_ONLY__ &&
+	__FINITE_MATH_ONLY__ > 0) && !NO_MATH_REDIRECT] (ceil): Redirect
+	using MATH_REDIRECT.
+	* sysdeps/aarch64/fpu/s_ceil.c: Define NO_MATH_REDIRECT before
+	header inclusion.
+	* sysdeps/aarch64/fpu/s_ceilf.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_ceil.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_ceil.c: Likewise.
+	* sysdeps/ieee754/float128/s_ceilf128.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_ceilf.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_ceill.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_ceill.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_ceil_template.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_ceil.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_ceilf.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_ceil.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_ceilf.c: Likewise.
+	* sysdeps/riscv/rv64/rvd/s_ceil.c: Likewise.
+	* sysdeps/riscv/rvf/s_ceilf.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_ceil.c: Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_ceilf.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_ceil.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_ceilf.c: Likewise.
+	* sysdeps/powerpc/fpu/math_private.h [_ARCH_PWR5X] (__ceil):
+	Remove macro.
+	* sysdeps/ieee754/dbl-64/e_gamma_r.c (gamma_positive): Use ceil
+	functions instead of __ceil variants.
+	* sysdeps/ieee754/flt-32/e_gammaf_r.c (gammaf_positive): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_gammal_r.c (gammal_positive):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_gammal_r.c (gammal_positive):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_truncl.c (__truncl): Likewise.
+	* sysdeps/ieee754/ldbl-96/e_gammal_r.c (gammal_positive):
+	Likewise.
+	* sysdeps/powerpc/power5+/fpu/s_modf.c (__modf): Likewise.
+	* sysdeps/powerpc/power5+/fpu/s_modff.c (__modff): Likewise.
+
 	[BZ #21286]
 	* sysdeps/unix/sysv/linux/bits/siginfo-consts.h (SI_DETHREAD): New
 	constant.

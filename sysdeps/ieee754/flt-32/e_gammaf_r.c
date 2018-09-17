@@ -71,7 +71,7 @@ gammaf_positive (float x, int *exp2_adj)
 	{
 	  /* Adjust into the range for applying Stirling's
 	     approximation.  */
-	  float n = __ceilf (4.0f - x);
+	  float n = ceilf (4.0f - x);
 	  x_adj = math_narrow_eval (x + n);
 	  x_eps = (x - (x_adj - n));
 	  prod = __gamma_productf (x_adj - n, x_eps, n, &eps);

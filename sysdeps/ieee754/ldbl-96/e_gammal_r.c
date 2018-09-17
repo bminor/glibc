@@ -62,7 +62,7 @@ gammal_positive (long double x, int *exp2_adj)
     {
       /* Adjust into the range for using exp (lgamma).  */
       *exp2_adj = 0;
-      long double n = __ceill (x - 1.5L);
+      long double n = ceill (x - 1.5L);
       long double x_adj = x - n;
       long double eps;
       long double prod = __gamma_productl (x_adj, 0, n, &eps);
@@ -79,7 +79,7 @@ gammal_positive (long double x, int *exp2_adj)
 	{
 	  /* Adjust into the range for applying Stirling's
 	     approximation.  */
-	  long double n = __ceill (13.0L - x);
+	  long double n = ceill (13.0L - x);
 	  x_adj = x + n;
 	  x_eps = (x - (x_adj - n));
 	  prod = __gamma_productl (x_adj - n, x_eps, n, &eps);

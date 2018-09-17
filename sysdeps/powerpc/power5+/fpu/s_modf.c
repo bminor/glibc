@@ -41,7 +41,7 @@ __modf (double x, double *iptr)
     }
   else
     {
-      *iptr = __ceil (x);
+      *iptr = ceil (x);
       return __copysign (x - *iptr, x);
     }
 }

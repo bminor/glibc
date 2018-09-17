@@ -69,7 +69,7 @@ gammal_positive (_Float128 x, int *exp2_adj)
     {
       /* Adjust into the range for using exp (lgamma).  */
       *exp2_adj = 0;
-      _Float128 n = __ceill (x - L(1.5));
+      _Float128 n = ceill (x - L(1.5));
       _Float128 x_adj = x - n;
       _Float128 eps;
       _Float128 prod = __gamma_productl (x_adj, 0, n, &eps);
@@ -86,7 +86,7 @@ gammal_positive (_Float128 x, int *exp2_adj)
 	{
 	  /* Adjust into the range for applying Stirling's
 	     approximation.  */
-	  _Float128 n = __ceill (24 - x);
+	  _Float128 n = ceill (24 - x);
 	  x_adj = x + n;
 	  x_eps = (x - (x_adj - n));
 	  prod = __gamma_productl (x_adj - n, x_eps, n, &eps);

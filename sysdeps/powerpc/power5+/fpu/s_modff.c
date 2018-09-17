@@ -40,7 +40,7 @@ __modff (float x, float *iptr)
     }
   else
     {
-      *iptr = __ceilf (x);
+      *iptr = ceilf (x);
       return __copysignf (x - *iptr, x);
     }
 }
