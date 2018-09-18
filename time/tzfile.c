@@ -410,7 +410,8 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
 
   /* First "register" all timezone names.  */
   for (i = 0; i < num_types; ++i)
-    (void) __tzstring (&zone_names[types[i].idx]);
+    if (__tzstring (&zone_names[types[i].idx]) == NULL)
+      goto ret_free_transitions;
 
   /* Find the standard and daylight time offsets used by the rule file.
      We choose the offsets in the types of each flavor that are
