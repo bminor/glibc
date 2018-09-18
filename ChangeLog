@@ -1,3 +1,12 @@
+2018-09-18  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/ldbl-128ibm/s_ceill.c (ceil): Redirect to
+	__ceil.
+	(__ceill): Call ceil instead of __ceil.
+	* sysdeps/ieee754/ldbl-128ibm/s_floorl.c (floor): Redirect to
+	__floor.
+	(__floorl): Call floor instead of __floor.
+
 2018-09-17  Joseph Myers  <joseph@codesourcery.com>
 
 	* include/math.h [!_ISOMAC && !(__FINITE_MATH_ONLY__ &&

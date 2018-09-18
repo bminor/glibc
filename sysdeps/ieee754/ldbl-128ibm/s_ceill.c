@@ -24,6 +24,8 @@
 #include <float.h>
 #include <ieee754.h>
 
+double ceil (double) asm ("__ceil");
+
 
 long double
 __ceill (long double x)
@@ -37,7 +39,7 @@ __ceill (long double x)
 			&& __builtin_isless (__builtin_fabs (xh),
 					     __builtin_inf ()), 1))
     {
-      hi = __ceil (xh);
+      hi = ceil (xh);
       if (hi != xh)
 	{
 	  /* The high part is not an integer; the low part does not
@@ -48,7 +50,7 @@ __ceill (long double x)
       else
 	{
 	  /* The high part is a nonzero integer.  */
-	  lo = __ceil (xl);
+	  lo = ceil (xl);
 	  xh = hi;
 	  xl = lo;
 	  ldbl_canonicalize_int (&xh, &xl);

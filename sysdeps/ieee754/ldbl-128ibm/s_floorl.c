@@ -24,6 +24,8 @@
 #include <float.h>
 #include <ieee754.h>
 
+double floor (double) asm ("__floor");
+
 
 long double
 __floorl (long double x)
@@ -37,7 +39,7 @@ __floorl (long double x)
 			&& __builtin_isless (__builtin_fabs (xh),
 					     __builtin_inf ()), 1))
     {
-      hi = __floor (xh);
+      hi = floor (xh);
       if (hi != xh)
 	{
 	  /* The high part is not an integer; the low part does not
@@ -48,7 +50,7 @@ __floorl (long double x)
       else
 	{
 	  /* The high part is a nonzero integer.  */
-	  lo = __floor (xl);
+	  lo = floor (xl);
 	  xh = hi;
 	  xl = lo;
 	  ldbl_canonicalize_int (&xh, &xl);
