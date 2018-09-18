@@ -1,3 +1,10 @@
+2018-09-18  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Fix tzfile low-memory assertion failure
+	[BZ #21716]
+	* time/tzfile.c (__tzfile_read): Check for memory exhaustion
+	when registering time zone abbreviations.
+
 2018-08-31  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #20271]
