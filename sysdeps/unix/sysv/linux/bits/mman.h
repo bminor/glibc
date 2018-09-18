@@ -1,7 +1,5 @@
-/* Definitions for POSIX memory map interface.  Linux/Nios II version.
-
+/* Definitions for POSIX memory map interface.  Linux/generic version.
    Copyright (C) 1997-2018 Free Software Foundation, Inc.
-
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,13 +20,14 @@
 # error "Never use <bits/mman.h> directly; include <sys/mman.h> instead."
 #endif
 
-/* The following definitions basically come from the kernel headers.
-   But the kernel header is not namespace clean.  */
+/* These definitions are appropriate for architectures that, in the
+   Linux kernel, either have no uapi/asm/mman.h, or have one that
+   includes asm-generic/mman.h without any changes or additions
+   relevant to glibc.  */
 
-/* These are Linux-specific.  */
 #ifdef __USE_MISC
 # define MAP_GROWSDOWN	0x00100		/* Stack-like segment.  */
-# define MAP_DENYWRITE	0x00800		/* ETXTBSY */
+# define MAP_DENYWRITE	0x00800		/* ETXTBSY.  */
 # define MAP_EXECUTABLE	0x01000		/* Mark it as an executable.  */
 # define MAP_LOCKED	0x02000		/* Lock the mapping.  */
 # define MAP_NORESERVE	0x04000		/* Don't check for reservations.  */
