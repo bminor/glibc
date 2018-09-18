@@ -168,10 +168,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
 
   /* Get information about the file we are actually using.  */
   if (fstat64 (__fileno (f), &st) != 0)
-    {
-      fclose (f);
-      goto ret_free_transitions;
-    }
+    goto lose;
 
   free ((void *) transitions);
   transitions = NULL;

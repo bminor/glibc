@@ -1,5 +1,9 @@
 2018-09-18  Paul Eggert  <eggert@cs.ucla.edu>
 
+	Simplify tzfile fstat failure code
+	[BZ #21716]
+	* time/tzfile.c (__tzfile_read): Simplify slightly.
+
 	Fix tzfile low-memory assertion failure
 	[BZ #21716]
 	* time/tzfile.c (__tzfile_read): Check for memory exhaustion
