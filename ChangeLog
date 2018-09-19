@@ -1,3 +1,12 @@
+2019-01-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #23640]
+	* posix/tst-spawn.c (do_prepare, handle_restart, do_test): Add
+	posix_spawn_file_actions_adddup2 test to check O_CLOCEXEC reset.
+	* sysdeps/unix/sysv/linux/spawni.c (__spawni_child): Add
+	close-on-exec reset for adddup2 file action.
+	* sysdeps/posix/spawni.c (__spawni_child): Likewise.
+
 2019-01-03  Zack Weinberg  <zackw@panix.com>
 
 	* include/features.h (__GLIBC_USE_DEPRECATED_SCANF): New __GLIBC_USE

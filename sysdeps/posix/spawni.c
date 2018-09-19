@@ -204,9 +204,21 @@ __spawni_child (void *arguments)
 	      break;
 
 	    case spawn_do_dup2:
-	      if (__dup2 (action->action.dup2_action.fd,
-			  action->action.dup2_action.newfd)
-		  != action->action.dup2_action.newfd)
+	      /* Austin Group issue #411 requires adddup2 action with source
+		 and destination being equal to remove close-on-exec flag.  */
+	      if (action->action.dup2_action.fd
+		  == action->action.dup2_action.newfd)
+		{
+		  int fd = action->action.dup2_action.newfd;
+		  int flags = __fcntl (fd, F_GETFD, 0);
+		  if (flags == -1)
+		    goto fail;
+		  if (__fcntl (fd, F_SETFD, flags & ~FD_CLOEXEC) == -1)
+		    goto fail;
+		}
+	      else if (__dup2 (action->action.dup2_action.fd,
+			       action->action.dup2_action.newfd)
+		       != action->action.dup2_action.newfd)
 		goto fail;
 	      break;
 
