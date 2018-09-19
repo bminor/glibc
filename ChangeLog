@@ -1,3 +1,11 @@
+2019-09-13  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	[BZ #23637]
+	* string/test-strstr.c (pr23637): New function.
+	(test_main): Add tests with longer needles.
+	* string/strcasestr.c (AVAILABLE): Fix readahead distance.
+	* string/strstr.c (AVAILABLE): Likewise.
+
 2019-09-13  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* string/memmem.c: Use memcmp for first match.
