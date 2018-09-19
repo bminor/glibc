@@ -1,3 +1,11 @@
+2018-09-19  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	[BZ #23637]
+	* string/test-strstr.c (pr23637): New function.
+	(test_main): Add tests with longer needles.
+	* string/strcasestr.c (AVAILABLE): Fix readahead distance.
+	* string/strstr.c (AVAILABLE): Likewise.
+
 2018-09-19  Carlos O'Donell  <carlos@redhat.com>
 
 	* stdlib/tst-setcontext9.c (f1): Rename to...
