@@ -1,5 +1,15 @@
 2018-09-19  Paul Eggert  <eggert@cs.ucla.edu>
 
+	Fix mktime localtime offset confusion
+	[BZ #23603]
+	* include/time.h (__mktime_internal): The localtime offset is now
+	of type long int instead of time_t.  This is the longstanding type
+	in glibc, and it is more than enough to represent difference
+	between localtime and gmtime even if it is 32 bits and time_t is
+	64.  Changing it now will let us avoid an unnecessary change when
+	time_t is widened to 64 bits on 32-bit platforms.
+	* time/mktime-internal.h (mktime_offset_t): Now long int.
+
 	Merge mktime, timegm from upstream Gnulib
 	[BZ #23603][BZ #16346]
 	This fixes some obscure problems with integer overflow.

@@ -55,11 +55,11 @@ extern void __tz_compute (time_t timer, struct tm *tm, int use_localtime)
 
 /* Subroutine of `mktime'.  Return the `time_t' representation of TP and
    normalize TP, given that a `struct tm *' maps to a `time_t' as performed
-   by FUNC.  Keep track of next guess for time_t offset in *OFFSET.  */
+   by FUNC.  Record next guess for localtime-gmtime offset in *OFFSET.  */
 extern time_t __mktime_internal (struct tm *__tp,
 				 struct tm *(*__func) (const time_t *,
 						       struct tm *),
-				 time_t *__offset) attribute_hidden;
+				 long int *__offset) attribute_hidden;
 extern struct tm *__localtime_r (const time_t *__timer,
 				 struct tm *__tp) attribute_hidden;
 
