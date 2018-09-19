@@ -118,7 +118,8 @@ exp2_inline (double_t xd, uint32_t sign_bias)
   return y;
 }
 
-/* Returns 0 if not int, 1 if odd int, 2 if even int.  */
+/* Returns 0 if not int, 1 if odd int, 2 if even int.  The argument is
+   the bit representation of a non-zero finite floating-point value.  */
 static inline int
 checkint (uint32_t iy)
 {

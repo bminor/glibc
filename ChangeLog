@@ -1,5 +1,9 @@
 2018-09-19  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
+	* sysdeps/ieee754/flt-32/e_powf.c (checkint): Fix documentation.
+
+2018-09-19  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
 	* NEWS: Mention pow improvements.
 	* math/Makefile (type-double-routines): Add e_pow_log_data.
 	* sysdeps/generic/math_private.h (__exp1): Remove.
