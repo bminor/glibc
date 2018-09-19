@@ -1,3 +1,11 @@
+2018-09-19  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	[BZ #23637]
+	* string/test-strstr.c (pr23637): New function.
+	(test_main): Add tests with longer needles.
+	* string/strcasestr.c (AVAILABLE): Fix readahead distance.
+	* string/strstr.c (AVAILABLE): Likewise.
+
 2018-09-19  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* sysdeps/ieee754/flt-32/e_powf.c (checkint): Fix documentation.
