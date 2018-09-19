@@ -17,31 +17,18 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifdef HAVE_CONFIG_H
+#ifndef _LIBC
 # include <config.h>
 #endif
 
-#ifdef _LIBC
-# include <time.h>
-#else
-# include "timegm.h"
+#include <time.h>
 
-/* Portable standalone applications should supply a "time_r.h" that
-   declares a POSIX-compliant gmtime_r, for the benefit of older
-   implementations that lack gmtime_r or have a nonstandard one.
-   See the gnulib time_r module for one way to implement this.  */
-# include <time_r.h>
-# undef __gmtime_r
-# define __gmtime_r gmtime_r
-time_t __mktime_internal (struct tm *,
-			  struct tm * (*) (time_t const *, struct tm *),
-			  time_t *);
-#endif
+#include "mktime-internal.h"
 
 time_t
 timegm (struct tm *tmp)
 {
-  static time_t gmtime_offset;
+  static mktime_offset_t gmtime_offset;
   tmp->tm_isdst = 0;
   return __mktime_internal (tmp, __gmtime_r, &gmtime_offset);
 }

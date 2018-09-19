@@ -1,3 +1,73 @@
+2018-09-19  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Merge mktime, timegm from upstream Gnulib
+	[BZ #23603][BZ #16346]
+	This fixes some obscure problems with integer overflow.
+	Although it looks scary, it is almost all a byte-for-byte copy
+	from Gnulib, and the Gnulib code has been tested reasonably well.
+	* include/intprops.h: New file, copied from Gnulib.
+	* include/verify.h, time/mktime-internal.h:
+	New tiny files, simplified from Gnulib.
+	* time/mktime.c: Copy from Gnulib.  This has the following changes:
+	Do not include config.h if DEBUG_MKTIME is nonzero.
+	Include stdbool.h, intprops.h, verify.h.
+	Include string.h only if needed.
+	Include stdlib.h on MS-Windows.
+	Include mktime-internal.h.
+	(DEBUG_MKTIME): Default to 0, and simplify later uses.
+	(NEED_MKTIME_INTERNAL, NEED_MKTIME_WINDOWS)
+	(NEED_MKTIME_WORKING): Give default values to pacify -Wundef,
+	which glibc uses.  Default NEED_MKTIME_WORKING to DEBUG_MKTIME, to
+	simplify later conditionals; default the others to zero.  Use
+	these conditionals to express only the code needed on the current
+	platform.  In uses of these conditionals, explicitly spell out how
+	_LIBC affects things, so it’s easier to review from a glibc
+	viewpoint.
+	(WRAPV): Remove; no longer needed now that we have
+	systematic overflow checking.
+	(my_tzset, __tzset) [!_LIBC]: New function and macro, to better
+	compartmentalize tzset issues.  Move system-dependent tzsettish
+	code here from mktime.
+	(verify): Remove; now done by verify.h.  All uses changed.
+	(long_int): Use a more-conservative definition, to avoid
+	integer overflow.
+	(SHR): Remove, replacing with ...
+	(shr): New function, which means we needn’t worry about side
+	effects in args, and conversion analysis is simpler.
+	(TYPE_IS_INTEGER, TYPE_TWOS_COMPLEMENT, TYPE_SIGNED, TYPE_MINIMUM)
+	(TYPE_MAXIMUM, TIME_T_MIN, TIME_T_MAX, TIME_T_MIDPOINT)
+	(time_t_avg, time_t_add_ok): Remove.
+	(mktime_min, mktime_max): New constants.
+	(leapyear, isdst_differ): Use bool for booleans.
+	(ydhms_diff, guess_time_tm, ranged_convert, __mktime_internal):
+	Use long_int, not time_t, for mktime differences.
+	(long_int_avg): New function, replacing time_t_avg.
+	INT_ADD_WRAPV replaces time_t_add_ok.
+	(guess_time_tm): 6th arg is now long_int, not time_t const *.
+	All uses changed.
+	(convert_time): New function.
+	(ranged_convert): Use it.
+	(__mktime_internal): Last arg now points to mktime_offset_t, not
+	time_t.  All uses changed.  This is a no-op on glibc, where
+	mktime_offset_t is always time_t.  Use int, not time_t, for UTC
+	offset guess.  Directly check for integer overflow instead of
+	using a heuristic that works only 99.9...% of the time.
+	Access *OFFSET only once, to avoid an unlikely race if the
+	compiler delays a load and if this cascades into a signed integer
+	overflow.
+	(mktime): Move tzsettish code to my_tzset, and move
+	localtime_offset to within mktime so that it doesn’t
+	need a separate ifdef.
+	(main) [DEBUG_MKTIME]: Speed up by using localtime_r
+	instead of localtime.
+	* time/timegm.c: Copy from Gnulib.  This has the following changes:
+	Include mktime-internal.h.
+	[!_LIBC]: Include config.h and time.h.  Do not include
+	timegm.h or time_r.h.  Make __mktime_internal a macro,
+	and include mktime-internal.h to get its declaration.
+	(timegm): Temporary is now mktime_offset_t, not time_t.
+	This affects only Gnulib.
+
 2018-09-19  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	[BZ #23637]
