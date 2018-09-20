@@ -257,30 +257,19 @@ extern const struct cpu_features *__get_cpu_features (void)
 
 #ifdef __x86_64__
 # define HAS_CPUID 1
-#elif defined __i586__ || defined __pentium__
+#elif (defined __i586__ || defined __pentium__	\
+       || defined __geode__ || defined __k6__)
 # define HAS_CPUID 1
 # define HAS_I586 1
 # define HAS_I686 HAS_ARCH_FEATURE (I686)
-#elif (defined __i686__ || defined __pentiumpro__		\
-       || defined __pentium4__ || defined __nocona__		\
-       || defined __atom__ || defined __core2__			\
-       || defined __corei7__ || defined __corei7_avx__		\
-       || defined __core_avx2__	|| defined __nehalem__		\
-       || defined __sandybridge__ || defined __haswell__	\
-       || defined __knl__ || defined __bonnell__		\
-       || defined __silvermont__				\
-       || defined __k6__ || defined __k8__			\
-       || defined __athlon__ || defined __amdfam10__		\
-       || defined __bdver1__ || defined __bdver2__		\
-       || defined __bdver3__ || defined __bdver4__		\
-       || defined __btver1__ || defined __btver2__)
-# define HAS_CPUID 1
-# define HAS_I586 1
-# define HAS_I686 1
-#else
+#elif defined __i486__
 # define HAS_CPUID 0
 # define HAS_I586 HAS_ARCH_FEATURE (I586)
 # define HAS_I686 HAS_ARCH_FEATURE (I686)
+#else
+# define HAS_CPUID 1
+# define HAS_I586 1
+# define HAS_I686 1
 #endif
 
 #endif  /* cpu_features_h */

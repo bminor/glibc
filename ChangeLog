@@ -1,3 +1,12 @@
+2018-09-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/x86/cpu-features.h [__geode__ || __k6__]: Handle like
+	[__i586__ || __pentium__].
+	[__i486__]: Handle explicitly.
+	(HAS_CPUID): Define to 1 if above macros are undefined.
+	(HAS_I586): Likewise.
+	(HAS_I686): Likewise.
+
 2018-09-20  Florian Weimer  <fweimer@redhat.com>
 
 	* misc/tst-gethostid.c: New file.
