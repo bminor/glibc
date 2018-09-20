@@ -102,12 +102,12 @@ gethostid (void)
     {
       int ret = __gethostbyname_r (hostname, &hostbuf,
 				   tmpbuf.data, tmpbuf.length, &hp, &herr);
-      if (ret == 0)
+      if (ret == 0 && hp != NULL)
 	break;
       else
 	{
 	  /* Enlarge the buffer on ERANGE.  */
-	  if (herr == NETDB_INTERNAL && errno == ERANGE)
+	  if (ret != 0 && herr == NETDB_INTERNAL && errno == ERANGE)
 	    {
 	      if (!scratch_buffer_grow (&tmpbuf))
 		return 0;
