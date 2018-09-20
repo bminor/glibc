@@ -173,8 +173,8 @@ __ieee754_gamma_r (double x, int *signgamp)
 	}
       else
 	{
-	  double tx = __trunc (x);
-	  *signgamp = (tx == 2.0 * __trunc (tx / 2.0)) ? -1 : 1;
+	  double tx = trunc (x);
+	  *signgamp = (tx == 2.0 * trunc (tx / 2.0)) ? -1 : 1;
 	  if (x <= -184.0)
 	    /* Underflow.  */
 	    ret = DBL_MIN * DBL_MIN;

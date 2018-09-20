@@ -17,11 +17,16 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#define NO_MATH_REDIRECT
 #include <math.h>
 #include <math_private.h>
 #include <math_ldbl_opt.h>
 #include <float.h>
 #include <ieee754.h>
+
+double ceil (double) asm ("__ceil");
+double floor (double) asm ("__floor");
+double trunc (double) asm ("__trunc");
 
 
 long double
@@ -36,7 +41,7 @@ __truncl (long double x)
 			&& __builtin_isless (__builtin_fabs (xh),
 					     __builtin_inf ()), 1))
     {
-      hi = __trunc (xh);
+      hi = trunc (xh);
       if (hi != xh)
 	{
 	  /* The high part is not an integer; the low part does not

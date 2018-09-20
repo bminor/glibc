@@ -179,8 +179,8 @@ __ieee754_gammal_r (_Float128 x, int *signgamp)
 	}
       else
 	{
-	  _Float128 tx = __truncl (x);
-	  *signgamp = (tx == 2 * __truncl (tx / 2)) ? -1 : 1;
+	  _Float128 tx = truncl (x);
+	  *signgamp = (tx == 2 * truncl (tx / 2)) ? -1 : 1;
 	  if (x <= -1775)
 	    /* Underflow.  */
 	    ret = LDBL_MIN * LDBL_MIN;

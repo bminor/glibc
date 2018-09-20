@@ -165,8 +165,8 @@ __ieee754_gammaf_r (float x, int *signgamp)
 	}
       else
 	{
-	  float tx = __truncf (x);
-	  *signgamp = (tx == 2.0f * __truncf (tx / 2.0f)) ? -1 : 1;
+	  float tx = truncf (x);
+	  *signgamp = (tx == 2.0f * truncf (tx / 2.0f)) ? -1 : 1;
 	  if (x <= -42.0f)
 	    /* Underflow.  */
 	    ret = FLT_MIN * FLT_MIN;
