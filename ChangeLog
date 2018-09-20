@@ -1,3 +1,9 @@
+2018-09-20  Florian Weimer  <fweimer@redhat.com>
+
+	* misc/tst-gethostid.c: New file.
+	* misc/Makefile [$(build-shared)] (tests): Add tst-gethostid.
+	(tst-gethostid): Link with -ldl.
+
 2018-09-20  Mingli Yu  <Mingli.Yu@windriver.com>
 
 	* sysdeps/unix/sysv/linux/gethostid.c (gethostid): Check for NULL
