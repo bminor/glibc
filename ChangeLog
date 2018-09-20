@@ -1,3 +1,8 @@
+2018-09-20  Mingli Yu  <Mingli.Yu@windriver.com>
+
+	* sysdeps/unix/sysv/linux/gethostid.c (gethostid): Check for NULL
+	value from gethostbyname_r.
+
 2018-09-06  Stefan Liebler  <stli@linux.ibm.com>
 
 	* sysdeps/unix/sysv/linux/spawni.c (maybe_script_execute):
