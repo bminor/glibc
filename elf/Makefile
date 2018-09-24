@@ -186,7 +186,8 @@ tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-tlsalign tst-tlsalign-extern tst-nodelete-opened \
 	 tst-nodelete2 tst-audit11 tst-audit12 tst-dlsym-error tst-noload \
 	 tst-latepthread tst-tls-manydynamic tst-nodelete-dlclose \
-	 tst-debug1 tst-main1 tst-absolute-sym tst-absolute-zero tst-big-note
+	 tst-debug1 tst-main1 tst-absolute-sym tst-absolute-zero tst-big-note \
+	 tst-unwind-ctor
 #	 reldep9
 tests-internal += loadtest unload unload2 circleload1 \
 	 neededtest neededtest2 neededtest3 neededtest4 \
@@ -273,7 +274,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-latepthreadmod $(tst-tls-many-dynamic-modules) \
 		tst-nodelete-dlclose-dso tst-nodelete-dlclose-plugin \
 		tst-main1mod tst-libc_dlvsym-dso tst-absolute-sym-lib \
-		tst-absolute-zero-lib tst-big-note-lib
+		tst-absolute-zero-lib tst-big-note-lib tst-unwind-ctor-lib
 # Most modules build with _ISOMAC defined, but those filtered out
 # depend on internal headers.
 modules-names-tests = $(filter-out ifuncmod% tst-libc_dlvsym-dso tst-tlsmod%,\
@@ -1492,3 +1493,5 @@ tst-libc_dlvsym-static-ENV = \
 $(objpfx)tst-libc_dlvsym-static.out: $(objpfx)tst-libc_dlvsym-dso.so
 
 $(objpfx)tst-big-note: $(objpfx)tst-big-note-lib.so
+
+$(objpfx)tst-unwind-ctor: $(objpfx)tst-unwind-ctor-lib.so

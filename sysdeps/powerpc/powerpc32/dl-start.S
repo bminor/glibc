@@ -34,6 +34,9 @@ ENTRY(_start)
    _dl_start to save the link register).  */
 	li	r4,0
 	addi	r1,r1,-16
+	cfi_adjust_cfa_offset (16)
+/* Mark lr as undefined to stop unwinding.  */
+	cfi_undefined (lr)
 	stw	r4,0(r1)
 	bl	_dl_start@local
 
