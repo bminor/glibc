@@ -1067,15 +1067,26 @@ AC_SUBST(CXX_SYSINCLUDES)
 
 # Obtain some C++ header file paths.  This is used to make a local
 # copy of those headers in Makerules.
+changequote(,)dnl
 if test -n "$CXX"; then
+  # In theory the clang and gcc regexes can be merged, but the
+  # result is incomprehensible.
+  if test "$with_clang" != no; then
+  find_cxx_header () {
+    echo "#include <$1>" | $CXX -M -MP -x c++ - 2>/dev/null \
+	 | sed -n "\,^[o.-]*[ :] /.*/$1 [\]$,{s,^[o.-]*[ :] /,/,;s/ [\]$//;p}"
+  }
+  else
   find_cxx_header () {
     echo "#include <$1>" | $CXX -M -MP -x c++ - 2>/dev/null \
 	 | sed -n "\,$1:,{s/:\$//;p}"
   }
+  fi
   CXX_CSTDLIB_HEADER="$(find_cxx_header cstdlib)"
   CXX_CMATH_HEADER="$(find_cxx_header cmath)"
   CXX_BITS_STD_ABS_H="$(find_cxx_header bits/std_abs.h)"
 fi
+changequote([,])dnl
 AC_SUBST(CXX_CSTDLIB_HEADER)
 AC_SUBST(CXX_CMATH_HEADER)
 AC_SUBST(CXX_BITS_STD_ABS_H)
