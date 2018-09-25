@@ -1,3 +1,12 @@
+2018-10-30  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #23125]
+	* sysdeps/riscv/start.S (ENTRY_POINT): Mark ra as undefined.
+	Don't use tail call.
+	* elf/tst-unwind-main.c: New file.
+	* elf/Makefile (tests): Add tst-unwind-main.
+	(CFLAGS-tst-unwind-main.c): Define.
+
 2018-12-15  Florian Weimer  <fweimer@redhat.com>
 
 	* support/blob_repeat.c (check_mul_overflow_size_t): New function.
