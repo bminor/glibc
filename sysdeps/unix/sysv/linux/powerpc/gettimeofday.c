@@ -23,7 +23,7 @@
 
 #include <sys/time.h>
 
-#ifdef SHARED
+#if defined(SHARED) && !defined(__clang__)
 
 # include <dl-vdso.h>
 # include <libc-vdso.h>

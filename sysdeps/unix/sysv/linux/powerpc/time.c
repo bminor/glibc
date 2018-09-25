@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifdef SHARED
+#if defined(SHARED) && !defined(__clang__)
 # ifndef __powerpc64__
 #  define time __redirect_time
 # else
