@@ -27,6 +27,9 @@
 #include <sys/param.h>
 #include <sys/stat.h>
 #include <sys/time.h>
+#if defined __clang__ && defined __powerpc64__
+#define UGLY_INLINE_HACK
+#endif
 #include <aio_misc.h>
 
 #ifndef aio_create_helper_thread

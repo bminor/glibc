@@ -35,7 +35,13 @@ __aio_start_notify_thread (void)
   INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_SETMASK, &ss, NULL, _NSIG / 8);
 }
 
-extern inline int
+extern
+/* clang fails to inline properly in one case, and then linking fails
+   because the function was discarded, so ensure it's kept.  */
+#ifndef UGLY_INLINE_HACK
+inline
+#endif
+int
 __aio_create_helper_thread (pthread_t *threadp, void *(*tf) (void *),
 			    void *arg)
 {
