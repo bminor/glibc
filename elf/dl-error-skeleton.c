@@ -85,6 +85,21 @@ fatal_error (int errcode, const char *objname, const char *occasion,
 		     : ""));
 }
 
+/* Due to a complicated set of interactions with different symbol
+   versions, presumably including a VMX-specific __vmx__longjmp, PPC
+   clang ends calling __longjump with ld.so through the global entry
+   point (+0x0) instead of via the local entry point (+0x8) which
+   results in ld.so exceptions crashing because the TOC is not set up.
+   The hack here simply calls the function through a pointer, which
+   guarantees that the global entry point has the TOC set up.  (This
+   may or may not be a clang bug, the symbol aliasing is tricky and
+   literally affects only __longjmp out of all the symbols in
+   libc.)  */
+#if defined __clang__ && defined __powerpc64__
+volatile void (*longjmpptr) (struct __jmp_buf_tag __env[1], int __val)
+__attribute__ ((__nothrow__)) __attribute__ ((__noreturn__)) = __longjmp;
+#endif
+
 void
 _dl_signal_exception (int errcode, struct dl_exception *exception,
 		      const char *occasion)
@@ -96,7 +111,11 @@ _dl_signal_exception (int errcode, struct dl_exception *exception,
       *lcatch->errcode = errcode;
 
       /* We do not restore the signal mask because none was saved.  */
+#if defined __clang__ && defined __powerpc64__
+      (*longjmpptr) (lcatch->env[0].__jmpbuf, 1);
+#else
       __longjmp (lcatch->env[0].__jmpbuf, 1);
+#endif
     }
   else
     fatal_error (errcode, exception->objname, occasion, exception->errstring);
@@ -118,7 +137,11 @@ _dl_signal_error (int errcode, const char *objname, const char *occation,
       *lcatch->errcode = errcode;
 
       /* We do not restore the signal mask because none was saved.  */
+#if defined __clang__ && defined __powerpc64__
+      (*longjmpptr) (lcatch->env[0].__jmpbuf, 1);
+#else
       __longjmp (lcatch->env[0].__jmpbuf, 1);
+#endif
     }
   else
     fatal_error (errcode, objname, occation, errstring);
