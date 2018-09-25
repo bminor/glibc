@@ -103,9 +103,11 @@ struct elf_prpsinfo
 /* Addresses.  */
 typedef void *psaddr_t;
 
+#include <bits/procfs-prregset.h>
+
 /* Register sets.  Linux has different names.  */
-typedef elf_gregset_t prgregset_t;
-typedef elf_fpregset_t prfpregset_t;
+typedef __prgregset_t prgregset_t;
+typedef __prfpregset_t prfpregset_t;
 
 /* We don't have any differences between processes and threads,
    therefore have only one PID type.  */

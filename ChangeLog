@@ -1,6 +1,17 @@
 2018-09-25  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/sys/procfs.h: Include
+	<bits/procfs-prregset.h>.
+	(prgregset_t): Define using __prgregset_t.
+	(prfpregset_t): Define using __prfpregset_t.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir) = misc]
+	(sysdep_headers): Add bits/procfs-prregset.h.
+	* sysdeps/unix/sysv/linux/bits/procfs-prregset.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/bits/procfs-prregset.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/sys/procfs.h: Remove file.
+
+	* sysdeps/unix/sysv/linux/sys/procfs.h: Include
 	<bits/procfs-id.h> and <bits/procfs-extra.h>.
 	(struct elf_prpsinfo): Use __pr_uid_t and __pr_gid_t as types of
 	pr_uid and pr_gid.
