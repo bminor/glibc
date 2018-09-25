@@ -73,12 +73,29 @@ realtime_getres (struct timespec *res)
   return -1;
 }
 
+#if defined __clang__ && defined __powerpc64__
+/* On ppc, __clock_getres's body eventually expands into asm code
+   that does a bctrl, but clang does not recognize the need to save
+   the link register, so calls loop infinitely instead of returning.
+   As workaround, make a dummy function call that forces a link
+   register save.  */
+volatile int clock_getres_dummy_glob;
+
+void __attribute__((noinline)) clock_getres_dummy ()
+{
+  clock_getres_dummy_glob = 45;
+}
+#endif
 
 /* Get resolution of clock.  */
 int
 __clock_getres (clockid_t clock_id, struct timespec *res)
 {
   int retval = -1;
+
+#if defined __clang__ && defined __powerpc64__
+  clock_getres_dummy ();
+#endif
 
   switch (clock_id)
     {

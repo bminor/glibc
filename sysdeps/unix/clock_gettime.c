@@ -86,12 +86,29 @@ realtime_gettime (struct timespec *tp)
   return retval;
 }
 
+#if defined __clang__ && defined __powerpc64__
+/* On ppc, __clock_gettime's body eventually expands into asm code
+   that does a bctrl, but clang does not recognize the need to save
+   the link register, so calls loop infinitely instead of returning.
+   As workaround, make a dummy function call that forces a link
+   register save.  */
+volatile int clock_gettime_dummy_glob;
+
+void __attribute__((noinline)) clock_gettime_dummy ()
+{
+  clock_gettime_dummy_glob = 45;
+}
+#endif
 
 /* Get current value of CLOCK and store it in TP.  */
 int
 __clock_gettime (clockid_t clock_id, struct timespec *tp)
 {
   int retval = -1;
+
+#if defined __clang__ && defined __powerpc64__
+  clock_gettime_dummy ();
+#endif
 
   switch (clock_id)
     {
