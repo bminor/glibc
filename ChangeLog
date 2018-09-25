@@ -1,3 +1,27 @@
+2018-09-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/sys/procfs.h: Replace with file based on
+	AArch64 version.  Include <bits/procfs.h>.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir) = misc]
+	(sysdep_headers): Add bits/procfs.h.
+	* sysdeps/unix/sysv/linux/bits/procfs.h: New file.
+	* sysdeps/unix/sysv/linux/aarch64/bits/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/bits/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/bits/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/bits/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/bits/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/sys/procfs.h: Remove file.
+	* sysdeps/unix/sysv/linux/hppa/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/sys/procfs.h: Likewise.
+
 2018-09-25  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* posix/tst-spawn.c (do_prepare, handle_restart, do_test):
