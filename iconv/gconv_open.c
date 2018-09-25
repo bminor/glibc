@@ -26,6 +26,10 @@
 #include <gconv_int.h>
 
 
+/* How many character should be converted in one call?  */
+#define GCONV_NCHAR_GOAL	8160
+
+
 int
 __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 	      int flags)

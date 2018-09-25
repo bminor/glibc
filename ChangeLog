@@ -1,3 +1,15 @@
+2018-09-25  Arjun Shankar  <arjun@redhat.com>
+
+	* iconv/gconv_int.h (__gconv_path_elem): Remove.
+	(__gconv_max_path_elem_len): Likewise.
+	(__gconv_nmodules): Likewise.
+	(__gconv_get_path): Likewise.
+	(path_elem): Move to ...
+	* iconv/gconv_conf.c: ... here.
+	(__gconv_get_path): Mark function static.
+	* iconv/gconv_int.h (GCONV_NCHAR_GOAL): Move to ...
+	* iconv/gconv_open.c: ... here.
+
 2018-09-24  Andreas Schwab  <schwab@suse.de>
 
 	* scripts/haveversions.awk: New file.

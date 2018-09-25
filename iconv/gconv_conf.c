@@ -38,6 +38,13 @@
 /* This is the default path where we look for module lists.  */
 static const char default_gconv_path[] = GCONV_PATH;
 
+/* Type to represent search path.  */
+struct path_elem
+{
+  const char *name;
+  size_t len;
+};
+
 /* The path elements, as determined by the __gconv_get_path function.
    All path elements end in a slash.  */
 struct path_elem *__gconv_path_elem;
@@ -420,7 +427,7 @@ read_conf_file (const char *filename, const char *directory, size_t dir_len,
 
 
 /* Determine the directories we are looking for data in.  */
-void
+static void
 __gconv_get_path (void)
 {
   struct path_elem *result;
