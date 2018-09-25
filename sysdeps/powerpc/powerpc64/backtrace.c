@@ -70,8 +70,12 @@ __backtrace (void **array, int size)
   struct layout *current;
   int count;
 
+  /* The following asm causes a clang crash, and does not seem to be
+     needed anyway; clang always saves link register.  */
+#if !defined __clang__
   /* Force gcc to spill LR.  */
   asm volatile ("" : "=l"(current));
+#endif
 
   /* Get the address on top-of-stack.  */
   asm volatile ("ld %0,0(1)" : "=r"(current));
