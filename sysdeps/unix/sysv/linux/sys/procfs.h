@@ -39,6 +39,10 @@
    types needed.  */
 #include <bits/procfs.h>
 
+/* bits/procfs-id.h must define __pr_uid_t and __pr_gid_t, the types
+   of pr_uid and pr_gid.  */
+#include <bits/procfs-id.h>
+
 __BEGIN_DECLS
 
 /* Signal info.  */
@@ -84,8 +88,8 @@ struct elf_prpsinfo
     char pr_zomb;			/* Zombie.  */
     char pr_nice;			/* Nice val.  */
     unsigned long int pr_flag;		/* Flags.  */
-    unsigned int pr_uid;
-    unsigned int pr_gid;
+    __pr_uid_t pr_uid;
+    __pr_gid_t pr_gid;
     int pr_pid, pr_ppid, pr_pgrp, pr_sid;
     /* Lots missing */
     char pr_fname[16];			/* Filename of executable.  */
@@ -112,5 +116,9 @@ typedef struct elf_prstatus prstatus_t;
 typedef struct elf_prpsinfo prpsinfo_t;
 
 __END_DECLS
+
+/* On some architectures, provide other-ABI variants of the above
+   types.  */
+#include <bits/procfs-extra.h>
 
 #endif	/* sys/procfs.h.  */

@@ -1,5 +1,34 @@
 2018-09-25  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/sys/procfs.h: Include
+	<bits/procfs-id.h> and <bits/procfs-extra.h>.
+	(struct elf_prpsinfo): Use __pr_uid_t and __pr_gid_t as types of
+	pr_uid and pr_gid.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir) = misc]
+	(sysdep_headers): Add bits/procfs-id.h and bits/procfs-extra.h.
+	* sysdeps/unix/sysv/linux/bits/procfs-extra.h: New file.
+	* sysdeps/unix/sysv/linux/bits/procfs-id.h: Likewise.
+	* sysdeps/unix/sysv/linux/arm/bits/procfs-id.h: Likewise.
+	* sysdeps/unix/sysv/linux/arm/bits/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/bits/procfs-id.h: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/bits/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/procfs-extra.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/procfs-id.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/procfs-id.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/procfs-extra.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/procfs-id.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86/bits/procfs-id.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86/bits/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/arm/sys/procfs.h: Remove file.
+	* sysdeps/unix/sysv/linux/m68k/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86/sys/procfs.h: Likewise.
+
 	* sysdeps/unix/sysv/linux/sys/procfs.h: Replace with file based on
 	AArch64 version.  Include <bits/procfs.h>.
 	* sysdeps/unix/sysv/linux/Makefile [$(subdir) = misc]

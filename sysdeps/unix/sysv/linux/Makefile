@@ -40,7 +40,8 @@ sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h \
 		  bits/signalfd.h bits/timerfd.h bits/epoll.h \
 		  bits/socket_type.h bits/syscall.h bits/sysctl.h \
 		  bits/mman-linux.h bits/mman-shared.h bits/ptrace-shared.h \
-		  bits/siginfo-arch.h bits/siginfo-consts-arch.h bits/procfs.h
+		  bits/siginfo-arch.h bits/siginfo-consts-arch.h \
+		  bits/procfs.h bits/procfs-id.h bits/procfs-extra.h
 
 tests += tst-clone tst-clone2 tst-clone3 tst-fanotify tst-personality \
 	 tst-quota tst-sync_file_range tst-sysconf-iov_max tst-ttyname \
