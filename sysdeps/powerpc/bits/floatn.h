@@ -22,11 +22,17 @@
 #include <features.h>
 #include <bits/long-double.h>
 
+#if 0 /* for macro expansion debugging */
+#define capture0(sym) typedef int sym##_eq_0
+#define capture1(sym) typedef int sym##_eq_1
+/*#define capture(sym, val) extern int sym[val]*/
+#endif
+
 /* Defined to 1 if the current compiler invocation provides a
    floating-point type with the IEEE 754 binary128 format, and this glibc
    includes corresponding *f128 interfaces for it.  */
 #if defined _ARCH_PWR8 && defined __LITTLE_ENDIAN__ && (_CALL_ELF == 2) \
-    && defined __FLOAT128__ && !defined __NO_LONG_DOUBLE_MATH
+    && defined __FLOAT128__ && !defined __NO_LONG_DOUBLE_MATH && !defined __clang__
 # define __HAVE_FLOAT128 1
 #else
 # define __HAVE_FLOAT128 0
@@ -52,6 +58,23 @@
 #define __HAVE_FLOAT64X_LONG_DOUBLE 0
 
 #ifndef __ASSEMBLER__
+#if 0 /* for macro expansion debugging */
+#if __HAVE_FLOAT128
+capture1(i_have_float128);
+#else
+capture0(i_have_float128);
+#endif
+#if __HAVE_DISTINCT_FLOAT128
+capture1(i_have_distinct_float128);
+#else
+capture0(i_have_distinct_float128);
+#endif
+/*capture(i_have_float128, __HAVE_FLOAT128);*/
+/*capture(i_have_distinct_float128, __HAVE_DISTINCT_FLOAT128);*/
+#endif
+#endif
+
+#ifndef __ASSEMBLER__
 
 /* Defined to concatenate the literal suffix to be used with _Float128
    types, if __HAVE_FLOAT128 is 1. */
@@ -66,7 +89,7 @@
 
 /* Defined to a complex binary128 type if __HAVE_FLOAT128 is 1.  */
 # if __HAVE_FLOAT128
-#  if !__GNUC_PREREQ (7, 0) || defined __cplusplus
+#  if !defined __clang__ && (!__GNUC_PREREQ (7, 0) || defined __cplusplus)
 /* Add a typedef for older GCC compilers which don't natively support
    _Complex _Float128.  */
 typedef _Complex float __cfloat128 __attribute__ ((__mode__ (__KC__)));
@@ -80,7 +103,7 @@ typedef _Complex float __cfloat128 __attribute__ ((__mode__ (__KC__)));
 # if __HAVE_FLOAT128
 
 /* The type _Float128 exist for powerpc only since GCC 7.0.  */
-#  if !__GNUC_PREREQ (7, 0) || defined __cplusplus
+#  if !defined __clang__ && (!__GNUC_PREREQ (7, 0) || defined __cplusplus)
 typedef __float128 _Float128;
 #  endif
 
@@ -88,6 +111,21 @@ typedef __float128 _Float128;
 #  if !__GNUC_PREREQ (7, 0)
 #   define __builtin_huge_valf128() ((_Float128) __builtin_huge_val ())
 #  endif
+
+#if defined __clang__
+
+#if 1 /* 6.0 or less */
+#define __builtin_huge_valf128() ((_Float128) __builtin_huge_val ())
+#define __builtin_inff128() ((_Float128) __builtin_inf ())
+#define __builtin_nanf128(x) ((_Float128) __builtin_nan (x))
+#define __builtin_nansf128(x) ((_Float128) __builtin_nans (x))
+
+#define __builtin_copysignf128(x,y) ((_Float128) __builtin_copysign ((double)(x),(double)(y)))
+#define __builtin_fabsf128(x) ((_Float128) __builtin_fabs ((double)(x)))
+#define __builtin_signbitf128(x) (__builtin_signbit (x))
+#endif
+
+#else /* GCC */
 
 /* The following builtins (suffixed with 'q') are available in GCC >= 6.2,
    which is the minimum version required for float128 support on powerpc64le.
@@ -101,6 +139,8 @@ typedef __float128 _Float128;
 #   define __builtin_nansf128 __builtin_nansq
 #  endif
 
+#endif /* GCC or clang */
+
 /* In math/math.h, __MATH_TG will expand signbit to __builtin_signbit*,
    e.g.: __builtin_signbitf128, before GCC 6.  However, there has never
    been a __builtin_signbitf128 in GCC and the type-generic builtin is
@@ -110,6 +150,10 @@ typedef __float128 _Float128;
 #  endif
 
 # endif
+
+#if !__HAVE_FLOAT128 && defined __clang__
+typedef long double _Float128;
+#endif /* clang fallback */
 
 #endif /* !__ASSEMBLER__.  */
 
