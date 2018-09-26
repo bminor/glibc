@@ -1,3 +1,20 @@
+2018-09-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/bits/mman-map-flags-generic.h: New
+	file.  Most contents moved from ....
+	* sysdeps/unix/sysv/linux/bits/mman.h: ... here.  Move contents to
+	and include <bits/mman-map-flags-generic.h>.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir) = misc]
+	(sysdep_headers): Add bits/mman-map-flags-generic.h.
+	* sysdeps/unix/sysv/linux/ia64/bits/mman.h: Include
+	<bits/mman-map-flags-generic.h>.
+	[__USE_MISC] (MAP_GROWSUP): Only define this macro, not other
+	macros defined in <bits/mman-map-flags-generic.h>.
+	* sysdeps/unix/sysv/linux/x86/bits/mman.h: Include
+	<bits/mman-map-flags-generic.h>.
+	[__USE_MISC] (MAP_32BIT): Only define this macro, not other macros
+	defined in <bits/mman-map-flags-generic.h>.
+
 2018-09-26  Andreas Schwab  <schwab@suse.de>
 
 	* Makefile ($(common-objpfx)testrun.sh): Remove leading space from
