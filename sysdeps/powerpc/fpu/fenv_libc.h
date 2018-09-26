@@ -35,13 +35,19 @@ extern const fenv_t *__fe_mask_env (void) attribute_hidden;
 #define fegetenv_register() \
         ({ fenv_t env; asm volatile ("mffs %0" : "=f" (env)); env; })
 
+#if defined __clang__
+#define MACHINE_POWER6
+#else
+#define MACHINE_POWER6 ".machine \"power6\""
+#endif
+
 /* Equivalent to fesetenv, but takes a fenv_t instead of a pointer.  */
 #define fesetenv_register(env) \
 	do { \
 	  double d = (env); \
 	  if(GLRO(dl_hwcap) & PPC_FEATURE_HAS_DFP) \
 	    asm volatile (".machine push; " \
-			  ".machine \"power6\"; " \
+			  MACHINE_POWER6 "; " \
 			  "mtfsf 0xff,%0,1,0; " \
 			  ".machine pop" : : "f" (d)); \
 	  else \
@@ -57,7 +63,8 @@ extern const fenv_t *__fe_mask_env (void) attribute_hidden;
 #define relax_fenv_state() \
 	do { \
 	   if (GLRO(dl_hwcap) & PPC_FEATURE_HAS_DFP) \
-	     asm (".machine push; .machine \"power6\"; " \
+	     asm (".machine push; " \
+		  MACHINE_POWER6 "; " \
 		  "mtfsfi 7,0,1; .machine pop"); \
 	   asm ("mtfsfi 7,0"); \
 	} while(0)

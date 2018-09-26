@@ -104,6 +104,12 @@ typedef unsigned int si_fpscr_t __attribute__ ((__mode__ (__SI__)));
     u.fpscr;								\
   })
 
+#if defined __clang__
+#define MACHINE_POWER6
+#else
+#define MACHINE_POWER6 ".machine \"power6\""
+#endif
+
 /* We make sure to zero fp after we use it in order to prevent stale data
    in an fp register from making a test-case pass erroneously.  */
 # define _SET_DI_FPSCR(__fpscr)						\
@@ -113,7 +119,7 @@ typedef unsigned int si_fpscr_t __attribute__ ((__mode__ (__SI__)));
     fr = u.d;								\
     /* Set the entire 64-bit FPSCR.  */					\
     __asm__ (".machine push; "						\
-	     ".machine \"power6\"; "					\
+	     MACHINE_POWER6 "; "					\
 	     "mtfsf 255,%0,1,0; "					\
 	     ".machine pop" : : "f" (fr));				\
     fr = 0.0;								\
