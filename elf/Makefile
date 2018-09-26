@@ -1294,6 +1294,11 @@ $(objpfx)tst-unique2.out: $(objpfx)tst-unique2mod2.so
 $(objpfx)tst-unique3: $(libdl) $(objpfx)tst-unique3lib.so
 $(objpfx)tst-unique3.out: $(objpfx)tst-unique3lib2.so
 
+# clang optimization drops seemingly-unused instantiations
+ifeq ($(with-clang),yes)
+CFLAGS-tst-unique4lib.cc += -O0
+endif
+
 $(objpfx)tst-unique4: $(objpfx)tst-unique4lib.so
 
 $(objpfx)tst-nodelete: $(libdl)
