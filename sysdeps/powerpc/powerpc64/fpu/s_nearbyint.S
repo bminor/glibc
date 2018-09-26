@@ -42,7 +42,11 @@ ENTRY (__nearbyint, 4)
 	fcmpu	cr7,fp1,fp12	/* if (x > 0.0) */
 	ble	cr7, L(lessthanzero)
 	mffs	fp11
+#if defined __clang__
+	mtfsb0	31	/* Disable FE_INEXACT exception */
+#else
 	mtfsb0	4*cr7+lt	/* Disable FE_INEXACT exception */
+#endif
 	fadd	fp1,fp1,fp13	/* x+= TWO52 */
 	fsub	fp1,fp1,fp13	/* x-= TWO52 */
 	fabs	fp1,fp1		/* if (x == 0.0) */
@@ -51,7 +55,11 @@ ENTRY (__nearbyint, 4)
 L(lessthanzero):
 	bgelr	cr7		/* if (x < 0.0) */
 	mffs	fp11
+#if defined __clang__
+	mtfsb0	31
+#else
 	mtfsb0	4*cr7+lt
+#endif
 	fsub	fp1,fp1,fp13	/* x -= TWO52 */
 	fadd	fp1,fp1,fp13	/* x += TWO52 */
 	fnabs	fp1,fp1		/* if (x == 0.0) */
