@@ -10,6 +10,7 @@ ifeq (yes,$(build-shared))
 pic-ccflag = -fpic
 endif
 
+ifeq ($(with-clang),no)
 # These flags prevent FPU or Altivec registers from being used,
 # for code called in contexts that is not allowed to touch those registers.
 # Stupid GCC requires us to pass all these ridiculous switches.  We need to
@@ -40,10 +41,14 @@ ifeq ($(subdir),elf)
 +cflags += -finline-limit=2000
 endif
 
+endif # clang
+
 ifeq ($(subdir),gmon)
 # The assembly functions assume that fp arg regs are not trashed.
 # Compiling with -msoft-float ensures that fp regs are not used
 # for moving memory around.
+ifeq ($(with-clang),no)
 CFLAGS-mcount.c += $(no-special-regs)
+endif # clang
 sysdep_routines += ppc-mcount
 endif
