@@ -27,7 +27,7 @@ static inline int
 __float_and_test28 (float num, float value)
 {
   float ret;
-#ifdef _ARCH_PWR7
+#if defined _ARCH_PWR7 && !defined __clang__
   union {
     int i;
     float f;
@@ -51,7 +51,7 @@ static inline int
 __float_and_test24 (float num, float value)
 {
   float ret;
-#ifdef _ARCH_PWR7
+#if defined _ARCH_PWR7 && !defined __clang__
   union {
     int i;
     float f;
@@ -73,7 +73,7 @@ static inline float
 __float_and8 (float num)
 {
   float ret;
-#ifdef _ARCH_PWR7
+#if defined _ARCH_PWR7 && !defined __clang__
   union {
     int i;
     float f;
@@ -95,7 +95,7 @@ static inline int32_t
 __float_get_exp (float num)
 {
   int32_t inum;
-#ifdef _ARCH_PWR7
+#if defined _ARCH_PWR7 && !defined __clang__
   float ret;
   union {
     int i;
