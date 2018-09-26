@@ -25,7 +25,7 @@
     adjacent to the lock word after the Store Conditional and the hint
     should be false.  */
 
-#if defined _ARCH_PWR6 || defined _ARCH_PWR6X
+#if (defined _ARCH_PWR6 || defined _ARCH_PWR6X) && !defined __clang__
 # define MUTEX_HINT_ACQ	",1"
 # define MUTEX_HINT_REL	",0"
 #else
@@ -45,7 +45,7 @@
    value as unsigned.  So we explicitly clear the high 32 bits in oldval.  */
 #define __arch_compare_and_exchange_bool_32_acq(mem, newval, oldval) \
 ({									      \
-  unsigned int __tmp, __tmp2;						      \
+  unsigned int __tmp; unsigned long __tmp2;						\
   __asm __volatile ("   clrldi  %1,%1,32\n"				      \
 		    "1:	lwarx	%0,0,%2" MUTEX_HINT_ACQ "\n"	 	      \
 		    "	subf.	%0,%1,%0\n"				      \
