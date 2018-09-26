@@ -1,6 +1,8 @@
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # Local configure fragment for sysdeps/powerpc/powerpc64le.
 
+if test "$with_clang" = no; then
+
 dnl Require binary128 floating point support on powerpc64le (available in
 dnl GCC 6.2).
 AC_CACHE_CHECK([if $CC supports binary128 floating point type],
@@ -28,6 +30,8 @@ foobar (__float128 x)
 CFLAGS="$save_CFLAGS"])
 AS_IF([test "$libc_cv_compiler_powerpc64le_binary128_ok" != "yes"],
       [critic_missing="$critic_missing binary128 floating point type (GCC >= 6.2) is required on powerpc64le."])
+
+fi # clang
 
 dnl Require at least POWER8 on powerpc64le
 OLD_CFLAGS="$CFLAGS"

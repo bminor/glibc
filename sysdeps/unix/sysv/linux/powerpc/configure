@@ -1,6 +1,7 @@
 # This file is generated from configure.ac by Autoconf.  DO NOT EDIT!
  # Local configure fragment for sysdeps/unix/sysv/linux/powerpc/.
 
+if test "$with_clang" = no; then
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $CC $CFLAGS -mlong-double-128 uses IBM extended format" >&5
 $as_echo_n "checking whether $CC $CFLAGS -mlong-double-128 uses IBM extended format... " >&6; }
@@ -75,5 +76,7 @@ $as_echo "$libc_cv_mabi_ibmlongdouble" >&6; }
     as_fn_error $? "this configuration requires -mlong-double-128 IBM extended format support" "$LINENO" 5
   fi
 fi
+
+fi # clang
 
 ldd_rewrite_script=sysdeps/unix/sysv/linux/powerpc/ldd-rewrite.sed

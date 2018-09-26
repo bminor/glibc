@@ -2,6 +2,8 @@ sinclude(./aclocal.m4)dnl Autoconf lossage
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # Local configure fragment for sysdeps/unix/sysv/linux/powerpc/.
 
+if test "$with_clang" = no; then
+
 AC_CACHE_CHECK(whether $CC $CFLAGS -mlong-double-128 uses IBM extended format,
 	       libc_cv_mlong_double_128ibm, [dnl
 save_CFLAGS="$CFLAGS"
@@ -35,5 +37,7 @@ long double foobar (long double x) { return x; }],
     AC_MSG_ERROR([this configuration requires -mlong-double-128 IBM extended format support])
   fi
 fi
+
+fi # clang
 
 ldd_rewrite_script=sysdeps/unix/sysv/linux/powerpc/ldd-rewrite.sed
