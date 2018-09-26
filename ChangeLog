@@ -1,3 +1,8 @@
+2018-09-26  Andreas Schwab  <schwab@suse.de>
+
+	* Makefile ($(common-objpfx)testrun.sh): Remove leading space from
+	output.
+
 2018-09-25  Adam J. Richte  <adam_richter2004@yahoo.com>
 	    Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 	    Fangrui Song  <maskray@google.com>

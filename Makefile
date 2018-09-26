@@ -181,7 +181,7 @@ endef
 # the current libc build for testing.
 $(common-objpfx)testrun.sh: $(common-objpfx)config.make \
 			    $(..)Makeconfig $(..)Makefile
-	$(file >$@T, $(testrun-script))
+	$(file >$@T,$(testrun-script))
 	chmod a+x $@T
 	mv -f $@T $@
 postclean-generated += testrun.sh
