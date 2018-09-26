@@ -2,6 +2,8 @@ sinclude(./aclocal.m4)dnl Autoconf lossage
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # Local configure fragment for sysdeps/ieee754/ldbl-opt/.
 
+if test "$with_clang" = no; then
+
 AC_CACHE_CHECK(whether $CC $CFLAGS supports -mlong-double-128,
 	       libc_cv_mlong_double_128, [dnl
 save_CFLAGS="$CFLAGS"
@@ -17,3 +19,5 @@ CFLAGS="$save_CFLAGS"])
 if test "$libc_cv_mlong_double_128" = no; then
   AC_MSG_ERROR([this configuration requires -mlong-double-128 support])
 fi
+
+fi # with_clang

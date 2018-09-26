@@ -2,8 +2,11 @@
 # -mlong-double-128 option is used (or when it becomes a default
 # when -mlong-double-64 is not used).
 long-double-fcts = yes
+# Skip this for clang (or stub out whole dir?)
+ifeq ($(with-clang),no)
 ifeq (,$(filter -mlong-double-128,$(sysdep-CFLAGS)))
 sysdep-CFLAGS += -mlong-double-128
+endif
 endif
 
 ifeq ($(subdir),math)

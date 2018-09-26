@@ -1,4 +1,9 @@
 # Include this earlier so it can be used earlier in Makefiles,
 # and sysdep/ makefiles.
 float128-fcts = $(enable-float128)
+# on ppc, float64x is tied to float128
+ifeq ($(findstring powerpc,$(config-sysdirs)),powerpc)
+float64x-alias-fcts = $(enable-float128)
+else
 float64x-alias-fcts = yes
+endif

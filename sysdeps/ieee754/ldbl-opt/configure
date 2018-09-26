@@ -1,6 +1,7 @@
 # This file is generated from configure.ac by Autoconf.  DO NOT EDIT!
  # Local configure fragment for sysdeps/ieee754/ldbl-opt/.
 
+if test "$with_clang" = no; then
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $CC $CFLAGS supports -mlong-double-128" >&5
 $as_echo_n "checking whether $CC $CFLAGS supports -mlong-double-128... " >&6; }
@@ -37,3 +38,5 @@ $as_echo "$libc_cv_mlong_double_128" >&6; }
 if test "$libc_cv_mlong_double_128" = no; then
   as_fn_error $? "this configuration requires -mlong-double-128 support" "$LINENO" 5
 fi
+
+fi # with_clang
