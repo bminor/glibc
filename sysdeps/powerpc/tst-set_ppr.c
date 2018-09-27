@@ -44,7 +44,12 @@ get_thread_priority (void)
 {
   /* Read the PPR.  */
   ppr_t ppr;
+#if defined __clang__
+  /* Temporary until clang knows about mfppr.  */
+  asm volatile ("mfspr %0,896" : "=r"(ppr));
+#else
   asm volatile (MFPPR" %0" : "=r"(ppr));
+#endif
   /* Return the thread priority value.  */
   return EXTRACT_THREAD_PRIORITY (ppr);
 }
