@@ -693,7 +693,7 @@ __kernel_standard(double x, double y, int type)
 		/* scalb underflow */
 		exc.type = UNDERFLOW;
 		exc.name = CSTR ("scalb");
-		exc.retval = __copysign(zero,x);
+		exc.retval = copysign(zero,x);
 		if (_LIB_VERSION == _POSIX_)
 		  __set_errno (ERANGE);
 		else if (!matherr(&exc)) {
@@ -808,7 +808,7 @@ __kernel_standard(double x, double y, int type)
 		/* tgamma(finite) overflow */
 		exc.type = OVERFLOW;
 		exc.name = CSTR ("tgamma");
-		exc.retval = __copysign (HUGE_VAL, x);
+		exc.retval = copysign (HUGE_VAL, x);
 		if (_LIB_VERSION == _POSIX_)
 		  __set_errno (ERANGE);
 		else if (!matherr(&exc)) {
@@ -930,7 +930,7 @@ __kernel_standard(double x, double y, int type)
 		/* tgamma(+-0) */
 		exc.type = SING;
 		exc.name = CSTR ("tgamma");
-		exc.retval = __copysign (HUGE_VAL, x);
+		exc.retval = copysign (HUGE_VAL, x);
 		if (_LIB_VERSION == _POSIX_)
 		  __set_errno (ERANGE);
 		else if (!matherr(&exc)) {

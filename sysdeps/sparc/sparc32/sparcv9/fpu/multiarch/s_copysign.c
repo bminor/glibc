@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#define NO_MATH_REDIRECT
 #define __copysign __redirect_copysign
 #include <math.h>
 #include <math_ldbl_opt.h>

@@ -71,6 +71,6 @@ __ieee754_atanh (double x)
       return x / 0.0;
     }
 
-  return __copysign (t, x);
+  return copysign (t, x);
 }
 strong_alias (__ieee754_atanh, __atanh_finite)

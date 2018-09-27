@@ -40,9 +40,9 @@ __scalbln (double x, long int n)
 	    }
 	if (__builtin_expect(k==0x7ff, 0)) return x+x;	/* NaN or Inf */
 	if (__builtin_expect(n< -50000, 0))
-	  return tiny*__copysign(tiny,x); /*underflow*/
+	  return tiny*copysign(tiny,x); /*underflow*/
 	if (__builtin_expect(n> 50000 || k+n > 0x7fe, 0))
-	  return huge*__copysign(huge,x); /* overflow  */
+	  return huge*copysign(huge,x); /* overflow  */
 	/* Now k and n are bounded we know that k = k+n does not
 	   overflow.  */
 	k = k+n;
@@ -50,7 +50,7 @@ __scalbln (double x, long int n)
 	    {INSERT_WORDS64(x,(ix&UINT64_C(0x800fffffffffffff))|(k<<52));
 	      return x;}
 	if (k <= -54)
-	  return tiny*__copysign(tiny,x);	/*underflow*/
+	  return tiny*copysign(tiny,x);	/*underflow*/
 	k += 54;				/* subnormal result */
 	INSERT_WORDS64(x,(ix&INT64_C(0x800fffffffffffff))|(k<<52));
 	return x*twom54;

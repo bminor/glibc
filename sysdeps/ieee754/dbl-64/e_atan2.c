@@ -64,7 +64,7 @@ static double atan2Mp (double, double, const int[]);
 static double
 signArctan2 (double y, double z)
 {
-  return __copysign (z, y);
+  return copysign (z, y);
 }
 
 static double normalized (double, double, double, double);

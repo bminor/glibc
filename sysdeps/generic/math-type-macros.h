@@ -101,7 +101,7 @@
 #define M_HUGE_VAL (M_SUF (__builtin_huge_val) ())
 
 /* Helper macros for commonly used functions.  */
-#define M_COPYSIGN M_SUF (__copysign)
+#define M_COPYSIGN M_SUF (copysign)
 #define M_FABS M_SUF (fabs)
 #define M_SINCOS M_SUF (__sincos)
 #define M_SCALBN M_SUF (__scalbn)

@@ -1,6 +1,89 @@
 2018-09-27  Joseph Myers  <joseph@codesourcery.com>
 
 	* include/math.h [!_ISOMAC && !(__FINITE_MATH_ONLY__ &&
+	__FINITE_MATH_ONLY__ > 0) && !NO_MATH_REDIRECT]
+	(MATH_REDIRECT_BINARY_ARGS): New macro.
+	[!_ISOMAC && !(__FINITE_MATH_ONLY__ && __FINITE_MATH_ONLY__ > 0)
+	&& !NO_MATH_REDIRECT] (copysign): Redirect using MATH_REDIRECT.
+	* sysdeps/alpha/fpu/s_copysign.c: Define NO_MATH_REDIRECT before
+	header inclusion.
+	* sysdeps/alpha/fpu/s_copysignf.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_copysign.c: Likewise.
+	* sysdeps/ieee754/float128/s_copysignf128.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_copysignf.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_copysignl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_copysignl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_copysignl.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_copysign.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_copysignf.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_copysign.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_copysignf.c: Likewise.
+	* sysdeps/riscv/rvd/s_copysign.c: Likewise.
+	* sysdeps/riscv/rvf/s_copysignf.c: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_copysign.c:
+	Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_copysignf.c:
+	Likewise.
+	* sysdeps/generic/math_private_calls.h
+	[!__MATH_DECLARING_LONG_DOUBLE || !NO_LONG_DOUBLE] (__copysign):
+	Do not declare and define as an inline function.
+	* math/divtc3.c (__divtc3): Use copysign functions instead of
+	__copysign variants.
+	* math/multc3.c (__multc3): Likewise.
+	* sysdeps/generic/math-type-macros.h (M_COPYSIGN): Likewise.
+	* sysdeps/ieee754/dbl-64/e_atan2.c (signArctan2): Likewise.
+	* sysdeps/ieee754/dbl-64/e_atanh.c (__ieee754_atanh): Likewise.
+	* sysdeps/ieee754/dbl-64/e_gamma_r.c (__ieee754_gamma_r):
+	Likewise.
+	* sysdeps/ieee754/dbl-64/e_jn.c (__ieee754_jn): Likewise.
+	(__ieee754_yn): Likewise.
+	* sysdeps/ieee754/dbl-64/s_asinh.c (__asinh): Likewise.
+	* sysdeps/ieee754/dbl-64/s_atan.c (__signArctan): Likewise.
+	* sysdeps/ieee754/dbl-64/s_scalbln.c (__scalbln): Likewise.
+	* sysdeps/ieee754/dbl-64/s_scalbn.c (__scalbn): Likewise.
+	* sysdeps/ieee754/dbl-64/s_sin.c (do_sin): Likewise.
+	(__sin): Likewise.
+	* sysdeps/ieee754/dbl-64/s_sincos.c (__sincos): Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_nearbyint.c (__nearbyint):
+	Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_scalbln.c (__scalbln):
+	Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_scalbn.c (__scalbn):
+	Likewise.
+	* sysdeps/ieee754/flt-32/e_atanhf.c (__ieee754_atanhf): Likewise.
+	* sysdeps/ieee754/flt-32/e_gammaf_r.c (__ieee754_gammaf_r):
+	Likewise.
+	* sysdeps/ieee754/flt-32/e_jnf.c (__ieee754_jnf): Likewise.
+	(__ieee754_ynf): Likewise.
+	* sysdeps/ieee754/flt-32/s_asinhf.c (__asinhf): Likewise.
+	* sysdeps/ieee754/flt-32/s_scalbnf.c (__scalbnf): Likewise.
+	* sysdeps/ieee754/k_standard.c (__kernel_standard): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_gammal_r.c (__ieee754_gammal_r):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128/e_jnl.c (__ieee754_jnl): Likewise.
+	(__ieee754_ynl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_scalblnl.c (__scalblnl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_scalbnl.c (__scalbnl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_gammal_r.c (__ieee754_gammal_r):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_jnl.c (__ieee754_jnl): Likewise.
+	(__ieee754_ynl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_fmal.c (__fmal): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_scalblnl.c (__scalblnl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_scalbnl.c (__scalbnl): Likewise.
+	* sysdeps/ieee754/ldbl-96/e_gammal_r.c (__ieee754_gammal_r):
+	Likewise.
+	* sysdeps/ieee754/ldbl-96/e_jnl.c (__ieee754_jnl): Likewise.
+	(__ieee754_ynl)
+	* sysdeps/ieee754/ldbl-96/s_asinhl.c (__asinhl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_scalblnl.c (__scalblnl): Likewise.
+	* sysdeps/ieee754/ldbl-opt/nldbl-copysign.c (copysignl): Likewise.
+	* sysdeps/powerpc/power5+/fpu/s_modf.c (__modf): Likewise.
+	* sysdeps/powerpc/power5+/fpu/s_modff.c (__modff): Likewise.
+
+	* include/math.h [!_ISOMAC && !(__FINITE_MATH_ONLY__ &&
 	__FINITE_MATH_ONLY__ > 0) && !NO_MATH_REDIRECT] (round): Redirect
 	using MATH_REDIRECT.
 	* sysdeps/aarch64/fpu/s_round.c: Define NO_MATH_REDIRECT before

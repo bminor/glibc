@@ -63,7 +63,7 @@ __sincos (double x, double *sinx, double *cosx)
       y = hp0 - fabs (x);
       a = y + hp1;
       da = (y - a) + hp1;
-      *sinx = __copysign (do_cos (a, da), x);
+      *sinx = copysign (do_cos (a, da), x);
       *cosx = do_sin (a, da);
       return;
     }

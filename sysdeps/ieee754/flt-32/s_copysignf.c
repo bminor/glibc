@@ -23,6 +23,7 @@ static char rcsid[] = "$NetBSD: s_copysignf.c,v 1.4 1995/05/10 20:46:59 jtc Exp 
  * with the sign bit of y.
  */
 
+#define NO_MATH_REDIRECT
 #include <math.h>
 #include <math_private.h>
 #include <libm-alias-float.h>

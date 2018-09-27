@@ -71,6 +71,6 @@ __ieee754_atanhf (float x)
       return x / 0.0f;
     }
 
-  return __copysignf (t, x);
+  return copysignf (t, x);
 }
 strong_alias (__ieee754_atanhf, __atanhf_finite)

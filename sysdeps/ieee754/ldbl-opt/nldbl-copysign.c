@@ -4,5 +4,5 @@ double
 attribute_hidden
 copysignl (double x, double y)
 {
-  return __copysign (x, y);
+  return copysign (x, y);
 }

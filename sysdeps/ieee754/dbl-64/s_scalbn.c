@@ -42,9 +42,9 @@ __scalbn (double x, int n)
   if (__glibc_unlikely (k == 0x7ff))
     return x + x;                                       /* NaN or Inf */
   if (__glibc_unlikely (n < -50000))
-    return tiny * __copysign (tiny, x);   /*underflow*/
+    return tiny * copysign (tiny, x);   /*underflow*/
   if (__glibc_unlikely (n > 50000 || k + n > 0x7fe))
-    return huge * __copysign (huge, x);   /* overflow  */
+    return huge * copysign (huge, x);   /* overflow  */
   /* Now k and n are bounded we know that k = k+n does not
      overflow.  */
   k = k + n;
@@ -53,7 +53,7 @@ __scalbn (double x, int n)
       SET_HIGH_WORD (x, (hx & 0x800fffff) | (k << 20)); return x;
     }
   if (k <= -54)
-    return tiny * __copysign (tiny, x);         /*underflow*/
+    return tiny * copysign (tiny, x);         /*underflow*/
   k += 54;                                      /* subnormal result */
   SET_HIGH_WORD (x, (hx & 0x800fffff) | (k << 20));
   return x * twom54;

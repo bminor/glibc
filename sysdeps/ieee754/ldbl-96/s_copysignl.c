@@ -24,6 +24,7 @@ static char rcsid[] = "$NetBSD: $";
  * with the sign bit of y.
  */
 
+#define NO_MATH_REDIRECT
 #include <math.h>
 #include <math_private.h>
 #include <libm-alias-ldouble.h>

@@ -199,22 +199,22 @@ __ieee754_gamma_r (double x, int *signgamp)
     {
       if (*signgamp < 0)
 	{
-	  ret = math_narrow_eval (-__copysign (DBL_MAX, ret) * DBL_MAX);
+	  ret = math_narrow_eval (-copysign (DBL_MAX, ret) * DBL_MAX);
 	  ret = -ret;
 	}
       else
-	ret = math_narrow_eval (__copysign (DBL_MAX, ret) * DBL_MAX);
+	ret = math_narrow_eval (copysign (DBL_MAX, ret) * DBL_MAX);
       return ret;
     }
   else if (ret == 0)
     {
       if (*signgamp < 0)
 	{
-	  ret = math_narrow_eval (-__copysign (DBL_MIN, ret) * DBL_MIN);
+	  ret = math_narrow_eval (-copysign (DBL_MIN, ret) * DBL_MIN);
 	  ret = -ret;
 	}
       else
-	ret = math_narrow_eval (__copysign (DBL_MIN, ret) * DBL_MIN);
+	ret = math_narrow_eval (copysign (DBL_MIN, ret) * DBL_MIN);
       return ret;
     }
   else

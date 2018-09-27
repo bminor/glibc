@@ -57,7 +57,7 @@ static double atanMp (double, const int[]);
 static double
 __signArctan (double x, double y)
 {
-  return __copysign (y, x);
+  return copysign (y, x);
 }
 
 

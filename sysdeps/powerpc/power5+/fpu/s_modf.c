@@ -26,7 +26,7 @@ __modf (double x, double *iptr)
   if (__builtin_isinf (x))
     {
       *iptr = x;
-      return __copysign (0.0, x);
+      return copysign (0.0, x);
     }
   else if (__builtin_isnan (x))
     {
@@ -37,12 +37,12 @@ __modf (double x, double *iptr)
   if (x >= 0.0)
     {
       *iptr = floor (x);
-      return __copysign (x - *iptr, x);
+      return copysign (x - *iptr, x);
     }
   else
     {
       *iptr = ceil (x);
-      return __copysign (x - *iptr, x);
+      return copysign (x - *iptr, x);
     }
 }
 libm_alias_double (__modf, modf)

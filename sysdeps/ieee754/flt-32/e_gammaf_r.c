@@ -191,22 +191,22 @@ __ieee754_gammaf_r (float x, int *signgamp)
     {
       if (*signgamp < 0)
 	{
-	  ret = math_narrow_eval (-__copysignf (FLT_MAX, ret) * FLT_MAX);
+	  ret = math_narrow_eval (-copysignf (FLT_MAX, ret) * FLT_MAX);
 	  ret = -ret;
 	}
       else
-	ret = math_narrow_eval (__copysignf (FLT_MAX, ret) * FLT_MAX);
+	ret = math_narrow_eval (copysignf (FLT_MAX, ret) * FLT_MAX);
       return ret;
     }
   else if (ret == 0)
     {
       if (*signgamp < 0)
 	{
-	  ret = math_narrow_eval (-__copysignf (FLT_MIN, ret) * FLT_MIN);
+	  ret = math_narrow_eval (-copysignf (FLT_MIN, ret) * FLT_MIN);
 	  ret = -ret;
 	}
       else
-	ret = math_narrow_eval (__copysignf (FLT_MIN, ret) * FLT_MIN);
+	ret = math_narrow_eval (copysignf (FLT_MIN, ret) * FLT_MIN);
       return ret;
     }
   else

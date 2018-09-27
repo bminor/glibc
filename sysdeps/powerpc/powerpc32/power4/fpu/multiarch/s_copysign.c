@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#define NO_MATH_REDIRECT
 /* Redefine copysign so that the compiler won't complain about the type
    mismatch with the IFUNC selector in strong_alias below.  */
 #undef __copysign

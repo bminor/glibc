@@ -62,6 +62,6 @@ long double __asinhl(long double x)
 		w =__log1pl(xa+t/(one+sqrtl(one+t)));
 	    }
 	}
-	return __copysignl(w, x);
+	return copysignl(w, x);
 }
 libm_alias_ldouble (__asinh, asinh)

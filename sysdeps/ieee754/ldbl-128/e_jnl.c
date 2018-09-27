@@ -299,7 +299,7 @@ __ieee754_jnl (int n, _Float128 x)
   }
   if (ret == 0)
     {
-      ret = __copysignl (LDBL_MIN, ret) * LDBL_MIN;
+      ret = copysignl (LDBL_MIN, ret) * LDBL_MIN;
       __set_errno (ERANGE);
     }
   else
@@ -415,7 +415,7 @@ __ieee754_ynl (int n, _Float128 x)
   }
  out:
   if (isinf (ret))
-    ret = __copysignl (LDBL_MAX, ret) * LDBL_MAX;
+    ret = copysignl (LDBL_MAX, ret) * LDBL_MAX;
   return ret;
 }
 strong_alias (__ieee754_ynl, __ynl_finite)

@@ -203,16 +203,16 @@ __ieee754_gammal_r (_Float128 x, int *signgamp)
   if (isinf (ret) && x != 0)
     {
       if (*signgamp < 0)
-	return -(-__copysignl (LDBL_MAX, ret) * LDBL_MAX);
+	return -(-copysignl (LDBL_MAX, ret) * LDBL_MAX);
       else
-	return __copysignl (LDBL_MAX, ret) * LDBL_MAX;
+	return copysignl (LDBL_MAX, ret) * LDBL_MAX;
     }
   else if (ret == 0)
     {
       if (*signgamp < 0)
-	return -(-__copysignl (LDBL_MIN, ret) * LDBL_MIN);
+	return -(-copysignl (LDBL_MIN, ret) * LDBL_MIN);
       else
-	return __copysignl (LDBL_MIN, ret) * LDBL_MIN;
+	return copysignl (LDBL_MIN, ret) * LDBL_MIN;
     }
   else
     return ret;

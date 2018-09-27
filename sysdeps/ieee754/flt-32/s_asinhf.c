@@ -47,6 +47,6 @@ __asinhf(float x)
 		w =__log1pf(xa+t/(one+sqrtf(one+t)));
 	    }
 	}
-	return __copysignf(w, x);
+	return copysignf(w, x);
 }
 libm_alias_float (__asinh, asinh)

@@ -65,6 +65,6 @@ __asinh (double x)
 	  w = __log1p (xa + t / (one + sqrt (one + t)));
 	}
     }
-  return __copysign (w, x);
+  return copysign (w, x);
 }
 libm_alias_double (__asinh, asinh)

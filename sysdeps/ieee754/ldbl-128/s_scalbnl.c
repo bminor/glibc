@@ -46,16 +46,16 @@ _Float128 __scalbnl (_Float128 x, int n)
 	    k = ((hx>>48)&0x7fff) - 114;
 	}
         if (k==0x7fff) return x+x;		/* NaN or Inf */
-	if (n< -50000) return tiny*__copysignl(tiny,x); /*underflow*/
+	if (n< -50000) return tiny*copysignl(tiny,x); /*underflow*/
         if (n> 50000 || k+n > 0x7ffe)
-	  return huge*__copysignl(huge,x); /* overflow  */
+	  return huge*copysignl(huge,x); /* overflow  */
 	/* Now k and n are bounded we know that k = k+n does not
 	   overflow.  */
         k = k+n;
         if (k > 0) 				/* normal result */
 	    {SET_LDOUBLE_MSW64(x,(hx&0x8000ffffffffffffULL)|(k<<48)); return x;}
         if (k <= -114)
-	  return tiny*__copysignl(tiny,x); 	/*underflow*/
+	  return tiny*copysignl(tiny,x); 	/*underflow*/
         k += 114;				/* subnormal result */
 	SET_LDOUBLE_MSW64(x,(hx&0x8000ffffffffffffULL)|(k<<48));
         return x*twom114;

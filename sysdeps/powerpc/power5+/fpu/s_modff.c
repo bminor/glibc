@@ -25,7 +25,7 @@ __modff (float x, float *iptr)
   if (__builtin_isinff (x))
     {
       *iptr = x;
-      return __copysignf (0.0, x);
+      return copysignf (0.0, x);
     }
   else if (__builtin_isnanf (x))
     {
@@ -36,12 +36,12 @@ __modff (float x, float *iptr)
   if (x >= 0.0)
     {
       *iptr = floorf (x);
-      return __copysignf (x - *iptr, x);
+      return copysignf (x - *iptr, x);
     }
   else
     {
       *iptr = ceilf (x);
-      return __copysignf (x - *iptr, x);
+      return copysignf (x - *iptr, x);
     }
 }
 libm_alias_float (__modf, modf)

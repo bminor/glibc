@@ -244,7 +244,7 @@ __fmal (long double x, long double y, long double z)
   scale_val = math_opt_barrier (scale_val);
   scale_val = __scalbn (scale_val, scale_exp);
   if (fabs (scale_val) == DBL_MAX)
-    return __copysignl (LDBL_MAX, scale_val);
+    return copysignl (LDBL_MAX, scale_val);
   math_check_force_underflow (scale_val);
   return scale_val;
 

@@ -250,7 +250,7 @@ __ieee754_jn (int n, double x)
   }
   if (ret == 0)
     {
-      ret = math_narrow_eval (__copysign (DBL_MIN, ret) * DBL_MIN);
+      ret = math_narrow_eval (copysign (DBL_MIN, ret) * DBL_MIN);
       __set_errno (ERANGE);
     }
   else
@@ -344,7 +344,7 @@ __ieee754_yn (int n, double x)
   }
  out:
   if (isinf (ret))
-    ret = __copysign (DBL_MAX, ret) * DBL_MAX;
+    ret = copysign (DBL_MAX, ret) * DBL_MAX;
   return ret;
 }
 strong_alias (__ieee754_yn, __yn_finite)
