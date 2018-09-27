@@ -58,7 +58,7 @@ f1b (void)
 static void
 f1a (void)
 {
-  char st2[32768];
+  static char st2[32768];
   puts ("start f1a");
   if (getcontext (&ctx[2]) != 0)
     {
@@ -93,7 +93,7 @@ f1a (void)
 static int
 do_test (void)
 {
-  char st1[32768];
+  static char st1[32768];
   puts ("making contexts");
   if (getcontext (&ctx[0]) != 0)
     {
