@@ -88,7 +88,7 @@ gamma_positive (double x, int *exp2_adj)
 	 starting by computing pow (X_ADJ, X_ADJ) with a power of 2
 	 factored out.  */
       double exp_adj = -eps;
-      double x_adj_int = __round (x_adj);
+      double x_adj_int = round (x_adj);
       double x_adj_frac = x_adj - x_adj_int;
       int x_adj_log2;
       double x_adj_mant = __frexp (x_adj, &x_adj_log2);

@@ -81,7 +81,7 @@ gammaf_positive (float x, int *exp2_adj)
 	 starting by computing pow (X_ADJ, X_ADJ) with a power of 2
 	 factored out.  */
       float exp_adj = -eps;
-      float x_adj_int = __roundf (x_adj);
+      float x_adj_int = roundf (x_adj);
       float x_adj_frac = x_adj - x_adj_int;
       int x_adj_log2;
       float x_adj_mant = __frexpf (x_adj, &x_adj_log2);

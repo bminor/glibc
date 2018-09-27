@@ -20,11 +20,14 @@
 /* This has been coded in assembler because GCC makes such a mess of it
    when it's coded in C.  */
 
+#define NO_MATH_REDIRECT
 #include <math.h>
 #include <math_private.h>
 #include <math_ldbl_opt.h>
 #include <float.h>
 #include <ieee754.h>
+
+double round (double) asm ("__round");
 
 
 long double
@@ -39,7 +42,7 @@ __roundl (long double x)
 			&& __builtin_isless (__builtin_fabs (xh),
 					     __builtin_inf ()), 1))
     {
-      hi = __round (xh);
+      hi = round (xh);
       if (hi != xh)
 	{
 	  /* The high part is not an integer; the low part only
@@ -62,7 +65,7 @@ __roundl (long double x)
       else
 	{
 	  /* The high part is a nonzero integer.  */
-	  lo = __round (xl);
+	  lo = round (xl);
 	  if (fabs (lo - xl) == 0.5)
 	    {
 	      if (xh > 0 && xl < 0)

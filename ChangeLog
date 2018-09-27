@@ -1,3 +1,43 @@
+2018-09-27  Joseph Myers  <joseph@codesourcery.com>
+
+	* include/math.h [!_ISOMAC && !(__FINITE_MATH_ONLY__ &&
+	__FINITE_MATH_ONLY__ > 0) && !NO_MATH_REDIRECT] (round): Redirect
+	using MATH_REDIRECT.
+	* sysdeps/aarch64/fpu/s_round.c: Define NO_MATH_REDIRECT before
+	header inclusion.
+	* sysdeps/aarch64/fpu/s_roundf.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_round.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_round.c: Likewise.
+	* sysdeps/ieee754/float128/s_roundf128.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_roundf.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_roundl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_roundl.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_round.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_roundf.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_round.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_roundf.c: Likewise.
+	* sysdeps/riscv/rv64/rvd/s_round.c: Likewise.
+	* sysdeps/riscv/rvf/s_roundf.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_roundl.c: Likewise.
+	(round): Redirect to __round.
+	(__roundl): Call round instead of __round.
+	* sysdeps/powerpc/fpu/math_private.h [_ARCH_PWR5X] (__round):
+	Remove macro.
+	[_ARCH_PWR5X] (__roundf): Likewise.
+	* sysdeps/ieee754/dbl-64/e_gamma_r.c (gamma_positive): Use round
+	functions instead of __round variants.
+	* sysdeps/ieee754/flt-32/e_gammaf_r.c (gammaf_positive): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_gammal_r.c (gammal_positive):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_gammal_r.c (gammal_positive):
+	Likewise.
+	* sysdeps/ieee754/ldbl-96/e_gammal_r.c (gammal_positive):
+	Likewise.
+	* sysdeps/x86/fpu/powl_helper.c (__powl_helper): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_expl.c (lroundl): Redirect to
+	__lroundl.
+	(__ieee754_expl): Call roundl instead of __roundl.
+
 2018-09-27  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #23717]

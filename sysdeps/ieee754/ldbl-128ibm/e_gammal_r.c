@@ -95,7 +95,7 @@ gammal_positive (long double x, int *exp2_adj)
 	 starting by computing pow (X_ADJ, X_ADJ) with a power of 2
 	 factored out.  */
       long double exp_adj = -eps;
-      long double x_adj_int = __roundl (x_adj);
+      long double x_adj_int = roundl (x_adj);
       long double x_adj_frac = x_adj - x_adj_int;
       int x_adj_log2;
       long double x_adj_mant = __frexpl (x_adj, &x_adj_log2);

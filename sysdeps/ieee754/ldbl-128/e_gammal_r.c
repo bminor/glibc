@@ -96,7 +96,7 @@ gammal_positive (_Float128 x, int *exp2_adj)
 	 starting by computing pow (X_ADJ, X_ADJ) with a power of 2
 	 factored out.  */
       _Float128 exp_adj = -eps;
-      _Float128 x_adj_int = __roundl (x_adj);
+      _Float128 x_adj_int = roundl (x_adj);
       _Float128 x_adj_frac = x_adj - x_adj_int;
       int x_adj_log2;
       _Float128 x_adj_mant = __frexpl (x_adj, &x_adj_log2);
