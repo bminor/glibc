@@ -1,3 +1,13 @@
+2018-10-09  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #23716]
+	* sysdeps/i386/dl-cet.c: Removed.
+	* sysdeps/i386/dl-machine.h (_dl_runtime_resolve_shstk): New
+	prototype.
+	(_dl_runtime_profile_shstk): Likewise.
+	(elf_machine_runtime_setup): Use _dl_runtime_profile_shstk or
+	_dl_runtime_resolve_shstk if SHSTK is enabled by kernel.
+
 2018-10-09  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	[BZ #20209]
