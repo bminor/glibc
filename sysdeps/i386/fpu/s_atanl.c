@@ -5,7 +5,6 @@
  * Adapted for `long double' by Ulrich Drepper <drepper@cygnus.com>.
  */
 
-#include <math_private.h>
 #include <libm-alias-ldouble.h>
 
 long double

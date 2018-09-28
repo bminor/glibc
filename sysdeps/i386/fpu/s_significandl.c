@@ -4,7 +4,6 @@
  * Public domain.
  */
 
-#include <math_private.h>
 
 long double
 __significandl (long double x)

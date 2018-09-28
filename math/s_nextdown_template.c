@@ -17,7 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
-#include <math_private.h>
 
 /* Return the greatest floating-point number less than X.  */
 FLOAT

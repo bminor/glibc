@@ -21,7 +21,6 @@
 #include <fenv.h>
 #include <ieee754.h>
 #include <math-barriers.h>
-#include <math_private.h>
 #include <fenv_private.h>
 #include <libm-alias-float.h>
 

@@ -5,7 +5,6 @@
  */
 
 #include <libm-alias-ldouble.h>
-#include <math_private.h>
 
 long double
 __logbl (long double x)

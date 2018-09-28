@@ -20,7 +20,6 @@
 #include <fpu_control.h>
 #include <math.h>
 #include <math-narrow-eval.h>
-#include <math_private.h>
 #include <libm-alias-double.h>
 
 double

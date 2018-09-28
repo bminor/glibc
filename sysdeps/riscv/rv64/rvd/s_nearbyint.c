@@ -17,7 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
-#include <math_private.h>
 #include <fenv_private.h>
 #include <libm-alias-double.h>
 #include <stdint.h>

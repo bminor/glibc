@@ -25,7 +25,6 @@ static char rcsid[] = "$NetBSD: $";
 
 #define NO_MATH_REDIRECT
 #include <math.h>
-#include <math_private.h>
 #include <math_ldbl_opt.h>
 
 long double __copysignl(long double x, long double y)

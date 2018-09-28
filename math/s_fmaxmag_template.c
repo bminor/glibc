@@ -17,7 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
-#include <math_private.h>
 
 FLOAT
 M_DECL_FUNC (__fmaxmag) (FLOAT x, FLOAT y)

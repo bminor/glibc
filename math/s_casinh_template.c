@@ -19,7 +19,6 @@
 
 #include <complex.h>
 #include <math.h>
-#include <math_private.h>
 
 CFLOAT
 M_DECL_FUNC (__casinh) (CFLOAT x)

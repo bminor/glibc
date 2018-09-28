@@ -45,7 +45,6 @@
 #include <float.h>
 #include <libm-alias-double.h>
 #include <math.h>
-#include <math_private.h>
 #include <fenv_private.h>
 #include <math-underflow.h>
 #include <stap-probe.h>

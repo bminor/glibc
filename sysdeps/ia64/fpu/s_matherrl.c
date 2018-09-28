@@ -12,7 +12,6 @@
 
 
 #include <math.h>
-#include <math_private.h>
 #include <math-svid-compat.h>
 #include "libm_support.h"
 

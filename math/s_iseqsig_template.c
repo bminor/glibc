@@ -19,7 +19,6 @@
 #include <errno.h>
 #include <fenv.h>
 #include <math.h>
-#include <math_private.h>
 #include <stdbool.h>
 #include <fix-fp-int-compare-invalid.h>
 

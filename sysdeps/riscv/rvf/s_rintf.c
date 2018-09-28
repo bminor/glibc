@@ -18,7 +18,7 @@
 
 #define NO_MATH_REDIRECT
 #include <math.h>
-#include <math_private.h>
+#include <stdbool.h>
 #include <libm-alias-float.h>
 #include <stdint.h>
 

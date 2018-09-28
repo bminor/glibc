@@ -19,7 +19,6 @@
 #include <math.h>
 #include <fpu_control.h>
 #include <math-narrow-eval.h>
-#include <math_private.h>
 #include <math-narrow.h>
 
 _Float32x

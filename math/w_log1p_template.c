@@ -18,7 +18,6 @@
 
 #include <errno.h>
 #include <math.h>
-#include <math_private.h>
 
 FLOAT
 M_DECL_FUNC (__w_log1p) (FLOAT x)

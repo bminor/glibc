@@ -22,7 +22,6 @@
 #include <fenv.h>
 #include <ieee754.h>
 #include <math-barriers.h>
-#include <math_private.h>
 #include <libm-alias-double.h>
 
 /* This implementation uses rounding to odd to avoid problems with
