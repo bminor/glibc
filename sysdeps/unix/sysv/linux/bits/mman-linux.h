@@ -67,12 +67,6 @@
 #define MS_SYNC		4		/* Synchronous memory sync.  */
 #define MS_INVALIDATE	2		/* Invalidate the caches.  */
 
-/* Flags for `mremap'.  */
-#ifdef __USE_GNU
-# define MREMAP_MAYMOVE	1
-# define MREMAP_FIXED	2
-#endif
-
 /* Advice to `madvise'.  */
 #ifdef __USE_MISC
 # define MADV_NORMAL	  0	/* No further special treatment.  */

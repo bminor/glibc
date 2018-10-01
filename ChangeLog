@@ -1,3 +1,15 @@
+2018-10-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/bits/mman-linux.h [__USE_GNU]
+	(MREMAP_MAYMOVE): Do not define here.
+	[__USE_GNU] (MREMAP_FIXED): Likewise.
+	* sysdeps/unix/sysv/linux/bits/mman-shared.h [__USE_GNU]
+	(MREMAP_MAYMOVE): Define here instead.
+	[__USE_GNU] (MREMAP_FIXED): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/bits/mman.h [__USE_GNU]
+	(MREMAP_MAYMOVE): Remove.
+	[__USE_GNU] (MREMAP_FIXED): Likewise.
+
 2018-09-28  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/fromfp.h: Do not include <math_private.h>.

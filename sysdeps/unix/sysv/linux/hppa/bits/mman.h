@@ -76,12 +76,6 @@
 #define MCL_FUTURE	2		/* Lock all future mappings */
 #define MCL_ONFAULT	4		/* Lock all pages that are faulted in */
 
-/* Flags for `mremap'.  */
-#ifdef __USE_GNU
-# define MREMAP_MAYMOVE 1
-# define MREMAP_FIXED	2
-#endif
-
 /* Advice to "madvise"  */
 #ifdef __USE_MISC
 # define MADV_NORMAL	  0	/* No further special treatment */
