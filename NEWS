@@ -9,6 +9,7 @@ Version 2.28.1
 
 The following bugs are resolved with this release:
 
+  [19444] build failures with -O1 due to -Wmaybe-uninitialized
   [20209] localedata: Spelling mistake for Sunday in Greenlandic kl_GL
   [22927] libanl: properly cleanup if first helper thread creation failed
   [23400] stdlib/test-bz22786.c creates temporary files in glibc source tree
