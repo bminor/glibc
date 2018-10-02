@@ -1,3 +1,11 @@
+2018-10-09  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #20209]
+	* localedata/locales/kl_GL: (abday): Fix spelling of Sun (Sunday),
+	should be "sap" rather than "sab".
+	(day): Fix spelling of Sunday, should be "sapaat" rather than
+	"sabaat".
+
 2018-09-28  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #23579]
