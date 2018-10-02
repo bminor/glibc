@@ -17,6 +17,8 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sys/stat.h>
+#include <string.h>
+#include <_itoa.h>
 
 #define FD_TO_FILENAME_SIZE ((sizeof ("/proc/self/fd/") - 1) \
 			     + (sizeof ("4294967295") - 1) + 1)

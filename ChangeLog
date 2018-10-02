@@ -1,3 +1,7 @@
+2018-10-02  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/fd_to_filename.h: Add missing includes.
+
 2018-10-02  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/x86/Makefile (CFLAGS-elision-lock.c):
