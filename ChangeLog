@@ -1,3 +1,10 @@
+2018-10-02  Martin Jansa  <Martin.Jansa@gmail.com>
+
+	[BZ #19444]
+	* sysdeps/ieee754/soft-fp/s_fdiv.c: Include <libc-diag.h> and use
+	DIAG_PUSH_NEEDS_COMMENT, DIAG_IGNORE_NEEDS_COMMENT and
+	DIAG_POP_NEEDS_COMMENT to disable -Wmaybe-uninitialized.
+
 2018-10-02  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/fd_to_filename.h: Add missing includes.
