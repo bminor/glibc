@@ -14,6 +14,10 @@ endif
 ifeq ($(subdir),nptl)
 libpthread-sysdep_routines += elision-lock elision-unlock elision-timed \
 			      elision-trylock
+CFLAGS-elision-lock.c += -mrtm
+CFLAGS-elision-unlock.c += -mrtm
+CFLAGS-elision-timed.c += -mrtm
+CFLAGS-elision-trylock.c += -mrtm
 endif
 
 ifeq ($(subdir),elf)
