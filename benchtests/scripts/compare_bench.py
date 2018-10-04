@@ -175,7 +175,7 @@ if __name__ == '__main__':
     parser.add_argument('--schema',
                         default=os.path.join(os.path.dirname(os.path.realpath(__file__)),'benchout.schema.json'),
                         help='JSON file to validate source/dest files (default: %(default)s)')
-    parser.add_argument('--threshold', default=10.0, help='Only print those with equal or higher threshold (default: %(default)s)')
+    parser.add_argument('--threshold', default=10.0, type=float, help='Only print those with equal or higher threshold (default: %(default)s)')
 
     args = parser.parse_args()
 

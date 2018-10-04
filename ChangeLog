@@ -1,3 +1,8 @@
+2018-10-08  Leonardo Sandoval  <leonardo.sandoval.gonzalez@intel.com>
+
+	* benchtests/scripts/compare_bench.py (main): set float type on
+	threshold argument.
+
 2018-10-08  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	[BZ #23740]
