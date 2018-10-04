@@ -20,6 +20,10 @@
 #ifndef __NLDBL_COMPAT_H
 #define __NLDBL_COMPAT_H	1
 
+/* Ensure calls to libm functions from libnldbl_nonshared.a call
+   public names, not libm-internal names.  */
+#define NO_MATH_REDIRECT
+
 /* Avoid long double prototypes.  */
 #define __NO_LONG_DOUBLE_MATH	1
 #include <stdarg.h>

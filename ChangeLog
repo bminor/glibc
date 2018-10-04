@@ -1,3 +1,15 @@
+2018-10-04  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #23735]
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.h (NO_MATH_REDIRECT):
+	Define.
+	* sysdeps/ieee754/ldbl-opt/test-nldbl-redirect.c: New file.
+	* sysdeps/ieee754/ldbl-opt/Makefile [$(subdir) = math] (tests):
+	Add test-nldbl-redirect.
+	[$(subdir) = math] (CFLAGS-test-nldbl-redirect.c): New variable.
+	[$(subdir) = math] ($(objpfx)test-nldbl-redirect): Depend on
+	$(objpfx)libnldbl_nonshared.a.
+
 2018-10-04  Stefan Liebler  <stli@linux.ibm.com>
 
 	* support/support.h (support_objdir_elf_ldso): New variable.
