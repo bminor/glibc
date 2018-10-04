@@ -1,3 +1,8 @@
+2018-10-23  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/riscv/setcontext.S (__setcontext)
+	(__start_context): Use END instead of PSEUDO_END.
+
 2018-10-22  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/syscall-names.list: Update kernel

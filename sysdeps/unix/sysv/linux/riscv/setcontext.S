@@ -94,7 +94,7 @@ LEAF (__setcontext)
 
 99:	j	__syscall_error
 
-PSEUDO_END (__setcontext)
+END (__setcontext)
 weak_alias (__setcontext, setcontext)
 
 LEAF (__start_context)
@@ -111,4 +111,4 @@ LEAF (__start_context)
 	jal	__setcontext
 1:	j	exit
 
-PSEUDO_END (__start_context)
+END (__start_context)
