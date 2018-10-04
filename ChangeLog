@@ -1,3 +1,12 @@
+2018-10-04  Stefan Liebler  <stli@linux.ibm.com>
+
+	* support/support.h (support_objdir_elf_ldso): New variable.
+	* support/support_paths.c (support_objdir_elf_ldso): Likewise.
+	* support/Makefile (CFLAGS-support_paths.c): Add definition
+	for OBJDIR_ELF_LDSO_PATH.
+	* support/test-container.c (main): Search for the ld.so
+	which is also used by the testsuite.
+
 2018-10-02  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	[BZ #20209]

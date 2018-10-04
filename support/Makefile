@@ -160,6 +160,7 @@ endif
 CFLAGS-support_paths.c = \
 		-DSRCDIR_PATH=\"`cd .. ; pwd`\" \
 		-DOBJDIR_PATH=\"`cd $(objpfx)/..; pwd`\" \
+		-DOBJDIR_ELF_LDSO_PATH=\"`cd $(objpfx)/..; pwd`/elf/$(rtld-installed-name)\" \
 		-DINSTDIR_PATH=\"$(prefix)\" \
 		-DLIBDIR_PATH=\"$(libdir)\"
 

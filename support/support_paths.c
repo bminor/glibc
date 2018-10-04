@@ -36,6 +36,14 @@ const char support_objdir_root[] = OBJDIR_PATH;
 # error please -DOBJDIR_PATH=something in the Makefile
 #endif
 
+#ifdef OBJDIR_ELF_LDSO_PATH
+/* Corresponds to the path to the runtime linker used by the testsuite,
+   e.g. OBJDIR_PATH/elf/ld-linux-x86-64.so.2  */
+const char support_objdir_elf_ldso[] = OBJDIR_ELF_LDSO_PATH;
+#else
+# error please -DOBJDIR_ELF_LDSO_PATH=something in the Makefile
+#endif
+
 #ifdef INSTDIR_PATH
 /* Corresponds to the --prefix= passed to configure.  */
 const char support_install_prefix[] = INSTDIR_PATH;

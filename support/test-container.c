@@ -674,8 +674,7 @@ main (int argc, char **argv)
 	}
     }
 
-  if (strncmp (argv[1], concat (support_objdir_root, "/elf/ld-linux-", NULL),
-	       strlen (support_objdir_root) + 14) == 0)
+  if (strcmp (argv[1], support_objdir_elf_ldso) == 0)
     {
       ++argv;
       --argc;

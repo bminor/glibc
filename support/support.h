@@ -91,6 +91,10 @@ char *xstrndup (const char *, size_t);
 extern const char support_srcdir_root[];
 extern const char support_objdir_root[];
 
+/* Corresponds to the path to the runtime linker used by the testsuite,
+   e.g. OBJDIR_PATH/elf/ld-linux-x86-64.so.2  */
+extern const char support_objdir_elf_ldso[];
+
 /* Corresponds to the --prefix= passed to configure.  */
 extern const char support_install_prefix[];
 /* Corresponds to the install's lib/ or lib64/ directory.  */
