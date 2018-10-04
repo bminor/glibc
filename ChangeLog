@@ -1,5 +1,55 @@
 2018-10-04  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/hppa/bits/mman.h: Include
+	<bits/mman-linux.h>.
+	(PROT_READ): Don't define here.
+	(PROT_WRITE): Likewise.
+	(PROT_EXEC): Likewise.
+	(PROT_NONE): Likewise.
+	(PROT_GROWSDOWN): Likewise.
+	(PROT_GROWSUP): Likewise.
+	(MAP_SHARED): Likewise.
+	(MAP_PRIVATE): Likewise.
+	[__USE_MISC] (MAP_SHARED_VALIDATE): Likewise.
+	[__USE_MISC] (MAP_FILE): Likewise.
+	[__USE_MISC] (MAP_ANONYMOUS): Likewise.
+	[__USE_MISC] (MAP_ANON): Likewise.
+	[__USE_MISC] (MAP_HUGE_SHIFT): Likewise.
+	[__USE_MISC] (MAP_HUGE_MASK): Likewise.
+	(MCL_CURRENT): Likewise.
+	(MCL_FUTURE): Likewise.
+	(MCL_ONFAULT): Likewise.
+	[__USE_MISC] (MADV_NORMAL): Likewise.
+	[__USE_MISC] (MADV_RANDOM): Likewise.
+	[__USE_MISC] (MADV_SEQUENTIAL): Likewise.
+	[__USE_MISC] (MADV_WILLNEED): Likewise.
+	[__USE_MISC] (MADV_DONTNEED): Likewise.
+	[__USE_MISC] (MADV_FREE): Likewise.
+	[__USE_MISC] (MADV_REMOVE): Likewise.
+	[__USE_MISC] (MADV_DONTFORK): Likewise.
+	[__USE_MISC] (MADV_DOFORK): Likewise.
+	[__USE_MISC] (MADV_HWPOISON): Likewise.
+	[__USE_XOPEN2K] (POSIX_MADV_NORMAL): Likewise.
+	[__USE_XOPEN2K] (POSIX_MADV_RANDOM): Likewise.
+	[__USE_XOPEN2K] (POSIX_MADV_SEQUENTIAL): Likewise.
+	[__USE_XOPEN2K] (POSIX_MADV_WILLNEED): Likewise.
+	[__USE_XOPEN2K] (POSIX_MADV_DONTNEED): Likewise.
+	(__MAP_ANONYMOUS): New macro.
+	[__USE_MISC] (MAP_TYPE): Undefine and redefine after
+	<bits/mman-linux.h> inclusion.
+	(MAP_FIXED): Likewise.
+	(MS_SYNC): Likewise.
+	(MS_ASYNC): Likewise.
+	(MS_INVALIDATE): Likewise.
+	[__USE_MISC] (MADV_MERGEABLE): Likewise.
+	[__USE_MISC] (MADV_UNMERGEABLE): Likewise.
+	[__USE_MISC] (MADV_HUGEPAGE): Likewise.
+	[__USE_MISC] (MADV_NOHUGEPAGE): Likewise.
+	[__USE_MISC] (MADV_DONTDUMP): Likewise.
+	[__USE_MISC] (MADV_DODUMP): Likewise.
+	[__USE_MISC] (MADV_WIPEONFORK): Likewise.
+	[__USE_MISC] (MADV_KEEPONFORK): Likewise.
+
 	[BZ #23735]
 	* sysdeps/ieee754/ldbl-opt/nldbl-compat.h (NO_MATH_REDIRECT):
 	Define.
