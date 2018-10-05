@@ -1,3 +1,11 @@
+2018-10-08  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #23740]
+	* localedata/locales/kl_GL (mon): Update, the relative case.
+	(alt_mon): Add, fill with month names in the nominative case.
+	(d_t_fmt): Set to "%a %b %d %Y %T %Z".
+	(d_fmt): Set to "%b %d %Y".
+
 2018-10-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/hppa/bits/mman.h: Include
