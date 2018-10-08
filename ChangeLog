@@ -1,3 +1,13 @@
+2019-01-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #17783]
+	* sysdeps/unix/sysv/linux/bits/termios.h [__USE_MISC] (TIOCSER_TEMT):
+	Define.
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h [__USE_MISC]
+	(TIOCSER_TEMT): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/termios.h [__USE_MISC]
+	(TEOCSER_TEMT): Likewise.
+
 2019-01-02  PanderMusubi  <pander@users.sourceforge.net>
 
 	[BZ #24011]

@@ -198,6 +198,11 @@ struct termios
 # define EXTPROC 0200000
 #endif
 
+#ifdef __USE_MISC
+/* ioctl (fd, TIOCSERGETLSR, &result) where result may be as below */
+# define TIOCSER_TEMT    0x01   /* Transmitter physically empty */
+#endif
+
 /* tcflow() and TCXONC use these */
 #define	TCOOFF		0
 #define	TCOON		1

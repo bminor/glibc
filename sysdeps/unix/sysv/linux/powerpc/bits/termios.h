@@ -273,7 +273,9 @@ struct ltchars {
 #define _VEOL2	8
 #define _VSWTC	9
 
+#ifdef __USE_MISC
 /* ioctl (fd, TIOCSERGETLSR, &result) where result may be as below */
-#define TIOCSER_TEMT    0x01	/* Transmitter physically empty */
+# define TIOCSER_TEMT    0x01	/* Transmitter physically empty */
+#endif
 
 #endif /* __USE_MISC  */
