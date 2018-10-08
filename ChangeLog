@@ -1,3 +1,15 @@
+2018-10-08  Paul Eggert  <eggert@cs.ucla.edu>
+
+	mktime fix for Gnulib + coreutils
+	[BZ#23745]
+	This fix affects only Gnulib.  Problem discovered when
+	mktime.c was used as part of Gnulib in bleeding-edge Coreutils.
+	* time/mktime.c:
+	(my_tzset) [!_LIBC && !NEED_MKTIME_WORKING && !NEED_MKTIME_WINDOWS]:
+	Do not define since it is not used.  Defining an unused static
+	function prompts a warning from GCC when Coreutils is configured
+	with --enable-gcc-warnings.
+
 2018-10-08  Leonardo Sandoval  <leonardo.sandoval.gonzalez@intel.com>
 
 	* benchtests/scripts/compare_bench.py (main): set float type on

@@ -78,7 +78,7 @@
 
 #include "mktime-internal.h"
 
-#ifndef _LIBC
+#if !defined _LIBC && (NEED_MKTIME_WORKING || NEED_MKTIME_WINDOWS)
 static void
 my_tzset (void)
 {
