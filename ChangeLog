@@ -1,3 +1,13 @@
+2018-12-28  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #10496]
+	[BZ #23724]
+	* localedata/locales/sq_AL (t_fmt): Set to "%I:%M:%S.%p %Z".
+	(t_fmt_ampm): Likewise.
+	(d_t_fmt): Set to "%a %-d %b %Y %I:%M:%S.%p".
+	(date_fmt): Add, set to "%a %-d %b %Y %I:%M:%S.%p %Z".
+	(d_fmt): Set to "%-d.%-m.%y".
+
 2018-12-28  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* malloc/alloc_buffer_alloc_array.c (__libc_alloc_buffer_alloc_array):
