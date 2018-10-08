@@ -172,7 +172,7 @@ d_fmt 		"%d.%m.%Y"
 
 t_fmt		"%H:%M:%S"
 
-t_fmt_ampm	"%I:%M:%S"
+t_fmt_ampm	""
 
 am_pm   	"";""
 

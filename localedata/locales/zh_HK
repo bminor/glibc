@@ -133,8 +133,8 @@ d_t_fmt     "%Y<U5E74>%m<U6708>%d<U65E5> %A %H:%M:%S"
 d_fmt       "%Y<U5E74>%m<U6708>%d<U65E5> %A"
 %
 % Appropriate time representation
-% %I時%M分%S秒 %Z
-t_fmt       "%I<U6642>%M<U5206>%S<U79D2> %Z"
+% %p %I時%M分%S秒 %Z
+t_fmt       "%p %I<U6642>%M<U5206>%S<U79D2> %Z"
 %
 % Appropriate 12 h time representation (%r)
 % Update by Roger So <roger.so@sw-linux.com>

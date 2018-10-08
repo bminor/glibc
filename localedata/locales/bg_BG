@@ -276,7 +276,7 @@ d_t_fmt    "%x (%a) %X %Z"
 d_fmt      "%e.%m.%Y"
 t_fmt      "%k:%M:%S"
 am_pm      "";""
-t_fmt_ampm "%l:%M:%S"
+t_fmt_ampm ""
 %
 week 7;19971130;4
 first_weekday 2

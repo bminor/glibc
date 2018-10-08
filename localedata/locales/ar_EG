@@ -140,7 +140,7 @@ d_t_fmt     "%d %b, %Y %Z %I:%M:%S %p"
 d_fmt       "%d %b, %Y"
 %
 % Appropriate time representation
-t_fmt       "%Z %I:%M:%S "
+t_fmt       "%Z %I:%M:%S %p"
 %
 % Appropriate 12 h time representation (%r)
 t_fmt_ampm  "%Z %I:%M:%S %p"

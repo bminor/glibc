@@ -1,6 +1,138 @@
 2018-12-28  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	[BZ #10496]
+	* localedata/locales/aa_DJ (t_fmt): Set to "%l:%M:%S %p".
+	(t_fmt_ampm): Likewise.
+	* localedata/locales/aa_ER (t_fmt): Likewise.
+	(t_fmt_ampm): Likewise.
+	* localedata/locales/aa_ER@saaho (t_fmt): Likewise.
+	(t_fmt_ampm): Likewise.
+	* localedata/locales/aa_ET (t_fmt): Likewise.
+	(t_fmt_ampm): Likewise.
+	* localedata/locales/am_ET (t_fmt): Likewise.
+	(t_fmt_ampm): Likewise.
+	* localedata/locales/byn_ER (t_fmt): Likewise.
+	(t_fmt_ampm): Likewise.
+	* localedata/locales/om_ET (t_fmt): Likewise.
+	(t_fmt_ampm): Likewise.
+	* localedata/locales/sid_ET (t_fmt): Likewise.
+	(t_fmt_ampm): Likewise.
+	* localedata/locales/so_DJ (t_fmt): Likewise.
+	(t_fmt_ampm): Likewise.
+	* localedata/locales/so_ET (t_fmt): Likewise.
+	(t_fmt_ampm): Likewise.
+	* localedata/locales/so_SO (t_fmt): Likewise.
+	(t_fmt_ampm): Likewise.
+	* localedata/locales/ti_ER (t_fmt): Likewise.
+	(t_fmt_ampm): Likewise.
+	* localedata/locales/ti_ET (t_fmt): Likewise.
+	(t_fmt_ampm): Likewise.
+	* localedata/locales/tig_ER (t_fmt): Likewise.
+	(t_fmt_ampm): Likewise.
+	* localedata/locales/wal_ET (t_fmt): Likewise.
+	(t_fmt_ampm): Likewise.
+
+	* localedata/locales/anp_IN (t_fmt): Set to "%I:%M:%S %p %Z".
+	* localedata/locales/ar_IN (t_fmt): Likewise.
+	* localedata/locales/bhb_IN (t_fmt): Likewise.
+	* localedata/locales/bho_IN (t_fmt): Likewise.
+	* localedata/locales/bi_VU (t_fmt): Likewise.
+	* localedata/locales/bn_BD (t_fmt): Likewise.
+	* localedata/locales/bn_IN (t_fmt): Likewise.
+	* localedata/locales/brx_IN (t_fmt): Likewise.
+	* localedata/locales/doi_IN (t_fmt): Likewise.
+	* localedata/locales/en_HK (t_fmt): Likewise.
+	(t_fmt_ampm): Likewise.
+	* localedata/locales/en_IN (t_fmt): Likewise.
+	* localedata/locales/en_PH (t_fmt): Likewise.
+	* localedata/locales/gu_IN (t_fmt): Likewise.
+	* localedata/locales/hi_IN (t_fmt): Likewise.
+	* localedata/locales/hif_FJ (t_fmt): Likewise.
+	* localedata/locales/hne_IN (t_fmt): Likewise.
+	* localedata/locales/kn_IN (t_fmt): Likewise.
+	* localedata/locales/kok_IN (t_fmt): Likewise.
+	* localedata/locales/ks_IN (t_fmt): Likewise.
+	* localedata/locales/ks_IN@devanagari (t_fmt): Likewise.
+	* localedata/locales/mag_IN (t_fmt): Likewise.
+	* localedata/locales/mai_IN (t_fmt): Likewise.
+	* localedata/locales/mjw_IN (t_fmt): Likewise.
+	* localedata/locales/ml_IN (t_fmt): Likewise.
+	* localedata/locales/mni_IN (t_fmt): Likewise.
+	* localedata/locales/mr_IN (t_fmt): Likewise.
+	* localedata/locales/ms_MY (t_fmt): Likewise.
+	* localedata/locales/pa_IN (t_fmt): Likewise.
+	* localedata/locales/raj_IN (t_fmt): Likewise.
+	* localedata/locales/sa_IN (t_fmt): Likewise.
+	* localedata/locales/sat_IN (t_fmt): Likewise.
+	* localedata/locales/sd_IN (t_fmt): Likewise.
+	* localedata/locales/sd_IN@devanagari (t_fmt): Likewise.
+	* localedata/locales/tcy_IN (t_fmt): Likewise.
+	* localedata/locales/the_NP (t_fmt): Likewise.
+	* localedata/locales/to_TO (t_fmt): Likewise.
+	* localedata/locales/ur_IN (t_fmt): Likewise.
+
+	* localedata/locales/hif_FJ (d_t_fmt): Set to
+	"%A %d %b %Y %I:%M:%S %p".
+	(date_fmt): Add, set to "%A %d %b %Y %I:%M:%S %p %Z".
+
+	* localedata/locales/ar_AE (t_fmt): Set to "%Z %I:%M:%S %p".
+	* localedata/locales/ar_BH (t_fmt): Likewise.
+	* localedata/locales/ar_DZ (t_fmt): Likewise.
+	* localedata/locales/ar_EG (t_fmt): Likewise.
+	* localedata/locales/ar_IQ (t_fmt): Likewise.
+	* localedata/locales/ar_JO (t_fmt): Likewise.
+	* localedata/locales/ar_KW (t_fmt): Likewise.
+	* localedata/locales/ar_LB (t_fmt): Likewise.
+	* localedata/locales/ar_LY (t_fmt): Likewise.
+	* localedata/locales/ar_OM (t_fmt): Likewise.
+	* localedata/locales/ar_QA (t_fmt): Likewise.
+	* localedata/locales/ar_SD (t_fmt): Likewise.
+	* localedata/locales/ar_SS (t_fmt): Likewise.
+	* localedata/locales/ar_SY (t_fmt): Likewise.
+	* localedata/locales/ar_TN (t_fmt): Likewise.
+	* localedata/locales/ar_YE (t_fmt): Likewise.
+
+	* localedata/locales/gez_ER (t_fmt): Set to "%l:%M:%S<U1361>%p".
+	(t_fmt_ampm): Likewise.
+	* localedata/locales/gez_ET (t_fmt): Likewise.
+	(t_fmt_ampm): Likewise.
+
+	* localedata/locales/ta_IN (t_fmt): Set to "%p %I:%M:%S %Z".
+	(t_fmt_ampm): Likewise.
+	(d_t_fmt): Set to "%A %d %B %Y %p %I:%M:%S %Z".
+
+	* localedata/locales/zh_HK (t_fmt):
+	Set to "%p %I<U6642>%M<U5206>%S<U79D2> %Z".
+
+	* localedata/locales/ar_MA (t_fmt_ampm): Set to "" (empty string)
+	because this locale does not use the 12-hour clock.
+	(t_fmt): Set to "%Z %H:%M:%S".
+	(d_t_fmt): Set to "%d %b, %Y %Z %H:%M:%S".
+
+	* localedata/locales/mt_MT (t_fmt_ampm): Set to "" (empty string)
+	because this locale does not use the 12-hour clock.
+	(t_fmt): Set to "%H:%M:%S %Z".
+	(d_t_fmt): Set to "%A, %d ta %b, %Y %H:%M:%S %Z".
+
+	* localedata/locales/so_KE (t_fmt_ampm): Set to "" (empty string)
+	because this locale does not use the 12-hour clock.
+	(t_fmt): Set to "%T".
+	(d_t_fmt): Set to "%A, %B %e, %Y %X %Z".
+	(date_fmt): Set to "%A, %B %e, %X %Z %Y".
+
+	* localedata/locales/ta_LK (t_fmt_ampm): Set to "" (empty string)
+	because this locale does not use the 12-hour clock.
+	(t_fmt): Set to "%H:%M:%S %Z".
+	(d_t_fmt): Set to "%A %d %B %Y %H:%M:%S %Z".
+
+	* localedata/locales/bg_BG (t_fmt_ampm): Set to "" (empty string)
+	because this locale does not use the 12-hour clock.
+	* localedata/locales/cs_CZ (t_fmt_ampm): Likewise.
+	* localedata/locales/sk_SK (t_fmt_ampm): Likewise.
+
+2018-12-28  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #10496]
 	[BZ #23724]
 	* localedata/locales/sq_AL (t_fmt): Set to "%I:%M:%S.%p %Z".
 	(t_fmt_ampm): Likewise.

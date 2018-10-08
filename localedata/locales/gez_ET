@@ -193,11 +193,11 @@ d_fmt   "%d//%m//%Y"
 %
 % Appropriate time representation (%X)
 %
-t_fmt "%l:%M:%S"
+t_fmt "%l:%M:%S<U1361>%p"
 %
 % Appropriate AM/PM time representation (%r)
 %
-t_fmt_ampm "%X<U1361>%p"
+t_fmt_ampm "%l:%M:%S<U1361>%p"
 %
 % Appropriate date and time representation (%c)
 %	"%A፥%B፡%e፡መዓልት፡%Y፡%r፡%Z"
