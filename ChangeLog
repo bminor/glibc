@@ -1,3 +1,24 @@
+2019-01-14  Leonardo Sandoval  <leonardo.sandoval.gonzalez@intel.com>
+
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	strcat-avx2, strncat-avx2, strcpy-avx2, strncpy-avx2,
+	stpcpy-avx2 and stpncpy-avx2.
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c:
+	(__libc_ifunc_impl_list): Add tests for __strcat_avx2,
+	__strncat_avx2, __strcpy_avx2, __strncpy_avx2, __stpcpy_avx2
+	and __stpncpy_avx2.
+	* sysdeps/x86_64/multiarch/{ifunc-unaligned-ssse3.h =>
+	ifunc-strcpy.h}: rename header for a more generic name.
+	* sysdeps/x86_64/multiarch/ifunc-strcpy.h:
+	(IFUNC_SELECTOR): Return OPTIMIZE (avx2) on AVX 2 machines if
+	AVX unaligned load is fast and vzeroupper is preferred.
+	* sysdeps/x86_64/multiarch/stpcpy-avx2.S: New file.
+	* sysdeps/x86_64/multiarch/stpncpy-avx2.S: Likewise.
+	* sysdeps/x86_64/multiarch/strcat-avx2.S: Likewise.
+	* sysdeps/x86_64/multiarch/strcpy-avx2.S: Likewise.
+	* sysdeps/x86_64/multiarch/strncat-avx2.S: Likewise.
+	* sysdeps/x86_64/multiarch/strncpy-avx2.S: Likewise.
+
 2019-01-12  Dmitry V. Levin  <ldv@altlinux.org>
 
 	* argp/argp-help.c: Fix typo in comment.

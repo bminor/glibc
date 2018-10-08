@@ -24,11 +24,14 @@ sysdep_routines += strncat-c stpncpy-c strncpy-c \
 		   strchr-sse2 strchrnul-sse2 strchr-avx2 strchrnul-avx2 \
 		   strrchr-sse2 strrchr-avx2 \
 		   strlen-sse2 strnlen-sse2 strlen-avx2 strnlen-avx2 \
+		   strcat-avx2 strncat-avx2 \
 		   strcat-ssse3 strncat-ssse3\
+		   strcpy-avx2 strncpy-avx2 \
 		   strcpy-sse2 stpcpy-sse2 \
 		   strcpy-ssse3 strncpy-ssse3 stpcpy-ssse3 stpncpy-ssse3 \
 		   strcpy-sse2-unaligned strncpy-sse2-unaligned \
 		   stpcpy-sse2-unaligned stpncpy-sse2-unaligned \
+		   stpcpy-avx2 stpncpy-avx2 \
 		   strcat-sse2 \
 		   strcat-sse2-unaligned strncat-sse2-unaligned \
 		   strchr-sse2-no-bsf memcmp-ssse3 strstr-sse2-unaligned \

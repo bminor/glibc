@@ -24,7 +24,7 @@
 # undef strcat
 
 # define SYMBOL_NAME strcat
-# include "ifunc-unaligned-ssse3.h"
+# include "ifunc-strcpy.h"
 
 libc_ifunc_redirected (__redirect_strcat, strcat, IFUNC_SELECTOR ());
 

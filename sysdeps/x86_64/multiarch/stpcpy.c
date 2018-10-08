@@ -28,7 +28,7 @@
 # undef __stpcpy
 
 # define SYMBOL_NAME stpcpy
-# include "ifunc-unaligned-ssse3.h"
+# include "ifunc-strcpy.h"
 
 libc_ifunc_redirected (__redirect_stpcpy, __stpcpy, IFUNC_SELECTOR ());
 
