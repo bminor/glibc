@@ -57,7 +57,7 @@ unsigned long int __hurd_sigthread_stack_end;
 struct hurd_sigstate *_hurd_sigstates;
 
 /* Timeout for RPC's after interrupt_operation. */
-mach_msg_timeout_t _hurd_interrupted_rpc_timeout = 3000;
+mach_msg_timeout_t _hurd_interrupted_rpc_timeout = 60000;
 
 static void
 default_sigaction (struct sigaction actions[NSIG])

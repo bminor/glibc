@@ -1,3 +1,7 @@
+2018-10-28  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* hurd/hurdsig.c (_hurd_interrupted_rpc_timeout): Set to 60000.
+
 2018-10-26  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/build-many-glibcs.py: Remove compatibility for missing
