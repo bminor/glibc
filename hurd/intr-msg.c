@@ -114,23 +114,10 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 
  message:
 
-  /* XXX
-     At all points here (once SS->intr_port is set), the signal thread
-     thinks we are "about to enter the syscall", and might mutate our
-     return-value register.  This is bogus.
-   */
-
-  if (ss->cancel)
-    {
-      /* We have been cancelled.  Don't do an RPC at all.  */
-      ss->intr_port = MACH_PORT_NULL;
-      ss->cancel = 0;
-      return EINTR;
-    }
-
   /* Note that the signal trampoline code might modify our OPTION!  */
   err = INTR_MSG_TRAP (msg, option, send_size,
-		       rcv_size, rcv_name, timeout, notify);
+		       rcv_size, rcv_name, timeout, notify,
+		       &ss->cancel, &ss->intr_port);
 
   switch (err)
     {
