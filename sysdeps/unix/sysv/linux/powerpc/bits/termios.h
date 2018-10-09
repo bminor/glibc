@@ -29,9 +29,6 @@ typedef unsigned int	tcflag_t;
 #include <bits/termios-c_oflag.h>
 
 /* c_cflag bit meaning */
-#ifdef __USE_MISC
-# define CBAUD	0000377
-#endif
 #define  B0	0000000		/* hang up */
 #define  B50	0000001
 #define  B75	0000002
@@ -51,24 +48,8 @@ typedef unsigned int	tcflag_t;
 #ifdef __USE_MISC
 # define EXTA B19200
 # define EXTB B38400
-# define CBAUDEX 0000020
 #endif
-#define  B57600   00020
-#define  B115200  00021
-#define  B230400  00022
-#define  B460800  00023
-#define  B500000  00024
-#define  B576000  00025
-#define  B921600  00026
-#define  B1000000 00027
-#define  B1152000 00030
-#define  B1500000 00031
-#define  B2000000 00032
-#define  B2500000 00033
-#define  B3000000 00034
-#define  B3500000 00035
-#define  B4000000 00036
-#define __MAX_BAUD B4000000
+#include <bits/termios-baud.h>
 
 #define CSIZE	00001400
 #define   CS5	00000000
@@ -83,10 +64,6 @@ typedef unsigned int	tcflag_t;
 #define HUPCL	00040000
 
 #define CLOCAL	00100000
-#ifdef __USE_MISC
-# define CMSPAR   010000000000		/* mark or space (stick) parity */
-# define CRTSCTS  020000000000		/* flow control */
-#endif
 
 /* c_lflag bits */
 #define ISIG	0x00000080

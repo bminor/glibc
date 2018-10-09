@@ -1,5 +1,22 @@
 2019-01-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	[BZ #23783]
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
+	termios-baud.h.
+	* sysdeps/unix/sysv/linux/bits/termios-baud.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/bits/termios-baud.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios-baud.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/termios-baud.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/termios.h (B57600, B115200,
+	B230400, B460800, B500000, B576000, B921600, B1000000, B1152000,
+	B1500000, B2000000, B2500000, B3000000, B3500000, B4000000,
+	__MAX_BAUD): Move to termios-baud.h.
+	[__USE_MISC] (CBAUD, CBAUDEX): Likewise.
+	* sysdeps/unix/sysv/linux/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/termios.h: Likewise.
+
 	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines): Add
 	termios-c_oflag.h.
 	* sysdeps/unix/sysv/linux/bits/termios-c_oflag.h: New file.

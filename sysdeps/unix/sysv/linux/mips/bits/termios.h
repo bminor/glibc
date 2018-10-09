@@ -30,9 +30,6 @@ typedef unsigned int	tcflag_t;
 #include <bits/termios-c_oflag.h>
 
 /* c_cflag bit meaning */
-#ifdef __USE_MISC
-# define CBAUD	0010017
-#endif
 #define  B0	0000000		/* hang up */
 #define  B50	0000001
 #define  B75	0000002
@@ -53,6 +50,8 @@ typedef unsigned int	tcflag_t;
 # define EXTA B19200
 # define EXTB B38400
 #endif
+#include <bits/termios-baud.h>
+
 #define CSIZE	0000060		/* Number of bits per byte (mask).  */
 #define   CS5	0000000		/* 5 bits per byte.  */
 #define   CS6	0000020		/* 6 bits per byte.  */
@@ -64,29 +63,6 @@ typedef unsigned int	tcflag_t;
 #define PARODD	0001000		/* Odd parity instead of even.  */
 #define HUPCL	0002000		/* Hang up on last close.  */
 #define CLOCAL	0004000		/* Ignore modem status lines.  */
-#ifdef __USE_MISC
-# define CBAUDEX   0010000
-#endif
-#define  B57600   0010001
-#define  B115200  0010002
-#define  B230400  0010003
-#define  B460800  0010004
-#define  B500000  0010005
-#define  B576000  0010006
-#define  B921600  0010007
-#define  B1000000 0010010
-#define  B1152000 0010011
-#define  B1500000 0010012
-#define  B2000000 0010013
-#define  B2500000 0010014
-#define  B3000000 0010015
-#define  B3500000 0010016
-#define  B4000000 0010017
-#define __MAX_BAUD B4000000
-#ifdef __USE_MISC
-# define CIBAUD	  002003600000	/* input baud rate (not used) */
-# define CRTSCTS  020000000000		/* flow control */
-#endif
 
 /* c_lflag bits */
 #define ISIG	0000001		/* Enable signals.  */
