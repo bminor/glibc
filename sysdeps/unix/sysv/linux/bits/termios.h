@@ -72,3 +72,5 @@ typedef unsigned int	tcflag_t;
 #define	TCIOFLUSH	2
 
 #include <bits/termios-tcflow.h>
+
+#include <bits/termios-misc.h>

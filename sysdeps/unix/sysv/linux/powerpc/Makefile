@@ -23,7 +23,7 @@ LDFLAGS-tst-tlsmod2.so += -Wl,--no-tls-get-addr-optimize
 endif
 
 ifeq ($(subdir),misc)
-sysdep_headers += bits/ppc.h bits/termios-misc.h
+sysdep_headers += bits/ppc.h
 sysdep_routines += get_timebase_freq
 tests += test-gettimebasefreq
 tests += test-powerpc-linux-sysconf

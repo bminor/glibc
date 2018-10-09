@@ -1,5 +1,14 @@
 2019-01-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
+	bits/termios-misc.h.
+	* sysdeps/unix/sysv/linux/alpha/bits/termios.h: Remove file.
+	* sysdeps/unix/sysv/linux/mips/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/termios-misc.h: New file.
+	* sysdeps/unix/sysv/linux/bits/termios.h: Include termios-misc.h.
+
 	* sysdeps/unix/sysv/linux/powerpc/bits/termios-misc.h: New file.
 	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h [__USE_MISC]
 	(struct sgtty, struct tchars, struct ltchars, TIOCPKT_DATA,
