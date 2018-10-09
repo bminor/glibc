@@ -1,5 +1,18 @@
 2019-01-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
+	termios-c_cflag.h.
+	* sysdeps/unix/sysv/linux/bits/termios-c_cflag.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/bits/termios-c_cflag.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios-c_cflag.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/termios.h (CSIZE, CS5, CS6, CS7, CS8,
+	CSTOPB, CREAD, PARENB, PARODD, HUPCL, CLOCAL): Move to
+	termios-c_cflag.h.
+	* sysdeps/unix/sysv/linux/alpha/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/termios.h: Likewise.
+
 	[BZ #23783]
 	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
 	termios-baud.h.

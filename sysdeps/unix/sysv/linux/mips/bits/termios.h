@@ -52,17 +52,7 @@ typedef unsigned int	tcflag_t;
 #endif
 #include <bits/termios-baud.h>
 
-#define CSIZE	0000060		/* Number of bits per byte (mask).  */
-#define   CS5	0000000		/* 5 bits per byte.  */
-#define   CS6	0000020		/* 6 bits per byte.  */
-#define   CS7	0000040		/* 7 bits per byte.  */
-#define   CS8	0000060		/* 8 bits per byte.  */
-#define CSTOPB	0000100		/* Two stop bits instead of one.  */
-#define CREAD	0000200		/* Enable receiver.  */
-#define PARENB	0000400		/* Parity enable.  */
-#define PARODD	0001000		/* Odd parity instead of even.  */
-#define HUPCL	0002000		/* Hang up on last close.  */
-#define CLOCAL	0004000		/* Ignore modem status lines.  */
+#include <bits/termios-c_cflag.h>
 
 /* c_lflag bits */
 #define ISIG	0000001		/* Enable signals.  */

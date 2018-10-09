@@ -52,17 +52,7 @@ typedef unsigned int tcflag_t;
 #endif
 #include <bits/termios-baud.h>
 
-#define  CSIZE  0x00000030
-#define   CS5	0x00000000
-#define   CS6	0x00000010
-#define   CS7	0x00000020
-#define   CS8	0x00000030
-#define CSTOPB	0x00000040
-#define CREAD	0x00000080
-#define PARENB	0x00000100
-#define PARODD	0x00000200
-#define HUPCL	0x00000400
-#define CLOCAL	0x00000800
+#include <bits/termios-c_cflag.h>
 
 /* c_lflag bits */
 #define ISIG	0x00000001
