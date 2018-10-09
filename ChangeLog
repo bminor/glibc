@@ -1,3 +1,7 @@
+2018-10-09  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* libio/tst-readline.c (TIMEOUT): Define.
+
 2018-10-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	mktime fix for Gnulib + coreutils
