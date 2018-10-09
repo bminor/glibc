@@ -1,3 +1,7 @@
+2018-10-09  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* libio/tst-readline.c (TIMEOUT): Define.
+
 2018-10-22  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/syscall-names.list: Update kernel
