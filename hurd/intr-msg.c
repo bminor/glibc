@@ -141,7 +141,7 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
       else
 	/* The operation was supposedly interrupted, but still has
 	   not returned.  Declare it interrupted.  */
-	goto interrupted;
+	goto dead;
 
     case MACH_SEND_INTERRUPTED: /* RPC didn't get out.  */
       if (!(option & MACH_SEND_MSG))
@@ -324,17 +324,21 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 	  timeout = user_timeout;
 	  goto message;
 	}
-      /* FALLTHROUGH */
+      err = EINTR;
+
+      /* The EINTR return indicates cancellation, so clear the flag.  */
+      ss->cancel = 0;
+      break;
 
     case MACH_RCV_PORT_DIED:
       /* Server didn't respond to interrupt_operation,
 	 so the signal thread destroyed the reply port.  */
       /* FALLTHROUGH */
 
-    interrupted:
-      err = EINTR;
+    dead:
+      err = EIO;
 
-      /* The EINTR return indicates cancellation, so clear the flag.  */
+      /* The EIO return indicates cancellation, so clear the flag.  */
       ss->cancel = 0;
       break;
 

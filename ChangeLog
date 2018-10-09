@@ -1,6 +1,8 @@
 2018-10-28  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* hurd/hurdsig.c (_hurd_interrupted_rpc_timeout): Set to 60000.
+	* hurd/intr-msg.c (_hurd_intr_rpc_mach_msg): When the server does not
+	answer to interrupt_operation, return EIO instead of EINTR.
 
 2018-10-26  Joseph Myers  <joseph@codesourcery.com>
 
