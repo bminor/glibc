@@ -27,45 +27,7 @@ typedef unsigned int	tcflag_t;
 #include <bits/termios-struct.h>
 #include <bits/termios-c_cc.h>
 #include <bits/termios-c_iflag.h>
-
-/* c_oflag bits */
-#define OPOST	0000001		/* Perform output processing.  */
-#define OLCUC	0000002		/* Map lower case to upper case on output.  */
-#define ONLCR	0000004		/* Map NL to CR-NL on output.  */
-#define OCRNL	0000010
-#define ONOCR	0000020
-#define ONLRET	0000040
-#define OFILL	0000100
-#define OFDEL	0000200
-#if defined __USE_MISC || defined __USE_XOPEN
-# define NLDLY	0000400
-# define   NL0	0000000
-# define   NL1	0000400
-# define CRDLY	0003000
-# define   CR0	0000000
-# define   CR1	0001000
-# define   CR2	0002000
-# define   CR3	0003000
-# define TABDLY	0014000
-# define   TAB0	0000000
-# define   TAB1	0004000
-# define   TAB2	0010000
-# define   TAB3	0014000
-# define BSDLY	0020000
-# define   BS0	0000000
-# define   BS1	0020000
-# define FFDLY	0100000
-# define   FF0	0000000
-# define   FF1	0100000
-#endif
-
-#define VTDLY	0040000
-#define   VT0	0000000
-#define   VT1	0040000
-
-#ifdef __USE_MISC
-# define XTABS  0014000
-#endif
+#include <bits/termios-c_oflag.h>
 
 /* c_cflag bit meaning */
 #ifdef __USE_MISC

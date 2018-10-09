@@ -1,5 +1,23 @@
 2019-01-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines): Add
+	termios-c_oflag.h.
+	* sysdeps/unix/sysv/linux/bits/termios-c_oflag.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/bits/termios-c_oflag.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios-c_oflag.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/termios-c_oflag.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/termios.h (OPOST, OLCUC, ONLCR, OCRNL,
+	ONOCR, ONLRET, OFILL, OFDEL, VTDLY, VT0, VT1):  Move to
+	termios-c_oflag.h.
+	[__USE_MISC || __USE_XOPEN] (NLDLY, NL0, NL1, CRDLY, CR0, CR1, CR2,
+	CR3, TABDLY, TAB0, TAB1, TAB2, TAB3, BSDLY, BS0, BS1, FFDLY, FF0,
+	FFR1): Likewise.
+	[USE_MISC] (XTABS): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/termios.h Likewise.
+
 	* sysdeps/unix/sysv/linux/Makefile (sysdeps_headers): Add
 	termios-c_iflag.h.
 	* sysdeps/unix/sysv/linux/bits/termios-c_iflag.h: New file.
