@@ -1,5 +1,9 @@
 2019-01-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/bits/termios.h (_IOT_termios): Remove.
+	* sysdeps/unix/sysv/linux/alpha/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/termios.h: Likewise.
+
 	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
 	termios-tcflow.h.
 	* sysdeps/unix/sysv/linux/bits/termios-tcflow.h: New file.

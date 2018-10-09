@@ -67,6 +67,3 @@ typedef unsigned int	tcflag_t;
 #define	TCIOFLUSH	2
 
 #include <bits/termios-tcflow.h>
-
-#define _IOT_termios /* Hurd ioctl type field.  */ \
-  _IOT (_IOTS (cflag_t), 4, _IOTS (cc_t), NCCS, _IOTS (speed_t), 2)
