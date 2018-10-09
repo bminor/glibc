@@ -71,7 +71,4 @@ typedef unsigned int tcflag_t;
 #define	TCOFLUSH	1
 #define	TCIOFLUSH	2
 
-/* tcsetattr uses these */
-#define	TCSANOW		0
-#define	TCSADRAIN	1
-#define	TCSAFLUSH	2
+#include <bits/termios-tcflow.h>

@@ -71,11 +71,7 @@ typedef unsigned int	tcflag_t;
 #define	TCOFLUSH	1
 #define	TCIOFLUSH	2
 
-/* tcsetattr uses these */
-#define	TCSANOW		0
-#define	TCSADRAIN	1
-#define	TCSAFLUSH	2
-
+#include <bits/termios-tcflow.h>
 
 #define _IOT_termios /* Hurd ioctl type field.  */ \
   _IOT (_IOTS (cflag_t), 4, _IOTS (cc_t), NCCS, _IOTS (speed_t), 2)

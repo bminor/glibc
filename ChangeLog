@@ -1,6 +1,17 @@
 2019-01-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
+	termios-tcflow.h.
+	* sysdeps/unix/sysv/linux/bits/termios-tcflow.h: New file.
+	* sysdeps/unix/sysv/linux/mips/bits/termios-tcflow.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/termios.h (TCSANOW, TCSADRAIN,
+	TCSAFLUSH): Move to termios-tcflow.h.
+	* sysdeps/unix/sysv/linux/alpha/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/termios.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
 	termios-c_lflag.h.
 	* sysdeps/unix/sysv/linux/bits/termios-c_lflag.h: New file.
 	* sysdeps/unix/sysv/linux/alpha/bits/termios-c_lflag.h: Likewise.

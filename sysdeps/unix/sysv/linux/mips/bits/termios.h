@@ -71,10 +71,7 @@ typedef unsigned int	tcflag_t;
 #define	TCOFLUSH	1	/* Discard data written but not yet sent.  */
 #define	TCIOFLUSH	2	/* Discard all pending data.  */
 
-/* tcsetattr uses these */
-#define	TCSANOW		0x540e	/* Same as TCSETS; change immediately.  */
-#define	TCSADRAIN	0x540f	/* Same as TCSETSW; change when pending output is written.  */
-#define	TCSAFLUSH	0x5410	/* Same as TCSETSF; flush pending input before changing.  */
+#include <bits/termios-tcflow.h>
 
 #define _IOT_termios /* Hurd ioctl type field.  */ \
   _IOT (_IOTS (cflag_t), 4, _IOTS (cc_t), NCCS, _IOTS (speed_t), 2)

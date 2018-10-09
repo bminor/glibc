@@ -65,10 +65,7 @@ typedef unsigned int	tcflag_t;
 #define	TCOFLUSH	1
 #define	TCIOFLUSH	2
 
-/* Values for the OPTIONAL_ACTIONS argument to `tcsetattr'.  */
-#define	TCSANOW		0
-#define	TCSADRAIN	1
-#define	TCSAFLUSH	2
+#include <bits/termios-tcflow.h>
 
 #ifdef __USE_MISC
 
