@@ -25,28 +25,7 @@ typedef unsigned int speed_t;
 typedef unsigned int tcflag_t;
 
 #include <bits/termios-struct.h>
-
-/* c_cc characters */
-#define VINTR    0
-#define VQUIT    1
-#define VERASE   2
-#define VKILL    3
-#define VEOF     4
-#define VEOL     5
-#define VEOL2    6
-#define VSWTC    7
-#define VSTART   8
-#define VSTOP    9
-#define VSUSP    10
-#define VDSUSP   11		/* SunOS POSIX nicety I do believe... */
-#define VREPRINT 12
-#define VDISCARD 13
-#define VWERASE  14
-#define VLNEXT   15
-
-/* User apps assume vmin/vtime is shared with eof/eol */
-#define VMIN     VEOF
-#define VTIME    VEOL
+#include <bits/termios-c_cc.h>
 
 /* c_iflag bits */
 #define IGNBRK	0x00000001

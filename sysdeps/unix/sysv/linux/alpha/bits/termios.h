@@ -25,25 +25,7 @@ typedef unsigned int	speed_t;
 typedef unsigned int	tcflag_t;
 
 #include <bits/termios-struct.h>
-
-/* c_cc characters */
-#define VEOF 0
-#define VEOL 1
-#define VEOL2 2
-#define VERASE 3
-#define VWERASE 4
-#define VKILL 5
-#define VREPRINT 6
-#define VSWTC 7
-#define VINTR 8
-#define VQUIT 9
-#define VSUSP 10
-#define VSTART 12
-#define VSTOP 13
-#define VLNEXT 14
-#define VDISCARD 15
-#define VMIN 16
-#define VTIME 17
+#include <bits/termios-c_cc.h>
 
 /* c_iflag bits */
 #define IGNBRK	0000001

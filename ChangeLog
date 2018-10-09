@@ -1,5 +1,20 @@
 2019-01-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/Makefile (sysdeps_headers): Add
+	termios-cc.h.
+	* sysdeps/unix/sysv/linux/bits/termios-c_cc.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/termios-c_cc.h: New file.
+	* sysdeps/unix/sysv/linux/mips/bits/termios-c_cc.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios-c_cc.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/termios-c_cc.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/termios.h (VINTR, VQUIT, VERASE,
+	VKILL, VEOF, VTIME, VMIN, VSWTC, VSTART, VSTOP, VSUSP, VEOL,
+	VREPRINT, VDISCARD, VWERASE, VLNEXT, VEOLF2): Move to termios-cc.h.
+	* sysdeps/unix/sysv/linux/alpha/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/termios.h: Likewise.
+
 	* sysdeps/unix/sysv/linux/alpha/bits/termios-struct.h: New file.
 	* sysdeps/unix/sysv/linux/bits/termios-struct.h: Likewise.
 	* sysdeps/unix/sysv/linux/mips/bits/termios-struct.h: Likewise.
