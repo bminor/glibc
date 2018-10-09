@@ -1,5 +1,35 @@
 2019-01-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/alpha/bits/termios-struct.h: New file.
+	* sysdeps/unix/sysv/linux/bits/termios-struct.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/termios-struct.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/termios-struct.h: Likewise.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
+	termios-struct.h.
+	* sysdeps/unix/sysv/linux/bits/termios.h (struct termios): Move to
+	termios-struct.h.
+	* sysdeps/unix/sysv/linux/alpha/bits/termios.h (struct termios):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/termios.h (struct termios):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h (struct termios):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/termios.h (struct termios):
+	Likewise.
+	* sysdeps/unix/sysv/linux/kernel_termios.h (_HAVE_C_ISPEED,
+	_HAVE_C_OSPEED): Define.
+	* sysdeps/unix/sysv/linux/mips/kernel_termios.h (_HAVE_C_ISPEED,
+	_HAVE_C_OSPEED): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/kernel_termios.h (_HAVE_C_ISPEED,
+	_HAVE_C_OSPEED): Likewise.
+	* sysdeps/unix/sysv/linux/speed.c [_HAVE_STRUCT_TERMIOS_C_OSPEED]
+	(cfsetospeed): Check for define value instead of existence.
+	[_HAVE_STRUCT_TERMIOS_C_ISPEED] (cfsetispeed): Likewise.
+	* sysdeps/unix/sysv/linux/tcgetattr.c [_HAVE_STRUCT_TERMIOS_C_ISPEED
+	&& _HAVE_C_ISPEED] (__tcgetattr): Likewise.
+	* sysdeps/unix/sysv/linux/tcsetattr.c [_HAVE_STRUCT_TERMIOS_C_ISPEED
+	&& _HAVE_C_ISPEED] (__tcsetattr): Likewise.
+
 	[BZ #17783]
 	* sysdeps/unix/sysv/linux/bits/termios.h [__USE_MISC] (TIOCSER_TEMT):
 	Define.

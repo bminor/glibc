@@ -66,10 +66,10 @@ __tcsetattr (int fd, int optional_actions, const struct termios *termios_p)
   k_termios.c_cflag = termios_p->c_cflag;
   k_termios.c_lflag = termios_p->c_lflag;
   k_termios.c_line = termios_p->c_line;
-#if defined _HAVE_C_ISPEED && defined _HAVE_STRUCT_TERMIOS_C_ISPEED
+#if _HAVE_C_ISPEED && _HAVE_STRUCT_TERMIOS_C_ISPEED
   k_termios.c_ispeed = termios_p->c_ispeed;
 #endif
-#if defined _HAVE_C_OSPEED && defined _HAVE_STRUCT_TERMIOS_C_OSPEED
+#if _HAVE_C_OSPEED && _HAVE_STRUCT_TERMIOS_C_OSPEED
   k_termios.c_ospeed = termios_p->c_ospeed;
 #endif
   memcpy (&k_termios.c_cc[0], &termios_p->c_cc[0],

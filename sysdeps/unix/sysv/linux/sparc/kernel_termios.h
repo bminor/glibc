@@ -34,4 +34,7 @@ struct __kernel_termios
     cc_t c_cc[__KERNEL_NCCS];	/* control characters */
   };
 
+#define _HAVE_C_ISPEED 0
+#define _HAVE_C_OSPEED 0
+
 #endif /* kernel_termios.h */
