@@ -25,23 +25,7 @@ typedef unsigned int	tcflag_t;
 
 #include <bits/termios-struct.h>
 #include <bits/termios-c_cc.h>
-
-/* c_iflag bits */
-#define IGNBRK	0000001
-#define BRKINT	0000002
-#define IGNPAR	0000004
-#define PARMRK	0000010
-#define INPCK	0000020
-#define ISTRIP	0000040
-#define INLCR	0000100
-#define IGNCR	0000200
-#define ICRNL	0000400
-#define IXON	0001000
-#define IXOFF	0002000
-#define IXANY	0004000
-#define IUCLC	0010000
-#define IMAXBEL	0020000
-#define IUTF8	0040000
+#include <bits/termios-c_iflag.h>
 
 /* c_oflag bits */
 #define OPOST	0000001

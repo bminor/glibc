@@ -26,23 +26,7 @@ typedef unsigned int	tcflag_t;
 
 #include <bits/termios-struct.h>
 #include <bits/termios-c_cc.h>
-
-/* c_iflag bits */
-#define IGNBRK	0000001		/* Ignore break condition.  */
-#define BRKINT	0000002		/* Signal interrupt on break.  */
-#define IGNPAR	0000004		/* Ignore characters with parity errors.  */
-#define PARMRK	0000010		/* Mark parity and framing errors.  */
-#define INPCK	0000020		/* Enable input parity check.  */
-#define ISTRIP	0000040		/* Strip 8th bit off characters.  */
-#define INLCR	0000100		/* Map NL to CR on input.  */
-#define IGNCR	0000200		/* Ignore CR.  */
-#define ICRNL	0000400		/* Map CR to NL on input.  */
-#define IUCLC	0001000		/* Map upper case to lower case on input.  */
-#define IXON	0002000		/* Enable start/stop output control.  */
-#define IXANY	0004000		/* Any character will restart after stop.  */
-#define IXOFF	0010000		/* Enable start/stop input control.  */
-#define IMAXBEL 0020000		/* Ring bell when input queue is full.  */
-#define IUTF8	0040000		/* Input is UTF8.  */
+#include <bits/termios-c_iflag.h>
 
 /* c_oflag bits */
 #define OPOST	0000001		/* Perform output processing.  */
