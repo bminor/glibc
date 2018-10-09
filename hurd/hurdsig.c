@@ -292,6 +292,7 @@ _hurdsig_abort_rpcs (struct hurd_sigstate *ss, int signo, int sigthread,
 		     struct machine_thread_all_state *state, int *state_change,
 		     void (*reply) (void))
 {
+  extern const void _hurd_intr_rpc_msg_about_to;
   extern const void _hurd_intr_rpc_msg_in_trap;
   mach_port_t rcv_port = MACH_PORT_NULL;
   mach_port_t intr_port;
@@ -307,7 +308,8 @@ _hurdsig_abort_rpcs (struct hurd_sigstate *ss, int signo, int sigthread,
      receive completes immediately or aborts.  */
   abort_thread (ss, state, reply);
 
-  if (state->basic.PC < (natural_t) &_hurd_intr_rpc_msg_in_trap)
+  if (state->basic.PC >= (natural_t) &_hurd_intr_rpc_msg_about_to &&
+      state->basic.PC <  (natural_t) &_hurd_intr_rpc_msg_in_trap)
     {
       /* The thread is about to do the RPC, but hasn't yet entered
 	 mach_msg.  Mutate the thread's state so it knows not to try
