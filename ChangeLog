@@ -1,5 +1,15 @@
 2019-01-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios-misc.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h [__USE_MISC]
+	(struct sgtty, struct tchars, struct ltchars, TIOCPKT_DATA,
+	TIOCPKT_FLUSHREAD, TIOCPKT_FLUSHWRITE, TIOCPKT_STOP, TIOCPKT_START,
+	TIOCPKT_NOSTOP, TIOCPKT_DOSTOP, _VINTR, _VQUIT, _VERASE, _VKILL,
+	_VEOF, _VMIN, _VEOL, _VTIME, _VEOL2, _VSWTC): Move to
+	termios-misc.h.
+	* sysdeps/unix/sysv/linux/powerpc/Makefile [$subdir == misc]
+	(sysdep_headers): Add termios-misc.h.
+
 	* sysdeps/unix/sysv/linux/bits/termios.h (_IOT_termios): Remove.
 	* sysdeps/unix/sysv/linux/alpha/bits/termios.h: Likewise.
 	* sysdeps/unix/sysv/linux/mips/bits/termios.h: Likewise.

@@ -67,58 +67,10 @@ typedef unsigned int	tcflag_t;
 
 #include <bits/termios-tcflow.h>
 
-#ifdef __USE_MISC
-
-struct sgttyb {
-	char	sg_ispeed;
-	char	sg_ospeed;
-	char	sg_erase;
-	char	sg_kill;
-	short	sg_flags;
-};
-
-struct tchars {
-	char	t_intrc;
-	char	t_quitc;
-	char	t_startc;
-	char	t_stopc;
-	char	t_eofc;
-	char	t_brkc;
-};
-
-struct ltchars {
-	char	t_suspc;
-	char	t_dsuspc;
-	char	t_rprntc;
-	char	t_flushc;
-	char	t_werasc;
-	char	t_lnextc;
-};
-
-/* Used for packet mode */
-#define TIOCPKT_DATA		 0
-#define TIOCPKT_FLUSHREAD	 1
-#define TIOCPKT_FLUSHWRITE	 2
-#define TIOCPKT_STOP		 4
-#define TIOCPKT_START		 8
-#define TIOCPKT_NOSTOP		16
-#define TIOCPKT_DOSTOP		32
-
-/* c_cc characters */
-#define _VINTR	0
-#define _VQUIT	1
-#define _VERASE	2
-#define _VKILL	3
-#define _VEOF	4
-#define _VMIN	5
-#define _VEOL	6
-#define _VTIME	7
-#define _VEOL2	8
-#define _VSWTC	9
+#include <bits/termios-misc.h>
 
 #ifdef __USE_MISC
 /* ioctl (fd, TIOCSERGETLSR, &result) where result may be as below */
 # define TIOCSER_TEMT    0x01	/* Transmitter physically empty */
 #endif
 
-#endif /* __USE_MISC  */
