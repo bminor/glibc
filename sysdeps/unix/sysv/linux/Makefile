@@ -46,7 +46,8 @@ sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h \
 		  bits/msq-pad.h bits/sem-pad.h bits/shmlba.h bits/shm-pad.h \
 		  bits/termios-struct.h bits/termios-c_cc.h \
 		  bits/termios-c_iflag.h bits/termios-c_oflag.h \
-		  bits/termios-baud.h bits/termios-c_cflag.h
+		  bits/termios-baud.h bits/termios-c_cflag.h \
+		  bits/termios-c_lflag.h
 
 tests += tst-clone tst-clone2 tst-clone3 tst-fanotify tst-personality \
 	 tst-quota tst-sync_file_range tst-sysconf-iov_max tst-ttyname \

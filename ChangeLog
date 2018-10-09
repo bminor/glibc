@@ -1,6 +1,22 @@
 2019-01-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
+	termios-c_lflag.h.
+	* sysdeps/unix/sysv/linux/bits/termios-c_lflag.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/bits/termios-c_lflag.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/termios-c_lflag.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios-c_lflag.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/termios.h (ISIG, ISCANON, ECHO, ECHOE,
+	ECHOK, ECHONL, NOFLSH, TOSTOP, IEXTEN): Move to termios-c_lflag.h.
+	[__USE_MISC || (__USE_XOPEN && !__USE_XOPEN2K)] (XCASE): Likewise.
+	[__USE_MISC] (ECHOCTL, ECHOPRT, ECHOKE, FLUSHO, PENDIN, EXTPROC):
+	Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/termios.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
 	termios-c_cflag.h.
 	* sysdeps/unix/sysv/linux/bits/termios-c_cflag.h: New file.
 	* sysdeps/unix/sysv/linux/alpha/bits/termios-c_cflag.h: Likewise.

@@ -53,30 +53,7 @@ typedef unsigned int	tcflag_t;
 #include <bits/termios-baud.h>
 
 #include <bits/termios-c_cflag.h>
-
-/* c_lflag bits */
-#define ISIG	0000001
-#define ICANON	0000002
-#if defined __USE_MISC || (defined __USE_XOPEN && !defined __USE_XOPEN2K)
-# define XCASE	0000004
-#endif
-#define ECHO	0000010
-#define ECHOE	0000020
-#define ECHOK	0000040
-#define ECHONL	0000100
-#define NOFLSH	0000200
-#define TOSTOP	0000400
-#ifdef __USE_MISC
-# define ECHOCTL 0001000
-# define ECHOPRT 0002000
-# define ECHOKE	 0004000
-# define FLUSHO	 0010000
-# define PENDIN	 0040000
-#endif
-#define IEXTEN	0100000
-#ifdef __USE_MISC
-# define EXTPROC 0200000
-#endif
+#include <bits/termios-c_lflag.h>
 
 #ifdef __USE_MISC
 /* ioctl (fd, TIOCSERGETLSR, &result) where result may be as below */
