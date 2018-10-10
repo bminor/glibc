@@ -20,6 +20,7 @@
 #endif
 
 #include <bits/types.h>
+#include <bits/wordsize.h>
 
 /* Define options for message queue functions.  */
 #define MSG_NOERROR	010000	/* no error if message is too big */
@@ -39,11 +40,17 @@ struct msqid_ds
 {
   struct ipc_perm msg_perm;	/* structure describing operation permission */
   __time_t msg_stime;		/* time of last msgsnd command */
+#if __WORDSIZE == 32
   unsigned long int __glibc_reserved1;
+#endif
   __time_t msg_rtime;		/* time of last msgrcv command */
+#if __WORDSIZE == 32
   unsigned long int __glibc_reserved2;
+#endif
   __time_t msg_ctime;		/* time of last change */
+#if __WORDSIZE == 32
   unsigned long int __glibc_reserved3;
+#endif
   unsigned long int __msg_cbytes; /* current number of bytes on queue */
   msgqnum_t msg_qnum;		/* number of messages currently on queue */
   msglen_t msg_qbytes;		/* max number of bytes allowed on queue */

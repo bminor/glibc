@@ -1,3 +1,13 @@
+2018-10-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/bits/msq.h: Include <bits/wordsize.h>.
+	(struct msqid_ds): Condition padding after time fields on
+	[__WORDSIZE == 32].
+	* sysdeps/unix/sysv/linux/alpha/bits/msq.h: Remove file.
+	* sysdeps/unix/sysv/linux/generic/bits/msq.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/msq.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/msq.h: Likewise.
+
 2018-10-09  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* nss/tst-nss-files-hosts-multi.c (TIMEOUT): Define.
