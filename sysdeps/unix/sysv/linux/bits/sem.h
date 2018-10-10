@@ -20,6 +20,7 @@
 #endif
 
 #include <sys/types.h>
+#include <bits/wordsize.h>
 
 /* Flags for `semop'.  */
 #define SEM_UNDO	0x1000		/* undo the operation on exit */
@@ -39,9 +40,13 @@ struct semid_ds
 {
   struct ipc_perm sem_perm;		/* operation permission struct */
   __time_t sem_otime;			/* last semop() time */
+#if __WORDSIZE == 32
   unsigned long int __glibc_reserved1;
+#endif
   __time_t sem_ctime;			/* last time changed by semctl() */
+#if __WORDSIZE == 32
   unsigned long int __glibc_reserved2;
+#endif
   unsigned long int sem_nsems;		/* number of semaphores in set */
   unsigned long int __glibc_reserved3;
   unsigned long int __glibc_reserved4;
