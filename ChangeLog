@@ -1,5 +1,12 @@
 2018-10-10  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/bits/shm.h: Include <bits/wordsize.h>.
+	(struct shmid_ds): Condition padding after time fields on
+	[__WORDSIZE == 32].
+	* sysdeps/unix/sysv/linux/alpha/bits/shm.h: Remove file.
+	* sysdeps/unix/sysv/linux/generic/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/shm.h: Likewise.
+
 	* sysdeps/unix/sysv/linux/bits/sem.h: Include <bits/wordsize.h>.
 	(struct semid_ds): Condition padding after time fields on
 	[__WORDSIZE == 32].
