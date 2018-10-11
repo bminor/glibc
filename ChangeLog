@@ -1,3 +1,27 @@
+2018-10-11  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
+	bits/msq-pad.h.
+	* sysdeps/unix/sysv/linux/bits/msq.h: Include <bits/msq-pad.h>
+	instead of <bits/wordsize.h>.
+	(msgqnum_t): Define as __syscall_ulong_t.
+	(msglen_t): Likewise.
+	(__MSQ_PAD_TIME): New macro, depending on [__MSQ_PAD_BEFORE_TIME]
+	and [__MSQ_PAD_AFTER_TIME].
+	(struct msqid_ds): Define time fields using __MSQ_PAD_TIME.  Use
+	__syscall_ulong_t instead of unsigned long int.
+	* sysdeps/unix/sysv/linux/bits/msq-pad.h: New file.
+	* sysdeps/unix/sysv/linux/hppa/bits/msq-pad.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/msq-pad.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/msq-pad.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/msq-pad.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86/bits/msq-pad.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/bits/msq.h: Remove.
+	* sysdeps/unix/sysv/linux/mips/bits/msq.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/msq.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/msq.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86/bits/msq.h: Likewise.
+
 2018-10-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/bits/shm.h: Include <bits/wordsize.h>.
