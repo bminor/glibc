@@ -20,7 +20,7 @@
 #endif
 
 #include <sys/types.h>
-#include <bits/wordsize.h>
+#include <bits/sem-pad.h>
 
 /* Flags for `semop'.  */
 #define SEM_UNDO	0x1000		/* undo the operation on exit */
@@ -35,21 +35,26 @@
 #define SETALL		17		/* set all semval's */
 
 
+#if __SEM_PAD_BEFORE_TIME
+# define __SEM_PAD_TIME(NAME, RES)				\
+  __syscall_ulong_t __glibc_reserved ## RES; __time_t NAME
+#elif __SEM_PAD_AFTER_TIME
+# define __SEM_PAD_TIME(NAME, RES)				\
+  __time_t NAME; __syscall_ulong_t __glibc_reserved ## RES
+#else
+# define __SEM_PAD_TIME(NAME, RES)		\
+  __time_t NAME
+#endif
+
 /* Data structure describing a set of semaphores.  */
 struct semid_ds
 {
   struct ipc_perm sem_perm;		/* operation permission struct */
-  __time_t sem_otime;			/* last semop() time */
-#if __WORDSIZE == 32
-  unsigned long int __glibc_reserved1;
-#endif
-  __time_t sem_ctime;			/* last time changed by semctl() */
-#if __WORDSIZE == 32
-  unsigned long int __glibc_reserved2;
-#endif
-  unsigned long int sem_nsems;		/* number of semaphores in set */
-  unsigned long int __glibc_reserved3;
-  unsigned long int __glibc_reserved4;
+  __SEM_PAD_TIME (sem_otime, 1);	/* last semop() time */
+  __SEM_PAD_TIME (sem_ctime, 2);	/* last time changed by semctl() */
+  __syscall_ulong_t sem_nsems;		/* number of semaphores in set */
+  __syscall_ulong_t __glibc_reserved3;
+  __syscall_ulong_t __glibc_reserved4;
 };
 
 /* The user should define a union like the following to use it for arguments

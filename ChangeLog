@@ -1,3 +1,25 @@
+2018-10-15  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
+	bits/sem-pad.h.
+	* sysdeps/unix/sysv/linux/bits/sem.h: Include <bits/sem-pad.h>
+	instead of <bits/wordsize.h>.
+	(__SEM_PAD_TIME): New macro, depending on [__SEM_PAD_BEFORE_TIME]
+	and [__SEM_PAD_AFTER_TIME].
+	(struct semid_ds): Define time fields using __SEM_PAD_TIME.  Use
+	__syscall_ulong_t instead of unsigned long int.
+	* sysdeps/unix/sysv/linux/bits/sem-pad.h: New file.
+	* sysdeps/unix/sysv/linux/hppa/bits/sem-pad.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/sem-pad.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/sem-pad.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/sem-pad.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86/bits/sem-pad.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/bits/sem.h: Remove.
+	* sysdeps/unix/sysv/linux/mips/bits/sem.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/sem.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/sem.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86/bits/sem.h: Likewise.
+
 2018-10-14  Paul Eggert  <eggert@cs.ucla.edu>
 
 	regex: simplify by using intprops.h
