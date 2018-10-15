@@ -1,3 +1,17 @@
+2018-10-14  Paul Eggert  <eggert@cs.ucla.edu>
+
+	regex: __builtin_expect → __glibc_unlikely
+	[BZ#23744]
+	This refactoring was prompted by a problem when the regex code is
+	used as part of Gnulib and when the builder’s compiler does not grok
+	__builtin_expect.  Problem reported for Gawk by Nelson H.F. Beebe in:
+	https://lists.gnu.org/r/bug-gnulib/2018-09/msg00137.html
+	Although this refactoring does not fix the problem directly,
+	we might as well have Gawk use the now-preferred glibc style for when
+	__builtin_expect is unavailable.
+	* posix/regex_internal.h (BE): Remove.
+	All uses replaced by __glibc_unlikely or __glibc_likely.
+
 2018-10-11  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
