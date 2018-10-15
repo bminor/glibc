@@ -1,5 +1,11 @@
 2018-10-14  Paul Eggert  <eggert@cs.ucla.edu>
 
+	regex: simplify by using intprops.h
+	[BZ#23744]
+	* posix/regex_internal.h [_LIBC]: Include intprops.h.
+	(TYPE_SIGNED, INT_ADD_WRAPV) [_LIBC]: Remove.
+	intprops.h defines them.
+
 	regex: __builtin_expect → __glibc_unlikely
 	[BZ#23744]
 	This refactoring was prompted by a problem when the regex code is

@@ -33,23 +33,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-/* Properties of integers.  Although Gnulib has intprops.h, glibc does
-   without for now.  */
-#ifndef _LIBC
-# include "intprops.h"
-#else
-/* True if the real type T is signed.  */
-# define TYPE_SIGNED(t) (! ((t) 0 < (t) -1))
-
-/* True if adding the nonnegative Idx values A and B would overflow.
-   If false, set *R to A + B.  A, B, and R may be evaluated more than
-   once, or zero times.  Although this is not a full implementation of
-   Gnulib INT_ADD_WRAPV, it is good enough for glibc regex code.
-   FIXME: This implementation is a fragile stopgap, and this file would
-   be simpler and more robust if intprops.h were migrated into glibc.  */
-# define INT_ADD_WRAPV(a, b, r) \
-   (IDX_MAX - (a) < (b) ? true : (*(r) = (a) + (b), false))
-#endif
+#include <intprops.h>
 
 #ifdef _LIBC
 # include <libc-lock.h>
