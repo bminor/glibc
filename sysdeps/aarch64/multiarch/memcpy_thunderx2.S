@@ -537,7 +537,7 @@ L(dst_unaligned):
 	   as immediate. 15 code chunks process each possible
 	   index value. Computed goto is used to reach the
 	   required code. */
-	
+
 	/* Store the 16 bytes to dst and align dst for further
 	   operations, several bytes will be stored at this
 	   address once more */
