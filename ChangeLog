@@ -1,3 +1,9 @@
+2018-10-16 Anton Youdkevitch <anton.youdkevitch@bell-sw.com>
+
+	* sysdeps/aarch64/multiarch/memcpy_thunderx.S: Remove thunderx2 code.
+	* sysdeps/aarch64/multiarch/memcpy_thunderx2.S: New implementation
+	for thunderX2.
+
 2018-10-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
