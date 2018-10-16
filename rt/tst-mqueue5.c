@@ -33,8 +33,6 @@
 #include <unistd.h>
 #include "tst-mqueue.h"
 
-#define TIMEOUT 3
-
 #if _POSIX_THREADS && defined SIGRTMIN && defined SA_SIGINFO
 # include <pthread.h>
 

@@ -35,7 +35,6 @@ alrm_handler (int sig)
 {
 }
 
-#define TIMEOUT 10
 #define TEST_FUNCTION do_test ()
 static int
 do_test (void)

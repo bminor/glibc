@@ -53,6 +53,5 @@ do_test (int argc, char **argv)
   return 1;
 }
 
-#define TIMEOUT 3
 #define TEST_FUNCTION_ARGV do_test
 #include <support/test-driver.c>

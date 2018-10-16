@@ -205,5 +205,4 @@ cmdline_process (int c)
 #define CMDLINE_PROCESS cmdline_process
 #define CLEANUP_HANDLER do_cleanup
 #define PREPARE do_prepare
-#define TIMEOUT 5
 #include <support/test-driver.c>

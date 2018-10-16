@@ -25,10 +25,6 @@
 #include <unistd.h>
 
 
-/* We might wait for 3 seconds, so increase timeout to 10 seconds.  */
-#define TIMEOUT 10
-
-
 #define TEST_FUNCTION do_test ()
 static int
 do_test (void)

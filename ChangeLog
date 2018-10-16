@@ -1,3 +1,67 @@
+2018-10-17  Andreas Schwab  <schwab@suse.de>
+
+	* benchtests/bench-strtod.c (TIMEOUT): Don't define.
+	* crypt/badsalttest.c (TIMEOUT): Likewise.
+	* crypt/sha256c-test.c (TIMEOUT): Likewise.
+	* dirent/tst-fdopendir.c (TIMEOUT): Likewise.
+	* io/test-lfs.c (TIMEOUT): Likewise.
+	* libio/tst-atime.c (TIMEOUT): Likewise.
+	* localedata/tst-leaks.c (TIMEOUT): Likewise.
+	* nptl/tst-cancel19.c (TIMEOUT): Likewise.
+	* nptl/tst-cancel22.c (TIMEOUT): Likewise.
+	* nptl/tst-cancel25.c (TIMEOUT): Likewise.
+	* nptl/tst-cancel7.c (TIMEOUT): Likewise.
+	* nptl/tst-cond-except.c (TIMEOUT): Likewise.
+	* nptl/tst-cond11.c (TIMEOUT): Likewise.
+	* nptl/tst-cond14.c (TIMEOUT): Likewise.
+	* nptl/tst-cond15.c (TIMEOUT): Likewise.
+	* nptl/tst-cond24.c (TIMEOUT): Likewise.
+	* nptl/tst-cond25.c (TIMEOUT): Likewise.
+	* nptl/tst-kill2.c (TIMEOUT): Likewise.
+	* nptl/tst-kill3.c (TIMEOUT): Likewise.
+	* nptl/tst-mutex4.c (TIMEOUT): Likewise.
+	* nptl/tst-mutex5.c (TIMEOUT): Likewise.
+	* nptl/tst-mutex9.c (TIMEOUT): Likewise.
+	* nptl/tst-once2.c (TIMEOUT): Likewise.
+	* nptl/tst-once3.c (TIMEOUT): Likewise.
+	* nptl/tst-once4.c (TIMEOUT): Likewise.
+	* nptl/tst-robust8.c (TIMEOUT): Likewise.
+	* nptl/tst-robust9.c (TIMEOUT): Likewise.
+	* nptl/tst-rwlock16.c (TIMEOUT): Likewise.
+	* nptl/tst-sem14.c (TIMEOUT): Likewise.
+	* nptl/tst-sem6.c (TIMEOUT): Likewise.
+	* nptl/tst-signal3.c (TIMEOUT): Likewise.
+	* nptl/tst-spin4.c (TIMEOUT): Likewise.
+	* nptl/tst-tls3.c (TIMEOUT): Likewise.
+	* nptl/tst-tls4.c (TIMEOUT): Likewise.
+	* posix/tst-chmod.c (TIMEOUT): Likewise.
+	* posix/tst-getaddrinfo4.c (TIMEOUT): Likewise.
+	* posix/tst-getaddrinfo5.c (TIMEOUT): Likewise.
+	* posix/tst-preadwrite-common.c (TIMEOUT): Likewise.
+	* posix/tst-regex2.c (TIMEOUT): Likewise.
+	* posix/tst-waitid.c (TIMEOUT): Likewise.
+	* rt/tst-aio.c (TIMEOUT): Likewise.
+	* rt/tst-aio10.c (TIMEOUT): Likewise.
+	* rt/tst-aio4.c (TIMEOUT): Likewise.
+	* rt/tst-aio5.c (TIMEOUT): Likewise.
+	* rt/tst-aio6.c (TIMEOUT): Likewise.
+	* rt/tst-aio64.c (TIMEOUT): Likewise.
+	* rt/tst-aio7.c (TIMEOUT): Likewise.
+	* rt/tst-aio9.c (TIMEOUT): Likewise.
+	* rt/tst-clock.c (TIMEOUT): Likewise.
+	* rt/tst-cpuclock1.c (TIMEOUT): Likewise.
+	* rt/tst-cpuclock2.c (TIMEOUT): Likewise.
+	* rt/tst-mqueue2.c (TIMEOUT): Likewise.
+	* rt/tst-mqueue4.c (TIMEOUT): Likewise.
+	* rt/tst-mqueue5.c (TIMEOUT): Likewise.
+	* rt/tst-timer4.c (TIMEOUT): Likewise.
+	* stdio-common/tst-fseek.c (TIMEOUT): Likewise.
+	* stdio-common/tst-rndseek.c (TIMEOUT): Likewise.
+	* stdlib/tst-empty-env.c (TIMEOUT): Likewise.
+	* sysdeps/wordsize-64/tst-writev.c (TIMEOUT): Likewise.
+	* time/tst-ftime.c (TIMEOUT): Likewise.
+	* timezone/tst-tzset.c (TIMEOUT): Likewise.
+
 2018-10-16 Anton Youdkevitch <anton.youdkevitch@bell-sw.com>
 
 	* sysdeps/aarch64/multiarch/memcpy_thunderx.S: Remove thunderx2 code.

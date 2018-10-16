@@ -330,7 +330,6 @@ do_test (void)
 
   return result;
 }
-# define TIMEOUT 8
 # define TEST_FUNCTION do_test ()
 #endif
 

@@ -23,8 +23,6 @@
 #include <sys/wait.h>
 #include <signal.h>
 
-#define TIMEOUT 15
-
 static void
 test_child (void)
 {

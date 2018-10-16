@@ -23,10 +23,6 @@
 #include <sys/time.h>
 
 
-/* We expect to wait for 3 seconds so we have to increase the timeout.  */
-#define TIMEOUT 10 /* sec */
-
-
 #define TEST_FUNCTION do_test ()
 static int
 do_test (void)

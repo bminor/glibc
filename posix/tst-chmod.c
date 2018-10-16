@@ -369,9 +369,4 @@ do_test (int argc, char *argv[])
   return result;
 }
 
-
-/* We need a few seconds since we have a few sleeps in the code.  */
-#define TIMEOUT	20
-
-
 #include "../test-skeleton.c"

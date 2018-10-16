@@ -26,9 +26,6 @@
 /* We want to see output immediately.  */
 #define STDOUT_UNBUFFERED
 
-/* We expect to run at least 10 seconds.  */
-#define TIMEOUT 15
-
 static int
 clock_test (clockid_t cl)
 {

@@ -27,9 +27,6 @@ static void do_prepare (void);
 static int do_test (void);
 #define TEST_FUNCTION		do_test ()
 
-/* We might need a bit longer timeout.  */
-#define TIMEOUT 20 /* sec */
-
 /* This defines the `main' function and some more.  */
 #include <test-skeleton.c>
 

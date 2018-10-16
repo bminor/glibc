@@ -244,6 +244,5 @@ do_test (void)
   return do_test_wait (thread_fun_timed);
 }
 
-#define TIMEOUT 20
 #define TEST_FUNCTION do_test ()
 #include "../test-skeleton.c"

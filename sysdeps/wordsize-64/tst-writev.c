@@ -110,8 +110,5 @@ do_test (void)
   return 0;
 }
 
-/* Time enough for a large writev syscall to complete.  */
-#define TIMEOUT 20
-
 #define TEST_FUNCTION do_test ()
 #include "../test-skeleton.c"

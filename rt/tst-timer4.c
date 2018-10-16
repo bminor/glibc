@@ -178,7 +178,6 @@ check_ts (const char *name, const struct timespec *start,
     return 0;
 }
 
-#define TIMEOUT 15
 #define TEST_FUNCTION do_test ()
 static int
 do_test (void)

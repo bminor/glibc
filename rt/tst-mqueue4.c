@@ -32,7 +32,6 @@
 #include <unistd.h>
 #include "tst-mqueue.h"
 
-#define TIMEOUT 4
 #define TEST_FUNCTION do_test ()
 static int
 do_test (void)

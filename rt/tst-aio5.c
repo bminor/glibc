@@ -23,9 +23,6 @@
 #include <unistd.h>
 #include <errno.h>
 
-/* We might need a bit longer timeout.  */
-#define TIMEOUT 10 /* sec */
-
 #define MY_SIVAL 27
 
 volatile sig_atomic_t flag;

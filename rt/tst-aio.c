@@ -34,9 +34,6 @@ extern int do_test (int argc, char *argv[]);
 /* We have a preparation function.  */
 #define PREPARE do_prepare
 
-/* We might need a bit longer timeout.  */
-#define TIMEOUT 20 /* sec */
-
 /* This defines the `main' function and some more.  */
 #include <test-skeleton.c>
 
