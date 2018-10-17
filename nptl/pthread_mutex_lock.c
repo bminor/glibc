@@ -62,6 +62,8 @@ static int __pthread_mutex_lock_full (pthread_mutex_t *mutex)
 int
 __pthread_mutex_lock (pthread_mutex_t *mutex)
 {
+  /* See concurrency notes regarding mutex type which is loaded from __kind
+     in struct __pthread_mutex_s in sysdeps/nptl/bits/thread-shared-types.h.  */
   unsigned int type = PTHREAD_MUTEX_TYPE_ELISION (mutex);
 
   LIBC_PROBE (mutex_entry, 1, mutex);
@@ -350,8 +352,14 @@ __pthread_mutex_lock_full (pthread_mutex_t *mutex)
     case PTHREAD_MUTEX_PI_ROBUST_NORMAL_NP:
     case PTHREAD_MUTEX_PI_ROBUST_ADAPTIVE_NP:
       {
-	int kind = mutex->__data.__kind & PTHREAD_MUTEX_KIND_MASK_NP;
-	int robust = mutex->__data.__kind & PTHREAD_MUTEX_ROBUST_NORMAL_NP;
+	int kind, robust;
+	{
+	  /* See concurrency notes regarding __kind in struct __pthread_mutex_s
+	     in sysdeps/nptl/bits/thread-shared-types.h.  */
+	  int mutex_kind = atomic_load_relaxed (&(mutex->__data.__kind));
+	  kind = mutex_kind & PTHREAD_MUTEX_KIND_MASK_NP;
+	  robust = mutex_kind & PTHREAD_MUTEX_ROBUST_NORMAL_NP;
+	}
 
 	if (robust)
 	  {
@@ -502,7 +510,10 @@ __pthread_mutex_lock_full (pthread_mutex_t *mutex)
     case PTHREAD_MUTEX_PP_NORMAL_NP:
     case PTHREAD_MUTEX_PP_ADAPTIVE_NP:
       {
-	int kind = mutex->__data.__kind & PTHREAD_MUTEX_KIND_MASK_NP;
+	/* See concurrency notes regarding __kind in struct __pthread_mutex_s
+	   in sysdeps/nptl/bits/thread-shared-types.h.  */
+	int kind = atomic_load_relaxed (&(mutex->__data.__kind))
+	  & PTHREAD_MUTEX_KIND_MASK_NP;
 
 	oldval = mutex->__data.__lock;
 
@@ -607,15 +618,18 @@ hidden_def (__pthread_mutex_lock)
 void
 __pthread_mutex_cond_lock_adjust (pthread_mutex_t *mutex)
 {
-  assert ((mutex->__data.__kind & PTHREAD_MUTEX_PRIO_INHERIT_NP) != 0);
-  assert ((mutex->__data.__kind & PTHREAD_MUTEX_ROBUST_NORMAL_NP) == 0);
-  assert ((mutex->__data.__kind & PTHREAD_MUTEX_PSHARED_BIT) == 0);
+  /* See concurrency notes regarding __kind in struct __pthread_mutex_s
+     in sysdeps/nptl/bits/thread-shared-types.h.  */
+  int mutex_kind = atomic_load_relaxed (&(mutex->__data.__kind));
+  assert ((mutex_kind & PTHREAD_MUTEX_PRIO_INHERIT_NP) != 0);
+  assert ((mutex_kind & PTHREAD_MUTEX_ROBUST_NORMAL_NP) == 0);
+  assert ((mutex_kind & PTHREAD_MUTEX_PSHARED_BIT) == 0);
 
   /* Record the ownership.  */
   pid_t id = THREAD_GETMEM (THREAD_SELF, tid);
   mutex->__data.__owner = id;
 
-  if (mutex->__data.__kind == PTHREAD_MUTEX_PI_RECURSIVE_NP)
+  if (mutex_kind == PTHREAD_MUTEX_PI_RECURSIVE_NP)
     ++mutex->__data.__count;
 }
 #endif

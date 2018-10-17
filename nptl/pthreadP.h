@@ -110,19 +110,23 @@ enum
 };
 #define PTHREAD_MUTEX_PSHARED_BIT 128
 
+/* See concurrency notes regarding __kind in struct __pthread_mutex_s
+   in sysdeps/nptl/bits/thread-shared-types.h.  */
 #define PTHREAD_MUTEX_TYPE(m) \
-  ((m)->__data.__kind & 127)
+  (atomic_load_relaxed (&((m)->__data.__kind)) & 127)
 /* Don't include NO_ELISION, as that type is always the same
    as the underlying lock type.  */
 #define PTHREAD_MUTEX_TYPE_ELISION(m) \
-  ((m)->__data.__kind & (127|PTHREAD_MUTEX_ELISION_NP))
+  (atomic_load_relaxed (&((m)->__data.__kind))	\
+   & (127 | PTHREAD_MUTEX_ELISION_NP))
 
 #if LLL_PRIVATE == 0 && LLL_SHARED == 128
 # define PTHREAD_MUTEX_PSHARED(m) \
-  ((m)->__data.__kind & 128)
+  (atomic_load_relaxed (&((m)->__data.__kind)) & 128)
 #else
 # define PTHREAD_MUTEX_PSHARED(m) \
-  (((m)->__data.__kind & 128) ? LLL_SHARED : LLL_PRIVATE)
+  ((atomic_load_relaxed (&((m)->__data.__kind)) & 128)	\
+   ? LLL_SHARED : LLL_PRIVATE)
 #endif
 
 /* The kernel when waking robust mutexes on exit never uses

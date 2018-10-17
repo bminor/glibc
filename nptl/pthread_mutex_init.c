@@ -101,7 +101,7 @@ __pthread_mutex_init (pthread_mutex_t *mutex,
   memset (mutex, '\0', __SIZEOF_PTHREAD_MUTEX_T);
 
   /* Copy the values from the attribute.  */
-  mutex->__data.__kind = imutexattr->mutexkind & ~PTHREAD_MUTEXATTR_FLAG_BITS;
+  int mutex_kind = imutexattr->mutexkind & ~PTHREAD_MUTEXATTR_FLAG_BITS;
 
   if ((imutexattr->mutexkind & PTHREAD_MUTEXATTR_FLAG_ROBUST) != 0)
     {
@@ -111,17 +111,17 @@ __pthread_mutex_init (pthread_mutex_t *mutex,
 	return ENOTSUP;
 #endif
 
-      mutex->__data.__kind |= PTHREAD_MUTEX_ROBUST_NORMAL_NP;
+      mutex_kind |= PTHREAD_MUTEX_ROBUST_NORMAL_NP;
     }
 
   switch (imutexattr->mutexkind & PTHREAD_MUTEXATTR_PROTOCOL_MASK)
     {
     case PTHREAD_PRIO_INHERIT << PTHREAD_MUTEXATTR_PROTOCOL_SHIFT:
-      mutex->__data.__kind |= PTHREAD_MUTEX_PRIO_INHERIT_NP;
+      mutex_kind |= PTHREAD_MUTEX_PRIO_INHERIT_NP;
       break;
 
     case PTHREAD_PRIO_PROTECT << PTHREAD_MUTEXATTR_PROTOCOL_SHIFT:
-      mutex->__data.__kind |= PTHREAD_MUTEX_PRIO_PROTECT_NP;
+      mutex_kind |= PTHREAD_MUTEX_PRIO_PROTECT_NP;
 
       int ceiling = (imutexattr->mutexkind
 		     & PTHREAD_MUTEXATTR_PRIO_CEILING_MASK)
@@ -145,7 +145,11 @@ __pthread_mutex_init (pthread_mutex_t *mutex,
      FUTEX_PRIVATE_FLAG FUTEX_WAKE.  */
   if ((imutexattr->mutexkind & (PTHREAD_MUTEXATTR_FLAG_PSHARED
 				| PTHREAD_MUTEXATTR_FLAG_ROBUST)) != 0)
-    mutex->__data.__kind |= PTHREAD_MUTEX_PSHARED_BIT;
+    mutex_kind |= PTHREAD_MUTEX_PSHARED_BIT;
+
+  /* See concurrency notes regarding __kind in struct __pthread_mutex_s
+     in sysdeps/nptl/bits/thread-shared-types.h.  */
+  atomic_store_relaxed (&(mutex->__data.__kind), mutex_kind);
 
   /* Default values: mutex not used yet.  */
   // mutex->__count = 0;	already done by memset
