@@ -1,3 +1,12 @@
+2018-10-17  Zack Weinberg  <zackw@panix.com>
+
+	* manual/job.texi (Job Control is Optional): Remove node, as
+	job control has not been optional in quite some time.
+	(Job Control): Mention briefly that systems older than
+	POSIX.1-2001 might not support job control.
+	* manual/conf.texi (_POSIX_JOB_CONTROL): Will always be
+	defined on systems conforming to POSIX.1-2001.
+
 2018-10-17  Arjun Shankar  <arjun@redhat.com>
 
 	[BZ #22062]

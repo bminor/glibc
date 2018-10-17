@@ -19,9 +19,15 @@ You need to be familiar with concepts relating to process creation
 Handling}) in order to understand this material presented in this
 chapter.
 
+@vindex _POSIX_JOB_CONTROL
+Some old systems do not support job control, but @gnusystems{} always
+have, and it is a required feature in the 2001 revision of POSIX.1
+(@pxref{POSIX}).  If you need to be portable to old systems, you can
+use the @code{_POSIX_JOB_CONTROL} macro to test at compile-time
+whether the system supports job control.  @xref{System Options}.
+
 @menu
 * Concepts of Job Control::     Jobs can be controlled by a shell.
-* Job Control is Optional::     Not all POSIX systems support job control.
 * Controlling Terminal::        How a process gets its controlling terminal.
 * Access to the Terminal::      How processes share the controlling terminal.
 * Orphaned Process Groups::     Jobs left after the user logs out.
@@ -29,7 +35,7 @@ chapter.
 * Functions for Job Control::   Functions to control process groups.
 @end menu
 
-@node Concepts of Job Control, Job Control is Optional,  , Job Control
+@node Concepts of Job Control
 @section Concepts of Job Control
 
 @cindex shell
@@ -102,30 +108,7 @@ jobs between foreground and background.
 @xref{Access to the Terminal}, for more information about I/O to the
 controlling terminal.
 
-@node Job Control is Optional, Controlling Terminal, Concepts of Job Control , Job Control
-@section Job Control is Optional
-@cindex job control is optional
-
-Not all operating systems support job control.  @gnusystems{} do
-support job control, but if you are using @theglibc{} on some other
-system, that system may not support job control itself.
-
-You can use the @code{_POSIX_JOB_CONTROL} macro to test at compile-time
-whether the system supports job control.  @xref{System Options}.
-
-If job control is not supported, then there can be only one process
-group per session, which behaves as if it were always in the foreground.
-The functions for creating additional process groups simply fail with
-the error code @code{ENOSYS}.
-
-The macros naming the various job control signals (@pxref{Job Control
-Signals}) are defined even if job control is not supported.  However,
-the system never generates these signals, and attempts to send a job
-control signal or examine or specify their actions report errors or do
-nothing.
-
-
-@node Controlling Terminal, Access to the Terminal, Job Control is Optional, Job Control
+@node Controlling Terminal
 @section Controlling Terminal of a Process
 
 One of the attributes of a process is its controlling terminal.  Child
@@ -1165,9 +1148,6 @@ process.
 The @code{setpgid} function puts the process @var{pid} into the process
 group @var{pgid}.  As a special case, either @var{pid} or @var{pgid} can
 be zero to indicate the process ID of the calling process.
-
-This function fails on a system that does not support job control.
-@xref{Job Control is Optional}, for more information.
 
 If the operation is successful, @code{setpgid} returns zero.  Otherwise
 it returns @code{-1}.  The following @code{errno} error conditions are

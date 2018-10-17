@@ -156,6 +156,8 @@ supported; use @code{sysconf} to find out.  @xref{Sysconf}.
 If this symbol is defined, it indicates that the system supports job
 control.  Otherwise, the implementation behaves as if all processes
 within a session belong to a single process group.  @xref{Job Control}.
+Systems conforming to the 2001 revision of POSIX, or newer, will
+always define this symbol.
 @end deftypevr
 
 @deftypevr Macro int _POSIX_SAVED_IDS
