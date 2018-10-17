@@ -1,3 +1,17 @@
+2018-10-17  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/init-arch.h: Removed.
+	* sysdeps/i386/i586/init-arch.h: Likewise.
+	* sysdeps/i386/i686/init-arch.h: Likewise.
+	* sysdeps/i386/i686/hp-timing.h: Likewise.
+	* sysdeps/x86_64/hp-timing.h: Likewise.
+	* sysdeps/i386/isa.h: New file.
+	* sysdeps/i386/i586/isa.h: Likewise.
+	* sysdeps/i386/i686/isa.h: Likewise.
+	* sysdeps/x86_64/isa.h: Likewise.
+	* sysdeps/x86/hp-timing.h: New file.
+	* sysdeps/x86/init-arch.h: Include <isa.h>.
+
 2018-10-17  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test-pow.inc (pow_test_data): Do not allow

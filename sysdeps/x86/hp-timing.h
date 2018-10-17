@@ -1,7 +1,6 @@
-/* High precision, low overhead timing functions.  i686 version.
-   Copyright (C) 1998-2018 Free Software Foundation, Inc.
+/* High precision, low overhead timing functions.  x86 version.
+   Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -20,12 +19,17 @@
 #ifndef _HP_TIMING_H
 #define _HP_TIMING_H	1
 
+#include <isa.h>
+
+#if MINIMUM_ISA == 686 || MINIMUM_ISA == 8664
+# include <x86intrin.h>
+
 /* We always assume having the timestamp register.  */
-#define HP_TIMING_AVAIL		(1)
-#define HP_SMALL_TIMING_AVAIL	(1)
+# define HP_TIMING_AVAIL	(1)
+# define HP_SMALL_TIMING_AVAIL	(1)
 
 /* We indeed have inlined functions.  */
-#define HP_TIMING_INLINE	(1)
+# define HP_TIMING_INLINE	(1)
 
 /* We use 64bit values for the times.  */
 typedef unsigned long long int hp_timing_t;
@@ -35,8 +39,14 @@ typedef unsigned long long int hp_timing_t;
    running in this moment.  This could be changed by using a barrier like
    'cpuid' right before the `rdtsc' instruciton.  But we are not interested
    in accurate clock cycles here so we don't do this.  */
-#define HP_TIMING_NOW(Var)	__asm__ __volatile__ ("rdtsc" : "=A" (Var))
+# define HP_TIMING_NOW(Var)	((Var) = _rdtsc ())
 
-#include <hp-timing-common.h>
+# include <hp-timing-common.h>
+#else
+/* NB: Undefine _HP_TIMING_H so that <sysdeps/generic/hp-timing.h> will
+   be included.  */
+# undef _HP_TIMING_H
+# include <sysdeps/generic/hp-timing.h>
+#endif
 
-#endif	/* hp-timing.h */
+#endif /* hp-timing.h */

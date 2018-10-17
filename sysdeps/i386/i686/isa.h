@@ -1,4 +1,5 @@
-/* Copyright (C) 2015-2018 Free Software Foundation, Inc.
+/* x86 ISA info.  i686 version.
+   Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,5 +16,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define MINIMUM_ISA 586
-#include <sysdeps/x86/init-arch.h>
+#ifndef _ISA_H
+#define _ISA_H
+
+#define MINIMUM_ISA 686
+
+#endif
