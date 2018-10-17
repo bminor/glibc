@@ -1,6 +1,31 @@
 2018-10-17  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
+	bits/shm-pad.h.
+	* sysdeps/unix/sysv/linux/bits/shm.h: Include <bits/shm-pad.h>.
+	(shmatt_t): Define as __syscall_ulong_t.
+	(__SHM_PAD_TIME): New macro, depending on [__SHM_PAD_BEFORE_TIME]
+	and [__SHM_PAD_AFTER_TIME].
+	(struct shmid_ds): Define time fields using __SHM_PAD_TIME.
+	Define shm_segsz and associated padding based on
+	[__SHM_SEGSZ_AFTER_TIME] and [__SHM_PAD_BETWEEN_TIME_AND_SEGSZ].
+	Use __syscall_ulong_t instead of unsigned long int.
+	[__USE_MISC] (struct shminfo): Use __syscall_ulong_t instead of
+	unsigned long int.
+	[__USE_MISC] (struct shm_info): Likewise.
+	* sysdeps/unix/sysv/linux/bits/shm-pad.h: New file.
+	* sysdeps/unix/sysv/linux/hppa/bits/shm-pad.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/shm-pad.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/shm-pad.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/shm-pad.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86/bits/shm-pad.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/bits/shm.h: Remove.
+	* sysdeps/unix/sysv/linux/mips/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86/bits/shm.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
 	bits/shmlba.h.
 	* sysdeps/unix/sysv/linux/bits/shm.h: Include <bits/shmlba.h>.
 	(SHMLBA): Remove macro.
