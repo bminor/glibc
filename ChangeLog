@@ -1,3 +1,8 @@
+2018-10-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test-pow.inc (pow_test_data): Do not allow
+	divide-by-zero exception for pow(+/- 0, -Inf).
+
 2018-10-17  Zack Weinberg  <zackw@panix.com>
 
 	* manual/job.texi (Job Control is Optional): Remove node, as
