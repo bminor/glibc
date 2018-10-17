@@ -43,7 +43,8 @@ CFLAGS-charmap.c += -DCHARMAP_PATH='"$(i18ndir)/charmaps"' \
 CFLAGS-linereader.c += -DNO_TRANSLITERATION
 CFLAGS-simple-hash.c += -I../locale
 
-tests	= tst-iconv1 tst-iconv2 tst-iconv3 tst-iconv4 tst-iconv5 tst-iconv6
+tests	= tst-iconv1 tst-iconv2 tst-iconv3 tst-iconv4 tst-iconv5 tst-iconv6 \
+	  tst-iconv-mt
 
 others		= iconv_prog iconvconfig
 install-others-programs	= $(inst_bindir)/iconv
@@ -66,6 +67,8 @@ endif
 # relative to the path of the configuration file.
 $(objpfx)gconv-modules: test-gconv-modules
 	cp $< $@
+
+$(objpfx)tst-iconv-mt: $(shared-thread-library)
 
 ifeq (yes,$(build-shared))
 tests += tst-gconv-init-failure

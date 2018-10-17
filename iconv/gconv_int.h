@@ -178,8 +178,8 @@ extern int __gconv_compare_alias_cache (const char *name1, const char *name2,
 extern void __gconv_release_step (struct __gconv_step *step)
      attribute_hidden;
 
-/* Read all the configuration data and cache it.  */
-extern void __gconv_read_conf (void) attribute_hidden;
+/* Read all the configuration data and cache it if not done so already.  */
+extern void __gconv_load_conf (void) attribute_hidden;
 
 /* Try to read module cache file.  */
 extern int __gconv_load_cache (void) attribute_hidden;

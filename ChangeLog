@@ -1,3 +1,19 @@
+2018-10-17  Arjun Shankar  <arjun@redhat.com>
+
+	[BZ #22062]
+	* iconv/gconv_conf.c (__gconv_get_path): Remove locking and fix
+	indentation.
+	* (__gconv_read_conf): Mark function static.
+	* (once): New static variable.
+	* (__gconv_load_conf): New function.
+	* iconv/gconv_int.h (__gconv_load_conf): Likewise.
+	* iconv/gconv_db.c (once): Remove static variable.
+	* (__gconv_compare_alias): Use __gconv_load_conf instead of
+	__gconv_read_conf.
+	* (__gconv_find_transform): Likewise.
+	* iconv/tst-iconv-mt.c: New test.
+	* iconv/Makefile: Add tst-iconv_mt.
+
 2018-10-17  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
