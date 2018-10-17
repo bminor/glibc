@@ -36,6 +36,8 @@ __pthread_mutex_trylock (pthread_mutex_t *mutex)
   int oldval;
   pid_t id = THREAD_GETMEM (THREAD_SELF, tid);
 
+  /* See concurrency notes regarding mutex type which is loaded from __kind
+     in struct __pthread_mutex_s in sysdeps/nptl/bits/thread-shared-types.h.  */
   switch (__builtin_expect (PTHREAD_MUTEX_TYPE_ELISION (mutex),
 			    PTHREAD_MUTEX_TIMED_NP))
     {
@@ -199,8 +201,14 @@ __pthread_mutex_trylock (pthread_mutex_t *mutex)
     case PTHREAD_MUTEX_PI_ROBUST_NORMAL_NP:
     case PTHREAD_MUTEX_PI_ROBUST_ADAPTIVE_NP:
       {
-	int kind = mutex->__data.__kind & PTHREAD_MUTEX_KIND_MASK_NP;
-	int robust = mutex->__data.__kind & PTHREAD_MUTEX_ROBUST_NORMAL_NP;
+	int kind, robust;
+	{
+	  /* See concurrency notes regarding __kind in struct __pthread_mutex_s
+	     in sysdeps/nptl/bits/thread-shared-types.h.  */
+	  int mutex_kind = atomic_load_relaxed (&(mutex->__data.__kind));
+	  kind = mutex_kind & PTHREAD_MUTEX_KIND_MASK_NP;
+	  robust = mutex_kind & PTHREAD_MUTEX_ROBUST_NORMAL_NP;
+	}
 
 	if (robust)
 	  /* Note: robust PI futexes are signaled by setting bit 0.  */
@@ -325,7 +333,10 @@ __pthread_mutex_trylock (pthread_mutex_t *mutex)
     case PTHREAD_MUTEX_PP_NORMAL_NP:
     case PTHREAD_MUTEX_PP_ADAPTIVE_NP:
       {
-	int kind = mutex->__data.__kind & PTHREAD_MUTEX_KIND_MASK_NP;
+	/* See concurrency notes regarding __kind in struct __pthread_mutex_s
+	   in sysdeps/nptl/bits/thread-shared-types.h.  */
+	int kind = atomic_load_relaxed (&(mutex->__data.__kind))
+	  & PTHREAD_MUTEX_KIND_MASK_NP;
 
 	oldval = mutex->__data.__lock;
 
