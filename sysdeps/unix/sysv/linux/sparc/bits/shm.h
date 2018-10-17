@@ -21,6 +21,7 @@
 
 #include <bits/types.h>
 #include <bits/wordsize.h>
+#include <bits/shmlba.h>
 
 /* Permission flag for shmget.  */
 #define SHM_R		0400		/* or S_IRUGO from <linux/stat.h> */
@@ -37,10 +38,6 @@
 #define SHM_UNLOCK	12		/* unlock segment (root only) */
 
 __BEGIN_DECLS
-
-/* Segment low boundary address multiple.  */
-#define SHMLBA		(__getshmlba ())
-extern int __getshmlba (void) __attribute__ ((__const__));
 
 
 /* Type to count number of attaches.  */

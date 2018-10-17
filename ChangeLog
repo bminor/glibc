@@ -1,3 +1,38 @@
+2018-10-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
+	bits/shmlba.h.
+	* sysdeps/unix/sysv/linux/bits/shm.h: Include <bits/shmlba.h>.
+	(SHMLBA): Remove macro.
+	(__getpagesize): Remove function declaration.
+	* sysdeps/unix/sysv/linux/hppa/bits/shm.h: Include
+	<bits/shmlba.h>.
+	(SHMLBA): Remove macro.
+	* sysdeps/unix/sysv/linux/mips/bits/shm.h: Include
+	<bits/shmlba.h>.
+	(SHMLBA): Remove macro.
+	* sysdeps/unix/sysv/linux/powerpc/bits/shm.h: Include
+	<bits/shmlba.h>.
+	(SHMLBA): Remove macro.
+	(__getpagesize): Remove function declaration.
+	* sysdeps/unix/sysv/linux/sparc/bits/shm.h: Include
+	<bits/shmlba.h>.
+	(SHMLBA): Remove macro.
+	(__getshmlba): Remove function declaration.
+	* sysdeps/unix/sysv/linux/x86/bits/shm.h: Include <bits/shmlba.h>.
+	(SHMLBA): Remove macro.
+	(__getpagesize): Remove function declaration.
+	* sysdeps/unix/sysv/linux/arm/bits/shm.h: Remove file.
+	* sysdeps/unix/sysv/linux/ia64/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/shm.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/shmlba.h: New file.
+	* sysdeps/unix/sysv/linux/arm/bits/shmlba.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/bits/shmlba.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/shmlba.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/shmlba.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/shmlba.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/shmlba.h: Likewise.
+
 2018-10-17  Stefan Liebler  <stli@linux.ibm.com>
 
 	[BZ #23275]

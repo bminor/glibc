@@ -21,6 +21,7 @@
 
 #include <bits/types.h>
 #include <bits/wordsize.h>
+#include <bits/shmlba.h>
 
 /* Permission flag for shmget.  */
 #define SHM_R		0400		/* or S_IRUGO from <linux/stat.h> */
@@ -35,9 +36,6 @@
 /* Commands for `shmctl'.  */
 #define SHM_LOCK	11		/* lock segment (root only) */
 #define SHM_UNLOCK	12		/* unlock segment (root only) */
-
-/* Segment low boundary address multiple.  */
-#define SHMLBA		0x1000
 
 /* Type to count number of attaches.  */
 typedef unsigned long int shmatt_t;
