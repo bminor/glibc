@@ -35,6 +35,8 @@ int
 attribute_hidden
 __pthread_mutex_unlock_usercnt (pthread_mutex_t *mutex, int decr)
 {
+  /* See concurrency notes regarding mutex type which is loaded from __kind
+     in struct __pthread_mutex_s in sysdeps/nptl/bits/thread-shared-types.h.  */
   int type = PTHREAD_MUTEX_TYPE_ELISION (mutex);
   if (__builtin_expect (type &
 		~(PTHREAD_MUTEX_KIND_MASK_NP|PTHREAD_MUTEX_ELISION_FLAGS_NP), 0))
@@ -222,13 +224,19 @@ __pthread_mutex_unlock_full (pthread_mutex_t *mutex, int decr)
       /* If the previous owner died and the caller did not succeed in
 	 making the state consistent, mark the mutex as unrecoverable
 	 and make all waiters.  */
-      if ((mutex->__data.__kind & PTHREAD_MUTEX_ROBUST_NORMAL_NP) != 0
+      /* See concurrency notes regarding __kind in struct __pthread_mutex_s
+	 in sysdeps/nptl/bits/thread-shared-types.h.  */
+      if ((atomic_load_relaxed (&(mutex->__data.__kind))
+	   & PTHREAD_MUTEX_ROBUST_NORMAL_NP) != 0
 	  && __builtin_expect (mutex->__data.__owner
 			       == PTHREAD_MUTEX_INCONSISTENT, 0))
       pi_notrecoverable:
        newowner = PTHREAD_MUTEX_NOTRECOVERABLE;
 
-      if ((mutex->__data.__kind & PTHREAD_MUTEX_ROBUST_NORMAL_NP) != 0)
+      /* See concurrency notes regarding __kind in struct __pthread_mutex_s
+	 in sysdeps/nptl/bits/thread-shared-types.h.  */
+      if ((atomic_load_relaxed (&(mutex->__data.__kind))
+	   & PTHREAD_MUTEX_ROBUST_NORMAL_NP) != 0)
 	{
 	continue_pi_robust:
 	  /* Remove mutex from the list.
@@ -251,7 +259,10 @@ __pthread_mutex_unlock_full (pthread_mutex_t *mutex, int decr)
       /* Unlock.  Load all necessary mutex data before releasing the mutex
 	 to not violate the mutex destruction requirements (see
 	 lll_unlock).  */
-      int robust = mutex->__data.__kind & PTHREAD_MUTEX_ROBUST_NORMAL_NP;
+      /* See concurrency notes regarding __kind in struct __pthread_mutex_s
+	 in sysdeps/nptl/bits/thread-shared-types.h.  */
+      int robust = atomic_load_relaxed (&(mutex->__data.__kind))
+	& PTHREAD_MUTEX_ROBUST_NORMAL_NP;
       private = (robust
 		 ? PTHREAD_ROBUST_MUTEX_PSHARED (mutex)
 		 : PTHREAD_MUTEX_PSHARED (mutex));

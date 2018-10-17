@@ -1,3 +1,34 @@
+2018-10-17  Stefan Liebler  <stli@linux.ibm.com>
+
+	[BZ #23275]
+	* nptl/tst-mutex10.c: New File.
+	* nptl/Makefile (tests): Add tst-mutex10.
+	(tst-mutex10-ENV): New variable.
+	* sysdeps/unix/sysv/linux/s390/force-elision.h: (FORCE_ELISION):
+	Ensure that elision path is used if elision is available.
+	* sysdeps/unix/sysv/linux/powerpc/force-elision.h (FORCE_ELISION):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86/force-elision.h: (FORCE_ELISION):
+	Likewise.
+	* nptl/pthreadP.h (PTHREAD_MUTEX_TYPE, PTHREAD_MUTEX_TYPE_ELISION)
+	(PTHREAD_MUTEX_PSHARED): Use atomic_load_relaxed.
+	* nptl/pthread_mutex_consistent.c (pthread_mutex_consistent): Likewise.
+	* nptl/pthread_mutex_getprioceiling.c (pthread_mutex_getprioceiling):
+	Likewise.
+	* nptl/pthread_mutex_lock.c (__pthread_mutex_lock_full)
+	(__pthread_mutex_cond_lock_adjust): Likewise.
+	* nptl/pthread_mutex_setprioceiling.c (pthread_mutex_setprioceiling):
+	Likewise.
+	* nptl/pthread_mutex_timedlock.c (__pthread_mutex_timedlock): Likewise.
+	* nptl/pthread_mutex_trylock.c (__pthread_mutex_trylock): Likewise.
+	* nptl/pthread_mutex_unlock.c (__pthread_mutex_unlock_full): Likewise.
+	* sysdeps/nptl/bits/thread-shared-types.h (struct __pthread_mutex_s):
+	Add comments.
+	* nptl/pthread_mutex_destroy.c (__pthread_mutex_destroy):
+	Use atomic_load_relaxed and atomic_store_relaxed.
+	* nptl/pthread_mutex_init.c (__pthread_mutex_init):
+	Use atomic_store_relaxed.
+
 2018-10-09  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #23716]
