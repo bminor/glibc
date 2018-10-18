@@ -1,3 +1,7 @@
+2018-10-18  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/fpu/libm-test-ulps: Regenerated.
+
 2018-10-17  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/init-arch.h: Removed.
