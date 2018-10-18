@@ -1,5 +1,16 @@
 2018-10-18  David S. Miller  <davem@davemloft.net>
 
+	* sysdeps/unix/sysv/linux/sparc/init-first.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/libc-vdso.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/Makefile: Add dl-vdso to
+	sysdep_routines in subdir elf.
+	* sysdeps/unix/sysv/linux/sparc/Versions: Add GLIBC_PRIVATE
+	version for __vdso_clock_gettime.
+	* sysdeps/unix/sysv/linux/sparc/sysdep.h (INTERNAL_VSYSCALL_CALL):
+	Define.
+	(HAVE_CLOCK_GETTIME_VSYSCALL): Define.
+	(HAVE_GETTIMEOFDAY_VSYSCALL): Define.
+
 	* sysdeps/sparc/fpu/libm-test-ulps: Regenerated.
 
 2018-10-17  H.J. Lu  <hongjiu.lu@intel.com>

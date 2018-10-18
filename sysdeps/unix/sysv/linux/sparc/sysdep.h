@@ -34,6 +34,17 @@
 
 #else	/* __ASSEMBLER__ */
 
+#define INTERNAL_VSYSCALL_CALL(funcptr, err, nr, args...)		\
+  ({									\
+    long _ret = funcptr (args);						\
+    err = ((unsigned long) (_ret) >= (unsigned long) -4095L);		\
+    _ret;								\
+  })
+
+/* List of system calls which are supported as vsyscalls.  */
+# define HAVE_CLOCK_GETTIME_VSYSCALL	1
+# define HAVE_GETTIMEOFDAY_VSYSCALL	1
+
 #undef INLINE_SYSCALL
 #define INLINE_SYSCALL(name, nr, args...) 				\
 ({	INTERNAL_SYSCALL_DECL(err);  					\

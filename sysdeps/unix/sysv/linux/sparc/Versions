@@ -29,6 +29,10 @@ libc {
 
     __getshmlba;
   }
+  GLIBC_PRIVATE {
+    # nptl/pthread_cond_timedwait.c uses INTERNAL_VSYSCALL(clock_gettime).
+    __vdso_clock_gettime;
+  }
 }
 
 libpthread {
