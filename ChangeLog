@@ -1,3 +1,8 @@
+2018-11-08  Alexandra Hájková  <ahajkova@redhat.com>
+
+	[BZ #17630]
+	* resolv/tst-resolv-network.c: Add test for getnetbyname.
+
 2018-11-08  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #23509]
