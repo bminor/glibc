@@ -22,7 +22,9 @@
 #include <bits/types.h>
 #include <bits/types/struct_timeval.h>
 
-/* Structure which says how much of each resource has been used.  */
+/* Structure which says how much of each resource has been used.  If
+   the system does not keep track of a particular value, the struct
+   field is always zero.  */
 
 /* The purpose of all the unions is to have the kernel-compatible layout
    while keeping the API type as 'long int', and among machines where
@@ -42,7 +44,6 @@ struct rusage
       };
     /* Amount of sharing of text segment memory
        with other processes (kilobyte-seconds).  */
-    /* Maximum resident set size (in kilobytes).  */
     __extension__ union
       {
 	long int ru_ixrss;

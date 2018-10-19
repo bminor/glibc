@@ -1,3 +1,9 @@
+2018-10-19  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23689]
+	* resource/bits/types/struct_rusage.h (struct rusage): Update
+	comment on struct.  Remove extraneous field comment.
+
 2018-10-18  David S. Miller  <davem@davemloft.net>
 
 	* sysdeps/unix/sysv/linux/sparc/init-first.c: New file.
