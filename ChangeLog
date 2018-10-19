@@ -1,3 +1,14 @@
+2018-10-19  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #23794]
+	* wcsmbs/c16rtomb.c (c16rtomb): Save first character of surrogate
+	pair and return 0 in that case, and use saved character to
+	interpret following character.
+	* wcsmbs/tst-c16-surrogate.c: New file.
+	* wcsmbs/Makefile (tests): Add tst-c16-surrogate.c.
+	[$(run-built-tests) = yes] ($(objpfx)tst-c16-surrogate.out):
+	Depend on $(gen-locales)
+
 2018-10-19  Ilya Yu. Malakhov  <malakhov@mcst.ru>
 
 	[BZ #23562]

@@ -51,7 +51,8 @@ tests := tst-wcstof wcsmbs-tst1 tst-wcsnlen tst-btowc tst-mbrtowc \
 	 tst-wcrtomb tst-wcpncpy tst-mbsrtowcs tst-wchar-h tst-mbrtowc2 \
 	 tst-c16c32-1 wcsatcliff tst-wcstol-locale tst-wcstod-nan-locale \
 	 tst-wcstod-round test-char-types tst-fgetwc-after-eof \
-	 tst-wcstod-nan-sign $(addprefix test-,$(strop-tests))
+	 tst-wcstod-nan-sign tst-c16-surrogate \
+	 $(addprefix test-,$(strop-tests))
 
 include ../Rules
 
@@ -68,6 +69,7 @@ $(objpfx)tst-wcrtomb.out: $(gen-locales)
 $(objpfx)wcsmbs-tst1.out: $(gen-locales)
 $(objpfx)tst-wcstol-locale.out: $(gen-locales)
 $(objpfx)tst-wcstod-nan-locale.out: $(gen-locales)
+$(objpfx)tst-c16-surrogate.out: $(gen-locales)
 endif
 
 $(objpfx)tst-wcstod-round: $(libm)
