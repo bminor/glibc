@@ -22,8 +22,6 @@
 #include <isa.h>
 
 #if MINIMUM_ISA == 686 || MINIMUM_ISA == 8664
-# include <x86intrin.h>
-
 /* We always assume having the timestamp register.  */
 # define HP_TIMING_AVAIL	(1)
 # define HP_SMALL_TIMING_AVAIL	(1)
@@ -38,8 +36,11 @@ typedef unsigned long long int hp_timing_t;
    might not be 100% accurate since there might be some more instructions
    running in this moment.  This could be changed by using a barrier like
    'cpuid' right before the `rdtsc' instruciton.  But we are not interested
-   in accurate clock cycles here so we don't do this.  */
-# define HP_TIMING_NOW(Var)	((Var) = _rdtsc ())
+   in accurate clock cycles here so we don't do this.
+
+   NB: Use __builtin_ia32_rdtsc directly since including <x86intrin.h>
+   makes building glibc very slow.  */
+# define HP_TIMING_NOW(Var)	((Var) = __builtin_ia32_rdtsc ())
 
 # include <hp-timing-common.h>
 #else
