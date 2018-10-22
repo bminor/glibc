@@ -1,3 +1,9 @@
+2018-10-19  Ilya Yu. Malakhov  <malakhov@mcst.ru>
+
+	[BZ #23562]
+	* sysdeps/unix/sysv/linux/bits/types/siginfo_t.h
+	(struct siginfo_t): Use correct type for si_band.
+
 2018-10-17  Stefan Liebler  <stli@linux.ibm.com>
 
 	[BZ #23275]
