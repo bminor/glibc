@@ -42,7 +42,7 @@ routines := wcscat wcschr wcscmp wcscpy wcscspn wcsdup wcslen wcsncat \
 	    wcsmbsload mbsrtowcs_l \
 	    isoc99_wscanf isoc99_vwscanf isoc99_fwscanf isoc99_vfwscanf \
 	    isoc99_swscanf isoc99_vswscanf \
-	    mbrtoc16 c16rtomb
+	    mbrtoc16 c16rtomb mbrtoc32 c32rtomb
 
 strop-tests :=  wcscmp wcsncmp wmemcmp wcslen wcschr wcsrchr wcscpy wcsnlen \
 		wcpcpy wcsncpy wcpncpy wcscat wcsncat wcschrnul wcsspn wcspbrk \
@@ -51,7 +51,7 @@ tests := tst-wcstof wcsmbs-tst1 tst-wcsnlen tst-btowc tst-mbrtowc \
 	 tst-wcrtomb tst-wcpncpy tst-mbsrtowcs tst-wchar-h tst-mbrtowc2 \
 	 tst-c16c32-1 wcsatcliff tst-wcstol-locale tst-wcstod-nan-locale \
 	 tst-wcstod-round test-char-types tst-fgetwc-after-eof \
-	 tst-wcstod-nan-sign tst-c16-surrogate \
+	 tst-wcstod-nan-sign tst-c16-surrogate tst-c32-state \
 	 $(addprefix test-,$(strop-tests))
 
 include ../Rules
@@ -70,6 +70,7 @@ $(objpfx)wcsmbs-tst1.out: $(gen-locales)
 $(objpfx)tst-wcstol-locale.out: $(gen-locales)
 $(objpfx)tst-wcstod-nan-locale.out: $(gen-locales)
 $(objpfx)tst-c16-surrogate.out: $(gen-locales)
+$(objpfx)tst-c32-state.out: $(gen-locales)
 endif
 
 $(objpfx)tst-wcstod-round: $(libm)

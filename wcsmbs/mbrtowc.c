@@ -122,8 +122,3 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 libc_hidden_def (__mbrtowc)
 weak_alias (__mbrtowc, mbrtowc)
 libc_hidden_weak (mbrtowc)
-
-/* There should be no difference between the UTF-32 handling required
-   by mbrtoc32 and the wchar_t handling which has long since been
-   implemented in mbrtowc.  */
-weak_alias (__mbrtowc, mbrtoc32)

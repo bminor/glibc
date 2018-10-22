@@ -1,3 +1,16 @@
+2018-10-22  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #23793]
+	* wcsmbs/c32rtomb.c: New file.
+	* wcsmbs/mbrtoc32.c: Likewise.
+	* wcsmbs/tst-c32-state.c: Likewise.
+	* wcsmbs/mbrtowc.c (mbrtoc32): Do not define as alias.
+	* wcsmbs/wcrtomb.c (c32rtomb): Likewise.
+	* wcsmbs/Makefile (routines): Add mbrtoc32 and c32rtomb.
+	(tests): Add tst-c32-state.
+	[$(run-built-tests) = yes] ($(objpfx)tst-c32-state.out): Depend on
+	$(gen-locales).
+
 2018-10-21  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86/hp-timing.h: Don't include <x86intrin.h>.

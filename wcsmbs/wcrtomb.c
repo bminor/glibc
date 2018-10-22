@@ -113,8 +113,3 @@ __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
 }
 weak_alias (__wcrtomb, wcrtomb)
 libc_hidden_weak (wcrtomb)
-
-/* There should be no difference between the UTF-32 handling required
-   by c32rtomb and the wchar_t handling which has long since been
-   implemented in wcrtomb.  */
-weak_alias (__wcrtomb, c32rtomb)
