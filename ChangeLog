@@ -1,3 +1,9 @@
+2017-12-18  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #22446]
+	* nscd/connections.c (handle_request) [SO_PEERCRED]: Use separate
+	buffers for readlink input and output.
+
 2017-12-15  Steve Ellcey  <sellcey@cavium.com>
 
 	* nscd/dbg_log.c (dbg_log): Increase msg buffer size.

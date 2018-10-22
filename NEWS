@@ -127,6 +127,7 @@ The following bugs are resolved with this release:
   [22375] malloc returns pointer from tcache instead of NULL (CVE-2017-17426)
   [22377] Provide a C++ version of iseqsig
   [22442] if_nametoindex: Check length of ifname before copying it
+  [22446] Fix nscd readlink argument aliasing
   [22447] Avoid use of strlen in getlogin_r
   [22463] Fix p_secstodate overflow handling
   [22627] $ORIGIN in $LD_LIBRARY_PATH is substituted twice
