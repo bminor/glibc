@@ -128,6 +128,7 @@ The following bugs are resolved with this release:
   [22377] Provide a C++ version of iseqsig
   [22442] if_nametoindex: Check length of ifname before copying it
   [22447] Avoid use of strlen in getlogin_r
+  [22463] Fix p_secstodate overflow handling
   [22627] $ORIGIN in $LD_LIBRARY_PATH is substituted twice
   [22636] PTHREAD_STACK_MIN is too small on x86-64
   [22637] nptl: Fix stack guard size accounting

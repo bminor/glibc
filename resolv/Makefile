@@ -53,6 +53,7 @@ tests += \
   tst-resolv-network \
   tst-resolv-res_init-multi \
   tst-resolv-search \
+  tst-p_secstodate \
 
 # These tests need libdl.
 ifeq (yes,$(build-shared))
@@ -178,7 +179,7 @@ $(objpfx)tst-resolv-canonname: \
 $(objpfx)tst-ns_name: $(objpfx)libresolv.so
 $(objpfx)tst-ns_name.out: tst-ns_name.data
 $(objpfx)tst-ns_name_compress: $(objpfx)libresolv.so
-
+$(objpfx)tst-p_secstodate: $(objpfx)libresolv.so
 
 # This test case uses the deprecated RES_USE_INET6 resolver option.
 CFLAGS-tst-res_use_inet6.c += -Wno-error
