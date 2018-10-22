@@ -1,5 +1,8 @@
 2018-10-22  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/syscall-names.list: Update kernel
+	version to 4.19.
+
 	* scripts/build-many-glibcs.py (Context.checkout): Default Linux
 	version to 4.19.
 
