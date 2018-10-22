@@ -1,5 +1,8 @@
 2018-10-22  Joseph Myers  <joseph@codesourcery.com>
 
+	* scripts/build-many-glibcs.py (Context.checkout): Default Linux
+	version to 4.19.
+
 	[BZ #23793]
 	* wcsmbs/c32rtomb.c: New file.
 	* wcsmbs/mbrtoc32.c: Likewise.
