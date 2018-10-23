@@ -118,6 +118,9 @@
 /* AArch64 PAC-RET code generation is enabled.  */
 #define HAVE_AARCH64_PAC_RET 0
 
+/* ARC big endian ABI */
+#undef HAVE_ARC_BE
+
 /* C-SKY ABI version.  */
 #undef CSKYABI
 
