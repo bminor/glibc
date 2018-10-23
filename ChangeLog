@@ -39,6 +39,19 @@
 	* sysdeps/arc/nofpu/math-tests-exceptions.h: New file.
 	* sysdeps/arc/nofpu/math-tests-rounding.h: New file.
 	* sysdeps/arc/sfp-machine.h: New file.
+	* sysdeps/unix/sysv/linux/arc/clone.S: New file.
+	* sysdeps/unix/sysv/linux/arc/jmp_buf-macros.h: New file.
+	* sysdeps/unix/sysv/linux/arc/kernel-features.h: New file.
+	* sysdeps/unix/sysv/linux/arc/mmap_internal.h: New file.
+	* sysdeps/unix/sysv/linux/arc/profil-counter.h: New file.
+	* sysdeps/unix/sysv/linux/arc/pt-vfork.S: New file.
+	* sysdeps/unix/sysv/linux/arc/sigaction.c: New file.
+	* sysdeps/unix/sysv/linux/arc/sigrestorer.S: New file.
+	* sysdeps/unix/sysv/linux/arc/syscall.S: New file.
+	* sysdeps/unix/sysv/linux/arc/syscalls.list: New file.
+	* sysdeps/unix/sysv/linux/arc/sysdep.c: New file.
+	* sysdeps/unix/sysv/linux/arc/sysdep.h: New file.
+	* sysdeps/unix/sysv/linux/arc/vfork.S: New file.
 
 2019-08-01  Carlos O'Donell <carlos@redhat.com>
 
