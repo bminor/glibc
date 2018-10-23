@@ -1,3 +1,13 @@
+2018-10-23  Florian Weimer  <fweimer@redhat.com>
+
+	* time/tst-mktime2.c (N_STRINGS): Remove.
+	(set_timezone): New function.
+	(spring_forward_gap): Call it.  Use FAIL_EXIT1.
+	(mktime_test1): Report localtime failure and check errno value.
+	Use TEST_COMPARE.
+	(irix_6_4_bug, bigtime_test): Use TEST_COMPARE.
+	(do_test): Remove alarm call. Use set_timezone and array_length.
+
 2018-10-23  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/riscv/setcontext.S (__setcontext)

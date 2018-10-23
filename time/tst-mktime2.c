@@ -1,8 +1,12 @@
 /* Test program from Paul Eggert and Tony Leneis.  */
 
+#include <array_length.h>
+#include <errno.h>
 #include <limits.h>
-#include <time.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <support/check.h>
+#include <time.h>
 #include <unistd.h>
 
 /* True if the arithmetic type T is signed.  */
@@ -34,7 +38,14 @@ static const char *tz_strings[] =
     (const char *) 0, "GMT0", "JST-9",
     "EST+3EDT+2,M10.1.0/00:00:00,M2.3.0/00:00:00"
   };
-#define N_STRINGS ((int) (sizeof (tz_strings) / sizeof (tz_strings[0])))
+
+static void
+set_timezone (const char *tz)
+{
+  printf ("info: setting TZ=%s\n", tz);
+  if (setenv ("TZ", tz, 1) != 0)
+    FAIL_EXIT1 ("setenv: %m");
+}
 
 /* Fail if mktime fails to convert a date in the spring-forward gap.
    Based on a problem report from Andreas Jaeger.  */
@@ -48,7 +59,7 @@ spring_forward_gap (void)
      instead of "TZ=America/Vancouver" in order to detect the bug even
      on systems that don't support the Olson extension, or don't have the
      full zoneinfo tables installed.  */
-  setenv ("TZ", "PST8PDT,M4.1.0,M10.5.0", 1);
+  set_timezone ("PST8PDT,M4.1.0,M10.5.0");
 
   tm.tm_year = 98;
   tm.tm_mon = 3;
@@ -58,15 +69,22 @@ spring_forward_gap (void)
   tm.tm_sec = 0;
   tm.tm_isdst = -1;
   if (mktime (&tm) == (time_t)-1)
-    exit (1);
+    FAIL_EXIT1 ("mktime: %m");
 }
 
 static void
 mktime_test1 (time_t now)
 {
   struct tm *lt = localtime (&now);
-  if (lt && mktime (lt) != now)
-    exit (2);
+  if (lt == NULL)
+    {
+      /* For extreme input values, it is expected that localtime fails
+	 with EOVERFLOW.  */
+      printf ("info: localtime (%lld) failed: %m\n", (long long int) now);
+      TEST_COMPARE (errno, EOVERFLOW);
+      return;
+    }
+  TEST_COMPARE (mktime (lt), now);
 }
 
 static void
@@ -90,8 +108,8 @@ irix_6_4_bug (void)
   tm.tm_sec = 0;
   tm.tm_isdst = -1;
   mktime (&tm);
-  if (tm.tm_mon != 2 || tm.tm_mday != 31)
-    exit (3);
+  TEST_COMPARE (tm.tm_mon, 2);
+  TEST_COMPARE (tm.tm_mday, 31);
 }
 
 static void
@@ -105,18 +123,16 @@ bigtime_test (int j)
   if (now != (time_t) -1)
     {
       struct tm *lt = localtime (&now);
-      if (! (lt
-	     && lt->tm_year == tm.tm_year
-	     && lt->tm_mon == tm.tm_mon
-	     && lt->tm_mday == tm.tm_mday
-	     && lt->tm_hour == tm.tm_hour
-	     && lt->tm_min == tm.tm_min
-	     && lt->tm_sec == tm.tm_sec
-	     && lt->tm_yday == tm.tm_yday
-	     && lt->tm_wday == tm.tm_wday
-	     && ((lt->tm_isdst < 0 ? -1 : 0 < lt->tm_isdst)
-		  == (tm.tm_isdst < 0 ? -1 : 0 < tm.tm_isdst))))
-	exit (4);
+      TEST_COMPARE (lt->tm_year, tm.tm_year);
+      TEST_COMPARE (lt->tm_mon, tm.tm_mon);
+      TEST_COMPARE (lt->tm_mday, tm.tm_mday);
+      TEST_COMPARE (lt->tm_hour, tm.tm_hour);
+      TEST_COMPARE (lt->tm_min, tm.tm_min);
+      TEST_COMPARE (lt->tm_sec, tm.tm_sec);
+      TEST_COMPARE (lt->tm_yday, tm.tm_yday);
+      TEST_COMPARE (lt->tm_wday, tm.tm_wday);
+      TEST_COMPARE (lt->tm_isdst < 0 ? -1 : 0 < lt->tm_isdst,
+		    tm.tm_isdst < 0 ? -1 : 0 < tm.tm_isdst);
     }
 }
 
@@ -127,17 +143,13 @@ do_test (void)
   int i;
   unsigned int j;
 
-  setenv ("TZ", "America/Sao_Paulo", 1);
-  /* This test makes some buggy mktime implementations loop.
-     Give up after 60 seconds; a mktime slower than that
-     isn't worth using anyway.  */
-  alarm (60);
+  set_timezone ("America/Sao_Paulo");
 
   delta = TIME_T_MAX / 997; /* a suitable prime number */
-  for (i = 0; i < N_STRINGS; i++)
+  for (i = 0; i < array_length (tz_strings); i++)
     {
-      if (tz_strings[i])
-	setenv ("TZ", tz_strings[i], 1);
+      if (tz_strings[i] != NULL)
+	set_timezone (tz_strings[i]);
 
       for (t = 0; t <= TIME_T_MAX - delta; t += delta)
 	mktime_test (t);
@@ -154,5 +166,4 @@ do_test (void)
   return 0;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>
