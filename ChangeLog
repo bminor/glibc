@@ -52,6 +52,21 @@
 	* sysdeps/unix/sysv/linux/arc/sysdep.c: New file.
 	* sysdeps/unix/sysv/linux/arc/sysdep.h: New file.
 	* sysdeps/unix/sysv/linux/arc/vfork.S: New file.
+	* sysdeps/arc/nptl/pthread-offsets.h: New file.
+	* sysdeps/arc/nptl/pthreaddef.h: New file.
+	* sysdeps/unix/sysv/linux/arc/bits/procfs.h: New file.
+	* sysdeps/unix/sysv/linux/arc/bits/types/__sigset_t.h: New file.
+	* sysdeps/unix/sysv/linux/arc/getcontext.S: New file.
+	* sysdeps/unix/sysv/linux/arc/ipc_priv.h: New file.
+	* sysdeps/unix/sysv/linux/arc/makecontext.c: New file.
+	* sysdeps/unix/sysv/linux/arc/setcontext.S: New file.
+	* sysdeps/unix/sysv/linux/arc/sigcontextinfo.h: New file.
+	* sysdeps/unix/sysv/linux/arc/swapcontext.S: New file.
+	* sysdeps/unix/sysv/linux/arc/sys/cachectl.h: New file.
+	* sysdeps/unix/sysv/linux/arc/sys/ucontext.h: New file.
+	* sysdeps/unix/sysv/linux/arc/sys/user.h: New file.
+	* sysdeps/unix/sysv/linux/arc/ucontext-macros.h: New file.
+	* sysdeps/unix/sysv/linux/arc/ucontext_i.sym: New file.
 
 2019-08-01  Carlos O'Donell <carlos@redhat.com>
 
