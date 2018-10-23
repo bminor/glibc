@@ -1,0 +1,9 @@
+GLIBC_2.30 __libc_stack_end D 0x4
+GLIBC_2.30 __stack_chk_guard D 0x4
+GLIBC_2.30 __tls_get_addr F
+GLIBC_2.30 _dl_mcount F
+GLIBC_2.30 _r_debug D 0x14
+GLIBC_2.30 calloc F
+GLIBC_2.30 free F
+GLIBC_2.30 malloc F
+GLIBC_2.30 realloc F
