@@ -19,6 +19,13 @@
 	* sysdeps/arc/setjmp.S: New file.
 	* sysdeps/arc/sysdep.h: New file.
 	* sysdeps/arc/tls-macros.h: New file.
+	* sysdeps/arc/bits/link.h: New file.
+	* sysdeps/arc/dl-machine.h: New file.
+	* sysdeps/arc/entry.h: New file.
+	* sysdeps/arc/ldsodefs.h: New file.
+	* sysdeps/arc/sotruss-lib.c: New file.
+	* sysdeps/arc/start.S: New file.
+	* sysdeps/arc/tst-audit.h: New file.
 
 2019-08-01  Carlos O'Donell <carlos@redhat.com>
 
