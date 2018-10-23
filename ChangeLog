@@ -1,6 +1,24 @@
 2019-08-01  Vineet Gupta <vgupta@synopsys.com>
 
 	* elf/elf.h: add defines for ARC.
+	* sysdeps/arc/__longjmp.S: New file.
+	* sysdeps/arc/abort-instr.h: New file.
+	* sysdeps/arc/bits/endian.h: New file.
+	* sysdeps/arc/bits/setjmp.h: New file.
+	* sysdeps/arc/bsd-_setjmp.S: New file.
+	* sysdeps/arc/bsd-setjmp.S: New file.
+	* sysdeps/arc/dl-runtime.c: New file.
+	* sysdeps/arc/dl-sysdep.h: New file.
+	* sysdeps/arc/dl-trampoline.S: New file.
+	* sysdeps/arc/gccframe.h: New file.
+	* sysdeps/arc/gmp-mparam.h: New file.
+	* sysdeps/arc/jmpbuf-offsets.h: New file.
+	* sysdeps/arc/jmpbuf-unwind.h: New file.
+	* sysdeps/arc/machine-gmon.h: New file.
+	* sysdeps/arc/memusage.h: New file.
+	* sysdeps/arc/setjmp.S: New file.
+	* sysdeps/arc/sysdep.h: New file.
+	* sysdeps/arc/tls-macros.h: New file.
 
 2019-08-01  Carlos O'Donell <carlos@redhat.com>
 
