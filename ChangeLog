@@ -86,6 +86,19 @@
 	* sysdeps/unix/sysv/linux/arc/libutil.abilist: New file.
 	* sysdeps/unix/sysv/linux/arc/localplt.data: New file.
 	* sysdeps/unix/sysv/linux/syscall-names.list: Update for ARC.
+	* sysdeps/arc/Implies: New file.
+	* sysdeps/arc/Makefile: New file.
+	* sysdeps/arc/Versions: New file.
+	* sysdeps/arc/configure: New file.
+	* sysdeps/arc/configure.ac: New file.
+	* sysdeps/arc/nptl/Makefile: New file.
+	* sysdeps/arc/preconfigure: New file.
+	* sysdeps/unix/sysv/linux/arc/Implies: New file.
+	* sysdeps/unix/sysv/linux/arc/Makefile: New file.
+	* sysdeps/unix/sysv/linux/arc/Versions: New file.
+	* sysdeps/unix/sysv/linux/arc/configure: New file.
+	* sysdeps/unix/sysv/linux/arc/configure.ac: New file.
+	* sysdeps/unix/sysv/linux/arc/shlib-versions: New file.
 
 2019-08-01  Carlos O'Donell <carlos@redhat.com>
 

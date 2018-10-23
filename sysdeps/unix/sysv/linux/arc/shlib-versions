@@ -1,0 +1,2 @@
+DEFAULT                 GLIBC_2.30
+ld=ld-linux-arc.so.2
