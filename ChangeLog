@@ -26,6 +26,11 @@
 	* sysdeps/arc/sotruss-lib.c: New file.
 	* sysdeps/arc/start.S: New file.
 	* sysdeps/arc/tst-audit.h: New file.
+	* sysdeps/arc/dl-tls.h: New file.
+	* sysdeps/arc/libc-tls.c: New file.
+	* sysdeps/arc/nptl/tcb-offsets.sym: New file.
+	* sysdeps/arc/nptl/tls.h: New file.
+	* sysdeps/arc/stackinfo.h: New file.
 
 2019-08-01  Carlos O'Donell <carlos@redhat.com>
 
