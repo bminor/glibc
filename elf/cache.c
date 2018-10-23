@@ -199,6 +199,11 @@ print_cache (const char *cache_name)
     }
   else
     {
+      /* Check for corruption, avoiding overflow.  */
+      if ((cache_size - sizeof (struct cache_file)) / sizeof (struct file_entry)
+	  < cache->nlibs)
+	error (EXIT_FAILURE, 0, _("File is not a cache file.\n"));
+
       size_t offset = ALIGN_CACHE (sizeof (struct cache_file)
 				   + (cache->nlibs
 				      * sizeof (struct file_entry)));

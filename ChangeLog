@@ -1,3 +1,10 @@
+2018-10-24  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #18093]
+	* elf/dl-cache.c (_dl_load_cache_lookup): Check for truncated old
+	format cache.
+	* elf/cache.c (print_cache): Likewise.
+
 2018-10-24  Albert ARIBAUD <albert.aribaud@3adev.fr>
 
 	* bits/timesize.h: New file.

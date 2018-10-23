@@ -204,7 +204,10 @@ _dl_load_cache_lookup (const char *name)
 	 - only the new format
 	 The following checks if the cache contains any of these formats.  */
       if (file != MAP_FAILED && cachesize > sizeof *cache
-	  && memcmp (file, CACHEMAGIC, sizeof CACHEMAGIC - 1) == 0)
+	  && memcmp (file, CACHEMAGIC, sizeof CACHEMAGIC - 1) == 0
+	  /* Check for corruption, avoiding overflow.  */
+	  && ((cachesize - sizeof *cache) / sizeof (struct file_entry)
+	      >= ((struct cache_file *) file)->nlibs))
 	{
 	  size_t offset;
 	  /* Looks ok.  */
