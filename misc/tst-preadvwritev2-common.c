@@ -37,6 +37,11 @@
 #define RWF_SUPPORTED	(RWF_HIPRI | RWF_DSYNC | RWF_SYNC | RWF_NOWAIT \
 			 | RWF_APPEND)
 
+/* Generic uio_lim.h does not define IOV_MAX.  */
+#ifndef IOV_MAX
+# define IOV_MAX 1024
+#endif
+
 static void
 do_test_with_invalid_fd (void)
 {
