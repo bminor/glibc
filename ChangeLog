@@ -1,3 +1,11 @@
+2018-11-02  Albert ARIBAUD  <albert.aribaud@3adev.fr>
+
+	* time/Makefile: Add bug-mktime4.
+	* time/bug-mktime4.c: New file.
+	* time/mktime.c
+	(__mktime_internal): Set errno to EOVERFLOW on error.
+	(mktime): Move call to __tzset inside conditional.
+
 2018-11-01  Zong Li  <zong@andestech.com>
 
 	* soft-fp/op-8.h (_FP_FRAC_SET_8, _FP_FRAC_ADD_8, _FP_FRAC_SUB_8)
