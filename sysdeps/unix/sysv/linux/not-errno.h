@@ -16,6 +16,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <sysdep.h>
+#include <fcntl.h>
+
 /* This function is used on maybe_enable_malloc_check (elf/dl-tunables.c)
    and to avoid having to build/use multiple versions if stack protection
    in enabled it is defined as inline.  */
@@ -29,6 +32,17 @@ __access_noerrno (const char *pathname, int mode)
 #else
   res = INTERNAL_SYSCALL_CALL (faccessat, err, AT_FDCWD, pathname, mode);
 #endif
+  if (INTERNAL_SYSCALL_ERROR_P (res, err))
+    return INTERNAL_SYSCALL_ERRNO (res, err);
+  return 0;
+}
+
+static inline int
+__kill_noerrno (pid_t pid, int sig)
+{
+  int res;
+  INTERNAL_SYSCALL_DECL (err);
+  res = INTERNAL_SYSCALL_CALL (kill, err, pid, sig);
   if (INTERNAL_SYSCALL_ERROR_P (res, err))
     return INTERNAL_SYSCALL_ERRNO (res, err);
   return 0;

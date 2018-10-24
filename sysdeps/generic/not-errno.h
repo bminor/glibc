@@ -17,3 +17,5 @@
    <http://www.gnu.org/licenses/>.  */
 
 extern __typeof (__access) __access_noerrno attribute_hidden;
+
+extern __typeof (__kill) __kill_noerrno attribute_hidden;

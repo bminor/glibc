@@ -138,11 +138,11 @@ __spawni_child (void *arguments)
   for (int sig = 1; sig < _NSIG; ++sig)
     {
       if ((attr->__flags & POSIX_SPAWN_SETSIGDEF)
-	  && sigismember (&attr->__sd, sig))
+	  && __sigismember (&attr->__sd, sig))
 	{
 	  sa.sa_handler = SIG_DFL;
 	}
-      else if (sigismember (&hset, sig))
+      else if (__sigismember (&hset, sig))
 	{
 	  if (__is_internal_signal (sig))
 	    sa.sa_handler = SIG_IGN;

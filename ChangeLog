@@ -1,5 +1,18 @@
 2018-11-28  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/spawni.c (__spawni_child): Use
+	__sigismember instead of sigismember.
+	* sysdeps/posix/system.c [SIGCANCEL] (cancel_handler_args,
+	cancel_handler): New definitions.
+	(do_system): Use posix_spawn instead of fork and execl and remove
+	reentracy code.
+	* sysdeps/generic/not-errno.h (__kill_noerrno): New prototype.
+	* sysdeps/unix/sysv/linux/not-errno.h (__kill_noerrno): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/system.c: Remove file.
+	* sysdeps/unix/sysv/linux/s390/system.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/system.c: Likewise.
+	* sysdeps/unix/sysv/linux/system.c: Likewise.
+
 	[BZ #22834]
 	[BZ #17490]
 	* NEWS: Add new semantic for atfork with popen and system.
