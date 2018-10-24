@@ -34,6 +34,11 @@
 	* sysdeps/arc/atomic-machine.h: New file.
 	* sysdeps/arc/nptl/bits/pthreadtypes-arch.h: New file.
 	* sysdeps/arc/nptl/bits/semaphore.h: New file.
+	* sysdeps/arc/bits/fenv.h: New file.
+	* sysdeps/arc/nofpu/Implies: New file.
+	* sysdeps/arc/nofpu/math-tests-exceptions.h: New file.
+	* sysdeps/arc/nofpu/math-tests-rounding.h: New file.
+	* sysdeps/arc/sfp-machine.h: New file.
 
 2019-08-01  Carlos O'Donell <carlos@redhat.com>
 
