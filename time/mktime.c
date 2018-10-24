@@ -49,6 +49,7 @@
 # define LEAP_SECONDS_POSSIBLE 1
 #endif
 
+#include <errno.h>
 #include <time.h>
 
 #include <limits.h>
@@ -435,7 +436,10 @@ __mktime_internal (struct tm *tp,
 	 useful than returning -1.  */
       goto offset_found;
     else if (--remaining_probes == 0)
-      return -1;
+      {
+	__set_errno (EOVERFLOW);
+	return -1;
+      }
 
   /* We have a match.  Check whether tm.tm_isdst has the requested
      value, if any.  */
@@ -507,7 +511,10 @@ __mktime_internal (struct tm *tp,
       if (INT_ADD_WRAPV (t, sec_adjustment, &t)
 	  || ! (mktime_min <= t && t <= mktime_max)
 	  || ! convert_time (convert, t, &tm))
-	return -1;
+	{
+	  __set_errno (EOVERFLOW);
+	  return -1;
+	}
     }
 
   *tp = tm;
@@ -522,18 +529,37 @@ __mktime_internal (struct tm *tp,
 time_t
 mktime (struct tm *tp)
 {
+  time_t result;
+  /* When __mktime_internal() returns -1, we need to know it it has set
+   * errno (real error) or not (just returning valid time_t value -1),
+   * so we beed to clear errno before calling __mktime_internal().
+   * But we also need to preserve errno if __mktime_internal() does not
+   * modify it, so we need to back up its current value.
+   * Ditto for __tzset().  */
+  int errno_backup = errno;
+  errno = 0;
+
   /* POSIX.1 8.1.1 requires that whenever mktime() is called, the
      time zone names contained in the external variable 'tzname' shall
      be set as if the tzset() function had been called.  */
   __tzset ();
+  if (errno != 0)
+    /* __tzset() did overwrite errno so let's not restore it.  */
+    return -1;
 
 # if defined _LIBC || NEED_MKTIME_WORKING
   static mktime_offset_t localtime_offset;
-  return __mktime_internal (tp, __localtime_r, &localtime_offset);
+  result = __mktime_internal (tp, __localtime_r, &localtime_offset);
 # else
 #  undef mktime
-  return mktime (tp);
+  result = mktime (tp);
 # endif
+  if (result == -1 && errno ==0)
+    return result;
+  else if (errno != 0)
+    return -1;
+  __set_errno(errno_backup);
+  return result;
 }
 #endif /* _LIBC || NEED_MKTIME_WORKING || NEED_MKTIME_WINDOWS */
 
