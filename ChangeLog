@@ -1,4 +1,4 @@
-2018-09-24  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+2018-10-24  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* include/spawn.h (__posix_spawn, posix_spawn_file_actions_addclose,
 	__posix_spawn_file_actions_adddup2, __posix_spawn_file_actions_destroy,
