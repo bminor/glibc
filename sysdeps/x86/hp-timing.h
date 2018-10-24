@@ -40,7 +40,19 @@ typedef unsigned long long int hp_timing_t;
 
    NB: Use __builtin_ia32_rdtsc directly since including <x86intrin.h>
    makes building glibc very slow.  */
-# define HP_TIMING_NOW(Var)	((Var) = __builtin_ia32_rdtsc ())
+# ifdef USE_RDTSCP
+/* RDTSCP waits until all previous instructions have executed and all
+   previous loads are globally visible before reading the counter.
+   RDTSC doesn't wait until all previous instructions have been executed
+   before reading the counter.  */
+#  define HP_TIMING_NOW(Var) \
+  (__extension__ ({				\
+    unsigned int __aux;				\
+    (Var) = __builtin_ia32_rdtscp (&__aux);	\
+  }))
+# else
+#  define HP_TIMING_NOW(Var) ((Var) = __builtin_ia32_rdtsc ())
+# endif
 
 # include <hp-timing-common.h>
 #else

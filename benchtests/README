@@ -34,6 +34,15 @@ the benchmark to use clock_gettime by invoking make as follows:
 
 Again, one must run `make bench-clean' before changing the measurement method.
 
+On x86 processors, RDTSCP instruction provides more precise timing data
+than RDTSC instruction.  All x86 processors since 2010 support RDTSCP
+instruction.  One can force the benchmark to use RDTSCP by invoking make
+as follows:
+
+  $ make USE_RDTSCP=1 bench
+
+One must run `make bench-clean' before changing the measurement method.
+
 Running benchmarks on another target:
 ====================================
 

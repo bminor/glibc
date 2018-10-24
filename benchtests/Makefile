@@ -131,6 +131,12 @@ CPPFLAGS-nonlib += -DDURATION=$(BENCH_DURATION) -D_ISOMAC
 # HP_TIMING if it is available.
 ifdef USE_CLOCK_GETTIME
 CPPFLAGS-nonlib += -DUSE_CLOCK_GETTIME
+else
+# On x86 processors, use RDTSCP, instead of RDTSC, to measure performance
+# of functions.  All x86 processors since 2010 support RDTSCP instruction.
+ifdef USE_RDTSCP
+CPPFLAGS-nonlib += -DUSE_RDTSCP
+endif
 endif
 
 DETAILED_OPT :=

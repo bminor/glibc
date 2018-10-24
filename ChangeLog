@@ -1,3 +1,10 @@
+2018-10-24  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* benchtests/Makefile (CPPFLAGS-nonlib): Add -DUSE_RDTSCP if
+	USE_RDTSCP is defined.
+	* sysdeps/x86/hp-timing.h (HP_TIMING_NOW): Use RDTSCP if
+	USE_RDTSCP is defined.
+
 2018-10-23  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* misc/tst-preadvwritev2-common.c (IOV_MAX): Define if not
