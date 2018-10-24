@@ -85,6 +85,7 @@
 	* sysdeps/unix/sysv/linux/arc/libthread_db.abilist: New file.
 	* sysdeps/unix/sysv/linux/arc/libutil.abilist: New file.
 	* sysdeps/unix/sysv/linux/arc/localplt.data: New file.
+	* sysdeps/unix/sysv/linux/syscall-names.list: Update for ARC.
 
 2019-08-01  Carlos O'Donell <carlos@redhat.com>
 
