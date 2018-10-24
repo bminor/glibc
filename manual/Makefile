@@ -99,10 +99,11 @@ $(objpfx)dir-add.texi: xtract-typefun.awk $(texis-path)
 
 # The table with the math errors is generated.
 $(objpfx)libm-err.texi: $(objpfx)stamp-libm-err
-$(objpfx)stamp-libm-err: libm-err-tab.pl $(wildcard $(foreach dir,$(sysdirs),\
-						     $(dir)/libm-test-ulps))
+$(objpfx)stamp-libm-err: $(..)math/gen-libm-test.py \
+			 $(wildcard $(foreach dir,$(sysdirs),\
+						  $(dir)/libm-test-ulps))
 	pwd=`pwd`; \
-	$(PERL) $< $$pwd/.. > $(objpfx)libm-err-tmp
+	$(PYTHON) $< -s $$pwd/.. -m $(objpfx)libm-err-tmp
 	$(move-if-change) $(objpfx)libm-err-tmp $(objpfx)libm-err.texi
 	touch $@
 
@@ -169,8 +170,9 @@ include ../Rules
 
 .PHONY: install subdir_install install-data
 install-data subdir_install: install
-# Generated files requiring perl: libm-err.texi, summary.texi
-ifneq ($(PERL),no)
+# Generated files requiring python: libm-err.texi
+# Generated files requiring perl: summary.texi
+ifneq ($(if $(PYTHON),$(PERL),no),no)
 ifneq ($(strip $(MAKEINFO)),:)
 install: $(inst_infodir)/libc.info
 	@if $(SHELL) -c '$(INSTALL_INFO) --version' >/dev/null 2>&1; then \

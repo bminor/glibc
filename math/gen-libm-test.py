@@ -19,6 +19,7 @@
 
 import argparse
 from collections import defaultdict
+import os
 import re
 
 
@@ -31,6 +32,16 @@ ALL_FLOATS_PFX = {'double': 'DBL',
                   'ldouble': 'LDBL',
                   'float': 'FLT',
                   'float128': 'FLT128'}
+
+# Float types in the order used in the generated ulps tables in the
+# manual.
+ALL_FLOATS_MANUAL = ('float', 'double', 'ldouble', 'float128')
+
+# Map float types in ulps files to C function suffix.
+ALL_FLOATS_SUFFIX = {'double': '',
+                     'ldouble': 'l',
+                     'float': 'f',
+                     'float128': 'f128'}
 
 # Number of arguments in structure (as opposed to arguments that are
 # pointers to return values) for an argument descriptor.
@@ -161,6 +172,17 @@ class Ulps(object):
                             ulps_dict[ulps_fn][line_first],
                             ulps_val)
 
+    def all_functions(self):
+        """Return the set of functions with ulps and whether they are
+        complex."""
+        funcs = set()
+        complex = {}
+        for k_prefix, k_dict in self.ulps_kinds:
+            for f in k_dict:
+                funcs.add(f)
+                complex[f] = True if k_prefix else False
+        return funcs, complex
+
     def write(self, ulps_file):
         """Write ulps back out as a sorted ulps file."""
         # Output is sorted first by function name, then by (real,
@@ -229,6 +251,18 @@ class Ulps(object):
                           self.ulps_table('func_imag_ulps', self.imag)))
         with open(ulps_header, 'w') as f:
             f.write(header_text)
+
+
+def read_all_ulps(srcdir):
+    """Read all platforms' libm-test-ulps files."""
+    all_ulps = {}
+    for dirpath, dirnames, filenames in os.walk(srcdir):
+        if 'libm-test-ulps' in filenames:
+            with open(os.path.join(dirpath, 'libm-test-ulps-name')) as f:
+                name = f.read().rstrip()
+            all_ulps[name] = Ulps()
+            all_ulps[name].read(os.path.join(dirpath, 'libm-test-ulps'))
+    return all_ulps
 
 
 def read_auto_tests(test_file):
@@ -570,6 +604,60 @@ def generate_testfile(inc_input, auto_tests, c_output):
         f.write(''.join(test_list))
 
 
+def generate_err_table_sub(all_ulps, all_functions, fns_complex, platforms):
+    """Generate a single table within the overall ulps table section."""
+    plat_width = [' {1000 + i 1000}' for p in platforms]
+    plat_header = [' @tab %s' % p for p in platforms]
+    table_list = ['@multitable {nexttowardf} %s\n' % ''.join(plat_width),
+                  '@item Function %s\n' % ''.join(plat_header)]
+    for func in all_functions:
+        for flt in ALL_FLOATS_MANUAL:
+            func_ulps = []
+            for p in platforms:
+                p_ulps = all_ulps[p]
+                if fns_complex[func]:
+                    ulp_real = p_ulps.real[func][flt]
+                    ulp_imag = p_ulps.imag[func][flt]
+                    ulp_str = '%d + i %d' % (ulp_real, ulp_imag)
+                    ulp_str = ulp_str if ulp_real or ulp_imag else '-'
+                else:
+                    ulp = p_ulps.normal[func][flt]
+                    ulp_str = str(ulp) if ulp else '-'
+                func_ulps.append(ulp_str)
+            table_list.append('@item %s%s  @tab %s\n'
+                              % (func, ALL_FLOATS_SUFFIX[flt],
+                                 ' @tab '.join(func_ulps)))
+    table_list.append('@end multitable\n')
+    return ''.join(table_list)
+
+
+def generate_err_table(all_ulps, err_table):
+    """Generate ulps table for manual."""
+    all_platforms = sorted(all_ulps.keys())
+    functions_set = set()
+    functions_complex = {}
+    for p in all_platforms:
+        p_functions, p_complex = all_ulps[p].all_functions()
+        functions_set.update(p_functions)
+        functions_complex.update(p_complex)
+    all_functions = sorted([f for f in functions_set
+                            if ('_downward' not in f
+                                and '_towardzero' not in f
+                                and '_upward' not in f
+                                and '_vlen' not in f)])
+    err_table_list = []
+    # Print five platforms at a time.
+    num_platforms = len(all_platforms)
+    for i in range((num_platforms + 4) // 5):
+        start = i * 5
+        end = i * 5 + 5 if num_platforms >= i * 5 + 5 else num_platforms
+        err_table_list.append(generate_err_table_sub(all_ulps, all_functions,
+                                                     functions_complex,
+                                                     all_platforms[start:end]))
+    with open(err_table, 'w') as f:
+        f.write(''.join(err_table_list))
+
+
 def main():
     """The main entry point."""
     parser = argparse.ArgumentParser(description='Generate libm tests.')
@@ -579,23 +667,31 @@ def main():
                         help='input file .inc file with tests')
     parser.add_argument('-u', dest='ulps_file', metavar='FILE',
                         help='input file with ulps')
+    parser.add_argument('-s', dest='srcdir', metavar='DIR',
+                        help='input source directory with all ulps')
     parser.add_argument('-n', dest='ulps_output', metavar='FILE',
                         help='generate sorted ulps file FILE')
     parser.add_argument('-C', dest='c_output', metavar='FILE',
                         help='generate output C file FILE from .inc file')
     parser.add_argument('-H', dest='ulps_header', metavar='FILE',
                         help='generate output ulps header FILE')
+    parser.add_argument('-m', dest='err_table', metavar='FILE',
+                        help='generate output ulps table for manual FILE')
     args = parser.parse_args()
     ulps = Ulps()
     if args.ulps_file is not None:
         ulps.read(args.ulps_file)
     auto_tests = read_auto_tests(args.auto_input)
+    if args.srcdir is not None:
+        all_ulps = read_all_ulps(args.srcdir)
     if args.ulps_output is not None:
         ulps.write(args.ulps_output)
     if args.ulps_header is not None:
         ulps.write_header(args.ulps_header)
     if args.c_output is not None:
         generate_testfile(args.inc_input, auto_tests, args.c_output)
+    if args.err_table is not None:
+        generate_err_table(all_ulps, args.err_table)
 
 
 if __name__ == '__main__':

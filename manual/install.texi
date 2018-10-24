@@ -577,8 +577,9 @@ with any version of @code{sed}.  As of release time, @code{sed} version
 @item
 Python 2.7/3.4 or later
 
-Python is required to run some tests.  As of release time, Python 3.6
-is the newest verified to work for testing @theglibc{}.
+Python is required to build the @glibcadj{} manual and to run some
+tests.  As of release time, Python 3.6 is the newest verified to work
+for testing @theglibc{}.
 
 @item PExpect 4.0
 

@@ -1,3 +1,22 @@
+2018-10-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/gen-libm-test.py: Import os.
+	(ALL_FLOATS_MANUAL): New constant.
+	(ALL_FLOATS_SUFFIX): Likewise.
+	(Ulps.all_functions): New function.
+	(real_all_ulps): Likewise.
+	(generate_err_table_sub): Likewise.
+	(generate_err_table): Likewise.
+	(main): Handle -s and -m options.
+	* manual/libm-err-tab.pl: Remove.
+	* manual/Makefile ($(objpfx)stamp-libm-err): Use gen-libm-test.py
+	instead of libm-err-tab.pl.
+	[$(PERL) != no]: Change condition to [$(if $(PYTHON),$(PERL),no)
+	!= no].
+	* manual/install.texi (Tools for Compilation): Document
+	requirement for Python to build manual.
+	* INSTALL: Regenerated.
+
 2018-10-24  Albert ARIBAUD <albert.aribaud@3adev.fr>
 
 	* bits/time64.h: New file.

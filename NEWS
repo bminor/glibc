@@ -48,7 +48,7 @@ Deprecated and removed features, and other changes affecting compatibility:
 
 Changes to build and runtime requirements:
 
-  [Add changes to build and runtime requirements here]
+* Python is required to build the GNU C Library manual.
 
 Security related changes:
 
