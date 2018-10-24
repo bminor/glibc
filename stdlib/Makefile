@@ -24,7 +24,7 @@ include ../Makeconfig
 
 headers	:= stdlib.h bits/stdlib.h bits/stdlib-ldbl.h bits/stdlib-float.h      \
 	   monetary.h bits/monetary-ldbl.h				      \
-	   inttypes.h stdint.h bits/wordsize.h				      \
+	   inttypes.h stdint.h bits/wordsize.h bits/timesize.h		      \
 	   errno.h sys/errno.h bits/errno.h bits/types/error_t.h	      \
 	   ucontext.h sys/ucontext.h bits/indirect-return.h		      \
 	   alloca.h fmtmsg.h						      \

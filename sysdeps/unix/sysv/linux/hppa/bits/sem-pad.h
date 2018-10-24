@@ -20,7 +20,7 @@
 # error "Never use <bits/sem-pad.h> directly; include <sys/sem.h> instead."
 #endif
 
-#include <bits/wordsize.h>
+#include <bits/timesize.h>
 
 #define __SEM_PAD_AFTER_TIME 0
-#define __SEM_PAD_BEFORE_TIME (__WORDSIZE == 32)
+#define __SEM_PAD_BEFORE_TIME (__TIMESIZE == 32)

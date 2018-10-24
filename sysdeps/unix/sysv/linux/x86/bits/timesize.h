@@ -1,4 +1,4 @@
-/* Define where padding goes in struct shmid_ds.  x86 version.
+/* Bit size of the time_t type at glibc build time, x86-64 and x32 case.
    Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,15 +16,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _SYS_SHM_H
-# error "Never use <bits/shm-pad.h> directly; include <sys/shm.h> instead."
-#endif
-
-#ifdef __x86_64__
-# define __SHM_PAD_AFTER_TIME 0
+#if defined __x86_64__ && defined __ILP32__
+/* For x32, time is 64-bit even though word size is 32-bit.  */
+# define __TIMESIZE	64
 #else
-# define __SHM_PAD_AFTER_TIME 1
+/* For others, time size is word size.  */
+# define __TIMESIZE	__WORDSIZE
 #endif
-#define __SHM_PAD_BEFORE_TIME 0
-#define __SHM_SEGSZ_AFTER_TIME 0
-#define __SHM_PAD_BETWEEN_TIME_AND_SEGSZ 0

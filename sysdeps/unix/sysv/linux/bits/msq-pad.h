@@ -20,12 +20,12 @@
 # error "Never use <bits/msq-pad.h> directly; include <sys/msg.h> instead."
 #endif
 
-#include <bits/wordsize.h>
+#include <bits/timesize.h>
 
 /* On most architectures, padding goes after time fields for 32-bit
    systems and is omitted for 64-bit systems.  Some architectures pad
    before time fields instead, or omit padding despite being
    32-bit.  */
 
-#define __MSQ_PAD_AFTER_TIME (__WORDSIZE == 32)
+#define __MSQ_PAD_AFTER_TIME (__TIMESIZE == 32)
 #define __MSQ_PAD_BEFORE_TIME 0

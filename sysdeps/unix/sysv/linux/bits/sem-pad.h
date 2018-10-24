@@ -20,7 +20,7 @@
 # error "Never use <bits/sem-pad.h> directly; include <sys/sem.h> instead."
 #endif
 
-#include <bits/wordsize.h>
+#include <bits/timesize.h>
 
 /* On most architectures, padding goes after time fields for 32-bit
    systems and is omitted for 64-bit systems.  Some architectures pad
@@ -29,5 +29,5 @@
    used for struct semid64_ds in <asm/sembuf.h>, as glibc does not do
    layout conversions for this structure.  */
 
-#define __SEM_PAD_AFTER_TIME (__WORDSIZE == 32)
+#define __SEM_PAD_AFTER_TIME (__TIMESIZE == 32)
 #define __SEM_PAD_BEFORE_TIME 0

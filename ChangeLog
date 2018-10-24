@@ -1,3 +1,37 @@
+2018-10-24  Albert ARIBAUD <albert.aribaud@3adev.fr>
+
+	* bits/timesize.h: New file.
+	* stdlib/Makefile (headers): Add bits/timesize.h.
+	* sysdeps/unix/sysv/linux/bits/msq-pad.h
+	(__MSQ_PAD_AFTER_TIME): Use __TIMESIZE instead of __WORDSIZE.
+	* sysdeps/unix/sysv/linux/bits/sem-pad.h
+	(__SEM_PAD_AFTER_TIME): Likewise.
+	* sysdeps/unix/sysv/linux/bits/shm-pad.h
+	(__SHM_PAD_AFTER_TIME): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/bits/msq-pad.h
+	(__MSQ_PAD_BEFORE_TIME): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/bits/sem-pad.h
+	(__SEM_PAD_BEFORE_TIME): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/bits/shm-pad.h
+	(__SHM_PAD_BEFORE_TIME, __SHM_PAD_BETWEEN_TIME_AND_SEGSZ): Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/msq-pad.h
+        (__MSQ_PAD_AFTER_TIME, __MSQ_PAD_BEFORE_TIME): Likewise.
+        * sysdeps/unix/sysv/linux/powerpc/bits/msq-pad.h
+        (__MSQ_PAD_BEFORE_TIME): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/sem-pad.h
+	(__SEM_PAD_BEFORE_TIME): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/shm-pad.h
+	(__SHM_PAD_BEFORE_TIME, __SHM_PAD_BETWEEN_TIME_AND_SEGSZ): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/msq-pad.h
+	(__MSQ_PAD_BEFORE_TIME): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/sem-pad.h
+	(__SEM_PAD_BEFORE_TIME): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/shm-pad.h
+	(__SHM_PAD_BEFORE_TIME): Likewise.
+	* sysdeps/unix/sysv/linux/x86/bits/msq-pad.h: Delete file.
+	* sysdeps/unix/sysv/linux/x86/bits/shm-pad.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86/bits/timesize.h: New file.
+
 2018-10-24  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* benchtests/Makefile (CPPFLAGS-nonlib): Add -DUSE_RDTSCP if

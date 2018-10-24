@@ -20,7 +20,7 @@
 # error "Never use <bits/shm-pad.h> directly; include <sys/shm.h> instead."
 #endif
 
-#include <bits/wordsize.h>
+#include <bits/timesize.h>
 
 /* On most architectures, padding goes after time fields for 32-bit
    systems and is omitted for 64-bit systems.  Some architectures pad
@@ -31,7 +31,7 @@
    layout used for struct shmid64_ds in <asm/shmbuf.h>, as glibc does
    not do layout conversions for this structure.  */
 
-#define __SHM_PAD_AFTER_TIME (__WORDSIZE == 32)
+#define __SHM_PAD_AFTER_TIME (__TIMESIZE == 32)
 #define __SHM_PAD_BEFORE_TIME 0
 #define __SHM_SEGSZ_AFTER_TIME 0
 #define __SHM_PAD_BETWEEN_TIME_AND_SEGSZ 0

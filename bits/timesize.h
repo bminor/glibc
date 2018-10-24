@@ -1,4 +1,4 @@
-/* Define where padding goes in struct msqid_ds.  x86 version.
+/* Bit size of the time_t type at glibc build time, general case.
    Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,13 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _SYS_MSG_H
-# error "Never use <bits/msq-pad.h> directly; include <sys/msg.h> instead."
-#endif
+#include <bits/wordsize.h>
 
-#ifdef __x86_64__
-# define __MSQ_PAD_AFTER_TIME 0
-#else
-# define __MSQ_PAD_AFTER_TIME 1
-#endif
-#define __MSQ_PAD_BEFORE_TIME 0
+/* Size in bits of the 'time_t' type of the default ABI.  */
+#define __TIMESIZE	__WORDSIZE

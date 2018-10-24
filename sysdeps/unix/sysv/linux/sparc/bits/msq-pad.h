@@ -20,7 +20,7 @@
 # error "Never use <bits/msq-pad.h> directly; include <sys/msg.h> instead."
 #endif
 
-#include <bits/wordsize.h>
+#include <bits/timesize.h>
 
 #define __MSQ_PAD_AFTER_TIME 0
-#define __MSQ_PAD_BEFORE_TIME (__WORDSIZE == 32)
+#define __MSQ_PAD_BEFORE_TIME (__TIMESIZE == 32)

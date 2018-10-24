@@ -20,9 +20,9 @@
 # error "Never use <bits/shm-pad.h> directly; include <sys/shm.h> instead."
 #endif
 
-#include <bits/wordsize.h>
+#include <bits/timesize.h>
 
 #define __SHM_PAD_AFTER_TIME 0
-#define __SHM_PAD_BEFORE_TIME (__WORDSIZE == 32)
+#define __SHM_PAD_BEFORE_TIME (__TIMESIZE == 32)
 #define __SHM_SEGSZ_AFTER_TIME 1
-#define __SHM_PAD_BETWEEN_TIME_AND_SEGSZ (__WORDSIZE == 32)
+#define __SHM_PAD_BETWEEN_TIME_AND_SEGSZ (__TIMESIZE == 32)
