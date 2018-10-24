@@ -44,12 +44,12 @@ struct ttinfo
 
 struct leap
   {
-    internal_time_t transition;	/* Time the transition takes effect.  */
+    __time64_t transition;	/* Time the transition takes effect.  */
     long int change;		/* Seconds of correction to apply.  */
   };
 
 static size_t num_transitions;
-libc_freeres_ptr (static internal_time_t *transitions);
+libc_freeres_ptr (static __time64_t *transitions);
 static unsigned char *type_idxs;
 static size_t num_types;
 static struct ttinfo *types;
@@ -113,8 +113,8 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
   size_t tzspec_len;
   char *new = NULL;
 
-  _Static_assert (sizeof (internal_time_t) == 8,
-		  "internal_time_t must be eight bytes");
+  _Static_assert (sizeof (__time64_t) == 8,
+		  "__time64_t must be eight bytes");
 
   __use_tzfile = 0;
 
@@ -217,9 +217,9 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
 
   if (__builtin_expect (num_transitions
 			> ((SIZE_MAX - (__alignof__ (struct ttinfo) - 1))
-			   / (sizeof (internal_time_t) + 1)), 0))
+			   / (sizeof (__time64_t) + 1)), 0))
     goto lose;
-  total_size = num_transitions * (sizeof (internal_time_t) + 1);
+  total_size = num_transitions * (sizeof (__time64_t) + 1);
   total_size = ((total_size + __alignof__ (struct ttinfo) - 1)
 		& ~(__alignof__ (struct ttinfo) - 1));
   types_idx = total_size;
@@ -276,7 +276,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
     goto lose;
 
   type_idxs = (unsigned char *) transitions + (num_transitions
-					       * sizeof (internal_time_t));
+					       * sizeof (__time64_t));
   types = (struct ttinfo *) ((char *) transitions + types_idx);
   zone_names = (char *) types + num_types * sizeof (struct ttinfo);
   leaps = (struct leap *) ((char *) transitions + leaps_idx);
@@ -578,7 +578,7 @@ __tzfile_default (const char *std, const char *dst,
 }
 
 void
-__tzfile_compute (internal_time_t timer, int use_localtime,
+__tzfile_compute (__time64_t timer, int use_localtime,
 		  long int *leap_correct, int *leap_hit,
 		  struct tm *tp)
 {
@@ -667,7 +667,7 @@ __tzfile_compute (internal_time_t timer, int use_localtime,
 	     initial search spot from it.  Half of a gregorian year
 	     has on average 365.2425 * 86400 / 2 = 15778476 seconds.
 	     The value i can be truncated if size_t is smaller than
-	     internal_time_t, but this is harmless because it is just
+	     __time64_t, but this is harmless because it is just
 	     a guess.  */
 	  i = (transitions[num_transitions - 1] - timer) / 15778476;
 	  if (i < num_transitions)
