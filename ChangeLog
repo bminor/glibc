@@ -1,3 +1,9 @@
+2018-10-25  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/i386/Makefile [$(subdir) = conform]
+	(test-xfail-ISO11/threads.h/linknamespace,
+	test-xfail-ISO11/threads.h/conform): Add.
+
 2018-10-24  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/gen-libm-test.py: Import os.
