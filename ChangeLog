@@ -1,3 +1,8 @@
+2018-10-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* elf/elf.h (NT_MIPS_DSP): New macro.
+	(NT_MIPS_FP_MODE): Likewise.
+
 2018-10-25  Zong Li  <zong@andestech.com>
 
 	* elf/Makefile (LDFLAGS-tst-execstack-mod.so): Change variable
