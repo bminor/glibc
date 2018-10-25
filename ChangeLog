@@ -1,3 +1,8 @@
+2018-10-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/sys/inotify.h (IN_MASK_CREATE): New
+	macro.
+
 2018-10-25  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #23562]

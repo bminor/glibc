@@ -66,6 +66,7 @@ struct inotify_event
 #define IN_DONT_FOLLOW	 0x02000000	/* Do not follow a sym link.  */
 #define IN_EXCL_UNLINK	 0x04000000	/* Exclude events on unlinked
 					   objects.  */
+#define IN_MASK_CREATE	 0x10000000	/* Only create watches.  */
 #define IN_MASK_ADD	 0x20000000	/* Add to the mask of an already
 					   existing watch.  */
 #define IN_ISDIR	 0x40000000	/* Event occurred against dir.  */
