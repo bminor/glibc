@@ -1012,7 +1012,7 @@ $(objpfx)tst-execstack: $(libdl)
 $(objpfx)tst-execstack.out: $(objpfx)tst-execstack-mod.so
 CPPFLAGS-tst-execstack.c += -DUSE_PTHREADS=0
 LDFLAGS-tst-execstack = -Wl,-z,noexecstack
-LDFLAGS-tst-execstack-mod = -Wl,-z,execstack
+LDFLAGS-tst-execstack-mod.so = -Wl,-z,execstack
 
 $(objpfx)tst-execstack-needed: $(objpfx)tst-execstack-mod.so
 LDFLAGS-tst-execstack-needed = -Wl,-z,noexecstack
