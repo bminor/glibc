@@ -1,3 +1,8 @@
+2018-10-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/build-many-glibcs.py: Remove compatibility for missing
+	os.cpu_count and re.fullmatch.
+
 2018-10-26  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	[BZ #23822]

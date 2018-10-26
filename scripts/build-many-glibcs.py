@@ -50,17 +50,6 @@ import time
 import urllib.request
 
 try:
-    os.cpu_count
-except:
-    import multiprocessing
-    os.cpu_count = lambda: multiprocessing.cpu_count()
-
-try:
-    re.fullmatch
-except:
-    re.fullmatch = lambda p,s,f=0: re.match(p+"\\Z",s,f)
-
-try:
     subprocess.run
 except:
     class _CompletedProcess:
