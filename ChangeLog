@@ -1,3 +1,10 @@
+2018-10-26  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	[BZ #23822]
+	* sysdeps/ia64/fpu/e_exp2f.S (exp2f): Use WEAK_LIBM_ENTRY.
+	* sysdeps/ia64/fpu/e_log2f.S (log2f): Likewise.
+	* sysdeps/ia64/fpu/e_exp2f.S (powf): Likewise.
+
 2018-10-25  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #23562]
