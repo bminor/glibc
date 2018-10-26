@@ -1,3 +1,16 @@
+2018-10-25  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23562]
+	[BZ #23821]
+	XFAIL siginfo_t si_band conform test on sparc64.
+	* sysdeps/unix/sysv/linux/sparc/bits/siginfo-arch.h
+	(__SI_BAND_TYPE): Only override long int default type on sparc64.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/Makefile
+	(conformtest-xfail-conds): Add sparc64-linux.
+	* conform/data/signal.h-data (siginfo_t): XFAIL si_band test on
+	sparc64.
+	* conform/data/sys/wait.h-data (siginfo_t): Likewise.
+
 2018-10-19  Ilya Yu. Malakhov  <malakhov@mcst.ru>
 
 	[BZ #23562]

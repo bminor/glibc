@@ -172,7 +172,8 @@ element siginfo_t pid_t si_pid
 element siginfo_t uid_t si_uid
 element siginfo_t {void*} si_addr
 element siginfo_t int si_status
-element siginfo_t long si_band
+// Bug 23821: si_band has type int on sparc64.
+xfail[sparc64-linux]-element siginfo_t long si_band
 #  endif
 #  ifndef XPG42
 element siginfo_t {union sigval} si_value
