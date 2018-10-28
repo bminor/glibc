@@ -116,7 +116,8 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 
   /* Note that the signal trampoline code might modify our OPTION!  */
   err = INTR_MSG_TRAP (msg, option, send_size,
-		       rcv_size, rcv_name, timeout, notify, &ss->cancel);
+		       rcv_size, rcv_name, timeout, notify,
+		       &ss->cancel, &ss->intr_port);
 
   switch (err)
     {
