@@ -3078,7 +3078,7 @@ to @code{fcvt}.
 @c gcvt calls sprintf, that ultimately calls vfprintf, which malloc()s
 @c args_value if it's too large, but gcvt never exercises this path.
 @code{gcvt} is functionally equivalent to @samp{sprintf(buf, "%*g",
-ndigit, value}.  It is provided only for compatibility's sake.  It
+ndigit, value)}.  It is provided only for compatibility's sake.  It
 returns @var{buf}.
 
 If @var{ndigit} decimal digits would exceed the precision of a
