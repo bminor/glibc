@@ -20,7 +20,7 @@
 
 	* hurd/hurdsig.c (_hurd_interrupted_rpc_timeout): Set to 60000.
 	* hurd/intr-msg.c (_hurd_intr_rpc_mach_msg): When the server does not
-	answer to interrupt_operation, return EIO instead of EINTR.
+	answer to interrupt_operation, return EIEIO instead of EINTR.
 	* sysdeps/mach/hurd/i386/intr-msg.h (INTR_MSG_TRAP): Make
 	_hurd_intr_rpc_msg_about_to global point to start of controlled
 	assembly snippet. Make it check canceled flag.
