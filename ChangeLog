@@ -1,5 +1,9 @@
 2018-10-29  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/glibcconform.py: Do not import shutil.
+	(list_exported_functions): Use tempfile.TemporaryDirectory instead
+	of mkdtemp.
+
 	* configure.ac (PYTHON_PROG): Use AC_CHECK_PROG_VER.  Set
 	critic_missing for versions before 3.4.
 	* configure: Regenerated.

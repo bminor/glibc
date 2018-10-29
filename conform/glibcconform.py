@@ -19,7 +19,6 @@
 
 import os.path
 import re
-import shutil
 import subprocess
 import tempfile
 
@@ -43,11 +42,9 @@ def list_exported_functions(cc, standard, header):
 
     """
     cc_all = '%s -D_ISOMAC %s' % (cc, CFLAGS[standard])
-    # tempfile.TemporaryDirectory requires Python 3.2, so use mkdtemp.
-    temp_dir = tempfile.mkdtemp()
-    c_file_name = os.path.join(temp_dir, 'test.c')
-    aux_file_name = os.path.join(temp_dir, 'test.c.aux')
-    try:
+    with tempfile.TemporaryDirectory() as temp_dir:
+        c_file_name = os.path.join(temp_dir, 'test.c')
+        aux_file_name = os.path.join(temp_dir, 'test.c.aux')
         with open(c_file_name, 'w') as c_file:
             c_file.write('#include <%s>\n' % header)
         fns = set()
@@ -72,6 +69,4 @@ def list_exported_functions(cc, standard, header):
                     else:
                         raise ValueError("couldn't parse -aux-info output: %s"
                                          % line)
-    finally:
-        shutil.rmtree(temp_dir)
     return fns
