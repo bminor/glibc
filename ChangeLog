@@ -1,3 +1,17 @@
+2018-10-29  Joseph Myers  <joseph@codesourcery.com>
+
+	* configure.ac (PYTHON_PROG): Use AC_CHECK_PROG_VER.  Set
+	critic_missing for versions before 3.4.
+	* configure: Regenerated.
+	* manual/install.texi (Tools for Compilation): Document
+	requirement for Python to build glibc.
+	* INSTALL: Regenerated.
+	* Rules [PYTHON]: Make code unconditional.
+	* benchtests/Makefile [PYTHON]: Likewise.
+	* conform/Makefile [PYTHON]: Likewise.
+	* manual/Makefile [PYTHON]: Likewise.
+	* math/Makefile [PYTHON]: Likewise.
+
 2018-10-28  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* hurd/hurdsig.c (_hurd_interrupted_rpc_timeout): Set to 60000.

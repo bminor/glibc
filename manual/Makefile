@@ -172,7 +172,7 @@ include ../Rules
 install-data subdir_install: install
 # Generated files requiring python: libm-err.texi
 # Generated files requiring perl: summary.texi
-ifneq ($(if $(PYTHON),$(PERL),no),no)
+ifneq ($(PERL),no)
 ifneq ($(strip $(MAKEINFO)),:)
 install: $(inst_infodir)/libc.info
 	@if $(SHELL) -c '$(INSTALL_INFO) --version' >/dev/null 2>&1; then \

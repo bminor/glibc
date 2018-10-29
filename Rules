@@ -114,11 +114,6 @@ tests-printers-programs := $(addprefix $(objpfx),$(tests-printers))
 # .out files with the output of running the pretty printer tests.
 tests-printers-out := $(patsubst %,$(objpfx)%.out,$(tests-printers))
 
-ifndef PYTHON
-# Mark tests-printers tests as unsupported if we don't have PYTHON.
-tests-unsupported += $(tests-printers)
-endif
-
 ifeq ($(build-programs),yes)
 others: $(addprefix $(objpfx),$(others) $(sysdep-others) $(extra-objs))
 else
@@ -277,7 +272,6 @@ endif
 
 endif	# tests
 
-ifdef PYTHON
 ifneq "$(strip $(tests-printers))" ""
 
 # Static pattern rule for building the test programs for the pretty printers.
@@ -299,7 +293,6 @@ $(tests-printers-out): $(objpfx)%.out: $(objpfx)% %.py %.c $(pretty-printers) \
 	$(test-wrapper-env) $(py-env) \
 	    $(PYTHON) $*.py $*.c $(objpfx)$* $(pretty-printers) > $@; \
 	$(evaluate-test)
-endif
 endif
 
 

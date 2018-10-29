@@ -255,7 +255,6 @@ tests += test-math-isinff test-math-iszero test-math-issignaling \
 	 test-math-iscanonical test-math-cxx11 test-math-iseqsig
 endif
 
-ifdef PYTHON
 libm-vec-tests = $(addprefix test-,$(libmvec-tests))
 libm-test-support = $(foreach t,$(test-types),libm-test-support-$(t))
 test-extras += $(libm-test-support)
@@ -351,9 +350,7 @@ $(libm-test-c-narrow-obj): $(objpfx)libm-test%.c: libm-test%.inc \
 						  auto-libm-test-out%
 	$(make-target-directory)
 	$(PYTHON) gen-libm-test.py -c $< -a auto-libm-test-out$* -C $@
-endif
 
-ifdef PYTHON
 tgmath3-macros = atan2 cbrt ceil copysign erf erfc exp2 expm1 fdim floor \
 		 fma fmax fmin fmod frexp hypot ilogb ldexp lgamma llrint \
 		 llround log10 log1p log2 logb lrint lround nearbyint \
@@ -380,7 +377,6 @@ tests-special += $(objpfx)test-tgmath3-macro-list.out
 $(objpfx)test-tgmath3-macro-list.out: gen-tgmath-tests.py
 	$(PYTHON) $< check-list $(tgmath3-macros) > $@; \
 	$(evaluate-test)
-endif
 
 libm-test-fast-math-cflags = -fno-builtin -D__FAST_MATH__ -DTEST_FAST_MATH
 libm-test-vec-cflags = $(libm-test-fast-math-cflags) -fno-inline \
@@ -476,7 +472,6 @@ $(objpfx)gen-libm-templates.stmp: Makefile
 $(foreach t, $(call type-foreach, $(gen-all-calls)), \
              $(objpfx)$(t).c): $(objpfx)gen-libm-templates.stmp
 
-ifdef PYTHON
 # This must come after the inclusion of sysdeps Makefiles via Rules.
 
 $(foreach t,$(libm-tests-normal),$(objpfx)$(t).c): $(objpfx)test-%.c:
@@ -637,11 +632,6 @@ regen-ulps: $(addprefix $(objpfx),$(libm-tests))
 	echo "Difference between the current baseline and the new baseline is:";\
 	diff -urN $(ulps-file) $(objpfx)NewUlps; \
 	echo "Copy $(objpfx)NewUlps to $(ulps-file) (relative to source)."
-else
-regen-ulps:
-	@echo "Automatic regeneration of ULPs requires python."; \
-	exit 1;
-endif
 
 # The generated sysd-rules file defines rules like this for sources
 # coming from sysdeps/ directories.  These rules find the generic sources.

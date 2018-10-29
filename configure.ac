@@ -1050,18 +1050,12 @@ else
 fi
 
 # Check for python3 if available, or else python.
-AC_CHECK_PROGS(PYTHON_PROG, python3 python,no)
-case "x$PYTHON_PROG" in
-xno|x|x:) PYTHON_PROG=no ;;
-*) ;;
-esac
-
-if test "x$PYTHON_PROG" = xno; then
-  aux_missing="$aux_missing python"
-else
-  PYTHON="$PYTHON_PROG -B"
-  AC_SUBST(PYTHON)
-fi
+AC_CHECK_PROG_VER(PYTHON_PROG, python3 python, --version,
+  [Python \([0-9][0-9.]*\)],
+  [3.[4-9]*|3.[1-9][0-9]*|[4-9].*|[1-9][0-9]*],
+  critic_missing="$critic_missing python")
+PYTHON="$PYTHON_PROG -B"
+AC_SUBST(PYTHON)
 
 test -n "$critic_missing" && AC_MSG_ERROR([
 *** These critical programs are missing or too old:$critic_missing

@@ -120,9 +120,7 @@ linknamespace-symlists-base := $(foreach std,$(conformtest-standards),\
 					     symlist-$(std))
 linknamespace-symlists-tests := $(addprefix $(objpfx),\
 					    $(linknamespace-symlists-base))
-ifdef PYTHON
 tests-special += $(linknamespace-symlists-tests)
-endif
 
 linknamespace-symlist-stdlibs-base := $(foreach std,$(conformtest-standards),\
 						    symlist-stdlibs-$(std))
@@ -130,9 +128,7 @@ linknamespace-symlist-stdlibs-tests := \
 	$(addprefix $(objpfx),\
 		    $(linknamespace-symlist-stdlibs-base))
 
-ifdef PYTHON
 tests-special += $(linknamespace-symlist-stdlibs-tests)
-endif
 
 linknamespace-header-base := $(foreach std,\
 				       $(conformtest-standards),\
@@ -141,9 +137,7 @@ linknamespace-header-base := $(foreach std,\
 						 $(std)/$(h)/linknamespace.out))
 linknamespace-header-tests := $(addprefix $(objpfx),\
 					  $(linknamespace-header-base))
-ifdef PYTHON
 tests-special += $(linknamespace-header-tests)
-endif
 
 include ../Rules
 
