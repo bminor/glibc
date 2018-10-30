@@ -1,3 +1,14 @@
+2018-10-30  Florian Weimer  <fweimer@redhat.com>
+
+	Avoid spurious test failures in stdlib/test-bz22786.
+	* support/Makefile (libsupport-routines): Add blob_repeat.
+	(tests): Add tst-support_blob_repeat.
+	* support/blob_repeat.h: New file.
+	* support/blob_repeat.c: Likewise.
+	* support/tst-support_blob_repeat.c: Likewise.
+	* stdlib/test-bz22786.c (do_test): Replace malloc and memset with
+	support_blob_repeat_allocate.
+
 2018-08-30  Stefan Liebler  <stli@linux.ibm.com>
 
 	* stdlib/test-bz22786.c (do_test): Return EXIT_UNSUPPORTED

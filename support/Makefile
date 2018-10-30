@@ -25,6 +25,7 @@ extra-libs-others = $(extra-libs)
 extra-libs-noinstall := $(extra-libs)
 
 libsupport-routines = \
+  blob_repeat \
   check \
   check_addrinfo \
   check_dns_packet \
@@ -154,6 +155,7 @@ endif
 tests = \
   README-testing \
   tst-support-namespace \
+  tst-support_blob_repeat \
   tst-support_capture_subprocess \
   tst-support_format_dns_packet \
   tst-support_quote_blob \
