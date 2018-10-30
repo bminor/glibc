@@ -36,8 +36,8 @@
 static int
 do_test (void)
 {
-  const char *dir = support_create_temp_directory ("bz22786.");
-  const char *lnk = xasprintf ("%s/symlink", dir);
+  char *dir = support_create_temp_directory ("bz22786.");
+  char *lnk = xasprintf ("%s/symlink", dir);
   const size_t path_len = (size_t) INT_MAX + strlen (lnk) + 1;
 
   struct support_blob_repeat repeat
@@ -72,6 +72,8 @@ do_test (void)
   /* Cleanup.  */
   unlink (lnk);
   support_blob_repeat_free (&repeat);
+  free (lnk);
+  free (dir);
 
   return 0;
 }
