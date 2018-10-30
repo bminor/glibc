@@ -1,5 +1,10 @@
 2018-10-30  Florian Weimer  <fweimer@redhat.com>
 
+	* stdlib/test-bz22786.c (do_test): Additional free calls to avoid
+	memory leaks.
+
+2018-10-30  Florian Weimer  <fweimer@redhat.com>
+
 	Avoid spurious test failures in stdlib/test-bz22786.
 	* support/Makefile (libsupport-routines): Add blob_repeat.
 	(tests): Add tst-support_blob_repeat.
