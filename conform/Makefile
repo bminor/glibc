@@ -218,17 +218,16 @@ $(linknamespace-symlist-stdlibs-tests): $(objpfx)symlist-stdlibs-%: \
 	$(evaluate-test)
 
 $(linknamespace-header-tests): $(objpfx)%/linknamespace.out: \
-			       linknamespace.pl \
+			       linknamespace.py \
 			       $(linknamespace-symlists-tests) \
 			       $(linknamespace-symlist-stdlibs-tests)
 	(set -e; std_hdr=$*; std=$${std_hdr%%/*}; hdr=$${std_hdr#*/}; \
 	 mkdir -p $(@D)/scratch; \
-	 $(PERL) -I. -w $< --tmpdir=$(@D)/scratch --cc='$(CC)' \
-		 --flags='$(conformtest-cc-flags)' --standard=$$std \
-		 --stdsyms=$(objpfx)symlist-$$std --header=$$hdr \
-		 --libsyms=$(objpfx)symlist-stdlibs-$$std \
-		 --readelf='$(READELF)' \
-		 > $@ 2>&1); \
+	 $(PYTHON) $< --cc='$(CC)' --flags='$(conformtest-cc-flags)' \
+		   --standard=$$std --stdsyms=$(objpfx)symlist-$$std \
+		   --header=$$hdr --libsyms=$(objpfx)symlist-stdlibs-$$std \
+		   --readelf='$(READELF)' \
+		   > $@ 2>&1); \
 	$(evaluate-test)
 
 # Pre-standard C feature no longer supported by GCC (obsoleted in

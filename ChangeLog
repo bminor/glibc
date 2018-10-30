@@ -1,3 +1,11 @@
+2018-10-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/linknamespace.py: New file.
+	* conform/linknamespace.pl: Remove file.
+	* conform/Makefile ($(linknamespace-header-tests)): Use
+	linknamespace.py instead of linknamespace.pl.  Do not use --tmpdir
+	option.
+
 2018-10-30  Florian Weimer  <fweimer@redhat.com>
 
 	* stdlib/test-bz22786.c (do_test): Additional free calls to avoid
