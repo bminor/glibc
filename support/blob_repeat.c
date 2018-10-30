@@ -23,8 +23,8 @@
 #include <string.h>
 #include <support/blob_repeat.h>
 #include <support/check.h>
+#include <support/test-driver.h>
 #include <support/support.h>
-#include <support/temp_file.h>
 #include <support/xunistd.h>
 #include <sys/mman.h>
 #include <unistd.h>
@@ -155,13 +155,17 @@ allocate_big (size_t total_size, const void *element, size_t element_size,
   if (target == MAP_FAILED)
     return (struct support_blob_repeat) { 0 };
 
-  /* Create the backing file for the repeated mapping.  */
+  /* Create the backing file for the repeated mapping.  Call mkstemp
+     directly to remove the resources backing the temporary file
+     immediately, once support_blob_repeat_free is called.  Using
+     create_temp_file would result in a warning during post-test
+     cleanup.  */
   int fd;
   {
-    char *temppath;
-    fd = create_temp_file ("support_blob_repeat-", &temppath);
+    char *temppath = xasprintf ("%s/support_blob_repeat-XXXXXX", test_dir);
+    fd = mkstemp (temppath);
     if (fd < 0)
-      FAIL_EXIT1 ("create_temp_file: %m");
+      FAIL_EXIT1 ("mkstemp (\"%s\"): %m", temppath);
     xunlink (temppath);
     free (temppath);
   }
