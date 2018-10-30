@@ -1,3 +1,19 @@
+2018-12-14  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
+	* misc/Makefile (tests): Remove tst-efgcvt.  Add tst-dbl-efgcvt
+	and tst-ldbl-efgcvt.
+	* misc/tst-efgcvt.c: Renamed to misc/tst-efgcvt-template.c.
+	* misc/tst-efgcvt-template.c: Renamed from misc/tst-efgcvt.c.
+	(struct testcase, efcvt_func, efcvt_r_func, ecvt_tests)
+	(fcvt_tests, output_error, output_r_error, do_test): Use the
+	macros defined in tst-dbl-efgcvt.c and tst-ldbl-efgcvt.c to:
+	select the type of floating-point variables and arguments; to
+	produce extra tests for double and conversion specifiers for
+	printf; and to set the names of called functions.
+	* misc/tst-dbl-efgcvt.c: New file that defines the macros used
+	in tst-efgcvt-template.c.
+	* misc/tst-ldbl-efgcvt.c: Likewise.
+
 2018-12-14  Stefan Liebler  <stli@linux.ibm.com>
 
 	* nss/Makefile (tst-nss-test3.out): New rule.

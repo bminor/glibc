@@ -15,11 +15,29 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+/* This template provides testing for the *cvt family of functions,
+   which deal with double or long double types.  In order to use the
+   template, the following macros must be defined before inclusion of
+   this template:
+
+     FLOAT: The floating-point type, i.e. double or long double.
+
+     ECVT: Appropriate *ecvt function for FLOAT, i.e. ecvt or qecvt.
+     FCVT: Likewise for *fcvt, i.e. fcvt or qfcvt.
+     ECVT_R: Likewise for *ecvt_r, i.e. ecvt_r or qecvt_r.
+     FCVT_R: Likewise for *fcvt_r, i.e. fcvt_r or qfcvt_r.
+
+     PRINTF_CONVERSION: The appropriate printf conversion specifier with
+     length modifier for FLOAT, i.e. "%f" or "%Lf".
+
+     EXTRA_ECVT_TESTS: Additional tests for the ecvt or qecvt function
+     that are only relevant to a particular floating-point type and
+     cannot be represented generically.  */
+
 #ifndef _GNU_SOURCE
 # define _GNU_SOURCE	1
 #endif
 
-#include <float.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,17 +45,20 @@
 
 #include <support/check.h>
 
+#define NAME(x) NAMEX(x)
+#define NAMEX(x) #x
+
 typedef struct
 {
-  double value;
+  FLOAT value;
   int ndigit;
   int decpt;
   char result[30];
 } testcase;
 
-typedef char * ((*efcvt_func) (double, int, int *, int *));
+typedef char * ((*efcvt_func) (FLOAT, int, int *, int *));
 
-typedef int ((*efcvt_r_func) (double, int, int *, int *, char *, size_t));
+typedef int ((*efcvt_r_func) (FLOAT, int, int *, int *, char *, size_t));
 
 
 static testcase ecvt_tests[] =
@@ -59,10 +80,7 @@ static testcase ecvt_tests[] =
   { 123.01, -4, 3, "" },
   { 126.71, -4, 3, "" },
   { 0.0, 4, 1, "0000" },
-#if DBL_MANT_DIG == 53
-  { 0x1p-1074, 3, -323, "494" },
-  { -0x1p-1074, 3, -323, "494" },
-#endif
+  EXTRA_ECVT_TESTS
   /* -1.0 is end marker.  */
   { -1.0, 0, 0, "" }
 };
@@ -91,11 +109,12 @@ static testcase fcvt_tests[] =
 };
 
 static void
-output_error (const char *name, double value, int ndigit,
+output_error (const char *name, FLOAT value, int ndigit,
 	      const char *exp_p, int exp_decpt, int exp_sign,
 	      char *res_p, int res_decpt, int res_sign)
 {
-  printf ("%s returned wrong result for value: %f, ndigits: %d\n",
+  printf ("%s returned wrong result for value: " PRINTF_CONVERSION
+	  ", ndigits: %d\n",
 	  name, value, ndigit);
   printf ("Result was p: \"%s\", decpt: %d, sign: %d\n",
 	  res_p, res_decpt, res_sign);
@@ -106,11 +125,12 @@ output_error (const char *name, double value, int ndigit,
 
 
 static void
-output_r_error (const char *name, double value, int ndigit,
+output_r_error (const char *name, FLOAT value, int ndigit,
 		const char *exp_p, int exp_decpt, int exp_sign, int exp_return,
 		char *res_p, int res_decpt, int res_sign, int res_return)
 {
-  printf ("%s returned wrong result for value: %f, ndigits: %d\n",
+  printf ("%s returned wrong result for value: " PRINTF_CONVERSION
+	  ", ndigits: %d\n",
 	  name, value, ndigit);
   printf ("Result was buf: \"%s\", decpt: %d, sign: %d return value: %d\n",
 	  res_p, res_decpt, res_sign, res_return);
@@ -171,30 +191,30 @@ special (void)
   char *p;
   char buf [1024];
 
-  p = ecvt (NAN, 10, &decpt, &sign);
+  p = ECVT (NAN, 10, &decpt, &sign);
   if (sign != 0 || strcmp (p, "nan") != 0)
-    output_error ("ecvt", NAN, 10, "nan", 0, 0, p, decpt, sign);
+    output_error (NAME (ECVT), NAN, 10, "nan", 0, 0, p, decpt, sign);
 
-  p = ecvt (INFINITY, 10, &decpt, &sign);
+  p = ECVT (INFINITY, 10, &decpt, &sign);
   if (sign != 0 || strcmp (p, "inf") != 0)
-    output_error ("ecvt", INFINITY, 10, "inf", 0, 0, p, decpt, sign);
+    output_error (NAME (ECVT), INFINITY, 10, "inf", 0, 0, p, decpt, sign);
 
   /* Simply make sure these calls with large NDIGITs don't crash.  */
-  (void) ecvt (123.456, 10000, &decpt, &sign);
-  (void) fcvt (123.456, 10000, &decpt, &sign);
+  (void) ECVT (123.456, 10000, &decpt, &sign);
+  (void) FCVT (123.456, 10000, &decpt, &sign);
 
   /* Some tests for the reentrant functions.  */
   /* Use a too small buffer.  */
-  res = ecvt_r (123.456, 10, &decpt, &sign, buf, 1);
+  res = ECVT_R (123.456, 10, &decpt, &sign, buf, 1);
   if (res == 0)
     {
-      printf ("ecvt_r with a too small buffer was succesful.\n");
+      printf (NAME (ECVT_R) " with a too small buffer was succesful.\n");
       support_record_failure ();
     }
-  res = fcvt_r (123.456, 10, &decpt, &sign, buf, 1);
+  res = FCVT_R (123.456, 10, &decpt, &sign, buf, 1);
   if (res == 0)
     {
-      printf ("fcvt_r with a too small buffer was succesful.\n");
+      printf (NAME (FCVT_R) " with a too small buffer was succesful.\n");
       support_record_failure ();
     }
 }
@@ -203,10 +223,10 @@ special (void)
 static int
 do_test (void)
 {
-  test (ecvt_tests, ecvt, "ecvt");
-  test (fcvt_tests, fcvt, "fcvt");
-  test_r (ecvt_tests, ecvt_r, "ecvt_r");
-  test_r (fcvt_tests, fcvt_r, "fcvt_r");
+  test (ecvt_tests, ECVT, NAME (ECVT));
+  test (fcvt_tests, FCVT, NAME (FCVT));
+  test_r (ecvt_tests, ECVT_R, NAME (ECVT_R));
+  test_r (fcvt_tests, FCVT_R, NAME (FCVT_R));
   special ();
 
   return 0;

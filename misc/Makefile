@@ -80,12 +80,12 @@ aux := init-misc
 install-lib := libg.a
 gpl2lgpl := error.c error.h
 
-tests := tst-dirname tst-tsearch tst-fdset tst-efgcvt tst-mntent tst-hsearch \
+tests := tst-dirname tst-tsearch tst-fdset tst-mntent tst-hsearch \
 	 tst-error1 tst-pselect tst-insremque tst-mntent2 bug-hsearch1 \
 	 tst-mntent-blank-corrupt tst-mntent-blank-passno bug18240 \
 	 tst-preadvwritev tst-preadvwritev64 tst-makedev tst-empty \
 	 tst-preadvwritev2 tst-preadvwritev64v2 tst-warn-wide \
-	 tst-ldbl-warn tst-ldbl-error
+	 tst-ldbl-warn tst-ldbl-error tst-dbl-efgcvt tst-ldbl-efgcvt
 
 # Tests which need libdl.
 ifeq (yes,$(build-shared))
