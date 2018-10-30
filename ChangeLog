@@ -1,5 +1,10 @@
 2018-10-30  Florian Weimer  <fweimer@redhat.com>
 
+	* stdlib/tst-strtod-overflow.c (do_test): Switch to
+	support_blob_repeat.
+
+2018-10-30  Florian Weimer  <fweimer@redhat.com>
+
 	* support/blob_repeat.c (allocate_big): Call mkstemp directly.
 
 2018-10-30  Florian Weimer  <fweimer@redhat.com>
