@@ -1,3 +1,8 @@
+2018-10-31  Rafael Avila de Espindola  <rafael@espindo.la>
+
+	* sysdeps/unix/sysv/linux/sysdep-vdso.h: Simplify an #if #else
+	#endif.
+
 2018-10-31  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* manual/errno.texi (EIEIO): Document how translators should

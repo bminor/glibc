@@ -26,13 +26,11 @@
      funcptr (args)
 #endif
 
-#ifdef SHARED
+#if defined SHARED && defined HAVE_VSYSCALL
 
-# ifdef HAVE_VSYSCALL
+# include <libc-vdso.h>
 
-#  include <libc-vdso.h>
-
-#  define INLINE_VSYSCALL(name, nr, args...)				      \
+# define INLINE_VSYSCALL(name, nr, args...)				      \
   ({									      \
     __label__ out;							      \
     __label__ iserr;							      \
@@ -61,7 +59,7 @@
     sc_ret;								      \
   })
 
-#  define INTERNAL_VSYSCALL(name, err, nr, args...)			      \
+# define INTERNAL_VSYSCALL(name, err, nr, args...)			      \
   ({									      \
     __label__ out;							      \
     long v_ret;								      \
@@ -79,20 +77,13 @@
   out:									      \
     v_ret;								      \
   })
-# else
-#  define INLINE_VSYSCALL(name, nr, args...) \
-    INLINE_SYSCALL (name, nr, ##args)
-#  define INTERNAL_VSYSCALL(name, err, nr, args...) \
-    INTERNAL_SYSCALL (name, err, nr, ##args)
-# endif /* HAVE_VSYSCALL  */
+#else
 
-# else /* SHARED  */
+# define INLINE_VSYSCALL(name, nr, args...) \
+   INLINE_SYSCALL (name, nr, ##args)
+# define INTERNAL_VSYSCALL(name, err, nr, args...) \
+   INTERNAL_SYSCALL (name, err, nr, ##args)
 
-#  define INLINE_VSYSCALL(name, nr, args...) \
-    INLINE_SYSCALL (name, nr, ##args)
-#  define INTERNAL_VSYSCALL(name, err, nr, args...) \
-    INTERNAL_SYSCALL (name, err, nr, ##args)
-
-#endif /* SHARED  */
+#endif /* defined SHARED && defined HAVE_VSYSCALL */
 
 #endif /* SYSDEP_VDSO_LINUX_H  */
