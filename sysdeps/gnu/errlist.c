@@ -974,7 +974,20 @@ TRANS You did @strong{what}? */
 #endif
 #ifdef EIEIO
 /*
-TRANS Go home and have a glass of warm, dairy-fresh milk. */
+TRANS Go home and have a glass of warm, dairy-fresh milk.
+TRANS @c Okay.  Since you are dying to know, I'll tell you.
+TRANS @c This is a joke, obviously.  There is a children's song which begins,
+TRANS @c "Old McDonald had a farm, e-i-e-i-o."  Every time I see the (real)
+TRANS @c errno macro EIO, I think about that song.  Probably most of my
+TRANS @c compatriots who program on Unix do, too.  One of them must have stayed
+TRANS @c up a little too late one night and decided to add it to Hurd or Glibc.
+TRANS @c Whoever did it should be castigated, but it made me laugh.
+TRANS @c  --jtobey@channel1.com
+TRANS @c
+TRANS @c "bought the farm" means "died".  -jtobey
+TRANS @c
+TRANS @c Translators, please do not translate this litteraly, translate it into
+TRANS @c an idiomatic funny way of saying that the computer died. */
     [ERR_REMAP (EIEIO)] = N_("Computer bought the farm"),
 # if EIEIO > ERR_MAX
 # undef ERR_MAX

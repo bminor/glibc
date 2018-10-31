@@ -531,11 +531,11 @@ build the GNU C Library:
      work with any version of 'sed'.  As of release time, 'sed' version
      4.5 is the newest verified to work to build the GNU C Library.
 
-   * Python 2.7/3.4 or later
+   * Python 3.4 or later
 
-     Python is required to build the GNU C Library manual and to run
-     some tests.  As of release time, Python 3.6 is the newest verified
-     to work for testing the GNU C Library.
+     Python is required to build the GNU C Library.  As of release time,
+     Python 3.6 is the newest verified to work for building and testing
+     the GNU C Library.
 
    * PExpect 4.0
 

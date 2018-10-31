@@ -323,9 +323,9 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
       /* FALLTHROUGH */
 
     dead:
-      err = EIO;
+      err = EIEIO;
 
-      /* The EIO return indicates cancellation, so clear the flag.  */
+      /* The EIEIO return indicates cancellation, so clear the flag.  */
       ss->cancel = 0;
       break;
 

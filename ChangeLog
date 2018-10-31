@@ -1,8 +1,80 @@
+2018-10-31  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/gnu/errlist.c (EIEIO): Document how translators should
+	translate the error message.
+
+2018-10-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/linknamespace.py: New file.
+	* conform/linknamespace.pl: Remove file.
+	* conform/Makefile ($(linknamespace-header-tests)): Use
+	linknamespace.py instead of linknamespace.pl.  Do not use --tmpdir
+	option.
+
+2018-10-30  Florian Weimer  <fweimer@redhat.com>
+
+	* stdlib/test-bz22786.c (do_test): Additional free calls to avoid
+	memory leaks.
+
+2018-10-30  Florian Weimer  <fweimer@redhat.com>
+
+	* support/blob_repeat.c (allocate_big): Call mkstemp directly.
+
+2018-10-30  Florian Weimer  <fweimer@redhat.com>
+
+	* stdlib/tst-strtod-overflow.c (do_test): Switch to
+	support_blob_repeat.
+
+2018-10-30  Florian Weimer  <fweimer@redhat.com>
+
+	Avoid spurious test failures in stdlib/test-bz22786.
+	* support/Makefile (libsupport-routines): Add blob_repeat.
+	(tests): Add tst-support_blob_repeat.
+	* support/blob_repeat.h: New file.
+	* support/blob_repeat.c: Likewise.
+	* support/tst-support_blob_repeat.c: Likewise.
+	* stdlib/test-bz22786.c (do_test): Replace malloc and memset with
+	support_blob_repeat_allocate.
+
+2018-10-30  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #23125]
+	* sysdeps/riscv/start.S (ENTRY_POINT): Mark ra as undefined.
+	Don't use tail call.
+	* elf/tst-unwind-main.c: New file.
+	* elf/Makefile (tests): Add tst-unwind-main.
+	(CFLAGS-tst-unwind-main.c): Define.
+
+2018-10-29  Sergi Almacellas Abellana <sergi@koolpi.com>
+
+	[BZ #23791]
+	* localedata/locales/ca_ES (LC_MONETARY): set p_cs_precedes and
+	n_cs_precedes to 0.
+	* localedata/locales/ca_ES (LC_MONETARY): set grouping to 3;3
+
+2018-10-29  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/glibcconform.py: Do not import shutil.
+	(list_exported_functions): Use tempfile.TemporaryDirectory instead
+	of mkdtemp.
+
+	* configure.ac (PYTHON_PROG): Use AC_CHECK_PROG_VER.  Set
+	critic_missing for versions before 3.4.
+	* configure: Regenerated.
+	* manual/install.texi (Tools for Compilation): Document
+	requirement for Python to build glibc.
+	* INSTALL: Regenerated.
+	* Rules [PYTHON]: Make code unconditional.
+	* benchtests/Makefile [PYTHON]: Likewise.
+	* conform/Makefile [PYTHON]: Likewise.
+	* manual/Makefile [PYTHON]: Likewise.
+	* math/Makefile [PYTHON]: Likewise.
+
 2018-10-28  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* hurd/hurdsig.c (_hurd_interrupted_rpc_timeout): Set to 60000.
 	* hurd/intr-msg.c (_hurd_intr_rpc_mach_msg): When the server does not
-	answer to interrupt_operation, return EIO instead of EINTR.
+	answer to interrupt_operation, return EIEIO instead of EINTR.
 	* sysdeps/mach/hurd/i386/intr-msg.h (INTR_MSG_TRAP): Make
 	_hurd_intr_rpc_msg_about_to global point to start of controlled
 	assembly snippet. Make it check canceled flag.
