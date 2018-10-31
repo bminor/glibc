@@ -11,6 +11,7 @@
 	printing trailing whitespaces refused by git.
 	* sysdeps/gnu/errlist.c (EIEIO): Regenerate.
 	* sysdeps/mach/hurd/bits/errno.h: Regenerate.
+	* hurd/Makefile (user-interfaces): Add pci.
 
 2018-10-30  Joseph Myers  <joseph@codesourcery.com>
 
