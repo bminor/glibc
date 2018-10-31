@@ -1,7 +1,11 @@
 2018-10-31  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
-	* sysdeps/gnu/errlist.c (EIEIO): Document how translators should
+	* manual/errno.texi (EIEIO): Document how translators should
 	translate the error message.
+	* sysdeps/mach/hurd/errnos.awk: Avoid printing errnos.d.  Avoid
+	printing trailing whitespaces refused by git.
+	* sysdeps/gnu/errlist.c (EIEIO): Regenerate.
+	* sysdeps/mach/hurd/bits/errno.h: Regenerate.
 
 2018-10-30  Joseph Myers  <joseph@codesourcery.com>
 

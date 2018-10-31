@@ -810,6 +810,19 @@ You did @strong{what}?
 @standards{GNU, errno.h}
 @errno{EIEIO, 104, Computer bought the farm}
 Go home and have a glass of warm, dairy-fresh milk.
+@c Okay.  Since you are dying to know, I'll tell you.
+@c This is a joke, obviously.  There is a children's song which begins,
+@c "Old McDonald had a farm, e-i-e-i-o."  Every time I see the (real)
+@c errno macro EIO, I think about that song.  Probably most of my
+@c compatriots who program on Unix do, too.  One of them must have stayed
+@c up a little too late one night and decided to add it to Hurd or Glibc.
+@c Whoever did it should be castigated, but it made me laugh.
+@c  --jtobey@channel1.com
+@c
+@c "bought the farm" means "died".  -jtobey
+@c
+@c Translators, please do not translate this litteraly, translate it into
+@c an idiomatic funny way of saying that the computer died.
 @end deftypevr
 
 @deftypevr Macro int EGRATUITOUS
