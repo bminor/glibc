@@ -1,3 +1,8 @@
+2018-10-31  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/gnu/errlist.c (EIEIO): Document how translators should
+	translate the error message.
+
 2018-10-30  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/linknamespace.py: New file.
