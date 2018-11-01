@@ -1,5 +1,10 @@
 2018-11-01  Zong Li  <zong@andestech.com>
 
+	* soft-fp/op-8.h (_FP_FRAC_SET_8, _FP_FRAC_ADD_8, _FP_FRAC_SUB_8)
+	(_FP_FRAC_CLZ_8, _FP_MINFRAC_8, _FP_FRAC_NEGP_8, _FP_FRAC_ZEROP_8)
+	(_FP_FRAC_HIGHBIT_DW_8, _FP_FRAC_COPY_4_8, _FP_FRAC_COPY_8_4)
+	(__FP_FRAC_SET_8): Add implementation for RV32 use.
+
 	* soft-fp/op-4.h (_FP_FRAC_SUB_3, _FP_FRAC_SUB_4): Use temporary
 	variable to avoid overlap arguments.
 
