@@ -1,3 +1,8 @@
+2018-11-01  Zong Li  <zong@andestech.com>
+
+	* soft-fp/op-4.h (_FP_FRAC_SUB_3, _FP_FRAC_SUB_4): Use temporary
+	variable to avoid overlap arguments.
+
 2018-11-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* posix/bug-regex22.c (main): Use puts with distinct error
