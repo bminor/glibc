@@ -1,3 +1,31 @@
+2018-11-01  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #23848]
+	* sysdeps/unix/sysv/linux/sparc/kernel-features.h [!__arch64__ &&
+	__LINUX_KERNEL_VERSION < 0x040400] (__ASSUME_SENDMSG_SYSCALL):
+	Undefine.
+	[!__arch64__ && __LINUX_KERNEL_VERSION < 0x040400]
+	(__ASSUME_RECVMSG_SYSCALL): Likewise.
+	[!__arch64__ && __LINUX_KERNEL_VERSION < 0x040400]
+	(__ASSUME_SENDTO_SYSCALL): Likewise.
+	[!__arch64__ && __LINUX_KERNEL_VERSION < 0x040400]
+	(__ASSUME_ACCEPT_SYSCALL): Undefine under this condition, not just
+	[!__arch64__].
+	[!__arch64__ && __LINUX_KERNEL_VERSION < 0x040400]
+	(__ASSUME_CONNECT_SYSCALL): Likewise.
+	[!__arch64__ && __LINUX_KERNEL_VERSION < 0x040400]
+	(__ASSUME_RECVFROM_SYSCALL): Likewise.
+	[__LINUX_KERNEL_VERSION >= 0x040400] (__ASSUME_BIND_SYSCALL):
+	Define.
+	[__LINUX_KERNEL_VERSION >= 0x040400] (__ASSUME_LISTEN_SYSCALL):
+	Likewise.
+	[__LINUX_KERNEL_VERSION >= 0x040400]
+	(__ASSUME_SETSOCKOPT_SYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list (bind):
+	Remove.
+	(listen): Likewise.
+	(setsockopt): Likewise.
+
 2018-11-01  Fredrik Noring  <noring@nocrew.org>
 
 	* sysdeps/mips/sys/tas.h (_test_and_set): Handle the R5900 CPU

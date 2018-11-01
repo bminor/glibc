@@ -28,11 +28,34 @@
 # undef __ASSUME_SET_ROBUST_LIST
 #endif
 
-#if !defined __arch64__
+/* These syscalls were added for 32-bit in 4.4 (but present for 64-bit
+   in all supported kernel versions); the architecture-independent
+   kernel-features.h assumes some of them to be present by default.
+   getpeername and getsockname syscalls were also added for 32-bit in
+   4.4, but only for 32-bit kernels, not in the compat syscall table
+   for 64-bit kernels.  */
+#if !defined __arch64__ && __LINUX_KERNEL_VERSION < 0x040400
+# undef __ASSUME_SENDMSG_SYSCALL
+# undef __ASSUME_RECVMSG_SYSCALL
 # undef __ASSUME_ACCEPT_SYSCALL
 # undef __ASSUME_CONNECT_SYSCALL
 # undef __ASSUME_RECVFROM_SYSCALL
+# undef __ASSUME_SENDTO_SYSCALL
 #else
+# define __ASSUME_SOCKET_SYSCALL             1
+# define __ASSUME_SOCKETPAIR_SYSCALL         1
+# define __ASSUME_GETSOCKOPT_SYSCALL         1
+# define __ASSUME_SHUTDOWN_SYSCALL           1
+#endif
+
+/* These syscalls were added for both 32-bit and 64-bit in 4.4.  */
+#if __LINUX_KERNEL_VERSION >= 0x040400
+# define __ASSUME_BIND_SYSCALL               1
+# define __ASSUME_LISTEN_SYSCALL             1
+# define __ASSUME_SETSOCKOPT_SYSCALL         1
+#endif
+
+#ifdef __arch64__
 /* sparc64 defines __NR_pause,  however it is not supported (ENOSYS).
    Undefine so pause.c can use a correct alternative.  */
 # undef __NR_pause
