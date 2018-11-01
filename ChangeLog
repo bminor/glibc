@@ -1,3 +1,8 @@
+2018-11-01  Fredrik Noring  <noring@nocrew.org>
+
+	* sysdeps/mips/sys/tas.h (_test_and_set): Handle the R5900 CPU
+	with the ISA override.
+
 2018-10-31  Rafael Avila de Espindola  <rafael@espindo.la>
 
 	* sysdeps/unix/sysv/linux/sysdep-vdso.h: Simplify an #if #else
