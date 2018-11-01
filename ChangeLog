@@ -1,3 +1,15 @@
+2018-11-09  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
+	* misc/tst-efgcvt.c: Include support/check.h and
+	support/test-driver.c.  Do not include test-skeleton.c.
+	(error_count): Remove.
+	(output_error): Replace increments to error_count with calls to
+	support_record_failure.
+	(output_r_error): Likewise.
+	(special): Likewise.
+	(do_test): Unconditionally return zero.
+	(TEST_FUNCTION): Remove.
+
 2018-11-09  Joseph Myers  <joseph@codesourcery.com>
 
 	* conform/Makefile ($(conformtest-header-tests)): Create $(@D),

@@ -25,7 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-int error_count;
+#include <support/check.h>
 
 typedef struct
 {
@@ -101,7 +101,7 @@ output_error (const char *name, double value, int ndigit,
 	  res_p, res_decpt, res_sign);
   printf ("Should be  p: \"%s\", decpt: %d, sign: %d\n",
 	  exp_p, exp_decpt, exp_sign);
-  ++error_count;
+  support_record_failure ();
 }
 
 
@@ -116,7 +116,7 @@ output_r_error (const char *name, double value, int ndigit,
 	  res_p, res_decpt, res_sign, res_return);
   printf ("Should be  buf: \"%s\", decpt: %d, sign: %d\n",
 	  exp_p, exp_decpt, exp_sign);
-  ++error_count;
+  support_record_failure ();
 }
 
 static void
@@ -189,13 +189,13 @@ special (void)
   if (res == 0)
     {
       printf ("ecvt_r with a too small buffer was succesful.\n");
-      ++error_count;
+      support_record_failure ();
     }
   res = fcvt_r (123.456, 10, &decpt, &sign, buf, 1);
   if (res == 0)
     {
       printf ("fcvt_r with a too small buffer was succesful.\n");
-      ++error_count;
+      support_record_failure ();
     }
 }
 
@@ -209,8 +209,7 @@ do_test (void)
   test_r (fcvt_tests, fcvt_r, "fcvt_r");
   special ();
 
-  return error_count;
+  return 0;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>
