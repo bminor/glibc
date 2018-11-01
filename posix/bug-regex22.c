@@ -99,8 +99,8 @@ main (void)
   s = re_compile_pattern ("[[:DIGIT:]]", 11, &re);
   if (s == NULL)
     {
-      printf ("compilation of \"[[:DIGIT:]]\" pattern unexpectedly succeeded: %s\n",
-	      s);
+      puts ("compilation of \"[[:DIGIT:]]\" pattern unexpectedly succeeded: "
+	    "length 11");
       result = 1;
     }
 
@@ -109,8 +109,8 @@ main (void)
   s = re_compile_pattern ("[[:DIGIT:]]", 2, &re);
   if (s == NULL)
     {
-      printf ("compilation of \"[[:DIGIT:]]\" pattern unexpectedly succeeded: %s\n",
-	      s);
+      puts ("compilation of \"[[:DIGIT:]]\" pattern unexpectedly succeeded: "
+	    "length 2");
       result = 1;
     }
 

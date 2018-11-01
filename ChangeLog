@@ -1,5 +1,9 @@
 2018-11-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* posix/bug-regex22.c (main): Use puts with distinct error
+	messages for unexpected success of re_compile_pattern, not printf
+	with NULL argument to %s.
+
 	* stdio-common/bug22.c: Include <libc-diag.h>.
 	(do_test): Disable -Wformat-overflow= warnings around fprintf
 	calls outputting more than INT_MAX characters.
