@@ -1,5 +1,11 @@
 2018-11-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* stdio-common/bug22.c: Include <libc-diag.h>.
+	(do_test): Disable -Wformat-overflow= warnings around fprintf
+	calls outputting more than INT_MAX characters.
+	* stdio-common/tst-printf.c: Disable -Wformat-overflow= warnings
+	around printf call with NULL %s argument.
+
 	[BZ #23848]
 	* sysdeps/unix/sysv/linux/sparc/kernel-features.h [!__arch64__ &&
 	__LINUX_KERNEL_VERSION < 0x040400] (__ASSUME_SENDMSG_SYSCALL):

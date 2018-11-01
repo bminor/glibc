@@ -1,6 +1,7 @@
 /* BZ #5424 */
 #include <stdio.h>
 #include <errno.h>
+#include <libc-diag.h>
 
 /* INT_MAX + 1 */
 #define N 2147483648
@@ -30,12 +31,26 @@ do_test (void)
       return 1;
     }
 
+  /* GCC 9 warns about output of more than INT_MAX characters; this is
+     deliberately tested here.  */
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (7, 0)
+  DIAG_IGNORE_NEEDS_COMMENT (9, "-Wformat-overflow=");
+#endif
   ret = fprintf (fp, "%" SN "d", 1);
+  DIAG_POP_NEEDS_COMMENT;
   printf ("ret = %d\n", ret);
   if (ret != -1 || errno != EOVERFLOW)
 	  return 1;
 
+  /* GCC 9 warns about output of more than INT_MAX characters; this is
+     deliberately tested here.  */
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (7, 0)
+  DIAG_IGNORE_NEEDS_COMMENT (9, "-Wformat-overflow=");
+#endif
   ret = fprintf (fp, "%." SN "d", 1);
+  DIAG_POP_NEEDS_COMMENT;
   printf ("ret = %d\n", ret);
   if (ret != -1 || errno != EOVERFLOW)
 	  return 1;
@@ -45,7 +60,14 @@ do_test (void)
   if (ret != -1 || errno != EOVERFLOW)
 	  return 1;
 
+  /* GCC 9 warns about output of more than INT_MAX characters; this is
+     deliberately tested here.  */
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (7, 0)
+  DIAG_IGNORE_NEEDS_COMMENT (9, "-Wformat-overflow=");
+#endif
   ret = fprintf (fp, "%" SN2 "d%" SN2 "d", 1, 1);
+  DIAG_POP_NEEDS_COMMENT;
   printf ("ret = %d\n", ret);
 
   return ret != -1 || errno != EOVERFLOW;
