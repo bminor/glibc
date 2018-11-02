@@ -316,7 +316,13 @@ init_cpu_features (struct cpu_features *cpu_features)
 		    | bit_arch_Fast_Unaligned_Copy
 		    | bit_arch_Prefer_PMINUB_for_stringop);
 	      break;
+	    }
 
+	 /* Disable TSX on some Haswell processors to avoid TSX on kernels that
+	    weren't updated with the latest microcode package (which disables
+	    broken feature by default).  */
+	 switch (model)
+	    {
 	    case 0x3f:
 	      /* Xeon E7 v3 with stepping >= 4 has working TSX.  */
 	      if (stepping >= 4)
