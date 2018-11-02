@@ -10,6 +10,7 @@ Version 2.28.1
 The following bugs are resolved with this release:
 
   [20209] localedata: Spelling mistake for Sunday in Greenlandic kl_GL
+  [23400] stdlib/test-bz22786.c creates temporary files in glibc source tree
   [23497] readdir64@GLIBC_2.1 cannot parse the kernel directory stream
   [23521] nss_files aliases database file stream leak
   [23538] pthread_cond_broadcast: Fix waiters-after-spinning case
