@@ -1,3 +1,8 @@
+2018-11-02  Florian Weimer  <fweimer@redhat.com>
+
+	* support/test-container.c: Include <libc-pointer-arith.h> for
+	ALIGN_UP.
+
 2018-11-01  Zong Li  <zong@andestech.com>
 
 	* soft-fp/op-8.h (_FP_FRAC_SET_8, _FP_FRAC_ADD_8, _FP_FRAC_SUB_8)

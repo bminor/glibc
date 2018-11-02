@@ -37,6 +37,7 @@
 #include <utime.h>
 #include <errno.h>
 #include <error.h>
+#include <libc-pointer-arith.h>
 
 #ifdef __linux__
 #include <sys/mount.h>
