@@ -1,5 +1,11 @@
 2018-11-02  Florian Weimer  <fweimer@redhat.com>
 
+	* support/shell-container.c (copy_func): Call
+	support_copy_file_range instead of copy_file_range to support
+	cross-device copies.
+
+2018-11-02  Florian Weimer  <fweimer@redhat.com>
+
 	* support/test-container.c: Include <libc-pointer-arith.h> for
 	ALIGN_UP.
 

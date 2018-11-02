@@ -119,7 +119,7 @@ copy_func (char **argv)
       return 1;
     }
 
-  if (copy_file_range (sfd, 0, dfd, 0, st.st_size, 0) != st.st_size)
+  if (support_copy_file_range (sfd, 0, dfd, 0, st.st_size, 0) != st.st_size)
     {
       fprintf (stderr, "cp: cannot copy file %s to %s: %s\n",
 	       sname, dname, strerror (errno));
