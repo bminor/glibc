@@ -1,3 +1,7 @@
+2018-11-03  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/msync.c: New file.
+
 2018-11-02  Florian Weimer  <fweimer@redhat.com>
 
 	* support/shell-container.c (copy_func): Call
