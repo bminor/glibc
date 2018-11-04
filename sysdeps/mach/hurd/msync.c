@@ -54,7 +54,7 @@ msync (void *addr, size_t length, int flags)
 
       err = __vm_region (__mach_task_self (),
 			 &begin, &len, &prot, &max_prot, &inherit,
-			 &shared, &obj, &offset)
+			 &shared, &obj, &offset);
 
       if (err != KERN_SUCCESS)
 	return __hurd_fail (err);
