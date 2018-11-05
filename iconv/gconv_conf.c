@@ -552,8 +552,7 @@ __gconv_read_conf (void)
 
 #ifndef STATIC_GCONV
   /* Find out where we have to look.  */
-  if (__gconv_path_elem == NULL)
-    __gconv_get_path ();
+  __gconv_get_path ();
 
   for (cnt = 0; __gconv_path_elem[cnt].name != NULL; ++cnt)
     {

@@ -1,3 +1,8 @@
+2018-11-05  Arjun Shankar  <arjun@redhat.com>
+
+	* iconv/gconv_conf.c (__gconv_read_conf): Remove NULL check for
+	__gconv_path_elem and call __gconv_get_path unconditionally.
+
 2018-11-05  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #22927]
