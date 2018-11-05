@@ -59,3 +59,8 @@ $(objpfx)tst-setjmp-bug21895-static.out: $(objpfx)setjmp-bug21895.so
 tst-setjmp-bug21895-static-ENV = \
 	LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)setjmp:$(common-objpfx)elf
 endif
+
+ifeq ($(subdir),stdlib)
+CFLAGS-tst-ucontext-ppc64-vscr.c += -maltivec
+tests += tst-ucontext-ppc64-vscr
+endif
