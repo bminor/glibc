@@ -61,11 +61,7 @@ do_one_test (int select, const char *format, va_list args,
 
   /* Close the in-memory stream and check the output buffer.  */
   xfclose_memstream (&stream);
-  if (strcmp (stream.buffer, expected) != 0)
-    FAIL_EXIT1 ("error:\n"
-		"    expected: '%s'\n"
-		"      actual: '%s'\n",
-		expected, stream.buffer);
+  TEST_COMPARE_STRING (stream.buffer, expected);
 
   if (stream.buffer != NULL)
     free (stream.buffer);

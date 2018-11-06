@@ -73,14 +73,7 @@ do_one_test (const char *expected)
   struct support_capture_subprocess result;
   result = support_capture_subprocess ((void *) &do_test_call, NULL);
 
-  if (strcmp (result.err.buffer, expected) != 0)
-    {
-      support_record_failure ();
-      printf ("error:\n"
-	      "    expected: '%s'\n"
-	      "      actual: '%s'\n",
-	      expected, result.err.buffer);
-    }
+  TEST_COMPARE_STRING (result.err.buffer, expected);
 
   return 0;
 }

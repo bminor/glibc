@@ -1,3 +1,10 @@
+2018-11-08  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
+	* argp/tst-ldbl-argp.c (do_one_test): Use TEST_COMPARE_STRING,
+	instead of manually comparing and reporting mismatching strings.
+	* misc/tst-ldbl-error.c (do_one_test): Likewise.
+	* misc/tst-ldbl-warn.c (do_one_test): Likewise.
+
 2018-11-08  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h: Remove comment about

@@ -95,14 +95,7 @@ do_one_test (void *callback, const char *expected, ...)
   message = strstr (result.err.buffer, needle);
 
   /* Verify that the output message is as expected.  */
-  if (strcmp (message, expected) != 0)
-    {
-      support_record_failure ();
-      printf ("error:\n"
-	      "    expected: '%s'\n"
-	      "      actual: '%s'\n",
-	      expected, message);
-    }
+  TEST_COMPARE_STRING (message, expected);
 
   va_end (args);
 }
