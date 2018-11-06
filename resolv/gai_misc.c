@@ -261,8 +261,11 @@ __gai_enqueue_request (struct gaicb *gaicbp)
 	      /* We cannot create a thread in the moment and there is
 		 also no thread running.  This is a problem.  `errno' is
 		 set to EAGAIN if this is only a temporary problem.  */
-	      assert (lastp->next == newp);
-	      lastp->next = NULL;
+	      assert (requests == newp || lastp->next == newp);
+	      if (lastp != NULL)
+		lastp->next = NULL;
+	      else
+		requests = NULL;
 	      requests_tail = lastp;
 
 	      newp->next = freelist;
