@@ -33,6 +33,9 @@ __posix_spawn_file_actions_destroy (posix_spawn_file_actions_t *file_actions)
 	case spawn_do_open:
 	  free (sa->action.open_action.path);
 	  break;
+	case spawn_do_chdir:
+	  free (sa->action.chdir_action.path);
+	  break;
 	case spawn_do_close:
 	case spawn_do_dup2:
 	  /* No cleanup required.  */

@@ -185,6 +185,13 @@ extern int posix_spawn_file_actions_adddup2 (posix_spawn_file_actions_t *
 					     __file_actions,
 					     int __fd, int __newfd) __THROW;
 
+#ifdef __USE_GNU
+/* Add an action changing the directory to PATH during spawn.  This
+   affects the subsequent file actions.  */
+extern int posix_spawn_file_actions_addchdir_np (posix_spawn_file_actions_t *,
+						 const char *__path) __THROW;
+#endif
+
 __END_DECLS
 
 #endif /* spawn.h */

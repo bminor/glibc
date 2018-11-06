@@ -258,6 +258,11 @@ __spawni_child (void *arguments)
 		  != action->action.dup2_action.newfd)
 		goto fail;
 	      break;
+
+	    case spawn_do_chdir:
+	      if (__chdir (action->action.chdir_action.path) != 0)
+		goto fail;
+	      break;
 	    }
 	}
     }

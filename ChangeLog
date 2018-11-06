@@ -1,3 +1,72 @@
+2018-11-06  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #17405]
+	* posix/Makefile (routines): Add spawn_faction_addchdir.
+	(tests): Add tst-spawn-chdir.
+	* posix/Versions (GLIBC_2.29): Add
+	posix_spawn_file_actions_addchdir_np.
+	* posix/spawn_faction_addchdir.c: New file.
+	* posix/spawn_faction_destroy.c
+	(__posix_spawn_file_actions_destroy): Handle spawn_do_chdir.
+	* posix/spawn.h (posix_spawn_file_actions_addchdir_np): Declare.
+	* posix/spawn_int.h (struct __spawn_action): Add spawn_do_chdir,
+	chdir_action.
+	* posix/tst-spawn-chdir.c: New file.
+	* sysdeps/posix/spawni.c (__spawni_child): Handle spawn_do_chdir.
+	* sysdeps/unix/sysv/linux/spawni.c (__spawni_child): Likewise.
+	* sysdeps/mach/hurd/i386/libc.abilist (GLIBC_2.29): Add
+	posix_spawn_file_actions_addchdir_np.
+	* sysdeps/unix/sysv/linux/aarch64/libc.abilist (GLIBC_2.29):
+	Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libc.abilist (GLIBC_2.29):
+	Likewise.
+	* sysdeps/unix/sysv/linux/arm/libc.abilist (GLIBC_2.29): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libc.abilist (GLIBC_2.29):
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/libc.abilist (GLIBC_2.29):
+	Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libc.abilist (GLIBC_2.29):
+	Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist (GLIBC_2.29):
+	Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist (GLIBC_2.29):
+	Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libc.abilist (GLIBC_2.29):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/fpu/libc.abilist
+	(GLIBC_2.29): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nofpu/libc.abilist
+	(GLIBC_2.29): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist
+	(GLIBC_2.29): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist
+	(GLIBC_2.29): Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libc.abilist (GLIBC_2.29):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist
+	(GLIBC_2.29): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist
+	(GLIBC_2.29): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc-le.abilist
+	(GLIBC_2.29): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc.abilist
+	(GLIBC_2.29): Likewise.
+	* sysdeps/unix/sysv/linux/riscv/rv64/libc.abilist (GLIBC_2.29):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist (GLIBC_2.29):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist (GLIBC_2.29):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sh/libc.abilist (GLIBC_2.29): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist (GLIBC_2.29):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist (GLIBC_2.29):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libc.abilist (GLIBC_2.29):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist (GLIBC_2.29):
+	Likewise.
+
 2018-11-06  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
 	* misc/Makefile (tests): Add tst-ldbl-error.
