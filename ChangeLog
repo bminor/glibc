@@ -1,3 +1,9 @@
+2018-11-05  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #22927]
+	* resolv/gai_misc.c (__gai_enqueue_request): Don't crash if
+	creating the first helper thread failed.
+
 2018-10-23  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #23709]
