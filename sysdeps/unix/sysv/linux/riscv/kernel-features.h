@@ -21,3 +21,8 @@
 
 #undef __ASSUME_CLONE_DEFAULT
 #define __ASSUME_CLONE_BACKWARDS 1
+
+/* No support for PI mutexes or robust futexes before 4.20.  */
+#if __LINUX_KERNEL_VERSION < 0x041400
+# undef __ASSUME_SET_ROBUST_LIST
+#endif

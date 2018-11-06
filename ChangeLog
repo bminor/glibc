@@ -1,3 +1,10 @@
+2018-11-07  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #23864]
+	* sysdeps/unix/sysv/linux/riscv/kernel-features.h
+	(__ASSUME_SET_ROBUST_LIST) [__LINUX_KERNEL_VERSION < 0x041400]:
+	Undef.
+
 2018-09-21  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* NEWS: Add note about new TLE support on powerpc64le.

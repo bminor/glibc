@@ -39,6 +39,7 @@ The following bugs are resolved with this release:
   [23717] Fix stack overflow in stdlib/tst-setcontext9
   [23821] si_band in siginfo_t has wrong type long int on sparc64
   [23822] ia64 static libm.a is missing exp2f, log2f and powf symbols
+  [23864] libc: [riscv] missing kernel-features.h undefines
   [23844] pthread_rwlock_trywrlock results in hang
   [23927] Linux if_nametoindex() does not close descriptor (CVE-2018-19591)
   [23972] __old_getdents64 uses wrong d_off value on overflow
