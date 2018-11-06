@@ -1,3 +1,12 @@
+2018-11-06  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #23862]
+	* sysdeps/unix/sysv/linux/sh/kernel-features.h
+	[__LINUX_KERNEL_VERSION < 0x040800] (__ASSUME_EXECVEAT): Undefine.
+	[__LINUX_KERNEL_VERSION < 0x040800] (__ASSUME_MLOCK2): Likewise.
+	[__LINUX_KERNEL_VERSION < 0x040800] (__ASSUME_COPY_FILE_RANGE):
+	Likewise.
+
 2018-11-06  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #17405]
