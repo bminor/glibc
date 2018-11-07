@@ -113,6 +113,9 @@ __spawni (pid_t *pid, const char *file,
   struct hurd_userlink *ulink_dtable = NULL;
   struct hurd_sigstate *ss;
 
+  /* Child current working dir */
+  file_t ccwdir = MACH_PORT_NULL;
+
   /* For POSIX_SPAWN_RESETIDS, this reauthenticates our root/current
      directory ports with the new AUTH port.  */
   file_t rcrdir = MACH_PORT_NULL, rcwdir = MACH_PORT_NULL;
@@ -123,16 +126,25 @@ __spawni (pid_t *pid, const char *file,
       if (*result != MACH_PORT_NULL)
 	return 0;
       ref = __mach_reply_port ();
-      err = HURD_PORT_USE
-	(&_hurd_ports[which],
-	 ({
-	   err = __io_reauthenticate (port, ref, MACH_MSG_TYPE_MAKE_SEND);
-	   if (!err)
-	     err = __auth_user_authenticate (auth,
-					     ref, MACH_MSG_TYPE_MAKE_SEND,
-					     result);
-	   err;
-	 }));
+      if (which == INIT_PORT_CWDIR && ccwdir != MACH_PORT_NULL)
+	{
+	  err = __io_reauthenticate (ccwdir, ref, MACH_MSG_TYPE_MAKE_SEND);
+	  if (!err)
+	    err = __auth_user_authenticate (auth,
+					    ref, MACH_MSG_TYPE_MAKE_SEND,
+					    result);
+	}
+      else
+	err = HURD_PORT_USE
+	  (&_hurd_ports[which],
+	   ({
+	     err = __io_reauthenticate (port, ref, MACH_MSG_TYPE_MAKE_SEND);
+	     if (!err)
+	       err = __auth_user_authenticate (auth,
+					       ref, MACH_MSG_TYPE_MAKE_SEND,
+					       result);
+	     err;
+	   }));
       __mach_port_destroy (__mach_task_self (), ref);
       return err;
     }
@@ -177,6 +189,14 @@ __spawni (pid_t *pid, const char *file,
 	    return (reauthenticate (INIT_PORT_CWDIR, &rcwdir)
 		    ?: (*operate) (rcwdir));
 	  }
+      else
+	switch (which)
+	  {
+	  case INIT_PORT_CWDIR:
+	    if (ccwdir != MACH_PORT_NULL)
+	      return (*operate) (ccwdir);
+	    break;
+	  }
       assert (which != INIT_PORT_PROC);
       return _hurd_ports_use (which, operate);
     }
@@ -204,6 +224,40 @@ __spawni (pid_t *pid, const char *file,
     {
       return __hurd_file_name_lookup (&child_init_port, &child_fd, 0,
 				      file, oflag, mode, result);
+    }
+  auto error_t child_chdir (const char *name)
+    {
+      file_t new_ccwdir;
+
+      /* Append trailing "/." to directory name to force ENOTDIR if
+	 it's not a directory and EACCES if we don't have search
+	 permission.  */
+      len = strlen (name);
+      const char *lookup = name;
+      if (len >= 2 && name[len - 2] == '/' && name[len - 1] == '.')
+	lookup = name;
+      else if (len == 0)
+	/* Special-case empty file name according to POSIX.  */
+	return __hurd_fail (ENOENT);
+      else
+	{
+	  char *n = alloca (len + 3);
+	  memcpy (n, name, len);
+	  n[len] = '/';
+	  n[len + 1] = '.';
+	  n[len + 2] = '\0';
+	  lookup = n;
+	}
+
+      error_t err = child_lookup (lookup, 0, 0, &new_ccwdir);
+      if (!err)
+	{
+	  if (ccwdir != MACH_PORT_NULL)
+	    __mach_port_deallocate (__mach_task_self (), ccwdir);
+	  ccwdir = new_ccwdir;
+	}
+
+      return err;
     }
 
 
@@ -485,6 +539,10 @@ __spawni (pid_t *pid, const char *file,
 	      dtable_cells[fd] = NULL;
 	      break;
 	    }
+
+	  case spawn_do_chdir:
+	    err = child_chdir (action->action.chdir_action.path);
+	    break;
 	  }
 
 	if (err)
@@ -708,6 +766,11 @@ __spawni (pid_t *pid, const char *file,
 		ports[i] = rcwdir;
 		continue;
 	      }
+	    if (ccwdir != MACH_PORT_NULL)
+	      {
+		ports[i] = ccwdir;
+		continue;
+	      }
 	    break;
 	  }
 	ports[i] = _hurd_port_get (&_hurd_ports[i], &ulink_ports[i]);
@@ -748,6 +811,8 @@ __spawni (pid_t *pid, const char *file,
 	  case INIT_PORT_CWDIR:
 	    if (flags & POSIX_SPAWN_RESETIDS)
 	      continue;
+	    if (ccwdir != MACH_PORT_NULL)
+	      continue;
 	    break;
 	  }
 	_hurd_port_free (&_hurd_ports[i], &ulink_ports[i], ports[i]);
@@ -773,6 +838,8 @@ __spawni (pid_t *pid, const char *file,
     }
   __mach_port_deallocate (__mach_task_self (), auth);
   __mach_port_deallocate (__mach_task_self (), proc);
+  if (ccwdir != MACH_PORT_NULL)
+    __mach_port_deallocate (__mach_task_self (), ccwdir);
   if (rcrdir != MACH_PORT_NULL)
     __mach_port_deallocate (__mach_task_self (), rcrdir);
   if (rcwdir != MACH_PORT_NULL)

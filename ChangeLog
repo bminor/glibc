@@ -1,3 +1,11 @@
+2018-11-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/spawni.c (__spawni): Add ccwdir port. Test and use
+	it, free it if needed.
+	(reauthenticate): Test and use ccwdir.
+	(child_init_port): In non-resetids case, test and use ccwdir.
+	(child_chdir): New nested function to set ccwdir.
+
 2018-11-09  Martin Sebor  <msebor@redhat.com>
 
 	* include/libc-symbols.h (__attribute_copy__): Define macro unless
