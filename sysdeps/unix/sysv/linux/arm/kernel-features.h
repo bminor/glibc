@@ -40,5 +40,12 @@
 #define __ASSUME_RECV_SYSCALL   1
 #define __ASSUME_SEND_SYSCALL	1
 
+/* Support for the mlock2 syscall was added to the compat syscall
+   table for 64-bit kernels in 4.7, although present in 32-bit kernels
+   from 4.4.  */
+#if __LINUX_KERNEL_VERSION < 0x040700
+# undef __ASSUME_MLOCK2
+#endif
+
 #undef __ASSUME_CLONE_DEFAULT
 #define __ASSUME_CLONE_BACKWARDS	1

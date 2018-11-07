@@ -1,3 +1,11 @@
+2018-11-07  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #23867]
+	* sysdeps/unix/sysv/linux/arm/kernel-features.h
+	[__LINUX_KERNEL_VERSION < 0x040700] (__ASSUME_MLOCK2): Undefine.
+	* sysdeps/unix/sysv/linux/microblaze/kernel-features.h
+	[__LINUX_KERNEL_VERSION < 0x040700] (__ASSUME_MLOCK2): Undefine.
+
 2018-11-07  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* support/support_test_compare_string.c
