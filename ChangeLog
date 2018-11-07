@@ -1,3 +1,14 @@
+2018-11-07  Florian Weimer  <fweimer@redhat.com>
+
+	Implement TEST_COMPARE_STRING.
+	* support/check.h (TEST_COMPARE_STRING): Define.
+	(support_test_compare_string): Declare.
+	* support/Makefile (libsupport-routines): Add
+	support_test_compare_string.
+	(tests): Add tst-test_compare_string.
+	* support/support_test_compare_string.c: New file.
+	* support/tst-test_compare_string.c: Likewise.
+
 2019-06-04  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #18830]

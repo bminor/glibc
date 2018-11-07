@@ -163,6 +163,19 @@ void support_test_compare_blob (const void *left,
                                 const char *right_exp,
                                 const char *right_len_exp);
 
+/* Compare the strings LEFT and RIGHT and report a test failure if
+   they are different.  Also report failure if one of the arguments is
+   a null pointer and the other is not.  The strings should be
+   reasonably short because on mismatch, both are printed.  */
+#define TEST_COMPARE_STRING(left, right)                         \
+  (support_test_compare_string (left, right, __FILE__, __LINE__, \
+                                #left, #right))
+
+void support_test_compare_string (const char *left, const char *right,
+                                  const char *file, int line,
+                                  const char *left_expr,
+                                  const char *right_expr);
+
 /* Internal function called by the test driver.  */
 int support_report_failure (int status)
   __attribute__ ((weak, warn_unused_result));
