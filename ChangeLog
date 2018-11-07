@@ -1,3 +1,8 @@
+2018-11-07  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* support/support_test_compare_string.c
+	(support_test_compare_string): Fix printf format.
+
 2018-11-07  Florian Weimer  <fweimer@redhat.com>
 
 	Implement TEST_COMPARE_STRING.
