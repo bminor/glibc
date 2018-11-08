@@ -1,3 +1,13 @@
+2018-11-08  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #23509]
+	* sysdeps/x86/dl-prop.h (_dl_process_cet_property_note): Skip
+	note parsing if a NT_GNU_PROPERTY_TYPE_0 note has been processed.
+	Update the l_cet field when processing NT_GNU_PROPERTY_TYPE_0 note.
+	Check multiple NT_GNU_PROPERTY_TYPE_0 notes.
+	* sysdeps/x86/link_map.h (l_cet): Expand to 3 bits,  Add
+	lc_unknown.
+
 2018-11-05  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #22927]
