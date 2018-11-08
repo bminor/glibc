@@ -314,7 +314,7 @@ __pthread_rwlock_rdlock_full (pthread_rwlock_t *rwlock,
 		 harmless because the flag is just about the state of
 		 __readers, and all threads set the flag under the same
 		 conditions.  */
-	      while ((atomic_load_relaxed (&rwlock->__data.__readers)
+	      while (((r = atomic_load_relaxed (&rwlock->__data.__readers))
 		      & PTHREAD_RWLOCK_RWAITING) != 0)
 		{
 		  int private = __pthread_rwlock_get_private (rwlock);
