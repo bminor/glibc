@@ -1,3 +1,12 @@
+2018-12-13  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #23861]
+	* nptl/pthread_rwlock_common.c: Reindent.  Fix typos.
+	(__pthread_rwlock_rdlock_full): Update expected value for
+	__readers while waiting on PTHREAD_RWLOCK_RWAITING.
+	* nptl/tst-rwlock-pwn.c: New file.
+	* nptl/Makefile (tests): Add tst-rwlock-pwn.
+
 2018-12-12  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
 
 	[BZ #23614]
