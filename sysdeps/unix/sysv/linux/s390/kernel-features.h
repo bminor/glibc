@@ -17,9 +17,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* S/390 uses socketcall.  */
-#define __ASSUME_SOCKETCALL		1
-
 /* Direct socketcalls available with kernel 4.3.  */
 #if __LINUX_KERNEL_VERSION >= 0x040300
 # define __ASSUME_SOCKET_SYSCALL             1

@@ -1,3 +1,22 @@
+2018-11-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: Remove comment about
+	__ASSUME_SOCKETCALL.
+	* sysdeps/unix/sysv/linux/i386/kernel-features.h
+	(__ASSUME_SOCKETCALL): Remove.
+	* sysdeps/unix/sysv/linux/m68k/kernel-features.h
+	(__ASSUME_SOCKETCALL): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/kernel-features.h
+	(__ASSUME_SOCKETCALL): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/kernel-features.h
+	(__ASSUME_SOCKETCALL): Likewise.
+	* sysdeps/unix/sysv/linux/s390/kernel-features.h
+	(__ASSUME_SOCKETCALL): Likewise.
+	* sysdeps/unix/sysv/linux/sh/kernel-features.h
+	(__ASSUME_SOCKETCALL): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/kernel-features.h
+	(__ASSUME_SOCKETCALL): Likewise.
+
 2018-11-08  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #23509]

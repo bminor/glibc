@@ -16,9 +16,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 
-/* MicroBlaze uses socketcall.  */
-#define __ASSUME_SOCKETCALL	1
-
 /* All supported kernel versions for MicroBlaze have these syscalls.  */
 #define __ASSUME_SOCKET_SYSCALL		1
 #define __ASSUME_BIND_SYSCALL		1

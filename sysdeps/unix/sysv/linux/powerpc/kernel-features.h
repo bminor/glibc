@@ -17,9 +17,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* PowerPC uses socketcall.  */
-#define __ASSUME_SOCKETCALL		1
-
 /* New syscalls added for PowerPC in 2.6.37.  */
 #define __ASSUME_SOCKET_SYSCALL	1
 #define __ASSUME_BIND_SYSCALL		1

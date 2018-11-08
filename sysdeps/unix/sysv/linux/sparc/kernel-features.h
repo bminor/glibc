@@ -17,9 +17,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* SPARC uses socketcall.  */
-#define __ASSUME_SOCKETCALL		1
-
 #include_next <kernel-features.h>
 
 /* 32-bit SPARC kernels do not support

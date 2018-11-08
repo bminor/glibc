@@ -37,10 +37,6 @@
    introduced.  If somebody cares these values can afterwards be
    corrected.  */
 
-/* Some architectures use the socketcall multiplexer for some or all
-   socket-related operations instead of separate syscalls.
-   __ASSUME_SOCKETCALL is defined for such architectures.  */
-
 /* The changed st_ino field appeared in 2.4.0-test6.  However, SH is lame,
    and still does not have a 64-bit inode field.  */
 #define __ASSUME_ST_INO_64_BIT		1

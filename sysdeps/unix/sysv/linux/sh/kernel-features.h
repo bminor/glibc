@@ -20,9 +20,6 @@
 #ifndef __KERNEL_FEATURES_SH__
 # define __KERNEL_FEATURES_SH__
 
-/* SH uses socketcall.  */
-#define __ASSUME_SOCKETCALL		1
-
 /* These syscalls were added for SH in 2.6.37.  */
 #define __ASSUME_SOCKET_SYSCALL		1
 #define __ASSUME_BIND_SYSCALL		1
