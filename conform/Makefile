@@ -174,7 +174,7 @@ endif
 $(conformtest-header-tests): $(objpfx)%/conform.out: \
 			     conformtest.py $(conformtest-headers-data)
 	(set -e; std_hdr=$*; std=$${std_hdr%%/*}; hdr=$${std_hdr#*/}; \
-	 mkdir -p $(@D)/scratch; \
+	 mkdir -p $(@D); \
 	 $(PYTHON) $< --cc='$(CC)' --flags='$(conformtest-cc-flags)' \
 		   --standard=$$std --header=$$hdr $(conformtest-xfail) \
 		   $(conformtest-cross) \
@@ -222,7 +222,7 @@ $(linknamespace-header-tests): $(objpfx)%/linknamespace.out: \
 			       $(linknamespace-symlists-tests) \
 			       $(linknamespace-symlist-stdlibs-tests)
 	(set -e; std_hdr=$*; std=$${std_hdr%%/*}; hdr=$${std_hdr#*/}; \
-	 mkdir -p $(@D)/scratch; \
+	 mkdir -p $(@D); \
 	 $(PYTHON) $< --cc='$(CC)' --flags='$(conformtest-cc-flags)' \
 		   --standard=$$std --stdsyms=$(objpfx)symlist-$$std \
 		   --header=$$hdr --libsyms=$(objpfx)symlist-stdlibs-$$std \

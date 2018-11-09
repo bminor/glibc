@@ -1,5 +1,9 @@
 2018-11-09  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/Makefile ($(conformtest-header-tests)): Create $(@D),
+	not $(@D)/scratch.
+	($(linknamespace-header-tests)): Likewise.
+
 	* conform/conformtest.py: New file.
 	* conform/conformtest.pl: Remove.
 	* conform/GlibcConform.pm: Likewise.
