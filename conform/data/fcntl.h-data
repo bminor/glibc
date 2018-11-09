@@ -119,7 +119,7 @@ constant AT_SYMLINK_NOFOLLOW
 constant AT_SYMLINK_FOLLOW
 constant AT_REMOVEDIR
 
-function int openat(int, const char*, int, ...)
+function int openat (int, const char*, int, ...)
 #endif
 
 #if !defined POSIX

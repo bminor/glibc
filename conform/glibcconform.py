@@ -35,6 +35,28 @@ CFLAGS = {'ISO': '-ansi',
           'XOPEN2K8': '-std=c99 -D_XOPEN_SOURCE=700',
           'POSIX2008': '-std=c99 -D_POSIX_C_SOURCE=200809L'}
 
+# ISO C90 keywords.
+KEYWORDS_C90 = {'auto', 'break', 'case', 'char', 'const', 'continue',
+                'default', 'do', 'double', 'else', 'enum', 'extern', 'float',
+                'for', 'goto', 'if', 'int', 'long', 'register', 'return',
+                'short', 'signed', 'sizeof', 'static', 'struct', 'switch',
+                'typedef', 'union', 'unsigned', 'void', 'volatile', 'while'}
+
+# ISO C99 keywords.
+KEYWORDS_C99 = KEYWORDS_C90 | {'inline', 'restrict'}
+
+# Keywords for each standard.
+KEYWORDS = {'ISO': KEYWORDS_C90,
+            'ISO99': KEYWORDS_C99,
+            'ISO11': KEYWORDS_C99,
+            'POSIX': KEYWORDS_C90,
+            'XPG4': KEYWORDS_C90,
+            'XPG42': KEYWORDS_C90,
+            'UNIX98': KEYWORDS_C90,
+            'XOPEN2K': KEYWORDS_C99,
+            'XOPEN2K8': KEYWORDS_C99,
+            'POSIX2008': KEYWORDS_C99}
+
 
 def list_exported_functions(cc, standard, header):
     """Return the set of functions exported by a header, empty if an

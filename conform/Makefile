@@ -172,13 +172,13 @@ else
 conformtest-cross = --cross
 endif
 $(conformtest-header-tests): $(objpfx)%/conform.out: \
-			     conformtest.pl $(conformtest-headers-data)
+			     conformtest.py $(conformtest-headers-data)
 	(set -e; std_hdr=$*; std=$${std_hdr%%/*}; hdr=$${std_hdr#*/}; \
 	 mkdir -p $(@D)/scratch; \
-	 $(PERL) -I. conformtest.pl --tmpdir=$(@D)/scratch --cc='$(CC)' \
-		 --flags='$(conformtest-cc-flags)' --standard=$$std \
-		 --headers=$$hdr $(conformtest-xfail) $(conformtest-cross) \
-		 > $@); \
+	 $(PYTHON) $< --cc='$(CC)' --flags='$(conformtest-cc-flags)' \
+		   --standard=$$std --header=$$hdr $(conformtest-xfail) \
+		   $(conformtest-cross) \
+		   > $@ 2>&1); \
 	$(evaluate-test)
 
 $(linknamespace-symlists-tests): $(objpfx)symlist-%: list-header-symbols.py

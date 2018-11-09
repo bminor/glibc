@@ -13,7 +13,7 @@ element {struct termios} tcflag_t c_iflag
 element {struct termios} tcflag_t c_oflag
 element {struct termios} tcflag_t c_cflag
 element {struct termios} tcflag_t c_lflag
-element {struct termios} cc_t c_cc[NCCS]
+element {struct termios} cc_t c_cc [NCCS]
 
 constant NCCS
 

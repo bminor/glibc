@@ -77,8 +77,8 @@ function {wchar_t*} wcpncpy (wchar_t*, const wchar_t*, size_t)
 # endif
 function size_t wcrtomb (char*, wchar_t, mbstate_t*)
 # if defined XOPEN2K8 || defined POSIX2008
-function int wcscasecmp(const wchar_t*, const wchar_t*)
-function int wcscasecmp_l(const wchar_t*, const wchar_t*, locale_t)
+function int wcscasecmp (const wchar_t*, const wchar_t*)
+function int wcscasecmp_l (const wchar_t*, const wchar_t*, locale_t)
 # endif
 function {wchar_t*} wcscat (wchar_t*, const wchar_t*)
 function {wchar_t*} wcschr (const wchar_t*, wchar_t)

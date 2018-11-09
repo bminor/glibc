@@ -1,3 +1,24 @@
+2018-11-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/conformtest.py: New file.
+	* conform/conformtest.pl: Remove.
+	* conform/GlibcConform.pm: Likewise.
+	* conform/glibcconform.py (KEYWORDS_C90): New constant.
+	(KEYWORDS_C99): Likewise.
+	(KEYWORDS): Likewise.
+	* conform/Makefile ($(conformtest-header-tests)): Use
+	conformtest.py instead of conformtest.pl.  Do not pass --tmpdir
+	option.  Use --header instead of --headers.
+	* conform/data/arpa/inet.h-data: Remove trailing semicolons on
+	function entries.
+	* conform/data/spawn.h-data: Likewise.
+	* conform/data/fcntl.h-data (openat): Add space after function
+	name.
+	* conform/data/wchar.h-data (wcscasecmp): Likewise.
+	(wcscasecmp_l): Likewise.
+	* conform/data/termios.h-data (c_cc): Add space after element
+	name.
+
 2018-11-08  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
 	* argp/tst-ldbl-argp.c (do_one_test): Use TEST_COMPARE_STRING,
