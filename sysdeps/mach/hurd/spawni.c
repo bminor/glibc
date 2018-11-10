@@ -457,7 +457,7 @@ __spawni (pid_t *pid, const char *file,
 	    {								      \
 	      /* We need to expand the dtable for the child.  */	      \
 	      NEW_TABLE (dtable, newfd);				      \
-	      NEW_TABLE (ulink_dtable, newfd);				      \
+	      NEW_ULINK_TABLE (ulink_dtable, newfd);			      \
 	      NEW_TABLE (dtable_cells, newfd);				      \
 	      dtablesize = newfd + 1;					      \
 	    }								      \
@@ -466,6 +466,16 @@ __spawni (pid_t *pid, const char *file,
 #define NEW_TABLE(x, newfd) \
   do { __typeof (x) new_##x = __alloca ((newfd + 1) * sizeof (x[0]));	      \
   memcpy (new_##x, x, dtablesize * sizeof (x[0]));			      \
+  memset (&new_##x[dtablesize], 0, (newfd + 1 - dtablesize) * sizeof (x[0])); \
+  x = new_##x; } while (0)
+#define NEW_ULINK_TABLE(x, newfd) \
+  do { __typeof (x) new_##x = __alloca ((newfd + 1) * sizeof (x[0]));	      \
+  unsigned i;								      \
+  for (i = 0; i < dtablesize; i++)					      \
+    if (dtable_cells[i] != NULL)					      \
+      _hurd_port_move (dtable_cells[i], &new_##x[i], &x[i]);		      \
+    else								      \
+      memset(&new_##x[i], 0, sizeof(new_##x[i]));			      \
   memset (&new_##x[dtablesize], 0, (newfd + 1 - dtablesize) * sizeof (x[0])); \
   x = new_##x; } while (0)
 

@@ -5,6 +5,10 @@
 	(reauthenticate): Test and use ccwdir.
 	(child_init_port): In non-resetids case, test and use ccwdir.
 	(child_chdir): New nested function to set ccwdir.
+	* hurd/hurd/userlink.h (_hurd_userlink_move): New function.
+	* hurd/hurd/port.h (_hurd_port_move): New function.
+	* sysdeps/mach/hurd/spawni.c (NEW_ULINK_TABLE): New macro.
+	(EXPAND_DTABLE): Use NEW_ULINK_TABLE macro for ulink_dtable.
 
 2018-11-09  Martin Sebor  <msebor@redhat.com>
 
