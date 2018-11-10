@@ -1,3 +1,28 @@
+2018-11-09  Martin Sebor  <msebor@redhat.com>
+
+	* include/libc-symbols.h (__attribute_copy__): Define macro unless
+	it's already defined.
+	(_strong_alias): Use __attribute_copy__.
+	(_weak_alias,  __hidden_ver1,  __hidden_nolink2): Same.
+	* misc/sys/cdefs.h (__attribute_copy__): New macro.
+	* sysdeps/x86_64/multiarch/memchr.c (memchr): Use __attribute_copy__.
+	* sysdeps/x86_64/multiarch/memcmp.c (memcmp): Same.
+	* sysdeps/x86_64/multiarch/mempcpy.c (mempcpy): Same.
+	* sysdeps/x86_64/multiarch/memset.c (memset): Same.
+	* sysdeps/x86_64/multiarch/stpcpy.c (stpcpy): Same.
+	* sysdeps/x86_64/multiarch/strcat.c (strcat): Same.
+	* sysdeps/x86_64/multiarch/strchr.c (strchr): Same.
+	* sysdeps/x86_64/multiarch/strcmp.c (strcmp): Same.
+	* sysdeps/x86_64/multiarch/strcpy.c (strcpy): Same.
+	* sysdeps/x86_64/multiarch/strcspn.c (strcspn): Same.
+	* sysdeps/x86_64/multiarch/strlen.c (strlen): Same.
+	* sysdeps/x86_64/multiarch/strncmp.c (strncmp): Same.
+	* sysdeps/x86_64/multiarch/strncpy.c (strncpy): Same.
+	* sysdeps/x86_64/multiarch/strnlen.c (strnlen): Same.
+	* sysdeps/x86_64/multiarch/strpbrk.c (strpbrk): Same.
+	* sysdeps/x86_64/multiarch/strrchr.c (strrchr): Same.
+	* sysdeps/x86_64/multiarch/strspn.c (strspn): Same.
+
 2018-11-09  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
 	* misc/tst-efgcvt.c: Include support/check.h and

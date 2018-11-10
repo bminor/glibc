@@ -30,6 +30,6 @@ libc_ifunc_redirected (__redirect_strncat, strncat, IFUNC_SELECTOR ());
 strong_alias (strncat, __strncat);
 # ifdef SHARED
 __hidden_ver1 (strncat, __GI___strncat, __redirect_strncat)
-  __attribute__((visibility ("hidden")));
+  __attribute__((visibility ("hidden"))) __attribute_copy__ (strncat);
 # endif
 #endif

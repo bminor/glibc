@@ -32,6 +32,6 @@ weak_alias (memcmp, bcmp)
 
 # ifdef SHARED
 __hidden_ver1 (memcmp, __GI_memcmp, __redirect_memcmp)
-  __attribute__ ((visibility ("hidden")));
+  __attribute__ ((visibility ("hidden"))) __attribute_copy__ (memcmp);
 # endif
 #endif

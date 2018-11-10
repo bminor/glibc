@@ -125,6 +125,11 @@
 # define ASM_LINE_SEP ;
 #endif
 
+#ifndef __attribute_copy__
+/* Provide an empty definition when cdefs.h is not included.  */
+# define __attribute_copy__(arg)
+#endif
+
 #ifndef __ASSEMBLER__
 /* GCC understands weak symbols and aliases; use its interface where
    possible, instead of embedded assembly language.  */
@@ -132,7 +137,8 @@
 /* Define ALIASNAME as a strong alias for NAME.  */
 # define strong_alias(name, aliasname) _strong_alias(name, aliasname)
 # define _strong_alias(name, aliasname) \
-  extern __typeof (name) aliasname __attribute__ ((alias (#name)));
+  extern __typeof (name) aliasname __attribute__ ((alias (#name))) \
+    __attribute_copy__ (name);
 
 /* This comes between the return type and function name in
    a function definition to make that definition weak.  */
@@ -143,14 +149,16 @@
    If weak aliases are not available, this defines a strong alias.  */
 # define weak_alias(name, aliasname) _weak_alias (name, aliasname)
 # define _weak_alias(name, aliasname) \
-  extern __typeof (name) aliasname __attribute__ ((weak, alias (#name)));
+  extern __typeof (name) aliasname __attribute__ ((weak, alias (#name))) \
+    __attribute_copy__ (name);
 
 /* Same as WEAK_ALIAS, but mark symbol as hidden.  */
 # define weak_hidden_alias(name, aliasname) \
   _weak_hidden_alias (name, aliasname)
 # define _weak_hidden_alias(name, aliasname) \
   extern __typeof (name) aliasname \
-    __attribute__ ((weak, alias (#name), __visibility__ ("hidden")));
+    __attribute__ ((weak, alias (#name), __visibility__ ("hidden"))) \
+    __attribute_copy__ (name);
 
 /* Declare SYMBOL as weak undefined symbol (resolved to 0 if not defined).  */
 # define weak_extern(symbol) _weak_extern (weak symbol)
@@ -532,7 +540,8 @@ for linking")
 #  define __hidden_ver1(local, internal, name) \
   extern __typeof (name) __EI_##name __asm__(__hidden_asmname (#internal)); \
   extern __typeof (name) __EI_##name \
-	__attribute__((alias (__hidden_asmname (#local))))
+    __attribute__((alias (__hidden_asmname (#local))))	\
+    __attribute_copy__ (name)
 #  define hidden_ver(local, name)	__hidden_ver1(local, __GI_##name, name);
 #  define hidden_data_ver(local, name)	hidden_ver(local, name)
 #  define hidden_def(name)		__hidden_ver1(__GI_##name, name, name);
@@ -545,7 +554,8 @@ for linking")
 #  define __hidden_nolink1(local, internal, name, version) \
   __hidden_nolink2 (local, internal, name, version)
 #  define __hidden_nolink2(local, internal, name, version) \
-  extern __typeof (name) internal __attribute__ ((alias (#local))); \
+  extern __typeof (name) internal __attribute__ ((alias (#local)))	\
+    __attribute_copy__ (name);						\
   __hidden_nolink3 (local, internal, #name "@" #version)
 #  define __hidden_nolink3(local, internal, vername) \
   __asm__ (".symver " #internal ", " vername);

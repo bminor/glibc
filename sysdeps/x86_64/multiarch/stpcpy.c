@@ -35,8 +35,8 @@ libc_ifunc_redirected (__redirect_stpcpy, __stpcpy, IFUNC_SELECTOR ());
 weak_alias (__stpcpy, stpcpy)
 # ifdef SHARED
 __hidden_ver1 (__stpcpy, __GI___stpcpy, __redirect___stpcpy)
-  __attribute__ ((visibility ("hidden")));
+  __attribute__ ((visibility ("hidden"))) __attribute_copy__ (stpcpy);
 __hidden_ver1 (stpcpy, __GI_stpcpy, __redirect_stpcpy)
-  __attribute__ ((visibility ("hidden")));
+  __attribute__ ((visibility ("hidden"))) __attribute_copy__ (stpcpy);
 # endif
 #endif

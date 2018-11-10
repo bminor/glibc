@@ -431,6 +431,16 @@
 # define __attribute_nonstring__
 #endif
 
+/* Undefine (also defined in libc-symbols.h).  */
+#undef __attribute_copy__
+#if __GNUC_PREREQ (9, 0)
+/* Copies attributes from the declaration or type referenced by
+   the argument.  */
+# define __attribute_copy__(arg) __attribute__ ((__copy__ (arg)))
+#else
+# define __attribute_copy__(arg)
+#endif
+
 #if (!defined _Static_assert && !defined __cplusplus \
      && (defined __STDC_VERSION__ ? __STDC_VERSION__ : 0) < 201112 \
      && (!__GNUC_PREREQ (4, 6) || defined __STRICT_ANSI__))
