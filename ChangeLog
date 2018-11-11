@@ -12,6 +12,8 @@
 	* hurd/Versions (_hurd_port_move): Export function.
 	* sysdeps/mach/hurd/i386/libc.abilist (_hurd_port_move): Expect
 	symbol.
+	* sysdeps/mach/hurd/spawni.c (__spawni): Use orig_dtablesize instead
+	of dtablesize for allocating dtable_cloexec.
 
 2018-11-09  Martin Sebor  <msebor@redhat.com>
 

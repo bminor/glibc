@@ -405,7 +405,7 @@ __spawni (pid_t *pid, const char *file,
   dtable = __alloca (dtablesize * sizeof (dtable[0]));
   ulink_dtable = __alloca (dtablesize * sizeof (ulink_dtable[0]));
   dtable_cells = __alloca (dtablesize * sizeof (dtable_cells[0]));
-  dtable_cloexec = __alloca (dtablesize);
+  dtable_cloexec = __alloca (orig_dtablesize);
   for (i = 0; i < dtablesize; ++i)
     {
       struct hurd_fd *const d = _hurd_dtable[i];
