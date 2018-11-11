@@ -158,11 +158,11 @@ _hurd_userlink_move (struct hurd_userlink *new_link,
 
   if (new_link->resource.next != NULL)
     new_link->resource.next->resource.prevp = &new_link->resource.next;
-  *new_link->resource.prevp = link;
+  *new_link->resource.prevp = new_link;
 
   if (new_link->thread.next != NULL)
     new_link->thread.next->thread.prevp = &new_link->thread.next;
-  *new_link->thread.prevp = link;
+  *new_link->thread.prevp = new_link;
 }
 # endif
 #endif
