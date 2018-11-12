@@ -596,7 +596,7 @@ heap_trim (heap_info *heap, size_t pad)
 {
   mstate ar_ptr = heap->ar_ptr;
   unsigned long pagesz = GLRO (dl_pagesize);
-  mchunkptr top_chunk = top (ar_ptr), p, bck, fwd;
+  mchunkptr top_chunk = top (ar_ptr), p;
   heap_info *prev_heap;
   long new_size, top_size, top_area, extra, prev_size, misalign;
 
@@ -625,7 +625,7 @@ heap_trim (heap_info *heap, size_t pad)
       if (!prev_inuse (p)) /* consolidate backward */
         {
           p = prev_chunk (p);
-          unlink (ar_ptr, p, bck, fwd);
+          unlink_chunk (ar_ptr, p);
         }
       assert (((unsigned long) ((char *) p + new_size) & (pagesz - 1)) == 0);
       assert (((char *) p + new_size) == ((char *) heap + heap->size));

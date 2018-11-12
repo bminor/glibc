@@ -1,3 +1,16 @@
+2018-11-12  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/malloc.c (unlink_chunk): Turn the unlink macro into this
+	function.  Move after the definition of in_smallbin_range.  Do not
+	use __builtin_expect for paths that lead to a noreturn function.
+	Drop remaining __builtin_expect (p->fd_nextsize != NULL, 0)
+	because it is unclear whether this is in fact an unlikely
+	condition.
+	(_int_malloc, _int_free): Adjust.
+	(malloc_consolidate, _int_realloc): Adjust.  Remove bck, fwd
+	variables.
+	* malloc/arena.c (heap_trim): Likewise.
+
 2018-11-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/spawni.c (__spawni): Add ccwdir port. Test and use

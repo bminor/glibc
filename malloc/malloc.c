@@ -1384,39 +1384,6 @@ typedef struct malloc_chunk *mbinptr;
 #define first(b)     ((b)->fd)
 #define last(b)      ((b)->bk)
 
-/* Take a chunk off a bin list */
-#define unlink(AV, P, BK, FD) {                                            \
-    if (__builtin_expect (chunksize(P) != prev_size (next_chunk(P)), 0))      \
-      malloc_printerr ("corrupted size vs. prev_size");			      \
-    FD = P->fd;								      \
-    BK = P->bk;								      \
-    if (__builtin_expect (FD->bk != P || BK->fd != P, 0))		      \
-      malloc_printerr ("corrupted double-linked list");			      \
-    else {								      \
-        FD->bk = BK;							      \
-        BK->fd = FD;							      \
-        if (!in_smallbin_range (chunksize_nomask (P))			      \
-            && __builtin_expect (P->fd_nextsize != NULL, 0)) {		      \
-	    if (__builtin_expect (P->fd_nextsize->bk_nextsize != P, 0)	      \
-		|| __builtin_expect (P->bk_nextsize->fd_nextsize != P, 0))    \
-	      malloc_printerr ("corrupted double-linked list (not small)");   \
-            if (FD->fd_nextsize == NULL) {				      \
-                if (P->fd_nextsize == P)				      \
-                  FD->fd_nextsize = FD->bk_nextsize = FD;		      \
-                else {							      \
-                    FD->fd_nextsize = P->fd_nextsize;			      \
-                    FD->bk_nextsize = P->bk_nextsize;			      \
-                    P->fd_nextsize->bk_nextsize = FD;			      \
-                    P->bk_nextsize->fd_nextsize = FD;			      \
-                  }							      \
-              } else {							      \
-                P->fd_nextsize->bk_nextsize = P->bk_nextsize;		      \
-                P->bk_nextsize->fd_nextsize = P->fd_nextsize;		      \
-              }								      \
-          }								      \
-      }									      \
-}
-
 /*
    Indexing
 
@@ -1489,6 +1456,46 @@ typedef struct malloc_chunk *mbinptr;
 #define bin_index(sz) \
   ((in_smallbin_range (sz)) ? smallbin_index (sz) : largebin_index (sz))
 
+/* Take a chunk off a bin list.  */
+static void
+unlink_chunk (mstate av, mchunkptr p)
+{
+  if (chunksize (p) != prev_size (next_chunk (p)))
+    malloc_printerr ("corrupted size vs. prev_size");
+
+  mchunkptr fd = p->fd;
+  mchunkptr bk = p->bk;
+
+  if (__builtin_expect (fd->bk != p || bk->fd != p, 0))
+    malloc_printerr ("corrupted double-linked list");
+
+  fd->bk = bk;
+  bk->fd = fd;
+  if (!in_smallbin_range (chunksize_nomask (p)) && p->fd_nextsize != NULL)
+    {
+      if (p->fd_nextsize->bk_nextsize != p
+	  || p->bk_nextsize->fd_nextsize != p)
+	malloc_printerr ("corrupted double-linked list (not small)");
+
+      if (fd->fd_nextsize == NULL)
+	{
+	  if (p->fd_nextsize == p)
+	    fd->fd_nextsize = fd->bk_nextsize = fd;
+	  else
+	    {
+	      fd->fd_nextsize = p->fd_nextsize;
+	      fd->bk_nextsize = p->bk_nextsize;
+	      p->fd_nextsize->bk_nextsize = fd;
+	      p->bk_nextsize->fd_nextsize = fd;
+	    }
+	}
+      else
+	{
+	  p->fd_nextsize->bk_nextsize = p->bk_nextsize;
+	  p->bk_nextsize->fd_nextsize = p->fd_nextsize;
+	}
+    }
+}
 
 /*
    Unsorted chunks
@@ -3920,7 +3927,7 @@ _int_malloc (mstate av, size_t bytes)
                 victim = victim->fd;
 
               remainder_size = size - nb;
-              unlink (av, victim, bck, fwd);
+              unlink_chunk (av, victim);
 
               /* Exhaust */
               if (remainder_size < MINSIZE)
@@ -4022,7 +4029,7 @@ _int_malloc (mstate av, size_t bytes)
               remainder_size = size - nb;
 
               /* unlink */
-              unlink (av, victim, bck, fwd);
+              unlink_chunk (av, victim);
 
               /* Exhaust */
               if (remainder_size < MINSIZE)
@@ -4294,7 +4301,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
       p = chunk_at_offset(p, -((long) prevsize));
       if (__glibc_unlikely (chunksize(p) != prevsize))
         malloc_printerr ("corrupted size vs. prev_size while consolidating");
-      unlink(av, p, bck, fwd);
+      unlink_chunk (av, p);
     }
 
     if (nextchunk != av->top) {
@@ -4303,7 +4310,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 
       /* consolidate forward */
       if (!nextinuse) {
-	unlink(av, nextchunk, bck, fwd);
+	unlink_chunk (av, nextchunk);
 	size += nextsize;
       } else
 	clear_inuse_bit_at_offset(nextchunk, 0);
@@ -4416,8 +4423,6 @@ static void malloc_consolidate(mstate av)
   INTERNAL_SIZE_T nextsize;
   INTERNAL_SIZE_T prevsize;
   int             nextinuse;
-  mchunkptr       bck;
-  mchunkptr       fwd;
 
   atomic_store_relaxed (&av->have_fastchunks, false);
 
@@ -4457,7 +4462,7 @@ static void malloc_consolidate(mstate av)
 	  p = chunk_at_offset(p, -((long) prevsize));
 	  if (__glibc_unlikely (chunksize(p) != prevsize))
 	    malloc_printerr ("corrupted size vs. prev_size in fastbins");
-	  unlink(av, p, bck, fwd);
+	  unlink_chunk (av, p);
 	}
 
 	if (nextchunk != av->top) {
@@ -4465,7 +4470,7 @@ static void malloc_consolidate(mstate av)
 
 	  if (!nextinuse) {
 	    size += nextsize;
-	    unlink(av, nextchunk, bck, fwd);
+	    unlink_chunk (av, nextchunk);
 	  } else
 	    clear_inuse_bit_at_offset(nextchunk, 0);
 
@@ -4512,9 +4517,6 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
 
   mchunkptr        remainder;       /* extra space at end of newp */
   unsigned long    remainder_size;  /* its size */
-
-  mchunkptr        bck;             /* misc temp for linking */
-  mchunkptr        fwd;             /* misc temp for linking */
 
   unsigned long    copysize;        /* bytes to copy */
   unsigned int     ncopies;         /* INTERNAL_SIZE_T words to copy */
@@ -4565,7 +4567,7 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
                (unsigned long) (nb))
         {
           newp = oldp;
-          unlink (av, next, bck, fwd);
+          unlink_chunk (av, next);
         }
 
       /* allocate, copy, free */
