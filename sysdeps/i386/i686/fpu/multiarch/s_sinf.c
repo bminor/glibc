@@ -18,10 +18,10 @@
 
 #include <init-arch.h>
 #include <libm-alias-float.h>
+#include <math.h>
 
 extern float __sinf_sse2 (float);
 extern float __sinf_ia32 (float);
-float __sinf (float);
 
 libm_ifunc (__sinf, HAS_CPU_FEATURE (SSE2) ? __sinf_sse2 : __sinf_ia32);
 libm_alias_float (__sin, sin);

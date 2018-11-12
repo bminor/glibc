@@ -26,7 +26,7 @@ libc_ifunc_redirected (__redirect_log2f, __log2f, IFUNC_SELECTOR ());
 #include <libm-alias-float.h>
 #ifdef SHARED
 __hidden_ver1 (__log2f_ia32, __GI___log2f, __redirect_log2f)
-  __attribute__ ((visibility ("hidden")));
+  __attribute__ ((visibility ("hidden"))) __THROW;
 
 # include <shlib-compat.h>
 versioned_symbol (libm, __log2f, log2f, GLIBC_2_27);

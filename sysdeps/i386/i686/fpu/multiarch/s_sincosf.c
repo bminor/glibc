@@ -18,10 +18,10 @@
 
 #include <init-arch.h>
 #include <libm-alias-float.h>
+#include <math.h>
 
 extern void __sincosf_sse2 (float, float *, float *);
 extern void __sincosf_ia32 (float, float *, float *);
-void __sincosf (float, float *, float *);
 
 libm_ifunc (__sincosf,
 	    HAS_CPU_FEATURE (SSE2) ? __sincosf_sse2 : __sincosf_ia32);

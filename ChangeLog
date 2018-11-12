@@ -1,5 +1,16 @@
 2018-11-12  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/i386/i686/fpu/multiarch/e_expf.c [SHARED]: Use __THROW
+	with __hidden_ver1 call.
+	* sysdeps/i386/i686/fpu/multiarch/e_log2f.c [SHARED]: Likewise.
+	* sysdeps/i386/i686/fpu/multiarch/e_logf.c [SHARED]: Likewise.
+	* sysdeps/i386/i686/fpu/multiarch/s_cosf.c: Include <math.h>.
+	(__cosf): Do not declare here.
+	* sysdeps/i386/i686/fpu/multiarch/s_sincosf.c: Include <math.h>.
+	(__sincosf): Do not declare here.
+	* sysdeps/i386/i686/fpu/multiarch/s_sinf.c: Include <math.h>.
+	(__sinf): Do not declare here.
+
 	* sysdeps/ia64/fpu/sfp-machine.h (__LITTLE_ENDIAN): Remove.
 	(__BIG_ENDIAN): Likewise.
 	(__BYTE_ORDER): Likewise.
