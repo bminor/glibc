@@ -1,5 +1,8 @@
 2018-11-12  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/arm/arm-ifunc.h [SHARED] (arm_libc_ifunc_hidden_def):
+	Use __attribute_copy__ to copy attributes from name.
+
 	* sysdeps/i386/i686/fpu/multiarch/e_expf.c [SHARED]: Use __THROW
 	with __hidden_ver1 call.
 	* sysdeps/i386/i686/fpu/multiarch/e_log2f.c [SHARED]: Likewise.
