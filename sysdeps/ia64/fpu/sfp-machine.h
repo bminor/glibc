@@ -88,13 +88,3 @@ void __sfp_handle_exceptions (int);
   } while (0)
 
 #define FP_ROUNDMODE		(_fcw & FP_RND_MASK)
-
-#define	__LITTLE_ENDIAN	1234
-#define	__BIG_ENDIAN	4321
-
-#define __BYTE_ORDER __LITTLE_ENDIAN
-
-/* Define ALIASNAME as a strong alias for NAME.  */
-#define strong_alias(name, aliasname) _strong_alias(name, aliasname)
-#define _strong_alias(name, aliasname) \
-  extern __typeof (name) aliasname __attribute__ ((alias (#name)));

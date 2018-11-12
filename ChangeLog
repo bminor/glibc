@@ -1,3 +1,11 @@
+2018-11-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ia64/fpu/sfp-machine.h (__LITTLE_ENDIAN): Remove.
+	(__BIG_ENDIAN): Likewise.
+	(__BYTE_ORDER): Likewise.
+	(strong_alias): Likewise.
+	(_strong_alias): Likewise.
+
 2018-11-12  Florian Weimer  <fweimer@redhat.com>
 
 	* malloc/malloc.c (unlink_chunk): Turn the unlink macro into this
