@@ -1,5 +1,8 @@
 2018-11-13  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/mips/__longjmp.c (__longjmp): Define alias manually with
+	alias attribute, not with strong_alias.
+
 	* include/libc-symbols.h [SHARED && !NO_HIDDEN && !__ASSEMBLER__]
 	(__hidden_ver2): New macro.  Use old definition of __hidden_ver1
 	with additional parameter thread.
