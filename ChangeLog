@@ -1,3 +1,12 @@
+2018-11-13  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/malloc.c (fastbin_push_entry): New function.
+	(fastbin_pop_entry): Likewise.  Replaces REMOVE_FB.
+	(REMOVE_FB): Remove macro.
+	(_int_malloc): Use fastbin_pop_entry and reindent.
+	(_int_free): Use fastbin_push_entry.
+	(malloc_consolidate): Use atomic_exchange_acquire.
+
 2018-11-13  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/__longjmp.c (__longjmp): Define alias manually with
