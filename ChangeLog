@@ -1,3 +1,9 @@
+2018-11-13  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/sparc/sparc-ifunc.h [SHARED]
+	(sparc_ifunc_redirected_hidden_def): Use __attribute_copy__ to
+	copy attributes from name.
+
 2018-11-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/arm-ifunc.h [SHARED] (arm_libc_ifunc_hidden_def):
