@@ -1,5 +1,28 @@
 2018-11-13  Joseph Myers  <joseph@codesourcery.com>
 
+	* include/libc-symbols.h [SHARED && !NO_HIDDEN && !__ASSEMBLER__]
+	(__hidden_ver2): New macro.  Use old definition of __hidden_ver1
+	with additional parameter thread.
+	[SHARED && !NO_HIDDEN && !__ASSEMBLER__] (__hidden_ver1): Define
+	in terms of __hidden_ver2.
+	(hidden_tls_def): New macro.
+	(libc_hidden_tls_def): Likewise.
+	(rtld_hidden_tls_def): Likewise.
+	(libm_hidden_tls_def): Likewise.
+	(libmvec_hidden_tls_def): Likewise.
+	(libresolv_hidden_tls_def): Likewise.
+	(librt_hidden_tls_def): Likewise.
+	(libdl_hidden_tls_def): Likewise.
+	(libnss_files_hidden_tls_def): Likewise.
+	(libnsl_hidden_tls_def): Likewise.
+	(libnss_nisplus_hidden_tls_def): Likewise.
+	(libutil_hidden_tls_def): Likewise.
+	(libutil_hidden_tls_def): Likweise.
+	* sysdeps/powerpc/nofpu/sim-full.c (__sim_exceptions_thread): Use
+	libc_hidden_tls_def.
+	(__sim_disabled_exceptions_thread): Likewise.
+	(__sim_round_mode_thread): Likewise.
+
 	* sysdeps/sparc/sparc-ifunc.h [SHARED]
 	(sparc_ifunc_redirected_hidden_def): Use __attribute_copy__ to
 	copy attributes from name.
