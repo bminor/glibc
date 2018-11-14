@@ -1,3 +1,10 @@
+2018-11-14  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/dl-sysdep.c (check_no_hidden): Use
+	__attribute_copy__ to copy attributes from name. Drop static qualifier
+	to avoid warnings about leaf attribute not having effect on static
+	functions.
+
 2018-11-13  Florian Weimer  <fweimer@redhat.com>
 
 	* malloc/malloc.c (fastbin_push_entry): New function.

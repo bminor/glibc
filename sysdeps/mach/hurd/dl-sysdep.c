@@ -283,8 +283,9 @@ _dl_sysdep_start_cleanup (void)
 /* This macro checks that the function does not get renamed to be hidden: we do
    need these to be overridable by libc's.  */
 #define check_no_hidden(name)				\
-  static __typeof (name) __check_##name##_no_hidden	\
-       __attribute__ ((alias (#name)));
+  __typeof (name) __check_##name##_no_hidden		\
+       __attribute__ ((alias (#name)))			\
+       __attribute_copy__ (name);
 
 /* Open FILE_NAME and return a Hurd I/O for it in *PORT, or return an
    error.  If STAT is non-zero, stat the file into that stat buffer.  */
