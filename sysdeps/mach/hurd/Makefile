@@ -194,6 +194,10 @@ ifeq (hurd, $(subdir))
 sysdep_routines += cthreads
 endif
 
+ifeq (io, $(subdir))
+sysdep_routines += f_setlk
+endif
+
 ifeq ($(subdir),sunrpc)
 sysdep_headers += nfs/nfs.h
 endif

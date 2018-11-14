@@ -21,6 +21,7 @@
 #include <hurd/fd.h>
 #include <stdarg.h>
 #include <sys/file.h>		/* XXX for LOCK_* */
+#include "f_setlk.h"
 
 /* Perform file control operations on FD.  */
 int
@@ -128,56 +129,50 @@ __libc_fcntl (int fd, int cmd, ...)
     case F_SETLK:
     case F_SETLKW:
       {
-	/* XXX
-	   We need new RPCs to support POSIX.1 fcntl file locking!!
-	   For the time being we support the whole-file case only,
-	   with all kinds of WRONG WRONG WRONG semantics,
-	   by using flock.  This is definitely the Wrong Thing,
-	   but it might be better than nothing (?).  */
 	struct flock *fl = va_arg (ap, struct flock *);
+	int wait = 0;
 	va_end (ap);
 	switch (cmd)
 	  {
 	  case F_GETLK:
 	    errno = ENOSYS;
 	    return -1;
-	  case F_SETLK:
-	    cmd = LOCK_NB;
-	    break;
-	  default:
-	    cmd = 0;
-	    break;
-	  }
-	switch (fl->l_type)
-	  {
-	  case F_RDLCK: cmd |= LOCK_SH; break;
-	  case F_WRLCK: cmd |= LOCK_EX; break;
-	  case F_UNLCK: cmd |= LOCK_UN; break;
-	  default:
-	    errno = EINVAL;
-	    return -1;
-	  }
-	switch (fl->l_whence)
-	  {
-	  case SEEK_SET:
-	    if (fl->l_start == 0 && fl->l_len == 0) /* Whole file request.  */
-	      break;
-	    /* It seems to be common for applications to lock the first
-	       byte of the file when they are really doing whole-file locking.
-	       So, since it's so wrong already, might as well do that too.  */
-	    if (fl->l_start == 0 && fl->l_len == 1)
-	      break;
+	  case F_SETLKW:
+	    wait = 1;
 	    /* FALLTHROUGH */
-	  case SEEK_CUR:
-	  case SEEK_END:
-	    errno = ENOTSUP;
-	    return -1;
+	  case F_SETLK:
+	    result = __f_setlk (fd, fl->l_type, fl->l_whence,
+				fl->l_start, fl->l_len, wait);
+	    break;
 	  default:
 	    errno = EINVAL;
 	    return -1;
 	  }
+      }
 
-	return __flock (fd, cmd);
+    case F_GETLK64:
+    case F_SETLK64:
+    case F_SETLKW64:
+      {
+	struct flock64 *fl = va_arg (ap, struct flock64 *);
+	int wait = 0;
+	va_end (ap);
+	switch (cmd)
+	  {
+	  case F_GETLK:
+	    errno = ENOSYS;
+	    return -1;
+	  case F_SETLKW:
+	    wait = 1;
+	    /* FALLTHROUGH */
+	  case F_SETLK:
+	    result = __f_setlk (fd, fl->l_type, fl->l_whence,
+				fl->l_start, fl->l_len, wait);
+	    break;
+	  default:
+	    errno = EINVAL;
+	    return -1;
+	  }
       }
 
     case F_GETFL:		/* Get per-open flags.  */
@@ -215,3 +210,4 @@ strong_alias (__libc_fcntl, __libc_fcntl64)
 libc_hidden_def (__libc_fcntl64)
 weak_alias (__libc_fcntl64, __fcntl64)
 libc_hidden_weak (__fcntl64)
+weak_alias (__fcntl64, fcntl64)
