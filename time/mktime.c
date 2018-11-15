@@ -120,11 +120,12 @@ my_tzset (void)
 #if defined _LIBC || NEED_MKTIME_WORKING || NEED_MKTIME_INTERNAL
 
 /* A signed type that can represent an integer number of years
-   multiplied by three times the number of seconds in a year.  It is
+   multiplied by four times the number of seconds in a year.  It is
    needed when converting a tm_year value times the number of seconds
-   in a year.  The factor of three comes because these products need
+   in a year.  The factor of four comes because these products need
    to be subtracted from each other, and sometimes with an offset
-   added to them, without worrying about overflow.
+   added to them, and then with another timestamp added, without
+   worrying about overflow.
 
    Much of the code uses long_int to represent time_t values, to
    lessen the hassle of dealing with platforms where time_t is
@@ -132,12 +133,12 @@ my_tzset (void)
    time_t values that mktime can generate even on platforms where
    time_t is excessively wide.  */
 
-#if INT_MAX <= LONG_MAX / 3 / 366 / 24 / 60 / 60
+#if INT_MAX <= LONG_MAX / 4 / 366 / 24 / 60 / 60
 typedef long int long_int;
 #else
 typedef long long int long_int;
 #endif
-verify (INT_MAX <= TYPE_MAXIMUM (long_int) / 3 / 366 / 24 / 60 / 60);
+verify (INT_MAX <= TYPE_MAXIMUM (long_int) / 4 / 366 / 24 / 60 / 60);
 
 /* Shift A right by B bits portably, by dividing A by 2**B and
    truncating towards minus infinity.  B should be in the range 0 <= B
@@ -211,9 +212,10 @@ isdst_differ (int a, int b)
    were not adjusted between the timestamps.
 
    The YEAR values uses the same numbering as TP->tm_year.  Values
-   need not be in the usual range.  However, YEAR1 must not overflow
-   when multiplied by three times the number of seconds in a year, and
-   likewise for YDAY1 and three times the number of seconds in a day.  */
+   need not be in the usual range.  However, YEAR1 - YEAR0 must not
+   overflow even when multiplied by three times the number of seconds
+   in a year, and likewise for YDAY1 - YDAY0 and three times the
+   number of seconds in a day.  */
 
 static long_int
 ydhms_diff (long_int year1, long_int yday1, int hour1, int min1, int sec1,
@@ -403,7 +405,7 @@ __mktime_internal (struct tm *tp,
   if (LEAP_SECONDS_POSSIBLE)
     {
       /* Handle out-of-range seconds specially,
-	 since ydhms_tm_diff assumes every minute has 60 seconds.  */
+	 since ydhms_diff assumes every minute has 60 seconds.  */
       if (sec < 0)
 	sec = 0;
       if (59 < sec)

@@ -1,5 +1,11 @@
 2018-11-15  Paul Eggert  <eggert@cs.ucla.edu>
 
+	mktime: make more room for overflow
+	[BZ#23789]
+	* time/mktime.c (long_int): Now 4⨯ int, not just 3⨯.
+	This is so that we can add tm_diff results to a previous guess,
+	which will be useful in a later patch.
+
 	mktime: simplify offset guess
 	[BZ#23789]
 	* time/mktime.c (__mktime_internal): Omit excess precision.
