@@ -1,5 +1,19 @@
 2018-11-15  Paul Eggert  <eggert@cs.ucla.edu>
 
+	mktime: fix non-EOVERFLOW errno handling
+	[BZ#23789]
+	mktime was not properly reporting failures when the underlying
+	localtime_r fails with errno != EOVERFLOW; it incorrectly treated
+	them like EOVERFLOW failures, and set errno to EOVERFLOW.
+	The problem could happen on non-glibc platforms, with Gnulib.
+	* time/mktime.c (guess_time_tm): Remove, replacing with ...
+	(tm_diff): ... this simpler function, which does not change errno.
+	All callers changed to deal with errno themselves.
+	(ranged_convert, __mktime_internal): Return failure immediately if
+	the underlying function reports any failure other than EOVERFLOW.
+	(__mktime_internal): Set errno to EOVERFLOW if the spring-forward
+	gap code fails.
+
 	mktime: fix bug with Y2038 DST transition
 	[BZ#23789]
 	* time/mktime.c (ranged_convert): On 32-bit platforms, don’t

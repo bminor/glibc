@@ -250,45 +250,25 @@ long_int_avg (long_int a, long_int b)
   return shr (a, 1) + shr (b, 1) + ((a | b) & 1);
 }
 
-/* Return a time_t value corresponding to (YEAR-YDAY HOUR:MIN:SEC),
-   assuming that T corresponds to *TP and that no clock adjustments
-   occurred between *TP and the desired time.
-   Although T and the returned value are of type long_int,
-   they represent time_t values and must be in time_t range.
-   If TP is null, return a value not equal to T; this avoids false matches.
+/* Return a long_int value corresponding to (YEAR-YDAY HOUR:MIN:SEC)
+   minus *TP seconds, assuming no clock adjustments occurred between
+   the two timestamps.
+
    YEAR and YDAY must not be so large that multiplying them by three times the
    number of seconds in a year (or day, respectively) would overflow long_int.
-   If TP is non-null and the returned value would be out of range, set
-   errno to EOVERFLOW and yield a minimal or maximal in-range value
-   that is not equal to T.  */
+   *TP should be in the usual range.  */
 static long_int
-guess_time_tm (long_int year, long_int yday, int hour, int min, int sec,
-	       long_int t, const struct tm *tp)
+tm_diff (long_int year, long_int yday, int hour, int min, int sec,
+	 struct tm const *tp)
 {
-  if (tp)
-    {
-      long_int result;
-      long_int d = ydhms_diff (year, yday, hour, min, sec,
-			       tp->tm_year, tp->tm_yday,
-			       tp->tm_hour, tp->tm_min, tp->tm_sec);
-      if (! INT_ADD_WRAPV (t, d, &result))
-	return result;
-      __set_errno (EOVERFLOW);
-    }
-
-  /* An error occurred, probably overflow.  Return the nearest result
-     that is actually in range, except don't report a zero difference
-     if the actual difference is nonzero, as that would cause a false
-     match; and don't oscillate between two values, as that would
-     confuse the spring-forward gap detector.  */
-  return (t < long_int_avg (mktime_min, mktime_max)
-	  ? (t <= mktime_min + 1 ? t + 1 : mktime_min)
-	  : (mktime_max - 1 <= t ? t - 1 : mktime_max));
+  return ydhms_diff (year, yday, hour, min, sec,
+		     tp->tm_year, tp->tm_yday,
+		     tp->tm_hour, tp->tm_min, tp->tm_sec);
 }
 
 /* Use CONVERT to convert T to a struct tm value in *TM.  T must be in
-   range for time_t.  Return TM if successful, NULL if T is out of
-   range for CONVERT.  */
+   range for time_t.  Return TM if successful, NULL (setting errno) on
+   failure.  */
 static struct tm *
 convert_time (struct tm *(*convert) (const time_t *, struct tm *),
 	      long_int t, struct tm *tm)
@@ -300,49 +280,48 @@ convert_time (struct tm *(*convert) (const time_t *, struct tm *),
 /* Use CONVERT to convert *T to a broken down time in *TP.
    If *T is out of range for conversion, adjust it so that
    it is the nearest in-range value and then convert that.
-   A value is in range if it fits in both time_t and long_int.  */
+   A value is in range if it fits in both time_t and long_int.
+   Return TP on success, NULL (setting errno) on failure.  */
 static struct tm *
 ranged_convert (struct tm *(*convert) (const time_t *, struct tm *),
 		long_int *t, struct tm *tp)
 {
-  struct tm *r;
-  if (*t < mktime_min)
-    *t = mktime_min;
-  else if (mktime_max < *t)
-    *t = mktime_max;
-  r = convert_time (convert, *t, tp);
-
-  if (!r && *t)
+  long_int t1 = (*t < mktime_min ? mktime_min
+		 : *t <= mktime_max ? *t : mktime_max);
+  struct tm *r = convert_time (convert, t1, tp);
+  if (r)
     {
-      long_int bad = *t;
-      long_int ok = 0;
+      *t = t1;
+      return r;
+    }
+  if (errno != EOVERFLOW)
+    return NULL;
 
-      /* BAD is a known unconvertible value, and OK is a known good one.
-	 Use binary search to narrow the range between BAD and OK until
-	 they differ by 1.  */
-      while (true)
-	{
-	  long_int mid = long_int_avg (ok, bad);
-	  if (mid == ok || mid == bad)
-	    break;
-	  r = convert_time (convert, mid, tp);
-	  if (r)
-	    ok = mid;
-	  else
-	    bad = mid;
-	}
+  long_int bad = t1;
+  long_int ok = 0;
+  struct tm oktm; oktm.tm_sec = -1;
 
-      *t = ok;
-
-      if (!r && ok)
-	{
-	  /* The last conversion attempt failed;
-	     revert to the most recent successful attempt.  */
-	  r = convert_time (convert, ok, tp);
-	}
+  /* BAD is a known out-of-range value, and OK is a known in-range one.
+     Use binary search to narrow the range between BAD and OK until
+     they differ by 1.  */
+  while (true)
+    {
+      long_int mid = long_int_avg (ok, bad);
+      if (mid == ok || mid == bad)
+	break;
+      if (convert_time (convert, mid, tp))
+	ok = mid, oktm = *tp;
+      else if (errno != EOVERFLOW)
+	return NULL;
+      else
+	bad = mid;
     }
 
-  return r;
+  if (oktm.tm_sec < 0)
+    return NULL;
+  *t = ok;
+  *tp = oktm;
+  return tp;
 }
 
 
@@ -359,7 +338,6 @@ __mktime_internal (struct tm *tp,
 		   struct tm *(*convert) (const time_t *, struct tm *),
 		   mktime_offset_t *offset)
 {
-  long_int t, gt, t0, t1, t2;
   struct tm tm;
 
   /* The maximum number of probes (calls to CONVERT) should be enough
@@ -379,7 +357,7 @@ __mktime_internal (struct tm *tp,
   int isdst = tp->tm_isdst;
 
   /* 1 if the previous probe was DST.  */
-  int dst2;
+  int dst2 = 0;
 
   /* Ensure that mon is in range, and set year accordingly.  */
   int mon_remainder = mon % 12;
@@ -418,36 +396,46 @@ __mktime_internal (struct tm *tp,
      time.  */
 
   INT_SUBTRACT_WRAPV (0, off, &negative_offset_guess);
-  t0 = ydhms_diff (year, yday, hour, min, sec,
-		   EPOCH_YEAR - TM_YEAR_BASE, 0, 0, 0, negative_offset_guess);
+  long_int t0 = ydhms_diff (year, yday, hour, min, sec,
+			    EPOCH_YEAR - TM_YEAR_BASE, 0, 0, 0,
+			    negative_offset_guess);
+  long_int t = t0, t1 = t0, t2 = t0;
 
   /* Repeatedly use the error to improve the guess.  */
 
-  for (t = t1 = t2 = t0, dst2 = 0;
-       (gt = guess_time_tm (year, yday, hour, min, sec, t,
-			    ranged_convert (convert, &t, &tm)),
-	t != gt);
-       t1 = t2, t2 = t, t = gt, dst2 = tm.tm_isdst != 0)
-    if (t == t1 && t != t2
-	&& (tm.tm_isdst < 0
-	    || (isdst < 0
-		? dst2 <= (tm.tm_isdst != 0)
-		: (isdst != 0) != (tm.tm_isdst != 0))))
-      /* We can't possibly find a match, as we are oscillating
-	 between two values.  The requested time probably falls
-	 within a spring-forward gap of size GT - T.  Follow the common
-	 practice in this case, which is to return a time that is GT - T
-	 away from the requested time, preferring a time whose
-	 tm_isdst differs from the requested value.  (If no tm_isdst
-	 was requested and only one of the two values has a nonzero
-	 tm_isdst, prefer that value.)  In practice, this is more
-	 useful than returning -1.  */
-      goto offset_found;
-    else if (--remaining_probes == 0)
-      {
-	__set_errno (EOVERFLOW);
+  while (true)
+    {
+      if (! ranged_convert (convert, &t, &tm))
 	return -1;
-      }
+      long_int dt = tm_diff (year, yday, hour, min, sec, &tm);
+      if (dt == 0)
+	break;
+
+      if (t == t1 && t != t2
+	  && (tm.tm_isdst < 0
+	      || (isdst < 0
+		  ? dst2 <= (tm.tm_isdst != 0)
+		  : (isdst != 0) != (tm.tm_isdst != 0))))
+	/* We can't possibly find a match, as we are oscillating
+	   between two values.  The requested time probably falls
+	   within a spring-forward gap of size DT.  Follow the common
+	   practice in this case, which is to return a time that is DT
+	   away from the requested time, preferring a time whose
+	   tm_isdst differs from the requested value.  (If no tm_isdst
+	   was requested and only one of the two values has a nonzero
+	   tm_isdst, prefer that value.)  In practice, this is more
+	   useful than returning -1.  */
+	goto offset_found;
+
+      remaining_probes--;
+      if (remaining_probes == 0)
+	{
+	  __set_errno (EOVERFLOW);
+	  return -1;
+	}
+
+      t1 = t2, t2 = t, t += dt, dst2 = tm.tm_isdst != 0;
+    }
 
   /* We have a match.  Check whether tm.tm_isdst has the requested
      value, if any.  */
@@ -489,17 +477,30 @@ __mktime_internal (struct tm *tp,
 	    if (! INT_ADD_WRAPV (t, delta * direction, &ot))
 	      {
 		struct tm otm;
-		ranged_convert (convert, &ot, &otm);
+		if (! ranged_convert (convert, &ot, &otm))
+		  return -1;
 		if (! isdst_differ (isdst, otm.tm_isdst))
 		  {
 		    /* We found the desired tm_isdst.
 		       Extrapolate back to the desired time.  */
-		    t = guess_time_tm (year, yday, hour, min, sec, ot, &otm);
-		    ranged_convert (convert, &t, &tm);
-		    goto offset_found;
+		    long_int gt = ot + tm_diff (year, yday, hour, min, sec,
+						&otm);
+		    if (mktime_min <= gt && gt <= mktime_max)
+		      {
+			if (convert_time (convert, gt, &tm))
+			  {
+			    t = gt;
+			    goto offset_found;
+			  }
+			if (errno != EOVERFLOW)
+			  return -1;
+		      }
 		  }
 	      }
 	  }
+
+      __set_errno (EOVERFLOW);
+      return -1;
     }
 
  offset_found:
