@@ -39,7 +39,7 @@
  */
 
 #if !defined _LIBC && !DEBUG_MKTIME
-# include <config.h>
+# include <libc-config.h>
 #endif
 
 /* Assume that leap seconds are possible, unless told otherwise.
@@ -51,6 +51,7 @@
 
 #include <time.h>
 
+#include <errno.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -255,8 +256,9 @@ long_int_avg (long_int a, long_int b)
    If TP is null, return a value not equal to T; this avoids false matches.
    YEAR and YDAY must not be so large that multiplying them by three times the
    number of seconds in a year (or day, respectively) would overflow long_int.
-   If the returned value would be out of range, yield the minimal or
-   maximal in-range value, except do not yield a value equal to T.  */
+   If TP is non-null and the returned value would be out of range, set
+   errno to EOVERFLOW and yield a minimal or maximal in-range value
+   that is not equal to T.  */
 static long_int
 guess_time_tm (long_int year, long_int yday, int hour, int min, int sec,
 	       long_int t, const struct tm *tp)
@@ -269,9 +271,10 @@ guess_time_tm (long_int year, long_int yday, int hour, int min, int sec,
 			       tp->tm_hour, tp->tm_min, tp->tm_sec);
       if (! INT_ADD_WRAPV (t, d, &result))
 	return result;
+      __set_errno (EOVERFLOW);
     }
 
-  /* Overflow occurred one way or another.  Return the nearest result
+  /* An error occurred, probably overflow.  Return the nearest result
      that is actually in range, except don't report a zero difference
      if the actual difference is nonzero, as that would cause a false
      match; and don't oscillate between two values, as that would
@@ -344,6 +347,8 @@ ranged_convert (struct tm *(*convert) (const time_t *, struct tm *),
    Use *OFFSET to keep track of a guess at the offset of the result,
    compared to what the result would be for UTC without leap seconds.
    If *OFFSET's guess is correct, only one CONVERT call is needed.
+   If successful, set *TP to the canonicalized struct tm;
+   otherwise leave *TP alone, return ((time_t) -1) and set errno.
    This function is external because it is used also by timegm.c.  */
 time_t
 __mktime_internal (struct tm *tp,
@@ -435,7 +440,10 @@ __mktime_internal (struct tm *tp,
 	 useful than returning -1.  */
       goto offset_found;
     else if (--remaining_probes == 0)
-      return -1;
+      {
+	__set_errno (EOVERFLOW);
+	return -1;
+      }
 
   /* We have a match.  Check whether tm.tm_isdst has the requested
      value, if any.  */
@@ -505,8 +513,12 @@ __mktime_internal (struct tm *tp,
       sec_adjustment -= sec;
       sec_adjustment += sec_requested;
       if (INT_ADD_WRAPV (t, sec_adjustment, &t)
-	  || ! (mktime_min <= t && t <= mktime_max)
-	  || ! convert_time (convert, t, &tm))
+	  || ! (mktime_min <= t && t <= mktime_max))
+	{
+	  __set_errno (EOVERFLOW);
+	  return -1;
+	}
+      if (! convert_time (convert, t, &tm))
 	return -1;
     }
 

@@ -1,3 +1,11 @@
+2018-11-15  Paul Eggert  <eggert@cs.ucla.edu>
+
+	mktime: fix EOVERFLOW bug
+	[BZ#23789]
+	* time/mktime.c [!_LIBC && !DEBUG_MKTIME]:
+	Include libc-config.h, not config.h, for __set_errno.
+	(guess_time_tm, __mktime_internal): Set errno to EOVERFLOW on overflow.
+
 2018-11-14  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/dl-sysdep.c (check_no_hidden): Use
