@@ -1,5 +1,12 @@
 2018-11-15  Paul Eggert  <eggert@cs.ucla.edu>
 
+	mktime: new test for mktime failure
+	[BZ#23789]
+	Based on a test suggested by Albert Aribaud in:
+	https://www.sourceware.org/ml/libc-alpha/2018-10/msg00662.html
+	* time/Makefile (tests): Add bug-mktime4.
+	* time/bug-mktime4.c: New file.
+
 	mktime: fix EOVERFLOW bug
 	[BZ#23789]
 	* time/mktime.c [!_LIBC && !DEBUG_MKTIME]:
