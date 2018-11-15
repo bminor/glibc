@@ -1,5 +1,12 @@
 2018-11-15  Paul Eggert  <eggert@cs.ucla.edu>
 
+	mktime: fix bug with Y2038 DST transition
+	[BZ#23789]
+	* time/mktime.c (ranged_convert): On 32-bit platforms, don’t
+	mishandle a DST transition that jumps over the Y2038 boundary.
+	No such DST transitions are known so this is only a theoretical
+	bug, but we might as well do things right.
+
 	mktime: make more room for overflow
 	[BZ#23789]
 	* time/mktime.c (long_int): Now 4⨯ int, not just 3⨯.

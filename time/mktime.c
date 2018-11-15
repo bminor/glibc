@@ -323,7 +323,7 @@ ranged_convert (struct tm *(*convert) (const time_t *, struct tm *),
       while (true)
 	{
 	  long_int mid = long_int_avg (ok, bad);
-	  if (mid != ok && mid != bad)
+	  if (mid == ok || mid == bad)
 	    break;
 	  r = convert_time (convert, mid, tp);
 	  if (r)
@@ -331,6 +331,8 @@ ranged_convert (struct tm *(*convert) (const time_t *, struct tm *),
 	  else
 	    bad = mid;
 	}
+
+      *t = ok;
 
       if (!r && ok)
 	{
