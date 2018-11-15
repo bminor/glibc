@@ -1,5 +1,11 @@
 2018-11-15  Paul Eggert  <eggert@cs.ucla.edu>
 
+	mktime: DEBUG_MKTIME cleanup
+	The DEBUG_MKTIME code no longer works in glibc or in Gnulib.
+	And it’s no longer needed now that glibc and Gnulib both have
+	their own testing mechanisms for mktime.
+	* time/mktime.c (DEBUG_MKTIME): Remove.  All uses removed.
+
 	mktime: fix non-EOVERFLOW errno handling
 	[BZ#23789]
 	mktime was not properly reporting failures when the underlying
