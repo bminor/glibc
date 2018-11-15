@@ -635,6 +635,13 @@ else
   fi
 fi
 
+# Workaround for clang assembler problem with ifunc relocs, b/119574415
+if test "$with_clang" = no; then
+  no_integrated_as=
+else
+  no_integrated_as=-no-integrated-as
+fi
+
 # For the multi-arch option we need support in the assembler & linker.
 AC_CACHE_CHECK([for assembler and linker STT_GNU_IFUNC support],
 	       libc_cv_ld_gnu_indirect_function, [dnl
@@ -654,7 +661,7 @@ __start:
 EOF
 libc_cv_ld_gnu_indirect_function=no
 if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS \
-	    -nostartfiles -nostdlib $no_ssp \
+	    -nostartfiles -nostdlib $no_ssp $no_integrated_as \
 	    -o conftest conftest.S 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD; then
   # Do a link to see if the backend supports IFUNC relocs.
   $READELF -r conftest 1>&AS_MESSAGE_LOG_FD

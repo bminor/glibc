@@ -231,6 +231,11 @@ CFLAGS-fsync.c += -fexceptions -fasynchronous-unwind-tables
 
 CFLAGS-pt-system.c += -fexceptions
 
+# Workaround for clang assembler problem with ifunc relocs, b/119574415
+ifeq ($(with-clang),yes)
+CFLAGS-pt-vfork.c += -no-integrated-as
+endif
+
 LDLIBS-tst-once5 = -lstdc++
 CFLAGS-tst-thread_local1.o = -std=gnu++11
 LDLIBS-tst-thread_local1 = -lstdc++
