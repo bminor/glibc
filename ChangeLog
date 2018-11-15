@@ -1,5 +1,9 @@
 2018-11-15  Paul Eggert  <eggert@cs.ucla.edu>
 
+	mktime: simplify offset guess
+	[BZ#23789]
+	* time/mktime.c (__mktime_internal): Omit excess precision.
+
 	mktime: new test for mktime failure
 	[BZ#23789]
 	Based on a test suggested by Albert Aribaud in:

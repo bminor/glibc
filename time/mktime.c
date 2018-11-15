@@ -355,7 +355,7 @@ __mktime_internal (struct tm *tp,
 		   struct tm *(*convert) (const time_t *, struct tm *),
 		   mktime_offset_t *offset)
 {
-  long_int t, gt, t0, t1, t2, dt;
+  long_int t, gt, t0, t1, t2;
   struct tm tm;
 
   /* The maximum number of probes (calls to CONVERT) should be enough
@@ -502,8 +502,8 @@ __mktime_internal (struct tm *tp,
   /* Set *OFFSET to the low-order bits of T - T0 - NEGATIVE_OFFSET_GUESS.
      This is just a heuristic to speed up the next mktime call, and
      correctness is unaffected if integer overflow occurs here.  */
-  INT_SUBTRACT_WRAPV (t, t0, &dt);
-  INT_SUBTRACT_WRAPV (dt, negative_offset_guess, offset);
+  INT_SUBTRACT_WRAPV (t, t0, offset);
+  INT_SUBTRACT_WRAPV (*offset, negative_offset_guess, offset);
 
   if (LEAP_SECONDS_POSSIBLE && sec_requested != tm.tm_sec)
     {
