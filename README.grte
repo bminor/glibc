@@ -37,9 +37,9 @@ it needs to be newer than 6.0.0.
 
 Configure:
 
-  CC=path-to-llvm/clang CXX=path-to-llvm/clang \
+  CC=path-to-llvm/clang CXX=path-to-llvm/clang++ \
     ../glibc/configure --disable-werror --with-clang --disable-float128 \
-      --with-lld --with-default-link --prefix=/something
+      --with-lld --with-default-link --disable-multi-arch --prefix=/something
 
 To build with BFD ld as linker, omit the "--with-lld
 --with-default-link".  (Gold has had problems in the past.)
@@ -49,7 +49,7 @@ Build:
   make
   make install
 
-To test:
+Test:
 
   make check
 
