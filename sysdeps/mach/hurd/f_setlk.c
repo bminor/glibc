@@ -19,6 +19,7 @@
 #include <sys/types.h>
 #include <sys/file.h>
 #include <fcntl.h>
+#include <unistd.h>
 #include <errno.h>
 
 /* XXX
@@ -44,6 +45,18 @@ __f_setlk (int fd, int type, int whence, __off64_t start, __off64_t len, int wai
 
   if (cmd != LOCK_UN && wait == 0)
     cmd |= LOCK_NB;
+
+  if (whence == SEEK_CUR)
+    {
+      /* In case the target position is 0, we can support it below.  */
+      __off64_t cur = __lseek64 (fd, 0, SEEK_CUR);
+
+      if (cur >= 0)
+	{
+	  start = cur + start;
+	  whence = SEEK_SET;
+	}
+    }
 
   switch (whence)
     {

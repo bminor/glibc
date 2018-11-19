@@ -1,3 +1,9 @@
+2018-11-19  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/f_setlk.c: Include <unistd.h>.
+	(__f_setlk): When whence is SEEK_CUR, use __lseek64 to convert it to
+	SEEK_SET.
+
 2018-11-19  Mao Han  <han_mao@c-sky.com>
 
 	* scripts/config.guess: Update to version 2018-08-29.
