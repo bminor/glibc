@@ -1,3 +1,10 @@
+2018-11-19  Florian Weimer  <fweimer@redhat.com>
+
+	support: Print timestamps in timeout handler.
+	* support/support_test_main.c (print_timestamp): New function.
+	(signal_handler): Use it to print the termination time and the
+	time of the last write to standard output.
+
 2018-10-09  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* libio/tst-readline.c (TIMEOUT): Define.
