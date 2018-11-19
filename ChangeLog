@@ -1,3 +1,10 @@
+2018-11-19  Florian Weimer  <fweimer@redhat.com>
+
+	support: Print timestamps in timeout handler.
+	* support/support_test_main.c (print_timestamp): New function.
+	(signal_handler): Use it to print the termination time and the
+	time of the last write to standard output.
+
 2018-11-16  Zack Weinberg  <zackw@panix.com>
 	    Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
