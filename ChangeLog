@@ -1,3 +1,15 @@
+2018-11-20  DJ Delorie  <dj@redhat.com>
+
+	* malloc/malloc.c (tcache_entry): Add key field.
+	(tcache_put): Set it.
+	(tcache_get): Likewise.
+	(_int_free): Check for double free in tcache.
+	* malloc/tst-tcfree1.c: New.
+	* malloc/tst-tcfree2.c: New.
+	* malloc/Makefile: Run the new tests.
+	* manual/probes.texi: Document memory_tcache_double_free probe.
+
+	* dlfcn/dlerror.c (check_free): Prevent double frees.
 2018-11-19  Florian Weimer  <fweimer@redhat.com>
 
 	support: Print timestamps in timeout handler.

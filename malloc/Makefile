@@ -38,6 +38,7 @@ tests := mallocbug tst-malloc tst-valloc tst-calloc tst-obstack \
 	 tst-malloc_info \
 	 tst-malloc-too-large \
 	 tst-malloc-stats-cancellation \
+	 tst-tcfree1 tst-tcfree2 \
 
 tests-static := \
 	 tst-interpose-static-nothread \

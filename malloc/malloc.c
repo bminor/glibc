@@ -2888,6 +2888,8 @@ mremap_chunk (mchunkptr p, size_t new_size)
 typedef struct tcache_entry
 {
   struct tcache_entry *next;
+  /* This field exists to detect double frees.  */
+  struct tcache_perthread_struct *key;
 } tcache_entry;
 
 /* There is one of these for each thread, which contains the
@@ -2911,6 +2913,11 @@ tcache_put (mchunkptr chunk, size_t tc_idx)
 {
   tcache_entry *e = (tcache_entry *) chunk2mem (chunk);
   assert (tc_idx < TCACHE_MAX_BINS);
+
+  /* Mark this chunk as "in the tcache" so the test in _int_free will
+     detect a double free.  */
+  e->key = tcache;
+
   e->next = tcache->entries[tc_idx];
   tcache->entries[tc_idx] = e;
   ++(tcache->counts[tc_idx]);
@@ -2926,6 +2933,7 @@ tcache_get (size_t tc_idx)
   assert (tcache->entries[tc_idx] > 0);
   tcache->entries[tc_idx] = e->next;
   --(tcache->counts[tc_idx]);
+  e->key = NULL;
   return (void *) e;
 }
 
@@ -4165,6 +4173,26 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 #if USE_TCACHE
   {
     size_t tc_idx = csize2tidx (size);
+
+    /* Check to see if it's already in the tcache.  */
+    tcache_entry *e = (tcache_entry *) chunk2mem (p);
+
+    /* This test succeeds on double free.  However, we don't 100%
+       trust it (it also matches random payload data at a 1 in
+       2^<size_t> chance), so verify it's not an unlikely coincidence
+       before aborting.  */
+    if (__glibc_unlikely (e->key == tcache && tcache))
+      {
+	tcache_entry *tmp;
+	LIBC_PROBE (memory_tcache_double_free, 2, e, tc_idx);
+	for (tmp = tcache->entries[tc_idx];
+	     tmp;
+	     tmp = tmp->next)
+	  if (tmp == e)
+	    malloc_printerr ("free(): double free detected in tcache 2");
+	/* If we get here, it was a coincidence.  We've wasted a few
+	   cycles, but don't abort.  */
+      }
 
     if (tcache
 	&& tc_idx < mp_.tcache_bins
