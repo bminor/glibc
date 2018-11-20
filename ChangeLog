@@ -1,3 +1,12 @@
+2018-12-17  Albert ARIBAUD <albert.aribaud@3adev.fr>
+
+	* include/time.h
+	(__localtime64): Add.
+	* manual/maint.texi: Document Y2038 symbol handling.
+	* time/localtime.c
+	(__localtime64): Add.
+	[__TIMERSIZE != 64] (__localtime): Turn into a wrapper.
+
 2018-12-17  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/ia64/sysdep.h (ASM_CLOBBERS_6_COMMON):

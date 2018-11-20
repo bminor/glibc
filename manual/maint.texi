@@ -5,6 +5,7 @@
 @menu
 * Source Layout::         How to add new functions or header files
                              to the GNU C Library.
+* Symbol handling::       How to handle symbols in the GNU C Library.
 * Porting::               How to port the GNU C Library to
                              a new machine or operating system.
 @end menu
@@ -182,6 +183,130 @@ Then ensure that you have added a @file{sys/platform/ppc.h}
 header file in the machine-specific directory, e.g.,
 @file{sysdeps/powerpc/sys/platform/ppc.h}.
 
+
+@node Symbol handling
+@appendixsec Symbol handling in the GNU C Library
+
+@menu
+* 64-bit time symbol handling :: How to handle 64-bit time related
+                                    symbols in the GNU C Library.
+@end menu
+
+@node 64-bit time symbol handling
+@appendixsubsec 64-bit time symbol handling in the GNU C Library
+
+With respect to time handling, @theglibcadj{} configurations fall in two
+classes depending on the value of @code{__TIMESIZE}:
+
+@table @code
+
+@item @code{__TIMESIZE == 32}
+
+These @dfn{dual-time} configurations have both 32-bit and 64-bit time
+support.  32-bit time support provides type @code{time_t} and cannot
+handle dates beyond @dfn{Y2038}.  64-bit time support provides type
+@code{__time64_t} and can handle dates beyond @dfn{Y2038}.
+
+In these configurations, time-related types have two declarations,
+a 64-bit one, and a 32-bit one; and time-related functions generally
+have two definitions: a 64-bit one, and a 32-bit one which is a wrapper
+around the former.  Therefore, for every @code{time_t}-related symbol,
+there is a corresponding @code{__time64_t}-related symbol, the name of
+which is usually the 32-bit symbol's name with @code{__} (a double
+underscore) prepended and @code{64} appended.  For instance, the
+64-bit-time counterpart of @code{clock_gettime} is
+@code{__clock_gettime64}.
+
+@item @code{__TIMESIZE == 64}
+
+These @dfn{single-time} configurations only have a 64-bit @code{time_t}
+and related functions, which can handle dates beyond 2038-01-19
+03:14:07 (aka @dfn{Y2038}).
+
+In these configurations, time-related types only have a 64-bit
+declaration; and time-related functions only have one 64-bit definition.
+However, for every @code{time_t}-related symbol, there is a
+corresponding @code{__time64_t}-related macro, the name of which is
+derived as in the dual-time configuration case, and which expands to
+the symbol's name.  For instance, the macro @code{__clock_gettime64}
+expands to @code{clock_gettime}.
+
+These macros are purely internal to @theglibc{} and exist only so that
+a single definition of the 64-bit time functions can be used on both
+single-time and dual-time configurations, and so that glibc code can
+freely call the 64-bit functions internally in all configurations.
+
+@end table
+
+@c The following paragraph should be removed once external interfaces
+@c get support for both time sizes.
+
+Note: at this point, 64-bit time support in dual-time configurations is
+work-in-progress, so for these configurations, the public API only makes
+the 32-bit time support available.  In a later change, the public API
+will allow user code to choose the time size for a given compilation
+unit.
+
+64-bit variants of time-related types or functions are defined for all
+configurations and use 64-bit-time symbol names (for dual-time
+configurations) or macros (for single-time configurations).
+
+32-bit variants of time-related types or functions are defined only for
+dual-time configurations.
+
+Here is an example with @code{localtime}:
+
+Function @code{localtime} is declared in @file{time/time.h} as
+@smallexample
+extern struct tm *localtime (const time_t *__timer) __THROW;
+libc_hidden_proto (localtime)
+@end smallexample
+
+For single-time configurations, @code{__localtime64} is a macro which
+evaluates to @code{localtime}; for dual-time configurations,
+@code{__localtime64} is a function similar to @code{localtime} except
+it uses Y2038-proof types:
+@smallexample
+#if __TIMESIZE == 64
+# define __localtime64 localtime
+#else
+extern struct tm *__localtime64 (const __time64_t *__timer) __THROW;
+libc_hidden_proto (__localtime64)
+#endif
+@end smallexample
+
+(note: type @code{time_t} is replaced with @code{__time64_t} because
+@code{time_t} is not Y2038-proof, but @code{struct tm} is not
+replaced because it is already Y2038-proof.)
+
+The 64-bit-time implementation of @code{localtime} is written as follows
+and is compiled for both dual-time and single-time configuration classes.
+
+@smallexample
+struct tm *
+__localtime64 (const __time64_t *t)
+@lbracechar{}
+  return __tz_convert (*t, 1, &_tmbuf);
+@rbracechar{}
+libc_hidden_def (__localtime64)
+@end smallexample
+
+The 32-bit-time implementation is a wrapper and is only compiled for
+dual-time configurations:
+
+@smallexample
+#if __TIMESIZE != 64
+
+struct tm *
+localtime (const time_t *t)
+@lbracechar{}
+  __time64_t t64 = *t;
+  return __localtime64 (&t64);
+@rbracechar{}
+libc_hidden_def (localtime)
+
+#endif
+@end smallexample
 
 @node Porting
 @appendixsec Porting @theglibc{}
