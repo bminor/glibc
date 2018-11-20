@@ -41,24 +41,24 @@ class ElementTest(object):
 
     def run(self, header_tests):
         """Run an ElementTest."""
-        text = ('%s a;\n'
-                '%s b;\n'
-                'extern void xyzzy (__typeof__ (&b.%s), __typeof__ (&a.%s), '
-                'unsigned);\n'
-                'void foobarbaz (void) {\n'
-                'xyzzy (&a.%s, &b.%s, sizeof (a.%s));\n'
+        text = ('%(type_name)s a_%(num)d;\n'
+                '%(type_name)s b_%(num)d;\n'
+                'extern void xyzzy_%(num)d '
+                '(__typeof__ (&b_%(num)d.%(member_name)s), '
+                '__typeof__ (&a_%(num)d.%(member_name)s), unsigned);\n'
+                'void foobarbaz_%(num)d (void) {\n'
+                'xyzzy_%(num)d (&a_%(num)d.%(member_name)s, '
+                '&b_%(num)d.%(member_name)s, '
+                'sizeof (a_%(num)d.%(member_name)s));\n'
                 '}\n'
-                % (self.type_name, self.type_name,
-                   self.member_name, self.member_name,
-                   self.member_name, self.member_name, self.member_name))
+                % vars(self))
         header_tests.compile_test('Availability of member %s'
                                   % self.member_name,
                                   text)
-        text = ('%s a;\n'
-                'extern %s b%s;\n'
-                'extern __typeof__ (a.%s) b;\n'
-                % (self.type_name, self.member_type, self.rest,
-                   self.member_name))
+        text = ('%(type_name)s a2_%(num)d;\n'
+                'extern %(member_type)s b2_%(num)d%(rest)s;\n'
+                'extern __typeof__ (a2_%(num)d.%(member_name)s) b2_%(num)d;\n'
+                % vars(self))
         header_tests.compile_test('Type of member %s' % self.member_name,
                                   text)
 
@@ -85,69 +85,73 @@ class ConstantTest(object):
     def run(self, header_tests):
         """Run a ConstantTest."""
         if 'macro' in self.symbol_type:
-            text = ('#ifndef %s\n'
-                    '# error "Macro %s not defined"\n'
+            text = ('#ifndef %(symbol)s\n'
+                    '# error "Macro %(symbol)s not defined"\n'
                     '#endif\n'
-                    % (self.symbol, self.symbol))
+                    % vars(self))
             header_tests.compile_test('Availability of macro %s'
                                       % self.symbol,
                                       text)
         if 'constant' in self.symbol_type:
-            text = ('__typeof__ (%s) a = %s;\n'
-                    % (self.symbol, self.symbol))
+            text = ('__typeof__ (%(symbol)s) a_%(num)d = %(symbol)s;\n'
+                    % vars(self))
             header_tests.compile_test('Availability of constant %s'
                                       % self.symbol,
                                       text)
         if self.symbol_type == 'macro-int-constant':
             sym_bits_def_neg = ''.join(
                 '# if %s & (1LL << %d)\n'
-                '#  define conformtest_bit_%d 0LL\n'
+                '#  define conformtest_%d_bit_%d 0LL\n'
                 '# else\n'
-                '#  define conformtest_bit_%d (1LL << %d)\n'
+                '#  define conformtest_%d_bit_%d (1LL << %d)\n'
                 '# endif\n'
-                % (self.symbol, i, i, i, i) for i in range(63))
-            sym_bits_or_neg = '|'.join('conformtest_bit_%d' % i
+                % (self.symbol, i, self.num, i, self.num, i, i)
+                for i in range(63))
+            sym_bits_or_neg = '|'.join('conformtest_%d_bit_%d' % (self.num, i)
                                        for i in range(63))
             sym_bits_def_pos = ''.join(
                 '# if %s & (1ULL << %d)\n'
-                '#  define conformtest_bit_%d (1ULL << %d)\n'
+                '#  define conformtest_%d_bit_%d (1ULL << %d)\n'
                 '# else\n'
-                '#  define conformtest_bit_%d 0ULL\n'
+                '#  define conformtest_%d_bit_%d 0ULL\n'
                 '# endif\n'
-                % (self.symbol, i, i, i, i) for i in range(64))
-            sym_bits_or_pos = '|'.join('conformtest_bit_%d' % i
+                % (self.symbol, i, self.num, i, i, self.num, i)
+                for i in range(64))
+            sym_bits_or_pos = '|'.join('conformtest_%d_bit_%d' % (self.num, i)
                                        for i in range(64))
             text = ('#if %s < 0\n'
-                    '# define conformtest_negative 1\n'
+                    '# define conformtest_%d_negative 1\n'
                     '%s'
-                    '# define conformtest_value ~(%s)\n'
+                    '# define conformtest_%d_value ~(%s)\n'
                     '#else\n'
-                    '# define conformtest_negative 0\n'
+                    '# define conformtest_%d_negative 0\n'
                     '%s'
-                    '# define conformtest_value (%s)\n'
+                    '# define conformtest_%d_value (%s)\n'
                     '#endif\n'
-                    '_Static_assert (((%s < 0) == conformtest_negative) '
-                    '&& (%s == conformtest_value), '
+                    '_Static_assert (((%s < 0) == conformtest_%d_negative) '
+                    '&& (%s == conformtest_%d_value), '
                     '"value match inside and outside #if");\n'
-                    % (self.symbol, sym_bits_def_neg, sym_bits_or_neg,
-                       sym_bits_def_pos, sym_bits_or_pos,
-                       self.symbol, self.symbol))
+                    % (self.symbol, self.num, sym_bits_def_neg, self.num,
+                       sym_bits_or_neg, self.num, sym_bits_def_pos, self.num,
+                       sym_bits_or_pos, self.symbol, self.num, self.symbol,
+                       self.num))
             header_tests.compile_test('#if usability of symbol %s'
                                       % self.symbol,
                                       text)
         if self.c_type is not None:
             if self.c_type.startswith('promoted:'):
                 c_type = self.c_type[len('promoted:'):]
-                text = ('__typeof__ ((%s) 0 + (%s) 0) a;\n'
-                        % (c_type, c_type))
+                text = ('__typeof__ ((%s) 0 + (%s) 0) a2_%d;\n'
+                        % (c_type, c_type, self.num))
             else:
-                text = '__typeof__ ((%s) 0) a;\n' % self.c_type
-            text += 'extern __typeof__ (%s) a;\n' % self.symbol
+                text = '__typeof__ ((%s) 0) a2_%d;\n' % (self.c_type, self.num)
+            text += 'extern __typeof__ (%s) a2_%d;\n' % (self.symbol, self.num)
             header_tests.compile_test('Type of symbol %s' % self.symbol,
                                       text)
         if self.op is not None:
-            text = ('_Static_assert (%s %s %s, "value constraint");\n'
-                    % (self.symbol, self.op, self.value))
+            text = ('_Static_assert (%(symbol)s %(op)s %(value)s, '
+                    '"value constraint");\n'
+                    % vars(self))
             header_tests.compile_test('Value of symbol %s' % self.symbol,
                                       text)
 
@@ -163,16 +167,16 @@ class SymbolTest(object):
 
     def run(self, header_tests):
         """Run a SymbolTest."""
-        text = ('void foobarbaz (void) {\n'
-                '__typeof__ (%s) a = %s;\n'
+        text = ('void foobarbaz_%(num)d (void) {\n'
+                '__typeof__ (%(symbol)s) a_%(num)d = %(symbol)s;\n'
                 '}\n'
-                % (self.symbol, self.symbol))
+                % vars(self))
         header_tests.compile_test('Availability of symbol %s'
                                   % self.symbol,
                                   text)
         if self.value is not None:
-            text = ('int main (void) { return %s != %s; }\n'
-                    % (self.symbol, self.value))
+            text = ('int main (void) { return %(symbol)s != %(symbol)s; }\n'
+                    % vars(self))
             header_tests.execute_test('Value of symbol %s' % self.symbol,
                                       text)
 
@@ -195,8 +199,8 @@ class TypeTest(object):
 
     def run(self, header_tests):
         """Run a TypeTest."""
-        text = ('%s %sa;\n'
-                % (self.type_name, '*' if self.maybe_opaque else ''))
+        text = ('%s %sa_%d;\n'
+                % (self.type_name, '*' if self.maybe_opaque else '', self.num))
         header_tests.compile_test('Availability of type %s' % self.type_name,
                                   text)
 
@@ -218,9 +222,9 @@ class TagTest(object):
         """Run a TagTest."""
         # If the tag is not declared, these function prototypes have
         # incompatible types.
-        text = ('void foo (%s *);\n'
-                'void foo (%s *);\n'
-                % (self.type_name, self.type_name))
+        text = ('void foo_%(num)d (%(type_name)s *);\n'
+                'void foo_%(num)d (%(type_name)s *);\n'
+                % vars(self))
         header_tests.compile_test('Availability of tag %s' % self.type_name,
                                   text)
 
@@ -243,14 +247,15 @@ class FunctionTest(object):
 
     def run(self, header_tests):
         """Run a FunctionTest."""
-        text = ('%s (*foobarbaz) %s = %s;\n'
-                % (self.return_type, self.args, self.function_name))
+        text = ('%(return_type)s (*foobarbaz_%(num)d) %(args)s '
+                '= %(function_name)s;\n'
+                % vars(self))
         header_tests.compile_test('Availability of function %s'
                                   % self.function_name,
                                   text)
-        text = ('extern %s (*foobarbaz) %s;\n'
-                'extern __typeof__ (&%s) foobarbaz;\n'
-                % (self.return_type, self.args, self.function_name))
+        text = ('extern %(return_type)s (*foobarbaz2_%(num)d) %(args)s;\n'
+                'extern __typeof__ (&%(function_name)s) foobarbaz2_%(num)d;\n'
+                % vars(self))
         header_tests.compile_test('Type of function %s' % self.function_name,
                                   text)
 
@@ -267,14 +272,14 @@ class VariableTest(object):
 
     def run(self, header_tests):
         """Run a VariableTest."""
-        text = ('typedef %s xyzzy%s;\n'
-                'xyzzy *foobarbaz = &%s;\n'
-                % (self.var_type, self.rest, self.var_name))
+        text = ('typedef %(var_type)s xyzzy_%(num)d%(rest)s;\n'
+                'xyzzy_%(num)d *foobarbaz_%(num)d = &%(var_name)s;\n'
+                % vars(self))
         header_tests.compile_test('Availability of variable %s'
                                   % self.var_name,
                                   text)
-        text = ('extern %s %s%s;\n'
-                % (self.var_type, self.var_name, self.rest))
+        text = ('extern %(var_type)s %(var_name)s%(rest)s;\n'
+                % vars(self))
         header_tests.compile_test('Type of variable %s' % self.var_name,
                                   text)
 
@@ -291,20 +296,19 @@ class MacroFunctionTest(object):
 
     def run(self, header_tests):
         """Run a MacroFunctionTest."""
-        text = ('#ifndef %s\n'
-                '%s (*foobarbaz) %s = %s;\n'
+        text = ('#ifndef %(function_name)s\n'
+                '%(return_type)s (*foobarbaz_%(num)d) %(args)s '
+                '= %(function_name)s;\n'
                 '#endif\n'
-                % (self.function_name, self.return_type, self.args,
-                   self.function_name))
+                % vars(self))
         header_tests.compile_test('Availability of macro %s'
                                   % self.function_name,
                                   text)
-        text = ('#ifndef %s\n'
-                'extern %s (*foobarbaz) %s;\n'
-                'extern __typeof__ (&%s) foobarbaz;\n'
+        text = ('#ifndef %(function_name)s\n'
+                'extern %(return_type)s (*foobarbaz2_%(num)d) %(args)s;\n'
+                'extern __typeof__ (&%(function_name)s) foobarbaz2_%(num)d;\n'
                 '#endif\n'
-                % (self.function_name, self.return_type, self.args,
-                   self.function_name))
+                % vars(self))
         header_tests.compile_test('Type of macro %s' % self.function_name,
                                   text)
 
@@ -320,16 +324,17 @@ class MacroStrTest(object):
 
     def run(self, header_tests):
         """Run a MacroStrTest."""
-        text = ('#ifndef %s\n'
-                '# error "Macro %s not defined"\n'
+        text = ('#ifndef %(macro_name)s\n'
+                '# error "Macro %(macro_name)s not defined"\n'
                 '#endif\n'
-                % (self.macro_name, self.macro_name))
+                % vars(self))
         header_tests.compile_test('Availability of macro %s' % self.macro_name,
                                   text)
         # We can't include <string.h> here.
         text = ('extern int (strcmp)(const char *, const char *);\n'
-                'int main (void) { return (strcmp) (%s, %s) != 0; }\n'
-                % (self.macro_name, self.value))
+                'int main (void) { return (strcmp) (%(macro_name)s, '
+                '%(value)s) != 0; }\n'
+                % vars(self))
         header_tests.execute_test('Value of macro %s' % self.macro_name,
                                   text)
 
@@ -355,6 +360,7 @@ class HeaderTests(object):
         self.allow = set()
         self.allow_fnmatch = set()
         self.headers_handled = set()
+        self.num_tests = 0
         self.total = 0
         self.skipped = 0
         self.errors = 0
@@ -458,6 +464,8 @@ class HeaderTests(object):
         test = test_classes[tokens[0]](*tokens)
         test.xfail = xfail
         test.optional = optional
+        test.num = self.num_tests
+        self.num_tests += 1
         self.add_allow(test.allow_name, False)
         if not allow:
             self.tests.append(test)

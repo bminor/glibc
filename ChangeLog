@@ -1,3 +1,19 @@
+2018-11-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/conformtest.py (ElementTest.run): Use unique identifiers
+	in tests.  Use names for format arguments.
+	(ConstantTest.run): Likewise.
+	(SymbolTest.run): Likewise.
+	(TypeTest.run): Likewise.
+	(TagTest.run): Likewise.
+	(FunctionTest.run): Likewise.
+	(VariableTest.run): Likewise.
+	(MacroFunctionTest.run): Likewise.
+	(MacroStrTest.run): Likewise.
+	(HeaderTests.__init__): Set self.num_tests.
+	(HeaderTests.handle_test_line): Set test.num.  Increment
+	self.num_tests.
+
 2018-11-19  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/f_setlk.c: Include <unistd.h>.
