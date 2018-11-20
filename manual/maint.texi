@@ -195,7 +195,7 @@ header file in the machine-specific directory, e.g.,
 @node 64-bit time symbol handling
 @appendixsubsec 64-bit time symbol handling in the GNU C Library
 
-With respect to time handling, @theglibcadj{} configurations fall in two
+With respect to time handling, @glibcadj{} configurations fall in two
 classes depending on the value of @code{__TIMESIZE}:
 
 @table @code
