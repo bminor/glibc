@@ -15,34 +15,26 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* We need to avoid the header declaration of lockf64, because
-   the types don't match lockf and then the compiler will
-   complain about the mismatch when we do the alias below.  */
-#define lockf64	__renamed_lockf64
+#ifndef __OFF_T_MATCHES_OFF64_T
 
-#include <fcntl.h>
-
-#undef	lockf64
-
-#include <sys/types.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include <errno.h>
-#include <string.h>
 
 /* lockf is a simplified interface to fcntl's locking facilities.  */
-
 int
 lockf (int fd, int cmd, off_t len)
 {
-  struct flock fl;
-
-  memset ((char *) &fl, '\0', sizeof (fl));
-
   /* lockf is always relative to the current file position.  */
-  fl.l_whence = SEEK_CUR;
-  fl.l_start = 0;
-  fl.l_len = len;
+  struct flock fl = {
+    .l_type = F_WRLCK,
+    .l_whence = SEEK_CUR,
+    .l_len = len
+  };
 
+  /* lockf() is a cancellation point but so is fcntl() if F_SETLKW is
+     used.  Therefore we don't have to care about cancellation here,
+     the fcntl() function will take care of it.  */
   switch (cmd)
     {
     case F_TEST:
@@ -55,31 +47,15 @@ lockf (int fd, int cmd, off_t len)
 	return 0;
       __set_errno (EACCES);
       return -1;
-
     case F_ULOCK:
       fl.l_type = F_UNLCK;
-      cmd = F_SETLK;
-      break;
+      return __fcntl (fd, F_SETLK, &fl);
     case F_LOCK:
-      fl.l_type = F_WRLCK;
-      cmd = F_SETLKW;
-      break;
+      return __fcntl (fd, F_SETLKW, &fl);
     case F_TLOCK:
-      fl.l_type = F_WRLCK;
-      cmd = F_SETLK;
-      break;
-
-    default:
-      __set_errno (EINVAL);
-      return -1;
+      return __fcntl (fd, F_SETLK, &fl);
     }
-
-  /* lockf() is a cancellation point but so is fcntl() if F_SETLKW is
-     used.  Therefore we don't have to care about cancellation here,
-     the fcntl() function will take care of it.  */
-  return __fcntl (fd, cmd, &fl);
+  __set_errno (EINVAL);
+  return -1;
 }
-
-#ifdef __OFF_T_MATCHES_OFF64_T
-weak_alias (lockf, lockf64)
 #endif

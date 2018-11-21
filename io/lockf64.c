@@ -15,69 +15,48 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sys/types.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <errno.h>
-#include <string.h>
-
-/* lockf.c defines lockf64 as an alias if __OFF_T_MATCHES_OFF64_T.  */
-#ifndef __OFF_T_MATCHES_OFF64_T
 
 /* lockf is a simplified interface to fcntl's locking facilities.  */
-
 int
-lockf64 (int fd, int cmd, off64_t len64)
+__lockf64 (int fd, int cmd, off64_t len64)
 {
-  struct flock fl;
-  off_t len = (off_t) len64;
-
-  if (len64 != (off64_t) len)
-    {
-      /* We can't represent the length.  */
-      __set_errno (EOVERFLOW);
-      return -1;
-    }
-
-  memset ((char *) &fl, '\0', sizeof (fl));
-
   /* lockf is always relative to the current file position.  */
-  fl.l_whence = SEEK_CUR;
-  fl.l_start = 0;
-  fl.l_len = len;
+  struct flock64 fl64 = {
+    .l_type = F_WRLCK,
+    .l_whence = SEEK_CUR,
+    .l_len = len64,
+  };
 
+  /* lockf() is a cancellation point but so is fcntl() if F_SETLKW is
+     used.  Therefore we don't have to care about cancellation here,
+     the fcntl() function will take care of it.  */
   switch (cmd)
     {
     case F_TEST:
       /* Test the lock: return 0 if FD is unlocked or locked by this process;
 	 return -1, set errno to EACCES, if another process holds the lock.  */
-      fl.l_type = F_RDLCK;
-      if (__fcntl (fd, F_GETLK, &fl) < 0)
+      fl64.l_type = F_RDLCK;
+      if (__fcntl (fd, F_GETLK64, &fl64) < 0)
 	return -1;
-      if (fl.l_type == F_UNLCK || fl.l_pid == __getpid ())
-	return 0;
+      if (fl64.l_type == F_UNLCK || fl64.l_pid == __getpid ())
+        return 0;
       __set_errno (EACCES);
       return -1;
-
     case F_ULOCK:
-      fl.l_type = F_UNLCK;
-      cmd = F_SETLK;
-      break;
+      fl64.l_type = F_UNLCK;
+      return __fcntl64 (fd, F_SETLK64, &fl64);
     case F_LOCK:
-      fl.l_type = F_WRLCK;
-      cmd = F_SETLKW;
-      break;
+      return __fcntl64 (fd, F_SETLKW64, &fl64);
     case F_TLOCK:
-      fl.l_type = F_WRLCK;
-      cmd = F_SETLK;
-      break;
-
-    default:
-      __set_errno (EINVAL);
-      return -1;
+      return __fcntl64 (fd, F_SETLK64, &fl64);
     }
-
-  return __fcntl (fd, cmd, &fl);
+  __set_errno (EINVAL);
+  return -1;
 }
-
+weak_alias (__lockf64, lockf64)
+#ifdef __OFF_T_MATCHES_OFF64_T
+weak_alias (lockf64, lockf)
 #endif

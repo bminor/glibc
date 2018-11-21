@@ -1,3 +1,21 @@
+2019-02-15  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* io/Makefile (tests): Add tst-lockf.
+	* io/lockf.c (lockf): Use __fcntl and only define for
+	!__OFF_T_MATCHES_OFF64_T.
+	* io/lockf64.c (__lockf64): Call __fcntl64 and alias to lockf for
+	__OFF_T_MATCHES_OFF64_T case.
+	* io/tst-lockf.c: New file.
+	* sysdeps/unix/sysv/linux/i386/lockf64.c: Remove file.
+	* sysdeps/unix/sysv/linux/arm/lockf64.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/lockf64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/lockf64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/lockf64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/lockf64.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/lockf64.c: Likewise.
+	* sysdeps/unix/sysv/linux/sh/lockf64.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/lockf64.c: Likewise.
+
 2019-02-15  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #24211]
