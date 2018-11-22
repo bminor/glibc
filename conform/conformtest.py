@@ -28,6 +28,32 @@ import tempfile
 import glibcconform
 
 
+class CompileSubTest(object):
+    """A compilation subtest."""
+
+    def __init__(self, name, text):
+        """Initialize a CompileSubTest object."""
+        self.name = name
+        self.text = text
+
+    def run(self, header_tests):
+        """Run a compilation subtest."""
+        header_tests.compile_test(self.name, self.text)
+
+
+class ExecuteSubTest(object):
+    """An execution subtest."""
+
+    def __init__(self, name, text):
+        """Initialize an ExecuteSubTest object."""
+        self.name = name
+        self.text = text
+
+    def run(self, header_tests):
+        """Run an execution subtest."""
+        header_tests.execute_test(self.name, self.text)
+
+
 class ElementTest(object):
     """Test for an element of a structure or union type."""
 
@@ -39,8 +65,8 @@ class ElementTest(object):
         self.rest = ' '.join(rest)
         self.allow_name = self.member_name
 
-    def run(self, header_tests):
-        """Run an ElementTest."""
+    def gen_subtests(self):
+        """Generate subtests for an ElementTest."""
         text = ('%(type_name)s a_%(num)d;\n'
                 '%(type_name)s b_%(num)d;\n'
                 'extern void xyzzy_%(num)d '
@@ -52,15 +78,16 @@ class ElementTest(object):
                 'sizeof (a_%(num)d.%(member_name)s));\n'
                 '}\n'
                 % vars(self))
-        header_tests.compile_test('Availability of member %s'
-                                  % self.member_name,
-                                  text)
+        self.subtests.append(CompileSubTest(
+            'Availability of member %s' % self.member_name,
+            text))
         text = ('%(type_name)s a2_%(num)d;\n'
                 'extern %(member_type)s b2_%(num)d%(rest)s;\n'
                 'extern __typeof__ (a2_%(num)d.%(member_name)s) b2_%(num)d;\n'
                 % vars(self))
-        header_tests.compile_test('Type of member %s' % self.member_name,
-                                  text)
+        self.subtests.append(CompileSubTest(
+            'Type of member %s' % self.member_name,
+            text))
 
 
 class ConstantTest(object):
@@ -82,22 +109,22 @@ class ConstantTest(object):
             self.value = extra3
         self.allow_name = self.symbol
 
-    def run(self, header_tests):
-        """Run a ConstantTest."""
+    def gen_subtests(self):
+        """Generate subtests for a ConstantTest."""
         if 'macro' in self.symbol_type:
             text = ('#ifndef %(symbol)s\n'
                     '# error "Macro %(symbol)s not defined"\n'
                     '#endif\n'
                     % vars(self))
-            header_tests.compile_test('Availability of macro %s'
-                                      % self.symbol,
-                                      text)
+            self.subtests.append(CompileSubTest(
+                'Availability of macro %s' % self.symbol,
+                text))
         if 'constant' in self.symbol_type:
             text = ('__typeof__ (%(symbol)s) a_%(num)d = %(symbol)s;\n'
                     % vars(self))
-            header_tests.compile_test('Availability of constant %s'
-                                      % self.symbol,
-                                      text)
+            self.subtests.append(CompileSubTest(
+                'Availability of constant %s' % self.symbol,
+                text))
         if self.symbol_type == 'macro-int-constant':
             sym_bits_def_neg = ''.join(
                 '# if %s & (1LL << %d)\n'
@@ -135,9 +162,9 @@ class ConstantTest(object):
                        sym_bits_or_neg, self.num, sym_bits_def_pos, self.num,
                        sym_bits_or_pos, self.symbol, self.num, self.symbol,
                        self.num))
-            header_tests.compile_test('#if usability of symbol %s'
-                                      % self.symbol,
-                                      text)
+            self.subtests.append(CompileSubTest(
+                '#if usability of symbol %s'% self.symbol,
+                text))
         if self.c_type is not None:
             if self.c_type.startswith('promoted:'):
                 c_type = self.c_type[len('promoted:'):]
@@ -146,14 +173,16 @@ class ConstantTest(object):
             else:
                 text = '__typeof__ ((%s) 0) a2_%d;\n' % (self.c_type, self.num)
             text += 'extern __typeof__ (%s) a2_%d;\n' % (self.symbol, self.num)
-            header_tests.compile_test('Type of symbol %s' % self.symbol,
-                                      text)
+            self.subtests.append(CompileSubTest(
+                'Type of symbol %s' % self.symbol,
+                text))
         if self.op is not None:
             text = ('_Static_assert (%(symbol)s %(op)s %(value)s, '
                     '"value constraint");\n'
                     % vars(self))
-            header_tests.compile_test('Value of symbol %s' % self.symbol,
-                                      text)
+            self.subtests.append(CompileSubTest(
+                'Value of symbol %s' % self.symbol,
+                text))
 
 
 class SymbolTest(object):
@@ -165,20 +194,21 @@ class SymbolTest(object):
         self.value = value
         self.allow_name = self.symbol
 
-    def run(self, header_tests):
-        """Run a SymbolTest."""
+    def gen_subtests(self):
+        """Generate subtests for a SymbolTest."""
         text = ('void foobarbaz_%(num)d (void) {\n'
                 '__typeof__ (%(symbol)s) a_%(num)d = %(symbol)s;\n'
                 '}\n'
                 % vars(self))
-        header_tests.compile_test('Availability of symbol %s'
-                                  % self.symbol,
-                                  text)
+        self.subtests.append(CompileSubTest(
+            'Availability of symbol %s' % self.symbol,
+            text))
         if self.value is not None:
             text = ('int main (void) { return %(symbol)s != %(symbol)s; }\n'
                     % vars(self))
-            header_tests.execute_test('Value of symbol %s' % self.symbol,
-                                      text)
+            self.subtests.append(ExecuteSubTest(
+                'Value of symbol %s' % self.symbol,
+                text))
 
 
 class TypeTest(object):
@@ -197,12 +227,13 @@ class TypeTest(object):
             self.allow_name = type_name
             self.maybe_opaque = True
 
-    def run(self, header_tests):
-        """Run a TypeTest."""
+    def gen_subtests(self):
+        """Generate subtests for a TypeTest."""
         text = ('%s %sa_%d;\n'
                 % (self.type_name, '*' if self.maybe_opaque else '', self.num))
-        header_tests.compile_test('Availability of type %s' % self.type_name,
-                                  text)
+        self.subtests.append(CompileSubTest(
+            'Availability of type %s' % self.type_name,
+            text))
 
 
 class TagTest(object):
@@ -218,15 +249,16 @@ class TagTest(object):
         else:
             raise ValueError('unexpected kind of tag: %s' % type_name)
 
-    def run(self, header_tests):
-        """Run a TagTest."""
+    def gen_subtests(self):
+        """Generate subtests for a TagTest."""
         # If the tag is not declared, these function prototypes have
         # incompatible types.
         text = ('void foo_%(num)d (%(type_name)s *);\n'
                 'void foo_%(num)d (%(type_name)s *);\n'
                 % vars(self))
-        header_tests.compile_test('Availability of tag %s' % self.type_name,
-                                  text)
+        self.subtests.append(CompileSubTest(
+            'Availability of tag %s' % self.type_name,
+            text))
 
 
 class FunctionTest(object):
@@ -245,19 +277,20 @@ class FunctionTest(object):
             self.function_name = function_name
         self.allow_name = self.function_name
 
-    def run(self, header_tests):
-        """Run a FunctionTest."""
+    def gen_subtests(self):
+        """Generate subtests for a FunctionTest."""
         text = ('%(return_type)s (*foobarbaz_%(num)d) %(args)s '
                 '= %(function_name)s;\n'
                 % vars(self))
-        header_tests.compile_test('Availability of function %s'
-                                  % self.function_name,
-                                  text)
+        self.subtests.append(CompileSubTest(
+            'Availability of function %s' % self.function_name,
+            text))
         text = ('extern %(return_type)s (*foobarbaz2_%(num)d) %(args)s;\n'
                 'extern __typeof__ (&%(function_name)s) foobarbaz2_%(num)d;\n'
                 % vars(self))
-        header_tests.compile_test('Type of function %s' % self.function_name,
-                                  text)
+        self.subtests.append(CompileSubTest(
+            'Type of function %s' % self.function_name,
+            text))
 
 
 class VariableTest(object):
@@ -270,18 +303,19 @@ class VariableTest(object):
         self.rest = ' '.join(rest)
         self.allow_name = var_name
 
-    def run(self, header_tests):
-        """Run a VariableTest."""
+    def gen_subtests(self):
+        """Generate subtests for a VariableTest."""
         text = ('typedef %(var_type)s xyzzy_%(num)d%(rest)s;\n'
                 'xyzzy_%(num)d *foobarbaz_%(num)d = &%(var_name)s;\n'
                 % vars(self))
-        header_tests.compile_test('Availability of variable %s'
-                                  % self.var_name,
-                                  text)
+        self.subtests.append(CompileSubTest(
+            'Availability of variable %s' % self.var_name,
+            text))
         text = ('extern %(var_type)s %(var_name)s%(rest)s;\n'
                 % vars(self))
-        header_tests.compile_test('Type of variable %s' % self.var_name,
-                                  text)
+        self.subtests.append(CompileSubTest(
+            'Type of variable %s' % self.var_name,
+            text))
 
 
 class MacroFunctionTest(object):
@@ -294,23 +328,24 @@ class MacroFunctionTest(object):
         self.args = ' '.join(args)
         self.allow_name = function_name
 
-    def run(self, header_tests):
-        """Run a MacroFunctionTest."""
+    def gen_subtests(self):
+        """Generate subtests for a MacroFunctionTest."""
         text = ('#ifndef %(function_name)s\n'
                 '%(return_type)s (*foobarbaz_%(num)d) %(args)s '
                 '= %(function_name)s;\n'
                 '#endif\n'
                 % vars(self))
-        header_tests.compile_test('Availability of macro %s'
-                                  % self.function_name,
-                                  text)
+        self.subtests.append(CompileSubTest(
+            'Availability of macro %s' % self.function_name,
+            text))
         text = ('#ifndef %(function_name)s\n'
                 'extern %(return_type)s (*foobarbaz2_%(num)d) %(args)s;\n'
                 'extern __typeof__ (&%(function_name)s) foobarbaz2_%(num)d;\n'
                 '#endif\n'
                 % vars(self))
-        header_tests.compile_test('Type of macro %s' % self.function_name,
-                                  text)
+        self.subtests.append(CompileSubTest(
+            'Type of macro %s' % self.function_name,
+            text))
 
 
 class MacroStrTest(object):
@@ -322,21 +357,23 @@ class MacroStrTest(object):
         self.value = value
         self.allow_name = macro_name
 
-    def run(self, header_tests):
-        """Run a MacroStrTest."""
+    def gen_subtests(self):
+        """Generate subtests for a MacroStrTest."""
         text = ('#ifndef %(macro_name)s\n'
                 '# error "Macro %(macro_name)s not defined"\n'
                 '#endif\n'
                 % vars(self))
-        header_tests.compile_test('Availability of macro %s' % self.macro_name,
-                                  text)
+        self.subtests.append(CompileSubTest(
+            'Availability of macro %s' % self.macro_name,
+            text))
         # We can't include <string.h> here.
         text = ('extern int (strcmp)(const char *, const char *);\n'
                 'int main (void) { return (strcmp) (%(macro_name)s, '
                 '%(value)s) != 0; }\n'
                 % vars(self))
-        header_tests.execute_test('Value of macro %s' % self.macro_name,
-                                  text)
+        self.subtests.append(ExecuteSubTest(
+            'Value of macro %s' % self.macro_name,
+            text))
 
 
 class HeaderTests(object):
@@ -465,9 +502,11 @@ class HeaderTests(object):
         test.xfail = xfail
         test.optional = optional
         test.num = self.num_tests
+        test.subtests = []
         self.num_tests += 1
         self.add_allow(test.allow_name, False)
         if not allow:
+            test.gen_subtests()
             self.tests.append(test)
 
     def load_tests(self, header, allow):
@@ -633,7 +672,8 @@ class HeaderTests(object):
                     self.group_xfail = test.xfail
                     self.group_ignore = False
                     self.group_skip = False
-                    test.run(self)
+                    for subtest in test.subtests:
+                        subtest.run(self)
             namespace_name = 'Namespace of <%s>' % self.header
             if available:
                 self.check_namespace(namespace_name)

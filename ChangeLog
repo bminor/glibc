@@ -1,3 +1,20 @@
+2018-11-22  Joseph Myers  <joseph@codesourcery.com>
+
+	* conform/conformtest.py (CompileSubTest): New class.
+	(ExecuteSubTest): Likewise.
+	(ElementTest.run): Rename to gen_subtests.  Append tests to
+	self.subtests instead of running them.
+	(ConstantTest.run): Likewise.
+	(SymbolTest.run): Likewise.
+	(TypeTest.run): Likewise.
+	(TagTest.run): Likewise.
+	(FunctionTest.run): Likewise.
+	(VariableTest.run): Likewise.
+	(MacroFunctionTest.run): Likewise.
+	(MacroStrTest.run): Likewise.
+	(HeaderTests.handle_test_line): Generate subtests for tests.
+	(HeaderTests.run): Run subtests for tests.
+
 2018-11-21  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* math/Versions (GLIBC_2.29): Add pow.
