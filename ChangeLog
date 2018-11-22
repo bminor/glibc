@@ -1,5 +1,11 @@
 2018-11-22  Joseph Myers  <joseph@codesourcery.com>
 
+	* conform/conformtest.py (CompileSubTest.__init__): Set
+	self.run_early to False.
+	(ExecuteSubTest.__init__): Likewise.
+	(HeaderTests.run): Try running all non-optional, non-XFAILed
+	compilation tests in a single execution of the compiler.
+
 	* conform/conformtest.py (CompileSubTest): New class.
 	(ExecuteSubTest): Likewise.
 	(ElementTest.run): Rename to gen_subtests.  Append tests to

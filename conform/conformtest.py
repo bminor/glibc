@@ -33,6 +33,7 @@ class CompileSubTest(object):
 
     def __init__(self, name, text):
         """Initialize a CompileSubTest object."""
+        self.run_early = False
         self.name = name
         self.text = text
 
@@ -46,6 +47,7 @@ class ExecuteSubTest(object):
 
     def __init__(self, name, text):
         """Initialize an ExecuteSubTest object."""
+        self.run_early = False
         self.name = name
         self.text = text
 
@@ -660,6 +662,21 @@ class HeaderTests(object):
             available = self.compile_test('Availability of <%s>' % self.header,
                                           '')
             if available:
+                # As an optimization, try running all non-optional,
+                # non-XFAILed compilation tests in a single execution
+                # of the compiler.
+                combined_list = []
+                for test in self.tests:
+                    if not test.optional and not test.xfail:
+                        for subtest in test.subtests:
+                            if isinstance(subtest, CompileSubTest):
+                                combined_list.append(subtest.text)
+                                subtest.run_early = True
+                combined_ok = self.compile_test('Combined <%s> test'
+                                                % self.header,
+                                                '\n'.join(combined_list))
+                # Now run the other tests, or all tests if the
+                # combined test failed.
                 for test in self.tests:
                     # A test may run more than one subtest.  If the
                     # initial subtest for an optional symbol fails,
@@ -673,7 +690,12 @@ class HeaderTests(object):
                     self.group_ignore = False
                     self.group_skip = False
                     for subtest in test.subtests:
-                        subtest.run(self)
+                        if combined_ok and subtest.run_early:
+                            self.total += 1
+                            print('PASSCOMBINED: %s' % subtest.name)
+                            sys.stdout.flush()
+                        else:
+                            subtest.run(self)
             namespace_name = 'Namespace of <%s>' % self.header
             if available:
                 self.check_namespace(namespace_name)
