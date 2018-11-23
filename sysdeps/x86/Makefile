@@ -18,8 +18,9 @@ ifeq ($(enable-cet),yes)
 ifeq ($(subdir),elf)
 sysdep-dl-routines += dl-cet
 
-tests += tst-cet-legacy-1 tst-cet-legacy-2 tst-cet-legacy-2a \
-	 tst-cet-legacy-3 tst-cet-legacy-4
+tests += tst-cet-legacy-1 tst-cet-legacy-1a tst-cet-legacy-2 \
+	 tst-cet-legacy-2a tst-cet-legacy-3 tst-cet-legacy-4
+tst-cet-legacy-1a-ARGS = -- $(host-test-program-cmd)
 ifneq (no,$(have-tunables))
 tests += tst-cet-legacy-4a tst-cet-legacy-4b tst-cet-legacy-4c
 endif
@@ -37,6 +38,8 @@ CFLAGS-tst-cet-legacy-4b.c += -fcf-protection
 CFLAGS-tst-cet-legacy-mod-4.c += -fcf-protection=none
 
 $(objpfx)tst-cet-legacy-1: $(objpfx)tst-cet-legacy-mod-1.so \
+		       $(objpfx)tst-cet-legacy-mod-2.so
+$(objpfx)tst-cet-legacy-1a: $(objpfx)tst-cet-legacy-mod-1.so \
 		       $(objpfx)tst-cet-legacy-mod-2.so
 $(objpfx)tst-cet-legacy-2: $(objpfx)tst-cet-legacy-mod-2.so $(libdl)
 $(objpfx)tst-cet-legacy-2.out: $(objpfx)tst-cet-legacy-mod-1.so
