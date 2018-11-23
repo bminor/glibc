@@ -1,3 +1,10 @@
+2018-11-23  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #23915]
+	* sysdeps/unix/sysv/linux/arm/kernel-features.h
+	[__LINUX_KERNEL_VERSION < 0x040700] (__ASSUME_COPY_FILE_RANGE):
+	Undefine.
+
 2018-11-23  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86/Makefile (tests): Add tst-cet-legacy-1a.
