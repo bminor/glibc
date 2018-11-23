@@ -1,5 +1,14 @@
 2018-12-11  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
+	* include/bits/monetary-ldbl.h: New file.
+	* include/bits/printf-ldbl.h: Likewise.
+	* include/bits/stdio-ldbl.h: Likewise.
+	* include/bits/stdlib-ldbl.h: Likewise.
+	* include/bits/syslog-ldbl.h: Likewise.
+	* include/bits/wchar-ldbl.h: Likewise.
+
+2018-12-11  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
 	* libio/libio.h: Remove redirection for _IO_vfprintf.
 
 2018-12-11  Andreas Schwab  <schwab@suse.de>
