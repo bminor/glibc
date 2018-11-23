@@ -18,6 +18,9 @@
 #ifndef _LINUX_X86_64_SYSDEP_H
 #define _LINUX_X86_64_SYSDEP_H 1
 
+/* Always enable vsyscalls on x86_64 */
+#define ALWAYS_USE_VSYSCALL 1
+
 /* There is some commonality.  */
 #include <sysdeps/unix/sysv/linux/sysdep.h>
 #include <sysdeps/unix/x86_64/sysdep.h>

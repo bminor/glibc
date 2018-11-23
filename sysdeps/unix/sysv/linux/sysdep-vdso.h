@@ -26,7 +26,7 @@
      funcptr (args)
 #endif
 
-#if defined SHARED && defined HAVE_VSYSCALL
+#if USE_VSYSCALL && defined HAVE_VSYSCALL
 
 # include <libc-vdso.h>
 
@@ -84,6 +84,6 @@
 # define INTERNAL_VSYSCALL(name, err, nr, args...) \
    INTERNAL_SYSCALL (name, err, nr, ##args)
 
-#endif /* defined SHARED && defined HAVE_VSYSCALL */
+#endif /* USE_VSYSCALL && defined HAVE_VSYSCALL */
 
 #endif /* SYSDEP_VDSO_LINUX_H  */

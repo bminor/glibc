@@ -449,9 +449,10 @@ link-libc-static := $(common-objpfx)libc.a $(static-gnulib) \
 tests-static += tst-locale1 tst-locale2 tst-stackguard1-static \
 		tst-cancel21-static tst-cancel24-static tst-cond8-static \
 		tst-mutex8-static tst-mutexpi8-static tst-sem11-static \
-		tst-sem12-static
+		tst-sem12-static tst-cond11-static
+
 tests += tst-cancel21-static tst-cancel24-static \
-	 tst-cond8-static
+	 tst-cond8-static tst-cond11-static
 tests-internal += tst-sem11-static tst-sem12-static tst-stackguard1-static
 xtests-static += tst-setuid1-static
 

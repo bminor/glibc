@@ -1,3 +1,24 @@
+2018-11-23  Rafael Ávila de Espíndola  <rafael@espindo.la>
+
+	[BZ #19767]
+	* nptl/Makefile (tests-static): Add tst-cond11-static.
+	(tests): Likewise.
+	* nptl/tst-cond11-static.c: New File.
+	* sysdeps/unix/sysv/linux/Makefile (tests-static): Add
+	tst-affinity-static.
+	(tests): Likewise.
+	* sysdeps/unix/sysv/linux/sysdep-vdso.h: Check USE_VSYSCALL
+	instead of SHARED.
+	* sysdeps/unix/sysv/linux/sysdep.h (ALWAYS_USE_VSYSCALL): New.
+	(USE_VSYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/tst-affinity-static.c: New file.
+	* sysdeps/unix/sysv/linux/x86/libc-vdso.h: Check USE_VSYSCALL
+	instead of SHARED.
+	* sysdeps/unix/sysv/linux/x86_64/init-first.c: Don't check
+	SHARED.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (ALWAYS_USE_VSYSCALL):
+	New.
+
 2018-11-23  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #23915]

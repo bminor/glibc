@@ -18,6 +18,13 @@
 #include <bits/wordsize.h>
 #include <kernel-features.h>
 
+/* By default only shared builds use vdso. */
+#ifndef ALWAYS_USE_VSYSCALL
+#define ALWAYS_USE_VSYSCALL 0
+#endif
+
+#define USE_VSYSCALL (defined (SHARED) || ALWAYS_USE_VSYSCALL)
+
 /* Set error number and return -1.  A target may choose to return the
    internal function, __syscall_error, which sets errno and returns -1.
    We use -1l, instead of -1, so that it can be casted to (void *).  */

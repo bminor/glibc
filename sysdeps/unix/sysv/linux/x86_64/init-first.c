@@ -16,11 +16,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifdef SHARED
-# include <time.h>
-# include <sysdep.h>
-# include <dl-vdso.h>
-# include <libc-vdso.h>
+#include <time.h>
+#include <sysdep.h>
+#include <dl-vdso.h>
+#include <libc-vdso.h>
 
 long int (*VDSO_SYMBOL(clock_gettime)) (clockid_t, struct timespec *)
   attribute_hidden;
@@ -46,7 +45,6 @@ __vdso_platform_setup (void)
   VDSO_SYMBOL(getcpu) = p;
 }
 
-# define VDSO_SETUP __vdso_platform_setup
-#endif
+#define VDSO_SETUP __vdso_platform_setup
 
 #include <csu/init-first.c>

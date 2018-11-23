@@ -22,7 +22,7 @@
 #include <time.h>
 #include <sys/time.h>
 
-#ifdef SHARED
+#if USE_VSYSCALL
 
 # include <sysdep-vdso.h>
 
