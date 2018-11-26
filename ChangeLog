@@ -1,3 +1,9 @@
+2018-11-26  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23907]
+	* malloc/malloc.c (_int_free): Validate tc_idx before checking for
+	double-frees.
+
 2018-11-26  Rafael Ávila de Espíndola  <rafael@espindo.la>
 
 	[BZ #19767]
