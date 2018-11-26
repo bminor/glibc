@@ -32,13 +32,25 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
+#include <statx_cp.h>
+
 /* Get information about the file NAME in BUF.  */
 int
 __xstat64 (int vers, const char *name, struct stat64 *buf)
 {
   if (vers == _STAT_VER_KERNEL)
-    return INLINE_SYSCALL (fstatat64, 4, AT_FDCWD, name, buf, 0);
-
+    {
+#ifdef __NR_fstatat64
+      return INLINE_SYSCALL (fstatat64, 4, AT_FDCWD, name, buf, 0);
+#else
+      struct statx tmp;
+      int rc = INLINE_SYSCALL (statx, 5, AT_FDCWD, name, AT_NO_AUTOMOUNT,
+                               STATX_BASIC_STATS, &tmp);
+      if (rc == 0)
+        __cp_stat64_statx (buf, &tmp);
+      return rc;
+#endif
+    }
   errno = EINVAL;
   return -1;
 }

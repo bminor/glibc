@@ -26,6 +26,8 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
+#include <statx_cp.h>
+
 /* Get information about the file NAME in BUF.  */
 
 int
@@ -37,7 +39,16 @@ __fxstatat64 (int vers, int fd, const char *file, struct stat64 *st, int flag)
   int result;
   INTERNAL_SYSCALL_DECL (err);
 
+#ifdef __NR_fstatat64
   result = INTERNAL_SYSCALL (fstatat64, err, 4, fd, file, st, flag);
+#else
+  struct statx tmp;
+
+  result = INTERNAL_SYSCALL (statx, err, 5, fd, file, AT_NO_AUTOMOUNT | flag,
+                             STATX_BASIC_STATS, &tmp);
+  if (result == 0)
+    __cp_stat64_statx (st, &tmp);
+#endif
   if (!__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 1))
     return 0;
   else

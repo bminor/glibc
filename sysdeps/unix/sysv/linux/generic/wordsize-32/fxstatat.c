@@ -28,6 +28,7 @@
 
 #if !XSTAT_IS_XSTAT64
 #include "overflow.h"
+#include <statx_cp.h>
 
 /* Get information about the file NAME in BUF.  */
 int
@@ -35,7 +36,16 @@ __fxstatat (int vers, int fd, const char *file, struct stat *buf, int flag)
 {
   if (vers == _STAT_VER_KERNEL)
     {
+# ifdef __NR_fstatat64
       int rc = INLINE_SYSCALL (fstatat64, 4, fd, file, buf, flag);
+# else
+      struct statx tmp;
+      int rc = INLINE_SYSCALL (statx, 5, fd, file,
+                               AT_NO_AUTOMOUNT | flag,
+                               STATX_BASIC_STATS, &tmp);
+      if (rc == 0)
+        __cp_stat64_statx ((struct stat64 *)buf, &tmp);
+# endif
       return rc ?: stat_overflow (buf);
     }
 

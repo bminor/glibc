@@ -1,4 +1,4 @@
-/* fxstat64 using Linux fstat64 system call.
+/* fxstat64 using Linux fstat64/statx system call.
    Copyright (C) 1997-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -18,6 +18,7 @@
 
 #include <errno.h>
 #include <stddef.h>
+#include <fcntl.h>
 #include <sys/stat.h>
 #include <kernel_stat.h>
 
@@ -25,6 +26,7 @@
 #include <sys/syscall.h>
 
 #include <kernel-features.h>
+#include <statx_cp.h>
 
 /* Get information about the file FD in BUF.  */
 
@@ -32,7 +34,15 @@ int
 ___fxstat64 (int vers, int fd, struct stat64 *buf)
 {
   int result;
+#ifdef __NR_fstat64
   result = INLINE_SYSCALL (fstat64, 2, fd, buf);
+#else
+  struct statx tmp;
+  result = INLINE_SYSCALL (statx, 5, fd, "", AT_EMPTY_PATH, STATX_BASIC_STATS,
+                           &tmp);
+  if (result == 0)
+    __cp_stat64_statx (buf, &tmp);
+#endif
 #if defined _HAVE_STAT64___ST_INO && !__ASSUME_ST_INO_64_BIT
   if (__builtin_expect (!result, 1) && buf->__st_ino != (__ino_t) buf->st_ino)
     buf->st_ino = buf->__st_ino;

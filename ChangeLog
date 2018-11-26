@@ -1,3 +1,20 @@
+2018-12-17  Mao Han  <han_mao@c-sky.com>
+
+	* sysdeps/unix/sysv/linux/Makefile: Add statx_cp.c.
+	* sysdeps/unix/sysv/linux/fxstat64.c: Add conditionals for kernel
+	without stat64 system call support.
+	* sysdeps/unix/sysv/linux/fxstatat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/fxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/fxstatat.c: Likewise.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/lxstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/lxstat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/xstat.c: Likewise.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/xstat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/statx_cp.c: New file.
+	* sysdeps/unix/sysv/linux/statx_cp.c: Likewise.
+	* sysdeps/unix/sysv/linux/statx_cp.h: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/statx_cp.c: Likewise.
+
 2018-12-15  Paul Eggert  <eggert@cs.ucla.edu>
 
 	regex: fix storage-exhaustion error
