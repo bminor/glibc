@@ -1,3 +1,8 @@
+2018-11-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/build-many-glibcs.py (Context.fix_glibc_timestamps):
+	Touch additional files.
+
 2018-11-26  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #23907]

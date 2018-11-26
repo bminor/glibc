@@ -841,6 +841,20 @@ class Context(object):
         # Ensure that builds do not try to regenerate generated files
         # in the source tree.
         srcdir = self.component_srcdir('glibc')
+        # These files have Makefile dependencies to regenerate them in
+        # the source tree that may be active during a normal build.
+        # Some other files have such dependencies but do not need to
+        # be touched because nothing in a build depends on the files
+        # in question.
+        for f in ('locale/C-translit.h', 'posix/ptestcases.h',
+                  'posix/testcases.h', 'sysdeps/gnu/errlist.c',
+                  'sysdeps/mach/hurd/bits/errno.h',
+                  'sysdeps/sparc/sparc32/rem.S',
+                  'sysdeps/sparc/sparc32/sdiv.S',
+                  'sysdeps/sparc/sparc32/udiv.S',
+                  'sysdeps/sparc/sparc32/urem.S'):
+            to_touch = os.path.join(srcdir, f)
+            subprocess.run(['touch', '-c', to_touch], check=True)
         for dirpath, dirnames, filenames in os.walk(srcdir):
             for f in filenames:
                 if (f == 'configure' or
