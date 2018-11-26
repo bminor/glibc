@@ -20,6 +20,9 @@
 #ifndef _LINUX_POWERPC_SYSDEP_H
 #define _LINUX_POWERPC_SYSDEP_H 1
 
+/* Always enable vsyscalls on powerpc64 */
+#define ALWAYS_USE_VSYSCALL 1
+
 #include <sysdeps/unix/sysv/linux/sysdep.h>
 #include <sysdeps/unix/powerpc/sysdep.h>
 #include <tls.h>

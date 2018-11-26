@@ -1,3 +1,14 @@
+2018-11-26  Rafael Ávila de Espíndola  <rafael@espindo.la>
+
+	[BZ #19767]
+	* sysdeps/unix/sysv/linux/powerpc/init-first.c: Remove #ifdef SHARED.
+	* sysdeps/unix/sysv/linux/powerpc/libc-vdso.h: Remove #ifdef
+	SHARED.  Include sysdep.h.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h: Define
+	ALWAYS_USE_VSYSCALL.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h: Define
+	ALWAYS_USE_VSYSCALL.
+
 2018-11-23  Rafael Ávila de Espíndola  <rafael@espindo.la>
 
 	[BZ #19767]
