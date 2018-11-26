@@ -702,7 +702,7 @@ write_locale_data (const char *output_path, int catidx, const char *category,
   size_t cnt, step, maxiov;
   int fd;
   char *fname;
-  const char **other_paths;
+  const char **other_paths = NULL;
   uint32_t header[2];
   size_t n_elem;
   struct iovec vec[3];
@@ -827,9 +827,22 @@ failure while writing data for category `%s'"), category);
 
   close (fd);
 
-  /* Compare the file with the locale data files for the same category in
-     other locales, and see if we can reuse it, to save disk space.  */
-  other_paths = siblings (output_path);
+  /* Compare the file with the locale data files for the same category
+     in other locales, and see if we can reuse it, to save disk space.
+     If the user specified --no-hard-links to localedef then hard_links
+     is false, other_paths remains NULL and we skip the optimization
+     below.  The use of --no-hard-links is distribution specific since
+     some distros have post-processing hard-link steps and so doing this
+     here is a waste of time.  Worse than a waste of time in rpm-based
+     distributions it can result in build determinism issues from
+     build-to-build since some files may get a hard link in one pass but
+     not in another (if the files happened to be created in parallel).  */
+  if (hard_links)
+    other_paths = siblings (output_path);
+
+  /* If there are other paths, then walk the sibling paths looking for
+     files with the same content so we can hard link and reduce disk
+     space usage.  */
   if (other_paths != NULL)
     {
       struct stat64 fname_stat;

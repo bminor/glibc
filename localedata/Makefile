@@ -423,7 +423,7 @@ $(INSTALL-SUPPORTED-LOCALE-ARCHIVE): install-locales-dir
 	$(build-one-locale)
 
 $(INSTALL-SUPPORTED-LOCALE-FILES): install-locales-dir
-	@flags="-c --no-archive"; \
+	@flags="-c --no-archive --no-hard-links"; \
 	$(build-one-locale)
 
 tst-setlocale-ENV = LC_ALL=ja_JP.EUC-JP

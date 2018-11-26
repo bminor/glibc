@@ -118,6 +118,7 @@ extern const char *repertoire_global;
 extern int max_locarchive_open_retry;
 extern bool no_archive;
 extern const char *alias_file;
+extern bool hard_links;
 
 
 /* Prototypes for a few program-wide used functions.  */
