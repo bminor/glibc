@@ -91,10 +91,11 @@ $(common-objpfx)errnos.d: $(mach-errnos-deps)
 $(hurd)/bits/errno.h: $(common-objpfx)stamp-errnos ;
 $(common-objpfx)stamp-errnos: $(hurd)/errnos.awk $(errno.texinfo) \
 			      $(mach-errnos-deps) $(common-objpfx)errnos.d
-	$(AWK) -f $^ > $(hurd)/bits/errno.h-tmp
+	mkdir -p $(hurd-objpfx)bits
+	$(AWK) -f $^ > $(hurd-objpfx)bits/errno.h-tmp
 # Make it unwritable so noone will edit it by mistake.
-	-chmod a-w $(hurd)/bits/errno.h-tmp
-	$(move-if-change) $(hurd)/bits/errno.h-tmp $(hurd)/bits/errno.h
+	-chmod a-w $(hurd-objpfx)bits/errno.h-tmp
+	$(move-if-change) $(hurd-objpfx)bits/errno.h-tmp $(hurd)/bits/errno.h
 	touch $@
 
 common-generated += errnos.d stamp-errnos
