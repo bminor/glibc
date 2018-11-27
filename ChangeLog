@@ -1,3 +1,10 @@
+2018-11-27  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23927]
+	CVE-2018-19591
+	* sysdeps/unix/sysv/linux/if_index.c (__if_nametoindex): Avoid
+	descriptor leak in case of ENODEV error.
+
 2018-11-19  Florian Weimer  <fweimer@redhat.com>
 
 	support: Print timestamps in timeout handler.
