@@ -1,3 +1,10 @@
+2018-11-27  Rafael Ávila de Espíndola  <rafael@espindo.la>
+
+	[BZ #19767]
+	* sysdeps/unix/sysv/linux/aarch64/init-first.c: Remove #ifdef SHARED.
+	* sysdeps/unix/sysv/linux/aarch64/libc-vdso.h: Remove #ifdef SHARED.
+	* sysdeps/unix/sysv/linux/aarch64/sysdep.h: Define ALWAYS_USE_VSYSCALL.
+
 2018-11-26  Carlos O'Donell  <carlos@redhat.com>
 
 	* scripts/abilist.awk: Handle .tdata. Error for unknown combinations.
