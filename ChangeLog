@@ -1,3 +1,12 @@
+2018-11-27  Florian Weimer  <fweimer@redhat.com>
+
+	* support/support.h (support_quote_string): Declare.
+	* support/support_quote_string.c: New file.
+	* support/tst-support_quote_string.c: Likewise.
+	* support/Makefile (libsupport-routines): Add
+	support_quote_string.
+	(tests): Add tst-support_quote_string.
+
 2018-12-10  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #23972]
