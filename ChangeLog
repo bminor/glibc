@@ -31,12 +31,20 @@
 	* resolv/tst-resolv-nondecimal.c: Likewise.
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Call __inet_aton_exact.
 
+2018-11-27  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23927]
+	CVE-2018-19591
+	* sysdeps/unix/sysv/linux/if_index.c (__if_nametoindex): Avoid
+	descriptor leak in case of ENODEV error.
+
 2018-05-18  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #22639]
 	* time/tzset.c (SECSPERDAY): Cast to time_t.
 	* time/tst-y2039.c: New file.
 	* time/Makefile (tests): Add tst-y2039.
+
 
 2018-02-12  Zack Weinberg  <zackw@panix.com>
 

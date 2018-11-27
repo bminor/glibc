@@ -38,11 +38,6 @@ __if_nametoindex (const char *ifname)
   return 0;
 #else
   struct ifreq ifr;
-  int fd = __opensock ();
-
-  if (fd < 0)
-    return 0;
-
   if (strlen (ifname) >= IFNAMSIZ)
     {
       __set_errno (ENODEV);
@@ -50,6 +45,12 @@ __if_nametoindex (const char *ifname)
     }
 
   strncpy (ifr.ifr_name, ifname, sizeof (ifr.ifr_name));
+
+  int fd = __opensock ();
+
+  if (fd < 0)
+    return 0;
+
   if (__ioctl (fd, SIOCGIFINDEX, &ifr) < 0)
     {
       int saved_errno = errno;

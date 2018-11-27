@@ -32,6 +32,10 @@ Security related changes:
   addresses with arbitrary trailing characters, potentially leading to data
   or command injection issues in applications.
 
+  CVE-2018-19591: A file descriptor leak in if_nametoindex can lead to a
+  denial of service due to resource exhaustion when processing getaddrinfo
+  calls with crafted host names.  Reported by Guido Vranken.
+
   CVE-2017-18269: An SSE2-based memmove implementation for the i386
   architecture could corrupt memory.  Reported by Max Horn.
 
