@@ -1,5 +1,14 @@
 2018-11-27  Florian Weimer  <fweimer@redhat.com>
 
+	* support/support.h (support_quote_string): Declare.
+	* support/support_quote_string.c: New file.
+	* support/tst-support_quote_string.c: Likewise.
+	* support/Makefile (libsupport-routines): Add
+	support_quote_string.
+	(tests): Add tst-support_quote_string.
+
+2018-11-27  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #23927]
 	CVE-2018-19591
 	* sysdeps/unix/sysv/linux/if_index.c (__if_nametoindex): Avoid
