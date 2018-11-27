@@ -54,6 +54,7 @@ libsupport-routines = \
   support_isolate_in_subprocess \
   support_openpty \
   support_quote_blob \
+  support_quote_string \
   support_record_failure \
   support_run_diff \
   support_shared_allocate \
@@ -157,6 +158,7 @@ tests = \
   tst-support_capture_subprocess \
   tst-support_format_dns_packet \
   tst-support_quote_blob \
+  tst-support_quote_string \
   tst-support_record_failure \
   tst-test_compare \
   tst-test_compare_blob \

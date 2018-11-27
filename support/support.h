@@ -65,6 +65,11 @@ void support_write_file_string (const char *path, const char *contents);
    the result).  */
 char *support_quote_blob (const void *blob, size_t length);
 
+/* Quote the contents of the at STR, in such a way that the result
+   string can be included in a C literal (in single/double quotes,
+   without putting the quotes into the result).  */
+char *support_quote_string (const char *str);
+
 /* Error-checking wrapper functions which terminate the process on
    error.  */
 
