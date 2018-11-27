@@ -57,7 +57,9 @@ Changes to build and runtime requirements:
 
 Security related changes:
 
-  [Add security related changes here]
+  CVE-2018-19591: A file descriptor leak in if_nametoindex can lead to a
+  denial of service due to resource exhaustion when processing getaddrinfo
+  calls with crafted host names.  Reported by Guido Vranken.
 
 The following bugs are resolved with this release:
 
