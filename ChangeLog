@@ -1,3 +1,20 @@
+2018-11-28  Florian Weimer  <fweimer@redhat.com>
+
+	support: Add signal support to support_capture_subprocess_check.
+	* support/capture_subprocess.h (support_capture_subprocess_check):
+	Adjust comment and rename parameter.
+	* support/support_capture_subprocess_check.c
+	(print_actual_status): New function.
+	(support_capture_subprocess_check): Support negative
+	status_or_signal.  Call print_actual_status.
+	* support/tst-support_capture_subprocess.c (do_test): Call
+	support_capture_subprocess_check.
+	* libio/tst-vtables-common.c (termination_status)
+	(init_termination_status): Remove.
+	(check_for_termination): Adjust support_capture_subprocess_check
+	call.
+	(do_test): Remove call to init_termination_status.
+
 2018-11-28  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/build-many-glibcs.py (Glibc.build_glibc): Use original

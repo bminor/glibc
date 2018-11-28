@@ -380,21 +380,6 @@ without_compatibility_fflush (void *closure)
   _exit (1);
 }
 
-/* Exit status after abnormal termination.  */
-static int termination_status;
-
-static void
-init_termination_status (void)
-{
-  pid_t pid = xfork ();
-  if (pid == 0)
-    abort ();
-  xwaitpid (pid, &termination_status, 0);
-
-  TEST_VERIFY (WIFSIGNALED (termination_status));
-  TEST_COMPARE (WTERMSIG (termination_status), SIGABRT);
-}
-
 static void
 check_for_termination (const char *name, void (*callback) (void *))
 {
@@ -404,7 +389,7 @@ check_for_termination (const char *name, void (*callback) (void *))
   shared->calls = 0;
   struct support_capture_subprocess proc
     = support_capture_subprocess (callback, NULL);
-  support_capture_subprocess_check (&proc, name, termination_status,
+  support_capture_subprocess_check (&proc, name, -SIGABRT,
                                     sc_allow_stderr);
   const char *message
     = "Fatal error: glibc detected an invalid stdio handle\n";
@@ -491,7 +476,6 @@ run_tests (bool initially_disabled)
 
   shared = support_shared_allocate (sizeof (*shared));
   shared->initially_disabled = initially_disabled;
-  init_termination_status ();
 
   if (initially_disabled)
     {

@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <support/capture_subprocess.h>
 #include <support/check.h>
+#include <sys/wait.h>
 
 static void
 print_context (const char *context, bool *failed)
@@ -31,9 +32,22 @@ print_context (const char *context, bool *failed)
   printf ("error: subprocess failed: %s\n", context);
 }
 
+static void
+print_actual_status (struct support_capture_subprocess *proc)
+{
+  if (WIFEXITED (proc->status))
+    printf ("error:   actual exit status: %d [0x%x]\n",
+            WEXITSTATUS (proc->status), proc->status);
+  else if (WIFSIGNALED (proc->status))
+    printf ("error:   actual termination signal: %d [0x%x]\n",
+            WTERMSIG (proc->status), proc->status);
+  else
+    printf ("error:   actual undecoded exit status: [0x%x]\n", proc->status);
+}
+
 void
 support_capture_subprocess_check (struct support_capture_subprocess *proc,
-                                  const char *context, int status,
+                                  const char *context, int status_or_signal,
                                   int allowed)
 {
   TEST_VERIFY ((allowed & sc_allow_none)
@@ -44,11 +58,28 @@ support_capture_subprocess_check (struct support_capture_subprocess *proc,
                      || (allowed & sc_allow_stderr))));
 
   bool failed = false;
-  if (proc->status != status)
+  if (status_or_signal >= 0)
     {
-      print_context (context, &failed);
-      printf ("error:   expected exit status: %d\n", status);
-      printf ("error:   actual exit status:   %d\n", proc->status);
+      /* Expect regular termination.  */
+      if (!(WIFEXITED (proc->status)
+            && WEXITSTATUS (proc->status) == status_or_signal))
+        {
+          print_context (context, &failed);
+          printf ("error:   expected exit status: %d\n", status_or_signal);
+          print_actual_status (proc);
+        }
+    }
+  else
+    {
+      /* status_or_signal < 0.  Expect termination by signal.  */
+      if (!(WIFSIGNALED (proc->status)
+            && WTERMSIG (proc->status) == -status_or_signal))
+        {
+          print_context (context, &failed);
+          printf ("error:   expected termination signal: %d\n",
+                  -status_or_signal);
+          print_actual_status (proc);
+        }
     }
   if (!(allowed & sc_allow_stdout) && proc->out.length != 0)
     {
