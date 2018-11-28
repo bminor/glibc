@@ -1328,14 +1328,6 @@ ifeq ($(build-shared),yes)
 	LC_ALL=C $(OBJDUMP) --dynamic-syms $< > $@T
 	mv -f $@T $@
 
-# A sysdeps/.../Makefile can set abilist-pattern to something like
-# %-foo.abilist to look for libc-foo.abilist instead of libc.abilist.
-# This makes sense if multiple ABIs can be most cleanly supported by a
-# configuration without using separate sysdeps directories for each.
-ifdef abilist-pattern
-vpath $(abilist-pattern) $(+sysdep_dirs)
-endif
-
 vpath %.abilist $(+sysdep_dirs)
 
 # The .PRECIOUS rule prevents the files built by an implicit rule whose
@@ -1345,16 +1337,6 @@ vpath %.abilist $(+sysdep_dirs)
 .PRECIOUS: %.symlist
 generated += $(extra-libs:=.symlist)
 
-ifdef abilist-pattern
-$(objpfx)check-abi-%.out: $(common-objpfx)config.make $(abilist-pattern) \
-			  $(objpfx)%.symlist
-	$(check-abi-pattern); \
-	$(evaluate-test)
-$(objpfx)check-abi-%.out: $(common-objpfx)config.make $(abilist-pattern) \
-			  $(common-objpfx)%.symlist
-	$(check-abi-pattern); \
-	$(evaluate-test)
-endif
 $(objpfx)check-abi-%.out: $(common-objpfx)config.make %.abilist \
 			  $(objpfx)%.symlist
 	$(check-abi); \
@@ -1363,32 +1345,14 @@ $(objpfx)check-abi-%.out: $(common-objpfx)config.make %.abilist \
 			  $(common-objpfx)%.symlist
 	$(check-abi); \
 	$(evaluate-test)
-define check-abi-pattern
-	diff -p -U 0 $(filter $(abilist-pattern),$^) $(filter %.symlist,$^) \
-	     > $@
-endef
 define check-abi
 	diff -p -U 0 $(filter %.abilist,$^) $(filter %.symlist,$^) > $@
 endef
 
-ifdef abilist-pattern
-update-abi-%: $(objpfx)%.symlist $(abilist-pattern)
-	$(update-abi-pattern)
-update-abi-%: $(common-objpfx)%.symlist $(abilist-pattern)
-	$(update-abi-pattern)
-endif
 update-abi-%: $(objpfx)%.symlist %.abilist
 	$(update-abi)
 update-abi-%: $(common-objpfx)%.symlist %.abilist
 	$(update-abi)
-define update-abi-pattern
-@if cmp -s $^ 2> /dev/null; \
- then \
-      echo '+++ $(filter $(abilist-pattern),$^) is unchanged'; \
- else cp -f $^; \
-      echo '*** Now check $(filter $(abilist-pattern),$^) changes for correctness ***'; \
- fi
-endef
 define update-abi
 @if cmp -s $^ 2> /dev/null; \
  then \
@@ -1398,26 +1362,13 @@ define update-abi
  fi
 endef
 
-# Patch all .abilist files for one DSO.  The find command locates
-# abilist files for all architectures.  The regular expression in the
-# find invocation is needed to separate libc.abilist and
-# libcrypt.abilist, for example.  It assumes that abilist-pattern, if
-# set, is of the form "%-SUFFIX", and not "%SUFFIX", that is, there is
-# a non-alphanumeric seperator between the pattern and the suffix
-# added.  The abilist files in /generic/ are filtered out because
-# these are expected to remain empty.
+# Patch all .abilist files for one DSO.  The find command locates abilist
+# files for all architectures.  The abilist files in /generic/ are
+# filtered out because these are expected to remain empty.
 define update-all-abi
 $(SHELL) $(..)scripts/update-abilist.sh $^ \
-  $$(find $(..)sysdeps \
-    -regextype posix-egrep -regex '.*/$*([^a-z0-9].*)?\.abilist$$' \
-    \! -regex '.*/generic/.*')
+  $$(find $(..)sysdeps -name '$*.abilist' \! -path '*/generic/*')
 endef
-ifdef abilist-pattern
-update-all-abi-%: $(abilist-pattern) $(objpfx)%.symlist
-	$(update-all-abi)
-update-all-abi-%: $(abilist-pattern) $(common-objpfx)%.symlist
-	$(update-all-abi)
-endif
 update-all-abi-%: %.abilist $(objpfx)%.symlist
 	$(update-all-abi)
 update-all-abi-%: %.abilist $(common-objpfx)%.symlist
