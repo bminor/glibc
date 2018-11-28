@@ -1349,9 +1349,9 @@ ldouble: 5
 
 Function: Real part of "ctan_towardzero":
 double: 5
-float: 2
+float: 3
 idouble: 5
-ifloat: 2
+ifloat: 3
 ildouble: 4
 ldouble: 4
 
@@ -1372,9 +1372,9 @@ ildouble: 5
 ldouble: 5
 
 Function: Imaginary part of "ctan_upward":
-double: 1
+double: 2
 float: 2
-idouble: 1
+idouble: 2
 ifloat: 2
 ildouble: 5
 ldouble: 5
@@ -1866,28 +1866,24 @@ ildouble: 2
 ldouble: 2
 
 Function: "log2":
-double: 1
 float: 1
-idouble: 1
 ifloat: 1
 ildouble: 2
 ldouble: 2
 
 Function: "log2_downward":
-double: 3
-idouble: 3
 ildouble: 3
 ldouble: 3
 
 Function: "log2_towardzero":
-double: 2
-idouble: 2
+double: 1
+idouble: 1
 ildouble: 1
 ldouble: 1
 
 Function: "log2_upward":
-double: 3
-idouble: 3
+double: 1
+idouble: 1
 ildouble: 1
 ldouble: 1
 
