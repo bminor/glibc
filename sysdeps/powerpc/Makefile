@@ -46,7 +46,3 @@ sysdep_headers += sys/platform/ppc.h
 tests += test-gettimebase
 tests += tst-set_ppr
 endif
-
-ifneq (,$(filter %le,$(config-machine)))
-abilist-pattern = %-le.abilist
-endif

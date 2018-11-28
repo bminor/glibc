@@ -1,3 +1,11 @@
+2018-12-10  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/*-le.abilist: Move to
+	sysdeps/unix/sysv/linux/powerpc/powerpc64/le/*.abilist.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/*.abilist: Move to
+	sysdeps/unix/sysv/linux/powerpc/powerpc64/be/*.abilist.
+	* sysdeps/powerpc/Makefile (abilist-pattern): Don't define.
+
 2018-12-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* timezone/private.h: Update from tzcode 2018g.
