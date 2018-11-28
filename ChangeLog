@@ -1,3 +1,9 @@
+2018-11-28  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/build-many-glibcs.py (Glibc.build_glibc): Use original
+	source directory instead of a copy.
+	(CommandList.create_copy_dir): Remove.
+
 2018-11-28  Stefan Liebler  <stli@linux.ibm.com>
 
 	* sysdeps/s390/fpu/libm-test-ulps: Regenerated.

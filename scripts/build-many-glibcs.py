@@ -1440,25 +1440,14 @@ class Glibc(object):
                                                    self.compiler.name, 'glibc',
                                                    self.name)
             installdir = self.compiler.sysroot
-            srcdir_copy = self.ctx.component_builddir('compilers',
-                                                      self.compiler.name,
-                                                      'glibc-src',
-                                                      self.name)
         else:
             builddir = self.ctx.component_builddir('glibcs', self.name,
                                                    'glibc')
             installdir = self.ctx.glibc_installdir(self.name)
-            srcdir_copy = self.ctx.component_builddir('glibcs', self.name,
-                                                      'glibc-src')
         cmdlist.create_use_dir(builddir)
-        # glibc builds write into the source directory, and even if
-        # not intentionally there is a risk of bugs that involve
-        # writing into the working directory.  To avoid possible
-        # concurrency issues, copy the source directory.
-        cmdlist.create_copy_dir(srcdir, srcdir_copy)
         use_usr = self.os != 'gnu'
         prefix = '/usr' if use_usr else ''
-        cfg_cmd = [os.path.join(srcdir_copy, 'configure'),
+        cfg_cmd = [os.path.join(srcdir, 'configure'),
                    '--prefix=%s' % prefix,
                    '--enable-profile',
                    '--build=%s' % self.ctx.build_triplet,
@@ -1497,7 +1486,6 @@ class Glibc(object):
             cmdlist.add_command('check', ['make', 'check'])
             cmdlist.add_command('save-logs', [self.ctx.save_logs],
                                 always_run=True)
-        cmdlist.cleanup_dir('cleanup-src', srcdir_copy)
         cmdlist.cleanup_dir()
 
 
@@ -1581,14 +1569,6 @@ class CommandList(object):
         self.add_command_dir('rm', None, ['rm', '-rf', dir])
         self.add_command_dir('mkdir', None, ['mkdir', '-p', dir])
         self.use_dir(dir)
-
-    def create_copy_dir(self, src, dest):
-        """Remove a directory and recreate it as a copy from the given
-        source."""
-        self.add_command_dir('copy-rm', None, ['rm', '-rf', dest])
-        parent = os.path.dirname(dest)
-        self.add_command_dir('copy-mkdir', None, ['mkdir', '-p', parent])
-        self.add_command_dir('copy', None, ['cp', '-a', src, dest])
 
     def add_command_dir(self, desc, dir, command, always_run=False):
         """Add a command to run in a given directory."""
