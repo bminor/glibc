@@ -1,3 +1,8 @@
+2018-11-28  Florian Weimer  <fweimer@redhat.com>
+
+	* support/support.h (support_quote_string): Do not use str
+	parameter name.
+
 2018-11-27  Florian Weimer  <fweimer@redhat.com>
 
 	* support/support.h (support_quote_string): Declare.
