@@ -111,6 +111,20 @@ _dl_exception_create_format (struct dl_exception *exception, const char *objname
             case 's':
               length += strlen (va_arg (ap, const char *));
               break;
+	      /* Recognize the l modifier.  It is only important on some
+		 platforms where long and int have a different size.  We
+		 can use the same code for size_t.  */
+	    case 'l':
+	    case 'z':
+	      if (p[1] == 'x')
+		{
+		  length += LONG_WIDTH / 4;
+		  ++p;
+		  break;
+		}
+	    case 'x':
+	      length += INT_WIDTH / 4;
+	      break;
             default:
               /* Assumed to be '%'.  */
               ++length;
@@ -167,6 +181,32 @@ _dl_exception_create_format (struct dl_exception *exception, const char *objname
               *wptr = '%';
               ++wptr;
               break;
+	    case 'x':
+	      {
+		unsigned long int num = va_arg (ap, unsigned int);
+		char *start = wptr;
+		wptr += INT_WIDTH / 4;
+		char *cp = _itoa (num, wptr, 16, 0);
+		/* Pad to the full width with 0.  */
+		while (cp != start)
+		  *--cp = '0';
+	      }
+	      break;
+	    case 'l':
+	    case 'z':
+	      if (p[1] == 'x')
+		{
+		  unsigned long int num = va_arg (ap, unsigned long int);
+		  char *start = wptr;
+		  wptr += LONG_WIDTH / 4;
+		  char *cp = _itoa (num, wptr, 16, 0);
+		  /* Pad to the full width with 0.  */
+		  while (cp != start)
+		    *--cp = '0';
+		  ++p;
+		  break;
+		}
+	       /* FALLTHROUGH */
             default:
               _dl_fatal_printf ("Fatal error:"
                                 " invalid format in exception string\n");

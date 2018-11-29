@@ -1,3 +1,11 @@
+2018-11-29  H.J. Lu  <hongjiu.lu@intel.com>
+	    Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* elf/Makefile (tests-internal): Add tst-create_format1.
+	* elf/dl-exception.c (_dl_exception_create_format): Support
+	%x, %lx and %zx.
+	* elf/tst-create_format1.c: New file.
+
 2018-11-29  Charles-Antoine Couret  <charles-antoine.couret@essensium.com>
 
 	* argp/argp-fmtstream.c (__argp_fmtstream_update): Use [_LIBC]
