@@ -1,3 +1,10 @@
+2018-11-29  Charles-Antoine Couret  <charles-antoine.couret@essensium.com>
+
+	* argp/argp-fmtstream.c (__argp_fmtstream_update): Use [_LIBC]
+	conditional on calls to _IO_fwide and putwc_unlocked.  (Merge from
+	gnulib.)
+	* argp/argp-help.c (__argp_failure): Likewise.
+
 2018-11-29  Mao Han  <han_mao@c-sky.com>
 
 	* elf/elf.h (EM_CSKY, R_CKCORE_NONE, R_CKCORE_ADDR32)
