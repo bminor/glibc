@@ -1,3 +1,15 @@
+2018-11-29  Florian Weimer  <fweimer@redhat.com>
+
+	* posix/Makefile (before-compile): Remove testcases.h and
+	ptestcases.h.
+	(generated): Add testcases.h and ptestcases.h.
+	(testcases.h, ptestcases.h): Move to $(objpfx).
+	(runtests.o): Add dependency on testcases.h.
+	(runptests.o): Add dependency on ptestcases.h.
+	* posix/testcases.h, posix/ptestcases.h: Remove files.
+	* scripts/build-many-glibcs.py (Context.fix_glibc_timestamps): Do
+	not touch posix/testcases.h and posix/ptestcases.h.
+
 2018-11-28  Florian Weimer  <fweimer@redhat.com>
 
 	support: Add signal support to support_capture_subprocess_check.

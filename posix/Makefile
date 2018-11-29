@@ -115,7 +115,7 @@ others		:= getconf
 install-bin	:= getconf
 install-others-programs	:= $(inst_libexecdir)/getconf
 
-before-compile	+= testcases.h ptestcases.h $(objpfx)posix-conf-vars-def.h
+before-compile	+= $(objpfx)posix-conf-vars-def.h
 
 # So they get cleaned up.
 generated += $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10) \
@@ -129,7 +129,8 @@ generated += $(addprefix wordexp-test-result, 1 2 3 4 5 6 7 8 9 10) \
 	     tst-boost.mtrace bug-ga2.mtrace bug-ga2-mem.out \
 	     bug-glob2.mtrace bug-glob2-mem.out tst-vfork3-mem.out \
 	     tst-vfork3.mtrace getconf.speclist tst-fnmatch-mem.out \
-	     tst-fnmatch.mtrace bug-regex36.mtrace
+	     tst-fnmatch.mtrace bug-regex36.mtrace \
+	     testcases.h ptestcases.h
 
 ifeq ($(run-built-tests),yes)
 ifeq (yes,$(build-shared))
@@ -261,13 +262,15 @@ bug-glob1-ARGS = "$(objpfx)"
 tst-execvp3-ARGS = --test-dir=$(objpfx)
 CFLAGS-tst-spawn3.c += -DOBJPFX=\"$(objpfx)\"
 
-testcases.h: TESTS TESTS2C.sed
+$(objpfx)testcases.h: TESTS TESTS2C.sed
 	LC_ALL=C sed -f TESTS2C.sed < $< > $@T
-	mv -f $@T $@
+	mv $@T $@
+$(objpfx)runtests.o: $(objpfx)testcases.h
 
-ptestcases.h: PTESTS PTESTS2C.sed
+$(objpfx)ptestcases.h: PTESTS PTESTS2C.sed
 	LC_ALL=C sed -f PTESTS2C.sed < $< > $@T
-	mv -f $@T $@
+	mv $@T $@
+$(objpfx)runptests.o: $(objpfx)ptestcases.h
 
 $(objpfx)tst-getopt-cancel: $(shared-thread-library)
 

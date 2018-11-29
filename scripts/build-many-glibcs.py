@@ -846,8 +846,7 @@ class Context(object):
         # Some other files have such dependencies but do not need to
         # be touched because nothing in a build depends on the files
         # in question.
-        for f in ('locale/C-translit.h', 'posix/ptestcases.h',
-                  'posix/testcases.h', 'sysdeps/gnu/errlist.c',
+        for f in ('locale/C-translit.h', 'sysdeps/gnu/errlist.c',
                   'sysdeps/mach/hurd/bits/errno.h',
                   'sysdeps/sparc/sparc32/rem.S',
                   'sysdeps/sparc/sparc32/sdiv.S',
