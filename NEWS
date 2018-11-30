@@ -36,6 +36,12 @@ Major new features:
   responses, indicating a lack of DNSSEC validation.  (Therefore, the name
   servers and the network path to them are treated as untrusted.)
 
+* Support RISC-V port for 32-bit. The ISA and ABI pairs supported as follows:
+
+    - rv32imac ilp32
+    - rv32imafdc ilp32
+    - rv32imafdc ilp32d
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The totalorder and totalordermag functions, and the corresponding
