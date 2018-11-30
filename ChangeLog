@@ -1,3 +1,10 @@
+2018-11-30  Rafael Ávila de Espíndola  <rafael@espindo.la>
+
+	[BZ #19767]
+	* sysdeps/unix/sysv/linux/i386/init-first.c: Don't check SHARED.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (ALWAYS_USE_VSYSCALL):
+	New.
+
 2018-11-30  Florian Weimer  <fweimer@redhat.com>
 
 	* scripts/abilist.awk: Print "0x0" for size 0. Handle "g"/"D".

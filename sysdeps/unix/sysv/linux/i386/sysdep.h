@@ -19,6 +19,9 @@
 #ifndef _LINUX_I386_SYSDEP_H
 #define _LINUX_I386_SYSDEP_H 1
 
+/* Always enable vsyscalls on i386 */
+#define ALWAYS_USE_VSYSCALL 1
+
 /* There is some commonality.  */
 #include <sysdeps/unix/sysv/linux/sysdep.h>
 #include <sysdeps/unix/i386/sysdep.h>
