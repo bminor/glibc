@@ -23,6 +23,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <unistd.h>
+#include <_itoa.h>
 
 /* This message we return as a last resort.  We define the string in a
    variable since we have to avoid freeing it and so have to enable

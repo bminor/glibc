@@ -1,3 +1,7 @@
+2018-11-29  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/dl-exception.c: Include <_itoa.h>.
+
 2018-11-30  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/fcntl.c (__libc_fcntl): Directly return value
