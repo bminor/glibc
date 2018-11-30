@@ -42,7 +42,11 @@ $2 == "g" || $2 == "w" && (NF == 7 || NF == 8) {
   type = $3;
   size = $5;
   sub(/^0*/, "", size);
-  size = " 0x" size;
+  if (size == "") {
+      size = " 0x0";
+  } else {
+      size = " 0x" size;
+  }
   version = $6;
   symbol = $NF;
   gsub(/[()]/, "", version);
@@ -73,6 +77,9 @@ $2 == "g" || $2 == "w" && (NF == 7 || NF == 8) {
   else if ($4 == "*ABS*") {
     next;
   }
+  else if (type == "D") {
+    # Accept unchanged.
+  }
   else if (type == "DO") {
     type = "D";
   }
@@ -89,7 +96,7 @@ $2 == "g" || $2 == "w" && (NF == 7 || NF == 8) {
     size = "";
   }
   else {
-    print "ERROR: Unable to handle this type of symbol."
+    print "ERROR: Unable to handle this type of symbol:", $0
     exit 1
   }
 
