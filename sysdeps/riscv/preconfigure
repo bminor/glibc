@@ -6,11 +6,7 @@ riscv*)
     atomic=`$CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null | grep '#define __riscv_atomic' | cut -d' ' -f2`
 
     case "$xlen" in
-    32)
-	echo "glibc does not yet support 32-bit systems" >&2
-	exit 1
-	;;
-    64)
+    64 | 32)
 	;;
     *)
 	echo "Unable to determine XLEN" >&2
