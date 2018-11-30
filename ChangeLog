@@ -1,3 +1,11 @@
+2018-11-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/gen-as-const.py: New file.
+	* scripts/gen-as-const.awk: Remove.
+	* Makerules ($(common-objpfx)%.h $(common-objpfx)%.h.d): Use
+	gen-as-const.py.
+	($(objpfx)test-as-const-%.c): Likewise.
+
 2018-11-29  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* elf/dl-exception.c: Include <_itoa.h>.

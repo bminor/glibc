@@ -282,15 +282,12 @@ ifdef gen-as-const-headers
 # may include <tcb-offsets.h>.  Target header files can check if
 # GEN_AS_CONST_HEADERS is defined to avoid circular dependency which
 # may lead to build hang on a many-core machine.
-$(common-objpfx)%.h $(common-objpfx)%.h.d: $(..)scripts/gen-as-const.awk \
+$(common-objpfx)%.h $(common-objpfx)%.h.d: $(..)scripts/gen-as-const.py \
 					   %.sym $(common-before-compile)
-	$(AWK) -f $< $(filter %.sym,$^) \
-	| $(CC) -S -o $(@:.h.d=.h)T3 $(CFLAGS) $(CPPFLAGS) \
-		-DGEN_AS_CONST_HEADERS -x c - \
-		-MD -MP -MF $(@:.h=.h.d)T -MT '$(@:.h=.h.d) $(@:.h.d=.h)'
-	sed -n 's/^.*@@@name@@@\([^@]*\)@@@value@@@[^0-9Xxa-fA-F-]*\([0-9Xxa-fA-F-][0-9Xxa-fA-F-]*\).*@@@end@@@.*$$/#define \1 \2/p' \
-		$(@:.h.d=.h)T3 > $(@:.h.d=.h)T
-	rm -f $(@:.h.d=.h)T3
+	$(PYTHON) $< --cc="$(CC) $(CFLAGS) $(CPPFLAGS) -DGEN_AS_CONST_HEADERS \
+			   -MD -MP -MF $(@:.h=.h.d)T \
+			   -MT '$(@:.h=.h.d) $(@:.h.d=.h)'" \
+		  $(filter %.sym,$^) > $(@:.h.d=.h)T
 	sed $(sed-remove-objpfx) $(sed-remove-dotdot) \
 	    $(@:.h=.h.d)T > $(@:.h=.h.d)T2
 	rm -f $(@:.h=.h.d)T
@@ -301,11 +298,10 @@ before-compile += $(gen-as-const-headers:%.sym=$(common-objpfx)%.h)
 
 tests-internal += $(gen-as-const-headers:%.sym=test-as-const-%)
 generated += $(gen-as-const-headers:%.sym=test-as-const-%.c)
-$(objpfx)test-as-const-%.c: $(..)scripts/gen-as-const.awk $(..)Makerules \
+$(objpfx)test-as-const-%.c: $(..)scripts/gen-as-const.py $(..)Makerules \
 			    %.sym $(common-objpfx)%.h
 	($(AWK) '{ sub(/^/, "asconst_", $$2); print; }' $(filter %.h,$^); \
-	 $(AWK) -v test=1 -f $< $(filter %.sym,$^); \
-	 echo '#include "$(..)test-skeleton.c"') > $@T
+	 $(PYTHON) $< --test $(filter %.sym,$^)) > $@T
 	mv -f $@T $@
 endif
 
