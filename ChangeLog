@@ -1,3 +1,18 @@
+2018-11-30  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
+
+	[BZ #23690]
+	* elf/dl-runtime.c (_dl_profile_fixup): Guarantee memory
+	modification order when accessing reloc_result->addr.
+	* include/link.h (reloc_result): Add field init.
+	* nptl/Makefile (tests): Add tst-audit-threads.
+	(modules-names): Add tst-audit-threads-mod1 and
+	tst-audit-threads-mod2.
+	Add rules to build tst-audit-threads.
+	* nptl/tst-audit-threads-mod1.c: New file.
+	* nptl/tst-audit-threads-mod2.c: Likewise.
+	* nptl/tst-audit-threads.c: Likewise.
+	* nptl/tst-audit-threads.h: Likewise.
+
 2018-11-26  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #23907]

@@ -382,7 +382,8 @@ tests += tst-cancelx2 tst-cancelx3 tst-cancelx4 tst-cancelx5 \
 	 tst-cleanupx0 tst-cleanupx1 tst-cleanupx2 tst-cleanupx3 tst-cleanupx4 \
 	 tst-oncex3 tst-oncex4
 ifeq ($(build-shared),yes)
-tests += tst-atfork2 tst-tls4 tst-_res1 tst-fini1 tst-compat-forwarder
+tests += tst-atfork2 tst-tls4 tst-_res1 tst-fini1 tst-compat-forwarder \
+	 tst-audit-threads
 tests-internal += tst-tls3 tst-tls3-malloc tst-tls5 tst-stackguard1
 tests-nolibpthread += tst-fini1
 ifeq ($(have-z-execstack),yes)
@@ -394,7 +395,8 @@ modules-names = tst-atfork2mod tst-tls3mod tst-tls4moda tst-tls4modb \
 		tst-tls5mod tst-tls5moda tst-tls5modb tst-tls5modc \
 		tst-tls5modd tst-tls5mode tst-tls5modf tst-stack4mod \
 		tst-_res1mod1 tst-_res1mod2 tst-execstack-mod tst-fini1mod \
-		tst-join7mod tst-compat-forwarder-mod
+		tst-join7mod tst-compat-forwarder-mod tst-audit-threads-mod1 \
+		tst-audit-threads-mod2
 extra-test-objs += $(addsuffix .os,$(strip $(modules-names))) \
 		   tst-cleanup4aux.o tst-cleanupx4aux.o
 test-extras += tst-cleanup4aux tst-cleanupx4aux
@@ -710,6 +712,14 @@ endif
 $(objpfx)tst-compat-forwarder: $(objpfx)tst-compat-forwarder-mod.so
 
 tst-mutex10-ENV = GLIBC_TUNABLES=glibc.elision.enable=1
+
+# Protect against a build using -Wl,-z,now.
+LDFLAGS-tst-audit-threads-mod1.so = -Wl,-z,lazy
+LDFLAGS-tst-audit-threads-mod2.so = -Wl,-z,lazy
+LDFLAGS-tst-audit-threads = -Wl,-z,lazy
+$(objpfx)tst-audit-threads: $(objpfx)tst-audit-threads-mod2.so
+$(objpfx)tst-audit-threads.out: $(objpfx)tst-audit-threads-mod1.so
+tst-audit-threads-ENV = LD_AUDIT=$(objpfx)tst-audit-threads-mod1.so
 
 # The tests here better do not run in parallel
 ifneq ($(filter %tests,$(MAKECMDGOALS)),)
