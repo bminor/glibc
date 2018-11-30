@@ -32,7 +32,15 @@
 # define __SIZEOF_PTHREAD_BARRIER_T 		32
 # define __SIZEOF_PTHREAD_BARRIERATTR_T 	 4
 #else
-# error "rv32i-based systems are not supported"
+# define __SIZEOF_PTHREAD_ATTR_T 		32
+# define __SIZEOF_PTHREAD_MUTEX_T 		32
+# define __SIZEOF_PTHREAD_MUTEXATTR_T 		 4
+# define __SIZEOF_PTHREAD_COND_T 		48
+# define __SIZEOF_PTHREAD_CONDATTR_T 		 4
+# define __SIZEOF_PTHREAD_RWLOCK_T 		48
+# define __SIZEOF_PTHREAD_RWLOCKATTR_T 		 8
+# define __SIZEOF_PTHREAD_BARRIER_T 		20
+# define __SIZEOF_PTHREAD_BARRIERATTR_T 	 4
 #endif
 
 #define __LOCK_ALIGNMENT
