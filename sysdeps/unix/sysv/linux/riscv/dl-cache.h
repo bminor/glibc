@@ -34,6 +34,8 @@
    RISC-V, libraries can be found in paths ending in:
      - /lib64/lp64d
      - /lib64/lp64
+     - /lib32/ilp32d
+     - /lib32/ilp32
      - /lib (only ld.so)
    so this will add all of those paths.
 
@@ -49,9 +51,16 @@
   do							    		\
     {									\
       size_t len = strlen (dir);					\
-      char path[len + 9];						\
+      char path[len + 10];						\
       memcpy (path, dir, len + 1);					\
-      if (len >= 12 && ! memcmp(path + len - 12, "/lib64/lp64d", 12))	\
+      if (len >= 13 && ! memcmp(path + len - 13, "/lib32/ilp32d", 13))	\
+        {								\
+          len -= 9;							\
+	  path[len] = '\0';						\
+        }								\
+      if (len >= 12							\
+          && (! memcmp(path + len - 12, "/lib32/ilp32", 12)		\
+              || ! memcmp(path + len - 12, "/lib64/lp64d", 12)))	\
 	{								\
 	  len -= 8;							\
 	  path[len] = '\0';						\
@@ -64,6 +73,10 @@
       add_dir (path);							\
       if (len >= 4 && ! memcmp(path + len - 4, "/lib", 4))		\
 	{								\
+	  memcpy (path + len, "32/ilp32d", 10);				\
+	  add_dir (path);						\
+	  memcpy (path + len, "32/ilp32", 9);				\
+	  add_dir (path);						\
 	  memcpy (path + len, "64/lp64d", 9);				\
 	  add_dir (path);						\
 	  memcpy (path + len, "64/lp64", 8);				\
