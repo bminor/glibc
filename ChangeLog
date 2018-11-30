@@ -1,4 +1,4 @@
-2018-11-28  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+2018-11-30  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/spawni.c (__spawni_child): Use
 	__sigismember instead of sigismember.
