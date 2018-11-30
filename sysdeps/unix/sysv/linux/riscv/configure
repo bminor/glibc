@@ -147,6 +147,17 @@ if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
 fi
 rm -f conftest*
 
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+__SIZEOF_INT__ __SIZEOF_LONG__ __SIZEOF_POINTER__
+
+_ACEOF
+if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+  $EGREP "4 4 4" >/dev/null 2>&1; then :
+  libc_cv_riscv_int_abi=ilp32
+fi
+rm -f conftest*
+
 if test $libc_cv_riscv_int_abi = no; then
   as_fn_error $? "Unable to determine integer ABI" "$LINENO" 5
 fi
@@ -212,6 +223,34 @@ case "$prefix" in
   libc_cv_rtlddir='/lib'
   if test "$libdir" = '${exec_prefix}/lib'; then
     libdir='${exec_prefix}/lib64/lp64d';
+    # Locale data can be shared between 32-bit and 64-bit libraries.
+    libc_cv_complocaledir='${exec_prefix}/lib/locale'
+  fi
+  ;;
+esac
+  ;;
+ilp32-riscv/rv32/*)
+  test -n "$libc_cv_slibdir" ||
+case "$prefix" in
+/usr | /usr/)
+  libc_cv_slibdir='/lib32/ilp32'
+  libc_cv_rtlddir='/lib'
+  if test "$libdir" = '${exec_prefix}/lib'; then
+    libdir='${exec_prefix}/lib32/ilp32';
+    # Locale data can be shared between 32-bit and 64-bit libraries.
+    libc_cv_complocaledir='${exec_prefix}/lib/locale'
+  fi
+  ;;
+esac
+  ;;
+ilp32d-riscv/rv32/*)
+  test -n "$libc_cv_slibdir" ||
+case "$prefix" in
+/usr | /usr/)
+  libc_cv_slibdir='/lib32/ilp32d'
+  libc_cv_rtlddir='/lib'
+  if test "$libdir" = '${exec_prefix}/lib'; then
+    libdir='${exec_prefix}/lib32/ilp32d';
     # Locale data can be shared between 32-bit and 64-bit libraries.
     libc_cv_complocaledir='${exec_prefix}/lib/locale'
   fi
