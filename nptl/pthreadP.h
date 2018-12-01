@@ -33,6 +33,7 @@
 #include <kernel-features.h>
 #include <errno.h>
 #include <internal-signals.h>
+#include "pthread_mutex_conf.h"
 
 
 /* Atomic operations on TLS memory.  */
@@ -47,10 +48,14 @@
 #endif
 
 
-/* Adaptive mutex definitions.  */
-#ifndef MAX_ADAPTIVE_COUNT
-# define MAX_ADAPTIVE_COUNT 100
+static inline short max_adaptive_count (void)
+{
+#if HAVE_TUNABLES
+  return __mutex_aconf.spin_count;
+#else
+  return DEFAULT_ADAPTIVE_COUNT;
 #endif
+}
 
 
 /* Magic cookie representing robust mutex with dead owner.  */

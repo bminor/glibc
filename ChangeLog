@@ -1,3 +1,21 @@
+2018-12-01  Kemi Wang  <kemi.wang@intel.com>
+
+	* manual/tunables.texi (POSIX Thread Tunables): New node.
+	* nptl/Makefile (libpthread-routines): Add pthread_mutex_conf.
+	* nptl/nptl-init.c: Include pthread_mutex_conf.h
+	(__pthread_initialize_minimal_internal) [HAVE_TUNABLES]: Call
+	__pthread_tunables_init.
+	* nptl/pthreadP.h (MAX_ADAPTIVE_COUNT): Remove.
+	(max_adaptive_count): Define.
+	* nptl/pthread_mutex_conf.c: New file.
+	* nptl/pthread_mutex_conf.h: New file.
+	* sysdeps/generic/adaptive_spin_count.h: New file.
+	* sysdeps/nptl/dl-tunables.list: New file.
+	* nptl/pthread_mutex_lock.c (__pthread_mutex_lock): Use
+	max_adaptive_count () not MAX_ADAPTIVE_COUNT.
+	* nptl/pthread_mutex_timedlock.c (__pthrad_mutex_timedlock):
+	Likewise.
+
 2018-12-01  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #20544]
