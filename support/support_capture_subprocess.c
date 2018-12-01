@@ -59,8 +59,12 @@ support_capture_subprocess (void (*callback) (void *), void *closure)
 
   int stdout_pipe[2];
   xpipe (stdout_pipe);
+  TEST_VERIFY (stdout_pipe[0] > STDERR_FILENO);
+  TEST_VERIFY (stdout_pipe[1] > STDERR_FILENO);
   int stderr_pipe[2];
   xpipe (stderr_pipe);
+  TEST_VERIFY (stderr_pipe[0] > STDERR_FILENO);
+  TEST_VERIFY (stderr_pipe[1] > STDERR_FILENO);
 
   TEST_VERIFY (fflush (stdout) == 0);
   TEST_VERIFY (fflush (stderr) == 0);
@@ -72,6 +76,8 @@ support_capture_subprocess (void (*callback) (void *), void *closure)
       xclose (stderr_pipe[0]);
       xdup2 (stdout_pipe[1], STDOUT_FILENO);
       xdup2 (stderr_pipe[1], STDERR_FILENO);
+      xclose (stdout_pipe[1]);
+      xclose (stderr_pipe[1]);
       callback (closure);
       _exit (0);
     }

@@ -1,3 +1,9 @@
+2018-12-01  Florian Weimer  <fweimer@redhat.com>
+
+	* support/support_capture_subprocess.c
+	(support_capture_subprocess): Check that pipe descriptors have
+	expected values.  Close original pipe descriptors in subprocess.
+
 2018-11-28  Florian Weimer  <fweimer@redhat.com>
 
 	* support/support.h (support_quote_string): Do not use str
