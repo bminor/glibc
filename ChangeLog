@@ -1,3 +1,9 @@
+2018-12-07  DJ Delorie  <dj@redhat.com>
+
+	[BZ #23907]
+	* malloc/tst-tcfree3.c: New.
+	* malloc/Makefile: Add it.
+
 2018-12-07  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* include/sched.h (__getcpu): Don't use __typeof__ (getcpu).
