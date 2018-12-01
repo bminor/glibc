@@ -36,7 +36,7 @@ pthread_barrier_init (pthread_barrier_t *barrier,
   barrier->__count = count;
 
   if (attr == NULL
-      || memcmp (attr, &__pthread_default_barrierattr, sizeof (*attr) == 0))
+      || memcmp (attr, &__pthread_default_barrierattr, sizeof (*attr)) == 0)
     /* Use the default attributes.  */
     return 0;
 

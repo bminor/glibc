@@ -1,3 +1,15 @@
+2018-12-01  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	[BZ #23032]
+	* sysdeps/htl/pt-barrier-init.c (pthread_barrier_init): Fix comparing
+	attr with __pthread_default_barrierattr.
+	* sysdeps/htl/pt-cond-init.c (__pthread_cond_init): Fix comparing
+	attr with __pthread_default_condattr.
+	* sysdeps/htl/pt-mutex-init.c (_pthread_mutex_init): Fix comparing
+	attr with __pthread_default_mutexattr.
+	* sysdeps/htl/pt-rwlock-init.c (_pthread_rwlock_init): Fix comparing
+	attr with __pthread_default_rwlockattr.
+
 2018-12-01  Kemi Wang  <kemi.wang@intel.com>
 
 	* manual/tunables.texi (POSIX Thread Tunables): New node.

@@ -29,7 +29,7 @@ _pthread_mutex_init (pthread_mutex_t *mutex, const pthread_mutexattr_t *attr)
   *mutex = (pthread_mutex_t) __PTHREAD_MUTEX_INITIALIZER;
 
   if (attr == NULL
-      || memcmp (attr, &__pthread_default_mutexattr, sizeof (*attr) == 0))
+      || memcmp (attr, &__pthread_default_mutexattr, sizeof (*attr)) == 0)
     /* The default attributes.  */
     return 0;
 
