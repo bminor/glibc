@@ -20,6 +20,9 @@
 #ifndef _LINUX_ARM_SYSDEP_H
 #define _LINUX_ARM_SYSDEP_H 1
 
+/* Always enable vsyscalls on arm */
+#define ALWAYS_USE_VSYSCALL 1
+
 /* There is some commonality.  */
 #include <sysdeps/unix/sysv/linux/sysdep.h>
 #include <sysdeps/unix/arm/sysdep.h>

@@ -1,3 +1,11 @@
+2018-12-03  Rafael Ávila de Espíndola  <rafael@espindo.la>
+
+	[BZ #19767]
+	* sysdeps/unix/sysv/linux/arm/init-first.c: Remove #ifdef SHARED.
+	* sysdeps/unix/sysv/linux/arm/libc-vdso.h: Remove #ifdef SHARED.
+	* sysdeps/unix/sysv/linux/arm/sysdep.h: Define
+	ALWAYS_USE_VSYSCALL.
+
 2018-12-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #23913]
