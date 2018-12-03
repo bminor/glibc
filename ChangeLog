@@ -1,3 +1,48 @@
+2018-12-03  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86/cacheinfo.c (intel_check_word): Updated for
+	cpu_features_basic.
+	(__cache_sysconf): Likewise.
+	(init_cacheinfo): Likewise.
+	* sysdeps/x86/cpu-features.c (get_extended_indeces): Also
+	populate COMMON_CPUID_INDEX_80000007 and
+	COMMON_CPUID_INDEX_80000008.
+	(get_common_indices): Also populate COMMON_CPUID_INDEX_D_ECX_1.
+	Use CPU_FEATURES_CPU_P (cpu_features, XSAVEC) to check if
+	XSAVEC is available.  Set the bit_arch_XXX_Usable bits.
+	(init_cpu_features): Use _Static_assert on
+	index_arch_Fast_Unaligned_Load.
+	__get_cpuid_registers and __get_arch_feature.  Updated for
+	cpu_features_basic.  Set stepping in cpu_features.
+	* sysdeps/x86/cpu-features.h: (FEATURE_INDEX_1): Changed to enum.
+	(FEATURE_INDEX_2): New.
+	(FEATURE_INDEX_MAX): Changed to enum.
+	(COMMON_CPUID_INDEX_D_ECX_1): New.
+	(COMMON_CPUID_INDEX_80000007): Likewise.
+	(COMMON_CPUID_INDEX_80000008): Likewise.
+	(cpuid_registers): Likewise.
+	(cpu_features_basic): Likewise.
+	(CPU_FEATURE_USABLE): Likewise.
+	(bit_arch_XXX_Usable): Likewise.
+	(cpu_features): Use cpuid_registers and cpu_features_basic.
+	(bit_arch_XXX): Reweritten.
+	(bit_cpu_XXX): Likewise.
+	(index_cpu_XXX): Likewise.
+	(reg_XXX): Likewise.
+	* sysdeps/x86/tst-get-cpu-features.c: Include <stdio.h> and
+	<support/check.h>.
+	(CHECK_CPU_FEATURE): New.
+	(CHECK_CPU_FEATURE_USABLE): Likewise.
+	(cpu_kinds): Likewise.
+	(do_test): Print vendor, family, model and stepping.  Check
+	HAS_CPU_FEATURE and CPU_FEATURE_USABLE.
+	(TEST_FUNCTION): Removed.
+	Include <support/test-driver.c> instead of
+	"../../test-skeleton.c".
+	* sysdeps/x86_64/multiarch/sched_cpucount.c (__sched_cpucount):
+	Check POPCNT instead of POPCOUNT.
+	* sysdeps/x86_64/multiarch/test-multiarch.c (do_test): Likewise.
+
 2018-12-03  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* scripts/gen-as-const.py (main): Avoid emitting empty line when

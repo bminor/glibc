@@ -53,7 +53,18 @@ get_extended_indices (struct cpu_features *cpu_features)
 	     cpu_features->cpuid[COMMON_CPUID_INDEX_80000001].ebx,
 	     cpu_features->cpuid[COMMON_CPUID_INDEX_80000001].ecx,
 	     cpu_features->cpuid[COMMON_CPUID_INDEX_80000001].edx);
-
+  if (eax >= 0x80000007)
+    __cpuid (0x80000007,
+	     cpu_features->cpuid[COMMON_CPUID_INDEX_80000007].eax,
+	     cpu_features->cpuid[COMMON_CPUID_INDEX_80000007].ebx,
+	     cpu_features->cpuid[COMMON_CPUID_INDEX_80000007].ecx,
+	     cpu_features->cpuid[COMMON_CPUID_INDEX_80000007].edx);
+  if (eax >= 0x80000008)
+    __cpuid (0x80000008,
+	     cpu_features->cpuid[COMMON_CPUID_INDEX_80000008].eax,
+	     cpu_features->cpuid[COMMON_CPUID_INDEX_80000008].ebx,
+	     cpu_features->cpuid[COMMON_CPUID_INDEX_80000008].ecx,
+	     cpu_features->cpuid[COMMON_CPUID_INDEX_80000008].edx);
 }
 
 static void
@@ -79,12 +90,19 @@ get_common_indices (struct cpu_features *cpu_features,
 	}
     }
 
-  if (cpu_features->max_cpuid >= 7)
+  if (cpu_features->basic.max_cpuid >= 7)
     __cpuid_count (7, 0,
 		   cpu_features->cpuid[COMMON_CPUID_INDEX_7].eax,
 		   cpu_features->cpuid[COMMON_CPUID_INDEX_7].ebx,
 		   cpu_features->cpuid[COMMON_CPUID_INDEX_7].ecx,
 		   cpu_features->cpuid[COMMON_CPUID_INDEX_7].edx);
+
+  if (cpu_features->basic.max_cpuid >= 0xd)
+    __cpuid_count (0xd, 1,
+		   cpu_features->cpuid[COMMON_CPUID_INDEX_D_ECX_1].eax,
+		   cpu_features->cpuid[COMMON_CPUID_INDEX_D_ECX_1].ebx,
+		   cpu_features->cpuid[COMMON_CPUID_INDEX_D_ECX_1].ecx,
+		   cpu_features->cpuid[COMMON_CPUID_INDEX_D_ECX_1].edx);
 
   /* Can we call xgetbv?  */
   if (CPU_FEATURES_CPU_P (cpu_features, OSXSAVE))
@@ -117,6 +135,18 @@ get_common_indices (struct cpu_features *cpu_features,
 	      if (CPU_FEATURES_CPU_P (cpu_features, FMA))
 		cpu_features->feature[index_arch_FMA_Usable]
 		  |= bit_arch_FMA_Usable;
+	      /* Determine if VAES is usable.  */
+	      if (CPU_FEATURES_CPU_P (cpu_features, VAES))
+		cpu_features->feature[index_arch_VAES_Usable]
+		  |= bit_arch_VAES_Usable;
+	      /* Determine if VPCLMULQDQ is usable.  */
+	      if (CPU_FEATURES_CPU_P (cpu_features, VPCLMULQDQ))
+		cpu_features->feature[index_arch_VPCLMULQDQ_Usable]
+		  |= bit_arch_VPCLMULQDQ_Usable;
+	      /* Determine if XOP is usable.  */
+	      if (CPU_FEATURES_CPU_P (cpu_features, XOP))
+		cpu_features->feature[index_arch_XOP_Usable]
+		  |= bit_arch_XOP_Usable;
 	    }
 
 	  /* Check if OPMASK state, upper 256-bit of ZMM0-ZMM15 and
@@ -130,17 +160,69 @@ get_common_indices (struct cpu_features *cpu_features,
 		{
 		  cpu_features->feature[index_arch_AVX512F_Usable]
 		    |= bit_arch_AVX512F_Usable;
+		  /* Determine if AVX512CD is usable.  */
+		  if (CPU_FEATURES_CPU_P (cpu_features, AVX512CD))
+		    cpu_features->feature[index_arch_AVX512CD_Usable]
+		      |= bit_arch_AVX512CD_Usable;
+		  /* Determine if AVX512ER is usable.  */
+		  if (CPU_FEATURES_CPU_P (cpu_features, AVX512ER))
+		    cpu_features->feature[index_arch_AVX512ER_Usable]
+		      |= bit_arch_AVX512ER_Usable;
+		  /* Determine if AVX512PF is usable.  */
+		  if (CPU_FEATURES_CPU_P (cpu_features, AVX512PF))
+		    cpu_features->feature[index_arch_AVX512PF_Usable]
+		      |= bit_arch_AVX512PF_Usable;
+		  /* Determine if AVX512VL is usable.  */
+		  if (CPU_FEATURES_CPU_P (cpu_features, AVX512VL))
+		    cpu_features->feature[index_arch_AVX512VL_Usable]
+		      |= bit_arch_AVX512VL_Usable;
 		  /* Determine if AVX512DQ is usable.  */
 		  if (CPU_FEATURES_CPU_P (cpu_features, AVX512DQ))
 		    cpu_features->feature[index_arch_AVX512DQ_Usable]
 		      |= bit_arch_AVX512DQ_Usable;
+		  /* Determine if AVX512BW is usable.  */
+		  if (CPU_FEATURES_CPU_P (cpu_features, AVX512BW))
+		    cpu_features->feature[index_arch_AVX512BW_Usable]
+		      |= bit_arch_AVX512BW_Usable;
+		  /* Determine if AVX512_4FMAPS is usable.  */
+		  if (CPU_FEATURES_CPU_P (cpu_features, AVX512_4FMAPS))
+		    cpu_features->feature[index_arch_AVX512_4FMAPS_Usable]
+		      |= bit_arch_AVX512_4FMAPS_Usable;
+		  /* Determine if AVX512_4VNNIW is usable.  */
+		  if (CPU_FEATURES_CPU_P (cpu_features, AVX512_4VNNIW))
+		    cpu_features->feature[index_arch_AVX512_4VNNIW_Usable]
+		      |= bit_arch_AVX512_4VNNIW_Usable;
+		  /* Determine if AVX512_BITALG is usable.  */
+		  if (CPU_FEATURES_CPU_P (cpu_features, AVX512_BITALG))
+		    cpu_features->feature[index_arch_AVX512_BITALG_Usable]
+		      |= bit_arch_AVX512_BITALG_Usable;
+		  /* Determine if AVX512_IFMA is usable.  */
+		  if (CPU_FEATURES_CPU_P (cpu_features, AVX512_IFMA))
+		    cpu_features->feature[index_arch_AVX512_IFMA_Usable]
+		      |= bit_arch_AVX512_IFMA_Usable;
+		  /* Determine if AVX512_VBMI is usable.  */
+		  if (CPU_FEATURES_CPU_P (cpu_features, AVX512_VBMI))
+		    cpu_features->feature[index_arch_AVX512_VBMI_Usable]
+		      |= bit_arch_AVX512_VBMI_Usable;
+		  /* Determine if AVX512_VBMI2 is usable.  */
+		  if (CPU_FEATURES_CPU_P (cpu_features, AVX512_VBMI2))
+		    cpu_features->feature[index_arch_AVX512_VBMI2_Usable]
+		      |= bit_arch_AVX512_VBMI2_Usable;
+		  /* Determine if is AVX512_VNNI usable.  */
+		  if (CPU_FEATURES_CPU_P (cpu_features, AVX512_VNNI))
+		    cpu_features->feature[index_arch_AVX512_VNNI_Usable]
+		      |= bit_arch_AVX512_VNNI_Usable;
+		  /* Determine if AVX512_VPOPCNTDQ is usable.  */
+		  if (CPU_FEATURES_CPU_P (cpu_features, AVX512_VPOPCNTDQ))
+		    cpu_features->feature[index_arch_AVX512_VPOPCNTDQ_Usable]
+		      |= bit_arch_AVX512_VPOPCNTDQ_Usable;
 		}
 	    }
 	}
 
       /* For _dl_runtime_resolve, set xsave_state_size to xsave area
 	 size + integer register save size and align it to 64 bytes.  */
-      if (cpu_features->max_cpuid >= 0xd)
+      if (cpu_features->basic.max_cpuid >= 0xd)
 	{
 	  unsigned int eax, ebx, ecx, edx;
 
@@ -155,10 +237,8 @@ get_common_indices (struct cpu_features *cpu_features,
 	      cpu_features->xsave_state_full_size
 		= xsave_state_full_size;
 
-	      __cpuid_count (0xd, 1, eax, ebx, ecx, edx);
-
 	      /* Check if XSAVEC is available.  */
-	      if ((eax & (1 << 1)) != 0)
+	      if (CPU_FEATURES_CPU_P (cpu_features, XSAVEC))
 		{
 		  unsigned int xstate_comp_offsets[32];
 		  unsigned int xstate_comp_sizes[32];
@@ -210,12 +290,25 @@ get_common_indices (struct cpu_features *cpu_features,
     }
 }
 
+_Static_assert (((index_arch_Fast_Unaligned_Load
+		  == index_arch_Fast_Unaligned_Copy)
+		 && (index_arch_Fast_Unaligned_Load
+		     == index_arch_Prefer_PMINUB_for_stringop)
+		 && (index_arch_Fast_Unaligned_Load
+		     == index_arch_Slow_SSE4_2)
+		 && (index_arch_Fast_Unaligned_Load
+		     == index_arch_Fast_Rep_String)
+		 && (index_arch_Fast_Unaligned_Load
+		     == index_arch_Fast_Copy_Backward)),
+		"Incorrect index_arch_Fast_Unaligned_Load");
+
 static inline void
 init_cpu_features (struct cpu_features *cpu_features)
 {
   unsigned int ebx, ecx, edx;
   unsigned int family = 0;
   unsigned int model = 0;
+  unsigned int stepping = 0;
   enum cpu_features_kind kind;
 
 #if !HAS_CPUID
@@ -226,12 +319,12 @@ init_cpu_features (struct cpu_features *cpu_features)
     }
 #endif
 
-  __cpuid (0, cpu_features->max_cpuid, ebx, ecx, edx);
+  __cpuid (0, cpu_features->basic.max_cpuid, ebx, ecx, edx);
 
   /* This spells out "GenuineIntel".  */
   if (ebx == 0x756e6547 && ecx == 0x6c65746e && edx == 0x49656e69)
     {
-      unsigned int extended_model, stepping;
+      unsigned int extended_model;
 
       kind = arch_kind_intel;
 
@@ -270,15 +363,6 @@ init_cpu_features (struct cpu_features *cpu_features)
 	    case 0x5d:
 	      /* Unaligned load versions are faster than SSSE3
 		 on Silvermont.  */
-#if index_arch_Fast_Unaligned_Load != index_arch_Prefer_PMINUB_for_stringop
-# error index_arch_Fast_Unaligned_Load != index_arch_Prefer_PMINUB_for_stringop
-#endif
-#if index_arch_Fast_Unaligned_Load != index_arch_Slow_SSE4_2
-# error index_arch_Fast_Unaligned_Load != index_arch_Slow_SSE4_2
-#endif
-#if index_arch_Fast_Unaligned_Load != index_arch_Fast_Unaligned_Copy
-# error index_arch_Fast_Unaligned_Load != index_arch_Fast_Unaligned_Copy
-#endif
 	      cpu_features->feature[index_arch_Fast_Unaligned_Load]
 		|= (bit_arch_Fast_Unaligned_Load
 		    | bit_arch_Fast_Unaligned_Copy
@@ -301,15 +385,6 @@ init_cpu_features (struct cpu_features *cpu_features)
 	    case 0x2f:
 	      /* Rep string instructions, unaligned load, unaligned copy,
 		 and pminub are fast on Intel Core i3, i5 and i7.  */
-#if index_arch_Fast_Rep_String != index_arch_Fast_Unaligned_Load
-# error index_arch_Fast_Rep_String != index_arch_Fast_Unaligned_Load
-#endif
-#if index_arch_Fast_Rep_String != index_arch_Prefer_PMINUB_for_stringop
-# error index_arch_Fast_Rep_String != index_arch_Prefer_PMINUB_for_stringop
-#endif
-#if index_arch_Fast_Rep_String != index_arch_Fast_Unaligned_Copy
-# error index_arch_Fast_Rep_String != index_arch_Fast_Unaligned_Copy
-#endif
 	      cpu_features->feature[index_arch_Fast_Rep_String]
 		|= (bit_arch_Fast_Rep_String
 		    | bit_arch_Fast_Unaligned_Load
@@ -353,7 +428,7 @@ init_cpu_features (struct cpu_features *cpu_features)
   /* This spells out "AuthenticAMD".  */
   else if (ebx == 0x68747541 && ecx == 0x444d4163 && edx == 0x69746e65)
     {
-      unsigned int extended_model, stepping;
+      unsigned int extended_model;
 
       kind = arch_kind_amd;
 
@@ -375,9 +450,6 @@ init_cpu_features (struct cpu_features *cpu_features)
 
       if (family == 0x15)
 	{
-#if index_arch_Fast_Unaligned_Load != index_arch_Fast_Copy_Backward
-# error index_arch_Fast_Unaligned_Load != index_arch_Fast_Copy_Backward
-#endif
 	  /* "Excavator"   */
 	  if (model >= 0x60 && model <= 0x7f)
 	  {
@@ -409,9 +481,10 @@ init_cpu_features (struct cpu_features *cpu_features)
 no_cpuid:
 #endif
 
-  cpu_features->family = family;
-  cpu_features->model = model;
-  cpu_features->kind = kind;
+  cpu_features->basic.kind = kind;
+  cpu_features->basic.family = family;
+  cpu_features->basic.model = model;
+  cpu_features->basic.stepping = stepping;
 
 #if HAVE_TUNABLES
   TUNABLE_GET (hwcaps, tunable_val_t *, TUNABLE_CALLBACK (set_hwcaps));
@@ -432,7 +505,7 @@ no_cpuid:
 
 #ifdef __x86_64__
   GLRO(dl_hwcap) = HWCAP_X86_64;
-  if (cpu_features->kind == arch_kind_intel)
+  if (cpu_features->basic.kind == arch_kind_intel)
     {
       const char *platform = NULL;
 

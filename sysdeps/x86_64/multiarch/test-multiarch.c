@@ -85,8 +85,8 @@ do_test (int argc, char **argv)
 		       , "HAS_CPU_FEATURE (SSE4_1)");
   fails += check_proc ("ssse3", HAS_CPU_FEATURE (SSSE3),
 		       "HAS_CPU_FEATURE (SSSE3)");
-  fails += check_proc ("popcnt", HAS_CPU_FEATURE (POPCOUNT),
-		       "HAS_CPU_FEATURE (POPCOUNT)");
+  fails += check_proc ("popcnt", HAS_CPU_FEATURE (POPCNT),
+		       "HAS_CPU_FEATURE (POPCNT)");
 
   printf ("%d differences between /proc/cpuinfo and glibc code.\n", fails);
 

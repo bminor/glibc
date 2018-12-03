@@ -205,8 +205,8 @@ intel_check_word (int name, unsigned int value, bool *has_level_2,
 	      /* Intel reused this value.  For family 15, model 6 it
 		 specifies the 3rd level cache.  Otherwise the 2nd
 		 level cache.  */
-	      unsigned int family = cpu_features->family;
-	      unsigned int model = cpu_features->model;
+	      unsigned int family = cpu_features->basic.family;
+	      unsigned int model = cpu_features->basic.model;
 
 	      if (family == 15 && model == 6)
 		{
@@ -258,7 +258,7 @@ intel_check_word (int name, unsigned int value, bool *has_level_2,
 static long int __attribute__ ((noinline))
 handle_intel (int name, const struct cpu_features *cpu_features)
 {
-  unsigned int maxidx = cpu_features->max_cpuid;
+  unsigned int maxidx = cpu_features->basic.max_cpuid;
 
   /* Return -1 for older CPUs.  */
   if (maxidx < 2)
@@ -443,10 +443,10 @@ __cache_sysconf (int name)
 {
   const struct cpu_features *cpu_features = __get_cpu_features ();
 
-  if (cpu_features->kind == arch_kind_intel)
+  if (cpu_features->basic.kind == arch_kind_intel)
     return handle_intel (name, cpu_features);
 
-  if (cpu_features->kind == arch_kind_amd)
+  if (cpu_features->basic.kind == arch_kind_amd)
     return handle_amd (name);
 
   // XXX Fill in more vendors.
@@ -497,9 +497,9 @@ init_cacheinfo (void)
   unsigned int level;
   unsigned int threads = 0;
   const struct cpu_features *cpu_features = __get_cpu_features ();
-  int max_cpuid = cpu_features->max_cpuid;
+  int max_cpuid = cpu_features->basic.max_cpuid;
 
-  if (cpu_features->kind == arch_kind_intel)
+  if (cpu_features->basic.kind == arch_kind_intel)
     {
       data = handle_intel (_SC_LEVEL1_DCACHE_SIZE, cpu_features);
 
@@ -538,8 +538,8 @@ init_cacheinfo (void)
 	     highest cache level.  */
 	  if (max_cpuid >= 4)
 	    {
-	      unsigned int family = cpu_features->family;
-	      unsigned int model = cpu_features->model;
+	      unsigned int family = cpu_features->basic.family;
+	      unsigned int model = cpu_features->basic.model;
 
 	      int i = 0;
 
@@ -700,7 +700,7 @@ intel_bug_no_cache_info:
 	  shared += core;
 	}
     }
-  else if (cpu_features->kind == arch_kind_amd)
+  else if (cpu_features->basic.kind == arch_kind_amd)
     {
       data   = handle_amd (_SC_LEVEL1_DCACHE_SIZE);
       long int core = handle_amd (_SC_LEVEL2_CACHE_SIZE);
