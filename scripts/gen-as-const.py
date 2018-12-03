@@ -34,28 +34,28 @@ def compute_c_consts(sym_data, cc):
     """Compute the values of some C constants.
 
     The first argument is a list whose elements are either strings
-    (preprocessor directives) or pairs of strings (a name and a C
+    (preprocessor directives, or the special string 'START' to
+    indicate this function should insert its initial boilerplate text
+    in the output there) or pairs of strings (a name and a C
     expression for the corresponding value).  Preprocessor directives
     in the middle of the list may be used to select which constants
     end up being evaluated using which expressions.
 
     """
     out_lines = []
-    started = False
     for arg in sym_data:
         if isinstance(arg, str):
-            out_lines.append(arg)
+            if arg == 'START':
+                out_lines.append('void\ndummy (void)\n{')
+            else:
+                out_lines.append(arg)
             continue
         name = arg[0]
         value = arg[1]
-        if not started:
-            out_lines.append('void\ndummy (void)\n{')
-            started = True
         out_lines.append('asm ("@@@name@@@%s@@@value@@@%%0@@@end@@@" '
                          ': : \"i\" ((long int) (%s)));'
                          % (name, value))
-    if started:
-        out_lines.append('}')
+    out_lines.append('}')
     out_lines.append('')
     out_text = '\n'.join(out_lines)
     with tempfile.TemporaryDirectory() as temp_dir:
@@ -89,32 +89,32 @@ def gen_test(sym_data):
 
     """
     out_lines = []
-    started = False
     for arg in sym_data:
         if isinstance(arg, str):
-            out_lines.append(arg)
+            if arg == 'START':
+                out_lines.append('#include <stdint.h>\n'
+                                 '#include <stdio.h>\n'
+                                 '#include <bits/wordsize.h>\n'
+                                 '#if __WORDSIZE == 64\n'
+                                 'typedef uint64_t c_t;\n'
+                                 '# define U(n) UINT64_C (n)\n'
+                                 '#else\n'
+                                 'typedef uint32_t c_t;\n'
+                                 '# define U(n) UINT32_C (n)\n'
+                                 '#endif\n'
+                                 'static int\n'
+                                 'do_test (void)\n'
+                                 '{\n'
+                                 # Compilation test only, using static
+                                 # assertions.
+                                 '  return 0;\n'
+                                 '}\n'
+                                 '#include <support/test-driver.c>')
+            else:
+                out_lines.append(arg)
             continue
         name = arg[0]
         value = arg[1]
-        if not started:
-            out_lines.append('#include <stdint.h>\n'
-                             '#include <stdio.h>\n'
-                             '#include <bits/wordsize.h>\n'
-                             '#if __WORDSIZE == 64\n'
-                             'typedef uint64_t c_t;\n'
-                             '# define U(n) UINT64_C (n)\n'
-                             '#else\n'
-                             'typedef uint32_t c_t;\n'
-                             '# define U(n) UINT32_C (n)\n'
-                             '#endif\n'
-                             'static int\n'
-                             'do_test (void)\n'
-                             '{\n'
-                             # Compilation test only, using static assertions.
-                             '  return 0;\n'
-                             '}\n'
-                             '#include <support/test-driver.c>')
-            started = True
         out_lines.append('_Static_assert (U (asconst_%s) == (c_t) (%s), '
                          '"value of %s");'
                          % (name, value, name))
@@ -134,6 +134,7 @@ def main():
     args = parser.parse_args()
     sym_data = []
     with open(args.sym_file, 'r') as sym_file:
+        started = False
         for line in sym_file:
             line = line.strip()
             if line == '':
@@ -143,12 +144,17 @@ def main():
                 sym_data.append(line)
                 continue
             words = line.split(maxsplit=1)
+            if not started:
+                sym_data.append('START')
+                started = True
             # Separator.
             if words[0] == '--':
                 continue
             name = words[0]
             value = words[1] if len(words) > 1 else words[0]
             sym_data.append((name, value))
+        if not started:
+            sym_data.append('START')
     if args.test:
         print(gen_test(sym_data))
     else:

@@ -1,3 +1,11 @@
+2018-12-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/gen-as-const.py (compute_c_consts): Take an argument
+	'START' to indicate that start text should be output.
+	(gen_test): Likewise.
+	(main): Generate 'START' for first symbol or '--' line, or at end
+	of input if not previously generated.
+
 2018-12-03  Rafael Ávila de Espíndola  <rafael@espindo.la>
 
 	[BZ #19767]
