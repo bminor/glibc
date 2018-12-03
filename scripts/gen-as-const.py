@@ -153,7 +153,7 @@ def main():
         print(gen_test(sym_data))
     else:
         consts = compute_c_consts(sym_data, args.cc)
-        print('\n'.join('#define %s %s' % c for c in sorted(consts.items())))
+        print(''.join('#define %s %s\n' % c for c in sorted(consts.items())), end='')
 
 if __name__ == '__main__':
     main()
