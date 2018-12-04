@@ -374,6 +374,7 @@ $(objpfx)testroot.pristine/install.stamp :
 	cp $(objpfx)support/shell-container $(objpfx)testroot.pristine/bin/sh
 	cp $(objpfx)support/echo-container $(objpfx)testroot.pristine/bin/echo
 	cp $(objpfx)support/true-container $(objpfx)testroot.pristine/bin/true
+ifeq ($(run-built-tests),yes)
 	# Copy these DSOs first so we can overwrite them with our own.
 	for dso in `$(test-wrapper-env) LD_TRACE_LOADED_OBJECTS=1  \
 		$(objpfx)elf/$(rtld-installed-name) \
@@ -393,6 +394,7 @@ $(objpfx)testroot.pristine/install.stamp :
 	      mkdir -p `dirname $(objpfx)testroot.pristine$$dso` ;\
 	    $(test-wrapper) cp $$dso $(objpfx)testroot.pristine$$dso ;\
 	  done
+endif
 	$(MAKE) install DESTDIR=$(objpfx)testroot.pristine
 	touch $(objpfx)testroot.pristine/install.stamp
 

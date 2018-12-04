@@ -1,3 +1,8 @@
+2018-12-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* Makefile ($(objpfx)testroot.pristine/install.stamp): Do not run
+	dynamic linker unless [$(run-built-tests) = yes].
+
 2018-12-03  DJ Delorie  <dj@delorie.com>
 
 	* support/test-container.c (check_for_unshare_hints): New.
