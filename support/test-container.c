@@ -88,15 +88,22 @@ int verbose = 0;
    * mytest.root/ is rsync'd into container
    * mytest.root/preclean.req causes fresh rsync (with delete) before
      test if present
-   * mytest.root/mytset.script has a list of "commands" to run:
+   * mytest.root/mytest.script has a list of "commands" to run:
        syntax:
          # comment
+         su
          mv FILE FILE
 	 cp FILE FILE
 	 rm FILE
 	 FILE must start with $B/, $S/, $I/, $L/, or /
 	  (expands to build dir, source dir, install dir, library dir
 	   (in container), or container's root)
+       details:
+         - '#': A comment.
+         - 'su': Enables running test as root in the container.
+         - 'mv': A minimal move files command.
+         - 'cp': A minimal copy files command.
+         - 'rm': A minimal remove files command.
    * mytest.root/postclean.req causes fresh rsync (with delete) after
      test if present
 
@@ -349,6 +356,7 @@ recursive_remove (char *path)
 
   switch (child) {
   case -1:
+    perror("fork");
     FAIL_EXIT1 ("Unable to fork");
   case 0:
     /* Child.  */
@@ -610,6 +618,47 @@ rsync (char *src, char *dest, int and_delete)
 }
 
 
+
+/* See if we can detect what the user needs to do to get unshare
+   support working for us.  */
+void
+check_for_unshare_hints (void)
+{
+  FILE *f;
+  int i;
+
+  /* Default Debian Linux disables user namespaces, but allows a way
+     to enable them.  */
+  f = fopen ("/proc/sys/kernel/unprivileged_userns_clone", "r");
+  if (f != NULL)
+    {
+      i = 99; /* Sentinel.  */
+      fscanf (f, "%d", &i);
+      if (i == 0)
+	{
+	  printf ("To enable test-container, please run this as root:\n");
+	  printf ("  echo 1 > /proc/sys/kernel/unprivileged_userns_clone\n");
+	}
+      fclose (f);
+      return;
+    }
+
+  /* ALT Linux has an alternate way of doing the same.  */
+  f = fopen ("/proc/sys/kernel/userns_restrict", "r");
+  if (f != NULL)
+    {
+      i = 99; /* Sentinel.  */
+      fscanf (f, "%d", &i);
+      if (i == 1)
+	{
+	  printf ("To enable test-container, please run this as root:\n");
+	  printf ("  echo 0 > /proc/sys/kernel/userns_restrict\n");
+	}
+      fclose (f);
+      return;
+    }
+}
+
 int
 main (int argc, char **argv)
 {
@@ -628,6 +677,8 @@ main (int argc, char **argv)
 
   uid_t original_uid;
   gid_t original_gid;
+  /* If set, the test runs as root instead of the user running the testsuite.  */
+  int be_su = 0;
   int UMAP;
   int GMAP;
   /* Used for "%lld %lld 1" so need not be large.  */
@@ -857,6 +908,10 @@ main (int argc, char **argv)
 	      {
 		maybe_xunlink (the_words[1]);
 	      }
+	    else if (nt == 1 && strcmp (the_words[0], "su") == 0)
+	      {
+		be_su = 1;
+	      }
 	    else if (nt > 0 && the_words[0][0] != '#')
 	      {
 		printf ("\033[31minvalid [%s]\033[0m\n", the_words[0]);
@@ -873,7 +928,12 @@ main (int argc, char **argv)
       /* Older kernels may not support all the options, or security
 	 policy may block this call.  */
       if (errno == EINVAL || errno == EPERM)
-	FAIL_UNSUPPORTED ("unable to unshare user/fs: %s", strerror (errno));
+	{
+	  int saved_errno = errno;
+	  if (errno == EPERM)
+	    check_for_unshare_hints ();
+	  FAIL_UNSUPPORTED ("unable to unshare user/fs: %s", strerror (saved_errno));
+	}
       else
 	FAIL_EXIT1 ("unable to unshare user/fs: %s", strerror (errno));
     }
@@ -952,7 +1012,7 @@ main (int argc, char **argv)
     FAIL_EXIT1 ("can't write to /proc/self/uid_map\n");
 
   sprintf (tmp, "%lld %lld 1\n",
-	   (long long) original_uid, (long long) original_uid);
+	   (long long) (be_su ? 0 : original_uid), (long long) original_uid);
   write (UMAP, tmp, strlen (tmp));
   xclose (UMAP);
 
@@ -973,7 +1033,7 @@ main (int argc, char **argv)
     FAIL_EXIT1 ("can't write to /proc/self/gid_map\n");
 
   sprintf (tmp, "%lld %lld 1\n",
-	   (long long) original_gid, (long long) original_gid);
+	   (long long) (be_su ? 0 : original_gid), (long long) original_gid);
   write (GMAP, tmp, strlen (tmp));
   xclose (GMAP);
 
