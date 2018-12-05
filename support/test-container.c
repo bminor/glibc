@@ -921,6 +921,43 @@ main (int argc, char **argv)
       }
   }
 
+  if (do_postclean)
+    {
+      pid_t pc_pid = fork ();
+
+      if (pc_pid < 0)
+	{
+	  FAIL_EXIT1 ("Can't fork for post-clean");
+	}
+      else if (pc_pid > 0)
+	{
+	  /* Parent.  */
+	  int status;
+	  waitpid (pc_pid, &status, 0);
+
+	  /* Child has exited, we can post-clean the test root.  */
+	  printf("running post-clean rsync\n");
+	  rsync (pristine_root_path, new_root_path, 1);
+
+	  if (WIFEXITED (status))
+	    exit (WEXITSTATUS (status));
+
+	  if (WIFSIGNALED (status))
+	    {
+	      printf ("%%SIGNALLED%%\n");
+	      exit (77);
+	    }
+
+	  printf ("%%EXITERROR%%\n");
+	  exit (78);
+	}
+
+      /* Child continues.  */
+    }
+
+  /* This is the last point in the program where we're still in the
+     "normal" namespace.  */
+
 #ifdef CLONE_NEWNS
   /* The unshare here gives us our own spaces and capabilities.  */
   if (unshare (CLONE_NEWUSER | CLONE_NEWPID | CLONE_NEWNS) < 0)
@@ -973,14 +1010,6 @@ main (int argc, char **argv)
       /* Parent.  */
       int status;
       waitpid (child, &status, 0);
-
-      /* There's a bit of magic here, since the buildroot is mounted
-	 in our space, the paths are still valid, and since the mounts
-	 aren't recursive, it sees *only* the built root, not anything
-	 we would normally se if we rsync'd to "/" like mounted /dev
-	 files.  */
-      if (do_postclean)
-	  rsync (pristine_root_path, new_root_path, 1);
 
       if (WIFEXITED (status))
 	exit (WEXITSTATUS (status));

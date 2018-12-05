@@ -1,3 +1,9 @@
+2018-12-10  DJ Delorie  <dj@redhat.com>
+
+	[BZ #23948]
+	* support/test-container.c: Move postclean step to before we
+	change namespaces.
+
 2018-12-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/gen-as-const.py (main): Handle --python option.
