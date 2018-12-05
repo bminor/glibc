@@ -300,7 +300,6 @@ extern void _IO_free_wbackup_area (FILE *) __THROW;
 
 #ifdef __LDBL_COMPAT
 __LDBL_REDIR_DECL (_IO_vfscanf)
-__LDBL_REDIR_DECL (_IO_vfprintf)
 #endif
 
 libc_hidden_proto (__overflow)
