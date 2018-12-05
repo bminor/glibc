@@ -95,6 +95,7 @@ static enum nss_status _nss_borg_getpwent_r_locked(struct passwd *result,
     ret = NSS_STATUS_SUCCESS;
   } else if (
 	     // Yes, this is one of those cases where an assign makes sense.
+	     // NB: passwd.borg.base is not ordered by UID as of cl/201005022.
 	     fb != NULL && (result = sparecopy) && (fgetpwent_r(fb, result, buffer, buflen, &result) == 0)) {
     DEBUG("Returning base user %d:%s\n", result->pw_uid, result->pw_name);
     ret = NSS_STATUS_SUCCESS;
