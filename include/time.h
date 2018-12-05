@@ -46,7 +46,7 @@ extern void __tzfile_default (const char *std, const char *dst,
 			      long int stdoff, long int dstoff)
   attribute_hidden;
 extern void __tzset_parse_tz (const char *tz) attribute_hidden;
-extern void __tz_compute (time_t timer, struct tm *tm, int use_localtime)
+extern void __tz_compute (__time64_t timer, struct tm *tm, int use_localtime)
   __THROW attribute_hidden;
 
 /* Subroutine of `mktime'.  Return the `time_t' representation of TP and
@@ -63,11 +63,11 @@ extern struct tm *__gmtime_r (const time_t *__restrict __timer,
 			      struct tm *__restrict __tp);
 libc_hidden_proto (__gmtime_r)
 
-/* Compute the `struct tm' representation of *T,
+/* Compute the `struct tm' representation of T,
    offset OFFSET seconds east of UTC,
    and store year, yday, mon, mday, wday, hour, min, sec into *TP.
    Return nonzero if successful.  */
-extern int __offtime (const time_t *__timer,
+extern int __offtime (__time64_t __timer,
 		      long int __offset,
 		      struct tm *__tp) attribute_hidden;
 
@@ -76,7 +76,7 @@ extern char *__asctime_r (const struct tm *__tp, char *__buf)
 extern void __tzset (void) attribute_hidden;
 
 /* Prototype for the internal function to get information based on TZ.  */
-extern struct tm *__tz_convert (const time_t *timer, int use_localtime,
+extern struct tm *__tz_convert (__time64_t timer, int use_localtime,
 				struct tm *tp) attribute_hidden;
 
 extern int __nanosleep (const struct timespec *__requested_time,

@@ -1,3 +1,18 @@
+2018-12-05  Albert ARIBAUD <albert.aribaud@3adev.fr>
+
+	* include/time.h
+	(__tz_compute): Replace time_t with __time64_t.
+	(__tz_convert): Replace time_t* with __time64_t.
+	(__offtime): Replace time_t* with __time64_t.
+	* time/gmtime.c
+	(__gmtime_r): Adjust call to __tz_convert.
+	(gmtime): Likewise.
+	* time/localtime.c
+	(__localtime_r): Likewise.
+	(localtime): Likewise.
+	* time/offtime.c: Replace time_t with __time64_t.
+	* time/tzset.c: Likewise.
+
 2018-12-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* Makefile ($(objpfx)testroot.pristine/install.stamp): Do not run

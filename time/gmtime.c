@@ -23,7 +23,7 @@
 struct tm *
 __gmtime_r (const time_t *t, struct tm *tp)
 {
-  return __tz_convert (t, 0, tp);
+  return __tz_convert (*t, 0, tp);
 }
 libc_hidden_def (__gmtime_r)
 weak_alias (__gmtime_r, gmtime_r)
@@ -33,5 +33,5 @@ weak_alias (__gmtime_r, gmtime_r)
 struct tm *
 gmtime (const time_t *t)
 {
-  return __tz_convert (t, 0, &_tmbuf);
+  return __tz_convert (*t, 0, &_tmbuf);
 }
