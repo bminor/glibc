@@ -2053,7 +2053,7 @@ _dl_map_object (struct link_map *loader, const char *name, off_t offset,
 	      && main_map != NULL && main_map->l_type != lt_loaded
 	      && cache_rpath (main_map, &main_map->l_rpath_dirs, DT_RPATH,
 			      "RPATH"))
-	    fd = open_path (name, namelen, mode, offset,
+	    fd = open_path (name, namelen, offset, mode,
 			    &main_map->l_rpath_dirs,
 			    &realname, &fb, loader ?: main_map, LA_SER_RUNPATH,
 			    &found_other_class);
