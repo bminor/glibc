@@ -6,6 +6,8 @@
 libc_hidden_proto (_exit, __noreturn__)
 rtld_hidden_proto (_exit, __noreturn__)
 libc_hidden_proto (alarm)
+extern size_t __confstr (int name, char *buf, size_t len);
+libc_hidden_proto (__confstr)
 libc_hidden_proto (confstr)
 libc_hidden_proto (execl)
 libc_hidden_proto (execle)

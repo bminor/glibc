@@ -673,10 +673,10 @@ __spawni (pid_t *pid, const char *file,
 	  /* There is no `PATH' in the environment.
 	     The default search path is the current directory
 	     followed by the path `confstr' returns for `_CS_PATH'.  */
-	  len = confstr (_CS_PATH, (char *) NULL, 0);
+	  len = __confstr (_CS_PATH, (char *) NULL, 0);
 	  path = (char *) __alloca (1 + len);
 	  path[0] = ':';
-	  (void) confstr (_CS_PATH, path + 1, len);
+	  (void) __confstr (_CS_PATH, path + 1, len);
 	}
 
       len = strlen (file) + 1;

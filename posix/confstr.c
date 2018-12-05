@@ -29,7 +29,7 @@
    of BUF with the value corresponding to NAME and zero-terminate BUF.
    Return the number of bytes required to hold NAME's entire value.  */
 size_t
-confstr (int name, char *buf, size_t len)
+__confstr (int name, char *buf, size_t len)
 {
   const char *string = "";
   size_t string_len = 1;
@@ -289,4 +289,6 @@ confstr (int name, char *buf, size_t len)
     }
   return string_len;
 }
+libc_hidden_def (__confstr)
 libc_hidden_def (confstr)
+weak_alias (__confstr, confstr)

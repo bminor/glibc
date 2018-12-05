@@ -1,3 +1,12 @@
+2018-12-05  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* include/unistd.h (__confstr): Add prototype and hidden prototype.
+	* posix/confstr.c (confstr): Rename to __confstr.
+	(__confstr): Add hidden def.
+	(confstr): Add weak alias for __confstr.
+	* sysdeps/mach/hurd/spawni.c (__spawni): Call __confstr instead of
+	confstr.
+
 2018-12-07  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* NEWS: Mention getcpu.
