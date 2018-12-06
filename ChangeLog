@@ -1,3 +1,13 @@
+2018-12-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* manual/texinfo.tex: Update to version 2018-09-21.20 with
+	trailing whitespace removed.
+	* scripts/config.guess: Update to version 2018-11-28.
+	* scripts/config.sub: Update to version 2018-11-28.
+	* scripts/install-sh: Update to version 2018-03-11.20.
+	* scripts/mkinstalldirs: Update to version 2018-03-07.03.
+	* scripts/move-if-change: Update to version 2018-03-07 03:47.
+
 2018-12-07  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #23927]
