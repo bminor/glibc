@@ -183,6 +183,10 @@ int support_report_failure (int status)
 /* Internal function used to test the failure recording framework.  */
 void support_record_failure_reset (void);
 
+/* Returns true or false depending on whether there have been test
+   failures or not.  */
+int support_record_failure_is_failed (void);
+
 __END_DECLS
 
 #endif /* SUPPORT_CHECK_H */

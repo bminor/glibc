@@ -46,6 +46,7 @@ libsupport-routines = \
   support_chroot \
   support_copy_file_range \
   support_descriptor_supports_holes \
+  support_descriptors \
   support_enter_mount_namespace \
   support_enter_network_namespace \
   support_format_address_family \
@@ -195,6 +196,7 @@ tests = \
   tst-support-namespace \
   tst-support_blob_repeat \
   tst-support_capture_subprocess \
+  tst-support_descriptors \
   tst-support_format_dns_packet \
   tst-support_quote_blob \
   tst-support_quote_string \
