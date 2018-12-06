@@ -43,6 +43,7 @@ libsupport-routines = \
   support_capture_subprocess \
   support_capture_subprocess_check \
   support_chroot \
+  support_descriptors \
   support_enter_mount_namespace \
   support_enter_network_namespace \
   support_format_address_family \
@@ -156,6 +157,7 @@ tests = \
   README-testing \
   tst-support-namespace \
   tst-support_capture_subprocess \
+  tst-support_descriptors \
   tst-support_format_dns_packet \
   tst-support_quote_blob \
   tst-support_quote_string \
