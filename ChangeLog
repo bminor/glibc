@@ -1,5 +1,12 @@
 2018-12-07  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #23927]
+	CVE-2018-19591
+	* inet/tst-if_index-long.c: New file.
+	* inet/Makefile (tests): Add tst-if_index-long.
+
+2018-12-07  Florian Weimer  <fweimer@redhat.com>
+
 	* support/check.h (support_record_failure_is_failed): Declare.
 	* support/descriptors.h: New file.
 	* support/support_descriptors.c: Likewise.
