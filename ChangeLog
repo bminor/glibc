@@ -1,3 +1,14 @@
+2018-12-07  Florian Weimer  <fweimer@redhat.com>
+
+	* support/check.h (support_record_failure_is_failed): Declare.
+	* support/descriptors.h: New file.
+	* support/support_descriptors.c: Likewise.
+	* support/tst-support_descriptors.c: Likewise.
+	* support/support_record_failure.c
+	(support_record_failure_is_failed): New function.
+	* support/Makefile (libsupport-routines): Add support_descriptors.
+	(tests): Add tst-support_descriptors.
+
 2018-12-01  Florian Weimer  <fweimer@redhat.com>
 
 	* support/support_capture_subprocess.c
