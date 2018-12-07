@@ -31,6 +31,7 @@ struct __spawn_action
     spawn_do_dup2,
     spawn_do_open,
     spawn_do_chdir,
+    spawn_do_fchdir,
   } tag;
 
   union
@@ -55,6 +56,10 @@ struct __spawn_action
     {
       char *path;
     } chdir_action;
+    struct
+    {
+      int fd;
+    } fchdir_action;
   } action;
 };
 

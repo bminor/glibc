@@ -190,6 +190,12 @@ extern int posix_spawn_file_actions_adddup2 (posix_spawn_file_actions_t *
    affects the subsequent file actions.  */
 extern int posix_spawn_file_actions_addchdir_np (posix_spawn_file_actions_t *,
 						 const char *__path) __THROW;
+
+/* Add an action changing the directory to FD during spawn.  This
+   affects the subsequent file actions.  FD is not duplicated and must
+   be open when the file action is executed.  */
+extern int posix_spawn_file_actions_addfchdir_np (posix_spawn_file_actions_t *,
+						  int __fd) __THROW;
 #endif
 
 __END_DECLS

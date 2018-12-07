@@ -30,10 +30,12 @@ Major new features:
   HTM state is saved and restore lazily (the state being saved even when the
   process actually does not use HTM).
 
-* The posix_spawn_file_actions_addchdir_np function has been added,
-  enabling posix_spawn and posix_spawnp to run the new process in a
-  different directory.  This is a GNU extension and similar to the
-  Solaris function of the same name.
+* The functions posix_spawn_file_actions_addchdir_np and
+  posix_spawn_file_actions_addfchdir_np have been added, enabling
+  posix_spawn and posix_spawnp to run the new process in a different
+  directory.  These functions are GNU extensions.  The function
+  posix_spawn_file_actions_addchdir_np is similar to the Solaris function
+  of the same name.
 
 * The popen and system do not run atfork handlers anymore (BZ#17490).
   Although it is a possible POSIX violation, the POSIX rationale in

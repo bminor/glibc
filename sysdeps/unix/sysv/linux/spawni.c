@@ -263,6 +263,11 @@ __spawni_child (void *arguments)
 	      if (__chdir (action->action.chdir_action.path) != 0)
 		goto fail;
 	      break;
+
+	    case spawn_do_fchdir:
+	      if (__fchdir (action->action.fchdir_action.fd) != 0)
+		goto fail;
+	      break;
 	    }
 	}
     }

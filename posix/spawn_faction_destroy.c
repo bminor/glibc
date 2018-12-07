@@ -38,6 +38,7 @@ __posix_spawn_file_actions_destroy (posix_spawn_file_actions_t *file_actions)
 	  break;
 	case spawn_do_close:
 	case spawn_do_dup2:
+	case spawn_do_fchdir:
 	  /* No cleanup required.  */
 	  break;
 	}

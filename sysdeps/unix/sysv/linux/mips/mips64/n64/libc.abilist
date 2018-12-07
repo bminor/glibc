@@ -1969,6 +1969,7 @@ GLIBC_2.28 thrd_equal F
 GLIBC_2.28 thrd_sleep F
 GLIBC_2.28 thrd_yield F
 GLIBC_2.29 posix_spawn_file_actions_addchdir_np F
+GLIBC_2.29 posix_spawn_file_actions_addfchdir_np F
 GLIBC_2.3 __ctype_b_loc F
 GLIBC_2.3 __ctype_tolower_loc F
 GLIBC_2.3 __ctype_toupper_loc F
