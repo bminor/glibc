@@ -142,7 +142,7 @@ endif
 ifeq ($(subdir),posix)
 sysdep_headers += bits/initspin.h
 
-sysdep_routines += sched_getcpu oldglob
+sysdep_routines += sched_getcpu oldglob getcpu
 
 tests += tst-affinity tst-affinity-pid
 

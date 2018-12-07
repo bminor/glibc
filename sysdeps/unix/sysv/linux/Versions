@@ -171,6 +171,9 @@ libc {
     mlock2;
     pkey_alloc; pkey_free; pkey_set; pkey_get; pkey_mprotect;
   }
+  GLIBC_2.29 {
+    getcpu;
+  }
   GLIBC_PRIVATE {
     # functions used in other libraries
     __syscall_rt_sigqueueinfo;

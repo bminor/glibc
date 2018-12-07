@@ -1429,6 +1429,27 @@ not leave a processor for the process or thread to run on.
 This function is a GNU extension and is declared in @file{sched.h}.
 @end deftypefun
 
+@deftypefun int getcpu (unsigned int *cpu, unsigned int *node)
+@standards{Linux, <sched.h>}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+The @code{getcpu} function identifies the processor and node on which
+the calling thread or process is currently running and writes them into
+the integers pointed to by the @var{cpu} and @var{node} arguments.  The
+processor is a unique nonnegative integer identifying a CPU.  The node
+is a unique nonnegative integer identifying a NUMA node.  When either
+@var{cpu} or @var{node} is @code{NULL}, nothing is written to the
+respective pointer.
+
+The return value is @code{0} on success and @code{-1} on failure.  The
+following @code{errno} error condition is defined for this function:
+
+@table @code
+@item ENOSYS
+The operating system does not support this function.
+@end table
+
+This function is Linux-specific and is declared in @file{sched.h}.
+@end deftypefun
 
 @node Memory Resources
 @section Querying memory available resources

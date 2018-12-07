@@ -86,6 +86,9 @@ extern int unshare (int __flags) __THROW;
 /* Get index of currently used CPU.  */
 extern int sched_getcpu (void) __THROW;
 
+/* Get currently used CPU and NUMA node.  */
+extern int getcpu (unsigned int *, unsigned int *) __THROW;
+
 /* Switch process to namespace of type NSTYPE indicated by FD.  */
 extern int setns (int __fd, int __nstype) __THROW;
 #endif

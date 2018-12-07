@@ -189,6 +189,18 @@ test_size (const struct conf *conf, size_t size)
 	  printf ("error: Unexpected CPU %d, expected %d\n", active_cpu, cpu);
 	  return false;
 	}
+      unsigned int numa_cpu, numa_node;
+      if (getcpu (&numa_cpu, &numa_node) != 0)
+	{
+	  printf ("error: getcpu: %m\n");
+	  return false;
+	}
+      if ((unsigned int) active_cpu != numa_cpu)
+	{
+	  printf ("error: Unexpected CPU %d, expected %d\n",
+		  active_cpu, numa_cpu);
+	  return false;
+	}
       if (getaffinity (kernel_size, set2) < 0)
 	{
 	  printf ("error: size %zu: getaffinity (2): %m\n", size);
