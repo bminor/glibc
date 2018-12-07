@@ -259,6 +259,46 @@ __spawni (pid_t *pid, const char *file,
 
       return err;
     }
+  inline error_t child_lookup_under (file_t startdir, const char *file,
+				     int oflag, mode_t mode, file_t *result)
+    {
+      error_t use_init_port (int which, error_t (*operate) (mach_port_t))
+	{
+	  return (which == INIT_PORT_CWDIR ? (*operate) (startdir) :
+		  child_init_port (which, operate));
+	}
+
+      return __hurd_file_name_lookup (&use_init_port, &child_fd, 0,
+				      file, oflag, mode, result);
+    }
+  auto error_t child_fchdir (int fd)
+    {
+      file_t new_ccwdir;
+      error_t err;
+
+      if ((unsigned int)fd >= dtablesize
+	  || dtable[fd] == MACH_PORT_NULL)
+	return EBADF;
+
+      /* We look up "." to force ENOTDIR if it's not a directory and EACCES if
+         we don't have search permission.  */
+      if (dtable_cells[fd] != NULL)
+	  err = HURD_PORT_USE (dtable_cells[fd],
+		    ({
+		      child_lookup_under (port, ".", O_NOTRANS, 0, &new_ccwdir);
+		     }));
+      else
+	  err = child_lookup_under (dtable[fd], ".", O_NOTRANS, 0, &new_ccwdir);
+
+      if (!err)
+	{
+	  if (ccwdir != MACH_PORT_NULL)
+	    __mach_port_deallocate (__mach_task_self (), ccwdir);
+	  ccwdir = new_ccwdir;
+	}
+
+      return err;
+    }
 
 
   /* Do this once.  */
@@ -552,6 +592,10 @@ __spawni (pid_t *pid, const char *file,
 
 	  case spawn_do_chdir:
 	    err = child_chdir (action->action.chdir_action.path);
+	    break;
+
+	  case spawn_do_fchdir:
+	    err = child_fchdir (action->action.fchdir_action.fd);
 	    break;
 	  }
 
