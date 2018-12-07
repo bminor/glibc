@@ -1,3 +1,7 @@
+2018-12-07  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* include/sched.h (__getcpu): Don't use __typeof__ (getcpu).
+
 2018-12-07  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
 	* libio/libioP.h (SCANF_LDBL_USES_FLOAT128): New macro to be
