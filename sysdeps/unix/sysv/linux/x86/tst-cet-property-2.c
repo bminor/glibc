@@ -44,9 +44,9 @@ sig_handler (int signo)
 static int
 do_test (void)
 {
-  char buf[20];
+  char buf[4];
 
-  if (scanf ("%20s", buf) != 1)
+  if (scanf ("%3s", buf) != 1)
     FAIL_UNSUPPORTED ("IBT not supported");
 
   if (strcmp (buf, "IBT") != 0)

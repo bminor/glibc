@@ -1,3 +1,9 @@
+2018-12-08  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #23490]
+	* sysdeps/unix/sysv/linux/x86/tst-cet-property-2.c
+	(do_test): Adjust buffer size and fix format.
+
 2018-12-07  DJ Delorie  <dj@redhat.com>
 
 	[BZ #23907]
