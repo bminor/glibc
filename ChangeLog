@@ -1,3 +1,17 @@
+2018-12-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/glibcextract.py: New file.
+	* scripts/gen-as-const.py: Do not import os.path, re, subprocess
+	or tempfile.  Import glibcexctract.
+	(compute_c_consts): Remove.  Moved to glibcextract.py.
+	(gen_test): Update reference to compute_c_consts.
+	(main): Likewise.
+	* sysdeps/unix/sysv/linux/tst-signal-numbers.py: New file.
+	* sysdeps/unix/sysv/linux/tst-signal-numbers.sh: Remove.
+	* sysdeps/unix/sysv/linux/Makefile
+	($(objpfx)tst-signal-numbers.out): Use tst-signal-numbers.py.
+	Redirect stderr as well as stdout.
+
 2018-12-10  Rafael Ávila de Espíndola  <rafael@espindo.la>
 
 	[BZ #19767]

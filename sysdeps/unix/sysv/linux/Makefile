@@ -115,11 +115,14 @@ tests-special += $(objpfx)tst-signal-numbers.out
 # in this context, but signal.c includes signal.h and not much else so it'll
 # be conservatively correct.
 $(objpfx)tst-signal-numbers.out: \
-		../sysdeps/unix/sysv/linux/tst-signal-numbers.sh \
+		../sysdeps/unix/sysv/linux/tst-signal-numbers.py \
 		$(objpfx)signal.o*
-	AWK=$(AWK) $(SHELL) ../sysdeps/unix/sysv/linux/tst-signal-numbers.sh \
-	$(CC) $(patsubst -DMODULE_NAME=%,-DMODULE_NAME=testsuite,$(CPPFLAGS)) \
-	< /dev/null > $@; $(evaluate-test)
+	PYTHONPATH=../scripts \
+	$(PYTHON) ../sysdeps/unix/sysv/linux/tst-signal-numbers.py \
+		   --cc="$(CC) $(patsubst -DMODULE_NAME=%, \
+					  -DMODULE_NAME=testsuite, \
+					  $(CPPFLAGS))" \
+	< /dev/null > $@ 2>&1; $(evaluate-test)
 endif
 
 ifeq ($(subdir),socket)

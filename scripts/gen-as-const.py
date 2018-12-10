@@ -24,68 +24,14 @@
 # A line giving just a name implies an expression consisting of just that name.
 
 import argparse
-import os.path
-import re
-import subprocess
-import tempfile
 
-
-def compute_c_consts(sym_data, cc):
-    """Compute the values of some C constants.
-
-    The first argument is a list whose elements are either strings
-    (preprocessor directives, or the special string 'START' to
-    indicate this function should insert its initial boilerplate text
-    in the output there) or pairs of strings (a name and a C
-    expression for the corresponding value).  Preprocessor directives
-    in the middle of the list may be used to select which constants
-    end up being evaluated using which expressions.
-
-    """
-    out_lines = []
-    for arg in sym_data:
-        if isinstance(arg, str):
-            if arg == 'START':
-                out_lines.append('void\ndummy (void)\n{')
-            else:
-                out_lines.append(arg)
-            continue
-        name = arg[0]
-        value = arg[1]
-        out_lines.append('asm ("@@@name@@@%s@@@value@@@%%0@@@end@@@" '
-                         ': : \"i\" ((long int) (%s)));'
-                         % (name, value))
-    out_lines.append('}')
-    out_lines.append('')
-    out_text = '\n'.join(out_lines)
-    with tempfile.TemporaryDirectory() as temp_dir:
-        c_file_name = os.path.join(temp_dir, 'test.c')
-        s_file_name = os.path.join(temp_dir, 'test.s')
-        with open(c_file_name, 'w') as c_file:
-            c_file.write(out_text)
-        # Compilation has to be from stdin to avoid the temporary file
-        # name being written into the generated dependencies.
-        cmd = ('%s -S -o %s -x c - < %s' % (cc, s_file_name, c_file_name))
-        subprocess.check_call(cmd, shell=True)
-        consts = {}
-        with open(s_file_name, 'r') as s_file:
-            for line in s_file:
-                match = re.search('@@@name@@@([^@]*)'
-                                  '@@@value@@@[^0-9Xxa-fA-F-]*'
-                                  '([0-9Xxa-fA-F-]+).*@@@end@@@', line)
-                if match:
-                    if (match.group(1) in consts
-                        and match.group(2) != consts[match.group(1)]):
-                        raise ValueError('duplicate constant %s'
-                                         % match.group(1))
-                    consts[match.group(1)] = match.group(2)
-        return consts
+import glibcextract
 
 
 def gen_test(sym_data):
     """Generate a test for the values of some C constants.
 
-    The first argument is as for compute_c_consts.
+    The first argument is as for glibcextract.compute_c_consts.
 
     """
     out_lines = []
@@ -158,7 +104,7 @@ def main():
     if args.test:
         print(gen_test(sym_data))
     else:
-        consts = compute_c_consts(sym_data, args.cc)
+        consts = glibcextract.compute_c_consts(sym_data, args.cc)
         print(''.join('#define %s %s\n' % c for c in sorted(consts.items())), end='')
 
 if __name__ == '__main__':
