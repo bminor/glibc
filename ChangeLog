@@ -1,3 +1,10 @@
+2018-12-11  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	[BZ #23961]
+	* math/auto-libm-test-in: Add new test case.
+	* math/auto-libm-test-out-pow: Regenerated.
+	* sysdeps/ieee754/flt-32/e_powf.c (__powf): Fix overflow check.
+
 2018-12-10  DJ Delorie  <dj@redhat.com>
 
 	[BZ #23948]

@@ -17,6 +17,8 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <math-barriers.h>
+#include <math-narrow-eval.h>
 #include <stdint.h>
 #include <shlib-compat.h>
 #include <libm-alias-float.h>
@@ -207,7 +209,17 @@ __powf (float x, float y)
     {
       /* |y*log(x)| >= 126.  */
       if (ylogx > 0x1.fffffffd1d571p+6 * POWF_SCALE)
+	/* |x^y| > 0x1.ffffffp127.  */
 	return __math_oflowf (sign_bias);
+      if (WANT_ROUNDING && WANT_ERRNO
+	  && ylogx > 0x1.fffffffa3aae2p+6 * POWF_SCALE)
+	/* |x^y| > 0x1.fffffep127, check if we round away from 0.  */
+	if ((!sign_bias
+	     && math_narrow_eval (1.0f + math_opt_barrier (0x1p-25f)) != 1.0f)
+	    || (sign_bias
+		&& math_narrow_eval (-1.0f - math_opt_barrier (0x1p-25f))
+		     != -1.0f))
+	  return __math_oflowf (sign_bias);
       if (ylogx <= -150.0 * POWF_SCALE)
 	return __math_uflowf (sign_bias);
 #if WANT_ERRNO_UFLOW
