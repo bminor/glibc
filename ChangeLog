@@ -1,3 +1,11 @@
+2018-12-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* timezone/private.h: Update from tzcode 2018g.
+	* timezone/tzfile.h: Likewise.
+	* timezone/tzselect.ksh: Likewise.
+	* timezone/zdump.c: Likewise.
+	* timezone/zic.c: Likewise.
+
 2018-12-08  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #23490]

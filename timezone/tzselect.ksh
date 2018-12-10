@@ -1,11 +1,10 @@
 #!/bin/bash
+# Ask the user about the time zone, and output the resulting TZ value to stdout.
+# Interact with the user via stderr and stdin.
 
 PKGVERSION='(tzcode) '
 TZVERSION=see_Makefile
 REPORT_BUGS_TO=tz@iana.org
-
-# Ask the user about the time zone, and output the resulting TZ value to stdout.
-# Interact with the user via stderr and stdin.
 
 # Contributed by Paul Eggert.  This file is in the public domain.
 
@@ -17,9 +16,9 @@ REPORT_BUGS_TO=tz@iana.org
 # If your host lacks both Bash and the Korn shell, you can get their
 # source from one of these locations:
 #
-#	Bash <http://www.gnu.org/software/bash/bash.html>
+#	Bash <https://www.gnu.org/software/bash/>
 #	Korn Shell <http://www.kornshell.com/>
-#	Public Domain Korn Shell <http://www.cs.mun.ca/~michael/pdksh/>
+#	MirBSD Korn Shell <https://www.mirbsd.org/mksh.htm>
 #
 # For portability to Solaris 9 /bin/sh this script avoids some POSIX
 # features and common extensions, such as $(...) (which works sometimes
@@ -29,8 +28,8 @@ REPORT_BUGS_TO=tz@iana.org
 # If your host lacks awk, or has an old awk that does not conform to Posix,
 # you can use either of the following free programs instead:
 #
-#	Gawk (GNU awk) <http://www.gnu.org/software/gawk/>
-#	mawk <http://invisible-island.net/mawk/>
+#	Gawk (GNU awk) <https://www.gnu.org/software/gawk/>
+#	mawk <https://invisible-island.net/mawk/>
 
 
 # Specify default values for environment variables if they are unset.
@@ -55,7 +54,7 @@ location_limit=10
 zonetabtype=zone1970
 
 usage="Usage: tzselect [--version] [--help] [-c COORD] [-n LIMIT]
-Select a time zone interactively.
+Select a timezone interactively.
 
 Options:
 
@@ -327,7 +326,7 @@ while
 	eval '
 	    doselect '"$quoted_continents"' \
 		"coord - I want to use geographical coordinates." \
-		"TZ - I want to specify the time zone using the Posix TZ format."
+		"TZ - I want to specify the timezone using the Posix TZ format."
 	    continent=$select_result
 	    case $continent in
 	    Americas) continent=America;;
@@ -342,8 +341,10 @@ while
 		while
 			echo >&2 'Please enter the desired value' \
 				'of the TZ environment variable.'
-			echo >&2 'For example, GST-10 is a zone named GST' \
-				'that is 10 hours ahead (east) of UTC.'
+			echo >&2 'For example, AEST-10 is abbreviated' \
+				'AEST and is 10 hours'
+			echo >&2 'ahead (east) of Greenwich,' \
+				'with no daylight saving time.'
 			read TZ
 			$AWK -v TZ="$TZ" 'BEGIN {
 				tzname = "(<[[:alnum:]+-]{3,}>|[[:alpha:]]{3,})"
@@ -360,7 +361,7 @@ while
 				exit 0
 			}'
 		do
-		    say >&2 "'$TZ' is not a conforming Posix time zone string."
+		    say >&2 "'$TZ' is not a conforming Posix timezone string."
 		done
 		TZ_for_date=$TZ;;
 	*)
@@ -386,8 +387,7 @@ while
 		      BEGIN { FS = "\t" }
 		      { print $NF }
 		    '`
-		    echo >&2 'Please select one of the following' \
-			    'time zone regions,'
+		    echo >&2 'Please select one of the following timezones,' \
 		    echo >&2 'listed roughly in increasing order' \
 			    "of distance from $coord".
 		    doselect $regions
@@ -437,7 +437,7 @@ while
 		esac
 
 
-		# Get list of names of time zone rule regions in the country.
+		# Get list of timezones in the country.
 		regions=`$AWK \
 			-v country="$country" \
 			-v TZ_COUNTRY_TABLE="$TZ_COUNTRY_TABLE" \
@@ -460,8 +460,7 @@ while
 		# If there's more than one region, ask the user which one.
 		case $regions in
 		*"$newline"*)
-			echo >&2 'Please select one of the following' \
-				'time zone regions.'
+			echo >&2 'Please select one of the following timezones.'
 			doselect $regions
 			region=$select_result;;
 		*)
