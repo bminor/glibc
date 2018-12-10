@@ -1,3 +1,13 @@
+2018-12-10  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23972]
+	* sysdeps/unix/sysv/linux/getdents64.c (handle_overflow): Check
+	offset instead of count for clarity.  Fix typo in comment.
+	(__old_getdents64): Keep track of previous offset.  Use it to call
+	handle_overflow.
+	* sysdeps/unix/sysv/linux/tst-readdir64-compat.c (do_test): Check
+	that d_off is never zero.
+
 2018-11-30  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
 
 	[BZ #23690]
