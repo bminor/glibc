@@ -1,5 +1,17 @@
 2018-12-10  Joseph Myers  <joseph@codesourcery.com>
 
+	* scripts/gen-as-const.py (main): Handle --python option.
+	* scripts/gen-py-const.awk: Remove.
+	* Makerules (py-const-script): Use gen-as-const.py.
+	($(py-const)): Likewise.
+	* nptl/nptl-printers.py (MutexPrinter.read_status_no_robust): Mask
+	with 0xffffffff together with ~(PTHREAD_MUTEX_PRIO_CEILING_MASK).
+	(MutexAttributesPrinter.read_values): Mask with 0xffffffff
+	together with ~PTHREAD_MUTEXATTR_FLAG_BITS and
+	~PTHREAD_MUTEX_NO_ELISION_NP.
+	* manual/README.pretty-printers: Update reference to
+	gen-py-const.awk.
+
 	* scripts/glibcextract.py: New file.
 	* scripts/gen-as-const.py: Do not import os.path, re, subprocess
 	or tempfile.  Import glibcexctract.

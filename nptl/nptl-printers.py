@@ -155,7 +155,7 @@ class MutexPrinter(object):
         lock_value = self.lock
 
         if self.kind & PTHREAD_MUTEX_PRIO_PROTECT_NP:
-            lock_value &= ~(PTHREAD_MUTEX_PRIO_CEILING_MASK)
+            lock_value &= 0xffffffff & ~(PTHREAD_MUTEX_PRIO_CEILING_MASK)
 
         if lock_value == PTHREAD_MUTEX_UNLOCKED:
             self.values.append(('Status', 'Not acquired'))
@@ -274,6 +274,7 @@ class MutexAttributesPrinter(object):
         """
 
         mutexattr_type = (self.mutexattr
+                          & 0xffffffff
                           & ~PTHREAD_MUTEXATTR_FLAG_BITS
                           & ~PTHREAD_MUTEX_NO_ELISION_NP)
 

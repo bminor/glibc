@@ -104,7 +104,7 @@ Adding new pretty printers
 Adding new pretty printers to glibc requires following these steps:
 
 1. Identify which constants must be generated from C headers, and write the
-corresponding .pysym file.  See scripts/gen-py-const.awk for more information
+corresponding .pysym file.  See scripts/gen-as-const.py for more information
 on how this works.  The name of the .pysym file must be added to the
 'gen-py-const-headers' variable in your submodule's Makefile (without the .pysym
 extension).

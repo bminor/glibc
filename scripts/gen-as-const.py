@@ -75,6 +75,8 @@ def main():
                         help='C compiler (including options) to use')
     parser.add_argument('--test', action='store_true',
                         help='Generate test case instead of header')
+    parser.add_argument('--python', action='store_true',
+                        help='Generate Python file instead of header')
     parser.add_argument('sym_file',
                         help='.sym file to process')
     args = parser.parse_args()
@@ -103,6 +105,13 @@ def main():
             sym_data.append('START')
     if args.test:
         print(gen_test(sym_data))
+    elif args.python:
+        consts = glibcextract.compute_c_consts(sym_data, args.cc)
+        print('# GENERATED FILE\n'
+              '\n'
+              '# Constant definitions.\n'
+              '# See gen-as-const.py for details.\n')
+        print(''.join('%s = %s\n' % c for c in sorted(consts.items())), end='')
     else:
         consts = glibcextract.compute_c_consts(sym_data, args.cc)
         print(''.join('#define %s %s\n' % c for c in sorted(consts.items())), end='')
