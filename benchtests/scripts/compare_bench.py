@@ -47,6 +47,7 @@ def do_compare(func, var, tl1, tl2, par, threshold):
         v2 = tl2[str(par)]
         d = abs(v2 - v1) * 100 / v1
     except KeyError:
+        sys.stderr.write('%s(%s)[%s]: stat does not exist\n' % (func, var, par))
         return
     except ZeroDivisionError:
         return
@@ -85,7 +86,7 @@ def compare_runs(pts1, pts2, threshold, stats):
             # timing info for the function variant.
             if 'timings' not in pts1['functions'][func][var].keys() or \
                 'timings' not in pts2['functions'][func][var].keys():
-                    continue
+                continue
 
             # If two lists do not have the same length then it is likely that
             # the performance characteristics of the function have changed.
@@ -133,7 +134,7 @@ def plot_graphs(bench1, bench2):
             # No point trying to print a graph if there are no detailed
             # timings.
             if u'timings' not in bench1['functions'][func][var].keys():
-                print('Skipping graph for %s(%s)' % (func, var))
+                sys.stderr.write('Skipping graph for %s(%s)\n' % (func, var))
                 continue
 
             pylab.clf()
@@ -157,7 +158,7 @@ def plot_graphs(bench1, bench2):
                 filename = "%s-%s.png" % (func, var)
             else:
                 filename = "%s.png" % func
-            print('Writing out %s' % filename)
+            sys.stderr.write('Writing out %s' % filename)
             pylab.savefig(filename)
 
 def main(bench1, bench2, schema, threshold, stats):

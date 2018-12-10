@@ -1,5 +1,13 @@
 2018-12-12  Leonardo Sandoval  <leonardo.sandoval.gonzalez@intel.com>
 
+	* benchtests/scripts/compare_bench.py (do_compare): write to
+	stderr in casestat is not present.
+	* benchtests/scripts/compare_bench.py (plot_graphs): write to
+	stderr in case timings field is not present. Also string showing
+	the output filename goes into the stderr.
+
+2018-12-12  Leonardo Sandoval  <leonardo.sandoval.gonzalez@intel.com>
+
 	* benchtests/scripts/compare_bench.py (do_compare): Catch KeyError
 	and ZeroDivisorError exceptions.
 	* benchtests/scripts/compare_bench.py (compare_runs): Use stats
