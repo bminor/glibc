@@ -1,3 +1,15 @@
+2018-12-10  Rafael Ávila de Espíndola  <rafael@espindo.la>
+
+	[BZ #19767]
+	* sysdeps/unix/sysv/linux/mips/init-first.c: Remove #ifdef SHARED.
+        * sysdeps/unix/sysv/linux/mips/libc-vdso.h: Remove #ifdef SHARED.
+        * sysdeps/unix/sysv/linux/mips/mips32/sysdep.h: Define
+	ALWAYS_USE_VSYSCALL.
+        * sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h: Define
+	ALWAYS_USE_VSYSCALL.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/sysdep.h: Define
+	ALWAYS_USE_VSYSCALL.
+
 2018-12-10  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #23972]
