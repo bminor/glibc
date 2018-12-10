@@ -77,7 +77,7 @@ def compare_runs(pts1, pts2, threshold):
             # timing info for the function variant.
             if 'timings' not in pts1['functions'][func][var].keys() or \
                 'timings' not in pts2['functions'][func][var].keys():
-                    return
+                    continue
 
             # If two lists do not have the same length then it is likely that
             # the performance characteristics of the function have changed.

@@ -1,3 +1,8 @@
+2018-12-12  Leonardo Sandoval  <leonardo.sandoval.gonzalez@intel.com>
+
+	* benchtests/scripts/compare_bench.py (compare_runs): Continue
+	instead of return.
+
 2018-12-12  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/posix/timespec_get.c: Add missing “any later version”
