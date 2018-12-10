@@ -1,5 +1,14 @@
 2018-12-12  Leonardo Sandoval  <leonardo.sandoval.gonzalez@intel.com>
 
+	* benchtests/scripts/compare_bench.py (do_compare): Catch KeyError
+	and ZeroDivisorError exceptions.
+	* benchtests/scripts/compare_bench.py (compare_runs): Use stats
+	argument to loop through user provided statistics.
+	* benchtests/scripts/compare_bench.py (main): Include the --stats
+	argument.
+
+2018-12-12  Leonardo Sandoval  <leonardo.sandoval.gonzalez@intel.com>
+
 	* benchtests/scripts/compare_bench.py (compare_runs): Continue
 	instead of return.
 

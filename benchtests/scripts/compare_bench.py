@@ -42,17 +42,25 @@ def do_compare(func, var, tl1, tl2, par, threshold):
         threshold: The threshold for differences, beyond which the script should
         print a warning.
     """
-    d = abs(tl2[par] - tl1[par]) * 100 / tl1[str(par)]
+    try:
+        v1 = tl1[str(par)]
+        v2 = tl2[str(par)]
+        d = abs(v2 - v1) * 100 / v1
+    except KeyError:
+        return
+    except ZeroDivisionError:
+        return
+
     if d > threshold:
-        if tl1[par] > tl2[par]:
+        if v1 > v2:
             ind = '+++'
         else:
             ind = '---'
         print('%s %s(%s)[%s]: (%.2lf%%) from %g to %g' %
-                (ind, func, var, par, d, tl1[par], tl2[par]))
+                (ind, func, var, par, d, v1, v2))
 
 
-def compare_runs(pts1, pts2, threshold):
+def compare_runs(pts1, pts2, threshold, stats):
     """Compare two benchmark runs
 
     Args:
@@ -70,8 +78,8 @@ def compare_runs(pts1, pts2, threshold):
 
             # Compare the consolidated numbers
             # do_compare(func, var, tl1, tl2, 'max', threshold)
-            do_compare(func, var, tl1, tl2, 'min', threshold)
-            do_compare(func, var, tl1, tl2, 'mean', threshold)
+            for stat in stats.split():
+                do_compare(func, var, tl1, tl2, stat, threshold)
 
             # Skip over to the next variant or function if there is no detailed
             # timing info for the function variant.
@@ -152,7 +160,7 @@ def plot_graphs(bench1, bench2):
             print('Writing out %s' % filename)
             pylab.savefig(filename)
 
-def main(bench1, bench2, schema, threshold):
+def main(bench1, bench2, schema, threshold, stats):
     bench1 = bench.parse_bench(bench1, schema)
     bench2 = bench.parse_bench(bench2, schema)
 
@@ -161,7 +169,7 @@ def main(bench1, bench2, schema, threshold):
     bench.compress_timings(bench1)
     bench.compress_timings(bench2)
 
-    compare_runs(bench1, bench2, threshold)
+    compare_runs(bench1, bench2, threshold, stats)
 
 
 if __name__ == '__main__':
@@ -176,7 +184,8 @@ if __name__ == '__main__':
                         default=os.path.join(os.path.dirname(os.path.realpath(__file__)),'benchout.schema.json'),
                         help='JSON file to validate source/dest files (default: %(default)s)')
     parser.add_argument('--threshold', default=10.0, type=float, help='Only print those with equal or higher threshold (default: %(default)s)')
+    parser.add_argument('--stats', default='min mean', type=str, help='Only consider values from the statistics specified as a space separated list (default: %(default)s)')
 
     args = parser.parse_args()
 
-    main(args.bench1, args.bench2, args.schema, args.threshold)
+    main(args.bench1, args.bench2, args.schema, args.threshold, args.stats)
