@@ -24,8 +24,9 @@
 
 static void __rt_sigreturn_stub (void);
 
-#define STUB(act) \
-  (((unsigned long) &__rt_sigreturn_stub) - 8),
+#define STUB(act, sigsetsize) \
+  (((unsigned long) &__rt_sigreturn_stub) - 8),	\
+  (sigsetsize)
 
 #include <sysdeps/unix/sysv/linux/sigaction.c>
 

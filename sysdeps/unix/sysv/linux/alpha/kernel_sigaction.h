@@ -1,12 +1,11 @@
-#ifndef _KERNEL_SIGACTION_H
-# define _KERNEL_SIGACTION_H
+#include <sysdeps/unix/sysv/linux/kernel_sigaction.h>
 
-/* This is the sigaction structure from the Linux 3.2 kernel.  */
-struct kernel_sigaction
-{
-  __sighandler_t k_sa_handler;
-  unsigned int sa_flags;
-  sigset_t sa_mask;
-};
+void __syscall_rt_sigreturn (void) attribute_hidden;
+void __syscall_sigreturn (void) attribute_hidden;
 
-#endif
+#define STUB(act, sigsetsize) \
+  (sigsetsize),						\
+  (act) ? ((unsigned long)((act->sa_flags & SA_SIGINFO)	\
+			    ? &__syscall_rt_sigreturn	\
+			    : &__syscall_sigreturn))	\
+	: 0

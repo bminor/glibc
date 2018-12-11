@@ -18,43 +18,6 @@
 
 #include <sysdep.h>
 
-/* On Alpha we desparately want to avoid having to issue an imb.  Ordinarily
-   the kernel would have to issue one after setting up the signal return
-   stack, but the Linux rt_sigaction syscall is prepared to accept a pointer
-   to the sigreturn syscall, instead of inlining it on the stack.
-
-   This just about halves signal delivery time.  */
-
-	.text
-
-ENTRY(__syscall_rt_sigaction)
-	cfi_startproc
-	ldgp	gp,0(pv)
-#ifdef PROF
-	.set noat
-	lda	AT, _mcount
-	jsr	AT, (AT), _mcount
-	.set at
-#endif
-	.prologue 1
-
-	beq	a1, 0f
-	ldl	t0, 8(a1)				# sa_flags
-
-	ldah	a4, __syscall_sigreturn(gp)		!gprelhigh
-	ldah	t1, __syscall_rt_sigreturn(gp)		!gprelhigh
-	lda	a4, __syscall_sigreturn(a4)		!gprellow
-	lda	t1, __syscall_rt_sigreturn(t1)		!gprellow
-	and	t0, 0x40, t0				# SA_SIGINFO
-	cmovne	t0, t1, a4
-
-0:	ldi	v0, __NR_rt_sigaction
-	callsys
-	bne	a3, SYSCALL_ERROR_LABEL
-	ret
-	cfi_endproc
-PSEUDO_END(__syscall_rt_sigaction)
-
 /* To enable unwinding through the signal frame without special hackery
    elsewhere, describe the entire struct sigcontext with unwind info.
 
@@ -104,6 +67,8 @@ __syscall_sigreturn:
 	callsys
 	.size	__syscall_sigreturn, .-__syscall_sigreturn
 	.type	__syscall_sigreturn, @function
+	.global __syscall_sigreturn;
+	.hidden __syscall_sigreturn;
 
 	/* See above wrt including the nop.  */
 	cfi_def_cfa_offset (176 + 648)
@@ -116,5 +81,7 @@ __syscall_rt_sigreturn:
 	callsys
 	.size	__syscall_rt_sigreturn, .-__syscall_rt_sigreturn
 	.type	__syscall_rt_sigreturn, @function
+	.global __syscall_rt_sigreturn;
+	.hidden __syscall_rt_sigreturn;
 
 	cfi_endproc

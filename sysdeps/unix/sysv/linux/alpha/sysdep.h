@@ -72,27 +72,4 @@
 
 #define SINGLE_THREAD_BY_GLOBAL 1
 
-/*
- * In order to get the hidden arguments for rt_sigaction set up
- * properly, we need to call the assembly version.  This shouldn't
- * happen except for inside sigaction.c, where we handle this
- * specially.  Catch other uses and error.
- */
-
-#undef INLINE_SYSCALL
-#define INLINE_SYSCALL(name, nr, args...)				\
-({									\
-	extern char ChEcK[__NR_##name == __NR_rt_sigaction ? -1 : 1]	\
-	  __attribute__((unused));					\
-	INLINE_SYSCALL1(name, nr, args);				\
-})
-
-#undef INTERNAL_SYSCALL
-#define INTERNAL_SYSCALL(name, err_out, nr, args...)			\
-({									\
-	extern char ChEcK[__NR_##name == __NR_rt_sigaction ? -1 : 1]	\
-	  __attribute__((unused));					\
-	INTERNAL_SYSCALL1(name, err_out, nr, args);			\
-})
-
 #endif /* _LINUX_ALPHA_SYSDEP_H */

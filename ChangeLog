@@ -1,4 +1,24 @@
 2018-12-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/alpha/Makefile: Update comment about
+	__syscall_rt_sigaction.
+	* sysdeps/unix/sysv/linux/alpha/kernel_sigaction.h
+	(kernel_sigaction): Use Linux generic defintion.
+	(STUB): Define.
+	(__syscall_rt_sigreturn, __syscall_sigreturn): Add prototype.
+	* sysdeps/unix/sysv/linux/alpha/rt_sigaction.S
+	(__syscall_rt_sigaction): Remove implementation.
+	(__syscall_sigreturn, __syscall_rt_sigreturn): Define as global and
+	hidden.
+	* sysdeps/unix/sysv/linux/alpha/sigaction.c: Remove file.
+	* sysdeps/unix/sysv/linux/alpha/sysdep.h (INLINE_SYSCALL,
+	INTERNAL_SYSCALL): Remove definitions.
+	* sysdeps/unix/sysv/linux/sigaction.c: Define STUB to accept both the
+	action and signal set size.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sigaction.c (STUB): Redefine.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigaction.c (STUB): Likewise.
+
+2018-12-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 	    James Clarke  <jrtc27@jrtc27.com>
 
 	[BZ #23960]

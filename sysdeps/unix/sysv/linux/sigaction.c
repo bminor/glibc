@@ -33,7 +33,7 @@
 
 /* SPARC passes the restore function as an argument to rt_sigaction.  */
 #ifndef STUB
-# define STUB(act)
+# define STUB(act, sigsetsize) (sigsetsize)
 #endif
 
 /* If ACT is not NULL, change the action for SIG to *ACT.
@@ -57,7 +57,7 @@ __libc_sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
      real size of the user-level sigset_t.  */
   result = INLINE_SYSCALL_CALL (rt_sigaction, sig,
 				act ? &kact : NULL,
-				oact ? &koact : NULL, STUB(act) _NSIG / 8);
+				oact ? &koact : NULL, STUB (act, _NSIG / 8));
 
   if (oact && result >= 0)
     {
