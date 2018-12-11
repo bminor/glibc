@@ -1,5 +1,8 @@
 2018-12-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/s390/kernel_sigaction.h: Use Linux generic
+	kernel_sigction definition.
+
 	* sysdeps/unix/sysv/linux/ia64/kernel_sigaction.h: Remove file.
 
 	* sysdeps/unix/sysv/linux/hppa/kernel_sigaction.h: Remove file.
