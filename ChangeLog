@@ -1,5 +1,7 @@
 2018-12-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/hppa/kernel_sigaction.h: Remove file.
+
 	* sysdeps/unix/sysv/linux/alpha/Makefile: Update comment about
 	__syscall_rt_sigaction.
 	* sysdeps/unix/sysv/linux/alpha/kernel_sigaction.h
