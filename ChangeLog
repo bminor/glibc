@@ -1,3 +1,25 @@
+2018-12-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+	    James Clarke  <jrtc27@jrtc27.com>
+
+	[BZ #23967]
+	* sysdeps/unix/sysv/linux/kernel_sigaction.h (HAS_SA_RESTORER):
+	Define if SA_RESTORER is defined.
+	(kernel_sigaction): Define sa_restorer if HAS_SA_RESTORER is defined.
+	(SET_SA_RESTORER, RESET_SA_RESTORER): Define iff the macro are not
+	already defined.
+	* sysdeps/unix/sysv/linux/m68k/kernel_sigaction.h (SA_RESTORER,
+	kernel_sigaction, SET_SA_RESTORER, RESET_SA_RESTORER): Remove
+	definitions.
+	(HAS_SA_RESTORER): Define.
+	* sysdeps/unix/sysv/linux/sparc/kernel_sigaction.h (SA_RESTORER,
+	SET_SA_RESTORER, RESET_SA_RESTORER): Remove definition.
+	(HAS_SA_RESTORER): Define.
+	* sysdeps/unix/sysv/linux/nios2/kernel_sigaction.h: Include generic
+	kernel_sigaction after define SET_SA_RESTORER and RESET_SA_RESTORER.
+	* sysdeps/unix/sysv/linux/powerpc/kernel_sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/kernel_sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sigaction.c: Likewise.
+
 2018-10-30  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #23125]
