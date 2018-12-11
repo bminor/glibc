@@ -18,7 +18,6 @@
 
 #include <signal.h>
 #define SA_RESTORER 0x04000000
-#include <kernel_sigaction.h>
 
 extern void restore_rt (void) asm ("__restore_rt") attribute_hidden;
 
@@ -28,6 +27,8 @@ extern void restore_rt (void) asm ("__restore_rt") attribute_hidden;
 
 #define RESET_SA_RESTORER(act, kact) 			\
   (act)->sa_restorer = (kact)->sa_restorer
+
+#include <kernel_sigaction.h>
 
 #include <sysdeps/unix/sysv/linux/sigaction.c>
 
