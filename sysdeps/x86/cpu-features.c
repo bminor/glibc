@@ -425,8 +425,9 @@ init_cpu_features (struct cpu_features *cpu_features)
 	cpu_features->feature[index_arch_Prefer_No_AVX512]
 	  |= bit_arch_Prefer_No_AVX512;
     }
-  /* This spells out "AuthenticAMD".  */
-  else if (ebx == 0x68747541 && ecx == 0x444d4163 && edx == 0x69746e65)
+  /* This spells out "AuthenticAMD" or "HygonGenuine".  */
+  else if ((ebx == 0x68747541 && ecx == 0x444d4163 && edx == 0x69746e65)
+	   || (ebx == 0x6f677948 && ecx == 0x656e6975 && edx == 0x6e65476e))
     {
       unsigned int extended_model;
 

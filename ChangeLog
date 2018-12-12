@@ -1,3 +1,8 @@
+2018-12-13  fanjinke  <fanjinke@hygon.cn>
+
+	* sysdeps/x86/cpu-features.c (init_cpu_features): Check for
+	"HygonGenuine".
+
 2018-12-13  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #23861]
