@@ -1,3 +1,8 @@
+2018-12-12  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/posix/timespec_get.c: Add missing “any later version”
+	clause to copyright header.
+
 2018-12-12  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
 
 	[BZ #23614]
