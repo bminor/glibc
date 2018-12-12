@@ -298,10 +298,6 @@ __inline_mathcodeNP (atanh, __x, \
   register long double __y = __fabsl (__x);				      \
   return -0.5 * log1pl (-(__y + __y) / (1.0 + __y)) * __sgn1l (__x))
 
-/* The argument range of the inline version of hypotl is slightly reduced.  */
-__inline_mathcodeNP2 (hypot, __x, __y,
-		      return __libc_sqrtl (__x * __x + __y * __y))
-
 #   endif
 #  endif
 
