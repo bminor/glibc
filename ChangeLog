@@ -1,3 +1,8 @@
+2018-12-13  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mach/hurd/i386/init-first.c (_hurd_stack_setup): Do not
+	clobber sp.
+
 2018-12-13  fanjinke  <fanjinke@hygon.cn>
 
 	* sysdeps/x86/cpu-features.c (init_cpu_features): Check for
