@@ -20,6 +20,7 @@ The following bugs are resolved with this release:
   [23578] regex: Fix memory overread in re_compile_pattern
   [23579] libc: Errors misreported in preadv2
   [23606] Missing ENDBR32 in sysdeps/i386/start.S
+  [23614] powerpc: missing CFI register information in __mpn_* functions
   [23679] gethostid: Missing NULL check for gethostbyname_r result
   [23709] Fix CPU string flags for Haswell-type CPUs
   [23717] Fix stack overflow in stdlib/tst-setcontext9
