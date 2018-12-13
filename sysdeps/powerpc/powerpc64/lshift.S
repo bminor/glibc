@@ -26,11 +26,15 @@
 #define TNC      r0
 #define U0      r30
 #define U1      r31
+#define U0SAVE  (-16)
+#define U1SAVE  (-8)
 #define RETVAL   r5
 
 ENTRY_TOCLESS (__mpn_lshift, 5)
-	std	U1, -8(r1)
-	std	U0, -16(r1)
+	std	U1, U1SAVE(r1)
+	std	U0, U0SAVE(r1)
+	cfi_offset(U1, U1SAVE)
+	cfi_offset(U0, U0SAVE)
 	subfic	TNC, CNT, 64
 	sldi	r7, N, RP
 	add	UP, UP, r7
@@ -170,8 +174,8 @@ L(cj3):	or	r10, r12, r7
 L(cj2):	std	r10, -32(RP)
 	std	r8, -40(RP)
 
-L(ret):	ld	U1, -8(r1)
-	ld	U0, -16(r1)
+L(ret):	ld	U1, U1SAVE(r1)
+	ld	U0, U0SAVE(r1)
 	mr	RP, RETVAL
 	blr
 END(__mpn_lshift)
