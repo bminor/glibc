@@ -1,3 +1,13 @@
+2018-12-14  Florian Weimer  <fweimer@redhat.com>
+
+	* manual/process.texi (Process Creation Concepts): Remove
+	documentation of process (ID) lifetime.  List more process
+	creation functions.  Reference Process Identification section.
+	(Process Identification): Add information about process ID
+	lifetime.  Describe Linux thread/task IDs.
+	* manual/signal.texi (Signaling Another Process): Mention that the
+	signal is always sent to the process.
+
 2018-12-14  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
 	* misc/Makefile (tests): Remove tst-efgcvt.  Add tst-dbl-efgcvt

@@ -132,22 +132,19 @@ output channels of the command being executed.
 This section gives an overview of processes and of the steps involved in
 creating a process and making it run another program.
 
-@cindex process ID
-@cindex process lifetime
-Each process is named by a @dfn{process ID} number.  A unique process ID
-is allocated to each process when it is created.  The @dfn{lifetime} of
-a process ends when its termination is reported to its parent process;
-at that time, all of the process resources, including its process ID,
-are freed.
-
 @cindex creating a process
 @cindex forking a process
 @cindex child process
 @cindex parent process
-Processes are created with the @code{fork} system call (so the operation
-of creating a new process is sometimes called @dfn{forking} a process).
-The @dfn{child process} created by @code{fork} is a copy of the original
-@dfn{parent process}, except that it has its own process ID.
+@cindex subprocess
+A new processes is created when one of the functions
+@code{posix_spawn}, @code{fork}, or @code{vfork} is called.  (The
+@code{system} and @code{popen} also create new processes internally.)
+Due to the name of the @code{fork} function, the act of creating a new
+process is sometimes called @dfn{forking} a process.  Each new process
+(the @dfn{child process} or @dfn{subprocess}) is allocated a process
+ID, distinct from the process ID of the parent process.  @xref{Process
+Identification}.
 
 After forking a child process, both the parent and child processes
 continue to execute normally.  If you want your program to wait for a
@@ -174,11 +171,40 @@ too, instead of returning to the previous process image.
 @node Process Identification
 @section Process Identification
 
-The @code{pid_t} data type represents process IDs.  You can get the
-process ID of a process by calling @code{getpid}.  The function
-@code{getppid} returns the process ID of the parent of the current
-process (this is also known as the @dfn{parent process ID}).  Your
-program should include the header files @file{unistd.h} and
+@cindex process ID
+Each process is named by a @dfn{process ID} number, a value of type
+@code{pid_t}.  A process ID is allocated to each process when it is
+created.  Process IDs are reused over time.  The lifetime of a process
+ends when the parent process of the corresponding process waits on the
+process ID after the process has terminated.  @xref{Process
+Completion}.  (The parent process can arrange for such waiting to
+happen implicitly.)  A process ID uniquely identifies a process only
+during the lifetime of the process.  As a rule of thumb, this means
+that the process must still be running.
+
+Process IDs can also denote process groups and sessions.
+@xref{Job Control}.
+
+@cindex thread ID
+@cindex task ID
+@cindex thread group
+On Linux, threads created by @code{pthread_create} also receive a
+@dfn{thread ID}.  The thread ID of the initial (main) thread is the
+same as the process ID of the entire process.  Thread IDs for
+subsequently created threads are distinct.  They are allocated from
+the same numbering space as process IDs.  Process IDs and thread IDs
+are sometimes also referred to collectively as @dfn{task IDs}.  In
+contrast to processes, threads are never waited for explicitly, so a
+thread ID becomes eligible for reuse as soon as a thread exits or is
+canceled.  This is true even for joinable threads, not just detached
+threads.  Threads are assigned to a @dfn{thread group}.  In
+@theglibc{} implementation running on Linux, the process ID is the
+thread group ID of all threads in the process.
+
+You can get the process ID of a process by calling @code{getpid}.  The
+function @code{getppid} returns the process ID of the parent of the
+current process (this is also known as the @dfn{parent process ID}).
+Your program should include the header files @file{unistd.h} and
 @file{sys/types.h} to use these functions.
 @pindex sys/types.h
 @pindex unistd.h

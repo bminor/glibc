@@ -2246,7 +2246,9 @@ signal:
 
 @table @code
 @item @var{pid} > 0
-The process whose identifier is @var{pid}.
+The process whose identifier is @var{pid}.  (On Linux, the signal is
+sent to the entire process even if @var{pid} is a thread ID distinct
+from the process ID.)
 
 @item @var{pid} == 0
 All processes in the same process group as the sender.
