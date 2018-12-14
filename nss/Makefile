@@ -163,7 +163,7 @@ ifdef libnss_test2.so-version
 $(objpfx)/libnss_test2.so$(libnss_test2.so-version): $(objpfx)/libnss_test2.so
 	$(make-link)
 endif
-$(patsubst %,$(objpfx)%.out,$(tests)) : \
+$(patsubst %,$(objpfx)%.out,$(tests) $(tests-container)) : \
 	$(objpfx)/libnss_test1.so$(libnss_test1.so-version) \
 	$(objpfx)/libnss_test2.so$(libnss_test2.so-version)
 
