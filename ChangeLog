@@ -1,3 +1,10 @@
+2018-12-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/x86/fpu/bits/mathinline.h (asinh): Remove inline
+	definition.
+	(acosh): Likewise.
+	(atanh): Likewise.
+
 2018-12-14  Florian Weimer  <fweimer@redhat.com>
 
 	* manual/process.texi (Process Creation Concepts): Remove

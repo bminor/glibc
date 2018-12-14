@@ -285,19 +285,6 @@ __inline_mathcodeNP (tanh, __x, \
 #   ifdef __FAST_MATH__
 __inline_mathcodeNP (expm1, __x, __expm1_code)
 
-/* The argument range of the inline version of asinhl is slightly reduced.  */
-__inline_mathcodeNP (asinh, __x, \
-  register long double  __y = __fabsl (__x);				      \
-  return (log1pl (__y * __y / (__libc_sqrtl (__y * __y + 1.0) + 1.0) + __y)   \
-	  * __sgn1l (__x)))
-
-__inline_mathcodeNP (acosh, __x, \
-  return logl (__x + __libc_sqrtl (__x - 1.0) * __libc_sqrtl (__x + 1.0)))
-
-__inline_mathcodeNP (atanh, __x, \
-  register long double __y = __fabsl (__x);				      \
-  return -0.5 * log1pl (-(__y + __y) / (1.0 + __y)) * __sgn1l (__x))
-
 #   endif
 #  endif
 
