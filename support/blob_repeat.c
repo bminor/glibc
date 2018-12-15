@@ -34,6 +34,26 @@
    optimization because mappings carry a lot of overhead.  */
 static const size_t maximum_small_size = 4 * 1024 * 1024;
 
+/* Set *RESULT to LEFT * RIGHT.  Return true if the multiplication
+   overflowed.  See <malloc/malloc-internal.h>.  */
+static inline bool
+check_mul_overflow_size_t (size_t left, size_t right, size_t *result)
+{
+#if __GNUC__ >= 5
+  return __builtin_mul_overflow (left, right, result);
+#else
+  /* size_t is unsigned so the behavior on overflow is defined.  */
+  *result = left * right;
+  size_t half_size_t = ((size_t) 1) << (8 * sizeof (size_t) / 2);
+  if (__glibc_unlikely ((left | right) >= half_size_t))
+    {
+      if (__glibc_unlikely (right != 0 && *result / right != left))
+        return true;
+    }
+  return false;
+#endif
+}
+
 /* Internal helper for fill.  */
 static void
 fill0 (char *target, const char *element, size_t element_size,
@@ -118,8 +138,8 @@ minimum_stride_size (size_t page_size, size_t element_size)
      common multiple, it appears only once.  Therefore, shift one
      factor.  */
   size_t multiple;
-  if (__builtin_mul_overflow (page_size >> common_zeros, element_size,
-                              &multiple))
+  if (check_mul_overflow_size_t (page_size >> common_zeros, element_size,
+                                 &multiple))
     return 0;
   return multiple;
 }
@@ -255,7 +275,7 @@ support_blob_repeat_allocate (const void *element, size_t element_size,
                               size_t count)
 {
   size_t total_size;
-  if (__builtin_mul_overflow (element_size, count, &total_size))
+  if (check_mul_overflow_size_t (element_size, count, &total_size))
     {
       errno = EOVERFLOW;
       return (struct support_blob_repeat) { 0 };
