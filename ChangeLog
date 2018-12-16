@@ -1,3 +1,10 @@
+2019-07-17  PanderMusubi  <pander@users.sourceforge.net>
+
+	[BZ #23996]
+	* localedata/locales/nl_BE (LC_NAME): Add name_gen, name_mr,
+	name_mrs, name_miss, and name_ms.
+	* localedata/locales/nl_NL (LC_NAME): Likewise.
+
 2019-07-17  Daniil Zhilin  <generalfailer@protonmail.com>
 
 	[BZ #24200]

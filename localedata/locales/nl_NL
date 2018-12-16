@@ -150,6 +150,11 @@ END LC_MEASUREMENT
 
 LC_NAME
 name_fmt    "%d%t%g%t%m%t%f"
+name_gen    "heer of mevrouw"
+name_mr     "heer"
+name_mrs    "mevrouw"
+name_miss   "mevrouw"
+name_ms     "mevrouw"
 END LC_NAME
 
 LC_ADDRESS
