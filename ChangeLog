@@ -1,3 +1,12 @@
+2018-12-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/glibcextract.py (compare_macro_consts): Take parameters
+	to allow extra macros from first or second sources.
+	* sysdeps/unix/sysv/linux/tst-mman-consts.py: New file.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir) = misc]
+	(tests-special): Add $(objpfx)tst-mman-consts.out.
+	($(objpfx)tst-mman-consts.out): New makefile target.
+
 2018-12-17  Mao Han  <han_mao@c-sky.com>
 
 	* sysdeps/unix/sysv/linux/Makefile: Add statx_cp.c.

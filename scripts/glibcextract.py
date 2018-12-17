@@ -136,12 +136,19 @@ def compute_macro_consts(source_text, cc, macro_re, exclude_re=None):
     return compute_c_consts(sym_data, cc)
 
 
-def compare_macro_consts(source_1, source_2, cc, macro_re, exclude_re=None):
+def compare_macro_consts(source_1, source_2, cc, macro_re, exclude_re=None,
+                         allow_extra_1=False, allow_extra_2=False):
     """Compare the values of macros defined by two different sources.
 
     The sources would typically be includes of a glibc header and a
-    kernel header.  Return 1 if there were any differences, 0 if the
-    macro values were the same.
+    kernel header.  If allow_extra_1, the first source may define
+    extra macros (typically if the kernel headers are older than the
+    version glibc has taken definitions from); if allow_extra_2, the
+    second source may define extra macros (typically if the kernel
+    headers are newer than the version glibc has taken definitions
+    from).  Return 1 if there were any differences other than those
+    allowed, 0 if the macro values were the same apart from any
+    allowed differences.
 
     """
     macros_1 = compute_macro_consts(source_1, cc, macro_re, exclude_re)
@@ -150,13 +157,19 @@ def compare_macro_consts(source_1, source_2, cc, macro_re, exclude_re=None):
         return 0
     print('First source:\n%s\n' % source_1)
     print('Second source:\n%s\n' % source_2)
+    ret = 0
     for name, value in sorted(macros_1.items()):
         if name not in macros_2:
             print('Only in first source: %s' % name)
+            if not allow_extra_1:
+                ret = 1
         elif macros_1[name] != macros_2[name]:
             print('Different values for %s: %s != %s'
                   % (name, macros_1[name], macros_2[name]))
+            ret = 1
     for name in sorted(macros_2.keys()):
         if name not in macros_1:
             print('Only in second source: %s' % name)
-    return 1
+            if not allow_extra_2:
+                ret = 1
+    return ret

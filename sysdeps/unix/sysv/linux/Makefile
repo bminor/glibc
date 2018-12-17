@@ -100,6 +100,15 @@ $(objpfx)tst-sysconf-iov_max: $(objpfx)tst-sysconf-iov_max-uapi.o
 
 $(objpfx)tst-pkey: $(shared-thread-library)
 
+tests-special += $(objpfx)tst-mman-consts.out
+$(objpfx)tst-mman-consts.out: ../sysdeps/unix/sysv/linux/tst-mman-consts.py
+	PYTHONPATH=../scripts \
+	$(PYTHON) ../sysdeps/unix/sysv/linux/tst-mman-consts.py \
+		   --cc="$(CC) $(patsubst -DMODULE_NAME=%, \
+					  -DMODULE_NAME=testsuite, \
+					  $(CPPFLAGS))" \
+	< /dev/null > $@ 2>&1; $(evaluate-test)
+
 endif # $(subdir) == misc
 
 ifeq ($(subdir),time)
