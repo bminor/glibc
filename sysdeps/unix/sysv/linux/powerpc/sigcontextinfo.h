@@ -15,7 +15,19 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef _SIGCONTEXTINFO_H
+#define _SIGCONTEXTINFO_H
+
 #include <signal.h>
 
-#define SIGCONTEXT struct sigcontext *
-#define GET_PC(ctx)	((void *)((ctx)->regs->nip))
+static inline uintptr_t
+sigcontext_get_pc (const ucontext_t *ctx)
+{
+#ifdef __powerpc64__
+  return ctx->uc_mcontext.gp_regs[PT_NIP];
+#else
+  return ctx->uc_mcontext.uc_regs->gregs[PT_NIP];
+#endif
+}
+
+#endif

@@ -53,7 +53,7 @@ hexvalue (unsigned long int value, char *buf, size_t len)
 }
 
 static void
-register_dump (int fd, struct sigcontext *ctx)
+register_dump (int fd, struct ucontext_t *ctx)
 {
   char regs[22][8];
   struct iovec iov[22 * 2 + 34 * 2 + 2];
@@ -69,28 +69,28 @@ register_dump (int fd, struct sigcontext *ctx)
   ++nr
 
   /* Generate strings of register contents.  */
-  hexvalue (ctx->sc_regs[0], regs[0], 8);
-  hexvalue (ctx->sc_regs[1], regs[1], 8);
-  hexvalue (ctx->sc_regs[2], regs[2], 8);
-  hexvalue (ctx->sc_regs[3], regs[3], 8);
-  hexvalue (ctx->sc_regs[4], regs[4], 8);
-  hexvalue (ctx->sc_regs[5], regs[5], 8);
-  hexvalue (ctx->sc_regs[6], regs[6], 8);
-  hexvalue (ctx->sc_regs[7], regs[7], 8);
-  hexvalue (ctx->sc_regs[8], regs[8], 8);
-  hexvalue (ctx->sc_regs[9], regs[9], 8);
-  hexvalue (ctx->sc_regs[10], regs[10], 8);
-  hexvalue (ctx->sc_regs[11], regs[11], 8);
-  hexvalue (ctx->sc_regs[12], regs[12], 8);
-  hexvalue (ctx->sc_regs[13], regs[13], 8);
-  hexvalue (ctx->sc_regs[14], regs[14], 8);
-  hexvalue (ctx->sc_regs[15], regs[15], 8);
-  hexvalue (ctx->sc_macl, regs[16], 8);
-  hexvalue (ctx->sc_mach, regs[17], 8);
-  hexvalue (ctx->sc_pc, regs[18], 8);
-  hexvalue (ctx->sc_pr, regs[19], 8);
-  hexvalue (ctx->sc_gbr, regs[20], 8);
-  hexvalue (ctx->sc_sr, regs[21], 8);
+  hexvalue (ctx->uc_mcontext.gregs[REG_R0], regs[0], 8);
+  hexvalue (ctx->uc_mcontext.gregs[REG_R1], regs[1], 8);
+  hexvalue (ctx->uc_mcontext.gregs[REG_R2], regs[2], 8);
+  hexvalue (ctx->uc_mcontext.gregs[REG_R3], regs[3], 8);
+  hexvalue (ctx->uc_mcontext.gregs[REG_R4], regs[4], 8);
+  hexvalue (ctx->uc_mcontext.gregs[REG_R5], regs[5], 8);
+  hexvalue (ctx->uc_mcontext.gregs[REG_R6], regs[6], 8);
+  hexvalue (ctx->uc_mcontext.gregs[REG_R7], regs[7], 8);
+  hexvalue (ctx->uc_mcontext.gregs[REG_R8], regs[8], 8);
+  hexvalue (ctx->uc_mcontext.gregs[REG_R9], regs[9], 8);
+  hexvalue (ctx->uc_mcontext.gregs[REG_R10], regs[10], 8);
+  hexvalue (ctx->uc_mcontext.gregs[REG_R11], regs[11], 8);
+  hexvalue (ctx->uc_mcontext.gregs[REG_R12], regs[12], 8);
+  hexvalue (ctx->uc_mcontext.gregs[REG_R13], regs[13], 8);
+  hexvalue (ctx->uc_mcontext.gregs[REG_R14], regs[14], 8);
+  hexvalue (ctx->uc_mcontext.gregs[REG_R15], regs[15], 8);
+  hexvalue (ctx->uc_mcontext.macl, regs[16], 8);
+  hexvalue (ctx->uc_mcontext.mach, regs[17], 8);
+  hexvalue (ctx->uc_mcontext.pc, regs[18], 8);
+  hexvalue (ctx->uc_mcontext.pr, regs[19], 8);
+  hexvalue (ctx->uc_mcontext.gbr, regs[20], 8);
+  hexvalue (ctx->uc_mcontext.sr, regs[21], 8);
 
   /* Generate the output.  */
   ADD_STRING ("Register dump:\n\n  R0: ");
@@ -144,42 +144,42 @@ register_dump (int fd, struct sigcontext *ctx)
 
 #ifdef __SH_FPU_ANY__
   char fpregs[34][8];
-  if (ctx->sc_ownedfp != 0)
+  if (ctx->uc_mcontext.ownedfp != 0)
     {
-      hexvalue (ctx->sc_fpregs[0], fpregs[0], 8);
-      hexvalue (ctx->sc_fpregs[1], fpregs[1], 8);
-      hexvalue (ctx->sc_fpregs[2], fpregs[2], 8);
-      hexvalue (ctx->sc_fpregs[3], fpregs[3], 8);
-      hexvalue (ctx->sc_fpregs[4], fpregs[4], 8);
-      hexvalue (ctx->sc_fpregs[5], fpregs[5], 8);
-      hexvalue (ctx->sc_fpregs[6], fpregs[6], 8);
-      hexvalue (ctx->sc_fpregs[7], fpregs[7], 8);
-      hexvalue (ctx->sc_fpregs[8], fpregs[8], 8);
-      hexvalue (ctx->sc_fpregs[9], fpregs[9], 8);
-      hexvalue (ctx->sc_fpregs[10], fpregs[10], 8);
-      hexvalue (ctx->sc_fpregs[11], fpregs[11], 8);
-      hexvalue (ctx->sc_fpregs[12], fpregs[12], 8);
-      hexvalue (ctx->sc_fpregs[13], fpregs[13], 8);
-      hexvalue (ctx->sc_fpregs[14], fpregs[14], 8);
-      hexvalue (ctx->sc_fpregs[15], fpregs[15], 8);
-      hexvalue (ctx->sc_xfpregs[0], fpregs[16], 8);
-      hexvalue (ctx->sc_xfpregs[1], fpregs[17], 8);
-      hexvalue (ctx->sc_xfpregs[2], fpregs[18], 8);
-      hexvalue (ctx->sc_xfpregs[3], fpregs[19], 8);
-      hexvalue (ctx->sc_xfpregs[4], fpregs[20], 8);
-      hexvalue (ctx->sc_xfpregs[5], fpregs[21], 8);
-      hexvalue (ctx->sc_xfpregs[6], fpregs[22], 8);
-      hexvalue (ctx->sc_xfpregs[7], fpregs[23], 8);
-      hexvalue (ctx->sc_xfpregs[8], fpregs[24], 8);
-      hexvalue (ctx->sc_xfpregs[9], fpregs[25], 8);
-      hexvalue (ctx->sc_xfpregs[10], fpregs[26], 8);
-      hexvalue (ctx->sc_xfpregs[11], fpregs[27], 8);
-      hexvalue (ctx->sc_xfpregs[12], fpregs[28], 8);
-      hexvalue (ctx->sc_xfpregs[13], fpregs[29], 8);
-      hexvalue (ctx->sc_xfpregs[14], fpregs[30], 8);
-      hexvalue (ctx->sc_xfpregs[15], fpregs[31], 8);
-      hexvalue (ctx->sc_fpscr, fpregs[32], 8);
-      hexvalue (ctx->sc_fpul, fpregs[33], 8);
+      hexvalue (ctx->uc_mcontext.fpregs[0], fpregs[0], 8);
+      hexvalue (ctx->uc_mcontext.fpregs[1], fpregs[1], 8);
+      hexvalue (ctx->uc_mcontext.fpregs[2], fpregs[2], 8);
+      hexvalue (ctx->uc_mcontext.fpregs[3], fpregs[3], 8);
+      hexvalue (ctx->uc_mcontext.fpregs[4], fpregs[4], 8);
+      hexvalue (ctx->uc_mcontext.fpregs[5], fpregs[5], 8);
+      hexvalue (ctx->uc_mcontext.fpregs[6], fpregs[6], 8);
+      hexvalue (ctx->uc_mcontext.fpregs[7], fpregs[7], 8);
+      hexvalue (ctx->uc_mcontext.fpregs[8], fpregs[8], 8);
+      hexvalue (ctx->uc_mcontext.fpregs[9], fpregs[9], 8);
+      hexvalue (ctx->uc_mcontext.fpregs[10], fpregs[10], 8);
+      hexvalue (ctx->uc_mcontext.fpregs[11], fpregs[11], 8);
+      hexvalue (ctx->uc_mcontext.fpregs[12], fpregs[12], 8);
+      hexvalue (ctx->uc_mcontext.fpregs[13], fpregs[13], 8);
+      hexvalue (ctx->uc_mcontext.fpregs[14], fpregs[14], 8);
+      hexvalue (ctx->uc_mcontext.fpregs[15], fpregs[15], 8);
+      hexvalue (ctx->uc_mcontext.xfpregs[0], fpregs[16], 8);
+      hexvalue (ctx->uc_mcontext.xfpregs[1], fpregs[17], 8);
+      hexvalue (ctx->uc_mcontext.xfpregs[2], fpregs[18], 8);
+      hexvalue (ctx->uc_mcontext.xfpregs[3], fpregs[19], 8);
+      hexvalue (ctx->uc_mcontext.xfpregs[4], fpregs[20], 8);
+      hexvalue (ctx->uc_mcontext.xfpregs[5], fpregs[21], 8);
+      hexvalue (ctx->uc_mcontext.xfpregs[6], fpregs[22], 8);
+      hexvalue (ctx->uc_mcontext.xfpregs[7], fpregs[23], 8);
+      hexvalue (ctx->uc_mcontext.xfpregs[8], fpregs[24], 8);
+      hexvalue (ctx->uc_mcontext.xfpregs[9], fpregs[25], 8);
+      hexvalue (ctx->uc_mcontext.xfpregs[10], fpregs[26], 8);
+      hexvalue (ctx->uc_mcontext.xfpregs[11], fpregs[27], 8);
+      hexvalue (ctx->uc_mcontext.xfpregs[12], fpregs[28], 8);
+      hexvalue (ctx->uc_mcontext.xfpregs[13], fpregs[29], 8);
+      hexvalue (ctx->uc_mcontext.xfpregs[14], fpregs[30], 8);
+      hexvalue (ctx->uc_mcontext.xfpregs[15], fpregs[31], 8);
+      hexvalue (ctx->uc_mcontext.fpscr, fpregs[32], 8);
+      hexvalue (ctx->uc_mcontext.fpul, fpregs[33], 8);
 
       ADD_STRING ("\n\n FR0: ");
       ADD_MEM (fpregs[0], 8);
@@ -260,4 +260,4 @@ register_dump (int fd, struct sigcontext *ctx)
 }
 
 
-#define REGISTER_DUMP register_dump (fd, &ctx)
+#define REGISTER_DUMP register_dump (fd, ctx)

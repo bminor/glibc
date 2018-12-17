@@ -60,17 +60,36 @@ hexvalue (unsigned long int value, char *buf, size_t len)
     *--cp = '0';
 }
 
+/* The sparc64 kernel signal frame for SA_SIGINFO is defined as:
+
+   struct rt_signal_frame
+     {
+       struct sparc_stackf ss;
+       siginfo_t info;
+       struct pt_regs regs;          <- void *ctx
+       __siginfo_fpu_t *fpu_save;
+       stack_t stack;
+       sigset_t mask;
+       __siginfo_rwin_t *rwin_save;
+     };
+
+  Unlike other architectures, sparc32 passes pt_regs32 REGS pointers as
+  the third argument to a sa_sigaction handler with SA_SIGINFO enabled.  */
+
 static void
-register_dump (int fd, SIGCONTEXT ctx)
+register_dump (int fd, void *ctx)
 {
   char regs[36][16];
   char fregs[68][8];
   struct iovec iov[150];
   size_t nr = 0;
   int i;
-  unsigned long *r = (unsigned long *)
-    (ctx->sigc_regs.u_regs[14] + STACK_BIAS);
-  __siginfo_fpu_t *f;
+  struct pt_regs *ptregs = (struct pt_regs*) ((siginfo_t *)ctx + 1);
+  unsigned long *r = (unsigned long *) (ptregs->u_regs[14] + STACK_BIAS);
+  __siginfo_fpu_t *f = (__siginfo_fpu_t *)(ptregs + 1);
+  struct kernel_sigset_t {
+    unsigned long sig[1];
+  } *mask = (struct kernel_sigset_t *)((stack_t *)(f + 1) + 1);
 
 #define ADD_STRING(str) \
   iov[nr].iov_base = (char *) str;					      \
@@ -82,15 +101,15 @@ register_dump (int fd, SIGCONTEXT ctx)
   ++nr
 
   /* Generate strings of register contents.  */
-  hexvalue (ctx->sigc_regs.tstate,	regs[0], 16);
-  hexvalue (ctx->sigc_regs.tpc,		regs[1], 16);
-  hexvalue (ctx->sigc_regs.tnpc,	regs[2], 16);
-  hexvalue (ctx->sigc_regs.y,		regs[3], 8);
+  hexvalue (ptregs->tstate, regs[0], 16);
+  hexvalue (ptregs->tpc, regs[1], 16);
+  hexvalue (ptregs->tnpc, regs[2], 16);
+  hexvalue (ptregs->y, regs[3], 8);
   for (i = 1; i <= 15; i++)
-    hexvalue (ctx->sigc_regs.u_regs[i], regs[3+i], 16);
+    hexvalue (ptregs->u_regs[i], regs[3+i], 16);
   for (i = 0; i <= 15; i++)
-    hexvalue (r[i],			regs[19+i], 16);
-  hexvalue (ctx->sigc_mask,		regs[35], 16);
+    hexvalue (r[i], regs[19+i], 16);
+  hexvalue (mask->sig[0], regs[35], 16);
 
   /* Generate the output.  */
   ADD_STRING ("Register dump:\n\n TSTATE: ");
@@ -166,7 +185,6 @@ register_dump (int fd, SIGCONTEXT ctx)
   ADD_STRING ("\n\n Mask: ");
   ADD_MEM (regs[35], 16);
 
-  f = ctx->sigc_fpu_save;
   if (f != NULL)
     {
       for (i = 0; i < 64; i++)

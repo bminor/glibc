@@ -16,8 +16,46 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef _SIGCONTEXTINFO_H
+#define _SIGCONTEXTINFO_H
+
+#include <bits/types/siginfo_t.h>
+
+/* The sparc64 kernel signal frame for SA_SIGINFO is defined as:
+
+   struct rt_signal_frame
+   {
+     struct sparc_stackf ss;
+     siginfo_t info;
+     struct pt_regs regs;
+     __siginfo_fpu_t *fpu_save;
+     stack_t stack;
+     sigset_t mask;
+     __siginfo_rwin_t *rwin_save;
+   };
+
+   Unlike other architectures, sparc64 passe the siginfo_t INFO pointer
+   as the third argument to a sa_sigaction handler with SA_SIGINFO enabled.  */
+
 #ifndef STACK_BIAS
 #define STACK_BIAS 2047
 #endif
-#define SIGCONTEXT struct sigcontext *
-#define GET_PC(__ctx)	((void *) ((__ctx)->sigc_regs.tpc))
+
+struct pt_regs
+{
+  unsigned long int u_regs[16];
+  unsigned long int tstate;
+  unsigned long int tpc;
+  unsigned long int tnpc;
+  unsigned int y;
+  unsigned int magic;
+};
+
+static inline uintptr_t
+sigcontext_get_pc (const siginfo_t *ctx)
+{
+  struct pt_regs *regs = (struct pt_regs*) ((siginfo_t *)(ctx) + 1);
+  return regs->tpc;
+}
+
+#endif

@@ -45,7 +45,7 @@ hexvalue (unsigned long int value, char *buf, size_t len)
 }
 
 static void
-register_dump (int fd, struct sigcontext *ctx)
+register_dump (int fd, struct ucontext_t *ctx)
 {
   char regs[19][8];
   struct iovec iov[40];
@@ -61,24 +61,24 @@ register_dump (int fd, struct sigcontext *ctx)
   ++nr
 
   /* Generate strings of register contents.  */
-  hexvalue (ctx->sregs->regs.gprs[0], regs[0], 8);
-  hexvalue (ctx->sregs->regs.gprs[1], regs[1], 8);
-  hexvalue (ctx->sregs->regs.gprs[2], regs[2], 8);
-  hexvalue (ctx->sregs->regs.gprs[3], regs[3], 8);
-  hexvalue (ctx->sregs->regs.gprs[4], regs[4], 8);
-  hexvalue (ctx->sregs->regs.gprs[5], regs[5], 8);
-  hexvalue (ctx->sregs->regs.gprs[6], regs[6], 8);
-  hexvalue (ctx->sregs->regs.gprs[7], regs[7], 8);
-  hexvalue (ctx->sregs->regs.gprs[8], regs[8], 8);
-  hexvalue (ctx->sregs->regs.gprs[9], regs[9], 8);
-  hexvalue (ctx->sregs->regs.gprs[10], regs[10], 8);
-  hexvalue (ctx->sregs->regs.gprs[11], regs[11], 8);
-  hexvalue (ctx->sregs->regs.gprs[12], regs[12], 8);
-  hexvalue (ctx->sregs->regs.gprs[13], regs[13], 8);
-  hexvalue (ctx->sregs->regs.gprs[14], regs[14], 8);
-  hexvalue (ctx->sregs->regs.gprs[15], regs[15], 8);
-  hexvalue (ctx->sregs->regs.psw.mask, regs[16], 8);
-  hexvalue (ctx->sregs->regs.psw.addr, regs[17], 8);
+  hexvalue (ctx->uc_mcontext.gregs[0], regs[0], 8);
+  hexvalue (ctx->uc_mcontext.gregs[1], regs[1], 8);
+  hexvalue (ctx->uc_mcontext.gregs[2], regs[2], 8);
+  hexvalue (ctx->uc_mcontext.gregs[3], regs[3], 8);
+  hexvalue (ctx->uc_mcontext.gregs[4], regs[4], 8);
+  hexvalue (ctx->uc_mcontext.gregs[5], regs[5], 8);
+  hexvalue (ctx->uc_mcontext.gregs[6], regs[6], 8);
+  hexvalue (ctx->uc_mcontext.gregs[7], regs[7], 8);
+  hexvalue (ctx->uc_mcontext.gregs[8], regs[8], 8);
+  hexvalue (ctx->uc_mcontext.gregs[9], regs[9], 8);
+  hexvalue (ctx->uc_mcontext.gregs[10], regs[10], 8);
+  hexvalue (ctx->uc_mcontext.gregs[11], regs[11], 8);
+  hexvalue (ctx->uc_mcontext.gregs[12], regs[12], 8);
+  hexvalue (ctx->uc_mcontext.gregs[13], regs[13], 8);
+  hexvalue (ctx->uc_mcontext.gregs[14], regs[14], 8);
+  hexvalue (ctx->uc_mcontext.gregs[15], regs[15], 8);
+  hexvalue (ctx->uc_mcontext.psw.mask, regs[16], 8);
+  hexvalue (ctx->uc_mcontext.psw.addr, regs[17], 8);
 
   /* Generate the output.  */
   ADD_STRING ("Register dump:\n\n GPR0: ");

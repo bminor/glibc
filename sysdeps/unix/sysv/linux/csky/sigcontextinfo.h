@@ -16,17 +16,13 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define SIGCONTEXT siginfo_t *_si, struct ucontext_t *
-#define GET_PC(ctx)     ((void *) (ctx)->uc_mcontext.__gregs.__pc)
+#ifndef _SIGCONTEXTINFO_H
+#define _SIGCONTEXTINFO_H
 
-/* There is no reliable way to get the sigcontext unless we use a
-   three-argument signal handler.  */
-#define __sigaction(sig, act, oact) ({ \
-  (act)->sa_flags |= SA_SIGINFO; \
-  (__sigaction) (sig, act, oact); \
-})
+static inline uintptr_t
+sigcontext_get_pc (const ucontext_t *ctx)
+{
+  return ctx->uc_mcontext.__gregs.__pc;
+}
 
-#define sigaction(sig, act, oact) ({ \
-  (act)->sa_flags |= SA_SIGINFO; \
-  (sigaction) (sig, act, oact); \
-})
+#endif

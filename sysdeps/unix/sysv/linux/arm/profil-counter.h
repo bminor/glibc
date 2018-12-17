@@ -20,9 +20,9 @@
 #include <sigcontextinfo.h>
 
 void
-__profil_counter (int signo, const SIGCONTEXT scp)
+__profil_counter (int signo, siginfo_t *_si, void *scp)
 {
-  profil_count ((void *) GET_PC (scp));
+  profil_count (sigcontext_get_pc (scp));
 
   /* This is a hack to prevent the compiler from implementing the
      above function call as a sibcall.  The sibcall would overwrite

@@ -1,5 +1,5 @@
-/* Low-level statistical profiling support function.  Linux/SPARC version.
-   Copyright (C) 1997-2019 Free Software Foundation, Inc.
+/* Machine-dependent SIGPROF signal handler.  PA-RISC version
+   Copyright (C) 2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -13,16 +13,18 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, see
+   License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <signal.h>
+#ifndef _SIGCONTEXTINFO_H
+#define _SIGCONTEXTINFO_H
 
-void
-__profil_counter (int signo, struct sigcontext *si)
+#include <sys/ucontext.h>
+
+static inline uintptr_t
+sigcontext_get_pc (const ucontext_t *ctx)
 {
-  profil_count ((void *) si->si_regs.pc);
+  return ctx->uc_mcontext.sc_iaoq[0] & ~0x3;
 }
-#ifndef __profil_counter
-weak_alias (__profil_counter, profil_counter)
+
 #endif

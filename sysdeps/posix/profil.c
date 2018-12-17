@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <signal.h>
 #include <sys/time.h>
+#include <stdint.h>
 #include <libc-internal.h>
 #include <sigsetops.h>
 
@@ -36,9 +37,9 @@ static size_t pc_offset;
 static u_int pc_scale;
 
 static inline void
-profil_count (void *pc)
+profil_count (uintptr_t pc)
 {
-  size_t i = (pc - pc_offset - (void *) 0) / 2;
+  size_t i = (pc - pc_offset) / 2;
 
   if (sizeof (unsigned long long int) > sizeof (size_t))
     i = (unsigned long long int) i * pc_scale / 65536;
@@ -104,8 +105,14 @@ __profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
   pc_offset = offset;
   pc_scale = scale;
 
-  act.sa_handler = (sighandler_t) &__profil_counter;
-  act.sa_flags = SA_RESTART;
+#ifdef SA_SIGINFO
+  act.sa_sigaction = __profil_counter;
+  act.sa_flags = SA_SIGINFO;
+#else
+  act.sa_handler = __profil_counter;
+  act.sa_flags = 0;
+#endif
+  act.sa_flags |= SA_RESTART;
   __sigfillset (&act.sa_mask);
   if (__sigaction (SIGPROF, &act, oact_ptr) < 0)
     return -1;

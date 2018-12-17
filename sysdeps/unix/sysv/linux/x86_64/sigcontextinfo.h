@@ -15,8 +15,13 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <stdint.h>
+#ifndef _SIGCONTEXTINFO_H
+#define _SIGCONTEXTINFO_H
 
-#define SIGCONTEXT siginfo_t *_si, ucontext_t *
-#define GET_PC(ctx)	\
-  ((void *) (uintptr_t) (ctx)->uc_mcontext.gregs[REG_RIP])
+static inline uintptr_t
+sigcontext_get_pc (const ucontext_t *ctx)
+{
+  return ctx->uc_mcontext.gregs[REG_RIP];
+}
+
+#endif

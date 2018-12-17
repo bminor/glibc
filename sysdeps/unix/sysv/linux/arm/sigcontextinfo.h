@@ -16,24 +16,13 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sys/ucontext.h>
+#ifndef _SIGCONTEXTINFO_H
+#define _SIGCONTEXTINFO_H
 
-#define SIGCONTEXT siginfo_t *_si, ucontext_t *
+static inline uintptr_t
+sigcontext_get_pc (const ucontext_t *ctx)
+{
+  return ctx->uc_mcontext.arm_pc;
+}
 
-/* The sigcontext structure changed between 2.0 and 2.1 kernels.  On any
-   modern system we should be able to assume that the "new" format will be
-   in use.  */
-
-#define GET_PC(ctx)	((void *) (ctx)->uc_mcontext.arm_pc)
-
-/* There is no reliable way to get the sigcontext unless we use a
-   three-argument signal handler.  */
-#define __sigaction(sig, act, oact) ({ \
-  (act)->sa_flags |= SA_SIGINFO; \
-  (__sigaction) (sig, act, oact); \
-})
-
-#define sigaction(sig, act, oact) ({ \
-  (act)->sa_flags |= SA_SIGINFO; \
-  (sigaction) (sig, act, oact); \
-})
+#endif

@@ -1,11 +1,11 @@
-/* Low-level statistical profiling support function.  Linux/x86-64 version.
+/* Low-level statistical profiling support function.  Linux version.
    Copyright (C) 2001-2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
+   modify it under the terms of the GNU Lesser General Public License as
+   published by the Free Software Foundation; either version 2.1 of the
+   License, or (at your option) any later version.
 
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,10 +19,11 @@
 #include <signal.h>
 #include <sigcontextinfo.h>
 
+/* sa_sigaction signature to use along SA_SIGINFO.  */
 static void
-__profil_counter (int signo, SIGCONTEXT scp)
+__profil_counter (int signo, siginfo_t *info, void *ctx)
 {
-  profil_count ((void *) GET_PC (scp));
+  profil_count (sigcontext_get_pc (ctx));
 
   /* This is a hack to prevent the compiler from implementing the
      above function call as a sibcall.  The sibcall would overwrite

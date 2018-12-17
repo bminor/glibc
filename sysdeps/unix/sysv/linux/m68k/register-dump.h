@@ -39,35 +39,9 @@
 
 */
 
-/* Linux saves only the call-clobbered registers in the sigcontext.  We
-   need to use a trampoline that saves the rest so that the C code can
-   access them.  We use the sc_fpstate field, since the handler is not
-   supposed to return anyway, thus it doesn't matter that it's clobbered.  */
-
-/* static */ void catch_segfault (int, int, struct sigcontext *);
-
-/* Dummy function so that we can use asm with arguments.  */
-static void __attribute_used__
-__dummy__ (void)
-{
-  asm ("\n\
-catch_segfault:\n\
-	move.l 12(%%sp),%%a0\n\
-	lea %c0(%%a0),%%a0\n\
-	/* Clear the first 4 bytes to make it a null fp state, just\n\
-	   in case the handler does return.  */\n\
-	clr.l (%%a0)+\n\
-	movem.l %%d2-%%d7/%%a2-%%a6,(%%a0)\n"
-#ifndef __mcoldfire__
-       "fmovem.x %%fp2-%%fp7,11*4(%%a0)\n"
-#elif defined __mcffpu__
-       "fmovem.d %%fp2-%%fp7,11*4(%%a0)\n"
-#endif
-       "jra real_catch_segfault"
-       : : "n" (offsetof (struct sigcontext, sc_fpstate)));
-}
-#define catch_segfault(a,b) \
-  __attribute_used__ real_catch_segfault(a,b)
+#define FPCONTEXT_SIZE  216
+#define uc_formatvec    __glibc_reserved1[FPCONTEXT_SIZE/4]
+#define uc_oldmask      uc_sigmask.__val[0]
 
 static void
 hexvalue (unsigned long int value, char *buf, size_t len)
@@ -78,13 +52,11 @@ hexvalue (unsigned long int value, char *buf, size_t len)
 }
 
 static void
-register_dump (int fd, struct sigcontext *ctx)
+register_dump (int fd, struct ucontext_t *ctx)
 {
   char regs[20][8];
   char fpregs[11][24];
   struct iovec iov[63], *next_iov = iov;
-  unsigned long *p = (unsigned long *) ctx->sc_fpstate + 1;
-  unsigned long *pfp = (unsigned long *) ctx->sc_fpregs;
   int i, j, fpreg_size;
 
 #define ADD_STRING(str) \
@@ -103,35 +75,33 @@ register_dump (int fd, struct sigcontext *ctx)
 #endif
 
   /* Generate strings of register contents.  */
-  hexvalue (ctx->sc_d0, regs[0], 8);
-  hexvalue (ctx->sc_d1, regs[1], 8);
-  hexvalue (*p++, regs[2], 8);
-  hexvalue (*p++, regs[3], 8);
-  hexvalue (*p++, regs[4], 8);
-  hexvalue (*p++, regs[5], 8);
-  hexvalue (*p++, regs[6], 8);
-  hexvalue (*p++, regs[7], 8);
-  hexvalue (ctx->sc_a0, regs[8], 8);
-  hexvalue (ctx->sc_a1, regs[9], 8);
-  hexvalue (*p++, regs[10], 8);
-  hexvalue (*p++, regs[11], 8);
-  hexvalue (*p++, regs[12], 8);
-  hexvalue (*p++, regs[13], 8);
-  hexvalue (*p++, regs[14], 8);
-  hexvalue (ctx->sc_usp, regs[15], 8);
-  hexvalue (ctx->sc_pc, regs[16], 8);
-  hexvalue (ctx->sc_sr, regs[17], 4);
-  hexvalue (ctx->sc_mask, regs[18], 8);
-  hexvalue (ctx->sc_formatvec & 0xfff, regs[19], 4);
-  for (i = 0; i < 2; i++)
+  hexvalue (ctx->uc_mcontext.gregs[R_D0], regs[0], 8);
+  hexvalue (ctx->uc_mcontext.gregs[R_D1], regs[1], 8);
+  hexvalue (ctx->uc_mcontext.gregs[R_D2], regs[2], 8);
+  hexvalue (ctx->uc_mcontext.gregs[R_D3], regs[3], 8);
+  hexvalue (ctx->uc_mcontext.gregs[R_D4], regs[4], 8);
+  hexvalue (ctx->uc_mcontext.gregs[R_D5], regs[5], 8);
+  hexvalue (ctx->uc_mcontext.gregs[R_D6], regs[6], 8);
+  hexvalue (ctx->uc_mcontext.gregs[R_D7], regs[7], 8);
+  hexvalue (ctx->uc_mcontext.gregs[R_A0], regs[8], 8);
+  hexvalue (ctx->uc_mcontext.gregs[R_A1], regs[9], 8);
+  hexvalue (ctx->uc_mcontext.gregs[R_A2], regs[10], 8);
+  hexvalue (ctx->uc_mcontext.gregs[R_A3], regs[11], 8);
+  hexvalue (ctx->uc_mcontext.gregs[R_A4], regs[12], 8);
+  hexvalue (ctx->uc_mcontext.gregs[R_A5], regs[13], 8);
+  hexvalue (ctx->uc_mcontext.gregs[R_A6], regs[14], 8);
+  hexvalue (ctx->uc_mcontext.gregs[R_SP], regs[15], 8);
+  hexvalue (ctx->uc_mcontext.gregs[R_PC], regs[16], 8);
+  hexvalue (ctx->uc_mcontext.gregs[R_PS], regs[17], 4);
+  hexvalue (ctx->uc_oldmask, regs[18], 8);
+  hexvalue (ctx->uc_formatvec & 0xfff, regs[19], 4);
+
+  for (i = 0; i < 8; i++)
     for (j = 0; j < fpreg_size; j += 8)
-      hexvalue (*pfp++, fpregs[i] + j, 8);
-  for (i = 2; i < 8; i++)
-    for (j = 0; j < fpreg_size; j += 8)
-      hexvalue (*p++, fpregs[i] + j, 8);
-  hexvalue (ctx->sc_fpcntl[0], fpregs[8], 8);
-  hexvalue (ctx->sc_fpcntl[1], fpregs[9], 8);
-  hexvalue (ctx->sc_fpcntl[2], fpregs[10], 8);
+      hexvalue (ctx->uc_mcontext.fpregs.f_fpregs[i][j/8], fpregs[i] + j, 8);
+  hexvalue (ctx->uc_mcontext.fpregs.f_pcr, fpregs[8], 8);
+  hexvalue (ctx->uc_mcontext.fpregs.f_psr, fpregs[9], 8);
+  hexvalue (ctx->uc_mcontext.fpregs.f_fpiaddr, fpregs[10], 8);
 
   /* Generate the output.  */
   ADD_STRING ("Register dump:\n\n  D0: ");

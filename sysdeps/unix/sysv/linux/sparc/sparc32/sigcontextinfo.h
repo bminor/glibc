@@ -16,5 +16,41 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define SIGCONTEXT struct sigcontext *
-#define GET_PC(__ctx)	((void *) ((__ctx)->si_regs.pc))
+#ifndef _SIGCONTEXTINFO_H
+#define _SIGCONTEXTINFO_H
+
+/* The sparc32 kernel signal frame for SA_SIGINFO is defined as:
+
+  struct rt_signal_frame32
+  {
+    struct sparc_stackf32 ss;
+    compat_siginfo_t info;
+    struct pt_regs32 regs;          <- void *ctx
+    compat_sigset_t mask;
+    u32 fpu_save;
+    unsigned int insns[2];
+    compat_stack_t stack;
+    unsigned int extra_size;
+    siginfo_extra_v8plus_t v8plus;
+    u32 rwin_save;
+  } __attribute__((aligned(8)));
+
+  Unlike other architectures, sparc32 passes pt_regs32 REGS pointer as
+  the third argument to a sa_sigaction handler with SA_SIGINFO enabled.  */
+
+struct pt_regs32
+{
+  unsigned int psr;
+  unsigned int pc;
+  unsigned int npc;
+  unsigned int y;
+  unsigned int u_regs[16];
+};
+
+static inline uintptr_t
+sigcontext_get_pc (const struct pt_regs32 *ctx)
+{
+  return ctx->pc;
+}
+
+#endif

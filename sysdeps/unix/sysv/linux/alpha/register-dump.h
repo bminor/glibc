@@ -16,8 +16,10 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <stddef.h>
 #include <string.h>
+#include <ucontext.h>
+#include <sys/uio.h>
+#include <_itoa.h>
 
 /* We will print the register dump in this format:
 
@@ -48,109 +50,190 @@
    TA0: XXXXXXXXXXXXXXXX   TA1: XXXXXXXXXXXXXXXX   TA2: XXXXXXXXXXXXXXXX
 */
 
-#define NREGS (32+32+3)
-
-static const char __attribute__((aligned(8))) regnames[NREGS][8] =
+static void
+hexvalue (unsigned long int value, char *buf, size_t len)
 {
-  "    V0: ", "    T0: ", "    T1: ",
-  "    T2: ", "    T3: ", "    T4: ",
-  "    T5: ", "    T6: ", "    T7: ",
-  "    S0: ", "    S1: ", "    S2: ",
-  "    S3: ", "    S4: ", "    S5: ",
-  "    S6: ", "    A0: ", "    A1: ",
-  "    A2: ", "    A3: ", "    A4: ",
-  "    A5: ", "    T8: ", "    T9: ",
-  "   T10: ", "   T11: ", "    RA: ",
-  "   T12: ", "    AT: ", "    GP: ",
-  "    SP: ", "    PC: ",
-
-  "   FP0: ", "   FP1: ", "   FP2: ",
-  "   FP3: ", "   FP4: ", "   FP5: ",
-  "   FP6: ", "   FP7: ", "   FP8: ",
-  "   FP9: ", "  FP10: ", "  FP11: ",
-  "  FP12: ", "  FP13: ", "  FP14: ",
-  "  FP15: ", "  FP16: ", "  FP17: ",
-  "  FP18: ", "  FP19: ", "  FP20: ",
-  "  FP21: ", "  FP22: ", "  FP23: ",
-  "  FP24: ", "  FP25: ", "  FP26: ",
-  "  FP27: ", "  FP28: ", "  FP29: ",
-  "  FP30: ", "  FPCR: ",
-
-  "   TA0: ", "   TA1: ", "   TA2: "
-};
-
-#define O(FIELD, LF)  offsetof(struct sigcontext, FIELD) + LF
-
-static const int offsets[NREGS] =
-{
-  O(sc_regs[0], 0),  O(sc_regs[1], 0),  O(sc_regs[2], 1),
-  O(sc_regs[3], 0),  O(sc_regs[4], 0),  O(sc_regs[5], 1),
-  O(sc_regs[6], 0),  O(sc_regs[7], 0),  O(sc_regs[8], 1),
-  O(sc_regs[9], 0),  O(sc_regs[10], 0), O(sc_regs[11], 1),
-  O(sc_regs[12], 0), O(sc_regs[13], 0), O(sc_regs[14], 1),
-  O(sc_regs[15], 0), O(sc_regs[16], 0), O(sc_regs[17], 1),
-  O(sc_regs[18], 0), O(sc_regs[19], 0), O(sc_regs[20], 1),
-  O(sc_regs[21], 0), O(sc_regs[22], 0), O(sc_regs[23], 1),
-  O(sc_regs[24], 0), O(sc_regs[25], 0), O(sc_regs[26], 1),
-  O(sc_regs[27], 0), O(sc_regs[28], 0), O(sc_regs[29], 1),
-  O(sc_regs[30], 0), O(sc_pc, 2),
-
-  O(sc_fpregs[0], 0),  O(sc_fpregs[1], 0),  O(sc_fpregs[2], 1),
-  O(sc_fpregs[3], 0),  O(sc_fpregs[4], 0),  O(sc_fpregs[5], 1),
-  O(sc_fpregs[6], 0),  O(sc_fpregs[7], 0),  O(sc_fpregs[8], 1),
-  O(sc_fpregs[9], 0),  O(sc_fpregs[10], 0), O(sc_fpregs[11], 1),
-  O(sc_fpregs[12], 0), O(sc_fpregs[13], 0), O(sc_fpregs[14], 1),
-  O(sc_fpregs[15], 0), O(sc_fpregs[16], 0), O(sc_fpregs[17], 1),
-  O(sc_fpregs[18], 0), O(sc_fpregs[19], 0), O(sc_fpregs[20], 1),
-  O(sc_fpregs[21], 0), O(sc_fpregs[22], 0), O(sc_fpregs[23], 1),
-  O(sc_fpregs[24], 0), O(sc_fpregs[25], 0), O(sc_fpregs[26], 1),
-  O(sc_fpregs[27], 0), O(sc_fpregs[28], 0), O(sc_fpregs[29], 1),
-  O(sc_fpregs[30], 0), O(sc_fpcr, 2),
-
-  O(sc_traparg_a0, 0),  O(sc_traparg_a1, 0),  O(sc_traparg_a2, 1)
-};
-
-#undef O
+  char *cp = _itoa_word (value, buf + len, 16, 0);
+  while (cp > buf)
+    *--cp = '0';
+}
 
 static void
-register_dump (int fd, struct sigcontext *ctx)
+register_dump (int fd, struct ucontext_t *ctx)
 {
-  char buf[NREGS*(8+16) + 25 + 80];
-  char *p = buf;
-  size_t i;
+  struct iovec iov[31 * 2 + 2    /* REGS + PC.  */
+                   + 31 * 2 + 2  /* FREGS + FPCR.  */
+                   + (3 * 2)     /* TA0, TA1, TA3.  */
+                   + 1           /* '\n'.  */];
+  size_t nr = 0;
 
-  p = stpcpy (p, "Register dump:\n\n");
+#define ADD_STRING(str) \
+  iov[nr].iov_base = (char *) str;					      \
+  iov[nr].iov_len = strlen (str);					      \
+  ++nr
+#define ADD_MEM(str, len) \
+  iov[nr].iov_base = str;						      \
+  iov[nr].iov_len = len;						      \
+  ++nr
 
-  for (i = 0; i < NREGS; ++i)
-    {
-      int this_offset, this_lf;
-      unsigned long val;
-      signed long j;
+  char regs[31][16];
+  char pc[16];
+  for (int i = 0; i < 31; i++)
+    hexvalue (ctx->uc_mcontext.sc_regs[i], regs[i], 16);
+  hexvalue (ctx->uc_mcontext.sc_pc, pc, 16);
 
-      this_offset = offsets[i];
-      this_lf = this_offset & 7;
+  /* Generate the output.  */
+  ADD_STRING ("Register dump:\n\n    V0: ");
+  ADD_MEM (regs[0], 16);
+  ADD_STRING ("    T0: ");
+  ADD_MEM (regs[1], 16);
+  ADD_STRING ("    T1: ");
+  ADD_MEM (regs[2], 16);
+  ADD_STRING ("\n    T2: ");
+  ADD_MEM (regs[3], 16);
+  ADD_STRING ("    T3: ");
+  ADD_MEM (regs[4], 16);
+  ADD_STRING ("    T4: ");
+  ADD_MEM (regs[5], 16);
+  ADD_STRING ("\n    T5: ");
+  ADD_MEM (regs[6], 16);
+  ADD_STRING ("    T6: ");
+  ADD_MEM (regs[7], 16);
+  ADD_STRING ("    T7: ");
+  ADD_MEM (regs[8], 16);
+  ADD_STRING ("\n    S0: ");
+  ADD_MEM (regs[9], 16);
+  ADD_STRING ("    S1: ");
+  ADD_MEM (regs[10], 16);
+  ADD_STRING ("    S2: ");
+  ADD_MEM (regs[11], 16);
+  ADD_STRING ("\n    S3: ");
+  ADD_MEM (regs[12], 16);
+  ADD_STRING ("    S4: ");
+  ADD_MEM (regs[13], 16);
+  ADD_STRING ("    S5: ");
+  ADD_MEM (regs[14], 16);
+  ADD_STRING ("\n    S6: ");
+  ADD_MEM (regs[15], 16);
+  ADD_STRING ("    A0: ");
+  ADD_MEM (regs[16], 16);
+  ADD_STRING ("    A1: ");
+  ADD_MEM (regs[17], 16);
+  ADD_STRING ("\n    A2: ");
+  ADD_MEM (regs[18], 16);
+  ADD_STRING ("    A3: ");
+  ADD_MEM (regs[19], 16);
+  ADD_STRING ("    A4: ");
+  ADD_MEM (regs[20], 16);
+  ADD_STRING ("\n    A5: ");
+  ADD_MEM (regs[21], 16);
+  ADD_STRING ("    T8: ");
+  ADD_MEM (regs[22], 16);
+  ADD_STRING ("    T9: ");
+  ADD_MEM (regs[23], 16);
+  ADD_STRING ("\n   T10: ");
+  ADD_MEM (regs[24], 16);
+  ADD_STRING ("   T11: ");
+  ADD_MEM (regs[25], 16);
+  ADD_STRING ("    RA: ");
+  ADD_MEM (regs[26], 16);
+  ADD_STRING ("\n   T12: ");
+  ADD_MEM (regs[27], 16);
+  ADD_STRING ("    AT: ");
+  ADD_MEM (regs[28], 16);
+  ADD_STRING ("    GP: ");
+  ADD_MEM (regs[29], 16);
+  ADD_STRING ("\n    SP: ");
+  ADD_MEM (regs[30], 16);
+  ADD_STRING ("    PC: ");
+  ADD_MEM (pc, 16);
 
-      val = *(unsigned long *)(((size_t)ctx + this_offset) & -8);
+  char fpregs[31][16];
+  char fpcr[16];
+  for (int i = 0; i < 31; i++)
+    hexvalue (ctx->uc_mcontext.sc_fpregs[i], fpregs[i], 16);
+  hexvalue (ctx->uc_mcontext.sc_fpcr, fpcr, 16);
 
-      memcpy (p, regnames[i], 8);
-      p += 8;
+  ADD_STRING ("\n\n   FP0: ");
+  ADD_MEM (fpregs[0], 16);
+  ADD_STRING ("   FP1: ");
+  ADD_MEM (fpregs[1], 16);
+  ADD_STRING ("   FP2: ");
+  ADD_MEM (fpregs[2], 16);
+  ADD_STRING ("\n   FP3: ");
+  ADD_MEM (fpregs[3], 16);
+  ADD_STRING ("   FP4: ");
+  ADD_MEM (fpregs[4], 16);
+  ADD_STRING ("   FP5: ");
+  ADD_MEM (fpregs[5], 16);
+  ADD_STRING ("\n   FP6: ");
+  ADD_MEM (fpregs[6], 16);
+  ADD_STRING ("   FP7: ");
+  ADD_MEM (fpregs[7], 16);
+  ADD_STRING ("   FP8: ");
+  ADD_MEM (fpregs[8], 16);
+  ADD_STRING ("\n   FP9: ");
+  ADD_MEM (fpregs[9], 16);
+  ADD_STRING ("  FP10: ");
+  ADD_MEM (fpregs[10], 16);
+  ADD_STRING ("  FP11: ");
+  ADD_MEM (fpregs[11], 16);
+  ADD_STRING ("\n  FP12: ");
+  ADD_MEM (fpregs[12], 16);
+  ADD_STRING ("  FP13: ");
+  ADD_MEM (fpregs[13], 16);
+  ADD_STRING ("  FP14: ");
+  ADD_MEM (fpregs[14], 16);
+  ADD_STRING ("\n  FP15: ");
+  ADD_MEM (fpregs[15], 16);
+  ADD_STRING ("  FP16: ");
+  ADD_MEM (fpregs[16], 16);
+  ADD_STRING ("  FP17: ");
+  ADD_MEM (fpregs[17], 16);
+  ADD_STRING ("\n  FP18: ");
+  ADD_MEM (fpregs[18], 16);
+  ADD_STRING ("  FP19: ");
+  ADD_MEM (fpregs[19], 16);
+  ADD_STRING ("  FP20: ");
+  ADD_MEM (fpregs[20], 16);
+  ADD_STRING ("\n  FP21: ");
+  ADD_MEM (fpregs[21], 16);
+  ADD_STRING ("  FP22: ");
+  ADD_MEM (fpregs[22], 16);
+  ADD_STRING ("  FP23: ");
+  ADD_MEM (fpregs[23], 16);
+  ADD_STRING ("\n  FP24: ");
+  ADD_MEM (fpregs[24], 16);
+  ADD_STRING ("  FP25: ");
+  ADD_MEM (fpregs[25], 16);
+  ADD_STRING ("  FP26: ");
+  ADD_MEM (fpregs[26], 16);
+  ADD_STRING ("\n  FP27: ");
+  ADD_MEM (fpregs[27], 16);
+  ADD_STRING ("  FP28: ");
+  ADD_MEM (fpregs[28], 16);
+  ADD_STRING ("  FP29: ");
+  ADD_MEM (fpregs[29], 16);
+  ADD_STRING ("\n  FP30: ");
+  ADD_MEM (fpregs[30], 16);
+  ADD_STRING ("  FPCR: ");
+  ADD_MEM (fpcr, 16);
 
-      for (j = 60; j >= 0; j -= 4)
-	{
-	  unsigned long x = (val >> j) & 15;
-	  x += x < 10 ? '0' : 'a' - 10;
-	  *p++ = x;
-	}
+  char traparg[3][16];
+  hexvalue (ctx->uc_mcontext.sc_traparg_a0, traparg[0], 16);
+  hexvalue (ctx->uc_mcontext.sc_traparg_a1, traparg[1], 16);
+  hexvalue (ctx->uc_mcontext.sc_traparg_a2, traparg[2], 16);
+  ADD_STRING ("\n\n   TA0: ");
+  ADD_MEM (traparg[0], 16);
+  ADD_STRING ("   TA1: ");
+  ADD_MEM (traparg[1], 16);
+  ADD_STRING ("   TA2: ");
+  ADD_MEM (traparg[2], 16);
 
-      if (this_lf > 0)
-	{
-	  if (this_lf > 1)
-	    *p++ = '\n';
-	  *p++ = '\n';
-	}
-    }
+  ADD_STRING ("\n");
 
-  write (fd, buf, p - buf);
+  /* Write the stuff out.  */
+  writev (fd, iov, nr);
 }
 
 #define REGISTER_DUMP register_dump (fd, ctx)

@@ -51,7 +51,7 @@ hexvalue (unsigned long int value, char *buf, size_t len)
 }
 
 static void
-register_dump (int fd, struct sigcontext *ctx)
+register_dump (int fd, struct ucontext_t *ctx)
 {
   char regs[21][8];
   char fpregs[31][8];
@@ -68,27 +68,27 @@ register_dump (int fd, struct sigcontext *ctx)
   ++nr
 
   /* Generate strings of register contents.  */
-  hexvalue (ctx->eax, regs[0], 8);
-  hexvalue (ctx->ebx, regs[1], 8);
-  hexvalue (ctx->ecx, regs[2], 8);
-  hexvalue (ctx->edx, regs[3], 8);
-  hexvalue (ctx->esi, regs[4], 8);
-  hexvalue (ctx->edi, regs[5], 8);
-  hexvalue (ctx->ebp, regs[6], 8);
-  hexvalue (ctx->esp, regs[7], 8);
-  hexvalue (ctx->eip, regs[8], 8);
-  hexvalue (ctx->eflags, regs[9], 8);
-  hexvalue (ctx->cs, regs[10], 4);
-  hexvalue (ctx->ds, regs[11], 4);
-  hexvalue (ctx->es, regs[12], 4);
-  hexvalue (ctx->fs, regs[13], 4);
-  hexvalue (ctx->gs, regs[14], 4);
-  hexvalue (ctx->ss, regs[15], 4);
-  hexvalue (ctx->trapno, regs[16], 8);
-  hexvalue (ctx->err, regs[17], 8);
-  hexvalue (ctx->oldmask, regs[18], 8);
-  hexvalue (ctx->esp_at_signal, regs[19], 8);
-  hexvalue (ctx->cr2, regs[20], 8);
+  hexvalue (ctx->uc_mcontext.gregs[REG_EAX], regs[0], 8);
+  hexvalue (ctx->uc_mcontext.gregs[REG_EBX], regs[1], 8);
+  hexvalue (ctx->uc_mcontext.gregs[REG_ECX], regs[2], 8);
+  hexvalue (ctx->uc_mcontext.gregs[REG_EDX], regs[3], 8);
+  hexvalue (ctx->uc_mcontext.gregs[REG_ESI], regs[4], 8);
+  hexvalue (ctx->uc_mcontext.gregs[REG_EDI], regs[5], 8);
+  hexvalue (ctx->uc_mcontext.gregs[REG_EBP], regs[6], 8);
+  hexvalue (ctx->uc_mcontext.gregs[REG_ESP], regs[7], 8);
+  hexvalue (ctx->uc_mcontext.gregs[REG_EIP], regs[8], 8);
+  hexvalue (ctx->uc_flags, regs[9], 8);
+  hexvalue (ctx->uc_mcontext.gregs[REG_CS], regs[10], 4);
+  hexvalue (ctx->uc_mcontext.gregs[REG_DS], regs[11], 4);
+  hexvalue (ctx->uc_mcontext.gregs[REG_ES], regs[12], 4);
+  hexvalue (ctx->uc_mcontext.gregs[REG_FS], regs[13], 4);
+  hexvalue (ctx->uc_mcontext.gregs[REG_GS], regs[14], 4);
+  hexvalue (ctx->uc_mcontext.gregs[REG_SS], regs[15], 4);
+  hexvalue (ctx->uc_mcontext.gregs[REG_TRAPNO], regs[16], 8);
+  hexvalue (ctx->uc_mcontext.gregs[REG_ERR], regs[17], 8);
+  hexvalue (ctx->uc_mcontext.oldmask, regs[18], 8);
+  hexvalue (ctx->uc_mcontext.gregs[REG_UESP], regs[19], 8);
+  hexvalue (ctx->uc_mcontext.cr2, regs[20], 8);
 
   /* Generate the output.  */
   ADD_STRING ("Register dump:\n\n EAX: ");
@@ -134,116 +134,112 @@ register_dump (int fd, struct sigcontext *ctx)
   ADD_STRING ("   CR2: ");
   ADD_MEM (regs[20], 8);
 
-  if (ctx->fpstate != NULL)
-    {
+  /* Generate output for the FPU control/status registers.  */
+  hexvalue (ctx->__fpregs_mem.cw, fpregs[0], 8);
+  hexvalue (ctx->__fpregs_mem.sw, fpregs[1], 8);
+  hexvalue (ctx->__fpregs_mem.tag, fpregs[2], 8);
+  hexvalue (ctx->__fpregs_mem.ipoff, fpregs[3], 8);
+  hexvalue (ctx->__fpregs_mem.cssel, fpregs[4], 4);
+  hexvalue (ctx->__fpregs_mem.dataoff, fpregs[5], 8);
+  hexvalue (ctx->__fpregs_mem.datasel, fpregs[6], 4);
 
-      /* Generate output for the FPU control/status registers.  */
-      hexvalue (ctx->fpstate->cw, fpregs[0], 8);
-      hexvalue (ctx->fpstate->sw, fpregs[1], 8);
-      hexvalue (ctx->fpstate->tag, fpregs[2], 8);
-      hexvalue (ctx->fpstate->ipoff, fpregs[3], 8);
-      hexvalue (ctx->fpstate->cssel, fpregs[4], 4);
-      hexvalue (ctx->fpstate->dataoff, fpregs[5], 8);
-      hexvalue (ctx->fpstate->datasel, fpregs[6], 4);
+  ADD_STRING ("\n\n FPUCW: ");
+  ADD_MEM (fpregs[0], 8);
+  ADD_STRING ("   FPUSW: ");
+  ADD_MEM (fpregs[1], 8);
+  ADD_STRING ("   TAG: ");
+  ADD_MEM (fpregs[2], 8);
+  ADD_STRING ("\n IPOFF: ");
+  ADD_MEM (fpregs[3], 8);
+  ADD_STRING ("   CSSEL: ");
+  ADD_MEM (fpregs[4], 4);
+  ADD_STRING ("   DATAOFF: ");
+  ADD_MEM (fpregs[5], 8);
+  ADD_STRING ("   DATASEL: ");
+  ADD_MEM (fpregs[6], 4);
 
-      ADD_STRING ("\n\n FPUCW: ");
-      ADD_MEM (fpregs[0], 8);
-      ADD_STRING ("   FPUSW: ");
-      ADD_MEM (fpregs[1], 8);
-      ADD_STRING ("   TAG: ");
-      ADD_MEM (fpregs[2], 8);
-      ADD_STRING ("\n IPOFF: ");
-      ADD_MEM (fpregs[3], 8);
-      ADD_STRING ("   CSSEL: ");
-      ADD_MEM (fpregs[4], 4);
-      ADD_STRING ("   DATAOFF: ");
-      ADD_MEM (fpregs[5], 8);
-      ADD_STRING ("   DATASEL: ");
-      ADD_MEM (fpregs[6], 4);
+  /* Now the real FPU registers.  */
+  hexvalue (ctx->__fpregs_mem._st[0].exponent, fpregs[7], 8);
+  hexvalue (ctx->__fpregs_mem._st[0].significand[3] << 16
+		| ctx->__fpregs_mem._st[0].significand[2], fpregs[8], 8);
+  hexvalue (ctx->__fpregs_mem._st[0].significand[1] << 16
+		| ctx->__fpregs_mem._st[0].significand[0], fpregs[9], 8);
+  hexvalue (ctx->__fpregs_mem._st[1].exponent, fpregs[10], 8);
+  hexvalue (ctx->__fpregs_mem._st[1].significand[3] << 16
+		| ctx->__fpregs_mem._st[1].significand[2], fpregs[11], 8);
+  hexvalue (ctx->__fpregs_mem._st[1].significand[1] << 16
+		| ctx->__fpregs_mem._st[1].significand[0], fpregs[12], 8);
+  hexvalue (ctx->__fpregs_mem._st[2].exponent, fpregs[13], 8);
+  hexvalue (ctx->__fpregs_mem._st[2].significand[3] << 16
+		| ctx->__fpregs_mem._st[2].significand[2], fpregs[14], 8);
+  hexvalue (ctx->__fpregs_mem._st[2].significand[1] << 16
+		| ctx->__fpregs_mem._st[2].significand[0], fpregs[15], 8);
+  hexvalue (ctx->__fpregs_mem._st[3].exponent, fpregs[16], 8);
+  hexvalue (ctx->__fpregs_mem._st[3].significand[3] << 16
+		| ctx->__fpregs_mem._st[3].significand[2], fpregs[17], 8);
+  hexvalue (ctx->__fpregs_mem._st[3].significand[1] << 16
+		| ctx->__fpregs_mem._st[3].significand[0], fpregs[18], 8);
+  hexvalue (ctx->__fpregs_mem._st[4].exponent, fpregs[19], 8);
+  hexvalue (ctx->__fpregs_mem._st[4].significand[3] << 16
+		| ctx->__fpregs_mem._st[4].significand[2], fpregs[20], 8);
+  hexvalue (ctx->__fpregs_mem._st[4].significand[1] << 16
+		| ctx->__fpregs_mem._st[4].significand[0], fpregs[21], 8);
+  hexvalue (ctx->__fpregs_mem._st[5].exponent, fpregs[22], 8);
+  hexvalue (ctx->__fpregs_mem._st[5].significand[3] << 16
+		| ctx->__fpregs_mem._st[5].significand[2], fpregs[23], 8);
+  hexvalue (ctx->__fpregs_mem._st[5].significand[1] << 16
+		| ctx->__fpregs_mem._st[5].significand[0], fpregs[24], 8);
+  hexvalue (ctx->__fpregs_mem._st[6].exponent, fpregs[25], 8);
+  hexvalue (ctx->__fpregs_mem._st[6].significand[3] << 16
+		| ctx->__fpregs_mem._st[6].significand[2], fpregs[26], 8);
+  hexvalue (ctx->__fpregs_mem._st[6].significand[1] << 16
+		| ctx->__fpregs_mem._st[6].significand[0], fpregs[27], 8);
+  hexvalue (ctx->__fpregs_mem._st[7].exponent, fpregs[28], 8);
+  hexvalue (ctx->__fpregs_mem._st[7].significand[3] << 16
+		| ctx->__fpregs_mem._st[7].significand[2], fpregs[29], 8);
+  hexvalue (ctx->__fpregs_mem._st[7].significand[1] << 16
+		| ctx->__fpregs_mem._st[7].significand[0], fpregs[30], 8);
 
-      /* Now the real FPU registers.  */
-      hexvalue (ctx->fpstate->_st[0].exponent, fpregs[7], 8);
-      hexvalue (ctx->fpstate->_st[0].significand[3] << 16
-		| ctx->fpstate->_st[0].significand[2], fpregs[8], 8);
-      hexvalue (ctx->fpstate->_st[0].significand[1] << 16
-		| ctx->fpstate->_st[0].significand[0], fpregs[9], 8);
-      hexvalue (ctx->fpstate->_st[1].exponent, fpregs[10], 8);
-      hexvalue (ctx->fpstate->_st[1].significand[3] << 16
-		| ctx->fpstate->_st[1].significand[2], fpregs[11], 8);
-      hexvalue (ctx->fpstate->_st[1].significand[1] << 16
-		| ctx->fpstate->_st[1].significand[0], fpregs[12], 8);
-      hexvalue (ctx->fpstate->_st[2].exponent, fpregs[13], 8);
-      hexvalue (ctx->fpstate->_st[2].significand[3] << 16
-		| ctx->fpstate->_st[2].significand[2], fpregs[14], 8);
-      hexvalue (ctx->fpstate->_st[2].significand[1] << 16
-		| ctx->fpstate->_st[2].significand[0], fpregs[15], 8);
-      hexvalue (ctx->fpstate->_st[3].exponent, fpregs[16], 8);
-      hexvalue (ctx->fpstate->_st[3].significand[3] << 16
-		| ctx->fpstate->_st[3].significand[2], fpregs[17], 8);
-      hexvalue (ctx->fpstate->_st[3].significand[1] << 16
-		| ctx->fpstate->_st[3].significand[0], fpregs[18], 8);
-      hexvalue (ctx->fpstate->_st[4].exponent, fpregs[19], 8);
-      hexvalue (ctx->fpstate->_st[4].significand[3] << 16
-		| ctx->fpstate->_st[4].significand[2], fpregs[20], 8);
-      hexvalue (ctx->fpstate->_st[4].significand[1] << 16
-		| ctx->fpstate->_st[4].significand[0], fpregs[21], 8);
-      hexvalue (ctx->fpstate->_st[5].exponent, fpregs[22], 8);
-      hexvalue (ctx->fpstate->_st[5].significand[3] << 16
-		| ctx->fpstate->_st[5].significand[2], fpregs[23], 8);
-      hexvalue (ctx->fpstate->_st[5].significand[1] << 16
-		| ctx->fpstate->_st[5].significand[0], fpregs[24], 8);
-      hexvalue (ctx->fpstate->_st[6].exponent, fpregs[25], 8);
-      hexvalue (ctx->fpstate->_st[6].significand[3] << 16
-		| ctx->fpstate->_st[6].significand[2], fpregs[26], 8);
-      hexvalue (ctx->fpstate->_st[6].significand[1] << 16
-		| ctx->fpstate->_st[6].significand[0], fpregs[27], 8);
-      hexvalue (ctx->fpstate->_st[7].exponent, fpregs[28], 8);
-      hexvalue (ctx->fpstate->_st[7].significand[3] << 16
-		| ctx->fpstate->_st[7].significand[2], fpregs[29], 8);
-      hexvalue (ctx->fpstate->_st[7].significand[1] << 16
-		| ctx->fpstate->_st[7].significand[0], fpregs[30], 8);
-
-      ADD_STRING ("\n\n ST(0) ");
-      ADD_MEM (fpregs[7], 4);
-      ADD_STRING (" ");
-      ADD_MEM (fpregs[8], 8);
-      ADD_MEM (fpregs[9], 8);
-      ADD_STRING ("   ST(1) ");
-      ADD_MEM (fpregs[10], 4);
-      ADD_STRING (" ");
-      ADD_MEM (fpregs[11], 8);
-      ADD_MEM (fpregs[12], 8);
-      ADD_STRING ("\n ST(2) ");
-      ADD_MEM (fpregs[13], 4);
-      ADD_STRING (" ");
-      ADD_MEM (fpregs[14], 8);
-      ADD_MEM (fpregs[15], 8);
-      ADD_STRING ("   ST(3) ");
-      ADD_MEM (fpregs[16], 4);
-      ADD_STRING (" ");
-      ADD_MEM (fpregs[17], 8);
-      ADD_MEM (fpregs[18], 8);
-      ADD_STRING ("\n ST(4) ");
-      ADD_MEM (fpregs[19], 4);
-      ADD_STRING (" ");
-      ADD_MEM (fpregs[20], 8);
-      ADD_MEM (fpregs[21], 8);
-      ADD_STRING ("   ST(5) ");
-      ADD_MEM (fpregs[22], 4);
-      ADD_STRING (" ");
-      ADD_MEM (fpregs[23], 8);
-      ADD_MEM (fpregs[24], 8);
-      ADD_STRING ("\n ST(6) ");
-      ADD_MEM (fpregs[25], 4);
-      ADD_STRING (" ");
-      ADD_MEM (fpregs[26], 8);
-      ADD_MEM (fpregs[27], 8);
-      ADD_STRING ("   ST(7) ");
-      ADD_MEM (fpregs[28], 4);
-      ADD_STRING (" ");
-      ADD_MEM (fpregs[29], 8);
-      ADD_MEM (fpregs[30], 8);
-    }
+  ADD_STRING ("\n\n ST(0) ");
+  ADD_MEM (fpregs[7], 4);
+  ADD_STRING (" ");
+  ADD_MEM (fpregs[8], 8);
+  ADD_MEM (fpregs[9], 8);
+  ADD_STRING ("   ST(1) ");
+  ADD_MEM (fpregs[10], 4);
+  ADD_STRING (" ");
+  ADD_MEM (fpregs[11], 8);
+  ADD_MEM (fpregs[12], 8);
+  ADD_STRING ("\n ST(2) ");
+  ADD_MEM (fpregs[13], 4);
+  ADD_STRING (" ");
+  ADD_MEM (fpregs[14], 8);
+  ADD_MEM (fpregs[15], 8);
+  ADD_STRING ("   ST(3) ");
+  ADD_MEM (fpregs[16], 4);
+  ADD_STRING (" ");
+  ADD_MEM (fpregs[17], 8);
+  ADD_MEM (fpregs[18], 8);
+  ADD_STRING ("\n ST(4) ");
+  ADD_MEM (fpregs[19], 4);
+  ADD_STRING (" ");
+  ADD_MEM (fpregs[20], 8);
+  ADD_MEM (fpregs[21], 8);
+  ADD_STRING ("   ST(5) ");
+  ADD_MEM (fpregs[22], 4);
+  ADD_STRING (" ");
+  ADD_MEM (fpregs[23], 8);
+  ADD_MEM (fpregs[24], 8);
+  ADD_STRING ("\n ST(6) ");
+  ADD_MEM (fpregs[25], 4);
+  ADD_STRING (" ");
+  ADD_MEM (fpregs[26], 8);
+  ADD_MEM (fpregs[27], 8);
+  ADD_STRING ("   ST(7) ");
+  ADD_MEM (fpregs[28], 4);
+  ADD_STRING (" ");
+  ADD_MEM (fpregs[29], 8);
+  ADD_MEM (fpregs[30], 8);
 
   ADD_STRING ("\n");
 
@@ -252,4 +248,4 @@ register_dump (int fd, struct sigcontext *ctx)
 }
 
 
-#define REGISTER_DUMP register_dump (fd, &ctx)
+#define REGISTER_DUMP register_dump (fd, ctx)

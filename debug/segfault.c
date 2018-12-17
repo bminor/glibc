@@ -35,6 +35,10 @@
    passed up by the signal handler.  */
 #include <sigcontextinfo.h>
 
+#ifdef SA_SIGINFO
+# define SIGCONTEXT siginfo_t *info, void *
+#endif
+
 /* Get code to possibly dump the content of all registers.  */
 #include <register-dump.h>
 
@@ -101,7 +105,7 @@ catch_segfault (int signal, SIGCONTEXT ctx)
      Normally it will be found at arr[2], but it might appear later
      if there were some signal handler wrappers.  Allow a few bytes
      difference to cope with as many arches as possible.  */
-  pc = (uintptr_t) GET_PC (ctx);
+  pc = sigcontext_get_pc (ctx);
   for (i = 0; i < cnt; ++i)
     if ((uintptr_t) arr[i] >= pc - 16 && (uintptr_t) arr[i] <= pc + 16)
       break;
@@ -148,9 +152,15 @@ install_handler (void)
   const char *sigs = getenv ("SEGFAULT_SIGNALS");
   const char *name;
 
-  sa.sa_handler = (void *) catch_segfault;
+#ifdef SA_SIGINFO
+  sa.sa_sigaction = catch_segfault;
+  sa.sa_flags = SA_SIGINFO;
+#else
+  sa.sa_handler = (void*) catch_segfault;
+  sa.sa_flags = 0;
+#endif
   sigemptyset (&sa.sa_mask);
-  sa.sa_flags = SA_RESTART;
+  sa.sa_flags |= SA_RESTART;
 
   /* Maybe we are expected to use an alternative stack.  */
   if (getenv ("SEGFAULT_USE_ALTSTACK") != 0)

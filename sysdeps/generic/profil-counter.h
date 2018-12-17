@@ -22,5 +22,5 @@
 static void
 __profil_counter (int signr, int code, struct sigcontext *scp)
 {
-  profil_count ((void *) scp->sc_pc);
+  profil_count ((uintptr_t) scp->sc_pc);
 }

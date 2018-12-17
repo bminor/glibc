@@ -15,5 +15,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define SIGCONTEXT siginfo_t *_si, struct sigcontext *
-#define GET_PC(ctx)	((ctx)->sc_ip)
+#ifndef _SIGCONTEXTINFO_H
+#define _SIGCONTEXTINFO_H
+
+/* Unlike other architectures, ia64 passes 'struct sigcontext' pointer as
+   the third argument to a sa_sigaction handler with SA_SIGINFO enabled.  */
+static inline uintptr_t
+sigcontext_get_pc (const struct sigcontext *ctx)
+{
+  return ctx->sc_ip;
+}
+
+#endif

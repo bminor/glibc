@@ -1,5 +1,5 @@
-/* Low-level statistical profiling support function.  Linux/s390 version.
-   Copyright (C) 2000-2019 Free Software Foundation, Inc.
+/* Low-level statistical profiling support function.  Linux/Sparc64 version.
+   Copyright (C) 1997-2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,10 +17,18 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <signal.h>
-#include <sigcontextinfo.h>
 
-static void
-__profil_counter (int signo, SIGCONTEXT scp)
+#include <sysdeps/unix/sysv/linux/profil-counter.h>
+
+#ifndef __profil_counter
+void
+__profil_counter_global (int signo, struct sigcontext *si)
 {
-  profil_count ((void *) GET_PC (scp));
+#ifdef __arch64__
+  profil_count (si->sigc_regs.tpc);
+#else
+  profil_count (si->si_regs.pc);
+#endif
 }
+weak_alias (__profil_counter_global, profil_counter)
+#endif

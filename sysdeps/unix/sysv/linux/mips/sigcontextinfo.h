@@ -16,17 +16,13 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef _SIGCONTEXTINFO_H
+#define _SIGCONTEXTINFO_H
 
-#include <sgidefs.h>
-
-#if _MIPS_SIM == _ABIO32
-
-#define SIGCONTEXT unsigned long _code, struct sigcontext *
-#define GET_PC(ctx)	((void *) (unsigned long) ctx->sc_pc)
-
-#else
-
-#define SIGCONTEXT unsigned long _code, ucontext_t *
-#define GET_PC(ctx)	((void *) (unsigned long) ctx->uc_mcontext.pc)
+static inline uintptr_t
+sigcontext_get_pc (const ucontext_t *ctx)
+{
+ return ctx->uc_mcontext.pc;
+}
 
 #endif

@@ -1,4 +1,76 @@
 2019-08-23  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+	    Florian Weimer  <fweimer@redhat.com>
+
+	* debug/segfault.c (install_handler): Use SA_SIGINFO if defined.
+	* sysdeps/generic/profil-counter.h (__profil_counter): Cast to
+	uintptr_t.
+	* sysdeps/generic/sigcontextinfo.h (GET_PC): Rename to
+	sigcontext_get_pc and return aligned cast to uintptr_t.
+	* sysdeps/mach/hurd/i386/sigcontextinfo.h (GET_PC): Likewise.
+	* sysdeps/posix/profil.c (profil_count): Change PC argument to
+	uintptr_t.
+	(__profil): Use SA_SIGINFO.
+	* sysdeps/posix/sprofil.c (profil_count): Change PCP argument to
+	uintptr_t.
+	(__sprofil): Use SA_SIGINFO.
+	* sysdeps/unix/sysv/linux/profil-counter.h: New file.
+	* sysdeps/unix/sysv/linux/aarch64/profil-counter.h: Remove file.
+	* sysdeps/unix/sysv/linux/csky/profil-counter.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/profil-counter.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/profil-counter.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/profil-counter.h: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/profil-counter.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/profil-counter.h: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/profil-counter.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/profil-counter.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/profil-counter.h: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/profil-counter.h: Likewise.
+	* sysdeps/sysv/linux/s390/s390-32/profil-counter.h: Likewise.
+	* sysdeps/sysv/linux/s390/s390-64/profil-counter.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/profil-counter.h: Likewise.
+	* sysdeps/unix/sysv/linux/arm/profil-counter.h (__profil_counter):
+	Assume SA_SIGINFO and use sigcontext_get_pc instead of GET_PC.
+	* sysdeps/unix/sysv/linux/sparc/profil-counter.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/profil-counter.h: Remove file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/profil-counter.h: Likewise.
+	* sysdpes/unix/sysv/linux/aarch64/sigcontextinfo.h (SIGCONTEXT,
+	GET_PC, __sigaction, sigaction): Remove defines.
+	(sigcontext_get_pc): New function.
+	* sysdeps/unix/sysv/linux/alpha/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/arm/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/csky/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/sigcontextinfo.h: Likewise.
+	* sysdeps/sysv/linux/sparc/sparc32/sigcontextinfo.h: Likewise.
+	* sysdeps/sysv/linux/sparc/sparc64/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/register-dump.h (register_dump):
+	Handle CTX argument as ucontext_t.
+	* sysdeps/unix/sysv/linux/i386/register-dump.h: Likewise.
+	Likewise.
+	* sysdeps/unix/sysv/linux/m68k/register-dump.h: Likewise.
+	* sysdeps/sysv/linux/s390/s390-32/register-dump.h: Likewise.
+	* sysdeps/sysv/linux/s390/s390-64/register-dump.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/register-dump.h: New file.
+	* sysdeps/unix/sysv/linux/sh/sh4/register-dump.h: Remove File.
+	* sysdeps/unix/sysv/linux/sh/sh3/register-dump.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/register-dump.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/register-dump.h: Likewise.
+	* sysdeps/unix/sysv/linux/Makefile (tests-internal): Add
+	tst-sigcontextinfo-get_pc.
+	* sysdeps/unix/sysv/linux/tst-sigcontextinfo-get_pc.c: New file.
+	(CFLAGS-tst-sigcontextinfo-get_pc.c): New rule.
+
+2019-08-23  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/generic/single-thread.h (RTLD_SINGLE_THREAD_P): Add
 	definition.

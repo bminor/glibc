@@ -105,10 +105,10 @@ index_to_pc (unsigned long int n, size_t offset, unsigned int scale,
 }
 
 static void
-profil_count (void *pcp, int prof_uint)
+profil_count (uintptr_t pcp, int prof_uint)
 {
   struct region *region, *r = prof_info.last;
-  size_t lo, hi, mid, pc = (unsigned long int) pcp;
+  size_t lo, hi, mid, pc = pcp;
   unsigned long int i;
 
   /* Fast path: pc is in same region as before.  */
@@ -165,13 +165,13 @@ profil_count (void *pcp, int prof_uint)
 }
 
 static inline void
-profil_count_ushort (void *pcp)
+profil_count_ushort (uintptr_t pcp)
 {
   profil_count (pcp, 0);
 }
 
 static inline void
-profil_count_uint (void *pcp)
+profil_count_uint (uintptr_t pcp)
 {
   profil_count (pcp, 1);
 }
@@ -334,11 +334,18 @@ __sprofil (struct prof *profp, int profcnt, struct timeval *tvp,
   prof_info.last = prof_info.region;
 
   /* Install SIGPROF handler.  */
-  if (flags & PROF_UINT)
-    act.sa_handler = (sighandler_t) &__profil_counter_uint;
-  else
-    act.sa_handler = (sighandler_t) &__profil_counter_ushort;
-  act.sa_flags = SA_RESTART;
+#ifdef SA_SIGINFO
+  act.sa_sigaction= flags & PROF_UINT
+		    ? __profil_counter_uint
+		    : __profil_counter_ushort;
+  act.sa_flags = SA_SIGINFO;
+#else
+  act.sa_handler = flags & PROF_UINT
+		   ? (sighandler_t) __profil_counter_uint
+		   : (sighandler_t) __profil_counter_ushort;
+  act.sa_flags = 0;
+#endif
+  act.sa_flags |= SA_RESTART;
   __sigfillset (&act.sa_mask);
   if (__sigaction (SIGPROF, &act, &prof_info.saved_action) < 0)
     return -1;
