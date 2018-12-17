@@ -1,5 +1,8 @@
 2018-12-17  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/ia64/sysdep.h (ASM_CLOBBERS_6_COMMON):
+	Do not clobber r12.
+
 	* scripts/glibcextract.py (compare_macro_consts): Take parameters
 	to allow extra macros from first or second sources.
 	* sysdeps/unix/sysv/linux/tst-mman-consts.py: New file.
