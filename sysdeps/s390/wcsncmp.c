@@ -1,4 +1,4 @@
-/* Default wcsncmp implementation for S/390.
+/* Multiple versions of wcsncmp.
    Copyright (C) 2015-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,10 +16,23 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
-# define WCSNCMP  __wcsncmp_c
+#include <ifunc-wcsncmp.h>
 
+#if HAVE_WCSNCMP_IFUNC
 # include <wchar.h>
-extern __typeof (wcsncmp) __wcsncmp_c;
-# include <wcsmbs/wcsncmp.c>
+# include <ifunc-resolve.h>
+
+# if HAVE_WCSNCMP_C
+extern __typeof (wcsncmp) WCSNCMP_C attribute_hidden;
+# endif
+
+# if HAVE_WCSNCMP_Z13
+extern __typeof (wcsncmp) WCSNCMP_Z13 attribute_hidden;
+# endif
+
+s390_libc_ifunc_expr (wcsncmp, wcsncmp,
+		      (HAVE_WCSNCMP_Z13 && (hwcap & HWCAP_S390_VX))
+		      ? WCSNCMP_Z13
+		      : WCSNCMP_DEFAULT
+		      )
 #endif

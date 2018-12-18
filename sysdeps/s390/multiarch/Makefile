@@ -1,6 +1,5 @@
 ifeq ($(subdir),wcsmbs)
-sysdep_routines += wcsncmp wcsncmp-vx wcsncmp-c \
-		   wcschr wcschr-vx wcschr-c \
+sysdep_routines += wcschr wcschr-vx wcschr-c \
 		   wcschrnul wcschrnul-vx wcschrnul-c \
 		   wcsrchr wcsrchr-vx wcsrchr-c \
 		   wcsspn wcsspn-vx wcsspn-c \
