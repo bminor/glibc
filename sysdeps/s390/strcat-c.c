@@ -1,4 +1,4 @@
-/* Multiple versions of strcat.
+/* Default strcat implementation for S/390.
    Copyright (C) 2015-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,14 +16,17 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
-# define strcat __redirect_strcat
-# include <string.h>
-# undef strcat
-# include <ifunc-resolve.h>
+#include <ifunc-strcat.h>
 
-s390_vx_libc_ifunc2_redirected (__redirect_strcat, __strcat, strcat)
+#if HAVE_STRCAT_C
+# if HAVE_STRCAT_IFUNC
+# define STRCAT STRCAT_C
+#  if defined SHARED && IS_IN (libc)
+#   undef libc_hidden_builtin_def
+#   define libc_hidden_builtin_def(name)		\
+  __hidden_ver1 (__strcat_c, __GI_strcat, __strcat_c);
+#  endif
+# endif
 
-#else
 # include <string/strcat.c>
-#endif /* !(defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)) */
+#endif
