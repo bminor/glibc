@@ -34,6 +34,7 @@
 #include <ifunc-stpncpy.h>
 #include <ifunc-strcat.h>
 #include <ifunc-strncat.h>
+#include <ifunc-strcmp.h>
 
 /* Maximum number of IFUNC implementations.  */
 #define MAX_IFUNC	3
@@ -268,6 +269,18 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 		)
 #endif /* HAVE_STRNCAT_IFUNC  */
 
+#if HAVE_STRCMP_IFUNC
+    IFUNC_IMPL (i, name, strcmp,
+# if HAVE_STRCMP_Z13
+		IFUNC_IMPL_ADD (array, i, strcmp,
+				dl_hwcap & HWCAP_S390_VX, STRCMP_Z13)
+# endif
+# if HAVE_STRCMP_Z900_G5
+		IFUNC_IMPL_ADD (array, i, strcmp, 1, STRCMP_Z900_G5)
+# endif
+		)
+#endif /* HAVE_STRCMP_IFUNC  */
+
 #ifdef HAVE_S390_VX_ASM_SUPPORT
 
 # define IFUNC_VX_IMPL(FUNC)						\
@@ -292,7 +305,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   IFUNC_VX_IMPL (wcsncat);
 
-  IFUNC_VX_IMPL (strcmp);
   IFUNC_VX_IMPL (wcscmp);
 
   IFUNC_VX_IMPL (strncmp);

@@ -1,4 +1,4 @@
-/* strcmp - compare two string.  S/390 version.
+/* strcmp - compare two string.  64 bit S/390 version.
    This file is part of the GNU C Library.
    Copyright (C) 2001-2018 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
@@ -21,21 +21,39 @@
      %r2 = address of string 1
      %r3 = address of string 2.  */
 
+#include <ifunc-strcmp.h>
 #include "sysdep.h"
 #include "asm-syntax.h"
 
+#if HAVE_STRCMP_Z900_G5
+# if defined __s390x__
+#  define SLGR	slgr
+#  define LGHI	lghi
+# else
+#  define SLGR	slr
+#  define LGHI	lhi
+# endif /* ! defined __s390x__  */
+
 	.text
-ENTRY(strcmp)
-        slr   %r0,%r0
+ENTRY(STRCMP_Z900_G5)
+	SLGR   %r0,%r0
 0:	clst  %r2,%r3
 	jo    0b
 	jp    1f
 	jm    2f
-	slr   %r2,%r2
+	SLGR  %r2,%r2
 	br    %r14
-1:	lhi   %r2,1
+1:	LGHI  %r2,1
 	br    %r14
-2:	lhi   %r2,-1
+2:	LGHI  %r2,-1
 	br    %r14
-END(strcmp)
-libc_hidden_builtin_def (strcmp)
+END(STRCMP_Z900_G5)
+
+# if ! HAVE_STRCMP_IFUNC
+strong_alias (STRCMP_Z900_G5, strcmp)
+# endif
+
+# if defined SHARED && IS_IN (libc)
+strong_alias (STRCMP_Z900_G5, __GI_strcmp)
+# endif
+#endif

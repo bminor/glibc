@@ -1,6 +1,25 @@
 2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
 
 	* sysdeps/s390/multiarch/Makefile
+	(sysdep_routines): Remove strcmp variants.
+	* sysdeps/s390/Makefile (sysdep_routines): Add strcmp variants.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Refactor ifunc handling for strcmp.
+	* sysdeps/s390/multiarch/strcmp-vx.S: Move to ...
+	* sysdeps/s390/strcmp-vx.S: ... here and adjust ifunc handling.
+	* sysdeps/s390/multiarch/strcmp.c: Move to ...
+	* sysdeps/s390/strcmp.c: ... here and adjust ifunc handling.
+	* sysdeps/s390/ifunc-strcmp.h: New file.
+	* sysdeps/s390/s390-64/strcmp.S: Move to ...
+	* sysdeps/s390/strcmp-z900.S: ... here and adjust to be usable
+	for 31/64bit and ifunc handling.
+	* sysdeps/s390/s390-32/multiarch/strcmp.c: Delete file.
+	* sysdeps/s390/s390-64/multiarch/strcmp.c: Likewise.
+	* sysdeps/s390/s390-32/strcmp.S: Likewise.
+
+2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
+
+	* sysdeps/s390/multiarch/Makefile
 	(sysdep_routines): Remove strncat variants.
 	* sysdeps/s390/Makefile (sysdep_routines): Add strncat variants.
 	* sysdeps/s390/multiarch/ifunc-impl-list.c

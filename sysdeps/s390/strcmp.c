@@ -1,7 +1,6 @@
-/* strcmp - compare two string.  64 bit S/390 version.
+/* Multiple versions of strcmp.
+   Copyright (C) 2015-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Copyright (C) 2001-2018 Free Software Foundation, Inc.
-   Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,25 +16,27 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* INPUT PARAMETERS
-     %r2 = address of string 1
-     %r3 = address of string 2.  */
+#include <ifunc-strcmp.h>
 
-#include "sysdep.h"
-#include "asm-syntax.h"
+#if HAVE_STRCMP_IFUNC
+# define strcmp __redirect_strcmp
+/* Omit the strcmp inline definitions because it would redefine strcmp.  */
+# define __NO_STRING_INLINES
+# include <string.h>
+# include <ifunc-resolve.h>
+# undef strcmp
 
-	.text
-ENTRY(strcmp)
-        slr   %r0,%r0
-0:	clst  %r2,%r3
-	jo    0b
-	jp    1f
-	jm    2f
-	slgr  %r2,%r2
-	br    %r14
-1:	lghi  %r2,1
-	br    %r14
-2:	lghi  %r2,-1
-	br    %r14
-END(strcmp)
-libc_hidden_builtin_def (strcmp)
+# if HAVE_STRCMP_Z900_G5
+extern __typeof (__redirect_strcmp) STRCMP_Z900_G5 attribute_hidden;
+# endif
+
+# if HAVE_STRCMP_Z13
+extern __typeof (__redirect_strcmp) STRCMP_Z13 attribute_hidden;
+# endif
+
+s390_libc_ifunc_expr (__redirect_strcmp, strcmp,
+		      (HAVE_STRCMP_Z13 && (hwcap & HWCAP_S390_VX))
+		      ? STRCMP_Z13
+		      : STRCMP_DEFAULT
+		      )
+#endif

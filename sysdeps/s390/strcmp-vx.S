@@ -16,7 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-strcmp.h>
+#if HAVE_STRCMP_Z13
 
 # include "sysdep.h"
 # include "asm-syntax.h"
@@ -36,7 +37,7 @@
    -v17=part of s2
    -v18=index of unequal
 */
-ENTRY(__strcmp_vx)
+ENTRY(STRCMP_Z13)
 	.machine "z13"
 	.machinemode "zarch_nohighgprs"
 
@@ -106,11 +107,13 @@ ENTRY(__strcmp_vx)
 .Lend_equal:
 	lghi	%r2,0
 	br	%r14
-END(__strcmp_vx)
+END(STRCMP_Z13)
 
-# define strcmp __strcmp_c
-# undef libc_hidden_builtin_def
-# define libc_hidden_builtin_def(name) strong_alias(__strcmp_c, __GI_strcmp)
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+# if ! HAVE_STRCMP_IFUNC
+strong_alias (STRCMP_Z13, strcmp)
+# endif
 
-#include <strcmp.S>
+# if ! HAVE_STRCMP_Z900_G5 && defined SHARED && IS_IN (libc)
+strong_alias (STRCMP_Z13, __GI_strcmp)
+# endif
+#endif
