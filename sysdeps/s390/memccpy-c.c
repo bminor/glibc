@@ -16,10 +16,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
-# define MEMCCPY  __memccpy_c
+#include <ifunc-memccpy.h>
 
-# include <string.h>
-extern __typeof (__memccpy) __memccpy_c;
+#if HAVE_MEMCCPY_C
+# if HAVE_MEMCCPY_IFUNC
+#  define MEMCCPY MEMCCPY_C
+#  undef weak_alias
+#  define weak_alias(a, b)
+#endif
+
 # include <string/memccpy.c>
 #endif

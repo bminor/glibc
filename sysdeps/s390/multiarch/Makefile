@@ -1,6 +1,5 @@
 ifeq ($(subdir),string)
-sysdep_routines += memccpy memccpy-vx memccpy-c \
-		   memrchr memrchr-vx memrchr-c
+sysdep_routines += memrchr memrchr-vx memrchr-c
 endif
 
 ifeq ($(subdir),wcsmbs)
