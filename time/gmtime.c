@@ -28,10 +28,24 @@ __gmtime_r (const time_t *t, struct tm *tp)
 libc_hidden_def (__gmtime_r)
 weak_alias (__gmtime_r, gmtime_r)
 
-
-/* Return the `struct tm' representation of *T in UTC.	*/
+/* Return the `struct tm' representation of *T in UTC.  */
 struct tm *
-gmtime (const time_t *t)
+__gmtime64 (const __time64_t *t)
 {
   return __tz_convert (*t, 0, &_tmbuf);
 }
+
+/* Provide a 32-bit variant if needed.  */
+
+#if __TIMESIZE != 64
+
+libc_hidden_def (__gmtime64)
+
+struct tm *
+gmtime (const time_t *t)
+{
+  __time64_t t64 = *t;
+  return __gmtime64 (&t64);
+}
+
+#endif
