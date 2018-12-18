@@ -27,17 +27,18 @@
 
 # define ICONV_C_NAME(NAME) __##NAME##_c
 # define ICONV_VX_NAME(NAME) __##NAME##_vx
-# define ICONV_VX_IFUNC(FUNC)						\
-  extern __typeof (ICONV_C_NAME (FUNC)) __##FUNC;			\
-  s390_vx_libc_ifunc (__##FUNC)						\
-  int FUNC (struct __gconv_step *step, struct __gconv_step_data *data,	\
-	    const unsigned char **inptrp, const unsigned char *inend,	\
-	    unsigned char **outbufstart, size_t *irreversible,		\
-	    int do_flush, int consume_incomplete)			\
-  {									\
-    return __##FUNC (step, data, inptrp, inend,outbufstart,		\
-		     irreversible, do_flush, consume_incomplete);	\
-  }
+# ifdef HAVE_S390_MIN_Z13_ZARCH_ASM_SUPPORT
+/* We support z13 instructions by default -> Just use the vector variant.  */
+#  define ICONV_VX_IFUNC(FUNC) strong_alias (ICONV_VX_NAME (FUNC), FUNC)
+# else
+/* We have to use ifunc to determine if z13 instructions are supported.  */
+#  define ICONV_VX_IFUNC(FUNC)						\
+  s390_libc_ifunc_expr (ICONV_C_NAME (FUNC), FUNC,			\
+			(hwcap & HWCAP_S390_VX)				\
+			? ICONV_VX_NAME (FUNC)				\
+			: ICONV_C_NAME (FUNC)				\
+			)
+# endif
 # define ICONV_VX_SINGLE(NAME)						\
   static __typeof (NAME##_single) __##NAME##_vx_single __attribute__((alias(#NAME "_single")));
 

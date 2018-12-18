@@ -1,5 +1,10 @@
 2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
 
+	* sysdeps/s390/multiarch/gconv_simple.c (ICONV_VX_IFUNC):
+	Define macro dependent on HAVE_S390_MIN_Z13_ZARCH_ASM_SUPPORT.
+
+2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
+
 	* sysdeps/s390/multiarch/Makefile
 	(sysdep_routines): Remove wmemcmp variants.
 	* sysdeps/s390/Makefile (sysdep_routines): Add wmemcmp variants.
