@@ -1,4 +1,4 @@
-/* Multiple versions of wcpncpy.
+/* Default wcsncpy implementation for S/390.
    Copyright (C) 2015-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,13 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
-# include <wchar.h>
-# include <ifunc-resolve.h>
+#include <ifunc-wcpncpy.h>
 
-s390_vx_libc_ifunc (__wcpncpy)
-weak_alias (__wcpncpy, wcpncpy)
+#if HAVE_WCPNCPY_C
+# if HAVE_WCPNCPY_IFUNC || HAVE_WCPNCPY_Z13
+#  define WCPNCPY WCPNCPY_C
+# endif
 
-#else
 # include <wcsmbs/wcpncpy.c>
-#endif /* !(defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)) */
+#endif

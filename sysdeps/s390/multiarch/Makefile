@@ -1,6 +1,5 @@
 ifeq ($(subdir),wcsmbs)
-sysdep_routines += wcpncpy wcpncpy-vx wcpncpy-c \
-		   wcscat wcscat-vx wcscat-c \
+sysdep_routines += wcscat wcscat-vx wcscat-c \
 		   wcsncat wcsncat-vx wcsncat-c \
 		   wcscmp wcscmp-vx wcscmp-c \
 		   wcsncmp wcsncmp-vx wcsncmp-c \

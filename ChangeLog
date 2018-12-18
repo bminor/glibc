@@ -1,6 +1,21 @@
 2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
 
 	* sysdeps/s390/multiarch/Makefile
+	(sysdep_routines): Remove wcpncpy variants.
+	* sysdeps/s390/Makefile (sysdep_routines): Add wcpncpy variants.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Refactor ifunc handling for wcpncpy.
+	* sysdeps/s390/multiarch/wcpncpy-c.c: Move to ...
+	* sysdeps/s390/wcpncpy-c.c: ... here and adjust ifunc handling.
+	* sysdeps/s390/multiarch/wcpncpy-vx.S: Move to ...
+	* sysdeps/s390/wcpncpy-vx.S: ... here and adjust ifunc handling.
+	* sysdeps/s390/multiarch/wcpncpy.c: Move to ...
+	* sysdeps/s390/wcpncpy.c: ... here and adjust ifunc handling.
+	* sysdeps/s390/ifunc-wcpncpy.h: New file.
+
+2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
+
+	* sysdeps/s390/multiarch/Makefile
 	(sysdep_routines): Remove wcsncpy variants.
 	* sysdeps/s390/Makefile (sysdep_routines): Add wcsncpy variants.
 	* sysdeps/s390/multiarch/ifunc-impl-list.c
