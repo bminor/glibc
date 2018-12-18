@@ -1,4 +1,4 @@
-/* Default wcscmp implementation for S/390.
+/* Multiple versions of wcscmp.
    Copyright (C) 2015-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,17 +16,26 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
-# define WCSCMP  __wcscmp_c
+#include <ifunc-wcscmp.h>
 
+#if HAVE_WCSCMP_IFUNC
+# define __wcscmp __redirect___wcscmp
 # include <wchar.h>
-extern __typeof (wcscmp) __wcscmp_c;
-# undef weak_alias
-# define weak_alias(name, alias)
-# ifdef SHARED
-#  undef libc_hidden_def
-#  define libc_hidden_def(name)				\
-  __hidden_ver1 (__wcscmp_c, __GI___wcscmp, __wcscmp_c);
-# endif /* SHARED */
-# include <wcsmbs/wcscmp.c>
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+# undef __wcscmp
+# include <ifunc-resolve.h>
+
+# if HAVE_WCSCMP_C
+extern __typeof (__redirect___wcscmp) WCSCMP_C attribute_hidden;
+# endif
+
+# if HAVE_WCSCMP_Z13
+extern __typeof (__redirect___wcscmp) WCSCMP_Z13 attribute_hidden;
+# endif
+
+s390_libc_ifunc_expr (__redirect___wcscmp, __wcscmp,
+		      (HAVE_WCSCMP_Z13 && (hwcap & HWCAP_S390_VX))
+		      ? WCSCMP_Z13
+		      : WCSCMP_DEFAULT
+		      )
+weak_alias (__wcscmp, wcscmp)
+#endif

@@ -16,7 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-wcscmp.h>
+#if HAVE_WCSCMP_Z13
 
 # include "sysdep.h"
 # include "asm-syntax.h"
@@ -36,7 +37,7 @@
    -v17=part of s2
    -v18=index of unequal
 */
-ENTRY(__wcscmp_vx)
+ENTRY(WCSCMP_Z13)
 	.machine "z13"
 	.machinemode "zarch_nohighgprs"
 
@@ -127,5 +128,14 @@ ENTRY(__wcscmp_vx)
 .Lend_equal:
 	lghi	%r2,0
 	br	%r14
-END(__wcscmp_vx)
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+END(WCSCMP_Z13)
+
+# if ! HAVE_WCSCMP_IFUNC
+strong_alias (WCSCMP_Z13, __wcscmp)
+weak_alias (__wcscmp, wcscmp)
+# endif
+
+# if ! HAVE_WCSCMP_C && defined SHARED && IS_IN (libc)
+strong_alias (WCSCMP_Z13, __GI___wcscmp)
+# endif
+#endif
