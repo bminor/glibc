@@ -20,6 +20,23 @@
 #include <malloc.h>
 #include <string.h>
 #include <support/check.h>
+#include <libc-diag.h>
+
+static void *
+reallocarray_nowarn (void *ptr, size_t nmemb, size_t size)
+{
+#if __GNUC_PREREQ (7, 0)
+  /* GCC 7 warns about too-large allocations; here we want to test
+     that they fail.  */
+  DIAG_IGNORE_NEEDS_COMMENT (7, "-Walloc-size-larger-than=");
+#endif
+  void *ret = reallocarray (ptr, nmemb, size);
+#if __GNUC_PREREQ (7, 0)
+  DIAG_POP_NEEDS_COMMENT;
+#endif
+  return ret;
+}
+
 
 static int
 do_test (void)
@@ -34,24 +51,24 @@ do_test (void)
 
   /* Test overflow detection.  */
   errno = 0;
-  ptr = reallocarray (NULL, max, 2);
+  ptr = reallocarray_nowarn (NULL, max, 2);
   TEST_VERIFY (!ptr);
   TEST_VERIFY (errno == ENOMEM);
 
   errno = 0;
-  ptr = reallocarray (NULL, 2, max);
+  ptr = reallocarray_nowarn (NULL, 2, max);
   TEST_VERIFY (!ptr);
   TEST_VERIFY (errno == ENOMEM);
 
   a = 65537;
   b = max/65537 + 1;
   errno = 0;
-  ptr = reallocarray (NULL, a, b);
+  ptr = reallocarray_nowarn (NULL, a, b);
   TEST_VERIFY (!ptr);
   TEST_VERIFY (errno == ENOMEM);
 
   errno = 0;
-  ptr = reallocarray (NULL, b, a);
+  ptr = reallocarray_nowarn (NULL, b, a);
   TEST_VERIFY (!ptr);
   TEST_VERIFY (errno == ENOMEM);
 
@@ -97,7 +114,7 @@ do_test (void)
 
   /* Overflow should leave buffer untouched.  */
   errno = 0;
-  ptr2 = reallocarray (ptr, 2, ~(size_t)0);
+  ptr2 = reallocarray_nowarn (ptr, 2, ~(size_t)0);
   TEST_VERIFY (!ptr2);
   TEST_VERIFY (errno == ENOMEM);
 

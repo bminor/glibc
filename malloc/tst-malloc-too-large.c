@@ -72,13 +72,28 @@ test_large_allocations (size_t size)
   void * ptr_to_realloc;
 
   test_setup ();
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (7, 0)
+  /* GCC 7 warns about too-large allocations; here we want to test
+     that they fail.  */
+  DIAG_IGNORE_NEEDS_COMMENT (7, "-Walloc-size-larger-than=");
+#endif
   TEST_VERIFY (malloc (size) == NULL);
+#if __GNUC_PREREQ (7, 0)
+  DIAG_POP_NEEDS_COMMENT;
+#endif
   TEST_VERIFY (errno == ENOMEM);
 
   ptr_to_realloc = malloc (16);
   TEST_VERIFY_EXIT (ptr_to_realloc != NULL);
   test_setup ();
+#if __GNUC_PREREQ (7, 0)
+  DIAG_IGNORE_NEEDS_COMMENT (7, "-Walloc-size-larger-than=");
+#endif
   TEST_VERIFY (realloc (ptr_to_realloc, size) == NULL);
+#if __GNUC_PREREQ (7, 0)
+  DIAG_POP_NEEDS_COMMENT;
+#endif
   TEST_VERIFY (errno == ENOMEM);
   free (ptr_to_realloc);
 
@@ -135,7 +150,13 @@ test_large_aligned_allocations (size_t size)
   for (align = 1; align <= pagesize; align *= 2)
     {
       test_setup ();
+#if __GNUC_PREREQ (7, 0)
+      DIAG_IGNORE_NEEDS_COMMENT (7, "-Walloc-size-larger-than=");
+#endif
       TEST_VERIFY (memalign (align, size) == NULL);
+#if __GNUC_PREREQ (7, 0)
+      DIAG_POP_NEEDS_COMMENT;
+#endif
       TEST_VERIFY (errno == ENOMEM);
 
       /* posix_memalign expects an alignment that is a power of 2 *and* a
@@ -151,7 +172,13 @@ test_large_aligned_allocations (size_t size)
       if ((size % align) == 0)
         {
           test_setup ();
+#if __GNUC_PREREQ (7, 0)
+	  DIAG_IGNORE_NEEDS_COMMENT (7, "-Walloc-size-larger-than=");
+#endif
           TEST_VERIFY (aligned_alloc (align, size) == NULL);
+#if __GNUC_PREREQ (7, 0)
+	  DIAG_POP_NEEDS_COMMENT;
+#endif
           TEST_VERIFY (errno == ENOMEM);
         }
     }
@@ -159,11 +186,23 @@ test_large_aligned_allocations (size_t size)
   /* Both valloc and pvalloc return page-aligned memory.  */
 
   test_setup ();
+#if __GNUC_PREREQ (7, 0)
+  DIAG_IGNORE_NEEDS_COMMENT (7, "-Walloc-size-larger-than=");
+#endif
   TEST_VERIFY (valloc (size) == NULL);
+#if __GNUC_PREREQ (7, 0)
+  DIAG_POP_NEEDS_COMMENT;
+#endif
   TEST_VERIFY (errno == ENOMEM);
 
   test_setup ();
+#if __GNUC_PREREQ (7, 0)
+  DIAG_IGNORE_NEEDS_COMMENT (7, "-Walloc-size-larger-than=");
+#endif
   TEST_VERIFY (pvalloc (size) == NULL);
+#if __GNUC_PREREQ (7, 0)
+  DIAG_POP_NEEDS_COMMENT;
+#endif
   TEST_VERIFY (errno == ENOMEM);
 }
 
@@ -224,6 +263,16 @@ do_test (void)
     {
       test_large_allocations (SIZE_MAX - i);
       test_large_aligned_allocations (SIZE_MAX - i);
+    }
+
+  /* Allocation larger than PTRDIFF_MAX does play well with C standard,
+     since pointer subtraction within the object might overflow ptrdiff_t
+     resulting in undefined behavior.  To prevent it malloc function fail
+     for such allocations.  */
+  for (size_t i = 1; i <= FOURTEEN_ON_BITS; i++)
+    {
+      test_large_allocations (PTRDIFF_MAX + i);
+      test_large_aligned_allocations (PTRDIFF_MAX + i);
     }
 
 #if __WORDSIZE >= 64

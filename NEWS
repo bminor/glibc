@@ -160,6 +160,12 @@ Deprecated and removed features, and other changes affecting compatibility:
   as all functions that call vscanf, vfscanf, or vsscanf are annotated with
   __attribute__ ((format (scanf, ...))).
 
+* Memory allocation functions malloc, calloc, realloc, reallocarray, valloc,
+  pvalloc, memalign, and posix_memalign fail now with total object size
+  larger than PTRDIFF_MAX.  This is to avoid potential undefined behavior with
+  pointer subtraction within the allocated object, where results might
+  overflow the ptrdiff_t type.
+
 Changes to build and runtime requirements:
 
 * Python 3.4 or later is required to build the GNU C Library.

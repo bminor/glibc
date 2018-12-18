@@ -226,8 +226,9 @@ static void *
 malloc_check (size_t sz, const void *caller)
 {
   void *victim;
+  size_t nb;
 
-  if (sz + 1 == 0)
+  if (__builtin_add_overflow (sz, 1, &nb))
     {
       __set_errno (ENOMEM);
       return NULL;
@@ -235,7 +236,7 @@ malloc_check (size_t sz, const void *caller)
 
   __libc_lock_lock (main_arena.mutex);
   top_check ();
-  victim = _int_malloc (&main_arena, sz + 1);
+  victim = _int_malloc (&main_arena, nb);
   __libc_lock_unlock (main_arena.mutex);
   return mem2mem_check (victim, sz);
 }
@@ -268,8 +269,9 @@ realloc_check (void *oldmem, size_t bytes, const void *caller)
   INTERNAL_SIZE_T nb;
   void *newmem = 0;
   unsigned char *magic_p;
+  size_t rb;
 
-  if (bytes + 1 == 0)
+  if (__builtin_add_overflow (bytes, 1, &rb))
     {
       __set_errno (ENOMEM);
       return NULL;
@@ -289,7 +291,9 @@ realloc_check (void *oldmem, size_t bytes, const void *caller)
     malloc_printerr ("realloc(): invalid pointer");
   const INTERNAL_SIZE_T oldsize = chunksize (oldp);
 
-  checked_request2size (bytes + 1, nb);
+  if (!checked_request2size (rb, &nb))
+    goto invert;
+
   __libc_lock_lock (main_arena.mutex);
 
   if (chunk_is_mmapped (oldp))
@@ -308,7 +312,7 @@ realloc_check (void *oldmem, size_t bytes, const void *caller)
           {
             /* Must alloc, copy, free. */
 	    top_check ();
-	    newmem = _int_malloc (&main_arena, bytes + 1);
+	    newmem = _int_malloc (&main_arena, rb);
             if (newmem)
               {
                 memcpy (newmem, oldmem, oldsize - 2 * SIZE_SZ);
@@ -320,8 +324,6 @@ realloc_check (void *oldmem, size_t bytes, const void *caller)
   else
     {
       top_check ();
-      INTERNAL_SIZE_T nb;
-      checked_request2size (bytes + 1, nb);
       newmem = _int_realloc (&main_arena, oldp, oldsize, nb);
     }
 
@@ -334,6 +336,7 @@ realloc_check (void *oldmem, size_t bytes, const void *caller)
   /* mem2chunk_check changed the magic byte in the old chunk.
      If newmem is NULL, then the old chunk will still be used though,
      so we need to invert that change here.  */
+invert:
   if (newmem == NULL)
     *magic_p ^= 0xFF;
   DIAG_POP_NEEDS_COMMENT;

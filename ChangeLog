@@ -1,3 +1,37 @@
+2019-04-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #23741]
+	* malloc/hooks.c (malloc_check, realloc_check): Use
+	__builtin_add_overflow on overflow check and adapt to
+	checked_request2size change.
+	* malloc/malloc.c (__libc_malloc, __libc_realloc, _mid_memalign,
+	__libc_pvalloc, __libc_calloc, _int_memalign): Limit maximum
+	allocation size to PTRDIFF_MAX.
+	(REQUEST_OUT_OF_RANGE): Remove macro.
+	(checked_request2size): Change to inline function and limit maximum
+	requested size to PTRDIFF_MAX.
+	(__libc_malloc, __libc_realloc, _int_malloc, _int_memalign): Limit
+	maximum allocation size to PTRDIFF_MAX.
+	(_mid_memalign): Use _int_memalign call for overflow check.
+	(__libc_pvalloc): Use __builtin_add_overflow on overflow check.
+	(__libc_calloc): Use __builtin_mul_overflow for overflow check and
+	limit maximum requested size to PTRDIFF_MAX.
+	* malloc/malloc.h (malloc, calloc, realloc, reallocarray, memalign,
+	valloc, pvalloc): Add __attribute_alloc_size__.
+	* stdlib/stdlib.h (malloc, realloc, reallocarray, valloc): Likewise.
+	* malloc/tst-malloc-too-large.c (do_test): Add check for allocation
+	larger than PTRDIFF_MAX.
+	* malloc/tst-memalign.c (do_test): Disable -Walloc-size-larger-than=
+	around tests of malloc with negative sizes.
+	* malloc/tst-posix_memalign.c (do_test): Likewise.
+	* malloc/tst-pvalloc.c (do_test): Likewise.
+	* malloc/tst-valloc.c (do_test): Likewise.
+	* malloc/tst-reallocarray.c (do_test): Replace call to reallocarray
+	with resulting size allocation larger than PTRDIFF_MAX with
+	reallocarray_nowarn.
+	(reallocarray_nowarn): New function.
+	* NEWS: Mention the malloc function semantic change.
+
 2019-04-17  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/powerpc/fpu/s_fma.c: Fix format.

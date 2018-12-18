@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <libc-diag.h>
 
 static int errors = 0;
 
@@ -41,9 +42,18 @@ do_test (void)
 
   errno = 0;
 
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (7, 0)
+  /* GCC 7 warns about too-large allocations; here we want to test
+     that they fail.  */
+  DIAG_IGNORE_NEEDS_COMMENT (7, "-Walloc-size-larger-than=");
+#endif
   /* An attempt to allocate a huge value should return NULL and set
      errno to ENOMEM.  */
   p = pvalloc (-1);
+#if __GNUC_PREREQ (7, 0)
+  DIAG_POP_NEEDS_COMMENT;
+#endif
 
   save = errno;
 
