@@ -1,5 +1,15 @@
 2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
 
+	* sysdeps/s390/Makefile (sysdep_routines): Add strstr variants.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add ifunc variants for strstr.
+	* sysdeps/s390/ifunc-strstr.h: New file.
+	* sysdeps/s390/strstr.c: Likewise.
+	* sysdeps/s390/strstr-c.c: Likewise.
+	* sysdeps/s390/strstr-vx.c: Likewise.
+
+2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
+
 	* sysdeps/s390/Makefile (sysdep_routines): Add memmove-c.
 	* sysdeps/s390/ifunc-memcpy.h (HAVE_MEMMOVE_IFUNC,
 	HAVE_MEMMOVE_IFUNC_AND_VX_SUPPORT, MEMMOVE_DEFAULT,
