@@ -1,5 +1,10 @@
 2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
 
+	* sysdeps/s390/s390-32/bcopy.S: Remove.
+	* sysdeps/s390/s390-64/bcopy.S: Likewise.
+
+2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
+
 	* sysdeps/s390/ifunc-memcpy.h: New File.
 	* sysdeps/s390/memcpy.S: Move to ...
 	* sysdeps/s390/memcpy-z900.S ... here.
