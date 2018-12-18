@@ -58,6 +58,13 @@ extern time_t __mktime_internal (struct tm *__tp,
 				 long int *__offset) attribute_hidden;
 
 #if __TIMESIZE == 64
+# define __ctime64 ctime
+#else
+extern char *__ctime64 (const __time64_t *__timer) __THROW;
+libc_hidden_proto (__ctime64);
+#endif
+
+#if __TIMESIZE == 64
 # define __localtime64 localtime
 #else
 extern struct tm *__localtime64 (const __time64_t *__timer);
