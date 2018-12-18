@@ -83,5 +83,6 @@ sysdep_routines += bzero memset memset-z900 \
 endif
 
 ifeq ($(subdir),wcsmbs)
-sysdep_routines += wcslen wcslen-vx wcslen-c
+sysdep_routines += wcslen wcslen-vx wcslen-c \
+		   wcsnlen wcsnlen-vx wcsnlen-c
 endif

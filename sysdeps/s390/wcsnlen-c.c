@@ -1,4 +1,4 @@
-/* Multiple versions of wcsnlen.
+/* Default wcsnlen implementation for S/390.
    Copyright (C) 2015-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,13 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
-# include <wchar.h>
-# include <ifunc-resolve.h>
+#include <ifunc-wcsnlen.h>
 
-s390_vx_libc_ifunc (__wcsnlen)
-weak_alias (__wcsnlen, wcsnlen)
+#if HAVE_WCSNLEN_C
+# if HAVE_WCSNLEN_IFUNC || HAVE_WCSNLEN_Z13
+#  define WCSNLEN WCSNLEN_C
+# endif
 
-#else
 # include <wcsmbs/wcsnlen.c>
-#endif /* !(defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)) */
+#endif

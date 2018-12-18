@@ -1,6 +1,21 @@
 2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
 
 	* sysdeps/s390/multiarch/Makefile
+	(sysdep_routines): Remove wcsnlen variants.
+	* sysdeps/s390/Makefile (sysdep_routines): Add wcsnlen variants.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Refactor ifunc handling for wcsnlen.
+	* sysdeps/s390/multiarch/wcsnlen-c.c: Move to ...
+	* sysdeps/s390/wcsnlen-c.c: ... here and adjust ifunc handling.
+	* sysdeps/s390/multiarch/wcsnlen-vx.S: Move to ...
+	* sysdeps/s390/wcsnlen-vx.S: ... here and adjust ifunc handling.
+	* sysdeps/s390/multiarch/wcsnlen.c: Move to ...
+	* sysdeps/s390/wcsnlen.c: ... here and adjust ifunc handling.
+	* sysdeps/s390/ifunc-wcsnlen.h: New file.
+
+2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
+
+	* sysdeps/s390/multiarch/Makefile
 	(sysdep_routines): Remove wcslen variants.
 	* sysdeps/s390/Makefile (sysdep_routines): Add wcslen variants.
 	* sysdeps/s390/multiarch/ifunc-impl-list.c
