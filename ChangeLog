@@ -1,5 +1,15 @@
 2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
 
+	* sysdeps/s390/Makefile (sysdep_routines): Add memmem variants.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add ifunc variants for memmem.
+	* sysdeps/s390/ifunc-memmem.h: New file.
+	* sysdeps/s390/memmem.c: Likewise.
+	* sysdeps/s390/memmem-c.c: Likewise.
+	* sysdeps/s390/memmem-vx.c: Likewise.
+
+2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
+
 	* sysdeps/s390/Makefile (sysdep_routines): Add strstr variants.
 	* sysdeps/s390/multiarch/ifunc-impl-list.c
 	(__libc_ifunc_impl_list): Add ifunc variants for strstr.
