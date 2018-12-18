@@ -16,16 +16,22 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
-# define WCSSPN  __wcsspn_c
+#include <ifunc-wcsspn.h>
 
-# include <wchar.h>
-extern __typeof (wcsspn) __wcsspn_c;
-# ifdef SHARED
-#  undef libc_hidden_def
-#  define libc_hidden_def(name)				\
+#if HAVE_WCSSPN_C
+# if HAVE_WCSSPN_IFUNC || HAVE_WCSSPN_Z13
+#  define WCSSPN WCSSPN_C
+
+#  if defined SHARED && IS_IN (libc)
+#   undef libc_hidden_def
+#   if ! defined HAVE_S390_MIN_Z13_ZARCH_ASM_SUPPORT
+#    define libc_hidden_def(name)			\
   __hidden_ver1 (__wcsspn_c, __GI_wcsspn, __wcsspn_c);
-# endif /* SHARED */
+#   else
+#    define libc_hidden_def(name)
+#   endif
+#  endif
+# endif
 
 # include <wcsmbs/wcsspn.c>
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+#endif
