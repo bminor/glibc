@@ -1,3 +1,9 @@
+2018-12-18  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/atomic-machine.h: Merged with ...
+	* sysdeps/x86_64/atomic-machine.h: To ...
+	* sysdeps/x86/atomic-machine.h: This.  New file.
+
 2018-12-18  Florian Weimer  <fweimer@redhat.com>
 
 	Rewrite locale/gen-translit.pl in Python.
