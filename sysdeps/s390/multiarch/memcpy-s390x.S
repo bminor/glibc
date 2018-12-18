@@ -1,4 +1,4 @@
-/* CPU specific memcpy implementations.  64 bit S/390 version.
+/* CPU specific memcpy implementations.  31/64 bit S/390 version.
    Copyright (C) 2012-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -31,6 +31,7 @@
 
 ENTRY(____mempcpy_z196)
 	.machine "z196"
+	.machinemode "zarch_nohighgprs"
 	lgr     %r1,%r2         # Use as dest
 	la      %r2,0(%r4,%r2)  # Return dest + n
 	j	.L_Z196_start
@@ -38,8 +39,12 @@ END(____mempcpy_z196)
 
 ENTRY(__memcpy_z196)
 	.machine "z196"
+	.machinemode "zarch_nohighgprs"
 	lgr     %r1,%r2         # r1: Use as dest ; r2: Return dest
 .L_Z196_start:
+# if !defined __s390x__
+	llgfr	%r4,%r4
+# endif /* !defined __s390x__  */
 	ltgr    %r4,%r4
 	je      .L_Z196_4
 	aghi    %r4,-1
@@ -68,6 +73,7 @@ END(__memcpy_z196)
 
 ENTRY(____mempcpy_z10)
 	.machine "z10"
+	.machinemode "zarch_nohighgprs"
 	lgr     %r1,%r2         # Use as dest
 	la      %r2,0(%r4,%r2)  # Return dest + n
 	j	.L_Z10_start
@@ -75,8 +81,12 @@ END(____mempcpy_z10)
 
 ENTRY(__memcpy_z10)
 	.machine "z10"
+	.machinemode "zarch_nohighgprs"
 	lgr     %r1,%r2         # r1: Use as dest ; r2: Return dest
 .L_Z10_start:
+# if !defined __s390x__
+	llgfr	%r4,%r4
+# endif /* !defined __s390x__  */
 	cgije   %r4,0,.L_Z10_4
 	aghi    %r4,-1
 	srlg    %r5,%r4,8
