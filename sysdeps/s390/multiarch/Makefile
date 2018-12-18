@@ -1,7 +1,3 @@
-ifeq ($(subdir),string)
-sysdep_routines += memrchr memrchr-vx memrchr-c
-endif
-
 ifeq ($(subdir),wcsmbs)
 sysdep_routines += wcslen wcslen-vx wcslen-c \
 		   wcsnlen wcsnlen-vx wcsnlen-c \

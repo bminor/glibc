@@ -16,7 +16,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-memrchr.h>
+
+#if HAVE_MEMRCHR_Z13
 
 # include "sysdep.h"
 # include "asm-syntax.h"
@@ -40,7 +42,7 @@
    -v18=c replicated
    -v20=permute pattern
 */
-ENTRY(__memrchr_vx)
+ENTRY(MEMRCHR_Z13)
 	.machine "z13"
 	.machinemode "zarch_nohighgprs"
 
@@ -156,5 +158,11 @@ ENTRY(__memrchr_vx)
 
 	clgijhe	%r4,64,.Lloop64	/* If n >= 64 -> loop64.  */
 	j	.Llt64
-END(__memrchr_vx)
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+END(MEMRCHR_Z13)
+
+# if ! HAVE_MEMRCHR_IFUNC
+strong_alias (MEMRCHR_Z13, __memrchr)
+weak_alias (__memrchr, memrchr)
+# endif
+
+#endif /* HAVE_MEMRCHR_Z13  */

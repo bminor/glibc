@@ -78,5 +78,6 @@ sysdep_routines += bzero memset memset-z900 \
 		   strcspn strcspn-vx strcspn-c \
 		   memchr memchr-vx memchr-z900 \
 		   rawmemchr rawmemchr-vx rawmemchr-c \
-		   memccpy memccpy-vx memccpy-c
+		   memccpy memccpy-vx memccpy-c \
+		   memrchr memrchr-vx memrchr-c
 endif

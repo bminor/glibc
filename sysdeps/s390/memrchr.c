@@ -16,13 +16,24 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-memrchr.h>
+
+#if HAVE_MEMRCHR_IFUNC
 # include <string.h>
 # include <ifunc-resolve.h>
 
-s390_vx_libc_ifunc (__memrchr)
-weak_alias (__memrchr, memrchr)
+# if HAVE_MEMRCHR_C
+extern __typeof (__memrchr) MEMRCHR_C attribute_hidden;
+# endif
 
-#else
-# include <string/memrchr.c>
-#endif /* !(defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)) */
+# if HAVE_MEMRCHR_Z13
+extern __typeof (__memrchr) MEMRCHR_Z13 attribute_hidden;
+# endif
+
+s390_libc_ifunc_expr (__memrchr, __memrchr,
+		      (HAVE_MEMRCHR_Z13 && (hwcap & HWCAP_S390_VX))
+		      ? MEMRCHR_Z13
+		      : MEMRCHR_DEFAULT
+		      )
+weak_alias (__memrchr, memrchr)
+#endif /* HAVE_MEMRCHR_IFUNC  */

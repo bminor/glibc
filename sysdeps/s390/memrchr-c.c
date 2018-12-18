@@ -16,10 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
-# define MEMRCHR  __memrchr_c
+#include <ifunc-memrchr.h>
 
-# include <string.h>
-extern __typeof (__memrchr) __memrchr_c;
+#if HAVE_MEMRCHR_C
+# if HAVE_MEMRCHR_IFUNC
+#  define MEMRCHR MEMRCHR_C
+# endif
+
 # include <string/memrchr.c>
 #endif
