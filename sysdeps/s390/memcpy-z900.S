@@ -182,6 +182,7 @@ ENTRY(MEMCPY_Z196)
 # endif /* !defined __s390x__  */
 	ltgr    %r4,%r4
 	je      .L_Z196_4
+.L_Z196_start2:
 	aghi    %r4,-1
 	srlg    %r5,%r4,8
 	ltgr    %r5,%r5
@@ -207,6 +208,75 @@ ENTRY(MEMCPY_Z196)
 END(MEMCPY_Z196)
 #endif /* HAVE_MEMCPY_Z196  */
 
+#if HAVE_MEMMOVE_Z13
+ENTRY(MEMMOVE_Z13)
+	.machine "z13"
+	.machinemode "zarch_nohighgprs"
+# if !defined __s390x__
+	/* Note: The 31bit dst and src pointers are prefixed with zeroes.  */
+	llgfr	%r4,%r4
+	llgfr	%r3,%r3
+	llgfr	%r2,%r2
+# endif /* !defined __s390x__ */
+	sgrk	%r0,%r2,%r3
+	clgijh	%r4,16,.L_MEMMOVE_Z13_LARGE
+	aghik	%r5,%r4,-1
+.L_MEMMOVE_Z13_SMALL:
+	jl .L_MEMMOVE_Z13_END		/* Jump away if len was zero.  */
+	/* Store up to 16 bytes with vll/vstl which needs the index
+	   instead of lengths.  */
+	vll	%v16,%r5,0(%r3)
+	vstl	%v16,%r5,0(%r2)
+.L_MEMMOVE_Z13_END:
+	br      %r14
+.L_MEMMOVE_Z13_LARGE:
+	lgr     %r1,%r2			/* For memcpy: r1: Use as dest ;
+					   r2: Return dest  */
+	/* The unsigned comparison (dst - src >= len) determines if we can
+	   execute the forward case with memcpy.  */
+#if ! HAVE_MEMCPY_Z196
+# error The z13 variant of memmove needs the z196 variant of memcpy!
+#endif
+	clgrjhe %r0,%r4,.L_Z196_start2
+	risbgn	%r5,%r4,4,128+63,60	/* r5 = r4 / 16  */
+	aghi	%r4,-16
+	clgijhe	%r5,8,.L_MEMMOVE_Z13_LARGE_64B
+.L_MEMMOVE_Z13_LARGE_16B_LOOP:
+	/* Store at least 16 bytes with vl/vst. The number of 16byte blocks
+	   is stored in r5.  */
+	vl	%v16,0(%r4,%r3)
+	vst	%v16,0(%r4,%r2)
+	aghi	%r4,-16
+	brctg	%r5,.L_MEMMOVE_Z13_LARGE_16B_LOOP
+	aghik	%r5,%r4,15
+	j	.L_MEMMOVE_Z13_SMALL
+.L_MEMMOVE_Z13_LARGE_64B:
+	/* Store at least 128 bytes with 4x vl/vst. The number of 64byte blocks
+	   will be stored in r0.  */
+	aghi	%r4,-48
+	srlg	%r0,%r5,2		/* r5 = %r0 / 4
+					   => Number of 64byte blocks.  */
+.L_MEMMOVE_Z13_LARGE_64B_LOOP:
+	vl	%v20,48(%r4,%r3)
+	vl	%v19,32(%r4,%r3)
+	vl	%v18,16(%r4,%r3)
+	vl	%v17,0(%r4,%r3)
+	vst	%v20,48(%r4,%r2)
+	vst	%v19,32(%r4,%r2)
+	vst	%v18,16(%r4,%r2)
+	vst	%v17,0(%r4,%r2)
+	aghi	%r4,-64
+	brctg	%r0,.L_MEMMOVE_Z13_LARGE_64B_LOOP
+	aghi	%r4,48
+	/* Recalculate the number of 16byte blocks.  */
+	risbg	%r5,%r5,62,128+63,0	/* r5 = r5 & 3
+					   => Remaining 16byte blocks.  */
+	jne	.L_MEMMOVE_Z13_LARGE_16B_LOOP
+	aghik	%r5,%r4,15
+	j	.L_MEMMOVE_Z13_SMALL
+END(MEMMOVE_Z13)
+#endif /* HAVE_MEMMOVE_Z13  */
+
 #if ! HAVE_MEMCPY_IFUNC
 /* If we don't use ifunc, define an alias for mem[p]cpy here.
    Otherwise see sysdeps/s390/mem[p]cpy.c.  */
@@ -215,10 +285,27 @@ strong_alias (MEMPCPY_DEFAULT, __mempcpy)
 weak_alias (__mempcpy, mempcpy)
 #endif
 
+#if ! HAVE_MEMMOVE_IFUNC
+/* If we don't use ifunc, define an alias for memmove here.
+   Otherwise see sysdeps/s390/memmove.c.  */
+# if ! HAVE_MEMMOVE_C
+/* If the c variant is needed, then sysdeps/s390/memmove-c.c
+   defines memmove.
+   Otherwise MEMMOVE_DEFAULT is implemented here and we have to define it.  */
+strong_alias (MEMMOVE_DEFAULT, memmove)
+# endif
+#endif
+
 #if defined SHARED && IS_IN (libc)
 /* Defines the internal symbols.
    Compare to libc_hidden_[builtin_]def (mem[p]cpy) in string/mem[p]cpy.c.  */
 strong_alias (MEMCPY_DEFAULT, __GI_memcpy)
 strong_alias (MEMPCPY_DEFAULT, __GI_mempcpy)
 strong_alias (MEMPCPY_DEFAULT, __GI___mempcpy)
+# if ! HAVE_MEMMOVE_C
+/* If the c variant is needed, then sysdeps/s390/memmove-c.c
+   defines the internal symbol.
+   Otherwise MEMMOVE_DEFAULT is implemented here and we have to define it.  */
+strong_alias (MEMMOVE_DEFAULT, __GI_memmove)
+# endif
 #endif

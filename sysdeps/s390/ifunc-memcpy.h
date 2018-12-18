@@ -43,6 +43,29 @@
 # define HAVE_MEMCPY_Z196	HAVE_MEMCPY_IFUNC
 #endif
 
+#if defined SHARED && defined USE_MULTIARCH && IS_IN (libc)	\
+  && ! defined HAVE_S390_MIN_Z13_ZARCH_ASM_SUPPORT
+# define HAVE_MEMMOVE_IFUNC	1
+#else
+# define HAVE_MEMMOVE_IFUNC	0
+#endif
+
+#ifdef HAVE_S390_VX_ASM_SUPPORT
+# define HAVE_MEMMOVE_IFUNC_AND_VX_SUPPORT HAVE_MEMMOVE_IFUNC
+#else
+# define HAVE_MEMMOVE_IFUNC_AND_VX_SUPPORT 0
+#endif
+
+#if defined HAVE_S390_MIN_Z13_ZARCH_ASM_SUPPORT
+# define MEMMOVE_DEFAULT	MEMMOVE_Z13
+# define HAVE_MEMMOVE_C		0
+# define HAVE_MEMMOVE_Z13	1
+#else
+# define MEMMOVE_DEFAULT	MEMMOVE_C
+# define HAVE_MEMMOVE_C		1
+# define HAVE_MEMMOVE_Z13	HAVE_MEMMOVE_IFUNC_AND_VX_SUPPORT
+#endif
+
 #if HAVE_MEMCPY_Z900_G5
 # define MEMCPY_Z900_G5		__memcpy_default
 # define MEMPCPY_Z900_G5	__mempcpy_default
@@ -65,4 +88,16 @@
 #else
 # define MEMCPY_Z196		NULL
 # define MEMPCPY_Z196		NULL
+#endif
+
+#if HAVE_MEMMOVE_C
+# define MEMMOVE_C		__memmove_c
+#else
+# define MEMMOVE_C		NULL
+#endif
+
+#if HAVE_MEMMOVE_Z13
+# define MEMMOVE_Z13		__memmove_z13
+#else
+# define MEMMOVE_Z13		NULL
 #endif

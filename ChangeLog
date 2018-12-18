@@ -1,5 +1,18 @@
 2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
 
+	* sysdeps/s390/Makefile (sysdep_routines): Add memmove-c.
+	* sysdeps/s390/ifunc-memcpy.h (HAVE_MEMMOVE_IFUNC,
+	HAVE_MEMMOVE_IFUNC_AND_VX_SUPPORT, MEMMOVE_DEFAULT,
+	HAVE_MEMMOVE_C, MEMMOVE_C,  HAVE_MEMMOVE_Z13, MEMMOVE_Z13):
+	New defines.
+	* sysdeps/s390/memcpy-z900.S: Add z13 memmove implementation.
+	* sysdeps/s390/memmove-c.c: New file.
+	* sysdeps/s390/memmove.c: Likewise.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add ifunc variants for memmove.
+
+2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
+
 	* config.h.in (HAVE_S390_MIN_Z13_ZARCH_ASM_SUPPORT): New undefine.
 	* sysdeps/s390/configure.ac: Add check for z13 support.
 	* sysdeps/s390/configure: Regenerated.

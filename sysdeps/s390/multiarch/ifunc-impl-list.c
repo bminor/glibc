@@ -126,6 +126,18 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      )
 #endif /* HAVE_MEMCPY_IFUNC  */
 
+#if HAVE_MEMMOVE_IFUNC
+    IFUNC_IMPL (i, name, memmove,
+# if HAVE_MEMMOVE_Z13
+		IFUNC_IMPL_ADD (array, i, memmove,
+				dl_hwcap & HWCAP_S390_VX, MEMMOVE_Z13)
+# endif
+# if HAVE_MEMMOVE_C
+		IFUNC_IMPL_ADD (array, i, memmove, 1, MEMMOVE_C)
+# endif
+		)
+#endif /* HAVE_MEMMOVE_IFUNC  */
+
 #ifdef HAVE_S390_VX_ASM_SUPPORT
 
 # define IFUNC_VX_IMPL(FUNC)						\
