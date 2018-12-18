@@ -16,13 +16,17 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
-# define STRNCMP  __strncmp_c
-# ifdef SHARED
-#  undef libc_hidden_builtin_def
-#  define libc_hidden_builtin_def(name)			\
+#include <ifunc-strncmp.h>
+
+#if HAVE_STRNCMP_C
+# if HAVE_STRNCMP_IFUNC
+#  define STRNCMP STRNCMP_C
+#  if defined SHARED && IS_IN (libc)
+#   undef libc_hidden_builtin_def
+#   define libc_hidden_builtin_def(name)			\
   __hidden_ver1 (__strncmp_c, __GI_strncmp, __strncmp_c);
-# endif /* SHARED */
+#  endif
+# endif
 
 # include <string/strncmp.c>
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+#endif

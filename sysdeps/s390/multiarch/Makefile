@@ -1,6 +1,5 @@
 ifeq ($(subdir),string)
-sysdep_routines += strncmp strncmp-vx strncmp-c \
-		   strchr strchr-vx strchr-c \
+sysdep_routines += strchr strchr-vx strchr-c \
 		   strchrnul strchrnul-vx strchrnul-c \
 		   strrchr strrchr-vx strrchr-c \
 		   strspn strspn-vx strspn-c \

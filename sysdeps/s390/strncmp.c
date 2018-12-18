@@ -16,7 +16,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-strncmp.h>
+
+#if HAVE_STRNCMP_IFUNC
 # define strncmp __redirect_strncmp
 /* Omit the strncmp inline definitions because it would redefine strncmp.  */
 # define __NO_STRING_INLINES
@@ -24,8 +26,17 @@
 # undef strncmp
 # include <ifunc-resolve.h>
 
-s390_vx_libc_ifunc2_redirected (__redirect_strncmp, __strncmp, strncmp)
+# if HAVE_STRNCMP_C
+extern __typeof (__redirect_strncmp) STRNCMP_C attribute_hidden;
+# endif
 
-#else
-# include <string/strncmp.c>
-#endif /* !(defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)) */
+# if HAVE_STRNCMP_Z13
+extern __typeof (__redirect_strncmp) STRNCMP_Z13 attribute_hidden;
+# endif
+
+s390_libc_ifunc_expr (__redirect_strncmp, strncmp,
+		      (HAVE_STRNCMP_Z13 && (hwcap & HWCAP_S390_VX))
+		      ? STRNCMP_Z13
+		      : STRNCMP_DEFAULT
+		      )
+#endif /* HAVE_STRNCMP_IFUNC  */
