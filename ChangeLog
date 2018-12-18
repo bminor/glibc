@@ -1,6 +1,21 @@
 2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
 
 	* sysdeps/s390/multiarch/Makefile
+	(sysdep_routines): Remove rawmemchr variants.
+	* sysdeps/s390/Makefile (sysdep_routines): Add rawmemchr variants.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Refactor ifunc handling for rawmemchr.
+	* sysdeps/s390/multiarch/rawmemchr-c.c: Move to ...
+	* sysdeps/s390/rawmemchr-c.c: ... here and adjust ifunc handling.
+	* sysdeps/s390/multiarch/rawmemchr-vx.S: Move to ...
+	* sysdeps/s390/rawmemchr-vx.S: ... here and adjust ifunc handling.
+	* sysdeps/s390/multiarch/rawmemchr.c: Move to ...
+	* sysdeps/s390/rawmemchr.c: ... here and adjust ifunc handling.
+	* sysdeps/s390/ifunc-rawmemchr.h: New file.
+
+2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
+
+	* sysdeps/s390/multiarch/Makefile
 	(sysdep_routines): Remove memchr variants.
 	* sysdeps/s390/Makefile (sysdep_routines): Add memchr variants.
 	* sysdeps/s390/multiarch/ifunc-impl-list.c

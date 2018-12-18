@@ -1,4 +1,4 @@
-/* Multiple versions of rawmemchr.
+/* Default rawmemchr implementation for S/390.
    Copyright (C) 2015-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,16 +16,19 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
-# define __rawmemchr __redirect___rawmemchr
-# include <string.h>
-# undef __rawmemchr
-# include <ifunc-resolve.h>
+#include <ifunc-rawmemchr.h>
 
-s390_vx_libc_ifunc2_redirected (__redirect___rawmemchr, __rawmemchr
-				, __rawmemchr)
-weak_alias (__rawmemchr, rawmemchr)
+#if HAVE_RAWMEMCHR_C
+# if HAVE_RAWMEMCHR_IFUNC
+#  define RAWMEMCHR RAWMEMCHR_C
+#  undef weak_alias
+#  define weak_alias(a, b)
+#  if defined SHARED && IS_IN (libc)
+#   undef libc_hidden_def
+#   define libc_hidden_def(name)					\
+  __hidden_ver1 (__rawmemchr_c, __GI___rawmemchr, __rawmemchr_c);
+#  endif
+# endif
 
-#else
 # include <string/rawmemchr.c>
-#endif /* !(defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)) */
+#endif

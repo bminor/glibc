@@ -43,6 +43,7 @@
 #include <ifunc-strpbrk.h>
 #include <ifunc-strcspn.h>
 #include <ifunc-memchr.h>
+#include <ifunc-rawmemchr.h>
 
 /* Maximum number of IFUNC implementations.  */
 #define MAX_IFUNC	3
@@ -385,6 +386,18 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 		)
 #endif /* HAVE_MEMCHR_IFUNC  */
 
+#if HAVE_RAWMEMCHR_IFUNC
+    IFUNC_IMPL (i, name, rawmemchr,
+# if HAVE_RAWMEMCHR_Z13
+		IFUNC_IMPL_ADD (array, i, rawmemchr,
+				dl_hwcap & HWCAP_S390_VX, RAWMEMCHR_Z13)
+# endif
+# if HAVE_RAWMEMCHR_C
+		IFUNC_IMPL_ADD (array, i, rawmemchr, 1, RAWMEMCHR_C)
+# endif
+		)
+#endif /* HAVE_RAWMEMCHR_IFUNC  */
+
 #ifdef HAVE_S390_VX_ASM_SUPPORT
 
 # define IFUNC_VX_IMPL(FUNC)						\
@@ -426,7 +439,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   IFUNC_VX_IMPL (wcscspn);
 
   IFUNC_VX_IMPL (wmemchr);
-  IFUNC_VX_IMPL (rawmemchr);
 
   IFUNC_VX_IMPL (memccpy);
 

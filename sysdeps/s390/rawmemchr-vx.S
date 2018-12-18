@@ -16,7 +16,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-rawmemchr.h>
+
+#if HAVE_RAWMEMCHR_Z13
 
 # include "sysdep.h"
 # include "asm-syntax.h"
@@ -37,7 +39,7 @@
    -v17=index of unequal
    -v18=c replicated
 */
-ENTRY(__rawmemchr_vx)
+ENTRY(RAWMEMCHR_Z13)
 	.machine "z13"
 	.machinemode "zarch_nohighgprs"
 
@@ -88,5 +90,15 @@ ENTRY(__rawmemchr_vx)
 .Lend_found:
 	la	%r2,0(%r5,%r2)	/* Return pointer to character.  */
 	br	%r14
-END(__rawmemchr_vx)
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+END(RAWMEMCHR_Z13)
+
+# if ! HAVE_RAWMEMCHR_IFUNC
+strong_alias (RAWMEMCHR_Z13, __rawmemchr)
+weak_alias (__rawmemchr, rawmemchr)
+# endif
+
+# if ! HAVE_RAWMEMCHR_C && defined SHARED && IS_IN (libc)
+strong_alias (RAWMEMCHR_Z13, __GI___rawmemchr)
+# endif
+
+#endif /* HAVE_RAWMEMCHR_Z13  */
