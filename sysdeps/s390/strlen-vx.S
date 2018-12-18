@@ -16,7 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-strlen.h>
+#if HAVE_STRLEN_Z13
 
 # include "sysdep.h"
 # include "asm-syntax.h"
@@ -34,7 +35,7 @@
    -r5=current_len and return_value
    -v16=part of s
 */
-ENTRY(__strlen_vx)
+ENTRY(STRLEN_Z13)
 	.machine "z13"
 	.machinemode "zarch_nohighgprs"
 
@@ -80,5 +81,13 @@ ENTRY(__strlen_vx)
 	vlgvb	%r2,%v16,7	/* Load byte index of zero.  */
 	algr	%r2,%r5
 	br	%r14
-END(__strlen_vx)
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+END(STRLEN_Z13)
+
+# if ! HAVE_STRLEN_IFUNC
+strong_alias (STRLEN_Z13, strlen)
+# endif
+
+# if ! HAVE_STRLEN_C && defined SHARED && IS_IN (libc)
+strong_alias (STRLEN_Z13, __GI_strlen)
+# endif
+#endif

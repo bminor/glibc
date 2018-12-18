@@ -1,5 +1,20 @@
 2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
 
+	* sysdeps/s390/multiarch/Makefile
+	(sysdep_routines): Remove strlen variants.
+	* sysdeps/s390/Makefile (sysdep_routines): Add strlen variants.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Refactor ifunc handling for strlen.
+	* sysdeps/s390/multiarch/strlen-c.c: Move to ...
+	* sysdeps/s390/strlen-c.c: ... here and adjust ifunc handling.
+	* sysdeps/s390/multiarch/strlen-vx.S: Move to ...
+	* sysdeps/s390/strlen-vx.S: ... here and adjust ifunc handling.
+	* sysdeps/s390/multiarch/strlen.c: Move to ...
+	* sysdeps/s390/strlen.c: ... here and adjust ifunc handling.
+	* sysdeps/s390/ifunc-strlen.h: New file.
+
+2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
+
 	* sysdeps/s390/Makefile (sysdep_routines): Add memmem variants.
 	* sysdeps/s390/multiarch/ifunc-impl-list.c
 	(__libc_ifunc_impl_list): Add ifunc variants for memmem.

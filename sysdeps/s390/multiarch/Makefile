@@ -1,6 +1,5 @@
 ifeq ($(subdir),string)
-sysdep_routines += strlen strlen-vx strlen-c \
-		   strnlen strnlen-vx strnlen-c \
+sysdep_routines += strnlen strnlen-vx strnlen-c \
 		   strcpy strcpy-vx \
 		   stpcpy stpcpy-vx stpcpy-c \
 		   strncpy strncpy-vx \

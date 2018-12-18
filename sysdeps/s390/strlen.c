@@ -16,14 +16,25 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-strlen.h>
+
+#if HAVE_STRLEN_IFUNC
 # define strlen __redirect_strlen
 # include <string.h>
 # include <ifunc-resolve.h>
 # undef strlen
 
-s390_vx_libc_ifunc2_redirected (__redirect_strlen, __strlen, strlen)
+# if HAVE_STRLEN_C
+extern __typeof (__redirect_strlen) STRLEN_C attribute_hidden;
+# endif
 
-#else
-# include <string/strlen.c>
-#endif /* !(defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)) */
+# if HAVE_STRLEN_Z13
+extern __typeof (__redirect_strlen) STRLEN_Z13 attribute_hidden;
+# endif
+
+s390_libc_ifunc_expr (__redirect_strlen, strlen,
+		      (HAVE_STRLEN_Z13 && (hwcap & HWCAP_S390_VX))
+		      ? STRLEN_Z13
+		      : STRLEN_DEFAULT
+		      )
+#endif

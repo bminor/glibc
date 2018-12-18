@@ -59,5 +59,6 @@ sysdep_routines += bzero memset memset-z900 \
 		   mempcpy memcpy memcpy-z900 \
 		   memmove memmove-c \
 		   strstr strstr-vx strstr-c \
-		   memmem memmem-vx memmem-c
+		   memmem memmem-vx memmem-c \
+		   strlen strlen-vx strlen-c
 endif
