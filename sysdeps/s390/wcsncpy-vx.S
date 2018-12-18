@@ -16,7 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-wcsncpy.h>
+#if HAVE_WCSNCPY_Z13
 
 # include "sysdep.h"
 # include "asm-syntax.h"
@@ -40,7 +41,7 @@
    -v18=part of src
    -v31=register save area for r6, r7
 */
-ENTRY(__wcsncpy_vx)
+ENTRY(WCSNCPY_Z13)
 	.machine "z13"
 	.machinemode "zarch_nohighgprs"
 
@@ -217,7 +218,11 @@ ENTRY(__wcsncpy_vx)
 	j	.Llt64
 
 .Lfallback:
-	jg	__wcsncpy_c
-END(__wcsncpy_vx)
+	jg	WCSNCPY_C
+END(WCSNCPY_Z13)
 
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+# if ! HAVE_WCSNCPY_IFUNC
+strong_alias (WCSNCPY_Z13, __wcsncpy)
+weak_alias (__wcsncpy, wcsncpy)
+# endif
+#endif

@@ -16,13 +16,24 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-wcsncpy.h>
+
+#if HAVE_WCSNCPY_IFUNC
 # include <wchar.h>
 # include <ifunc-resolve.h>
 
-s390_vx_libc_ifunc (__wcsncpy)
-weak_alias (__wcsncpy, wcsncpy)
+# if HAVE_WCSNCPY_C
+extern __typeof (__wcsncpy) WCSNCPY_C attribute_hidden;
+# endif
 
-#else
-# include <wcsmbs/wcsncpy.c>
-#endif /* !(defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)) */
+# if HAVE_WCSNCPY_Z13
+extern __typeof (__wcsncpy) WCSNCPY_Z13 attribute_hidden;
+# endif
+
+s390_libc_ifunc_expr (__wcsncpy, __wcsncpy,
+		      (HAVE_WCSNCPY_Z13 && (hwcap & HWCAP_S390_VX))
+		      ? WCSNCPY_Z13
+		      : WCSNCPY_DEFAULT
+		      )
+weak_alias (__wcsncpy, wcsncpy)
+#endif

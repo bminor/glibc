@@ -16,10 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
-# define WCSNCPY  __wcsncpy_c
+#include <ifunc-wcsncpy.h>
 
-# include <wchar.h>
-extern __typeof (__wcsncpy) __wcsncpy_c;
+#if HAVE_WCSNCPY_C
+# if HAVE_WCSNCPY_IFUNC || HAVE_WCSNCPY_Z13
+#  define WCSNCPY WCSNCPY_C
+# endif
+
 # include <wcsmbs/wcsncpy.c>
 #endif
