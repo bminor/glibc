@@ -1,7 +1,6 @@
-/* bzero -- set a block of memory to zero.  IBM S390 version
+/* Multiple versions of bzero.
+   Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Copyright (C) 2000-2018 Free Software Foundation, Inc.
-   Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,26 +16,32 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/*
- * R2 = address to memory area
- * R3 = number of bytes to fill
- */
+#include <ifunc-memset.h>
+#if HAVE_MEMSET_IFUNC
+# include <string.h>
+# include <ifunc-resolve.h>
 
-#include "sysdep.h"
-#include "asm-syntax.h"
+# if HAVE_MEMSET_Z900_G5
+extern __typeof (__bzero) BZERO_Z900_G5 attribute_hidden;
+# endif
 
-	.text
-ENTRY(__bzero)
-	ltr     %r3,%r3
-	jz      .L1
-	sr      %r1,%r1             # set pad byte to zero
-	sr      %r4,%r4             # no source for MVCLE, only a pad byte
-	sr      %r5,%r5
-.L0:    mvcle   %r2,%r4,0(%r1)      # thats it, MVCLE is your friend
-	jo      .L0
-.L1:    br      %r14
-END(__bzero)
+# if HAVE_MEMSET_Z10
+extern __typeof (__bzero) BZERO_Z10 attribute_hidden;
+# endif
 
-#ifndef NO_WEAK_ALIAS
+# if HAVE_MEMSET_Z196
+extern __typeof (__bzero) BZERO_Z196 attribute_hidden;
+# endif
+
+s390_libc_ifunc_expr (__bzero, __bzero,
+		      ({
+			s390_libc_ifunc_init ();
+			(HAVE_MEMSET_Z196 && S390_IS_Z196 (stfle_bits))
+			  ? BZERO_Z196
+			  : (HAVE_MEMSET_Z10 && S390_IS_Z10 (stfle_bits))
+			  ? BZERO_Z10
+			  : BZERO_DEFAULT;
+		      })
+		      )
 weak_alias (__bzero, bzero)
 #endif

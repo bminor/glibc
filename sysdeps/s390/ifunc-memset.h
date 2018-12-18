@@ -25,16 +25,19 @@
 
 #if defined HAVE_S390_MIN_Z196_ZARCH_ASM_SUPPORT
 # define MEMSET_DEFAULT		MEMSET_Z196
+# define BZERO_DEFAULT		BZERO_Z196
 # define HAVE_MEMSET_Z900_G5	0
 # define HAVE_MEMSET_Z10	0
 # define HAVE_MEMSET_Z196	1
 #elif defined HAVE_S390_MIN_Z10_ZARCH_ASM_SUPPORT
 # define MEMSET_DEFAULT		MEMSET_Z10
+# define BZERO_DEFAULT		BZERO_Z10
 # define HAVE_MEMSET_Z900_G5	0
 # define HAVE_MEMSET_Z10	1
 # define HAVE_MEMSET_Z196	HAVE_MEMSET_IFUNC
 #else
 # define MEMSET_DEFAULT		MEMSET_Z900_G5
+# define BZERO_DEFAULT		BZERO_Z900_G5
 # define HAVE_MEMSET_Z900_G5	1
 # define HAVE_MEMSET_Z10	HAVE_MEMSET_IFUNC
 # define HAVE_MEMSET_Z196	HAVE_MEMSET_IFUNC
@@ -48,18 +51,24 @@
 
 #if HAVE_MEMSET_Z900_G5
 # define MEMSET_Z900_G5		__memset_default
+# define BZERO_Z900_G5		__bzero_default
 #else
 # define MEMSET_Z900_G5		NULL
+# define BZERO_Z900_G5		NULL
 #endif
 
 #if HAVE_MEMSET_Z10
 # define MEMSET_Z10		__memset_z10
+# define BZERO_Z10		__bzero_z10
 #else
 # define MEMSET_Z10		NULL
+# define BZERO_Z10		NULL
 #endif
 
 #if HAVE_MEMSET_Z196
 # define MEMSET_Z196		__memset_z196
+# define BZERO_Z196		__bzero_z196
 #else
 # define MEMSET_Z196		NULL
+# define BZERO_Z196		NULL
 #endif

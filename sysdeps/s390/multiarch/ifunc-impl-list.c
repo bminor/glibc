@@ -61,6 +61,21 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, memset, 1, MEMSET_Z900_G5)
 # endif
 	      )
+
+  /* Note: bzero is implemented in memset.  */
+  IFUNC_IMPL (i, name, bzero,
+# if HAVE_MEMSET_Z196
+	      IFUNC_IMPL_ADD (array, i, bzero,
+			      S390_IS_Z196 (stfle_bits), BZERO_Z196)
+# endif
+# if HAVE_MEMSET_Z10
+	      IFUNC_IMPL_ADD (array, i, bzero,
+			      S390_IS_Z10 (stfle_bits), BZERO_Z10)
+# endif
+# if HAVE_MEMSET_Z900_G5
+	      IFUNC_IMPL_ADD (array, i, bzero, 1, BZERO_Z900_G5)
+# endif
+	      )
 #endif /* HAVE_MEMSET_IFUNC */
 
   IFUNC_IMPL (i, name, memcmp,

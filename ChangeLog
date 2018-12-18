@@ -1,5 +1,16 @@
 2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
 
+	* sysdeps/s390/s390-32/bzero.S: Delete file.
+	* sysdeps/s390/s390-64/bzero.S: Likewise.
+	* sysdeps/s390/Makefile (sysdep_routines): Add bzero.
+	* sysdeps/s390/bzero.c: New file.
+	* sysdeps/s390/memset-z900.S: Add bzero entry points.
+	* sysdeps/s390/ifunc-memset.h: Add bzero function macros.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add bzero ifunc variants.
+
+2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
+
 	* sysdeps/s390/ifunc-memset.h: New File.
 	* sysdeps/s390/memset.S: Move to ...
 	* sysdeps/s390/memset-z900.S ... here.
