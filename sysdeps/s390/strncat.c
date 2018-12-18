@@ -1,4 +1,4 @@
-/* Default strncat implementation for S/390.
+/* Multiple versions of strncat.
    Copyright (C) 2015-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,8 +16,23 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
-# define STRNCAT  __strncat_c
-# define STRNCAT_PRIMARY
-# include <string/strncat.c>
+#include <ifunc-strncat.h>
+
+#if HAVE_STRNCAT_IFUNC
+# include <string.h>
+# include <ifunc-resolve.h>
+
+# if HAVE_STRNCAT_C
+extern __typeof (__strncat) STRNCAT_C attribute_hidden;
+# endif
+
+# if HAVE_STRNCAT_Z13
+extern __typeof (__strncat) STRNCAT_Z13 attribute_hidden;
+# endif
+
+s390_libc_ifunc_expr (__strncat, strncat,
+		      (HAVE_STRNCAT_Z13 && (hwcap & HWCAP_S390_VX))
+		      ? STRNCAT_Z13
+		      : STRNCAT_DEFAULT
+		      )
 #endif

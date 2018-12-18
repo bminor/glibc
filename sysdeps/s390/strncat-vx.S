@@ -16,7 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-strncat.h>
+#if HAVE_STRNCAT_Z13
 
 # include "sysdep.h"
 # include "asm-syntax.h"
@@ -40,7 +41,7 @@
    -v18=part of src
    -v31=register save area for r6, r7
 */
-ENTRY(__strncat_vx)
+ENTRY(STRNCAT_Z13)
 	.machine "z13"
 	.machinemode "zarch_nohighgprs"
 
@@ -235,5 +236,17 @@ ENTRY(__strncat_vx)
 
 	vl	%v16,0(%r5,%r3)	/* Load s.  */
 	j	.Lcpy_lt64
-END(__strncat_vx)
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+END(STRNCAT_Z13)
+
+# if ! HAVE_STRNCAT_IFUNC
+strong_alias (STRNCAT_Z13, strncat)
+# endif
+
+# if ! HAVE_STRNCAT_C
+/* See string/strncat.c and define STRNCAT_PRIMARY.  */
+strong_alias (STRNCAT_Z13, __strncat)
+#  if defined SHARED && IS_IN (libc)
+strong_alias (__strncat, __GI___strncat)
+#  endif
+# endif
+#endif
