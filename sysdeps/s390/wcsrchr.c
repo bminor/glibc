@@ -16,12 +16,23 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-wcsrchr.h>
+
+#if HAVE_WCSRCHR_IFUNC
 # include <wchar.h>
 # include <ifunc-resolve.h>
 
-s390_vx_libc_ifunc2 (__wcsrchr, wcsrchr)
+# if HAVE_WCSRCHR_C
+extern __typeof (wcsrchr) WCSRCHR_C attribute_hidden;
+# endif
 
-#else
-# include <wcsmbs/wcsrchr.c>
-#endif /* !(defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)) */
+# if HAVE_WCSRCHR_Z13
+extern __typeof (wcsrchr) WCSRCHR_Z13 attribute_hidden;
+# endif
+
+s390_libc_ifunc_expr (wcsrchr, wcsrchr,
+		      (HAVE_WCSRCHR_Z13 && (hwcap & HWCAP_S390_VX))
+		      ? WCSRCHR_Z13
+		      : WCSRCHR_DEFAULT
+		      )
+#endif

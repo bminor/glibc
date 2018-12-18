@@ -16,10 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
-# define WCSRCHR  __wcsrchr_c
+#include <ifunc-wcsrchr.h>
 
-# include <wchar.h>
-extern __typeof (wcsrchr) __wcsrchr_c;
+#if HAVE_WCSRCHR_C
+# if HAVE_WCSRCHR_IFUNC || HAVE_WCSRCHR_Z13
+#  define WCSRCHR WCSRCHR_C
+# endif
+
 # include <wcsmbs/wcsrchr.c>
 #endif

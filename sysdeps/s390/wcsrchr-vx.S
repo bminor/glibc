@@ -16,7 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-wcsrchr.h>
+#if HAVE_WCSRCHR_Z13
 
 # include "sysdep.h"
 # include "asm-syntax.h"
@@ -39,7 +40,7 @@
    -v19=part of s with last occurence of c.
    -v20=permute pattern
 */
-ENTRY(__wcsrchr_vx)
+ENTRY(WCSRCHR_Z13)
 	.machine "z13"
 	.machinemode "zarch_nohighgprs"
 
@@ -185,6 +186,10 @@ ENTRY(__wcsrchr_vx)
 	.byte	0x0C,0x0D,0x0E,0x0F,0x08,0x09,0x0A,0x0B
 	.byte	0x04,0x05,0x06,0x07,0x00,0x01,0x02,0x03
 .Lfallback:
-	jg	__wcsrchr_c
-END(__wcsrchr_vx)
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+	jg	WCSRCHR_C
+END(WCSRCHR_Z13)
+
+# if ! HAVE_WCSRCHR_IFUNC
+strong_alias (WCSRCHR_Z13, wcsrchr)
+# endif
+#endif

@@ -94,5 +94,6 @@ sysdep_routines += wcslen wcslen-vx wcslen-c \
 		   wcscmp wcscmp-vx wcscmp-c \
 		   wcsncmp wcsncmp-vx wcsncmp-c \
 		   wcschr wcschr-vx wcschr-c \
-		   wcschrnul wcschrnul-vx wcschrnul-c
+		   wcschrnul wcschrnul-vx wcschrnul-c \
+		   wcsrchr wcsrchr-vx wcsrchr-c
 endif
