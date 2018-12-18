@@ -520,10 +520,9 @@ build the GNU C Library:
    * Perl 5
 
      Perl is not required, but if present it is used in some tests and
-     the 'mtrace' program, to build the GNU C Library manual, as well as
-     to regenerate 'locale/C-translit.h' if its source files are
-     modified.  As of release time 'perl' version 5.28.0 is the newest
-     verified to work to build the GNU C Library.
+     the 'mtrace' program, to build the GNU C Library manual.  As of
+     release time 'perl' version 5.28.0 is the newest verified to work
+     to build the GNU C Library.
 
    * GNU 'sed' 3.02 or newer
 

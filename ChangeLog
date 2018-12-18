@@ -1,5 +1,24 @@
 2018-12-18  Florian Weimer  <fweimer@redhat.com>
 
+	Rewrite locale/gen-translit.pl in Python.
+	* locale/Makefile (generated): Add C-translit.h.
+	(before-compile): Add $(objpfx)C-translit.h.
+	(C-translit.h): Move to $(objpfx).  Create target directory.
+	Build using Python script.
+	* locale/gen-translit.py: New file.
+	* locale/gen-translit.pl: Remove file.
+	* locale/C-translit.h.in: Change comment character to '#' for
+	easier parsing without a C preprocessor.
+	* locale/C-translit.h: Remove generated file.
+	* manual/install.texi (Tools for Compilation): Do not mention
+	C-translit.h.
+	* scripts/build-many-glibcs.py (Context.fix_glibc_timestamps):
+	Remove locale/C-translit.h.
+	* scripts/update-copyrights: Likewise.
+	* INSTALL: Regenerate.
+
+2018-12-18  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #23995]
 	* localedata/locales/bi_VU: Remove executable bit from file.
 

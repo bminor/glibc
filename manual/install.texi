@@ -562,10 +562,9 @@ verified to work to build @theglibc{}.
 Perl 5
 
 Perl is not required, but if present it is used in some tests and the
-@code{mtrace} program, to build the @glibcadj{} manual, as well as to
-regenerate @file{locale/C-translit.h} if its source files are
-modified.  As of release time @code{perl} version 5.28.0 is the newest
-verified to work to build @theglibc{}.
+@code{mtrace} program, to build the @glibcadj{} manual.  As of release
+time @code{perl} version 5.28.0 is the newest verified to work to
+build @theglibc{}.
 
 @item
 GNU @code{sed} 3.02 or newer

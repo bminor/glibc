@@ -37,6 +37,8 @@ others		= localedef locale
 install-bin	= localedef locale
 extra-objs	= $(localedef-modules:=.o) $(localedef-aux:=.o) \
 		  $(locale-modules:=.o) $(lib-modules:=.o)
+generated 	+= C-translit.h
+before-compile	+= $(objpfx)C-translit.h
 
 extra-libs	= libBrokenLocale
 extra-libs-others = $(extra-libs)
@@ -74,8 +76,9 @@ $(objpfx)localedef: $(localedef-aux:%=$(objpfx)%.o)
 $(objpfx)locale: $(locale-modules:%=$(objpfx)%.o)
 $(objpfx)localedef $(objpfx)locale: $(lib-modules:%=$(objpfx)%.o)
 
-C-translit.h: C-translit.h.in gen-translit.pl
-	$(PERL) gen-translit.pl < $< > $@.tmp
+$(objpfx)C-translit.h: C-translit.h.in gen-translit.py
+	$(make-target-directory)
+	$(PYTHON) gen-translit.py < $< > $@.tmp
 	mv -f $@.tmp $@
 
 # The path to the compiled binary locale archive or compiled locales,
