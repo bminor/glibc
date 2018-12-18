@@ -1,5 +1,11 @@
 2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
 
+	* sysdeps/s390/multiarch/ifunc-resolve.h
+	(s390_libc_ifunc_init, s390_libc_ifunc,
+	s390_vx_libc_ifunc2_redirected): Use hwcap instead of dl_hwcap.
+
+2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
+
 	* config.h.in (HAVE_S390_MIN_Z10_ZARCH_ASM_SUPPORT): New undefine.
 	* sysdeps/s390/configure.ac: Add check for z10 support.
 	* sysdeps/s390/configure: Regenerated.

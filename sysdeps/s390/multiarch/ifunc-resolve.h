@@ -42,9 +42,9 @@
 		       : : "cc");
 #define s390_libc_ifunc_init()						\
   unsigned long long stfle_bits = 0ULL;					\
-  if (__glibc_likely((dl_hwcap & HWCAP_S390_STFLE)			\
-		     && (dl_hwcap & HWCAP_S390_ZARCH)			\
-		     && (dl_hwcap & HWCAP_S390_HIGH_GPRS)))		\
+  if (__glibc_likely ((hwcap & HWCAP_S390_STFLE)			\
+		      && (hwcap & HWCAP_S390_ZARCH)			\
+		      && (hwcap & HWCAP_S390_HIGH_GPRS)))		\
     {									\
       S390_STORE_STFLE (stfle_bits);					\
     }
@@ -61,7 +61,7 @@
 	   : __glibc_likely (S390_IS_Z10 (stfle_bits))			\
 	     ? RESOLVERFUNC##_z10					\
 	     : RESOLVERFUNC##_default,					\
-	   unsigned long int dl_hwcap, s390_libc_ifunc_init);
+	   unsigned long int hwcap, s390_libc_ifunc_init);
 
 #define s390_vx_libc_ifunc(FUNC)		\
   s390_vx_libc_ifunc2_redirected(FUNC, FUNC, FUNC)
@@ -79,10 +79,10 @@
   extern __typeof (TYPE_FUNC) RESOLVERFUNC##_vx attribute_hidden;	\
   extern __typeof (TYPE_FUNC) RESOLVERFUNC##_c attribute_hidden;	\
   __ifunc (TYPE_FUNC, FUNC,						\
-	   (dl_hwcap & HWCAP_S390_VX)					\
+	   (hwcap & HWCAP_S390_VX)					\
 	   ? RESOLVERFUNC##_vx						\
 	   : RESOLVERFUNC##_c,						\
-	   unsigned long int dl_hwcap, s390_vx_libc_ifunc_init);
+	   unsigned long int hwcap, s390_vx_libc_ifunc_init);
 
 #define s390_libc_ifunc_expr_init()
 #define s390_libc_ifunc_expr(TYPE_FUNC, FUNC, EXPR)		\
