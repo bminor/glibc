@@ -1,6 +1,27 @@
 2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
 
 	* sysdeps/s390/multiarch/Makefile
+	(sysdep_routines): Remove strncpy variants.
+	* sysdeps/s390/Makefile (sysdep_routines): Add strncpy variants.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Refactor ifunc handling for strncpy.
+	* sysdeps/s390/multiarch/strncpy-vx.S: Move to ...
+	* sysdeps/s390/strncpy-vx.S: ... here and adjust ifunc handling.
+	* sysdeps/s390/multiarch/strncpy.c: Move to ...
+	* sysdeps/s390/strncpy.c: ... here and adjust ifunc handling.
+	* sysdeps/s390/ifunc-strncpy.h: New file.
+	* sysdeps/s390/s390-64/strncpy.S: Move to ...
+	* sysdeps/s390/s390-64/strncpy-z900.S: ... here
+	and adjust ifunc handling.
+	* sysdeps/s390/s390-32/strncpy.S: Move to ...
+	* sysdeps/s390/s390-32/strncpy-z900.S: ... here
+	and adjust ifunc handling.
+	* sysdeps/s390/s390-32/multiarch/strncpy.c: Delete file.
+	* sysdeps/s390/s390-64/multiarch/strncpy.c: Likewise.
+
+2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
+
+	* sysdeps/s390/multiarch/Makefile
 	(sysdep_routines): Remove stpcpy variants.
 	* sysdeps/s390/Makefile (sysdep_routines): Add stpcpy variants.
 	* sysdeps/s390/multiarch/ifunc-impl-list.c

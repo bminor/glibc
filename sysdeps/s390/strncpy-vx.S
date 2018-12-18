@@ -16,13 +16,13 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
-
-# include "sysdep.h"
-# include "asm-syntax.h"
+#include <ifunc-strncpy.h>
+#include "sysdep.h"
+#include "asm-syntax.h"
 
 	.text
 
+#if HAVE_STRNCPY_Z13
 /* char * strncpy (const char *dest, const char *src, size_t n)
    Copy at most n characters of string  src to dest.
 
@@ -40,7 +40,7 @@
    -v18=part of src
    -v31=register save area for r6, r7
 */
-ENTRY(__strncpy_vx)
+ENTRY(STRNCPY_Z13)
 	.machine "z13"
 	.machinemode "zarch_nohighgprs"
 
@@ -196,12 +196,13 @@ ENTRY(__strncpy_vx)
 
 	vl	%v16,0(%r5,%r3)	/* Load s.  */
 	j	.Llt64
-END(__strncpy_vx)
+END(STRNCPY_Z13)
 
-# define strncpy __strncpy_c
-# undef libc_hidden_builtin_def
-# define libc_hidden_builtin_def(name) strong_alias(__strncpy_c, __GI_strncpy)
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+# if ! HAVE_STRNCPY_IFUNC
+strong_alias (STRNCPY_Z13, strncpy)
+# endif
 
-/* Include strncpy-implementation in s390-32/s390-64 subdirectory.  */
-#include <strncpy.S>
+# if ! HAVE_STRNCPY_Z900_G5 && defined SHARED && IS_IN (libc)
+strong_alias (STRNCPY_Z13, __GI_strncpy)
+# endif
+#endif

@@ -16,7 +16,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-strncpy.h>
+
+#if HAVE_STRNCPY_IFUNC
 # define strncpy __redirect_strncpy
 /* Omit the strncpy inline definitions because it would redefine strncpy.  */
 # define __NO_STRING_INLINES
@@ -24,6 +26,17 @@
 # undef strncpy
 # include <ifunc-resolve.h>
 
-s390_vx_libc_ifunc2_redirected (__redirect_strncpy, __strncpy, strncpy);
+# if HAVE_STRNCPY_Z900_G5
+extern __typeof (__redirect_strncpy) STRNCPY_Z900_G5 attribute_hidden;
+# endif
 
+# if HAVE_STRNCPY_Z13
+extern __typeof (__redirect_strncpy) STRNCPY_Z13 attribute_hidden;
+# endif
+
+s390_libc_ifunc_expr (__redirect_strncpy, strncpy,
+		      (HAVE_STRNCPY_Z13 && (hwcap & HWCAP_S390_VX))
+		      ? STRNCPY_Z13
+		      : STRNCPY_DEFAULT
+		      )
 #endif
