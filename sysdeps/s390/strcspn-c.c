@@ -1,4 +1,4 @@
-/* Multiple versions of strcspn.
+/* Default strcspn implementation for S/390.
    Copyright (C) 2015-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,16 +16,17 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
-# define strcspn __redirect_strcspn
-/* Omit the strcspn inline definitions because it would redefine strcspn.  */
-# define __NO_STRING_INLINES
-# include <string.h>
-# undef strcspn
-# include <ifunc-resolve.h>
+#include <ifunc-strcspn.h>
 
-s390_vx_libc_ifunc2_redirected (__redirect_strcspn, __strcspn, strcspn)
+#if HAVE_STRCSPN_C
+# if HAVE_STRCSPN_IFUNC
+#  define STRCSPN STRCSPN_C
+#  if defined SHARED && IS_IN (libc)
+#   undef libc_hidden_builtin_def
+#   define libc_hidden_builtin_def(name)			\
+  __hidden_ver1 (__strcspn_c, __GI_strcspn, __strcspn_c);
+#  endif
+# endif
 
-#else
 # include <string/strcspn.c>
-#endif /* !(defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)) */
+#endif

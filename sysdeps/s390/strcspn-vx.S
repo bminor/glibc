@@ -16,7 +16,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-strcspn.h>
+
+#if HAVE_STRCSPN_Z13
 
 # include "sysdep.h"
 # include "asm-syntax.h"
@@ -58,7 +60,7 @@
 			otherwise =0;
    r9:  loaded byte count of vlbb reject-string
 */
-ENTRY(__strcspn_vx)
+ENTRY(STRCSPN_Z13)
 	.machine "z13"
 	.machinemode "zarch_nohighgprs"
 
@@ -277,5 +279,14 @@ ENTRY(__strcspn_vx)
 	vlgvg	%r8,%v31,0
 	vlgvg	%r9,%v31,1
 	br	%r14
-END(__strcspn_vx)
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+END(STRCSPN_Z13)
+
+# if ! HAVE_STRCSPN_IFUNC
+strong_alias (STRCSPN_Z13, strcspn)
+# endif
+
+# if ! HAVE_STRCSPN_C && defined SHARED && IS_IN (libc)
+strong_alias (STRCSPN_Z13, __GI_strcspn)
+# endif
+
+#endif /* HAVE_STRCSPN_Z13  */
