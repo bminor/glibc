@@ -62,6 +62,9 @@
 /* Define if assembler supports AVX512DQ.  */
 #undef  HAVE_AVX512DQ_ASM_SUPPORT
 
+/* Define if assembler supports z10 zarch instructions as default on S390.  */
+#undef  HAVE_S390_MIN_Z10_ZARCH_ASM_SUPPORT
+
 /* Define if assembler supports z196 zarch instructions as default on S390.  */
 #undef  HAVE_S390_MIN_Z196_ZARCH_ASM_SUPPORT
 

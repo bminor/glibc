@@ -1,3 +1,9 @@
+2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
+
+	* config.h.in (HAVE_S390_MIN_Z10_ZARCH_ASM_SUPPORT): New undefine.
+	* sysdeps/s390/configure.ac: Add check for z10 support.
+	* sysdeps/s390/configure: Regenerated.
+
 2018-12-18  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/atomic-machine.h: Merged with ...
