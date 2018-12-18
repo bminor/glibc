@@ -1,3 +1,11 @@
+2018-12-18  Albert ARIBAUD <albert.aribaud@3adev.fr>
+
+	* include/time.h
+	(__localtime64_r): Add.
+	* time/localtime.c
+	(__localtime64_r): Add.
+	[__TIMESIZE != 64] (__localtime_r): Turn into a wrapper.
+
 2018-12-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/s390/kernel_sigaction.h: Use Linux generic

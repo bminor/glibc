@@ -67,6 +67,14 @@ libc_hidden_proto (__localtime64)
 extern struct tm *__localtime_r (const time_t *__timer,
 				 struct tm *__tp) attribute_hidden;
 
+#if __TIMESIZE == 64
+# define __localtime64_r __localtime_r
+#else
+extern struct tm *__localtime64_r (const __time64_t *__timer,
+				   struct tm *__tp);
+libc_hidden_proto (__localtime64_r)
+#endif
+
 extern struct tm *__gmtime_r (const time_t *__restrict __timer,
 			      struct tm *__restrict __tp);
 libc_hidden_proto (__gmtime_r)

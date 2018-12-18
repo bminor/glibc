@@ -25,10 +25,25 @@ struct tm _tmbuf;
 /* Return the `struct tm' representation of *T in local time,
    using *TP to store the result.  */
 struct tm *
-__localtime_r (const time_t *t, struct tm *tp)
+__localtime64_r (const __time64_t *t, struct tm *tp)
 {
   return __tz_convert (*t, 1, tp);
 }
+
+/* Provide a 32-bit variant if needed.  */
+
+#if __TIMESIZE != 64
+
+struct tm *
+__localtime_r (const time_t *t, struct tm *tp)
+{
+  __time64_t t64 = *t;
+  return __localtime64_r (&t64, tp);
+}
+libc_hidden_def (__localtime64_r)
+
+#endif
+
 weak_alias (__localtime_r, localtime_r)
 
 
