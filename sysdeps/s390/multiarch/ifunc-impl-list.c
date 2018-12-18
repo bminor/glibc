@@ -52,6 +52,7 @@
 #include <ifunc-wcpcpy.h>
 #include <ifunc-wcsncpy.h>
 #include <ifunc-wcpncpy.h>
+#include <ifunc-wcscat.h>
 
 /* Maximum number of IFUNC implementations.  */
 #define MAX_IFUNC	3
@@ -502,6 +503,18 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 		)
 #endif /* HAVE_WCPNCPY_IFUNC  */
 
+#if HAVE_WCSCAT_IFUNC
+    IFUNC_IMPL (i, name, wcscat,
+# if HAVE_WCSCAT_Z13
+		IFUNC_IMPL_ADD (array, i, wcscat,
+				dl_hwcap & HWCAP_S390_VX, WCSCAT_Z13)
+# endif
+# if HAVE_WCSCAT_C
+		IFUNC_IMPL_ADD (array, i, wcscat, 1, WCSCAT_C)
+# endif
+		)
+#endif /* HAVE_WCSCAT_IFUNC  */
+
 #ifdef HAVE_S390_VX_ASM_SUPPORT
 
 # define IFUNC_VX_IMPL(FUNC)						\
@@ -509,8 +522,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, FUNC, dl_hwcap & HWCAP_S390_VX, \
 			      __##FUNC##_vx)				\
 	      IFUNC_IMPL_ADD (array, i, FUNC, 1, __##FUNC##_c))
-
-  IFUNC_VX_IMPL (wcscat);
 
   IFUNC_VX_IMPL (wcsncat);
 

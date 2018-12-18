@@ -88,5 +88,6 @@ sysdep_routines += wcslen wcslen-vx wcslen-c \
 		   wcscpy wcscpy-vx wcscpy-c \
 		   wcpcpy wcpcpy-vx wcpcpy-c \
 		   wcsncpy wcsncpy-vx wcsncpy-c \
-		   wcpncpy wcpncpy-vx wcpncpy-c
+		   wcpncpy wcpncpy-vx wcpncpy-c \
+		   wcscat wcscat-vx wcscat-c
 endif
