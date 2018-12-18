@@ -1,6 +1,21 @@
 2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
 
 	* sysdeps/s390/multiarch/Makefile
+	(sysdep_routines): Remove strchrnul variants.
+	* sysdeps/s390/Makefile (sysdep_routines): Add strchrnul variants.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Refactor ifunc handling for strchrnul.
+	* sysdeps/s390/multiarch/strchrnul-c.c: Move to ...
+	* sysdeps/s390/strchrnul-c.c: ... here and adjust ifunc handling.
+	* sysdeps/s390/multiarch/strchrnul-vx.S: Move to ...
+	* sysdeps/s390/strchrnul-vx.S: ... here and adjust ifunc handling.
+	* sysdeps/s390/multiarch/strchrnul.c: Move to ...
+	* sysdeps/s390/strchrnul.c: ... here and adjust ifunc handling.
+	* sysdeps/s390/ifunc-strchrnul.h: New file.
+
+2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
+
+	* sysdeps/s390/multiarch/Makefile
 	(sysdep_routines): Remove strchr variants.
 	* sysdeps/s390/Makefile (sysdep_routines): Add strchr variants.
 	* sysdeps/s390/multiarch/ifunc-impl-list.c

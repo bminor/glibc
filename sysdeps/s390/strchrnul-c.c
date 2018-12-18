@@ -16,11 +16,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
-# define STRCHRNUL  __strchrnul_c
-# define __strchrnul STRCHRNUL
-# undef weak_alias
-# define weak_alias(name, alias)
+#include <ifunc-strchrnul.h>
+
+#if HAVE_STRCHRNUL_C
+# if HAVE_STRCHRNUL_IFUNC
+#  define STRCHRNUL STRCHRNUL_C
+#  define __strchrnul STRCHRNUL
+#  undef weak_alias
+#  define weak_alias(name, alias)
+# endif
 
 # include <string/strchrnul.c>
 #endif
