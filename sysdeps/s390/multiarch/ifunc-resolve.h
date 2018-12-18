@@ -40,7 +40,7 @@
 		       ".machine pop"         "\n"			\
 		       : "=QS" (STFLE_BITS), "+d" (reg0)		\
 		       : : "cc");
-#define s390_libc_ifunc_init()						\
+#define s390_libc_ifunc_expr_stfle_init()				\
   unsigned long long stfle_bits = 0ULL;					\
   if (__glibc_likely ((hwcap & HWCAP_S390_STFLE)			\
 		      && (hwcap & HWCAP_S390_ZARCH)			\
@@ -48,41 +48,6 @@
     {									\
       S390_STORE_STFLE (stfle_bits);					\
     }
-
-#define s390_libc_ifunc(TYPE_FUNC, RESOLVERFUNC, FUNC)			\
-  /* Make the declarations of the optimized functions hidden in order
-     to prevent GOT slots being generated for them. */			\
-  extern __typeof (TYPE_FUNC) RESOLVERFUNC##_z196 attribute_hidden;	\
-  extern __typeof (TYPE_FUNC) RESOLVERFUNC##_z10 attribute_hidden;      \
-  extern __typeof (TYPE_FUNC) RESOLVERFUNC##_default attribute_hidden;  \
-  __ifunc (TYPE_FUNC, FUNC,						\
-	   __glibc_likely (S390_IS_Z196 (stfle_bits))			\
-	   ? RESOLVERFUNC##_z196					\
-	   : __glibc_likely (S390_IS_Z10 (stfle_bits))			\
-	     ? RESOLVERFUNC##_z10					\
-	     : RESOLVERFUNC##_default,					\
-	   unsigned long int hwcap, s390_libc_ifunc_init);
-
-#define s390_vx_libc_ifunc(FUNC)		\
-  s390_vx_libc_ifunc2_redirected(FUNC, FUNC, FUNC)
-
-#define s390_vx_libc_ifunc_redirected(TYPE_FUNC, FUNC)	\
-  s390_vx_libc_ifunc2_redirected(TYPE_FUNC, FUNC, FUNC)
-
-#define s390_vx_libc_ifunc2(RESOLVERFUNC, FUNC)	\
-  s390_vx_libc_ifunc2_redirected(FUNC, RESOLVERFUNC, FUNC)
-
-#define s390_vx_libc_ifunc_init()
-#define s390_vx_libc_ifunc2_redirected(TYPE_FUNC, RESOLVERFUNC, FUNC)	\
-  /* Make the declarations of the optimized functions hidden in order
-     to prevent GOT slots being generated for them.  */			\
-  extern __typeof (TYPE_FUNC) RESOLVERFUNC##_vx attribute_hidden;	\
-  extern __typeof (TYPE_FUNC) RESOLVERFUNC##_c attribute_hidden;	\
-  __ifunc (TYPE_FUNC, FUNC,						\
-	   (hwcap & HWCAP_S390_VX)					\
-	   ? RESOLVERFUNC##_vx						\
-	   : RESOLVERFUNC##_c,						\
-	   unsigned long int hwcap, s390_vx_libc_ifunc_init);
 
 #define s390_libc_ifunc_expr_init()
 #define s390_libc_ifunc_expr(TYPE_FUNC, FUNC, EXPR)		\

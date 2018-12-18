@@ -38,7 +38,7 @@ extern __typeof (__redirect_memcpy) MEMCPY_Z196 attribute_hidden;
 
 s390_libc_ifunc_expr (__redirect_memcpy, memcpy,
 		      ({
-			s390_libc_ifunc_init ();
+			s390_libc_ifunc_expr_stfle_init ();
 			(HAVE_MEMCPY_Z196 && S390_IS_Z196 (stfle_bits))
 			  ? MEMCPY_Z196
 			  : (HAVE_MEMCPY_Z10 && S390_IS_Z10 (stfle_bits))

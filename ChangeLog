@@ -1,5 +1,22 @@
 2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
 
+	* sysdeps/s390/multiarch/ifunc-resolve.h
+	(s390_vx_libc_ifunc, s390_vx_libc_ifunc_redirected,
+	s390_vx_libc_ifunc2, s390_vx_libc_ifunc_init,
+	s390_vx_libc_ifunc2_redirected, s390_libc_ifunc):
+	Delete macro definition.
+	(s390_libc_ifunc_init): Rename to
+	s390_libc_ifunc_expr_stfle_init.
+	* sysdeps/s390/bzero: Use
+	s390_libc_ifunc_expr_stfle_init instead of
+	s390_libc_ifunc_init.
+	* sysdeps/s390/memcmp.c: Likewise.
+	* sysdeps/s390/memcpy.c: Likewise.
+	* sysdeps/s390/mempcpy.c: Likewise.
+	* sysdeps/s390/memset.c: Likewise.
+
+2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
+
 	* sysdeps/s390/multiarch/gconv_simple.c (ICONV_VX_IFUNC):
 	Define macro dependent on HAVE_S390_MIN_Z13_ZARCH_ASM_SUPPORT.
 

@@ -35,7 +35,7 @@ extern __typeof (__bzero) BZERO_Z196 attribute_hidden;
 
 s390_libc_ifunc_expr (__bzero, __bzero,
 		      ({
-			s390_libc_ifunc_init ();
+			s390_libc_ifunc_expr_stfle_init ();
 			(HAVE_MEMSET_Z196 && S390_IS_Z196 (stfle_bits))
 			  ? BZERO_Z196
 			  : (HAVE_MEMSET_Z10 && S390_IS_Z10 (stfle_bits))

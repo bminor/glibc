@@ -37,7 +37,7 @@ extern __typeof (__redirect_memcmp) MEMCMP_Z196 attribute_hidden;
 
 s390_libc_ifunc_expr (__redirect_memcmp, memcmp,
 		      ({
-			s390_libc_ifunc_init ();
+			s390_libc_ifunc_expr_stfle_init ();
 			(HAVE_MEMCMP_Z196 && S390_IS_Z196 (stfle_bits))
 			  ? MEMCMP_Z196
 			  : (HAVE_MEMCMP_Z10 && S390_IS_Z10 (stfle_bits))
