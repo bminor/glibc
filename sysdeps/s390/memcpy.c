@@ -1,5 +1,5 @@
-/* Multiple versions of mempcpy.
-   Copyright (C) 2016-2018 Free Software Foundation, Inc.
+/* Multiple versions of memcpy.
+   Copyright (C) 2015-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,17 +16,34 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <ifunc-memcpy.h>
 
-#if defined SHARED && IS_IN (libc)
-# define mempcpy __redirect_mempcpy
-# define __mempcpy __redirect___mempcpy
-# define __NO_STRING_INLINES
-# define NO_MEMPCPY_STPCPY_REDIRECT
+#if HAVE_MEMCPY_IFUNC
+# define memcpy __redirect_memcpy
 # include <string.h>
-# undef mempcpy
-# undef __mempcpy
+# undef memcpy
 # include <ifunc-resolve.h>
 
-s390_libc_ifunc (__redirect___mempcpy, ____mempcpy, __mempcpy)
-weak_alias (__mempcpy, mempcpy);
+# if HAVE_MEMCPY_Z900_G5
+extern __typeof (__redirect_memcpy) MEMCPY_Z900_G5 attribute_hidden;
+# endif
+
+# if HAVE_MEMCPY_Z10
+extern __typeof (__redirect_memcpy) MEMCPY_Z10 attribute_hidden;
+# endif
+
+# if HAVE_MEMCPY_Z196
+extern __typeof (__redirect_memcpy) MEMCPY_Z196 attribute_hidden;
+# endif
+
+s390_libc_ifunc_expr (__redirect_memcpy, memcpy,
+		      ({
+			s390_libc_ifunc_init ();
+			(HAVE_MEMCPY_Z196 && S390_IS_Z196 (stfle_bits))
+			  ? MEMCPY_Z196
+			  : (HAVE_MEMCPY_Z10 && S390_IS_Z10 (stfle_bits))
+			  ? MEMCPY_Z10
+			  : MEMCPY_DEFAULT;
+		      })
+		      )
 #endif

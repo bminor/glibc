@@ -1,5 +1,28 @@
 2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
 
+	* sysdeps/s390/ifunc-memcpy.h: New File.
+	* sysdeps/s390/memcpy.S: Move to ...
+	* sysdeps/s390/memcpy-z900.S ... here.
+	Move implementations from memcpy-s390x.s to here.
+	* sysdeps/s390/multiarch/memcpy-s390x.S: Delete File.
+	* sysdeps/s390/multiarch/Makefile (sysdep_routines):
+	Remove memcpy/mempcpy variants.
+	* sysdeps/s390/Makefile (sysdep_routines):
+	Add memcpy/mempcpy variants.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Adjust ifunc variants for
+	memcpy and mempcpy.
+	* sysdeps/s390/multiarch/memcpy.c: Move ifunc resolver
+	to ...
+	* sysdeps/s390/memcpy.c: ... here.
+	Adjust ifunc variants for memcpy.
+	* sysdeps/s390/multiarch/mempcpy.c: Move to ...
+	* sysdeps/s390/mempcpy.c: ... here.
+	Adjust ifunc variants for mempcpy.
+	* sysdeps/s390/mempcpy.S: Delete file.
+
+2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
+
 	* sysdeps/s390/s390-64/memcpy.S: Move to ...
 	* sysdeps/s390/memcpy.S: ... here.
 	Adjust to be usable for 31/64bit.

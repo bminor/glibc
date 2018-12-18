@@ -23,6 +23,7 @@
 #include <ifunc-resolve.h>
 #include <ifunc-memset.h>
 #include <ifunc-memcmp.h>
+#include <ifunc-memcpy.h>
 
 /* Maximum number of IFUNC implementations.  */
 #define MAX_IFUNC	3
@@ -95,23 +96,35 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      )
 #endif /* HAVE_MEMCMP_IFUNC */
 
-#ifdef SHARED
-
+#if HAVE_MEMCPY_IFUNC
   IFUNC_IMPL (i, name, memcpy,
+# if HAVE_MEMCPY_Z196
 	      IFUNC_IMPL_ADD (array, i, memcpy,
-			      S390_IS_Z196 (stfle_bits), __memcpy_z196)
+			      S390_IS_Z196 (stfle_bits), MEMCPY_Z196)
+# endif
+# if HAVE_MEMCPY_Z10
 	      IFUNC_IMPL_ADD (array, i, memcpy,
-			      S390_IS_Z10 (stfle_bits), __memcpy_z10)
-	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_default))
+			      S390_IS_Z10 (stfle_bits), MEMCPY_Z10)
+# endif
+# if HAVE_MEMCPY_Z900_G5
+	      IFUNC_IMPL_ADD (array, i, memcpy, 1, MEMCPY_Z900_G5)
+# endif
+	      )
 
   IFUNC_IMPL (i, name, mempcpy,
+# if HAVE_MEMCPY_Z196
 	      IFUNC_IMPL_ADD (array, i, mempcpy,
-			      S390_IS_Z196 (stfle_bits), ____mempcpy_z196)
+			      S390_IS_Z196 (stfle_bits), MEMPCPY_Z196)
+# endif
+# if HAVE_MEMCPY_Z10
 	      IFUNC_IMPL_ADD (array, i, mempcpy,
-			      S390_IS_Z10 (stfle_bits), ____mempcpy_z10)
-	      IFUNC_IMPL_ADD (array, i, mempcpy, 1, ____mempcpy_default))
-
-#endif /* SHARED */
+			      S390_IS_Z10 (stfle_bits), MEMPCPY_Z10)
+# endif
+# if HAVE_MEMCPY_Z900_G5
+	      IFUNC_IMPL_ADD (array, i, mempcpy, 1, MEMPCPY_Z900_G5)
+# endif
+	      )
+#endif /* HAVE_MEMCPY_IFUNC  */
 
 #ifdef HAVE_S390_VX_ASM_SUPPORT
 

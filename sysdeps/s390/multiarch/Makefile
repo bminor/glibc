@@ -18,8 +18,7 @@ sysdep_routines += strlen strlen-vx strlen-c \
 		   memchr memchr-vx \
 		   rawmemchr rawmemchr-vx rawmemchr-c \
 		   memccpy memccpy-vx memccpy-c \
-		   memrchr memrchr-vx memrchr-c \
-		   mempcpy memcpy memcpy-s390x
+		   memrchr memrchr-vx memrchr-c
 endif
 
 ifeq ($(subdir),wcsmbs)
