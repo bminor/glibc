@@ -16,15 +16,26 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-strrchr.h>
+
+#if HAVE_STRRCHR_IFUNC
 # define strrchr __redirect_strrchr
 # include <string.h>
 # undef strrchr
 # include <ifunc-resolve.h>
 
-s390_vx_libc_ifunc2_redirected (__redirect_strrchr, __strrchr, strrchr)
-weak_alias (strrchr, rindex);
+# if HAVE_STRRCHR_C
+extern __typeof (__redirect_strrchr) STRRCHR_C attribute_hidden;
+# endif
 
-#else
-# include <string/strrchr.c>
-#endif /* !(defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)) */
+# if HAVE_STRRCHR_Z13
+extern __typeof (__redirect_strrchr) STRRCHR_Z13 attribute_hidden;
+# endif
+
+s390_libc_ifunc_expr (__redirect_strrchr, strrchr,
+		      (HAVE_STRRCHR_Z13 && (hwcap & HWCAP_S390_VX))
+		      ? STRRCHR_Z13
+		      : STRRCHR_DEFAULT
+		      )
+weak_alias (strrchr, rindex)
+#endif /* HAVE_STRRCHR_IFUNC  */

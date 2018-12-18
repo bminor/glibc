@@ -16,7 +16,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-strrchr.h>
+
+#if HAVE_STRRCHR_Z13
 
 # include "sysdep.h"
 # include "asm-syntax.h"
@@ -39,7 +41,7 @@
    -v19=part of s with last occurence of c.
    -v20=permute pattern
 */
-ENTRY(__strrchr_vx)
+ENTRY(STRRCHR_Z13)
 	.machine "z13"
 	.machinemode "zarch_nohighgprs"
 
@@ -176,5 +178,15 @@ ENTRY(__strrchr_vx)
 .Lpermute_mask:
 	.byte	0x0F,0x0E,0x0D,0x0C,0x0B,0x0A,0x09,0x08
 	.byte	0x07,0x06,0x05,0x04,0x03,0x02,0x01,0x00
-END(__strrchr_vx)
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+END(STRRCHR_Z13)
+
+# if ! HAVE_STRRCHR_IFUNC
+strong_alias (STRRCHR_Z13, strrchr)
+weak_alias (strrchr, rindex)
+# endif
+
+# if ! HAVE_STRRCHR_C && defined SHARED && IS_IN (libc)
+strong_alias (STRRCHR_Z13, __GI_strrchr)
+# endif
+
+#endif /* HAVE_STRRCHR_Z13  */
