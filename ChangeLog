@@ -1,3 +1,8 @@
+2018-12-18  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23995]
+	* localedata/locales/bi_VU: Remove executable bit from file.
+
 2018-12-17  Albert ARIBAUD <albert.aribaud@3adev.fr>
 
 	* include/time.h
