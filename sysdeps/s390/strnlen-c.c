@@ -16,15 +16,19 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
-# define STRNLEN  __strnlen_c
-# ifdef SHARED
-#  undef libc_hidden_def
-#  define libc_hidden_def(name)					\
+#include <ifunc-strnlen.h>
+
+#if HAVE_STRNLEN_C
+# if HAVE_STRNLEN_IFUNC
+#  define STRNLEN STRNLEN_C
+#  if defined SHARED && IS_IN (libc)
+#   undef libc_hidden_def
+#   define libc_hidden_def(name)					\
   __hidden_ver1 (__strnlen_c, __GI_strnlen, __strnlen_c);	\
   strong_alias (__strnlen_c, __strnlen_c_1);			\
   __hidden_ver1 (__strnlen_c_1, __GI___strnlen, __strnlen_c_1);
-# endif /* SHARED */
+#  endif
+# endif
 
 # include <string/strnlen.c>
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+#endif

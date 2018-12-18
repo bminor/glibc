@@ -27,6 +27,7 @@
 #include <ifunc-strstr.h>
 #include <ifunc-memmem.h>
 #include <ifunc-strlen.h>
+#include <ifunc-strnlen.h>
 
 /* Maximum number of IFUNC implementations.  */
 #define MAX_IFUNC	3
@@ -177,6 +178,18 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 		)
 #endif /* HAVE_STRLEN_IFUNC  */
 
+#if HAVE_STRNLEN_IFUNC
+    IFUNC_IMPL (i, name, strnlen,
+# if HAVE_STRNLEN_Z13
+		IFUNC_IMPL_ADD (array, i, strnlen,
+				dl_hwcap & HWCAP_S390_VX, STRNLEN_Z13)
+# endif
+# if HAVE_STRNLEN_C
+		IFUNC_IMPL_ADD (array, i, strnlen, 1, STRNLEN_C)
+# endif
+		)
+#endif /* HAVE_STRNLEN_IFUNC  */
+
 #ifdef HAVE_S390_VX_ASM_SUPPORT
 
 # define IFUNC_VX_IMPL(FUNC)						\
@@ -187,7 +200,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   IFUNC_VX_IMPL (wcslen);
 
-  IFUNC_VX_IMPL (strnlen);
   IFUNC_VX_IMPL (wcsnlen);
 
   IFUNC_VX_IMPL (strcpy);
