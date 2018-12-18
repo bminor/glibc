@@ -60,7 +60,7 @@
 2018-12-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 	    James Clarke  <jrtc27@jrtc27.com>
 
-	[BZ #23960]
+	[BZ #23967]
 	* sysdeps/unix/sysv/linux/kernel_sigaction.h (HAS_SA_RESTORER):
 	Define if SA_RESTORER is defined.
 	(kernel_sigaction): Define sa_restorer if HAS_SA_RESTORER is defined.
