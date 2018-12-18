@@ -16,7 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-wmemset.h>
+#if HAVE_WMEMSET_Z13
 
 # include "sysdep.h"
 # include "asm-syntax.h"
@@ -38,7 +39,7 @@
    -v17,v18,v19=copy of v16 for vstm
    -v31=saved dest for return
 */
-ENTRY(__wmemset_vx)
+ENTRY(WMEMSET_Z13)
 	.machine "z13"
 	.machinemode "zarch_nohighgprs"
 
@@ -137,6 +138,17 @@ ENTRY(__wmemset_vx)
 	br	%r14
 .Lfallback:
 	srlg	%r4,%r4,2	/* Convert byte-count to character-count.  */
-	jg	__wmemset_c
-END(__wmemset_vx)
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+	jg	WMEMSET_C
+END(WMEMSET_Z13)
+
+# if ! HAVE_WMEMSET_IFUNC
+strong_alias (WMEMSET_Z13, __wmemset)
+weak_alias (__wmemset, wmemset)
+# endif
+
+# if defined HAVE_S390_MIN_Z13_ZARCH_ASM_SUPPORT \
+	&& defined SHARED && IS_IN (libc)
+strong_alias (WMEMSET_Z13, __GI___wmemset)
+weak_alias (WMEMSET_Z13, __GI_wmemset)
+# endif
+#endif

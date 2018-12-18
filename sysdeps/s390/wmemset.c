@@ -1,4 +1,4 @@
-/* Default wmemset implementation for S/390.
+/* Multiple versions of wmemset.
    Copyright (C) 2015-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,22 +16,28 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
-# define WMEMSET  __wmemset_c
+#include <ifunc-wmemset.h>
 
+#if HAVE_WMEMSET_IFUNC
+# define wmemset __redirect_wmemset
+# define __wmemset __redirect___wmemset
 # include <wchar.h>
-extern __typeof (__wmemset) __wmemset_c;
-# undef weak_alias
-# define weak_alias(name, alias)
-# ifdef SHARED
-#  undef libc_hidden_def
-#  define libc_hidden_def(name)					\
-  __hidden_ver1 (__wmemset_c, __GI___wmemset, __wmemset_c);
-#  undef libc_hidden_weak
-#  define libc_hidden_weak(name)					\
-  strong_alias (__wmemset_c, __wmemset_c_1);				\
-  __hidden_ver1 (__wmemset_c_1, __GI_wmemset, __wmemset_c_1);
-# endif /* SHARED */
+# undef wmemset
+# undef __wmemset
+# include <ifunc-resolve.h>
 
-# include <wcsmbs/wmemset.c>
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+# if HAVE_WMEMSET_C
+extern __typeof (__redirect___wmemset) WMEMSET_C attribute_hidden;
+# endif
+
+# if HAVE_WMEMSET_Z13
+extern __typeof (__redirect___wmemset) WMEMSET_Z13 attribute_hidden;
+# endif
+
+s390_libc_ifunc_expr (__redirect___wmemset, __wmemset,
+		      (HAVE_WMEMSET_Z13 && (hwcap & HWCAP_S390_VX))
+		      ? WMEMSET_Z13
+		      : WMEMSET_DEFAULT
+		      )
+weak_alias (__wmemset, wmemset)
+#endif
