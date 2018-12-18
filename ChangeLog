@@ -1,5 +1,23 @@
 2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
 
+	* sysdeps/s390/s390-64/memcmp.S: Move to ...
+	* sysdeps/s390/memcmp.S: ... here.
+	Adjust to be usable for 31/64bit.
+	* sysdeps/s390/s390-32/memcmp.S: Delete File.
+	* sysdeps/s390/multiarch/Makefile (sysdep_routines): Add memcmp.
+	* sysdeps/s390/s390-32/multiarch/Makefile (sysdep_routines):
+	Remove memcmp.
+	* sysdeps/s390/s390-64/multiarch/Makefile: Likewise.
+	* sysdeps/s390/s390-64/multiarch/memcmp-s390x.S: Move to ...
+	* sysdeps/s390/multiarch/memcmp-s390x.S: ... here.
+	Adjust to be usable for 31/64bit.
+	* sysdeps/s390/s390-32/multiarch/memcmp-s390.S: Delete File.
+	* sysdeps/s390/s390-64/multiarch/memcmp.c: Move to ...
+	* sysdeps/s390/multiarch/memcmp.c: ... here.
+	* sysdeps/s390/s390-32/multiarch/memcmp.c: Delete File.
+
+2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
+
 	* sysdeps/s390/s390-32/bzero.S: Delete file.
 	* sysdeps/s390/s390-64/bzero.S: Likewise.
 	* sysdeps/s390/Makefile (sysdep_routines): Add bzero.
