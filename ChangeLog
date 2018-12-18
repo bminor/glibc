@@ -1,6 +1,21 @@
 2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
 
 	* sysdeps/s390/multiarch/Makefile
+	(sysdep_routines): Remove strpbrk variants.
+	* sysdeps/s390/Makefile (sysdep_routines): Add strpbrk variants.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Refactor ifunc handling for strpbrk.
+	* sysdeps/s390/multiarch/strpbrk-c.c: Move to ...
+	* sysdeps/s390/strpbrk-c.c: ... here and adjust ifunc handling.
+	* sysdeps/s390/multiarch/strpbrk-vx.S: Move to ...
+	* sysdeps/s390/strpbrk-vx.S: ... here and adjust ifunc handling.
+	* sysdeps/s390/multiarch/strpbrk.c: Move to ...
+	* sysdeps/s390/strpbrk.c: ... here and adjust ifunc handling.
+	* sysdeps/s390/ifunc-strpbrk.h: New file.
+
+2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
+
+	* sysdeps/s390/multiarch/Makefile
 	(sysdep_routines): Remove strspn variants.
 	* sysdeps/s390/Makefile (sysdep_routines): Add strspn variants.
 	* sysdeps/s390/multiarch/ifunc-impl-list.c

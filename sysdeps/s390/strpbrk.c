@@ -16,7 +16,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-strpbrk.h>
+
+#if HAVE_STRPBRK_IFUNC
 # define strpbrk __redirect_strpbrk
 /* Omit the strpbrk inline definitions because it would redefine strpbrk.  */
 # define __NO_STRING_INLINES
@@ -24,8 +26,17 @@
 # undef strpbrk
 # include <ifunc-resolve.h>
 
-s390_vx_libc_ifunc2_redirected (__redirect_strpbrk, __strpbrk, strpbrk)
+# if HAVE_STRPBRK_C
+extern __typeof (__redirect_strpbrk) STRPBRK_C attribute_hidden;
+# endif
 
-#else
-# include <string/strpbrk.c>
-#endif /* !(defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)) */
+# if HAVE_STRPBRK_Z13
+extern __typeof (__redirect_strpbrk) STRPBRK_Z13 attribute_hidden;
+# endif
+
+s390_libc_ifunc_expr (__redirect_strpbrk, strpbrk,
+		      (HAVE_STRPBRK_Z13 && (hwcap & HWCAP_S390_VX))
+		      ? STRPBRK_Z13
+		      : STRPBRK_DEFAULT
+		      )
+#endif /* HAVE_STRPBRK_IFUNC  */
