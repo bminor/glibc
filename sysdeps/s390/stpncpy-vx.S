@@ -16,7 +16,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-stpncpy.h>
+
+#if HAVE_STPNCPY_Z13
 
 # include "sysdep.h"
 # include "asm-syntax.h"
@@ -38,7 +40,7 @@
    -%r6 = loaded bytes
    -%r7 = border, tmp
 */
-ENTRY(__stpncpy_vx)
+ENTRY(STPNCPY_Z13)
 	.machine "z13"
 	.machinemode "zarch_nohighgprs"
 
@@ -196,5 +198,14 @@ ENTRY(__stpncpy_vx)
 
 	vl	%v16,0(%r5,%r3)	/* Load s.  */
 	j	.Llt64
-END(__stpncpy_vx)
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+END(STPNCPY_Z13)
+
+# if ! HAVE_STPNCPY_IFUNC
+strong_alias (STPNCPY_Z13, __stpncpy)
+weak_alias (__stpncpy, stpncpy)
+# endif
+
+# if ! HAVE_STPNCPY_C && defined SHARED && IS_IN (libc)
+strong_alias (STPNCPY_Z13, __GI___stpncpy)
+# endif
+#endif

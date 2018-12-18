@@ -1,4 +1,4 @@
-/* Default stpncpy implementation for S/390.
+/* Multiple versions of stpncpy.
    Copyright (C) 2015-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,13 +16,28 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
-# define STPNCPY  __stpncpy_c
-# ifdef SHARED
-#  undef libc_hidden_def
-#  define libc_hidden_def(name)  \
-     __hidden_ver1 (__stpncpy_c, __GI___stpncpy, __stpncpy_c);
-# endif /* SHARED */
+#include <ifunc-stpncpy.h>
 
-# include <string/stpncpy.c>
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+#if HAVE_STPNCPY_IFUNC
+# define stpncpy __redirect_stpncpy
+# define __stpncpy __redirect___stpncpy
+# include <string.h>
+# undef stpncpy
+# undef __stpncpy
+# include <ifunc-resolve.h>
+
+# if HAVE_STPNCPY_C
+extern __typeof (__redirect_stpncpy) STPNCPY_C attribute_hidden;
+# endif
+
+# if HAVE_STPNCPY_Z13
+extern __typeof (__redirect_stpncpy) STPNCPY_Z13 attribute_hidden;
+# endif
+
+s390_libc_ifunc_expr (__redirect___stpncpy, __stpncpy,
+		      (HAVE_STPNCPY_Z13 && (hwcap & HWCAP_S390_VX))
+		      ? STPNCPY_Z13
+		      : STPNCPY_DEFAULT
+		      )
+weak_alias (__stpncpy, stpncpy)
+#endif

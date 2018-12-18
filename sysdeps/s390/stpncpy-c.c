@@ -1,4 +1,4 @@
-/* Multiple versions of stpncpy.
+/* Default stpncpy implementation for S/390.
    Copyright (C) 2015-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,17 +16,18 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
-# define stpncpy __redirect_stpncpy
-# define __stpncpy __redirect___stpncpy
-# include <string.h>
-# undef stpncpy
-# undef __stpncpy
-# include <ifunc-resolve.h>
+#include <ifunc-stpncpy.h>
 
-s390_vx_libc_ifunc_redirected (__redirect___stpncpy, __stpncpy)
-weak_alias (__stpncpy, stpncpy)
+#if HAVE_STPNCPY_C
+# if HAVE_STPNCPY_IFUNC
+#  define STPNCPY STPNCPY_C
 
-#else
+#  if defined SHARED && IS_IN (libc)
+#   undef libc_hidden_def
+#   define libc_hidden_def(name)				\
+  __hidden_ver1 (__stpncpy_c, __GI___stpncpy, __stpncpy_c);
+#  endif
+# endif
+
 # include <string/stpncpy.c>
-#endif  /* !(defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)) */
+#endif
