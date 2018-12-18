@@ -16,7 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-wmemchr.h>
+#if HAVE_WMEMCHR_Z13
 
 # include "sysdep.h"
 # include "asm-syntax.h"
@@ -38,7 +39,7 @@
    -v17=index of found c
    -v18=c replicated
 */
-ENTRY(__wmemchr_vx)
+ENTRY(WMEMCHR_Z13)
 	.machine "z13"
 	.machinemode "zarch_nohighgprs"
 
@@ -161,6 +162,17 @@ ENTRY(__wmemchr_vx)
 
 	j	.Llt64
 .Lfallback:
-	jg	__wmemchr_c
-END(__wmemchr_vx)
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+	jg	WMEMCHR_C
+END(WMEMCHR_Z13)
+
+# if ! HAVE_WMEMCHR_IFUNC
+strong_alias (WMEMCHR_Z13, __wmemchr)
+weak_alias (__wmemchr, wmemchr)
+# endif
+
+# if defined HAVE_S390_MIN_Z13_ZARCH_ASM_SUPPORT \
+	&& defined SHARED && IS_IN (libc)
+strong_alias (WMEMCHR_Z13, __GI___wmemchr)
+weak_alias (WMEMCHR_Z13, __GI_wmemchr)
+# endif
+#endif

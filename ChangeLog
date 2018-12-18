@@ -1,6 +1,21 @@
 2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
 
 	* sysdeps/s390/multiarch/Makefile
+	(sysdep_routines): Remove wmemchr variants.
+	* sysdeps/s390/Makefile (sysdep_routines): Add wmemchr variants.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Refactor ifunc handling for wmemchr.
+	* sysdeps/s390/multiarch/wmemchr-c.c: Move to ...
+	* sysdeps/s390/wmemchr-c.c: ... here and adjust ifunc handling.
+	* sysdeps/s390/multiarch/wmemchr-vx.S: Move to ...
+	* sysdeps/s390/wmemchr-vx.S: ... here and adjust ifunc handling.
+	* sysdeps/s390/multiarch/wmemchr.c: Move to ...
+	* sysdeps/s390/wmemchr.c: ... here and adjust ifunc handling.
+	* sysdeps/s390/ifunc-wmemchr.h: New file.
+
+2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
+
+	* sysdeps/s390/multiarch/Makefile
 	(sysdep_routines): Remove wcscspn variants.
 	* sysdeps/s390/Makefile (sysdep_routines): Add wcscspn variants.
 	* sysdeps/s390/multiarch/ifunc-impl-list.c

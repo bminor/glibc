@@ -1,4 +1,4 @@
-/* Default wmemchr implementation for S/390.
+/* Multiple versions of wmemchr.
    Copyright (C) 2015-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,22 +16,28 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
-# define WMEMCHR  __wmemchr_c
+#include <ifunc-wmemchr.h>
 
+#if HAVE_WMEMCHR_IFUNC
+# define wmemchr __redirect_wmemchr
+# define __wmemchr __redirect___wmemchr
 # include <wchar.h>
-extern __typeof (wmemchr) __wmemchr_c;
-# undef weak_alias
-# define weak_alias(name, alias)
-# ifdef SHARED
-#  undef libc_hidden_def
-#  define libc_hidden_def(name)			\
-  __hidden_ver1 (__wmemchr_c, __GI___wmemchr, __wmemchr_c);
-#  undef libc_hidden_weak
-#  define libc_hidden_weak(name)					\
-  strong_alias (__wmemchr_c, __wmemchr_c_1);				\
-  __hidden_ver1 (__wmemchr_c_1, __GI_wmemchr, __wmemchr_c_1);
-# endif /* SHARED */
+# undef wmemchr
+# undef __wmemchr
+# include <ifunc-resolve.h>
 
-# include <wcsmbs/wmemchr.c>
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+# if HAVE_WMEMCHR_C
+extern __typeof (__redirect___wmemchr) WMEMCHR_C attribute_hidden;
+# endif
+
+# if HAVE_WMEMCHR_Z13
+extern __typeof (__redirect___wmemchr) WMEMCHR_Z13 attribute_hidden;
+# endif
+
+s390_libc_ifunc_expr (__redirect___wmemchr, __wmemchr,
+		      (HAVE_WMEMCHR_Z13 && (hwcap & HWCAP_S390_VX))
+		      ? WMEMCHR_Z13
+		      : WMEMCHR_DEFAULT
+		      )
+weak_alias (__wmemchr, wmemchr)
+#endif
