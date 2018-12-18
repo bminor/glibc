@@ -1,3 +1,28 @@
+2018-12-18  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_ST_INO_64_BIT): Remove macro definition.
+	* sysdeps/unix/sysv/linux/alpha/kernel-features.h
+	(__ASSUME_ST_INO_64_BIT): Do not undefine and define.
+	* sysdeps/unix/sysv/linux/sh/kernel-features.h
+	(__ASSUME_ST_INO_64_BIT): Likewise.
+	* sysdeps/unix/sysv/linux/fxstat64.c: Do not include
+	<kernel-features.h>.
+	(___fxstat64) [_HAVE_STAT64___ST_INO && !__ASSUME_ST_INO_64_BIT]:
+	Remove conditional code.
+	* sysdeps/unix/sysv/linux/lxstat64.c: Do not include
+	<kernel-features.h>.
+	(___lxstat64) [_HAVE_STAT64___ST_INO && !__ASSUME_ST_INO_64_BIT]:
+	Remove conditional code.
+	* sysdeps/unix/sysv/linux/xstat64.c: Do not include
+	<kernel-features.h>.
+	(___xstat64) [_HAVE_STAT64___ST_INO && !__ASSUME_ST_INO_64_BIT]:
+	Remove conditional code.
+	* sysdeps/unix/sysv/linux/xstatconv.c: Do not include
+	<kernel-features.h>.
+	(__xstat32_conv) [_HAVE_STAT64___ST_INO]: Remove conditional code.
+	[!_HAVE_STAT64___ST_INO]: Make code unconditional.
+
 2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
 
 	* sysdeps/s390/multiarch/ifunc-resolve.h

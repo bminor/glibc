@@ -37,10 +37,6 @@
    introduced.  If somebody cares these values can afterwards be
    corrected.  */
 
-/* The changed st_ino field appeared in 2.4.0-test6.  However, SH is lame,
-   and still does not have a 64-bit inode field.  */
-#define __ASSUME_ST_INO_64_BIT		1
-
 /* The statfs64 syscalls are available in 2.5.74 (but not for alpha).  */
 #define __ASSUME_STATFS64	1
 

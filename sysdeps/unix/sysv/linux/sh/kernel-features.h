@@ -36,10 +36,6 @@
 
 #include_next <kernel-features.h>
 
-/* SH does not have a 64-bit inode field.  */
-#undef __ASSUME_ST_INO_64_BIT
-#define __ASSUME_ST_INO_64_BIT	0
-
 /* SH4 ABI does not really require argument alignment for 64-bits, but
    the kernel interface for p{read,write}64 adds a dummy long argument
    before the offset.  */

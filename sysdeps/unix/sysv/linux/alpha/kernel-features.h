@@ -22,9 +22,6 @@
 
 #include_next <kernel-features.h>
 
-#undef __ASSUME_ST_INO_64_BIT
-#define __ASSUME_ST_INO_64_BIT 0
-
 /* There never has been support for fstat64.  */
 #undef __ASSUME_STATFS64
 #define __ASSUME_STATFS64 0

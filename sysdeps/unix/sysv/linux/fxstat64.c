@@ -25,7 +25,6 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
-#include <kernel-features.h>
 #include <statx_cp.h>
 
 /* Get information about the file FD in BUF.  */
@@ -42,10 +41,6 @@ ___fxstat64 (int vers, int fd, struct stat64 *buf)
                            &tmp);
   if (result == 0)
     __cp_stat64_statx (buf, &tmp);
-#endif
-#if defined _HAVE_STAT64___ST_INO && !__ASSUME_ST_INO_64_BIT
-  if (__builtin_expect (!result, 1) && buf->__st_ino != (__ino_t) buf->st_ino)
-    buf->st_ino = buf->__st_ino;
 #endif
   return result;
 }
