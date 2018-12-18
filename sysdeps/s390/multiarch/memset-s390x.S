@@ -1,4 +1,4 @@
-/* Set a block of memory to some byte value.  64 bit S/390 version.
+/* Set a block of memory to some byte value.  31/64 bit S/390 version.
    Copyright (C) 2012-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -31,6 +31,10 @@
 
 ENTRY(__memset_z196)
 	.machine "z196"
+	.machinemode "zarch_nohighgprs"
+# if !defined __s390x__
+	llgfr	%r4,%r4
+# endif /* !defined __s390x__  */
 	ltgr    %r4,%r4
 	je      .L_Z196_4
 	stc     %r3,0(%r2)
@@ -61,6 +65,10 @@ END(__memset_z196)
 
 ENTRY(__memset_z10)
 	.machine "z10"
+	.machinemode "zarch_nohighgprs"
+# if !defined __s390x__
+	llgfr	%r4,%r4
+# endif /* !defined __s390x__  */
 	cgije   %r4,0,.L_Z10_4
 	stc     %r3,0(%r2)
 	lgr     %r1,%r2

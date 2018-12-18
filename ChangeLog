@@ -1,5 +1,23 @@
 2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
 
+	* sysdeps/s390/s390-64/memset.S: Move to ...
+	* sysdeps/s390/memset.S: ... here.
+	Adjust to be usable for 31/64bit.
+	* sysdeps/s390/s390-32/memset.S: Delete File.
+	* sysdeps/s390/multiarch/Makefile (sysdep_routines): Add memset.
+	* sysdeps/s390/s390-32/multiarch/Makefile (sysdep_routines):
+	Remove memset.
+	* sysdeps/s390/s390-64/multiarch/Makefile: Likewise.
+	* sysdeps/s390/s390-64/multiarch/memset-s390x.S: Move to ...
+	* sysdeps/s390/multiarch/memset-s390x.S: ... here.
+	Adjust to be usable for 31/64bit.
+	* sysdeps/s390/s390-32/multiarch/memset-s390.S: Delete File.
+	* sysdeps/s390/s390-64/multiarch/memset.c: Move to ...
+	* sysdeps/s390/multiarch/memset.c: ... here.
+	* sysdeps/s390/s390-32/multiarch/memset.c: Delete File.
+
+2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
+
 	* sysdeps/s390/multiarch/ifunc-resolve.h
 	(s390_libc_ifunc_init, s390_libc_ifunc,
 	s390_vx_libc_ifunc2_redirected): Use hwcap instead of dl_hwcap.
