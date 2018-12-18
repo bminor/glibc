@@ -16,7 +16,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-strspn.h>
+
+#if HAVE_STRSPN_IFUNC
 # define strspn __redirect_strspn
 /* Omit the strspn inline definitions because it would redefine strspn.  */
 # define __NO_STRING_INLINES
@@ -24,8 +26,17 @@
 # undef strspn
 # include <ifunc-resolve.h>
 
-s390_vx_libc_ifunc2_redirected (__redirect_strspn, __strspn, strspn)
+# if HAVE_STRSPN_C
+extern __typeof (__redirect_strspn) STRSPN_C attribute_hidden;
+# endif
 
-#else
-# include <string/strspn.c>
-#endif /* !(defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)) */
+# if HAVE_STRSPN_Z13
+extern __typeof (__redirect_strspn) STRSPN_Z13 attribute_hidden;
+# endif
+
+s390_libc_ifunc_expr (__redirect_strspn, strspn,
+		      (HAVE_STRSPN_Z13 && (hwcap & HWCAP_S390_VX))
+		      ? STRSPN_Z13
+		      : STRSPN_DEFAULT
+		      )
+#endif /* HAVE_STRSPN_IFUNC  */

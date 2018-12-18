@@ -16,7 +16,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-strspn.h>
+
+#if HAVE_STRSPN_Z13
 
 # include "sysdep.h"
 # include "asm-syntax.h"
@@ -57,7 +59,7 @@
 	otherwise =0;
    r9: loaded byte count of vlbb accept-string
 */
-ENTRY(__strspn_vx)
+ENTRY(STRSPN_Z13)
 	.machine "z13"
 	.machinemode "zarch_nohighgprs"
 
@@ -252,5 +254,14 @@ ENTRY(__strspn_vx)
 				   Check for zero is in jump-target.  */
 	j	.Lslow_next_acc_notonbb /* ... and search for zero in
 					    fully loaded vreg again.  */
-END(__strspn_vx)
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+END(STRSPN_Z13)
+
+# if ! HAVE_STRSPN_IFUNC
+strong_alias (STRSPN_Z13, strspn)
+# endif
+
+# if ! HAVE_STRSPN_C && defined SHARED && IS_IN (libc)
+strong_alias (STRSPN_Z13, __GI_strspn)
+# endif
+
+#endif /* HAVE_STRSPN_Z13  */
