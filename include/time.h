@@ -65,6 +65,14 @@ libc_hidden_proto (__ctime64);
 #endif
 
 #if __TIMESIZE == 64
+# define __ctime64_r ctime_r
+#else
+extern char *__ctime64_r (const __time64_t *__restrict __timer,
+		          char *__restrict __buf) __THROW;
+libc_hidden_proto (__ctime64_r);
+#endif
+
+#if __TIMESIZE == 64
 # define __localtime64 localtime
 #else
 extern struct tm *__localtime64 (const __time64_t *__timer);
