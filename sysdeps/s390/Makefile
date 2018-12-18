@@ -69,5 +69,6 @@ sysdep_routines += bzero memset memset-z900 \
 		   strcat strcat-vx strcat-c \
 		   strncat strncat-vx strncat-c \
 		   strcmp strcmp-vx strcmp-z900 \
-		   strncmp strncmp-vx strncmp-c
+		   strncmp strncmp-vx strncmp-c \
+		   strchr strchr-vx strchr-c
 endif

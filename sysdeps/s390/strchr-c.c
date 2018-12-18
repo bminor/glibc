@@ -16,14 +16,18 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
-# define STRCHR  __strchr_c
-# undef weak_alias
-# ifdef SHARED
-#  undef libc_hidden_builtin_def
-#  define libc_hidden_builtin_def(name)				\
+#include <ifunc-strchr.h>
+
+#if HAVE_STRCHR_C
+# if HAVE_STRCHR_IFUNC
+#  define STRCHR STRCHR_C
+#  undef weak_alias
+#  if defined SHARED && IS_IN (libc)
+#   undef libc_hidden_builtin_def
+#   define libc_hidden_builtin_def(name)			\
      __hidden_ver1 (__strchr_c, __GI_strchr, __strchr_c);
-# endif /* SHARED */
+#  endif
+# endif
 
 # include <string/strchr.c>
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+#endif

@@ -16,7 +16,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-strchr.h>
+
+#if HAVE_STRCHR_Z13
 
 # include "sysdep.h"
 # include "asm-syntax.h"
@@ -36,7 +38,7 @@
    -v17=index of unequal
    -v18=replicated c
 */
-ENTRY(__strchr_vx)
+ENTRY(STRCHR_Z13)
 	.machine "z13"
 	.machinemode "zarch_nohighgprs"
 
@@ -96,5 +98,15 @@ ENTRY(__strchr_vx)
 	clije	%r3,0,.Lcharacter /* Found zero and c is zero.  */
 	lghi	%r2,0		/* Return null if character not found.  */
 	br	%r14
-END(__strchr_vx)
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+END(STRCHR_Z13)
+
+# if ! HAVE_STRCHR_IFUNC
+strong_alias (STRCHR_Z13, strchr)
+weak_alias (strchr, index)
+# endif
+
+# if ! HAVE_STRCHR_C && defined SHARED && IS_IN (libc)
+strong_alias (STRCHR_Z13, __GI_strchr)
+# endif
+
+#endif /* HAVE_STRCHR_Z13  */
