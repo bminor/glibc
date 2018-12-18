@@ -16,11 +16,33 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc)
+#include <ifunc-memset.h>
+#if HAVE_MEMSET_IFUNC
 # define memset __redirect_memset
 # include <string.h>
 # undef memset
 # include <ifunc-resolve.h>
 
-s390_libc_ifunc (__redirect_memset, __memset, memset)
+# if HAVE_MEMSET_Z900_G5
+extern __typeof (__redirect_memset) MEMSET_Z900_G5 attribute_hidden;
+# endif
+
+# if HAVE_MEMSET_Z10
+extern __typeof (__redirect_memset) MEMSET_Z10 attribute_hidden;
+# endif
+
+# if HAVE_MEMSET_Z196
+extern __typeof (__redirect_memset) MEMSET_Z196 attribute_hidden;
+# endif
+
+s390_libc_ifunc_expr (__redirect_memset, memset,
+		      ({
+			s390_libc_ifunc_init ();
+			(HAVE_MEMSET_Z196 && S390_IS_Z196 (stfle_bits))
+			  ? MEMSET_Z196
+			  : (HAVE_MEMSET_Z10 && S390_IS_Z10 (stfle_bits))
+			  ? MEMSET_Z10
+			  : MEMSET_DEFAULT;
+		      })
+		      )
 #endif

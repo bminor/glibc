@@ -52,3 +52,7 @@ tst-dl-runtime-profile-noaudit-ENV = $(env-profile)
 tst-dl-runtime-profile-audit-ENV = $(env-profile) $(env-audit)
 endif
 endif
+
+ifeq ($(subdir),string)
+sysdep_routines += memset memset-z900
+endif

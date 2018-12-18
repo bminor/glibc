@@ -21,6 +21,7 @@
 #include <wchar.h>
 #include <ifunc-impl-list.h>
 #include <ifunc-resolve.h>
+#include <ifunc-memset.h>
 
 /* Maximum number of IFUNC implementations.  */
 #define MAX_IFUNC	3
@@ -46,12 +47,21 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
       S390_STORE_STFLE (stfle_bits);
     }
 
+#if HAVE_MEMSET_IFUNC
   IFUNC_IMPL (i, name, memset,
+# if HAVE_MEMSET_Z196
 	      IFUNC_IMPL_ADD (array, i, memset,
-			      S390_IS_Z196 (stfle_bits), __memset_z196)
+			      S390_IS_Z196 (stfle_bits), MEMSET_Z196)
+# endif
+# if HAVE_MEMSET_Z10
 	      IFUNC_IMPL_ADD (array, i, memset,
-			      S390_IS_Z10 (stfle_bits), __memset_z10)
-	      IFUNC_IMPL_ADD (array, i, memset, 1, __memset_default))
+			      S390_IS_Z10 (stfle_bits), MEMSET_Z10)
+# endif
+# if HAVE_MEMSET_Z900_G5
+	      IFUNC_IMPL_ADD (array, i, memset, 1, MEMSET_Z900_G5)
+# endif
+	      )
+#endif /* HAVE_MEMSET_IFUNC */
 
   IFUNC_IMPL (i, name, memcmp,
 	      IFUNC_IMPL_ADD (array, i, memcmp,
