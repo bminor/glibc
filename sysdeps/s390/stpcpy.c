@@ -1,4 +1,4 @@
-/* Default stpcpy implementation for S/390.
+/* Multiple versions of stpcpy.
    Copyright (C) 2015-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,20 +16,31 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
-# define STPCPY  __stpcpy_c
-# undef weak_alias
-# define weak_alias(a, b)
-# ifdef SHARED
-#  undef libc_hidden_def
-#  define libc_hidden_def(name)					\
-  __hidden_ver1 (__stpcpy_c, __GI___stpcpy, __stpcpy_c);
-#  undef libc_hidden_builtin_def
-#  define libc_hidden_builtin_def(name)				\
-  strong_alias (__stpcpy_c, __stpcpy_c_1);			\
-  __hidden_ver1 (__stpcpy_c_1, __GI_stpcpy, __stpcpy_c_1);
-# endif /* SHARED */
+#include <ifunc-stpcpy.h>
 
+#if HAVE_STPCPY_IFUNC
+# define stpcpy __redirect_stpcpy
+# define __stpcpy __redirect___stpcpy
+/* Omit the stpcpy inline definitions because it would redefine stpcpy.  */
+# define __NO_STRING_INLINES
+# define NO_MEMPCPY_STPCPY_REDIRECT
+# include <string.h>
+# undef stpcpy
+# undef __stpcpy
+# include <ifunc-resolve.h>
 
-# include <string/stpcpy.c>
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+# if HAVE_STPCPY_C
+extern __typeof (__redirect_stpcpy) STPCPY_C attribute_hidden;
+# endif
+
+# if HAVE_STPCPY_Z13
+extern __typeof (__redirect_stpcpy) STPCPY_Z13 attribute_hidden;
+# endif
+
+s390_libc_ifunc_expr (__redirect___stpcpy, __stpcpy,
+		      (HAVE_STPCPY_Z13 && (hwcap & HWCAP_S390_VX))
+		      ? STPCPY_Z13
+		      : STPCPY_DEFAULT
+		      )
+weak_alias (__stpcpy, stpcpy)
+#endif

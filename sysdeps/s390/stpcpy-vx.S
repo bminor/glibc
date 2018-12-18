@@ -16,7 +16,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-stpcpy.h>
+
+#if HAVE_STPCPY_Z13
 
 # include "sysdep.h"
 # include "asm-syntax.h"
@@ -36,7 +38,7 @@
    -v17=index of zero
    -v18=part of src
 */
-ENTRY(__stpcpy_vx)
+ENTRY(STPCPY_Z13)
 	.machine "z13"
 	.machinemode "zarch_nohighgprs"
 
@@ -100,5 +102,15 @@ ENTRY(__stpcpy_vx)
 	vstl	%v16,%r5,0(%r2)	/* Copy characters including zero.  */
 	la	%r2,0(%r5,%r2)	/* Return pointer to zero.  */
 	br	%r14
-END(__stpcpy_vx)
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+END(STPCPY_Z13)
+
+# if ! HAVE_STPCPY_IFUNC
+strong_alias (STPCPY_Z13, __stpcpy)
+weak_alias (__stpcpy, stpcpy)
+# endif
+
+# if ! HAVE_STPCPY_C && defined SHARED && IS_IN (libc)
+strong_alias (STPCPY_Z13, __GI_stpcpy)
+strong_alias (STPCPY_Z13, __GI___stpcpy)
+# endif
+#endif
