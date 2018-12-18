@@ -16,6 +16,25 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* This wrapper-file is needed, because otherwise file
-   sysdeps/s390/s390-[32|64]/strcpy.S will be used.  */
-#include <sysdeps/s390/multiarch/strcpy.c>
+#include <ifunc-strcpy.h>
+
+#if HAVE_STRCPY_IFUNC
+# define strcpy __redirect_strcpy
+# include <string.h>
+# undef strcpy
+# include <ifunc-resolve.h>
+
+# if HAVE_STRCPY_Z900_G5
+extern __typeof (__redirect_strcpy) STRCPY_Z900_G5 attribute_hidden;
+# endif
+
+# if HAVE_STRCPY_Z13
+extern __typeof (__redirect_strcpy) STRCPY_Z13 attribute_hidden;
+# endif
+
+s390_libc_ifunc_expr (__redirect_strcpy, strcpy,
+		      (HAVE_STRCPY_Z13 && (hwcap & HWCAP_S390_VX))
+		      ? STRCPY_Z13
+		      : STRCPY_DEFAULT
+		      )
+#endif
