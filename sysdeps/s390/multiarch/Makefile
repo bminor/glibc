@@ -1,7 +1,3 @@
-ifeq ($(subdir),wcsmbs)
-sysdep_routines += wmemcmp wmemcmp-vx wmemcmp-c
-endif
-
 ifeq ($(subdir),iconvdata)
 override define generate-8bit-table
 $(make-target-directory)

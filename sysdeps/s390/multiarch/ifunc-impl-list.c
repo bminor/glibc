@@ -64,6 +64,7 @@
 #include <ifunc-wcscspn.h>
 #include <ifunc-wmemchr.h>
 #include <ifunc-wmemset.h>
+#include <ifunc-wmemcmp.h>
 
 /* Maximum number of IFUNC implementations.  */
 #define MAX_IFUNC	3
@@ -658,17 +659,17 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 		)
 #endif /* HAVE_WMEMSET_IFUNC  */
 
-#ifdef HAVE_S390_VX_ASM_SUPPORT
-
-# define IFUNC_VX_IMPL(FUNC)						\
-  IFUNC_IMPL (i, name, FUNC,						\
-	      IFUNC_IMPL_ADD (array, i, FUNC, dl_hwcap & HWCAP_S390_VX, \
-			      __##FUNC##_vx)				\
-	      IFUNC_IMPL_ADD (array, i, FUNC, 1, __##FUNC##_c))
-
-  IFUNC_VX_IMPL (wmemcmp);
-
-#endif /* HAVE_S390_VX_ASM_SUPPORT */
+#if HAVE_WMEMCMP_IFUNC
+    IFUNC_IMPL (i, name, wmemcmp,
+# if HAVE_WMEMCMP_Z13
+		IFUNC_IMPL_ADD (array, i, wmemcmp,
+				dl_hwcap & HWCAP_S390_VX, WMEMCMP_Z13)
+# endif
+# if HAVE_WMEMCMP_C
+		IFUNC_IMPL_ADD (array, i, wmemcmp, 1, WMEMCMP_C)
+# endif
+		)
+#endif /* HAVE_WMEMCMP_IFUNC  */
 
   return i;
 }

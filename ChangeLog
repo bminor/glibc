@@ -1,6 +1,21 @@
 2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
 
 	* sysdeps/s390/multiarch/Makefile
+	(sysdep_routines): Remove wmemcmp variants.
+	* sysdeps/s390/Makefile (sysdep_routines): Add wmemcmp variants.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Refactor ifunc handling for wmemcmp.
+	* sysdeps/s390/multiarch/wmemcmp-c.c: Move to ...
+	* sysdeps/s390/wmemcmp-c.c: ... here and adjust ifunc handling.
+	* sysdeps/s390/multiarch/wmemcmp-vx.S: Move to ...
+	* sysdeps/s390/wmemcmp-vx.S: ... here and adjust ifunc handling.
+	* sysdeps/s390/multiarch/wmemcmp.c: Move to ...
+	* sysdeps/s390/wmemcmp.c: ... here and adjust ifunc handling.
+	* sysdeps/s390/ifunc-wmemcmp.h: New file.
+
+2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
+
+	* sysdeps/s390/multiarch/Makefile
 	(sysdep_routines): Remove wmemset variants.
 	* sysdeps/s390/Makefile (sysdep_routines): Add wmemset variants.
 	* sysdeps/s390/multiarch/ifunc-impl-list.c

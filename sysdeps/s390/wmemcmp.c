@@ -16,12 +16,23 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-wmemcmp.h>
+
+#if HAVE_WMEMCMP_IFUNC
 # include <wchar.h>
 # include <ifunc-resolve.h>
 
-s390_vx_libc_ifunc2 (__wmemcmp, wmemcmp)
+# if HAVE_WMEMCMP_C
+extern __typeof (wmemcmp) WMEMCMP_C attribute_hidden;
+# endif
 
-#else
-# include <wcsmbs/wmemcmp.c>
-#endif /* !(defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)) */
+# if HAVE_WMEMCMP_Z13
+extern __typeof (wmemcmp) WMEMCMP_Z13 attribute_hidden;
+# endif
+
+s390_libc_ifunc_expr (wmemcmp, wmemcmp,
+		      (HAVE_WMEMCMP_Z13 && (hwcap & HWCAP_S390_VX))
+		      ? WMEMCMP_Z13
+		      : WMEMCMP_DEFAULT
+		      )
+#endif
