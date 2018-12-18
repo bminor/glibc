@@ -1,4 +1,4 @@
-/* Search a character in a block of memory.  64 bit S/390 version.
+/* Search a character in a block of memory.  31/64 bit S/390 version.
    Copyright (C) 2001-2018 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
@@ -22,19 +22,42 @@
      %r3 = character to find
      %r4 = number of bytes to search.  */
 
+#include <ifunc-memchr.h>
 #include "sysdep.h"
 #include "asm-syntax.h"
 
+#if HAVE_MEMCHR_Z900_G5
+# if defined __s390x__
+#  define SLGR	slgr
+#  define LGHI	lghi
+#  define NGR	ngr
+#  define LGR	lgr
+# else
+#  define SLGR	slr
+#  define LGHI	lhi
+#  define NGR	nr
+#  define LGR	lr
+# endif /* ! defined __s390x__  */
+
 	.text
-ENTRY(memchr)
-	lghi  %r0,0xff
-	ngr   %r0,%r3
-	lgr   %r1,%r2
+ENTRY(MEMCHR_Z900_G5)
+	LGHI  %r0,0xff
+	NGR   %r0,%r3
+	LGR   %r1,%r2
 	la    %r2,0(%r4,%r1)
 0:	srst  %r2,%r1
 	jo    0b
 	brc   13,1f
-	slgr  %r2,%r2
+	SLGR  %r2,%r2
 1:	br    %r14
-END(memchr)
-libc_hidden_builtin_def (memchr)
+END(MEMCHR_Z900_G5)
+
+# if ! HAVE_MEMCHR_IFUNC
+strong_alias (MEMCHR_Z900_G5, __memchr)
+weak_alias (__memchr, memchr)
+# endif
+
+# if defined SHARED && IS_IN (libc)
+strong_alias (MEMCHR_Z900_G5, __GI_memchr)
+# endif
+#endif

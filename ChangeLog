@@ -1,6 +1,25 @@
 2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
 
 	* sysdeps/s390/multiarch/Makefile
+	(sysdep_routines): Remove memchr variants.
+	* sysdeps/s390/Makefile (sysdep_routines): Add memchr variants.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Refactor ifunc handling for memchr.
+	* sysdeps/s390/multiarch/memchr-vx.S: Move to ...
+	* sysdeps/s390/memchr-vx.S: ... here and adjust ifunc handling.
+	* sysdeps/s390/multiarch/memchr.c: Move to ...
+	* sysdeps/s390/memchr.c: ... here and adjust ifunc handling.
+	* sysdeps/s390/ifunc-memchr.h: New file.
+	* sysdeps/s390/s390-64/memchr.S: Move to ...
+	* sysdeps/s390/memchr-z900.S: ... here and adjust to be usable
+	for 31/64bit and ifunc handling.
+	* sysdeps/s390/s390-32/multiarch/memchr.c: Delete file.
+	* sysdeps/s390/s390-64/multiarch/memchr.c: Likewise.
+	* sysdeps/s390/s390-32/memchr.S: Likewise.
+
+2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
+
+	* sysdeps/s390/multiarch/Makefile
 	(sysdep_routines): Remove strcspn variants.
 	* sysdeps/s390/Makefile (sysdep_routines): Add strcspn variants.
 	* sysdeps/s390/multiarch/ifunc-impl-list.c
