@@ -16,7 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-wcslen.h>
+#if HAVE_WCSLEN_Z13
 
 # include "sysdep.h"
 # include "asm-syntax.h"
@@ -34,7 +35,7 @@
    -r5=current_len and return_value
    -v16=part of s
 */
-ENTRY(__wcslen_vx)
+ENTRY(WCSLEN_Z13)
 	.machine "z13"
 	.machinemode "zarch_nohighgprs"
 
@@ -86,6 +87,11 @@ ENTRY(__wcslen_vx)
 	srlg	%r2,%r2,2	/* Convert byte-count to character-count.  */
 	br	%r14
 .Lfallback:
-	jg	__wcslen_c
-END(__wcslen_vx)
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+	jg	WCSLEN_C
+END(WCSLEN_Z13)
+
+# if ! HAVE_WCSLEN_IFUNC
+strong_alias (WCSLEN_Z13, __wcslen)
+weak_alias (__wcslen, wcslen)
+# endif
+#endif

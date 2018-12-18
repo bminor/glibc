@@ -16,10 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
-# define WCSLEN  __wcslen_c
+#include <ifunc-wcslen.h>
 
-# include <wchar.h>
-extern __typeof (__wcslen) __wcslen_c;
+#if HAVE_WCSLEN_C
+# if HAVE_WCSLEN_IFUNC || HAVE_WCSLEN_Z13
+#  define WCSLEN WCSLEN_C
+# endif
+
 # include <wcsmbs/wcslen.c>
 #endif
