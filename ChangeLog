@@ -1,6 +1,12 @@
 2018-12-18  Albert ARIBAUD <albert.aribaud@3adev.fr>
 
 	* include/time.h
+	(__gmtime64_r): Add.
+	* time/gmtime.c
+	(__gmtime64_r): Add.
+	[__TIMESIZE != 64] (__gmtime): Turn into a wrapper.
+
+	* include/time.h
 	(__gmtime64): Add.
 	* time/gmtime.c
 	(__gmtime64): Add.
