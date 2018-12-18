@@ -16,7 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-wcschrnul.h>
+#if HAVE_WCSCHRNUL_Z13
 
 # include "sysdep.h"
 # include "asm-syntax.h"
@@ -35,7 +36,7 @@
    -v16=part of s
    -v18=vector with c replicated in every byte
 */
-ENTRY(__wcschrnul_vx)
+ENTRY(WCSCHRNUL_Z13)
 	.machine "z13"
 	.machinemode "zarch_nohighgprs"
 
@@ -92,6 +93,11 @@ ENTRY(__wcschrnul_vx)
 .Lend:
 	br	%r14
 .Lfallback:
-	jg	__wcschrnul_c
-END(__wcschrnul_vx)
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+	jg	WCSCHRNUL_C
+END(WCSCHRNUL_Z13)
+
+# if ! HAVE_WCSCHRNUL_IFUNC
+strong_alias (WCSCHRNUL_Z13, __wcschrnul)
+weak_alias (__wcschrnul, wcschrnul)
+# endif
+#endif

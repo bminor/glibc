@@ -1,6 +1,21 @@
 2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
 
 	* sysdeps/s390/multiarch/Makefile
+	(sysdep_routines): Remove wcschrnul variants.
+	* sysdeps/s390/Makefile (sysdep_routines): Add wcschrnul variants.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Refactor ifunc handling for wcschrnul.
+	* sysdeps/s390/multiarch/wcschrnul-c.c: Move to ...
+	* sysdeps/s390/wcschrnul-c.c: ... here and adjust ifunc handling.
+	* sysdeps/s390/multiarch/wcschrnul-vx.S: Move to ...
+	* sysdeps/s390/wcschrnul-vx.S: ... here and adjust ifunc handling.
+	* sysdeps/s390/multiarch/wcschrnul.c: Move to ...
+	* sysdeps/s390/wcschrnul.c: ... here and adjust ifunc handling.
+	* sysdeps/s390/ifunc-wcschrnul.h: New file.
+
+2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
+
+	* sysdeps/s390/multiarch/Makefile
 	(sysdep_routines): Remove wcschr variants.
 	* sysdeps/s390/Makefile (sysdep_routines): Add wcschr variants.
 	* sysdeps/s390/multiarch/ifunc-impl-list.c
