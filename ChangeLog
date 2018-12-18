@@ -1,6 +1,21 @@
 2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
 
 	* sysdeps/s390/multiarch/Makefile
+	(sysdep_routines): Remove wcsncat variants.
+	* sysdeps/s390/Makefile (sysdep_routines): Add wcsncat variants.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Refactor ifunc handling for wcsncat.
+	* sysdeps/s390/multiarch/wcsncat-c.c: Move to ...
+	* sysdeps/s390/wcsncat-c.c: ... here and adjust ifunc handling.
+	* sysdeps/s390/multiarch/wcsncat-vx.S: Move to ...
+	* sysdeps/s390/wcsncat-vx.S: ... here and adjust ifunc handling.
+	* sysdeps/s390/multiarch/wcsncat.c: Move to ...
+	* sysdeps/s390/wcsncat.c: ... here and adjust ifunc handling.
+	* sysdeps/s390/ifunc-wcsncat.h: New file.
+
+2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
+
+	* sysdeps/s390/multiarch/Makefile
 	(sysdep_routines): Remove wcscat variants.
 	* sysdeps/s390/Makefile (sysdep_routines): Add wcscat variants.
 	* sysdeps/s390/multiarch/ifunc-impl-list.c

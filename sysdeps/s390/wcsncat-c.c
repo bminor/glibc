@@ -16,10 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
-# define WCSNCAT  __wcsncat_c
+#include <ifunc-wcsncat.h>
 
-# include <wchar.h>
-extern __typeof (wcsncat) __wcsncat_c;
+#if HAVE_WCSNCAT_C
+# if HAVE_WCSNCAT_IFUNC || HAVE_WCSNCAT_Z13
+#  define WCSNCAT WCSNCAT_C
+# endif
+
 # include <wcsmbs/wcsncat.c>
 #endif
