@@ -1,4 +1,4 @@
-/* Default wcscpy implementation for S/390.
+/* Multiple versions of wcscpy.
    Copyright (C) 2015-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,10 +16,23 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
-# define WCSCPY  __wcscpy_c
+#include <ifunc-wcscpy.h>
 
+#if HAVE_WCSCPY_IFUNC
 # include <wchar.h>
-extern __typeof (wcscpy) __wcscpy_c;
-# include <wcsmbs/wcscpy.c>
+# include <ifunc-resolve.h>
+
+# if HAVE_WCSCPY_C
+extern __typeof (wcscpy) WCSCPY_C attribute_hidden;
+# endif
+
+# if HAVE_WCSCPY_Z13
+extern __typeof (wcscpy) WCSCPY_Z13 attribute_hidden;
+# endif
+
+s390_libc_ifunc_expr (wcscpy, wcscpy,
+		      (HAVE_WCSCPY_Z13 && (hwcap & HWCAP_S390_VX))
+		      ? WCSCPY_Z13
+		      : WCSCPY_DEFAULT
+		      )
 #endif
