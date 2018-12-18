@@ -1,5 +1,9 @@
 2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
 
+	* sysdeps/s390/memcopy.h: New file.
+
+2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
+
 	* sysdeps/s390/s390-32/bcopy.S: Remove.
 	* sysdeps/s390/s390-64/bcopy.S: Likewise.
 
