@@ -1,4 +1,4 @@
-/* Default wcslen implementation for S/390.
+/* Multiple versions of wcpcpy.
    Copyright (C) 2015-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,10 +16,24 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
-# define WCPCPY  __wcpcpy_c
+#include <ifunc-wcpcpy.h>
 
+#if HAVE_WCPCPY_IFUNC
 # include <wchar.h>
-extern __typeof (__wcpcpy) __wcpcpy_c;
-# include <wcsmbs/wcpcpy.c>
+# include <ifunc-resolve.h>
+
+# if HAVE_WCPCPY_C
+extern __typeof (__wcpcpy) WCPCPY_C attribute_hidden;
+# endif
+
+# if HAVE_WCPCPY_Z13
+extern __typeof (__wcpcpy) WCPCPY_Z13 attribute_hidden;
+# endif
+
+s390_libc_ifunc_expr (__wcpcpy, __wcpcpy,
+		      (HAVE_WCPCPY_Z13 && (hwcap & HWCAP_S390_VX))
+		      ? WCPCPY_Z13
+		      : WCPCPY_DEFAULT
+		      )
+weak_alias (__wcpcpy, wcpcpy)
 #endif
