@@ -61,6 +61,7 @@
 #include <ifunc-wcsrchr.h>
 #include <ifunc-wcsspn.h>
 #include <ifunc-wcspbrk.h>
+#include <ifunc-wcscspn.h>
 
 /* Maximum number of IFUNC implementations.  */
 #define MAX_IFUNC	3
@@ -619,6 +620,18 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 		)
 #endif /* HAVE_WCSPBRK_IFUNC  */
 
+#if HAVE_WCSCSPN_IFUNC
+    IFUNC_IMPL (i, name, wcscspn,
+# if HAVE_WCSCSPN_Z13
+		IFUNC_IMPL_ADD (array, i, wcscspn,
+				dl_hwcap & HWCAP_S390_VX, WCSCSPN_Z13)
+# endif
+# if HAVE_WCSCSPN_C
+		IFUNC_IMPL_ADD (array, i, wcscspn, 1, WCSCSPN_C)
+# endif
+		)
+#endif /* HAVE_WCSCSPN_IFUNC  */
+
 #ifdef HAVE_S390_VX_ASM_SUPPORT
 
 # define IFUNC_VX_IMPL(FUNC)						\
@@ -626,8 +639,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, FUNC, dl_hwcap & HWCAP_S390_VX, \
 			      __##FUNC##_vx)				\
 	      IFUNC_IMPL_ADD (array, i, FUNC, 1, __##FUNC##_c))
-
-  IFUNC_VX_IMPL (wcscspn);
 
   IFUNC_VX_IMPL (wmemchr);
 

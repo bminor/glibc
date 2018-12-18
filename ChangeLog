@@ -1,6 +1,21 @@
 2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
 
 	* sysdeps/s390/multiarch/Makefile
+	(sysdep_routines): Remove wcscspn variants.
+	* sysdeps/s390/Makefile (sysdep_routines): Add wcscspn variants.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Refactor ifunc handling for wcscspn.
+	* sysdeps/s390/multiarch/wcscspn-c.c: Move to ...
+	* sysdeps/s390/wcscspn-c.c: ... here and adjust ifunc handling.
+	* sysdeps/s390/multiarch/wcscspn-vx.S: Move to ...
+	* sysdeps/s390/wcscspn-vx.S: ... here and adjust ifunc handling.
+	* sysdeps/s390/multiarch/wcscspn.c: Move to ...
+	* sysdeps/s390/wcscspn.c: ... here and adjust ifunc handling.
+	* sysdeps/s390/ifunc-wcscspn.h: New file.
+
+2018-12-18  Stefan Liebler  <stli@linux.ibm.com>
+
+	* sysdeps/s390/multiarch/Makefile
 	(sysdep_routines): Remove wcspbrk variants.
 	* sysdeps/s390/Makefile (sysdep_routines): Add wcspbrk variants.
 	* sysdeps/s390/multiarch/ifunc-impl-list.c

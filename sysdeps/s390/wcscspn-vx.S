@@ -16,7 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-wcscspn.h>
+#if HAVE_WCSCSPN_Z13
 
 # include "sysdep.h"
 # include "asm-syntax.h"
@@ -57,7 +58,7 @@
 			otherwise =0;
    r9:  loaded byte count of vlbb reject-string
 */
-ENTRY(__wcscspn_vx)
+ENTRY(WCSCSPN_Z13)
 	.machine "z13"
 	.machinemode "zarch_nohighgprs"
 
@@ -288,6 +289,10 @@ ENTRY(__wcscspn_vx)
 	vlgvg	%r9,%v31,1
 	br	%r14
 .Lfallback:
-	jg	__wcscspn_c
-END(__wcscspn_vx)
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+	jg	WCSCSPN_C
+END(WCSCSPN_Z13)
+
+# if ! HAVE_WCSCSPN_IFUNC
+strong_alias (WCSCSPN_Z13, wcscspn)
+# endif
+#endif
