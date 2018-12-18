@@ -1,4 +1,4 @@
-/* Default wcspbrk implementation for S/390.
+/* Multiple versions of wcspbrk.
    Copyright (C) 2015-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,16 +16,24 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
-# define WCSPBRK  __wcspbrk_c
+#include <ifunc-wcspbrk.h>
 
+#if HAVE_WCSPBRK_IFUNC
+# define wcspbrk __redirect_wcspbrk
 # include <wchar.h>
-extern __typeof (wcspbrk) __wcspbrk_c;
-# ifdef SHARED
-#  undef libc_hidden_def
-#  define libc_hidden_def(name)				\
-  __hidden_ver1 (__wcspbrk_c, __GI_wcspbrk, __wcspbrk_c);
-# endif /* SHARED */
+# undef wcspbrk
+# include <ifunc-resolve.h>
+# if HAVE_WCSPBRK_C
+extern __typeof (__redirect_wcspbrk) WCSPBRK_C attribute_hidden;
+# endif
 
-# include <wcsmbs/wcspbrk.c>
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+# if HAVE_WCSPBRK_Z13
+extern __typeof (__redirect_wcspbrk) WCSPBRK_Z13 attribute_hidden;
+# endif
+
+s390_libc_ifunc_expr (__redirect_wcspbrk, wcspbrk,
+		      (HAVE_WCSPBRK_Z13 && (hwcap & HWCAP_S390_VX))
+		      ? WCSPBRK_Z13
+		      : WCSPBRK_DEFAULT
+		      )
+#endif

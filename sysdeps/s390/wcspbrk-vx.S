@@ -16,7 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-wcspbrk.h>
+#if HAVE_WCSPBRK_Z13
 
 # include "sysdep.h"
 # include "asm-syntax.h"
@@ -59,7 +60,7 @@
 	otherwise =0;
    r9:  loaded byte count of vlbb accept-string
 */
-ENTRY(__wcspbrk_vx)
+ENTRY(WCSPBRK_Z13)
 	.machine "z13"
 	.machinemode "zarch_nohighgprs"
 
@@ -310,6 +311,15 @@ ENTRY(__wcspbrk_vx)
 	lgr	%r2,%r1
 	br	%r14
 .Lfallback:
-	jg	__wcspbrk_c
-END(__wcspbrk_vx)
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+	jg	WCSPBRK_C
+END(WCSPBRK_Z13)
+
+# if ! HAVE_WCSPBRK_IFUNC
+strong_alias (WCSPBRK_Z13, wcspbrk)
+# endif
+
+# if defined HAVE_S390_MIN_Z13_ZARCH_ASM_SUPPORT \
+	&& defined SHARED && IS_IN (libc)
+strong_alias (WCSPBRK_Z13, __GI_wcspbrk)
+# endif
+#endif
