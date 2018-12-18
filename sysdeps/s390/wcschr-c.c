@@ -16,22 +16,29 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
-# define WCSCHR  __wcschr_c
+#include <ifunc-wcschr.h>
 
-# include <wchar.h>
-extern __typeof (__wcschr) __wcschr_c;
-# undef weak_alias
-# define weak_alias(name, alias)
-# ifdef SHARED
-#  undef libc_hidden_def
-#  define libc_hidden_def(name)					\
-  __hidden_ver1 (__wcschr_c, __GI_wcschr, __wcschr_c);		\
-  strong_alias (__wcschr_c, __wcschr_c_1);			\
+#if HAVE_WCSCHR_C
+# if HAVE_WCSCHR_IFUNC || HAVE_WCSCHR_Z13
+#  define WCSCHR WCSCHR_C
+
+#  undef weak_alias
+#  define weak_alias(name, alias)
+
+#  if defined SHARED && IS_IN (libc)
+#   undef libc_hidden_weak
+#   define libc_hidden_weak(name)
+#   undef libc_hidden_def
+#   if ! defined HAVE_S390_MIN_Z13_ZARCH_ASM_SUPPORT
+#    define libc_hidden_def(name)					\
+  __hidden_ver1 (__wcschr_c, __GI_wcschr, __wcschr_c)  __attribute__((weak)); \
+  strong_alias (__wcschr_c, __wcschr_c_1);				\
   __hidden_ver1 (__wcschr_c_1, __GI___wcschr, __wcschr_c_1);
-#  undef libc_hidden_weak
-#  define libc_hidden_weak(name)
-# endif /* SHARED */
+#   else
+#    define libc_hidden_def(name)
+#   endif
+#  endif
+# endif
 
 # include <wcsmbs/wcschr.c>
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+#endif

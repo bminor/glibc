@@ -16,7 +16,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-wcschr.h>
+
+#if HAVE_WCSCHR_IFUNC
 # define wcschr __redirect_wcschr
 # define __wcschr __redirect___wcschr
 # include <wchar.h>
@@ -24,9 +26,18 @@
 # undef __wcschr
 # include <ifunc-resolve.h>
 
-s390_vx_libc_ifunc_redirected (__redirect___wcschr, __wcschr)
-weak_alias (__wcschr, wcschr)
+# if HAVE_WCSCHR_C
+extern __typeof (__redirect___wcschr) WCSCHR_C attribute_hidden;
+# endif
 
-#else
-# include <wcsmbs/wcschr.c>
-#endif /* !(defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)) */
+# if HAVE_WCSCHR_Z13
+extern __typeof (__redirect___wcschr) WCSCHR_Z13 attribute_hidden;
+# endif
+
+s390_libc_ifunc_expr (__redirect___wcschr, __wcschr,
+		      (HAVE_WCSCHR_Z13 && (hwcap & HWCAP_S390_VX))
+		      ? WCSCHR_Z13
+		      : WCSCHR_DEFAULT
+		      )
+weak_alias (__wcschr, wcschr)
+#endif

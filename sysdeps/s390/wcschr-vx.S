@@ -16,7 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if defined HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc)
+#include <ifunc-wcschr.h>
+#if HAVE_WCSCHR_Z13
 
 # include "sysdep.h"
 # include "asm-syntax.h"
@@ -36,7 +37,7 @@
    -v17=index of unequal
    -v18=replicated c
 */
-ENTRY(__wcschr_vx)
+ENTRY(WCSCHR_Z13)
 	.machine "z13"
 	.machinemode "zarch_nohighgprs"
 
@@ -98,6 +99,17 @@ ENTRY(__wcschr_vx)
 	lghi	%r2,0		/* Return null if character not found.  */
 	br	%r14
 .Lfallback:
-	jg	__wcschr_c
-END(__wcschr_vx)
-#endif /* HAVE_S390_VX_ASM_SUPPORT && IS_IN (libc) */
+	jg	WCSCHR_C
+END(WCSCHR_Z13)
+
+# if ! HAVE_WCSCHR_IFUNC
+strong_alias (WCSCHR_Z13, __wcschr)
+weak_alias (__wcschr, wcschr)
+# endif
+
+# if defined HAVE_S390_MIN_Z13_ZARCH_ASM_SUPPORT \
+	&& defined SHARED && IS_IN (libc)
+strong_alias (WCSCHR_Z13, __GI___wcschr)
+weak_alias (WCSCHR_Z13, __GI_wcschr)
+# endif
+#endif
