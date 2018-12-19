@@ -158,13 +158,13 @@ __libc_fcntl (int fd, int cmd, ...)
 	va_end (ap);
 	switch (cmd)
 	  {
-	  case F_GETLK:
+	  case F_GETLK64:
 	    errno = ENOSYS;
 	    return -1;
-	  case F_SETLKW:
+	  case F_SETLKW64:
 	    wait = 1;
 	    /* FALLTHROUGH */
-	  case F_SETLK:
+	  case F_SETLK64:
 	    return __f_setlk (fd, fl->l_type, fl->l_whence,
 			      fl->l_start, fl->l_len, wait);
 	  default:

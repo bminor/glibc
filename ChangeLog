@@ -1,3 +1,8 @@
+2018-12-18  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/fcntl.c (__libc_fcntl): Test against 64bit `cmd'
+	values in the 64bit value cases.
+
 2018-12-18  Albert ARIBAUD <albert.aribaud@3adev.fr>
 
 	* include/time.h
