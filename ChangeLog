@@ -1,3 +1,13 @@
+2019-09-06  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* manual/tunables.texi (glibc.cpu.name): Add ares tunable.
+	* sysdeps/aarch64/multiarch/memcpy.c (__libc_memcpy): Use
+	__memcpy_falkor for ares.
+	* sysdeps/unix/sysv/linux/aarch64/cpu-features.h (IS_ARES):
+	Add new define.
+	* sysdeps/unix/sysv/linux/aarch64/cpu-features.c (cpu_list):
+	Add ares cpu.
+
 2019-07-12  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #24699]
