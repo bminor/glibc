@@ -263,22 +263,6 @@ __inline_mathcode_ (long double, __sgn1l, __x, \
   return __n.__xld)
 
 
-#  ifdef __FAST_MATH__
-/* The argument range of the inline version of sinhl is slightly reduced.  */
-__inline_mathcodeNP (sinh, __x, \
-  register long double __exm1 = __expm1l (__fabsl (__x));		      \
-  return 0.5 * (__exm1 / (__exm1 + 1.0) + __exm1) * __sgn1l (__x))
-
-__inline_mathcodeNP (cosh, __x, \
-  register long double __ex = __expl (__x);				      \
-  return 0.5 * (__ex + 1.0 / __ex))
-
-__inline_mathcodeNP (tanh, __x, \
-  register long double __exm1 = __expm1l (-__fabsl (__x + __x));	      \
-  return __exm1 / (__exm1 + 2.0) * __sgn1l (-__x))
-#  endif
-
-
 /* Optimized versions for some non-standardized functions.  */
 #  ifdef __USE_ISOC99
 
