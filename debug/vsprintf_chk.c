@@ -25,6 +25,10 @@ ___vsprintf_chk (char *s, int flag, size_t slen, const char *format,
      can only come from read-only format strings.  */
   unsigned int mode = (flag > 0) ? PRINTF_FORTIFY : 0;
 
+  /* Regardless of the value of flag, let __vsprintf_internal know that
+     this is a call from *printf_chk.  */
+  mode |= PRINTF_CHK;
+
   if (slen == 0)
     __chk_fail ();
 

@@ -77,8 +77,18 @@ __vsprintf_internal (char *string, size_t maxlen,
   sf._sbf._f._lock = NULL;
 #endif
   _IO_no_init (&sf._sbf._f, _IO_USER_LOCK, -1, NULL, NULL);
-  _IO_JUMPS (&sf._sbf) = &_IO_str_chk_jumps;
-  string[0] = '\0';
+  /* When called from fortified sprintf/vsprintf, erase the destination
+     buffer and try to detect overflows.  When called from regular
+     sprintf/vsprintf, do not erase the destination buffer, because
+     known user code relies on this behavior (even though its undefined
+     by ISO C), nor try to detect overflows.  */
+  if ((mode_flags & PRINTF_CHK) != 0)
+    {
+      _IO_JUMPS (&sf._sbf) = &_IO_str_chk_jumps;
+      string[0] = '\0';
+    }
+  else
+    _IO_JUMPS (&sf._sbf) = &_IO_str_jumps;
   _IO_str_init_static_internal (&sf, string,
 				(maxlen == -1) ? -1 : maxlen - 1,
 				string);

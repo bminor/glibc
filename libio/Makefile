@@ -64,7 +64,8 @@ tests = tst_swprintf tst_wprintf tst_swscanf tst_wscanf tst_getwc tst_putwc   \
 	bug-memstream1 bug-wmemstream1 \
 	tst-setvbuf1 tst-popen1 tst-fgetwc bug-wsetpos tst-fseek \
 	tst-fwrite-error tst-ftell-partial-wide tst-ftell-active-handler \
-	tst-ftell-append tst-fputws tst-bz22415 tst-fgetc-after-eof
+	tst-ftell-append tst-fputws tst-bz22415 tst-fgetc-after-eof \
+	tst-sprintf-ub tst-sprintf-chk-ub
 
 tests-internal = tst-vtables tst-vtables-interposed tst-readline
 
@@ -151,6 +152,10 @@ CFLAGS-oldtmpfile.c += -fexceptions
 # XXX Do we need filedoalloc and wfiledoalloc?  Others?
 
 CFLAGS-tst_putwc.c += -DOBJPFX=\"$(objpfx)\"
+
+# These test cases intentionally use overlapping arguments
+CFLAGS-tst-sprintf-ub.c += -Wno-restrict
+CFLAGS-tst-sprintf-chk-ub.c += -Wno-restrict
 
 tst_wprintf2-ARGS = "Some Text"
 

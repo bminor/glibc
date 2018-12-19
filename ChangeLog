@@ -1,3 +1,17 @@
+2019-01-02  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
+	* debug/sprintf_chk.c (___sprintf_chk): Use PRINTF_CHK.
+	* debug/vsprintf_chk.c (___vsprintf_chk): Likewise.
+	* libio/Makefile (tests): Add tst-sprintf-ub and
+	tst-sprintf-chk-ub.
+	(CFLAGS-tst-sprintf-ub.c): New variable.
+	(CFLAGS-tst-sprintf-chk-ub.c): Likewise.
+	* libio/iovsprintf.c (__vsprintf_internal): Only erase the
+	destination buffer and check for overflows in fortified mode.
+	* libio/libioP.h (PRINTF_CHK): New macro.
+	* libio/tst-sprintf-chk-ub.c: New file.
+	* libio/tst-sprintf-ub.c: Likewise.
+
 2019-01-02  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #24018]

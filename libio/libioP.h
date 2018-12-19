@@ -705,9 +705,13 @@ extern int __vswprintf_internal (wchar_t *string, size_t maxlen,
    PRINTF_FORTIFY, when set to one, indicates that fortification checks
    are to be performed in input parameters.  This is used by the
    __*printf_chk functions, which are used when _FORTIFY_SOURCE is
-   defined to 1 or 2.  Otherwise, such checks are ignored.  */
+   defined to 1 or 2.  Otherwise, such checks are ignored.
+
+   PRINTF_CHK indicates, to the internal function being called, that the
+   call is originated from one of the __*printf_chk functions.  */
 #define PRINTF_LDBL_IS_DBL 0x0001
 #define PRINTF_FORTIFY     0x0002
+#define PRINTF_CHK	   0x0004
 
 extern size_t _IO_getline (FILE *,char *, size_t, int, int);
 libc_hidden_proto (_IO_getline)

@@ -29,6 +29,10 @@ ___sprintf_chk (char *s, int flag, size_t slen, const char *format, ...)
   va_list ap;
   int ret;
 
+  /* Regardless of the value of flag, let __vsprintf_internal know that
+     this is a call from *printf_chk.  */
+  mode |= PRINTF_CHK;
+
   if (slen == 0)
     __chk_fail ();
 
