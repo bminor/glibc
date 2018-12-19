@@ -44,6 +44,9 @@
 #define IS_FALKOR(midr) (MIDR_IMPLEMENTOR(midr) == 'Q'			      \
                         && MIDR_PARTNUM(midr) == 0xc00)
 
+#define IS_ARES(midr) (MIDR_IMPLEMENTOR(midr) == 'A'			      \
+			&& MIDR_PARTNUM(midr) == 0xd0c)
+
 struct cpu_features
 {
   uint64_t midr_el1;
