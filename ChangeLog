@@ -1,3 +1,18 @@
+2018-12-19  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
+
+	* elf/dl-sysdep.c (auxvars): Add AT_L1I_CACHESIZE,
+	AT_L1I_CACHEGEOMETRY, AT_L1D_CACHESIZE, AT_L1D_CACHEGEOMETRY,
+	AT_L2_CACHESIZE, AT_L2_CACHEGEOMETRY, AT_L3_CACHESIZE and
+	AT_L3_CACHEGEOMETRY.  Fix indentation when printing the other
+	fields.
+	(_dl_show_auxv): Give a special treatment to
+	AT_L1I_CACHEGEOMETRY, AT_L1D_CACHEGEOMETRY, AT_L2_CACHEGEOMETRY
+	and AT_L3_CACHEGEOMETRY.
+	* sysdeps/powerpc/dl-procinfo.h (cache_geometry): New function.
+	(_dl_procinfo): Fix indentation when printing AT_HWCAP and
+	AT_HWCAP2.  Add support for AT_L1I_CACHEGEOMETRY,
+	AT_L1D_CACHEGEOMETRY, AT_L2_CACHEGEOMETRY and AT_L3_CACHEGEOMETRY.
+
 2018-12-19  Andreas Schwab  <schwab@suse.de>
 
 	* nscd/connections.c (check_use): Don't abort on invalid len.
