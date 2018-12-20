@@ -1,3 +1,10 @@
+2018-12-18  Albert ARIBAUD <albert.aribaud@3adev.fr>
+
+	* include/time.h (__difftime64): Add.
+	* time/difftime.c (subtract): convert to 64-bit time.
+	* time/difftime.c (__difftime64): Add.
+	* time/difftime.c (__difftime): Wrap around __difftime64.
+
 2018-12-20  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* manual/examples/add.c: Remove redundant "if not".
