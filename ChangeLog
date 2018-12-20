@@ -1,3 +1,47 @@
+2018-12-20  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* manual/examples/add.c: Remove redundant "if not".
+	* manual/examples/argp-ex1.c: Likewise.
+	* manual/examples/argp-ex2.c: Likewise.
+	* manual/examples/argp-ex3.c: Likewise.
+	* manual/examples/argp-ex4.c: Likewise.
+	* manual/examples/atexit.c: Likewise.
+	* manual/examples/db.c: Likewise.
+	* manual/examples/dir.c: Likewise.
+	* manual/examples/dir2.c: Likewise.
+	* manual/examples/execinfo.c: Likewise.
+	* manual/examples/filecli.c: Likewise.
+	* manual/examples/filesrv.c: Likewise.
+	* manual/examples/fmtmsgexpl.c: Likewise.
+	* manual/examples/genpass.c: Likewise.
+	* manual/examples/inetcli.c: Likewise.
+	* manual/examples/inetsrv.c: Likewise.
+	* manual/examples/isockad.c: Likewise.
+	* manual/examples/longopt.c: Likewise.
+	* manual/examples/memopen.c: Likewise.
+	* manual/examples/memstrm.c: Likewise.
+	* manual/examples/mkdirent.c: Likewise.
+	* manual/examples/mkfsock.c: Likewise.
+	* manual/examples/mkisock.c: Likewise.
+	* manual/examples/mygetpass.c: Likewise.
+	* manual/examples/pipe.c: Likewise.
+	* manual/examples/popen.c: Likewise.
+	* manual/examples/rprintf.c: Likewise.
+	* manual/examples/search.c: Likewise.
+	* manual/examples/select.c: Likewise.
+	* manual/examples/setjmp.c: Likewise.
+	* manual/examples/sigh1.c: Likewise.
+	* manual/examples/sigusr.c: Likewise.
+	* manual/examples/stpcpy.c: Likewise.
+	* manual/examples/strdupa.c: Likewise.
+	* manual/examples/strftim.c: Likewise.
+	* manual/examples/subopt.c: Likewise.
+	* manual/examples/swapcontext.c: Likewise.
+	* manual/examples/termios.c: Likewise.
+	* manual/examples/testopt.c: Likewise.
+	* manual/examples/testpass.c: Likewise.
+	* manual/examples/timeval_subtract.c: Likewise.
+
 2018-12-19  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/x86/fpu/math_private.h: New file.
