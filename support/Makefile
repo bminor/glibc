@@ -184,12 +184,7 @@ CFLAGS-support_paths.c = \
 		-DSBINDIR_PATH=\"$(sbindir)\" \
 		-DROOTSBINDIR_PATH=\"$(rootsbindir)\"
 
-ifeq (,$(CXX))
 LINKS_DSO_PROGRAM = links-dso-program-c
-else
-LINKS_DSO_PROGRAM = links-dso-program
-LDLIBS-links-dso-program = -lstdc++ -lgcc -lgcc_s $(libunwind)
-endif
 
 ifeq (yes,$(have-selinux))
 LDLIBS-$(LINKS_DSO_PROGRAM) += -lselinux
