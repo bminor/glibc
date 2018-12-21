@@ -26,6 +26,7 @@ libc.so: __divsf3
 libc.so: __nedf2
 libc.so: __eqdf2
 libc.so: __extendsfdf2
+libc.so: __floatundidf ?
 libm.so: matherr
 # The main malloc is interposed into the dynamic linker, for
 # allocations after the initial link (when dlopen is used).

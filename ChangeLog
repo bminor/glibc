@@ -1,3 +1,11 @@
+2018-12-21  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #24023]
+	* sysdeps/unix/sysv/linux/nios2/localplt.data: Allow __floatundidf
+	PLT reference in libc.so.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/localplt.data: Allow
+	_Q_lltoq and _Q_qtod PLT references in libc.so.
+
 2018-12-21  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* benchtests/bench-memchr.c: Cleanup defines.
