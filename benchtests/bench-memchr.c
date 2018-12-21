@@ -17,11 +17,8 @@
    <http://www.gnu.org/licenses/>.  */
 
 #ifndef WIDE
-# define CHAR char
 # define SMALL_CHAR 127
 #else
-# include <wchar.h>
-# define CHAR wchar_t
 # define SMALL_CHAR 1273
 #endif /* WIDE */
 
@@ -35,10 +32,8 @@
 # include "bench-string.h"
 
 # ifndef WIDE
-#  define MEMCHR memchr
 #  define SIMPLE_MEMCHR simple_memchr
 # else
-#  define MEMCHR wmemchr
 #  define SIMPLE_MEMCHR simple_wmemchr
 # endif /* WIDE */
 

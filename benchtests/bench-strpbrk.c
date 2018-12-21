@@ -16,18 +16,11 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#define BIG_CHAR MAX_CHAR
+
 #ifndef WIDE
-# define CHAR char
-# define STRLEN strlen
-# define STRCHR strchr
-# define BIG_CHAR CHAR_MAX
 # define SMALL_CHAR 127
 #else
-# include <wchar.h>
-# define CHAR wchar_t
-# define STRLEN wcslen
-# define STRCHR wcschr
-# define BIG_CHAR WCHAR_MAX
 # define SMALL_CHAR 1273
 #endif /* WIDE */
 
@@ -43,12 +36,9 @@
 # include "bench-string.h"
 
 # ifndef WIDE
-#  define STRPBRK strpbrk
 #  define SIMPLE_STRPBRK simple_strpbrk
 #  define STUPID_STRPBRK stupid_strpbrk
 # else
-#  include <wchar.h>
-#  define STRPBRK wcspbrk
 #  define SIMPLE_STRPBRK simple_wcspbrk
 #  define STUPID_STRPBRK stupid_wcspbrk
 # endif /* WIDE */

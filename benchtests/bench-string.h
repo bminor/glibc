@@ -65,6 +65,56 @@ extern impl_t __start_impls[], __stop_impls[];
 # define GLRO(x) _##x
 # include "bench-timing.h"
 
+# ifndef WIDE
+#  define CHAR char
+#  define UCHAR unsigned char
+#  define CHARBYTES 1
+#  define MAX_CHAR CHAR_MAX
+#  define MEMCHR memchr
+#  define MEMCMP memcmp
+#  define MEMCPY memcpy
+#  define MEMSET memset
+#  define STRCAT strcat
+#  define STRLEN strlen
+#  define STRCMP strcmp
+#  define STRCHR strchr
+#  define STRCPY strcpy
+#  define STRNLEN strnlen
+#  define STRCSPN strcspn
+#  define STRNCAT strncat
+#  define STRNCMP strncmp
+#  define STRNCPY strncpy
+#  define STRPBRK strpbrk
+#  define STRRCHR strrchr
+#  define STRSPN strspn
+#  define STPCPY stpcpy
+#  define STPNCPY stpncpy
+# else
+#  include <wchar.h>
+#  define CHAR wchar_t
+#  define UCHAR wchar_t
+#  define CHARBYTES 4
+#  define MAX_CHAR WCHAR_MAX
+#  define MEMCHR wmemchr
+#  define MEMCMP wmemcmp
+#  define MEMCPY wmemcpy
+#  define MEMSET wmemset
+#  define STRCAT wcscat
+#  define STRLEN wcslen
+#  define STRCMP wcscmp
+#  define STRCHR wcschr
+#  define STRCPY wcscpy
+#  define STRNLEN wcsnlen
+#  define STRCSPN wcscspn
+#  define STRNCAT wcsncat
+#  define STRNCMP wcsncmp
+#  define STRNCPY wcsncpy
+#  define STRPBRK wcspbrk
+#  define STRRCHR wcsrchr
+#  define STRSPN wcsspn
+#  define STPCPY wcpcpy
+#  define STPNCPY wcpncpy
+# endif /* WIDE */
 
 # define TEST_FUNCTION test_main
 # ifndef TIMEOUT

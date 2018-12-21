@@ -24,24 +24,15 @@
 #endif /* WIDE */
 #include "bench-string.h"
 
+#define BIG_CHAR MAX_CHAR
+
 #ifndef WIDE
-# define STRNCAT strncat
-# define CHAR char
 # define SIMPLE_STRNCAT simple_strncat
 # define STUPID_STRNCAT stupid_strncat
-# define STRLEN strlen
-# define MEMCMP memcmp
-# define BIG_CHAR CHAR_MAX
 # define SMALL_CHAR 127
 #else
-# include <wchar.h>
-# define STRNCAT wcsncat
-# define CHAR wchar_t
 # define SIMPLE_STRNCAT simple_wcsncat
 # define STUPID_STRNCAT stupid_wcsncat
-# define STRLEN wcslen
-# define MEMCMP wmemcmp
-# define BIG_CHAR WCHAR_MAX
 # define SMALL_CHAR 1273
 #endif /* WIDE */
 

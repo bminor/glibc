@@ -16,25 +16,13 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifdef WIDE
-# include <wchar.h>
-# define CHAR wchar_t
-# define UCHAR wchar_t
-# define BIG_CHAR WCHAR_MAX
-# define SMALL_CHAR 1273
-# define MEMCMP wmemcmp
-# define MEMSET wmemset
-# define STRNLEN wcsnlen
-#else
-# define CHAR char
-# define UCHAR unsigned char
-# define BIG_CHAR CHAR_MAX
-# define SMALL_CHAR 127
-# define MEMCMP memcmp
-# define MEMSET memset
-# define STRNLEN strnlen
-#endif /* !WIDE */
+#define BIG_CHAR MAX_CHAR
 
+#ifdef WIDE
+# define SMALL_CHAR 1273
+#else
+# define SMALL_CHAR 127
+#endif /* !WIDE */
 
 #ifndef STRNCPY_RESULT
 # define STRNCPY_RESULT(dst, len, n) dst
@@ -48,11 +36,9 @@
 # ifndef WIDE
 #  define SIMPLE_STRNCPY simple_strncpy
 #  define STUPID_STRNCPY stupid_strncpy
-#  define STRNCPY strncpy
 # else
 #  define SIMPLE_STRNCPY simple_wcsncpy
 #  define STUPID_STRNCPY stupid_wcsncpy
-#  define STRNCPY wcsncpy
 # endif /* WIDE */
 
 CHAR *SIMPLE_STRNCPY (CHAR *, const CHAR *, size_t);

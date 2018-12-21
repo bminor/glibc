@@ -25,14 +25,9 @@
 #endif /* WIDE */
 #include "bench-string.h"
 #ifndef WIDE
-# define CHAR char
 # define SIMPLE_STPCPY simple_stpcpy
-# define STPCPY stpcpy
 #else
-# include <wchar.h>
-# define CHAR wchar_t
 # define SIMPLE_STPCPY simple_wcpcpy
-# define STPCPY wcpcpy
 #endif /* WIDE */
 
 CHAR *SIMPLE_STPCPY (CHAR *, const CHAR *);
@@ -47,5 +42,4 @@ SIMPLE_STPCPY (CHAR *dst, const CHAR *src)
   return dst - 1;
 }
 
-#undef CHAR
 #include "bench-strcpy.c"

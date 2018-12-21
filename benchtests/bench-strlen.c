@@ -25,13 +25,8 @@
 #include "bench-string.h"
 
 #ifndef WIDE
-# define STRLEN strlen
-# define CHAR char
 # define MAX_CHAR CHAR_MAX
 #else
-# include <wchar.h>
-# define STRLEN wcslen
-# define CHAR wchar_t
 # define MAX_CHAR WCHAR_MAX
 #endif
 

@@ -24,17 +24,8 @@
 #endif
 #include "bench-string.h"
 #ifdef WIDE
-# include <inttypes.h>
-# include <wchar.h>
 
-# define MEMCMP wmemcmp
-# define MEMCPY wmemcpy
 # define SIMPLE_MEMCMP simple_wmemcmp
-# define CHAR wchar_t
-# define UCHAR wchar_t
-# define CHARBYTES 4
-# define CHAR__MIN WCHAR_MIN
-# define CHAR__MAX WCHAR_MAX
 int
 simple_wmemcmp (const wchar_t *s1, const wchar_t *s2, size_t n)
 {
@@ -49,15 +40,7 @@ simple_wmemcmp (const wchar_t *s1, const wchar_t *s2, size_t n)
 #else
 # include <limits.h>
 
-# define MEMCMP memcmp
-# define MEMCPY memcpy
 # define SIMPLE_MEMCMP simple_memcmp
-# define CHAR char
-# define MAX_CHAR 255
-# define UCHAR unsigned char
-# define CHARBYTES 1
-# define CHAR__MIN CHAR_MIN
-# define CHAR__MAX CHAR_MAX
 
 int
 simple_memcmp (const char *s1, const char *s2, size_t n)
@@ -125,7 +108,7 @@ do_test (json_ctx_t *json_ctx, size_t align1, size_t align2, size_t len,
       s2 = (CHAR *) (buf2 + align2);
 
       for (i = 0; i < len; i++)
-	s1[i] = s2[i] = 1 + (23 << ((CHARBYTES - 1) * 8)) * i % CHAR__MAX;
+	s1[i] = s2[i] = 1 + (23 << ((CHARBYTES - 1) * 8)) * i % MAX_CHAR;
 
       s1[len] = align1;
       s2[len] = align2;

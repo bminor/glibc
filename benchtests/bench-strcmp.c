@@ -25,24 +25,12 @@
 #include "bench-string.h"
 
 #ifdef WIDE
-# include <wchar.h>
-
 # define L(str) L##str
-# define STRCMP wcscmp
-# define STRCPY wcscpy
-# define STRLEN wcslen
-# define MEMCPY wmemcpy
 # define SIMPLE_STRCMP simple_wcscmp
 # define STUPID_STRCMP stupid_wcscmp
-# define CHAR wchar_t
-# define UCHAR wchar_t
-# define CHARBYTES 4
 # define CHARBYTESLOG 2
-# define CHARALIGN __alignof__ (CHAR)
 # define MIDCHAR 0x7fffffff
 # define LARGECHAR 0xfffffffe
-# define CHAR__MAX WCHAR_MAX
-# define CHAR__MIN WCHAR_MIN
 
 /* Wcscmp uses signed semantics for comparison, not unsigned */
 /* Avoid using substraction since possible overflow */
@@ -86,21 +74,11 @@ stupid_wcscmp (const wchar_t *s1, const wchar_t *s2)
 # include <limits.h>
 
 # define L(str) str
-# define STRCMP strcmp
-# define STRCPY strcpy
-# define STRLEN strlen
-# define MEMCPY memcpy
 # define SIMPLE_STRCMP simple_strcmp
 # define STUPID_STRCMP stupid_strcmp
-# define CHAR char
-# define UCHAR unsigned char
-# define CHARBYTES 1
 # define CHARBYTESLOG 0
-# define CHARALIGN 1
 # define MIDCHAR 0x7f
 # define LARGECHAR 0xfe
-# define CHAR__MAX CHAR_MAX
-# define CHAR__MIN CHAR_MIN
 
 /* Strcmp uses unsigned semantics for comparison. */
 int

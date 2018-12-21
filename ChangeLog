@@ -1,3 +1,27 @@
+2018-12-21  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* benchtests/bench-memchr.c: Cleanup defines.
+	* benchtests/bench-memcmp.c: Likewise.
+	* benchtests/bench-memset.c: Likewise.
+	* benchtests/bench-memset-large.c: Likewise.
+	* benchtests/bench-memset-walk.c: Likewise.
+	* benchtests/bench-stpcpy.c: Likewise.
+	* benchtests/bench-stpncpy.c: Likewise.
+	* benchtests/bench-strcat.c: Likewise.
+	* benchtests/bench-strchr.c: Likewise.
+	* benchtests/bench-strcmp.c: Likewise.
+	* benchtests/bench-strcpy.c: Likewise.
+	* benchtests/bench-strcspn.c: Likewise.
+	* benchtests/bench-string.h: Likewise.
+	* benchtests/bench-strlen.c: Likewise.
+	* benchtests/bench-strncat.c: Likewise.
+	* benchtests/bench-strncmp.c: Likewise.
+	* benchtests/bench-strncpy.c: Likewise.
+	* benchtests/bench-strnlen.c: Likewise.
+	* benchtests/bench-strpbrk.c: Likewise.
+	* benchtests/bench-strrchr.c: Likewise.
+	* benchtests/bench-strspn.c: Likewise.
+
 2018-12-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* stdlib/longlong.h: Update from GCC.

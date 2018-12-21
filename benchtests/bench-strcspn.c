@@ -27,18 +27,11 @@
 #include "bench-string.h"
 
 #ifndef WIDE
-# define STRCSPN strcspn
-# define CHAR char
 # define SIMPLE_STRCSPN simple_strcspn
 # define STUPID_STRCSPN stupid_strcspn
-# define STRLEN strlen
 #else
-# include <wchar.h>
-# define STRCSPN wcscspn
-# define CHAR wchar_t
 # define SIMPLE_STRCSPN simple_wcscspn
 # define STUPID_STRCSPN stupid_wcscspn
-# define STRLEN wcslen
 #endif /* WIDE */
 
 typedef size_t (*proto_t) (const CHAR *, const CHAR *);
@@ -75,6 +68,4 @@ STUPID_STRCSPN (const CHAR *s, const CHAR *rej)
   return i;
 }
 
-#undef CHAR
-#undef STRLEN
 #include "bench-strpbrk.c"

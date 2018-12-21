@@ -26,14 +26,9 @@
 #include "json-lib.h"
 
 #ifdef WIDE
-# include <wchar.h>
-
 # define L(str) L##str
-# define STRNCMP wcsncmp
 # define SIMPLE_STRNCMP simple_wcsncmp
 # define STUPID_STRNCMP stupid_wcsncmp
-# define CHAR wchar_t
-# define CHARBYTES 4
 
 /* Wcsncmp uses signed semantics for comparison, not unsigned.
    Avoid using substraction since possible overflow.  */
@@ -73,11 +68,8 @@ stupid_wcsncmp (const CHAR *s1, const CHAR *s2, size_t n)
 
 #else
 # define L(str) str
-# define STRNCMP strncmp
 # define SIMPLE_STRNCMP simple_strncmp
 # define STUPID_STRNCMP stupid_strncmp
-# define CHAR char
-# define CHARBYTES 1
 
 /* Strncmp uses unsigned semantics for comparison.  */
 int

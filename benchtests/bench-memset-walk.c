@@ -28,16 +28,9 @@
 #include "bench-string.h"
 
 #ifndef WIDE
-# define MEMSET memset
-# define CHAR char
 # define SIMPLE_MEMSET simple_memset
-# define MEMCMP memcmp
 #else
-# include <wchar.h>
-# define MEMSET wmemset
-# define CHAR wchar_t
 # define SIMPLE_MEMSET simple_wmemset
-# define MEMCMP wmemcmp
 #endif /* WIDE */
 
 #include <assert.h>

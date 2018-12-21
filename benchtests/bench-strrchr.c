@@ -24,20 +24,13 @@
 #endif
 #include "bench-string.h"
 
+#define BIG_CHAR MAX_CHAR
+
 #ifdef WIDE
-# include <wchar.h>
 # define SIMPLE_STRRCHR simple_wcsrchr
-# define STRRCHR wcsrchr
-# define CHAR wchar_t
-# define UCHAR wchar_t
-# define BIG_CHAR WCHAR_MAX
 # define SMALL_CHAR 1273
 #else
 # define SIMPLE_STRRCHR simple_strrchr
-# define STRRCHR strrchr
-# define CHAR char
-# define UCHAR unsigned char
-# define BIG_CHAR CHAR_MAX
 # define SMALL_CHAR 127
 #endif
 
