@@ -1,0 +1,37 @@
+case "$machine" in
+csky*)
+    abi=`$CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null |
+      sed -n 's/^#define __CSKYABI__ \(.*\)/\1/p'`
+    float_abi=`$CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null |
+      sed -n 's/^#define __CSKY_HARD_FLOAT__ \(.*\)/\1/p'`
+
+    case "$abi" in
+    1)
+        echo "glibc does not support abiv1 yet" >&2
+        exit 1
+        ;;
+    2)
+        machine=abiv2
+        ;;
+    *)
+        echo "Unknown abi" >&2
+        exit 1
+        ;;
+    esac
+
+    case "$float_abi" in
+    1)
+        with_fp_cond=1
+        ;;
+    *)
+        with_fp_cond=0
+        ;;
+    esac
+
+    base_machine=csky
+    machine=csky/$machine
+
+    $as_echo "#define CSKYABI $abi" >>confdefs.h
+    $as_echo "#define CSKY_HARD_FLOAT $with_fp_cond" >>confdefs.h
+    ;;
+esac

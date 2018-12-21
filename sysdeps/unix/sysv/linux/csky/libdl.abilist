@@ -1,0 +1,9 @@
+GLIBC_2.29 dladdr F
+GLIBC_2.29 dladdr1 F
+GLIBC_2.29 dlclose F
+GLIBC_2.29 dlerror F
+GLIBC_2.29 dlinfo F
+GLIBC_2.29 dlmopen F
+GLIBC_2.29 dlopen F
+GLIBC_2.29 dlsym F
+GLIBC_2.29 dlvsym F

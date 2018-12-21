@@ -106,6 +106,12 @@
 /* AArch64 big endian ABI */
 #undef HAVE_AARCH64_BE
 
+/* C-SKY ABI version.  */
+#undef CSKYABI
+
+/* C-SKY floating-point ABI.  */
+#undef CSKY_HARD_FLOAT
+
 /* RISC-V integer ABI for ld.so.  */
 #undef RISCV_ABI_XLEN
 

@@ -46,6 +46,12 @@ Major new features:
   incosistent mutex state after fork call in multithread environment.
   In both popen and system there is no direct access to user-defined mutexes.
 
+* Support for the C-SKY ABIV2 running on Linux has been added.  This port
+  requires at least binutils-2.32, gcc-9.0, and linux-4.20.  Two ABIs are
+  supported:
+    - C-SKY ABIV2 soft-float little-endian
+    - C-SKY ABIV2 hard-float little-endian
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The glibc.tune tunable namespace has been renamed to glibc.cpu and the

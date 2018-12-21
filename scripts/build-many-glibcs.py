@@ -181,6 +181,13 @@ class Context(object):
                         variant='be8',
                         gcc_cfg=['--with-float=hard', '--with-arch=armv7-a',
                                  '--with-fpu=vfpv3'])
+        self.add_config(arch='csky',
+                        os_name='linux-gnuabiv2',
+                        variant='soft',
+                        gcc_cfg=['--disable-multilib'])
+        self.add_config(arch='csky',
+                        os_name='linux-gnuabiv2',
+                        gcc_cfg=['--with-float=hard', '--disable-multilib'])
         self.add_config(arch='hppa',
                         os_name='linux-gnu')
         self.add_config(arch='i686',
@@ -1260,6 +1267,7 @@ class Config(object):
         arch_map = {'aarch64': 'arm64',
                     'alpha': 'alpha',
                     'arm': 'arm',
+                    'csky': 'csky',
                     'hppa': 'parisc',
                     'i486': 'x86',
                     'i586': 'x86',
