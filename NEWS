@@ -72,6 +72,12 @@ Changes to build and runtime requirements:
 
 * Python 3.4 or later is required to build the GNU C Library.
 
+* On most architectures, GCC 5 or later is required to build the GNU C
+  Library.  (On powerpc64le, GCC 6.2 or later is still required, as before.)
+
+  Older GCC versions and non-GNU compilers are still supported when
+  compiling programs that use the GNU C Library.
+
 Security related changes:
 
   CVE-2018-19591: A file descriptor leak in if_nametoindex can lead to a

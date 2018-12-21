@@ -1,3 +1,12 @@
+2018-12-21  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #23993]
+	* configure.ac (libc_cv_compiler_ok): Require GCC 5 or later.
+	* configure: Regenerated.
+	* manual/install.texi (Tools for Compilation): Update minimum GCC
+	version.
+	* INSTALL: Regenerated.
+
 2018-12-21  Istvan Kurucsai <pistukem@gmail.com>
 
 	* malloc/malloc.c (munmap_chunk): Verify chunk alignment.
