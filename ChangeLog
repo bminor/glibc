@@ -1,3 +1,9 @@
+2018-12-21  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24018]
+	* intl/dcigettext.c (DCIGETTEXT): Do not return NULL on asprintf
+	failure.
+
 2019-01-02  Florian Weimer  <fweimer@redhat.com>
 
 	* nptl/tst-audit-threads.c: Switch to <support/test-driver.c>.

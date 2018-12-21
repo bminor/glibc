@@ -631,7 +631,7 @@ DCIGETTEXT (const char *domainname, const char *msgid1, const char *msgid2,
 	  int ret = __asprintf (&xdirname, "%s/%s", cwd, dirname);
 	  free (cwd);
 	  if (ret < 0)
-	      return NULL;
+	    goto return_untranslated;
 	  dirname = xdirname;
 	}
 #ifndef IN_LIBGLOCALE
