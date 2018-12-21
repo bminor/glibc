@@ -2810,6 +2810,7 @@ systrim (size_t pad, mstate av)
 static void
 munmap_chunk (mchunkptr p)
 {
+  size_t pagesize = GLRO (dl_pagesize);
   INTERNAL_SIZE_T size = chunksize (p);
 
   assert (chunk_is_mmapped (p));
@@ -2819,6 +2820,7 @@ munmap_chunk (mchunkptr p)
   if (DUMPED_MAIN_ARENA_CHUNK (p))
     return;
 
+  uintptr_t mem = (uintptr_t) chunk2mem (p);
   uintptr_t block = (uintptr_t) p - prev_size (p);
   size_t total_size = prev_size (p) + size;
   /* Unfortunately we have to do the compilers job by hand here.  Normally
@@ -2826,7 +2828,8 @@ munmap_chunk (mchunkptr p)
      page size.  But gcc does not recognize the optimization possibility
      (in the moment at least) so we combine the two values into one before
      the bit test.  */
-  if (__builtin_expect (((block | total_size) & (GLRO (dl_pagesize) - 1)) != 0, 0))
+  if (__glibc_unlikely ((block | total_size) & (pagesize - 1)) != 0
+      || __glibc_unlikely (!powerof2 (mem & (pagesize - 1))))
     malloc_printerr ("munmap_chunk(): invalid pointer");
 
   atomic_decrement (&mp_.n_mmaps);
