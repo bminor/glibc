@@ -18,7 +18,6 @@
 
 #include <dynarray.h>
 #include <errno.h>
-#include <malloc-internal.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -52,7 +51,7 @@ __libc_dynarray_emplace_enlarge (struct dynarray_header *list,
     }
 
   size_t new_size;
-  if (check_mul_overflow_size_t (new_allocated, element_size, &new_size))
+  if (__builtin_mul_overflow (new_allocated, element_size, &new_size))
     return false;
   void *new_array;
   if (list->array == scratch)

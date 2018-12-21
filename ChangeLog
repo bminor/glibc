@@ -1,3 +1,16 @@
+2018-12-28  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* malloc/alloc_buffer_alloc_array.c (__libc_alloc_buffer_alloc_array):
+	Use __builtin_mul_overflow in place of check_mul_overflow_size_t.
+	* malloc/dynarray_emplace_enlarge.c (__libc_dynarray_emplace_enlarge):
+	Likewise.
+	* malloc/dynarray_resize.c (__libc_dynarray_resize): Likewise.
+	* malloc/reallocarray.c (__libc_reallocarray): Likewise.
+	* malloc/malloc-internal.h (check_mul_overflow_size_t): Remove
+	function.
+	* support/blob_repeat.c (check_mul_overflow_size_t,
+	(minimum_stride_size, support_blob_repeat_allocate): Likewise.
+
 2018-12-28  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/alpha/fpu/libm-test-ulps: Regenerated.
