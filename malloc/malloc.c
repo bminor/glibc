@@ -2849,16 +2849,22 @@ mremap_chunk (mchunkptr p, size_t new_size)
   char *cp;
 
   assert (chunk_is_mmapped (p));
-  assert (((size + offset) & (GLRO (dl_pagesize) - 1)) == 0);
+
+  uintptr_t block = (uintptr_t) p - offset;
+  uintptr_t mem = (uintptr_t) chunk2mem(p);
+  size_t total_size = offset + size;
+  if (__glibc_unlikely ((block | total_size) & (pagesize - 1)) != 0
+      || __glibc_unlikely (!powerof2 (mem & (pagesize - 1))))
+    malloc_printerr("mremap_chunk(): invalid pointer");
 
   /* Note the extra SIZE_SZ overhead as in mmap_chunk(). */
   new_size = ALIGN_UP (new_size + offset + SIZE_SZ, pagesize);
 
   /* No need to remap if the number of pages does not change.  */
-  if (size + offset == new_size)
+  if (total_size == new_size)
     return p;
 
-  cp = (char *) __mremap ((char *) p - offset, size + offset, new_size,
+  cp = (char *) __mremap ((char *) block, total_size, new_size,
                           MREMAP_MAYMOVE);
 
   if (cp == MAP_FAILED)
