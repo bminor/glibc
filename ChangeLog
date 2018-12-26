@@ -1,3 +1,18 @@
+2018-12-27  Paul Eggert  <eggert@cs.ucla.edu>
+
+	regex: simplify Gnulib port
+	This simplifies the code, by removing stuff intended for porting
+	to Gnulib but no longer needed there.
+	* posix/regcomp.c [!_LIBC]: No need to put #ifdef _LIBC around
+	uses of libc_hidden_def, weak_alias.
+	* posix/regcomp.c, posix/regexec.c: Use __restrict rather than
+	_Restrict_ except for public-facing headers.
+	* posix/regex_internal.h (attribute_hidden) [!_LIBC]:
+	Remove; already defined elsewhere.
+	* posix/regex.c, posix/regex_internal.h:
+	Use __GNUC_PREREQ instead of rolling our own.
+	* posix/regex_internal.h (__GNUC_PREREQ): Remove duplicate defn.
+
 2018-12-27  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* benchtests/bench-strlen.c (generic_strlen): New function.
