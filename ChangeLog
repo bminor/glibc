@@ -1,5 +1,9 @@
 2018-12-26  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/fpu/libm-test-ulps: Regenerated.
+
+2018-12-26  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/ieee754/flt-32/s_sincosf.h: Include <sincosf_poly.h>.
 	(sincos_t, sincosf_poly, sinf_poly): Moved to ...
 	* sysdeps/ieee754/flt-32/sincosf_poly.h: Here.  New file.
