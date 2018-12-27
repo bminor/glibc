@@ -1,3 +1,8 @@
+2018-12-27  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* benchtests/bench-strlen.c (generic_strlen): New function.
+	 (memchr_strlen): New function.
+
 2018-12-26  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/fpu/s_sincosf.S: Removed.

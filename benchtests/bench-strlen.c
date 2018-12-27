@@ -24,24 +24,15 @@
 #endif
 #include "bench-string.h"
 
-#ifndef WIDE
-# define MAX_CHAR CHAR_MAX
-#else
-# define MAX_CHAR WCHAR_MAX
-#endif
-
 #include "json-lib.h"
 
 typedef size_t (*proto_t) (const CHAR *);
 
-size_t
-simple_STRLEN (const CHAR *s)
-{
-  const CHAR *p;
+size_t generic_strlen (const CHAR *);
+size_t memchr_strlen (const CHAR *);
 
-  for (p = s; *p; ++p);
-  return p - s;
-}
+IMPL (memchr_strlen, 0)
+IMPL (generic_strlen, 0)
 
 #ifndef WIDE
 size_t
@@ -52,7 +43,12 @@ builtin_strlen (const CHAR *p)
 IMPL (builtin_strlen, 0)
 #endif
 
-IMPL (simple_STRLEN, 0)
+size_t
+memchr_strlen (const CHAR *p)
+{
+  return (const CHAR *)MEMCHR (p, 0, PTRDIFF_MAX) - p;
+}
+
 IMPL (STRLEN, 1)
 
 
@@ -161,3 +157,13 @@ test_main (void)
 }
 
 #include <support/test-driver.c>
+
+#define libc_hidden_builtin_def(X)
+#ifndef WIDE
+# undef STRLEN
+# define STRLEN generic_strlen
+# include <string/strlen.c>
+#else
+# define WCSLEN generic_strlen
+# include <wcsmbs/wcslen.c>
+#endif
