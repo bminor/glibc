@@ -25,6 +25,7 @@
 #include <string.h>
 #include <_itoa.h>
 #include <eloop-threshold.h>
+#include <unistd.h>
 
 /* Translate the error from dir_lookup into the error the user sees.  */
 static inline error_t
@@ -59,6 +60,7 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
   error_t err;
   char *file_name;
   int nloops;
+  file_t lastdir = MACH_PORT_NULL;
 
   error_t lookup_op (file_t startdir)
     {
@@ -107,14 +109,15 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 	{
 	case FS_RETRY_REAUTH:
 	  if (err = reauthenticate (*result))
-	    return err;
+	    goto out;
 	  /* Fall through.  */
 
 	case FS_RETRY_NORMAL:
 	  if (nloops++ >= __eloop_threshold ())
 	    {
 	      __mach_port_deallocate (__mach_task_self (), *result);
-	      return ELOOP;
+	      err = ELOOP;
+	      goto out;
 	    }
 
 	  /* An empty RETRYNAME indicates we have the final port.  */
@@ -180,7 +183,7 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 
 	      if (err)
 		__mach_port_deallocate (__mach_task_self (), *result);
-	      return err;
+	      goto out;
 	    }
 
 	  startdir = *result;
@@ -195,7 +198,10 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 	      if (*result != MACH_PORT_NULL)
 		__mach_port_deallocate (__mach_task_self (), *result);
 	      if (nloops++ >= __eloop_threshold ())
-		return ELOOP;
+		{
+		  err = ELOOP;
+		  goto out;
+		}
 	      file_name = &retryname[1];
 	      break;
 
@@ -214,7 +220,8 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 		      (*end != '/' && *end != '\0'))
 		    {
 		      errno = save;
-		      return ENOENT;
+		      err = ENOENT;
+		      goto out;
 		    }
 		  if (! get_dtable_port)
 		    err = EGRATUITOUS;
@@ -232,9 +239,12 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 		    }
 		  errno = save;
 		  if (err)
-		    return err;
+		    goto out;
 		  if (*end == '\0')
-		    return 0;
+		    {
+		      err = 0;
+		      goto out;
+		    }
 		  else
 		    {
 		      /* Do a normal retry on the remaining components.  */
@@ -261,9 +271,12 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 		  if (err = __host_info (__mach_host_self (), HOST_BASIC_INFO,
 					 (integer_t *) &hostinfo,
 					 &hostinfocnt))
-		    return err;
+		    goto out;
 		  if (hostinfocnt != HOST_BASIC_INFO_COUNT)
-		    return EGRATUITOUS;
+		    {
+		      err = EGRATUITOUS;
+		      goto out;
+		    }
 		  p = _itoa (hostinfo.cpu_subtype, &retryname[8], 10, 0);
 		  *--p = '/';
 		  p = _itoa (hostinfo.cpu_type, &retryname[8], 10, 0);
@@ -299,10 +312,11 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 		      }
 
 		  case '\0':
-		    return opentty (result);
+		    err = opentty (result);
+		    goto out;
 		  case '/':
 		    if (err = opentty (&startdir))
-		      return err;
+		      goto out;
 		    strcpy (retryname, &retryname[4]);
 		    break;
 		  default:
@@ -312,14 +326,48 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 		goto bad_magic;
 	      break;
 
+	    case 'p':
+	      if (retryname[1] == 'i' && retryname[2] == 'd' &&
+		  (retryname[3] == '/' || retryname[3] == 0))
+		{
+		  char *p, buf[1024];  /* XXX */
+		  size_t len;
+		  p = _itoa (__getpid (), &buf[sizeof buf], 10, 0);
+		  len = &buf[sizeof buf] - p;
+		  memcpy (buf, p, len);
+		  strcpy (buf + len, &retryname[3]);
+		  strcpy (retryname, buf);
+
+		  /* Do a normal retry on the remaining components.  */
+		  __mach_port_mod_refs (__mach_task_self (), lastdir,
+					MACH_PORT_RIGHT_SEND, 1);
+		  startdir = lastdir;
+		  file_name = retryname;
+		}
+	      else
+		goto bad_magic;
+	      break;
+
 	    default:
 	    bad_magic:
-	      return EGRATUITOUS;
+	      err = EGRATUITOUS;
+	      goto out;
 	    }
 	  break;
 
 	default:
-	  return EGRATUITOUS;
+	  err = EGRATUITOUS;
+	  goto out;
+	}
+
+      if (MACH_PORT_VALID (*result) && *result != lastdir)
+	{
+	  if (MACH_PORT_VALID (lastdir))
+	    __mach_port_deallocate (__mach_task_self (), lastdir);
+
+	  lastdir = *result;
+	  __mach_port_mod_refs (__mach_task_self (), lastdir,
+				MACH_PORT_RIGHT_SEND, 1);
 	}
 
       if (startdir != MACH_PORT_NULL)
@@ -331,6 +379,10 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
       else
 	err = (*use_init_port) (dirport, &lookup_op);
     } while (! err);
+
+out:
+  if (MACH_PORT_VALID (lastdir))
+    __mach_port_deallocate (__mach_task_self (), lastdir);
 
   return err;
 }

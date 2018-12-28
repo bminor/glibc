@@ -1,3 +1,9 @@
+2018-12-28  Justus Winter <4winter@informatik.uni-hamburg.de>
+
+	* hurd/lookup-retry: Include <unistd.h>.
+	(__hurd_file_name_lookup_retry): Keep a ref on last result in `lastdir'.
+	Release it on return.  Handle "pid" magical lookup retry.
+
 2018-12-28  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	[BZ #10496]
