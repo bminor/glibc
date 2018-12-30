@@ -1,3 +1,9 @@
+2019-01-07  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #24046]
+	* localedata/locales/en_US (date_fmt): Add, set to
+	"%a %d %b %Y %r %Z".
+
 2019-01-07  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #24063]
