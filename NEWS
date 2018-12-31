@@ -81,6 +81,7 @@ The following bugs are resolved with this release:
     to SSIZE_MAX (CVE-2018-11236)
   [23196] string: __mempcpy_avx512_no_vzeroupper mishandles large copies
     (CVE-2018-11237)
+  [24027] malloc: Integer overflow in realloc
 
 Version 2.24
 

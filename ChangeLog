@@ -1,3 +1,10 @@
+2018-12-31  Florian Weimer  <fw@deneb.enyo.de>
+
+	[BZ #24027]
+	* malloc/malloc.c (_int_realloc): Always call memcpy for the
+	copying operation.  (ncopies had the wrong type, resulting in an
+	integer wraparound and too few elements being copied.)
+
 2016-01-28  Carlos O'Donell  <carlos@redhat.com>
 	    Alexey Makhalov <amakhalov@vmware.com>
 	    Florian Weimer <fweimer@redhat.com>
