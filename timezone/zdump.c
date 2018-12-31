@@ -807,8 +807,10 @@ my_snprintf(char *s, size_t size, char const *format, ...)
     arglen = strlen(arg);
   } else {
     n = vsprintf(buf, format, args);
-    if (n < 0)
+    if (n < 0) {
+      va_end(args);
       return n;
+    }
     arg = buf;
     arglen = n;
   }

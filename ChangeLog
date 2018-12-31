@@ -1,3 +1,8 @@
+2018-12-31  Joseph Myers  <joseph@codesourcery.com>
+
+	* timezone/zdump.c: Update from tzcode 2018i.
+	* timezone/zic.c: Likewise.
+
 2018-12-31  Paul Eggert  <eggert@cs.ucla.edu>
 
 	regex: improve Gnulib port to AIX

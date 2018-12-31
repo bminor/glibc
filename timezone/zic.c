@@ -2741,7 +2741,7 @@ error(_("can't determine time zone abbreviation to use just after until time"));
 			if (attypes[i].at > lastat->at)
 				lastat = &attypes[i];
 		if (lastat->at < rpytime(&xr, max_year - 1)) {
-			addtt(rpytime(&xr, max_year + 1), typecnt-1);
+			addtt(rpytime(&xr, max_year + 1), lastat->type);
 			attypes[timecnt - 1].dontmerge = true;
 		}
 	}
@@ -2945,7 +2945,7 @@ lowerit(char a)
 }
 
 /* case-insensitive equality */
-static bool
+static ATTRIBUTE_PURE bool
 ciequal(register const char *ap, register const char *bp)
 {
 	while (lowerit(*ap) == lowerit(*bp++))
@@ -2954,7 +2954,7 @@ ciequal(register const char *ap, register const char *bp)
 	return false;
 }
 
-static bool
+static ATTRIBUTE_PURE bool
 itsabbr(register const char *abbr, register const char *word)
 {
 	if (lowerit(*abbr) != lowerit(*word))
@@ -2970,7 +2970,7 @@ itsabbr(register const char *abbr, register const char *word)
 
 /* Return true if ABBR is an initial prefix of WORD, ignoring ASCII case.  */
 
-static bool
+static ATTRIBUTE_PURE bool
 ciprefix(char const *abbr, char const *word)
 {
   do
