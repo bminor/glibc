@@ -1,3 +1,8 @@
+2018-12-31  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/build-many-glibcs.py (Context.checkout): Default Linux
+	version to 4.20.
+
 2018-12-28  Justus Winter <4winter@informatik.uni-hamburg.de>
 
 	* hurd/lookup-retry: Include <unistd.h>.
