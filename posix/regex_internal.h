@@ -146,10 +146,6 @@
 # define __regfree regfree
 #endif /* not _LIBC */
 
-#if !__GNUC_PREREQ (3, 1)
-# define __attribute__(arg)
-#endif
-
 #ifndef SSIZE_MAX
 # define SSIZE_MAX ((ssize_t) (SIZE_MAX / 2))
 #endif
@@ -866,14 +862,6 @@ re_string_elem_size_at (const re_string_t *pstr, Idx idx)
     return 1;
 }
 #endif /* RE_ENABLE_I18N */
-
-#if __GNUC_PREREQ (3,4)
-# undef __attribute_warn_unused_result__
-# define __attribute_warn_unused_result__ \
-   __attribute__ ((__warn_unused_result__))
-#else
-# define __attribute_warn_unused_result__ /* empty */
-#endif
 
 #ifndef FALLTHROUGH
 # if __GNUC__ < 7

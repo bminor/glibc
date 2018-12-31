@@ -1,3 +1,13 @@
+2018-12-31  Paul Eggert  <eggert@cs.ucla.edu>
+
+	regex: improve Gnulib port to AIX
+	From the glibc point of view, this removes duplicate macro
+	definitions and is obviously safe.
+	From the Gnulib point of view, this pacifies xlc 12.01 on AIX 7.1.
+	* posix/regex_internal.h:
+	(__attribute__, __attribute_warn_unused_result__):
+	Remove; already defined elsewhere.
+
 2018-12-31  Florian Weimer  <fw@deneb.enyo.de>
 
 	[BZ #24027]
