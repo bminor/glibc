@@ -1,3 +1,10 @@
+2018-12-31  Florian Weimer  <fw@deneb.enyo.de>
+
+	[BZ #24027]
+	* malloc/malloc.c (_int_realloc): Always call memcpy for the
+	copying operation.  (ncopies had the wrong type, resulting in an
+	integer wraparound and too few elements being copied.)
+
 2018-12-28  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/alpha/fpu/libm-test-ulps: Regenerated.

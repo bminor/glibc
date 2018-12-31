@@ -4544,11 +4544,6 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
   mchunkptr        bck;             /* misc temp for linking */
   mchunkptr        fwd;             /* misc temp for linking */
 
-  unsigned long    copysize;        /* bytes to copy */
-  unsigned int     ncopies;         /* INTERNAL_SIZE_T words to copy */
-  INTERNAL_SIZE_T* s;               /* copy source */
-  INTERNAL_SIZE_T* d;               /* copy destination */
-
   /* oldmem size */
   if (__builtin_expect (chunksize_nomask (oldp) <= 2 * SIZE_SZ, 0)
       || __builtin_expect (oldsize >= av->system_mem, 0))
@@ -4616,43 +4611,7 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
             }
           else
             {
-              /*
-                 Unroll copy of <= 36 bytes (72 if 8byte sizes)
-                 We know that contents have an odd number of
-                 INTERNAL_SIZE_T-sized words; minimally 3.
-               */
-
-              copysize = oldsize - SIZE_SZ;
-              s = (INTERNAL_SIZE_T *) (chunk2mem (oldp));
-              d = (INTERNAL_SIZE_T *) (newmem);
-              ncopies = copysize / sizeof (INTERNAL_SIZE_T);
-              assert (ncopies >= 3);
-
-              if (ncopies > 9)
-                memcpy (d, s, copysize);
-
-              else
-                {
-                  *(d + 0) = *(s + 0);
-                  *(d + 1) = *(s + 1);
-                  *(d + 2) = *(s + 2);
-                  if (ncopies > 4)
-                    {
-                      *(d + 3) = *(s + 3);
-                      *(d + 4) = *(s + 4);
-                      if (ncopies > 6)
-                        {
-                          *(d + 5) = *(s + 5);
-                          *(d + 6) = *(s + 6);
-                          if (ncopies > 8)
-                            {
-                              *(d + 7) = *(s + 7);
-                              *(d + 8) = *(s + 8);
-                            }
-                        }
-                    }
-                }
-
+	      memcpy (newmem, chunk2mem (oldp), oldsize - SIZE_SZ);
               _int_free (av, oldp, 1);
               check_inuse_chunk (av, newp);
               return chunk2mem (newp);

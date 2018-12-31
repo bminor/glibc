@@ -28,6 +28,7 @@ The following bugs are resolved with this release:
   [23822] ia64 static libm.a is missing exp2f, log2f and powf symbols
   [23927] Linux if_nametoindex() does not close descriptor (CVE-2018-19591)
   [23972] __old_getdents64 uses wrong d_off value on overflow
+  [24027] malloc: Integer overflow in realloc
 
 Security related changes:
 
