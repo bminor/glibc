@@ -22,8 +22,8 @@
 # names are only used if the installed kernel headers also provide
 # them.
 
-# The list of system calls is current as of Linux 4.19.
-kernel 4.19
+# The list of system calls is current as of Linux 4.20.
+kernel 4.20
 
 FAST_atomic_update
 FAST_cmpxchg
@@ -431,6 +431,7 @@ renameat
 renameat2
 request_key
 restart_syscall
+riscv_flush_icache
 rmdir
 rseq
 rt_sigaction

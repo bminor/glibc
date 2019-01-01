@@ -1,5 +1,9 @@
 2019-01-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/syscall-names.list: Update kernel
+	version to 4.20.
+	(riscv_flush_icache): New syscall.
+
 	* manual/texinfo.tex: Update to version 2018-12-28.17 with
 	trailing whitespace removed.
 	* scripts/config.guess: Update to version 2019-01-01.
