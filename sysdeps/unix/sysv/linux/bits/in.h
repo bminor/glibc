@@ -191,6 +191,7 @@ struct in_pktinfo
 #define IPV6_V6ONLY		26
 #define IPV6_JOIN_ANYCAST	27
 #define IPV6_LEAVE_ANYCAST	28
+#define IPV6_MULTICAST_ALL	29
 #define IPV6_IPSEC_POLICY	34
 #define IPV6_XFRM_POLICY	35
 #define IPV6_HDRINCL		36

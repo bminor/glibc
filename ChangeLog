@@ -1,5 +1,8 @@
 2019-01-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/bits/in.h (IPV6_MULTICAST_ALL): New
+	macro.
+
 	* sysdeps/unix/sysv/linux/netpacket/packet.h
 	(PACKET_IGNORE_OUTGOING): New macro.
 
