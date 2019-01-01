@@ -21,6 +21,6 @@
 wint_t
 putwchar_unlocked (wchar_t wc)
 {
-  CHECK_FILE (_IO_stdout, WEOF);
-  return _IO_putwc_unlocked (wc, _IO_stdout);
+  CHECK_FILE (stdout, WEOF);
+  return _IO_putwc_unlocked (wc, stdout);
 }

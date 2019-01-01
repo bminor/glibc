@@ -1,3 +1,16 @@
+2019-01-31  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #24051]
+	* libio/ioputs.c (_IO_puts): Use stdout instead of _IO_stdout.
+	* libio/fileops.c (_IO_new_file_underflow): Likewise
+	* libio/wfileops.c (_IO_wfile_underflow): Likewise
+	* libio/putchar.c (putchar): Likewise.
+	* libio/putchar_u.c (putchar_unlocked): Likewise.
+	* libio/putwchar.c (putchar): Likewise.
+	* libio/putwchar_u.c (putwchar_unlocked): Likewise.
+	* libio/tst-bz24051.c: New test.
+	* libio/Makefile (tests): Add tst-bz24051
+
 2019-01-31  Paul Eggert  <eggert@cs.ucla.edu>
 
 	regex: fix read overrun [BZ #24114]

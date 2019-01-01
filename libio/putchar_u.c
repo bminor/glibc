@@ -23,6 +23,6 @@
 int
 putchar_unlocked (int c)
 {
-  CHECK_FILE (_IO_stdout, EOF);
-  return _IO_putc_unlocked (c, _IO_stdout);
+  CHECK_FILE (stdout, EOF);
+  return _IO_putc_unlocked (c, stdout);
 }

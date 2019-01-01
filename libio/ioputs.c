@@ -33,15 +33,15 @@ _IO_puts (const char *str)
 {
   int result = EOF;
   size_t len = strlen (str);
-  _IO_acquire_lock (_IO_stdout);
+  _IO_acquire_lock (stdout);
 
-  if ((_IO_vtable_offset (_IO_stdout) != 0
-       || _IO_fwide (_IO_stdout, -1) == -1)
-      && _IO_sputn (_IO_stdout, str, len) == len
-      && _IO_putc_unlocked ('\n', _IO_stdout) != EOF)
+  if ((_IO_vtable_offset (stdout) != 0
+       || _IO_fwide (stdout, -1) == -1)
+      && _IO_sputn (stdout, str, len) == len
+      && _IO_putc_unlocked ('\n', stdout) != EOF)
     result = MIN (INT_MAX, len + 1);
 
-  _IO_release_lock (_IO_stdout);
+  _IO_release_lock (stdout);
   return result;
 }
 
