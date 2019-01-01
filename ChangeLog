@@ -1,3 +1,10 @@
+2019-01-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* All files with FSF copyright notices: Update copyright dates
+	using scripts/update-copyrights.
+	* locale/programs/charmap-kw.h: Regenerated.
+	* locale/programs/locfile-kw.h: Likewise.
+
 2018-12-31  Joseph Myers  <joseph@codesourcery.com>
 
 	* timezone/zdump.c: Update from tzcode 2018i.
