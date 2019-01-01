@@ -1,3 +1,8 @@
+2019-01-02  PanderMusubi  <pander@users.sourceforge.net>
+
+	[BZ #24011]
+	* localedata/locales/bs_BA (LC_TELEPHONE): Fix a typo in comment.
+
 2019-01-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/powerpc/nofpu/libm-test-ulps: Update.
