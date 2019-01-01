@@ -63,6 +63,7 @@ struct sockaddr_ll
 #define	PACKET_QDISC_BYPASS		20
 #define	PACKET_ROLLOVER_STATS		21
 #define	PACKET_FANOUT_DATA		22
+#define	PACKET_IGNORE_OUTGOING		23
 
 struct packet_mreq
   {
