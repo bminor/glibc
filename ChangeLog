@@ -1,3 +1,10 @@
+2019-01-02  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #24034]
+	* sysdeps/unix/sysv/linux/arm/atomic-machine.h
+	(__arm_assisted_compare_and_exchange_val_32_acq): Use uint32_t rather
+	than __typeof (...) for the a_ptr variable.
+
 2018-12-31  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #24022]

@@ -31,6 +31,7 @@ The following bugs are resolved with this release:
   [24018] gettext may return NULL
   [24022] riscv may lack <asm/syscalls.h>
   [24027] malloc: Integer overflow in realloc
+  [24034] tst-cancel21-static fails with SIGBUS on pre-ARMv7 when using GCC 8
 
 Security related changes:
 
