@@ -35,3 +35,4 @@ pthread_mutexattr_setpshared (pthread_mutexattr_t *attr, int pshared)
       return EINVAL;
     }
 }
+stub_warning (pthread_mutexattr_setpshared)

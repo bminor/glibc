@@ -1,3 +1,16 @@
+2019-01-02  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/htl/pt-barrierattr-setpshared.c
+	(pthread_barrierattr_setpshared): Add stub warning.
+	* sysdeps/htl/pt-condattr-setpshared.c
+	(pthread_condattr_setpshared): Likewise.
+	* sysdeps/htl/pt-mutexattr-setpshared.c
+	(pthread_mutexattr_setpshared): Likewise.
+	* sysdeps/htl/pt-rwlockattr-setpshared.c
+	(pthread_rwlockattr_setpshared): Likewise.
+	* sysdeps/mach/hurd/htl/pt-mutexattr-setpshared.c
+	(pthread_mutexattr_setpshared): Likewise.
+
 2019-01-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/tst-mman-consts.py (main): Expect

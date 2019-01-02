@@ -35,3 +35,4 @@ pthread_barrierattr_setpshared (pthread_barrierattr_t *attr, int pshared)
       return EINVAL;
     }
 }
+stub_warning (pthread_barrierattr_setpshared)

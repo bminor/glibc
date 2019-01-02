@@ -35,3 +35,4 @@ pthread_condattr_setpshared (pthread_condattr_t *attr, int pshared)
       return EINVAL;
     }
 }
+stub_warning (pthread_condattr_setpshared)

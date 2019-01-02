@@ -35,3 +35,4 @@ pthread_rwlockattr_setpshared (pthread_rwlockattr_t *attr, int pshared)
       return EINVAL;
     }
 }
+stub_warning (pthread_rwlockattr_setpshared)
