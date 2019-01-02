@@ -49,16 +49,23 @@
    declarations of A_OLDVAL et al because when NEWVAL or OLDVAL is of the
    form *PTR and PTR has a 'volatile ... *' type, then __typeof (*PTR) has
    a 'volatile ...' type and this triggers -Wvolatile-register-var to
-   complain about 'register volatile ... asm ("reg")'.  */
+   complain about 'register volatile ... asm ("reg")'.
+
+   We use the same union trick in the declaration of A_PTR because when
+   MEM is of the from *PTR and PTR has a 'const ... *' type, then __typeof
+   (*PTR) has a 'const ...' type and this enables the compiler to substitute
+   the variable with its initializer in asm statements, which may cause the
+   corresponding operand to appear in a different register.  */
 #ifdef __thumb2__
 /* Thumb-2 has ldrex/strex.  However it does not have barrier instructions,
    so we still need to use the kernel helper.  */
 # define __arm_assisted_compare_and_exchange_val_32_acq(mem, newval, oldval) \
-  ({ union { __typeof (oldval) a; uint32_t v; } oldval_arg = { .a = (oldval) };\
+  ({ union { __typeof (mem) a; uint32_t v; } mem_arg = { .a = (mem) };       \
+     union { __typeof (oldval) a; uint32_t v; } oldval_arg = { .a = (oldval) };\
      union { __typeof (newval) a; uint32_t v; } newval_arg = { .a = (newval) };\
      register uint32_t a_oldval asm ("r0");				      \
      register uint32_t a_newval asm ("r1") = newval_arg.v;		      \
-     register __typeof (mem) a_ptr asm ("r2") = (mem);			      \
+     register uint32_t a_ptr asm ("r2") = mem_arg.v;			      \
      register uint32_t a_tmp asm ("r3");				      \
      register uint32_t a_oldval2 asm ("r4") = oldval_arg.v;		      \
      __asm__ __volatile__						      \
@@ -79,11 +86,12 @@
      (__typeof (oldval)) a_tmp; })
 #else
 # define __arm_assisted_compare_and_exchange_val_32_acq(mem, newval, oldval) \
-  ({ union { __typeof (oldval) a; uint32_t v; } oldval_arg = { .a = (oldval) };\
+  ({ union { __typeof (mem) a; uint32_t v; } mem_arg = { .a = (mem) };       \
+     union { __typeof (oldval) a; uint32_t v; } oldval_arg = { .a = (oldval) };\
      union { __typeof (newval) a; uint32_t v; } newval_arg = { .a = (newval) };\
      register uint32_t a_oldval asm ("r0");				      \
      register uint32_t a_newval asm ("r1") = newval_arg.v;		      \
-     register __typeof (mem) a_ptr asm ("r2") = (mem);			      \
+     register uint32_t a_ptr asm ("r2") = mem_arg.v;			      \
      register uint32_t a_tmp asm ("r3");				      \
      register uint32_t a_oldval2 asm ("r4") = oldval_arg.v;		      \
      __asm__ __volatile__						      \
