@@ -1,5 +1,8 @@
 2019-01-02  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/tst-mman-consts.py (main): Expect
+	constants to match with Linux 4.20.
+
 	* sysdeps/mips/mips32/libm-test-ulps: Update.
 	* sysdeps/mips/mips64/libm-test-ulps: Likewise.
 
