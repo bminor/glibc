@@ -1,3 +1,7 @@
+2019-01-02  Florian Weimer  <fweimer@redhat.com>
+
+	* nptl/tst-audit-threads.c: Switch to <support/test-driver.c>.
+
 2019-01-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/bits/in.h (IPV6_MULTICAST_ALL): New
