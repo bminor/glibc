@@ -1,3 +1,9 @@
+2019-01-02  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24018]
+	* intl/dcigettext.c (DCIGETTEXT): Do not return NULL on asprintf
+	failure.
+
 2018-12-31  Florian Weimer  <fw@deneb.enyo.de>
 
 	[BZ #24027]
