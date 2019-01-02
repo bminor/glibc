@@ -20,7 +20,8 @@
 # error "Never include <bits/hwcap.h> directly; use <sys/auxv.h> instead."
 #endif
 
-/* The following must match the kernel's <asm/hwcap.h>.  */
+/* The following must match the kernel's <asm/hwcap.h> and update the
+   list together with sysdeps/unix/sysv/linux/aarch64/dl-procinfo.c.  */
 #define HWCAP_FP		(1 << 0)
 #define HWCAP_ASIMD		(1 << 1)
 #define HWCAP_EVTSTRM		(1 << 2)
