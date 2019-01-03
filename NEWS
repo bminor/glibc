@@ -31,6 +31,7 @@ The following bugs are resolved with this release:
   [23972] __old_getdents64 uses wrong d_off value on overflow
   [24018] gettext may return NULL
   [24022] riscv may lack <asm/syscalls.h>
+  [24024] strerror() might set errno to ENOMEM due to -fno-math-error
   [24027] malloc: Integer overflow in realloc
   [24034] tst-cancel21-static fails with SIGBUS on pre-ARMv7 when using GCC 8
 
