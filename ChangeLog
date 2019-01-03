@@ -1,3 +1,9 @@
+2018-12-31  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #24022]
+	* sysdeps/unix/sysv/linux/riscv/flush-icache.c: Check if
+	<asm/syscalls.h> exists with __has_include__ before including it.
+
 2019-01-02  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #24018]

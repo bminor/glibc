@@ -29,6 +29,7 @@ The following bugs are resolved with this release:
   [23927] Linux if_nametoindex() does not close descriptor (CVE-2018-19591)
   [23972] __old_getdents64 uses wrong d_off value on overflow
   [24018] gettext may return NULL
+  [24022] riscv may lack <asm/syscalls.h>
   [24027] malloc: Integer overflow in realloc
 
 Security related changes:
