@@ -1,5 +1,14 @@
 2019-01-07  Aurelien Jarno  <aurelien@aurel32.net>
 
+	[BZ #24024]
+	* Makeconfig: Build libm with -fno-math-errno but build the remaining
+	code with -fmath-errno.
+	* string/Makefile [$(build-shared)] (tests): Add test-strerror-errno.
+	[$(build-shared)] (LDLIBS-test-strerror-errno): New variable.
+	* string/test-strerror-errno.c: New file.
+
+2019-01-07  Aurelien Jarno  <aurelien@aurel32.net>
+
 	[BZ #24046]
 	* localedata/locales/en_US (date_fmt): Add, set to
 	"%a %d %b %Y %r %Z".
