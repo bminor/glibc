@@ -1,3 +1,7 @@
+2019-01-04  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* manual/maint.texi: Use @{ and @}.
+
 2019-01-04  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/unix/sysv/linux/tst-ttyname.c (adjust_file_limit): New

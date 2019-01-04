@@ -285,9 +285,9 @@ and is compiled for both dual-time and single-time configuration classes.
 @smallexample
 struct tm *
 __localtime64 (const __time64_t *t)
-@lbracechar{}
+@{
   return __tz_convert (*t, 1, &_tmbuf);
-@rbracechar{}
+@}
 libc_hidden_def (__localtime64)
 @end smallexample
 
@@ -299,10 +299,10 @@ dual-time configurations:
 
 struct tm *
 localtime (const time_t *t)
-@lbracechar{}
+@{
   __time64_t t64 = *t;
   return __localtime64 (&t64);
-@rbracechar{}
+@}
 libc_hidden_def (localtime)
 
 #endif
