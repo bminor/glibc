@@ -1,4 +1,4 @@
-2019-10-04  Martin Jansa  <Martin.Jansa@gmail.com>
+2019-01-04  Martin Jansa  <Martin.Jansa@gmail.com>
 
 	[BZ #19444]
 	* sysdeps/ieee754/dbl-64/e_jn.c (__ieee754_jn): Use
