@@ -1,3 +1,16 @@
+2019-10-04  Martin Jansa  <Martin.Jansa@gmail.com>
+
+	[BZ #19444]
+	* sysdeps/ieee754/dbl-64/e_jn.c (__ieee754_jn): Use
+	__builtin_unreachable for default case in switch.
+	(__ieee754_yn): Likewise.
+	* sysdeps/ieee754/ldbl-96/e_jnl.c (__ieee754_jnl): Likewise.
+	(__ieee754_ynl): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_jnl.c (__ieee754_jnl): Likewise.
+	(__ieee754_ynl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_jnl.c (__ieee754_jnl): Likewise.
+	(__ieee754_ynl): Likewise.
+
 2019-01-04  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* manual/maint.texi: Use @{ and @}.

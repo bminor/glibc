@@ -109,6 +109,7 @@ __ieee754_jn (int n, double x)
 	      case 1: temp = -c + s; break;
 	      case 2: temp = -c - s; break;
 	      case 3: temp = c - s; break;
+	      default: __builtin_unreachable ();
 	      }
 	    b = invsqrtpi * temp / sqrt (x);
 	  }
@@ -316,6 +317,7 @@ __ieee754_yn (int n, double x)
 	  case 1: temp = -s - c; break;
 	  case 2: temp = -s + c; break;
 	  case 3: temp = s + c; break;
+	  default: __builtin_unreachable ();
 	  }
 	b = invsqrtpi * temp / sqrt (x);
       }
