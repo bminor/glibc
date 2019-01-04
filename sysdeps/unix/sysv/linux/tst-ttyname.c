@@ -27,6 +27,7 @@
 #include <sys/prctl.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
+#include <sys/resource.h>
 #include <unistd.h>
 
 #include <support/check.h>
@@ -239,6 +240,32 @@ prepare (int argc, char **argv)
 }
 #define PREPARE prepare
 
+/* Adjust the file limit so that we have a chance to open PTY.  */
+static void
+adjust_file_limit (const char *pty)
+{
+  int number = -1;
+  if (sscanf (pty, "/dev/pts/%d", &number) != 1 || number < 0)
+    FAIL_EXIT1 ("invalid PTY name: \"%s\"", pty);
+
+  /* Add a few additional descriptors to cover standard I/O streams
+     etc.  */
+  rlim_t desired_limit = number + 10;
+
+  struct rlimit lim;
+  if (getrlimit (RLIMIT_NOFILE, &lim) != 0)
+    FAIL_EXIT1 ("getrlimit (RLIMIT_NOFILE): %m");
+  if (lim.rlim_cur < desired_limit)
+    {
+      printf ("info: adjusting RLIMIT_NOFILE from %llu to %llu\n",
+	      (unsigned long long int) lim.rlim_cur,
+	      (unsigned long long int) desired_limit);
+      lim.rlim_cur = desired_limit;
+      if (setrlimit (RLIMIT_NOFILE, &lim) != 0)
+	printf ("warning: setrlimit (RLIMIT_NOFILE) failed: %m\n");
+    }
+}
+
 /* These chroot setup functions put the TTY at at "/console" (where it
    won't be found by ttyname), and create "/dev/console" as an
    ordinary file.  This way, it's easier to write test-cases that
@@ -266,6 +293,7 @@ do_in_chroot_1 (int (*cb)(const char *, int))
   if (strncmp (slavename, "/dev/pts/", 9) != 0)
     FAIL_UNSUPPORTED ("slave pseudo-terminal is not under /dev/pts/: %s",
                       slavename);
+  adjust_file_limit (slavename);
   int slave = xopen (slavename, O_RDWR, 0);
   if (!doit (slave, "basic smoketest",
              (struct result_r){.name=slavename, .ret=0, .err=0}))
@@ -332,6 +360,7 @@ do_in_chroot_2 (int (*cb)(const char *, int))
   if (strncmp (slavename, "/dev/pts/", 9) != 0)
     FAIL_UNSUPPORTED ("slave pseudo-terminal is not under /dev/pts/: %s",
                       slavename);
+  adjust_file_limit (slavename);
   /* wait until in a new mount ns to open the slave */
 
   /* enable `wait`ing on grandchildren */
@@ -445,10 +474,20 @@ run_chroot_tests (const char *slavename, int slave)
       ok = false;
     VERIFY (umount ("/dev/console") == 0);
 
-    /* keep creating PTYs until we we get a name collision */
-    while (stat (slavename, &st) < 0)
-      posix_openpt (O_RDWR|O_NOCTTY|O_NONBLOCK);
-    VERIFY (stat (slavename, &st) == 0);
+    /* Keep creating PTYs until we we get a name collision.  */
+    while (true)
+      {
+	if (stat (slavename, &st) == 0)
+	  break;
+	if (posix_openpt (O_RDWR|O_NOCTTY|O_NONBLOCK) < 0)
+	  {
+	    if (errno == ENOSPC || errno == EMFILE || errno == ENFILE)
+	      FAIL_UNSUPPORTED ("cannot re-create PTY \"%s\" in chroot: %m"
+				" (consider increasing limits)", slavename);
+	    else
+	      FAIL_EXIT1 ("cannot re-create PTY \"%s\" chroot: %m", slavename);
+	  }
+      }
 
     if (!doit (slave, "conflict, no match",
                (struct result_r){.name=NULL, .ret=ENODEV, .err=ENODEV}))

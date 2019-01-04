@@ -1,3 +1,12 @@
+2019-01-04  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/unix/sysv/linux/tst-ttyname.c (adjust_file_limit): New
+	function.
+	(do_in_chroot_1): Call it.
+	(run_chroot_tests):
+	Improve error reporting in case it is not possible to create a
+	collision for the PTY name required by the test.
+
 2019-01-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* nptl/pthread_join_common.c (__pthread_timedjoin_ex): Use
