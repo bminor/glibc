@@ -154,7 +154,7 @@ do_test (int argc, char *argv[])
   char fd4name[18];
   char fd5name[18];
   char *name3_copy;
-  char *spargv[12];
+  char *spargv[13];
   int i;
 
   /* We must have
@@ -169,7 +169,7 @@ do_test (int argc, char *argv[])
        + the newly opened file descriptor
        + the duped second descriptor
        + the name of the closed descriptor
-       + the duped fourth dile descriptor which O_CLOEXEC should be
+       + the duped fourth file descriptor which O_CLOEXEC should be
 	 remove by adddup2.
   */
   if (argc != (restart ? 7 : 2) && argc != (restart ? 7 : 5))
