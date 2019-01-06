@@ -90,6 +90,7 @@ The following bugs are resolved with this release:
   [23253] Set 387 and SSE2 rounding mode for tgamma on i386
   [23259] Unsubstituted ${ORIGIN} remains in DT_NEEDED for AT_SECURE
   [23264] libc: posix_spawnp wrongly executes ENOEXEC in non compat mode
+  [23275] Race in pthread_mutex_lock while promoting to PTHREAD_MUTEX_ELISION_NP
   [23313] libio: Disable vtable validation in case of interposition
   [23349] Various glibc headers no longer compatible with <linux/time.h>
   [23363] stdio-common/tst-printf.c has non-free license
@@ -103,6 +104,8 @@ The following bugs are resolved with this release:
   [23709] Fix CPU string flags for Haswell-type CPUs
   [23821] si_band in siginfo_t has wrong type long int on sparc64
   [23822] ia64 static libm.a is missing exp2f, log2f and powf symbols
+  [23861] rdlock stalls indefinitely on an unlocked pthread rwlock
+  [23907] Incorrect double-free malloc tcache check disregards tcache size
   [23927] Linux if_nametoindex() does not close descriptor (CVE-2018-19591)
   [24018] gettext may return NULL
   [24027] malloc: Integer overflow in realloc
