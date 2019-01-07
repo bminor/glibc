@@ -1098,7 +1098,7 @@ this option is set.  This option is a GNU extension.
 The return value is computed in the same way as for @code{ftw}.
 @code{nftw} returns @math{0} if no failures occurred and all callback
 functions returned @math{0}.  In case of internal errors, such as memory
-problems, the return value is @math{-1} and @var{errno} is set
+problems, the return value is @math{-1} and @code{errno} is set
 accordingly.  If the return value of a callback invocation was non-zero
 then that value is returned.
 
@@ -3524,9 +3524,9 @@ directory, and returns @var{template}.  As with @code{mktemp} and
 @samp{XXXXXX}.
 
 If @code{mkdtemp} cannot create an uniquely named directory, it returns
-@code{NULL} and sets @var{errno} appropriately.  If @var{template} does
+@code{NULL} and sets @code{errno} appropriately.  If @var{template} does
 not end with @samp{XXXXXX}, @code{mkdtemp} returns @code{NULL} and does
-not modify @var{template}.  @var{errno} will be set to @code{EINVAL} in
+not modify @var{template}.  @code{errno} will be set to @code{EINVAL} in
 this case.
 
 The directory is created using mode @code{0700}.

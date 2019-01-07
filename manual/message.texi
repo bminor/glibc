@@ -116,7 +116,7 @@ opaque type and can be used in calls to the other functions to refer to
 this loaded catalog.
 
 The return value is @code{(nl_catd) -1} in case the function failed and
-no catalog was loaded.  The global variable @var{errno} contains a code
+no catalog was loaded.  The global variable @code{errno} contains a code
 for the error causing the failure.  But even if the function call
 succeeded this does not mean that all messages can be translated.
 
@@ -242,7 +242,7 @@ translation actually happened must look like this:
 @end smallexample
 
 @noindent
-When an error occurs the global variable @var{errno} is set to
+When an error occurs the global variable @code{errno} is set to
 
 @table @var
 @item EBADF
@@ -315,8 +315,8 @@ The @code{catclose} function can be used to free the resources
 associated with a message catalog which previously was opened by a call
 to @code{catopen}.  If the resources can be successfully freed the
 function returns @code{0}.  Otherwise it returns @code{@minus{}1} and the
-global variable @var{errno} is set.  Errors can occur if the catalog
-descriptor @var{catalog_desc} is not valid in which case @var{errno} is
+global variable @code{errno} is set.  Errors can occur if the catalog
+descriptor @var{catalog_desc} is not valid in which case @code{errno} is
 set to @code{EBADF}.
 @end deftypefun
 
@@ -849,14 +849,14 @@ say more about this when we talk about the ways message catalogs are
 selected (@pxref{Locating gettext catalog}).
 
 The @code{gettext} function does not modify the value of the global
-@var{errno} variable.  This is necessary to make it possible to write
+@code{errno} variable.  This is necessary to make it possible to write
 something like
 
 @smallexample
   printf (gettext ("Operation failed: %m\n"));
 @end smallexample
 
-Here the @var{errno} value is used in the @code{printf} function while
+Here the @code{errno} value is used in the @code{printf} function while
 processing the @code{%m} format element and if the @code{gettext}
 function would change this value (it is called before @code{printf} is
 called) we would get a wrong message.
@@ -1133,7 +1133,7 @@ only lead to problems.
 
 The function returns the value which is from now on taken as the default
 domain.  If the system went out of memory the returned value is
-@code{NULL} and the global variable @var{errno} is set to @code{ENOMEM}.
+@code{NULL} and the global variable @code{errno} is set to @code{ENOMEM}.
 Despite the return value type being @code{char *} the return string must
 not be changed.  It is allocated internally by the @code{textdomain}
 function.
@@ -1190,7 +1190,7 @@ containing the name of the selected directory name.  The string is
 allocated internally in the function and must not be changed by the
 user.  If the system went out of core during the execution of
 @code{bindtextdomain} the return value is @code{NULL} and the global
-variable @var{errno} is set accordingly.
+variable @code{errno} is set accordingly.
 @end deftypefun
 
 
@@ -1585,7 +1585,7 @@ string containing the name of the selected codeset.  The string is
 allocated internally in the function and must not be changed by the
 user.  If the system went out of core during the execution of
 @code{bind_textdomain_codeset}, the return value is @code{NULL} and the
-global variable @var{errno} is set accordingly.
+global variable @code{errno} is set accordingly.
 @end deftypefun
 
 

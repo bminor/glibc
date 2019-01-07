@@ -2197,7 +2197,7 @@ protected using cancellation handlers.
 @c ref pthread_cleanup_push / pthread_cleanup_pop
 
 The return value of the function is zero if no error occurred.  Otherwise
-it is @math{-1} and the global variable @var{errno} is set to the
+it is @math{-1} and the global variable @code{errno} is set to the
 following values:
 @table @code
 @item EBADF
@@ -2230,7 +2230,7 @@ required by @code{fdatasync}.
 The prototype for @code{fdatasync} is in @file{unistd.h}.
 
 The return value of the function is zero if no error occurred.  Otherwise
-it is @math{-1} and the global variable @var{errno} is set to the
+it is @math{-1} and the global variable @code{errno} is set to the
 following values:
 @table @code
 @item EBADF

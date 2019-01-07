@@ -1,3 +1,26 @@
+2019-01-07  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24063]
+	* manual/arith.texi (Math Error Reporting): Use @code{errno}
+	instead of @var{errno}.
+	(Parsing of Integers): Likewise.
+	(Parsing of Floats): Likewise.
+	* manual/filesys.texi (Working with Directory Trees): Likewise.
+	(Temporary Files): Likewise.
+	* manual/job.texi (Terminal Access Functions): Likewise.
+	* manual/llio.texi (Synchronizing I/O): Likewise.
+	* manual/math.texi (SVID Random): Likewise.
+	* manual/message.texi (The catgets Functions): Likewise.
+	(Translation with gettext): Likewise.
+	(Locating gettext catalog): Likewise.
+	(Charset conversion in gettext): Likewise.
+	* manual/nss.texi (NSS Module Function Internals): Likewise.
+	* manual/search.texi (Hash Search Function): Likewise.
+	* manual/setjmp.texi (System V contexts): Likewise.
+	* manual/time.texi (Sleeping): Likewise.
+	* manual/users.texi (Lookup User): Likewise.
+	(Lookup Group): Likewise.
+
 2019-01-05  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* posix/tst-spawn.c (do_test): Extend spargv to new required size and

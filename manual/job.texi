@@ -1275,7 +1275,7 @@ process.
 This function is used to obtain the process group ID of the session
 for which the terminal specified by @var{fildes} is the controlling terminal.
 If the call is successful the group ID is returned.  Otherwise the
-return value is @code{(pid_t) -1} and the global variable @var{errno}
+return value is @code{(pid_t) -1} and the global variable @code{errno}
 is set to the following value:
 @table @code
 @item EBADF

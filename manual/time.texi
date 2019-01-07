@@ -2864,7 +2864,7 @@ without getting interrupted by a signal, this is zero.
 @code{struct timespec} is described in @xref{Elapsed Time}.
 
 If the function returns because the interval is over the return value is
-zero.  If the function returns @math{-1} the global variable @var{errno}
+zero.  If the function returns @math{-1} the global variable @code{errno}
 is set to the following values:
 
 @table @code

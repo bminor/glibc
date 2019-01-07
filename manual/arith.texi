@@ -875,20 +875,20 @@ complete response as @dfn{signalling} a domain error, overflow, or
 underflow.
 
 When a math function suffers a domain error, it raises the invalid
-exception and returns NaN.  It also sets @var{errno} to @code{EDOM};
+exception and returns NaN.  It also sets @code{errno} to @code{EDOM};
 this is for compatibility with old systems that do not support @w{IEEE
 754} exception handling.  Likewise, when overflow occurs, math
 functions raise the overflow exception and, in the default rounding
 mode, return @math{@infinity{}} or @math{-@infinity{}} as appropriate
 (in other rounding modes, the largest finite value of the appropriate
 sign is returned when appropriate for that rounding mode).  They also
-set @var{errno} to @code{ERANGE} if returning @math{@infinity{}} or
-@math{-@infinity{}}; @var{errno} may or may not be set to
+set @code{errno} to @code{ERANGE} if returning @math{@infinity{}} or
+@math{-@infinity{}}; @code{errno} may or may not be set to
 @code{ERANGE} when a finite value is returned on overflow.  When
 underflow occurs, the underflow exception is raised, and zero
 (appropriately signed) or a subnormal value, as appropriate for the
 mathematical result of the function and the rounding mode, is
-returned.  @var{errno} may be set to @code{ERANGE}, but this is not
+returned.  @code{errno} may be set to @code{ERANGE}, but this is not
 guaranteed; it is intended that @theglibc{} should set it when the
 underflow is to an appropriately signed zero, but not necessarily for
 other underflows.
@@ -2545,7 +2545,7 @@ You should not check for errors by examining the return value of
 @code{0l}, @code{LONG_MAX}, or @code{LONG_MIN}.  Instead, check whether
 @var{tailptr} points to what you expect after the number
 (e.g. @code{'\0'} if the string should end after the number).  You also
-need to clear @var{errno} before the call and check it afterward, in
+need to clear @code{errno} before the call and check it afterward, in
 case there was overflow.
 
 There is an example at the end of this section.
@@ -2574,7 +2574,7 @@ for example that @code{strtoul} on @code{"-1"} returns @code{ULONG_MAX}
 and an input more negative than @code{LONG_MIN} returns
 (@code{ULONG_MAX} + 1) / 2.
 
-@code{strtoul} sets @var{errno} to @code{EINVAL} if @var{base} is out of
+@code{strtoul} sets @code{errno} to @code{EINVAL} if @var{base} is out of
 range, or @code{ERANGE} on overflow.
 @end deftypefun
 
@@ -2892,7 +2892,7 @@ representation of NaN (there can be several).
 
 Since zero is a valid result as well as the value returned on error, you
 should check for errors in the same way as for @code{strtol}, by
-examining @var{errno} and @var{tailptr}.
+examining @code{errno} and @var{tailptr}.
 @end deftypefun
 
 @deftypefun float strtof (const char *@var{string}, char **@var{tailptr})

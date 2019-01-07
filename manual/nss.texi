@@ -691,7 +691,7 @@ function.  Therefore one must not misuse this buffer to save some state
 information from one call to another.
 
 Before the function returns with a failure code, the implementation
-should store the value of the local @var{errno} variable in the variable
+should store the value of the local @code{errno} variable in the variable
 pointed to be @var{errnop}.  This is important to guarantee the module
 working in statically linked programs.  The stored value must not be
 zero.
@@ -725,7 +725,7 @@ The implementation of this function should honor the @var{stayopen}
 flag set by the @code{set@var{DB}ent} function whenever this makes sense.
 
 Before the function returns, the implementation should store the value of
-the local @var{errno} variable in the variable pointed to by
+the local @code{errno} variable in the variable pointed to by
 @var{errnop}.  This is important to guarantee the module works in
 statically linked programs.
 

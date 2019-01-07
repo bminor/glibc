@@ -300,7 +300,7 @@ information about the current context's stack may be in the
 architecture-specific subfields of the @code{uc_mcontext} field.
 
 The function returns @code{0} if successful.  Otherwise it returns
-@code{-1} and sets @var{errno} accordingly.
+@code{-1} and sets @code{errno} accordingly.
 @end deftypefun
 
 The @code{getcontext} function is similar to @code{setjmp} but it does
@@ -425,7 +425,7 @@ installed and execution continues as described in this context.
 If @code{swapcontext} succeeds the function does not return unless the
 context @var{oucp} is used without prior modification by
 @code{makecontext}.  The return value in this case is @code{0}.  If the
-function fails it returns @code{-1} and sets @var{errno} accordingly.
+function fails it returns @code{-1} and sets @code{errno} accordingly.
 @end deftypefun
 
 @heading Example for SVID Context Handling

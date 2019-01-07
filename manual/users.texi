@@ -2034,7 +2034,7 @@ If a user with ID @var{uid} is found, the pointer returned in
 or if an error occurred, the pointer returned in @var{result} is a null
 pointer.  The function returns zero or an error code.  If the buffer
 @var{buffer} is too small to contain all the needed information, the
-error code @code{ERANGE} is returned and @var{errno} is set to
+error code @code{ERANGE} is returned and @code{errno} is set to
 @code{ERANGE}.
 @end deftypefun
 
@@ -2353,7 +2353,7 @@ If a group with ID @var{gid} is found, the pointer returned in
 or if an error occurred, the pointer returned in @var{result} is a null
 pointer.  The function returns zero or an error code.  If the buffer
 @var{buffer} is too small to contain all the needed information, the
-error code @code{ERANGE} is returned and @var{errno} is set to
+error code @code{ERANGE} is returned and @code{errno} is set to
 @code{ERANGE}.
 @end deftypefun
 

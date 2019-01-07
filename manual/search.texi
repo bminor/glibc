@@ -449,7 +449,7 @@ entry in the table is not the return value of the function.  It is
 returned by storing it in a pointer variable pointed to by the
 @var{retval} parameter.  The return value of the function is an integer
 value indicating success if it is non-zero and failure if it is zero.
-In the latter case the global variable @var{errno} signals the reason for
+In the latter case the global variable @code{errno} signals the reason for
 the failure.
 
 @table @code

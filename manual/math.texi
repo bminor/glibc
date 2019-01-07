@@ -1835,7 +1835,7 @@ pointer @var{buffer}.  The random number is returned in the variable
 pointed to by @var{result}.
 
 The return value of the function indicates whether the call succeeded.
-If the value is less than @code{0} an error occurred and @var{errno} is
+If the value is less than @code{0} an error occurred and @code{errno} is
 set to indicate the problem.
 
 This function is a GNU extension and should not be used in portable
