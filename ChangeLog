@@ -1,3 +1,7 @@
+2019-01-09  Jim Wilson  <jimw@sifive.com>
+
+	* sysdeps/riscv/rv64/rvd/libm-test-ulps: Update.
+
 2019-01-09  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* manual/tunables.texi (glibc.cpu.name): Add ares tunable.
