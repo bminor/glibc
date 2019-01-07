@@ -31,7 +31,7 @@ long double _Q_stoq(const float a)
   long double c;
 
   FP_UNPACK_RAW_S(A, a);
-#if (2 * _FP_W_TYPE_SIZE) < _FP_FRACBITS_Q
+#if _FP_W_TYPE_SIZE < 64
   FP_EXTEND(Q,S,4,1,C,A);
 #else
   FP_EXTEND(Q,S,2,1,C,A);

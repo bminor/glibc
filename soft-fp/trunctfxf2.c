@@ -41,7 +41,7 @@ __trunctfxf2 (TFtype a)
 
   FP_INIT_ROUNDMODE;
   FP_UNPACK_SEMIRAW_Q (A, a);
-#if (2 * _FP_W_TYPE_SIZE) < _FP_FRACBITS_Q
+#if _FP_W_TYPE_SIZE < 64
   FP_TRUNC (E, Q, 4, 4, R, A);
 #else
   FP_TRUNC (E, Q, 2, 2, R, A);

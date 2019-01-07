@@ -41,7 +41,7 @@ __extendxftf2 (XFtype a)
 
   FP_INIT_TRAPPING_EXCEPTIONS;
   FP_UNPACK_RAW_E (A, a);
-#if (2 * _FP_W_TYPE_SIZE) < _FP_FRACBITS_Q
+#if _FP_W_TYPE_SIZE < 64
   FP_EXTEND (Q, E, 4, 4, R, A);
 #else
   FP_EXTEND (Q, E, 2, 2, R, A);

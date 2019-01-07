@@ -1,3 +1,34 @@
+2019-01-07  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #24066]
+	* soft-fp/extenddftf2.c: Use "_FP_W_TYPE_SIZE < 64" to check if
+	4_FP_W_TYPEs are used for IEEE quad precision.
+	* soft-fp/extendhftf2.c: Likewise.
+	* soft-fp/extendsftf2.c: Likewise.
+	* soft-fp/extendxftf2.c: Likewise.
+	* soft-fp/trunctfdf2.c: Likewise.
+	* soft-fp/trunctfhf2.c: Likewise.
+	* soft-fp/trunctfsf2.c: Likewise.
+	* soft-fp/trunctfxf2.c: Likewise.
+	* sysdeps/alpha/ots_cvttx.c: Likewise.
+	* sysdeps/alpha/ots_cvtxt.c: Likewise.
+	* sysdeps/ieee754/soft-fp/s_daddl.c: Likewise.
+	* sysdeps/ieee754/soft-fp/s_ddivl.c: Likewise.
+	* sysdeps/ieee754/soft-fp/s_dmull.c: Likewise.
+	* sysdeps/ieee754/soft-fp/s_dsubl.c: Likewise.
+	* sysdeps/ieee754/soft-fp/s_faddl.c: Likewise.
+	* sysdeps/ieee754/soft-fp/s_fdivl.c: Likewise.
+	* sysdeps/ieee754/soft-fp/s_fmull.c: Likewise.
+	* sysdeps/ieee754/soft-fp/s_fsubl.c: Likewise.
+	* sysdeps/sparc/sparc32/q_dtoq.c: Likewise.
+	* sysdeps/sparc/sparc32/q_qtod.c: Likewise.
+	* sysdeps/sparc/sparc32/q_qtos.c: Likewise.
+	* sysdeps/sparc/sparc32/q_stoq.c: Likewise.
+	* sysdeps/sparc/sparc64/qp_dtoq.c: Likewise.
+	* sysdeps/sparc/sparc64/qp_qtod.c: Likewise.
+	* sysdeps/sparc/sparc64/qp_qtos.c: Likewise.
+	* sysdeps/sparc/sparc64/qp_stoq.c: Likewise.
+
 2019-01-07  Aurelien Jarno  <aurelien@aurel32.net>
 
 	[BZ #24024]

@@ -43,7 +43,7 @@ __extenddftf2 (DFtype a)
 
   FP_INIT_EXCEPTIONS;
   FP_UNPACK_RAW_D (A, a);
-#if (2 * _FP_W_TYPE_SIZE) < _FP_FRACBITS_Q
+#if _FP_W_TYPE_SIZE < 64
   FP_EXTEND (Q, D, 4, 2, R, A);
 #else
   FP_EXTEND (Q, D, 2, 1, R, A);
