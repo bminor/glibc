@@ -1,3 +1,7 @@
+2019-02-03  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* stdlib/isomac.c: Include <unistd.h>.
+
 2019-02-03  Florian Weimer  <fweimer@redhat.com>
 
 	* include/time.h (__tzfile_default): Use int, not long int, for
