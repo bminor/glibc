@@ -1,3 +1,7 @@
+2019-02-03  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* stdlib/isomac.c: Include <unistd.h>.
+
 2018-11-07  Florian Weimer  <fweimer@redhat.com>
 
 	Implement TEST_COMPARE_STRING.
