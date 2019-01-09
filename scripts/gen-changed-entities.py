@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# Copyright (C) 2018 Free Software Foundation, Inc.
+# Copyright (C) 2019 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 #
 # The GNU C Library is free software; you can redistribute it and/or
@@ -168,7 +168,7 @@ actions = {0:{'new': 'New', 'mod': 'Modified', 'del': 'Remove'},
 
 # The __attribute__ are written in a bunch of different ways in glibc.
 ATTRIBUTE = \
-r'(attribute_\w+)|(__attribute__\(\([^;]\)\))|(weak_function)|(_*ATTRIBUTE_*\w+)'
+r'((attribute_\w+)|(__attribute__\(\([^;]\)\))|(weak_function)|(_*ATTRIBUTE_*\w+))'
 
 # Function regex
 FUNC_RE = re.compile(ATTRIBUTE + r'*\s*(\w+)\s*\([^(][^{]+\)\s*{')
@@ -194,7 +194,7 @@ TYPEDEF_FN_RE = re.compile(r'\(\*(\w+)\)\s*\([^)]+\);')
 DECL_RE = re.compile(r'(\w+)(\[\w+\])*\s*' + ATTRIBUTE + '?;')
 
 # __typeof decls.
-TYPEOF_DECL_RE = re.compile(r'__typeof\(\w+\)\s*(\w+);')
+TYPEOF_DECL_RE = re.compile(r'__typeof\s*\([\w\s]+\)\s*(\w+);')
 
 
 def remove_comments(op):
@@ -318,6 +318,25 @@ def fast_forward_scope(cur, op, loc):
 
 
 # Different types of declarations.
+def parse_typedef_decl(name, cur, op, loc, code, blocktype):
+    ''' Parse a top level declaration.
+
+    All types of declarations except function declarations.
+
+    - NAME is the name of the declarated entity
+    - CUR is the string to consume this expression from
+    - OP is the string array for the file
+    - LOC is the first unread location in CUR
+    - CODE is the block to which we add this function
+
+    - Returns: The next location to be read in the array.
+    '''
+    debug_print('FOUND TYPEDEF DECL: %s' % name)
+    new_block(name, blocktype, [cur], code)
+
+    return loc
+
+
 def parse_decl(name, cur, op, loc, code, blocktype):
     ''' Parse a top level declaration.
 
@@ -426,10 +445,11 @@ def parse_macrocall(cur, op, loc, code, blocktype):
 
     found = re.search(MACROCALL_RE, cur)
     if found:
-        name = found.group(1)
-        if name in SYM_MACROS:
-            debug_print('FOUND MACROCALL: %s' % name)
-            new_block(found.group(2), blocktype, [cur], code)
+        sym = found.group(1)
+        name = found.group(2)
+        if sym in SYM_MACROS:
+            debug_print('FOUND MACROCALL: %s (%s)' % (sym, name))
+            new_block(name, blocktype, [cur], code)
             return '', loc
 
     return cur, loc
@@ -448,7 +468,7 @@ c_expr_parsers = [
             'type' : block_type.decl},
         {'regex' : FNDECL_RE, 'func' : parse_decl, 'name' : 1,
             'type' : block_type.fndecl},
-        {'regex' : FUNC_RE, 'func' : parse_func, 'name' : 5,
+        {'regex' : FUNC_RE, 'func' : parse_func, 'name' : 6,
             'type' : block_type.func},
         {'regex' : DECL_RE, 'func' : parse_decl, 'name' : 1,
             'type' : block_type.decl},
@@ -581,7 +601,7 @@ def c_parse_output(op):
     op = remove_comments(op)
     op = [re.sub(r'#\s+', '#', x) for x in op]
     op = c_parse(op, 0, tree)
-    #compact_tree(tree)
+    compact_tree(tree)
     c_dump_tree(tree, 0)
 
     return tree
