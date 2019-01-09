@@ -168,7 +168,7 @@ actions = {0:{'new': 'New', 'mod': 'Modified', 'del': 'Remove'},
 
 # The __attribute__ are written in a bunch of different ways in glibc.
 ATTRIBUTE = \
-        r'((_*(attribute|ATTRIBUTE)_*(\s*\(\([^)]+\)\)|\w+))|weak_function)';
+r'(attribute_\w+)|(__attribute__\(\([^;]\)\))|(weak_function)|(_*ATTRIBUTE_*\w+)'
 
 # Function regex
 FUNC_RE = re.compile(ATTRIBUTE + r'*\s*(\w+)\s*\([^(][^{]+\)\s*{')
@@ -176,7 +176,7 @@ FUNC_RE = re.compile(ATTRIBUTE + r'*\s*(\w+)\s*\([^(][^{]+\)\s*{')
 # The macrocall_re peeks into the next line to ensure that it doesn't eat up
 # a FUNC by accident.  The func_re regex is also quite crude and only
 # intends to ensure that the function name gets picked up correctly.
-MACROCALL_RE = re.compile(r'(\w+)\s*\((?!void).(\s*,\s*[\w\.]+)*\)$')
+MACROCALL_RE = re.compile(r'(\w+)\s*\((\w+)(\s*,\s*[\w\.]+)*\)$')
 
 # Composite types such as structs and unions.
 COMPOSITE_RE = re.compile(r'(struct|union|enum)\s*(\w*)\s*{')
@@ -185,13 +185,16 @@ COMPOSITE_RE = re.compile(r'(struct|union|enum)\s*(\w*)\s*{')
 ASSIGN_RE = re.compile(r'(\w+)\s*(\[[^\]]*\])*\s*([^\s]*attribute[\s\w()]+)?\s*=')
 
 # Function Declarations.
-FNDECL_RE = re.compile(r'(\w+)\s*\([^;]+\)\s*' + ATTRIBUTE + '*;')
+FNDECL_RE = re.compile(r'(\w+)\s*\([^;]+\)\s*(__THROW)?\s*' + ATTRIBUTE + '*;')
 
 # Function pointer typedefs.
 TYPEDEF_FN_RE = re.compile(r'\(\*(\w+)\)\s*\([^)]+\);')
 
 # Simple decls.
-DECL_RE = re.compile(r'(\w+)(\[\w+\])?\s*' + ATTRIBUTE + '?;')
+DECL_RE = re.compile(r'(\w+)(\[\w+\])*\s*' + ATTRIBUTE + '?;')
+
+# __typeof decls.
+TYPEOF_DECL_RE = re.compile(r'__typeof\(\w+\)\s*(\w+);')
 
 
 def remove_comments(op):
@@ -406,7 +409,8 @@ def parse_func(name, cur, op, loc, code, blocktype):
     return loc
 
 
-def parse_macrocall(name, cur, op, loc, code, blocktype):
+SYM_MACROS = []
+def parse_macrocall(cur, op, loc, code, blocktype):
     ''' Parse a macro call.
 
     Match a symbol hack macro calls that get added without semicolons.
@@ -419,11 +423,16 @@ def parse_macrocall(name, cur, op, loc, code, blocktype):
 
     - Returns: The next location to be read in the array.
     '''
-    debug_print('FOUND MACROCALL: %s' % name)
 
-    new_block(name, blocktype, [cur], code)
+    found = re.search(MACROCALL_RE, cur)
+    if found:
+        name = found.group(1)
+        if name in SYM_MACROS:
+            debug_print('FOUND MACROCALL: %s' % name)
+            new_block(found.group(2), blocktype, [cur], code)
+            return '', loc
 
-    return loc
+    return cur, loc
 
 
 # Regular expressions and token consumption functions for expressions we
@@ -433,16 +442,19 @@ c_expr_parsers = [
             'type' : block_type.composite},
         {'regex' : ASSIGN_RE, 'func' : parse_assign, 'name' : 1,
             'type' : block_type.assign},
+        {'regex' : TYPEOF_DECL_RE, 'func' : parse_decl, 'name' : 1,
+            'type' : block_type.decl},
         {'regex' : TYPEDEF_FN_RE, 'func' : parse_decl, 'name' : 1,
             'type' : block_type.decl},
         {'regex' : FNDECL_RE, 'func' : parse_decl, 'name' : 1,
             'type' : block_type.fndecl},
         {'regex' : FUNC_RE, 'func' : parse_func, 'name' : 5,
             'type' : block_type.func},
-        {'regex' : MACROCALL_RE, 'func' : parse_macrocall, 'name' : 1,
-            'type' : block_type.macrocall},
         {'regex' : DECL_RE, 'func' : parse_decl, 'name' : 1,
-            'type' : block_type.decl}]
+            'type' : block_type.decl},
+        # Special case at the end: macro call.
+        {'regex' : None, 'func' : parse_macrocall, 'name' : 1,
+            'type' : block_type.macrocall}]
 
 
 def parse_c_expr(cur, op, loc, code):
@@ -456,6 +468,9 @@ def parse_c_expr(cur, op, loc, code):
     debug_print('PARSING: %s' % cur)
 
     for p in c_expr_parsers:
+        if not p['regex']:
+            return p['func'](cur, op, loc, code, p['type'])
+
         found = re.search(p['regex'], cur)
         if found:
             return '', p['func'](found.group(p['name']), cur, op, loc, code,
@@ -499,6 +514,61 @@ def c_parse(op, loc, code, start = ''):
     return loc
 
 
+def compact_tree(tree):
+    ''' Try to reduce the tree to its minimal form.
+
+    A source code tree in its simplest form may have a lot of duplicated
+    information that may be difficult to compare and come up with a minimal
+    difference.  Currently this function only consolidates macro scope blocks
+    so that if there are multiple blocks with the same condition in the same
+    nesting scope, they are collapsed into a single scope.
+    '''
+
+    # Macro conditions that nest the entire file aren't very interesting.  This
+    # should take care of the header guards.
+    if tree['type'] == block_type.file \
+            and len(tree['contents']) == 1 \
+            and tree['contents'][0]['type'] == block_type.macro_cond:
+        tree['contents'] = tree['contents'][0]['contents']
+
+    # Nothing to do for non-nesting blocks.
+    if tree['type'] != block_type.macro_cond \
+            and tree['type'] != block_type.file:
+        return
+
+    # Now for nesting blocks, get the list of unique condition names and
+    # consolidate code under them.  The result also bunches up all the
+    # conditions at the top.
+    newcontents = []
+    macro_names = sorted(set([x['name'] for x in tree['contents'] \
+                                if x['type'] == block_type.macro_cond]))
+    for m in macro_names:
+        nc = [x['contents'] for x in tree['contents'] if x['name'] == m]
+        b = new_block(m, block_type.macro_cond, sum(nc, []), tree)
+        compact_tree(b)
+        newcontents.append(b)
+
+    newcontents.extend([x for x in tree['contents'] \
+                        if x['type'] != block_type.macro_cond])
+
+    tree['contents'] = newcontents
+
+
+def build_macrocalls():
+    ''' Build a list of macro calls used for symbol versioning and attributes.
+
+    glibc uses a set of macro calls that do not end with a semi-colon and hence
+    breaks our parser.  Identify those calls from include/libc-symbols.h and
+    filter them out.
+    '''
+    with open('include/libc-symbols.h') as macrofile:
+        global SYM_MACROS
+        op = macrofile.readlines()
+        op = remove_comments(op)
+        SYM_MACROS = [re.sub(r'.*define (\w+).*', r'\1', x[:-1]) for x in op \
+                      if 'define ' in x]
+
+
 def c_parse_output(op):
     ''' File parser.
 
@@ -506,10 +576,13 @@ def c_parse_output(op):
     represent the file.  This tree structure is then used for comparison between
     the old and new file.
     '''
+    build_macrocalls()
     tree = new_block('', block_type.file, [], None)
     op = remove_comments(op)
     op = [re.sub(r'#\s+', '#', x) for x in op]
     op = c_parse(op, 0, tree)
+    #compact_tree(tree)
+    c_dump_tree(tree, 0)
 
     return tree
 
@@ -610,17 +683,15 @@ def c_compare(oldfile, newfile):
     Parse the two files into trees and compare them.  Print the result of the
     comparison in the ChangeLog-like format.
     '''
+    debug_print('LEFT TREE')
+    debug_print('-' * 80)
     left = c_parse_output(oldfile)
+
+    debug_print('RIGHT TREE')
+    debug_print('-' * 80)
     right = c_parse_output(newfile)
 
     c_compare_trees(left, right)
-
-    debug_print('LEFT TREE')
-    debug_print('-' * 80)
-    c_dump_tree(left, 0)
-    debug_print('RIGHT TREE')
-    debug_print('-' * 80)
-    c_dump_tree(right, 0)
 
 
 #------------------------------------------------------------------------------
@@ -628,8 +699,8 @@ def c_compare(oldfile, newfile):
 
 # Register backends for specific file extensions.
 BACKENDS = \
-        {'.c': {'compare': c_compare},
-         '.h': {'compare': c_compare}}
+        {'.c': {'parse_output': c_parse_output, 'compare': c_compare},
+         '.h': {'parse_output': c_parse_output, 'compare': c_compare}}
 
 
 def get_backend(filename):
@@ -801,7 +872,6 @@ def backend_file_test(f):
         op = srcfile.readlines()
         op = [x[:-1] for x in op]
         tree = backend['parse_output'](op)
-        backend['dump_tree'](tree, 0)
 
 
 # Program Entry point.  If -d is specified, the second argument is assumed to be
