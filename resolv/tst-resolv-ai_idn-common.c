@@ -241,6 +241,7 @@ response (const struct resolv_response_context *ctx,
               qname[0] };
         resolv_response_add_data (b, &addr, sizeof (addr));
       }
+      break;
     default:
       FAIL_EXIT1 ("invalid qtype: %d", qtype);
     }
