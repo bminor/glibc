@@ -107,7 +107,7 @@ typedef struct
 	/* SIGPOLL.  */
 	struct
 	  {
-	    long int si_band;	/* Band event for SIGPOLL.  */
+	    __SI_BAND_TYPE si_band;	/* Band event for SIGPOLL.  */
 	    int si_fd;
 	  } _sigpoll;
 

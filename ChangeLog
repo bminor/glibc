@@ -1,3 +1,372 @@
+2019-01-11  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
+	* sysdeps/powerpc/fpu/libm-test-ulps: Regenerate.
+
+2019-01-11  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	[BZ #21745]
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile:
+	[$(subdir) = math] (sysdep_calls): New variable.  Has the
+	previous contents of sysdep_routines, but re-sorted..
+	[$(subdir) = math] (sysdep_routines): Re-use the contents from
+	sysdep_calls.
+	[$(subdir) = math] (libm-sysdep_routines): Remove the functions
+	defined in sysdep_calls and replace by the respective m_* names.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isnan-ppc64.S:
+	(compat_symbol): Undefine to avoid duplicated compat symbols in
+	libc.
+
+2019-01-02  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24018]
+	* intl/dcigettext.c (DCIGETTEXT): Do not return NULL on asprintf
+	failure.
+
+2018-12-31  Florian Weimer  <fw@deneb.enyo.de>
+
+	[BZ #24027]
+	* malloc/malloc.c (_int_realloc): Always call memcpy for the
+	copying operation.  (ncopies had the wrong type, resulting in an
+	integer wraparound and too few elements being copied.)
+
+2018-11-27  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23927]
+	CVE-2018-19591
+	* sysdeps/unix/sysv/linux/if_index.c (__if_nametoindex): Avoid
+	descriptor leak in case of ENODEV error.
+
+2018-11-08  Alexandra Hájková  <ahajkova@redhat.com>
+
+	[BZ #17630]
+	* resolv/tst-resolv-network.c: Add test for getnetbyname.
+
+2018-11-05  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #22927]
+	* resolv/gai_misc.c (__gai_enqueue_request): Don't crash if
+	creating the first helper thread failed.
+
+2018-10-23  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #23709]
+	* sysdeps/x86/cpu-features.c (init_cpu_features): Set TSX bits
+	independently of other flags.
+
+2017-12-18  Joseph Myers  <joseph@codesourcery.com>
+
+	* nptl/tst-attr3.c: Include <libc-diag.h>.
+	(do_test) [__GNUC_PREREQ (7, 0)]: Ignore -Wrestrict for two tests.
+
+2017-11-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* string/bug-strncat1.c: Include <libc-diag.h>.
+	(main): Disable -Wstringop-truncation for strncat call for GCC 8.
+
+2018-06-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* string/tester.c (test_strncat) [__GNUC_PREREQ (7, 0)]: Also
+	ignore -Wrestrict for one test.
+
+2017-12-18  Joseph Myers  <joseph@codesourcery.com>
+
+	* string/tester.c (test_strncat): Also disable -Warray-bounds
+	warnings for two tests.
+
+2017-11-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* string/tester.c (test_stpncpy): Disable -Wstringop-truncation
+	for stpncpy calls for GCC 8.
+	(test_strncat): Disable -Wstringop-truncation warning for strncat
+	calls for GCC 8.  Disable -Wstringop-overflow= warning for one
+	strncat call for GCC 7.
+	(test_strncpy): Disable -Wstringop-truncation warning for strncpy
+	calls for GCC 8.
+	(test_memcmp): Use memcpy instead of strncpy for calls not copying
+	trailing NUL.
+
+2017-12-18  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #22446]
+	* nscd/connections.c (handle_request) [SO_PEERCRED]: Use separate
+	buffers for readlink input and output.
+
+2017-12-15  Steve Ellcey  <sellcey@cavium.com>
+
+	* nscd/dbg_log.c (dbg_log): Increase msg buffer size.
+
+2017-11-22  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #22463]
+	* resolv/res_debug.c: Include <libc-diag.h>.
+	(p_secstodate): Assert time_t at least as wide as u_long.  On
+	overflow, use integer seconds since the epoch as output, or use
+	"<overflow>" as output and set errno to EOVERFLOW if integer
+	seconds since the epoch would be 14 or more characters.
+	(p_secstodate) [__GNUC_PREREQ (7, 0)]: Disable -Wformat-overflow=
+	for sprintf call.
+	* resolv/tst-p_secstodate.c: New file.
+	* resolv/Makefile (tests): Add tst-p_secstodate.
+	($(objpfx)tst-p_secstodate): Depend on $(objpfx)libresolv.so.
+
+2017-11-12  Paul Eggert  <eggert@cs.ucla.edu>
+
+	timezone: pacify GCC -Wstringop-truncation
+	Problem reported by Martin Sebor in:
+	https://sourceware.org/ml/libc-alpha/2017-11/msg00336.html
+	* timezone/zic.c (writezone): Use memcpy, not strncpy.
+
+2017-11-15  Martin Sebor  <msebor@redhat.com>
+
+	* misc/sys/cdefs.h (__attribute_nonstring__): New macro.
+	* sysdeps/gnu/bits/utmp.h (struct utmp): Use it.
+	* sysdeps/unix/sysv/linux/s390/bits/utmp.h (struct utmp): Same.
+
+2017-11-22  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #22447]
+	* sysdeps/unix/getlogin_r.c (__getlogin_r): Use __strnlen not
+	strlen to compute length of ut_user and set trailing NUL byte of
+	result explicitly.
+
+2018-10-19  Ilya Yu. Malakhov  <malakhov@mcst.ru>
+
+	[BZ #23562]
+	* sysdeps/unix/sysv/linux/bits/types/siginfo_t.h
+	(struct siginfo_t): Use correct type for si_band.
+
+2018-09-28  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #23579]
+	* misc/tst-preadvwritev2-common.c (do_test_with_invalid_fd,
+	do_test_with_invalid_iov): New tests.
+	* misc/tst-preadvwritev2.c, misc/tst-preadvwritev64v2.c (do_test):
+	Call do_test_with_invalid_fd and do_test_with_invalid_iov.
+	* sysdeps/unix/sysv/linux/preadv2.c (preadv2): Use fallback code iff
+	errno is ENOSYS.
+	* sysdeps/unix/sysv/linux/preadv64v2.c (preadv64v2): Likewise.
+	* sysdeps/unix/sysv/linux/pwritev2.c (pwritev2): Likewise.
+	* sysdeps/unix/sysv/linux/pwritev64v2.c (pwritev64v2): Likewise.
+	* NEWS: Add bug fixed.
+
+2018-09-28  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #22753]
+	* sysdeps/posix/preadv2.c (preadv2): Handle offset == -1.
+	* sysdeps/posix/preadv64v2.c (preadv64v2): Likewise.
+	* sysdeps/posix/pwritev2.c (pwritev2): Likewise.
+	* sysdeps/posix/pwritev64v2.c (pwritev64v2): Likweise.
+	* sysdeps/unix/sysv/linux/preadv2.c (preadv2): Likewise.
+	* sysdeps/unix/sysv/linux/preadv64v2.c (preadv64v2): Likewise.
+	* sysdeps/unix/sysv/linux/pwritev2.c (pwritev2): Likewise.
+	* sysdeps/unix/sysv/linux/pwritev64v2.c (pwritev64v2): Likweise.
+	* manual/llio.texi (Scatter-Gather): Mention offset -1.
+	* misc/tst-preadvwritev-common.c (do_test_without_offset): New.
+	* misc/tst-preadvwritev2.c (do_test): Call it.
+	* misc/tst-preadvwritev64v2.c (do_test): Likewise.
+	* NEWS: Add bug fixed.
+
+2018-09-06  Stefan Liebler  <stli@linux.ibm.com>
+
+	* sysdeps/unix/sysv/linux/spawni.c (maybe_script_execute):
+	Increment size of new_argv by one.
+
+2018-08-27 Martin Kuchta  <martin.kuchta@netapp.com>
+	   Torvald Riegel  <triegel@redhat.com>
+
+	[BZ #23538]
+	* nptl/pthread_cond_common.c (__condvar_quiesce_and_switch_g1):
+	Update r to include the set wake-request flag if waiters are
+	remaining after spinning.
+
+2018-07-29  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #23459]
+	* sysdeps/x86/cpu-features.c (get_extended_indices): New
+	function.
+	(init_cpu_features): Call get_extended_indices for both Intel
+	and AMD CPUs.
+	* sysdeps/x86/cpu-features.h (COMMON_CPUID_INDEX_80000001):
+	Remove "for AMD" comment.
+
+2018-07-29  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #23456]
+	* sysdeps/x86/cpu-features.h (index_cpu_LZCNT): Set to
+	COMMON_CPUID_INDEX_80000001.
+
+2018-07-06  Florian Weimer  <fweimer@redhat.com>
+
+	* conform/conformtest.pl (checknamespace): Escape literal braces
+	in regular expressions.
+
+2018-07-03  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23363]
+	* stdio-common/tst-printf.c (DEC, INT, UNS, fp_test): Remove.
+	* stdio-common/tst-printf.sh: Adjust expected output.
+	* LICENSES: Update.
+
+2018-06-26  Florian Weimer  <fweimer@redhat.com>
+
+	* libio/Makefile (tests-internal): Add tst-vtables,
+	tst-vtables-interposed.
+	* libio/tst-vtables.c: New file.
+	* libio/tst-vtables-common.c: Likewise.
+	* libio/tst-vtables-interposed.c: Likewise.
+
+2018-06-26  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23313]
+	* libio/vtables.c (check_stdfiles_vtables): New ELF constructor.
+
+2017-11-15  Steve Ellcey  <sellcey@cavium.com>
+
+	[BZ #22442]
+	* sysdeps/unix/sysv/linux/if_index.c (__if_nametoindex):
+	Check if ifname is too long.
+
+2018-06-29  Daniel Alvarez  <dalvarez@redhat.com>
+	    Jakub Sitnicki  <jkbs@redhat.com>
+
+	[BZ #21812]
+	* sysdeps/unix/sysv/linux/ifaddrs.c (getifaddrs_internal): Retry
+	on NLM_F_DUMP_INTR.
+
+2018-06-28  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23349]
+	* time/bits/types/struct_timespec.h: Change header inclusion guard to
+	_STRUCT_TIMESPEC.
+
+2018-05-24  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
+	[BZ #23171]
+	* math/math.h [C++] (iseqsig): Fix parameter type for the long
+	double version.
+
+2018-06-01  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23236]
+	* libio/strfile.h (struct _IO_str_fields): Rename members to
+	discourage their use and add comment.
+	(_IO_STR_DYNAMIC): Remove unused macro.
+	* libio/strops.c (_IO_str_init_static_internal): Do not use
+	callback pointers.  Call malloc and free.
+	(_IO_str_overflow): Do not use callback pointers.  Call malloc
+	and free.
+	(enlarge_userbuf): Likewise.
+	(_IO_str_finish): Call free.
+	* libio/wstrops.c (_IO_wstr_init_static): Initialize
+	_allocate_buffer_unused.
+	(_IO_wstr_overflow): Do not use callback pointers.  Call malloc
+	and free.
+	(enlarge_userbuf): Likewise.
+	(_IO_wstr_finish): Call free.
+	* debug/vasprintf_chk.c (__vasprintf_chk): Initialize
+	_allocate_buffer_unused, _free_buffer_unused.
+	* libio/memstream.c (__open_memstream): Likewise.
+	* libio/vasprintf.c (_IO_vasprintf): Likewise.
+	* libio/wmemstream.c (open_wmemstream): Likewise.
+
+2018-05-23  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #23196]
+	* string/test-memcpy.c (do_test1): New function.
+	(test_main): Call it.
+
+2018-05-23  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #23196]
+	CVE-2018-11237
+	* sysdeps/x86_64/multiarch/memmove-avx512-no-vzeroupper.S
+	(L(preloop_large)): Save initial destination pointer in %r11 and
+	use it instead of %rax after the loop.
+	* string/test-mempcpy.c (MIN_PAGE_SIZE): Define.
+
+2018-05-09  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #22786]
+	CVE-2018-11236
+	* stdlib/canonicalize.c (__realpath): Fix overflow in path length
+	computation.
+	* stdlib/Makefile (test-bz22786): New test.
+	* stdlib/test-bz22786.c: New test.
+
+2018-05-05  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #20419]
+	* elf/dl-load.c (open_verify): Fix stack overflow.
+	* elf/Makefile (tst-big-note): New test.
+	* elf/tst-big-note-lib.S: New.
+	* elf/tst-big-note.c: New.
+
+2018-05-04  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	[BZ #23137]
+	* sysdeps/nptl/lowlevellock.h (lll_wait_tid):
+	Use atomic_load_acquire to load __tid.
+
+2018-03-20  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #17343]
+	* stdlib/random_r.c (__random_r): Use unsigned arithmetic for
+	possibly overflowing computations.
+
+2018-03-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #21269]
+	* sysdeps/unix/sysv/linux/i386/Makefile (tests): Add tst-bz21269.
+	* sysdeps/unix/sysv/linux/i386/sigaction.c (SET_SA_RESTORER): Clear
+	sa_restorer for vDSO case.
+	* sysdeps/unix/sysv/linux/i386/tst-bz21269.c: New file.
+
+2018-03-01  DJ Delorie  <dj@delorie.com>
+
+	[BZ #22342]
+	* nscd/netgroupcache.c (addinnetgrX): Include trailing NUL in
+	key value.
+
+2018-03-23  Andrew Senkevich  <andrew.senkevich@intel.com>
+	    Max Horn  <max@quendi.de>
+
+	[BZ #22644]
+	CVE-2017-18269
+	* sysdeps/i386/i686/multiarch/memcpy-sse2-unaligned.S: Fixed
+	branch conditions.
+	* string/test-memmove.c (do_test2): New testcase.
+
+2018-03-27  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #23005]
+	* resolv/res_send.c (__res_context_send): Return ENOMEM if
+	allocation of private copy of nsaddr_list fails.
+
+2018-03-27  Jesse Hathaway  <jesse@mbuki-mvuki.org>
+
+	[BZ #23024]
+	* sysdeps/unix/sysv/linux/getlogin_r.c (__getlogin_r_loginuid): Return
+	early when linux sentinel value is set.
+
+2018-04-09  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23037]
+	* resolv/res_send.c (send_dg): Use designated initializers instead
+	of assignment to zero-initialize other fields of struct mmsghdr.
+
+2018-01-18  Arjun Shankar  <arjun@redhat.com>
+
+	[BZ #22343]
+	[BZ #22774]
+	CVE-2018-6485
+	CVE-2018-6551
+	* malloc/malloc.c (checked_request2size): call REQUEST_OUT_OF_RANGE
+	after padding.
+	(_int_memalign): check for integer overflow before calling
+	_int_malloc.
+	* malloc/tst-malloc-too-large.c: New test.
+	* malloc/Makefile: Add tst-malloc-too-large.
+
 2018-01-19  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	[BZ #22685]

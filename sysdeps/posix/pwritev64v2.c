@@ -30,7 +30,10 @@ pwritev64v2 (int fd, const struct iovec *vector, int count, OFF_T offset,
       return -1;
     }
 
-  return pwritev64 (fd, vector, count, offset);
+  if (offset == -1)
+    return __writev (fd, vector, count);
+  else
+    return pwritev64 (fd, vector, count, offset);
 }
 
 #ifdef __OFF_T_MATCHES_OFF64_T

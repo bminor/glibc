@@ -30,7 +30,7 @@ pwritev64v2 (int fd, const struct iovec *vector, int count, off64_t offset,
 #ifdef __NR_pwritev64v2
   ssize_t result = SYSCALL_CANCEL (pwritev64v2, fd, vector, count,
 				   LO_HI_LONG (offset), flags);
-  if (result >= 0)
+  if (result >= 0 || errno != ENOSYS)
     return result;
 #endif
   /* Trying to emulate the pwritev2 syscall flags is troublesome:
@@ -47,7 +47,10 @@ pwritev64v2 (int fd, const struct iovec *vector, int count, off64_t offset,
       __set_errno (ENOTSUP);
       return -1;
     }
-  return pwritev64 (fd, vector, count, offset);
+  if (offset == -1)
+    return __writev (fd, vector, count);
+  else
+    return pwritev64 (fd, vector, count, offset);
 }
 
 #ifdef __OFF_T_MATCHES_OFF64_T

@@ -67,8 +67,6 @@ format_ai_flags (FILE *out, struct addrinfo *ai)
       FLAG (AI_ADDRCONFIG);
       FLAG (AI_IDN);
       FLAG (AI_CANONIDN);
-      FLAG (AI_IDN_ALLOW_UNASSIGNED);
-      FLAG (AI_IDN_USE_STD3_ASCII_RULES);
       FLAG (AI_NUMERICSERV);
 #undef FLAG
       int remaining = ai->ai_flags & ~flags_printed;
@@ -220,7 +218,11 @@ support_format_addrinfo (struct addrinfo *ai, int ret)
   xopen_memstream (&mem);
   if (ret != 0)
     {
-      fprintf (mem.out, "error: %s\n", gai_strerror (ret));
+      const char *errmsg = gai_strerror (ret);
+      if (strcmp (errmsg, "Unknown error") == 0)
+        fprintf (mem.out, "error: Unknown error %d\n", ret);
+      else
+        fprintf (mem.out, "error: %s\n", errmsg);
       if (ret == EAI_SYSTEM)
         {
           errno = errno_copy;
