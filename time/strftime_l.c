@@ -820,7 +820,7 @@ __strftime_internal (CHAR_T *s, size_t maxsize, const CHAR_T *format,
 	  if (modifier == L_('O'))
 	    goto bad_format;
 #ifdef _NL_CURRENT
-	  if (! (modifier == 'E'
+	  if (! (modifier == L_('E')
 		 && (*(subfmt =
 		       (const CHAR_T *) _NL_CURRENT (LC_TIME,
 						     NLW(ERA_D_T_FMT)))
@@ -917,7 +917,7 @@ __strftime_internal (CHAR_T *s, size_t maxsize, const CHAR_T *format,
 #ifdef _NL_CURRENT
 	  if (! (modifier == L_('E')
 		 && (*(subfmt =
-		       (const CHAR_T *)_NL_CURRENT (LC_TIME, NLW(ERA_D_FMT)))
+		       (const CHAR_T *) _NL_CURRENT (LC_TIME, NLW(ERA_D_FMT)))
 		     != L_('\0'))))
 	    subfmt = (const CHAR_T *) _NL_CURRENT (LC_TIME, NLW(D_FMT));
 	  goto subformat;
@@ -1262,7 +1262,7 @@ __strftime_internal (CHAR_T *s, size_t maxsize, const CHAR_T *format,
 	  DO_NUMBER (1, tp->tm_wday);
 
 	case L_('Y'):
-	  if (modifier == 'E')
+	  if (modifier == L_('E'))
 	    {
 #if HAVE_STRUCT_ERA_ENTRY
 	      struct era_entry *era = _nl_get_era_entry (tp HELPER_LOCALE_ARG);

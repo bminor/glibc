@@ -1,3 +1,8 @@
+2019-01-11  TAMUKI Shoichi  <tamuki@linet.gr.jp>
+
+	* time/strftime_l.c (__strftime_internal): Use "L_" macros, also add a
+	missing space after the cast of "_NL_CURRENT".
+
 2019-01-11  Rogerio A. Cardoso  <rcardoso@linux.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h (vscr_t): Added
