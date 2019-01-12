@@ -18,7 +18,7 @@
 #include <errno.h>
 #include <sys/socket.h>
 
-/* Determine wheter socket is at a out-of-band mark.  */
+/* Determine whether socket is at a out-of-band mark.  */
 int
 sockatmark (int fd)
 {

@@ -1540,7 +1540,7 @@ argp_doc (const struct argp *argp, const struct argp_state *state,
 }
 
 /* Output a usage message for ARGP to STREAM.  If called from
-   argp_state_help, STATE is the relevent parsing state.  FLAGS are from the
+   argp_state_help, STATE is the relevant parsing state.  FLAGS are from the
    set ARGP_HELP_*.  NAME is what to use wherever a `program name' is
    needed. */
 static void

@@ -251,7 +251,7 @@ extern int shutdown (int __fd, int __how) __THROW;
 
 
 #ifdef __USE_XOPEN2K
-/* Determine wheter socket is at a out-of-band mark.  */
+/* Determine whether socket is at a out-of-band mark.  */
 extern int sockatmark (int __fd) __THROW;
 #endif
 

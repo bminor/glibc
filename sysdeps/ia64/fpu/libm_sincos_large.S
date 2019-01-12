@@ -223,7 +223,7 @@
 //           = (-1)^i_0 * [cos(r) - c*r] if i_1 = 1
 //
 //  because |r| is small and thus the second terms in the correction
-//  are unneccessary.
+//  are unnecessary.
 //
 //  Finally, sin(r) and cos(r) are approximated by polynomials of
 //  moderate lengths.

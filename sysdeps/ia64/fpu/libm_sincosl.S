@@ -205,7 +205,7 @@
 //           = (-1)^i_0 * [cosl(r) - c*r] if i_1 = 1
 //
 //  because |r| is small and thus the second terms in the correction
-//  are unneccessary.
+//  are unnecessary.
 //
 //  Finally, sinl(r) and cosl(r) are approximated by polynomials of
 //  moderate lengths.

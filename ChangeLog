@@ -1,3 +1,17 @@
+2019-01-12  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* argp/argp-help.c: Fix typo in comment.
+	* misc/sys/cdefs.h: Likewise.
+	* posix/regexec.c (sift_states_iter_mb): Likewise.
+	* socket/sockatmark.c: Likewise.
+	* socket/sys/socket.h: Likewise.
+	* sysdeps/ia64/fpu/libm_sincos_large.S: Likewise.
+	* sysdeps/ia64/fpu/libm_sincosl.S: Likewise.
+	* sysdeps/ia64/fpu/s_cosl.S: Likewise.
+	* sysdeps/ieee754/dbl-64/k_rem_pio2.c: Likewise.
+	* sysdeps/unix/sockatmark.c: Likewise.
+	* time/strptime_l.c: Likewise.
+
 2019-01-11  TAMUKI Shoichi  <tamuki@linet.gr.jp>
 
 	* time/strftime_l.c (__strftime_internal): Use "L_" macros, also add a
