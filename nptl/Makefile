@@ -320,7 +320,8 @@ tests = tst-attr1 tst-attr2 tst-attr3 tst-default-attr \
 	tst-cnd-timedwait tst-thrd-detach tst-mtx-basic tst-thrd-sleep \
 	tst-mtx-recursive tst-tss-basic tst-call-once tst-mtx-timedlock \
 	tst-rwlock-pwn \
-	tst-rwlock-tryrdlock-stall tst-rwlock-trywrlock-stall
+	tst-rwlock-tryrdlock-stall tst-rwlock-trywrlock-stall \
+	tst-unwind-thread
 
 tests-internal := tst-rwlock19 tst-rwlock20 \
 		  tst-sem11 tst-sem12 tst-sem13 \
@@ -722,6 +723,8 @@ LDFLAGS-tst-audit-threads = -Wl,-z,lazy
 $(objpfx)tst-audit-threads: $(objpfx)tst-audit-threads-mod2.so
 $(objpfx)tst-audit-threads.out: $(objpfx)tst-audit-threads-mod1.so
 tst-audit-threads-ENV = LD_AUDIT=$(objpfx)tst-audit-threads-mod1.so
+
+CFLAGS-tst-unwind-thread.c += -funwind-tables
 
 # The tests here better do not run in parallel
 ifneq ($(filter %tests,$(MAKECMDGOALS)),)

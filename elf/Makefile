@@ -1486,4 +1486,4 @@ $(objpfx)tst-libc_dlvsym-static.out: $(objpfx)tst-libc_dlvsym-dso.so
 
 $(objpfx)tst-big-note: $(objpfx)tst-big-note-lib.so
 
-CFLAGS-tst-unwind-main.c += -funwind-tables
+CFLAGS-tst-unwind-main.c += -funwind-tables -DUSE_PTHREADS=0

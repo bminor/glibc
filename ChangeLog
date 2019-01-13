@@ -1,3 +1,17 @@
+2019-01-13  Jim Wilson  <jimw@sifive.com>
+
+	[BZ #24040]
+	* elf/Makefile (CFLAGS-tst-unwind-main.c): Add -DUSE_PTHREADS=0.
+	* elf/tst-unwind-main.c: If USE_PTHEADS, include pthread.h and error.h
+	(func): New.
+	(main): If USE_PTHREADS, call pthread_create to run func.  Otherwise
+	call func directly.
+	* nptl/Makefile (tests): Add tst-unwind-thread.
+	(CFLAGS-tst-unwind-thread.c): Define.
+	* nptl/tst-unwind-thread.c: New file.
+	* sysdeps/unix/sysv/linux/riscv/clone.S (__thread_start): Mark ra
+	as undefined.
+
 2019-01-31  Carlos O'Donell  <carlos@redhat.com>
 	    Torvald Riegel  <triegel@redhat.com>
 	    Rik Prohaska  <prohaska7@gmail.com>
