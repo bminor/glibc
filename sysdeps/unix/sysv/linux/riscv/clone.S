@@ -69,6 +69,11 @@ L (error):
 
 ENTRY (__thread_start)
 L (thread_start):
+	/* Terminate call stack by noting ra is undefined.  Use a dummy
+	   .cfi_label to force starting the FDE.  */
+	.cfi_label .Ldummy
+	cfi_undefined (ra)
+
 	/* Restore the arg for user's function.  */
 	REG_L		a1,0(sp)	/* Function pointer.  */
 	REG_L		a0,SZREG(sp)	/* Argument pointer.  */

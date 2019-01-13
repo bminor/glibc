@@ -1512,4 +1512,4 @@ $(objpfx)tst-big-note: $(objpfx)tst-big-note-lib.so
 
 $(objpfx)tst-unwind-ctor: $(objpfx)tst-unwind-ctor-lib.so
 
-CFLAGS-tst-unwind-main.c += -funwind-tables
+CFLAGS-tst-unwind-main.c += -funwind-tables -DUSE_PTHREADS=0
