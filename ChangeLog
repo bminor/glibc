@@ -1,3 +1,8 @@
+2019-01-16  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
+
+	* math/libm-test-fma.inc (fma_test_data): Set
+	XFAIL_ROUNDING_IBM128_LIBGCC to more tests.
+
 2019-01-07  Aurelien Jarno  <aurelien@aurel32.net>
 
 	[BZ #24024]
