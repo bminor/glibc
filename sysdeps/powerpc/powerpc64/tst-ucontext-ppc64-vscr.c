@@ -44,8 +44,8 @@ do_test (void)
   uint32_t* vscr_ptr = vscr;
   uint32_t vscr_word;
   ucontext_t ucp;
-  __vector __int128_t v0 = {0};
-  __vector __int128_t v1 = {0};
+  __vector unsigned int v0 = {0};
+  __vector unsigned int v1 = {0};
 
   /* Set SAT bit in VSCR register.  */
   asm volatile (".machine push;\n"

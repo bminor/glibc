@@ -1,3 +1,8 @@
+2019-01-15  Rogerio A. Cardoso  <rcardoso@linux.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/tst-ucontext-ppc64-vscr.c:
+	(do_test): Changed __vector __int128_t to __vector unsigned int.
+
 2019-01-14  Leonardo Sandoval  <leonardo.sandoval.gonzalez@intel.com>
 
 	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
