@@ -1,3 +1,7 @@
+2019-01-16  Paul A. Clarke  <pc@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/multiarch/strncmp.c: Fix #ifdef.
+
 2019-01-16  Zack Weinberg  <zackw@panix.com>
 
 	 * support/xsignal.h (xalloc_sigstack, xfree_sigstack)

@@ -37,7 +37,7 @@ extern __typeof (strncmp) __strncmp_power9 attribute_hidden;
 /* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
    ifunc symbol properly.  */
 libc_ifunc_redirected (__redirect_strncmp, strncmp,
-# ifdef __LITTLE_ENDIAN_
+# ifdef __LITTLE_ENDIAN__
 			(hwcap2 & PPC_FEATURE2_ARCH_3_00)
 			? __strncmp_power9 :
 # endif
