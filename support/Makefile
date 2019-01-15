@@ -145,6 +145,7 @@ libsupport-routines = \
   xsetsockopt \
   xsigaction \
   xsignal \
+  xsigstack \
   xsocket \
   xstrdup \
   xstrndup \
@@ -205,6 +206,7 @@ tests = \
   tst-test_compare_blob \
   tst-test_compare_string \
   tst-xreadlink \
+  tst-xsigstack \
 
 ifeq ($(run-built-tests),yes)
 tests-special = \

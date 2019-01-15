@@ -1,3 +1,18 @@
+2019-01-16  Zack Weinberg  <zackw@panix.com>
+
+	 * support/xsignal.h (xalloc_sigstack, xfree_sigstack)
+	 (xget_sigstack_location): New test support functions.
+	 * support/xsigstack.c: New file, implementing them.
+	 * support/tst-xsigstack.c: New test for them.
+	 * support/Makefile: Update.
+
+	 * signal/tst-minsigstksz-1.c
+	 * signal/tst-minsigstksz-2.c
+	 * signal/tst-minsigstksz-3.c
+	 * signal/tst-minsigstksz-3a.c
+	 * signal/tst-minsigstksz-4.c: New tests.
+	 * signal/Makefile: Run them.
+
 2019-01-16  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* po/libc.pot: Regenerate.

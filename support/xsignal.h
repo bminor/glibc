@@ -37,6 +37,23 @@ void xsigaction (int sig, const struct sigaction *newact,
 
 void xpthread_sigmask (int how, const sigset_t *set, sigset_t *oldset);
 
+/* Allocate and activate an alternate signal stack.  This stack will
+   have SIZE + MINSIGSTKSZ bytes of space, rounded up to a whole
+   number of pages.  There will be large (at least 1 MiB) inaccessible
+   guard bands on either side of it.  The return value is a cookie
+   that can be passed to xfree_sigstack to deactivate and deallocate
+   the stack again.  It is not necessary to call sigaltstack after
+   calling this function.  Terminates the process on error.  */
+void *xalloc_sigstack (size_t size);
+
+/* Deactivate and deallocate a signal stack created by xalloc_sigstack.  */
+void xfree_sigstack (void *stack);
+
+/* Extract the actual address and size of the alternate signal stack from
+   the cookie returned by xalloc_sigstack.  */
+void xget_sigstack_location (const void *stack, unsigned char **addrp,
+                             size_t *sizep);
+
 __END_DECLS
 
 #endif /* SUPPORT_SIGNAL_H */
