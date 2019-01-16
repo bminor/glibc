@@ -1,5 +1,11 @@
 2019-03-22  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/ia64/has_cpuclock.c: Remove file.
+	* sysdeps/unix/sysv/linux/ia64/sysconf.c: Likewise.
+	* sysdeps/unix/sysv/linux/sysconf.c (has_cpuclock): Remove function.
+	(__sysconf): Assume kernel support for _SC_MONOTONIC_CLOCK,
+	_SC_CPUTIME, and _SC_THREAD_CPUTIME.
+
 	* nptl/Makefile (libpthread-routines): Remove pthread_clock_gettime and
 	pthread_clock_settime.
 	* nptl/pthreadP.h (__find_thread_by_id): Remove prototype.
