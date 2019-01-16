@@ -83,14 +83,6 @@ __libc_fork (void)
       if (__fork_generation_pointer != NULL)
 	*__fork_generation_pointer += __PTHREAD_ONCE_FORK_GEN_INCR;
 
-#if HP_TIMING_AVAIL
-      /* The CPU clock of the thread and process have to be set to zero.  */
-      hp_timing_t now;
-      HP_TIMING_NOW (now);
-      THREAD_SETMEM (self, cpuclock_offset, now);
-      GL(dl_cpuclock_offset) = now;
-#endif
-
 #ifdef __NR_set_robust_list
       /* Initialize the robust mutex list setting in the kernel which has
 	 been reset during the fork.  We do not check for errors because if

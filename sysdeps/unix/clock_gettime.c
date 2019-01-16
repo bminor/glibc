@@ -24,57 +24,6 @@
 #include <ldsodefs.h>
 
 
-#if HP_TIMING_AVAIL
-/* Clock frequency of the processor.  We make it a 64-bit variable
-   because some jokers are already playing with processors with more
-   than 4GHz.  */
-static hp_timing_t freq;
-
-
-/* This function is defined in the thread library.  */
-extern int __pthread_clock_gettime (clockid_t clock_id, hp_timing_t freq,
-				    struct timespec *tp)
-     __attribute__ ((__weak__));
-
-static int
-hp_timing_gettime (clockid_t clock_id, struct timespec *tp)
-{
-  hp_timing_t tsc;
-
-  if (__glibc_unlikely (freq == 0))
-    {
-      /* This can only happen if we haven't initialized the `freq'
-	 variable yet.  Do this now. We don't have to protect this
-	 code against multiple execution since all of them should
-	 lead to the same result.  */
-      freq = __get_clockfreq ();
-      if (__glibc_unlikely (freq == 0))
-	/* Something went wrong.  */
-	return -1;
-    }
-
-  if (clock_id != CLOCK_PROCESS_CPUTIME_ID
-      && __pthread_clock_gettime != NULL)
-    return __pthread_clock_gettime (clock_id, freq, tp);
-
-  /* Get the current counter.  */
-  HP_TIMING_NOW (tsc);
-
-  /* Compute the offset since the start time of the process.  */
-  tsc -= GL(dl_cpuclock_offset);
-
-  /* Compute the seconds.  */
-  tp->tv_sec = tsc / freq;
-
-  /* And the nanoseconds.  This computation should be stable until
-     we get machines with about 16GHz frequency.  */
-  tp->tv_nsec = ((tsc % freq) * UINT64_C (1000000000)) / freq;
-
-  return 0;
-}
-#endif
-
-
 static inline int
 realtime_gettime (struct timespec *tp)
 {
@@ -105,20 +54,8 @@ __clock_gettime (clockid_t clock_id, struct timespec *tp)
       break;
 
     default:
-#if HP_TIMING_AVAIL
-      if ((clock_id & ((1 << CLOCK_IDFIELD_SIZE) - 1))
-	  == CLOCK_THREAD_CPUTIME_ID)
-	retval = hp_timing_gettime (clock_id, tp);
-      else
-#endif
-	__set_errno (EINVAL);
+      __set_errno (EINVAL);
       break;
-
-#if HP_TIMING_AVAIL
-    case CLOCK_PROCESS_CPUTIME_ID:
-      retval = hp_timing_gettime (clock_id, tp);
-      break;
-#endif
     }
 
   return retval;

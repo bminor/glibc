@@ -403,8 +403,6 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
 # endif
 #endif
 
-  HP_TIMING_NOW (GL(dl_cpuclock_offset));
-
   /* Initialize the stack end variable.  */
   __libc_stack_end = __builtin_frame_address (0);
 

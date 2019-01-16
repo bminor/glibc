@@ -62,10 +62,6 @@ int __libc_multiple_libcs = 0;	/* Defining this here avoids the inclusion
 void *__libc_stack_end = NULL;
 rtld_hidden_data_def(__libc_stack_end)
 
-#if HP_TIMING_AVAIL
-hp_timing_t _dl_cpuclock_offset;
-#endif
-
 /* TODO: Initialize.  */
 void *_dl_random attribute_relro = NULL;
 
@@ -245,10 +241,6 @@ unfmh();			/* XXX */
 
   /* Initialize frequently used global variable.  */
   GLRO(dl_pagesize) = __getpagesize ();
-
-#if HP_TIMING_AVAIL
-  HP_TIMING_NOW (_dl_cpuclock_offset);
-#endif
 
 fmh();				/* XXX */
 

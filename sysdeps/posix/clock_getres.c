@@ -24,37 +24,6 @@
 #include <libc-internal.h>
 
 
-#if HP_TIMING_AVAIL
-static long int nsec;		/* Clock frequency of the processor.  */
-
-static int
-hp_timing_getres (struct timespec *res)
-{
-  if (__glibc_unlikely (nsec == 0))
-    {
-      hp_timing_t freq;
-
-      /* This can only happen if we haven't initialized the `nsec'
-	 variable yet.  Do this now.  We don't have to protect this
-	 code against multiple execution since all of them should
-	 lead to the same result.  */
-      freq = __get_clockfreq ();
-      if (__glibc_unlikely (freq == 0))
-	/* Something went wrong.  */
-	return -1;
-
-      nsec = MAX (UINT64_C (1000000000) / freq, 1);
-    }
-
-  /* Fill in the values.
-     The seconds are always zero (unless we have a 1Hz machine).  */
-  res->tv_sec = 0;
-  res->tv_nsec = nsec;
-
-  return 0;
-}
-#endif
-
 static inline int
 realtime_getres (struct timespec *res)
 {
@@ -87,21 +56,8 @@ __clock_getres (clockid_t clock_id, struct timespec *res)
       break;
 
     default:
-#if HP_TIMING_AVAIL
-      if ((clock_id & ((1 << CLOCK_IDFIELD_SIZE) - 1))
-	  == CLOCK_THREAD_CPUTIME_ID)
-	retval = hp_timing_getres (res);
-      else
-#endif
-	__set_errno (EINVAL);
+      __set_errno (EINVAL);
       break;
-
-#if HP_TIMING_AVAIL
-    case CLOCK_PROCESS_CPUTIME_ID:
-    case CLOCK_THREAD_CPUTIME_ID:
-      retval = hp_timing_getres (res);
-      break;
-#endif
     }
 
   return retval;

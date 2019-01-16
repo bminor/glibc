@@ -19,22 +19,7 @@
 #include <assert.h>
 #include <errno.h>
 #include <time.h>
-#include <hp-timing.h>
 #include <sysdep-cancel.h>
-
-#if HP_TIMING_AVAIL
-# define CPUCLOCK_P(clock) \
-  ((clock) == CLOCK_PROCESS_CPUTIME_ID					      \
-   || ((clock) & ((1 << CLOCK_IDFIELD_SIZE) - 1)) == CLOCK_THREAD_CPUTIME_ID)
-#else
-# define CPUCLOCK_P(clock) 0
-#endif
-
-#ifndef INVALID_CLOCK_P
-# define INVALID_CLOCK_P(cl) \
-  ((cl) < CLOCK_REALTIME || (cl) > CLOCK_THREAD_CPUTIME_ID)
-#endif
-
 
 /* This implementation assumes that these is only a `nanosleep' system
    call.  So we have to remap all other activities.  */
@@ -51,14 +36,7 @@ __clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req,
   if (clock_id == CLOCK_THREAD_CPUTIME_ID)
     return EINVAL;		/* POSIX specifies EINVAL for this case.  */
 
-#ifdef SYSDEP_NANOSLEEP
-  SYSDEP_NANOSLEEP;
-#endif
-
-  if (CPUCLOCK_P (clock_id))
-    return ENOTSUP;
-
-  if (INVALID_CLOCK_P (clock_id))
+  if (clock_id < CLOCK_REALTIME || clock_id > CLOCK_THREAD_CPUTIME_ID)
     return EINVAL;
 
   /* If we got an absolute time, remap it.  */
@@ -71,7 +49,7 @@ __clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req,
       assert (sizeof (sec) >= sizeof (now.tv_sec));
 
       /* Get the current time for this clock.  */
-      if (__builtin_expect (__clock_gettime (clock_id, &now), 0) != 0)
+      if (__clock_gettime (clock_id, &now) != 0)
 	return errno;
 
       /* Compute the difference.  */
@@ -90,12 +68,12 @@ __clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req,
       /* Make sure we are not modifying the struct pointed to by REM.  */
       rem = NULL;
     }
-  else if (__builtin_expect (flags, 0) != 0)
+  else if (flags != 0)
     return EINVAL;
   else if (clock_id != CLOCK_REALTIME)
     /* Not supported.  */
     return ENOTSUP;
 
-  return __builtin_expect (__nanosleep (req, rem), 0) ? errno : 0;
+  return __nanosleep (req, rem), 0 ? errno : 0;
 }
 weak_alias (__clock_nanosleep, clock_nanosleep)

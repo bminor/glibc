@@ -267,9 +267,6 @@ __pthread_initialize_minimal_internal (void)
   THREAD_SETMEM (pd, user_stack, true);
   if (LLL_LOCK_INITIALIZER != 0)
     THREAD_SETMEM (pd, lock, LLL_LOCK_INITIALIZER);
-#if HP_TIMING_AVAIL
-  THREAD_SETMEM (pd, cpuclock_offset, GL(dl_cpuclock_offset));
-#endif
 
   /* Initialize the robust mutex data.  */
   {

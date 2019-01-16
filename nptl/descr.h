@@ -343,8 +343,7 @@ struct pthread
   unsigned int setxid_futex;
 
 #if HP_TIMING_AVAIL
-  /* Offset of the CPU clock at start thread start time.  */
-  hp_timing_t cpuclock_offset;
+  hp_timing_t cpuclock_offset_ununsed;
 #endif
 
   /* If the thread waits to join another one the ID of the latter is

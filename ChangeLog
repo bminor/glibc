@@ -1,3 +1,35 @@
+2019-03-22  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* nptl/Makefile (libpthread-routines): Remove pthread_clock_gettime and
+	pthread_clock_settime.
+	* nptl/pthreadP.h (__find_thread_by_id): Remove prototype.
+	* elf/dl-support.c [!HP_TIMING_NOAVAIL] (_dl_cpuclock_offset): Remove.
+	(_dl_non_dynamic_init): Remove _dl_cpuclock_offset setting.
+	* elf/rtld.c (_dl_start_final): Likewise.
+	* nptl/allocatestack.c (__find_thread_by_id): Remove function.
+	* sysdeps/generic/ldsodefs.h [!HP_TIMING_NOAVAIL] (_dl_cpuclock_offset):
+	Remove.
+	* sysdeps/mach/hurd/dl-sysdep.c [!HP_TIMING_NOAVAIL]
+	(_dl_cpuclock_offset): Remove.
+	* nptl/descr.h (struct pthread): Rename cpuclock_offset to
+	cpuclock_offset_ununsed.
+	* nptl/nptl-init.c (__pthread_initialize_minimal_internal): Remove
+	cpuclock_offset set.
+	* nptl/pthread_create.c (START_THREAD_DEFN): Likewise.
+	* sysdeps/nptl/fork.c (__libc_fork): Likewise.
+	* nptl/pthread_clock_gettime.c: Remove file.
+	* nptl/pthread_clock_settime.c: Likewise.
+	* sysdeps/unix/clock_gettime.c (hp_timing_gettime): Remove function.
+	[HP_TIMING_AVAIL] (realtime_gettime): Remove CLOCK_THREAD_CPUTIME_ID
+	and CLOCK_PROCESS_CPUTIME_ID support.
+	* sysdeps/unix/clock_settime.c (hp_timing_gettime): Likewise.
+	[HP_TIMING_AVAIL] (realtime_gettime): Likewise.
+	* sysdeps/posix/clock_getres.c (hp_timing_getres): Likewise.
+	[HP_TIMING_AVAIL] (__clock_getres): Likewise.
+	* sysdeps/unix/clock_nanosleep.c (CPUCLOCK_P, INVALID_CLOCK_P):
+	Likewise.
+	(__clock_nanosleep): Remove CPUCLOCK_P and INVALID_CLOCK_P usage.
+
 2019-03-22  Stefan Liebler  <stli@linux.ibm.com>
 
 	* sysdeps/s390/Makefile (sysdep_routines): Add memmem-arch13.

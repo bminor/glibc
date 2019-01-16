@@ -401,16 +401,6 @@ extern int __pthread_multiple_threads attribute_hidden;
 extern int *__libc_multiple_threads_ptr attribute_hidden;
 #endif
 
-/* Find a thread given its TID.  */
-extern struct pthread *__find_thread_by_id (pid_t tid) attribute_hidden
-#ifdef SHARED
-;
-#else
-weak_function;
-#define __find_thread_by_id(tid) \
-  (__find_thread_by_id ? (__find_thread_by_id) (tid) : (struct pthread *) NULL)
-#endif
-
 extern void __pthread_init_static_tls (struct link_map *) attribute_hidden;
 
 extern size_t __pthread_get_minstack (const pthread_attr_t *attr);

@@ -129,11 +129,6 @@ void *_dl_random;
 #include <dl-procruntime.c>
 #include <dl-procinfo.c>
 
-/* Initial value of the CPU clock.  */
-#ifndef HP_TIMING_NONAVAIL
-hp_timing_t _dl_cpuclock_offset;
-#endif
-
 void (*_dl_init_static_tls) (struct link_map *) = &_dl_nothread_init_static_tls;
 
 size_t _dl_pagesize = EXEC_PAGESIZE;
@@ -313,9 +308,6 @@ _dl_non_dynamic_init (void)
   _dl_main_map.l_origin = _dl_get_origin ();
   _dl_main_map.l_phdr = GL(dl_phdr);
   _dl_main_map.l_phnum = GL(dl_phnum);
-
-  if (HP_SMALL_TIMING_AVAIL)
-    HP_TIMING_NOW (_dl_cpuclock_offset);
 
   _dl_verbose = *(getenv ("LD_WARN") ?: "") == '\0' ? 0 : 1;
 

@@ -379,13 +379,6 @@ START_THREAD_DEFN
 {
   struct pthread *pd = START_THREAD_SELF;
 
-#if HP_TIMING_AVAIL
-  /* Remember the time when the thread was started.  */
-  hp_timing_t now;
-  HP_TIMING_NOW (now);
-  THREAD_SETMEM (pd, cpuclock_offset, now);
-#endif
-
   /* Initialize resolver state pointer.  */
   __resp = &pd->res;
 
