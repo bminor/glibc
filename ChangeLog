@@ -1,3 +1,7 @@
+2019-01-16  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* po/libc.pot: Regenerate.
+
 2019-01-15  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
 
 	* math/libm-test-fma.inc (fma_test_data): Set
