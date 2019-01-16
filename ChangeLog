@@ -1,5 +1,13 @@
 2019-03-22  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* include/random-bits.h: New file.
+	* resolv/res_mkquery.c [HP_TIMING_AVAIL] (RANDOM_BITS,
+	(__res_context_mkquery): Remove usage hp-timing usage and replace with
+	random_bits.
+	* resolv/res_send.c [HP_TIMING_AVAIL] (nameserver_offset): Likewise.
+	* sysdeps/posix/tempname.c [HP_TIMING_AVAIL] (__gen_tempname):
+	Likewise.
+
 	* include/libc-internal.h (__get_clockfreq): Remove prototype.
 	* rt/Makefile (clock-routines): Remove get_clockfreq.
 	* rt/get_clockfreq.c: Remove file.

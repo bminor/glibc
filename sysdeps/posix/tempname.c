@@ -71,22 +71,15 @@
 #endif
 
 #ifdef _LIBC
-# include <hp-timing.h>
-# if HP_TIMING_AVAIL
-#  define RANDOM_BITS(Var) \
-  if (__glibc_unlikely (value == UINT64_C (0)))				      \
-    {									      \
-      /* If this is the first time this function is used initialize	      \
-	 the variable we accumulate the value in to some somewhat	      \
-	 random value.  If we'd not do this programs at startup time	      \
-	 might have a reduced set of possible names, at least on slow	      \
-	 machines.  */							      \
-      struct timeval tv;						      \
-      __gettimeofday (&tv, NULL);					      \
-      value = ((uint64_t) tv.tv_usec << 16) ^ tv.tv_sec;		      \
-    }									      \
-  HP_TIMING_NOW (Var)
-# endif
+# include <random-bits.h>
+# define RANDOM_BITS(Var) ((Var) = random_bits ())
+# else
+# define RANDOM_BITS(Var) \
+    {                                                                         \
+      struct timeval tv;                                                      \
+      __gettimeofday (&tv, NULL);                                             \
+      (Var) = ((uint64_t) tv.tv_usec << 16) ^ tv.tv_sec;                      \
+    }
 #endif
 
 /* Use the widest available unsigned type if uint64_t is not
@@ -193,8 +186,7 @@ __gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
 {
   int len;
   char *XXXXXX;
-  static uint64_t value;
-  uint64_t random_time_bits;
+  uint64_t value;
   unsigned int count;
   int fd = -1;
   int save_errno = errno;
@@ -227,16 +219,8 @@ __gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
   XXXXXX = &tmpl[len - 6 - suffixlen];
 
   /* Get some more or less random data.  */
-#ifdef RANDOM_BITS
-  RANDOM_BITS (random_time_bits);
-#else
-  {
-    struct timeval tv;
-    __gettimeofday (&tv, NULL);
-    random_time_bits = ((uint64_t) tv.tv_usec << 16) ^ tv.tv_sec;
-  }
-#endif
-  value += random_time_bits ^ __getpid ();
+  RANDOM_BITS (value);
+  value ^= (uint64_t)__getpid () << 32;
 
   for (count = 0; count < attempts; value += 7777, ++count)
     {
