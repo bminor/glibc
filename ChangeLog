@@ -1,3 +1,8 @@
+2019-01-18  TAMUKI Shoichi  <tamuki@linet.gr.jp>
+
+	* manual/time.texi (strftime): Fix the wording to "alternative" rather
+	than "alternate".
+
 2019-01-16  Paul A. Clarke  <pc@us.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/multiarch/strncmp.c: Fix #ifdef.

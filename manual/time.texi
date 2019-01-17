@@ -1339,7 +1339,7 @@ POSIX.2-1992 and by @w{ISO C99}, are:
 
 @table @code
 @item E
-Use the locale's alternate representation for date and time.  This
+Use the locale's alternative representation for date and time.  This
 modifier applies to the @code{%c}, @code{%C}, @code{%x}, @code{%X},
 @code{%y} and @code{%Y} format specifiers.  In a Japanese locale, for
 example, @code{%Ex} might yield a date format based on the Japanese
@@ -1347,7 +1347,7 @@ Emperors' reigns.
 
 @item O
 With all format specifiers that produce numbers: use the locale's
-alternate numeric symbols.
+alternative numeric symbols.
 
 With @code{%B}, @code{%b}, and @code{%h}: use the grammatical form for
 month names that is appropriate when the month is named by itself,
@@ -1355,7 +1355,7 @@ rather than the form that is appropriate when the month is used as
 part of a complete date.  This is a GNU extension.
 @end table
 
-If the format supports the modifier but no alternate representation
+If the format supports the modifier but no alternative representation
 is available, it is ignored.
 
 The conversion specifier ends with a format specifier taken from the
