@@ -1,3 +1,12 @@
+2019-01-18  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* signal/Makefile (LDFLAGS-tst-minsigstksz-1): New.  Set to
+	-Wl,-z,now.
+	(LDFLAGS-tst-minsigstksz-2): Likewise.
+	(LDFLAGS-tst-minsigstksz-3): Likewise.
+	(LDFLAGS-tst-minsigstksz-3a): Likewise.
+	(LDFLAGS-tst-minsigstksz-4): Likewise.
+
 2019-01-18  TAMUKI Shoichi  <tamuki@linet.gr.jp>
 
 	* manual/time.texi (strftime): Fix the wording to "alternative" rather

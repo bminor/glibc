@@ -59,3 +59,11 @@ CFLAGS-sigwait.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sigwaitinfo.c += -fexceptions -fasynchronous-unwind-tables
 
 CFLAGS-sigreturn.c += $(no-stack-protector)
+
+# We don't want to test the lazy resolution stack usage, just the
+# execution of the handler and the functions.
+LDFLAGS-tst-minsigstksz-1 = -Wl,-z,now
+LDFLAGS-tst-minsigstksz-2 = -Wl,-z,now
+LDFLAGS-tst-minsigstksz-3 = -Wl,-z,now
+LDFLAGS-tst-minsigstksz-3a = -Wl,-z,now
+LDFLAGS-tst-minsigstksz-4 = -Wl,-z,now
