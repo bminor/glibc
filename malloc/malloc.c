@@ -1316,78 +1316,6 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 #define set_foot(p, s)       (((mchunkptr) ((char *) (p) + (s)))->mchunk_prev_size = (s))
 
 
-/* Add an item to the atomic fastbin list at *ROOT.  Returns the old
-   value at *ROOT.  Note that properties of the old chunk are only
-   stable if the caller has acquired the arena lock.  With out the
-   lock, it can be deallocated at any time.  */
-static inline struct malloc_chunk *
-fastbin_push_entry (struct malloc_chunk **root, struct malloc_chunk *e)
-{
-  struct malloc_chunk *head;
-  if (SINGLE_THREAD_P)
-    {
-      /* Check that the top of the bin is not the record we are going
-	 to add (i.e., double free).  */
-      head = *root;
-      if (head == e)
-	malloc_printerr ("double free or corruption (fasttop)");
-      e->fd = head;
-      *root = e;
-    }
-  else
-    do
-      {
-	/* Synchronize with the release release MO CAS below.  We do
-	   not need synchronization locally, but fastbin_pop_entry and
-	   (especially) malloc_consolidate read the entire list after
-	   synchronizing on the head, so we need to make sure that the
-	   writes to the next (fd) pointers have happened.  */
-	head = atomic_load_acquire (root);
-	/* Check that the top of the bin is not the record we are
-	   going to add (i.e., double free).  */
-	if (head == e)
-	  malloc_printerr ("double free or corruption (fasttop)");
-	e->fd = head;
-      }
-  /* Synchronizes with the acquire MO CAS in  */
-    while (!atomic_compare_exchange_weak_release (root, &head, e));
-  return head;
-}
-
-/* Remove an item from the atomic fastbin list at *ROOT.  The caller
-   must have acquired the arena lock.  */
-static inline struct malloc_chunk *
-fastbin_pop_entry (struct malloc_chunk **root)
-{
-  struct malloc_chunk *head;
-  if (SINGLE_THREAD_P)
-    {
-      head = *root;
-      if (head != NULL)
-	*root = head->fd;
-    }
-  else
-    {
-      /* Synchromizes with the release MO store in fastbin_push_entry.
-	 Synchronization is needed because we read the next list
-	 pointer.  */
-      head = atomic_load_acquire (root);
-      struct malloc_chunk *tail;
-      do
-	{
-	  if (head == NULL)
-	    return NULL;
-	  tail = head->fd;
-	}
-      /* Synchronizes with the release MO store in fastbin_push_entry.
-	 We do not have an ABA issue here because the caller has
-	 acquired the arena lock, which ensures that there is only one
-	 thread which removes elements from this list.  */
-      while (!atomic_compare_exchange_weak_acquire (root, &head, tail));
-    }
-  return head;
-}
-
 #pragma GCC poison mchunk_size
 #pragma GCC poison mchunk_prev_size
 
@@ -3648,36 +3576,63 @@ _int_malloc (mstate av, size_t bytes)
      can try it without checking, which saves some time on this fast path.
    */
 
+#define REMOVE_FB(fb, victim, pp)			\
+  do							\
+    {							\
+      victim = pp;					\
+      if (victim == NULL)				\
+	break;						\
+    }							\
+  while ((pp = catomic_compare_and_exchange_val_acq (fb, victim->fd, victim)) \
+	 != victim);					\
+
   if ((unsigned long) (nb) <= (unsigned long) (get_max_fast ()))
     {
       idx = fastbin_index (nb);
       mfastbinptr *fb = &fastbin (av, idx);
-      victim = fastbin_pop_entry (fb);
+      mchunkptr pp;
+      victim = *fb;
+
       if (victim != NULL)
 	{
-	  size_t victim_idx = fastbin_index (chunksize (victim));
-	  if (victim_idx != idx)
-	    malloc_printerr ("malloc(): memory corruption (fast)");
-	  check_remalloced_chunk (av, victim, nb);
-#if USE_TCACHE
-	  /* While we're here, if we see other chunks of the same size,
-	     stash them in the tcache.  */
-	  size_t tc_idx = csize2tidx (nb);
-	  if (tcache && tc_idx < mp_.tcache_bins)
+	  if (SINGLE_THREAD_P)
+	    *fb = victim->fd;
+	  else
+	    REMOVE_FB (fb, pp, victim);
+	  if (__glibc_likely (victim != NULL))
 	    {
-	      /* While bin not empty and tcache not full, copy chunks.  */
-	      while (tcache->counts[tc_idx] < mp_.tcache_count)
+	      size_t victim_idx = fastbin_index (chunksize (victim));
+	      if (__builtin_expect (victim_idx != idx, 0))
+		malloc_printerr ("malloc(): memory corruption (fast)");
+	      check_remalloced_chunk (av, victim, nb);
+#if USE_TCACHE
+	      /* While we're here, if we see other chunks of the same size,
+		 stash them in the tcache.  */
+	      size_t tc_idx = csize2tidx (nb);
+	      if (tcache && tc_idx < mp_.tcache_bins)
 		{
-		  mchunkptr tc_victim = fastbin_pop_entry (fb);
-		  if (tc_victim == NULL)
-		    break;
-		  tcache_put (tc_victim, tc_idx);
+		  mchunkptr tc_victim;
+
+		  /* While bin not empty and tcache not full, copy chunks.  */
+		  while (tcache->counts[tc_idx] < mp_.tcache_count
+			 && (tc_victim = *fb) != NULL)
+		    {
+		      if (SINGLE_THREAD_P)
+			*fb = tc_victim->fd;
+		      else
+			{
+			  REMOVE_FB (fb, pp, tc_victim);
+			  if (__glibc_unlikely (tc_victim == NULL))
+			    break;
+			}
+		      tcache_put (tc_victim, tc_idx);
+		    }
 		}
-	    }
 #endif
-	  void *p = chunk2mem (victim);
-	  alloc_perturb (p, bytes);
-	  return p;
+	      void *p = chunk2mem (victim);
+	      alloc_perturb (p, bytes);
+	      return p;
+	    }
 	}
     }
 
@@ -4309,7 +4264,28 @@ _int_free (mstate av, mchunkptr p, int have_lock)
     fb = &fastbin (av, idx);
 
     /* Atomically link P to its fastbin: P->FD = *FB; *FB = P;  */
-    mchunkptr old = fastbin_push_entry (fb, p);
+    mchunkptr old = *fb, old2;
+
+    if (SINGLE_THREAD_P)
+      {
+	/* Check that the top of the bin is not the record we are going to
+	   add (i.e., double free).  */
+	if (__builtin_expect (old == p, 0))
+	  malloc_printerr ("double free or corruption (fasttop)");
+	p->fd = old;
+	*fb = p;
+      }
+    else
+      do
+	{
+	  /* Check that the top of the bin is not the record we are going to
+	     add (i.e., double free).  */
+	  if (__builtin_expect (old == p, 0))
+	    malloc_printerr ("double free or corruption (fasttop)");
+	  p->fd = old2 = old;
+	}
+      while ((old = catomic_compare_and_exchange_val_rel (fb, p, old2))
+	     != old2);
 
     /* Check that size of fastbin chunk at the top is the same as
        size of the chunk that we are adding.  We can dereference OLD
@@ -4500,9 +4476,7 @@ static void malloc_consolidate(mstate av)
   maxfb = &fastbin (av, NFASTBINS - 1);
   fb = &fastbin (av, 0);
   do {
-    /* Synchronizes with the release MO store in
-       fastbin_push_entry.  */
-    p = atomic_exchange_acquire (fb, NULL);
+    p = atomic_exchange_acq (fb, NULL);
     if (p != 0) {
       do {
 	{

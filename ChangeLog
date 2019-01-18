@@ -1,3 +1,17 @@
+2019-01-18  Florian Weimer  <fweimer@redhat.com>
+
+	malloc: Revert commit 6923f6db1e688dedcf3a6556da76e0bf24a41872
+	("malloc: Use current (C11-style) atomics for fastbin access").
+	This commit introduces a substantial performance regression on
+	POWER and Aarch64.
+	* malloc/malloc.c (fastbin_push_entry, fastbin_pop_entry): Remove.
+	(REMOVE_FB): Define.
+	(_int_malloc): Use it and reindent.
+	(_int_free): Use CAS loop with
+	catomic_compare_and_exchange_val_rel.
+	(malloc_consolidate): Use atomic_exchange_acq.
+
+
 2019-01-18  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* signal/Makefile (LDFLAGS-tst-minsigstksz-1): New.  Set to
