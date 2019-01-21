@@ -79,15 +79,15 @@
 ENTRY (STRCMP)
 # ifdef USE_AS_STRNCMP
 	/* Check for simple cases (0 or 1) in offset.  */
-	cmp	$1, %rdx
+	cmp	$1, %RDX_LP
 	je	L(char0)
 	jb	L(zero)
 #  ifdef USE_AS_WCSCMP
 	/* Convert units: from wide to byte char.  */
-	shl	$2, %rdx
+	shl	$2, %RDX_LP
 #  endif
 	/* Register %r11 tracks the maximum offset.  */
-	movq	%rdx, %r11
+	mov	%RDX_LP, %R11_LP
 # endif
 	movl	%edi, %eax
 	xorl	%edx, %edx
