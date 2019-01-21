@@ -42,12 +42,15 @@
 ENTRY (STRLEN)
 # ifdef USE_AS_STRNLEN
 	/* Check for zero length.  */
-	testq	%rsi, %rsi
+	test	%RSI_LP, %RSI_LP
 	jz	L(zero)
 #  ifdef USE_AS_WCSLEN
-	shl	$2, %rsi
+	shl	$2, %RSI_LP
+#  elif defined __ILP32__
+	/* Clear the upper 32 bits.  */
+	movl	%esi, %esi
 #  endif
-	movq	%rsi, %r8
+	mov	%RSI_LP, %R8_LP
 # endif
 	movl	%edi, %ecx
 	movq	%rdi, %rdx
