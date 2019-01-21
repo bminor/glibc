@@ -38,8 +38,6 @@
 #define HAVE_LOOKUP_BUFFER	1
 #define HAVE_AF			1
 
-#define __inet_aton inet_aton
-
 /* We are nscd, so we don't want to be talking to ourselves.  */
 #undef	USE_NSCD
 

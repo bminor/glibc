@@ -34,6 +34,9 @@ routines := herror inet_addr inet_ntop inet_pton nsap_addr res_init \
 tests = tst-aton tst-leaks tst-inet_ntop
 xtests = tst-leaks2
 
+tests-internal += tst-inet_aton_exact
+
+
 generate := mtrace-tst-leaks.out tst-leaks.mtrace tst-leaks2.mtrace
 
 extra-libs := libresolv libnss_dns
@@ -54,8 +57,10 @@ tests += \
   tst-resolv-binary \
   tst-resolv-edns \
   tst-resolv-network \
+  tst-resolv-nondecimal \
   tst-resolv-res_init-multi \
   tst-resolv-search \
+  tst-resolv-trailing \
 
 # These tests need libdl.
 ifeq (yes,$(build-shared))
@@ -190,9 +195,11 @@ $(objpfx)tst-resolv-res_init-multi: $(objpfx)libresolv.so \
   $(shared-thread-library)
 $(objpfx)tst-resolv-res_init-thread: $(libdl) $(objpfx)libresolv.so \
   $(shared-thread-library)
+$(objpfx)tst-resolv-nondecimal: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-qtypes: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-rotate: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-search: $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-resolv-trailing: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-threads: \
   $(libdl) $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-canonname: \

@@ -19,7 +19,6 @@
 
 /* This file uses the getaddrinfo code but it compiles it without NSCD
    support.  We just need a few symbol renames.  */
-#define __inet_aton inet_aton
 #define __ioctl ioctl
 #define __getsockname getsockname
 #define __socket socket

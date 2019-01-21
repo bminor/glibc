@@ -96,26 +96,14 @@
 #include <limits.h>
 #include <errno.h>
 
-/* ASCII IPv4 Internet address interpretation routine.  The value
-   returned is in network order.  */
-in_addr_t
-__inet_addr (const char *cp)
-{
-  struct in_addr val;
-
-  if (__inet_aton (cp, &val))
-    return val.s_addr;
-  return INADDR_NONE;
-}
-weak_alias (__inet_addr, inet_addr)
-
 /* Check whether "cp" is a valid ASCII representation of an IPv4
    Internet address and convert it to a binary address.  Returns 1 if
    the address is valid, 0 if not.  This replaces inet_addr, the
    return value from which cannot distinguish between failure and a
-   local broadcast address.  */
-int
-__inet_aton (const char *cp, struct in_addr *addr)
+   local broadcast address.  Write a pointer to the first
+   non-converted character to *endp.  */
+static int
+inet_aton_end (const char *cp, struct in_addr *addr, const char **endp)
 {
   static const in_addr_t max[4] = { 0xffffffff, 0xffffff, 0xffff, 0xff };
   in_addr_t val;
@@ -180,6 +168,7 @@ __inet_aton (const char *cp, struct in_addr *addr)
 
   if (addr != NULL)
     addr->s_addr = res.word | htonl (val);
+  *endp = cp;
 
   __set_errno (saved_errno);
   return 1;
@@ -188,6 +177,41 @@ __inet_aton (const char *cp, struct in_addr *addr)
   __set_errno (saved_errno);
   return 0;
 }
-weak_alias (__inet_aton, inet_aton)
-libc_hidden_def (__inet_aton)
-libc_hidden_weak (inet_aton)
+
+int
+__inet_aton_exact (const char *cp, struct in_addr *addr)
+{
+  struct in_addr val;
+  const char *endp;
+  /* Check that inet_aton_end parsed the entire string.  */
+  if (inet_aton_end (cp, &val, &endp) != 0 && *endp == 0)
+    {
+      *addr = val;
+      return 1;
+    }
+  else
+    return 0;
+}
+libc_hidden_def (__inet_aton_exact)
+
+/* inet_aton ignores trailing garbage.  */
+int
+__inet_aton_ignore_trailing (const char *cp, struct in_addr *addr)
+{
+  const char *endp;
+  return  inet_aton_end (cp, addr, &endp);
+}
+weak_alias (__inet_aton_ignore_trailing, inet_aton)
+
+/* ASCII IPv4 Internet address interpretation routine.  The value
+   returned is in network order.  */
+in_addr_t
+__inet_addr (const char *cp)
+{
+  struct in_addr val;
+  const char *endp;
+  if (inet_aton_end (cp, &val, &endp))
+    return val.s_addr;
+  return INADDR_NONE;
+}
+weak_alias (__inet_addr, inet_addr)
