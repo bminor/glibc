@@ -49,8 +49,8 @@
 	.section .text.avx,"ax",@progbits
 ENTRY (STRCPY)
 #  ifdef USE_AS_STRNCPY
-	mov	%rdx, %r8
-	test	%r8, %r8
+	mov	%RDX_LP, %R8_LP
+	test	%R8_LP, %R8_LP
 	jz	L(ExitZero)
 #  endif
 	mov	%rsi, %rcx
