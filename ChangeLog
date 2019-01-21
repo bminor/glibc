@@ -1,3 +1,11 @@
+2019-01-31  Paul Eggert  <eggert@cs.ucla.edu>
+
+	regex: fix read overrun [BZ #24114]
+	Problem found by AddressSanitizer, reported by Hongxu Chen in:
+	https://debbugs.gnu.org/34140
+	* posix/regexec.c (proceed_next_node):
+	Do not read past end of input buffer.
+
 2018-11-07  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #23864]
