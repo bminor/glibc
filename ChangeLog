@@ -1,3 +1,36 @@
+2019-01-21  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20018]
+	CVE-2016-10739
+	resolv: Reject trailing characters in host names
+	* include/arpa/inet.h (__inet_aton_exact): Declare.
+	(inet_aton): Remove hidden prototype.  No longer used internally.
+	* nscd/gai.c (__inet_aton): Do not define.
+	* nscd/gethstbynm3_r.c (__inet_aton): Likewise.
+	* nss/digits_dots.c (__inet_aton): Likewise.
+	(__nss_hostname_digits_dots_context): Call __inet_aton_exact.
+	* resolv/Makefile (tests-internal): Add tst-inet_aton_exact.
+	(tests): Add tst-resolv-nondecimal, tst-resolv-trailing.
+	(tst-resolv-nondecimal): Link with libresolv.so and libpthread.
+	(tst-resolv-trailing): Likewise.
+	* resolv/Versions (GLIBC_PRIVATE): Export __inet_aton_exact from
+	libc.
+	* resolv/inet_addr.c (inet_aton_end): Remame from __inet_aton.
+	Make static.  Add endp parameter.
+	(__inet_aton_exact): New function.
+	(__inet_aton_ignore_trailing): New function, aliased to inet_aton.
+	(__inet_addr): Call inet_aton_end.
+	* resolv/res_init.c (res_vinit_1): Truncate nameserver for IPv4,
+	not just IPv6.  Call __inet_aton_exact.
+	* resolv/tst-aton.c: Switch to <support/test-driver.c>.
+	(tests): Make const.  Add additional test cases with trailing
+	characters.
+	(do_test): Use array_length.
+	* resolv/tst-inet_aton_exact.c: New file.
+	* resolv/tst-resolv-trailing.c: Likewise.
+	* resolv/tst-resolv-nondecimal.c: Likewise.
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Call __inet_aton_exact.
+
 2019-01-18  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #24112]

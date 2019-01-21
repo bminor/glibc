@@ -488,7 +488,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  malloc_name = true;
 	}
 
-      if (__inet_aton (name, (struct in_addr *) at->addr) != 0)
+      if (__inet_aton_exact (name, (struct in_addr *) at->addr) != 0)
 	{
 	  if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET)
 	    at->family = AF_INET;
