@@ -399,8 +399,16 @@ res_vinit_1 (FILE *fp, struct resolv_conf_parser *parser)
               cp = parser->buffer + sizeof ("nameserver") - 1;
               while (*cp == ' ' || *cp == '\t')
                 cp++;
+
+              /* Ignore trailing contents on the name server line.  */
+              {
+                char *el;
+                if ((el = strpbrk (cp, " \t\n")) != NULL)
+                  *el = '\0';
+              }
+
               struct sockaddr *sa;
-              if ((*cp != '\0') && (*cp != '\n') && __inet_aton (cp, &a))
+              if ((*cp != '\0') && (*cp != '\n') && __inet_aton_exact (cp, &a))
                 {
                   sa = allocate_address_v4 (a, NAMESERVER_PORT);
                   if (sa == NULL)
@@ -410,9 +418,6 @@ res_vinit_1 (FILE *fp, struct resolv_conf_parser *parser)
                 {
                   struct in6_addr a6;
                   char *el;
-
-                  if ((el = strpbrk (cp, " \t\n")) != NULL)
-                    *el = '\0';
                   if ((el = strchr (cp, SCOPE_DELIMITER)) != NULL)
                     *el = '\0';
                   if ((*cp != '\0') && (__inet_pton (AF_INET6, cp, &a6) > 0))
@@ -472,7 +477,7 @@ res_vinit_1 (FILE *fp, struct resolv_conf_parser *parser)
                   char separator = *cp;
                   *cp = 0;
                   struct resolv_sortlist_entry e;
-                  if (__inet_aton (net, &a))
+                  if (__inet_aton_exact (net, &a))
                     {
                       e.addr = a;
                       if (is_sort_mask (separator))
@@ -484,7 +489,7 @@ res_vinit_1 (FILE *fp, struct resolv_conf_parser *parser)
                             cp++;
                           separator = *cp;
                           *cp = 0;
-                          if (__inet_aton (net, &a))
+                          if (__inet_aton_exact (net, &a))
                             e.mask = a.s_addr;
                           else
                             e.mask = net_mask (e.addr);
