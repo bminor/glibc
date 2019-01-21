@@ -1,3 +1,12 @@
+2019-01-18  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24112]
+	resolv: Do not send queries for non-host-names in nss_dns.
+	* resolv/nss_dns/dns-host.c (check_name): New function.
+	(_nss_dns_gethostbyname2_r): Use it.
+	(_nss_dns_gethostbyname_r): Likewise.
+	(_nss_dns_gethostbyname4_r): Likewise.
+
 2019-01-21  Florian Weimer  <fweimer@redhat.com>
 
 	* resolv/inet_addr.c: Reformat to GNU style.
