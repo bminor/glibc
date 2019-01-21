@@ -1,3 +1,11 @@
+2019-01-31  Paul Eggert  <eggert@cs.ucla.edu>
+
+	regex: fix read overrun [BZ #24114]
+	Problem found by AddressSanitizer, reported by Hongxu Chen in:
+	https://debbugs.gnu.org/34140
+	* posix/regexec.c (proceed_next_node):
+	Do not read past end of input buffer.
+
 2019-01-31  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #24059]
@@ -18002,7 +18010,7 @@
 	(CFLAGS-wcstof_l.c): Likewise.
 	(CPPFLAGS-tst-wchar-h.c): Likewise.
 	(CPPFLAGS-wcstold_l.c): Likewise.
----
+
 2017-12-11  Paul A. Clarke  <pc@us.ibm.com>
 
 	* sysdeps/ieee754/flt-32/s_cosf.c: New implementation.
