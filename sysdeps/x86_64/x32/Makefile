@@ -7,9 +7,9 @@ endif
 
 ifeq ($(subdir),string)
 tests += tst-size_t-memchr tst-size_t-memcmp tst-size_t-memcpy \
-	 tst-size_t-memrchr
+	 tst-size_t-memrchr tst-size_t-memset
 endif
 
 ifeq ($(subdir),wcsmbs)
-tests += tst-size_t-wmemchr tst-size_t-wmemcmp
+tests += tst-size_t-wmemchr tst-size_t-wmemcmp tst-size_t-wmemset
 endif
