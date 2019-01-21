@@ -274,11 +274,26 @@ gethostbyname3_context (struct resolv_context *ctx,
   return status;
 }
 
+/* Verify that the name looks like a host name.  There is no point in
+   sending a query which will not produce a usable name in the
+   response.  */
+static enum nss_status
+check_name (const char *name, int *h_errnop)
+{
+  if (res_hnok (name))
+    return NSS_STATUS_SUCCESS;
+  *h_errnop = HOST_NOT_FOUND;
+  return NSS_STATUS_NOTFOUND;
+}
+
 enum nss_status
 _nss_dns_gethostbyname2_r (const char *name, int af, struct hostent *result,
 			   char *buffer, size_t buflen, int *errnop,
 			   int *h_errnop)
 {
+  enum nss_status status = check_name (name, h_errnop);
+  if (status != NSS_STATUS_SUCCESS)
+    return status;
   return _nss_dns_gethostbyname3_r (name, af, result, buffer, buflen, errnop,
 				    h_errnop, NULL, NULL);
 }
@@ -289,6 +304,9 @@ _nss_dns_gethostbyname_r (const char *name, struct hostent *result,
 			  char *buffer, size_t buflen, int *errnop,
 			  int *h_errnop)
 {
+  enum nss_status status = check_name (name, h_errnop);
+  if (status != NSS_STATUS_SUCCESS)
+    return status;
   struct resolv_context *ctx = __resolv_context_get ();
   if (ctx == NULL)
     {
@@ -296,7 +314,7 @@ _nss_dns_gethostbyname_r (const char *name, struct hostent *result,
       *h_errnop = NETDB_INTERNAL;
       return NSS_STATUS_UNAVAIL;
     }
-  enum nss_status status = NSS_STATUS_NOTFOUND;
+  status = NSS_STATUS_NOTFOUND;
   if (res_use_inet6 ())
     status = gethostbyname3_context (ctx, name, AF_INET6, result, buffer,
 				     buflen, errnop, h_errnop, NULL, NULL);
@@ -313,6 +331,9 @@ _nss_dns_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
 			   char *buffer, size_t buflen, int *errnop,
 			   int *herrnop, int32_t *ttlp)
 {
+  enum nss_status status = check_name (name, herrnop);
+  if (status != NSS_STATUS_SUCCESS)
+    return status;
   struct resolv_context *ctx = __resolv_context_get ();
   if (ctx == NULL)
     {
@@ -347,7 +368,6 @@ _nss_dns_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
   int ans2p_malloced = 0;
 
   int olderr = errno;
-  enum nss_status status;
   int n = __res_context_search (ctx, name, C_IN, T_QUERY_A_AND_AAAA,
 				host_buffer.buf->buf, 2048, &host_buffer.ptr,
 				&ans2p, &nans2p, &resplen2, &ans2p_malloced);
