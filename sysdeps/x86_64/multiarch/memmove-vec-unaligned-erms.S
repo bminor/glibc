@@ -106,20 +106,20 @@
 	.section SECTION(.text),"ax",@progbits
 #if defined SHARED && IS_IN (libc)
 ENTRY (MEMMOVE_CHK_SYMBOL (__mempcpy_chk, unaligned))
-	cmpq	%rdx, %rcx
+	cmp	%RDX_LP, %RCX_LP
 	jb	HIDDEN_JUMPTARGET (__chk_fail)
 END (MEMMOVE_CHK_SYMBOL (__mempcpy_chk, unaligned))
 #endif
 
 ENTRY (MEMPCPY_SYMBOL (__mempcpy, unaligned))
-	movq	%rdi, %rax
-	addq	%rdx, %rax
+	mov	%RDI_LP, %RAX_LP
+	add	%RDX_LP, %RAX_LP
 	jmp	L(start)
 END (MEMPCPY_SYMBOL (__mempcpy, unaligned))
 
 #if defined SHARED && IS_IN (libc)
 ENTRY (MEMMOVE_CHK_SYMBOL (__memmove_chk, unaligned))
-	cmpq	%rdx, %rcx
+	cmp	%RDX_LP, %RCX_LP
 	jb	HIDDEN_JUMPTARGET (__chk_fail)
 END (MEMMOVE_CHK_SYMBOL (__memmove_chk, unaligned))
 #endif
@@ -127,9 +127,13 @@ END (MEMMOVE_CHK_SYMBOL (__memmove_chk, unaligned))
 ENTRY (MEMMOVE_SYMBOL (__memmove, unaligned))
 	movq	%rdi, %rax
 L(start):
-	cmpq	$VEC_SIZE, %rdx
+# ifdef __ILP32__
+	/* Clear the upper 32 bits.  */
+	movl	%edx, %edx
+# endif
+	cmp	$VEC_SIZE, %RDX_LP
 	jb	L(less_vec)
-	cmpq	$(VEC_SIZE * 2), %rdx
+	cmp	$(VEC_SIZE * 2), %RDX_LP
 	ja	L(more_2x_vec)
 #if !defined USE_MULTIARCH || !IS_IN (libc)
 L(last_2x_vec):
@@ -149,38 +153,38 @@ END (MEMMOVE_SYMBOL (__memmove, unaligned))
 
 # if VEC_SIZE == 16
 ENTRY (__mempcpy_chk_erms)
-	cmpq	%rdx, %rcx
+	cmp	%RDX_LP, %RCX_LP
 	jb	HIDDEN_JUMPTARGET (__chk_fail)
 END (__mempcpy_chk_erms)
 
 /* Only used to measure performance of REP MOVSB.  */
 ENTRY (__mempcpy_erms)
-	movq	%rdi, %rax
+	mov	%RDI_LP, %RAX_LP
 	/* Skip zero length.  */
-	testq	%rdx, %rdx
+	test	%RDX_LP, %RDX_LP
 	jz	2f
-	addq	%rdx, %rax
+	add	%RDX_LP, %RAX_LP
 	jmp	L(start_movsb)
 END (__mempcpy_erms)
 
 ENTRY (__memmove_chk_erms)
-	cmpq	%rdx, %rcx
+	cmp	%RDX_LP, %RCX_LP
 	jb	HIDDEN_JUMPTARGET (__chk_fail)
 END (__memmove_chk_erms)
 
 ENTRY (__memmove_erms)
 	movq	%rdi, %rax
 	/* Skip zero length.  */
-	testq	%rdx, %rdx
+	test	%RDX_LP, %RDX_LP
 	jz	2f
 L(start_movsb):
-	movq	%rdx, %rcx
-	cmpq	%rsi, %rdi
+	mov	%RDX_LP, %RCX_LP
+	cmp	%RSI_LP, %RDI_LP
 	jb	1f
 	/* Source == destination is less common.  */
 	je	2f
-	leaq	(%rsi,%rcx), %rdx
-	cmpq	%rdx, %rdi
+	lea	(%rsi,%rcx), %RDX_LP
+	cmp	%RDX_LP, %RDI_LP
 	jb	L(movsb_backward)
 1:
 	rep movsb
@@ -200,20 +204,20 @@ strong_alias (__memmove_chk_erms, __memcpy_chk_erms)
 
 # ifdef SHARED
 ENTRY (MEMMOVE_CHK_SYMBOL (__mempcpy_chk, unaligned_erms))
-	cmpq	%rdx, %rcx
+	cmp	%RDX_LP, %RCX_LP
 	jb	HIDDEN_JUMPTARGET (__chk_fail)
 END (MEMMOVE_CHK_SYMBOL (__mempcpy_chk, unaligned_erms))
 # endif
 
 ENTRY (MEMMOVE_SYMBOL (__mempcpy, unaligned_erms))
-	movq	%rdi, %rax
-	addq	%rdx, %rax
+	mov	%RDI_LP, %RAX_LP
+	add	%RDX_LP, %RAX_LP
 	jmp	L(start_erms)
 END (MEMMOVE_SYMBOL (__mempcpy, unaligned_erms))
 
 # ifdef SHARED
 ENTRY (MEMMOVE_CHK_SYMBOL (__memmove_chk, unaligned_erms))
-	cmpq	%rdx, %rcx
+	cmp	%RDX_LP, %RCX_LP
 	jb	HIDDEN_JUMPTARGET (__chk_fail)
 END (MEMMOVE_CHK_SYMBOL (__memmove_chk, unaligned_erms))
 # endif
@@ -221,9 +225,13 @@ END (MEMMOVE_CHK_SYMBOL (__memmove_chk, unaligned_erms))
 ENTRY (MEMMOVE_SYMBOL (__memmove, unaligned_erms))
 	movq	%rdi, %rax
 L(start_erms):
-	cmpq	$VEC_SIZE, %rdx
+# ifdef __ILP32__
+	/* Clear the upper 32 bits.  */
+	movl	%edx, %edx
+# endif
+	cmp	$VEC_SIZE, %RDX_LP
 	jb	L(less_vec)
-	cmpq	$(VEC_SIZE * 2), %rdx
+	cmp	$(VEC_SIZE * 2), %RDX_LP
 	ja	L(movsb_more_2x_vec)
 L(last_2x_vec):
 	/* From VEC and to 2 * VEC.  No branch when size == VEC_SIZE. */
@@ -250,7 +258,7 @@ L(movsb):
 # endif
 	jb	L(more_8x_vec_backward)
 1:
-	movq	%rdx, %rcx
+	mov	%RDX_LP, %RCX_LP
 	rep movsb
 L(nop):
 	ret
