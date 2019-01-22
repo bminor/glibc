@@ -28,6 +28,9 @@ __file_name_lookup_at (int fd, int at_flags,
 {
   error_t err;
   file_t result;
+  int empty = at_flags & AT_EMPTY_PATH;
+
+  at_flags &= ~AT_EMPTY_PATH;
 
   err = __hurd_at_flags (&at_flags, &flags);
   if (err)
@@ -35,6 +38,23 @@ __file_name_lookup_at (int fd, int at_flags,
 
   if (fd == AT_FDCWD || file_name[0] == '/')
     return __file_name_lookup (file_name, flags, mode);
+
+  if (empty != 0 && file_name[0] == '\0')
+    {
+      enum retry_type doretry;
+      char retryname[1024];	/* XXX string_t LOSES! */
+
+      err = HURD_DPORT_USE (fd, __dir_lookup (port, "", flags, mode,
+					      &doretry, retryname,
+					      &result));
+
+      if (! err)
+	err = __hurd_file_name_lookup_retry (&_hurd_ports_use, &__getdport,
+					     NULL, doretry, retryname,
+					     flags, mode, &result);
+
+      return err ? (__hurd_dfail (fd, err), MACH_PORT_NULL) : result;
+    }
 
   file_t startdir;
   error_t use_init_port (int which, error_t (*operate) (mach_port_t))

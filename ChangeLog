@@ -2,6 +2,9 @@
 
 	* sysdeps/mach/hurd/faccessat.c (__faccessat_common): Check for errors
 	returned by __hurd_at_flags.
+	* hurd/lookup-at.c (__file_name_lookup_at): When at_flags contains
+	AT_EMPTY_PATH, call __dir_lookup and __hurd_file_name_lookup_retry
+	directly instead of __hurd_file_name_lookup.
 
 2019-01-21  Joseph Myers  <joseph@codesourcery.com>
 
