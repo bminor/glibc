@@ -129,6 +129,7 @@ libsupport-routines = \
   xpthread_mutexattr_settype \
   xpthread_once \
   xpthread_rwlock_init \
+  xpthread_rwlock_destroy \
   xpthread_rwlock_rdlock \
   xpthread_rwlock_unlock \
   xpthread_rwlock_wrlock \
