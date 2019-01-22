@@ -1,3 +1,20 @@
+2019-01-31  Carlos O'Donell  <carlos@redhat.com>
+	    Torvald Riegel  <triegel@redhat.com>
+	    Rik Prohaska  <prohaska7@gmail.com>
+
+	[BZ# 23844]
+	* nptl/Makefile (tests): Add tst-rwlock-tryrdlock-stall, and
+	tst-rwlock-trywrlock-stall.
+	* nptl/pthread_rwlock_tryrdlock.c (__pthread_rwlock_tryrdlock):
+	Wake waiters if PTHREAD_RWLOCK_FUTEX_USED is set.
+	* nptl/pthread_rwlock_trywrlock.c (__pthread_rwlock_trywrlock):
+	Set __wrphase_fute to 1 only if we started the write phase.
+	* nptl/tst-rwlock-tryrdlock-stall.c: New file.
+	* nptl/tst-rwlock-trywrlock-stall.c: New file.
+	* support/Makefile (libsupport-routines): Add xpthread_rwlock_destroy.
+	* support/xpthread_rwlock_destroy.c: New file.
+	* support/xthread.h: Declare xpthread_rwlock_destroy.
+
 2019-02-08  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #24161]

@@ -84,6 +84,7 @@ void xpthread_rwlockattr_setkind_np (pthread_rwlockattr_t *attr, int pref);
 void xpthread_rwlock_wrlock (pthread_rwlock_t *rwlock);
 void xpthread_rwlock_rdlock (pthread_rwlock_t *rwlock);
 void xpthread_rwlock_unlock (pthread_rwlock_t *rwlock);
+void xpthread_rwlock_destroy (pthread_rwlock_t *rwlock);
 
 __END_DECLS
 
