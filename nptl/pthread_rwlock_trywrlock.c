@@ -46,8 +46,15 @@ __pthread_rwlock_trywrlock (pthread_rwlock_t *rwlock)
 	  &rwlock->__data.__readers, &r,
 	  r | PTHREAD_RWLOCK_WRPHASE | PTHREAD_RWLOCK_WRLOCKED))
 	{
+	  /* We have become the primary writer and we cannot have shared
+	     the PTHREAD_RWLOCK_FUTEX_USED flag with someone else, so we
+	     can simply enable blocking (see full wrlock code).  */
 	  atomic_store_relaxed (&rwlock->__data.__writers_futex, 1);
-	  atomic_store_relaxed (&rwlock->__data.__wrphase_futex, 1);
+	  /* If we started a write phase, we need to enable readers to
+	     wait.  If we did not, we must not change it because other threads
+	     may have set the PTHREAD_RWLOCK_FUTEX_USED in the meantime.  */
+	  if ((r & PTHREAD_RWLOCK_WRPHASE) == 0)
+	    atomic_store_relaxed (&rwlock->__data.__wrphase_futex, 1);
 	  atomic_store_relaxed (&rwlock->__data.__cur_writer,
 	      THREAD_GETMEM (THREAD_SELF, tid));
 	  return 0;
