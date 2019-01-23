@@ -1,3 +1,14 @@
+2019-01-24  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #24122]
+	* elf/Makefile (tests): Add tst-audit13.
+	(modules-names): Add tst-audit13mod1.
+	(tst-audit13.out, LDFLAGS-tst-audit13mod1.so, tst-audit13-ENV): New
+	rule.
+	* elf/rtld.c (dl_main): Handle invalid audit module version.
+	* elf/tst-audit13.c: New file.
+	* elf/tst-audit13mod1.c: Likewise.
+
 2019-01-22  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/faccessat.c (__faccessat_common): Check for errors
