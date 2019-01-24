@@ -21,7 +21,7 @@
 #include <hp-timing.h>
 #include <stdint.h>
 
-#if HP_TIMING_AVAIL && !defined USE_CLOCK_GETTIME
+#if HP_TIMING_INLINE && !defined USE_CLOCK_GETTIME
 # define GL(x) _##x
 # define GLRO(x) _##x
 typedef hp_timing_t timing_t;

@@ -1,5 +1,31 @@
 2019-03-22  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* benchtests/bench-timing.h: Replace HP_TIMING_AVAIL with
+	HP_TIMING_INLINE.
+	* nptl/descr.h: Likewise.
+	* elf/rtld.c (RLTD_TIMING_DECLARE, RTLD_TIMING_NOW, RTLD_TIMING_DIFF,
+	RTLD_TIMING_ACCUM_NT, RTLD_TIMING_SET): Define.
+	(dl_start_final_info, _dl_start_final, dl_main, print_statistics):
+	Abstract hp-timing usage with RTLD_* macros.
+	* sysdeps/alpha/hp-timing.h (HP_TIMING_INLINE): Define iff IS_IN(rtld).
+	(HP_TIMING_AVAIL, HP_SMALL_TIMING_AVAIL): Remove.
+	* sysdeps/generic/hp-timing.h (HP_TIMING_AVAIL, HP_SMALL_TIMING_AVAIL,
+	HP_TIMING_NONAVAIL): Likewise.
+	* sysdeps/ia64/hp-timing.h (HP_TIMING_AVAIL, HP_SMALL_TIMING_AVAIL):
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/hp-timing.h (HP_TIMING_AVAIL,
+	HP_SMALL_TIMING_AVAIL): Likewise.
+	* sysdeps/powerpc/powerpc64/hp-timing.h (HP_TIMING_AVAIL,
+	HP_SMALL_TIMING_AVAIL): Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/hp-timing.h (HP_TIMING_AVAIL,
+	HP_SMALL_TIMING_AVAIL): Likewise.
+	* sysdeps/sparc/sparc64/hp-timing.h (HP_TIMING_AVAIL,
+	HP_SMALL_TIMING_AVAIL): Likewise.
+	* sysdeps/x86/hp-timing.h (HP_TIMING_AVAIL, HP_SMALL_TIMING_AVAIL):
+	Likewise.
+	* sysdeps/generic/hp-timing-common.h: Update comment with
+	HP_TIMING_AVAIL removal.
+
 	* include/random-bits.h: New file.
 	* resolv/res_mkquery.c [HP_TIMING_AVAIL] (RANDOM_BITS,
 	(__res_context_mkquery): Remove usage hp-timing usage and replace with

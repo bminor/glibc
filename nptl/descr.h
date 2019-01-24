@@ -342,7 +342,7 @@ struct pthread
   /* Lock for synchronizing setxid calls.  */
   unsigned int setxid_futex;
 
-#if HP_TIMING_AVAIL
+#if HP_TIMING_INLINE
   hp_timing_t cpuclock_offset_ununsed;
 #endif
 

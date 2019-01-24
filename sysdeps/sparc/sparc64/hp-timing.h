@@ -20,8 +20,6 @@
 #ifndef _HP_TIMING_H
 #define _HP_TIMING_H	1
 
-#define HP_TIMING_AVAIL		(1)
-#define HP_SMALL_TIMING_AVAIL	(1)
 #define HP_TIMING_INLINE	(1)
 
 typedef unsigned long int hp_timing_t;
