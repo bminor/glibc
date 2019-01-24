@@ -60,6 +60,10 @@ Major new features:
   alternative year numbers less than 10).  Zero-padding can be
   overridden with the '_' or '-' flags (which are GNU extensions).
 
+* As a GNU extension, the '_' and '-' flags can now be applied to
+  "%EY" to control how the year number is formatted; they have the
+  same effect that they would on "%Ey".
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The glibc.tune tunable namespace has been renamed to glibc.cpu and the

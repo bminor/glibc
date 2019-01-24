@@ -434,7 +434,7 @@ static CHAR_T const month_name[][10] =
 #endif
 
 static size_t __strftime_internal (CHAR_T *, size_t, const CHAR_T *,
-				   const struct tm *, bool *
+				   const struct tm *, int, bool *
 				   ut_argument_spec
 				   LOCALE_PARAM) __THROW;
 
@@ -457,7 +457,7 @@ my_strftime (CHAR_T *s, size_t maxsize, const CHAR_T *format,
   tp = &tmcopy;
 #endif
   bool tzset_called = false;
-  return __strftime_internal (s, maxsize, format, tp, &tzset_called
+  return __strftime_internal (s, maxsize, format, tp, 0, &tzset_called
 			      ut_argument LOCALE_ARG);
 }
 #ifdef _LIBC
@@ -466,7 +466,7 @@ libc_hidden_def (my_strftime)
 
 static size_t
 __strftime_internal (CHAR_T *s, size_t maxsize, const CHAR_T *format,
-		     const struct tm *tp, bool *tzset_called
+		     const struct tm *tp, int yr_spec, bool *tzset_called
 		     ut_argument_spec LOCALE_PARAM)
 {
 #if defined _LIBC && defined USE_IN_EXTENDED_LOCALE_MODEL
@@ -838,11 +838,11 @@ __strftime_internal (CHAR_T *s, size_t maxsize, const CHAR_T *format,
 	  {
 	    CHAR_T *old_start = p;
 	    size_t len = __strftime_internal (NULL, (size_t) -1, subfmt,
-					      tp, tzset_called ut_argument
-					      LOCALE_ARG);
+					      tp, yr_spec, tzset_called
+					      ut_argument LOCALE_ARG);
 	    add (len, __strftime_internal (p, maxsize - i, subfmt,
-					   tp, tzset_called ut_argument
-					   LOCALE_ARG));
+					   tp, yr_spec, tzset_called
+					   ut_argument LOCALE_ARG));
 
 	    if (to_uppcase)
 	      while (old_start < p)
@@ -1273,6 +1273,8 @@ __strftime_internal (CHAR_T *s, size_t maxsize, const CHAR_T *format,
 # else
 		  subfmt = era->era_format;
 # endif
+		  if (pad != 0)
+		    yr_spec = pad;
 		  goto subformat;
 		}
 #else
@@ -1294,6 +1296,8 @@ __strftime_internal (CHAR_T *s, size_t maxsize, const CHAR_T *format,
 	      if (era)
 		{
 		  int delta = tp->tm_year - era->start_date[0];
+		  if (yr_spec != 0)
+		    pad = yr_spec;
 		  DO_NUMBER (2, (era->offset
 				 + delta * era->absolute_direction));
 		}

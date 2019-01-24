@@ -1393,6 +1393,10 @@ The preferred calendar time representation for the current locale.
 The century of the year.  This is equivalent to the greatest integer not
 greater than the year divided by 100.
 
+If the @code{E} modifier is specified (@code{%EC}), instead produces
+the name of the period for the year (e.g.@: an era name) in the
+locale's alternative calendar.
+
 This format was first standardized by POSIX.2-1992 and by @w{ISO C99}.
 
 @item %d
@@ -1578,6 +1582,13 @@ can be overridden by an explicit field width or by the @code{_} and
 @item %Y
 The year as a decimal number, using the Gregorian calendar.  Years
 before the year @code{1} are numbered @code{0}, @code{-1}, and so on.
+
+If the @code{E} modifier is specified (@code{%EY}), instead produces a
+complete representation of the year according to the locale's
+alternative calendar.  Generally this will be some combination of the
+information produced by @code{%EC} and @code{Ey}.  As a GNU extension,
+the formatting flags @code{_} or @code{-} may be used with this
+conversion specifier; they affect how the year number is printed.
 
 @item %z
 @w{RFC 822}/@w{ISO 8601:1988} style numeric time zone (e.g.,
