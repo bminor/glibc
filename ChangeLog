@@ -6,6 +6,7 @@
 
 2019-01-24  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
+	[BZ #24110]
 	* hurd/hurdsig.c (_hurd_thread_sigstate): Set SS_DISABLE in
 	sigaltstack.ss_flags.
 
