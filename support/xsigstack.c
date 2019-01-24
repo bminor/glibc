@@ -26,6 +26,13 @@
 #include <sys/mman.h>
 #include <sys/param.h> /* roundup, MAX */
 
+#ifndef MAP_NORESERVE
+# define MAP_NORESERVE 0
+#endif
+#ifndef MAP_STACK
+# define MAP_STACK 0
+#endif
+
 /* The "cookie" returned by xalloc_sigstack points to one of these
    structures.  */
 struct sigstack_desc
