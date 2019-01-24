@@ -246,12 +246,16 @@ $y_is_neg:
 	   quotient must be either 0 or 1, so the remainder must be X
 	   or X-Y, so just compute it directly.  */
 	cmpule	Y, X, AT
+	excb
+	mt_fpcr	$f3
 	subq	X, Y, RV
 	ldt	$f0, 0(sp)
+	ldt	$f3, 48(sp)
 	cmoveq	AT, X, RV
 
 	lda	sp, FRAME(sp)
 	cfi_restore ($f0)
+	cfi_restore ($f3)
 	cfi_def_cfa_offset (0)
 	ret	$31, (RA), 1
 

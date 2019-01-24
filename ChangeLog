@@ -1,3 +1,9 @@
+2019-01-24  Uroš Bizjak  <ubizjak@gmail.com>
+
+	[BZ #24130]
+	* sysdeps/alpha/remqu.S (__remqu): Add missing restore
+	of $f3 register on $y_is_neg path.
+
 2019-01-24  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* hurd/hurdsig.c (_hurd_thread_sigstate): Set SS_DISABLE in
