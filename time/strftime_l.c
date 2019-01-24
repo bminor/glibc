@@ -1294,7 +1294,7 @@ __strftime_internal (CHAR_T *s, size_t maxsize, const CHAR_T *format,
 	      if (era)
 		{
 		  int delta = tp->tm_year - era->start_date[0];
-		  DO_NUMBER (1, (era->offset
+		  DO_NUMBER (2, (era->offset
 				 + delta * era->absolute_direction));
 		}
 #else

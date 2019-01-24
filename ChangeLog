@@ -1,3 +1,10 @@
+2019-01-24  TAMUKI Shoichi  <tamuki@linet.gr.jp>
+
+	[BZ #23758]
+	* manual/time.texi (strftime): Document "%Ey".
+	* time/strftime_l.c (__strftime_internal): Set the default width
+	padding with zero of "%Ey" to 2.
+
 2019-01-24  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* support/xsigstack.c (MAP_NORESERVE, MAP_STACK): Define if they

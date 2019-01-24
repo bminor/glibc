@@ -52,6 +52,14 @@ Major new features:
     - C-SKY ABIV2 soft-float little-endian
     - C-SKY ABIV2 hard-float little-endian
 
+* strftime's default formatting of a locale's alternative year (%Ey)
+  has been changed to zero-pad the year to a minimum of two digits,
+  like "%y".  This improves the display of Japanese era years during
+  the first nine years of a new era, and is expected to be harmless
+  for all other locales (only Japanese locales regularly have
+  alternative year numbers less than 10).  Zero-padding can be
+  overridden with the '_' or '-' flags (which are GNU extensions).
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The glibc.tune tunable namespace has been renamed to glibc.cpu and the

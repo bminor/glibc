@@ -1568,6 +1568,13 @@ The preferred time of day representation for the current locale.
 The year without a century as a decimal number (range @code{00} through
 @code{99}).  This is equivalent to the year modulo 100.
 
+If the @code{E} modifier is specified (@code{%Ey}), instead produces
+the year number according to a locale-specific alternative calendar.
+Unlike @code{%y}, the number is @emph{not} reduced modulo 100.
+However, by default it is zero-padded to a minimum of two digits (this
+can be overridden by an explicit field width or by the @code{_} and
+@code{-} flags).
+
 @item %Y
 The year as a decimal number, using the Gregorian calendar.  Years
 before the year @code{1} are numbered @code{0}, @code{-1}, and so on.
