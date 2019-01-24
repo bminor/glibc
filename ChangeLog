@@ -1,3 +1,8 @@
+2019-01-24  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* hurd/hurdsig.c (_hurd_thread_sigstate): Set SS_DISABLE in
+	sigaltstack.ss_flags.
+
 2019-01-24  TAMUKI Shoichi  <tamuki@linet.gr.jp>
 
 	[BZ #23758]

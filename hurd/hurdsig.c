@@ -92,6 +92,7 @@ _hurd_thread_sigstate (thread_t thread)
       __sigemptyset (&ss->blocked);
       __sigemptyset (&ss->pending);
       memset (&ss->sigaltstack, 0, sizeof (ss->sigaltstack));
+      ss->sigaltstack.ss_flags |= SS_DISABLE;
       ss->preemptors = NULL;
       ss->suspended = MACH_PORT_NULL;
       ss->intr_port = MACH_PORT_NULL;
