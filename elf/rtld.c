@@ -1453,12 +1453,10 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 
 	      unsigned int (*laversion) (unsigned int);
 	      unsigned int lav;
-	      if (err_str != NULL)
-		goto not_loaded;
-
-	      if ((laversion = largs.result) != NULL
-		  && (lav = laversion (LAV_CURRENT)) > 0
-		  && lav <= LAV_CURRENT)
+	      if  (err_str == NULL
+		   && (laversion = largs.result) != NULL
+		   && (lav = laversion (LAV_CURRENT)) > 0
+		   && lav <= LAV_CURRENT)
 		{
 		  /* Allocate structure for the callback function pointers.
 		     This call can never fail.  */
@@ -1540,25 +1538,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 		  assert (GL(dl_ns)[ns]._ns_nloaded == 0);
 
 		  GL(dl_tls_max_dtv_idx) = tls_idx;
-		  if (GLRO(dl_debug_mask) & DL_DEBUG_FILES)
-		    {
-		      _dl_debug_printf ("\
-\nfile=%s cannot be loaded as audit interface; ignored.\n", name);
-		      if (laversion == NULL)
-			_dl_debug_printf (
-"  la_version function not found.\n");
-		      else
-			{
-			  if (lav == 0)
-			    _dl_debug_printf (
-"  auditor requested to be ignored (returned version of 0).\n");
-			  else
-			    _dl_debug_printf (
-"  auditor disabled since expected version %d is greater than "
-"supported version %d.\n",
-					      lav, LAV_CURRENT);
-			}
-		    }
+		  goto not_loaded;
 		}
 	    }
 	}
