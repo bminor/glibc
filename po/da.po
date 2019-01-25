@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc-2.11.1\n"
-"POT-Creation-Date: 2018-07-26 22:19-0400\n"
+"POT-Creation-Date: 2019-01-16 15:48+0530\n"
 "PO-Revision-Date: 2010-11-01 10:37+0100\n"
 "Last-Translator: Keld Simonsen <keld@keldix.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
@@ -149,7 +149,7 @@ msgstr ""
 #: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:308
 #: elf/pldd.c:252 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:405
 #: iconv/iconvconfig.c:379 locale/programs/locale.c:275
-#: locale/programs/localedef.c:427 login/programs/pt_chown.c:89
+#: locale/programs/localedef.c:437 login/programs/pt_chown.c:89
 #: malloc/memusagestat.c:563 nss/getent.c:933 nss/makedb.c:369
 #: posix/getconf.c:503 sysdeps/unix/sysv/linux/lddlibc4.c:61
 #, fuzzy, c-format
@@ -167,7 +167,7 @@ msgstr ""
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
 #: elf/ldconfig.c:324 elf/ldd.bash.in:38 elf/pldd.c:268 elf/sotruss.sh:75
 #: elf/sprof.c:389 iconv/iconv_prog.c:422 iconv/iconvconfig.c:396
-#: locale/programs/locale.c:292 locale/programs/localedef.c:453
+#: locale/programs/locale.c:292 locale/programs/localedef.c:463
 #: login/programs/pt_chown.c:63 malloc/memusage.sh:71
 #: malloc/memusagestat.c:581 nscd/nscd.c:509 nss/getent.c:87 nss/makedb.c:385
 #: posix/getconf.c:485 sysdeps/unix/sysv/linux/lddlibc4.c:68
@@ -185,7 +185,7 @@ msgstr ""
 #: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
 #: elf/ldconfig.c:329 elf/pldd.c:273 elf/sprof.c:395 iconv/iconv_prog.c:427
 #: iconv/iconvconfig.c:401 locale/programs/locale.c:297
-#: locale/programs/localedef.c:458 malloc/memusage.sh:75
+#: locale/programs/localedef.c:468 malloc/memusage.sh:75
 #: malloc/memusagestat.c:586 nscd/nscd.c:514 nss/getent.c:92 nss/makedb.c:390
 #: posix/getconf.c:490
 #, c-format
@@ -418,33 +418,33 @@ msgstr "Kan ikke åbne hurtigbufferfil %s\n"
 msgid "mmap of cache file failed.\n"
 msgstr "mmap af bufferfil fejlede\n"
 
-#: elf/cache.c:181 elf/cache.c:195
+#: elf/cache.c:181 elf/cache.c:195 elf/cache.c:205
 #, c-format
 msgid "File is not a cache file.\n"
 msgstr "Fil er ikke en bufferfil.\n"
 
-#: elf/cache.c:228 elf/cache.c:238
+#: elf/cache.c:233 elf/cache.c:243
 #, c-format
 msgid "%d libs found in cache `%s'\n"
 msgstr "%d libs fundet i hurtigbuffer '%s'\n"
 
-#: elf/cache.c:432
+#: elf/cache.c:437
 #, c-format
 msgid "Can't create temporary cache file %s"
 msgstr "Kan ikke oprette midlertidig hurtigbufferfil %s"
 
-#: elf/cache.c:440 elf/cache.c:450 elf/cache.c:454 elf/cache.c:458
-#: elf/cache.c:468
+#: elf/cache.c:445 elf/cache.c:455 elf/cache.c:459 elf/cache.c:463
+#: elf/cache.c:473
 #, c-format
 msgid "Writing of cache data failed"
 msgstr "Udskrivning af bufferdata fejlede"
 
-#: elf/cache.c:463
+#: elf/cache.c:468
 #, c-format
 msgid "Changing access rights of %s to %#o failed"
 msgstr "Ændring af adgangsrettigheder for %s til %#o fejlede"
 
-#: elf/cache.c:472
+#: elf/cache.c:477
 #, c-format
 msgid "Renaming of %s to %s failed"
 msgstr "Omdøbning af %s til %s fejlede"
@@ -692,20 +692,20 @@ msgstr "ugyldigt mål-navnerum for dlmopen()"
 msgid "cannot allocate memory in static TLS block"
 msgstr "Kan ikke tildele hukommelse i statisk TLS-blok"
 
-#: elf/dl-reloc.c:205
+#: elf/dl-reloc.c:213
 msgid "cannot make segment writable for relocation"
 msgstr "kan ikke gøre segment skrivbart for relokering"
 
-#: elf/dl-reloc.c:276
+#: elf/dl-reloc.c:272
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr "%s: ikke mere hukommelse til at gemme relokeringsresultat for %s\n"
 
-#: elf/dl-reloc.c:292
+#: elf/dl-reloc.c:288
 msgid "cannot restore segment prot after reloc"
 msgstr "kan ikke genskabe segmentbeskyttelse efter flytning"
 
-#: elf/dl-reloc.c:323
+#: elf/dl-reloc.c:319
 msgid "cannot apply additional memory protection after relocation"
 msgstr "kan ikke udføre yderligere hukommelsesbeskyttelser efter flytning"
 
@@ -1427,7 +1427,7 @@ msgstr "Information:"
 msgid "list all known coded character sets"
 msgstr "list alle kendte kodede tegnsæt"
 
-#: iconv/iconv_prog.c:64 locale/programs/localedef.c:120
+#: iconv/iconv_prog.c:64 locale/programs/localedef.c:124
 msgid "Output control:"
 msgstr "Udskriftskontrol:"
 
@@ -1436,8 +1436,8 @@ msgid "omit invalid characters from output"
 msgstr "fjern ugyldige tegn fra uddata"
 
 #: iconv/iconv_prog.c:66 iconv/iconvconfig.c:128
-#: locale/programs/localedef.c:113 locale/programs/localedef.c:115
-#: locale/programs/localedef.c:117 locale/programs/localedef.c:144
+#: locale/programs/localedef.c:117 locale/programs/localedef.c:119
+#: locale/programs/localedef.c:121 locale/programs/localedef.c:150
 #: malloc/memusagestat.c:56
 #, fuzzy
 #| msgid "[FILE]"
@@ -1546,7 +1546,7 @@ msgstr "Opret hurtigtindlæst iconv-modul konfigurationsfil."
 msgid "[DIR...]"
 msgstr "[KAT...]"
 
-#: iconv/iconvconfig.c:126 locale/programs/localedef.c:123
+#: iconv/iconvconfig.c:126 locale/programs/localedef.c:129
 msgid "PATH"
 msgstr ""
 
@@ -1796,7 +1796,7 @@ msgstr "%s: fejl i tilstandsmaskinen"
 #: locale/programs/ld-monetary.c:764 locale/programs/ld-name.c:278
 #: locale/programs/ld-numeric.c:341 locale/programs/ld-paper.c:228
 #: locale/programs/ld-telephone.c:292 locale/programs/ld-time.c:990
-#: locale/programs/locfile.c:997 locale/programs/repertoire.c:323
+#: locale/programs/locfile.c:1010 locale/programs/repertoire.c:323
 #, c-format
 msgid "%s: premature end of file"
 msgstr "%s: for tidlig slut på filen"
@@ -2675,99 +2675,103 @@ msgstr "Kan ikke sætte LC_ALL til forvalgt lokale"
 msgid "while preparing output"
 msgstr "under forberedelse af uddata"
 
-#: locale/programs/localedef.c:112
+#: locale/programs/localedef.c:116
 msgid "Input Files:"
 msgstr "Inddatafiler:"
 
-#: locale/programs/localedef.c:114
+#: locale/programs/localedef.c:118
 msgid "Symbolic character names defined in FILE"
 msgstr "Symbolske tegnnavne defineret i FIL"
 
-#: locale/programs/localedef.c:116
+#: locale/programs/localedef.c:120
 msgid "Source definitions are found in FILE"
 msgstr "Kildedefinitioner er fundet i FIL"
 
-#: locale/programs/localedef.c:118
+#: locale/programs/localedef.c:122
 msgid "FILE contains mapping from symbolic names to UCS4 values"
 msgstr "FIL indeholder mapning fra symbolske navne til UCS4-værdier"
 
-#: locale/programs/localedef.c:122
+#: locale/programs/localedef.c:126
 msgid "Create output even if warning messages were issued"
 msgstr "Lav uddata selv om advarsler blev givet"
 
-#: locale/programs/localedef.c:123
+#: locale/programs/localedef.c:128
+msgid "Do not create hard links between installed locales"
+msgstr ""
+
+#: locale/programs/localedef.c:129
 msgid "Optional output file prefix"
 msgstr "Valgfrit præfiks for uddatafil"
 
-#: locale/programs/localedef.c:124
+#: locale/programs/localedef.c:130
 #, fuzzy
 #| msgid "Be strictly POSIX conform"
 msgid "Strictly conform to POSIX"
 msgstr "Vær strengt POSIX-konform"
 
-#: locale/programs/localedef.c:126
+#: locale/programs/localedef.c:132
 msgid "Suppress warnings and information messages"
 msgstr "Undertryk advarsler og informationsmeddelelser"
 
-#: locale/programs/localedef.c:127
+#: locale/programs/localedef.c:133
 msgid "Print more messages"
 msgstr "Skriv flere meddelelser"
 
-#: locale/programs/localedef.c:128 locale/programs/localedef.c:131
+#: locale/programs/localedef.c:134 locale/programs/localedef.c:137
 #, fuzzy
 #| msgid "warning: "
 msgid "<warnings>"
 msgstr "advarsel: "
 
-#: locale/programs/localedef.c:129
+#: locale/programs/localedef.c:135
 msgid "Comma-separated list of warnings to disable; supported warnings are: ascii, intcurrsym"
 msgstr ""
 
-#: locale/programs/localedef.c:132
+#: locale/programs/localedef.c:138
 msgid "Comma-separated list of warnings to enable; supported warnings are: ascii, intcurrsym"
 msgstr ""
 
-#: locale/programs/localedef.c:135
+#: locale/programs/localedef.c:141
 msgid "Archive control:"
 msgstr "Arkivkontrol:"
 
-#: locale/programs/localedef.c:137
+#: locale/programs/localedef.c:143
 msgid "Don't add new data to archive"
 msgstr "Tilføj ikke nye data til arkiv"
 
-#: locale/programs/localedef.c:139
+#: locale/programs/localedef.c:145
 msgid "Add locales named by parameters to archive"
 msgstr "Tilføj lokaler navngivet af parametre til arkiv"
 
-#: locale/programs/localedef.c:140
+#: locale/programs/localedef.c:146
 msgid "Replace existing archive content"
 msgstr "Erstat eksisterende arkivindhold"
 
-#: locale/programs/localedef.c:142
+#: locale/programs/localedef.c:148
 msgid "Remove locales named by parameters from archive"
 msgstr "Fjern lokaler navngivet af parametre fra arkiv"
 
-#: locale/programs/localedef.c:143
+#: locale/programs/localedef.c:149
 msgid "List content of archive"
 msgstr "Vis indeholdet i arkiv"
 
-#: locale/programs/localedef.c:145
+#: locale/programs/localedef.c:151
 msgid "locale.alias file to consult when making archive"
 msgstr "locale.alias-fil som skal bruges når arkiv laves"
 
-#: locale/programs/localedef.c:147
+#: locale/programs/localedef.c:153
 msgid "Generate little-endian output"
 msgstr ""
 
-#: locale/programs/localedef.c:149
+#: locale/programs/localedef.c:155
 msgid "Generate big-endian output"
 msgstr ""
 
-#: locale/programs/localedef.c:154
+#: locale/programs/localedef.c:160
 msgid "Compile locale specification"
 msgstr "Kompilér lokale-specifikation"
 
-#: locale/programs/localedef.c:157
+#: locale/programs/localedef.c:163
 msgid ""
 "NAME\n"
 "[--add-to-archive|--delete-from-archive] FILE...\n"
@@ -2777,33 +2781,33 @@ msgstr ""
 "[--add-to-archive|--delete-from-archive] FIL...\n"
 "--list-archive [FIL]"
 
-#: locale/programs/localedef.c:232
+#: locale/programs/localedef.c:238
 #, c-format
 msgid "cannot create directory for output files"
 msgstr "kan ikke oprette katalog for uddatafiler"
 
-#: locale/programs/localedef.c:243
+#: locale/programs/localedef.c:249
 msgid "FATAL: system does not define `_POSIX2_LOCALEDEF'"
 msgstr "FATALT: systemet definerer ikke '_POSIX2_LOCALEDEF'"
 
-#: locale/programs/localedef.c:257 locale/programs/localedef.c:273
-#: locale/programs/localedef.c:663 locale/programs/localedef.c:683
+#: locale/programs/localedef.c:263 locale/programs/localedef.c:279
+#: locale/programs/localedef.c:673 locale/programs/localedef.c:693
 #, c-format
 msgid "cannot open locale definition file `%s'"
 msgstr "kan ikke åbne lokaledefinitionsfil '%s'"
 
-#: locale/programs/localedef.c:297
+#: locale/programs/localedef.c:303
 #, c-format
 msgid "cannot write output files to `%s'"
 msgstr "kan ikke skrive uddatafiler til '%s'"
 
-#: locale/programs/localedef.c:303
+#: locale/programs/localedef.c:309
 #, fuzzy
 #| msgid "no output file produced because warnings were issued"
 msgid "no output file produced because errors were issued"
 msgstr "på grund af advarsler blev ingen uddatafil oprettet"
 
-#: locale/programs/localedef.c:431
+#: locale/programs/localedef.c:441
 #, fuzzy, c-format
 #| msgid ""
 #| "System's directory for character maps : %s\n"
@@ -2821,11 +2825,11 @@ msgstr ""
 "                     lokale-sti: %s\n"
 "%s"
 
-#: locale/programs/localedef.c:631
+#: locale/programs/localedef.c:641
 msgid "circular dependencies between locale definitions"
 msgstr "cirkulære afhængigheder mellem lokale-definitioner"
 
-#: locale/programs/localedef.c:637
+#: locale/programs/localedef.c:647
 #, c-format
 msgid "cannot add already read locale `%s' a second time"
 msgstr "kan ikke tilføje allerede læst lokale '%s' på ny"
@@ -2984,24 +2988,24 @@ msgstr "kan ikke åbne uddatafil '%s' for kategori '%s'"
 msgid "failure while writing data for category `%s'"
 msgstr "fejl ved skrivning af data for kategori '%s'"
 
-#: locale/programs/locfile.c:917
+#: locale/programs/locfile.c:930
 #, c-format
 msgid "cannot create output file `%s' for category `%s'"
 msgstr "kan ikke oprette uddatafil '%s' for kategori '%s'"
 
-#: locale/programs/locfile.c:953
+#: locale/programs/locfile.c:966
 msgid "expecting string argument for `copy'"
 msgstr "forventer strengargument for 'copy'"
 
-#: locale/programs/locfile.c:957
+#: locale/programs/locfile.c:970
 msgid "locale name should consist only of portable characters"
 msgstr "lokale-navn bør bestå af bare portable tegn"
 
-#: locale/programs/locfile.c:976
+#: locale/programs/locfile.c:989
 msgid "no other keyword shall be specified when `copy' is used"
 msgstr "ingen andre nøgleord skal angives når 'copy' bruges"
 
-#: locale/programs/locfile.c:990
+#: locale/programs/locfile.c:1003
 #, c-format
 msgid "`%1$s' definition does not end with `END %1$s'"
 msgstr "'%1$s' definition slutter ikke med 'END %1$s'"
@@ -3881,264 +3885,264 @@ msgstr "formindsker %s cache; tid %ld"
 msgid "considering %s entry \"%s\", timeout %<PRIu64>"
 msgstr "overvejer %s-post \"%s\", tidsgrænse %<PRIu64>"
 
-#: nscd/connections.c:520
+#: nscd/connections.c:521
 #, c-format
 msgid "invalid persistent database file \"%s\": %s"
 msgstr "Ugyldig overlevende databasefil '%s': %s"
 
-#: nscd/connections.c:528
+#: nscd/connections.c:529
 msgid "uninitialized header"
 msgstr "uinitieret hoved"
 
-#: nscd/connections.c:533
+#: nscd/connections.c:534
 msgid "header size does not match"
 msgstr "hovedstørrelse er ikke overensstemmende"
 
-#: nscd/connections.c:543
+#: nscd/connections.c:544
 msgid "file size does not match"
 msgstr "filstørrelse er ikke overensstemmende"
 
-#: nscd/connections.c:560
+#: nscd/connections.c:561
 msgid "verification failed"
 msgstr "efterprøvelse mislykkedes"
 
-#: nscd/connections.c:574
+#: nscd/connections.c:575
 #, c-format
 msgid "suggested size of table for database %s larger than the persistent database's table"
 msgstr "foreslået størrelse på tabellen for database %s er større end den overlevende databases tabel"
 
-#: nscd/connections.c:585 nscd/connections.c:669
+#: nscd/connections.c:586 nscd/connections.c:670
 #, c-format
 msgid "cannot create read-only descriptor for \"%s\"; no mmap"
 msgstr "kan ikke oprette kun læsbar filidentifikator for \"%s\", ingen mmap"
 
-#: nscd/connections.c:601
+#: nscd/connections.c:602
 #, c-format
 msgid "cannot access '%s'"
 msgstr "kan ikke få adgang til '%s'"
 
-#: nscd/connections.c:649
+#: nscd/connections.c:650
 #, c-format
 msgid "database for %s corrupted or simultaneously used; remove %s manually if necessary and restart"
 msgstr "database for %s ødelagt eller brugt af flere samtidigt; fjern %s manuelt hvis det behøves og genstart"
 
-#: nscd/connections.c:655
+#: nscd/connections.c:656
 #, c-format
 msgid "cannot create %s; no persistent database used"
 msgstr "kan ikke oprette %s, ingen overlevende database brugt"
 
-#: nscd/connections.c:658
+#: nscd/connections.c:659
 #, c-format
 msgid "cannot create %s; no sharing possible"
 msgstr "Kan ikke oprette %s, ingen deling mulig"
 
-#: nscd/connections.c:729
+#: nscd/connections.c:730
 #, c-format
 msgid "cannot write to database file %s: %s"
 msgstr "kan ikke skrive til databasefil '%s': %s"
 
-#: nscd/connections.c:785
+#: nscd/connections.c:786
 #, c-format
 msgid "cannot open socket: %s"
 msgstr "kan ikke åbne sokkel: %s"
 
-#: nscd/connections.c:804
+#: nscd/connections.c:805
 #, c-format
 msgid "cannot enable socket to accept connections: %s"
 msgstr "kan ikke få sokkel til at acceptere forbindelser: %s"
 
-#: nscd/connections.c:861
+#: nscd/connections.c:862
 #, c-format
 msgid "disabled inotify-based monitoring for file `%s': %s"
 msgstr ""
 
-#: nscd/connections.c:865
+#: nscd/connections.c:866
 #, c-format
 msgid "monitoring file `%s` (%d)"
 msgstr ""
 
-#: nscd/connections.c:878
+#: nscd/connections.c:879
 #, c-format
 msgid "disabled inotify-based monitoring for directory `%s': %s"
 msgstr ""
 
-#: nscd/connections.c:882
+#: nscd/connections.c:883
 #, fuzzy, c-format
 #| msgid "Can't open directory %s"
 msgid "monitoring directory `%s` (%d)"
 msgstr "Kan ikke åbne katalog %s"
 
-#: nscd/connections.c:910
+#: nscd/connections.c:911
 #, fuzzy, c-format
 #| msgid "no more memory for database '%s'"
 msgid "monitoring file %s for database %s"
 msgstr "Ikke mere hukommelse for database '%s'"
 
-#: nscd/connections.c:920
+#: nscd/connections.c:921
 #, c-format
 msgid "stat failed for file `%s'; will try again later: %s"
 msgstr ""
 
-#: nscd/connections.c:1039
+#: nscd/connections.c:1040
 #, c-format
 msgid "provide access to FD %d, for %s"
 msgstr "giv adgang til FD %d, for %s"
 
-#: nscd/connections.c:1051
+#: nscd/connections.c:1052
 #, c-format
 msgid "cannot handle old request version %d; current version is %d"
 msgstr "kan ikke håndtere gammel forespørgsel af version %d. Nuværende version er %d"
 
-#: nscd/connections.c:1074
+#: nscd/connections.c:1075
 #, c-format
 msgid "request from %ld not handled due to missing permission"
 msgstr "forespørgsel fra %ld ikke behandlet da rettigheder mangler"
 
-#: nscd/connections.c:1079
+#: nscd/connections.c:1080
 #, c-format
 msgid "request from '%s' [%ld] not handled due to missing permission"
 msgstr "forespørgsel fra \"%s\" [%ld] ikke behandlet da rettigheder mangler"
 
-#: nscd/connections.c:1084
+#: nscd/connections.c:1085
 msgid "request not handled due to missing permission"
 msgstr "forespørgsel ikke behandlet da rettigheder mangler"
 
-#: nscd/connections.c:1122 nscd/connections.c:1148
+#: nscd/connections.c:1123 nscd/connections.c:1149
 #, c-format
 msgid "cannot write result: %s"
 msgstr "kan ikke udskrive resultat: '%s'"
 
-#: nscd/connections.c:1239
+#: nscd/connections.c:1240
 #, c-format
 msgid "error getting caller's id: %s"
 msgstr "fejl ved indhentning af opkalders id: %s"
 
-#: nscd/connections.c:1349
+#: nscd/connections.c:1350
 #, fuzzy, c-format
 #| msgid "cannot open /proc/self/cmdline: %s; disabling paranoia mode"
 msgid "cannot open /proc/self/cmdline: %m; disabling paranoia mode"
 msgstr "kan ikke åbne /proc/self/cmdline: %s, deaktiverer paranoiatilstand"
 
-#: nscd/connections.c:1372
+#: nscd/connections.c:1373
 #, c-format
 msgid "cannot change to old UID: %s; disabling paranoia mode"
 msgstr "kan ikke ændre til foregående UID: %s; deaktiverer paranoiatilstand"
 
-#: nscd/connections.c:1383
+#: nscd/connections.c:1384
 #, c-format
 msgid "cannot change to old GID: %s; disabling paranoia mode"
 msgstr "kan ikke ændre til foregående GID: %s; deaktiverer paranoiatilstand"
 
-#: nscd/connections.c:1397
+#: nscd/connections.c:1398
 #, c-format
 msgid "cannot change to old working directory: %s; disabling paranoia mode"
 msgstr "kan ikke ændre til foregående arbejdskatalog: %s; deaktiverer paranoiatilstand"
 
-#: nscd/connections.c:1444
+#: nscd/connections.c:1445
 #, c-format
 msgid "re-exec failed: %s; disabling paranoia mode"
 msgstr "genstart mislykkedes: %s; deaktiverer paranoiatilstand"
 
-#: nscd/connections.c:1453
+#: nscd/connections.c:1454
 #, c-format
 msgid "cannot change current working directory to \"/\": %s"
 msgstr "kan ikke ændre aktuelt arbejdskatalog to \"/\": %s"
 
-#: nscd/connections.c:1637
+#: nscd/connections.c:1638
 #, c-format
 msgid "short read while reading request: %s"
 msgstr "afkortet læsning ved læsning af forespørgsel: %s"
 
-#: nscd/connections.c:1670
+#: nscd/connections.c:1671
 #, c-format
 msgid "key length in request too long: %d"
 msgstr "nøglelængde i forespørgsel for lang: %d"
 
-#: nscd/connections.c:1683
+#: nscd/connections.c:1684
 #, c-format
 msgid "short read while reading request key: %s"
 msgstr "afkortet læsning ved læsning af forespørgsels-nøgle: %s"
 
-#: nscd/connections.c:1693
+#: nscd/connections.c:1694
 #, c-format
 msgid "handle_request: request received (Version = %d) from PID %ld"
 msgstr "handle_request: forespørgsel modtaget (version = %d) fra PID %ld"
 
-#: nscd/connections.c:1698
+#: nscd/connections.c:1699
 #, c-format
 msgid "handle_request: request received (Version = %d)"
 msgstr "handle_request: forespørgsel modtaget (version = %d)"
 
-#: nscd/connections.c:1838
+#: nscd/connections.c:1839
 #, c-format
 msgid "ignored inotify event for `%s` (file exists)"
 msgstr ""
 
-#: nscd/connections.c:1843
+#: nscd/connections.c:1844
 #, c-format
 msgid "monitored file `%s` was %s, removing watch"
 msgstr ""
 
-#: nscd/connections.c:1851 nscd/connections.c:1893
+#: nscd/connections.c:1852 nscd/connections.c:1894
 #, c-format
 msgid "failed to remove file watch `%s`: %s"
 msgstr ""
 
-#: nscd/connections.c:1866
+#: nscd/connections.c:1867
 #, c-format
 msgid "monitored file `%s` was written to"
 msgstr ""
 
-#: nscd/connections.c:1890
+#: nscd/connections.c:1891
 #, c-format
 msgid "monitored parent directory `%s` was %s, removing watch on `%s`"
 msgstr ""
 
-#: nscd/connections.c:1916
+#: nscd/connections.c:1917
 #, c-format
 msgid "monitored file `%s` was %s, adding watch"
 msgstr ""
 
-#: nscd/connections.c:1928
+#: nscd/connections.c:1929
 #, fuzzy, c-format
 #| msgid "failed to load shared object `%s'"
 msgid "failed to add file watch `%s`: %s"
 msgstr "kunne ikke indlæse delt objekt '%s'"
 
-#: nscd/connections.c:2106 nscd/connections.c:2271
+#: nscd/connections.c:2107 nscd/connections.c:2272
 #, fuzzy, c-format
 #| msgid "disabled inotify after read error %d"
 msgid "disabled inotify-based monitoring after read error %d"
 msgstr "deaktiverede inotify efter læsefejl %d"
 
-#: nscd/connections.c:2386
+#: nscd/connections.c:2387
 msgid "could not initialize conditional variable"
 msgstr "kan ikke initiere betingelsesvariabel"
 
-#: nscd/connections.c:2394
+#: nscd/connections.c:2395
 msgid "could not start clean-up thread; terminating"
 msgstr "kunne ikke starte oprydningstråd; afslutter"
 
-#: nscd/connections.c:2408
+#: nscd/connections.c:2409
 msgid "could not start any worker thread; terminating"
 msgstr "kunne ikke starte nogen arbejdstråd; afslutter"
 
-#: nscd/connections.c:2463 nscd/connections.c:2465 nscd/connections.c:2481
-#: nscd/connections.c:2491 nscd/connections.c:2509 nscd/connections.c:2520
-#: nscd/connections.c:2530
+#: nscd/connections.c:2464 nscd/connections.c:2466 nscd/connections.c:2482
+#: nscd/connections.c:2492 nscd/connections.c:2510 nscd/connections.c:2521
+#: nscd/connections.c:2531
 #, c-format
 msgid "Failed to run nscd as user '%s'"
 msgstr "Kunne ikke køre nscd som bruger \"%s\""
 
-#: nscd/connections.c:2483
+#: nscd/connections.c:2484
 msgid "initial getgrouplist failed"
 msgstr "indledende getgrouplist mislykkedes"
 
-#: nscd/connections.c:2492
+#: nscd/connections.c:2493
 msgid "getgrouplist failed"
 msgstr "getgrouplist mislykkedes"
 
-#: nscd/connections.c:2510
+#: nscd/connections.c:2511
 msgid "setgroups failed"
 msgstr "setgroups mislykkedes"
 
@@ -4173,25 +4177,25 @@ msgstr "frigjorde %zu byte i %s cache"
 msgid "no more memory for database '%s'"
 msgstr "Ikke mere hukommelse for database '%s'"
 
-#: nscd/netgroupcache.c:121
+#: nscd/netgroupcache.c:122
 #, fuzzy, c-format
 #| msgid "Haven't found \"%s\" in group cache!"
 msgid "Haven't found \"%s\" in netgroup cache!"
 msgstr "Har ikke fundet '%s' i gruppe-nærbuffer!"
 
-#: nscd/netgroupcache.c:123
+#: nscd/netgroupcache.c:124
 #, fuzzy, c-format
 #| msgid "Reloading \"%s\" in group cache!"
 msgid "Reloading \"%s\" in netgroup cache!"
 msgstr "Genindlæser '%s' i gruppe-nærbuffer!"
 
-#: nscd/netgroupcache.c:469
+#: nscd/netgroupcache.c:470
 #, fuzzy, c-format
 #| msgid "Haven't found \"%s\" in group cache!"
 msgid "Haven't found \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr "Har ikke fundet '%s' i gruppe-nærbuffer!"
 
-#: nscd/netgroupcache.c:472
+#: nscd/netgroupcache.c:473
 #, fuzzy, c-format
 #| msgid "Reloading \"%s\" in group cache!"
 msgid "Reloading \"%s (%s,%s,%s)\" in netgroup cache!"
@@ -4351,27 +4355,27 @@ msgstr "Fejl under tolkning: %s"
 msgid "Must specify user name for server-user option"
 msgstr "Brugernavn skal angives for server-bruger-mulighed"
 
-#: nscd/nscd_conf.c:198
+#: nscd/nscd_conf.c:201
 #, c-format
 msgid "Must specify user name for stat-user option"
 msgstr "Brugernavn skal angives for stat-bruger-mulighed"
 
-#: nscd/nscd_conf.c:255
+#: nscd/nscd_conf.c:259
 #, c-format
 msgid "Must specify value for restart-interval option"
 msgstr "Skal angive værdi for \"restart-interval\"-flaget"
 
-#: nscd/nscd_conf.c:269
+#: nscd/nscd_conf.c:273
 #, c-format
 msgid "Unknown option: %s %s %s"
 msgstr "Ukendt flag: %s %s %s"
 
-#: nscd/nscd_conf.c:282
+#: nscd/nscd_conf.c:286
 #, c-format
 msgid "cannot get current working directory: %s; disabling paranoia mode"
 msgstr "kan ikke få fat på aktuelt arbejdskatalog: %s; deaktiverer paranoiatilstand"
 
-#: nscd/nscd_conf.c:302
+#: nscd/nscd_conf.c:306
 #, c-format
 msgid "maximum file size for %s database too small"
 msgstr "maksimal filstørrelse for \"%s\"-databasen er for lille"
@@ -4958,7 +4962,7 @@ msgstr "Regulært udtryk for stort"
 msgid "Unmatched ) or \\)"
 msgstr "Ubalanceret ) eller \\)"
 
-#: posix/regcomp.c:689
+#: posix/regcomp.c:676
 msgid "No previous regular expression"
 msgstr "Intet foregående regulært udtryk"
 
@@ -5185,7 +5189,7 @@ msgstr "Ikke mere buffer-plads tilgængelig"
 msgid "Input message available"
 msgstr "Ikke mere buffer-plads tilgængelig"
 
-#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:381 timezone/zic.c:520
+#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:375 timezone/zic.c:561
 #, fuzzy
 #| msgid "Remote I/O error"
 msgid "I/O error"
@@ -6532,56 +6536,69 @@ msgid "You really blew it this time"
 msgstr "Denne gang gjorde du virkelig i nælderne"
 
 #. TRANS Go home and have a glass of warm, dairy-fresh milk.
-#: sysdeps/gnu/errlist.c:978
+#. TRANS @c Okay.  Since you are dying to know, I'll tell you.
+#. TRANS @c This is a joke, obviously.  There is a children's song which begins,
+#. TRANS @c "Old McDonald had a farm, e-i-e-i-o."  Every time I see the (real)
+#. TRANS @c errno macro EIO, I think about that song.  Probably most of my
+#. TRANS @c compatriots who program on Unix do, too.  One of them must have stayed
+#. TRANS @c up a little too late one night and decided to add it to Hurd or Glibc.
+#. TRANS @c Whoever did it should be castigated, but it made me laugh.
+#. TRANS @c  --jtobey@channel1.com
+#. TRANS @c
+#. TRANS @c "bought the farm" means "died".  -jtobey
+#. TRANS @c
+#. TRANS @c Translators, please do not translate this litteraly, translate it into
+#. TRANS @c an idiomatic funny way of saying that the computer died.
+#: sysdeps/gnu/errlist.c:991
 msgid "Computer bought the farm"
 msgstr "Datamaskinen tog på ferie"
 
 #. TRANS This error code has no purpose.
-#: sysdeps/gnu/errlist.c:987
+#: sysdeps/gnu/errlist.c:1000
 msgid "Gratuitous error"
 msgstr "Umotiveret fejl"
 
-#: sysdeps/gnu/errlist.c:995
+#: sysdeps/gnu/errlist.c:1008
 msgid "Bad message"
 msgstr "Ugyldig meddelelse"
 
-#: sysdeps/gnu/errlist.c:1003
+#: sysdeps/gnu/errlist.c:1016
 msgid "Identifier removed"
 msgstr "Identifikator fjernet"
 
-#: sysdeps/gnu/errlist.c:1011
+#: sysdeps/gnu/errlist.c:1024
 msgid "Multihop attempted"
 msgstr "Forsøgte viderehop"
 
-#: sysdeps/gnu/errlist.c:1019
+#: sysdeps/gnu/errlist.c:1032
 msgid "No data available"
 msgstr "Ingen data er tilgængelige"
 
-#: sysdeps/gnu/errlist.c:1027
+#: sysdeps/gnu/errlist.c:1040
 msgid "Link has been severed"
 msgstr "Lænken er blevet skadet"
 
-#: sysdeps/gnu/errlist.c:1035
+#: sysdeps/gnu/errlist.c:1048
 msgid "No message of desired type"
 msgstr "Ingen meddelelser af ønsket type"
 
-#: sysdeps/gnu/errlist.c:1043
+#: sysdeps/gnu/errlist.c:1056
 msgid "Out of streams resources"
 msgstr "Ikke flere strøm-ressourcer"
 
-#: sysdeps/gnu/errlist.c:1051
+#: sysdeps/gnu/errlist.c:1064
 msgid "Device not a stream"
 msgstr "Enheden er ikke en strøm"
 
-#: sysdeps/gnu/errlist.c:1059
+#: sysdeps/gnu/errlist.c:1072
 msgid "Value too large for defined data type"
 msgstr "Værdien er for stor for den definerede datatype"
 
-#: sysdeps/gnu/errlist.c:1067
+#: sysdeps/gnu/errlist.c:1080
 msgid "Protocol error"
 msgstr "Protokolfejl"
 
-#: sysdeps/gnu/errlist.c:1075
+#: sysdeps/gnu/errlist.c:1088
 msgid "Timer expired"
 msgstr "Tidstager udløb"
 
@@ -6589,197 +6606,197 @@ msgstr "Tidstager udløb"
 #. TRANS completed.  @xref{Asynchronous I/O}.  When you call @code{aio_cancel},
 #. TRANS the normal result is for the operations affected to complete with this
 #. TRANS error; @pxref{Cancel AIO Operations}.
-#: sysdeps/gnu/errlist.c:1087
+#: sysdeps/gnu/errlist.c:1100
 msgid "Operation canceled"
 msgstr "Operationen afbrudt"
 
-#: sysdeps/gnu/errlist.c:1095
+#: sysdeps/gnu/errlist.c:1108
 msgid "Owner died"
 msgstr "Ejeren døde"
 
-#: sysdeps/gnu/errlist.c:1103
+#: sysdeps/gnu/errlist.c:1116
 msgid "State not recoverable"
 msgstr "Tilstanden kan ikke genskabes"
 
-#: sysdeps/gnu/errlist.c:1111
+#: sysdeps/gnu/errlist.c:1124
 msgid "Interrupted system call should be restarted"
 msgstr "Afbrudt systemkald bør genstartes"
 
-#: sysdeps/gnu/errlist.c:1119
+#: sysdeps/gnu/errlist.c:1132
 msgid "Channel number out of range"
 msgstr "Kanalnummer udenfor gyldigt interval"
 
-#: sysdeps/gnu/errlist.c:1127
+#: sysdeps/gnu/errlist.c:1140
 msgid "Level 2 not synchronized"
 msgstr "Niveau 2 ikke synkroniseret"
 
-#: sysdeps/gnu/errlist.c:1135
+#: sysdeps/gnu/errlist.c:1148
 msgid "Level 3 halted"
 msgstr "Niveau 3 stoppet"
 
-#: sysdeps/gnu/errlist.c:1143
+#: sysdeps/gnu/errlist.c:1156
 msgid "Level 3 reset"
 msgstr "Niveau 3 startet forfra"
 
-#: sysdeps/gnu/errlist.c:1151
+#: sysdeps/gnu/errlist.c:1164
 msgid "Link number out of range"
 msgstr "Lænkenummer udenfor gyldigt område"
 
-#: sysdeps/gnu/errlist.c:1159
+#: sysdeps/gnu/errlist.c:1172
 msgid "Protocol driver not attached"
 msgstr "Protokoldriver er ikke tilkoblet"
 
-#: sysdeps/gnu/errlist.c:1167
+#: sysdeps/gnu/errlist.c:1180
 msgid "No CSI structure available"
 msgstr "Ingen CSI-strukturer tilgængelige"
 
-#: sysdeps/gnu/errlist.c:1175
+#: sysdeps/gnu/errlist.c:1188
 msgid "Level 2 halted"
 msgstr "Niveau 2 stoppet"
 
-#: sysdeps/gnu/errlist.c:1183
+#: sysdeps/gnu/errlist.c:1196
 msgid "Invalid exchange"
 msgstr "Ugyldig veksel"
 
-#: sysdeps/gnu/errlist.c:1191
+#: sysdeps/gnu/errlist.c:1204
 msgid "Invalid request descriptor"
 msgstr "Ugyldig forespørgseldeskriptor"
 
-#: sysdeps/gnu/errlist.c:1199
+#: sysdeps/gnu/errlist.c:1212
 msgid "Exchange full"
 msgstr "Veksel fuld"
 
-#: sysdeps/gnu/errlist.c:1207
+#: sysdeps/gnu/errlist.c:1220
 msgid "No anode"
 msgstr "Ingen anode"
 
-#: sysdeps/gnu/errlist.c:1215
+#: sysdeps/gnu/errlist.c:1228
 msgid "Invalid request code"
 msgstr "Ugyldig adgangskode"
 
-#: sysdeps/gnu/errlist.c:1223
+#: sysdeps/gnu/errlist.c:1236
 msgid "Invalid slot"
 msgstr "Ugyldig plads"
 
-#: sysdeps/gnu/errlist.c:1231
+#: sysdeps/gnu/errlist.c:1244
 msgid "File locking deadlock error"
 msgstr "Fillåsning fejlede på grund af baglås"
 
-#: sysdeps/gnu/errlist.c:1239
+#: sysdeps/gnu/errlist.c:1252
 msgid "Bad font file format"
 msgstr "Ugyldigt format på skrifttypefil"
 
-#: sysdeps/gnu/errlist.c:1247
+#: sysdeps/gnu/errlist.c:1260
 msgid "Machine is not on the network"
 msgstr "Maskinen er ikke på netværket"
 
-#: sysdeps/gnu/errlist.c:1255
+#: sysdeps/gnu/errlist.c:1268
 msgid "Package not installed"
 msgstr "Pakken er ikke installeret"
 
-#: sysdeps/gnu/errlist.c:1263
+#: sysdeps/gnu/errlist.c:1276
 msgid "Advertise error"
 msgstr "Annonceringsfejl"
 
-#: sysdeps/gnu/errlist.c:1271
+#: sysdeps/gnu/errlist.c:1284
 msgid "Srmount error"
 msgstr "Srmount-fejl"
 
-#: sysdeps/gnu/errlist.c:1279
+#: sysdeps/gnu/errlist.c:1292
 msgid "Communication error on send"
 msgstr "Kommunikationsfejl ved sending"
 
-#: sysdeps/gnu/errlist.c:1287
+#: sysdeps/gnu/errlist.c:1300
 msgid "RFS specific error"
 msgstr "RFS-specifik fejl"
 
-#: sysdeps/gnu/errlist.c:1295
+#: sysdeps/gnu/errlist.c:1308
 msgid "Name not unique on network"
 msgstr "Navnet er ikke unikt på netværket"
 
-#: sysdeps/gnu/errlist.c:1303
+#: sysdeps/gnu/errlist.c:1316
 msgid "File descriptor in bad state"
 msgstr "Fildeskriptor i dårlig tilstand"
 
-#: sysdeps/gnu/errlist.c:1311
+#: sysdeps/gnu/errlist.c:1324
 msgid "Remote address changed"
 msgstr "Fjernadresse ændret"
 
-#: sysdeps/gnu/errlist.c:1319
+#: sysdeps/gnu/errlist.c:1332
 msgid "Can not access a needed shared library"
 msgstr "Kan ikke få adgang til et nødvendigt delt bibliotek"
 
-#: sysdeps/gnu/errlist.c:1327
+#: sysdeps/gnu/errlist.c:1340
 msgid "Accessing a corrupted shared library"
 msgstr "Får adgang til et skadet delt bibliotek"
 
-#: sysdeps/gnu/errlist.c:1335
+#: sysdeps/gnu/errlist.c:1348
 msgid ".lib section in a.out corrupted"
 msgstr ".lib-sektion i a.out skadet"
 
-#: sysdeps/gnu/errlist.c:1343
+#: sysdeps/gnu/errlist.c:1356
 msgid "Attempting to link in too many shared libraries"
 msgstr "Forsøger at indlænke for mange delte biblioteker"
 
-#: sysdeps/gnu/errlist.c:1351
+#: sysdeps/gnu/errlist.c:1364
 msgid "Cannot exec a shared library directly"
 msgstr "Kan ikke eksekvere et delt bibliotek direkte"
 
-#: sysdeps/gnu/errlist.c:1359
+#: sysdeps/gnu/errlist.c:1372
 msgid "Streams pipe error"
 msgstr "Strøm-kanalfejl"
 
-#: sysdeps/gnu/errlist.c:1367
+#: sysdeps/gnu/errlist.c:1380
 msgid "Structure needs cleaning"
 msgstr "Strukturen trænger til oprydning"
 
-#: sysdeps/gnu/errlist.c:1375
+#: sysdeps/gnu/errlist.c:1388
 msgid "Not a XENIX named type file"
 msgstr "Ikke en XENIX navngiven typefil"
 
-#: sysdeps/gnu/errlist.c:1383
+#: sysdeps/gnu/errlist.c:1396
 msgid "No XENIX semaphores available"
 msgstr "Ingen XENIX-semaforer tilgængelige"
 
-#: sysdeps/gnu/errlist.c:1391
+#: sysdeps/gnu/errlist.c:1404
 msgid "Is a named type file"
 msgstr "Er en navngiven filtype"
 
-#: sysdeps/gnu/errlist.c:1399
+#: sysdeps/gnu/errlist.c:1412
 msgid "Remote I/O error"
 msgstr "I/O-fejl på fjernmaskine"
 
-#: sysdeps/gnu/errlist.c:1407
+#: sysdeps/gnu/errlist.c:1420
 msgid "No medium found"
 msgstr "Medie ikke fundet"
 
-#: sysdeps/gnu/errlist.c:1415
+#: sysdeps/gnu/errlist.c:1428
 msgid "Wrong medium type"
 msgstr "Forkert medietype"
 
-#: sysdeps/gnu/errlist.c:1423
+#: sysdeps/gnu/errlist.c:1436
 msgid "Required key not available"
 msgstr "Obligatorisk nøgle ikke tilgængelig"
 
-#: sysdeps/gnu/errlist.c:1431
+#: sysdeps/gnu/errlist.c:1444
 msgid "Key has expired"
 msgstr "Nøgle er udløbet"
 
-#: sysdeps/gnu/errlist.c:1439
+#: sysdeps/gnu/errlist.c:1452
 msgid "Key has been revoked"
 msgstr "Nøglen er blevet tilbagekaldt"
 
-#: sysdeps/gnu/errlist.c:1447
+#: sysdeps/gnu/errlist.c:1460
 msgid "Key was rejected by service"
 msgstr "Nøglen blev afvist af tjeneste"
 
-#: sysdeps/gnu/errlist.c:1455
+#: sysdeps/gnu/errlist.c:1468
 #, fuzzy
 #| msgid "Operation not permitted"
 msgid "Operation not possible due to RF-kill"
 msgstr "Operationen er ikke tilladt"
 
-#: sysdeps/gnu/errlist.c:1463
+#: sysdeps/gnu/errlist.c:1476
 msgid "Memory page has hardware error"
 msgstr ""
 
@@ -6908,31 +6925,31 @@ msgstr ""
 msgid "can't disable CET"
 msgstr ""
 
-#: timezone/zdump.c:338
+#: timezone/zdump.c:332
 #, fuzzy
 #| msgid "has fewer than 3 alphabetics"
 msgid "has fewer than 3 characters"
 msgstr "har mindre end 3 alfabetiske tegn"
 
-#: timezone/zdump.c:340
+#: timezone/zdump.c:334
 #, fuzzy
 #| msgid "has more than 6 alphabetics"
 msgid "has more than 6 characters"
 msgstr "har mere end 6 alfabetiske tegn"
 
-#: timezone/zdump.c:342
+#: timezone/zdump.c:336
 msgid "has characters other than ASCII alphanumerics, '-' or '+'"
 msgstr ""
 
-#: timezone/zdump.c:347
+#: timezone/zdump.c:341
 #, c-format
 msgid "%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"
 msgstr "%s: advarsel: zone \"%s\" forkortelse \"%s\": %s\n"
 
-#: timezone/zdump.c:393
+#: timezone/zdump.c:387
 #, c-format
 msgid ""
-"%s: usage: %s OPTIONS ZONENAME ...\n"
+"%s: usage: %s OPTIONS TIMEZONE ...\n"
 "Options include:\n"
 "  -c [L,]U   Start at year L (default -500), end before year U (default 2500)\n"
 "  -t [L,]U   Start at time L, end before time U (in seconds since 1970)\n"
@@ -6945,52 +6962,58 @@ msgid ""
 "Report bugs to %s.\n"
 msgstr ""
 
-#: timezone/zdump.c:479
+#: timezone/zdump.c:473
 #, c-format
 msgid "%s: wild -c argument %s\n"
 msgstr "%s: argument \"%s\" til flaget -c har forkert format\n"
 
-#: timezone/zdump.c:512
+#: timezone/zdump.c:506
 #, fuzzy, c-format
 #| msgid "%s: wild -c argument %s\n"
 msgid "%s: wild -t argument %s\n"
 msgstr "%s: argument \"%s\" til flaget -c har forkert format\n"
 
-#: timezone/zic.c:398
+#: timezone/zic.c:429
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: Lageret opbrugt: %s\n"
 
-#: timezone/zic.c:406
+#: timezone/zic.c:437
 #, fuzzy
 #| msgid "time overflow"
 msgid "size overflow"
 msgstr "for stor tidsværdi"
 
-#: timezone/zic.c:454
+#: timezone/zic.c:447
+#, fuzzy
+#| msgid "time overflow"
+msgid "alignment overflow"
+msgstr "for stor tidsværdi"
+
+#: timezone/zic.c:495
 #, fuzzy
 #| msgid "time overflow"
 msgid "integer overflow"
 msgstr "for stor tidsværdi"
 
-#: timezone/zic.c:488
+#: timezone/zic.c:529
 #, fuzzy, c-format
 #| msgid "\"%s\", line %d: %s"
 msgid "\"%s\", line %<PRIdMAX>: "
 msgstr "'%s', linje %d: %s"
 
-#: timezone/zic.c:491
+#: timezone/zic.c:532
 #, fuzzy, c-format
 #| msgid " (rule from \"%s\", line %d)"
 msgid " (rule from \"%s\", line %<PRIdMAX>)"
 msgstr " (regel fra '%s', linje %d)"
 
-#: timezone/zic.c:510
+#: timezone/zic.c:551
 #, c-format
 msgid "warning: "
 msgstr "advarsel: "
 
-#: timezone/zic.c:535
+#: timezone/zic.c:576
 #, fuzzy, c-format
 #| msgid ""
 #| "%s: usage is %s [ --version ] [ -v ] [ -l localtime ] [ -p posixrules ] \\\n"
@@ -6998,411 +7021,434 @@ msgstr "advarsel: "
 msgid ""
 "%s: usage is %s [ --version ] [ --help ] [ -v ] \\\n"
 "\t[ -l localtime ] [ -p posixrules ] [ -d directory ] \\\n"
-"\t[ -L leapseconds ] [ filename ... ]\n"
+"\t[ -t localtime-link ] [ -L leapseconds ] [ filename ... ]\n"
 "\n"
 "Report bugs to %s.\n"
 msgstr ""
 "%s: brug er %s [ --version ] [ -v ] [ -l lokaltid ] [ -p posixregler ] \\\n"
 "\t[ -d katalog ] [ -L skudsekunder ] [ -y årkontrolprogram ] [ filnavn ... ]\n"
 
-#: timezone/zic.c:558
+#: timezone/zic.c:599
 #, fuzzy, c-format
 #| msgid "%s: Can't create %s: %s\n"
 msgid "%s: Can't chdir to %s: %s\n"
 msgstr "%s: Kan ikke oprette %s: %s\n"
 
-#: timezone/zic.c:590
+#: timezone/zic.c:632
 msgid "wild compilation-time specification of zic_t"
 msgstr "definitionen af zic_t ved kompilering er urimelig"
 
-#: timezone/zic.c:610
+#: timezone/zic.c:652
 #, c-format
 msgid "%s: More than one -d option specified\n"
 msgstr "%s: Mere end et -d-flag specificeret\n"
 
-#: timezone/zic.c:620
+#: timezone/zic.c:662
 #, c-format
 msgid "%s: More than one -l option specified\n"
 msgstr "%s: Mere end et -l-flag specificeret\n"
 
-#: timezone/zic.c:630
+#: timezone/zic.c:672
 #, c-format
 msgid "%s: More than one -p option specified\n"
 msgstr "%s: Mere end et -p-flag specificeret\n"
 
-#: timezone/zic.c:640
+#: timezone/zic.c:680
+#, fuzzy, c-format
+#| msgid "%s: More than one -d option specified\n"
+msgid "%s: More than one -t option specified\n"
+msgstr "%s: Mere end et -d-flag specificeret\n"
+
+#: timezone/zic.c:689
+msgid "-y is obsolescent"
+msgstr ""
+
+#: timezone/zic.c:693
 #, c-format
 msgid "%s: More than one -y option specified\n"
 msgstr "%s: Mere end et -y-flag specificeret\n"
 
-#: timezone/zic.c:650
+#: timezone/zic.c:703
 #, c-format
 msgid "%s: More than one -L option specified\n"
 msgstr "%s: Mere end et -L-flag specificeret\n"
 
-#: timezone/zic.c:659
+#: timezone/zic.c:712
 msgid "-s ignored"
 msgstr ""
 
-#: timezone/zic.c:698
+#: timezone/zic.c:753
 msgid "link to link"
 msgstr "lænke til lænke"
 
-#: timezone/zic.c:701 timezone/zic.c:705
+#: timezone/zic.c:756 timezone/zic.c:760
 #, fuzzy
 #| msgid "Too many links"
 msgid "command line"
 msgstr "For mange lænker"
 
-#: timezone/zic.c:721
+#: timezone/zic.c:776
 msgid "empty file name"
 msgstr ""
 
-#: timezone/zic.c:724
+#: timezone/zic.c:779
 #, c-format
 msgid "file name '%s' begins with '/'"
 msgstr ""
 
-#: timezone/zic.c:734
+#: timezone/zic.c:789
 #, c-format
 msgid "file name '%s' contains '%.*s' component"
 msgstr ""
 
-#: timezone/zic.c:740
+#: timezone/zic.c:795
 #, c-format
 msgid "file name '%s' component contains leading '-'"
 msgstr ""
 
-#: timezone/zic.c:743
+#: timezone/zic.c:798
 #, c-format
 msgid "file name '%s' contains overlength component '%.*s...'"
 msgstr ""
 
-#: timezone/zic.c:771
+#: timezone/zic.c:826
 #, c-format
 msgid "file name '%s' contains byte '%c'"
 msgstr ""
 
-#: timezone/zic.c:772
+#: timezone/zic.c:827
 #, c-format
 msgid "file name '%s' contains byte '\\%o'"
 msgstr ""
 
-#: timezone/zic.c:842
+#: timezone/zic.c:897
 #, fuzzy, c-format
 #| msgid "%s: Can't link from %s to %s: %s\n"
 msgid "%s: link from %s/%s failed: %s\n"
 msgstr "%s: Kan ikke oprette lænke fra %s til %s: %s\n"
 
-#: timezone/zic.c:852 timezone/zic.c:1815
+#: timezone/zic.c:907 timezone/zic.c:1876
 #, fuzzy, c-format
 #| msgid "%s: Can't remove %s: %s\n"
 msgid "%s: Can't remove %s/%s: %s\n"
 msgstr "%s: Kan ikke fjerne %s: %s\n"
 
-#: timezone/zic.c:874
+#: timezone/zic.c:931
 #, c-format
 msgid "symbolic link used because hard link failed: %s"
 msgstr ""
 
-#: timezone/zic.c:882
+#: timezone/zic.c:939
 #, fuzzy, c-format
 #| msgid "%s: Can't create %s: %s\n"
 msgid "%s: Can't read %s/%s: %s\n"
 msgstr "%s: Kan ikke oprette %s: %s\n"
 
-#: timezone/zic.c:889 timezone/zic.c:1828
+#: timezone/zic.c:946 timezone/zic.c:1889
 #, fuzzy, c-format
 #| msgid "%s: Can't create %s: %s\n"
 msgid "%s: Can't create %s/%s: %s\n"
 msgstr "%s: Kan ikke oprette %s: %s\n"
 
-#: timezone/zic.c:898
+#: timezone/zic.c:955
 #, c-format
 msgid "copy used because hard link failed: %s"
 msgstr ""
 
-#: timezone/zic.c:901
+#: timezone/zic.c:958
 #, c-format
 msgid "copy used because symbolic link failed: %s"
 msgstr ""
 
-#: timezone/zic.c:1013 timezone/zic.c:1015
+#: timezone/zic.c:1032 timezone/zic.c:1034
 msgid "same rule name in multiple files"
 msgstr "samme regelnavn i flere filer"
 
-#: timezone/zic.c:1056
-msgid "unruly zone"
-msgstr "vanskelig zone"
-
-#: timezone/zic.c:1063
+#: timezone/zic.c:1081
 #, c-format
 msgid "%s in ruleless zone"
 msgstr "%s i zone uden regel"
 
-#: timezone/zic.c:1083
+#: timezone/zic.c:1101
 msgid "standard input"
 msgstr "standard inddata"
 
-#: timezone/zic.c:1088
+#: timezone/zic.c:1106
 #, c-format
 msgid "%s: Can't open %s: %s\n"
 msgstr "%s: Kan ikke åbne %s: %s\n"
 
-#: timezone/zic.c:1099
+#: timezone/zic.c:1117
 msgid "line too long"
 msgstr "for lang linje"
 
-#: timezone/zic.c:1119
+#: timezone/zic.c:1139
 msgid "input line of unknown type"
 msgstr "inddatalinje af ukendt type"
 
-#: timezone/zic.c:1134
-#, fuzzy, c-format
-#| msgid "%s: Leap line in non leap seconds file %s\n"
-msgid "%s: Leap line in non leap seconds file %s"
-msgstr "%s: 'Leap'-linje i fil %s som ikke er skudsekundsfil\n"
-
-#: timezone/zic.c:1142 timezone/zic.c:1547 timezone/zic.c:1569
+#: timezone/zic.c:1158 timezone/zic.c:1593 timezone/zic.c:1615
 #, c-format
 msgid "%s: panic: Invalid l_value %d\n"
 msgstr "%s: panik: ugyldig l_value %d\n"
 
-#: timezone/zic.c:1151
+#: timezone/zic.c:1167
 msgid "expected continuation line not found"
 msgstr "forventet fortsættelseslinje ikke fundet"
 
-#: timezone/zic.c:1193 timezone/zic.c:2976
+#: timezone/zic.c:1203
+#, fuzzy
+#| msgid "24:00 not handled by pre-1998 versions of zic"
+msgid "fractional seconds rejected by pre-2018 versions of zic"
+msgstr "24:00 håndteres ikke af zic-versioner før 1998"
+
+#: timezone/zic.c:1221 timezone/zic.c:3078
 msgid "time overflow"
 msgstr "for stor tidsværdi"
 
-#: timezone/zic.c:1198
+#: timezone/zic.c:1227
 msgid "values over 24 hours not handled by pre-2007 versions of zic"
 msgstr "værdier større end 24 timer håndteres ikke af zic-versioner før 2007"
 
-#: timezone/zic.c:1209
-msgid "wrong number of fields on Rule line"
-msgstr "galt antal felter på 'Rule'-linje"
-
-#: timezone/zic.c:1213
-msgid "nameless rule"
-msgstr "navnløs regel"
-
-#: timezone/zic.c:1218
+#: timezone/zic.c:1245
 msgid "invalid saved time"
 msgstr "ugyldig lagret tid"
 
-#: timezone/zic.c:1235
+#: timezone/zic.c:1256
+msgid "wrong number of fields on Rule line"
+msgstr "galt antal felter på 'Rule'-linje"
+
+#: timezone/zic.c:1265
+#, fuzzy, c-format
+#| msgid "Invalid numeric gid \"%s\"!"
+msgid "Invalid rule name \"%s\""
+msgstr "Ugyldigt numerisk gruppe-id (gid) \"%s\"!"
+
+#: timezone/zic.c:1287
 msgid "wrong number of fields on Zone line"
 msgstr "galt antal felter på 'Zone'-linje"
 
-#: timezone/zic.c:1240
+#: timezone/zic.c:1292
 #, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
 msgstr "'Zone %s'-linje og flaget -l udelukker hinanden"
 
-#: timezone/zic.c:1246
+#: timezone/zic.c:1298
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr "'Zone %s'-linje og flaget -p udelukker hinanden"
 
-#: timezone/zic.c:1253
+#: timezone/zic.c:1305
 #, fuzzy, c-format
 #| msgid "duplicate zone name %s (file \"%s\", line %d)"
 msgid "duplicate zone name %s (file \"%s\", line %<PRIdMAX>)"
 msgstr "duplikér zonenavn %s (fil '%s', linje %d)"
 
-#: timezone/zic.c:1267
+#: timezone/zic.c:1319
 msgid "wrong number of fields on Zone continuation line"
 msgstr "galt antal felter på 'Zone'-fortsættelseslinje"
 
-#: timezone/zic.c:1307
+#: timezone/zic.c:1359
 #, fuzzy
 #| msgid "invalid UTC offset"
 msgid "invalid UT offset"
 msgstr "ugyldig UTC-forskydning"
 
-#: timezone/zic.c:1311
+#: timezone/zic.c:1363
 msgid "invalid abbreviation format"
 msgstr "ugyldig forkortelsesformat"
 
-#: timezone/zic.c:1320
+#: timezone/zic.c:1372
 #, fuzzy, c-format
 #| msgid "24:00 not handled by pre-1998 versions of zic"
 msgid "format '%s' not handled by pre-2015 versions of zic"
 msgstr "24:00 håndteres ikke af zic-versioner før 1998"
 
-#: timezone/zic.c:1347
+#: timezone/zic.c:1399
 msgid "Zone continuation line end time is not after end time of previous line"
 msgstr "Sluttiden på fortsætningslinjen til en zone kommer før sluttiden på foregående linje"
 
-#: timezone/zic.c:1374
+#: timezone/zic.c:1426
 msgid "wrong number of fields on Leap line"
 msgstr "galt antal felter på 'Leap'-linje"
 
-#: timezone/zic.c:1383
+#: timezone/zic.c:1435
 msgid "invalid leaping year"
 msgstr "ugyldigt skudår"
 
-#: timezone/zic.c:1403 timezone/zic.c:1501
+#: timezone/zic.c:1455 timezone/zic.c:1547
 msgid "invalid month name"
 msgstr "ugyldigt månedsnavn"
 
-#: timezone/zic.c:1416 timezone/zic.c:1614 timezone/zic.c:1628
+#: timezone/zic.c:1468 timezone/zic.c:1663 timezone/zic.c:1677
 msgid "invalid day of month"
 msgstr "ugyldig dag i måneden"
 
-#: timezone/zic.c:1421
+#: timezone/zic.c:1473
 msgid "time too small"
 msgstr "tid for lille"
 
-#: timezone/zic.c:1425
+#: timezone/zic.c:1477
 msgid "time too large"
 msgstr "tid for stor"
 
-#: timezone/zic.c:1429 timezone/zic.c:1530
+#: timezone/zic.c:1481 timezone/zic.c:1576
 msgid "invalid time of day"
 msgstr "ugyldig tid på dagen"
 
-#: timezone/zic.c:1448
+#: timezone/zic.c:1494
 msgid "illegal CORRECTION field on Leap line"
 msgstr "ugyldigt 'CORRECTION'-felt på 'Leap'-linje"
 
-#: timezone/zic.c:1453
+#: timezone/zic.c:1499
 msgid "illegal Rolling/Stationary field on Leap line"
 msgstr "ugyldigt 'Rolling/Stationary'-felt på 'Leap'-linje"
 
-#: timezone/zic.c:1459
-msgid "leap second precedes Big Bang"
+#: timezone/zic.c:1505
+msgid "leap second precedes Epoch"
 msgstr ""
 
-#: timezone/zic.c:1472
+#: timezone/zic.c:1518
 msgid "wrong number of fields on Link line"
 msgstr "forkert antal felter på 'Link'-linje"
 
-#: timezone/zic.c:1476
+#: timezone/zic.c:1522
 msgid "blank FROM field on Link line"
 msgstr "tomt 'FROM'-felt på 'Link'-linje"
 
-#: timezone/zic.c:1551
+#: timezone/zic.c:1597
 msgid "invalid starting year"
 msgstr "ugyldigt startår"
 
-#: timezone/zic.c:1573
+#: timezone/zic.c:1619
 msgid "invalid ending year"
 msgstr "ugyldigt slutår"
 
-#: timezone/zic.c:1577
+#: timezone/zic.c:1623
 msgid "starting year greater than ending year"
 msgstr "startår er højere end slutår"
 
-#: timezone/zic.c:1584
+#: timezone/zic.c:1630
 msgid "typed single year"
 msgstr "indtastede enkelt år"
 
-#: timezone/zic.c:1619
+#: timezone/zic.c:1633
+#, c-format
+msgid "year type \"%s\" is obsolete; use \"-\" instead"
+msgstr ""
+
+#: timezone/zic.c:1668
 msgid "invalid weekday name"
 msgstr "ugyldigt ugedagsnavn"
 
-#: timezone/zic.c:1743
+#: timezone/zic.c:1800
 #, c-format
 msgid "reference clients mishandle more than %d transition times"
 msgstr ""
 
-#: timezone/zic.c:1747
+#: timezone/zic.c:1804
 msgid "pre-2014 clients may mishandle more than 1200 transition times"
 msgstr ""
 
-#: timezone/zic.c:1858
+#: timezone/zic.c:1920
 #, fuzzy
 #| msgid "too many transitions?!"
 msgid "too many transition times"
 msgstr "for mange overgange?!"
 
-#: timezone/zic.c:2047
+#: timezone/zic.c:2107
 #, c-format
-msgid "%%z UTC offset magnitude exceeds 99:59:59"
+msgid "%%z UT offset magnitude exceeds 99:59:59"
 msgstr ""
 
-#: timezone/zic.c:2424
+#: timezone/zic.c:2488
 msgid "no POSIX environment variable for zone"
 msgstr "ingen POSIX-miljøvariabel for zone"
 
-#: timezone/zic.c:2430
+#: timezone/zic.c:2494
 #, c-format
 msgid "%s: pre-%d clients may mishandle distant timestamps"
 msgstr ""
 
-#: timezone/zic.c:2566
+#: timezone/zic.c:2631
 msgid "two rules for same instant"
 msgstr ""
 
-#: timezone/zic.c:2627
+#: timezone/zic.c:2696
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr "kan ikke afgøre tidszoneforkortelse for brug lige efter 'until'-tid"
 
-#: timezone/zic.c:2725
+#: timezone/zic.c:2785
 msgid "too many local time types"
 msgstr "for mange lokale tidstyper"
 
-#: timezone/zic.c:2729
+#: timezone/zic.c:2789
 #, fuzzy
 #| msgid "UTC offset out of range"
 msgid "UT offset out of range"
 msgstr "UTC-forskel udenfor interval"
 
-#: timezone/zic.c:2753
+#: timezone/zic.c:2813
 msgid "too many leap seconds"
 msgstr "for mange skudsekunder"
 
-#: timezone/zic.c:2759
-msgid "repeated leap second moment"
-msgstr "repeteret skudsekunds-tidspunkt"
+#: timezone/zic.c:2844
+msgid "Leap seconds too close together"
+msgstr ""
 
-#: timezone/zic.c:2830
+#: timezone/zic.c:2891
 msgid "Wild result from command execution"
 msgstr "Vildt resultat fra eksekvering af kommando"
 
-#: timezone/zic.c:2831
+#: timezone/zic.c:2892
 #, c-format
 msgid "%s: command was '%s', result was %d\n"
 msgstr "%s: kommandoen var '%s', resultatet blev %d\n"
 
-#: timezone/zic.c:2961
+#: timezone/zic.c:2998
+#, c-format
+msgid "\"%s\" is undocumented; use \"last%s\" instead"
+msgstr ""
+
+#: timezone/zic.c:3029
+#, c-format
+msgid "\"%s\" is ambiguous in pre-2017c zic"
+msgstr ""
+
+#: timezone/zic.c:3063
 msgid "Odd number of quotation marks"
 msgstr "Ulige antal anførselstegn"
 
-#: timezone/zic.c:3046
+#: timezone/zic.c:3157
 msgid "use of 2/29 in non leap-year"
 msgstr "bruger 29/2 i ikke-skudår"
 
-#: timezone/zic.c:3081
+#: timezone/zic.c:3192
 #, fuzzy
 #| msgid "rule goes past start/end of month--will not work with pre-2004 versions of zic"
 msgid "rule goes past start/end of month; will not work with pre-2004 versions of zic"
 msgstr "reglen går udenfor start/slut på måned, fungerer ikke på zic-versioner fra før 2004"
 
-#: timezone/zic.c:3108
+#: timezone/zic.c:3219
 #, fuzzy
 #| msgid "time zone abbreviation has more than 3 alphabetics"
 msgid "time zone abbreviation has fewer than 3 characters"
 msgstr "tidszoneforkortelse har mere end 3 alfabetiske tegn"
 
-#: timezone/zic.c:3110
+#: timezone/zic.c:3221
 #, fuzzy
 #| msgid "time zone abbreviation has too many alphabetics"
 msgid "time zone abbreviation has too many characters"
 msgstr "tidszoneforkortelse har for mange alfabetiske tegn"
 
-#: timezone/zic.c:3112
+#: timezone/zic.c:3223
 msgid "time zone abbreviation differs from POSIX standard"
 msgstr "tidszoneforkortelse afviger fra POSIX-standarden"
 
-#: timezone/zic.c:3118
+#: timezone/zic.c:3229
 msgid "too many, or too long, time zone abbreviations"
 msgstr "for mange eller for lange tidszoneforkortelser"
 
-#: timezone/zic.c:3161
+#: timezone/zic.c:3275
 #, fuzzy, c-format
 #| msgid "%s: Can't create directory %s: %s\n"
 msgid "%s: Can't create directory %s: %s"
@@ -7579,11 +7625,20 @@ msgstr "%s: Kan ikke oprette filkatalog %s: %s\n"
 #~ msgid "hard link failed, symbolic link used"
 #~ msgstr "hård lænke fejlede, symbolsk lænke brugt"
 
+#~ msgid "unruly zone"
+#~ msgstr "vanskelig zone"
+
+#~ msgid "%s: Leap line in non leap seconds file %s\n"
+#~ msgstr "%s: 'Leap'-linje i fil %s som ikke er skudsekundsfil\n"
+
 #~ msgid "%s: Error reading %s\n"
 #~ msgstr "%s: Fejl ved læsning fra %s\n"
 
 #~ msgid "%s: Error closing %s: %s\n"
 #~ msgstr "%s: Fejl ved lukning af %s: %s\n"
+
+#~ msgid "nameless rule"
+#~ msgstr "navnløs regel"
 
 #~ msgid "time before zero"
 #~ msgstr "tid før nul"
@@ -7602,6 +7657,9 @@ msgstr "%s: Kan ikke oprette filkatalog %s: %s\n"
 
 #~ msgid "internal error - addtype called with bad ttisgmt"
 #~ msgstr "intern fejl - addtype kaldt med dårlig ttisgmt"
+
+#~ msgid "repeated leap second moment"
+#~ msgstr "repeteret skudsekunds-tidspunkt"
 
 #~ msgid "time zone abbreviation lacks alphabetic at start"
 #~ msgstr "tidszoneforkortelse mangler alfabetisk tegn i begyndelsen"

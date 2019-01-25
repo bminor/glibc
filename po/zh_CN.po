@@ -12,7 +12,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.25-pre1\n"
-"POT-Creation-Date: 2018-07-26 22:19-0400\n"
+"POT-Creation-Date: 2019-01-16 15:48+0530\n"
 "PO-Revision-Date: 2017-01-11 14:20-0500\n"
 "Last-Translator: Mingye Wang (Arthur2e5) <arthur200126@gmail.com>\n"
 "Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
@@ -156,7 +156,7 @@ msgstr ""
 #: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:308
 #: elf/pldd.c:252 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:405
 #: iconv/iconvconfig.c:379 locale/programs/locale.c:275
-#: locale/programs/localedef.c:427 login/programs/pt_chown.c:89
+#: locale/programs/localedef.c:437 login/programs/pt_chown.c:89
 #: malloc/memusagestat.c:563 nss/getent.c:933 nss/makedb.c:369
 #: posix/getconf.c:503 sysdeps/unix/sysv/linux/lddlibc4.c:61
 #, c-format
@@ -170,7 +170,7 @@ msgstr ""
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
 #: elf/ldconfig.c:324 elf/ldd.bash.in:38 elf/pldd.c:268 elf/sotruss.sh:75
 #: elf/sprof.c:389 iconv/iconv_prog.c:422 iconv/iconvconfig.c:396
-#: locale/programs/locale.c:292 locale/programs/localedef.c:453
+#: locale/programs/locale.c:292 locale/programs/localedef.c:463
 #: login/programs/pt_chown.c:63 malloc/memusage.sh:71
 #: malloc/memusagestat.c:581 nscd/nscd.c:509 nss/getent.c:87 nss/makedb.c:385
 #: posix/getconf.c:485 sysdeps/unix/sysv/linux/lddlibc4.c:68
@@ -187,7 +187,7 @@ msgstr ""
 #: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
 #: elf/ldconfig.c:329 elf/pldd.c:273 elf/sprof.c:395 iconv/iconv_prog.c:427
 #: iconv/iconvconfig.c:401 locale/programs/locale.c:297
-#: locale/programs/localedef.c:458 malloc/memusage.sh:75
+#: locale/programs/localedef.c:468 malloc/memusage.sh:75
 #: malloc/memusagestat.c:586 nscd/nscd.c:514 nss/getent.c:92 nss/makedb.c:390
 #: posix/getconf.c:490
 #, c-format
@@ -410,33 +410,33 @@ msgstr "无法打开缓冲文件 %s\n"
 msgid "mmap of cache file failed.\n"
 msgstr "缓冲文件的 mmap 失败。\n"
 
-#: elf/cache.c:181 elf/cache.c:195
+#: elf/cache.c:181 elf/cache.c:195 elf/cache.c:205
 #, c-format
 msgid "File is not a cache file.\n"
 msgstr "文件不是缓冲区文件。\n"
 
-#: elf/cache.c:228 elf/cache.c:238
+#: elf/cache.c:233 elf/cache.c:243
 #, c-format
 msgid "%d libs found in cache `%s'\n"
 msgstr "在缓冲区“%2$s”中找到 %1$d 个库\n"
 
-#: elf/cache.c:432
+#: elf/cache.c:437
 #, c-format
 msgid "Can't create temporary cache file %s"
 msgstr "无法创建临时缓冲文件 %s"
 
-#: elf/cache.c:440 elf/cache.c:450 elf/cache.c:454 elf/cache.c:458
-#: elf/cache.c:468
+#: elf/cache.c:445 elf/cache.c:455 elf/cache.c:459 elf/cache.c:463
+#: elf/cache.c:473
 #, c-format
 msgid "Writing of cache data failed"
 msgstr "写缓冲数据失败"
 
-#: elf/cache.c:463
+#: elf/cache.c:468
 #, c-format
 msgid "Changing access rights of %s to %#o failed"
 msgstr "将 %s 的访问权限改变为 %#o 失败"
 
-#: elf/cache.c:472
+#: elf/cache.c:477
 #, c-format
 msgid "Renaming of %s to %s failed"
 msgstr "将 %s 改名为 %s 失败"
@@ -683,20 +683,20 @@ msgstr "dlmopen() 中无效的目标名字空间"
 msgid "cannot allocate memory in static TLS block"
 msgstr "无法在静态 TLS 块中分配内存"
 
-#: elf/dl-reloc.c:205
+#: elf/dl-reloc.c:213
 msgid "cannot make segment writable for relocation"
 msgstr "在重新寻址以后无法将节设为可写入状态"
 
-#: elf/dl-reloc.c:276
+#: elf/dl-reloc.c:272
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr "%s: 内存不足以保存重寻址结果用于 %s\n"
 
-#: elf/dl-reloc.c:292
+#: elf/dl-reloc.c:288
 msgid "cannot restore segment prot after reloc"
 msgstr "重定位后无法恢复段 prot"
 
-#: elf/dl-reloc.c:323
+#: elf/dl-reloc.c:319
 msgid "cannot apply additional memory protection after relocation"
 msgstr "无法在重定位后应用额外的内存保护"
 
@@ -1407,7 +1407,7 @@ msgstr "信息："
 msgid "list all known coded character sets"
 msgstr "列举所有已知的字符集"
 
-#: iconv/iconv_prog.c:64 locale/programs/localedef.c:120
+#: iconv/iconv_prog.c:64 locale/programs/localedef.c:124
 msgid "Output control:"
 msgstr "输出控制："
 
@@ -1416,8 +1416,8 @@ msgid "omit invalid characters from output"
 msgstr "从输出中忽略无效的字符"
 
 #: iconv/iconv_prog.c:66 iconv/iconvconfig.c:128
-#: locale/programs/localedef.c:113 locale/programs/localedef.c:115
-#: locale/programs/localedef.c:117 locale/programs/localedef.c:144
+#: locale/programs/localedef.c:117 locale/programs/localedef.c:119
+#: locale/programs/localedef.c:121 locale/programs/localedef.c:150
 #: malloc/memusagestat.c:56
 msgid "FILE"
 msgstr "文件"
@@ -1515,7 +1515,7 @@ msgstr "创建快速装入 iconv 模块配置文件。"
 msgid "[DIR...]"
 msgstr "[目录...]"
 
-#: iconv/iconvconfig.c:126 locale/programs/localedef.c:123
+#: iconv/iconvconfig.c:126 locale/programs/localedef.c:129
 msgid "PATH"
 msgstr "路径"
 
@@ -1765,7 +1765,7 @@ msgstr "%s：状态机出错"
 #: locale/programs/ld-monetary.c:764 locale/programs/ld-name.c:278
 #: locale/programs/ld-numeric.c:341 locale/programs/ld-paper.c:228
 #: locale/programs/ld-telephone.c:292 locale/programs/ld-time.c:990
-#: locale/programs/locfile.c:997 locale/programs/repertoire.c:323
+#: locale/programs/locfile.c:1010 locale/programs/repertoire.c:323
 #, c-format
 msgid "%s: premature end of file"
 msgstr "%s：文件不完整"
@@ -2641,97 +2641,101 @@ msgstr "无法将 LC_ALL 设置为缺省的语区"
 msgid "while preparing output"
 msgstr "准备输出时"
 
-#: locale/programs/localedef.c:112
+#: locale/programs/localedef.c:116
 msgid "Input Files:"
 msgstr "输入文件："
 
-#: locale/programs/localedef.c:114
+#: locale/programs/localedef.c:118
 msgid "Symbolic character names defined in FILE"
 msgstr "符号字符的名称定义在文件 FILE 中"
 
-#: locale/programs/localedef.c:116
+#: locale/programs/localedef.c:120
 msgid "Source definitions are found in FILE"
 msgstr "在 FILE 中找到源定义"
 
-#: locale/programs/localedef.c:118
+#: locale/programs/localedef.c:122
 msgid "FILE contains mapping from symbolic names to UCS4 values"
 msgstr "文件 FILE 内含符号名与 UCS4 编码之间的映射"
 
-#: locale/programs/localedef.c:122
+#: locale/programs/localedef.c:126
 msgid "Create output even if warning messages were issued"
 msgstr "即使出现警告消息也创建输出"
 
-#: locale/programs/localedef.c:123
+#: locale/programs/localedef.c:128
+msgid "Do not create hard links between installed locales"
+msgstr ""
+
+#: locale/programs/localedef.c:129
 msgid "Optional output file prefix"
 msgstr "可选的输出文件前缀"
 
-#: locale/programs/localedef.c:124
+#: locale/programs/localedef.c:130
 msgid "Strictly conform to POSIX"
 msgstr "严格遵从 POSIX"
 
-#: locale/programs/localedef.c:126
+#: locale/programs/localedef.c:132
 msgid "Suppress warnings and information messages"
 msgstr "关闭警告和信息消息"
 
-#: locale/programs/localedef.c:127
+#: locale/programs/localedef.c:133
 msgid "Print more messages"
 msgstr "打印更多消息"
 
-#: locale/programs/localedef.c:128 locale/programs/localedef.c:131
+#: locale/programs/localedef.c:134 locale/programs/localedef.c:137
 #, fuzzy
 #| msgid "warning: "
 msgid "<warnings>"
 msgstr "警告："
 
-#: locale/programs/localedef.c:129
+#: locale/programs/localedef.c:135
 msgid "Comma-separated list of warnings to disable; supported warnings are: ascii, intcurrsym"
 msgstr ""
 
-#: locale/programs/localedef.c:132
+#: locale/programs/localedef.c:138
 msgid "Comma-separated list of warnings to enable; supported warnings are: ascii, intcurrsym"
 msgstr ""
 
-#: locale/programs/localedef.c:135
+#: locale/programs/localedef.c:141
 msgid "Archive control:"
 msgstr "归档控制："
 
-#: locale/programs/localedef.c:137
+#: locale/programs/localedef.c:143
 msgid "Don't add new data to archive"
 msgstr "不要将新数据添加到归档文件中"
 
-#: locale/programs/localedef.c:139
+#: locale/programs/localedef.c:145
 msgid "Add locales named by parameters to archive"
 msgstr "将由参数命名的区域添加到归档文件中"
 
-#: locale/programs/localedef.c:140
+#: locale/programs/localedef.c:146
 msgid "Replace existing archive content"
 msgstr "替换现有的归档文件内容"
 
-#: locale/programs/localedef.c:142
+#: locale/programs/localedef.c:148
 msgid "Remove locales named by parameters from archive"
 msgstr "从归档文件中删除由参数命名的区域"
 
-#: locale/programs/localedef.c:143
+#: locale/programs/localedef.c:149
 msgid "List content of archive"
 msgstr "列出归档文件的内容"
 
-#: locale/programs/localedef.c:145
+#: locale/programs/localedef.c:151
 msgid "locale.alias file to consult when making archive"
 msgstr "在制作归档文件时参考 locale.alias 文件"
 
-#: locale/programs/localedef.c:147
+#: locale/programs/localedef.c:153
 msgid "Generate little-endian output"
 msgstr "生成小端序输出"
 
-#: locale/programs/localedef.c:149
+#: locale/programs/localedef.c:155
 msgid "Generate big-endian output"
 msgstr "生成大端序输出"
 
-#: locale/programs/localedef.c:154
+#: locale/programs/localedef.c:160
 msgid "Compile locale specification"
 msgstr "编译区域规范"
 
-#: locale/programs/localedef.c:157
+#: locale/programs/localedef.c:163
 msgid ""
 "NAME\n"
 "[--add-to-archive|--delete-from-archive] FILE...\n"
@@ -2741,33 +2745,33 @@ msgstr ""
 "[--add-to-archive|--delete-from-archive] 文件...\n"
 "--list-archive [文件]"
 
-#: locale/programs/localedef.c:232
+#: locale/programs/localedef.c:238
 #, c-format
 msgid "cannot create directory for output files"
 msgstr "无法为输出文件创建目录"
 
-#: locale/programs/localedef.c:243
+#: locale/programs/localedef.c:249
 msgid "FATAL: system does not define `_POSIX2_LOCALEDEF'"
 msgstr "致命错误：系统未定义“_POSIX2_LOCALEDEF”"
 
-#: locale/programs/localedef.c:257 locale/programs/localedef.c:273
-#: locale/programs/localedef.c:663 locale/programs/localedef.c:683
+#: locale/programs/localedef.c:263 locale/programs/localedef.c:279
+#: locale/programs/localedef.c:673 locale/programs/localedef.c:693
 #, c-format
 msgid "cannot open locale definition file `%s'"
 msgstr "无法打开区域定义文件“%s”"
 
-#: locale/programs/localedef.c:297
+#: locale/programs/localedef.c:303
 #, c-format
 msgid "cannot write output files to `%s'"
 msgstr "无法将输出文件写入“%s”"
 
-#: locale/programs/localedef.c:303
+#: locale/programs/localedef.c:309
 #, fuzzy
 #| msgid "no output file produced because warnings were issued"
 msgid "no output file produced because errors were issued"
 msgstr "由于出现警告而未生成输出文件"
 
-#: locale/programs/localedef.c:431
+#: locale/programs/localedef.c:441
 #, c-format
 msgid ""
 "System's directory for character maps : %s\n"
@@ -2780,11 +2784,11 @@ msgstr ""
 "\t\t      语区路径   ：%s\n"
 "%s"
 
-#: locale/programs/localedef.c:631
+#: locale/programs/localedef.c:641
 msgid "circular dependencies between locale definitions"
 msgstr "区域定义中的循环倚赖"
 
-#: locale/programs/localedef.c:637
+#: locale/programs/localedef.c:647
 #, c-format
 msgid "cannot add already read locale `%s' a second time"
 msgstr "无法再次添加已经读入的“%s”"
@@ -2940,24 +2944,24 @@ msgstr "无法为范畴“%2$s”打开输出文件“%1$s”"
 msgid "failure while writing data for category `%s'"
 msgstr "为范畴“%s”写入数据失败"
 
-#: locale/programs/locfile.c:917
+#: locale/programs/locfile.c:930
 #, c-format
 msgid "cannot create output file `%s' for category `%s'"
 msgstr "无法为范畴“%2$s”创建输出文件“%1$s”"
 
-#: locale/programs/locfile.c:953
+#: locale/programs/locfile.c:966
 msgid "expecting string argument for `copy'"
 msgstr "`copy' 的参数应该是字串才对"
 
-#: locale/programs/locfile.c:957
+#: locale/programs/locfile.c:970
 msgid "locale name should consist only of portable characters"
 msgstr "区域名称应该仅由可移植的字符组成"
 
-#: locale/programs/locfile.c:976
+#: locale/programs/locfile.c:989
 msgid "no other keyword shall be specified when `copy' is used"
 msgstr "使用“copy”时不应再使用其它关键字"
 
-#: locale/programs/locfile.c:990
+#: locale/programs/locfile.c:1003
 #, c-format
 msgid "`%1$s' definition does not end with `END %1$s'"
 msgstr "对“%1$s”的定义并不以“END %1%s”结束"
@@ -3828,260 +3832,260 @@ msgstr "pruning %s 缓存；时间 %ld"
 msgid "considering %s entry \"%s\", timeout %<PRIu64>"
 msgstr "认为中 %s 项目 “%s” ，逾时 %<PRIu64>"
 
-#: nscd/connections.c:520
+#: nscd/connections.c:521
 #, c-format
 msgid "invalid persistent database file \"%s\": %s"
 msgstr "无效的永久性的数据库文件 “%s” ：%s"
 
-#: nscd/connections.c:528
+#: nscd/connections.c:529
 msgid "uninitialized header"
 msgstr "未起始的标头"
 
-#: nscd/connections.c:533
+#: nscd/connections.c:534
 msgid "header size does not match"
 msgstr "标头大小不吻合"
 
-#: nscd/connections.c:543
+#: nscd/connections.c:544
 msgid "file size does not match"
 msgstr "文件大小不匹配"
 
-#: nscd/connections.c:560
+#: nscd/connections.c:561
 msgid "verification failed"
 msgstr "验证失败"
 
-#: nscd/connections.c:574
+#: nscd/connections.c:575
 #, c-format
 msgid "suggested size of table for database %s larger than the persistent database's table"
 msgstr "用于数据库 %s 的建议表格大小大于永久性的数据库表格"
 
-#: nscd/connections.c:585 nscd/connections.c:669
+#: nscd/connections.c:586 nscd/connections.c:670
 #, c-format
 msgid "cannot create read-only descriptor for \"%s\"; no mmap"
 msgstr "无法为“%s”创建只读描述符；没有 mmap"
 
-#: nscd/connections.c:601
+#: nscd/connections.c:602
 #, c-format
 msgid "cannot access '%s'"
 msgstr "无法访问 ‘%s’"
 
-#: nscd/connections.c:649
+#: nscd/connections.c:650
 #, c-format
 msgid "database for %s corrupted or simultaneously used; remove %s manually if necessary and restart"
 msgstr "数据库用于 %s 已损坏或被同步地使用；若必要，手动移除 %s 并重启"
 
-#: nscd/connections.c:655
+#: nscd/connections.c:656
 #, c-format
 msgid "cannot create %s; no persistent database used"
 msgstr "无法创建 %s; 不使用持久数据库"
 
-#: nscd/connections.c:658
+#: nscd/connections.c:659
 #, c-format
 msgid "cannot create %s; no sharing possible"
 msgstr "无法创建 %s; 无法共享"
 
-#: nscd/connections.c:729
+#: nscd/connections.c:730
 #, c-format
 msgid "cannot write to database file %s: %s"
 msgstr "无法写入数据库文件 %s: %s"
 
-#: nscd/connections.c:785
+#: nscd/connections.c:786
 #, c-format
 msgid "cannot open socket: %s"
 msgstr "无法打开套接字：%s"
 
-#: nscd/connections.c:804
+#: nscd/connections.c:805
 #, c-format
 msgid "cannot enable socket to accept connections: %s"
 msgstr "无法启用套接字以接受连接：%s"
 
-#: nscd/connections.c:861
+#: nscd/connections.c:862
 #, c-format
 msgid "disabled inotify-based monitoring for file `%s': %s"
 msgstr "为 `%s' 禁用基于 inotify 的监控: %s"
 
-#: nscd/connections.c:865
+#: nscd/connections.c:866
 #, c-format
 msgid "monitoring file `%s` (%d)"
 msgstr "监控文件 `%s' (%d)"
 
-#: nscd/connections.c:878
+#: nscd/connections.c:879
 #, c-format
 msgid "disabled inotify-based monitoring for directory `%s': %s"
 msgstr "为目录 `%s' 禁用基于 inotify 的监控: %s"
 
-#: nscd/connections.c:882
+#: nscd/connections.c:883
 #, c-format
 msgid "monitoring directory `%s` (%d)"
 msgstr "监视目录 `%s` (%d)"
 
-#: nscd/connections.c:910
+#: nscd/connections.c:911
 #, c-format
 msgid "monitoring file %s for database %s"
 msgstr "监视文件 %s, 用于数据库 %s"
 
-#: nscd/connections.c:920
+#: nscd/connections.c:921
 #, c-format
 msgid "stat failed for file `%s'; will try again later: %s"
 msgstr "stat 文件 `%s' 失败；将稍后再试: %s"
 
-#: nscd/connections.c:1039
+#: nscd/connections.c:1040
 #, c-format
 msgid "provide access to FD %d, for %s"
 msgstr "提供访问到 FD %d, 用于 %s"
 
-#: nscd/connections.c:1051
+#: nscd/connections.c:1052
 #, c-format
 msgid "cannot handle old request version %d; current version is %d"
 msgstr "无法处理旧请求版本 %d；当前版本为 %d"
 
-#: nscd/connections.c:1074
+#: nscd/connections.c:1075
 #, c-format
 msgid "request from %ld not handled due to missing permission"
 msgstr "由于缺少权限而无法处理来自 %ld 的要求"
 
-#: nscd/connections.c:1079
+#: nscd/connections.c:1080
 #, c-format
 msgid "request from '%s' [%ld] not handled due to missing permission"
 msgstr "由于缺少权限而无法处理来自 '%s' [%ld] 的要求"
 
-#: nscd/connections.c:1084
+#: nscd/connections.c:1085
 msgid "request not handled due to missing permission"
 msgstr "要求无法控柄的由于缺少权限"
 
-#: nscd/connections.c:1122 nscd/connections.c:1148
+#: nscd/connections.c:1123 nscd/connections.c:1149
 #, c-format
 msgid "cannot write result: %s"
 msgstr "无法写入结果：“%s”"
 
-#: nscd/connections.c:1239
+#: nscd/connections.c:1240
 #, c-format
 msgid "error getting caller's id: %s"
 msgstr "取得调用程序识别码时发生错误: %s"
 
-#: nscd/connections.c:1349
+#: nscd/connections.c:1350
 #, fuzzy, c-format
 #| msgid "cannot open /proc/self/cmdline: %s; disabling paranoia mode"
 msgid "cannot open /proc/self/cmdline: %m; disabling paranoia mode"
 msgstr "无法打开/proc/self/cmdline：%s; 停用 paranoia 模式"
 
-#: nscd/connections.c:1372
+#: nscd/connections.c:1373
 #, c-format
 msgid "cannot change to old UID: %s; disabling paranoia mode"
 msgstr "无法变更为旧的 UID：%s; 停用 paranoia 模式"
 
-#: nscd/connections.c:1383
+#: nscd/connections.c:1384
 #, c-format
 msgid "cannot change to old GID: %s; disabling paranoia mode"
 msgstr "无法变更为旧的 GID：%s; 停用 paranoia 模式"
 
-#: nscd/connections.c:1397
+#: nscd/connections.c:1398
 #, c-format
 msgid "cannot change to old working directory: %s; disabling paranoia mode"
 msgstr "无法变更为旧的工作目录：%s; 停用 paranoia 模式"
 
-#: nscd/connections.c:1444
+#: nscd/connections.c:1445
 #, c-format
 msgid "re-exec failed: %s; disabling paranoia mode"
 msgstr "re-exec 失败：%s; 停用 paranoia 模式"
 
-#: nscd/connections.c:1453
+#: nscd/connections.c:1454
 #, c-format
 msgid "cannot change current working directory to \"/\": %s"
 msgstr "无法变更目前的工作目录到 “/” ：%s"
 
-#: nscd/connections.c:1637
+#: nscd/connections.c:1638
 #, c-format
 msgid "short read while reading request: %s"
 msgstr "读取请求时没有读入足够的数据：%s"
 
-#: nscd/connections.c:1670
+#: nscd/connections.c:1671
 #, c-format
 msgid "key length in request too long: %d"
 msgstr "请求中的键过长：%d"
 
-#: nscd/connections.c:1683
+#: nscd/connections.c:1684
 #, c-format
 msgid "short read while reading request key: %s"
 msgstr "读入请求键的时候没有读入足够的数据：%s"
 
-#: nscd/connections.c:1693
+#: nscd/connections.c:1694
 #, c-format
 msgid "handle_request: request received (Version = %d) from PID %ld"
 msgstr "处理请求：已从进程ID %2$ld 收到请求 (版本 = %1$d)"
 
-#: nscd/connections.c:1698
+#: nscd/connections.c:1699
 #, c-format
 msgid "handle_request: request received (Version = %d)"
 msgstr "处理请求：已收到请求 (版本 = %d)"
 
-#: nscd/connections.c:1838
+#: nscd/connections.c:1839
 #, c-format
 msgid "ignored inotify event for `%s` (file exists)"
 msgstr "为 `%s` 忽略 inotify 事件（文件存在）"
 
-#: nscd/connections.c:1843
+#: nscd/connections.c:1844
 #, c-format
 msgid "monitored file `%s` was %s, removing watch"
 msgstr "监视文件 `%s' 原为 %s，移除监视"
 
-#: nscd/connections.c:1851 nscd/connections.c:1893
+#: nscd/connections.c:1852 nscd/connections.c:1894
 #, c-format
 msgid "failed to remove file watch `%s`: %s"
 msgstr "移除文件监视 `%s' 失败: %s"
 
-#: nscd/connections.c:1866
+#: nscd/connections.c:1867
 #, c-format
 msgid "monitored file `%s` was written to"
 msgstr "监视的文件 '%s' 被写入"
 
-#: nscd/connections.c:1890
+#: nscd/connections.c:1891
 #, c-format
 msgid "monitored parent directory `%s` was %s, removing watch on `%s`"
 msgstr "监视父目录 `%s' 原为 %s，移除 `%s' 上的监视"
 
-#: nscd/connections.c:1916
+#: nscd/connections.c:1917
 #, c-format
 msgid "monitored file `%s` was %s, adding watch"
 msgstr "监视文件 `%s' 原为 %s，添加监视"
 
-#: nscd/connections.c:1928
+#: nscd/connections.c:1929
 #, c-format
 msgid "failed to add file watch `%s`: %s"
 msgstr "添加文件监视 `%s' 失败: %s"
 
-#: nscd/connections.c:2106 nscd/connections.c:2271
+#: nscd/connections.c:2107 nscd/connections.c:2272
 #, c-format
 msgid "disabled inotify-based monitoring after read error %d"
 msgstr "停用基于 inotify 的监控，在读取错误 %d 发生后"
 
-#: nscd/connections.c:2386
+#: nscd/connections.c:2387
 msgid "could not initialize conditional variable"
 msgstr "无法初始化条件变量"
 
-#: nscd/connections.c:2394
+#: nscd/connections.c:2395
 msgid "could not start clean-up thread; terminating"
 msgstr "无法开始清理线程；终止中"
 
-#: nscd/connections.c:2408
+#: nscd/connections.c:2409
 msgid "could not start any worker thread; terminating"
 msgstr "无法开始任何背景工作线程；终止中"
 
-#: nscd/connections.c:2463 nscd/connections.c:2465 nscd/connections.c:2481
-#: nscd/connections.c:2491 nscd/connections.c:2509 nscd/connections.c:2520
-#: nscd/connections.c:2530
+#: nscd/connections.c:2464 nscd/connections.c:2466 nscd/connections.c:2482
+#: nscd/connections.c:2492 nscd/connections.c:2510 nscd/connections.c:2521
+#: nscd/connections.c:2531
 #, c-format
 msgid "Failed to run nscd as user '%s'"
 msgstr "以用户 '%s' 的身分运行 nscd 失败"
 
-#: nscd/connections.c:2483
+#: nscd/connections.c:2484
 msgid "initial getgrouplist failed"
 msgstr "初始化 getgrouplist 失败"
 
-#: nscd/connections.c:2492
+#: nscd/connections.c:2493
 msgid "getgrouplist failed"
 msgstr "getgrouplist 失败"
 
-#: nscd/connections.c:2510
+#: nscd/connections.c:2511
 msgid "setgroups failed"
 msgstr "setgroups 失败"
 
@@ -4116,22 +4120,22 @@ msgstr "在 %2$s 缓存中 %1$zu 字节可用"
 msgid "no more memory for database '%s'"
 msgstr "无内存可用于数据库 “%s” "
 
-#: nscd/netgroupcache.c:121
+#: nscd/netgroupcache.c:122
 #, c-format
 msgid "Haven't found \"%s\" in netgroup cache!"
 msgstr "尚未在网络群组缓存中找到 “%s” ！"
 
-#: nscd/netgroupcache.c:123
+#: nscd/netgroupcache.c:124
 #, c-format
 msgid "Reloading \"%s\" in netgroup cache!"
 msgstr "重新在网络群组缓存中加载 “%s” ！"
 
-#: nscd/netgroupcache.c:469
+#: nscd/netgroupcache.c:470
 #, c-format
 msgid "Haven't found \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr "尚未在网络群组缓存中找到 “%s (%s,%s,%s)” ！"
 
-#: nscd/netgroupcache.c:472
+#: nscd/netgroupcache.c:473
 #, c-format
 msgid "Reloading \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr "重新在网络群组缓存中加载 “%s (%s,%s,%s)” ！"
@@ -4292,27 +4296,27 @@ msgstr "解析错误：%s"
 msgid "Must specify user name for server-user option"
 msgstr "必须为服务器用户选项指定用户名"
 
-#: nscd/nscd_conf.c:198
+#: nscd/nscd_conf.c:201
 #, c-format
 msgid "Must specify user name for stat-user option"
 msgstr "必须为 stat 用户选项指定用户名"
 
-#: nscd/nscd_conf.c:255
+#: nscd/nscd_conf.c:259
 #, c-format
 msgid "Must specify value for restart-interval option"
 msgstr "必须指定用于 restart-interval 选项的值"
 
-#: nscd/nscd_conf.c:269
+#: nscd/nscd_conf.c:273
 #, c-format
 msgid "Unknown option: %s %s %s"
 msgstr "未知的选项：%s %s %s"
 
-#: nscd/nscd_conf.c:282
+#: nscd/nscd_conf.c:286
 #, c-format
 msgid "cannot get current working directory: %s; disabling paranoia mode"
 msgstr "无法取得目前的工作目录：%s; 停用 paranoia 模式"
 
-#: nscd/nscd_conf.c:302
+#: nscd/nscd_conf.c:306
 #, c-format
 msgid "maximum file size for %s database too small"
 msgstr "最大值文件大小用于 %s 数据库太小"
@@ -4878,7 +4882,7 @@ msgstr "常规表达式过大"
 msgid "Unmatched ) or \\)"
 msgstr "不匹配的 ) 或 \\)"
 
-#: posix/regcomp.c:689
+#: posix/regcomp.c:676
 msgid "No previous regular expression"
 msgstr "没有前一个常规表达式"
 
@@ -5067,7 +5071,7 @@ msgstr "输出缓冲区可用"
 msgid "Input message available"
 msgstr "输入消息可用"
 
-#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:381 timezone/zic.c:520
+#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:375 timezone/zic.c:561
 msgid "I/O error"
 msgstr "I/O 错误"
 
@@ -6433,56 +6437,69 @@ msgstr "这次真的被您打败了"
 # 简单的说，儿歌 "唐老先生有块地..."，然后呢?? ;-p
 #
 #. TRANS Go home and have a glass of warm, dairy-fresh milk.
-#: sysdeps/gnu/errlist.c:978
+#. TRANS @c Okay.  Since you are dying to know, I'll tell you.
+#. TRANS @c This is a joke, obviously.  There is a children's song which begins,
+#. TRANS @c "Old McDonald had a farm, e-i-e-i-o."  Every time I see the (real)
+#. TRANS @c errno macro EIO, I think about that song.  Probably most of my
+#. TRANS @c compatriots who program on Unix do, too.  One of them must have stayed
+#. TRANS @c up a little too late one night and decided to add it to Hurd or Glibc.
+#. TRANS @c Whoever did it should be castigated, but it made me laugh.
+#. TRANS @c  --jtobey@channel1.com
+#. TRANS @c
+#. TRANS @c "bought the farm" means "died".  -jtobey
+#. TRANS @c
+#. TRANS @c Translators, please do not translate this litteraly, translate it into
+#. TRANS @c an idiomatic funny way of saying that the computer died.
+#: sysdeps/gnu/errlist.c:991
 msgid "Computer bought the farm"
 msgstr "这台电脑买了一块地啰"
 
 #. TRANS This error code has no purpose.
-#: sysdeps/gnu/errlist.c:987
+#: sysdeps/gnu/errlist.c:1000
 msgid "Gratuitous error"
 msgstr "无故的错误"
 
-#: sysdeps/gnu/errlist.c:995
+#: sysdeps/gnu/errlist.c:1008
 msgid "Bad message"
 msgstr "错误的消息"
 
-#: sysdeps/gnu/errlist.c:1003
+#: sysdeps/gnu/errlist.c:1016
 msgid "Identifier removed"
 msgstr "标识符已删除"
 
-#: sysdeps/gnu/errlist.c:1011
+#: sysdeps/gnu/errlist.c:1024
 msgid "Multihop attempted"
 msgstr "尝试 Multihop"
 
-#: sysdeps/gnu/errlist.c:1019
+#: sysdeps/gnu/errlist.c:1032
 msgid "No data available"
 msgstr "没有可用的数据"
 
-#: sysdeps/gnu/errlist.c:1027
+#: sysdeps/gnu/errlist.c:1040
 msgid "Link has been severed"
 msgstr "链接已有服务"
 
-#: sysdeps/gnu/errlist.c:1035
+#: sysdeps/gnu/errlist.c:1048
 msgid "No message of desired type"
 msgstr "没有符合需求格式的消息"
 
-#: sysdeps/gnu/errlist.c:1043
+#: sysdeps/gnu/errlist.c:1056
 msgid "Out of streams resources"
 msgstr "流资源不足"
 
-#: sysdeps/gnu/errlist.c:1051
+#: sysdeps/gnu/errlist.c:1064
 msgid "Device not a stream"
 msgstr "设备不是流"
 
-#: sysdeps/gnu/errlist.c:1059
+#: sysdeps/gnu/errlist.c:1072
 msgid "Value too large for defined data type"
 msgstr "对已定义的数据类型来说值过大"
 
-#: sysdeps/gnu/errlist.c:1067
+#: sysdeps/gnu/errlist.c:1080
 msgid "Protocol error"
 msgstr "协议错误"
 
-#: sysdeps/gnu/errlist.c:1075
+#: sysdeps/gnu/errlist.c:1088
 msgid "Timer expired"
 msgstr "计时器超时"
 
@@ -6490,195 +6507,195 @@ msgstr "计时器超时"
 #. TRANS completed.  @xref{Asynchronous I/O}.  When you call @code{aio_cancel},
 #. TRANS the normal result is for the operations affected to complete with this
 #. TRANS error; @pxref{Cancel AIO Operations}.
-#: sysdeps/gnu/errlist.c:1087
+#: sysdeps/gnu/errlist.c:1100
 msgid "Operation canceled"
 msgstr "操作已取消"
 
-#: sysdeps/gnu/errlist.c:1095
+#: sysdeps/gnu/errlist.c:1108
 msgid "Owner died"
 msgstr "拥有者已消逝"
 
-#: sysdeps/gnu/errlist.c:1103
+#: sysdeps/gnu/errlist.c:1116
 msgid "State not recoverable"
 msgstr "状态无法回复"
 
-#: sysdeps/gnu/errlist.c:1111
+#: sysdeps/gnu/errlist.c:1124
 msgid "Interrupted system call should be restarted"
 msgstr "被中断的系统调用应该重新启动"
 
-#: sysdeps/gnu/errlist.c:1119
+#: sysdeps/gnu/errlist.c:1132
 msgid "Channel number out of range"
 msgstr "通道编号超出范围"
 
-#: sysdeps/gnu/errlist.c:1127
+#: sysdeps/gnu/errlist.c:1140
 msgid "Level 2 not synchronized"
 msgstr "级别 2 尚未同步"
 
-#: sysdeps/gnu/errlist.c:1135
+#: sysdeps/gnu/errlist.c:1148
 msgid "Level 3 halted"
 msgstr "级别 3 已关闭"
 
-#: sysdeps/gnu/errlist.c:1143
+#: sysdeps/gnu/errlist.c:1156
 msgid "Level 3 reset"
 msgstr "级别 3 已重置"
 
-#: sysdeps/gnu/errlist.c:1151
+#: sysdeps/gnu/errlist.c:1164
 msgid "Link number out of range"
 msgstr "链接数超出范围"
 
-#: sysdeps/gnu/errlist.c:1159
+#: sysdeps/gnu/errlist.c:1172
 msgid "Protocol driver not attached"
 msgstr "未加载协议驱动程序"
 
-#: sysdeps/gnu/errlist.c:1167
+#: sysdeps/gnu/errlist.c:1180
 msgid "No CSI structure available"
 msgstr "没有可用的 CSI 结构"
 
-#: sysdeps/gnu/errlist.c:1175
+#: sysdeps/gnu/errlist.c:1188
 msgid "Level 2 halted"
 msgstr "级别 2 己关闭"
 
-#: sysdeps/gnu/errlist.c:1183
+#: sysdeps/gnu/errlist.c:1196
 msgid "Invalid exchange"
 msgstr "无效的交换"
 
-#: sysdeps/gnu/errlist.c:1191
+#: sysdeps/gnu/errlist.c:1204
 msgid "Invalid request descriptor"
 msgstr "无效的请求描述符"
 
-#: sysdeps/gnu/errlist.c:1199
+#: sysdeps/gnu/errlist.c:1212
 msgid "Exchange full"
 msgstr "交换满"
 
-#: sysdeps/gnu/errlist.c:1207
+#: sysdeps/gnu/errlist.c:1220
 msgid "No anode"
 msgstr "没有 anode"
 
-#: sysdeps/gnu/errlist.c:1215
+#: sysdeps/gnu/errlist.c:1228
 msgid "Invalid request code"
 msgstr "无效的请求码"
 
-#: sysdeps/gnu/errlist.c:1223
+#: sysdeps/gnu/errlist.c:1236
 msgid "Invalid slot"
 msgstr "不适用的 slot"
 
-#: sysdeps/gnu/errlist.c:1231
+#: sysdeps/gnu/errlist.c:1244
 msgid "File locking deadlock error"
 msgstr "文件锁死锁错误"
 
-#: sysdeps/gnu/errlist.c:1239
+#: sysdeps/gnu/errlist.c:1252
 msgid "Bad font file format"
 msgstr "错误的字体文件格式"
 
-#: sysdeps/gnu/errlist.c:1247
+#: sysdeps/gnu/errlist.c:1260
 msgid "Machine is not on the network"
 msgstr "机器不在网络中"
 
-#: sysdeps/gnu/errlist.c:1255
+#: sysdeps/gnu/errlist.c:1268
 msgid "Package not installed"
 msgstr "包未安装"
 
-#: sysdeps/gnu/errlist.c:1263
+#: sysdeps/gnu/errlist.c:1276
 msgid "Advertise error"
 msgstr "通知错误"
 
-#: sysdeps/gnu/errlist.c:1271
+#: sysdeps/gnu/errlist.c:1284
 msgid "Srmount error"
 msgstr "Srmount 错误"
 
-#: sysdeps/gnu/errlist.c:1279
+#: sysdeps/gnu/errlist.c:1292
 msgid "Communication error on send"
 msgstr "发送时出现通讯错误"
 
-#: sysdeps/gnu/errlist.c:1287
+#: sysdeps/gnu/errlist.c:1300
 msgid "RFS specific error"
 msgstr "RFS 特定错误"
 
-#: sysdeps/gnu/errlist.c:1295
+#: sysdeps/gnu/errlist.c:1308
 msgid "Name not unique on network"
 msgstr "网络上的名称不是唯一的"
 
-#: sysdeps/gnu/errlist.c:1303
+#: sysdeps/gnu/errlist.c:1316
 msgid "File descriptor in bad state"
 msgstr "文件描述符处于错误状态"
 
-#: sysdeps/gnu/errlist.c:1311
+#: sysdeps/gnu/errlist.c:1324
 msgid "Remote address changed"
 msgstr "远程地址已改变"
 
-#: sysdeps/gnu/errlist.c:1319
+#: sysdeps/gnu/errlist.c:1332
 msgid "Can not access a needed shared library"
 msgstr "无法访问必须的共享库"
 
-#: sysdeps/gnu/errlist.c:1327
+#: sysdeps/gnu/errlist.c:1340
 msgid "Accessing a corrupted shared library"
 msgstr "正在访问一个已毁坏的共享库"
 
-#: sysdeps/gnu/errlist.c:1335
+#: sysdeps/gnu/errlist.c:1348
 msgid ".lib section in a.out corrupted"
 msgstr "a.out 中的 .lib 节已毁坏"
 
-#: sysdeps/gnu/errlist.c:1343
+#: sysdeps/gnu/errlist.c:1356
 msgid "Attempting to link in too many shared libraries"
 msgstr "试图与过多的共享库相链接"
 
-#: sysdeps/gnu/errlist.c:1351
+#: sysdeps/gnu/errlist.c:1364
 msgid "Cannot exec a shared library directly"
 msgstr "无法直接执行共享库"
 
-#: sysdeps/gnu/errlist.c:1359
+#: sysdeps/gnu/errlist.c:1372
 msgid "Streams pipe error"
 msgstr "流管道错误"
 
-#: sysdeps/gnu/errlist.c:1367
+#: sysdeps/gnu/errlist.c:1380
 msgid "Structure needs cleaning"
 msgstr "结构需要清理"
 
-#: sysdeps/gnu/errlist.c:1375
+#: sysdeps/gnu/errlist.c:1388
 msgid "Not a XENIX named type file"
 msgstr "不是 XENIX 命名的类型文件"
 
-#: sysdeps/gnu/errlist.c:1383
+#: sysdeps/gnu/errlist.c:1396
 msgid "No XENIX semaphores available"
 msgstr "没有可用的 XENIX 信号量"
 
-#: sysdeps/gnu/errlist.c:1391
+#: sysdeps/gnu/errlist.c:1404
 msgid "Is a named type file"
 msgstr "是一个有名类型文件"
 
-#: sysdeps/gnu/errlist.c:1399
+#: sysdeps/gnu/errlist.c:1412
 msgid "Remote I/O error"
 msgstr "远程 I/O 错误"
 
-#: sysdeps/gnu/errlist.c:1407
+#: sysdeps/gnu/errlist.c:1420
 msgid "No medium found"
 msgstr "找不到介质"
 
-#: sysdeps/gnu/errlist.c:1415
+#: sysdeps/gnu/errlist.c:1428
 msgid "Wrong medium type"
 msgstr "错误的介质类型"
 
-#: sysdeps/gnu/errlist.c:1423
+#: sysdeps/gnu/errlist.c:1436
 msgid "Required key not available"
 msgstr "需要的关键字不存在"
 
-#: sysdeps/gnu/errlist.c:1431
+#: sysdeps/gnu/errlist.c:1444
 msgid "Key has expired"
 msgstr "关键字已过期"
 
-#: sysdeps/gnu/errlist.c:1439
+#: sysdeps/gnu/errlist.c:1452
 msgid "Key has been revoked"
 msgstr "键值已取消"
 
-#: sysdeps/gnu/errlist.c:1447
+#: sysdeps/gnu/errlist.c:1460
 msgid "Key was rejected by service"
 msgstr "键值被服务所拒绝"
 
-#: sysdeps/gnu/errlist.c:1455
+#: sysdeps/gnu/errlist.c:1468
 msgid "Operation not possible due to RF-kill"
 msgstr "由于 RF-kill 而无法操作"
 
-#: sysdeps/gnu/errlist.c:1463
+#: sysdeps/gnu/errlist.c:1476
 msgid "Memory page has hardware error"
 msgstr "内存分页有硬件错误"
 
@@ -6807,27 +6824,27 @@ msgstr ""
 msgid "can't disable CET"
 msgstr ""
 
-#: timezone/zdump.c:338
+#: timezone/zdump.c:332
 msgid "has fewer than 3 characters"
 msgstr "不足 3 个字符"
 
-#: timezone/zdump.c:340
+#: timezone/zdump.c:334
 msgid "has more than 6 characters"
 msgstr "超过 6 个字符"
 
-#: timezone/zdump.c:342
+#: timezone/zdump.c:336
 msgid "has characters other than ASCII alphanumerics, '-' or '+'"
 msgstr "含有 ASCII 数字、字母、“-”、“+”之外的字符"
 
-#: timezone/zdump.c:347
+#: timezone/zdump.c:341
 #, c-format
 msgid "%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"
 msgstr "%s: 警告：区域 “%s” 缩写 “%s” %s\n"
 
-#: timezone/zdump.c:393
+#: timezone/zdump.c:387
 #, c-format
 msgid ""
-"%s: usage: %s OPTIONS ZONENAME ...\n"
+"%s: usage: %s OPTIONS TIMEZONE ...\n"
 "Options include:\n"
 "  -c [L,]U   Start at year L (default -500), end before year U (default 2500)\n"
 "  -t [L,]U   Start at time L, end before time U (in seconds since 1970)\n"
@@ -6840,54 +6857,66 @@ msgid ""
 "Report bugs to %s.\n"
 msgstr ""
 
-#: timezone/zdump.c:479
+#: timezone/zdump.c:473
 #, c-format
 msgid "%s: wild -c argument %s\n"
 msgstr "%s： 怪异的 -c 选项 %s\n"
 
-#: timezone/zdump.c:512
+#: timezone/zdump.c:506
 #, c-format
 msgid "%s: wild -t argument %s\n"
 msgstr "%s: wild -c 参数 %s\n"
 
-#: timezone/zic.c:398
+#: timezone/zic.c:429
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s：内存耗尽：%s\n"
 
-#: timezone/zic.c:406
+#: timezone/zic.c:437
 msgid "size overflow"
 msgstr "大小溢出"
 
-#: timezone/zic.c:454
+#: timezone/zic.c:447
+#, fuzzy
+#| msgid "int overflow"
+msgid "alignment overflow"
+msgstr "整数溢出"
+
+#: timezone/zic.c:495
 #, fuzzy
 #| msgid "Integer overflow"
 msgid "integer overflow"
 msgstr "整数溢出"
 
-#: timezone/zic.c:488
+#: timezone/zic.c:529
 #, fuzzy, c-format
 #| msgid "\"%s\", line %d: "
 msgid "\"%s\", line %<PRIdMAX>: "
 msgstr "\"%s\", 第 %d 行: "
 
-#: timezone/zic.c:491
+#: timezone/zic.c:532
 #, fuzzy, c-format
 #| msgid " (rule from \"%s\", line %d)"
 msgid " (rule from \"%s\", line %<PRIdMAX>)"
 msgstr " (规则来自 \"%s\", 第 %d 行)"
 
-#: timezone/zic.c:510
+#: timezone/zic.c:551
 #, c-format
 msgid "warning: "
 msgstr "警告："
 
-#: timezone/zic.c:535
-#, c-format
+#: timezone/zic.c:576
+#, fuzzy, c-format
+#| msgid ""
+#| "%s: usage is %s [ --version ] [ --help ] [ -v ] \\\n"
+#| "\t[ -l localtime ] [ -p posixrules ] [ -d directory ] \\\n"
+#| "\t[ -L leapseconds ] [ filename ... ]\n"
+#| "\n"
+#| "Report bugs to %s.\n"
 msgid ""
 "%s: usage is %s [ --version ] [ --help ] [ -v ] \\\n"
 "\t[ -l localtime ] [ -p posixrules ] [ -d directory ] \\\n"
-"\t[ -L leapseconds ] [ filename ... ]\n"
+"\t[ -t localtime-link ] [ -L leapseconds ] [ filename ... ]\n"
 "\n"
 "Report bugs to %s.\n"
 msgstr ""
@@ -6897,395 +6926,422 @@ msgstr ""
 "\n"
 "将错误通报给 %s。\n"
 
-#: timezone/zic.c:558
+#: timezone/zic.c:599
 #, fuzzy, c-format
 #| msgid "%s: Can't create %s: %s\n"
 msgid "%s: Can't chdir to %s: %s\n"
 msgstr "%s：无法创建 %s：%s\n"
 
-#: timezone/zic.c:590
+#: timezone/zic.c:632
 msgid "wild compilation-time specification of zic_t"
 msgstr "zic_t 的万用编译时间规格"
 
-#: timezone/zic.c:610
+#: timezone/zic.c:652
 #, c-format
 msgid "%s: More than one -d option specified\n"
 msgstr "%s：给出了多个 -d 选项\n"
 
-#: timezone/zic.c:620
+#: timezone/zic.c:662
 #, c-format
 msgid "%s: More than one -l option specified\n"
 msgstr "%s：给出了多个 -l 选项\n"
 
-#: timezone/zic.c:630
+#: timezone/zic.c:672
 #, c-format
 msgid "%s: More than one -p option specified\n"
 msgstr "%s：给出了多个 -p 选项\n"
 
-#: timezone/zic.c:640
+#: timezone/zic.c:680
+#, fuzzy, c-format
+#| msgid "%s: More than one -d option specified\n"
+msgid "%s: More than one -t option specified\n"
+msgstr "%s：给出了多个 -d 选项\n"
+
+#: timezone/zic.c:689
+msgid "-y is obsolescent"
+msgstr ""
+
+#: timezone/zic.c:693
 #, c-format
 msgid "%s: More than one -y option specified\n"
 msgstr "%s：给出了多个 -y 选项\n"
 
-#: timezone/zic.c:650
+#: timezone/zic.c:703
 #, c-format
 msgid "%s: More than one -L option specified\n"
 msgstr "%s：给出了多个 -L 选项\n"
 
-#: timezone/zic.c:659
+#: timezone/zic.c:712
 msgid "-s ignored"
 msgstr "-s 已被忽略"
 
-#: timezone/zic.c:698
+#: timezone/zic.c:753
 msgid "link to link"
 msgstr "链接到链接"
 
-#: timezone/zic.c:701 timezone/zic.c:705
+#: timezone/zic.c:756 timezone/zic.c:760
 msgid "command line"
 msgstr "命令行"
 
-#: timezone/zic.c:721
+#: timezone/zic.c:776
 msgid "empty file name"
 msgstr "空文件名"
 
-#: timezone/zic.c:724
+#: timezone/zic.c:779
 #, c-format
 msgid "file name '%s' begins with '/'"
 msgstr "文件名“%s”以“/”开头"
 
-#: timezone/zic.c:734
+#: timezone/zic.c:789
 #, c-format
 msgid "file name '%s' contains '%.*s' component"
 msgstr "文件名“%s”包含“%.*s”部分"
 
-#: timezone/zic.c:740
+#: timezone/zic.c:795
 #, c-format
 msgid "file name '%s' component contains leading '-'"
 msgstr "文件名“%s”部分以“-”开头"
 
 # component_len_max < component_len
-#: timezone/zic.c:743
+#: timezone/zic.c:798
 #, c-format
 msgid "file name '%s' contains overlength component '%.*s...'"
 msgstr "文件名“%s”中的“%.*s”部分过长"
 
-#: timezone/zic.c:771
+#: timezone/zic.c:826
 #, c-format
 msgid "file name '%s' contains byte '%c'"
 msgstr "文件名“%s”包含字节“%c”"
 
-#: timezone/zic.c:772
+#: timezone/zic.c:827
 #, c-format
 msgid "file name '%s' contains byte '\\%o'"
 msgstr "文件名“%s”包含字节“\\%o”"
 
-#: timezone/zic.c:842
+#: timezone/zic.c:897
 #, fuzzy, c-format
 #| msgid "%s: link from %s failed: %s"
 msgid "%s: link from %s/%s failed: %s\n"
 msgstr "%s：无法链接到 %s：%s"
 
-#: timezone/zic.c:852 timezone/zic.c:1815
+#: timezone/zic.c:907 timezone/zic.c:1876
 #, fuzzy, c-format
 #| msgid "%s: Can't remove %s: %s\n"
 msgid "%s: Can't remove %s/%s: %s\n"
 msgstr "%s：无法删除 %s：%s\n"
 
-#: timezone/zic.c:874
+#: timezone/zic.c:931
 #, c-format
 msgid "symbolic link used because hard link failed: %s"
 msgstr ""
 
-#: timezone/zic.c:882
+#: timezone/zic.c:939
 #, fuzzy, c-format
 #| msgid "%s: Can't read %s: %s\n"
 msgid "%s: Can't read %s/%s: %s\n"
 msgstr "%s: 无法读取 %s: %s\n"
 
-#: timezone/zic.c:889 timezone/zic.c:1828
+#: timezone/zic.c:946 timezone/zic.c:1889
 #, fuzzy, c-format
 #| msgid "%s: Can't create %s: %s\n"
 msgid "%s: Can't create %s/%s: %s\n"
 msgstr "%s：无法创建 %s：%s\n"
 
-#: timezone/zic.c:898
+#: timezone/zic.c:955
 #, c-format
 msgid "copy used because hard link failed: %s"
 msgstr ""
 
-#: timezone/zic.c:901
+#: timezone/zic.c:958
 #, fuzzy, c-format
 #| msgid "Don't update symbolic links"
 msgid "copy used because symbolic link failed: %s"
 msgstr "不更新符号链接"
 
-#: timezone/zic.c:1013 timezone/zic.c:1015
+#: timezone/zic.c:1032 timezone/zic.c:1034
 msgid "same rule name in multiple files"
 msgstr "多个文件中的相同规则名"
 
-#: timezone/zic.c:1056
-msgid "unruly zone"
-msgstr "没有规则的时区"
-
-#: timezone/zic.c:1063
+#: timezone/zic.c:1081
 #, c-format
 msgid "%s in ruleless zone"
 msgstr "%s 在没有规则的节"
 
-#: timezone/zic.c:1083
+#: timezone/zic.c:1101
 msgid "standard input"
 msgstr "标准输入"
 
-#: timezone/zic.c:1088
+#: timezone/zic.c:1106
 #, c-format
 msgid "%s: Can't open %s: %s\n"
 msgstr "%s：无法打开 %s：%s\n"
 
-#: timezone/zic.c:1099
+#: timezone/zic.c:1117
 msgid "line too long"
 msgstr "行过长"
 
-#: timezone/zic.c:1119
+#: timezone/zic.c:1139
 msgid "input line of unknown type"
 msgstr "未知类型的输入行"
 
-#: timezone/zic.c:1134
-#, c-format
-msgid "%s: Leap line in non leap seconds file %s"
-msgstr "%s: 闰时设置行出现在不含闰秒的文件 %s 中"
-
-#: timezone/zic.c:1142 timezone/zic.c:1547 timezone/zic.c:1569
+#: timezone/zic.c:1158 timezone/zic.c:1593 timezone/zic.c:1615
 #, c-format
 msgid "%s: panic: Invalid l_value %d\n"
 msgstr "%s: 严重错误: 错误的 l_value %d\n"
 
-#: timezone/zic.c:1151
+#: timezone/zic.c:1167
 msgid "expected continuation line not found"
 msgstr "找不到应该出现的续行"
 
-#: timezone/zic.c:1193 timezone/zic.c:2976
+#: timezone/zic.c:1203
+#, fuzzy
+#| msgid "format '%s' not handled by pre-2015 versions of zic"
+msgid "fractional seconds rejected by pre-2018 versions of zic"
+msgstr "“%s”格式无法由早于 2015 年的 zic 版本所处理"
+
+#: timezone/zic.c:1221 timezone/zic.c:3078
 msgid "time overflow"
 msgstr "时间溢出"
 
-#: timezone/zic.c:1198
+#: timezone/zic.c:1227
 msgid "values over 24 hours not handled by pre-2007 versions of zic"
 msgstr "24 小时以上的值无法由早于 2007 的 zic 版本所处理"
 
-#: timezone/zic.c:1209
-msgid "wrong number of fields on Rule line"
-msgstr "规则行中域的个数错误"
-
-#: timezone/zic.c:1213
-msgid "nameless rule"
-msgstr "无名规则"
-
 # 	zic_t		r_stdoff;	/* offset from standard time */
-#: timezone/zic.c:1218
+#: timezone/zic.c:1245
 #, fuzzy
 msgid "invalid saved time"
 msgstr "无效的保存时间"
 
-#: timezone/zic.c:1235
+#: timezone/zic.c:1256
+msgid "wrong number of fields on Rule line"
+msgstr "规则行中域的个数错误"
+
+#: timezone/zic.c:1265
+#, fuzzy, c-format
+#| msgid "Invalid numeric gid \"%s\"!"
+msgid "Invalid rule name \"%s\""
+msgstr "无效的 gid 数值 \"%s\"!"
+
+#: timezone/zic.c:1287
 msgid "wrong number of fields on Zone line"
 msgstr "区域行中域的个数错误"
 
-#: timezone/zic.c:1240
+#: timezone/zic.c:1292
 #, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
 msgstr "\"Zone %s\" 行和 -l 选项是互斥的"
 
-#: timezone/zic.c:1246
+#: timezone/zic.c:1298
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr "\"Zone %s\" 行和 -p 选项是互斥的"
 
-#: timezone/zic.c:1253
+#: timezone/zic.c:1305
 #, fuzzy, c-format
 #| msgid "duplicate zone name %s (file \"%s\", line %d)"
 msgid "duplicate zone name %s (file \"%s\", line %<PRIdMAX>)"
 msgstr "重复的区域名 %s (文件“%s”，行 %d)"
 
-#: timezone/zic.c:1267
+#: timezone/zic.c:1319
 msgid "wrong number of fields on Zone continuation line"
 msgstr "时区接续行的字段数目不对"
 
-#: timezone/zic.c:1307
+#: timezone/zic.c:1359
 msgid "invalid UT offset"
 msgstr "无效的 UT 偏移量"
 
-#: timezone/zic.c:1311
+#: timezone/zic.c:1363
 msgid "invalid abbreviation format"
 msgstr "无效的缩略格式"
 
-#: timezone/zic.c:1320
+#: timezone/zic.c:1372
 #, c-format
 msgid "format '%s' not handled by pre-2015 versions of zic"
 msgstr "“%s”格式无法由早于 2015 年的 zic 版本所处理"
 
-#: timezone/zic.c:1347
+#: timezone/zic.c:1399
 msgid "Zone continuation line end time is not after end time of previous line"
 msgstr "时区接续行的结束时间不在上一行的结束时间之后"
 
-#: timezone/zic.c:1374
+#: timezone/zic.c:1426
 msgid "wrong number of fields on Leap line"
 msgstr "闰时设置行的字段数目错误"
 
-#: timezone/zic.c:1383
+#: timezone/zic.c:1435
 msgid "invalid leaping year"
 msgstr "无效的闰年"
 
-#: timezone/zic.c:1403 timezone/zic.c:1501
+#: timezone/zic.c:1455 timezone/zic.c:1547
 msgid "invalid month name"
 msgstr "无效的月名称"
 
-#: timezone/zic.c:1416 timezone/zic.c:1614 timezone/zic.c:1628
+#: timezone/zic.c:1468 timezone/zic.c:1663 timezone/zic.c:1677
 msgid "invalid day of month"
 msgstr "无效的日"
 
-#: timezone/zic.c:1421
+#: timezone/zic.c:1473
 msgid "time too small"
 msgstr "时间太小"
 
-#: timezone/zic.c:1425
+#: timezone/zic.c:1477
 msgid "time too large"
 msgstr "时间过大"
 
-#: timezone/zic.c:1429 timezone/zic.c:1530
+#: timezone/zic.c:1481 timezone/zic.c:1576
 msgid "invalid time of day"
 msgstr "无效的时间"
 
-#: timezone/zic.c:1448
+#: timezone/zic.c:1494
 msgid "illegal CORRECTION field on Leap line"
 msgstr "在闰时设置行中有不合法的 CORRECTION 字段"
 
-#: timezone/zic.c:1453
+#: timezone/zic.c:1499
 msgid "illegal Rolling/Stationary field on Leap line"
 msgstr "在闰时设置行中有不合法的 Rolling/Stationary 字段"
 
-#: timezone/zic.c:1459
-msgid "leap second precedes Big Bang"
+#: timezone/zic.c:1505
+#, fuzzy
+#| msgid "leap second precedes Big Bang"
+msgid "leap second precedes Epoch"
 msgstr "闰秒出现在大爆炸之前"
 
-#: timezone/zic.c:1472
+#: timezone/zic.c:1518
 msgid "wrong number of fields on Link line"
 msgstr "链接行中域的个数错误"
 
-#: timezone/zic.c:1476
+#: timezone/zic.c:1522
 msgid "blank FROM field on Link line"
 msgstr "Link 行中空白的 FROM 域"
 
-#: timezone/zic.c:1551
+#: timezone/zic.c:1597
 msgid "invalid starting year"
 msgstr "无效的起始年份"
 
-#: timezone/zic.c:1573
+#: timezone/zic.c:1619
 msgid "invalid ending year"
 msgstr "无效的终止年份"
 
-#: timezone/zic.c:1577
+#: timezone/zic.c:1623
 msgid "starting year greater than ending year"
 msgstr "起始年份大于终止年份"
 
-#: timezone/zic.c:1584
+#: timezone/zic.c:1630
 msgid "typed single year"
 msgstr "输入的年分是同一年"
 
-#: timezone/zic.c:1619
+#: timezone/zic.c:1633
+#, c-format
+msgid "year type \"%s\" is obsolete; use \"-\" instead"
+msgstr ""
+
+#: timezone/zic.c:1668
 msgid "invalid weekday name"
 msgstr "无效的星期名"
 
-#: timezone/zic.c:1743
+#: timezone/zic.c:1800
 #, fuzzy, c-format
 #| msgid "pre-2014 clients may mishandle more than 1200 transition times"
 msgid "reference clients mishandle more than %d transition times"
 msgstr "2014 之前的客户端可能会错误处理超过 1200 次的改变次数"
 
-#: timezone/zic.c:1747
+#: timezone/zic.c:1804
 msgid "pre-2014 clients may mishandle more than 1200 transition times"
 msgstr "2014 之前的客户端可能会错误处理超过 1200 次的改变次数"
 
-#: timezone/zic.c:1858
+#: timezone/zic.c:1920
 #, fuzzy
 #| msgid "too many local time types"
 msgid "too many transition times"
 msgstr "过多的本地时间类型"
 
-#: timezone/zic.c:2047
-#, c-format
-msgid "%%z UTC offset magnitude exceeds 99:59:59"
+#: timezone/zic.c:2107
+#, fuzzy, c-format
+#| msgid "%%z UTC offset magnitude exceeds 99:59:59"
+msgid "%%z UT offset magnitude exceeds 99:59:59"
 msgstr "%%z UTC 偏移大小超过了 99:59:59"
 
-#: timezone/zic.c:2424
+#: timezone/zic.c:2488
 msgid "no POSIX environment variable for zone"
 msgstr "无 POSIX 环境变量用于区"
 
-#: timezone/zic.c:2430
+#: timezone/zic.c:2494
 #, c-format
 msgid "%s: pre-%d clients may mishandle distant timestamps"
 msgstr "%s: %d 之前的客户端可能会错误处理久远的时间戳"
 
-#: timezone/zic.c:2566
+#: timezone/zic.c:2631
 msgid "two rules for same instant"
 msgstr "为同一时间点制订了两种规则"
 
-#: timezone/zic.c:2627
+#: timezone/zic.c:2696
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr "无法决定在结束时间以后该使用的时区简写"
 
-#: timezone/zic.c:2725
+#: timezone/zic.c:2785
 msgid "too many local time types"
 msgstr "过多的本地时间类型"
 
-#: timezone/zic.c:2729
+#: timezone/zic.c:2789
 msgid "UT offset out of range"
 msgstr "UTC 偏移超出范围"
 
-#: timezone/zic.c:2753
+#: timezone/zic.c:2813
 msgid "too many leap seconds"
 msgstr "太多闰秒"
 
-#: timezone/zic.c:2759
-msgid "repeated leap second moment"
-msgstr "重复的闰秒设置"
+#: timezone/zic.c:2844
+msgid "Leap seconds too close together"
+msgstr ""
 
-#: timezone/zic.c:2830
+#: timezone/zic.c:2891
 msgid "Wild result from command execution"
 msgstr "命令运行导致奇怪的结果"
 
-#: timezone/zic.c:2831
+#: timezone/zic.c:2892
 #, c-format
 msgid "%s: command was '%s', result was %d\n"
 msgstr "%s：命令为“%s”，结果为 %d\n"
 
-#: timezone/zic.c:2961
+#: timezone/zic.c:2998
+#, c-format
+msgid "\"%s\" is undocumented; use \"last%s\" instead"
+msgstr ""
+
+#: timezone/zic.c:3029
+#, c-format
+msgid "\"%s\" is ambiguous in pre-2017c zic"
+msgstr ""
+
+#: timezone/zic.c:3063
 msgid "Odd number of quotation marks"
 msgstr "奇数个引号"
 
-#: timezone/zic.c:3046
+#: timezone/zic.c:3157
 msgid "use of 2/29 in non leap-year"
 msgstr "在非闰年时用到 2/29 日"
 
-#: timezone/zic.c:3081
+#: timezone/zic.c:3192
 msgid "rule goes past start/end of month; will not work with pre-2004 versions of zic"
 msgstr "规则超过开始/结束月分；将无法用于 2004 年之前的 zic 版本"
 
-#: timezone/zic.c:3108
+#: timezone/zic.c:3219
 msgid "time zone abbreviation has fewer than 3 characters"
 msgstr "时区缩写少于 3 个字母"
 
-#: timezone/zic.c:3110
+#: timezone/zic.c:3221
 msgid "time zone abbreviation has too many characters"
 msgstr "时区缩写字母太多"
 
-#: timezone/zic.c:3112
+#: timezone/zic.c:3223
 msgid "time zone abbreviation differs from POSIX standard"
 msgstr "时区缩写与 POSIX 标准不同"
 
-#: timezone/zic.c:3118
+#: timezone/zic.c:3229
 msgid "too many, or too long, time zone abbreviations"
 msgstr "过多或过长的时区缩写"
 
-#: timezone/zic.c:3161
+#: timezone/zic.c:3275
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s：无法创建目录 %s：%s"
@@ -7338,14 +7394,23 @@ msgstr "%s：无法创建目录 %s：%s"
 #~ "\n"
 #~ "将错误通报给 %s。\n"
 
-#~ msgid "int overflow"
-#~ msgstr "整数溢出"
-
 #~ msgid "hard link failed, symbolic link used"
 #~ msgstr "硬链接失败，使用符号链接"
 
 #~ msgid "link failed, copy used"
 #~ msgstr "链接失败，使用复制代替"
+
+#~ msgid "unruly zone"
+#~ msgstr "没有规则的时区"
+
+#~ msgid "%s: Leap line in non leap seconds file %s"
+#~ msgstr "%s: 闰时设置行出现在不含闰秒的文件 %s 中"
+
+#~ msgid "nameless rule"
+#~ msgstr "无名规则"
+
+#~ msgid "repeated leap second moment"
+#~ msgstr "重复的闰秒设置"
 
 #~ msgid "cannot allocate TLS data structures for initial thread"
 #~ msgstr "无法配置 TLS 数据结构用以起始线程"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libc-2.26.9000\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-26 22:19-0400\n"
+"POT-Creation-Date: 2019-01-16 15:48+0530\n"
 "PO-Revision-Date: 2018-06-10 18:20+0200\n"
 "Last-Translator: Benno Schulenberg <vertaling@coevern.nl>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
@@ -161,7 +161,7 @@ msgstr ""
 #: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:308
 #: elf/pldd.c:252 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:405
 #: iconv/iconvconfig.c:379 locale/programs/locale.c:275
-#: locale/programs/localedef.c:427 login/programs/pt_chown.c:89
+#: locale/programs/localedef.c:437 login/programs/pt_chown.c:89
 #: malloc/memusagestat.c:563 nss/getent.c:933 nss/makedb.c:369
 #: posix/getconf.c:503 sysdeps/unix/sysv/linux/lddlibc4.c:61
 #, c-format
@@ -175,7 +175,7 @@ msgstr ""
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
 #: elf/ldconfig.c:324 elf/ldd.bash.in:38 elf/pldd.c:268 elf/sotruss.sh:75
 #: elf/sprof.c:389 iconv/iconv_prog.c:422 iconv/iconvconfig.c:396
-#: locale/programs/locale.c:292 locale/programs/localedef.c:453
+#: locale/programs/locale.c:292 locale/programs/localedef.c:463
 #: login/programs/pt_chown.c:63 malloc/memusage.sh:71
 #: malloc/memusagestat.c:581 nscd/nscd.c:509 nss/getent.c:87 nss/makedb.c:385
 #: posix/getconf.c:485 sysdeps/unix/sysv/linux/lddlibc4.c:68
@@ -193,7 +193,7 @@ msgstr ""
 #: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
 #: elf/ldconfig.c:329 elf/pldd.c:273 elf/sprof.c:395 iconv/iconv_prog.c:427
 #: iconv/iconvconfig.c:401 locale/programs/locale.c:297
-#: locale/programs/localedef.c:458 malloc/memusage.sh:75
+#: locale/programs/localedef.c:468 malloc/memusage.sh:75
 #: malloc/memusagestat.c:586 nscd/nscd.c:514 nss/getent.c:92 nss/makedb.c:390
 #: posix/getconf.c:490
 #, c-format
@@ -416,33 +416,33 @@ msgstr "Kan cachebestand %s niet openen\n"
 msgid "mmap of cache file failed.\n"
 msgstr "mmap() van cachebestand is mislukt\n"
 
-#: elf/cache.c:181 elf/cache.c:195
+#: elf/cache.c:181 elf/cache.c:195 elf/cache.c:205
 #, c-format
 msgid "File is not a cache file.\n"
 msgstr "Bestand is geen cachebestand\n"
 
-#: elf/cache.c:228 elf/cache.c:238
+#: elf/cache.c:233 elf/cache.c:243
 #, c-format
 msgid "%d libs found in cache `%s'\n"
 msgstr "%d bibliotheken gevonden in cache '%s'\n"
 
-#: elf/cache.c:432
+#: elf/cache.c:437
 #, c-format
 msgid "Can't create temporary cache file %s"
 msgstr "Kan tijdelijk cachebestand %s niet aanmaken"
 
-#: elf/cache.c:440 elf/cache.c:450 elf/cache.c:454 elf/cache.c:458
-#: elf/cache.c:468
+#: elf/cache.c:445 elf/cache.c:455 elf/cache.c:459 elf/cache.c:463
+#: elf/cache.c:473
 #, c-format
 msgid "Writing of cache data failed"
 msgstr "Schrijven van cachegegevens is mislukt"
 
-#: elf/cache.c:463
+#: elf/cache.c:468
 #, c-format
 msgid "Changing access rights of %s to %#o failed"
 msgstr "Wijzigen van toegangsrechten van %s naar %#o is mislukt"
 
-#: elf/cache.c:472
+#: elf/cache.c:477
 #, c-format
 msgid "Renaming of %s to %s failed"
 msgstr "Naamswijziging van %s naar %s is mislukt"
@@ -690,20 +690,20 @@ msgstr "ongeldige doelnaamsruimte in dlmopen()"
 msgid "cannot allocate memory in static TLS block"
 msgstr "kan geen geheugen reserveren binnen statisch TLS-blok"
 
-#: elf/dl-reloc.c:205
+#: elf/dl-reloc.c:213
 msgid "cannot make segment writable for relocation"
 msgstr "kan segment niet schrijfbaar maken voor verplaatsing"
 
-#: elf/dl-reloc.c:276
+#: elf/dl-reloc.c:272
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr "%s: onvoldoende geheugen om verplaatsingsresultaten van %s op te slaan\n"
 
-#: elf/dl-reloc.c:292
+#: elf/dl-reloc.c:288
 msgid "cannot restore segment prot after reloc"
 msgstr "kan segmentbescherming niet herstellen na verplaatsing"
 
-#: elf/dl-reloc.c:323
+#: elf/dl-reloc.c:319
 msgid "cannot apply additional memory protection after relocation"
 msgstr "kan extra geheugenbescherming niet toepassen na verplaatsing"
 
@@ -1423,7 +1423,7 @@ msgstr "Informatie:"
 msgid "list all known coded character sets"
 msgstr "alle bekende gecodeerde tekensets opsommen"
 
-#: iconv/iconv_prog.c:64 locale/programs/localedef.c:120
+#: iconv/iconv_prog.c:64 locale/programs/localedef.c:124
 msgid "Output control:"
 msgstr "Uitvoerbeheer:"
 
@@ -1432,8 +1432,8 @@ msgid "omit invalid characters from output"
 msgstr "ongeldige tekens in uitvoer overslaan"
 
 #: iconv/iconv_prog.c:66 iconv/iconvconfig.c:128
-#: locale/programs/localedef.c:113 locale/programs/localedef.c:115
-#: locale/programs/localedef.c:117 locale/programs/localedef.c:144
+#: locale/programs/localedef.c:117 locale/programs/localedef.c:119
+#: locale/programs/localedef.c:121 locale/programs/localedef.c:150
 #: malloc/memusagestat.c:56
 msgid "FILE"
 msgstr "BESTAND"
@@ -1534,7 +1534,7 @@ msgstr "Maakt een snelladend configuratiebestand voor een iconv-module."
 msgid "[DIR...]"
 msgstr "[MAP...]"
 
-#: iconv/iconvconfig.c:126 locale/programs/localedef.c:123
+#: iconv/iconvconfig.c:126 locale/programs/localedef.c:129
 msgid "PATH"
 msgstr "PAD"
 
@@ -1783,7 +1783,7 @@ msgstr "%s: **interne fout** in toestandsmachine"
 #: locale/programs/ld-monetary.c:764 locale/programs/ld-name.c:278
 #: locale/programs/ld-numeric.c:341 locale/programs/ld-paper.c:228
 #: locale/programs/ld-telephone.c:292 locale/programs/ld-time.c:990
-#: locale/programs/locfile.c:997 locale/programs/repertoire.c:323
+#: locale/programs/locfile.c:1010 locale/programs/repertoire.c:323
 #, c-format
 msgid "%s: premature end of file"
 msgstr "%s: voortijdig einde van bestand"
@@ -2656,97 +2656,101 @@ msgstr "Kan LC_ALL niet op de standaard-taalregio instellen"
 msgid "while preparing output"
 msgstr "tijdens voorbereiden van uitvoer"
 
-#: locale/programs/localedef.c:112
+#: locale/programs/localedef.c:116
 msgid "Input Files:"
 msgstr "Invoerbestanden:"
 
 # FIXME: option descriptions should start with lowercase (next 17)
-#: locale/programs/localedef.c:114
+#: locale/programs/localedef.c:118
 msgid "Symbolic character names defined in FILE"
 msgstr "bestand dat tekennamen op codes afbeeldt"
 
-#: locale/programs/localedef.c:116
+#: locale/programs/localedef.c:120
 msgid "Source definitions are found in FILE"
 msgstr "bestand met brondefinities"
 
-#: locale/programs/localedef.c:118
+#: locale/programs/localedef.c:122
 msgid "FILE contains mapping from symbolic names to UCS4 values"
 msgstr "bestand dat tekennamen op UCS4-waarden afbeeldt"
 
-#: locale/programs/localedef.c:122
+#: locale/programs/localedef.c:126
 msgid "Create output even if warning messages were issued"
 msgstr "ook uitvoer genereren na waarschuwingen"
 
-#: locale/programs/localedef.c:123
+#: locale/programs/localedef.c:128
+msgid "Do not create hard links between installed locales"
+msgstr ""
+
+#: locale/programs/localedef.c:129
 msgid "Optional output file prefix"
 msgstr "optioneel voorvoegsel voor uitvoerbestand"
 
-#: locale/programs/localedef.c:124
+#: locale/programs/localedef.c:130
 msgid "Strictly conform to POSIX"
 msgstr "strict de POSIX-voorschriften volgen"
 
-#: locale/programs/localedef.c:126
+#: locale/programs/localedef.c:132
 msgid "Suppress warnings and information messages"
 msgstr "waarschuwingen en meldingen onderdrukken"
 
-#: locale/programs/localedef.c:127
+#: locale/programs/localedef.c:133
 msgid "Print more messages"
 msgstr "gedetailleerde uitvoer produceren"
 
-#: locale/programs/localedef.c:128 locale/programs/localedef.c:131
+#: locale/programs/localedef.c:134 locale/programs/localedef.c:137
 msgid "<warnings>"
 msgstr "<waarschuwingen>"
 
-#: locale/programs/localedef.c:129
+#: locale/programs/localedef.c:135
 msgid "Comma-separated list of warnings to disable; supported warnings are: ascii, intcurrsym"
 msgstr "Kommagescheiden lijst van uit te schakelen waarschuwingen; mogelijke waarschuwingen zijn: ascii, intcurrsym"
 
-#: locale/programs/localedef.c:132
+#: locale/programs/localedef.c:138
 msgid "Comma-separated list of warnings to enable; supported warnings are: ascii, intcurrsym"
 msgstr "Kommagescheiden lijst van in te schakelen waarschuwingen; mogelijke waarschuwingen zijn: ascii, intcurrsym"
 
-#: locale/programs/localedef.c:135
+#: locale/programs/localedef.c:141
 msgid "Archive control:"
 msgstr "Archiefbeheer:"
 
-#: locale/programs/localedef.c:137
+#: locale/programs/localedef.c:143
 msgid "Don't add new data to archive"
 msgstr "geen nieuwe gegevens aan archief toevoegen"
 
-#: locale/programs/localedef.c:139
+#: locale/programs/localedef.c:145
 msgid "Add locales named by parameters to archive"
 msgstr "genoemde taalregio's aan archief toevoegen"
 
-#: locale/programs/localedef.c:140
+#: locale/programs/localedef.c:146
 msgid "Replace existing archive content"
 msgstr "bestaande inhoud van archief vervangen"
 
-#: locale/programs/localedef.c:142
+#: locale/programs/localedef.c:148
 msgid "Remove locales named by parameters from archive"
 msgstr "genoemde taalregio's uit archief verwijderen"
 
-#: locale/programs/localedef.c:143
+#: locale/programs/localedef.c:149
 msgid "List content of archive"
 msgstr "inhoud van archief weergeven"
 
-#: locale/programs/localedef.c:145
+#: locale/programs/localedef.c:151
 msgid "locale.alias file to consult when making archive"
 msgstr "te raadplegen aliassenbestand tijdens archivering"
 
-#: locale/programs/localedef.c:147
+#: locale/programs/localedef.c:153
 msgid "Generate little-endian output"
 msgstr "little-endian uitvoer produceren"
 
-#: locale/programs/localedef.c:149
+#: locale/programs/localedef.c:155
 msgid "Generate big-endian output"
 msgstr "big-endian uitvoer produceren"
 
 # FIXME: this is a docstring, it should end in a period
-#: locale/programs/localedef.c:154
+#: locale/programs/localedef.c:160
 msgid "Compile locale specification"
 msgstr "Compileert de definitie van een taalregio."
 
-#: locale/programs/localedef.c:157
+#: locale/programs/localedef.c:163
 msgid ""
 "NAME\n"
 "[--add-to-archive|--delete-from-archive] FILE...\n"
@@ -2756,31 +2760,31 @@ msgstr ""
 "[--add-to-archive|--delete-from-archive] BESTAND...\n"
 "--list-archive [BESTAND]"
 
-#: locale/programs/localedef.c:232
+#: locale/programs/localedef.c:238
 #, c-format
 msgid "cannot create directory for output files"
 msgstr "kan map voor uitvoerbestanden niet aanmaken"
 
-#: locale/programs/localedef.c:243
+#: locale/programs/localedef.c:249
 msgid "FATAL: system does not define `_POSIX2_LOCALEDEF'"
 msgstr "FATAAL: systeem definieert '_POSIX2_LOCALEDEF' niet"
 
-#: locale/programs/localedef.c:257 locale/programs/localedef.c:273
-#: locale/programs/localedef.c:663 locale/programs/localedef.c:683
+#: locale/programs/localedef.c:263 locale/programs/localedef.c:279
+#: locale/programs/localedef.c:673 locale/programs/localedef.c:693
 #, c-format
 msgid "cannot open locale definition file `%s'"
 msgstr "kan taalregiodefinitiebestand '%s' niet openen"
 
-#: locale/programs/localedef.c:297
+#: locale/programs/localedef.c:303
 #, c-format
 msgid "cannot write output files to `%s'"
 msgstr "kan uitvoerbestanden niet naar '%s' schrijven"
 
-#: locale/programs/localedef.c:303
+#: locale/programs/localedef.c:309
 msgid "no output file produced because errors were issued"
 msgstr "geen uitvoerbestand aangemaakt omdat er fouten werden gerapporteerd"
 
-#: locale/programs/localedef.c:431
+#: locale/programs/localedef.c:441
 #, c-format
 msgid ""
 "System's directory for character maps : %s\n"
@@ -2794,11 +2798,11 @@ msgstr ""
 "\n"
 "%s"
 
-#: locale/programs/localedef.c:631
+#: locale/programs/localedef.c:641
 msgid "circular dependencies between locale definitions"
 msgstr "circulaire afhankelijkheid tussen taalregiodefinities"
 
-#: locale/programs/localedef.c:637
+#: locale/programs/localedef.c:647
 #, c-format
 msgid "cannot add already read locale `%s' a second time"
 msgstr "kan de reeds gelezen taalregio '%s' niet nogmaals toevoegen"
@@ -2954,24 +2958,24 @@ msgstr "kan uitvoerbestand '%s' niet openen voor categorie '%s'"
 msgid "failure while writing data for category `%s'"
 msgstr "fout bij schrijven van gegevens voor categorie '%s'"
 
-#: locale/programs/locfile.c:917
+#: locale/programs/locfile.c:930
 #, c-format
 msgid "cannot create output file `%s' for category `%s'"
 msgstr "kan uitvoerbestand '%s' niet aanmaken voor categorie '%s'"
 
-#: locale/programs/locfile.c:953
+#: locale/programs/locfile.c:966
 msgid "expecting string argument for `copy'"
 msgstr "argument van 'copy' dient een tekenreeks te zijn"
 
-#: locale/programs/locfile.c:957
+#: locale/programs/locfile.c:970
 msgid "locale name should consist only of portable characters"
 msgstr "een taalregionaam mag alleen uit overdraagbare tekens bestaan"
 
-#: locale/programs/locfile.c:976
+#: locale/programs/locfile.c:989
 msgid "no other keyword shall be specified when `copy' is used"
 msgstr "als 'copy' gebruikt wordt, zijn geen andere sleutelwoorden toegestaan"
 
-#: locale/programs/locfile.c:990
+#: locale/programs/locfile.c:1003
 #, c-format
 msgid "`%1$s' definition does not end with `END %1$s'"
 msgstr "%1$s: definitie eindigt niet met 'END %1$s'"
@@ -3850,265 +3854,265 @@ msgstr "snoeien van cache %s; tijd %ld"
 msgid "considering %s entry \"%s\", timeout %<PRIu64>"
 msgstr "overwegen van %s-item \"%s\", tijdslimiet %<PRIu64>"
 
-#: nscd/connections.c:520
+#: nscd/connections.c:521
 #, c-format
 msgid "invalid persistent database file \"%s\": %s"
 msgstr "ongeldig persistent gegevensbestand '%s': %s"
 
-#: nscd/connections.c:528
+#: nscd/connections.c:529
 msgid "uninitialized header"
 msgstr "ongeïnitialiseerde header"
 
-#: nscd/connections.c:533
+#: nscd/connections.c:534
 msgid "header size does not match"
 msgstr "grootte van de kop klopt niet"
 
-#: nscd/connections.c:543
+#: nscd/connections.c:544
 msgid "file size does not match"
 msgstr "bestandsgrootte klopt niet"
 
-#: nscd/connections.c:560
+#: nscd/connections.c:561
 msgid "verification failed"
 msgstr "gegevenscontrole is mislukt"
 
-#: nscd/connections.c:574
+#: nscd/connections.c:575
 #, c-format
 msgid "suggested size of table for database %s larger than the persistent database's table"
 msgstr "de aangeraden tabelgrootte voor gegevensbestand '%s' is groter dan de tabelgrootte van het persistente gegevensbestand"
 
-#: nscd/connections.c:585 nscd/connections.c:669
+#: nscd/connections.c:586 nscd/connections.c:670
 #, c-format
 msgid "cannot create read-only descriptor for \"%s\"; no mmap"
 msgstr "kan geen alleen-lezen-descriptor voor '%s' aanmaken; geen mmap()"
 
-#: nscd/connections.c:601
+#: nscd/connections.c:602
 #, c-format
 msgid "cannot access '%s'"
 msgstr "kan geen toegang tot '%s' verkrijgen"
 
-#: nscd/connections.c:649
+#: nscd/connections.c:650
 #, c-format
 msgid "database for %s corrupted or simultaneously used; remove %s manually if necessary and restart"
 msgstr ""
 "gegevensbestand voor %s is beschadigd of wordt al gebruikt;\n"
 "verwijder %s zo nodig handmatig en herstart"
 
-#: nscd/connections.c:655
+#: nscd/connections.c:656
 #, c-format
 msgid "cannot create %s; no persistent database used"
 msgstr "kan %s niet aanmaken; geen persistent gegevensbestand gebruikt"
 
-#: nscd/connections.c:658
+#: nscd/connections.c:659
 #, c-format
 msgid "cannot create %s; no sharing possible"
 msgstr "kan %s niet aanmaken; bestandsdeling is niet mogelijk"
 
-#: nscd/connections.c:729
+#: nscd/connections.c:730
 #, c-format
 msgid "cannot write to database file %s: %s"
 msgstr "kan niet naar gegevensbestand %s schrijven: %s"
 
-#: nscd/connections.c:785
+#: nscd/connections.c:786
 #, c-format
 msgid "cannot open socket: %s"
 msgstr "kan socket niet openen: %s"
 
-#: nscd/connections.c:804
+#: nscd/connections.c:805
 #, c-format
 msgid "cannot enable socket to accept connections: %s"
 msgstr "kan socket geen verbindingen laten accepteren: %s"
 
-#: nscd/connections.c:861
+#: nscd/connections.c:862
 #, c-format
 msgid "disabled inotify-based monitoring for file `%s': %s"
 msgstr "'inotify'-monitoring van bestand '%s' is uitgeschakeld: %s"
 
-#: nscd/connections.c:865
+#: nscd/connections.c:866
 #, c-format
 msgid "monitoring file `%s` (%d)"
 msgstr "bestand '%s' wordt gemonitord (%d)"
 
-#: nscd/connections.c:878
+#: nscd/connections.c:879
 #, c-format
 msgid "disabled inotify-based monitoring for directory `%s': %s"
 msgstr "'inotify'-monitoring van map '%s' is uitgeschakeld: %s"
 
-#: nscd/connections.c:882
+#: nscd/connections.c:883
 #, c-format
 msgid "monitoring directory `%s` (%d)"
 msgstr "map '%s' wordt gemonitord (%d)"
 
-#: nscd/connections.c:910
+#: nscd/connections.c:911
 #, c-format
 msgid "monitoring file %s for database %s"
 msgstr "bestand '%s' wordt gemonitord voor gegevensbank '%s'"
 
-#: nscd/connections.c:920
+#: nscd/connections.c:921
 #, c-format
 msgid "stat failed for file `%s'; will try again later: %s"
 msgstr "opvragen van status van bestand '%s' is mislukt; zal het later opnieuw proberen: %s"
 
-#: nscd/connections.c:1039
+#: nscd/connections.c:1040
 #, c-format
 msgid "provide access to FD %d, for %s"
 msgstr "toegang verleend aan bestandsdescriptor %d, voor %s"
 
-#: nscd/connections.c:1051
+#: nscd/connections.c:1052
 #, c-format
 msgid "cannot handle old request version %d; current version is %d"
 msgstr "kan verzoek voor oude versie %d niet behandelen; huidige versie is %d"
 
-#: nscd/connections.c:1074
+#: nscd/connections.c:1075
 #, c-format
 msgid "request from %ld not handled due to missing permission"
 msgstr "verzoek van %ld is niet behandeld omdat er rechten ontbreken"
 
-#: nscd/connections.c:1079
+#: nscd/connections.c:1080
 #, c-format
 msgid "request from '%s' [%ld] not handled due to missing permission"
 msgstr "verzoek van '%s' [%ld] is niet behandeld omdat er rechten ontbreken"
 
-#: nscd/connections.c:1084
+#: nscd/connections.c:1085
 msgid "request not handled due to missing permission"
 msgstr "verzoek is niet behandeld omdat er rechten ontbreken"
 
-#: nscd/connections.c:1122 nscd/connections.c:1148
+#: nscd/connections.c:1123 nscd/connections.c:1149
 #, c-format
 msgid "cannot write result: %s"
 msgstr "kan resultaat niet schrijven: %s"
 
-#: nscd/connections.c:1239
+#: nscd/connections.c:1240
 #, c-format
 msgid "error getting caller's id: %s"
 msgstr "fout bij opvragen van ID van aanroeper: %s"
 
-#: nscd/connections.c:1349
+#: nscd/connections.c:1350
 #, fuzzy, c-format
 #| msgid "cannot open /proc/self/cmdline: %s; disabling paranoia mode"
 msgid "cannot open /proc/self/cmdline: %m; disabling paranoia mode"
 msgstr "kan '/proc/self/cmdline' niet openen: %s -- paranoia-modus is uitgeschakeld"
 
-#: nscd/connections.c:1372
+#: nscd/connections.c:1373
 #, c-format
 msgid "cannot change to old UID: %s; disabling paranoia mode"
 msgstr "kan niet overschakelen naar oude UID: %s -- paranoia-modus is uitgeschakeld"
 
-#: nscd/connections.c:1383
+#: nscd/connections.c:1384
 #, c-format
 msgid "cannot change to old GID: %s; disabling paranoia mode"
 msgstr "kan niet overschakelen naar oude GID: %s -- paranoia-modus is uitgeschakeld"
 
-#: nscd/connections.c:1397
+#: nscd/connections.c:1398
 #, c-format
 msgid "cannot change to old working directory: %s; disabling paranoia mode"
 msgstr "kan niet overschakelen naar oude werkmap: %s -- paranoia-modus is uitgeschakeld"
 
-#: nscd/connections.c:1444
+#: nscd/connections.c:1445
 #, c-format
 msgid "re-exec failed: %s; disabling paranoia mode"
 msgstr "her-exec() is mislukt: %s -- paranoia-modus is uitgeschakeld"
 
-#: nscd/connections.c:1453
+#: nscd/connections.c:1454
 #, c-format
 msgid "cannot change current working directory to \"/\": %s"
 msgstr "kan huidige werkmap niet overschakelen naar '/': %s"
 
-#: nscd/connections.c:1637
+#: nscd/connections.c:1638
 #, c-format
 msgid "short read while reading request: %s"
 msgstr "te weinig gelezen bij lezen van verzoek: %s"
 
-#: nscd/connections.c:1670
+#: nscd/connections.c:1671
 #, c-format
 msgid "key length in request too long: %d"
 msgstr "sleutellengte in verzoek is te lang: %d"
 
-#: nscd/connections.c:1683
+#: nscd/connections.c:1684
 #, c-format
 msgid "short read while reading request key: %s"
 msgstr "te weinig gelezen bij lezen van verzoeksleutel: %s"
 
-#: nscd/connections.c:1693
+#: nscd/connections.c:1694
 #, c-format
 msgid "handle_request: request received (Version = %d) from PID %ld"
 msgstr "handle_request(): verzoek ontvangen (versie = %d) van PID %ld"
 
-#: nscd/connections.c:1698
+#: nscd/connections.c:1699
 #, c-format
 msgid "handle_request: request received (Version = %d)"
 msgstr "handle_request(): verzoek ontvangen (versie = %d)"
 
-#: nscd/connections.c:1838
+#: nscd/connections.c:1839
 #, c-format
 msgid "ignored inotify event for `%s` (file exists)"
 msgstr "'inotify'-gebeurtenis voor '%s' is genegeerd (bestand bestaat al)"
 
 # FIXME: missing translatable word in second %s
-#: nscd/connections.c:1843
+#: nscd/connections.c:1844
 #, c-format
 msgid "monitored file `%s` was %s, removing watch"
 msgstr "gemonitord bestand '%s' werd «%s»; wachter wordt verwijderd"
 
-#: nscd/connections.c:1851 nscd/connections.c:1893
+#: nscd/connections.c:1852 nscd/connections.c:1894
 #, c-format
 msgid "failed to remove file watch `%s`: %s"
 msgstr "verwijderen van bestandswachter '%s' is mislukt: %s"
 
-#: nscd/connections.c:1866
+#: nscd/connections.c:1867
 #, c-format
 msgid "monitored file `%s` was written to"
 msgstr "er is geschreven naar gemonitord bestand '%s'"
 
 # FIXME: untranslatable second %s
-#: nscd/connections.c:1890
+#: nscd/connections.c:1891
 #, c-format
 msgid "monitored parent directory `%s` was %s, removing watch on `%s`"
 msgstr "gemonitorde oudermap '%s' werd «%s»; wachter op '%s' wordt verwijderd`"
 
 # FIXME: untranslatable second %s
-#: nscd/connections.c:1916
+#: nscd/connections.c:1917
 #, c-format
 msgid "monitored file `%s` was %s, adding watch"
 msgstr "gemonitord bestand '%s' werd «%s»; wachter wordt toegevoegd"
 
-#: nscd/connections.c:1928
+#: nscd/connections.c:1929
 #, c-format
 msgid "failed to add file watch `%s`: %s"
 msgstr "toevoegen van bestandswachter '%s' is mislukt: %s"
 
-#: nscd/connections.c:2106 nscd/connections.c:2271
+#: nscd/connections.c:2107 nscd/connections.c:2272
 #, c-format
 msgid "disabled inotify-based monitoring after read error %d"
 msgstr "'inotify'-monitoring is uitgeschakeld na leesfout %d"
 
-#: nscd/connections.c:2386
+#: nscd/connections.c:2387
 msgid "could not initialize conditional variable"
 msgstr "kan conditionele variabele niet initialiseren"
 
-#: nscd/connections.c:2394
+#: nscd/connections.c:2395
 msgid "could not start clean-up thread; terminating"
 msgstr "kan opschoon-thread niet starten -- gestopt"
 
-#: nscd/connections.c:2408
+#: nscd/connections.c:2409
 msgid "could not start any worker thread; terminating"
 msgstr "kan geen enkele werk-thread starten -- gestopt"
 
-#: nscd/connections.c:2463 nscd/connections.c:2465 nscd/connections.c:2481
-#: nscd/connections.c:2491 nscd/connections.c:2509 nscd/connections.c:2520
-#: nscd/connections.c:2530
+#: nscd/connections.c:2464 nscd/connections.c:2466 nscd/connections.c:2482
+#: nscd/connections.c:2492 nscd/connections.c:2510 nscd/connections.c:2521
+#: nscd/connections.c:2531
 #, c-format
 msgid "Failed to run nscd as user '%s'"
 msgstr "uitvoeren van nscd als gebruiker '%s' is mislukt"
 
-#: nscd/connections.c:2483
+#: nscd/connections.c:2484
 msgid "initial getgrouplist failed"
 msgstr "eerste getgrouplist() is mislukt"
 
-#: nscd/connections.c:2492
+#: nscd/connections.c:2493
 msgid "getgrouplist failed"
 msgstr "getgrouplist() is mislukt"
 
-#: nscd/connections.c:2510
+#: nscd/connections.c:2511
 msgid "setgroups failed"
 msgstr "setgroups() is mislukt"
 
@@ -4143,22 +4147,22 @@ msgstr "%zu bytes in cache %s zijn vrijgegeven"
 msgid "no more memory for database '%s'"
 msgstr "onvoldoende geheugen beschikbaar voor gegevensbank '%s'"
 
-#: nscd/netgroupcache.c:121
+#: nscd/netgroupcache.c:122
 #, c-format
 msgid "Haven't found \"%s\" in netgroup cache!"
 msgstr "Item \"%s\" niet gevonden in groeps-cache!"
 
-#: nscd/netgroupcache.c:123
+#: nscd/netgroupcache.c:124
 #, c-format
 msgid "Reloading \"%s\" in netgroup cache!"
 msgstr "Herladen van \"%s\" in groeps-cache!"
 
-#: nscd/netgroupcache.c:469
+#: nscd/netgroupcache.c:470
 #, c-format
 msgid "Haven't found \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr "Item \"%s (%s,%s,%s)\" niet gevonden in groeps-cache!"
 
-#: nscd/netgroupcache.c:472
+#: nscd/netgroupcache.c:473
 #, c-format
 msgid "Reloading \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr "Herladen van \"%s (%s,%s,%s)\" in groeps-cache!"
@@ -4321,27 +4325,27 @@ msgstr "Ontledingsfout: %s"
 msgid "Must specify user name for server-user option"
 msgstr "De optie 'server-user' vereist een gebruikersnaam als argument"
 
-#: nscd/nscd_conf.c:198
+#: nscd/nscd_conf.c:201
 #, c-format
 msgid "Must specify user name for stat-user option"
 msgstr "De optie 'stat-user' vereist een gebruikersnaam als argument"
 
-#: nscd/nscd_conf.c:255
+#: nscd/nscd_conf.c:259
 #, c-format
 msgid "Must specify value for restart-interval option"
 msgstr "De optie 'restart-interval' vereist een waarde als argument"
 
-#: nscd/nscd_conf.c:269
+#: nscd/nscd_conf.c:273
 #, c-format
 msgid "Unknown option: %s %s %s"
 msgstr "Onbekende optie: %s %s %s"
 
-#: nscd/nscd_conf.c:282
+#: nscd/nscd_conf.c:286
 #, c-format
 msgid "cannot get current working directory: %s; disabling paranoia mode"
 msgstr "Kan huidige werkmap niet bepalen: %s -- paranoia-modus is uitgeschakeld"
 
-#: nscd/nscd_conf.c:302
+#: nscd/nscd_conf.c:306
 #, c-format
 msgid "maximum file size for %s database too small"
 msgstr "Maximum bestandsgrootte voor %s-gegevensbank is te klein"
@@ -4905,7 +4909,7 @@ msgstr "Reguliere expressie is te groot"
 msgid "Unmatched ) or \\)"
 msgstr "Ongepaarde ) of \\)"
 
-#: posix/regcomp.c:689
+#: posix/regcomp.c:676
 msgid "No previous regular expression"
 msgstr "Geen eerdere reguliere expressie"
 
@@ -5094,7 +5098,7 @@ msgstr "Uitvoerbuffers zijn beschikbaar"
 msgid "Input message available"
 msgstr "Invoerbericht is beschikbaar"
 
-#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:381 timezone/zic.c:520
+#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:375 timezone/zic.c:561
 msgid "I/O error"
 msgstr "Invoer-/uitvoerfout"
 
@@ -6435,56 +6439,69 @@ msgid "You really blew it this time"
 msgstr "Deze keer hebt u het echt verknald"
 
 #. TRANS Go home and have a glass of warm, dairy-fresh milk.
-#: sysdeps/gnu/errlist.c:978
+#. TRANS @c Okay.  Since you are dying to know, I'll tell you.
+#. TRANS @c This is a joke, obviously.  There is a children's song which begins,
+#. TRANS @c "Old McDonald had a farm, e-i-e-i-o."  Every time I see the (real)
+#. TRANS @c errno macro EIO, I think about that song.  Probably most of my
+#. TRANS @c compatriots who program on Unix do, too.  One of them must have stayed
+#. TRANS @c up a little too late one night and decided to add it to Hurd or Glibc.
+#. TRANS @c Whoever did it should be castigated, but it made me laugh.
+#. TRANS @c  --jtobey@channel1.com
+#. TRANS @c
+#. TRANS @c "bought the farm" means "died".  -jtobey
+#. TRANS @c
+#. TRANS @c Translators, please do not translate this litteraly, translate it into
+#. TRANS @c an idiomatic funny way of saying that the computer died.
+#: sysdeps/gnu/errlist.c:991
 msgid "Computer bought the farm"
 msgstr "Ga er even rustig bij zitten"
 
 #. TRANS This error code has no purpose.
-#: sysdeps/gnu/errlist.c:987
+#: sysdeps/gnu/errlist.c:1000
 msgid "Gratuitous error"
 msgstr "Zinloze fout"
 
-#: sysdeps/gnu/errlist.c:995
+#: sysdeps/gnu/errlist.c:1008
 msgid "Bad message"
 msgstr "Ongeldig bericht"
 
-#: sysdeps/gnu/errlist.c:1003
+#: sysdeps/gnu/errlist.c:1016
 msgid "Identifier removed"
 msgstr "Naam is verwijderd"
 
-#: sysdeps/gnu/errlist.c:1011
+#: sysdeps/gnu/errlist.c:1024
 msgid "Multihop attempted"
 msgstr "Multihop geprobeerd"
 
-#: sysdeps/gnu/errlist.c:1019
+#: sysdeps/gnu/errlist.c:1032
 msgid "No data available"
 msgstr "Geen gegevens beschikbaar"
 
-#: sysdeps/gnu/errlist.c:1027
+#: sysdeps/gnu/errlist.c:1040
 msgid "Link has been severed"
 msgstr "Koppeling is verbroken"
 
-#: sysdeps/gnu/errlist.c:1035
+#: sysdeps/gnu/errlist.c:1048
 msgid "No message of desired type"
 msgstr "Geen bericht van de gewenste soort"
 
-#: sysdeps/gnu/errlist.c:1043
+#: sysdeps/gnu/errlist.c:1056
 msgid "Out of streams resources"
 msgstr "Geen hulpbronnen voor stromen meer beschikbaar"
 
-#: sysdeps/gnu/errlist.c:1051
+#: sysdeps/gnu/errlist.c:1064
 msgid "Device not a stream"
 msgstr "Apparaat is geen stroom"
 
-#: sysdeps/gnu/errlist.c:1059
+#: sysdeps/gnu/errlist.c:1072
 msgid "Value too large for defined data type"
 msgstr "Waarde is te groot voor gedefinieerde gegevenssoort"
 
-#: sysdeps/gnu/errlist.c:1067
+#: sysdeps/gnu/errlist.c:1080
 msgid "Protocol error"
 msgstr "Protocolfout"
 
-#: sysdeps/gnu/errlist.c:1075
+#: sysdeps/gnu/errlist.c:1088
 msgid "Timer expired"
 msgstr "Timer is verlopen"
 
@@ -6492,195 +6509,195 @@ msgstr "Timer is verlopen"
 #. TRANS completed.  @xref{Asynchronous I/O}.  When you call @code{aio_cancel},
 #. TRANS the normal result is for the operations affected to complete with this
 #. TRANS error; @pxref{Cancel AIO Operations}.
-#: sysdeps/gnu/errlist.c:1087
+#: sysdeps/gnu/errlist.c:1100
 msgid "Operation canceled"
 msgstr "Actie is geannuleerd"
 
-#: sysdeps/gnu/errlist.c:1095
+#: sysdeps/gnu/errlist.c:1108
 msgid "Owner died"
 msgstr "Eigenaar bestaat niet meer"
 
-#: sysdeps/gnu/errlist.c:1103
+#: sysdeps/gnu/errlist.c:1116
 msgid "State not recoverable"
 msgstr "Toestand is onherstelbaar"
 
-#: sysdeps/gnu/errlist.c:1111
+#: sysdeps/gnu/errlist.c:1124
 msgid "Interrupted system call should be restarted"
 msgstr "Onderbroken systeemaanroep moet worden herstart"
 
-#: sysdeps/gnu/errlist.c:1119
+#: sysdeps/gnu/errlist.c:1132
 msgid "Channel number out of range"
 msgstr "Kanaalnummer valt buiten bereik"
 
-#: sysdeps/gnu/errlist.c:1127
+#: sysdeps/gnu/errlist.c:1140
 msgid "Level 2 not synchronized"
 msgstr "Niveau 2 is niet gesynchroniseerd"
 
-#: sysdeps/gnu/errlist.c:1135
+#: sysdeps/gnu/errlist.c:1148
 msgid "Level 3 halted"
 msgstr "Niveau 3 staat stil"
 
-#: sysdeps/gnu/errlist.c:1143
+#: sysdeps/gnu/errlist.c:1156
 msgid "Level 3 reset"
 msgstr "Niveau 3 reset"
 
-#: sysdeps/gnu/errlist.c:1151
+#: sysdeps/gnu/errlist.c:1164
 msgid "Link number out of range"
 msgstr "Koppelingsnummer valt buiten bereik"
 
-#: sysdeps/gnu/errlist.c:1159
+#: sysdeps/gnu/errlist.c:1172
 msgid "Protocol driver not attached"
 msgstr "Protocolstuurprogramma is niet aangehecht"
 
-#: sysdeps/gnu/errlist.c:1167
+#: sysdeps/gnu/errlist.c:1180
 msgid "No CSI structure available"
 msgstr "Geen CSI-structuur beschikbaar"
 
-#: sysdeps/gnu/errlist.c:1175
+#: sysdeps/gnu/errlist.c:1188
 msgid "Level 2 halted"
 msgstr "Niveau 2 staat stil"
 
-#: sysdeps/gnu/errlist.c:1183
+#: sysdeps/gnu/errlist.c:1196
 msgid "Invalid exchange"
 msgstr "Ongeldige uitwisseling"
 
-#: sysdeps/gnu/errlist.c:1191
+#: sysdeps/gnu/errlist.c:1204
 msgid "Invalid request descriptor"
 msgstr "Ongeldige verzoeksdescriptor"
 
-#: sysdeps/gnu/errlist.c:1199
+#: sysdeps/gnu/errlist.c:1212
 msgid "Exchange full"
 msgstr "Uitwisseling is vol"
 
-#: sysdeps/gnu/errlist.c:1207
+#: sysdeps/gnu/errlist.c:1220
 msgid "No anode"
 msgstr "Geen anode"
 
-#: sysdeps/gnu/errlist.c:1215
+#: sysdeps/gnu/errlist.c:1228
 msgid "Invalid request code"
 msgstr "Ongeldige verzoekscode"
 
-#: sysdeps/gnu/errlist.c:1223
+#: sysdeps/gnu/errlist.c:1236
 msgid "Invalid slot"
 msgstr "Ongeldige sleuf"
 
-#: sysdeps/gnu/errlist.c:1231
+#: sysdeps/gnu/errlist.c:1244
 msgid "File locking deadlock error"
 msgstr "Bestandsvergrendelingsfout; totale blokkering"
 
-#: sysdeps/gnu/errlist.c:1239
+#: sysdeps/gnu/errlist.c:1252
 msgid "Bad font file format"
 msgstr "Ongeldige bestandsindeling voor lettertype"
 
-#: sysdeps/gnu/errlist.c:1247
+#: sysdeps/gnu/errlist.c:1260
 msgid "Machine is not on the network"
 msgstr "Machine is niet op netwerk aangesloten"
 
-#: sysdeps/gnu/errlist.c:1255
+#: sysdeps/gnu/errlist.c:1268
 msgid "Package not installed"
 msgstr "Pakket is niet geïnstalleerd"
 
-#: sysdeps/gnu/errlist.c:1263
+#: sysdeps/gnu/errlist.c:1276
 msgid "Advertise error"
 msgstr "Adverteerfout"
 
-#: sysdeps/gnu/errlist.c:1271
+#: sysdeps/gnu/errlist.c:1284
 msgid "Srmount error"
 msgstr "Srmount-fout"
 
-#: sysdeps/gnu/errlist.c:1279
+#: sysdeps/gnu/errlist.c:1292
 msgid "Communication error on send"
 msgstr "Communicatiefout bij verzenden"
 
-#: sysdeps/gnu/errlist.c:1287
+#: sysdeps/gnu/errlist.c:1300
 msgid "RFS specific error"
 msgstr "RFS-specifieke fout"
 
-#: sysdeps/gnu/errlist.c:1295
+#: sysdeps/gnu/errlist.c:1308
 msgid "Name not unique on network"
 msgstr "Naam is niet uniek op het netwerk"
 
-#: sysdeps/gnu/errlist.c:1303
+#: sysdeps/gnu/errlist.c:1316
 msgid "File descriptor in bad state"
 msgstr "Bestandsdescriptor is in ongeldige toestand"
 
-#: sysdeps/gnu/errlist.c:1311
+#: sysdeps/gnu/errlist.c:1324
 msgid "Remote address changed"
 msgstr "Ginds adres is veranderd"
 
-#: sysdeps/gnu/errlist.c:1319
+#: sysdeps/gnu/errlist.c:1332
 msgid "Can not access a needed shared library"
 msgstr "Kan geen toegang krijgen tot benodigde gedeelde bibliotheek"
 
-#: sysdeps/gnu/errlist.c:1327
+#: sysdeps/gnu/errlist.c:1340
 msgid "Accessing a corrupted shared library"
 msgstr "Er wordt toegang gezocht tot een beschadigde gedeelde bibliotheek"
 
-#: sysdeps/gnu/errlist.c:1335
+#: sysdeps/gnu/errlist.c:1348
 msgid ".lib section in a.out corrupted"
 msgstr ".lib-sectie in a.out is beschadigd"
 
-#: sysdeps/gnu/errlist.c:1343
+#: sysdeps/gnu/errlist.c:1356
 msgid "Attempting to link in too many shared libraries"
 msgstr "Er wordt geprobeerd te veel gedeelde bibliotheken te linken"
 
-#: sysdeps/gnu/errlist.c:1351
+#: sysdeps/gnu/errlist.c:1364
 msgid "Cannot exec a shared library directly"
 msgstr "Kan een gedeelde bibliotheek niet direct uitvoeren"
 
-#: sysdeps/gnu/errlist.c:1359
+#: sysdeps/gnu/errlist.c:1372
 msgid "Streams pipe error"
 msgstr "Pijpfout bij stromen"
 
-#: sysdeps/gnu/errlist.c:1367
+#: sysdeps/gnu/errlist.c:1380
 msgid "Structure needs cleaning"
 msgstr "Structure moet worden opgeschoond"
 
-#: sysdeps/gnu/errlist.c:1375
+#: sysdeps/gnu/errlist.c:1388
 msgid "Not a XENIX named type file"
 msgstr "Niet een XENIX-bestand met naam"
 
-#: sysdeps/gnu/errlist.c:1383
+#: sysdeps/gnu/errlist.c:1396
 msgid "No XENIX semaphores available"
 msgstr "Geen XENIX-semaforen beschikbaar"
 
-#: sysdeps/gnu/errlist.c:1391
+#: sysdeps/gnu/errlist.c:1404
 msgid "Is a named type file"
 msgstr "Is een bestand met naam"
 
-#: sysdeps/gnu/errlist.c:1399
+#: sysdeps/gnu/errlist.c:1412
 msgid "Remote I/O error"
 msgstr "Gindse invoer-/uitvoerfout"
 
-#: sysdeps/gnu/errlist.c:1407
+#: sysdeps/gnu/errlist.c:1420
 msgid "No medium found"
 msgstr "Geen medium gevonden"
 
-#: sysdeps/gnu/errlist.c:1415
+#: sysdeps/gnu/errlist.c:1428
 msgid "Wrong medium type"
 msgstr "Verkeerde mediumsoort"
 
-#: sysdeps/gnu/errlist.c:1423
+#: sysdeps/gnu/errlist.c:1436
 msgid "Required key not available"
 msgstr "Vereiste sleutel is niet beschikbaar"
 
-#: sysdeps/gnu/errlist.c:1431
+#: sysdeps/gnu/errlist.c:1444
 msgid "Key has expired"
 msgstr "Sleutel is verlopen"
 
-#: sysdeps/gnu/errlist.c:1439
+#: sysdeps/gnu/errlist.c:1452
 msgid "Key has been revoked"
 msgstr "Sleutel is herroepen"
 
-#: sysdeps/gnu/errlist.c:1447
+#: sysdeps/gnu/errlist.c:1460
 msgid "Key was rejected by service"
 msgstr "Sleutel werd geweigerd door service"
 
-#: sysdeps/gnu/errlist.c:1455
+#: sysdeps/gnu/errlist.c:1468
 msgid "Operation not possible due to RF-kill"
 msgstr "Actie is niet mogelijk vanwege RF-kill"
 
-#: sysdeps/gnu/errlist.c:1463
+#: sysdeps/gnu/errlist.c:1476
 msgid "Memory page has hardware error"
 msgstr "Geheugenpagina bevat een hardware-fout"
 
@@ -6809,27 +6826,39 @@ msgstr ""
 msgid "can't disable CET"
 msgstr ""
 
-#: timezone/zdump.c:338
+#: timezone/zdump.c:332
 msgid "has fewer than 3 characters"
 msgstr "heeft minder dan drie tekens"
 
-#: timezone/zdump.c:340
+#: timezone/zdump.c:334
 msgid "has more than 6 characters"
 msgstr "heeft meer dan zes tekens"
 
-#: timezone/zdump.c:342
+#: timezone/zdump.c:336
 msgid "has characters other than ASCII alphanumerics, '-' or '+'"
 msgstr "bevat andere tekens dan ASCII-letters en -cijfers en '+' en '-'"
 
-#: timezone/zdump.c:347
+#: timezone/zdump.c:341
 #, c-format
 msgid "%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"
 msgstr "%s: Waarschuwing: zone \"%s\", afkorting \"%s\" %s\n"
 
-#: timezone/zdump.c:393
-#, c-format
+#: timezone/zdump.c:387
+#, fuzzy, c-format
+#| msgid ""
+#| "%s: usage: %s OPTIONS ZONENAME ...\n"
+#| "Options include:\n"
+#| "  -c [L,]U   Start at year L (default -500), end before year U (default 2500)\n"
+#| "  -t [L,]U   Start at time L, end before time U (in seconds since 1970)\n"
+#| "  -i         List transitions briefly (format is experimental)\n"
+#| "  -v         List transitions verbosely\n"
+#| "  -V         List transitions a bit less verbosely\n"
+#| "  --help     Output this help\n"
+#| "  --version  Output version info\n"
+#| "\n"
+#| "Report bugs to %s.\n"
 msgid ""
-"%s: usage: %s OPTIONS ZONENAME ...\n"
+"%s: usage: %s OPTIONS TIMEZONE ...\n"
 "Options include:\n"
 "  -c [L,]U   Start at year L (default -500), end before year U (default 2500)\n"
 "  -t [L,]U   Start at time L, end before time U (in seconds since 1970)\n"
@@ -6855,50 +6884,62 @@ msgstr ""
 "Rapporteer programmagebreken aan %s;\n"
 "meld fouten in de vertaling aan <vertaling@vrijschrift.nl>.\n"
 
-#: timezone/zdump.c:479
+#: timezone/zdump.c:473
 #, c-format
 msgid "%s: wild -c argument %s\n"
 msgstr "%s: extra argument %s bij optie -c\n"
 
-#: timezone/zdump.c:512
+#: timezone/zdump.c:506
 #, c-format
 msgid "%s: wild -t argument %s\n"
 msgstr "%s: extra argument %s bij optie -t\n"
 
-#: timezone/zic.c:398
+#: timezone/zic.c:429
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: Onvoldoende geheugen beschikbaar: %s\n"
 
-#: timezone/zic.c:406
+#: timezone/zic.c:437
 msgid "size overflow"
 msgstr "grootteoverloop"
 
-#: timezone/zic.c:454
+#: timezone/zic.c:447
+#, fuzzy
+#| msgid "int overflow"
+msgid "alignment overflow"
+msgstr "geheelgetaloverloop"
+
+#: timezone/zic.c:495
 msgid "integer overflow"
 msgstr "geheelgetaloverloop"
 
-#: timezone/zic.c:488
+#: timezone/zic.c:529
 #, c-format
 msgid "\"%s\", line %<PRIdMAX>: "
 msgstr "\"%s\", regel %<PRIdMAX>: "
 
-#: timezone/zic.c:491
+#: timezone/zic.c:532
 #, c-format
 msgid " (rule from \"%s\", line %<PRIdMAX>)"
 msgstr " (voorschrift uit \"%s\", regel %<PRIdMAX>)"
 
-#: timezone/zic.c:510
+#: timezone/zic.c:551
 #, c-format
 msgid "warning: "
 msgstr "waarschuwing: "
 
-#: timezone/zic.c:535
-#, c-format
+#: timezone/zic.c:576
+#, fuzzy, c-format
+#| msgid ""
+#| "%s: usage is %s [ --version ] [ --help ] [ -v ] \\\n"
+#| "\t[ -l localtime ] [ -p posixrules ] [ -d directory ] \\\n"
+#| "\t[ -L leapseconds ] [ filename ... ]\n"
+#| "\n"
+#| "Report bugs to %s.\n"
 msgid ""
 "%s: usage is %s [ --version ] [ --help ] [ -v ] \\\n"
 "\t[ -l localtime ] [ -p posixrules ] [ -d directory ] \\\n"
-"\t[ -L leapseconds ] [ filename ... ]\n"
+"\t[ -t localtime-link ] [ -L leapseconds ] [ filename ... ]\n"
 "\n"
 "Report bugs to %s.\n"
 msgstr ""
@@ -6908,130 +6949,136 @@ msgstr ""
 "\n"
 "Rapporteer programmafouten aan %s.\n"
 
-#: timezone/zic.c:558
+#: timezone/zic.c:599
 #, c-format
 msgid "%s: Can't chdir to %s: %s\n"
 msgstr "%s: Kan huidige map niet wijzigen naar %s: %s\n"
 
-#: timezone/zic.c:590
+#: timezone/zic.c:632
 msgid "wild compilation-time specification of zic_t"
 msgstr "compilatiefout: type 'zic_t' heeft te weinig bits"
 
-#: timezone/zic.c:610
+#: timezone/zic.c:652
 #, c-format
 msgid "%s: More than one -d option specified\n"
 msgstr "%s: Optie -d is meermaals gegeven\n"
 
-#: timezone/zic.c:620
+#: timezone/zic.c:662
 #, c-format
 msgid "%s: More than one -l option specified\n"
 msgstr "%s: Optie -l is meermaals gegeven\n"
 
-#: timezone/zic.c:630
+#: timezone/zic.c:672
 #, c-format
 msgid "%s: More than one -p option specified\n"
 msgstr "%s: Optie -p is meermaals gegeven\n"
 
-#: timezone/zic.c:640
+#: timezone/zic.c:680
+#, fuzzy, c-format
+#| msgid "%s: More than one -d option specified\n"
+msgid "%s: More than one -t option specified\n"
+msgstr "%s: Optie -d is meermaals gegeven\n"
+
+#: timezone/zic.c:689
+msgid "-y is obsolescent"
+msgstr ""
+
+#: timezone/zic.c:693
 #, c-format
 msgid "%s: More than one -y option specified\n"
 msgstr "%s: Optie -y is meermaals gegeven\n"
 
-#: timezone/zic.c:650
+#: timezone/zic.c:703
 #, c-format
 msgid "%s: More than one -L option specified\n"
 msgstr "%s: Optie -L is meermaals gegeven\n"
 
-#: timezone/zic.c:659
+#: timezone/zic.c:712
 msgid "-s ignored"
 msgstr "optie '-s' is genegeerd"
 
-#: timezone/zic.c:698
+#: timezone/zic.c:753
 msgid "link to link"
 msgstr "koppeling naar een andere koppeling"
 
-#: timezone/zic.c:701 timezone/zic.c:705
+#: timezone/zic.c:756 timezone/zic.c:760
 msgid "command line"
 msgstr "opdrachtregel"
 
-#: timezone/zic.c:721
+#: timezone/zic.c:776
 msgid "empty file name"
 msgstr "lege bestandsnaam"
 
-#: timezone/zic.c:724
+#: timezone/zic.c:779
 #, c-format
 msgid "file name '%s' begins with '/'"
 msgstr "bestandsnaam '%s' begint met '/'"
 
-#: timezone/zic.c:734
+#: timezone/zic.c:789
 #, c-format
 msgid "file name '%s' contains '%.*s' component"
 msgstr "bestandsnaam '%s' bevat een '%.*s'-component"
 
-#: timezone/zic.c:740
+#: timezone/zic.c:795
 #, c-format
 msgid "file name '%s' component contains leading '-'"
 msgstr "bestandsnaam '%s' bevat component met een leidende '-'"
 
-#: timezone/zic.c:743
+#: timezone/zic.c:798
 #, c-format
 msgid "file name '%s' contains overlength component '%.*s...'"
 msgstr "bestandsnaam '%s' bevat overlange component '%.*s...'"
 
-#: timezone/zic.c:771
+#: timezone/zic.c:826
 #, c-format
 msgid "file name '%s' contains byte '%c'"
 msgstr "bestandsnaam '%s' bevat byte '%c'"
 
-#: timezone/zic.c:772
+#: timezone/zic.c:827
 #, c-format
 msgid "file name '%s' contains byte '\\%o'"
 msgstr "bestandsnaam '%s' bevat byte '\\%o'"
 
-#: timezone/zic.c:842
+#: timezone/zic.c:897
 #, c-format
 msgid "%s: link from %s/%s failed: %s\n"
 msgstr "%s: aanmaken van koppeling vanaf %s/%s is mislukt: %s\n"
 
-#: timezone/zic.c:852 timezone/zic.c:1815
+#: timezone/zic.c:907 timezone/zic.c:1876
 #, c-format
 msgid "%s: Can't remove %s/%s: %s\n"
 msgstr "%s: Kan %s/%s niet verwijderen: %s\n"
 
-#: timezone/zic.c:874
+#: timezone/zic.c:931
 #, c-format
 msgid "symbolic link used because hard link failed: %s"
 msgstr "symbolische koppeling gemaakt omdat harde koppeling mislukte: %s"
 
-#: timezone/zic.c:882
+#: timezone/zic.c:939
 #, c-format
 msgid "%s: Can't read %s/%s: %s\n"
 msgstr "%s: Kan %s/%s niet lezen: %s\n"
 
-#: timezone/zic.c:889 timezone/zic.c:1828
+#: timezone/zic.c:946 timezone/zic.c:1889
 #, c-format
 msgid "%s: Can't create %s/%s: %s\n"
 msgstr "%s: Kan %s/%s niet aanmaken: %s\n"
 
-#: timezone/zic.c:898
+#: timezone/zic.c:955
 #, c-format
 msgid "copy used because hard link failed: %s"
 msgstr "kopie gemaakt omdat harde koppeling mislukte: %s"
 
-#: timezone/zic.c:901
+#: timezone/zic.c:958
 #, c-format
 msgid "copy used because symbolic link failed: %s"
 msgstr "kopie gemaakt omdat symbolische koppeling mislukte: %s"
 
-#: timezone/zic.c:1013 timezone/zic.c:1015
+#: timezone/zic.c:1032 timezone/zic.c:1034
 msgid "same rule name in multiple files"
 msgstr "dezelfde voorschriftnaam in meerdere bestanden"
 
-#: timezone/zic.c:1056
-msgid "unruly zone"
-msgstr "onhandelbare zone"
-
-#: timezone/zic.c:1063
+#: timezone/zic.c:1081
 #, c-format
 msgid "%s in ruleless zone"
 msgstr "%s in voorschriftloze zone"
@@ -7040,256 +7087,277 @@ msgstr "%s in voorschriftloze zone"
 # This is the name of the program's standard input.  The place input
 # from getchar (et al) comes from.
 #
-#: timezone/zic.c:1083
+#: timezone/zic.c:1101
 msgid "standard input"
 msgstr "standaardinvoer"
 
-#: timezone/zic.c:1088
+#: timezone/zic.c:1106
 #, c-format
 msgid "%s: Can't open %s: %s\n"
 msgstr "%s: Kan %s niet openen: %s\n"
 
-#: timezone/zic.c:1099
+#: timezone/zic.c:1117
 msgid "line too long"
 msgstr "regel is te lang"
 
-#: timezone/zic.c:1119
+#: timezone/zic.c:1139
 msgid "input line of unknown type"
 msgstr "invoerregel is van onbekende soort"
 
-#: timezone/zic.c:1134
-#, c-format
-msgid "%s: Leap line in non leap seconds file %s"
-msgstr "%s: Schrikkelregel in niet-schrikkelsecondenbestand %s"
-
-#: timezone/zic.c:1142 timezone/zic.c:1547 timezone/zic.c:1569
+#: timezone/zic.c:1158 timezone/zic.c:1593 timezone/zic.c:1615
 #, c-format
 msgid "%s: panic: Invalid l_value %d\n"
 msgstr "%s: **interne fout** -- ongeldige regelcode %d\n"
 
-#: timezone/zic.c:1151
+#: timezone/zic.c:1167
 msgid "expected continuation line not found"
 msgstr "verwachte regelcontinuering is niet gevonden"
 
-#: timezone/zic.c:1193 timezone/zic.c:2976
+#: timezone/zic.c:1203
+#, fuzzy
+#| msgid "format '%s' not handled by pre-2015 versions of zic"
+msgid "fractional seconds rejected by pre-2018 versions of zic"
+msgstr "opmaak '%s' werkt niet in versies van 'zic' van voor 2015"
+
+#: timezone/zic.c:1221 timezone/zic.c:3078
 msgid "time overflow"
 msgstr "tijdsoverloop"
 
-#: timezone/zic.c:1198
+#: timezone/zic.c:1227
 msgid "values over 24 hours not handled by pre-2007 versions of zic"
 msgstr "versies van 'zic' van voor 2007 kunnen uren boven de 24 niet aan"
 
-#: timezone/zic.c:1209
-msgid "wrong number of fields on Rule line"
-msgstr "verkeerd aantal velden op 'Rule'-regel"
-
-#: timezone/zic.c:1213
-msgid "nameless rule"
-msgstr "naamloos voorschrift"
-
-#: timezone/zic.c:1218
+#: timezone/zic.c:1245
 msgid "invalid saved time"
 msgstr "ongeldige opgeslagen tijd"
 
-#: timezone/zic.c:1235
+#: timezone/zic.c:1256
+msgid "wrong number of fields on Rule line"
+msgstr "verkeerd aantal velden op 'Rule'-regel"
+
+#: timezone/zic.c:1265
+#, fuzzy, c-format
+#| msgid "Invalid numeric gid \"%s\"!"
+msgid "Invalid rule name \"%s\""
+msgstr "Ongeldig numeriek GID '%s'!"
+
+#: timezone/zic.c:1287
 msgid "wrong number of fields on Zone line"
 msgstr "verkeerd aantal velden op 'Zone'-regel"
 
-#: timezone/zic.c:1240
+#: timezone/zic.c:1292
 #, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
 msgstr "De regel \"Zone %s\" en optie -l sluiten elkaar uit"
 
-#: timezone/zic.c:1246
+#: timezone/zic.c:1298
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr "De regel \"Zone %s\" en optie -p sluiten elkaar uit"
 
-#: timezone/zic.c:1253
+#: timezone/zic.c:1305
 #, c-format
 msgid "duplicate zone name %s (file \"%s\", line %<PRIdMAX>)"
 msgstr "dubbele zonenaam '%s' (in bestand %s, regel %<PRIdMAX>)"
 
-#: timezone/zic.c:1267
+#: timezone/zic.c:1319
 msgid "wrong number of fields on Zone continuation line"
 msgstr "verkeerd aantal velden op 'Zone'-continueringsregel"
 
-#: timezone/zic.c:1307
+#: timezone/zic.c:1359
 msgid "invalid UT offset"
 msgstr "ongeldige verschuiving ten opzichte van UTC"
 
-#: timezone/zic.c:1311
+#: timezone/zic.c:1363
 msgid "invalid abbreviation format"
 msgstr "ongeldige opmaak voor afkorting"
 
-#: timezone/zic.c:1320
+#: timezone/zic.c:1372
 #, c-format
 msgid "format '%s' not handled by pre-2015 versions of zic"
 msgstr "opmaak '%s' werkt niet in versies van 'zic' van voor 2015"
 
-#: timezone/zic.c:1347
+#: timezone/zic.c:1399
 msgid "Zone continuation line end time is not after end time of previous line"
 msgstr "'Zone'-continueringsregel: eindtijd ligt niet na eindtijd van vorige regel"
 
-#: timezone/zic.c:1374
+#: timezone/zic.c:1426
 msgid "wrong number of fields on Leap line"
 msgstr "verkeerd aantal velden op 'Leap'-regel"
 
-#: timezone/zic.c:1383
+#: timezone/zic.c:1435
 msgid "invalid leaping year"
 msgstr "ongeldig schrikkeljaar"
 
-#: timezone/zic.c:1403 timezone/zic.c:1501
+#: timezone/zic.c:1455 timezone/zic.c:1547
 msgid "invalid month name"
 msgstr "ongeldige maandnaam"
 
-#: timezone/zic.c:1416 timezone/zic.c:1614 timezone/zic.c:1628
+#: timezone/zic.c:1468 timezone/zic.c:1663 timezone/zic.c:1677
 msgid "invalid day of month"
 msgstr "ongeldige dag van maand"
 
-#: timezone/zic.c:1421
+#: timezone/zic.c:1473
 msgid "time too small"
 msgstr "tijdswaarde is te klein"
 
-#: timezone/zic.c:1425
+#: timezone/zic.c:1477
 msgid "time too large"
 msgstr "tijdswaarde is te groot"
 
-#: timezone/zic.c:1429 timezone/zic.c:1530
+#: timezone/zic.c:1481 timezone/zic.c:1576
 msgid "invalid time of day"
 msgstr "ongeldige tijd van de dag"
 
-#: timezone/zic.c:1448
+#: timezone/zic.c:1494
 msgid "illegal CORRECTION field on Leap line"
 msgstr "ongeldig CORRECTION-veld op 'Leap'-regel"
 
-#: timezone/zic.c:1453
+#: timezone/zic.c:1499
 msgid "illegal Rolling/Stationary field on Leap line"
 msgstr "ongeldig 'Rolling'/'Stationary'-veld op 'Leap'-regel"
 
-#: timezone/zic.c:1459
-msgid "leap second precedes Big Bang"
+#: timezone/zic.c:1505
+#, fuzzy
+#| msgid "leap second precedes Big Bang"
+msgid "leap second precedes Epoch"
 msgstr "schrikkelseconde valt voor de oerknal"
 
-#: timezone/zic.c:1472
+#: timezone/zic.c:1518
 msgid "wrong number of fields on Link line"
 msgstr "verkeerd aantal velden op 'Link'-regel"
 
-#: timezone/zic.c:1476
+#: timezone/zic.c:1522
 msgid "blank FROM field on Link line"
 msgstr "leeg FROM-veld op 'Link'-regel"
 
-#: timezone/zic.c:1551
+#: timezone/zic.c:1597
 msgid "invalid starting year"
 msgstr "ongeldig beginjaar"
 
-#: timezone/zic.c:1573
+#: timezone/zic.c:1619
 msgid "invalid ending year"
 msgstr "ongeldig eindjaar"
 
-#: timezone/zic.c:1577
+#: timezone/zic.c:1623
 msgid "starting year greater than ending year"
 msgstr "beginjaar is groter dan eindjaar"
 
-#: timezone/zic.c:1584
+#: timezone/zic.c:1630
 msgid "typed single year"
 msgstr "begin- en eindjaar zijn gelijk"
 
-#: timezone/zic.c:1619
+#: timezone/zic.c:1633
+#, c-format
+msgid "year type \"%s\" is obsolete; use \"-\" instead"
+msgstr ""
+
+#: timezone/zic.c:1668
 msgid "invalid weekday name"
 msgstr "ongeldige naam voor weekdag"
 
-#: timezone/zic.c:1743
+#: timezone/zic.c:1800
 #, c-format
 msgid "reference clients mishandle more than %d transition times"
 msgstr "meer dan %d overgangstijden worden door referentie-clients onjuist behandeld"
 
-#: timezone/zic.c:1747
+#: timezone/zic.c:1804
 msgid "pre-2014 clients may mishandle more than 1200 transition times"
 msgstr "clients van voor 2014 zouden meer dan 1200 overgangstijden onjuist kunnen behandelen"
 
-#: timezone/zic.c:1858
+#: timezone/zic.c:1920
 msgid "too many transition times"
 msgstr "te veel overgangstijden"
 
-#: timezone/zic.c:2047
-#, c-format
-msgid "%%z UTC offset magnitude exceeds 99:59:59"
+#: timezone/zic.c:2107
+#, fuzzy, c-format
+#| msgid "%%z UTC offset magnitude exceeds 99:59:59"
+msgid "%%z UT offset magnitude exceeds 99:59:59"
 msgstr "verschuiving %%z t.o.v. UTC is groter dan 99:59:59"
 
-#: timezone/zic.c:2424
+#: timezone/zic.c:2488
 msgid "no POSIX environment variable for zone"
 msgstr "geen POSIX-omgevingsvariabele voor tijdzone"
 
-#: timezone/zic.c:2430
+#: timezone/zic.c:2494
 #, c-format
 msgid "%s: pre-%d clients may mishandle distant timestamps"
 msgstr "%s: clients van voor %d zouden verre tijdsstempels onjuist kunnen behandelen"
 
-#: timezone/zic.c:2566
+#: timezone/zic.c:2631
 msgid "two rules for same instant"
 msgstr "twee voorschriften voor hetzelfde moment"
 
-#: timezone/zic.c:2627
+#: timezone/zic.c:2696
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr "kan tijdzone-afkorting voor gebruik na een tot-tijd niet bepalen"
 
-#: timezone/zic.c:2725
+#: timezone/zic.c:2785
 msgid "too many local time types"
 msgstr "te veel soorten lokale tijd"
 
-#: timezone/zic.c:2729
+#: timezone/zic.c:2789
 msgid "UT offset out of range"
 msgstr "verschuiving ten opzichte van UTC valt buiten bereik"
 
-#: timezone/zic.c:2753
+#: timezone/zic.c:2813
 msgid "too many leap seconds"
 msgstr "te veel schrikkelseconden"
 
-#: timezone/zic.c:2759
-msgid "repeated leap second moment"
-msgstr "herhaald schrikkelseconde-moment"
+#: timezone/zic.c:2844
+msgid "Leap seconds too close together"
+msgstr ""
 
-#: timezone/zic.c:2830
+#: timezone/zic.c:2891
 msgid "Wild result from command execution"
 msgstr "Vreemd resultaat van uitgevoerde opdracht"
 
-#: timezone/zic.c:2831
+#: timezone/zic.c:2892
 #, c-format
 msgid "%s: command was '%s', result was %d\n"
 msgstr "%s: opdracht was '%s', resultaat was %d\n"
 
-#: timezone/zic.c:2961
+#: timezone/zic.c:2998
+#, c-format
+msgid "\"%s\" is undocumented; use \"last%s\" instead"
+msgstr ""
+
+#: timezone/zic.c:3029
+#, c-format
+msgid "\"%s\" is ambiguous in pre-2017c zic"
+msgstr ""
+
+#: timezone/zic.c:3063
 msgid "Odd number of quotation marks"
 msgstr "Oneven aantal aanhalingstekens"
 
-#: timezone/zic.c:3046
+#: timezone/zic.c:3157
 msgid "use of 2/29 in non leap-year"
 msgstr "'29-2' gebruikt in een niet-schrikkeljaar"
 
-#: timezone/zic.c:3081
+#: timezone/zic.c:3192
 msgid "rule goes past start/end of month; will not work with pre-2004 versions of zic"
 msgstr ""
 "voorschrift gaat voorbij begin of einde van maand --\n"
 "dit zal niet werken met versies van 'zic' van voor 2004"
 
-#: timezone/zic.c:3108
+#: timezone/zic.c:3219
 msgid "time zone abbreviation has fewer than 3 characters"
 msgstr "tijdzone-afkorting heeft minder dan drie tekens"
 
-#: timezone/zic.c:3110
+#: timezone/zic.c:3221
 msgid "time zone abbreviation has too many characters"
 msgstr "tijdzone-afkorting heeft te veel tekens"
 
-#: timezone/zic.c:3112
+#: timezone/zic.c:3223
 msgid "time zone abbreviation differs from POSIX standard"
 msgstr "tijdzone-afkorting verschilt van de POSIX-standaard"
 
-#: timezone/zic.c:3118
+#: timezone/zic.c:3229
 msgid "too many, or too long, time zone abbreviations"
 msgstr "te veel of te lange tijdzone-afkortingen"
 
-#: timezone/zic.c:3161
+#: timezone/zic.c:3275
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s: Kan map %s niet aanmaken: %s"
@@ -7311,6 +7379,18 @@ msgstr "%s: Kan map %s niet aanmaken: %s"
 
 #~ msgid "This implementation doesn't support newstyle or MT-safe code!\n"
 #~ msgstr "Deze implementatie ondersteunt geen 'newstyle'- of 'MT-safe'-code\n"
+
+#~ msgid "unruly zone"
+#~ msgstr "onhandelbare zone"
+
+#~ msgid "%s: Leap line in non leap seconds file %s"
+#~ msgstr "%s: Schrikkelregel in niet-schrikkelsecondenbestand %s"
+
+#~ msgid "nameless rule"
+#~ msgstr "naamloos voorschrift"
+
+#~ msgid "repeated leap second moment"
+#~ msgstr "herhaald schrikkelseconde-moment"
 
 #~ msgid "no definition of `UNDEFINED'"
 #~ msgstr "geen definitie van 'UNDEFINED'"
@@ -7343,9 +7423,6 @@ msgstr "%s: Kan map %s niet aanmaken: %s"
 #~ "\n"
 #~ "Voor het rapporteren van programmafouten, zie:\n"
 #~ "  %s.\n"
-
-#~ msgid "int overflow"
-#~ msgstr "geheelgetaloverloop"
 
 #~ msgid "hard link failed, symbolic link used"
 #~ msgstr "harde koppeling is mislukt; symbolische wordt gebruikt"

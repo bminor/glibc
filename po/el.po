@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.2.3\n"
-"POT-Creation-Date: 2018-07-26 22:19-0400\n"
+"POT-Creation-Date: 2019-01-16 15:48+0530\n"
 "PO-Revision-Date: 2001-05-21 19:20:31+0000\n"
 "Last-Translator: Nikos Mavroyanopoulos <nmav@hellug.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
@@ -151,7 +151,7 @@ msgstr ""
 #: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:308
 #: elf/pldd.c:252 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:405
 #: iconv/iconvconfig.c:379 locale/programs/locale.c:275
-#: locale/programs/localedef.c:427 login/programs/pt_chown.c:89
+#: locale/programs/localedef.c:437 login/programs/pt_chown.c:89
 #: malloc/memusagestat.c:563 nss/getent.c:933 nss/makedb.c:369
 #: posix/getconf.c:503 sysdeps/unix/sysv/linux/lddlibc4.c:61
 #, c-format
@@ -163,7 +163,7 @@ msgstr ""
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
 #: elf/ldconfig.c:324 elf/ldd.bash.in:38 elf/pldd.c:268 elf/sotruss.sh:75
 #: elf/sprof.c:389 iconv/iconv_prog.c:422 iconv/iconvconfig.c:396
-#: locale/programs/locale.c:292 locale/programs/localedef.c:453
+#: locale/programs/locale.c:292 locale/programs/localedef.c:463
 #: login/programs/pt_chown.c:63 malloc/memusage.sh:71
 #: malloc/memusagestat.c:581 nscd/nscd.c:509 nss/getent.c:87 nss/makedb.c:385
 #: posix/getconf.c:485 sysdeps/unix/sysv/linux/lddlibc4.c:68
@@ -181,7 +181,7 @@ msgstr ""
 #: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
 #: elf/ldconfig.c:329 elf/pldd.c:273 elf/sprof.c:395 iconv/iconv_prog.c:427
 #: iconv/iconvconfig.c:401 locale/programs/locale.c:297
-#: locale/programs/localedef.c:458 malloc/memusage.sh:75
+#: locale/programs/localedef.c:468 malloc/memusage.sh:75
 #: malloc/memusagestat.c:586 nscd/nscd.c:514 nss/getent.c:92 nss/makedb.c:390
 #: posix/getconf.c:490
 #, c-format
@@ -420,33 +420,33 @@ msgstr "αδυναμία ανοίγματος αρχείου εισόδου `%s'
 msgid "mmap of cache file failed.\n"
 msgstr "αποτυχία αντιστοίχισης κεφαλίδων τμημάτων"
 
-#: elf/cache.c:181 elf/cache.c:195
+#: elf/cache.c:181 elf/cache.c:195 elf/cache.c:205
 #, c-format
 msgid "File is not a cache file.\n"
 msgstr ""
 
-#: elf/cache.c:228 elf/cache.c:238
+#: elf/cache.c:233 elf/cache.c:243
 #, c-format
 msgid "%d libs found in cache `%s'\n"
 msgstr ""
 
-#: elf/cache.c:432
+#: elf/cache.c:437
 #, fuzzy, c-format
 msgid "Can't create temporary cache file %s"
 msgstr "αδυναμία ανάγνωσης αρχείου locale `%s'"
 
-#: elf/cache.c:440 elf/cache.c:450 elf/cache.c:454 elf/cache.c:458
-#: elf/cache.c:468
+#: elf/cache.c:445 elf/cache.c:455 elf/cache.c:459 elf/cache.c:463
+#: elf/cache.c:473
 #, c-format
 msgid "Writing of cache data failed"
 msgstr ""
 
-#: elf/cache.c:463
+#: elf/cache.c:468
 #, fuzzy, c-format
 msgid "Changing access rights of %s to %#o failed"
 msgstr "αποτυχία αντιστοίχισης κεφαλίδων τμημάτων"
 
-#: elf/cache.c:472
+#: elf/cache.c:477
 #, fuzzy, c-format
 msgid "Renaming of %s to %s failed"
 msgstr "αποτυχία αντιστοίχισης κεφαλίδων τμημάτων"
@@ -724,21 +724,21 @@ msgstr "μη έγκυρη κατάσταση για την dlopen()"
 msgid "cannot allocate memory in static TLS block"
 msgstr "Δεν είναι δυνατό να δεσμευτεί μνήμη"
 
-#: elf/dl-reloc.c:205
+#: elf/dl-reloc.c:213
 msgid "cannot make segment writable for relocation"
 msgstr ""
 
-#: elf/dl-reloc.c:276
+#: elf/dl-reloc.c:272
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr ""
 
-#: elf/dl-reloc.c:292
+#: elf/dl-reloc.c:288
 #, fuzzy
 msgid "cannot restore segment prot after reloc"
 msgstr "αδυναμία δημιουργίας εσωτερικού περιγραφέα"
 
-#: elf/dl-reloc.c:323
+#: elf/dl-reloc.c:319
 #, fuzzy
 msgid "cannot apply additional memory protection after relocation"
 msgstr "αδυναμία επεξεργασίας των προδιαγραφών σειράς"
@@ -1470,7 +1470,7 @@ msgstr "Πληροφορία:"
 msgid "list all known coded character sets"
 msgstr "λίστα με όλα τα γνωστά σύνολα χαρακτήρων"
 
-#: iconv/iconv_prog.c:64 locale/programs/localedef.c:120
+#: iconv/iconv_prog.c:64 locale/programs/localedef.c:124
 msgid "Output control:"
 msgstr "Έλεγχος εξόδου:"
 
@@ -1480,8 +1480,8 @@ msgid "omit invalid characters from output"
 msgstr "Μη έγκυρος χαρακτήρας ονόματος κλάσης"
 
 #: iconv/iconv_prog.c:66 iconv/iconvconfig.c:128
-#: locale/programs/localedef.c:113 locale/programs/localedef.c:115
-#: locale/programs/localedef.c:117 locale/programs/localedef.c:144
+#: locale/programs/localedef.c:117 locale/programs/localedef.c:119
+#: locale/programs/localedef.c:121 locale/programs/localedef.c:150
 #: malloc/memusagestat.c:56
 #, fuzzy
 msgid "FILE"
@@ -1592,7 +1592,7 @@ msgstr "αδυναμία ανοίγματος αρχείου εισόδου `%s'
 msgid "[DIR...]"
 msgstr "[ΑΡΧΕΙΟ...]"
 
-#: iconv/iconvconfig.c:126 locale/programs/localedef.c:123
+#: iconv/iconvconfig.c:126 locale/programs/localedef.c:129
 msgid "PATH"
 msgstr ""
 
@@ -1849,7 +1849,7 @@ msgstr "%s: Σφάλμα στο μηχανισμό κατάστασης"
 #: locale/programs/ld-monetary.c:764 locale/programs/ld-name.c:278
 #: locale/programs/ld-numeric.c:341 locale/programs/ld-paper.c:228
 #: locale/programs/ld-telephone.c:292 locale/programs/ld-time.c:990
-#: locale/programs/locfile.c:997 locale/programs/repertoire.c:323
+#: locale/programs/locfile.c:1010 locale/programs/repertoire.c:323
 #, c-format
 msgid "%s: premature end of file"
 msgstr "%s: πρόωρο τέλος αρχείου"
@@ -2743,134 +2743,138 @@ msgstr "αδυναμία εισαγωγής στον πίνακα αποτελε
 msgid "while preparing output"
 msgstr "κατά την προετοιμασία εξόδου"
 
-#: locale/programs/localedef.c:112
+#: locale/programs/localedef.c:116
 msgid "Input Files:"
 msgstr "Αρχεία Εισόδου:"
 
-#: locale/programs/localedef.c:114
+#: locale/programs/localedef.c:118
 msgid "Symbolic character names defined in FILE"
 msgstr "Τα συμβολικά ονόματα χαρακτήρων δηλώθηκαν στο ΑΡΧΕΙΟ"
 
-#: locale/programs/localedef.c:116
+#: locale/programs/localedef.c:120
 msgid "Source definitions are found in FILE"
 msgstr "Οι ορισμοί πηγή βρίσκονται στο ΑΡΧΕΙΟ"
 
-#: locale/programs/localedef.c:118
+#: locale/programs/localedef.c:122
 msgid "FILE contains mapping from symbolic names to UCS4 values"
 msgstr "Το ΑΡΧΕΙΟ περιέχει αντιστοιχίσεις από συμβολικά ονόματα σε τιμές UCS4"
 
-#: locale/programs/localedef.c:122
+#: locale/programs/localedef.c:126
 msgid "Create output even if warning messages were issued"
 msgstr "Δημιουργία εξόδου ακόμα και αν εκδόθηκαν προειδοποιήσεις"
 
-#: locale/programs/localedef.c:123
+#: locale/programs/localedef.c:128
+msgid "Do not create hard links between installed locales"
+msgstr ""
+
+#: locale/programs/localedef.c:129
 #, fuzzy
 msgid "Optional output file prefix"
 msgstr "αδυναμία ανοίγματος αρχείου εξόδου"
 
-#: locale/programs/localedef.c:124
+#: locale/programs/localedef.c:130
 #, fuzzy
 #| msgid "Be strictly POSIX conform"
 msgid "Strictly conform to POSIX"
 msgstr "Αυστηρή συμμόρφωση με POSIX"
 
-#: locale/programs/localedef.c:126
+#: locale/programs/localedef.c:132
 msgid "Suppress warnings and information messages"
 msgstr "Αποσιώπηση προηδοποιήσεων και μηνυμάτων πληροφόρησης"
 
-#: locale/programs/localedef.c:127
+#: locale/programs/localedef.c:133
 msgid "Print more messages"
 msgstr "Εμφάνιση περισσότερων μηνυμάτων"
 
-#: locale/programs/localedef.c:128 locale/programs/localedef.c:131
+#: locale/programs/localedef.c:134 locale/programs/localedef.c:137
 #, fuzzy
 #| msgid "warning: "
 msgid "<warnings>"
 msgstr "προειδοποίηση: "
 
-#: locale/programs/localedef.c:129
+#: locale/programs/localedef.c:135
 msgid "Comma-separated list of warnings to disable; supported warnings are: ascii, intcurrsym"
 msgstr ""
 
-#: locale/programs/localedef.c:132
+#: locale/programs/localedef.c:138
 msgid "Comma-separated list of warnings to enable; supported warnings are: ascii, intcurrsym"
 msgstr ""
 
-#: locale/programs/localedef.c:135
+#: locale/programs/localedef.c:141
 msgid "Archive control:"
 msgstr ""
 
-#: locale/programs/localedef.c:137
+#: locale/programs/localedef.c:143
 msgid "Don't add new data to archive"
 msgstr ""
 
-#: locale/programs/localedef.c:139
+#: locale/programs/localedef.c:145
 msgid "Add locales named by parameters to archive"
 msgstr ""
 
-#: locale/programs/localedef.c:140
+#: locale/programs/localedef.c:146
 msgid "Replace existing archive content"
 msgstr ""
 
-#: locale/programs/localedef.c:142
+#: locale/programs/localedef.c:148
 msgid "Remove locales named by parameters from archive"
 msgstr ""
 
-#: locale/programs/localedef.c:143
+#: locale/programs/localedef.c:149
 msgid "List content of archive"
 msgstr ""
 
-#: locale/programs/localedef.c:145
+#: locale/programs/localedef.c:151
 msgid "locale.alias file to consult when making archive"
 msgstr ""
 
-#: locale/programs/localedef.c:147
+#: locale/programs/localedef.c:153
 msgid "Generate little-endian output"
 msgstr ""
 
-#: locale/programs/localedef.c:149
+#: locale/programs/localedef.c:155
 msgid "Generate big-endian output"
 msgstr ""
 
-#: locale/programs/localedef.c:154
+#: locale/programs/localedef.c:160
 msgid "Compile locale specification"
 msgstr "Μεταγλωττισμός προδιαγραφών τοπικών ρυθμίσεων"
 
-#: locale/programs/localedef.c:157
+#: locale/programs/localedef.c:163
 msgid ""
 "NAME\n"
 "[--add-to-archive|--delete-from-archive] FILE...\n"
 "--list-archive [FILE]"
 msgstr ""
 
-#: locale/programs/localedef.c:232
+#: locale/programs/localedef.c:238
 #, fuzzy, c-format
 #| msgid "cannot open output file"
 msgid "cannot create directory for output files"
 msgstr "αδυναμία ανοίγματος αρχείου εξόδου"
 
-#: locale/programs/localedef.c:243
+#: locale/programs/localedef.c:249
 msgid "FATAL: system does not define `_POSIX2_LOCALEDEF'"
 msgstr "ΜΟΙΡΑΙΟ: το σύστημα δεν ορίζει το `_POSIX2_LOCALEDEF'"
 
-#: locale/programs/localedef.c:257 locale/programs/localedef.c:273
-#: locale/programs/localedef.c:663 locale/programs/localedef.c:683
+#: locale/programs/localedef.c:263 locale/programs/localedef.c:279
+#: locale/programs/localedef.c:673 locale/programs/localedef.c:693
 #, c-format
 msgid "cannot open locale definition file `%s'"
 msgstr "αδυναμία ανοίγματος αρχείου ορισμού locale `%s'"
 
-#: locale/programs/localedef.c:297
+#: locale/programs/localedef.c:303
 #, c-format
 msgid "cannot write output files to `%s'"
 msgstr "αδυναμία εγγραφής αρχείων εξόδου στο `%s'"
 
-#: locale/programs/localedef.c:303
+#: locale/programs/localedef.c:309
 #, fuzzy
 #| msgid "no output file produced because warning were issued"
 msgid "no output file produced because errors were issued"
 msgstr "δεν παράχθηκε αρχείο εξόδου επειδή εκδόθηκαν προειδοποιήσεις"
 
-#: locale/programs/localedef.c:431
+#: locale/programs/localedef.c:441
 #, fuzzy, c-format
 #| msgid ""
 #| "System's directory for character maps : %s\n"
@@ -2888,11 +2892,11 @@ msgstr ""
 "                 μονοπάτι τοπικών ρυθμίσεων: %s\n"
 "%s"
 
-#: locale/programs/localedef.c:631
+#: locale/programs/localedef.c:641
 msgid "circular dependencies between locale definitions"
 msgstr ""
 
-#: locale/programs/localedef.c:637
+#: locale/programs/localedef.c:647
 #, c-format
 msgid "cannot add already read locale `%s' a second time"
 msgstr ""
@@ -3061,27 +3065,27 @@ msgstr "αδυναμία ανοίγματος αρχείου εξόδο `%s' γ�
 msgid "failure while writing data for category `%s'"
 msgstr "αποτυχία κατά την εγγραφή δεδομένων για την κατηγορία `%s'"
 
-#: locale/programs/locfile.c:917
+#: locale/programs/locfile.c:930
 #, fuzzy, c-format
 #| msgid "cannot open output file `%s' for category `%s'"
 msgid "cannot create output file `%s' for category `%s'"
 msgstr "αδυναμία ανοίγματος αρχείου εξόδο `%s' για την κατηγορία `%s'"
 
-#: locale/programs/locfile.c:953
+#: locale/programs/locfile.c:966
 #, fuzzy
 #| msgid "expect string argument for `copy'"
 msgid "expecting string argument for `copy'"
 msgstr "αναμενόταν αλυσίδα χαρακτήρων για `copy'"
 
-#: locale/programs/locfile.c:957
+#: locale/programs/locfile.c:970
 msgid "locale name should consist only of portable characters"
 msgstr ""
 
-#: locale/programs/locfile.c:976
+#: locale/programs/locfile.c:989
 msgid "no other keyword shall be specified when `copy' is used"
 msgstr "καμιά άλλη λέξη κλειδί δεν θα πρέπει να καθορίζεται όταν χρησιμοποιείται το `copy'"
 
-#: locale/programs/locfile.c:990
+#: locale/programs/locfile.c:1003
 #, c-format
 msgid "`%1$s' definition does not end with `END %1$s'"
 msgstr "Ο ορισμός `%1$s' δεν τελειώνει με `END %1$s'"
@@ -3939,271 +3943,271 @@ msgstr ""
 msgid "considering %s entry \"%s\", timeout %<PRIu64>"
 msgstr ""
 
-#: nscd/connections.c:520
+#: nscd/connections.c:521
 #, fuzzy, c-format
 #| msgid "cannot open database file `%s': %s"
 msgid "invalid persistent database file \"%s\": %s"
 msgstr "αδυναμία ανοίγματος αρχείου βάσεως δεδομένων `%s': %s"
 
-#: nscd/connections.c:528
+#: nscd/connections.c:529
 #, fuzzy
 msgid "uninitialized header"
 msgstr "μη έγκυρος χρόνος λήξης"
 
-#: nscd/connections.c:533
+#: nscd/connections.c:534
 msgid "header size does not match"
 msgstr ""
 
-#: nscd/connections.c:543
+#: nscd/connections.c:544
 msgid "file size does not match"
 msgstr ""
 
-#: nscd/connections.c:560
+#: nscd/connections.c:561
 #, fuzzy
 #| msgid "Modification failed"
 msgid "verification failed"
 msgstr "Η τροποποίηση απέτυχε"
 
-#: nscd/connections.c:574
+#: nscd/connections.c:575
 #, c-format
 msgid "suggested size of table for database %s larger than the persistent database's table"
 msgstr ""
 
-#: nscd/connections.c:585 nscd/connections.c:669
+#: nscd/connections.c:586 nscd/connections.c:670
 #, fuzzy, c-format
 #| msgid "cannot create internal descriptors"
 msgid "cannot create read-only descriptor for \"%s\"; no mmap"
 msgstr "αδυναμία δημιουργίας εσωτερικών περιγραφέων"
 
-#: nscd/connections.c:601
+#: nscd/connections.c:602
 #, fuzzy, c-format
 #| msgid "cannot open `%s'"
 msgid "cannot access '%s'"
 msgstr "αδυναμία ανοίγματος του `%s'"
 
-#: nscd/connections.c:649
+#: nscd/connections.c:650
 #, c-format
 msgid "database for %s corrupted or simultaneously used; remove %s manually if necessary and restart"
 msgstr ""
 
-#: nscd/connections.c:655
+#: nscd/connections.c:656
 #, c-format
 msgid "cannot create %s; no persistent database used"
 msgstr ""
 
-#: nscd/connections.c:658
+#: nscd/connections.c:659
 #, fuzzy, c-format
 msgid "cannot create %s; no sharing possible"
 msgstr "αδυναμία ανάγνωσης από τον πελάτη"
 
-#: nscd/connections.c:729
+#: nscd/connections.c:730
 #, fuzzy, c-format
 #| msgid "cannot open database file `%s': %s"
 msgid "cannot write to database file %s: %s"
 msgstr "αδυναμία ανοίγματος αρχείου βάσεως δεδομένων `%s': %s"
 
-#: nscd/connections.c:785
+#: nscd/connections.c:786
 #, c-format
 msgid "cannot open socket: %s"
 msgstr "αδυναμία ανοίγματος υποδοχής: %s"
 
-#: nscd/connections.c:804
+#: nscd/connections.c:805
 #, c-format
 msgid "cannot enable socket to accept connections: %s"
 msgstr "αδύνατη η ενεργοποίηση υποδοχής για αποδοχή συνδέσεων: %s"
 
-#: nscd/connections.c:861
+#: nscd/connections.c:862
 #, c-format
 msgid "disabled inotify-based monitoring for file `%s': %s"
 msgstr ""
 
-#: nscd/connections.c:865
+#: nscd/connections.c:866
 #, c-format
 msgid "monitoring file `%s` (%d)"
 msgstr ""
 
-#: nscd/connections.c:878
+#: nscd/connections.c:879
 #, c-format
 msgid "disabled inotify-based monitoring for directory `%s': %s"
 msgstr ""
 
-#: nscd/connections.c:882
+#: nscd/connections.c:883
 #, fuzzy, c-format
 msgid "monitoring directory `%s` (%d)"
 msgstr "%s: Δεν είναι δυνατόν να δημιουργηθεί ο κατάλογος %s: %s\n"
 
-#: nscd/connections.c:910
+#: nscd/connections.c:911
 #, c-format
 msgid "monitoring file %s for database %s"
 msgstr ""
 
-#: nscd/connections.c:920
+#: nscd/connections.c:921
 #, c-format
 msgid "stat failed for file `%s'; will try again later: %s"
 msgstr ""
 
-#: nscd/connections.c:1039
+#: nscd/connections.c:1040
 #, c-format
 msgid "provide access to FD %d, for %s"
 msgstr ""
 
-#: nscd/connections.c:1051
+#: nscd/connections.c:1052
 #, c-format
 msgid "cannot handle old request version %d; current version is %d"
 msgstr "δε μπορεί να εξυπηρετηθεί η αίτηση παλαιάς έκδοσης %d, η τρέχουσα έκδοση είναι %d"
 
-#: nscd/connections.c:1074
+#: nscd/connections.c:1075
 #, c-format
 msgid "request from %ld not handled due to missing permission"
 msgstr ""
 
-#: nscd/connections.c:1079
+#: nscd/connections.c:1080
 #, c-format
 msgid "request from '%s' [%ld] not handled due to missing permission"
 msgstr ""
 
-#: nscd/connections.c:1084
+#: nscd/connections.c:1085
 msgid "request not handled due to missing permission"
 msgstr ""
 
-#: nscd/connections.c:1122 nscd/connections.c:1148
+#: nscd/connections.c:1123 nscd/connections.c:1149
 #, c-format
 msgid "cannot write result: %s"
 msgstr "αδυναμία εγγραφής αποτελέσματος: %s"
 
-#: nscd/connections.c:1239
+#: nscd/connections.c:1240
 #, fuzzy, c-format
 #| msgid "error getting callers id: %s"
 msgid "error getting caller's id: %s"
 msgstr "σφάλμα στη λήψη της ταυτότητας αυτού που κάλεσε: %s"
 
-#: nscd/connections.c:1349
+#: nscd/connections.c:1350
 #, c-format
 msgid "cannot open /proc/self/cmdline: %m; disabling paranoia mode"
 msgstr ""
 
-#: nscd/connections.c:1372
+#: nscd/connections.c:1373
 #, c-format
 msgid "cannot change to old UID: %s; disabling paranoia mode"
 msgstr ""
 
-#: nscd/connections.c:1383
+#: nscd/connections.c:1384
 #, c-format
 msgid "cannot change to old GID: %s; disabling paranoia mode"
 msgstr ""
 
-#: nscd/connections.c:1397
+#: nscd/connections.c:1398
 #, c-format
 msgid "cannot change to old working directory: %s; disabling paranoia mode"
 msgstr ""
 
-#: nscd/connections.c:1444
+#: nscd/connections.c:1445
 #, c-format
 msgid "re-exec failed: %s; disabling paranoia mode"
 msgstr ""
 
-#: nscd/connections.c:1453
+#: nscd/connections.c:1454
 #, c-format
 msgid "cannot change current working directory to \"/\": %s"
 msgstr ""
 
-#: nscd/connections.c:1637
+#: nscd/connections.c:1638
 #, c-format
 msgid "short read while reading request: %s"
 msgstr "σύντομη ανάγνωση κατά την αίτηση ανάγνωσης: %s"
 
-#: nscd/connections.c:1670
+#: nscd/connections.c:1671
 #, fuzzy, c-format
 msgid "key length in request too long: %d"
 msgstr "το μήκος κλειδιού στην αίτηση είναι πολύ μεγάλο: %Zd"
 
-#: nscd/connections.c:1683
+#: nscd/connections.c:1684
 #, c-format
 msgid "short read while reading request key: %s"
 msgstr "σύντομη ανάγνωση κατά την ανάγνωση του κλειδιού αίτησης: %s"
 
-#: nscd/connections.c:1693
+#: nscd/connections.c:1694
 #, fuzzy, c-format
 #| msgid "handle_request: request received (Version = %d)"
 msgid "handle_request: request received (Version = %d) from PID %ld"
 msgstr "handle_request: λήψη αίτησης (Έκδοση = %d)"
 
-#: nscd/connections.c:1698
+#: nscd/connections.c:1699
 #, c-format
 msgid "handle_request: request received (Version = %d)"
 msgstr "handle_request: λήψη αίτησης (Έκδοση = %d)"
 
-#: nscd/connections.c:1838
+#: nscd/connections.c:1839
 #, c-format
 msgid "ignored inotify event for `%s` (file exists)"
 msgstr ""
 
-#: nscd/connections.c:1843
+#: nscd/connections.c:1844
 #, c-format
 msgid "monitored file `%s` was %s, removing watch"
 msgstr ""
 
-#: nscd/connections.c:1851 nscd/connections.c:1893
+#: nscd/connections.c:1852 nscd/connections.c:1894
 #, c-format
 msgid "failed to remove file watch `%s`: %s"
 msgstr ""
 
-#: nscd/connections.c:1866
+#: nscd/connections.c:1867
 #, c-format
 msgid "monitored file `%s` was written to"
 msgstr ""
 
-#: nscd/connections.c:1890
+#: nscd/connections.c:1891
 #, c-format
 msgid "monitored parent directory `%s` was %s, removing watch on `%s`"
 msgstr ""
 
-#: nscd/connections.c:1916
+#: nscd/connections.c:1917
 #, c-format
 msgid "monitored file `%s` was %s, adding watch"
 msgstr ""
 
-#: nscd/connections.c:1928
+#: nscd/connections.c:1929
 #, fuzzy, c-format
 #| msgid "failed to load shared object `%s'"
 msgid "failed to add file watch `%s`: %s"
 msgstr "αποτυχία φόρτωσης διαμοιραζομένου αντικειμένου `%s'"
 
-#: nscd/connections.c:2106 nscd/connections.c:2271
+#: nscd/connections.c:2107 nscd/connections.c:2272
 #, c-format
 msgid "disabled inotify-based monitoring after read error %d"
 msgstr ""
 
-#: nscd/connections.c:2386
+#: nscd/connections.c:2387
 msgid "could not initialize conditional variable"
 msgstr ""
 
-#: nscd/connections.c:2394
+#: nscd/connections.c:2395
 msgid "could not start clean-up thread; terminating"
 msgstr ""
 
-#: nscd/connections.c:2408
+#: nscd/connections.c:2409
 msgid "could not start any worker thread; terminating"
 msgstr ""
 
-#: nscd/connections.c:2463 nscd/connections.c:2465 nscd/connections.c:2481
-#: nscd/connections.c:2491 nscd/connections.c:2509 nscd/connections.c:2520
-#: nscd/connections.c:2530
+#: nscd/connections.c:2464 nscd/connections.c:2466 nscd/connections.c:2482
+#: nscd/connections.c:2492 nscd/connections.c:2510 nscd/connections.c:2521
+#: nscd/connections.c:2531
 #, c-format
 msgid "Failed to run nscd as user '%s'"
 msgstr ""
 
-#: nscd/connections.c:2483
+#: nscd/connections.c:2484
 msgid "initial getgrouplist failed"
 msgstr ""
 
-#: nscd/connections.c:2492
+#: nscd/connections.c:2493
 #, fuzzy
 #| msgid "lstat failed"
 msgid "getgrouplist failed"
 msgstr "το lstat απέτυχε"
 
-#: nscd/connections.c:2510
+#: nscd/connections.c:2511
 #, fuzzy
 #| msgid "fstat failed"
 msgid "setgroups failed"
@@ -4242,25 +4246,25 @@ msgstr ""
 msgid "no more memory for database '%s'"
 msgstr "Δεν υπάρχουν άλλες καταχωρίσεις στο χάρτη της βάσης δεδομένων"
 
-#: nscd/netgroupcache.c:121
+#: nscd/netgroupcache.c:122
 #, fuzzy, c-format
 #| msgid "Haven't found \"%s\" in group cache!"
 msgid "Haven't found \"%s\" in netgroup cache!"
 msgstr "Δε βρέθηκε το \"%s\" στην λανθάνουσα μνήμη ομάδας!"
 
-#: nscd/netgroupcache.c:123
+#: nscd/netgroupcache.c:124
 #, fuzzy, c-format
 #| msgid "Haven't found \"%s\" in group cache!"
 msgid "Reloading \"%s\" in netgroup cache!"
 msgstr "Δε βρέθηκε το \"%s\" στην λανθάνουσα μνήμη ομάδας!"
 
-#: nscd/netgroupcache.c:469
+#: nscd/netgroupcache.c:470
 #, fuzzy, c-format
 #| msgid "Haven't found \"%s\" in group cache!"
 msgid "Haven't found \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr "Δε βρέθηκε το \"%s\" στην λανθάνουσα μνήμη ομάδας!"
 
-#: nscd/netgroupcache.c:472
+#: nscd/netgroupcache.c:473
 #, fuzzy, c-format
 #| msgid "Haven't found \"%s\" in group cache!"
 msgid "Reloading \"%s (%s,%s,%s)\" in netgroup cache!"
@@ -4427,27 +4431,27 @@ msgstr "Σφάλμα επεξεργασίας: %s"
 msgid "Must specify user name for server-user option"
 msgstr ""
 
-#: nscd/nscd_conf.c:198
+#: nscd/nscd_conf.c:201
 #, c-format
 msgid "Must specify user name for stat-user option"
 msgstr ""
 
-#: nscd/nscd_conf.c:255
+#: nscd/nscd_conf.c:259
 #, c-format
 msgid "Must specify value for restart-interval option"
 msgstr ""
 
-#: nscd/nscd_conf.c:269
+#: nscd/nscd_conf.c:273
 #, c-format
 msgid "Unknown option: %s %s %s"
 msgstr "Άγνωστη επιλογή: %s %s %s"
 
-#: nscd/nscd_conf.c:282
+#: nscd/nscd_conf.c:286
 #, c-format
 msgid "cannot get current working directory: %s; disabling paranoia mode"
 msgstr ""
 
-#: nscd/nscd_conf.c:302
+#: nscd/nscd_conf.c:306
 #, c-format
 msgid "maximum file size for %s database too small"
 msgstr ""
@@ -5022,7 +5026,7 @@ msgstr "Πολύ μεγάλη κανονική έκφραση"
 msgid "Unmatched ) or \\)"
 msgstr "Αταίριαστο ) ή \\)"
 
-#: posix/regcomp.c:689
+#: posix/regcomp.c:676
 msgid "No previous regular expression"
 msgstr "Δεν υπάρχει προηγούμενη κανονική έκφραση"
 
@@ -5249,7 +5253,7 @@ msgstr "Δεν υπάρχει διαθέσιμος χώρος ενταμίευσ
 msgid "Input message available"
 msgstr "Δεν υπάρχει διαθέσιμος χώρος ενταμίευσης"
 
-#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:381 timezone/zic.c:520
+#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:375 timezone/zic.c:561
 msgid "I/O error"
 msgstr "Σφάλμα εισόδου/εξόδου"
 
@@ -6607,56 +6611,69 @@ msgid "You really blew it this time"
 msgstr "Πραγματικά την έκανες αυτή τη φορά"
 
 #. TRANS Go home and have a glass of warm, dairy-fresh milk.
-#: sysdeps/gnu/errlist.c:978
+#. TRANS @c Okay.  Since you are dying to know, I'll tell you.
+#. TRANS @c This is a joke, obviously.  There is a children's song which begins,
+#. TRANS @c "Old McDonald had a farm, e-i-e-i-o."  Every time I see the (real)
+#. TRANS @c errno macro EIO, I think about that song.  Probably most of my
+#. TRANS @c compatriots who program on Unix do, too.  One of them must have stayed
+#. TRANS @c up a little too late one night and decided to add it to Hurd or Glibc.
+#. TRANS @c Whoever did it should be castigated, but it made me laugh.
+#. TRANS @c  --jtobey@channel1.com
+#. TRANS @c
+#. TRANS @c "bought the farm" means "died".  -jtobey
+#. TRANS @c
+#. TRANS @c Translators, please do not translate this litteraly, translate it into
+#. TRANS @c an idiomatic funny way of saying that the computer died.
+#: sysdeps/gnu/errlist.c:991
 msgid "Computer bought the farm"
 msgstr "Ο υπολογιστής πήγε για βρούβες"
 
 #. TRANS This error code has no purpose.
-#: sysdeps/gnu/errlist.c:987
+#: sysdeps/gnu/errlist.c:1000
 msgid "Gratuitous error"
 msgstr "Αδικαιολόγητο λάθος"
 
-#: sysdeps/gnu/errlist.c:995
+#: sysdeps/gnu/errlist.c:1008
 msgid "Bad message"
 msgstr "Εσφαλμένο μήνυμα"
 
-#: sysdeps/gnu/errlist.c:1003
+#: sysdeps/gnu/errlist.c:1016
 msgid "Identifier removed"
 msgstr "Προσδιοριστής αφαιρέθηκε"
 
-#: sysdeps/gnu/errlist.c:1011
+#: sysdeps/gnu/errlist.c:1024
 msgid "Multihop attempted"
 msgstr "Προσπάθεια multihop"
 
-#: sysdeps/gnu/errlist.c:1019
+#: sysdeps/gnu/errlist.c:1032
 msgid "No data available"
 msgstr "Δεν υπάρχουν διαθέσιμα δεδομένα"
 
-#: sysdeps/gnu/errlist.c:1027
+#: sysdeps/gnu/errlist.c:1040
 msgid "Link has been severed"
 msgstr "Ο σύνδεσμος έσπασε"
 
-#: sysdeps/gnu/errlist.c:1035
+#: sysdeps/gnu/errlist.c:1048
 msgid "No message of desired type"
 msgstr "Κανένα μήνυμα επιθυμητού τύπου"
 
-#: sysdeps/gnu/errlist.c:1043
+#: sysdeps/gnu/errlist.c:1056
 msgid "Out of streams resources"
 msgstr "Δεν απομείναν πόροι ροής(streams)"
 
-#: sysdeps/gnu/errlist.c:1051
+#: sysdeps/gnu/errlist.c:1064
 msgid "Device not a stream"
 msgstr "Η συσκευή δεν είναι ροής"
 
-#: sysdeps/gnu/errlist.c:1059
+#: sysdeps/gnu/errlist.c:1072
 msgid "Value too large for defined data type"
 msgstr "Η τιμή είναι πολύ μεγάλη για καθορισμένο τύπο δεδομένων"
 
-#: sysdeps/gnu/errlist.c:1067
+#: sysdeps/gnu/errlist.c:1080
 msgid "Protocol error"
 msgstr "Σφάλμα πρωτοκόλλου"
 
-#: sysdeps/gnu/errlist.c:1075
+#: sysdeps/gnu/errlist.c:1088
 msgid "Timer expired"
 msgstr "Ο χρονομετρητής έληξε"
 
@@ -6664,203 +6681,203 @@ msgstr "Ο χρονομετρητής έληξε"
 #. TRANS completed.  @xref{Asynchronous I/O}.  When you call @code{aio_cancel},
 #. TRANS the normal result is for the operations affected to complete with this
 #. TRANS error; @pxref{Cancel AIO Operations}.
-#: sysdeps/gnu/errlist.c:1087
+#: sysdeps/gnu/errlist.c:1100
 msgid "Operation canceled"
 msgstr "Η λειτουργία ακυρώθηκε"
 
-#: sysdeps/gnu/errlist.c:1095
+#: sysdeps/gnu/errlist.c:1108
 msgid "Owner died"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1103
+#: sysdeps/gnu/errlist.c:1116
 msgid "State not recoverable"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1111
+#: sysdeps/gnu/errlist.c:1124
 msgid "Interrupted system call should be restarted"
 msgstr "Η διακοπείσα κλήση συστήματος θα πρέπει να επανακινηθεί"
 
-#: sysdeps/gnu/errlist.c:1119
+#: sysdeps/gnu/errlist.c:1132
 msgid "Channel number out of range"
 msgstr "Ο αριθμός των καναλιών είναι έξω από τα όρια"
 
-#: sysdeps/gnu/errlist.c:1127
+#: sysdeps/gnu/errlist.c:1140
 msgid "Level 2 not synchronized"
 msgstr "Επίπεδο 2 δεν συγχρονίστηκε"
 
-#: sysdeps/gnu/errlist.c:1135
+#: sysdeps/gnu/errlist.c:1148
 msgid "Level 3 halted"
 msgstr "Επίπεδο 3 σταμάτησε"
 
-#: sysdeps/gnu/errlist.c:1143
+#: sysdeps/gnu/errlist.c:1156
 msgid "Level 3 reset"
 msgstr "Επίπεδο 3 επαναφέρθηκε"
 
-#: sysdeps/gnu/errlist.c:1151
+#: sysdeps/gnu/errlist.c:1164
 msgid "Link number out of range"
 msgstr "Ο αριθμός σύνδεσμου είναι έξω από το όριο"
 
-#: sysdeps/gnu/errlist.c:1159
+#: sysdeps/gnu/errlist.c:1172
 msgid "Protocol driver not attached"
 msgstr "Ο οδηγός πρωτοκόλλου δεν έχει προσκολληθεί"
 
-#: sysdeps/gnu/errlist.c:1167
+#: sysdeps/gnu/errlist.c:1180
 msgid "No CSI structure available"
 msgstr "Δεν είναι διαθέσιμη η CSI δομή(structure)"
 
-#: sysdeps/gnu/errlist.c:1175
+#: sysdeps/gnu/errlist.c:1188
 msgid "Level 2 halted"
 msgstr "Επίπεδο 2 σταμάτησε"
 
-#: sysdeps/gnu/errlist.c:1183
+#: sysdeps/gnu/errlist.c:1196
 msgid "Invalid exchange"
 msgstr "Μη έγκυρη ανταλλαγή"
 
-#: sysdeps/gnu/errlist.c:1191
+#: sysdeps/gnu/errlist.c:1204
 msgid "Invalid request descriptor"
 msgstr "Μη έγκυρος περιγραφέας αίτησης"
 
-#: sysdeps/gnu/errlist.c:1199
+#: sysdeps/gnu/errlist.c:1212
 msgid "Exchange full"
 msgstr "Ανταλλαγή πλήρης"
 
-#: sysdeps/gnu/errlist.c:1207
+#: sysdeps/gnu/errlist.c:1220
 msgid "No anode"
 msgstr "Κανένα anode"
 
-#: sysdeps/gnu/errlist.c:1215
+#: sysdeps/gnu/errlist.c:1228
 msgid "Invalid request code"
 msgstr "Μη έγκυρος κώδικας αίτησης"
 
-#: sysdeps/gnu/errlist.c:1223
+#: sysdeps/gnu/errlist.c:1236
 msgid "Invalid slot"
 msgstr "Μη έγκυρη οπή"
 
-#: sysdeps/gnu/errlist.c:1231
+#: sysdeps/gnu/errlist.c:1244
 msgid "File locking deadlock error"
 msgstr "Το κλείδωμα αρχείου κατέληξε σε σφάλμα αδιεξόδου"
 
-#: sysdeps/gnu/errlist.c:1239
+#: sysdeps/gnu/errlist.c:1252
 msgid "Bad font file format"
 msgstr "Εσφαλμένη διαμόρφωση αρχείου γραμματοσειράς"
 
-#: sysdeps/gnu/errlist.c:1247
+#: sysdeps/gnu/errlist.c:1260
 msgid "Machine is not on the network"
 msgstr "Το μηχάνημα δεν είναι στο δίκτυο"
 
-#: sysdeps/gnu/errlist.c:1255
+#: sysdeps/gnu/errlist.c:1268
 msgid "Package not installed"
 msgstr "Το πακέτο δεν εγκαταστάθηκε"
 
-#: sysdeps/gnu/errlist.c:1263
+#: sysdeps/gnu/errlist.c:1276
 msgid "Advertise error"
 msgstr "Σφάλμα διαφήμισης"
 
-#: sysdeps/gnu/errlist.c:1271
+#: sysdeps/gnu/errlist.c:1284
 msgid "Srmount error"
 msgstr "Σφάλμα srmount"
 
-#: sysdeps/gnu/errlist.c:1279
+#: sysdeps/gnu/errlist.c:1292
 msgid "Communication error on send"
 msgstr "Σφάλμα επικοινωνίας κατά την αποστολή"
 
-#: sysdeps/gnu/errlist.c:1287
+#: sysdeps/gnu/errlist.c:1300
 msgid "RFS specific error"
 msgstr "Συγκεκριμένο με RFS σφάλμα"
 
-#: sysdeps/gnu/errlist.c:1295
+#: sysdeps/gnu/errlist.c:1308
 msgid "Name not unique on network"
 msgstr "Το όνομα δεν είναι μοναδικό στο δίκτυο"
 
-#: sysdeps/gnu/errlist.c:1303
+#: sysdeps/gnu/errlist.c:1316
 msgid "File descriptor in bad state"
 msgstr "Ο περιγραφέας αρχείου σε κακή κατάσταση"
 
-#: sysdeps/gnu/errlist.c:1311
+#: sysdeps/gnu/errlist.c:1324
 msgid "Remote address changed"
 msgstr "Η απομακρυσμένη διεύθυνση άλλαξε"
 
-#: sysdeps/gnu/errlist.c:1319
+#: sysdeps/gnu/errlist.c:1332
 msgid "Can not access a needed shared library"
 msgstr "Δεν είναι δυνατή η προσπέλαση μιας αναγκαίας διαμοιραζόμενης βιβλιοθήκης"
 
-#: sysdeps/gnu/errlist.c:1327
+#: sysdeps/gnu/errlist.c:1340
 msgid "Accessing a corrupted shared library"
 msgstr "Προσπελαύνεται μια κατεστραμμένη διαμοιραζόμενη βιβλιοθήκη"
 
-#: sysdeps/gnu/errlist.c:1335
+#: sysdeps/gnu/errlist.c:1348
 msgid ".lib section in a.out corrupted"
 msgstr "Το τμήμα .lib στο a.out είναι κατεστραμμένο"
 
-#: sysdeps/gnu/errlist.c:1343
+#: sysdeps/gnu/errlist.c:1356
 msgid "Attempting to link in too many shared libraries"
 msgstr "Προσπάθεια σύνδεσης σε πάρα πολλές διαμοιραζόμενες βιβλιοθήκες"
 
-#: sysdeps/gnu/errlist.c:1351
+#: sysdeps/gnu/errlist.c:1364
 msgid "Cannot exec a shared library directly"
 msgstr "Δεν είναι δυνατή η άμεση εκτέλεση διαμοιραζόμενης βιβλιοθήκης"
 
-#: sysdeps/gnu/errlist.c:1359
+#: sysdeps/gnu/errlist.c:1372
 msgid "Streams pipe error"
 msgstr "Σφάλμα σωλήνωσης ροής"
 
-#: sysdeps/gnu/errlist.c:1367
+#: sysdeps/gnu/errlist.c:1380
 msgid "Structure needs cleaning"
 msgstr "Η δομή χρειάζεται καθάρισμα"
 
-#: sysdeps/gnu/errlist.c:1375
+#: sysdeps/gnu/errlist.c:1388
 msgid "Not a XENIX named type file"
 msgstr "Δεν είναι XENIX τύπος επώνυμου αρχείου"
 
-#: sysdeps/gnu/errlist.c:1383
+#: sysdeps/gnu/errlist.c:1396
 msgid "No XENIX semaphores available"
 msgstr "Δεν είναι διαθέσιμοι οι XENIX σημαφόροι"
 
-#: sysdeps/gnu/errlist.c:1391
+#: sysdeps/gnu/errlist.c:1404
 msgid "Is a named type file"
 msgstr "Είναι ένα επώνυμο είδος αρχείου"
 
-#: sysdeps/gnu/errlist.c:1399
+#: sysdeps/gnu/errlist.c:1412
 msgid "Remote I/O error"
 msgstr "Απομακρυσμένο σφάλμα εισόδου/εξόδου"
 
-#: sysdeps/gnu/errlist.c:1407
+#: sysdeps/gnu/errlist.c:1420
 msgid "No medium found"
 msgstr "Δεν βρέθηκε μέσο"
 
-#: sysdeps/gnu/errlist.c:1415
+#: sysdeps/gnu/errlist.c:1428
 msgid "Wrong medium type"
 msgstr "Εσφαλμένο είδος μέσου"
 
-#: sysdeps/gnu/errlist.c:1423
+#: sysdeps/gnu/errlist.c:1436
 #, fuzzy
 #| msgid "Resource temporarily unavailable"
 msgid "Required key not available"
 msgstr "Ο πόρος είναι προσωρινά μη διαθέσιμος"
 
-#: sysdeps/gnu/errlist.c:1431
+#: sysdeps/gnu/errlist.c:1444
 #, fuzzy
 #| msgid "Cache expired"
 msgid "Key has expired"
 msgstr "Τα περιεχόμενα της λανθάνουσας μνήμης έληξαν"
 
-#: sysdeps/gnu/errlist.c:1439
+#: sysdeps/gnu/errlist.c:1452
 #, fuzzy
 #| msgid "Link has been severed"
 msgid "Key has been revoked"
 msgstr "Ο σύνδεσμος έσπασε"
 
-#: sysdeps/gnu/errlist.c:1447
+#: sysdeps/gnu/errlist.c:1460
 msgid "Key was rejected by service"
 msgstr ""
 
-#: sysdeps/gnu/errlist.c:1455
+#: sysdeps/gnu/errlist.c:1468
 #, fuzzy
 #| msgid "Operation not applicable"
 msgid "Operation not possible due to RF-kill"
 msgstr "Η λειτουργία δεν είναι εφαρμόσιμη"
 
-#: sysdeps/gnu/errlist.c:1463
+#: sysdeps/gnu/errlist.c:1476
 msgid "Memory page has hardware error"
 msgstr ""
 
@@ -6997,27 +7014,27 @@ msgstr ""
 msgid "can't disable CET"
 msgstr ""
 
-#: timezone/zdump.c:338
+#: timezone/zdump.c:332
 msgid "has fewer than 3 characters"
 msgstr ""
 
-#: timezone/zdump.c:340
+#: timezone/zdump.c:334
 msgid "has more than 6 characters"
 msgstr ""
 
-#: timezone/zdump.c:342
+#: timezone/zdump.c:336
 msgid "has characters other than ASCII alphanumerics, '-' or '+'"
 msgstr ""
 
-#: timezone/zdump.c:347
+#: timezone/zdump.c:341
 #, c-format
 msgid "%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"
 msgstr ""
 
-#: timezone/zdump.c:393
+#: timezone/zdump.c:387
 #, c-format
 msgid ""
-"%s: usage: %s OPTIONS ZONENAME ...\n"
+"%s: usage: %s OPTIONS TIMEZONE ...\n"
 "Options include:\n"
 "  -c [L,]U   Start at year L (default -500), end before year U (default 2500)\n"
 "  -t [L,]U   Start at time L, end before time U (in seconds since 1970)\n"
@@ -7030,53 +7047,59 @@ msgid ""
 "Report bugs to %s.\n"
 msgstr ""
 
-#: timezone/zdump.c:479
+#: timezone/zdump.c:473
 #, fuzzy, c-format
 #| msgid "%s: Too many arguments\n"
 msgid "%s: wild -c argument %s\n"
 msgstr "%s: Πάρα πολλά ορίσματα\n"
 
-#: timezone/zdump.c:512
+#: timezone/zdump.c:506
 #, fuzzy, c-format
 #| msgid "%s: Too many arguments\n"
 msgid "%s: wild -t argument %s\n"
 msgstr "%s: Πάρα πολλά ορίσματα\n"
 
-#: timezone/zic.c:398
+#: timezone/zic.c:429
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: Η μνήμη εξαντλήθηκε: %s\n"
 
-#: timezone/zic.c:406
+#: timezone/zic.c:437
 #, fuzzy
 #| msgid "time overflow"
 msgid "size overflow"
 msgstr "υπερχείλιση ώρας"
 
-#: timezone/zic.c:454
+#: timezone/zic.c:447
+#, fuzzy
+#| msgid "time overflow"
+msgid "alignment overflow"
+msgstr "υπερχείλιση ώρας"
+
+#: timezone/zic.c:495
 #, fuzzy
 #| msgid "time overflow"
 msgid "integer overflow"
 msgstr "υπερχείλιση ώρας"
 
-#: timezone/zic.c:488
+#: timezone/zic.c:529
 #, fuzzy, c-format
 #| msgid "\"%s\", line %d: %s"
 msgid "\"%s\", line %<PRIdMAX>: "
 msgstr "\"%s\", γραμμή %d: %s"
 
-#: timezone/zic.c:491
+#: timezone/zic.c:532
 #, fuzzy, c-format
 #| msgid " (rule from \"%s\", line %d)"
 msgid " (rule from \"%s\", line %<PRIdMAX>)"
 msgstr " (κανόνας από \"%s\", γραμμή %d)"
 
-#: timezone/zic.c:510
+#: timezone/zic.c:551
 #, c-format
 msgid "warning: "
 msgstr "προειδοποίηση: "
 
-#: timezone/zic.c:535
+#: timezone/zic.c:576
 #, fuzzy, c-format
 #| msgid ""
 #| "%s: usage is %s [ -s ] [ -v ] [ -l localtime ] [ -p posixrules ] \\\n"
@@ -7084,410 +7107,431 @@ msgstr "προειδοποίηση: "
 msgid ""
 "%s: usage is %s [ --version ] [ --help ] [ -v ] \\\n"
 "\t[ -l localtime ] [ -p posixrules ] [ -d directory ] \\\n"
-"\t[ -L leapseconds ] [ filename ... ]\n"
+"\t[ -t localtime-link ] [ -L leapseconds ] [ filename ... ]\n"
 "\n"
 "Report bugs to %s.\n"
 msgstr ""
 "%s: η χρήση είναι %s [ -s ] [ -v ] [ -l τοπική ώρα ] [ -p κανόνες posix ] \\\n"
 "\t[ -d κατάλογος ] [ -L δευτερόλεπτα αναπήδησης ] [ -y τύπος έτους ] [ αρχείο ... ]\n"
 
-#: timezone/zic.c:558
+#: timezone/zic.c:599
 #, fuzzy, c-format
 #| msgid "%s: Can't create %s: %s\n"
 msgid "%s: Can't chdir to %s: %s\n"
 msgstr "%s: Δεν είναι δυνατόν να δημιουργηθεί %s: %s\n"
 
-#: timezone/zic.c:590
+#: timezone/zic.c:632
 msgid "wild compilation-time specification of zic_t"
 msgstr ""
 
-#: timezone/zic.c:610
+#: timezone/zic.c:652
 #, c-format
 msgid "%s: More than one -d option specified\n"
 msgstr "%s: Περισσότερες από μία -d επιλογές καθορίστηκαν\n"
 
-#: timezone/zic.c:620
+#: timezone/zic.c:662
 #, c-format
 msgid "%s: More than one -l option specified\n"
 msgstr "%s: Περισσότερες από μία -l επιλογές καθορίστηκαν\n"
 
-#: timezone/zic.c:630
+#: timezone/zic.c:672
 #, c-format
 msgid "%s: More than one -p option specified\n"
 msgstr "%s: Περισσότερες από μία -p επιλογές καθορίστηκαν\n"
 
-#: timezone/zic.c:640
+#: timezone/zic.c:680
+#, fuzzy, c-format
+#| msgid "%s: More than one -L option specified\n"
+msgid "%s: More than one -t option specified\n"
+msgstr "%s: Περισσότερες από μία -L επιλογές καθορίστηκαν\n"
+
+#: timezone/zic.c:689
+msgid "-y is obsolescent"
+msgstr ""
+
+#: timezone/zic.c:693
 #, c-format
 msgid "%s: More than one -y option specified\n"
 msgstr "%s: Περισσότερες από μία -y επιλογές καθορίστηκαν\n"
 
-#: timezone/zic.c:650
+#: timezone/zic.c:703
 #, c-format
 msgid "%s: More than one -L option specified\n"
 msgstr "%s: Περισσότερες από μία -L επιλογές καθορίστηκαν\n"
 
-#: timezone/zic.c:659
+#: timezone/zic.c:712
 msgid "-s ignored"
 msgstr ""
 
-#: timezone/zic.c:698
+#: timezone/zic.c:753
 msgid "link to link"
 msgstr ""
 
-#: timezone/zic.c:701 timezone/zic.c:705
+#: timezone/zic.c:756 timezone/zic.c:760
 #, fuzzy
 #| msgid "Too many links"
 msgid "command line"
 msgstr "Υπερβολικά πολλοί σύνδεσμοι"
 
-#: timezone/zic.c:721
+#: timezone/zic.c:776
 #, fuzzy
 #| msgid "Bad file number"
 msgid "empty file name"
 msgstr "Εσφαλμένος αριθμός αρχείου"
 
-#: timezone/zic.c:724
+#: timezone/zic.c:779
 #, c-format
 msgid "file name '%s' begins with '/'"
 msgstr ""
 
-#: timezone/zic.c:734
+#: timezone/zic.c:789
 #, c-format
 msgid "file name '%s' contains '%.*s' component"
 msgstr ""
 
-#: timezone/zic.c:740
+#: timezone/zic.c:795
 #, c-format
 msgid "file name '%s' component contains leading '-'"
 msgstr ""
 
-#: timezone/zic.c:743
+#: timezone/zic.c:798
 #, c-format
 msgid "file name '%s' contains overlength component '%.*s...'"
 msgstr ""
 
-#: timezone/zic.c:771
+#: timezone/zic.c:826
 #, c-format
 msgid "file name '%s' contains byte '%c'"
 msgstr ""
 
-#: timezone/zic.c:772
+#: timezone/zic.c:827
 #, c-format
 msgid "file name '%s' contains byte '\\%o'"
 msgstr ""
 
-#: timezone/zic.c:842
+#: timezone/zic.c:897
 #, fuzzy, c-format
 #| msgid "%s: Can't link from %s to %s: %s\n"
 msgid "%s: link from %s/%s failed: %s\n"
 msgstr "%s: Δεν είναι δυνατόν να συνδεθεί το %s με το %s: %s\n"
 
-#: timezone/zic.c:852 timezone/zic.c:1815
+#: timezone/zic.c:907 timezone/zic.c:1876
 #, fuzzy, c-format
 #| msgid "%s: Can't remove %s: %s\n"
 msgid "%s: Can't remove %s/%s: %s\n"
 msgstr "%s: Δεν είναι δυνατόν να αφαιρεθεί το %s: %s\n"
 
-#: timezone/zic.c:874
+#: timezone/zic.c:931
 #, c-format
 msgid "symbolic link used because hard link failed: %s"
 msgstr ""
 
-#: timezone/zic.c:882
+#: timezone/zic.c:939
 #, fuzzy, c-format
 #| msgid "%s: Can't create %s: %s\n"
 msgid "%s: Can't read %s/%s: %s\n"
 msgstr "%s: Δεν είναι δυνατόν να δημιουργηθεί %s: %s\n"
 
-#: timezone/zic.c:889 timezone/zic.c:1828
+#: timezone/zic.c:946 timezone/zic.c:1889
 #, fuzzy, c-format
 #| msgid "%s: Can't create %s: %s\n"
 msgid "%s: Can't create %s/%s: %s\n"
 msgstr "%s: Δεν είναι δυνατόν να δημιουργηθεί %s: %s\n"
 
-#: timezone/zic.c:898
+#: timezone/zic.c:955
 #, c-format
 msgid "copy used because hard link failed: %s"
 msgstr ""
 
-#: timezone/zic.c:901
+#: timezone/zic.c:958
 #, c-format
 msgid "copy used because symbolic link failed: %s"
 msgstr ""
 
-#: timezone/zic.c:1013 timezone/zic.c:1015
+#: timezone/zic.c:1032 timezone/zic.c:1034
 msgid "same rule name in multiple files"
 msgstr "ο ίδιος κανόνας σε πολλαπλά αρχεία"
 
-#: timezone/zic.c:1056
-msgid "unruly zone"
-msgstr "άτακτη ζώνη"
-
-#: timezone/zic.c:1063
+#: timezone/zic.c:1081
 #, c-format
 msgid "%s in ruleless zone"
 msgstr "%s σε ακανόνιστη ζώνη"
 
-#: timezone/zic.c:1083
+#: timezone/zic.c:1101
 msgid "standard input"
 msgstr "κανονική είσοδος"
 
-#: timezone/zic.c:1088
+#: timezone/zic.c:1106
 #, c-format
 msgid "%s: Can't open %s: %s\n"
 msgstr "%s: Δεν είναι δυνατόν να ανοιχτεί το %s: %s\n"
 
-#: timezone/zic.c:1099
+#: timezone/zic.c:1117
 msgid "line too long"
 msgstr "πολύ μεγάλη γραμμή"
 
-#: timezone/zic.c:1119
+#: timezone/zic.c:1139
 msgid "input line of unknown type"
 msgstr "γραμμή εισαγωγής αγνώστου τύπου"
 
-#: timezone/zic.c:1134
-#, fuzzy, c-format
-#| msgid "%s: Leap line in non leap seconds file %s\n"
-msgid "%s: Leap line in non leap seconds file %s"
-msgstr "%s: Γραμμή αναπήδησης(leap) στο αρχείο μη αναπήδησης δευτερολέπτων %s\n"
-
-#: timezone/zic.c:1142 timezone/zic.c:1547 timezone/zic.c:1569
+#: timezone/zic.c:1158 timezone/zic.c:1593 timezone/zic.c:1615
 #, c-format
 msgid "%s: panic: Invalid l_value %d\n"
 msgstr "%s: πανικός: Μη έγκυρη l_value %d\n"
 
-#: timezone/zic.c:1151
+#: timezone/zic.c:1167
 msgid "expected continuation line not found"
 msgstr "αναμενόταν γραμμή παράτασης και δεν βρέθηκε"
 
-#: timezone/zic.c:1193 timezone/zic.c:2976
+#: timezone/zic.c:1203
+msgid "fractional seconds rejected by pre-2018 versions of zic"
+msgstr ""
+
+#: timezone/zic.c:1221 timezone/zic.c:3078
 msgid "time overflow"
 msgstr "υπερχείλιση ώρας"
 
-#: timezone/zic.c:1198
+#: timezone/zic.c:1227
 msgid "values over 24 hours not handled by pre-2007 versions of zic"
 msgstr ""
 
-#: timezone/zic.c:1209
-msgid "wrong number of fields on Rule line"
-msgstr "λάθος αριθμός πεδίων στη γραμμή Rule"
-
-#: timezone/zic.c:1213
-msgid "nameless rule"
-msgstr "κανόνας χωρίς όνομα"
-
-#: timezone/zic.c:1218
+#: timezone/zic.c:1245
 msgid "invalid saved time"
 msgstr "μη έγκυρη σωσμένη ώρα"
 
-#: timezone/zic.c:1235
+#: timezone/zic.c:1256
+msgid "wrong number of fields on Rule line"
+msgstr "λάθος αριθμός πεδίων στη γραμμή Rule"
+
+#: timezone/zic.c:1265
+#, fuzzy, c-format
+#| msgid "Invalid argument"
+msgid "Invalid rule name \"%s\""
+msgstr "Μη έγκυρη παράμετρος"
+
+#: timezone/zic.c:1287
 msgid "wrong number of fields on Zone line"
 msgstr "λάθος αριθμός πεδίων στη γραμμή Zone"
 
-#: timezone/zic.c:1240
+#: timezone/zic.c:1292
 #, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
 msgstr "\"Ζώνη %s\" γραμμή και επιλογή -l είναι αμοιβαίως αποκλειόμενα"
 
-#: timezone/zic.c:1246
+#: timezone/zic.c:1298
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr "\"Ζώνη %s\" γραμμή και επιλογή -p είναι αμοιβαίως αποκλειόμενα"
 
-#: timezone/zic.c:1253
+#: timezone/zic.c:1305
 #, fuzzy, c-format
 #| msgid "duplicate zone name %s (file \"%s\", line %d)"
 msgid "duplicate zone name %s (file \"%s\", line %<PRIdMAX>)"
 msgstr "διπλό όνομα ζώνης %s (αρχείο \"%s\", γραμμή %d)"
 
-#: timezone/zic.c:1267
+#: timezone/zic.c:1319
 msgid "wrong number of fields on Zone continuation line"
 msgstr "λάθος αριθμός πεδίων στη γραμμή παράτασης Zone"
 
-#: timezone/zic.c:1307
+#: timezone/zic.c:1359
 #, fuzzy
 #| msgid "invalid UTC offset"
 msgid "invalid UT offset"
 msgstr "μη έγκυρη μετατόπιση UTC"
 
-#: timezone/zic.c:1311
+#: timezone/zic.c:1363
 msgid "invalid abbreviation format"
 msgstr "μη έγκυρη διαμόρφωση συντόμευσης"
 
-#: timezone/zic.c:1320
+#: timezone/zic.c:1372
 #, c-format
 msgid "format '%s' not handled by pre-2015 versions of zic"
 msgstr ""
 
-#: timezone/zic.c:1347
+#: timezone/zic.c:1399
 msgid "Zone continuation line end time is not after end time of previous line"
 msgstr "Ο χρόνος τέλους της γραμμής συνέχισης της ζώνης δεν είναι μετά από το χρόνο τέλους της προηγούμενης γραμμής"
 
-#: timezone/zic.c:1374
+#: timezone/zic.c:1426
 msgid "wrong number of fields on Leap line"
 msgstr "λάθος αριθμός πεδίων στη γραμμή Leap"
 
-#: timezone/zic.c:1383
+#: timezone/zic.c:1435
 msgid "invalid leaping year"
 msgstr "μη έγκυρος χρόνος αναπήδης"
 
-#: timezone/zic.c:1403 timezone/zic.c:1501
+#: timezone/zic.c:1455 timezone/zic.c:1547
 msgid "invalid month name"
 msgstr "μη έγκυρο όνομα μήνα"
 
-#: timezone/zic.c:1416 timezone/zic.c:1614 timezone/zic.c:1628
+#: timezone/zic.c:1468 timezone/zic.c:1663 timezone/zic.c:1677
 msgid "invalid day of month"
 msgstr "μη έγκυρη μέρα του μήνα"
 
-#: timezone/zic.c:1421
+#: timezone/zic.c:1473
 msgid "time too small"
 msgstr ""
 
-#: timezone/zic.c:1425
+#: timezone/zic.c:1477
 #, fuzzy
 #| msgid "File too large"
 msgid "time too large"
 msgstr "Πολύ μεγάλο αρχείο"
 
-#: timezone/zic.c:1429 timezone/zic.c:1530
+#: timezone/zic.c:1481 timezone/zic.c:1576
 msgid "invalid time of day"
 msgstr "μη έγκυρη ώρα της μέρας"
 
-#: timezone/zic.c:1448
+#: timezone/zic.c:1494
 msgid "illegal CORRECTION field on Leap line"
 msgstr "μη έγκυρο CORRECTION πεδίο στη γραμμή αναπήδησης (Leap)"
 
-#: timezone/zic.c:1453
+#: timezone/zic.c:1499
 msgid "illegal Rolling/Stationary field on Leap line"
 msgstr "μη έγκυρο Rolling/Stationary πεδίο στη γραμμή αναπήδησης (Leap)"
 
-#: timezone/zic.c:1459
-msgid "leap second precedes Big Bang"
+#: timezone/zic.c:1505
+msgid "leap second precedes Epoch"
 msgstr ""
 
-#: timezone/zic.c:1472
+#: timezone/zic.c:1518
 msgid "wrong number of fields on Link line"
 msgstr "λάθος αριθμός πεδίων στη γραμμή Link"
 
-#: timezone/zic.c:1476
+#: timezone/zic.c:1522
 msgid "blank FROM field on Link line"
 msgstr "Λευκό πεδίο FROM σε γραμμή Link"
 
-#: timezone/zic.c:1551
+#: timezone/zic.c:1597
 msgid "invalid starting year"
 msgstr "μη έγκυρος χρόνος έναρξης"
 
-#: timezone/zic.c:1573
+#: timezone/zic.c:1619
 msgid "invalid ending year"
 msgstr "μη έγκυρος χρόνος λήξης"
 
-#: timezone/zic.c:1577
+#: timezone/zic.c:1623
 msgid "starting year greater than ending year"
 msgstr "το έτος έναρξης είναι μεγαλύτερος το έτος τερματισμού"
 
-#: timezone/zic.c:1584
+#: timezone/zic.c:1630
 msgid "typed single year"
 msgstr "τυπώθηκε απλός χρόνος"
 
-#: timezone/zic.c:1619
+#: timezone/zic.c:1633
+#, c-format
+msgid "year type \"%s\" is obsolete; use \"-\" instead"
+msgstr ""
+
+#: timezone/zic.c:1668
 msgid "invalid weekday name"
 msgstr "μη έγκυρο όνομα εβδομάδας"
 
-#: timezone/zic.c:1743
+#: timezone/zic.c:1800
 #, c-format
 msgid "reference clients mishandle more than %d transition times"
 msgstr ""
 
-#: timezone/zic.c:1747
+#: timezone/zic.c:1804
 msgid "pre-2014 clients may mishandle more than 1200 transition times"
 msgstr ""
 
-#: timezone/zic.c:1858
+#: timezone/zic.c:1920
 #, fuzzy
 #| msgid "too many transitions?!"
 msgid "too many transition times"
 msgstr "υπερβολικά πολλές μεταβάσεις;!"
 
-#: timezone/zic.c:2047
+#: timezone/zic.c:2107
 #, c-format
-msgid "%%z UTC offset magnitude exceeds 99:59:59"
+msgid "%%z UT offset magnitude exceeds 99:59:59"
 msgstr ""
 
-#: timezone/zic.c:2424
+#: timezone/zic.c:2488
 msgid "no POSIX environment variable for zone"
 msgstr ""
 
-#: timezone/zic.c:2430
+#: timezone/zic.c:2494
 #, c-format
 msgid "%s: pre-%d clients may mishandle distant timestamps"
 msgstr ""
 
-#: timezone/zic.c:2566
+#: timezone/zic.c:2631
 msgid "two rules for same instant"
 msgstr ""
 
-#: timezone/zic.c:2627
+#: timezone/zic.c:2696
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr ""
 "δεν είναι δυνατόν να καθοριστεί η συντόμευση της ζώνης ώρας για\n"
 "να χρησιμοποιηθεί αμέσως μετά το 'until time'"
 
-#: timezone/zic.c:2725
+#: timezone/zic.c:2785
 msgid "too many local time types"
 msgstr "υπορβολικά πολλοί τύποι τοπικής ώρας"
 
-#: timezone/zic.c:2729
+#: timezone/zic.c:2789
 #, fuzzy
 #| msgid "Link number out of range"
 msgid "UT offset out of range"
 msgstr "Ο αριθμός σύνδεσμου είναι έξω από το όριο"
 
-#: timezone/zic.c:2753
+#: timezone/zic.c:2813
 msgid "too many leap seconds"
 msgstr "υπερβολικά πολλά δευτερόλεπτα αναπήδησης"
 
-#: timezone/zic.c:2759
-msgid "repeated leap second moment"
-msgstr "repeated leap second moment"
+#: timezone/zic.c:2844
+msgid "Leap seconds too close together"
+msgstr ""
 
-#: timezone/zic.c:2830
+#: timezone/zic.c:2891
 msgid "Wild result from command execution"
 msgstr "Αγριο αποτέλεσμα από την εκτέλεση της εντολής"
 
-#: timezone/zic.c:2831
+#: timezone/zic.c:2892
 #, c-format
 msgid "%s: command was '%s', result was %d\n"
 msgstr "%s: η εντολή ήταν '%s', το αποτέλεσμα ήταν %d\n"
 
-#: timezone/zic.c:2961
+#: timezone/zic.c:2998
+#, c-format
+msgid "\"%s\" is undocumented; use \"last%s\" instead"
+msgstr ""
+
+#: timezone/zic.c:3029
+#, c-format
+msgid "\"%s\" is ambiguous in pre-2017c zic"
+msgstr ""
+
+#: timezone/zic.c:3063
 msgid "Odd number of quotation marks"
 msgstr "Περιττός αριθμός εισαγωγικών"
 
-#: timezone/zic.c:3046
+#: timezone/zic.c:3157
 msgid "use of 2/29 in non leap-year"
 msgstr "χρήση του 2/29 σε χρόνο μη δίσεκτο"
 
-#: timezone/zic.c:3081
+#: timezone/zic.c:3192
 msgid "rule goes past start/end of month; will not work with pre-2004 versions of zic"
 msgstr ""
 
-#: timezone/zic.c:3108
+#: timezone/zic.c:3219
 msgid "time zone abbreviation has fewer than 3 characters"
 msgstr ""
 
-#: timezone/zic.c:3110
+#: timezone/zic.c:3221
 msgid "time zone abbreviation has too many characters"
 msgstr ""
 
-#: timezone/zic.c:3112
+#: timezone/zic.c:3223
 msgid "time zone abbreviation differs from POSIX standard"
 msgstr ""
 
-#: timezone/zic.c:3118
+#: timezone/zic.c:3229
 msgid "too many, or too long, time zone abbreviations"
 msgstr "υπερβολικά πολλές, ή πολύ μακρές, συντομεύσεις ζώνης ώρας"
 
-#: timezone/zic.c:3161
+#: timezone/zic.c:3275
 #, fuzzy, c-format
 #| msgid "%s: Can't create directory %s: %s\n"
 msgid "%s: Can't create directory %s: %s"
@@ -7531,6 +7575,9 @@ msgstr "%s: Δεν είναι δυνατόν να δημιουργηθεί ο κ
 
 #~ msgid "%s: Error writing %s\n"
 #~ msgstr "%s: Σφάλμα κατά την εγγραφή του %s\n"
+
+#~ msgid "%s: Leap line in non leap seconds file %s\n"
+#~ msgstr "%s: Γραμμή αναπήδησης(leap) στο αρχείο μη αναπήδησης δευτερολέπτων %s\n"
 
 #, fuzzy
 #~ msgid "%s: character `%s' not defined in charmap while needed as default value"
@@ -7855,6 +7902,9 @@ msgstr "%s: Δεν είναι δυνατόν να δημιουργηθεί ο κ
 #~ msgid "internal error - addtype called with bad ttisstd"
 #~ msgstr "εσωτερικό σφάλμα - κλήθηκε η addtype με κακό ttisstd"
 
+#~ msgid "nameless rule"
+#~ msgstr "κανόνας χωρίς όνομα"
+
 #~ msgid "neither original nor target encoding specified"
 #~ msgstr "δεν έχει οριστεί ούτε αρχική ούτε τελική κωδικοποίηση"
 
@@ -7875,6 +7925,9 @@ msgstr "%s: Δεν είναι δυνατόν να δημιουργηθεί ο κ
 
 #~ msgid "program %lu version %lu ready and waiting\n"
 #~ msgstr "το πρόγραμμα %lu έκδοσης %lu έτοιμο και αναμένει\n"
+
+#~ msgid "repeated leap second moment"
+#~ msgstr "repeated leap second moment"
 
 #~ msgid "rpcinfo: %s is unknown host\n"
 #~ msgstr "rpcinfo: %s είναι άγνωστο σύστημα\n"
@@ -7917,6 +7970,9 @@ msgstr "%s: Δεν είναι δυνατόν να δημιουργηθεί ο κ
 
 #~ msgid "time before zero"
 #~ msgstr "ώρα πριν το μηδέν"
+
+#~ msgid "unruly zone"
+#~ msgstr "άτακτη ζώνη"
 
 #, fuzzy
 #~ msgid "upper limit in range is not higher then lower limit"
