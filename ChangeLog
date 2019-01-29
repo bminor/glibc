@@ -1,5 +1,13 @@
 2019-03-22  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* benchtests/Makefile (USE_CLOCK_GETTIME) Remove.
+	* benchtests/README: Update description.
+	* benchtests/bench-timing.h: Default to hp-timing.
+	* sysdeps/generic/hp-timing.h (HP_TIMING_DIFF, HP_TIMING_ACCUM_NT,
+	HP_TIMING_PRINT): Remove.
+	(HP_TIMING_NOW): Add generic implementation.
+	(hp_timing_t): Change to uint64_t.
+
 	* benchtests/bench-timing.h: Replace HP_TIMING_AVAIL with
 	HP_TIMING_INLINE.
 	* nptl/descr.h: Likewise.

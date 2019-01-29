@@ -20,16 +20,23 @@
 #ifndef _HP_TIMING_H
 #define _HP_TIMING_H	1
 
-/* There are no generic definitions for the times.  We could write something
-   using the `gettimeofday' system call where available but the overhead of
-   the system call might be too high.  */
+#include <time.h>
+#include <stdint.h>
+#include <hp-timing-common.h>
 
-/* Provide dummy definitions.  */
+/* It should not be used for ld.so.  */
 #define HP_TIMING_INLINE	(0)
-typedef int hp_timing_t;
-#define HP_TIMING_NOW(var)
-#define HP_TIMING_DIFF(Diff, Start, End)
-#define HP_TIMING_ACCUM_NT(Sum, Diff)
-#define HP_TIMING_PRINT(Buf, Len, Val)
+
+typedef uint64_t hp_timing_t;
+
+/* The clock_gettime (CLOCK_MONOTONIC) has unspecified starting time,
+   nano-second accuracy, and for some architectues is implemented as
+   vDSO symbol.  */
+#define HP_TIMING_NOW(var) \
+({								\
+  struct timespec tv;						\
+  __clock_gettime (CLOCK_MONOTONIC, &tv);			\
+  (var) = (tv.tv_nsec + UINT64_C(1000000000) * tv.tv_sec);	\
+})
 
 #endif	/* hp-timing.h */
