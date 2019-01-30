@@ -1,3 +1,12 @@
+2019-02-08  Patsy Griffin Franklin  <pfrankli@redhat.com>
+
+	[BZ #21915]
+	* nss/Makefile (test-container): Add tst-nss-files-hosts-long.
+	* nss/tst-nss-files-hosts-long.c: New file.
+	* nss/tst-nss-files-hosts-long.root: New directory.
+	* nss/tst-nss-files-hosts-long.root/etc: Likewise.
+	* nss/tst-nss-files-hosts-long.root/etc/hosts: New file.
+
 2019-02-08  Florian Weimer  <fweimer@redhat.com>
 
 	* include/bits/unistd_ext.h: Remove file.
