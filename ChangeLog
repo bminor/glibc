@@ -1,5 +1,9 @@
 2019-01-31  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* version.h (RELEASE): Set to "development".
+	(VERSION): Set to "2.29.9000".
+	* NEWS: Add section for 2.30.
+
 	* version.h (RELEASE): Set to "stable".
 	(VERSION): Set to "2.29".
 	* include/features.h (__GLIBC_MINOR__): Set to 2.29.
