@@ -1,3 +1,19 @@
+2019-01-31  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24059]
+	* nss/nss_files/files-alias.c (get_next_alias): Handle
+	continuation line without newline at the end.
+	* nss/tst-nss-files-alias-truncated.c: New file.
+	* nss/Makefile [$(build-shared)] (tests): Add
+	tst-nss-files-alias-truncated.
+	(tst-nss-files-alias-truncated): Link with libnss_files.so.
+	* support/namespace.h (struct support_chroot_configuration): Add
+	aliases member.
+	(struct support_chroot): Add path_aliases member.
+	* support/support_chroot.c (support_chroot_create): Handle
+	aliases.
+	(support_chroot_free): Free path_aliases.
+
 2019-01-31  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* version.h (RELEASE): Set to "development".

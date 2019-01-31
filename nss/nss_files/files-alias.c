@@ -333,6 +333,16 @@ get_next_alias (FILE *stream, const char *match, struct aliasent *result,
 		     can be ignored.  */
 		  first_unused[room_left - 1] = '\xff';
 		  line = fgets_unlocked (first_unused, room_left, stream);
+		  if (line == NULL)
+		    {
+		      /* Continuation line without any data and
+			 without a newline at the end.  Treat it as an
+			 empty line and retry, reaching EOF once
+			 more.  */
+		      line = first_unused;
+		      *line = '\0';
+		      continue;
+		    }
 		  if (first_unused[room_left - 1] != '\xff')
 		    goto no_more_room;
 		  cp = strpbrk (line, "#\n");

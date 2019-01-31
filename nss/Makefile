@@ -68,6 +68,7 @@ tests += tst-nss-files-hosts-erange
 tests += tst-nss-files-hosts-multi
 tests += tst-nss-files-hosts-getent
 tests += tst-nss-files-alias-leak
+tests += tst-nss-files-alias-truncated
 endif
 
 # If we have a thread library then we can test cancellation against
@@ -176,3 +177,4 @@ $(objpfx)tst-nss-files-hosts-multi: $(libdl)
 $(objpfx)tst-nss-files-hosts-getent: $(libdl)
 $(objpfx)tst-nss-files-alias-leak: $(libdl)
 $(objpfx)tst-nss-files-alias-leak.out: $(objpfx)/libnss_files.so
+$(objpfx)tst-nss-files-alias-truncated: $(objpfx)/libnss_files.so
