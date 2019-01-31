@@ -19,6 +19,9 @@ stack smashing protector enabled.
 John David Anglin for various fixes to the hppa port.
 
 @item
+Albert ARIBAUD for Y2038 related fixes.
+
+@item
 Ryan S. Arnold for his improvements for Linux on PowerPC and his direction
 as FSF Project Steward for @theglibc{}.
 
@@ -31,6 +34,9 @@ Jeff Bailey for his maintainership of the HPPA architecture.
 
 @item
 Petr Baudis for bug fixes and testing.
+
+@item
+Anton Blanchard for various fixes.
 
 @item
 Stephen R. van den Berg for contributing a highly-optimized
@@ -105,9 +111,6 @@ and wide-character support functions (@file{wctype.h}, @file{wchar.h}, etc.).
 @end itemize
 
 @item
-Wilco Dijkstra for various fixes.
-
-@item
 Richard Earnshaw for continued support and fixes to the various ARM
 machine files.
 
@@ -167,6 +170,9 @@ Richard Henderson for the port to Linux on Alpha
 
 @item
 David Holsgrove for the port to Linux on MicroBlaze.
+
+@item
+Leonhard Holz for various fixes.
 
 @item
 Daniel Jacobowitz for various fixes and enhancements.
@@ -239,6 +245,12 @@ code.
 Chris Leonard for various fixes and enhancements to localedata.
 
 @item
+Ilya Leoshkevich for various fixes.
+
+@item
+Dmitry V. Levin for various fixes.
+
+@item
 Stefan Liebler for various fixes.
 
 @item
@@ -280,6 +292,9 @@ Chris Metcalf for the port to Linux/Tile
 (@code{tilegx-@var{anything}-linux} and
 @code{tilepro-@var{anything}-linux}) and support for the generic Linux
 kernel syscall interface used by several newer ports.
+
+@item
+Jim Meyering for various fixes.
 
 @item
 David Miller for contributing the port to Linux/Sparc
@@ -363,6 +378,9 @@ Maciej W. Rozycki for MIPS fixes, support for ABSOLUTE symbols,
 and various fixes.
 
 @item
+Leonardo Sandoval for various fixes.
+
+@item
 Pravin Satpute for writing sorting rules for some Indian languages.
 
 @item
@@ -384,6 +402,9 @@ Martin Schwidefsky for porting to Linux on s390
 
 @item
 Thomas Schwinge for his contribution to Hurd and the SH architecture.
+
+@item
+Martin Sebor for various fixes.
 
 @item
 Andrew Senkevich for contributing vector math function implementations for x86.
@@ -427,8 +448,14 @@ Samuel Thibault for improving the Hurd port.
 Pino Toscano for various fixes.
 
 @item
+Matt Turner for various fixes to the Alpha port.
+
+@item
 Tim Waugh for the implementation of the POSIX.2 @code{wordexp}
 function family.
+
+@item
+Ulrich Weigand for various fixes to the PowerPC64 and Arm ports.
 
 @item
 Florian Weimer for his maintainership of the network component, for handling
@@ -437,6 +464,9 @@ of security issues, and for various fixes.
 @item
 Zack Weinberg for the @code{explicit_bzero} implementation and for various
 fixes.
+
+@item
+Mark Wielaard for various fixes.
 
 @item
 Eric Youngdale for implementing versioning of objects on the symbol level.

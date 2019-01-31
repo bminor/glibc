@@ -1,3 +1,12 @@
+2019-01-31  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* NEWS: Add the list of bugs fixed in 2.29.
+	* manual/contrib.texi: Update contributors list with some more
+	names.
+	* manual/install.texi: Update latest versions of packages
+	tested.
+	* INSTALL: Regenerated.
+
 2019-01-25  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* po/be.po: Update translations.
