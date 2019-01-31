@@ -1,5 +1,9 @@
 2019-01-31  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* version.h (RELEASE): Set to "stable".
+	(VERSION): Set to "2.29".
+	* include/features.h (__GLIBC_MINOR__): Set to 2.29.
+
 	* NEWS: Add the list of bugs fixed in 2.29.
 	* manual/contrib.texi: Update contributors list with some more
 	names.
