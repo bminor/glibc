@@ -779,16 +779,17 @@ Internet namespace.  It has the following members:
 @table @code
 @item sa_family_t sin_family
 This identifies the address family or format of the socket address.
-You should store the value @code{AF_INET} in this member.
-@xref{Socket Addresses}.
+You should store the value @code{AF_INET} in this member.  The address
+family is stored in host byte order.  @xref{Socket Addresses}.
 
 @item struct in_addr sin_addr
-This is the Internet address of the host machine.  @xref{Host
-Addresses}, and @ref{Host Names}, for how to get a value to store
-here.
+This is the IPv4 address.  @xref{Host Addresses}, and @ref{Host
+Names}, for how to get a value to store here.  The IPv4 address is
+stored in network byte order.
 
 @item unsigned short int sin_port
-This is the port number.  @xref{Ports}.
+This is the port number.  @xref{Ports}.  The port number is stored in
+network byte order.
 @end table
 @end deftp
 
@@ -804,18 +805,36 @@ namespace.  It has the following members:
 @item sa_family_t sin6_family
 This identifies the address family or format of the socket address.
 You should store the value of @code{AF_INET6} in this member.
-@xref{Socket Addresses}.
+@xref{Socket Addresses}.  The address family is stored in host byte
+order.
 
 @item struct in6_addr sin6_addr
 This is the IPv6 address of the host machine.  @xref{Host
 Addresses}, and @ref{Host Names}, for how to get a value to store
-here.
+here.  The address is stored in network byte order.
 
 @item uint32_t sin6_flowinfo
-This is a currently unimplemented field.
+@cindex flow label
+@cindex IPv6 flow label
+@cindex traffic class
+@cindex IPv6 traffic class
+This combines the IPv6 traffic class and flow label values, as found
+in the IPv6 header.  This field is stored in network byte order.  Only
+the 28 lower bits (of the number in network byte order) are used; the
+remainig bits must be zero.  The lower 20 bits are the flow label, and
+bits 20 to 27 are the the traffic class.  Typically, this field is
+zero.
+
+@item uint32_t sin6_scope_id
+@cindex scope ID
+@cindex IPv6 scope ID
+For link-local addresses, this identifies the interface on which this
+address is valid.  The scope ID is stored in host byte order.
+Typically, this field is zero.
 
 @item uint16_t sin6_port
-This is the port number.  @xref{Ports}.
+This is the port number.  @xref{Ports}.  The port number is stored in
+network byte order.
 
 @end table
 @end deftp
