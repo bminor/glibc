@@ -75,7 +75,7 @@ support_test_compare_string (const char *left, const char *right,
       || memcmp (left, right, left_length) != 0)
     {
       support_record_failure ();
-      printf ("%s:%d: error: blob comparison failed\n", file, line);
+      printf ("%s:%d: error: string comparison failed\n", file, line);
       if (left_length == right_length && right != NULL && left != NULL)
         printf ("  string length: %zu bytes\n", left_length);
       else

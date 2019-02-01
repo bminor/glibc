@@ -1,3 +1,9 @@
+2019-02-01  Florian Weimer  <fweimer@redhat.com>
+
+	* support/support_test_compare_string.c
+	(support_test_compare_string): Use "string" in error message.
+	* support/tst-test_compare_string.c (do_test): Adjust.
+
 2018-11-07  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* support/support_test_compare_string.c
