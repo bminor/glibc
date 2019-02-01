@@ -49,7 +49,7 @@ ENTRY(strlen)
 
 #ifdef AS_STRNLEN
 /* Do not read anything when n==0.  */
-	test	%rsi, %rsi
+	test	%RSI_LP, %RSI_LP
 	jne	L(n_nonzero)
 	xor	%rax, %rax
 	ret
@@ -57,10 +57,10 @@ L(n_nonzero):
 
 /* Initialize long lived registers.  */
 
-	add	%rdi, %rsi
-	mov	%rsi, %r10
-	and	$-64, %r10
-	mov	%rsi, %r11
+	add	%RDI_LP, %RSI_LP
+	mov	%RSI_LP, %R10_LP
+	and	$-64, %R10_LP
+	mov	%RSI_LP, %R11_LP
 #endif
 
 	pxor	%xmm0, %xmm0
