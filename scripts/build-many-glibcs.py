@@ -716,7 +716,7 @@ class Context(object):
                             'gmp': '6.1.2',
                             'linux': '4.20',
                             'mpc': '1.1.0',
-                            'mpfr': '4.0.1',
+                            'mpfr': '4.0.2',
                             'mig': 'vcs-mainline',
                             'gnumach': 'vcs-mainline',
                             'hurd': 'vcs-mainline'}
