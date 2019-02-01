@@ -1,5 +1,11 @@
 2019-02-01  Florian Weimer  <fweimer@redhat.com>
 
+	* support/support_test_compare_string.c
+	(support_test_compare_string): Use "string" in error message.
+	* support/tst-test_compare_string.c (do_test): Adjust.
+
+2019-02-01  Florian Weimer  <fweimer@redhat.com>
+
 	* support/support_format_address_family.c
 	(support_format_address_family): Handle AF_LOCAL, AF_UNSPEC.
 
