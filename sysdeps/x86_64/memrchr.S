@@ -24,13 +24,13 @@
 ENTRY (__memrchr)
 	movd	%esi, %xmm1
 
-	sub	$16, %rdx
+	sub	$16, %RDX_LP
 	jbe	L(length_less16)
 
 	punpcklbw	%xmm1, %xmm1
 	punpcklbw	%xmm1, %xmm1
 
-	add	%rdx, %rdi
+	add	%RDX_LP, %RDI_LP
 	pshufd	$0, %xmm1, %xmm1
 
 	movdqu	(%rdi), %xmm0
