@@ -4,3 +4,7 @@ ifeq ($(subdir),math)
 # 64-bit llround.  Add -fno-builtin-lround to silence the compiler.
 CFLAGS-s_llround.c += -fno-builtin-lround
 endif
+
+ifeq ($(subdir),string)
+tests += tst-size_t-memchr
+endif

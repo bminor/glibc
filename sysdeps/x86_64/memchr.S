@@ -24,9 +24,12 @@
 ENTRY(memchr)
 	movd	%rsi, %xmm1
 	mov	%rdi, %rcx
-
+#ifdef __ILP32__
+	/* Clear the upper 32 bits.  */
+	movl	%edx, %edx
+#endif
 	punpcklbw %xmm1, %xmm1
-	test	%rdx, %rdx
+	test	%RDX_LP, %RDX_LP
 	jz	L(return_null)
 	punpcklbw %xmm1, %xmm1
 
