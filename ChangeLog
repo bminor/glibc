@@ -2,6 +2,17 @@
 
 	[BZ #24097]
 	CVE-2019-6488
+	* sysdeps/x86_64/multiarch/memset-avx512-no-vzeroupper.S: Use
+	RDX_LP for length.  Clear the upper 32 bits of RDX register.
+	* sysdeps/x86_64/multiarch/memset-vec-unaligned-erms.S: Likewise.
+	* sysdeps/x86_64/x32/Makefile (tests): Add tst-size_t-wmemset.
+	* sysdeps/x86_64/x32/tst-size_t-memset.c: New file.
+	* sysdeps/x86_64/x32/tst-size_t-wmemset.c: Likewise.
+
+2019-02-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #24097]
+	CVE-2019-6488
 	* sysdeps/x86_64/memrchr.S: Use RDX_LP for length.
 	* sysdeps/x86_64/multiarch/memrchr-avx2.S: Likewise.
 	* sysdeps/x86_64/x32/Makefile (tests): Add tst-size_t-memrchr.
