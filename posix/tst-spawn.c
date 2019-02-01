@@ -237,6 +237,12 @@ do_test (int argc, char *argv[])
   TEST_COMPARE (posix_spawn (&pid, argv[1], &actions, NULL, spargv, environ),
 		0);
 
+  /* Wait for the children.  */
+  TEST_COMPARE (xwaitpid (pid, &status, 0), pid);
+  TEST_VERIFY (WIFEXITED (status));
+  TEST_VERIFY (!WIFSIGNALED (status));
+  TEST_COMPARE (WEXITSTATUS (status), 0);
+
   /* Same test but with a NULL pid argument.  */
   TEST_COMPARE (posix_spawn (NULL, argv[1], &actions, NULL, spargv, environ),
 		0);
@@ -246,11 +252,6 @@ do_test (int argc, char *argv[])
   free (name3_copy);
 
   /* Wait for the children.  */
-  TEST_COMPARE (xwaitpid (pid, &status, 0), pid);
-  TEST_VERIFY (WIFEXITED (status));
-  TEST_VERIFY (!WIFSIGNALED (status));
-  TEST_COMPARE (WEXITSTATUS (status), 0);
-
   xwaitpid (-1, &status, 0);
   TEST_VERIFY (WIFEXITED (status));
   TEST_VERIFY (!WIFSIGNALED (status));
