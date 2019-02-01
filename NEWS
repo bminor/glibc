@@ -52,6 +52,12 @@ Security related changes:
   the value of SIZE_MAX, would return a pointer to a buffer which is too
   small, instead of NULL.
 
+  CVE-2019-6488: On x32, the size_t parameter may be passed in the lower
+  32 bits of a 64-bit register with with non-zero upper 32 bit.  When it
+  happened, accessing the 32-bit size_t value as the full 64-bit register
+  in the assembly string/memory functions would cause a buffer overflow.
+  Reported by H.J. Lu.
+
 The following bugs are resolved with this release:
 
   [20257] sunrpc: clntudp_call does not enforce timeout when receiving data
@@ -86,6 +92,7 @@ The following bugs are resolved with this release:
   [22774] malloc: Integer overflow in malloc (CVE-2018-6551)
   [23538] pthread_cond_broadcast: Fix waiters-after-spinning case
   [24027] malloc: Integer overflow in realloc
+  [24097] Can't use 64-bit register for size_t in assembly codes for x32 (CVE-2019-6488)
 
 Version 2.25
 
