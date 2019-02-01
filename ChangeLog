@@ -1,3 +1,11 @@
+2019-02-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* configure.ac (libc_cv_compiler_ok): Require GCC 6.2 or later.
+	* configure: Regenerated.
+	* manual/install.texi (Tools for Compilation): Update minimum GCC
+	version.
+	* INSTALL: Regenerated.
+
 2019-02-01  Florian Weimer  <fweimer@redhat.com>
 
 	* support/support_test_compare_string.c

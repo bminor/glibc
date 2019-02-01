@@ -17,7 +17,10 @@ Deprecated and removed features, and other changes affecting compatibility:
 
 Changes to build and runtime requirements:
 
-  [Add changes to build and runtime requirements here]
+* GCC 6.2 or later is required to build the GNU C Library.
+
+  Older GCC versions and non-GNU compilers are still supported when
+  compiling programs that use the GNU C Library.
 
 Security related changes:
 

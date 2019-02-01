@@ -5119,7 +5119,7 @@ int
 main ()
 {
 
-#if !defined __GNUC__ || __GNUC__ < 5
+#if !defined __GNUC__ || __GNUC__ < 6 || (__GNUC__ == 6 && __GNUC_MINOR__ < 2)
 #error insufficient compiler
 #endif
   ;
