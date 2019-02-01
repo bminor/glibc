@@ -2,6 +2,21 @@
 
 	[BZ #24097]
 	CVE-2019-6488
+	* sysdeps/x86_64/multiarch/memcpy-ssse3-back.S: Use RDX_LP for
+	length.  Clear the upper 32 bits of RDX register.
+	* sysdeps/x86_64/multiarch/memcpy-ssse3.S: Likewise.
+	* sysdeps/x86_64/multiarch/memmove-avx512-no-vzeroupper.S:
+	Likewise.
+	* sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S:
+	Likewise.
+	* sysdeps/x86_64/x32/Makefile (tests): Add tst-size_t-memcpy.
+	tst-size_t-wmemchr.
+	* sysdeps/x86_64/x32/tst-size_t-memcpy.c: New file.
+
+2019-02-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #24097]
+	CVE-2019-6488
 	* sysdeps/x86_64/multiarch/memcmp-avx2-movbe.S: Use RDX_LP for
 	length.  Clear the upper 32 bits of RDX register.
 	* sysdeps/x86_64/multiarch/memcmp-sse4.S: Likewise.
