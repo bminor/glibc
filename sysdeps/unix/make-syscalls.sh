@@ -7,7 +7,7 @@
 #
 # This script is used to process the syscall data encoded in the various
 # syscalls.list files to produce thin assembly syscall wrappers around the
-# appropriate OS syscall. See syscall-template.s for more details on the
+# appropriate OS syscall. See syscall-template.S for more details on the
 # actual wrapper.
 #
 # Syscall Signature Prefixes:
