@@ -1,3 +1,16 @@
+2019-02-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #24097]
+	CVE-2019-6488
+	* sysdeps/x86_64/memchr.S: Use RDX_LP for length.  Clear the
+	upper 32 bits of RDX register.
+	* sysdeps/x86_64/multiarch/memchr-avx2.S: Likewise.
+	* sysdeps/x86_64/x32/Makefile (tests): Add tst-size_t-memchr and
+	tst-size_t-wmemchr.
+	* sysdeps/x86_64/x32/test-size_t.h: New file.
+	* sysdeps/x86_64/x32/tst-size_t-memchr.c: Likewise.
+	* sysdeps/x86_64/x32/tst-size_t-wmemchr.c: Likewise.
+
 2019-01-16  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
 
 	* math/libm-test-fma.inc (fma_test_data): Set
