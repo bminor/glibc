@@ -95,11 +95,6 @@ __clock_gettime (clockid_t clock_id, struct timespec *tp)
 
   switch (clock_id)
     {
-#ifdef SYSDEP_GETTIME
-      SYSDEP_GETTIME;
-#endif
-
-#ifndef HANDLED_REALTIME
     case CLOCK_REALTIME:
       {
 	struct timeval tv;
@@ -108,12 +103,8 @@ __clock_gettime (clockid_t clock_id, struct timespec *tp)
 	  TIMEVAL_TO_TIMESPEC (&tv, tp);
       }
       break;
-#endif
 
     default:
-#ifdef SYSDEP_GETTIME_CPU
-      SYSDEP_GETTIME_CPU (clock_id, tp);
-#endif
 #if HP_TIMING_AVAIL
       if ((clock_id & ((1 << CLOCK_IDFIELD_SIZE) - 1))
 	  == CLOCK_THREAD_CPUTIME_ID)
@@ -123,7 +114,7 @@ __clock_gettime (clockid_t clock_id, struct timespec *tp)
 	__set_errno (EINVAL);
       break;
 
-#if HP_TIMING_AVAIL && !defined HANDLED_CPUTIME
+#if HP_TIMING_AVAIL
     case CLOCK_PROCESS_CPUTIME_ID:
       retval = hp_timing_gettime (clock_id, tp);
       break;

@@ -1,3 +1,12 @@
+2019-02-01  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* sysdeps/posix/clock_getres.c (__clock_getres): Cleanup.
+	* sysdeps/unix/clock_gettime.c (__clock_gettime): Cleanup.
+	* sysdeps/unix/clock_settime.c (__clock_settime): Cleanup.
+	* sysdeps/unix/sysv/linux/clock_getres.c (__clock_getres): Cleanup.
+	* sysdeps/unix/sysv/linux/clock_gettime.c (__clock_gettime): Cleanup.
+	* sysdeps/unix/sysv/linux/clock_settime.c (__clock_settime): Cleanup.
+
 2019-02-01  Feng Xue  <fxue@os.amperecomputing.com>
 
 	* sysdeps/aarch64/memchr.S (__memchr): Rename to MEMCHR.

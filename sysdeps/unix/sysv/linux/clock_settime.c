@@ -21,18 +21,17 @@
 
 #include "kernel-posix-cpu-timers.h"
 
+/* Set CLOCK to value TP.  */
+int
+__clock_settime (clockid_t clock_id, const struct timespec *tp)
+{
+  /* Make sure the time cvalue is OK.  */
+  if (tp->tv_nsec < 0 || tp->tv_nsec >= 1000000000)
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
 
-/* The REALTIME clock is definitely supported in the kernel.  */
-#define SYSDEP_SETTIME \
-  case CLOCK_REALTIME:							      \
-    retval = INLINE_SYSCALL (clock_settime, 2, clock_id, tp);		      \
-    break
-
-/* We handled the REALTIME clock here.  */
-#define HANDLED_REALTIME	1
-
-#define HANDLED_CPUTIME 1
-#define SYSDEP_SETTIME_CPU \
-  retval = INLINE_SYSCALL (clock_settime, 2, clock_id, tp)
-
-#include <sysdeps/unix/clock_settime.c>
+  return INLINE_SYSCALL_CALL (clock_settime, clock_id, tp);
+}
+weak_alias (__clock_settime, clock_settime)

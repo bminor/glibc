@@ -26,26 +26,10 @@
 #endif
 #include <sysdep-vdso.h>
 
-#define SYSCALL_GETRES \
-  retval = INLINE_VSYSCALL (clock_getres, 2, clock_id, res); \
-  break
-
-/* The REALTIME and MONOTONIC clock are definitely supported in the
-   kernel.  */
-#define SYSDEP_GETRES							      \
-  SYSDEP_GETRES_CPUTIME							      \
-  case CLOCK_REALTIME:							      \
-  case CLOCK_MONOTONIC:							      \
-  case CLOCK_MONOTONIC_RAW:						      \
-  case CLOCK_REALTIME_COARSE:						      \
-  case CLOCK_MONOTONIC_COARSE:						      \
-    SYSCALL_GETRES
-
-/* We handled the REALTIME clock here.  */
-#define HANDLED_REALTIME	1
-#define HANDLED_CPUTIME		1
-
-#define SYSDEP_GETRES_CPU SYSCALL_GETRES
-#define SYSDEP_GETRES_CPUTIME	/* Default catches them too.  */
-
-#include <sysdeps/posix/clock_getres.c>
+/* Get resolution of clock.  */
+int
+__clock_getres (clockid_t clock_id, struct timespec *res)
+{
+  return INLINE_VSYSCALL (clock_getres, 2, clock_id, res);
+}
+weak_alias (__clock_getres, clock_getres)

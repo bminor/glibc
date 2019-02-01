@@ -82,20 +82,11 @@ __clock_getres (clockid_t clock_id, struct timespec *res)
 
   switch (clock_id)
     {
-#ifdef SYSDEP_GETRES
-      SYSDEP_GETRES;
-#endif
-
-#ifndef HANDLED_REALTIME
     case CLOCK_REALTIME:
       retval = realtime_getres (res);
       break;
-#endif	/* handled REALTIME */
 
     default:
-#ifdef SYSDEP_GETRES_CPU
-      SYSDEP_GETRES_CPU;
-#endif
 #if HP_TIMING_AVAIL
       if ((clock_id & ((1 << CLOCK_IDFIELD_SIZE) - 1))
 	  == CLOCK_THREAD_CPUTIME_ID)
@@ -105,7 +96,7 @@ __clock_getres (clockid_t clock_id, struct timespec *res)
 	__set_errno (EINVAL);
       break;
 
-#if HP_TIMING_AVAIL && !defined HANDLED_CPUTIME
+#if HP_TIMING_AVAIL
     case CLOCK_PROCESS_CPUTIME_ID:
     case CLOCK_THREAD_CPUTIME_ID:
       retval = hp_timing_getres (res);

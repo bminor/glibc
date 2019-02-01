@@ -21,7 +21,7 @@
 #include <ldsodefs.h>
 
 
-#if HP_TIMING_AVAIL && !defined HANDLED_CPUTIME
+#if HP_TIMING_AVAIL
 /* Clock frequency of the processor.  We make it a 64-bit variable
    because some jokers are already playing with processors with more
    than 4GHz.  */
@@ -84,29 +84,15 @@ __clock_settime (clockid_t clock_id, const struct timespec *tp)
 
   switch (clock_id)
     {
-#define HANDLE_REALTIME \
-      do {								      \
-	struct timeval tv;						      \
-	TIMESPEC_TO_TIMEVAL (&tv, tp);					      \
-									      \
-	retval = __settimeofday (&tv, NULL);				      \
-      } while (0)
-
-#ifdef SYSDEP_SETTIME
-      SYSDEP_SETTIME;
-#endif
-
-#ifndef HANDLED_REALTIME
     case CLOCK_REALTIME:
-      HANDLE_REALTIME;
+      {
+	struct timeval tv;
+	TIMESPEC_TO_TIMEVAL (&tv, tp);
+	retval = __settimeofday (&tv, NULL);
+      }
       break;
-#endif
 
     default:
-#ifdef SYSDEP_SETTIME_CPU
-      SYSDEP_SETTIME_CPU;
-#endif
-#ifndef HANDLED_CPUTIME
 # if HP_TIMING_AVAIL
       if (CPUCLOCK_WHICH (clock_id) == CLOCK_PROCESS_CPUTIME_ID
 	  || CPUCLOCK_WHICH (clock_id) == CLOCK_THREAD_CPUTIME_ID)
@@ -117,7 +103,6 @@ __clock_settime (clockid_t clock_id, const struct timespec *tp)
 	  __set_errno (EINVAL);
 	  retval = -1;
 	}
-#endif
       break;
     }
 

@@ -26,22 +26,11 @@
 #endif
 #include <sysdep-vdso.h>
 
-/* The REALTIME and MONOTONIC clock are definitely supported in the
-   kernel.  */
-#define SYSDEP_GETTIME \
-  SYSDEP_GETTIME_CPUTIME;						      \
-  case CLOCK_REALTIME:							      \
-  case CLOCK_MONOTONIC:							      \
-    retval = INLINE_VSYSCALL (clock_gettime, 2, clock_id, tp);		      \
-    break
-
-/* We handled the REALTIME clock here.  */
-#define HANDLED_REALTIME	1
-#define HANDLED_CPUTIME	1
-
-#define SYSDEP_GETTIME_CPU(clock_id, tp) \
-  retval = INLINE_VSYSCALL (clock_gettime, 2, clock_id, tp); \
-  break
-#define SYSDEP_GETTIME_CPUTIME	/* Default catches them too.  */
-
-#include <sysdeps/unix/clock_gettime.c>
+/* Get current value of CLOCK and store it in TP.  */
+int
+__clock_gettime (clockid_t clock_id, struct timespec *tp)
+{
+  return INLINE_VSYSCALL (clock_gettime, 2, clock_id, tp);
+}
+weak_alias (__clock_gettime, clock_gettime)
+libc_hidden_def (__clock_gettime)
