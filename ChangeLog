@@ -1,5 +1,10 @@
 2019-02-01  Florian Weimer  <fweimer@redhat.com>
 
+	* support/support_format_address_family.c
+	(support_format_address_family): Handle AF_LOCAL, AF_UNSPEC.
+
+2019-02-01  Florian Weimer  <fweimer@redhat.com>
+
 	* manual/socket.texi (Internet Address Formats): Clarify the byte
 	order of struct sockaddr_in, struct sockaddr_in6.  Document
 	sin6_flowinfo and sin6_scope_id.

@@ -29,6 +29,10 @@ support_format_address_family (int family)
       return xstrdup ("INET");
     case AF_INET6:
       return xstrdup ("INET6");
+    case AF_LOCAL:
+      return xstrdup ("LOCAL");
+    case AF_UNSPEC:
+      return xstrdup ("UNSPEC");
     default:
       return xasprintf ("<unknown address family %d>", family);
     }
