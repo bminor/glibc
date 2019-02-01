@@ -2,6 +2,19 @@
 
 	[BZ #24097]
 	CVE-2019-6488
+	* sysdeps/x86_64/multiarch/strcmp-avx2.S: Use RDX_LP for length.
+	* sysdeps/x86_64/multiarch/strcmp-sse42.S: Likewise.
+	* sysdeps/x86_64/strcmp.S: Likewise.
+	* sysdeps/x86_64/x32/Makefile (tests): Add tst-size_t-strncasecmp,
+	tst-size_t-strncmp and tst-size_t-wcsncmp.
+	* sysdeps/x86_64/x32/tst-size_t-strncasecmp.c: New file.
+	* sysdeps/x86_64/x32/tst-size_t-strncmp.c: Likewise.
+	* sysdeps/x86_64/x32/tst-size_t-wcsncmp.c: Likewise.
+
+2019-02-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #24097]
+	CVE-2019-6488
 	* sysdeps/x86_64/multiarch/memset-avx512-no-vzeroupper.S: Use
 	RDX_LP for length.  Clear the upper 32 bits of RDX register.
 	* sysdeps/x86_64/multiarch/memset-vec-unaligned-erms.S: Likewise.
