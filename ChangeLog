@@ -1,3 +1,10 @@
+2019-02-26  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* math/math.h (fpclassify, isfinite, isnormal, isnan): Use builtin for
+	clang 2.8.
+	(signbit): Use builtin for clang 3.3.
+	(isinf): Use builtin for clang 3.7.
+
 2019-03-25  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/powerpc/fpu/s_float_bitwise.h: Remove file.
