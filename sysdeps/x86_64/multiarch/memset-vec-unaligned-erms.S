@@ -71,8 +71,8 @@
 	.section SECTION(.text),"ax",@progbits
 #if VEC_SIZE == 16 && IS_IN (libc)
 ENTRY (__bzero)
-	movq	%rdi, %rax /* Set return value.  */
-	movq	%rsi, %rdx /* Set n.  */
+	mov	%RDI_LP, %RAX_LP /* Set return value.  */
+	mov	%RSI_LP, %RDX_LP /* Set n.  */
 	pxor	%xmm0, %xmm0
 	jmp	L(entry_from_bzero)
 END (__bzero)
@@ -81,7 +81,7 @@ weak_alias (__bzero, bzero)
 
 #if defined SHARED && IS_IN (libc)
 ENTRY_CHK (MEMSET_CHK_SYMBOL (__memset_chk, unaligned))
-	cmpq	%rdx, %rcx
+	cmp	%RDX_LP, %RCX_LP
 	jb	HIDDEN_JUMPTARGET (__chk_fail)
 END_CHK (MEMSET_CHK_SYMBOL (__memset_chk, unaligned))
 #endif
@@ -89,6 +89,10 @@ END_CHK (MEMSET_CHK_SYMBOL (__memset_chk, unaligned))
 ENTRY (MEMSET_SYMBOL (__memset, unaligned))
 L(memset_entry):
 	VDUP_TO_VEC0_AND_SET_RETURN (%esi, %rdi)
+# ifdef __ILP32__
+	/* Clear the upper 32 bits.  */
+	mov	%edx, %edx
+# endif
 L(entry_from_bzero):
 	cmpq	$VEC_SIZE, %rdx
 	jb	L(less_vec)
@@ -112,11 +116,11 @@ ENTRY (MEMSET_SYMBOL (__memset, erms))
 L(stosb):
 	/* Issue vzeroupper before rep stosb.  */
 	VZEROUPPER
-	movq	%rdx, %rcx
+	mov	%RDX_LP, %RCX_LP
 	movzbl	%sil, %eax
-	movq	%rdi, %rdx
+	mov	%RDI_LP, %RDX_LP
 	rep stosb
-	movq	%rdx, %rax
+	mov	%RDX_LP, %RAX_LP
 	ret
 # if VEC_SIZE == 16
 END (__memset_erms)
@@ -126,16 +130,20 @@ END (MEMSET_SYMBOL (__memset, erms))
 
 # if defined SHARED && IS_IN (libc)
 ENTRY_CHK (MEMSET_CHK_SYMBOL (__memset_chk, unaligned_erms))
-	cmpq	%rdx, %rcx
+	cmp	%RDX_LP, %RCX_LP
 	jb	HIDDEN_JUMPTARGET (__chk_fail)
 END_CHK (MEMSET_CHK_SYMBOL (__memset_chk, unaligned_erms))
 # endif
 
 ENTRY (MEMSET_SYMBOL (__memset, unaligned_erms))
 	VDUP_TO_VEC0_AND_SET_RETURN (%esi, %rdi)
-	cmpq	$VEC_SIZE, %rdx
+# ifdef __ILP32__
+	/* Clear the upper 32 bits.  */
+	mov	%edx, %edx
+# endif
+	cmp	$VEC_SIZE, %RDX_LP
 	jb	L(less_vec)
-	cmpq	$(VEC_SIZE * 2), %rdx
+	cmp	$(VEC_SIZE * 2), %RDX_LP
 	ja	L(stosb_more_2x_vec)
 	/* From VEC and to 2 * VEC.  No branch when size == VEC_SIZE.  */
 	VMOVU	%VEC(0), -VEC_SIZE(%rdi,%rdx)
