@@ -6,7 +6,7 @@ CFLAGS-s_llround.c += -fno-builtin-lround
 endif
 
 ifeq ($(subdir),string)
-tests += tst-size_t-memchr tst-size_t-memcmp
+tests += tst-size_t-memchr tst-size_t-memcmp tst-size_t-memcpy
 endif
 
 ifeq ($(subdir),wcsmbs)
