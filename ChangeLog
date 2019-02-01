@@ -2,6 +2,16 @@
 
 	[BZ #24097]
 	CVE-2019-6488
+	* sysdeps/x86_64/multiarch/strcpy-sse2-unaligned.S: Use RDX_LP
+	for length.
+	* sysdeps/x86_64/multiarch/strcpy-ssse3.S: Likewise.
+	* sysdeps/x86_64/x32/Makefile (tests): Add tst-size_t-strncpy.
+	* sysdeps/x86_64/x32/tst-size_t-strncpy.c: New file.
+
+2019-02-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #24097]
+	CVE-2019-6488
 	* sysdeps/x86_64/multiarch/strcmp-avx2.S: Use RDX_LP for length.
 	* sysdeps/x86_64/multiarch/strcmp-sse42.S: Likewise.
 	* sysdeps/x86_64/strcmp.S: Likewise.
