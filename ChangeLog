@@ -1,3 +1,73 @@
+2019-01-31  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #6399]
+	Linux: Add gettid system call wrapper.
+	* posix/Makefile (headers): Add bits/unistd_ext.h.
+	* posix/bits/unistd_ext.h: New file.
+	* posix/unistd.h: Include it.
+	* manual/process.texi (Process Identification): Document gettid.
+	* sysdeps/unix/sysv/linux/Makefile [subdir == misc] (tests): Add
+	tst-gettid, tst-gettid-kill.
+	(tst-gettid): Link with $(shared-thread-library).
+	* sysdeps/unix/sysv/linux/Version (GLIBC_2.30): Export gettid.
+	* sysdeps/unix/sysv/linux/bits/unistd_ext.h: New file.
+	* sysdeps/unix/sysv/linux/bits/syscalls.list (gettid): Add.
+	* sysdeps/unix/sysv/linux/bits/tst-gettid.c: New file.
+	* sysdeps/unix/sysv/linux/bits/tst-gettid-kill.c: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/libc.abilist (GLIBC_2.30):
+	Add gettid.
+	* sysdeps/unix/sysv/linux/alpha/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/arm/libc.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/csky/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/fpu/libc.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nofpu/libc.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libc.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libc.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/riscv/rv64/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sh/libc.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/tst-setgetname.c (gettid): Remove.
+
 2019-02-07  Florian Weimer  <fweimer@redhat.com>
 
 	* rt/clock-compat.c (COMPAT_REDIRECT): Turn librt forwarders into

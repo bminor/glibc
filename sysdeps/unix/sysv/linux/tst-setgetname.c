@@ -43,12 +43,6 @@
    terminator.  */
 #define TASK_COMM_LEN 16
 
-long
-gettid (void)
-{
-    return syscall(__NR_gettid);
-}
-
 /* On Linux we can read this task's name from /proc.  */
 int
 get_self_comm (long tid, char *buf, size_t len)

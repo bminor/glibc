@@ -2204,6 +2204,7 @@ GLIBC_2.3.4 setipv4sourcefilter F
 GLIBC_2.3.4 setsourcefilter F
 GLIBC_2.3.4 xdr_quad_t F
 GLIBC_2.3.4 xdr_u_quad_t F
+GLIBC_2.30 gettid F
 GLIBC_2.4 _IO_fprintf F
 GLIBC_2.4 _IO_printf F
 GLIBC_2.4 _IO_sprintf F

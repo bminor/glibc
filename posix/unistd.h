@@ -1166,6 +1166,9 @@ int getentropy (void *__buffer, size_t __length) __wur;
 # include <bits/unistd.h>
 #endif
 
+/* System-specific extensions.  */
+#include <bits/unistd_ext.h>
+
 __END_DECLS
 
 #endif /* unistd.h  */

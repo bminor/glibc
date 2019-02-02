@@ -228,6 +228,17 @@ The @code{getppid} function returns the process ID of the parent of the
 current process.
 @end deftypefun
 
+@deftypefun pid_t gettid (void)
+@standards{Linux, unistd.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+The @code{gettid} function returns the thread ID of the current
+thread.  The returned value is obtained from the Linux kernel and is
+not subject to caching.  See the discussion of thread IDs above,
+especially regarding reuse of the IDs of threads which have exited.
+
+This function is specific to Linux.
+@end deftypefun
+
 @node Creating a Process
 @section Creating a Process
 

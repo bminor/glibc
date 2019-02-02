@@ -12,6 +12,8 @@ Major new features:
 * The dynamic linker accepts the --preload argument to preload shared
   objects, in addition to the LD_PRELOAD environment variable.
 
+* On Linux, the gettid function has been added.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The functions clock_gettime, clock_getres, clock_settime,
