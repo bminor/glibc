@@ -25,7 +25,10 @@
 /* Processes have a saved set-user-ID and a saved set-group-ID.  */
 #define	_POSIX_SAVED_IDS	1
 
-/* Priority scheduling is supported.  */
+/* Priority scheduling is not supported with the correct semantics,
+   but GNU/Linux applications expect that the corresponding interfaces
+   are available, even though the semantics do not meet the POSIX
+   requirements.  See glibc bug 14829.  */
 #define	_POSIX_PRIORITY_SCHEDULING	200809L
 
 /* Synchronizing file data is supported.  */

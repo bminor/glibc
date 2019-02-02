@@ -1,3 +1,13 @@
+2019-02-02  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #14829]
+	* manual/resource.texi (Basic Scheduling Functions): Add
+	portability note.  Change process to task throughout the section.
+	Remove incorrect comment about sched_yield as it affects
+	tasks/threads, not entire processes.
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h
+	(_POSIX_PRIORITY_SCHEDULING): Update comment.
+
 2019-02-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* configure.ac (libc_cv_compiler_ok): Require GCC 6.2 or later.

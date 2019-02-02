@@ -750,6 +750,14 @@ policy, if anything, only fine tunes the effect of that priority.
 
 The symbols in this section are declared by including file @file{sched.h}.
 
+@strong{Portability Note:} In POSIX, the @code{pid_t} arguments of the
+functions below refer to process IDs.  On Linux, they are actually
+thread IDs, and control how specific threads are scheduled with
+regards to the entire system.  The resulting behavior does not conform
+to POSIX.  This is why the following description refers to tasks and
+tasks IDs, and not processes and process IDs.
+@c https://sourceware.org/bugzilla/show_bug.cgi?id=14829
+
 @deftp {Data Type} {struct sched_param}
 @standards{POSIX, sched.h}
 This structure describes an absolute priority.
@@ -765,11 +773,11 @@ absolute priority value
 @c Direct syscall, Linux only.
 
 This function sets both the absolute priority and the scheduling policy
-for a process.
+for a task.
 
 It assigns the absolute priority value given by @var{param} and the
-scheduling policy @var{policy} to the process with Process ID @var{pid},
-or the calling process if @var{pid} is zero.  If @var{policy} is
+scheduling policy @var{policy} to the task with ID @var{pid},
+or the calling task if @var{pid} is zero.  If @var{policy} is
 negative, @code{sched_setscheduler} keeps the existing scheduling policy.
 
 The following macros represent the valid values for @var{policy}:
@@ -795,20 +803,20 @@ to this function are:
 @item EPERM
 @itemize @bullet
 @item
-The calling process does not have @code{CAP_SYS_NICE} permission and
+The calling task does not have @code{CAP_SYS_NICE} permission and
 @var{policy} is not @code{SCHED_OTHER} (or it's negative and the
 existing policy is not @code{SCHED_OTHER}.
 
 @item
-The calling process does not have @code{CAP_SYS_NICE} permission and its
-owner is not the target process' owner.  I.e., the effective uid of the
-calling process is neither the effective nor the real uid of process
+The calling task does not have @code{CAP_SYS_NICE} permission and its
+owner is not the target task's owner.  I.e., the effective uid of the
+calling task is neither the effective nor the real uid of task
 @var{pid}.
 @c We need a cross reference to the capabilities section, when written.
 @end itemize
 
 @item ESRCH
-There is no process with pid @var{pid} and @var{pid} is not zero.
+There is no task with pid @var{pid} and @var{pid} is not zero.
 
 @item EINVAL
 @itemize @bullet
@@ -835,8 +843,8 @@ tell you what the valid range is.
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Direct syscall, Linux only.
 
-This function returns the scheduling policy assigned to the process with
-Process ID (pid) @var{pid}, or the calling process if @var{pid} is zero.
+This function returns the scheduling policy assigned to the task with
+ID @var{pid}, or the calling task if @var{pid} is zero.
 
 The return value is the scheduling policy.  See
 @code{sched_setscheduler} for the possible values.
@@ -849,7 +857,7 @@ The @code{errno} values specific to this function are:
 @table @code
 
 @item ESRCH
-There is no process with pid @var{pid} and it is not zero.
+There is no task with pid @var{pid} and it is not zero.
 
 @item EINVAL
 @var{pid} is negative.
@@ -869,7 +877,7 @@ absolute priority, use @code{sched_getparam}.
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Direct syscall, Linux only.
 
-This function sets a process' absolute priority.
+This function sets a task's absolute priority.
 
 It is functionally identical to @code{sched_setscheduler} with
 @var{policy} = @code{-1}.
@@ -883,13 +891,13 @@ It is functionally identical to @code{sched_setscheduler} with
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Direct syscall, Linux only.
 
-This function returns a process' absolute priority.
+This function returns a task's absolute priority.
 
-@var{pid} is the Process ID (pid) of the process whose absolute priority
-you want to know.
+@var{pid} is the task ID of the task whose absolute priority you want
+to know.
 
 @var{param} is a pointer to a structure in which the function stores the
-absolute priority of the process.
+absolute priority of the task.
 
 On success, the return value is @code{0}.  Otherwise, it is @code{-1}
 and @code{errno} is set accordingly.  The @code{errno} values specific
@@ -898,7 +906,7 @@ to this function are:
 @table @code
 
 @item ESRCH
-There is no process with pid @var{pid} and it is not zero.
+There is no task with ID @var{pid} and it is not zero.
 
 @item EINVAL
 @var{pid} is negative.
@@ -914,7 +922,7 @@ There is no process with pid @var{pid} and it is not zero.
 @c Direct syscall, Linux only.
 
 This function returns the lowest absolute priority value that is
-allowable for a process with scheduling policy @var{policy}.
+allowable for a task with scheduling policy @var{policy}.
 
 On Linux, it is 0 for SCHED_OTHER and 1 for everything else.
 
@@ -935,7 +943,7 @@ to this function are:
 @c Direct syscall, Linux only.
 
 This function returns the highest absolute priority value that is
-allowable for a process that with scheduling policy @var{policy}.
+allowable for a task that with scheduling policy @var{policy}.
 
 On Linux, it is 0 for SCHED_OTHER and 99 for everything else.
 
@@ -956,8 +964,8 @@ to this function are:
 @c Direct syscall, Linux only.
 
 This function returns the length of the quantum (time slice) used with
-the Round Robin scheduling policy, if it is used, for the process with
-Process ID @var{pid}.
+the Round Robin scheduling policy, if it is used, for the task with
+task ID @var{pid}.
 
 It returns the length of time as @var{interval}.
 @c We need a cross-reference to where timespec is explained.  But that
@@ -980,18 +988,18 @@ function, so there are no specific @code{errno} values.
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Direct syscall on Linux; alias to swtch on HURD.
 
-This function voluntarily gives up the process' claim on the CPU.
+This function voluntarily gives up the task's claim on the CPU.
 
-Technically, @code{sched_yield} causes the calling process to be made
+Technically, @code{sched_yield} causes the calling task to be made
 immediately ready to run (as opposed to running, which is what it was
 before).  This means that if it has absolute priority higher than 0, it
-gets pushed onto the tail of the queue of processes that share its
+gets pushed onto the tail of the queue of tasks that share its
 absolute priority and are ready to run, and it will run again when its
 turn next arrives.  If its absolute priority is 0, it is more
 complicated, but still has the effect of yielding the CPU to other
-processes.
+tasks.
 
-If there are no other processes that share the calling process' absolute
+If there are no other tasks that share the calling task's absolute
 priority, this function doesn't have any effect.
 
 To the extent that the containing program is oblivious to what other
