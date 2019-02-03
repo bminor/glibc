@@ -1,5 +1,16 @@
 2019-02-03  Florian Weimer  <fweimer@redhat.com>
 
+	* include/time.h (__tzfile_default): Use int, not long int, for
+	the GMT offsets.
+	* time/tzfile.c (struct ttinfo): Change type of the offset member
+	to int.
+	(__tzfile_read): Remove useless cast.
+	(__tzfile_default): Adjust prototype.
+	* time/tzset.c (tz_rule): Change type of the offset member to int.
+	(parse_offset): Change the type of the sign variable to int.
+
+2019-02-03  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #24153]
 	* debug/gets_chk.c (__gets_chk): Use stdin instead of _IO_stdin.
 	* libio/getchar.c (getchar): Likewise.

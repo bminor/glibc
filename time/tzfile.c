@@ -35,7 +35,7 @@ static time_t tzfile_mtime;
 
 struct ttinfo
   {
-    long int offset;		/* Seconds east of GMT.  */
+    int offset;			/* Seconds east of GMT.  */
     unsigned char isdst;	/* Used to set tm_isdst.  */
     unsigned char idx;		/* Index into `zone_names'.  */
     unsigned char isstd;	/* Transition times are in standard time.  */
@@ -345,7 +345,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
 	/* Bogus index in data file.  */
 	goto lose;
       types[i].idx = c;
-      types[i].offset = (long int) decode (x);
+      types[i].offset = decode (x);
     }
 
   if (__glibc_unlikely (__fread_unlocked (zone_names, 1, chars, f) != chars))
@@ -491,7 +491,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
 
 void
 __tzfile_default (const char *std, const char *dst,
-		  long int stdoff, long int dstoff)
+		  int stdoff, int dstoff)
 {
   size_t stdlen = strlen (std) + 1;
   size_t dstlen = strlen (dst) + 1;

@@ -50,7 +50,7 @@ typedef struct
     unsigned short int m, n, d;	/* Month, week, day.  */
     int secs;			/* Time of day.  */
 
-    long int offset;		/* Seconds east of GMT (west if < 0).  */
+    int offset;			/* Seconds east of GMT (west if < 0).  */
 
     /* We cache the computed time of change for a
        given year so we don't have to recompute it.  */
@@ -193,11 +193,11 @@ parse_offset (const char **tzp, int whichrule)
       && (*tz == '\0' || (*tz != '+' && *tz != '-' && !isdigit (*tz))))
     return false;
 
-  long sign;
+  int sign;
   if (*tz == '-' || *tz == '+')
-    sign = *tz++ == '-' ? 1L : -1L;
+    sign = *tz++ == '-' ? 1 : -1;
   else
-    sign = -1L;
+    sign = -1;
   *tzp = tz;
 
   unsigned short int hh;

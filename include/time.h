@@ -43,7 +43,7 @@ extern void __tzfile_compute (__time64_t timer, int use_localtime,
 			      long int *leap_correct, int *leap_hit,
 			      struct tm *tp) attribute_hidden;
 extern void __tzfile_default (const char *std, const char *dst,
-			      long int stdoff, long int dstoff)
+			      int stdoff, int dstoff)
   attribute_hidden;
 extern void __tzset_parse_tz (const char *tz) attribute_hidden;
 extern void __tz_compute (__time64_t timer, struct tm *tm, int use_localtime)
