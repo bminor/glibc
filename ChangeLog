@@ -1,3 +1,17 @@
+2019-02-03  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24153]
+	* debug/gets_chk.c (__gets_chk): Use stdin instead of _IO_stdin.
+	* libio/getchar.c (getchar): Likewise.
+	* libio/getchar_u.c (getchar_unlocked): Likewise.
+	* libio/getwchar.c (getwchar): Likewise.
+	* libio/getwchar_u.c (getwchar_unlocked): Likewise.
+	* libio/iogets.c (_IO_gets): Likewise.
+	* libio/vscanf.c (_IO_vscanf): Likewise.
+	* libio/vwscanf.c (__vwscanf): Likewise.
+	* libio/tst-bz24153.c: New file.
+	* libio/Makefile (tests): Add it.
+
 2019-02-02  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #14829]

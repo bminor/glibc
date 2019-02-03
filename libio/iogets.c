@@ -34,8 +34,8 @@ _IO_gets (char *buf)
   int ch;
   char *retval;
 
-  _IO_acquire_lock (_IO_stdin);
-  ch = _IO_getc_unlocked (_IO_stdin);
+  _IO_acquire_lock (stdin);
+  ch = _IO_getc_unlocked (stdin);
   if (ch == EOF)
     {
       retval = NULL;
@@ -48,22 +48,22 @@ _IO_gets (char *buf)
       /* This is very tricky since a file descriptor may be in the
 	 non-blocking mode. The error flag doesn't mean much in this
 	 case. We return an error only when there is a new error. */
-      int old_error = _IO_stdin->_flags & _IO_ERR_SEEN;
-      _IO_stdin->_flags &= ~_IO_ERR_SEEN;
+      int old_error = stdin->_flags & _IO_ERR_SEEN;
+      stdin->_flags &= ~_IO_ERR_SEEN;
       buf[0] = (char) ch;
-      count = _IO_getline (_IO_stdin, buf + 1, INT_MAX, '\n', 0) + 1;
-      if (_IO_stdin->_flags & _IO_ERR_SEEN)
+      count = _IO_getline (stdin, buf + 1, INT_MAX, '\n', 0) + 1;
+      if (stdin->_flags & _IO_ERR_SEEN)
 	{
 	  retval = NULL;
 	  goto unlock_return;
 	}
       else
-	_IO_stdin->_flags |= old_error;
+	stdin->_flags |= old_error;
     }
   buf[count] = 0;
   retval = buf;
 unlock_return:
-  _IO_release_lock (_IO_stdin);
+  _IO_release_lock (stdin);
   return retval;
 }
 

@@ -32,5 +32,5 @@
 wint_t
 getwchar_unlocked (void)
 {
-  return _IO_getwc_unlocked (_IO_stdin);
+  return _IO_getwc_unlocked (stdin);
 }

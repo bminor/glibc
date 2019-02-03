@@ -35,6 +35,6 @@
 int
 __vwscanf (const wchar_t *format, va_list args)
 {
-  return __vfwscanf_internal (_IO_stdin, format, args, 0);
+  return __vfwscanf_internal (stdin, format, args, 0);
 }
 ldbl_strong_alias (__vwscanf, vwscanf)
