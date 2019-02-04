@@ -826,15 +826,18 @@ static const char *library_path attribute_relro;
 static const char *preloadlist attribute_relro;
 /* Nonzero if information about versions has to be printed.  */
 static int version_info attribute_relro;
+/* The preload list passed as a command argument.  */
+static const char *preloadarg attribute_relro;
 
 /* The LD_PRELOAD environment variable gives list of libraries
    separated by white space or colons that are loaded before the
    executable's dependencies and prepended to the global scope list.
    (If the binary is running setuid all elements containing a '/' are
    ignored since it is insecure.)  Return the number of preloads
-   performed.  */
+   performed.   Ditto for --preload command argument.  */
 unsigned int
-handle_ld_preload (const char *preloadlist, struct link_map *main_map)
+handle_preload_list (const char *preloadlist, struct link_map *main_map,
+		     const char *where)
 {
   unsigned int npreloads = 0;
   const char *p = preloadlist;
@@ -858,7 +861,7 @@ handle_ld_preload (const char *preloadlist, struct link_map *main_map)
 	++p;
 
       if (dso_name_valid_for_suid (fname))
-	npreloads += do_preload (fname, main_map, "LD_PRELOAD");
+	npreloads += do_preload (fname, main_map, where);
     }
   return npreloads;
 }
@@ -978,6 +981,13 @@ dl_main (const ElfW(Phdr) *phdr,
 	    _dl_argc -= 2;
 	    _dl_argv += 2;
 	  }
+	else if (! strcmp (_dl_argv[1], "--preload") && _dl_argc > 2)
+	  {
+	    preloadarg = _dl_argv[2];
+	    _dl_skip_args += 2;
+	    _dl_argc -= 2;
+	    _dl_argv += 2;
+	  }
 	else
 	  break;
 
@@ -1006,7 +1016,8 @@ of this helper program; chances are you did not intend to run this program.\n\
 			variable LD_LIBRARY_PATH\n\
   --inhibit-rpath LIST  ignore RUNPATH and RPATH information in object names\n\
 			in LIST\n\
-  --audit LIST          use objects named in LIST as auditors\n");
+  --audit LIST          use objects named in LIST as auditors\n\
+  --preload LIST        preload objects named in LIST\n");
 
       ++_dl_skip_args;
       --_dl_argc;
@@ -1620,7 +1631,16 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
   if (__glibc_unlikely (preloadlist != NULL))
     {
       HP_TIMING_NOW (start);
-      npreloads += handle_ld_preload (preloadlist, main_map);
+      npreloads += handle_preload_list (preloadlist, main_map, "LD_PRELOAD");
+      HP_TIMING_NOW (stop);
+      HP_TIMING_DIFF (diff, start, stop);
+      HP_TIMING_ACCUM_NT (load_time, diff);
+    }
+
+  if (__glibc_unlikely (preloadarg != NULL))
+    {
+      HP_TIMING_NOW (start);
+      npreloads += handle_preload_list (preloadarg, main_map, "--preload");
       HP_TIMING_NOW (stop);
       HP_TIMING_DIFF (diff, start, stop);
       HP_TIMING_ACCUM_NT (load_time, diff);

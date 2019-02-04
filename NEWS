@@ -9,7 +9,8 @@ Version 2.30
 
 Major new features:
 
-  [Add new features here]
+* The dynamic linker accepts the --preload argument to preload shared
+  objects, in addition to the LD_PRELOAD environment variable.
 
 Deprecated and removed features, and other changes affecting compatibility:
 

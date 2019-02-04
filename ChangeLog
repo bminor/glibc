@@ -1,3 +1,16 @@
+2019-02-04  David Newall  <glibc@davidnewall.com>
+
+	elf: Implement --preload option for the dynamic linker.
+	* elf/rtld.c (preloadarg): New variable.
+	(handle_preload_list): Pass through “where” argument to
+	do_preload.
+	(dl_main): Handle "--preload" and add second call to
+	handle_preload_list.
+	* elf/Makefile (tests-special): Add tst-rtld-preload.out.
+	(tst-rtld-preload-OBJS): Set variable.
+	(tst-rtld-preload.out): New target.
+	* elf/tst-rtld-preload.sh: New file.
+
 2019-02-04  Matthew Malcomson  <matthew.malcomson@arm.com>
 
 	* Makefile (testrun.sh): Exit in case of incorrect argument.

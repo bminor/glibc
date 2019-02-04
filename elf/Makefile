@@ -354,7 +354,8 @@ endif
 
 ifeq (yes,$(build-shared))
 ifeq ($(run-built-tests),yes)
-tests-special += $(objpfx)tst-pathopt.out $(objpfx)tst-rtld-load-self.out
+tests-special += $(objpfx)tst-pathopt.out $(objpfx)tst-rtld-load-self.out \
+		 $(objpfx)tst-rtld-preload.out
 endif
 tests-special += $(objpfx)check-textrel.out $(objpfx)check-execstack.out \
 		 $(objpfx)check-localplt.out $(objpfx)check-initfini.out
@@ -881,6 +882,15 @@ $(objpfx)tst-pathopt.out: tst-pathopt.sh $(objpfx)tst-pathopt \
 
 $(objpfx)tst-rtld-load-self.out: tst-rtld-load-self.sh $(objpfx)ld.so
 	$(SHELL) $^ '$(test-wrapper)' '$(test-wrapper-env)' > $@; \
+	$(evaluate-test)
+
+tst-rtld-preload-OBJS = $(subst $(empty) ,:,$(strip $(preloadtest-preloads:=.so)))
+$(objpfx)tst-rtld-preload.out: tst-rtld-preload.sh $(objpfx)ld.so \
+			       $(objpfx)preloadtest \
+			       $(preloadtest-preloads:%=$(objpfx)%.so)
+	$(SHELL) $< $(objpfx)ld.so $(objpfx)preloadtest \
+		    '$(test-wrapper)' '$(test-wrapper-env)' '$(run_program_env)' \
+		    '$(rpath-link)' '$(tst-rtld-preload-OBJS)' > $@; \
 	$(evaluate-test)
 
 $(objpfx)initfirst: $(libdl)
