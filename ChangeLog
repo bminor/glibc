@@ -1,3 +1,8 @@
+2019-02-20  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
+	* sysdeps/powerpc/powerpc64/le/configure.ac: Remove test.
+	* sysdeps/powerpc/powerpc64/le/configure: Regenerate.
+
 2019-02-19  Wolfram Sang  <wsa@the-dreams.de>
 
 	* nptl/pthread_mutex_trylock.c: Fix comment.
