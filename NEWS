@@ -25,7 +25,13 @@ Changes to build and runtime requirements:
 
 Security related changes:
 
-  [Add security related changes here]
+  CVE-2019-7309: x86-64 memcmp used signed Jcc instructions to check
+  size.  For x86-64, memcmp on an object size larger than SSIZE_MAX
+  has undefined behavior.  On x32, the size_t argument may be passed
+  in the lower 32 bits of the 64-bit RDX register with non-zero upper
+  32 bits.  When it happened with the sign bit of RDX register set,
+  memcmp gave the wrong result since it treated the size argument as
+  zero.  Reported by H.J. Lu.
 
 The following bugs are resolved with this release:
 

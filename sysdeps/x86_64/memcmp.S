@@ -21,14 +21,18 @@
 
 	.text
 ENTRY (memcmp)
-	test	%rdx, %rdx
+#ifdef __ILP32__
+	/* Clear the upper 32 bits.  */
+	movl	%edx, %edx
+#endif
+	test	%RDX_LP, %RDX_LP
 	jz	L(finz)
 	cmpq	$1, %rdx
-	jle	L(finr1b)
+	jbe	L(finr1b)
 	subq	%rdi, %rsi
 	movq	%rdx, %r10
 	cmpq	$32, %r10
-	jge	L(gt32)
+	jae	L(gt32)
 	/* Handle small chunks and last block of less than 32 bytes.  */
 L(small):
 	testq	$1, %r10
@@ -156,7 +160,7 @@ L(A32):
 	movq	%r11, %r10
 	andq	$-32, %r10
 	cmpq	%r10, %rdi
-        jge	L(mt16)
+        jae	L(mt16)
 	/* Pre-unroll to be ready for unrolled 64B loop.  */
 	testq	$32, %rdi
 	jz	L(A64)
@@ -178,7 +182,7 @@ L(A64):
 	movq	%r11, %r10
 	andq	$-64, %r10
 	cmpq	%r10, %rdi
-        jge	L(mt32)
+        jae	L(mt32)
 
 L(A64main):
 	movdqu    (%rdi,%rsi), %xmm0
@@ -216,7 +220,7 @@ L(mt32):
 	movq	%r11, %r10
 	andq	$-32, %r10
 	cmpq	%r10, %rdi
-        jge	L(mt16)
+        jae	L(mt16)
 
 L(A32main):
 	movdqu    (%rdi,%rsi), %xmm0
@@ -254,7 +258,7 @@ L(ATR):
 	movq	%r11, %r10
 	andq	$-32, %r10
 	cmpq	%r10, %rdi
-        jge	L(mt16)
+        jae	L(mt16)
 	testq	$16, %rdi
 	jz	L(ATR32)
 
@@ -325,7 +329,7 @@ L(ATR64main):
 	movq	%r11, %r10
 	andq	$-32, %r10
 	cmpq	%r10, %rdi
-        jge	L(mt16)
+        jae	L(mt16)
 
 L(ATR32res):
 	movdqa    (%rdi,%rsi), %xmm0
