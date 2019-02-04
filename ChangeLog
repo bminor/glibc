@@ -1,3 +1,14 @@
+2019-02-04  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #24155]
+	CVE-2019-7309
+	* NEWS: Updated for CVE-2019-7309.
+	* sysdeps/x86_64/memcmp.S: Use RDX_LP for size.  Clear the
+	upper 32 bits of RDX register for x32.  Use unsigned Jcc
+	instructions, instead of signed.
+	* sysdeps/x86_64/x32/Makefile (tests): Add tst-size_t-memcmp-2.
+	* sysdeps/x86_64/x32/tst-size_t-memcmp-2.c: New test.
+
 2019-02-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #24097]
