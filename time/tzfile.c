@@ -246,25 +246,32 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
      the following arrays:
 
      __time64_t transitions[num_transitions];
+     struct leap leaps[num_leaps];
      struct ttinfo types[num_types];
      unsigned char type_idxs[num_types];
      char zone_names[chars];
-     struct leap leaps[num_leaps];
-     char extra_array[extra]; // Stored into *pextras if requested.
      char tzspec[tzspec_len];
+     char extra_array[extra]; // Stored into *pextras if requested.
 
      The piece-wise allocations from buf below verify that no
-     overflow/wraparound occurred in these computations.  */
+     overflow/wraparound occurred in these computations.
+
+     The order of the suballocations is important for alignment
+     purposes.  __time64_t outside a struct may require more alignment
+     then inside a struct on some architectures, so it must come
+     first. */
+  _Static_assert (__alignof (__time64_t) >= __alignof (struct leap),
+		  "alignment of __time64_t");
+  _Static_assert (__alignof (struct leap) >= __alignof (struct ttinfo),
+		  "alignment of struct leap");
   struct alloc_buffer buf;
   {
-    size_t total_size = num_transitions * (sizeof (__time64_t) + 1);
-    total_size = ((total_size + __alignof__ (struct ttinfo) - 1)
-		  & ~(__alignof__ (struct ttinfo) - 1));
-    total_size += num_types * sizeof (struct ttinfo) + chars;
-    total_size = ((total_size + __alignof__ (struct leap) - 1)
-		  & ~(__alignof__ (struct leap) - 1));
-    total_size += num_leaps * sizeof (struct leap) + tzspec_len + extra;
-
+    size_t total_size = (num_transitions * sizeof (__time64_t)
+			 + num_leaps * sizeof (struct leap)
+			 + num_types * sizeof (struct ttinfo)
+			 + num_transitions /* type_idxs */
+			 + chars /* zone_names */
+			 + tzspec_len + extra);
     transitions = malloc (total_size);
     if (transitions == NULL)
       goto lose;
@@ -274,35 +281,25 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
   /* The address of the first allocation is already stored in the
      pointer transitions.  */
   (void) alloc_buffer_alloc_array (&buf, __time64_t, num_transitions);
-  type_idxs = alloc_buffer_alloc_array (&buf, unsigned char, num_transitions);
-  types = alloc_buffer_alloc_array (&buf, struct ttinfo, num_types);
-  zone_names = alloc_buffer_alloc_array (&buf, char, chars);
   leaps = alloc_buffer_alloc_array (&buf, struct leap, num_leaps);
-  if (extra > 0)
-    *extrap = alloc_buffer_alloc_array (&buf, char, extra);
+  types = alloc_buffer_alloc_array (&buf, struct ttinfo, num_types);
+  type_idxs = alloc_buffer_alloc_array (&buf, unsigned char, num_transitions);
+  zone_names = alloc_buffer_alloc_array (&buf, char, chars);
   if (trans_width == 8)
     tzspec = alloc_buffer_alloc_array (&buf, char, tzspec_len);
   else
     tzspec = NULL;
+  if (extra > 0)
+    *extrap = alloc_buffer_alloc_array (&buf, char, extra);
   if (alloc_buffer_has_failed (&buf))
     goto lose;
 
-  if (__builtin_expect (trans_width == 8, 1))
-    {
-      if (__builtin_expect (__fread_unlocked (transitions, trans_width + 1,
-					      num_transitions, f)
-			    != num_transitions, 0))
+  if (__glibc_unlikely (__fread_unlocked (transitions, trans_width,
+					  num_transitions, f)
+			!= num_transitions)
+      || __glibc_unlikely (__fread_unlocked (type_idxs, 1, num_transitions, f)
+			   != num_transitions))
 	goto lose;
-    }
-  else
-    {
-      if (__builtin_expect (__fread_unlocked (transitions, 4,
-					      num_transitions, f)
-			    != num_transitions, 0)
-	  || __builtin_expect (__fread_unlocked (type_idxs, 1, num_transitions,
-						 f) != num_transitions, 0))
-	goto lose;
-    }
 
   /* Check for bogus indices in the data file, so we can hereafter
      safely use type_idxs[T] as indices into `types' and never crash.  */

@@ -1,3 +1,8 @@
+2019-02-04  Florian Weimer  <fweimer@redhat.com>
+
+	* time/tzfile.c (__tzfile_read): Reorder suballocations to avoid
+	alignment gaps.
+
 2019-02-03  Florian Weimer  <fweimer@redhat.com>
 
 	* time/tzfile.c (__tzfile_read): Use struct alloc_buffer and its
