@@ -35,6 +35,7 @@ The following bugs are resolved with this release:
   [24027] malloc: Integer overflow in realloc
   [24034] tst-cancel21-static fails with SIGBUS on pre-ARMv7 when using GCC 8
   [24097] Can't use 64-bit register for size_t in assembly codes for x32 (CVE-2019-6488)
+  [24155] x32 memcmp can treat positive length as 0 (if sign bit in RDX is set) (CVE-2019-7309)
 
 Security related changes:
 
@@ -47,6 +48,14 @@ Security related changes:
   happened, accessing the 32-bit size_t value as the full 64-bit register
   in the assembly string/memory functions would cause a buffer overflow.
   Reported by H.J. Lu.
+
+  CVE-2019-7309: x86-64 memcmp used signed Jcc instructions to check
+  size.  For x86-64, memcmp on an object size larger than SSIZE_MAX
+  has undefined behavior.  On x32, the size_t argument may be passed
+  in the lower 32 bits of the 64-bit RDX register with non-zero upper
+  32 bits.  When it happened with the sign bit of RDX register set,
+  memcmp gave the wrong result since it treated the size argument as
+  zero.  Reported by H.J. Lu.
 
 
 Version 2.28
