@@ -479,6 +479,8 @@ The following bugs are resolved with this release:
   [23459] libc: COMMON_CPUID_INDEX_80000001 isn't populated for Intel
     processors
   [23467] dynamic-link: x86/CET: A property note parser bug
+  [24112] network: Do not send DNS queries for non-host names (where all
+    answers will be rejected)
 
 
 Version 2.27
