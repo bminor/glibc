@@ -1,3 +1,8 @@
+2019-02-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* malloc/malloc.c (tcache_get): Compare tcache->counts[tc_idx]
+	with 0, not tcache->entries[tc_idx].
+
 2019-09-13  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* string/memmem.c (__memmem): Rewrite to improve performance.
