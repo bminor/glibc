@@ -2,8 +2,8 @@
 
 #ifndef _ISOMAC
 /* Variant of inet_aton which rejects trailing garbage.  */
-extern int __inet_aton_exact (const char *__cp, struct in_addr *__inp);
-libc_hidden_proto (__inet_aton_exact)
+extern int __inet_aton_exact (const char *__cp, struct in_addr *__inp)
+  attribute_hidden;
 
 libc_hidden_proto (inet_ntop)
 libc_hidden_proto (inet_pton)

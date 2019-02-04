@@ -1,3 +1,15 @@
+2019-02-04  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20018]
+	Restore GLIBC_PRIVATE ABI after CVE-2016-10739 fix.
+	* include/arpa/inet.h (__inet_aton_exact): Declare as hidden.
+	* resolv/inet_addr.c (__inet_aton_exact): Remove libc_hidden_def.
+	* resolv/Versions (GLIBC_PRIVATE): Do not export
+	__inet_aton_exact.
+	* nscd/nscd-inet_addr.c: New file.  Build resolv/inet_addr.c for
+	nscd, without public symbols.
+	* nscd/Makefile (nscd-modules): Add it.
+
 2019-01-21  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #20018]

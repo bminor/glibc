@@ -192,7 +192,6 @@ __inet_aton_exact (const char *cp, struct in_addr *addr)
   else
     return 0;
 }
-libc_hidden_def (__inet_aton_exact)
 
 /* inet_aton ignores trailing garbage.  */
 int
