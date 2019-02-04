@@ -1,3 +1,7 @@
+2019-02-04  Matthew Malcomson  <matthew.malcomson@arm.com>
+
+	* Makefile (testrun.sh): Exit in case of incorrect argument.
+
 2019-02-04  Florian Weimer  <fweimer@redhat.com>
 
 	* time/tzfile.c (__tzfile_read): Reorder suballocations to avoid

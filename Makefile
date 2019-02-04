@@ -137,6 +137,7 @@ GCONV_PATH="$${builddir}/iconvdata"
 usage () {
   echo "usage: $$0 [--tool=strace] PROGRAM [ARGUMENTS...]" 2>&1
   echo "       $$0 --tool=valgrind PROGRAM [ARGUMENTS...]" 2>&1
+  exit 1
 }
 
 toolname=default
