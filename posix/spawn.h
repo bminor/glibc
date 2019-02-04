@@ -75,7 +75,8 @@ extern int posix_spawn (pid_t *__restrict __pid,
 			__file_actions,
 			const posix_spawnattr_t *__restrict __attrp,
 			char *const __argv[__restrict_arr],
-			char *const __envp[__restrict_arr]);
+			char *const __envp[__restrict_arr])
+    __nonnull ((2, 5));
 
 /* Similar to `posix_spawn' but search for FILE in the PATH.
 
@@ -84,85 +85,97 @@ extern int posix_spawn (pid_t *__restrict __pid,
 extern int posix_spawnp (pid_t *__pid, const char *__file,
 			 const posix_spawn_file_actions_t *__file_actions,
 			 const posix_spawnattr_t *__attrp,
-			 char *const __argv[], char *const __envp[]);
+			 char *const __argv[], char *const __envp[])
+    __nonnull ((2, 5));
 
 
 /* Initialize data structure with attributes for `spawn' to default values.  */
-extern int posix_spawnattr_init (posix_spawnattr_t *__attr) __THROW;
+extern int posix_spawnattr_init (posix_spawnattr_t *__attr)
+    __THROW __nonnull ((1));
 
 /* Free resources associated with ATTR.  */
-extern int posix_spawnattr_destroy (posix_spawnattr_t *__attr) __THROW;
+extern int posix_spawnattr_destroy (posix_spawnattr_t *__attr)
+    __THROW __nonnull ((1));
 
 /* Store signal mask for signals with default handling from ATTR in
    SIGDEFAULT.  */
 extern int posix_spawnattr_getsigdefault (const posix_spawnattr_t *
 					  __restrict __attr,
 					  sigset_t *__restrict __sigdefault)
-     __THROW;
+     __THROW __nonnull ((1, 2));
 
 /* Set signal mask for signals with default handling in ATTR to SIGDEFAULT.  */
 extern int posix_spawnattr_setsigdefault (posix_spawnattr_t *__restrict __attr,
 					  const sigset_t *__restrict
 					  __sigdefault)
-     __THROW;
+     __THROW __nonnull ((1, 2));
 
 /* Store signal mask for the new process from ATTR in SIGMASK.  */
 extern int posix_spawnattr_getsigmask (const posix_spawnattr_t *__restrict
 				       __attr,
-				       sigset_t *__restrict __sigmask) __THROW;
+				       sigset_t *__restrict __sigmask)
+    __THROW __nonnull ((1, 2));
 
 /* Set signal mask for the new process in ATTR to SIGMASK.  */
 extern int posix_spawnattr_setsigmask (posix_spawnattr_t *__restrict __attr,
 				       const sigset_t *__restrict __sigmask)
-     __THROW;
+     __THROW __nonnull ((1, 2));
 
 /* Get flag word from the attribute structure.  */
 extern int posix_spawnattr_getflags (const posix_spawnattr_t *__restrict
 				     __attr,
-				     short int *__restrict __flags) __THROW;
+				     short int *__restrict __flags)
+     __THROW __nonnull ((1, 2));
 
 /* Store flags in the attribute structure.  */
 extern int posix_spawnattr_setflags (posix_spawnattr_t *_attr,
-				     short int __flags) __THROW;
+				     short int __flags)
+     __THROW __nonnull ((1));
 
 /* Get process group ID from the attribute structure.  */
 extern int posix_spawnattr_getpgroup (const posix_spawnattr_t *__restrict
 				      __attr, pid_t *__restrict __pgroup)
-     __THROW;
+     __THROW __nonnull ((1, 2));
 
 /* Store process group ID in the attribute structure.  */
 extern int posix_spawnattr_setpgroup (posix_spawnattr_t *__attr,
-				      pid_t __pgroup) __THROW;
+				      pid_t __pgroup)
+     __THROW __nonnull ((1));
 
 /* Get scheduling policy from the attribute structure.  */
 extern int posix_spawnattr_getschedpolicy (const posix_spawnattr_t *
 					   __restrict __attr,
 					   int *__restrict __schedpolicy)
-     __THROW;
+     __THROW __nonnull ((1, 2));
 
 /* Store scheduling policy in the attribute structure.  */
 extern int posix_spawnattr_setschedpolicy (posix_spawnattr_t *__attr,
-					   int __schedpolicy) __THROW;
+					   int __schedpolicy)
+     __THROW __nonnull ((1));
 
 /* Get scheduling parameters from the attribute structure.  */
 extern int posix_spawnattr_getschedparam (const posix_spawnattr_t *
 					  __restrict __attr,
 					  struct sched_param *__restrict
-					  __schedparam) __THROW;
+					  __schedparam)
+     __THROW __nonnull ((1, 2));
 
 /* Store scheduling parameters in the attribute structure.  */
 extern int posix_spawnattr_setschedparam (posix_spawnattr_t *__restrict __attr,
 					  const struct sched_param *
-					  __restrict __schedparam) __THROW;
+					  __restrict __schedparam)
+     __THROW __nonnull ((1, 2));
 
 
 /* Initialize data structure for file attribute for `spawn' call.  */
 extern int posix_spawn_file_actions_init (posix_spawn_file_actions_t *
-					  __file_actions) __THROW;
+					  __file_actions)
+     __THROW __nonnull ((1));
 
 /* Free resources associated with FILE-ACTIONS.  */
 extern int posix_spawn_file_actions_destroy (posix_spawn_file_actions_t *
-					     __file_actions) __THROW;
+					     __file_actions)
+     __THROW __nonnull ((1));
 
 /* Add an action to FILE-ACTIONS which tells the implementation to call
    `open' for the given file during the `spawn' call.  */
@@ -171,31 +184,35 @@ extern int posix_spawn_file_actions_addopen (posix_spawn_file_actions_t *
 					     int __fd,
 					     const char *__restrict __path,
 					     int __oflag, mode_t __mode)
-     __THROW;
+     __THROW __nonnull ((1, 3));
 
 /* Add an action to FILE-ACTIONS which tells the implementation to call
    `close' for the given file descriptor during the `spawn' call.  */
 extern int posix_spawn_file_actions_addclose (posix_spawn_file_actions_t *
 					      __file_actions, int __fd)
-     __THROW;
+     __THROW __nonnull ((1));
 
 /* Add an action to FILE-ACTIONS which tells the implementation to call
    `dup2' for the given file descriptors during the `spawn' call.  */
 extern int posix_spawn_file_actions_adddup2 (posix_spawn_file_actions_t *
 					     __file_actions,
-					     int __fd, int __newfd) __THROW;
+					     int __fd, int __newfd)
+     __THROW __nonnull ((1));
 
 #ifdef __USE_GNU
 /* Add an action changing the directory to PATH during spawn.  This
    affects the subsequent file actions.  */
-extern int posix_spawn_file_actions_addchdir_np (posix_spawn_file_actions_t *,
-						 const char *__path) __THROW;
+extern int posix_spawn_file_actions_addchdir_np (posix_spawn_file_actions_t *
+						 __restrict __actions,
+						 const char *__restrict __path)
+     __THROW __nonnull ((1, 2));
 
 /* Add an action changing the directory to FD during spawn.  This
    affects the subsequent file actions.  FD is not duplicated and must
    be open when the file action is executed.  */
 extern int posix_spawn_file_actions_addfchdir_np (posix_spawn_file_actions_t *,
-						  int __fd) __THROW;
+						  int __fd)
+     __THROW __nonnull ((1));
 #endif
 
 __END_DECLS

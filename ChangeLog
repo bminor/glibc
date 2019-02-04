@@ -1,3 +1,25 @@
+2019-02-04  Florian Weimer  <fweimer@redhat.com>
+
+	* posix/spawn.h (posix_spawn, posix_spawnp): Add __nonnull attribute.
+	(posix_spawnattr_init, posix_spawnattr_destroy): Likewise.
+	(posix_spawnattr_getsigdefault, posix_spawnattr_setsigdefault):
+	Likewise.
+	(posix_spawnattr_getsigmask, posix_spawnattr_setsigmask): Likewise.
+	(posix_spawnattr_getflags, posix_spawnattr_setflags): Likewise.
+	(posix_spawnattr_getpgroup, posix_spawnattr_setpgroup): Likewise.
+	(posix_spawnattr_getschedpolicy, posix_spawnattr_setschedpolicy):
+	Likewise.
+	(posix_spawnattr_getschedparam, posix_spawnattr_setschedparam):
+	Likewise.
+	(posix_spawn_file_actions_init, posix_spawn_file_actions_destroy):
+	Likewise.
+	(posix_spawn_file_actions_addopen): Likewise.
+	(posix_spawn_file_actions_addclose): Likewise.
+	(posix_spawn_file_actions_adddup2): Likewise.
+	(posix_spawn_file_actions_addchdir_np): Likewise.  Add __restrict
+	qualifiers.
+	(posix_spawn_file_actions_addfchdir_np): Likewise.
+
 2019-02-04  David Newall  <glibc@davidnewall.com>
 
 	elf: Implement --preload option for the dynamic linker.
