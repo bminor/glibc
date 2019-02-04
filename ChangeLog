@@ -1,3 +1,13 @@
+2019-02-04  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20018]
+	nscd: Do not rely on new GLIBC_PRIVATE ABI after CVE-2016-10739 fix.
+	* nscd/nscd-inet_addr.c: New file.  Build resolv/inet_addr.c for
+	nscd, without public symbols.
+	* nscd/Makefile (nscd-modules): Add it.
+	* nscd/gai.c: Include <arpa/inet.h> and change visibility of
+	__inet_aton_exact.
+
 2019-01-21  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #20018]
