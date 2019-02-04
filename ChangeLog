@@ -1,5 +1,8 @@
 2019-02-04  Joseph Myers  <joseph@codesourcery.com>
 
+	* malloc/malloc.c (tcache_get): Compare tcache->counts[tc_idx]
+	with 0, not tcache->entries[tc_idx].
+
 	* nscd/connections.c (reqinfo): Initialize SHUTDOWN element only
 	once.
 
