@@ -227,7 +227,6 @@ static struct
   [GETHOSTBYADDRv6] = { true, &dbs[hstdb] },
   [SHUTDOWN] = { false, NULL },
   [GETSTAT] = { false, NULL },
-  [SHUTDOWN] = { false, NULL },
   [GETFDPW] = { false, &dbs[pwddb] },
   [GETFDGR] = { false, &dbs[grpdb] },
   [GETFDHST] = { false, &dbs[hstdb] },

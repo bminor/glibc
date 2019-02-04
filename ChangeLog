@@ -1,3 +1,8 @@
+2019-02-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* nscd/connections.c (reqinfo): Initialize SHUTDOWN element only
+	once.
+
 2019-02-04  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #16976]
