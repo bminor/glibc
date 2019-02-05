@@ -1,3 +1,8 @@
+2019-02-11  Paul A. Clarke  <pc@us.ibm.com>
+
+	* sysdeps/powerpc/fpu/e_sqrt.c (__slow_ieee754_sqrtf):
+	Use float instead of double.
+
 2019-02-11  TAMUKI Shoichi  <tamuki@linet.gr.jp>
 
 	* time/strftime_l.c: Fix a few whitespace arrangement inconsistencies.

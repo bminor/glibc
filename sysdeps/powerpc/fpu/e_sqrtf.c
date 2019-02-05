@@ -138,7 +138,7 @@ __slow_ieee754_sqrtf (float x)
 float
 __ieee754_sqrtf (float x)
 {
-  double z;
+  float z;
 
 #ifdef _ARCH_PPCSQ
   asm ("fsqrts	%0,%1\n" :"=f" (z):"f" (x));
