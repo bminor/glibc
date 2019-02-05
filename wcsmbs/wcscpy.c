@@ -16,7 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <stddef.h>
 #include <wchar.h>
 
 
@@ -28,35 +27,7 @@
 wchar_t *
 __wcscpy (wchar_t *dest, const wchar_t *src)
 {
-  wint_t c;
-  wchar_t *wcp;
-
-  if (__alignof__ (wchar_t) >= sizeof (wchar_t))
-    {
-      const ptrdiff_t off = dest - src - 1;
-
-      wcp = (wchar_t *) src;
-
-      do
-	{
-	  c = *wcp++;
-	  wcp[off] = c;
-	}
-      while (c != L'\0');
-    }
-  else
-    {
-      wcp = dest;
-
-      do
-	{
-	  c = *src++;
-	  *wcp++ = c;
-	}
-      while (c != L'\0');
-    }
-
-  return dest;
+  return __wmemcpy (dest, src, __wcslen (src) + 1);
 }
 #ifndef WCSCPY
 weak_alias (__wcscpy, wcscpy)

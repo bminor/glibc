@@ -1,5 +1,7 @@
 2019-02-27  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* wcsmbs/wcscpy.c (__wcpcpy): Rewrite using wcslen and wmemcpy.
+
 	* include/wchar.h (__wcscpy): New prototype.
 	* sysdeps/powerpc/powerpc32/power4/multiarch/wcscpy-ppc32.c
 	(__wcscpy): Route internal symbol to generic implementation.
