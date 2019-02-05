@@ -17,10 +17,11 @@
 
 #include <wchar.h>
 
-#if IS_IN (libc)
-# define WCSCPY  __wcscpy_ppc
-#endif
-
 extern __typeof (wcscpy) __wcscpy_ppc;
 
+#define WCSCPY  __wcscpy_ppc
 #include <wcsmbs/wcscpy.c>
+
+#ifdef SHARED
+__hidden_ver1 (__wcscpy_ppc, __GI___wcscpy, __wcscpy_ppc);
+#endif

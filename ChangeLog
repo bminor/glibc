@@ -1,5 +1,18 @@
 2019-02-27  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* include/wchar.h (__wcscpy): New prototype.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/wcscpy-ppc32.c
+	(__wcscpy): Route internal symbol to generic implementation.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/wcscpy.c (wcscpy):
+	Add internal __wcscpy alias.
+	* sysdeps/powerpc/powerpc64/multiarch/wcscpy.c (wcscpy): Likewise.
+	* sysdeps/s390/wcscpy.c (wcscpy): Likewise.
+	* sysdeps/x86_64/multiarch/wcscpy.c (wcscpy): Likewise.
+	* wcsmbs/wcscpy.c (wcscpy): Add
+	* sysdeps/x86_64/multiarch/wcscpy-c.c (WCSCPY): Adjust macro to
+	use generic implementation.
+	* wcsmbs/wcscat.c (wcscat): Rewrite using wcslen and wcscpy.
+
 	* wcsmbs/wcpncpy.c (__wcpcpy): Rewrite using wcslen, wmemcpy, and
 	wmemset.
 

@@ -20,13 +20,13 @@
 #include <wchar.h>
 
 
-#ifndef WCSCPY
-# define WCSCPY wcscpy
+#ifdef WCSCPY
+# define __wcscpy WCSCPY
 #endif
 
 /* Copy SRC to DEST.  */
 wchar_t *
-WCSCPY (wchar_t *dest, const wchar_t *src)
+__wcscpy (wchar_t *dest, const wchar_t *src)
 {
   wint_t c;
   wchar_t *wcp;
@@ -58,3 +58,7 @@ WCSCPY (wchar_t *dest, const wchar_t *src)
 
   return dest;
 }
+#ifndef WCSCPY
+weak_alias (__wcscpy, wcscpy)
+libc_hidden_def (__wcscpy)
+#endif

@@ -30,9 +30,11 @@ extern __typeof (wcscpy) WCSCPY_C attribute_hidden;
 extern __typeof (wcscpy) WCSCPY_Z13 attribute_hidden;
 # endif
 
-s390_libc_ifunc_expr (wcscpy, wcscpy,
+s390_libc_ifunc_expr (wcscpy, __wcscpy,
 		      (HAVE_WCSCPY_Z13 && (hwcap & HWCAP_S390_VX))
 		      ? WCSCPY_Z13
 		      : WCSCPY_DEFAULT
 		      )
+weak_alias (__wcscpy, wcscpy)
+libc_hidden_def (__wcscpy)
 #endif

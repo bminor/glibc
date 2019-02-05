@@ -16,21 +16,20 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc)
-# include <wchar.h>
-# include <shlib-compat.h>
-# include "init-arch.h"
+#define __wcscpy __redirect___wcscpy
+#include <wchar.h>
+#undef __wcscpy
+#include <shlib-compat.h>
+#include "init-arch.h"
 
 extern __typeof (wcscpy) __wcscpy_ppc attribute_hidden;
 extern __typeof (wcscpy) __wcscpy_power6 attribute_hidden;
 extern __typeof (wcscpy) __wcscpy_power7 attribute_hidden;
 
-libc_ifunc (wcscpy,
-	     (hwcap & PPC_FEATURE_HAS_VSX)
-             ? __wcscpy_power7 :
-	       (hwcap & PPC_FEATURE_ARCH_2_05)
-	       ? __wcscpy_power6
-             : __wcscpy_ppc);
-#else
-#include <wcsmbs/wcscpy.c>
-#endif
+libc_ifunc_redirected (__redirect___wcscpy, __wcscpy,
+		       (hwcap & PPC_FEATURE_HAS_VSX)
+		       ? __wcscpy_power7 :
+		         (hwcap & PPC_FEATURE_ARCH_2_05)
+		         ? __wcscpy_power6
+	               : __wcscpy_ppc);
+weak_alias (__wcscpy, wcscpy)
