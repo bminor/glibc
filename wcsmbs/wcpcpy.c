@@ -18,31 +18,18 @@
 
 #include <wchar.h>
 
-#define __need_ptrdiff_t
-#include <stddef.h>
-
 #ifdef WCPCPY
 # define __wcpcpy WCPCPY
 #endif
+
 /* Copy SRC to DEST, returning the address of the terminating L'\0' in
    DEST.  */
 wchar_t *
 __wcpcpy (wchar_t *dest, const wchar_t *src)
 {
-  wchar_t *wcp = (wchar_t *) dest - 1;
-  wint_t c;
-  const ptrdiff_t off = src - dest + 1;
-
-  do
-    {
-      c = wcp[off];
-      *++wcp = c;
-    }
-  while (c != L'\0');
-
-  return wcp;
+  size_t len = __wcslen (src);
+  return __wmemcpy (dest, src, len + 1) + len;
 }
-
 #ifndef WCPCPY
 weak_alias (__wcpcpy, wcpcpy)
 #endif

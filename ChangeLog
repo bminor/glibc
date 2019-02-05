@@ -1,3 +1,8 @@
+2019-02-27  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/m68k/wcpcpy.c: Remove file.
+	* wcsmbs/wcpcpy.c (__wcpcpy): Rewrite using wcslen and wmemcpy.
+
 2019-02-26  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/arm/sysdep.h (#if condition): Break lines before rather
