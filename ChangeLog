@@ -1,5 +1,8 @@
 2019-02-27  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* wcsmbs/wcpncpy.c (__wcpcpy): Rewrite using wcslen, wmemcpy, and
+	wmemset.
+
 	* sysdeps/m68k/wcpcpy.c: Remove file.
 	* wcsmbs/wcpcpy.c (__wcpcpy): Rewrite using wcslen and wmemcpy.
 
