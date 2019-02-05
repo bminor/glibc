@@ -1,5 +1,8 @@
 2019-02-27  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* wcsmbs/wcsncat.c (wcsncat): Rewrite using wcslen, wcsnlen, and
+	wmemcpy.
+
 	* wcsmbs/wcscpy.c (__wcpcpy): Rewrite using wcslen and wmemcpy.
 
 	* include/wchar.h (__wcscpy): New prototype.

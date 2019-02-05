@@ -26,54 +26,15 @@
 wchar_t *
 WCSNCAT (wchar_t *dest, const wchar_t *src, size_t n)
 {
-  wchar_t c;
-  wchar_t * const s = dest;
+  wchar_t *ret = dest;
 
-  /* Find the end of DEST.  */
-  do
-    c = *dest++;
-  while (c != L'\0');
+  /* Find the end of dest.  */
+  dest += __wcslen (dest);
 
-  /* Make DEST point before next character, so we can increment
-     it while memory is read (wins on pipelined cpus).	*/
-  dest -= 2;
+  size_t ds = __wcsnlen (src, n);
 
-  if (n >= 4)
-    {
-      size_t n4 = n >> 2;
-      do
-	{
-	  c = *src++;
-	  *++dest = c;
-	  if (c == L'\0')
-	    return s;
-	  c = *src++;
-	  *++dest = c;
-	  if (c == L'\0')
-	    return s;
-	  c = *src++;
-	  *++dest = c;
-	  if (c == L'\0')
-	    return s;
-	  c = *src++;
-	  *++dest = c;
-	  if (c == L'\0')
-	    return s;
-	} while (--n4 > 0);
-      n &= 3;
-    }
+  dest[ds] = L'\0';
+  __wmemcpy (dest, src, ds);
 
-  while (n > 0)
-    {
-      c = *src++;
-      *++dest = c;
-      if (c == L'\0')
-	return s;
-      n--;
-    }
-
-  if (c != L'\0')
-    *++dest = L'\0';
-
-  return s;
+  return ret;
 }
