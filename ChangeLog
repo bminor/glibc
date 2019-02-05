@@ -1,3 +1,14 @@
+2019-02-05  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24164]
+	arm: Use "nr" constraint for Systemtap probes, to avoid the
+	compiler using memory operands for constants, due to the "o"
+	alternative in the default "nor" constraint.
+	* include/stap-probe.h [USE_STAP_PROBE]: Include
+	<stap-probe-machine.h>
+	* sysdeps/generic/stap-probe-machine.h: New file.
+	* sysdeps/arm/stap-probe-machine.h: Likewise.
+
 2019-02-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* malloc/malloc.c (tcache_get): Compare tcache->counts[tc_idx]
