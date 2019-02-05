@@ -26,62 +26,10 @@
 wchar_t *
 __wcsncpy (wchar_t *dest, const wchar_t *src, size_t n)
 {
-  wint_t c;
-  wchar_t *const s = dest;
-
-  --dest;
-
-  if (n >= 4)
-    {
-      size_t n4 = n >> 2;
-
-      for (;;)
-	{
-	  c = *src++;
-	  *++dest = c;
-	  if (c == L'\0')
-	    break;
-	  c = *src++;
-	  *++dest = c;
-	  if (c == L'\0')
-	    break;
-	  c = *src++;
-	  *++dest = c;
-	  if (c == L'\0')
-	    break;
-	  c = *src++;
-	  *++dest = c;
-	  if (c == L'\0')
-	    break;
-	  if (--n4 == 0)
-	    goto last_chars;
-	}
-      n = n - (dest - s) - 1;
-      if (n == 0)
-	return s;
-      goto zero_fill;
-    }
-
- last_chars:
-  n &= 3;
-  if (n == 0)
-    return s;
-
-  do
-    {
-      c = *src++;
-      *++dest = c;
-      if (--n == 0)
-	return s;
-    }
-  while (c != L'\0');
-
- zero_fill:
-  do
-    *++dest = L'\0';
-  while (--n > 0);
-
-  return s;
+  size_t size = __wcsnlen (src, n);
+  if (size != n)
+    __wmemset (dest + size, L'\0', n - size);
+  return __wmemcpy (dest, src, size);
 }
 #ifndef WCSNCPY
 weak_alias (__wcsncpy, wcsncpy)
