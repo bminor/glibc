@@ -21,6 +21,7 @@
 
 #ifdef USE_STAP_PROBE
 
+# include <stap-probe-machine.h>
 # include <sys/sdt.h>
 
 /* Our code uses one macro LIBC_PROBE (name, n, arg1, ..., argn).

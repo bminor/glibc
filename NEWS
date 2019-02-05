@@ -10,6 +10,7 @@ Version 2.29.1
 The following bugs are resolved with this release:
 
   [24155] x32 memcmp can treat positive length as 0 (if sign bit in RDX is set) (CVE-2019-7309)
+  [24164] Systemtap probes need to use "nr" constraint on 32-bit Arm
 
 Security related changes:
 
