@@ -1,5 +1,7 @@
 2019-02-27  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* wcsmbs/wcsnlen.c (__wcsnlen): Rewrite using wmemchr.
+
 	* wcsmbs/wcsncpy.c (__wcsncpy): Rewrite using wcsnlen, wmemset, and
 	wmemcpy.
 
