@@ -84,9 +84,9 @@ wide (const char *path)
   TEST_COMPARE (getwchar (), L'a');
   TEST_COMPARE (getwchar_unlocked (), L'b');
   wchar_t ch = 1;
-  TEST_COMPARE (wscanf (L"%c", &ch), 1);
+  TEST_COMPARE (wscanf (L"%lc", &ch), 1);
   TEST_COMPARE (ch, L'c');
-  TEST_COMPARE (call_vwscanf (L"%c", &ch), 1);
+  TEST_COMPARE (call_vwscanf (L"%lc", &ch), 1);
   TEST_COMPARE (ch, L'd');
 
   fclose (stdin);
