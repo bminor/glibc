@@ -1,5 +1,10 @@
 2019-02-06  Florian Weimer  <fweimer@redhat.com>
 
+	* support/xdlfcn.c (xdlopen, xdlclose): Do not call dlerror.
+	(xdlsym): Use dlerror to detect a NULL symbol.
+
+2019-02-06  Florian Weimer  <fweimer@redhat.com>
+
 	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Do not include
 	<stap-probe.h>.
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Likewise.
