@@ -97,8 +97,7 @@ int __branred (double x, double *a, double *aa);
    of the number by combining the sin and cos of X (as computed by a variation
    of the Taylor series) with the values looked up from the sin/cos table to
    get the result.  */
-static inline double
-__always_inline
+static __always_inline double
 do_cos (double x, double dx)
 {
   mynumber u;
@@ -122,8 +121,7 @@ do_cos (double x, double dx)
    the number by combining the sin and cos of X (as computed by a variation of
    the Taylor series) with the values looked up from the sin/cos table to get
    the result.  */
-static inline double
-__always_inline
+static __always_inline double
 do_sin (double x, double dx)
 {
   double xold = x;
@@ -151,8 +149,7 @@ do_sin (double x, double dx)
    is written to *a, the low part to *da.  Range reduction is accurate to 136
    bits so that when x is large and *a very close to zero, all 53 bits of *a
    are correct.  */
-static inline int4
-__always_inline
+static __always_inline int4
 reduce_sincos (double x, double *a, double *da)
 {
   mynumber v;
@@ -178,8 +175,7 @@ reduce_sincos (double x, double *a, double *da)
 }
 
 /* Compute sin or cos (A + DA) for the given quadrant N.  */
-static double
-__always_inline
+static __always_inline double
 do_sincos (double a, double da, int4 n)
 {
   double retval;

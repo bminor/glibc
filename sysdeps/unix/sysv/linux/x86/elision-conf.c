@@ -56,8 +56,7 @@ struct elision_config __elision_aconf =
 int __pthread_force_elision attribute_hidden = 0;
 
 #if HAVE_TUNABLES
-static inline void
-__always_inline
+static __always_inline void
 do_set_elision_enable (int32_t elision_enable)
 {
   /* Enable elision if it's avaliable in hardware. It's not necessary to check
@@ -79,8 +78,7 @@ TUNABLE_CALLBACK (set_elision_enable) (tunable_val_t *valp)
 }
 
 #define TUNABLE_CALLBACK_FNDECL(__name, __type)			\
-static inline void						\
-__always_inline							\
+static __always_inline void					\
 do_set_elision_ ## __name (__type value)			\
 {								\
   __elision_aconf.__name = value;				\

@@ -1,3 +1,30 @@
+2019-02-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* elf/dl-load.h (_dl_postprocess_loadcmd): Use __always_inline
+	before return type, without separate inline.
+	* elf/dl-tunables.c (maybe_enable_malloc_check): Likewise.
+	* elf/dl-tunables.h (tunable_is_name): Likewise.
+	* malloc/malloc.c (do_set_trim_threshold): Likewise.
+	(do_set_top_pad): Likewise.
+	(do_set_mmap_threshold): Likewise.
+	(do_set_mmaps_max): Likewise.
+	(do_set_mallopt_check): Likewise.
+	(do_set_perturb_byte): Likewise.
+	(do_set_arena_test): Likewise.
+	(do_set_arena_max): Likewise.
+	(do_set_tcache_max): Likewise.
+	(do_set_tcache_count): Likewise.
+	(do_set_tcache_unsorted_limit): Likewise.
+	* nis/nis_subr.c (count_dots): Likewise.
+	* nptl/allocatestack.c (advise_stack_range): Likewise.
+	* sysdeps/ieee754/dbl-64/s_sin.c (do_cos): Likewise.
+	(do_sin): Likewise.
+	(reduce_sincos): Likewise.
+	(do_sincos): Likewise.
+	* sysdeps/unix/sysv/linux/x86/elision-conf.c
+	(do_set_elision_enable): Likewise.
+	(TUNABLE_CALLBACK_FNDECL): Likewise.
+
 2019-02-06  Florian Weimer  <fweimer@redhat.com>
 
 	* support/xdlfcn.c (xdlopen, xdlclose): Do not call dlerror.

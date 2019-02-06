@@ -113,8 +113,7 @@ rtld_hidden_proto (__tunable_get_val)
 # define TUNABLES_FRONTEND_yes TUNABLES_FRONTEND_valstring
 
 /* Compare two name strings, bounded by the name hardcoded in glibc.  */
-static inline bool
-__always_inline
+static __always_inline bool
 tunable_is_name (const char *orig, const char *envname)
 {
   for (;*orig != '\0' && *envname != '\0'; envname++, orig++)

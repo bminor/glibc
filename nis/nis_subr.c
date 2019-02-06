@@ -91,7 +91,7 @@ nis_name_of_r (const_nis_name name, char *buffer, size_t buflen)
 }
 libnsl_hidden_nolink_def (nis_name_of_r, GLIBC_2_1)
 
-static int __always_inline
+static __always_inline int
 count_dots (const_nis_name str)
 {
   int count = 0;

@@ -5019,8 +5019,7 @@ __malloc_stats (void)
 /*
    ------------------------------ mallopt ------------------------------
  */
-static inline int
-__always_inline
+static __always_inline int
 do_set_trim_threshold (size_t value)
 {
   LIBC_PROBE (memory_mallopt_trim_threshold, 3, value, mp_.trim_threshold,
@@ -5030,8 +5029,7 @@ do_set_trim_threshold (size_t value)
   return 1;
 }
 
-static inline int
-__always_inline
+static __always_inline int
 do_set_top_pad (size_t value)
 {
   LIBC_PROBE (memory_mallopt_top_pad, 3, value, mp_.top_pad,
@@ -5041,8 +5039,7 @@ do_set_top_pad (size_t value)
   return 1;
 }
 
-static inline int
-__always_inline
+static __always_inline int
 do_set_mmap_threshold (size_t value)
 {
   /* Forbid setting the threshold too high.  */
@@ -5057,8 +5054,7 @@ do_set_mmap_threshold (size_t value)
   return 0;
 }
 
-static inline int
-__always_inline
+static __always_inline int
 do_set_mmaps_max (int32_t value)
 {
   LIBC_PROBE (memory_mallopt_mmap_max, 3, value, mp_.n_mmaps_max,
@@ -5068,15 +5064,13 @@ do_set_mmaps_max (int32_t value)
   return 1;
 }
 
-static inline int
-__always_inline
+static __always_inline int
 do_set_mallopt_check (int32_t value)
 {
   return 1;
 }
 
-static inline int
-__always_inline
+static __always_inline int
 do_set_perturb_byte (int32_t value)
 {
   LIBC_PROBE (memory_mallopt_perturb, 2, value, perturb_byte);
@@ -5084,8 +5078,7 @@ do_set_perturb_byte (int32_t value)
   return 1;
 }
 
-static inline int
-__always_inline
+static __always_inline int
 do_set_arena_test (size_t value)
 {
   LIBC_PROBE (memory_mallopt_arena_test, 2, value, mp_.arena_test);
@@ -5093,8 +5086,7 @@ do_set_arena_test (size_t value)
   return 1;
 }
 
-static inline int
-__always_inline
+static __always_inline int
 do_set_arena_max (size_t value)
 {
   LIBC_PROBE (memory_mallopt_arena_max, 2, value, mp_.arena_max);
@@ -5103,8 +5095,7 @@ do_set_arena_max (size_t value)
 }
 
 #if USE_TCACHE
-static inline int
-__always_inline
+static __always_inline int
 do_set_tcache_max (size_t value)
 {
   if (value >= 0 && value <= MAX_TCACHE_SIZE)
@@ -5116,8 +5107,7 @@ do_set_tcache_max (size_t value)
   return 1;
 }
 
-static inline int
-__always_inline
+static __always_inline int
 do_set_tcache_count (size_t value)
 {
   LIBC_PROBE (memory_tunable_tcache_count, 2, value, mp_.tcache_count);
@@ -5125,8 +5115,7 @@ do_set_tcache_count (size_t value)
   return 1;
 }
 
-static inline int
-__always_inline
+static __always_inline int
 do_set_tcache_unsorted_limit (size_t value)
 {
   LIBC_PROBE (memory_tunable_tcache_unsorted_limit, 2, value, mp_.tcache_unsorted_limit);

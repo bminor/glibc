@@ -83,7 +83,7 @@ struct loadcmd
 /* This is a subroutine of _dl_map_segments.  It should be called for each
    load command, some time after L->l_addr has been set correctly.  It is
    responsible for setting up the l_text_end and l_phdr fields.  */
-static void __always_inline
+static __always_inline void
 _dl_postprocess_loadcmd (struct link_map *l, const ElfW(Ehdr) *header,
                          const struct loadcmd *c)
 {

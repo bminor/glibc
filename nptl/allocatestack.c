@@ -379,8 +379,7 @@ setup_stack_prot (char *mem, size_t size, char *guard, size_t guardsize,
 
 /* Mark the memory of the stack as usable to the kernel.  It frees everything
    except for the space used for the TCB itself.  */
-static inline void
-__always_inline
+static __always_inline void
 advise_stack_range (void *mem, size_t size, uintptr_t pd, size_t guardsize)
 {
   uintptr_t sp = (uintptr_t) CURRENT_STACK_FRAME;
