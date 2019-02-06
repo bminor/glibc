@@ -1,3 +1,9 @@
+2019-02-06  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Do not include
+	<stap-probe.h>.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Likewise.
+
 2019-02-06  Stefan Liebler  <stli@linux.ibm.com>
 
 	* libio/tst-bz24153.c (wide): Use wide char format specifier.

@@ -19,8 +19,6 @@
 #ifndef _LOWLEVELLOCK_H
 #define _LOWLEVELLOCK_H	1
 
-#include <stap-probe.h>
-
 #ifndef __ASSEMBLER__
 # include <time.h>
 # include <sys/param.h>
