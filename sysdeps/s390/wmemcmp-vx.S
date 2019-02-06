@@ -149,6 +149,7 @@ ENTRY(WMEMCMP_Z13)
 END(WMEMCMP_Z13)
 
 # if ! HAVE_WMEMCMP_IFUNC
-strong_alias (WMEMCMP_Z13, wmemcmp)
+strong_alias (WMEMCMP_Z13, __wmemcmp)
+weak_alias (__wmemcmp, wmemcmp)
 # endif
 #endif

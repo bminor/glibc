@@ -1,5 +1,10 @@
 2019-02-06  Stefan Liebler  <stli@linux.ibm.com>
 
+	* sysdeps/s390/wmemcmp-vx.S: Add strong alias to
+	__wmemcmp and weak alias to wmemcmp.
+
+2019-02-06  Stefan Liebler  <stli@linux.ibm.com>
+
 	[BZ #23403]
 	* nptl/allocatestack.c (allocate_stack): Align pointer pd for
 	TLS_TCB_AT_TP tls variant.
