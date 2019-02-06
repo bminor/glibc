@@ -68,6 +68,8 @@ void xpthread_attr_destroy (pthread_attr_t *attr);
 void xpthread_attr_init (pthread_attr_t *attr);
 void xpthread_attr_setdetachstate (pthread_attr_t *attr,
 				   int detachstate);
+void xpthread_attr_setstack (pthread_attr_t *attr, void *stackaddr,
+			     size_t stacksize);
 void xpthread_attr_setstacksize (pthread_attr_t *attr,
 				 size_t stacksize);
 void xpthread_attr_setguardsize (pthread_attr_t *attr,

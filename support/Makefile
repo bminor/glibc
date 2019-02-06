@@ -93,10 +93,12 @@ libsupport-routines = \
   xopen \
   xpipe \
   xpoll \
+  xposix_memalign \
   xpthread_attr_destroy \
   xpthread_attr_init \
   xpthread_attr_setdetachstate \
   xpthread_attr_setguardsize \
+  xpthread_attr_setstack \
   xpthread_attr_setstacksize \
   xpthread_barrier_destroy \
   xpthread_barrier_init \
