@@ -572,7 +572,9 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 
 	  /* Place the thread descriptor at the end of the stack.  */
 #if TLS_TCB_AT_TP
-	  pd = (struct pthread *) ((char *) mem + size) - 1;
+	  pd = (struct pthread *) ((((uintptr_t) mem + size)
+				    - TLS_TCB_SIZE)
+				   & ~__static_tls_align_m1);
 #elif TLS_DTV_AT_TP
 	  pd = (struct pthread *) ((((uintptr_t) mem + size
 				    - __static_tls_size)

@@ -19,12 +19,16 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <stdint.h>
+#include <inttypes.h>
+#include <support/support.h>
+#include <support/check.h>
+#include <support/xthread.h>
 
 struct test_s
 {
-  int a;
-  int b;
+  __attribute__ ((aligned(0x20))) int a;
+  __attribute__ ((aligned(0x200))) int b;
 };
 
 #define INIT_A 1
@@ -36,15 +40,34 @@ __thread struct test_s s __attribute__ ((tls_model ("initial-exec"))) =
   .b = INIT_B
 };
 
+/* Use noinline in combination with not static to ensure that the
+   alignment check is really done.  Otherwise it was optimized out!  */
+__attribute__ ((noinline)) void
+check_alignment (const char *thr_name, const char *ptr_name,
+		 int *ptr, int alignment)
+{
+  uintptr_t offset_aligment = ((uintptr_t) ptr) & (alignment - 1);
+  if (offset_aligment)
+    {
+      FAIL_EXIT1 ("%s (%p) is not 0x%x-byte aligned in %s thread\n",
+		  ptr_name, ptr, alignment, thr_name);
+    }
+}
+
+static void
+check_s (const char *thr_name)
+{
+  if (s.a != INIT_A || s.b != INIT_B)
+    FAIL_EXIT1 ("initial value of s in %s thread wrong\n", thr_name);
+
+  check_alignment (thr_name, "s.a", &s.a, 0x20);
+  check_alignment (thr_name, "s.b", &s.b, 0x200);
+}
 
 static void *
 tf (void *arg)
 {
-  if (s.a != INIT_A || s.b != INIT_B)
-    {
-      puts ("initial value of s in child thread wrong");
-      exit (1);
-    }
+  check_s ("child");
 
   ++s.a;
 
@@ -55,25 +78,14 @@ tf (void *arg)
 int
 do_test (void)
 {
-  if (s.a != INIT_A || s.b != INIT_B)
-    {
-      puts ("initial value of s in main thread wrong");
-      exit (1);
-    }
+  check_s ("main");
 
   pthread_attr_t a;
 
-  if (pthread_attr_init (&a) != 0)
-    {
-      puts ("attr_init failed");
-      exit (1);
-    }
+  xpthread_attr_init (&a);
 
-  if (pthread_attr_setstacksize (&a, 1 * 1024 * 1024) != 0)
-    {
-      puts ("attr_setstacksize failed");
-      return 1;
-    }
+#define STACK_SIZE (1 * 1024 * 1024)
+  xpthread_attr_setstacksize (&a, STACK_SIZE);
 
 #define N 10
   int i;
@@ -83,29 +95,25 @@ do_test (void)
       pthread_t th[M];
       int j;
       for (j = 0; j < M; ++j, ++s.a)
-	if (pthread_create (&th[j], &a, tf, NULL) != 0)
-	  {
-	    puts ("pthread_create failed");
-	    exit (1);
-	  }
+	th[j] = xpthread_create (&a, tf, NULL);
 
       for (j = 0; j < M; ++j)
-	if (pthread_join (th[j], NULL) != 0)
-	  {
-	    puts ("pthread_join failed");
-	    exit (1);
-	  }
+	xpthread_join (th[j]);
     }
 
-  if (pthread_attr_destroy (&a) != 0)
-    {
-      puts ("attr_destroy failed");
-      exit (1);
-    }
+  /* Also check the alignment of the tls variables if a misaligned stack is
+     specified.  */
+  pthread_t th;
+  void *thr_stack = NULL;
+  thr_stack = xposix_memalign (0x200, STACK_SIZE + 1);
+  xpthread_attr_setstack (&a, thr_stack + 1, STACK_SIZE);
+  th = xpthread_create (&a, tf, NULL);
+  xpthread_join (th);
+  free (thr_stack);
+
+  xpthread_attr_destroy (&a);
 
   return 0;
 }
 
-
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>
