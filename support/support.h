@@ -86,6 +86,7 @@ int support_descriptor_supports_holes (int fd);
 void *xmalloc (size_t) __attribute__ ((malloc));
 void *xcalloc (size_t n, size_t s) __attribute__ ((malloc));
 void *xrealloc (void *p, size_t n);
+void *xposix_memalign (size_t alignment, size_t n);
 char *xasprintf (const char *format, ...)
   __attribute__ ((format (printf, 1, 2), malloc));
 char *xstrdup (const char *);
