@@ -92,6 +92,9 @@ __pthread_mutex_trylock (pthread_mutex_t *mutex)
     case PTHREAD_MUTEX_ROBUST_ADAPTIVE_NP:
       THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending,
 		     &mutex->__data.__list.__next);
+      /* We need to set op_pending before starting the operation.  Also
+	 see comments at ENQUEUE_MUTEX.  */
+      __asm ("" ::: "memory");
 
       oldval = mutex->__data.__lock;
       do
@@ -117,7 +120,12 @@ __pthread_mutex_trylock (pthread_mutex_t *mutex)
 	      /* But it is inconsistent unless marked otherwise.  */
 	      mutex->__data.__owner = PTHREAD_MUTEX_INCONSISTENT;
 
+	      /* We must not enqueue the mutex before we have acquired it.
+		 Also see comments at ENQUEUE_MUTEX.  */
+	      __asm ("" ::: "memory");
 	      ENQUEUE_MUTEX (mutex);
+	      /* We need to clear op_pending after we enqueue the mutex.  */
+	      __asm ("" ::: "memory");
 	      THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
 
 	      /* Note that we deliberately exist here.  If we fall
@@ -133,6 +141,8 @@ __pthread_mutex_trylock (pthread_mutex_t *mutex)
 	      int kind = PTHREAD_MUTEX_TYPE (mutex);
 	      if (kind == PTHREAD_MUTEX_ROBUST_ERRORCHECK_NP)
 		{
+		  /* We do not need to ensure ordering wrt another memory
+		     access.  Also see comments at ENQUEUE_MUTEX. */
 		  THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending,
 				 NULL);
 		  return EDEADLK;
@@ -140,6 +150,8 @@ __pthread_mutex_trylock (pthread_mutex_t *mutex)
 
 	      if (kind == PTHREAD_MUTEX_ROBUST_RECURSIVE_NP)
 		{
+		  /* We do not need to ensure ordering wrt another memory
+		     access.  */
 		  THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending,
 				 NULL);
 
@@ -158,6 +170,9 @@ __pthread_mutex_trylock (pthread_mutex_t *mutex)
 							id, 0);
 	  if (oldval != 0 && (oldval & FUTEX_OWNER_DIED) == 0)
 	    {
+	      /* We haven't acquired the lock as it is already acquired by
+		 another owner.  We do not need to ensure ordering wrt another
+		 memory access.  */
 	      THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
 
 	      return EBUSY;
@@ -171,13 +186,20 @@ __pthread_mutex_trylock (pthread_mutex_t *mutex)
 	      if (oldval == id)
 		lll_unlock (mutex->__data.__lock,
 			    PTHREAD_ROBUST_MUTEX_PSHARED (mutex));
+	      /* FIXME This violates the mutex destruction requirements.  See
+		 __pthread_mutex_unlock_full.  */
 	      THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
 	      return ENOTRECOVERABLE;
 	    }
 	}
       while ((oldval & FUTEX_OWNER_DIED) != 0);
 
+      /* We must not enqueue the mutex before we have acquired it.
+	 Also see comments at ENQUEUE_MUTEX.  */
+      __asm ("" ::: "memory");
       ENQUEUE_MUTEX (mutex);
+      /* We need to clear op_pending after we enqueue the mutex.  */
+      __asm ("" ::: "memory");
       THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
 
       mutex->__data.__owner = id;
@@ -203,10 +225,15 @@ __pthread_mutex_trylock (pthread_mutex_t *mutex)
 	int robust = mutex->__data.__kind & PTHREAD_MUTEX_ROBUST_NORMAL_NP;
 
 	if (robust)
-	  /* Note: robust PI futexes are signaled by setting bit 0.  */
-	  THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending,
-			 (void *) (((uintptr_t) &mutex->__data.__list.__next)
-				   | 1));
+	  {
+	    /* Note: robust PI futexes are signaled by setting bit 0.  */
+	    THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending,
+			   (void *) (((uintptr_t) &mutex->__data.__list.__next)
+				     | 1));
+	    /* We need to set op_pending before starting the operation.  Also
+	       see comments at ENQUEUE_MUTEX.  */
+	    __asm ("" ::: "memory");
+	  }
 
 	oldval = mutex->__data.__lock;
 
@@ -215,12 +242,16 @@ __pthread_mutex_trylock (pthread_mutex_t *mutex)
 	  {
 	    if (kind == PTHREAD_MUTEX_ERRORCHECK_NP)
 	      {
+		/* We do not need to ensure ordering wrt another memory
+		   access.  */
 		THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
 		return EDEADLK;
 	      }
 
 	    if (kind == PTHREAD_MUTEX_RECURSIVE_NP)
 	      {
+		/* We do not need to ensure ordering wrt another memory
+		   access.  */
 		THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
 
 		/* Just bump the counter.  */
@@ -242,6 +273,9 @@ __pthread_mutex_trylock (pthread_mutex_t *mutex)
 	  {
 	    if ((oldval & FUTEX_OWNER_DIED) == 0)
 	      {
+		/* We haven't acquired the lock as it is already acquired by
+		   another owner.  We do not need to ensure ordering wrt another
+		   memory access.  */
 		THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
 
 		return EBUSY;
@@ -262,6 +296,9 @@ __pthread_mutex_trylock (pthread_mutex_t *mutex)
 	    if (INTERNAL_SYSCALL_ERROR_P (e, __err)
 		&& INTERNAL_SYSCALL_ERRNO (e, __err) == EWOULDBLOCK)
 	      {
+		/* The kernel has not yet finished the mutex owner death.
+		   We do not need to ensure ordering wrt another memory
+		   access.  */
 		THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
 
 		return EBUSY;
@@ -279,7 +316,12 @@ __pthread_mutex_trylock (pthread_mutex_t *mutex)
 	    /* But it is inconsistent unless marked otherwise.  */
 	    mutex->__data.__owner = PTHREAD_MUTEX_INCONSISTENT;
 
+	    /* We must not enqueue the mutex before we have acquired it.
+	       Also see comments at ENQUEUE_MUTEX.  */
+	    __asm ("" ::: "memory");
 	    ENQUEUE_MUTEX (mutex);
+	    /* We need to clear op_pending after we enqueue the mutex.  */
+	    __asm ("" ::: "memory");
 	    THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
 
 	    /* Note that we deliberately exit here.  If we fall
@@ -302,13 +344,20 @@ __pthread_mutex_trylock (pthread_mutex_t *mutex)
 						  PTHREAD_ROBUST_MUTEX_PSHARED (mutex)),
 			      0, 0);
 
+	    /* To the kernel, this will be visible after the kernel has
+	       acquired the mutex in the syscall.  */
 	    THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
 	    return ENOTRECOVERABLE;
 	  }
 
 	if (robust)
 	  {
+	    /* We must not enqueue the mutex before we have acquired it.
+	       Also see comments at ENQUEUE_MUTEX.  */
+	    __asm ("" ::: "memory");
 	    ENQUEUE_MUTEX_PI (mutex);
+	    /* We need to clear op_pending after we enqueue the mutex.  */
+	    __asm ("" ::: "memory");
 	    THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
 	  }
 
