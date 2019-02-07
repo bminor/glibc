@@ -22,12 +22,12 @@
 /* array_length (VAR) is the number of elements in the array VAR.  VAR
    must evaluate to an array, not a pointer.  */
 #define array_length(var)                                               \
-  __extension__ ({                                                      \
-    _Static_assert (!__builtin_types_compatible_p                       \
-                    (__typeof (var), __typeof (&(var)[0])),             \
-                    "argument must be an array");                       \
-    sizeof (var) / sizeof ((var)[0]);                                   \
-  })
+  (sizeof (var) / sizeof ((var)[0])                                     \
+   + 0 * sizeof (struct {                                               \
+       _Static_assert (!__builtin_types_compatible_p                    \
+                       (__typeof (var), __typeof (&(var)[0])),          \
+                       "argument must be an array");                    \
+   }))
 
 /* array_end (VAR) is a pointer one past the end of the array VAR.
    VAR must evaluate to an array, not a pointer.  */

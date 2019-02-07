@@ -1,5 +1,11 @@
 2019-02-07  Florian Weimer  <fweimer@redhat.com>
 
+	* include/array_length.h (array_length): Do not use a statement
+	expression and _Static_assert, so that array_length can be used at
+	file scope and as a constant expression.
+
+2019-02-07  Florian Weimer  <fweimer@redhat.com>
+
 	* support/xdlfcn.h (xdlmopen): Declare.
 	* support/xdlmopen.c: New file.
 	* support/Makefile (libsupport-routines): Add xdlmopen.
