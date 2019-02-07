@@ -1,3 +1,9 @@
+2019-02-07  Stefan Liebler  <stli@linux.ibm.com>
+
+	[BZ #24180]
+	* nptl/pthread_mutex_trylock.c (__pthread_mutex_trylock):
+	Add compiler barriers and comments.
+
 2019-02-04  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #20018]
