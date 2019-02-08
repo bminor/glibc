@@ -55,7 +55,7 @@ __libc_fork (void)
      but our current fork implementation is not.  */
   bool multiple_threads = THREAD_GETMEM (THREAD_SELF, header.multiple_threads);
 
-  __run_fork_handlers (atfork_run_prepare);
+  __run_fork_handlers (atfork_run_prepare, multiple_threads);
 
   /* If we are not running multiple threads, we do not have to
      preserve lock state.  If fork runs from a signal handler, only
@@ -134,7 +134,7 @@ __libc_fork (void)
       __rtld_lock_initialize (GL(dl_load_lock));
 
       /* Run the handlers registered for the child.  */
-      __run_fork_handlers (atfork_run_child);
+      __run_fork_handlers (atfork_run_child, multiple_threads);
     }
   else
     {
@@ -149,7 +149,7 @@ __libc_fork (void)
 	}
 
       /* Run the handlers registered for the parent.  */
-      __run_fork_handlers (atfork_run_parent);
+      __run_fork_handlers (atfork_run_parent, multiple_threads);
     }
 
   return pid;
