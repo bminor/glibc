@@ -60,6 +60,10 @@ TIMEOUTFACTOR = os.environ.get('TIMEOUTFACTOR')
 if TIMEOUTFACTOR:
     timeout = int(TIMEOUTFACTOR)
 
+# Otherwise GDB is run in interactive mode and readline may send escape
+# sequences confusing output for pexpect.
+os.environ["TERM"]="dumb"
+
 try:
     # Check the gdb version.
     version_cmd = '{0} --version'.format(gdb_invocation, timeout=timeout)

@@ -1,3 +1,8 @@
+2019-02-14  Jan Kratochvil <jan.kratochvil@redhat.com>
+
+	* scripts/test_printers_common.py: Set TERM to a known harmless
+	value.
+
 2019-02-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* sunrpc/xdr.c (xdr_int): Add fall-through comment.
