@@ -1,3 +1,8 @@
+2019-02-08  TAMUKI Shoichi  <tamuki@linet.gr.jp>
+
+	* time/tst-strftime2.c: Use array_length macros instead of magic
+	numbers.
+
 2019-02-08  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #24161]

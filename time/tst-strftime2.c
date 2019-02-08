@@ -41,7 +41,8 @@ static const struct
     { 1, 3, 98 }
   };
 
-static char ref[3][3][6][100];
+static char ref[array_length (locales)][array_length (formats)]
+	       [array_length (dates)][100];
 
 static void
 mkreftable (void)
