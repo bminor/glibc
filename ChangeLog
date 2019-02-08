@@ -1,4 +1,4 @@
-2019-01-31  Florian Weimer  <fweimer@redhat.com>
+2019-02-08  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #6399]
 	Linux: Add gettid system call wrapper.
