@@ -1,3 +1,8 @@
+2019-02-08  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/generic/bits/unistd_ext.h: Move to ...
+	* bits/unistd_ext.h: here.
+
 2019-02-08  Patsy Griffin Franklin  <pfrankli@redhat.com>
 
 	[BZ #21915]
