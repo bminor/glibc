@@ -28,7 +28,7 @@ aio-routines   := aio_cancel aio_error aio_fsync aio_misc aio_read	\
 		  aio_read64 aio_return aio_suspend aio_write		\
 		  aio_write64 lio_listio lio_listio64 aio_sigqueue	\
 		  aio_notify
-clock-routines := get_clockfreq clock_getcpuclockid			\
+clock-routines := clock_getcpuclockid					\
 		  clock_getres clock_gettime clock_settime		\
 		  clock_nanosleep
 timer-routines := timer_create timer_delete timer_getoverr		\

@@ -36,9 +36,6 @@ libc_hidden_proto (__profile_frequency)
 extern void __cyg_profile_func_enter (void *this_fn, void *call_site);
 extern void __cyg_profile_func_exit (void *this_fn, void *call_site);
 
-/* Get frequency of the system processor.  */
-extern hp_timing_t __get_clockfreq (void);
-
 /* Free all allocated resources.  */
 extern void __libc_freeres (void);
 libc_hidden_proto (__libc_freeres)

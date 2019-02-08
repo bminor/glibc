@@ -1,5 +1,14 @@
 2019-03-22  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* include/libc-internal.h (__get_clockfreq): Remove prototype.
+	* rt/Makefile (clock-routines): Remove get_clockfreq.
+	* rt/get_clockfreq.c: Remove file.
+	* sysdeps/unix/sysv/linux/i386/get_clockfreq.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/get_clockfreq.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/get_clockfreq.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/get_clockfreq.c: Move code to ...
+	* sysdeps/unix/sysv/linux/powerpc/get_timebase_freq.c: ... here.
+
 	* sysdeps/unix/sysv/linux/ia64/has_cpuclock.c: Remove file.
 	* sysdeps/unix/sysv/linux/ia64/sysconf.c: Likewise.
 	* sysdeps/unix/sysv/linux/sysconf.c (has_cpuclock): Remove function.
