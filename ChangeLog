@@ -1,5 +1,11 @@
 2019-02-08  Florian Weimer  <fweimer@redhat.com>
 
+	math: Enable <bits/math-finite.h> sysdeps override, as used on ia64.
+	* math/bits/math-finite.h: Move to ...
+	* bits/math-finite.h: ... here.
+
+2019-02-08  Florian Weimer  <fweimer@redhat.com>
+
 	* sysdeps/generic/bits/unistd_ext.h: Move to ...
 	* bits/unistd_ext.h: here.
 
