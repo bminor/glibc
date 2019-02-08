@@ -14,7 +14,11 @@ Major new features:
 
 Deprecated and removed features, and other changes affecting compatibility:
 
-  [Add deprecations, removals and changes affecting compatibility here]
+* The functions clock_gettime, clock_getres, clock_settime,
+  clock_getcpuclockid, clock_nanosleep were removed from the librt library
+  for new applications (on architectures which had them).  Instead, the
+  definitions in libc will be used automatically, which have been available
+  since glibc 2.17.
 
 Changes to build and runtime requirements:
 

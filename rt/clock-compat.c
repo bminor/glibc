@@ -30,14 +30,16 @@
 #if HAVE_IFUNC
 # undef INIT_ARCH
 # define INIT_ARCH()
-# define COMPAT_REDIRECT(name, proto, arglist) libc_ifunc (name, &__##name)
+# define COMPAT_REDIRECT(name, proto, arglist) libc_ifunc (name, &__##name) \
+    compat_symbol (librt, name, name, GLIBC_2_2);
 #else
 # define COMPAT_REDIRECT(name, proto, arglist)				      \
   int									      \
   name proto								      \
   {									      \
     return __##name arglist;						      \
-  }
+  }									      \
+  compat_symbol (librt, name, name, GLIBC_2_2);
 #endif
 
 COMPAT_REDIRECT (clock_getres,
