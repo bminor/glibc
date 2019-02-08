@@ -1,5 +1,11 @@
 2019-02-08  Florian Weimer  <fweimer@redhat.com>
 
+	* include/bits/unistd_ext.h: Remove file.
+	* posix/bits/unistd_ext.h: Move to ...
+	* sysdeps/generic/bits/unistd_ext.h: ... here.
+
+2019-02-08  Florian Weimer  <fweimer@redhat.com>
+
 	* include/bits/unistd_ext.h: New file.
 
 2019-02-08  TAMUKI Shoichi  <tamuki@linet.gr.jp>
