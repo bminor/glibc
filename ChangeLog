@@ -1,3 +1,13 @@
+2019-02-08  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24161]
+	* sysdeps/nptl/fork.h (__run_fork_handlers): Add multiple_threads
+	argument.
+	* nptl/register-atfork.c (__run_fork_handlers): Only perform
+	locking if the new do_locking argument is true.
+	* sysdeps/nptl/fork.c (__libc_fork): Pass multiple_threads to
+	__run_fork_handlers.
+
 2019-02-07  Stefan Liebler  <stli@linux.ibm.com>
 
 	[BZ #24180]
