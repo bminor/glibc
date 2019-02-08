@@ -107,13 +107,14 @@ __unregister_atfork (void *dso_handle)
 }
 
 void
-__run_fork_handlers (enum __run_fork_handler_type who)
+__run_fork_handlers (enum __run_fork_handler_type who, _Bool do_locking)
 {
   struct fork_handler *runp;
 
   if (who == atfork_run_prepare)
     {
-      lll_lock (atfork_lock, LLL_PRIVATE);
+      if (do_locking)
+	lll_lock (atfork_lock, LLL_PRIVATE);
       size_t sl = fork_handler_list_size (&fork_handlers);
       for (size_t i = sl; i > 0; i--)
 	{
@@ -133,7 +134,8 @@ __run_fork_handlers (enum __run_fork_handler_type who)
 	  else if (who == atfork_run_parent && runp->parent_handler)
 	    runp->parent_handler ();
 	}
-      lll_unlock (atfork_lock, LLL_PRIVATE);
+      if (do_locking)
+	lll_unlock (atfork_lock, LLL_PRIVATE);
     }
 }
 
