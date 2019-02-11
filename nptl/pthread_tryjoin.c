@@ -26,7 +26,7 @@ pthread_tryjoin_np (pthread_t threadid, void **thread_return)
   if (pd->tid != 0)
     return EBUSY;
 
-  /* If pd->tid != 0 then lll_wait_tid will not block on futex
+  /* If pd->tid == 0 then lll_wait_tid will not block on futex
      operation.  */
   return __pthread_timedjoin_ex (threadid, thread_return, NULL, false);
 }
