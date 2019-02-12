@@ -135,6 +135,13 @@
     __err;							       \
   })
 
+#define lll_futex_timed_wait_cancel(futexp, val, timeout, private)	   \
+  ({									   \
+    int __oldtype = CANCEL_ASYNC ();				       	   \
+    long int __err = lll_futex_timed_wait (futexp, val, timeout, private); \
+    CANCEL_RESET (__oldtype);						   \
+    __err;								   \
+  })
 
 #endif  /* !__ASSEMBLER__  */
 

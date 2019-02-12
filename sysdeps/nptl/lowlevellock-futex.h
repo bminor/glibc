@@ -82,5 +82,12 @@
                                  val, private)                          \
   -ENOSYS
 
+/* Like lll_futex_wait, but acting as a cancellable entrypoint.  */
+#define lll_futex_wait_cancel(futexp, val, private) \
+  -ENOSYS
+
+/* Like lll_futex_timed_wait, but acting as a cancellable entrypoint.  */
+#define lll_futex_timed_wait_cancel(futexp, val, timeout, private) \
+  -ENOSYS
 
 #endif  /* lowlevellock-futex.h */

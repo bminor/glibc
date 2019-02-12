@@ -30,6 +30,52 @@ cleanup (void *arg)
   atomic_compare_exchange_weak_acquire (&arg, &self, NULL);
 }
 
+/* The kernel notifies a process which uses CLONE_CHILD_CLEARTID via futex
+   wake-up when the clone terminates.  The memory location contains the
+   thread ID while the clone is running and is reset to zero by the kernel
+   afterwards.  The kernel up to version 3.16.3 does not use the private futex
+   operations for futex wake-up when the clone terminates.  */
+static int
+timedwait_tid (pid_t *tidp, const struct timespec *abstime)
+{
+  pid_t tid;
+
+  if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
+    return EINVAL;
+
+  /* Repeat until thread terminated.  */
+  while ((tid = *tidp) != 0)
+    {
+      struct timeval tv;
+      struct timespec rt;
+
+      /* Get the current time.  */
+      __gettimeofday (&tv, NULL);
+
+      /* Compute relative timeout.  */
+      rt.tv_sec = abstime->tv_sec - tv.tv_sec;
+      rt.tv_nsec = abstime->tv_nsec - tv.tv_usec * 1000;
+      if (rt.tv_nsec < 0)
+        {
+          rt.tv_nsec += 1000000000;
+          --rt.tv_sec;
+        }
+
+      /* Already timed out?  */
+      if (rt.tv_sec < 0)
+        return ETIMEDOUT;
+
+      /* If *tidp == tid, wait until thread terminates or the wait times out.
+         The kernel up to version 3.16.3 does not use the private futex
+         operations for futex wake-up when the clone terminates.  */
+      if (lll_futex_timed_wait_cancel (tidp, tid, &rt, LLL_SHARED)
+	  == -ETIMEDOUT)
+        return ETIMEDOUT;
+    }
+
+  return 0;
+}
+
 int
 __pthread_timedjoin_ex (pthread_t threadid, void **thread_return,
 			const struct timespec *abstime, bool block)
@@ -74,6 +120,10 @@ __pthread_timedjoin_ex (pthread_t threadid, void **thread_return,
     /* There is already somebody waiting for the thread.  */
     return EINVAL;
 
+  /* BLOCK waits either indefinitely or based on an absolute time.  POSIX also
+     states a cancellation point shall occur for pthread_join, and we use the
+     same rationale for posix_timedjoin_np.  Both timedwait_tid and the futex
+     call use the cancellable variant.  */
   if (block)
     {
       /* During the wait we change to asynchronous cancellation.  If we
@@ -81,7 +131,16 @@ __pthread_timedjoin_ex (pthread_t threadid, void **thread_return,
 	 un-wait-ed for again.  */
       pthread_cleanup_push (cleanup, &pd->joinid);
 
-      result = lll_wait_tid (pd->tid, abstime);
+      if (abstime != NULL)
+	result = timedwait_tid (&pd->tid, abstime);
+      else
+	{
+	  pid_t tid;
+	  /* We need acquire MO here so that we synchronize with the
+	     kernel's store to 0 when the clone terminates. (see above)  */
+	  while ((tid = atomic_load_acquire (&pd->tid)) != 0)
+	    lll_futex_wait_cancel (&pd->tid, tid, LLL_SHARED);
+	}
 
       pthread_cleanup_pop (0);
     }

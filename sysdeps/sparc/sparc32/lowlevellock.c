@@ -88,44 +88,4 @@ __lll_timedlock_wait (int *futex, const struct timespec *abstime, int private)
 
   return 0;
 }
-
-
-int
-__lll_timedwait_tid (int *tidp, const struct timespec *abstime)
-{
-  int tid;
-
-  if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
-    return EINVAL;
-
-  /* Repeat until thread terminated.  */
-  while ((tid = *tidp) != 0)
-    {
-      struct timeval tv;
-      struct timespec rt;
-
-      /* Get the current time.  */
-      (void) __gettimeofday (&tv, NULL);
-
-      /* Compute relative timeout.  */
-      rt.tv_sec = abstime->tv_sec - tv.tv_sec;
-      rt.tv_nsec = abstime->tv_nsec - tv.tv_usec * 1000;
-      if (rt.tv_nsec < 0)
-	{
-	  rt.tv_nsec += 1000000000;
-	  --rt.tv_sec;
-	}
-
-      /* Already timed out?  */
-      if (rt.tv_sec < 0)
-	return ETIMEDOUT;
-
-      /* Wait until thread terminates.  The kernel so far does not use
-	 the private futex operations for this.  */
-      if (lll_futex_timed_wait (tidp, tid, &rt, LLL_SHARED) == -ETIMEDOUT)
-	return ETIMEDOUT;
-    }
-
-  return 0;
-}
 #endif

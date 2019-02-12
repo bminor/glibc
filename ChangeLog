@@ -1,3 +1,35 @@
+2019-02-14  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #2421]
+	* nptl/Makefile (lpthread-routines): Remove lll_timedwait_tid.
+	(tests): Add tst-join8 tst-join9.
+	* nptl/lll_timedwait_tid.c: Remove file.
+	* sysdeps/sparc/sparc32/lll_timedwait_tid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/lll_timedwait_tid.c: Likewise.
+	* sysdeps/sysv/linux/x86_64/lll_timedwait_tid.c: Likewise.
+	* nptl/pthread_join_common.c (timedwait_tid): New function.
+	(__pthread_timedjoin_ex): Act as cancellation entrypoint is block
+	is set.
+	* nptl/tst-join5.c (thread_join): New function.
+	(tf1, tf2, do_test): Use libsupport and add pthread_timedjoin_np
+	check.
+	* nptl/tst-join8.c: New file.
+	* nptl/tst-join9.c: Likewise.
+	* sysdeps/nptl/lowlevellock-futex.h (lll_futex_wait_cancel,
+	lll_futex_timed_wait_cancel): Add generic macros.
+	* sysdeps/nptl/lowlevellock.h (__lll_timedwait_tid, lll_wait_tid):
+	Remove definitions.
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Likewise.
+	* sysdeps/sparc/sparc32/lowlevellock.c (__lll_timedwait_tid):
+	Remove function.
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.S (__lll_timedwait_tid):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S: Likewise.
+	* sysdeps/unix/sysv/linux/lowlevellock-futex.h
+	(lll_futex_timed_wait_cancel): New macro.
+
 2019-02-14  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* benchtests/Makefile: Add malloc-simple benchmark.

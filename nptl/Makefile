@@ -120,7 +120,7 @@ libpthread-routines = nptl-init nptlfreeres vars events version pt-interp \
 		      pt-longjmp pt-cleanup\
 		      cancellation \
 		      lowlevellock \
-		      lll_timedlock_wait lll_timedwait_tid \
+		      lll_timedlock_wait \
 		      pt-fork pt-vfork pt-fcntl \
 		      $(pthread-compat-wrappers) \
 		      pt-raise pt-system \
@@ -271,6 +271,7 @@ tests = tst-attr1 tst-attr2 tst-attr3 tst-default-attr \
 	tst-kill1 tst-kill2 tst-kill3 tst-kill4 tst-kill5 tst-kill6 \
 	tst-raise1 \
 	tst-join1 tst-join2 tst-join3 tst-join4 tst-join5 tst-join6 tst-join7 \
+	tst-join8 tst-join9 \
 	tst-detach1 \
 	tst-eintr1 tst-eintr2 tst-eintr3 tst-eintr4 tst-eintr5 \
 	tst-tsd1 tst-tsd2 tst-tsd3 tst-tsd4 tst-tsd5 tst-tsd6 \

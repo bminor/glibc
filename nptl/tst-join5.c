@@ -23,6 +23,8 @@
 #include <time.h>
 #include <unistd.h>
 
+#include <support/check.h>
+#include <support/xthread.h>
 
 static void
 wait_code (void)
@@ -37,22 +39,31 @@ wait_code (void)
 static pthread_barrier_t b;
 #endif
 
+static int
+thread_join (pthread_t thread, void **retval)
+{
+#ifdef USE_PTHREAD_TIMEDJOIN_NP
+  struct timespec tv;
+  TEST_COMPARE (clock_gettime (CLOCK_REALTIME, &tv), 0);
+  /* Arbitrary large timeout to make it act as pthread_join.  */
+  tv.tv_sec += 1000;
+  return pthread_timedjoin_np ((pthread_t) thread, retval, &tv);
+#else
+  return pthread_join ((pthread_t) thread, retval);
+#endif
+}
+
 
 static void *
 tf1 (void *arg)
 {
 #ifdef WAIT_IN_CHILD
-  int e = pthread_barrier_wait (&b);
-  if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD)
-    {
-      printf ("%s: barrier_wait failed\n", __func__);
-      exit (1);
-    }
+  xpthread_barrier_wait (&b);
 
   wait_code ();
 #endif
 
-  pthread_join ((pthread_t) arg, NULL);
+  thread_join ((pthread_t) arg, NULL);
 
   exit (42);
 }
@@ -62,16 +73,12 @@ static void *
 tf2 (void *arg)
 {
 #ifdef WAIT_IN_CHILD
-  int e = pthread_barrier_wait (&b);
-  if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD)
-    {
-      printf ("%s: barrier_wait failed\n", __func__);
-      exit (1);
-    }
+  xpthread_barrier_wait (&b);
 
   wait_code ();
 #endif
-  pthread_join ((pthread_t) arg, NULL);
+
+  thread_join ((pthread_t) arg, NULL);
 
   exit (43);
 }
@@ -81,16 +88,12 @@ static int
 do_test (void)
 {
 #ifdef WAIT_IN_CHILD
-  if (pthread_barrier_init (&b, NULL, 2) != 0)
-    {
-      puts ("barrier_init failed");
-      return 1;
-    }
+  xpthread_barrier_init (&b, NULL, 2);
 #endif
 
   pthread_t th;
 
-  int err = pthread_join (pthread_self (), NULL);
+  int err = thread_join (pthread_self (), NULL);
   if (err == 0)
     {
       puts ("1st circular join succeeded");
@@ -102,33 +105,20 @@ do_test (void)
       return 1;
     }
 
-  if (pthread_create (&th, NULL, tf1, (void *) pthread_self ()) != 0)
-    {
-      puts ("1st create failed");
-      return 1;
-    }
+  th = xpthread_create (NULL, tf1, (void *) pthread_self ());
 
 #ifndef WAIT_IN_CHILD
   wait_code ();
 #endif
 
-  if (pthread_cancel (th) != 0)
-    {
-      puts ("cannot cancel 1st thread");
-      return 1;
-    }
+  xpthread_cancel (th);
 
 #ifdef WAIT_IN_CHILD
-  int e = pthread_barrier_wait (&b);
-  if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD)
-    {
-      printf ("%s: barrier_wait failed\n", __func__);
-      return 1;
-    }
+  xpthread_barrier_wait (&b);
 #endif
 
   void *r;
-  err = pthread_join (th, &r);
+  err = thread_join (th, &r);
   if (err != 0)
     {
       printf ("cannot join 1st thread: %d\n", err);
@@ -140,7 +130,7 @@ do_test (void)
       return 1;
     }
 
-  err = pthread_join (pthread_self (), NULL);
+  err = thread_join (pthread_self (), NULL);
   if (err == 0)
     {
       puts ("2nd circular join succeeded");
@@ -152,32 +142,19 @@ do_test (void)
       return 1;
     }
 
-  if (pthread_create (&th, NULL, tf2, (void *) pthread_self ()) != 0)
-    {
-      puts ("2nd create failed");
-      return 1;
-    }
+  th = xpthread_create (NULL, tf2, (void *) pthread_self ());
 
 #ifndef WAIT_IN_CHILD
   wait_code ();
 #endif
 
-  if (pthread_cancel (th) != 0)
-    {
-      puts ("cannot cancel 2nd thread");
-      return 1;
-    }
+  xpthread_cancel (th);
 
 #ifdef WAIT_IN_CHILD
-  e = pthread_barrier_wait (&b);
-  if (e != 0 && e != PTHREAD_BARRIER_SERIAL_THREAD)
-    {
-      printf ("%s: barrier_wait failed\n", __func__);
-      return 1;
-    }
+  xpthread_barrier_wait (&b);
 #endif
 
-  if (pthread_join (th, &r) != 0)
+  if (thread_join (th, &r) != 0)
     {
       puts ("cannot join 2nd thread");
       return 1;
@@ -188,7 +165,7 @@ do_test (void)
       return 1;
     }
 
-  err = pthread_join (pthread_self (), NULL);
+  err = thread_join (pthread_self (), NULL);
   if (err == 0)
     {
       puts ("3rd circular join succeeded");
@@ -203,5 +180,4 @@ do_test (void)
   return 0;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>
