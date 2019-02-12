@@ -713,6 +713,7 @@ only WIDTH definitions are allowed to follow the CHARMAP definition"));
 	      state = 95;
 	      continue;
 	    }
+	  /* Fall through.  */
 
 	case 96:
 	  if (nowtok != tok_number)

@@ -375,6 +375,7 @@ init_cpu_features (struct cpu_features *cpu_features)
 		 of Core i3/i5/i7 processors if AVX is available.  */
 	      if (!CPU_FEATURES_CPU_P (cpu_features, AVX))
 		break;
+	      /* Fall through.  */
 
 	    case 0x1a:
 	    case 0x1e:
@@ -402,6 +403,7 @@ init_cpu_features (struct cpu_features *cpu_features)
 	      /* Xeon E7 v3 with stepping >= 4 has working TSX.  */
 	      if (stepping >= 4)
 		break;
+	      /* Fall through.  */
 	    case 0x3c:
 	    case 0x45:
 	    case 0x46:

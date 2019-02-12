@@ -799,6 +799,7 @@ parse_arith (char **word, size_t *word_length, size_t *max_length,
 
 	case '(':
 	  ++paren_depth;
+	  /* Fall through.  */
 	default:
 	  expr = w_addchar (expr, &expr_length, &expr_maxlen, words[*offset]);
 	  if (expr == NULL)
@@ -2127,6 +2128,7 @@ parse_backtick (char **word, size_t *word_length, size_t *max_length,
 
 	case '\'':
 	  squoting = 1 - squoting;
+	  /* Fall through.  */
 	default:
 	  comm = w_addchar (comm, &comm_length, &comm_maxlen, words[*offset]);
 	  if (comm == NULL)

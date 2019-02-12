@@ -347,6 +347,7 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 	  /* Set to symbol size plus addend.  */
 	  value = sym->st_size;
 # endif
+	  /* Fall through.  */
 	case R_X86_64_GLOB_DAT:
 	case R_X86_64_JUMP_SLOT:
 	  *reloc_addr = value + reloc->r_addend;
@@ -460,6 +461,7 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 	  /* Set to symbol size plus addend.  */
 	  value = sym->st_size;
 #  endif
+	  /* Fall through.  */
 	case R_X86_64_32:
 	  value += reloc->r_addend;
 	  *(unsigned int *) reloc_addr = value;

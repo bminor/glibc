@@ -1228,6 +1228,7 @@ parse_conf_include (const char *config_file, unsigned int lineno,
 
     case GLOB_NOSPACE:
       errno = ENOMEM;
+      /* Fall through.  */
     case GLOB_ABORTED:
       if (opt_verbose)
 	error (0, errno, _("%s:%u: cannot read directory %s"),

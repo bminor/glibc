@@ -174,8 +174,10 @@ __getmntent_r (FILE *stream, struct mntent *mp, char *buffer, int bufsiz)
     {
     case 0:
       mp->mnt_freq = 0;
+      /* Fall through.  */
     case 1:
       mp->mnt_passno = 0;
+      /* Fall through.  */
     case 2:
       break;
     }

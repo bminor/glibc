@@ -1,3 +1,17 @@
+2019-02-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* elf/dl-exception.c (_dl_exception_create_format): Add
+	fall-through comments.
+	* elf/ldconfig.c (parse_conf_include): Likewise.
+	* elf/rtld.c (print_statistics): Likewise.
+	* locale/programs/charmap.c (parse_charmap): Likewise.
+	* misc/mntent_r.c (__getmntent_r): Likewise.
+	* posix/wordexp.c (parse_arith): Likewise.
+	(parse_backtick): Likewise.
+	* resolv/ns_ttl.c (ns_parse_ttl): Likewise.
+	* sysdeps/x86/cpu-features.c (init_cpu_features): Likewise.
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): Likewise.
+
 2019-02-11  Paul A. Clarke  <pc@us.ibm.com>
 
 	* sysdeps/powerpc/fpu/e_sqrt.c (__slow_ieee754_sqrtf):

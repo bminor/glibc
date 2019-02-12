@@ -2738,8 +2738,10 @@ print_statistics (hp_timing_t *rtld_total_timep)
 	{
 	case 3:
 	  *wp++ = *cp++;
+	  /* Fall through.  */
 	case 2:
 	  *wp++ = *cp++;
+	  /* Fall through.  */
 	case 1:
 	  *wp++ = '.';
 	  *wp++ = *cp++;
@@ -2801,8 +2803,10 @@ print_statistics (hp_timing_t *rtld_total_timep)
 	{
 	case 3:
 	  *wp++ = *cp++;
+	  /* Fall through.  */
 	case 2:
 	  *wp++ = *cp++;
+	  /* Fall through.  */
 	case 1:
 	  *wp++ = '.';
 	  *wp++ = *cp++;

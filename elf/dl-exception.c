@@ -123,6 +123,7 @@ _dl_exception_create_format (struct dl_exception *exception, const char *objname
 		  ++p;
 		  break;
 		}
+	      /* Fall through.  */
 	    case 'x':
 	      length += INT_WIDTH / 4;
 	      break;
