@@ -37,17 +37,13 @@
 
 # ifndef WIDE
 #  define SIMPLE_STRPBRK simple_strpbrk
-#  define STUPID_STRPBRK stupid_strpbrk
 # else
 #  define SIMPLE_STRPBRK simple_wcspbrk
-#  define STUPID_STRPBRK stupid_wcspbrk
 # endif /* WIDE */
 
 typedef CHAR *(*proto_t) (const CHAR *, const CHAR *);
 CHAR *SIMPLE_STRPBRK (const CHAR *, const CHAR *);
-CHAR *STUPID_STRPBRK (const CHAR *, const CHAR *);
 
-IMPL (STUPID_STRPBRK, 0)
 IMPL (SIMPLE_STRPBRK, 0)
 IMPL (STRPBRK, 1)
 
@@ -64,18 +60,6 @@ SIMPLE_STRPBRK (const CHAR *s, const CHAR *rej)
   return NULL;
 }
 
-CHAR *
-STUPID_STRPBRK (const CHAR *s, const CHAR *rej)
-{
-  size_t ns = STRLEN (s), nrej = STRLEN (rej);
-  size_t i, j;
-
-  for (i = 0; i < ns; ++i)
-    for (j = 0; j < nrej; ++j)
-      if (s[i] == rej[j])
-	return (CHAR *) s + i;
-  return NULL;
-}
 #endif /* !STRPBRK_RESULT */
 
 static void

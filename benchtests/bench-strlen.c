@@ -34,15 +34,6 @@ size_t memchr_strlen (const CHAR *);
 IMPL (memchr_strlen, 0)
 IMPL (generic_strlen, 0)
 
-#ifndef WIDE
-size_t
-builtin_strlen (const CHAR *p)
-{
-  return __builtin_strlen (p);
-}
-IMPL (builtin_strlen, 0)
-#endif
-
 size_t
 memchr_strlen (const CHAR *p)
 {

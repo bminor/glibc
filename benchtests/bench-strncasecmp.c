@@ -23,9 +23,7 @@
 
 typedef int (*proto_t) (const char *, const char *, size_t);
 static int simple_strncasecmp (const char *, const char *, size_t);
-static int stupid_strncasecmp (const char *, const char *, size_t);
 
-IMPL (stupid_strncasecmp, 0)
 IMPL (simple_strncasecmp, 0)
 IMPL (strncasecmp, 1)
 
@@ -43,27 +41,6 @@ simple_strncasecmp (const char *s1, const char *s2, size_t n)
     {
       if (--n == 0)
 	return 0;
-      ++s2;
-    }
-  return ret;
-}
-
-static int
-stupid_strncasecmp (const char *s1, const char *s2, size_t max)
-{
-  size_t ns1 = strlen (s1) + 1;
-  size_t ns2 = strlen (s2) + 1;
-  size_t n = ns1 < ns2 ? ns1 : ns2;
-  if (n > max)
-    n = max;
-  int ret = 0;
-
-  while (n--)
-    {
-      if ((ret = ((unsigned char) tolower (*s1)
-		  - (unsigned char) tolower (*s2))) != 0)
-	break;
-      ++s1;
       ++s2;
     }
   return ret;

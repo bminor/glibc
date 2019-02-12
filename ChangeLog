@@ -1,3 +1,31 @@
+2019-02-12  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* benchtests/bench-strcasecmp.c (stupid_strcasecmp): Remove.
+	* benchtests/bench-strcasestr.c (stupid_strcasestr): Remove.
+	* benchtests/bench-strchr.c (stupid_strchr): Remove.
+	* benchtests/bench-strcmp.c (stupid_strcmp): Remove.
+	* benchtests/bench-strcspn.c (stupid_strcspn): Remove.
+	* benchtests/bench-strlen.c (builtin_strlen): Remove.
+	* benchtests/bench-strncasecmp.c (stupid_strncasecmp): Remove.
+	* benchtests/bench-strncmp.c (stupid_strncmp): Remove.
+	* benchtests/bench-strpbrk.c (stupid_strpbrk): Remove.
+	* benchtests/bench-strspn.c (stupid_strspn): Remove.
+	* benchtests/Makefile: Remove bench-bcopy.c and bench-bzero.c.
+	* benchtests/bench-bcopy.c: Delete file.
+	* benchtests/bench-bzero.c: Likewise.
+	* benchtests/bench-memccpy.c (stupid_memccpy): Remove.
+	(simple_memccpy): Remove.
+	(generic_memccpy): Add function.
+	* benchtests/bench-memcpy.c: (builtin_memcpy): Remove.
+	* benchtests/bench-memmove.c (simple_bcopy): Remove.
+	* benchtests/bench-mempcpy.c (simple_mempcpy): Remove.
+	(generic_mempcpy): Add new function.
+	* benchtests/bench-memset.c (simple_bzero): Remove.
+	(builtin_bzero): Remove.
+	(builtin_memset): Remove.
+	* benchtests/bench-rawmemchr.c (simple_rawmemchr): Remove.
+	(generic_rawmemchr): Add new function.
+
 2019-02-12  Florian Weimer  <fweimer@redhat.com>
 
 	* nss/getent.c (ahosts_keys_int): Include IPv6 scope ID in output.

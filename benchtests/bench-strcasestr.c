@@ -27,33 +27,8 @@
 #define __strnlen strnlen
 #include "../string/strcasestr.c"
 
-
-static char *
-stupid_strcasestr (const char *s1, const char *s2)
-{
-  ssize_t s1len = strlen (s1);
-  ssize_t s2len = strlen (s2);
-
-  if (s2len > s1len)
-    return NULL;
-
-  for (ssize_t i = 0; i <= s1len - s2len; ++i)
-    {
-      size_t j;
-      for (j = 0; j < s2len; ++j)
-	if (tolower (s1[i + j]) != tolower (s2[j]))
-	  break;
-      if (j == s2len)
-	return (char *) s1 + i;
-    }
-
-  return NULL;
-}
-
-
 typedef char *(*proto_t) (const char *, const char *);
 
-IMPL (stupid_strcasestr, 0)
 IMPL (simple_strcasestr, 0)
 IMPL (strcasestr, 1)
 

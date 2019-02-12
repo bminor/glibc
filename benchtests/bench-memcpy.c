@@ -23,13 +23,6 @@
 # define TEST_NAME "memcpy"
 # include "bench-string.h"
 
-char *simple_memcpy (char *, const char *, size_t);
-char *builtin_memcpy (char *, const char *, size_t);
-
-IMPL (simple_memcpy, 0)
-IMPL (builtin_memcpy, 0)
-IMPL (memcpy, 1)
-
 char *
 simple_memcpy (char *dst, const char *src, size_t n)
 {
@@ -39,11 +32,9 @@ simple_memcpy (char *dst, const char *src, size_t n)
   return ret;
 }
 
-char *
-builtin_memcpy (char *dst, const char *src, size_t n)
-{
-  return __builtin_memcpy (dst, src, n);
-}
+IMPL (memcpy, 1)
+IMPL (simple_memcpy, 0)
+
 #endif
 
 # include "json-lib.h"

@@ -38,7 +38,6 @@
 # ifdef USE_FOR_STRCHRNUL
 #  undef STRCHR
 #  define STRCHR strchrnul
-#  define stupid_STRCHR stupid_STRCHRNUL
 #  define simple_STRCHR simple_STRCHRNUL
 # endif /* !USE_FOR_STRCHRNUL */
 # define MIDDLE_CHAR 127
@@ -47,7 +46,6 @@
 # ifdef USE_FOR_STRCHRNUL
 #  undef STRCHR
 #  define STRCHR wcschrnul
-#  define stupid_STRCHR stupid_WCSCHRNUL
 #  define simple_STRCHR simple_WCSCHRNUL
 # endif /* !USE_FOR_STRCHRNUL */
 # define MIDDLE_CHAR 1121
@@ -72,18 +70,6 @@ simple_STRCHR (const CHAR *s, int c)
   return (CHAR *) s;
 }
 
-CHAR *
-stupid_STRCHR (const CHAR *s, int c)
-{
-  size_t n = STRLEN (s) + 1;
-
-  while (n--)
-    if (*s++ == (CHAR) c)
-      return (CHAR *) s - 1;
-  return NULLRET ((CHAR *) s - 1);
-}
-
-IMPL (stupid_STRCHR, 0)
 IMPL (simple_STRCHR, 0)
 IMPL (STRCHR, 1)
 

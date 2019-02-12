@@ -21,17 +21,13 @@
 #define TEST_NAME "mempcpy"
 #include "bench-string.h"
 
-char *simple_mempcpy (char *, const char *, size_t);
-
-IMPL (simple_mempcpy, 0)
-IMPL (mempcpy, 1)
-
 char *
-simple_mempcpy (char *dst, const char *src, size_t n)
+generic_mempcpy (char *dst, const char *src, size_t n)
 {
-  while (n--)
-    *dst++ = *src++;
-  return dst;
+  return memcpy (dst, src, n) + n;
 }
+
+IMPL (mempcpy, 1)
+IMPL (generic_mempcpy, 0)
 
 #include "bench-memcpy.c"

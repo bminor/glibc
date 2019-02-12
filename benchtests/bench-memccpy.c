@@ -20,28 +20,8 @@
 #define TEST_NAME "memccpy"
 #include "bench-string.h"
 
-void *simple_memccpy (void *, const void *, int, size_t);
-void *stupid_memccpy (void *, const void *, int, size_t);
-
-IMPL (stupid_memccpy, 0)
-IMPL (simple_memccpy, 0)
-IMPL (memccpy, 1)
-
 void *
-simple_memccpy (void *dst, const void *src, int c, size_t n)
-{
-  const char *s = src;
-  char *d = dst;
-
-  while (n-- > 0)
-    if ((*d++ = *s++) == (char) c)
-      return d;
-
-  return NULL;
-}
-
-void *
-stupid_memccpy (void *dst, const void *src, int c, size_t n)
+generic_memccpy (void *dst, const void *src, int c, size_t n)
 {
   void *p = memchr (src, c, n);
 
@@ -51,6 +31,9 @@ stupid_memccpy (void *dst, const void *src, int c, size_t n)
   memcpy (dst, src, n);
   return NULL;
 }
+
+IMPL (memccpy, 1)
+IMPL (generic_memccpy, 0)
 
 typedef void *(*proto_t) (void *, const void *, int c, size_t);
 

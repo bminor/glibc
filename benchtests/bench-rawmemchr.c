@@ -17,25 +17,24 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <assert.h>
+#include <stdint.h>
 
 #define TEST_MAIN
 #define TEST_NAME "rawmemchr"
 #include "bench-string.h"
 
 typedef char *(*proto_t) (const char *, int);
-char *simple_rawmemchr (const char *, int);
-
-IMPL (simple_rawmemchr, 0)
-IMPL (rawmemchr, 1)
 
 char *
-simple_rawmemchr (const char *s, int c)
+generic_rawmemchr (const char *s, int c)
 {
-  while (1)
-    if (*s++ == (char) c)
-      return (char *) s - 1;
-  return NULL;
+  if (c != 0)
+    return memchr (s, c, PTRDIFF_MAX);
+  return (char *)s + strlen (s);
 }
+
+IMPL (rawmemchr, 1)
+IMPL (generic_rawmemchr, 0)
 
 static void
 do_one_test (impl_t *impl, const char *s, int c, char *exp_res)

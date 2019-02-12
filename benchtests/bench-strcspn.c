@@ -28,17 +28,13 @@
 
 #ifndef WIDE
 # define SIMPLE_STRCSPN simple_strcspn
-# define STUPID_STRCSPN stupid_strcspn
 #else
 # define SIMPLE_STRCSPN simple_wcscspn
-# define STUPID_STRCSPN stupid_wcscspn
 #endif /* WIDE */
 
 typedef size_t (*proto_t) (const CHAR *, const CHAR *);
 size_t SIMPLE_STRCSPN (const CHAR *, const CHAR *);
-size_t STUPID_STRCSPN (const CHAR *, const CHAR *);
 
-IMPL (STUPID_STRCSPN, 0)
 IMPL (SIMPLE_STRCSPN, 0)
 IMPL (STRCSPN, 1)
 
@@ -53,19 +49,6 @@ SIMPLE_STRCSPN (const CHAR *s, const CHAR *rej)
       if (*r == c)
 	return s - str - 1;
   return s - str - 1;
-}
-
-size_t
-STUPID_STRCSPN (const CHAR *s, const CHAR *rej)
-{
-  size_t ns = STRLEN (s), nrej = STRLEN (rej);
-  size_t i, j;
-
-  for (i = 0; i < ns; ++i)
-    for (j = 0; j < nrej; ++j)
-      if (s[i] == rej[j])
-	return i;
-  return i;
 }
 
 #include "bench-strpbrk.c"
