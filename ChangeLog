@@ -1,3 +1,7 @@
+2019-02-12  Florian Weimer  <fweimer@redhat.com>
+
+	* nss/getent.c (ahosts_keys_int): Include IPv6 scope ID in output.
+
 2019-02-12  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #24122]
