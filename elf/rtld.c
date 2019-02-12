@@ -866,6 +866,205 @@ handle_preload_list (const char *preloadlist, struct link_map *main_map,
   return npreloads;
 }
 
+/* Called if the audit DSO cannot be used: if it does not have the
+   appropriate interfaces, or it expects a more recent version library
+   version than what the dynamic linker provides.  */
+static void
+unload_audit_module (struct link_map *map, int original_tls_idx)
+{
+#ifndef NDEBUG
+  Lmid_t ns = map->l_ns;
+#endif
+  _dl_close (map);
+
+  /* Make sure the namespace has been cleared entirely.  */
+  assert (GL(dl_ns)[ns]._ns_loaded == NULL);
+  assert (GL(dl_ns)[ns]._ns_nloaded == 0);
+
+  GL(dl_tls_max_dtv_idx) = original_tls_idx;
+}
+
+/* Called to print an error message if loading of an audit module
+   failed.  */
+static void
+report_audit_module_load_error (const char *name, const char *err_str,
+				bool malloced)
+{
+  _dl_error_printf ("\
+ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
+		    name, err_str);
+  if (malloced)
+    free ((char *) err_str);
+}
+
+/* Load one audit module.  */
+static void
+load_audit_module (const char *name, struct audit_ifaces **last_audit)
+{
+  int original_tls_idx = GL(dl_tls_max_dtv_idx);
+
+  struct dlmopen_args dlmargs;
+  dlmargs.fname = name;
+  dlmargs.map = NULL;
+
+  const char *objname;
+  const char *err_str = NULL;
+  bool malloced;
+  _dl_catch_error (&objname, &err_str, &malloced, dlmopen_doit, &dlmargs);
+  if (__glibc_unlikely (err_str != NULL))
+    {
+      report_audit_module_load_error (name, err_str, malloced);
+      return;
+    }
+
+  struct lookup_args largs;
+  largs.name = "la_version";
+  largs.map = dlmargs.map;
+  _dl_catch_error (&objname, &err_str, &malloced, lookup_doit, &largs);
+  if (__glibc_likely (err_str != NULL))
+    {
+      unload_audit_module (dlmargs.map, original_tls_idx);
+      report_audit_module_load_error (name, err_str, malloced);
+      return;
+    }
+
+  unsigned int (*laversion) (unsigned int) = largs.result;
+
+ /* A null symbol indicates that something is very wrong with the
+    loaded object because defined symbols are supposed to have a
+    valid, non-null address.  */
+  assert (laversion != NULL);
+
+  unsigned int lav = laversion (LAV_CURRENT);
+  if (lav == 0)
+    {
+      /* Only print an error message if debugging because this can
+	 happen deliberately.  */
+      if (GLRO(dl_debug_mask) & DL_DEBUG_FILES)
+	_dl_debug_printf ("\
+file=%s [%lu]; audit interface function la_version returned zero; ignored.\n",
+			  dlmargs.map->l_name, dlmargs.map->l_ns);
+      unload_audit_module (dlmargs.map, original_tls_idx);
+      return;
+    }
+
+  if (lav > LAV_CURRENT)
+    {
+      _dl_debug_printf ("\
+ERROR: audit interface '%s' requires version %d (maximum supported version %d); ignored.\n",
+			name, lav, LAV_CURRENT);
+      unload_audit_module (dlmargs.map, original_tls_idx);
+      return;
+    }
+
+  enum { naudit_ifaces = 8 };
+  union
+  {
+    struct audit_ifaces ifaces;
+    void (*fptr[naudit_ifaces]) (void);
+  } *newp = malloc (sizeof (*newp));
+  if (newp == NULL)
+    _dl_fatal_printf ("Out of memory while loading audit modules\n");
+
+  /* Names of the auditing interfaces.  All in one
+     long string.  */
+  static const char audit_iface_names[] =
+    "la_activity\0"
+    "la_objsearch\0"
+    "la_objopen\0"
+    "la_preinit\0"
+#if __ELF_NATIVE_CLASS == 32
+    "la_symbind32\0"
+#elif __ELF_NATIVE_CLASS == 64
+    "la_symbind64\0"
+#else
+# error "__ELF_NATIVE_CLASS must be defined"
+#endif
+#define STRING(s) __STRING (s)
+    "la_" STRING (ARCH_LA_PLTENTER) "\0"
+    "la_" STRING (ARCH_LA_PLTEXIT) "\0"
+    "la_objclose\0";
+  unsigned int cnt = 0;
+  const char *cp = audit_iface_names;
+  do
+    {
+      largs.name = cp;
+      _dl_catch_error (&objname, &err_str, &malloced, lookup_doit, &largs);
+
+      /* Store the pointer.  */
+      if (err_str == NULL && largs.result != NULL)
+	{
+	  newp->fptr[cnt] = largs.result;
+
+	  /* The dynamic linker link map is statically allocated,
+	     initialize the data now.  */
+	  GL(dl_rtld_map).l_audit[cnt].cookie = (intptr_t) &GL(dl_rtld_map);
+	}
+      else
+	newp->fptr[cnt] = NULL;
+      ++cnt;
+
+      cp = rawmemchr (cp, '\0') + 1;
+    }
+  while (*cp != '\0');
+  assert (cnt == naudit_ifaces);
+
+  /* Now append the new auditing interface to the list.  */
+  newp->ifaces.next = NULL;
+  if (*last_audit == NULL)
+    *last_audit = GLRO(dl_audit) = &newp->ifaces;
+  else
+    *last_audit = (*last_audit)->next = &newp->ifaces;
+  ++GLRO(dl_naudit);
+
+  /* Mark the DSO as being used for auditing.  */
+  dlmargs.map->l_auditing = 1;
+}
+
+/* Notify the the audit modules that the object MAP has already been
+   loaded.  */
+static void
+notify_audit_modules_of_loaded_object (struct link_map *map)
+{
+  struct audit_ifaces *afct = GLRO(dl_audit);
+  for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
+    {
+      if (afct->objopen != NULL)
+	{
+	  map->l_audit[cnt].bindflags
+	    = afct->objopen (map, LM_ID_BASE, &map->l_audit[cnt].cookie);
+	  map->l_audit_any_plt |= map->l_audit[cnt].bindflags != 0;
+	}
+
+      afct = afct->next;
+    }
+}
+
+/* Load all audit modules.  */
+static void
+load_audit_modules (struct link_map *main_map)
+{
+  struct audit_ifaces *last_audit = NULL;
+  struct audit_list_iter al_iter;
+  audit_list_iter_init (&al_iter);
+
+  while (true)
+    {
+      const char *name = audit_list_iter_next (&al_iter);
+      if (name == NULL)
+	break;
+      load_audit_module (name, &last_audit);
+    }
+
+  /* Notify audit modules of the initially loaded modules (the main
+     program and the dynamic linker itself).  */
+  if (GLRO(dl_naudit) > 0)
+    {
+      notify_audit_modules_of_loaded_object (main_map);
+      notify_audit_modules_of_loaded_object (&GL(dl_rtld_map));
+    }
+}
+
 static void
 dl_main (const ElfW(Phdr) *phdr,
 	 ElfW(Word) phnum,
@@ -1406,10 +1605,6 @@ ERROR: '%s': cannot process note segment.\n", _dl_argv[0]);
   if (__glibc_unlikely (audit_list != NULL)
       || __glibc_unlikely (audit_list_string != NULL))
     {
-      struct audit_ifaces *last_audit = NULL;
-      struct audit_list_iter al_iter;
-      audit_list_iter_init (&al_iter);
-
       /* Since we start using the auditing DSOs right away we need to
 	 initialize the data structures now.  */
       tcbp = init_tls ();
@@ -1421,164 +1616,7 @@ ERROR: '%s': cannot process note segment.\n", _dl_argv[0]);
       security_init ();
       need_security_init = false;
 
-      while (true)
-	{
-	  const char *name = audit_list_iter_next (&al_iter);
-	  if (name == NULL)
-	    break;
-
-	  int tls_idx = GL(dl_tls_max_dtv_idx);
-
-	  /* Now it is time to determine the layout of the static TLS
-	     block and allocate it for the initial thread.  Note that we
-	     always allocate the static block, we never defer it even if
-	     no DF_STATIC_TLS bit is set.  The reason is that we know
-	     glibc will use the static model.  */
-	  struct dlmopen_args dlmargs;
-	  dlmargs.fname = name;
-	  dlmargs.map = NULL;
-
-	  const char *objname;
-	  const char *err_str = NULL;
-	  bool malloced;
-	  (void) _dl_catch_error (&objname, &err_str, &malloced, dlmopen_doit,
-				  &dlmargs);
-	  if (__glibc_unlikely (err_str != NULL))
-	    {
-	    not_loaded:
-	      _dl_error_printf ("\
-ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
-				name, err_str);
-	      if (malloced)
-		free ((char *) err_str);
-	    }
-	  else
-	    {
-	      struct lookup_args largs;
-	      largs.name = "la_version";
-	      largs.map = dlmargs.map;
-
-	      /* Check whether the interface version matches.  */
-	      (void) _dl_catch_error (&objname, &err_str, &malloced,
-				      lookup_doit, &largs);
-
-	      unsigned int (*laversion) (unsigned int);
-	      unsigned int lav;
-	      if  (err_str == NULL
-		   && (laversion = largs.result) != NULL
-		   && (lav = laversion (LAV_CURRENT)) > 0
-		   && lav <= LAV_CURRENT)
-		{
-		  /* Allocate structure for the callback function pointers.
-		     This call can never fail.  */
-		  union
-		  {
-		    struct audit_ifaces ifaces;
-#define naudit_ifaces 8
-		    void (*fptr[naudit_ifaces]) (void);
-		  } *newp = malloc (sizeof (*newp));
-
-		  /* Names of the auditing interfaces.  All in one
-		     long string.  */
-		  static const char audit_iface_names[] =
-		    "la_activity\0"
-		    "la_objsearch\0"
-		    "la_objopen\0"
-		    "la_preinit\0"
-#if __ELF_NATIVE_CLASS == 32
-		    "la_symbind32\0"
-#elif __ELF_NATIVE_CLASS == 64
-		    "la_symbind64\0"
-#else
-# error "__ELF_NATIVE_CLASS must be defined"
-#endif
-#define STRING(s) __STRING (s)
-		    "la_" STRING (ARCH_LA_PLTENTER) "\0"
-		    "la_" STRING (ARCH_LA_PLTEXIT) "\0"
-		    "la_objclose\0";
-		  unsigned int cnt = 0;
-		  const char *cp = audit_iface_names;
-		  do
-		    {
-		      largs.name = cp;
-		      (void) _dl_catch_error (&objname, &err_str, &malloced,
-					      lookup_doit, &largs);
-
-		      /* Store the pointer.  */
-		      if (err_str == NULL && largs.result != NULL)
-			{
-			  newp->fptr[cnt] = largs.result;
-
-			  /* The dynamic linker link map is statically
-			     allocated, initialize the data now.   */
-			  GL(dl_rtld_map).l_audit[cnt].cookie
-			    = (intptr_t) &GL(dl_rtld_map);
-			}
-		      else
-			newp->fptr[cnt] = NULL;
-		      ++cnt;
-
-		      cp = (char *) rawmemchr (cp, '\0') + 1;
-		    }
-		  while (*cp != '\0');
-		  assert (cnt == naudit_ifaces);
-
-		  /* Now append the new auditing interface to the list.  */
-		  newp->ifaces.next = NULL;
-		  if (last_audit == NULL)
-		    last_audit = GLRO(dl_audit) = &newp->ifaces;
-		  else
-		    last_audit = last_audit->next = &newp->ifaces;
-		  ++GLRO(dl_naudit);
-
-		  /* Mark the DSO as being used for auditing.  */
-		  dlmargs.map->l_auditing = 1;
-		}
-	      else
-		{
-		  /* We cannot use the DSO, it does not have the
-		     appropriate interfaces or it expects something
-		     more recent.  */
-#ifndef NDEBUG
-		  Lmid_t ns = dlmargs.map->l_ns;
-#endif
-		  _dl_close (dlmargs.map);
-
-		  /* Make sure the namespace has been cleared entirely.  */
-		  assert (GL(dl_ns)[ns]._ns_loaded == NULL);
-		  assert (GL(dl_ns)[ns]._ns_nloaded == 0);
-
-		  GL(dl_tls_max_dtv_idx) = tls_idx;
-		  goto not_loaded;
-		}
-	    }
-	}
-
-      /* If we have any auditing modules, announce that we already
-	 have two objects loaded.  */
-      if (__glibc_unlikely (GLRO(dl_naudit) > 0))
-	{
-	  struct link_map *ls[2] = { main_map, &GL(dl_rtld_map) };
-
-	  for (unsigned int outer = 0; outer < 2; ++outer)
-	    {
-	      struct audit_ifaces *afct = GLRO(dl_audit);
-	      for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
-		{
-		  if (afct->objopen != NULL)
-		    {
-		      ls[outer]->l_audit[cnt].bindflags
-			= afct->objopen (ls[outer], LM_ID_BASE,
-					 &ls[outer]->l_audit[cnt].cookie);
-
-		      ls[outer]->l_audit_any_plt
-			|= ls[outer]->l_audit[cnt].bindflags != 0;
-		    }
-
-		  afct = afct->next;
-		}
-	    }
-	}
+      load_audit_modules (main_map);
     }
 
   /* Keep track of the currently loaded modules to count how many

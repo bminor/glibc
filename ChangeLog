@@ -1,3 +1,18 @@
+2019-02-12  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24122]
+	* elf/rtld.c (unload_audit_module): New function.
+	(report_audit_module_load_error): Likewise.
+	(load_audit_module): Likewise.  Extracted from dl_main.  Call
+	_dl_close if the laversion symbol cannot be found.  Use early
+	returns for error handling.  Add malloc error check.  Check for a
+	zero return value from la_version.  Remove spurious comment about
+	static TLS initialization.  Remove useless casts.
+	(notify_audit_modules_of_loaded_object): New function.  Extracted
+	from dl_main.
+	(load_audit_module): Likewise.
+	(dl_main): Call load_audit_modules.
+
 2019-02-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* elf/dl-exception.c (_dl_exception_create_format): Add
