@@ -1,3 +1,13 @@
+2019-02-12  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #24122]
+	* elf/Makefile (tests): Add tst-audit13.
+	(modules-names): Add tst-audit13mod1.
+	(tst-audit13.out, LDFLAGS-tst-audit13mod1.so, tst-audit13-ENV): New
+	rule.
+	* elf/tst-audit13.c: New file.
+	* elf/tst-audit13mod1.c: Likewise.
+
 2019-02-12  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #24122]
