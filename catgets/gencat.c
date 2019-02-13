@@ -1196,7 +1196,9 @@ normalize_line (const char *fname, size_t line, iconv_t cd, wchar_t *string,
 		  ++rp;
 		}
 	      else
-		/* Simply ignore the backslash character.  */;
+		{
+		  /* Simply ignore the backslash character.  */
+		}
 	      break;
 	    }
       }

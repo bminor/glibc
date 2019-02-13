@@ -240,7 +240,7 @@ extern int _IO_ftrylockfile (FILE *) __THROW;
 
 #define _IO_peekc(_fp) _IO_peekc_unlocked (_fp)
 #define _IO_flockfile(_fp) /**/
-#define _IO_funlockfile(_fp) /**/
+#define _IO_funlockfile(_fp) ((void) 0)
 #define _IO_ftrylockfile(_fp) /**/
 #ifndef _IO_cleanup_region_start
 #define _IO_cleanup_region_start(_fct, _fp) /**/

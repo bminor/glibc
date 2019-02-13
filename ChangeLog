@@ -1,5 +1,16 @@
 2019-02-13  Joseph Myers  <joseph@codesourcery.com>
 
+	* catgets/gencat.c (normalize_line): Use braces around empty
+	'else' body.
+	* include/stap-probe.h [!USE_STAP_PROBE && !__ASSEMBLER__]
+	(STAP_PROBE0): Use do {} while (0) for do-nothing definition.
+	[!USE_STAP_PROBE && !__ASSEMBLER__] (STAP_PROBE1): Likewise.
+	[!USE_STAP_PROBE && !__ASSEMBLER__] (STAP_PROBE2): Likewise.
+	[!USE_STAP_PROBE && !__ASSEMBLER__] (STAP_PROBE3): Likewise.
+	[!USE_STAP_PROBE && !__ASSEMBLER__] (STAP_PROBE4): Likewise.
+	* libio/libio.h (_IO_funlockfile): Use ((void) 0) for do-nothing
+	definition.
+
 	* support/test-container.c (recursive_remove): Use FAIL_EXIT1 if
 	execlp returns.
 
