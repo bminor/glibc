@@ -220,7 +220,8 @@ ucs4_to_cns11643 (uint32_t wch, unsigned char *s, size_t avail)
       cp = __cns11643l1_from_ucs4_tab12[ch - 0x4e00];
       if (cp[0] != '\0')
 	break;
-      /* FALLTHROUGH.  Let's try the other planes.  */
+      /* Let's try the other planes.  */
+      /* Fall through.  */
     case 0x3400 ... 0x4dff:
     case 0x9f9d ... 0x9fa5:
       /* Let's try the other planes.  */
