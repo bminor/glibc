@@ -1,3 +1,20 @@
+2019-06-20  Dmitry V. Levin  <ldv@altlinux.org>
+	    Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24228]
+	* libio/genops.c (_IO_unbuffer_all)
+	[SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)]: Do not attempt to free wide
+	buffers and access _IO_FILE_complete members of legacy libio streams.
+	* libio/tst-bz24228.c: New file.
+	* libio/tst-bz24228.map: Likewise.
+	* libio/Makefile [build-shared] (tests): Add tst-bz24228.
+	[build-shared] (generated): Add tst-bz24228.mtrace and
+	tst-bz24228.check.
+	[run-built-tests && build-shared] (tests-special): Add
+	$(objpfx)tst-bz24228-mem.out.
+	(LDFLAGS-tst-bz24228, tst-bz24228-ENV): New variables.
+	($(objpfx)tst-bz24228-mem.out): New rule.
+
 2019-05-22  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	[BZ #24531]
