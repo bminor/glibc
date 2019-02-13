@@ -1,3 +1,8 @@
+2019-02-13  Joseph Myers  <joseph@codesourcery.com>
+
+	* support/test-container.c (recursive_remove): Use FAIL_EXIT1 if
+	execlp returns.
+
 2019-02-12  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* benchtests/bench-strcasecmp.c (stupid_strcasecmp): Remove.

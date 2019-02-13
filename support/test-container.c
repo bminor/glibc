@@ -361,6 +361,7 @@ recursive_remove (char *path)
   case 0:
     /* Child.  */
     execlp ("rm", "rm", "-rf", path, NULL);
+    FAIL_EXIT1 ("exec rm: %m");
   default:
     /* Parent.  */
     waitpid (child, &status, 0);
