@@ -1,3 +1,11 @@
+2019-02-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* sunrpc/xdr.c (xdr_int): Add fall-through comment.
+	(xdr_u_int): Likewise.
+	(xdr_enum): Likewise.
+	(xdr_bytes): Reword fall-through comment.
+	(xdr_string): Likewise.
+
 2019-02-14  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #2421]

@@ -113,6 +113,7 @@ xdr_int (XDR *xdrs, int *ip)
 	  return FALSE;
 	}
       *ip = (int) l;
+      /* Fall through.  */
     case XDR_FREE:
       return TRUE;
     }
@@ -152,6 +153,7 @@ xdr_u_int (XDR *xdrs, u_int *up)
 	  return FALSE;
 	}
       *up = (u_int) (u_long) l;
+      /* Fall through.  */
     case XDR_FREE:
       return TRUE;
     }
@@ -506,6 +508,7 @@ xdr_enum (XDR *xdrs, enum_t *ep)
 	      return FALSE;
 	    }
 	  *ep = l;
+	  /* Fall through.  */
 	case XDR_FREE:
 	  return TRUE;
 
@@ -628,7 +631,7 @@ xdr_bytes (XDR *xdrs, char **cpp, u_int *sizep, u_int maxsize)
 	  (void) __fxprintf (NULL, "%s: %s", __func__, _("out of memory\n"));
 	  return FALSE;
 	}
-      /* fall into ... */
+      /* Fall through.  */
 
     case XDR_ENCODE:
       return xdr_opaque (xdrs, sp, nodesize);
@@ -789,7 +792,7 @@ xdr_string (XDR *xdrs, char **cpp, u_int maxsize)
 	  return FALSE;
 	}
       sp[size] = 0;
-      /* fall into ... */
+      /* Fall through.  */
 
     case XDR_ENCODE:
       return xdr_opaque (xdrs, sp, size);
