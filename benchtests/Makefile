@@ -90,7 +90,7 @@ CFLAGS-bench-trunc.c += -fno-builtin
 CFLAGS-bench-truncf.c += -fno-builtin
 
 ifeq (${BENCHSET},)
-bench-malloc := malloc-thread
+bench-malloc := malloc-thread malloc-simple
 else
 bench-malloc := $(filter malloc-%,${BENCHSET})
 endif
@@ -98,7 +98,7 @@ endif
 $(addprefix $(objpfx)bench-,$(bench-math)): $(libm)
 $(addprefix $(objpfx)bench-,$(math-benchset)): $(libm)
 $(addprefix $(objpfx)bench-,$(bench-pthread)): $(shared-thread-library)
-$(objpfx)bench-malloc-thread: $(shared-thread-library)
+$(addprefix $(objpfx)bench-,$(bench-malloc)): $(shared-thread-library)
 
 
 
@@ -171,7 +171,7 @@ bench-clean:
 ifneq ($(strip ${BENCHSET}),)
 VALIDBENCHSETNAMES := bench-pthread bench-math bench-string string-benchset \
    wcsmbs-benchset stdlib-benchset stdio-common-benchset math-benchset \
-   malloc-thread
+   malloc-thread malloc-simple
 INVALIDBENCHSETNAMES := $(filter-out ${VALIDBENCHSETNAMES},${BENCHSET})
 ifneq (${INVALIDBENCHSETNAMES},)
 $(info The following values in BENCHSET are invalid: ${INVALIDBENCHSETNAMES})
@@ -200,10 +200,18 @@ bench-set: $(binaries-benchset)
 
 bench-malloc: $(binaries-bench-malloc)
 	for run in $^; do \
+	  echo "$${run}"; \
+	  if [ `basename $${run}` = "bench-malloc-thread" ]; then \
 		for thr in 1 8 16 32; do \
 			echo "Running $${run} $${thr}"; \
-	  $(run-bench) $${thr} > $${run}-$${thr}.out; \
-	  done;\
+			$(run-bench) $${thr} > $${run}-$${thr}.out; \
+		done;\
+	  else \
+		for thr in 8 16 32 64 128 256 512 1024 2048 4096; do \
+		  echo "Running $${run} $${thr}"; \
+		  $(run-bench) $${thr} > $${run}-$${thr}.out; \
+		done;\
+	  fi;\
 	done
 
 # Build and execute the benchmark functions.  This target generates JSON
