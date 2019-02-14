@@ -1,3 +1,12 @@
+2019-02-14  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* benchtests/bench-memmove.c (do_one_test): Remove unused
+	ORIG_SRC.
+	(do_test): Adjust.
+	* benchtests/bench-memmove-large.c (do_one_test): Remove unused
+	ORIG_SRC.
+	(do_test): Adjust.
+
 2019-01-13  Jim Wilson  <jimw@sifive.com>
 
 	[BZ #24040]
