@@ -86,6 +86,7 @@ __pthread_timedjoin_ex (pthread_t threadid, void **thread_return,
       pthread_cleanup_pop (0);
     }
 
+  void *pd_result = pd->result;
   if (__glibc_likely (result == 0))
     {
       /* We mark the thread as terminated and as joined.  */
@@ -93,7 +94,7 @@ __pthread_timedjoin_ex (pthread_t threadid, void **thread_return,
 
       /* Store the return value if the caller is interested.  */
       if (thread_return != NULL)
-	*thread_return = pd->result;
+	*thread_return = pd_result;
 
       /* Free the TCB.  */
       __free_tcb (pd);
@@ -101,7 +102,7 @@ __pthread_timedjoin_ex (pthread_t threadid, void **thread_return,
   else
     pd->joinid = NULL;
 
-  LIBC_PROBE (pthread_join_ret, 3, threadid, result, pd->result);
+  LIBC_PROBE (pthread_join_ret, 3, threadid, result, pd_result);
 
   return result;
 }
