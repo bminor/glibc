@@ -1,5 +1,14 @@
 2019-04-17  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/mips/getcontext.S (__getcontext): Remove
+	the magic flag store.
+	* sysdeps/unix/sysv/linux/mips/makecontext.S (__makecontext):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/swapcontext.S (__swapcontext):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/setcontext.S (__setcontext):
+	Remove rt_sigreturn call.
+
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext-common.S:
 	Remove rt_sigreturn call.
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext-common.S:

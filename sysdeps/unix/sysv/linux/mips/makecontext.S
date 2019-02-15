@@ -93,11 +93,6 @@ NESTED (__makecontext, FRAMESZ, ra)
 	REG_S	a7, A7OFF(sp)
 #endif
 
-	/* Store a magic flag.  */
-	li	v1, 1
-	/* zero */
-	REG_S	v1, (MCONTEXT_GREGOFF + 0 * MCONTEXT_GREGSZ + MCONTEXT_GREGS)(a0)
-
 	/* Set up the stack.  */
 	PTR_L	t0, STACK_SP(a0)
 	PTR_L	t2, STACK_SIZE(a0)
