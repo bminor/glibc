@@ -1,3 +1,7 @@
+2019-02-15  Joseph Myers  <joseph@codesourcery.com>
+
+	* setjmp/tst-setjmp.c (jump): Use __attribute__ ((__noreturn__)).
+
 2019-02-14  Jan Kratochvil <jan.kratochvil@redhat.com>
 
 	* scripts/test_printers_common.py: Set TERM to a known harmless

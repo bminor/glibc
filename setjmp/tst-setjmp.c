@@ -22,7 +22,7 @@
 static jmp_buf env;
 static int last_value = -1, lose = 0;
 
-static void
+static __attribute__ ((__noreturn__)) void
 jump (int val)
 {
   longjmp (env, val);
