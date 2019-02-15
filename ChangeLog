@@ -1,3 +1,11 @@
+2019-02-15  Florian Weimer  <fweimer@redhat.com>
+
+	* nptl_db/proc_service.h: Move to ...
+	* sysdeps/nptl/proc_service.h: ... here.
+	* nptl_db/thread_db.h: Move to ...
+	* sysdeps/nptl/thread_db.h: ... here.
+	* nptl/descr.h: Include <thread_db.h>.
+
 2019-02-15  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* io/Makefile (tests): Add tst-lockf.

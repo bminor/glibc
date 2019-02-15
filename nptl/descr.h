@@ -29,7 +29,7 @@
 #include <lowlevellock.h>
 #include <pthreaddef.h>
 #include <dl-sysdep.h>
-#include "../nptl_db/thread_db.h"
+#include <thread_db.h>
 #include <tls.h>
 #include <unwind.h>
 #include <bits/types/res_state.h>
