@@ -1,5 +1,12 @@
 2019-04-17  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext-common.S:
+	Remove rt_sigreturn call.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext-common.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/setcontext.S: Likewie.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/swapcontext.S: Likewise.
+
 	* support/Makefile (libsupport-routines): Add support_subprocess,
 	xposix_spawn, xposix_spawn_file_actions_addclose, and
 	xposix_spawn_file_actions_adddup2.

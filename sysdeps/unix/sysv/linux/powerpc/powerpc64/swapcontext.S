@@ -149,20 +149,6 @@ ENTRY(__novec_swapcontext)
   cmpdi  r3,0
   bne   L(nv_error_exit)
 
-/*
- * If this new ucontext refers to the point where we were interrupted
- * by a signal, we have to use the rt_sigreturn system call to
- * return to the context so we get both LR and CTR restored.
- *
- * Otherwise, the context we are restoring is either just after
- * a procedure call (getcontext/swapcontext) or at the beginning
- * of a procedure call (makecontext), so we don't need to restore
- * msr and ctr.  We don't restore r13 since it will be used as
- * the TLS pointer.  */
-  ld	  r0,(SIGCONTEXT_GP_REGS+(PT_MSR*8))(r31)
-  cmpdi r0,0
-  bne	  L(nv_do_sigret)
-
   ld	r8,.LC__dl_hwcap@toc(r2)
 # ifdef SHARED
 /* Load _rtld-global._dl_hwcap.  */
@@ -287,21 +273,6 @@ L(nv_error_exit):
   mtlr  r0
   ld    r31,-8(r1)
   blr
-
-  /* At this point we assume that the ucontext was created by a
-     rt_signal and we should use rt_sigreturn to restore the original
-     state.  As of the 2.4.21 kernel the ucontext is the first thing
-     (offset 0) in the rt_signal frame and rt_sigreturn expects the
-     ucontext address in R1.  Normally the rt-signal trampoline handles
-     this by popping dummy frame before the rt_signal syscall.  In our
-     case the stack may not be in its original (signal handler return with
-     R1 pointing at the dummy frame) state.  We do have the ucontext
-     address in R3, so simply copy R3 to R1 before the syscall.  */
-L(nv_do_sigret):
-  mr   r1,r3,
-  li   r0,SYS_ify(rt_sigreturn)
-  sc
-  /* No return.  */
 
 PSEUDO_END(__novec_swapcontext)
 
@@ -535,20 +506,6 @@ L(has_no_vec):
   cmpdi  r3,0
   bne   L(error_exit)
 
-/*
- * If this new ucontext refers to the point where we were interrupted
- * by a signal, we have to use the rt_sigreturn system call to
- * return to the context so we get both LR and CTR restored.
- *
- * Otherwise, the context we are restoring is either just after
- * a procedure call (getcontext/swapcontext) or at the beginning
- * of a procedure call (makecontext), so we don't need to restore
- * msr and ctr.  We don't restore r13 since it will be used as
- * the TLS pointer.  */
-  ld	  r0,(SIGCONTEXT_GP_REGS+(PT_MSR*8))(r31)
-  cmpdi r0,0
-  bne	  L(do_sigret)
-
   ld    r8,.LC__dl_hwcap@toc(r2)
   ld    r10,(SIGCONTEXT_V_REGS_PTR)(r31)
 # ifdef SHARED
@@ -776,21 +733,6 @@ L(error_exit):
   mtlr  r0
   ld    r31,-8(r1)
   blr
-
-  /* At this point we assume that the ucontext was created by a
-     rt_signal and we should use rt_sigreturn to restore the original
-     state.  As of the 2.4.21 kernel the ucontext is the first thing
-     (offset 0) in the rt_signal frame and rt_sigreturn expects the
-     ucontext address in R1.  Normally the rt-signal trampoline handles
-     this by popping dummy frame before the rt_signal syscall.  In our
-     case the stack may not be in its original (signal handler return with
-     R1 pointing at the dummy frame) state.  We do have the ucontext
-     address in R3, so simply copy R3 to R1 before the syscall.  */
-L(do_sigret):
-  mr   r1,r3,
-  li   r0,SYS_ify(rt_sigreturn)
-  sc
-  /* No return.  */
 
 PSEUDO_END(__swapcontext)
 
