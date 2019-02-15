@@ -1,5 +1,8 @@
 2019-02-15  Joseph Myers  <joseph@codesourcery.com>
 
+	* sunrpc/tst-svc_register.c (rpcbind_address): Remove qualifier
+	from function return type.
+
 	* setjmp/tst-setjmp.c (jump): Use __attribute__ ((__noreturn__)).
 
 2019-02-14  Jan Kratochvil <jan.kratochvil@redhat.com>

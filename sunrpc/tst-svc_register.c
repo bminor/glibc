@@ -54,7 +54,7 @@ server_dispatch (struct svc_req *request, SVCXPRT *transport)
 }
 
 /* The port on which rpcbind listens for incoming requests.  */
-static inline const struct sockaddr_in
+static inline struct sockaddr_in
 rpcbind_address (void)
 {
   return (struct sockaddr_in)
