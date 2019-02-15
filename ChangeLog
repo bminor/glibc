@@ -1,5 +1,14 @@
 2019-02-15  Florian Weimer  <fweimer@redhat.com>
 
+	Check that non-sysdeps headers have wrapper headers.
+	* scripts/check-wrapper-headers.py: New file.
+	* Makefile (tests-special): Add check-wrapper-headers.out.
+	(check-wrapper-headers.out): New target.
+	* Rules (tests-special): Add check-wrapper-headers.out.
+	(check-wrapper-headers.out): New target.
+
+2019-02-15  Florian Weimer  <fweimer@redhat.com>
+
 	Add missing header wrappers under include/.
 	* include/ar.h: New file.
 	* include/bits/mqueue2.h: Likewise.

@@ -101,8 +101,15 @@ $(objpfx)check-installed-headers-cxx.out: \
 	  "$(CXX) $(filter-out -std=%,$(CXXFLAGS)) -D_ISOMAC $(+includes)" \
 	  $(headers) > $@; \
 	$(evaluate-test)
-endif
-endif
+endif # $(CXX)
+
+tests-special += $(objpfx)check-wrapper-headers.out
+$(objpfx)check-wrapper-headers.out: \
+  $(..)scripts/check-wrapper-headers.py $(headers)
+	$(PYTHON) $< --root=$(..) --subdir=$(subdir) $(headers) > $@; \
+	  $(evaluate-test)
+
+endif # $(headers)
 
 # This makes all the auxiliary and test programs.
 

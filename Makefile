@@ -331,8 +331,13 @@ $(objpfx)check-installed-headers-cxx.out: \
 	  "$(CXX) $(filter-out -std=%,$(CXXFLAGS)) -D_ISOMAC $(+includes)" \
 	  $(headers) > $@; \
 	$(evaluate-test)
-endif
-endif
+endif # $(CXX)
+
+tests-special += $(objpfx)check-wrapper-headers.out
+$(objpfx)check-wrapper-headers.out: scripts/check-wrapper-headers.py $(headers)
+	$(PYTHON) $< --root=. --subdir=. $(headers) \
+	  --generated $(common-generated) > $@; $(evaluate-test)
+endif # $(headers)
 
 define summarize-tests
 @egrep -v '^(PASS|XFAIL):' $(objpfx)$1 || true
