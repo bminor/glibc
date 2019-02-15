@@ -1,5 +1,28 @@
 2019-02-15  Florian Weimer  <fweimer@redhat.com>
 
+	Add missing header wrappers under include/.
+	* include/ar.h: New file.
+	* include/bits/mqueue2.h: Likewise.
+	* include/bits/stdio.h: Likewise.
+	* include/bits/stdio2.h: Likewise.
+	* include/fstab.h: Likewise.
+	* include/fts.h: Likewise.
+	* include/lastlog.h: Likewise.
+	* include/netinet/icmp6.h: Likewise.
+	* include/netinet/igmp.h: Likewise.
+	* include/netinet/ip6.h: Likewise.
+	* include/re_comp.h: Likewise.
+	* include/regexp.h: Likewise.
+	* include/rpcsvc/bootparam.h: Likewise.
+	* include/rpcsvc/yp_prot.h: Likewise.
+	* include/sys/random.h: Likewise.
+	* include/sys/stropts.h: Likewise.
+	* include/sys/ttychars.h: Likewise.
+	* include/sys/vfs.h: Likewise.
+	* include/wait.h: Likewise.
+
+2019-02-15  Florian Weimer  <fweimer@redhat.com>
+
 	* nptl_db/proc_service.h: Move to ...
 	* sysdeps/nptl/proc_service.h: ... here.
 	* nptl_db/thread_db.h: Move to ...
