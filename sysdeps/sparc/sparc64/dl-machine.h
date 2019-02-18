@@ -573,6 +573,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
       *(unsigned int *) reloc_addr =
 	((*(unsigned int *)reloc_addr & 0xffc00000) |
 	 ((value >> 12) & 0x3fffff));
+      break;
 
       /* MEDMID code model relocs */
     case R_SPARC_H44:

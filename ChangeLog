@@ -1,3 +1,9 @@
+2019-02-18  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #24231]
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela): Add break
+	after R_SPARC_H34 case.
+
 2019-02-18  Florian Weimer  <fweimer@redhat.com>
 
 	* resolv/compat-gethnamaddr.c (Dprintf): Remove definition.
