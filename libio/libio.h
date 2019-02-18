@@ -185,9 +185,6 @@ struct _IO_FILE_plus;
 extern struct _IO_FILE_plus _IO_2_1_stdin_;
 extern struct _IO_FILE_plus _IO_2_1_stdout_;
 extern struct _IO_FILE_plus _IO_2_1_stderr_;
-extern FILE *_IO_stdin attribute_hidden;
-extern FILE *_IO_stdout attribute_hidden;
-extern FILE *_IO_stderr attribute_hidden;
 
 struct _IO_cookie_file;
 

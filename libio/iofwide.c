@@ -87,8 +87,7 @@ _IO_fwide (FILE *fp, int mode)
   mode = mode < 0 ? -1 : (mode == 0 ? 0 : 1);
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
-  if (__builtin_expect (&_IO_stdin_used == NULL, 0)
-      && (fp == _IO_stdin || fp == _IO_stdout || fp == _IO_stderr))
+  if (__glibc_unlikely (&_IO_stdin_used == NULL) && _IO_legacy_file (fp))
     /* This is for a stream in the glibc 2.0 format.  */
     return -1;
 #endif

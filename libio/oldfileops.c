@@ -109,10 +109,7 @@ _IO_old_file_init_internal (struct _IO_FILE_plus *fp)
 			     - (int) sizeof (struct _IO_FILE_complete));
   fp->file._fileno = -1;
 
-  if (__builtin_expect (&_IO_stdin_used != NULL, 1)
-      || (fp != (struct _IO_FILE_plus *) _IO_stdin
-	  && fp != (struct _IO_FILE_plus *) _IO_stdout
-	  && fp != (struct _IO_FILE_plus *) _IO_stderr))
+  if (&_IO_stdin_used != NULL || !_IO_legacy_file ((FILE *) fp))
     /* The object is dynamically allocated and large enough.  Initialize
        the _mode element as well.  */
     ((struct _IO_FILE_complete *) fp)->_mode = -1;

@@ -58,12 +58,7 @@ _IO_old_fclose (FILE *fp)
   _IO_FINISH (fp);
   if (_IO_have_backup (fp))
     _IO_free_backup_area (fp);
-  if (fp != _IO_stdin && fp != _IO_stdout && fp != _IO_stderr)
-    {
-      fp->_flags = 0;
-      free(fp);
-    }
-
+  _IO_deallocate_file (fp);
   return status;
 }
 

@@ -1,3 +1,24 @@
+2019-02-18  Florian Weimer  <fweimer@redhat.com>
+
+	* libio/libio.h (_IO_stdin, _IO_stdout, _IO_stderr): Remove
+	declaration.
+	* libio/stdio.c (AL, AL2, _IO_stdin, _IO_stdout, _IO_stderr):
+	Remove definitions.
+	* libio/stdfiles.c: Update comment.
+	* libio/oldstdfiles.c (_IO_check_libio): Update comment.  Do not
+	set _IO_stdin, _IO_stdout, _IO_stderr.
+	* libio/libioP.h (_IO_fake_stdiobuf): Remove unused declaration.
+	[SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)] (_IO_legacy_file): New
+	inline function.
+	(_IO_deallocate_file): New inline function.
+	* libio/iolibio.h (_IO_vprintf): Remove definition.
+	* libio/iofclose.c (_IO_new_fclose): Use _IO_deallocate_file.
+	* libio/oldiofclose.c (_IO_old_fclose): Likewise.
+	* libio/iofwide.c (_IO_fwide): Use __glibc_unlikely and
+	_IO_legacy_file.
+	* libio/oldfileops.c (_IO_old_file_init_internal): Remove
+	__builtin_expect.  Use _IO_legacy_file.
+
 2019-02-18  Stefan Liebler  <stli@linux.ibm.com>
 
 	* sysdeps/unix/sysv/linux/tst-clone3.c (do_test):

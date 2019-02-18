@@ -25,11 +25,10 @@
    in files containing the exception.  */
 
 
-/* This file provides definitions of _IO_stdin, _IO_stdout, and _IO_stderr
-   for C code.  Compare stdstreams.cc.
-   (The difference is that here the vtable field is set to 0,
-   so the objects defined are not valid C++ objects.  On the other
-   hand, we don't need a C++ compiler to build this file.) */
+/* This file provides definitions of _IO_2_1_stdin_, _IO_2_1_stdout_,
+   and _IO_2_1_stderr_, the default values of stdin, stdout, stderr.
+   See oldstdfiles.c for glibc 2.0 legacy definitions without wide
+   character support.  */
 
 #include "libioP.h"
 

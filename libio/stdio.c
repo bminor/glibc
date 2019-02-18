@@ -33,14 +33,3 @@
 FILE *stdin = (FILE *) &_IO_2_1_stdin_;
 FILE *stdout = (FILE *) &_IO_2_1_stdout_;
 FILE *stderr = (FILE *) &_IO_2_1_stderr_;
-
-#undef _IO_stdin
-#undef _IO_stdout
-#undef _IO_stderr
-#define AL(name) AL2 (name, _IO_##name)
-#define AL2(name, al) \
-  extern __typeof (name) al __attribute__ ((alias (#name),                    \
-                                            visibility ("hidden")))
-AL(stdin);
-AL(stdout);
-AL(stderr);

@@ -817,7 +817,35 @@ extern int _IO_vscanf (const char *, va_list) __THROW;
 # endif
 #endif
 
-extern struct _IO_fake_stdiobuf _IO_stdin_buf, _IO_stdout_buf, _IO_stderr_buf;
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
+/* See oldstdfiles.c.  These are the old stream variables.  */
+extern struct _IO_FILE_plus _IO_stdin_;
+extern struct _IO_FILE_plus _IO_stdout_;
+extern struct _IO_FILE_plus _IO_stderr_;
+
+static inline bool
+_IO_legacy_file (FILE *fp)
+{
+  return fp == (FILE *) &_IO_stdin_ || fp == (FILE *) &_IO_stdout_
+    || fp == (FILE *) &_IO_stderr_;
+}
+#endif
+
+/* Deallocate a stream if it is heap-allocated.  Preallocated
+   stdin/stdout/stderr streams are not deallocated. */
+static inline void
+_IO_deallocate_file (FILE *fp)
+{
+  /* The current stream variables.  */
+  if (fp == (FILE *) &_IO_2_1_stdin_ || fp == (FILE *) &_IO_2_1_stdout_
+      || fp == (FILE *) &_IO_2_1_stderr_)
+    return;
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
+  if (_IO_legacy_file (fp))
+    return;
+#endif
+  free (fp);
+}
 
 #ifdef IO_DEBUG
 # define CHECK_FILE(FILE, RET) do {			\

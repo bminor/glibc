@@ -58,8 +58,6 @@ extern int _IO_vsscanf (const char *, const char *, __gnuc_va_list) __THROW;
    == _IO_pos_BAD ? EOF : 0)
 #define _IO_rewind(FILE) \
   (void) _IO_seekoff_unlocked (FILE, 0, 0, _IOS_INPUT|_IOS_OUTPUT)
-#define _IO_vprintf(FORMAT, ARGS) \
-  _IO_vfprintf (_IO_stdout, FORMAT, ARGS)
 #define _IO_freopen(FILENAME, MODE, FP) \
   (_IO_file_close_it (FP), \
    _IO_file_fopen (FP, FILENAME, MODE, 1))
