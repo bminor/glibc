@@ -1,3 +1,11 @@
+2019-02-18  Stefan Liebler  <stli@linux.ibm.com>
+
+	* sysdeps/unix/sysv/linux/tst-clone3.c (do_test):
+	Initialize ctid with a known value and remove update of ctid
+	after clone.
+	(wait_tid): Adjust arguments and call futex_wait with ctid_val
+	as assumed current value of ctid_ptr.
+
 2019-02-15  Florian Weimer  <fweimer@redhat.com>
 
 	Check that non-sysdeps headers have wrapper headers.

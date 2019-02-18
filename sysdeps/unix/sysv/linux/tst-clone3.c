@@ -27,6 +27,7 @@
 
 #include <stackinfo.h>  /* For _STACK_GROWS_{UP,DOWN}.  */
 #include <support/check.h>
+#include <stdatomic.h>
 
 /* Test if clone call with CLONE_THREAD does not call exit_group.  The 'f'
    function returns '1', which will be used by clone thread to call the
@@ -42,11 +43,14 @@ f (void *a)
 
 /* Futex wait for TID argument, similar to pthread_join internal
    implementation.  */
-#define wait_tid(tid) \
-  do {					\
-    __typeof (tid) __tid;		\
-    while ((__tid = (tid)) != 0)	\
-      futex_wait (&(tid), __tid);	\
+#define wait_tid(ctid_ptr, ctid_val)					\
+  do {									\
+    __typeof (*(ctid_ptr)) __tid;					\
+    /* We need acquire MO here so that we synchronize with the		\
+       kernel's store to 0 when the clone terminates.  */		\
+    while ((__tid = atomic_load_explicit (ctid_ptr,			\
+					  memory_order_acquire)) != 0)	\
+      futex_wait (ctid_ptr, ctid_val);					\
   } while (0)
 
 static inline int
@@ -64,7 +68,11 @@ do_test (void)
   clone_flags |= CLONE_VM | CLONE_SIGHAND;
   /* We will used ctid to call on futex to wait for thread exit.  */
   clone_flags |= CLONE_CHILD_CLEARTID;
-  pid_t ctid, tid;
+  /* Initialize with a known value.  ctid is set to zero by the kernel after the
+     cloned thread has exited.  */
+#define CTID_INIT_VAL 1
+  pid_t ctid = CTID_INIT_VAL;
+  pid_t tid;
 
 #ifdef __ia64__
   extern int __clone2 (int (*__fn) (void *__arg), void *__child_stack_base,
@@ -86,8 +94,7 @@ do_test (void)
   if (tid == -1)
     FAIL_EXIT1 ("clone failed: %m");
 
-  ctid = tid;
-  wait_tid (ctid);
+  wait_tid (&ctid, CTID_INIT_VAL);
 
   return 2;
 }
