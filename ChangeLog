@@ -1,5 +1,12 @@
 2019-02-18  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/compat-gethnamaddr.c (Dprintf): Remove definition.
+	(getanswer): Do not call Dprintf.
+	(res_gethostbyname2_context): Likewise.
+	(res_gethostbyaddr_context): Likewise.
+
+2019-02-18  Florian Weimer  <fweimer@redhat.com>
+
 	* libio/libio.h (_IO_stdin, _IO_stdout, _IO_stderr): Remove
 	declaration.
 	* libio/stdio.c (AL, AL2, _IO_stdin, _IO_stdout, _IO_stderr):

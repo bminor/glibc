@@ -119,21 +119,6 @@ typedef union {
 extern int h_errno;
 # endif
 
-# ifdef DEBUG
-static void
-Dprintf (char *msg, int num)
-{
-	if (_res.options & RES_DEBUG) {
-		int save = errno;
-
-		printf(msg, num);
-		__set_errno (save);
-	}
-}
-# else
-#  define Dprintf(msg, num) /*nada*/
-# endif
-
 # define BOUNDED_INCR(x) \
 	do { \
 		cp += x; \
@@ -162,7 +147,6 @@ getanswer (const querybuf *answer, int anslen, const char *qname, int qtype)
 	char *bp, **ap, **hap;
 	int type, class, buflen, ancount, qdcount;
 	int haveanswer, had_error;
-	int toobig = 0;
 	char tbuf[MAXDNAME];
 	const char *tname;
 	int (*name_ok) (const char *);
@@ -370,15 +354,10 @@ getanswer (const querybuf *answer, int anslen, const char *qname, int qtype)
 			bp += sizeof(align) - ((u_long)bp % sizeof(align));
 
 			if (bp + n >= &hostbuf[sizeof hostbuf]) {
-				Dprintf("size (%d) too big\n", n);
 				had_error++;
 				continue;
 			}
 			if (hap >= &h_addr_ptrs[MAXADDRS-1]) {
-				if (!toobig++) {
-					Dprintf("Too many addresses (%d)\n",
-						MAXADDRS);
-				}
 				cp += n;
 				continue;
 			}
@@ -572,7 +551,6 @@ res_gethostbyname2_context (struct resolv_context *ctx,
 	      &buf.ptr, NULL, NULL, NULL, NULL)) < 0) {
 		if (buf.buf != origbuf)
 			free (buf.buf);
-		Dprintf("res_nsearch failed (%d)\n", n);
 		if (errno == ECONNREFUSED)
 			return (_gethtbyname2(name, af));
 		return (NULL);
@@ -671,7 +649,6 @@ res_gethostbyaddr_context (struct resolv_context *ctx,
 	if (n < 0) {
 		if (buf.buf != orig_buf)
 			free (buf.buf);
-		Dprintf("res_nquery failed (%d)\n", n);
 		if (errno == ECONNREFUSED)
 			return (_gethtbyaddr(addr, len, af));
 		return (NULL);
