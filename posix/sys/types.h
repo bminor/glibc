@@ -143,18 +143,20 @@ typedef __suseconds_t suseconds_t;
 #define	__need_size_t
 #include <stddef.h>
 
+/* POSIX does not require intN_t to be defined in this header, so
+   technically this ought to be under __USE_MISC, but it doesn't
+   forbid them to be defined here either, and much existing code
+   expects them to be defined here.  */
+#include <bits/stdint-intn.h>
+
 #ifdef __USE_MISC
 /* Old compatibility names for C types.  */
 typedef unsigned long int ulong;
 typedef unsigned short int ushort;
 typedef unsigned int uint;
-#endif
 
-/* These size-specific names are used by some of the inet code.  */
-
-#include <bits/stdint-intn.h>
-
-/* These were defined by ISO C without the first `_'.  */
+/* These size-specific names are used by some of the inet code.
+   They were defined by ISO C without the first `_'.  */
 typedef __uint8_t u_int8_t;
 typedef __uint16_t u_int16_t;
 typedef __uint32_t u_int32_t;
@@ -167,8 +169,6 @@ typedef __register_t register_t;
    defined.  */
 #define __BIT_TYPES_DEFINED__	1
 
-
-#ifdef	__USE_MISC
 /* In BSD <sys/types.h> is expected to define BYTE_ORDER.  */
 # include <endian.h>
 

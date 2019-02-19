@@ -187,6 +187,14 @@ Deprecated and removed features, and other changes affecting compatibility:
 * The obsolete and never-implemented XSI STREAMS header files <stropts.h>
   and <sys/stropts.h> have been removed.
 
+* The typedefs u_int8_t, u_int16_t, u_int32_t, u_int64_t, and register_t
+  are no longer defined by <sys/types.h> in strict conformance modes.
+  These types were historically provided by <sys/types.h> on BSD systems,
+  but are not part of the POSIX specification for that header.  Applications
+  requiring fixed-width unsigned integer types should use the similarly
+  named uint8_t, uint16_t, etc. from <stdint.h>.  There is no standardized
+  replacement for register_t.
+
 * Support for the "inet6" option in /etc/resolv.conf and the RES_USE_INET6
   resolver flag (deprecated in glibc 2.25) have been removed.
 

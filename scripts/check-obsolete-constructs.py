@@ -254,6 +254,7 @@ class NoCheck(ConstructChecker):
 OBSOLETE_TYPE_RE_ = re.compile(r"""\A
   (__)?
   (   quad_t
+    | register_t
     | u(?: short | int | long
          | _(?: char | short | int(?:[0-9]+_t)? | long | quad_t )))
 \Z""", re.VERBOSE)
