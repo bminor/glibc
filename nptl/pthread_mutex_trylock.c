@@ -130,7 +130,7 @@ __pthread_mutex_trylock (pthread_mutex_t *mutex)
 	      __asm ("" ::: "memory");
 	      THREAD_SETMEM (THREAD_SELF, robust_head.list_op_pending, NULL);
 
-	      /* Note that we deliberately exist here.  If we fall
+	      /* Note that we deliberately exit here.  If we fall
 		 through to the end of the function __nusers would be
 		 incremented which is not correct because the old
 		 owner has to be discounted.  */

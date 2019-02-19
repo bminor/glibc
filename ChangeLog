@@ -1,3 +1,7 @@
+2019-02-19  Wolfram Sang  <wsa@the-dreams.de>
+
+	* nptl/pthread_mutex_trylock.c: Fix comment.
+
 2019-02-19  Carlos O'Donell  <carlos@redhat.com>
 
 	* nptl/pthread_tryjoin.c: Fix comment.
