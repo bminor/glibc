@@ -222,6 +222,9 @@ typedef int __sig_atomic_t;
 __STD_TYPE __TIME64_T_TYPE __time64_t;
 #endif
 
+/* BSD: Size of a general-purpose integer register.  */
+__STD_TYPE __REGISTER_T_TYPE __register_t;
+
 #undef __STD_TYPE
 
 #endif /* bits/types.h */

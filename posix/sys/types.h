@@ -160,11 +160,8 @@ typedef __uint16_t u_int16_t;
 typedef __uint32_t u_int32_t;
 typedef __uint64_t u_int64_t;
 
-#if __GNUC_PREREQ (2, 7)
-typedef int register_t __attribute__ ((__mode__ (__word__)));
-#else
-typedef int register_t;
-#endif
+/* Type of a general-purpose integer register (BSD).  */
+typedef __register_t register_t;
 
 /* Some code from BIND tests this macro to see if the types above are
    defined.  */

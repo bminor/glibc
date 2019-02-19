@@ -61,6 +61,7 @@
 #define __SYSCALL_SLONG_TYPE	__SLONGWORD_TYPE
 #define __SYSCALL_ULONG_TYPE	__ULONGWORD_TYPE
 #define __CPU_MASK_TYPE 	__ULONGWORD_TYPE
+#define __REGISTER_T_TYPE	__SWORD_TYPE
 
 #ifdef __LP64__
 /* Tell the libc code that off_t and off64_t are actually the same type

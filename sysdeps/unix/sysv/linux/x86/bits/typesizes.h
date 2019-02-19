@@ -30,9 +30,11 @@
 #if defined __x86_64__ && defined __ILP32__
 # define __SYSCALL_SLONG_TYPE	__SQUAD_TYPE
 # define __SYSCALL_ULONG_TYPE	__UQUAD_TYPE
+# define __REGISTER_T_TYPE	__SQUAD_TYPE
 #else
 # define __SYSCALL_SLONG_TYPE	__SLONGWORD_TYPE
 # define __SYSCALL_ULONG_TYPE	__ULONGWORD_TYPE
+# define __REGISTER_T_TYPE	__SWORD_TYPE
 #endif
 
 #define __DEV_T_TYPE		__UQUAD_TYPE

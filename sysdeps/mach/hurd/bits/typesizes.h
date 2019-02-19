@@ -60,6 +60,7 @@
 #define __SYSCALL_SLONG_TYPE	__SLONGWORD_TYPE
 #define __SYSCALL_ULONG_TYPE	__ULONGWORD_TYPE
 #define __CPU_MASK_TYPE 	__ULONGWORD_TYPE
+#define __REGISTER_T_TYPE	__SWORD_TYPE
 
 /* Number of descriptors that can fit in an `fd_set'.  */
 #define	__FD_SETSIZE		256
