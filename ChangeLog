@@ -1,3 +1,8 @@
+2019-02-21  Patsy Griffin Franklin  <pfrankli@redhat.com>
+
+        [BZ #21915]
+        * nss/tst-nss-files-hosts-long.root/etc/host.conf: New file.
+
 2019-02-21  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
 	* argp/argp-help.c (__argp_error_internal): New function,
