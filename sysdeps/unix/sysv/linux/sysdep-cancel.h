@@ -17,48 +17,51 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef _SYSDEP_CANCEL_H
+#define _SYSDEP_CANCEL_H
+
 #include <sysdep.h>
 #include <tls.h>
-#include <nptl/pthreadP.h>
+#include <errno.h>
 
-/* The default way to check if the process is single thread is by using the
-   pthread_t 'multiple_threads' field.  However for some architectures it
-   is faster to either use an extra field on TCB or global varibles
-   (the TCB field is also used on x86 for some single-thread atomic
-   optimizations).
+/* The two functions are in libc.so and not exported.  */
+extern int __libc_enable_asynccancel (void) attribute_hidden;
+extern void __libc_disable_asynccancel (int oldtype) attribute_hidden;
 
-   The ABI might define SINGLE_THREAD_BY_GLOBAL to enable the single
-   thread check to use global variables instead of the pthread_t
-   field.  */
+/* The two functions are in librt.so and not exported.  */
+extern int __librt_enable_asynccancel (void) attribute_hidden;
+extern void __librt_disable_asynccancel (int oldtype) attribute_hidden;
 
-#ifdef SINGLE_THREAD_BY_GLOBAL
-# if IS_IN (libc)
-extern int __libc_multiple_threads;
-#  define SINGLE_THREAD_P \
-  __glibc_likely (__libc_multiple_threads == 0)
-# elif IS_IN (libpthread)
-extern int __pthread_multiple_threads;
-#  define SINGLE_THREAD_P \
-  __glibc_likely (__pthread_multiple_threads == 0)
-# elif IS_IN (librt)
-#   define SINGLE_THREAD_P					\
-  __glibc_likely (THREAD_GETMEM (THREAD_SELF,			\
-				 header.multiple_threads) == 0)
-# else
-/* For rtld, et cetera.  */
-#  define SINGLE_THREAD_P (1)
-# endif
-#else /* SINGLE_THREAD_BY_GLOBAL  */
-# if IS_IN (libc) || IS_IN (libpthread) || IS_IN (librt)
-#   define SINGLE_THREAD_P					\
-  __glibc_likely (THREAD_GETMEM (THREAD_SELF,			\
-				 header.multiple_threads) == 0)
-# else
-/* For rtld, et cetera.  */
-#  define SINGLE_THREAD_P (1)
-# endif
-#endif /* SINGLE_THREAD_BY_GLOBAL  */
+/* The two functions are in libpthread.so and not exported.  */
+extern int __pthread_enable_asynccancel (void) attribute_hidden;
+extern void __pthread_disable_asynccancel (int oldtype) attribute_hidden;
 
-#define RTLD_SINGLE_THREAD_P \
-  __glibc_likely (THREAD_GETMEM (THREAD_SELF, \
-				 header.multiple_threads) == 0)
+/* Set cancellation mode to asynchronous.  */
+#define CANCEL_ASYNC() \
+  __pthread_enable_asynccancel ()
+/* Reset to previous cancellation mode.  */
+#define CANCEL_RESET(oldtype) \
+  __pthread_disable_asynccancel (oldtype)
+
+#if IS_IN (libc)
+/* Same as CANCEL_ASYNC, but for use in libc.so.  */
+# define LIBC_CANCEL_ASYNC() \
+  __libc_enable_asynccancel ()
+/* Same as CANCEL_RESET, but for use in libc.so.  */
+# define LIBC_CANCEL_RESET(oldtype) \
+  __libc_disable_asynccancel (oldtype)
+#elif IS_IN (libpthread)
+# define LIBC_CANCEL_ASYNC() CANCEL_ASYNC ()
+# define LIBC_CANCEL_RESET(val) CANCEL_RESET (val)
+#elif IS_IN (librt)
+# define LIBC_CANCEL_ASYNC() \
+  __librt_enable_asynccancel ()
+# define LIBC_CANCEL_RESET(val) \
+  __librt_disable_asynccancel (val)
+#else
+# define LIBC_CANCEL_ASYNC()	0 /* Just a dummy value.  */
+# define LIBC_CANCEL_RESET(val)	((void)(val)) /* Nothing, but evaluate it.  */
+#endif
+
+
+#endif
