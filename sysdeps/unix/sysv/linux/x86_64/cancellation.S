@@ -19,7 +19,7 @@
 #include <sysdep.h>
 #include <tcb-offsets.h>
 #include <kernel-features.h>
-#include "lowlevellock.h"
+#include <lowlevellock-futex.h>
 
 #define PTHREAD_UNWIND JUMPTARGET(__pthread_unwind)
 #if IS_IN (libpthread)

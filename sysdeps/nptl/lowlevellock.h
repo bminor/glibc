@@ -63,8 +63,10 @@
 /* If LOCK is 0 (not acquired), set to 1 (acquired with no waiters) and return
    0.  Otherwise leave lock unchanged and return non-zero to indicate that the
    lock was not acquired.  */
+#define __lll_trylock(lock)	\
+  __glibc_unlikely (atomic_compare_and_exchange_bool_acq ((lock), 1, 0))
 #define lll_trylock(lock)	\
-  __glibc_unlikely (atomic_compare_and_exchange_bool_acq (&(lock), 1, 0))
+   __lll_trylock (&(lock))
 
 /* If LOCK is 0 (not acquired), set to 2 (acquired, possibly with waiters) and
    return 0.  Otherwise leave lock unchanged and return non-zero to indicate

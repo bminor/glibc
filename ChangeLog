@@ -1,5 +1,19 @@
 2019-05-14  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/nptl/lowlevellock.h (__lll_trylock): New macro.
+	(lll_trylock): Call __lll_trylock.
+	* sysdeps/unix/sysv/linux/i386/libc-lowlevellock.S: Remove file.
+	* sysdeps/unix/sysv/linux/i386/lll_timedlock_wait.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/libc-lowlevellock.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/lll_timedlock_wait.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86/lowlevellock.h: New file.
+	* sysdeps/unix/sysv/linux/x86_64/cancellation.S: Include
+	lowlevellock-futex.h.
+
 	* nptl/nptl-init.c (__pthread_initialize_minimal_internal): Remove
 	initialization for LLL_LOCK_INITIALIZER different than 0.
 	* nptl/old_pthread_cond_broadcast.c (__pthread_cond_broadcast_2_0):
