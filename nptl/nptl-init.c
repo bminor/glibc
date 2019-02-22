@@ -265,8 +265,6 @@ __pthread_initialize_minimal_internal (void)
   __pthread_initialize_pids (pd);
   THREAD_SETMEM (pd, specific[0], &pd->specific_1stblock[0]);
   THREAD_SETMEM (pd, user_stack, true);
-  if (LLL_LOCK_INITIALIZER != 0)
-    THREAD_SETMEM (pd, lock, LLL_LOCK_INITIALIZER);
 
   /* Initialize the robust mutex data.  */
   {

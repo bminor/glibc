@@ -1,5 +1,15 @@
 2019-05-14  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* nptl/nptl-init.c (__pthread_initialize_minimal_internal): Remove
+	initialization for LLL_LOCK_INITIALIZER different than 0.
+	* nptl/old_pthread_cond_broadcast.c (__pthread_cond_broadcast_2_0):
+	Assume LLL_LOCK_INITIALIZER being 0.
+	* nptl/old_pthread_cond_signal.c (__pthread_cond_signal_2_0): Likewise.
+	* nptl/old_pthread_cond_timedwait.c (__pthread_cond_timedwait_2_0):
+	Likewise.
+	* nptl/old_pthread_cond_wait.c (__pthread_cond_wait_2_0): Likewise.
+	* sysdeps/nptl/libc-lockP.h (__libc_lock_define_initialized): Likewise.
+
 	* nptl/lowlevellock.c (__lll_lock_wait, __lll_lock_wait_private):
 	Optimize futex call and add systemtap probe.
 
