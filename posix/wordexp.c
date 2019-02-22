@@ -285,8 +285,8 @@ parse_tilde (char **word, size_t *word_length, size_t *max_length,
 
   for (i = 1 + *offset; words[i]; i++)
     {
-      if (words[i] == ':' || words[i] == '/' || words[i] == ' ' ||
-	  words[i] == '\t' || words[i] == 0 )
+      if (words[i] == ':' || words[i] == '/' || words[i] == ' '
+	  || words[i] == '\t' || words[i] == 0 )
 	break;
 
       if (words[i] == '\\')
@@ -1070,8 +1070,8 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
   /* Chop off trailing newlines (required by POSIX.2)  */
   /* Ensure we don't go back further than the beginning of the
      substitution (i.e. remove maxnewlines bytes at most) */
-  while (maxnewlines-- != 0 &&
-	 *word_length > 0 && (*word)[*word_length - 1] == '\n')
+  while (maxnewlines-- != 0
+	 && *word_length > 0 && (*word)[*word_length - 1] == '\n')
     {
       (*word)[--*word_length] = '\0';
 

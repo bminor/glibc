@@ -366,8 +366,8 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 	      // XXX async OK?
 	      uintptr_t pval = (uintptr_t) dataset & ~pagesize_m1;
 	      msync ((void *) pval,
-		     ((uintptr_t) dataset & pagesize_m1) + total +
-		     req->key_len, MS_ASYNC);
+		     ((uintptr_t) dataset & pagesize_m1) + total
+		     + req->key_len, MS_ASYNC);
 	    }
 
 	  (void) cache_add (INITGROUPS, cp, req->key_len, &dataset->head, true,

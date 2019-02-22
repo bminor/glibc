@@ -125,8 +125,8 @@ __sha256_finish_ctx (struct sha256_ctx *ctx, void *resbuf)
   ctx->buffer64[(bytes + pad) / 8] = SWAP64 (ctx->total64 << 3);
 #else
   ctx->buffer32[(bytes + pad + 4) / 4] = SWAP (ctx->total[TOTAL64_low] << 3);
-  ctx->buffer32[(bytes + pad) / 4] = SWAP ((ctx->total[TOTAL64_high] << 3) |
-					   (ctx->total[TOTAL64_low] >> 29));
+  ctx->buffer32[(bytes + pad) / 4] = SWAP ((ctx->total[TOTAL64_high] << 3)
+					   | (ctx->total[TOTAL64_low] >> 29));
 #endif
 
   /* Process last bytes.  */

@@ -49,8 +49,8 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
     {
       if ((d_tag_utype) dyn->d_tag < DT_NUM)
 	info[dyn->d_tag] = dyn;
-      else if (dyn->d_tag >= DT_LOPROC &&
-	       dyn->d_tag < DT_LOPROC + DT_THISPROCNUM)
+      else if (dyn->d_tag >= DT_LOPROC
+	       && dyn->d_tag < DT_LOPROC + DT_THISPROCNUM)
 	{
 	  /* This does not violate the array bounds of l->l_info, but
 	     gcc 4.6 on sparc somehow does not see this.  */

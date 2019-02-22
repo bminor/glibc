@@ -127,8 +127,8 @@ copy_spwd_changes (struct spwd *dest, struct spwd *src,
     {
       if (buffer == NULL)
 	dest->sp_pwdp = strdup (src->sp_pwdp);
-      else if (dest->sp_pwdp &&
-	       strlen (dest->sp_pwdp) >= strlen (src->sp_pwdp))
+      else if (dest->sp_pwdp
+	       && strlen (dest->sp_pwdp) >= strlen (src->sp_pwdp))
 	strcpy (dest->sp_pwdp, src->sp_pwdp);
       else
 	{

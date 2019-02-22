@@ -46,9 +46,9 @@ tcsetattr (int fd, int optional_actions, const struct termios *termios_p)
       return -1;
     }
 
-  if (bad_speed(termios_p->__ospeed) ||
-      bad_speed(termios_p->__ispeed == 0 ?
-		termios_p->__ospeed : termios_p->__ispeed))
+  if (bad_speed(termios_p->__ospeed)
+      || bad_speed(termios_p->__ispeed == 0
+		   ? termios_p->__ospeed : termios_p->__ispeed))
     {
       __set_errno (EINVAL);
       return -1;

@@ -87,9 +87,9 @@ _nss_nisplus_getnetgrent_r (struct __netgrent *result, char *buffer,
 
       result->type = triple_val;
 
-      if (hostlen == 0 ||
-	  NISENTRYVAL (result->position, 2,
-		       (nis_result *) result->data)[0] == '\0')
+      if (hostlen == 0
+	  || NISENTRYVAL (result->position, 2,
+			  (nis_result *) result->data)[0] == '\0')
 	result->val.triple.host = NULL;
       else
 	{
@@ -100,9 +100,9 @@ _nss_nisplus_getnetgrent_r (struct __netgrent *result, char *buffer,
 	  *cp++ = '\0';
 	}
 
-      if (userlen == 0 ||
-	  NISENTRYVAL (result->position, 3,
-		       (nis_result *) result->data)[0] == '\0')
+      if (userlen == 0
+	  || NISENTRYVAL (result->position, 3,
+			  (nis_result *) result->data)[0] == '\0')
 	result->val.triple.user = NULL;
       else
 	{
@@ -113,9 +113,9 @@ _nss_nisplus_getnetgrent_r (struct __netgrent *result, char *buffer,
 	  *cp++ = '\0';
 	}
 
-      if (domainlen == 0 ||
-	  NISENTRYVAL (result->position, 4,
-		       (nis_result *) result->data)[0] == '\0')
+      if (domainlen == 0
+	  || NISENTRYVAL (result->position, 4,
+			  (nis_result *) result->data)[0] == '\0')
 	result->val.triple.domain = NULL;
       else
 	{

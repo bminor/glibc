@@ -106,8 +106,8 @@ nis_local_principal (void)
 	      buf[len] = '\0';
 	    }
 
-	  res = nis_list (buf, USE_DGRAM + NO_AUTHINFO + FOLLOW_LINKS +
-			  FOLLOW_PATH, NULL, NULL);
+	  res = nis_list (buf, USE_DGRAM + NO_AUTHINFO + FOLLOW_LINKS
+			  + FOLLOW_PATH, NULL, NULL);
 
 	  if (res == NULL)
 	    goto nobody;

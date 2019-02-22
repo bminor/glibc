@@ -138,8 +138,8 @@ copy_pwd_changes (struct passwd *dest, struct passwd *src,
     {
       if (buffer == NULL)
 	dest->pw_passwd = strdup (src->pw_passwd);
-      else if (dest->pw_passwd &&
-	       strlen (dest->pw_passwd) >= strlen (src->pw_passwd))
+      else if (dest->pw_passwd
+	       && strlen (dest->pw_passwd) >= strlen (src->pw_passwd))
 	strcpy (dest->pw_passwd, src->pw_passwd);
       else
 	{
@@ -154,8 +154,8 @@ copy_pwd_changes (struct passwd *dest, struct passwd *src,
     {
       if (buffer == NULL)
 	dest->pw_gecos = strdup (src->pw_gecos);
-      else if (dest->pw_gecos &&
-	       strlen (dest->pw_gecos) >= strlen (src->pw_gecos))
+      else if (dest->pw_gecos
+	       && strlen (dest->pw_gecos) >= strlen (src->pw_gecos))
 	strcpy (dest->pw_gecos, src->pw_gecos);
       else
 	{
@@ -184,8 +184,8 @@ copy_pwd_changes (struct passwd *dest, struct passwd *src,
     {
       if (buffer == NULL)
 	dest->pw_shell = strdup (src->pw_shell);
-      else if (dest->pw_shell &&
-	       strlen (dest->pw_shell) >= strlen (src->pw_shell))
+      else if (dest->pw_shell
+	       && strlen (dest->pw_shell) >= strlen (src->pw_shell))
 	strcpy (dest->pw_shell, src->pw_shell);
       else
 	{
@@ -943,8 +943,8 @@ internal_getpwuid_r (uid_t uid, struct passwd *result, ent_t *ent,
 	  memcpy (buf, &result->pw_name[2], len);
 
 	  status = getpwuid_plususer (uid, result, buffer, buflen, errnop);
-	  if (status == NSS_STATUS_SUCCESS &&
-	      innetgr (buf, NULL, result->pw_name, NULL))
+	  if (status == NSS_STATUS_SUCCESS
+	      && innetgr (buf, NULL, result->pw_name, NULL))
 	    return NSS_STATUS_NOTFOUND;
 
 	  continue;
@@ -990,8 +990,8 @@ internal_getpwuid_r (uid_t uid, struct passwd *result, ent_t *ent,
 	  memcpy (buf, &result->pw_name[1], len);
 
 	  status = getpwuid_plususer (uid, result, buffer, buflen, errnop);
-	  if (status == NSS_STATUS_SUCCESS &&
-	      innetgr (buf, NULL, result->pw_name, NULL))
+	  if (status == NSS_STATUS_SUCCESS
+	      && innetgr (buf, NULL, result->pw_name, NULL))
 	    return NSS_STATUS_NOTFOUND;
 	  continue;
 	}

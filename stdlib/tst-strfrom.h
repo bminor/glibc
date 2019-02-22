@@ -103,10 +103,10 @@ test_ ## FSUF (void)							\
   for (i = 0; i < sizeof (htest) / sizeof (htest[0]); i++)		\
     {									\
       rc = FTOSTR (buf, 50, htest[i].fmt, htest[i].t.FSUF);		\
-      if (strcmp (buf, htest[i].exp[0]) == 0 ||				\
-	  strcmp (buf, htest[i].exp[1]) == 0 ||				\
-	  strcmp (buf, htest[i].exp[2]) == 0 ||				\
-	  strcmp (buf, htest[i].exp[3]) == 0)				\
+      if (strcmp (buf, htest[i].exp[0]) == 0				\
+	  || strcmp (buf, htest[i].exp[1]) == 0				\
+	  || strcmp (buf, htest[i].exp[2]) == 0				\
+	  || strcmp (buf, htest[i].exp[3]) == 0)			\
 	continue;							\
       else								\
 	{								\

@@ -164,10 +164,10 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
 	      if (size == 0)
 		break;
 
-	      *osversion = (abi_note [4] << 24) |
-			   ((abi_note [5] & 0xff) << 16) |
-			   ((abi_note [6] & 0xff) << 8) |
-			   (abi_note [7] & 0xff);
+	      *osversion = ((abi_note [4] << 24)
+			    | ((abi_note [5] & 0xff) << 16)
+			    | ((abi_note [6] & 0xff) << 8)
+			    | (abi_note [7] & 0xff));
 	    }
 	  break;
 

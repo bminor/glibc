@@ -30,8 +30,8 @@
 size_t
 STRCSPN (const char *str, const char *reject)
 {
-  if (__glibc_unlikely (reject[0] == '\0') ||
-      __glibc_unlikely (reject[1] == '\0'))
+  if (__glibc_unlikely (reject[0] == '\0')
+      || __glibc_unlikely (reject[1] == '\0'))
     return __strchrnul (str, reject [0]) - str;
 
   /* Use multiple small memsets to enable inlining on most targets.  */

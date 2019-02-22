@@ -97,9 +97,9 @@ __nis_findfastest_with_timeout (dir_binding *bind,
   for (i = 0; i < bind->server_len; i++)
     for (j = 0; j < bind->server_val[i].ep.ep_len; ++j)
       if (strcmp (bind->server_val[i].ep.ep_val[j].family, "inet") == 0)
-	if ((bind->server_val[i].ep.ep_val[j].proto == NULL) ||
-	    (bind->server_val[i].ep.ep_val[j].proto[0] == '-') ||
-	    (bind->server_val[i].ep.ep_val[j].proto[0] == '\0'))
+	if ((bind->server_val[i].ep.ep_val[j].proto == NULL)
+	    || (bind->server_val[i].ep.ep_val[j].proto[0] == '-')
+	    || (bind->server_val[i].ep.ep_val[j].proto[0] == '\0'))
 	  {
 	    sin.sin_addr.s_addr =
 	      inetstr2int (bind->server_val[i].ep.ep_val[j].uaddr);

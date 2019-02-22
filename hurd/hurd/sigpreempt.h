@@ -51,8 +51,8 @@ struct hurd_signal_preemptor
   };
 
 #define HURD_PREEMPT_SIGNAL_P(preemptor, signo, sigcode) \
-  (((preemptor)->signals & sigmask (signo)) && \
-   (sigcode) >= (preemptor)->first && (sigcode) <= (preemptor)->last)
+  (((preemptor)->signals & sigmask (signo)) \
+   && (sigcode) >= (preemptor)->first && (sigcode) <= (preemptor)->last)
 
 
 /* Signal preemptors applying to all threads; locked by _hurd_siglock.  */

@@ -459,8 +459,8 @@ __printf_fp_l (FILE *fp, locale_t loc,
 	}
       else
 	{
-	  cy = __mpn_lshift (p.frac +
-			     (p.exponent + to_shift) / BITS_PER_MP_LIMB,
+	  cy = __mpn_lshift (p.frac
+			     + (p.exponent + to_shift) / BITS_PER_MP_LIMB,
 			     fp_input, p.fracsize,
 			     (p.exponent + to_shift) % BITS_PER_MP_LIMB);
 	  p.fracsize += (p.exponent + to_shift) / BITS_PER_MP_LIMB;
@@ -533,8 +533,8 @@ __printf_fp_l (FILE *fp, locale_t loc,
 				  &__tens[powers->arrayoff
 					 + _FPIO_CONST_OFFSET],
 				  powers->arraysize - _FPIO_CONST_OFFSET);
-		  p.tmpsize = p.scalesize +
-		    powers->arraysize - _FPIO_CONST_OFFSET;
+		  p.tmpsize = p.scalesize
+		    + powers->arraysize - _FPIO_CONST_OFFSET;
 		  if (cy == 0)
 		    --p.tmpsize;
 		}
@@ -717,10 +717,10 @@ __printf_fp_l (FILE *fp, locale_t loc,
 		 multiplication was not valid.  This is because we cannot
 		 determine the number of bits in the result in advance.  */
 	      if (incr < p.exponent + 3
-		  || (incr == p.exponent + 3 &&
-		      (p.tmp[p.tmpsize - 1] < topval[1]
-		       || (p.tmp[p.tmpsize - 1] == topval[1]
-			   && p.tmp[p.tmpsize - 2] < topval[0]))))
+		  || (incr == p.exponent + 3
+		      && (p.tmp[p.tmpsize - 1] < topval[1]
+			  || (p.tmp[p.tmpsize - 1] == topval[1]
+			      && p.tmp[p.tmpsize - 2] < topval[0]))))
 		{
 		  /* The factor is right.  Adapt binary and decimal
 		     exponents.	 */
@@ -809,8 +809,8 @@ __printf_fp_l (FILE *fp, locale_t loc,
 	 numbers are in the range of 1.0 <= |fp| < 8.0.  We simply
 	 shift it to the right place and divide it by 1.0 to get the
 	 leading digit.	 (Of course this division is not really made.)	*/
-      assert (0 <= p.exponent && p.exponent < 3 &&
-	      p.exponent + to_shift < BITS_PER_MP_LIMB);
+      assert (0 <= p.exponent && p.exponent < 3
+	      && p.exponent + to_shift < BITS_PER_MP_LIMB);
 
       /* Now shift the input value to its right place.	*/
       cy = __mpn_lshift (p.frac, fp_input, p.fracsize, (p.exponent + to_shift));

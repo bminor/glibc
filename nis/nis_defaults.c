@@ -278,18 +278,18 @@ searchaccess (char *str, unsigned int access)
 	  cptr++;		/* Remove "=" from beginning */
 	  /* Clear */
 	  if (n)
-	    result = result & ~((NIS_READ_ACC + NIS_MODIFY_ACC +
-				 NIS_CREATE_ACC + NIS_DESTROY_ACC) << 24);
+	    result = result & ~((NIS_READ_ACC + NIS_MODIFY_ACC
+				 + NIS_CREATE_ACC + NIS_DESTROY_ACC) << 24);
 
 	  if (o)
-	    result = result & ~((NIS_READ_ACC + NIS_MODIFY_ACC +
-				 NIS_CREATE_ACC + NIS_DESTROY_ACC) << 16);
+	    result = result & ~((NIS_READ_ACC + NIS_MODIFY_ACC
+				 + NIS_CREATE_ACC + NIS_DESTROY_ACC) << 16);
 	  if (g)
-	    result = result & ~((NIS_READ_ACC + NIS_MODIFY_ACC +
-				 NIS_CREATE_ACC + NIS_DESTROY_ACC) << 8);
+	    result = result & ~((NIS_READ_ACC + NIS_MODIFY_ACC
+				 + NIS_CREATE_ACC + NIS_DESTROY_ACC) << 8);
 	  if (w)
-	    result = result & ~(NIS_READ_ACC + NIS_MODIFY_ACC +
-				NIS_CREATE_ACC + NIS_DESTROY_ACC);
+	    result = result & ~(NIS_READ_ACC + NIS_MODIFY_ACC
+				+ NIS_CREATE_ACC + NIS_DESTROY_ACC);
 	  while (*cptr != '\0' && *cptr != ',')
 	    {
 	      switch (*cptr)

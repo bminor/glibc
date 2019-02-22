@@ -51,8 +51,8 @@ internal_ismember (const_nis_name principal, const_nis_name group)
       return 0;
     }
 
-  if ((NIS_RES_NUMOBJ (res) != 1) ||
-      (__type_of (NIS_RES_OBJECT (res)) != NIS_GROUP_OBJ))
+  if ((NIS_RES_NUMOBJ (res) != 1)
+      || (__type_of (NIS_RES_OBJECT (res)) != NIS_GROUP_OBJ))
     {
       nis_freeresult (res);
       return 0;

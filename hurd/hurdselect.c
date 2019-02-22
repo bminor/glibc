@@ -81,8 +81,8 @@ _hurd_select (int nfds,
 	  return -1;
 	}
 
-      to = (timeout->tv_sec * 1000 +
-            (timeout->tv_nsec + 999999) / 1000000);
+      to = (timeout->tv_sec * 1000
+            + (timeout->tv_nsec + 999999) / 1000000);
     }
 
   if (sigmask && __sigprocmask (SIG_SETMASK, sigmask, &oset))
@@ -347,30 +347,30 @@ _hurd_select (int nfds,
 	    { MACH_MSG_TYPE_INTEGER_T, sizeof (integer_t) * 8, 1, 1, 0, 0 }
 	  };
 #endif
-	  if (msg.head.msgh_id == IO_SELECT_REPLY_MSGID &&
-	      msg.head.msgh_size >= sizeof msg.error &&
-	      !(msg.head.msgh_bits & MACH_MSGH_BITS_COMPLEX) &&
+	  if (msg.head.msgh_id == IO_SELECT_REPLY_MSGID
+	      && msg.head.msgh_size >= sizeof msg.error
+	      && !(msg.head.msgh_bits & MACH_MSGH_BITS_COMPLEX)
 #ifdef MACH_MSG_TYPE_BIT
-	      msg.error.err_type.word == inttype.word
+	      && msg.error.err_type.word == inttype.word
 #endif
 	      )
 	    {
 	      /* This is a properly formatted message so far.
 		 See if it is a success or a failure.  */
-	      if (msg.error.err == EINTR &&
-		  msg.head.msgh_size == sizeof msg.error)
+	      if (msg.error.err == EINTR
+		  && msg.head.msgh_size == sizeof msg.error)
 		{
 		  /* EINTR response; poll for further responses
 		     and then return quickly.  */
 		  err = EINTR;
 		  goto poll;
 		}
-	      if (msg.error.err ||
-		  msg.head.msgh_size != sizeof msg.success ||
+	      if (msg.error.err
+		  || msg.head.msgh_size != sizeof msg.success
 #ifdef MACH_MSG_TYPE_BIT
-		  msg.success.result_type.word != inttype.word ||
+		  || msg.success.result_type.word != inttype.word
 #endif
-		  (msg.success.result & SELECT_ALL) == 0)
+		  || (msg.success.result & SELECT_ALL) == 0)
 		{
 		  /* Error or bogus reply.  Simulate readiness.  */
 		  __mach_msg_destroy (&msg.head);

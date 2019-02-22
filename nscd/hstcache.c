@@ -134,9 +134,9 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 	  const hst_response_header *resp = (errval == EAGAIN
 					     ? &tryagain : &notfound);
 
-	  if (fd != -1 &&
-	      TEMP_FAILURE_RETRY (send (fd, resp, total,
-					MSG_NOSIGNAL)) != total)
+	  if (fd != -1
+	      && TEMP_FAILURE_RETRY (send (fd, resp, total,
+					   MSG_NOSIGNAL)) != total)
 	    all_written = false;
 
 	  /* If we have a transient error or cannot permanently store

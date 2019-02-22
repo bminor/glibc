@@ -280,11 +280,12 @@ round_and_return (mp_limb_t *retval, intmax_t exponent, int negative,
 		  mp_limb_t cy = __mpn_add_1 (retval_normal, retval,
 					      RETURN_LIMB_SIZE, 1);
 
-		  if (((MANT_DIG % BITS_PER_MP_LIMB) == 0 && cy) ||
-		      ((MANT_DIG % BITS_PER_MP_LIMB) != 0 &&
-		       ((retval_normal[RETURN_LIMB_SIZE - 1]
-			& (((mp_limb_t) 1) << (MANT_DIG % BITS_PER_MP_LIMB)))
-			!= 0)))
+		  if (((MANT_DIG % BITS_PER_MP_LIMB) == 0 && cy)
+		      || ((MANT_DIG % BITS_PER_MP_LIMB) != 0
+			  && ((retval_normal[RETURN_LIMB_SIZE - 1]
+			       & (((mp_limb_t) 1)
+				  << (MANT_DIG % BITS_PER_MP_LIMB)))
+			      != 0)))
 		    is_tiny = false;
 		}
 	    }
@@ -325,10 +326,10 @@ round_and_return (mp_limb_t *retval, intmax_t exponent, int negative,
     {
       mp_limb_t cy = __mpn_add_1 (retval, retval, RETURN_LIMB_SIZE, 1);
 
-      if (((MANT_DIG % BITS_PER_MP_LIMB) == 0 && cy) ||
-	  ((MANT_DIG % BITS_PER_MP_LIMB) != 0 &&
-	   (retval[RETURN_LIMB_SIZE - 1]
-	    & (((mp_limb_t) 1) << (MANT_DIG % BITS_PER_MP_LIMB))) != 0))
+      if (((MANT_DIG % BITS_PER_MP_LIMB) == 0 && cy)
+	  || ((MANT_DIG % BITS_PER_MP_LIMB) != 0
+	      && (retval[RETURN_LIMB_SIZE - 1]
+		  & (((mp_limb_t) 1) << (MANT_DIG % BITS_PER_MP_LIMB))) != 0))
 	{
 	  ++exponent;
 	  (void) __mpn_rshift (retval, retval, RETURN_LIMB_SIZE, 1);
@@ -861,9 +862,9 @@ ____STRTOF_INTERNAL (const STRING_TYPE *nptr, STRING_TYPE **endptr, int group,
     {
       cp += decimal_len;
       c = *cp;
-      while ((c >= L_('0') && c <= L_('9')) ||
-	     (base == 16 && ({ CHAR_TYPE lo = TOLOWER (c);
-			       lo >= L_('a') && lo <= L_('f'); })))
+      while ((c >= L_('0') && c <= L_('9'))
+	     || (base == 16 && ({ CHAR_TYPE lo = TOLOWER (c);
+				  lo >= L_('a') && lo <= L_('f'); })))
 	{
 	  if (c != L_('0') && lead_zero == (size_t) -1)
 	    lead_zero = dig_no - int_no;

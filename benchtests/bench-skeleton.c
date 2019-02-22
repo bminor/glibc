@@ -29,9 +29,9 @@
 #include "bench-util.c"
 
 #define TIMESPEC_AFTER(a, b) \
-  (((a).tv_sec == (b).tv_sec) ?						      \
-     ((a).tv_nsec > (b).tv_nsec) :					      \
-	((a).tv_sec > (b).tv_sec))
+  (((a).tv_sec == (b).tv_sec)						      \
+   ? ((a).tv_nsec > (b).tv_nsec)					      \
+   : ((a).tv_sec > (b).tv_sec))
 int
 main (int argc, char **argv)
 {

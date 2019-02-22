@@ -508,8 +508,8 @@ testit (struct test_case_struct *tc)
 	  }
 
       for (i = 0; i < we.we_wordc; ++i)
-	if (we.we_wordv[i+start_offs] == NULL ||
-	    strcmp (tc->wordv[i], we.we_wordv[i+start_offs]) != 0)
+	if (we.we_wordv[i+start_offs] == NULL
+	    || strcmp (tc->wordv[i], we.we_wordv[i+start_offs]) != 0)
 	  {
 	    bzzzt = 1;
 	    break;
@@ -534,10 +534,10 @@ testit (struct test_case_struct *tc)
 	}
       printf ("\n");
     }
-  else if (retval != 0 && retval != WRDE_NOSPACE &&
-	   (we.we_wordc != sav_we.we_wordc ||
-            we.we_wordv != sav_we.we_wordv ||
-            we.we_offs != sav_we.we_offs))
+  else if (retval != 0 && retval != WRDE_NOSPACE
+	   && (we.we_wordc != sav_we.we_wordc
+	       || we.we_wordv != sav_we.we_wordv
+	       || we.we_offs != sav_we.we_offs))
     {
       bzzzt = 1;
       printf ("FAILED to restore wordexp_t members\n");

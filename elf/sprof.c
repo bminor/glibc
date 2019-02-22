@@ -1354,8 +1354,8 @@ generate_call_graph (struct profdata *profdata)
 		     ? sortsym[runp->idx]->ticks * tick_unit : 0.0),
 		    0.0, /* FIXME: what's time for the children, recursive */
 		    runp->count, sortsym[cnt]->calls,
-		    (runp->idx != (size_t) -1l ?
-		     sortsym[runp->idx]->name : "<UNKNOWN>"));
+		    (runp->idx != (size_t) -1l
+		     ? sortsym[runp->idx]->name : "<UNKNOWN>"));
 
 	    if (runp->idx != (size_t) -1l)
 	      printf (" [%Zd]", runp->idx);

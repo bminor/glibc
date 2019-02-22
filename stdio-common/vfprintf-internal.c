@@ -1290,8 +1290,8 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap, unsigned int mode_flags)
 
 #ifdef ORIENT
   /* Check for correct orientation.  */
-  if (_IO_vtable_offset (s) == 0 &&
-      _IO_fwide (s, sizeof (CHAR_T) == 1 ? -1 : 1)
+  if (_IO_vtable_offset (s) == 0
+      && _IO_fwide (s, sizeof (CHAR_T) == 1 ? -1 : 1)
       != (sizeof (CHAR_T) == 1 ? -1 : 1))
     /* The stream is already oriented otherwise.  */
     return EOF;

@@ -22,8 +22,8 @@
 /* Return the number of 1/VTIMES_UNITS_PER_SECOND-second
    units in the `struct timeval' TV.  */
 #define TIMEVAL_TO_VTIMES(tv) \
-  ((tv.tv_sec * VTIMES_UNITS_PER_SECOND) + \
-   (tv.tv_usec * VTIMES_UNITS_PER_SECOND / 1000000))
+  ((tv.tv_sec * VTIMES_UNITS_PER_SECOND) \
+   + (tv.tv_usec * VTIMES_UNITS_PER_SECOND / 1000000))
 
 /* If VT is not NULL, write statistics for WHO into *VT.
    Return 0 for success, -1 for failure.  */

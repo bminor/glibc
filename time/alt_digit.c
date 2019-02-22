@@ -162,8 +162,8 @@ _nl_parse_alt_digit (const char **strp, struct __locale_data *current)
       || ! current->private.time->alt_digits_initialized)
     _nl_init_alt_digit (current);
 
-  if (current->private.time != NULL &&
-      current->private.time->alt_digits != NULL)
+  if (current->private.time != NULL
+      && current->private.time->alt_digits != NULL)
     /* Matching is not unambiguous.  The alternative digits could be like
        I, II, III, ... and the first one is a substring of the second
        and third.  Therefore we must keep on searching until we found

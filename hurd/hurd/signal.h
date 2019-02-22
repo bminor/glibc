@@ -379,8 +379,8 @@ extern mach_msg_timeout_t _hurd_interrupted_rpc_timeout;
 	__mach_port_deallocate (__mach_task_self (), msgport);		      \
 	if ((dealloc_refport) && refport != MACH_PORT_NULL)		      \
 	  __mach_port_deallocate (__mach_task_self (), refport);    	      \
-      } while (__err == MACH_SEND_INVALID_DEST ||			      \
-	       __err == MIG_SERVER_DIED);				      \
+      } while (__err == MACH_SEND_INVALID_DEST				      \
+	       || __err == MIG_SERVER_DIED);				      \
     __err;								      \
 })
 

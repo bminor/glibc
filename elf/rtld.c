@@ -2110,8 +2110,8 @@ ERROR: '%s': cannot process note segment.\n", _dl_argv[0]);
       liblist = (ElfW(Lib) *)
 		main_map->l_info[ADDRIDX (DT_GNU_LIBLIST)]->d_un.d_ptr;
       liblistend = (ElfW(Lib) *)
-		   ((char *) liblist +
-		    main_map->l_info[VALIDX (DT_GNU_LIBLISTSZ)]->d_un.d_val);
+		   ((char *) liblist
+		    + main_map->l_info[VALIDX (DT_GNU_LIBLISTSZ)]->d_un.d_val);
       r_list = main_map->l_searchlist.r_list;
       r_listend = r_list + main_map->l_searchlist.r_nlist;
 

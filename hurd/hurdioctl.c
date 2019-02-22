@@ -78,16 +78,16 @@ fioctl (int fd,
       break;
 
     case FIONBIO:
-      err = HURD_DPORT_USE (fd, (*arg ?
-				 __io_set_some_openmodes :
-				 __io_clear_some_openmodes)
+      err = HURD_DPORT_USE (fd, (*arg
+				 ? __io_set_some_openmodes
+				 : __io_clear_some_openmodes)
 			    (port, O_NONBLOCK));
       break;
 
     case FIOASYNC:
-      err = HURD_DPORT_USE (fd, (*arg ?
-				 __io_set_some_openmodes :
-				 __io_clear_some_openmodes)
+      err = HURD_DPORT_USE (fd, (*arg
+				 ? __io_set_some_openmodes
+				 : __io_clear_some_openmodes)
 			    (port, O_ASYNC));
       break;
 

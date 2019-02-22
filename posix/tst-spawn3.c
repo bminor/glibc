@@ -84,8 +84,8 @@ do_test (void)
 
   /* Executes a /bin/sh echo $$ 2>&1 > ${objpfx}tst-spawn3.pid .  */
   const char pidfile[] = OBJPFX "tst-spawn3.pid";
-  if (posix_spawn_file_actions_addopen (&a, STDOUT_FILENO, pidfile, O_WRONLY |
-					O_CREAT | O_TRUNC, 0644) != 0)
+  if (posix_spawn_file_actions_addopen (&a, STDOUT_FILENO, pidfile, O_WRONLY
+					| O_CREAT | O_TRUNC, 0644) != 0)
     FAIL_EXIT1 ("posix_spawn_file_actions_addopen");
 
   if (posix_spawn_file_actions_adddup2 (&a, STDOUT_FILENO, STDERR_FILENO) != 0)

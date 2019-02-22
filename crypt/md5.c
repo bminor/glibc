@@ -116,8 +116,8 @@ md5_finish_ctx (struct md5_ctx *ctx, void *resbuf)
 
   /* Put the 64-bit file length in *bits* at the end of the buffer.  */
   ctx->buffer32[(bytes + pad) / 4] = SWAP (ctx->total[0] << 3);
-  ctx->buffer32[(bytes + pad + 4) / 4] = SWAP ((ctx->total[1] << 3) |
-					       (ctx->total[0] >> 29));
+  ctx->buffer32[(bytes + pad + 4) / 4] = SWAP ((ctx->total[1] << 3)
+					       | (ctx->total[0] >> 29));
 
   /* Process last bytes.  */
   __md5_process_block (ctx->buffer, bytes + pad + 8, ctx);

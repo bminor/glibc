@@ -115,11 +115,11 @@ tst_swscanf (FILE * fp, int debug_flg)
 
       if (errno == 0 && !TST_INPUT (swscanf).wch)
 	{
-	  if (val_int1 != TST_EXPECT (swscanf).val_int ||
-	      val_int2 != TST_EXPECT (swscanf).val_uns ||
-	      val_flt != TST_EXPECT (swscanf).val_flt ||
-	      val_c != TST_EXPECT (swscanf).val_c ||
-	      strcmp (val_s, TST_EXPECT (swscanf).val_s))
+	  if (val_int1 != TST_EXPECT (swscanf).val_int
+	      || val_int2 != TST_EXPECT (swscanf).val_uns
+	      || val_flt != TST_EXPECT (swscanf).val_flt
+	      || val_c != TST_EXPECT (swscanf).val_c
+	      || strcmp (val_s, TST_EXPECT (swscanf).val_s))
 	    {
 	      err_count++;
 	      Result (C_FAILURE, S_SWSCANF, CASE_3,

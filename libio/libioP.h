@@ -848,13 +848,13 @@ _IO_deallocate_file (FILE *fp)
 }
 
 #ifdef IO_DEBUG
-# define CHECK_FILE(FILE, RET) do {			\
-    if ((FILE) == NULL ||				\
-	((FILE)->_flags & _IO_MAGIC_MASK) != _IO_MAGIC) \
-      {							\
-	__set_errno (EINVAL);				\
-	return RET;					\
-      }							\
+# define CHECK_FILE(FILE, RET) do {				\
+    if ((FILE) == NULL						\
+	|| ((FILE)->_flags & _IO_MAGIC_MASK) != _IO_MAGIC)	\
+      {								\
+	__set_errno (EINVAL);					\
+	return RET;						\
+      }								\
   } while (0)
 #else
 # define CHECK_FILE(FILE, RET) do { } while (0)

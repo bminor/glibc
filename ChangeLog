@@ -1,3 +1,93 @@
+2019-02-22  Joseph Myers  <joseph@codesourcery.com>
+
+	* benchtests/bench-memmem.c (simple_memmem): Break lines before
+	rather than after operators.
+	* benchtests/bench-skeleton.c (TIMESPEC_AFTER): Likewise.
+	* crypt/md5.c (md5_finish_ctx): Likewise.
+	* crypt/sha256.c (__sha256_finish_ctx): Likewise.
+	* crypt/sha512.c (__sha512_finish_ctx): Likewise.
+	* elf/cache.c (load_aux_cache): Likewise.
+	* elf/dl-load.c (open_verify): Likewise.
+	* elf/get-dynamic-info.h (elf_get_dynamic_info): Likewise.
+	* elf/readelflib.c (process_elf_file): Likewise.
+	* elf/rtld.c (dl_main): Likewise.
+	* elf/sprof.c (generate_call_graph): Likewise.
+	* hurd/ctty-input.c (_hurd_ctty_input): Likewise.
+	* hurd/ctty-output.c (_hurd_ctty_output): Likewise.
+	* hurd/dtable.c (reauth_dtable): Likewise.
+	* hurd/getdport.c (__getdport): Likewise.
+	* hurd/hurd/signal.h (_hurd_interrupted_rpc_timeout): Likewise.
+	* hurd/hurd/sigpreempt.h (HURD_PREEMPT_SIGNAL_P): Likewise.
+	* hurd/hurdfault.c (_hurdsig_fault_catch_exception_raise):
+	Likewise.
+	* hurd/hurdioctl.c (fioctl): Likewise.
+	* hurd/hurdselect.c (_hurd_select): Likewise.
+	* hurd/hurdsig.c (_hurdsig_abort_rpcs): Likewise.
+	(STOPSIGS): Likewise.
+	* hurd/hurdstartup.c (_hurd_startup): Likewise.
+	* hurd/intr-msg.c (_hurd_intr_rpc_mach_msg): Likewise.
+	* hurd/lookup-retry.c (__hurd_file_name_lookup_retry): Likewise.
+	* hurd/msgportdemux.c (msgport_server): Likewise.
+	* hurd/setauth.c (_hurd_setauth): Likewise.
+	* include/features.h (__GLIBC_USE_DEPRECATED_SCANF): Likewise.
+	* libio/libioP.h [IO_DEBUG] (CHECK_FILE): Likewise.
+	* locale/programs/ld-ctype.c (set_class_defaults): Likewise.
+	* localedata/tests-mbwc/tst_swscanf.c (tst_swscanf): Likewise.
+	* login/tst-utmp.c (do_check): Likewise.
+	(simulate_login): Likewise.
+	* mach/lowlevellock.h (lll_lock): Likewise.
+	(lll_trylock): Likewise.
+	* math/test-fenv.c (ALL_EXC): Likewise.
+	* math/test-fenvinline.c (ALL_EXC): Likewise.
+	* misc/sys/cdefs.h (__attribute_deprecated_msg__): Likewise.
+	* nis/nis_call.c (__do_niscall3): Likewise.
+	* nis/nis_callback.c (cb_prog_1): Likewise.
+	* nis/nis_defaults.c (searchaccess): Likewise.
+	* nis/nis_findserv.c (__nis_findfastest_with_timeout): Likewise.
+	* nis/nis_ismember.c (internal_ismember): Likewise.
+	* nis/nis_local_names.c (nis_local_principal): Likewise.
+	* nis/nss_nis/nis-rpc.c (_nss_nis_getrpcbyname_r): Likewise.
+	* nis/nss_nisplus/nisplus-netgrp.c (_nss_nisplus_getnetgrent_r):
+	Likewise.
+	* nis/ypclnt.c (yp_match): Likewise.
+	(yp_first): Likewise.
+	(yp_next): Likewise.
+	(yp_master): Likewise.
+	(yp_order): Likewise.
+	* nscd/hstcache.c (cache_addhst): Likewise.
+	* nscd/initgrcache.c (addinitgroupsX): Likewise.
+	* nss/nss_compat/compat-pwd.c (copy_pwd_changes): Likewise.
+	(internal_getpwuid_r): Likewise.
+	* nss/nss_compat/compat-spwd.c (copy_spwd_changes): Likewise.
+	* posix/glob.h (__GLOB_FLAGS): Likewise.
+	* posix/regcomp.c (peek_token): Likewise.
+	(peek_token_bracket): Likewise.
+	(parse_expression): Likewise.
+	* posix/regexec.c (sift_states_iter_mb): Likewise.
+	(check_node_accept_bytes): Likewise.
+	* posix/tst-spawn3.c (do_test): Likewise.
+	* posix/wordexp-test.c (testit): Likewise.
+	* posix/wordexp.c (parse_tilde): Likewise.
+	(exec_comm): Likewise.
+	* posix/wordexp.h (__WRDE_FLAGS): Likewise.
+	* resource/vtimes.c (TIMEVAL_TO_VTIMES): Likewise.
+	* setjmp/sigjmp.c (__sigjmp_save): Likewise.
+	* stdio-common/printf_fp.c (__printf_fp_l): Likewise.
+	* stdio-common/tst-fileno.c (do_test): Likewise.
+	* stdio-common/vfprintf-internal.c (vfprintf): Likewise.
+	* stdlib/strfmon_l.c (__vstrfmon_l_internal): Likewise.
+	* stdlib/strtod_l.c (round_and_return): Likewise.
+	(____STRTOF_INTERNAL): Likewise.
+	* stdlib/tst-strfrom.h (TEST_STRFROM): Likewise.
+	* string/strcspn.c (STRCSPN): Likewise.
+	* string/test-memmem.c (simple_memmem): Likewise.
+	* termios/tcsetattr.c (tcsetattr): Likewise.
+	* time/alt_digit.c (_nl_parse_alt_digit): Likewise.
+	* time/asctime.c (asctime_internal): Likewise.
+	* time/strptime_l.c (__strptime_internal): Likewise.
+	* time/sys/time.h (timercmp): Likewise.
+	* time/tzfile.c (__tzfile_compute): Likewise.
+
 2019-02-21  Patsy Griffin Franklin  <pfrankli@redhat.com>
 
         [BZ #21915]

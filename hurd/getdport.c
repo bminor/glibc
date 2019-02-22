@@ -41,8 +41,8 @@ __getdport (int fd)
       return MACH_PORT_NULL;
     }
 
-  if (fd < 0 || (unsigned int) fd > _hurd_init_dtablesize ||
-      _hurd_init_dtable[fd] == MACH_PORT_NULL)
+  if (fd < 0 || (unsigned int) fd > _hurd_init_dtablesize
+      || _hurd_init_dtable[fd] == MACH_PORT_NULL)
     {
       errno = EBADF;
       return MACH_PORT_NULL;

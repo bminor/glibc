@@ -33,8 +33,8 @@ enum
     WRDE_REUSE = (1 << 3),	/* Reuse storage in PWORDEXP.  */
     WRDE_SHOWERR = (1 << 4),	/* Don't redirect stderr to /dev/null.  */
     WRDE_UNDEF = (1 << 5),	/* Error for expanding undefined variables.  */
-    __WRDE_FLAGS = (WRDE_DOOFFS | WRDE_APPEND | WRDE_NOCMD |
-		    WRDE_REUSE | WRDE_SHOWERR | WRDE_UNDEF)
+    __WRDE_FLAGS = (WRDE_DOOFFS | WRDE_APPEND | WRDE_NOCMD
+		    | WRDE_REUSE | WRDE_SHOWERR | WRDE_UNDEF)
   };
 
 /* Structure describing a word-expansion run.  */

@@ -130,8 +130,8 @@ cb_prog_1 (struct svc_req *rqstp, SVCXPRT *transp)
 	for (i = 0; i < argument.cbproc_receive_1_arg.entries.entries_len; ++i)
 	  {
 #define cbproc_entry(a) argument.cbproc_receive_1_arg.entries.entries_val[a]
-	    char name[strlen (cbproc_entry(i)->zo_name) +
-		      strlen (cbproc_entry(i)->zo_domain) + 3];
+	    char name[strlen (cbproc_entry(i)->zo_name)
+		      + strlen (cbproc_entry(i)->zo_domain) + 3];
 	    char *cp;
 
 	    cp = stpcpy (name, cbproc_entry(i)->zo_name);

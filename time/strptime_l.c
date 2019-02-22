@@ -495,8 +495,8 @@ __strptime_internal (const char *rp, const char *fmt, struct tm *tmp,
 		}
 	      else
 		{
-		  if (s.decided == not &&
-		      strcmp (_NL_CURRENT (LC_TIME, D_T_FMT), HERE_D_T_FMT))
+		  if (s.decided == not
+		      && strcmp (_NL_CURRENT (LC_TIME, D_T_FMT), HERE_D_T_FMT))
 		    s.decided = loc;
 		  s.want_xday = 1;
 		  break;
@@ -641,9 +641,9 @@ __strptime_internal (const char *rp, const char *fmt, struct tm *tmp,
 		}
 	      else
 		{
-		  if (s.decided == not &&
-		      strcmp (_NL_CURRENT (LC_TIME, T_FMT_AMPM),
-			      HERE_T_FMT_AMPM))
+		  if (s.decided == not
+		      && strcmp (_NL_CURRENT (LC_TIME, T_FMT_AMPM),
+				 HERE_T_FMT_AMPM))
 		    s.decided = loc;
 		  break;
 		}

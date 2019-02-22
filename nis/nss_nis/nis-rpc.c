@@ -197,9 +197,9 @@ _nss_nis_getrpcbyname_r (const char *name, struct rpcent *rpc,
     return status;
 
   int found = 0;
-  while (!found &&
-         ((status = internal_nis_getrpcent_r (rpc, buffer, buflen, errnop,
-					      &data)) == NSS_STATUS_SUCCESS))
+  while (!found
+         && ((status = internal_nis_getrpcent_r (rpc, buffer, buflen, errnop,
+						 &data)) == NSS_STATUS_SUCCESS))
     {
       if (strcmp (rpc->r_name, name) == 0)
 	found = 1;

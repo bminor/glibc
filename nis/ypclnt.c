@@ -436,9 +436,9 @@ yp_match (const char *indomain, const char *inmap, const char *inkey,
   ypresp_val resp;
   enum clnt_stat result;
 
-  if (indomain == NULL || indomain[0] == '\0' ||
-      inmap == NULL || inmap[0] == '\0' ||
-      inkey == NULL || inkey[0] == '\0' || inkeylen <= 0)
+  if (indomain == NULL || indomain[0] == '\0'
+      || inmap == NULL || inmap[0] == '\0'
+      || inkey == NULL || inkey[0] == '\0' || inkeylen <= 0)
     return YPERR_BADARGS;
 
   req.domain = (char *) indomain;
@@ -481,8 +481,8 @@ yp_first (const char *indomain, const char *inmap, char **outkey,
   ypresp_key_val resp;
   enum clnt_stat result;
 
-  if (indomain == NULL || indomain[0] == '\0' ||
-      inmap == NULL || inmap[0] == '\0')
+  if (indomain == NULL || indomain[0] == '\0'
+      || inmap == NULL || inmap[0] == '\0')
     return YPERR_BADARGS;
 
   req.domain = (char *) indomain;
@@ -537,9 +537,9 @@ yp_next (const char *indomain, const char *inmap, const char *inkey,
   ypresp_key_val resp;
   enum clnt_stat result;
 
-  if (indomain == NULL || indomain[0] == '\0' ||
-      inmap == NULL || inmap[0] == '\0' ||
-      inkeylen <= 0 || inkey == NULL || inkey[0] == '\0')
+  if (indomain == NULL || indomain[0] == '\0'
+      || inmap == NULL || inmap[0] == '\0'
+      || inkeylen <= 0 || inkey == NULL || inkey[0] == '\0')
     return YPERR_BADARGS;
 
   req.domain = (char *) indomain;
@@ -592,8 +592,8 @@ yp_master (const char *indomain, const char *inmap, char **outname)
   ypresp_master resp;
   enum clnt_stat result;
 
-  if (indomain == NULL || indomain[0] == '\0' ||
-      inmap == NULL || inmap[0] == '\0')
+  if (indomain == NULL || indomain[0] == '\0'
+      || inmap == NULL || inmap[0] == '\0')
     return YPERR_BADARGS;
 
   req.domain = (char *) indomain;
@@ -622,8 +622,8 @@ yp_order (const char *indomain, const char *inmap, unsigned int *outorder)
   struct ypresp_order resp;
   enum clnt_stat result;
 
-  if (indomain == NULL || indomain[0] == '\0' ||
-      inmap == NULL || inmap[0] == '\0')
+  if (indomain == NULL || indomain[0] == '\0'
+      || inmap == NULL || inmap[0] == '\0')
     return YPERR_BADARGS;
 
   req.domain = (char *) indomain;

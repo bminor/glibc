@@ -38,8 +38,8 @@ _hurd_ctty_output (io_t port, io_t ctty, error_t (*rpc) (io_t))
 	     SIGTTOU.  We redo this check at the top of the loop in case
 	     the signal handler changed the state.  */
 	  __spin_lock (&ss->lock);
-	  if (__sigismember (&ss->blocked, SIGTTOU) ||
-	      ss->actions[SIGTTOU].sa_handler == SIG_IGN)
+	  if (__sigismember (&ss->blocked, SIGTTOU)
+	      || ss->actions[SIGTTOU].sa_handler == SIG_IGN)
 	    err = EIO;
 	  else
 	    err = 0;

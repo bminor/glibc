@@ -31,9 +31,9 @@ check (const char *name, FILE *stream, int fd)
 static int
 do_test (void)
 {
-  return (check ("stdin", stdin, STDIN_FILENO) ||
-	  check ("stdout", stdout, STDOUT_FILENO) ||
-	  check ("stderr", stderr, STDERR_FILENO));
+  return (check ("stdin", stdin, STDIN_FILENO)
+	  || check ("stdout", stdout, STDOUT_FILENO)
+	  || check ("stderr", stderr, STDERR_FILENO));
 }
 
 #define TEST_FUNCTION do_test ()

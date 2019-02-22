@@ -132,8 +132,8 @@ do_check (void)
   n = 0;
   while ((ut = getutent ()))
     {
-      if (n < num_entries &&
-	  memcmp (ut, &entry[n], sizeof (struct utmp)))
+      if (n < num_entries
+	  && memcmp (ut, &entry[n], sizeof (struct utmp)))
 	{
 	  error (0, 0, "UTMP entry does not match");
 	  return 1;
@@ -160,8 +160,8 @@ simulate_login (const char *line, const char *user)
 
   for (n = 0; n < num_entries; n++)
     {
-      if (strcmp (line, entry[n].ut_line) == 0 ||
-	  entry[n].ut_type == DEAD_PROCESS)
+      if (strcmp (line, entry[n].ut_line) == 0
+	  || entry[n].ut_type == DEAD_PROCESS)
 	{
 	  if (entry[n].ut_pid == DEAD_PROCESS)
 	    entry[n].ut_pid = (entry_pid += 27);

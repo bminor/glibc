@@ -121,10 +121,10 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 	    }
 
 	  /* An empty RETRYNAME indicates we have the final port.  */
-	  if (retryname[0] == '\0' &&
+	  if (retryname[0] == '\0'
 	      /* If reauth'd, we must do one more retry on "" to give the new
 		 translator a chance to make a new port for us.  */
-	      doretry == FS_RETRY_NORMAL)
+	      && doretry == FS_RETRY_NORMAL)
 	    {
 	      if (flags & O_NOFOLLOW)
 		{
@@ -258,10 +258,10 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 	      break;
 
 	    case 'm':
-	      if (retryname[1] == 'a' && retryname[2] == 'c' &&
-		  retryname[3] == 'h' && retryname[4] == 't' &&
-		  retryname[5] == 'y' && retryname[6] == 'p' &&
-		  retryname[7] == 'e')
+	      if (retryname[1] == 'a' && retryname[2] == 'c'
+		  && retryname[3] == 'h' && retryname[4] == 't'
+		  && retryname[5] == 'y' && retryname[6] == 'p'
+		  && retryname[7] == 'e')
 		{
 		  error_t err;
 		  struct host_basic_info hostinfo;

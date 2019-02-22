@@ -256,8 +256,8 @@
 /* Since version 4.5, gcc also allows one to specify the message printed
    when a deprecated function is used.  clang claims to be gcc 4.2, but
    may also support this feature.  */
-#if __GNUC_PREREQ (4,5) || \
-    __glibc_clang_has_extension (__attribute_deprecated_with_message__)
+#if __GNUC_PREREQ (4,5) \
+    || __glibc_clang_has_extension (__attribute_deprecated_with_message__)
 # define __attribute_deprecated_msg__(msg) \
 	 __attribute__ ((__deprecated__ (msg)))
 #else

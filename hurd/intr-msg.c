@@ -362,12 +362,12 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 		 1, TRUE, FALSE, FALSE, 0 } };
 #endif
 
-        if (m->reply.RetCode == EINTR &&
-	    m->header.msgh_size == sizeof m->reply &&
+        if (m->reply.RetCode == EINTR
+	    && m->header.msgh_size == sizeof m->reply
 #ifdef MACH_MSG_TYPE_BIT
-	    m->check.type == check.i &&
+	    && m->check.type == check.i
 #endif
-	    !(m->header.msgh_bits & MACH_MSGH_BITS_COMPLEX))
+	    && !(m->header.msgh_bits & MACH_MSGH_BITS_COMPLEX))
 	  {
 	    /* It is indeed EINTR.  Is the interrupt for us?  */
 	    if (ss->intr_port != MACH_PORT_NULL)

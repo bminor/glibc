@@ -38,8 +38,8 @@
 #define OVERFLOW_EXC 0x08
 #define INVALID_EXC 0x10
 #define ALL_EXC \
-        (INEXACT_EXC | DIVBYZERO_EXC | UNDERFLOW_EXC | OVERFLOW_EXC | \
-         INVALID_EXC)
+        (INEXACT_EXC | DIVBYZERO_EXC | UNDERFLOW_EXC | OVERFLOW_EXC \
+         | INVALID_EXC)
 static int count_errors;
 
 #if FE_ALL_EXCEPT

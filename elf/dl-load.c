@@ -1581,15 +1581,15 @@ open_verify (const char *name, int fd,
 	  const Elf32_Word *magp = (const void *) ehdr->e_ident;
 	  if (*magp !=
 #if BYTE_ORDER == LITTLE_ENDIAN
-	      ((ELFMAG0 << (EI_MAG0 * 8)) |
-	       (ELFMAG1 << (EI_MAG1 * 8)) |
-	       (ELFMAG2 << (EI_MAG2 * 8)) |
-	       (ELFMAG3 << (EI_MAG3 * 8)))
+	      ((ELFMAG0 << (EI_MAG0 * 8))
+	       | (ELFMAG1 << (EI_MAG1 * 8))
+	       | (ELFMAG2 << (EI_MAG2 * 8))
+	       | (ELFMAG3 << (EI_MAG3 * 8)))
 #else
-	      ((ELFMAG0 << (EI_MAG3 * 8)) |
-	       (ELFMAG1 << (EI_MAG2 * 8)) |
-	       (ELFMAG2 << (EI_MAG1 * 8)) |
-	       (ELFMAG3 << (EI_MAG0 * 8)))
+	      ((ELFMAG0 << (EI_MAG3 * 8))
+	       | (ELFMAG1 << (EI_MAG2 * 8))
+	       | (ELFMAG2 << (EI_MAG1 * 8))
+	       | (ELFMAG3 << (EI_MAG0 * 8)))
 #endif
 	      )
 	    errstring = N_("invalid ELF header");

@@ -317,8 +317,8 @@ __do_niscall3 (dir_binding *dbp, u_long prog, xdrproc_t xargs, caddr_t req,
 	  switch (prog)
 	    {
 	    case NIS_IBLIST:
-	      if ((((nis_result *)resp)->status == NIS_CBRESULTS) &&
-		  (cb != NULL))
+	      if ((((nis_result *)resp)->status == NIS_CBRESULTS)
+		  && (cb != NULL))
 		{
 		  __nis_do_callback (dbp, &((nis_result *) resp)->cookie, cb);
 		  break;

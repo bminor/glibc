@@ -386,17 +386,17 @@ __vstrfmon_l_internal (char *s, size_t maxsize, locale_t loc,
       /* Check for degenerate cases */
       if (sep_by_space == 2)
 	{
-	  if (sign_posn == 0 ||
-	      (sign_posn == 1 && !cs_precedes) ||
-	      (sign_posn == 2 && cs_precedes))
+	  if (sign_posn == 0
+	      || (sign_posn == 1 && !cs_precedes)
+	      || (sign_posn == 2 && cs_precedes))
 	    /* sign and symbol are not adjacent, so no separator */
 	    sep_by_space = 0;
 	}
       if (other_sep_by_space == 2)
 	{
-	  if (other_sign_posn == 0 ||
-	      (other_sign_posn == 1 && !other_cs_precedes) ||
-	      (other_sign_posn == 2 && other_cs_precedes))
+	  if (other_sign_posn == 0
+	      || (other_sign_posn == 1 && !other_cs_precedes)
+	      || (other_sign_posn == 2 && other_cs_precedes))
 	    /* sign and symbol are not adjacent, so no separator */
 	    other_sep_by_space = 0;
 	}
@@ -444,8 +444,8 @@ __vstrfmon_l_internal (char *s, size_t maxsize, locale_t loc,
 	    ++other_left_bytes;
 	  else if (other_sign_posn == 1)
 	    other_left_bytes += strlen (other_sign_string);
-	  else if (other_cs_precedes &&
-		   (other_sign_posn == 3 || other_sign_posn == 4))
+	  else if (other_cs_precedes
+		   && (other_sign_posn == 3 || other_sign_posn == 4))
 	    other_left_bytes += strlen (other_sign_string);
 
 	  /* Compare the number of bytes preceding the value for

@@ -52,8 +52,8 @@ _hurdsig_fault_catch_exception_raise (mach_port_t port,
   int signo;
   struct hurd_signal_detail d;
 
-  if (port != forward_sigexc ||
-      thread != _hurd_msgport_thread || task != __mach_task_self ())
+  if (port != forward_sigexc
+      || thread != _hurd_msgport_thread || task != __mach_task_self ())
     return EPERM;		/* Strange bogosity.  */
 
   d.exc = exception;

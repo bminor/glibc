@@ -266,24 +266,24 @@ reauth_dtable (void)
       __spin_lock (&d->port.lock);
 
       /* Reauthenticate the descriptor's port.  */
-      if (d->port.port != MACH_PORT_NULL &&
-	  ! __io_reauthenticate (d->port.port,
-				 ref, MACH_MSG_TYPE_MAKE_SEND) &&
-	  ! __USEPORT (AUTH, __auth_user_authenticate
-		       (port,
-			ref, MACH_MSG_TYPE_MAKE_SEND,
-			&new)))
+      if (d->port.port != MACH_PORT_NULL
+	  && ! __io_reauthenticate (d->port.port,
+				    ref, MACH_MSG_TYPE_MAKE_SEND)
+	  && ! __USEPORT (AUTH, __auth_user_authenticate
+			  (port,
+			   ref, MACH_MSG_TYPE_MAKE_SEND,
+			   &new)))
 	{
 	  /* Replace the port in the descriptor cell
 	     with the newly reauthenticated port.  */
 
-	  if (d->ctty.port != MACH_PORT_NULL &&
-	      ! __io_reauthenticate (d->ctty.port,
-				     ref, MACH_MSG_TYPE_MAKE_SEND) &&
-	      ! __USEPORT (AUTH, __auth_user_authenticate
-			   (port,
-			    ref, MACH_MSG_TYPE_MAKE_SEND,
-			    &newctty)))
+	  if (d->ctty.port != MACH_PORT_NULL
+	      && ! __io_reauthenticate (d->ctty.port,
+					ref, MACH_MSG_TYPE_MAKE_SEND)
+	      && ! __USEPORT (AUTH, __auth_user_authenticate
+			      (port,
+			       ref, MACH_MSG_TYPE_MAKE_SEND,
+			       &newctty)))
 	    _hurd_port_set (&d->ctty, newctty);
 
 	  _hurd_port_locked_set (&d->port, new);
