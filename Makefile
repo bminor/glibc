@@ -68,17 +68,11 @@ endif # $(AUTOCONF) = no
 		   subdir_objs subdir_stubs subdir_testclean		\
 		   $(addprefix install-, no-libc.a bin lib data headers others)
 
-headers := limits.h values.h features.h gnu-versions.h \
-	   bits/xopen_lim.h gnu/libc-version.h stdc-predef.h \
-	   bits/libc-header-start.h
+headers :=
 
 echo-headers: subdir_echo-headers
 
-# The headers are in the include directory.
-subdir-dirs = include
-vpath %.h $(subdir-dirs)
-
-# What to install.
+# This header is created during the install process.  See below.
 install-others = $(inst_includedir)/gnu/stubs.h
 install-bin-script =
 
@@ -521,34 +515,6 @@ $(objpfx)check-local-headers.out: scripts/check-local-headers.sh
 	AWK='$(AWK)' scripts/check-local-headers.sh \
 	  "$(includedir)" "$(objpfx)" < /dev/null > $@; \
 	$(evaluate-test)
-
-ifneq "$(headers)" ""
-# Special test of all the installed headers in this directory.
-tests-special += $(objpfx)check-installed-headers-c.out
-libof-check-installed-headers-c := testsuite
-$(objpfx)check-installed-headers-c.out: \
-    scripts/check-installed-headers.sh $(headers)
-	$(SHELL) $(..)scripts/check-installed-headers.sh c \
-	  "$(CC) $(filter-out -std=%,$(CFLAGS)) -D_ISOMAC $(+includes)" \
-	  $(headers) > $@; \
-	$(evaluate-test)
-
-ifneq "$(CXX)" ""
-tests-special += $(objpfx)check-installed-headers-cxx.out
-libof-check-installed-headers-cxx := testsuite
-$(objpfx)check-installed-headers-cxx.out: \
-    scripts/check-installed-headers.sh $(headers)
-	$(SHELL) $(..)scripts/check-installed-headers.sh c++ \
-	  "$(CXX) $(filter-out -std=%,$(CXXFLAGS)) -D_ISOMAC $(+includes)" \
-	  $(headers) > $@; \
-	$(evaluate-test)
-endif # $(CXX)
-
-tests-special += $(objpfx)check-wrapper-headers.out
-$(objpfx)check-wrapper-headers.out: scripts/check-wrapper-headers.py $(headers)
-	$(PYTHON) $< --root=. --subdir=. $(headers) \
-	  --generated $(common-generated) > $@; $(evaluate-test)
-endif # $(headers)
 
 define summarize-tests
 @egrep -v '^(PASS|XFAIL):' $(objpfx)$1 || true
