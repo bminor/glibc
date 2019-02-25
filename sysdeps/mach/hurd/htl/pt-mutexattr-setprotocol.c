@@ -27,7 +27,8 @@ int
 pthread_mutexattr_setprotocol (pthread_mutexattr_t *attrp, int proto)
 {
   (void) attrp;
-  return proto == PTHREAD_PRIO_NONE ? 0 :
-	 proto != PTHREAD_PRIO_INHERIT &&
-	 proto != PTHREAD_PRIO_PROTECT ? EINVAL : ENOTSUP;
+  return (proto == PTHREAD_PRIO_NONE
+	  ? 0
+	  : (proto != PTHREAD_PRIO_INHERIT
+	     && proto != PTHREAD_PRIO_PROTECT) ? EINVAL : ENOTSUP);
 }

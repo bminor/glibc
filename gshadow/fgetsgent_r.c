@@ -61,11 +61,11 @@ __fgetsgent_r (FILE *stream, struct sgrp *resbuf, char *buffer, size_t buflen,
       /* Skip leading blanks.  */
       while (isspace (*p))
 	++p;
-    } while (*p == '\0' || *p == '#' ||	/* Ignore empty and comment lines.  */
+    } while (*p == '\0' || *p == '#' /* Ignore empty and comment lines.  */
 	     /* Parse the line.  If it is invalid, loop to
 		get the next line of the file to parse.  */
-	     ! parse_line (buffer, (void *) resbuf, (void *) buffer, buflen,
-			   &errno));
+	     || ! parse_line (buffer, (void *) resbuf, (void *) buffer, buflen,
+			      &errno));
 
   _IO_funlockfile (stream);
 

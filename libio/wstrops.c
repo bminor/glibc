@@ -256,8 +256,8 @@ _IO_wstr_seekoff (FILE *fp, off64_t offset, int dir, int mode)
   if (mode == 0 && (fp->_flags & _IO_TIED_PUT_GET))
     mode = (fp->_flags & _IO_CURRENTLY_PUTTING ? _IOS_OUTPUT : _IOS_INPUT);
 
-  bool was_writing = (fp->_wide_data->_IO_write_ptr >
-			fp->_wide_data->_IO_write_base
+  bool was_writing = ((fp->_wide_data->_IO_write_ptr
+		       > fp->_wide_data->_IO_write_base)
 		     || _IO_in_put_mode (fp));
   if (was_writing)
     _IO_wstr_switch_to_get_mode (fp);

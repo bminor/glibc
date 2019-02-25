@@ -282,8 +282,8 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	   break;
 	case R_CKCORE_PCREL_IMM26BY2:
 	{
-	  unsigned int offset = ((value + reloc->r_addend -
-				  (unsigned int)reloc_addr) >> 1);
+	  unsigned int offset = ((value + reloc->r_addend
+				  - (unsigned int)reloc_addr) >> 1);
 	  insn_opcode = (*opcode16_addr << 16) | (*(opcode16_addr + 1));
 	  if (offset > 0x3ffffff){
 	    const char *strtab;

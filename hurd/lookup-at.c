@@ -59,8 +59,8 @@ __file_name_lookup_at (int fd, int at_flags,
   file_t startdir;
   error_t use_init_port (int which, error_t (*operate) (mach_port_t))
     {
-      return (which == INIT_PORT_CWDIR ? (*operate) (startdir) :
-	      _hurd_ports_use (which, operate));
+      return (which == INIT_PORT_CWDIR ? (*operate) (startdir)
+	      : _hurd_ports_use (which, operate));
     }
 
   err = HURD_DPORT_USE (fd, (startdir = port,
@@ -89,8 +89,8 @@ __file_name_split_at (int fd, const char *file_name, char **name)
   file_t startdir;
   error_t use_init_port (int which, error_t (*operate) (mach_port_t))
   {
-    return (which == INIT_PORT_CWDIR ? (*operate) (startdir) :
-	    _hurd_ports_use (which, operate));
+    return (which == INIT_PORT_CWDIR ? (*operate) (startdir)
+	    : _hurd_ports_use (which, operate));
   }
 
   err = HURD_DPORT_USE (fd, (startdir = port,
@@ -114,8 +114,8 @@ __directory_name_split_at (int fd, const char *directory_name, char **name)
   file_t startdir;
   error_t use_init_port (int which, error_t (*operate) (mach_port_t))
     {
-      return (which == INIT_PORT_CWDIR ? (*operate) (startdir) :
-	      _hurd_ports_use (which, operate));
+      return (which == INIT_PORT_CWDIR ? (*operate) (startdir)
+	      : _hurd_ports_use (which, operate));
     }
 
   err = HURD_DPORT_USE (fd, (startdir = port,

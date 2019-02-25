@@ -224,9 +224,9 @@ do_print (const void *nodep, VISIT value, int level)
   struct __gconv_loaded_object *obj = *(struct __gconv_loaded_object **) nodep;
 
   printf ("%10s: \"%s\", %d\n",
-	  value == leaf ? "leaf" :
-	  value == preorder ? "preorder" :
-	  value == postorder ? "postorder" : "endorder",
+	  value == leaf ? "leaf"
+	  : value == preorder ? "preorder"
+	  : value == postorder ? "postorder" : "endorder",
 	  obj->name, obj->counter);
 }
 

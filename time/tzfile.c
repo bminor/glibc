@@ -764,9 +764,9 @@ __tzfile_compute (__time64_t timer, int use_localtime,
   /* Apply its correction.  */
   *leap_correct = leaps[i].change;
 
-  if (timer == leaps[i].transition && /* Exactly at the transition time.  */
-      ((i == 0 && leaps[i].change > 0)
-       || leaps[i].change > leaps[i - 1].change))
+  if (timer == leaps[i].transition /* Exactly at the transition time.  */
+      && ((i == 0 && leaps[i].change > 0)
+	  || leaps[i].change > leaps[i - 1].change))
     {
       *leap_hit = 1;
       while (i > 0

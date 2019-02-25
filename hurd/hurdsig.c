@@ -538,8 +538,8 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
       assert_perror (err);
       for (i = 0; i < nthreads; ++i)
 	{
-	  if (threads[i] != _hurd_msgport_thread &&
-	      (act != handle || threads[i] != ss->thread))
+	  if (threads[i] != _hurd_msgport_thread
+	      && (act != handle || threads[i] != ss->thread))
 	    {
 	      err = __thread_resume (threads[i]);
 	      assert_perror (err);
@@ -715,9 +715,9 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	}
     }
 
-  if (_hurd_orphaned && act == stop &&
-      (__sigmask (signo) & (__sigmask (SIGTTIN) | __sigmask (SIGTTOU) |
-			    __sigmask (SIGTSTP))))
+  if (_hurd_orphaned && act == stop
+      && (__sigmask (signo) & (__sigmask (SIGTTIN) | __sigmask (SIGTTOU)
+			       | __sigmask (SIGTSTP))))
     {
       /* If we would ordinarily stop for a job control signal, but we are
 	 orphaned so noone would ever notice and continue us again, we just
@@ -728,9 +728,9 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
     }
 
   /* Handle receipt of a blocked signal, or any signal while stopped.  */
-  if (act != ignore &&		/* Signals ignored now are forgotten now.  */
-      __sigismember (&ss->blocked, signo) ||
-      (signo != SIGKILL && _hurd_stopped))
+  if (act != ignore		/* Signals ignored now are forgotten now.  */
+      && __sigismember (&ss->blocked, signo)
+      || (signo != SIGKILL && _hurd_stopped))
     {
       mark_pending ();
       act = ignore;
@@ -1368,10 +1368,10 @@ reauth_proc (mach_port_t new)
   ref = __mach_reply_port ();
   if (! HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC],
 		       __proc_reauthenticate (port, ref,
-					      MACH_MSG_TYPE_MAKE_SEND) ||
-		       __auth_user_authenticate (new, ref,
-						 MACH_MSG_TYPE_MAKE_SEND,
-						 &ignore))
+					      MACH_MSG_TYPE_MAKE_SEND)
+		       || __auth_user_authenticate (new, ref,
+						    MACH_MSG_TYPE_MAKE_SEND,
+						    &ignore))
       && ignore != MACH_PORT_NULL)
     __mach_port_deallocate (__mach_task_self (), ignore);
   __mach_port_destroy (__mach_task_self (), ref);

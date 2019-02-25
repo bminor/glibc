@@ -264,8 +264,8 @@ __spawni (pid_t *pid, const char *file,
     {
       error_t use_init_port (int which, error_t (*operate) (mach_port_t))
 	{
-	  return (which == INIT_PORT_CWDIR ? (*operate) (startdir) :
-		  child_init_port (which, operate));
+	  return (which == INIT_PORT_CWDIR ? (*operate) (startdir)
+		  : child_init_port (which, operate));
 	}
 
       return __hurd_file_name_lookup (&use_init_port, &child_fd, 0,

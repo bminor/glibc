@@ -198,10 +198,10 @@ _hurd_setproc (process_t procserver)
 
   /* Tell the proc server where our args and environment are.  */
   if (err = __proc_set_arg_locations (procserver,
-				      _hide_arguments ? 0 :
-				      (vm_address_t) __libc_argv,
-				      _hide_environment ? 0 :
-				      (vm_address_t) __environ))
+				      _hide_arguments ? 0
+				      : (vm_address_t) __libc_argv,
+				      _hide_environment ? 0
+				      : (vm_address_t) __environ))
     return err;
 
   /* Those calls worked, so the port looks good.  */

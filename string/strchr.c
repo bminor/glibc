@@ -126,11 +126,11 @@ STRCHR (const char *s, int c_in)
 	   /* Look at only the hole bits.  If any of the hole bits
 	      are unchanged, most likely one of the bytes was a
 	      zero.  */
-	   & ~magic_bits) != 0 ||
+	   & ~magic_bits) != 0
 
 	  /* That caught zeroes.  Now test for C.  */
-	  ((((longword ^ charmask) + magic_bits) ^ ~(longword ^ charmask))
-	   & ~magic_bits) != 0)
+	  || ((((longword ^ charmask) + magic_bits) ^ ~(longword ^ charmask))
+	      & ~magic_bits) != 0)
 	{
 	  /* Which of the bytes was C or zero?
 	     If none of them were, it was a misfire; continue the search.  */

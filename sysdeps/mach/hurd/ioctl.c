@@ -199,9 +199,9 @@ __ioctl (int fd, unsigned long int request, ...)
 	return MIG_TYPE_ERROR;
 
 #ifdef MACH_MSG_TYPE_BIT
-      if (msg.header_typecheck.RetCodeType !=
-	  ((union { mach_msg_type_t t; int i; })
-	   { t: io2mach_type (1, _IOTS (msg.header.RetCode)) }).i)
+      if (msg.header_typecheck.RetCodeType
+	  != ((union { mach_msg_type_t t; int i; })
+	    { t: io2mach_type (1, _IOTS (msg.header.RetCode)) }).i)
 	return MIG_TYPE_ERROR;
 #endif
       return msg.header.RetCode;

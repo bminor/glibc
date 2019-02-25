@@ -268,8 +268,8 @@ __file_name_lookup_under (file_t startdir,
 
   error_t use_init_port (int which, error_t (*operate) (mach_port_t))
     {
-      return (which == INIT_PORT_CWDIR ? (*operate) (startdir) :
-	      _hurd_ports_use (which, operate));
+      return (which == INIT_PORT_CWDIR ? (*operate) (startdir)
+	      : _hurd_ports_use (which, operate));
     }
 
   err = __hurd_file_name_lookup (&use_init_port, &__getdport, 0,

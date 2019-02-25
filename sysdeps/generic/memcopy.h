@@ -164,8 +164,8 @@ extern void _wordcopy_bwd_dest_aligned (long int, long int, size_t)
 # define PAGE_COPY_FWD_MAYBE(dstp, srcp, nbytes_left, nbytes)		      \
   do									      \
     {									      \
-      if ((nbytes) >= PAGE_COPY_THRESHOLD &&				      \
-	  PAGE_OFFSET ((dstp) - (srcp)) == 0) 				      \
+      if ((nbytes) >= PAGE_COPY_THRESHOLD				      \
+	  && PAGE_OFFSET ((dstp) - (srcp)) == 0)			      \
 	{								      \
 	  /* The amount to copy is past the threshold for copying	      \
 	     pages virtually with kernel VM operations, and the		      \

@@ -38,8 +38,9 @@ __pthread_mutex_unlock_usercnt (pthread_mutex_t *mutex, int decr)
   /* See concurrency notes regarding mutex type which is loaded from __kind
      in struct __pthread_mutex_s in sysdeps/nptl/bits/thread-shared-types.h.  */
   int type = PTHREAD_MUTEX_TYPE_ELISION (mutex);
-  if (__builtin_expect (type &
-		~(PTHREAD_MUTEX_KIND_MASK_NP|PTHREAD_MUTEX_ELISION_FLAGS_NP), 0))
+  if (__builtin_expect (type
+			& ~(PTHREAD_MUTEX_KIND_MASK_NP
+			    |PTHREAD_MUTEX_ELISION_FLAGS_NP), 0))
     return __pthread_mutex_unlock_full (mutex, decr);
 
   if (__builtin_expect (type, PTHREAD_MUTEX_TIMED_NP)

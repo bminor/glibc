@@ -269,11 +269,11 @@ struct icmp
 #define	ICMP_PARAMPROB_OPTABSENT 1		/* req. opt. absent */
 
 #define	ICMP_INFOTYPE(type) \
-	((type) == ICMP_ECHOREPLY || (type) == ICMP_ECHO || \
-	(type) == ICMP_ROUTERADVERT || (type) == ICMP_ROUTERSOLICIT || \
-	(type) == ICMP_TSTAMP || (type) == ICMP_TSTAMPREPLY || \
-	(type) == ICMP_IREQ || (type) == ICMP_IREQREPLY || \
-	(type) == ICMP_MASKREQ || (type) == ICMP_MASKREPLY)
+	((type) == ICMP_ECHOREPLY || (type) == ICMP_ECHO \
+	 || (type) == ICMP_ROUTERADVERT || (type) == ICMP_ROUTERSOLICIT \
+	 || (type) == ICMP_TSTAMP || (type) == ICMP_TSTAMPREPLY \
+	 || (type) == ICMP_IREQ || (type) == ICMP_IREQREPLY \
+	 || (type) == ICMP_MASKREQ || (type) == ICMP_MASKREPLY)
 
 #endif /* __USE_MISC */
 

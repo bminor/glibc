@@ -443,8 +443,8 @@ gconv_end (struct __gconv_step *data)
 	      }								\
 									\
 	    /* See Principles of Operations cu12.  */			\
-	    zabcd = (((inptr[0] & 0x7) << 2) |				\
-		     ((inptr[1] & 0x30) >> 4)) - 1;			\
+	    zabcd = (((inptr[0] & 0x7) << 2)				\
+		     | ((inptr[1] & 0x30) >> 4)) - 1;			\
 									\
 	    /* z-bit must be zero after subtracting 1.  */		\
 	    if (zabcd & 0x10)						\

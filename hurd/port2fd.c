@@ -34,8 +34,9 @@ _hurd_port2fd (struct hurd_fd *d, io_t dport, int flags)
   if (!(flags & O_IGNORE_CTTY))
     __USEPORT (CTTYID,
 	       ({
-		 if (port != MACH_PORT_NULL && /* Do we have a ctty? */
-		     ! __term_getctty (dport, &cttyid))	/* Could this be it? */
+		 if (port != MACH_PORT_NULL /* Do we have a ctty? */
+		     && ! __term_getctty (dport, &cttyid))
+		   /* Could this be it? */
 		   {
 		     __mach_port_deallocate (__mach_task_self (), cttyid);
 		     /* This port is capable of being a controlling tty.

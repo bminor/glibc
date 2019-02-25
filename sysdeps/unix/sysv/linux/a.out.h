@@ -64,8 +64,8 @@ enum machine_type
    && N_MAGIC(x) != ZMAGIC && N_MAGIC(x) != QMAGIC)
 #define _N_HDROFF(x)	(1024 - sizeof (struct exec))
 #define N_TXTOFF(x) \
-  (N_MAGIC(x) == ZMAGIC ? _N_HDROFF((x)) + sizeof (struct exec) :	\
-   (N_MAGIC(x) == QMAGIC ? 0 : sizeof (struct exec)))
+  (N_MAGIC(x) == ZMAGIC ? _N_HDROFF((x)) + sizeof (struct exec)		\
+   : (N_MAGIC(x) == QMAGIC ? 0 : sizeof (struct exec)))
 #define N_DATOFF(x)	(N_TXTOFF(x) + (x).a_text)
 #define N_TRELOFF(x)	(N_DATOFF(x) + (x).a_data)
 #define N_DRELOFF(x)	(N_TRELOFF(x) + N_TRSIZE(x))

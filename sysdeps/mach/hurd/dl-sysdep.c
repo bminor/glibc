@@ -132,8 +132,8 @@ _dl_sysdep_start (void **start_argptr,
 
       __tunables_init (_environ);
 
-      if (_dl_hurd_data->flags & EXEC_STACK_ARGS &&
-	  _dl_hurd_data->user_entry == 0)
+      if (_dl_hurd_data->flags & EXEC_STACK_ARGS
+	  && _dl_hurd_data->user_entry == 0)
 	_dl_hurd_data->user_entry = (vm_address_t) ENTRY_POINT;
 
 unfmh();			/* XXX */
@@ -319,8 +319,8 @@ open_file (const char *file_name, int flags,
 
   assert (!(flags & ~(O_READ | O_CLOEXEC)));
 
-  startdir = _dl_hurd_data->portarray[file_name[0] == '/' ?
-				      INIT_PORT_CRDIR : INIT_PORT_CWDIR];
+  startdir = _dl_hurd_data->portarray[file_name[0] == '/'
+				      ? INIT_PORT_CRDIR : INIT_PORT_CWDIR];
 
   while (file_name[0] == '/')
     file_name++;

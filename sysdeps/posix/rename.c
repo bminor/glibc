@@ -30,8 +30,8 @@ rename (const char *old, const char *new)
 	{
 	  __set_errno (save);
 	  /* Race condition, required for 1003.1 conformance.  */
-	  if (__unlink (new) < 0 ||
-	      __link (old, new) < 0)
+	  if (__unlink (new) < 0
+	      || __link (old, new) < 0)
 	    return -1;
 	}
       else

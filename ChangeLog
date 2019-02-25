@@ -1,3 +1,88 @@
+2019-02-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* dirent/dirent.h [!_DIRENT_HAVE_D_NAMLEN
+	&& _DIRENT_HAVE_D_RECLEN] (_D_ALLOC_NAMLEN): Break lines before
+	rather than after operators.
+	* elf/cache.c (print_cache): Likewise.
+	* gshadow/fgetsgent_r.c (__fgetsgent_r): Likewise.
+	* htl/pt-getattr.c (__pthread_getattr_np): Likewise.
+	* hurd/hurdinit.c (_hurd_setproc): Likewise.
+	* hurd/hurdkill.c (_hurd_sig_post): Likewise.
+	* hurd/hurdlookup.c (__file_name_lookup_under): Likewise.
+	* hurd/hurdsig.c (_hurd_internal_post_signal): Likewise.
+	(reauth_proc): Likewise.
+	* hurd/lookup-at.c (__file_name_lookup_at): Likewise.
+	(__file_name_split_at): Likewise.
+	(__directory_name_split_at): Likewise.
+	* hurd/lookup-retry.c (__hurd_file_name_lookup_retry): Likewise.
+	* hurd/port2fd.c (_hurd_port2fd): Likewise.
+	* iconv/gconv_dl.c (do_print): Likewise.
+	* inet/netinet/in.h (struct sockaddr_in): Likewise.
+	* libio/wstrops.c (_IO_wstr_seekoff): Likewise.
+	* locale/setlocale.c (new_composite_name): Likewise.
+	* malloc/memusagestat.c (main): Likewise.
+	* misc/fstab.c (fstab_convert): Likewise.
+	* nptl/pthread_mutex_unlock.c (__pthread_mutex_unlock_usercnt):
+	Likewise.
+	* nss/nss_compat/compat-grp.c (getgrent_next_nss): Likewise.
+	(getgrent_next_file): Likewise.
+	(internal_getgrnam_r): Likewise.
+	(internal_getgrgid_r): Likewise.
+	* nss/nss_compat/compat-initgroups.c (getgrent_next_nss):
+	Likewise.
+	(internal_getgrent_r): Likewise.
+	* nss/nss_compat/compat-pwd.c (getpwent_next_nss_netgr): Likewise.
+	(getpwent_next_nss): Likewise.
+	(getpwent_next_file): Likewise.
+	(internal_getpwnam_r): Likewise.
+	(internal_getpwuid_r): Likewise.
+	* nss/nss_compat/compat-spwd.c (getspent_next_nss_netgr):
+	Likewise.
+	(getspent_next_nss): Likewise.
+	(internal_getspnam_r): Likewise.
+	* pwd/fgetpwent_r.c (__fgetpwent_r): Likewise.
+	* shadow/fgetspent_r.c (__fgetspent_r): Likewise.
+	* string/strchr.c (STRCHR): Likewise.
+	* string/strchrnul.c (STRCHRNUL): Likewise.
+	* sysdeps/aarch64/fpu/fpu_control.h (_FPU_FPCR_IEEE): Likewise.
+	* sysdeps/aarch64/sfp-machine.h (_FP_CHOOSENAN): Likewise.
+	* sysdeps/csky/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/generic/memcopy.h (PAGE_COPY_FWD_MAYBE): Likewise.
+	* sysdeps/generic/symbol-hacks.h (__stack_chk_fail_local):
+	Likewise.
+	* sysdeps/gnu/netinet/ip_icmp.h (ICMP_INFOTYPE): Likewise.
+	* sysdeps/gnu/updwtmp.c (TRANSFORM_UTMP_FILE_NAME): Likewise.
+	* sysdeps/gnu/utmp_file.c (TRANSFORM_UTMP_FILE_NAME): Likewise.
+	* sysdeps/hppa/jmpbuf-unwind.h (_JMPBUF_UNWINDS): Likewise.
+	* sysdeps/mach/hurd/bits/stat.h (S_ISPARE): Likewise.
+	* sysdeps/mach/hurd/dl-sysdep.c (_dl_sysdep_start): Likewise.
+	(open_file): Likewise.
+	* sysdeps/mach/hurd/htl/pt-mutexattr-setprotocol.c
+	(pthread_mutexattr_setprotocol): Likewise.
+	* sysdeps/mach/hurd/ioctl.c (__ioctl): Likewise.
+	* sysdeps/mach/hurd/mmap.c (__mmap): Likewise.
+	* sysdeps/mach/hurd/ptrace.c (ptrace): Likewise.
+	* sysdeps/mach/hurd/spawni.c (__spawni): Likewise.
+	* sysdeps/microblaze/dl-machine.h (elf_machine_type_class):
+	Likewise.
+	(elf_machine_rela): Likewise.
+	* sysdeps/mips/mips32/sfp-machine.h (_FP_CHOOSENAN): Likewise.
+	* sysdeps/mips/mips64/sfp-machine.h (_FP_CHOOSENAN): Likewise.
+	* sysdeps/mips/sys/asm.h (multiple #if conditionals): Likewise.
+	* sysdeps/posix/rename.c (rename): Likewise.
+	* sysdeps/powerpc/novmx-sigjmp.c (__novmx__sigjmp_save): Likewise.
+	* sysdeps/powerpc/sigjmp.c (__vmx__sigjmp_save): Likewise.
+	* sysdeps/s390/fpu/fenv_libc.h (FPC_VALID_MASK): Likewise.
+	* sysdeps/s390/utf8-utf16-z9.c (gconv_end): Likewise.
+	* sysdeps/unix/grantpt.c (grantpt): Likewise.
+	* sysdeps/unix/sysv/linux/a.out.h (N_TXTOFF): Likewise.
+	* sysdeps/unix/sysv/linux/updwtmp.c (TRANSFORM_UTMP_FILE_NAME):
+	Likewise.
+	* sysdeps/unix/sysv/linux/utmp_file.c (TRANSFORM_UTMP_FILE_NAME):
+	Likewise.
+	* sysdeps/x86/cpu-features.c (get_common_indices): Likewise.
+	* time/tzfile.c (__tzfile_compute): Likewise.
+
 2019-02-22  Joseph Myers  <joseph@codesourcery.com>
 
 	* benchtests/bench-memmem.c (simple_memmem): Break lines before

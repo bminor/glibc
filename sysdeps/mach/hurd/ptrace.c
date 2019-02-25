@@ -178,8 +178,8 @@ ptrace (enum __ptrace_request request, ... )
 	if (! err)
 	  {
 	    err = __msg_set_init_int (msgport, task, INIT_TRACEMASK,
-				      request == PTRACE_DETACH ? 0 :
-				      ~(sigset_t) 0);
+				      request == PTRACE_DETACH ? 0
+				      : ~(sigset_t) 0);
 	    if (! err)
 	      {
 		if (request == PTRACE_ATTACH)

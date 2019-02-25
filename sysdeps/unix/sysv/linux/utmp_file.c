@@ -19,15 +19,19 @@
 #include <string.h>
 #include <unistd.h>
 
-#define TRANSFORM_UTMP_FILE_NAME(file_name) \
-    ((strcmp (file_name, _PATH_UTMP) == 0 \
-      && __access (_PATH_UTMP "x", F_OK) == 0) ? (_PATH_UTMP "x") : \
-     ((strcmp (file_name, _PATH_WTMP) == 0 \
-       && __access ( _PATH_WTMP "x", F_OK) == 0) ? (_PATH_WTMP "x") : \
-      ((strcmp (file_name, _PATH_UTMP "x") == 0 \
-	&& __access (_PATH_UTMP "x", F_OK) != 0) ? _PATH_UTMP : \
-       ((strcmp (file_name, _PATH_WTMP "x") == 0 \
-	 && __access (_PATH_WTMP "x", F_OK) != 0) ? _PATH_WTMP : \
-	file_name))))
+#define TRANSFORM_UTMP_FILE_NAME(file_name)		\
+  ((strcmp (file_name, _PATH_UTMP) == 0			\
+    && __access (_PATH_UTMP "x", F_OK) == 0)		\
+   ? (_PATH_UTMP "x")					\
+   : ((strcmp (file_name, _PATH_WTMP) == 0		\
+       && __access ( _PATH_WTMP "x", F_OK) == 0)	\
+      ? (_PATH_WTMP "x")				\
+      : ((strcmp (file_name, _PATH_UTMP "x") == 0	\
+	  && __access (_PATH_UTMP "x", F_OK) != 0)	\
+	 ? _PATH_UTMP					\
+	 : ((strcmp (file_name, _PATH_WTMP "x") == 0	\
+	     && __access (_PATH_WTMP "x", F_OK) != 0)	\
+	    ? _PATH_WTMP				\
+	    : file_name))))
 
 #include <login/utmp_file.c>

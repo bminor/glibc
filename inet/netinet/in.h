@@ -241,10 +241,10 @@ struct sockaddr_in
     struct in_addr sin_addr;		/* Internet address.  */
 
     /* Pad to size of `struct sockaddr'.  */
-    unsigned char sin_zero[sizeof (struct sockaddr) -
-			   __SOCKADDR_COMMON_SIZE -
-			   sizeof (in_port_t) -
-			   sizeof (struct in_addr)];
+    unsigned char sin_zero[sizeof (struct sockaddr)
+			   - __SOCKADDR_COMMON_SIZE
+			   - sizeof (in_port_t)
+			   - sizeof (struct in_addr)];
   };
 
 #if !__USE_KERNEL_IPV6_DEFS

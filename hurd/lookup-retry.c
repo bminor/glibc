@@ -213,11 +213,11 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 		  int save = errno;
 		  errno = 0;
 		  fd = (int) __strtoul_internal (&retryname[3], &end, 10, 0);
-		  if (end == NULL || errno || /* Malformed number.  */
+		  if (end == NULL || errno /* Malformed number.  */
 		      /* Check for excess text after the number.  A slash
 			 is valid; it ends the component.  Anything else
 			 does not name a numeric file descriptor.  */
-		      (*end != '/' && *end != '\0'))
+		      || (*end != '/' && *end != '\0'))
 		    {
 		      errno = save;
 		      err = ENOENT;
@@ -327,8 +327,8 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 	      break;
 
 	    case 'p':
-	      if (retryname[1] == 'i' && retryname[2] == 'd' &&
-		  (retryname[3] == '/' || retryname[3] == 0))
+	      if (retryname[1] == 'i' && retryname[2] == 'd'
+		  && (retryname[3] == '/' || retryname[3] == 0))
 		{
 		  char *p, buf[1024];  /* XXX */
 		  size_t len;

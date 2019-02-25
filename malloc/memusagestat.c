@@ -346,8 +346,8 @@ main (int argc, char *argv[])
       if (cnt != cnt2)
         gdImageDashedLine (im_out, 40, ysize - 20 - cnt2, xsize - 40,
                            ysize - 20 - cnt2, green);
-      snprintf (buf, sizeof (buf), stack_format, maxsize_stack / 4 * line /
-                stack_scale);
+      snprintf (buf, sizeof (buf), stack_format,
+		maxsize_stack / 4 * line / stack_scale);
       gdImageString (im_out, gdFontSmall, xsize - 37, ysize - 26 - cnt2,
                      (unsigned char *) buf, green);
     }

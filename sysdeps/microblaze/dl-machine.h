@@ -153,10 +153,10 @@ _dl_start_user:\n\
    of the main executable's symbols, as for a COPY reloc.  */
 #ifndef RTLD_BOOTSTRAP
 # define elf_machine_type_class(type) \
-  (((type) == R_MICROBLAZE_JUMP_SLOT || \
-    (type) == R_MICROBLAZE_TLSDTPREL32 || \
-    (type) == R_MICROBLAZE_TLSDTPMOD32 || \
-    (type) == R_MICROBLAZE_TLSTPREL32) \
+  (((type) == R_MICROBLAZE_JUMP_SLOT \
+    || (type) == R_MICROBLAZE_TLSDTPREL32 \
+    || (type) == R_MICROBLAZE_TLSDTPMOD32 \
+    || (type) == R_MICROBLAZE_TLSTPREL32) \
     * ELF_RTYPE_CLASS_PLT \
    | ((type) == R_MICROBLAZE_COPY) * ELF_RTYPE_CLASS_COPY)
 #else
@@ -226,9 +226,9 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
       Elf32_Addr value = SYMBOL_ADDRESS (sym_map, sym, true);
 
       value += reloc->r_addend;
-      if (r_type == R_MICROBLAZE_GLOB_DAT ||
-          r_type == R_MICROBLAZE_JUMP_SLOT ||
-          r_type == R_MICROBLAZE_32)
+      if (r_type == R_MICROBLAZE_GLOB_DAT
+          || r_type == R_MICROBLAZE_JUMP_SLOT
+          || r_type == R_MICROBLAZE_32)
 	{
 	  *reloc_addr = value;
 	}

@@ -178,8 +178,8 @@ grantpt (int fd)
      owner.  For security reasons, make it writable by the group only
      when originally writable and when the group of the device is that
      special group.  */
-  mode_t mode = S_IRUSR|S_IWUSR|
-	        ((st.st_gid == gid) ? (st.st_mode & S_IWGRP) : 0);
+  mode_t mode = S_IRUSR|S_IWUSR
+	        |((st.st_gid == gid) ? (st.st_mode & S_IWGRP) : 0);
 #endif
 
   if ((st.st_mode & ACCESSPERMS) != mode)

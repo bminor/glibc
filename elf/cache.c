@@ -211,8 +211,8 @@ print_cache (const char *cache_name)
       cache_data = (const char *) &cache->libs[cache->nlibs];
 
       /* Check for a new cache embedded in the old format.  */
-      if (cache_size >
-	  (offset + sizeof (struct cache_file_new)))
+      if (cache_size
+	  > (offset + sizeof (struct cache_file_new)))
 	{
 
 	  cache_new = (struct cache_file_new *) ((void *)cache + offset);

@@ -38,9 +38,9 @@ __pthread_getattr_np (pthread_t thread, pthread_attr_t *attr)
      are not supported yet, so fill them with our default values.  */
   *attr = __pthread_default_attr;
 
-  attr->__stackaddr = pthread->stackaddr +
-      ((pthread->guardsize + __vm_page_size - 1)
-       / __vm_page_size * __vm_page_size);
+  attr->__stackaddr = (pthread->stackaddr
+		       + ((pthread->guardsize + __vm_page_size - 1)
+			  / __vm_page_size * __vm_page_size));
   attr->__stacksize = pthread->stacksize;
   attr->__guardsize = pthread->guardsize;
   attr->__detachstate = (pthread->state == PTHREAD_DETACHED

@@ -31,8 +31,8 @@
    NaNs is sNaN,  in which case the result is NANSIGN/NANFRAC.  */
 #define _FP_CHOOSENAN(fs, wc, R, X, Y, OP)			\
   do {								\
-    if ((_FP_FRAC_HIGH_RAW_##fs(X) |				\
-	 _FP_FRAC_HIGH_RAW_##fs(Y)) & _FP_QNANBIT_##fs)		\
+    if ((_FP_FRAC_HIGH_RAW_##fs(X)				\
+	 | _FP_FRAC_HIGH_RAW_##fs(Y)) & _FP_QNANBIT_##fs)	\
       {								\
 	R##_s = _FP_NANSIGN_##fs;				\
         _FP_FRAC_SET_##wc(R,_FP_NANFRAC_##fs);			\

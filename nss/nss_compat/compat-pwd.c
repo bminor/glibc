@@ -370,8 +370,8 @@ getpwent_next_nss_netgr (const char *name, struct passwd *result, ent_t *ent,
       p2 = buffer + (buflen - p2len);
       buflen -= p2len;
 
-      if (nss_getpwnam_r (user, result, buffer, buflen, errnop) !=
-	  NSS_STATUS_SUCCESS)
+      if (nss_getpwnam_r (user, result, buffer, buflen, errnop)
+	  != NSS_STATUS_SUCCESS)
 	continue;
 
       if (!in_blacklist (result->pw_name, strlen (result->pw_name), ent))
@@ -418,8 +418,8 @@ getpwent_next_nss (struct passwd *result, ent_t *ent, char *buffer,
 
   do
     {
-      if ((status = nss_getpwent_r (result, buffer, buflen, errnop)) !=
-	  NSS_STATUS_SUCCESS)
+      if ((status = nss_getpwent_r (result, buffer, buflen, errnop))
+	  != NSS_STATUS_SUCCESS)
 	return status;
     }
   while (in_blacklist (result->pw_name, strlen (result->pw_name), ent));
@@ -506,11 +506,11 @@ getpwent_next_file (struct passwd *result, ent_t *ent,
 	  while (isspace (*p))
 	    ++p;
 	}
-      while (*p == '\0' || *p == '#' ||	/* Ignore empty and comment lines.  */
+      while (*p == '\0' || *p == '#' /* Ignore empty and comment lines.  */
 	     /* Parse the line.  If it is invalid, loop to
 	        get the next line of the file to parse.  */
-	     !(parse_res = _nss_files_parse_pwent (p, result, data, buflen,
-						   errnop)));
+	     || !(parse_res = _nss_files_parse_pwent (p, result, data, buflen,
+						      errnop)));
 
       if (__glibc_unlikely (parse_res == -1))
 	/* The parser ran out of space.  */
@@ -706,11 +706,11 @@ internal_getpwnam_r (const char *name, struct passwd *result, ent_t *ent,
 	  while (isspace (*p))
 	    ++p;
 	}
-      while (*p == '\0' || *p == '#' ||	/* Ignore empty and comment lines.  */
+      while (*p == '\0' || *p == '#' /* Ignore empty and comment lines.  */
 	     /* Parse the line.  If it is invalid, loop to
 	        get the next line of the file to parse.  */
-	     !(parse_res = _nss_files_parse_pwent (p, result, data, buflen,
-						   errnop)));
+	     || !(parse_res = _nss_files_parse_pwent (p, result, data, buflen,
+						      errnop)));
 
       if (__glibc_unlikely (parse_res == -1))
 	/* The parser ran out of space.  */
@@ -912,11 +912,11 @@ internal_getpwuid_r (uid_t uid, struct passwd *result, ent_t *ent,
 	  while (isspace (*p))
 	    ++p;
 	}
-      while (*p == '\0' || *p == '#' ||	/* Ignore empty and comment lines.  */
+      while (*p == '\0' || *p == '#' /* Ignore empty and comment lines.  */
 	     /* Parse the line.  If it is invalid, loop to
 	        get the next line of the file to parse.  */
-	     !(parse_res = _nss_files_parse_pwent (p, result, data, buflen,
-						   errnop)));
+	     || !(parse_res = _nss_files_parse_pwent (p, result, data, buflen,
+						      errnop)));
 
       if (__glibc_unlikely (parse_res == -1))
 	/* The parser ran out of space.  */

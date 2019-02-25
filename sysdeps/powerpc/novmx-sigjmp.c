@@ -33,9 +33,9 @@
 int
 __novmx__sigjmp_save (__novmx__sigjmp_buf env, int savemask)
 {
-  env[0].__mask_was_saved = (savemask &&
-			     __sigprocmask (SIG_BLOCK, (sigset_t *) NULL,
-					    &env[0].__saved_mask) == 0);
+  env[0].__mask_was_saved = (savemask
+			     && __sigprocmask (SIG_BLOCK, (sigset_t *) NULL,
+					       &env[0].__saved_mask) == 0);
 
   return 0;
 }

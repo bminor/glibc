@@ -148,9 +148,9 @@ new_composite_name (int category, const char *newnames[__LC_LAST])
   for (i = 0; i < __LC_LAST; ++i)
     if (i != LC_ALL)
       {
-	const char *name = (category == LC_ALL ? newnames[i] :
-			    category == i ? newnames[0] :
-			    _nl_global_locale.__names[i]);
+	const char *name = (category == LC_ALL ? newnames[i]
+			    : category == i ? newnames[0]
+			    : _nl_global_locale.__names[i]);
 	last_len = strlen (name);
 	cumlen += _nl_category_name_sizes[i] + 1 + last_len + 1;
 	if (same && name != newnames[0] && strcmp (name, newnames[0]) != 0)
@@ -177,9 +177,9 @@ new_composite_name (int category, const char *newnames[__LC_LAST])
     if (i != LC_ALL)
       {
 	/* Add "CATEGORY=NAME;" to the string.  */
-	const char *name = (category == LC_ALL ? newnames[i] :
-			    category == i ? newnames[0] :
-			    _nl_global_locale.__names[i]);
+	const char *name = (category == LC_ALL ? newnames[i]
+			    : category == i ? newnames[0]
+			    : _nl_global_locale.__names[i]);
 	p = __stpcpy (p, _nl_category_names.str + _nl_category_name_idxs[i]);
 	*p++ = '=';
 	p = __stpcpy (p, name);

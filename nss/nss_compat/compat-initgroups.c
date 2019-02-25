@@ -334,8 +334,8 @@ getgrent_next_nss (ent_t *ent, char *buffer, size_t buflen, const char *user,
  iter:
   do
     {
-      if ((status = nss_getgrent_r (&grpbuf, buffer, buflen, errnop)) !=
-	  NSS_STATUS_SUCCESS)
+      if ((status = nss_getgrent_r (&grpbuf, buffer, buflen, errnop))
+	  != NSS_STATUS_SUCCESS)
 	break;
     }
   while (in_blacklist (grpbuf.gr_name, strlen (grpbuf.gr_name), ent));
@@ -394,11 +394,11 @@ internal_getgrent_r (ent_t *ent, char *buffer, size_t buflen, const char *user,
 	  while (isspace (*p))
 	    ++p;
 	}
-      while (*p == '\0' || *p == '#' ||	/* Ignore empty and comment lines. */
+      while (*p == '\0' || *p == '#' /* Ignore empty and comment lines. */
 	     /* Parse the line.  If it is invalid, loop to
 		get the next line of the file to parse.  */
-	     !(parse_res = _nss_files_parse_grent (p, &grpbuf, data, buflen,
-						   errnop)));
+	     || !(parse_res = _nss_files_parse_grent (p, &grpbuf, data, buflen,
+						      errnop)));
 
       if (__glibc_unlikely (parse_res == -1))
 	/* The parser ran out of space.  */

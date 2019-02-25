@@ -120,8 +120,8 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
 		/* Remove extra reference.  */
 		__mach_port_deallocate (__mach_task_self (), memobj);
 	      }
-	    else if (wobj == MACH_PORT_NULL && /* Not writable by mapping.  */
-		     !(flags & MAP_SHARED))
+	    else if (wobj == MACH_PORT_NULL /* Not writable by mapping.  */
+		     && !(flags & MAP_SHARED))
 	      /* The file can only be mapped for reading.  Since we are
 		 making a private mapping, we will never try to write the
 		 object anyway, so we don't care.  */
