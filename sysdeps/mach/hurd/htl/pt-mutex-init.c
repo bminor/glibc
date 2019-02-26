@@ -37,13 +37,13 @@ _pthread_mutex_init (pthread_mutex_t *mtxp, const pthread_mutexattr_t *attrp)
   if (attrp == NULL)
     attrp = &dfl_attr;
 
-  mtxp->__flags = (attrp->__pshared == PTHREAD_PROCESS_SHARED ?
-		   GSYNC_SHARED : 0) | ((attrp->
-					 __prioceiling & PTHREAD_MUTEX_ROBUST) ?
-					PTHREAD_MUTEX_ROBUST : 0);
+  mtxp->__flags = (attrp->__pshared == PTHREAD_PROCESS_SHARED
+		   ? GSYNC_SHARED : 0) | ((attrp->__prioceiling
+					   & PTHREAD_MUTEX_ROBUST)
+					  ? PTHREAD_MUTEX_ROBUST : 0);
 
-  mtxp->__type = attrp->__mutex_type +
-      (attrp->__mutex_type != __PTHREAD_MUTEX_TIMED);
+  mtxp->__type = (attrp->__mutex_type
+		  + (attrp->__mutex_type != __PTHREAD_MUTEX_TIMED));
 
   mtxp->__owner_id = 0;
   mtxp->__shpid = 0;

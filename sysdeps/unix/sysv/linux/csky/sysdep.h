@@ -486,8 +486,8 @@ __local_syscall_error:				\
 #endif /* __ASSEMBLER__ */
 
 /* Pointer mangling support.  */
-#if (IS_IN (rtld) || \
-     (!defined SHARED && (IS_IN (libc) || IS_IN (libpthread))))
+#if (IS_IN (rtld) \
+     || (!defined SHARED && (IS_IN (libc) || IS_IN (libpthread))))
 # ifdef __ASSEMBLER__
 #  define PTR_MANGLE(dst, src, guard)			\
 	grs	t0, 1f;					\

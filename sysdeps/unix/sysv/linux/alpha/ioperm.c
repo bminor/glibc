@@ -506,14 +506,15 @@ process_cpuinfo(struct cpuinfo_data *data)
     {
       if (fgets_unlocked (dummy, 256, fp) == NULL)
 	break;
-      if (!got_type &&
-	  sscanf (dummy, "system type : %256[^\n]\n", data->systype) == 1)
+      if (!got_type
+	  && sscanf (dummy, "system type : %256[^\n]\n", data->systype) == 1)
 	got_type = 1;
-      if (!got_vari &&
-	  sscanf (dummy, "system variation : %256[^\n]\n", data->sysvari) == 1)
+      if (!got_vari
+	  && (sscanf (dummy, "system variation : %256[^\n]\n", data->sysvari)
+	      == 1))
 	got_vari = 1;
-      if (!got_model &&
-	  sscanf (dummy, "cpu model : %256[^\n]\n", data->cpumodel) == 1)
+      if (!got_model
+	  && sscanf (dummy, "cpu model : %256[^\n]\n", data->cpumodel) == 1)
 	got_model = 1;
     }
 

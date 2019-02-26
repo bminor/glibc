@@ -148,8 +148,8 @@ __hurd_canonicalize_directory_name_internal (file_t thisdir,
       dirdata = dirbuf;
       dirdatasize = dirbufsize;
       while (!(err = __dir_readdir (parent, &dirdata, &dirdatasize,
-				    direntry, -1, 0, &nentries)) &&
-	     nentries != 0)
+				    direntry, -1, 0, &nentries))
+	     && nentries != 0)
 	{
 	  /* We have a block of directory entries.  */
 
@@ -178,9 +178,9 @@ __hurd_canonicalize_directory_name_internal (file_t thisdir,
 	      offset += d->d_reclen;
 
 	      /* Ignore `.' and `..'.  */
-	      if (d->d_name[0] == '.' &&
-		  (d->d_namlen == 1 ||
-		   (d->d_namlen == 2 && d->d_name[1] == '.')))
+	      if (d->d_name[0] == '.'
+		  && (d->d_namlen == 1
+		      || (d->d_namlen == 2 && d->d_name[1] == '.')))
 		continue;
 
 	      if (mount_point || d->d_ino == thisino)

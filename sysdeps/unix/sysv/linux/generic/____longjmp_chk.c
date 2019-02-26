@@ -49,8 +49,8 @@ void ____longjmp_chk (__jmp_buf env, int val)
 
   /* If we we are executing on the alternate stack and within the
      bounds, do the longjmp.  */
-  if (ss.ss_flags == SS_ONSTACK &&
-      (this_frame >= ss.ss_sp && this_frame < (ss.ss_sp + ss.ss_size)))
+  if (ss.ss_flags == SS_ONSTACK
+      && (this_frame >= ss.ss_sp && this_frame < (ss.ss_sp + ss.ss_size)))
     __longjmp (env, val);
 
   __fortify_fail ("longjmp causes uninitialized stack frame");

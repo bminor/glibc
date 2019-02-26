@@ -58,8 +58,8 @@ __get_clockfreq_via_cpuinfo (void)
 
 	      while (mhz < endp && *mhz != '\n')
 		{
-		  if ((*mhz >= '0' && *mhz <= '9') ||
-		      (*mhz >= 'a' && *mhz <= 'f'))
+		  if ((*mhz >= '0' && *mhz <= '9')
+		      || (*mhz >= 'a' && *mhz <= 'f'))
 		    {
 		      result <<= 4;
 		      if (*mhz >= '0' && *mhz <= '9')

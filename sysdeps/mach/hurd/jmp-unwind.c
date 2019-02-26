@@ -54,8 +54,8 @@ _longjmp_unwind (jmp_buf env, int val)
   __spin_lock (&ss->critical_section_lock);
 
   /* Remove local signal preemptors being unwound past.  */
-  while (ss->preemptors &&
-	 _JMPBUF_UNWINDS (env[0].__jmpbuf, ss->preemptors, demangle_ptr))
+  while (ss->preemptors
+	 && _JMPBUF_UNWINDS (env[0].__jmpbuf, ss->preemptors, demangle_ptr))
     ss->preemptors = ss->preemptors->next;
 
   __spin_unlock (&ss->lock);

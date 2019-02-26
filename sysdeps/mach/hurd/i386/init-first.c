@@ -126,8 +126,8 @@ init1 (int argc, char *arg0, ...)
     char dummy;
     const vm_address_t newsp = (vm_address_t) &dummy;
 
-    if (d->stack_size != 0 && (newsp < d->stack_base ||
-			       newsp - d->stack_base > d->stack_size))
+    if (d->stack_size != 0 && (newsp < d->stack_base
+			       || newsp - d->stack_base > d->stack_size))
       /* The new stack pointer does not intersect with the
 	 stack the exec server set up for us, so free that stack.  */
       __vm_deallocate (__mach_task_self (), d->stack_base, d->stack_size);

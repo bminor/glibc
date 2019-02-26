@@ -74,8 +74,8 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
      interrupted RPC frame.  */
   state->basic.esp = state->basic.uesp;
 
-  if ((ss->actions[signo].sa_flags & SA_ONSTACK) &&
-      !(ss->sigaltstack.ss_flags & (SS_DISABLE|SS_ONSTACK)))
+  if ((ss->actions[signo].sa_flags & SA_ONSTACK)
+      && !(ss->sigaltstack.ss_flags & (SS_DISABLE|SS_ONSTACK)))
     {
       sigsp = ss->sigaltstack.ss_sp + ss->sigaltstack.ss_size;
       ss->sigaltstack.ss_flags |= SS_ONSTACK;
@@ -91,8 +91,8 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
      We must check for the window during which %esp points at the
      mach_msg arguments.  The space below until %ecx is used by
      the _hurd_intr_rpc_mach_msg frame, and must not be clobbered.  */
-  else if (state->basic.eip >= (int) &_hurd_intr_rpc_msg_cx_sp &&
-	   state->basic.eip < (int) &_hurd_intr_rpc_msg_sp_restored)
+  else if (state->basic.eip >= (int) &_hurd_intr_rpc_msg_cx_sp
+	   && state->basic.eip < (int) &_hurd_intr_rpc_msg_sp_restored)
     /* The SP now points at the mach_msg args, but there is more stack
        space used below it.  The real SP is saved in %ecx; we must push the
        new frame below there, and restore that value as the SP on

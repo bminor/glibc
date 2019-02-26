@@ -66,15 +66,15 @@ __ioctl (int fd, unsigned long int request, ...)
 	kern_return_t		RetCode;
       } header_typecheck;
     };
-    char data[3 * sizeof (mach_msg_type_t) +
-	     msg_align (_IOT_COUNT0 (type) * typesize (_IOT_TYPE0 (type))) +
-	     msg_align (_IOT_COUNT1 (type) * typesize (_IOT_TYPE1 (type))) +
-	     _IOT_COUNT2 (type) * typesize (_IOT_TYPE2 (type))];
+    char data[3 * sizeof (mach_msg_type_t)
+	      + msg_align (_IOT_COUNT0 (type) * typesize (_IOT_TYPE0 (type)))
+	      + msg_align (_IOT_COUNT1 (type) * typesize (_IOT_TYPE1 (type)))
+	      + _IOT_COUNT2 (type) * typesize (_IOT_TYPE2 (type))];
 #else  /* Untyped Mach IPC format.  */
     mig_reply_error_t header;
-    char data[_IOT_COUNT0 (type) * typesize (_IOT_TYPE0 (type)) +
-	     _IOT_COUNT1 (type) * typesize (_IOT_TYPE1 (type)) +
-	     _IOT_COUNT2 (type) * typesize (_IOT_TYPE2 (type))];
+    char data[_IOT_COUNT0 (type) * typesize (_IOT_TYPE0 (type))
+	      + _IOT_COUNT1 (type) * typesize (_IOT_TYPE1 (type))
+	      + _IOT_COUNT2 (type) * typesize (_IOT_TYPE2 (type))];
     mach_msg_trailer_t trailer;
 #endif
   } msg;
@@ -192,11 +192,11 @@ __ioctl (int fd, unsigned long int request, ...)
 	}
 
       if (m->msgh_id != msgid + 100)
-	return (m->msgh_id == MACH_NOTIFY_SEND_ONCE ?
-		MIG_SERVER_DIED : MIG_REPLY_MISMATCH);
+	return (m->msgh_id == MACH_NOTIFY_SEND_ONCE
+		? MIG_SERVER_DIED : MIG_REPLY_MISMATCH);
 
-      if (m->msgh_size != reply_size &&
-	  m->msgh_size != sizeof msg.header)
+      if (m->msgh_size != reply_size
+	  && m->msgh_size != sizeof msg.header)
 	return MIG_TYPE_ERROR;
 
 #ifdef MACH_MSG_TYPE_BIT
@@ -307,11 +307,11 @@ __ioctl (int fd, unsigned long int request, ...)
 	}
 
     case 0:
-      if (m->msgh_size != reply_size ||
-	  ((_IOC_INOUT (request) & IOC_OUT) &&
-	   (out (_IOT_COUNT0 (type), _IOT_TYPE0 (type), arg, &arg) ||
-	    out (_IOT_COUNT1 (type), _IOT_TYPE1 (type), arg, &arg) ||
-	    out (_IOT_COUNT2 (type), _IOT_TYPE2 (type), arg, &arg))))
+      if (m->msgh_size != reply_size
+	  || ((_IOC_INOUT (request) & IOC_OUT)
+	      && (out (_IOT_COUNT0 (type), _IOT_TYPE0 (type), arg, &arg)
+		  || out (_IOT_COUNT1 (type), _IOT_TYPE1 (type), arg, &arg)
+		  || out (_IOT_COUNT2 (type), _IOT_TYPE2 (type), arg, &arg))))
 	return __hurd_fail (MIG_TYPE_ERROR);
       return 0;
 

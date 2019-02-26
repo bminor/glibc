@@ -349,8 +349,8 @@ ptrace (enum __ptrace_request request, ... )
 	task_t task = __pid2task (pid);
 	if (task == MACH_PORT_NULL)
 	  return -1;
-	if ((vm_address_t) addr % __vm_page_size == 0 &&
-	    (vm_address_t) data % __vm_page_size == 0)
+	if ((vm_address_t) addr % __vm_page_size == 0
+	    && (vm_address_t) data % __vm_page_size == 0)
 	  {
 	    /* Writing whole pages; can go directly from the user's buffer.  */
 	    ourpage = (vm_address_t) addr2;

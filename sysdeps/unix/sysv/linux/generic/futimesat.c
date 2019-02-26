@@ -37,8 +37,8 @@ futimesat (int fd, const char *file, const struct timeval tvp[2])
 
   if (tvp)
     {
-      if (tvp[0].tv_usec >= 1000000 || tvp[0].tv_usec < 0 ||
-          tvp[1].tv_usec >= 1000000 || tvp[1].tv_usec < 0)
+      if (tvp[0].tv_usec >= 1000000 || tvp[0].tv_usec < 0
+          || tvp[1].tv_usec >= 1000000 || tvp[1].tv_usec < 0)
         {
           __set_errno (EINVAL);
           return -1;

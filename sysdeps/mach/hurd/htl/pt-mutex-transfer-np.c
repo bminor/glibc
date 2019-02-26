@@ -58,8 +58,8 @@ __pthread_mutex_transfer_np (pthread_mutex_t *mtxp, pthread_t th)
       /* Note that this can be used to transfer an inconsistent
        * mutex as well. The new owner will still have the same
        * flags as the original. */
-      if (mtxp->__owner_id != self->thread ||
-	  (int) (mtxp->__lock & LLL_OWNER_MASK) != __getpid ())
+      if (mtxp->__owner_id != self->thread
+	  || (int) (mtxp->__lock & LLL_OWNER_MASK) != __getpid ())
 	ret = EPERM;
       else
 	mtxp->__owner_id = pt->thread;

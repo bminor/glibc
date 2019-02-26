@@ -1,5 +1,48 @@
 2019-02-26  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/arm/sysdep.h (#if condition): Break lines before rather
+	than after operators.
+	* sysdeps/mach/hurd/fork.c (__fork): Likewise.
+	* sysdeps/mach/hurd/getcwd.c
+	(__hurd_canonicalize_directory_name_internal): Likewise.
+	* sysdeps/mach/hurd/htl/pt-mutex-consistent.c
+	(pthread_mutex_consistent): Likewise.
+	* sysdeps/mach/hurd/htl/pt-mutex-init.c (_pthread_mutex_init):
+	Likewise.
+	* sysdeps/mach/hurd/htl/pt-mutex-transfer-np.c
+	(__pthread_mutex_transfer_np): Likewise.
+	* sysdeps/mach/hurd/htl/pt-mutex-unlock.c
+	(__pthread_mutex_unlock): Likewise.
+	* sysdeps/mach/hurd/htl/pt-mutex.h (ROBUST_LOCK): Likewise.
+	(mtx_owned_p): Likewise.
+	* sysdeps/mach/hurd/htl/pt-mutexattr-getrobust.c
+	(pthread_mutexattr_getrobust): Likewise.
+	* sysdeps/mach/hurd/i386/init-first.c (init1): Likewise.
+	* sysdeps/mach/hurd/i386/trampoline.c (_hurd_setup_sighandler):
+	Likewise.
+	* sysdeps/mach/hurd/ioctl.c (__ioctl): Likewise.
+	* sysdeps/mach/hurd/jmp-unwind.c (_longjmp_unwind): Likewise.
+	* sysdeps/mach/hurd/kill.c (__kill): Likewise.
+	* sysdeps/mach/hurd/mig-reply.c (__mig_get_reply_port): Likewise.
+	* sysdeps/mach/hurd/ptrace.c (ptrace): Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/sysdep.h (#if condition):
+	Likewise.
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c (process_cpuinfo):
+	Likewise.
+	* sysdeps/unix/sysv/linux/bits/timex.h (STA_RONLY): Likewise.
+	* sysdeps/unix/sysv/linux/csky/sysdep.h (#if condition): Likewise.
+	* sysdeps/unix/sysv/linux/generic/____longjmp_chk.c
+	(____longjmp_chk): Likewise.
+	* sysdeps/unix/sysv/linux/generic/futimesat.c (futimesat):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h
+	(INTERNAL_SYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h
+	(INTERNAL_SYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/get_clockfreq.c
+	(__get_clockfreq_via_cpuinfo): Likewise.
+
 	* sysdeps/i386/dl-machine.h (elf_machine_rela): Add fall-through
 	comments.
 	* sysdeps/m68k/m680x0/fpu/s_cexp_template.c (s(__cexp)): Likewise.

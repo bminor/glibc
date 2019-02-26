@@ -27,9 +27,9 @@ mach_port_t __hurd_reply_port0;
 mach_port_t
 __mig_get_reply_port (void)
 {
-  if (__hurd_local_reply_port == MACH_PORT_NULL ||
-      (&__hurd_local_reply_port != &__hurd_reply_port0
-       && __hurd_local_reply_port == __hurd_reply_port0))
+  if (__hurd_local_reply_port == MACH_PORT_NULL
+      || (&__hurd_local_reply_port != &__hurd_reply_port0
+	  && __hurd_local_reply_port == __hurd_reply_port0))
     __hurd_local_reply_port = __mach_reply_port ();
 
   return __hurd_local_reply_port;

@@ -55,8 +55,8 @@ __kill (pid_t pid, int sig)
 		err = __task_terminate (refport);
 		__mach_port_deallocate (__mach_task_self (), refport);
 	      }
-	  } while (err == MACH_SEND_INVALID_DEST ||
-		   err == MIG_SERVER_DIED);
+	  } while (err == MACH_SEND_INVALID_DEST
+		   || err == MIG_SERVER_DIED);
       else
 	{
 	  error_t taskerr;
@@ -103,8 +103,8 @@ __kill (pid_t pid, int sig)
 	    }
 	  err = HURD_MSGPORT_RPC (__proc_getmsgport (proc, pid, &msgport),
 				  (taskerr = __proc_pid2task (proc, pid,
-							      &refport)) ?
-				  __proc_getsidport (proc, &refport) : 0, 1,
+							      &refport))
+				  ? __proc_getsidport (proc, &refport) : 0, 1,
 				  kill_port (msgport, refport));
 	}
       if (! err)

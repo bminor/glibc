@@ -547,66 +547,66 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
       break;
     case R_SPARC_WDISP30:
       *(unsigned int *) reloc_addr =
-	((*(unsigned int *)reloc_addr & 0xc0000000) |
-	 (((value - (Elf64_Addr) reloc_addr) >> 2) & 0x3fffffff));
+	((*(unsigned int *)reloc_addr & 0xc0000000)
+	 | (((value - (Elf64_Addr) reloc_addr) >> 2) & 0x3fffffff));
       break;
 
       /* MEDLOW code model relocs */
     case R_SPARC_LO10:
       *(unsigned int *) reloc_addr =
-	((*(unsigned int *)reloc_addr & ~0x3ff) |
-	 (value & 0x3ff));
+	((*(unsigned int *)reloc_addr & ~0x3ff)
+	 | (value & 0x3ff));
       break;
     case R_SPARC_HI22:
       *(unsigned int *) reloc_addr =
-	((*(unsigned int *)reloc_addr & 0xffc00000) |
-	 ((value >> 10) & 0x3fffff));
+	((*(unsigned int *)reloc_addr & 0xffc00000)
+	 | ((value >> 10) & 0x3fffff));
       break;
     case R_SPARC_OLO10:
       *(unsigned int *) reloc_addr =
-	((*(unsigned int *)reloc_addr & ~0x1fff) |
-	 (((value & 0x3ff) + ELF64_R_TYPE_DATA (reloc->r_info)) & 0x1fff));
+	((*(unsigned int *)reloc_addr & ~0x1fff)
+	 | (((value & 0x3ff) + ELF64_R_TYPE_DATA (reloc->r_info)) & 0x1fff));
       break;
 
       /* ABS34 code model reloc */
     case R_SPARC_H34:
       *(unsigned int *) reloc_addr =
-	((*(unsigned int *)reloc_addr & 0xffc00000) |
-	 ((value >> 12) & 0x3fffff));
+	((*(unsigned int *)reloc_addr & 0xffc00000)
+	 | ((value >> 12) & 0x3fffff));
       break;
 
       /* MEDMID code model relocs */
     case R_SPARC_H44:
       *(unsigned int *) reloc_addr =
-	((*(unsigned int *)reloc_addr & 0xffc00000) |
-	 ((value >> 22) & 0x3fffff));
+	((*(unsigned int *)reloc_addr & 0xffc00000)
+	 | ((value >> 22) & 0x3fffff));
       break;
     case R_SPARC_M44:
       *(unsigned int *) reloc_addr =
-	((*(unsigned int *)reloc_addr & ~0x3ff) |
-	 ((value >> 12) & 0x3ff));
+	((*(unsigned int *)reloc_addr & ~0x3ff)
+	 | ((value >> 12) & 0x3ff));
       break;
     case R_SPARC_L44:
       *(unsigned int *) reloc_addr =
-	((*(unsigned int *)reloc_addr & ~0xfff) |
-	 (value & 0xfff));
+	((*(unsigned int *)reloc_addr & ~0xfff)
+	 | (value & 0xfff));
       break;
 
       /* MEDANY code model relocs */
     case R_SPARC_HH22:
       *(unsigned int *) reloc_addr =
-	((*(unsigned int *)reloc_addr & 0xffc00000) |
-	 (value >> 42));
+	((*(unsigned int *)reloc_addr & 0xffc00000)
+	 | (value >> 42));
       break;
     case R_SPARC_HM10:
       *(unsigned int *) reloc_addr =
-	((*(unsigned int *)reloc_addr & ~0x3ff) |
-	 ((value >> 32) & 0x3ff));
+	((*(unsigned int *)reloc_addr & ~0x3ff)
+	 | ((value >> 32) & 0x3ff));
       break;
     case R_SPARC_LM22:
       *(unsigned int *) reloc_addr =
-	((*(unsigned int *)reloc_addr & 0xffc00000) |
-	 ((value >> 10) & 0x003fffff));
+	((*(unsigned int *)reloc_addr & 0xffc00000)
+	 | ((value >> 10) & 0x003fffff));
       break;
     case R_SPARC_UA16:
       ((unsigned char *) reloc_addr_arg) [0] = value >> 8;
