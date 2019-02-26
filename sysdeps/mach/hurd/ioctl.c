@@ -177,6 +177,7 @@ __ioctl (int fd, unsigned long int request, ...)
 	case MACH_SEND_INVALID_REPLY:
 	case MACH_RCV_INVALID_NAME:
 	  __mig_dealloc_reply_port (m->msgh_local_port);
+	  /* Fall through.  */
 	default:
 	  return err;
 	}
@@ -318,6 +319,7 @@ __ioctl (int fd, unsigned long int request, ...)
     case EOPNOTSUPP:
       /* The server didn't understand the RPC.  */
       err = ENOTTY;
+      /* Fall through.  */
     default:
       return __hurd_fail (err);
     }

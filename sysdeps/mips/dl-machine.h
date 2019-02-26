@@ -712,8 +712,8 @@ elf_machine_reloc (struct link_map *map, ElfW(Addr) r_info,
 	 it's totally unnecessary.  */
       if (ELFW(R_SYM) (r_info) == 0)
 	break;
-      /* Fall through.  */
 #endif
+      /* Fall through.  */
     default:
       _dl_reloc_bad_type (map, r_type, 0);
       break;

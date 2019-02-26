@@ -522,6 +522,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	case R_386_SIZE32:
 	  /* Set to symbol size plus addend.  */
 	  value = sym->st_size;
+	  /* Fall through.  */
 	case R_386_GLOB_DAT:
 	case R_386_JMP_SLOT:
 	case R_386_32:

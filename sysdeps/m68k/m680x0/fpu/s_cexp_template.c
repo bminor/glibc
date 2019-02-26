@@ -93,6 +93,7 @@ s(__cexp) (CFLOAT x)
 	      break;
 	    case 2:
 	      __real__ retval = -__real__ retval;
+	      /* Fall through.  */
 	    case 3:
 	      __imag__ retval = -__imag__ retval;
 	      break;

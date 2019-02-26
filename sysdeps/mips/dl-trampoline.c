@@ -166,8 +166,8 @@ __dl_runtime_resolve (ElfW(Word) sym_index,
 
 		break;
 	      }
-	    /* Fall through.  */
 	  }
+	  /* Fall through.  */
 	case 0:
 	  {
           /* We need to keep the scope around so do some locking.  This is

@@ -902,6 +902,7 @@ elf_machine_rela (struct link_map *map,
     case R_PPC64_ADDR16_HI:
       if (dont_expect (value + 0x80000000 >= 0x100000000LL))
 	_dl_reloc_overflow (map, "R_PPC64_ADDR16_HI", reloc_addr, refsym);
+      /* Fall through.  */
     case R_PPC64_ADDR16_HIGH:
       *(Elf64_Half *) reloc_addr = PPC_HI (value);
       break;
@@ -909,6 +910,7 @@ elf_machine_rela (struct link_map *map,
     case R_PPC64_ADDR16_HA:
       if (dont_expect (value + 0x80008000 >= 0x100000000LL))
 	_dl_reloc_overflow (map, "R_PPC64_ADDR16_HA", reloc_addr, refsym);
+      /* Fall through.  */
     case R_PPC64_ADDR16_HIGHA:
       *(Elf64_Half *) reloc_addr = PPC_HA (value);
       break;

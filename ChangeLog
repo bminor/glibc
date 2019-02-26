@@ -1,3 +1,18 @@
+2019-02-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/i386/dl-machine.h (elf_machine_rela): Add fall-through
+	comments.
+	* sysdeps/m68k/m680x0/fpu/s_cexp_template.c (s(__cexp)): Likewise.
+	* sysdeps/m68k/memcopy.h (WORD_COPY_FWD): Likewise.
+	(WORD_COPY_BWD): Likewise.
+	* sysdeps/mach/hurd/ioctl.c (__ioctl): Likewise.
+	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_rela):
+	Likewise.
+	* sysdeps/s390/iso-8859-1_cp037_z900.c (TR_LOOP): Likewise.
+	* sysdeps/mips/dl-machine.h (elf_machine_reloc): Move fall-through
+	comment.
+	* sysdeps/mips/dl-trampoline.c (__dl_runtime_resolve): Likewise.
+
 2019-02-25  Joseph Myers  <joseph@codesourcery.com>
 
 	* dirent/dirent.h [!_DIRENT_HAVE_D_NAMLEN
