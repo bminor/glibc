@@ -100,10 +100,12 @@ _hurd_init (int flags, char **argv,
 		   portarraysize * sizeof (mach_port_t));
 
   if (flags & EXEC_SECURE)
-    /* XXX if secure exec, elide environment variables
-       which the library uses and could be security holes.
-       CORESERVER, COREFILE
-       */ ;
+    {
+      /* XXX if secure exec, elide environment variables
+	 which the library uses and could be security holes.
+	 CORESERVER, COREFILE
+      */
+    }
 
   /* Call other things which want to do some initialization.  These are not
      on the __libc_subinit hook because things there like to be able to

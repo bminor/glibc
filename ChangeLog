@@ -1,5 +1,8 @@
 2019-02-27  Joseph Myers  <joseph@codesourcery.com>
 
+	* hurd/hurdinit.c (_hurd_init): Use braces around empty body of an
+	if statement.
+
 	* benchtests/bench-strcpy.c (do_test): Use space before '('.
 	* benchtests/bench-string.h (cmdline_process_function): Likewise.
 	* benchtests/bench-strlen.c (do_test): Likewise.
