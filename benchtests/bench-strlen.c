@@ -75,7 +75,7 @@ do_test (json_ctx_t *json_ctx, size_t align, size_t len)
   size_t i;
 
   align &= 63;
-  if (align + sizeof(CHAR) * len >= page_size)
+  if (align + sizeof (CHAR) * len >= page_size)
     return;
 
   json_element_object_begin (json_ctx);
@@ -127,16 +127,16 @@ test_main (void)
 
   for (i = 1; i < 8; ++i)
   {
-    do_test (&json_ctx, sizeof(CHAR) * i, i);
+    do_test (&json_ctx, sizeof (CHAR) * i, i);
     do_test (&json_ctx, 0, i);
   }
 
   for (i = 2; i <= 12; ++i)
     {
       do_test (&json_ctx, 0, 1 << i);
-      do_test (&json_ctx, sizeof(CHAR) * 7, 1 << i);
-      do_test (&json_ctx, sizeof(CHAR) * i, 1 << i);
-      do_test (&json_ctx, sizeof(CHAR) * i, (size_t)((1 << i) / 1.5));
+      do_test (&json_ctx, sizeof (CHAR) * 7, 1 << i);
+      do_test (&json_ctx, sizeof (CHAR) * i, 1 << i);
+      do_test (&json_ctx, sizeof (CHAR) * i, (size_t)((1 << i) / 1.5));
     }
 
   json_array_end (&json_ctx);

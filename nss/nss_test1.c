@@ -81,7 +81,7 @@ init(void)
     return;
   if (NAME(init_hook))
     {
-      memset (&t, 0, sizeof(t));
+      memset (&t, 0, sizeof (t));
       NAME(init_hook)(&t);
 
       if (t.pwd_table)

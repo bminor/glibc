@@ -166,7 +166,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
       /* FIXME: Search for the got, but backwards through the relocs, technically we should
 	 find it on the first try. However, assuming the relocs got out of order the
 	 routine is made a bit more robust by searching them all in case of failure. */
-      for (iplt = (end_jmprel - sizeof(Elf32_Rela)); iplt >= jmprel; iplt -= sizeof (Elf32_Rela))
+      for (iplt = (end_jmprel - sizeof (Elf32_Rela)); iplt >= jmprel; iplt -= sizeof (Elf32_Rela))
 	{
 
 	  reloc = (const Elf32_Rela *) iplt;

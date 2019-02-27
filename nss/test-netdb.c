@@ -192,7 +192,7 @@ test_hosts (void)
     }
 
   ip.s_addr = htonl (INADDR_LOOPBACK);
-  hptr1 = gethostbyaddr ((char *) &ip, sizeof(ip), AF_INET);
+  hptr1 = gethostbyaddr ((char *) &ip, sizeof (ip), AF_INET);
   if (hptr1 != NULL)
     {
       printf ("official name of 127.0.0.1: %s\n", hptr1->h_name);

@@ -86,7 +86,7 @@ do_test (size_t align, size_t pos, size_t len, int seek_char, int max_char)
   CHAR *buf = (CHAR *) buf1;
 
   align &= 7;
-  if ( (align + len) * sizeof(CHAR) >= page_size)
+  if ( (align + len) * sizeof (CHAR) >= page_size)
     return;
 
   for (i = 0; i < len; ++i)
@@ -125,7 +125,7 @@ do_random_tests (void)
 
   for (n = 0; n < ITERATIONS; n++)
     {
-      align = random () & (63 / sizeof(CHAR));
+      align = random () & (63 / sizeof (CHAR));
       /* For wcsrchr: align here means align not in bytes, but in wchar_ts,
 	 in bytes it will equal to align * (sizeof (wchar_t)).
 	 For strrchr we need to check all alignments from 0 to 63 since

@@ -156,7 +156,7 @@ cmdline_process_function (int c)
       case OPT_RANDOM:
 	{
 	  int fdr = open ("/dev/urandom", O_RDONLY);
-	  if (fdr < 0 || read (fdr, &seed, sizeof(seed)) != sizeof (seed))
+	  if (fdr < 0 || read (fdr, &seed, sizeof (seed)) != sizeof (seed))
 	    seed = time (NULL);
 	  if (fdr >= 0)
 	    close (fdr);

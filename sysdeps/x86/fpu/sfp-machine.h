@@ -15,7 +15,7 @@ typedef int __gcc_CMPtype __attribute__ ((mode (__libgcc_cmp_return__)));
 typedef int TItype __attribute__ ((mode (TI)));
 typedef unsigned int UTItype __attribute__ ((mode (TI)));
 
-# define TI_BITS (__CHAR_BIT__ * (int)sizeof(TItype))
+# define TI_BITS (__CHAR_BIT__ * (int) sizeof (TItype))
 
 # define _FP_MUL_MEAT_Q(R,X,Y)				\
   _FP_MUL_MEAT_2_wide(_FP_WFRACBITS_Q,R,X,Y,umul_ppmm)

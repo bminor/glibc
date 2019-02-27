@@ -47,7 +47,7 @@
    This should normally be the biggest type supported by a single load
    and store.  Must be an unsigned type.  */
 # define op_t	unsigned long int
-# define OPSIZ	(sizeof(op_t))
+# define OPSIZ	(sizeof (op_t))
 
 /* Threshold value for when to enter the unrolled loops.  */
 # define OP_T_THRES	16

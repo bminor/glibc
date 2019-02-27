@@ -16,9 +16,9 @@ do_test (void)
    size_t ret;
 
    inbuf = in;
-   inbytesleft = sizeof(in) - 1;
+   inbytesleft = sizeof (in) - 1;
    outbuf = out;
-   outbytesleft = sizeof(out);
+   outbytesleft = sizeof (out);
 
    cd = iconv_open("utf-8", "cp932");
    ret = iconv(cd, &inbuf, &inbytesleft, &outbuf, &outbytesleft);

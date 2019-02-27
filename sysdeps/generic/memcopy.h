@@ -60,7 +60,7 @@
    This should normally be the biggest type supported by a single load
    and store.  */
 #define	op_t	unsigned long int
-#define OPSIZ	(sizeof(op_t))
+#define OPSIZ	(sizeof (op_t))
 
 /* Type to use for unaligned operations.  */
 typedef unsigned char byte;

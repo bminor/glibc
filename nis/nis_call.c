@@ -503,7 +503,7 @@ rec_dirsearch (const_nis_name name, directory_obj *dir, nis_error *status)
 	    return dir;
 	  }
 	nis_free_directory (dir);
-	obj = calloc (1, sizeof(directory_obj));
+	obj = calloc (1, sizeof (directory_obj));
 	if (obj == NULL)
 	  {
 	    __free_fdresult (fd_res);

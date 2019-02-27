@@ -124,7 +124,7 @@ do_test (int argc, char ** argv)
   int i, errors = 0;
   char buf[PATH_MAX];
 
-  getcwd (cwd, sizeof(buf));
+  getcwd (cwd, sizeof (buf));
   cwd_len = strlen (cwd);
 
   errno = 0;
@@ -204,7 +204,7 @@ do_test (int argc, char ** argv)
       free (result2);
     }
 
-  getcwd (buf, sizeof(buf));
+  getcwd (buf, sizeof (buf));
   if (strcmp (buf, cwd))
     {
       printf ("%s: current working directory changed from %s to %s\n",

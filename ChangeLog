@@ -1,3 +1,65 @@
+2019-02-27  Joseph Myers  <joseph@codesourcery.com>
+
+	* benchtests/bench-strcpy.c (do_test): Use space before '('.
+	* benchtests/bench-string.h (cmdline_process_function): Likewise.
+	* benchtests/bench-strlen.c (do_test): Likewise.
+	(test_main): Likewise.
+	* catgets/gencat.c (read_old): Likewise.
+	* elf/cache.c (load_aux_cache): Likewise.
+	* iconvdata/bug-iconv8.c (do_test): Likewise.
+	* math/test-tgmath-ret.c (do_test): Likewise.
+	* nis/nis_call.c (rec_dirsearch): Likewise.
+	* nis/nis_findserv.c (__nis_findfastest_with_timeout): Likewise.
+	* nptl/tst-audit-threads.c (do_test): Likewise.
+	* nptl/tst-cancel4-common.h (set_socket_buffer): Likewise.
+	* nss/nss_test1.c (init): Likewise.
+	* nss/test-netdb.c (test_hosts): Likewise.
+	* posix/execvpe.c (maybe_script_execute): Likewise.
+	* stdio-common/tst-fmemopen4.c (do_test): Likewise.
+	* stdio-common/tst-printf.c (do_test): Likewise.
+	* stdio-common/vfscanf-internal.c (__vfscanf_internal): Likewise.
+	* stdlib/fmtmsg.c (NKEYWORDS): Likewise.
+	* stdlib/qsort.c (STACK_SIZE): Likewise.
+	* stdlib/test-canon.c (do_test): Likewise.
+	* stdlib/tst-swapcontext1.c (do_test): Likewise.
+	* string/memcmp.c (OPSIZ): Likewise.
+	* string/test-strcpy.c (do_test): Likewise.
+	(do_random_tests): Likewise.
+	* string/test-strlen.c (do_test): Likewise.
+	(test_main): Likewise.
+	* string/test-strrchr.c (do_test): Likewise.
+	(do_random_tests): Likewise.
+	* string/tester.c (test_memrchr): Likewise.
+	(test_memchr): Likewise.
+	* sysdeps/generic/memcopy.h (OPSIZ): Likewise.
+	* sysdeps/generic/unwind-dw2.c (execute_stack_op): Likewise.
+	* sysdeps/generic/unwind-pe.h (read_sleb128): Likewise.
+	(read_encoded_value_with_base): Likewise.
+	* sysdeps/hppa/dl-machine.h (elf_machine_runtime_setup): Likewise.
+	* sysdeps/hppa/fpu/feupdateenv.c (__feupdateenv): Likewise.
+	* sysdeps/ia64/fpu/sfp-machine.h (TI_BITS): Likewise.
+	* sysdeps/mach/hurd/spawni.c (__spawni): Likewise.
+	* sysdeps/posix/spawni.c (maybe_script_execute): Likewise.
+	* sysdeps/powerpc/fpu/tst-setcontext-fpscr.c (query_auxv):
+	Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/bits/procfs.h (ELF_NGREG):
+	Likewise.
+	* sysdeps/unix/sysv/linux/arm/bits/procfs.h (ELF_NGREG): Likewise.
+	* sysdeps/unix/sysv/linux/arm/ioperm.c (init_iosys): Likewise.
+	* sysdeps/unix/sysv/linux/csky/bits/procfs.h (ELF_NGREG):
+	Likewise.
+	* sysdeps/unix/sysv/linux/m68k/bits/procfs.h (ELF_NGREG):
+	Likewise.
+	* sysdeps/unix/sysv/linux/nios2/bits/procfs.h (ELF_NGREG):
+	Likewise.
+	* sysdeps/unix/sysv/linux/spawni.c (maybe_script_execute):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86/bits/procfs.h (ELF_NGREG): Likewise.
+	* sysdeps/unix/sysv/linux/x86/bits/sigcontext.h
+	(FP_XSTATE_MAGIC2_SIZE): Likewise.
+	* sysdeps/x86/fpu/sfp-machine.h (TI_BITS): Likewise.
+	* time/test_time.c (main): Likewise.
+
 2019-02-27  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* wcsmbs/wcsnlen.c (__wcsnlen): Rewrite using wmemchr.

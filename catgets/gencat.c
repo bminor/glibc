@@ -1270,7 +1270,7 @@ read_old (struct catalog *catalog, const char *file_name)
 	     Insert it at the right position.  */
 	  struct message_list *newp;
 
-	  newp = (struct message_list *) xmalloc (sizeof(*newp));
+	  newp = (struct message_list *) xmalloc (sizeof (*newp));
 	  newp->number = old_cat_obj.name_ptr[cnt * 3 + 1];
 	  newp->message =
 	    &old_cat_obj.strings[old_cat_obj.name_ptr[cnt * 3 + 2]];

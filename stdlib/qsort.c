@@ -55,7 +55,7 @@ typedef struct
    log(MAX_THRESH)).  Since total_elements has type size_t, we get as
    upper bound for log (total_elements):
    bits per byte (CHAR_BIT) * sizeof(size_t).  */
-#define STACK_SIZE	(CHAR_BIT * sizeof(size_t))
+#define STACK_SIZE	(CHAR_BIT * sizeof (size_t))
 #define PUSH(low, high)	((void) ((top->lo = (low)), (top->hi = (high)), ++top))
 #define	POP(low, high)	((void) (--top, (low = top->lo), (high = top->hi)))
 #define	STACK_NOT_EMPTY	(stack < top)

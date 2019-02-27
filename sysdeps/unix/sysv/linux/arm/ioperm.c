@@ -65,7 +65,7 @@ init_iosys (void)
 {
   static int iobase_name[] = { CTL_BUS, CTL_BUS_ISA, BUS_ISA_PORT_BASE };
   static int ioshift_name[] = { CTL_BUS, CTL_BUS_ISA, BUS_ISA_PORT_SHIFT };
-  size_t len = sizeof(io.base);
+  size_t len = sizeof (io.base);
 
   if (! __sysctl (iobase_name, 3, &io.io_base, &len, NULL, 0)
       && ! __sysctl (ioshift_name, 3, &io.shift, &len, NULL, 0))

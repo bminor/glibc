@@ -173,7 +173,7 @@ I am ready for my first lesson today.";
 	    snprintf (buf, sizeof (buf), "%30s", "foo"), (int) sizeof (buf),
 	    buf);
     printf ("snprintf (\"%%.999999u\", 10) == %d\n",
-	    snprintf(buf2, sizeof(buf2), "%.999999u", 10));
+	    snprintf (buf2, sizeof (buf2), "%.999999u", 10));
   }
 
   printf("%.8f\n", DBL_MAX);

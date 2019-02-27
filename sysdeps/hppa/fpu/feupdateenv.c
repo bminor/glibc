@@ -33,7 +33,7 @@ __feupdateenv (const fenv_t *envp)
   /* Given environment with exception flags not cleared.  */
   if ((envp != FE_DFL_ENV) && (envp != FE_NOMASK_ENV))
     {
-      memcpy(&temp, envp, sizeof(fenv_t));
+      memcpy(&temp, envp, sizeof (fenv_t));
       temp.__status_word |= s.sw[0] & (FE_ALL_EXCEPT << 27);
     }
 

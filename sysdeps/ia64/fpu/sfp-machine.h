@@ -6,7 +6,7 @@
 typedef int TItype __attribute__ ((mode (TI)));
 typedef unsigned int UTItype __attribute__ ((mode (TI)));
 
-#define TI_BITS (__CHAR_BIT__ * (int)sizeof(TItype))
+#define TI_BITS (__CHAR_BIT__ * (int) sizeof (TItype))
 
 /* The type of the result of a floating point comparison.  This must
    match `__libgcc_cmp_return__' in GCC for the target.  */

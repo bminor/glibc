@@ -80,14 +80,14 @@ do_test (void)
   if (getcontext(&uctx_func1) == -1)
     handle_error("getcontext");
   uctx_func1.uc_stack.ss_sp = func1_stack;
-  uctx_func1.uc_stack.ss_size = sizeof(func1_stack);
+  uctx_func1.uc_stack.ss_size = sizeof (func1_stack);
   uctx_func1.uc_link = &uctx_main;
   makecontext(&uctx_func1, func1, 0);
 
   if (getcontext(&uctx_func2) == -1)
     handle_error("getcontext");
   uctx_func2.uc_stack.ss_sp = func2_stack;
-  uctx_func2.uc_stack.ss_size = sizeof(func2_stack);
+  uctx_func2.uc_stack.ss_size = sizeof (func2_stack);
   uctx_func2.uc_link = &uctx_func1;
   makecontext(&uctx_func2, func2, 0);
 

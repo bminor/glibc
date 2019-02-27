@@ -105,7 +105,7 @@ maybe_script_execute (struct posix_spawn_args *args)
       new_argv[0] = (char *) _PATH_BSHELL;
       new_argv[1] = (char *) args->file;
       if (argc > 1)
-	memcpy (new_argv + 2, argv + 1, argc * sizeof(char *));
+	memcpy (new_argv + 2, argv + 1, argc * sizeof (char *));
       else
 	new_argv[2] = NULL;
 

@@ -127,7 +127,7 @@ __nis_findfastest_with_timeout (dir_binding *bind,
 	      }
 	    memcpy ((char *) &pings[pings_count].sin, (char *) &sin,
 		    sizeof (sin));
-	    memcpy ((char *)&saved_sin, (char *)&sin, sizeof(sin));
+	    memcpy ((char *)&saved_sin, (char *)&sin, sizeof (sin));
 	    pings[pings_count].xid = xid_seed + pings_count;
 	    pings[pings_count].server_nr = i;
 	    pings[pings_count].server_ep = j;

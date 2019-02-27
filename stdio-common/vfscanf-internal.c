@@ -1360,7 +1360,7 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 		    wchar_t *cp = (wchar_t *) realloc (*strptr,
 						       ((wstr
 							 - (wchar_t *) *strptr)
-							* sizeof(wchar_t)));
+							* sizeof (wchar_t)));
 		    if (cp != NULL)
 		      *strptr = (char *) cp;
 		  }
@@ -2756,7 +2756,7 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 		    {
 		      wchar_t *cp = (wchar_t *)
 			realloc (*strptr, ((wstr - (wchar_t *) *strptr)
-					   * sizeof(wchar_t)));
+					   * sizeof (wchar_t)));
 		      if (cp != NULL)
 			*strptr = (char *) cp;
 		    }

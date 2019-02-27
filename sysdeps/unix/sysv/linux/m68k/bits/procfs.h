@@ -27,7 +27,7 @@ typedef unsigned long elf_greg_t;
    user_regs_struct' directly in the typedef, but tradition says that
    the register set is an array, which does have some peculiar
    semantics, so leave it that way.  */
-#define ELF_NGREG (sizeof (struct user_regs_struct) / sizeof(elf_greg_t))
+#define ELF_NGREG (sizeof (struct user_regs_struct) / sizeof (elf_greg_t))
 typedef elf_greg_t elf_gregset_t[ELF_NGREG];
 
 /* Register set for the floating-point registers.  */

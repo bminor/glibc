@@ -183,7 +183,7 @@ read_sleb128 (const unsigned char *p, _Unwind_Sword *val)
   while (byte & 0x80);
 
   /* Sign-extend a negative value.  */
-  if (shift < 8 * sizeof(result) && (byte & 0x40) != 0)
+  if (shift < 8 * sizeof (result) && (byte & 0x40) != 0)
     result |= -(1L << shift);
 
   *val = (_Unwind_Sword) result;
@@ -215,7 +215,7 @@ read_encoded_value_with_base (unsigned char encoding, _Unwind_Ptr base,
   if (encoding == DW_EH_PE_aligned)
     {
       _Unwind_Internal_Ptr a = (_Unwind_Internal_Ptr) p;
-      a = (a + sizeof (void *) - 1) & - sizeof(void *);
+      a = (a + sizeof (void *) - 1) & - sizeof (void *);
       result = *(_Unwind_Internal_Ptr *) a;
       p = (const unsigned char *) (a + sizeof (void *));
     }

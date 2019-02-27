@@ -53,7 +53,7 @@ static const struct
     { 6, "action"},
     { 3, "tag" }
   };
-#define NKEYWORDS (sizeof( keywords) / sizeof (keywords[0]))
+#define NKEYWORDS (sizeof (keywords) / sizeof (keywords[0]))
 
 
 struct severity_info

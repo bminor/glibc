@@ -67,7 +67,7 @@ main (int argc, char **argv)
 	  puts("localtime() failed.");
 	  lose = 1;
 	}
-      else if (strftime(buf, sizeof(buf), "%a %b %d %X %Z %Y", tp) == 0)
+      else if (strftime (buf, sizeof (buf), "%a %b %d %X %Z %Y", tp) == 0)
 	{
 	  puts("strftime() failed.");
 	  lose = 1;

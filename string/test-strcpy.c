@@ -103,11 +103,11 @@ do_test (size_t align1, size_t align2, size_t len, int max_char)
    but in wchar_ts, in bytes it will equal to align * (sizeof (wchar_t))
    len for wcschr here isn't in bytes but it's number of wchar_t symbols.  */
   align1 &= 7;
-  if ((align1 + len) * sizeof(CHAR) >= page_size)
+  if ((align1 + len) * sizeof (CHAR) >= page_size)
     return;
 
   align2 &= 7;
-  if ((align2 + len) * sizeof(CHAR) >= page_size)
+  if ((align2 + len) * sizeof (CHAR) >= page_size)
     return;
 
   s1 = (CHAR *) (buf1) + align1;
@@ -137,9 +137,9 @@ do_random_tests (void)
 	 0 to 63 since some assembly implementations have separate
 	 prolog for alignments more 48. */
 
-      align1 = random () & (63 / sizeof(CHAR));
+      align1 = random () & (63 / sizeof (CHAR));
       if (random () & 1)
-	align2 = random () & (63 / sizeof(CHAR));
+	align2 = random () & (63 / sizeof (CHAR));
       else
 	align2 = align1 + (random () & 24);
       len = random () & 511;

@@ -515,7 +515,7 @@ __spawni (pid_t *pid, const char *file,
     if (dtable_cells[i] != NULL)					      \
       _hurd_port_move (dtable_cells[i], &new_##x[i], &x[i]);		      \
     else								      \
-      memset(&new_##x[i], 0, sizeof(new_##x[i]));			      \
+      memset (&new_##x[i], 0, sizeof (new_##x[i]));			      \
   memset (&new_##x[dtablesize], 0, (newfd + 1 - dtablesize) * sizeof (x[0])); \
   x = new_##x; } while (0)
 

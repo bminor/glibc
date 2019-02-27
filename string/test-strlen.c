@@ -80,7 +80,7 @@ do_test (size_t align, size_t len)
   size_t i;
 
   align &= 63;
-  if (align + sizeof(CHAR) * len >= page_size)
+  if (align + sizeof (CHAR) * len >= page_size)
     return;
 
   CHAR *buf = (CHAR *) (buf1);
@@ -97,7 +97,7 @@ static void
 do_random_tests (void)
 {
   size_t i, j, n, align, len;
-  CHAR *p = (CHAR *) (buf1 + page_size - 512 * sizeof(CHAR));
+  CHAR *p = (CHAR *) (buf1 + page_size - 512 * sizeof (CHAR));
 
   for (n = 0; n < ITERATIONS; n++)
     {
@@ -148,16 +148,16 @@ test_main (void)
 
   for (i = 1; i < 8; ++i)
   {
-    do_test (sizeof(CHAR) * i, i);
+    do_test (sizeof (CHAR) * i, i);
     do_test (0, i);
   }
 
   for (i = 2; i <= 12; ++i)
     {
       do_test (0, 1 << i);
-      do_test (sizeof(CHAR) * 7, 1 << i);
-      do_test (sizeof(CHAR) * i, 1 << i);
-      do_test (sizeof(CHAR) * i, (size_t)((1 << i) / 1.5));
+      do_test (sizeof (CHAR) * 7, 1 << i);
+      do_test (sizeof (CHAR) * i, 1 << i);
+      do_test (sizeof (CHAR) * i, (size_t)((1 << i) / 1.5));
     }
 
   do_random_tests ();

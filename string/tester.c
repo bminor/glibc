@@ -811,11 +811,11 @@ test_memrchr (void)
      bugs due to unrolled loops (assuming unrolling is limited to no
      more than 128 byte chunks: */
   {
-    char buf[128 + sizeof(long)];
+    char buf[128 + sizeof (long)];
     long align, len, i, pos, n = 9;
 
-    for (align = 0; align < (long) sizeof(long); ++align) {
-      for (len = 0; len < (long) (sizeof(buf) - align); ++len) {
+    for (align = 0; align < (long) sizeof (long); ++align) {
+      for (len = 0; len < (long) (sizeof (buf) - align); ++len) {
 	for (i = 0; i < len; ++i)
 	  buf[align + i] = 'x';		/* don't depend on memset... */
 
@@ -1230,11 +1230,11 @@ test_memchr (void)
      bugs due to unrolled loops (assuming unrolling is limited to no
      more than 128 byte chunks: */
   {
-    char buf[128 + sizeof(long)];
+    char buf[128 + sizeof (long)];
     long align, len, i, pos;
 
-    for (align = 0; align < (long) sizeof(long); ++align) {
-      for (len = 0; len < (long) (sizeof(buf) - align); ++len) {
+    for (align = 0; align < (long) sizeof (long); ++align) {
+      for (len = 0; len < (long) (sizeof (buf) - align); ++len) {
 	for (i = 0; i < len; ++i) {
 	  buf[align + i] = 'x';		/* don't depend on memset... */
 	}

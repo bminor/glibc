@@ -77,7 +77,7 @@ do_test (void)
   /* Used to synchronize all the threads after calling each retNumN.  */
   xpthread_barrier_init (&barrier, NULL, num_threads);
 
-  threads = (pthread_t *) xcalloc (num_threads, sizeof(pthread_t));
+  threads = (pthread_t *) xcalloc (num_threads, sizeof (pthread_t));
   for (i = 0; i < num_threads; i++)
     threads[i] = xpthread_create(NULL, thread_main, NULL);
 

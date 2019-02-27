@@ -63,7 +63,7 @@ ElfW(Addr) query_auxv(int type)
 
       do
 	{
-	  fread(&auxv_struct, sizeof(ElfW(auxv_t)), 1, auxv_f);
+	  fread (&auxv_struct, sizeof (ElfW(auxv_t)), 1, auxv_f);
 	  auxv[i] = auxv_struct;
 	  i++;
 	} while(auxv_struct.a_type != AT_NULL);

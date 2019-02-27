@@ -710,7 +710,7 @@ execute_stack_op (const unsigned char *op_ptr, const unsigned char *op_end,
 	}
 
       /* Most things push a result value.  */
-      if ((size_t) stack_elt >= sizeof(stack)/sizeof(*stack))
+      if ((size_t) stack_elt >= sizeof (stack) / sizeof (*stack))
 	abort ();
       stack[stack_elt++] = result;
     no_push:;

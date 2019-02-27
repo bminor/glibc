@@ -40,14 +40,14 @@ do_test (void)
   size_t r = fwrite (test, sizeof (char), sizeof (test), stream);
   if (r != sizeof (test))
     {
-      printf ("error: fwrite returned %zu, expected %zu\n", r, sizeof(test));
+      printf ("error: fwrite returned %zu, expected %zu\n", r, sizeof (test));
       return 1;
     }
 
   r = ftell (stream);
   if (r != sizeof (test))
     {
-      printf ("error: ftell return %zu, expected %zu\n", r, sizeof(test));
+      printf ("error: ftell return %zu, expected %zu\n", r, sizeof (test));
       return 1;
     }
 
@@ -60,7 +60,7 @@ do_test (void)
   r = ftell (stream);
   if (r != sizeof (test))
     {
-      printf ("error: ftell return %zu, expected %zu\n", r, sizeof(test));
+      printf ("error: ftell return %zu, expected %zu\n", r, sizeof (test));
       return 1;
     }
 
