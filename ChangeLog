@@ -1,3 +1,8 @@
+2019-02-27  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/powerpc/powerpc32/power4/multiarch/wcscpy.c: Define ifunc
+	symbol as __wcspcy instead of wcscpy.
+
 2019-02-27  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* include/stdio.h (__renameat2): New hidden prototype.

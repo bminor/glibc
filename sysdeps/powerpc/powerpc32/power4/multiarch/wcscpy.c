@@ -17,20 +17,20 @@
    <http://www.gnu.org/licenses/>.  */
 
 #if IS_IN (libc)
-# define wcscpy __redirect_wcscpy
+# define __wcscpy __redirect_wcscpy
 # include <wchar.h>
-# undef wcscpy
+# undef __wcscpy
 # include "init-arch.h"
 
 extern __typeof (__redirect_wcscpy) __wcscpy_ppc attribute_hidden;
 extern __typeof (__redirect_wcscpy) __wcscpy_power6 attribute_hidden;
 extern __typeof (__redirect_wcscpy) __wcscpy_power7 attribute_hidden;
 
-libc_ifunc_redirected (__redirect_wcscpy, wcscpy,
+libc_ifunc_redirected (__redirect_wcscpy, __wcscpy,
 		       (hwcap & PPC_FEATURE_HAS_VSX)
 		       ? __wcscpy_power7 :
 			 (hwcap & PPC_FEATURE_ARCH_2_05)
 			 ? __wcscpy_power6
 		       : __wcscpy_ppc);
-weak_alias (wcscpy, __wcscpy)
+weak_alias (__wcscpy, wcscpy)
 #endif
