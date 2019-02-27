@@ -6794,6 +6794,8 @@ if test x"$libc_cv_ld_gnu_indirect_function" = xyes; then
   $as_echo "#define HAVE_IFUNC 1" >>confdefs.h
 
 fi
+config_vars="$config_vars
+have-ifunc = $libc_cv_ld_gnu_indirect_function"
 
 if test x"$libc_cv_gcc_indirect_function" = xyes; then
   $as_echo "#define HAVE_GCC_IFUNC 1" >>confdefs.h

@@ -1,3 +1,9 @@
+2019-02-27  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* configure.ac (have-ifunc): New LIBC_CONFIG_VAR.
+	* configure: Regenerated.
+	* elf/Makefile: Run IFUNC tests if binutils supports IFUNC.
+
 2019-02-27  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/powerpc/powerpc32/power4/multiarch/wcscpy.c: Define ifunc

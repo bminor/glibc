@@ -1804,6 +1804,7 @@ AC_SUBST(libc_cv_gcc_unwind_find_fde)
 if test x"$libc_cv_ld_gnu_indirect_function" = xyes; then
   AC_DEFINE(HAVE_IFUNC)
 fi
+LIBC_CONFIG_VAR([have-ifunc], [$libc_cv_ld_gnu_indirect_function])
 
 if test x"$libc_cv_gcc_indirect_function" = xyes; then
   AC_DEFINE(HAVE_GCC_IFUNC)

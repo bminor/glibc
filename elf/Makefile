@@ -321,7 +321,7 @@ modules-names-nobuild := filtmod1
 
 tests += $(tests-static)
 
-ifneq (no,$(multi-arch))
+ifeq (yes,$(have-ifunc))
 tests-ifuncstatic := ifuncmain1static ifuncmain1picstatic \
 		ifuncmain2static ifuncmain2picstatic \
 		ifuncmain4static ifuncmain4picstatic \
