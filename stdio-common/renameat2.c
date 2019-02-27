@@ -20,7 +20,7 @@
 #include <stdio.h>
 
 int
-renameat2 (int oldfd, const char *old, int newfd, const char *new,
+__renameat2 (int oldfd, const char *old, int newfd, const char *new,
            unsigned int flags)
 {
   if (flags == 0)
@@ -28,3 +28,5 @@ renameat2 (int oldfd, const char *old, int newfd, const char *new,
   __set_errno (EINVAL);
   return -1;
 }
+libc_hidden_def (__renameat2)
+weak_alias (__renameat2, renameat2)

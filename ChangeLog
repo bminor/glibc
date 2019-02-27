@@ -1,3 +1,11 @@
+2019-02-27  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* include/stdio.h (__renameat2): New hidden prototype.
+	* stdio-common/renameat2.c (__renameat2): Add hidden definition.
+	* sysdeps/mach/hurd/renameat.c (__renameat): Move implementation to...
+	* sysdeps/mach/hurd/renameat2.c (__renameat2): ... new function.
+	* sysdeps/unix/sysv/linux/renameat2.c (__renameat2): Add hidden definition.
+
 2019-02-27  Joseph Myers  <joseph@codesourcery.com>
 
 	* hurd/hurdinit.c (_hurd_init): Use braces around empty body of an
