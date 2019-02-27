@@ -1,5 +1,29 @@
 2019-04-04  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/powerpc/Makefile [$(subdir) == wcsmbs] (CFLAGS-wcscpy.c):
+	New rule.
+	* sysdeps/powerpc/power6/wcscpy.c: Remove file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/wcscpy-power6.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/wcscpy-power7.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/wcscpy-ppc32.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/wcscpy.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/wcscpy-power6.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/wcscpy-power7.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/wcscpy-ppc64.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/wcscpy.c: Likewise.
+	* sysdeps/powerpc/powerpc64/power6/wcscpy.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/Makefile
+	[$(subdir) == wcsmbs] (sysdeps_routines): Remove wcscpy-power6 and
+	wcscpy-power7.
+	(CFLAGS-wcscpy-power7.c, CFLAGS-wcscpy-power6.c): Remove rule.
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/ifunc-impl-list.c:
+	Remove wcscpy optimizations.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c: Likewise.
+
 	* include/loop_unroll.h: New file.
 	* wcsmbs/wcscpy (__wcscpy): Add option to use loop unrolling
 	besides generic implementation.

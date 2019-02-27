@@ -46,3 +46,7 @@ sysdep_headers += sys/platform/ppc.h
 tests += test-gettimebase
 tests += tst-set_ppr
 endif
+
+ifeq ($(subdir),wcsmbs)
+CFLAGS-wcscpy.c += -DUNROLL_NTIMES=8
+endif

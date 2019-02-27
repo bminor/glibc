@@ -18,13 +18,10 @@ endif
 
 ifeq ($(subdir),wcsmbs)
 sysdep_routines += wcschr-power7 wcschr-power6 wcschr-ppc32 \
-		   wcsrchr-power7 wcsrchr-power6 wcsrchr-ppc32 \
-		   wcscpy-power7 wcscpy-power6 wcscpy-ppc32
+		   wcsrchr-power7 wcsrchr-power6 wcsrchr-ppc32
 
 CFLAGS-wcschr-power7.c += -mcpu=power7
 CFLAGS-wcschr-power6.c += -mcpu=power6
 CFLAGS-wcsrchr-power7.c += -mcpu=power7
 CFLAGS-wcsrchr-power6.c += -mcpu=power6
-CFLAGS-wcscpy-power7.c += -mcpu=power7
-CFLAGS-wcscpy-power6.c += -mcpu=power6
 endif
