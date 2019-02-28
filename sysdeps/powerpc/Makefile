@@ -50,4 +50,5 @@ endif
 ifeq ($(subdir),wcsmbs)
 CFLAGS-wcscpy.c += -DUNROLL_NTIMES=8
 CFLAGS-wcschr.c += -DUNROLL_NTIMES=8
+CFLAGS-wcsrchr.c += -DUNROLL_NTIMES=8
 endif

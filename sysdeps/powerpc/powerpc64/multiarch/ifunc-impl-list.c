@@ -260,17 +260,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, strncasecmp_l, 1,
 			      __strncasecmp_l_ppc))
 
-  /* Support sysdeps/powerpc/powerpc64/multiarch/wcschr.c.  */
-  IFUNC_IMPL (i, name, wcsrchr,
-	      IFUNC_IMPL_ADD (array, i, wcsrchr,
-			      hwcap & PPC_FEATURE_HAS_VSX,
-			      __wcsrchr_power7)
-	      IFUNC_IMPL_ADD (array, i, wcsrchr,
-			      hwcap & PPC_FEATURE_ARCH_2_05,
-			      __wcsrchr_power6)
-	      IFUNC_IMPL_ADD (array, i, wcsrchr, 1,
-			      __wcsrchr_ppc))
-
   /* Support sysdeps/powerpc/powerpc64/multiarch/strrchr.c.  */
   IFUNC_IMPL (i, name, strrchr,
 	      IFUNC_IMPL_ADD (array, i, strrchr,

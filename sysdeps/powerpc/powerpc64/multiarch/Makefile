@@ -37,10 +37,3 @@ endif
 CFLAGS-strncase-power7.c += -mcpu=power7 -funroll-loops
 CFLAGS-strncase_l-power7.c += -mcpu=power7 -funroll-loops
 endif
-
-ifeq ($(subdir),wcsmbs)
-sysdep_routines += wcsrchr-power7 wcsrchr-power6 wcsrchr-ppc64
-
-CFLAGS-wcsrchr-power7.c += -mcpu=power7
-CFLAGS-wcsrchr-power6.c += -mcpu=power6
-endif

@@ -1,5 +1,29 @@
 2019-04-04  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/powerpc/Makefile [$(subdir) == wcsmbs] (CFLAGS-wcsrchr.c):
+	New rule.
+	* sysdeps/powerpc/power6/wcsrchr.c: Remove file.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/wcsrchr-power6.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/wcsrchr-power7.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/wcsrchr-ppc32.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/wcsrchr.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/wcsrchr-power6.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/wcsrchr-power7.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/wcsrchr-ppc64.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/wcsrchr.c: Likewise.
+	* sysdeps/powerpc/powerpc64/power6/wcsrchr.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/Makefile
+	[$(subdir) == wcsmbs] (sysdeps_routines): Remove wcsrchr-power6 and
+	wcsrchr-power7.
+	(CFLAGS-wcsrchr-power7.c, CFLAGS-wcsrchr-power6.c): Remove rule.
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/ifunc-impl-list.c:
+	Remove wcsrchr optimizations.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c: Likewise.
+
 	* wcsmbs/wcsrchr.c (WCSRCHR): Use loop_unroll.h to parametrize
 	the loop unroll.
 
