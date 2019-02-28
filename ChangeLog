@@ -1,3 +1,31 @@
+2019-02-28  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/powerpc/powerpc32/dl-machine.c
+	(__elf_machine_fixup_plt): Use space before '('.
+	(__process_machine_rela): Likewise.
+	* sysdeps/powerpc/powerpc32/register-dump.h (register_dump):
+	Likewise.
+	* sysdeps/powerpc/powerpc64/le/fpu/sfp-machine.h (TI_BITS):
+	Likewise.
+	* sysdeps/powerpc/powerpc64/register-dump.h (register_dump):
+	Likewise.
+	* sysdeps/powerpc/test-arith.c (union_t): Likewise.
+	(pattern): Likewise.
+	(delta): Likewise.
+	(check_result): Likewise.
+	(check_excepts): Likewise.
+	(check_op): Likewise.
+	(fail_xr): Likewise.
+	* sysdeps/unix/alpha/sysdep.h (syscall_promote): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/a.out.h (AOUTHSZ): Likewise.
+	(SCNHSZ): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/makecontext.c (FRAME_SIZE_BYTES):
+	Likewise.
+	(ARGS): Likewise.
+	(__makecontext): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h (ucontext_t):
+	Likewise.
+
 2019-02-28  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #23937]

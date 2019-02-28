@@ -188,7 +188,7 @@ typedef struct ucontext_t
     } uc_mcontext;
     sigset_t    uc_sigmask;
     /* last for extensibility */
-    char __ctx(uc_reg_space)[sizeof(mcontext_t) + 12];
+    char __ctx(uc_reg_space)[sizeof (mcontext_t) + 12];
 #else /* 64-bit */
     sigset_t    uc_sigmask;
     mcontext_t  uc_mcontext;  /* last for extensibility */

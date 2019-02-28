@@ -348,7 +348,7 @@ __elf_machine_fixup_plt (struct link_map *map,
       Elf32_Word index, offset, num_plt_entries;
 
       num_plt_entries = (map->l_info[DT_PLTRELSZ]->d_un.d_val
-			 / sizeof(Elf32_Rela));
+			 / sizeof (Elf32_Rela));
       plt = (Elf32_Word *) D_PTR (map, l_info[DT_PLTGOT]);
       offset = reloc_addr - plt;
       index = (offset - PLT_INITIAL_ENTRY_WORDS)/2;
@@ -538,7 +538,7 @@ __process_machine_rela (struct link_map *map,
 	      {
 		index = (offset - PLT_INITIAL_ENTRY_WORDS)/2;
 		num_plt_entries = (map->l_info[DT_PLTRELSZ]->d_un.d_val
-				   / sizeof(Elf32_Rela));
+				   / sizeof (Elf32_Rela));
 		data_words = plt + PLT_DATA_START_WORDS (num_plt_entries);
 		data_words[index] = finaladdr;
 		reloc_addr[0] = OPCODE_LI (11, index * 4);

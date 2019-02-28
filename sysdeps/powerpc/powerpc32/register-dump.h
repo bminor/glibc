@@ -96,15 +96,15 @@ r28=000001c% r29=000001d% r30=000001e% r31=000001f%  fscr=0000071% ccr=0000026%\
 static void
 register_dump (int fd, struct sigcontext *ctx)
 {
-  char buffer[sizeof(dumpform)];
+  char buffer[sizeof (dumpform)];
   char *bufferpos;
   unsigned regno;
   unsigned *regs = (unsigned *)(ctx->regs);
 
-  memcpy(buffer, dumpform, sizeof(dumpform));
+  memcpy(buffer, dumpform, sizeof (dumpform));
 
   /* Generate the output.  */
-  while ((bufferpos = memchr (buffer, '%', sizeof(dumpform))))
+  while ((bufferpos = memchr (buffer, '%', sizeof (dumpform))))
     {
       regno = xtoi (bufferpos[-1]) | xtoi (bufferpos[-2]) << 4;
       memset (bufferpos-2, '0', 3);
@@ -112,7 +112,7 @@ register_dump (int fd, struct sigcontext *ctx)
     }
 
   /* Write the output.  */
-  write (fd, buffer, sizeof(buffer) - 1);
+  write (fd, buffer, sizeof (buffer) - 1);
 }
 
 

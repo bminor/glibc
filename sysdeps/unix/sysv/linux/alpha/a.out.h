@@ -72,8 +72,8 @@ struct exec
 #define a_gpvalue	ah.gpvalue
 
 
-#define AOUTHSZ		sizeof(struct aouthdr)
-#define SCNHSZ		sizeof(struct scnhdr)
+#define AOUTHSZ		sizeof (struct aouthdr)
+#define SCNHSZ		sizeof (struct scnhdr)
 #define SCNROUND	16
 
 enum machine_type

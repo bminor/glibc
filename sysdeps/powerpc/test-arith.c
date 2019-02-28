@@ -43,7 +43,7 @@ static const char * const rmnames[4] =
 
 typedef union {
   tocheck_t tc;
-  unsigned char c[sizeof(tocheck_t)];
+  unsigned char c[sizeof (tocheck_t)];
 } union_t;
 
 /* Don't try reading these in a font that doesn't distinguish
@@ -170,7 +170,7 @@ pattern(int negative, pattern_t exp, pattern_t mant)
   pattern_fill(mant, result.c, ESIZE+1, MSIZE);
 #if 0
   printf("neg=%d exp=%02x mant=%02x: ", negative, exp, mant);
-  for (i = 0; i < sizeof(tocheck_t); i++)
+  for (i = 0; i < sizeof (tocheck_t); i++)
     printf("%02x", result.c[i]);
   printf("\n");
 #endif
@@ -193,10 +193,10 @@ delta(tocheck_t x, int direction)
     {
       union_t tx;
       tx.tc = pattern(xx.c[0] >> 7, P_O, P_Z);
-      if (memcmp(tx.c, xx.c, sizeof(tocheck_t)) == 0)
+      if (memcmp (tx.c, xx.c, sizeof (tocheck_t)) == 0)
 	return x;
     }
-  for (i = sizeof(tocheck_t)-1; i > 0; i--)
+  for (i = sizeof (tocheck_t)-1; i > 0; i--)
     {
       xx.c[i] += direction;
       if (xx.c[i] != (direction > 0 ? 0 : 0xff))
@@ -222,7 +222,7 @@ static const int all_exceptions = FE_ALL_EXCEPT;
 static void
 check_result(int line, const char *rm, tocheck_t expected, tocheck_t actual)
 {
-  if (memcmp(&expected, &actual, sizeof(tocheck_t)) != 0)
+  if (memcmp (&expected, &actual, sizeof (tocheck_t)) != 0)
     {
       unsigned char *ex, *ac;
       size_t i;
@@ -231,10 +231,10 @@ check_result(int line, const char *rm, tocheck_t expected, tocheck_t actual)
 	     " expected result 0x", __FILE__, line, rm);
       ex = (unsigned char *)&expected;
       ac = (unsigned char *)&actual;
-      for (i = 0; i < sizeof(tocheck_t); i++)
+      for (i = 0; i < sizeof (tocheck_t); i++)
 	printf("%02x", ex[i]);
       printf(" got 0x");
-      for (i = 0; i < sizeof(tocheck_t); i++)
+      for (i = 0; i < sizeof (tocheck_t); i++)
 	printf("%02x", ac[i]);
       printf("\n");
       nerrors++;
@@ -325,13 +325,13 @@ check_excepts(int line, const char *rm, int expected, int actual)
       size_t i;
       printf("%s:%d:round %s:exceptions failed\n"
 	     " expected exceptions ", __FILE__, line,rm);
-      for (i = 0; i < sizeof(excepts)/sizeof(excepts[0]); i++)
+      for (i = 0; i < sizeof (excepts) / sizeof (excepts[0]); i++)
 	if (expected & excepts[i].except)
 	  printf("%s ",excepts[i].name);
       if ((expected & all_exceptions) == 0)
 	printf("- ");
       printf("got");
-      for (i = 0; i < sizeof(excepts)/sizeof(excepts[0]); i++)
+      for (i = 0; i < sizeof (excepts) / sizeof (excepts[0]); i++)
 	if (actual & excepts[i].except)
 	  printf(" %s",excepts[i].name);
       if ((actual & all_exceptions) == 0)
@@ -463,7 +463,7 @@ check_op(void)
   tocheck_t r, a, b, x;
   int raised;
 
-  for (i = 0; i < sizeof(optests)/sizeof(optests[0]); i++)
+  for (i = 0; i < sizeof (optests) / sizeof (optests[0]); i++)
     {
       a = pattern(optests[i].a_sgn, optests[i].a_exp,
 		  optests[i].a_mant);
@@ -504,13 +504,13 @@ fail_xr(int line, const char *rm, tocheck_t x, tocheck_t r, tocheck_t xx,
   cx = (unsigned char *)&x;
   cr = (unsigned char *)&r;
   cxx = (unsigned char *)&xx;
-  for (i = 0; i < sizeof(tocheck_t); i++)
+  for (i = 0; i < sizeof (tocheck_t); i++)
     printf("%02x", cx[i]);
   printf(" r=0x");
-  for (i = 0; i < sizeof(tocheck_t); i++)
+  for (i = 0; i < sizeof (tocheck_t); i++)
     printf("%02x", cr[i]);
   printf(" xx=0x");
-  for (i = 0; i < sizeof(tocheck_t); i++)
+  for (i = 0; i < sizeof (tocheck_t); i++)
     printf("%02x", cxx[i]);
   printf(" inexact=%d\n", xflag != 0);
   nerrors++;
