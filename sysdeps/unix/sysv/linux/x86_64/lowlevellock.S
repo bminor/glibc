@@ -127,15 +127,6 @@ __lll_lock_wait:
 	.align	16
 __lll_timedlock_wait:
 	cfi_startproc
-# ifndef __ASSUME_FUTEX_CLOCK_REALTIME
-#  ifdef PIC
-	cmpl	$0, __have_futex_clock_realtime(%rip)
-#  else
-	cmpl	$0, __have_futex_clock_realtime
-#  endif
-	je	.Lreltmo
-# endif
-
 	cmpq	$0, (%rdx)
 	js	5f
 
@@ -176,112 +167,6 @@ __lll_timedlock_wait:
 5:	movl	$ETIMEDOUT, %eax
 	retq
 
-# ifndef __ASSUME_FUTEX_CLOCK_REALTIME
-.Lreltmo:
-	/* Check for a valid timeout value.  */
-	cmpq	$1000000000, 8(%rdx)
-	jae	3f
-
-	pushq	%r8
-	cfi_adjust_cfa_offset(8)
-	pushq	%r9
-	cfi_adjust_cfa_offset(8)
-	pushq	%r12
-	cfi_adjust_cfa_offset(8)
-	pushq	%r13
-	cfi_adjust_cfa_offset(8)
-	pushq	%r14
-	cfi_adjust_cfa_offset(8)
-	cfi_offset(%r8, -16)
-	cfi_offset(%r9, -24)
-	cfi_offset(%r12, -32)
-	cfi_offset(%r13, -40)
-	cfi_offset(%r14, -48)
-	pushq	%rsi
-	cfi_adjust_cfa_offset(8)
-
-	/* Stack frame for the timespec and timeval structs.  */
-	subq	$24, %rsp
-	cfi_adjust_cfa_offset(24)
-
-	movq	%rdi, %r12
-	movq	%rdx, %r13
-
-	movl	$2, %edx
-	xchgl	%edx, (%r12)
-
-	testl	%edx, %edx
-	je	6f
-
-1:
-	/* Get current time.  */
-	movq	%rsp, %rdi
-	xorl	%esi, %esi
-	/* This call works because we directly jump to a system call entry
-	   which preserves all the registers.  */
-	call	JUMPTARGET(__gettimeofday)
-
-	/* Compute relative timeout.  */
-	movq	8(%rsp), %rax
-	movl	$1000, %edi
-	mul	%rdi		/* Milli seconds to nano seconds.  */
-	movq	(%r13), %rdi
-	movq	8(%r13), %rsi
-	subq	(%rsp), %rdi
-	subq	%rax, %rsi
-	jns	4f
-	addq	$1000000000, %rsi
-	decq	%rdi
-4:	testq	%rdi, %rdi
-	js	2f		/* Time is already up.  */
-
-	/* Store relative timeout.  */
-	movq	%rdi, (%rsp)
-	movq	%rsi, 8(%rsp)
-
-	/* Futex call.  */
-	movl	$2, %edx
-	movl	$1, %eax
-	movq	%rsp, %r10
-	movl	24(%rsp), %esi
-	LOAD_FUTEX_WAIT (%esi)
-	movq	%r12, %rdi
-	movl	$SYS_futex, %eax
-	syscall
-
-	/* NB: %edx == 2 */
-	xchgl	%edx, (%r12)
-
-	testl	%edx, %edx
-	je	6f
-
-	cmpl	$-ETIMEDOUT, %eax
-	jne	1b
-2:	movl	$ETIMEDOUT, %edx
-
-6:	addq	$32, %rsp
-	cfi_adjust_cfa_offset(-32)
-	popq	%r14
-	cfi_adjust_cfa_offset(-8)
-	cfi_restore(%r14)
-	popq	%r13
-	cfi_adjust_cfa_offset(-8)
-	cfi_restore(%r13)
-	popq	%r12
-	cfi_adjust_cfa_offset(-8)
-	cfi_restore(%r12)
-	popq	%r9
-	cfi_adjust_cfa_offset(-8)
-	cfi_restore(%r9)
-	popq	%r8
-	cfi_adjust_cfa_offset(-8)
-	cfi_restore(%r8)
-	movl	%edx, %eax
-	retq
-
-3:	movl	$EINVAL, %eax
-	retq
-# endif
 	cfi_endproc
 	.size	__lll_timedlock_wait,.-__lll_timedlock_wait
 #endif

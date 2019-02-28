@@ -148,16 +148,6 @@ __lll_timedlock_wait:
 	cfi_adjust_cfa_offset(4)
 	cfi_rel_offset(%ebx, 0)
 
-# ifndef __ASSUME_FUTEX_CLOCK_REALTIME
-#  ifdef PIC
-	LOAD_PIC_REG (bx)
-	cmpl	$0, __have_futex_clock_realtime@GOTOFF(%ebx)
-#  else
-	cmpl	$0, __have_futex_clock_realtime
-#  endif
-	je	.Lreltmo
-# endif
-
 	cmpl	$0, (%edx)
 	js	8f
 
@@ -199,96 +189,6 @@ __lll_timedlock_wait:
 8:	movl	$ETIMEDOUT, %eax
 	jmp	7b
 
-# ifndef __ASSUME_FUTEX_CLOCK_REALTIME
-.Lreltmo:
-	/* Check for a valid timeout value.  */
-	cmpl	$1000000000, 4(%edx)
-	jae	3f
-
-	pushl	%esi
-	cfi_adjust_cfa_offset(4)
-	cfi_rel_offset(%esi, 0)
-	pushl	%edi
-	cfi_adjust_cfa_offset(4)
-	cfi_rel_offset(%edi, 0)
-
-	/* Stack frame for the timespec and timeval structs.  */
-	subl	$8, %esp
-	cfi_adjust_cfa_offset(8)
-
-	movl	%ecx, %ebp
-	movl	%edx, %edi
-
-	movl	$2, %edx
-	xchgl	%edx, (%ebp)
-
-	test	%edx, %edx
-	je	6f
-
-1:
-	/* Get current time.  */
-	movl	%esp, %ebx
-	xorl	%ecx, %ecx
-	movl	$__NR_gettimeofday, %eax
-	ENTER_KERNEL
-
-	/* Compute relative timeout.  */
-	movl	4(%esp), %eax
-	movl	$1000, %edx
-	mul	%edx		/* Milli seconds to nano seconds.  */
-	movl	(%edi), %ecx
-	movl	4(%edi), %edx
-	subl	(%esp), %ecx
-	subl	%eax, %edx
-	jns	4f
-	addl	$1000000000, %edx
-	subl	$1, %ecx
-4:	testl	%ecx, %ecx
-	js	2f		/* Time is already up.  */
-
-	/* Store relative timeout.  */
-	movl	%ecx, (%esp)
-	movl	%edx, 4(%esp)
-
-	/* Futex call.  */
-	movl	%ebp, %ebx
-	movl	$2, %edx
-	movl	%esp, %esi
-	movl	16(%esp), %ecx
-	LOAD_FUTEX_WAIT (%ecx)
-	movl	$SYS_futex, %eax
-	ENTER_KERNEL
-
-	/* NB: %edx == 2 */
-	xchgl	%edx, (%ebp)
-
-	testl	%edx, %edx
-	je	6f
-
-	cmpl	$-ETIMEDOUT, %eax
-	jne	1b
-2:	movl	$ETIMEDOUT, %edx
-
-6:	addl	$8, %esp
-	cfi_adjust_cfa_offset(-8)
-	popl	%edi
-	cfi_adjust_cfa_offset(-4)
-	cfi_restore(%edi)
-	popl	%esi
-	cfi_adjust_cfa_offset(-4)
-	cfi_restore(%esi)
-7:	popl	%ebx
-	cfi_adjust_cfa_offset(-4)
-	cfi_restore(%ebx)
-	popl	%ebp
-	cfi_adjust_cfa_offset(-4)
-	cfi_restore(%ebp)
-	movl	%edx, %eax
-	ret
-
-3:	movl	$EINVAL, %edx
-	jmp	7b
-# endif
 	cfi_endproc
 	.size	__lll_timedlock_wait,.-__lll_timedlock_wait
 #endif

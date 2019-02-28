@@ -43,8 +43,7 @@
 #define lll_futex_timed_wait(futexp, val, timeout, private)             \
   -ENOSYS
 
-/* This macro should be defined only if FUTEX_CLOCK_REALTIME is also defined.
-   If CLOCKBIT is zero, this is identical to lll_futex_timed_wait.
+/* If CLOCKBIT is zero, this is identical to lll_futex_timed_wait.
    If CLOCKBIT has FUTEX_CLOCK_REALTIME set, then it's the same but
    TIMEOUT is counted by CLOCK_REALTIME rather than CLOCK_MONOTONIC.  */
 #define lll_futex_timed_wait_bitset(futexp, val, timeout, clockbit, private) \

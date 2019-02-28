@@ -58,15 +58,6 @@ int __set_robust_list_avail;
 # define set_robust_list_not_avail() do { } while (0)
 #endif
 
-#ifndef __ASSUME_FUTEX_CLOCK_REALTIME
-/* Nonzero if we do not have FUTEX_CLOCK_REALTIME.  */
-int __have_futex_clock_realtime;
-# define __set_futex_clock_realtime() \
-  __have_futex_clock_realtime = 1
-#else
-#define __set_futex_clock_realtime() do { } while (0)
-#endif
-
 /* Version of the library, used in libthread_db to detect mismatches.  */
 static const char nptl_version[] __attribute_used__ = VERSION;
 
@@ -297,26 +288,6 @@ __pthread_initialize_minimal_internal (void)
 #endif
       set_robust_list_not_avail ();
   }
-
-#ifdef __NR_futex
-# ifndef __ASSUME_FUTEX_CLOCK_REALTIME
-    {
-      int word = 0;
-      /* NB: the syscall actually takes six parameters.  The last is the
-	 bit mask.  But since we will not actually wait at all the value
-	 is irrelevant.  Given that passing six parameters is difficult
-	 on some architectures we just pass whatever random value the
-	 calling convention calls for to the kernel.  It causes no harm.  */
-      INTERNAL_SYSCALL_DECL (err);
-      word = INTERNAL_SYSCALL (futex, err, 5, &word,
-			       FUTEX_WAIT_BITSET | FUTEX_CLOCK_REALTIME
-			       | FUTEX_PRIVATE_FLAG, 1, NULL, 0);
-      assert (INTERNAL_SYSCALL_ERROR_P (word, err));
-      if (INTERNAL_SYSCALL_ERRNO (word, err) != ENOSYS)
-	__set_futex_clock_realtime ();
-    }
-# endif
-#endif
 
   /* Set initial thread's stack block from 0 up to __libc_stack_end.
      It will be bigger than it actually is, but for unwind.c/pt-longjmp.c

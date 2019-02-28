@@ -240,27 +240,6 @@ __pthread_mutex_timedlock (pthread_mutex_t *mutex,
 	     values despite them being valid.  */
 	  if (__glibc_unlikely (abstime->tv_sec < 0))
 	    return ETIMEDOUT;
-#if (!defined __ASSUME_FUTEX_CLOCK_REALTIME \
-     || !defined lll_futex_timed_wait_bitset)
-	  struct timeval tv;
-	  struct timespec rt;
-
-	  /* Get the current time.  */
-	  (void) __gettimeofday (&tv, NULL);
-
-	  /* Compute relative timeout.  */
-	  rt.tv_sec = abstime->tv_sec - tv.tv_sec;
-	  rt.tv_nsec = abstime->tv_nsec - tv.tv_usec * 1000;
-	  if (rt.tv_nsec < 0)
-	    {
-	      rt.tv_nsec += 1000000000;
-	      --rt.tv_sec;
-	    }
-
-	  /* Already timed out?  */
-	  if (rt.tv_sec < 0)
-	    return ETIMEDOUT;
-#endif
 
 	  /* We cannot acquire the mutex nor has its owner died.  Thus, try
 	     to block using futexes.  Set FUTEX_WAITERS if necessary so that
@@ -287,18 +266,12 @@ __pthread_mutex_timedlock (pthread_mutex_t *mutex,
 	  assume_other_futex_waiters |= FUTEX_WAITERS;
 
 	  /* Block using the futex.  */
-#if (!defined __ASSUME_FUTEX_CLOCK_REALTIME \
-     || !defined lll_futex_timed_wait_bitset)
-	  lll_futex_timed_wait (&mutex->__data.__lock, oldval,
-				&rt, PTHREAD_ROBUST_MUTEX_PSHARED (mutex));
-#else
 	  int err = lll_futex_timed_wait_bitset (&mutex->__data.__lock,
 	      oldval, abstime, FUTEX_CLOCK_REALTIME,
 	      PTHREAD_ROBUST_MUTEX_PSHARED (mutex));
 	  /* The futex call timed out.  */
 	  if (err == -ETIMEDOUT)
 	    return -err;
-#endif
 	  /* Reload current lock value.  */
 	  oldval = mutex->__data.__lock;
 	}

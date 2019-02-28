@@ -1,3 +1,18 @@
+2019-03-05  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* nptl/nptl-init.c (__have_futex_clock_realtime,
+	__have_futex_clock_realtime): Remove definition.
+	(__pthread_initialize_minimal_internal): Remove FUTEX_CLOCK_REALTIME
+	check test for !__ASSUME_FUTEX_CLOCK_REALTIME.
+	* nptl/pthread_mutex_timedlock.c (__pthread_mutex_timedlock): Assume
+	__ASSUME_FUTEX_CLOCK_REALTIME support.
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S: Likewise.
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_FUTEX_CLOCK_REALTIME): Remove.
+	* sysdeps/nptl/lowlevellock-futex.h (lll_futex_timed_wait_bitset):
+	Adjust comment.
+
 2019-03-05  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
 	* sysdeps/powerpc/powerpc64/power6/wcscpy.c (WCSCPY): Define to
