@@ -1,3 +1,22 @@
+2019-02-28  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23937]
+	elf: Add test with a local IFUNC resolver.
+	* elf/ifuncmain9.c: New file.
+	* elf/ifuncmain9pic.c: Likewise.
+	* elf/ifuncmain9picstatic.c: Likewise.
+	* elf/ifuncmain9pie.c: Likewise.
+	* elf/ifuncmain9static.c: Likewise.
+	* elf/Makefile [multi-arch] (tests-ifuncstatic): Add
+	ifuncmain9static, ifuncmain9picstatic.
+	* elf/Makefile [multi-arch && build-shared] (tests-internal):
+	Add ifuncmain9, ifuncmain9pic.
+	* elf/Makefile [multi-arch && build-shared && have-fpie]
+	(ifunc-pie-tests): Add ifuncmain9pie.
+	(CFLAGS-ifuncmain9pic.c): Add $(pic-ccflag).
+	(CFLAGS-ifuncmain9picstatic.c): Likewise.
+	(CFLAGS-ifuncmain9pie.c): Add $(pie-ccflag).
+
 2019-02-27  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* configure.ac (have-ifunc): New LIBC_CONFIG_VAR.

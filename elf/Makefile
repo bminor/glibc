@@ -326,23 +326,26 @@ tests-ifuncstatic := ifuncmain1static ifuncmain1picstatic \
 		ifuncmain2static ifuncmain2picstatic \
 		ifuncmain4static ifuncmain4picstatic \
 		ifuncmain5static ifuncmain5picstatic \
-		ifuncmain7static ifuncmain7picstatic
+		ifuncmain7static ifuncmain7picstatic \
+		ifuncmain9static ifuncmain9picstatic
 tests-static += $(tests-ifuncstatic)
 tests-internal += $(tests-ifuncstatic)
 ifeq (yes,$(build-shared))
+# Note: sysdeps/x86_64/ifuncmain8.c uses ifuncmain8.
 tests-internal += \
 	 ifuncmain1 ifuncmain1pic ifuncmain1vis ifuncmain1vispic \
 	 ifuncmain1staticpic \
 	 ifuncmain2 ifuncmain2pic ifuncmain3 ifuncmain4 \
 	 ifuncmain5 ifuncmain5pic ifuncmain5staticpic \
-	 ifuncmain7 ifuncmain7pic
+	 ifuncmain7 ifuncmain7pic \
+	 ifuncmain9 ifuncmain9pic
 ifunc-test-modules = ifuncdep1 ifuncdep1pic ifuncdep2 ifuncdep2pic \
 		     ifuncdep5 ifuncdep5pic
 extra-test-objs += $(ifunc-test-modules:=.o)
 test-internal-extras += $(ifunc-test-modules)
 ifeq (yes,$(have-fpie))
 ifunc-pie-tests = ifuncmain1pie ifuncmain1vispie ifuncmain1staticpie \
-		  ifuncmain5pie ifuncmain6pie ifuncmain7pie
+		  ifuncmain5pie ifuncmain6pie ifuncmain7pie ifuncmain9pie
 ifeq (yes,$(have-textrel_ifunc))
 ifunc-pie-tests += tst-ifunc-textrel
 endif
@@ -1276,6 +1279,8 @@ CFLAGS-ifuncmain5staticpic.c += $(pic-ccflag)
 CFLAGS-ifuncdep5pic.c += $(pic-ccflag)
 CFLAGS-ifuncmain7pic.c += $(pic-ccflag)
 CFLAGS-ifuncmain7picstatic.c += $(pic-ccflag)
+CFLAGS-ifuncmain9pic.c += $(pic-ccflag)
+CFLAGS-ifuncmain9picstatic.c += $(pic-ccflag)
 
 LDFLAGS-ifuncmain3 = -Wl,-export-dynamic
 
@@ -1285,6 +1290,7 @@ CFLAGS-ifuncmain1staticpie.c += $(pie-ccflag)
 CFLAGS-ifuncmain5pie.c += $(pie-ccflag)
 CFLAGS-ifuncmain6pie.c += $(pie-ccflag)
 CFLAGS-ifuncmain7pie.c += $(pie-ccflag)
+CFLAGS-ifuncmain9pie.c += $(pie-ccflag)
 CFLAGS-tst-ifunc-textrel.c += $(pic-ccflag)
 
 $(objpfx)ifuncmain1pie: $(objpfx)ifuncmod1.so
