@@ -92,12 +92,12 @@ __netlink_assert_response (int fd, ssize_t result)
       if (family < 0)
           __snprintf (message, sizeof (message),
                       "Unexpected netlink response of size %zd"
-                      " on descriptor %d",
+                      " on descriptor %d\n",
                       result, fd);
       else
           __snprintf (message, sizeof (message),
                       "Unexpected netlink response of size %zd"
-                      " on descriptor %d (address family %d)",
+                      " on descriptor %d (address family %d)\n",
                       result, fd, family);
       __libc_fatal (message);
     }

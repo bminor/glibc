@@ -1,3 +1,9 @@
+2019-03-01  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20271]
+	* sysdeps/unix/sysv/linux/netlink_assert_response.c
+	(__netlink_assert_response): Add additional missing newlines.
+
 2019-02-28  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/powerpc/powerpc32/dl-machine.c
