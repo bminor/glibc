@@ -111,6 +111,10 @@ ENTRY(WCSCPY_Z13)
 END(WCSCPY_Z13)
 
 # if ! HAVE_WCSCPY_IFUNC
-strong_alias (WCSCPY_Z13, wcscpy)
+strong_alias (WCSCPY_Z13, __wcscpy)
+weak_alias (__wcscpy, wcscpy)
+#  if defined SHARED && IS_IN (libc)
+strong_alias (__wcscpy, __GI___wcscpy)
+#  endif
 # endif
 #endif

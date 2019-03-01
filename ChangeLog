@@ -1,3 +1,8 @@
+2019-03-01  Stefan Liebler  <stli@linux.ibm.com>
+
+	* sysdeps/s390/wcscpy-vx.S: Add strong aliases to
+	__wcscpy, __GI___wcscpy and weak alias to wcscpy.
+
 2019-03-01  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #20271]
