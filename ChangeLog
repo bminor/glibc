@@ -1,3 +1,11 @@
+2019-03-01  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20419]
+	* elf/tst-big-note-lib.S: Create a syntactically valid note.
+	* elf/Makefile (tst-big-note-lib.so): Do not link with startup
+	code, to avoid creating an ABI tag note.
+	(modules-names-nobuild): Add tst-big-note-lib.
+
 2019-03-01  Stefan Liebler  <stli@linux.ibm.com>
 
 	* sysdeps/s390/wcscpy-vx.S: Add strong aliases to

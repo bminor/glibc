@@ -316,8 +316,8 @@ endif
 modules-execstack-yes = tst-execstack-mod
 extra-test-objs += $(addsuffix .os,$(strip $(modules-names)))
 
-# filtmod1.so has a special rule
-modules-names-nobuild := filtmod1
+# filtmod1.so, tst-big-note-lib.so have special rules.
+modules-names-nobuild := filtmod1 tst-big-note-lib
 
 tests += $(tests-static)
 
@@ -1515,6 +1515,11 @@ tst-libc_dlvsym-static-ENV = \
 $(objpfx)tst-libc_dlvsym-static.out: $(objpfx)tst-libc_dlvsym-dso.so
 
 $(objpfx)tst-big-note: $(objpfx)tst-big-note-lib.so
+# Avoid creating an ABI tag note, which may come before the
+# artificial, large note in tst-big-note-lib.o and invalidate the
+# test.
+$(objpfx)tst-big-note-lib.so: $(objpfx)tst-big-note-lib.o
+	$(LINK.o) -shared -o $@ $(LDFLAGS.so) $<
 
 $(objpfx)tst-unwind-ctor: $(objpfx)tst-unwind-ctor-lib.so
 
