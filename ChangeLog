@@ -1,3 +1,9 @@
+2019-03-02  TAMUKI Shoichi  <tamuki@linet.gr.jp>
+
+	[BZ #24162]
+	* localedata/locales/ja_JP (LC_TIME): Change the offset for Taisho
+	gan-nen from 2 to 1.  Problem reported by Morimitsu, Junji.
+
 2019-03-01  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
 	* misc/tst-ldbl-error.c (do_one_test): Adapt for reuse by nldbl
