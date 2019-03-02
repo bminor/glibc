@@ -1,3 +1,9 @@
+2019-03-05  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
+	* sysdeps/powerpc/powerpc64/power6/wcscpy.c (WCSCPY): Define to
+	__wcscpy, then use libc_hidden_def and weak_alias to bind it to
+	__GI___wcscpy and wcscpy.
+
 2019-03-04  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/generic/ldsodefs.h (_dl_sysdep_open_zero_fill): Remove
