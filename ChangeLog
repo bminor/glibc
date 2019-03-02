@@ -1,3 +1,9 @@
+2019-03-02  TAMUKI Shoichi  <tamuki@linet.gr.jp>
+
+	[BZ #24162]
+	* localedata/locales/ja_JP (LC_TIME): Change the offset for Taisho
+	gan-nen from 2 to 1.  Problem reported by Morimitsu, Junji.
+
 2019-03-21  Stefan Liebler  <stli@linux.ibm.com>
 
 	* sysdeps/s390/dl-procinfo.h (HWCAP_IMPORTANT):
