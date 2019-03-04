@@ -1,3 +1,8 @@
+2019-03-04  Stefan Liebler  <stli@linux.ibm.com>
+
+	* sysdeps/s390/s390-64/sysdep.h (ENTRY): Use alignment of 16byte.
+	* sysdeps/s390/s390-32/sysdep.h: Likewise.
+
 2019-03-02  TAMUKI Shoichi  <tamuki@linet.gr.jp>
 
 	[BZ #24162]
