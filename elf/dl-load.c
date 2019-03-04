@@ -947,21 +947,6 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
   /* This is the ELF header.  We read it in `open_verify'.  */
   header = (void *) fbp->buf;
 
-#ifndef MAP_ANON
-# define MAP_ANON 0
-  if (_dl_zerofd == -1)
-    {
-      _dl_zerofd = _dl_sysdep_open_zero_fill ();
-      if (_dl_zerofd == -1)
-	{
-	  free (realname);
-	  __close_nocancel (fd);
-	  _dl_signal_error (errno, NULL, NULL,
-			    N_("cannot open zero fill device"));
-	}
-    }
-#endif
-
   /* Signal that we are going to add new objects.  */
   if (r->r_state == RT_CONSISTENT)
     {

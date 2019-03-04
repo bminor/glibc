@@ -689,10 +689,6 @@ rtld_hidden_proto (_dl_starting_up)
 /* Random data provided by the kernel.  */
 extern void *_dl_random attribute_hidden attribute_relro;
 
-/* OS-dependent function to open the zero-fill device.  */
-extern int _dl_sysdep_open_zero_fill (void); /* dl-sysdep.c */
-
-
 /* Write message on the debug file descriptor.  The parameters are
    interpreted as for a `printf' call.  All the lines start with a
    tag showing the PID.  */
