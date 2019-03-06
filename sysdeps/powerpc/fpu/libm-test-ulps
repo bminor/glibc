@@ -1311,6 +1311,9 @@ ifloat128: 2
 ildouble: 5
 ldouble: 5
 
+Function: "cos_vlen2":
+double: 2
+
 Function: "cosh":
 double: 1
 float: 1

@@ -257,6 +257,17 @@ Version 2.30
 
 Major new features:
 
+* Start of implementing vector math library libmvec on PPC64/POWER8.
+  The double-precision cosine now has a vector version.
+  GCC support for auto-vectorization of functions on PPC64 is not yet
+  available. Until that is done, the new vector math functions are
+  inaccessible to applications.
+  Library libmvec is built by default for PPC64. Disable its creation by
+  passing flag --disable-mathvec to configure.
+  The library ABI specification is x86_64 Vector Function ABI.
+  More information on libmvec including a link to the ABI document is at:
+  <https://sourceware.org/glibc/wiki/libmvec>
+
 * Unicode 12.1.0 Support: Character encoding, character type info, and
   transliteration tables are all updated to Unicode 12.1.0, using
   generator scripts contributed by Mike FABIAN (Red Hat).
