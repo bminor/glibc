@@ -220,7 +220,7 @@ TEST_CASES = [
     ],
     [[0x108D],
      [('combining', True), ('combining_level3', False),
-      ('alpha', False), ('lower', False), ('upper', False),
+      ('alpha', True), ('lower', False), ('upper', False),
       ('tolower', False), ('toupper', False), ('totitle', False)],
      '''“108D;MYANMAR SIGN SHAN COUNCIL EMPHATIC
      TONE;Mn;220;NSM;;;;;N;;;;;”.  Has apparently been added
@@ -231,7 +231,8 @@ TEST_CASES = [
      combining class value is 220 which is >= 200. According to
      gen-unicode-ctype.c, “combining_level3” needs a
      canonical combining class value < 200. According to
-     DerivedCoreProperties.txt it is not “Alphabetic”.'''
+     DerivedCoreProperties.txt it was not “Alphabetic”
+     until Unicode 11.0.0 but in 12.0.0 it became “Alphabetic”.'''
     ],
     [[0x06DE],
      [('combining', False), ('combining_level3', False),

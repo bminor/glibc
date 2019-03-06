@@ -9,7 +9,7 @@ comment_char %
 % otherwise be governed by that license.
 
 % Transliterations of compatibility characters and ligatures.
-% Generated automatically from UnicodeData.txt by gen_translit_compat.py on 2018-06-20 for Unicode 11.0.0.
+% Generated automatically from UnicodeData.txt by gen_translit_compat.py on 2019-03-06 for Unicode 12.0.0.
 
 LC_CTYPE
 
@@ -1877,6 +1877,8 @@ translit_start
 <U0001F16A> "<U004D><U0043>"
 % RAISED MD SIGN
 <U0001F16B> "<U004D><U0044>"
+% RAISED MR SIGN
+<U0001F16C> "<U004D><U0052>"
 % TORTOISE SHELL BRACKETED CJK UNIFIED IDEOGRAPH-672C
 <U0001F240> "<U3014><U672C><U3015>"
 % TORTOISE SHELL BRACKETED CJK UNIFIED IDEOGRAPH-4E09
