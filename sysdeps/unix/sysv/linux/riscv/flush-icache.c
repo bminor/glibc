@@ -21,7 +21,11 @@
 #include <stdlib.h>
 #include <atomic.h>
 #include <sys/cachectl.h>
-#include <asm/syscalls.h>
+#if __has_include__ (<asm/syscalls.h>)
+# include <asm/syscalls.h>
+#else
+# include <asm/unistd.h>
+#endif
 
 typedef int (*func_type) (void *, void *, unsigned long int);
 

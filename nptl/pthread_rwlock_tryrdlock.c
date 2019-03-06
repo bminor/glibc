@@ -94,15 +94,22 @@ __pthread_rwlock_tryrdlock (pthread_rwlock_t *rwlock)
       /* Same as in __pthread_rwlock_rdlock_full:
 	 We started the read phase, so we are also responsible for
 	 updating the write-phase futex.  Relaxed MO is sufficient.
-	 Note that there can be no other reader that we have to wake
-	 because all other readers will see the read phase started by us
-	 (or they will try to start it themselves); if a writer started
-	 the read phase, we cannot have started it.  Furthermore, we
-	 cannot discard a PTHREAD_RWLOCK_FUTEX_USED flag because we will
-	 overwrite the value set by the most recent writer (or the readers
-	 before it in case of explicit hand-over) and we know that there
-	 are no waiting readers.  */
-      atomic_store_relaxed (&rwlock->__data.__wrphase_futex, 0);
+	 We have to do the same steps as a writer would when handing over the
+	 read phase to use because other readers cannot distinguish between
+	 us and the writer.
+	 Note that __pthread_rwlock_tryrdlock callers will not have to be
+	 woken up because they will either see the read phase started by us
+	 or they will try to start it themselves; however, callers of
+	 __pthread_rwlock_rdlock_full just increase the reader count and then
+	 check what state the lock is in, so they cannot distinguish between
+	 us and a writer that acquired and released the lock in the
+	 meantime.  */
+      if ((atomic_exchange_relaxed (&rwlock->__data.__wrphase_futex, 0)
+	  & PTHREAD_RWLOCK_FUTEX_USED) != 0)
+	{
+	  int private = __pthread_rwlock_get_private (rwlock);
+	  futex_wake (&rwlock->__data.__wrphase_futex, INT_MAX, private);
+	}
     }
 
   return 0;

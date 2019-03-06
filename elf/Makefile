@@ -186,7 +186,8 @@ tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-tlsalign tst-tlsalign-extern tst-nodelete-opened \
 	 tst-nodelete2 tst-audit11 tst-audit12 tst-dlsym-error tst-noload \
 	 tst-latepthread tst-tls-manydynamic tst-nodelete-dlclose \
-	 tst-debug1 tst-main1 tst-absolute-sym tst-absolute-zero tst-big-note
+	 tst-debug1 tst-main1 tst-absolute-sym tst-absolute-zero tst-big-note \
+	 tst-unwind-main
 #	 reldep9
 tests-internal += loadtest unload unload2 circleload1 \
 	 neededtest neededtest2 neededtest3 neededtest4 \
@@ -1484,3 +1485,5 @@ tst-libc_dlvsym-static-ENV = \
 $(objpfx)tst-libc_dlvsym-static.out: $(objpfx)tst-libc_dlvsym-dso.so
 
 $(objpfx)tst-big-note: $(objpfx)tst-big-note-lib.so
+
+CFLAGS-tst-unwind-main.c += -funwind-tables -DUSE_PTHREADS=0

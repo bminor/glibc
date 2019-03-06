@@ -30,6 +30,7 @@
 #include <string.h>
 #include <sys/param.h>
 #include <sys/resource.h>
+#include <sys/time.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <time.h>
@@ -86,6 +87,19 @@ static pid_t test_pid;
 /* The cleanup handler passed to test_main.  */
 static void (*cleanup_function) (void);
 
+static void
+print_timestamp (const char *what, struct timeval tv)
+{
+  struct tm tm;
+  if (gmtime_r (&tv.tv_sec, &tm) == NULL)
+    printf ("%s: %lld.%06d\n",
+            what, (long long int) tv.tv_sec, (int) tv.tv_usec);
+  else
+    printf ("%s: %04d-%02d-%02dT%02d:%02d:%02d.%06d\n",
+            what, 1900 + tm.tm_year, tm.tm_mon + 1, tm.tm_mday,
+            tm.tm_hour, tm.tm_min, tm.tm_sec, (int) tv.tv_usec);
+}
+
 /* Timeout handler.  We kill the child and exit with an error.  */
 static void
 __attribute__ ((noreturn))
@@ -93,6 +107,13 @@ signal_handler (int sig)
 {
   int killed;
   int status;
+
+  /* Do this first to avoid further interference from the
+     subprocess.  */
+  struct timeval now;
+  bool now_available = gettimeofday (&now, NULL) == 0;
+  struct stat64 st;
+  bool st_available = fstat64 (STDOUT_FILENO, &st) == 0 && st.st_mtime != 0;
 
   assert (test_pid > 1);
   /* Kill the whole process group.  */
@@ -143,6 +164,13 @@ signal_handler (int sig)
   else
     printf ("Timed out: killed the child process but it exited %d\n",
             WEXITSTATUS (status));
+
+  if (now_available)
+    print_timestamp ("Termination time", now);
+  if (st_available)
+    print_timestamp ("Last write to standard output",
+                     (struct timeval) { st.st_mtim.tv_sec,
+                         st.st_mtim.tv_nsec / 1000 });
 
   /* Exit with an error.  */
   exit (1);

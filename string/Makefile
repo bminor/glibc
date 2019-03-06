@@ -64,6 +64,12 @@ tests		:= tester inl-tester noinl-tester testcopy test-ffs	\
 # This test allocates a lot of memory and can run for a long time.
 xtests = tst-strcoll-overflow
 
+# This test needs libdl.
+ifeq (yes,$(build-shared))
+tests += test-strerror-errno
+LDLIBS-test-strerror-errno = $(libdl)
+endif
+
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-svc-cmp.out
 endif

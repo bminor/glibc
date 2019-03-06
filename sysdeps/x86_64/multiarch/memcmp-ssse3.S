@@ -33,9 +33,12 @@
 	atom_text_section
 ENTRY (MEMCMP)
 # ifdef USE_AS_WMEMCMP
-	shl	$2, %rdx
-	test	%rdx, %rdx
+	shl	$2, %RDX_LP
+	test	%RDX_LP, %RDX_LP
 	jz	L(equal)
+# elif defined __ILP32__
+	/* Clear the upper 32 bits.  */
+	mov	%edx, %edx
 # endif
 	mov	%rdx, %rcx
 	mov	%rdi, %rdx

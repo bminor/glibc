@@ -1,11 +1,29 @@
+/* Test legacy IPv4 text-to-address function inet_aton.
+   Copyright (C) 1998-2019 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
+#include <array_length.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-
-static struct tests
+static const struct tests
 {
   const char *input;
   int valid;
@@ -16,6 +34,7 @@ static struct tests
   { "-1", 0, 0 },
   { "256", 1, 0x00000100 },
   { "256.", 0, 0 },
+  { "255a", 0, 0 },
   { "256a", 0, 0 },
   { "0x100", 1, 0x00000100 },
   { "0200.0x123456", 1, 0x80123456 },
@@ -40,7 +59,12 @@ static struct tests
   { "1.2.256.4", 0, 0 },
   { "1.2.3.0x100", 0, 0 },
   { "323543357756889", 0, 0 },
-  { "10.1.2.3.4", 0, 0},
+  { "10.1.2.3.4", 0, 0 },
+  { "192.0.2.1", 1, 0xc0000201 },
+  { "192.0.2.2\nX", 1, 0xc0000202 },
+  { "192.0.2.3 Y", 1, 0xc0000203 },
+  { "192.0.2.3Z", 0, 0 },
+  { "192.000.002.010", 1, 0xc0000208 },
 };
 
 
@@ -50,7 +74,7 @@ do_test (void)
   int result = 0;
   size_t cnt;
 
-  for (cnt = 0; cnt < sizeof (tests) / sizeof (tests[0]); ++cnt)
+  for (cnt = 0; cnt < array_length (tests); ++cnt)
     {
       struct in_addr addr;
 
@@ -73,5 +97,4 @@ do_test (void)
   return result;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

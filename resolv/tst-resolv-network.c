@@ -149,6 +149,9 @@ handle_code (const struct resolv_response_context *ctx,
           resolv_response_add_data (b, &rrtype, sizeof (rrtype));
         }
       break;
+    case 104:
+      send_ptr (b, qname, qclass, qtype, "host.example");
+      break;
     default:
       FAIL_EXIT1 ("invalid QNAME: %s (code %d)", qname, code);
     }
@@ -257,6 +260,9 @@ do_test (void)
                 "error: TRY_AGAIN\n");
   check_netent ("code103.example", getnetbyname ("code103.example"),
                 "error: NO_RECOVERY\n");
+  /* Test bug #17630.  */
+  check_netent ("code104.example", getnetbyname ("code104.example"),
+                "error: TRY_AGAIN\n");
 
   /* Lookup by address, success cases.  */
   check_reverse (1,

@@ -127,6 +127,26 @@ elision_init (int argc __attribute__ ((unused)),
 	       TUNABLE_CALLBACK (set_elision_skip_trylock_internal_abort));
 #endif
 
+  /* Linux from 3.9 through 4.2 do not abort HTM transaction on syscalls,
+     instead it suspends the transaction and resumes it when returning to
+     usercode.  The side-effects of the syscall will always remain visible,
+     even if the transaction is aborted.  This is an issue when a transaction
+     is used along with futex syscall, on pthread_cond_wait for instance,
+     where futex might succeed but the transaction is rolled back leading
+     the condition variable object in an inconsistent state.
+
+     Glibc used to prevent it by always aborting a transaction before issuing
+     a syscall.  Linux 4.2 also decided to abort active transaction in
+     syscalls which makes the glibc workaround superflours.  Worse, glibc
+     transaction abortions leads to a performance issues on recent kernels.
+
+     So Lock Elision is just enabled when it has been explict set (either
+     by tunables of by a configure switch) and if kernel aborts HTM
+     transactions on syscalls (PPC_FEATURE2_HTM_NOSC)  */
+
+  __pthread_force_elision = (__pthread_force_elision
+			     && GLRO (dl_hwcap2) & PPC_FEATURE2_HTM_NOSC);
+
   if (!__pthread_force_elision)
     __elision_aconf.try_tbegin = 0; /* Disable elision on rwlocks.  */
 }

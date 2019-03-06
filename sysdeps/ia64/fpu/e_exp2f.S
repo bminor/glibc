@@ -221,7 +221,7 @@ LOCAL_OBJECT_END(T_table)
 
 
 .section .text
-GLOBAL_LIBM_ENTRY(__exp2f)
+WEAK_LIBM_ENTRY(exp2f)
 
 
 {.mfi
@@ -468,10 +468,10 @@ OUT_RANGE_exp2:
 }
 ;;
 
-GLOBAL_LIBM_END(__exp2f)
+WEAK_LIBM_END(exp2f)
 libm_alias_float_other (__exp2, exp2)
 #ifdef SHARED
-.symver __exp2f,exp2f@@GLIBC_2.27
+.symver exp2f,exp2f@@GLIBC_2.27
 .weak __exp2f_compat
 .set __exp2f_compat,__exp2f
 .symver __exp2f_compat,exp2f@GLIBC_2.2

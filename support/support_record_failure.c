@@ -104,3 +104,11 @@ support_record_failure_reset (void)
   __atomic_store_n (&state->failed, 0, __ATOMIC_RELAXED);
   __atomic_add_fetch (&state->counter, 0, __ATOMIC_RELAXED);
 }
+
+int
+support_record_failure_is_failed (void)
+{
+  /* Relaxed MO is sufficient because we need (blocking) external
+     synchronization for reliable test error reporting anyway.  */
+  return __atomic_load_n (&state->failed, __ATOMIC_RELAXED);
+}

@@ -1,5 +1,5 @@
-/* Syscall wrapper that do not set errno.  Linux powerpc version.
-   Copyright (C) 2018 Free Software Foundation, Inc.
+/* Test wcsnlen with size_t in the lower 32 bits of 64-bit register.
+   Copyright (C) 2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,15 +16,5 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* __access_noerrno is used during process initialization in elf/dl-tunables.c
-   before the TCB is initialized, prohibiting the usage of
-   ABORT_TRANSACTION.  */
-#undef ABORT_TRANSACTION
-#define ABORT_TRANSACTION
-
-#include "sysdeps/unix/sysv/linux/not-errno.h"
-
-/* Recover ABORT_TRANSACTION's previous value, in order to not affect
-   other syscalls.  */
-#undef ABORT_TRANSACTION
-#define ABORT_TRANSACTION ABORT_TRANSACTION_IMPL
+#define WIDE 1
+#include "tst-size_t-strnlen.c"

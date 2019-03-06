@@ -86,6 +86,11 @@ tests := tst-dirname tst-tsearch tst-fdset tst-efgcvt tst-mntent tst-hsearch \
 	 tst-preadvwritev tst-preadvwritev64 tst-makedev tst-empty \
 	 tst-preadvwritev2 tst-preadvwritev64v2
 
+# Tests which need libdl.
+ifeq (yes,$(build-shared))
+tests += tst-gethostid
+endif
+
 tests-internal := tst-atomic tst-atomic-long tst-allocate_once
 tests-static := tst-empty
 
@@ -145,3 +150,5 @@ tst-allocate_once-ENV = MALLOC_TRACE=$(objpfx)tst-allocate_once.mtrace
 $(objpfx)tst-allocate_once-mem.out: $(objpfx)tst-allocate_once.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-allocate_once.mtrace > $@; \
 	$(evaluate-test)
+
+$(objpfx)tst-gethostid: $(libdl)

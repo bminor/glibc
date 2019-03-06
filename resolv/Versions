@@ -27,6 +27,7 @@ libc {
     __h_errno; __resp;
 
     __res_iclose;
+    __inet_aton_exact;
     __inet_pton_length;
     __resolv_context_get;
     __resolv_context_get_preinit;

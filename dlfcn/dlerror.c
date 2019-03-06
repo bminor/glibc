@@ -198,7 +198,10 @@ check_free (struct dl_action_result *rec)
       Dl_info info;
       if (_dl_addr (check_free, &info, &map, NULL) != 0 && map->l_ns == 0)
 #endif
-	free ((char *) rec->errstring);
+	{
+	  free ((char *) rec->errstring);
+	  rec->errstring = NULL;
+	}
     }
 }
 

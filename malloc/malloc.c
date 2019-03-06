@@ -2888,6 +2888,8 @@ mremap_chunk (mchunkptr p, size_t new_size)
 typedef struct tcache_entry
 {
   struct tcache_entry *next;
+  /* This field exists to detect double frees.  */
+  struct tcache_perthread_struct *key;
 } tcache_entry;
 
 /* There is one of these for each thread, which contains the
@@ -2911,6 +2913,11 @@ tcache_put (mchunkptr chunk, size_t tc_idx)
 {
   tcache_entry *e = (tcache_entry *) chunk2mem (chunk);
   assert (tc_idx < TCACHE_MAX_BINS);
+
+  /* Mark this chunk as "in the tcache" so the test in _int_free will
+     detect a double free.  */
+  e->key = tcache;
+
   e->next = tcache->entries[tc_idx];
   tcache->entries[tc_idx] = e;
   ++(tcache->counts[tc_idx]);
@@ -2926,6 +2933,7 @@ tcache_get (size_t tc_idx)
   assert (tcache->entries[tc_idx] > 0);
   tcache->entries[tc_idx] = e->next;
   --(tcache->counts[tc_idx]);
+  e->key = NULL;
   return (void *) e;
 }
 
@@ -3716,11 +3724,22 @@ _int_malloc (mstate av, size_t bytes)
       while ((victim = unsorted_chunks (av)->bk) != unsorted_chunks (av))
         {
           bck = victim->bk;
-          if (__builtin_expect (chunksize_nomask (victim) <= 2 * SIZE_SZ, 0)
-              || __builtin_expect (chunksize_nomask (victim)
-				   > av->system_mem, 0))
-            malloc_printerr ("malloc(): memory corruption");
           size = chunksize (victim);
+          mchunkptr next = chunk_at_offset (victim, size);
+
+          if (__glibc_unlikely (size <= 2 * SIZE_SZ)
+              || __glibc_unlikely (size > av->system_mem))
+            malloc_printerr ("malloc(): invalid size (unsorted)");
+          if (__glibc_unlikely (chunksize_nomask (next) < 2 * SIZE_SZ)
+              || __glibc_unlikely (chunksize_nomask (next) > av->system_mem))
+            malloc_printerr ("malloc(): invalid next size (unsorted)");
+          if (__glibc_unlikely ((prev_size (next) & ~(SIZE_BITS)) != size))
+            malloc_printerr ("malloc(): mismatching next->prev_size (unsorted)");
+          if (__glibc_unlikely (bck->fd != victim)
+              || __glibc_unlikely (victim->fd != unsorted_chunks (av)))
+            malloc_printerr ("malloc(): unsorted double linked list corrupted");
+          if (__glibc_unlikely (prev_inuse(next)))
+            malloc_printerr ("malloc(): invalid next->prev_inuse (unsorted)");
 
           /*
              If a small request, try to use last remainder if it is the
@@ -4076,6 +4095,9 @@ _int_malloc (mstate av, size_t bytes)
       victim = av->top;
       size = chunksize (victim);
 
+      if (__glibc_unlikely (size > av->system_mem))
+        malloc_printerr ("malloc(): corrupted top size");
+
       if ((unsigned long) (size) >= (unsigned long) (nb + MINSIZE))
         {
           remainder_size = size - nb;
@@ -4151,13 +4173,33 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 #if USE_TCACHE
   {
     size_t tc_idx = csize2tidx (size);
-
-    if (tcache
-	&& tc_idx < mp_.tcache_bins
-	&& tcache->counts[tc_idx] < mp_.tcache_count)
+    if (tcache != NULL && tc_idx < mp_.tcache_bins)
       {
-	tcache_put (p, tc_idx);
-	return;
+	/* Check to see if it's already in the tcache.  */
+	tcache_entry *e = (tcache_entry *) chunk2mem (p);
+
+	/* This test succeeds on double free.  However, we don't 100%
+	   trust it (it also matches random payload data at a 1 in
+	   2^<size_t> chance), so verify it's not an unlikely
+	   coincidence before aborting.  */
+	if (__glibc_unlikely (e->key == tcache))
+	  {
+	    tcache_entry *tmp;
+	    LIBC_PROBE (memory_tcache_double_free, 2, e, tc_idx);
+	    for (tmp = tcache->entries[tc_idx];
+		 tmp;
+		 tmp = tmp->next)
+	      if (tmp == e)
+		malloc_printerr ("free(): double free detected in tcache 2");
+	    /* If we get here, it was a coincidence.  We've wasted a
+	       few cycles, but don't abort.  */
+	  }
+
+	if (tcache->counts[tc_idx] < mp_.tcache_count)
+	  {
+	    tcache_put (p, tc_idx);
+	    return;
+	  }
       }
   }
 #endif
@@ -4278,6 +4320,8 @@ _int_free (mstate av, mchunkptr p, int have_lock)
       prevsize = prev_size (p);
       size += prevsize;
       p = chunk_at_offset(p, -((long) prevsize));
+      if (__glibc_unlikely (chunksize(p) != prevsize))
+        malloc_printerr ("corrupted size vs. prev_size while consolidating");
       unlink(av, p, bck, fwd);
     }
 
@@ -4439,6 +4483,8 @@ static void malloc_consolidate(mstate av)
 	  prevsize = prev_size (p);
 	  size += prevsize;
 	  p = chunk_at_offset(p, -((long) prevsize));
+	  if (__glibc_unlikely (chunksize(p) != prevsize))
+	    malloc_printerr ("corrupted size vs. prev_size in fastbins");
 	  unlink(av, p, bck, fwd);
 	}
 
@@ -4497,11 +4543,6 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
 
   mchunkptr        bck;             /* misc temp for linking */
   mchunkptr        fwd;             /* misc temp for linking */
-
-  unsigned long    copysize;        /* bytes to copy */
-  unsigned int     ncopies;         /* INTERNAL_SIZE_T words to copy */
-  INTERNAL_SIZE_T* s;               /* copy source */
-  INTERNAL_SIZE_T* d;               /* copy destination */
 
   /* oldmem size */
   if (__builtin_expect (chunksize_nomask (oldp) <= 2 * SIZE_SZ, 0)
@@ -4570,43 +4611,7 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
             }
           else
             {
-              /*
-                 Unroll copy of <= 36 bytes (72 if 8byte sizes)
-                 We know that contents have an odd number of
-                 INTERNAL_SIZE_T-sized words; minimally 3.
-               */
-
-              copysize = oldsize - SIZE_SZ;
-              s = (INTERNAL_SIZE_T *) (chunk2mem (oldp));
-              d = (INTERNAL_SIZE_T *) (newmem);
-              ncopies = copysize / sizeof (INTERNAL_SIZE_T);
-              assert (ncopies >= 3);
-
-              if (ncopies > 9)
-                memcpy (d, s, copysize);
-
-              else
-                {
-                  *(d + 0) = *(s + 0);
-                  *(d + 1) = *(s + 1);
-                  *(d + 2) = *(s + 2);
-                  if (ncopies > 4)
-                    {
-                      *(d + 3) = *(s + 3);
-                      *(d + 4) = *(s + 4);
-                      if (ncopies > 6)
-                        {
-                          *(d + 5) = *(s + 5);
-                          *(d + 6) = *(s + 6);
-                          if (ncopies > 8)
-                            {
-                              *(d + 7) = *(s + 7);
-                              *(d + 8) = *(s + 8);
-                            }
-                        }
-                    }
-                }
-
+	      memcpy (newmem, chunk2mem (oldp), oldsize - SIZE_SZ);
               _int_free (av, oldp, 1);
               check_inuse_chunk (av, newp);
               return chunk2mem (newp);

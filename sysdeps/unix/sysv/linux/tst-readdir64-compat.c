@@ -88,6 +88,10 @@ do_test (void)
       else
         TEST_VERIFY_EXIT (entry_test != NULL);
 
+      /* d_off is never zero because it is the offset of the next
+         entry (not the current entry).  */
+      TEST_VERIFY (entry_reference->d_off > 0);
+
       /* Check that the entries are the same.  */
       TEST_COMPARE_BLOB (entry_reference->d_name,
                          strlen (entry_reference->d_name),

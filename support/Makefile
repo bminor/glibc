@@ -25,6 +25,7 @@ extra-libs-others = $(extra-libs)
 extra-libs-noinstall := $(extra-libs)
 
 libsupport-routines = \
+  blob_repeat \
   check \
   check_addrinfo \
   check_dns_packet \
@@ -43,6 +44,7 @@ libsupport-routines = \
   support_capture_subprocess \
   support_capture_subprocess_check \
   support_chroot \
+  support_descriptors \
   support_enter_mount_namespace \
   support_enter_network_namespace \
   support_format_address_family \
@@ -54,6 +56,7 @@ libsupport-routines = \
   support_isolate_in_subprocess \
   support_openpty \
   support_quote_blob \
+  support_quote_string \
   support_record_failure \
   support_run_diff \
   support_shared_allocate \
@@ -120,6 +123,7 @@ libsupport-routines = \
   xpthread_mutexattr_settype \
   xpthread_once \
   xpthread_rwlock_init \
+  xpthread_rwlock_destroy \
   xpthread_rwlock_rdlock \
   xpthread_rwlock_unlock \
   xpthread_rwlock_wrlock \
@@ -154,9 +158,12 @@ endif
 tests = \
   README-testing \
   tst-support-namespace \
+  tst-support_blob_repeat \
   tst-support_capture_subprocess \
+  tst-support_descriptors \
   tst-support_format_dns_packet \
   tst-support_quote_blob \
+  tst-support_quote_string \
   tst-support_record_failure \
   tst-test_compare \
   tst-test_compare_blob \

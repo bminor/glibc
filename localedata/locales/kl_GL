@@ -70,11 +70,11 @@ copy "da_DK"
 END LC_NUMERIC
 
 LC_TIME
-abday    "sab";"ata";/
+abday    "sap";"ata";/
          "mar";"pin";/
          "sis";"tal";/
          "arf"
-day      "sabaat";/
+day      "sapaat";/
          "ataasinngorneq";/
          "marlunngorneq";/
          "pingasunngorneq";/

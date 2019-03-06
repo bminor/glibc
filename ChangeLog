@@ -1,3 +1,734 @@
+2018-09-21  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* NEWS: Add note about new TLE support on powerpc64le.
+	* sysdeps/powerpc/nptl/tcb-offsets.sym (TM_CAPABLE): Remove.
+	* sysdeps/powerpc/nptl/tls.h (tcbhead_t): Rename tm_capable to
+	__ununsed1.
+	(TLS_INIT_TP, TLS_DEFINE_INIT_TP): Remove tm_capable setup.
+	(THREAD_GET_TM_CAPABLE, THREAD_SET_TM_CAPABLE): Remove macros.
+	* sysdeps/powerpc/powerpc32/sysdep.h,
+	sysdeps/powerpc/powerpc64/sysdep.h (ABORT_TRANSACTION_IMPL,
+	ABORT_TRANSACTION): Remove macros.
+	* sysdeps/powerpc/sysdep.h (ABORT_TRANSACTION): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/elision-conf.c (elision_init): Set
+	__pthread_force_elision iff PPC_FEATURE2_HTM_NOSC is set.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h,
+	sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h
+	sysdeps/unix/sysv/linux/powerpc/syscall.S (ABORT_TRANSACTION): Remove
+	usage.
+	* sysdeps/unix/sysv/linux/powerpc/not-errno.h: Remove file.
+
+2019-01-13  Jim Wilson  <jimw@sifive.com>
+
+	[BZ #24040]
+	* elf/Makefile (CFLAGS-tst-unwind-main.c): Add -DUSE_PTHREADS=0.
+	* elf/tst-unwind-main.c: If USE_PTHEADS, include pthread.h and error.h
+	(func): New.
+	(main): If USE_PTHREADS, call pthread_create to run func.  Otherwise
+	call func directly.
+	* nptl/Makefile (tests): Add tst-unwind-thread.
+	(CFLAGS-tst-unwind-thread.c): Define.
+	* nptl/tst-unwind-thread.c: New file.
+	* sysdeps/unix/sysv/linux/riscv/clone.S (__thread_start): Mark ra
+	as undefined.
+
+2019-01-31  Carlos O'Donell  <carlos@redhat.com>
+	    Torvald Riegel  <triegel@redhat.com>
+	    Rik Prohaska  <prohaska7@gmail.com>
+
+	[BZ# 23844]
+	* nptl/Makefile (tests): Add tst-rwlock-tryrdlock-stall, and
+	tst-rwlock-trywrlock-stall.
+	* nptl/pthread_rwlock_tryrdlock.c (__pthread_rwlock_tryrdlock):
+	Wake waiters if PTHREAD_RWLOCK_FUTEX_USED is set.
+	* nptl/pthread_rwlock_trywrlock.c (__pthread_rwlock_trywrlock):
+	Set __wrphase_fute to 1 only if we started the write phase.
+	* nptl/tst-rwlock-tryrdlock-stall.c: New file.
+	* nptl/tst-rwlock-trywrlock-stall.c: New file.
+	* support/Makefile (libsupport-routines): Add xpthread_rwlock_destroy.
+	* support/xpthread_rwlock_destroy.c: New file.
+	* support/xthread.h: Declare xpthread_rwlock_destroy.
+
+2019-02-08  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24161]
+	* sysdeps/nptl/fork.h (__run_fork_handlers): Add multiple_threads
+	argument.
+	* nptl/register-atfork.c (__run_fork_handlers): Only perform
+	locking if the new do_locking argument is true.
+	* sysdeps/nptl/fork.c (__libc_fork): Pass multiple_threads to
+	__run_fork_handlers.
+
+2019-02-07  Stefan Liebler  <stli@linux.ibm.com>
+
+	[BZ #24180]
+	* nptl/pthread_mutex_trylock.c (__pthread_mutex_trylock):
+	Add compiler barriers and comments.
+
+2019-02-04  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20018]
+	nscd: Do not rely on new GLIBC_PRIVATE ABI after CVE-2016-10739 fix.
+	* nscd/nscd-inet_addr.c: New file.  Build resolv/inet_addr.c for
+	nscd, without public symbols.
+	* nscd/Makefile (nscd-modules): Add it.
+	* nscd/gai.c: Include <arpa/inet.h> and change visibility of
+	__inet_aton_exact.
+
+2019-01-21  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20018]
+	CVE-2016-10739
+	resolv: Reject trailing characters in host names
+	* include/arpa/inet.h (__inet_aton_exact): Declare.
+	(inet_aton): Remove hidden prototype.  No longer used internally.
+	* nscd/gai.c (__inet_aton): Do not define.
+	* nscd/gethstbynm3_r.c (__inet_aton): Likewise.
+	* nss/digits_dots.c (__inet_aton): Likewise.
+	(__nss_hostname_digits_dots_context): Call __inet_aton_exact.
+	* resolv/Makefile (tests-internal): Add tst-inet_aton_exact.
+	(tests): Add tst-resolv-nondecimal, tst-resolv-trailing.
+	(tst-resolv-nondecimal): Link with libresolv.so and libpthread.
+	(tst-resolv-trailing): Likewise.
+	* resolv/Versions (GLIBC_PRIVATE): Export __inet_aton_exact from
+	libc.
+	* resolv/inet_addr.c (inet_aton_end): Remame from __inet_aton.
+	Make static.  Add endp parameter.
+	(__inet_aton_exact): New function.
+	(__inet_aton_ignore_trailing): New function, aliased to inet_aton.
+	(__inet_addr): Call inet_aton_end.
+	* resolv/res_init.c (res_vinit_1): Truncate nameserver for IPv4,
+	not just IPv6.  Call __inet_aton_exact.
+	* resolv/tst-aton.c: Switch to <support/test-driver.c>.
+	(tests): Make const.  Add additional test cases with trailing
+	characters.
+	(do_test): Use array_length.
+	* resolv/tst-inet_aton_exact.c: New file.
+	* resolv/tst-resolv-trailing.c: Likewise.
+	* resolv/tst-resolv-nondecimal.c: Likewise.
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Call __inet_aton_exact.
+
+2019-01-18  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24112]
+	resolv: Do not send queries for non-host-names in nss_dns.
+	* resolv/nss_dns/dns-host.c (check_name): New function.
+	(_nss_dns_gethostbyname2_r): Use it.
+	(_nss_dns_gethostbyname_r): Likewise.
+	(_nss_dns_gethostbyname4_r): Likewise.
+
+2019-01-21  Florian Weimer  <fweimer@redhat.com>
+
+	* resolv/inet_addr.c: Reformat to GNU style.
+	(__inet_addr, __inet_aton): Update comment.
+
+2019-02-04  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #24155]
+	CVE-2019-7309
+	* NEWS: Updated for CVE-2019-7309.
+	* sysdeps/x86_64/memcmp.S: Use RDX_LP for size.  Clear the
+	upper 32 bits of RDX register for x32.  Use unsigned Jcc
+	instructions, instead of signed.
+	* sysdeps/x86_64/x32/Makefile (tests): Add tst-size_t-memcmp-2.
+	* sysdeps/x86_64/x32/tst-size_t-memcmp-2.c: New test.
+
+2019-02-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #24097]
+	CVE-2019-6488
+	* sysdeps/x86_64/multiarch/strlen-avx2.S: Use RSI_LP for length.
+	Clear the upper 32 bits of RSI register.
+	* sysdeps/x86_64/strlen.S: Use RSI_LP for length.
+	* sysdeps/x86_64/x32/Makefile (tests): Add tst-size_t-strnlen
+	and tst-size_t-wcsnlen.
+	* sysdeps/x86_64/x32/tst-size_t-strnlen.c: New file.
+	* sysdeps/x86_64/x32/tst-size_t-wcsnlen.c: Likewise.
+
+2019-02-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #24097]
+	CVE-2019-6488
+	* sysdeps/x86_64/multiarch/strcpy-sse2-unaligned.S: Use RDX_LP
+	for length.
+	* sysdeps/x86_64/multiarch/strcpy-ssse3.S: Likewise.
+	* sysdeps/x86_64/x32/Makefile (tests): Add tst-size_t-strncpy.
+	* sysdeps/x86_64/x32/tst-size_t-strncpy.c: New file.
+
+2019-02-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #24097]
+	CVE-2019-6488
+	* sysdeps/x86_64/multiarch/strcmp-avx2.S: Use RDX_LP for length.
+	* sysdeps/x86_64/multiarch/strcmp-sse42.S: Likewise.
+	* sysdeps/x86_64/strcmp.S: Likewise.
+	* sysdeps/x86_64/x32/Makefile (tests): Add tst-size_t-strncasecmp,
+	tst-size_t-strncmp and tst-size_t-wcsncmp.
+	* sysdeps/x86_64/x32/tst-size_t-strncasecmp.c: New file.
+	* sysdeps/x86_64/x32/tst-size_t-strncmp.c: Likewise.
+	* sysdeps/x86_64/x32/tst-size_t-wcsncmp.c: Likewise.
+
+2019-02-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #24097]
+	CVE-2019-6488
+	* sysdeps/x86_64/multiarch/memset-avx512-no-vzeroupper.S: Use
+	RDX_LP for length.  Clear the upper 32 bits of RDX register.
+	* sysdeps/x86_64/multiarch/memset-vec-unaligned-erms.S: Likewise.
+	* sysdeps/x86_64/x32/Makefile (tests): Add tst-size_t-wmemset.
+	* sysdeps/x86_64/x32/tst-size_t-memset.c: New file.
+	* sysdeps/x86_64/x32/tst-size_t-wmemset.c: Likewise.
+
+2019-02-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #24097]
+	CVE-2019-6488
+	* sysdeps/x86_64/memrchr.S: Use RDX_LP for length.
+	* sysdeps/x86_64/multiarch/memrchr-avx2.S: Likewise.
+	* sysdeps/x86_64/x32/Makefile (tests): Add tst-size_t-memrchr.
+	* sysdeps/x86_64/x32/tst-size_t-memrchr.c: New file.
+
+2019-02-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #24097]
+	CVE-2019-6488
+	* sysdeps/x86_64/multiarch/memcpy-ssse3-back.S: Use RDX_LP for
+	length.  Clear the upper 32 bits of RDX register.
+	* sysdeps/x86_64/multiarch/memcpy-ssse3.S: Likewise.
+	* sysdeps/x86_64/multiarch/memmove-avx512-no-vzeroupper.S:
+	Likewise.
+	* sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S:
+	Likewise.
+	* sysdeps/x86_64/x32/Makefile (tests): Add tst-size_t-memcpy.
+	tst-size_t-wmemchr.
+	* sysdeps/x86_64/x32/tst-size_t-memcpy.c: New file.
+
+2019-02-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #24097]
+	CVE-2019-6488
+	* sysdeps/x86_64/multiarch/memcmp-avx2-movbe.S: Use RDX_LP for
+	length.  Clear the upper 32 bits of RDX register.
+	* sysdeps/x86_64/multiarch/memcmp-sse4.S: Likewise.
+	* sysdeps/x86_64/multiarch/memcmp-ssse3.S: Likewise.
+	* sysdeps/x86_64/x32/Makefile (tests): Add tst-size_t-memcmp and
+	tst-size_t-wmemcmp.
+	* sysdeps/x86_64/x32/tst-size_t-memcmp.c: New file.
+	* sysdeps/x86_64/x32/tst-size_t-wmemcmp.c: Likewise.
+
+2019-02-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #24097]
+	CVE-2019-6488
+	* sysdeps/x86_64/memchr.S: Use RDX_LP for length.  Clear the
+	upper 32 bits of RDX register.
+	* sysdeps/x86_64/multiarch/memchr-avx2.S: Likewise.
+	* sysdeps/x86_64/x32/Makefile (tests): Add tst-size_t-memchr and
+	tst-size_t-wmemchr.
+	* sysdeps/x86_64/x32/test-size_t.h: New file.
+	* sysdeps/x86_64/x32/tst-size_t-memchr.c: Likewise.
+	* sysdeps/x86_64/x32/tst-size_t-wmemchr.c: Likewise.
+
+2019-01-16  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
+
+	* math/libm-test-fma.inc (fma_test_data): Set
+	XFAIL_ROUNDING_IBM128_LIBGCC to more tests.
+
+2019-01-07  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #24024]
+	* Makeconfig: Build libm with -fno-math-errno but build the remaining
+	code with -fmath-errno.
+	* string/Makefile [$(build-shared)] (tests): Add test-strerror-errno.
+	[$(build-shared)] (LDLIBS-test-strerror-errno): New variable.
+	* string/test-strerror-errno.c: New file.
+
+2019-01-03  Martin Jansa  <Martin.Jansa@gmail.com>
+
+	[BZ #19444]
+	* sysdeps/ieee754/soft-fp/s_fdiv.c: Include <libc-diag.h> and use
+	DIAG_PUSH_NEEDS_COMMENT, DIAG_IGNORE_NEEDS_COMMENT and
+	DIAG_POP_NEEDS_COMMENT to disable -Wmaybe-uninitialized.
+
+2019-01-02  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #24034]
+	* sysdeps/unix/sysv/linux/arm/atomic-machine.h
+	(__arm_assisted_compare_and_exchange_val_32_acq): Use uint32_t rather
+	than __typeof (...) for the a_ptr variable.
+
+2018-12-31  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #24022]
+	* sysdeps/unix/sysv/linux/riscv/flush-icache.c: Check if
+	<asm/syscalls.h> exists with __has_include__ before including it.
+
+2019-01-02  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24018]
+	* intl/dcigettext.c (DCIGETTEXT): Do not return NULL on asprintf
+	failure.
+
+2018-12-31  Florian Weimer  <fw@deneb.enyo.de>
+
+	[BZ #24027]
+	* malloc/malloc.c (_int_realloc): Always call memcpy for the
+	copying operation.  (ncopies had the wrong type, resulting in an
+	integer wraparound and too few elements being copied.)
+
+2018-12-28  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/alpha/fpu/libm-test-ulps: Regenerated.
+
+2018-12-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+	    James Clarke  <jrtc27@jrtc27.com>
+
+	[BZ #23967]
+	* sysdeps/unix/sysv/linux/kernel_sigaction.h (HAS_SA_RESTORER):
+	Define if SA_RESTORER is defined.
+	(kernel_sigaction): Define sa_restorer if HAS_SA_RESTORER is defined.
+	(SET_SA_RESTORER, RESET_SA_RESTORER): Define iff the macro are not
+	already defined.
+	* sysdeps/unix/sysv/linux/m68k/kernel_sigaction.h (SA_RESTORER,
+	kernel_sigaction, SET_SA_RESTORER, RESET_SA_RESTORER): Remove
+	definitions.
+	(HAS_SA_RESTORER): Define.
+	* sysdeps/unix/sysv/linux/sparc/kernel_sigaction.h (SA_RESTORER,
+	SET_SA_RESTORER, RESET_SA_RESTORER): Remove definition.
+	(HAS_SA_RESTORER): Define.
+	* sysdeps/unix/sysv/linux/nios2/kernel_sigaction.h: Include generic
+	kernel_sigaction after define SET_SA_RESTORER and RESET_SA_RESTORER.
+	* sysdeps/unix/sysv/linux/powerpc/kernel_sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/kernel_sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sigaction.c: Likewise.
+
+2018-10-30  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #23125]
+	* sysdeps/riscv/start.S (ENTRY_POINT): Mark ra as undefined.
+	Don't use tail call.
+	* elf/tst-unwind-main.c: New file.
+	* elf/Makefile (tests): Add tst-unwind-main.
+	(CFLAGS-tst-unwind-main.c): Define.
+
+2018-12-15  Florian Weimer  <fweimer@redhat.com>
+
+	* support/blob_repeat.c (check_mul_overflow_size_t): New function.
+	(minimum_stride_size): Use it.
+	(support_blob_repeat_allocate): Likewise.
+
+2018-12-13  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #23861]
+	* nptl/pthread_rwlock_common.c: Reindent.  Fix typos.
+	(__pthread_rwlock_rdlock_full): Update expected value for
+	__readers while waiting on PTHREAD_RWLOCK_RWAITING.
+	* nptl/tst-rwlock-pwn.c: New file.
+	* nptl/Makefile (tests): Add tst-rwlock-pwn.
+
+2018-12-12  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
+
+	[BZ #23614]
+	* sysdeps/powerpc/powerpc64/addmul_1.S (FUNC): Add CFI offset for
+	registers saved in the stack frame.
+	* sysdeps/powerpc/powerpc64/lshift.S (__mpn_lshift): Likewise.
+	* sysdeps/powerpc/powerpc64/mul_1.S (__mpn_mul_1): Likewise.
+
+2018-12-07  DJ Delorie  <dj@redhat.com>
+
+	[BZ #23907]
+	* malloc/tst-tcfree3.c: New.
+	* malloc/Makefile: Add it.
+
+2018-12-07  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23927]
+	CVE-2018-19591
+	* inet/tst-if_index-long.c: New file.
+	* inet/Makefile (tests): Add tst-if_index-long.
+
+2018-12-07  Florian Weimer  <fweimer@redhat.com>
+
+	* support/check.h (support_record_failure_is_failed): Declare.
+	* support/descriptors.h: New file.
+	* support/support_descriptors.c: Likewise.
+	* support/tst-support_descriptors.c: Likewise.
+	* support/support_record_failure.c
+	(support_record_failure_is_failed): New function.
+	* support/Makefile (libsupport-routines): Add support_descriptors.
+	(tests): Add tst-support_descriptors.
+
+2018-12-01  Florian Weimer  <fweimer@redhat.com>
+
+	* support/support_capture_subprocess.c
+	(support_capture_subprocess): Check that pipe descriptors have
+	expected values.  Close original pipe descriptors in subprocess.
+
+2018-11-28  Florian Weimer  <fweimer@redhat.com>
+
+	* support/support.h (support_quote_string): Do not use str
+	parameter name.
+
+2018-11-27  Florian Weimer  <fweimer@redhat.com>
+
+	* support/support.h (support_quote_string): Declare.
+	* support/support_quote_string.c: New file.
+	* support/tst-support_quote_string.c: Likewise.
+	* support/Makefile (libsupport-routines): Add
+	support_quote_string.
+	(tests): Add tst-support_quote_string.
+
+2018-12-10  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23972]
+	* sysdeps/unix/sysv/linux/getdents64.c (handle_overflow): Check
+	offset instead of count for clarity.  Fix typo in comment.
+	(__old_getdents64): Keep track of previous offset.  Use it to call
+	handle_overflow.
+	* sysdeps/unix/sysv/linux/tst-readdir64-compat.c (do_test): Check
+	that d_off is never zero.
+
+2018-11-30  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
+
+	[BZ #23690]
+	* elf/dl-runtime.c (_dl_profile_fixup): Guarantee memory
+	modification order when accessing reloc_result->addr.
+	* include/link.h (reloc_result): Add field init.
+	* nptl/Makefile (tests): Add tst-audit-threads.
+	(modules-names): Add tst-audit-threads-mod1 and
+	tst-audit-threads-mod2.
+	Add rules to build tst-audit-threads.
+	* nptl/tst-audit-threads-mod1.c: New file.
+	* nptl/tst-audit-threads-mod2.c: Likewise.
+	* nptl/tst-audit-threads.c: Likewise.
+	* nptl/tst-audit-threads.h: Likewise.
+
+2018-11-26  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23907]
+	* malloc/malloc.c (_int_free): Validate tc_idx before checking for
+	double-frees.
+
+
+2018-11-20  DJ Delorie  <dj@redhat.com>
+
+	* malloc/malloc.c (tcache_entry): Add key field.
+	(tcache_put): Set it.
+	(tcache_get): Likewise.
+	(_int_free): Check for double free in tcache.
+	* malloc/tst-tcfree1.c: New.
+	* malloc/tst-tcfree2.c: New.
+	* malloc/Makefile: Run the new tests.
+	* manual/probes.texi: Document memory_tcache_double_free probe.
+
+	* dlfcn/dlerror.c (check_free): Prevent double frees.
+
+2018-11-27  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23927]
+	CVE-2018-19591
+	* sysdeps/unix/sysv/linux/if_index.c (__if_nametoindex): Avoid
+	descriptor leak in case of ENODEV error.
+
+2018-11-19  Florian Weimer  <fweimer@redhat.com>
+
+	support: Print timestamps in timeout handler.
+	* support/support_test_main.c (print_timestamp): New function.
+	(signal_handler): Use it to print the termination time and the
+	time of the last write to standard output.
+
+2018-10-09  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* libio/tst-readline.c (TIMEOUT): Define.
+
+2018-10-22  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/syscall-names.list: Update kernel
+	version to 4.19.
+
+2018-09-18  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Fix tzfile low-memory assertion failure
+	[BZ #21716]
+	* time/tzfile.c (__tzfile_read): Check for memory exhaustion
+	when registering time zone abbreviations.
+
+2018-08-31  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #20271]
+	* include/stdio.h (__libc_fatal): Mention newline in comment.
+	* grp/initgroups.c (internal_getgrouplist): Add missing newline.
+	* nptl/pthread_cond_wait.c (__pthread_cond_wait_common): Likewise.
+	* nscd/initgrcache.c (addinitgroupsX): Likewise.
+	* nss/nsswitch.c (__nss_next2): Likewise.
+	* sysdeps/aarch64/dl-irel.h (elf_irela): Likewise.
+	* sysdeps/arm/dl-irel.h (elf_irel): Likewise.
+	* sysdeps/generic/unwind-dw2.c (execute_cfa_program): Likewise.
+	* sysdeps/i386/dl-irel.h (elf_irel): Likewise.
+	* sysdeps/powerpc/powerpc32/dl-irel.h (elf_irel): Likewise.
+	* sysdeps/powerpc/powerpc64/dl-irel.h (elf_irel): Likewise.
+	* sysdeps/s390/dl-irel.h (elf_irel): Likewise.
+	* sysdeps/sparc/sparc32/dl-irel.h (elf_irel): Likewise.
+	* sysdeps/sparc/sparc64/dl-irel.h (elf_irel): Likewise.
+	* sysdeps/x86_64/dl-irel.h (elf_irel): Likewise.
+	* sysdeps/nptl/futex-internal.h (futex_wake): Likewise.
+	* sysdeps/unix/sysv/linux/netlink_assert_response.c
+	(__netlink_assert_response): Likewise.
+
+2018-08-28  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23520]
+	nscd: Fix use-after-free in addgetnetgrentX and its callers.
+	* nscd/netgroupcache.c
+	(addgetnetgrentX): Add tofreep parameter.  Do not free
+	heap-allocated buffer.
+	(addinnetgrX): Free buffer allocated bt addgetnetgrentX.
+	(addgetnetgrentX_ignore): New function.
+	(addgetnetgrent): Call it.
+	(readdgetnetgrent): Likewise.
+
+2018-08-16  DJ Delorie  <dj@delorie.com>
+
+	* malloc/malloc.c (_int_free): Check for corrupt prev_size vs size.
+	(malloc_consolidate): Likewise.
+
+2018-08-16  Pochang Chen  <johnchen902@gmail.com>
+
+	* malloc/malloc.c (_int_malloc.c): Verify size of top chunk.
+
+2018-08-13  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/syscall-names.list: Update kernel
+	version to 4.18.
+	(io_pgetevents): New syscall.
+	(rseq): Likewise.
+
+2018-11-08  Alexandra Hájková  <ahajkova@redhat.com>
+
+	[BZ #17630]
+	* resolv/tst-resolv-network.c: Add test for getnetbyname.
+
+2018-11-08  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #23509]
+	* sysdeps/x86/dl-prop.h (_dl_process_cet_property_note): Skip
+	note parsing if a NT_GNU_PROPERTY_TYPE_0 note has been processed.
+	Update the l_cet field when processing NT_GNU_PROPERTY_TYPE_0 note.
+	Check multiple NT_GNU_PROPERTY_TYPE_0 notes.
+	* sysdeps/x86/link_map.h (l_cet): Expand to 3 bits,  Add
+	lc_unknown.
+
+2018-11-05  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #22927]
+	* resolv/gai_misc.c (__gai_enqueue_request): Don't crash if
+	creating the first helper thread failed.
+
+2018-10-23  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #23709]
+	* sysdeps/x86/cpu-features.c (init_cpu_features): Set TSX bits
+	independently of other flags.
+
+2018-10-30  Florian Weimer  <fweimer@redhat.com>
+
+	* stdlib/tst-strtod-overflow.c (do_test): Switch to
+	support_blob_repeat.
+
+2018-10-30  Florian Weimer  <fweimer@redhat.com>
+
+	* support/blob_repeat.c (allocate_big): Call mkstemp directly.
+
+2018-10-30  Florian Weimer  <fweimer@redhat.com>
+
+	* stdlib/test-bz22786.c (do_test): Additional free calls to avoid
+	memory leaks.
+
+2018-10-30  Florian Weimer  <fweimer@redhat.com>
+
+	Avoid spurious test failures in stdlib/test-bz22786.
+	* support/Makefile (libsupport-routines): Add blob_repeat.
+	(tests): Add tst-support_blob_repeat.
+	* support/blob_repeat.h: New file.
+	* support/blob_repeat.c: Likewise.
+	* support/tst-support_blob_repeat.c: Likewise.
+	* stdlib/test-bz22786.c (do_test): Replace malloc and memset with
+	support_blob_repeat_allocate.
+
+2018-08-30  Stefan Liebler  <stli@linux.ibm.com>
+
+	* stdlib/test-bz22786.c (do_test): Return EXIT_UNSUPPORTED
+	if malloc fails.
+
+2018-08-24  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+        [BZ #23400]
+        * stdlib/test-bz22786.c (do_test): Fix undefined behavior, don't
+        create temporary files in source tree.
+
+2018-10-26  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	[BZ #23822]
+	* sysdeps/ia64/fpu/e_exp2f.S (exp2f): Use WEAK_LIBM_ENTRY.
+	* sysdeps/ia64/fpu/e_log2f.S (log2f): Likewise.
+	* sysdeps/ia64/fpu/e_exp2f.S (powf): Likewise.
+
+2018-10-25  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23562]
+	[BZ #23821]
+	XFAIL siginfo_t si_band conform test on sparc64.
+	* sysdeps/unix/sysv/linux/sparc/bits/siginfo-arch.h
+	(__SI_BAND_TYPE): Only override long int default type on sparc64.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/Makefile
+	(conformtest-xfail-conds): Add sparc64-linux.
+	* conform/data/signal.h-data (siginfo_t): XFAIL si_band test on
+	sparc64.
+	* conform/data/sys/wait.h-data (siginfo_t): Likewise.
+
+2018-10-19  Ilya Yu. Malakhov  <malakhov@mcst.ru>
+
+	[BZ #23562]
+	* sysdeps/unix/sysv/linux/bits/types/siginfo_t.h
+	(struct siginfo_t): Use correct type for si_band.
+
+2018-10-17  Stefan Liebler  <stli@linux.ibm.com>
+
+	[BZ #23275]
+	* nptl/tst-mutex10.c: New File.
+	* nptl/Makefile (tests): Add tst-mutex10.
+	(tst-mutex10-ENV): New variable.
+	* sysdeps/unix/sysv/linux/s390/force-elision.h: (FORCE_ELISION):
+	Ensure that elision path is used if elision is available.
+	* sysdeps/unix/sysv/linux/powerpc/force-elision.h (FORCE_ELISION):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86/force-elision.h: (FORCE_ELISION):
+	Likewise.
+	* nptl/pthreadP.h (PTHREAD_MUTEX_TYPE, PTHREAD_MUTEX_TYPE_ELISION)
+	(PTHREAD_MUTEX_PSHARED): Use atomic_load_relaxed.
+	* nptl/pthread_mutex_consistent.c (pthread_mutex_consistent): Likewise.
+	* nptl/pthread_mutex_getprioceiling.c (pthread_mutex_getprioceiling):
+	Likewise.
+	* nptl/pthread_mutex_lock.c (__pthread_mutex_lock_full)
+	(__pthread_mutex_cond_lock_adjust): Likewise.
+	* nptl/pthread_mutex_setprioceiling.c (pthread_mutex_setprioceiling):
+	Likewise.
+	* nptl/pthread_mutex_timedlock.c (__pthread_mutex_timedlock): Likewise.
+	* nptl/pthread_mutex_trylock.c (__pthread_mutex_trylock): Likewise.
+	* nptl/pthread_mutex_unlock.c (__pthread_mutex_unlock_full): Likewise.
+	* sysdeps/nptl/bits/thread-shared-types.h (struct __pthread_mutex_s):
+	Add comments.
+	* nptl/pthread_mutex_destroy.c (__pthread_mutex_destroy):
+	Use atomic_load_relaxed and atomic_store_relaxed.
+	* nptl/pthread_mutex_init.c (__pthread_mutex_init):
+	Use atomic_store_relaxed.
+
+2018-10-09  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #23716]
+	* sysdeps/i386/dl-cet.c: Removed.
+	* sysdeps/i386/dl-machine.h (_dl_runtime_resolve_shstk): New
+	prototype.
+	(_dl_runtime_profile_shstk): Likewise.
+	(elf_machine_runtime_setup): Use _dl_runtime_profile_shstk or
+	_dl_runtime_resolve_shstk if SHSTK is enabled by kernel.
+
+2018-10-09  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #20209]
+	* localedata/locales/kl_GL: (abday): Fix spelling of Sun (Sunday),
+	should be "sap" rather than "sab".
+	(day): Fix spelling of Sunday, should be "sapaat" rather than
+	"sabaat".
+
+2018-09-28  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #23579]
+	* misc/tst-preadvwritev2-common.c (do_test_with_invalid_fd,
+	do_test_with_invalid_iov): New tests.
+	* misc/tst-preadvwritev2.c, misc/tst-preadvwritev64v2.c (do_test):
+	Call do_test_with_invalid_fd and do_test_with_invalid_iov.
+	* sysdeps/unix/sysv/linux/preadv2.c (preadv2): Use fallback code iff
+	errno is ENOSYS.
+	* sysdeps/unix/sysv/linux/preadv64v2.c (preadv64v2): Likewise.
+	* sysdeps/unix/sysv/linux/pwritev2.c (pwritev2): Likewise.
+	* sysdeps/unix/sysv/linux/pwritev64v2.c (pwritev64v2): Likewise.
+	* NEWS: Add bug fixed.
+
+2018-09-27  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #23717]
+	* stdlib/tst-setcontext9.c (f1a): Make st2 static.
+	(do_test): Make st1 static.
+
+2018-09-21  H.J. Lu  <hongjiu.lu@intel.com>
+	    Xuepeng Guo  <xuepeng.guo@intel.com>
+
+	[BZ #23606]
+	* sysdeps/i386/start.S: Include <sysdep.h>
+	(_start): Use ENTRY/END to insert ENDBR32 at entry when CET is
+	enabled.  Add cfi_undefined (eip).
+
+2018-09-19  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	[BZ #23637]
+	* string/test-strstr.c (pr23637): New function.
+	(test_main): Add tests with longer needles.
+	* string/strcasestr.c (AVAILABLE): Fix readahead distance.
+	* string/strstr.c (AVAILABLE): Likewise.
+
+2018-09-19  Carlos O'Donell  <carlos@redhat.com>
+
+	* stdlib/tst-setcontext9.c (f1): Rename to...
+	(f1a): ... this.
+	(f1b): New function implementing lower half of f1 in alternate stack.
+
+2018-09-20  Florian Weimer  <fweimer@redhat.com>
+
+	* misc/tst-gethostid.c: New file.
+	* misc/Makefile [$(build-shared)] (tests): Add tst-gethostid.
+	(tst-gethostid): Link with -ldl.
+
+2018-09-20  Mingli Yu  <Mingli.Yu@windriver.com>
+
+	* sysdeps/unix/sysv/linux/gethostid.c (gethostid): Check for NULL
+	value from gethostbyname_r.
+
+2018-09-06  Stefan Liebler  <stli@linux.ibm.com>
+
+	* sysdeps/unix/sysv/linux/spawni.c (maybe_script_execute):
+	Increment size of new_argv by one.
+
+2018-08-28  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23578]
+	* posix/tst-regcomp-truncated.c: New file.
+	* posix/Makefile (tests): Add it.
+	(tst-regcomp-truncated.out): Depend on generated locales.
+
+2018-08-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	[BZ #23578]
+	regex: fix uninitialized memory access
+	I introduced this bug into gnulib in commit
+	8335a4d6c7b4448cd0bcb6d0bebf1d456bcfdb17 dated 2006-04-10;
+	eventually it was merged into glibc.  The bug was found by
+	project-repo <bugs@feusi.co> and reported here:
+	https://lists.gnu.org/r/sed-devel/2018-08/msg00017.html
+	Diagnosis and draft fix reported by Assaf Gordon here:
+	https://lists.gnu.org/r/bug-gnulib/2018-08/msg00071.html
+	https://lists.gnu.org/r/bug-gnulib/2018-08/msg00142.html
+	* posix/regex_internal.c (build_wcs_upper_buffer):
+	Fix bug when mbrtowc returns 0.
+
+2018-08-27 Martin Kuchta  <martin.kuchta@netapp.com>
+	   Torvald Riegel  <triegel@redhat.com>
+
+	[BZ #23538]
+	* nptl/pthread_cond_common.c (__condvar_quiesce_and_switch_g1):
+	Update r to include the set wake-request flag if waiters are
+	remaining after spinning.
+
 2018-08-03  DJ Delorie  <dj@redhat.com>
 
 	* sysdeps/riscv/rvf/math_private.h (libc_feholdexcept_setround_riscv):

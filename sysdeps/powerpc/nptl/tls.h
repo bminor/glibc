@@ -67,8 +67,7 @@ typedef struct
   uint32_t padding;
   uint32_t at_platform;
 #endif
-  /* Indicate if HTM capable (ISA 2.07).  */
-  uint32_t tm_capable;
+  uint32_t __unused;
   /* Reservation for AT_PLATFORM data - powerpc64.  */
 #ifdef __powerpc64__
   uint32_t at_platform;
@@ -142,7 +141,6 @@ register void *__thread_register __asm__ ("r13");
 # define TLS_INIT_TP(tcbp) \
   ({ 									      \
     __thread_register = (void *) (tcbp) + TLS_TCB_OFFSET;		      \
-    THREAD_SET_TM_CAPABLE (__tcb_hwcap & PPC_FEATURE2_HAS_HTM ? 1 : 0);	      \
     THREAD_SET_HWCAP (__tcb_hwcap);					      \
     THREAD_SET_AT_PLATFORM (__tcb_platform);				      \
     NULL;								      \
@@ -151,8 +149,6 @@ register void *__thread_register __asm__ ("r13");
 /* Value passed to 'clone' for initialization of the thread register.  */
 # define TLS_DEFINE_INIT_TP(tp, pd) \
     void *tp = (void *) (pd) + TLS_TCB_OFFSET + TLS_PRE_TCB_SIZE;	      \
-    (((tcbhead_t *) ((char *) tp - TLS_TCB_OFFSET))[-1].tm_capable) =	      \
-      THREAD_GET_TM_CAPABLE ();						      \
     (((tcbhead_t *) ((char *) tp - TLS_TCB_OFFSET))[-1].hwcap) =	      \
       THREAD_GET_HWCAP ();						      \
     (((tcbhead_t *) ((char *) tp - TLS_TCB_OFFSET))[-1].at_platform) =	      \
@@ -209,13 +205,6 @@ register void *__thread_register __asm__ ("r13");
     (((tcbhead_t *) ((char *) (descr)					      \
 		     + TLS_PRE_TCB_SIZE))[-1].pointer_guard		      \
      = THREAD_GET_POINTER_GUARD())
-
-/* tm_capable field in TCB head.  */
-# define THREAD_GET_TM_CAPABLE() \
-    (((tcbhead_t *) ((char *) __thread_register				      \
-		     - TLS_TCB_OFFSET))[-1].tm_capable)
-# define THREAD_SET_TM_CAPABLE(value) \
-    (THREAD_GET_TM_CAPABLE () = (value))
 
 /* hwcap field in TCB head.  */
 # define THREAD_GET_HWCAP() \

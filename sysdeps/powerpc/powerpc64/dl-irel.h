@@ -57,7 +57,7 @@ elf_irela (const Elf64_Rela *reloc)
 #endif
     }
   else
-    __libc_fatal ("unexpected reloc type in static binary");
+    __libc_fatal ("Unexpected reloc type in static binary.\n");
 }
 
 #endif /* dl-irel.h */

@@ -34,12 +34,16 @@ ENTRY(MEMCHR)
 	mov	%edi, %ecx
 
 #ifdef USE_AS_WMEMCHR
-	test	%rdx, %rdx
+	test	%RDX_LP, %RDX_LP
 	jz	L(return_null)
-	shl	$2, %rdx
+	shl	$2, %RDX_LP
 #else
+# ifdef __ILP32__
+	/* Clear the upper 32 bits.  */
+	movl	%edx, %edx
+# endif
 	punpcklbw %xmm1, %xmm1
-	test	%rdx, %rdx
+	test	%RDX_LP, %RDX_LP
 	jz	L(return_null)
 	punpcklbw %xmm1, %xmm1
 #endif

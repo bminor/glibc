@@ -405,8 +405,12 @@ __condvar_quiesce_and_switch_g1 (pthread_cond_t *cond, uint64_t wseq,
 	{
 	  /* There is still a waiter after spinning.  Set the wake-request
 	     flag and block.  Relaxed MO is fine because this is just about
-	     this futex word.  */
-	  r = atomic_fetch_or_relaxed (cond->__data.__g_refs + g1, 1);
+	     this futex word.
+
+	     Update r to include the set wake-request flag so that the upcoming
+	     futex_wait only blocks if the flag is still set (otherwise, we'd
+	     violate the basic client-side futex protocol).  */
+	  r = atomic_fetch_or_relaxed (cond->__data.__g_refs + g1, 1) | 1;
 
 	  if ((r >> 1) > 0)
 	    futex_wait_simple (cond->__data.__g_refs + g1, r, private);
