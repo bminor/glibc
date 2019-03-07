@@ -1,3 +1,8 @@
+2019-03-07  Florian Weimer  <fweimer@redhat.com>
+
+	* scripts/check-wrapper-headers.py (check_headers): Adjust Fortran
+	header check.
+
 2019-03-07  Martin Liska  <mliska@suse.cz>
 
 	* math/Makefile: Change location where math-vector-fortran.h is

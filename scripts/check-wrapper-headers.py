@@ -76,7 +76,7 @@ def check_headers(args):
         is_nonsysdep_header = os.access(header, os.R_OK)
         if is_nonsysdep_header:
             # Skip Fortran header files.
-            if '/finclude/' in header:
+            if header.startswith("finclude/"):
                 continue
 
             include_path = os.path.join(args.root, INCLUDE, header)
