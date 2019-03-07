@@ -262,6 +262,7 @@ Major new features:
   The following functions now have vector versions.
   - double-precision cosine: cos
   - single-precision cosine: cosf
+  - double-precision sine: sin
 
   GCC support for auto-vectorization of functions on PPC64 is not yet
   available. Until that is done, the new vector math functions are

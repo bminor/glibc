@@ -22,3 +22,4 @@
 #define VEC_TYPE vector double
 
 VECTOR_WRAPPER (WRAPPER_NAME (cos), _ZGVbN2v_cos)
+VECTOR_WRAPPER (WRAPPER_NAME (sin), _ZGVbN2v_sin)
