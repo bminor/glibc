@@ -257,13 +257,19 @@ Version 2.30
 
 Major new features:
 
-* Start of implementing vector math library libmvec on PPC64/POWER8.
-  The double-precision cosine now has a vector version.
+* Implementation of vector math library libmvec on PPC64/POWER8.
+
+  The following functions now have vector versions.
+  - double-precision cosine: cos
+  - single-precision cosine: cosf
+
   GCC support for auto-vectorization of functions on PPC64 is not yet
   available. Until that is done, the new vector math functions are
   inaccessible to applications.
+
   Library libmvec is built by default for PPC64. Disable its creation by
   passing flag --disable-mathvec to configure.
+
   The library ABI specification is x86_64 Vector Function ABI.
   More information on libmvec including a link to the ABI document is at:
   <https://sourceware.org/glibc/wiki/libmvec>
