@@ -23,50 +23,54 @@
 #include <altivec.h>
 
 /* PI/2.  */
-const vector float __s_half_pi =
+static const vector float __s_half_pi =
 { 0x1.921fb6p+0, 0x1.921fb6p+0, 0x1.921fb6p+0, 0x1.921fb6p+0 };
 
 /* Inverse PI.  */
-const vector float __s_inv_pi =
+static const vector float __s_inv_pi =
 { 0x1.45f306p-2, 0x1.45f306p-2, 0x1.45f306p-2, 0x1.45f306p-2 };
 
 /* Right-shifter constant.  */
-const vector float __s_rshifter =
+static const vector float __s_rshifter =
 { 0x1.8p+23, 0x1.8p+23, 0x1.8p+23, 0x1.8p+23 };
 
 /* One-half.  */
-const vector float __s_one_half =
+static const vector float __s_one_half =
 { 0x1p-1, 0x1p-1, 0x1p-1, 0x1p-1 };
 
 /* Threshold for out-of-range values.  */
-const vector float __s_rangeval =
+static const vector float __s_rangeval =
 { 0x1.388p+13, 0x1.388p+13, 0x1.388p+13, 0x1.388p+13 };
 
 /* PI1, PI2, and PI3 when FMA is available
    PI high part (when FMA available).  */
-const vector float __s_pi1_fma =
+static const vector float __s_pi1_fma =
 { 0x1.921fb6p+1, 0x1.921fb6p+1, 0x1.921fb6p+1, 0x1.921fb6p+1 };
 
 /* PI mid part  (when FMA available).  */
-const vector float __s_pi2_fma =
+static const vector float __s_pi2_fma =
 { -0x1.777a5cp-24, -0x1.777a5cp-24, -0x1.777a5cp-24, -0x1.777a5cp-24 };
 
 /* PI low part  (when FMA available).  */
-const vector float __s_pi3_fma =
+static const vector float __s_pi3_fma =
 { -0x1.ee59dap-49, -0x1.ee59dap-49, -0x1.ee59dap-49, -0x1.ee59dap-49 };
 
 /* Polynomial constants for work w/o FMA, relative error ~ 2^(-26.625).  */
-const vector float __s_a3 =
+static const vector float __s_a3 =
 { -0x1.55554cp-3, -0x1.55554cp-3, -0x1.55554cp-3, -0x1.55554cp-3 };
 
 /* Polynomial constants, work with FMA, relative error ~ 2^(-26.417).  */
-const vector float __s_a5_fma =
+static const vector float __s_a5_fma =
 { 0x1.110edp-7, 0x1.110edp-7, 0x1.110edp-7, 0x1.110edp-7 };
 
-const vector float __s_a7_fma =
+static const vector float __s_a7_fma =
 { -0x1.9f6d9ep-13, -0x1.9f6d9ep-13, -0x1.9f6d9ep-13, -0x1.9f6d9ep-13 };
 
-const vector float __s_a9_fma =
+static const vector float __s_a9_fma =
 { 0x1.5d866ap-19, 0x1.5d866ap-19, 0x1.5d866ap-19, 0x1.5d866ap-19 };
+
+/* Absolute value mask.  */
+static const vector bool int __s_abs_mask =
+{ 0x7fffffff, 0x7fffffff, 0x7fffffff, 0x7fffffff };
 
 #endif /* S_TRIG_DATA_H.  */

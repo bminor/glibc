@@ -2573,6 +2573,9 @@ ldouble: 5
 Function: "sin_vlen2":
 double: 2
 
+Function: "sin_vlen4":
+float: 1
+
 Function: "sincos":
 double: 1
 float: 1

@@ -22,3 +22,4 @@
 #define VEC_TYPE vector float
 
 VECTOR_WRAPPER (WRAPPER_NAME (cosf), _ZGVbN4v_cosf)
+VECTOR_WRAPPER (WRAPPER_NAME (sinf), _ZGVbN4v_sinf)
