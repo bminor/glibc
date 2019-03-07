@@ -75,6 +75,10 @@ def check_headers(args):
 
         is_nonsysdep_header = os.access(header, os.R_OK)
         if is_nonsysdep_header:
+            # Skip Fortran header files.
+            if '/finclude/' in header:
+                continue
+
             include_path = os.path.join(args.root, INCLUDE, header)
             if not os.access(include_path, os.R_OK):
                 print('error: missing wrapper header {} for {}'.format(

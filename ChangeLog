@@ -1,3 +1,13 @@
+2019-03-07  Martin Liska  <mliska@suse.cz>
+
+	* math/Makefile: Change location where math-vector-fortran.h is
+	installed.
+	* math/finclude/math-vector-fortran.h: Move from bits/math-vector-fortran.h.
+	* sysdeps/x86/fpu/finclude/math-vector-fortran.h: Move
+	from sysdeps/x86/fpu/bits/math-vector-fortran.h.
+	* scripts/check-installed-headers.sh: Skip Fortran header files.
+	* scripts/check-wrapper-headers.py: Likewise.
+
 2019-03-05  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* nptl/nptl-init.c (__have_futex_clock_realtime,

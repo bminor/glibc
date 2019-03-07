@@ -84,6 +84,10 @@ for header in "$@"; do
         (sys/elf.h)
             continue;;
 
+        # Skip Fortran headers.
+        (finclude/*)
+            continue;;
+
 	# sys/sysctl.h is unsupported for x32.
 	(sys/sysctl.h)
             case "$is_x32" in
