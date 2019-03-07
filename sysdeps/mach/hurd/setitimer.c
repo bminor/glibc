@@ -89,8 +89,8 @@ timer_thread (void)
       err = __mach_msg (&msg.header,
 			MACH_RCV_MSG|MACH_RCV_TIMEOUT|MACH_RCV_INTERRUPT,
 			0, 0, _hurd_itimer_port,
-			_hurd_itimerval.it_value.tv_sec * 1000 +
-			_hurd_itimerval.it_value.tv_usec / 1000,
+			_hurd_itimerval.it_value.tv_sec * 1000
+			+ _hurd_itimerval.it_value.tv_usec / 1000,
 			MACH_PORT_NULL);
       switch (err)
 	{
@@ -278,8 +278,8 @@ setitimer_locked (const struct itimerval *new, struct itimerval *old,
 	     kernel context so that when the thread is resumed, mach_msg
 	     will return to timer_thread (below) and it will fetch new
 	     values from _hurd_itimerval.  */
-	  if ((err = __thread_suspend (_hurd_itimer_thread)) ||
-	      (err = __thread_abort (_hurd_itimer_thread)))
+	  if ((err = __thread_suspend (_hurd_itimer_thread))
+	      || (err = __thread_abort (_hurd_itimer_thread)))
 	    /* If we can't save it for later, nuke it.  */
 	    kill_itimer_thread ();
 	  else
@@ -287,8 +287,8 @@ setitimer_locked (const struct itimerval *new, struct itimerval *old,
 	}
     }
   /* See if the timeout changed.  If so, we must alert the itimer thread.  */
-  else if (remaining.tv_sec != newval.it_value.tv_sec ||
-	   remaining.tv_usec != newval.it_value.tv_usec)
+  else if (remaining.tv_sec != newval.it_value.tv_sec
+	   || remaining.tv_usec != newval.it_value.tv_usec)
     {
       /* The timeout value is changing.  Tell the itimer thread to
 	 reexamine it and start counting down.  If the itimer thread is

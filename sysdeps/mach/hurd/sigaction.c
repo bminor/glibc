@@ -30,10 +30,10 @@ __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
   struct sigaction a, old;
   sigset_t pending;
 
-  if (sig <= 0 || sig >= NSIG ||
-      (act != NULL && act->sa_handler != SIG_DFL &&
-       ((__sigmask (sig) & _SIG_CANT_MASK) ||
-	act->sa_handler == SIG_ERR)))
+  if (sig <= 0 || sig >= NSIG
+      || (act != NULL && act->sa_handler != SIG_DFL
+	  && ((__sigmask (sig) & _SIG_CANT_MASK)
+	      || act->sa_handler == SIG_ERR)))
     {
       errno = EINVAL;
       return -1;
@@ -51,8 +51,8 @@ __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
   if (act != NULL)
     ss->actions[sig] = a;
 
-  if (act != NULL && sig == SIGCHLD &&
-      (a.sa_flags & SA_NOCLDSTOP) != (old.sa_flags & SA_NOCLDSTOP))
+  if (act != NULL && sig == SIGCHLD
+      && (a.sa_flags & SA_NOCLDSTOP) != (old.sa_flags & SA_NOCLDSTOP))
     {
       __spin_unlock (&ss->lock);
 

@@ -27,9 +27,9 @@
 #define SAT 0x1
 
 /* This test is supported only on POWER 5 or higher.  */
-#define PPC_CPU_SUPPORTED (PPC_FEATURE_POWER5 | PPC_FEATURE_POWER5_PLUS | \
-			   PPC_FEATURE_ARCH_2_05 | PPC_FEATURE_ARCH_2_06 | \
-			   PPC_FEATURE2_ARCH_2_07)
+#define PPC_CPU_SUPPORTED (PPC_FEATURE_POWER5 | PPC_FEATURE_POWER5_PLUS \
+			   | PPC_FEATURE_ARCH_2_05 | PPC_FEATURE_ARCH_2_06 \
+			   | PPC_FEATURE2_ARCH_2_07)
 static int
 do_test (void)
 {

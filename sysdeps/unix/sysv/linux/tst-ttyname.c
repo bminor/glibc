@@ -103,9 +103,9 @@ eq_ttyname (struct result actual, struct result expected)
 {
   char *actual_name, *expected_name;
 
-  if ((actual.err == expected.err) &&
-      (!actual.name == !expected.name) &&
-      (actual.name ? strcmp (actual.name, expected.name) == 0 : true))
+  if ((actual.err == expected.err)
+      && (!actual.name == !expected.name)
+      && (actual.name ? strcmp (actual.name, expected.name) == 0 : true))
     {
       if (expected.name)
         expected_name = xasprintf ("\"%s\"", expected.name);
@@ -169,10 +169,10 @@ eq_ttyname_r (struct result_r actual, struct result_r expected)
 {
   char *actual_name, *expected_name;
 
-  if ((actual.err == expected.err) &&
-      (actual.ret == expected.ret) &&
-      (!actual.name == !expected.name) &&
-      (actual.name ? strcmp (actual.name, expected.name) == 0 : true))
+  if ((actual.err == expected.err)
+      && (actual.ret == expected.ret)
+      && (!actual.name == !expected.name)
+      && (actual.name ? strcmp (actual.name, expected.name) == 0 : true))
     {
       if (expected.name)
         expected_name = xasprintf ("\"%s\"", expected.name);
@@ -570,9 +570,9 @@ run_chroot_tests (const char *slavename, int slave)
     struct dirent *d;
     while ((d = readdir (dirstream)) != NULL && ci < 3)
       {
-        if (strcmp (d->d_name, "console1") &&
-            strcmp (d->d_name, "console2") &&
-            strcmp (d->d_name, "console3") )
+        if (strcmp (d->d_name, "console1")
+            && strcmp (d->d_name, "console2")
+            && strcmp (d->d_name, "console3") )
           continue;
         c[ci++] = xasprintf ("/dev/%s", d->d_name);
       }

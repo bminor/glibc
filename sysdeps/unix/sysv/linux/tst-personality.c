@@ -30,11 +30,11 @@ do_test (void)
   errno = 0xdefaced;
   saved_persona = personality (0xffffffff);
 
-  if (personality (test_persona) != saved_persona ||
-      personality (0xffffffff) == -1 ||
-      personality (PER_LINUX) == -1 ||
-      personality (0xffffffff) != PER_LINUX ||
-      0xdefaced != errno)
+  if (personality (test_persona) != saved_persona
+      || personality (0xffffffff) == -1
+      || personality (PER_LINUX) == -1
+      || personality (0xffffffff) != PER_LINUX
+      || 0xdefaced != errno)
     rc = 1;
 
   (void) personality (saved_persona);

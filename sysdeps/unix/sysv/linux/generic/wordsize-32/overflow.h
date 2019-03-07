@@ -36,8 +36,8 @@ static inline off_t lseek_overflow (loff_t res)
 
 static inline int stat_overflow (struct stat *buf)
 {
-  if (buf->__st_ino_pad == 0 && buf->__st_size_pad == 0 &&
-      buf->__st_blocks_pad == 0)
+  if (buf->__st_ino_pad == 0 && buf->__st_size_pad == 0
+      && buf->__st_blocks_pad == 0)
     return 0;
 
   __set_errno (EOVERFLOW);
@@ -47,12 +47,12 @@ static inline int stat_overflow (struct stat *buf)
 /* Note that f_files and f_ffree may validly be a sign-extended -1.  */
 static inline int statfs_overflow (struct statfs *buf)
 {
-  if (buf->__f_blocks_pad == 0 && buf->__f_bfree_pad == 0 &&
-      buf->__f_bavail_pad == 0 &&
-      (buf->__f_files_pad == 0 ||
-       (buf->f_files == -1U && buf->__f_files_pad == -1)) &&
-      (buf->__f_ffree_pad == 0 ||
-       (buf->f_ffree == -1U && buf->__f_ffree_pad == -1)))
+  if (buf->__f_blocks_pad == 0 && buf->__f_bfree_pad == 0
+      && buf->__f_bavail_pad == 0
+      && (buf->__f_files_pad == 0
+	  || (buf->f_files == -1U && buf->__f_files_pad == -1))
+      && (buf->__f_ffree_pad == 0
+	  || (buf->f_ffree == -1U && buf->__f_ffree_pad == -1)))
     return 0;
 
   __set_errno (EOVERFLOW);

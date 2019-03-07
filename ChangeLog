@@ -1,3 +1,24 @@
+2019-03-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* stdio-common/vfscanf-internal.c (ARG): Break lines before rather
+	than after operators.
+	* sysdeps/mach/hurd/setitimer.c (timer_thread): Likewise.
+	(setitimer_locked): Likewise.
+	* sysdeps/mach/hurd/sigaction.c (__sigaction): Likewise.
+	* sysdeps/mach/hurd/sigaltstack.c (__sigaltstack): Likewise.
+	* sysdeps/mach/pagecopy.h (PAGE_COPY_FWD): Likewise.
+	* sysdeps/mach/thread_state.h (machine_get_basic_state): Likewise.
+	* sysdeps/powerpc/powerpc64/tst-ucontext-ppc64-vscr.c
+	(PPC_CPU_SUPPORTED): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/a.out.h (N_TXTOFF): Likewise.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/overflow.h
+	(stat_overflow): Likewise.
+	(statfs_overflow): Likewise.
+	* sysdeps/unix/sysv/linux/tst-personality.c (do_test): Likewise.
+	* sysdeps/unix/sysv/linux/tst-ttyname.c (eq_ttyname): Likewise.
+	(eq_ttyname_r): Likewise.
+	(run_chroot_tests): Likewise.
+
 2019-03-07  Florian Weimer  <fweimer@redhat.com>
 
 	* scripts/check-wrapper-headers.py (check_headers): Adjust Fortran

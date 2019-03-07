@@ -385,32 +385,32 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 	 For a %N$... spec, this is the Nth argument from the beginning;
 	 otherwise it is the next argument after the state now in ARG.  */
 #ifdef __va_copy
-# define ARG(type)	(argpos == 0 ? va_arg (arg, type) :		      \
-			 ({ unsigned int pos = argpos;			      \
-			    va_list arg;				      \
-			    __va_copy (arg, argptr);			      \
-			    while (--pos > 0)				      \
-			      (void) va_arg (arg, void *);		      \
-			    va_arg (arg, type);				      \
-			  }))
+# define ARG(type)	(argpos == 0 ? va_arg (arg, type)		      \
+			 : ({ unsigned int pos = argpos;		      \
+			      va_list arg;				      \
+			      __va_copy (arg, argptr);			      \
+			      while (--pos > 0)				      \
+				(void) va_arg (arg, void *);		      \
+			      va_arg (arg, type);			      \
+			    }))
 #else
 # if 0
       /* XXX Possible optimization.  */
-#  define ARG(type)	(argpos == 0 ? va_arg (arg, type) :		      \
-			 ({ va_list arg = (va_list) argptr;		      \
-			    arg = (va_list) ((char *) arg		      \
-					     + (argpos - 1)		      \
-					     * __va_rounded_size (void *));   \
-			    va_arg (arg, type);				      \
-			 }))
+#  define ARG(type)	(argpos == 0 ? va_arg (arg, type)		      \
+			 : ({ va_list arg = (va_list) argptr;		      \
+			      arg = (va_list) ((char *) arg		      \
+					       + (argpos - 1)		      \
+					       * __va_rounded_size (void *)); \
+			      va_arg (arg, type);			      \
+			   }))
 # else
-#  define ARG(type)	(argpos == 0 ? va_arg (arg, type) :		      \
-			 ({ unsigned int pos = argpos;			      \
-			    va_list arg = (va_list) argptr;		      \
-			    while (--pos > 0)				      \
-			      (void) va_arg (arg, void *);		      \
-			    va_arg (arg, type);				      \
-			  }))
+#  define ARG(type)	(argpos == 0 ? va_arg (arg, type)		      \
+			 : ({ unsigned int pos = argpos;		      \
+			      va_list arg = (va_list) argptr;		      \
+			      while (--pos > 0)				      \
+				(void) va_arg (arg, void *);		      \
+			      va_arg (arg, type);			      \
+			    }))
 # endif
 #endif
 

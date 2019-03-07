@@ -82,8 +82,8 @@ machine_get_basic_state (thread_t thread,
   count = MACHINE_THREAD_STATE_COUNT;
   if (__thread_get_state (thread, MACHINE_THREAD_STATE_FLAVOR,
 			  (natural_t *) &state->basic,
-			  &count) != KERN_SUCCESS ||
-      count != MACHINE_THREAD_STATE_COUNT)
+			  &count) != KERN_SUCCESS
+      || count != MACHINE_THREAD_STATE_COUNT)
     /* What kind of thread?? */
     return 0;			/* XXX */
 
