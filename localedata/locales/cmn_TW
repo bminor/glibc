@@ -119,6 +119,10 @@ am_pm         "<U4E0A><U5348>";/
 t_fmt_ampm    "%p %I<U9EDE>%M<U5206>%S<U79D2>"
 % %Y年 %b %-d號 %A %H:%M:%S %Z
 date_fmt      "%Y<U5E74> %b %-d<U865F> %A %H:%M:%S %Z"
+
+era "+:2:1913//01//01:+*:<U6C11><U570B>:%EC%Ey<U5E74>";/
+    "+:1:1912//01//01:1912//12//31:<U6C11><U570B>:%EC<U5143><U5E74>";/
+    "+:1:1911//12//31:-*:<U6C11><U524D>:%EC%Ey<U5E74>"
 END LC_TIME
 
 LC_NUMERIC

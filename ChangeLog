@@ -1,3 +1,12 @@
+2019-03-15  Felix Yan  <felixonmars@archlinux.org>
+
+	[BZ #24293]
+	* localedata/locales/zh_TW (era): Add, support Minguo calendar.
+	* localedata/locales/cmn_TW (era): Likewise.
+	* localedata/locales/hak_TW (era): Likewise.
+	* localedata/locales/lzh_TW (era): Likewise.
+	* localedata/locales/nan_TW (era): Likewise.
+
 2019-03-14  Florian Weimer  <fweimer@redhat.com>
 
 	Remove obsolete, never-implemented XSI STREAMS declarations.
