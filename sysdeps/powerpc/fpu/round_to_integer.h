@@ -24,7 +24,8 @@
 enum round_mode
 {
   CEIL,
-  FLOOR
+  FLOOR,
+  ROUND
 };
 
 static inline void
@@ -35,6 +36,7 @@ set_fenv_mode (enum round_mode mode)
   {
   case CEIL:  rmode = FE_UPWARD; break;
   case FLOOR: rmode = FE_DOWNWARD; break;
+  case ROUND: rmode = FE_TOWARDZERO; break;
   default:    rmode = FE_TONEAREST; break;
   }
   __fesetround_inline_nocheck (rmode);
@@ -57,12 +59,24 @@ round_to_integer_float (enum round_mode mode, float x)
   set_fenv_mode (mode);
   if (x > 0.0)
     {
+      /* IEEE 1003.1 round function.  IEEE specifies "round to the nearest
+	 integer value, rounding halfway cases away from zero, regardless of
+	 the current rounding mode."  However PowerPC Architecture defines
+	 "Round to Nearest" as "Choose the best approximation. In case of a
+	 tie, choose the one that is even (least significant bit o).".
+	 So we can't use the PowerPC "Round to Nearest" mode. Instead we set
+	 "Round toward Zero" mode and round by adding +-0.5 before rounding
+	 to the integer value.  */
+      if (mode == ROUND)
+	r += 0.5f;
       r += 0x1p+23;
       r -= 0x1p+23;
       r = fabs (r);
     }
   else if (x < 0.0)
     {
+      if (mode == ROUND)
+	r -= 0.5f;
       r -= 0x1p+23;
       r += 0x1p+23;
       r = -fabs (r);
@@ -89,12 +103,16 @@ round_to_integer_double (enum round_mode mode, double x)
   set_fenv_mode (mode);
   if (x > 0.0)
     {
+      if (mode == ROUND)
+	r += 0.5;
       r += 0x1p+52;
       r -= 0x1p+52;
       r = fabs (r);
     }
   else if (x < 0.0)
     {
+      if (mode == ROUND)
+	r -= 0.5;
       r -= 0x1p+52;
       r += 0x1p+52;
       r = -fabs (r);

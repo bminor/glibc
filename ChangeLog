@@ -1,5 +1,60 @@
 2019-05-09  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/powerpc/fpu/round_to_integer.h (set_fenv_mode): Add
+	ROUND handling.
+	(round_mode): Add definition for ROUND.
+	(round_to_integer_float): Likewise.
+	* sysdeps/powerpc/fpu/s_round.c: New file.
+	* sysdeps/powerpc/fpu/s_roundf.c: New file.
+	* sysdeps/powerpc/powerpc32/fpu/s_round.S: Remove file.
+	* sysdeps/powerpc/powerpc32/fpu/s_roundf.S: Likewise.
+	* sysdep/powerpc/powepc32/power4/fpu/multiarch/s_round-power5+.S:
+	Likewise.
+	* sysdep/powerpc/powepc32/power4/fpu/multiarch/s_round-ppc32.S:
+	Likewise.
+	* sysdep/powerpc/powepc32/power4/fpu/multiarch/s_roundf-power5+.S:
+	Likewise.
+	* sysdep/powerpc/powepc32/power4/fpu/multiarch/s_roundf-ppc32.S:
+	Likewise.
+	* sysdep/powerpc/powepc32/power4/fpu/multiarch/s_round-power5+.c: New
+	file.
+	* sysdep/powerpc/powepc32/power4/fpu/multiarch/s_round-ppc32.c:
+	Likewise.
+	* sysdep/powerpc/powepc32/power4/fpu/multiarch/s_roundf-power5+.c:
+	Likewise.
+	* sysdep/powerpc/powepc32/power4/fpu/multiarch/s_roundf-ppc32.c:
+	Likewise.
+	* sysdep/powerpc/powerpc32/power5+/fpu/s_round.S: Remove file.
+	* sysdep/powerpc/powerpc32/power5+/fpu/s_roundf.S: Likewise.
+	* sysdep/powerpc/powerpc64/be/fpu/multiarch/Makefile
+	(libm-sysdep_routines): Add s_round-power5+, s_round-ppc64,
+	s_roundf-power5+, and s_roundf-ppc64.
+	(CFLAGS-s_round-power5+.c, CFLAGS-s_roundf-power5+.c): New rule.
+	* sysdep/powerpc/powercp64/be/fpu/multiarch/s_round-power5+.c: New
+	file.
+	* sysdep/powerpc/powercp64/be/fpu/multiarch/s_round-ppc64.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_round.c: Move to ...
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_round.c: ... here.
+	* sysdep/powerpc/powercp64/be/fpu/multiarch/s_roundf-power5+.c: New
+	file.
+	* sysdep/powerpc/powercp64/be/fpu/multiarch/s_roundf-ppc64.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_roundf.c: Move to ...
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_roundf.c: ... here.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile
+	(libm-sysdep_routines): Remove s_round-power5+, s_round-ppc64,
+	s_roundf-power5+, and s_roundf-ppc64.
+	* sysdep/powerpc/powerpc64/fpu/multiarch/s_round-power5+.S: Remove
+	file.
+	* sysdep/powerpc/powerpc64/fpu/multiarch/s_round-ppc64.S: Likewise.
+	* sysdep/powerpc/powerpc64/fpu/multiarch/s_roundf-power5+.S:
+	Likewise.
+	* sysdep/powerpc/powerpc64/fpu/multiarch/s_roundf-ppc64.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_round.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_roundf.S: Likewise.
+	* sysdep/powerpc/powerpc64/power5+/fpu/s_round.S: Likewise.
+	* sysdep/powerpc/powerpc64/power5+/fpu/s_roundf.S: Likewise.
+
 	* sysdeps/powerpc/fpu/round_to_integer.h (set_fenv_mode):
 	Add FLOOR option.
 	(round_mode): Add definition for FLOOR.
