@@ -19,26 +19,11 @@
 #define NO_MATH_REDIRECT
 #include <math.h>
 #include <libm-alias-double.h>
+#include <round_to_integer.h>
 
 double
 __rint (double x)
 {
-  static const float TWO52 = 4503599627370496.0;
-
-  if (fabs (x) < TWO52)
-    {
-      if (x > 0.0)
-	{
-	  x += TWO52;
-	  x -= TWO52;
-	}
-      else if (x < 0.0)
-	{
-	  x = TWO52 - x;
-	  x = -(x - TWO52);
-	}
-    }
-
-  return x;
+  return round_to_integer_double (RINT, x);
 }
 libm_alias_double (__rint, rint)

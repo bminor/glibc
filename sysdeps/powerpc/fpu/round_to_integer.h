@@ -27,12 +27,18 @@ enum round_mode
   FLOOR,
   ROUND,
   TRUNC,
-  NEARBYINT
+  NEARBYINT,
+  RINT
 };
 
-static inline void
+static inline fenv_t
 set_fenv_mode (enum round_mode mode)
 {
+  fenv_t fe = 0;
+  if (mode != RINT)
+    /* Save current FPU rounding mode and inexact state.  */
+    fe = fegetenv_register ();
+
   switch (mode)
   {
   case CEIL:
@@ -49,6 +55,22 @@ set_fenv_mode (enum round_mode mode)
     /*  Disable FE_INEXACT exception  */
     reset_fpscr_bit (FPSCR_XE);
     break;
+  case RINT:
+    break;
+  }
+  return fe;
+}
+
+static inline void
+reset_fenv_mode (fenv_t fe, enum round_mode mode)
+{
+  switch (mode)
+  {
+  default:
+    __builtin_mtfsf (0xff, fe);
+    break;
+  case RINT:
+    break;
   }
 }
 
@@ -64,9 +86,7 @@ round_to_integer_float (enum round_mode mode, float x)
 
   float r = x;
 
-  /* Save current FPU rounding mode and inexact state.  */
-  fenv_t fe = fegetenv_register ();
-  set_fenv_mode (mode);
+  fenv_t fe = set_fenv_mode (mode);
   if (x > 0.0)
     {
       /* IEEE 1003.1 round function.  IEEE specifies "round to the nearest
@@ -91,7 +111,7 @@ round_to_integer_float (enum round_mode mode, float x)
       r += 0x1p+23;
       r = -fabs (r);
     }
-  __builtin_mtfsf (0xff, fe);
+  reset_fenv_mode (fe, mode);
 
   return r;
 }
@@ -109,8 +129,7 @@ round_to_integer_double (enum round_mode mode, double x)
   double r = x;
 
   /* Save current FPU rounding mode and inexact state.  */
-  fenv_t fe = fegetenv_register ();
-  set_fenv_mode (mode);
+  fenv_t fe = set_fenv_mode (mode);
   if (x > 0.0)
     {
       if (mode == ROUND)
@@ -127,7 +146,7 @@ round_to_integer_double (enum round_mode mode, double x)
       r += 0x1p+52;
       r = -fabs (r);
     }
-  __builtin_mtfsf (0xff, fe);
+  reset_fenv_mode (fe, mode);
 
   return r;
 }

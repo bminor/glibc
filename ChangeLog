@@ -1,3 +1,15 @@
+2019-06-12  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/powerpc/fpu/round_to_integer.h (set_fenv_mode,
+	round_to_integer_float, round_mode): Add RINT handling.
+	(reset_fenv_mode): New symbol.
+	* sysdeps/powerpc/fpu/s_rint.c (__rint): Use generic implementation.
+	* sysdeps/powerpc/fpu/s_rintf.c (__rintf): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_rint.S: Remove file.
+	* sysdeps/powerpc/powerpc32/fpu/s_rintf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_rint.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_rintf.S: Likewise.
+
 2019-06-12  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #24632]
