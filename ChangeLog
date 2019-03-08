@@ -1,5 +1,31 @@
 2019-06-12  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile
+	(sysdeps_routines, libm-sysdep_routines): Remove s_isinf* and s_isinf*
+	objects.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_isinf-power7.S:
+	Remove file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_isinf-ppc32.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_isinf.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_isinff-ppc32.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_isinff.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power7/fpu/s_isinf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power7/fpu/s_isinff.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile (sysdep_call):
+	Remove s_isinf* and s_isinf* objects.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isinf-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isinf-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isinf-ppc64.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isinf.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isinff-ppc64.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isinff.c: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/fpu/s_isinf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/fpu/s_isinff.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_isinf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_isinff.S: Likewise.
+
 	* sysdeps/ieee754/dbl-64/wordsize-64/s_isinf.c: Move to ...
 	* sysdeps/ieee754/dbl-64/s_isinf.c: ... here and format code.
 
