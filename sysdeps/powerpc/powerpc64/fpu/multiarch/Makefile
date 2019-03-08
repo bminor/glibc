@@ -6,8 +6,6 @@ sysdep_calls := s_finite-power8 s_finite-power7 s_finite-ppc64 \
 		s_finitef-ppc64 \
 		s_isinf-power8 s_isinf-ppc64 \
 		s_isinff-ppc64 s_isinf-power7 \
-		s_isnan-power8 s_isnan-power7 s_isnan-power6x s_isnan-power6 \
-		s_isnan-power5 s_isnan-ppc64 \
 		s_modf-power5+ s_modf-ppc64 \
 		s_modff-power5+ s_modff-ppc64
 
