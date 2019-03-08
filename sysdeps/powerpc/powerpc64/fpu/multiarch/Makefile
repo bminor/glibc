@@ -2,8 +2,7 @@ ifeq ($(subdir),math)
 # These functions are built both for libc and libm because they're required
 # by printf.  While the libc objects have the prefix s_, the libm ones are
 # prefixed with  m_.
-sysdep_calls := s_copysign-power6 s_copysign-ppc64 \
-		s_finite-power8 s_finite-power7 s_finite-ppc64 \
+sysdep_calls := s_finite-power8 s_finite-power7 s_finite-ppc64 \
 		s_finitef-ppc64 \
 		s_isinf-power8 s_isinf-ppc64 \
 		s_isinff-ppc64 s_isinf-power7 \

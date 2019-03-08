@@ -1,5 +1,35 @@
 2019-06-12  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/powerpc/fpu/s_copysign.c: New file.
+	* sysdeps/powerpc/fpu/s_copysignf.c: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_copysign.S: Remove file.
+	* sysdeps/powerpc/powerpc32/fpu/s_copysignf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile
+	(sysdep_routines, libm-sysdep_routines): Remove s_copysign-power6 and
+	s_copysign-ppc32.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_copysign-power6.S:
+	Remove file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_copysign-ppc32.S:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_copysign.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_copysignf.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_copysign.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_copysignf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile (sysdeps_calls):
+	Remove s_copysign-power6 s_copysign-ppc64.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_copysign-power6.S:
+	Remove file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_copysign-ppc64.S:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_copysign.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_copysignf.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_copysign.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_copysignf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power6/fpu/s_copysign.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power6/fpu/s_copysignf.S: Likewise.
+
 	* sysdeps/powerpc/fpu/round_to_integer.h (set_fenv_mode,
 	round_to_integer_float, round_mode): Add RINT handling.
 	(reset_fenv_mode): New symbol.
