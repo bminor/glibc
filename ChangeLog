@@ -1,3 +1,61 @@
+2019-05-09  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/powerpc/fpu/round_to_integer.h (set_fenv_mode):
+	Add FLOOR option.
+	(round_mode): Add definition for FLOOR.
+	* sysdeps/powerpc/fpu/s_floor.c: New file.
+	* sysdeps/powerpc/fpu/s_floorf.c: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_floor.S: Remove file.
+	* sysdeps/powerpc/powerpc32/fpu/s_floorf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_floor-power5+.S:
+	Remove file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_floor-ppc32.S:
+	Likewise
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_floorf-power5+.S:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_floorf-ppc32.S:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_floor-power5+.c:
+	New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_floor-ppc32.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_floorf-power5+.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_floorf-ppc32.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_floor.S: Remove file.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_floorf.S: Remove file.
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/Makefile
+	(libm-sysdep_routines): Add s_floor-power5+, s_floor-ppc64,
+	s_floorf-power5+, and s_floorf-ppc64.
+	(CFLAGS-s_floor-power5+.c, CFLAGS-s_floorf-power5+.c): New rule.
+	* sysdep/powerpc/powerpc64/be/fpu/multiarch/s_floor-power5+.c: New
+	file.
+	* sysdep/powerpc/powerpc64/be/fpu/multiarch/s_floor-ppc64.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_floor.c: Move to ...
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_floor.c: ... here.
+	* sysdep/powerpc/powerpc64/be/fpu/multiarch/s_floorf-power5+.c: New
+	file.
+	* sysdep/powerpc/powerpc64/be/fpu/multiarch/s_floorf-ppc64.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_floorf.c: Move to ...
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_floorf.c: ... here.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile
+	(libm-sysdep_routines): Remove s_floor-power5+, s_floor-ppc64,
+	s_floorf-power5+, and s_floorf-ppc64.
+	* sysdep/powerpc/powerpc64/fpu/multiarch/s_floor-power5+.S: Remove
+	file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_floor-ppc64.S: Remove
+	file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_floorf-power5+.S:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_floorf-ppc64.S:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_floor.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_floorf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_floor.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_floorf.S: Likewise.
+
 2019-05-08  Mike Crowe  <mac@mcrowe.com>
 
 	* support/xclock_gettime.c (xclock_gettime): New file. Provide
