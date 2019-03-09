@@ -122,7 +122,7 @@ pmap_set (u_long program, u_long version, int protocol, u_short port)
   parms.pm_prot = protocol;
   parms.pm_port = port;
   if (CLNT_CALL (client, PMAPPROC_SET, (xdrproc_t)xdr_pmap,
-		 (caddr_t)&parms, (xdrproc_t)xdr_bool, (caddr_t)&rslt,
+		 (char *)&parms, (xdrproc_t)xdr_bool, (char *)&rslt,
 		 tottimeout) != RPC_SUCCESS)
     {
       clnt_perror (client, _("Cannot register service"));
@@ -157,7 +157,7 @@ pmap_unset (u_long program, u_long version)
   parms.pm_vers = version;
   parms.pm_port = parms.pm_prot = 0;
   CLNT_CALL (client, PMAPPROC_UNSET, (xdrproc_t)xdr_pmap,
-	     (caddr_t)&parms, (xdrproc_t)xdr_bool, (caddr_t)&rslt,
+	     (char *)&parms, (xdrproc_t)xdr_bool, (char *)&rslt,
 	     tottimeout);
   CLNT_DESTROY (client);
   /* (void)close(socket); CLNT_DESTROY already closed it */

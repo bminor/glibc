@@ -27,7 +27,7 @@ off64_t
 __lseek64 (int fd, off64_t offset, int whence)
 {
 #ifdef __NR__llseek
-  loff_t res;
+  off64_t res;
   int rc = INLINE_SYSCALL_CALL (_llseek, fd,
 				(long) (((uint64_t) (offset)) >> 32),
 				(long) offset, &res, whence);

@@ -23,7 +23,7 @@
 
 error_t
 _hurd_fd_write (struct hurd_fd *fd,
-		const void *buf, size_t *nbytes, loff_t offset)
+		const void *buf, size_t *nbytes, off64_t offset)
 {
   error_t err;
   mach_msg_type_number_t wrote;

@@ -60,7 +60,7 @@ extern  void * cbproc_finish_1_svc (void *, struct svc_req *) __THROW;
 #define CBPROC_ERROR 3
 extern  void * cbproc_error_1 (nis_error *, CLIENT *) __THROW;
 extern  void * cbproc_error_1_svc (nis_error *, struct svc_req *) __THROW;
-extern int cb_prog_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t) __THROW;
+extern int cb_prog_1_freeresult (SVCXPRT *, xdrproc_t, char *) __THROW;
 
 /* the xdr functions */
 

@@ -64,8 +64,8 @@ nis_ping (const_nis_name dirname, unsigned int utime,
   for (i = 1; i < obj->DI_data.do_servers.do_servers_len; ++i)
     __do_niscall2 (&obj->DI_data.do_servers.do_servers_val[i], 1,
 		   NIS_PING, (xdrproc_t) _xdr_ping_args,
-		   (caddr_t) &args, (xdrproc_t) xdr_void,
-		   (caddr_t) NULL, 0, NULL);
+		   (char *) &args, (xdrproc_t) xdr_void,
+		   (char *) NULL, 0, NULL);
   nis_freeresult (res);
 }
 libnsl_hidden_nolink_def (nis_ping, GLIBC_2_1)

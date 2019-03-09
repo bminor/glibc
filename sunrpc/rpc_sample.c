@@ -264,13 +264,13 @@ write_sample_server (definition * def)
 	  f_print(fout, "\nint\n");
 	  pvname(def->def_name, vp->vers_num);
 	  if (Cflag)
-	    f_print(fout,"_freeresult (SVCXPRT *transp, xdrproc_t xdr_result, caddr_t result)\n");
+	    f_print(fout,"_freeresult (SVCXPRT *transp, xdrproc_t xdr_result, char *result)\n");
 	  else
 	    {
 	      f_print(fout,"_freeresult (transp, xdr_result, result)\n");
 	      f_print(fout,"\tSVCXPRT *transp;\n");
 	      f_print(fout,"\txdrproc_t xdr_result;\n");
-	      f_print(fout,"\tcaddr_t result;\n");
+	      f_print(fout,"\tchar *result;\n");
 	    }
 	  f_print(fout, "{\n");
 	  f_print(fout, "\txdr_free (xdr_result, result);\n");

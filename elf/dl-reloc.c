@@ -148,7 +148,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 {
   struct textrels
   {
-    caddr_t start;
+    char *start;
     size_t len;
     int prot;
     struct textrels *next;
@@ -198,7 +198,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 	    newp->len = ALIGN_UP (ph->p_vaddr + ph->p_memsz, GLRO(dl_pagesize))
 			- ALIGN_DOWN (ph->p_vaddr, GLRO(dl_pagesize));
 	    newp->start = PTR_ALIGN_DOWN (ph->p_vaddr, GLRO(dl_pagesize))
-			  + (caddr_t) l->l_addr;
+			  + (char *) l->l_addr;
 
 	    newp->prot = 0;
 	    if (ph->p_flags & PF_R)

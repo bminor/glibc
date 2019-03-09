@@ -36,12 +36,13 @@
   })
 # endif
 
+/* INLINE_SYSCALL_CALL requires all pointer arguments to point to
+   complete types, but we do not need to access any of the fields of
+   this structure.  It was formerly 20, 24, or 32 bytes, depending on
+   architecture and _FILE_OFFSET_BITS.  */
 struct ustat
 {
-  __daddr_t f_tfree;         /* Number of free blocks.  */
-  __ino_t f_tinode;          /* Number of free inodes.  */
-  char f_fname[6];
-  char f_fpack[6];
+  char dummy[32];
 };
 
 int

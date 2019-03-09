@@ -217,7 +217,7 @@ __nisbind_connect (dir_binding *dbp)
   if (dbp->clnt == NULL)
     return NIS_RPCERROR;
 
-  clnt_control (dbp->clnt, CLSET_TIMEOUT, (caddr_t) &RPCTIMEOUT);
+  clnt_control (dbp->clnt, CLSET_TIMEOUT, (char *) &RPCTIMEOUT);
   /* If the program exists, close the socket */
   if (fcntl (dbp->socket, F_SETFD, 1) == -1)
     perror ("fcntl: F_SETFD");
@@ -296,8 +296,8 @@ libnsl_hidden_nolink_def (__nisbind_create, GLIBC_2_1)
 /* __nisbind_connect (dbp) must be run before calling this function !
    So we could use the same binding twice */
 nis_error
-__do_niscall3 (dir_binding *dbp, u_long prog, xdrproc_t xargs, caddr_t req,
-	       xdrproc_t xres, caddr_t resp, unsigned int flags, nis_cb *cb)
+__do_niscall3 (dir_binding *dbp, u_long prog, xdrproc_t xargs, char *req,
+	       xdrproc_t xres, char *resp, unsigned int flags, nis_cb *cb)
 {
   enum clnt_stat result;
   nis_error retcode;
@@ -381,7 +381,7 @@ libnsl_hidden_nolink_def (__do_niscall3, GLIBC_PRIVATE)
 
 nis_error
 __do_niscall2 (const nis_server *server, u_int server_len, u_long prog,
-	       xdrproc_t xargs, caddr_t req, xdrproc_t xres, caddr_t resp,
+	       xdrproc_t xargs, char *req, xdrproc_t xres, char *resp,
 	       unsigned int flags, nis_cb *cb)
 {
   dir_binding dbp;
@@ -825,7 +825,7 @@ libnsl_hidden_nolink_def (__prepare_niscall, GLIBC_PRIVATE)
 
 nis_error
 __do_niscall (const_nis_name name, u_long prog, xdrproc_t xargs,
-	      caddr_t req, xdrproc_t xres, caddr_t resp, unsigned int flags,
+	      char *req, xdrproc_t xres, char *resp, unsigned int flags,
 	      nis_cb *cb)
 {
   dir_binding bptr;

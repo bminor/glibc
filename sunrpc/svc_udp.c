@@ -74,8 +74,8 @@
 static bool_t svcudp_recv (SVCXPRT *, struct rpc_msg *);
 static bool_t svcudp_reply (SVCXPRT *, struct rpc_msg *);
 static enum xprt_stat svcudp_stat (SVCXPRT *);
-static bool_t svcudp_getargs (SVCXPRT *, xdrproc_t, caddr_t);
-static bool_t svcudp_freeargs (SVCXPRT *, xdrproc_t, caddr_t);
+static bool_t svcudp_getargs (SVCXPRT *, xdrproc_t, char *);
+static bool_t svcudp_freeargs (SVCXPRT *, xdrproc_t, char *);
 static void svcudp_destroy (SVCXPRT *);
 
 static const struct xp_ops svcudp_op =
@@ -168,7 +168,7 @@ svcudp_bufcreate (int sock, u_int sendsz, u_int recvsz)
   rpc_buffer (xprt) = buf;
   xdrmem_create (&(su->su_xdrs), rpc_buffer (xprt), su->su_iosz, XDR_DECODE);
   su->su_cache = NULL;
-  xprt->xp_p2 = (caddr_t) su;
+  xprt->xp_p2 = (char *) su;
   xprt->xp_verf.oa_base = su->su_verfbody;
   xprt->xp_ops = &svcudp_op;
   xprt->xp_port = ntohs (addr.sin_port);
@@ -368,14 +368,14 @@ svcudp_reply (SVCXPRT *xprt, struct rpc_msg *msg)
 }
 
 static bool_t
-svcudp_getargs (SVCXPRT *xprt, xdrproc_t xdr_args, caddr_t args_ptr)
+svcudp_getargs (SVCXPRT *xprt, xdrproc_t xdr_args, char *args_ptr)
 {
 
   return (*xdr_args) (&(su_data (xprt)->su_xdrs), args_ptr);
 }
 
 static bool_t
-svcudp_freeargs (SVCXPRT *xprt, xdrproc_t xdr_args, caddr_t args_ptr)
+svcudp_freeargs (SVCXPRT *xprt, xdrproc_t xdr_args, char *args_ptr)
 {
   XDR *xdrs = &(su_data (xprt)->su_xdrs);
 
@@ -392,8 +392,8 @@ svcudp_destroy (SVCXPRT *xprt)
   (void) __close (xprt->xp_sock);
   XDR_DESTROY (&(su->su_xdrs));
   mem_free (rpc_buffer (xprt), su->su_iosz);
-  mem_free ((caddr_t) su, sizeof (struct svcudp_data));
-  mem_free ((caddr_t) xprt, sizeof (SVCXPRT));
+  mem_free ((char *) su, sizeof (struct svcudp_data));
+  mem_free ((char *) xprt, sizeof (SVCXPRT));
 }
 
 

@@ -126,9 +126,9 @@ yp_bind_ypbindprog (const char *domain, dom_binding *ysd)
     }
 
   if (clnt_call (client, YPBINDPROC_DOMAIN,
-		 (xdrproc_t) xdr_domainname, (caddr_t) &domain,
+		 (xdrproc_t) xdr_domainname, (char *) &domain,
 		 (xdrproc_t) xdr_ypbind_resp,
-		 (caddr_t) &ypbr, RPCTIMEOUT) != RPC_SUCCESS)
+		 (char *) &ypbr, RPCTIMEOUT) != RPC_SUCCESS)
     {
       clnt_destroy (client);
       return YPERR_YPBIND;
@@ -271,7 +271,7 @@ libnsl_hidden_nolink_def(yp_unbind, GLIBC_2_0)
 
 static int
 __ypclnt_call (const char *domain, u_long prog, xdrproc_t xargs,
-	       caddr_t req, xdrproc_t xres, caddr_t resp, dom_binding **ydb,
+	       char *req, xdrproc_t xres, char *resp, dom_binding **ydb,
 	       int print_error)
 {
   enum clnt_stat result;
@@ -294,7 +294,7 @@ __ypclnt_call (const char *domain, u_long prog, xdrproc_t xargs,
 
 static int
 do_ypcall (const char *domain, u_long prog, xdrproc_t xargs,
-	   caddr_t req, xdrproc_t xres, caddr_t resp)
+	   char *req, xdrproc_t xres, char *resp)
 {
   dom_binding *ydb;
   int status;
@@ -365,7 +365,7 @@ do_ypcall (const char *domain, u_long prog, xdrproc_t xargs,
 /* Like do_ypcall, but translate the status value if necessary.  */
 static int
 do_ypcall_tr (const char *domain, u_long prog, xdrproc_t xargs,
-	      caddr_t req, xdrproc_t xres, caddr_t resp)
+	      char *req, xdrproc_t xres, char *resp)
 {
   int status = do_ypcall (domain, prog, xargs, req, xres, resp);
   if (status == YPERR_SUCCESS)
@@ -451,8 +451,8 @@ yp_match (const char *indomain, const char *inmap, const char *inkey,
   memset (&resp, '\0', sizeof (resp));
 
   result = do_ypcall_tr (indomain, YPPROC_MATCH, (xdrproc_t) xdr_ypreq_key,
-			 (caddr_t) &req, (xdrproc_t) xdr_ypresp_val,
-			 (caddr_t) &resp);
+			 (char *) &req, (xdrproc_t) xdr_ypresp_val,
+			 (char *) &resp);
 
   if (result != YPERR_SUCCESS)
     return result;
@@ -493,8 +493,8 @@ yp_first (const char *indomain, const char *inmap, char **outkey,
   memset (&resp, '\0', sizeof (resp));
 
   result = do_ypcall (indomain, YPPROC_FIRST, (xdrproc_t) xdr_ypreq_nokey,
-		      (caddr_t) &req, (xdrproc_t) xdr_ypresp_key_val,
-		      (caddr_t) &resp);
+		      (char *) &req, (xdrproc_t) xdr_ypresp_key_val,
+		      (char *) &resp);
 
   if (result != RPC_SUCCESS)
     return YPERR_RPC;
@@ -552,8 +552,8 @@ yp_next (const char *indomain, const char *inmap, const char *inkey,
   memset (&resp, '\0', sizeof (resp));
 
   result = do_ypcall_tr (indomain, YPPROC_NEXT, (xdrproc_t) xdr_ypreq_key,
-			 (caddr_t) &req, (xdrproc_t) xdr_ypresp_key_val,
-			 (caddr_t) &resp);
+			 (char *) &req, (xdrproc_t) xdr_ypresp_key_val,
+			 (char *) &resp);
 
   if (result != YPERR_SUCCESS)
     return result;
@@ -602,8 +602,8 @@ yp_master (const char *indomain, const char *inmap, char **outname)
   memset (&resp, '\0', sizeof (ypresp_master));
 
   result = do_ypcall_tr (indomain, YPPROC_MASTER, (xdrproc_t) xdr_ypreq_nokey,
-			 (caddr_t) &req, (xdrproc_t) xdr_ypresp_master,
-			 (caddr_t) &resp);
+			 (char *) &req, (xdrproc_t) xdr_ypresp_master,
+			 (char *) &resp);
 
   if (result != YPERR_SUCCESS)
     return result;
@@ -632,8 +632,8 @@ yp_order (const char *indomain, const char *inmap, unsigned int *outorder)
   memset (&resp, '\0', sizeof (resp));
 
   result = do_ypcall_tr (indomain, YPPROC_ORDER, (xdrproc_t) xdr_ypreq_nokey,
-			 (caddr_t) &req, (xdrproc_t) xdr_ypresp_order,
-			 (caddr_t) &resp);
+			 (char *) &req, (xdrproc_t) xdr_ypresp_order,
+			 (char *) &resp);
 
   if (result != YPERR_SUCCESS)
     return result;
@@ -760,8 +760,8 @@ yp_all (const char *indomain, const char *inmap,
       data.data = (void *) incallback->data;
 
       result = clnt_call (clnt, YPPROC_ALL, (xdrproc_t) xdr_ypreq_nokey,
-			  (caddr_t) &req, (xdrproc_t) __xdr_ypresp_all,
-			  (caddr_t) &data, RPCTIMEOUT);
+			  (char *) &req, (xdrproc_t) __xdr_ypresp_all,
+			  (char *) &data, RPCTIMEOUT);
 
       if (__glibc_unlikely (result != RPC_SUCCESS))
 	{
@@ -801,8 +801,8 @@ yp_maplist (const char *indomain, struct ypmaplist **outmaplist)
   memset (&resp, '\0', sizeof (resp));
 
   result = do_ypcall_tr (indomain, YPPROC_MAPLIST, (xdrproc_t) xdr_domainname,
-			 (caddr_t) &indomain, (xdrproc_t) xdr_ypresp_maplist,
-			 (caddr_t) &resp);
+			 (char *) &indomain, (xdrproc_t) xdr_ypresp_maplist,
+			 (char *) &resp);
 
   if (__glibc_likely (result == YPERR_SUCCESS))
     {
@@ -1007,8 +1007,8 @@ yp_update (char *domain, char *map, unsigned ypop,
     clnt->cl_auth = authunix_create_default ();
 
 again:
-  r = clnt_call (clnt, ypop, xdr_argument, (caddr_t) &args,
-		 (xdrproc_t) xdr_u_int, (caddr_t) &res, RPCTIMEOUT);
+  r = clnt_call (clnt, ypop, xdr_argument, (char *) &args,
+		 (xdrproc_t) xdr_u_int, (char *) &res, RPCTIMEOUT);
 
   if (r == RPC_AUTHERROR)
     {

@@ -116,7 +116,7 @@ struct XDR
 	/* get a long from underlying stream */
 	bool_t (*x_putlong) (XDR *__xdrs, const long *__lp);
 	/* put a long to " */
-	bool_t (*x_getbytes) (XDR *__xdrs, caddr_t __addr, u_int __len);
+	bool_t (*x_getbytes) (XDR *__xdrs, char *__addr, u_int __len);
 	/* get some bytes from " */
 	bool_t (*x_putbytes) (XDR *__xdrs, const char *__addr, u_int __len);
 	/* put some bytes to " */
@@ -134,9 +134,9 @@ struct XDR
 	/* put a int to " */
       }
      *x_ops;
-    caddr_t x_public;		/* users' data */
-    caddr_t x_private;		/* pointer to private data */
-    caddr_t x_base;		/* private used for position info */
+    char *x_public;		/* users' data */
+    char *x_private;		/* pointer to private data */
+    char *x_base;		/* private used for position info */
     u_int x_handy;		/* extra private word */
   };
 
@@ -147,7 +147,7 @@ struct XDR
  * The opaque pointer generally points to a structure of the data type
  * to be decoded.  If this pointer is 0, then the type routines should
  * allocate dynamic storage of the appropriate size and return it.
- * bool_t       (*xdrproc_t)(XDR *, caddr_t *);
+ * bool_t       (*xdrproc_t)(XDR *, char **);
  */
 typedef bool_t (*xdrproc_t) (XDR *, void *,...);
 
@@ -158,7 +158,7 @@ typedef bool_t (*xdrproc_t) (XDR *, void *,...);
  * XDR          *xdrs;
  * int32_t      *int32p;
  * long         *longp;
- * caddr_t       addr;
+ * char         *addr;
  * u_int         len;
  * u_int         pos;
  */
@@ -305,12 +305,12 @@ extern bool_t xdr_quad_t (XDR *__xdrs, quad_t *__ip) __THROW;
 extern bool_t xdr_u_quad_t (XDR *__xdrs, u_quad_t *__up) __THROW;
 extern bool_t xdr_bool (XDR *__xdrs, bool_t *__bp) __THROW;
 extern bool_t xdr_enum (XDR *__xdrs, enum_t *__ep) __THROW;
-extern bool_t xdr_array (XDR * _xdrs, caddr_t *__addrp, u_int *__sizep,
+extern bool_t xdr_array (XDR * _xdrs, char **__addrp, u_int *__sizep,
 			 u_int __maxsize, u_int __elsize, xdrproc_t __elproc)
      __THROW;
 extern bool_t xdr_bytes (XDR *__xdrs, char **__cpp, u_int *__sizep,
 			 u_int __maxsize) __THROW;
-extern bool_t xdr_opaque (XDR *__xdrs, caddr_t __cp, u_int __cnt) __THROW;
+extern bool_t xdr_opaque (XDR *__xdrs, char *__cp, u_int __cnt) __THROW;
 extern bool_t xdr_string (XDR *__xdrs, char **__cpp, u_int __maxsize) __THROW;
 extern bool_t xdr_union (XDR *__xdrs, enum_t *__dscmp, char *__unp,
 			 const struct xdr_discrim *__choices,
@@ -321,7 +321,7 @@ extern bool_t xdr_vector (XDR *__xdrs, char *__basep, u_int __nelem,
 			  u_int __elemsize, xdrproc_t __xdr_elem) __THROW;
 extern bool_t xdr_float (XDR *__xdrs, float *__fp) __THROW;
 extern bool_t xdr_double (XDR *__xdrs, double *__dp) __THROW;
-extern bool_t xdr_reference (XDR *__xdrs, caddr_t *__xpp, u_int __size,
+extern bool_t xdr_reference (XDR *__xdrs, char **__xpp, u_int __size,
 			     xdrproc_t __proc) __THROW;
 extern bool_t xdr_pointer (XDR *__xdrs, char **__objpp,
 			   u_int __obj_size, xdrproc_t __xdr_obj) __THROW;
@@ -347,7 +347,7 @@ extern bool_t xdr_netobj (XDR *__xdrs, struct netobj *__np) __THROW;
  */
 
 /* XDR using memory buffers */
-extern void xdrmem_create (XDR *__xdrs, const caddr_t __addr,
+extern void xdrmem_create (XDR *__xdrs, const char *__addr,
 			   u_int __size, enum xdr_op __xop) __THROW;
 
 /* XDR using stdio library */
@@ -356,7 +356,7 @@ extern void xdrstdio_create (XDR *__xdrs, FILE *__file, enum xdr_op __xop)
 
 /* XDR pseudo records for tcp */
 extern void xdrrec_create (XDR *__xdrs, u_int __sendsize,
-			   u_int __recvsize, caddr_t __tcp_handle,
+			   u_int __recvsize, char *__tcp_handle,
 			   int (*__readit) (char *, char *, int),
 			   int (*__writeit) (char *, char *, int)) __THROW;
 

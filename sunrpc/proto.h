@@ -17,7 +17,7 @@ void pprocdef(proc_list *proc, version_list *vp,
 	      const char *addargtype, int server_p, int mode);
 void pdeclaration(const char *name, declaration *dec, int tab,
 		  const char *separator);
-void print_xdr_func_def (char* name, int pointerp, int i);
+void print_xdr_func_def (char *name, int pointerp, int i);
 
 /****** rpc_main.c ******/
 	/* nil */

@@ -115,8 +115,8 @@ __libc_rpc_getport (struct sockaddr_in *address, u_long program,
       parms.pm_prot = protocol;
       parms.pm_port = 0;	/* not needed or used */
       if (CLNT_CALL (client, PMAPPROC_GETPORT, (xdrproc_t)xdr_pmap,
-		     (caddr_t)&parms, (xdrproc_t)xdr_u_short,
-		     (caddr_t)&port, tottimeout) != RPC_SUCCESS)
+		     (char *)&parms, (xdrproc_t)xdr_u_short,
+		     (char *)&port, tottimeout) != RPC_SUCCESS)
 	{
 	  ce->cf_stat = RPC_PMAPFAILURE;
 	  clnt_geterr (client, &ce->cf_error);

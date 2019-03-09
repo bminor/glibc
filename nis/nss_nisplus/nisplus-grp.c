@@ -188,9 +188,9 @@ internal_nisplus_getgrent_r (struct group *gr, char *buffer, size_t buflen,
 
 	  status = __do_niscall3 (&bptr, NIS_IBFIRST,
 				  (xdrproc_t) _xdr_ib_request,
-				  (caddr_t) ibreq,
+				  (char *) ibreq,
 				  (xdrproc_t) _xdr_nis_result,
-				  (caddr_t) &result,
+				  (char *) &result,
 				  0, NULL);
 	}
       else
@@ -200,9 +200,9 @@ internal_nisplus_getgrent_r (struct group *gr, char *buffer, size_t buflen,
 
 	  status = __do_niscall3 (&bptr, NIS_IBNEXT,
 				  (xdrproc_t) _xdr_ib_request,
-				  (caddr_t) ibreq,
+				  (char *) ibreq,
 				  (xdrproc_t) _xdr_nis_result,
-				  (caddr_t) &result,
+				  (char *) &result,
 				  0, NULL);
 
 	  ibreq->ibr_cookie.n_bytes = NULL;

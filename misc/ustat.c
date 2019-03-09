@@ -24,13 +24,7 @@
 # include <unistd.h>
 # include <errno.h>
 
-struct ustat
- {
-   __daddr_t f_tfree;         /* Number of free blocks.  */
-   __ino_t f_tinode;          /* Number of free inodes.  */
-   char f_fname[6];
-   char f_fpack[6];
-};
+struct ustat;
 
 int
 __old_ustat (dev_t dev, struct ustat *ust)

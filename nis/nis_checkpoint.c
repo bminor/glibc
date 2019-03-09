@@ -60,8 +60,8 @@ nis_checkpoint (const_nis_name dirname)
 	  memset (&cpres, '\0', sizeof (cp_result));
 	  if (__do_niscall2 (&NIS_RES_OBJECT(res2)->DI_data.do_servers.do_servers_val[i],
 			     1, NIS_CHECKPOINT, (xdrproc_t) _xdr_nis_name,
-			     (caddr_t) &dirname, (xdrproc_t) _xdr_cp_result,
-			     (caddr_t) &cpres, 0, NULL) != NIS_SUCCESS)
+			     (char *) &dirname, (xdrproc_t) _xdr_cp_result,
+			     (char *) &cpres, 0, NULL) != NIS_SUCCESS)
 	    NIS_RES_STATUS (res) = NIS_RPCERROR;
 	  else
 	    {

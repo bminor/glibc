@@ -624,7 +624,7 @@ write_program (const definition * def, const char *storage)
 	{
 	  f_print(fout,"\tif (!");
 	  pvname(def->def_name, vp->vers_num);
-	  f_print(fout,"_freeresult (%s, _xdr_%s, (caddr_t) &%s))\n",
+	  f_print(fout,"_freeresult (%s, _xdr_%s, (char *) &%s))\n",
 		  TRANSP, RESULT, RESULT);
 	  (void) sprintf(_errbuf, "unable to free results");
 	  print_err_message("\t\t");
@@ -644,7 +644,7 @@ printerr (const char *err, const char *transp)
 static void
 printif (const char *proc, const char *transp, const char *arg)
 {
-  f_print (fout, "\tif (!svc_%s (%s, (xdrproc_t) _xdr_%s, (caddr_t) &%s)) {\n",
+  f_print (fout, "\tif (!svc_%s (%s, (xdrproc_t) _xdr_%s, (char *) &%s)) {\n",
 	   proc, transp, arg, arg);
 }
 
@@ -773,7 +773,7 @@ write_msg_out (void)
     }
   else
     {
-      f_print (fout, "void _msgout (char* msg)\n");
+      f_print (fout, "void _msgout (char *msg)\n");
     }
   f_print (fout, "{\n");
   f_print (fout, "#ifdef RPC_SVC_FG\n");

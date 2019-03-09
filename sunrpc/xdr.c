@@ -539,7 +539,7 @@ libc_hidden_nolink_sunrpc (xdr_enum, GLIBC_2_0)
  * cp points to the opaque object and cnt gives the byte length.
  */
 bool_t
-xdr_opaque (XDR *xdrs, caddr_t cp, u_int cnt)
+xdr_opaque (XDR *xdrs, char *cp, u_int cnt)
 {
   u_int rndup;
   static char crud[BYTES_PER_XDR_UNIT];
@@ -566,7 +566,7 @@ xdr_opaque (XDR *xdrs, caddr_t cp, u_int cnt)
 	}
       if (rndup == 0)
 	return TRUE;
-      return XDR_GETBYTES (xdrs, (caddr_t)crud, rndup);
+      return XDR_GETBYTES (xdrs, (char *)crud, rndup);
 
     case XDR_ENCODE:
       if (!XDR_PUTBYTES (xdrs, cp, cnt))

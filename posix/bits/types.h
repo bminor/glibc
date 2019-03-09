@@ -161,7 +161,6 @@ __STD_TYPE __TIME_T_TYPE __time_t;	/* Seconds since the Epoch.  */
 __STD_TYPE __USECONDS_T_TYPE __useconds_t; /* Count of microseconds.  */
 __STD_TYPE __SUSECONDS_T_TYPE __suseconds_t; /* Signed count of microseconds.  */
 
-__STD_TYPE __DADDR_T_TYPE __daddr_t;	/* The type of a disk address.  */
 __STD_TYPE __KEY_T_TYPE __key_t;	/* Type of an IPC key.  */
 
 /* Clock ID used in clock and timer functions.  */
@@ -200,7 +199,8 @@ __STD_TYPE __SYSCALL_ULONG_TYPE __syscall_ulong_t;
 /* These few don't really vary by system, they always correspond
    to one of the other defined types.  */
 typedef __off64_t __loff_t;	/* Type of file sizes and offsets (LFS).  */
-typedef char *__caddr_t;
+typedef char *__caddr_t;                /* Type of a memory address (BSD).  */
+__STD_TYPE __S32_TYPE __daddr_t;	/* Type of a disk address (BSD).  */
 
 /* Duplicates info from stdint.h but this is used in unistd.h.  */
 __STD_TYPE __SWORD_TYPE __intptr_t;

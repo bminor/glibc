@@ -97,11 +97,11 @@ struct SVCXPRT {
     enum xprt_stat (*xp_stat) (SVCXPRT *__xprt);
 				/* get transport status */
     bool_t	(*xp_getargs) (SVCXPRT *__xprt, xdrproc_t __xdr_args,
-			       caddr_t __args_ptr); /* get arguments */
+			       char *__args_ptr); /* get arguments */
     bool_t	(*xp_reply) (SVCXPRT *__xprt, struct rpc_msg *__msg);
 				/* send reply */
     bool_t	(*xp_freeargs) (SVCXPRT *__xprt, xdrproc_t __xdr_args,
-				caddr_t __args_ptr);
+				char *__args_ptr);
 				/* free mem allocated for args */
     void	(*xp_destroy) (SVCXPRT *__xprt);
 				/* destroy this struct */
@@ -109,8 +109,8 @@ struct SVCXPRT {
   int		xp_addrlen;	 /* length of remote address */
   struct sockaddr_in xp_raddr;	 /* remote address */
   struct opaque_auth xp_verf;	 /* raw response verifier */
-  caddr_t		xp_p1;		 /* private */
-  caddr_t		xp_p2;		 /* private */
+  char *		xp_p1;		 /* private */
+  char *		xp_p2;		 /* private */
   char		xp_pad [256];	/* padding, internal use */
 };
 
@@ -125,7 +125,7 @@ struct SVCXPRT {
  * SVCXPRT		*xprt;
  * struct rpc_msg	*msg;
  * xdrproc_t		 xargs;
- * caddr_t		 argsp;
+ * char *		 argsp;
  */
 #define SVC_RECV(xprt, msg)				\
 	(*(xprt)->xp_ops->xp_recv)((xprt), (msg))
@@ -166,7 +166,7 @@ struct svc_req {
   rpcvers_t rq_vers;            /* service protocol version */
   rpcproc_t rq_proc;            /* the desired procedure */
   struct opaque_auth rq_cred;   /* raw creds from the wire */
-  caddr_t rq_clntcred;          /* read only cooked cred */
+  char *rq_clntcred;          /* read only cooked cred */
   SVCXPRT *rq_xprt;             /* associated transport */
 };
 
@@ -242,7 +242,7 @@ extern void xprt_unregister (SVCXPRT *__xprt) __THROW;
  */
 
 extern bool_t	svc_sendreply (SVCXPRT *__xprt, xdrproc_t __xdr_results,
-			       caddr_t __xdr_location) __THROW;
+			       char *__xdr_location) __THROW;
 
 extern void	svcerr_decode (SVCXPRT *__xprt) __THROW;
 

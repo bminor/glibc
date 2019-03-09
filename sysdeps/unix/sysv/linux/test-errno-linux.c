@@ -163,7 +163,7 @@ do_test (void)
      of containers.  Linux 5.4 added additional argument validation
      and can return EINVAL.  */
   fails |= test_wrp2 (LIST (ENODEV, ENOSYS, EPERM, EINVAL),
-		      quotactl, Q_GETINFO, NULL, -1, (caddr_t) &dqblk);
+		      quotactl, Q_GETINFO, NULL, -1, (char *) &dqblk);
   fails |= test_wrp (EINVAL, sched_getparam, -1, &sch_param);
   fails |= test_wrp (EINVAL, sched_getscheduler, -1);
   fails |= test_wrp (EINVAL, sched_get_priority_max, -1);

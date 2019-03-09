@@ -190,7 +190,7 @@ authdes_pk_create (const char *servername, netobj *pkey, u_int window,
   auth->ah_cred.oa_flavor = AUTH_DES;
   auth->ah_verf.oa_flavor = AUTH_DES;
   auth->ah_ops = (struct auth_ops *) &authdes_ops;
-  auth->ah_private = (caddr_t) ad;
+  auth->ah_private = (char *) ad;
 
   if (!authdes_refresh (auth))
     goto failed;

@@ -871,7 +871,7 @@ _nl_load_domain (struct loaded_l10nfile *domain_file,
       /* The magic number is wrong: not a message catalog file.  */
 #ifdef HAVE_MMAP
       if (use_mmap)
-	munmap ((caddr_t) data, size);
+	munmap (data, size);
       else
 #endif
 	free (data);
@@ -1237,7 +1237,7 @@ _nl_load_domain (struct loaded_l10nfile *domain_file,
       free (domain->malloced);
 #ifdef HAVE_MMAP
       if (use_mmap)
-	munmap ((caddr_t) data, size);
+	munmap (data, size);
       else
 #endif
 	free (data);
@@ -1307,9 +1307,10 @@ _nl_unload_domain (struct loaded_domain *domain)
 
   free (domain->malloced);
 
+  /* Casts below are necessary because domain->data is const.  */
 # ifdef _POSIX_MAPPED_FILES
   if (domain->use_mmap)
-    munmap ((caddr_t) domain->data, domain->mmap_size);
+    munmap ((void *) domain->data, domain->mmap_size);
   else
 # endif	/* _POSIX_MAPPED_FILES */
     free ((void *) domain->data);

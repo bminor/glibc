@@ -130,19 +130,19 @@ typedef struct CLIENT CLIENT;
 struct CLIENT {
   AUTH	*cl_auth;		 /* authenticator */
   struct clnt_ops {
-    enum clnt_stat (*cl_call) (CLIENT *, u_long, xdrproc_t, caddr_t, xdrproc_t,
-			       caddr_t, struct timeval);
+    enum clnt_stat (*cl_call) (CLIENT *, u_long, xdrproc_t, char *, xdrproc_t,
+			       char *, struct timeval);
 				/* call remote procedure */
     void (*cl_abort) (void);	/* abort a call */
     void (*cl_geterr) (CLIENT *, struct rpc_err *);
 				/* get specific error code */
-    bool_t (*cl_freeres) (CLIENT *, xdrproc_t, caddr_t);
+    bool_t (*cl_freeres) (CLIENT *, xdrproc_t, char *);
 				/* frees results */
     void (*cl_destroy) (CLIENT *); /* destroy this structure */
     bool_t (*cl_control) (CLIENT *, int, char *);
 				/* the ioctl() of rpc */
   } *cl_ops;
-  caddr_t cl_private;		/* private stuff */
+  char *cl_private;		/* private stuff */
 };
 
 
@@ -159,9 +159,9 @@ struct CLIENT {
  * 	CLIENT *rh;
  *	u_long proc;
  *	xdrproc_t xargs;
- *	caddr_t argsp;
+ *	char *argsp;
  *	xdrproc_t xres;
- *	caddr_t resp;
+ *	char *resp;
  *	struct timeval timeout;
  */
 #define	CLNT_CALL(rh, proc, xargs, argsp, xres, resp, secs)	\
@@ -191,7 +191,7 @@ struct CLIENT {
  * CLNT_FREERES(rh, xres, resp);
  * 	CLIENT *rh;
  *	xdrproc_t xres;
- *	caddr_t resp;
+ *	char *resp;
  */
 #define	CLNT_FREERES(rh,xres,resp) ((*(rh)->cl_ops->cl_freeres)(rh,xres,resp))
 #define	clnt_freeres(rh,xres,resp) ((*(rh)->cl_ops->cl_freeres)(rh,xres,resp))
@@ -401,7 +401,7 @@ extern char *clnt_sperrno (enum clnt_stat __num) __THROW;	/* string */
 /*
  * get the port number on the host for the rpc program,version and proto
  */
-extern int getrpcport (const char * __host, u_long __prognum,
+extern int getrpcport (const char *__host, u_long __prognum,
 		       u_long __versnum, u_int __proto) __THROW;
 
 /*

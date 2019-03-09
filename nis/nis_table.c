@@ -146,8 +146,8 @@ get_tablepath (char *name, dir_binding *bptr)
   req.ns_object.ns_object_val = NULL;
 
   result = clnt_call (bptr->clnt, NIS_LOOKUP, (xdrproc_t) _xdr_ns_request,
-		      (caddr_t) &req, (xdrproc_t) _xdr_nis_result,
-		      (caddr_t) &res, RPCTIMEOUT);
+		      (char *) &req, (xdrproc_t) _xdr_nis_result,
+		      (char *) &res, RPCTIMEOUT);
 
   const char *cptr;
   if (result == RPC_SUCCESS && NIS_RES_STATUS (&res) == NIS_SUCCESS
@@ -308,9 +308,9 @@ nis_list (const_nis_name name, unsigned int flags,
 
     again:
       clnt_status = clnt_call (bptr.clnt, NIS_IBLIST,
-			       (xdrproc_t) _xdr_ib_request, (caddr_t) ibreq,
+			       (xdrproc_t) _xdr_ib_request, (char *) ibreq,
 			       (xdrproc_t) _xdr_nis_result,
-			       (caddr_t) res, RPCTIMEOUT);
+			       (char *) res, RPCTIMEOUT);
 
       if (__glibc_unlikely (clnt_status != RPC_SUCCESS))
 	NIS_RES_STATUS (res) = NIS_RPCERROR;
@@ -604,9 +604,9 @@ nis_add_entry (const_nis_name name, const nis_object *obj2, unsigned int flags)
 
   nis_error status = __do_niscall (ibreq->ibr_name, NIS_IBADD,
 				   (xdrproc_t) _xdr_ib_request,
-				   (caddr_t) ibreq,
+				   (char *) ibreq,
 				   (xdrproc_t) _xdr_nis_result,
-				   (caddr_t) res, 0, NULL);
+				   (char *) res, 0, NULL);
   if (__glibc_unlikely (status != NIS_SUCCESS))
     NIS_RES_STATUS (res) = status;
 
@@ -663,8 +663,8 @@ nis_modify_entry (const_nis_name name, const nis_object *obj2,
 
   status = __do_niscall (ibreq->ibr_name, NIS_IBMODIFY,
 			 (xdrproc_t) _xdr_ib_request,
-			 (caddr_t) ibreq, (xdrproc_t) _xdr_nis_result,
-			 (caddr_t) res, 0, NULL);
+			 (char *) ibreq, (xdrproc_t) _xdr_nis_result,
+			 (char *) res, 0, NULL);
   if (__glibc_unlikely (status != NIS_SUCCESS))
     NIS_RES_STATUS (res) = status;
 
@@ -713,8 +713,8 @@ nis_remove_entry (const_nis_name name, const nis_object *obj,
 
   if ((status = __do_niscall (ibreq->ibr_name, NIS_IBREMOVE,
 			      (xdrproc_t) _xdr_ib_request,
-			      (caddr_t) ibreq, (xdrproc_t) _xdr_nis_result,
-			      (caddr_t) res, 0, NULL)) != NIS_SUCCESS)
+			      (char *) ibreq, (xdrproc_t) _xdr_nis_result,
+			      (char *) res, 0, NULL)) != NIS_SUCCESS)
     NIS_RES_STATUS (res) = status;
 
   nis_free_request (ibreq);
@@ -749,8 +749,8 @@ nis_first_entry (const_nis_name name)
 
   status = __do_niscall (ibreq->ibr_name, NIS_IBFIRST,
 			 (xdrproc_t) _xdr_ib_request,
-			 (caddr_t) ibreq, (xdrproc_t) _xdr_nis_result,
-			 (caddr_t) res, 0, NULL);
+			 (char *) ibreq, (xdrproc_t) _xdr_nis_result,
+			 (char *) res, 0, NULL);
 
   if (__glibc_unlikely (status != NIS_SUCCESS))
     NIS_RES_STATUS (res) = status;
@@ -793,8 +793,8 @@ nis_next_entry (const_nis_name name, const netobj *cookie)
 
   status = __do_niscall (ibreq->ibr_name, NIS_IBNEXT,
 			 (xdrproc_t) _xdr_ib_request,
-			 (caddr_t) ibreq, (xdrproc_t) _xdr_nis_result,
-			 (caddr_t) res, 0, NULL);
+			 (char *) ibreq, (xdrproc_t) _xdr_nis_result,
+			 (char *) res, 0, NULL);
 
   if (__glibc_unlikely (status != NIS_SUCCESS))
     NIS_RES_STATUS (res) = status;

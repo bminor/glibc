@@ -18,7 +18,10 @@
 
 """Verifies that installed headers do not use any obsolete constructs:
  * legacy BSD typedefs superseded by <stdint.h>:
-   ushort uint ulong u_char u_short u_int u_long u_intNN_t quad_t u_quad_t
+      ushort uint ulong
+      u_char u_short u_int u_long
+      u_intNN_t quad_t u_quad_t
+      caddr_t daddr_t loff_t register_t
    (sys/types.h is allowed to _define_ these types, but not to use them
     to define anything else).
 """
@@ -254,6 +257,8 @@ class NoCheck(ConstructChecker):
 OBSOLETE_TYPE_RE_ = re.compile(r"""\A
   (__)?
   (   quad_t
+    | [cd]addr_t
+    | loff_t
     | register_t
     | u(?: short | int | long
          | _(?: char | short | int(?:[0-9]+_t)? | long | quad_t )))

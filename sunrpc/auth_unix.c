@@ -116,7 +116,7 @@ no_memory:
       return NULL;
     }
   auth->ah_ops = (struct auth_ops *) &auth_unix_ops;
-  auth->ah_private = (caddr_t) au;
+  auth->ah_private = (char *) au;
   auth->ah_verf = au->au_shcred = _null_auth;
   au->au_shfaults = 0;
 
@@ -330,7 +330,7 @@ authunix_destroy (AUTH *auth)
   if (auth->ah_verf.oa_base != NULL)
     mem_free (auth->ah_verf.oa_base, auth->ah_verf.oa_length);
 
-  mem_free ((caddr_t) auth, sizeof (*auth));
+  mem_free ((char *) auth, sizeof (*auth));
 }
 
 /*

@@ -65,7 +65,7 @@ malloc (size_t n)
     {
       /* Insufficient space left; allocate another page plus one extra
 	 page to reduce number of mmap calls.  */
-      caddr_t page;
+      char *page;
       size_t nup = (n + GLRO(dl_pagesize) - 1) & ~(GLRO(dl_pagesize) - 1);
       if (__glibc_unlikely (nup == 0 && n != 0))
 	return NULL;

@@ -56,7 +56,7 @@
 bool_t
 xdr_array (XDR *xdrs,
 	   /* array pointer */
-	   caddr_t *addrp,
+	   char **addrp,
 	   /* number of elements */
 	   u_int *sizep,
 	   /* max numberof elements */
@@ -67,7 +67,7 @@ xdr_array (XDR *xdrs,
 	   xdrproc_t elproc)
 {
   u_int i;
-  caddr_t target = *addrp;
+  char *target = *addrp;
   u_int c;		/* the actual element count */
   bool_t stat = TRUE;
 

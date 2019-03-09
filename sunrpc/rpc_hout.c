@@ -277,7 +277,7 @@ pfreeprocdef (const char *name, const char *vers, int mode)
   f_print (fout, "extern int ");
   pvname (name, vers);
   if (mode == 1)
-    f_print (fout,"_freeresult (SVCXPRT *, xdrproc_t, caddr_t);\n");
+    f_print (fout,"_freeresult (SVCXPRT *, xdrproc_t, char *);\n");
   else
     f_print (fout,"_freeresult ();\n");
 }

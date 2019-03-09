@@ -22,7 +22,7 @@
 #include <string.h>
 
 error_t
-_hurd_fd_read (struct hurd_fd *fd, void *buf, size_t *nbytes, loff_t offset)
+_hurd_fd_read (struct hurd_fd *fd, void *buf, size_t *nbytes, off64_t offset)
 {
   error_t err;
   char *data;

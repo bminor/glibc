@@ -76,11 +76,11 @@ struct ct_data
 static int readtcp (char *, char *, int);
 static int writetcp (char *, char *, int);
 
-static enum clnt_stat clnttcp_call (CLIENT *, u_long, xdrproc_t, caddr_t,
-				    xdrproc_t, caddr_t, struct timeval);
+static enum clnt_stat clnttcp_call (CLIENT *, u_long, xdrproc_t, char *,
+				    xdrproc_t, char *, struct timeval);
 static void clnttcp_abort (void);
 static void clnttcp_geterr (CLIENT *, struct rpc_err *);
-static bool_t clnttcp_freeres (CLIENT *, xdrproc_t, caddr_t);
+static bool_t clnttcp_freeres (CLIENT *, xdrproc_t, char *);
 static bool_t clnttcp_control (CLIENT *, int, char *);
 static void clnttcp_destroy (CLIENT *);
 
@@ -135,8 +135,8 @@ clnttcp_create (struct sockaddr_in *raddr, u_long prog, u_long vers,
       u_short port;
       if ((port = pmap_getport (raddr, prog, vers, IPPROTO_TCP)) == 0)
 	{
-	  mem_free ((caddr_t) ct, sizeof (struct ct_data));
-	  mem_free ((caddr_t) h, sizeof (CLIENT));
+	  mem_free ((char *) ct, sizeof (struct ct_data));
+	  mem_free ((char *) h, sizeof (CLIENT));
 	  return ((CLIENT *) NULL);
 	}
       raddr->sin_port = htons (port);
@@ -204,9 +204,9 @@ clnttcp_create (struct sockaddr_in *raddr, u_long prog, u_long vers,
    * and authnone for authentication.
    */
   xdrrec_create (&(ct->ct_xdrs), sendsz, recvsz,
-		 (caddr_t) ct, readtcp, writetcp);
+		 (char *) ct, readtcp, writetcp);
   h->cl_ops = (struct clnt_ops *) &tcp_ops;
-  h->cl_private = (caddr_t) ct;
+  h->cl_private = (char *) ct;
   h->cl_auth = authnone_create ();
   return h;
 
@@ -214,8 +214,8 @@ fooy:
   /*
    * Something goofed, free stuff and barf
    */
-  mem_free ((caddr_t) ct, sizeof (struct ct_data));
-  mem_free ((caddr_t) h, sizeof (CLIENT));
+  mem_free ((char *) ct, sizeof (struct ct_data));
+  mem_free ((char *) h, sizeof (CLIENT));
   return ((CLIENT *) NULL);
 }
 #ifdef EXPORT_RPC_SYMBOLS
@@ -225,8 +225,8 @@ libc_hidden_nolink_sunrpc (clnttcp_create, GLIBC_2_0)
 #endif
 
 static enum clnt_stat
-clnttcp_call (CLIENT *h, u_long proc, xdrproc_t xdr_args, caddr_t args_ptr,
-	      xdrproc_t xdr_results, caddr_t results_ptr,
+clnttcp_call (CLIENT *h, u_long proc, xdrproc_t xdr_args, char *args_ptr,
+	      xdrproc_t xdr_results, char *results_ptr,
 	      struct timeval timeout)
 {
   struct ct_data *ct = (struct ct_data *) h->cl_private;
@@ -337,7 +337,7 @@ clnttcp_geterr (CLIENT *h, struct rpc_err *errp)
 }
 
 static bool_t
-clnttcp_freeres (CLIENT *cl, xdrproc_t xdr_res, caddr_t res_ptr)
+clnttcp_freeres (CLIENT *cl, xdrproc_t xdr_res, char *res_ptr)
 {
   struct ct_data *ct = (struct ct_data *) cl->cl_private;
   XDR *xdrs = &(ct->ct_xdrs);
@@ -454,8 +454,8 @@ clnttcp_destroy (CLIENT *h)
       (void) __close (ct->ct_sock);
     }
   XDR_DESTROY (&(ct->ct_xdrs));
-  mem_free ((caddr_t) ct, sizeof (struct ct_data));
-  mem_free ((caddr_t) h, sizeof (CLIENT));
+  mem_free ((char *) ct, sizeof (struct ct_data));
+  mem_free ((char *) h, sizeof (CLIENT));
 }
 
 /*

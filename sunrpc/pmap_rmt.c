@@ -66,7 +66,7 @@ static const struct timeval timeout = {3, 0};
  */
 enum clnt_stat
 pmap_rmtcall (struct sockaddr_in *addr, u_long prog, u_long vers, u_long proc,
-	      xdrproc_t xdrargs, caddr_t argsp, xdrproc_t xdrres, caddr_t resp,
+	      xdrproc_t xdrargs, char *argsp, xdrproc_t xdrres, char *resp,
 	      struct timeval tout, u_long *port_ptr)
 {
   int socket = -1;
@@ -89,8 +89,8 @@ pmap_rmtcall (struct sockaddr_in *addr, u_long prog, u_long vers, u_long proc,
       r.xdr_results = xdrres;
       stat = CLNT_CALL (client, PMAPPROC_CALLIT,
 			(xdrproc_t)xdr_rmtcall_args,
-			(caddr_t)&a, (xdrproc_t)xdr_rmtcallres,
-			(caddr_t)&r, tout);
+			(char *)&a, (xdrproc_t)xdr_rmtcallres,
+			(char *)&r, tout);
       CLNT_DESTROY (client);
     }
   else
@@ -143,9 +143,9 @@ libc_hidden_nolink_sunrpc (xdr_rmtcall_args, GLIBC_2_0)
 bool_t
 xdr_rmtcallres (XDR *xdrs, struct rmtcallres *crp)
 {
-  caddr_t port_ptr;
+  char *port_ptr;
 
-  port_ptr = (caddr_t) crp->port_ptr;
+  port_ptr = (char *) crp->port_ptr;
   if (xdr_reference (xdrs, &port_ptr, sizeof (u_long),
 		     (xdrproc_t) xdr_u_long)
       && xdr_u_long (xdrs, &crp->resultslen))
@@ -205,11 +205,11 @@ clnt_broadcast (/* program number */
 		/* xdr routine for args */
 		xdrproc_t xargs,
 		/* pointer to args */
-		caddr_t argsp,
+		char *argsp,
 		/* xdr routine for results */
 		xdrproc_t xresults,
 		/* pointer to results */
-		caddr_t resultsp,
+		char *resultsp,
 		/* call with each result obtained */
 		resultproc_t eachresult)
 {
@@ -312,7 +312,7 @@ clnt_broadcast (/* program number */
 	}
     recv_again:
       msg.acpted_rply.ar_verf = _null_auth;
-      msg.acpted_rply.ar_results.where = (caddr_t) & r;
+      msg.acpted_rply.ar_results.where = (char *) & r;
       msg.acpted_rply.ar_results.proc = (xdrproc_t) xdr_rmtcallres;
       milliseconds = t.tv_sec * 1000 + t.tv_usec / 1000;
       switch (__poll(&fd, 1, milliseconds))

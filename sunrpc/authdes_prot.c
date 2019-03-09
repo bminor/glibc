@@ -51,13 +51,13 @@ xdr_authdes_cred (XDR *xdrs, struct authdes_cred *cred)
     {
     case ADN_FULLNAME:
       ATTEMPT (xdr_string (xdrs, &cred->adc_fullname.name, MAXNETNAMELEN));
-      ATTEMPT (xdr_opaque (xdrs, (caddr_t) & cred->adc_fullname.key,
+      ATTEMPT (xdr_opaque (xdrs, (char *) & cred->adc_fullname.key,
 			   sizeof (des_block)));
-      ATTEMPT (xdr_opaque (xdrs, (caddr_t) & cred->adc_fullname.window,
+      ATTEMPT (xdr_opaque (xdrs, (char *) & cred->adc_fullname.window,
 			   sizeof (cred->adc_fullname.window)));
       return (TRUE);
     case ADN_NICKNAME:
-      ATTEMPT (xdr_opaque (xdrs, (caddr_t) & cred->adc_nickname,
+      ATTEMPT (xdr_opaque (xdrs, (char *) & cred->adc_nickname,
 			   sizeof (cred->adc_nickname)));
       return TRUE;
     default:
@@ -73,9 +73,9 @@ xdr_authdes_verf (register XDR *xdrs, register struct authdes_verf *verf)
   /*
    * Unrolled xdr
    */
-  ATTEMPT (xdr_opaque (xdrs, (caddr_t) & verf->adv_xtimestamp,
+  ATTEMPT (xdr_opaque (xdrs, (char *) & verf->adv_xtimestamp,
 		       sizeof (des_block)));
-  ATTEMPT (xdr_opaque (xdrs, (caddr_t) & verf->adv_int_u,
+  ATTEMPT (xdr_opaque (xdrs, (char *) & verf->adv_int_u,
 		       sizeof (verf->adv_int_u)));
   return TRUE;
 }

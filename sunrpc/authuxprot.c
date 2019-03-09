@@ -54,7 +54,7 @@ xdr_authunix_parms (XDR * xdrs, struct authunix_parms *p)
       && (sizeof (gid_t) == sizeof (short int)
 	  ? xdr_u_short (xdrs, (u_short *) & (p->aup_gid))
 	  : xdr_u_int (xdrs, (u_int *) & (p->aup_gid)))
-      && xdr_array (xdrs, (caddr_t *) & (p->aup_gids),
+      && xdr_array (xdrs, (char **) & (p->aup_gids),
 		    & (p->aup_len), NGRPS, sizeof (gid_t),
 		    (sizeof (gid_t) == sizeof (short int)
 		     ? (xdrproc_t) xdr_u_short

@@ -64,11 +64,11 @@ extern u_long _create_xid (void);
 /*
  * UDP bases client side rpc operations
  */
-static enum clnt_stat clntudp_call (CLIENT *, u_long, xdrproc_t, caddr_t,
-				    xdrproc_t, caddr_t, struct timeval);
+static enum clnt_stat clntudp_call (CLIENT *, u_long, xdrproc_t, char *,
+				    xdrproc_t, char *, struct timeval);
 static void clntudp_abort (void);
 static void clntudp_geterr (CLIENT *, struct rpc_err *);
-static bool_t clntudp_freeres (CLIENT *, xdrproc_t, caddr_t);
+static bool_t clntudp_freeres (CLIENT *, xdrproc_t, char *);
 static bool_t clntudp_control (CLIENT *, int, char *);
 static void clntudp_destroy (CLIENT *);
 
@@ -155,7 +155,7 @@ __libc_clntudp_bufcreate (struct sockaddr_in *raddr, u_long program,
       raddr->sin_port = htons (port);
     }
   cl->cl_ops = (struct clnt_ops *) &udp_ops;
-  cl->cl_private = (caddr_t) cu;
+  cl->cl_private = (char *) cu;
   cu->cu_raddr = *raddr;
   cu->cu_rlen = sizeof (cu->cu_raddr);
   cu->cu_wait = wait;
@@ -203,9 +203,9 @@ __libc_clntudp_bufcreate (struct sockaddr_in *raddr, u_long program,
   return cl;
 fooy:
   if (cu)
-    mem_free ((caddr_t) cu, sizeof (*cu) + sendsz + recvsz);
+    mem_free ((char *) cu, sizeof (*cu) + sendsz + recvsz);
   if (cl)
-    mem_free ((caddr_t) cl, sizeof (CLIENT));
+    mem_free ((char *) cl, sizeof (CLIENT));
   return (CLIENT *) NULL;
 }
 #ifdef EXPORT_RPC_SYMBOLS
@@ -269,11 +269,11 @@ clntudp_call (/* client handle */
 	      /* xdr routine for args */
 	      xdrproc_t xargs,
 	      /* pointer to args */
-	      caddr_t argsp,
+	      char *argsp,
 	      /* xdr routine for results */
 	      xdrproc_t xresults,
 	      /* pointer to results */
-	      caddr_t resultsp,
+	      char *resultsp,
 	      /* seconds to wait before giving up */
 	      struct timeval utimeout)
 {
@@ -535,7 +535,7 @@ clntudp_geterr (CLIENT *cl, struct rpc_err *errp)
 
 
 static bool_t
-clntudp_freeres (CLIENT *cl, xdrproc_t xdr_res, caddr_t res_ptr)
+clntudp_freeres (CLIENT *cl, xdrproc_t xdr_res, char *res_ptr)
 {
   struct cu_data *cu = (struct cu_data *) cl->cl_private;
   XDR *xdrs = &(cu->cu_outxdrs);
@@ -652,6 +652,6 @@ clntudp_destroy (CLIENT *cl)
       (void) __close (cu->cu_sock);
     }
   XDR_DESTROY (&(cu->cu_outxdrs));
-  mem_free ((caddr_t) cu, (sizeof (*cu) + cu->cu_sendsz + cu->cu_recvsz));
-  mem_free ((caddr_t) cl, sizeof (CLIENT));
+  mem_free ((char *) cu, (sizeof (*cu) + cu->cu_sendsz + cu->cu_recvsz));
+  mem_free ((char *) cl, sizeof (CLIENT));
 }

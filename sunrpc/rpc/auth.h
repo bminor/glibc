@@ -81,7 +81,7 @@ extern bool_t xdr_des_block (XDR *__xdrs, des_block *__blkp) __THROW;
  */
 struct opaque_auth {
 	enum_t	oa_flavor;		/* flavor of auth */
-	caddr_t	oa_base;		/* address of more auth stuff */
+	char *	oa_base;		/* address of more auth stuff */
 	u_int	oa_length;		/* not to exceed MAX_AUTH_BYTES */
 };
 
@@ -101,7 +101,7 @@ struct AUTH {
     int  (*ah_refresh) (AUTH *);		/* refresh credentials */
     void (*ah_destroy) (AUTH *); 	    	/* destroy this structure */
   } *ah_ops;
-  caddr_t ah_private;
+  char *ah_private;
 };
 
 

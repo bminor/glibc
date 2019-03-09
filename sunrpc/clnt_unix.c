@@ -77,11 +77,11 @@ struct ct_data
 static int readunix (char *, char *, int);
 static int writeunix (char *, char *, int);
 
-static enum clnt_stat clntunix_call (CLIENT *, u_long, xdrproc_t, caddr_t,
-				    xdrproc_t, caddr_t, struct timeval);
+static enum clnt_stat clntunix_call (CLIENT *, u_long, xdrproc_t, char *,
+				    xdrproc_t, char *, struct timeval);
 static void clntunix_abort (void);
 static void clntunix_geterr (CLIENT *, struct rpc_err *);
-static bool_t clntunix_freeres (CLIENT *, xdrproc_t, caddr_t);
+static bool_t clntunix_freeres (CLIENT *, xdrproc_t, char *);
 static bool_t clntunix_control (CLIENT *, int, char *);
 static void clntunix_destroy (CLIENT *);
 
@@ -187,9 +187,9 @@ clntunix_create (struct sockaddr_un *raddr, u_long prog, u_long vers,
    * and authnone for authentication.
    */
   xdrrec_create (&(ct->ct_xdrs), sendsz, recvsz,
-		 (caddr_t) ct, readunix, writeunix);
+		 (char *) ct, readunix, writeunix);
   h->cl_ops = (struct clnt_ops *) &unix_ops;
-  h->cl_private = (caddr_t) ct;
+  h->cl_private = (char *) ct;
   h->cl_auth = authnone_create ();
   return h;
 
@@ -197,15 +197,15 @@ fooy:
   /*
    * Something goofed, free stuff and barf
    */
-  mem_free ((caddr_t) ct, sizeof (struct ct_data));
-  mem_free ((caddr_t) h, sizeof (CLIENT));
+  mem_free ((char *) ct, sizeof (struct ct_data));
+  mem_free ((char *) h, sizeof (CLIENT));
   return (CLIENT *) NULL;
 }
 libc_hidden_nolink_sunrpc (clntunix_create, GLIBC_2_1)
 
 static enum clnt_stat
-clntunix_call (CLIENT *h, u_long proc, xdrproc_t xdr_args, caddr_t args_ptr,
-	       xdrproc_t xdr_results, caddr_t results_ptr,
+clntunix_call (CLIENT *h, u_long proc, xdrproc_t xdr_args, char *args_ptr,
+	       xdrproc_t xdr_results, char *results_ptr,
 	       struct timeval timeout)
 {
   struct ct_data *ct = (struct ct_data *) h->cl_private;
@@ -313,7 +313,7 @@ clntunix_geterr (CLIENT *h, struct rpc_err *errp)
 }
 
 static bool_t
-clntunix_freeres (CLIENT *cl, xdrproc_t xdr_res, caddr_t res_ptr)
+clntunix_freeres (CLIENT *cl, xdrproc_t xdr_res, char *res_ptr)
 {
   struct ct_data *ct = (struct ct_data *) cl->cl_private;
   XDR *xdrs = &(ct->ct_xdrs);
@@ -428,8 +428,8 @@ clntunix_destroy (CLIENT *h)
       (void) __close (ct->ct_sock);
     }
   XDR_DESTROY (&(ct->ct_xdrs));
-  mem_free ((caddr_t) ct, sizeof (struct ct_data));
-  mem_free ((caddr_t) h, sizeof (CLIENT));
+  mem_free ((char *) ct, sizeof (struct ct_data));
+  mem_free ((char *) h, sizeof (CLIENT));
 }
 
 static int
@@ -450,7 +450,7 @@ __msgread (int sock, void *data, size_t cnt)
   msg.msg_name = NULL;
   msg.msg_namelen = 0;
 #ifdef SCM_CREDENTIALS
-  msg.msg_control = (caddr_t) &cm;
+  msg.msg_control = (char *) &cm;
   msg.msg_controllen = CMSG_SPACE(sizeof (struct ucred));
 #endif
   msg.msg_flags = 0;

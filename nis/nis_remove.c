@@ -47,8 +47,8 @@ nis_remove (const_nis_name name, const nis_object *obj)
     }
 
   if ((status = __do_niscall (name, NIS_REMOVE, (xdrproc_t) _xdr_ns_request,
-			      (caddr_t) &req, (xdrproc_t) _xdr_nis_result,
-			      (caddr_t) res, MASTER_ONLY,
+			      (char *) &req, (xdrproc_t) _xdr_nis_result,
+			      (char *) res, MASTER_ONLY,
 			      NULL)) != NIS_SUCCESS)
     NIS_RES_STATUS (res) = status;
 

@@ -65,7 +65,7 @@ libc_hidden_nolink_sunrpc (xdr_opaque_auth, GLIBC_2_0)
 bool_t
 xdr_des_block (XDR *xdrs, des_block *blkp)
 {
-  return xdr_opaque (xdrs, (caddr_t) blkp, sizeof (des_block));
+  return xdr_opaque (xdrs, (char *) blkp, sizeof (des_block));
 }
 libc_hidden_nolink_sunrpc (xdr_des_block, GLIBC_2_0)
 
@@ -136,7 +136,7 @@ xdr_replymsg (XDR *xdrs, struct rpc_msg *rmsg)
       xdr_enum (xdrs, (enum_t *) & (rmsg->rm_direction)) &&
       (rmsg->rm_direction == REPLY))
     return xdr_union (xdrs, (enum_t *) & (rmsg->rm_reply.rp_stat),
-		      (caddr_t) & (rmsg->rm_reply.ru), reply_dscrm,
+		      (char *) & (rmsg->rm_reply.ru), reply_dscrm,
 		      NULL_xdrproc_t);
   return FALSE;
 }

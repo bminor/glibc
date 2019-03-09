@@ -71,9 +71,9 @@
  */
 static bool_t svcunix_recv (SVCXPRT *, struct rpc_msg *);
 static enum xprt_stat svcunix_stat (SVCXPRT *);
-static bool_t svcunix_getargs (SVCXPRT *, xdrproc_t, caddr_t);
+static bool_t svcunix_getargs (SVCXPRT *, xdrproc_t, char *);
 static bool_t svcunix_reply (SVCXPRT *, struct rpc_msg *);
-static bool_t svcunix_freeargs (SVCXPRT *, xdrproc_t, caddr_t);
+static bool_t svcunix_freeargs (SVCXPRT *, xdrproc_t, char *);
 static void svcunix_destroy (SVCXPRT *);
 
 static const struct xp_ops svcunix_op =
@@ -105,9 +105,9 @@ static const struct xp_ops svcunix_rendezvous_op =
 {
   rendezvous_request,
   rendezvous_stat,
-  (bool_t (*) (SVCXPRT *, xdrproc_t, caddr_t)) svcunix_rendezvous_abort,
+  (bool_t (*) (SVCXPRT *, xdrproc_t, char *)) svcunix_rendezvous_abort,
   (bool_t (*) (SVCXPRT *, struct rpc_msg *)) svcunix_rendezvous_abort,
-  (bool_t (*) (SVCXPRT *, xdrproc_t, caddr_t)) svcunix_rendezvous_abort,
+  (bool_t (*) (SVCXPRT *, xdrproc_t, char *)) svcunix_rendezvous_abort,
   svcunix_destroy
 };
 
@@ -194,7 +194,7 @@ svcunix_create (int sock, u_int sendsize, u_int recvsize, char *path)
   r->sendsize = sendsize;
   r->recvsize = recvsize;
   xprt->xp_p2 = NULL;
-  xprt->xp_p1 = (caddr_t) r;
+  xprt->xp_p1 = (char *) r;
   xprt->xp_verf = _null_auth;
   xprt->xp_ops = &svcunix_rendezvous_op;
   xprt->xp_port = -1;
@@ -233,9 +233,9 @@ makefd_xprt (int fd, u_int sendsize, u_int recvsize)
     }
   cd->strm_stat = XPRT_IDLE;
   xdrrec_create (&(cd->xdrs), sendsize, recvsize,
-		 (caddr_t) xprt, readunix, writeunix);
+		 (char *) xprt, readunix, writeunix);
   xprt->xp_p2 = NULL;
-  xprt->xp_p1 = (caddr_t) cd;
+  xprt->xp_p1 = (char *) cd;
   xprt->xp_verf.oa_base = cd->verf_body;
   xprt->xp_addrlen = 0;
   xprt->xp_ops = &svcunix_op;	/* truly deals with calls */
@@ -298,8 +298,8 @@ svcunix_destroy (SVCXPRT *xprt)
       /* an actual connection socket */
       XDR_DESTROY (&(cd->xdrs));
     }
-  mem_free ((caddr_t) cd, sizeof (struct unix_conn));
-  mem_free ((caddr_t) xprt, sizeof (SVCXPRT));
+  mem_free ((char *) cd, sizeof (struct unix_conn));
+  mem_free ((char *) xprt, sizeof (SVCXPRT));
 }
 
 #ifdef SCM_CREDENTIALS
@@ -331,7 +331,7 @@ __msgread (int sock, void *data, size_t cnt)
   msg.msg_name = NULL;
   msg.msg_namelen = 0;
 #ifdef SCM_CREDENTIALS
-  msg.msg_control = (caddr_t) &cm;
+  msg.msg_control = (char *) &cm;
   msg.msg_controllen = sizeof (struct cmessage);
 #endif
   msg.msg_flags = 0;
@@ -453,7 +453,7 @@ readunix (char *xprtptr, char *buf, int len)
  * Any error is fatal and the connection is closed.
  */
 static int
-writeunix (char *xprtptr, char * buf, int len)
+writeunix (char *xprtptr, char *buf, int len)
 {
   SVCXPRT *xprt = (SVCXPRT *) xprtptr;
   int i, cnt;
@@ -496,7 +496,7 @@ svcunix_recv (SVCXPRT *xprt, struct rpc_msg *msg)
       /* set up verifiers */
 #ifdef SCM_CREDENTIALS
       msg->rm_call.cb_verf.oa_flavor = AUTH_UNIX;
-      msg->rm_call.cb_verf.oa_base = (caddr_t) &cm;
+      msg->rm_call.cb_verf.oa_base = (char *) &cm;
       msg->rm_call.cb_verf.oa_length = sizeof (cm);
 #endif
       return TRUE;
@@ -506,14 +506,14 @@ svcunix_recv (SVCXPRT *xprt, struct rpc_msg *msg)
 }
 
 static bool_t
-svcunix_getargs (SVCXPRT *xprt, xdrproc_t xdr_args, caddr_t args_ptr)
+svcunix_getargs (SVCXPRT *xprt, xdrproc_t xdr_args, char *args_ptr)
 {
   return (*xdr_args) (&(((struct unix_conn *) (xprt->xp_p1))->xdrs),
 		      args_ptr);
 }
 
 static bool_t
-svcunix_freeargs (SVCXPRT *xprt, xdrproc_t xdr_args, caddr_t args_ptr)
+svcunix_freeargs (SVCXPRT *xprt, xdrproc_t xdr_args, char *args_ptr)
 {
   XDR *xdrs = &(((struct unix_conn *) (xprt->xp_p1))->xdrs);
 

@@ -221,8 +221,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
   /* Some systems do not have this flag; it is superfluous.  */
 #  define MAP_FILE 0
 # endif
-  filedata = __mmap ((caddr_t) 0, st.st_size,
-		     PROT_READ, MAP_FILE|MAP_COPY, fd, 0);
+  filedata = __mmap (NULL, st.st_size, PROT_READ, MAP_FILE|MAP_COPY, fd, 0);
   if (__glibc_unlikely (filedata == MAP_FAILED))
     {
       filedata = NULL;
@@ -270,7 +269,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
     {
 #ifdef _POSIX_MAPPED_FILES
       if (alloc == ld_mapped)
-	__munmap ((caddr_t) filedata, st.st_size);
+	__munmap (filedata, st.st_size);
 #endif
       return;
     }
@@ -288,14 +287,16 @@ _nl_unload_locale (struct __locale_data *locale)
   if (locale->private.cleanup)
     (*locale->private.cleanup) (locale);
 
+  /* The casts below are necessary because locale->name and
+     locale->filedata are const.  */
   switch (__builtin_expect (locale->alloc, ld_mapped))
     {
     case ld_malloced:
-      free ((void *) locale->filedata);
+      free ((char *) locale->filedata);
       break;
     case ld_mapped:
 #ifdef _POSIX_MAPPED_FILES
-      __munmap ((caddr_t) locale->filedata, locale->filesize);
+      __munmap ((char *) locale->filedata, locale->filesize);
       break;
 #endif
     case ld_archive:		/* Nothing to do.  */

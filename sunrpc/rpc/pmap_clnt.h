@@ -42,7 +42,7 @@
 
 __BEGIN_DECLS
 
-typedef bool_t (*resultproc_t) (caddr_t __resp, struct sockaddr_in *__raddr);
+typedef bool_t (*resultproc_t) (char *__resp, struct sockaddr_in *__raddr);
 
 /*
  * Usage:
@@ -60,7 +60,7 @@ typedef bool_t (*resultproc_t) (caddr_t __resp, struct sockaddr_in *__raddr);
  *		the procedure eachresult is called.  Its form is:
  *	done = eachresult(resp, raddr)
  *		bool_t done;
- *		caddr_t resp;
+ *		char *resp;
  *		struct sockaddr_in raddr;
  *		where resp points to the results of the call and raddr is the
  *		address if the responder to the broadcast.
@@ -76,14 +76,14 @@ extern enum clnt_stat pmap_rmtcall (struct sockaddr_in *__addr,
 				    const u_long __vers,
 				    const u_long __proc,
 				    xdrproc_t __xdrargs,
-				    caddr_t __argsp, xdrproc_t __xdrres,
-				    caddr_t __resp, struct timeval __tout,
+				    char *__argsp, xdrproc_t __xdrres,
+				    char *__resp, struct timeval __tout,
 				    u_long *__port_ptr) __THROW;
 extern enum clnt_stat clnt_broadcast (const u_long __prog,
 				      const u_long __vers,
 				      const u_long __proc, xdrproc_t __xargs,
-				      caddr_t __argsp, xdrproc_t __xresults,
-				      caddr_t __resultsp,
+				      char *__argsp, xdrproc_t __xresults,
+				      char *__resultsp,
 				      resultproc_t __eachresult) __THROW;
 extern u_short pmap_getport (struct sockaddr_in *__address,
 			     const u_long __program,

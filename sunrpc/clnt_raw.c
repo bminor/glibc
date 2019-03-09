@@ -61,11 +61,11 @@ struct clntraw_private_s
   };
 #define clntraw_private RPC_THREAD_VARIABLE(clntraw_private_s)
 
-static enum clnt_stat clntraw_call (CLIENT *, u_long, xdrproc_t, caddr_t,
-				    xdrproc_t, caddr_t, struct timeval);
+static enum clnt_stat clntraw_call (CLIENT *, u_long, xdrproc_t, char *,
+				    xdrproc_t, char *, struct timeval);
 static void clntraw_abort (void);
 static void clntraw_geterr (CLIENT *, struct rpc_err *);
-static bool_t clntraw_freeres (CLIENT *, xdrproc_t, caddr_t);
+static bool_t clntraw_freeres (CLIENT *, xdrproc_t, char *);
 static bool_t clntraw_control (CLIENT *, int, char *);
 static void clntraw_destroy (CLIENT *);
 
@@ -129,8 +129,8 @@ clntraw_create (u_long prog, u_long vers)
 libc_hidden_nolink_sunrpc (clntraw_create, GLIBC_2_0)
 
 static enum clnt_stat
-clntraw_call (CLIENT *h, u_long proc, xdrproc_t xargs, caddr_t argsp,
-	      xdrproc_t xresults, caddr_t resultsp, struct timeval timeout)
+clntraw_call (CLIENT *h, u_long proc, xdrproc_t xargs, char *argsp,
+	      xdrproc_t xresults, char *resultsp, struct timeval timeout)
 {
   struct clntraw_private_s *clp = clntraw_private;
   XDR *xdrs = &clp->xdr_stream;
@@ -214,7 +214,7 @@ clntraw_geterr (CLIENT *cl, struct rpc_err *err)
 
 
 static bool_t
-clntraw_freeres (CLIENT *cl, xdrproc_t xdr_res, caddr_t res_ptr)
+clntraw_freeres (CLIENT *cl, xdrproc_t xdr_res, char *res_ptr)
 {
   struct clntraw_private_s *clp = clntraw_private;
   XDR *xdrs = &clp->xdr_stream;

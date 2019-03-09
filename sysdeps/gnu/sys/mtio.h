@@ -90,8 +90,8 @@ struct mtget
     long int mt_gstat;		/* Generic (device independent) status.  */
     long int mt_erreg;		/* Error register.  */
     /* The next two fields are not always used.  */
-    __daddr_t mt_fileno;	/* Number of current file on tape.  */
-    __daddr_t mt_blkno;		/* Current block number.  */
+    int mt_fileno;		/* Number of current file on tape.  */
+    int mt_blkno;		/* Current block number.  */
   };
 #define _IOT_mtget /* Hurd ioctl type field.  */ \
   _IOT (_IOTS (long), 7, 0, 0, 0, 0)

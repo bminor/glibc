@@ -250,7 +250,7 @@ libc_hidden_nolink_sunrpc (svc_unregister, GLIBC_2_0)
 /* Send a reply to an rpc request */
 bool_t
 svc_sendreply (register SVCXPRT *xprt, xdrproc_t xdr_results,
-	       caddr_t xdr_location)
+	       char *xdr_location)
 {
   struct rpc_msg rply;
 

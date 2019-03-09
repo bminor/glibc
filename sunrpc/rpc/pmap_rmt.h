@@ -44,7 +44,7 @@ __BEGIN_DECLS
 
 struct rmtcallargs {
 	u_long prog, vers, proc, arglen;
-	caddr_t args_ptr;
+	char *args_ptr;
 	xdrproc_t xdr_args;
 };
 
@@ -54,7 +54,7 @@ extern bool_t xdr_rmtcall_args (XDR *__xdrs, struct rmtcallargs *__crp)
 struct rmtcallres {
 	u_long *port_ptr;
 	u_long resultslen;
-	caddr_t results_ptr;
+	char *results_ptr;
 	xdrproc_t xdr_results;
 };
 

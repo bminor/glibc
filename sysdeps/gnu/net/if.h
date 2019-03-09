@@ -145,7 +145,7 @@ struct ifreq
 	struct ifmap ifru_map;
 	char ifru_slave[IFNAMSIZ];	/* Just fits the size */
 	char ifru_newname[IFNAMSIZ];
-	__caddr_t ifru_data;
+	char *ifru_data;
       } ifr_ifru;
   };
 # define ifr_name	ifr_ifrn.ifrn_name	/* interface name 	*/
@@ -178,7 +178,7 @@ struct ifconf
     int	ifc_len;			/* Size of buffer.  */
     union
       {
-	__caddr_t ifcu_buf;
+	char *ifcu_buf;
 	struct ifreq *ifcu_req;
       } ifc_ifcu;
   };

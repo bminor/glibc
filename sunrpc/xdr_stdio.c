@@ -49,7 +49,7 @@
 
 static bool_t xdrstdio_getlong (XDR *, long *);
 static bool_t xdrstdio_putlong (XDR *, const long *);
-static bool_t xdrstdio_getbytes (XDR *, caddr_t, u_int);
+static bool_t xdrstdio_getbytes (XDR *, char *, u_int);
 static bool_t xdrstdio_putbytes (XDR *, const char *, u_int);
 static u_int xdrstdio_getpos (const XDR *);
 static bool_t xdrstdio_setpos (XDR *, u_int);
@@ -87,7 +87,7 @@ xdrstdio_create (XDR *xdrs, FILE *file, enum xdr_op op)
   /* We have to add the const since the `struct xdr_ops' in `struct XDR'
      is not `const'.  */
   xdrs->x_ops = (struct xdr_ops *) &xdrstdio_ops;
-  xdrs->x_private = (caddr_t) file;
+  xdrs->x_private = (char *) file;
   xdrs->x_handy = 0;
   xdrs->x_base = 0;
 }
@@ -108,7 +108,7 @@ xdrstdio_getlong (XDR *xdrs, long *lp)
 {
   uint32_t mycopy;
 
-  if (fread ((caddr_t) &mycopy, 4, 1, (FILE *) xdrs->x_private) != 1)
+  if (fread ((char *) &mycopy, 4, 1, (FILE *) xdrs->x_private) != 1)
     return FALSE;
   *lp = (long) ntohl (mycopy);
   return TRUE;
@@ -119,13 +119,13 @@ xdrstdio_putlong (XDR *xdrs, const long *lp)
 {
   int32_t mycopy = htonl ((uint32_t) *lp);
 
-  if (fwrite ((caddr_t) &mycopy, 4, 1, (FILE *) xdrs->x_private) != 1)
+  if (fwrite ((char *) &mycopy, 4, 1, (FILE *) xdrs->x_private) != 1)
     return FALSE;
   return TRUE;
 }
 
 static bool_t
-xdrstdio_getbytes (XDR *xdrs, const caddr_t addr, u_int len)
+xdrstdio_getbytes (XDR *xdrs, char *addr, u_int len)
 {
   if ((len != 0) && (fread (addr, (int) len, 1,
 			    (FILE *) xdrs->x_private) != 1))
@@ -174,7 +174,7 @@ xdrstdio_getint32 (XDR *xdrs, int32_t *ip)
 {
   int32_t mycopy;
 
-  if (fread ((caddr_t) &mycopy, 4, 1, (FILE *) xdrs->x_private) != 1)
+  if (fread ((char *) &mycopy, 4, 1, (FILE *) xdrs->x_private) != 1)
     return FALSE;
   *ip = ntohl (mycopy);
   return TRUE;
@@ -186,7 +186,7 @@ xdrstdio_putint32 (XDR *xdrs, const int32_t *ip)
   int32_t mycopy = htonl (*ip);
 
   ip = &mycopy;
-  if (fwrite ((caddr_t) ip, 4, 1, (FILE *) xdrs->x_private) != 1)
+  if (fwrite ((char *) ip, 4, 1, (FILE *) xdrs->x_private) != 1)
     return FALSE;
   return TRUE;
 }

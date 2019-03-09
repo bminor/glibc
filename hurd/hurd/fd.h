@@ -255,9 +255,11 @@ extern error_t _hurd_fd_close (struct hurd_fd *fd);
    If successful, stores the amount actually read or written in *NBYTES.  */
 
 extern error_t _hurd_fd_read (struct hurd_fd *fd,
-			      void *buf, size_t *nbytes, __loff_t offset);
+			      void *buf, size_t *nbytes,
+                              __off64_t offset);
 extern error_t _hurd_fd_write (struct hurd_fd *fd,
-			       const void *buf, size_t *nbytes, __loff_t offset);
+			       const void *buf, size_t *nbytes,
+                               __off64_t offset);
 
 
 /* Call *RPC on PORT and/or CTTY; if a call on CTTY returns EBACKGROUND,

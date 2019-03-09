@@ -90,7 +90,7 @@ CFLAGS-hurdstartup.o = $(no-stack-protector)
 CFLAGS-RPC_exec_startup_get_info.o = $(no-stack-protector)
 
 # Make generated headers compatible with all support standards
-migheaderpipe := | sed -e 's/\<ino64_t\>/__ino64_t/' -e 's/\<loff_t\>/__loff_t/'
+migheaderpipe := | sed -e 's/\<ino64_t\>/__ino64_t/' -e 's/\<loff_t\>/__off64_t/'
 include ../mach/Machrules
 include ../Rules
 

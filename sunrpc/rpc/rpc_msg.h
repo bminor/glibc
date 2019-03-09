@@ -93,7 +93,7 @@ struct accepted_reply {
 			u_long	high;
 		} AR_versions;
 		struct {
-			caddr_t	where;
+			char *	where;
 			xdrproc_t proc;
 		} AR_results;
 		/* and many other null cases */

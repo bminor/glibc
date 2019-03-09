@@ -121,7 +121,7 @@ cb_prog_1 (struct svc_req *rqstp, SVCXPRT *transp)
 	xdr_argument = (xdrproc_t) xdr_cback_data;
 	xdr_result = (xdrproc_t) xdr_bool;
 	memset (&argument, 0, sizeof (argument));
-	if (!svc_getargs (transp, xdr_argument, (caddr_t) & argument))
+	if (!svc_getargs (transp, xdr_argument, (char *) & argument))
 	  {
 	    svcerr_decode (transp);
 	    return;
@@ -153,7 +153,7 @@ cb_prog_1 (struct svc_req *rqstp, SVCXPRT *transp)
       xdr_argument = (xdrproc_t) xdr_void;
       xdr_result = (xdrproc_t) xdr_void;
       memset (&argument, 0, sizeof (argument));
-      if (!svc_getargs (transp, xdr_argument, (caddr_t) & argument))
+      if (!svc_getargs (transp, xdr_argument, (char *) & argument))
 	{
 	  svcerr_decode (transp);
 	  return;
@@ -167,7 +167,7 @@ cb_prog_1 (struct svc_req *rqstp, SVCXPRT *transp)
       xdr_argument = (xdrproc_t) _xdr_nis_error;
       xdr_result = (xdrproc_t) xdr_void;
       memset (&argument, 0, sizeof (argument));
-      if (!svc_getargs (transp, xdr_argument, (caddr_t) & argument))
+      if (!svc_getargs (transp, xdr_argument, (char *) & argument))
 	{
 	  svcerr_decode (transp);
 	  return;
@@ -183,7 +183,7 @@ cb_prog_1 (struct svc_req *rqstp, SVCXPRT *transp)
     }
   if (result != NULL && !svc_sendreply (transp, xdr_result, result))
     svcerr_systemerr (transp);
-  if (!svc_freeargs (transp, xdr_argument, (caddr_t) & argument))
+  if (!svc_freeargs (transp, xdr_argument, (char *) & argument))
     {
       fputs (_ ("unable to free arguments"), stderr);
       exit (1);
@@ -224,8 +224,8 @@ internal_nis_do_callback (struct dir_binding *bptr, netobj *cookie,
 	  /* See if callback 'thread' in the server is still alive. */
 	  cb_is_running = FALSE;
 	  if (clnt_call (bptr->clnt, NIS_CALLBACK, (xdrproc_t) xdr_netobj,
-			 (caddr_t) cookie, (xdrproc_t) xdr_bool,
-			 (caddr_t) &cb_is_running, TIMEOUT) != RPC_SUCCESS)
+			 (char *) cookie, (xdrproc_t) xdr_bool,
+			 (char *) &cb_is_running, TIMEOUT) != RPC_SUCCESS)
 	    cb_is_running = FALSE;
 
 	  if (cb_is_running == FALSE)

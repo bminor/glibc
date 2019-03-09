@@ -71,7 +71,7 @@ _dl_map_segments (struct link_map *l, int fd,
              handle the portion of the segment past the end of the file
              mapping.  */
           if (__glibc_unlikely
-              (__mprotect ((caddr_t) (l->l_addr + c->mapend),
+              (__mprotect ((void *) (l->l_addr + c->mapend),
                            loadcmds[nloadcmds - 1].mapstart - c->mapend,
                            PROT_NONE) < 0))
             return DL_MAP_SEGMENTS_ERROR_MPROTECT;
@@ -123,22 +123,21 @@ _dl_map_segments (struct link_map *l, int fd,
               if (__glibc_unlikely ((c->prot & PROT_WRITE) == 0))
                 {
                   /* Dag nab it.  */
-                  if (__mprotect ((caddr_t) (zero
-                                             & ~(GLRO(dl_pagesize) - 1)),
-                                  GLRO(dl_pagesize), c->prot|PROT_WRITE) < 0)
-                    return DL_MAP_SEGMENTS_ERROR_MPROTECT;
+		  if (__mprotect ((void *) (zero & ~(GLRO(dl_pagesize) - 1)),
+				  GLRO(dl_pagesize), c->prot|PROT_WRITE) < 0)
+		    return DL_MAP_SEGMENTS_ERROR_MPROTECT;
                 }
               memset ((void *) zero, '\0', zeropage - zero);
               if (__glibc_unlikely ((c->prot & PROT_WRITE) == 0))
-                __mprotect ((caddr_t) (zero & ~(GLRO(dl_pagesize) - 1)),
+                __mprotect ((void *) (zero & ~(GLRO(dl_pagesize) - 1)),
                             GLRO(dl_pagesize), c->prot);
             }
 
           if (zeroend > zeropage)
             {
               /* Map the remaining zero pages in from the zero fill FD.  */
-              caddr_t mapat;
-              mapat = __mmap ((caddr_t) zeropage, zeroend - zeropage,
+              char *mapat;
+              mapat = __mmap ((void *) zeropage, zeroend - zeropage,
                               c->prot, MAP_ANON|MAP_PRIVATE|MAP_FIXED,
                               -1, 0);
               if (__glibc_unlikely (mapat == MAP_FAILED))

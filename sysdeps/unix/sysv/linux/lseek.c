@@ -28,7 +28,7 @@
    in with standard 64-bit syscalls but return them through APIs that
    only expose the low 32 bits of some fields.  */
 
-static inline off_t lseek_overflow (loff_t res)
+static inline off_t lseek_overflow (off64_t res)
 {
   off_t retval = (off_t) res;
   if (retval == res)
@@ -42,7 +42,7 @@ off_t
 __lseek (int fd, off_t offset, int whence)
 {
 # ifdef __NR__llseek
-  loff_t res;
+  off64_t res;
   int rc = INLINE_SYSCALL_CALL (_llseek, fd,
 				(long) (((uint64_t) (offset)) >> 32),
 				(long) offset, &res, whence);

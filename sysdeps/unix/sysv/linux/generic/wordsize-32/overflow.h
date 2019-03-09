@@ -24,7 +24,7 @@
    in with standard 64-bit syscalls but return them through APIs that
    only expose the low 32 bits of some fields.  */
 
-static inline off_t lseek_overflow (loff_t res)
+static inline off_t lseek_overflow (off64_t res)
 {
   off_t retval = (off_t) res;
   if (retval == res)

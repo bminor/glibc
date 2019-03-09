@@ -228,7 +228,7 @@ key_gendes (des_block *key)
     return -1;
 
   stat = clnt_call (client, KEY_GEN, (xdrproc_t) xdr_void, NULL,
-		    (xdrproc_t) xdr_des_block, (caddr_t) key,
+		    (xdrproc_t) xdr_des_block, (char *) key,
 		    tottimeout);
   clnt_destroy (client);
   __close (socket);

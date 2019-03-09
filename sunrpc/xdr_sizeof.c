@@ -87,7 +87,7 @@ x_inline (XDR *xdrs, u_int len)
     {
       /* Free the earlier space and allocate new area */
       free (xdrs->x_private);
-      if ((xdrs->x_private = (caddr_t) malloc (len)) == NULL)
+      if ((xdrs->x_private = (char *) malloc (len)) == NULL)
 	{
 	  xdrs->x_base = 0;
 	  return NULL;
@@ -133,7 +133,7 @@ xdr_sizeof (xdrproc_t func, void *data)
   bool_t stat;
   /* to stop ANSI-C compiler from complaining */
   typedef bool_t (*dummyfunc1) (XDR *, long *);
-  typedef bool_t (*dummyfunc2) (XDR *, caddr_t, u_int);
+  typedef bool_t (*dummyfunc2) (XDR *, char *, u_int);
   typedef bool_t (*dummyfunc3) (XDR *, int32_t *);
 
   ops.x_putlong = x_putlong;
@@ -152,8 +152,8 @@ xdr_sizeof (xdrproc_t func, void *data)
   x.x_op = XDR_ENCODE;
   x.x_ops = &ops;
   x.x_handy = 0;
-  x.x_private = (caddr_t) NULL;
-  x.x_base = (caddr_t) 0;
+  x.x_private = (char *) NULL;
+  x.x_base = (char *) 0;
 
   stat = func (&x, data);
   free (x.x_private);

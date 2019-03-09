@@ -262,7 +262,7 @@ printbody (proc_list * proc)
 	       "(clnt_call (clnt, %s, (xdrproc_t) xdr_void, ", proc->proc_name);
 
       fprintf (fout,
-	       "(caddr_t) NULL,\n\t\t(xdrproc_t) xdr_%s, (caddr_t) %s%s,",
+	       "(char *) NULL,\n\t\t(xdrproc_t) xdr_%s, (char *) %s%s,",
 	       stringfix(proc->res_type), (mtflag)?"":ampr(proc->res_type),
 	       RESULT);
       if (mtflag)
@@ -287,7 +287,7 @@ printbody (proc_list * proc)
 	       "(clnt_call (clnt, %s, (xdrproc_t) xdr_%s", proc->proc_name,
 	       proc->args.argname);
       fprintf (fout,
-	       ", (caddr_t) &arg,\n\t\t(xdrproc_t) xdr_%s, (caddr_t) %s%s,",
+	       ", (char *) &arg,\n\t\t(xdrproc_t) xdr_%s, (char *) %s%s,",
 	       stringfix(proc->res_type), (mtflag)?"":ampr(proc->res_type),
 	       RESULT);
       if (mtflag)
@@ -299,7 +299,7 @@ printbody (proc_list * proc)
     {				/* single argument, new or old style */
       if (!mtflag)
 	fprintf (fout,
-		 "\tif (clnt_call (clnt, %s,\n\t\t(xdrproc_t) xdr_%s, (caddr_t) %s%s,\n\t\t(xdrproc_t) xdr_%s, (caddr_t) %s%s,\n\t\tTIMEOUT) != RPC_SUCCESS) {\n",
+		 "\tif (clnt_call (clnt, %s,\n\t\t(xdrproc_t) xdr_%s, (char *) %s%s,\n\t\t(xdrproc_t) xdr_%s, (char *) %s%s,\n\t\tTIMEOUT) != RPC_SUCCESS) {\n",
 		 proc->proc_name,
 		 stringfix (proc->args.decls->decl.type),
 		 (newstyle ? "&" : ""),
@@ -308,7 +308,7 @@ printbody (proc_list * proc)
 		 RESULT);
       else
 	fprintf(fout,
-		"\treturn (clnt_call(clnt, %s,\n\t\t(xdrproc_t) xdr_%s, (caddr_t) %s%s,\n\t\t(xdrproc_t) xdr_%s, (caddr_t) %s%s,\n\t\tTIMEOUT));\n",
+		"\treturn (clnt_call(clnt, %s,\n\t\t(xdrproc_t) xdr_%s, (char *) %s%s,\n\t\t(xdrproc_t) xdr_%s, (char *) %s%s,\n\t\tTIMEOUT));\n",
 		proc->proc_name,
 		stringfix (proc->args.decls->decl.type),
 		(newstyle ? "&" : ""),

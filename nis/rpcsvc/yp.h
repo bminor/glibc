@@ -278,7 +278,7 @@ extern  ypresp_order *ypproc_order_2_svc (ypreq_nokey *, struct svc_req *);
 #define YPPROC_MAPLIST 11
 extern  ypresp_maplist *ypproc_maplist_2 (domainname *, CLIENT *);
 extern  ypresp_maplist *ypproc_maplist_2_svc (domainname *, struct svc_req *);
-extern int ypprog_2_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
+extern int ypprog_2_freeresult (SVCXPRT *, xdrproc_t, char *);
 
 
 #define YPPUSH_XFRRESPPROG (0x40000000)
@@ -290,7 +290,7 @@ extern  void *yppushproc_null_1_svc (void *, struct svc_req *);
 #define YPPUSHPROC_XFRRESP 1
 extern  void *yppushproc_xfrresp_1 (yppushresp_xfr *, CLIENT *);
 extern  void *yppushproc_xfrresp_1_svc (yppushresp_xfr *, struct svc_req *);
-extern int yppush_xfrrespprog_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
+extern int yppush_xfrrespprog_1_freeresult (SVCXPRT *, xdrproc_t, char *);
 
 
 #define YPBINDPROG 100007
@@ -305,7 +305,7 @@ extern  ypbind_resp *ypbindproc_domain_2_svc (domainname *, struct svc_req *);
 #define YPBINDPROC_SETDOM 2
 extern  void *ypbindproc_setdom_2 (ypbind_setdom *, CLIENT *);
 extern  void *ypbindproc_setdom_2_svc (ypbind_setdom *, struct svc_req *);
-extern int ypbindprog_2_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
+extern int ypbindprog_2_freeresult (SVCXPRT *, xdrproc_t, char *);
 
 
 extern  bool_t xdr_ypstat (XDR *, ypstat*);

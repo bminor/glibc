@@ -114,7 +114,7 @@ struct dqblk
 #define	dq_btime	dq_dqb.dqb_btime
 #define	dq_itime	dq_dqb.dqb_itime
 
-#define dqoff(UID)      ((__loff_t)((UID) * sizeof (struct dqblk)))
+#define dqoff(UID)      ((__off64_t)((UID) * sizeof (struct dqblk)))
 
 /* Old name for struct if_dqinfo.  */
 struct dqinfo
@@ -128,7 +128,7 @@ struct dqinfo
 __BEGIN_DECLS
 
 extern int quotactl (int __cmd, const char *__special, int __id,
-		     __caddr_t __addr) __THROW;
+		     char *__addr) __THROW;
 
 __END_DECLS
 

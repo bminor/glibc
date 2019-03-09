@@ -57,13 +57,13 @@
 bool_t
 xdr_reference (XDR *xdrs,
 	       /* the pointer to work on */
-	       caddr_t *pp,
+	       char **pp,
 	       /* size of the object pointed to */
 	       u_int size,
 	       /* xdr routine to handle the object */
 	       xdrproc_t proc)
 {
-  caddr_t loc = *pp;
+  char *loc = *pp;
   bool_t stat;
 
   if (loc == NULL)
@@ -73,7 +73,7 @@ xdr_reference (XDR *xdrs,
 	return TRUE;
 
       case XDR_DECODE:
-	*pp = loc = (caddr_t) calloc (1, size);
+	*pp = loc = (char *) calloc (1, size);
 	if (loc == NULL)
 	  {
 	    (void) __fxprintf (NULL, "%s: %s", __func__, _("out of memory\n"));

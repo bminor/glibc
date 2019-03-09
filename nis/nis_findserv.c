@@ -163,15 +163,15 @@ __nis_findfastest_with_timeout (dir_binding *bind,
 	      sizeof (struct sockaddr_in));
       /* Transmit to NULLPROC, return immediately. */
       clnt_call (clnt, NULLPROC,
-		 (xdrproc_t) xdr_void, (caddr_t) 0,
-		 (xdrproc_t) xdr_void, (caddr_t) 0, TIMEOUT00);
+		 (xdrproc_t) xdr_void, (char *) 0,
+		 (xdrproc_t) xdr_void, (char *) 0, TIMEOUT00);
     }
 
   while (found == -1) {
     /* Receive reply from NULLPROC asynchronously. Note null inproc. */
     int rc = clnt_call (clnt, NULLPROC,
-			(xdrproc_t) NULL, (caddr_t) 0,
-			(xdrproc_t) xdr_void, (caddr_t) 0,
+			(xdrproc_t) NULL, (char *) 0,
+			(xdrproc_t) xdr_void, (char *) 0,
 			*timeout);
     if (RPC_SUCCESS == rc) {
       uint32_t val;

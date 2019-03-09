@@ -78,8 +78,8 @@ nis_lookup (const_nis_name name, const unsigned int flags)
 	again:
 	  result = clnt_call (bptr.clnt, NIS_LOOKUP,
 			      (xdrproc_t) _xdr_ns_request,
-			      (caddr_t) &req, (xdrproc_t) _xdr_nis_result,
-			      (caddr_t) res, RPCTIMEOUT);
+			      (char *) &req, (xdrproc_t) _xdr_nis_result,
+			      (char *) res, RPCTIMEOUT);
 
 	  if (result != RPC_SUCCESS)
 	    status = NIS_RPCERROR;
