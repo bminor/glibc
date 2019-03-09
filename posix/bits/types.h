@@ -158,6 +158,7 @@ __STD_TYPE __RLIM_T_TYPE __rlim_t;	/* Type for resource measurement.  */
 __STD_TYPE __RLIM64_T_TYPE __rlim64_t;	/* Type for resource measurement (LFS).  */
 __STD_TYPE __ID_T_TYPE __id_t;		/* General type for IDs.  */
 __STD_TYPE __TIME_T_TYPE __time_t;	/* Seconds since the Epoch.  */
+__STD_TYPE __TIME64_T_TYPE __time64_t;	/* Seconds since the Epoch (Y2038).  */
 __STD_TYPE __USECONDS_T_TYPE __useconds_t; /* Count of microseconds.  */
 __STD_TYPE __SUSECONDS_T_TYPE __suseconds_t; /* Signed count of microseconds.  */
 
@@ -212,15 +213,6 @@ __STD_TYPE __U32_TYPE __socklen_t;
    even in the presence of asynchronous interrupts.
    It is not currently necessary for this to be machine-specific.  */
 typedef int __sig_atomic_t;
-
-/* Seconds since the Epoch, visible to user code when time_t is too
-   narrow only for consistency with the old way of widening too-narrow
-   types.  User code should never use __time64_t.  */
-#if __TIMESIZE == 64 && defined __LIBC
-# define __time64_t __time_t
-#elif __TIMESIZE != 64
-__STD_TYPE __TIME64_T_TYPE __time64_t;
-#endif
 
 /* BSD: Size of a general-purpose integer register.  */
 __STD_TYPE __REGISTER_T_TYPE __register_t;
