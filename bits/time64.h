@@ -30,7 +30,7 @@
 # define __TIME64_T_TYPE		__TIME_T_TYPE
 #else
 /* Define a 64-bit time type alongsize the 32-bit one.  */
-# define __TIME64_T_TYPE		__SQUAD_TYPE
+# define __TIME64_T_TYPE		__S64_TYPE
 #endif
 
 #endif /* bits/time64.h */

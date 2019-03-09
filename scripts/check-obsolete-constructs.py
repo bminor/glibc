@@ -280,9 +280,8 @@ class ObsoletePrivateDefinitionsAllowed(ConstructChecker):
         self.prev_token = None
 
     def examine(self, tok):
-        # bits/types.h hides 'typedef' in a macro sometimes.
         if (tok.kind == "IDENT"
-            and tok.text in ("typedef", "__STD_TYPE")
+            and tok.text == "typedef"
             and tok.context is None):
             self.in_typedef = True
         elif tok.kind == "PUNCTUATOR" and tok.text == ";" and self.in_typedef:
@@ -312,9 +311,12 @@ class ObsoletePublicDefinitionsAllowed(ConstructChecker):
 
            typedef __obsolete obsolete;  // identifiers must agree
            typedef __uintN_t u_intN_t;   // N must agree
-           typedef unsigned long int ulong;
-           typedef unsigned short int ushort;
-           typedef unsigned int uint;
+           typedef unsigned long int u_?long;
+           typedef unsigned short int u_?short;
+           typedef unsigned int u_?int;
+           typedef unsigned char u_char;
+           typedef __int64_t quad_t;
+           typedef __uint64_t u_quad_t;
     """
     def __init__(self, reporter):
         super().__init__(reporter)
@@ -357,41 +359,40 @@ class ObsoletePublicDefinitionsAllowed(ConstructChecker):
         self._reset()
 
     def _permissible_public_definition(self, m):
-        if m.group(1) == "__": return False
-        name = m.group(2)
-        toks = self.typedef_tokens
-        ntok = len(toks)
-        if ntok == 3 and toks[1].kind == "IDENT":
-            defn = toks[1].text
-            n = OBSOLETE_TYPE_RE_.match(defn)
-            if n and n.group(1) == "__" and n.group(2) == name:
-                return True
-
-            if (name[:5] == "u_int" and name[-2:] == "_t"
-                and defn[:6] == "__uint" and defn[-2:] == "_t"
-                and name[5:-2] == defn[6:-2]):
-                return True
-
+        if m.group(1) == "__":
             return False
+        name = m.group(2)
 
-        if (name == "ulong" and ntok == 5
-            and toks[1].kind == "IDENT" and toks[1].text == "unsigned"
-            and toks[2].kind == "IDENT" and toks[2].text == "long"
-            and toks[3].kind == "IDENT" and toks[3].text == "int"):
-            return True
+        toks = self.typedef_tokens
+        if len(toks) > 5:
+            return False
+        if any(tk.kind != "IDENT" for tk in toks):
+            return False
+        defn = " ".join(tk.text for tk in toks[1:-1])
 
-        if (name == "ushort" and ntok == 5
-            and toks[1].kind == "IDENT" and toks[1].text == "unsigned"
-            and toks[2].kind == "IDENT" and toks[2].text == "short"
-            and toks[3].kind == "IDENT" and toks[3].text == "int"):
-            return True
+        if name == "u_char":
+            return defn == "unsigned char"
 
-        if (name == "uint" and ntok == 4
-            and toks[1].kind == "IDENT" and toks[1].text == "unsigned"
-            and toks[2].kind == "IDENT" and toks[2].text == "int"):
-            return True
+        if name in ("ushort", "u_short"):
+            return defn == "unsigned short int"
 
-        return False
+        if name in ("uint", "u_int"):
+            return defn == "unsigned int"
+
+        if name in ("ulong", "u_long"):
+            return defn == "unsigned long int"
+
+        if name == "quad_t":
+            return defn == "__int64_t"
+
+        if name == "u_quad_t":
+            return defn == "__uint64_t"
+
+        if name[:5] == "u_int" and name[-2:] == "_t":
+            return defn == "__uint" + name[5:-2] + "_t"
+
+        return defn == "__" + name
+
 
 def ObsoleteTypedefChecker(reporter, fname):
     """Factory: produce an instance of the appropriate

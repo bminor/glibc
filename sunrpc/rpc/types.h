@@ -75,12 +75,12 @@ typedef unsigned long rpcport_t;
 #endif
 
 #ifndef __u_char_defined
-typedef __u_char u_char;
-typedef __u_short u_short;
-typedef __u_int u_int;
-typedef __u_long u_long;
-typedef __quad_t quad_t;
-typedef __u_quad_t u_quad_t;
+typedef unsigned char u_char;
+typedef unsigned short int u_short;
+typedef unsigned int u_int;
+typedef unsigned long int u_long;
+typedef __int64_t quad_t;
+typedef __uint64_t u_quad_t;
 typedef __fsid_t fsid_t;
 # define __u_char_defined
 #endif
