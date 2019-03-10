@@ -23,26 +23,10 @@
 /* Get system dependent definition of `struct ipc_perm' and more.  */
 #include <bits/ipctypes.h>
 #include <bits/ipc.h>
-
-#ifndef __uid_t_defined
-typedef __uid_t uid_t;
-# define __uid_t_defined
-#endif
-
-#ifndef __gid_t_defined
-typedef __gid_t gid_t;
-# define __gid_t_defined
-#endif
-
-#ifndef __mode_t_defined
-typedef __mode_t mode_t;
-# define __mode_t_defined
-#endif
-
-#ifndef __key_t_defined
-typedef __key_t key_t;
-# define __key_t_defined
-#endif
+#include <bits/types/uid_t.h>
+#include <bits/types/gid_t.h>
+#include <bits/types/mode_t.h>
+#include <bits/types/key_t.h>
 
 __BEGIN_DECLS
 

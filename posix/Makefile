@@ -22,17 +22,32 @@ subdir	:= posix
 
 include ../Makeconfig
 
-headers	:= sys/utsname.h sys/times.h sys/wait.h sys/types.h unistd.h	      \
-	   glob.h regex.h wordexp.h fnmatch.h 				      \
-	   getopt.h bits/getopt_core.h bits/getopt_ext.h bits/getopt_posix.h  \
-	   bits/types.h bits/typesizes.h bits/pthreadtypes.h		      \
-	   bits/pthreadtypes-arch.h bits/thread-shared-types.h		      \
-	   bits/posix1_lim.h bits/posix2_lim.h bits/posix_opt.h		      \
-	   bits/local_lim.h tar.h bits/utsname.h bits/confname.h	      \
-	   bits/waitflags.h bits/waitstatus.h sys/unistd.h sched.h	      \
-	   bits/sched.h bits/cpu-set.h re_comp.h wait.h bits/environments.h   \
-	   cpio.h spawn.h bits/unistd.h bits/types/struct_sched_param.h	      \
-	   bits/unistd_ext.h
+headers := sys/utsname.h sys/times.h sys/wait.h sys/types.h unistd.h	\
+	   glob.h regex.h wordexp.h fnmatch.h getopt.h			\
+	   bits/getopt_core.h bits/getopt_ext.h bits/getopt_posix.h	\
+	   bits/types.h bits/typesizes.h bits/pthreadtypes.h		\
+	   bits/pthreadtypes-arch.h bits/thread-shared-types.h		\
+	   bits/posix1_lim.h bits/posix2_lim.h bits/posix_opt.h		\
+	   bits/local_lim.h tar.h bits/utsname.h bits/confname.h	\
+	   bits/waitflags.h bits/waitstatus.h sys/unistd.h sched.h	\
+	   bits/sched.h bits/cpu-set.h re_comp.h wait.h			\
+	   bits/environments.h cpio.h spawn.h bits/unistd.h		\
+	   bits/types/struct_sched_param.h bits/unistd_ext.h		\
+	   bits/types/blkcnt64_t.h bits/types/blkcnt_t.h		\
+	   bits/types/blksize_t.h bits/types/caddr_t.h			\
+	   bits/types/daddr_t.h bits/types/dev_t.h			\
+	   bits/types/fsblkcnt64_t.h bits/types/fsblkcnt_t.h		\
+	   bits/types/fsfilcnt64_t.h bits/types/fsfilcnt_t.h		\
+	   bits/types/fsid_t.h bits/types/gid_t.h bits/types/id_t.h	\
+	   bits/types/ino64_t.h bits/types/ino_t.h			\
+	   bits/types/intptr_t.h bits/types/key_t.h			\
+	   bits/types/loff_t.h bits/types/mode_t.h			\
+	   bits/types/nlink_t.h bits/types/off64_t.h			\
+	   bits/types/off_t.h bits/types/pid_t.h			\
+	   bits/types/register_t.h bits/types/ssize_t.h			\
+	   bits/types/socklen_t.h bits/types/suseconds_t.h		\
+	   bits/types/uid_t.h bits/types/uint.h bits/types/u_int.h	\
+	   bits/types/u_intN_t.h bits/types/useconds_t.h
 
 routines :=								      \
 	uname								      \

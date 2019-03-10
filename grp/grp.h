@@ -31,11 +31,9 @@ __BEGIN_DECLS
 #define __need_size_t
 #include <stddef.h>
 
-
 /* For the Single Unix specification we must define this type here.  */
-#if (defined __USE_XOPEN || defined __USE_XOPEN2K) && !defined __gid_t_defined
-typedef __gid_t gid_t;
-# define __gid_t_defined
+#if defined __USE_XOPEN || defined __USE_XOPEN2K
+# include <bits/types/gid_t.h>
 #endif
 
 /* The group structure.	 */

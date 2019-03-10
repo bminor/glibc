@@ -22,11 +22,7 @@
 
 /* Get the system-dependent definitions of structures and bit values.  */
 #include <bits/resource.h>
-
-#ifndef __id_t_defined
-typedef __id_t id_t;
-# define __id_t_defined
-#endif
+#include <bits/types/id_t.h>
 
 __BEGIN_DECLS
 

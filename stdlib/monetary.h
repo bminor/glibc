@@ -25,12 +25,7 @@
 #define __need_size_t
 #include <stddef.h>
 #include <bits/types.h>
-
-#ifndef	__ssize_t_defined
-typedef __ssize_t ssize_t;
-# define __ssize_t_defined
-#endif
-
+#include <bits/types/ssize_t.h>
 
 __BEGIN_DECLS
 

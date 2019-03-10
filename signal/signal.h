@@ -36,16 +36,8 @@ __BEGIN_DECLS
 #endif
 
 #if defined __USE_XOPEN || defined __USE_XOPEN2K
-# ifndef __pid_t_defined
-typedef __pid_t pid_t;
-#  define __pid_t_defined
-#endif
-#ifdef __USE_XOPEN
-# endif
-# ifndef __uid_t_defined
-typedef __uid_t uid_t;
-#  define __uid_t_defined
-# endif
+# include <bits/types/pid_t.h>
+# include <bits/types/uid_t.h>
 #endif	/* Unix98 */
 
 #ifdef __USE_POSIX199309

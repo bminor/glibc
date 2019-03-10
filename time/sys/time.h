@@ -23,11 +23,7 @@
 #include <bits/types.h>
 #include <bits/types/time_t.h>
 #include <bits/types/struct_timeval.h>
-
-#ifndef __suseconds_t_defined
-typedef __suseconds_t suseconds_t;
-# define __suseconds_t_defined
-#endif
+#include <bits/types/suseconds_t.h>
 
 #include <sys/select.h>
 

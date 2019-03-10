@@ -82,10 +82,7 @@ typedef unsigned long long int	uint_fast64_t;
 
 
 /* Types for `void *' pointers.  */
-# ifndef __intptr_t_defined
-typedef __intptr_t		intptr_t;
-#  define __intptr_t_defined
-# endif
+#include <bits/types/intptr_t.h>
 typedef __uintptr_t		uintptr_t;
 
 /* Largest integral types.  */

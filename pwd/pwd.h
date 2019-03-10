@@ -34,15 +34,8 @@ __BEGIN_DECLS
 #if defined __USE_XOPEN || defined __USE_XOPEN2K
 /* The Single Unix specification says that some more types are
    available here.  */
-# ifndef __gid_t_defined
-typedef __gid_t gid_t;
-#  define __gid_t_defined
-# endif
-
-# ifndef __uid_t_defined
-typedef __uid_t uid_t;
-#  define __uid_t_defined
-# endif
+# include <bits/types/gid_t.h>
+# include <bits/types/uid_t.h>
 #endif
 
 /* A record in the user database.  */

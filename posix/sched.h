@@ -33,11 +33,7 @@
 #ifndef __USE_XOPEN2K
 # include <time.h>
 #endif
-
-#ifndef __pid_t_defined
-typedef __pid_t pid_t;
-# define __pid_t_defined
-#endif
+#include <bits/types/pid_t.h>
 
 /* Get system specific constant and data structure definitions.  */
 #include <bits/sched.h>

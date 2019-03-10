@@ -215,11 +215,7 @@ __BEGIN_DECLS
 /* All functions that are not declared anywhere else.  */
 
 #include <bits/types.h>
-
-#ifndef	__ssize_t_defined
-typedef __ssize_t ssize_t;
-# define __ssize_t_defined
-#endif
+#include <bits/types/ssize_t.h>
 
 #define	__need_size_t
 #define __need_NULL
@@ -228,52 +224,22 @@ typedef __ssize_t ssize_t;
 #if defined __USE_XOPEN || defined __USE_XOPEN2K
 /* The Single Unix specification says that some more types are
    available here.  */
-# ifndef __gid_t_defined
-typedef __gid_t gid_t;
-#  define __gid_t_defined
+# include <bits/types/gid_t.h>
+# include <bits/types/uid_t.h>
+# include <bits/types/off_t.h>
+# ifdef __USE_LARGEFILE64
+#  include <bits/types/off64_t.h>
 # endif
-
-# ifndef __uid_t_defined
-typedef __uid_t uid_t;
-#  define __uid_t_defined
-# endif
-
-# ifndef __off_t_defined
-#  ifndef __USE_FILE_OFFSET64
-typedef __off_t off_t;
-#  else
-typedef __off64_t off_t;
-#  endif
-#  define __off_t_defined
-# endif
-# if defined __USE_LARGEFILE64 && !defined __off64_t_defined
-typedef __off64_t off64_t;
-#  define __off64_t_defined
-# endif
-
-# ifndef __useconds_t_defined
-typedef __useconds_t useconds_t;
-#  define __useconds_t_defined
-# endif
-
-# ifndef __pid_t_defined
-typedef __pid_t pid_t;
-#  define __pid_t_defined
-# endif
+# include <bits/types/useconds_t.h>
+# include <bits/types/pid_t.h>
 #endif	/* X/Open */
 
 #if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K
-# ifndef __intptr_t_defined
-typedef __intptr_t intptr_t;
-#  define __intptr_t_defined
-# endif
+# include <bits/types/intptr_t.h>
 #endif
 
 #if defined __USE_MISC || defined __USE_XOPEN
-# ifndef __socklen_t_defined
-typedef __socklen_t socklen_t;
-#  define __socklen_t_defined
-# endif
+# include <bits/types/socklen_t.h>
 #endif
 
 /* Values for the second argument to access.

@@ -21,22 +21,12 @@
 
 #include <features.h>
 #include <bits/types.h>
+
 #define __need_size_t
 #include <stddef.h>
 
-#ifndef __off_t_defined
-# ifndef __USE_FILE_OFFSET64
-typedef __off_t off_t;
-# else
-typedef __off64_t off_t;
-# endif
-# define __off_t_defined
-#endif
-
-#ifndef __mode_t_defined
-typedef __mode_t mode_t;
-# define __mode_t_defined
-#endif
+#include <bits/types/off_t.h>
+#include <bits/types/mode_t.h>
 
 #include <bits/mman.h>
 

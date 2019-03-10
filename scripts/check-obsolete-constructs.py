@@ -28,6 +28,7 @@
 
 import argparse
 import collections
+import os.path
 import re
 import sys
 
@@ -264,15 +265,40 @@ OBSOLETE_TYPE_RE_ = re.compile(r"""\A
          | _(?: char | short | int(?:[0-9]+_t)? | long | quad_t )))
 \Z""", re.VERBOSE)
 
+# The headers that declare them:
+OBSOLETE_TYPE_HDR_RE_ = re.compile(r"""\A
+   [<"] bits/types/
+        (?: [cd]addr_t
+          | loff_t
+          | register_t
+          | uint
+          | u_int
+          | u_intN_t ) \.h [">]
+\Z""", re.VERBOSE)
+
 class ObsoleteNotAllowed(ConstructChecker):
-    """Don't allow any use of the obsolete typedefs."""
+    """Don't allow any use of the obsolete typedefs,
+       or the headers that declare them."""
     def examine(self, tok):
-        if OBSOLETE_TYPE_RE_.match(tok.text):
+        if ((tok.kind == "IDENT"
+             and OBSOLETE_TYPE_RE_.match(tok.text))
+            or (tok.kind == "HEADER_NAME"
+                and OBSOLETE_TYPE_HDR_RE_.match(tok.text))):
+            self.reporter.error(tok, "use of {!r}")
+
+class ObsoleteIndirectDefinitionsAllowed(ConstructChecker):
+    """Don't allow any use of the obsolete typedefs,
+       but do allow inclusion of the headers that declare them."""
+    def examine(self, tok):
+        if (tok.kind == "IDENT"
+            and OBSOLETE_TYPE_RE_.match(tok.text)):
             self.reporter.error(tok, "use of {!r}")
 
 class ObsoletePrivateDefinitionsAllowed(ConstructChecker):
     """Allow definitions of the private versions of the
        obsolete typedefs; that is, 'typedef [anything] __obsolete;'
+       Don't allow inclusion of headers that declare the public
+       versions.
     """
     def __init__(self, reporter):
         super().__init__(reporter)
@@ -300,10 +326,14 @@ class ObsoletePrivateDefinitionsAllowed(ConstructChecker):
         self._check_prev()
 
     def _check_prev(self):
-        if (self.prev_token is not None
-            and self.prev_token.kind == "IDENT"
-            and OBSOLETE_TYPE_RE_.match(self.prev_token.text)):
-            self.reporter.error(self.prev_token, "use of {!r}")
+        tok = self.prev_token
+        if tok is None:
+            return
+        if ((tok.kind == "IDENT"
+             and OBSOLETE_TYPE_RE_.match(tok.text))
+            or (tok.kind == "HEADER_NAME"
+                and OBSOLETE_TYPE_HDR_RE_.match(tok.text))):
+            self.reporter.error(tok, "use of {!r}")
 
 class ObsoletePublicDefinitionsAllowed(ConstructChecker):
     """Allow definitions of the public versions of the obsolete
@@ -317,6 +347,9 @@ class ObsoletePublicDefinitionsAllowed(ConstructChecker):
            typedef unsigned char u_char;
            typedef __int64_t quad_t;
            typedef __uint64_t u_quad_t;
+
+       Don't allow inclusion of headers that declare public
+       versions of other obsolete typedefs.
     """
     def __init__(self, reporter):
         super().__init__(reporter)
@@ -336,6 +369,10 @@ class ObsoletePublicDefinitionsAllowed(ConstructChecker):
 
         elif tok.kind == "PUNCTUATOR" and tok.text == ";":
             self._finish()
+
+        elif tok.kind == "HEADER_NAME":
+            if OBSOLETE_TYPE_HDR_RE_.match(tok.text):
+                self.reporter.error(tok, "use of {!r}")
 
         elif self.typedef_tokens:
             self.typedef_tokens.append(tok)
@@ -406,19 +443,38 @@ def ObsoleteTypedefChecker(reporter, fname):
         or fname.startswith("rpcsvc/")
         or "/rpc/" in fname
         or "/rpcsvc/" in fname):
+        sys.stderr.write("# No typedef checks for {}\n".format(fname))
         return NoCheck(reporter)
 
     # bits/types.h is allowed to define the __-versions of the
     # obsolete types.
     if (fname == "bits/types.h"
         or fname.endswith("/bits/types.h")):
+        sys.stderr.write("# Obsolete private defs allowed for {}\n"
+                         .format(fname))
         return ObsoletePrivateDefinitionsAllowed(reporter)
 
-    # sys/types.h is allowed to use the __-versions of the
-    # obsolete types, but only to define the unprefixed versions.
+    # Certain bits/types/ headers are allowed to define the
+    # unprefixed versions of the obsolete types.
+    if ((fname.startswith("bits/types/")
+         or "/bits/types/" in fname)
+        and os.path.basename(fname) in ("caddr_t.h",
+                                        "daddr_t.h",
+                                        "loff_t.h",
+                                        "register_t.h",
+                                        "uint.h",
+                                        "u_int.h",
+                                        "u_intN_t.h")):
+        sys.stderr.write("# Obsolete public defs allowed for {}\n"
+                         .format(fname))
+        return ObsoletePublicDefinitionsAllowed(reporter)
+
+    # sys/types.h is allowed to include the above bits/types/ headers.
     if (fname == "sys/types.h"
         or fname.endswith("/sys/types.h")):
-        return ObsoletePublicDefinitionsAllowed(reporter)
+        sys.stderr.write("# Obsolete indirect defs allowed for {}\n"
+                         .format(fname))
+        return ObsoleteIndirectDefinitionsAllowed(reporter)
 
     return ObsoleteNotAllowed(reporter)
 

@@ -46,28 +46,11 @@ __BEGIN_DECLS
 /* POSIX.1-2001 specifies that these types are defined by <fcntl.h>.
    Earlier POSIX standards permitted any type ending in `_t' to be defined
    by any POSIX header, so we don't conditionalize the definitions here.  */
-#ifndef __mode_t_defined
-typedef __mode_t mode_t;
-# define __mode_t_defined
-#endif
-
-#ifndef __off_t_defined
-# ifndef __USE_FILE_OFFSET64
-typedef __off_t off_t;
-# else
-typedef __off64_t off_t;
-# endif
-# define __off_t_defined
-#endif
-
-#if defined __USE_LARGEFILE64 && !defined __off64_t_defined
-typedef __off64_t off64_t;
-# define __off64_t_defined
-#endif
-
-#ifndef __pid_t_defined
-typedef __pid_t pid_t;
-# define __pid_t_defined
+#include <bits/types/mode_t.h>
+#include <bits/types/off_t.h>
+#include <bits/types/pid_t.h>
+#ifdef __USE_LARGEFILE64
+#include <bits/types/off64_t.h>
 #endif
 
 /* For XPG all symbols from <sys/stat.h> should also be available.  */

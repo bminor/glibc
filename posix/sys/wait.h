@@ -27,10 +27,7 @@
 __BEGIN_DECLS
 
 #include <bits/types.h>
-#ifndef __pid_t_defined
-typedef __pid_t pid_t;
-# define __pid_t_defined
-#endif
+#include <bits/types/pid_t.h>
 
 #if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
 # include <signal.h>
@@ -111,11 +108,7 @@ extern __pid_t wait (int *__stat_loc);
 extern __pid_t waitpid (__pid_t __pid, int *__stat_loc, int __options);
 
 #if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
-# ifndef __id_t_defined
-typedef __id_t id_t;
-#  define __id_t_defined
-# endif
-
+# include <bits/types/id_t.h>
 # include <bits/types/siginfo_t.h>
 
 /* Wait for a childing matching IDTYPE and ID to change the status and

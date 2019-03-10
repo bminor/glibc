@@ -20,12 +20,7 @@
 
 #include <features.h>
 #include <netinet/in.h>		/* To define `struct in_addr'.  */
-
-/* Type for length arguments in socket calls.  */
-#ifndef __socklen_t_defined
-typedef __socklen_t socklen_t;
-# define __socklen_t_defined
-#endif
+#include <bits/types/socklen_t.h>
 
 __BEGIN_DECLS
 

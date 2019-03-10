@@ -33,67 +33,19 @@
 #if defined __USE_XOPEN || defined __USE_XOPEN2K
 /* The Single Unix specification says that some more types are
    available here.  */
-
 # include <bits/types/time_t.h>
-
-# ifndef __dev_t_defined
-typedef __dev_t dev_t;
-#  define __dev_t_defined
-# endif
-
-# ifndef __gid_t_defined
-typedef __gid_t gid_t;
-#  define __gid_t_defined
-# endif
-
-# ifndef __ino_t_defined
-#  ifndef __USE_FILE_OFFSET64
-typedef __ino_t ino_t;
-#  else
-typedef __ino64_t ino_t;
-#  endif
-#  define __ino_t_defined
-# endif
-
-# ifndef __mode_t_defined
-typedef __mode_t mode_t;
-#  define __mode_t_defined
-# endif
-
-# ifndef __nlink_t_defined
-typedef __nlink_t nlink_t;
-#  define __nlink_t_defined
-# endif
-
-# ifndef __off_t_defined
-#  ifndef __USE_FILE_OFFSET64
-typedef __off_t off_t;
-#  else
-typedef __off64_t off_t;
-#  endif
-#  define __off_t_defined
-# endif
-
-# ifndef __uid_t_defined
-typedef __uid_t uid_t;
-#  define __uid_t_defined
-# endif
+# include <bits/types/dev_t.h>
+# include <bits/types/gid_t.h>
+# include <bits/types/ino_t.h>
+# include <bits/types/mode_t.h>
+# include <bits/types/nlink_t.h>
+# include <bits/types/off_t.h>
+# include <bits/types/uid_t.h>
 #endif	/* X/Open */
 
 #ifdef __USE_UNIX98
-# ifndef __blkcnt_t_defined
-#  ifndef __USE_FILE_OFFSET64
-typedef __blkcnt_t blkcnt_t;
-#  else
-typedef __blkcnt64_t blkcnt_t;
-#  endif
-#  define __blkcnt_t_defined
-# endif
-
-# ifndef __blksize_t_defined
-typedef __blksize_t blksize_t;
-#  define __blksize_t_defined
-# endif
+# include <bits/types/blkcnt_t.h>
+# include <bits/types/blksize_t.h>
 #endif	/* Unix98 */
 
 __BEGIN_DECLS

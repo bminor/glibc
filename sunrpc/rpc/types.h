@@ -34,6 +34,19 @@
 #ifndef _RPC_TYPES_H
 #define _RPC_TYPES_H 1
 
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/time.h>
+#include <sys/param.h>
+#include <netinet/in.h>
+
+#ifndef __BIT_TYPES_DEFINED__
+#include <bits/types/caddr_t.h>
+#include <bits/types/daddr_t.h>
+#include <bits/types/fsid_t.h>
+#include <bits/types/u_int.h>
+#endif
+
 typedef int bool_t;
 typedef int enum_t;
 /* This needs to be changed to uint32_t in the future */
@@ -57,43 +70,12 @@ typedef unsigned long rpcport_t;
 #      define  NULL 0
 #endif
 
-#include <stdlib.h>		/* For malloc decl.  */
 #define mem_alloc(bsize)	malloc(bsize)
 /*
  * XXX: This must not use the second argument, or code in xdr_array.c needs
  * to be modified.
  */
 #define mem_free(ptr, bsize)	free(ptr)
-
-#ifndef makedev /* ie, we haven't already included it */
-#include <sys/types.h>
-#endif
-
-#if defined __APPLE_CC__ || defined __FreeBSD__
-# define __u_char_defined
-# define __daddr_t_defined
-#endif
-
-#ifndef __u_char_defined
-typedef unsigned char u_char;
-typedef unsigned short int u_short;
-typedef unsigned int u_int;
-typedef unsigned long int u_long;
-typedef __int64_t quad_t;
-typedef __uint64_t u_quad_t;
-typedef __fsid_t fsid_t;
-# define __u_char_defined
-#endif
-#ifndef __daddr_t_defined
-typedef __daddr_t daddr_t;
-typedef __caddr_t caddr_t;
-# define __daddr_t_defined
-#endif
-
-#include <sys/time.h>
-#include <sys/param.h>
-
-#include <netinet/in.h>
 
 #ifndef INADDR_LOOPBACK
 #define       INADDR_LOOPBACK         (u_long)0x7F000001

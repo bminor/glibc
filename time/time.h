@@ -50,10 +50,7 @@ struct sigevent;
 #endif
 
 #ifdef __USE_XOPEN2K
-# ifndef __pid_t_defined
-typedef __pid_t pid_t;
-#  define __pid_t_defined
-# endif
+# include <bits/types/pid_t.h>
 #endif
 
 #ifdef __USE_XOPEN2K8

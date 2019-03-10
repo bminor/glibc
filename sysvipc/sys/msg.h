@@ -31,16 +31,8 @@
 
 /* Define types required by the standard.  */
 #include <bits/types/time_t.h>
-
-#ifndef __pid_t_defined
-typedef __pid_t pid_t;
-# define __pid_t_defined
-#endif
-
-#ifndef __ssize_t_defined
-typedef __ssize_t ssize_t;
-# define __ssize_t_defined
-#endif
+#include <bits/types/pid_t.h>
+#include <bits/types/ssize_t.h>
 
 /* The following System V style IPC functions implement a message queue
    system.  The definition is found in XPG2.  */

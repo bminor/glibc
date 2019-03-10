@@ -38,12 +38,7 @@
 #ifdef __USE_XOPEN2K
 # include <bits/types/struct_timespec.h>
 #endif
-
-#ifndef __suseconds_t_defined
-typedef __suseconds_t suseconds_t;
-# define __suseconds_t_defined
-#endif
-
+#include <bits/types/suseconds_t.h>
 
 /* The fd_set member is required to be an array of longs.  */
 typedef long int __fd_mask;
