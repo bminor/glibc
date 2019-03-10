@@ -62,16 +62,14 @@ typedef struct
   } div_t;
 
 /* Returned by `ldiv'.  */
-#ifndef __ldiv_t_defined
 typedef struct
   {
     long int quot;		/* Quotient.  */
     long int rem;		/* Remainder.  */
   } ldiv_t;
-# define __ldiv_t_defined	1
-#endif
+#define __ldiv_t_defined	1
 
-#if defined __USE_ISOC99 && !defined __lldiv_t_defined
+#if defined __USE_ISOC99
 /* Returned by `lldiv'.  */
 __extension__ typedef struct
   {
