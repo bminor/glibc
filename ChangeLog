@@ -1,5 +1,12 @@
 2019-03-11  Mao Han  <han_mao@c-sky.com>
 
+	* sysdeps/unix/sysv/linux/csky/sys/procfs.h: Use linux definition
+	directly.
+	* sysdeps/unix/sysv/linux/csky/sys/user.h: Remove user_regs
+	definition.
+
+2019-03-11  Mao Han  <han_mao@c-sky.com>
+
 	* sysdeps/unix/sysv/linux/csky/register-dump.h: Adjust offset change.
 	* sysdeps/unix/sysv/linux/csky/sys/ucontext.h: Remove __mask field
 	in mcontext_t

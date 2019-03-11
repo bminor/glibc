@@ -20,15 +20,18 @@
 # error "Never include <bits/procfs.h> directly; use <sys/procfs.h> instead."
 #endif
 
+#include <asm/ptrace.h>
+
 /* Type for a general-purpose register.  */
 typedef unsigned long elf_greg_t;
+/* Type for a floating-point registers.  */
+typedef unsigned long elf_fpreg_t;
 
-/* And the whole bunch of them.  We could have used `struct
-   user_regs' directly in the typedef, but tradition says that
-   the register set is an array, which does have some peculiar
-   semantics, so leave it that way.  */
-#define ELF_NGREG (sizeof (struct user_regs) / sizeof (elf_greg_t))
+/* In gdb/bfd elf32-csky.c, csky_elf_grok_prstatus() use fixed size of
+   elf_prstatus.  It's 148 for abiv1 and 220 for abiv2, the size is enough
+   for coredump and no need full sizeof (struct pt_regs).  */
+#define ELF_NGREG ((sizeof (struct pt_regs) / sizeof (elf_greg_t)) - 2)
 typedef elf_greg_t elf_gregset_t[ELF_NGREG];
 
-/* Register set for the floating-point registers.  */
-typedef struct user_fpregs elf_fpregset_t;
+#define ELF_NFPREG (sizeof (struct user_fp) / sizeof (elf_fpreg_t))
+typedef elf_fpreg_t elf_fpregset_t[ELF_NFPREG];
