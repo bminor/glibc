@@ -1,5 +1,31 @@
 2019-06-12  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile
+	(sysdeps_routines, libm-sysdep_routines): Remove s_finite*
+	objects.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_finite-power7.S:
+	Remove file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_finite-ppc32.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_finite.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_finitef-ppc32.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_finitef.c: Likewise.
+	* sysdeps/powerpc/powerpc32/power7/fpu/s_finite.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power7/fpu/s_finitef.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile (sysdep_call):
+	Remove s_finite* objects.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_finite-power7.S: Remove file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_finite-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_finite-ppc64.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_finite.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_finitef-ppc64.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_finitef.c: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/fpu/s_finite.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/fpu/s_finitef.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_finite.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_finitef.S: Likewise.
+
 	* sysdeps/ieee754/dbl-64/wordsize-64/s_finite.c: Move to ...
 	* sysdeps/ieee754/dbl-64/s_finite.c: ... here and format code.
 

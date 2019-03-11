@@ -2,9 +2,7 @@ ifeq ($(subdir),math)
 # These functions are built both for libc and libm because they're required
 # by printf.  While the libc objects have the prefix s_, the libm ones are
 # prefixed with  m_.
-sysdep_calls := s_finite-power8 s_finite-power7 s_finite-ppc64 \
-		s_finitef-ppc64 \
-		s_modf-power5+ s_modf-ppc64 \
+sysdep_calls := s_modf-power5+ s_modf-ppc64 \
 		s_modff-power5+ s_modff-ppc64
 
 sysdep_routines += $(sysdep_calls)
