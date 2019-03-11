@@ -1,3 +1,19 @@
+2019-03-13  Zack Weinberg  <zackw@panix.com>
+
+	* scripts/check-obsolete-constructs.py: New test script.
+	* scripts/check-installed-headers.sh: Remove tests for
+	obsolete typedefs, superseded by check-obsolete-constructs.py.
+	* Rules: Run scripts/check-obsolete-constructs.py over $(headers)
+	as a special test.  Update commentary.
+	* posix/bits/types.h (__SQUAD_TYPE, __S64_TYPE): Define as __int64_t.
+	(__UQUAD_TYPE, __U64_TYPE): Define as __uint64_t.
+	Update commentary.
+	* posix/sys/types.h (__u_intN_t): Remove.
+	(u_int8_t): Typedef using __uint8_t.
+	(u_int16_t): Typedef using __uint16_t.
+	(u_int32_t): Typedef using __uint32_t.
+	(u_int64_t): Typedef using __uint64_t.
+
 2019-04-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* malloc/tst-memalign.c (do_test): Disable

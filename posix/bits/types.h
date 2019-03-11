@@ -87,7 +87,7 @@ __extension__ typedef unsigned long long int __uintmax_t;
 	32		-- "natural" 32-bit type (always int)
 	64		-- "natural" 64-bit type (long or long long)
 	LONG32		-- 32-bit type, traditionally long
-	QUAD		-- 64-bit type, always long long
+	QUAD		-- 64-bit type, traditionally long long
 	WORD		-- natural type of __WORDSIZE bits (int or long)
 	LONGWORD	-- type of __WORDSIZE bits, traditionally long
 
@@ -113,14 +113,14 @@ __extension__ typedef unsigned long long int __uintmax_t;
 #define __SLONGWORD_TYPE	long int
 #define __ULONGWORD_TYPE	unsigned long int
 #if __WORDSIZE == 32
-# define __SQUAD_TYPE		__quad_t
-# define __UQUAD_TYPE		__u_quad_t
+# define __SQUAD_TYPE		__int64_t
+# define __UQUAD_TYPE		__uint64_t
 # define __SWORD_TYPE		int
 # define __UWORD_TYPE		unsigned int
 # define __SLONG32_TYPE		long int
 # define __ULONG32_TYPE		unsigned long int
-# define __S64_TYPE		__quad_t
-# define __U64_TYPE		__u_quad_t
+# define __S64_TYPE		__int64_t
+# define __U64_TYPE		__uint64_t
 /* We want __extension__ before typedef's that use nonstandard base types
    such as `long long' in C89 mode.  */
 # define __STD_TYPE		__extension__ typedef

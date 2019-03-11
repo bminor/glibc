@@ -16,11 +16,9 @@
 # License along with the GNU C Library; if not, see
 # <http://www.gnu.org/licenses/>.
 
-# Check installed headers for cleanliness.  For each header, confirm
-# that it's possible to compile a file that includes that header and
-# does nothing else, in several different compilation modes.  Also,
-# scan the header for a set of obsolete typedefs that should no longer
-# appear.
+# For each installed header, confirm that it's possible to compile a
+# file that includes that header and does nothing else, in several
+# different compilation modes.
 
 # These compilation switches assume GCC or compatible, which is probably
 # fine since we also assume that when _building_ glibc.
@@ -31,13 +29,6 @@ cxx_modes="-std=c++98 -std=gnu++98 -std=c++11 -std=gnu++11"
 # These are probably the most commonly used three.
 lib_modes="-D_DEFAULT_SOURCE=1 -D_GNU_SOURCE=1 -D_XOPEN_SOURCE=700"
 
-# sys/types.h+bits/types.h have to define the obsolete types.
-# rpc(svc)/* have the obsolete types too deeply embedded in their API
-# to remove.
-skip_obsolete_type_check='*/sys/types.h|*/bits/types.h|*/rpc/*|*/rpcsvc/*'
-obsolete_type_re=\
-'\<((__)?(quad_t|u(short|int|long|_(char|short|int([0-9]+_t)?|long|quad_t))))\>'
-
 if [ $# -lt 3 ]; then
     echo "usage: $0 c|c++ \"compile command\" header header header..." >&2
     exit 2
@@ -46,14 +37,10 @@ case "$1" in
     (c)
         lang_modes="$c_modes"
         cih_test_c=$(mktemp ${TMPDIR-/tmp}/cih_test_XXXXXX.c)
-        already="$skip_obsolete_type_check"
     ;;
     (c++)
         lang_modes="$cxx_modes"
         cih_test_c=$(mktemp ${TMPDIR-/tmp}/cih_test_XXXXXX.cc)
-        # The obsolete-type check can be skipped for C++; it is
-        # sufficient to do it for C.
-        already="*"
     ;;
     (*)
         echo "usage: $0 c|c++ \"compile command\" header header header..." >&2
@@ -151,22 +138,8 @@ $expanded_lib_mode
 int avoid_empty_translation_unit;
 EOF
             if $cc_cmd -fsyntax-only $lang_mode "$cih_test_c" 2>&1
-            then
-                includes=$($cc_cmd -fsyntax-only -H $lang_mode \
-                              "$cih_test_c" 2>&1 | sed -ne 's/^[.][.]* //p')
-                for h in $includes; do
-                    # Don't repeat work.
-                    eval 'case "$h" in ('"$already"') continue;; esac'
-
-                    if grep -qE "$obsolete_type_re" "$h"; then
-                        echo "*** Obsolete types detected:"
-                        grep -HE "$obsolete_type_re" "$h"
-                        failed=1
-                    fi
-                    already="$already|$h"
-                done
-            else
-                failed=1
+            then :
+            else failed=1
             fi
         done
     done

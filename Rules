@@ -82,7 +82,8 @@ $(common-objpfx)dummy.c:
 common-generated += dummy.o dummy.c
 
 ifneq "$(headers)" ""
-# Special test of all the installed headers in this directory.
+# Test that all of the headers installed by this directory can be compiled
+# in isolation.
 tests-special += $(objpfx)check-installed-headers-c.out
 libof-check-installed-headers-c := testsuite
 $(objpfx)check-installed-headers-c.out: \
@@ -93,6 +94,8 @@ $(objpfx)check-installed-headers-c.out: \
 	$(evaluate-test)
 
 ifneq "$(CXX)" ""
+# If a C++ compiler is available, also test that they can be compiled
+# in isolation as C++.
 tests-special += $(objpfx)check-installed-headers-cxx.out
 libof-check-installed-headers-cxx := testsuite
 $(objpfx)check-installed-headers-cxx.out: \
