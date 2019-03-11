@@ -69,7 +69,6 @@ typedef struct
 /* Context to describe whole processor state.  */
 typedef struct
   {
-    unsigned long __mask;
     gregset_t __gregs;
     fpregset_t __fpregs;
   } mcontext_t;
