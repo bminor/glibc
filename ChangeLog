@@ -1,5 +1,10 @@
 2019-03-11  Mao Han  <han_mao@c-sky.com>
 
+	* elf/elf.h (EF_CSKY_ABIMASK, EF_CSKY_OTHER, EF_CSKY_PROCESSOR)
+	(EF_CSKY_ABIV1, EF_CSKY_ABIV2, SHT_CSKY_ATTRIBUTES): New defines.
+
+2019-03-11  Mao Han  <han_mao@c-sky.com>
+
 	* sysdeps/csky/abiv2/start.S: Mark lr as undefined.
 	* sysdeps/unix/sysv/linux/csky/abiv2/clone.S: Likewise.
 	* sysdeps/unix/sysv/linux/csky/abiv2/setcontext.S: Likewise.

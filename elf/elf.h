@@ -360,7 +360,7 @@ typedef struct
 #define EM_RISCV	243	/* RISC-V */
 
 #define EM_BPF		247	/* Linux BPF -- in-kernel virtual machine */
-#define EM_CSKY		252     /* C_SKY */
+#define EM_CSKY		252     /* C-SKY */
 
 #define EM_NUM		253
 
@@ -3022,7 +3022,7 @@ enum
 /* Keep this the last entry.  */
 #define R_ARM_NUM		256
 
-/* csky */
+/* C-SKY */
 #define R_CKCORE_NONE               0	/* no reloc */
 #define R_CKCORE_ADDR32             1	/* direct 32 bit (S + A) */
 #define R_CKCORE_PCRELIMM8BY4       2	/* disp ((S + A - P) >> 2) & 0xff   */
@@ -3085,6 +3085,17 @@ enum
 #define R_CKCORE_TLS_DTPMOD32       56
 #define R_CKCORE_TLS_DTPOFF32       57
 #define R_CKCORE_TLS_TPOFF32        58
+
+/* C-SKY elf header definition.  */
+#define EF_CSKY_ABIMASK		    0XF0000000
+#define EF_CSKY_OTHER		    0X0FFF0000
+#define EF_CSKY_PROCESSOR	    0X0000FFFF
+
+#define EF_CSKY_ABIV1		    0X10000000
+#define EF_CSKY_ABIV2		    0X20000000
+
+/* C-SKY attributes section.  */
+#define SHT_CSKY_ATTRIBUTES	    (SHT_LOPROC + 1)
 
 /* IA-64 specific declarations.  */
 
