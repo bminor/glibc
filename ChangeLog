@@ -1,3 +1,8 @@
+2019-07-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* benchtests/Makefile (bench-math): Add hypot.
+	* benchtests/hypot-inputs: New file.
+
 2019-07-08  Vincent Chen  <vincentc@andestech.com>
 
 	* sysdeps/unix/sysv/linux/dl-vdso.h
