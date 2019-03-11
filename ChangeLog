@@ -1,5 +1,11 @@
 2019-03-11  Mao Han  <han_mao@c-sky.com>
 
+	* sysdeps/csky/abiv2/start.S: Mark lr as undefined.
+	* sysdeps/unix/sysv/linux/csky/abiv2/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/csky/abiv2/setcontext.S: Likewise.
+
+2019-03-11  Mao Han  <han_mao@c-sky.com>
+
 	* sysdeps/unix/sysv/linux/csky/sys/procfs.h: Use linux definition
 	directly.
 	* sysdeps/unix/sysv/linux/csky/sys/user.h: Remove user_regs

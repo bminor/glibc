@@ -46,6 +46,9 @@
 	.type _start,@function;
 	.align 4;
 _start:
+	cfi_startproc
+	.cfi_label .Ldummy
+	cfi_undefined (lr)
 	subi	sp, 8
 	/* Clear the link register since this is the outermost frame.  */
 	movi	lr, 0
@@ -96,6 +99,7 @@ _start:
 	/* Should never get here.  */
 	jsri	abort
 #endif	/* !SHARED */
+	cfi_endproc
 	.size _start,.-_start
 
 

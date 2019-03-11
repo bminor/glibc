@@ -62,6 +62,8 @@ END (setcontext)
 weak_alias (__setcontext, setcontext)
 
 ENTRY (__startcontext)
+	.cfi_label .Ldummy
+	cfi_undefined (lr)
 	mov	a0, r9
 	cmpnei	r9, 0	/* r9 was set in makecontext.  */
 	bf	1f	/* null, then exit.  */
