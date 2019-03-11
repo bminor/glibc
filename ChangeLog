@@ -1,5 +1,12 @@
 2019-03-13  Zack Weinberg  <zackw@panix.com>
 
+	* sysdeps/generic/inttypes.h, sysdeps/generic/stdint.h:
+	Move to stdlib.
+	* include/inttypes.h: Adjust to match.
+	* include/stdint.h: New wrapper.
+
+2019-03-13  Zack Weinberg  <zackw@panix.com>
+
 	* scripts/check-obsolete-constructs.py: New test script.
 	* scripts/check-installed-headers.sh: Remove tests for
 	obsolete typedefs, superseded by check-obsolete-constructs.py.
