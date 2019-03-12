@@ -1,5 +1,8 @@
 2019-04-04  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* wcsmbs/wcschr.c (WCSCHR): Use loop_unroll.h to parametrize
+	the loop unroll.
+
 	* sysdeps/powerpc/Makefile [$(subdir) == wcsmbs] (CFLAGS-wcscpy.c):
 	New rule.
 	* sysdeps/powerpc/power6/wcscpy.c: Remove file.
