@@ -1,5 +1,9 @@
 2019-03-12  Florian Weimer  <fweimer@redhat.com>
 
+	* elf/elf.h (DF_1_KMOD, DF_1_WEAKFILTER, DF_1_NOCOMMON): Define.
+
+2019-03-12  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #24047]
 	resolv: Enable full ICMP errors for UDP DNS sockets
 	* resolv/res_enable_icmp.c: New file.
