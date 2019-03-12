@@ -105,7 +105,7 @@ libresolv-routines := res_comp res_debug \
 		      res_data res_mkquery res_query res_send		\
 		      inet_net_ntop inet_net_pton inet_neta base64	\
 		      ns_parse ns_name ns_netint ns_ttl ns_print	\
-		      ns_samedomain ns_date \
+		      ns_samedomain ns_date res_enable_icmp \
 		      compat-hooks compat-gethnamaddr
 
 libanl-routines := gai_cancel gai_error gai_misc gai_notify gai_suspend \

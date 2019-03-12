@@ -100,4 +100,10 @@ libc_hidden_proto (__inet_pton_length)
 /* Called as part of the thread shutdown sequence.  */
 void __res_thread_freeres (void) attribute_hidden;
 
+/* The Linux kernel does not enable all ICMP messages on a UDP socket
+   by default.  A call this function enables full error reporting for
+   the socket FD.  FAMILY must be AF_INET or AF_INET6.  Returns 0 on
+   success, -1 on failure.  */
+int __res_enable_icmp (int family, int fd) attribute_hidden;
+
 #endif  /* _RESOLV_INTERNAL_H */

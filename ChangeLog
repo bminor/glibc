@@ -1,3 +1,13 @@
+2019-03-12  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24047]
+	resolv: Enable full ICMP errors for UDP DNS sockets
+	* resolv/res_enable_icmp.c: New file.
+	* resolv/Makefile (libresolv-routines): Add res_enable_icmp.
+	* resolv/resolv-internal.h (__res_enable_icmp): Declare.
+	* resolv/res_send.c (reopen): Call __res_enable_icmp on new
+	socket.
+
 2019-03-11  Mao Han  <han_mao@c-sky.com>
 
 	* elf/elf.h (EF_CSKY_ABIMASK, EF_CSKY_OTHER, EF_CSKY_PROCESSOR)

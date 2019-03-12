@@ -943,6 +943,18 @@ reopen (res_state statp, int *terrno, int ns)
 			return (-1);
 		}
 
+		/* Enable full ICMP error reporting for this
+		   socket.  */
+		if (__res_enable_icmp (nsap->sa_family,
+				       EXT (statp).nssocks[ns]) < 0)
+		  {
+		    int saved_errno = errno;
+		    __res_iclose (statp, false);
+		    __set_errno (saved_errno);
+		    *terrno = saved_errno;
+		    return -1;
+		  }
+
 		/*
 		 * On a 4.3BSD+ machine (client and server,
 		 * actually), sending to a nameserver datagram
