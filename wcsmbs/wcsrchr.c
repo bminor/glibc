@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <wchar.h>
+#include <loop_unroll.h>
 
 #ifndef WCSRCHR
 # define WCSRCHR wcsrchr
@@ -26,12 +27,21 @@
 wchar_t *
 WCSRCHR (const wchar_t *wcs, const wchar_t wc)
 {
-  const wchar_t *retval = NULL;
+  wchar_t *retval = NULL;
 
-  do
-    if (*wcs == wc)
-      retval = wcs;
-  while (*wcs++ != L'\0');
+#define ITERATION(index)		\
+  ({					\
+    if (*wcs == wc)			\
+      retval = (wchar_t*) wcs;		\
+    *wcs++ != L'\0';	\
+  })
 
-  return (wchar_t *) retval;
+#ifndef UNROLL_NTIMES
+# define UNROLL_NTIMES 1
+#endif
+
+  while (1)
+    UNROLL_REPEAT (UNROLL_NTIMES, ITERATION);
+
+  return retval;
 }
