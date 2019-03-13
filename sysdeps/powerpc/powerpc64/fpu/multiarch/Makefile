@@ -10,7 +10,6 @@ libm-sysdep_routines += s_logb-power7 s_logbf-power7 \
 			s_logbl-power7 s_logb-ppc64 s_logbf-ppc64 \
 			s_logbl-ppc64 e_hypot-ppc64 \
 			e_hypot-power7 e_hypotf-ppc64 e_hypotf-power7 \
-			e_expf-power8 e_expf-ppc64 \
 			$(sysdep_calls:s_%=m_%)
 
 CFLAGS-s_logbf-power7.c = -mcpu=power7

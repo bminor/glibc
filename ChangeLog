@@ -1,5 +1,15 @@
 2019-06-26  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile
+	(libm-sysdep_routines): Remove e_expf-power8 and expf-ppc64.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/e_expf-power8.S: Remove
+	file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/e_expf-ppc64.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/e_expf.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/w_expf.c: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/e_expf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/w_expf.c: Likewise.
+
 	* sysdeps/powerpc/powerpc32/fpu/Makefile
 	[$(subdir) == math] (CFLAGS-s_lround.c): New rule.
 	* sysdeps/powerpc/powerpc32/fpu/s_llround.c (__llround): Add power5+
