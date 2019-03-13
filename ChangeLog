@@ -1,3 +1,10 @@
+2019-03-13  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/build-many-glibcs.py (Context.checkout): Default Linux
+	version to 5.0.
+	(Context.checkout_tar): Handle variable major version for Linux
+	kernel.
+
 2019-03-13  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #24047]

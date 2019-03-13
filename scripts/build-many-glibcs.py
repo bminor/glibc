@@ -714,7 +714,7 @@ class Context(object):
                             'gcc': 'vcs-8',
                             'glibc': 'vcs-mainline',
                             'gmp': '6.1.2',
-                            'linux': '4.20',
+                            'linux': '5.0',
                             'mpc': '1.1.0',
                             'mpfr': '4.0.2',
                             'mig': 'vcs-mainline',
@@ -889,7 +889,7 @@ class Context(object):
         url_map = {'binutils': 'https://ftp.gnu.org/gnu/binutils/binutils-%(version)s.tar.bz2',
                    'gcc': 'https://ftp.gnu.org/gnu/gcc/gcc-%(version)s/gcc-%(version)s.tar.gz',
                    'gmp': 'https://ftp.gnu.org/gnu/gmp/gmp-%(version)s.tar.xz',
-                   'linux': 'https://www.kernel.org/pub/linux/kernel/v4.x/linux-%(version)s.tar.xz',
+                   'linux': 'https://www.kernel.org/pub/linux/kernel/v%(major)s.x/linux-%(version)s.tar.xz',
                    'mpc': 'https://ftp.gnu.org/gnu/mpc/mpc-%(version)s.tar.gz',
                    'mpfr': 'https://ftp.gnu.org/gnu/mpfr/mpfr-%(version)s.tar.xz',
                    'mig': 'https://ftp.gnu.org/gnu/mig/mig-%(version)s.tar.bz2',
@@ -898,7 +898,8 @@ class Context(object):
         if component not in url_map:
             print('error: component %s coming from tarball' % component)
             exit(1)
-        url = url_map[component] % {'version': version}
+        version_major = version.split('.')[0]
+        url = url_map[component] % {'version': version, 'major': version_major}
         filename = os.path.join(self.srcdir, url.split('/')[-1])
         response = urllib.request.urlopen(url)
         data = response.read()
