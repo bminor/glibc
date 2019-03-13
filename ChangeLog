@@ -1,3 +1,8 @@
+2019-03-13  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24047]
+	* sysdeps/mach/hurd/res_enable_icmp.c: New file.
+
 2019-03-13  Zack Weinberg  <zackw@panix.com>
 
 	* sysdeps/generic/inttypes.h, sysdeps/generic/stdint.h:
