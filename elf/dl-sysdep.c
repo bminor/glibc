@@ -328,14 +328,9 @@ _dl_show_auxv (void)
       assert (AT_NULL == 0);
       assert (AT_IGNORE == 1);
 
-      if (av->a_type == AT_HWCAP || av->a_type == AT_HWCAP2
-	  || AT_L1I_CACHEGEOMETRY || AT_L1D_CACHEGEOMETRY
-	  || AT_L2_CACHEGEOMETRY || AT_L3_CACHEGEOMETRY)
-	{
-	  /* These are handled in a special way per platform.  */
-	  if (_dl_procinfo (av->a_type, av->a_un.a_val) == 0)
-	    continue;
-	}
+      /* Some entries are handled in a special way per platform.  */
+      if (_dl_procinfo (av->a_type, av->a_un.a_val) == 0)
+	continue;
 
       if (idx < sizeof (auxvars) / sizeof (auxvars[0])
 	  && auxvars[idx].form != unknown)

@@ -225,7 +225,7 @@ _dl_procinfo (unsigned int type, unsigned long int word)
 	break;
       }
     default:
-      /* This should not happen.  */
+      /* Fallback to generic output mechanism.  */
       return -1;
     }
    _dl_printf ("\n");

@@ -1,3 +1,17 @@
+2019-03-13  Stefan Liebler  <stli@linux.ibm.com>
+
+	* elf/dl-sysdep.c (_dl_show_auxv): Remove condition and always
+	call _dl_procinfo.
+	* sysdeps/unix/sysv/linux/s390/dl-procinfo.h (_dl_procinfo):
+	Ignore types other than AT_HWCAP.
+	* sysdeps/sparc/dl-procinfo.h (_dl_procinfo): Likewise.
+	* sysdeps/unix/sysv/linux/i386/dl-procinfo.h (_dl_procinfo):
+	Likewise.
+	* sysdeps/powerpc/dl-procinfo.h (_dl_procinfo): Adjust comment
+	in the case of falling back to generic output mechanism.
+	* sysdeps/unix/sysv/linux/arm/dl-procinfo.h (_dl_procinfo):
+	Likewise.
+
 2019-02-15  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #24211]
