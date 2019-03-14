@@ -1116,11 +1116,7 @@ __sysconf (int name)
 #endif
 
     case _SC_STREAMS:
-#ifdef _XOPEN_STREAMS
-      return _XOPEN_STREAMS;
-#else
       return -1;
-#endif
 
     case _SC_HOST_NAME_MAX:
 #ifdef HOST_NAME_MAX

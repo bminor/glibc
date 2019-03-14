@@ -2117,12 +2117,6 @@ at @var{buf} with length @var{len}.
 This function is a GNU extension.
 @end deftypefun
 
-@strong{Portability Note:} On @w{System V} derived systems, the file
-returned by the @code{ptsname} and @code{ptsname_r} functions may be
-STREAMS-based, and therefore require additional processing after opening
-before it actually behaves as a pseudo terminal.
-@c FIXME: xref STREAMS
-
 Typical usage of these functions is illustrated by the following example:
 @smallexample
 int
@@ -2144,13 +2138,6 @@ open_pty_pair (int *amaster, int *aslave)
   slave = open (name, O_RDWR);
   if (slave == -1)
     goto close_master;
-
-  if (isastream (slave))
-    @{
-      if (ioctl (slave, I_PUSH, "ptem") < 0
-          || ioctl (slave, I_PUSH, "ldterm") < 0)
-        goto close_slave;
-    @}
 
   *amaster = master;
   *aslave = slave;

@@ -1,5 +1,51 @@
 2019-03-14  Florian Weimer  <fweimer@redhat.com>
 
+	Remove obsolete, never-implemented XSI STREAMS declarations.
+	* manual/terminal.texi (Allocation): Remove portability note and
+	adjust example.
+	* sysdeps/posix/sysconf.c (__sysconf): Always return -1 for
+	_SC_STREAMS.
+	* sysdeps/unix/sysv/linux/syscalls.list (getpmsg, putpmsg): Remove.
+	* sysdeps/unix/inet/Subdirs (streams): Remove.
+	* conform/Makefile (conformtest-headers-XPG42): Remove stropts.h.
+	(conformtest-headers-UNIX98): Likewise.
+	(conformtest-headers-XOPEN2K): Likewise.
+	(conformtest-headers-POSIX2008): Likewise.
+	* posix/compat-streams.c: New file.
+	* posix/Makefile (routines): Add it.
+	* posix/Versions (GLIBC_2.1): Add fattach, fdetach, getmsg,
+	getpmsg, isastream, putmsg, putpmsg.
+	(GLIBC_2.30): New section.
+	* bits/stropts.h: Remove file.
+	* bits/xtitypes.h: Likewise.
+	* conform/data/stropts.h-data: Likewise.
+	* include/stropts.h: Likewise.
+	* include/sys/stropts.h: Likewise.
+	* include/xtitypes.h: Likewise.
+	* streams/Makefile: Likewise.
+	* streams/fattach.c: Likewise.
+	* streams/fdetach.c: Likewise.
+	* streams/getmsg.c: Likewise.
+	* streams/getpmsg.c: Likewise.
+	* streams/isastream.c: Likewise.
+	* streams/putmsg.c: Likewise.
+	* streams/putpmsg.c: Likewise.
+	* streams/stropts.h: Likewise.
+	* streams/sys/stropts.h: Likewise.
+	* sysdeps/ia64/bits/xtitypes.h: Likewise.
+	* sysdeps/s390/bits/xtitypes.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getmsg.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/putmsg.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/getmsg.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/putmsg.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/getmsg.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/putmsg.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/getmsg.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/putmsg.c: Likewise.
+	* sysdeps/x86/bits/xtitypes.h: Likewise.
+
+2019-03-14  Florian Weimer  <fweimer@redhat.com>
+
 	* nss/tst-nss-files-alias-truncated.c (do_test): Load
 	libnss_files.
 	* nss/Makefile (tst-nss-files-alias-truncated): Link with -ldl,

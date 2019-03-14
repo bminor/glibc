@@ -26,6 +26,9 @@ Deprecated and removed features, and other changes affecting compatibility:
   definitions in libc will be used automatically, which have been available
   since glibc 2.17.
 
+* The obsolete and never-implemented XSI STREAMS header files <stropts.h>
+  and <sys/stropts.h> have been removed.
+
 Changes to build and runtime requirements:
 
 * GCC 6.2 or later is required to build the GNU C Library.

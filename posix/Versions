@@ -80,6 +80,10 @@ libc {
     # w*
     waitid; wordexp; wordfree;
   }
+  GLIBC_2.1 {
+    # Compat symbols for the obsolete, unimplemented XSI streams extension.
+    fattach; fdetach; getmsg; getpmsg; isastream; putmsg; putpmsg;
+  }
   GLIBC_2.1.2 {
     # functions used in other libraries
     __vfork;
@@ -140,6 +144,8 @@ libc {
   GLIBC_2.29 {
     posix_spawn_file_actions_addchdir_np;
     posix_spawn_file_actions_addfchdir_np;
+  }
+  GLIBC_2.30 {
   }
   GLIBC_PRIVATE {
     __libc_fork; __libc_pread; __libc_pwrite;

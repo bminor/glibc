@@ -20,7 +20,6 @@ getegid		-	getegid		Ei:	__getegid	getegid
 geteuid		-	geteuid		Ei:	__geteuid	geteuid
 getpgid		-	getpgid		i:i	__getpgid	getpgid
 getpgrp		-	getpgrp		Ei:	getpgrp
-getpmsg		-	getpmsg		i:ipppp	getpmsg
 getppid		-	getppid		Ei:	__getppid	getppid
 getresuid	-	getresuid	i:ppp	getresuid
 getresgid	-	getresgid	i:ppp	getresgid
@@ -46,7 +45,6 @@ pipe		-	pipe		i:f	__pipe		pipe
 pipe2		-	pipe2		i:fi	__pipe2		pipe2
 pivot_root	EXTRA	pivot_root	i:ss	pivot_root
 prctl		EXTRA	prctl		i:iiiii	__prctl		prctl
-putpmsg		-	putpmsg		i:ippii	putpmsg
 query_module	EXTRA	query_module	i:sipip	__compat_query_module	query_module@GLIBC_2.0:GLIBC_2.23
 quotactl	EXTRA	quotactl	i:isip	quotactl
 remap_file_pages -	remap_file_pages i:piiii	__remap_file_pages remap_file_pages

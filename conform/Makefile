@@ -52,44 +52,44 @@ conformtest-headers-XPG4 := $(conformtest-headers-ISO) cpio.h dirent.h \
 			    sys/wait.h tar.h termios.h ulimit.h unistd.h \
 			    utime.h varargs.h wordexp.h
 # Missing XPG42 expectations for: re_comp.h regexp.h wchar.h.
-# XPG42 includes XTI, but xti.h is outside the scope of these tests.
+# XPG42 includes XTI and STREAMS, but those are not implemented by glibc.
 conformtest-headers-XPG42 := $(conformtest-headers-XPG4) arpa/inet.h fmtmsg.h \
 			    libgen.h ndbm.h netdb.h netinet/in.h poll.h \
-			    strings.h stropts.h sys/mman.h sys/resource.h \
+			    strings.h sys/mman.h sys/resource.h \
 			    sys/socket.h sys/statvfs.h sys/time.h sys/timeb.h \
 			    sys/uio.h sys/un.h syslog.h ucontext.h utmpx.h
 # Missing UNIX98 expectations for: inttypes.h re_comp.h regexp.h.
 # The online UNIX98 includes XCURSES, but curses.h, term.h and
 # unctrl.h are outside the scope of these tests.  It also includes
-# XTI, but xti.h is outside the scope of these tests.
+# XTI and STREAMS, but those are not implemented by glibc.
 conformtest-headers-UNIX98 := $(conformtest-headers-POSIX) arpa/inet.h cpio.h \
 			      dlfcn.h fmtmsg.h ftw.h iconv.h iso646.h \
 			      langinfo.h libgen.h monetary.h ndbm.h netdb.h \
 			      netinet/in.h nl_types.h poll.h search.h \
-			      strings.h stropts.h sys/ipc.h sys/msg.h \
+			      strings.h sys/ipc.h sys/msg.h \
 			      sys/resource.h sys/sem.h sys/shm.h sys/socket.h \
 			      sys/statvfs.h sys/time.h sys/timeb.h sys/uio.h \
 			      sys/un.h syslog.h ucontext.h ulimit.h utmpx.h \
 			      varargs.h wchar.h wctype.h
-# Missing XOPEN2K expectations for: trace.h.
+# Missing XOPEN2K expectations for: trace.h, stropts.h.
 conformtest-headers-XOPEN2K := $(conformtest-headers-POSIX) arpa/inet.h \
 			       complex.h cpio.h dlfcn.h fenv.h fmtmsg.h ftw.h \
 			       iconv.h inttypes.h iso646.h langinfo.h \
 			       libgen.h monetary.h ndbm.h net/if.h netdb.h \
 			       netinet/in.h netinet/tcp.h nl_types.h poll.h \
 			       search.h spawn.h stdbool.h stdint.h strings.h \
-			       stropts.h sys/ipc.h sys/msg.h sys/resource.h \
+			       sys/ipc.h sys/msg.h sys/resource.h \
 			       sys/select.h sys/sem.h sys/shm.h sys/socket.h \
 			       sys/statvfs.h sys/time.h sys/timeb.h sys/uio.h \
 			       sys/un.h syslog.h tgmath.h ucontext.h ulimit.h \
 			       utmpx.h wchar.h wctype.h
-# Missing POSIX2008 expectations for: trace.h.
+# Missing POSIX2008 expectations for: trace.h, stropts.h.
 conformtest-headers-POSIX2008 := $(conformtest-headers-POSIX) arpa/inet.h \
 				 complex.h cpio.h dlfcn.h fenv.h iconv.h \
 				 inttypes.h iso646.h langinfo.h monetary.h \
 				 net/if.h netdb.h netinet/in.h netinet/tcp.h \
 				 nl_types.h poll.h spawn.h stdbool.h stdint.h \
-				 strings.h stropts.h sys/select.h \
+				 strings.h sys/select.h \
 				 sys/socket.h sys/statvfs.h sys/un.h tgmath.h \
 				 wchar.h wctype.h
 # Missing XOPEN2K8 expectations for: trace.h.
