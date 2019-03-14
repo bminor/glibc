@@ -1,5 +1,9 @@
 2019-07-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* benchtests/Makefile (bench-math): Add logb.
+	* benchtests/logb-inputs: New file.
+	* benchtests/logbf-inputs: New file.
+
 	* sysdeps/powerpc/power5+/fpu/s_modf.c: Move to ...
 	* sysdeps/powerpc/fpu/s_modf.c: ... here.  Add ISA 2.07 optimization.
 	* sysdeps/powerpc/power5+/fpu/s_modff.c: Move to ...
