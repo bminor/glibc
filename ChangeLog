@@ -1,3 +1,11 @@
+2019-03-14  Florian Weimer  <fweimer@redhat.com>
+
+	* nss/tst-nss-files-alias-truncated.c (do_test): Load
+	libnss_files.
+	* nss/Makefile (tst-nss-files-alias-truncated): Link with -ldl,
+	but not with libnss_files.
+	(tst-nss-files-alias-truncated.out): Depend on libnss_files.
+
 2019-03-14  Zack Weinberg  <zackw@panix.com>
 
 	* scripts/check-obsolete-constructs.py (HeaderChecker.check):

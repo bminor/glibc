@@ -17,11 +17,13 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <aliases.h>
+#include <gnu/lib-names.h>
 #include <nss.h>
 #include <stddef.h>
 #include <support/check.h>
 #include <support/namespace.h>
 #include <support/test-driver.h>
+#include <support/xdlfcn.h>
 #include <support/xunistd.h>
 
 static void
@@ -42,8 +44,9 @@ in_chroot (void *closure)
 static int
 do_test (void)
 {
-  /* nss_files has already been loaded via DT_NEEDED, outside the
-     chroot.  */
+  /* Make sure we don't try to load the module in the chroot.  */
+  xdlopen (LIBNSS_FILES_SO, RTLD_NOW);
+
   __nss_configure_lookup ("aliases", "files");
 
   support_become_root ();
