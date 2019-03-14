@@ -437,7 +437,7 @@ class HeaderChecker:
     def check(self, fname):
         self.fname = fname
         try:
-            with open(fname, "rt") as fp:
+            with open(fname, "rt", encoding="utf-8") as fp:
                 contents = fp.read()
         except OSError as e:
             sys.stderr.write("{}: {}\n".format(fname, e.strerror))
