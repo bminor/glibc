@@ -1,5 +1,59 @@
 2019-04-29  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/powerpc/fpu/fenv_libc.h (__fesetround_inline_nocheck): New
+	function.
+	* sysdeps/powerpc/fpu/round_to_integer.h: New file.
+	* sysdeps/powerpc/fpu/s_ceil.c: Likewise.
+	* sysdeps/powerpc/fpu/s_ceilf.c: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_ceil.S: Remove file.
+	* sysdeps/powerpc/powerpc32/fpu/s_ceilf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile
+	(CFLAGS-s_ceil-power5+.c, CFLAGS-s_ceilf-power5+.c): New rule.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_ceil-power5+.S:
+	Remove file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_ceil-ppc32.S:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_ceilf-power5+.S:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_ceilf-ppc32.S:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_ceil-power5+.c:
+	New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_ceil-ppc32.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_ceilf-power5+.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_ceilf-ppc32.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_ceil.S: Remove file.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_ceilf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/Makefile: New file.
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_ceil-power5+.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_ceil-ppc64.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_ceil.c: Move to ...
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_ceil.c: ... here.
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_ceilf-power5+.c: New
+	file.
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_ceilf-ppc64.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_ceilf.c: Move to ...
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_ceilf.c: ...
+	* here.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile
+	(libm-sysdep_routines): Remove s_ceil-power5+, s_ceil-ppc64,
+	s_ceilf-power5+, and s_ceilf-ppc64.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_ceil-power5+.S: Remove
+	file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_ceil-ppc64.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_ceilf-power5+.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_ceilf-ppc64.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_ceil.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_ceilf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_ceil.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_ceilf.S: Likewise.
+
 	* sysdeps/powerpc/power4/fpu/Makefile: Remove file.
 	* sysdeps/powerpc/power4/fpu/mpa-arch.h: Likewise.
 	* sysdeps/powerpc/power4/fpu/mpa.c: Likewise.

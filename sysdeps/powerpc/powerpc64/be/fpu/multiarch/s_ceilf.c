@@ -1,5 +1,5 @@
-/* ceilf function.  PowerPC64/power5+ version.
-   Copyright (C) 2006-2019 Free Software Foundation, Inc.
+/* Multiple versions of ceilf.
+   Copyright (C) 2013-2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,16 +16,17 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
+#define NO_MATH_REDIRECT
+#include <math.h>
 #include <libm-alias-float.h>
+#include "init-arch.h"
 
-	.machine	"power5"
-ENTRY_TOCLESS (__ceilf, 4)
-	CALL_MCOUNT 0
-	frip	fp1, fp1	/* The rounding instructions are double.  */
-	frsp	fp1, fp1	/* But we need to set ooverflow for float.  */
-	blr
-	END (__ceilf)
+extern __typeof (__ceilf) __ceilf_ppc64 attribute_hidden;
+extern __typeof (__ceilf) __ceilf_power5plus attribute_hidden;
+
+libc_ifunc (__ceilf,
+	    (hwcap & PPC_FEATURE_POWER5_PLUS)
+	    ? __ceilf_power5plus
+            : __ceilf_ppc64);
 
 libm_alias_float (__ceil, ceil)
-

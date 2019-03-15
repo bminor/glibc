@@ -14,8 +14,7 @@ sysdep_calls := s_copysign-power6 s_copysign-ppc64 \
 
 sysdep_routines += $(sysdep_calls)
 libm-sysdep_routines += s_llround-power6x \
-			s_llround-power5+ s_llround-ppc64 s_ceil-power5+ \
-			s_ceil-ppc64 s_ceilf-power5+ s_ceilf-ppc64 \
+			s_llround-power5+ s_llround-ppc64 \
 			s_floor-power5+ s_floor-ppc64 s_floorf-power5+ \
 			s_floorf-ppc64 s_round-power5+ s_round-ppc64 \
 			s_roundf-power5+ s_roundf-ppc64 s_trunc-power5+ \

@@ -97,6 +97,14 @@ __fesetround_inline (int round)
   return 0;
 }
 
+/* Same as __fesetround_inline, however without runtime check to use DFP
+   mtfsfi syntax (as relax_fenv_state) or if round value is valid.  */
+static inline void
+__fesetround_inline_nocheck (const int round)
+{
+  asm volatile ("mtfsfi 7,%0" : : "i" (round));
+}
+
 /* Definitions of all the FPSCR bit numbers */
 enum {
   FPSCR_FX = 0,    /* exception summary */
