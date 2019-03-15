@@ -40,6 +40,8 @@ extern fpu_control_t __fpu_control;
 # define _FPU_RC_UP      0x02
 # define _FPU_RC_ZERO    0x01
 
+# define _FPU_MASK_RC (_FPU_RC_NEAREST|_FPU_RC_DOWN|_FPU_RC_UP|_FPU_RC_ZERO)
+
 # define _FPU_MASK_NI  0x04 /* non-ieee mode */
 
 /* masking of interrupts */
@@ -63,12 +65,33 @@ extern fpu_control_t __fpu_control;
 typedef unsigned int fpu_control_t;
 
 /* Macros for accessing the hardware control word.  */
+# define __FPU_MFFS()						\
+  ({register double __fr;					\
+    __asm__ ("mffs %0" : "=f" (__fr));				\
+    __fr;							\
+  })
+
 # define _FPU_GETCW(cw)						\
   ({union { double __d; unsigned long long __ll; } __u;		\
-    register double __fr;					\
-    __asm__ ("mffs %0" : "=f" (__fr));				\
-    __u.__d = __fr;						\
+    __u.__d = __FPU_MFFS();					\
     (cw) = (fpu_control_t) __u.__ll;				\
+    (fpu_control_t) __u.__ll;					\
+  })
+
+#ifdef _ARCH_PWR9
+# define __FPU_MFFSL()						\
+  ({register double __fr;					\
+    __asm__ ("mffsl %0" : "=f" (__fr));				\
+    __fr;							\
+  })
+#else
+# define __FPU_MFFSL() __FPU_MFFS()
+#endif
+    
+# define _FPU_GET_RC()						\
+  ({union { double __d; unsigned long long __ll; } __u;		\
+    __u.__d = __FPU_MFFSL();					\
+    __u.__ll &= _FPU_MASK_RC;					\
     (fpu_control_t) __u.__ll;					\
   })
 

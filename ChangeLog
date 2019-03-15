@@ -1,3 +1,12 @@
+2019-06-06  Paul A. Clarke  <pc@us.ibm.com>
+
+	* sysdeps/powerpc/fpu_control.h (_FPU_MASK_RC): New.
+	(__FPU_MFFS): New.
+	(__FPU_MFFSL): New.
+	(_FPU_GET_RC): New.
+	(_FPU_GETCW): Use __FPU_MFFS().
+	* sysdeps/powerpc/fpu/get-rounding-mode.h: New file.
+
 2019-06-06  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/unix/sysv/linux/riscv/flush-icache.c: Do not use
