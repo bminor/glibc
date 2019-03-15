@@ -18,8 +18,6 @@
 
 #define NO_MATH_REDIRECT
 #include <math.h>
-#include <math_ldbl_opt.h>
-#include <shlib-compat.h>
 #include "init-arch.h"
 #include <libm-alias-float.h>
 

@@ -25,7 +25,8 @@ enum round_mode
 {
   CEIL,
   FLOOR,
-  ROUND
+  ROUND,
+  TRUNC
 };
 
 static inline void
@@ -36,6 +37,7 @@ set_fenv_mode (enum round_mode mode)
   {
   case CEIL:  rmode = FE_UPWARD; break;
   case FLOOR: rmode = FE_DOWNWARD; break;
+  case TRUNC:
   case ROUND: rmode = FE_TOWARDZERO; break;
   default:    rmode = FE_TONEAREST; break;
   }

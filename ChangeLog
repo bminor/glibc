@@ -1,5 +1,59 @@
 2019-05-09  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/powerpc/fpu/trunc_to_integer.h (set_fenv_mode): Add
+	 TRUNC handling.
+	(round_mode): Add definition for TRUNC.
+	* sysdeps/powerpc/fpu/s_trunc.c: New file.
+	* sysdeps/powerpc/fpu/s_truncf.c: New file.
+	* sysdeps/powerpc/powerpc32/fpu/s_trunc.S: Remove file.
+	* sysdeps/powerpc/powerpc32/fpu/s_truncf.S: Likewise.
+	* sysdep/powerpc/powepc32/power4/fpu/multiarch/s_trunc-power5+.S:
+	Likewise.
+	* sysdep/powerpc/powepc32/power4/fpu/multiarch/s_trunc-ppc32.S:
+	Likewise.
+	* sysdep/powerpc/powepc32/power4/fpu/multiarch/s_truncf-power5+.S:
+	Likewise.
+	* sysdep/powerpc/powepc32/power4/fpu/multiarch/s_truncf-ppc32.S:
+	Likewise.
+	* sysdep/powerpc/powepc32/power4/fpu/multiarch/s_trunc-power5+.c: New
+	file.
+	* sysdep/powerpc/powepc32/power4/fpu/multiarch/s_trunc-ppc32.c:
+	Likewise.
+	* sysdep/powerpc/powepc32/power4/fpu/multiarch/s_truncf-power5+.c:
+	Likewise.
+	* sysdep/powerpc/powepc32/power4/fpu/multiarch/s_truncf-ppc32.c:
+	Likewise.
+	* sysdep/powerpc/powerpc32/power5+/fpu/s_trunc.S: Remove file.
+	* sysdep/powerpc/powerpc32/power5+/fpu/s_truncf.S: Likewise.
+	* sysdep/powerpc/powerpc64/be/fpu/multiarch/Makefile
+	(libm-sysdep_routines): Add s_trunc-power5+, s_trunc-ppc64,
+	s_truncf-power5+, and s_truncf-ppc64.
+	(CFLAGS-s_trunc-power5+.c, CFLAGS-s_truncf-power5+.c): New rule.
+	* sysdep/powerpc/powercp64/be/fpu/multiarch/s_trunc-power5+.c: New
+	file.
+	* sysdep/powerpc/powercp64/be/fpu/multiarch/s_trunc-ppc64.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_trunc.c: Move to ...
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_trunc.c: ... here.
+	* sysdep/powerpc/powercp64/be/fpu/multiarch/s_truncf-power5+.c: New
+	file.
+	* sysdep/powerpc/powercp64/be/fpu/multiarch/s_truncf-ppc64.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_truncf.c: Move to ...
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_truncf.c: ... here.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile
+	(libm-sysdep_routines): Remove s_trunc-power5+, s_trunc-ppc64,
+	s_truncf-power5+, and s_truncf-ppc64.
+	* sysdep/powerpc/powerpc64/fpu/multiarch/s_trunc-power5+.S: Remove
+	file.
+	* sysdep/powerpc/powerpc64/fpu/multiarch/s_trunc-ppc64.S: Likewise.
+	* sysdep/powerpc/powerpc64/fpu/multiarch/s_truncf-power5+.S:
+	Likewise.
+	* sysdep/powerpc/powerpc64/fpu/multiarch/s_truncf-ppc64.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_trunc.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_truncf.S: Likewise.
+	* sysdep/powerpc/powerpc64/power5+/fpu/s_trunc.S: Likewise.
+	* sysdep/powerpc/powerpc64/power5+/fpu/s_truncf.S: Likewise.
+
 	* sysdeps/powerpc/fpu/round_to_integer.h (set_fenv_mode): Add
 	ROUND handling.
 	(round_mode): Add definition for ROUND.

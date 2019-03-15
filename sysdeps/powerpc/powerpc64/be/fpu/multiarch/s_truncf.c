@@ -1,5 +1,5 @@
-/* trunc function.  PowerPC32/power5+ version.
-   Copyright (C) 2006-2019 Free Software Foundation, Inc.
+/* Multiple versions of truncf.
+   Copyright (C) 2013-2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,14 +16,17 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
-#include <math_ldbl_opt.h>
-#include <libm-alias-double.h>
+#define NO_MATH_REDIRECT
+#include <math.h>
+#include "init-arch.h"
+#include <libm-alias-float.h>
 
-	.machine	"power5"
-EALIGN (__trunc, 4, 0)
-	friz	fp1, fp1
-	blr
-	END (__trunc)
+extern __typeof (__truncf) __truncf_ppc64 attribute_hidden;
+extern __typeof (__truncf) __truncf_power5plus attribute_hidden;
 
-libm_alias_double (__trunc, trunc)
+libc_ifunc (__truncf,
+	    (hwcap & PPC_FEATURE_POWER5_PLUS)
+	    ? __truncf_power5plus
+            : __truncf_ppc64);
+
+libm_alias_float (__trunc, trunc)
