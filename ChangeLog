@@ -1,3 +1,14 @@
+2019-05-28  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/powerpc/fpu/round_to_integer.h (set_fenv_mode): Add
+	NEARBYINT handling.
+	* sysdeps/powerpc/fpu/s_nearbyint.c: New file.
+	* sysdeps/powerpc/fpu/s_nearbyintf.c: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_nearbyint.S: Remove file.
+	* sysdeps/powerpc/powerpc32/fpu/s_nearbyintf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_nearbyint.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_nearbyintf.S: Likewise.
+
 2019-05-28  mansayk  <6688000@gmail.com>
 
 	[BZ #24370]

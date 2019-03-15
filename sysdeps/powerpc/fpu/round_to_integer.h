@@ -26,22 +26,30 @@ enum round_mode
   CEIL,
   FLOOR,
   ROUND,
-  TRUNC
+  TRUNC,
+  NEARBYINT
 };
 
 static inline void
 set_fenv_mode (enum round_mode mode)
 {
-  int rmode;
   switch (mode)
   {
-  case CEIL:  rmode = FE_UPWARD; break;
-  case FLOOR: rmode = FE_DOWNWARD; break;
+  case CEIL:
+    __fesetround_inline_nocheck (FE_UPWARD);
+    break;
+  case FLOOR:
+    __fesetround_inline_nocheck (FE_DOWNWARD);
+    break;
   case TRUNC:
-  case ROUND: rmode = FE_TOWARDZERO; break;
-  default:    rmode = FE_TONEAREST; break;
+  case ROUND:
+    __fesetround_inline_nocheck (FE_TOWARDZERO);
+    break;
+  case NEARBYINT:
+    /*  Disable FE_INEXACT exception  */
+    reset_fpscr_bit (FPSCR_XE);
+    break;
   }
-  __fesetround_inline_nocheck (rmode);
 }
 
 static inline float
