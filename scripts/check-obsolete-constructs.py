@@ -17,6 +17,7 @@
 # <https://www.gnu.org/licenses/>.
 
 """Verifies that installed headers do not use any obsolete constructs:
+
  * legacy BSD typedefs superseded by <stdint.h>:
       ushort uint ulong
       u_char u_short u_int u_long
@@ -24,6 +25,9 @@
       caddr_t daddr_t loff_t register_t
    (sys/types.h is allowed to _define_ these types, but not to use them
     to define anything else).
+
+ * nested includes of other top-level headers, except as required by
+   the relevant standards
 """
 
 import argparse
@@ -479,6 +483,420 @@ def ObsoleteTypedefChecker(reporter, fname):
     return ObsoleteNotAllowed(reporter)
 
 #
+# Nested includes
+#
+
+# All header files are allowed to include these headers.
+# TODO: Every header file _should_ include features.h as its first inclusion,
+# but we are not ready to enforce that yet.
+UNIVERSAL_ALLOWED_INCLUDES = {
+    "features.h",
+
+    # Technically these should only ever be included with __need
+    # macros active, but some headers deliberately break this rule
+    # when they think they're dealing with freestanding headers from a
+    # non-GNU compiler, so enforcing it would be more trouble than
+    # it's worth.
+    "stddef.h",
+    "stdarg.h",
+}
+
+# Specific headers are allowed to include specific other headers.
+# Each key in this dictionary should be the installed name of a
+# header, and its value is a list of installed names that are allowed
+# to be included.  (We do not currently enforce any rules about <> vs
+# "" inclusion.)
+HEADER_ALLOWED_INCLUDES = {
+    # ISO C standard headers
+    # mandated: inttypes.h -> stdint.h
+    #           tgmath.h   -> complex.h, math.h
+    #           threads.h  -> time.h
+    "ctype.h":                     [ "endian.h" ],
+    "inttypes.h":                  [ "stdint.h" ],
+    "signal.h":                    [ "sys/ucontext.h" ],
+    "stdlib.h":                    [ "alloca.h", "sys/types.h" ],
+    "string.h":                    [ "strings.h" ],
+    "tgmath.h":                    [ "complex.h", "math.h" ],
+    "threads.h":                   [ "time.h" ],
+
+    # POSIX top-level headers
+    # mandated: pthread.h -> sched.h, time.h
+    # allowed:  ftw.h -> sys/stat.h
+    #           mqueue.h -> fcntl.h
+    #           sched.h -> time.h
+    #           spawn.h -> sched.h
+    "aio.h":                       [ "sys/types.h" ],
+    "ftw.h":                       [ "sys/stat.h", "sys/types.h" ],
+    "glob.h":                      [ "sys/cdefs.h" ],
+    "langinfo.h":                  [ "nl_types.h" ],
+    "mqueue.h":                    [ "fcntl.h", "sys/types.h" ],
+    "poll.h":                      [ "sys/poll.h" ],
+    "pthread.h":                   [ "endian.h", "sched.h", "time.h",
+                                     "sys/cdefs.h" ],
+    "regex.h":                     [ "limits.h", "sys/types.h" ],
+    "sched.h":                     [ "time.h" ],
+    "semaphore.h":                 [ "sys/types.h" ],
+    "spawn.h":                     [ "sched.h", "sys/types.h" ],
+    "termios.h":                   [ "sys/ttydefaults.h" ],
+
+    # POSIX sys/ headers
+    # mandated: sys/msg.h -> sys/ipc.h
+    #           sys/sem.h -> sys/ipc.h
+    #           sys/shm.h -> sys/ipc.h
+    # allowed:  sys/time.h -> sys/select.h
+    #           sys/wait.h -> signal.h
+    "sys/msg.h":                   [ "sys/ipc.h" ],
+    "sys/sem.h":                   [ "sys/ipc.h" ],
+    "sys/shm.h":                   [ "sys/ipc.h" ],
+    "sys/time.h":                  [ "sys/select.h" ],
+    "sys/types.h":                 [ "endian.h", "sys/select.h" ],
+    "sys/uio.h":                   [ "sys/types.h" ],
+    "sys/un.h":                    [ "string.h", "sys/cdefs.h" ],
+    "sys/wait.h":                  [ "signal.h" ],
+
+    # POSIX networking headers
+    # allowed: netdb.h -> netinet/in.h
+    #          arpa/inet.h -> netinet/in.h
+    "netdb.h":                     [ "netinet/in.h", "rpc/netdb.h" ],
+    "arpa/inet.h":                 [ "netinet/in.h" ],
+    "net/if.h":                    [ "sys/socket.h", "sys/types.h" ],
+    "netinet/in.h":                [ "endian.h", "sys/socket.h" ],
+    "netinet/tcp.h":               [ "stdint.h", "sys/socket.h",
+                                     "sys/types.h" ],
+
+    # Nonstandardized top-level headers
+    "aliases.h":                   [ "sys/types.h" ],
+    "ar.h":                        [ "sys/cdefs.h" ],
+    "argp.h":                      [ "ctype.h", "errno.h", "getopt.h",
+                                     "limits.h", "stdio.h" ],
+    "argz.h":                      [ "errno.h", "string.h" ],
+    "elf.h":                       [ "stdint.h" ],
+    "envz.h":                      [ "argz.h", "errno.h" ],
+    "fts.h":                       [ "sys/types.h" ],
+    "gshadow.h":                   [ "paths.h" ],
+    "ieee754.h":                   [ "endian.h", "float.h" ],
+    "lastlog.h":                   [ "utmp.h" ],
+    "libintl.h":                   [ "locale.h" ],
+    "link.h":                      [ "dlfcn.h", "elf.h", "sys/types.h" ],
+    "mntent.h":                    [ "paths.h" ],
+    "nss.h":                       [ "stdint.h" ],
+    "obstack.h":                   [ "string.h" ],
+    "proc_service.h":              [ "sys/procfs.h" ],
+    "pty.h":                       [ "sys/ioctl.h", "termios.h" ],
+    "sgtty.h":                     [ "sys/ioctl.h" ],
+    "shadow.h":                    [ "paths.h" ],
+    "stdio_ext.h":                 [ "stdio.h" ],
+    "thread_db.h":                 [ "pthread.h", "stdint.h", "sys/procfs.h",
+                                     "sys/types.h" ],
+    "ucontext.h":                  [ "sys/ucontext.h" ],
+    "utmp.h":                      [ "sys/types.h" ],
+    "utmpx.h":                     [ "sys/time.h" ],
+    "values.h":                    [ "float.h", "limits.h" ],
+
+    # Nonstandardized sys/ headers
+    "sys/acct.h":                  [ "endian.h", "stdint.h", "sys/types.h" ],
+    "sys/auxv.h":                  [ "elf.h", "sys/cdefs.h" ],
+    "sys/elf.h":                   [ "sys/procfs.h" ],
+    "sys/epoll.h":                 [ "stdint.h", "sys/types.h" ],
+    "sys/eventfd.h":               [ "stdint.h" ],
+    "sys/fanotify.h":              [ "stdint.h" ],
+    "sys/file.h":                  [ "fcntl.h" ],
+    "sys/fsuid.h":                 [ "sys/types.h" ],
+    "sys/gmon.h":                  [ "sys/types.h" ],
+    "sys/inotify.h":               [ "stdint.h" ],
+    "sys/ioctl.h":                 [ "sys/ttydefaults.h" ],
+    "sys/mount.h":                 [ "sys/ioctl.h" ],
+    "sys/mtio.h":                  [ "sys/ioctl.h", "sys/types.h" ],
+    "sys/param.h":                 [ "endian.h", "limits.h", "signal.h",
+                                     "sys/types.h" ],
+    "sys/platform/ppc.h":          [ "stdint.h" ],
+    "sys/procfs.h":                [ "sys/time.h", "sys/types.h",
+                                     "sys/user.h" ],
+    "sys/profil.h":                [ "sys/time.h", "sys/types.h" ],
+    "sys/ptrace.h":                [ "sys/ucontext.h" ],
+    "sys/quota.h":                 [ "sys/types.h" ],
+    "sys/random.h":                [ "sys/types.h" ],
+    "sys/raw.h":                   [ "stdint.h", "sys/ioctl.h" ],
+    "sys/sendfile.h":              [ "sys/types.h" ],
+    "sys/signalfd.h":              [ "stdint.h" ],
+    "sys/socketvar.h":             [ "sys/socket.h" ],
+    "sys/timerfd.h":               [ "time.h" ],
+    "sys/timex.h":                 [ "sys/time.h" ],
+    "sys/ttychars.h":              [ "sys/ttydefaults.h" ],
+    "sys/ucontext.h":              [ "sys/procfs.h" ],
+    "sys/user.h":                  [ "sys/types.h" ],
+    "sys/vfs.h":                   [ "sys/statfs.h" ],
+    "sys/xattr.h":                 [ "sys/types.h" ],
+
+    # Nonstandardized headers that do nothing but include some other
+    # header(s).  These exist for compatibility with old systems where
+    # the included header did not exist or didn't provide all the
+    # necessary definitions.
+    "memory.h":                    [ "string.h" ],
+    "poll.h":                      [ "sys/poll.h" ],
+    "re_comp.h":                   [ "regex.h" ],
+    "syslog.h":                    [ "sys/syslog.h" ],
+    "sys/bitypes.h":               [ "sys/types.h" ],
+    "sys/dir.h":                   [ "dirent.h" ],
+    "sys/errno.h":                 [ "errno.h" ],
+    "sys/fcntl.h":                 [ "fcntl.h" ],
+    "sys/signal.h":                [ "signal.h" ],
+    "sys/termios.h":               [ "termios.h" ],
+    "sys/unistd.h":                [ "unistd.h" ],
+    "syscall.h":                   [ "sys/syscall.h" ],
+    "termio.h":                    [ "sys/ioctl.h", "termios.h" ],
+    "wait.h":                      [ "sys/wait.h" ],
+
+    # Nonstandardized networking headers
+    "ifaddrs.h":                   [ "sys/socket.h" ],
+    "resolv.h":                    [ "arpa/nameser.h", "netinet/in.h",
+                                     "stdio.h", "sys/cdefs.h", "sys/param.h",\
+                                     "sys/types.h" ],
+
+    "arpa/nameser.h":              [ "arpa/nameser_compat.h", "stdint.h",
+                                     "sys/param.h", "sys/types.h" ],
+    "arpa/nameser_compat.h":       [ "endian.h" ],
+    "net/ethernet.h":              [ "stdint.h", "sys/types.h", "sys/cdefs.h",
+                                     "net/if_ether.h" ],
+    "net/if_arp.h":                [ "stdint.h", "sys/socket.h",
+                                     "sys/types.h", "sys/cdefs.h" ],
+    "net/if_ppp.h":                [ "net/if.h", "net/ppp_defs.h", "stdint.h",
+                                     "sys/ioctl.h", "sys/types.h" ],
+    "net/if_shaper.h":             [ "net/if.h", "stdint.h", "sys/ioctl.h",
+                                     "sys/types.h" ],
+    "net/route.h":                 [ "netinet/in.h", "sys/socket.h",
+                                     "sys/types.h" ],
+    "netatalk/at.h":               [ "sys/socket.h" ],
+    "netinet/ether.h":             [ "netinet/if_ether.h" ],
+    "netinet/icmp6.h":             [ "inttypes.h", "netinet/in.h", "string.h",
+                                     "sys/types.h" ],
+    "netinet/if_ether.h":          [ "net/ethernet.h", "net/if_arp.h",
+                                     "sys/types.h", "stdint.h" ],
+    "netinet/if_fddi.h":           [ "stdint.h", "sys/types.h" ],
+    "netinet/if_tr.h":             [ "stdint.h", "sys/types.h" ],
+    "netinet/igmp.h":              [ "netinet/in.h", "sys/cdefs.h",
+                                     "sys/types.h" ],
+    "netinet/in_systm.h":          [ "stdint.h", "sys/types.h" ],
+    "netinet/ip.h":                [ "netinet/in.h", "sys/types.h" ],
+    "netinet/ip6.h":               [ "inttypes.h", "netinet/in.h" ],
+    "netinet/ip_icmp.h":           [ "netinet/in.h", "netinet/ip.h",
+                                     "stdint.h", "sys/types.h" ],
+    "netinet/udp.h":               [ "stdint.h", "sys/types.h" ],
+    "netipx/ipx.h":                [ "stdint.h", "sys/types.h" ],
+    "netrom/netrom.h":             [ "netax25/ax25.h" ],
+    "netrose/rose.h":              [ "netax25/ax25.h", "sys/socket.h" ],
+    "protocols/routed.h":          [ "sys/socket.h" ],
+    "protocols/rwhod.h":           [ "paths.h", "sys/types.h" ],
+    "protocols/talkd.h":           [ "stdint.h", "sys/socket.h",
+                                     "sys/types.h" ],
+    "protocols/timed.h":           [ "sys/time.h", "sys/types.h" ],
+
+    # Internal headers
+    "features.h":                  [ "gnu/stubs.h", "stdc-predef.h",
+                                     "sys/cdefs.h" ],
+
+    "bits/fcntl.h":                [ "sys/types.h" ],
+    "bits/ipc.h":                  [ "sys/types.h" ],
+    "bits/procfs.h":               [ "signal.h", "sys/ucontext.h" ],
+    "bits/pthreadtypes-arch.h":    [ "endian.h" ],
+    "bits/sem.h":                  [ "sys/types.h" ],
+    "bits/socket.h":               [ "sys/types.h" ],
+    "bits/stat.h":                 [ "endian.h" ],
+    "bits/statfs.h":               [ "endian.h" ],
+    "bits/types/res_state.h":      [ "netinet/in.h", "sys/types.h" ],
+    "bits/utmp.h":                 [ "paths.h", "sys/time.h", "sys/types.h" ],
+    "bits/utmpx.h":                [ "paths.h", "sys/time.h" ],
+    "bits/wctype-wchar.h":         [ "endian.h" ],
+}
+
+# As above, but each group of whitelist entries is only used for
+# headers whose pathname includes a sysdeps directory with that name.
+# This allows us, for instance, to restrict the use of Linux kernel
+# headers to the Linux-specific variants of glibc headers.
+SYSDEP_ALLOWED_INCLUDES = {
+    'linux': {
+        # Nonstandardized sys/ headers
+        "sys/cachectl.h":          [ "asm/cachectl.h" ],
+        "sys/fanotify.h":          [ "linux/fanotify.h" ],
+        "sys/kd.h":                [ "linux/kd.h" ],
+        "sys/pci.h":               [ "linux/pci.h" ],
+        "sys/prctl.h":             [ "linux/prctl.h" ],
+        "sys/quota.h":             [ "linux/quota.h" ],
+        "sys/syscall.h":           [ "asm/unistd.h" ],
+        "sys/sysctl.h":            [ "linux/sysctl.h" ],
+        "sys/sysinfo.h":           [ "linux/kernel.h" ],
+        "sys/user.h":              [ "asm/ptrace.h", "asm/reg.h" ],
+        "sys/vm86.h":              [ "asm/vm86.h" ],
+
+        # Nonstandardized networking headers
+        "net/ethernet.h":          [ "linux/if_ether.h" ],
+        "net/if_slip.h":           [ "linux/if_slip.h" ],
+        "net/ppp_defs.h":          [ "asm/types.h", "linux/ppp_defs.h" ],
+        "netatalk/at.h":           [ "asm/types.h", "linux/atalk.h" ],
+        "netinet/if_ether.h":      [ "linux/if_ether.h" ],
+        "netinet/if_fddi.h":       [ "linux/if_fddi.h" ],
+
+        # Alternative names for kernel headers
+        "net/ppp-comp.h":          [ "linux/ppp-comp.h" ],
+        "nfs/nfs.h":               [ "linux/nfs.h" ],
+        "sys/soundcard.h":         [ "linux/soundcard.h" ],
+        "sys/vt.h":                [ "linux/vt.h" ],
+
+        # Internal headers
+        "bits/errno.h":            [ "linux/errno.h" ],
+        "bits/fcntl-linux.h":      [ "linux/falloc.h" ],
+        "bits/ioctl-types.h":      [ "asm/ioctls.h" ],
+        "bits/ioctls.h":           [ "asm/ioctls.h", "linux/sockios.h" ],
+        "bits/local_lim.h":        [ "linux/limits.h" ],
+        "bits/param.h":            [ "linux/limits.h", "linux/param.h" ],
+        "bits/procfs.h":           [ "asm/ptrace.h" ],
+        "bits/sigcontext.h":       [ "asm/sigcontext.h" ],
+        "bits/socket.h":           [ "asm/socket.h" ],
+    },
+
+    'mach': {
+        "bits/spin-lock-inline.h": [ "errno.h", "lock-intern.h" ],
+        "bits/sigcontext.h":       [ "mach/machine/fp_reg.h" ],
+    },
+
+    'mips': {
+        "fpregdef.h":              [ "sys/fpregdef.h" ],
+        "regdef.h":                [ "sys/fpregdef.h", "sys/regdef.h" ],
+
+        "sys/asm.h":               [ "sgidefs.h" ],
+        "sys/fpregdef.h":          [ "sgidefs.h" ],
+        "sys/regdef.h":            [ "sgidefs.h" ],
+        "sys/tas.h":               [ "sgidefs.h" ],
+        "sys/ucontext.h":          [ "sgidefs.h" ],
+        "sys/user.h":              [ "sgidefs.h" ],
+
+        "bits/fcntl.h":            [ "sgidefs.h" ],
+        "bits/link.h":             [ "sgidefs.h" ],
+        "bits/long-double.h":      [ "sgidefs.h" ],
+        "bits/procfs.h":           [ "sgidefs.h" ],
+        "bits/setjmp.h":           [ "sgidefs.h" ],
+        "bits/sigcontext.h":       [ "sgidefs.h" ],
+        "bits/stat.h":             [ "sgidefs.h" ],
+        "bits/wordsize.h":         [ "sgidefs.h" ],
+    },
+}
+
+# Headers that are exempt from the nested includes check.  This is a
+# giant regex because fnmatch.fnmatch doesn't treat / specially and
+# glob.glob can't be applied to anything but the file system.
+#
+# Hurd-specific headers are exempt for now, because for them, nested
+# include minimization is not a pure cleanup project, the way it is
+# for the standard headers.  The Hurd maintainers first need to make
+# some design decisions about which headers _should_ include which
+# other headers.
+#
+# Sun RPC headers are exempt because most of them are obsolete within
+# glibc; cleanups should be done within the TIRPC project instead.
+# (Same rationale as for exempting them from the obsolete-types checks.)
+NESTED_INCLUDES_EXEMPT_RE = re.compile(r"""
+    (?: \A | / ) (?:
+
+    # Hurd-specific headers
+        faultexc_server\.h
+      | hurd\.h
+      | lock-intern\.h
+      | mach\.h
+      | mach_error\.h
+      | mach_init\.h
+      | mach-shortcuts\.h
+      | spin-lock\.h
+      | device/[^/]+?\.h
+      | mach/[^/]+?\.h
+      | mach/i386/[^/]+?\.h
+      | hurd/[^/]+?\.h
+
+    # Sun RPC headers
+      | rpc/[^/]+?\.[hx]
+      | rpcsvc/[^/]+?\.[hx]
+
+    ) \Z
+""", re.VERBOSE)
+
+
+def get_allowed_nested(fname):
+    """Retrieve the set of allowed nested includes for a header whose
+       filename is FNAME."""
+    HEADER_ALLOWED = HEADER_ALLOWED_INCLUDES
+    SYSDEP_ALLOWED = SYSDEP_ALLOWED_INCLUDES
+
+    allowed = UNIVERSAL_ALLOWED_INCLUDES.copy()
+    sysdirs = {}
+
+    # HEADER_ALLOWED is keyed by the name to be used in an #include,
+    # which is some suffix of the filename; we don't know how many
+    # directory components to chop off, so we go one at a time until
+    # we find a match.  os.path does not include a utility function to
+    # chop off the _first_ component of a pathname.
+    fname = os.path.normpath(fname)
+    inc = fname
+    while True:
+        try:
+            allowed.update(HEADER_ALLOWED[inc])
+            break
+
+        except KeyError:
+            pos = inc.find('/')
+            if pos == -1:
+                break
+            dirname = inc[:pos]
+            inc = inc[(pos+1):]
+            if not inc:
+                break
+            if dirname in SYSDEP_ALLOWED and dirname not in sysdirs:
+                sysdirs[dirname] = SYSDEP_ALLOWED[dirname]
+
+    for hgroup in sysdirs.values():
+        inc = fname
+        while True:
+            try:
+                allowed.update(hgroup[inc])
+                break
+            except KeyError:
+                pos = inc.find('/')
+                if pos == -1:
+                    break
+                dirname = inc[:pos]
+                inc = inc[(pos+1):]
+                if not inc:
+                    break
+
+    return frozenset(allowed)
+
+class NestedIncludeWhitelistOnly(ConstructChecker):
+    def __init__(self, reporter, fname):
+        super().__init__(reporter)
+        self.allowed_nested = get_allowed_nested(fname)
+
+    def examine(self, tok):
+        if tok.kind == "HEADER_NAME":
+            included = tok.text[1:-1] # chop off "" or <>
+            if included in self.allowed_nested:
+                pass
+            # We allow any public header to include any bits header.
+            # More specific rules about which bits headers should be
+            # used by which public headers are enforced by the bits
+            # headers themselves.
+            elif included.startswith("bits/"):
+                pass
+            else:
+                self.reporter.error(tok, "inappropriate inclusion of {!r}")
+
+
+def NestedIncludeChecker(reporter, fname):
+    if NESTED_INCLUDES_EXEMPT_RE.search(fname):
+        sys.stderr.write("# Arbitrary nested includes allowed for {}\n"
+                         .format(fname))
+        return NoCheck(reporter)
+    else:
+        return NestedIncludeWhitelistOnly(reporter, fname)
+
+#
 # Master control
 #
 
@@ -508,9 +926,11 @@ class HeaderChecker:
             return
 
         typedef_checker = ObsoleteTypedefChecker(self, self.fname)
+        nested_checker = NestedIncludeChecker(self, self.fname)
 
         for tok in tokenize_c(contents, self):
             typedef_checker.examine(tok)
+            nested_checker.examine(tok)
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
