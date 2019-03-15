@@ -511,7 +511,6 @@ HEADER_ALLOWED_INCLUDES = {
     # mandated: inttypes.h -> stdint.h
     #           tgmath.h   -> complex.h, math.h
     #           threads.h  -> time.h
-    "ctype.h":                     [ "endian.h" ],
     "inttypes.h":                  [ "stdint.h" ],
     "signal.h":                    [ "sys/ucontext.h" ],
     "stdlib.h":                    [ "alloca.h", "sys/types.h" ],
@@ -557,7 +556,7 @@ HEADER_ALLOWED_INCLUDES = {
     "netdb.h":                     [ "netinet/in.h", "rpc/netdb.h" ],
     "arpa/inet.h":                 [ "netinet/in.h" ],
     "net/if.h":                    [ "sys/socket.h", "sys/types.h" ],
-    "netinet/in.h":                [ "endian.h", "sys/socket.h" ],
+    "netinet/in.h":                [ "sys/socket.h" ],
     "netinet/tcp.h":               [ "stdint.h", "sys/socket.h",
                                      "sys/types.h" ],
 
@@ -570,7 +569,7 @@ HEADER_ALLOWED_INCLUDES = {
     "envz.h":                      [ "argz.h", "errno.h" ],
     "fts.h":                       [ "sys/types.h" ],
     "gshadow.h":                   [ "paths.h" ],
-    "ieee754.h":                   [ "endian.h", "float.h" ],
+    "ieee754.h":                   [ "float.h" ],
     "lastlog.h":                   [ "utmp.h" ],
     "libintl.h":                   [ "locale.h" ],
     "link.h":                      [ "dlfcn.h", "elf.h", "sys/types.h" ],
@@ -651,7 +650,6 @@ HEADER_ALLOWED_INCLUDES = {
 
     "arpa/nameser.h":              [ "arpa/nameser_compat.h", "stdint.h",
                                      "sys/param.h", "sys/types.h" ],
-    "arpa/nameser_compat.h":       [ "endian.h" ],
     "net/ethernet.h":              [ "stdint.h", "sys/types.h",
                                      "net/if_ether.h" ],
     "net/if_arp.h":                [ "stdint.h", "sys/socket.h",
@@ -693,15 +691,11 @@ HEADER_ALLOWED_INCLUDES = {
     "bits/fcntl.h":                [ "sys/types.h" ],
     "bits/ipc.h":                  [ "sys/types.h" ],
     "bits/procfs.h":               [ "signal.h", "sys/ucontext.h" ],
-    "bits/pthreadtypes-arch.h":    [ "endian.h" ],
     "bits/sem.h":                  [ "sys/types.h" ],
     "bits/socket.h":               [ "sys/types.h" ],
-    "bits/stat.h":                 [ "endian.h" ],
-    "bits/statfs.h":               [ "endian.h" ],
     "bits/types/res_state.h":      [ "netinet/in.h", "sys/types.h" ],
     "bits/utmp.h":                 [ "paths.h", "sys/time.h", "sys/types.h" ],
     "bits/utmpx.h":                [ "paths.h", "sys/time.h" ],
-    "bits/wctype-wchar.h":         [ "endian.h" ],
 }
 
 # As above, but each group of whitelist entries is only used for

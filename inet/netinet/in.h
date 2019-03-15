@@ -380,9 +380,9 @@ extern uint32_t htonl (uint32_t __hostlong)
 extern uint16_t htons (uint16_t __hostshort)
      __THROW __attribute__ ((__const__));
 
-#include <endian.h>
 
 /* Get machine dependent optimized versions of byte swapping functions.  */
+#include <bits/endian.h>
 #include <bits/byteswap.h>
 #include <bits/uintn-identity.h>
 

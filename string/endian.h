@@ -23,14 +23,12 @@
 /* Get the definitions of __*_ENDIAN, __BYTE_ORDER, and __FLOAT_WORD_ORDER.  */
 #include <bits/endian.h>
 
-#ifdef __USE_MISC
-# define LITTLE_ENDIAN	__LITTLE_ENDIAN
-# define BIG_ENDIAN	__BIG_ENDIAN
-# define PDP_ENDIAN	__PDP_ENDIAN
-# define BYTE_ORDER	__BYTE_ORDER
-#endif
+#define LITTLE_ENDIAN	__LITTLE_ENDIAN
+#define BIG_ENDIAN	__BIG_ENDIAN
+#define PDP_ENDIAN	__PDP_ENDIAN
+#define BYTE_ORDER	__BYTE_ORDER
 
-#if defined __USE_MISC && !defined __ASSEMBLER__
+#ifndef __ASSEMBLER__
 /* Conversion interfaces.  */
 # include <bits/byteswap.h>
 # include <bits/uintn-identity.h>

@@ -29,7 +29,7 @@
 #ifndef _ARPA_NAMESER_COMPAT_
 #define	_ARPA_NAMESER_COMPAT_
 
-#include <endian.h>
+#include <bits/endian.h>
 
 /*%
  * Structure for query header.  The order of the fields is machine- and
