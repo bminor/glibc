@@ -530,13 +530,13 @@ HEADER_ALLOWED_INCLUDES = {
     # mandated: sys/msg.h -> sys/ipc.h
     #           sys/sem.h -> sys/ipc.h
     #           sys/shm.h -> sys/ipc.h
-    # allowed:  sys/time.h -> sys/select.h
-    #           sys/wait.h -> signal.h
+    #           sys/time.h -> sys/select.h (effectively)
+    # allowed:  sys/wait.h -> signal.h
     "sys/msg.h":                   [ "sys/ipc.h" ],
     "sys/sem.h":                   [ "sys/ipc.h" ],
     "sys/shm.h":                   [ "sys/ipc.h" ],
     "sys/time.h":                  [ "sys/select.h" ],
-    "sys/types.h":                 [ "endian.h", "sys/select.h" ],
+    "sys/types.h":                 [ "endian.h" ],
     "sys/uio.h":                   [ "sys/types.h" ],
     "sys/un.h":                    [ "string.h" ],
     "sys/wait.h":                  [ "signal.h" ],

@@ -53,6 +53,7 @@
 
 #include <features.h>
 #include <rpc/rpc_msg.h>
+#include <sys/select.h>
 
 __BEGIN_DECLS
 

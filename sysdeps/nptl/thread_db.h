@@ -26,7 +26,7 @@
 #include <stdint.h>
 #include <sys/types.h>
 #include <sys/procfs.h>
-
+#include <bits/types/sigset_t.h>
 
 /* Error codes of the library.  */
 typedef enum

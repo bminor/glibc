@@ -18,7 +18,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <stdio.h>
-#include <sys/types.h>
+#include <sys/select.h>
 
 static int
 do_test (void)

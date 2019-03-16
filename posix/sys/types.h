@@ -93,9 +93,6 @@ __BEGIN_DECLS
 
 /* In BSD <sys/types.h> is expected to define BYTE_ORDER.  */
 # include <endian.h>
-
-/* It also defines `fd_set' and the FD_* macros for `select'.  */
-# include <sys/select.h>
 #endif /* Use misc.  */
 
 __END_DECLS

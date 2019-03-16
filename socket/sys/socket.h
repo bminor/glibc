@@ -35,6 +35,10 @@ __BEGIN_DECLS
 # include <bits/types/struct_osockaddr.h>
 #endif
 
+#ifdef __USE_GNU
+struct timespec;
+#endif
+
 /* The following constants should be used for the second parameter of
    `shutdown'.  */
 enum

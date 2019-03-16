@@ -46,6 +46,7 @@ while read t; do
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/resource.h>
+#include <sys/select.h>
 #include <unistd.h>
 void foo ($t) { }
 EOF
