@@ -1,3 +1,9 @@
+2019-03-20  mansayk  <6688000@gmail.com>
+
+	[BZ #24296]
+	* localedata/locales/tt_RU (day): Update from CLDR-34, fix errors.
+	(abday): Likewise, but remove the trailing dots.
+
 2019-03-19  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/aarch64/bits/hwcap.h (HWCAP_SB): New
