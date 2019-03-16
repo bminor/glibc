@@ -1,5 +1,10 @@
 2019-05-28  mansayk  <6688000@gmail.com>
 
+	[BZ #24370]
+	* localedata/locales/tt_RU (lang_name): Add from CLDR-35.1.
+
+2019-05-28  mansayk  <6688000@gmail.com>
+
 	[BZ #24369]
 	* localedata/locales/tt_RU (mon): Update from CLDR-35.1, fix errors.
 	(abmon): Likewise, but remove the trailing dots.
