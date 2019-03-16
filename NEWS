@@ -24,6 +24,10 @@ Security related changes:
   memcmp gave the wrong result since it treated the size argument as
   zero.  Reported by H.J. Lu.
 
+  CVE-2019-9169: Attempted case-insensitive regular-expression match
+  via proceed_next_node in posix/regexec.c leads to heap-based buffer
+  over-read.  Reported by Hongxu Chen.
+
 
 Version 2.29
 

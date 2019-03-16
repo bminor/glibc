@@ -1,5 +1,6 @@
 2019-01-31  Paul Eggert  <eggert@cs.ucla.edu>
 
+	CVE-2019-9169
 	regex: fix read overrun [BZ #24114]
 	Problem found by AddressSanitizer, reported by Hongxu Chen in:
 	https://debbugs.gnu.org/34140
