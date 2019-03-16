@@ -76,6 +76,10 @@ Security related changes:
   CVE-2016-10739: The getaddrinfo function could successfully parse IPv4
   addresses with arbitrary trailing characters, potentially leading to data
   or command injection issues in applications.
+
+  CVE-2019-9169: Attempted case-insensitive regular-expression match
+  via proceed_next_node in posix/regexec.c leads to heap-based buffer
+  over-read.  Reported by Hongxu Chen.
 
 Version 2.28
 
