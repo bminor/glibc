@@ -173,8 +173,7 @@ extern int _hurd_core_limit;
    As a consequence, a critical section will see its RPCs return EINTR, even if
    SA_RESTART is set!  In that case, the critical section should be left, so
    that the handler can run, and the whole critical section be tried again, to
-   avoid unexpectingly exposing EINTR to the application.
-   */
+   avoid unexpectingly exposing EINTR to the application.  */
 
 extern void *_hurd_critical_section_lock (void);
 
