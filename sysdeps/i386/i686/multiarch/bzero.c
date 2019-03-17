@@ -21,6 +21,7 @@
 #if IS_IN (libc)
 # define bzero __redirect_bzero
 # include <string.h>
+# include <strings.h>
 # undef bzero
 
 # define SYMBOL_NAME bzero

@@ -20,6 +20,7 @@
 #if IS_IN (libc)
 # define bzero __redirect_bzero
 # include <string.h>
+# include <strings.h>
 # undef bzero
 
 # include <sparc-ifunc.h>

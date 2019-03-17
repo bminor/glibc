@@ -21,6 +21,7 @@
 #if IS_IN (libc)
 # define bcopy __redirect_bcopy
 # include <string.h>
+# include <strings.h>
 # undef bcopy
 
 # define SYMBOL_NAME bcopy

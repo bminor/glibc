@@ -18,6 +18,7 @@
 
 #include <assert.h>
 #include <string.h>
+#include <strings.h>
 #include <wchar.h>
 #include <ifunc-impl-list.h>
 #include "init-arch.h"

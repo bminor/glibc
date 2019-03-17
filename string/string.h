@@ -427,7 +427,7 @@ extern char *strerror_l (int __errnum, locale_t __l) __THROW;
 #endif
 
 #ifdef __USE_MISC
-# include <strings.h>
+# include <bits/strings_x2k8.h>
 
 /* Set N bytes of S to 0.  The compiler will not delete a call to this
    function, even if S is dead after the call.  */

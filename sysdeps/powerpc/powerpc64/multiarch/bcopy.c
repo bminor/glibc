@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <string.h>
+#include <strings.h>
 #include "init-arch.h"
 
 extern __typeof (bcopy) __bcopy_ppc attribute_hidden;

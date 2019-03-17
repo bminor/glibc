@@ -23,7 +23,7 @@ subdir	:= string
 include ../Makeconfig
 
 headers		:= string.h bits/string_fortified.h			\
-		   strings.h bits/strings_fortified.h			\
+		   strings.h bits/strings_x2k8.h bits/strings_fortified.h \
 		   byteswap.h bits/byteswap.h				\
 		   endian.h bits/endian.h bits/endianness.h		\
 		   bits/uintn-identity.h				\

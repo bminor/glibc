@@ -18,6 +18,7 @@
 
 #include <assert.h>
 #include <string.h>
+#include <strings.h>
 #include <wchar.h>
 #include <ldsodefs.h>
 #include <sysdep.h>

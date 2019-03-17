@@ -506,7 +506,6 @@ HEADER_ALLOWED_INCLUDES = {
     "inttypes.h":                  [ "stdint.h" ],
     "signal.h":                    [ "sys/ucontext.h" ],
     "stdlib.h":                    [ "alloca.h", "sys/types.h" ],
-    "string.h":                    [ "strings.h" ],
     "tgmath.h":                    [ "complex.h", "math.h" ],
     "threads.h":                   [ "time.h" ],
 

@@ -19,6 +19,7 @@
 #include <ifunc-memset.h>
 #if HAVE_MEMSET_IFUNC
 # include <string.h>
+# include <strings.h>
 # include <ifunc-resolve.h>
 
 # if HAVE_MEMSET_Z900_G5

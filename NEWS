@@ -187,6 +187,9 @@ Deprecated and removed features, and other changes affecting compatibility:
 * The obsolete and never-implemented XSI STREAMS header files <stropts.h>
   and <sys/stropts.h> have been removed.
 
+* The obsolete functions bcmp, bcopy, bzero, index, and rindex are no
+  longer declared in <string.h>, only <strings.h>.
+
 * The typedefs u_int8_t, u_int16_t, u_int32_t, u_int64_t, and register_t
   are no longer defined by <sys/types.h> in strict conformance modes.
   These types were historically provided by <sys/types.h> on BSD systems,

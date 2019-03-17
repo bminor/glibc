@@ -55,6 +55,7 @@ extern impl_t __start_impls[], __stop_impls[];
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <sys/mman.h>
 #include <sys/param.h>
 #include <unistd.h>
