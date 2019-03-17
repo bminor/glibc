@@ -1,3 +1,40 @@
+2019-06-17  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/Makefile
+	(libm-sysdep_routines): Add s_llrint-power8, s_llrint-power6x, and
+	s_llrint-ppc64.
+	(CFLAGS-s_llrint-power8.c, CFLAGS-s_llrint-power6x.c): New rule.
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_llrint-power6x.c: New
+	file.
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_llrint-power8.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_llrint-ppc64.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_lrint.c: Move to ...
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_lrint.c: ... here.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llrint.c: Move to ...
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_llrint.c: ... here.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llrintf.c: Move to ...
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_llrintf.c: ... here.
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_lrint.c: New file.
+	* sysdeps/powerpc/powerpc64/fpu/Makefile: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile
+	(libm-sysdep_routines): Remove s_llrint-* objects.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llrint-power6x.S: Remove
+	file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llrint-power8.S:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llrint-ppc64.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_llrint.c: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_llrintf.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_lrint.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_lrintf.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_llrint.S: Remove file.
+	* sysdeps/powerpc/powerpc64/fpu/s_llrintf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_lrint.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power6x/fpu/s_llrint.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_llrint.S: Likewise.
+
 2019-06-14  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/statx.h: Use string literal in
