@@ -530,7 +530,6 @@ HEADER_ALLOWED_INCLUDES = {
     "glob.h":                      [ "sys/cdefs.h" ],
     "langinfo.h":                  [ "nl_types.h" ],
     "mqueue.h":                    [ "fcntl.h", "sys/types.h" ],
-    "poll.h":                      [ "sys/poll.h" ],
     "pthread.h":                   [ "endian.h", "sched.h", "time.h",
                                      "sys/cdefs.h" ],
     "regex.h":                     [ "limits.h", "sys/types.h" ],
@@ -633,12 +632,12 @@ HEADER_ALLOWED_INCLUDES = {
     # the included header did not exist or didn't provide all the
     # necessary definitions.
     "memory.h":                    [ "string.h" ],
-    "poll.h":                      [ "sys/poll.h" ],
     "re_comp.h":                   [ "regex.h" ],
     "sys/bitypes.h":               [ "sys/types.h" ],
     "sys/dir.h":                   [ "dirent.h" ],
     "sys/errno.h":                 [ "errno.h" ],
     "sys/fcntl.h":                 [ "fcntl.h" ],
+    "sys/poll.h":                  [ "poll.h" ],
     "sys/signal.h":                [ "signal.h" ],
     "sys/syslog.h":                [ "syslog.h" ],
     "sys/termios.h":               [ "termios.h" ],

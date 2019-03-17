@@ -15,8 +15,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _SYS_POLL_H
-# error "Never use <bits/poll.h> directly; include <sys/poll.h> instead."
+#ifndef _BITS_POLL_H
+#define _BITS_POLL_H 1
+
+#ifndef _POLL_H
+# error "Never use <bits/poll.h> directly; include <poll.h> instead."
 #endif
 
 /* Event types that can be polled for.  These bits may be set in `events'
@@ -40,3 +43,5 @@
 #define POLLERR         010             /* Error condition.  */
 #define POLLHUP         020             /* Hung up.  */
 #define POLLNVAL        040             /* Invalid polling request.  */
+
+#endif /* bits/poll.h */

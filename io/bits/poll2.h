@@ -16,8 +16,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _SYS_POLL_H
-# error "Never include <bits/poll2.h> directly; use <sys/poll.h> instead."
+#ifndef _BITS_POLL2_H
+#define _BITS_POLL2_H 1
+
+#ifndef _POLL_H
+# error "Never include <bits/poll2.h> directly; use <poll.h> instead."
 #endif
 
 
@@ -79,3 +82,5 @@ ppoll (struct pollfd *__fds, nfds_t __nfds, const struct timespec *__timeout,
 #endif
 
 __END_DECLS
+
+#endif /* bits/poll2.h */
