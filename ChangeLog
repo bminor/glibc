@@ -1,3 +1,47 @@
+2019-04-30  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Make mktime etc. compatible with __time64_t
+	Keep these functions compatible with Gnulib while adding
+	__time64_t support.  The basic idea is to move private API
+	declarations from include/time.h to time/mktime-internal.h, since
+	the former file cannot easily be shared with Gnulib whereas the
+	latter can.
+	Also, do some other minor cleanup while in the neighborhood.
+	* include/time.h: Include stdbool.h, time/mktime-internal.h.
+	(__mktime_internal): Move this prototype to time/mktime-internal.h,
+	since Gnulib needs it.
+	(__localtime64_r, __gmtime64_r) [__TIMESIZE == 64]:
+	Move these macros to time/mktime-internal.h, since Gnulib needs them.
+	(__mktime64, __timegm64) [__TIMESIZE != 64]: New prototypes.
+	(in_time_t_range): New static function.
+	* posix/bits/types.h (__time64_t): Move to time/mktime-internal.h,
+	so that glibc users are not tempted to use __time64_t.
+	* time/mktime-internal.h: Rewrite so that it does both glibc
+	and Gnulib work.  Include time.h if not _LIBC.
+	(mktime_offset_t) [!_LIBC]: Define for gnulib.
+	(__time64_t): New type or macro, moved here from
+	posix/bits/types.h.
+	(__gmtime64_r, __localtime64_r, __mktime64, __timegm64)
+	[!_LIBC || __TIMESIZE == 64): New macros, mostly moved here
+	from include/time.h.
+	(__gmtime_r, __localtime_r, __mktime_internal) [!_LIBC]:
+	New macros, taken from GNulib.
+	(__mktime_internal): New prototype, moved here from include/time.h.
+	* time/mktime.c (mktime_min, mktime_max, convert_time)
+	(ranged_convert, __mktime_internal, __mktime64):
+	* time/timegm.c (__timegm64):
+	Use __time64_t, not time_t.
+	* time/mktime.c: Stop worrying about whether time_t is floating-point.
+	(__mktime64) [! (_LIBC && __TIMESIZE != 64)]:
+	Rename from mktime.
+	(mktime) [_LIBC && __TIMESIZE != 64]: New function.
+	* time/timegm.c [!_LIBC]: Include libc-config.h, not config.h,
+	for libc_hidden_def.
+	Include errno.h.
+	(__timegm64) [! (_LIBC && __TIMESIZE != 64)]:
+	Rename from timegm.
+	(timegm) [_LIBC && __TIMESIZE != 64]: New function.
+
 2019-04-30  Maciej W. Rozycki  <macro@wdc.com>
 
 	[BZ #19444]

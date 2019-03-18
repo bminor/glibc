@@ -3,6 +3,8 @@
 
 #ifndef _ISOMAC
 # include <bits/types/locale_t.h>
+# include <stdbool.h>
+# include <time/mktime-internal.h>
 
 extern __typeof (strftime_l) __strftime_l;
 libc_hidden_proto (__strftime_l)
@@ -49,19 +51,11 @@ extern void __tzset_parse_tz (const char *tz) attribute_hidden;
 extern void __tz_compute (__time64_t timer, struct tm *tm, int use_localtime)
   __THROW attribute_hidden;
 
-/* Subroutine of `mktime'.  Return the `time_t' representation of TP and
-   normalize TP, given that a `struct tm *' maps to a `time_t' as performed
-   by FUNC.  Record next guess for localtime-gmtime offset in *OFFSET.  */
-extern time_t __mktime_internal (struct tm *__tp,
-				 struct tm *(*__func) (const time_t *,
-						       struct tm *),
-				 long int *__offset) attribute_hidden;
-
 #if __TIMESIZE == 64
 # define __ctime64 ctime
 #else
 extern char *__ctime64 (const __time64_t *__timer) __THROW;
-libc_hidden_proto (__ctime64);
+libc_hidden_proto (__ctime64)
 #endif
 
 #if __TIMESIZE == 64
@@ -69,7 +63,7 @@ libc_hidden_proto (__ctime64);
 #else
 extern char *__ctime64_r (const __time64_t *__restrict __timer,
 		          char *__restrict __buf) __THROW;
-libc_hidden_proto (__ctime64_r);
+libc_hidden_proto (__ctime64_r)
 #endif
 
 #if __TIMESIZE == 64
@@ -81,13 +75,13 @@ libc_hidden_proto (__localtime64)
 
 extern struct tm *__localtime_r (const time_t *__timer,
 				 struct tm *__tp) attribute_hidden;
-
-#if __TIMESIZE == 64
-# define __localtime64_r __localtime_r
-#else
+#if __TIMESIZE != 64
 extern struct tm *__localtime64_r (const __time64_t *__timer,
 				   struct tm *__tp);
 libc_hidden_proto (__localtime64_r)
+
+extern __time64_t __mktime64 (struct tm *__tp) __THROW;
+libc_hidden_proto (__mktime64)
 #endif
 
 extern struct tm *__gmtime_r (const time_t *__restrict __timer,
@@ -99,14 +93,13 @@ libc_hidden_proto (__gmtime_r)
 #else
 extern struct tm *__gmtime64 (const __time64_t *__timer);
 libc_hidden_proto (__gmtime64)
-#endif
 
-#if __TIMESIZE == 64
-# define __gmtime64_r __gmtime_r
-#else
 extern struct tm *__gmtime64_r (const __time64_t *__restrict __timer,
 				struct tm *__restrict __tp);
-libc_hidden_proto (__gmtime64_r);
+libc_hidden_proto (__gmtime64_r)
+
+extern __time64_t __timegm64 (struct tm *__tp) __THROW;
+libc_hidden_proto (__timegm64)
 #endif
 
 /* Compute the `struct tm' representation of T,
@@ -154,6 +147,14 @@ extern double __difftime (time_t time1, time_t time0);
 /* Use in the clock_* functions.  Size of the field representing the
    actual clock ID.  */
 #define CLOCK_IDFIELD_SIZE	3
+
+/* Check whether T fits in time_t.  */
+static inline bool
+in_time_t_range (__time64_t t)
+{
+  time_t s = t;
+  return s == t;
+}
 
 #endif
 #endif
