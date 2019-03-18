@@ -24,6 +24,12 @@
 long long int
 __llrintf (float x)
 {
+#ifdef _ARCH_PWR4
+  /* Assume powerpc64 instructions availability.  */
+  long long int ret;
+  __asm__ ("fctid %0, %1" : "=d" (ret) : "d" (x));
+  return ret;
+#else
   float rx = rintf (x);
   if (HAVE_PPC_FCTIDZ || rx != x)
     return (long long int) rx;
@@ -43,5 +49,6 @@ __llrintf (float x)
       mant <<= exponent - 23;
       return (long long int) ((i0 & 0x80000000) != 0 ? -mant : mant);
     }
+#endif
 }
 libm_alias_float (__llrint, llrint)

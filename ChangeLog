@@ -1,5 +1,44 @@
 2019-06-17  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/powerpc/fpu/s_lrintf.S: Remove file.
+	* sysdeps/powerpc/powerpc64/fpu/s_lrintf.c: Move to ...
+	* sysdeps/powerpc/fpu/s_lrintf.c: ... here.
+	* sysdeps/powerpc/powerpc32/fpu/Makefile
+	[$(subdir) == math] (CFLAGS-s_lrint.c): New rule.
+	* sysdeps/powerpc/powerpc32/fpu/s_llrint.c (__llrint): Add power4
+	optimization.
+	* sysdeps/powerpc/powerpc32/fpu/s_llrintf.c (__llrintf): Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/s_lrint.S: Remove file.
+	* sysdeps/powerpc/powerpc32/fpu/s_lrint.c: New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile
+	(CFLAGS-s_llrintf-power6.c, CFLAGS-s_llrintf-ppc32.c,
+	CFLAGS-s_llrint-power6.c, CFLAGS-s_llrint-ppc32.c,
+	CFLAGS-s_lrint-ppc32.c): New rule.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_llrint-power6.S:
+	Remove file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_llrint-ppc32.S:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_llrintf-power6.S:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_llrintf-ppc32.S:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_lrint-ppc32.S:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/s_llrint.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/s_llrintf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_llrint.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_llrintf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_llrint-power6.c:
+	New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_llrint-ppc32.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_llrintf-power6.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_llrintf-ppc32.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_lrint-ppc32.c:
+	Likewise.
+
 	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/Makefile
 	(libm-sysdep_routines): Add s_llrint-power8, s_llrint-power6x, and
 	s_llrint-ppc64.

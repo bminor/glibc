@@ -26,6 +26,12 @@
 long long int
 __llrint (double x)
 {
+#ifdef _ARCH_PWR4
+  /* Assume powerpc64 instructions availability.  */
+  long long int ret;
+  __asm__ ("fctid %0, %1" : "=d" (ret) : "d" (x));
+  return ret;
+#else
   double rx = rint (x);
   if (HAVE_PPC_FCTIDZ || rx != x)
     return (long long int) rx;
@@ -53,5 +59,8 @@ __llrint (double x)
       else
 	return (long long int) (long int) rx << 32;
     }
+#endif
 }
+#ifndef __llrint
 libm_alias_double (__llrint, llrint)
+#endif

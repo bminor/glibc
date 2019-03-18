@@ -18,6 +18,11 @@ libm-sysdep_routines += s_llrintf-power6 s_llrintf-ppc32 s_llrint-power6 \
 			s_logbf-power7 s_logbf-ppc32 e_hypot-power7 \
 			e_hypot-ppc32 e_hypotf-power7 e_hypotf-ppc32
 
+CFLAGS-s_llrintf-power6.c += -mcpu=power6
+CFLAGS-s_llrintf-ppc32.c += -mcpu=power4
+CFLAGS-s_llrint-power6.c += -mcpu=power6
+CFLAGS-s_llrint-ppc32.c += -mcpu=power4
+CFLAGS-s_lrint-ppc32.c += -mcpu=power4
 CFLAGS-s_ceil-power5+.c = -mcpu=power5+
 CFLAGS-s_ceilf-power5+.c = -mcpu=power5+
 CFLAGS-s_modf-power5+.c = -mcpu=power5+
