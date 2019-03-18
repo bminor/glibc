@@ -1,5 +1,21 @@
 2019-07-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/powerpc/fpu/e_hypot.c (two60, two500, two600, two1022,
+	twoM500, twoM600, two60factor, pdnum): Remove.
+	(TEST_INFO_NAN, GET_TW0_HIGH_WORD): Remove macro.
+	(__ieee754_hypot): Replace static variables with inline definition,
+	remove ununsed branches.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile
+	(libm-sysdep_routines): Remove e_hypot-* objects.
+	(CFLAGS-e_hypot-power7.c, CFLAGS-e_hypotf-power7.c): Remove rule.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/e_hypot-power7.c: Remove
+	file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/e_hypot-ppc64.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/e_hypot.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/e_hypotf-power7.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/e_hypotf-ppc64.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/e_hypotf.c: Likewise.
+
 	* benchtests/Makefile (bench-math): Add hypot.
 	* benchtests/hypot-inputs: New file.
 
