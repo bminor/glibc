@@ -15,18 +15,25 @@
    License along with the GNU C Library; see the file COPYING.LIB.  If
    not, see <http://www.gnu.org/licenses/>.  */
 
-#include <math.h>
-#include <libm-alias-float.h>
+/* ISA 2.07 provides fast GPR to FP instruction (mfvsr{d,wz}) which make
+   generic implementation faster.  Also disables for old ISAs that do not
+   have ceil/floor instructions.  */
+#if defined(_ARCH_PWR8) || !defined(_ARCH_PWR5X)
+# include <sysdeps/ieee754/ldbl-opt/s_modf.c>
+#else
+# include <math.h>
+# include <math_ldbl_opt.h>
+# include <libm-alias-double.h>
 
-float
-__modff (float x, float *iptr)
+double
+__modf (double x, double *iptr)
 {
-  if (__builtin_isinff (x))
+  if (__builtin_isinf (x))
     {
       *iptr = x;
-      return copysignf (0.0, x);
+      return copysign (0.0, x);
     }
-  else if (__builtin_isnanf (x))
+  else if (__builtin_isnan (x))
     {
       *iptr = NAN;
       return NAN;
@@ -34,13 +41,19 @@ __modff (float x, float *iptr)
 
   if (x >= 0.0)
     {
-      *iptr = floorf (x);
-      return copysignf (x - *iptr, x);
+      *iptr = floor (x);
+      return copysign (x - *iptr, x);
     }
   else
     {
-      *iptr = ceilf (x);
-      return copysignf (x - *iptr, x);
+      *iptr = ceil (x);
+      return copysign (x - *iptr, x);
     }
 }
-libm_alias_float (__modf, modf)
+# ifndef __modf
+libm_alias_double (__modf, modf)
+#  if LONG_DOUBLE_COMPAT (libc, GLIBC_2_0)
+compat_symbol (libc, __modf, modfl, GLIBC_2_0);
+#  endif
+# endif
+#endif

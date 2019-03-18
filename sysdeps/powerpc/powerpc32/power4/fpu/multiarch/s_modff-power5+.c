@@ -16,12 +16,5 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <math.h>
-#include <math_ldbl_opt.h>
-
-#undef weak_alias
-#define weak_alias(a,b)
-
 #define __modff __modff_power5plus
-
-#include <sysdeps/powerpc/power5+/fpu/s_modff.c>
+#include <sysdeps/powerpc/fpu/s_modff.c>

@@ -1,5 +1,37 @@
 2019-07-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/powerpc/power5+/fpu/s_modf.c: Move to ...
+	* sysdeps/powerpc/fpu/s_modf.c: ... here.  Add ISA 2.07 optimization.
+	* sysdeps/powerpc/power5+/fpu/s_modff.c: Move to ...
+	* sysdeps/powerpc/fpu/s_modff.c: ... here.  Add ISA 2.07 optimization.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_modf-power5+.c:
+	Adjust include.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_modff-power5+.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/Makefile (sysdep_calls,
+	sysdep_routines): Add s_modf* objects.
+	(CFLAGS-s_modf-power5+.c, CFLAGS-s_modff-power5+.c,
+	CFLAGS-s_modf-ppc64.c, CFLAGS-s_modff-ppc64.c): New rule.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_modf-power5+.c: Move
+	to ...
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_modf-power5+.c:
+	... here.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_modf-power5+.c: Movo
+	to ...
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_modf-power5+.c: Move
+	... here.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_modf.c: Move to ...
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_modf.c: ... here.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_modff-power5+.c: Move
+	to ...
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_modff-power5+.c:
+	... here.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_modff-ppc64.c: Move to ...
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_modff-ppc64.c:
+	... here.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_modff.c: Move to ...
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_modff.c: ... here.
+
 	* sysdeps/powerpc/fpu/e_hypot.c (two60, two500, two600, two1022,
 	twoM500, twoM600, two60factor, pdnum): Remove.
 	(TEST_INFO_NAN, GET_TW0_HIGH_WORD): Remove macro.

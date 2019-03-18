@@ -1,4 +1,4 @@
-/* PowerPC/POWER5+ implementation for modf.
+/* PowerPC/POWER5+ implementation for modff.
    Copyright (C) 2013-2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,4 +16,5 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_modf-power5+.c>
+#define __modff __modff_power5plus
+#include <sysdeps/powerpc/fpu/s_modff.c>

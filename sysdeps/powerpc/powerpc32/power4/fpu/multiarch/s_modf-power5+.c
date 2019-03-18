@@ -16,16 +16,5 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <math.h>
-#include <math_ldbl_opt.h>
-
-#undef weak_alias
-#define weak_alias(a,b)
-#undef strong_alias
-#define strong_alias(a,b)
-#undef compat_symbol
-#define compat_symbol(a,b,c,d)
-
 #define __modf __modf_power5plus
-
-#include <sysdeps/powerpc/power5+/fpu/s_modf.c>
+#include <sysdeps/powerpc/fpu/s_modf.c>
