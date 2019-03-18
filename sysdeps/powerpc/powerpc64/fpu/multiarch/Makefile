@@ -6,13 +6,10 @@ sysdep_calls := s_modf-power5+ s_modf-ppc64 \
 		s_modff-power5+ s_modff-ppc64
 
 sysdep_routines += $(sysdep_calls)
-libm-sysdep_routines += s_llround-power6x \
-			s_llround-power5+ s_llround-ppc64 \
-			s_logb-power7 s_logbf-power7 \
+libm-sysdep_routines += s_logb-power7 s_logbf-power7 \
 			s_logbl-power7 s_logb-ppc64 s_logbf-ppc64 \
 			s_logbl-ppc64 e_hypot-ppc64 \
 			e_hypot-power7 e_hypotf-ppc64 e_hypotf-power7 \
-			s_llround-power8 s_llroundf-ppc64 \
 			e_expf-power8 e_expf-ppc64 \
 			$(sysdep_calls:s_%=m_%)
 

@@ -1,5 +1,55 @@
 2019-06-17  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/Makefile
+	(libm-sysdep_routines): Add s_llround-power8, s_llround-power6x,
+	s_llround-power5+, s_llround-ppc64, and s_llroundf-ppc64.
+	(CFLAGS-s_llround-power8.c, CFLAGS-s_llround-power6x.c,
+	CFLAGS-s_llround-power5+.c): New rule.
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_llround-power5+.c:
+	New file.
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_llround-power6x.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_llround-power8.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_llround-ppc64.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_llroundf-ppc64.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llround.c: Move to ...
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_llround.c: ... here.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llroundf.c: Move to ...
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_llroundf.c: ... here.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_lround.c: Move to ...
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_lround.c: ... here.
+	* sysdeps/powerpc/powerpc64/fpu/Makefile
+	[$(subdir) == math] (CFLAGS-s_llround.c): New rule.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile
+	(libm-sysdep_routines): Remove s_llround-* objects.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llround-power5+.S: Remove
+	file.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llround-power6x.S:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llround-power8.S:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llround-ppc64.S:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llroundf-ppc64.S:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_llround.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_llroundf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_lround.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_lroundf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_llround.c: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_llroundf.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_lround.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_lroundf.c: Likewise.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_llround.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_llroundf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power6x/fpu/s_llround.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power6x/fpu/s_llroundf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_llround.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_llroundf.S: Likewise.
+
 	* sysdeps/powerpc/fpu/s_lrintf.S: Remove file.
 	* sysdeps/powerpc/powerpc64/fpu/s_lrintf.c: Move to ...
 	* sysdeps/powerpc/fpu/s_lrintf.c: ... here.
