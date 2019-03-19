@@ -16,11 +16,5 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <math.h>
-
-#undef weak_alias
-#define weak_alias(a, b)
-
 #define __logbf __logbf_power7
-
-#include <sysdeps/powerpc/power7/fpu/s_logbf.c>
+#include <sysdeps/powerpc/fpu/s_logbf.c>

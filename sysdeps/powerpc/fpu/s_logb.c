@@ -1,4 +1,4 @@
-/* logb(). PowerPC/POWER7 version.
+/* Get exponent of a floating-point value.  PowerPC version.
    Copyright (C) 2012-2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,59 +16,49 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <math.h>
-#include <math_private.h>
-#include <math_ldbl_opt.h>
-#include <libm-alias-double.h>
+/* ISA 2.07 provides fast GPR to FP instruction (mfvsr{d,wz}) which make
+   generic implementation faster.  */
+#if defined(_ARCH_PWR8) || !defined(_ARCH_PWR7)
+# include <sysdeps/ieee754/dbl-64/s_logb.c>
+#else
+# include <math.h>
+# include <math_private.h>
+# include <math_ldbl_opt.h>
+# include <libm-alias-double.h>
 
 /* This implementation avoids FP to INT conversions by using VSX
    bitwise instructions over FP values.  */
-
-static const double two1div52 = 2.220446049250313e-16;	/* 1/2**52  */
-static const double two10m1   = -1023.0;		/* 2**10 -1  */
-
-/* FP mask to extract the exponent.  */
-static const union {
-  unsigned long long mask;
-  double d;
-} mask = { 0x7ff0000000000000ULL };
-
 double
 __logb (double x)
 {
   double ret;
 
-  if (__builtin_expect (x == 0.0, 0))
+  if (__glibc_unlikely (x == 0.0))
     /* Raise FE_DIVBYZERO and return -HUGE_VAL[LF].  */
-    return -1.0 / __builtin_fabs (x);
+    return -1.0 / fabs (x);
 
-  /* ret = x & 0x7ff0000000000000;  */
-  asm (
-    "xxland %x0,%x1,%x2\n"
-    "fcfid  %0,%0"
-    : "=f" (ret)
-    : "f" (x), "f" (mask.d));
-  /* ret = (ret >> 52) - 1023.0;  */
-  ret = (ret * two1div52) + two10m1;
-  if (__builtin_expect (ret > -two10m1, 0))
+  /* Mask to extract the exponent.  */
+  asm ("xxland %x0,%x1,%x2\n"
+       "fcfid  %0,%0"
+       : "=d" (ret)
+       : "d" (x), "d" (0x7ff0000000000000ULL));
+  ret = (ret * 0x1p-52) - 1023.0;
+  if (ret > 1023.0)
     /* Multiplication is used to set logb (+-INF) = INF.  */
     return (x * x);
-  else if (__builtin_expect (ret == two10m1, 0))
+  else if (ret == -1023.0)
     {
       /* POSIX specifies that denormal numbers are treated as
          though they were normalized.  */
-      int32_t lx, ix;
-      int ma;
-
-      EXTRACT_WORDS (ix, lx, x);
-      ix &= 0x7fffffff;
-      if (ix == 0)
-	ma = __builtin_clz (lx) + 32;
-      else
-	ma = __builtin_clz (ix);
-      return (double) (-1023 - (ma - 12));
+      int64_t ix;
+      EXTRACT_WORDS64 (ix, x);
+      ix &= UINT64_C (0x7fffffffffffffff);
+      return (double) (-1023 - (__builtin_clzll (ix) - 12));
     }
   /* Test to avoid logb_downward (0.0) == -0.0.  */
   return ret == -0.0 ? 0.0 : ret;
 }
+# ifndef __logb
 libm_alias_double (__logb, logb)
+# endif
+#endif

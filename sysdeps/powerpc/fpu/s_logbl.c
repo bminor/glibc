@@ -1,4 +1,4 @@
-/* logbl(). PowerPC/POWER7 version.
+/* Get exponent of a floating-point value.  PowerPC version.
    Copyright (C) 2012-2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,22 +16,17 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <math.h>
-#include <math_private.h>
-#include <math_ldbl_opt.h>
+/* ISA 2.07 provides fast GPR to FP instruction (mfvsr{d,wz}) which make
+   generic implementation faster.  */
+#if defined(_ARCH_PWR8) || !defined(_ARCH_PWR7)
+# include <./sysdeps/ieee754/ldbl-128ibm/s_logbl.c>
+#else
+# include <math.h>
+# include <math_private.h>
+# include <math_ldbl_opt.h>
 
 /* This implementation avoids FP to INT conversions by using VSX
    bitwise instructions over FP values.  */
-
-static const double two1div52 = 2.220446049250313e-16;	/* 1/2**52  */
-static const double two10m1   = -1023.0;		/* 2**10 -1  */
-
-/* FP mask to extract the exponent.  */
-static const union {
-  unsigned long long mask;
-  double d;
-} mask = { 0x7ff0000000000000ULL };
-
 long double
 __logbl (long double x)
 {
@@ -39,24 +34,23 @@ __logbl (long double x)
   double ret;
   int64_t hx;
 
-  if (__builtin_expect (x == 0.0L, 0))
+  if (__glibc_unlikely (x == 0.0))
     /* Raise FE_DIVBYZERO and return -HUGE_VAL[LF].  */
     return -1.0L / __builtin_fabsl (x);
 
   ldbl_unpack (x, &xh, &xl);
   EXTRACT_WORDS64 (hx, xh);
-  /* ret = x & 0x7ff0000000000000;  */
-  asm (
-    "xxland %x0,%x1,%x2\n"
-    "fcfid  %0,%0"
-    : "=f" (ret)
-    : "f" (xh), "f" (mask.d));
-  /* ret = (ret >> 52) - 1023.0;  */
-  ret = (ret * two1div52) + two10m1;
-  if (__builtin_expect (ret > -two10m1, 0))
+
+  /* Mask to extract the exponent.  */
+  asm ("xxland %x0,%x1,%x2\n"
+       "fcfid  %0,%0"
+       : "=d" (ret)
+       : "d" (xh), "d" (0x7ff0000000000000ULL));
+  ret = (ret * 0x1p-52) - 1023.0;
+  if (ret > 1023.0)
     /* Multiplication is used to set logb (+-INF) = INF.  */
     return (xh * xh);
-  else if (__builtin_expect (ret == two10m1, 0))
+  else if (ret == -1023.0)
     {
       /* POSIX specifies that denormal number is treated as
          though it were normalized.  */
@@ -78,6 +72,7 @@ __logbl (long double x)
   /* Test to avoid logb_downward (0.0) == -0.0.  */
   return ret == -0.0 ? 0.0 : ret;
 }
-#ifndef __logbl
+# ifndef __logbl
 long_double_symbol (libm, __logbl, logbl);
+# endif
 #endif

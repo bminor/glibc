@@ -16,4 +16,5 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_logbl-power7.c>
+#define __logbl __logbl_power7
+#include <sysdeps/powerpc/fpu/s_logbl.c>

@@ -1,5 +1,56 @@
 2019-07-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/powerpc/power7/fpu/s_logb.c: Move to ...
+	* sysdeps/powerpc/fpu/s_logb.c: ... here.  Use inline FP constants.
+	* sysdeps/powerpc/power7/fpu/s_logbf.c: Move to ...
+	* sysdeps/powerpc/fpu/s_logbf.c: ... here.  Use inline FP constants.
+	* sysdeps/powerpc/power7/fpu/s_logbl.c: Move to ...
+	* sysdeps/powerpc/fpu/s_logbl.c: ... here.  Use inline FP constants.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_logb-power7.c:
+	Adjust implementation path.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_logbf-power7.c:
+	Adjust implementation path.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_logbl-power7.c:
+	Adjust implementation path.
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/Makefile
+	(libm-sysdep_routines): Add s_log* objects.
+	(CFLAGS-s_logbf-power7.c, CFLAGS-s_logbl-power7.c,
+	CFLAGS-s_logb-power7.c): New fule.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_logb-power7.c: Move
+	to ...
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_logb-power7.c:
+	... here.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_logb-ppc64.c: Move
+	to ...
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_logb-ppc64.c:
+	... here.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_logb.c: Move to ...
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_logb.c: ... here.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_logbf-power7.c: Move
+	to ...
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_logbf-power7.c:
+	... here.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_logbf-ppc64.c: Move
+	to ...
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_logbf-ppc64.c:
+	... here.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_logbf.c: Move to ...
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_logbf.c: ... here.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_logbl-power7.c: Move
+	to ...
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_logbl-power7.c:
+	... here.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_logbl-ppc64.c: Move
+	to ...
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_logbl-ppc64.c:
+	... here.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_logbl.c: Move to ...
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/s_logbl.c: ... here.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile: Remove file.
+	* sysdeps/powerpc/powerpc64/power7/fpu/s_logb.c: Remove file.
+	* sysdeps/powerpc/powerpc64/power7/fpu/s_logbf.c: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/fpu/s_logbl.c: Likewise.
+
 	* sysdeps/ieee754/dbl-64/wordsize-64/s_logb.c: Move to ...
 	* sysdeps/ieee754/dbl-64/s_logb.c: ... here.  Add work around for
 	powerpc32 integer 0 converting to -0.

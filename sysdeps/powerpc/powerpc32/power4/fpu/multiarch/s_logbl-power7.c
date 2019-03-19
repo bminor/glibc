@@ -17,5 +17,4 @@
    <http://www.gnu.org/licenses/>.  */
 
 #define __logbl __logbl_power7
-
-#include <sysdeps/powerpc/power7/fpu/s_logbl.c>
+#include <sysdeps/powerpc/fpu/s_logbl.c>
