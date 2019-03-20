@@ -56,13 +56,17 @@ functions to access the databases.
 @noindent
 The databases available in the NSS are
 
+@cindex aliases
 @cindex ethers
 @cindex group
+@cindex gshadow
 @cindex hosts
+@cindex initgroups
 @cindex netgroup
 @cindex networks
-@cindex protocols
 @cindex passwd
+@cindex protocols
+@cindex publickey
 @cindex rpc
 @cindex services
 @cindex shadow
@@ -75,16 +79,22 @@ Ethernet numbers,
 @comment @pxref{Ethernet Numbers}.
 @item group
 Groups of users, @pxref{Group Database}.
+@item gshadow
+Group passphrase hashes and related information.
 @item hosts
 Host names and numbers, @pxref{Host Names}.
+@item initgroups
+Supplementary group access list.
 @item netgroup
 Network wide list of host and users, @pxref{Netgroup Database}.
 @item networks
 Network names and numbers, @pxref{Networks Database}.
-@item protocols
-Network protocols, @pxref{Protocols Database}.
 @item passwd
 User identities, @pxref{User Database}.
+@item protocols
+Network protocols, @pxref{Protocols Database}.
+@item publickey
+Public keys for Secure RPC.
 @item rpc
 Remote procedure call names and numbers.
 @comment @pxref{RPC Database}.
@@ -96,8 +106,8 @@ User passphrase hashes and related information.
 @end table
 
 @noindent
-There will be some more added later (@code{automount}, @code{bootparams},
-@code{netmasks}, and @code{publickey}).
+@c We currently don't implement automount, netmasks, or bootparams.
+More databases may be added later.
 
 @node NSS Configuration File, NSS Module Internals, NSS Basics, Name Service Switch
 @section The NSS Configuration File
@@ -158,6 +168,10 @@ change frequently.  Normally the user should not have to be cognizant of
 these files since they should be placed in a directory where they are
 found automatically.  Only the names of all available services are
 important.
+
+Lastly, some system software may make use of the NSS configuration file
+to store their own configuration for similar purposes.  Examples of this
+include the @code{automount} service which is used by @code{autofs}.
 
 @node Actions in the NSS configuration, Notes on NSS Configuration File, Services in the NSS configuration, NSS Configuration File
 @subsection Actions in the NSS configuration

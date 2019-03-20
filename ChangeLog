@@ -1,3 +1,9 @@
+2019-08-19  Carlos O'Donell  <carlos@redhat.com>
+
+	* nss/nsswitch.conf: Expand comments, and simplify defaults.
+	* manual/nss.texi (NSS Basics): List all known databases.
+	(Services in the NSS configuration): Mention automount.
+
 2019-08-19  Florian Weimer  <fweimer@redhat.com>
 
 	Do not print backtraces on fatal errors.
