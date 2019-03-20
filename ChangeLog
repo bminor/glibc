@@ -1,5 +1,8 @@
 2019-04-17  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/powerpc/fpu/s_fabs.S: Remove file.
+	* sysdeps/powerpc/fpu/s_fabsf.S: Likewise.
+
 	* sysdeps/unix/sysv/linux/mips/getcontext.S (__getcontext): Remove
 	the magic flag store.
 	* sysdeps/unix/sysv/linux/mips/makecontext.S (__makecontext):
