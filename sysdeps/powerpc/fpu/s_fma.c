@@ -1,5 +1,5 @@
 /* Compute x * y + z as ternary operation.  PowerPC version.
-   Copyright (C) 2010-2019 Free Software Foundation, Inc.
+   Copyright (C) 2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,12 +17,10 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <libm-alias-float.h>
+#include <libm-alias-double.h>
 
-ENTRY_TOCLESS(__fmaf)
-/* float [f1] fmaf (float [f1] x, float [f2] y, float [f3] z); */
-	fmadds	fp1,fp1,fp2,fp3
-	blr
-END(__fmaf)
-
-libm_alias_float (__fma, fma)
+double __fma (double x, double y, double z)
+{
+  return __builtin_fma (x, y, z);
+}
+libm_alias_double (__fma, fma)
