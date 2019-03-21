@@ -1,3 +1,8 @@
+2019-03-21  Stefan Liebler  <stli@linux.ibm.com>
+
+	* sysdeps/s390/dl-procinfo.h (HWCAP_IMPORTANT):
+	Add HWCAP_S390_VX and HWCAP_S390_VXE.
+
 2019-01-31  Paul Eggert  <eggert@cs.ucla.edu>
 
 	CVE-2019-9169
