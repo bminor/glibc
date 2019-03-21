@@ -2402,7 +2402,7 @@ collate_output (struct localedef_t *locale, const struct charmap_t *charmap,
       runp = runp->next;
     }
   /* Add 50% and find the next prime number.  */
-  elem_size = next_prime (elem_size + elem_size >> 1);
+  elem_size = next_prime (elem_size + (elem_size >> 1));
 
   /* Allocate the table.  Each entry consists of two words: the hash
      value and an index in a secondary table which provides the index

@@ -1,3 +1,10 @@
+2019-03-05  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
+	[BZ #24372]
+	* iconv/iconvconfig.c (write_output): Add parentheses to get rid
+	of compiler warning.
+	* locale/programs/ld-collate.c (collate_output): Likewise.
+
 2019-03-21  DJ Delorie  <dj@redhat.com>
 
 	[BZ #24372]
