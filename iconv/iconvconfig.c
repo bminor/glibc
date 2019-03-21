@@ -1079,9 +1079,9 @@ write_output (void)
 
   /* Create the hashing table.  We know how many strings we have.
      Creating a perfect hash table is not reasonable here.  Therefore
-     we use open hashing and a table size which is the next prime 40%
+     we use open hashing and a table size which is the next prime 50%
      larger than the number of strings.  */
-  hash_size = next_prime (nnames * 1.4);
+  hash_size = next_prime (nnames + nnames >> 1);
   hash_table = (struct hash_entry *) xcalloc (hash_size,
 					      sizeof (struct hash_entry));
   /* Fill the hash table.  */

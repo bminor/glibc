@@ -1,3 +1,10 @@
+2019-03-21  DJ Delorie  <dj@redhat.com>
+
+	[BZ #24372]
+	* iconv/iconvconfig.c (write_output): Replace floating point math
+	with integer math to avoid imprecise results.
+	* locale/programs/ld-collate.c (collate_output): Likewise.
+
 2019-03-21  Stefan Liebler  <stli@linux.ibm.com>
 
 	* sysdeps/s390/dl-procinfo.h (HWCAP_IMPORTANT):
