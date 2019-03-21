@@ -57,7 +57,8 @@ enum
 };
 
 #define HWCAP_IMPORTANT (HWCAP_S390_ZARCH | HWCAP_S390_LDISP \
-			  | HWCAP_S390_EIMM | HWCAP_S390_DFP)
+			 | HWCAP_S390_EIMM | HWCAP_S390_DFP  \
+			 | HWCAP_S390_VX | HWCAP_S390_VXE)
 
 /* We cannot provide a general printing function.  */
 #define _dl_procinfo(type, word) -1
