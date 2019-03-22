@@ -1,5 +1,18 @@
 2019-03-22  Stefan Liebler  <stli@linux.ibm.com>
 
+	* sysdeps/s390/Makefile (sysdep_routines): Add strstr-arch13.
+	* sysdeps/s390/ifunc-strstr.h (HAVE_STRSTR_ARCH13, STRSTR_ARCH13,
+	STRSTR_Z13_ONLY_USED_AS_FALLBACK, HAVE_STRSTR_IFUNC_AND_ARCH13_SUPPORT):
+	New defines.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add ifunc variant for arch13 strstr.
+	* sysdeps/s390/strstr-arch13.S: New file.
+	* sysdeps/s390/strstr-vx.c: Omit GI symbol for z13 strstr ifunc variant
+	if it is only used as fallback.
+	* sysdeps/s390/strstr.c (strstr): Add arch13 variant in ifunc selector.
+
+2019-03-22  Stefan Liebler  <stli@linux.ibm.com>
+
 	* sysdeps/s390/ifunc-memcpy.h (HAVE_MEMMOVE_ARCH13, MEMMOVE_ARCH13
 	HAVE_MEMMOVE_IFUNC_AND_ARCH13_SUPPORT): New defines.
 	* sysdeps/s390/memcpy-z900.S: Add arch13 memmove implementation.

@@ -19,11 +19,11 @@
 #include <ifunc-strstr.h>
 
 #if HAVE_STRSTR_Z13
-# if HAVE_STRSTR_IFUNC
+# if HAVE_STRSTR_IFUNC || STRSTR_Z13_ONLY_USED_AS_FALLBACK
 #  define STRSTR STRSTR_Z13
 #  if defined SHARED && IS_IN (libc)
 #   undef libc_hidden_builtin_def
-#   if HAVE_STRSTR_C
+#   if HAVE_STRSTR_C || STRSTR_Z13_ONLY_USED_AS_FALLBACK
 #    define libc_hidden_builtin_def(name)
 #   else
 #    define libc_hidden_builtin_def(name)		\

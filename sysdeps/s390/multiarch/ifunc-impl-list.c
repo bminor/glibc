@@ -186,6 +186,10 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
 #if HAVE_STRSTR_IFUNC
     IFUNC_IMPL (i, name, strstr,
+# if HAVE_STRSTR_ARCH13
+		IFUNC_IMPL_ADD (array, i, strstr,
+				dl_hwcap & HWCAP_S390_VXRS_EXT2, STRSTR_ARCH13)
+# endif
 # if HAVE_STRSTR_Z13
 		IFUNC_IMPL_ADD (array, i, strstr,
 				dl_hwcap & HWCAP_S390_VX, STRSTR_Z13)
