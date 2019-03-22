@@ -20,7 +20,7 @@
 
 #if HAVE_MEMMEM_Z13
 # include <string.h>
-# if HAVE_MEMMEM_IFUNC
+# if HAVE_MEMMEM_IFUNC || MEMMEM_Z13_ONLY_USED_AS_FALLBACK
 
 #  ifndef _LIBC
 #   define memmem MEMMEM_Z13
@@ -32,7 +32,7 @@
 #   undef libc_hidden_def
 #   undef libc_hidden_weak
 
-#   if HAVE_MEMMEM_C
+#   if HAVE_MEMMEM_C || MEMMEM_Z13_ONLY_USED_AS_FALLBACK
 #    define libc_hidden_def(name)
 #    define libc_hidden_weak(name)
 #   else

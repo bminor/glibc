@@ -34,8 +34,14 @@ extern __typeof (__redirect_memmem) MEMMEM_C attribute_hidden;
 extern __typeof (__redirect_memmem) MEMMEM_Z13 attribute_hidden;
 # endif
 
+# if HAVE_MEMMEM_ARCH13
+extern __typeof (__redirect_memmem) MEMMEM_ARCH13 attribute_hidden;
+# endif
+
 s390_libc_ifunc_expr (__redirect_memmem, __memmem,
-		      (HAVE_MEMMEM_Z13 && (hwcap & HWCAP_S390_VX))
+		      (HAVE_MEMMEM_ARCH13 && (hwcap & HWCAP_S390_VXRS_EXT2))
+		      ? MEMMEM_ARCH13
+		      : (HAVE_MEMMEM_Z13 && (hwcap & HWCAP_S390_VX))
 		      ? MEMMEM_Z13
 		      : MEMMEM_DEFAULT
 		      )

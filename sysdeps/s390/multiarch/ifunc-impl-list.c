@@ -202,6 +202,10 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
 #if HAVE_MEMMEM_IFUNC
     IFUNC_IMPL (i, name, memmem,
+# if HAVE_MEMMEM_ARCH13
+	      IFUNC_IMPL_ADD (array, i, memmem,
+			      dl_hwcap & HWCAP_S390_VXRS_EXT2, MEMMEM_ARCH13)
+# endif
 # if HAVE_MEMMEM_Z13
 		IFUNC_IMPL_ADD (array, i, memmem,
 				dl_hwcap & HWCAP_S390_VX, MEMMEM_Z13)
