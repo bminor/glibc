@@ -23,6 +23,11 @@ CFLAGS-s_llrintf-ppc32.c += -mcpu=power4
 CFLAGS-s_llrint-power6.c += -mcpu=power6
 CFLAGS-s_llrint-ppc32.c += -mcpu=power4
 CFLAGS-s_lrint-ppc32.c += -mcpu=power4
+CFLAGS-s_llround-power6.c += -mcpu=power6
+CFLAGS-s_llround-power5+.c += -mcpu=power5+
+CFLAGS-s_llround-ppc32.c += -mcpu=power4
+CFLAGS-s_lround-ppc32.c += -mcpu=power4
+CFLAGS-s_lround-power5+.c += -mcpu=power5+
 CFLAGS-s_ceil-power5+.c = -mcpu=power5+
 CFLAGS-s_ceilf-power5+.c = -mcpu=power5+
 CFLAGS-s_modf-power5+.c = -mcpu=power5+

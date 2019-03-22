@@ -1,3 +1,43 @@
+2019-06-26  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/powerpc/powerpc32/fpu/Makefile
+	[$(subdir) == math] (CFLAGS-s_lround.c): New rule.
+	* sysdeps/powerpc/powerpc32/fpu/s_llround.c (__llround): Add power5+
+	and fctidz optimization.
+	* sysdeps/powerpc/powerpc32/fpu/s_lround.S: Remove file.
+	* sysdeps/powerpc/powerpc32/fpu/s_lround.c: New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile
+	(CFLAGS-s_llround-power6.c, CFLAGS-s_llround-power5+.c,
+	CFLAGS-s_llround-ppc32.c, CFLAGS-s_lround-ppc32.c,
+	CFLAGS-s_lround-power5+.c): New rule.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_llround-power5+.c:
+	New file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_llround-power6.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_llround-ppc32.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_lround-power5+.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_lround-ppc32.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_llround-power5+.S:
+	Remove file.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_llround-power6.S:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_llround-ppc32.S:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_lround-power5+.S:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_lround-ppc32.S:
+	Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/s_llround.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power4/fpu/s_llroundf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_llround.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_llroundf.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_lround.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_llround.S: Likewise.
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_llroundf.S: Likewise.
+
 2019-06-26  Vincent Chen  <vincentc@andestech.com>
 
 	* sysdeps/unix/sysv/linux/syscall-names.list: Add nds32
