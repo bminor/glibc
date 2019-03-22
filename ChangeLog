@@ -1,3 +1,7 @@
+2019-09-26  Lukasz Majewski <lukma@denx.de>
+
+	* include/time.h: Add struct __timespec64 definition
+
 2019-09-26  Siddhesh Poyarekar  <siddhesh@gotplt.org>
 
 	* scripts/vcs_to_changelog/misc_util.py (decode): Remove latin1
