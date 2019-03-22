@@ -21,7 +21,7 @@
 #define _DL_PROCINFO_H	1
 #include <ldsodefs.h>
 
-#define _DL_HWCAP_COUNT 15
+#define _DL_HWCAP_COUNT 19
 
 #define _DL_PLATFORMS_COUNT	9
 
@@ -54,11 +54,16 @@ enum
   HWCAP_S390_VXD = 1 << 12,
   HWCAP_S390_VXE = 1 << 13,
   HWCAP_S390_GS = 1 << 14,
+  HWCAP_S390_VXRS_EXT2 = 1 << 15,
+  HWCAP_S390_VXRS_PDE = 1 << 16,
+  HWCAP_S390_SORT = 1 << 17,
+  HWCAP_S390_DFLT = 1 << 18,
 };
 
 #define HWCAP_IMPORTANT (HWCAP_S390_ZARCH | HWCAP_S390_LDISP \
 			 | HWCAP_S390_EIMM | HWCAP_S390_DFP  \
-			 | HWCAP_S390_VX | HWCAP_S390_VXE)
+			 | HWCAP_S390_VX | HWCAP_S390_VXE    \
+			 | HWCAP_S390_VXRS_EXT2)
 
 /* We cannot provide a general printing function.  */
 #define _dl_procinfo(type, word) -1

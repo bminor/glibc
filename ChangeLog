@@ -1,3 +1,15 @@
+2019-03-22  Stefan Liebler  <stli@linux.ibm.com>
+
+	* sysdeps/s390/dl-procinfo.c (_dl_s390_cap_flags):
+	Add vxe2, vxp, dflt, sort flags.
+	* sysdeps/s390/dl-procinfo.h: Add HWCAP_S390_VXRS_EXT2,
+	HWCAP_S390_VXRS_PDE, HWCAP_S390_SORT, HWCAP_S390_DFLT
+	capabilities.
+	(HWCAP_IMPORTANT): Add HWCAP_S390_VXRS_EXT2.
+	* sysdeps/unix/sysv/linux/s390/bits/hwcap.h
+	(HWCAP_S390_VXRS_EXT2, HWCAP_S390_VXRS_PDE, HWCAP_S390_SORT,
+	HWCAP_S390_DFLT): Define.
+
 2019-03-05  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
 	[BZ #24372]
