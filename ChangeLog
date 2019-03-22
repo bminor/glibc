@@ -1,5 +1,12 @@
 2019-03-22  Stefan Liebler  <stli@linux.ibm.com>
 
+	* config.h.in (HAVE_S390_MIN_ARCH13_ZARCH_ASM_SUPPORT,
+	HAVE_S390_ARCH13_ASM_SUPPORT): New undefine.
+	* sysdeps/s390/configure.ac: Add checks for arch13 support.
+	* sysdeps/s390/configure: Regenerated.
+
+2019-03-22  Stefan Liebler  <stli@linux.ibm.com>
+
 	* sysdeps/s390/dl-procinfo.c (_dl_s390_cap_flags):
 	Add vxe2, vxp, dflt, sort flags.
 	* sysdeps/s390/dl-procinfo.h: Add HWCAP_S390_VXRS_EXT2,
