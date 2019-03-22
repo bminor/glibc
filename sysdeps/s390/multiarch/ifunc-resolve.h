@@ -22,6 +22,11 @@
 
 #define S390_STFLE_BITS_Z10  34 /* General instructions extension */
 #define S390_STFLE_BITS_Z196 45 /* Distinct operands, pop ... */
+#define S390_STFLE_BITS_ARCH13_MIE3 61 /* Miscellaneous-Instruction-Extensions
+					  Facility 3, e.g. mvcrl.  */
+
+#define S390_IS_ARCH13_MIE3(STFLE_BITS)			\
+  ((STFLE_BITS & (1ULL << (63 - S390_STFLE_BITS_ARCH13_MIE3))) != 0)
 
 #define S390_IS_Z196(STFLE_BITS)			\
   ((STFLE_BITS & (1ULL << (63 - S390_STFLE_BITS_Z196))) != 0)

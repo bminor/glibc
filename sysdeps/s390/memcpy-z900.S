@@ -277,6 +277,61 @@ ENTRY(MEMMOVE_Z13)
 END(MEMMOVE_Z13)
 #endif /* HAVE_MEMMOVE_Z13  */
 
+#if HAVE_MEMMOVE_ARCH13
+ENTRY(MEMMOVE_ARCH13)
+	.machine "arch13"
+	.machinemode "zarch_nohighgprs"
+# if ! defined __s390x__
+	/* Note: The 31bit dst and src pointers are prefixed with zeroes.  */
+	llgfr	%r4,%r4
+	llgfr	%r3,%r3
+	llgfr	%r2,%r2
+# endif /* ! defined __s390x__ */
+	sgrk	%r5,%r2,%r3
+	aghik	%r0,%r4,-1	/* Both vstl and mvcrl needs highest index.  */
+	clgijh	%r4,16,.L_MEMMOVE_ARCH13_LARGE
+.L_MEMMOVE_ARCH13_SMALL:
+	jl .L_MEMMOVE_ARCH13_END /* Return if len was zero (cc of aghik).  */
+	/* Store up to 16 bytes with vll/vstl (needs highest index).  */
+	vll	%v16,%r0,0(%r3)
+	vstl	%v16,%r0,0(%r2)
+.L_MEMMOVE_ARCH13_END:
+	br      %r14
+.L_MEMMOVE_ARCH13_LARGE:
+	lgr     %r1,%r2	/* For memcpy: r1: Use as dest ; r2: Return dest  */
+	/* The unsigned comparison (dst - src >= len) determines if we can
+	   execute the forward case with memcpy.  */
+#if ! HAVE_MEMCPY_Z196
+# error The arch13 variant of memmove needs the z196 variant of memcpy!
+#endif
+	/* Backward case.  */
+	clgrjhe %r5,%r4,.L_Z196_start2
+	clgijh	%r0,255,.L_MEMMOVE_ARCH13_LARGER_256B
+	/* Move up to 256bytes with mvcrl (move right to left).  */
+	mvcrl	0(%r1),0(%r3)	/* Move (r0 + 1) bytes from r3 to r1.  */
+	br      %r14
+.L_MEMMOVE_ARCH13_LARGER_256B:
+	/* First move the "remaining" block of up to 256 bytes at the end of
+	   src/dst buffers.  Then move blocks of 256bytes in a loop starting
+	   with the block at the end.
+	   (If src/dst pointers are aligned e.g. to 256 bytes, then the pointers
+	   passed to mvcrl instructions are aligned, too)  */
+	risbgn	%r5,%r0,8,128+63,56	/* r5 = r0 / 256  */
+	risbgn	%r0,%r0,56,128+63,0	/* r0 = r0 & 0xFF  */
+	slgr	%r4,%r0
+	lay	%r1,-1(%r4,%r1)
+	lay	%r3,-1(%r4,%r3)
+	mvcrl	0(%r1),0(%r3)	/* Move (r0 + 1) bytes from r3 to r1.  */
+	lghi	%r0,255		/* Always copy 256 bytes in the loop below!  */
+.L_MEMMOVE_ARCH13_LARGE_256B_LOOP:
+	aghi	%r1,-256
+	aghi	%r3,-256
+	mvcrl	0(%r1),0(%r3)	/* Move (r0 + 1) bytes from r3 to r1.  */
+	brctg	%r5,.L_MEMMOVE_ARCH13_LARGE_256B_LOOP
+	br      %r14
+END(MEMMOVE_ARCH13)
+#endif /* HAVE_MEMMOVE_ARCH13  */
+
 #if ! HAVE_MEMCPY_IFUNC
 /* If we don't use ifunc, define an alias for mem[p]cpy here.
    Otherwise see sysdeps/s390/mem[p]cpy.c.  */

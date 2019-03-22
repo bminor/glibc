@@ -1,5 +1,17 @@
 2019-03-22  Stefan Liebler  <stli@linux.ibm.com>
 
+	* sysdeps/s390/ifunc-memcpy.h (HAVE_MEMMOVE_ARCH13, MEMMOVE_ARCH13
+	HAVE_MEMMOVE_IFUNC_AND_ARCH13_SUPPORT): New defines.
+	* sysdeps/s390/memcpy-z900.S: Add arch13 memmove implementation.
+	* sysdeps/s390/memmove.c (memmove): Add arch13 variant in
+	ifunc selector.
+	* sysdeps/s390/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add ifunc variant for arch13 memmove.
+	* sysdeps/s390/multiarch/ifunc-resolve.h (S390_STFLE_BITS_ARCH13_MIE3,
+	S390_IS_ARCH13_MIE3): New defines.
+
+2019-03-22  Stefan Liebler  <stli@linux.ibm.com>
+
 	* config.h.in (HAVE_S390_MIN_ARCH13_ZARCH_ASM_SUPPORT,
 	HAVE_S390_ARCH13_ASM_SUPPORT): New undefine.
 	* sysdeps/s390/configure.ac: Add checks for arch13 support.
