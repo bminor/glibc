@@ -1,3 +1,8 @@
+2019-03-25  Andreas K. Hüttel  <dilfridge@gentoo.org>
+
+	* nss/tst-nss-files-alias-leak.c (do_test): add missing opening
+	quote in printf.
+
 2019-03-25  Mike Crowe  <mac@mcrowe.com>
 
 	* nptl/tst-rwlock14.c (do_test): Replace duplicate calls to

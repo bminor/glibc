@@ -191,7 +191,7 @@ do_test (void)
           else if (ret != ERANGE)
             {
               support_record_failure ();
-              printf ("error: invalid return code %d (user \%s\", size %zu)\n",
+              printf ("error: invalid return code %d (user \"%s\", size %zu)\n",
                       ret, users[id], size);
             }
           free (buffer);
