@@ -117,15 +117,15 @@ do_test (void)
       result = 1;
     }
 
-  e = pthread_rwlock_timedrdlock (&r, &ts);
+  e = pthread_rwlock_timedwrlock (&r, &ts);
   if (e == 0)
     {
-      puts ("second rwlock_timedrdlock did not fail");
+      puts ("second rwlock_timedwrlock did not fail");
       result = 1;
     }
   else if (e != EINVAL)
     {
-      puts ("second rwlock_timedrdlock did not return EINVAL");
+      puts ("second rwlock_timedwrlock did not return EINVAL");
       result = 1;
     }
 
@@ -145,15 +145,15 @@ do_test (void)
       result = 1;
     }
 
-  e = pthread_rwlock_timedrdlock (&r, &ts);
+  e = pthread_rwlock_timedwrlock (&r, &ts);
   if (e == 0)
     {
-      puts ("third rwlock_timedrdlock did not fail");
+      puts ("third rwlock_timedwrlock did not fail");
       result = 1;
     }
   else if (e != EINVAL)
     {
-      puts ("third rwlock_timedrdlock did not return EINVAL");
+      puts ("third rwlock_timedwrlock did not return EINVAL");
       result = 1;
     }
 
