@@ -18,10 +18,10 @@
 
 #include <errno.h>
 #include <semaphore.h>
-#include <stdio.h>
 #include <time.h>
 #include <unistd.h>
 #include <sys/time.h>
+#include <support/check.h>
 
 
 static int
@@ -31,23 +31,9 @@ do_test (void)
   struct timespec ts;
   struct timeval tv;
 
-  if (sem_init (&s, 0, 1) == -1)
-    {
-      puts ("sem_init failed");
-      return 1;
-    }
-
-  if (TEMP_FAILURE_RETRY (sem_wait (&s)) == -1)
-    {
-      puts ("sem_wait failed");
-      return 1;
-    }
-
-  if (gettimeofday (&tv, NULL) != 0)
-    {
-      puts ("gettimeofday failed");
-      return 1;
-    }
+  TEST_COMPARE (sem_init (&s, 0, 1), 0);
+  TEST_COMPARE (TEMP_FAILURE_RETRY (sem_wait (&s)), 0);
+  TEST_COMPARE (gettimeofday (&tv, NULL), 0);
 
   TIMEVAL_TO_TIMESPEC (&tv, &ts);
 
@@ -60,34 +46,16 @@ do_test (void)
     }
 
   errno = 0;
-  if (TEMP_FAILURE_RETRY (sem_timedwait (&s, &ts)) != -1)
-    {
-      puts ("sem_timedwait succeeded");
-      return 1;
-    }
-  if (errno != ETIMEDOUT)
-    {
-      printf ("sem_timedwait return errno = %d instead of ETIMEDOUT\n",
-	      errno);
-      return 1;
-    }
+  TEST_COMPARE (TEMP_FAILURE_RETRY (sem_timedwait (&s, &ts)), -1);
+  TEST_COMPARE (errno, ETIMEDOUT);
 
   struct timespec ts2;
-  if (clock_gettime (CLOCK_REALTIME, &ts2) != 0)
-    {
-      puts ("clock_gettime failed");
-      return 1;
-    }
+  TEST_COMPARE (clock_gettime (CLOCK_REALTIME, &ts2), 0);
 
-  if (ts2.tv_sec < ts.tv_sec
-      || (ts2.tv_sec == ts.tv_sec && ts2.tv_nsec < ts.tv_nsec))
-    {
-      puts ("timeout too short");
-      return 1;
-    }
+  TEST_VERIFY (ts2.tv_sec > ts.tv_sec
+               || (ts2.tv_sec == ts.tv_sec && ts2.tv_nsec > ts.tv_nsec));
 
   return 0;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

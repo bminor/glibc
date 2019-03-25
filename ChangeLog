@@ -1,3 +1,15 @@
+2019-03-25  Mike Crowe  <mac@mcrowe.com>
+
+	* nptl/tst-sem5.c: Remove unused headers. Add <support/check.h>.
+	(do_test) Use libsupport test macros rather than hand-coded
+	conditionals and error messages. Ensure that sem_init returns zero
+	rather than not -1. Use <support/test-driver.c> rather than
+	test-skeleton.c.
+
+	* nptl/tst-sem13.c: Add <support/check.h>. (do_test) Use libsupport
+	test macros rather than hand-coded conditionals and error messages.
+	Use <support/test-driver.c> rather than test-skeleton.c.
+
 2019-03-25  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/gnu/netinet/udp.h (UDP_GRO): New macro.
