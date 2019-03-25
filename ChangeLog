@@ -1,3 +1,7 @@
+2019-03-25  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/powerpc/fpu/s_float_bitwise.h: Remove file.
+
 2019-03-25  Andreas K. Hüttel  <dilfridge@gentoo.org>
 
 	* nss/tst-nss-files-alias-leak.c (do_test): add missing opening
