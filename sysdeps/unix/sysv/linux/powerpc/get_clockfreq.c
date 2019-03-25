@@ -25,10 +25,28 @@
 #include <libc-vdso.h>
 #include <not-cancel.h>
 
+#if defined __clang__ && defined __powerpc64__
+/* On ppc, __get_clockfreq's body eventually expands into asm code
+   that does a bctrl, but clang does not recognize the need to save
+   the link register, so calls loop infinitely instead of returning.
+   As workaround, make a dummy function call that forces a link
+   register save.  */
+volatile int get_clockfreq_dummy_glob;
+
+void __attribute__((noinline)) get_clockfreq_dummy ()
+{
+  get_clockfreq_dummy_glob = 45;
+}
+#endif
+
 hp_timing_t
 __get_clockfreq (void)
 {
   hp_timing_t result = 0L;
+
+#if defined __clang__ && defined __powerpc64__
+  get_clockfreq_dummy ();
+#endif
 
 #ifdef SHARED
   /* The vDSO does not return an error (it clear cr0.so on returning).  */
