@@ -1,3 +1,8 @@
+2019-03-25  Joseph Myers  <joseph@codesourcery.com>
+
+	* elf/elf.h (NT_ARM_PAC_MASK): New macro.
+	(NT_MIPS_MSA): Likewise.
+
 2019-03-22  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* benchtests/Makefile (USE_CLOCK_GETTIME) Remove.

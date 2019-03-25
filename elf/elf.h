@@ -809,9 +809,12 @@ typedef struct
 #define NT_ARM_SYSTEM_CALL	0x404	/* ARM system call number */
 #define NT_ARM_SVE	0x405		/* ARM Scalable Vector Extension
 					   registers */
+#define NT_ARM_PAC_MASK	0x406		/* ARM pointer authentication
+					   code masks.  */
 #define NT_VMCOREDD	0x700		/* Vmcore Device Dump Note.  */
 #define NT_MIPS_DSP	0x800		/* MIPS DSP ASE registers.  */
 #define NT_MIPS_FP_MODE	0x801		/* MIPS floating-point mode.  */
+#define NT_MIPS_MSA	0x802		/* MIPS SIMD registers.  */
 
 /* Legal values for the note segment descriptor types for object files.  */
 
