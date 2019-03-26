@@ -4,10 +4,6 @@
  * Public domain.
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: s_isinf.c,v 1.3 1995/05/11 23:20:14 jtc Exp $";
-#endif
-
 /*
  * isinf(x) returns 1 is x is inf, -1 if x is -inf, else 0;
  * no branching!
@@ -21,11 +17,12 @@ static char rcsid[] = "$NetBSD: s_isinf.c,v 1.3 1995/05/11 23:20:14 jtc Exp $";
 int
 __isinf (double x)
 {
-  int32_t hx, lx;
-  EXTRACT_WORDS (hx, lx, x);
-  lx |= (hx & 0x7fffffff) ^ 0x7ff00000;
-  lx |= -lx;
-  return ~(lx >> 31) & (hx >> 30);
+  int64_t ix;
+  EXTRACT_WORDS64 (ix,x);
+  int64_t t = ix & UINT64_C (0x7fffffffffffffff);
+  t ^= UINT64_C (0x7ff0000000000000);
+  t |= -t;
+  return ~(t >> 63) & (ix >> 62);
 }
 hidden_def (__isinf)
 weak_alias (__isinf, isinf)
