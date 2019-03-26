@@ -1,5 +1,8 @@
 2019-06-12  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_finite.c: Move to ...
+	* sysdeps/ieee754/dbl-64/s_finite.c: ... here and format code.
+
 	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/Makefile
 	(sysdeps_routines, libm-sysdep_routines): Remove s_isinf* and s_isinf*
 	objects.

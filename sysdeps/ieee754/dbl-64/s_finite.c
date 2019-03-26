@@ -1,4 +1,3 @@
-/* @(#)s_finite.c 5.1 93/09/24 */
 /*
  * ====================================================
  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
@@ -10,10 +9,6 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: s_finite.c,v 1.8 1995/05/10 20:47:17 jtc Exp $";
-#endif
-
 /*
  * finite(x) returns 1 is x is finite, else 0;
  * no branching!
@@ -23,18 +18,15 @@ static char rcsid[] = "$NetBSD: s_finite.c,v 1.8 1995/05/10 20:47:17 jtc Exp $";
 #include <math_private.h>
 #include <ldbl-classify-compat.h>
 #include <shlib-compat.h>
+#include <stdint.h>
 
-#undef __finite
-
-#ifndef FINITE
-# define FINITE __finite
-#endif
-
-int FINITE(double x)
+int
+__finite (double x)
 {
-  int32_t hx;
-  GET_HIGH_WORD (hx, x);
-  return (int) ((uint32_t) ((hx & 0x7ff00000) - 0x7ff00000) >> 31);
+  int64_t lx;
+  EXTRACT_WORDS64 (lx,x);
+  return (int)((uint64_t)((lx & INT64_C(0x7ff0000000000000))
+			  - INT64_C (0x7ff0000000000000)) >> 63);
 }
 hidden_def (__finite)
 weak_alias (__finite, finite)
