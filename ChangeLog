@@ -1,5 +1,8 @@
 2019-06-12  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_isnan.c: Move to ...
+	* sysdeps/ieee754/dbl-64/s_isnan.c: ... here and format code.
+
 	* benchtests/Makefile (bench-math): Add isnan, isinf, and isfinite.
 	(CFLAGS-bench-isnan.c, CFLAGS-bench-isinf.c,
 	CFLAGS-bench-isfinite.c): New rule.
