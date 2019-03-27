@@ -1102,7 +1102,7 @@
 	(wait_tid): Adjust arguments and call futex_wait with ctid_val
 	as assumed current value of ctid_ptr.
 
-2019-02-15  Florian Weimer  <fweimer@redhat.com>
+2019-02-16  Florian Weimer  <fweimer@redhat.com>
 
 	Check that non-sysdeps headers have wrapper headers.
 	* scripts/check-wrapper-headers.py: New file.
@@ -1111,7 +1111,7 @@
 	* Rules (tests-special): Add check-wrapper-headers.out.
 	(check-wrapper-headers.out): New target.
 
-2019-02-15  Florian Weimer  <fweimer@redhat.com>
+2019-02-16  Florian Weimer  <fweimer@redhat.com>
 
 	Add missing header wrappers under include/.
 	* include/ar.h: New file.
@@ -1134,7 +1134,7 @@
 	* include/sys/vfs.h: Likewise.
 	* include/wait.h: Likewise.
 
-2019-02-15  Florian Weimer  <fweimer@redhat.com>
+2019-02-16  Florian Weimer  <fweimer@redhat.com>
 
 	* nptl_db/proc_service.h: Move to ...
 	* sysdeps/nptl/proc_service.h: ... here.
@@ -1465,7 +1465,7 @@
 	Likewise.
 	* sysdeps/unix/sysv/linux/tst-setgetname.c (gettid): Remove.
 
-2019-02-07  Florian Weimer  <fweimer@redhat.com>
+2019-02-08  Florian Weimer  <fweimer@redhat.com>
 
 	* rt/clock-compat.c (COMPAT_REDIRECT): Turn librt forwarders into
 	compatibility symbols.
