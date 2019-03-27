@@ -24,7 +24,7 @@ include ../Makeconfig
 bench-math := acos acosh asin asinh atan atanh cos cosh exp exp2 log log2 \
 	      modf pow rint sin sincos sinh sqrt tan tanh fmin fmax fminf \
 	      fmaxf powf trunc truncf expf exp2f logf log2f sincosf sinf \
-	      cosf
+	      cosf isnan isinf isfinite
 
 bench-pthread := pthread_once thread_create
 
@@ -88,6 +88,9 @@ CFLAGS-bench-fmax.c += -fno-builtin
 CFLAGS-bench-fmaxf.c += -fno-builtin
 CFLAGS-bench-trunc.c += -fno-builtin
 CFLAGS-bench-truncf.c += -fno-builtin
+CFLAGS-bench-isnan.c += -fsignaling-nans
+CFLAGS-bench-isinf.c += -fsignaling-nans
+CFLAGS-bench-isfinite.c += -fsignaling-nans
 
 ifeq (${BENCHSET},)
 bench-malloc := malloc-thread malloc-simple

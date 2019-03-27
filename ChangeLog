@@ -1,5 +1,12 @@
 2019-06-12  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* benchtests/Makefile (bench-math): Add isnan, isinf, and isfinite.
+	(CFLAGS-bench-isnan.c, CFLAGS-bench-isinf.c,
+	CFLAGS-bench-isfinite.c): New rule.
+	* benchtests/isnan-input: New file.
+	* benchtests/isinf-input: New file.
+	* benchtests/isfinite-input: New file.
+
 	* sysdeps/powerpc/fpu/s_copysign.c: New file.
 	* sysdeps/powerpc/fpu/s_copysignf.c: Likewise.
 	* sysdeps/powerpc/powerpc32/fpu/s_copysign.S: Remove file.
