@@ -1,4 +1,4 @@
-2019-02-26  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+2019-03-26  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* math/math.h (fpclassify, isfinite, isnormal, isnan): Use builtin for
 	clang 2.8.
@@ -184,7 +184,7 @@
 	(HWCAP_S390_VXRS_EXT2, HWCAP_S390_VXRS_PDE, HWCAP_S390_SORT,
 	HWCAP_S390_DFLT): Define.
 
-2019-03-05  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+2019-03-21  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
 	[BZ #24372]
 	* iconv/iconvconfig.c (write_output): Add parentheses to get rid
