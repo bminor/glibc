@@ -1,22 +1,24 @@
-/* @(#)s_logb.c 5.1 93/09/24 */
-/*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
- */
+/* Compute radix independent exponent.
+   Copyright (C) 2011-2019 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
-/*
- * double logb(x)
- * IEEE 754 logb. Included to pass IEEE test suite. Not recommend.
- * Use ilogb instead.
- */
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+
 #include <math_private.h>
 #include <libm-alias-double.h>
 #include <fix-int-fp-convert-zero.h>
@@ -24,28 +26,23 @@
 double
 __logb (double x)
 {
-  int32_t lx, ix, rix;
+  int64_t ix, ex;
 
-  EXTRACT_WORDS (ix, lx, x);
-  ix &= 0x7fffffff;             /* high |x| */
-  if ((ix | lx) == 0)
+  EXTRACT_WORDS64 (ix, x);
+  ix &= UINT64_C(0x7fffffffffffffff);
+  if (ix == 0)
     return -1.0 / fabs (x);
-  if (ix >= 0x7ff00000)
+  ex = ix >> 52;
+  if (ex == 0x7ff)
     return x * x;
-  if (__glibc_unlikely ((rix = ix >> 20) == 0))
+  if (__glibc_unlikely (ex == 0))
     {
-      /* POSIX specifies that denormal number is treated as
-         though it were normalized.  */
-      int ma;
-      if (ix == 0)
-	ma = __builtin_clz (lx) + 32;
-      else
-	ma = __builtin_clz (ix);
-      rix -= ma - 12;
+      int m = __builtin_clzll (ix);
+      ex -= m - 12;
     }
-  if (FIX_INT_FP_CONVERT_ZERO && rix == 1023)
+  if (FIX_INT_FP_CONVERT_ZERO && ex == 1023)
     return 0.0;
-  return (double) (rix - 1023);
+  return (double) (ex - 1023);
 }
 #ifndef __logb
 libm_alias_double (__logb, logb)

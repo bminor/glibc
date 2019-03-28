@@ -1,5 +1,9 @@
 2019-07-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_logb.c: Move to ...
+	* sysdeps/ieee754/dbl-64/s_logb.c: ... here.  Add work around for
+	powerpc32 integer 0 converting to -0.
+
 	* benchtests/Makefile (bench-math): Add logb.
 	* benchtests/logb-inputs: New file.
 	* benchtests/logbf-inputs: New file.
