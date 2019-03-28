@@ -1,3 +1,7 @@
+2019-04-01  Carlos O'Donell  <carlos@redhat.com>
+
+	* localedata/locales/ja_JP: Add comments to era entries.
+
 2019-04-01  DJ Delorie  <dj@redhat.com>
 
 	[BZ #24394]

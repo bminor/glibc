@@ -14946,6 +14946,24 @@ am_pm	"<U5348><U524D>";"<U5348><U5F8C>"
 
 t_fmt_ampm "%p%I<U6642>%M<U5206>%S<U79D2>"
 
+% The era names are laid out in groups of 2 to account for the desire
+% to avoid using '1' for the first era year.  Instead of '1' we use
+% <U5143> or <GAN> as the first era year.
+%
+% The following dates and their names are recorded below in descending
+% date order (note that <U5E74> or <NEN> follows each date).
+% <HEISEI> -> <SHOWA> -> <TAISHO> -> <MEIJI> -> <AD> -> <BC>
+%
+% Each string is an era description segment with the format:
+% "direction:offset:start_date:end_date:era_name:era_format"
+%
+% Note:
+% - The '+*' entry in end_date means "forever going forward"
+% - The '-*' entry in end_date means "forever going backwards" counting up.
+% - Negative year number in start_date is prior to AD 1 (BC) counting up.
+% - The last entry <U7D00><U5143><U524D> in era_name means BC.
+% - The second-to-last entry <U897F><U66A6> in era_name means AD.
+%
 era	"+:2:1990//01//01:+*:<U5E73><U6210>:%EC%Ey<U5E74>";/
 	"+:1:1989//01//08:1989//12//31:<U5E73><U6210>:%EC<U5143><U5E74>";/
 	"+:2:1927//01//01:1989//01//07:<U662D><U548C>:%EC%Ey<U5E74>";/
