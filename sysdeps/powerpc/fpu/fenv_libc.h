@@ -32,8 +32,7 @@ extern const fenv_t *__fe_mask_env (void) attribute_hidden;
 
 /* Equivalent to fegetenv, but returns a fenv_t instead of taking a
    pointer.  */
-#define fegetenv_register() \
-        ({ fenv_t env; asm volatile ("mffs %0" : "=f" (env)); env; })
+#define fegetenv_register() __builtin_mffs()
 
 /* Equivalent to fesetenv, but takes a fenv_t instead of a pointer.  */
 #define fesetenv_register(env) \
@@ -45,7 +44,7 @@ extern const fenv_t *__fe_mask_env (void) attribute_hidden;
 			  "mtfsf 0xff,%0,1,0; " \
 			  ".machine pop" : : "f" (d)); \
 	  else \
-	    asm volatile ("mtfsf 0xff,%0" : : "f" (d)); \
+	    __builtin_mtfsf (0xff, d); \
 	} while(0)
 
 /* This very handy macro:

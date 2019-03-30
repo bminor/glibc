@@ -1,3 +1,13 @@
+2019-03-29  Paul A. Clarke  <pc@us.ibm.com>
+
+	* sysdeps/powerpc/fpu/fenv_libc.h (fegetenv_register): Replace inline
+	asm with builtin.
+	* sysdeps/powerpc/powerpc64/le/fpu/sfp-machine.h (FP_INIT_ROUNDMODE):
+	Likewise.
+	* sysdeps/powerpc/fpu/tst-setcontext-fpscr.c (_GET_DI_FPSCR): Likewise.
+	(_GET_SI_FPSCR): Likewise.
+	(_SET_SI_FPSCR): Likewise.
+
 2019-03-26  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* math/math.h (fpclassify, isfinite, isnormal, isnan): Use builtin for

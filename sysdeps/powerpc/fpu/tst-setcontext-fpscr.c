@@ -97,9 +97,7 @@ typedef unsigned int si_fpscr_t __attribute__ ((__mode__ (__SI__)));
 /* Macros for accessing the hardware control word on Power6[x].  */
 #define _GET_DI_FPSCR(__fpscr)						\
   ({union { double d; di_fpscr_t fpscr; } u;				\
-    register double fr;							\
-    __asm__ ("mffs %0" : "=f" (fr));					\
-    u.d = fr;								\
+    u.d = __builtin_mffs ();						\
     (__fpscr) = u.fpscr;						\
     u.fpscr;								\
   })
@@ -121,9 +119,7 @@ typedef unsigned int si_fpscr_t __attribute__ ((__mode__ (__SI__)));
 
 # define _GET_SI_FPSCR(__fpscr)						\
   ({union { double d; di_fpscr_t fpscr; } u;				\
-    register double fr;							\
-    __asm__ ("mffs %0" : "=f" (fr));					\
-    u.d = fr;								\
+    u.d = __builtin_mffs ();						\
     (__fpscr) = (si_fpscr_t) u.fpscr;					\
     (si_fpscr_t) u.fpscr;						\
   })
@@ -137,7 +133,7 @@ typedef unsigned int si_fpscr_t __attribute__ ((__mode__ (__SI__)));
     u.fpscr = 0xfff80000ULL << 32;					\
     u.fpscr |= __fpscr & 0xffffffffULL;					\
     fr = u.d;								\
-    __asm__ ("mtfsf 255,%0" : : "f" (fr));				\
+    __builtin_mtfsf (255, fr);						\
     fr = 0.0;								\
   }
 

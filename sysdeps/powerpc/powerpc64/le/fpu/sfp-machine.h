@@ -107,8 +107,7 @@ void __sfp_handle_exceptions (int);
 
 #define FP_INIT_ROUNDMODE			\
   do {						\
-    __asm__ __volatile__ ("mffs %0"		\
-			  : "=f" (_fpscr.d));	\
+    _fpscr.d = __builtin_mffs ();		\
   } while (0)
 
 # define FP_ROUNDMODE	(_fpscr.i & FP_RND_MASK)
