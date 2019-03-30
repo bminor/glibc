@@ -178,7 +178,7 @@ if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
 fi
 rm -f conftest*
 
-if test $libc_cv_riscv_float_abi = no; then
+if test "$libc_cv_riscv_float_abi" = no; then
   as_fn_error $? "Unable to determine floating-point ABI" "$LINENO" 5
 fi
 

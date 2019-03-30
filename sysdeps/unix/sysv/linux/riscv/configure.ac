@@ -20,7 +20,7 @@ AC_EGREP_CPP(yes, [#ifdef __riscv_float_abi_soft
 		   yes
 		   #endif
   ],libc_cv_riscv_float_abi=)
-if test $libc_cv_riscv_float_abi = no; then
+if test "$libc_cv_riscv_float_abi" = no; then
   AC_MSG_ERROR([Unable to determine floating-point ABI])
 fi
 

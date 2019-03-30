@@ -1,3 +1,9 @@
+2019-03-30  Maciej W. Rozycki  <macro@wdc.com>
+
+	* sysdeps/unix/sysv/linux/riscv/configure.ac: Quote
+	$libc_cv_riscv_float_abi in `test' invocation.
+	* sysdeps/unix/sysv/linux/riscv/configure: Regenerate.
+
 2019-03-29  Paul A. Clarke  <pc@us.ibm.com>
 
 	* sysdeps/powerpc/fpu/fenv_libc.h (fegetenv_register): Replace inline
