@@ -1,3 +1,10 @@
+2019-08-15  Richard Henderson  <rth@twiddle.net>
+
+	* sysdeps/unix/sysv/linux/alpha/kernel-features.h (__NR_shmat):
+	Do not redefine.
+	* sysdeps/unix/sysv/linux/alpha/sysdep.h (__NR_osf_shmat):
+	Do not redefine.
+
 2019-07-15  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #24699]

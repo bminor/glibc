@@ -26,8 +26,10 @@
 #undef __ASSUME_STATFS64
 #define __ASSUME_STATFS64 0
 
-/* Alpha defines SysV ipc shmat syscall with a different name.  */
-#define __NR_shmat __NR_osf_shmat
+/* Alpha used to define SysV ipc shmat syscall with a different name.  */
+#ifndef __NR_shmat
+# define __NR_shmat __NR_osf_shmat
+#endif
 
 #define __ASSUME_RECV_SYSCALL	1
 #define __ASSUME_SEND_SYSCALL	1
