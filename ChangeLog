@@ -1,3 +1,12 @@
+2019-04-01  Uros Bizjak <ubizjak@gmail.com>
+
+	* sysdeps/alpha/divqu.S (__divqu): Move save of $f0 and excb after
+	conditional branch to DIVBYZERO.  Fix unwind info.
+	* sysdeps/alpha/remqu.S (__remqu): Move saves of $f0, $f1, $f2 and
+	excb after conditional branch to $powerof2.  Add missing unop
+	instructions and .align directives and reorder instructions to
+	match __divqu.
+
 2019-04-01  Richard Henderson  <rth@twiddle.net>
 
 	* sysdeps/unix/sysv/linux/alpha/kernel-features.h (__NR_shmat):
