@@ -1,3 +1,10 @@
+2019-04-01  Richard Henderson  <rth@twiddle.net>
+
+	* sysdeps/unix/sysv/linux/alpha/kernel-features.h (__NR_shmat):
+	Do not redefine.
+	* sysdeps/unix/sysv/linux/alpha/sysdep.h (__NR_osf_shmat):
+	Do not redefine.
+
 2019-03-30  Maciej W. Rozycki  <macro@wdc.com>
 
 	* sysdeps/unix/sysv/linux/riscv/configure.ac: Quote
