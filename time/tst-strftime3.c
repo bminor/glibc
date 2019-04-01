@@ -291,6 +291,62 @@ const Data data[] = {
     1990, Jan,  1, Mon, 12, 00, 00, "ja_JP.EUC-JP", "%EY",
     /* <U5E73><U6210>02<U5E74> 平成02年 */
     "\xca\xbf\xc0\xae""02\xc7\xaf" },
+
+
+  { "Japanese era change, 2019, before transition year",
+    2018, Dec, 31, Mon, 12, 00, 00, "ja_JP.UTF-8", "%EY",
+    /* <U5E73><U6210>30<U5E74> 昭和30年 */
+    "\xe5\xb9\xb3\xe6\x88\x90""30\xe5\xb9\xb4" },
+  { "Japanese era change, 2019, start of transition year",
+    2019, Jan,  1, Tue, 12, 00, 00, "ja_JP.UTF-8", "%EY",
+    /* <U5E73><U6210>30<U5E74> 昭和31年 */
+    "\xe5\xb9\xb3\xe6\x88\x90""31\xe5\xb9\xb4" },
+
+  { "Japanese era change, 2019, before transition",
+    2019, Apr, 30, Tue, 12, 00, 00, "ja_JP.UTF-8", "%EY",
+    /* <U5E73><U6210>30<U5E74> 昭和31年 */
+    "\xe5\xb9\xb3\xe6\x88\x90""31\xe5\xb9\xb4" },
+  { "Japanese era change, 2019, after transition",
+    2019, May,  1, Wed, 12, 00, 00, "ja_JP.UTF-8", "%EY",
+    /* <U4EE4><U548C><U5143><U5E74> 令和元年 */
+    "\xe4\xbb\xa4\xe5\x92\x8c\xe5\x85\x83\xe5\xb9\xb4" },
+
+  { "Japanese era change, 2019, end of transition year",
+    2019, Dec, 31, Tue, 12, 00, 00, "ja_JP.UTF-8", "%EY",
+    /* <U4EE4><U548C><U5143><U5E74> 令和元年 */
+    "\xe4\xbb\xa4\xe5\x92\x8c\xe5\x85\x83\xe5\xb9\xb4" },
+  { "Japanese era change, 2019, after transition year",
+    2020, Jan,  1, Wed, 12, 00, 00, "ja_JP.UTF-8", "%EY",
+    /* <U4EE4><U548C>02<U5E74> 令和02年 */
+    "\xe4\xbb\xa4\xe5\x92\x8c""02\xe5\xb9\xb4" },
+
+
+  { "Japanese era change, 2019, before transition year",
+    2018, Dec, 31, Mon, 12, 00, 00, "ja_JP.EUC-JP", "%EY",
+    /* <U5E73><U6210>30<U5E74> 昭和30年 */
+    "\xca\xbf\xc0\xae""30\xc7\xaf" },
+  { "Japanese era change, 2019, start of transition year",
+    2019, Jan,  1, Tue, 12, 00, 00, "ja_JP.EUC-JP", "%EY",
+    /* <U5E73><U6210>30<U5E74> 昭和31年 */
+    "\xca\xbf\xc0\xae""31\xc7\xaf" },
+
+  { "Japanese era change, 2019, before transition",
+    2019, Apr, 30, Tue, 12, 00, 00, "ja_JP.EUC-JP", "%EY",
+    /* <U5E73><U6210>30<U5E74> 昭和31年 */
+    "\xca\xbf\xc0\xae""31\xc7\xaf" },
+  { "Japanese era change, 2019, after transition",
+    2019, May,  1, Wed, 12, 00, 00, "ja_JP.EUC-JP", "%EY",
+    /* <U4EE4><U548C><U5143><U5E74> 令和元年 */
+    "\xce\xe1\xcf\xc2\xb8\xb5\xc7\xaf" },
+
+  { "Japanese era change, 2019, end of transition year",
+    2019, Dec, 31, Tue, 12, 00, 00, "ja_JP.EUC-JP", "%EY",
+    /* <U4EE4><U548C><U5143><U5E74> 令和元年 */
+    "\xce\xe1\xcf\xc2\xb8\xb5\xc7\xaf" },
+  { "Japanese era change, 2019, after transition year",
+    2020, Jan,  1, Wed, 12, 00, 00, "ja_JP.EUC-JP", "%EY",
+    /* <U4EE4><U548C>02<U5E74> 令和02年 */
+    "\xce\xe1\xcf\xc2""02\xc7\xaf" },
 };
 
 #define NDATA array_length(data)
@@ -348,7 +404,7 @@ print_string_hex (const char *header, const char *str)
       if (' ' <= w[i] && w[i] <= '~')
 	putchar (w[i]);
       else
-	printf ("<U%04X>", w[i]);
+	printf ("<U%04X>", (int) w[i]);
     }
   printf ("\n");
 }
