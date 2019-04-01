@@ -309,7 +309,7 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 # ifndef RTLD_BOOTSTRAP
       const ElfW(Sym) *const refsym = sym;
 # endif
-#if !defined NESTING && defined RTLD_BOOTSTRAP
+#if !defined NESTING && (defined RTLD_BOOTSTRAP || defined STATIC_PIE_BOOTSTRAP)
   struct link_map *sym_map = boot_map;
 #else
       struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
