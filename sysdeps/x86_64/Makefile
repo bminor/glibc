@@ -6,6 +6,9 @@ ifeq ($(with-clang),yes)
 # allowed. (-mavx512 is the preferred option but does not work in 5.0)
 ASFLAGS-.o += -march=knl
 ASFLAGS-.os += -march=knl
+# We want clang to generate relaxed relocations so that they can work with
+# static-pie as well.
+ASFLAGS-.o += -Wa,-mrelax-relocations=yes
 endif
 
 ifeq ($(subdir),csu)
