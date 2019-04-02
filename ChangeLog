@@ -7,6 +7,14 @@
 	(mkreftable): Minor improvements to simplify maintenance.
 	(do_test): Reflect the changes in dates array.
 
+	[BZ #24293]
+	* time/Makefile (LOCALES): Add zh_TW.UTF-8, cmn_TW.UTF-8,
+	hak_TW.UTF-8, nan_TW.UTF-8, and lzh_TW.UTF-8.
+	* time/tst-strftime2.c (locales): Likewise.
+	(dates): Add 1910-04-01, 1911-12-31, 1912-01-01, 1913-04-01,
+	2010-04-01, and 2011-04-01.
+	(mkreftable): Add rules for the new locales and the new dates.
+
 2019-04-01  Carlos O'Donell  <carlos@redhat.com>
 
 	* localedata/locales/ja_JP: Add comments to era entries.
