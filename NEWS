@@ -18,6 +18,10 @@ Major new features:
 
 * On Linux, the gettid function has been added.
 
+* Minguo (Republic of China) calendar support has been added as an
+  alternative calendar for the following locales: zh_TW, cmn_TW, hak_TW,
+  nan_TW, lzh_TW.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The functions clock_gettime, clock_getres, clock_settime,
