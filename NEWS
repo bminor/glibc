@@ -9,6 +9,8 @@ Version 2.27.1
 
 Major new features:
 
+* The entry for the new Japanese era has been added for ja_JP locale.
+
 * Nominative and genitive month names are now supported for the Catalan and
   Czech languages.  The Catalan and Greek languages now support abbreviated
   alternative month names.
