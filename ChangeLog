@@ -1,4 +1,12 @@
 2019-04-02  TAMUKI Shoichi  <tamuki@linet.gr.jp>
+
+	[BZ #22964]
+	* localedata/locales/ja_JP (LC_TIME): Add entry for the new Japanese
+	era.
+	* time/tst-strftime2.c (dates): Add 2019-04-30 and 2019-05-01.
+	(mkreftable): Add rules for the new Japanese era and the new dates.
+
+2019-04-02  TAMUKI Shoichi  <tamuki@linet.gr.jp>
 	    Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	* time/tst-strftime2.c (date_t): Explicitly define the type.

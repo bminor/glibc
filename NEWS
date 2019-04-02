@@ -22,6 +22,8 @@ Major new features:
   alternative calendar for the following locales: zh_TW, cmn_TW, hak_TW,
   nan_TW, lzh_TW.
 
+* The entry for the new Japanese era has been added for ja_JP locale.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The functions clock_gettime, clock_getres, clock_settime,

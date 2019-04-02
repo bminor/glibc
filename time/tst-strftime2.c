@@ -61,7 +61,9 @@ static const date_t dates[] =
   {  1,  4, 1997 },
   {  1,  4, 1998 },
   {  1,  4, 2010 },
-  {  1,  4, 2011 }
+  {  1,  4, 2011 },
+  { 30,  4, 2019 },
+  {  1,  5, 2019 }
 };
 
 static char ref[array_length (locales)][array_length (formats)]
@@ -91,20 +93,20 @@ mkreftable (void)
   static const int yrj[] =
   {
     43, 44, 45, 2,
-    63, 64, 1, 2, 9, 10, 22, 23
+    63, 64, 1, 2, 9, 10, 22, 23, 31, 1
   };
   /* Buddhist calendar year to be checked.  */
   static const int yrb[] =
   {
     2453, 2454, 2455, 2456,
-    2531, 2532, 2532, 2533, 2540, 2541, 2553, 2554
+    2531, 2532, 2532, 2533, 2540, 2541, 2553, 2554, 2562, 2562
   };
   /* R.O.C. calendar year to be checked.  Negative number is prior to
      Minguo counting up.  */
   static const int yrc[] =
   {
     -2, -1, 1, 2,
-    77, 78, 78, 79, 86, 87, 99, 100
+    77, 78, 78, 79, 86, 87, 99, 100, 108, 108
   };
 
   for (i = 0; i < array_length (locales); i++)
@@ -116,7 +118,8 @@ mkreftable (void)
 	      era = (is_before (k, 30,  7, 1912)) ? "\u660e\u6cbb"
 		  : (is_before (k, 25, 12, 1926)) ? "\u5927\u6b63"
 		  : (is_before (k,  8,  1, 1989)) ? "\u662d\u548c"
-						  : "\u5e73\u6210";
+		  : (is_before (k,  1,  5, 2019)) ? "\u5e73\u6210"
+						  : "\u4ee4\u548c";
 	      yr = yrj[k], sfx = "\u5e74";
 	    }
 	  else if (i == lo_LA)
