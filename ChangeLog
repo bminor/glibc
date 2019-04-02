@@ -1,3 +1,12 @@
+2019-04-02  TAMUKI Shoichi  <tamuki@linet.gr.jp>
+	    Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	* time/tst-strftime2.c (date_t): Explicitly define the type.
+	(dates): Use natural month and year numbers to express a date.
+	(is_before): New function to compare dates.
+	(mkreftable): Minor improvements to simplify maintenance.
+	(do_test): Reflect the changes in dates array.
+
 2019-04-01  Carlos O'Donell  <carlos@redhat.com>
 
 	* localedata/locales/ja_JP: Add comments to era entries.
