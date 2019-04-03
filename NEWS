@@ -7,6 +7,10 @@ using `glibc' in the "product" field.
 
 Version 2.28.1
 
+Major new features:
+
+* The entry for the new Japanese era has been added for ja_JP locale.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * For powercp64le ABI, Transactional Lock Elision is now enabled iff kernel

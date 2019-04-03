@@ -1,3 +1,9 @@
+2019-04-03  TAMUKI Shoichi  <tamuki@linet.gr.jp>
+
+	[BZ #22964]
+	* localedata/locales/ja_JP (LC_TIME): Add entry for the new Japanese
+	era.
+
 2019-03-21  Stefan Liebler  <stli@linux.ibm.com>
 
 	* sysdeps/s390/dl-procinfo.h (HWCAP_IMPORTANT):
