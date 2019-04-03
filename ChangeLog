@@ -1,3 +1,8 @@
+2019-04-03  DJ Delorie  <dj@redhat.com>
+
+	* time/tst-strftime3.c (tm_to_printed): Disable warning about
+	snprintf truncating output.
+
 2019-04-02  DJ Delorie  <dj@redhat.com>
 
 	* time/tst-strftime3.c: Add new Japanese era tests.  Fix printf

@@ -25,6 +25,7 @@
 
 #include <support/check.h>
 #include <array_length.h>
+#include <libc-diag.h>
 
 /* These exist for the convenience of writing the test data, because
    zero-based vs one-based.  */
@@ -440,6 +441,14 @@ tm_to_printed (struct tm *tm, char *buffer)
       sprintf (temp, "%d", tm->tm_wday);
     }
 
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (9, 0)
+  /* GCC 9 warns that strncmp may truncate its output, but that's why
+     we're using it.  When it needs to truncate, it got corrupted
+     data, and we only care that the string is different than valid
+     data, which won't truncate.  */
+  DIAG_IGNORE_NEEDS_COMMENT (9, "-Wformat-truncation=");
+#endif
   snprintf (buffer, TMBUFLEN, "%04d/%02d/%02d %02d:%02d:%02d %s",
 	    tm->tm_year + 1900,
 	    tm->tm_mon + 1,
@@ -448,6 +457,7 @@ tm_to_printed (struct tm *tm, char *buffer)
 	    tm->tm_min,
 	    tm->tm_sec,
 	    wn);
+  DIAG_POP_NEEDS_COMMENT;
 }
 
 static int
