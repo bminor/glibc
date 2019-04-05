@@ -1,3 +1,8 @@
+2019-04-05  Anton Youdkevitch <anton.youdkevitch@bell-sw.com>
+
+	* sysdeps/aarch64/multiarch/memcpy_thunderx2.S: Cleanup branching
+	and remove redundant code.
+
 2019-04-04  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/powerpc/Makefile [$(subdir) == wcsmbs] (CFLAGS-wcsrchr.c):

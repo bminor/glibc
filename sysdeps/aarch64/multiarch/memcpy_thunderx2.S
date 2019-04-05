@@ -382,7 +382,8 @@ L(bytes_0_to_3):
 	strb    A_lw, [dstin]
 	strb    B_lw, [dstin, tmp1]
 	strb    A_hw, [dstend, -1]
-L(end): ret
+L(end):
+	ret
 
 	.p2align 4
 
@@ -544,43 +545,35 @@ L(dst_unaligned):
 	str     C_q, [dst], #16
 	ldp     F_q, G_q, [src], #32
 	bic	dst, dst, 15
+	subs    count, count, 32
 	adrp	tmp2, L(ext_table)
 	add	tmp2, tmp2, :lo12:L(ext_table)
 	add	tmp2, tmp2, tmp1, LSL #2
 	ldr	tmp3w, [tmp2]
 	add	tmp2, tmp2, tmp3w, SXTW
 	br	tmp2
-
-#define EXT_CHUNK(shft) \
 .p2align 4 ;\
+	nop
+#define EXT_CHUNK(shft) \
 L(ext_size_ ## shft):;\
 	ext     A_v.16b, C_v.16b, D_v.16b, 16-shft;\
 	ext     B_v.16b, D_v.16b, E_v.16b, 16-shft;\
-	subs    count, count, 32;\
-	b.ge    2f;\
+	ext     H_v.16b, E_v.16b, F_v.16b, 16-shft;\
 1:;\
 	stp     A_q, B_q, [dst], #32;\
-	ext     H_v.16b, E_v.16b, F_v.16b, 16-shft;\
-	ext     I_v.16b, F_v.16b, G_v.16b, 16-shft;\
-	stp     H_q, I_q, [dst], #16;\
-	add     dst, dst, tmp1;\
-	str     G_q, [dst], #16;\
-	b       L(copy_long_check32);\
-2:;\
-	stp     A_q, B_q, [dst], #32;\
 	prfm    pldl1strm, [src, MEMCPY_PREFETCH_LDR];\
-	ldp     D_q, J_q, [src], #32;\
-	ext     H_v.16b, E_v.16b, F_v.16b, 16-shft;\
+	ldp     C_q, D_q, [src], #32;\
 	ext     I_v.16b, F_v.16b, G_v.16b, 16-shft;\
-	mov     C_v.16b, G_v.16b;\
 	stp     H_q, I_q, [dst], #32;\
+	ext     A_v.16b, G_v.16b, C_v.16b, 16-shft;\
+	ext     B_v.16b, C_v.16b, D_v.16b, 16-shft;\
 	ldp     F_q, G_q, [src], #32;\
-	ext     A_v.16b, C_v.16b, D_v.16b, 16-shft;\
-	ext     B_v.16b, D_v.16b, J_v.16b, 16-shft;\
-	mov     E_v.16b, J_v.16b;\
+	ext     H_v.16b, D_v.16b, F_v.16b, 16-shft;\
 	subs    count, count, 64;\
-	b.ge    2b;\
-	b	1b;\
+	b.ge    1b;\
+2:;\
+	ext     I_v.16b, F_v.16b, G_v.16b, 16-shft;\
+	b	L(ext_tail);
 
 EXT_CHUNK(1)
 EXT_CHUNK(2)
@@ -597,6 +590,14 @@ EXT_CHUNK(12)
 EXT_CHUNK(13)
 EXT_CHUNK(14)
 EXT_CHUNK(15)
+
+L(ext_tail):
+	stp     A_q, B_q, [dst], #32
+	stp     H_q, I_q, [dst], #16
+	add     dst, dst, tmp1
+	str     G_q, [dst], #16
+	b       L(copy_long_check32)
+
 
 END (MEMCPY)
 	.section	.rodata
