@@ -1,5 +1,6 @@
 libmvec {
   GLIBC_2.30 {
     _ZGVbN2v_cos; _ZGVbN4v_cosf; _ZGVbN2v_sin; _ZGVbN4v_sinf;
+    _ZGVbN2vvv_sincos;
   }
 }

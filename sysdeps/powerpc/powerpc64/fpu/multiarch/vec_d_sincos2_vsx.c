@@ -1,4 +1,4 @@
-/* Wrapper part of tests for VSX ISA versions of vector math functions.
+/* Function sincos vectorized with VSX.
    Copyright (C) 2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,12 +16,18 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "test-double-vlen2.h"
-#include <altivec.h>
+#include <math.h>
+#include "vec_d_trig_data.h"
+#include "vec_d_sincos2_vsx.h"
 
-#define VEC_TYPE vector double
+void
+_ZGVbN2vvv_sincos (vector double x, vector double * sines_x, vector double * cosines_x)
+{
 
-VECTOR_WRAPPER (WRAPPER_NAME (cos), _ZGVbN2v_cos)
-VECTOR_WRAPPER (WRAPPER_NAME (sin), _ZGVbN2v_sin)
+  /* Call vector sine evaluator.  */
+  *sines_x = __d_sin_poly_eval(x);
 
-VECTOR_WRAPPER_fFF (WRAPPER_NAME (sincos), _ZGVbN2vvv_sincos)
+  /* Call vector cosine evaluator.  */
+  *cosines_x = __d_cos_poly_eval(x);
+
+} /* Function _ZGVbN2_vvv_sincos.  */

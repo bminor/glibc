@@ -2616,6 +2616,9 @@ ifloat128: 3
 ildouble: 7
 ldouble: 7
 
+Function: "sincos_vlen2":
+double: 2
+
 Function: "sinh":
 double: 2
 float: 2

@@ -36,6 +36,8 @@
 # ifdef __DECL_SIMD_PPC64
 #  undef __DECL_SIMD_cos
 #  define __DECL_SIMD_cos __DECL_SIMD_PPC64
+#  undef __DECL_SIMD_sincos
+#  define __DECL_SIMD_sincos __DECL_SIMD_PPC64
 
 # endif
 #endif

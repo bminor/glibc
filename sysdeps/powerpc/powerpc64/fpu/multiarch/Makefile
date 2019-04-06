@@ -1,10 +1,12 @@
 ifeq ($(subdir),mathvec)
 libmvec-sysdep_routines += vec_d_cos2_vsx vec_s_cosf4_vsx \
-			   vec_d_sin2_vsx vec_s_sinf4_vsx
+			   vec_d_sin2_vsx vec_s_sinf4_vsx \
+			   vec_d_sincos2_vsx
 CFLAGS-vec_d_cos2_vsx.c += -mabi=altivec -maltivec -mvsx
 CFLAGS-vec_s_cosf4_vsx.c += -mabi=altivec -maltivec -mvsx
 CFLAGS-vec_d_sin2_vsx.c += -mabi=altivec -maltivec -mvsx
 CFLAGS-vec_s_sinf4_vsx.c += -mabi=altivec -maltivec -mvsx
+CFLAGS-vec_d_sincos2_vsx.c += -mabi=altivec -maltivec -mvsx
 endif
 
 # Variables for libmvec tests.
@@ -12,7 +14,7 @@ ifeq ($(subdir),math)
 ifeq ($(build-mathvec),yes)
 libmvec-tests += double-vlen2 float-vlen4
 
-double-vlen2-funcs = cos sin
+double-vlen2-funcs = cos sin sincos
 float-vlen4-funcs = cos sin
 
 double-vlen2-arch-ext-cflags = -mabi=altivec -maltivec -mvsx -DREQUIRE_VSX
