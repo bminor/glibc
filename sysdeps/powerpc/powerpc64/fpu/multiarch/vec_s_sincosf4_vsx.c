@@ -1,4 +1,4 @@
-/* Wrapper part of tests for VSX ISA versions of vector math functions.
+/* Function sincosf vectorized with VSX.
    Copyright (C) 2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,12 +16,18 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "test-float-vlen4.h"
-#include <altivec.h>
+#include <math.h>
+#include "vec_s_trig_data.h"
+#include "vec_s_sincosf4_vsx.h"
 
-#define VEC_TYPE vector float
+void
+_ZGVbN4vvv_sincosf (vector float x, vector float * sines_x, vector float * cosines_x)
+{
 
-VECTOR_WRAPPER (WRAPPER_NAME (cosf), _ZGVbN4v_cosf)
-VECTOR_WRAPPER (WRAPPER_NAME (sinf), _ZGVbN4v_sinf)
+  /* Call vector sine evaluator.  */
+  *sines_x = __s_sin_poly_eval(x);
 
-VECTOR_WRAPPER_fFF (WRAPPER_NAME (sincosf), _ZGVbN4vvv_sincosf)
+  /* Call vector cosine evaluator.  */
+  *cosines_x = __s_cos_poly_eval(x);
+
+} /* Function _ZGVbN4_vvv_sincosf.  */
