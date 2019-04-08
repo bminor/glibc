@@ -121,6 +121,41 @@ lock_and_info (const void *caller, Dl_info *mem)
   return res;
 }
 
+static void tr_freehook (void *, const void *);
+static void * tr_mallochook (size_t, const void *);
+static void * tr_reallochook (void *, size_t, const void *);
+static void * tr_memalignhook (size_t, size_t, const void *);
+
+/* Set all the default non-trace hooks.  */
+static __always_inline void
+set_default_hooks (void)
+{
+  __free_hook = tr_old_free_hook;
+  __malloc_hook = tr_old_malloc_hook;
+  __realloc_hook = tr_old_realloc_hook;
+  __memalign_hook = tr_old_memalign_hook;
+}
+
+/* Set all of the tracing hooks used for mtrace.  */
+static __always_inline void
+set_trace_hooks (void)
+{
+  __free_hook = tr_freehook;
+  __malloc_hook = tr_mallochook;
+  __realloc_hook = tr_reallochook;
+  __memalign_hook = tr_memalignhook;
+}
+
+/* Save the current set of hooks as the default hooks.  */
+static __always_inline void
+save_default_hooks (void)
+{
+  tr_old_free_hook = __free_hook;
+  tr_old_malloc_hook = __malloc_hook;
+  tr_old_realloc_hook = __realloc_hook;
+  tr_old_memalign_hook = __memalign_hook;
+}
+
 static void
 tr_freehook (void *ptr, const void *caller)
 {
@@ -138,12 +173,12 @@ tr_freehook (void *ptr, const void *caller)
       tr_break ();
       __libc_lock_lock (lock);
     }
-  __free_hook = tr_old_free_hook;
+  set_default_hooks ();
   if (tr_old_free_hook != NULL)
     (*tr_old_free_hook)(ptr, caller);
   else
     free (ptr);
-  __free_hook = tr_freehook;
+  set_trace_hooks ();
   __libc_lock_unlock (lock);
 }
 
@@ -155,12 +190,12 @@ tr_mallochook (size_t size, const void *caller)
   Dl_info mem;
   Dl_info *info = lock_and_info (caller, &mem);
 
-  __malloc_hook = tr_old_malloc_hook;
+  set_default_hooks ();
   if (tr_old_malloc_hook != NULL)
     hdr = (void *) (*tr_old_malloc_hook)(size, caller);
   else
     hdr = (void *) malloc (size);
-  __malloc_hook = tr_mallochook;
+  set_trace_hooks ();
 
   tr_where (caller, info);
   /* We could be printing a NULL here; that's OK.  */
@@ -185,16 +220,12 @@ tr_reallochook (void *ptr, size_t size, const void *caller)
   Dl_info mem;
   Dl_info *info = lock_and_info (caller, &mem);
 
-  __free_hook = tr_old_free_hook;
-  __malloc_hook = tr_old_malloc_hook;
-  __realloc_hook = tr_old_realloc_hook;
+  set_default_hooks ();
   if (tr_old_realloc_hook != NULL)
     hdr = (void *) (*tr_old_realloc_hook)(ptr, size, caller);
   else
     hdr = (void *) realloc (ptr, size);
-  __free_hook = tr_freehook;
-  __malloc_hook = tr_mallochook;
-  __realloc_hook = tr_reallochook;
+  set_trace_hooks ();
 
   tr_where (caller, info);
   if (hdr == NULL)
@@ -230,14 +261,12 @@ tr_memalignhook (size_t alignment, size_t size, const void *caller)
   Dl_info mem;
   Dl_info *info = lock_and_info (caller, &mem);
 
-  __memalign_hook = tr_old_memalign_hook;
-  __malloc_hook = tr_old_malloc_hook;
+  set_default_hooks ();
   if (tr_old_memalign_hook != NULL)
     hdr = (void *) (*tr_old_memalign_hook)(alignment, size, caller);
   else
     hdr = (void *) memalign (alignment, size);
-  __memalign_hook = tr_memalignhook;
-  __malloc_hook = tr_mallochook;
+  set_trace_hooks ();
 
   tr_where (caller, info);
   /* We could be printing a NULL here; that's OK.  */
@@ -305,14 +334,8 @@ mtrace (void)
           malloc_trace_buffer = mtb;
           setvbuf (mallstream, malloc_trace_buffer, _IOFBF, TRACE_BUFFER_SIZE);
           fprintf (mallstream, "= Start\n");
-          tr_old_free_hook = __free_hook;
-          __free_hook = tr_freehook;
-          tr_old_malloc_hook = __malloc_hook;
-          __malloc_hook = tr_mallochook;
-          tr_old_realloc_hook = __realloc_hook;
-          __realloc_hook = tr_reallochook;
-          tr_old_memalign_hook = __memalign_hook;
-          __memalign_hook = tr_memalignhook;
+	  save_default_hooks ();
+	  set_trace_hooks ();
 #ifdef _LIBC
           if (!added_atexit_handler)
             {
@@ -338,10 +361,7 @@ muntrace (void)
      file.  */
   FILE *f = mallstream;
   mallstream = NULL;
-  __free_hook = tr_old_free_hook;
-  __malloc_hook = tr_old_malloc_hook;
-  __realloc_hook = tr_old_realloc_hook;
-  __memalign_hook = tr_old_memalign_hook;
+  set_default_hooks ();
 
   fprintf (f, "= End\n");
   fclose (f);

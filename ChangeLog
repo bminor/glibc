@@ -1,3 +1,18 @@
+2019-04-09  Carlos O'Donell  <carlos@redhat.com>
+	    Kwok Cheung Yeung  <kcy@codesourcery.com>
+
+	[BZ #16573]
+	* malloc/mtrace.c: Define prototypes for all hooks.
+	(set_default_hooks): New function.
+	(set_trace_hooks): Likewise.
+	(save_default_hooks): Likewise.
+	(tr_freehook): Use new s*_hooks functions.
+	(tr_mallochook): Likewise.
+	(tr_reallochook): Likewise.
+	(tr_memalignhook): Likewise.
+	(mtrace): Likewise.
+	(muntrace): Likewise.
+
 2019-04-09  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* benchtests/bench-stpcpy.c (SIMPLE_STPCPY): Remove function.
