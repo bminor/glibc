@@ -117,7 +117,7 @@ $(CC) -nostdlib -nostartfiles -r -o $@.precopy $^
 # retains relocs, the section is garbled and causes errors in later
 # links done with --icf=safe.  The removal can be unconditional as it
 # is a no-op for non-clang/lld.
-$(OBJCOPY) --remove-section=.llvm_addrsig $@.precopy $@
+$(OBJCOPY_FOR_ADDRSIG) --remove-section=.llvm_addrsig $@.precopy $@
 rm $@.precopy
 endef
 
