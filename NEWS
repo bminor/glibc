@@ -38,6 +38,9 @@ Deprecated and removed features, and other changes affecting compatibility:
 * Support for the "inet6" option in /etc/resolv.conf and the RES_USE_INET6
   resolver flag (deprecated in glibc 2.25) have been removed.
 
+* The obsolete RES_INSECURE1 and RES_INSECURE2 option flags for the DNS stub
+  resolver have been removed from <resolv.h>.
+
 Changes to build and runtime requirements:
 
 * GCC 6.2 or later is required to build the GNU C Library.

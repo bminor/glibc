@@ -1316,31 +1316,25 @@ send_dg(res_state statp,
 			 */
 			goto wait;
 		}
-		if (!(statp->options & RES_INSECURE1) &&
-		    !res_ourserver_p(statp, &from)) {
-			/*
-			 * response from wrong server? ignore it.
-			 * XXX - potential security hazard could
-			 *	 be detected here.
-			 */
-			goto wait;
-		}
-		if (!(statp->options & RES_INSECURE2)
-		    && (recvresp1 || !res_queriesmatch(buf, buf + buflen,
+
+		/* Paranoia check.  Due to the connected UDP socket,
+		   the kernel has already filtered invalid addresses
+		   for us.  */
+		if (!res_ourserver_p(statp, &from))
+		  goto wait;
+
+		/* Check for the correct header layout and a matching
+		   question.  */
+		if ((recvresp1 || !res_queriesmatch(buf, buf + buflen,
 						       *thisansp,
 						       *thisansp
 						       + *thisanssizp))
 		    && (recvresp2 || !res_queriesmatch(buf2, buf2 + buflen2,
 						       *thisansp,
 						       *thisansp
-						       + *thisanssizp))) {
-			/*
-			 * response contains wrong query? ignore it.
-			 * XXX - potential security hazard could
-			 *	 be detected here.
-			 */
-			goto wait;
-		}
+						       + *thisanssizp)))
+		  goto wait;
+
 		if (anhp->rcode == SERVFAIL ||
 		    anhp->rcode == NOTIMP ||
 		    anhp->rcode == REFUSED) {

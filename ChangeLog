@@ -1,5 +1,14 @@
 2019-04-08  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/resolv.h (RES_INSECURE1, RES_INSECURE2): Remove
+	definitions.
+	* resolv/res_send.c (send_dg): Always perform RES_INSECURE1 and
+	RES_INSECURE2 security checks.
+	* resolv/res_debug.c (p_option): Remove RES_INSECURE1 and
+	RES_INSECURE2 handling.
+
+2019-04-08  Florian Weimer  <fweimer@redhat.com>
+
 	resolv: Remove support for RES_USE_INET6 and the inet6 option.
 	* nscd/aicache.c (addhstaiX): Do not disable RES_USE_INET6.
 	* nscd/nscd_gehst_r.c (__nscd_gethostbyname_r): Always use
