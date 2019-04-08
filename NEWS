@@ -35,6 +35,9 @@ Deprecated and removed features, and other changes affecting compatibility:
 * The obsolete and never-implemented XSI STREAMS header files <stropts.h>
   and <sys/stropts.h> have been removed.
 
+* Support for the "inet6" option in /etc/resolv.conf and the RES_USE_INET6
+  resolver flag (deprecated in glibc 2.25) have been removed.
+
 Changes to build and runtime requirements:
 
 * GCC 6.2 or later is required to build the GNU C Library.

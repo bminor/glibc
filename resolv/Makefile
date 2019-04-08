@@ -52,7 +52,6 @@ tests += \
   tst-ns_name_pton \
   tst-res_hconf_reorder \
   tst-res_hnok \
-  tst-res_use_inet6 \
   tst-resolv-basic \
   tst-resolv-binary \
   tst-resolv-edns \
@@ -70,13 +69,10 @@ tests += \
   tst-resolv-ai_idn-nolibidn2 \
   tst-resolv-canonname \
 
-# uses DEPRECATED_RES_USE_INET6 from <resolv-internal.h>.
+# Needs resolv_context.
 tests-internal += \
   tst-resolv-res_init \
   tst-resolv-res_init-thread \
-
-# Needs resolv_context.
-tests-internal += \
   tst-resolv-res_ninit \
   tst-resolv-threads \
 
@@ -175,7 +171,6 @@ $(objpfx)mtrace-tst-resolv-res_ninit.out: $(objpfx)tst-resolv-res_ninit.out
 
 $(objpfx)tst-bug18665-tcp: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-bug18665: $(objpfx)libresolv.so $(shared-thread-library)
-$(objpfx)tst-res_use_inet6: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-ai_idn: \
   $(libdl) $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-ai_idn-latin1: \
@@ -211,7 +206,3 @@ $(objpfx)tst-ns_name_compress: $(objpfx)libresolv.so
 $(objpfx)tst-ns_name_pton: $(objpfx)libresolv.so
 $(objpfx)tst-res_hnok: $(objpfx)libresolv.so
 $(objpfx)tst-p_secstodate: $(objpfx)libresolv.so
-
-
-# This test case uses the deprecated RES_USE_INET6 resolver option.
-CFLAGS-tst-res_use_inet6.c += -Wno-error

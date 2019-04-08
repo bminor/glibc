@@ -61,7 +61,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <nss.h>
 #include <resolv/resolv-internal.h>
 #include <resolv/resolv_context.h>
-#include <resolv/res_use_inet6.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdio_ext.h>
@@ -255,7 +254,6 @@ convert_hostent_to_gaih_addrtuple (const struct addrinfo *req,
 	break;								      \
       if (!scratch_buffer_grow (tmpbuf))				      \
 	{								      \
-	  __resolv_context_enable_inet6 (res_ctx, res_enable_inet6);	      \
 	  __resolv_context_put (res_ctx);				      \
 	  result = -EAI_MEMORY;						      \
 	  goto free_and_return;						      \
@@ -266,7 +264,6 @@ convert_hostent_to_gaih_addrtuple (const struct addrinfo *req,
     {									      \
       if (h_errno == NETDB_INTERNAL)					      \
 	{								      \
-	  __resolv_context_enable_inet6 (res_ctx, res_enable_inet6);	      \
 	  __resolv_context_put (res_ctx);				      \
 	  result = -EAI_SYSTEM;						      \
 	  goto free_and_return;						      \
@@ -280,7 +277,6 @@ convert_hostent_to_gaih_addrtuple (const struct addrinfo *req,
     {									      \
       if (!convert_hostent_to_gaih_addrtuple (req, _family, &th, &addrmem))   \
 	{								      \
-	  __resolv_context_enable_inet6 (res_ctx, res_enable_inet6);	      \
 	  __resolv_context_put (res_ctx);				      \
 	  result = -EAI_SYSTEM;						      \
 	  goto free_and_return;						      \
@@ -558,7 +554,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  enum nss_status status = NSS_STATUS_UNAVAIL;
 	  int no_more;
 	  struct resolv_context *res_ctx = NULL;
-	  bool res_enable_inet6 = false;
 
 	  /* If we do not have to look for IPv6 addresses or the canonical
 	     name, use the simple, old functions, which do not support
@@ -749,7 +744,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	     addresses to IPv6 addresses, so we use the no_inet6
 	     function variant.  */
 	  res_ctx = __resolv_context_get ();
-	  res_enable_inet6 = __resolv_context_disable_inet6 (res_ctx);
 	  if (res_ctx == NULL)
 	    no_more = 1;
 
@@ -785,8 +779,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 		      if (!scratch_buffer_grow (tmpbuf))
 			{
-			  __resolv_context_enable_inet6
-			    (res_ctx, res_enable_inet6);
 			  __resolv_context_put (res_ctx);
 			  result = -EAI_MEMORY;
 			  goto free_and_return;
@@ -886,8 +878,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
 			      canonbuf = getcanonname (nip, at, name);
 			      if (canonbuf == NULL)
 				{
-				  __resolv_context_enable_inet6
-				    (res_ctx, res_enable_inet6);
 				  __resolv_context_put (res_ctx);
 				  result = -EAI_MEMORY;
 				  goto free_and_return;
@@ -932,7 +922,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		nip = nip->next;
 	    }
 
-	  __resolv_context_enable_inet6 (res_ctx, res_enable_inet6);
 	  __resolv_context_put (res_ctx);
 
 	  /* If we have a failure which sets errno, report it using

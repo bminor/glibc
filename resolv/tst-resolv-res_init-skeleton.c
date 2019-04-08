@@ -24,7 +24,6 @@
 #include <errno.h>
 #include <gnu/lib-names.h>
 #include <netdb.h>
-#include <resolv/resolv-internal.h> /* For DEPRECATED_RES_USE_INET6.  */
 #include <resolv/resolv_context.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -120,7 +119,6 @@ print_resp (FILE *fp, res_state resp)
         if (resp->retry != RES_DFLRETRY)
           fprintf (fp, " attempts:%d", resp->retry);
         print_option_flag (fp, &options, RES_USEVC, "use-vc");
-        print_option_flag (fp, &options, DEPRECATED_RES_USE_INET6, "inet6");
         print_option_flag (fp, &options, RES_ROTATE, "rotate");
         print_option_flag (fp, &options, RES_USE_EDNS0, "edns0");
         print_option_flag (fp, &options, RES_SNGLKUP,
@@ -560,7 +558,7 @@ struct test_case test_cases[] =
      "nameserver 192.0.2.1\n"
      "nameserver ::1\n"
      "nameserver 192.0.2.2\n",
-     .expected = "options ndots:3 timeout:19 attempts:5 inet6 edns0\n"
+     .expected = "options ndots:3 timeout:19 attempts:5 edns0\n"
      "search corp.example.com example.com\n"
      "; search[0]: corp.example.com\n"
      "; search[1]: example.com\n"

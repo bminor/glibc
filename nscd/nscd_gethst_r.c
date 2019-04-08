@@ -40,11 +40,7 @@ __nscd_gethostbyname_r (const char *name, struct hostent *resultbuf,
 			char *buffer, size_t buflen, struct hostent **result,
 			int *h_errnop)
 {
-  request_type reqtype;
-
-  reqtype = res_use_inet6 () ? GETHOSTBYNAMEv6 : GETHOSTBYNAME;
-
-  return nscd_gethst_r (name, strlen (name) + 1, reqtype, resultbuf,
+  return nscd_gethst_r (name, strlen (name) + 1, GETHOSTBYNAME, resultbuf,
 			buffer, buflen, result, h_errnop);
 }
 

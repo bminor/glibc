@@ -276,19 +276,12 @@ thread_byname2 (void *closure)
   return byname (true);
 }
 
-/* Call gethostbyname_r with RES_USE_INET6 (if do_2 is false), or
-   gethostbyname_r with AF_INET6 (if do_2 is true).  */
+/* Test gethostbyname2_r with AF_INET6.  */
 static void *
-byname_inet6 (bool do_2)
+thread_byname2_af_inet6 (void *closure)
 {
   int this_thread = get_thread_number ();
   xpthread_barrier_wait (&barrier);
-  if (!do_2)
-    {
-      res_init ();
-      _res.options |= DEPRECATED_RES_USE_INET6;
-      TEST_VERIFY (strcmp (_res.defdname, "example.com") == 0);
-    }
   for (int i = 0; i < queries_per_thread; ++i)
     {
       char qname[100];
@@ -298,46 +291,19 @@ byname_inet6 (bool do_2)
       char buf[1000];
       struct hostent *e = NULL;
       int herrno;
-      int ret;
-      if (do_2)
-        ret = gethostbyname2_r (qname, AF_INET6, &storage, buf, sizeof (buf),
-                                &e, &herrno);
-      else
-        ret = gethostbyname_r (qname, &storage, buf, sizeof (buf),
-                               &e, &herrno);
-      check_hostent (__func__,
-                     do_2 ? "gethostbyname2_r" : "gethostbyname_r",
-                     qname, ret, e, AF_INET6, i);
+      int ret = gethostbyname2_r (qname, AF_INET6, &storage, buf, sizeof (buf),
+                                  &e, &herrno);
+      check_hostent (__func__, "gethostbyname2_r", qname, ret, e, AF_INET6, i);
     }
   return NULL;
 }
 
-/* Test gethostbyname_r with AF_INET6.  */
-static void *
-thread_byname_inet6 (void *closure)
-{
-  return byname_inet6 (false);
-}
-
-/* Test gethostbyname2_r with AF_INET6.  */
-static void *
-thread_byname2_af_inet6 (void *closure)
-{
-  return byname_inet6 (true);
-}
-
 /* Run getaddrinfo tests for FAMILY.  */
 static void *
-gai (int family, bool do_inet6)
+gai (int family)
 {
   int this_thread = get_thread_number ();
   xpthread_barrier_wait (&barrier);
-  if (do_inet6)
-    {
-      res_init ();
-      _res.options |= DEPRECATED_RES_USE_INET6;
-      check_have_conf ();
-    }
   for (int i = 0; i < queries_per_thread; ++i)
     {
       char qname[100];
@@ -362,42 +328,21 @@ gai (int family, bool do_inet6)
 static void *
 thread_gai_inet (void *closure)
 {
-  return gai (AF_INET, false);
+  return gai (AF_INET);
 }
 
 /* Test getaddrinfo with AF_INET6.  */
 static void *
 thread_gai_inet6 (void *closure)
 {
-  return gai (AF_INET6, false);
+  return gai (AF_INET6);
 }
 
 /* Test getaddrinfo with AF_UNSPEC.  */
 static void *
 thread_gai_unspec (void *closure)
 {
-  return gai (AF_UNSPEC, false);
-}
-
-/* Test getaddrinfo with AF_INET.  */
-static void *
-thread_gai_inet_inet6 (void *closure)
-{
-  return gai (AF_INET, true);
-}
-
-/* Test getaddrinfo with AF_INET6.  */
-static void *
-thread_gai_inet6_inet6 (void *closure)
-{
-  return gai (AF_INET6, true);
-}
-
-/* Test getaddrinfo with AF_UNSPEC.  */
-static void *
-thread_gai_unspec_inet6 (void *closure)
-{
-  return gai (AF_UNSPEC, true);
+  return gai (AF_UNSPEC);
 }
 
 /* Description of the chroot environment used to run the tests.  */
@@ -451,7 +396,7 @@ do_test (void)
        .server_address_overrides = server_addresses,
      });
 
-  enum { thread_count = 10 };
+  enum { thread_count = 6 };
   xpthread_barrier_init (&barrier, NULL, thread_count + 1);
   pthread_t threads[thread_count];
   typedef void *(*thread_func) (void *);
@@ -459,14 +404,10 @@ do_test (void)
     {
       thread_byname,
       thread_byname2,
-      thread_byname_inet6,
       thread_byname2_af_inet6,
       thread_gai_inet,
       thread_gai_inet6,
       thread_gai_unspec,
-      thread_gai_inet_inet6,
-      thread_gai_inet6_inet6,
-      thread_gai_unspec_inet6,
     };
   for (int i = 0; i < thread_count; ++i)
     threads[i] = xpthread_create (NULL, thread_funcs[i], NULL);

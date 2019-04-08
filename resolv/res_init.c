@@ -672,7 +672,6 @@ res_setoptions (struct resolv_conf_parser *parser, const char *options)
             unsigned long int flag;
           } options[] = {
 #define STRnLEN(str) str, sizeof (str) - 1
-            { STRnLEN ("inet6"), 0, DEPRECATED_RES_USE_INET6 },
             { STRnLEN ("rotate"), 0, RES_ROTATE },
             { STRnLEN ("edns0"), 0, RES_USE_EDNS0 },
             { STRnLEN ("single-request-reopen"), 0, RES_SNGLKUPREOP },

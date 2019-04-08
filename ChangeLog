@@ -1,3 +1,40 @@
+2019-04-08  Florian Weimer  <fweimer@redhat.com>
+
+	resolv: Remove support for RES_USE_INET6 and the inet6 option.
+	* nscd/aicache.c (addhstaiX): Do not disable RES_USE_INET6.
+	* nscd/nscd_gehst_r.c (__nscd_gethostbyname_r): Always use
+	GETHOSTBYNAME.
+	* resolv/Makefile (tests): Remove tst-res_use_inet6.
+	(tests-internal): Update justification for tst-resolv-res_init,
+	tst-resolv-res_init-thread.
+	(tst-res_use_inet6): Remove target.
+	(CFLAGS-tst-res_use_inet6.c): Do not set variable.
+	* resolv/res_debug.c (p_option): Remove "inet6" support.
+	* resolv/res_init.c (res_setoptions): Likewise.
+	* resolv/res_use_inet6.h: Remove file.
+	* resolv/resolv-internal.h (DEPRECATED_RES_USE_INET6): Remove
+	definition.
+	(res_use_inet6): Always return false.
+	* resolv/resolv.h (RES_USE_INET6): Remove definition.
+	* resolv/resolv_context.h: Adjust file comment.
+	(struct resolv_context): Update comment on __next field.
+	(__resolv_context_put): Update comment.
+	* resolv/tst-res_use_inet6.c: Remove file.
+	* resolv/tst-resolv-res_init-skeleton.c (print_resp): Remove
+	"inet6" support.
+	(test_cases): Adjust test case.
+	* resolv/tst-resolv-threads.c (byname_inet6) Remove function.
+	(thread_byname2_af_inet6): Use old byname_inet6 code.
+	(thread_byname_inet6, thread_byname2_af_inet6): Remove functions.
+	(gai): Remove do_inet6 argument.
+	(thread_gai_inet, thread_gai_inet6, thread_gai_unspec): Adjust.
+	(thread_gai_inet_inet6, thread_gai_inet6_inet6)
+	(thread_gai_unspec_inet6): Remove functions.
+	(do_test): Adjust thread_funcs.
+	* sysdeps/posix/getaddrinfo.c (gethosts): Do not restore
+	RES_USE_INET6 flag.
+	(gaih_inet): Do not disable RES_USE_INET6 flag.
+
 2019-04-05  Anton Youdkevitch <anton.youdkevitch@bell-sw.com>
 
 	* sysdeps/aarch64/multiarch/memcpy_thunderx2.S: Cleanup branching
