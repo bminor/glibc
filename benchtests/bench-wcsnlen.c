@@ -17,4 +17,5 @@
    <http://www.gnu.org/licenses/>.  */
 
 #define WIDE 1
+#define __wmemchr wmemchr
 #include "bench-strnlen.c"

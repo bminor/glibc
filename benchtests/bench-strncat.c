@@ -21,40 +21,32 @@
 # define TEST_NAME "strncat"
 #else
 # define TEST_NAME "wcsncat"
+# define generic_strncat generic_wcsncat
 #endif /* WIDE */
 #include "bench-string.h"
 
 #define BIG_CHAR MAX_CHAR
 
 #ifndef WIDE
-# define SIMPLE_STRNCAT simple_strncat
-# define STUPID_STRNCAT stupid_strncat
 # define SMALL_CHAR 127
 #else
-# define SIMPLE_STRNCAT simple_wcsncat
-# define STUPID_STRNCAT stupid_wcsncat
 # define SMALL_CHAR 1273
 #endif /* WIDE */
 
 typedef CHAR *(*proto_t) (CHAR *, const CHAR *, size_t);
-CHAR *STUPID_STRNCAT (CHAR *, const CHAR *, size_t);
-CHAR *SIMPLE_STRNCAT (CHAR *, const CHAR *, size_t);
-
-IMPL (STUPID_STRNCAT, 0)
-IMPL (STRNCAT, 2)
 
 CHAR *
-STUPID_STRNCAT (CHAR *dst, const CHAR *src, size_t n)
+generic_strncat (CHAR *dst, const CHAR *src, size_t n)
 {
-  CHAR *ret = dst;
-  while (*dst++ != '\0');
-  --dst;
-  while (n--)
-    if ((*dst++ = *src++) == '\0')
-      return ret;
-  *dst = '\0';
-  return ret;
+  CHAR *end = dst + STRLEN (dst);
+  n = STRNLEN (src, n);
+  end[n] = 0;
+  MEMCPY (end, src, n);
+  return dst;
 }
+
+IMPL (STRNCAT, 2)
+IMPL (generic_strncat, 0)
 
 static void
 do_one_test (impl_t *impl, CHAR *dst, const CHAR *src, size_t n)

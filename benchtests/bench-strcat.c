@@ -21,6 +21,7 @@
 # define TEST_NAME "strcat"
 #else
 # define TEST_NAME "wcscat"
+# define generic_strcat generic_wcscat
 #endif /* WIDE */
 #include "bench-string.h"
 
@@ -28,30 +29,24 @@
 
 #ifndef WIDE
 # define sfmt "s"
-# define SIMPLE_STRCAT simple_strcat
 # define SMALL_CHAR 127
 #else
 # define sfmt "ls"
-# define SIMPLE_STRCAT simple_wcscat
 # define SMALL_CHAR 1273
 #endif /* WIDE */
 
 
 typedef CHAR *(*proto_t) (CHAR *, const CHAR *);
-CHAR *SIMPLE_STRCAT (CHAR *, const CHAR *);
-
-IMPL (SIMPLE_STRCAT, 0)
-IMPL (STRCAT, 1)
 
 CHAR *
-SIMPLE_STRCAT (CHAR *dst, const CHAR *src)
+generic_strcat (CHAR *dst, const CHAR *src)
 {
-  CHAR *ret = dst;
-  while (*dst++ != '\0');
-  --dst;
-  while ((*dst++ = *src++) != '\0');
-  return ret;
+  STRCPY (dst + STRLEN (dst), src);
+  return dst;
 }
+
+IMPL (STRCAT, 1)
+IMPL (generic_strcat, 0)
 
 static void
 do_one_test (impl_t *impl, CHAR *dst, const CHAR *src)

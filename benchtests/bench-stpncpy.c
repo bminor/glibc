@@ -22,49 +22,22 @@
 # define TEST_NAME "stpncpy"
 #else
 # define TEST_NAME "wcpncpy"
+# define generic_stpncpy generic_wcpncpy
 #endif /* WIDE */
 #include "bench-string.h"
-#ifndef WIDE
-# define SIMPLE_STPNCPY simple_stpncpy
-# define STUPID_STPNCPY stupid_stpncpy
-#else
-# define SIMPLE_STPNCPY simple_wcpncpy
-# define STUPID_STPNCPY stupid_wcpncpy
-#endif /* WIDE */
-
-CHAR *SIMPLE_STPNCPY (CHAR *, const CHAR *, size_t);
-CHAR *STUPID_STPNCPY (CHAR *, const CHAR *, size_t);
-
-IMPL (STUPID_STPNCPY, 0)
-IMPL (SIMPLE_STPNCPY, 0)
-IMPL (STPNCPY, 1)
 
 CHAR *
-SIMPLE_STPNCPY (CHAR *dst, const CHAR *src, size_t n)
-{
-  while (n--)
-    if ((*dst++ = *src++) == '\0')
-      {
-	size_t i;
-
-	for (i = 0; i < n; ++i)
-	  dst[i] = '\0';
-	return dst - 1;
-      }
-  return dst;
-}
-
-CHAR *
-STUPID_STPNCPY (CHAR *dst, const CHAR *src, size_t n)
+generic_stpncpy (CHAR *dst, const CHAR *src, size_t n)
 {
   size_t nc = STRNLEN (src, n);
-  size_t i;
-
-  for (i = 0; i < nc; ++i)
-    dst[i] = src[i];
-  for (; i < n; ++i)
-    dst[i] = '\0';
-  return dst + nc;
+  MEMCPY (dst, src, nc);
+  dst += nc;
+  if (nc == n)
+    return dst;
+  return MEMSET (dst, 0, n - nc);
 }
+
+IMPL (STPNCPY, 1)
+IMPL (generic_stpncpy, 0)
 
 #include "bench-strncpy.c"

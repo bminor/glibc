@@ -22,24 +22,18 @@
 # define TEST_NAME "stpcpy"
 #else
 # define TEST_NAME "wcpcpy"
+# define generic_stpcpy generic_wcpcpy
 #endif /* WIDE */
 #include "bench-string.h"
-#ifndef WIDE
-# define SIMPLE_STPCPY simple_stpcpy
-#else
-# define SIMPLE_STPCPY simple_wcpcpy
-#endif /* WIDE */
-
-CHAR *SIMPLE_STPCPY (CHAR *, const CHAR *);
-
-IMPL (SIMPLE_STPCPY, 0)
-IMPL (STPCPY, 1)
 
 CHAR *
-SIMPLE_STPCPY (CHAR *dst, const CHAR *src)
+generic_stpcpy (CHAR *dst, const CHAR *src)
 {
-  while ((*dst++ = *src++) != '\0');
-  return dst - 1;
+  size_t len = STRLEN (src);
+  return (CHAR *) MEMCPY (dst, src, len + 1) + len;
 }
+
+IMPL (STPCPY, 1)
+IMPL (generic_stpcpy, 0)
 
 #include "bench-strcpy.c"

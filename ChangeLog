@@ -1,5 +1,27 @@
 2019-04-09  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* benchtests/bench-stpcpy.c (SIMPLE_STPCPY): Remove function.
+	(generic_stpcpy): New function.
+	* benchtests/bench-stpncpy.c (SIMPLE_STPNCPY): Remove function.
+	(generic_stpncpy): New function.
+	* benchtests/bench-strcat.c (SIMPLE_STRCAT): Remove function.
+	(generic_strcat): New function.
+	* benchtests/bench-strcpy.c (SIMPLE_STRCPY): Remove function.
+	(generic_strcpy): New function.
+	* benchtests/bench-strncat.c (SIMPLE_STRNCAT): Remove function.
+	(STUPID_STRNCAT): Remove function.
+	(generic_strncat): New function.
+	* benchtests/bench-strncpy.c (SIMPLE_STRNCPY): Remove function.
+	(STUPID_STRNCPY): Remove function.
+	(generic_strncpy): New function.
+	* benchtests/bench-strnlen.c (SIMPLE_STRNLEN): Remove function.
+	(generic_strnlen): New function.
+	(memchr_strnlen): New function.
+	* benchtests/bench-strlen.c (generic_strlen): Define for WIDE.
+	(memchr_strlen): Likewise.
+
+2019-04-09  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* benchtests/bench-strstr.c (input): Add realistic input text.
 	(stupid_strstr): Remove function.
 	(basic_strstr): Add function.

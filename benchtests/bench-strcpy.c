@@ -33,26 +33,19 @@
 #  define TEST_NAME "strcpy"
 # else
 #  define TEST_NAME "wcscpy"
+#  define generic_strcpy generic_wcscpy
 # endif
-# include "bench-string.h"
-# ifndef WIDE
-#  define SIMPLE_STRCPY simple_strcpy
-# else
-#  define SIMPLE_STRCPY simple_wcscpy
-# endif
-
-CHAR *SIMPLE_STRCPY (CHAR *, const CHAR *);
-
-IMPL (SIMPLE_STRCPY, 0)
-IMPL (STRCPY, 1)
+#include "bench-string.h"
 
 CHAR *
-SIMPLE_STRCPY (CHAR *dst, const CHAR *src)
+generic_strcpy (CHAR *dst, const CHAR *src)
 {
-  CHAR *ret = dst;
-  while ((*dst++ = *src++) != '\0');
-  return ret;
+  return MEMCPY (dst, src, STRLEN (src) + 1);
 }
+
+IMPL (STRCPY, 1)
+IMPL (generic_strcpy, 0)
+
 #endif
 
 typedef CHAR *(*proto_t) (CHAR *, const CHAR *);

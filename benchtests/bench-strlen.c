@@ -21,6 +21,8 @@
 # define TEST_NAME "strlen"
 #else
 # define TEST_NAME "wcslen"
+# define generic_strlen generic_wcslen
+# define memchr_strlen wcschr_wcslen
 #endif
 #include "bench-string.h"
 
