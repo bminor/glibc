@@ -1,3 +1,8 @@
+2019-04-25  David Abdurachmanov  <david.abdurachmanov@gmail.com>
+
+	[BZ#24484]
+	* sysdeps/riscv/ldsodefs.h (DL_RO_DYN_SECTION): Remove.
+
 2019-04-25  Florian Weimer  <fweimer@redhat.com>
 
 	benchtests: Enable BIND_NOW if configured with --enable-bind-now.
