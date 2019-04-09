@@ -711,7 +711,7 @@ elf_machine_rela (struct link_map *map,
 
   /* We need SYM_MAP even in the absence of TLS, for elf_machine_fixup_plt
      and STT_GNU_IFUNC.  */
-#if !defined NESTING && defined RTLD_BOOTSTRAP
+#if !defined NESTING && (defined RTLD_BOOTSTRAP || defined STATIC_PIE_BOOTSTRAP)
   struct link_map *sym_map = boot_map;
 #else
   struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
