@@ -16,63 +16,140 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#define MIN_PAGE_SIZE 131072
 #define TEST_MAIN
 #define TEST_NAME "strstr"
 #include "bench-string.h"
 
+static const char input[] =
+"This manual is written with the assumption that you are at least "
+"somewhat familiar with the C programming language and basic programming "
+"concepts.  Specifically, familiarity with ISO standard C (*note ISO "
+"C::), rather than “traditional” pre-ISO C dialects, is assumed.\n"
 
-#define STRSTR simple_strstr
-#define libc_hidden_builtin_def(X)
-#define __strnlen strnlen
-#include "../string/strstr.c"
+"   The GNU C Library includes several “header files”, each of which "
+"provides definitions and declarations for a group of related facilities; "
+"this information is used by the C compiler when processing your program. "
+"For example, the header file ‘stdio.h’ declares facilities for "
+"performing input and output, and the header file ‘string.h’ declares "
+"string processing utilities.  The organization of this manual generally "
+"follows the same division as the header files.\n"
 
+"   If you are reading this manual for the first time, you should read "
+"all of the introductory material and skim the remaining chapters.  There "
+"are a _lot_ of functions in the GNU C Library and it’s not realistic to "
+"expect that you will be able to remember exactly _how_ to use each and "
+"every one of them.  It’s more important to become generally familiar "
+"with the kinds of facilities that the library provides, so that when you "
+"are writing your programs you can recognize _when_ to make use of "
+"library functions, and _where_ in this manual you can find more specific "
+"information about them.\n";
 
+/* Simple yet efficient strstr - for needles < 32 bytes it is 2-4 times
+   faster than the optimized twoway_strstr.  */
 static char *
-stupid_strstr (const char *s1, const char *s2)
+basic_strstr (const char *s1, const char *s2)
 {
-  ssize_t s1len = strlen (s1);
-  ssize_t s2len = strlen (s2);
+  size_t i;
+  int c = s2[0];
 
-  if (s2len > s1len)
-    return NULL;
+  if (c == 0)
+    return (char*)s1;
 
-  for (ssize_t i = 0; i <= s1len - s2len; ++i)
+  for ( ; s1[0] != '\0'; s1++)
     {
-      size_t j;
-      for (j = 0; j < s2len; ++j)
-	if (s1[i + j] != s2[j])
+      if (s1[0] != c)
+	continue;
+      for (i = 1; s2[i] != 0; i++)
+	if (s1[i] != s2[i])
 	  break;
-      if (j == s2len)
-	return (char *) s1 + i;
+      if (s2[i] == '\0')
+	return (char*)s1;
     }
 
   return NULL;
 }
 
+#define RETURN_TYPE char *
+#define AVAILABLE(h, h_l, j, n_l)			\
+  (((j) + (n_l) <= (h_l)) \
+   || ((h_l) += __strnlen ((void*)((h) + (h_l)), (n_l) + 512), \
+       (j) + (n_l) <= (h_l)))
+#define CHECK_EOL (1)
+#define RET0_IF_0(a) if (!a) goto ret0
+#define FASTSEARCH(S,C,N) (void*) strchr ((void*)(S), (C))
+#define LONG_NEEDLE_THRESHOLD 32U
+#define __strnlen strnlen
+#include "string/str-two-way.h"
+
+/* Optimized Two-way implementation from GLIBC 2.29.  */
+static char *
+twoway_strstr (const char *haystack, const char *needle)
+{
+  size_t needle_len; /* Length of NEEDLE.  */
+  size_t haystack_len; /* Known minimum length of HAYSTACK.  */
+
+  /* Handle empty NEEDLE special case.  */
+  if (needle[0] == '\0')
+    return (char *) haystack;
+
+  /* Skip until we find the first matching char from NEEDLE.  */
+  haystack = strchr (haystack, needle[0]);
+  if (haystack == NULL || needle[1] == '\0')
+    return (char *) haystack;
+
+  /* Ensure HAYSTACK length is at least as long as NEEDLE length.
+     Since a match may occur early on in a huge HAYSTACK, use strnlen
+     and read ahead a few cachelines for improved performance.  */
+  needle_len = strlen (needle);
+  haystack_len = __strnlen (haystack, needle_len + 256);
+  if (haystack_len < needle_len)
+    return NULL;
+
+  /* Check whether we have a match.  This improves performance since we avoid
+     the initialization overhead of the two-way algorithm.  */
+  if (memcmp (haystack, needle, needle_len) == 0)
+    return (char *) haystack;
+
+  /* Perform the search.  Abstract memory is considered to be an array
+     of 'unsigned char' values, not an array of 'char' values.  See
+     ISO C 99 section 6.2.6.1.  */
+  if (needle_len < LONG_NEEDLE_THRESHOLD)
+    return two_way_short_needle ((const unsigned char *) haystack,
+				  haystack_len,
+				 (const unsigned char *) needle, needle_len);
+  return two_way_long_needle ((const unsigned char *) haystack, haystack_len,
+			      (const unsigned char *) needle, needle_len);
+}
 
 typedef char *(*proto_t) (const char *, const char *);
 
-IMPL (stupid_strstr, 0)
-IMPL (simple_strstr, 0)
 IMPL (strstr, 1)
-
+IMPL (twoway_strstr, 0)
+IMPL (basic_strstr, 0)
 
 static void
 do_one_test (impl_t *impl, const char *s1, const char *s2, char *exp_result)
 {
   size_t i, iters = INNER_LOOP_ITERS;
   timing_t start, stop, cur;
+  char *res;
 
   TIMING_NOW (start);
   for (i = 0; i < iters; ++i)
-    {
-      CALL (impl, s1, s2);
-    }
+    res = CALL (impl, s1, s2);
   TIMING_NOW (stop);
 
   TIMING_DIFF (cur, start, stop);
 
   TIMING_PRINT_MEAN ((double) cur, (double) iters);
+
+  if (res != exp_result)
+    {
+      error (0, 0, "Wrong result in function %s %s %s", impl->name,
+	     res, exp_result);
+      ret = 1;
+    }
 }
 
 
@@ -83,36 +160,42 @@ do_test (size_t align1, size_t align2, size_t len1, size_t len2,
   char *s1 = (char *) (buf1 + align1);
   char *s2 = (char *) (buf2 + align2);
 
-  static const char d[] = "1234567890abcdef";
-#define dl (sizeof (d) - 1)
+  size_t size = sizeof (input) - 1;
+  size_t pos = (len1 + len2) % size;
+
   char *ss2 = s2;
-  for (size_t l = len2; l > 0; l = l > dl ? l - dl : 0)
+  for (size_t l = len2; l > 0; l = l > size ? l - size : 0)
     {
-      size_t t = l > dl ? dl : l;
-      ss2 = mempcpy (ss2, d, t);
+      size_t t = l > size ? size : l;
+      if (pos + t <= size)
+	ss2 = mempcpy (ss2, input + pos, t);
+      else
+	{
+	  ss2 = mempcpy (ss2, input + pos, size - pos);
+	  ss2 = mempcpy (ss2, input, t - (size - pos));
+	}
     }
   s2[len2] = '\0';
 
-  if (fail)
+  char *ss1 = s1;
+  for (size_t l = len1; l > 0; l = l > size ? l - size : 0)
     {
-      char *ss1 = s1;
-      for (size_t l = len1; l > 0; l = l > dl ? l - dl : 0)
-	{
-	  size_t t = l > dl ? dl : l;
-	  memcpy (ss1, d, t);
-	  ++ss1[len2 > 7 ? 7 : len2 - 1];
-	  ss1 += t;
-	}
+      size_t t = l > size ? size : l;
+      memcpy (ss1, input, t);
+      ss1 += t;
     }
-  else
-    {
-      memset (s1, '0', len1);
-      memcpy (s1 + len1 - len2, s2, len2);
-    }
+
+  if (!fail)
+    memcpy (s1 + len1 - len2, s2, len2);
   s1[len1] = '\0';
 
-  printf ("Length %4zd/%zd, alignment %2zd/%2zd, %s:",
-	  len1, len2, align1, align2, fail ? "fail" : "found");
+  /* Remove any accidental matches except for the last if !fail.  */
+  for (ss1 = basic_strstr (s1, s2); ss1; ss1 = basic_strstr (ss1 + 1, s2))
+    if (fail || ss1 != s1 + len1 - len2)
+      ++ss1[len2 / 2];
+
+  printf ("Length %4zd/%3zd, alignment %2zd/%2zd, %s:",
+	  len1, len2, align1, align2, fail ? "fail " : "found");
 
   FOR_EACH_IMPL (impl, 0)
     do_one_test (impl, s1, s2, fail ? NULL : s1 + len1 - len2);
@@ -130,48 +213,19 @@ test_main (void)
     printf ("\t%s", impl->name);
   putchar ('\n');
 
-  for (size_t klen = 2; klen < 32; ++klen)
-    for (size_t hlen = 2 * klen; hlen < 16 * klen; hlen += klen)
+  for (size_t hlen = 64; hlen <= 256; hlen += 32)
+    for (size_t klen = 1; klen <= 16; klen++)
       {
-	do_test (0, 0, hlen, klen, 0);
-	do_test (0, 0, hlen, klen, 1);
-	do_test (0, 3, hlen, klen, 0);
-	do_test (0, 3, hlen, klen, 1);
-	do_test (0, 9, hlen, klen, 0);
+	do_test (1, 3, hlen, klen, 0);
 	do_test (0, 9, hlen, klen, 1);
-	do_test (0, 15, hlen, klen, 0);
-	do_test (0, 15, hlen, klen, 1);
-
-	do_test (3, 0, hlen, klen, 0);
-	do_test (3, 0, hlen, klen, 1);
-	do_test (3, 3, hlen, klen, 0);
-	do_test (3, 3, hlen, klen, 1);
-	do_test (3, 9, hlen, klen, 0);
-	do_test (3, 9, hlen, klen, 1);
-	do_test (3, 15, hlen, klen, 0);
-	do_test (3, 15, hlen, klen, 1);
-
-	do_test (9, 0, hlen, klen, 0);
-	do_test (9, 0, hlen, klen, 1);
-	do_test (9, 3, hlen, klen, 0);
-	do_test (9, 3, hlen, klen, 1);
-	do_test (9, 9, hlen, klen, 0);
-	do_test (9, 9, hlen, klen, 1);
-	do_test (9, 15, hlen, klen, 0);
-	do_test (9, 15, hlen, klen, 1);
-
-	do_test (15, 0, hlen, klen, 0);
-	do_test (15, 0, hlen, klen, 1);
-	do_test (15, 3, hlen, klen, 0);
-	do_test (15, 3, hlen, klen, 1);
-	do_test (15, 9, hlen, klen, 0);
-	do_test (15, 9, hlen, klen, 1);
-	do_test (15, 15, hlen, klen, 0);
-	do_test (15, 15, hlen, klen, 1);
       }
 
-  do_test (0, 0, page_size - 1, 16, 0);
-  do_test (0, 0, page_size - 1, 16, 1);
+  for (size_t hlen = 256; hlen <= 65536; hlen *= 2)
+    for (size_t klen = 16; klen <= 256; klen *= 2)
+      {
+	do_test (1, 11, hlen, klen, 0);
+	do_test (14, 5, hlen, klen, 1);
+      }
 
   return ret;
 }

@@ -1,5 +1,15 @@
 2019-04-09  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* benchtests/bench-strstr.c (input): Add realistic input text.
+	(stupid_strstr): Remove function.
+	(basic_strstr): Add function.
+	(twoway_strstr): Add function.
+	(do_one_test): Add result checking.
+	(do_test): Use new input text.  Remove accidental early matches.
+	(test_main): Improve range of tests, reduce unaligned cases.
+
+2019-04-09  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* benchtests/bench-memmem.c (simple_memmem): Remove function.
 	(basic_memmem): Add function.
 	(twoway_memmem): Add function.
