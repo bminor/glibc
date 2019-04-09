@@ -19,22 +19,51 @@
 #define TEST_MAIN
 #define TEST_NAME "memmem"
 #define BUF1PAGES 20
-#define ITERATIONS 500
+#define ITERATIONS 100
 #include "bench-string.h"
 
 typedef char *(*proto_t) (const void *, size_t, const void *, size_t);
-void *simple_memmem (const void *, size_t, const void *, size_t);
-
-IMPL (simple_memmem, 0)
-IMPL (memmem, 1)
 
 void *
-simple_memmem (const void *haystack, size_t haystack_len, const void *needle,
-	       size_t needle_len)
+basic_memmem (const void *haystack, size_t hs_len, const void *needle,
+	      size_t ne_len)
 {
-  const char *begin;
-  const char *const last_possible
-    = (const char *) haystack + haystack_len - needle_len;
+  const char *hs = haystack;
+  const char *ne = needle;
+
+  if (ne_len == 0)
+    return (void *)hs;
+  int i;
+  int c = ne[0];
+  const char *end = hs + hs_len - ne_len;
+
+  for ( ; hs <= end; hs++)
+  {
+    if (hs[0] != c)
+      continue;
+    for (i = ne_len - 1; i != 0; i--)
+      if (hs[i] != ne[i])
+        break;
+    if (i == 0)
+      return (void *)hs;
+  }
+
+  return NULL;
+}
+
+#define RETURN_TYPE void *
+#define AVAILABLE(h, h_l, j, n_l) ((j) <= (h_l) - (n_l))
+#define FASTSEARCH(S,C,N) (void*) memchr ((void *)(S), (C), (N))
+#include "../string/str-two-way.h"
+
+void *
+twoway_memmem (const void *haystack_start, size_t haystack_len,
+	       const void *needle_start, size_t needle_len)
+{
+  /* Abstract memory is considered to be an array of 'unsigned char' values,
+     not an array of 'char' values.  See ISO C 99 section 6.2.6.1.  */
+  const unsigned char *haystack = (const unsigned char *) haystack_start;
+  const unsigned char *needle = (const unsigned char *) needle_start;
 
   if (needle_len == 0)
     /* The first occurrence of the empty string is deemed to occur at
@@ -46,15 +75,31 @@ simple_memmem (const void *haystack, size_t haystack_len, const void *needle,
   if (__glibc_unlikely (haystack_len < needle_len))
     return NULL;
 
-  for (begin = (const char *) haystack; begin <= last_possible; ++begin)
-    if (begin[0] == ((const char *) needle)[0]
-	&& !memcmp ((const void *) &begin[1],
-		    (const void *) ((const char *) needle + 1),
-		    needle_len - 1))
-      return (void *) begin;
-
-  return NULL;
+  /* Use optimizations in memchr when possible, to reduce the search
+     size of haystack using a linear algorithm with a smaller
+     coefficient.  However, avoid memchr for long needles, since we
+     can often achieve sublinear performance.  */
+  if (needle_len < LONG_NEEDLE_THRESHOLD)
+    {
+      haystack = memchr (haystack, *needle, haystack_len);
+      if (!haystack || __builtin_expect (needle_len == 1, 0))
+	return (void *) haystack;
+      haystack_len -= haystack - (const unsigned char *) haystack_start;
+      if (haystack_len < needle_len)
+	return NULL;
+      /* Check whether we have a match.  This improves performance since we
+	 avoid the initialization overhead of the two-way algorithm.  */
+      if (memcmp (haystack, needle, needle_len) == 0)
+	return (void *) haystack;
+      return two_way_short_needle (haystack, haystack_len, needle, needle_len);
+    }
+  else
+    return two_way_long_needle (haystack, haystack_len, needle, needle_len);
 }
+
+IMPL (memmem, 1)
+IMPL (twoway_memmem, 0)
+IMPL (basic_memmem, 0)
 
 static void
 do_one_test (impl_t *impl, const void *haystack, size_t haystack_len,

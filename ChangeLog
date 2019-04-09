@@ -1,5 +1,11 @@
 2019-04-09  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* benchtests/bench-memmem.c (simple_memmem): Remove function.
+	(basic_memmem): Add function.
+	(twoway_memmem): Add function.
+
+2019-04-09  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* benchtests/bench-malloc-simple.c: Remove TIMING_INIT.
 	* benchtests/bench-malloc-thread.c: Likewise.
 	* benchtests/bench-skeleton.c: Likewise.
