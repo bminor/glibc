@@ -89,9 +89,6 @@ int
 do_bench (void)
 {
   const size_t iters = INNER_LOOP_ITERS;
-  timing_t res __attribute__ ((unused));
-
-  TIMING_INIT (res);
 
   for (size_t i = 0; inputs[i] != NULL; ++i)
     {

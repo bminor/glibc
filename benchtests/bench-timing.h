@@ -28,8 +28,6 @@ typedef hp_timing_t timing_t;
 
 #define TIMING_TYPE "hp_timing"
 
-#define TIMING_INIT(res) ({ (res) = 1; })
-
 #define TIMING_NOW(var) HP_TIMING_NOW (var)
 #define TIMING_DIFF(diff, start, end) HP_TIMING_DIFF ((diff), (start), (end))
 #define TIMING_ACCUM(sum, diff) HP_TIMING_ACCUM_NT ((sum), (diff))

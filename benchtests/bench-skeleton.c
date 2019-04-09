@@ -48,14 +48,11 @@ main (int argc, char **argv)
 
   memset (&runtime, 0, sizeof (runtime));
 
-  unsigned long iters, res;
+  unsigned long iters = 1000;
 
 #ifdef BENCH_INIT
   BENCH_INIT ();
 #endif
-  TIMING_INIT (res);
-
-  iters = 1000 * res;
 
   json_init (&json_ctx, 2, stdout);
 

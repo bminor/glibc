@@ -1,3 +1,11 @@
+2019-04-09  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* benchtests/bench-malloc-simple.c: Remove TIMING_INIT.
+	* benchtests/bench-malloc-thread.c: Likewise.
+	* benchtests/bench-skeleton.c: Likewise.
+	* benchtests/bench-strtod.c: Likewise.
+	* benchtests/bench-timing.h: Likewise.
+
 2019-04-08  Florian Weimer  <fweimer@redhat.com>
 
 	* resolv/resolv.h (RES_INSECURE1, RES_INSECURE2): Remove

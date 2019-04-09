@@ -86,9 +86,6 @@ bench (unsigned long size)
 {
   size_t iters = NUM_ITERS;
   int **arr = (int**) malloc (MAX_ALLOCS * sizeof (void*));
-  unsigned long res;
-
-  TIMING_INIT (res);
 
   for (int t = 0; t <= 3; t++)
     for (int i = 0; i < NUM_ALLOCS; i++)
