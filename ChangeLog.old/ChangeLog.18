@@ -79025,6 +79025,7 @@
 
 2012-08-01  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #2705]
 	* posix/unistd.h (setuid, setreuid, seteuid, setresuid):
 	Declare with warn_unused_result.
 	(setgid, setregid, setegid, setresgid): Likewise.
