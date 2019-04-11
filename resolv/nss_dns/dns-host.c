@@ -706,9 +706,6 @@ getanswer_r (struct resolv_context *ctx,
       n = -1;
     }
 
-  if (n > 0 && bp[0] == '.')
-    bp[0] = '\0';
-
   if (__glibc_unlikely (n < 0))
     {
       *errnop = errno;

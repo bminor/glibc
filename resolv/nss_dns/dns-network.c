@@ -345,9 +345,6 @@ getanswer_r (const querybuf *answer, int anslen, struct netent *result,
 	  n = -1;
 	}
 
-      if (n > 0 && bp[0] == '.')
-	bp[0] = '\0';
-
       if (n < 0 || res_dnok (bp) == 0)
 	break;
       cp += n;
