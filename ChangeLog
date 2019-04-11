@@ -1,3 +1,10 @@
+2019-04-11  Florian Weimer  <fweimer@redhat.com>
+
+	* include/alloc_buffer.h (alloc_buffer_alloc_bytes): Update
+	comment.
+	(alloc_buffer_next): Change return type to non-const.  Update
+	comment.
+
 2019-04-10  TAMUKI Shoichi  <tamuki@linet.gr.jp>
 
 	* manual/time.texi (Formatting Calendar Time): Add missing percent
