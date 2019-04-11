@@ -1,3 +1,8 @@
+2019-04-10  TAMUKI Shoichi  <tamuki@linet.gr.jp>
+
+	* manual/time.texi (Formatting Calendar Time): Add missing percent
+	sign to conversion specifier.
+
 2019-04-09  Carlos O'Donell  <carlos@redhat.com>
 	    Kwok Cheung Yeung  <kcy@codesourcery.com>
 
