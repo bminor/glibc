@@ -2108,6 +2108,7 @@
 
 2017-06-20  Zack Weinberg  <zackw@panix.com>
 
+	[BZ #2489]
 	* bits/signum-generic.h: Renamed from bits/signum.h.
 	Add proper multiple include guard and misuse check.
 	Define __SIGRTMIN = __SIGRTMAX = 32, and define _NSIG = __SIGRTMAX+1.
@@ -14295,6 +14296,7 @@
 
 2016-11-24  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	[BZ #651]
 	* sysdeps/nptl/fork.c (__libc_fork): Remove pid cache setting.
 	* nptl/allocatestack.c (allocate_stack): Likewise.
 	(__reclaim_stacks): Likewise.
