@@ -1,3 +1,25 @@
+2019-04-17  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* support/Makefile (libsupport-routines): Add support_subprocess,
+	xposix_spawn, xposix_spawn_file_actions_addclose, and
+	xposix_spawn_file_actions_adddup2.
+	(tst-support_capture_subprocess-ARGS): New rule.
+	* support/capture_subprocess.h (support_capture_subprogram): New
+	prototype.
+	* support/support_capture_subprocess.c (support_capture_subprocess):
+	Refactor to use support_subprocess and support_capture_poll.
+	(support_capture_subprogram): New function.
+	* support/tst-support_capture_subprocess.c (write_mode_to_str,
+	str_to_write_mode, test_common, parse_int, handle_restart,
+	do_subprocess, do_subprogram, do_multiple_tests): New functions.
+	(do_test): Add support_capture_subprogram tests.
+	* support/subprocess.h: New file.
+	* support/support_subprocess.c: Likewise.
+	* support/xposix_spawn.c: Likewise.
+	* support/xposix_spawn_file_actions_addclose.c: Likewise.
+	* support/xposix_spawn_file_actions_adddup2.c: Likewise.
+	* support/xspawn.h: Likewise.
+
 2019-04-09  Carlos O'Donell  <carlos@redhat.com>
 	    Kwok Cheung Yeung  <kcy@codesourcery.com>
 
