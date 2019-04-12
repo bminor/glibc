@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <support/subprocess.h>
 #include <support/capture_subprocess.h>
 
 #include <errno.h>
@@ -23,6 +24,7 @@
 #include <support/check.h>
 #include <support/xunistd.h>
 #include <support/xsocket.h>
+#include <support/xspawn.h>
 
 static void
 transfer (const char *what, struct pollfd *pfd, struct xmemstream *stream)
@@ -50,6 +52,30 @@ transfer (const char *what, struct pollfd *pfd, struct xmemstream *stream)
     }
 }
 
+static void
+support_capture_poll (struct support_capture_subprocess *result,
+		      struct support_subprocess *proc)
+{
+  struct pollfd fds[2] =
+    {
+      { .fd = proc->stdout_pipe[0], .events = POLLIN },
+      { .fd = proc->stderr_pipe[0], .events = POLLIN },
+    };
+
+  do
+    {
+      xpoll (fds, 2, -1);
+      transfer ("stdout", &fds[0], &result->out);
+      transfer ("stderr", &fds[1], &result->err);
+    }
+  while (fds[0].events != 0 || fds[1].events != 0);
+
+  xfclose_memstream (&result->out);
+  xfclose_memstream (&result->err);
+
+  result->status = support_process_wait (proc);
+}
+
 struct support_capture_subprocess
 support_capture_subprocess (void (*callback) (void *), void *closure)
 {
@@ -57,52 +83,22 @@ support_capture_subprocess (void (*callback) (void *), void *closure)
   xopen_memstream (&result.out);
   xopen_memstream (&result.err);
 
-  int stdout_pipe[2];
-  xpipe (stdout_pipe);
-  TEST_VERIFY (stdout_pipe[0] > STDERR_FILENO);
-  TEST_VERIFY (stdout_pipe[1] > STDERR_FILENO);
-  int stderr_pipe[2];
-  xpipe (stderr_pipe);
-  TEST_VERIFY (stderr_pipe[0] > STDERR_FILENO);
-  TEST_VERIFY (stderr_pipe[1] > STDERR_FILENO);
+  struct support_subprocess proc = support_subprocess (callback, closure);
 
-  TEST_VERIFY (fflush (stdout) == 0);
-  TEST_VERIFY (fflush (stderr) == 0);
+  support_capture_poll (&result, &proc);
+  return result;
+}
 
-  pid_t pid = xfork ();
-  if (pid == 0)
-    {
-      xclose (stdout_pipe[0]);
-      xclose (stderr_pipe[0]);
-      xdup2 (stdout_pipe[1], STDOUT_FILENO);
-      xdup2 (stderr_pipe[1], STDERR_FILENO);
-      xclose (stdout_pipe[1]);
-      xclose (stderr_pipe[1]);
-      callback (closure);
-      _exit (0);
-    }
-  xclose (stdout_pipe[1]);
-  xclose (stderr_pipe[1]);
+struct support_capture_subprocess
+support_capture_subprogram (const char *file, char *const argv[])
+{
+  struct support_capture_subprocess result;
+  xopen_memstream (&result.out);
+  xopen_memstream (&result.err);
 
-  struct pollfd fds[2] =
-    {
-      { .fd = stdout_pipe[0], .events = POLLIN },
-      { .fd = stderr_pipe[0], .events = POLLIN },
-    };
+  struct support_subprocess proc = support_subprogram (file, argv);
 
-  do
-    {
-      xpoll (fds, 2, -1);
-      transfer ("stdout", &fds[0], &result.out);
-      transfer ("stderr", &fds[1], &result.err);
-    }
-  while (fds[0].events != 0 || fds[1].events != 0);
-  xclose (stdout_pipe[0]);
-  xclose (stderr_pipe[0]);
-
-  xfclose_memstream (&result.out);
-  xfclose_memstream (&result.err);
-  xwaitpid (pid, &result.status, 0);
+  support_capture_poll (&result, &proc);
   return result;
 }
 

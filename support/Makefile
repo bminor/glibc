@@ -60,6 +60,7 @@ libsupport-routines = \
   support_record_failure \
   support_run_diff \
   support_shared_allocate \
+  support_subprocess \
   support_test_compare_blob \
   support_test_compare_failure \
   support_write_file_string \
@@ -143,6 +144,9 @@ libsupport-routines = \
   xsigaction \
   xsignal \
   xsocket \
+  xposix_spawn \
+  xposix_spawn_file_actions_addclose \
+  xposix_spawn_file_actions_adddup2 \
   xstrdup \
   xstrndup \
   xsysconf \
@@ -184,5 +188,7 @@ $(objpfx)tst-support_record_failure-2.out: tst-support_record_failure-2.sh \
 endif
 
 $(objpfx)tst-support_format_dns_packet: $(common-objpfx)resolv/libresolv.so
+
+tst-support_capture_subprocess-ARGS = -- $(host-test-program-cmd)
 
 include ../Rules
