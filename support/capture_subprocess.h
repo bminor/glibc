@@ -35,6 +35,12 @@ struct support_capture_subprocess
 struct support_capture_subprocess support_capture_subprocess
   (void (*callback) (void *), void *closure);
 
+/* Issue FILE with ARGV arguments by using posix_spawn and capture standard
+   output, standard error, and the exit status.  The out.buffer and err.buffer
+   are handle as support_capture_subprocess.  */
+struct support_capture_subprocess support_capture_subprogram
+  (const char *file, char *const argv[]);
+
 /* Deallocate the subprocess data captured by
    support_capture_subprocess.  */
 void support_capture_subprocess_free (struct support_capture_subprocess *);
