@@ -2,11 +2,11 @@ ifeq ($(subdir),mathvec)
 libmvec-sysdep_routines += vec_d_cos2_vsx vec_s_cosf4_vsx \
 			   vec_d_sin2_vsx vec_s_sinf4_vsx \
 			   vec_d_sincos2_vsx vec_s_sincosf4_vsx
-CFLAGS-vec_d_cos2_vsx.c += -mabi=altivec -maltivec -mvsx
+CFLAGS-vec_d_cos2_vsx.c += -mabi=altivec -maltivec -mvsx -mpower8-vector
 CFLAGS-vec_s_cosf4_vsx.c += -mabi=altivec -maltivec -mvsx
-CFLAGS-vec_d_sin2_vsx.c += -mabi=altivec -maltivec -mvsx
+CFLAGS-vec_d_sin2_vsx.c += -mabi=altivec -maltivec -mvsx -mpower8-vector
 CFLAGS-vec_s_sinf4_vsx.c += -mabi=altivec -maltivec -mvsx
-CFLAGS-vec_d_sincos2_vsx.c += -mabi=altivec -maltivec -mvsx
+CFLAGS-vec_d_sincos2_vsx.c += -mabi=altivec -maltivec -mvsx -mpower8-vector
 CFLAGS-vec_s_sincosf4_vsx.c += -mabi=altivec -maltivec -mvsx
 endif
 
