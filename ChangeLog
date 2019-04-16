@@ -1302,8 +1302,8 @@
 
 2019-02-21  Patsy Griffin Franklin  <pfrankli@redhat.com>
 
-        [BZ #21915]
-        * nss/tst-nss-files-hosts-long.root/etc/host.conf: New file.
+	[BZ #21915]
+	* nss/tst-nss-files-hosts-long.root/etc/host.conf: New file.
 
 2019-02-21  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
@@ -4685,10 +4685,10 @@
 
 	[BZ #19767]
 	* sysdeps/unix/sysv/linux/mips/init-first.c: Remove #ifdef SHARED.
-        * sysdeps/unix/sysv/linux/mips/libc-vdso.h: Remove #ifdef SHARED.
-        * sysdeps/unix/sysv/linux/mips/mips32/sysdep.h: Define
+	* sysdeps/unix/sysv/linux/mips/libc-vdso.h: Remove #ifdef SHARED.
+	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h: Define
 	ALWAYS_USE_VSYSCALL.
-        * sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h: Define
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h: Define
 	ALWAYS_USE_VSYSCALL.
 	* sysdeps/unix/sysv/linux/mips/mips64/n64/sysdep.h: Define
 	ALWAYS_USE_VSYSCALL.
@@ -6607,9 +6607,9 @@
 	* sysdeps/unix/sysv/linux/hppa/bits/shm-pad.h
 	(__SHM_PAD_BEFORE_TIME, __SHM_PAD_BETWEEN_TIME_AND_SEGSZ): Likewise.
 	* sysdeps/unix/sysv/linux/mips/bits/msq-pad.h
-        (__MSQ_PAD_AFTER_TIME, __MSQ_PAD_BEFORE_TIME): Likewise.
-        * sysdeps/unix/sysv/linux/powerpc/bits/msq-pad.h
-        (__MSQ_PAD_BEFORE_TIME): Likewise.
+	(__MSQ_PAD_AFTER_TIME, __MSQ_PAD_BEFORE_TIME): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/msq-pad.h
+	(__MSQ_PAD_BEFORE_TIME): Likewise.
 	* sysdeps/unix/sysv/linux/powerpc/bits/sem-pad.h
 	(__SEM_PAD_BEFORE_TIME): Likewise.
 	* sysdeps/unix/sysv/linux/powerpc/bits/shm-pad.h
@@ -8568,9 +8568,9 @@
 
 2018-08-24  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
-        [BZ #23400]
-        * stdlib/test-bz22786.c (do_test): Fix undefined behavior, don't
-        create temporary files in source tree.
+	[BZ #23400]
+	* stdlib/test-bz22786.c (do_test): Fix undefined behavior, don't
+	create temporary files in source tree.
 
 2018-08-24  Joseph Myers  <joseph@codesourcery.com>
 
@@ -10922,8 +10922,8 @@
 2018-06-27  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #18023]
-        * include/alloca.h (stackinfo_alloca_round, extend_alloca)
-        (extend_alloca_account): Remove.
+	* include/alloca.h (stackinfo_alloca_round, extend_alloca)
+	(extend_alloca_account): Remove.
 	* manual/stdio.texi (Variable Arguments Output): Update comment.
 
 2018-06-27  Joseph Myers  <joseph@codesourcery.com>
@@ -11547,11 +11547,11 @@
 	* csu/check_fds.c (check_one_fd)
 	* sysdeps/posix/fdopendir.c (__fdopendir)
 	* sysdeps/posix/opendir.c (__alloc_dir): Use __fcntl_nocancel
-        instead of __fcntl and/or __libc_fcntl.
+	instead of __fcntl and/or __libc_fcntl.
 
 	* sysdeps/unix/sysv/linux/pthread_setname.c (pthread_setname_np)
 	* sysdeps/unix/sysv/linux/pthread_getname.c (pthread_getname_np)
-        * sysdeps/unix/sysv/linux/i386/smp.h (is_smp_system):
+	* sysdeps/unix/sysv/linux/i386/smp.h (is_smp_system):
 	Use __open64_nocancel instead of __open_nocancel.
 
 	* sysdeps/unix/sysv/linux/not-cancel.h: Move all of the
@@ -11562,18 +11562,18 @@
 	open_nocancel, open64_nocancel, openat_nocancel, pause_nocancel,
 	read_nocancel, waitpid_nocancel, write_nocancel.
 
-        * io/Versions [GLIBC_PRIVATE]: Add __libc_fcntl,
-        __fcntl_nocancel, __open64_nocancel, __write_nocancel.
-        * posix/Versions: Add __nanosleep_nocancel, __pause_nocancel.
+	* io/Versions [GLIBC_PRIVATE]: Add __libc_fcntl,
+	__fcntl_nocancel, __open64_nocancel, __write_nocancel.
+	* posix/Versions: Add __nanosleep_nocancel, __pause_nocancel.
 
-        * nptl/pt-fcntl.c: New file.
-        * nptl/Makefile (pthread-compat-wrappers): Remove fcntl.
-        (libpthread-routines): Add pt-fcntl.
-        * include/fcntl.h (__fcntl_nocancel_adjusted): New function.
-        (__libc_fcntl): Remove attribute_hidden.
+	* nptl/pt-fcntl.c: New file.
+	* nptl/Makefile (pthread-compat-wrappers): Remove fcntl.
+	(libpthread-routines): Add pt-fcntl.
+	* include/fcntl.h (__fcntl_nocancel_adjusted): New function.
+	(__libc_fcntl): Remove attribute_hidden.
 	* sysdeps/unix/sysv/linux/fcntl.c (__libc_fcntl): Call
 	__fcntl_nocancel_adjusted, not fcntl_common.
-        (__fcntl_nocancel): Move to new file fcntl_nocancel.c.
+	(__fcntl_nocancel): Move to new file fcntl_nocancel.c.
 	(fcntl_common): Rename to __fcntl_nocancel_adjusted; also move
 	to fcntl_nocancel.c.
 	* sysdeps/unix/sysv/linux/fcntl_nocancel.c: New file.
@@ -11602,14 +11602,14 @@
 	* sysdeps/unix/sysv/linux/write.c: Move __write_nocancel to...
 	* sysdeps/unix/sysv/linux/write_nocancel.c: ...this new file.
 
-        * sysdeps/unix/sysv/linux/nios2/Makefile: Don't override
-        libpthread-routines.
-        * sysdeps/unix/sysv/linux/nios2/pt-vfork.S: New file which
-        defines nothing.
+	* sysdeps/unix/sysv/linux/nios2/Makefile: Don't override
+	libpthread-routines.
+	* sysdeps/unix/sysv/linux/nios2/pt-vfork.S: New file which
+	defines nothing.
 
-        * sysdeps/mach/hurd/dl-sysdep.c: Define __read instead of
-        __libc_read, and __write instead of __libc_write.  Define
-        __open64 in addition to __open.
+	* sysdeps/mach/hurd/dl-sysdep.c: Define __read instead of
+	__libc_read, and __write instead of __libc_write.  Define
+	__open64 in addition to __open.
 
 2018-06-12  H.J. Lu  <hongjiu.lu@intel.com>
 
@@ -14639,17 +14639,17 @@
 	* sysdeps/mach/hurd/localplt.data: New file.
 
 2018-04-02  Agustina Arzille  <avarzille@riseup.net>
-            Amos Jeffries  <squid3@treenet.co.nz>
-            David Michael  <fedora.dm0@gmail.com>
-            Marco Gerards  <marco@gnu.org>
-            Marcus Brinkmann  <marcus@gnu.org>
-            Neal H. Walfield  <neal@gnu.org>
-            Pino Toscano  <toscano.pino@tiscali.it>
-            Richard Braun  <rbraun@sceen.net>
-            Roland McGrath  <roland@gnu.org>
-            Samuel Thibault  <samuel.thibault@ens-lyon.org>
-            Thomas DiModica  <ricinwich@yahoo.com>
-            Thomas Schwinge  <tschwinge@gnu.org>
+	    Amos Jeffries  <squid3@treenet.co.nz>
+	    David Michael  <fedora.dm0@gmail.com>
+	    Marco Gerards  <marco@gnu.org>
+	    Marcus Brinkmann  <marcus@gnu.org>
+	    Neal H. Walfield  <neal@gnu.org>
+	    Pino Toscano  <toscano.pino@tiscali.it>
+	    Richard Braun  <rbraun@sceen.net>
+	    Roland McGrath  <roland@gnu.org>
+	    Samuel Thibault  <samuel.thibault@ens-lyon.org>
+	    Thomas DiModica  <ricinwich@yahoo.com>
+	    Thomas Schwinge  <tschwinge@gnu.org>
 
 	* htl: New directory.
 	* sysdeps/htl: New directory.
@@ -28384,8 +28384,8 @@
 	* sysdeps/x86_64/fpu/multiarch/s_truncf.c: Likewise.
 
 2017-09-20  Paul Pluzhnikov  <ppluzhnikov@google.com>
-            Ricky Zhou  <rickyz@google.com>
-            Anoop V Chakkalakkal  <anoop.vijayan@in.ibm.com>
+	    Ricky Zhou  <rickyz@google.com>
+	    Anoop V Chakkalakkal  <anoop.vijayan@in.ibm.com>
 
 	[BZ #14333]
 	* stdlib/cxa_atexit.c (__internal_atexit): Use __exit_funcs_lock.
@@ -29925,7 +29925,7 @@
 	set FE_INVALID.
 	* sysdeps/aarch64/fpu/s_lround.c (IREG_SIZE, OREG_SIZE):
 	Initialize if not already set.
-        (OREGS, IREGS): Set based on IREG_SIZE and OREG_SIZE.
+	(OREGS, IREGS): Set based on IREG_SIZE and OREG_SIZE.
 
 2017-08-31  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
