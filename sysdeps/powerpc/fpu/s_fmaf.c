@@ -19,7 +19,8 @@
 #include <sysdep.h>
 #include <libm-alias-float.h>
 
-float __fmaf (float x, float y, float z)
+float
+__fmaf (float x, float y, float z)
 {
   return __builtin_fmaf (x, y, z);
 }

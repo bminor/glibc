@@ -1,5 +1,8 @@
 2019-04-17  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/powerpc/fpu/s_fma.c: Fix format.
+	* sysdeps/powerpc/fpu/s_fmaf.c: Likewise.
+
 	* sysdeps/powerpc/fpu/s_fma.S: Remove file.
 	* sysdeps/powerpc/fpu/s_fmaf.S: Likewise.
 	* sysdeps/powerpc/fpu/s_fma.c: New file.

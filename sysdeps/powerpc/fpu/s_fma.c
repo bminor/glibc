@@ -19,7 +19,8 @@
 #include <sysdep.h>
 #include <libm-alias-double.h>
 
-double __fma (double x, double y, double z)
+double
+__fma (double x, double y, double z)
 {
   return __builtin_fma (x, y, z);
 }
