@@ -123,7 +123,7 @@
 	RES_USE_INET6 flag.
 	(gaih_inet): Do not disable RES_USE_INET6 flag.
 
-2019-04-05  Anton Youdkevitch <anton.youdkevitch@bell-sw.com>
+2019-04-05  Anton Youdkevitch  <anton.youdkevitch@bell-sw.com>
 
 	* sysdeps/aarch64/multiarch/memcpy_thunderx2.S: Cleanup branching
 	and remove redundant code.
@@ -258,7 +258,7 @@
 	* time/tst-strftime3.c: New.
 	* time/Makefile (tests): Add tst-strftime3.
 
-2019-04-01  Uros Bizjak <ubizjak@gmail.com>
+2019-04-01  Uros Bizjak  <ubizjak@gmail.com>
 
 	* sysdeps/alpha/divqu.S (__divqu): Move save of $f0 and excb after
 	conditional branch to DIVBYZERO.  Fix unwind info.
@@ -1465,7 +1465,7 @@
 
 	* setjmp/tst-setjmp.c (jump): Use __attribute__ ((__noreturn__)).
 
-2019-02-14  Jan Kratochvil <jan.kratochvil@redhat.com>
+2019-02-14  Jan Kratochvil  <jan.kratochvil@redhat.com>
 
 	* scripts/test_printers_common.py: Set TERM to a known harmless
 	value.
@@ -2399,18 +2399,18 @@
 
 2019-01-16  Zack Weinberg  <zackw@panix.com>
 
-	 * support/xsignal.h (xalloc_sigstack, xfree_sigstack)
-	 (xget_sigstack_location): New test support functions.
-	 * support/xsigstack.c: New file, implementing them.
-	 * support/tst-xsigstack.c: New test for them.
-	 * support/Makefile: Update.
+	* support/xsignal.h (xalloc_sigstack, xfree_sigstack)
+	(xget_sigstack_location): New test support functions.
+	* support/xsigstack.c: New file, implementing them.
+	* support/tst-xsigstack.c: New test for them.
+	* support/Makefile: Update.
 
-	 * signal/tst-minsigstksz-1.c
-	 * signal/tst-minsigstksz-2.c
-	 * signal/tst-minsigstksz-3.c
-	 * signal/tst-minsigstksz-3a.c
-	 * signal/tst-minsigstksz-4.c: New tests.
-	 * signal/Makefile: Run them.
+	* signal/tst-minsigstksz-1.c
+	* signal/tst-minsigstksz-2.c
+	* signal/tst-minsigstksz-3.c
+	* signal/tst-minsigstksz-3a.c
+	* signal/tst-minsigstksz-4.c: New tests.
+	* signal/Makefile: Run them.
 
 2019-01-16  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
@@ -3051,7 +3051,7 @@
 	* scripts/build-many-glibcs.py (Context.checkout): Default Linux
 	version to 4.20.
 
-2018-12-28  Justus Winter <4winter@informatik.uni-hamburg.de>
+2018-12-28  Justus Winter  <4winter@informatik.uni-hamburg.de>
 
 	* hurd/lookup-retry: Include <unistd.h>.
 	(__hurd_file_name_lookup_retry): Keep a ref on last result in `lastdir'.
@@ -3234,7 +3234,7 @@
 2018-12-27  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* benchtests/bench-strlen.c (generic_strlen): New function.
-	 (memchr_strlen): New function.
+	(memchr_strlen): New function.
 
 2018-12-26  H.J. Lu  <hongjiu.lu@intel.com>
 
@@ -3299,11 +3299,11 @@
 	version.
 	* INSTALL: Regenerated.
 
-2018-12-21  Istvan Kurucsai <pistukem@gmail.com>
+2018-12-21  Istvan Kurucsai  <pistukem@gmail.com>
 
 	* malloc/malloc.c (munmap_chunk): Verify chunk alignment.
 
-2018-12-20  Istvan Kurucsai <pistukem@gmail.com>
+2018-12-20  Istvan Kurucsai  <pistukem@gmail.com>
 
 	* malloc/malloc.c (mremap_chunk): Additional checks.
 
@@ -3433,7 +3433,7 @@
 	* sysdeps/unix/sysv/linux/csky/syscalls.list: Likewise.
 	* sysdeps/unix/sysv/linux/csky/sysdep.h: Likewise.
 
-2018-12-18  Albert ARIBAUD <albert.aribaud@3adev.fr>
+2018-12-18  Albert ARIBAUD  <albert.aribaud@3adev.fr>
 
 	* include/time.h (__difftime64): Add.
 	* time/difftime.c (subtract): convert to 64-bit time.
@@ -3518,7 +3518,7 @@
 	* sysdeps/mach/hurd/fcntl.c (__libc_fcntl): Test against 64bit `cmd'
 	values in the 64bit value cases.
 
-2018-12-18  Albert ARIBAUD <albert.aribaud@3adev.fr>
+2018-12-18  Albert ARIBAUD  <albert.aribaud@3adev.fr>
 
 	* include/time.h
 	(__ctime64_r): Add.
@@ -4464,7 +4464,7 @@
 	[BZ #23995]
 	* localedata/locales/bi_VU: Remove executable bit from file.
 
-2018-12-17  Albert ARIBAUD <albert.aribaud@3adev.fr>
+2018-12-17  Albert ARIBAUD  <albert.aribaud@3adev.fr>
 
 	* include/time.h
 	(__localtime64): Add.
@@ -5250,7 +5250,7 @@
 	* wcsmbs/isoc99_vwscanf.c: Likewise.
 	* wcsmbs/isoc99_wscanf.c: Likewise.
 
-2018-12-05  Albert ARIBAUD <albert.aribaud@3adev.fr>
+2018-12-05  Albert ARIBAUD  <albert.aribaud@3adev.fr>
 
 	* include/time.h
 	(__tz_compute): Replace time_t with __time64_t.
@@ -6447,7 +6447,7 @@
 	* elf/Makefile (tests): Add tst-unwind-main.
 	(CFLAGS-tst-unwind-main.c): Define.
 
-2018-10-29  Sergi Almacellas Abellana <sergi@koolpi.com>
+2018-10-29  Sergi Almacellas Abellana  <sergi@koolpi.com>
 
 	[BZ #23791]
 	* localedata/locales/ca_ES (LC_MONETARY): set p_cs_precedes and
@@ -6550,7 +6550,7 @@
 	requirement for Python to build manual.
 	* INSTALL: Regenerated.
 
-2018-10-24  Albert ARIBAUD <albert.aribaud@3adev.fr>
+2018-10-24  Albert ARIBAUD  <albert.aribaud@3adev.fr>
 
 	* bits/time64.h: New file.
 	* include/time.h: Replace internal_time_t with __time64_t.
@@ -6590,7 +6590,7 @@
 	format cache.
 	* elf/cache.c (print_cache): Likewise.
 
-2018-10-24  Albert ARIBAUD <albert.aribaud@3adev.fr>
+2018-10-24  Albert ARIBAUD  <albert.aribaud@3adev.fr>
 
 	* bits/timesize.h: New file.
 	* stdlib/Makefile (headers): Add bits/timesize.h.
@@ -6916,7 +6916,7 @@
 	* time/tst-ftime.c (TIMEOUT): Likewise.
 	* timezone/tst-tzset.c (TIMEOUT): Likewise.
 
-2018-10-16 Anton Youdkevitch <anton.youdkevitch@bell-sw.com>
+2018-10-16  Anton Youdkevitch  <anton.youdkevitch@bell-sw.com>
 
 	* sysdeps/aarch64/multiarch/memcpy_thunderx.S: Remove thunderx2 code.
 	* sysdeps/aarch64/multiarch/memcpy_thunderx2.S: New implementation
@@ -8530,8 +8530,8 @@
 	* sysdeps/powerpc/math-tests.h: Remove file.
 	* sysdeps/powerpc/fpu/math-tests-trap-force.h: New file.
 
-2018-08-27 Martin Kuchta  <martin.kuchta@netapp.com>
-	   Torvald Riegel  <triegel@redhat.com>
+2018-08-27  Martin Kuchta  <martin.kuchta@netapp.com>
+	    Torvald Riegel  <triegel@redhat.com>
 
 	[BZ #23538]
 	* nptl/pthread_cond_common.c (__condvar_quiesce_and_switch_g1):
@@ -9219,7 +9219,7 @@
 	(FEATURE_INDEX_1): Likewise.
 	(RTLD_GLOBAL_RO_DL_X86_CPU_FEATURES_OFFSET): Updated.
 
-2018-08-02  Carlos O'Donell <carlos@redhat.com>
+2018-08-02  Carlos O'Donell  <carlos@redhat.com>
 
 	* localedata/Makefile (INSTALL-SUPPORTED-LOCALES): Remove.
 	(INSTALL-SUPPORTED-LOCALE-ARCHIVE): Define.
@@ -9497,7 +9497,7 @@
 	* htl/lockfile.c (flockfile, funlockfile, ftrylockfile): Use weak
 	aliases for symbols not in the implementation namespace.
 
-2018-07-25  Carlos O'Donell <carlos@redhat.com>
+2018-07-25  Carlos O'Donell  <carlos@redhat.com>
 
 	[BZ #23393]
 	* localedata/locales/iso14651_t1_common: Deinterlace uppercase and
@@ -9689,7 +9689,7 @@
 	* sysdeps/unix/sysv/linux/sh/kernel-features.h (__ASSUME_STATX):
 	Undefine.  Suggested by Romain Naour <romain.naour@gmail.com>.
 
-2018-07-24  Rical Jasan <rj@2c3t.io>
+2018-07-24  Rical Jasan  <rj@2c3t.io>
 	    Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 	    Juan Manuel Torres Palma  <jmtorrespalma@gmail.com>
 
@@ -10218,7 +10218,7 @@
 
 2018-07-16  H.J. Lu  <hongjiu.lu@intel.com>
 
-	 [BZ #21598]
+	[BZ #21598]
 	* configure.ac: Add --enable-cet.
 	* configure: Regenerated.
 	* elf/Makefille (all-built-dso): Add a comment.
@@ -10905,7 +10905,7 @@
 2018-06-28  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* sysdeps/ieee754/ldbl-128ibm-compat/Versions: Add __strfromieee128,
-	 __strtoieee128, __strtoieee128_l,__wcstoieee128 and __wcstoieee128_l.
+	__strtoieee128, __strtoieee128_l,__wcstoieee128 and __wcstoieee128_l.
 	* sysdeps/ieee754/ldbl-128ibm-compat/strfromf128.c: New file.
 	* sysdeps/ieee754/ldbl-128ibm-compat/strtof128.c: New file.
 	* sysdeps/ieee754/ldbl-128ibm-compat/strtof128_l.c: New file.
@@ -11520,7 +11520,7 @@
 2018-06-12  Carlos O'Donell  <carlos@redhat.com>
 	    Andreas Schwab  <schwab@suse.de>
 	    Dmitry V. Levin  <ldv@altlinux.org>
-	    Florian Weimer <fweimer@redhat.com>
+	    Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #23102]
 	[BZ #21942]
@@ -13385,7 +13385,7 @@
 	* math/w_expl_compat.c: Likewise.
 	* math/w_exp_template.c: Likewise.  Remove hidden_def_x.
 
-2018-04-30  Raymond Nicholson <rain1@airmail.cc>
+2018-04-30  Raymond Nicholson  <rain1@airmail.cc>
 
 	* manual/startup.texi (Aborting a Program): Remove inappropriate joke.
 
@@ -13673,7 +13673,7 @@
 
 	* elf/elf.h (NT_PPC_PKEY): New macro.
 
-2018-04-23  Dragan Stanojevic - Nevidljivi <invisible@hidden-city.net>
+2018-04-23  Dragan Stanojevic - Nevidljivi  <invisible@hidden-city.net>
 
 	[BZ #23094]
 	* localedata/locales/hr_HR: fix thousands_sep and
@@ -13728,7 +13728,7 @@
 
 	* sysdeps/unix/sysv/linux/alpha/getdents.c: Add comments with alpha
 	requirements.
-	 (_DIRENT_MATCHES_DIRENT64): Undef
+	(_DIRENT_MATCHES_DIRENT64): Undef
 	* sysdeps/unix/sysv/linux/alpha/getdents64.c: Likewise.
 	* sysdeps/unix/sysv/linux/arm/getdents64.c: Remove file.
 	* sysdeps/unix/sysv/linux/generic/getdents.c: Likewise.
@@ -13912,7 +13912,7 @@
 	[BZ #19527]
 	* iconvdata/gconv-modules (ARMSCII8//, ShiftJISX0213//): New aliases.
 
-2018-04-15  Patrick McGehearty <patrick.mcgehearty@oracle.com>
+2018-04-15  Patrick McGehearty  <patrick.mcgehearty@oracle.com>
 
 	* sysdeps/ieee754/dbl-64/e_exp.c: faster __ieee754_exp()
 	* sysdeps/ieee754/dbl-64/eexp.tbl: New file for e_exp.c
@@ -13967,7 +13967,7 @@
 
 	* manual/charset.texi (Converting a Character): Fix typo.
 
-2018-04-05 Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+2018-04-05  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/sparc/fpu/libm-test-ulps: Update.
 
@@ -14113,7 +14113,7 @@
 	* misc/tst-preadvwritev2-common.c (RWF_APPEND): New.
 	(RWF_SUPPORTED): Add RWF_APPEND.
 
-2018-04-03 Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+2018-04-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #22391]
 	* nptl/sigaction.c (__sigaction): Use __is_internal_signal to
@@ -15445,7 +15445,7 @@
 
 	* po/pt_BR.po: Update translations.
 
-2018-03-12  David Michael <fedora.dm0@gmail.com>
+2018-03-12  David Michael  <fedora.dm0@gmail.com>
 
 	* sysdeps/mach/hurd/reboot.c: Include <hurd/paths.h>
 	(reboot): Lookup _SERVERS_STARTUP instead of calling proc_getmsgport to
@@ -16143,7 +16143,7 @@
 	* sysdeps/unix/sysv/linux/spawni.c (__spawni_child): Call
 	__is_internal_signal instead of __nptl_is_internal_signal.
 
-2018-02-22  Andrew Waterman <andrew@sifive.com>
+2018-02-22  Andrew Waterman  <andrew@sifive.com>
 
 	[BZ # 22884]
 	* sysdeps/riscv/rvd/s_fmax.c (__fmax): Handle sNaNs correctly.
@@ -17089,7 +17089,7 @@
 	* sysdeps/unix/sysv/linux/sys/quota.h (dqoff): Use __loff_t
 	instead of loff_t.
 
-2018-02-06  Florian Weimer <fweimer@redhat.com>
+2018-02-06  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #18023]
 	* sysdeps/unix/sysv/linux/getlogin_r.c (__getlogin_r_loginuid):
@@ -19123,7 +19123,7 @@
 	(slowexp_p32): Likewise.
 
 2017-12-19  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
-	    James Clarke <jrtc27@jrtc27.com>
+	    James Clarke  <jrtc27@jrtc27.com>
 
 	[BZ #22603]
 	* sysdeps/ia64/memchr.S (__memchr): Avoid overflow in pointer
@@ -20444,7 +20444,7 @@
 
 2017-12-05  Rogerio A. Cardoso  <rcardoso@linux.vnet.ibm.com>
 	    Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
-	    Carlos O'Donnell <carlos@redhat.com>
+	    Carlos O'Donnell  <carlos@redhat.com>
 
 	* elf/dl-tunables.list: Add elision parameters.
 	* manual/tunables.texi: Add entries about elision tunable.
@@ -20884,7 +20884,7 @@
 
 	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h
 	(INTERNAL_VSYSCALL_CALL, CLOBBER_0, CLOBBER_1, CLOBBER_2,
-	 CLOBBER_3, CLOBBER_4, CLOBBER_5, CLOBBER_6,
+	CLOBBER_3, CLOBBER_4, CLOBBER_5, CLOBBER_6,
 	INTERNAL_VSYSCALL_NO_SYSCALL_FALLBACK): Remove.
 	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h: Likewise.
 
@@ -25635,7 +25635,7 @@
 	(do_check_malloc_state): Add assert that checks arena->top.
 	(malloc_consolidate): Remove initialization.
 	(int_mallinfo): Remove call to malloc_consolidate.
-	 (__libc_mallopt): Clarify why malloc_consolidate is needed.
+	(__libc_mallopt): Clarify why malloc_consolidate is needed.
 
 2017-10-17  Wilco Dijkstra  <wdijkstr@arm.com>
 
@@ -29349,7 +29349,7 @@
 	(readdir_result_type, readdir_result_skip_entry):
 	New functions, replacing ...
 	(readdir_result_might_be_symlink, readdir_result_might_be_dir):
-	 these functions, which were removed.  This makes the callers
+	these functions, which were removed.  This makes the callers
 	easier to read.  All callers changed.
 	(D_INO_TO_RESULT): Now empty if there is no d_ino.
 	(size_add_wrapv, glob_use_alloca): New static functions.
@@ -29905,7 +29905,7 @@
 	(gaih_inet): Likewise.
 
 2017-08-31  Steve Ellcey  <sellcey@cavium.com>
-	    Richard Henderson <rth@twiddle.net>
+	    Richard Henderson  <rth@twiddle.net>
 
 	* sysdeps/aarch64/fpu/s_llrint.c (OREG_SIZE): New macro.
 	* sysdeps/aarch64/fpu/s_llround.c (OREG_SIZE): Likewise.
@@ -30988,7 +30988,7 @@
 	syscall definitions and replace __builtin_expect with __glibc_likely.
 	* sysdeps/unix/syscall-template.S: Update comment about cancellable
 	syscall.
-	 (SYSCALL_CANCELLABLE): Removedefinition
+	(SYSCALL_CANCELLABLE): Removedefinition
 	* sysdeps/unix/sysv/linux/aarch64/sysdep-cancel.h (PSEUDO): Remove
 	definition.
 	(PSEUDO_END): Likewise.
