@@ -91,7 +91,7 @@ ENTRY (__memchr)
 	and	vhas_chr2.16b, vhas_chr2.16b, vrepmask.16b
 	addp	vend.16b, vhas_chr1.16b, vhas_chr2.16b		/* 256->128 */
 	addp	vend.16b, vend.16b, vend.16b			/* 128->64 */
-	mov	synd, vend.2d[0]
+	mov	synd, vend.d[0]
 	/* Clear the soff*2 lower bits */
 	lsl	tmp, soff, #1
 	lsr	synd, synd, tmp
@@ -111,7 +111,7 @@ L(loop):
 	/* Use a fast check for the termination condition */
 	orr	vend.16b, vhas_chr1.16b, vhas_chr2.16b
 	addp	vend.2d, vend.2d, vend.2d
-	mov	synd, vend.2d[0]
+	mov	synd, vend.d[0]
 	/* We're not out of data, loop if we haven't found the character */
 	cbz	synd, L(loop)
 
@@ -121,7 +121,7 @@ L(end):
 	and	vhas_chr2.16b, vhas_chr2.16b, vrepmask.16b
 	addp	vend.16b, vhas_chr1.16b, vhas_chr2.16b		/* 256->128 */
 	addp	vend.16b, vend.16b, vend.16b			/* 128->64 */
-	mov	synd, vend.2d[0]
+	mov	synd, vend.d[0]
 	/* Only do the clear for the last possible block */
 	b.hi	L(tail)
 
