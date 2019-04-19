@@ -241,7 +241,11 @@ auto inline void
 __attribute__ ((always_inline))
 elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 		  const ElfW(Sym) *sym, const struct r_found_version *version,
-		  void *const reloc_addr_arg, int skip_ifunc)
+		  void *const reloc_addr_arg, int skip_ifunc
+#ifndef NESTING
+		  , struct link_map *boot_map
+#endif
+                  )
 {
   ElfW(Addr) *const reloc_addr = reloc_addr_arg;
   const unsigned int r_type = ELFW (R_TYPE) (reloc->r_info);
@@ -253,7 +257,11 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
   else
     {
       const ElfW(Sym) *const refsym = sym;
+#if !defined(NESTING) && (defined RTLD_BOOTSTRAP || defined STATIC_PIE_BOOTSTRAP)
+      struct link_map *sym_map = boot_map;
+#else
       struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
+#endif
       ElfW(Addr) value = sym_map == NULL ? 0 : sym_map->l_addr + sym->st_value;
 
       if (sym != NULL
@@ -409,7 +417,11 @@ elf_machine_lazy_rel (struct link_map *map,
 
       /* Always initialize TLS descriptors completely, because lazy
 	 initialization requires synchronization at every TLS access.  */
-      elf_machine_rela (map, reloc, sym, version, reloc_addr, skip_ifunc);
+      elf_machine_rela (map, reloc, sym, version, reloc_addr, skip_ifunc
+#ifndef NESTING
+			, NULL
+#endif
+			);
     }
   else if (__glibc_unlikely (r_type == AARCH64_R(IRELATIVE)))
     {
