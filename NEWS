@@ -24,6 +24,12 @@ Major new features:
 
 * The entry for the new Japanese era has been added for ja_JP locale.
 
+* Memory allocation functions malloc, calloc, realloc, reallocarray, valloc,
+  pvalloc, memalign, and posix_memalign fail now with total object size
+  larger than PTRDIFF_MAX.  This is to avoid potential undefined behavior with
+  pointer subtraction within the allocated object, where results might
+  overflow the ptrdiff_t type.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The functions clock_gettime, clock_getres, clock_settime,
@@ -159,12 +165,6 @@ Deprecated and removed features, and other changes affecting compatibility:
   GCC's -Wformat warnings can detect most uses of this extension, as long
   as all functions that call vscanf, vfscanf, or vsscanf are annotated with
   __attribute__ ((format (scanf, ...))).
-
-* Memory allocation functions malloc, calloc, realloc, reallocarray, valloc,
-  pvalloc, memalign, and posix_memalign fail now with total object size
-  larger than PTRDIFF_MAX.  This is to avoid potential undefined behavior with
-  pointer subtraction within the allocated object, where results might
-  overflow the ptrdiff_t type.
 
 Changes to build and runtime requirements:
 
