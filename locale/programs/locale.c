@@ -173,6 +173,9 @@ static int write_archive_locales (void **all_datap, char *linebuf);
 static void write_charmaps (void);
 static void show_locale_vars (void);
 static void show_info (const char *name);
+static void try_setlocale (int category, const char *category_name);
+static char *quote_string (const char *input);
+static void setlocale_diagnostics (void);
 
 
 int
@@ -186,10 +189,8 @@ main (int argc, char *argv[])
 
   /* Set locale.  Do not set LC_ALL because the other categories must
      not be affected (according to POSIX.2).  */
-  if (setlocale (LC_CTYPE, "") == NULL)
-    error (0, errno, gettext ("Cannot set LC_CTYPE to default locale"));
-  if (setlocale (LC_MESSAGES, "") == NULL)
-    error (0, errno, gettext ("Cannot set LC_MESSAGES to default locale"));
+  try_setlocale (LC_CTYPE, "LC_CTYPE");
+  try_setlocale (LC_MESSAGES, "LC_MESSAGES");
 
   /* Initialize the message catalog.  */
   textdomain (PACKAGE);
@@ -200,9 +201,8 @@ main (int argc, char *argv[])
   /* `-a' requests the names of all available locales.  */
   if (do_all != 0)
     {
-      if (setlocale (LC_COLLATE, "") == NULL)
-	error (0, errno,
-	       gettext ("Cannot set LC_COLLATE to default locale"));
+      setlocale_diagnostics ();
+      try_setlocale (LC_COLLATE, "LC_COLLATE");
       write_locales ();
       exit (EXIT_SUCCESS);
     }
@@ -211,14 +211,15 @@ main (int argc, char *argv[])
      used for the -f argument to localedef(1).  */
   if (do_charmaps != 0)
     {
+      setlocale_diagnostics ();
       write_charmaps ();
       exit (EXIT_SUCCESS);
     }
 
   /* Specific information about the current locale are requested.
      Change to this locale now.  */
-  if (setlocale (LC_ALL, "") == NULL)
-    error (0, errno, gettext ("Cannot set LC_ALL to default locale"));
+  try_setlocale (LC_ALL, "LC_ALL");
+  setlocale_diagnostics ();
 
   /* If no real argument is given we have to print the contents of the
      current locale definition variables.  These are LANG and the LC_*.  */
@@ -982,4 +983,122 @@ show_info (const char *name)
   /* The name is not a standard one.
      For testing and perhaps advanced use allow some more symbols.  */
   locale_special (name, show_category_name, show_keyword_name);
+}
+
+/* Set to true by try_setlocale if setlocale fails.  Used by
+   setlocale_diagnostics.  */
+static bool setlocale_failed;
+
+/* Call setlocale, with non-fatal error reporting.  */
+static void
+try_setlocale (int category, const char *category_name)
+{
+  if (setlocale (category, "") == NULL)
+    {
+      error (0, errno, gettext ("Cannot set %s to default locale"),
+	     category_name);
+      setlocale_failed = true;
+    }
+}
+
+/* Return a quoted version of the passed string, or NULL on error.  */
+static char *
+quote_string (const char *input)
+{
+  char *buffer;
+  size_t length;
+  FILE *stream = open_memstream (&buffer, &length);
+  if (stream == NULL)
+    return NULL;
+
+  while (true)
+    {
+      unsigned char ch = *input++;
+      if (ch == '\0')
+	break;
+
+      /* Use C backslash escapes for those control characters for
+         which they are defined.  */
+      switch (ch)
+        {
+          case '\a':
+            putc_unlocked ('\\', stream);
+            putc_unlocked ('a', stream);
+            break;
+          case '\b':
+            putc_unlocked ('\\', stream);
+            putc_unlocked ('b', stream);
+            break;
+          case '\f':
+            putc_unlocked ('\\', stream);
+            putc_unlocked ('f', stream);
+            break;
+          case '\n':
+            putc_unlocked ('\\', stream);
+            putc_unlocked ('n', stream);
+            break;
+          case '\r':
+            putc_unlocked ('\\', stream);
+            putc_unlocked ('r', stream);
+            break;
+          case '\t':
+            putc_unlocked ('\\', stream);
+            putc_unlocked ('t', stream);
+            break;
+          case '\v':
+            putc_unlocked ('\\', stream);
+            putc_unlocked ('v', stream);
+            break;
+          case '\\':
+          case '\'':
+          case '\"':
+            putc_unlocked ('\\', stream);
+            putc_unlocked (ch, stream);
+            break;
+        default:
+          if (ch < ' ' || ch > '~')
+            /* Use octal sequences because they are fixed width,
+               unlike hexadecimal sequences.  */
+            fprintf (stream, "\\%03o", ch);
+          else
+            putc_unlocked (ch, stream);
+        }
+    }
+
+  if (ferror (stream))
+    {
+      fclose (stream);
+      free (buffer);
+      return NULL;
+    }
+  if (fclose (stream) != 0)
+    {
+      free (buffer);
+      return NULL;
+    }
+
+  return buffer;
+}
+
+/* Print additional information if there was a setlocale error (during
+   try_setlocale).  */
+static void
+setlocale_diagnostics (void)
+{
+  if (setlocale_failed)
+    {
+      const char *locpath = getenv ("LOCPATH");
+      if (locpath != NULL)
+	{
+	  char *quoted = quote_string (locpath);
+	  if (quoted != NULL)
+	    fprintf (stderr,
+		     gettext ("\
+warning: The LOCPATH variable is set to \"%s\"\n"),
+		     quoted);
+	  else
+	    fputs ("warning: The LOCPATH variable is set\n", stderr);
+	  free (quoted);
+	}
+    }
 }

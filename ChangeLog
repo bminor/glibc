@@ -1,3 +1,16 @@
+2019-04-23  Florian Weimer  <fweimer@redhat.com>
+
+	locale: Add LOCPATH diagnostics to the locale program.
+	* locale/programs/locale.c (setlocale_failed): New variable.
+	(try_setlocale): New function.
+	(quote_string): Likewise.
+	(setlocale_diagnostics): Likewise.
+	(main): Call try_setlocale instead of setlocale.  Call
+	setlocale_diagnostics.
+	* locale/Makefile (tests-special): Add tst-locale-locpath.out.
+	(tst-locale-locpath.out): New target.
+	* locale/tst-locale-locpath.sh: New file.
+
 2019-04-21  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* NEWS: Move memory allocation changes of BZ#23741 from 2.29
