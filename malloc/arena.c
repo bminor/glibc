@@ -207,7 +207,6 @@ __malloc_fork_unlock_child (void)
 }
 
 #if HAVE_TUNABLES
-static inline int do_set_mallopt_check (int32_t value);
 void
 TUNABLE_CALLBACK (set_mallopt_check) (tunable_val_t *valp)
 {

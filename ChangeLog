@@ -1,3 +1,7 @@
+2019-04-23  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* malloc/arena.c (do_set_mallopt_check): Removed.
+
 2019-04-23  Florian Weimer  <fweimer@redhat.com>
 
 	locale: Add LOCPATH diagnostics to the locale program.
