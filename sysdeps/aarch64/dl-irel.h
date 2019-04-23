@@ -24,6 +24,7 @@
 #include <unistd.h>
 #include <ldsodefs.h>
 #include <sysdep.h>
+#include <sys/ifunc.h>
 
 #define ELF_MACHINE_IRELA	1
 
@@ -31,7 +32,13 @@ static inline ElfW(Addr)
 __attribute ((always_inline))
 elf_ifunc_invoke (ElfW(Addr) addr)
 {
-  return ((ElfW(Addr) (*) (uint64_t)) (addr)) (GLRO(dl_hwcap));
+  __ifunc_arg_t arg;
+
+  arg._size = sizeof (arg);
+  arg._hwcap = GLRO(dl_hwcap);
+  arg._hwcap2 = GLRO(dl_hwcap2);
+  return ((ElfW(Addr) (*) (uint64_t, const __ifunc_arg_t *)) (addr))
+	 (GLRO(dl_hwcap) | _IFUNC_ARG_HWCAP, &arg);
 }
 
 static inline void
