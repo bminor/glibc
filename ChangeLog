@@ -1,3 +1,8 @@
+2019-04-24  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* benchtests/Makefile (BENCH_DURATION): Set to 1 second.
+	* benchtests/bench-malloc-thread.c (BENCH_DURATION): Set to 10 seconds.
+
 2019-04-24  Mike Frysinger  <vapier@gentoo.org>
 
 	[BZ #18465]

@@ -31,7 +31,7 @@
 #include "json-lib.h"
 
 /* Benchmark duration in seconds.  */
-#define BENCHMARK_DURATION	60
+#define BENCHMARK_DURATION	10
 #define RAND_SEED		88
 
 #ifndef NUM_THREADS

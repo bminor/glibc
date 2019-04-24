@@ -120,9 +120,9 @@ binaries-bench := $(addprefix $(objpfx)bench-,$(bench))
 binaries-benchset := $(addprefix $(objpfx)bench-,$(benchset))
 binaries-bench-malloc := $(addprefix $(objpfx)bench-,$(bench-malloc))
 
-# The default duration: 10 seconds.
+# The default duration: 1 seconds.
 ifndef BENCH_DURATION
-BENCH_DURATION := 10
+BENCH_DURATION := 1
 endif
 
 CPPFLAGS-nonlib += -DDURATION=$(BENCH_DURATION) -D_ISOMAC
