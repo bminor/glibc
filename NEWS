@@ -24,6 +24,7 @@ Deprecated and removed features, and other changes affecting compatibility:
 
 The following bugs are resolved with this release:
 
+  [18465] memusagestat: use local glibc when linking
   [19444] build failures with -O1 due to -Wmaybe-uninitialized
   [20018] getaddrinfo should reject IP addresses with trailing characters
   [20209] localedata: Spelling mistake for Sunday in Greenlandic kl_GL

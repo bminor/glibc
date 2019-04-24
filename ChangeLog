@@ -1,3 +1,10 @@
+2019-04-24  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #18465]
+	* malloc/Makefile (others): Add memusagestat.
+	($(objpfx)memusagestat): Delete rule.
+	(LDLIBS-memusagestat): New variable.
+
 2019-04-03  TAMUKI Shoichi  <tamuki@linet.gr.jp>
 
 	[BZ #22964]
