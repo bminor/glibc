@@ -1,3 +1,10 @@
+2019-04-24  Mike Frysinger  <vapier@gentoo.org>
+
+	[BZ #18465]
+	* malloc/Makefile (others): Add memusagestat.
+	($(objpfx)memusagestat): Delete rule.
+	(LDLIBS-memusagestat): New variable.
+
 2019-04-24  Florian Weimer  <fweimer@redhat.com>
 
 	* locale/Makefile (tests-special): Guard setting by
