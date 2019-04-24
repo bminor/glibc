@@ -19,7 +19,7 @@
 #ifndef X86_MATH_BARRIERS_H
 #define X86_MATH_BARRIERS_H 1
 
-#ifdef __SSE2_MATH__
+#if defined(__SSE2_MATH__) && !defined(__clang__)
 # define math_opt_barrier(x)						\
   ({ __typeof(x) __x;							\
      if (sizeof (x) <= sizeof (double)					\
