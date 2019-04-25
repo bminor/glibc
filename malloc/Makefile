@@ -131,7 +131,6 @@ ifneq ($(cross-compiling),yes)
 # If the gd library is available we build the `memusagestat' program.
 ifneq ($(LIBGD),no)
 others: $(objpfx)memusage
-others += memusagestat
 install-bin = memusagestat
 install-bin-script += memusage
 generated += memusagestat memusage
@@ -155,7 +154,8 @@ cpp-srcs-left := $(memusagestat-modules)
 lib := memusagestat
 include $(patsubst %,$(..)libof-iterator.mk,$(cpp-srcs-left))
 
-LDLIBS-memusagestat = $(libgd-LDFLAGS) -lgd -lpng -lz -lm
+$(objpfx)memusagestat: $(memusagestat-modules:%=$(objpfx)%.o)
+	$(LINK.o) -o $@ $^ $(libgd-LDFLAGS) -lgd -lpng -lz -lm
 
 ifeq ($(run-built-tests),yes)
 ifeq (yes,$(build-shared))
