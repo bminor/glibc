@@ -1,5 +1,14 @@
 2019-06-13  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
+	* sysdeps/aarch64/dl-dtprocnum.h: New file.
+	* sysdeps/aarch64/dl-machine.h (DT_AARCH64): Define.
+	(elf_machine_runtime_setup): Handle DT_AARCH64_VARIANT_PCS.
+	(elf_machine_lazy_rel): Check STO_AARCH64_VARIANT_PCS and bind such
+	symbols at load time.
+	* sysdeps/aarch64/linkmap.h (struct link_map_machine): Add variant_pcs.
+
+2019-06-13  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
 	* elf/elf.h (STO_AARCH64_VARIANT_PCS): Define.
 	(DT_AARCH64_VARIANT_PCS): Define.
 

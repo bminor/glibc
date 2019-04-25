@@ -27,6 +27,9 @@
 #include <dl-irel.h>
 #include <cpu-features.c>
 
+/* Translate a processor specific dynamic tag to the index in l_info array.  */
+#define DT_AARCH64(x) (DT_AARCH64_##x - DT_LOPROC + DT_NUM)
+
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int __attribute__ ((unused))
 elf_machine_matches_host (const ElfW(Ehdr) *ehdr)
@@ -101,6 +104,10 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	  got[2] = (ElfW(Addr)) &_dl_runtime_resolve;
 	}
     }
+
+  /* Check if STO_AARCH64_VARIANT_PCS needs to be handled.  */
+  if (l->l_info[DT_AARCH64 (VARIANT_PCS)])
+    l->l_mach.variant_pcs = 1;
 
   return lazy;
 }
@@ -388,10 +395,37 @@ elf_machine_lazy_rel (struct link_map *map,
   /* Check for unexpected PLT reloc type.  */
   if (__builtin_expect (r_type == AARCH64_R(JUMP_SLOT), 1))
     {
-      if (__builtin_expect (map->l_mach.plt, 0) == 0)
-	*reloc_addr += l_addr;
-      else
-	*reloc_addr = map->l_mach.plt;
+      if (map->l_mach.plt == 0)
+	{
+	  /* Prelinking.  */
+	  *reloc_addr += l_addr;
+	  return;
+	}
+
+      if (__glibc_unlikely (map->l_mach.variant_pcs))
+	{
+	  /* Check the symbol table for variant PCS symbols.  */
+	  const Elf_Symndx symndx = ELFW (R_SYM) (reloc->r_info);
+	  const ElfW (Sym) *symtab =
+	    (const void *)D_PTR (map, l_info[DT_SYMTAB]);
+	  const ElfW (Sym) *sym = &symtab[symndx];
+	  if (__glibc_unlikely (sym->st_other & STO_AARCH64_VARIANT_PCS))
+	    {
+	      /* Avoid lazy resolution of variant PCS symbols.  */
+	      const struct r_found_version *version = NULL;
+	      if (map->l_info[VERSYMIDX (DT_VERSYM)] != NULL)
+		{
+		  const ElfW (Half) *vernum =
+		    (const void *)D_PTR (map, l_info[VERSYMIDX (DT_VERSYM)]);
+		  version = &map->l_versions[vernum[symndx] & 0x7fff];
+		}
+	      elf_machine_rela (map, reloc, sym, version, reloc_addr,
+				skip_ifunc);
+	      return;
+	    }
+	}
+
+      *reloc_addr = map->l_mach.plt;
     }
   else if (__builtin_expect (r_type == AARCH64_R(TLSDESC), 1))
     {

@@ -20,4 +20,5 @@ struct link_map_machine
 {
   ElfW(Addr) plt;	  /* Address of .plt */
   void *tlsdesc_table;	  /* Address of TLS descriptor hash table.  */
+  int variant_pcs;	  /* If set, PLT calls may follow a variant PCS.  */
 };
