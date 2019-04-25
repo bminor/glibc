@@ -47,6 +47,9 @@ Deprecated and removed features, and other changes affecting compatibility:
 * The obsolete RES_INSECURE1 and RES_INSECURE2 option flags for the DNS stub
   resolver have been removed from <resolv.h>.
 
+* With --enable-bind-now, installed programs are now linked with the
+  BIND_NOW flag.
+
 Changes to build and runtime requirements:
 
 * GCC 6.2 or later is required to build the GNU C Library.

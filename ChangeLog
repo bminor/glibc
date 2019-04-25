@@ -1,3 +1,14 @@
+2019-04-25  Florian Weimer  <fweimer@redhat.com>
+
+	Also enable BIND_NOW for programs if --enable-bind-now.
+	* Makeconfig [$(bind-now)] (link-extra-flags): Add -Wl,-z,now.
+	(+link-pie): Use $(link-extra-flags).
+	(+link-static): Likewise.
+	[! $(build-pie-default)] (+link): Likewise.
+	* manual/install.texi (Configuring and compiling): Update
+	--enable-bind-now description.
+	* INSTALL: Regenerated.
+
 2019-04-24  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* benchtests/Makefile (BENCH_DURATION): Set to 1 second.

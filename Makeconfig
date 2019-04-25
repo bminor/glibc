@@ -398,6 +398,8 @@ endif
 # test modules.
 ifeq ($(bind-now),yes)
 LDFLAGS-lib.so += -Wl,-z,now
+# Extra flags for dynamically linked non-test main programs.
+link-extra-flags += -Wl,-z,now
 endif
 
 # Command to run after every final link (executable or shared object).
@@ -426,7 +428,7 @@ ifndef +link-pie
 	     $(link-extra-libs)
 +link-pie-after-libc = $(+postctorS) $(+postinit)
 define +link-pie
-$(+link-pie-before-libc) $(rtld-LDFLAGS) $(link-libc) $(+link-pie-after-libc)
+$(+link-pie-before-libc) $(rtld-LDFLAGS) $(link-extra-flags) $(link-libc) $(+link-pie-after-libc)
 $(call after-link,$@)
 endef
 define +link-pie-tests
@@ -454,7 +456,7 @@ ifndef +link-static
 	      $(link-extra-libs-static)
 +link-static-after-libc = $(+postctorT) $(+postinit)
 define +link-static
-$(+link-static-before-libc) $(link-libc-static) $(+link-static-after-libc)
+$(+link-static-before-libc) $(link-extra-flags) $(link-libc-static) $(+link-static-after-libc)
 $(call after-link,$@)
 endef
 define +link-static-tests
@@ -485,7 +487,7 @@ else  # not build-pie-default
 	      $(link-extra-libs)
 +link-after-libc = $(+postctor) $(+postinit)
 define +link
-$(+link-before-libc) $(rtld-LDFLAGS) $(link-libc) $(+link-after-libc)
+$(+link-before-libc) $(rtld-LDFLAGS) $(link-extra-flags) $(link-libc) $(+link-after-libc)
 $(call after-link,$@)
 endef
 define +link-tests

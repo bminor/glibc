@@ -176,10 +176,10 @@ if 'CFLAGS' is specified it must enable optimization.  For example:
      protection.
 
 '--enable-bind-now'
-     Disable lazy binding for installed shared objects.  This provides
-     additional security hardening because it enables full RELRO and a
-     read-only global offset table (GOT), at the cost of slightly
-     increased program load times.
+     Disable lazy binding for installed shared objects and programs.
+     This provides additional security hardening because it enables full
+     RELRO and a read-only global offset table (GOT), at the cost of
+     slightly increased program load times.
 
 '--enable-pt_chown'
      The file 'pt_chown' is a helper binary for 'grantpt' (*note
