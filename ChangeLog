@@ -1,5 +1,12 @@
 2019-04-25  Florian Weimer  <fweimer@redhat.com>
 
+	benchtests: Enable BIND_NOW if configured with --enable-bind-now.
+	* benchtests/Makefile [$(bind-now)] (link-bench-bind-now): Set.
+	(bench-link-targets): New variable.
+	($(binaries-bench) …): Use it.  Set LDFLAGS accordingly.
+
+2019-04-25  Florian Weimer  <fweimer@redhat.com>
+
 	Also enable BIND_NOW for programs if --enable-bind-now.
 	* Makeconfig [$(bind-now)] (link-extra-flags): Add -Wl,-z,now.
 	(+link-pie): Use $(link-extra-flags).

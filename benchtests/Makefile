@@ -236,12 +236,20 @@ bench-func: $(binaries-bench)
 	  scripts/benchout.schema.json; \
 	fi
 
-$(timing-type) $(binaries-bench) $(binaries-benchset) \
-	$(binaries-bench-malloc): %: %.o $(objpfx)json-lib.o \
+ifeq ($(bind-now),yes)
+link-bench-bind-now = -Wl,-z,now
+endif
+
+bench-link-targets = $(timing-type) $(binaries-bench) $(binaries-benchset) \
+	$(binaries-bench-malloc)
+
+$(bench-link-targets): %: %.o $(objpfx)json-lib.o \
 	$(link-extra-libs-tests) \
   $(sort $(filter $(common-objpfx)lib%,$(link-libc))) \
   $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
 	$(+link-tests)
+
+$(bench-link-targets): LDFLAGS += $(link-bench-bind-now)
 
 $(objpfx)bench-%.c: %-inputs $(bench-deps)
 	{ if [ -n "$($*-INCLUDE)" ]; then \
