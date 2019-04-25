@@ -1,5 +1,14 @@
 2019-10-09  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* include/spawn.h (__posix_spawn_file_actions_addopen): New
+	prototype.
+	* posix/spawn_faction_addopen.c (posix_spawn_file_actions_addopen):
+	Add internal alias.
+	* posix/wordexp.c (create_environment, free_environment): New
+	functions.
+	(exec_comm_child, exec_comm): Use posix_spawn instead of fork+exec.
+	* posix/wordexp-test.c: Use libsupport.
+
 	* sysdeps/unix/sysv/linux/mips/mips64/getdents64.c (__getdents64):
 	Add small optimization for older kernel to avoid issuing
 	__NR_getdents64 on each call and replace scratch_buffer usage with

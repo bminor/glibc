@@ -15,19 +15,19 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <sys/mman.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <pwd.h>
+#include <wordexp.h>
 #include <stdio.h>
-#include <stdint.h>
+#include <fcntl.h>
+#include <pwd.h>
 #include <stdlib.h>
 #include <string.h>
-#include <wordexp.h>
+#include <sys/mman.h>
+
 #include <libc-pointer-arith.h>
-#include <dso_handle.h>
+#include <array_length.h>
+#include <support/xunistd.h>
+#include <support/check.h>
+#include <support/next_to_fault.h>
 
 #define IFS " \n\t"
 
@@ -40,7 +40,7 @@ struct test_case_struct
   size_t wordc;
   const char *wordv[10];
   const char *ifs;
-} test_case[] =
+} static test_case[] =
   {
     /* Simple word- and field-splitting */
     { 0, NULL, "one", 0, 1, { "one", }, IFS },
@@ -213,8 +213,6 @@ struct test_case_struct
     { WRDE_SYNTAX, NULL, "`\\", 0, 0, { NULL, }, IFS },     /* BZ 18042  */
     { WRDE_SYNTAX, NULL, "${", 0, 0, { NULL, }, IFS },      /* BZ 18043  */
     { WRDE_SYNTAX, NULL, "L${a:", 0, 0, { NULL, }, IFS },   /* BZ 18043#c4  */
-
-    { -1, NULL, NULL, 0, 0, { NULL, }, IFS },
   };
 
 static int testit (struct test_case_struct *tc);
@@ -226,21 +224,19 @@ command_line_test (const char *words)
   wordexp_t we;
   int i;
   int retval = wordexp (words, &we, 0);
-  printf ("wordexp returned %d\n", retval);
+  printf ("info: wordexp returned %d\n", retval);
   for (i = 0; i < we.we_wordc; i++)
-    printf ("we_wordv[%d] = \"%s\"\n", i, we.we_wordv[i]);
+    printf ("info: we_wordv[%d] = \"%s\"\n", i, we.we_wordv[i]);
 }
 
-int
-main (int argc, char *argv[])
+static int
+do_test (int argc, char *argv[])
 {
-  const char *globfile[] = { "one", "two", "three", NULL };
+  const char *globfile[] = { "one", "two", "three" };
   char tmpdir[32];
   struct passwd *pw;
   const char *cwd;
   int test;
-  int fail = 0;
-  int i;
   struct test_case_struct ts;
 
   if (argc > 1)
@@ -253,21 +249,18 @@ main (int argc, char *argv[])
 
   /* Set up arena for pathname expansion */
   tmpnam (tmpdir);
-  if (mkdir (tmpdir, S_IRWXU) || chdir (tmpdir))
-    return -1;
-  else
-    {
-      int fd;
+  xmkdir (tmpdir, S_IRWXU);
+  TEST_VERIFY_EXIT (chdir (tmpdir) == 0);
 
-      for (i = 0; globfile[i]; ++i)
-	if ((fd = creat (globfile[i], S_IRUSR | S_IWUSR)) == -1
-	    || close (fd))
-	  return -1;
+  for (int i = 0; i < array_length (globfile); ++i)
+    {
+      int fd = xopen (globfile[i], O_WRONLY|O_CREAT|O_TRUNC,
+		      S_IRUSR | S_IWUSR);
+      xclose (fd);
     }
 
-  for (test = 0; test_case[test].retval != -1; test++)
-    if (testit (&test_case[test]))
-      ++fail;
+  for (test = 0; test < array_length (test_case); test++)
+    TEST_COMPARE (testit (&test_case[test]), 0);
 
   /* Tilde-expansion tests. */
   pw = getpwnam ("root");
@@ -281,8 +274,7 @@ main (int argc, char *argv[])
       ts.wordv[0] = pw->pw_dir;
       ts.ifs = IFS;
 
-      if (testit (&ts))
-	++fail;
+      TEST_COMPARE (testit (&ts), 0);
 
       ts.retval = 0;
       ts.env = pw->pw_dir;
@@ -292,8 +284,7 @@ main (int argc, char *argv[])
       ts.wordv[0] = "x";
       ts.ifs = IFS;
 
-      if (testit (&ts))
-	++fail;
+      TEST_COMPARE (testit (&ts), 0);
     }
 
   /* "~" expands to value of $HOME when HOME is set */
@@ -308,8 +299,7 @@ main (int argc, char *argv[])
   ts.wordv[1] = "/dummy/home/foo";
   ts.ifs = IFS;
 
-  if (testit (&ts))
-    ++fail;
+  TEST_COMPARE (testit (&ts), 0);
 
   /* "~" expands to home dir from passwd file if HOME is not set */
 
@@ -325,14 +315,13 @@ main (int argc, char *argv[])
       ts.wordv[0] = pw->pw_dir;
       ts.ifs = IFS;
 
-      if (testit (&ts))
-	++fail;
+      TEST_COMPARE (testit (&ts), 0);
     }
 
   puts ("tests completed, now cleaning up");
 
   /* Clean up */
-  for (i = 0; globfile[i]; ++i)
+  for (int i = 0; i < array_length (globfile); ++i)
     remove (globfile[i]);
 
   if (cwd == NULL)
@@ -341,33 +330,20 @@ main (int argc, char *argv[])
   chdir (cwd);
   rmdir (tmpdir);
 
-  printf ("tests failed: %d\n", fail);
-
-  return fail != 0;
+  return 0;
 }
 
-static const char *
+struct support_next_to_fault
 at_page_end (const char *words)
 {
-  const int pagesize = getpagesize ();
-  char *start = mmap (0, 2 * pagesize, PROT_READ|PROT_WRITE,
-		      MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-
-  if (start == MAP_FAILED)
-    return start;
-
-  if (mprotect (start + pagesize, pagesize, PROT_NONE))
-    {
-      munmap (start, 2 * pagesize);
-      return MAP_FAILED;
-    }
+  const size_t words_size = strlen (words) + 1;
+  struct support_next_to_fault ntf
+    = support_next_to_fault_allocate (words_size);
 
   /* Includes terminating NUL.  */
-  const size_t words_size = strlen (words) + 1;
-  char *words_start = start + pagesize - words_size;
-  memcpy (words_start, words, words_size);
+  memcpy (ntf.buffer, words, words_size);
 
-  return words_start;
+  return ntf;
 }
 
 static int
@@ -395,20 +371,20 @@ testit (struct test_case_struct *tc)
   sav_we.we_offs = 3;
   we = sav_we;
 
-  printf ("Test %d (%s): ", ++tests, tc->words);
+  printf ("info: test %d (%s): ", ++tests, tc->words);
   fflush (NULL);
-  const char *words = at_page_end (tc->words);
+  struct support_next_to_fault words = at_page_end (tc->words);
 
   if (tc->flags & WRDE_APPEND)
     {
       /* initial wordexp() call, to be appended to */
       if (wordexp ("pre1 pre2", &we, tc->flags & ~WRDE_APPEND) != 0)
         {
-	  printf ("FAILED setup\n");
+	  printf ("info: FAILED setup\n");
 	  return 1;
 	}
     }
-  retval = wordexp (words, &we, tc->flags);
+  retval = wordexp (words.buffer, &we, tc->flags);
 
   if (tc->flags & WRDE_DOOFFS)
       start_offs = sav_we.we_offs;
@@ -436,7 +412,7 @@ testit (struct test_case_struct *tc)
   if (bzzzt)
     {
       printf ("FAILED\n");
-      printf ("Test words: <%s>, need retval %d, wordc %Zd\n",
+      printf ("info: Test words: <%s>, need retval %d, wordc %Zd\n",
 	      tc->words, tc->retval, tc->wordc);
       if (start_offs != 0)
 	printf ("(preceded by %d NULLs)\n", start_offs);
@@ -465,12 +441,11 @@ testit (struct test_case_struct *tc)
   if (retval == 0 || retval == WRDE_NOSPACE)
     wordfree (&we);
 
-  const int page_size = getpagesize ();
-  char *start = (char *) PTR_ALIGN_DOWN (words, page_size);
-
-  if (munmap (start, 2 * page_size) != 0)
-    return 1;
+  support_next_to_fault_free (&words);
 
   fflush (NULL);
   return bzzzt;
 }
+
+#define TEST_FUNCTION_ARGV do_test
+#include <support/test-driver.c>

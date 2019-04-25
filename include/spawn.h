@@ -11,6 +11,9 @@ __typeof (posix_spawn_file_actions_addclose)
 __typeof (posix_spawn_file_actions_adddup2)
   __posix_spawn_file_actions_adddup2 attribute_hidden;
 
+__typeof (posix_spawn_file_actions_addopen)
+  __posix_spawn_file_actions_addopen attribute_hidden;
+
 __typeof (posix_spawn_file_actions_destroy)
   __posix_spawn_file_actions_destroy attribute_hidden;
 
