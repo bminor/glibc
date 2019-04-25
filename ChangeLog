@@ -1,3 +1,8 @@
+2019-07-12  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* sysdeps/aarch64/dl-machine.h (elf_machine_lazy_rel): Check
+	STO_AARCH64_VARIANT_PCS and bind such symbols at load time.
+
 2019-06-13  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* elf/elf.h (STO_AARCH64_VARIANT_PCS): Define.
