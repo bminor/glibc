@@ -1,3 +1,8 @@
+2019-06-13  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* elf/elf.h (STO_AARCH64_VARIANT_PCS): Define.
+	(DT_AARCH64_VARIANT_PCS): Define.
+
 2019-06-28  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #24744]
