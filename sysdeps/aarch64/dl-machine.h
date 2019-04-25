@@ -388,10 +388,37 @@ elf_machine_lazy_rel (struct link_map *map,
   /* Check for unexpected PLT reloc type.  */
   if (__builtin_expect (r_type == AARCH64_R(JUMP_SLOT), 1))
     {
-      if (__builtin_expect (map->l_mach.plt, 0) == 0)
-	*reloc_addr += l_addr;
-      else
-	*reloc_addr = map->l_mach.plt;
+      if (map->l_mach.plt == 0)
+	{
+	  /* Prelinking.  */
+	  *reloc_addr += l_addr;
+	  return;
+	}
+
+      if (1) /* DT_AARCH64_VARIANT_PCS is not available, so always check.  */
+	{
+	  /* Check the symbol table for variant PCS symbols.  */
+	  const Elf_Symndx symndx = ELFW (R_SYM) (reloc->r_info);
+	  const ElfW (Sym) *symtab =
+	    (const void *)D_PTR (map, l_info[DT_SYMTAB]);
+	  const ElfW (Sym) *sym = &symtab[symndx];
+	  if (__glibc_unlikely (sym->st_other & STO_AARCH64_VARIANT_PCS))
+	    {
+	      /* Avoid lazy resolution of variant PCS symbols.  */
+	      const struct r_found_version *version = NULL;
+	      if (map->l_info[VERSYMIDX (DT_VERSYM)] != NULL)
+		{
+		  const ElfW (Half) *vernum =
+		    (const void *)D_PTR (map, l_info[VERSYMIDX (DT_VERSYM)]);
+		  version = &map->l_versions[vernum[symndx] & 0x7fff];
+		}
+	      elf_machine_rela (map, reloc, sym, version, reloc_addr,
+				skip_ifunc);
+	      return;
+	    }
+	}
+
+      *reloc_addr = map->l_mach.plt;
     }
   else if (__builtin_expect (r_type == AARCH64_R(TLSDESC), 1))
     {
