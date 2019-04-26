@@ -415,7 +415,7 @@ link-extra-libs-tests = $(libsupport)
 
 # Command for linking PIE programs with the C library.
 ifndef +link-pie
-+link-pie-before-libc = $(CC) $(if $($(@F)-no-pie),$(no-pie-ldflag),-pie) \
++link-pie-before-libc = $(if $($(@F)-no-pie),$(no-pie-ldflag),-pie) \
 	     -Wl,-O1 -nostdlib -nostartfiles -o $@ \
 	     $(sysdep-LDFLAGS) $(LDFLAGS) $(LDFLAGS-$(@F)) \
 	     $(combreloc-LDFLAGS) $(relro-LDFLAGS) $(hashstyle-LDFLAGS) \
@@ -428,23 +428,24 @@ ifndef +link-pie
 	     $(link-extra-libs)
 +link-pie-after-libc = $(+postctorS) $(+postinit)
 define +link-pie
-$(+link-pie-before-libc) $(rtld-LDFLAGS) $(link-extra-flags) $(link-libc) $(+link-pie-after-libc)
+$(CC) $(+link-pie-before-libc) $(rtld-LDFLAGS) $(link-extra-flags) \
+  $(link-libc) $(+link-pie-after-libc)
 $(call after-link,$@)
 endef
 define +link-pie-tests
-$(+link-pie-before-libc) $(rtld-tests-LDFLAGS) $(link-libc-tests) \
-			 $(+link-pie-after-libc)
+$(CC) $(+link-pie-before-libc) $(rtld-tests-LDFLAGS) $(link-libc-tests) \
+  $(+link-pie-after-libc)
 $(call after-link,$@)
 endef
 define +link-pie-printers-tests
-$(+link-pie-before-libc) $(built-rtld-LDFLAGS) $(link-libc-printers-tests) \
-			 $(+link-pie-after-libc)
+$(CC) $(+link-pie-before-libc) $(built-rtld-LDFLAGS) \
+  $(link-libc-printers-tests) $(+link-pie-after-libc)
 $(call after-link,$@)
 endef
 endif
 # Command for statically linking programs with the C library.
 ifndef +link-static
-+link-static-before-libc = $(CC) -nostdlib -nostartfiles -static -o $@ \
++link-static-before-libc = -nostdlib -nostartfiles -static -o $@ \
 	      $(if $($(@F)-no-pie),$(no-pie-ldflag),$(default-pie-ldflag)) \
 	      $(sysdep-LDFLAGS) $(LDFLAGS) $(LDFLAGS-$(@F))  \
 	      $(firstword $(CRT-$(@F)) $(csu-objpfx)$(real-static-start-installed-name)) \
@@ -456,11 +457,13 @@ ifndef +link-static
 	      $(link-extra-libs-static)
 +link-static-after-libc = $(+postctorT) $(+postinit)
 define +link-static
-$(+link-static-before-libc) $(link-extra-flags) $(link-libc-static) $(+link-static-after-libc)
+$(CC) $(+link-static-before-libc) $(link-extra-flags) $(link-libc-static) \
+  $(+link-static-after-libc)
 $(call after-link,$@)
 endef
 define +link-static-tests
-$(+link-static-before-libc) $(link-libc-static-tests) $(+link-static-after-libc)
+$(CC) $(+link-static-before-libc) $(link-libc-static-tests) \
+  $(+link-static-after-libc)
 $(call after-link,$@)
 endef
 endif
@@ -475,7 +478,7 @@ ifeq (yes,$(build-pie-default))
 +link-tests = $(+link-pie-tests)
 +link-printers-tests = $(+link-pie-printers-tests)
 else  # not build-pie-default
-+link-before-libc = $(CC) -nostdlib -nostartfiles -o $@ \
++link-before-libc = -nostdlib -nostartfiles -o $@ \
 	      $(sysdep-LDFLAGS) $(LDFLAGS) $(LDFLAGS-$(@F)) \
 	      $(combreloc-LDFLAGS) $(relro-LDFLAGS) $(hashstyle-LDFLAGS) \
 	      $(firstword $(CRT-$(@F)) $(csu-objpfx)$(start-installed-name)) \
@@ -487,16 +490,17 @@ else  # not build-pie-default
 	      $(link-extra-libs)
 +link-after-libc = $(+postctor) $(+postinit)
 define +link
-$(+link-before-libc) $(rtld-LDFLAGS) $(link-extra-flags) $(link-libc) $(+link-after-libc)
+$(CC) $(+link-before-libc) $(rtld-LDFLAGS) $(link-extra-flags) $(link-libc) \
+  $(+link-after-libc)
 $(call after-link,$@)
 endef
 define +link-tests
-$(+link-before-libc) $(rtld-tests-LDFLAGS) $(link-libc-tests) \
+$(CC) $(+link-before-libc) $(rtld-tests-LDFLAGS) $(link-libc-tests) \
 		     $(+link-after-libc)
 $(call after-link,$@)
 endef
 define +link-printers-tests
-$(+link-before-libc) $(built-rtld-LDFLAGS) $(link-libc-printers-tests) \
+$(CC) $(+link-before-libc) $(built-rtld-LDFLAGS) $(link-libc-printers-tests) \
 		     $(+link-after-libc)
 $(call after-link,$@)
 endef

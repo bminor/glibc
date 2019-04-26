@@ -1,3 +1,12 @@
+2019-04-26  Florian Weimer  <fweimer@redhat.com>
+
+	* Makeconfig (+link-pie-before-libc): Remove $(CC).
+	(+link-pie, +link-pie-tests, +link-pie-printers-tests): Add $(CC).
+	(+link-static-before-libc): Remove $(CC).
+	(+link-static, +link-static-tests): Add $(CC).
+	(+link-before-libc): Remove $(CC).
+	(+link, +link-pie, +link-pie-printers): Add $(CC).
+
 2019-04-25  David Abdurachmanov  <david.abdurachmanov@gmail.com>
 
 	[BZ#24484]
