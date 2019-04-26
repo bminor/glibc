@@ -49,6 +49,13 @@ __typeof (__write) __write_nocancel;
 /* Uncancelable close.  */
 __typeof (__close) __close_nocancel;
 
+#ifdef __clang__
+/* We need the hidden proto to be ahead of its use.  */
+#if IS_IN (libc) || IS_IN (rtld)
+hidden_proto (__close_nocancel)
+#endif
+#endif
+
 /* Non cancellable close syscall that does not also set errno in case of
    failure.  */
 static inline void
