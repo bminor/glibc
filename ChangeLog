@@ -1,3 +1,14 @@
+2019-04-23  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #18035]
+	* elf/pldd-xx.c: Use _Static_assert in of pldd_assert.
+	(E(find_maps)): Avoid use alloca, use default read file operations
+	instead of explicit LFS names, and fix infinite loop.
+	* elf/pldd.c: Explicit set _FILE_OFFSET_BITS, cleanup headers.
+	(get_process_info): Use _Static_assert instead of assert, use default
+	directory operations instead of explicit LFS names, and free some
+	leadek pointers.
+
 2019-04-03  TAMUKI Shoichi  <tamuki@linet.gr.jp>
 
 	[BZ #22964]
