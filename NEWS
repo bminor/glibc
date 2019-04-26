@@ -63,6 +63,7 @@ The following bugs are resolved with this release:
   [16335] Feature test macro documentation incomplete and out of date
   [17343] Signed integer overflow in /stdlib/random_r.c
   [18018] Additional $ORIGIN handling issues (CVE-2011-0536)
+  [18035] Fix pldd hang
   [20419] files with large allocated notes crash in open_verify
   [21269] i386 sigaction sa_restorer handling is wrong
   [21812] getifaddrs: Don't return ifa entries with NULL names

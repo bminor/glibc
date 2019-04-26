@@ -23,10 +23,6 @@
 #define EW_(e, w, t) EW__(e, w, _##t)
 #define EW__(e, w, t) e##w##t
 
-#define pldd_assert(name, exp) \
-  typedef int __assert_##name[((exp) != 0) - 1]
-
-
 struct E(link_map)
 {
   EW(Addr) l_addr;
@@ -39,12 +35,12 @@ struct E(link_map)
   EW(Addr) l_libname;
 };
 #if CLASS == __ELF_NATIVE_CLASS
-pldd_assert (l_addr, (offsetof (struct link_map, l_addr)
-			== offsetof (struct E(link_map), l_addr)));
-pldd_assert (l_name, (offsetof (struct link_map, l_name)
-			== offsetof (struct E(link_map), l_name)));
-pldd_assert (l_next, (offsetof (struct link_map, l_next)
-			== offsetof (struct E(link_map), l_next)));
+_Static_assert (offsetof (struct link_map, l_addr)
+		== offsetof (struct E(link_map), l_addr), "l_addr");
+_Static_assert (offsetof (struct link_map, l_name)
+		== offsetof (struct E(link_map), l_name), "l_name");
+_Static_assert (offsetof (struct link_map, l_next)
+		== offsetof (struct E(link_map), l_next), "l_next");
 #endif
 
 
@@ -54,10 +50,10 @@ struct E(libname_list)
   EW(Addr) next;
 };
 #if CLASS == __ELF_NATIVE_CLASS
-pldd_assert (name, (offsetof (struct libname_list, name)
-		      == offsetof (struct E(libname_list), name)));
-pldd_assert (next, (offsetof (struct libname_list, next)
-		      == offsetof (struct E(libname_list), next)));
+_Static_assert (offsetof (struct libname_list, name)
+		== offsetof (struct E(libname_list), name), "name");
+_Static_assert (offsetof (struct libname_list, next)
+		== offsetof (struct E(libname_list), next), "next");
 #endif
 
 struct E(r_debug)
@@ -69,16 +65,17 @@ struct E(r_debug)
   EW(Addr) r_map;
 };
 #if CLASS == __ELF_NATIVE_CLASS
-pldd_assert (r_version, (offsetof (struct r_debug, r_version)
-			   == offsetof (struct E(r_debug), r_version)));
-pldd_assert (r_map, (offsetof (struct r_debug, r_map)
-		       == offsetof (struct E(r_debug), r_map)));
+_Static_assert (offsetof (struct r_debug, r_version)
+		== offsetof (struct E(r_debug), r_version), "r_version");
+_Static_assert (offsetof (struct r_debug, r_map)
+		== offsetof (struct E(r_debug), r_map), "r_map");
 #endif
 
 
 static int
 
-E(find_maps) (pid_t pid, void *auxv, size_t auxv_size)
+E(find_maps) (const char *exe, int memfd, pid_t pid, void *auxv,
+	      size_t auxv_size)
 {
   EW(Addr) phdr = 0;
   unsigned int phnum = 0;
@@ -104,12 +101,9 @@ E(find_maps) (pid_t pid, void *auxv, size_t auxv_size)
   if (phdr == 0 || phnum == 0 || phent == 0)
     error (EXIT_FAILURE, 0, gettext ("cannot find program header of process"));
 
-  EW(Phdr) *p = alloca (phnum * phent);
-  if (pread64 (memfd, p, phnum * phent, phdr) != phnum * phent)
-    {
-      error (0, 0, gettext ("cannot read program header"));
-      return EXIT_FAILURE;
-    }
+  EW(Phdr) *p = xmalloc (phnum * phent);
+  if (pread (memfd, p, phnum * phent, phdr) != phnum * phent)
+    error (EXIT_FAILURE, 0, gettext ("cannot read program header"));
 
   /* Determine the load offset.  We need this for interpreting the
      other program header entries so we do this in a separate loop.
@@ -129,24 +123,18 @@ E(find_maps) (pid_t pid, void *auxv, size_t auxv_size)
     if (p[i].p_type == PT_DYNAMIC)
       {
 	EW(Dyn) *dyn = xmalloc (p[i].p_filesz);
-	if (pread64 (memfd, dyn, p[i].p_filesz, offset + p[i].p_vaddr)
+	if (pread (memfd, dyn, p[i].p_filesz, offset + p[i].p_vaddr)
 	    != p[i].p_filesz)
-	  {
-	    error (0, 0, gettext ("cannot read dynamic section"));
-	    return EXIT_FAILURE;
-	  }
+	  error (EXIT_FAILURE, 0, gettext ("cannot read dynamic section"));
 
 	/* Search for the DT_DEBUG entry.  */
 	for (unsigned int j = 0; j < p[i].p_filesz / sizeof (EW(Dyn)); ++j)
 	  if (dyn[j].d_tag == DT_DEBUG && dyn[j].d_un.d_ptr != 0)
 	    {
 	      struct E(r_debug) r;
-	      if (pread64 (memfd, &r, sizeof (r), dyn[j].d_un.d_ptr)
+	      if (pread (memfd, &r, sizeof (r), dyn[j].d_un.d_ptr)
 		  != sizeof (r))
-		{
-		  error (0, 0, gettext ("cannot read r_debug"));
-		  return EXIT_FAILURE;
-		}
+		error (EXIT_FAILURE, 0, gettext ("cannot read r_debug"));
 
 	      if (r.r_map != 0)
 		{
@@ -160,13 +148,10 @@ E(find_maps) (pid_t pid, void *auxv, size_t auxv_size)
       }
     else if (p[i].p_type == PT_INTERP)
       {
-	interp = alloca (p[i].p_filesz);
-	if (pread64 (memfd, interp, p[i].p_filesz, offset + p[i].p_vaddr)
+	interp = xmalloc (p[i].p_filesz);
+	if (pread (memfd, interp, p[i].p_filesz, offset + p[i].p_vaddr)
 	    != p[i].p_filesz)
-	  {
-	    error (0, 0, gettext ("cannot read program interpreter"));
-	    return EXIT_FAILURE;
-	  }
+	  error (EXIT_FAILURE, 0, gettext ("cannot read program interpreter"));
       }
 
   if (list == 0)
@@ -174,13 +159,15 @@ E(find_maps) (pid_t pid, void *auxv, size_t auxv_size)
       if (interp == NULL)
 	{
 	  // XXX check whether the executable itself is the loader
-	  return EXIT_FAILURE;
+	  exit (EXIT_FAILURE);
 	}
 
       // XXX perhaps try finding ld.so and _r_debug in it
-
-      return EXIT_FAILURE;
+      exit (EXIT_FAILURE);
     }
+
+  free (p);
+  free (interp);
 
   /* Print the PID and program name first.  */
   printf ("%lu:\t%s\n", (unsigned long int) pid, exe);
@@ -192,47 +179,27 @@ E(find_maps) (pid_t pid, void *auxv, size_t auxv_size)
   do
     {
       struct E(link_map) m;
-      if (pread64 (memfd, &m, sizeof (m), list) != sizeof (m))
-	{
-	  error (0, 0, gettext ("cannot read link map"));
-	  status = EXIT_FAILURE;
-	  goto out;
-	}
+      if (pread (memfd, &m, sizeof (m), list) != sizeof (m))
+	error (EXIT_FAILURE, 0, gettext ("cannot read link map"));
 
       EW(Addr) name_offset = m.l_name;
-    again:
       while (1)
 	{
-	  ssize_t n = pread64 (memfd, tmpbuf.data, tmpbuf.length, name_offset);
+	  ssize_t n = pread (memfd, tmpbuf.data, tmpbuf.length, name_offset);
 	  if (n == -1)
-	    {
-	      error (0, 0, gettext ("cannot read object name"));
-	      status = EXIT_FAILURE;
-	      goto out;
-	    }
+	    error (EXIT_FAILURE, 0, gettext ("cannot read object name"));
 
 	  if (memchr (tmpbuf.data, '\0', n) != NULL)
 	    break;
 
 	  if (!scratch_buffer_grow (&tmpbuf))
-	    {
-	      error (0, 0, gettext ("cannot allocate buffer for object name"));
-	      status = EXIT_FAILURE;
-	      goto out;
-	    }
+	    error (EXIT_FAILURE, 0,
+		   gettext ("cannot allocate buffer for object name"));
 	}
 
-      if (((char *)tmpbuf.data)[0] == '\0' && name_offset == m.l_name
-	  && m.l_libname != 0)
-	{
-	  /* Try the l_libname element.  */
-	  struct E(libname_list) ln;
-	  if (pread64 (memfd, &ln, sizeof (ln), m.l_libname) == sizeof (ln))
-	    {
-	      name_offset = ln.name;
-	      goto again;
-	    }
-	}
+      /* The m.l_name and m.l_libname.name for loader linkmap points to same
+	 values (since BZ#387 fix).  Trying to use l_libname name as the
+	 shared object name might lead to an infinite loop (BZ#18035).  */
 
       /* Skip over the executable.  */
       if (((char *)tmpbuf.data)[0] != '\0')
@@ -242,7 +209,6 @@ E(find_maps) (pid_t pid, void *auxv, size_t auxv_size)
     }
   while (list != 0);
 
- out:
   scratch_buffer_free (&tmpbuf);
   return status;
 }
