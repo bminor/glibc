@@ -112,7 +112,11 @@ struct entry
 };
 
 static struct entry buffer[2 * DEFAULT_BUFFER_SIZE];
+#ifdef __clang__
+static long buffer_cnt;
+#else
 static uatomic32_t buffer_cnt;
+#endif
 static struct entry first;
 
 
