@@ -2962,9 +2962,8 @@ build_range_exp (bitset_t sbcset, re_charset_t *mbcset, int *range_alloc,
 
   /* Equivalence Classes and Character Classes can't be a range
      start/end.  */
-  if (BE (start_elem->type == EQUIV_CLASS || start_elem->type == CHAR_CLASS
-	  || end_elem->type == EQUIV_CLASS || end_elem->type == CHAR_CLASS,
-	  0))
+  if (__glibc_unlikely (start_elem->type == EQUIV_CLASS || start_elem->type == CHAR_CLASS
+                        || end_elem->type == EQUIV_CLASS || end_elem->type == CHAR_CLASS))
     return REG_ERANGE;
 
   start_collseq = lookup_collation_sequence_value (start_elem, nrules, collseqmb, collseqwc,
@@ -2972,9 +2971,9 @@ build_range_exp (bitset_t sbcset, re_charset_t *mbcset, int *range_alloc,
   end_collseq = lookup_collation_sequence_value (end_elem, nrules, collseqmb, collseqwc,
 						 symb_table, table_size, extra);
   /* Check start/end collation sequence values.  */
-  if (BE (start_collseq == UINT_MAX || end_collseq == UINT_MAX, 0))
+  if (__glibc_unlikely (start_collseq == UINT_MAX || end_collseq == UINT_MAX))
     return REG_ECOLLATE;
-  if (BE ((syntax & RE_NO_EMPTY_RANGES) && start_collseq > end_collseq, 0))
+  if (__glibc_unlikely ((syntax & RE_NO_EMPTY_RANGES) && start_collseq > end_collseq))
     return REG_ERANGE;
 
   /* Got valid collation sequence values, add them as a new entry.
@@ -2984,7 +2983,7 @@ build_range_exp (bitset_t sbcset, re_charset_t *mbcset, int *range_alloc,
   if (nrules > 0 || dfa->mb_cur_max > 1)
     {
       /* Check the space of the arrays.  */
-      if (BE (*range_alloc == mbcset->nranges, 0))
+      if (__glibc_unlikely (*range_alloc == mbcset->nranges))
 	{
 	  /* There is not enough space, need realloc.  */
 	  uint32_t *new_array_start;
@@ -2998,7 +2997,7 @@ build_range_exp (bitset_t sbcset, re_charset_t *mbcset, int *range_alloc,
 	  new_array_end = re_realloc (mbcset->range_ends, uint32_t,
 				      new_nranges);
 
-	  if (BE (new_array_start == NULL || new_array_end == NULL, 0))
+	  if (__glibc_unlikely (new_array_start == NULL || new_array_end == NULL))
 	    return REG_ESPACE;
 
 	  mbcset->range_starts = new_array_start;
@@ -3065,7 +3064,7 @@ build_collating_symbol (bitset_t sbcset, re_charset_t *mbcset,
 
       /* Got valid collation sequence, add it as a new entry.  */
       /* Check the space of the arrays.  */
-      if (BE (*coll_sym_alloc == mbcset->ncoll_syms, 0))
+      if (__glibc_unlikely (*coll_sym_alloc == mbcset->ncoll_syms))
 	{
 	  /* Not enough, realloc it.  */
 	  /* +1 in case of mbcset->ncoll_syms is 0.  */
@@ -3074,7 +3073,7 @@ build_collating_symbol (bitset_t sbcset, re_charset_t *mbcset,
 	     if *alloc == 0.  */
 	  int32_t *new_coll_syms = re_realloc (mbcset->coll_syms, int32_t,
 					       new_coll_sym_alloc);
-	  if (BE (new_coll_syms == NULL, 0))
+	  if (__glibc_unlikely (new_coll_syms == NULL))
 	    return REG_ESPACE;
 	  mbcset->coll_syms = new_coll_syms;
 	  *coll_sym_alloc = new_coll_sym_alloc;
@@ -3084,7 +3083,7 @@ build_collating_symbol (bitset_t sbcset, re_charset_t *mbcset,
     }
   else
     {
-      if (BE (name_len != 1, 0))
+      if (__glibc_unlikely (name_len != 1))
 	return REG_ECOLLATE;
       else
 	{
