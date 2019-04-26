@@ -1,5 +1,10 @@
 2019-04-26  Florian Weimer  <fweimer@redhat.com>
 
+	elf: Link sotruss-lib.so with BIND_NOW for --enable-bind-now.
+	* elf/Makefile (LDFLAGS-sotruss-lib.so): Set.
+
+2019-04-26  Florian Weimer  <fweimer@redhat.com>
+
 	Makeconfig: Move -Wl,-rpath-link options before library references.
 	* Makeconfig (+link-pie, +link): Add $(link-libc-rpath-link).
 	(link-libc): Remove $(link-libc-rpath-link).
