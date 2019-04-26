@@ -157,8 +157,11 @@ static uint32_t narcs;
    currently in the mmaped file.  At no point of time this has to be the
    same as NARCS.  If it is equal all entries from the file are in our
    lists.  */
+#ifdef __clang__
+static volatile unsigned long *narcsp;
+#else
 static volatile uint32_t *narcsp;
-
+#endif
 
 struct here_fromstruct
   {
@@ -170,7 +173,11 @@ static volatile uint16_t *tos;
 
 static struct here_fromstruct *froms;
 static uint32_t fromlimit;
+#ifdef __clang__
+static volatile unsigned long fromidx;
+#else
 static volatile uint32_t fromidx;
+#endif
 
 static uintptr_t lowpc;
 static size_t textsize;
