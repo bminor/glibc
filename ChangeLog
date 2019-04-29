@@ -1,3 +1,10 @@
+2019-04-29  Yann Droneaud  <ydroneaud@opteya.com>
+
+	* sysdeps/pthread/semaphore.h (sem_init): Add __nonnull attribute.
+	(sem_destroy, sem_open, sem_close, sem_unlink): Likewise.
+	(sem_wait, sem_timedwait, sem_trywait, sem_post): Likewise.
+	(sem_getvalue): Likewise.
+
 2019-04-26  Florian Weimer  <fweimer@redhat.com>
 
 	elf: Link sotruss-lib.so with BIND_NOW for --enable-bind-now.
