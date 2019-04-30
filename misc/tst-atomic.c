@@ -21,7 +21,11 @@
 #include <atomic.h>
 
 #ifndef atomic_t
+#ifdef __clang__
+# define atomic_t long
+#else
 # define atomic_t int
+#endif
 #endif
 
 /* Test various atomic.h macros.  */

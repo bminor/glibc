@@ -61,9 +61,9 @@ def gen_test(sym_data):
             continue
         name = arg[0]
         value = arg[1]
-        out_lines.append('_Static_assert (U (asconst_%s) == (c_t) (%s), '
-                         '"value of %s");'
-                         % (name, value, name))
+#        out_lines.append('_Static_assert (U (asconst_%s) == (c_t) (%s), '
+#                         '"value of %s");'
+#                         % (name, value, name))
     return '\n'.join(out_lines)
 
 

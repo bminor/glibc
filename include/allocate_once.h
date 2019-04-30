@@ -28,6 +28,11 @@ void *__libc_allocate_once_slow (void **__place,
                                                        void *__ptr),
                                  void *__closure);
 
+#ifdef __clang__
+/* clang needs the hidden proto to be specified ahead of its use.  */
+libc_hidden_proto (__libc_allocate_once_slow)
+#endif
+
 /* Return an a pointer to an allocated and initialized data structure.
    If this function returns a non-NULL value, the caller can assume
    that pointed-to data has been initialized according to the ALLOCATE
