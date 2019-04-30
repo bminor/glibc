@@ -24,6 +24,16 @@
 #undef f32divf128
 
 #include <math-narrow.h>
+#include <libc-diag.h>
+
+/* R_f[01] are not set in cases where they are not used in packing,
+   but the compiler does not see that they are set in all cases where
+   they are used, resulting in warnings that they may be used
+   uninitialized.  The location of the warning differs in different
+   versions of GCC, it may be where R is defined using a macro or it
+   may be where the macro is defined.  This happens only with -O1.  */
+DIAG_PUSH_NEEDS_COMMENT;
+DIAG_IGNORE_NEEDS_COMMENT (8, "-Wmaybe-uninitialized");
 #include <soft-fp.h>
 #include <single.h>
 #include <quad.h>
@@ -52,4 +62,6 @@ __fdivl (_Float128 x, _Float128 y)
   CHECK_NARROW_DIV (ret, x, y);
   return ret;
 }
+DIAG_POP_NEEDS_COMMENT;
+
 libm_alias_float_ldouble (div)

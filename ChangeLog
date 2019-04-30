@@ -1,3 +1,10 @@
+2019-04-30  Maciej W. Rozycki  <macro@wdc.com>
+
+	[BZ #19444]
+	* sysdeps/ieee754/soft-fp/s_ddivl.c (__ddivl): Ignore errors
+	from `-Wmaybe-uninitialized'.
+	* sysdeps/ieee754/soft-fp/s_fdivl.c (__fdivl): Likewise.
+
 2019-04-29  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/powerpc/fpu/fenv_libc.h (__fesetround_inline_nocheck): New
