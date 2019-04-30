@@ -1,3 +1,8 @@
+2019-05-02  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* elf/tst-pldd.c (in_str_list): New function.
+	(do_test): Add default names for ld and libc as one option.
+
 2019-05-02  Florian Weimer  <fweimer@redhat.com>
 
 	misc: Add twalk_r function.
