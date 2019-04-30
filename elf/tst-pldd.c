@@ -20,7 +20,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdint.h>
-#include <libgen.h>
 #include <stdbool.h>
 
 #include <array_length.h>
@@ -38,6 +37,15 @@ target_process (void *arg)
 
 /* The test runs in a container because pldd does not support tracing
    a binary started by the loader iself (as with testrun.sh).  */
+
+static bool
+in_str_list (const char *libname, const char *const strlist[])
+{
+  for (const char *const *str = strlist; *str != NULL; str++)
+    if (strcmp (libname, *str) == 0)
+      return true;
+  return false;
+}
 
 static int
 do_test (void)
@@ -89,14 +97,20 @@ do_test (void)
 	if (buffer[strlen(buffer)-1] == '\n')
 	  buffer[strlen(buffer)-1] = '\0';
 
-	if (strcmp (basename (buffer), LD_SO) == 0)
+	const char *libname = basename (buffer);
+
+	/* It checks for default names in case of build configure with
+	   --enable-hardcoded-path-in-tests (BZ #24506).  */
+	if (in_str_list (libname,
+			 (const char *const []) { "ld.so", LD_SO, NULL }))
 	  {
 	    TEST_COMPARE (interpreter_found, false);
 	    interpreter_found = true;
 	    continue;
 	  }
 
-	if (strcmp (basename (buffer), LIBC_SO) == 0)
+	if (in_str_list (libname,
+			 (const char *const []) { "libc.so", LIBC_SO, NULL }))
 	  {
 	    TEST_COMPARE (libc_found, false);
 	    libc_found = true;
