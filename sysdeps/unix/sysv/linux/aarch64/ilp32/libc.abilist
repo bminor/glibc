@@ -2098,3 +2098,6 @@ GLIBC_2.28 thrd_current F
 GLIBC_2.28 thrd_equal F
 GLIBC_2.28 thrd_sleep F
 GLIBC_2.28 thrd_yield F
+GLIBC_2.29 getcpu F
+GLIBC_2.29 posix_spawn_file_actions_addchdir_np F
+GLIBC_2.29 posix_spawn_file_actions_addfchdir_np F
