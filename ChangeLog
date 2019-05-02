@@ -1,5 +1,11 @@
 2019-05-02  Florian Weimer  <fweimer@redhat.com>
 
+	* iconv/gconv_dl.c (release_handle): Remove file-level definition.
+	(do_release_shlib): Adjust for __twalk_r.
+	(__gconv_release_shlib): Call __twalk_r.
+
+2019-05-02  Florian Weimer  <fweimer@redhat.com>
+
 	misc: Add twalk_r function.
 	* include/search.h (__twalk_r): Declare.
 	* manual/examples/twalk.c: New file.
