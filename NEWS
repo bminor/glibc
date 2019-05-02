@@ -16,6 +16,10 @@ Major new features:
 * The dynamic linker accepts the --preload argument to preload shared
   objects, in addition to the LD_PRELOAD environment variable.
 
+* The twalk_r function has been added.  It is similar to the existing
+  twalk function, but it passes an additional caller-supplied argument
+  to the callback function.
+
 * On Linux, the gettid function has been added.
 
 * Minguo (Republic of China) calendar support has been added as an

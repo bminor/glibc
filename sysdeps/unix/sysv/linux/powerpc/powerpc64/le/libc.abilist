@@ -2244,3 +2244,4 @@ GLIBC_2.30 __nldbl_vwarnx F
 GLIBC_2.30 __nldbl_warn F
 GLIBC_2.30 __nldbl_warnx F
 GLIBC_2.30 gettid F
+GLIBC_2.30 twalk_r F

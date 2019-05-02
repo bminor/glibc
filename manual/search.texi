@@ -618,5 +618,28 @@ Since the functions used for the @var{action} parameter to @code{twalk}
 must not modify the tree data, it is safe to run @code{twalk} in more
 than one thread at the same time, working on the same tree.  It is also
 safe to call @code{tfind} in parallel.  Functions which modify the tree
-must not be used, otherwise the behavior is undefined.
+must not be used, otherwise the behavior is undefined.  However, it is
+difficult to pass data external to the tree to the callback function
+without resorting to global variables (and thread safety issues), so
+see the @code{twalk_r} function below.
+@end deftypefun
+
+@deftypefun void twalk_r (const void *@var{root}, void (*@var{action}) (const void *@var{key}, VISIT @var{which}, void *@var{closure}), void *@var{closure})
+@standards{GNU, search.h}
+@safety{@prelim{}@mtsafe{@mtsrace{:root}}@assafe{}@acsafe{}}
+For each node in the tree with a node pointed to by @var{root}, the
+@code{twalk_r} function calls the function provided by the parameter
+@var{action}.  For leaf nodes the function is called exactly once with
+@var{value} set to @code{leaf}.  For internal nodes the function is
+called three times, setting the @var{value} parameter or @var{action} to
+the appropriate value.  The @var{closure} parameter is passed down to
+each call of the @var{action} function, unmodified.
+
+It is possible to implement the @code{twalk} function on top of the
+@code{twalk_r} function, which is why there is no separate level
+parameter.
+
+@smallexample
+@include twalk.c.texi
+@end smallexample
 @end deftypefun

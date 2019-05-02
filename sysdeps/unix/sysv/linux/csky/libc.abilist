@@ -2086,3 +2086,4 @@ GLIBC_2.29 xencrypt F
 GLIBC_2.29 xprt_register F
 GLIBC_2.29 xprt_unregister F
 GLIBC_2.30 gettid F
+GLIBC_2.30 twalk_r F

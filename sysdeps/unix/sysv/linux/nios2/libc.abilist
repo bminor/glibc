@@ -2175,3 +2175,4 @@ GLIBC_2.29 getcpu F
 GLIBC_2.29 posix_spawn_file_actions_addchdir_np F
 GLIBC_2.29 posix_spawn_file_actions_addfchdir_np F
 GLIBC_2.30 gettid F
+GLIBC_2.30 twalk_r F

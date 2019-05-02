@@ -25,6 +25,7 @@
 #include <string.h>
 #include <search.h>
 #include <tst-stack-align.h>
+#include <support/check.h>
 
 #define SEED 0
 #define BALANCED 1
@@ -74,6 +75,20 @@ static int max_depth;
 
 static int stack_align_check[2];
 
+/* Used to compare walk traces between the two implementations.  */
+struct walk_trace_element
+{
+  const void *key;
+  VISIT which;
+  int depth;
+};
+#define DYNARRAY_STRUCT walk_trace_list
+#define DYNARRAY_ELEMENT struct walk_trace_element
+#define DYNARRAY_PREFIX walk_trace_
+#define DYNARRAY_INITIAL_SIZE 0
+#include <malloc/dynarray-skeleton.c>
+static struct walk_trace_list walk_trace;
+
 /* Compare two keys.  */
 static int
 cmp_fn (const void *a, const void *b)
@@ -102,10 +117,53 @@ memfry (int *string)
     }
 }
 
+struct twalk_with_twalk_r_closure
+{
+  void (*action) (const void *, VISIT, int);
+  int depth;
+};
+
+static void
+twalk_with_twalk_r_action (const void *nodep, VISIT which, void *closure0)
+{
+  struct twalk_with_twalk_r_closure *closure = closure0;
+
+  switch (which)
+    {
+    case leaf:
+      closure->action (nodep, which, closure->depth);
+      break;
+    case preorder:
+      closure->action (nodep, which, closure->depth);
+      ++closure->depth;
+      break;
+    case postorder:
+      /* The preorder action incremented the depth.  */
+      closure->action (nodep, which, closure->depth - 1);
+      break;
+    case endorder:
+      --closure->depth;
+      closure->action (nodep, which, closure->depth);
+      break;
+    }
+}
+
+static void
+twalk_with_twalk_r (const void *root,
+		    void (*action) (const void *, VISIT, int))
+{
+  struct twalk_with_twalk_r_closure closure = { action, 0 };
+  twalk_r (root, twalk_with_twalk_r_action, &closure);
+  TEST_COMPARE (closure.depth, 0);
+}
+
 static void
 walk_action (const void *nodep, const VISIT which, const int depth)
 {
   int key = **(int **) nodep;
+
+  walk_trace_add (&walk_trace,
+		  (struct walk_trace_element) { nodep, which, depth });
 
   if (!stack_align_check[1])
     stack_align_check[1] = TEST_STACK_ALIGN () ? -1 : 1;
@@ -128,14 +186,16 @@ walk_action (const void *nodep, const VISIT which, const int depth)
 }
 
 static void
-walk_tree (void *root, int expected_count)
+walk_tree_with (void *root, int expected_count,
+		void (*walk) (const void *,
+			      void (*) (const void *, VISIT, int)))
 {
   int i;
 
   memset (z, 0, sizeof z);
   max_depth = 0;
 
-  twalk (root, walk_action);
+  walk (root, walk_action);
   for (i = 0; i < expected_count; ++i)
     if (z[i] != 1)
       {
@@ -152,6 +212,31 @@ walk_tree (void *root, int expected_count)
       fputs ("Depth too large during tree walk.\n", stdout);
       error = 1;
     }
+}
+
+static void
+walk_tree (void *root, int expected_count)
+{
+  walk_trace_clear (&walk_trace);
+  walk_tree_with (root, expected_count, twalk);
+  TEST_VERIFY (!walk_trace_has_failed (&walk_trace));
+  size_t first_list_size;
+  struct walk_trace_element *first_list
+    = walk_trace_finalize (&walk_trace, &first_list_size);
+
+  walk_tree_with (root, expected_count, twalk_with_twalk_r);
+
+  /* Compare the two traces.  */
+  TEST_COMPARE (first_list_size, walk_trace_size (&walk_trace));
+  for (size_t i = 0; i < first_list_size && i < walk_trace_size (&walk_trace);
+       ++i)
+    {
+      TEST_VERIFY (first_list[i].key == walk_trace_at (&walk_trace, i)->key);
+      TEST_COMPARE (first_list[i].which, walk_trace_at (&walk_trace, i)->which);
+      TEST_COMPARE (first_list[i].depth, walk_trace_at (&walk_trace, i)->depth);
+    }
+
+  walk_trace_free (&walk_trace);
 }
 
 /* Perform an operation on a tree.  */

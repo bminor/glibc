@@ -1,3 +1,72 @@
+2019-05-02  Florian Weimer  <fweimer@redhat.com>
+
+	misc: Add twalk_r function.
+	* include/search.h (__twalk_r): Declare.
+	* manual/examples/twalk.c: New file.
+	* manual/search.texi (Tree Search Function): Document twalk_r.
+	* misc/Versions (2.30): Export twalk_r.
+	(GLIBC_PRIVATE): Export __twalk_r.
+	* misc/search.h [__USE_GNU] (twalk_r): Declare.
+	* misc/tsearch.c (trecurse_r, __twalk_r): New functions.
+	(twalk_r): Add weak alias.
+	* misc/tst-tsearch.c (struct walk_trace_element): Define.
+	(walk_trace): New variable.
+	(struct twalk_with_twalk_r_closure): Define.
+	(twalk_with_twalk_r_action): New function.
+	(twalk_with_twalk_r): Likewise.
+	(walk_action): Call walk_trace_add.
+	(walk_tree_with): Rename from walk_tree.  Add walk argument.
+	(walk_tree): New function.
+	* sysdeps/mach/hurd/i386/libc.abilist (GLIBC_2.30): Add twalk_r.
+	* sysdeps/unix/sysv/linux/aarch64/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/arm/libc.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/csky/libc.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libc.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/i386/libc.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libc.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/fpu/libc.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nofpu/libc.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libc.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libc.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/riscv/rv64/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sh/libc.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist (GLIBC_2.30):
+	Likewise.
+
 2019-04-30  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Make mktime etc. compatible with __time64_t
