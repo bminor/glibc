@@ -19,8 +19,8 @@
 #ifndef MMAP_ARC_INTERNAL_H
 #define MMAP_ARC_INTERNAL_H
 
-/* 8K page is default for ARC.  */
-#define MMAP2_PAGE_UNIT 8192ULL
+/* Determine the shift dynamically with getpagesize.  */
+#define MMAP2_PAGE_UNIT -1
 
 #include_next <mmap_internal.h>
 
