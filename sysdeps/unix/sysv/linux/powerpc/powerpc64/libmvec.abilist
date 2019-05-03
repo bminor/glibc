@@ -1,4 +1,5 @@
 GLIBC_2.30 _ZGVbN2v_cos F
+GLIBC_2.30 _ZGVbN2v_log F
 GLIBC_2.30 _ZGVbN2v_sin F
 GLIBC_2.30 _ZGVbN2vvv_sincos F
 GLIBC_2.30 _ZGVbN4v_cosf F

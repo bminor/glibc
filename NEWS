@@ -262,6 +262,7 @@ Major new features:
   The following functions now have vector versions.
   - double-precision cosine: cos
   - single-precision cosine: cosf
+  - double-precision logarithm: log
   - double-precision sine: sin
   - single-precision sine: sinf
   - double-precision sincos: sincos
