@@ -34,6 +34,11 @@
 #include <sys/wait.h>
 #include <time.h>
 #include <unistd.h>
+#include <array_length.h>
+#include <support/check.h>
+#include <support/support.h>
+#include <support/xthread.h>
+#include <support/xunistd.h>
 
 /* How many malloc objects to keep arond.  */
 enum { malloc_objects = 1009 };
@@ -41,19 +46,16 @@ enum { malloc_objects = 1009 };
 /* The maximum size of an object.  */
 enum { malloc_maximum_size = 70000 };
 
-/* How many signals need to be delivered before the test exits.  */
-enum { signal_count = 1000 };
+/* How many iterations the test performs before exiting.  */
+enum { iterations = 10000 };
 
-static int do_test (void);
-#define TIMEOUT 100
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
-
-/* Process ID of the subprocess which sends SIGUSR1 signals.  */
-static pid_t sigusr1_sender_pid;
+/* Barrier for synchronization with the processes sending SIGUSR1
+   signals, to make it more likely that the signals arrive during a
+   fork/free/malloc call.  */
+static struct { pthread_barrier_t barrier; } *shared;
 
 /* Set to 1 if SIGUSR1 is received.  Used to detect a signal during
-   malloc/free.  */
+   fork/free/malloc.  */
 static volatile sig_atomic_t sigusr1_received;
 
 /* Periodically set to 1, to indicate that the process is making
@@ -63,17 +65,6 @@ static volatile sig_atomic_t progress_indicator = 1;
 static void
 sigusr1_handler (int signo)
 {
-  /* Let the main program make progress, by temporarily suspending
-     signals from the subprocess.  */
-  if (sigusr1_received)
-    return;
-  /* sigusr1_sender_pid might not be initialized in the parent when
-     the first SIGUSR1 signal arrives.  */
-  if (sigusr1_sender_pid > 0 && kill (sigusr1_sender_pid, SIGSTOP) != 0)
-    {
-      write_message ("error: kill (SIGSTOP)\n");
-      abort ();
-    }
   sigusr1_received = 1;
 
   /* Perform a fork with a trivial subprocess.  */
@@ -108,6 +99,8 @@ liveness_signal_handler (int signo)
     write_message ("warning: process seems to be stuck\n");
 }
 
+/* Send SIGNO to the parent process.  If SLEEP, wait a second between
+   signals, otherwise use barriers to delay sending signals.  */
 static void
 __attribute__ ((noreturn))
 signal_sender (int signo, bool sleep)
@@ -115,6 +108,8 @@ signal_sender (int signo, bool sleep)
   pid_t target = getppid ();
   while (true)
     {
+      if (!sleep)
+        xpthread_barrier_wait (&shared->barrier);
       if (kill (target, signo) != 0)
         {
           dprintf (STDOUT_FILENO, "error: kill: %m\n");
@@ -123,14 +118,17 @@ signal_sender (int signo, bool sleep)
       if (sleep)
         usleep (1 * 1000 * 1000);
       else
-        /* Reduce the rate at which we send signals.  */
-        sched_yield ();
+        xpthread_barrier_wait (&shared->barrier);
     }
 }
 
 static int
 do_test (void)
 {
+  /* shared->barrier is intialized along with sigusr1_sender_pids
+     below.  */
+  shared = support_shared_allocate (sizeof (*shared));
+
   struct sigaction action =
     {
       .sa_handler = sigusr1_handler,
@@ -150,48 +148,74 @@ do_test (void)
       return 1;
     }
 
-  pid_t sigusr2_sender_pid = fork ();
+  pid_t sigusr2_sender_pid = xfork ();
   if (sigusr2_sender_pid == 0)
     signal_sender (SIGUSR2, true);
-  sigusr1_sender_pid = fork ();
-  if (sigusr1_sender_pid == 0)
-    signal_sender (SIGUSR1, false);
+
+  /* Send SIGUSR1 signals from several processes.  Hopefully, one
+     signal will hit one of the ciritical functions.  Use a barrier to
+     avoid sending signals while not running fork/free/malloc.  */
+  pid_t sigusr1_sender_pids[5];
+  {
+    pthread_barrierattr_t attr;
+    xpthread_barrierattr_init (&attr);
+    xpthread_barrierattr_setpshared (&attr, PTHREAD_PROCESS_SHARED);
+    xpthread_barrier_init (&shared->barrier, &attr,
+                           array_length (sigusr1_sender_pids) + 1);
+    xpthread_barrierattr_destroy (&attr);
+  }
+  for (size_t i = 0; i < array_length (sigusr1_sender_pids); ++i)
+    {
+      sigusr1_sender_pids[i] = fork ();
+      if (sigusr1_sender_pids[i] == 0)
+        signal_sender (SIGUSR1, false);
+    }
 
   void *objects[malloc_objects] = {};
-  unsigned signals = 0;
+  unsigned int fork_signals = 0;
+  unsigned int free_signals = 0;
+  unsigned int malloc_signals = 0;
   unsigned seed = 1;
-  time_t last_report = 0;
-  while (signals < signal_count)
+  for (int i = 0; i < iterations; ++i)
     {
       progress_indicator = 1;
       int slot = rand_r (&seed) % malloc_objects;
       size_t size = rand_r (&seed) % malloc_maximum_size;
-      if (kill (sigusr1_sender_pid, SIGCONT) != 0)
+
+      /* Occasionally do a fork first, to catch deadlocks there as
+         well (see bug 24161).  */
+      bool do_fork = (rand_r (&seed) % 7) == 0;
+
+      xpthread_barrier_wait (&shared->barrier);
+      if (do_fork)
         {
-          printf ("error: kill (SIGCONT): %m\n");
-          signal (SIGUSR1, SIG_IGN);
-          kill (sigusr1_sender_pid, SIGKILL);
-          kill (sigusr2_sender_pid, SIGKILL);
-          return 1;
+          sigusr1_received = 0;
+          pid_t pid = xfork ();
+          if (sigusr1_received)
+            ++fork_signals;
+          if (pid == 0)
+            _exit (0);
+          int status;
+          int ret = TEMP_FAILURE_RETRY (waitpid (pid, &status, 0));
+          if (ret < 0)
+            FAIL_EXIT1 ("waitpid: %m");
+          TEST_COMPARE (status, 0);
         }
-      sigusr1_received = false;
+      sigusr1_received = 0;
       free (objects[slot]);
+      if (sigusr1_received)
+        ++free_signals;
+      sigusr1_received = 0;
       objects[slot] = malloc (size);
       if (sigusr1_received)
-        {
-          ++signals;
-          time_t current = time (0);
-          if (current != last_report)
-            {
-              printf ("info: SIGUSR1 signal count: %u\n", signals);
-              last_report = current;
-            }
-        }
+        ++malloc_signals;
+      xpthread_barrier_wait (&shared->barrier);
+
       if (objects[slot] == NULL)
         {
           printf ("error: malloc: %m\n");
-          signal (SIGUSR1, SIG_IGN);
-          kill (sigusr1_sender_pid, SIGKILL);
+          for (size_t i = 0; i < array_length (sigusr1_sender_pids); ++i)
+            kill (sigusr1_sender_pids[i], SIGKILL);
           kill (sigusr2_sender_pid, SIGKILL);
           return 1;
         }
@@ -201,11 +225,20 @@ do_test (void)
   for (int slot = 0; slot < malloc_objects; ++slot)
     free (objects[slot]);
 
-  /* Terminate the signal-sending subprocess.  The SIGUSR1 handler
-     should no longer run because it uses sigusr1_sender_pid.  */
-  signal (SIGUSR1, SIG_IGN);
-  kill (sigusr1_sender_pid, SIGKILL);
+  for (size_t i = 0; i < array_length (sigusr1_sender_pids); ++i)
+    kill (sigusr1_sender_pids[i], SIGKILL);
   kill (sigusr2_sender_pid, SIGKILL);
+
+  printf ("info: signals received during fork: %u\n", fork_signals);
+  printf ("info: signals received during free: %u\n", free_signals);
+  printf ("info: signals received during malloc: %u\n", malloc_signals);
+
+  /* Do not destroy the barrier because of the SIGKILL above, which
+     may have left the barrier in an inconsistent state.  */
+  support_shared_free (shared);
 
   return 0;
 }
+
+#define TIMEOUT 100
+#include <support/test-driver.c>

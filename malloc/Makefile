@@ -252,3 +252,4 @@ $(objpfx)tst-dynarray-fail-mem.out: $(objpfx)tst-dynarray-fail.out
 
 $(objpfx)tst-malloc-tcache-leak: $(shared-thread-library)
 $(objpfx)tst-malloc_info: $(shared-thread-library)
+$(objpfx)tst-mallocfork2: $(shared-thread-library)
