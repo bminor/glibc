@@ -1,3 +1,14 @@
+2019-05-03  Anton Youdkevitch  <anton.youdkevitch@bell-sw.com>
+
+	* sysdeps/aarch64/multiarch/ifunc-impl-list.c: Added
+	__memmove_thunderx2 to the list of implementations
+	* sysdeps/aarch64/multiarch/memmove.c: Likewise
+	* sysdeps/aarch64/multiarch/memcpy_thunderx2.S:
+	(__memmove_thunderx2): Rewritten using SIMD ld/st
+	(__memcpy_thunderx2): Fixed handling overlapping cases.
+	Used ldp/stp instead of ldr/str if possible. Made loops
+	tails branchless.
+
 2019-05-03  Florian Weimer  <fweimer@redhat.com>
 
 	* misc/tst-tsearch.c (walk_tree): Add more error checking.
