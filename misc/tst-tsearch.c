@@ -223,8 +223,10 @@ walk_tree (void *root, int expected_count)
   size_t first_list_size;
   struct walk_trace_element *first_list
     = walk_trace_finalize (&walk_trace, &first_list_size);
+  TEST_VERIFY_EXIT (first_list != NULL);
 
   walk_tree_with (root, expected_count, twalk_with_twalk_r);
+  TEST_VERIFY (!walk_trace_has_failed (&walk_trace));
 
   /* Compare the two traces.  */
   TEST_COMPARE (first_list_size, walk_trace_size (&walk_trace));

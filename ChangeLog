@@ -1,3 +1,7 @@
+2019-05-03  Florian Weimer  <fweimer@redhat.com>
+
+	* misc/tst-tsearch.c (walk_tree): Add more error checking.
+
 2019-05-02  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #24506]
