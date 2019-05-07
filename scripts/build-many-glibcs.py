@@ -711,7 +711,7 @@ class Context(object):
     def checkout(self, versions):
         """Check out the desired component versions."""
         default_versions = {'binutils': 'vcs-2.32',
-                            'gcc': 'vcs-8',
+                            'gcc': 'vcs-9',
                             'glibc': 'vcs-mainline',
                             'gmp': '6.1.2',
                             'linux': '5.0',

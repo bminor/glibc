@@ -1,3 +1,8 @@
+2019-05-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/build-many-glibcs.py (Context.checkout): Default GCC
+	version to 9 branch.
+
 2019-05-03  Anton Youdkevitch  <anton.youdkevitch@bell-sw.com>
 
 	* sysdeps/aarch64/multiarch/ifunc-impl-list.c: Added
