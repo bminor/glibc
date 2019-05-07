@@ -1,5 +1,8 @@
 2019-05-07  Joseph Myers  <joseph@codesourcery.com>
 
+	* scripts/build-many-glibcs.py (Context.checkout): Default Linux
+	version to 5.1.
+
 	* scripts/build-many-glibcs.py (Context.checkout): Default GCC
 	version to 9 branch.
 
