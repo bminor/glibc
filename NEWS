@@ -263,6 +263,7 @@ Major new features:
   - double-precision cosine: cos
   - single-precision cosine: cosf
   - double-precision logarithm: log
+  - single-precision logarithm: logf
   - double-precision sine: sin
   - single-precision sine: sinf
   - double-precision sincos: sincos

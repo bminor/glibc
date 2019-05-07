@@ -38,6 +38,8 @@
 #  define __DECL_SIMD_cos __DECL_SIMD_PPC64
 #  undef __DECL_SIMD_log
 #  define __DECL_SIMD_log __DECL_SIMD_PPC64
+#  undef __DECL_SIMD_logf
+#  define __DECL_SIMD_logf __DECL_SIMD_PPC64
 #  undef __DECL_SIMD_sincos
 #  define __DECL_SIMD_sincos __DECL_SIMD_PPC64
 #  undef __DECL_SIMD_sincosf

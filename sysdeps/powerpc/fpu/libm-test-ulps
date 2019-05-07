@@ -2466,6 +2466,9 @@ ifloat128: 1
 ildouble: 1
 ldouble: 1
 
+Function: "log_vlen4":
+float: 1
+
 Function: "mul_downward_ldouble":
 double: 1
 float: 1
