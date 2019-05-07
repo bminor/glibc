@@ -1,5 +1,32 @@
 2019-05-07  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/syscall-names.list: Update kernel
+	version to 5.1.
+	(clock_adjtime64) New syscall.
+	(clock_getres_time64) Likewise.
+	(clock_gettime64) Likewise.
+	(clock_nanosleep_time64) Likewise.
+	(clock_settime64) Likewise.
+	(futex_time64) Likewise.
+	(io_pgetevents_time64) Likewise.
+	(io_uring_enter) Likewise.
+	(io_uring_register) Likewise.
+	(io_uring_setup) Likewise.
+	(mq_timedreceive_time64) Likewise.
+	(mq_timedsend_time64) Likewise.
+	(pidfd_send_signal) Likewise.
+	(ppoll_time64) Likewise.
+	(pselect6_time64) Likewise.
+	(recvmmsg_time64) Likewise.
+	(rt_sigtimedwait_time64) Likewise.
+	(sched_rr_get_interval_time64) Likewise.
+	(semtimedop_time64) Likewise.
+	(timer_gettime64) Likewise.
+	(timer_settime64) Likewise.
+	(timerfd_gettime64) Likewise.
+	(timerfd_settime64) Likewise.
+	(utimensat_time64) Likewise.
+
 	* scripts/build-many-glibcs.py (Context.checkout): Default GCC
 	version to 9 branch.
 
