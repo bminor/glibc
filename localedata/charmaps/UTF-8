@@ -11865,6 +11865,7 @@ CHARMAP
 <U32FC>     /xe3/x8b/xbc CIRCLED KATAKANA WI
 <U32FD>     /xe3/x8b/xbd CIRCLED KATAKANA WE
 <U32FE>     /xe3/x8b/xbe CIRCLED KATAKANA WO
+<U32FF>     /xe3/x8b/xbf SQUARE ERA NAME REIWA
 <U3300>     /xe3/x8c/x80 SQUARE APAATO
 <U3301>     /xe3/x8c/x81 SQUARE ARUHUA
 <U3302>     /xe3/x8c/x82 SQUARE ANPEA
@@ -47617,7 +47618,7 @@ CHARMAP
 <U0010FFC0>..<U0010FFFD> /xf4/x8f/xbf/x80 <Plane 16 Private Use>
 END CHARMAP
 
-% Character width according to Unicode 12.0.0.
+% Character width according to Unicode 12.1.0.
 % - Default width is 1.
 % - Double-width characters have width 2; generated from
 %        "grep '^[^;]*;[WF]' EastAsianWidth.txt"
@@ -47848,8 +47849,7 @@ WIDTH
 <U3190>...<U31BA>	2
 <U31C0>...<U31E3>	2
 <U31F0>...<U321E>	2
-<U3220>...<U32FE>	2
-<U3300>...<U4DB5>	2
+<U3220>...<U4DB5>	2
 <U4DC0>...<U9FEF>	2
 <UA000>...<UA48C>	2
 <UA490>...<UA4C6>	2

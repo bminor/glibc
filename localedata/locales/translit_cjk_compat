@@ -9,7 +9,7 @@ comment_char %
 % otherwise be governed by that license.
 
 % Transliterations of CJK compatibility characters.
-% Generated automatically from UnicodeData.txt by gen_translit_cjk_compat.py on 2019-03-06 for Unicode 12.0.0.
+% Generated automatically from UnicodeData.txt by gen_translit_cjk_compat.py on 2019-05-08 for Unicode 12.1.0.
 
 LC_CTYPE
 
@@ -25,6 +25,8 @@ translit_start
 <U32CE> "<U0065><U0056>"
 % LIMITED LIABILITY SIGN
 <U32CF> "<U004C><U0054><U0044>"
+% SQUARE ERA NAME REIWA
+<U32FF> "<U4EE4><U548C>"
 % SQUARE APAATO
 <U3300> "<U30A2><U30D1><U30FC><U30C8>"
 % SQUARE ARUHUA
