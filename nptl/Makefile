@@ -272,7 +272,7 @@ tests = tst-attr1 tst-attr2 tst-attr3 tst-default-attr \
 	tst-join1 tst-join2 tst-join3 tst-join4 tst-join5 tst-join6 tst-join7 \
 	tst-join8 tst-join9 \
 	tst-detach1 \
-	tst-eintr1 tst-eintr2 tst-eintr3 tst-eintr4 tst-eintr5 \
+	tst-eintr2 tst-eintr3 tst-eintr4 tst-eintr5 \
 	tst-tsd1 tst-tsd2 tst-tsd3 tst-tsd4 tst-tsd5 tst-tsd6 \
 	tst-tls1 tst-tls2 \
 	tst-fork1 tst-fork2 tst-fork3 tst-fork4 \
@@ -330,6 +330,11 @@ tests-internal := tst-rwlock19 tst-rwlock20 \
 
 xtests = tst-setuid1 tst-setuid1-static tst-setuid2 \
 	tst-mutexpp1 tst-mutexpp6 tst-mutexpp10
+
+# This test can run into task limits because of a linux kernel bug
+# and then cause the make process to fail too, see bug 24537.
+xtests += tst-eintr1
+
 test-srcs = tst-oddstacklimit
 
 # Test expected to fail on most targets (except x86_64) due to bug

@@ -1,3 +1,8 @@
+2019-05-09  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	[BZ #24537]
+	* nptl/Makefile: Move tst-eintr1 to xtests.
+
 2019-05-09  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/powerpc/fpu/trunc_to_integer.h (set_fenv_mode): Add
