@@ -78,6 +78,7 @@ libsupport-routines = \
   xbind \
   xcalloc \
   xchroot \
+  xclock_gettime \
   xclose \
   xconnect \
   xcopy_file_range \

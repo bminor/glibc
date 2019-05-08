@@ -1,3 +1,15 @@
+2019-05-08  Mike Crowe  <mac@mcrowe.com>
+
+	* support/xclock_gettime.c (xclock_gettime): New file. Provide
+	clock_gettime wrapper for use in tests that fails the test rather
+	than returning failure.
+
+	* support/xtime.h: New file to declare xclock_gettime.
+
+	* support/Makefile: Add xclock_gettime.c.
+
+	* support/README: Mention xtime.h.
+
 2019-05-08  Florian Weimer  <fweimer@redhat.com>
 
 	malloc/tst-mallocfork2: Use process-shared barriers.

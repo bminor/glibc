@@ -10,6 +10,7 @@ error.  They are declared in these header files:
 * support.h
 * xsignal.h
 * xthread.h
+* xtime.h
 
 In general, new wrappers should be added to support.h if possible.
 However, support.h must remain fully compatible with C90 and therefore
