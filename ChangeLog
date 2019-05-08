@@ -1,3 +1,23 @@
+2019-05-08  Florian Weimer  <fweimer@redhat.com>
+
+	malloc/tst-mallocfork2: Use process-shared barriers.
+	* malloc/tst-mallocfork2.c: Switch to <support/test-driver.c>.
+	(signal_count, sigusr1_sender_pid): Remove.
+	(iterations): Define constant.
+	(shared): New variable.
+	(sigusr1_received): Update comment.
+	(sigusr1_handler): Do not send SIGSTOP to the sender process.
+	(signal_sender): Optional use barriers to avoid sending signals
+	during irrelevant times.
+	(do_it): Initialize variable shared.  Use xfork for error
+	checking.  Launch multiple SIGUSR1-sending subprocesses.  Limit
+	the iteration count, independent of signal delivery.  Check for
+	deadlocks in fork.  Introduce barriers for reducing signal
+	traffic.  Do not send SIGCONT to the SIGUSR1-sending processes;
+	replaced by the barriers.  Count signals during fork/free/malloc
+	and report them.
+	* malloc/Makefile (tst-mallocfork): Link with libpthread.
+
 2019-05-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/syscall-names.list: Update kernel
