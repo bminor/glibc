@@ -1,5 +1,7 @@
 2019-05-09  Mike Crowe <mac@mcrowe.com>
 
+	* nptl/tst-cond11.c: Use libsupport.
+
 	* support/timespec.h: New file.  Provide timespec helper functions
 	along with macros in the style of those in check.h.
 	* support/timespec.c: New file.  Implement check functions declared
