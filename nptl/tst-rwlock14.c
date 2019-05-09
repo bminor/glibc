@@ -21,6 +21,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <support/check.h>
+#include <support/xthread.h>
+#include <support/xtime.h>
 
 
 static pthread_barrier_t b;
@@ -31,18 +34,14 @@ static void *
 tf (void *arg)
 {
   /* Lock the read-write lock.  */
-  if (pthread_rwlock_wrlock (&r) != 0)
-    {
-      puts ("tf: cannot lock rwlock");
-      exit (EXIT_FAILURE);
-    }
+  TEST_COMPARE (pthread_rwlock_wrlock (&r), 0);
 
   pthread_t mt = *(pthread_t *) arg;
 
-  pthread_barrier_wait (&b);
+  xpthread_barrier_wait (&b);
 
   /* This call will never return.  */
-  pthread_join (mt, NULL);
+  xpthread_join (mt);
 
   return NULL;
 }
@@ -51,118 +50,35 @@ tf (void *arg)
 static int
 do_test (void)
 {
-  int result = 0;
   struct timespec ts;
 
-  if (clock_gettime (CLOCK_REALTIME, &ts) != 0)
-    {
-      puts ("clock_gettime failed");
-      return 1;
-    }
-
-  if (pthread_barrier_init (&b, NULL, 2) != 0)
-    {
-      puts ("barrier_init failed");
-      return 1;
-    }
+  xclock_gettime (CLOCK_REALTIME, &ts);
+  xpthread_barrier_init (&b, NULL, 2);
 
   pthread_t me = pthread_self ();
-  pthread_t th;
-  if (pthread_create (&th, NULL, tf, &me) != 0)
-    {
-      puts ("create failed");
-      return 1;
-    }
+  xpthread_create (NULL, tf, &me);
 
   /* Wait until the rwlock is locked.  */
-  pthread_barrier_wait (&b);
+  xpthread_barrier_wait (&b);
 
   ts.tv_nsec = -1;
 
-  int e = pthread_rwlock_timedrdlock (&r, &ts);
-  if (e == 0)
-    {
-      puts ("first rwlock_timedrdlock did not fail");
-      result = 1;
-    }
-  else if (e != EINVAL)
-    {
-      puts ("first rwlock_timedrdlock did not return EINVAL");
-      result = 1;
-    }
-
-  e = pthread_rwlock_timedwrlock (&r, &ts);
-  if (e == 0)
-    {
-      puts ("first rwlock_timedwrlock did not fail");
-      result = 1;
-    }
-  else if (e != EINVAL)
-    {
-      puts ("first rwlock_timedwrlock did not return EINVAL");
-      result = 1;
-    }
+  TEST_COMPARE (pthread_rwlock_timedrdlock (&r, &ts), EINVAL);
+  TEST_COMPARE (pthread_rwlock_timedwrlock (&r, &ts), EINVAL);
 
   ts.tv_nsec = 1000000000;
 
-  e = pthread_rwlock_timedrdlock (&r, &ts);
-  if (e == 0)
-    {
-      puts ("second rwlock_timedrdlock did not fail");
-      result = 1;
-    }
-  else if (e != EINVAL)
-    {
-      puts ("second rwlock_timedrdlock did not return EINVAL");
-      result = 1;
-    }
-
-  e = pthread_rwlock_timedwrlock (&r, &ts);
-  if (e == 0)
-    {
-      puts ("second rwlock_timedwrlock did not fail");
-      result = 1;
-    }
-  else if (e != EINVAL)
-    {
-      puts ("second rwlock_timedwrlock did not return EINVAL");
-      result = 1;
-    }
+  TEST_COMPARE (pthread_rwlock_timedrdlock (&r, &ts), EINVAL);
+  TEST_COMPARE (pthread_rwlock_timedwrlock (&r, &ts), EINVAL);
 
   ts.tv_nsec = (__typeof (ts.tv_nsec)) 0x100001000LL;
   if ((__typeof (ts.tv_nsec)) 0x100001000LL != 0x100001000LL)
     ts.tv_nsec = 2000000000;
 
-  e = pthread_rwlock_timedrdlock (&r, &ts);
-  if (e == 0)
-    {
-      puts ("third rwlock_timedrdlock did not fail");
-      result = 1;
-    }
-  else if (e != EINVAL)
-    {
-      puts ("third rwlock_timedrdlock did not return EINVAL");
-      result = 1;
-    }
+  TEST_COMPARE (pthread_rwlock_timedrdlock (&r, &ts), EINVAL);
+  TEST_COMPARE (pthread_rwlock_timedwrlock (&r, &ts), EINVAL);
 
-  e = pthread_rwlock_timedwrlock (&r, &ts);
-  if (e == 0)
-    {
-      puts ("third rwlock_timedwrlock did not fail");
-      result = 1;
-    }
-  else if (e != EINVAL)
-    {
-      puts ("third rwlock_timedwrlock did not return EINVAL");
-      result = 1;
-    }
-
-  if (result == 0)
-    puts ("no bugs");
-
-  return result;
+  return 0;
 }
 
-
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

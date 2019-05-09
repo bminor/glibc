@@ -24,6 +24,8 @@
 #include <time.h>
 #include <unistd.h>
 #include <sys/time.h>
+#include <support/check.h>
+#include <support/timespec.h>
 
 
 #define NWRITERS 15
@@ -31,8 +33,8 @@
 #define NREADERS 15
 #define READTRIES 15
 
-#define TIMEOUT 1000000
-#define DELAY   1000000
+static const struct timespec timeout = { 0,1000000 };
+static const struct timespec delay = { 0, 1000000 };
 
 #ifndef KIND
 # define KIND PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP
@@ -45,36 +47,23 @@ static void *
 writer_thread (void *nr)
 {
   struct timespec ts;
-  struct timespec delay;
   int n;
-
-  delay.tv_sec = 0;
-  delay.tv_nsec = DELAY;
 
   for (n = 0; n < WRITETRIES; ++n)
     {
       int e;
       do
 	{
-	  struct timeval tv;
-	  (void) gettimeofday (&tv, NULL);
-	  TIMEVAL_TO_TIMESPEC (&tv, &ts);
+	  xclock_gettime (CLOCK_REALTIME, &ts);
 
-	  ts.tv_nsec += 2 * TIMEOUT;
-	  if (ts.tv_nsec >= 1000000000)
-	    {
-	      ts.tv_nsec -= 1000000000;
-	      ++ts.tv_sec;
-	    }
+          ts = timespec_add (ts, timeout);
+          ts = timespec_add (ts, timeout);
 
 	  printf ("writer thread %ld tries again\n", (long int) nr);
 
 	  e = pthread_rwlock_timedwrlock (&lock, &ts);
 	  if (e != 0 && e != ETIMEDOUT)
-	    {
-	      puts ("timedwrlock failed");
-	      exit (1);
-	    }
+            FAIL_EXIT1 ("timedwrlock failed");
 	}
       while (e == ETIMEDOUT);
 
@@ -83,10 +72,7 @@ writer_thread (void *nr)
       nanosleep (&delay, NULL);
 
       if (pthread_rwlock_unlock (&lock) != 0)
-	{
-	  puts ("unlock for writer failed");
-	  exit (1);
-	}
+        FAIL_EXIT1 ("unlock for writer failed");
 
       printf ("writer thread %ld released\n", (long int) nr);
     }
@@ -99,36 +85,22 @@ static void *
 reader_thread (void *nr)
 {
   struct timespec ts;
-  struct timespec delay;
   int n;
-
-  delay.tv_sec = 0;
-  delay.tv_nsec = DELAY;
 
   for (n = 0; n < READTRIES; ++n)
     {
       int e;
       do
 	{
-	  struct timeval tv;
-	  (void) gettimeofday (&tv, NULL);
-	  TIMEVAL_TO_TIMESPEC (&tv, &ts);
+	  xclock_gettime (CLOCK_REALTIME, &ts);
 
-	  ts.tv_nsec += TIMEOUT;
-	  if (ts.tv_nsec >= 1000000000)
-	    {
-	      ts.tv_nsec -= 1000000000;
-	      ++ts.tv_sec;
-	    }
+          ts = timespec_add (ts, timeout);
 
 	  printf ("reader thread %ld tries again\n", (long int) nr);
 
 	  e = pthread_rwlock_timedrdlock (&lock, &ts);
 	  if (e != 0 && e != ETIMEDOUT)
-	    {
-	      puts ("timedrdlock failed");
-	      exit (1);
-	    }
+            FAIL_EXIT1 ("timedrdlock failed");
 	}
       while (e == ETIMEDOUT);
 
@@ -137,10 +109,7 @@ reader_thread (void *nr)
       nanosleep (&delay, NULL);
 
       if (pthread_rwlock_unlock (&lock) != 0)
-	{
-	  puts ("unlock for reader failed");
-	  exit (1);
-	}
+        FAIL_EXIT1 ("unlock for reader failed");
 
       printf ("reader thread %ld released\n", (long int) nr);
     }
@@ -159,22 +128,13 @@ do_test (void)
   pthread_rwlockattr_t a;
 
   if (pthread_rwlockattr_init (&a) != 0)
-    {
-      puts ("rwlockattr_t failed");
-      exit (1);
-    }
+    FAIL_EXIT1 ("rwlockattr_t failed");
 
   if (pthread_rwlockattr_setkind_np (&a, KIND) != 0)
-    {
-      puts ("rwlockattr_setkind failed");
-      exit (1);
-    }
+    FAIL_EXIT1 ("rwlockattr_setkind failed");
 
   if (pthread_rwlock_init (&lock, &a) != 0)
-    {
-      puts ("rwlock_init failed");
-      exit (1);
-    }
+    FAIL_EXIT1 ("rwlock_init failed");
 
   /* Make standard error the same as standard output.  */
   dup2 (1, 2);
@@ -185,37 +145,23 @@ do_test (void)
   for (n = 0; n < NWRITERS; ++n)
     if (pthread_create (&thwr[n], NULL, writer_thread,
 			(void *) (long int) n) != 0)
-      {
-	puts ("writer create failed");
-	exit (1);
-      }
+      FAIL_EXIT1 ("writer create failed");
 
   for (n = 0; n < NREADERS; ++n)
     if (pthread_create (&thrd[n], NULL, reader_thread,
 			(void *) (long int) n) != 0)
-      {
-	puts ("reader create failed");
-	exit (1);
-      }
+      FAIL_EXIT1 ("reader create failed");
 
   /* Wait for all the threads.  */
   for (n = 0; n < NWRITERS; ++n)
     if (pthread_join (thwr[n], &res) != 0)
-      {
-	puts ("writer join failed");
-	exit (1);
-      }
+      FAIL_EXIT1 ("writer join failed");
   for (n = 0; n < NREADERS; ++n)
     if (pthread_join (thrd[n], &res) != 0)
-      {
-	puts ("reader join failed");
-	exit (1);
-      }
+      FAIL_EXIT1 ("reader join failed");
 
   return 0;
 }
 
-#undef TIMEOUT
 #define TIMEOUT 30
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

@@ -22,6 +22,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/time.h>
+#include <support/check.h>
+#include <support/timespec.h>
+#include <support/xthread.h>
+#include <support/xtime.h>
 
 
 static int kind[] =
@@ -38,64 +42,26 @@ tf (void *arg)
   pthread_rwlock_t *r = arg;
 
   /* Timeout: 0.3 secs.  */
-  struct timeval tv;
-  (void) gettimeofday (&tv, NULL);
+  struct timespec ts_start;
+  xclock_gettime (CLOCK_REALTIME, &ts_start);
 
-  struct timespec ts;
-  TIMEVAL_TO_TIMESPEC (&tv, &ts);
-  ts.tv_nsec += 300000000;
-  if (ts.tv_nsec >= 1000000000)
-    {
-      ts.tv_nsec -= 1000000000;
-      ++ts.tv_sec;
-    }
+  struct timespec ts_timeout = timespec_add (ts_start,
+                                             make_timespec (0, 300000000));
 
   puts ("child calling timedrdlock");
 
-  int err = pthread_rwlock_timedrdlock (r, &ts);
-  if (err == 0)
-    {
-      puts ("rwlock_timedrdlock returned");
-      pthread_exit ((void *) 1l);
-    }
-
-  if (err != ETIMEDOUT)
-    {
-      printf ("err = %s (%d), expected %s (%d)\n",
-	      strerror (err), err, strerror (ETIMEDOUT), ETIMEDOUT);
-      pthread_exit ((void *) 1l);
-    }
+  TEST_COMPARE (pthread_rwlock_timedrdlock (r, &ts_timeout), ETIMEDOUT);
 
   puts ("1st child timedrdlock done");
 
-  struct timeval tv2;
-  (void) gettimeofday (&tv2, NULL);
+  TEST_TIMESPEC_NOW_OR_AFTER (CLOCK_REALTIME, ts_timeout);
 
-  timersub (&tv2, &tv, &tv);
-
-  if (tv.tv_usec < 200000)
-    {
-      puts ("timeout too short");
-      pthread_exit ((void *) 1l);
-    }
-
-  (void) gettimeofday (&tv, NULL);
-  TIMEVAL_TO_TIMESPEC (&tv, &ts);
-  ts.tv_sec += 10;
+  xclock_gettime (CLOCK_REALTIME, &ts_timeout);
+  ts_timeout.tv_sec += 10;
   /* Note that the following operation makes ts invalid.  */
-  ts.tv_nsec += 1000000000;
+  ts_timeout.tv_nsec += 1000000000;
 
-  err = pthread_rwlock_timedrdlock (r, &ts);
-  if (err == 0)
-    {
-      puts ("2nd timedrdlock succeeded");
-      pthread_exit ((void *) 1l);
-    }
-  if (err != EINVAL)
-    {
-      puts ("2nd timedrdlock did not return EINVAL");
-      pthread_exit ((void *) 1l);
-    }
+  TEST_COMPARE (pthread_rwlock_timedrdlock (r, &ts_timeout), EINVAL);
 
   puts ("2nd child timedrdlock done");
 
@@ -113,113 +79,59 @@ do_test (void)
       pthread_rwlockattr_t a;
 
       if (pthread_rwlockattr_init (&a) != 0)
-	{
-	  printf ("round %Zu: rwlockattr_t failed\n", cnt);
-	  exit (1);
-	}
+        FAIL_EXIT1 ("round %Zu: rwlockattr_t failed\n", cnt);
 
       if (pthread_rwlockattr_setkind_np (&a, kind[cnt]) != 0)
-	{
-	  printf ("round %Zu: rwlockattr_setkind failed\n", cnt);
-	  exit (1);
-	}
+        FAIL_EXIT1 ("round %Zu: rwlockattr_setkind failed\n", cnt);
 
       if (pthread_rwlock_init (&r, &a) != 0)
-	{
-	  printf ("round %Zu: rwlock_init failed\n", cnt);
-	  exit (1);
-	}
+        FAIL_EXIT1 ("round %Zu: rwlock_init failed\n", cnt);
 
       if (pthread_rwlockattr_destroy (&a) != 0)
-	{
-	  printf ("round %Zu: rwlockattr_destroy failed\n", cnt);
-	  exit (1);
-	}
-
-      struct timeval tv;
-      (void) gettimeofday (&tv, NULL);
+        FAIL_EXIT1 ("round %Zu: rwlockattr_destroy failed\n", cnt);
 
       struct timespec ts;
-      TIMEVAL_TO_TIMESPEC (&tv, &ts);
-
+      xclock_gettime (CLOCK_REALTIME, &ts);
       ++ts.tv_sec;
 
       /* Get a write lock.  */
       int e = pthread_rwlock_timedwrlock (&r, &ts);
       if (e != 0)
-	{
-	  printf ("round %Zu: rwlock_timedwrlock failed (%d)\n", cnt, e);
-	  exit (1);
-	}
+        FAIL_EXIT1 ("round %Zu: rwlock_timedwrlock failed (%d)\n", cnt, e);
 
       puts ("1st timedwrlock done");
 
-      (void) gettimeofday (&tv, NULL);
-      TIMEVAL_TO_TIMESPEC (&tv, &ts);
+      xclock_gettime (CLOCK_REALTIME, &ts);
       ++ts.tv_sec;
-      e = pthread_rwlock_timedrdlock (&r, &ts);
-      if (e == 0)
-	{
-	  puts ("timedrdlock succeeded");
-	  exit (1);
-	}
-      if (e != EDEADLK)
-	{
-	  puts ("timedrdlock did not return EDEADLK");
-	  exit (1);
-	}
+      TEST_COMPARE (pthread_rwlock_timedrdlock (&r, &ts), EDEADLK);
 
       puts ("1st timedrdlock done");
 
-      (void) gettimeofday (&tv, NULL);
-      TIMEVAL_TO_TIMESPEC (&tv, &ts);
+      xclock_gettime (CLOCK_REALTIME, &ts);
       ++ts.tv_sec;
-      e = pthread_rwlock_timedwrlock (&r, &ts);
-      if (e == 0)
-	{
-	  puts ("2nd timedwrlock succeeded");
-	  exit (1);
-	}
-      if (e != EDEADLK)
-	{
-	  puts ("2nd timedwrlock did not return EDEADLK");
-	  exit (1);
-	}
+      TEST_COMPARE (pthread_rwlock_timedwrlock (&r, &ts), EDEADLK);
 
       puts ("2nd timedwrlock done");
 
       pthread_t th;
       if (pthread_create (&th, NULL, tf, &r) != 0)
-	{
-	  printf ("round %Zu: create failed\n", cnt);
-	  exit (1);
-	}
+        FAIL_EXIT1 ("round %Zu: create failed\n", cnt);
 
       puts ("started thread");
 
       void *status;
       if (pthread_join (th, &status) != 0)
-	{
-	  printf ("round %Zu: join failed\n", cnt);
-	  exit (1);
-	}
+        FAIL_EXIT1 ("round %Zu: join failed\n", cnt);
       if (status != NULL)
-	{
-	  printf ("failure in round %Zu\n", cnt);
-	  exit (1);
-	}
+        FAIL_EXIT1 ("failure in round %Zu\n", cnt);
 
       puts ("joined thread");
 
       if (pthread_rwlock_destroy (&r) != 0)
-	{
-	  printf ("round %Zu: rwlock_destroy failed\n", cnt);
-	  exit (1);
-	}
+        FAIL_EXIT1 ("round %Zu: rwlock_destroy failed\n", cnt);
     }
 
   return 0;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>
