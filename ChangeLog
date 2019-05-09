@@ -1,3 +1,12 @@
+2019-05-23 Alexandra Hajkova  <ahajkova@redhat.com>
+
+       * elf/Makefile (test-container): Add tst-ldconfig-bad-aux-cache.
+       * elf/tst-ldconfig-bad-aux-cache.c: New file.
+       * elf/tst-ldconfig_aux-cache.root: New directory.
+       * elf/tst-ldconfig-bad-aux-cache.root/postclean.req: New file.
+       * elf/tst-ldconfig-bad-aux-cache.root/etc: New directory.
+       * elf/tst-ldconfig-bad-aux-cache.root/etc/ld.so.conf: New file.
+
 2019-05-22  Zack Weinberg  <zackw@panix.com>
 
         * sysdeps/powerpc/preconfigure: Error out on powerpc-*-*gnuspe*

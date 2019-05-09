@@ -156,6 +156,9 @@ tests-static-internal := tst-tls1-static tst-tls2-static \
 CRT-tst-tls1-static-non-pie := $(csu-objpfx)crt1.o
 tst-tls1-static-non-pie-no-pie = yes
 
+tests-container = \
+			  tst-ldconfig-bad-aux-cache
+
 tests := tst-tls9 tst-leaks1 \
 	tst-array1 tst-array2 tst-array3 tst-array4 tst-array5 \
 	tst-auxv
