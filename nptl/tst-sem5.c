@@ -22,6 +22,8 @@
 #include <unistd.h>
 #include <sys/time.h>
 #include <support/check.h>
+#include <support/timespec.h>
+#include <support/xtime.h>
 
 
 static int
@@ -29,31 +31,18 @@ do_test (void)
 {
   sem_t s;
   struct timespec ts;
-  struct timeval tv;
 
   TEST_COMPARE (sem_init (&s, 0, 1), 0);
   TEST_COMPARE (TEMP_FAILURE_RETRY (sem_wait (&s)), 0);
-  TEST_COMPARE (gettimeofday (&tv, NULL), 0);
-
-  TIMEVAL_TO_TIMESPEC (&tv, &ts);
 
   /* We wait for half a second.  */
-  ts.tv_nsec += 500000000;
-  if (ts.tv_nsec >= 1000000000)
-    {
-      ++ts.tv_sec;
-      ts.tv_nsec -= 1000000000;
-    }
+  xclock_gettime (CLOCK_REALTIME, &ts);
+  ts = timespec_add (ts, make_timespec (0, TIMESPEC_HZ/2));
 
   errno = 0;
   TEST_COMPARE (TEMP_FAILURE_RETRY (sem_timedwait (&s, &ts)), -1);
   TEST_COMPARE (errno, ETIMEDOUT);
-
-  struct timespec ts2;
-  TEST_COMPARE (clock_gettime (CLOCK_REALTIME, &ts2), 0);
-
-  TEST_VERIFY (ts2.tv_sec > ts.tv_sec
-               || (ts2.tv_sec == ts.tv_sec && ts2.tv_nsec > ts.tv_nsec));
+  TEST_TIMESPEC_NOW_OR_AFTER (CLOCK_REALTIME, ts);
 
   return 0;
 }
