@@ -1,3 +1,15 @@
+2019-05-09  Mike Crowe <mac@mcrowe.com>
+
+	* support/timespec.h: New file.  Provide timespec helper functions
+	along with macros in the style of those in check.h.
+	* support/timespec.c: New file.  Implement check functions declared
+	in support/timespec.h.
+	* support/timespec-add.c: New file from gnulib containing
+	timespec_add implementation that handles overflow.
+	* support/timespec-sub.c: New file from gnulib containing
+	timespec_sub implementation that handles overflow.
+	* support/README: Mention timespec.h.
+
 2019-05-09  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	[BZ #24537]

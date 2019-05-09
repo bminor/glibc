@@ -1,0 +1,71 @@
+/* Subtract two struct timespec values.
+   Copyright (C) 2011-2019 Free Software Foundation, Inc.
+   This file is part of the GNU C Library and is also part of gnulib.
+   Patches to this file should be submitted to both projects.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
+/* Return the difference between two timespec values A and B.  On
+   overflow, return an extremal value.  This assumes 0 <= tv_nsec <
+   TIMESPEC_HZ.  */
+
+#include <config.h>
+#include "timespec.h"
+
+#include "intprops.h"
+
+struct timespec
+timespec_sub (struct timespec a, struct timespec b)
+{
+  time_t rs = a.tv_sec;
+  time_t bs = b.tv_sec;
+  int ns = a.tv_nsec - b.tv_nsec;
+  int rns = ns;
+  time_t tmin = TYPE_MINIMUM (time_t);
+  time_t tmax = TYPE_MAXIMUM (time_t);
+
+  if (ns < 0)
+    {
+      rns = ns + TIMESPEC_HZ;
+      if (bs < tmax)
+        bs++;
+      else if (- TYPE_SIGNED (time_t) < rs)
+        rs--;
+      else
+        goto low_overflow;
+    }
+
+  /* INT_SUBTRACT_WRAPV is not appropriate since time_t might be unsigned.
+     In theory time_t might be narrower than int, so plain
+     INT_SUBTRACT_OVERFLOW does not suffice.  */
+  if (! INT_SUBTRACT_OVERFLOW (rs, bs) && tmin <= rs - bs && rs - bs <= tmax)
+    rs -= bs;
+  else
+    {
+      if (rs < 0)
+        {
+        low_overflow:
+          rs = tmin;
+          rns = 0;
+        }
+      else
+        {
+          rs = tmax;
+          rns = TIMESPEC_HZ - 1;
+        }
+    }
+
+  return make_timespec (rs, rns);
+}

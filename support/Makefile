@@ -71,6 +71,9 @@ libsupport-routines = \
   support_test_main \
   support_test_verify_impl \
   temp_file \
+  timespec \
+  timespec-add \
+  timespec-sub \
   write_message \
   xaccept \
   xaccept4 \

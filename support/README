@@ -28,3 +28,8 @@ header files provide related declarations:
 * check.h
 * temp_file.h
 * test-driver.h
+
+For tests that make use of struct timespec, the following header files
+contain additional macros and helper functions:
+
+* timespec.h
