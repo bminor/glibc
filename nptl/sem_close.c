@@ -21,21 +21,20 @@
 #include <sys/mman.h>
 #include "semaphoreP.h"
 
-
-/* Global variables to parametrize the walk function.  This works
-   since we always have to use locks.  And we have to use the twalk
-   function since the entries are not sorted wrt the mapping
-   address.  */
-static sem_t *the_sem;
-static struct inuse_sem *rec;
+struct walk_closure
+{
+  sem_t *the_sem;
+  struct inuse_sem *rec;
+};
 
 static void
-walker (const void *inodep, const VISIT which, const int depth)
+walker (const void *inodep, VISIT which, void *closure0)
 {
+  struct walk_closure *closure = closure0;
   struct inuse_sem *nodep = *(struct inuse_sem **) inodep;
 
-  if (nodep->sem == the_sem)
-    rec = nodep;
+  if (nodep->sem == closure->the_sem)
+    closure->rec = nodep;
 }
 
 
@@ -48,9 +47,12 @@ sem_close (sem_t *sem)
   lll_lock (__sem_mappings_lock, LLL_PRIVATE);
 
   /* Locate the entry for the mapping the caller provided.  */
-  rec = NULL;
-  the_sem = sem;
-  __twalk (__sem_mappings, walker);
+  struct inuse_sem *rec;
+  {
+    struct walk_closure closure = { .the_sem = sem, .rec = NULL };
+    __twalk_r (__sem_mappings, walker, &closure);
+    rec = closure.rec;
+  }
   if  (rec != NULL)
     {
       /* Check the reference counter.  If it is going to be zero, free

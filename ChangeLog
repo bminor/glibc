@@ -1,3 +1,9 @@
+2019-05-10  Florian Weimer  <fweimer@redhat.com>
+
+	* nptl/sem_close.c (struct walk_closure): Define.
+	(walker): Adjust for __twalk_r.
+	(sem_close): Call __twalk_r.
+
 2019-05-09  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* support/timespec.c (test_timespec_before_impl,
