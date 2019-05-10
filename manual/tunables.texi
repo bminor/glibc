@@ -188,8 +188,8 @@ per-thread cache.  The default (and maximum) value is 1032 bytes on
 
 @deftp Tunable glibc.malloc.tcache_count
 The maximum number of chunks of each size to cache. The default is 7.
-There is no upper limit, other than available system memory.  If set
-to zero, the per-thread cache is effectively disabled.
+The upper limit is 127.  If set to zero, the per-thread cache is effectively
+disabled.
 
 The approximate maximum overhead of the per-thread cache is thus equal
 to the number of bins times the chunk count in each bin times the size
