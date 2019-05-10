@@ -1,3 +1,9 @@
+2019-05-09  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* support/timespec.c (test_timespec_before_impl,
+	test_timespec_equal_or_after_impl): print timespec member as intmax_t
+	insted of long int.
+
 2019-05-09  Mike Crowe <mac@mcrowe.com>
 
 	* nptl/tst-abstime.c: Use libsupport.
