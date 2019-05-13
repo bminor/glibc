@@ -57,3 +57,10 @@ const char support_libdir_prefix[] = LIBDIR_PATH;
 #else
 # error please -DLIBDIR_PATH=something in the Makefile
 #endif
+
+#ifdef BINDIR_PATH
+/* Corresponds to the install's bin/ directory.  */
+const char support_bindir_prefix[] = BINDIR_PATH;
+#else
+# error please -DBINDIR_PATH=something in the Makefile
+#endif
