@@ -18,6 +18,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -28,6 +29,7 @@
 #include <support/subprocess.h>
 #include <support/capture_subprocess.h>
 #include <support/check.h>
+#include <support/support.h>
 
 static void
 target_process (void *arg)
@@ -60,12 +62,14 @@ do_test (void)
     char pid[3 * sizeof (uint32_t) + 1];
     snprintf (pid, array_length (pid), "%d", target.pid);
 
-    const char prog[] = "/usr/bin/pldd";
+    char *prog = xasprintf ("%s/pldd", support_bindir_prefix);
 
     pldd = support_capture_subprogram (prog,
       (char *const []) { (char *) prog, pid, NULL });
 
     support_capture_subprocess_check (&pldd, "pldd", 0, sc_allow_stdout);
+
+    free (prog);
   }
 
   /* Check 'pldd' output.  The test is expected to be linked against only

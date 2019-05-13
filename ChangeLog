@@ -1,5 +1,9 @@
 2019-05-14  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	[BZ #24544]
+	* elf/tst-pldd.c (do_test): Use support_bindir_prefix instead of
+	pre-defined value.
+
 	* support/Makefile (CFLAGS-support_paths.c): Add -DBINDIR_PATH.
 	* support/support.h (support_bindir_prefix): New variable.
 	* support/support_paths.c [BINDIR_PATH] (support_bindir_prefix):
