@@ -172,7 +172,8 @@ CFLAGS-support_paths.c = \
 		-DOBJDIR_PATH=\"`cd $(objpfx)/..; pwd`\" \
 		-DOBJDIR_ELF_LDSO_PATH=\"`cd $(objpfx)/..; pwd`/elf/$(rtld-installed-name)\" \
 		-DINSTDIR_PATH=\"$(prefix)\" \
-		-DLIBDIR_PATH=\"$(libdir)\"
+		-DLIBDIR_PATH=\"$(libdir)\" \
+		-DBINDIR_PATH=\"$(bindir)\"
 
 ifeq (,$(CXX))
 LINKS_DSO_PROGRAM = links-dso-program-c

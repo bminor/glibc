@@ -1,3 +1,11 @@
+2019-05-14  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* support/Makefile (CFLAGS-support_paths.c): Add -DBINDIR_PATH.
+	* support/support.h (support_bindir_prefix): New variable.
+	* support/support_paths.c [BINDIR_PATH] (support_bindir_prefix):
+
+	* config.make.in (bindir): New variable.
+
 2019-07-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #24259]
