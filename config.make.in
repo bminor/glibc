@@ -10,6 +10,7 @@ prefix = @prefix@
 exec_prefix = @exec_prefix@
 datadir = @datadir@
 libdir = @libdir@
+bindir = @bindir@
 slibdir = @libc_cv_slibdir@
 rtlddir = @libc_cv_rtlddir@
 complocaledir = @libc_cv_complocaledir@

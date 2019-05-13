@@ -1,5 +1,7 @@
 2019-05-14  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* config.make.in (bindir): New variable.
+
 	* sysdeps/nptl/lowlevellock.h (__lll_trylock): New macro.
 	(lll_trylock): Call __lll_trylock.
 	* sysdeps/unix/sysv/linux/i386/libc-lowlevellock.S: Remove file.
