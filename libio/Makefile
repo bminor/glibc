@@ -61,7 +61,7 @@ tests = tst_swprintf tst_wprintf tst_swscanf tst_wscanf tst_getwc tst_putwc   \
 	bug-memstream1 bug-wmemstream1 \
 	tst-setvbuf1 tst-popen1 tst-fgetwc bug-wsetpos tst-fseek \
 	tst-fwrite-error tst-ftell-partial-wide tst-ftell-active-handler \
-	tst-ftell-append tst-fputws
+	tst-ftell-append tst-fputws tst-wfile-sync
 ifeq (yes,$(build-shared))
 # Add test-fopenloc only if shared library is enabled since it depends on
 # shared localedata objects.
@@ -198,6 +198,7 @@ $(objpfx)tst-ungetwc1.out: $(gen-locales)
 $(objpfx)tst-ungetwc2.out: $(gen-locales)
 $(objpfx)tst-widetext.out: $(gen-locales)
 $(objpfx)tst_wprintf2.out: $(gen-locales)
+$(objpfx)tst-wfile-sync.out: $(gen-locales)
 endif
 
 $(objpfx)test-freopen.out: test-freopen.sh $(objpfx)test-freopen

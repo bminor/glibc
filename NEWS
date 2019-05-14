@@ -69,6 +69,7 @@ Security related changes:
 The following bugs are resolved with this release:
 
   [20257] sunrpc: clntudp_call does not enforce timeout when receiving data
+  [20568] Fix crash in _IO_wfile_sync
   [21015] Document and fix --enable-bind-now
   [21109] Tunables broken on big-endian
   [21115] sunrpc: Use-after-free in error path in clntudp_call
