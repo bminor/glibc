@@ -2291,6 +2291,21 @@ The @var{pid} argument does not refer to an existing process or group.
 @end table
 @end deftypefun
 
+@deftypefun int tgkill (pid_t @var{pid}, pid_t @var{tid}, int @var{signum})
+@standards{Linux, signal.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+The @code{tgkill} function sends the signal @var{signum} to the thread
+or process with ID @var{tid}, like the @code{kill} function, but only
+if the process ID of the thread @var{tid} is equal to @var{pid}.  If
+the target thread belongs to another process, the function fails with
+@code{ESRCH}.
+
+The @code{tgkill} function can be used to avoid sending a signal to a
+thread in the wrong process if the caller ensures that the passed
+@var{pid} value is not reused by the kernel (for example, if it is the
+process ID of the current process, as returned by @code{getpid}).
+@end deftypefun
+
 @deftypefun int killpg (int @var{pgid}, int @var{signum})
 @standards{BSD, signal.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}

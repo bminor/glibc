@@ -1,3 +1,49 @@
+2019-05-14  Florian Weimer  <fweimer@redhat.com>
+
+	Linux: Add the tgkill function.
+	* bits/signal_ext.h: New file.
+	* manual/signal.texi (Signaling Another Process): Document tgkill.
+	* signal/Makefile (headers): Add bits/signal_ext.h.
+	* signal/signal.h: Include <bits/signal_ext.h>.
+	* sysdeps/unix/sysv/linux/Makefile (tests): Add tst-tgkill.
+	(tst-tgkill): Link with libpthread.
+	* sysdeps/unix/sysv/linux/Versions (GLIBC_2.30): Export tgkill.
+	* sysdeps/unix/sysv/linux/bits/signal_ext.h: New file.
+	* sysdeps/unix/sysv/linux/bits/tst-tgkill.c: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/libc.abilist (GLIBC_2.30): Add
+	tgkill.
+	* sysdeps/unix/sysv/linux/alpha/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/csky/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/fpu/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nofpu/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/riscv/rv64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist: Likewise.
+
 2019-05-14  Carlos O'Donell  <carlos@redhat.com>
 
 	* manual/search.texi (Tree Search Function): Adjust twalk_r

@@ -20,7 +20,7 @@ Major new features:
   twalk function, but it passes an additional caller-supplied argument
   to the callback function.
 
-* On Linux, the gettid function has been added.
+* On Linux, the gettid and tgkill functions have been added.
 
 * Minguo (Republic of China) calendar support has been added as an
   alternative calendar for the following locales: zh_TW, cmn_TW, hak_TW,

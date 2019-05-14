@@ -53,7 +53,8 @@ sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h \
 tests += tst-clone tst-clone2 tst-clone3 tst-fanotify tst-personality \
 	 tst-quota tst-sync_file_range tst-sysconf-iov_max tst-ttyname \
 	 test-errno-linux tst-memfd_create tst-mlock2 tst-pkey \
-	 tst-rlimit-infinity tst-ofdlocks tst-gettid tst-gettid-kill
+	 tst-rlimit-infinity tst-ofdlocks tst-gettid tst-gettid-kill \
+	 tst-tgkill
 tests-internal += tst-ofdlocks-compat
 
 # Generate the list of SYS_* macros for the system calls (__NR_*
@@ -115,6 +116,7 @@ $(objpfx)tst-mman-consts.out: ../sysdeps/unix/sysv/linux/tst-mman-consts.py
 
 $(objpfx)tst-gettid: $(shared-thread-library)
 $(objpfx)tst-gettid-kill: $(shared-thread-library)
+$(objpfx)tst-tgkill: $(shared-thread-library)
 
 endif # $(subdir) == misc
 

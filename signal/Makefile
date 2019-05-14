@@ -31,7 +31,7 @@ headers := signal.h sys/signal.h \
 	   bits/types/sigevent_t.h bits/types/siginfo_t.h \
 	   bits/types/sigset_t.h bits/types/sigval_t.h \
 	   bits/types/stack_t.h bits/types/struct_sigstack.h \
-	   bits/types/__sigval_t.h
+	   bits/types/__sigval_t.h bits/signal_ext.h
 
 routines	:= signal raise killpg \
 		   sigaction sigprocmask kill \

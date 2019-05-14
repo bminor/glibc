@@ -175,7 +175,7 @@ libc {
     getcpu;
   }
   GLIBC_2.30 {
-    gettid;
+    gettid; tgkill;
   }
   GLIBC_PRIVATE {
     # functions used in other libraries
