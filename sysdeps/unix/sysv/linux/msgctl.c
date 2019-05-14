@@ -62,7 +62,7 @@ attribute_compat_text_section
 __old_msgctl (int msqid, int cmd, struct __old_msqid_ds *buf)
 {
 #ifdef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
-  return INLINE_SYSCALL_CALL (msgctl, msqid, cmd | __IPC_64, buf);
+  return INLINE_SYSCALL_CALL (msgctl, msqid, cmd, buf);
 #else
   return INLINE_SYSCALL_CALL (ipc, IPCOP_msgctl, msqid, cmd, 0, buf);
 #endif
