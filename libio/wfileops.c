@@ -508,11 +508,12 @@ _IO_wfile_sync (FILE *fp)
 	     generate the wide characters up to the current reading
 	     position.  */
 	  int nread;
-
+	  size_t wnread = (fp->_wide_data->_IO_read_ptr
+			   - fp->_wide_data->_IO_read_base);
 	  fp->_wide_data->_IO_state = fp->_wide_data->_IO_last_state;
 	  nread = (*cv->__codecvt_do_length) (cv, &fp->_wide_data->_IO_state,
 					      fp->_IO_read_base,
-					      fp->_IO_read_end, delta);
+					      fp->_IO_read_end, wnread);
 	  fp->_IO_read_ptr = fp->_IO_read_base + nread;
 	  delta = -(fp->_IO_read_end - fp->_IO_read_base - nread);
 	}

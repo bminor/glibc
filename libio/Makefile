@@ -65,7 +65,8 @@ tests = tst_swprintf tst_wprintf tst_swscanf tst_wscanf tst_getwc tst_putwc   \
 	tst-setvbuf1 tst-popen1 tst-fgetwc bug-wsetpos tst-fseek \
 	tst-fwrite-error tst-ftell-partial-wide tst-ftell-active-handler \
 	tst-ftell-append tst-fputws tst-bz22415 tst-fgetc-after-eof \
-	tst-sprintf-ub tst-sprintf-chk-ub tst-bz24051 tst-bz24153
+	tst-sprintf-ub tst-sprintf-chk-ub tst-bz24051 tst-bz24153 \
+	tst-wfile-sync
 
 tests-internal = tst-vtables tst-vtables-interposed tst-readline
 
@@ -212,6 +213,7 @@ $(objpfx)tst-ungetwc1.out: $(gen-locales)
 $(objpfx)tst-ungetwc2.out: $(gen-locales)
 $(objpfx)tst-widetext.out: $(gen-locales)
 $(objpfx)tst_wprintf2.out: $(gen-locales)
+$(objpfx)tst-wfile-sync.out: $(gen-locales)
 endif
 
 $(objpfx)test-freopen.out: test-freopen.sh $(objpfx)test-freopen
