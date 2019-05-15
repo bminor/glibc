@@ -133,7 +133,7 @@
  */
 
 #include <assert.h>
-#include <gconv.h>
+#include <iconv/gconv_int.h>
 #include <string.h>
 #define __need_size_t
 #define __need_NULL

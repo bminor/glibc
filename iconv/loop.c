@@ -49,7 +49,7 @@
 
 #include <assert.h>
 #include <endian.h>
-#include <gconv.h>
+#include <iconv/gconv_int.h>
 #include <stdint.h>
 #include <string.h>
 #include <wchar.h>

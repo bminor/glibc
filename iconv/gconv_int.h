@@ -223,6 +223,14 @@ extern void __gconv_get_builtin_trans (const char *name,
 				       struct __gconv_step *step)
      attribute_hidden;
 
+/* Transliteration using the locale's data.  */
+extern int __gconv_transliterate (struct __gconv_step *step,
+                                  struct __gconv_step_data *step_data,
+                                  const unsigned char *inbufstart,
+                                  const unsigned char **inbufp,
+                                  const unsigned char *inbufend,
+                                  unsigned char **outbufstart,
+                                  size_t *irreversible);
 libc_hidden_proto (__gconv_transliterate)
 
 /* If NAME is an codeset alias expand it.  */

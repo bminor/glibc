@@ -142,13 +142,4 @@ typedef struct __gconv_info
   __extension__ struct __gconv_step_data __data[0];
 } *__gconv_t;
 
-/* Transliteration using the locale's data.  */
-extern int __gconv_transliterate (struct __gconv_step *step,
-				  struct __gconv_step_data *step_data,
-				  const unsigned char *inbufstart,
-				  const unsigned char **inbufp,
-				  const unsigned char *inbufend,
-				  unsigned char **outbufstart,
-				  size_t *irreversible);
-
 #endif /* gconv.h */

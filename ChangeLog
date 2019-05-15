@@ -1,3 +1,10 @@
+2019-05-15  Florian Weimer  <fweimer@redhat.com>
+
+	* iconv/gconv.h (__gconv_transliterate): Move declaration …
+	* iconv/gconv_int.h (__gconv_transliterate): … here.
+	* iconv/loop.c: Include <iconv/gconv_int.h> instead of <gconv.h>.
+	* iconv/skeleton.c: Likewise.
+
 2019-05-14  Florian Weimer  <fweimer@redhat.com>
 
 	Linux: Add the tgkill function.
