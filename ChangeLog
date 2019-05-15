@@ -1386,6 +1386,11 @@
 	* localedata/locales/lzh_TW (era): Likewise.
 	* localedata/locales/nan_TW (era): Likewise.
 
+2019-03-14  Adam Maris  <amaris@redhat.com>
+
+	* malloc/malloc.c (_int_malloc): Check for large bin list
+	corruption when inserting unsorted chunk.
+
 2019-03-14  Florian Weimer  <fweimer@redhat.com>
 
 	Remove obsolete, never-implemented XSI STREAMS declarations.
