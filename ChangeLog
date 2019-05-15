@@ -1,3 +1,11 @@
+2019-05-15  Mark Wielaard  <mark@klomp.org>
+
+	[BZ#24476]
+	* dlfcn/dlerror.c (__dlerror_main_freeres): Guard using
+	__libc_once_get (once) and static_buf == NULL.
+	(__dlerror): Check we have a valid key, set result to static_buf
+	otherwise.
+
 2019-05-15  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #20568]
