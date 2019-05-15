@@ -1,5 +1,12 @@
 2019-05-20  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/ipc_priv.h (SEMTIMEDOP_IPC_ARGS): New
+	define.
+	* sysdpes/unix/sysv/linux/s390/ipc_priv.h: New file.
+	* sysdeps/unix/sysv/linux/s390/semtimedop.c: Remove file.
+	* sysdeps/unix/sysv/linux/semtimedop.c (semtimedop): Use
+	SEMTIMEDOP_IPC_ARGS for calls with __NR_ipc.
+
 	[BZ #24570]
 	* sysdeps/unix/sysv/linux/msgctl.c (__old_msgctl): Remove __IPC_64
 	usage.

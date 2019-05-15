@@ -36,4 +36,9 @@ struct __old_ipc_perm
 #define MSGRCV_ARGS(__msgp, __msgtyp) \
   ((long int []){ (long int) __msgp, __msgtyp })
 
+/* This macro is required to handle the s390 variants, which passes the
+   arguments in a different order than default.  */
+#define SEMTIMEDOP_IPC_ARGS(__nsops, __sops, __timeout) \
+  (__nsops), 0, (__sops), (__timeout)
+
 #include <ipc_ops.h>

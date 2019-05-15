@@ -1,6 +1,6 @@
-/* Copyright (C) 1995-2019 Free Software Foundation, Inc.
+/* Arch-specific SysV IPC definitions for Linux.  s390 version.
+   Copyright (C) 2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, August 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,21 +16,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sys/sem.h>
-#include <ipc_priv.h>
-#include <sysdep.h>
-#include <errno.h>
+#include <sysdeps/unix/sysv/linux/ipc_priv.h>
 
-/* Perform user-defined atomical operation of array of semaphores.  */
+/* The s390 sys_ipc variant has only five parameters instead of six
+   (as for default variant).  The difference is the handling of
+   SEMTIMEDOP where on s390 the third parameter is used as a pointer
+   to a struct timespec where the generic variant uses fifth parameter.  */
+#undef SEMTIMEDOP_IPC_ARGS
+#define SEMTIMEDOP_IPC_ARGS(__nsops, __sops, __timeout) \
+  (__nsops), (__timeout), (__sops)
 
-int
-semtimedop (int semid, struct sembuf *sops, size_t nsops,
-	    const struct timespec *timeout)
-{
-#ifdef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
-  return INLINE_SYSCALL_CALL (semtimedop, semid, sops, nsops, timeout);
-#else
-  return INLINE_SYSCALL_CALL (ipc, IPCOP_semtimedop, semid,
-			      SEMTIMEDOP_IPC_ARGS (nsops, sops, timeout));
-#endif
-}
+#include <ipc_ops.h>
