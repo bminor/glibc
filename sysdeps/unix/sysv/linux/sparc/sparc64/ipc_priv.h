@@ -16,26 +16,17 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <sys/ipc.h>  /* For __key_t  */
-
-#define __IPC_64	0x0
-
-struct __old_ipc_perm
-{
-  __key_t __key;		/* Key.  */
-  unsigned int uid;		/* Owner's user ID.  */
-  unsigned int gid;		/* Owner's group ID.  */
-  unsigned int cuid;		/* Creator's user ID.  */
-  unsigned int cgid;		/* Creator's group ID.  */
-  unsigned int mode;		/* Read/write permission.  */
-  unsigned short int __seq;	/* Sequence number.  */
-};
+#define __OLD_IPC_ID_TYPE   unsigned int
+#define __OLD_IPC_MODE_TYPE unsigned int
+#include <sysdeps/unix/sysv/linux/ipc_priv.h>
 
 /* SPARC semctl multiplex syscall expects the union pointed address, not
    the union address itself.  */
+#undef SEMCTL_ARG_ADDRESS
 #define SEMCTL_ARG_ADDRESS(__arg) __arg.array
 
 /* Also for msgrcv it does not use the kludge on final 2 arguments.  */
+#undef MSGRCV_ARGS
 #define MSGRCV_ARGS(__msgp, __msgtyp) __msgp, __msgtyp
 
 #define SEMTIMEDOP_IPC_ARGS(__nsops, __sops, __timeout) \

@@ -85,6 +85,9 @@
 /* Support for SysV IPC through wired syscalls.  All supported architectures
    either support ipc syscall and/or all the ipc correspondent syscalls.  */
 #define __ASSUME_DIRECT_SYSVIPC_SYSCALLS	1
+/* The generic default __IPC_64 value is 0x0, however some architectures
+   require a different value of 0x100.  */
+#define __ASSUME_SYSVIPC_DEFAULT_IPC_64		1
 
 /* All supported architectures reserve a 32-bit for MODE field in sysvipc
    ipc_perm.  However, some kernel ABI interfaces still expect a 16-bit

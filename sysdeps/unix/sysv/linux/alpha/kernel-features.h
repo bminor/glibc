@@ -52,4 +52,7 @@
 # undef __ASSUME_STATX
 #endif
 
+/* Alpha requires old sysvipc even being a 64-bit architecture.  */
+#undef __ASSUME_SYSVIPC_DEFAULT_IPC_64
+
 #endif /* _KERNEL_FEATURES_H */

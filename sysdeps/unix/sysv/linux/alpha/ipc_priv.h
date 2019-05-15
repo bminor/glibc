@@ -16,17 +16,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <sys/ipc.h>  /* For __key_t  */
-
-#define __IPC_64	0x100
-
-struct __old_ipc_perm
-{
-  __key_t __key;		/* Key.  */
-  unsigned int uid;		/* Owner's user ID.  */
-  unsigned int gid;		/* Owner's group ID.  */
-  unsigned int cuid;		/* Creator's user ID.  */
-  unsigned int cgid;		/* Creator's group ID.  */
-  unsigned int mode;		/* Read/write permission.  */
-  unsigned short int __seq;	/* Sequence number.  */
-};
+#define __OLD_IPC_ID_TYPE   unsigned int
+#define __OLD_IPC_MODE_TYPE unsigned int
+#include <sysdeps/unix/sysv/linux/ipc_priv.h>

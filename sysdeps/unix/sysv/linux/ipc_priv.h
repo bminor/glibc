@@ -17,17 +17,29 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sys/ipc.h>  /* For __key_t  */
+#include <kernel-features.h>
 
-#define __IPC_64	0x100
+#ifdef __ASSUME_SYSVIPC_DEFAULT_IPC_64
+# define __IPC_64      0x0
+#else
+# define __IPC_64      0x100
+#endif
+
+#ifndef __OLD_IPC_ID_TYPE
+# define __OLD_IPC_ID_TYPE unsigned short int
+#endif
+#ifndef __OLD_IPC_MODE_TYPE
+# define __OLD_IPC_MODE_TYPE unsigned short int
+#endif
 
 struct __old_ipc_perm
 {
   __key_t __key;			/* Key.  */
-  unsigned short int uid;		/* Owner's user ID.  */
-  unsigned short int gid;		/* Owner's group ID.  */
-  unsigned short int cuid;		/* Creator's user ID.  */
-  unsigned short int cgid;		/* Creator's group ID.  */
-  unsigned short int mode;		/* Read/write permission.  */
+  __OLD_IPC_ID_TYPE uid;		/* Owner's user ID.  */
+  __OLD_IPC_ID_TYPE gid;		/* Owner's group ID.  */
+  __OLD_IPC_ID_TYPE cuid;		/* Creator's user ID.  */
+  __OLD_IPC_ID_TYPE cgid;		/* Creator's group ID.  */
+  __OLD_IPC_MODE_TYPE mode;		/* Read/write permission.  */
   unsigned short int __seq;		/* Sequence number.  */
 };
 

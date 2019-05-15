@@ -45,6 +45,7 @@
 
 /* i686 only supports ipc syscall.  */
 #undef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
+#undef __ASSUME_SYSVIPC_DEFAULT_IPC_64
 
 #undef __ASSUME_CLONE_DEFAULT
 #define __ASSUME_CLONE_BACKWARDS	1

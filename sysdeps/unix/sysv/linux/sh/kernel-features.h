@@ -48,6 +48,7 @@
 #if __BYTE_ORDER == __BIG_ENDIAN
 # define __ASSUME_SYSVIPC_BROKEN_MODE_T
 #endif
+#undef __ASSUME_SYSVIPC_DEFAULT_IPC_64
 
 /* Support for several syscalls was added in 4.8.  */
 #if __LINUX_KERNEL_VERSION < 0x040800
