@@ -1,3 +1,30 @@
+2019-05-15  Florian Weimer  <fweimer@redhat.com>
+
+	nss: Turn __nss_database_lookup into a compatibility symbol.
+	* nss/nsswitch.h (__nss_database_lookup2): Renamed from
+	__nss_database_lookup.
+	* nss/nsswitch.c (__nss_database_lookup2): Likewise.
+	(nss_load_all_libraries): Call __nss_database_lookup2 instead of
+	__nss_database_lookup.
+	(__nss_next): Move to …
+	* nss/compat-lookup.c (nss_next): … here.  Change it to fail
+	unconditionally.
+	(__nss_database_lookup): New function.
+	* nss/Versions (GLIBC_2.0): Update comment.
+	(GLIBC_PRIVATE): Export __nss_database_lookup2.
+	* grp/initgroups.c (internal_getgrouplist): Call
+	__nss_database_lookup2 instead of __nss_database_lookup.
+	* nscd/aicache.c (addhstaiX): Likewise.
+	* nscd/initgrcache.c (addinitgroupsX): Likewise.
+	* nscd/netgroupcache.c (addgetnetgrentX): Likewise.
+	* nss/XXX-lookup.c (DB_LOOKUP_FCT): Likewise.
+	* nss/nss_compat/compat-grp.c (init_nss_interface): Likewise.
+	* nss/nss_compat/compat-initgroups.c (init_nss_interface):
+	Likewise.
+	* nss/nss_compat/compat-pwd.c (init_nss_interface): Likewise.
+	* nss/nss_compat/compat-spwd.c (init_nss_interface): Likewise.
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Likewise.
+
 2019-05-15  Alexandra Hajkova  <ahajkova@redhat.com>
 	* support/support.h (support_install_rootsbindir): New variable.
 	* support/support_paths.c: Likewise.

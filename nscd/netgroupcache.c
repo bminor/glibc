@@ -143,7 +143,7 @@ addgetnetgrentX (struct database_dyn *db, int fd, request_header *req,
   *tofreep = NULL;
 
   if (netgroup_database == NULL
-      && __nss_database_lookup ("netgroup", NULL, NULL, &netgroup_database))
+      && __nss_database_lookup2 ("netgroup", NULL, NULL, &netgroup_database))
     {
       /* No such service.  */
       cacheable = do_notfound (db, fd, req, key, &dataset, &total, &timeout,

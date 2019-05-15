@@ -88,8 +88,8 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
   int no_more;
 
   if (group_database == NULL)
-    no_more = __nss_database_lookup ("group", NULL, DEFAULT_CONFIG,
-				     &group_database);
+    no_more = __nss_database_lookup2 ("group", NULL, DEFAULT_CONFIG,
+				      &group_database);
   else
     no_more = 0;
   nip = group_database;

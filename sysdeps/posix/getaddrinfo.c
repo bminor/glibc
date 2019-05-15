@@ -732,9 +732,9 @@ gaih_inet (const char *name, const struct gaih_service *service,
 #endif
 
 	  if (__nss_hosts_database == NULL)
-	    no_more = __nss_database_lookup ("hosts", NULL,
-					     "dns [!UNAVAIL=return] files",
-					     &__nss_hosts_database);
+	    no_more = __nss_database_lookup2 ("hosts", NULL,
+					      "dns [!UNAVAIL=return] files",
+					      &__nss_hosts_database);
 	  else
 	    no_more = 0;
 	  nip = __nss_hosts_database;

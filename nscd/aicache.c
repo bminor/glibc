@@ -92,9 +92,9 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
   int herrno = 0;
 
   if (hosts_database == NULL)
-    no_more = __nss_database_lookup ("hosts", NULL,
-				     "dns [!UNAVAIL=return] files",
-				     &hosts_database);
+    no_more = __nss_database_lookup2 ("hosts", NULL,
+				      "dns [!UNAVAIL=return] files",
+				      &hosts_database);
   else
     no_more = 0;
   nip = hosts_database;

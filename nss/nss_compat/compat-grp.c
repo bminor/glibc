@@ -78,7 +78,7 @@ static bool in_blacklist (const char *, int, ent_t *);
 static void
 init_nss_interface (void)
 {
-  if (__nss_database_lookup ("group_compat", NULL, "nis", &ni) >= 0)
+  if (__nss_database_lookup2 ("group_compat", NULL, "nis", &ni) >= 0)
     {
       nss_setgrent = __nss_lookup_function (ni, "setgrent");
       nss_getgrnam_r = __nss_lookup_function (ni, "getgrnam_r");
