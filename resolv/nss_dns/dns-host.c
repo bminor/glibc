@@ -947,8 +947,15 @@ getanswer_r (struct resolv_context *ctx,
 	      linebuflen -= nn;
 	    }
 
-	  linebuflen -= sizeof (align) - ((u_long) bp % sizeof (align));
-	  bp += sizeof (align) - ((u_long) bp % sizeof (align));
+	  /* Provide sufficient alignment for both address
+	     families.  */
+	  enum { align = 4 };
+	  _Static_assert ((align % __alignof__ (struct in_addr)) == 0,
+			  "struct in_addr alignment");
+	  _Static_assert ((align % __alignof__ (struct in6_addr)) == 0,
+			  "struct in6_addr alignment");
+	  linebuflen -= align - ((u_long) bp % align);
+	  bp += align - ((u_long) bp % align);
 
 	  if (__glibc_unlikely (n > linebuflen))
 	    goto too_small;

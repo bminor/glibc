@@ -1,5 +1,10 @@
 2019-05-16  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/nss_dns/dns-host.c (getanswer_r): Be more explicit about
+	struct in_addr/struct in6_addr alignment.
+
+2019-05-16  Florian Weimer  <fweimer@redhat.com>
+
 	* nis/nss_nis/nis-hosts.c (EXTRA_ARGS, EXTRA_ARGS_DECL): Remove
 	flags argument.
 	(LINE_PARSER): Do not map IPv4 addresses.
