@@ -27,7 +27,6 @@
 
 
 /* Get implementation for some internal functions.  */
-#include "../resolv/mapv4v6addr.h"
 #include "../resolv/res_hconf.h"
 
 
@@ -35,8 +34,8 @@
 #define DATABASE	"hosts"
 #define NEED_H_ERRNO
 
-#define EXTRA_ARGS	 , af, flags
-#define EXTRA_ARGS_DECL	 , int af, int flags
+#define EXTRA_ARGS	 , af
+#define EXTRA_ARGS_DECL	 , int af
 
 #define ENTDATA hostent_data
 struct hostent_data
@@ -61,12 +60,7 @@ LINE_PARSER
      af = af == AF_UNSPEC ? AF_INET : af;
    else
      {
-       if (af == AF_INET6 && (flags & AI_V4MAPPED) != 0
-	   && inet_pton (AF_INET, addr, entdata->host_addr) > 0)
-	 map_v4v6_address ((char *) entdata->host_addr,
-			   (char *) entdata->host_addr);
-       else if (af == AF_INET
-		&& inet_pton (AF_INET6, addr, entdata->host_addr) > 0)
+       if (af == AF_INET && inet_pton (AF_INET6, addr, entdata->host_addr) > 0)
 	 {
 	   if (IN6_IS_ADDR_V4MAPPED (entdata->host_addr))
 	     memcpy (entdata->host_addr, entdata->host_addr + 12, INADDRSZ);
@@ -99,16 +93,13 @@ LINE_PARSER
    STRING_FIELD (result->h_name, isspace, 1);
  })
 
-#define EXTRA_ARGS_VALUE \
-  , (res_use_inet6 () ? AF_INET6 : AF_INET),		      \
-  (res_use_inet6 () ? AI_V4MAPPED : 0)
+#define EXTRA_ARGS_VALUE , AF_INET
 #include "files-XXX.c"
 #undef EXTRA_ARGS_VALUE
 
 /* We only need to consider IPv4 mapped addresses if the input to the
    gethostbyaddr() function is an IPv6 address.  */
-#define EXTRA_ARGS_VALUE \
-  , af, (len == IN6ADDRSZ ? AI_V4MAPPED : 0)
+#define EXTRA_ARGS_VALUE , af
 DB_LOOKUP (hostbyaddr, ,,,
 	   {
 	     if (result->h_length == (int) len
@@ -126,7 +117,7 @@ DB_LOOKUP (hostbyaddr, ,,,
 static enum nss_status
 gethostbyname3_multi (FILE * stream, const char *name, int af,
 		      struct hostent *result, char *buffer, size_t buflen,
-		      int *errnop, int *herrnop, int flags)
+		      int *errnop, int *herrnop)
 {
   assert (af == AF_INET || af == AF_INET6);
 
@@ -160,8 +151,7 @@ gethostbyname3_multi (FILE * stream, const char *name, int af,
   while (true)
     {
       status = internal_getent (stream, &tmp_result_buf, tmp_buffer.data,
-				tmp_buffer.length, errnop, herrnop, af,
-				flags);
+				tmp_buffer.length, errnop, herrnop, af);
       /* Enlarge the buffer if necessary.  */
       if (status == NSS_STATUS_TRYAGAIN && *herrnop == NETDB_INTERNAL
 	  && *errnop == ERANGE)
@@ -345,12 +335,8 @@ _nss_files_gethostbyname3_r (const char *name, int af, struct hostent *result,
 
   if (status == NSS_STATUS_SUCCESS)
     {
-      /* XXX Is using _res to determine whether we want to convert IPv4
-         addresses to IPv6 addresses really the right thing to do?  */
-      int flags = (res_use_inet6 () ? AI_V4MAPPED : 0);
-
       while ((status = internal_getent (stream, result, buffer, buflen, errnop,
-					herrnop, af, flags))
+					herrnop, af))
 	     == NSS_STATUS_SUCCESS)
 	{
 	  LOOKUP_NAME_CASE (h_name, h_aliases)
@@ -359,7 +345,7 @@ _nss_files_gethostbyname3_r (const char *name, int af, struct hostent *result,
       if (status == NSS_STATUS_SUCCESS
 	  && _res_hconf.flags & HCONF_FLAG_MULTI)
 	status = gethostbyname3_multi
-	  (stream, name, af, result, buffer, buflen, errnop, herrnop, flags);
+	  (stream, name, af, result, buffer, buflen, errnop, herrnop);
 
       internal_endent (&stream);
     }
@@ -375,9 +361,7 @@ _nss_files_gethostbyname_r (const char *name, struct hostent *result,
 			    char *buffer, size_t buflen, int *errnop,
 			    int *herrnop)
 {
-  int af = (res_use_inet6 () ? AF_INET6 : AF_INET);
-
-  return _nss_files_gethostbyname3_r (name, af, result, buffer, buflen,
+  return _nss_files_gethostbyname3_r (name, AF_INET, result, buffer, buflen,
 				      errnop, herrnop, NULL, NULL);
 }
 
@@ -414,7 +398,7 @@ _nss_files_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
 
 	  struct hostent result;
 	  status = internal_getent (stream, &result, buffer, buflen, errnop,
-				    herrnop, AF_UNSPEC, 0);
+				    herrnop, AF_UNSPEC);
 	  if (status != NSS_STATUS_SUCCESS)
 	    break;
 

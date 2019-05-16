@@ -1,5 +1,18 @@
 2019-05-16  Florian Weimer  <fweimer@redhat.com>
 
+	* nss/nss_files/files-hosts.c (EXTRA_ARGS, EXTRA_ARGS_DECL):
+	Remove flags.
+	(LINE_PARSER): Remove address mapping.
+	(EXTRA_ARGS_VALUE): Remove flags argument.
+	(gethostbyname3_multi): Likewise.  Adjust call to internal_getent.
+	(_nss_files_gethostbyname3_r): Adjust calls to internal_getent and
+	gethostbyname3_multi.
+	(_nss_files_gethostbyname_r): Always use AF_INET.  Adjust call to
+	_nss_files_gethostbyname3_r.
+	(_nss_files_gethostbyname4_r): Adjust call to internal_getent.
+
+2019-05-16  Florian Weimer  <fweimer@redhat.com>
+
 	* support/support_test_compare_blob.c (report_blob): Report
 	incorrect NULL blobs.
 
