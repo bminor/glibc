@@ -1,3 +1,8 @@
+2019-05-16  Florian Weimer  <fweimer@redhat.com>
+
+	* support/support_test_compare_blob.c (report_blob): Report
+	incorrect NULL blobs.
+
 2019-05-15  Mark Wielaard  <mark@klomp.org>
 
 	[BZ# 24476]

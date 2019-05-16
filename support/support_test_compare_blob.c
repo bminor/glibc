@@ -33,7 +33,9 @@ static void
 report_blob (const char *what, const unsigned char *blob,
              unsigned long int length, const char *expr)
 {
-  if (length > 0)
+  if (blob == NULL && length > 0)
+    printf ("  %s (evaluated from %s): NULL\n", what, expr);
+  else if (length > 0)
     {
       printf ("  %s (evaluated from %s):\n", what, expr);
       char *quoted = support_quote_blob (blob, length);
