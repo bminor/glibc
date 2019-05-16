@@ -1,3 +1,13 @@
+2019-05-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/alpha/kernel-features.h
+	(__ASSUME_STATFS64): Only undefine if [__LINUX_KERNEL_VERSION <
+	0x050100].
+	* sysdeps/unix/sysv/linux/ia64/kernel-features.h (__ASSUME_STATX):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sh/kernel-features.h
+	(__ASSUME_STATX): Likewise.
+
 2019-05-16  Florian Weimer  <fweimer@redhat.com>
 
 	* nis/nss_nis/nis-hosts.c (EXTRA_ARGS, EXTRA_ARGS_DECL): Remove

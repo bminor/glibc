@@ -22,9 +22,11 @@
 
 #include_next <kernel-features.h>
 
-/* There never has been support for fstat64.  */
-#undef __ASSUME_STATFS64
-#define __ASSUME_STATFS64 0
+/* Support for statfs64 was added in 5.1.  */
+#if __LINUX_KERNEL_VERSION < 0x050100
+# undef __ASSUME_STATFS64
+# define __ASSUME_STATFS64 0
+#endif
 
 /* Alpha used to define SysV ipc shmat syscall with a different name.  */
 #ifndef __NR_shmat
