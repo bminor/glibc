@@ -23,6 +23,18 @@
 #include <wchar.h>
 #include <libioP.h>
 
+/* See libio/fwprintf.c.  */
+static int
+call_fwprintf (FILE *stream, unsigned int mode_flags,
+	       const wchar_t *format, ...)
+{
+  va_list arg;
+  va_start (arg, format);
+  int done = __vfwprintf_internal (stream, format, arg, mode_flags);
+  va_end (arg);
+  return done;
+}
+
 static int
 locked_vfxprintf (FILE *fp, const char *fmt, va_list ap,
 		  unsigned int mode_flags)
@@ -30,34 +42,46 @@ locked_vfxprintf (FILE *fp, const char *fmt, va_list ap,
   if (_IO_fwide (fp, 0) <= 0)
     return __vfprintf_internal (fp, fmt, ap, mode_flags);
 
-  /* We must convert the narrow format string to a wide one.
-     Each byte can produce at most one wide character.  */
-  wchar_t *wfmt;
-  mbstate_t mbstate;
-  int res;
-  int used_malloc = 0;
-  size_t len = strlen (fmt) + 1;
+  int saved_errno = errno;
 
-  if (__glibc_unlikely (len > SIZE_MAX / sizeof (wchar_t)))
-    {
-      __set_errno (EOVERFLOW);
-      return -1;
-    }
-  if (__libc_use_alloca (len * sizeof (wchar_t)))
-    wfmt = alloca (len * sizeof (wchar_t));
-  else if ((wfmt = malloc (len * sizeof (wchar_t))) == NULL)
-    return -1;
+  /* Format the narrow string as a multibyte string.  Try to use an
+     on-stack buffer first, to avoid the heap allocation.  */
+  char buffer[512];
+  va_list ap1;
+  va_copy (ap1, ap);
+  int res = __vsnprintf_internal (buffer, sizeof (buffer),
+				  fmt, ap1, mode_flags);
+  va_end (ap1);
+  if (res < 0)
+    return res;
+  char *ptr;
+  if (res < sizeof (buffer))
+    ptr = buffer;
   else
-    used_malloc = 1;
+    {
+      /* Use a heap allocation for a large buffer.  */
+      if (res == INT_MAX)
+	{
+	  __set_errno (EOVERFLOW);
+	  return -1;
+	}
+      size_t len = res + 1;
+      ptr = malloc (len);
+      if (ptr == NULL)
+	return -1;
+      __set_errno (saved_errno);
+      res = __vsnprintf_internal (ptr, len, fmt, ap, mode_flags);
+      if (res < 0)
+	return -1;
+    }
 
-  memset (&mbstate, 0, sizeof mbstate);
-  res = __mbsrtowcs (wfmt, &fmt, len, &mbstate);
+  /* Write the formatted multibyte string to the wide stream.  */
+  if (res >= 0)
+    res = call_fwprintf (fp, mode_flags, L"%s", ptr);
 
-  if (res != -1)
-    res = __vfwprintf_internal (fp, wfmt, ap, mode_flags);
-
-  if (used_malloc)
-    free (wfmt);
+  if (ptr != buffer)
+    free (ptr);
+  __set_errno (saved_errno);
 
   return res;
 }

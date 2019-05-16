@@ -86,7 +86,8 @@ tests := tst-dirname tst-tsearch tst-fdset tst-mntent tst-hsearch \
 	 tst-mntent-blank-corrupt tst-mntent-blank-passno bug18240 \
 	 tst-preadvwritev tst-preadvwritev64 tst-makedev tst-empty \
 	 tst-preadvwritev2 tst-preadvwritev64v2 tst-warn-wide \
-	 tst-ldbl-warn tst-ldbl-error tst-dbl-efgcvt tst-ldbl-efgcvt
+	 tst-ldbl-warn tst-ldbl-error tst-dbl-efgcvt tst-ldbl-efgcvt \
+	 tst-warn-wide-tscii
 
 # Tests which need libdl.
 ifeq (yes,$(build-shared))
@@ -137,6 +138,11 @@ CFLAGS-brk.o = $(no-stack-protector)
 CFLAGS-brk.op = $(no-stack-protector)
 
 include ../Rules
+
+LOCALES := en_US.TSCII
+include ../gen-locales.mk
+
+$(objpfx)tst-warn-wide-tscii.out: $(gen-locales)
 
 $(objpfx)libg.a: $(dep-dummy-lib); $(make-dummy-lib)
 
