@@ -27,22 +27,18 @@
 #include <string.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <resolv/resolv-internal.h>
 #include <libc-lock.h>
 #include <rpcsvc/yp.h>
 #include <rpcsvc/ypclnt.h>
 
 #include "nss-nis.h"
 
-/* Get implementation for some internal functions. */
-#include <resolv/mapv4v6addr.h>
-
 #define ENTNAME         hostent
 #define DATABASE        "hosts"
 #define NEED_H_ERRNO
 
-#define EXTRA_ARGS      , af, flags
-#define EXTRA_ARGS_DECL , int af, int flags
+#define EXTRA_ARGS      , af
+#define EXTRA_ARGS_DECL , int af
 
 #define ENTDATA hostent_data
 struct hostent_data
@@ -66,19 +62,8 @@ LINE_PARSER
    /* Parse address.  */
    if (af != AF_INET6 && inet_pton (AF_INET, addr, entdata->host_addr) > 0)
      {
-       assert ((flags & AI_V4MAPPED) == 0 || af != AF_UNSPEC);
-       if (flags & AI_V4MAPPED)
-	 {
-	   map_v4v6_address ((char *) entdata->host_addr,
-			     (char *) entdata->host_addr);
-	   result->h_addrtype = AF_INET6;
-	   result->h_length = IN6ADDRSZ;
-	 }
-       else
-	 {
-	   result->h_addrtype = AF_INET;
-	   result->h_length = INADDRSZ;
-	 }
+       result->h_addrtype = AF_INET;
+       result->h_length = INADDRSZ;
      }
    else if (af != AF_INET
 	    && inet_pton (AF_INET6, addr, entdata->host_addr) > 0)
@@ -133,7 +118,7 @@ strong_alias (_nss_nis_sethostent, _nss_nis_endhostent)
 static enum nss_status
 internal_nis_gethostent_r (struct hostent *host, char *buffer,
 			   size_t buflen, int *errnop, int *h_errnop,
-			   int af, int flags)
+			   int af)
 {
   char *domain;
   if (__glibc_unlikely (yp_get_default_domain (&domain)))
@@ -202,7 +187,7 @@ internal_nis_gethostent_r (struct hostent *host, char *buffer,
 	++p;
       free (result);
 
-      parse_res = parse_line (p, host, data, buflen, errnop, af, flags);
+      parse_res = parse_line (p, host, data, buflen, errnop, af);
       if (__glibc_unlikely (parse_res == -1))
 	{
 	  free (outkey);
@@ -231,8 +216,7 @@ _nss_nis_gethostent_r (struct hostent *host, char *buffer, size_t buflen,
   __libc_lock_lock (lock);
 
   status = internal_nis_gethostent_r (host, buffer, buflen, errnop, h_errnop,
-			(res_use_inet6 () ? AF_INET6 : AF_INET),
-			(res_use_inet6 () ? AI_V4MAPPED : 0 ));
+				      AF_INET);
 
   __libc_lock_unlock (lock);
 
@@ -243,7 +227,7 @@ _nss_nis_gethostent_r (struct hostent *host, char *buffer, size_t buflen,
 static enum nss_status
 internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
 			   char *buffer, size_t buflen, int *errnop,
-			   int *h_errnop, int flags)
+			   int *h_errnop)
 {
   uintptr_t pad = -(uintptr_t) buffer % __alignof__ (struct parser_data);
   buffer += pad;
@@ -317,7 +301,7 @@ internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
     ++p;
   free (result);
 
-  int parse_res = parse_line (p, host, data, buflen, errnop, af, flags);
+  int parse_res = parse_line (p, host, data, buflen, errnop, af);
 
   if (__glibc_unlikely (parse_res < 1 || host->h_addrtype != af))
     {
@@ -350,8 +334,7 @@ _nss_nis_gethostbyname2_r (const char *name, int af, struct hostent *host,
     }
 
   return internal_gethostbyname2_r (name, af, host, buffer, buflen, errnop,
-				    h_errnop,
-			(res_use_inet6 () ? AI_V4MAPPED : 0));
+				    h_errnop);
 }
 
 
@@ -359,18 +342,8 @@ enum nss_status
 _nss_nis_gethostbyname_r (const char *name, struct hostent *host, char *buffer,
 			  size_t buflen, int *errnop, int *h_errnop)
 {
-  if (res_use_inet6 ())
-    {
-      enum nss_status status;
-
-      status = internal_gethostbyname2_r (name, AF_INET6, host, buffer, buflen,
-					  errnop, h_errnop, AI_V4MAPPED);
-      if (status == NSS_STATUS_SUCCESS)
-	return status;
-    }
-
   return internal_gethostbyname2_r (name, AF_INET, host, buffer, buflen,
-				    errnop, h_errnop, 0);
+				    errnop, h_errnop);
 }
 
 
@@ -432,8 +405,7 @@ _nss_nis_gethostbyaddr_r (const void *addr, socklen_t addrlen, int af,
     ++p;
   free (result);
 
-  int parse_res = parse_line (p, host, data, buflen, errnop, af,
-			      (res_use_inet6 () ? AI_V4MAPPED : 0));
+  int parse_res = parse_line (p, host, data, buflen, errnop, af);
   if (__glibc_unlikely (parse_res < 1))
     {
       if (parse_res == -1)
@@ -530,8 +502,7 @@ _nss_nis_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
   buflen -= pad;
 
   struct hostent host;
-  int parse_res = parse_line (result, &host, data, buflen, errnop, AF_UNSPEC,
-			      0);
+  int parse_res = parse_line (result, &host, data, buflen, errnop, AF_UNSPEC);
   if (__glibc_unlikely (parse_res < 1))
     {
       if (parse_res == -1)

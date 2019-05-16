@@ -42,15 +42,9 @@ static u_long tablename_len;
 #define NISENTRYLEN(idx, col, res) \
 	(NIS_RES_OBJECT (res)[idx].EN_data.en_cols.en_cols_val[col].ec_value.ec_value_len)
 
-/* Get implementation for some internal functions. */
-#include <resolv/resolv-internal.h>
-#include <resolv/mapv4v6addr.h>
-
-
 static int
 _nss_nisplus_parse_hostent (nis_result *result, int af, struct hostent *host,
-			    char *buffer, size_t buflen, int *errnop,
-			    int flags)
+			    char *buffer, size_t buflen, int *errnop)
 {
   unsigned int i;
   char *first_unused = buffer;
@@ -67,8 +61,7 @@ _nss_nisplus_parse_hostent (nis_result *result, int af, struct hostent *host,
 
   char *data = first_unused;
 
-  if (room_left < (af != AF_INET || (flags & AI_V4MAPPED) != 0
-		   ? IN6ADDRSZ : INADDRSZ))
+  if (room_left < (af != AF_INET ? IN6ADDRSZ : INADDRSZ))
     {
     no_more_room:
       *errnop = ERANGE;
@@ -79,18 +72,8 @@ _nss_nisplus_parse_hostent (nis_result *result, int af, struct hostent *host,
   if (af != AF_INET6
       && inet_pton (AF_INET, NISENTRYVAL (0, 2, result), data) > 0)
     {
-      assert ((flags & AI_V4MAPPED) == 0 || af != AF_UNSPEC);
-      if (flags & AI_V4MAPPED)
-	{
-	  map_v4v6_address (data, data);
-	  host->h_addrtype = AF_INET6;
-	  host->h_length = IN6ADDRSZ;
-	}
-      else
-	{
-	  host->h_addrtype = AF_INET;
-	  host->h_length = INADDRSZ;
-	}
+      host->h_addrtype = AF_INET;
+      host->h_length = INADDRSZ;
     }
   else if (af != AF_INET
 	   && inet_pton (AF_INET6, NISENTRYVAL (0, 2, result), data) > 0)
@@ -322,12 +305,8 @@ internal_nisplus_gethostent_r (struct hostent *host, char *buffer,
 	    }
 	}
 
-      if (res_use_inet6 ())
-	parse_res = _nss_nisplus_parse_hostent (result, AF_INET6, host, buffer,
-						buflen, errnop, AI_V4MAPPED);
-      else
-	parse_res = _nss_nisplus_parse_hostent (result, AF_INET, host, buffer,
-						buflen, errnop, 0);
+      parse_res = _nss_nisplus_parse_hostent (result, AF_INET, host, buffer,
+					      buflen, errnop);
 
       if (parse_res == -1)
 	{
@@ -382,7 +361,7 @@ get_tablename (int *herrnop)
 static enum nss_status
 internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
 			   char *buffer, size_t buflen, int *errnop,
-			   int *herrnop, int flags)
+			   int *herrnop)
 {
   if (tablename_val == NULL)
     {
@@ -457,7 +436,7 @@ internal_gethostbyname2_r (const char *name, int af, struct hostent *host,
     }
 
   int parse_res = _nss_nisplus_parse_hostent (result, af, host, buffer,
-					      buflen, errnop, flags);
+					      buflen, errnop);
 
   nis_freeresult (result);
 
@@ -488,8 +467,7 @@ _nss_nisplus_gethostbyname2_r (const char *name, int af, struct hostent *host,
     }
 
   return internal_gethostbyname2_r (name, af, host, buffer, buflen, errnop,
-				    herrnop,
-				    (res_use_inet6 () ? AI_V4MAPPED : 0));
+				    herrnop);
 }
 
 
@@ -498,19 +476,8 @@ _nss_nisplus_gethostbyname_r (const char *name, struct hostent *host,
 			      char *buffer, size_t buflen, int *errnop,
 			      int *h_errnop)
 {
-  if (res_use_inet6 ())
-    {
-      enum nss_status status;
-
-      status = internal_gethostbyname2_r (name, AF_INET6, host, buffer,
-					  buflen, errnop, h_errnop,
-					  AI_V4MAPPED);
-      if (status == NSS_STATUS_SUCCESS)
-	return status;
-    }
-
   return internal_gethostbyname2_r (name, AF_INET, host, buffer,
-				   buflen, errnop, h_errnop, 0);
+				   buflen, errnop, h_errnop);
 }
 
 
@@ -558,9 +525,7 @@ _nss_nisplus_gethostbyaddr_r (const void *addr, socklen_t addrlen, int af,
     }
 
   parse_res = _nss_nisplus_parse_hostent (result, af, host,
-					  buffer, buflen, errnop,
-					  (res_use_inet6 ()
-					   ? AI_V4MAPPED : 0));
+					  buffer, buflen, errnop);
   nis_freeresult (result);
 
   if (parse_res > 0)
@@ -587,7 +552,7 @@ _nss_nisplus_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
 
   enum nss_status status = internal_gethostbyname2_r (name, AF_UNSPEC, &host,
 						      buffer, buflen,
-						      errnop, herrnop, 0);
+						      errnop, herrnop);
   if (__glibc_likely (status == NSS_STATUS_SUCCESS))
     {
       if (*pat == NULL)

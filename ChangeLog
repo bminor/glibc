@@ -1,5 +1,38 @@
 2019-05-16  Florian Weimer  <fweimer@redhat.com>
 
+	* nis/nss_nis/nis-hosts.c (EXTRA_ARGS, EXTRA_ARGS_DECL): Remove
+	flags argument.
+	(LINE_PARSER): Do not map IPv4 addresses.
+	(internal_nis_gethostent_r): Remove flags argument.  Adjust call
+	to parse_line.
+	(_nss_nis_gethostent_r): Always pass AF_INET to
+	internal_nis_gethostent_r.
+	(internal_gethostbyname2_r): Remove flags argument.  Adjust call
+	to parse_line.
+	(_nss_nis_gethostbyname2_r): Adjust call to
+	internal_nis_gethostent_r.
+	(_nss_nis_gethostbyname_r): Do not attempt IPv6 query.  Adjust
+	call to internal_nis_gethostent_r.
+	(_nss_nis_gethostbyaddr_r): Do not request IPv4 address mapping
+	from parse_line.
+	(_nss_nis_gethostbyname4_r):Adjust call to parse_line.
+	* nis/nss_nisplus/nisplus-hosts.c (_nss_nisplus_parse_hostent):
+	Remove flags argument.  Do not map IPv4 addresses.
+	(internal_nisplus_gethostent_r): Adjust call to
+	_nss_nisplus_parse_hostent.
+	(internal_gethostbyname2_r): Remove flags argument.  Adjust call
+	to _nss_nisplus_parse_hostent.
+	(_nss_nisplus_gethostbyname2_r): Adjust call to
+	internal_gethostbyname2_r.
+	(_nss_nisplus_gethostbyname_r): Do not perform IPv6 lookup.
+	Adjust call to internal_gethostbyname2_r.
+	(_nss_nisplus_gethostbyaddr_r): Adjust call to
+	_nss_nisplus_parse_hostent.
+	(_nss_nisplus_gethostbyname4_r): Adjust call to
+	internal_gethostbyname2_r.
+
+2019-05-16  Florian Weimer  <fweimer@redhat.com>
+
 	* nss/nss_files/files-hosts.c (EXTRA_ARGS, EXTRA_ARGS_DECL):
 	Remove flags.
 	(LINE_PARSER): Remove address mapping.
