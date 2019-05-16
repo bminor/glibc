@@ -23,7 +23,6 @@
 int
 __lll_unlock_elision (int *lock, short *adapt_count, int pshared)
 {
-#ifndef __SPE__
   /* When the lock was free we're in a transaction.  */
   if (*lock == 0)
     __libc_tend (0);
@@ -40,8 +39,5 @@ __lll_unlock_elision (int *lock, short *adapt_count, int pshared)
 
       lll_unlock ((*lock), pshared);
     }
-#else
-  lll_unlock ((*lock), pshared);
-#endif
   return 0;
 }

@@ -19,6 +19,10 @@
 #ifndef _FPU_CONTROL_H
 #define _FPU_CONTROL_H
 
+#if defined __SPE__ || (defined __NO_FPRS__ && !defined _SOFT_FLOAT)
+# error "SPE/e500 is no longer supported"
+#endif
+
 #ifdef _SOFT_FLOAT
 
 # define _FPU_RESERVED 0xffffffff
@@ -26,41 +30,6 @@
 typedef unsigned int fpu_control_t;
 # define _FPU_GETCW(cw) (cw) = 0
 # define _FPU_SETCW(cw) (void) (cw)
-extern fpu_control_t __fpu_control;
-
-#elif defined __NO_FPRS__ /* e500 */
-
-/* rounding control */
-# define _FPU_RC_NEAREST 0x00   /* RECOMMENDED */
-# define _FPU_RC_DOWN    0x03
-# define _FPU_RC_UP      0x02
-# define _FPU_RC_ZERO    0x01
-
-/* masking of interrupts */
-# define _FPU_MASK_ZM  0x10 /* zero divide */
-# define _FPU_MASK_OM  0x04 /* overflow */
-# define _FPU_MASK_UM  0x08 /* underflow */
-# define _FPU_MASK_XM  0x40 /* inexact */
-# define _FPU_MASK_IM  0x20 /* invalid operation */
-
-# define _FPU_RESERVED 0x00c10080 /* These bits are reserved and not changed. */
-
-/* Correct IEEE semantics require traps to be enabled at the hardware
-   level; the kernel then does the emulation and determines whether
-   generation of signals from those traps was enabled using prctl.  */
-# define _FPU_DEFAULT  0x0000003c /* Default value.  */
-# define _FPU_IEEE     _FPU_DEFAULT
-
-/* Type of the control word.  */
-typedef unsigned int fpu_control_t;
-
-/* Macros for accessing the hardware control word.  */
-# define _FPU_GETCW(cw) \
-  __asm__ volatile ("mfspefscr %0" : "=r" (cw))
-# define _FPU_SETCW(cw) \
-  __asm__ volatile ("mtspefscr %0" : : "r" (cw))
-
-/* Default control word set at startup.  */
 extern fpu_control_t __fpu_control;
 
 #else /* PowerPC 6xx floating-point.  */

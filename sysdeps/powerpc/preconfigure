@@ -8,14 +8,18 @@ powerpc64*)
   base_machine=powerpc machine=powerpc/powerpc64/be
   ;;
 powerpc*)
-  # Check for e500.
-  $CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null > conftest.i
-  if grep -q __NO_FPRS__ conftest.i && ! grep -q _SOFT_FLOAT conftest.i; then
-    base_machine=powerpc machine=powerpc/powerpc32/e500
-  else
-    base_machine=powerpc machine=powerpc/powerpc32
-  fi
-  rm -f conftest.i
+  base_machine=powerpc machine=powerpc/powerpc32
   with_fp_cond="!defined __NO_FPRS__"
+  case "$host_os" in
+    *gnuspe*)
+      # SPE support was dropped in glibc 2.30.
+      # We can't use AC_MSG_ERROR here.
+      # The parent script is in the middle of printing the
+      # "checking for sysdeps preconfigure fragments" line.
+      echo >&2
+      echo "Host system type $host is no longer supported." >&2
+      exit 1
+    ;;
+  esac
   ;;
 esac

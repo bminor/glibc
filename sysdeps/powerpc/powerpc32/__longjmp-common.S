@@ -25,12 +25,6 @@
 # include <jmpbuf-offsets.h>
 #endif
 
-#if defined __SPE__ || (defined __NO_FPRS__ && !defined _SOFT_FLOAT)
-# define LOAD_GP(N)	evldd r##N,((JB_FPRS+((N)-14)*2)*4)(r3)
-#else
-# define LOAD_GP(N)	lwz r##N,((JB_GPRS+(N)-14)*4)(r3)
-#endif
-
 ENTRY (__longjmp_symbol)
 
 #if defined PTR_DEMANGLE || defined CHECK_SP
@@ -46,13 +40,13 @@ ENTRY (__longjmp_symbol)
 	lwz r1,(JB_GPR1*4)(r3)
 #endif
 	lwz r0,(JB_LR*4)(r3)
-	LOAD_GP (14)
-	LOAD_GP (15)
-	LOAD_GP (16)
-	LOAD_GP (17)
-	LOAD_GP (18)
-	LOAD_GP (19)
-	LOAD_GP (20)
+	lwz r14,((JB_GPRS+14-14)*4)(r3)
+	lwz r15,((JB_GPRS+15-14)*4)(r3)
+	lwz r16,((JB_GPRS+16-14)*4)(r3)
+	lwz r17,((JB_GPRS+17-14)*4)(r3)
+	lwz r18,((JB_GPRS+18-14)*4)(r3)
+	lwz r19,((JB_GPRS+19-14)*4)(r3)
+	lwz r20,((JB_GPRS+20-14)*4)(r3)
 #ifdef PTR_DEMANGLE
 # ifndef CHECK_SP
 	PTR_DEMANGLE3 (r1, r24, r25)
@@ -63,19 +57,19 @@ ENTRY (__longjmp_symbol)
 	   second argument (-4@4), and target address (4@0), respectively.  */
 	LIBC_PROBE (longjmp, 3, 4@3, -4@4, 4@0)
 	mtlr r0
-	LOAD_GP (21)
-	LOAD_GP (22)
+	lwz r21,((JB_GPRS+21-14)*4)(r3)
+	lwz r22,((JB_GPRS+22-14)*4)(r3)
 	lwz r5,(JB_CR*4)(r3)
-	LOAD_GP (23)
-	LOAD_GP (24)
-	LOAD_GP (25)
+	lwz r23,((JB_GPRS+23-14)*4)(r3)
+	lwz r24,((JB_GPRS+24-14)*4)(r3)
+	lwz r25,((JB_GPRS+25-14)*4)(r3)
 	mtcrf 0xFF,r5
-	LOAD_GP (26)
-	LOAD_GP (27)
-	LOAD_GP (28)
-	LOAD_GP (29)
-	LOAD_GP (30)
-	LOAD_GP (31)
+	lwz r26,((JB_GPRS+26-14)*4)(r3)
+	lwz r27,((JB_GPRS+27-14)*4)(r3)
+	lwz r28,((JB_GPRS+28-14)*4)(r3)
+	lwz r29,((JB_GPRS+29-14)*4)(r3)
+	lwz r30,((JB_GPRS+30-14)*4)(r3)
+	lwz r31,((JB_GPRS+31-14)*4)(r3)
 	LIBC_PROBE (longjmp_target, 3, 4@3, -4@4, 4@0)
 	mr r3,r4
 	blr
