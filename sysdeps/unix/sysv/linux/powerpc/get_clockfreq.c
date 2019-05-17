@@ -59,7 +59,7 @@ __get_clockfreq (void)
      timebase        : 33333333
      We search for this line and convert the number into an integer.  */
   int fd = __open_nocancel ("/proc/cpuinfo", O_RDONLY);
-  if (__glibc_likely (fd != -1))
+  if (__glibc_unlikely (fd == -1))
     return result;
 
   /* The timebase will be in the 1st 1024 bytes for systems with up
