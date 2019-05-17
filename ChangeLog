@@ -1,3 +1,11 @@
+2019-05-17  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* malloc/malloc.c (MAX_TCACHE_COUNT): Increase to UINT16_MAX.
+	(tcache_put): Remove redundant assert.
+	(tcache_get): Remove redundant asserts.
+	(__libc_malloc): Check tcache count is not zero.
+	* manual/tunables.texi (glibc.malloc.tcache_count): Update maximum.
+
 2019-02-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* malloc/malloc.c (tcache_get): Compare tcache->counts[tc_idx]
