@@ -1,3 +1,7 @@
+2019-05-17  Florian Weimer  <fweimer@redhat.com>
+
+	* manual/llio.texi (Open-time Flags): Document O_DIRECTORY.
+
 2019-05-16  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/alpha/kernel-features.h

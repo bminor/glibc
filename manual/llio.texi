@@ -3671,6 +3671,13 @@ The @code{O_EXCL} flag has a special meaning in combination with
 @code{O_TMPFILE}; see below.
 @end deftypevr
 
+@deftypevr Macro int O_DIRECTORY
+@standards{POSIX.1, fcntl.h}
+If set, the open operation fails if the given name is not the name of
+a directory.  The @code{errno} variable is set to @code{ENOTDIR} for
+this error condition.
+@end deftypevr
+
 @deftypevr Macro int O_TMPFILE
 @standards{GNU, fcntl.h}
 If this flag is specified, functions in the @code{open} family create an
