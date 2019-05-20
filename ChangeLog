@@ -1,5 +1,8 @@
 2019-05-20  Mike Crowe  <mac@mcrowe.com>
 
+	* support/timespec.c: Add backslash to correct newline in failure
+	message.
+
 	* support/timespec.h: Correct confusing comment.
 
 2019-05-20  Adhemerval Zanella  <adhemerval.zanella@linaro.org>

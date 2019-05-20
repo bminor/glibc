@@ -31,7 +31,7 @@ test_timespec_before_impl (const char *file, int line,
     support_record_failure ();
     const struct timespec diff = timespec_sub (left, right);
     printf ("%s:%d: %jd.%09jds not before %jd.%09jds "
-	    "(difference %jd.%09jds)n",
+	    "(difference %jd.%09jds)\n",
 	    file, line,
 	    (intmax_t) left.tv_sec, (intmax_t) left.tv_nsec,
 	    (intmax_t) right.tv_sec, (intmax_t) right.tv_nsec,
@@ -50,7 +50,7 @@ test_timespec_equal_or_after_impl (const char *file, int line,
     support_record_failure ();
     const struct timespec diff = timespec_sub (right, left);
     printf ("%s:%d: %jd.%09jds not after %jd.%09jds "
-	    "(difference %jd.%09jds)n",
+	    "(difference %jd.%09jds)\n",
 	    file, line,
 	    (intmax_t) left.tv_sec, (intmax_t) left.tv_nsec,
 	    (intmax_t) right.tv_sec, (intmax_t) right.tv_nsec,
