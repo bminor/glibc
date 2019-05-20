@@ -1,3 +1,8 @@
+2019-05-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* elf/elf.h (NT_ARM_PACA_KEYS): New macro.
+	(NT_ARM_PACG_KEYS): Likewise.
+
 2019-05-17  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* malloc/malloc.c (MAX_TCACHE_COUNT): Increase to UINT16_MAX.
