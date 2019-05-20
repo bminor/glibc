@@ -108,6 +108,8 @@ extern const char support_libdir_prefix[];
 /* Corresponds to the install's bin/ directory.  */
 extern const char support_bindir_prefix[];
 /* Corresponds to the install's sbin/ directory.  */
+extern const char support_sbindir_prefix[];
+/* Corresponds to the install's sbin/ directory (without prefix).  */
 extern const char support_install_rootsbindir[];
 
 extern ssize_t support_copy_file_range (int, off64_t *, int, off64_t *,

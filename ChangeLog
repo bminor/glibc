@@ -1,3 +1,10 @@
+2019-05-20  Florian Weimer  <fweimer@redhat.com>
+
+	* support/support.h (support_sbindir_prefix): Declare.
+	(support_install_rootsbindir): Update comment.
+	* support/Makefile (CFLAGS-support_paths.c): Define SBINDIR_PATH.
+	* support/support_paths.c (support_sbindir_prefix): Define.
+
 2019-05-20  Mike Crowe  <mac@mcrowe.com>
 
 	* support/timespec.c: Add backslash to correct newline in failure

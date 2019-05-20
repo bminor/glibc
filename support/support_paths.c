@@ -65,6 +65,13 @@ const char support_bindir_prefix[] = BINDIR_PATH;
 # error please -DBINDIR_PATH=something in the Makefile
 #endif
 
+#ifdef SBINDIR_PATH
+/* Corresponds to the install's bin/ directory.  */
+const char support_sbindir_prefix[] = SBINDIR_PATH;
+#else
+# error please -DSBINDIR_PATH=something in the Makefile
+#endif
+
 #ifdef ROOTSBINDIR_PATH
 /* Corresponds to the install's sbin/ directory.  */
 const char support_install_rootsbindir[] = ROOTSBINDIR_PATH;

@@ -181,6 +181,7 @@ CFLAGS-support_paths.c = \
 		-DINSTDIR_PATH=\"$(prefix)\" \
 		-DLIBDIR_PATH=\"$(libdir)\" \
 		-DBINDIR_PATH=\"$(bindir)\" \
+		-DSBINDIR_PATH=\"$(sbindir)\" \
 		-DROOTSBINDIR_PATH=\"$(rootsbindir)\"
 
 ifeq (,$(CXX))
