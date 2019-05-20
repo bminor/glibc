@@ -1,3 +1,7 @@
+2019-05-20  Mike Crowe  <mac@mcrowe.com>
+
+	* support/timespec.h: Correct confusing comment.
+
 2019-05-20  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/ipc_priv.h (SEMTIMEDOP_IPC_ARGS): New

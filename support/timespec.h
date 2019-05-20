@@ -62,8 +62,8 @@ void test_timespec_equal_or_after_impl (const char *file, int line,
     errno = saved_errno;                                        \
   })
 
-/* Check that the timespec on the left represents a after before the
-   time on the right. */
+/* Check that the timespec on the left represents a time equal to or
+   after the time on the right. */
 #define TEST_TIMESPEC_EQUAL_OR_AFTER(left, right)                       \
   test_timespec_equal_or_after_impl (__FILE__, __LINE__, left, right)
 
