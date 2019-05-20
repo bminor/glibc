@@ -58,10 +58,12 @@
 # undef __NR_pause
 #endif
 
-/* sparc only supports ipc syscall.  */
-#undef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
-#ifndef __arch64__
-# undef __ASSUME_SYSVIPC_DEFAULT_IPC_64
+/* sparc only supports ipc syscall before 5.1.  */
+#if __LINUX_KERNEL_VERSION < 0x050100
+# undef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
+# if !defined __arch64__
+#  undef __ASSUME_SYSVIPC_DEFAULT_IPC_64
+# endif
 #endif
 
 /* Support for the renameat2 syscall was added in 3.16.  */

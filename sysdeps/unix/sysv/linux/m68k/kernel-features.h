@@ -50,7 +50,9 @@
 # undef __ASSUME_SET_ROBUST_LIST
 #endif
 
-/* m68k only supports ipc syscall.  */
-#undef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
+/* m68k only supports ipc syscall before 5.1.  */
+#if __LINUX_KERNEL_VERSION < 0x050100
+# undef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
+# undef __ASSUME_SYSVIPC_DEFAULT_IPC_64
+#endif
 #define __ASSUME_SYSVIPC_BROKEN_MODE_T
-#undef __ASSUME_SYSVIPC_DEFAULT_IPC_64
