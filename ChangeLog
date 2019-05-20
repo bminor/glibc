@@ -1,5 +1,48 @@
 2019-05-20  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #24588]
+	libio: Remove codecvt vtable.
+	* libio/fileops.c ( _IO_new_file_fopen): Do not copy
+	__libio_codecvt.
+	* libio/iofgetpos.c (_IO_new_fgetpos): Call
+	__libio_codecvt_encoding.
+	* libio/iofgetpos64.c (_IO_new_fgetpos): Likewise.
+	* libio/iofsetpos.c (_IO_new_fsetpos): Likewise.
+	* libio/iofsetpos64.c (_IO_new_fsetpos): Likewise.
+	* libio/iofwide.c (__libio_codecvt): Remove variable.
+	(_IO_fwide): Do not copy __libio_codecvt.
+	(__libio_codecvt_out): Rename from do_out and export.
+	(do_unshift): Remove function.
+	(__libio_codecvt_in): Rename from do_in and export.
+	(__libio_codecvt_encoding): Rename from do_encoding and export.
+	(do_always_noconv): Remove function.
+	(__libio_codecvt_length): Rename from do_length and export.
+	(do_max_length): Remove function.
+	* libio/libio.h (enum __codecvt_result): Remove definition; moved
+	to libioP.h.
+	(struct _IO_codecvt): Remove fields __codecvt_destr,
+	__codecvt_do_out, __codecvt_do_unshift, __codecvt_do_in,
+	__codecvt_do_encoding, __codecvt_do_always_noconv,
+	__codecvt_do_length, __codecvt_do_max_length.
+	* libio/libioP.h (enum __codecvt_result): Define; moved from
+	libio.h.
+	(__libio_codecvt_out, __libio_codecvt_in)
+	(__libio_codecvt_encoding, __libio_codecvt_length): Declare
+	functions.
+	* libio/wfileops.c (_IO_wdo_write): Call __libio_codecvt_out.
+	(_IO_wfile_underflow): Call __libio_codecvt_in.
+	(_IO_wfile_underflow): Likewise.
+	(_IO_wfile_underflow_mmap): Likewise.
+	(_IO_wfile_sync): Call __libio_codecvt_encoding,
+	__libio_codecvt_length.
+	(adjust_wide_data): Call __libio_codecvt_encoding,
+	__libio_codecvt_in.
+	(do_ftell_wide): Call __libio_codecvt_length, __libio_codecvt_out.
+	(_IO_wfile_seekoff): Call __libio_codecvt_encoding,
+	__libio_codecvt_length.
+
+2019-05-20  Florian Weimer  <fweimer@redhat.com>
+
 	* support/support.h (support_sbindir_prefix): Declare.
 	(support_install_rootsbindir): Update comment.
 	* support/Makefile (CFLAGS-support_paths.c): Define SBINDIR_PATH.

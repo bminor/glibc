@@ -58,8 +58,7 @@ _IO_new_fsetpos (FILE *fp, const __fpos_t *posp)
   else
     {
       result = 0;
-      if (fp->_mode > 0
-	  && (*fp->_codecvt->__codecvt_do_encoding) (fp->_codecvt) < 0)
+      if (fp->_mode > 0 && __libio_codecvt_encoding (fp->_codecvt) < 0)
 	/* This is a stateful encoding, restore the state.  */
 	fp->_wide_data->_IO_state = posp->__state;
     }

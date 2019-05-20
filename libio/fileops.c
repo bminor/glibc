@@ -331,9 +331,6 @@ _IO_new_file_fopen (FILE *fp, const char *filename, const char *mode,
 
 	  cc = fp->_codecvt = &fp->_wide_data->_codecvt;
 
-	  /* The functions are always the same.  */
-	  *cc = __libio_codecvt;
-
 	  cc->__cd_in.__cd.__nsteps = fcts.towc_nsteps;
 	  cc->__cd_in.__cd.__steps = fcts.towc;
 

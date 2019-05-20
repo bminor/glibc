@@ -476,7 +476,6 @@ extern const struct _IO_jump_t _IO_streambuf_jumps;
 extern const struct _IO_jump_t _IO_old_proc_jumps attribute_hidden;
 extern const struct _IO_jump_t _IO_str_jumps attribute_hidden;
 extern const struct _IO_jump_t _IO_wstr_jumps attribute_hidden;
-extern const struct _IO_codecvt __libio_codecvt attribute_hidden;
 extern int _IO_do_write (FILE *, const char *, size_t);
 libc_hidden_proto (_IO_do_write)
 extern int _IO_new_do_write (FILE *, const char *, size_t);
@@ -931,5 +930,33 @@ IO_validate_vtable (const struct _IO_jump_t *vtable)
     _IO_vtable_check ();
   return vtable;
 }
+
+/* Character set conversion.  */
+
+enum __codecvt_result
+{
+  __codecvt_ok,
+  __codecvt_partial,
+  __codecvt_error,
+  __codecvt_noconv
+};
+
+enum __codecvt_result __libio_codecvt_out (struct _IO_codecvt *,
+					   __mbstate_t *,
+					   const wchar_t *,
+					   const wchar_t *,
+					   const wchar_t **, char *,
+					   char *, char **)
+  attribute_hidden;
+enum __codecvt_result __libio_codecvt_in (struct _IO_codecvt *,
+					  __mbstate_t *,
+					  const char *, const char *,
+					  const char **, wchar_t *,
+					  wchar_t *, wchar_t **)
+  attribute_hidden;
+int __libio_codecvt_encoding (struct _IO_codecvt *) attribute_hidden;
+int __libio_codecvt_length (struct _IO_codecvt *, __mbstate_t *,
+			    const char *, const char *, size_t)
+  attribute_hidden;
 
 #endif /* libioP.h.  */

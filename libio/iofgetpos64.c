@@ -54,8 +54,7 @@ _IO_new_fgetpos64 (FILE *fp, __fpos64_t *posp)
   else
     {
       posp->__pos = pos;
-      if (fp->_mode > 0
-	  && (*fp->_codecvt->__codecvt_do_encoding) (fp->_codecvt) < 0)
+      if (fp->_mode > 0 && __libio_codecvt_encoding (fp->_codecvt) < 0)
 	/* This is a stateful encoding, safe the state.  */
 	posp->__state = fp->_wide_data->_IO_state;
     }
