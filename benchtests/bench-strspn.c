@@ -60,7 +60,7 @@ SIMPLE_STRSPN (const CHAR *s, const CHAR *acc)
 static void
 do_one_test (impl_t *impl, const CHAR *s, const CHAR *acc, size_t exp_res)
 {
-  size_t res = CALL (impl, s, acc), i, iters = INNER_LOOP_ITERS;
+  size_t res = CALL (impl, s, acc), i, iters = INNER_LOOP_ITERS_MEDIUM;
   timing_t start, stop, cur;
 
   if (res != exp_res)

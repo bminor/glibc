@@ -1,3 +1,20 @@
+2019-05-21  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* benchtests/bench-memcpy-random.c (do_one_test): Use medium iterations.
+	* benchtests/bench-memcpy-walk.c (test_main): Reduce alignment tests.
+	* benchtests/bench-memmem.c (do_one_test): Use small iterations.
+	* benchtests/bench-memmove-walk.c (test_main): Reduce alignment tests.
+	* benchtests/bench-memset-walk.c (test_main): Reduce alignment tests.
+	* benchtests/bench-strcasestr.c (do_one_test): Use small iterations.
+	* benchtests/bench-string.h (INNER_LOOP_ITERS): Increase iterations.
+	(INNER_LOOP_ITERS_MEDIUM): New define.
+	(INNER_LOOP_ITERS_SMALL): New define.
+	* benchtests/bench-strpbrk.c (do_one_test): Use medium iterations.
+	* benchtests/bench-strsep.c (do_one_test): Use small iterations.
+	* benchtests/bench-strspn.c (do_one_test): Use medium iterations.
+	* benchtests/bench-strstr.c (do_one_test): Use small iterations.
+	* benchtests/bench-strtok.c (do_one_test): Use small iterations.
+
 2019-05-21  Adhemeval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/powerpc/ipc_priv.h (SEMTIMEDOP_IPC_ARGS):

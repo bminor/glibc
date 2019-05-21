@@ -36,7 +36,7 @@ IMPL (strcasestr, 1)
 static void
 do_one_test (impl_t *impl, const char *s1, const char *s2, char *exp_result)
 {
-  size_t i, iters = INNER_LOOP_ITERS;
+  size_t i, iters = INNER_LOOP_ITERS_SMALL;
   timing_t start, stop, cur;
 
   TIMING_NOW (start);

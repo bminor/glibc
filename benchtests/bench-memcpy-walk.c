@@ -103,12 +103,8 @@ test_main (void)
   json_array_begin (&json_ctx, "results");
   for (size_t i = START_SIZE; i <= MIN_PAGE_SIZE; i <<= 1)
     {
-      /* Test length alignments from 0-16 bytes.  */
-      for (int j = 0; j < 8; j++)
-	{
-	  do_test (&json_ctx, i + j);
-	  do_test (&json_ctx, i + 16 - j);
-	}
+      do_test (&json_ctx, i);
+      do_test (&json_ctx, i + 1);
     }
 
   json_array_end (&json_ctx);

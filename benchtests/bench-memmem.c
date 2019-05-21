@@ -105,7 +105,7 @@ static void
 do_one_test (impl_t *impl, const void *haystack, size_t haystack_len,
 	     const void *needle, size_t needle_len, const void *expected)
 {
-  size_t i, iters = INNER_LOOP_ITERS;
+  size_t i, iters = INNER_LOOP_ITERS_SMALL;
   timing_t start, stop, cur;
 
   TIMING_NOW (start);

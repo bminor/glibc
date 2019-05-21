@@ -107,23 +107,15 @@ test_main (void)
   /* Non-overlapping buffers.  */
   for (size_t i = START_SIZE; i <= MIN_PAGE_SIZE; i <<= 1)
     {
-      /* Test length alignments from 0-16 bytes.  */
-      for (int j = 0; j < 8; j++)
-	{
-	  do_test (&json_ctx, i + j, false);
-	  do_test (&json_ctx, i + 16 - j, false);
-	}
+      do_test (&json_ctx, i, false);
+      do_test (&json_ctx, i + 1, false);
     }
 
   /* Overlapping buffers.  */
   for (size_t i = START_SIZE; i <= MIN_PAGE_SIZE; i <<= 1)
     {
-      /* Test length alignments from 0-16 bytes.  */
-      for (int j = 0; j < 8; j++)
-	{
-	  do_test (&json_ctx, i + j, true);
-	  do_test (&json_ctx, i + 16 - j, true);
-	}
+      do_test (&json_ctx, i, true);
+      do_test (&json_ctx, i + 1, true);
     }
 
   json_array_end (&json_ctx);

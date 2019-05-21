@@ -101,7 +101,7 @@ do_one_test (json_ctx_t *json_ctx, impl_t *impl, char *dst, char *src,
 	     copy_t *copy, size_t n)
 {
   timing_t start, stop, cur;
-  size_t iters = INNER_LOOP_ITERS * 20;
+  size_t iters = INNER_LOOP_ITERS_MEDIUM;
 
   TIMING_NOW (start);
   for (int i = 0; i < iters; ++i)
