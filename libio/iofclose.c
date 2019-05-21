@@ -26,8 +26,8 @@
 
 #include "libioP.h"
 #include <stdlib.h>
-#include "../iconv/gconv_int.h"
 #include <shlib-compat.h>
+#include <wcsmbs/wcsmbsload.h>
 
 int
 _IO_new_fclose (FILE *fp)
@@ -60,11 +60,14 @@ _IO_new_fclose (FILE *fp)
       /* This stream has a wide orientation.  This means we have to free
 	 the conversion functions.  */
       struct _IO_codecvt *cc = fp->_codecvt;
-
-      __libc_lock_lock (__gconv_lock);
-      __gconv_release_step (cc->__cd_in.__cd.__steps);
-      __gconv_release_step (cc->__cd_out.__cd.__steps);
-      __libc_lock_unlock (__gconv_lock);
+      struct gconv_fcts conv =
+	{
+	 .towc = cc->__cd_in.__cd.__steps,
+	 .towc_nsteps = cc->__cd_in.__cd.__nsteps,
+	 .tomb = cc->__cd_out.__cd.__steps,
+	 .tomb_nsteps = cc->__cd_out.__cd.__nsteps,
+	};
+      __wcsmbs_close_conv (&conv);
     }
   else
     {

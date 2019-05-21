@@ -1,3 +1,20 @@
+2019-05-21  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24583]
+	* wcsmbs/wcsmbsload.h (__wcsmbs_close_conv): Declare.
+	* wcsmbs/wcsmbsload.c (__wcsmbs_close_conv): Define.
+	* libio/iofclose.c (_IO_new_fclose): Call __wcsmbs_close_conv
+	instead of __gconv_release_step.
+	* libio/Makefile (tests): Add tst-wfile-gconv.
+	(tests-container): Add tst-wfile-ascii.
+	(tst-wfile-gconv-ENV): Enable mtrace.
+	(generated): Add tst-wfile-gconv.mtrace, tst-wfile-gconv.check.
+	(tests-special): Add tst-wfile-gconv-mem.out.
+	(tst-wfile-gconv.out): Depend on locales.
+	(tst-wfile-gconv-mem.out): Add mtrace rule.
+	* libio/tst-wfile-ascii.c: New file.
+	* libio/tst-wfile-gconv.c: Likewise.
+
 2019-05-20  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #24588]

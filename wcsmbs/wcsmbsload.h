@@ -51,6 +51,7 @@ extern int __wcsmbs_named_conv (struct gconv_fcts *copy, const char *name)
 /* Function used for the `private.cleanup' hook.  */
 extern void _nl_cleanup_ctype (struct __locale_data *) attribute_hidden;
 
+extern void __wcsmbs_close_conv (struct gconv_fcts *conv) attribute_hidden;
 
 #include <iconv/gconv_int.h>
 

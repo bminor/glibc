@@ -66,7 +66,11 @@ tests = tst_swprintf tst_wprintf tst_swscanf tst_wscanf tst_getwc tst_putwc   \
 	tst-fwrite-error tst-ftell-partial-wide tst-ftell-active-handler \
 	tst-ftell-append tst-fputws tst-bz22415 tst-fgetc-after-eof \
 	tst-sprintf-ub tst-sprintf-chk-ub tst-bz24051 tst-bz24153 \
-	tst-wfile-sync
+	tst-wfile-sync tst-wfile-gconv
+
+# This test tests interaction with the gconv cache.  Setting
+# GCONV_CACHE during out-of-container testing disables the cache.
+tests-container += tst-wfile-ascii
 
 tests-internal = tst-vtables tst-vtables-interposed tst-readline
 
@@ -163,10 +167,12 @@ tst_wprintf2-ARGS = "Some Text"
 test-fmemopen-ENV = MALLOC_TRACE=$(objpfx)test-fmemopen.mtrace
 tst-fopenloc-ENV = MALLOC_TRACE=$(objpfx)tst-fopenloc.mtrace
 tst-bz22415-ENV = MALLOC_TRACE=$(objpfx)tst-bz22415.mtrace
+tst-wfile-gconv-ENV = MALLOC_TRACE=$(objpfx)tst-wfile-gconv.mtrace
 
 generated += test-fmemopen.mtrace test-fmemopen.check
 generated += tst-fopenloc.mtrace tst-fopenloc.check
 generated += tst-bz22415.mtrace tst-bz22415.check
+generated += tst-wfile-gconv.mtrace tst-wfile-gconv.check
 
 aux	:= fileops genops stdfiles stdio strops
 
@@ -181,7 +187,8 @@ shared-only-routines = oldiofopen oldiofdopen oldiofclose oldfileops	\
 
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)test-freopen.out $(objpfx)test-fmemopen-mem.out \
-		 $(objpfx)tst-bz22415-mem.out
+		 $(objpfx)tst-bz22415-mem.out \
+		 $(objpfx)tst-wfile-gconv-mem.out
 ifeq (yes,$(build-shared))
 # Run tst-fopenloc-cmp.out and tst-openloc-mem.out only if shared
 # library is enabled since they depend on tst-fopenloc.out.
@@ -214,6 +221,7 @@ $(objpfx)tst-ungetwc2.out: $(gen-locales)
 $(objpfx)tst-widetext.out: $(gen-locales)
 $(objpfx)tst_wprintf2.out: $(gen-locales)
 $(objpfx)tst-wfile-sync.out: $(gen-locales)
+$(objpfx)tst-wfile-gconv.out: $(gen-locales)
 endif
 
 $(objpfx)test-freopen.out: test-freopen.sh $(objpfx)test-freopen
@@ -236,4 +244,8 @@ $(objpfx)tst-fopenloc-mem.out: $(objpfx)tst-fopenloc.out
 
 $(objpfx)tst-bz22415-mem.out: $(objpfx)tst-bz22415.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-bz22415.mtrace > $@; \
+	$(evaluate-test)
+
+$(objpfx)tst-wfile-gconv-mem.out: $(objpfx)tst-wfile-gconv.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-wfile-gconv.mtrace > $@; \
 	$(evaluate-test)
