@@ -20,6 +20,7 @@
 #include <langinfo.h>
 #include <limits.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 #include <locale/localeinfo.h>
@@ -223,12 +224,25 @@ __wcsmbs_clone_conv (struct gconv_fcts *copy)
   /* Copy the data.  */
   *copy = *orig;
 
-  /* Now increment the usage counters.
-     Note: This assumes copy->*_nsteps == 1.  */
+  /* Now increment the usage counters.  Note: This assumes
+     copy->*_nsteps == 1.  The current locale holds a reference, so it
+     is still there after acquiring the lock.  */
+
+  __libc_lock_lock (__gconv_lock);
+
+  bool overflow = false;
   if (copy->towc->__shlib_handle != NULL)
-    ++copy->towc->__counter;
+    overflow |= __builtin_add_overflow (copy->towc->__counter, 1,
+					&copy->towc->__counter);
   if (copy->tomb->__shlib_handle != NULL)
-    ++copy->tomb->__counter;
+    overflow |= __builtin_add_overflow (copy->tomb->__counter, 1,
+					&copy->tomb->__counter);
+
+  __libc_lock_unlock (__gconv_lock);
+
+  if (overflow)
+    __libc_fatal ("\
+Fatal glibc error: gconv module reference counter overflow\n");
 }
 
 

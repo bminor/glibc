@@ -1,5 +1,14 @@
 2019-05-21  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #24584]
+	* wcsmbs/wcsmbsload.c (__wcsmbs_clone_conv): Acquire __gconv_lock
+	before updating __counter field and release it afterwards.  Add
+	overflow check.
+	* iconv/gconv.h (struct __gconv_step): Mention synchronization
+	requirement for __counter member.
+
+2019-05-21  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #24583]
 	* wcsmbs/wcsmbsload.h (__wcsmbs_close_conv): Declare.
 	* wcsmbs/wcsmbsload.c (__wcsmbs_close_conv): Define.

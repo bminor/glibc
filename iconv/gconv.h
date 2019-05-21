@@ -86,6 +86,8 @@ struct __gconv_step
   struct __gconv_loaded_object *__shlib_handle;
   const char *__modname;
 
+  /* For internal use by glibc.  (Accesses to this member must occur
+     when the internal __gconv_lock mutex is acquired).  */
   int __counter;
 
   char *__from_name;
