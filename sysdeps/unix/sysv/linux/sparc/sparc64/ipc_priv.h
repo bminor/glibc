@@ -38,4 +38,7 @@ struct __old_ipc_perm
 /* Also for msgrcv it does not use the kludge on final 2 arguments.  */
 #define MSGRCV_ARGS(__msgp, __msgtyp) __msgp, __msgtyp
 
+#define SEMTIMEDOP_IPC_ARGS(__nsops, __sops, __timeout) \
+  (__nsops), 0, (__sops), (__timeout)
+
 #include <ipc_ops.h>

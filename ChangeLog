@@ -1,3 +1,10 @@
+2019-05-21  Adhemeval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/powerpc/ipc_priv.h (SEMTIMEDOP_IPC_ARGS):
+	New define.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/ipc_priv.h
+	(SEMTIMEDOP_IPC_ARGS): Likewise.
+
 2019-05-21  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #24584]
