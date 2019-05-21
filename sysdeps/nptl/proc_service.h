@@ -22,6 +22,9 @@
 /* The definitions in this file must correspond to those in the debugger.  */
 #include <sys/procfs.h>
 
+#include <bits/types/size_t.h>
+#include <bits/types/pid_t.h>
+
 __BEGIN_DECLS
 
 /* Functions in this interface return one of these status codes.  */

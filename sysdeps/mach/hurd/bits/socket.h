@@ -25,7 +25,7 @@
 #endif
 
 
-#include <sys/types.h>
+#include <bits/types.h>
 #include <bits/types/size_t.h>
 #include <bits/types/socklen_t.h>
 #include <bits/wordsize.h>

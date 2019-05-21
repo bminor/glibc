@@ -25,6 +25,8 @@
 
 /* Define types required by the standard.  */
 #include <bits/types/size_t.h>
+#include <bits/types/pid_t.h>
+#include <bits/types/time_t.h>
 #ifdef __USE_GNU
 # include <bits/types/struct_timespec.h>
 #endif

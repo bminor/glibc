@@ -24,7 +24,6 @@
    with the goal to share the same code in the debugger.  */
 #include <pthread.h>
 #include <stdint.h>
-#include <sys/types.h>
 #include <sys/procfs.h>
 #include <bits/types/sigset_t.h>
 

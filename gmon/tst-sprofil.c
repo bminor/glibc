@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/profil.h>
+#include <sys/time.h>
 
 #include <bits/wordsize.h>
 

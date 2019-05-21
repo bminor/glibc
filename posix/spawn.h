@@ -21,7 +21,10 @@
 
 #include <features.h>
 #include <sched.h>
-#include <sys/types.h>
+
+#include <bits/types.h>
+#include <bits/types/mode_t.h>
+#include <bits/types/pid_t.h>
 #include <bits/types/sigset_t.h>
 
 

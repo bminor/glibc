@@ -23,7 +23,10 @@
 
 __BEGIN_DECLS
 
+#include <bits/types.h>
 #include <bits/types/size_t.h>
+#include <bits/types/ssize_t.h>
+#include <bits/types/socklen_t.h>
 #include <bits/types/struct_iovec.h>
 
 /* This operating system-specific header file defines the SOCK_*, PF_*,

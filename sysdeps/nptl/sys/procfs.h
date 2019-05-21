@@ -19,7 +19,8 @@
 #ifndef _SYS_PROCFS_H
 #define _SYS_PROCFS_H	1
 
-#include <sys/types.h>
+#include <features.h>
+#include <bits/types.h>
 
 /* The rest of this file provides the types for emulation of the
    Solaris <proc_service.h> interfaces that should be implemented by

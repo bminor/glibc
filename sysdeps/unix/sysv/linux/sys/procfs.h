@@ -30,8 +30,10 @@
    GDB unless you know what you are doing.  */
 
 #include <features.h>
-#include <sys/time.h>
-#include <sys/types.h>
+
+#include <bits/types.h>
+#include <bits/types/struct_timeval.h>
+
 #include <sys/user.h>
 
 /* bits/procfs.h, provided by each architecture, must define

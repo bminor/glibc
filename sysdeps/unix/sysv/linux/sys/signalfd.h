@@ -18,7 +18,8 @@
 #ifndef	_SYS_SIGNALFD_H
 #define	_SYS_SIGNALFD_H	1
 
-#include <stdint.h>
+#include <features.h>
+#include <bits/types.h>
 #include <bits/types/sigset_t.h>
 
 /* Get the platform-dependent flags.  */
@@ -26,28 +27,28 @@
 
 struct signalfd_siginfo
 {
-  uint32_t ssi_signo;
-  int32_t ssi_errno;
-  int32_t ssi_code;
-  uint32_t ssi_pid;
-  uint32_t ssi_uid;
-  int32_t ssi_fd;
-  uint32_t ssi_tid;
-  uint32_t ssi_band;
-  uint32_t ssi_overrun;
-  uint32_t ssi_trapno;
-  int32_t ssi_status;
-  int32_t ssi_int;
-  uint64_t ssi_ptr;
-  uint64_t ssi_utime;
-  uint64_t ssi_stime;
-  uint64_t ssi_addr;
-  uint16_t ssi_addr_lsb;
-  uint16_t __pad2;
-  int32_t ssi_syscall;
-  uint64_t ssi_call_addr;
-  uint32_t ssi_arch;
-  uint8_t __pad[28];
+  __uint32_t ssi_signo;
+  __int32_t ssi_errno;
+  __int32_t ssi_code;
+  __uint32_t ssi_pid;
+  __uint32_t ssi_uid;
+  __int32_t ssi_fd;
+  __uint32_t ssi_tid;
+  __uint32_t ssi_band;
+  __uint32_t ssi_overrun;
+  __uint32_t ssi_trapno;
+  __int32_t ssi_status;
+  __int32_t ssi_int;
+  __uint64_t ssi_ptr;
+  __uint64_t ssi_utime;
+  __uint64_t ssi_stime;
+  __uint64_t ssi_addr;
+  __uint16_t ssi_addr_lsb;
+  __uint16_t __pad2;
+  __int32_t ssi_syscall;
+  __uint64_t ssi_call_addr;
+  __uint32_t ssi_arch;
+  __uint8_t __pad[28];
 };
 
 __BEGIN_DECLS

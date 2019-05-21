@@ -16,10 +16,14 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifndef _BITS_FCNTL_H
+#define _BITS_FCNTL_H 1
+
 #ifndef	_FCNTL_H
 #error "Never use <bits/fcntl.h> directly; include <fcntl.h> instead."
 #endif
 
+#include <bits/types.h>
 
 /* File access modes for `open' and `fcntl'.  */
 #define	O_RDONLY	0	/* Open read-only.  */
@@ -104,9 +108,6 @@
 /* File descriptor flags used with F_GETFD and F_SETFD.  */
 #define	FD_CLOEXEC	1	/* Close on exec.  */
 
-
-#include <bits/types.h>
-
 /* The structure describing an advisory lock.  This is the type of the third
    argument to `fcntl' for the F_GETLK, F_SETLK, and F_SETLKW requests.  */
 struct flock
@@ -143,4 +144,6 @@ struct flock64
 # define POSIX_FADV_WILLNEED	3 /* Will need these pages.  */
 # define POSIX_FADV_DONTNEED	4 /* Don't need these pages.  */
 # define POSIX_FADV_NOREUSE	5 /* Data will be accessed once.  */
+#endif
+
 #endif

@@ -17,19 +17,28 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifndef _BITS_PROCFS_H
+#define _BITS_PROCFS_H 1
+
 #ifndef _SYS_PROCFS_H
 # error "Never include <bits/procfs.h> directly; use <sys/procfs.h> instead."
 #endif
+
+#include <bits/types.h>
 
 /* Type for a general-purpose register.  */
 typedef __uint64_t elf_greg_t;
 
 /* And the whole bunch of them.  We could have used `struct
-   pt_regs' directly in the typedef, but tradition says that
+   user_regs_struct' directly in the typedef, but tradition says that
    the register set is an array, which does have some peculiar
-   semantics, so leave it that way.  */
+   semantics, so leave it that way.
+
+   struct user_regs_struct is defined in sys/user.h.  */
 #define ELF_NGREG (sizeof (struct user_regs_struct) / sizeof (elf_greg_t))
 typedef elf_greg_t elf_gregset_t[ELF_NGREG];
 
 /* Register set for the floating-point registers.  */
 typedef struct user_fpsimd_struct elf_fpregset_t;
+
+#endif /* bits/procfs.h */

@@ -16,10 +16,16 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifndef _BITS_PROCFS_H
+#define _BITS_PROCFS_H 1
+
 #ifndef _SYS_PROCFS_H
 # error "Never include <bits/procfs.h> directly; use <sys/procfs.h> instead."
 #endif
 
+/* FIXME: sys/ucontext.h does not define NGREG or NFPREG unless
+   __USE_MISC is active, and sys/procfs.h should not expose all of
+   sys/ucontext.h.  */
 #include <sys/ucontext.h>
 
 /* ELF register definitions */
@@ -29,3 +35,5 @@
 typedef unsigned long int elf_greg_t;
 typedef unsigned long int elf_gregset_t[32];
 typedef union __riscv_mc_fp_state elf_fpregset_t;
+
+#endif /* bits/procfs.h */

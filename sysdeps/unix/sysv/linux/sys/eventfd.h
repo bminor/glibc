@@ -18,13 +18,14 @@
 #ifndef	_SYS_EVENTFD_H
 #define	_SYS_EVENTFD_H	1
 
-#include <stdint.h>
+#include <features.h>
+#include <bits/types.h>
 
 /* Get the platform-dependent flags.  */
 #include <bits/eventfd.h>
 
 /* Type for event counter.  */
-typedef uint64_t eventfd_t;
+typedef __uint64_t eventfd_t;
 
 
 __BEGIN_DECLS

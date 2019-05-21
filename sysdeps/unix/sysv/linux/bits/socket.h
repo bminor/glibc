@@ -24,7 +24,7 @@
 #endif
 
 
-#include <sys/types.h>
+#include <bits/types.h>
 #include <bits/types/size_t.h>
 #include <bits/types/socklen_t.h>
 
@@ -337,9 +337,9 @@ enum
 /* User visible structure for SCM_CREDENTIALS message */
 struct ucred
 {
-  pid_t pid;			/* PID of sending process.  */
-  uid_t uid;			/* UID of sending process.  */
-  gid_t gid;			/* GID of sending process.  */
+  __pid_t pid;			/* PID of sending process.  */
+  __uid_t uid;			/* UID of sending process.  */
+  __gid_t gid;			/* GID of sending process.  */
 };
 #endif
 

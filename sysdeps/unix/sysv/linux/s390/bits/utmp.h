@@ -1,4 +1,4 @@
-/* The `struct utmp' type, describing entries in the utmp file.  GNU version.
+/* The `struct utmp' type, describing entries in the utmp file.  S/390 version.
    Copyright (C) 1993-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,14 +16,12 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifndef _BITS_UTMP_H
+#define _BITS_UTMP_H 1
+
 #ifndef _UTMP_H
 # error "Never include <bits/utmp.h> directly; use <utmp.h> instead."
 #endif
-
-#include <paths.h>
-#include <sys/time.h>
-#include <sys/types.h>
-#include <bits/wordsize.h>
 
 
 #define UT_LINESIZE	32
@@ -35,11 +33,7 @@
    previous logins.  */
 struct lastlog
   {
-#if __WORDSIZE == 32
-    int64_t ll_time;
-#else
-    __time_t ll_time;
-#endif
+    __time64_t ll_time;
     char ll_line[UT_LINESIZE];
     char ll_host[UT_HOSTSIZE];
   };
@@ -64,28 +58,25 @@ struct utmp
   char ut_id[4]
     __attribute_nonstring__;	/* Inittab ID.  */
   char ut_user[UT_NAMESIZE]
-     __attribute_nonstring__;	/* Username.  */
+    __attribute_nonstring__;	/* Username.  */
   char ut_host[UT_HOSTSIZE]
-     __attribute_nonstring__;	/* Hostname for remote login.  */
+    __attribute_nonstring__;	/* Hostname for remote login.  */
   struct exit_status ut_exit;	/* Exit status of a process marked
 				   as DEAD_PROCESS.  */
+
 /* The ut_session and ut_tv fields must be the same size when compiled
    32- and 64-bit.  This allows data files and shared memory to be
-   shared between 32- and 64-bit applications.  */
-#if __WORDSIZE == 32
-  int64_t ut_session;		/* Session ID, used for windowing.  */
+   shared between 32- and 64-bit applications.  Even on 64-bit systems,
+   struct timeval is not guaranteed to have both fields be 64 bits.  */
+  __int64_t ut_session;		/* Session ID, used for windowing.  */
   struct
   {
-    int64_t tv_sec;		/* Seconds.  */
-    int64_t tv_usec;		/* Microseconds.  */
+    __int64_t tv_sec;		/* Seconds.  */
+    __int64_t tv_usec;		/* Microseconds.  */
   } ut_tv;			/* Time entry was made.  */
-#else
-  long int ut_session;		/* Session ID, used for windowing.  */
-  struct timeval ut_tv;		/* Time entry was made.  */
-#endif
 
-  int32_t ut_addr_v6[4];	/* Internet address of remote host.  */
-  char __glibc_reserved[20];		/* Reserved for future use.  */
+  __int32_t ut_addr_v6[4];	/* Internet address of remote host.  */
+  char __glibc_reserved[20];	/* Reserved for future use.  */
 };
 
 /* Backwards compatibility hacks.  */
@@ -125,3 +116,5 @@ struct utmp
 #define _HAVE_UT_ID	1
 #define _HAVE_UT_TV	1
 #define _HAVE_UT_HOST	1
+
+#endif /* bits/utmp.h */

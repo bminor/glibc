@@ -26,7 +26,7 @@
 __BEGIN_DECLS
 
 /* Read the time base frequency.   */
-extern uint64_t __ppc_get_timebase_freq (void);
+extern __uint64_t __ppc_get_timebase_freq (void);
 
 __END_DECLS
 

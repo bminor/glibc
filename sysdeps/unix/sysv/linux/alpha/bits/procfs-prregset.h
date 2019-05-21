@@ -17,9 +17,18 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifndef _BITS_PROCFS_PRREGSET_H
+#define _BITS_PROCFS_PRREGSET_H 1
+
 #ifndef _SYS_PROCFS_H
 # error "Never include <bits/procfs-prregset.h> directly; use <sys/procfs.h> instead."
 #endif
 
+/* For gregset_t and fpregset_t.  FIXME: sys/procfs.h should not
+   expose all of sys/ucontext.h.  */
+#include <sys/ucontext.h>
+
 typedef gregset_t __prgregset_t;
 typedef fpregset_t __prfpregset_t;
+
+#endif

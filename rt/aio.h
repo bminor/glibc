@@ -23,7 +23,12 @@
 #define _AIO_H	1
 
 #include <features.h>
-#include <sys/types.h>
+
+#include <bits/types.h>
+#include <bits/pthreadtypes.h>
+#include <bits/types/off_t.h>
+#include <bits/types/size_t.h>
+#include <bits/types/ssize_t.h>
 #include <bits/types/sigevent_t.h>
 #include <bits/sigevent-consts.h>
 #include <bits/types/struct_timespec.h>

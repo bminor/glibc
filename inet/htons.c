@@ -16,6 +16,8 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <netinet/in.h>
+#include <endian.h>
+#include <stdint.h>
 
 #undef	htons
 #undef	ntohs

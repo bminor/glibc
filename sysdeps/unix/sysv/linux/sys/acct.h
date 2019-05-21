@@ -18,10 +18,10 @@
 #ifndef _SYS_ACCT_H
 #define _SYS_ACCT_H	1
 
-#include <sys/types.h>
-#include <stdint.h>
+#include <features.h>
+
 #include <bits/endian.h>
-#include <bits/types/time_t.h>
+#include <bits/stdint-uintn.h>
 
 __BEGIN_DECLS
 

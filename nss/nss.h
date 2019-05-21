@@ -22,7 +22,7 @@
 #define _NSS_H	1
 
 #include <features.h>
-#include <stdint.h>
+#include <bits/types.h>
 
 
 __BEGIN_DECLS
@@ -44,8 +44,8 @@ struct gaih_addrtuple
     struct gaih_addrtuple *next;
     char *name;
     int family;
-    uint32_t addr[4];
-    uint32_t scopeid;
+    __uint32_t addr[4];
+    __uint32_t scopeid;
   };
 
 

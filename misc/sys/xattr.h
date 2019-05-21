@@ -19,8 +19,9 @@
 #define _SYS_XATTR_H	1
 
 #include <features.h>
-#include <sys/types.h>
 
+#include <bits/types/size_t.h>
+#include <bits/types/ssize_t.h>
 
 __BEGIN_DECLS
 

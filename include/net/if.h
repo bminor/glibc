@@ -1,6 +1,6 @@
 #ifndef _NET_IF_H
 
-# include_next <net/if.h>
+#include <socket/net/if.h>
 
 #ifndef _ISOMAC
 libc_hidden_proto (if_nametoindex)

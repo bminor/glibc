@@ -16,11 +16,15 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifndef _BITS_PROCFS_H
+#define _BITS_PROCFS_H 1
+
 #ifndef _SYS_PROCFS_H
 # error "Never include <bits/procfs.h> directly; use <sys/procfs.h> instead."
 #endif
 
-#include <signal.h>
+/* For struct __ia64_fpreg.  FIXME: sys/procfs.h should not expose all
+   of sys/ucontext.h.  */
 #include <sys/ucontext.h>
 #include <bits/sigcontext.h>
 
@@ -39,3 +43,5 @@ typedef elf_greg_t greg_t;
 typedef elf_gregset_t gregset_t;
 typedef elf_fpregset_t fpregset_t;
 #define NGREG ELF_NGREG
+
+#endif /* bits/procfs.h */

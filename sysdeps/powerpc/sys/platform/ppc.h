@@ -20,24 +20,24 @@
 #define _SYS_PLATFORM_PPC_H	1
 
 #include <features.h>
-#include <stdint.h>
+#include <bits/types.h>
 #include <bits/ppc.h>
 
 /* Read the Time Base Register.   */
-static __inline__ uint64_t
+static __inline__ __uint64_t
 __ppc_get_timebase (void)
 {
 #if __GNUC_PREREQ (4, 8)
   return __builtin_ppc_get_timebase ();
 #else
 # ifdef __powerpc64__
-  uint64_t __tb;
+  __uint64_t __tb;
   /* "volatile" is necessary here, because the user expects this assembly
      isn't moved after an optimization.  */
   __asm__ volatile ("mfspr %0, 268" : "=r" (__tb));
   return __tb;
 # else  /* not __powerpc64__ */
-  uint32_t __tbu, __tbl, __tmp; \
+  __uint32_t __tbu, __tbl, __tmp;
   __asm__ volatile ("0:\n\t"
 		    "mftbu %0\n\t"
 		    "mftbl %1\n\t"
@@ -45,7 +45,7 @@ __ppc_get_timebase (void)
 		    "cmpw %0, %2\n\t"
 		    "bne- 0b"
 		    : "=r" (__tbu), "=r" (__tbl), "=r" (__tmp));
-  return (((uint64_t) __tbu << 32) | __tbl);
+  return (((__uint64_t) __tbu << 32) | __tbl);
 # endif  /* not __powerpc64__ */
 #endif
 }

@@ -15,6 +15,9 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifndef _BITS_EPOLL_H
+#define _BITS_EPOLL_H 1
+
 #ifndef	_SYS_EPOLL_H
 # error "Never use <bits/epoll.h> directly; include <sys/epoll.h> instead."
 #endif
@@ -27,3 +30,5 @@ enum
   };
 
 #define __EPOLL_PACKED __attribute__ ((__packed__))
+
+#endif /* bits/epoll.h */

@@ -19,9 +19,10 @@
 #define __NETINET_IP_H 1
 
 #include <features.h>
-#include <sys/types.h>
 
 #include <netinet/in.h>
+#include <bits/endian.h>
+#include <bits/stdint-uintn.h>
 
 __BEGIN_DECLS
 

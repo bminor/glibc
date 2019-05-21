@@ -18,7 +18,8 @@
 #ifndef _SYS_RAW_H
 #define _SYS_RAW_H	1
 
-#include <stdint.h>
+#include <features.h>
+#include <bits/types.h>
 #include <sys/ioctl.h>
 
 /* The major device number for raw devices.  */
@@ -31,8 +32,8 @@
 struct raw_config_request
 {
   int raw_minor;
-  uint64_t block_major;
-  uint64_t block_minor;
+  __uint64_t block_major;
+  __uint64_t block_minor;
 };
 
 #endif /* sys/raw.h */

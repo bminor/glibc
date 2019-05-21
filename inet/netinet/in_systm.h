@@ -19,8 +19,7 @@
 #ifndef _NETINET_IN_SYSTM_H
 #define _NETINET_IN_SYSTM_H 1
 
-#include <sys/types.h>
-#include <stdint.h>
+#include <bits/stdint-uintn.h>
 
 __BEGIN_DECLS
 

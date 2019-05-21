@@ -16,9 +16,14 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifndef _BITS_PROCFS_H
+#define _BITS_PROCFS_H 1
+
 #ifndef _SYS_PROCFS_H
 # error "Never include <bits/procfs.h> directly; use <sys/procfs.h> instead."
 #endif
 
 /* elf_gregset_t and elf_fpregset_t are defined by sys/user.h for
    SH.  */
+
+#endif /* bits/procfs.h */

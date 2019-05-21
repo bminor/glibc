@@ -23,12 +23,15 @@ subdir	:= login
 
 include ../Makeconfig
 
-headers	:= utmp.h bits/utmp.h lastlog.h pty.h
+headers	:= utmp.h bits/utmp.h utmpx.h bits/utmpx.h lastlog.h pty.h
 
-routines := getlogin getlogin_r setlogin getlogin_r_chk \
-	    getutent getutent_r getutid getutline getutid_r getutline_r \
-	    utmp_file utmpname updwtmp getpt grantpt unlockpt ptsname \
-	    ptsname_r_chk
+routines :=								\
+	getlogin getlogin_r getlogin_r_chk setlogin			\
+	getpt grantpt ptsname ptsname_r_chk unlockpt			\
+	getutent getutent_r getutid getutid_r getutline getutline_r	\
+	getutmp updwtmp utmp_file utmpname				\
+	endutxent getutmpx getutxent getutxid getutxline pututxline	\
+	setutxent updwtmpx utmpxname
 
 CFLAGS-grantpt.c += -DLIBEXECDIR='"$(libexecdir)"'
 

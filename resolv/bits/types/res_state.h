@@ -1,7 +1,7 @@
 #ifndef __res_state_defined
 #define __res_state_defined 1
 
-#include <sys/types.h>
+#include <bits/types.h>
 #include <netinet/in.h>
 
 /* res_state: the global state used by the resolver stub.  */
@@ -28,7 +28,7 @@ struct __res_state {
 	unsigned unused:23;
 	struct {
 		struct in_addr	addr;
-		uint32_t	mask;
+		__uint32_t	mask;
 	} sort_list[MAXRESOLVSORT];
 	/* 4 byte hole here on 64-bit architectures.  */
 	void * __glibc_unused_qhook;
@@ -40,11 +40,11 @@ struct __res_state {
 	union {
 		char	pad[52];	/* On an i386 this means 512b total. */
 		struct {
-			uint16_t		nscount;
-			uint16_t		nsmap[MAXNS];
+			__uint16_t		nscount;
+			__uint16_t		nsmap[MAXNS];
 			int			nssocks[MAXNS];
-			uint16_t		nscount6;
-			uint16_t		nsinit;
+			__uint16_t		nscount6;
+			__uint16_t		nsinit;
 			struct sockaddr_in6	*nsaddrs[MAXNS];
 #ifdef _LIBC
 			unsigned long long int __glibc_extension_index

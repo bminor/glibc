@@ -19,15 +19,22 @@
 #define	_UTMPX_H	1
 
 #include <features.h>
-#include <sys/time.h>
 
 /* Required according to Unix98.  */
+#include <bits/types.h>
 #include <bits/types/pid_t.h>
+#include <bits/types/suseconds_t.h>
+#include <bits/types/time_t.h>
+#include <bits/types/struct_timeval.h>
 
 /* Get system dependent values and data structures.  */
 #include <bits/utmpx.h>
 
 #ifdef __USE_GNU
+# include <paths.h>
+# define _PATH_UTMPX	_PATH_UTMP
+# define _PATH_WTMPX	_PATH_WTMP
+
 /* Compatibility names for the strings of the canonical file names.  */
 # define UTMPX_FILE	_PATH_UTMPX
 # define UTMPX_FILENAME	_PATH_UTMPX

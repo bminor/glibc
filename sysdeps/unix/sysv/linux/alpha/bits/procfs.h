@@ -16,12 +16,12 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifndef _BITS_PROCFS_H
+#define _BITS_PROCFS_H 1
+
 #ifndef _SYS_PROCFS_H
 # error "Never include <bits/procfs.h> directly; use <sys/procfs.h> instead."
 #endif
-
-#include <signal.h>
-#include <sys/ucontext.h>
 
 /*
  * The OSF/1 version of <sys/procfs.h> makes gregset_t 46 entries long.
@@ -36,3 +36,5 @@ typedef elf_greg_t elf_gregset_t[ELF_NGREG];
 
 typedef double elf_fpreg_t;
 typedef elf_fpreg_t elf_fpregset_t[ELF_NFPREG];
+
+#endif /* bits/procfs.h */

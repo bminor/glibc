@@ -51,8 +51,11 @@
 #define	_FTS_H 1
 
 #include <features.h>
-#include <sys/types.h>
 
+#include <bits/types/dev_t.h>
+#include <bits/types/ino_t.h>
+#include <bits/types/ino64_t.h>
+#include <bits/types/nlink_t.h>
 
 typedef struct {
 	struct _ftsent *fts_cur;	/* current node */

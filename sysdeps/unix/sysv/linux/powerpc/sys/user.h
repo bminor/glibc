@@ -22,6 +22,7 @@
 #include <bits/types/size_t.h>
 
 #include <asm/ptrace.h>
+#include <bits/types/size_t.h>
 
 struct user {
 	struct pt_regs	regs;			/* entire machine state */

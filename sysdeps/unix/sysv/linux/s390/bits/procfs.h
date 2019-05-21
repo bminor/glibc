@@ -16,10 +16,15 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifndef _BITS_PROCFS_H
+#define _BITS_PROCFS_H 1
+
 #ifndef _SYS_PROCFS_H
 # error "Never include <bits/procfs.h> directly; use <sys/procfs.h> instead."
 #endif
 
+/* FIXME: sys/ucontext.h does not define NGREG unless __USE_MISC is
+   active, and sys/procfs.h should not expose all of sys/ucontext.h.  */
 #include <sys/ucontext.h>
 
 typedef greg_t elf_greg_t;
@@ -27,3 +32,5 @@ typedef greg_t elf_greg_t;
 typedef gregset_t elf_gregset_t;
 typedef fpreg_t   elf_fpreg_t;
 typedef fpregset_t elf_fpregset_t;
+
+#endif /* bits/procfs.h */

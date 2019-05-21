@@ -20,8 +20,8 @@
 
 #include <features.h>
 
-#include <sys/time.h>
-#include <sys/types.h>
+#include <bits/types/size_t.h>
+#include <bits/types/struct_timeval.h>
 
 /* This interface is intended to follow the sprofil() system calls as
    described by the sprofil(2) man page of Irix v6.5, except that:

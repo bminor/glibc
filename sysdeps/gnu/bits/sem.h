@@ -15,11 +15,14 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifndef _BITS_SEM_H
+#define _BITS_SEM_H 1
+
 #ifndef _SYS_SEM_H
 # error "Never include <bits/sem.h> directly; use <sys/sem.h> instead."
 #endif
 
-#include <sys/types.h>
+#include <bits/types.h>
 
 /* Flags for `semop'.  */
 #define SEM_UNDO	0x1000		/* undo the operation on exit */
@@ -85,3 +88,5 @@ struct  seminfo
 };
 
 #endif /* __USE_MISC */
+
+#endif /* bits/sem.h */

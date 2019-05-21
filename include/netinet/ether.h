@@ -2,6 +2,7 @@
 #include <inet/netinet/ether.h>
 
 # ifndef _ISOMAC
+#  include <bits/types/size_t.h>
 
 libc_hidden_proto (ether_aton_r)
 libc_hidden_proto (ether_ntoa_r)

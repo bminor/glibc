@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sys/sendfile.h>
+#include <sys/types.h>
 #include <stddef.h>
 
 /* Send COUNT bytes from file associated with IN_FD starting at OFFSET to

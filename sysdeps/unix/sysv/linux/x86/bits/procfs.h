@@ -16,6 +16,9 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifndef _BITS_PROCFS_H
+#define _BITS_PROCFS_H 1
+
 #ifndef _SYS_PROCFS_H
 # error "Never include <bits/procfs.h> directly; use <sys/procfs.h> instead."
 #endif
@@ -48,3 +51,5 @@ typedef struct user_fpxregs_struct elf_fpxregset_t;
    floating-point stuff.  */
 typedef struct user_fpregs_struct elf_fpregset_t;
 #endif
+
+#endif /* bits/procfs.h */

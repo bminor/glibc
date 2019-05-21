@@ -15,6 +15,9 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifndef _BITS_EPOLL_H
+#define _BITS_EPOLL_H 1
+
 #ifndef	_SYS_EPOLL_H
 # error "Never use <bits/epoll.h> directly; include <sys/epoll.h> instead."
 #endif
@@ -25,3 +28,5 @@ enum
     EPOLL_CLOEXEC = 02000000
 #define EPOLL_CLOEXEC EPOLL_CLOEXEC
   };
+
+#endif /* bits/epoll.h */

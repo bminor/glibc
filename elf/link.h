@@ -23,7 +23,6 @@
 #include <features.h>
 #include <elf.h>
 #include <dlfcn.h>
-#include <sys/types.h>
 
 /* We use this macro to refer to ELF types independent of the native wordsize.
    `ElfW(TYPE)' is used in place of `Elf32_TYPE' or `Elf64_TYPE'.  */
@@ -31,6 +30,7 @@
 #define _ElfW(e,w,t)	_ElfW_1 (e, w, _##t)
 #define _ElfW_1(e,w,t)	e##w##t
 
+#include <bits/types/size_t.h>
 #include <bits/elfclass.h>		/* Defines __ELF_NATIVE_CLASS.  */
 #include <bits/link.h>
 

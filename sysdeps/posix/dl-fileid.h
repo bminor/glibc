@@ -23,8 +23,8 @@
    a unique identifier for a file.  */
 struct r_file_id
   {
-    dev_t dev;
-    ino64_t ino;
+    __dev_t dev;
+    __ino64_t ino;
   };
 
 /* Sample FD to fill in *ID.  Returns true on success.

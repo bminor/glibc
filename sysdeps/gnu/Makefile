@@ -58,21 +58,9 @@ $(foreach o,$(object-suffixes) $(object-suffixes:=.d),\
 	  $(objpfx)errlist$o): $(objpfx)errlist-compat.h
 endif
 
-ifeq ($(subdir),login)
-sysdep_routines += setutxent getutxent endutxent getutxid getutxline \
-		   pututxline utmpxname updwtmpx getutmpx getutmp
-
-sysdep_headers += utmpx.h bits/utmpx.h
-endif
-
 
 ifeq ($(subdir),inet)
 sysdep_headers += netinet/udp.h netinet/ip_icmp.h
-endif
-
-
-ifeq ($(subdir),misc)
-sysdep_headers += sys/mtio.h
 endif
 
 

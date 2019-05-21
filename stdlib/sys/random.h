@@ -20,7 +20,9 @@
 #define _SYS_RANDOM_H 1
 
 #include <features.h>
-#include <sys/types.h>
+
+#include <bits/types/size_t.h>
+#include <bits/types/ssize_t.h>
 
 /* Flags for use with getrandom.  */
 #define GRND_NONBLOCK 0x01

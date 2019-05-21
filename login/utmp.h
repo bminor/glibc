@@ -20,21 +20,26 @@
 
 #include <features.h>
 
-#include <sys/types.h>
-
-
-__BEGIN_DECLS
+/* utmp.h is not standardized; utmpx.h is, and is required to define
+   pid_t and struct timeval.  It makes sense for utmp.h to be
+   consistent.  */
+#include <bits/types.h>
+#include <bits/types/pid_t.h>
+#include <bits/types/suseconds_t.h>
+#include <bits/types/time_t.h>
+#include <bits/types/struct_timeval.h>
 
 /* Get system dependent values and data structures.  */
 #include <bits/utmp.h>
 
 /* Compatibility names for the strings of the canonical file names.  */
+#include <paths.h>
 #define UTMP_FILE	_PATH_UTMP
 #define UTMP_FILENAME	_PATH_UTMP
 #define WTMP_FILE	_PATH_WTMP
 #define WTMP_FILENAME	_PATH_WTMP
 
-
+__BEGIN_DECLS
 
 /* Make FD be the controlling terminal, stdin, stdout, and stderr;
    then close FD.  Returns 0 on success, nonzero on error.  */

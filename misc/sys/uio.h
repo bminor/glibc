@@ -19,7 +19,10 @@
 #define _SYS_UIO_H	1
 
 #include <features.h>
-#include <sys/types.h>
+
+#include <bits/types.h>
+#include <bits/types/size_t.h>
+#include <bits/types/ssize_t.h>
 #include <bits/types/struct_iovec.h>
 #include <bits/uio_lim.h>
 #ifdef __IOV_MAX

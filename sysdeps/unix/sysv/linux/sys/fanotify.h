@@ -18,9 +18,9 @@
 #ifndef	_SYS_FANOTIFY_H
 #define	_SYS_FANOTIFY_H	1
 
-#include <stdint.h>
+#include <features.h>
+#include <bits/types.h>
 #include <linux/fanotify.h>
-
 
 __BEGIN_DECLS
 
@@ -30,7 +30,7 @@ extern int fanotify_init (unsigned int __flags, unsigned int __event_f_flags)
 
 /* Add, remove, or modify an fanotify mark on a filesystem object.  */
 extern int fanotify_mark (int __fanotify_fd, unsigned int __flags,
-			  uint64_t __mask, int __dfd, const char *__pathname)
+			  __uint64_t __mask, int __dfd, const char *__pathname)
      __THROW;
 
 __END_DECLS

@@ -86,9 +86,9 @@
 #define TCP_REPAIR_OFF_NO_WP	 -1
 
 #ifdef __USE_MISC
-# include <sys/types.h>
+# include <bits/stdint-uintn.h>
+# include <bits/endian.h>
 # include <sys/socket.h>
-# include <stdint.h>
 
 typedef	uint32_t tcp_seq;
 /*

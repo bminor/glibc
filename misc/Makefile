@@ -36,9 +36,9 @@ headers :=								\
 	bits/uio-ext.h bits/uio_lim.h bits/xopen_lim.h			\
 	gnu/libc-version.h						\
 	sys/auxv.h sys/cdefs.h sys/dir.h sys/file.h sys/ioctl.h		\
-	sys/mman.h sys/param.h sys/ptrace.h sys/queue.h sys/reboot.h	\
-	sys/select.h sys/swap.h sys/syscall.h sys/sysinfo.h		\
-	sys/syslog.h sys/sysmacros.h sys/uio.h sys/xattr.h
+	sys/mman.h sys/mtio.h sys/param.h sys/ptrace.h sys/queue.h	\
+	sys/reboot.h sys/select.h sys/swap.h sys/syscall.h		\
+	sys/sysinfo.h sys/syslog.h sys/sysmacros.h sys/uio.h sys/xattr.h
 
 routines := brk sbrk sstk ioctl \
 	    readv writev preadv preadv64 pwritev pwritev64 \

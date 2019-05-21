@@ -34,8 +34,6 @@
 
 #include <features.h>
 
-#include <sys/types.h>
-
 /*
  * See gmon_out.h for gmon.out format.
  */

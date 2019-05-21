@@ -52,8 +52,8 @@
 #define _SYS_QUOTA_H 1
 
 #include <features.h>
-#include <sys/types.h>
 
+#include <bits/types.h>
 #include <linux/quota.h>
 
 /*

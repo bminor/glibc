@@ -21,12 +21,6 @@
 
 #include <features.h>
 
-#ifdef __USE_MISC
-# include <sys/types.h>
-# include <sys/socket.h>
-#endif
-
-
 /* Length of interface name.  */
 #define IF_NAMESIZE	16
 
@@ -38,6 +32,8 @@ struct if_nameindex
 
 
 #ifdef __USE_MISC
+# include <sys/socket.h>  /* for struct sockaddr */
+
 /* Standard interface flags. */
 enum
   {

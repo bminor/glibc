@@ -26,7 +26,7 @@
 __BEGIN_DECLS
 
 /* Read from another process' address space.  */
-extern ssize_t process_vm_readv (pid_t __pid, const struct iovec *__lvec,
+extern ssize_t process_vm_readv (__pid_t __pid, const struct iovec *__lvec,
 				 unsigned long int __liovcnt,
 				 const struct iovec *__rvec,
 				 unsigned long int __riovcnt,
@@ -34,7 +34,7 @@ extern ssize_t process_vm_readv (pid_t __pid, const struct iovec *__lvec,
   __THROW;
 
 /* Write to another process' address space.  */
-extern ssize_t process_vm_writev (pid_t __pid, const struct iovec *__lvec,
+extern ssize_t process_vm_writev (__pid_t __pid, const struct iovec *__lvec,
 				  unsigned long int __liovcnt,
 				  const struct iovec *__rvec,
 				  unsigned long int __riovcnt,

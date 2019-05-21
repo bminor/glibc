@@ -17,7 +17,9 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _SYS_USER_H
-# define _SYS_USER_H	1
+#define _SYS_USER_H	1
+
+#include <features.h>
 
 #include <features.h>
 

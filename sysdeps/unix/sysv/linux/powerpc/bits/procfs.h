@@ -16,17 +16,20 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifndef _BITS_PROCFS_H
+#define _BITS_PROCFS_H 1
+
 #ifndef _SYS_PROCFS_H
 # error "Never include <bits/procfs.h> directly; use <sys/procfs.h> instead."
 #endif
 
-#include <signal.h>
-#include <sys/ucontext.h>
+#include <bits/wordsize.h>
+#include <asm/elf.h>
 
-/* These definitions are normally provided by ucontext.h via
-   asm/sigcontext.h, asm/ptrace.h, and asm/elf.h.  Otherwise we define
-   them here.  */
-#if !defined __PPC64_ELF_H && !defined _ASM_POWERPC_ELF_H
+/* These definitions may have been provided by asm/elf.h.  Otherwise
+   we define them here.  */
+#ifndef ELF_NGREG
+
 #define ELF_NGREG       48      /* includes nip, msr, lr, etc. */
 #define ELF_NFPREG      33      /* includes fpscr */
 #if __WORDSIZE == 32
@@ -46,4 +49,7 @@ typedef struct {
   unsigned int u[4];
 } __attribute__ ((__aligned__ (16))) elf_vrreg_t;
 typedef elf_vrreg_t elf_vrregset_t[ELF_NVRREG];
-#endif
+
+#endif /* ifndef ELF_NGREG */
+
+#endif /* bits/procfs.h */

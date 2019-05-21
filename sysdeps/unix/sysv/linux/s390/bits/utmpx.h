@@ -1,4 +1,4 @@
-/* Structures and definitions for the user accounting database.  GNU version.
+/* Structures and definitions for the user accounting database.  S/390 version.
    Copyright (C) 1997-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,21 +16,12 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifndef _BITS_UTMPX_H
+#define _BITS_UTMPX_H 1
+
 #ifndef _UTMPX_H
 # error "Never include <bits/utmpx.h> directly; use <utmpx.h> instead."
 #endif
-
-#include <bits/types.h>
-#include <sys/time.h>
-#include <bits/wordsize.h>
-
-
-#ifdef __USE_GNU
-# include <paths.h>
-# define _PATH_UTMPX	_PATH_UTMP
-# define _PATH_WTMPX	_PATH_WTMP
-#endif
-
 
 #define __UT_LINESIZE	32
 #define __UT_NAMESIZE	32
@@ -67,20 +58,17 @@ struct utmpx
   struct __exit_status ut_exit;	/* Exit status of a process marked
 				   as DEAD_PROCESS.  */
 
-/* The fields ut_session and ut_tv must be the same size when compiled
-   32- and 64-bit.  This allows files and shared memory to be shared
-   between 32- and 64-bit applications.  */
-#if __WORDSIZE == 32
+/* The ut_session and ut_tv fields must be the same size when compiled
+   32- and 64-bit.  This allows data files and shared memory to be
+   shared between 32- and 64-bit applications.  Even on 64-bit systems,
+   struct timeval is not guaranteed to have both fields be 64 bits.  */
   __int64_t ut_session;		/* Session ID, used for windowing.  */
   struct
   {
     __int64_t tv_sec;		/* Seconds.  */
     __int64_t tv_usec;		/* Microseconds.  */
   } ut_tv;			/* Time entry was made.  */
-#else
-  long int ut_session;		/* Session ID, used for windowing.  */
-  struct timeval ut_tv;		/* Time entry was made.  */
-#endif
+
   __int32_t ut_addr_v6[4];	/* Internet address of remote host.  */
   char __glibc_reserved[20];		/* Reserved for future use.  */
 };
@@ -104,3 +92,5 @@ struct utmpx
 #ifdef __USE_GNU
 # define ACCOUNTING	9	/* System accounting.  */
 #endif
+
+#endif /* bits/utmpx.h */

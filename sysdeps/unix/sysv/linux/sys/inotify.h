@@ -18,7 +18,8 @@
 #ifndef	_SYS_INOTIFY_H
 #define	_SYS_INOTIFY_H	1
 
-#include <stdint.h>
+#include <features.h>
+#include <bits/types.h>
 
 /* Get the platform-dependent flags.  */
 #include <bits/inotify.h>
@@ -28,9 +29,9 @@
 struct inotify_event
 {
   int wd;		/* Watch descriptor.  */
-  uint32_t mask;	/* Watch mask.  */
-  uint32_t cookie;	/* Cookie to synchronize two events.  */
-  uint32_t len;		/* Length (including NULs) of name.  */
+  __uint32_t mask;	/* Watch mask.  */
+  __uint32_t cookie;	/* Cookie to synchronize two events.  */
+  __uint32_t len;	/* Length (including NULs) of name.  */
   char name __flexarr;	/* Name.  */
 };
 
@@ -89,7 +90,7 @@ extern int inotify_init1 (int __flags) __THROW;
 
 /* Add watch of object NAME to inotify instance FD.  Notify about
    events specified by MASK.  */
-extern int inotify_add_watch (int __fd, const char *__name, uint32_t __mask)
+extern int inotify_add_watch (int __fd, const char *__name, __uint32_t __mask)
   __THROW;
 
 /* Remove the watch specified by WD from the inotify instance FD.  */

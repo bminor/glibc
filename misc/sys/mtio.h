@@ -21,10 +21,7 @@
 #ifndef _SYS_MTIO_H
 #define _SYS_MTIO_H	1
 
-/* Get necessary definitions from system and kernel headers.  */
-#include <sys/types.h>
 #include <sys/ioctl.h>
-
 
 /* Structure for MTIOCTOP - magnetic tape operation command.  */
 struct mtop
