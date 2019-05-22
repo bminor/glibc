@@ -1,3 +1,32 @@
+2019-05-22  Zack Weinberg  <zackw@panix.com>
+
+        * sysdeps/powerpc/preconfigure: Error out on powerpc-*-*gnuspe*
+        host type.
+        * scripts/build-many-glibcs.py: Remove powerpc-*-linux-gnuspe
+        and powerpc-*-linux-gnuspe-e500v1 from list of build configurations.
+
+        * sysdeps/powerpc/powerpc32/e500: Recursively delete.
+        * sysdeps/unix/sysv/linux/powerpc/powerpc32/e500: Recursively delete.
+        * sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/context-e500.h:
+        Delete.
+
+        * sysdeps/powerpc/fpu_control.h: Remove SPE variant.
+        Issue an #error if used with a compiler in SPE-float mode.
+        * sysdeps/powerpc/powerpc32/__longjmp_common.S
+        * sysdeps/powerpc/powerpc32/setjmp_common.S
+        * sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext-common.S
+        * sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/getcontext.S
+        * sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/setcontext.S
+        * sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/swapcontext.S
+        * sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext-common.S
+        * sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext-common.S:
+        Remove code to preserve SPE register state.
+
+        * sysdeps/unix/sysv/linux/powerpc/elision-lock.c
+        * sysdeps/unix/sysv/linux/powerpc/elision-trylock.c
+        * sysdeps/unix/sysv/linux/powerpc/elision-unlock.c:
+        Remove __SPE__ ifndefs.
+
 2019-05-21  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* benchtests/bench-memcpy-random.c (do_one_test): Use medium iterations.
