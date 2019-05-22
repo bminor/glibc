@@ -539,7 +539,6 @@ HEADER_ALLOWED_INCLUDES = {
     "sys/types.h":                 [ "endian.h" ],
 
     "sys/uio.h":                   [ "sys/types.h" ],
-    "sys/un.h":                    [ "string.h" ],
 
     # POSIX networking headers
     # allowed: netdb.h -> netinet/in.h

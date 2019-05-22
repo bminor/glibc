@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <rpcsvc/nis.h>
+#include <string.h>
 #include <shlib-compat.h>
 
 nis_name

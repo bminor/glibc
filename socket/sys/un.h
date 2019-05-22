@@ -34,11 +34,13 @@ struct sockaddr_un
 
 
 #ifdef __USE_MISC
-# include <string.h>		/* For prototype of `strlen'.  */
+#include <bits/types/size_t.h>
+
+extern size_t strlen (const char *__s)
+     __THROW __attribute_pure__ __nonnull ((1));
 
 /* Evaluate to actual length of the `sockaddr_un' structure.  */
-# define SUN_LEN(ptr) ((size_t) (((struct sockaddr_un *) 0)->sun_path)	      \
-		      + strlen ((ptr)->sun_path))
+# define SUN_LEN(ptr) (__SOCKADDR_COMMON_SIZE + strlen ((ptr)->sun_path))
 #endif
 
 __END_DECLS
