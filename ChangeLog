@@ -1,3 +1,8 @@
+2019-05-23  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/bits/fcntl-linux.h [__USE_GNU]
+	(F_SEAL_FUTURE_WRITE): New macro.
+
 2019-05-23 Alexandra Hajkova  <ahajkova@redhat.com>
 
        * elf/Makefile (test-container): Add tst-ldconfig-bad-aux-cache.
