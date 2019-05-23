@@ -20,6 +20,7 @@
 #ifndef _LINUX_POWERPC_SYSDEP_H
 #define _LINUX_POWERPC_SYSDEP_H 1
 
+#include <sysdeps/unix/sysv/linux/powerpc/sysdep.h>
 #include <sysdeps/unix/sysv/linux/sysdep.h>
 #include <sysdeps/unix/powerpc/sysdep.h>
 #include <tls.h>
@@ -59,11 +60,6 @@
       err = 1 << 28;							      \
     sc_ret;								      \
   })
-
-/* List of system calls which are supported as vsyscalls.  */
-#define HAVE_CLOCK_GETRES_VSYSCALL	1
-#define HAVE_CLOCK_GETTIME_VSYSCALL	1
-#define HAVE_GETCPU_VSYSCALL		1
 
 /* Define a macro which expands inline into the wrapper code for a system
    call. This use is for internal calls that do not need to handle errors

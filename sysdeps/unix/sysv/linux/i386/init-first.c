@@ -34,9 +34,7 @@ clock_gettime_syscall (clockid_t id, struct timespec *tp)
 static inline void
 __vdso_platform_setup (void)
 {
-  PREPARE_VERSION_KNOWN (linux26, LINUX_2_6);
-
-  void *p = _dl_vdso_vsym ("__vdso_clock_gettime", &linux26);
+  void *p = get_vdso_symbol ("__vdso_clock_gettime");
   if (p == NULL)
     p = clock_gettime_syscall;
   PTR_MANGLE (p);

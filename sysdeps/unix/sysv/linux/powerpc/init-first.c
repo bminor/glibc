@@ -37,29 +37,27 @@ void *VDSO_SYMBOL(sigtramp_rt32);
 static inline void
 _libc_vdso_platform_setup (void)
 {
-  PREPARE_VERSION_KNOWN (linux2615, LINUX_2_6_15);
-
-  void *p = _dl_vdso_vsym ("__kernel_gettimeofday", &linux2615);
+  void *p = get_vdso_symbol ("__kernel_gettimeofday");
   PTR_MANGLE (p);
   VDSO_SYMBOL (gettimeofday) = p;
 
-  p = _dl_vdso_vsym ("__kernel_clock_gettime", &linux2615);
+  p = get_vdso_symbol ("__kernel_clock_gettime");
   PTR_MANGLE (p);
   VDSO_SYMBOL (clock_gettime) = p;
 
-  p = _dl_vdso_vsym ("__kernel_clock_getres", &linux2615);
+  p = get_vdso_symbol ("__kernel_clock_getres");
   PTR_MANGLE (p);
   VDSO_SYMBOL (clock_getres) = p;
 
-  p = _dl_vdso_vsym ("__kernel_get_tbfreq", &linux2615);
+  p = get_vdso_symbol ("__kernel_get_tbfreq");
   PTR_MANGLE (p);
   VDSO_SYMBOL (get_tbfreq) = p;
 
-  p = _dl_vdso_vsym ("__kernel_getcpu", &linux2615);
+  p = get_vdso_symbol ("__kernel_getcpu");
   PTR_MANGLE (p);
   VDSO_SYMBOL (getcpu) = p;
 
-  p = _dl_vdso_vsym ("__kernel_time", &linux2615);
+  p = get_vdso_symbol ("__kernel_time");
   PTR_MANGLE (p);
   VDSO_SYMBOL (time) = p;
 
@@ -69,12 +67,10 @@ _libc_vdso_platform_setup (void)
      There is no need to pointer mangle these symbol because they will
      used only for pointer comparison.  */
 #if defined(__PPC64__) || defined(__powerpc64__)
-  VDSO_SYMBOL(sigtramp_rt64) = _dl_vdso_vsym ("__kernel_sigtramp_rt64",
-					      &linux2615);
+  VDSO_SYMBOL(sigtramp_rt64) =  get_vdso_symbol ("__kernel_sigtramp_rt64");
 #else
-  VDSO_SYMBOL(sigtramp32) = _dl_vdso_vsym ("__kernel_sigtramp32", &linux2615);
-  VDSO_SYMBOL(sigtramp_rt32) = _dl_vdso_vsym ("__kernel_sigtramp_rt32",
-					      &linux2615);
+  VDSO_SYMBOL(sigtramp32) = get_vdso_symbol ("__kernel_sigtramp32");
+  VDSO_SYMBOL(sigtramp_rt32) = get_vdso_symbol ("__kernel_sigtramp_rt32");
 #endif
 }
 

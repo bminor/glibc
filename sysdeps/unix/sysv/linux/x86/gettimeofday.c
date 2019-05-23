@@ -22,6 +22,8 @@
 
 # include <dl-vdso.h>
 # include <errno.h>
+# include <sysdep-vdso.h>
+# include <sysdep-vdso.h>
 
 static int
 __gettimeofday_syscall (struct timeval *tv, struct timezone *tz)
@@ -36,12 +38,11 @@ __gettimeofday_syscall (struct timeval *tv, struct timezone *tz)
 #  define __gettimeofday_type __gettimeofday
 # endif
 
-# undef INIT_ARCH
-# define INIT_ARCH() PREPARE_VERSION_KNOWN (linux26, LINUX_2_6)
+# define INIT_ARCH()
 /* If the vDSO is not available we fall back to syscall.  */
 libc_ifunc_hidden (__gettimeofday_type, __gettimeofday,
-		   (_dl_vdso_vsym ("__vdso_gettimeofday", &linux26)
-		    ?: &__gettimeofday_syscall))
+		   (get_vdso_symbol ("__vdso_gettimeofday")
+		    ?: __gettimeofday_syscall));
 libc_hidden_def (__gettimeofday)
 
 #else

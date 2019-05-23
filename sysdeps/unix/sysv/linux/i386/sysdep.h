@@ -309,6 +309,9 @@ struct libc_do_syscall_args
 #define INLINE_SYSCALL_ERROR_RETURN_VALUE(resultvar) \
   __syscall_error (-(resultvar))
 
+# define VDSO_NAME  "LINUX_2.6"
+# define VDSO_HASH  61765110
+
 /* List of system calls which are supported as vsyscalls.  */
 # define HAVE_CLOCK_GETTIME_VSYSCALL    1
 # define HAVE_GETTIMEOFDAY_VSYSCALL     1

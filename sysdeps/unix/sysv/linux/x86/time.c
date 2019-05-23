@@ -22,6 +22,7 @@
 
 #include <dl-vdso.h>
 #include <errno.h>
+#include <sysdep-vdso.h>
 
 static time_t
 __time_syscall (time_t *t)
@@ -38,11 +39,10 @@ __time_syscall (time_t *t)
 # endif
 
 #undef INIT_ARCH
-#define INIT_ARCH() PREPARE_VERSION_KNOWN (linux26, LINUX_2_6);
+#define INIT_ARCH()
 /* If the vDSO is not available we fall back on the syscall.  */
 libc_ifunc_hidden (time_type, time,
-		   (_dl_vdso_vsym ("__vdso_time", &linux26)
-		    ?:  &__time_syscall))
+		   (get_vdso_symbol ("__vdso_time") ?: __time_syscall))
 libc_hidden_def (time)
 
 #else

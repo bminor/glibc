@@ -21,6 +21,7 @@
 
 #include <sysdeps/s390/s390-32/sysdep.h>
 #include <sysdeps/unix/sysdep.h>
+#include <sysdeps/unix/sysv/linux/s390/sysdep.h>
 #include <sysdeps/unix/sysv/linux/sysdep.h>
 #include <dl-sysdep.h>	/* For RTLD_PRIVATE_ERRNO.  */
 #include <tls.h>
@@ -270,12 +271,6 @@
 #define ASMFMT_4 , "0" (gpr2), "d" (gpr3), "d" (gpr4), "d" (gpr5)
 #define ASMFMT_5 , "0" (gpr2), "d" (gpr3), "d" (gpr4), "d" (gpr5), "d" (gpr6)
 #define ASMFMT_6 , "0" (gpr2), "d" (gpr3), "d" (gpr4), "d" (gpr5), "d" (gpr6), "d" (gpr7)
-
-/* List of system calls which are supported as vsyscalls.  */
-#define HAVE_CLOCK_GETRES_VSYSCALL	1
-#define HAVE_CLOCK_GETTIME_VSYSCALL	1
-#define HAVE_GETTIMEOFDAY_VSYSCALL	1
-#define HAVE_GETCPU_VSYSCALL		1
 
 /* Pointer mangling support.  */
 #if IS_IN (rtld)

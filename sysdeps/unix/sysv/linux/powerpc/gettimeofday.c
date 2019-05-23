@@ -57,9 +57,8 @@ __gettimeofday_syscall (struct timeval *tv, struct timezone *tz)
   return INLINE_SYSCALL (gettimeofday, 2, tv, tz);
 }
 
-# define INIT_ARCH()						\
-  PREPARE_VERSION_KNOWN (linux2615, LINUX_2_6_15);		\
-  void *vdso_gettimeofday = _dl_vdso_vsym ("__kernel_gettimeofday", &linux2615);
+# define INIT_ARCH() \
+  void *vdso_gettimeofday = get_vdso_symbol ("__kernel_gettimeofday")
 
 /* If the vDSO is not available we fall back syscall.  */
 libc_ifunc_hidden (__redirect___gettimeofday, __gettimeofday,

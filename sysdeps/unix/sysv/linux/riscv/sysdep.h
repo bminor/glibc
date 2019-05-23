@@ -121,6 +121,9 @@
 
 #ifndef __ASSEMBLER__
 
+# define VDSO_NAME  "LINUX_4.15"
+# define VDSO_HASH  182943605
+
 /* List of system calls which are supported as vsyscalls.  */
 # define HAVE_CLOCK_GETRES_VSYSCALL	1
 # define HAVE_CLOCK_GETTIME_VSYSCALL	1

@@ -32,21 +32,19 @@ long int (*VDSO_SYMBOL (clock_getres)) (clockid_t, struct timespec *)
 static inline void
 _libc_vdso_platform_setup (void)
 {
-  PREPARE_VERSION_KNOWN (linux_version, LINUX_4_15);
-
-  void *p = _dl_vdso_vsym ("__vdso_getcpu", &linux_version);
+  void *p = get_vdso_symbol ("__vdso_getcpu");
   PTR_MANGLE (p);
   VDSO_SYMBOL (getcpu) = p;
 
-  p = _dl_vdso_vsym ("__vdso_gettimeofday", &linux_version);
+  p = get_vdso_symbol ("__vdso_gettimeofday");
   PTR_MANGLE (p);
   VDSO_SYMBOL (gettimeofday) = p;
 
-  p = _dl_vdso_vsym ("__vdso_clock_gettime", &linux_version);
+  p = get_vdso_symbol ("__vdso_clock_gettime");
   PTR_MANGLE (p);
   VDSO_SYMBOL (clock_gettime) = p;
 
-  p = _dl_vdso_vsym ("__vdso_clock_getres", &linux_version);
+  p = get_vdso_symbol ("__vdso_clock_getres");
   PTR_MANGLE (p);
   VDSO_SYMBOL (clock_getres) = p;
 }

@@ -27,13 +27,11 @@ int (*VDSO_SYMBOL(clock_gettime)) (clockid_t, struct timespec *);
 static inline void
 _libc_vdso_platform_setup (void)
 {
-  PREPARE_VERSION_KNOWN (linux26, LINUX_2_6);
-
-  void *p = _dl_vdso_vsym ("__vdso_gettimeofday", &linux26);
+  void *p = get_vdso_symbol ("__vdso_gettimeofday");
   PTR_MANGLE (p);
   VDSO_SYMBOL (gettimeofday) = p;
 
-  p = _dl_vdso_vsym ("__vdso_clock_gettime", &linux26);
+  p = get_vdso_symbol ("__vdso_clock_gettime");
   PTR_MANGLE (p);
   VDSO_SYMBOL (clock_gettime) = p;
 }

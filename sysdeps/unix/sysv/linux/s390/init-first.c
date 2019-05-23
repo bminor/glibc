@@ -34,21 +34,19 @@ long int (*VDSO_SYMBOL(getcpu)) (unsigned *, unsigned *, void *)
 static inline void
 _libc_vdso_platform_setup (void)
 {
-  PREPARE_VERSION_KNOWN (linux2629, LINUX_2_6_29);
-
-  void *p = _dl_vdso_vsym ("__kernel_gettimeofday", &linux2629);
+  void *p = get_vdso_symbol ("__kernel_gettimeofday");
   PTR_MANGLE (p);
   VDSO_SYMBOL (gettimeofday) = p;
 
-  p = _dl_vdso_vsym ("__kernel_clock_gettime", &linux2629);
+  p = get_vdso_symbol ("__kernel_clock_gettime");
   PTR_MANGLE (p);
   VDSO_SYMBOL (clock_gettime) = p;
 
-  p = _dl_vdso_vsym ("__kernel_clock_getres", &linux2629);
+  p = get_vdso_symbol ("__kernel_clock_getres");
   PTR_MANGLE (p);
   VDSO_SYMBOL (clock_getres) = p;
 
-  p = _dl_vdso_vsym ("__kernel_getcpu", &linux2629);
+  p = get_vdso_symbol ("__kernel_getcpu");
   PTR_MANGLE (p);
   VDSO_SYMBOL (getcpu) = p;
 }

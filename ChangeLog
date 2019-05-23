@@ -1,3 +1,63 @@
+2019-09-17  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/make-syscalls.sh: Make vDSO call use get_vdso_symbol.
+	* sysdeps/unix/sysv/linux/aarch64/gettimeofday.c (__gettimeofday):
+	Use get_vdso_symbol instead of _dl_vdso_vsym.
+	* sysdeps/unix/sysv/linux/powerpc/time.c (time): Likewise.
+	* sysdeps/unix/sysv/linux/riscv/flush-icache.c
+	(__lookup_riscv_flush_icache): Likewise.
+	* sysdeps/unix/sysv/linux/x86/gettimeofday.c (__gettimeofday):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86/time.c (time): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/gettimeofday.c: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/sysdep.h (VDSO_NAME, VDSO_HASH):
+	Define.
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (VDSO_NAME, VDSO_HASH):
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (VDSO_NAME, VDSO_HASH):
+	Likewise.
+	* sysdeps/unix/sysv/linux/riscv/sysdep.h (VDSO_NAME, VDSO_HASH):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sysdep.h (VDSO_NAME, VDSO_HASH):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (VDSO_NAME, VDSO_HASH):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h
+	(HAVE_CLOCK_GETTIME_VSYSCALL, HAVE_GETTIMEOFDAY_VSYSCALL): Remove
+	definition.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h
+	(HAVE_CLOCK_GETTIME_VSYSCALL, HAVE_GETTIMEOFDAY_VSYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/sysdep.h
+	(HAVE_CLOCK_GETTIME_VSYSCALL, HAVE_GETTIMEOFDAY_VSYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h
+	(HAVE_CLOCK_GETTIME_VSYSCALL, HAVE_GETTIMEOFDAY_VSYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h
+	(HAVE_CLOCK_GETTIME_VSYSCALL, HAVE_GETTIMEOFDAY_VSYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h
+	(HAVE_CLOCK_GETRES_VSYSCALL, HAVE_CLOCK_GETTIME_VSYSCALL,
+	HAVE_GETTIMEOFDAY_VSYSCALL, HAVE_GETCPU_VSYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h
+	(HAVE_CLOCK_GETRES_VSYSCALL, HAVE_CLOCK_GETTIME_VSYSCALL,
+	HAVE_GETTIMEOFDAY_VSYSCALL, HAVE_GETCPU_VSYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/mips/sysdep.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/dl-vdso.h (PREPARE_VERSION,
+	PREPARE_VERSION_KNOWN, VDSO_NAME_LINUX_2_6, VDSO_HASH_LINUX_2_6,
+	VDSO_NAME_LINUX_2_6_15, VDSO_HASH_LINUX_2_6_15,
+	VDSO_NAME_LINUX_2_6_29, VDSO_HASH_LINUX_2_6_29,
+	VDSO_NAME_LINUX_4_15, VDSO_HASH_LINUX_4_15): Remove defines.
+	(get_vdso_symbol): New function.
+
 2019-09-17  Chung-Lin Tang  <cltang@codesourcery.com>
 
 	* sysdeps/generic/hp-timing-common.h (HP_TIMING_PRINT): Correct

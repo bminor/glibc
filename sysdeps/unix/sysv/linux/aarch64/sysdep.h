@@ -151,6 +151,13 @@
 
 #else /* not __ASSEMBLER__ */
 
+# ifdef __LP64__
+#  define VDSO_NAME  "LINUX_2.6.39"
+#  define VDSO_HASH  123718537
+# else
+#  define VDSO_NAME  "LINUX_4.9"
+#  define VDSO_HASH  61765625
+# endif
 
 /* List of system calls which are supported as vsyscalls.  */
 # define HAVE_CLOCK_GETRES_VSYSCALL	1

@@ -19,6 +19,7 @@
 #define _LINUX_MIPS_SYSDEP_H 1
 
 /* There is some commonality.  */
+#include <sysdeps/unix/sysv/linux/mips/sysdep.h>
 #include <sysdeps/unix/sysv/linux/sysdep.h>
 #include <sysdeps/unix/mips/mips64/n32/sysdep.h>
 
@@ -307,10 +308,6 @@
       _ret = -_ret;							\
     _ret;								\
   })
-
-/* List of system calls which are supported as vsyscalls.  */
-#define HAVE_CLOCK_GETTIME_VSYSCALL	1
-#define HAVE_GETTIMEOFDAY_VSYSCALL	1
 
 #endif /* __ASSEMBLER__ */
 

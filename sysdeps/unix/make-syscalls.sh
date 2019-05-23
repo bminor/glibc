@@ -283,10 +283,9 @@ while read file srcfile caller syscall args strong weak; do
 	(echo '#define ${strong} __redirect_${strong}'; \\
 	 echo '#include <dl-vdso.h>'; \\
 	 echo '#undef ${strong}'; \\
-	 echo '#define vdso_ifunc_init() \\'; \\
-	 echo '  PREPARE_VERSION_KNOWN (symver, ${vdso_symver})'; \\
+	 echo '#define vdso_ifunc_init()'; \\
 	 echo '__ifunc (__redirect_${strong}, ${strong},'; \\
-	 echo '         _dl_vdso_vsym ("${vdso_symbol}", &symver), void,'; \\
+	 echo '         get_vdso_symbol ("${vdso_symbol}"), void,'; \\
 	 echo '         vdso_ifunc_init)'; \\
 EOF
     # This is doing "hidden_def (${strong})", but the compiler
