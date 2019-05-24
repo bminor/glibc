@@ -78,6 +78,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <string.h>
+#include <libc-pointer-arith.h>
 
 #include "nsswitch.h"
 #include <arpa/nameser.h>
@@ -947,8 +948,18 @@ getanswer_r (struct resolv_context *ctx,
 	      linebuflen -= nn;
 	    }
 
-	  linebuflen -= sizeof (align) - ((u_long) bp % sizeof (align));
-	  bp += sizeof (align) - ((u_long) bp % sizeof (align));
+	  /* Provide sufficient alignment for both address
+	     families.  */
+	  enum { align = 4 };
+	  _Static_assert ((align % __alignof__ (struct in_addr)) == 0,
+			  "struct in_addr alignment");
+	  _Static_assert ((align % __alignof__ (struct in6_addr)) == 0,
+			  "struct in6_addr alignment");
+	  {
+	    char *new_bp = PTR_ALIGN_UP (bp, align);
+	    linebuflen -= new_bp - bp;
+	    bp = new_bp;
+	  }
 
 	  if (__glibc_unlikely (n > linebuflen))
 	    goto too_small;
