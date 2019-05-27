@@ -1,4 +1,4 @@
-/* Wrapper part of tests for VSX ISA versions of vector math functions.
+/* Single-precision vector math error handling.
    Copyright (C) 2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,13 +16,23 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "test-float-vlen4.h"
-#include <altivec.h>
+#include "math_config_flt.h"
+/* NOINLINE prevents fenv semantics breaking optimizations.  */
+NOINLINE static float
+xflowf (uint32_t sign, float y)
+{
+  y = (sign ? -y : y) * y;
+  return y;
+}
 
-#define VEC_TYPE vector float
+attribute_hidden float
+__math_uflowf (uint32_t sign)
+{
+  return xflowf (sign, 0x1p-95f);
+}
 
-VECTOR_WRAPPER (WRAPPER_NAME (cosf), _ZGVbN4v_cosf)
-VECTOR_WRAPPER (WRAPPER_NAME (sinf), _ZGVbN4v_sinf)
-VECTOR_WRAPPER (WRAPPER_NAME (logf), _ZGVbN4v_logf)
-VECTOR_WRAPPER (WRAPPER_NAME (expf), _ZGVbN4v_expf)
-VECTOR_WRAPPER_fFF (WRAPPER_NAME (sincosf), _ZGVbN4vvv_sincosf)
+attribute_hidden float
+__math_oflowf (uint32_t sign)
+{
+  return xflowf (sign, 0x1p97f);
+}

@@ -48,15 +48,37 @@
 /* Round x to nearest int in all rounding modes, ties have to be rounded
    consistently with converttoint so the results match.  If the result
    would be outside of [-2^31, 2^31-1] then the semantics is unspecified.  */
-static inline double_t
-roundtoint (double_t x);
+static inline vector double
+roundtoint (vector double x);
 
 /* Convert x to nearest int in all rounding modes, ties have to be rounded
    consistently with roundtoint.  If the result is not representible in an
    int32_t then the semantics is unspecified.  */
-static inline int32_t
-converttoint (double_t x);
+static inline vector unsigned long long
+converttoint (vector double x);
 #endif
+
+static inline vector unsigned
+vasuint (vector float f)
+{
+  union
+  {
+    vector float f;
+    vector unsigned i;
+  } u = {f};
+  return u.i;
+}
+
+static inline vector float
+vasfloat (vector unsigned i)
+{
+  union
+  {
+    vector unsigned i;
+    vector float f;
+  } u = {i};
+  return u.f;
+}
 
 static inline uint32_t
 asuint (float f)
@@ -76,6 +98,28 @@ asfloat (uint32_t i)
   {
     uint32_t i;
     float f;
+  } u = {i};
+  return u.f;
+}
+
+static inline vector unsigned long long
+vasuint64 (vector double f)
+{
+  union
+  {
+    vector double f;
+    vector unsigned long long i;
+  } u = {f};
+  return u.i;
+}
+
+static inline vector double
+vasdouble (vector unsigned long long i)
+{
+  union
+  {
+    vector unsigned long long i;
+    vector double f;
   } u = {i};
   return u.f;
 }
@@ -124,12 +168,12 @@ attribute_hidden float __math_invalidf (float);
 #define EXP2F_POLY_ORDER 3
 extern const struct exp2f_data
 {
-  uint64_t tab[1 << EXP2F_TABLE_BITS];
-  double shift_scaled;
-  double poly[EXP2F_POLY_ORDER];
-  double shift;
-  double invln2_scaled;
-  double poly_scaled[EXP2F_POLY_ORDER];
+  long long unsigned tab[1 << EXP2F_TABLE_BITS];
+  vector double shift_scaled;
+  vector double poly[EXP2F_POLY_ORDER];
+  vector double shift;
+  vector double invln2_scaled;
+  vector double poly_scaled[EXP2F_POLY_ORDER];
 } __exp2f_data attribute_hidden;
 
 #define LOGF_TABLE_BITS 4
