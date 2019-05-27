@@ -91,21 +91,7 @@
 3: \
 	TOLOWER()
 
-#ifdef _ARCH_PWR8
-#  define VCLZD_V8_v7	vclzd	v8, v7;
-#  define MFVRD_R3_V1	mfvrd	r3, v1;
-#  define VSUBUDM_V9_V8	vsubudm	v9, v9, v8;
-#  define VPOPCNTD_V8_V8	vpopcntd v8, v8;
-#  define VADDUQM_V7_V8	vadduqm	v9, v7, v8;
-#else
-#  define VCLZD_V8_v7	.long	0x11003fc2
-#  define MFVRD_R3_V1	.long	0x7c230067
-#  define VSUBUDM_V9_V8	.long	0x112944c0
-#  define VPOPCNTD_V8_V8	.long	0x110047c3
-#  define VADDUQM_V7_V8	.long	0x11274100
-#endif
-
-	.machine  power7
+	.machine  power8
 
 ENTRY (__STRCASECMP)
 #ifdef USE_AS_STRNCASECMP
@@ -265,15 +251,15 @@ L(different):
 #ifdef __LITTLE_ENDIAN__
 	/* Count trailing zero.  */
 	vspltisb	v8, -1
-	VADDUQM_V7_V8
+	vadduqm	v9, v7, v8
 	vandc	v8, v9, v7
-	VPOPCNTD_V8_V8
+	vpopcntd	v8, v8
 	vspltb	v6, v8, 15
 	vcmpequb.	v6, v6, v1
 	blt	cr6, L(shift8)
 #else
 	/* Count leading zero.  */
-	VCLZD_V8_v7
+	vclzd	v8, v7
 	vspltb	v6, v8, 7
 	vcmpequb.	v6, v6, v1
 	blt	cr6, L(shift8)
@@ -291,7 +277,7 @@ L(skipsum):
 	/* Merge and move to GPR.  */
 	vmrglb	v6, v6, v7
 	vslo	v1, v6, v1
-	MFVRD_R3_V1
+	mfvrd	r3, v1
 	/* Place the characters that are different in first position.  */
 	sldi	rSTR2, rRTN, 56
 	srdi	rSTR2, rSTR2, 56
@@ -301,7 +287,7 @@ L(skipsum):
 	vslo	v6, v5, v8
 	vslo	v7, v4, v8
 	vmrghb	v1, v6, v7
-	MFVRD_R3_V1
+	mfvrd	r3, v1
 	srdi	rSTR2, rRTN, 48
 	sldi	rSTR2, rSTR2, 56
 	srdi	rSTR2, rSTR2, 56
@@ -320,15 +306,15 @@ L(null_found):
 #ifdef __LITTLE_ENDIAN__
 	/* Count trailing zero.  */
 	vspltisb	v8, -1
-	VADDUQM_V7_V8
+	vadduqm	v9, v7, v8
 	vandc	v8, v9, v7
-	VPOPCNTD_V8_V8
+	vpopcntd	v8, v8
 	vspltb	v6, v8, 15
 	vcmpequb.	v6, v6, v10
 	blt	cr6, L(shift_8)
 #else
 	/* Count leading zero.  */
-	VCLZD_V8_v7
+	vclzd	v8, v7
 	vspltb	v6, v8, 7
 	vcmpequb.	v6, v6, v10
 	blt	cr6, L(shift_8)
@@ -343,10 +329,10 @@ L(skipsum1):
 	vspltisb	v10, 7
 	vslb	v10, v10, v10
 	vsldoi	v9, v0, v10, 1
-	VSUBUDM_V9_V8
+	vsubudm	v9, v9, v8
 	vspltisb	v8, 8
 	vsldoi	v8, v0, v8, 1
-	VSUBUDM_V9_V8
+	vsubudm	v9, v9, v8
 	/* Shift and remove junk after null character.  */
 #ifdef __LITTLE_ENDIAN__
 	vslo	v5, v5, v9

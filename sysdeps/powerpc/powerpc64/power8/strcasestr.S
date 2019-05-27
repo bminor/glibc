@@ -73,18 +73,8 @@
 	vor	reg, v8, reg; \
 	vcmpequb.	v6, reg, v4;
 
-/* TODO: change these to the actual instructions when the minimum required
-   binutils allows it.  */
-#ifdef _ARCH_PWR8
-#define VCLZD_V8_v7	vclzd	v8, v7;
-#else
-#define VCLZD_V8_v7	.long	0x11003fc2
-#endif
-
 #define	FRAMESIZE	(FRAME_MIN_SIZE+48)
-/* TODO: change this to .machine power8 when the minimum required binutils
-   allows it.  */
-	.machine  power7
+	.machine  power8
 ENTRY (STRCASESTR, 4)
 	CALL_MCOUNT 2
 	mflr	r0			/* Load link register LR to r0.  */
@@ -291,7 +281,7 @@ L(nullchk1):
 	vcmpequb.	v6, v0, v7
 	/* Shift r3 by 16 bytes and proceed.  */
 	blt	cr6, L(shift16)
-	VCLZD_V8_v7
+	vclzd	v8, v7
 #ifdef __LITTLE_ENDIAN__
 	vspltb	v6, v8, 15
 #else

@@ -26,7 +26,14 @@
 # define MEMCMP memcmp
 #endif
 
+#ifndef __LITTLE_ENDIAN__
 	.machine power4
+#else
+/* Little endian is only available since POWER8, so it's safe to
+   specify .machine as power8 (or older), even though this is a POWER4
+   file.  Since the little-endian code uses 'ldbrx', power7 is enough. */
+	.machine power7
+#endif
 ENTRY_TOCLESS (MEMCMP, 4)
 	CALL_MCOUNT 3
 

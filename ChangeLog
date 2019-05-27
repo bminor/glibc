@@ -1,3 +1,23 @@
+2019-05-30  Gabriel F. T. Gomes  <gabrielftg@linux.ibm.com>
+
+	* sysdeps/powerpc/Makefile
+	[$(subdir) == misc] (CFLAGS-tst-set_ppr.c): New variable.
+	* sysdeps/powerpc/powerpc64/power4/memcmp.S [__LITTLE_ENDIAN__]:
+	Declare '.machine power7' to get support for ldbrx.
+	* sysdeps/powerpc/powerpc64/power7/strncmp.S: Declare '.machine'
+	directive based on the directory of the file.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_llround.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/strcmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/strcasecmp.S: Update
+	'.machine' directive.
+	(VCLZD_V8_v7, MFVRD_R3_V1, VSUBUDM_V9_V8, VPOPCNTD_V8_V8)
+	(VADDUQM_V7_V8): Remove.
+	(__STRCASECMP): Replace macros with actual instructions.
+	* sysdeps/powerpc/powerpc64/power8/strcasestr.S: Update
+	'.machine' directive.
+	(VCLZD_V8_v7): Remove.
+	(STRCASESTR): Replace VCLZD_V8_v7 with actual instruction.
+
 2019-05-29  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/sparcv9/get_clockfreq.c:

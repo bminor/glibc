@@ -28,6 +28,7 @@
 		     const char *s2 [r4],
 		     size_t size [r5])  */
 
+	.machine power7
 ENTRY_TOCLESS (STRNCMP, 5)
 	CALL_MCOUNT 3
 

@@ -31,6 +31,7 @@
    64K as default, the page cross handling assumes minimum page size of
    4k.  */
 
+	.machine power8
 ENTRY_TOCLESS (STRCMP, 4)
 	li	r0,0
 

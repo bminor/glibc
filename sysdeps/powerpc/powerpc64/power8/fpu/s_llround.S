@@ -26,6 +26,7 @@
 
 /* long long [r3] llround (float x [fp1])  */
 
+	.machine power8
 ENTRY_TOCLESS (__llround)
 	CALL_MCOUNT 0
 	frin	fp1,fp1	/* Round to nearest +-0.5.  */
