@@ -407,6 +407,14 @@ strong_alias (__pthread_initialize_minimal_internal,
 	      __pthread_initialize_minimal)
 
 
+/* This function is internal (it has a GLIBC_PRIVATE) version, but it
+   is widely used (either via weak symbol, or dlsym) to obtain the
+   __static_tls_size value.  This value is then used to adjust the
+   value of the stack size attribute, so that applications receive the
+   full requested stack size, not diminished by the TCB and static TLS
+   allocation on the stack.  Once the TCB is separately allocated,
+   this function should be removed or renamed (if it is still
+   necessary at that point).  */
 size_t
 __pthread_get_minstack (const pthread_attr_t *attr)
 {
