@@ -32,6 +32,17 @@ LOGF_POLY_ORDER = 4.  */
 #define N (1 << LOGF_TABLE_BITS)
 #define OFF 0x3f330000
 
+/* The vec_float built-in was added to GCC 8.  */
+#if !__GNUC_PREREQ (8, 0)
+vector float
+vec_float (vector signed int xb)
+{
+  vector float tmp;
+  __asm__ volatile ("xvcvsxwsp %x0,%x1" : "=wa" (tmp) : "wa" (xb));
+  return tmp;
+}
+#endif
+
 vector float
 _ZGVbN4v_logf (vector float x)
 {
