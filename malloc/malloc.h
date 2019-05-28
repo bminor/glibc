@@ -20,8 +20,11 @@
 #define _MALLOC_H 1
 
 #include <features.h>
-#include <stddef.h>
-#include <stdio.h>
+
+#include <bits/NULL.h>
+#include <bits/types/size_t.h>
+#include <bits/types/ptrdiff_t.h>
+#include <bits/types/FILE.h>
 
 #ifdef _LIBC
 # define __MALLOC_HOOK_VOLATILE

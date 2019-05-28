@@ -19,8 +19,7 @@
 #ifndef __iovec_defined
 #define __iovec_defined 1
 
-#define __need_size_t
-#include <stddef.h>
+#include <bits/types/size_t.h>
 
 /* Structure for scatter/gather I/O.  */
 struct iovec

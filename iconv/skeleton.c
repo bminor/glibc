@@ -140,8 +140,6 @@
 #include <assert.h>
 #include <iconv/gconv_int.h>
 #include <string.h>
-#define __need_size_t
-#define __need_NULL
 #include <stddef.h>
 
 #ifndef STATIC_GCONV

@@ -24,11 +24,9 @@
 
 #include <features.h>
 #include <bits/types/__mbstate_t.h>
+#include <bits/types/size_t.h>
+#include <bits/types/wchar_t.h>
 #include <bits/types/wint_t.h>
-
-#define __need_size_t
-#define __need_wchar_t
-#include <stddef.h>
 
 /* ISO 10646 value used to signal invalid value.  */
 #define __UNKNOWN_10646_CHAR	((wchar_t) 0xfffd)

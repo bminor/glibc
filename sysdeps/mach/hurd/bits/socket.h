@@ -24,12 +24,11 @@
 # error "Never include <bits/socket.h> directly; use <sys/socket.h> instead."
 #endif
 
-#define	__need_size_t
-#include <stddef.h>
 
-#include <bits/wordsize.h>
 #include <sys/types.h>
+#include <bits/types/size_t.h>
 #include <bits/types/socklen_t.h>
+#include <bits/wordsize.h>
 
 /* Types of sockets.  */
 enum __socket_type

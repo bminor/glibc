@@ -19,8 +19,6 @@
 #ifndef	_HURD_IOCTL_H
 #define	_HURD_IOCTL_H	1
 
-#define	__need___va_list
-#include <stdarg.h>
 #include <bits/ioctls.h>
 #include <mach/port.h>
 

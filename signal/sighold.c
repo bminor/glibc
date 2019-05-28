@@ -17,7 +17,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define __need_NULL
 #include <stddef.h>
 #include <signal.h>
 

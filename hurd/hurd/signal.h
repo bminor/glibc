@@ -21,10 +21,6 @@
 #define	_HURD_SIGNAL_H	1
 #include <features.h>
 
-#define __need_size_t
-#define __need_NULL
-#include <stddef.h>
-
 #include <mach/mach_types.h>
 #include <mach/port.h>
 #include <mach/message.h>
@@ -34,6 +30,7 @@
 #include <bits/types/error_t.h>
 #include <bits/types/stack_t.h>
 #include <bits/types/sigset_t.h>
+#include <bits/types/size_t.h>
 #include <bits/sigaction.h>
 #include <hurd/msg.h>
 
@@ -164,7 +161,7 @@ extern void _hurd_sigstate_delete (thread_t thread);
 _HURD_SIGNAL_H_EXTERN_INLINE struct hurd_sigstate *
 _hurd_self_sigstate (void)
 {
-  if (THREAD_SELF->_hurd_sigstate == NULL)
+  if (! THREAD_SELF->_hurd_sigstate)
     THREAD_SELF->_hurd_sigstate = _hurd_thread_sigstate (__mach_thread_self ());
   return THREAD_SELF->_hurd_sigstate;
 }
@@ -207,11 +204,11 @@ _hurd_critical_section_lock (void)
 #ifdef __LIBC_NO_TLS
   if (__LIBC_NO_TLS ())
     /* TLS is currently initializing, no need to enter critical section.  */
-    return NULL;
+    return 0;
 #endif
 
   ss = THREAD_SELF->_hurd_sigstate;
-  if (ss == NULL)
+  if (! ss)
     {
       /* The thread variable is unset; this must be the first time we've
 	 asked for it.  In this case, the critical section flag cannot
@@ -222,7 +219,7 @@ _hurd_critical_section_lock (void)
 
   if (! __spin_try_lock (&ss->critical_section_lock))
     /* We are already in a critical section, so do nothing.  */
-    return NULL;
+    return 0;
 
   /* With the critical section lock held no signal handler will run.
      Return our sigstate pointer; this will be passed to
@@ -239,7 +236,7 @@ extern void _hurd_critical_section_unlock (void *our_lock);
 _HURD_SIGNAL_H_EXTERN_INLINE void
 _hurd_critical_section_unlock (void *our_lock)
 {
-  if (our_lock == NULL)
+  if (! our_lock)
     /* The critical section lock was held when we began.  Do nothing.  */
     return;
   else

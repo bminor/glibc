@@ -289,9 +289,7 @@ extern int sigreturn (struct sigcontext *__scp) __THROW;
 
 
 #if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
-# define __need_size_t
-# include <stddef.h>
-
+# include <bits/types/size_t.h>
 # include <bits/types/stack_t.h>
 # if defined __USE_XOPEN || defined __USE_XOPEN2K8
 /* This will define `ucontext_t' and `mcontext_t'.  */

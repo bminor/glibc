@@ -19,8 +19,7 @@
 #ifndef __stack_t_defined
 #define __stack_t_defined 1
 
-#define __need_size_t
-#include <stddef.h>
+#include <bits/types/size_t.h>
 
 /* Structure describing a signal stack.  */
 typedef struct

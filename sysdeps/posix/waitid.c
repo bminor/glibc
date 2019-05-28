@@ -20,7 +20,6 @@
 #include <assert.h>
 #include <errno.h>
 #include <signal.h>
-#define __need_NULL
 #include <stddef.h>
 #include <sys/wait.h>
 #include <sys/types.h>

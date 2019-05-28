@@ -20,7 +20,6 @@
 #define _LIBC_LOCKP_H 1
 
 #include <pthread.h>
-#define __need_NULL
 #include <stddef.h>
 
 

@@ -18,12 +18,14 @@
 #ifndef _SYS_USER_H
 #define _SYS_USER_H	1
 
+#include <features.h>
+#include <bits/types/size_t.h>
+
+#include <asm/reg.h>
+
 /* The whole purpose of this file is for gdb/strace and gdb/strace
    only. Don't read too much into it. Don't use it for anything other
    than gdb/strace unless you know what you are doing. */
-
-#include <asm/reg.h>
-#include <stddef.h>
 
 struct user
 {

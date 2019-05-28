@@ -19,7 +19,7 @@
 #define _SYS_USER_H	1
 
 #include <features.h>
-#include <sys/types.h>
+#include <bits/types/size_t.h>
 
 /* This definition comes directly from the kernel headers.  If
    anything changes in them this header has to be changed, too.  */

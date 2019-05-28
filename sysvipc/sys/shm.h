@@ -20,20 +20,18 @@
 
 #include <features.h>
 
-#define __need_size_t
-#include <stddef.h>
-
 /* Get common definition of System V style IPC.  */
 #include <sys/ipc.h>
 
-/* Get system dependent definition of `struct shmid_ds' and more.  */
-#include <bits/shm.h>
-
 /* Define types required by the standard.  */
+#include <bits/types/size_t.h>
 #include <bits/types/time_t.h>
 #ifdef __USE_XOPEN
 # include <bits/types/pid_t.h>
 #endif
+
+/* Get system dependent definition of `struct shmid_ds' and more.  */
+#include <bits/shm.h>
 
 __BEGIN_DECLS
 

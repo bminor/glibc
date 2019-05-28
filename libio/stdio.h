@@ -28,33 +28,22 @@
 
 __BEGIN_DECLS
 
-#define __need_size_t
-#define __need_NULL
-#include <stddef.h>
-
-#define __need___va_list
-#include <stdarg.h>
-
 #include <bits/types.h>
 #include <bits/types/__fpos_t.h>
 #include <bits/types/__fpos64_t.h>
 #include <bits/types/__FILE.h>
+#include <bits/types/__va_list.h>
 #include <bits/types/FILE.h>
 #include <bits/types/struct_FILE.h>
+#include <bits/types/size_t.h>
+#include <bits/NULL.h>
 
 #ifdef __USE_GNU
 # include <bits/types/cookie_io_functions_t.h>
 #endif
 
 #if defined __USE_XOPEN || defined __USE_XOPEN2K8
-# ifdef __GNUC__
-#  ifndef _VA_LIST_DEFINED
-typedef __gnuc_va_list va_list;
-#   define _VA_LIST_DEFINED
-#  endif
-# else
-#  include <stdarg.h>
-# endif
+# include <bits/types/va_list.h>
 #endif
 
 #if defined __USE_UNIX98 || defined __USE_XOPEN2K

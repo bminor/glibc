@@ -27,9 +27,7 @@
 __BEGIN_DECLS
 
 #include <bits/types.h>
-
-#define __need_size_t
-#include <stddef.h>
+#include <bits/types/size_t.h>
 
 /* For the Single Unix specification we must define this type here.  */
 #if defined __USE_XOPEN || defined __USE_XOPEN2K
@@ -166,9 +164,6 @@ extern int fgetgrent_r (FILE *__restrict __stream,
 
 
 #ifdef	__USE_MISC
-
-# define __need_size_t
-# include <stddef.h>
 
 /* Set the group set for the current user to GROUPS (N of them).  */
 extern int setgroups (size_t __n, const __gid_t *__groups) __THROW;

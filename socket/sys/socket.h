@@ -23,9 +23,8 @@
 
 __BEGIN_DECLS
 
+#include <bits/types/size_t.h>
 #include <bits/types/struct_iovec.h>
-#define	__need_size_t
-#include <stddef.h>
 
 /* This operating system-specific header file defines the SOCK_*, PF_*,
    AF_*, MSG_*, SOL_*, and SO_* constants, and the `struct sockaddr',

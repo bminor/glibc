@@ -19,8 +19,7 @@
 #ifndef _SET_HOOKS_H
 #define _SET_HOOKS_H 1
 
-#define __need_size_t
-#include <stddef.h>
+#include <bits/types/size_t.h>
 #include <sys/cdefs.h>
 #include <libc-symbols.h>
 

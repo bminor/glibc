@@ -24,14 +24,17 @@
 
 #ifndef sigcontext_struct
 /* Kernel headers before 2.1.1 define a struct sigcontext_struct, but
-   we need sigcontext.  */
+   we need sigcontext.  FIXME: Is this workaround still necessary?
+   2.1.1 was many years ago.  */
 # define sigcontext_struct sigcontext
 
 # include <asm/sigcontext.h>
 
-/* The Linux kernel headers redefine NULL wrongly, so cleanup afterwards.  */
-# define __need_NULL
-# include <stddef.h>
+/* The Linux kernel headers redefine NULL wrongly, so cleanup afterwards.
+   FIXME: This won't work if bits/NULL.h or stddef.h has already been
+   included.  Is this workaround still necessary?  Current (4.19) uapi
+   headers do not redefine NULL.  */
+#include <bits/NULL.h>
 #endif
 
 #endif /* bits/sigcontext.h */

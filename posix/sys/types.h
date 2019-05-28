@@ -28,9 +28,6 @@ __BEGIN_DECLS
 
 #include <bits/types.h>
 
-#define __need_size_t
-#include <stddef.h>
-
 #include <bits/types/blkcnt_t.h>
 #include <bits/types/clockid_t.h>
 #include <bits/types/dev_t.h>
@@ -42,6 +39,7 @@ __BEGIN_DECLS
 #include <bits/types/nlink_t.h>
 #include <bits/types/off_t.h>
 #include <bits/types/pid_t.h>
+#include <bits/types/size_t.h>
 #include <bits/types/ssize_t.h>
 #include <bits/types/time_t.h>
 #include <bits/types/timer_t.h>

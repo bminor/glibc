@@ -20,18 +20,17 @@
 
 #include <features.h>
 
-#define __need_size_t
-#include <stddef.h>
-
 /* Get common definition of System V style IPC.  */
 #include <sys/ipc.h>
 
-/* Get system dependent definition of `struct semid_ds' and more.  */
-#include <bits/sem.h>
-
+/* Define types required by the standard.  */
+#include <bits/types/size_t.h>
 #ifdef __USE_GNU
 # include <bits/types/struct_timespec.h>
 #endif
+
+/* Get system dependent definition of `struct semid_ds' and more.  */
+#include <bits/sem.h>
 
 /* The following System V style IPC functions implement a semaphore
    handling.  The definition is found in XPG2.  */

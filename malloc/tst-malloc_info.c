@@ -22,6 +22,7 @@
 #include <array_length.h>
 #include <malloc.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <support/support.h>
 #include <support/xthread.h>
 

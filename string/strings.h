@@ -19,8 +19,7 @@
 #define	_STRINGS_H	1
 
 #include <features.h>
-#define __need_size_t
-#include <stddef.h>
+#include <bits/types/size_t.h>
 
 /* Tell the caller that we provide correct C++ prototypes.  */
 #if defined __cplusplus && __GNUC_PREREQ (4, 4)

@@ -19,13 +19,13 @@
 #ifndef _SYS_PARAM_H
 #define _SYS_PARAM_H    1
 
-#define __need_NULL
-#include <stddef.h>
+#include <features.h>
 
 #include <sys/types.h>
 #include <limits.h>
 #include <endian.h>                     /* Define BYTE_ORDER et al.  */
 #include <signal.h>                     /* Define NSIG.  */
+#include <bits/NULL.h>
 
 /* This file defines some things in system-specific ways.  */
 #include <bits/param.h>

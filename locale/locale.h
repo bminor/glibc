@@ -24,9 +24,8 @@
 
 #include <features.h>
 
-#define __need_NULL
-#include <stddef.h>
 #include <bits/locale.h>
+#include <bits/NULL.h>
 
 __BEGIN_DECLS
 

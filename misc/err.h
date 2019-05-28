@@ -21,11 +21,7 @@
 
 #include <features.h>
 
-#define	__need___va_list
-#include <stdarg.h>
-#ifndef	__GNUC_VA_LIST
-# define __gnuc_va_list	void *
-#endif
+#include <bits/types/__va_list.h>
 
 __BEGIN_DECLS
 

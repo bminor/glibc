@@ -21,8 +21,8 @@
 #warning "The <sys/sysctl.h> header is deprecated and will be removed."
 
 #include <features.h>
-#define __need_size_t
-#include <stddef.h>
+#include <bits/types/size_t.h>
+
 /* Prevent more kernel headers than necessary to be included.  */
 #ifndef _LINUX_KERNEL_H
 # define _LINUX_KERNEL_H	1

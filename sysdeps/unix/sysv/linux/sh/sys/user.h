@@ -18,8 +18,11 @@
 #ifndef _SYS_USER_H
 #define _SYS_USER_H	1
 
+#include <features.h>
+#include <bits/types/size_t.h>
+
 #include <asm/ptrace.h>
-#include <stddef.h>
+
 
 /* asm/ptrace.h polutes the namespace.  */
 #undef PTRACE_GETREGS

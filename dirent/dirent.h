@@ -233,8 +233,7 @@ extern int dirfd (DIR *__dirp) __THROW __nonnull ((1));
 #  endif
 # endif
 
-# define __need_size_t
-# include <stddef.h>
+# include <bits/types/size_t.h>
 
 /* Scan the directory DIR, calling SELECTOR on each directory entry.
    Entries for which SELECT returns nonzero are individually malloc'd,

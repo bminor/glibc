@@ -20,13 +20,11 @@
 #define	_SYS_MMAN_H	1
 
 #include <features.h>
+
 #include <bits/types.h>
-
-#define __need_size_t
-#include <stddef.h>
-
-#include <bits/types/off_t.h>
 #include <bits/types/mode_t.h>
+#include <bits/types/off_t.h>
+#include <bits/types/size_t.h>
 
 #include <bits/mman.h>
 

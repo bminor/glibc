@@ -20,19 +20,16 @@
  */
 
 #ifndef	_STDLIB_H
+#define	_STDLIB_H	1
 
 #define __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION
 #include <bits/libc-header-start.h>
 
-/* Get size_t, wchar_t and NULL from <stddef.h>.  */
-#define __need_size_t
-#define __need_wchar_t
-#define __need_NULL
-#include <stddef.h>
+#include <bits/types/size_t.h>
+#include <bits/types/wchar_t.h>
+#include <bits/NULL.h>
 
 __BEGIN_DECLS
-
-#define	_STDLIB_H	1
 
 #if (defined __USE_XOPEN || defined __USE_XOPEN2K8) && !defined _SYS_WAIT_H
 /* XPG requires a few symbols from <sys/wait.h> being defined.  */

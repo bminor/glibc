@@ -17,8 +17,6 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <wchar.h>
-
-#define __need_ptrdiff_t
 #include <stddef.h>
 
 

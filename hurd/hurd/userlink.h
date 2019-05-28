@@ -17,20 +17,16 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef	_HURD_USERLINK_H
-
 #define	_HURD_USERLINK_H	1
-#include <features.h>
 
-#define __need_NULL
-#include <stddef.h>
+#include <features.h>
+#include <setjmp.h>
 
 #if defined __USE_EXTERN_INLINES && defined _LIBC
 # if IS_IN (libc)
 #  include <hurd/signal.h>
 # endif
 #endif
-#include <setjmp.h>
-
 
 /* This structure records a link in two doubly-linked lists.
    We call these the per-resource user list and the per-thread
@@ -156,11 +152,11 @@ _hurd_userlink_move (struct hurd_userlink *new_link,
 {
   *new_link = *link;
 
-  if (new_link->resource.next != NULL)
+  if (new_link->resource.next)
     new_link->resource.next->resource.prevp = &new_link->resource.next;
   *new_link->resource.prevp = new_link;
 
-  if (new_link->thread.next != NULL)
+  if (new_link->thread.next)
     new_link->thread.next->thread.prevp = &new_link->thread.next;
   *new_link->thread.prevp = new_link;
 }
@@ -180,13 +176,13 @@ extern int _hurd_userlink_clear (struct hurd_userlink **chainp);
 _HURD_USERLINK_H_EXTERN_INLINE int
 _hurd_userlink_clear (struct hurd_userlink **chainp)
 {
-  if (*chainp == NULL)
+  if (! *chainp)
     return 1;
 
   /* Detach the chain of current users from the cell.  The last user to
      remove his link from that chain will deallocate the old resource.  */
-  (*chainp)->resource.prevp = NULL;
-  *chainp = NULL;
+  (*chainp)->resource.prevp = 0;
+  *chainp = 0;
   return 0;
 }
 # endif

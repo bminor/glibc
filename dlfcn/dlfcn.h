@@ -20,8 +20,8 @@
 #define	_DLFCN_H 1
 
 #include <features.h>
-#define __need_size_t
-#include <stddef.h>
+
+#include <bits/types/size_t.h>
 
 /* Collect various system dependent definitions and declarations.  */
 #include <bits/dlfcn.h>

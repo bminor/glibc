@@ -23,12 +23,9 @@
 __BEGIN_DECLS
 
 #include <bits/types/FILE.h>
-
-#define	__need_size_t
-#define __need_wchar_t
-#include <stddef.h>
-
-#include <stdarg.h>
+#include <bits/types/size_t.h>
+#include <bits/types/wchar_t.h>
+#include <bits/types/__va_list.h>
 
 
 struct printf_info
@@ -89,7 +86,7 @@ typedef int printf_arginfo_function (const struct printf_info *__info,
 
 /* Type of a function to get a value of a user-defined from the
    variable argument list.  */
-typedef void printf_va_arg_function (void *__mem, va_list *__ap);
+typedef void printf_va_arg_function (void *__mem, __gnuc_va_list *__ap);
 
 
 /* Register FUNC to be called to format SPEC specifiers; ARGINFO must be

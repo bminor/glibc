@@ -20,6 +20,7 @@
    related to allocation failures, notably switching to a different
    arena, and falling back to mmap (via sysmalloc).  */
 
+#include <stddef.h>
 #include <errno.h>
 #include <malloc.h>
 #include <pthread.h>

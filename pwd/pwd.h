@@ -27,9 +27,7 @@
 __BEGIN_DECLS
 
 #include <bits/types.h>
-
-#define __need_size_t
-#include <stddef.h>
+#include <bits/types/size_t.h>
 
 #if defined __USE_XOPEN || defined __USE_XOPEN2K
 /* The Single Unix specification says that some more types are

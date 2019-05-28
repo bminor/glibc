@@ -95,10 +95,6 @@ extern char *bind_textdomain_codeset (const char *__domainname,
 /* Optimized version of the function above.  */
 #if defined __OPTIMIZE__ && !defined __cplusplus
 
-/* We need NULL for `gettext'.  */
-# define __need_NULL
-# include <stddef.h>
-
 /* We need LC_MESSAGES for `dgettext'.  */
 # include <locale.h>
 
@@ -106,12 +102,12 @@ extern char *bind_textdomain_codeset (const char *__domainname,
    `__builtin_constant_p' predicate in dcgettext would always return
    false.  */
 
-# define gettext(msgid) dgettext (NULL, msgid)
+# define gettext(msgid) dgettext (0, msgid)
 
 # define dgettext(domainname, msgid) \
   dcgettext (domainname, msgid, LC_MESSAGES)
 
-# define ngettext(msgid1, msgid2, n) dngettext (NULL, msgid1, msgid2, n)
+# define ngettext(msgid1, msgid2, n) dngettext (0, msgid1, msgid2, n)
 
 # define dngettext(domainname, msgid1, msgid2, n) \
   dcngettext (domainname, msgid1, msgid2, n, LC_MESSAGES)

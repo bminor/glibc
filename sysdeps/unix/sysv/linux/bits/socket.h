@@ -23,10 +23,9 @@
 # error "Never include <bits/socket.h> directly; use <sys/socket.h> instead."
 #endif
 
-#define __need_size_t
-#include <stddef.h>
 
 #include <sys/types.h>
+#include <bits/types/size_t.h>
 #include <bits/types/socklen_t.h>
 
 /* Get the architecture-dependent definition of enum __socket_type.  */

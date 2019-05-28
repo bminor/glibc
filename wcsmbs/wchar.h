@@ -27,20 +27,16 @@
 #include <bits/libc-header-start.h>
 
 /* Gather machine dependent type support.  */
-#include <bits/floatn.h>
-
-#define __need_size_t
-#define __need_wchar_t
-#define __need_NULL
-#include <stddef.h>
-
-#define __need___va_list
-#include <stdarg.h>
-
-#include <bits/wchar.h>
-#include <bits/types/wint_t.h>
-#include <bits/types/mbstate_t.h>
 #include <bits/types/__FILE.h>
+#include <bits/types/__va_list.h>
+#include <bits/types/mbstate_t.h>
+#include <bits/types/size_t.h>
+#include <bits/types/wchar_t.h>
+#include <bits/types/wint_t.h>
+
+#include <bits/NULL.h>
+#include <bits/floatn.h>
+#include <bits/wchar.h>
 
 #if defined __USE_UNIX98 || defined __USE_XOPEN2K
 # include <bits/types/FILE.h>

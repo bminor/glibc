@@ -19,10 +19,8 @@
 #ifndef _BITS_TYPES_STRUCT___PTHREAD_ATTR
 #define _BITS_TYPES_STRUCT___PTHREAD_ATTR	1
 
+#include <bits/types/size_t.h>
 #include <bits/types/struct_sched_param.h>
-
-#define __need_size_t
-#include <stddef.h>
 
 enum __pthread_detachstate;
 enum __pthread_inheritsched;

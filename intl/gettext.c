@@ -18,12 +18,7 @@
 # include <config.h>
 #endif
 
-#ifdef _LIBC
-# define __need_NULL
-# include <stddef.h>
-#else
-# include <stdlib.h>		/* Just for NULL.  */
-#endif
+#include <stddef.h>		/* Just for NULL.  */
 
 #include "gettextP.h"
 #ifdef _LIBC

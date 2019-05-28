@@ -23,9 +23,7 @@
 #include <features.h>
 #include <paths.h>
 #include <bits/types/FILE.h>
-
-#define __need_size_t
-#include <stddef.h>
+#include <bits/types/size_t.h>
 
 /* Path to the user database files.  */
 #define	GSHADOW _PATH_GSHADOW

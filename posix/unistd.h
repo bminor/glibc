@@ -214,12 +214,10 @@ __BEGIN_DECLS
 
 /* All functions that are not declared anywhere else.  */
 
+#include <bits/NULL.h>
 #include <bits/types.h>
+#include <bits/types/size_t.h>
 #include <bits/types/ssize_t.h>
-
-#define	__need_size_t
-#define __need_NULL
-#include <stddef.h>
 
 #if defined __USE_XOPEN || defined __USE_XOPEN2K
 /* The Single Unix specification says that some more types are

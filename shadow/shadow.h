@@ -28,10 +28,8 @@
 
 #include <paths.h>
 
-#define __need_size_t
-#include <stddef.h>
-
 #include <bits/types/FILE.h>
+#include <bits/types/size_t.h>
 
 /* Paths to the user database files.  */
 #define	SHADOW _PATH_SHADOW

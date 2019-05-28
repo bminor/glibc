@@ -19,6 +19,8 @@
 #ifndef _SYS_USER_H
 #define _SYS_USER_H	1
 
+#include <features.h>
+
 struct user_regs_struct
 {
   unsigned long long regs[31];

@@ -17,11 +17,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#define __need_NULL
 #include <stddef.h>
 #include <signal.h>
-#include <string.h>	/* For the real memset prototype.  */
 #include <sigsetops.h>
 
 int

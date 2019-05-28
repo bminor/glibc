@@ -24,17 +24,15 @@
 
 #include <features.h>
 
-#define __need_size_t
-#define __need_NULL
-#include <stddef.h>
-
 /* This defines CLOCKS_PER_SEC, which is the number of processor clock
    ticks per second, and possibly a number of other constants.   */
 #include <bits/time.h>
 
-/* Many of the typedefs and structs whose official home is this header
-   may also need to be defined by other headers.  */
+/* Typedefs and structs required to be defined by this header.
+   Many are also defined by other headers.  */
+#include <bits/NULL.h>
 #include <bits/types/clock_t.h>
+#include <bits/types/size_t.h>
 #include <bits/types/time_t.h>
 #include <bits/types/struct_tm.h>
 

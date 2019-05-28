@@ -84,9 +84,7 @@ libc_hidden_proto (__isoc99_vfscanf)
 extern FILE *__new_tmpfile (void);
 extern FILE *__old_tmpfile (void);
 
-#  define __need_size_t
-#  include <stddef.h>
-
+#  include <bits/types/size_t.h>
 #  include <bits/types/wint_t.h>
 
 /* Generate a unique file name (and possibly open it).  */

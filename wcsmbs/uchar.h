@@ -25,10 +25,8 @@
 
 #include <features.h>
 
-#define __need_size_t
-#include <stddef.h>
-
 #include <bits/types.h>
+#include <bits/types/size_t.h>
 #include <bits/types/mbstate_t.h>
 
 #ifndef __USE_ISOCXX11

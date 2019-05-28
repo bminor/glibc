@@ -22,9 +22,8 @@
 #include <features.h>
 
 /* Get needed types.  */
-#define __need_size_t
-#include <stddef.h>
 #include <bits/types.h>
+#include <bits/types/size_t.h>
 #include <bits/types/ssize_t.h>
 
 __BEGIN_DECLS

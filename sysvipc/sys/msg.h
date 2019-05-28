@@ -20,19 +20,17 @@
 
 #include <features.h>
 
-#define __need_size_t
-#include <stddef.h>
-
 /* Get common definition of System V style IPC.  */
 #include <sys/ipc.h>
-
-/* Get system dependent definition of `struct msqid_ds' and more.  */
-#include <bits/msq.h>
 
 /* Define types required by the standard.  */
 #include <bits/types/time_t.h>
 #include <bits/types/pid_t.h>
+#include <bits/types/size_t.h>
 #include <bits/types/ssize_t.h>
+
+/* Get system dependent definition of `struct msqid_ds' and more.  */
+#include <bits/msq.h>
 
 /* The following System V style IPC functions implement a message queue
    system.  The definition is found in XPG2.  */

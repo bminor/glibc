@@ -491,14 +491,6 @@ def ObsoleteTypedefChecker(reporter, fname):
 # but we are not ready to enforce that yet.
 UNIVERSAL_ALLOWED_INCLUDES = {
     "features.h",
-
-    # Technically these should only ever be included with __need
-    # macros active, but some headers deliberately break this rule
-    # when they think they're dealing with freestanding headers from a
-    # non-GNU compiler, so enforcing it would be more trouble than
-    # it's worth.
-    "stddef.h",
-    "stdarg.h",
 }
 
 # Specific headers are allowed to include specific other headers.
@@ -575,7 +567,7 @@ HEADER_ALLOWED_INCLUDES = {
     "link.h":                      [ "dlfcn.h", "elf.h", "sys/types.h" ],
     "mntent.h":                    [ "paths.h" ],
     "nss.h":                       [ "stdint.h" ],
-    "obstack.h":                   [ "string.h" ],
+    "obstack.h":                   [ "stddef.h", "string.h" ],
     "proc_service.h":              [ "sys/procfs.h" ],
     "pty.h":                       [ "sys/ioctl.h", "termios.h" ],
     "sgtty.h":                     [ "sys/ioctl.h" ],
@@ -619,7 +611,6 @@ HEADER_ALLOWED_INCLUDES = {
     "sys/timex.h":                 [ "sys/time.h" ],
     "sys/ttychars.h":              [ "sys/ttydefaults.h" ],
     "sys/ucontext.h":              [ "sys/procfs.h" ],
-    "sys/user.h":                  [ "sys/types.h" ],
     "sys/vfs.h":                   [ "sys/statfs.h" ],
     "sys/xattr.h":                 [ "sys/types.h" ],
 
@@ -696,6 +687,12 @@ HEADER_ALLOWED_INCLUDES = {
     "bits/types/res_state.h":      [ "netinet/in.h", "sys/types.h" ],
     "bits/utmp.h":                 [ "paths.h", "sys/time.h", "sys/types.h" ],
     "bits/utmpx.h":                [ "paths.h", "sys/time.h" ],
+
+    "bits/types/__va_list.h":      [ "stdarg.h" ],
+    "bits/types/ptrdiff_t.h":      [ "stddef.h" ],
+    "bits/types/size_t.h":         [ "stddef.h" ],
+    "bits/types/wchar_t.h":        [ "stddef.h" ],
+    "bits/NULL.h":                 [ "stddef.h" ],
 }
 
 # As above, but each group of whitelist entries is only used for

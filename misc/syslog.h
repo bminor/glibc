@@ -33,8 +33,7 @@
 #define _SYSLOG_H 1
 
 #include <features.h>
-#define __need___va_list
-#include <stdarg.h>
+#include <bits/types/__va_list.h>
 
 /* This file defines _PATH_LOG.  */
 #include <bits/syslog-path.h>

@@ -29,7 +29,9 @@ headers	:= stdlib.h bits/stdlib.h bits/stdlib-ldbl.h bits/stdlib-float.h      \
 	   ucontext.h sys/ucontext.h bits/indirect-return.h		      \
 	   alloca.h fmtmsg.h						      \
 	   bits/stdlib-bsearch.h sys/random.h bits/stdint-intn.h	      \
-	   bits/stdint-uintn.h bits/time64.h				      \
+	   bits/stdint-uintn.h bits/time64.h bits/NULL.h		      \
+	   bits/types/ptrdiff_t.h bits/types/size_t.h bits/types/wchar_t.h    \
+	   bits/types/__va_list.h bits/types/va_list.h
 
 routines	:=							      \
 	atof atoi atol atoll						      \

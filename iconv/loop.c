@@ -54,7 +54,6 @@
 #include <string.h>
 #include <wchar.h>
 #include <sys/param.h>		/* For MIN.  */
-#define __need_size_t
 #include <stddef.h>
 #include <libc-diag.h>
 

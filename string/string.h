@@ -27,10 +27,8 @@
 
 __BEGIN_DECLS
 
-/* Get size_t and NULL from <stddef.h>.  */
-#define	__need_size_t
-#define	__need_NULL
-#include <stddef.h>
+#include <bits/types/size_t.h>
+#include <bits/NULL.h>
 
 /* Tell the caller that we provide correct C++ prototypes.  */
 #if defined __cplusplus && (__GNUC_PREREQ (4, 4) \

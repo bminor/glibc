@@ -29,8 +29,7 @@ __BEGIN_DECLS
    a different purpose.  */
 
 #if defined __USE_XOPEN || defined __USE_XOPEN2K8
-# define __need_size_t
-# include <stddef.h>
+#include <bits/types/size_t.h>
 typedef size_t __gsize_t;
 #elif defined __SIZE_TYPE__
 typedef __SIZE_TYPE__ __gsize_t;

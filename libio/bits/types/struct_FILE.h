@@ -31,6 +31,7 @@
 #endif
 
 #include <bits/types.h>
+#include <bits/types/size_t.h>
 
 struct _IO_FILE;
 struct _IO_marker;

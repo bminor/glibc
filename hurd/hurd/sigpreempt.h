@@ -19,8 +19,7 @@
 #ifndef	_HURD_SIGPREEMPT_H
 
 #define	_HURD_SIGPREEMPT_H	1
-#define __need_size_t
-#include <stddef.h>
+#include <bits/types/size_t.h>
 #include <errno.h>
 #include <bits/types/error_t.h>
 #include <signal.h>		/* For sighandler_t, SIG_ERR.  */
