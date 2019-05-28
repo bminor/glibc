@@ -1,3 +1,7 @@
+2019-05-28  Joseph Myers  <joseph@codesourcery.com>
+
+	* inet/netinet/igmp.h (IGMP_MRDISC_ADV): New macro.
+
 2019-05-27  Florian Weimer  <fweimer@redhat.com>
 
 	* nptl/nptl-init.c: Add comment.
