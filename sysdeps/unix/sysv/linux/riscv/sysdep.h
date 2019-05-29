@@ -19,6 +19,9 @@
 #ifndef _LINUX_RISCV_SYSDEP_H
 #define _LINUX_RISCV_SYSDEP_H 1
 
+/* Always enable vsyscalls on riscv */
+#define ALWAYS_USE_VSYSCALL 1
+
 #include <sysdeps/unix/sysv/linux/generic/sysdep.h>
 #include <tls.h>
 

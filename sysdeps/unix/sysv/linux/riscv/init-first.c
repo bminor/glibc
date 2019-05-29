@@ -17,9 +17,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifdef SHARED
-# include <dl-vdso.h>
-# include <libc-vdso.h>
+#include <dl-vdso.h>
+#include <libc-vdso.h>
 
 long int (*VDSO_SYMBOL (getcpu)) (unsigned int *, unsigned int *, void *)
     attribute_hidden;
@@ -52,7 +51,6 @@ _libc_vdso_platform_setup (void)
   VDSO_SYMBOL (clock_getres) = p;
 }
 
-# define VDSO_SETUP _libc_vdso_platform_setup
-#endif
+#define VDSO_SETUP _libc_vdso_platform_setup
 
 #include <csu/init-first.c>

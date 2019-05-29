@@ -1,5 +1,11 @@
 2019-08-05  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	[BZ #19767]
+	* sysdeps/unix/sysv/linux/riscv/init-first.c: Remove #ifdef SHARED.
+	* sysdeps/unix/sysv/linux/riscv/libc-vdso.h: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/sysdep.h (ALWAYS_USE_VSYSCALL):
+	Define.
+
 	* sysdeps/sh/libm-test-ulps: Update.
 
 2019-08-05  Florian Weimer  <fweimer@redhat.com>
