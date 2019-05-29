@@ -17,167 +17,71 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* I/O port access on the ARM is something of a fiction.  What we do is to
-   map an appropriate area of /dev/mem into user space so that a program
-   can blast away at the hardware in such a way as to generate I/O cycles
-   on the bus.  To insulate user code from dependencies on particular
-   hardware we don't allow calls to inb() and friends to be inlined, but
-   force them to come through code in here every time.  Performance-critical
-   registers tend to be memory mapped these days so this should be no big
-   problem.  */
+#include <shlib-compat.h>
 
-/* Once upon a time this file used mprotect to enable and disable
-   access to particular areas of I/O space.  Unfortunately the
-   mprotect syscall also has the side effect of enabling caching for
-   the area affected (this is a kernel limitation).  So we now just
-   enable all the ports all of the time.  */
+#if SHLIB_COMPAT (libc, GLIBC_2_4, GLIBC_2_30)
+# include <errno.h>
 
-#include <errno.h>
-#include <fcntl.h>
-#include <stdio.h>
-#include <ctype.h>
-#include <stdlib.h>
-#include <unistd.h>
-
-#include <sys/types.h>
-#include <sys/mman.h>
-
-#include <sys/sysctl.h>
-
-#define MAX_PORT	0x10000
-
-static struct {
-  unsigned long int	base;
-  unsigned long int	io_base;
-  unsigned int		shift;
-  unsigned int		initdone;	/* since all the above could be 0 */
-} io;
-
-#define IO_ADDR(port)	(io.base + ((port) << io.shift))
-
-/*
- * Initialize I/O system.  The io_bae and port_shift values are fetched
- * using sysctl (CTL_BUS, CTL_BUS_ISA, ISA_*).
- */
-
-static int
-init_iosys (void)
+int
+ioperm (unsigned long int from, unsigned long int num, int turn_on)
 {
-  static int iobase_name[] = { CTL_BUS, CTL_BUS_ISA, BUS_ISA_PORT_BASE };
-  static int ioshift_name[] = { CTL_BUS, CTL_BUS_ISA, BUS_ISA_PORT_SHIFT };
-  size_t len = sizeof (io.base);
-
-  if (! __sysctl (iobase_name, 3, &io.io_base, &len, NULL, 0)
-      && ! __sysctl (ioshift_name, 3, &io.shift, &len, NULL, 0))
-    {
-      io.initdone = 1;
-      return 0;
-    }
-
-  /* sysctl has failed... */
-  __set_errno (ENODEV);
+  __set_errno (ENOSYS);
   return -1;
 }
+compat_symbol (libc, ioperm, ioperm, GLIBC_2_4);
 
 int
-_ioperm (unsigned long int from, unsigned long int num, int turn_on)
+iopl (unsigned int level)
 {
-  if (! io.initdone && init_iosys () < 0)
-    return -1;
+  __set_errno (ENOSYS);
+  return -1;
+}
+compat_symbol (libc, iopl, iopl, GLIBC_2_4);
 
-  /* this test isn't as silly as it may look like; consider overflows! */
-  if (from >= MAX_PORT || from + num > MAX_PORT)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
 
-  if (turn_on)
-    {
-      if (! io.base)
-	{
-	  int fd;
+/* The remaining functions do not have any way to indicate failure.
+   However, it is only valid to call them after calling ioperm/iopl,
+   which will have indicated failure.  */
 
-	  fd = __open ("/dev/mem", O_RDWR);
-	  if (fd < 0)
-	    return -1;
+void
+outb (unsigned char b, unsigned long int port)
+{
+}
+compat_symbol (libc, outb, outb, GLIBC_2_4);
 
-	  io.base =
-	    (unsigned long int) __mmap (0, MAX_PORT << io.shift,
-					PROT_READ | PROT_WRITE,
-					MAP_SHARED, fd, io.io_base);
-	  __close (fd);
-	  if ((long) io.base == -1)
-	    return -1;
-	}
-    }
+void
+outw (unsigned short b, unsigned long int port)
+{
+}
+compat_symbol (libc, outw, outw, GLIBC_2_4);
 
+void
+outl (unsigned int b, unsigned long int port)
+{
+}
+compat_symbol (libc, outl, outl, GLIBC_2_4);
+
+unsigned int
+inb (unsigned long int port)
+{
   return 0;
 }
-
-
-int
-_iopl (unsigned int level)
-{
-    if (level > 3)
-      {
-	__set_errno (EINVAL);
-	return -1;
-      }
-    if (level)
-      {
-	return _ioperm (0, MAX_PORT, 1);
-      }
-    return 0;
-}
-
-
-void
-_outb (unsigned char b, unsigned long int port)
-{
-  *((volatile unsigned char *)(IO_ADDR (port))) = b;
-}
-
-
-void
-_outw (unsigned short b, unsigned long int port)
-{
-  *((volatile unsigned short *)(IO_ADDR (port))) = b;
-}
-
-
-void
-_outl (unsigned int b, unsigned long int port)
-{
-  *((volatile unsigned long *)(IO_ADDR (port))) = b;
-}
+compat_symbol (libc, inb, inb, GLIBC_2_4);
 
 
 unsigned int
-_inb (unsigned long int port)
+inw (unsigned long int port)
 {
-  return *((volatile unsigned char *)(IO_ADDR (port)));
+  return 0;
 }
+compat_symbol (libc, inw, inw, GLIBC_2_4);
 
 
 unsigned int
-_inw (unsigned long int port)
+inl (unsigned long int port)
 {
-  return *((volatile unsigned short *)(IO_ADDR (port)));
+  return 0;
 }
+compat_symbol (libc, inl, inl, GLIBC_2_4);
 
-
-unsigned int
-_inl (unsigned long int port)
-{
-  return *((volatile unsigned long *)(IO_ADDR (port)));
-}
-
-weak_alias (_ioperm, ioperm);
-weak_alias (_iopl, iopl);
-weak_alias (_inb, inb);
-weak_alias (_inw, inw);
-weak_alias (_inl, inl);
-weak_alias (_outb, outb);
-weak_alias (_outw, outw);
-weak_alias (_outl, outl);
+#endif /* SHLIB_COMAT */

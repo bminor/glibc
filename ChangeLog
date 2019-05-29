@@ -1,3 +1,13 @@
+2019-05-29  Florian Weimer  <fweimer@redhat.com>
+
+	arm: Remove ioperm/iopl/inb/inw/inl/outb/outw/outl support.
+	* sysdeps/unix/sysv/linux/arm/Makefile
+	[$(subdir) == misc] (sysdep_headers): Remove sys/io.h.
+	* sysdeps/unix/sysv/linux/arm/sys/io.h: Remove file.
+	* sysdeps/unix/sysv/linux/arm/ioperm.c: Rewrite file.
+	(ioperm, iopl, inb, inw, inl, outb, outw, outl): Turn into
+	compatibility symbols.
+
 2019-05-31  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/unix/sysv/linux/syscall-names.list: Add oddly named
