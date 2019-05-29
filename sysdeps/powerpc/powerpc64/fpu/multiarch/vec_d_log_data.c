@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "math_config.h"
+#include "math_config_dbl.h"
 
 #define N (1 << LOG_TABLE_BITS)
 

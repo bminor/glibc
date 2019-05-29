@@ -21,7 +21,7 @@
 #include <math/math-svid-compat.h>
 #include <shlib-compat.h>
 #include <libm-alias-double.h>
-#include "math_config.h"
+#include "math_config_dbl.h"
 #include <altivec.h>
 
 #define T __log_data.tab

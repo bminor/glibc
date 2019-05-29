@@ -46,6 +46,8 @@
 #  define __DECL_SIMD_sincosf __DECL_SIMD_PPC64
 #  undef __DECL_SIMD_expf
 #  define __DECL_SIMD_expf __DECL_SIMD_PPC64
+#  undef __DECL_SIMD_exp
+#  define __DECL_SIMD_exp __DECL_SIMD_PPC64
 
 # endif
 #endif

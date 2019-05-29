@@ -24,6 +24,7 @@
 #include <nan-high-order-bit.h>
 #include <stdint.h>
 #include <altivec.h>
+#include <math-narrow-eval.h>
 
 #ifndef WANT_ROUNDING
 /* Correct special case results in non-nearest rounding modes.  */
@@ -134,13 +135,13 @@ check_uflow (double x)
 #define EXP2_POLY_ORDER 5
 extern const struct exp_data
 {
-  double invln2N;
-  double shift;
-  double negln2hiN;
-  double negln2loN;
-  double poly[4]; /* Last four coefficients.  */
-  double exp2_shift;
-  double exp2_poly[EXP2_POLY_ORDER];
+  vector double invln2N;
+  vector double shift;
+  vector double negln2hiN;
+  vector double negln2loN;
+  vector double poly[4]; /* Last four coefficients.  */
+  vector double exp2_shift;
+  vector double exp2_poly[EXP2_POLY_ORDER];
   uint64_t tab[2*(1 << EXP_TABLE_BITS)];
 } __exp_data attribute_hidden;
 

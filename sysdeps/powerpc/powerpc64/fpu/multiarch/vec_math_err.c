@@ -1,4 +1,4 @@
-/* Wrapper part of tests for VSX ISA versions of vector math functions.
+/* Double-precision math error handling.
    Copyright (C) 2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,13 +16,25 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "test-double-vlen2.h"
-#include <altivec.h>
+#include <fpu/math-barriers.h>
+#include "math_config_dbl.h"
 
-#define VEC_TYPE vector double
+/* NOINLINE reduces code size.  */
+NOINLINE static double
+xflow (uint32_t sign, double y)
+{
+  y = math_opt_barrier (sign ? -y : y) * y;
+  return y;
+}
 
-VECTOR_WRAPPER (WRAPPER_NAME (cos), _ZGVbN2v_cos)
-VECTOR_WRAPPER (WRAPPER_NAME (sin), _ZGVbN2v_sin)
-VECTOR_WRAPPER (WRAPPER_NAME (log), _ZGVbN2v_log)
-VECTOR_WRAPPER (WRAPPER_NAME (exp), _ZGVbN2v_exp)
-VECTOR_WRAPPER_fFF (WRAPPER_NAME (sincos), _ZGVbN2vvv_sincos)
+attribute_hidden double
+__math_uflow (uint32_t sign)
+{
+  return xflow (sign, 0x1p-767);
+}
+
+attribute_hidden double
+__math_oflow (uint32_t sign)
+{
+  return xflow (sign, 0x1p769);
+}
