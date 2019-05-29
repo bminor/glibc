@@ -1,5 +1,21 @@
 2019-06-17  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/m68k/Makefile (sysdep_routines,
+	sysdep-rtld-routines): Remove rules.
+	* sysdeps/unix/sysv/linux/m68k/Versions (libc) [GLIBC_PRIVATE]:
+	Remove __vdso_atomic_cmpxchg_32 and __vdso_atomic_barrier.
+	(ld) [GLIBC_PRIVATE]: __rtld___vdso_read_tp,
+	__rtld___vdso_atomic_cmpxchg_32, and __rtld___vdso_atomic_barrier.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/atomic-machine.h
+	(atomic_compare_and_exchange_val_acq, atomic_full_barrier): Remove
+	vDSO path for SHARED.
+	* sysdeps/unix/sysv/linux/m68k/init-first.c: Remove file.
+	* sysdeps/unix/sysv/linux/m68k/libc-m68k-vdso.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m68k-helpers.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m68k-vdso.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m68k-vdso.h: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m68k-helpers.c: New file.
+
 	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/Makefile
 	(libm-sysdep_routines): Add s_llround-power8, s_llround-power6x,
 	s_llround-power5+, s_llround-ppc64, and s_llroundf-ppc64.

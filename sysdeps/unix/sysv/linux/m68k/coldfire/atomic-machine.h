@@ -21,7 +21,6 @@
 
 #include <stdint.h>
 #include <sysdep.h>
-#include <m68k-vdso.h>
 
 /* Coldfire has no atomic compare-and-exchange operation, but the
    kernel provides userspace atomicity operations.  Use them.  */
@@ -43,33 +42,7 @@ typedef uintmax_t uatomic_max_t;
 #define ATOMIC_EXCHANGE_USES_CAS 1
 
 /* The only basic operation needed is compare and exchange.  */
-/* For ColdFire we'll have to trap into the kernel mode anyway,
-   so trap from the library rather then from the kernel wrapper.  */
-#ifdef SHARED
-# define atomic_compare_and_exchange_val_acq(mem, newval, oldval)	\
-  ({									\
-    /* Use temporary variables to workaround call-clobberness of 	\
-       the registers.  */						\
-    __typeof (mem) _mem = mem;						\
-    __typeof (oldval) _oldval = oldval;					\
-    __typeof (newval) _newval = newval;					\
-    register uint32_t *_a0 asm ("a0") = (uint32_t *) _mem;		\
-    register uint32_t _d0 asm ("d0") = (uint32_t) _oldval;		\
-    register uint32_t _d1 asm ("d1") = (uint32_t) _newval;		\
-    void *tmp;								\
-									\
-    asm ("movel #_GLOBAL_OFFSET_TABLE_@GOTPC, %2\n\t"			\
-	 "lea (-6, %%pc, %2), %2\n\t"					\
-	 "movel " STR_M68K_VDSO_SYMBOL (__vdso_atomic_cmpxchg_32)	\
-	 "@GOT(%2), %2\n\t"						\
-	 "movel (%2), %2\n\t"						\
-	 "jsr (%2)\n\t"							\
-	 : "+d" (_d0), "+m" (*_a0), "=&a" (tmp)				\
-	 : "a" (_a0), "d" (_d1));					\
-    (__typeof (oldval)) _d0;						\
-  })
-#else
-# define atomic_compare_and_exchange_val_acq(mem, newval, oldval)	\
+#define atomic_compare_and_exchange_val_acq(mem, newval, oldval)	\
   ({									\
     /* Use temporary variables to workaround call-clobberness of 	\
        the registers.  */						\
@@ -86,24 +59,8 @@ typedef uintmax_t uatomic_max_t;
 	 : "a" (_a0), "d" (_d2), "d" (_d1));				\
     (__typeof (oldval)) _d0;						\
   })
-#endif
 
-#ifdef SHARED
-# define atomic_full_barrier()					 \
-  ({								 \
-    void *tmp;							 \
-								 \
-    asm ("movel #_GLOBAL_OFFSET_TABLE_@GOTPC, %0\n\t"		 \
-	 "lea (-6, %pc, %0), %0\n\t"				 \
-	 "movel " STR_M68K_VDSO_SYMBOL (__vdso_atomic_barrier)	 \
-	 "@GOT(%0), %0\n\t"					 \
-	 "movel (%0), %0\n\t"					 \
-	 "jsr (%0)\n\t"						 \
-	 : "=&a" (tmp));					 \
-  })
-#else
 # define atomic_full_barrier()				\
   (INTERNAL_SYSCALL (atomic_barrier, , 0), (void) 0)
-#endif
 
 #endif

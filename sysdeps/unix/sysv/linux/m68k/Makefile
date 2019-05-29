@@ -18,8 +18,6 @@ endif
 
 ifeq ($(subdir),elf)
 sysdep-dl-routines += dl-static
-sysdep_routines += dl-vdso libc-m68k-vdso
-sysdep-rtld-routines += m68k-vdso
 sysdep-others += lddlibc4
 install-bin += lddlibc4
 endif
