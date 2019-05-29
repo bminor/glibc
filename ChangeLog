@@ -1,3 +1,9 @@
+2019-05-29  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sparcv9/get_clockfreq.c:
+	Remove file.
+	* sysdeps/unix/sysv/linux/x86_64/get_clockfreq.c: Likewise.
+
 2019-05-28  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/powerpc/fpu/round_to_integer.h (set_fenv_mode): Add
