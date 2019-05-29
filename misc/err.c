@@ -38,7 +38,7 @@ extern char *__progname;
 }
 
 void
-__vwarnx_internal (const char *format, __gnuc_va_list ap,
+__vwarnx_internal (const char *format, __va_list ap,
 		   unsigned int mode_flags)
 {
   flockfile (stderr);
@@ -50,7 +50,7 @@ __vwarnx_internal (const char *format, __gnuc_va_list ap,
 }
 
 void
-__vwarn_internal (const char *format, __gnuc_va_list ap,
+__vwarn_internal (const char *format, __va_list ap,
 		   unsigned int mode_flags)
 {
   int error = errno;
@@ -72,14 +72,14 @@ __vwarn_internal (const char *format, __gnuc_va_list ap,
 }
 
 void
-vwarn (const char *format, __gnuc_va_list ap)
+vwarn (const char *format, __va_list ap)
 {
   __vwarn_internal (format, ap, 0);
 }
 libc_hidden_def (vwarn)
 
 void
-vwarnx (const char *format, __gnuc_va_list ap)
+vwarnx (const char *format, __va_list ap)
 {
   __vwarnx_internal (format, ap, 0);
 }
@@ -100,7 +100,7 @@ warnx (const char *format, ...)
 libc_hidden_def (warnx)
 
 void
-verr (int status, const char *format, __gnuc_va_list ap)
+verr (int status, const char *format, __va_list ap)
 {
   vwarn (format, ap);
   exit (status);
@@ -108,7 +108,7 @@ verr (int status, const char *format, __gnuc_va_list ap)
 libc_hidden_def (verr)
 
 void
-verrx (int status, const char *format, __gnuc_va_list ap)
+verrx (int status, const char *format, __va_list ap)
 {
   vwarnx (format, ap);
   exit (status);

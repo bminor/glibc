@@ -3,12 +3,10 @@
 
 /* Prototypes for internal err.h functions.  */
 void
-__vwarnx_internal (const char *format, __gnuc_va_list ap,
-		   unsigned int mode_flags);
+__vwarnx_internal (const char *format, __va_list ap, unsigned int mode_flags);
 
 void
-__vwarn_internal (const char *format, __gnuc_va_list ap,
-		   unsigned int mode_flags);
+__vwarn_internal (const char *format, __va_list ap, unsigned int mode_flags);
 
 # ifndef _ISOMAC
 

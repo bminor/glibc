@@ -1036,14 +1036,14 @@ __nldbl_errx (int status, const char *format, ...)
 }
 
 void
-__nldbl_verr (int status, const char *format, __gnuc_va_list ap)
+__nldbl_verr (int status, const char *format, __va_list ap)
 {
   __vwarn_internal (format, ap, PRINTF_LDBL_IS_DBL);
   exit (status);
 }
 
 void
-__nldbl_verrx (int status, const char *format, __gnuc_va_list ap)
+__nldbl_verrx (int status, const char *format, __va_list ap)
 {
   __vwarnx_internal (format, ap, PRINTF_LDBL_IS_DBL);
   exit (status);
@@ -1062,13 +1062,13 @@ __nldbl_warnx (const char *format, ...)
 }
 
 void
-__nldbl_vwarn (const char *format, __gnuc_va_list ap)
+__nldbl_vwarn (const char *format, __va_list ap)
 {
   __vwarn_internal (format, ap, PRINTF_LDBL_IS_DBL);
 }
 
 void
-__nldbl_vwarnx (const char *format, __gnuc_va_list ap)
+__nldbl_vwarnx (const char *format, __va_list ap)
 {
   __vwarnx_internal (format, ap, PRINTF_LDBL_IS_DBL);
 }

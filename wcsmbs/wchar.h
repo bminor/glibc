@@ -593,20 +593,20 @@ extern int swprintf (wchar_t *__restrict __s, size_t __n,
    marked with __THROW.  */
 extern int vfwprintf (__FILE *__restrict __s,
 		      const wchar_t *__restrict __format,
-		      __gnuc_va_list __arg)
+		      __va_list __arg)
      /* __attribute__ ((__format__ (__wprintf__, 2, 0))) */;
 /* Write formatted output to stdout from argument list ARG.
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern int vwprintf (const wchar_t *__restrict __format,
-		     __gnuc_va_list __arg)
+		     __va_list __arg)
      /* __attribute__ ((__format__ (__wprintf__, 1, 0))) */;
 /* Write formatted output of at most N character to S from argument
    list ARG.  */
 extern int vswprintf (wchar_t *__restrict __s, size_t __n,
 		      const wchar_t *__restrict __format,
-		      __gnuc_va_list __arg)
+		      __va_list __arg)
      __THROW /* __attribute__ ((__format__ (__wprintf__, 3, 0))) */;
 
 
@@ -666,19 +666,19 @@ extern int __isoc99_swscanf (const wchar_t *__restrict __s,
    marked with __THROW.  */
 extern int vfwscanf (__FILE *__restrict __s,
 		     const wchar_t *__restrict __format,
-		     __gnuc_va_list __arg)
+		     __va_list __arg)
      /* __attribute__ ((__format__ (__wscanf__, 2, 0))) */;
 /* Read formatted input from stdin into argument list ARG.
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern int vwscanf (const wchar_t *__restrict __format,
-		    __gnuc_va_list __arg)
+		    __va_list __arg)
      /* __attribute__ ((__format__ (__wscanf__, 1, 0))) */;
 /* Read formatted input from S into argument list ARG.  */
 extern int vswscanf (const wchar_t *__restrict __s,
 		     const wchar_t *__restrict __format,
-		     __gnuc_va_list __arg)
+		     __va_list __arg)
      __THROW /* __attribute__ ((__format__ (__wscanf__, 2, 0))) */;
 
 /* Same redirection as above for the v*wscanf family.  */
@@ -688,24 +688,24 @@ extern int vswscanf (const wchar_t *__restrict __s,
 #  ifdef __REDIRECT
 extern int __REDIRECT (vfwscanf, (__FILE *__restrict __s,
 				  const wchar_t *__restrict __format,
-				  __gnuc_va_list __arg), __isoc99_vfwscanf)
+				  __va_list __arg), __isoc99_vfwscanf)
      /* __attribute__ ((__format__ (__wscanf__, 2, 0))) */;
 extern int __REDIRECT (vwscanf, (const wchar_t *__restrict __format,
-				 __gnuc_va_list __arg), __isoc99_vwscanf)
+				 __va_list __arg), __isoc99_vwscanf)
      /* __attribute__ ((__format__ (__wscanf__, 1, 0))) */;
 extern int __REDIRECT_NTH (vswscanf, (const wchar_t *__restrict __s,
 				      const wchar_t *__restrict __format,
-				      __gnuc_va_list __arg), __isoc99_vswscanf)
+				      __va_list __arg), __isoc99_vswscanf)
      /* __attribute__ ((__format__ (__wscanf__, 2, 0))) */;
 #  else
 extern int __isoc99_vfwscanf (__FILE *__restrict __s,
 			      const wchar_t *__restrict __format,
-			      __gnuc_va_list __arg);
+			      __va_list __arg);
 extern int __isoc99_vwscanf (const wchar_t *__restrict __format,
-			     __gnuc_va_list __arg);
+			     __va_list __arg);
 extern int __isoc99_vswscanf (const wchar_t *__restrict __s,
 			      const wchar_t *__restrict __format,
-			      __gnuc_va_list __arg) __THROW;
+			      __va_list __arg) __THROW;
 #   define vfwscanf __isoc99_vfwscanf
 #   define vwscanf __isoc99_vwscanf
 #   define vswscanf __isoc99_vswscanf

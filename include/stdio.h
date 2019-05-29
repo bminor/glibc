@@ -18,40 +18,39 @@ libc_hidden_proto (__snprintf)
 #  endif
 extern int __vfscanf (FILE *__restrict __s,
 		      const char *__restrict __format,
-		      __gnuc_va_list __arg)
+		      __va_list __arg)
      __attribute__ ((__format__ (__scanf__, 2, 0)));
 libc_hidden_proto (__vfscanf)
-extern int __vscanf (const char *__restrict __format,
-		     __gnuc_va_list __arg)
+extern int __vscanf (const char *__restrict __format, __va_list __arg)
      __attribute__ ((__format__ (__scanf__, 1, 0)));
 extern __ssize_t __getline (char **__lineptr, size_t *__n,
                             FILE *__stream) attribute_hidden;
 extern int __vsscanf (const char *__restrict __s,
 		      const char *__restrict __format,
-		      __gnuc_va_list __arg)
+		      __va_list __arg)
      __attribute__ ((__format__ (__scanf__, 2, 0)));
 
 extern int __sprintf_chk (char *, int, size_t, const char *, ...) __THROW;
 extern int __snprintf_chk (char *, size_t, int, size_t, const char *, ...)
      __THROW;
 extern int __vsprintf_chk (char *, int, size_t, const char *,
-			   __gnuc_va_list) __THROW;
+			   __va_list) __THROW;
 extern int __vsnprintf_chk (char *, size_t, int, size_t, const char *,
-			    __gnuc_va_list) __THROW;
+			    __va_list) __THROW;
 extern int __printf_chk (int, const char *, ...);
 extern int __fprintf_chk (FILE *, int, const char *, ...);
-extern int __vprintf_chk (int, const char *, __gnuc_va_list);
-extern int __vfprintf_chk (FILE *, int, const char *, __gnuc_va_list);
+extern int __vprintf_chk (int, const char *, __va_list);
+extern int __vfprintf_chk (FILE *, int, const char *, __va_list);
 extern char *__fgets_unlocked_chk (char *buf, size_t size, int n, FILE *fp);
 extern char *__fgets_chk (char *buf, size_t size, int n, FILE *fp);
 extern int __asprintf_chk (char **, int, const char *, ...) __THROW;
-extern int __vasprintf_chk (char **, int, const char *, __gnuc_va_list) __THROW;
+extern int __vasprintf_chk (char **, int, const char *, __va_list) __THROW;
 extern int __dprintf_chk (int, int, const char *, ...);
-extern int __vdprintf_chk (int, int, const char *, __gnuc_va_list);
+extern int __vdprintf_chk (int, int, const char *, __va_list);
 extern int __obstack_printf_chk (struct obstack *, int, const char *, ...)
      __THROW;
 extern int __obstack_vprintf_chk (struct obstack *, int, const char *,
-				  __gnuc_va_list) __THROW;
+				  __va_list) __THROW;
 
 extern int __isoc99_fscanf (FILE *__restrict __stream,
 			    const char *__restrict __format, ...) __wur;
@@ -60,12 +59,12 @@ extern int __isoc99_sscanf (const char *__restrict __s,
 			    const char *__restrict __format, ...) __THROW;
 extern int __isoc99_vfscanf (FILE *__restrict __s,
 			     const char *__restrict __format,
-			     __gnuc_va_list __arg) __wur;
+			     __va_list __arg) __wur;
 extern int __isoc99_vscanf (const char *__restrict __format,
-			    __gnuc_va_list __arg) __wur;
+			    __va_list __arg) __wur;
 extern int __isoc99_vsscanf (const char *__restrict __s,
 			     const char *__restrict __format,
-			     __gnuc_va_list __arg) __THROW;
+			     __va_list __arg) __THROW;
 libc_hidden_proto (__isoc99_sscanf)
 libc_hidden_proto (__isoc99_vsscanf)
 libc_hidden_proto (__isoc99_vfscanf)
@@ -131,8 +130,7 @@ extern int __fxprintf (FILE *__fp, const char *__fmt, ...)
      __attribute__ ((__format__ (__printf__, 2, 3))) attribute_hidden;
 extern int __fxprintf_nocancel (FILE *__fp, const char *__fmt, ...)
      __attribute__ ((__format__ (__printf__, 2, 3))) attribute_hidden;
-int __vfxprintf (FILE *__fp, const char *__fmt, __gnuc_va_list,
-		 unsigned int)
+int __vfxprintf (FILE *__fp, const char *__fmt, __va_list, unsigned int)
   attribute_hidden;
 
 /* Read the next line from FP into BUFFER, of LENGTH bytes.  LINE will

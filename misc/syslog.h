@@ -196,7 +196,7 @@ extern void syslog (int __pri, const char *__fmt, ...)
    cancellation point.  But due to similarity with an POSIX interface
    or due to the implementation it is a cancellation point and
    therefore not marked with __THROW.  */
-extern void vsyslog (int __pri, const char *__fmt, __gnuc_va_list __ap)
+extern void vsyslog (int __pri, const char *__fmt, __va_list __ap)
      __attribute__ ((__format__ (__printf__, 2, 0)));
 #endif
 

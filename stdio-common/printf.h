@@ -86,7 +86,7 @@ typedef int printf_arginfo_function (const struct printf_info *__info,
 
 /* Type of a function to get a value of a user-defined from the
    variable argument list.  */
-typedef void printf_va_arg_function (void *__mem, __gnuc_va_list *__ap);
+typedef void printf_va_arg_function (void *__mem, __va_list *__ap);
 
 
 /* Register FUNC to be called to format SPEC specifiers; ARGINFO must be

@@ -1,9 +1,45 @@
-#ifndef __ptrdiff_t_defined
-#define __ptrdiff_t_defined 1
+/* Copyright (C) 2019 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-/* We rely on the compiler's stddef.h to define ptrdiff_t for us.  */
-#define __need_ptrdiff_t
-#include <stddef.h>
-#undef __need_ptrdiff_t
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
+/* The guard macro for this header must match the guard macro used by
+   the compiler's stddef.h for ptrdiff_t specifically.
+   GCC's stddef.h checks a long list of other macros as well as this
+   one, in order to accommodate many different C libraries, but clang's
+   stddef.h only looks for this macro.  Other compilers can reasonably
+   be expected to look for this macro as well.  */
+#ifndef _PTRDIFF_T
+
+#ifdef __PTRDIFF_TYPE__
+
+/* If the predefined macro __PTRDIFF_TYPE__ is available, use it.  */
+typedef __PTRDIFF_TYPE__ ptrdiff_t;
+
+#else
+
+/* Depending on the compiler, we may be able to persuade its stddef.h
+   to define ptrdiff_t and nothing else.  If this feature is not
+   available, exposing everything defined by stddef.h is better than
+   not defining ptrdiff_t at all.  */
+# define __need_ptrdiff_t
+# include <stddef.h>
+# undef __need_ptrdiff_t
+
+#endif
+
+/* This must not be defined until _after_ possibly including stddef.h.  */
+#define _PTRDIFF_T
 #endif

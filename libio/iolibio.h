@@ -50,7 +50,7 @@ libc_hidden_proto (_IO_setvbuf)
 extern int _IO_sscanf (const char*, const char*, ...) __THROW;
 extern int _IO_sprintf (char *, const char*, ...) __THROW;
 extern int _IO_ungetc (int, FILE*) __THROW;
-extern int _IO_vsscanf (const char *, const char *, __gnuc_va_list) __THROW;
+extern int _IO_vsscanf (const char *, const char *, __va_list) __THROW;
 
 #define _IO_clearerr(FP) ((FP)->_flags &= ~(_IO_ERR_SEEN|_IO_EOF_SEEN))
 #define _IO_fseek(__fp, __offset, __whence) \

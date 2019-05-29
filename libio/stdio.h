@@ -317,15 +317,15 @@ extern int sprintf (char *__restrict __s,
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern int vfprintf (FILE *__restrict __s, const char *__restrict __format,
-		     __gnuc_va_list __arg);
+		     __va_list __arg);
 /* Write formatted output to stdout from argument list ARG.
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern int vprintf (const char *__restrict __format, __gnuc_va_list __arg);
+extern int vprintf (const char *__restrict __format, __va_list __arg);
 /* Write formatted output to S from argument list ARG.  */
 extern int vsprintf (char *__restrict __s, const char *__restrict __format,
-		     __gnuc_va_list __arg) __THROWNL;
+		     __va_list __arg) __THROWNL;
 
 #if defined __USE_ISOC99 || defined __USE_UNIX98
 /* Maximum chars of output to write in MAXLEN.  */
@@ -334,7 +334,7 @@ extern int snprintf (char *__restrict __s, size_t __maxlen,
      __THROWNL __attribute__ ((__format__ (__printf__, 3, 4)));
 
 extern int vsnprintf (char *__restrict __s, size_t __maxlen,
-		      const char *__restrict __format, __gnuc_va_list __arg)
+		      const char *__restrict __format, __va_list __arg)
      __THROWNL __attribute__ ((__format__ (__printf__, 3, 0)));
 #endif
 
@@ -342,7 +342,7 @@ extern int vsnprintf (char *__restrict __s, size_t __maxlen,
 /* Write formatted output to a string dynamically allocated with `malloc'.
    Store the address of the string in *PTR.  */
 extern int vasprintf (char **__restrict __ptr, const char *__restrict __f,
-		      __gnuc_va_list __arg)
+		      __va_list __arg)
      __THROWNL __attribute__ ((__format__ (__printf__, 2, 0))) __wur;
 extern int __asprintf (char **__restrict __ptr,
 		       const char *__restrict __fmt, ...)
@@ -354,8 +354,7 @@ extern int asprintf (char **__restrict __ptr,
 
 #ifdef __USE_XOPEN2K8
 /* Write formatted output to a file descriptor.  */
-extern int vdprintf (int __fd, const char *__restrict __fmt,
-		     __gnuc_va_list __arg)
+extern int vdprintf (int __fd, const char *__restrict __fmt, __va_list __arg)
      __attribute__ ((__format__ (__printf__, 2, 0)));
 extern int dprintf (int __fd, const char *__restrict __fmt, ...)
      __attribute__ ((__format__ (__printf__, 2, 3)));
@@ -408,19 +407,19 @@ extern int __isoc99_sscanf (const char *__restrict __s,
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern int vfscanf (FILE *__restrict __s, const char *__restrict __format,
-		    __gnuc_va_list __arg)
+		    __va_list __arg)
      __attribute__ ((__format__ (__scanf__, 2, 0))) __wur;
 
 /* Read formatted input from stdin into argument list ARG.
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern int vscanf (const char *__restrict __format, __gnuc_va_list __arg)
+extern int vscanf (const char *__restrict __format, __va_list __arg)
      __attribute__ ((__format__ (__scanf__, 1, 0))) __wur;
 
 /* Read formatted input from S into argument list ARG.  */
 extern int vsscanf (const char *__restrict __s,
-		    const char *__restrict __format, __gnuc_va_list __arg)
+		    const char *__restrict __format, __va_list __arg)
      __THROW __attribute__ ((__format__ (__scanf__, 2, 0)));
 
 /* Same redirection as above for the v*scanf family.  */
@@ -428,26 +427,26 @@ extern int vsscanf (const char *__restrict __s,
 #  if defined __REDIRECT && !defined __LDBL_COMPAT
 extern int __REDIRECT (vfscanf,
 		       (FILE *__restrict __s,
-			const char *__restrict __format, __gnuc_va_list __arg),
+			const char *__restrict __format, __va_list __arg),
 		       __isoc99_vfscanf)
      __attribute__ ((__format__ (__scanf__, 2, 0))) __wur;
 extern int __REDIRECT (vscanf, (const char *__restrict __format,
-				__gnuc_va_list __arg), __isoc99_vscanf)
+				__va_list __arg), __isoc99_vscanf)
      __attribute__ ((__format__ (__scanf__, 1, 0))) __wur;
 extern int __REDIRECT_NTH (vsscanf,
 			   (const char *__restrict __s,
 			    const char *__restrict __format,
-			    __gnuc_va_list __arg), __isoc99_vsscanf)
+			    __va_list __arg), __isoc99_vsscanf)
      __attribute__ ((__format__ (__scanf__, 2, 0)));
 #  elif !defined __REDIRECT
 extern int __isoc99_vfscanf (FILE *__restrict __s,
 			     const char *__restrict __format,
-			     __gnuc_va_list __arg) __wur;
+			     __va_list __arg) __wur;
 extern int __isoc99_vscanf (const char *__restrict __format,
-			    __gnuc_va_list __arg) __wur;
+			    __va_list __arg) __wur;
 extern int __isoc99_vsscanf (const char *__restrict __s,
 			     const char *__restrict __format,
-			     __gnuc_va_list __arg) __THROW;
+			     __va_list __arg) __THROW;
 #   define vfscanf __isoc99_vfscanf
 #   define vscanf __isoc99_vscanf
 #   define vsscanf __isoc99_vsscanf
@@ -806,7 +805,7 @@ extern int obstack_printf (struct obstack *__restrict __obstack,
      __THROWNL __attribute__ ((__format__ (__printf__, 2, 3)));
 extern int obstack_vprintf (struct obstack *__restrict __obstack,
 			    const char *__restrict __format,
-			    __gnuc_va_list __args)
+			    __va_list __args)
      __THROWNL __attribute__ ((__format__ (__printf__, 2, 0)));
 #endif /* Use GNU.  */
 

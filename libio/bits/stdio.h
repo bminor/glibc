@@ -36,7 +36,7 @@
 # if !(__USE_FORTIFY_LEVEL > 0 && defined __fortify_function)
 /* Write formatted output to stdout from argument list ARG.  */
 __STDIO_INLINE int
-vprintf (const char *__restrict __fmt, __gnuc_va_list __arg)
+vprintf (const char *__restrict __fmt, __va_list __arg)
 {
   return vfprintf (stdout, __fmt, __arg);
 }

@@ -303,17 +303,17 @@ __NTH (swprintf (wchar_t *__restrict __s, size_t __n,
 extern int __vswprintf_chk (wchar_t *__restrict __s, size_t __n,
 			    int __flag, size_t __s_len,
 			    const wchar_t *__restrict __format,
-			    __gnuc_va_list __arg)
+			    __va_list __arg)
      __THROW /* __attribute__ ((__format__ (__wprintf__, 5, 0))) */;
 
 extern int __REDIRECT_NTH_LDBL (__vswprintf_alias,
 				(wchar_t *__restrict __s, size_t __n,
 				 const wchar_t *__restrict __fmt,
-				 __gnuc_va_list __ap), vswprintf);
+				 __va_list __ap), vswprintf);
 
 __fortify_function int
 __NTH (vswprintf (wchar_t *__restrict __s, size_t __n,
-		  const wchar_t *__restrict __fmt, __gnuc_va_list __ap))
+		  const wchar_t *__restrict __fmt, __va_list __ap))
 {
   if (__bos (__s) != (size_t) -1 || __USE_FORTIFY_LEVEL > 1)
     return __vswprintf_chk (__s, __n,  __USE_FORTIFY_LEVEL - 1,
@@ -330,9 +330,9 @@ extern int __wprintf_chk (int __flag, const wchar_t *__restrict __format,
 			  ...);
 extern int __vfwprintf_chk (__FILE *__restrict __stream, int __flag,
 			    const wchar_t *__restrict __format,
-			    __gnuc_va_list __ap);
+			    __va_list __ap);
 extern int __vwprintf_chk (int __flag, const wchar_t *__restrict __format,
-			   __gnuc_va_list __ap);
+			   __va_list __ap);
 
 # ifdef __va_arg_pack
 __fortify_function int
@@ -355,14 +355,14 @@ fwprintf (__FILE *__restrict __stream, const wchar_t *__restrict __fmt, ...)
 # endif
 
 __fortify_function int
-vwprintf (const wchar_t *__restrict __fmt, __gnuc_va_list __ap)
+vwprintf (const wchar_t *__restrict __fmt, __va_list __ap)
 {
   return __vwprintf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __ap);
 }
 
 __fortify_function int
 vfwprintf (__FILE *__restrict __stream,
-	   const wchar_t *__restrict __fmt, __gnuc_va_list __ap)
+	   const wchar_t *__restrict __fmt, __va_list __ap)
 {
   return __vfwprintf_chk (__stream, __USE_FORTIFY_LEVEL - 1, __fmt, __ap);
 }

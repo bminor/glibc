@@ -692,7 +692,6 @@ HEADER_ALLOWED_INCLUDES = {
     "bits/types/ptrdiff_t.h":      [ "stddef.h" ],
     "bits/types/size_t.h":         [ "stddef.h" ],
     "bits/types/wchar_t.h":        [ "stddef.h" ],
-    "bits/NULL.h":                 [ "stddef.h" ],
 }
 
 # As above, but each group of whitelist entries is only used for

@@ -41,11 +41,11 @@ syslog (int __pri, const char *__fmt, ...)
 
 #ifdef __USE_MISC
 extern void __vsyslog_chk (int __pri, int __flag, const char *__fmt,
-			   __gnuc_va_list __ap)
+			   __va_list __ap)
      __attribute__ ((__format__ (__printf__, 3, 0)));
 
 __fortify_function void
-vsyslog (int __pri, const char *__fmt, __gnuc_va_list __ap)
+vsyslog (int __pri, const char *__fmt, __va_list __ap)
 {
   __vsyslog_chk (__pri,  __USE_FORTIFY_LEVEL - 1, __fmt, __ap);
 }
