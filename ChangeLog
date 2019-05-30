@@ -1,6 +1,12 @@
 2019-08-05  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #19767]
+	* sysdeps/unix/sysv/linux/sparc/init-first.c: Remove #ifdef SHARED.
+	* sysdeps/unix/sysv/linux/sparc/libc-vdso.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sysdep.h (ALWAYS_USE_VSYSCALL):
+	Define.
+
+	[BZ #19767]
 	* sysdeps/unix/sysv/linux/s390/init-first.c: Remove #ifdef SHARED.
 	* sysdeps/unix/sysv/linux/s390/libc-vdso.h: Likewise.
 	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h
