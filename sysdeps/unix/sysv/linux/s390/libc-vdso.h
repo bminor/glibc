@@ -20,8 +20,6 @@
 #ifndef _LIBC_VDSO_H
 #define _LIBC_VDSO_H
 
-#ifdef SHARED
-
 #include <sysdep-vdso.h>
 
 extern long int (*VDSO_SYMBOL(gettimeofday)) (struct timeval *, void *)
@@ -33,6 +31,5 @@ extern long int (*VDSO_SYMBOL(clock_getres)) (clockid_t, struct timespec *);
 
 extern long int (*VDSO_SYMBOL(getcpu)) (unsigned *, unsigned *, void *)
    attribute_hidden;
-#endif
 
 #endif /* _LIBC_VDSO_H */

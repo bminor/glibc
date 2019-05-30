@@ -20,6 +20,9 @@
 #ifndef _LINUX_S390_SYSDEP_H
 #define _LINUX_S390_SYSDEP_H
 
+/* Always enable vsyscalls on s390-64.  */
+#define ALWAYS_USE_VSYSCALL 1
+
 #include <sysdeps/s390/s390-64/sysdep.h>
 #include <sysdeps/unix/sysdep.h>
 #include <sysdeps/unix/sysv/linux/sysdep.h>
