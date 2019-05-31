@@ -1,3 +1,9 @@
+2019-05-31  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/unix/sysv/linux/syscall-names.list: Add oddly named
+	system calls for the arm architecture: breakpoint, get_tls,
+	set_tls, usr26, usr32.
+
 2019-05-30  Gabriel F. T. Gomes  <gabrielftg@linux.ibm.com>
 
 	* sysdeps/powerpc/Makefile
