@@ -605,7 +605,6 @@ HEADER_ALLOWED_INCLUDES = {
     "sys/signalfd.h":              [ "stdint.h" ],
     "sys/socketvar.h":             [ "sys/socket.h" ],
     "sys/timerfd.h":               [ "time.h" ],
-    "sys/timex.h":                 [ "sys/time.h" ],
     "sys/ttychars.h":              [ "sys/ttydefaults.h" ],
     "sys/ucontext.h":              [ "sys/procfs.h" ],
     "sys/vfs.h":                   [ "sys/statfs.h" ],

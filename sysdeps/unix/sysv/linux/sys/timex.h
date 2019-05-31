@@ -19,14 +19,11 @@
 #define	_SYS_TIMEX_H	1
 
 #include <features.h>
-#include <sys/time.h>
 
-/* These definitions from linux/timex.h as of 2.6.30.  */
-
+/* Get struct timex and related constants.  */
 #include <bits/timex.h>
 
-#define NTP_API	4	/* NTP API version */
-
+/* Parameter structure used by ntp_gettime(x).  */
 struct ntptimeval
 {
   struct timeval time;	/* current time (ro) */
@@ -40,17 +37,6 @@ struct ntptimeval
   long int __glibc_reserved4;
 };
 
-/* Clock states (time_state) */
-#define TIME_OK		0	/* clock synchronized, no leap second */
-#define TIME_INS	1	/* insert leap second */
-#define TIME_DEL	2	/* delete leap second */
-#define TIME_OOP	3	/* leap second in progress */
-#define TIME_WAIT	4	/* leap second has occurred */
-#define TIME_ERROR	5	/* clock not synchronized */
-#define TIME_BAD	TIME_ERROR /* bw compat */
-
-/* Maximum time constant of the PLL.  */
-#define MAXTC		6
 
 __BEGIN_DECLS
 

@@ -21,10 +21,6 @@
 
 #undef ntp_gettime
 
-#ifndef MOD_OFFSET
-# define modes mode
-#endif
-
 
 int
 ntp_gettime (struct ntptimeval *ntv)

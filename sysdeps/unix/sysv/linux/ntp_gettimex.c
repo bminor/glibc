@@ -17,10 +17,6 @@
 
 #include <sys/timex.h>
 
-#ifndef MOD_OFFSET
-# define modes mode
-#endif
-
 
 int
 ntp_gettimex (struct ntptimeval *ntv)

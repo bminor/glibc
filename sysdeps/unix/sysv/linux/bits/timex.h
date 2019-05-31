@@ -18,10 +18,16 @@
 #ifndef	_BITS_TIMEX_H
 #define	_BITS_TIMEX_H	1
 
+#if !defined _SYS_TIMEX_H && !defined _BITS_TIME_H
+# error "Never include <bits/timex.h> directly; use <sys/timex.h> instead."
+#endif
+
 #include <bits/types.h>
 #include <bits/types/struct_timeval.h>
 
-/* These definitions from linux/timex.h as of 3.18.  */
+/* These definitions match linux/timex.h as of 5.0.  */
+
+#define NTP_API	4		/* NTP API version */
 
 struct timex
 {
@@ -47,7 +53,7 @@ struct timex
 
   int tai;			/* TAI offset (ro) */
 
-  /* ??? */
+  /* room for future expansion */
   int  :32; int  :32; int  :32; int  :32;
   int  :32; int  :32; int  :32; int  :32;
   int  :32; int  :32; int  :32;
@@ -65,6 +71,7 @@ struct timex
 #define ADJ_MICRO		0x1000	/* select microsecond resolution */
 #define ADJ_NANO		0x2000	/* select nanosecond resolution */
 #define ADJ_TICK		0x4000	/* tick value */
+
 #define ADJ_OFFSET_SINGLESHOT	0x8001	/* old-fashioned adjtime */
 #define ADJ_OFFSET_SS_READ	0xa001	/* read-only adjtime */
 
@@ -106,5 +113,14 @@ struct timex
 /* Read-only bits */
 #define STA_RONLY (STA_PPSSIGNAL | STA_PPSJITTER | STA_PPSWANDER \
     | STA_PPSERROR | STA_CLOCKERR | STA_NANO | STA_MODE | STA_CLK)
+
+/* Clock states (codes returned by adjtimex) */
+#define TIME_OK		0	/* clock synchronized, no leap second */
+#define TIME_INS	1	/* insert leap second */
+#define TIME_DEL	2	/* delete leap second */
+#define TIME_OOP	3	/* leap second in progress */
+#define TIME_WAIT	4	/* leap second has occurred */
+#define TIME_ERROR	5	/* clock not synchronized */
+#define TIME_BAD	TIME_ERROR /* bw compat */
 
 #endif /* bits/timex.h */
