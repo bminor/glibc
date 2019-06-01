@@ -25,6 +25,7 @@
 #include <shadow.h>
 #include <stdio_ext.h>
 #include <string.h>
+#include <sys/param.h>
 #include <libc-lock.h>
 #include <kernel-features.h>
 

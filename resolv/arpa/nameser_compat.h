@@ -29,6 +29,7 @@
 #ifndef _ARPA_NAMESER_COMPAT_
 #define	_ARPA_NAMESER_COMPAT_
 
+#include <features.h>
 #include <bits/endian.h>
 
 /*%

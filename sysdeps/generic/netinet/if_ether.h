@@ -18,8 +18,8 @@
 #ifndef __NETINET_IF_ETHER_H
 #define __NETINET_IF_ETHER_H	1
 
-#include <sys/types.h>
-#include <stdint.h>
+#include <features.h>
+#include <bits/types.h>
 
 #define ETH_ALEN	6	/* Octets in one ethernet address.  */
 
@@ -27,7 +27,7 @@
    systems.  */
 struct ether_addr
 {
-  uint8_t ether_addr_octet[ETH_ALEN];
+  __uint8_t ether_addr_octet[ETH_ALEN];
 } __attribute__ ((__packed__));
 
 #endif /* netinet/if_ether.h */

@@ -48,10 +48,10 @@
 #ifndef __NET_IF_PPP_H
 #define __NET_IF_PPP_H 1
 
-#include <sys/types.h>
-#include <stdint.h>
-#include <net/if.h>
+#include <features.h>
+#include <bits/types.h>
 #include <sys/ioctl.h>
+#include <net/if.h>
 #include <net/ppp_defs.h>
 
 __BEGIN_DECLS
@@ -113,8 +113,8 @@ struct npioctl {
 
 /* Structure describing a CCP configuration option, for PPPIOCSCOMPRESS */
 struct ppp_option_data {
-	uint8_t  *ptr;
-	uint32_t length;
+	__uint8_t  *ptr;
+	__uint32_t length;
 	int	 transmit;
 };
 

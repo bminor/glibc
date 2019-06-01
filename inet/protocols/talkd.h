@@ -50,9 +50,8 @@
  * stream connection through which the conversation takes place.
  */
 
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <stdint.h>
+#include <features.h>
+#include <bits/types.h>
 #include <bits/types/struct_osockaddr.h>
 
 /*
@@ -63,10 +62,10 @@ typedef struct {
 	unsigned char	type;	/* request type, see below */
 	unsigned char	answer;	/* not used */
 	unsigned char	pad;
-	uint32_t id_num;	/* message id */
+	__uint32_t	id_num;	/* message id */
 	struct	osockaddr addr;		/* old (4.3) style */
 	struct	osockaddr ctl_addr;	/* old (4.3) style */
-	int32_t	pid;		/* caller's process id */
+	__int32_t	pid;		/* caller's process id */
 #define	NAME_SIZE	12
 	char	l_name[NAME_SIZE];/* caller's name */
 	char	r_name[NAME_SIZE];/* callee's name */
@@ -82,7 +81,7 @@ typedef struct {
 	unsigned char	type;	/* type of request message, see below */
 	unsigned char	answer;	/* response to request message, see below */
 	unsigned char	pad;
-	uint32_t	id_num;	/* message id */
+	__uint32_t	id_num;	/* message id */
 	struct	osockaddr addr;	/* address for establishing conversation */
 } CTL_RESPONSE;
 

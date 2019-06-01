@@ -20,11 +20,10 @@
 
 #include <features.h>
 
-#include <sys/types.h>
-
 #ifdef __USE_MISC
 
 #include <netinet/in.h>
+#include <bits/types.h>
 
 __BEGIN_DECLS
 
@@ -65,9 +64,9 @@ __BEGIN_DECLS
  */
 
 struct igmp {
-  uint8_t igmp_type;             /* IGMP type */
-  uint8_t igmp_code;             /* routing code */
-  uint16_t igmp_cksum;           /* checksum */
+  __uint8_t igmp_type;           /* IGMP type */
+  __uint8_t igmp_code;           /* routing code */
+  __uint16_t igmp_cksum;         /* checksum */
   struct in_addr igmp_group;     /* group address */
 };
 

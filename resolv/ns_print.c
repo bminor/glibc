@@ -19,6 +19,7 @@
 /* Import. */
 
 #include <sys/types.h>
+#include <sys/param.h>
 #include <sys/socket.h>
 
 #include <netinet/in.h>
@@ -28,6 +29,7 @@
 #include <assert.h>
 #include <errno.h>
 #include <resolv.h>
+#include <stdio.h>
 #include <string.h>
 #include <ctype.h>
 

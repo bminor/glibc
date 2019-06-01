@@ -18,6 +18,7 @@
 
 #include <array_length.h>
 #include <resolv.h>
+#include <stdio.h>
 #include <string.h>
 #include <support/check.h>
 #include <support/test-driver.h>

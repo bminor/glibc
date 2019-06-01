@@ -48,9 +48,9 @@
 #ifndef _ARPA_NAMESER_H_
 #define _ARPA_NAMESER_H_
 
-#include <sys/param.h>
-#include <sys/types.h>
-#include <stdint.h>
+#include <features.h>
+#include <bits/types.h>
+#include <bits/types/size_t.h>
 
 /*
  * Define constants based on RFC 883, RFC 1034, RFC 1035
@@ -92,7 +92,7 @@ typedef enum __ns_sect {
  */
 typedef struct __ns_msg {
 	const unsigned char	*_msg, *_eom;
-	uint16_t		_id, _flags, _counts[ns_s_max];
+	__uint16_t		_id, _flags, _counts[ns_s_max];
 	const unsigned char	*_sections[ns_s_max];
 	ns_sect			_sect;
 	int			_rrnum;
@@ -116,10 +116,10 @@ extern const struct _ns_flagdata _ns_flagdata[];
  */
 typedef	struct __ns_rr {
 	char			name[NS_MAXDNAME];
-	uint16_t		type;
-	uint16_t		rr_class;
-	uint32_t		ttl;
-	uint16_t		rdlength;
+	__uint16_t		type;
+	__uint16_t		rr_class;
+	__uint32_t		ttl;
+	__uint16_t		rdlength;
 	const unsigned char *	rdata;
 } ns_rr;
 
@@ -355,24 +355,24 @@ typedef enum __ns_cert_types {
  */
 #define NS_GET16(s, cp) do { \
 	const unsigned char *t_cp = (const unsigned char *)(cp); \
-	(s) = ((uint16_t)t_cp[0] << 8) \
-	    | ((uint16_t)t_cp[1]) \
+	(s) = ((__uint16_t)t_cp[0] << 8) \
+	    | ((__uint16_t)t_cp[1]) \
 	    ; \
 	(cp) += NS_INT16SZ; \
 } while (0)
 
 #define NS_GET32(l, cp) do { \
 	const unsigned char *t_cp = (const unsigned char *)(cp); \
-	(l) = ((uint32_t)t_cp[0] << 24) \
-	    | ((uint32_t)t_cp[1] << 16) \
-	    | ((uint32_t)t_cp[2] << 8) \
-	    | ((uint32_t)t_cp[3]) \
+	(l) = ((__uint32_t)t_cp[0] << 24) \
+	    | ((__uint32_t)t_cp[1] << 16) \
+	    | ((__uint32_t)t_cp[2] << 8) \
+	    | ((__uint32_t)t_cp[3]) \
 	    ; \
 	(cp) += NS_INT32SZ; \
 } while (0)
 
 #define NS_PUT16(s, cp) do { \
-	uint16_t t_s = (uint16_t)(s); \
+	__uint16_t t_s = (__uint16_t)(s); \
 	unsigned char *t_cp = (unsigned char *)(cp); \
 	*t_cp++ = t_s >> 8; \
 	*t_cp   = t_s; \
@@ -380,7 +380,7 @@ typedef enum __ns_cert_types {
 } while (0)
 
 #define NS_PUT32(l, cp) do { \
-	uint32_t t_l = (uint32_t)(l); \
+	__uint32_t t_l = (__uint32_t)(l); \
 	unsigned char *t_cp = (unsigned char *)(cp); \
 	*t_cp++ = t_l >> 24; \
 	*t_cp++ = t_l >> 16; \
@@ -408,7 +408,7 @@ int		ns_sprintrrf (const unsigned char *, size_t, const char *,
 			      const char *, char *, size_t) __THROW;
 int		ns_format_ttl (unsigned long, char *, size_t) __THROW;
 int		ns_parse_ttl (const char *, unsigned long *) __THROW;
-uint32_t	ns_datetosecs (const char *, int *) __THROW;
+__uint32_t	ns_datetosecs (const char *, int *) __THROW;
 int		ns_name_ntol (const unsigned char *, unsigned char *, size_t)
      __THROW;
 int		ns_name_ntop (const unsigned char *, char *, size_t) __THROW;

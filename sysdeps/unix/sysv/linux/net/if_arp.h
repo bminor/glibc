@@ -22,9 +22,8 @@
 #ifndef _NET_IF_ARP_H
 #define _NET_IF_ARP_H 1
 
-#include <sys/types.h>
+#include <features.h>
 #include <sys/socket.h>
-#include <stdint.h>
 
 __BEGIN_DECLS
 
@@ -171,7 +170,7 @@ struct arpreq_old
 struct arpd_request
   {
     unsigned short int req;		/* Request type.  */
-    uint32_t ip;			/* IP address of entry.  */
+    __uint32_t ip;			/* IP address of entry.  */
     unsigned long int dev;		/* Device entry is tied to.  */
     unsigned long int stamp;
     unsigned long int updated;

@@ -22,10 +22,13 @@ subdir	:= inet
 
 include ../Makeconfig
 
-headers	:= netinet/ether.h netinet/in.h netinet/in_systm.h \
-	   netinet/if_ether.h netinet/igmp.h \
-	   netinet/tcp.h netinet/ip.h $(wildcard arpa/*.h protocols/*.h) \
-	   aliases.h ifaddrs.h netinet/ip6.h netinet/icmp6.h bits/in.h
+headers	:= aliases.h ifaddrs.h bits/in.h				     \
+           netinet/ether.h netinet/icmp6.h netinet/if_ether.h netinet/igmp.h \
+           netinet/in.h netinet/in_systm.h netinet/ip.h netinet/ip6.h	     \
+	   netinet/ip_icmp.h netinet/tcp.h netinet/udp.h		     \
+	   arpa/ftp.h arpa/inet.h arpa/telnet.h arpa/tftp.h		     \
+           protocols/routed.h protocols/rwhod.h protocols/talkd.h	     \
+	   protocols/timed.h
 
 routines := htonl htons		\
 	    inet_lnaof inet_mkadr	\

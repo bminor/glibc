@@ -18,8 +18,8 @@
 #ifndef _NET_IF_SHAPER_H
 #define _NET_IF_SHAPER_H 1
 
-#include <sys/types.h>
-#include <stdint.h>
+#include <features.h>
+#include <bits/types.h>
 #include <net/if.h>
 #include <sys/ioctl.h>
 
@@ -43,11 +43,11 @@ __BEGIN_DECLS
 
 struct shaperconf
 {
-  uint16_t ss_cmd;
+  __uint16_t ss_cmd;
   union
   {
     char ssu_name[14];
-    uint32_t ssu_speed;
+    __uint32_t ssu_speed;
   } ss_u;
 #define ss_speed ss_u.ssu_speed
 #define ss_name ss_u.ssu_name

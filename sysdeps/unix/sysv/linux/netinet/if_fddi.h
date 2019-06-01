@@ -18,16 +18,18 @@
 #ifndef _NETINET_IF_FDDI_H
 #define	_NETINET_IF_FDDI_H 1
 
-#include <sys/types.h>
-#include <stdint.h>
+#include <features.h>
+#include <bits/types.h>
+
 #include <linux/if_fddi.h>
 
 #ifdef __USE_MISC
 
-struct fddi_header {
-  uint8_t fddi_fc;                    /* Frame Control (FC) value */
-  uint8_t fddi_dhost[FDDI_K_ALEN];    /* Destination host */
-  uint8_t fddi_shost[FDDI_K_ALEN];    /* Source host */
+struct fddi_header
+{
+  __uint8_t fddi_fc;                    /* Frame Control (FC) value */
+  __uint8_t fddi_dhost[FDDI_K_ALEN];    /* Destination host */
+  __uint8_t fddi_shost[FDDI_K_ALEN];    /* Source host */
 };
 #endif
 

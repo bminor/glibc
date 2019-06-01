@@ -20,10 +20,12 @@
 #include <errno.h>
 #include <grp.h>
 #include <libintl.h>
+#include <stdio.h>
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
 #include <sys/mman.h>
+#include <sys/param.h>
 #include <scratch_buffer.h>
 #include <config.h>
 

@@ -22,14 +22,14 @@
 
 #include <netinet/in.h>
 #include <bits/endian.h>
-#include <bits/stdint-uintn.h>
+#include <bits/types.h>
 
 __BEGIN_DECLS
 
 struct timestamp
   {
-    uint8_t len;
-    uint8_t ptr;
+    __uint8_t len;
+    __uint8_t ptr;
 #if __BYTE_ORDER == __LITTLE_ENDIAN
     unsigned int flags:4;
     unsigned int overflow:4;
@@ -39,7 +39,7 @@ struct timestamp
 #else
 # error	"Please fix <bits/endian.h>"
 #endif
-    uint32_t data[9];
+    __uint32_t data[9];
   };
 
 struct iphdr
@@ -53,15 +53,15 @@ struct iphdr
 #else
 # error	"Please fix <bits/endian.h>"
 #endif
-    uint8_t tos;
-    uint16_t tot_len;
-    uint16_t id;
-    uint16_t frag_off;
-    uint8_t ttl;
-    uint8_t protocol;
-    uint16_t check;
-    uint32_t saddr;
-    uint32_t daddr;
+    __uint8_t tos;
+    __uint16_t tot_len;
+    __uint16_t id;
+    __uint16_t frag_off;
+    __uint8_t ttl;
+    __uint8_t protocol;
+    __uint16_t check;
+    __uint32_t saddr;
+    __uint32_t daddr;
     /*The options start here. */
   };
 
@@ -115,7 +115,7 @@ struct ip
     unsigned int ip_v:4;		/* version */
     unsigned int ip_hl:4;		/* header length */
 #endif
-    uint8_t ip_tos;			/* type of service */
+    __uint8_t ip_tos;			/* type of service */
     unsigned short ip_len;		/* total length */
     unsigned short ip_id;		/* identification */
     unsigned short ip_off;		/* fragment offset field */
@@ -123,8 +123,8 @@ struct ip
 #define	IP_DF 0x4000			/* dont fragment flag */
 #define	IP_MF 0x2000			/* more fragments flag */
 #define	IP_OFFMASK 0x1fff		/* mask for fragmenting bits */
-    uint8_t ip_ttl;			/* time to live */
-    uint8_t ip_p;			/* protocol */
+    __uint8_t ip_ttl;			/* time to live */
+    __uint8_t ip_p;			/* protocol */
     unsigned short ip_sum;		/* checksum */
     struct in_addr ip_src, ip_dst;	/* source and dest address */
   };
@@ -134,9 +134,9 @@ struct ip
  */
 struct ip_timestamp
   {
-    uint8_t ipt_code;			/* IPOPT_TS */
-    uint8_t ipt_len;			/* size of structure (variable) */
-    uint8_t ipt_ptr;			/* index of current entry */
+    __uint8_t ipt_code;			/* IPOPT_TS */
+    __uint8_t ipt_len;			/* size of structure (variable) */
+    __uint8_t ipt_ptr;			/* index of current entry */
 #if __BYTE_ORDER == __LITTLE_ENDIAN
     unsigned int ipt_flg:4;		/* flags, see below */
     unsigned int ipt_oflw:4;		/* overflow counter */
@@ -145,7 +145,7 @@ struct ip_timestamp
     unsigned int ipt_oflw:4;		/* overflow counter */
     unsigned int ipt_flg:4;		/* flags, see below */
 #endif
-    uint32_t data[9];
+    __uint32_t data[9];
   };
 #endif /* __USE_MISC */
 

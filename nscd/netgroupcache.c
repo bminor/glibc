@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/mman.h>
+#include <sys/param.h>
 
 #include "../inet/netgroup.h"
 #include "nscd.h"

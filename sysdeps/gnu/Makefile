@@ -59,11 +59,6 @@ $(foreach o,$(object-suffixes) $(object-suffixes:=.d),\
 endif
 
 
-ifeq ($(subdir),inet)
-sysdep_headers += netinet/udp.h netinet/ip_icmp.h
-endif
-
-
 ifeq ($(subdir),csu)
 routines += unwind-resume
 shared-only-routines += unwind-resume

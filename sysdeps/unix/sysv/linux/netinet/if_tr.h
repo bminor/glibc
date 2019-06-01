@@ -16,49 +16,49 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _NETINET_IF_TR_H
-#define	_NETINET_IF_TR_H 1
+#define _NETINET_IF_TR_H 1
 
-#include <sys/types.h>
-#include <stdint.h>
+#include <features.h>
+#include <bits/types.h>
 
 /* IEEE 802.5 Token-Ring magic constants.  The frame sizes omit the preamble
    and FCS/CRC (frame check sequence). */
 #define TR_ALEN		6		/* Octets in one token-ring addr */
-#define TR_HLEN 	(sizeof (struct trh_hdr) + sizeof (struct trllc))
+#define TR_HLEN		(sizeof (struct trh_hdr) + sizeof (struct trllc))
 #define AC		0x10
-#define LLC_FRAME 	0x40
+#define LLC_FRAME	0x40
 
 /* LLC and SNAP constants */
-#define EXTENDED_SAP 	0xAA
-#define UI_CMD       	0x03
+#define EXTENDED_SAP	0xAA
+#define UI_CMD		0x03
 
 /* This is an Token-Ring frame header. */
 struct trh_hdr
 {
-  uint8_t  ac;			/* access control field */
-  uint8_t  fc;			/* frame control field */
-  uint8_t  daddr[TR_ALEN];	/* destination address */
-  uint8_t  saddr[TR_ALEN];	/* source address */
-  uint16_t rcf;			/* route control field */
-  uint16_t rseg[8];		/* routing registers */
+  __uint8_t  ac;		/* access control field */
+  __uint8_t  fc;		/* frame control field */
+  __uint8_t  daddr[TR_ALEN];	/* destination address */
+  __uint8_t  saddr[TR_ALEN];	/* source address */
+  __uint16_t rcf;		/* route control field */
+  __uint16_t rseg[8];		/* routing registers */
 };
 
 /* This is an Token-Ring LLC structure */
 struct trllc
 {
-  uint8_t  dsap;		/* destination SAP */
-  uint8_t  ssap;		/* source SAP */
-  uint8_t  llc;			/* LLC control field */
-  uint8_t  protid[3];		/* protocol id */
-  uint16_t ethertype;		/* ether type field */
+  __uint8_t  dsap;		/* destination SAP */
+  __uint8_t  ssap;		/* source SAP */
+  __uint8_t  llc;		/* LLC control field */
+  __uint8_t  protid[3];		/* protocol id */
+  __uint16_t ethertype;		/* ether type field */
 };
 
 /* Token-Ring statistics collection data. */
 struct tr_statistics
 {
-  unsigned long rx_packets;     /* total packets received	*/
+  unsigned long rx_packets;	/* total packets received	*/
   unsigned long tx_packets;	/* total packets transmitted	*/
-  unsigned long rx_bytes;	/* total bytes received   	*/
+  unsigned long rx_bytes;	/* total bytes received		*/
   unsigned long tx_bytes;	/* total bytes transmitted	*/
   unsigned long rx_errors;	/* bad packets received		*/
   unsigned long tx_errors;	/* packet transmit problems	*/
@@ -84,27 +84,27 @@ struct tr_statistics
 };
 
 /* source routing stuff */
-#define TR_RII 			0x80
-#define TR_RCF_DIR_BIT 		0x80
-#define TR_RCF_LEN_MASK 	0x1f00
-#define TR_RCF_BROADCAST 	0x8000	/* all-routes broadcast */
+#define TR_RII			 0x80
+#define TR_RCF_DIR_BIT		 0x80
+#define TR_RCF_LEN_MASK		 0x1f00
+#define TR_RCF_BROADCAST	 0x8000	/* all-routes broadcast */
 #define TR_RCF_LIMITED_BROADCAST 0xC000	/* single-route broadcast */
-#define TR_RCF_FRAME2K 		0x20
-#define TR_RCF_BROADCAST_MASK 	0xC000
-#define TR_MAXRIFLEN 		18
+#define TR_RCF_FRAME2K		 0x20
+#define TR_RCF_BROADCAST_MASK	 0xC000
+#define TR_MAXRIFLEN		 18
 
 #ifdef __USE_MISC
 
 struct trn_hdr
 {
-  uint8_t trn_ac;                /* access control field */
-  uint8_t trn_fc;                /* field control field */
-  uint8_t trn_dhost[TR_ALEN];    /* destination host */
-  uint8_t trn_shost[TR_ALEN];    /* source host */
-  uint16_t trn_rcf;              /* route control field */
-  uint16_t trn_rseg[8];          /* routing registers */
+  __uint8_t  trn_ac;		   /* access control field */
+  __uint8_t  trn_fc;		   /* field control field */
+  __uint8_t  trn_dhost[TR_ALEN];   /* destination host */
+  __uint8_t  trn_shost[TR_ALEN];   /* source host */
+  __uint16_t trn_rcf;		   /* route control field */
+  __uint16_t trn_rseg[8];	   /* routing registers */
 };
 
 #endif
 
-#endif	/* netinet/if_tr.h */
+#endif /* netinet/if_tr.h */

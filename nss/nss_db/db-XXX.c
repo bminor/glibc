@@ -18,6 +18,7 @@
 
 #include <dlfcn.h>
 #include <fcntl.h>
+#include <stdio.h>
 #include <stdint.h>
 #include <sys/mman.h>
 #include <libc-lock.h>

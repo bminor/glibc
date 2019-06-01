@@ -16,10 +16,10 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef __NETINET_IF_ETHER_H
-
 #define __NETINET_IF_ETHER_H	1
+
 #include <features.h>
-#include <sys/types.h>
+#include <bits/types.h>
 
 /* Get definitions from kernel header file.  */
 #include <linux/if_ether.h>
@@ -56,7 +56,6 @@
  *	@(#)if_ether.h	8.3 (Berkeley) 5/2/95
  *	$FreeBSD$
  */
-
 #include <net/ethernet.h>
 #include <net/if_arp.h>
 
@@ -70,10 +69,10 @@ __BEGIN_DECLS
  */
 struct	ether_arp {
 	struct	arphdr ea_hdr;		/* fixed-size header */
-	uint8_t arp_sha[ETH_ALEN];	/* sender hardware address */
-	uint8_t arp_spa[4];		/* sender protocol address */
-	uint8_t arp_tha[ETH_ALEN];	/* target hardware address */
-	uint8_t arp_tpa[4];		/* target protocol address */
+	__uint8_t arp_sha[ETH_ALEN];	/* sender hardware address */
+	__uint8_t arp_spa[4];		/* sender protocol address */
+	__uint8_t arp_tha[ETH_ALEN];	/* target hardware address */
+	__uint8_t arp_tpa[4];		/* target protocol address */
 };
 #define	arp_hrd	ea_hdr.ar_hrd
 #define	arp_pro	ea_hdr.ar_pro
@@ -88,14 +87,14 @@ struct	ether_arp {
  */
 #define ETHER_MAP_IP_MULTICAST(ipaddr, enaddr) \
 	/* struct in_addr *ipaddr; */ \
-	/* uint8_t enaddr[ETH_ALEN]; */ \
+	/* __uint8_t enaddr[ETH_ALEN]; */ \
 { \
 	(enaddr)[0] = 0x01; \
 	(enaddr)[1] = 0x00; \
 	(enaddr)[2] = 0x5e; \
-	(enaddr)[3] = ((uint8_t *)ipaddr)[1] & 0x7f; \
-	(enaddr)[4] = ((uint8_t *)ipaddr)[2]; \
-	(enaddr)[5] = ((uint8_t *)ipaddr)[3]; \
+	(enaddr)[3] = ((__uint8_t *)ipaddr)[1] & 0x7f; \
+	(enaddr)[4] = ((__uint8_t *)ipaddr)[2]; \
+	(enaddr)[5] = ((__uint8_t *)ipaddr)[3]; \
 }
 
 __END_DECLS

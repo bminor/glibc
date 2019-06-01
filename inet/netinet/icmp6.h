@@ -18,9 +18,10 @@
 #ifndef _NETINET_ICMP6_H
 #define _NETINET_ICMP6_H 1
 
-#include <inttypes.h>
-#include <string.h>
-#include <sys/types.h>
+#include <features.h>
+#include <bits/endian.h>
+#include <bits/types.h>
+#include <bits/types/size_t.h>
 #include <netinet/in.h>
 
 #define ICMP6_FILTER 1
@@ -32,19 +33,19 @@
 
 struct icmp6_filter
   {
-    uint32_t icmp6_filt[8];
+    __uint32_t icmp6_filt[8];
   };
 
 struct icmp6_hdr
   {
-    uint8_t     icmp6_type;   /* type field */
-    uint8_t     icmp6_code;   /* code field */
-    uint16_t    icmp6_cksum;  /* checksum field */
+    __uint8_t     icmp6_type;   /* type field */
+    __uint8_t     icmp6_code;   /* code field */
+    __uint16_t    icmp6_cksum;  /* checksum field */
     union
       {
-	uint32_t  icmp6_un_data32[1]; /* type-specific field */
-	uint16_t  icmp6_un_data16[2]; /* type-specific field */
-	uint8_t   icmp6_un_data8[4];  /* type-specific field */
+	__uint32_t  icmp6_un_data32[1]; /* type-specific field */
+	__uint16_t  icmp6_un_data16[2]; /* type-specific field */
+	__uint8_t   icmp6_un_data8[4];  /* type-specific field */
       } icmp6_dataun;
   };
 
@@ -96,6 +97,8 @@ struct icmp6_hdr
 #define ICMP6_FILTER_SETBLOCK(type, filterp) \
 	((((filterp)->icmp6_filt[(type) >> 5]) |=  (1 << ((type) & 31))))
 
+extern void *memset (void *__s, int __c, size_t __n) __THROW __nonnull ((1));
+
 #define ICMP6_FILTER_SETPASSALL(filterp) \
 	memset (filterp, 0, sizeof (struct icmp6_filter));
 
@@ -122,8 +125,8 @@ struct nd_router_solicit      /* router solicitation */
 struct nd_router_advert       /* router advertisement */
   {
     struct icmp6_hdr  nd_ra_hdr;
-    uint32_t   nd_ra_reachable;   /* reachable time */
-    uint32_t   nd_ra_retransmit;  /* retransmit timer */
+    __uint32_t   nd_ra_reachable;   /* reachable time */
+    __uint32_t   nd_ra_retransmit;  /* retransmit timer */
     /* could be followed by options */
   };
 
@@ -185,8 +188,8 @@ struct nd_redirect            /* redirect */
 
 struct nd_opt_hdr             /* Neighbor discovery option header */
   {
-    uint8_t  nd_opt_type;
-    uint8_t  nd_opt_len;        /* in units of 8 octets */
+    __uint8_t  nd_opt_type;
+    __uint8_t  nd_opt_len;        /* in units of 8 octets */
     /* followed by option specific data */
   };
 
@@ -200,13 +203,13 @@ struct nd_opt_hdr             /* Neighbor discovery option header */
 
 struct nd_opt_prefix_info     /* prefix information */
   {
-    uint8_t   nd_opt_pi_type;
-    uint8_t   nd_opt_pi_len;
-    uint8_t   nd_opt_pi_prefix_len;
-    uint8_t   nd_opt_pi_flags_reserved;
-    uint32_t  nd_opt_pi_valid_time;
-    uint32_t  nd_opt_pi_preferred_time;
-    uint32_t  nd_opt_pi_reserved2;
+    __uint8_t   nd_opt_pi_type;
+    __uint8_t   nd_opt_pi_len;
+    __uint8_t   nd_opt_pi_prefix_len;
+    __uint8_t   nd_opt_pi_flags_reserved;
+    __uint32_t  nd_opt_pi_valid_time;
+    __uint32_t  nd_opt_pi_preferred_time;
+    __uint32_t  nd_opt_pi_reserved2;
     struct in6_addr  nd_opt_pi_prefix;
   };
 
@@ -216,19 +219,19 @@ struct nd_opt_prefix_info     /* prefix information */
 
 struct nd_opt_rd_hdr          /* redirected header */
   {
-    uint8_t   nd_opt_rh_type;
-    uint8_t   nd_opt_rh_len;
-    uint16_t  nd_opt_rh_reserved1;
-    uint32_t  nd_opt_rh_reserved2;
+    __uint8_t   nd_opt_rh_type;
+    __uint8_t   nd_opt_rh_len;
+    __uint16_t  nd_opt_rh_reserved1;
+    __uint32_t  nd_opt_rh_reserved2;
     /* followed by IP header and data */
   };
 
 struct nd_opt_mtu             /* MTU option */
   {
-    uint8_t   nd_opt_mtu_type;
-    uint8_t   nd_opt_mtu_len;
-    uint16_t  nd_opt_mtu_reserved;
-    uint32_t  nd_opt_mtu_mtu;
+    __uint8_t   nd_opt_mtu_type;
+    __uint8_t   nd_opt_mtu_len;
+    __uint16_t  nd_opt_mtu_reserved;
+    __uint32_t  nd_opt_mtu_mtu;
   };
 
 struct mld_hdr
@@ -248,10 +251,10 @@ struct mld_hdr
 struct icmp6_router_renum    /* router renumbering header */
   {
     struct icmp6_hdr    rr_hdr;
-    uint8_t             rr_segnum;
-    uint8_t             rr_flags;
-    uint16_t            rr_maxdelay;
-    uint32_t            rr_reserved;
+    __uint8_t           rr_segnum;
+    __uint8_t           rr_flags;
+    __uint16_t          rr_maxdelay;
+    __uint32_t          rr_reserved;
   };
 
 #define rr_type		rr_hdr.icmp6_type
@@ -268,13 +271,13 @@ struct icmp6_router_renum    /* router renumbering header */
 
 struct rr_pco_match    /* match prefix part */
   {
-    uint8_t             rpm_code;
-    uint8_t             rpm_len;
-    uint8_t             rpm_ordinal;
-    uint8_t             rpm_matchlen;
-    uint8_t             rpm_minlen;
-    uint8_t             rpm_maxlen;
-    uint16_t            rpm_reserved;
+    __uint8_t           rpm_code;
+    __uint8_t           rpm_len;
+    __uint8_t           rpm_ordinal;
+    __uint8_t           rpm_matchlen;
+    __uint8_t           rpm_minlen;
+    __uint8_t           rpm_maxlen;
+    __uint16_t          rpm_reserved;
     struct in6_addr     rpm_prefix;
   };
 
@@ -285,13 +288,13 @@ struct rr_pco_match    /* match prefix part */
 
 struct rr_pco_use      /* use prefix part */
   {
-    uint8_t             rpu_uselen;
-    uint8_t             rpu_keeplen;
-    uint8_t             rpu_ramask;
-    uint8_t             rpu_raflags;
-    uint32_t            rpu_vltime;
-    uint32_t            rpu_pltime;
-    uint32_t            rpu_flags;
+    __uint8_t           rpu_uselen;
+    __uint8_t           rpu_keeplen;
+    __uint8_t           rpu_ramask;
+    __uint8_t           rpu_raflags;
+    __uint32_t          rpu_vltime;
+    __uint32_t          rpu_pltime;
+    __uint32_t          rpu_flags;
     struct in6_addr     rpu_prefix;
   };
 
@@ -308,10 +311,10 @@ struct rr_pco_use      /* use prefix part */
 
 struct rr_result       /* router renumbering result message */
   {
-    uint16_t            rrr_flags;
-    uint8_t             rrr_ordinal;
-    uint8_t             rrr_matchedlen;
-    uint32_t            rrr_ifid;
+    __uint16_t          rrr_flags;
+    __uint8_t           rrr_ordinal;
+    __uint8_t           rrr_matchedlen;
+    __uint32_t          rrr_ifid;
     struct in6_addr     rrr_prefix;
   };
 
@@ -326,20 +329,20 @@ struct rr_result       /* router renumbering result message */
 /* Mobile IPv6 extension: Advertisement Interval.  */
 struct nd_opt_adv_interval
   {
-    uint8_t   nd_opt_adv_interval_type;
-    uint8_t   nd_opt_adv_interval_len;
-    uint16_t  nd_opt_adv_interval_reserved;
-    uint32_t  nd_opt_adv_interval_ival;
+    __uint8_t   nd_opt_adv_interval_type;
+    __uint8_t   nd_opt_adv_interval_len;
+    __uint16_t  nd_opt_adv_interval_reserved;
+    __uint32_t  nd_opt_adv_interval_ival;
   };
 
 /* Mobile IPv6 extension: Home Agent Info.  */
 struct nd_opt_home_agent_info
   {
-    uint8_t   nd_opt_home_agent_info_type;
-    uint8_t   nd_opt_home_agent_info_len;
-    uint16_t  nd_opt_home_agent_info_reserved;
-    uint16_t  nd_opt_home_agent_info_preference;
-    uint16_t  nd_opt_home_agent_info_lifetime;
+    __uint8_t   nd_opt_home_agent_info_type;
+    __uint8_t   nd_opt_home_agent_info_len;
+    __uint16_t  nd_opt_home_agent_info_reserved;
+    __uint16_t  nd_opt_home_agent_info_preference;
+    __uint16_t  nd_opt_home_agent_info_lifetime;
   };
 
 #endif /* netinet/icmpv6.h */

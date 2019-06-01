@@ -21,8 +21,8 @@
 #define _NET_ROUTE_H	1
 
 #include <features.h>
+
 #include <sys/socket.h>
-#include <sys/types.h>
 #include <netinet/in.h>
 #include <bits/wordsize.h>
 

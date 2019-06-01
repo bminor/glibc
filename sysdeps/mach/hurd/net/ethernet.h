@@ -22,9 +22,7 @@
 #define __NET_ETHERNET_H 1
 
 #include <features.h>
-
-#include <sys/types.h>
-#include <stdint.h>
+#include <bits/types.h>
 #include <net/if_ether.h>     /* IEEE 802.3 Ethernet constants */
 
 __BEGIN_DECLS
@@ -33,15 +31,15 @@ __BEGIN_DECLS
    systems.  */
 struct ether_addr
 {
-  uint8_t ether_addr_octet[ETH_ALEN];
+  __uint8_t ether_addr_octet[ETH_ALEN];
 };
 
 /* 10Mb/s ethernet header */
 struct ether_header
 {
-  uint8_t  ether_dhost[ETH_ALEN];	/* destination eth addr	*/
-  uint8_t  ether_shost[ETH_ALEN];	/* source ether addr	*/
-  uint16_t ether_type;		        /* packet type ID field	*/
+  __uint8_t  ether_dhost[ETH_ALEN];	/* destination eth addr	*/
+  __uint8_t  ether_shost[ETH_ALEN];	/* source ether addr	*/
+  __uint16_t ether_type;	        /* packet type ID field	*/
 };
 
 /* Ethernet protocol ID's */

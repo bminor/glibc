@@ -54,11 +54,12 @@
 
 #include <features.h>
 
-#include <sys/param.h>
-#include <sys/types.h>
-#include <stdio.h>
 #include <netinet/in.h>
 #include <arpa/nameser.h>
+
+#include <bits/types.h>
+#include <bits/types/FILE.h>
+#include <bits/types/size_t.h>
 #include <bits/types/res_state.h>
 
 /*
@@ -249,10 +250,10 @@ int		loc_aton (const char *__ascii, unsigned char *__binary) __THROW;
 const char *	loc_ntoa (const unsigned char *__binary, char *__ascii) __THROW;
 int		dn_skipname (const unsigned char *, const unsigned char *)
      __THROW;
-void		putlong (uint32_t, unsigned char *) __THROW;
-void		putshort (uint16_t, unsigned char *) __THROW;
+void		putlong (__uint32_t, unsigned char *) __THROW;
+void		putshort (__uint16_t, unsigned char *) __THROW;
 const char *	p_class (int) __THROW;
-const char *	p_time (uint32_t) __THROW;
+const char *	p_time (__uint32_t) __THROW;
 const char *	p_type (int) __THROW;
 const char *	p_rcode (int) __THROW;
 const unsigned char * p_cdnname (const unsigned char *,

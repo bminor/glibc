@@ -21,7 +21,7 @@
 #ifndef _NETROSE_ROSE_H
 #define _NETROSE_ROSE_H 1
 
-#include <sys/socket.h>
+#include <features.h>
 #include <netax25/ax25.h>
 
 /* Socket level values.  */

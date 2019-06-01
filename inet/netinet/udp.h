@@ -47,8 +47,8 @@
 #ifndef __NETINET_UDP_H
 #define __NETINET_UDP_H    1
 
-#include <sys/types.h>
-#include <stdint.h>
+#include <features.h>
+#include <bits/types.h>
 
 /* UDP header as specified by RFC 768, August 1980. */
 
@@ -58,17 +58,17 @@ struct udphdr
   {
     struct
     {
-      uint16_t uh_sport;	/* source port */
-      uint16_t uh_dport;	/* destination port */
-      uint16_t uh_ulen;		/* udp length */
-      uint16_t uh_sum;		/* udp checksum */
+      __uint16_t uh_sport;	/* source port */
+      __uint16_t uh_dport;	/* destination port */
+      __uint16_t uh_ulen;	/* udp length */
+      __uint16_t uh_sum;	/* udp checksum */
     };
     struct
     {
-      uint16_t source;
-      uint16_t dest;
-      uint16_t len;
-      uint16_t check;
+      __uint16_t source;
+      __uint16_t dest;
+      __uint16_t len;
+      __uint16_t check;
     };
   };
 };

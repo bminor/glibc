@@ -32,7 +32,8 @@
 #ifndef _PROTOCOLS_RWHOD_H
 #define	_PROTOCOLS_RWHOD_H 1
 
-#include <sys/types.h>
+#include <features.h>
+#include <bits/types.h>
 
 /*
  * rwho protocol packet format.
@@ -40,7 +41,7 @@
 struct	outmp {
 	char	out_line[8];		/* tty name */
 	char	out_name[8];		/* user id */
-	int32_t	out_time;		/* time on */
+	__int32_t out_time;		/* time on */
 };
 
 struct	whod {

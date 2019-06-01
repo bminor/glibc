@@ -18,8 +18,8 @@
 #ifndef __NETIPX_IPX_H
 #define __NETIPX_IPX_H 1
 
-#include <sys/types.h>
-#include <stdint.h>
+#include <features.h>
+#include <bits/types.h>
 #include <bits/sockaddr.h>
 
 __BEGIN_DECLS
@@ -33,10 +33,10 @@ __BEGIN_DECLS
 struct sockaddr_ipx
   {
     sa_family_t sipx_family;
-    uint16_t sipx_port;
-    uint32_t sipx_network;
+    __uint16_t sipx_port;
+    __uint32_t sipx_network;
     unsigned char sipx_node[IPX_NODE_LEN];
-    uint8_t sipx_type;
+    __uint8_t sipx_type;
     unsigned char sipx_zero;	/* 16 byte fill */
   };
 
