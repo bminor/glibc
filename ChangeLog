@@ -1,4 +1,4 @@
-2019-05-29  Florian Weimer  <fweimer@redhat.com>
+2019-06-01  Florian Weimer  <fweimer@redhat.com>
 
 	arm: Remove ioperm/iopl/inb/inw/inl/outb/outw/outl support.
 	* sysdeps/unix/sysv/linux/arm/Makefile
