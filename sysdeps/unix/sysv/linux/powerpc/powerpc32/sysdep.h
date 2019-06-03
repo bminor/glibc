@@ -41,7 +41,7 @@
    function call, with the exception of LR (which is needed for the
    "sc; bnslr+" sequence) and CR (where only CR0.SO is clobbered to signal
    an error return status).  */
-# define INTERNAL_VSYSCALL_CALL_TYPE(funcptr, err, nr, type, args...)	      \
+# define INTERNAL_VSYSCALL_CALL_TYPE(funcptr, err, type, nr, args...)	      \
   ({									      \
     register void *r0  __asm__ ("r0");					      \
     register long int r3  __asm__ ("r3");				      \
@@ -69,7 +69,7 @@
   })
 
 #define INTERNAL_VSYSCALL_CALL(funcptr, err, nr, args...) \
-  INTERNAL_VSYSCALL_CALL_TYPE(funcptr, err, nr, long int, args)
+  INTERNAL_VSYSCALL_CALL_TYPE(funcptr, err, long int, nr, args)
 
 # undef INLINE_SYSCALL
 # define INLINE_SYSCALL(name, nr, args...)				\
@@ -130,20 +130,6 @@
 
 # undef INTERNAL_SYSCALL_ERRNO
 # define INTERNAL_SYSCALL_ERRNO(val, err)     (val)
-
-# define INTERNAL_VSYSCALL_NO_SYSCALL_FALLBACK(name, err, type, nr, args...)  \
-  ({									      \
-    type sc_ret = ENOSYS;						      \
-									      \
-    __typeof (__vdso_##name) vdsop = __vdso_##name;			      \
-    PTR_DEMANGLE (vdsop);						      \
-    if (vdsop != NULL)							      \
-      sc_ret = 								      \
-        INTERNAL_VSYSCALL_CALL_TYPE (vdsop, err, nr, type, ##args);	      \
-    else								      \
-      err = 1 << 28;							      \
-    sc_ret;								      \
-  })
 
 # define LOADARGS_0(name, dummy)					      \
 	r0 = name

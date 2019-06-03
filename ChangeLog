@@ -1,5 +1,26 @@
 2019-09-17  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/libc-vdso.h (VDSO_IFUNC_RET): Define if not
+	defined.
+	* sysdeps/unix/sysv/linux/powerpc/get_timebase_freq.c
+	(__get_timebase_freq): Remove use of
+	INTERNAL_VSYSCALL_NO_SYSCALL_FALLBACK.
+	(get_timebase_freq_fallback): New symbol.
+	* sysdeps/unix/sysv/linux/powerpc/gettimeofday.c (time): Use
+	HAVE_GETTIMEOFDAY_VSYSCALL.
+	* sysdeps/unix/sysv/linux/powerpc/time.c (gettimeofday): Use
+	HAVE_TIME_VSYSCALL.
+	* sysdeps/unix/sysv/linux/powerpc/libc-vdso.h: Include generic
+	implementation.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h
+	(INTERNAL_VSYSCALL_CALL_TYPE): Make calling convention similar to
+	powerpc64.
+	(INTERNAL_VSYSCALL_NO_SYSCALL_FALLBACK): Remove macro.
+	* .../sysv/linux/powerpc/powerpc64/sysdep.h
+	(INTERNAL_VSYSCALL_NO_SYSCALL_FALLBACK): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sysdep.h
+	(HAVE_GETTIMEOFDAY_VSYSCALL): Define.
+
 	* sysdeps/powerpc/powerpc32/backtrace.c (is_sigtramp_address,
 	is_sigtramp_address_rt): Use HAVE_SIGTRAMP_{RT}32 instead of SHARED.
 	* sysdeps/powerpc/powerpc64/backtrace.c (is_sigtramp_address):

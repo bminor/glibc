@@ -45,22 +45,6 @@
 
 #endif /* __ASSEMBLER__ */
 
-/* This version is for internal uses when there is no desire
-   to set errno */
-#define INTERNAL_VSYSCALL_NO_SYSCALL_FALLBACK(name, err, type, nr, args...)   \
-  ({									      \
-    type sc_ret = ENOSYS;						      \
-									      \
-    __typeof (__vdso_##name) vdsop = __vdso_##name;			      \
-    PTR_DEMANGLE (vdsop);						      \
-    if (vdsop != NULL)							      \
-      sc_ret =								      \
-        INTERNAL_VSYSCALL_CALL_TYPE (vdsop, err, type, nr, ##args);	      \
-    else								      \
-      err = 1 << 28;							      \
-    sc_ret;								      \
-  })
-
 /* Define a macro which expands inline into the wrapper code for a system
    call. This use is for internal calls that do not need to handle errors
    normally. It will never touch errno. This returns just what the kernel
@@ -94,10 +78,9 @@
 #define INTERNAL_VSYSCALL_CALL(funcptr, err, nr, args...)		\
   INTERNAL_VSYSCALL_CALL_TYPE(funcptr, err, long int, nr, args)
 
-#undef INLINE_SYSCALL
-
 /* This version is for kernels that implement system calls that
    behave like function calls as far as register saving.  */
+#undef INLINE_SYSCALL
 #define INLINE_SYSCALL(name, nr, args...)				\
   ({									\
     INTERNAL_SYSCALL_DECL (sc_err);					\

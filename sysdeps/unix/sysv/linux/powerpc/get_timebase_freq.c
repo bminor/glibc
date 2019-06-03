@@ -23,17 +23,11 @@
 #include <not-cancel.h>
 #include <libc-vdso.h>
 
-uint64_t
-__get_timebase_freq (void)
+static uint64_t
+get_timebase_freq_fallback (void)
 {
   hp_timing_t result = 0L;
 
-#ifdef SHARED
-  /* The vDSO does not return an error (it clear cr0.so on returning).  */
-  INTERNAL_SYSCALL_DECL (err);
-  result =
-    INTERNAL_VSYSCALL_NO_SYSCALL_FALLBACK (get_tbfreq, err, uint64_t, 0);
-#else
   /* We read the information from the /proc filesystem.  /proc/cpuinfo
      contains at least one line like:
      timebase        : 33333333
@@ -99,8 +93,20 @@ __get_timebase_freq (void)
 	    }
 	}
     }
-#endif
 
   return result;
+}
+
+uint64_t
+__get_timebase_freq (void)
+{
+  /* The vDSO does not have a fallback mechanism (such calling a syscall).  */
+  __typeof (VDSO_SYMBOL (get_tbfreq)) vdsop = VDSO_SYMBOL (get_tbfreq);
+  PTR_DEMANGLE (vdsop);
+  if (vdsop == NULL)
+    return get_timebase_freq_fallback ();
+
+  INTERNAL_SYSCALL_DECL (err);
+  return INTERNAL_VSYSCALL_CALL_TYPE (vdsop, err, uint64_t, 0);
 }
 weak_alias (__get_timebase_freq, __ppc_get_timebase_freq)

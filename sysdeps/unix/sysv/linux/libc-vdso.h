@@ -21,6 +21,13 @@
 
 #define VDSO_SYMBOL(__name) __vdso_##__name
 
+/* Adjust the return IFUNC value from a vDSO symbol accordingly required
+   by the ELFv1 ABI.  It is used by the architecture to create an ODP
+   entry since the kernel vDSO does not provide it.  */
+#ifndef VDSO_IFUNC_RET
+# define VDSO_IFUNC_RET(__value) (__value)
+#endif
+
 #ifdef HAVE_CLOCK_GETTIME_VSYSCALL
 extern int (*VDSO_SYMBOL(clock_gettime)) (clockid_t, struct timespec *)
   attribute_hidden;

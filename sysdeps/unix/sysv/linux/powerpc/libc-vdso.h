@@ -22,17 +22,9 @@
 
 #include <sysdep.h>
 #include <sysdep-vdso.h>
-#include_next <libc-vdso.h>
-
-extern unsigned long long (*VDSO_SYMBOL(get_tbfreq)) (void);
-#if defined(__PPC64__) || defined(__powerpc64__)
-extern void *VDSO_SYMBOL(sigtramp_rt64);
-#else
-extern void *VDSO_SYMBOL(sigtramp32);
-extern void *VDSO_SYMBOL(sigtramp_rt32);
-#endif
 
 #if (defined(__PPC64__) || defined(__powerpc64__)) && _CALL_ELF != 2
+# include <dl-machine.h>
 /* The correct solution is for _dl_vdso_vsym to return the address of the OPD
    for the kernel VDSO function.  That address would then be stored in the
    __vdso_* variables and returned as the result of the IFUNC resolver function.
@@ -51,7 +43,7 @@ extern void *VDSO_SYMBOL(sigtramp_rt32);
    are processed immediately at startup the resolver functions and this code need
    not be thread-safe, but if the caller writes to a PLT slot it must do so in a
    thread-safe manner with all the required barriers.  */
-#define VDSO_IFUNC_RET(value)                            \
+# define VDSO_IFUNC_RET(value)                           \
   ({                                                     \
     static Elf64_FuncDesc vdso_opd = { .fd_toc = ~0x0 }; \
     vdso_opd.fd_func = (Elf64_Addr)value;                \
@@ -59,7 +51,17 @@ extern void *VDSO_SYMBOL(sigtramp_rt32);
   })
 
 #else
-#define VDSO_IFUNC_RET(value)  ((void *) (value))
+# define VDSO_IFUNC_RET(value)  ((void *) (value))
+#endif
+
+#include_next <libc-vdso.h>
+
+extern unsigned long long (*VDSO_SYMBOL(get_tbfreq)) (void);
+#if defined(__PPC64__) || defined(__powerpc64__)
+extern void *VDSO_SYMBOL(sigtramp_rt64);
+#else
+extern void *VDSO_SYMBOL(sigtramp32);
+extern void *VDSO_SYMBOL(sigtramp_rt32);
 #endif
 
 #endif /* _LIBC_VDSO_H */
