@@ -19,21 +19,38 @@
 #ifndef _DL_VDSO_H
 #define _DL_VDSO_H	1
 
-#include <assert.h>
 #include <ldsodefs.h>
 #include <dl-hash.h>
-#include <libc-vdso.h>
 
 /* Functions for resolving symbols in the VDSO link map.  */
 extern void *_dl_vdso_vsym (const char *name,
 			    const struct r_found_version *version)
       attribute_hidden;
 
+/* If the architecture support vDSO it should define which is the expected
+   kernel version and hash value through both VDSO_NAME and VDSO_HASH
+   (usually defined at architecture sysdep.h).  */
+
+#ifndef VDSO_NAME
+# define VDSO_NAME "LINUX_0.0"
+#endif
+#ifndef VDSO_HASH
+# define VDSO_HASH 0
+#endif
+
 static inline void *
 get_vdso_symbol (const char *symbol)
 {
   struct r_found_version rfv = { VDSO_NAME, VDSO_HASH, 1, NULL };
   return _dl_vdso_vsym (symbol, &rfv);
+}
+
+static inline void *
+get_vdso_mangle_symbol (const char *symbol)
+{
+  void *vdsop = get_vdso_symbol (symbol);
+  PTR_MANGLE (vdsop);
+  return vdsop;
 }
 
 #endif /* dl-vdso.h */

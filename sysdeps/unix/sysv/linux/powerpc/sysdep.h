@@ -20,6 +20,16 @@
 #define VDSO_HASH  123718565
 
 /* List of system calls which are supported as vsyscalls.  */
-#define HAVE_CLOCK_GETRES_VSYSCALL	1
-#define HAVE_CLOCK_GETTIME_VSYSCALL	1
-#define HAVE_GETCPU_VSYSCALL		1
+#define HAVE_CLOCK_GETRES_VSYSCALL	"__kernel_clock_getres"
+#define HAVE_CLOCK_GETTIME_VSYSCALL	"__kernel_clock_gettime"
+#define HAVE_GETCPU_VSYSCALL		"__kernel_getcpu"
+#define HAVE_TIME_VSYSCALL		"__kernel_time"
+#define HAVE_GETTIMEOFDAY_VSYSCALL      "__kernel_gettimeofday"
+#define HAVE_GET_TBFREQ                 "__kernel_get_tbfreq"
+
+#if defined(__PPC64__) || defined(__powerpc64__)
+# define HAVE_SIGTRAMP_RT64		"__kernel_sigtramp_rt64"
+#else
+# define HAVE_SIGTRAMP_32		"__kernel_sigtramp32"
+# define HAVE_SIGTRAMP_RT32		"__kernel_sigtramp_rt32"
+#endif

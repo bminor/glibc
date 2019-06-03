@@ -38,7 +38,7 @@ __gettimeofday_vsyscall (struct timeval *tv, struct timezone *tz)
 
 # define INIT_ARCH()
 libc_ifunc_hidden (__gettimeofday, __gettimeofday,
-		   (get_vdso_symbol ("__kernel_gettimeofday")
+		   (get_vdso_symbol (HAVE_GETTIMEOFDAY_VSYSCALL)
 		    ?: __gettimeofday_vsyscall))
 libc_hidden_def (__gettimeofday)
 

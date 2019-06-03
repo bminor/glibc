@@ -19,7 +19,7 @@
 #ifndef SYSDEP_VDSO_LINUX_H
 # define SYSDEP_VDSO_LINUX_H
 
-#define VDSO_SYMBOL(__name) __vdso_##__name
+#include <dl-vdso.h>
 
 #ifndef INTERNAL_VSYSCALL_CALL
 # define INTERNAL_VSYSCALL_CALL(funcptr, err, nr, args...)		      \

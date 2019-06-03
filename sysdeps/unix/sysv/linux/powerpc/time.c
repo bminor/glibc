@@ -67,7 +67,7 @@ time_syscall (time_t *t)
 }
 
 # define INIT_ARCH() \
-  void *vdso_time = get_vdso_symbol ("__kernel_time");
+  void *vdso_time = get_vdso_symbol (HAVE_TIME_VSYSCALL);
 
 /* If the vDSO is not available we fall back to the syscall.  */
 libc_ifunc_hidden (__redirect_time, time,

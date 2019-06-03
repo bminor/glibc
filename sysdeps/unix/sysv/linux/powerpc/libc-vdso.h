@@ -17,20 +17,14 @@
    <https://www.gnu.org/licenses/>.  */
 
 
-#ifndef _LIBC_VDSO_H
-#define _LIBC_VDSO_H
+#ifndef _LIBC_POWERPC_VDSO_H
+#define _LIBC_POWERPC_VDSO_H
 
 #include <sysdep.h>
 #include <sysdep-vdso.h>
+#include_next <libc-vdso.h>
 
-extern int (*VDSO_SYMBOL(gettimeofday)) (struct timeval *, void *)
-  attribute_hidden;
-extern int (*VDSO_SYMBOL(clock_gettime)) (clockid_t, struct timespec *);
-extern int (*VDSO_SYMBOL(clock_getres)) (clockid_t, struct timespec *);
 extern unsigned long long (*VDSO_SYMBOL(get_tbfreq)) (void);
-extern int (*VDSO_SYMBOL(getcpu)) (unsigned *, unsigned *);
-extern time_t (*VDSO_SYMBOL(time)) (time_t *);
-
 #if defined(__PPC64__) || defined(__powerpc64__)
 extern void *VDSO_SYMBOL(sigtramp_rt64);
 #else

@@ -57,7 +57,7 @@ struct signal_frame_64 {
 static inline int
 is_sigtramp_address (void *nip)
 {
-#ifdef SHARED
+#ifdef HAVE_SIGTRAMP_RT64
   if (nip == VDSO_SYMBOL (sigtramp_rt64))
     return 1;
 #endif

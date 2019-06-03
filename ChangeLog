@@ -1,5 +1,65 @@
 2019-09-17  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/powerpc/powerpc32/backtrace.c (is_sigtramp_address,
+	is_sigtramp_address_rt): Use HAVE_SIGTRAMP_{RT}32 instead of SHARED.
+	* sysdeps/powerpc/powerpc64/backtrace.c (is_sigtramp_address):
+	Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/init-first.c: Remove file.
+	* sysdeps/unix/sysv/linux/aarch64/libc-vdso.h: Likewise.
+	* sysdeps/unix/sysv/linux/arm/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libc-vdso.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/libc-vdso.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/libc-vdso.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/libc-vdso.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/libc-vdso.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86/libc-vdso.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/sysdep.h
+	(HAVE_CLOCK_GETRES_VSYSCALL, HAVE_CLOCK_GETTIME_VSYSCALL,
+	HAVE_GETTIMEOFDAY_VSYSCALL): Define value based on kernel exported
+	name.
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (HAVE_CLOCK_GETTIME_VSYSCALL,
+	HAVE_GETTIMEOFDAY_VSYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (HAVE_CLOCK_GETTIME_VSYSCALL,
+	HAVE_GETTIMEOFDAY_VSYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/mips/sysdep.h (HAVE_CLOCK_GETTIME_VSYSCALL,
+	HAVE_GETTIMEOFDAY_VSYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sysdep.h
+	(HAVE_CLOCK_GETRES_VSYSCALL, HAVE_CLOCK_GETTIME_VSYSCALL,
+	HAVE_GETCPU_VSYSCALL, HAVE_TIME_VSYSCALL, HAVE_GET_TBFREQ,
+	HAVE_SIGTRAMP_RT64, HAVE_SIGTRAMP_32, HAVE_SIGTRAMP_RT32i,
+	HAVE_GETTIMEOFDAY_VSYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/riscv/sysdep.h (HAVE_CLOCK_GETRES_VSYSCALL,
+	HAVE_CLOCK_GETTIME_VSYSCALL, HAVE_GETTIMEOFDAY_VSYSCALL,
+	HAVE_GETCPU_VSYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/s390/sysdep.h (HAVE_CLOCK_GETRES_VSYSCALL,
+	HAVE_CLOCK_GETTIME_VSYSCALL, HAVE_GETTIMEOFDAY_VSYSCALL,
+	HAVE_GETCPU_VSYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sysdep.h (HAVE_CLOCK_GETTIME_VSYSCALL,
+	HAVE_GETTIMEOFDAY_VSYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h
+	(HAVE_CLOCK_GETTIME_VSYSCALL, HAVE_GETTIMEOFDAY_VSYSCALL,
+	HAVE_GETCPU_VSYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/dl-vdso.h (VDSO_NAME, VDSO_HASH): Define to
+	invalid names if architecture does not define them.
+	(get_vdso_mangle_symbol): New symbol.
+	* sysdeps/unix/sysv/linux/init-first.c: New file.
+	* sysdeps/unix/sysv/linux/libc-vdso.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/init-first.c (gettimeofday,
+	clock_gettime, clock_getres, getcpu, time): Remove declaration.
+	(__libc_vdso_platform_setup_arch): Likewise and use
+	get_vdso_mangle_symbol to setup vDSO symbols.
+	(sigtramp_rt64, sigtramp32, sigtramp_rt32, get_tbfreq): Add
+	attribute_hidden.
+	* sysdeps/unix/sysv/linux/powerpc/libc-vdso.h: Likewise.
+	* sysdeps/unix/sysv/linux/sysdep-vdso.h (VDSO_SYMBOL): Remove
+	definition.
+
 	* sysdeps/unix/make-syscalls.sh: Make vDSO call use get_vdso_symbol.
 	* sysdeps/unix/sysv/linux/aarch64/gettimeofday.c (__gettimeofday):
 	Use get_vdso_symbol instead of _dl_vdso_vsym.

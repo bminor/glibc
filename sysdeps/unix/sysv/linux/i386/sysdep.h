@@ -313,8 +313,8 @@ struct libc_do_syscall_args
 # define VDSO_HASH  61765110
 
 /* List of system calls which are supported as vsyscalls.  */
-# define HAVE_CLOCK_GETTIME_VSYSCALL    1
-# define HAVE_GETTIMEOFDAY_VSYSCALL     1
+# define HAVE_CLOCK_GETTIME_VSYSCALL    "__vdso_clock_gettime"
+# define HAVE_GETTIMEOFDAY_VSYSCALL     "__vdso_gettimeofday"
 
 /* Define a macro which expands inline into the wrapper code for a system
    call.  This use is for internal calls that do not need to handle errors

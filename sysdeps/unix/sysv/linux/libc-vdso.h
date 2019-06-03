@@ -1,5 +1,4 @@
-/* VDSO function pointer declarations.
-   Copyright (C) 2016-2019 Free Software Foundation, Inc.
+/* Copyright (C) 2009-2019 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 
@@ -20,10 +19,26 @@
 #ifndef _LIBC_VDSO_H
 #define _LIBC_VDSO_H
 
-#include <sysdep-vdso.h>
+#define VDSO_SYMBOL(__name) __vdso_##__name
 
-extern int (*VDSO_SYMBOL(gettimeofday)) (struct timeval *, void *)
-   attribute_hidden;
-extern int (*VDSO_SYMBOL(clock_gettime)) (clockid_t, struct timespec *);
+#ifdef HAVE_CLOCK_GETTIME_VSYSCALL
+extern int (*VDSO_SYMBOL(clock_gettime)) (clockid_t, struct timespec *)
+  attribute_hidden;
+#endif
+#ifdef HAVE_CLOCK_GETRES_VSYSCALL
+extern int (*VDSO_SYMBOL(clock_getres)) (clockid_t, struct timespec *)
+  attribute_hidden;
+#endif
+#ifdef HAVE_GETTIMEOFDAY_VSYSCALL
+extern int (*VDSO_SYMBOL (gettimeofday)) (struct timeval *, void *)
+  attribute_hidden;
+#endif
+#ifdef HAVE_GETCPU_VSYSCALL
+extern long int (*VDSO_SYMBOL(getcpu)) (unsigned *, unsigned *, void *)
+  attribute_hidden;
+#endif
+#ifdef HAVE_TIME_VSYSCALL
+extern time_t (*VDSO_SYMBOL(time)) (time_t *) attribute_hidden;
+#endif
 
 #endif /* _LIBC_VDSO_H */

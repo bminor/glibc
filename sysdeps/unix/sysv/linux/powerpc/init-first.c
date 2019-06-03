@@ -19,47 +19,18 @@
 #include <dl-vdso.h>
 #include <libc-vdso.h>
 
-int (*VDSO_SYMBOL(gettimeofday)) (struct timeval *, void *)
-  attribute_hidden;
-int (*VDSO_SYMBOL(clock_gettime)) (clockid_t, struct timespec *);
-int (*VDSO_SYMBOL(clock_getres)) (clockid_t, struct timespec *);
-unsigned long long (*VDSO_SYMBOL(get_tbfreq)) (void);
-int (*VDSO_SYMBOL(getcpu)) (unsigned *, unsigned *);
-time_t (*VDSO_SYMBOL(time)) (time_t *);
-
+unsigned long long (*VDSO_SYMBOL(get_tbfreq)) (void) attribute_hidden;
 #if defined(__PPC64__) || defined(__powerpc64__)
-void *VDSO_SYMBOL(sigtramp_rt64);
+void *VDSO_SYMBOL(sigtramp_rt64) attribute_hidden;
 #else
-void *VDSO_SYMBOL(sigtramp32);
-void *VDSO_SYMBOL(sigtramp_rt32);
+void *VDSO_SYMBOL(sigtramp32) attribute_hidden;
+void *VDSO_SYMBOL(sigtramp_rt32) attribute_hidden;
 #endif
 
 static inline void
-_libc_vdso_platform_setup (void)
+__libc_vdso_platform_setup_arch (void)
 {
-  void *p = get_vdso_symbol ("__kernel_gettimeofday");
-  PTR_MANGLE (p);
-  VDSO_SYMBOL (gettimeofday) = p;
-
-  p = get_vdso_symbol ("__kernel_clock_gettime");
-  PTR_MANGLE (p);
-  VDSO_SYMBOL (clock_gettime) = p;
-
-  p = get_vdso_symbol ("__kernel_clock_getres");
-  PTR_MANGLE (p);
-  VDSO_SYMBOL (clock_getres) = p;
-
-  p = get_vdso_symbol ("__kernel_get_tbfreq");
-  PTR_MANGLE (p);
-  VDSO_SYMBOL (get_tbfreq) = p;
-
-  p = get_vdso_symbol ("__kernel_getcpu");
-  PTR_MANGLE (p);
-  VDSO_SYMBOL (getcpu) = p;
-
-  p = get_vdso_symbol ("__kernel_time");
-  PTR_MANGLE (p);
-  VDSO_SYMBOL (time) = p;
+  VDSO_SYMBOL (get_tbfreq) = get_vdso_mangle_symbol (HAVE_GET_TBFREQ);
 
   /* PPC64 uses only one signal trampoline symbol, while PPC32 will use
      two depending if SA_SIGINFO is used (__kernel_sigtramp_rt32) or not
@@ -67,13 +38,13 @@ _libc_vdso_platform_setup (void)
      There is no need to pointer mangle these symbol because they will
      used only for pointer comparison.  */
 #if defined(__PPC64__) || defined(__powerpc64__)
-  VDSO_SYMBOL(sigtramp_rt64) =  get_vdso_symbol ("__kernel_sigtramp_rt64");
+  VDSO_SYMBOL(sigtramp_rt64) =  get_vdso_symbol (HAVE_SIGTRAMP_RT64);
 #else
-  VDSO_SYMBOL(sigtramp32) = get_vdso_symbol ("__kernel_sigtramp32");
-  VDSO_SYMBOL(sigtramp_rt32) = get_vdso_symbol ("__kernel_sigtramp_rt32");
+  VDSO_SYMBOL(sigtramp32) = get_vdso_symbol (HAVE_SIGTRAMP_32);
+  VDSO_SYMBOL(sigtramp_rt32) = get_vdso_symbol (HAVE_SIGTRAMP_RT32);
 #endif
 }
 
-#define VDSO_SETUP _libc_vdso_platform_setup
+#define VDSO_SETUP_ARCH __libc_vdso_platform_setup_arch
 
-#include <csu/init-first.c>
+#include <sysdeps/unix/sysv/linux/init-first.c>

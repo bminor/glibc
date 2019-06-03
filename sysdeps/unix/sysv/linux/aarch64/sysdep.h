@@ -160,9 +160,9 @@
 # endif
 
 /* List of system calls which are supported as vsyscalls.  */
-# define HAVE_CLOCK_GETRES_VSYSCALL	1
-# define HAVE_CLOCK_GETTIME_VSYSCALL	1
-# define HAVE_GETTIMEOFDAY_VSYSCALL	1
+# define HAVE_CLOCK_GETRES_VSYSCALL	"__kernel_clock_getres"
+# define HAVE_CLOCK_GETTIME_VSYSCALL	"__kernel_clock_gettime"
+# define HAVE_GETTIMEOFDAY_VSYSCALL	"__kernel_gettimeofday"
 
 /* Previously AArch64 used the generic version without the libc_hidden_def
    which lead in a non existent __send symbol in libc.so.  */

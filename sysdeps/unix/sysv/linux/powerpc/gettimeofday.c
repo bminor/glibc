@@ -28,6 +28,7 @@
 # include <dl-vdso.h>
 # include <libc-vdso.h>
 # include <dl-machine.h>
+# include <sysdep.h>
 
 # ifndef __powerpc64__
 #  undef __gettimeofday
@@ -58,7 +59,7 @@ __gettimeofday_syscall (struct timeval *tv, struct timezone *tz)
 }
 
 # define INIT_ARCH() \
-  void *vdso_gettimeofday = get_vdso_symbol ("__kernel_gettimeofday")
+  void *vdso_gettimeofday = get_vdso_symbol (HAVE_GETTIMEOFDAY_VSYSCALL)
 
 /* If the vDSO is not available we fall back syscall.  */
 libc_ifunc_hidden (__redirect___gettimeofday, __gettimeofday,
