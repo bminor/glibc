@@ -1,3 +1,9 @@
+2019-06-04  Florian Weimer  <fweimer@redhat.com>
+
+	* iconv/gconv_dl.c (release_handle): Remove file-level definition.
+	(do_release_shlib): Adjust for __twalk_r.
+	(__gconv_release_shlib): Call __twalk_r.
+
 2019-06-04  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #18830]

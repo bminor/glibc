@@ -149,15 +149,10 @@ __gconv_find_shlib (const char *name)
   return found;
 }
 
-
-/* This is very ugly but the tsearch functions provide no way to pass
-   information to the walker function.  So we use a global variable.
-   It is MT safe since we use a lock.  */
-static struct __gconv_loaded_object *release_handle;
-
 static void
-do_release_shlib (void *nodep, VISIT value, int level)
+do_release_shlib (const void *nodep, VISIT value, void *closure)
 {
+  struct __gconv_loaded_object *release_handle = closure;
   struct __gconv_loaded_object *obj = *(struct __gconv_loaded_object **) nodep;
 
   if (value != preorder && value != leaf)
@@ -184,13 +179,10 @@ do_release_shlib (void *nodep, VISIT value, int level)
 void
 __gconv_release_shlib (struct __gconv_loaded_object *handle)
 {
-  /* Urgh, this is ugly but we have no other possibility.  */
-  release_handle = handle;
-
   /* Process all entries.  Please note that we also visit entries
      with release counts <= 0.  This way we can finally unload them
      if necessary.  */
-  __twalk (loaded, (__action_fn_t) do_release_shlib);
+  __twalk_r (loaded, do_release_shlib, handle);
 }
 
 
