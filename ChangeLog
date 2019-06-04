@@ -1,5 +1,14 @@
 2019-09-17  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h
+	(INTERNAL_VSYSCALL_CALL): Remove.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h
+	(INTERNAL_VSYSCALL_CALL): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/sysdep.h
+	(INTERNAL_VSYSCALL_CALL): Likewise.
+	* sysdeps/unix/sysv/linux/mips/sysdep.h (INTERNAL_VSYSCALL_CALL):
+	New macro.
+
 	* sysdeps/unix/sysv/linux/libc-vdso.h (VDSO_IFUNC_RET): Define if not
 	defined.
 	* sysdeps/unix/sysv/linux/powerpc/get_timebase_freq.c

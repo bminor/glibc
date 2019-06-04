@@ -22,3 +22,19 @@
 /* List of system calls which are supported as vsyscalls.  */
 #define HAVE_CLOCK_GETTIME_VSYSCALL     "__vdso_gettimeofday"
 #define HAVE_GETTIMEOFDAY_VSYSCALL      "__vdso_clock_gettime"
+
+#ifndef __ASSEMBLER__
+
+/* Standard MIPS syscalls have an error flag, and return a positive errno
+   when the error flag is set. Emulate this behaviour for vsyscalls so that
+   the INTERNAL_SYSCALL_{ERROR_P,ERRNO} macros work correctly.  */
+#define INTERNAL_VSYSCALL_CALL(funcptr, err, nr, args...)		\
+  ({									\
+    long _ret = funcptr (args);						\
+    err = ((unsigned long) (_ret) >= (unsigned long) -4095L);		\
+    if (err)								\
+      _ret = -_ret;							\
+    _ret;								\
+  })
+
+#endif /* __ASSEMBLER__  */

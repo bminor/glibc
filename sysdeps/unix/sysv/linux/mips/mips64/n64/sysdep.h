@@ -293,18 +293,6 @@
 #define __SYSCALL_CLOBBERS "$1", "$3", "$10", "$11", "$12", "$13", \
 	"$14", "$15", "$24", "$25", "hi", "lo", "memory"
 
-/* Standard MIPS syscalls have an error flag, and return a positive errno
-   when the error flag is set. Emulate this behaviour for vsyscalls so that
-   the INTERNAL_SYSCALL_{ERROR_P,ERRNO} macros work correctly.  */
-#define INTERNAL_VSYSCALL_CALL(funcptr, err, nr, args...)		\
-  ({									\
-    long _ret = funcptr (args);						\
-    err = ((unsigned long) (_ret) >= (unsigned long) -4095L);		\
-    if (err)								\
-      _ret = -_ret;							\
-    _ret;								\
-  })
-
 #endif /* __ASSEMBLER__ */
 
 /* Pointer mangling is not yet supported for MIPS.  */
