@@ -1,3 +1,12 @@
+2019-06-17  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #24614]
+	* localedata/Makefile (LOCALES): Add nl_NL.UTF-8.
+	* localedata/locales/nl_NL (n_sep_by_space): Set to 2 (a space
+	between the currency symbol and the minus sign).
+	(n_sign_posn): Set to 4 (the minus sign after the currency symbol).
+	* localedata/tst-strfmon1.c (tests): Add test data for nl_NL.UTF-8.
+
 2019-06-17  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/m68k/Makefile (sysdep_routines,

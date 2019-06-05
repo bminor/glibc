@@ -245,6 +245,7 @@ LOCALES := \
 	nan_TW.UTF-8@latin \
 	nb_NO.ISO-8859-1 \
 	nb_NO.UTF-8 \
+	nl_NL.UTF-8 \
 	nn_NO.ISO-8859-1 \
 	om_KE.UTF-8 \
 	os_RU.UTF-8 \

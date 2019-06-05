@@ -83,9 +83,9 @@ frac_digits               2
 p_cs_precedes             1
 p_sep_by_space            1
 n_cs_precedes             1
-n_sep_by_space            1
+n_sep_by_space            2
 p_sign_posn               1
-n_sign_posn               2
+n_sign_posn               4
 END LC_MONETARY
 
 LC_NUMERIC
