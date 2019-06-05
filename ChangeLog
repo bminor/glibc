@@ -1,3 +1,8 @@
+2019-06-05  Paul A. Clarke  <pc@us.ibm.com>
+
+	* sysdeps/powerpc/fpu/fegetexcept.c (__fegetexcept): Replace code
+	with call to equivalent function.
+
 2019-06-04  Florian Weimer  <fweimer@redhat.com>
 
 	* iconv/gconv_dl.c (release_handle): Remove file-level definition.
