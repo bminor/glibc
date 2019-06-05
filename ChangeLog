@@ -1,5 +1,7 @@
 2019-09-17  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/unix/sysv/linux/sparc/sparc64/time.c: Remove file.
+
 	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h
 	(INTERNAL_VSYSCALL_CALL): Remove.
 	* sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h
