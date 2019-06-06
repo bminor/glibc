@@ -542,9 +542,6 @@ HEADER_ALLOWED_INCLUDES = {
     #          arpa/inet.h -> netinet/in.h
     "netdb.h":                     [ "netinet/in.h", "rpc/netdb.h" ],
     "arpa/inet.h":                 [ "netinet/in.h" ],
-    "net/if.h":                    [ "sys/socket.h" ],
-    "netinet/in.h":                [ "sys/socket.h" ],
-    "netinet/tcp.h":               [ "sys/socket.h" ],
 
     # Nonstandardized top-level headers
     "argp.h":                      [ "ctype.h", "errno.h", "getopt.h",
@@ -580,7 +577,6 @@ HEADER_ALLOWED_INCLUDES = {
     "sys/procfs.h":                [ "sys/ucontext.h", "sys/user.h" ],
     "sys/ptrace.h":                [ "sys/ucontext.h" ],
     "sys/raw.h":                   [ "sys/ioctl.h" ],
-    "sys/socketvar.h":             [ "sys/socket.h" ],
     "sys/timerfd.h":               [ "time.h" ],
     "sys/ttychars.h":              [ "sys/ttydefaults.h" ],
     "sys/ucontext.h":              [ "sys/procfs.h" ],
@@ -598,6 +594,7 @@ HEADER_ALLOWED_INCLUDES = {
     "sys/fcntl.h":                 [ "fcntl.h" ],
     "sys/poll.h":                  [ "poll.h" ],
     "sys/signal.h":                [ "signal.h" ],
+    "sys/socketvar.h":             [ "sys/socket.h" ],
     "sys/syslog.h":                [ "syslog.h" ],
     "sys/termios.h":               [ "termios.h" ],
     "sys/unistd.h":                [ "unistd.h" ],
@@ -606,18 +603,16 @@ HEADER_ALLOWED_INCLUDES = {
     "wait.h":                      [ "sys/wait.h" ],
 
     # Nonstandardized networking headers
-    "ifaddrs.h":                   [ "sys/socket.h" ],
 
     "resolv.h":                    [ "arpa/nameser.h", "netinet/in.h" ],
     "arpa/nameser.h":              [ "arpa/nameser_compat.h" ],
 
     "net/ethernet.h":              [ "net/if_ether.h" ],
-    "net/if_arp.h":                [ "sys/socket.h" ],
     "net/if_ppp.h":                [ "net/if.h", "net/ppp_defs.h",
                                      "sys/ioctl.h" ],
     "net/if_shaper.h":             [ "net/if.h", "sys/ioctl.h" ],
-    "net/route.h":                 [ "netinet/in.h", "sys/socket.h" ],
-    "netatalk/at.h":               [ "sys/socket.h", "sys/ioctl.h" ],
+    "net/route.h":                 [ "netinet/in.h" ],
+    "netatalk/at.h":               [ "sys/ioctl.h" ],
 
     "netinet/ether.h":             [ "netinet/if_ether.h" ],
     "netinet/icmp6.h":             [ "netinet/in.h" ],
@@ -629,7 +624,6 @@ HEADER_ALLOWED_INCLUDES = {
 
     "netrom/netrom.h":             [ "netax25/ax25.h" ],
     "netrose/rose.h":              [ "netax25/ax25.h" ],
-    "protocols/routed.h":          [ "sys/socket.h" ],
     "protocols/rwhod.h":           [ "paths.h" ],
 
     # Internal headers

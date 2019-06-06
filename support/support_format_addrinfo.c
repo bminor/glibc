@@ -22,6 +22,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/socket.h>
 #include <support/support.h>
 #include <support/xmemstream.h>
 

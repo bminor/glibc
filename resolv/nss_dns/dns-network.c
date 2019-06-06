@@ -65,6 +65,7 @@
 #include <stddef.h>
 
 #include "nsswitch.h"
+#include <sys/socket.h>
 #include <arpa/inet.h>
 #include <arpa/nameser.h>
 #include <resolv/resolv-internal.h>

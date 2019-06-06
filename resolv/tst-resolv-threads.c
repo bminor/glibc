@@ -29,6 +29,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/socket.h>
 #include <support/check.h>
 #include <support/namespace.h>
 #include <support/resolv_test.h>

@@ -18,6 +18,7 @@
 
 #include <support/format_nss.h>
 
+#include <sys/socket.h>
 #include <arpa/inet.h>
 #include <resolv.h>
 #include <stdbool.h>

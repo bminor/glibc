@@ -25,6 +25,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <sys/mman.h>
+#include <sys/socket.h>
 #include <resolv/resolv-internal.h>
 #include <resolv/resolv_context.h>
 #include <scratch_buffer.h>

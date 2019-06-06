@@ -23,7 +23,8 @@
 #define _NET_IF_ARP_H 1
 
 #include <features.h>
-#include <sys/socket.h>
+#include <bits/types.h>
+#include <bits/types/struct_sockaddr.h>
 
 __BEGIN_DECLS
 

@@ -18,6 +18,7 @@
 
 #include <resolv.h>
 #include <string.h>
+#include <sys/types.h>
 #include <support/check.h>
 #include <support/resolv_test.h>
 

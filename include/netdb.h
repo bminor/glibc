@@ -39,21 +39,21 @@ extern int __old_gethostent_r (struct hostent *__restrict __result_buf,
 			       int *__restrict __h_errnop);
 
 extern int __gethostbyaddr_r (const void *__restrict __addr,
-			      socklen_t __len, int __type,
+			      __socklen_t __len, int __type,
 			      struct hostent *__restrict __result_buf,
 			      char *__restrict __buf, size_t __buflen,
 			      struct hostent **__restrict __result,
 			      int *__restrict __h_errnop)
      attribute_hidden;
 extern int __old_gethostbyaddr_r (const void *__restrict __addr,
-				  socklen_t __len, int __type,
+				  __socklen_t __len, int __type,
 				  struct hostent *__restrict __result_buf,
 				  char *__restrict __buf, size_t __buflen,
 				  struct hostent **__restrict __result,
 				  int *__restrict __h_errnop);
 
 extern int __gethostbyaddr2_r (const void *__restrict __addr,
-			       socklen_t __len, int __type,
+			       __socklen_t __len, int __type,
 			       struct hostent *__restrict __result_buf,
 			       char *__restrict __buf, size_t __buflen,
 			       struct hostent **__restrict __result,
@@ -246,7 +246,7 @@ extern enum nss_status _nss_ ## service ## _gethostbyname_r		      \
 		       (const char *name, struct hostent *host, char *buffer, \
 			size_t buflen, int *errnop, int *h_errnop);	      \
 extern enum nss_status _nss_ ## service ## _gethostbyaddr_r		      \
-		       (const void *addr, socklen_t addrlen, int af,	      \
+		       (const void *addr, __socklen_t addrlen, int af,	      \
 			struct hostent *host, char *buffer, size_t buflen,    \
 			int *errnop, int *h_errnop);			      \
 extern enum nss_status _nss_ ## service ## _setservent (int);		      \

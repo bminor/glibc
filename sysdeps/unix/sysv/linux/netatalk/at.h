@@ -22,8 +22,7 @@
 #include <bits/types.h>
 #include <bits/sockaddr.h>
 
-#include <sys/socket.h>
-#include <sys/ioctl.h>
+#include <sys/ioctl.h> /* for SIOCPROTOPRIVATE */
 
 /* Constants from linux/atalk.h as of kernel version 5.0.  */
 

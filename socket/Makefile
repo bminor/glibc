@@ -22,9 +22,11 @@ subdir	:= socket
 
 include ../Makeconfig
 
-headers	:= sys/socket.h sys/un.h bits/sockaddr.h bits/socket.h \
-	   bits/socket2.h bits/types/struct_osockaddr.h \
-	   sys/socketvar.h net/if.h
+headers := net/if.h sys/socket.h sys/socketvar.h sys/un.h		\
+	   bits/sockaddr.h bits/socket.h bits/socket2.h			\
+	   bits/types/struct_linger.h bits/types/struct_osockaddr.h	\
+	   bits/types/struct_sockaddr.h					\
+	   bits/types/struct_sockaddr_storage.h
 
 routines := accept bind connect getpeername getsockname getsockopt	\
 	    listen recv recvfrom recvmsg send sendmsg sendto		\

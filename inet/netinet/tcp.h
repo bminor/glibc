@@ -86,11 +86,11 @@
 #define TCP_REPAIR_OFF_NO_WP	 -1
 
 #ifdef __USE_MISC
-# include <bits/stdint-uintn.h>
 # include <bits/endian.h>
-# include <sys/socket.h>
+# include <bits/types.h>
+# include <bits/types/struct_sockaddr_storage.h>
 
-typedef	uint32_t tcp_seq;
+typedef	__uint32_t tcp_seq;
 /*
  * TCP header.
  * Per RFC 793, September, 1981.
@@ -101,61 +101,61 @@ struct tcphdr
     {
       struct
       {
-	uint16_t th_sport;	/* source port */
-	uint16_t th_dport;	/* destination port */
+	__uint16_t th_sport;	/* source port */
+	__uint16_t th_dport;	/* destination port */
 	tcp_seq th_seq;		/* sequence number */
 	tcp_seq th_ack;		/* acknowledgement number */
 # if __BYTE_ORDER == __LITTLE_ENDIAN
-	uint8_t th_x2:4;	/* (unused) */
-	uint8_t th_off:4;	/* data offset */
+	__uint8_t th_x2:4;	/* (unused) */
+	__uint8_t th_off:4;	/* data offset */
 # endif
 # if __BYTE_ORDER == __BIG_ENDIAN
-	uint8_t th_off:4;	/* data offset */
-	uint8_t th_x2:4;	/* (unused) */
+	__uint8_t th_off:4;	/* data offset */
+	__uint8_t th_x2:4;	/* (unused) */
 # endif
-	uint8_t th_flags;
+	__uint8_t th_flags;
 # define TH_FIN	0x01
 # define TH_SYN	0x02
 # define TH_RST	0x04
 # define TH_PUSH	0x08
 # define TH_ACK	0x10
 # define TH_URG	0x20
-	uint16_t th_win;	/* window */
-	uint16_t th_sum;	/* checksum */
-	uint16_t th_urp;	/* urgent pointer */
+	__uint16_t th_win;	/* window */
+	__uint16_t th_sum;	/* checksum */
+	__uint16_t th_urp;	/* urgent pointer */
       };
       struct
       {
-	uint16_t source;
-	uint16_t dest;
-	uint32_t seq;
-	uint32_t ack_seq;
+	__uint16_t source;
+	__uint16_t dest;
+	__uint32_t seq;
+	__uint32_t ack_seq;
 # if __BYTE_ORDER == __LITTLE_ENDIAN
-	uint16_t res1:4;
-	uint16_t doff:4;
-	uint16_t fin:1;
-	uint16_t syn:1;
-	uint16_t rst:1;
-	uint16_t psh:1;
-	uint16_t ack:1;
-	uint16_t urg:1;
-	uint16_t res2:2;
+	__uint16_t res1:4;
+	__uint16_t doff:4;
+	__uint16_t fin:1;
+	__uint16_t syn:1;
+	__uint16_t rst:1;
+	__uint16_t psh:1;
+	__uint16_t ack:1;
+	__uint16_t urg:1;
+	__uint16_t res2:2;
 # elif __BYTE_ORDER == __BIG_ENDIAN
-	uint16_t doff:4;
-	uint16_t res1:4;
-	uint16_t res2:2;
-	uint16_t urg:1;
-	uint16_t ack:1;
-	uint16_t psh:1;
-	uint16_t rst:1;
-	uint16_t syn:1;
-	uint16_t fin:1;
+	__uint16_t doff:4;
+	__uint16_t res1:4;
+	__uint16_t res2:2;
+	__uint16_t urg:1;
+	__uint16_t ack:1;
+	__uint16_t psh:1;
+	__uint16_t rst:1;
+	__uint16_t syn:1;
+	__uint16_t fin:1;
 # else
 #  error "Adjust your <bits/endian.h> defines"
 # endif
-	uint16_t window;
-	uint16_t check;
-	uint16_t urg_ptr;
+	__uint16_t window;
+	__uint16_t check;
+	__uint16_t urg_ptr;
       };
     };
 };
@@ -225,45 +225,45 @@ enum tcp_ca_state
 
 struct tcp_info
 {
-  uint8_t	tcpi_state;
-  uint8_t	tcpi_ca_state;
-  uint8_t	tcpi_retransmits;
-  uint8_t	tcpi_probes;
-  uint8_t	tcpi_backoff;
-  uint8_t	tcpi_options;
-  uint8_t	tcpi_snd_wscale : 4, tcpi_rcv_wscale : 4;
+  __uint8_t	tcpi_state;
+  __uint8_t	tcpi_ca_state;
+  __uint8_t	tcpi_retransmits;
+  __uint8_t	tcpi_probes;
+  __uint8_t	tcpi_backoff;
+  __uint8_t	tcpi_options;
+  __uint8_t	tcpi_snd_wscale : 4, tcpi_rcv_wscale : 4;
 
-  uint32_t	tcpi_rto;
-  uint32_t	tcpi_ato;
-  uint32_t	tcpi_snd_mss;
-  uint32_t	tcpi_rcv_mss;
+  __uint32_t	tcpi_rto;
+  __uint32_t	tcpi_ato;
+  __uint32_t	tcpi_snd_mss;
+  __uint32_t	tcpi_rcv_mss;
 
-  uint32_t	tcpi_unacked;
-  uint32_t	tcpi_sacked;
-  uint32_t	tcpi_lost;
-  uint32_t	tcpi_retrans;
-  uint32_t	tcpi_fackets;
+  __uint32_t	tcpi_unacked;
+  __uint32_t	tcpi_sacked;
+  __uint32_t	tcpi_lost;
+  __uint32_t	tcpi_retrans;
+  __uint32_t	tcpi_fackets;
 
   /* Times. */
-  uint32_t	tcpi_last_data_sent;
-  uint32_t	tcpi_last_ack_sent;	/* Not remembered, sorry.  */
-  uint32_t	tcpi_last_data_recv;
-  uint32_t	tcpi_last_ack_recv;
+  __uint32_t	tcpi_last_data_sent;
+  __uint32_t	tcpi_last_ack_sent;	/* Not remembered, sorry.  */
+  __uint32_t	tcpi_last_data_recv;
+  __uint32_t	tcpi_last_ack_recv;
 
   /* Metrics. */
-  uint32_t	tcpi_pmtu;
-  uint32_t	tcpi_rcv_ssthresh;
-  uint32_t	tcpi_rtt;
-  uint32_t	tcpi_rttvar;
-  uint32_t	tcpi_snd_ssthresh;
-  uint32_t	tcpi_snd_cwnd;
-  uint32_t	tcpi_advmss;
-  uint32_t	tcpi_reordering;
+  __uint32_t	tcpi_pmtu;
+  __uint32_t	tcpi_rcv_ssthresh;
+  __uint32_t	tcpi_rtt;
+  __uint32_t	tcpi_rttvar;
+  __uint32_t	tcpi_snd_ssthresh;
+  __uint32_t	tcpi_snd_cwnd;
+  __uint32_t	tcpi_advmss;
+  __uint32_t	tcpi_reordering;
 
-  uint32_t	tcpi_rcv_rtt;
-  uint32_t	tcpi_rcv_space;
+  __uint32_t	tcpi_rcv_rtt;
+  __uint32_t	tcpi_rcv_space;
 
-  uint32_t	tcpi_total_retrans;
+  __uint32_t	tcpi_total_retrans;
 };
 
 
@@ -276,18 +276,18 @@ struct tcp_info
 struct tcp_md5sig
 {
   struct sockaddr_storage tcpm_addr;		/* Address associated.  */
-  uint8_t	tcpm_flags;			/* Extension flags.  */
-  uint8_t	tcpm_prefixlen;			/* Address prefix.  */
-  uint16_t	tcpm_keylen;			/* Key length.  */
-  uint32_t	__tcpm_pad;			/* Zero.  */
-  uint8_t	tcpm_key[TCP_MD5SIG_MAXKEYLEN];	/* Key (binary).  */
+  __uint8_t	tcpm_flags;			/* Extension flags.  */
+  __uint8_t	tcpm_prefixlen;			/* Address prefix.  */
+  __uint16_t	tcpm_keylen;			/* Key length.  */
+  __uint32_t	__tcpm_pad;			/* Zero.  */
+  __uint8_t	tcpm_key[TCP_MD5SIG_MAXKEYLEN];	/* Key (binary).  */
 };
 
 /* For socket repair options.  */
 struct tcp_repair_opt
 {
-  uint32_t	opt_code;
-  uint32_t	opt_val;
+  __uint32_t	opt_code;
+  __uint32_t	opt_val;
 };
 
 /* Queue to repair, for TCP_REPAIR_QUEUE.  */
@@ -318,30 +318,30 @@ enum
 
 struct tcp_cookie_transactions
 {
-  uint16_t	tcpct_flags;
-  uint8_t	__tcpct_pad1;
-  uint8_t	tcpct_cookie_desired;
-  uint16_t	tcpct_s_data_desired;
-  uint16_t	tcpct_used;
-  uint8_t	tcpct_value[TCP_MSS_DEFAULT];
+  __uint16_t	tcpct_flags;
+  __uint8_t	__tcpct_pad1;
+  __uint8_t	tcpct_cookie_desired;
+  __uint16_t	tcpct_s_data_desired;
+  __uint16_t	tcpct_used;
+  __uint8_t	tcpct_value[TCP_MSS_DEFAULT];
 };
 
 /* For use with TCP_REPAIR_WINDOW.  */
 struct tcp_repair_window
 {
-  uint32_t snd_wl1;
-  uint32_t snd_wnd;
-  uint32_t max_window;
-  uint32_t rcv_wnd;
-  uint32_t rcv_wup;
+  __uint32_t snd_wl1;
+  __uint32_t snd_wnd;
+  __uint32_t max_window;
+  __uint32_t rcv_wnd;
+  __uint32_t rcv_wup;
 };
 
 /* For use with TCP_ZEROCOPY_RECEIVE.  */
 struct tcp_zerocopy_receive
 {
-  uint64_t address; /* In: address of mapping.  */
-  uint32_t length; /* In/out: number of bytes to map/mapped.  */
-  uint32_t recv_skip_hint; /* Out: amount of bytes to skip.  */
+  __uint64_t address; /* In: address of mapping.  */
+  __uint32_t length; /* In/out: number of bytes to map/mapped.  */
+  __uint32_t recv_skip_hint; /* Out: amount of bytes to skip.  */
 };
 
 #endif /* Misc.  */

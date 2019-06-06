@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <assert.h>
+#include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <arpa/nameser.h>

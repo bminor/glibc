@@ -25,6 +25,7 @@
 #include <string.h>
 #include <libintl.h>
 #include <arpa/inet.h>
+#include <sys/socket.h>
 #include <sys/mman.h>
 #include <sys/param.h>
 #include <sys/stat.h>

@@ -21,6 +21,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/socket.h>
 #include <support/check.h>
 #include <support/next_to_fault.h>
 #include <support/xunistd.h>

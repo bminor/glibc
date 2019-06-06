@@ -25,6 +25,7 @@
 #include <netdb.h>
 #undef _nss_nis_endhostent
 #include <string.h>
+#include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <libc-lock.h>

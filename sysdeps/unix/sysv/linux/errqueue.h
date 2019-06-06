@@ -20,18 +20,19 @@
 #ifndef _BITS_ERRQUEUE_H
 #define _BITS_ERRQUEUE_H  1
 
-#include <sys/types.h>
-#include <sys/socket.h>
+#include <bits/types.h>
+#include <bits/types/struct_sockaddr.h>
 
 struct sock_extended_err
   {
-    uint32_t ee_errno;
-    uint8_t ee_origin;
-    uint8_t ee_type;
-    uint8_t ee_code;
-    uint8_t ee_pad;
-    uint32_t ee_info;
-    uint32_t ee_data;
+    __uint32_t ee_errno;
+    __uint8_t ee_origin;
+    __uint8_t ee_type;
+    __uint8_t ee_code;
+    __uint8_t ee_pad;
+    __uint32_t ee_info;
+    __uint32_t ee_data;
+    /* A socket address immediately follows.  */
   };
 
 #define SO_EE_ORIGIN_NONE  0

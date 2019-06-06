@@ -24,6 +24,7 @@
 #include <nss.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <sys/socket.h>
 #include <support/check.h>
 #include <support/check_nss.h>
 #include <support/namespace.h>

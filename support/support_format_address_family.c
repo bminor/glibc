@@ -18,6 +18,7 @@
 
 #include <support/format_nss.h>
 
+#include <sys/socket.h>
 #include <support/support.h>
 
 char *

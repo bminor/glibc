@@ -19,10 +19,11 @@
 #define	_NETINET_IN_H	1
 
 #include <features.h>
-#include <bits/stdint-uintn.h>
-#include <sys/socket.h>
 #include <bits/types.h>
-
+#include <bits/stdint-uintn.h>
+#include <bits/sockaddr.h>
+#include <bits/types/struct_sockaddr.h>
+#include <bits/types/struct_sockaddr_storage.h>
 
 __BEGIN_DECLS
 
@@ -568,27 +569,27 @@ extern int inet6_option_find (const struct cmsghdr *__cmsg,
 
 
 /* Hop-by-Hop and Destination Options Processing (RFC 3542).  */
-extern int inet6_opt_init (void *__extbuf, socklen_t __extlen) __THROW;
-extern int inet6_opt_append (void *__extbuf, socklen_t __extlen, int __offset,
-			     uint8_t __type, socklen_t __len, uint8_t __align,
+extern int inet6_opt_init (void *__extbuf, __socklen_t __extlen) __THROW;
+extern int inet6_opt_append (void *__extbuf, __socklen_t __extlen, int __offset,
+			     uint8_t __type, __socklen_t __len, uint8_t __align,
 			     void **__databufp) __THROW;
-extern int inet6_opt_finish (void *__extbuf, socklen_t __extlen, int __offset)
+extern int inet6_opt_finish (void *__extbuf, __socklen_t __extlen, int __offset)
      __THROW;
 extern int inet6_opt_set_val (void *__databuf, int __offset, void *__val,
-			      socklen_t __vallen) __THROW;
-extern int inet6_opt_next (void *__extbuf, socklen_t __extlen, int __offset,
-			   uint8_t *__typep, socklen_t *__lenp,
+			      __socklen_t __vallen) __THROW;
+extern int inet6_opt_next (void *__extbuf, __socklen_t __extlen, int __offset,
+			   uint8_t *__typep, __socklen_t *__lenp,
 			   void **__databufp) __THROW;
-extern int inet6_opt_find (void *__extbuf, socklen_t __extlen, int __offset,
-			   uint8_t __type, socklen_t *__lenp,
+extern int inet6_opt_find (void *__extbuf, __socklen_t __extlen, int __offset,
+			   uint8_t __type, __socklen_t *__lenp,
 			   void **__databufp) __THROW;
 extern int inet6_opt_get_val (void *__databuf, int __offset, void *__val,
-			      socklen_t __vallen) __THROW;
+			      __socklen_t __vallen) __THROW;
 
 
 /* Routing Header Option (RFC 3542).  */
-extern socklen_t inet6_rth_space (int __type, int __segments) __THROW;
-extern void *inet6_rth_init (void *__bp, socklen_t __bp_len, int __type,
+extern __socklen_t inet6_rth_space (int __type, int __segments) __THROW;
+extern void *inet6_rth_init (void *__bp, __socklen_t __bp_len, int __type,
 			     int __segments) __THROW;
 extern int inet6_rth_add (void *__bp, const struct in6_addr *__addr) __THROW;
 extern int inet6_rth_reverse (const void *__in, void *__out) __THROW;
@@ -616,14 +617,14 @@ extern int setipv4sourcefilter (int __s, struct in_addr __interface_addr,
 /* Get source filter.  */
 extern int getsourcefilter (int __s, uint32_t __interface_addr,
 			    const struct sockaddr *__group,
-			    socklen_t __grouplen, uint32_t *__fmode,
+			    __socklen_t __grouplen, uint32_t *__fmode,
 			    uint32_t *__numsrc,
 			    struct sockaddr_storage *__slist) __THROW;
 
 /* Set source filter.  */
 extern int setsourcefilter (int __s, uint32_t __interface_addr,
 			    const struct sockaddr *__group,
-			    socklen_t __grouplen, uint32_t __fmode,
+			    __socklen_t __grouplen, uint32_t __fmode,
 			    uint32_t __numsrc,
 			    const struct sockaddr_storage *__slist) __THROW;
 #endif	/* use GNU */

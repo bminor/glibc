@@ -23,6 +23,7 @@
 #include <unistd.h>
 #include <stdint.h>
 #include <sys/mman.h>
+#include <sys/socket.h>
 #include <kernel-features.h>
 #include <scratch_buffer.h>
 

@@ -27,6 +27,7 @@
 #include <unistd.h>
 #include <net/if.h>
 #include <net/if_arp.h>
+#include <sys/socket.h>
 #include <sys/ioctl.h>
 
 #include <asm/types.h>

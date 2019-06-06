@@ -42,4 +42,13 @@ typedef unsigned char sa_family_t;
 /* Size of struct sockaddr_storage.  */
 #define _SS_SIZE 128
 
+/* Desired alignment for struct sockaddr_storage.  */
+#include <bits/types.h>
+#include <bits/wordsize.h>
+#if __WORDSIZE == 64
+# define __ss_aligntype __uint64_t
+#else
+# define __ss_aligntype __uint32_t
+#endif
+
 #endif	/* bits/sockaddr.h */

@@ -20,7 +20,7 @@
 #include <errno.h>
 #include <stdint.h>
 #include <netinet/in.h>
-
+#include <sys/socket.h>
 
 int
 setsourcefilter (int s, uint32_t interface, const struct sockaddr *group,

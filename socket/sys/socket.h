@@ -28,11 +28,11 @@ __BEGIN_DECLS
 #include <bits/types/ssize_t.h>
 #include <bits/types/socklen_t.h>
 #include <bits/types/struct_iovec.h>
+#include <bits/types/struct_linger.h>
 
-/* This operating system-specific header file defines the SOCK_*, PF_*,
-   AF_*, MSG_*, SOL_*, and SO_* constants, and the `struct sockaddr',
-   `struct msghdr', and `struct linger' types.  */
-#include <bits/socket.h>
+#include <bits/sockaddr.h>
+#include <bits/types/struct_sockaddr.h>
+#include <bits/types/struct_sockaddr_storage.h>
 
 #ifdef __USE_MISC
 # include <bits/types/struct_osockaddr.h>
@@ -41,6 +41,11 @@ __BEGIN_DECLS
 #ifdef __USE_GNU
 struct timespec;
 #endif
+
+/* This operating system-specific header file defines the SOCK_*, PF_*,
+   AF_*, MSG_*, SOL_*, and SO_* constants, and the `struct msghdr' and
+   `struct cmsghdr' types.  */
+#include <bits/socket.h>
 
 /* The following constants should be used for the second parameter of
    `shutdown'.  */

@@ -22,7 +22,7 @@
 
 #include <features.h>
 
-#include <sys/socket.h>
+#include <bits/types/struct_sockaddr.h>
 #include <netinet/in.h>
 
 

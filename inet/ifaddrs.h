@@ -20,7 +20,7 @@
 #define _IFADDRS_H	1
 
 #include <features.h>
-#include <sys/socket.h>
+#include <bits/types/struct_sockaddr.h>
 
 __BEGIN_DECLS
 

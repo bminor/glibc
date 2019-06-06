@@ -19,6 +19,7 @@
 #include <ifaddrs.h>
 #include <netdb.h>
 #include <stdint.h>
+#include <sys/socket.h>
 
 void
 attribute_hidden

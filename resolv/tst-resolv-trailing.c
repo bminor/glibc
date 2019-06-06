@@ -18,6 +18,7 @@
 
 #include <array_length.h>
 #include <netdb.h>
+#include <sys/socket.h>
 #include <support/check.h>
 #include <support/check_nss.h>
 #include <support/resolv_test.h>

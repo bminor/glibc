@@ -21,6 +21,7 @@
 #include <resolv.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/socket.h>
 #include <support/check.h>
 #include <support/resolv_test.h>
 #include <support/xthread.h>

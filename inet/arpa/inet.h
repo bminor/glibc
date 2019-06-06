@@ -20,6 +20,7 @@
 
 #include <features.h>
 #include <netinet/in.h>		/* To define `struct in_addr'.  */
+#include <bits/types/size_t.h>
 #include <bits/types/socklen_t.h>
 
 __BEGIN_DECLS

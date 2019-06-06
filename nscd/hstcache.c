@@ -33,6 +33,7 @@
 #include <arpa/inet.h>
 #include <arpa/nameser.h>
 #include <sys/mman.h>
+#include <sys/socket.h>
 #include <stackinfo.h>
 #include <scratch_buffer.h>
 

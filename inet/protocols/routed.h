@@ -32,7 +32,9 @@
 #ifndef _PROTOCOLS_ROUTED_H
 #define	_PROTOCOLS_ROUTED_H 1
 
-#include <sys/socket.h>
+#include <features.h>
+#include <bits/types/struct_sockaddr.h>
+
 /*
  * Routing Information Protocol
  *

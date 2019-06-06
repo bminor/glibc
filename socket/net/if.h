@@ -32,7 +32,7 @@ struct if_nameindex
 
 
 #ifdef __USE_MISC
-# include <sys/socket.h>  /* for struct sockaddr */
+# include <bits/types/struct_sockaddr.h>
 
 /* Standard interface flags. */
 enum

@@ -3,6 +3,7 @@
 #include <netinet/in.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/socket.h>
 
 static int
 do_test (void)

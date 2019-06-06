@@ -23,10 +23,6 @@
 # error "Never include <bits/socket.h> directly; use <sys/socket.h> instead."
 #endif
 
-#include <bits/wordsize.h>
-#include <bits/types.h>
-#include <bits/types/size_t.h>
-#include <bits/types/socklen_t.h>
 
 /* Types of sockets.  */
 enum __socket_type
@@ -136,34 +132,6 @@ enum __socket_type
 
 /* Maximum queue length specifiable by listen.  */
 #define SOMAXCONN	128	/* 5 on the origional 4.4 BSD.  */
-
-/* Get the definition of the macro to define the common sockaddr members.  */
-#include <bits/sockaddr.h>
-
-/* Structure describing a generic socket address.  */
-struct sockaddr
-  {
-    __SOCKADDR_COMMON (sa_);	/* Common data: address family and length.  */
-    char sa_data[14];		/* Address data.  */
-  };
-
-
-/* Structure large enough to hold any socket address (with the historical
-   exception of AF_UNIX).  */
-#if __WORDSIZE == 64
-# define __ss_aligntype	__uint64_t
-#else
-# define __ss_aligntype	__uint32_t
-#endif
-#define _SS_PADSIZE \
-  (_SS_SIZE - __SOCKADDR_COMMON_SIZE - sizeof (__ss_aligntype))
-
-struct sockaddr_storage
-  {
-    __SOCKADDR_COMMON (ss_);	/* Address family, etc.  */
-    char __ss_padding[_SS_PADSIZE];
-    __ss_aligntype __ss_align;	/* Force desired alignment.  */
-  };
 
 
 /* Bits in the FLAGS argument to `send', `recv', et al.  */
@@ -345,13 +313,6 @@ enum
 #define SO_STYLE SO_STYLE
     SO_TYPE = SO_STYLE		/* Compatible name for SO_STYLE.  */
 #define SO_TYPE SO_TYPE
-  };
-
-/* Structure used to manipulate the SO_LINGER option.  */
-struct linger
-  {
-    int l_onoff;		/* Nonzero to linger on close.  */
-    int l_linger;		/* Time to linger.  */
   };
 
 #endif	/* bits/socket.h */

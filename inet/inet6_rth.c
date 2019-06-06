@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <string.h>
+#include <sys/socket.h>
 #include <netinet/in.h>
 #include <netinet/ip6.h>
 

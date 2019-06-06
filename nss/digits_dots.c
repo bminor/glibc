@@ -25,6 +25,7 @@
 #include <resolv/resolv-internal.h>
 #include <resolv/resolv_context.h>
 #include <netdb.h>
+#include <sys/socket.h>
 #include <arpa/inet.h>
 #include "nsswitch.h"
 

@@ -24,10 +24,6 @@
 #endif
 
 
-#include <bits/types.h>
-#include <bits/types/size_t.h>
-#include <bits/types/socklen_t.h>
-
 /* Get the architecture-dependent definition of enum __socket_type.  */
 #include <bits/socket_type.h>
 
@@ -164,30 +160,6 @@
 
 /* Maximum queue length specifiable by listen.  */
 #define SOMAXCONN	4096
-
-/* Get the definition of the macro to define the common sockaddr members.  */
-#include <bits/sockaddr.h>
-
-/* Structure describing a generic socket address.  */
-struct sockaddr
-  {
-    __SOCKADDR_COMMON (sa_);	/* Common data: address family and length.  */
-    char sa_data[14];		/* Address data.  */
-  };
-
-
-/* Structure large enough to hold any socket address (with the historical
-   exception of AF_UNIX).  */
-#define __ss_aligntype	unsigned long int
-#define _SS_PADSIZE \
-  (_SS_SIZE - __SOCKADDR_COMMON_SIZE - sizeof (__ss_aligntype))
-
-struct sockaddr_storage
-  {
-    __SOCKADDR_COMMON (ss_);	/* Address family, etc.  */
-    char __ss_padding[_SS_PADSIZE];
-    __ss_aligntype __ss_align;	/* Force desired alignment.  */
-  };
 
 
 /* Bits in the FLAGS argument to `send', `recv', et al.  */
@@ -350,12 +322,5 @@ struct ucred
 # define SO_DEBUG 1
 # include <bits/socket-constants.h>
 #endif
-
-/* Structure used to manipulate the SO_LINGER option.  */
-struct linger
-  {
-    int l_onoff;		/* Nonzero to linger on close.  */
-    int l_linger;		/* Time to linger.  */
-  };
 
 #endif	/* bits/socket.h */
