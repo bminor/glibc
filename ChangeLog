@@ -1,3 +1,8 @@
+2019-06-06  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/unix/sysv/linux/riscv/flush-icache.c: Do not use
+	internal GCC preprocessor identifier __has_include__.
+
 2019-07-24  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #24532]

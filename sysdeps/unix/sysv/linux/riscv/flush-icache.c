@@ -21,7 +21,7 @@
 #include <stdlib.h>
 #include <atomic.h>
 #include <sys/cachectl.h>
-#if __has_include__ (<asm/syscalls.h>)
+#if __has_include (<asm/syscalls.h>)
 # include <asm/syscalls.h>
 #else
 # include <asm/unistd.h>
