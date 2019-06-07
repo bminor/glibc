@@ -25,8 +25,10 @@
 #include <scratch_buffer.h>
 
 ssize_t
-__getdents64 (int fd, char *buf, size_t nbytes)
+__getdents64 (int fd, void *buf0, size_t nbytes)
 {
+  char *buf = buf0;
+
 #ifdef __NR_getdents64
   ssize_t ret = INLINE_SYSCALL_CALL (getdents64, fd, buf, nbytes);
   if (ret != -1)
@@ -107,6 +109,9 @@ __getdents64 (int fd, char *buf, size_t nbytes)
   scratch_buffer_free (&tmpbuf);
   return (char *) dp - buf;
 }
+libc_hidden_def (__getdents64)
+weak_alias (__getdents64, getdents64)
+
 #if _DIRENT_MATCHES_DIRENT64
 strong_alias (__getdents64, __getdents)
 #endif

@@ -22,6 +22,12 @@
 
 #ifdef __USE_GNU
 
+/* Read from the directory descriptor FD into LENGTH bytes at BUFFER.
+   Return the number of bytes read on success (0 for end of
+   directory), and -1 for failure.  */
+extern ssize_t getdents64 (int __fd, void *__buffer, size_t __length)
+  __THROW __nonnull ((2));
+
 /* Return the kernel thread ID (TID) of the current thread.  The
    returned value is not subject to caching.  Most Linux system calls
    accept a TID in place of a PID.  Using the TID to change properties

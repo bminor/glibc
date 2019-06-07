@@ -2203,6 +2203,7 @@ GLIBC_2.3.4 setsourcefilter F
 GLIBC_2.3.4 vm86 F
 GLIBC_2.3.4 xdr_quad_t F
 GLIBC_2.3.4 xdr_u_quad_t F
+GLIBC_2.30 getdents64 F
 GLIBC_2.30 gettid F
 GLIBC_2.30 tgkill F
 GLIBC_2.30 twalk_r F

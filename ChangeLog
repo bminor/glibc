@@ -1,3 +1,78 @@
+2019-06-07  Florian Weimer  <fweimer@redhat.com>
+
+	Linux: Add getdents64 system call.
+	* include/dirnent.h (getdents): Add comment and change buffer
+	argument type to void *.
+	(getdents64): Likewise.  Add hidden prototype.
+	* sysdeps/unix/sysv/linux/bits/Versions (GLIBC_2.30): Export
+	getdents64.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir) == dirent] (tests):
+	Add tst-getdents64.
+	* sysdeps/unix/sysv/linux/bits/unistd_ext.h (getdents64): Declare.
+	* sysdeps/unix/sysv/linux/getdents.c (__getdents): Change buffer
+	argument type to void *.
+	* sysdeps/unix/sysv/linux/getdents64.c (__getdents64): Likewise.
+	Add hidden definition and getdents64 alias.
+	* sysdeps/unix/sysv/linux/mips/mips64/getdents64.c (__getdents64):
+	Likewise.
+	* sysdeps/unix/sysv/linux/tst-getdents64.c: New file.
+	* manual/filesys.texi (Accessing Directories): Add Low-level
+	Directory Access node reference.
+	(Opening a Directory): Cross-reference it.
+	(Low-level Directory Access): New node.
+	* sysdeps/unix/sysv/linux/aarch64/libc.abilist (GLIBC_2.30): Add
+	getdents64.
+	* sysdeps/unix/sysv/linux/alpha/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/arm/libc.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/csky/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/fpu/libc.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nofpu/libc.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libc.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libc.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/riscv/rv64/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sh/libc.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libc.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist (GLIBC_2.30):
+	Likewise.
+
 2019-06-06  Paul A. Clarke  <pc@us.ibm.com>
 
 	* sysdeps/powerpc/fpu_control.h (_FPU_MASK_RC): New.

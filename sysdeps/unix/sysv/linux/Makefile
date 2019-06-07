@@ -188,6 +188,7 @@ inhibit-glue = yes
 
 ifeq ($(subdir),dirent)
 sysdep_routines += getdirentries getdirentries64
+tests += tst-getdents64
 tests-internal += tst-readdir64-compat
 endif
 

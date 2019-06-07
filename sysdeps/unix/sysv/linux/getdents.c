@@ -31,8 +31,10 @@
 /* Pack the dirent64 struct down into 32-bit offset/inode fields, and
    ensure that no overflow occurs.  */
 ssize_t
-__getdents (int fd, char *buf, size_t nbytes)
+__getdents (int fd, void *buf0, size_t nbytes)
 {
+  char *buf = buf0;
+
   union
   {
     /* For !_DIRENT_MATCHES_DIRENT64 kernel 'linux_dirent64' has the same

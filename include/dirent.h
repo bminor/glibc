@@ -35,10 +35,14 @@ extern __ssize_t __getdirentries (int __fd, char *__restrict __buf,
 				size_t __nbytes,
 				__off_t *__restrict __basep)
      __THROW __nonnull ((2, 4));
-extern __ssize_t __getdents (int __fd, char *__buf, size_t __nbytes)
+
+/* These functions are only implemented on Linux.  The public
+   interface for getdents64 is declared in <unistd.h>.  */
+extern __ssize_t __getdents (int __fd, void *__buf, size_t __nbytes)
      attribute_hidden;
-extern __ssize_t __getdents64 (int __fd, char *__buf, size_t __nbytes)
-     attribute_hidden;
+extern __ssize_t __getdents64 (int __fd, void *__buf, size_t __nbytes);
+libc_hidden_proto (__getdents64)
+
 extern int __alphasort64 (const struct dirent64 **a, const struct dirent64 **b)
      __attribute_pure__;
 extern int __versionsort64 (const struct dirent64 **a,

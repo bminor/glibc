@@ -20,12 +20,14 @@
 #include <dirent.h>
 #include <errno.h>
 
-/* The kernel struct linux_dirent64 matches the 'struct getdents64' type.  */
+/* The kernel struct linux_dirent64 matches the 'struct dirent64' type.  */
 ssize_t
-__getdents64 (int fd, char *buf, size_t nbytes)
+__getdents64 (int fd, void *buf, size_t nbytes)
 {
   return INLINE_SYSCALL_CALL (getdents64, fd, buf, nbytes);
 }
+libc_hidden_def (__getdents64)
+weak_alias (__getdents64, getdents64)
 
 #if _DIRENT_MATCHES_DIRENT64
 strong_alias (__getdents64, __getdents)

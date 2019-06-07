@@ -242,6 +242,7 @@ here to the stream facilities for ordinary files, described in
 * Scanning Directory Content::  Get entries for user selected subset of
                                  contents in given directory.
 * Simple Directory Lister Mark II::  Revised version of the program.
+* Low-level Directory Access::  AS-Safe functions for directory access.
 @end menu
 
 @node Directory Entries
@@ -359,6 +360,10 @@ You shouldn't ever allocate objects of the @code{struct dirent} or
 @code{DIR} data types, since the directory access functions do that for
 you.  Instead, you refer to these objects using the pointers returned by
 the following functions.
+
+Directory streams are a high-level interface.  On Linux, alternative
+interfaces for accessing directories using file descriptors are
+available.  @xref{Low-level Directory Access}.
 
 @deftypefun {DIR *} opendir (const char *@var{dirname})
 @standards{POSIX.1, dirent.h}
@@ -825,6 +830,39 @@ After the call the returned entries are available for direct use.
 
 Note the simple selector function in this example.  Since we want to see
 all directory entries we always return @code{1}.
+
+@node Low-level Directory Access
+@subsection Low-level Directory Access
+
+The stream-based directory functions are not AS-Safe and cannot be
+used after @code{vfork}.  @xref{POSIX Safety Concepts}.  The functions
+below provide an alternative that can be used in these contexts.
+
+Directory data is obtained from a file descriptor, as created by the
+@code{open} function, with or without the @code{O_DIRECTORY} flag.
+@xref{Opening and Closing Files}.
+
+@deftypefun ssize_t getdents64 (int @var{fd}, void *@var{buffer}, size_t @var{length})
+@standards{Linux, unistd.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+The @code{getdents64} function reads at most @var{length} bytes of
+directory entry data from the file descriptor @var{fd} and stores it
+into the byte array starting at @var{buffer}.
+
+On success, the function returns the number of bytes written to the
+buffer.  This number is zero if @var{fd} is already at the end of the
+directory stream.  On error, the function returns @code{-1} and sets
+@code{errno} to the appropriate error code.
+
+The data is stored as a sequence of @code{struct dirent64} records,
+which can be traversed using the @code{d_reclen} member.  The buffer
+should be large enough to hold the largest possible directory entry.
+Note that some file systems support file names longer than
+@code{NAME_MAX} bytes (e.g., because they support up to 255 Unicode
+characters), so a buffer size of at least 1024 is recommended.
+
+This function is specific to Linux.
+@end deftypefun
 
 
 @node Working with Directory Trees
