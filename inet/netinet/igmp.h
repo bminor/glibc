@@ -22,8 +22,8 @@
 
 #ifdef __USE_MISC
 
-#include <netinet/in.h>
 #include <bits/types.h>
+#include <bits/types/struct_in_addr.h>
 
 __BEGIN_DECLS
 

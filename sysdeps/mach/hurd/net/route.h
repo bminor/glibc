@@ -22,8 +22,9 @@
 
 #include <features.h>
 
+#include <bits/types.h>
 #include <bits/types/struct_sockaddr.h>
-#include <netinet/in.h>
+#include <bits/types/struct_in6_addr.h>
 
 
 /* This structure gets passed by the SIOCADDRT and SIOCDELRT calls. */
@@ -54,12 +55,12 @@ struct in6_rtmsg
     struct in6_addr rtmsg_dst;
     struct in6_addr rtmsg_src;
     struct in6_addr rtmsg_gateway;
-    uint32_t rtmsg_type;
-    uint16_t rtmsg_dst_len;
-    uint16_t rtmsg_src_len;
-    uint32_t rtmsg_metric;
+    __uint32_t rtmsg_type;
+    __uint16_t rtmsg_dst_len;
+    __uint16_t rtmsg_src_len;
+    __uint32_t rtmsg_metric;
     unsigned long int rtmsg_info;
-    uint32_t rtmsg_flags;
+    __uint32_t rtmsg_flags;
     int rtmsg_ifindex;
   };
 
@@ -108,7 +109,7 @@ struct in6_rtmsg
 #define RTF_NAT		0x08000000
 
 #define RTF_ADDRCLASSMASK	0xF8000000
-#define RT_ADDRCLASS(flags)	((uint32_t) flags >> 23)
+#define RT_ADDRCLASS(flags)	((__uint32_t) flags >> 23)
 
 #define RT_TOS(tos)		((tos) & IPTOS_TOS_MASK)
 

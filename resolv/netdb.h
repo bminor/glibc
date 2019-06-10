@@ -24,7 +24,6 @@
 
 #include <features.h>
 
-#include <netinet/in.h>
 #include <bits/types/socklen_t.h>
 #include <bits/stdint-uintn.h>
 #ifdef __USE_MISC
@@ -77,7 +76,10 @@ extern int *__h_errno_location (void) __THROW __attribute__ ((__const__));
 
 #if defined __USE_XOPEN2K || defined __USE_XOPEN_EXTENDED
 /* Highest reserved Internet port number.  */
-# define IPPORT_RESERVED	1024
+# ifndef IPPORT_RESERVED /* also defined in netinet/in.h */
+enum { IPPORT_RESERVED = 1024 };
+#  define IPPORT_RESERVED IPPORT_RESERVED
+# endif
 #endif
 
 #ifdef __USE_GNU
@@ -133,7 +135,7 @@ extern struct hostent *gethostent (void);
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern struct hostent *gethostbyaddr (const void *__addr, __socklen_t __len,
+extern struct hostent *gethostbyaddr (const void *__addr, socklen_t __len,
 				      int __type);
 
 /* Return entry from host data base for host with NAME.
@@ -168,7 +170,7 @@ extern int gethostent_r (struct hostent *__restrict __result_buf,
 			 struct hostent **__restrict __result,
 			 int *__restrict __h_errnop);
 
-extern int gethostbyaddr_r (const void *__restrict __addr, __socklen_t __len,
+extern int gethostbyaddr_r (const void *__restrict __addr, socklen_t __len,
 			    int __type,
 			    struct hostent *__restrict __result_buf,
 			    char *__restrict __buf, size_t __buflen,
@@ -436,6 +438,8 @@ extern int getnetgrent_r (char **__restrict __hostp,
 
 
 #ifdef __USE_MISC
+#include <bits/sockaddr.h> /* for sa_family_t */
+
 /* Call `rshd' at port RPORT on remote machine *AHOST to execute CMD.
    The local user is LOCUSER, on the remote machine the command is
    executed as REMUSER.  In *FD2P the descriptor to the socket for the

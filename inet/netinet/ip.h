@@ -20,9 +20,9 @@
 
 #include <features.h>
 
-#include <netinet/in.h>
 #include <bits/endian.h>
 #include <bits/types.h>
+#include <bits/types/struct_in_addr.h>
 
 __BEGIN_DECLS
 

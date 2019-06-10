@@ -15,30 +15,13 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifndef _BITS_IN_H
+#define _BITS_IN_H 1
+
 /* Linux version.  */
 
 #ifndef _NETINET_IN_H
 # error "Never use <bits/in.h> directly; include <netinet/in.h> instead."
-#endif
-
-/* If the application has already included linux/in6.h from a linux-based
-   kernel then we will not define the IPv6 IPPROTO_* defines, in6_addr (nor the
-   defines), sockaddr_in6, or ipv6_mreq. Same for in6_ptkinfo or ip6_mtuinfo
-   in linux/ipv6.h. The ABI used by the linux-kernel and glibc match exactly.
-   Neither the linux kernel nor glibc should break this ABI without coordination.
-   In upstream kernel 56c176c9 the _UAPI prefix was stripped so we need to check
-   for _LINUX_IN6_H and _IPV6_H now, and keep checking the old versions for
-   maximum backwards compatibility.  */
-#if defined _UAPI_LINUX_IN6_H \
-    || defined _UAPI_IPV6_H \
-    || defined _LINUX_IN6_H \
-    || defined _IPV6_H
-/* This is not quite the same API since the kernel always defines s6_addr16 and
-   s6_addr32. This is not a violation of POSIX since POSIX says "at least the
-   following member" and that holds true.  */
-# define __USE_KERNEL_IPV6_DEFS 1
-#else
-# define __USE_KERNEL_IPV6_DEFS 0
 #endif
 
 /* Options for use with `getsockopt' and `setsockopt' at the IP level.
@@ -233,9 +216,11 @@ struct in_pktinfo
 #define IPV6_FREEBIND		78
 
 /* Obsolete synonyms for the above.  */
-#if !__USE_KERNEL_IPV6_DEFS
-# define IPV6_ADD_MEMBERSHIP	IPV6_JOIN_GROUP
-# define IPV6_DROP_MEMBERSHIP	IPV6_LEAVE_GROUP
+#ifndef IPV6_ADD_MEMBERSHIP
+#define IPV6_ADD_MEMBERSHIP	IPV6_JOIN_GROUP
+#endif
+#ifndef IPV6_DROP_MEMBERSHIP
+#define IPV6_DROP_MEMBERSHIP	IPV6_LEAVE_GROUP
 #endif
 #define IPV6_RXHOPOPTS		IPV6_HOPOPTS
 #define IPV6_RXDSTOPTS		IPV6_DSTOPTS
@@ -257,3 +242,5 @@ struct in_pktinfo
 #define IPV6_RTHDR_STRICT	1	/* Hop must be a neighbour.  */
 
 #define IPV6_RTHDR_TYPE_0	0	/* IPv6 Routing header type 0.  */
+
+#endif /* bits/in.h.  */

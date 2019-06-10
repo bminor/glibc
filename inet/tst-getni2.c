@@ -1,6 +1,7 @@
 #include <netdb.h>
 #include <stdio.h>
 #include <sys/socket.h>
+#include <netinet/in.h>
 
 static int
 do_test (void)

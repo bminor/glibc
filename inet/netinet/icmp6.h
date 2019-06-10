@@ -22,7 +22,7 @@
 #include <bits/endian.h>
 #include <bits/types.h>
 #include <bits/types/size_t.h>
-#include <netinet/in.h>
+#include <bits/types/struct_in6_addr.h>
 
 #define ICMP6_FILTER 1
 

@@ -19,24 +19,28 @@
 #define	_NETINET_IN_H	1
 
 #include <features.h>
+
 #include <bits/types.h>
 #include <bits/stdint-uintn.h>
 #include <bits/sockaddr.h>
+#include <bits/uapi-compat.h>
+
+#include <bits/types/in_addr_t.h>
+#include <bits/types/in_port_t.h>
+#include <bits/types/struct_in_addr.h>
+#include <bits/types/struct_in6_addr.h>
 #include <bits/types/struct_sockaddr.h>
+#include <bits/types/struct_sockaddr_in.h>
+#include <bits/types/struct_sockaddr_in6.h>
 #include <bits/types/struct_sockaddr_storage.h>
-
-__BEGIN_DECLS
-
-/* Internet address.  */
-typedef uint32_t in_addr_t;
-struct in_addr
-  {
-    in_addr_t s_addr;
-  };
 
 /* Get system-specific definitions.  */
 #include <bits/in.h>
 
+__BEGIN_DECLS
+
+#if !defined __UAPI_DEF_IN_IPPROTO || __UAPI_DEF_IN_IPPROTO == 0
+#define __UAPI_DEF_IN_IPPROTO 0
 /* Standard well-defined IP protocols.  */
 enum
   {
@@ -92,11 +96,10 @@ enum
 #define IPPROTO_RAW		IPPROTO_RAW
     IPPROTO_MAX
   };
+#endif
 
-/* If __USE_KERNEL_IPV6_DEFS is 1 then the user has included the kernel
-   network headers first and we should use those ABI-identical definitions
-   instead of our own, otherwise 0.  */
-#if !__USE_KERNEL_IPV6_DEFS
+#if !defined __UAPI_DEF_IPPROTO_V6 || __UAPI_DEF_IPPROTO_V6 == 0
+#define __UAPI_DEF_IPPROTO_V6 0
 enum
   {
     IPPROTO_HOPOPTS = 0,   /* IPv6 Hop-by-Hop options.  */
@@ -114,10 +117,7 @@ enum
     IPPROTO_MH = 135       /* IPv6 mobility header.  */
 #define IPPROTO_MH		IPPROTO_MH
   };
-#endif /* !__USE_KERNEL_IPV6_DEFS */
-
-/* Type to represent a port.  */
-typedef uint16_t in_port_t;
+#endif
 
 /* Standard well-known ports.  */
 enum
@@ -153,7 +153,10 @@ enum
     IPPORT_ROUTESERVER = 520,
 
     /* Ports less than this value are reserved for privileged processes.  */
+#ifndef IPPORT_RESERVED /* also defined in netdb.h */
     IPPORT_RESERVED = 1024,
+#define IPPORT_RESERVED IPPORT_RESERVED
+#endif
 
     /* Ports greater this value are reserved for (non-privileged) servers.  */
     IPPORT_USERRESERVED = 5000
@@ -163,6 +166,8 @@ enum
 
    On subnets, host and network parts are found according to
    the subnet mask, not these masks.  */
+#if !defined __UAPI_DEF_IN_CLASS || __UAPI_DEF_IN_CLASS == 0
+#define __UAPI_DEF_IN_CLASS 0
 
 #define	IN_CLASSA(a)		((((in_addr_t)(a)) & 0x80000000) == 0)
 #define	IN_CLASSA_NET		0xff000000
@@ -200,6 +205,7 @@ enum
 #ifndef INADDR_LOOPBACK
 # define INADDR_LOOPBACK	((in_addr_t) 0x7f000001) /* Inet 127.0.0.1.  */
 #endif
+#define	IN_LOOPBACK(a)		((((in_addr_t) (a)) & 0xff000000) == 0x7f000000)
 
 /* Defines for Multicast INADDR.  */
 #define INADDR_UNSPEC_GROUP	((in_addr_t) 0xe0000000) /* 224.0.0.0 */
@@ -207,24 +213,7 @@ enum
 #define INADDR_ALLRTRS_GROUP    ((in_addr_t) 0xe0000002) /* 224.0.0.2 */
 #define INADDR_ALLSNOOPERS_GROUP ((in_addr_t) 0xe000006a) /* 224.0.0.106 */
 #define INADDR_MAX_LOCAL_GROUP  ((in_addr_t) 0xe00000ff) /* 224.0.0.255 */
-
-#if !__USE_KERNEL_IPV6_DEFS
-/* IPv6 address */
-struct in6_addr
-  {
-    union
-      {
-	uint8_t	__u6_addr8[16];
-	uint16_t __u6_addr16[8];
-	uint32_t __u6_addr32[4];
-      } __in6_u;
-#define s6_addr			__in6_u.__u6_addr8
-#ifdef __USE_MISC
-# define s6_addr16		__in6_u.__u6_addr16
-# define s6_addr32		__in6_u.__u6_addr32
-#endif
-  };
-#endif /* !__USE_KERNEL_IPV6_DEFS */
+#endif /* __UAPI_DEF_IN_CLASS is zero or not defined */
 
 extern const struct in6_addr in6addr_any;        /* :: */
 extern const struct in6_addr in6addr_loopback;   /* ::1 */
@@ -234,34 +223,9 @@ extern const struct in6_addr in6addr_loopback;   /* ::1 */
 #define INET_ADDRSTRLEN 16
 #define INET6_ADDRSTRLEN 46
 
-
-/* Structure describing an Internet socket address.  */
-struct sockaddr_in
-  {
-    __SOCKADDR_COMMON (sin_);
-    in_port_t sin_port;			/* Port number.  */
-    struct in_addr sin_addr;		/* Internet address.  */
-
-    /* Pad to size of `struct sockaddr'.  */
-    unsigned char sin_zero[sizeof (struct sockaddr)
-			   - __SOCKADDR_COMMON_SIZE
-			   - sizeof (in_port_t)
-			   - sizeof (struct in_addr)];
-  };
-
-#if !__USE_KERNEL_IPV6_DEFS
-/* Ditto, for IPv6.  */
-struct sockaddr_in6
-  {
-    __SOCKADDR_COMMON (sin6_);
-    in_port_t sin6_port;	/* Transport layer port # */
-    uint32_t sin6_flowinfo;	/* IPv6 flow information */
-    struct in6_addr sin6_addr;	/* IPv6 address */
-    uint32_t sin6_scope_id;	/* IPv6 scope-id */
-  };
-#endif /* !__USE_KERNEL_IPV6_DEFS */
-
 #ifdef __USE_MISC
+#if !defined __UAPI_DEF_IP_MREQ || __UAPI_DEF_IP_MREQ == 0
+#define __UAPI_DEF_IP_MREQ 0
 /* IPv4 multicast request.  */
 struct ip_mreq
   {
@@ -284,8 +248,10 @@ struct ip_mreq_source
     struct in_addr imr_sourceaddr;
   };
 #endif
+#endif
 
-#if !__USE_KERNEL_IPV6_DEFS
+#if !defined __UAPI_DEF_IPV6_MREQ || __UAPI_DEF_IP_MREQ == 0
+#define __UAPI_DEF_IPV6_MREQ 0
 /* Likewise, for IPv6.  */
 struct ipv6_mreq
   {
@@ -295,7 +261,7 @@ struct ipv6_mreq
     /* local interface */
     unsigned int ipv6mr_interface;
   };
-#endif /* !__USE_KERNEL_IPV6_DEFS */
+#endif
 
 #ifdef __USE_MISC
 /* Multicast group request.  */
@@ -533,21 +499,25 @@ extern int bindresvport6 (int __sockfd, struct sockaddr_in6 *__sock_in)
 #ifdef __USE_GNU
 struct cmsghdr;			/* Forward declaration.  */
 
-#if !__USE_KERNEL_IPV6_DEFS
+#if !defined __UAPI_DEF_IN6_PKTINFO || __UAPI_DEF_IN6_PKTINFO == 0
+#define __UAPI_DEF_IN6_PKTINFO 0
 /* IPv6 packet information.  */
 struct in6_pktinfo
   {
     struct in6_addr ipi6_addr;	/* src/dst IPv6 address */
     unsigned int ipi6_ifindex;	/* send/recv interface index */
   };
+#endif
 
+#if !defined __UAPI_DEF_IN6_MTUINFO || __UAPI_DEF_IN6_MTUINFO == 0
+#define __UAPI_DEF_IN6_MTUINFO 0
 /* IPv6 MTU information.  */
 struct ip6_mtuinfo
   {
     struct sockaddr_in6 ip6m_addr; /* dst address including zone ID */
     uint32_t ip6m_mtu;		   /* path MTU in host byte order */
   };
-#endif /* !__USE_KERNEL_IPV6_DEFS */
+#endif
 
 /* Obsolete hop-by-hop and Destination Options Processing (RFC 2292).  */
 extern int inet6_option_space (int __nbytes)

@@ -22,7 +22,10 @@ subdir	:= inet
 
 include ../Makeconfig
 
-headers	:= aliases.h ifaddrs.h bits/in.h				     \
+headers	:= aliases.h ifaddrs.h bits/in.h 				     \
+	   bits/types/in_addr_t.h bits/types/in_port_t.h		     \
+	   bits/types/struct_in_addr.h bits/types/struct_in6_addr.h	     \
+	   bits/types/struct_sockaddr_in.h bits/types/struct_sockaddr_in6.h  \
            netinet/ether.h netinet/icmp6.h netinet/if_ether.h netinet/igmp.h \
            netinet/in.h netinet/in_systm.h netinet/ip.h netinet/ip6.h	     \
 	   netinet/ip_icmp.h netinet/tcp.h netinet/udp.h		     \

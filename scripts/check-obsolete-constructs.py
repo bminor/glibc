@@ -538,10 +538,10 @@ HEADER_ALLOWED_INCLUDES = {
     "sys/types.h":                 [ "endian.h" ],
 
     # POSIX networking headers
-    # allowed: netdb.h -> netinet/in.h
-    #          arpa/inet.h -> netinet/in.h
-    "netdb.h":                     [ "netinet/in.h", "rpc/netdb.h" ],
+    # POSIX allows arpa/inet.h -> netinet/in.h
     "arpa/inet.h":                 [ "netinet/in.h" ],
+    # necessary for backward compatibility with Sun RPC
+    "netdb.h":                     [ "rpc/netdb.h" ],
 
     # Nonstandardized top-level headers
     "argp.h":                      [ "ctype.h", "errno.h", "getopt.h",
@@ -603,27 +603,20 @@ HEADER_ALLOWED_INCLUDES = {
     "wait.h":                      [ "sys/wait.h" ],
 
     # Nonstandardized networking headers
-
-    "resolv.h":                    [ "arpa/nameser.h", "netinet/in.h" ],
+    "resolv.h":                    [ "arpa/nameser.h" ],
     "arpa/nameser.h":              [ "arpa/nameser_compat.h" ],
 
     "net/ethernet.h":              [ "net/if_ether.h" ],
     "net/if_ppp.h":                [ "net/if.h", "net/ppp_defs.h",
                                      "sys/ioctl.h" ],
     "net/if_shaper.h":             [ "net/if.h", "sys/ioctl.h" ],
-    "net/route.h":                 [ "netinet/in.h" ],
     "netatalk/at.h":               [ "sys/ioctl.h" ],
-
     "netinet/ether.h":             [ "netinet/if_ether.h" ],
-    "netinet/icmp6.h":             [ "netinet/in.h" ],
     "netinet/if_ether.h":          [ "net/ethernet.h", "net/if_arp.h" ],
-    "netinet/igmp.h":              [ "netinet/in.h" ],
-    "netinet/ip.h":                [ "netinet/in.h" ],
-    "netinet/ip6.h":               [ "netinet/in.h" ],
-    "netinet/ip_icmp.h":           [ "netinet/in.h", "netinet/ip.h" ],
-
+    "netinet/ip_icmp.h":           [ "netinet/ip.h" ],
     "netrom/netrom.h":             [ "netax25/ax25.h" ],
     "netrose/rose.h":              [ "netax25/ax25.h" ],
+
     "protocols/rwhod.h":           [ "paths.h" ],
 
     # Internal headers
@@ -631,7 +624,6 @@ HEADER_ALLOWED_INCLUDES = {
                                      "sys/cdefs.h" ],
 
     "bits/procfs.h":               [ "signal.h", "sys/ucontext.h" ],
-    "bits/types/res_state.h":      [ "netinet/in.h" ],
 
     "bits/types/__va_list.h":      [ "stdarg.h" ],
     "bits/types/ptrdiff_t.h":      [ "stddef.h" ],

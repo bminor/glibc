@@ -20,6 +20,10 @@
 
 #include <features.h>
 #include <bits/types.h>
+#ifdef __USE_MISC
+#include <bits/types/struct_in_addr.h>
+#include <netinet/ip.h>
+#endif
 
 __BEGIN_DECLS
 
@@ -121,9 +125,6 @@ struct icmphdr
  *
  *	@(#)ip_icmp.h	8.1 (Berkeley) 6/10/93
  */
-
-#include <netinet/in.h>
-#include <netinet/ip.h>
 
 /*
  * Internal of an ICMP Router Advertisement

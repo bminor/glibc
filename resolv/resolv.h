@@ -54,7 +54,6 @@
 
 #include <features.h>
 
-#include <netinet/in.h>
 #include <arpa/nameser.h>
 
 #include <bits/types.h>

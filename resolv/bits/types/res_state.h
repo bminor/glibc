@@ -2,7 +2,10 @@
 #define __res_state_defined 1
 
 #include <bits/types.h>
-#include <netinet/in.h>
+#include <bits/types/struct_in_addr.h>
+#include <bits/types/struct_sockaddr_in.h>
+
+struct sockaddr_in6;
 
 /* res_state: the global state used by the resolver stub.  */
 #define MAXNS			3	/* max # name servers we'll track */

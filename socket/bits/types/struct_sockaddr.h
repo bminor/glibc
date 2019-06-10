@@ -9,7 +9,7 @@
 struct sockaddr
   {
     __SOCKADDR_COMMON (sa_);	/* Common data: family and perhaps length.  */
-    char sa_data[14];		/* Address data.  */
+    char sa_data[__SOCKADDR_DATA_SIZE];	/* Address data.  */
   };
 
 #endif

@@ -15,14 +15,14 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifndef _BITS_IN_H
+#define _BITS_IN_H 1
+
 /* Generic version.  */
 
 #ifndef _NETINET_IN_H
 # error "Never use <bits/in.h> directly; include <netinet/in.h> instead."
 #endif
-
-/* This is the generic version, do not assume a linux-based kernel.  */
-#define __USE_KERNEL_IPV6_DEFS 0
 
 /* To select the IP level.  */
 #define SOL_IP		0
@@ -115,3 +115,5 @@ struct ip_opts
 #define IPV6_RTHDR_STRICT	1	/* Hop must be a neighbour.  */
 
 #define IPV6_RTHDR_TYPE_0	0	/* IPv6 Routing header type 0.  */
+
+#endif /* bits/in.h.  */

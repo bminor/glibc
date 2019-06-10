@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <gnu/lib-names.h>
 #include <netdb.h>
+#include <netinet/in.h>
 #include <nss.h>
 #include <stdio.h>
 #include <stdlib.h>

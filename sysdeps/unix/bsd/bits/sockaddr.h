@@ -51,4 +51,7 @@ typedef unsigned char sa_family_t;
 # define __ss_aligntype __uint32_t
 #endif
 
+/* Size of struct sockaddr.sa_data.  */
+#define __SOCKADDR_DATA_SIZE 14
+
 #endif	/* bits/sockaddr.h */

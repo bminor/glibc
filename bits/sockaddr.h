@@ -39,4 +39,7 @@ typedef unsigned short int sa_family_t;
 /* Size of struct sockaddr_storage.  */
 #define _SS_SIZE 128
 
+/* Size of struct sockaddr.sa_data.  */
+#define __SOCKADDR_DATA_SIZE 14
+
 #endif	/* bits/sockaddr.h */

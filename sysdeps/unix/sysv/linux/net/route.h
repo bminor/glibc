@@ -23,10 +23,9 @@
 #include <features.h>
 
 #include <bits/types.h>
+#include <bits/types/struct_in6_addr.h>
 #include <bits/types/struct_sockaddr.h>
 #include <bits/wordsize.h>
-
-#include <netinet/in.h>
 
 /* This structure gets passed by the SIOCADDRT and SIOCDELRT calls. */
 struct rtentry

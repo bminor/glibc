@@ -23,6 +23,7 @@
 #include <netdb.h>
 #include <nss.h>
 #include <sys/socket.h>
+#include <netinet/in.h>
 #include <support/check.h>
 #include <support/check_nss.h>
 #include <support/namespace.h>

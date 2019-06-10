@@ -19,9 +19,9 @@
 #define _NETINET_IP6_H 1
 
 #include <features.h>
-#include <netinet/in.h>
 #include <bits/endian.h>
 #include <bits/types.h>
+#include <bits/types/struct_in6_addr.h>
 
 struct ip6_hdr
   {

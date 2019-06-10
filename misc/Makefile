@@ -33,7 +33,7 @@ headers :=								\
 	bits/mman.h bits/param.h bits/select.h bits/select2.h		\
 	bits/stab.def bits/syslog-ldbl.h bits/syslog-path.h		\
 	bits/syslog.h bits/sysmacros.h bits/types/struct_iovec.h	\
-	bits/uio-ext.h bits/uio_lim.h bits/xopen_lim.h			\
+	bits/uapi-compat.h bits/uio-ext.h bits/uio_lim.h bits/xopen_lim.h \
 	gnu/libc-version.h						\
 	sys/auxv.h sys/cdefs.h sys/dir.h sys/file.h sys/ioctl.h		\
 	sys/mman.h sys/mtio.h sys/param.h sys/ptrace.h sys/queue.h	\

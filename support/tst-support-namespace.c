@@ -23,6 +23,7 @@
 #include <support/namespace.h>
 #include <support/xsocket.h>
 #include <support/xunistd.h>
+#include <netinet/in.h>
 
 /* Check that the loopback interface provides multiple addresses which
    can be used to run independent servers.  */

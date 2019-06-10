@@ -19,9 +19,9 @@
 #ifndef SUPPORT_RESOLV_TEST_H
 #define SUPPORT_RESOLV_TEST_H
 
-#include <arpa/nameser.h>
 #include <stdbool.h>
-#include <sys/cdefs.h>
+#include <stdint.h>
+#include <arpa/nameser.h>
 
 __BEGIN_DECLS
 
