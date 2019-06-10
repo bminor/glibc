@@ -1,3 +1,10 @@
+2019-06-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* malloc/tst-calloc.c: Include <libc-diag.h>.
+	(null_test): Ignore -Wunused-result around calls to calloc.
+	* malloc/tst-mallocfork.c: Include <libc-diag.h>.
+	(do_test): Ignore -Wunused-result around call to malloc.
+
 2019-06-07  Florian Weimer  <fweimer@redhat.com>
 
 	Linux: Add getdents64 system call.

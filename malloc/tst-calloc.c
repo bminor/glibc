@@ -22,6 +22,7 @@
 #include <malloc.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <libc-diag.h>
 
 
 /* Number of samples per size.  */
@@ -95,12 +96,16 @@ static void
 null_test (void)
 {
   /* If the size is 0 the result is implementation defined.  Just make
-     sure the program doesn't crash.  */
+     sure the program doesn't crash.  The result of calloc is
+     deliberately ignored, so do not warn about that.  */
+  DIAG_PUSH_NEEDS_COMMENT;
+  DIAG_IGNORE_NEEDS_COMMENT (10, "-Wunused-result");
   calloc (0, 0);
   calloc (0, UINT_MAX);
   calloc (UINT_MAX, 0);
   calloc (0, ~((size_t) 0));
   calloc (~((size_t) 0), 0);
+  DIAG_POP_NEEDS_COMMENT;
 }
 
 
