@@ -19,7 +19,7 @@
 #ifndef _BITS_SIGNUM_H
 #define _BITS_SIGNUM_H 1
 
-#ifndef _SIGNAL_H
+#if !defined _SIGNAL_H && !defined _SYS_PARAM_H
 #error "Never include <bits/signum.h> directly; use <signal.h> instead."
 #endif
 

@@ -16,6 +16,9 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifndef _BITS_PARAM_H
+#define _BITS_PARAM_H 1
+
 #ifndef _SYS_PARAM_H
 # error "Never use <bits/param.h> directly; include <sys/param.h> instead."
 #endif
@@ -31,3 +34,7 @@
 
         EXEC_PAGESIZE
 */
+
+#error "Generic bits/param.h should not have been used."
+
+#endif

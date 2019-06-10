@@ -16,21 +16,23 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <errno.h>
+#include <getopt.h>
+#include <limits.h>
+#include <paths.h>
+#include <signal.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/wait.h>
+#include <unistd.h>
+
+#include <array_length.h>
 #include <support/capture_subprocess.h>
 #include <support/check.h>
 #include <support/support.h>
 #include <support/temp_file.h>
-#include <sys/wait.h>
-#include <unistd.h>
-#include <paths.h>
-#include <getopt.h>
-#include <limits.h>
-#include <errno.h>
-#include <array_length.h>
 
 /* Nonzero if the program gets called via 'exec'.  */
 static int restart;
@@ -273,7 +275,8 @@ do_multiple_tests (enum test_type type)
                   .out = random_string (lengths[length_idx_stdout]),
                   .err = random_string (lengths[length_idx_stderr]),
                   .write_mode = write_mode,
-                  .signal = signal * SIGTERM, /* 0 or SIGTERM.  */
+                  .signal = signal *
+                  SIGTERM, /* 0 or SIGTERM.  */
                   .status = status * 3,       /* 0 or 3.  */
                 };
               TEST_VERIFY (strlen (test.out) == lengths[length_idx_stdout]);

@@ -2,6 +2,7 @@
    https://sourceware.org/bugzilla/show_bug.cgi?id=838.  */
 #include <assert.h>
 #include <errno.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>

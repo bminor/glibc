@@ -16,10 +16,15 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifndef _BITS_MACH_PARAM_H
+#define _BITS_MACH_PARAM_H 1
+
 #ifndef _SYS_PARAM_H
 # error "Never use <bits/mach/param.h> directly; include <sys/param.h> instead."
 #endif
 
 #ifndef EXEC_PAGESIZE
 #define EXEC_PAGESIZE	4096
+#endif
+
 #endif

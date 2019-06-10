@@ -25,6 +25,7 @@
 #include <gnu/lib-names.h>
 #include <netdb.h>
 #include <resolv/resolv_context.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <support/capture_subprocess.h>

@@ -20,13 +20,14 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <mqueue.h>
+#include <signal.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/wait.h>
 #include <time.h>
 #include <unistd.h>
-#include <stdint.h>
+#include <sys/wait.h>
 #include "tst-mqueue.h"
 
 static int

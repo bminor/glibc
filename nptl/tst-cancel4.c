@@ -19,27 +19,28 @@
 /* NOTE: this tests functionality beyond POSIX.  POSIX does not allow
    exit to be called more than once.  */
 
+#include <errno.h>
+#include <fcntl.h>
+#include <limits.h>
+#include <pthread.h>
+#include <signal.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/types.h>
+#include <termios.h>
+#include <unistd.h>
+#include <sys/ipc.h>
+#include <sys/mman.h>
+#include <sys/msg.h>
+#include <sys/poll.h>
 #include <sys/select.h>
 #include <sys/socket.h>
-#include <sys/un.h>
-#include <sys/ipc.h>
-#include <sys/msg.h>
-#include <unistd.h>
-#include <errno.h>
-#include <limits.h>
-#include <pthread.h>
-#include <fcntl.h>
-#include <termios.h>
-#include <sys/mman.h>
-#include <sys/poll.h>
-#include <sys/wait.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 #include <sys/uio.h>
+#include <sys/un.h>
+#include <sys/wait.h>
 
 
 /* Since STREAMS are not supported in the standard Linux kernel and

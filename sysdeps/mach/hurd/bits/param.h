@@ -16,19 +16,16 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifndef _BITS_PARAM_H
+#define _BITS_PARAM_H 1
+
 #ifndef _SYS_PARAM_H
 # error "Never use <bits/param.h> directly; include <sys/param.h> instead."
 #endif
 
 #include <bits/mach/param.h>
 
-/* This file is deprecated and is provided only for compatibility with
-   Unix systems.  It is unwise to include this file on programs which
-   are intended only for GNU systems.
-
-   Parts from:
-
- * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.
+/* Copyright (c) 1982, 1986, 1989 The Regents of the University of California.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -85,3 +82,5 @@
 
 #define	FSHIFT	11		/* Bits to right of fixed binary point.  */
 #define FSCALE	(1<<FSHIFT)
+
+#endif /* bits/param.h */

@@ -531,15 +531,15 @@ HEADER_ALLOWED_INCLUDES = {
     #           sys/sem.h -> sys/ipc.h
     #           sys/shm.h -> sys/ipc.h
     #           sys/time.h -> sys/select.h (effectively)
-    # allowed:  sys/wait.h -> signal.h
     "sys/msg.h":                   [ "sys/ipc.h" ],
     "sys/sem.h":                   [ "sys/ipc.h" ],
     "sys/shm.h":                   [ "sys/ipc.h" ],
     "sys/time.h":                  [ "sys/select.h" ],
+    # necessary for backward compatibility with BSD
     "sys/types.h":                 [ "endian.h" ],
+
     "sys/uio.h":                   [ "sys/types.h" ],
     "sys/un.h":                    [ "string.h" ],
-    "sys/wait.h":                  [ "signal.h" ],
 
     # POSIX networking headers
     # allowed: netdb.h -> netinet/in.h
@@ -593,8 +593,7 @@ HEADER_ALLOWED_INCLUDES = {
     "sys/ioctl.h":                 [ "sys/ttydefaults.h" ],
     "sys/mount.h":                 [ "sys/ioctl.h" ],
     "sys/mtio.h":                  [ "sys/ioctl.h", "sys/types.h" ],
-    "sys/param.h":                 [ "endian.h", "limits.h", "signal.h",
-                                     "sys/types.h" ],
+    "sys/param.h":                 [ "endian.h", "limits.h", "sys/types.h" ],
     "sys/platform/ppc.h":          [ "stdint.h" ],
     "sys/procfs.h":                [ "sys/time.h", "sys/types.h",
                                      "sys/user.h" ],

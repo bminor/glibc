@@ -16,14 +16,15 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sched.h>
+#include <signal.h>
+#include <stackinfo.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
-#include <sys/wait.h>
 #include <unistd.h>
+#include <sys/wait.h>
 #include <tst-stack-align.h>
-#include <stackinfo.h>
 
 static int
 f (void *arg)

@@ -2,6 +2,7 @@
 #ifdef  POSIX
 # define pid_t __pid_t
 #endif
+#define uid_t __uid_t
 
 constant WNOHANG
 constant WUNTRACED

@@ -30,7 +30,7 @@ __BEGIN_DECLS
 #include <bits/types/pid_t.h>
 
 #if defined __USE_XOPEN_EXTENDED || defined __USE_XOPEN2K8
-# include <signal.h>
+# include <bits/types/siginfo_t.h>
 #endif
 
 #if defined __USE_XOPEN_EXTENDED && !defined __USE_XOPEN2K8

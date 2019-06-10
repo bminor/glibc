@@ -16,6 +16,12 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+/* This header is provided only for compatibility with historic Unix
+   systems.  New programs should use some combination of <endian.h>,
+   <limits.h>, <signal.h>, <stddef.h>, <stdint.h>, and <sys/types.h>
+   instead, and the names defined in those headers.  The utility
+   macros at the end of this header should not be used at all.  */
+
 #ifndef _SYS_PARAM_H
 #define _SYS_PARAM_H    1
 
@@ -24,7 +30,7 @@
 #include <sys/types.h>
 #include <limits.h>
 #include <endian.h>                     /* Define BYTE_ORDER et al.  */
-#include <signal.h>                     /* Define NSIG.  */
+#include <bits/signum.h>                /* Define NSIG.  */
 #include <bits/NULL.h>
 
 /* This file defines some things in system-specific ways.  */
