@@ -1,3 +1,10 @@
+2019-06-19  Paul A. Clarke  <pc@us.ibm.com>
+
+	* sysdeps/powerpc/fpu/fenv_libc.h (relax_fenv_state): Add 'volatile'.
+	* sysdeps/powerpc/fpu/fpu_control.h (__FPU_MFFS): Likewise.
+	(__FPU_MFFSL): Likewise.
+	(_FPU_SETCW): Likewise.
+
 2019-06-19  Stan Shebs  <stanshebs@google.com>
 	    Raoni Fassina Firmino  <raoni@linux.ibm.com>
 

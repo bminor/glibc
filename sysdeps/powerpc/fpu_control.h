@@ -67,7 +67,7 @@ typedef unsigned int fpu_control_t;
 /* Macros for accessing the hardware control word.  */
 # define __FPU_MFFS()						\
   ({register double __fr;					\
-    __asm__ ("mffs %0" : "=f" (__fr));				\
+    __asm__ __volatile__("mffs %0" : "=f" (__fr));		\
     __fr;							\
   })
 
@@ -81,7 +81,7 @@ typedef unsigned int fpu_control_t;
 #ifdef _ARCH_PWR9
 # define __FPU_MFFSL()						\
   ({register double __fr;					\
-    __asm__ ("mffsl %0" : "=f" (__fr));				\
+    __asm__ __volatile__("mffsl %0" : "=f" (__fr));		\
     __fr;							\
   })
 #else
@@ -101,7 +101,7 @@ typedef unsigned int fpu_control_t;
     __u.__ll = 0xfff80000LL << 32; /* This is a QNaN.  */	\
     __u.__ll |= (cw) & 0xffffffffLL;				\
     __fr = __u.__d;						\
-    __asm__ ("mtfsf 255,%0" : : "f" (__fr));			\
+    __asm__ __volatile__("mtfsf 255,%0" : : "f" (__fr));	\
   }
 
 /* Default control word set at startup.  */

@@ -56,9 +56,9 @@ extern const fenv_t *__fe_mask_env (void) attribute_hidden;
 #define relax_fenv_state() \
 	do { \
 	   if (GLRO(dl_hwcap) & PPC_FEATURE_HAS_DFP) \
-	     asm (".machine push; .machine \"power6\"; " \
+	     asm volatile (".machine push; .machine \"power6\"; " \
 		  "mtfsfi 7,0,1; .machine pop"); \
-	   asm ("mtfsfi 7,0"); \
+	   asm volatile ("mtfsfi 7,0"); \
 	} while(0)
 
 /* Set/clear a particular FPSCR bit (for instance,
