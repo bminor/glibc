@@ -203,6 +203,81 @@ do_test (size_t align1, size_t align2, size_t len1, size_t len2,
   putchar ('\n');
 }
 
+/* Test needles which exhibit worst-case performance.  This shows that
+   basic_strstr is quadratic and thus unsuitable for large needles.
+   On the other hand Two-way and skip table implementations are linear with
+   increasing needle sizes.  The slowest cases of the two implementations are
+   within a factor of 2 on several different microarchitectures.  */
+
+static void
+test_hard_needle (size_t ne_len, size_t hs_len)
+{
+  char *ne = (char *) buf1;
+  char *hs = (char *) buf2;
+
+  /* Hard needle for strstr algorithm using skip table.  This results in many
+     memcmp calls comparing most of the needle.  */
+  {
+    memset (ne, 'a', ne_len);
+    ne[ne_len] = '\0';
+    ne[ne_len - 14] = 'b';
+
+    memset (hs, 'a', hs_len);
+    for (size_t i = ne_len; i <= hs_len; i += ne_len)
+      {
+	hs[i-5] = 'b';
+	hs[i-62] = 'b';
+      }
+
+    printf ("Length %4zd/%3zd, complex needle 1:", hs_len, ne_len);
+
+    FOR_EACH_IMPL (impl, 0)
+      do_one_test (impl, hs, ne, NULL);
+    putchar ('\n');
+  }
+
+  /* 2nd hard needle for strstr algorithm using skip table.  This results in
+     many memcmp calls comparing most of the needle.  */
+  {
+    memset (ne, 'a', ne_len);
+    ne[ne_len] = '\0';
+    ne[ne_len - 6] = 'b';
+
+    memset (hs, 'a', hs_len);
+    for (size_t i = ne_len; i <= hs_len; i += ne_len)
+      {
+	hs[i-5] = 'b';
+	hs[i-6] = 'b';
+      }
+
+    printf ("Length %4zd/%3zd, complex needle 2:", hs_len, ne_len);
+
+    FOR_EACH_IMPL (impl, 0)
+      do_one_test (impl, hs, ne, NULL);
+    putchar ('\n');
+  }
+
+  /* Hard needle for Two-way algorithm - the random input causes a large number
+     of branch mispredictions which significantly reduces performance on modern
+     micro architectures.  */
+  {
+    for (int i = 0; i < hs_len; i++)
+      hs[i] = (rand () & 255) > 155 ? 'a' : 'b';
+    hs[hs_len] = 0;
+
+    memset (ne, 'a', ne_len);
+    ne[ne_len-2] = 'b';
+    ne[0] = 'b';
+    ne[ne_len] = 0;
+
+    printf ("Length %4zd/%3zd, complex needle 3:", hs_len, ne_len);
+
+    FOR_EACH_IMPL (impl, 0)
+      do_one_test (impl, hs, ne, NULL);
+    putchar ('\n');
+  }
+}
+
 static int
 test_main (void)
 {
@@ -226,6 +301,10 @@ test_main (void)
 	do_test (1, 11, hlen, klen, 0);
 	do_test (14, 5, hlen, klen, 1);
       }
+
+  test_hard_needle (64, 65536);
+  test_hard_needle (256, 65536);
+  test_hard_needle (1024, 65536);
 
   return ret;
 }
