@@ -1,5 +1,5 @@
 #include <stddef.h>
-#include <sys/ucontext.h>
+#include <signal.h>
 
 --
 SC_NAT		offsetof (mcontext_t, sc_nat)

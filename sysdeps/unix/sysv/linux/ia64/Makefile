@@ -1,5 +1,5 @@
-ifeq ($(subdir),misc)
-sysdep_headers += sys/rse.h
+ifeq ($(subdir),signal)
+sysdep_headers += bits/types/__ia64_fpreg.h
 endif
 
 ifeq ($(subdir),stdlib)
@@ -8,7 +8,7 @@ gen-as-const-headers += sigcontext-offsets.sym
 endif
 
 ifeq ($(subdir),misc)
-sysdep_headers += sys/io.h
+sysdep_headers += sys/io.h sys/rse.h
 sysdep_routines += ioperm clone2
 gen-as-const-headers += sigaltstack-offsets.sym
 endif

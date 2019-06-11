@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-2020 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,10 +15,8 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* Don't rely on this, the interface is currently messed up and may need to
-   be broken to be fixed.  */
-#ifndef _SYS_UCONTEXT_H
-#define _SYS_UCONTEXT_H	1
+#ifndef _BITS_UCONTEXT_H
+#define _BITS_UCONTEXT_H	1
 
 #include <features.h>
 
@@ -32,39 +30,52 @@
 # define __ctx(fld) __ ## fld
 #endif
 
-#ifdef __USE_MISC
 /* Type for general register.  */
-typedef unsigned long int greg_t;
+typedef long int greg_t;
 
 /* Number of general registers.  */
-# define NGREG	80
-# define NFPREG	32
-
-/* Container for all general registers.  */
-typedef struct gregset
-  {
-    greg_t g_regs[32];
-    greg_t sr_regs[8];
-    greg_t cr_regs[24];
-    greg_t g_pad[16];
-  } gregset_t;
-
-/* Container for all FPU registers.  */
-typedef struct
-  {
-    double fp_dregs[32];
-  } fpregset_t;
+#define __NGREG	33
+#ifdef __USE_MISC
+# define NGREG	__NGREG
 #endif
 
-/* Context to describe whole processor state.  */
+/* Container for all general registers.  */
+typedef greg_t gregset_t[__NGREG];
+
+/* Type for floating-point register.  */
+typedef long int fpreg_t;
+
+/* Number of general registers.  */
+#define __NFPREG	32
+#ifdef __USE_MISC
+# define NFPREG	__NFPREG
+#endif
+
+/* Container for all general registers.  */
+typedef fpreg_t fpregset_t[__NFPREG];
+
+
+/* A machine context is exactly a sigcontext.  */
 typedef struct
   {
-    unsigned long int __ctx(sc_flags);
-    unsigned long int __ctx(sc_gr)[32];
-    unsigned long long int __ctx(sc_fr)[32];
-    unsigned long int __ctx(sc_iasq)[2];
-    unsigned long int __ctx(sc_iaoq)[2];
-    unsigned long int __ctx(sc_sar);
+    long int __ctx(sc_onstack);
+    long int __ctx(sc_mask);
+    long int __ctx(sc_pc);
+    long int __ctx(sc_ps);
+    long int __ctx(sc_regs)[32];
+    long int __ctx(sc_ownedfp);
+    long int __ctx(sc_fpregs)[32];
+    unsigned long int __ctx(sc_fpcr);
+    unsigned long int __ctx(sc_fp_control);
+    unsigned long int __glibc_reserved1, __glibc_reserved2;
+    unsigned long int __ctx(sc_ssize);
+    char *__ctx(sc_sbase);
+    unsigned long int __ctx(sc_traparg_a0);
+    unsigned long int __ctx(sc_traparg_a1);
+    unsigned long int __ctx(sc_traparg_a2);
+    unsigned long int __ctx(sc_fp_trap_pc);
+    unsigned long int __ctx(sc_fp_trigger_sum);
+    unsigned long int __ctx(sc_fp_trigger_inst);
   } mcontext_t;
 
 /* Userlevel context.  */
@@ -72,6 +83,7 @@ typedef struct ucontext_t
   {
     unsigned long int __ctx(uc_flags);
     struct ucontext_t *uc_link;
+    unsigned long __uc_osf_sigmask;
     stack_t uc_stack;
     mcontext_t uc_mcontext;
     sigset_t uc_sigmask;
@@ -79,4 +91,4 @@ typedef struct ucontext_t
 
 #undef __ctx
 
-#endif /* sys/ucontext.h */
+#endif /* bits/ucontext.h */

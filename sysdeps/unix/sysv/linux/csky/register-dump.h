@@ -19,7 +19,7 @@
 #include <sys/uio.h>
 #include <_itoa.h>
 #include <bits/sigcontext.h>
-#include <sys/ucontext.h>
+#include <ucontext.h>
 
 /* abiv1 register dump in this format:
 

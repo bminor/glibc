@@ -26,7 +26,7 @@
 #include <bits/indirect-return.h>
 
 /* Get machine dependent definition of data structures.  */
-#include <sys/ucontext.h>
+#include <bits/ucontext.h>
 
 __BEGIN_DECLS
 

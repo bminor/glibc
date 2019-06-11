@@ -20,11 +20,12 @@
 #ifndef _BITS_PROCFS_H
 #define _BITS_PROCFS_H 1
 
-#ifndef _SYS_PROCFS_H
+#if !defined _SYS_PROCFS_H && !defined _BITS_UCONTEXT_H
 # error "Never include <bits/procfs.h> directly; use <sys/procfs.h> instead."
 #endif
 
 #include <bits/types.h>
+#include <sys/user.h>
 
 /* Type for a general-purpose register.  */
 typedef __uint64_t elf_greg_t;

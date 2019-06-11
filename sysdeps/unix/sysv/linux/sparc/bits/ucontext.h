@@ -15,8 +15,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _SYS_UCONTEXT_H
-#define _SYS_UCONTEXT_H	1
+#ifndef _BITS_UCONTEXT_H
+#define _BITS_UCONTEXT_H	1
 
 #include <features.h>
 
@@ -301,4 +301,4 @@ typedef struct ucontext_t
   } ucontext_t;
 
 #endif /* __WORDSIZE == 32 */
-#endif /* sys/ucontext.h */
+#endif /* bits/ucontext.h */

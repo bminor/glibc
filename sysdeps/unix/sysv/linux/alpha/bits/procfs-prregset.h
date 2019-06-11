@@ -25,8 +25,8 @@
 #endif
 
 /* For gregset_t and fpregset_t.  FIXME: sys/procfs.h should not
-   expose all of sys/ucontext.h.  */
-#include <sys/ucontext.h>
+   expose all of bits/ucontext.h.  */
+#include <bits/ucontext.h>
 
 typedef gregset_t __prgregset_t;
 typedef fpregset_t __prfpregset_t;

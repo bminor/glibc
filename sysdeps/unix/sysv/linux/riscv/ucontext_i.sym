@@ -1,7 +1,5 @@
-#include <inttypes.h>
-#include <signal.h>
 #include <stddef.h>
-#include <sys/ucontext.h>
+#include <signal.h>
 
 -- Constants used by the rt_sigprocmask call.
 

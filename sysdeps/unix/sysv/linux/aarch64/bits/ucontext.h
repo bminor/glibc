@@ -18,8 +18,8 @@
 
 /* System V/AArch64 ABI compliant context switching support.  */
 
-#ifndef _SYS_UCONTEXT_H
-#define _SYS_UCONTEXT_H	1
+#ifndef _BITS_UCONTEXT_H
+#define _BITS_UCONTEXT_H	1
 
 #include <features.h>
 
@@ -33,7 +33,7 @@
 #endif
 
 #ifdef __USE_MISC
-# include <sys/procfs.h>
+# include <bits/procfs.h>
 
 
 typedef elf_greg_t greg_t;
@@ -75,4 +75,4 @@ typedef struct ucontext_t
 
 #undef __ctx
 
-#endif /* sys/ucontext.h */
+#endif /* bits/ucontext.h */

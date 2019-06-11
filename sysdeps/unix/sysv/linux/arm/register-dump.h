@@ -19,7 +19,7 @@
 
 #include <sys/uio.h>
 #include <_itoa.h>
-#include <sys/ucontext.h>
+#include <ucontext.h>
 
 /* We will print the register dump in this format:
 

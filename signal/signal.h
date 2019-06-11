@@ -293,7 +293,7 @@ extern int sigreturn (struct sigcontext *__scp) __THROW;
 # include <bits/types/stack_t.h>
 # if defined __USE_XOPEN || defined __USE_XOPEN2K8
 /* This will define `ucontext_t' and `mcontext_t'.  */
-#  include <sys/ucontext.h>
+#  include <bits/ucontext.h>
 # endif
 #endif /* Use POSIX.1-2008 or X/Open Unix.  */
 

@@ -18,14 +18,12 @@
 
 #include <sysdep.h>
 #include <sys/asm.h>
-#include <sys/ucontext.h>
+#include <ucontext.h>
 #include <stdarg.h>
 #include <assert.h>
 
 void
-__makecontext (ucontext_t *ucp, void (*func) (void), int argc,
-	       long int a0, long int a1, long int a2, long int a3, long int a4,
-	       ...)
+__makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
 {
   extern void __start_context (void) attribute_hidden;
   long int i, sp;
@@ -47,19 +45,13 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc,
   ucp->uc_mcontext.__gregs[REG_PC] = (long int) &__start_context;
 
   /* Put args in a0-a7, then put any remaining args on the stack.  */
-  ucp->uc_mcontext.__gregs[REG_A0 + 0] = a0;
-  ucp->uc_mcontext.__gregs[REG_A0 + 1] = a1;
-  ucp->uc_mcontext.__gregs[REG_A0 + 2] = a2;
-  ucp->uc_mcontext.__gregs[REG_A0 + 3] = a3;
-  ucp->uc_mcontext.__gregs[REG_A0 + 4] = a4;
-
-  if (__glibc_unlikely (argc > 5))
+  if (argc > 0)
     {
       va_list vl;
-      va_start (vl, a4);
+      va_start (vl, argc);
 
       long reg_args = argc < REG_NARGS ? argc : REG_NARGS;
-      for (i = 5; i < reg_args; i++)
+      for (i = 0; i < reg_args; i++)
         ucp->uc_mcontext.__gregs[REG_A0 + i] = va_arg (vl, long);
 
       long int stack_args = argc - reg_args;

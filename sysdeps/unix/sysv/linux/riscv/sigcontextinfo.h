@@ -19,7 +19,7 @@
 #ifndef _SIGCONTEXTINFO_H
 #define _SIGCONTEXTINFO_H
 
-#include <sys/ucontext.h>
+#include <signal.h>
 
 static inline uintptr_t
 sigcontext_get_pc (const ucontext_t *ctx)

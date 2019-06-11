@@ -23,10 +23,7 @@
 # error "Never include <bits/procfs.h> directly; use <sys/procfs.h> instead."
 #endif
 
-/* For struct __ia64_fpreg.  FIXME: sys/procfs.h should not expose all
-   of sys/ucontext.h.  */
-#include <sys/ucontext.h>
-#include <bits/sigcontext.h>
+#include <bits/types/__ia64_fpreg.h>
 
 /* We really need just 72 but let's leave some headroom...  */
 #define ELF_NGREG	128

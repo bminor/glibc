@@ -16,19 +16,19 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <elf.h>
+#include <errno.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <sys/wait.h>
 #include <sys/types.h>
 #include <sys/uio.h>
-#include <elf.h>
-#include <support/xunistd.h>
+#include <sys/wait.h>
+
 #include <support/check.h>
-#include <string.h>
-#include <errno.h>
+#include <support/xunistd.h>
 
 /* Ensure that we use the PTRACE_SINGLEBLOCK definition from glibc ptrace.h
    in tracer_func.  We need the kernel ptrace.h for structs ptrace_area

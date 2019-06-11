@@ -504,24 +504,25 @@ HEADER_ALLOWED_INCLUDES = {
     #           tgmath.h   -> complex.h, math.h
     #           threads.h  -> time.h
     "inttypes.h":                  [ "stdint.h" ],
-    "signal.h":                    [ "sys/ucontext.h" ],
-    "stdlib.h":                    [ "alloca.h", "sys/types.h" ],
     "tgmath.h":                    [ "complex.h", "math.h" ],
     "threads.h":                   [ "time.h" ],
+    # necessary for backward compatibility with old GNU extensions
+    "stdlib.h":                    [ "alloca.h", "sys/types.h" ],
 
     # POSIX top-level headers
     # mandated: pthread.h -> sched.h, time.h
+    "pthread.h":                   [ "sched.h", "time.h" ],
     # allowed:  ftw.h -> sys/stat.h
     #           mqueue.h -> fcntl.h
     #           sched.h -> time.h
     #           spawn.h -> sched.h
     "ftw.h":                       [ "sys/stat.h" ],
-    "langinfo.h":                  [ "nl_types.h" ],
     "mqueue.h":                    [ "fcntl.h" ],
-    "pthread.h":                   [ "sched.h", "time.h" ],
-    "regex.h":                     [ "limits.h", "sys/types.h" ],
     "sched.h":                     [ "time.h" ],
     "spawn.h":                     [ "sched.h" ],
+    # not yet analyzed
+    "langinfo.h":                  [ "nl_types.h" ],
+    "regex.h":                     [ "limits.h", "sys/types.h" ],
     "termios.h":                   [ "sys/ttydefaults.h" ],
     "utmpx.h":                     [ "paths.h" ],
 
@@ -562,7 +563,6 @@ HEADER_ALLOWED_INCLUDES = {
     "shadow.h":                    [ "paths.h" ],
     "stdio_ext.h":                 [ "stdio.h" ],
     "thread_db.h":                 [ "pthread.h", "stdint.h", "sys/procfs.h" ],
-    "ucontext.h":                  [ "sys/ucontext.h" ],
     "utmp.h":                      [ "paths.h" ],
     "values.h":                    [ "float.h", "limits.h" ],
 
@@ -574,12 +574,10 @@ HEADER_ALLOWED_INCLUDES = {
     "sys/mount.h":                 [ "sys/ioctl.h" ],
     "sys/mtio.h":                  [ "sys/ioctl.h" ],
     "sys/param.h":                 [ "endian.h", "limits.h", "sys/types.h" ],
-    "sys/procfs.h":                [ "sys/ucontext.h", "sys/user.h" ],
-    "sys/ptrace.h":                [ "sys/ucontext.h" ],
+    "sys/procfs.h":                [ "sys/user.h" ],
     "sys/raw.h":                   [ "sys/ioctl.h" ],
     "sys/timerfd.h":               [ "time.h" ],
     "sys/ttychars.h":              [ "sys/ttydefaults.h" ],
-    "sys/ucontext.h":              [ "sys/procfs.h" ],
     "sys/vfs.h":                   [ "sys/statfs.h" ],
 
     # Nonstandardized headers that do nothing but include some other
@@ -597,6 +595,7 @@ HEADER_ALLOWED_INCLUDES = {
     "sys/socketvar.h":             [ "sys/socket.h" ],
     "sys/syslog.h":                [ "syslog.h" ],
     "sys/termios.h":               [ "termios.h" ],
+    "sys/ucontext.h":              [ "ucontext.h" ],
     "sys/unistd.h":                [ "unistd.h" ],
     "syscall.h":                   [ "sys/syscall.h" ],
     "termio.h":                    [ "sys/ioctl.h", "termios.h" ],
@@ -622,8 +621,6 @@ HEADER_ALLOWED_INCLUDES = {
     # Internal headers
     "features.h":                  [ "gnu/stubs.h", "stdc-predef.h",
                                      "sys/cdefs.h" ],
-
-    "bits/procfs.h":               [ "signal.h", "sys/ucontext.h" ],
 
     "bits/types/__va_list.h":      [ "stdarg.h" ],
     "bits/types/ptrdiff_t.h":      [ "stddef.h" ],
@@ -670,8 +667,8 @@ SYSDEP_ALLOWED_INCLUDES = {
         "bits/ioctls.h":           [ "asm/ioctls.h", "linux/sockios.h" ],
         "bits/local_lim.h":        [ "linux/limits.h" ],
         "bits/param.h":            [ "linux/limits.h", "linux/param.h" ],
-        "bits/procfs.h":           [ "asm/elf.h", "asm/ptrace.h" ],
-        "bits/procfs-prregset.h":  [ "sys/ucontext.h" ],
+        "bits/procfs.h":           [ "asm/elf.h", "asm/ptrace.h",
+                                     "sys/user.h" ],
         "bits/sigcontext.h":       [ "asm/sigcontext.h" ],
         "bits/socket.h":           [ "asm/socket.h" ],
     },
@@ -689,7 +686,6 @@ SYSDEP_ALLOWED_INCLUDES = {
         "sys/fpregdef.h":          [ "sgidefs.h" ],
         "sys/regdef.h":            [ "sgidefs.h" ],
         "sys/tas.h":               [ "sgidefs.h" ],
-        "sys/ucontext.h":          [ "sgidefs.h" ],
         "sys/user.h":              [ "sgidefs.h" ],
 
         "bits/fcntl.h":            [ "sgidefs.h" ],
@@ -699,6 +695,7 @@ SYSDEP_ALLOWED_INCLUDES = {
         "bits/setjmp.h":           [ "sgidefs.h" ],
         "bits/sigcontext.h":       [ "sgidefs.h" ],
         "bits/stat.h":             [ "sgidefs.h" ],
+        "bits/ucontext.h":         [ "sgidefs.h" ],
         "bits/wordsize.h":         [ "sgidefs.h" ],
     },
 }

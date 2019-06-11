@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-2020 Free Software Foundation, Inc.
+/* Copyright (C) 1999-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,10 +15,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* System V/i386 ABI compliant context switching support.  */
+/* Where is System V/SH ABI?  */
 
-#ifndef _SYS_UCONTEXT_H
-#define _SYS_UCONTEXT_H	1
+#ifndef _BITS_UCONTEXT_H
+#define _BITS_UCONTEXT_H	1
 
 #include <features.h>
 
@@ -26,11 +26,10 @@
 #include <bits/types/stack_t.h>
 
 
-/* Type for general register.  */
 typedef int greg_t;
 
 /* Number of general registers.  */
-#define __NGREG	19
+#define __NGREG	16
 #ifdef __USE_MISC
 # define NGREG	__NGREG
 #endif
@@ -42,83 +41,74 @@ typedef greg_t gregset_t[__NGREG];
 /* Number of each register is the `gregset_t' array.  */
 enum
 {
-  REG_GS = 0,
-# define REG_GS	REG_GS
-  REG_FS,
-# define REG_FS	REG_FS
-  REG_ES,
-# define REG_ES	REG_ES
-  REG_DS,
-# define REG_DS	REG_DS
-  REG_EDI,
-# define REG_EDI	REG_EDI
-  REG_ESI,
-# define REG_ESI	REG_ESI
-  REG_EBP,
-# define REG_EBP	REG_EBP
-  REG_ESP,
-# define REG_ESP	REG_ESP
-  REG_EBX,
-# define REG_EBX	REG_EBX
-  REG_EDX,
-# define REG_EDX	REG_EDX
-  REG_ECX,
-# define REG_ECX	REG_ECX
-  REG_EAX,
-# define REG_EAX	REG_EAX
-  REG_TRAPNO,
-# define REG_TRAPNO	REG_TRAPNO
-  REG_ERR,
-# define REG_ERR	REG_ERR
-  REG_EIP,
-# define REG_EIP	REG_EIP
-  REG_CS,
-# define REG_CS	REG_CS
-  REG_EFL,
-# define REG_EFL	REG_EFL
-  REG_UESP,
-# define REG_UESP	REG_UESP
-  REG_SS
-# define REG_SS	REG_SS
+  REG_R0 = 0,
+# define REG_R0	REG_R0
+  REG_R1 = 1,
+# define REG_R1	REG_R1
+  REG_R2 = 2,
+# define REG_R2	REG_R2
+  REG_R3 = 3,
+# define REG_R3	REG_R3
+  REG_R4 = 4,
+# define REG_R4	REG_R4
+  REG_R5 = 5,
+# define REG_R5	REG_R5
+  REG_R6 = 6,
+# define REG_R6	REG_R6
+  REG_R7 = 7,
+# define REG_R7	REG_R7
+  REG_R8 = 8,
+# define REG_R8	REG_R8
+  REG_R9 = 9,
+# define REG_R9	REG_R9
+  REG_R10 = 10,
+# define REG_R10	REG_R10
+  REG_R11 = 11,
+# define REG_R11	REG_R11
+  REG_R12 = 12,
+# define REG_R12	REG_R12
+  REG_R13 = 13,
+# define REG_R13	REG_R13
+  REG_R14 = 14,
+# define REG_R14	REG_R14
+  REG_R15 = 15,
+# define REG_R15	REG_R15
 };
 #endif
 
+typedef int freg_t;
+
+/* Number of FPU registers.  */
+#define __NFPREG	16
 #ifdef __USE_MISC
-# define __ctx(fld) fld
-# define __ctxt(tag) tag
-#else
-# define __ctx(fld) __ ## fld
-# define __ctxt(tag) /* Empty.  */
+# define NFPREG	__NFPREG
 #endif
 
 /* Structure to describe FPU registers.  */
-typedef struct
-  {
-    union
-      {
-	struct __ctxt(fpchip_state)
-	  {
-	    int __ctx(state)[27];
-	    int __ctx(status);
-	  } __ctx(fpchip_state);
+typedef freg_t fpregset_t[__NFPREG];
 
-	struct __ctxt(fp_emul_space)
-	  {
-	    char __ctx(fp_emul)[246];
-	    char __ctx(fp_epad)[2];
-	  } __ctx(fp_emul_space);
-
-	int __ctx(f_fpregs)[62];
-      } __ctx(fp_reg_set);
-
-    long int __ctx(f_wregs)[33];
-  } fpregset_t;
+#ifdef __USE_MISC
+# define __ctx(fld) fld
+#else
+# define __ctx(fld) __ ## fld
+#endif
 
 /* Context to describe whole processor state.  */
 typedef struct
   {
+    unsigned int __ctx(oldmask);
     gregset_t __ctx(gregs);
+    unsigned int __ctx(pc);
+    unsigned int __ctx(pr);
+    unsigned int __ctx(sr);
+    unsigned int __ctx(gbr);
+    unsigned int __ctx(mach);
+    unsigned int __ctx(macl);
     fpregset_t __ctx(fpregs);
+    fpregset_t __ctx(xfpregs);
+    unsigned int __ctx(fpscr);
+    unsigned int __ctx(fpul);
+    unsigned int __ctx(ownedfp);
   } mcontext_t;
 
 /* Userlevel context.  */
@@ -126,13 +116,11 @@ typedef struct ucontext_t
   {
     unsigned long int __ctx(uc_flags);
     struct ucontext_t *uc_link;
-    sigset_t uc_sigmask;
     stack_t uc_stack;
     mcontext_t uc_mcontext;
-    long int __glibc_reserved1[5];
+    sigset_t uc_sigmask;
   } ucontext_t;
 
 #undef __ctx
-#undef __ctxt
 
-#endif /* sys/ucontext.h */
+#endif /* bits/ucontext.h */

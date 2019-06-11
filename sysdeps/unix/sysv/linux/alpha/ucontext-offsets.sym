@@ -1,5 +1,5 @@
 #include <stddef.h>
-#include <sys/ucontext.h>
+#include <signal.h>
 
 --
 UC_LINK		offsetof (ucontext_t, uc_link)

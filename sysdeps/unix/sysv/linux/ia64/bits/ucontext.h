@@ -15,14 +15,14 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _SYS_UCONTEXT_H
-#define _SYS_UCONTEXT_H	1
+#ifndef _BITS_UCONTEXT_H
+#define _BITS_UCONTEXT_H	1
 
 #include <features.h>
 
 #include <bits/types/sigset_t.h>
 #include <bits/types/stack_t.h>
-
+#include <bits/types/__ia64_fpreg.h>
 
 #ifdef __USE_MISC
 # define __ctx(fld) fld
@@ -35,14 +35,6 @@
  * IA-64 Linux does not distinguish between "mcontext_t" and
  * "ucontext_t" as all the necessary info is inside the former.
  */
-
-struct __ia64_fpreg_mcontext
-  {
-    union
-      {
-	unsigned long __ctx(bits)[2];
-      } __ctx(u);
-  } __attribute__ ((__aligned__ (16)));
 
 typedef struct
   {
@@ -63,7 +55,7 @@ typedef struct
     unsigned long int __ctx(sc_pr);
     unsigned long int __ctx(sc_br)[8];
     unsigned long int __ctx(sc_gr)[32];
-    struct __ia64_fpreg_mcontext __ctx(sc_fr)[128];
+    struct __ia64_fpreg __ctx(sc_fr)[128];
     unsigned long int __ctx(sc_rbs_base);
     unsigned long int __ctx(sc_loadrs);
     unsigned long int __ctx(sc_ar25);
@@ -103,4 +95,4 @@ ucontext_t;
 #define uc_stack	_u._mc.__ctx(sc_stack)
 #define uc_link		_u._uc._link
 
-#endif /* sys/ucontext.h */
+#endif /* bits/ucontext.h */

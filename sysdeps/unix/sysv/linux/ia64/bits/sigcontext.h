@@ -26,16 +26,9 @@
 #include <bits/types/size_t.h>
 #include <bits/types/struct_sigstack.h>
 #include <bits/types/stack_t.h>
+#include <bits/types/__ia64_fpreg.h>
 #include <bits/sigstack.h>
 #include <bits/ss_flags.h>
-
-struct __ia64_fpreg
-  {
-    union
-      {
-	unsigned long bits[2];
-      } u;
-  } __attribute__ ((__aligned__ (16)));
 
 struct sigcontext
 {

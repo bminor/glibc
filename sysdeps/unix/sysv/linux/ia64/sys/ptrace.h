@@ -20,9 +20,8 @@
 #define _SYS_PTRACE_H	1
 
 #include <features.h>
-#include <sys/ucontext.h>
-#include <bits/sigcontext.h>
 #include <bits/types.h>
+#include <bits/ucontext.h>
 
 __BEGIN_DECLS
 
