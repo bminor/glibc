@@ -1,5 +1,14 @@
 2019-09-13  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* string/str-two-way.h (two_way_short_needle): Add inline to avoid
+	warning.
+	(two_way_long_needle): Block inlining.
+	* string/strstr.c (strstr2): Add new function.
+	(strstr3): Likewise.
+	(STRSTR): Completely rewrite strstr to improve performance.
+
+2019-09-13  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	[BZ #23637]
 	* string/test-strstr.c (pr23637): New function.
 	(test_main): Add tests with longer needles.
