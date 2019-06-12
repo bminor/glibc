@@ -18,8 +18,15 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <string.h>
 #include <sys/stat.h>
 #include <sys/sysmacros.h>
+
+/* Obtain the original definition of struct statx.  */
+#undef __statx_defined
+#define statx original_statx
+#include <bits/types/struct_statx.h>
+#undef statx
 
 static inline struct statx_timestamp
 statx_convert_timestamp (struct timespec tv)
@@ -57,7 +64,7 @@ statx_generic (int fd, const char *path, int flags,
   /* The interface is defined in such a way that unused (padding)
      fields have to be cleared.  STATX_BASIC_STATS corresponds to the
      data which is available via fstatat64.  */
-  *buf = (struct statx)
+  struct original_statx obuf =
     {
       .stx_mask = STATX_BASIC_STATS,
       .stx_blksize = st.st_blksize,
@@ -76,6 +83,8 @@ statx_generic (int fd, const char *path, int flags,
       .stx_dev_major = major (st.st_dev),
       .stx_dev_minor = minor (st.st_dev),
     };
+  _Static_assert (sizeof (*buf) >= sizeof (obuf), "struct statx size");
+  memcpy (buf, &obuf, sizeof (obuf));
 
   return 0;
 }

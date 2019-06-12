@@ -1,5 +1,22 @@
 2019-06-12  Florian Weimer  <fweimer@redhat.com>
 
+	Linux: Use kernel headers for statx definitions if available.
+	* include/bits/statx-generic.h: New file.
+	* include/bits/types/struct_statx.h: Likewise.
+	* include/bits/types/struct_statx_timestamp.h: Likewise.
+	* io/Makefile (headers): Add bits/statx-generic.h.
+	* io/bits/statx-generic.h: New file.  Partly copied from
+	io/bits/statx.h.
+	* io/statx_generic.c: Include <bits/types/struct_statx.h> to
+	define original_statx.
+	* io/bits/types/struct_statx.h: Likewise.
+	* io/bits/types/struct_statx_timestamp.h: Likewise.
+	(statx_generic): Use original_statx.
+	* io/bits/statx.h: Rewrite to include <bits/statx-generic.h>.
+	* sysdeps/unix/sysv/linux/bits/statx.h: New file.
+
+2019-06-12  Florian Weimer  <fweimer@redhat.com>
+
 	* misc/sys/cdefs.h (__glibc_has_include): Define.
 
 2019-06-12  Wilco Dijkstra  <wdijkstr@arm.com>

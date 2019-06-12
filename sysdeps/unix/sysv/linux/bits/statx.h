@@ -1,4 +1,4 @@
-/* statx-related definitions and declarations.  Generic version.
+/* statx-related definitions and declarations.  Linux version.
    Copyright (C) 2018-2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -22,5 +22,13 @@
 # error Never include <bits/statx.h> directly, include <sys/stat.h> instead.
 #endif
 
-/* Use the generic definitions.  */
+/* Use the Linux kernel header if available.  */
+#if __glibc_has_include (<linux/stat.h>)
+# include <linux/stat.h>
+# ifdef STATX_TYPE
+#  define __statx_timestamp_defined 1
+#  define __statx_defined 1
+# endif
+#endif
+
 #include <bits/statx-generic.h>
