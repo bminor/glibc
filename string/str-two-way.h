@@ -221,7 +221,7 @@ critical_factorization (const unsigned char *needle, size_t needle_len,
    most 2 * HAYSTACK_LEN - NEEDLE_LEN comparisons occur in searching.
    If AVAILABLE modifies HAYSTACK_LEN (as in strstr), then at most 3 *
    HAYSTACK_LEN - NEEDLE_LEN comparisons occur in searching.  */
-static RETURN_TYPE
+static inline RETURN_TYPE
 two_way_short_needle (const unsigned char *haystack, size_t haystack_len,
 		      const unsigned char *needle, size_t needle_len)
 {
@@ -382,8 +382,11 @@ two_way_short_needle (const unsigned char *haystack, size_t haystack_len,
    and sublinear performance O(HAYSTACK_LEN / NEEDLE_LEN) is possible.
    If AVAILABLE modifies HAYSTACK_LEN (as in strstr), then at most 3 *
    HAYSTACK_LEN - NEEDLE_LEN comparisons occur in searching, and
-   sublinear performance is not possible.  */
-static RETURN_TYPE
+   sublinear performance is not possible.
+
+   Since this function is large and complex, block inlining to avoid
+   slowing down the common case of small needles.  */
+__attribute__((noinline)) static RETURN_TYPE
 two_way_long_needle (const unsigned char *haystack, size_t haystack_len,
 		     const unsigned char *needle, size_t needle_len)
 {
