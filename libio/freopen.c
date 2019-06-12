@@ -62,7 +62,7 @@ freopen (const char *filename, const char *mode, FILE *fp)
 	 to the old libio may be passed into shared C library and wind
 	 up here. */
       _IO_old_file_close_it (fp);
-      _IO_JUMPS_FILE_plus (fp) = &_IO_old_file_jumps;
+      _IO_JUMPS_FUNC_UPDATE (fp, &_IO_old_file_jumps);
       result = _IO_old_file_fopen (fp, gfilename, mode);
     }
   else

@@ -1,5 +1,11 @@
 2019-06-12  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #24632]
+	* libio/libioP.h (_IO_JUMPS_FUNC_UPDATE): New macro.
+	* libio/freopen.c (freopen): Use it.
+
+2019-06-12  Florian Weimer  <fweimer@redhat.com>
+
 	Linux: Deprecate sysctl.
 	* include/sysctl.h (__sysctl): Remove declaration.
 	* scripts/check-installed-headers.sh (sys/sysctl.h): Disable

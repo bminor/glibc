@@ -108,9 +108,14 @@
   (IO_validate_vtable                                                   \
    (*(struct _IO_jump_t **) ((void *) &_IO_JUMPS_FILE_plus (THIS)	\
 			     + (THIS)->_vtable_offset)))
+# define _IO_JUMPS_FUNC_UPDATE(THIS, VTABLE)				\
+  (*(const struct _IO_jump_t **) ((void *) &_IO_JUMPS_FILE_plus (THIS)	\
+				  + (THIS)->_vtable_offset) = (VTABLE))
 # define _IO_vtable_offset(THIS) (THIS)->_vtable_offset
 #else
 # define _IO_JUMPS_FUNC(THIS) (IO_validate_vtable (_IO_JUMPS_FILE_plus (THIS)))
+# define _IO_JUMPS_FUNC_UPDATE(THIS, VTABLE) \
+  (_IO_JUMPS_FILE_plus (THIS) = (VTABLE))
 # define _IO_vtable_offset(THIS) 0
 #endif
 #define _IO_WIDE_JUMPS_FUNC(THIS) _IO_WIDE_JUMPS(THIS)
