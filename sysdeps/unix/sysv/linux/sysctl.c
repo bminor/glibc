@@ -17,8 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
-#include <string.h>	/* For the real memset prototype.  */
-#include <sys/sysctl.h>
+#include <linux/sysctl.h>
 
 #include <sysdep.h>
 #include <sys/syscall.h>
@@ -39,5 +38,4 @@ __sysctl (int *name, int nlen, void *oldval, size_t *oldlenp,
 
   return INLINE_SYSCALL (_sysctl, 1, &args);
 }
-libc_hidden_def (__sysctl)
 weak_alias (__sysctl, sysctl)

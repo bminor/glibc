@@ -1,5 +1,18 @@
 2019-06-12  Florian Weimer  <fweimer@redhat.com>
 
+	Linux: Deprecate sysctl.
+	* include/sysctl.h (__sysctl): Remove declaration.
+	* scripts/check-installed-headers.sh (sys/sysctl.h): Disable
+	check.
+	* sysdeps/unix/sysv/linux/sys/sysctl.h: Add deprecation warning.
+	(sysctl): Add deprecation attribute.
+	* sysdeps/unix/sysv/linux/sysctl.c: Include <linux/sysctl.h>
+	directly, to avoid the deprecation warning.  Do not include
+	<string.h>.
+	(__sysctl): Remove hidden alias.
+
+2019-06-12  Florian Weimer  <fweimer@redhat.com>
+
 	Linux: Use kernel headers for statx definitions if available.
 	* include/bits/statx-generic.h: New file.
 	* include/bits/types/struct_statx.h: Likewise.

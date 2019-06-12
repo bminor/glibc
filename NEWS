@@ -61,6 +61,11 @@ Deprecated and removed features, and other changes affecting compatibility:
 * On 32-bit Arm, support for the port-based I/O emulation and the <sys/io.h>
   header have been removed.
 
+* The Linux-specific <sys/sysctl.h> header and the sysctl function have been
+  deprecated and will be removed from a future version of glibc.
+  Application should directly access /proc instead.  For obtaining random
+  bits, the getentropy function can be used.
+
 Changes to build and runtime requirements:
 
 * GCC 6.2 or later is required to build the GNU C Library.
