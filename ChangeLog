@@ -1,3 +1,7 @@
+2019-06-12  Florian Weimer  <fweimer@redhat.com>
+
+	* misc/sys/cdefs.h (__glibc_has_include): Define.
+
 2019-06-12  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* string/memmem.c (__memmem): Rewrite to improve performance.

@@ -412,6 +412,12 @@
 # define __glibc_has_attribute(attr)	0
 #endif
 
+#ifdef __has_include
+# define __glibc_has_include(header)	__has_include (header)
+#else
+# define __glibc_has_include(header)	0
+#endif
+
 #if (!defined _Noreturn \
      && (defined __STDC_VERSION__ ? __STDC_VERSION__ : 0) < 201112 \
      &&  !__GNUC_PREREQ (4,7))
