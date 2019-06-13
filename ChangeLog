@@ -1,5 +1,8 @@
 2019-06-13  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/bits/in.h (IPV6_ROUTER_ALERT_ISOLATE):
+	New macro.
+
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/localplt.data:
 	Allow memset in libc.so.
 
