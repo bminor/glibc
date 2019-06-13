@@ -1,3 +1,8 @@
+2019-06-13  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/localplt.data:
+	Allow memset in libc.so.
+
 2019-06-13  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* sysdeps/aarch64/dl-dtprocnum.h: New file.

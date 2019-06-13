@@ -31,6 +31,7 @@ libc.so: calloc
 libc.so: free
 libc.so: malloc
 libc.so: memalign
+libc.so: memset ?
 libc.so: realloc
 libm.so: copysignl ?
 libm.so: fabsl
