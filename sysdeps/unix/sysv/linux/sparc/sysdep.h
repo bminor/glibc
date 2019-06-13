@@ -19,9 +19,6 @@
 #ifndef _LINUX_SPARC_SYSDEP_H
 #define _LINUX_SPARC_SYSDEP_H 1
 
-/* Always enable vsyscalls on sparc */
-#define ALWAYS_USE_VSYSCALL 1
-
 #include <sysdeps/unix/sysdep.h>
 #include <sysdeps/unix/sysv/linux/sysdep.h>
 #include <sysdeps/sparc/sysdep.h>

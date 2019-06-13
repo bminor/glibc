@@ -26,7 +26,7 @@
      funcptr (args)
 #endif
 
-#if USE_VSYSCALL && defined HAVE_VSYSCALL
+#ifdef HAVE_VSYSCALL
 
 # include <libc-vdso.h>
 

@@ -19,9 +19,6 @@
 #ifndef _LINUX_AARCH64_SYSDEP_H
 #define _LINUX_AARCH64_SYSDEP_H 1
 
-/* Always enable vsyscalls on aarch64 */
-#define ALWAYS_USE_VSYSCALL 1
-
 #include <sysdeps/unix/sysdep.h>
 #include <sysdeps/aarch64/sysdep.h>
 #include <sysdeps/unix/sysv/linux/generic/sysdep.h>

@@ -18,9 +18,6 @@
 #ifndef _LINUX_MIPS_SYSDEP_H
 #define _LINUX_MIPS_SYSDEP_H 1
 
-/* Always enable vsyscalls on n32.  */
-#define ALWAYS_USE_VSYSCALL 1
-
 /* There is some commonality.  */
 #include <sysdeps/unix/sysv/linux/sysdep.h>
 #include <sysdeps/unix/mips/mips64/n32/sysdep.h>

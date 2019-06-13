@@ -1,6 +1,38 @@
 2019-08-05  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #19767]
+	* sysdeps/unix/sysv/linux/aarch64/sysdep.h (ALWAYS_USE_VSYSCALL):
+	Remove definition.
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (ALWAYS_USE_VSYSCALL):
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (ALWAYS_USE_VSYSCALL):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h (ALWAYS_USE_VSYSCALL):
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/sysdep.h
+	(ALWAYS_USE_VSYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/sysdep.h
+	(ALWAYS_USE_VSYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h
+	(ALWAYS_USE_VSYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h
+	(ALWAYS_USE_VSYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/riscv/sysdep.h (ALWAYS_USE_VSYSCALL):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h
+	(ALWAYS_USE_VSYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h
+	(ALWAYS_USE_VSYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sysdep.h (ALWAYS_USE_VSYSCALL):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (ALWAYS_USE_VSYSCALL):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86/libc-vdso.h: Remove #if USE_VSYSCALL.
+	* sysdeps/unix/sysv/linux/sysdep-vdso.h: Likewise.
+	* sysdeps/unix/sysv/linux/sysdep.h (ALWAYS_USE_VSYSCALL,
+	USE_VSYSCALL): Remove defitions.
+
+	[BZ #19767]
 	* sysdeps/unix/sysv/linux/sparc/init-first.c: Remove #ifdef SHARED.
 	* sysdeps/unix/sysv/linux/sparc/libc-vdso.h: Likewise.
 	* sysdeps/unix/sysv/linux/sparc/sysdep.h (ALWAYS_USE_VSYSCALL):
