@@ -23,8 +23,11 @@
 #endif
 
 /* Use the Linux kernel header if available.  */
-#if __glibc_has_include (<linux/stat.h>)
-# include <linux/stat.h>
+
+/* Use "" to work around incorrect macro expansion of the
+   __has_include argument (GCC PR 80005).  */
+#if __glibc_has_include ("linux/stat.h")
+# include "linux/stat.h"
 # ifdef STATX_TYPE
 #  define __statx_timestamp_defined 1
 #  define __statx_defined 1

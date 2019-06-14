@@ -1,5 +1,10 @@
 2019-06-14  Florian Weimer  <fweimer@redhat.com>
 
+	* sysdeps/unix/sysv/linux/bits/statx.h: Use string literal in
+	argument to __glibc_has_include to inhibit macro expansion.
+
+2019-06-14  Florian Weimer  <fweimer@redhat.com>
+
 	* misc/sys/cdefs.h (__glibc_has_include): Do not use a
 	function-like macro, so that __has_include can inhibit expansion
 	of its argument.
