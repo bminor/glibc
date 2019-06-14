@@ -1,3 +1,9 @@
+2019-06-14  Florian Weimer  <fweimer@redhat.com>
+
+	* misc/sys/cdefs.h (__glibc_has_include): Do not use a
+	function-like macro, so that __has_include can inhibit expansion
+	of its argument.
+
 2019-06-13  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/bits/in.h (IPV6_ROUTER_ALERT_ISOLATE):

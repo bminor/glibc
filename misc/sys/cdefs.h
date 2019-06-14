@@ -413,7 +413,9 @@
 #endif
 
 #ifdef __has_include
-# define __glibc_has_include(header)	__has_include (header)
+/* Do not use a function-like macro, so that __has_include can inhibit
+   macro expansion.  */
+# define __glibc_has_include __has_include
 #else
 # define __glibc_has_include(header)	0
 #endif
