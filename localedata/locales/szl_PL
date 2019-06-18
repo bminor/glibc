@@ -132,34 +132,46 @@ END LC_NUMERIC
 
 LC_TIME
 abday   "niy";"py<U0144>";/
-        "wt<U014F>";"str";/
-        "szt";"pj<U014D>";/
+        "wto";"str";/
+        "szt";"pi<U014D>";/
         "sob"
 day     "niydziela";/
-        "py<U0144>dzi<U014F>ek";/
-        "wt<U014F>rek";/
-        "strz<U014F>da";/
+        "py<U0144>działek";/
+        "wtorek";/
+        "strzoda";/
         "sztwortek";/
-        "pj<U014D>ntek";/
-        "sob<U014F>ta"
+        "pi<U014D>ntek";/
+        "sobota"
 abmon   "sty";"lut";/
-        "mer";"kwj";/
+        "mar";"kwi";/
         "moj";"czy";/
-        "lip";"siy";/
+        "lip";"sie";/
         "wrz";"pa<U017A>";/
         "lis";"gru"
-mon     "styczy<U0144>";/
+alt_mon "styczy<U0144>";/
         "luty";/
-        "merc";/
-        "kwjeciy<U0144>";/
+        "marzec";/
+        "kwieciy<U0144>";/
         "moj";/
-        "czyrwjy<U0144>";/
-        "lipjy<U0144>";/
-        "siyrpjy<U0144>";/
+        "czyrwiec";/
+        "lipiec";/
+        "sierpiy<U0144>";/
         "wrzesiy<U0144>";/
         "pa<U017A>dziernik";/
         "listopad";/
         "grudziy<U0144>"
+mon     "stycznia";/
+        "lutego";/
+        "marca";/
+        "kwietnia";/
+        "moja";/
+        "czyrwca";/
+        "lipca";/
+        "sierpnia";/
+        "wrze<U015B>nia";/
+        "pa<U017A>dziernika";/
+        "listopada";/
+        "grudnia"
 d_t_fmt "%a, %-d %b %Y, %T"
 d_fmt   "%d.%m.%Y"
 t_fmt   "%T"

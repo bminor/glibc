@@ -1,3 +1,13 @@
+2019-06-24  Grzegorz Kulik  <gregorykkulik@gmail.com>
+
+	[BZ #24652]
+	* localedata/locales/szl_PL (abday): Spelling corrections.
+	(day): Likewise.
+	(abmon): Likewise.
+	(mon): Rename to...
+	(alt_mon): This, then apply spelling corrections.
+	(mon): New entry, month names in the genitive case.
+
 2019-06-21  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	[BZ #23831]
