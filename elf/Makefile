@@ -310,7 +310,7 @@ test-xfail-tst-protected1b = yes
 endif
 ifeq (yesyes,$(have-fpie)$(build-shared))
 modules-names += tst-piemod1
-tests += tst-pie1 tst-pie2
+tests += tst-pie1 tst-pie2 tst-dlopen-pie
 tests-pie += tst-pie1 tst-pie2
 ifeq (yes,$(have-protected-data))
 tests += vismain
@@ -1084,6 +1084,8 @@ CFLAGS-tst-pie2.c += $(pie-ccflag)
 
 $(objpfx)tst-piemod1.so: $(libsupport)
 $(objpfx)tst-pie1: $(objpfx)tst-piemod1.so
+$(objpfx)tst-dlopen-pie: $(libdl)
+$(objpfx)tst-dlopen-pie.out: $(objpfx)tst-pie1
 
 ifeq (yes,$(build-shared))
 # NB: Please keep cet-built-dso in sysdeps/x86/Makefile in sync with
