@@ -30,10 +30,9 @@
  */
 
 #ifndef _NETINET_TCP_H
-
 #define _NETINET_TCP_H	1
-#include <sys/cdefs.h>
 
+#include <features.h>
 
 __BEGIN_DECLS
 

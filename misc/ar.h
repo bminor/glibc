@@ -19,7 +19,7 @@
 #ifndef _AR_H
 #define _AR_H 1
 
-#include <sys/cdefs.h>
+#include <features.h>
 
 /* Archive files start with the ARMAG identifying string.  Then follows a
    `struct ar_hdr', and as many bytes of member file data as its `ar_size'

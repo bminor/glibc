@@ -20,6 +20,8 @@
 #ifndef _MEMCOPY_H
 #define _MEMCOPY_H	1
 
+#include <features.h>
+
 /* The strategy of the memory functions is:
 
      1. Copy bytes until the destination pointer is aligned.
@@ -38,7 +40,6 @@
    exhaustive in the sense that I tried all alignment and length
    combinations, with and without overlap.  */
 
-#include <sys/cdefs.h>
 #include <endian.h>
 #include <pagecopy.h>
 

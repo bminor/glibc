@@ -35,7 +35,7 @@
 #ifndef _RPC_MSG_H
 #define _RPC_MSG_H 1
 
-#include <sys/cdefs.h>
+#include <features.h>
 
 #include <rpc/xdr.h>
 #include <rpc/clnt.h>

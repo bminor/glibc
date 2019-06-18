@@ -18,7 +18,8 @@
 #ifndef _LOCK_INTERN_H
 #define	_LOCK_INTERN_H
 
-#include <sys/cdefs.h>
+#include <features.h>
+
 #if defined __USE_EXTERN_INLINES && defined _LIBC
 # include <lowlevellock.h>
 #endif

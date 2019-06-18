@@ -21,7 +21,8 @@
 #ifndef __NET_ETHERNET_H
 #define __NET_ETHERNET_H 1
 
-#include <sys/cdefs.h>
+#include <features.h>
+
 #include <sys/types.h>
 #include <stdint.h>
 #include <net/if_ether.h>     /* IEEE 802.3 Ethernet constants */

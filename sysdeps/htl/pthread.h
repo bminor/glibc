@@ -25,7 +25,6 @@
 
 #include <features.h>
 
-#include <sys/cdefs.h>
 #ifndef __extern_inline
 /* GCC 4.3 and above with -std=c99 or -std=gnu99 implements ISO C99
    inline semantics, unless -fgnu89-inline is used.  */

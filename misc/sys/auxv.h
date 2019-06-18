@@ -19,8 +19,9 @@
 #ifndef _SYS_AUXV_H
 #define _SYS_AUXV_H 1
 
+#include <features.h>
+
 #include <elf.h>
-#include <sys/cdefs.h>
 #include <bits/hwcap.h>
 
 __BEGIN_DECLS

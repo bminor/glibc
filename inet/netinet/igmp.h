@@ -18,7 +18,8 @@
 #ifndef _NETINET_IGMP_H
 #define	_NETINET_IGMP_H 1
 
-#include <sys/cdefs.h>
+#include <features.h>
+
 #include <sys/types.h>
 
 #ifdef __USE_MISC

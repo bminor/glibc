@@ -18,7 +18,8 @@
 #ifndef _RPC_AUTH_DES_H
 #define _RPC_AUTH_DES_H	1
 
-#include <sys/cdefs.h>
+#include <features.h>
+
 #include <rpc/auth.h>
 
 __BEGIN_DECLS

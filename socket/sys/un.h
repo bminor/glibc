@@ -18,7 +18,7 @@
 #ifndef	_SYS_UN_H
 #define	_SYS_UN_H	1
 
-#include <sys/cdefs.h>
+#include <features.h>
 
 /* Get the definition of the macro to define the common sockaddr members.  */
 #include <bits/sockaddr.h>

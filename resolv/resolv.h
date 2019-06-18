@@ -52,7 +52,8 @@
 #ifndef _RESOLV_H_
 #define _RESOLV_H_
 
-#include <sys/cdefs.h>
+#include <features.h>
+
 #include <sys/param.h>
 #include <sys/types.h>
 #include <stdio.h>

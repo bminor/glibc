@@ -18,21 +18,24 @@
 #ifndef	_GLOB_H
 #define	_GLOB_H	1
 
-#include <sys/cdefs.h>
+#include <features.h>
 
 __BEGIN_DECLS
 
-/* We need `size_t' for the following definitions.  */
-#ifndef __size_t
-typedef __SIZE_TYPE__ __size_t;
-# if defined __USE_XOPEN || defined __USE_XOPEN2K8
-typedef __SIZE_TYPE__ size_t;
-# endif
+/* Structures below have size_t fields, but this header is not supposed to
+   define size_t itself, unless XSI or POSIX.1-2008 features are active.
+   We can't use __size_t as an alternative name, as we do for most types
+   with this kind of constraint, because GCC's stddef.h uses __size_t for
+   a different purpose.  */
+
+#if defined __USE_XOPEN || defined __USE_XOPEN2K8
+# define __need_size_t
+# include <stddef.h>
+typedef size_t __gsize_t;
+#elif defined __SIZE_TYPE__
+typedef __SIZE_TYPE__ __gsize_t;
 #else
-/* The GNU CC stddef.h version defines __size_t as empty.  We need a real
-   definition.  */
-# undef __size_t
-# define __size_t size_t
+# error "Don't know how to define __gsize_t"
 #endif
 
 /* Bits set in the FLAGS argument to `glob'.  */
@@ -81,9 +84,9 @@ struct stat;
 #endif
 typedef struct
   {
-    __size_t gl_pathc;		/* Count of paths matched by the pattern.  */
+    __gsize_t gl_pathc;		/* Count of paths matched by the pattern.  */
     char **gl_pathv;		/* List of matched pathnames.  */
-    __size_t gl_offs;		/* Slots to reserve in `gl_pathv'.  */
+    __gsize_t gl_offs;		/* Slots to reserve in `gl_pathv'.  */
     int gl_flags;		/* Set to FLAGS, maybe | GLOB_MAGCHAR.  */
 
     /* If the GLOB_ALTDIRFUNC flag is set, the following functions
@@ -110,9 +113,9 @@ struct stat64;
 # endif
 typedef struct
   {
-    __size_t gl_pathc;
+    __gsize_t gl_pathc;
     char **gl_pathv;
-    __size_t gl_offs;
+    __gsize_t gl_offs;
     int gl_flags;
 
     /* If the GLOB_ALTDIRFUNC flag is set, the following functions
