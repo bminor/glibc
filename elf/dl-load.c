@@ -1173,6 +1173,10 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 	goto call_lose;
       }
 
+    /* dlopen of an executable is not valid because it is not possible
+       to perform proper relocations, handle static TLS, or run the
+       ELF constructors.  For PIE, the check needs the dynamic
+       section, so there is another check below.  */
     if (__glibc_unlikely (type != ET_DYN)
 	&& __glibc_unlikely ((mode & __RTLD_OPENEXEC) == 0))
       {
@@ -1209,9 +1213,11 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
   elf_get_dynamic_info (l, NULL);
 
   /* Make sure we are not dlopen'ing an object that has the
-     DF_1_NOOPEN flag set.  */
-  if (__glibc_unlikely (l->l_flags_1 & DF_1_NOOPEN)
-      && (mode & __RTLD_DLOPEN))
+     DF_1_NOOPEN flag set, or a PIE object.  */
+  if ((__glibc_unlikely (l->l_flags_1 & DF_1_NOOPEN)
+       && (mode & __RTLD_DLOPEN))
+      || (__glibc_unlikely (l->l_flags_1 & DF_1_PIE)
+	  && __glibc_unlikely ((mode & __RTLD_OPENEXEC) == 0)))
     {
       /* We are not supposed to load this object.  Free all resources.  */
       _dl_unmap_segments (l);
@@ -1222,7 +1228,11 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
       if (l->l_phdr_allocated)
 	free ((void *) l->l_phdr);
 
-      errstring = N_("shared object cannot be dlopen()ed");
+      if (l->l_flags_1 & DF_1_PIE)
+	errstring
+	  = N_("cannot dynamically load position-independent executable");
+      else
+	errstring = N_("shared object cannot be dlopen()ed");
       goto call_lose;
     }
 
