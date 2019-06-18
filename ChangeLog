@@ -1,3 +1,14 @@
+2019-07-12  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #24699]
+	* posix/tst-mmap-offset.c: Mention BZ #24699.
+	(do_test_bz21270): Rename to do_test_large_offset and use
+	mmap64_maximum_offset to check for maximum expected offset value.
+	* sysdeps/generic/mmap_info.h: New file.
+	* sysdeps/unix/sysv/linux/mips/mmap_info.h: Likewise.
+	* sysdeps/unix/sysv/linux/mmap64.c (MMAP_OFF_HIGH_MASK): Define iff
+	__NR_mmap2 is used.
+
 2019-07-12  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* sysdeps/aarch64/dl-machine.h (elf_machine_lazy_rel): Check
