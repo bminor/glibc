@@ -16,8 +16,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _SYS_SYSLOG_H
-# error "Never include <bits/syslog-ldbl.h> directly; use <sys/syslog.h> instead."
+#ifndef _BITS_SYSLOG_LDBL_H
+#define _BITS_SYSLOG_LDBL_H 1
+
+#ifndef _SYSLOG_H
+# error "Never include <bits/syslog-ldbl.h> directly; use <syslog.h> instead."
 #endif
 
 __LDBL_REDIR_DECL (syslog)
@@ -33,3 +36,5 @@ __LDBL_REDIR_DECL (__syslog_chk)
 __LDBL_REDIR_DECL (__vsyslog_chk)
 # endif
 #endif
+
+#endif /* bits/syslog-ldbl.h */

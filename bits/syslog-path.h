@@ -16,12 +16,12 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _SYS_SYSLOG_H
-# error "Never include this file directly.  Use <sys/syslog.h> instead"
-#endif
-
 #ifndef _BITS_SYSLOG_PATH_H
 #define _BITS_SYSLOG_PATH_H 1
+
+#ifndef _SYSLOG_H
+# error "Never include <bits/syslog-path.h> directly.  Use <syslog.h> instead"
+#endif
 
 #define	_PATH_LOG	"/dev/log"
 

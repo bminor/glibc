@@ -16,8 +16,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _SYS_SYSLOG_H
-# error "Never include <bits/syslog.h> directly; use <sys/syslog.h> instead."
+#ifndef _BITS_SYSLOG_H
+#define _BITS_SYSLOG_H 1
+
+#ifndef _SYSLOG_H
+# error "Never include <bits/syslog.h> directly; use <syslog.h> instead."
 #endif
 
 
@@ -47,3 +50,5 @@ vsyslog (int __pri, const char *__fmt, __gnuc_va_list __ap)
   __vsyslog_chk (__pri,  __USE_FORTIFY_LEVEL - 1, __fmt, __ap);
 }
 #endif
+
+#endif /* bits/syslog.h */
