@@ -19,6 +19,9 @@
 #include <pthread.h>
 #include <signal.h>
 #include <unistd.h>
+#include <support/xthread.h>
+#include <support/xsignal.h>
+#include <support/xthread.h>
 
 
 static int the_sig;
@@ -46,7 +49,7 @@ eintr_source (void *arg)
       sigset_t ss;
       sigemptyset (&ss);
       sigaddset (&ss, the_sig);
-      pthread_sigmask (SIG_BLOCK, &ss, NULL);
+      xpthread_sigmask (SIG_BLOCK, &ss, NULL);
     }
 
   while (1)
@@ -79,10 +82,5 @@ setup_eintr (int sig, pthread_t *thp)
   the_sig = sig;
 
   /* Create the thread which will fire off the signals.  */
-  pthread_t th;
-  if (pthread_create (&th, NULL, eintr_source, thp) != 0)
-    {
-      puts ("setup_eintr: pthread_create failed");
-      exit (1);
-    }
+  xpthread_create (NULL, eintr_source, thp);
 }

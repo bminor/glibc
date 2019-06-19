@@ -1,5 +1,14 @@
 2019-06-20  Mike Crowe  <mac@mcrowe.com>
 
+	* nptl/eintr.c: Use libsupport.
+	* nptl/tst-eintr1.c: Likewise.
+	* nptl/tst-eintr2.c: Likewise.
+	* nptl/tst-eintr3.c: Likewise.
+	* nptl/tst-eintr4.c: Likewise.
+	* nptl/tst-eintr5.c: Likewise.
+	* nptl/tst-mutex-errorcheck.c: Likewise.
+	* nptl/tst-mutex5.c: Likewise.
+
 	* support/test-driver.h: Add verbose_printf macro.
 
 	* support/xtime.h: Add xclock_now() helper function.

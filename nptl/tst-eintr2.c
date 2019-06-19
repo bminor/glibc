@@ -23,11 +23,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/time.h>
-
-static int do_test (void);
-
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/check.h>
+#include <support/timespec.h>
+#include <support/xtime.h>
 
 #include "eintr.c"
 
@@ -39,12 +37,8 @@ static pthread_mutex_t m2 = PTHREAD_MUTEX_INITIALIZER;
 static void *
 tf1 (void *arg)
 {
-  struct timespec ts;
-  struct timeval tv;
-
-  gettimeofday (&tv, NULL);
-  TIMEVAL_TO_TIMESPEC (&tv, &ts);
-  ts.tv_sec += 10000;
+  struct timespec ts = timespec_add (xclock_now (CLOCK_REALTIME),
+                                     make_timespec (10000, 0));
 
   /* This call must never return.  */
   int e = pthread_mutex_timedlock (&m1, &ts);
@@ -61,58 +55,34 @@ tf2 (void *arg)
 {
   while (1)
     {
-      int e = pthread_mutex_lock (&m2);
-      if (e != 0)
-	{
-	  puts ("tf2: mutex_lock failed");
-	  exit (1);
-	}
-      e = pthread_mutex_unlock (&m2);
-      if (e != 0)
-	{
-	  puts ("tf2: mutex_unlock failed");
-	  exit (1);
-	}
+      TEST_COMPARE (pthread_mutex_lock (&m2), 0);
+      TEST_COMPARE (pthread_mutex_unlock (&m2), 0);
+
       struct timespec ts = { .tv_sec = 0, .tv_nsec = 10000000 };
       nanosleep (&ts, NULL);
     }
+  return NULL;
 }
 
 
 static int
 do_test (void)
 {
-  if (pthread_mutex_lock (&m1) != 0)
-    {
-      puts ("mutex_lock failed");
-      exit (1);
-    }
+  TEST_COMPARE (pthread_mutex_lock (&m1), 0);
 
   setup_eintr (SIGUSR1, NULL);
 
-  pthread_t th;
   char buf[100];
-  int e = pthread_create (&th, NULL, tf1, NULL);
-  if (e != 0)
-    {
-      printf ("main: 1st pthread_create failed: %s\n",
-	      strerror_r (e, buf, sizeof (buf)));
-      exit (1);
-    }
-
-  e = pthread_create (&th, NULL, tf2, NULL);
-  if (e != 0)
-    {
-      printf ("main: 2nd pthread_create failed: %s\n",
-	      strerror_r (e, buf, sizeof (buf)));
-      exit (1);
-    }
+  xpthread_create (NULL, tf1, NULL);
+  xpthread_create (NULL, tf2, NULL);
 
   delayed_exit (3);
   /* This call must never return.  */
-  e = pthread_mutex_lock (&m1);
+  int e = pthread_mutex_lock (&m1);
   printf ("main: mutex_lock returned: %s\n",
 	  strerror_r (e, buf, sizeof (buf)));
 
   return 1;
 }
+
+#include <support/test-driver.c>

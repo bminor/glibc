@@ -22,11 +22,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-static int do_test (void);
-
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/check.h>
+#include <support/xthread.h>
 
 #include "eintr.c"
 
@@ -39,11 +36,7 @@ do_test (void)
   setup_eintr (SIGUSR1, &self);
 
   pthread_barrier_t b;
-  if (pthread_barrier_init (&b, NULL, 2) != 0)
-    {
-      puts ("barrier_init failed");
-      exit (1);
-    }
+  xpthread_barrier_init (&b, NULL, 2);
 
   delayed_exit (1);
   /* This call must never return.  */
@@ -51,3 +44,5 @@ do_test (void)
   puts ("error: pthread_barrier_wait returned");
   return 1;
 }
+
+#include <support/test-driver.c>

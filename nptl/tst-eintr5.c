@@ -23,11 +23,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/time.h>
-
-static int do_test (void);
-
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/check.h>
+#include <support/timespec.h>
+#include <support/xthread.h>
+#include <support/xtime.h>
 
 #include "eintr.c"
 
@@ -39,20 +38,12 @@ static pthread_cond_t c = PTHREAD_COND_INITIALIZER;
 static void *
 tf (void *arg)
 {
-  struct timespec ts;
-  struct timeval tv;
-
-  gettimeofday (&tv, NULL);
-  TIMEVAL_TO_TIMESPEC (&tv, &ts);
-  ts.tv_sec += 10000;
+  struct timespec ts = timespec_add (xclock_now (CLOCK_REALTIME),
+                                     make_timespec (10000, 0));
 
   /* This call must never return.  */
-  int e = pthread_cond_timedwait (&c, &m, &ts);
-  char buf[100];
-  printf ("tf: cond_timedwait returned: %s\n",
-	  strerror_r (e, buf, sizeof (buf)));
-
-  exit (1);
+  TEST_COMPARE (pthread_cond_timedwait (&c, &m, &ts), 0);
+  FAIL_EXIT1 ("pthread_cond_timedwait returned unexpectedly\n");
 }
 
 
@@ -61,19 +52,12 @@ do_test (void)
 {
   setup_eintr (SIGUSR1, NULL);
 
-  pthread_t th;
-  char buf[100];
-  int e = pthread_create (&th, NULL, tf, NULL);
-  if (e != 0)
-    {
-      printf ("main: pthread_create failed: %s\n",
-	      strerror_r (e, buf, sizeof (buf)));
-      exit (1);
-    }
+  xpthread_create (NULL, tf, NULL);
 
   delayed_exit (3);
   /* This call must never return.  */
   xpthread_cond_wait (&c, &m);
-  puts ("error: pthread_cond_wait returned");
-  return 1;
+  FAIL_RET ("error: pthread_cond_wait returned");
 }
+
+#include <support/test-driver.c>

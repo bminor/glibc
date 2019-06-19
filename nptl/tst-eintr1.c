@@ -22,11 +22,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-static int do_test (void);
-
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/check.h>
+#include <support/xthread.h>
 
 #include "eintr.c"
 
@@ -43,37 +40,8 @@ tf1 (void *arg)
 {
   while (1)
     {
-      pthread_t th;
-
-      int e = pthread_create (&th, NULL, tf2, NULL);
-      if (e != 0)
-	{
-	  if (e == EINTR)
-	    {
-	      puts ("pthread_create returned EINTR");
-	      exit (1);
-	    }
-
-	  char buf[100];
-	  printf ("tf1: pthread_create failed: %s\n",
-		  strerror_r (e, buf, sizeof (buf)));
-	  exit (1);
-	}
-
-      e = pthread_join (th, NULL);
-      if (e != 0)
-	{
-	  if (e == EINTR)
-	    {
-	      puts ("pthread_join returned EINTR");
-	      exit (1);
-	    }
-
-	  char buf[100];
-	  printf ("tf1: pthread_join failed: %s\n",
-		  strerror_r (e, buf, sizeof (buf)));
-	  exit (1);
-	}
+      pthread_t th = xpthread_create (NULL, tf2, NULL);
+      xpthread_join (th);
     }
 }
 
@@ -86,15 +54,7 @@ do_test (void)
   int i;
   for (i = 0; i < 10; ++i)
     {
-      pthread_t th;
-      int e = pthread_create (&th, NULL, tf1, NULL);
-      if (e != 0)
-	{
-	  char buf[100];
-	  printf ("main: pthread_create failed: %s\n",
-		  strerror_r (e, buf, sizeof (buf)));
-	  exit (1);
-	}
+      pthread_t th = xpthread_create (NULL, tf1, NULL);
     }
 
   delayed_exit (3);
@@ -102,3 +62,5 @@ do_test (void)
   (void) tf1 (NULL);
   return 1;
 }
+
+#include <support/test-driver.c>

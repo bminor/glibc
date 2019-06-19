@@ -24,6 +24,8 @@
 #include <sys/time.h>
 #include <stdint.h>
 #include <config.h>
+#include <support/check.h>
+#include <support/timespec.h>
 
 
 #ifndef TYPE
@@ -35,168 +37,60 @@ static int
 do_test (void)
 {
   pthread_mutex_t m;
-  struct timespec ts;
-  struct timeval tv;
-  struct timeval tv2;
-  int err;
   pthread_mutexattr_t a;
 
-  if (pthread_mutexattr_init (&a) != 0)
-    {
-      puts ("mutexattr_init failed");
-      return 1;
-    }
-
-  if (pthread_mutexattr_settype (&a, TYPE) != 0)
-    {
-      puts ("mutexattr_settype failed");
-      return 1;
-    }
+  TEST_COMPARE (pthread_mutexattr_init (&a), 0);
+  TEST_COMPARE (pthread_mutexattr_settype (&a, TYPE), 0);
 
 #ifdef ENABLE_PI
-  if (pthread_mutexattr_setprotocol (&a, PTHREAD_PRIO_INHERIT) != 0)
-    {
-      puts ("pthread_mutexattr_setprotocol failed");
-      return 1;
-    }
+  TEST_COMPARE (pthread_mutexattr_setprotocol (&a, PTHREAD_PRIO_INHERIT), 0);
 #endif
 
-  err = pthread_mutex_init (&m, &a);
+  int err = pthread_mutex_init (&m, &a);
   if (err != 0)
     {
 #ifdef ENABLE_PI
       if (err == ENOTSUP)
-	{
-	  puts ("PI mutexes unsupported");
-	  return 0;
-	}
+        FAIL_UNSUPPORTED ("PI mutexes unsupported");
 #endif
-      puts ("mutex_init failed");
-      return 1;
+      FAIL_EXIT1 ("mutex_init failed");
     }
 
-  if (pthread_mutexattr_destroy (&a) != 0)
-    {
-      puts ("mutexattr_destroy failed");
-      return 1;
-    }
-
-  if (pthread_mutex_lock (&m) != 0)
-    {
-      puts ("mutex_lock failed");
-      return 1;
-    }
-
+  TEST_COMPARE (pthread_mutexattr_destroy (&a), 0);
+  TEST_COMPARE (pthread_mutex_lock (&m), 0);
   if (pthread_mutex_trylock (&m) == 0)
-    {
-      puts ("mutex_trylock succeeded");
-      return 1;
-    }
+    FAIL_EXIT1 ("mutex_trylock succeeded");
 
-  gettimeofday (&tv, NULL);
-  TIMEVAL_TO_TIMESPEC (&tv, &ts);
+  /* Wait 2 seconds.  */
+  struct timespec ts_timeout = timespec_add (xclock_now (CLOCK_REALTIME),
+                                             make_timespec (2, 0));
 
-  ts.tv_sec += 2;	/* Wait 2 seconds.  */
+  TEST_COMPARE (pthread_mutex_timedlock (&m, &ts_timeout), ETIMEDOUT);
+  TEST_TIMESPEC_BEFORE_NOW (ts_timeout, CLOCK_REALTIME);
 
-  err = pthread_mutex_timedlock (&m, &ts);
-  if (err == 0)
-    {
-      puts ("timedlock succeeded");
-      return 1;
-    }
-  else if (err != ETIMEDOUT)
-    {
-      printf ("timedlock error != ETIMEDOUT: %d\n", err);
-      return 1;
-    }
-  else
-    {
-      int clk_tck = sysconf (_SC_CLK_TCK);
-
-      gettimeofday (&tv2, NULL);
-
-      tv2.tv_sec -= tv.tv_sec;
-      tv2.tv_usec -= tv.tv_usec;
-      if (tv2.tv_usec < 0)
-	{
-	  tv2.tv_usec += 1000000;
-	  tv2.tv_sec -= 1;
-	}
-
-      /* Be a bit tolerant, add one CLK_TCK.  */
-      tv2.tv_usec += 1000000 / clk_tck;
-      if (tv2.tv_usec >= 1000000)
-	{
-	  tv2.tv_usec -= 1000000;
-	  ++tv2.tv_sec;
-	}
-
-      if (tv2.tv_sec < 2)
-	{
-	  printf ("premature timeout: %jd.%06jd difference\n",
-		  (intmax_t) tv2.tv_sec, (intmax_t) tv2.tv_usec);
-	  return 1;
-	}
-    }
-
-  (void) gettimeofday (&tv, NULL);
-  TIMEVAL_TO_TIMESPEC (&tv, &ts);
-
-  ts.tv_sec += 2;	/* Wait 2 seconds.  */
   /* The following makes the ts value invalid.  */
-  ts.tv_nsec += 1000000000;
+  ts_timeout.tv_nsec += 1000000000;
 
-  err = pthread_mutex_timedlock (&m, &ts);
-  if (err == 0)
-    {
-      puts ("2nd timedlock succeeded");
-      return 1;
-    }
-  else if (err != EINVAL)
-    {
-      printf ("2nd timedlock error != EINVAL: %d\n", err);
-      return 1;
-    }
+  TEST_COMPARE (pthread_mutex_timedlock (&m, &ts_timeout), EINVAL);
+  TEST_COMPARE (pthread_mutex_unlock (&m), 0);
 
-  if (pthread_mutex_unlock (&m) != 0)
-    {
-      puts ("mutex_unlock failed");
-      return 1;
-    }
+  const struct timespec ts_start = xclock_now (CLOCK_REALTIME);
 
-  (void) gettimeofday (&tv, NULL);
-  TIMEVAL_TO_TIMESPEC (&tv, &ts);
+  /* Wait 2 seconds.  */
+  ts_timeout = timespec_add (ts_start, make_timespec (2, 0));
 
-  ts.tv_sec += 2;	/* Wait 2 seconds.  */
-  if (pthread_mutex_timedlock (&m, &ts) != 0)
-    {
-      puts ("3rd timedlock failed");
-    }
+  TEST_COMPARE (pthread_mutex_timedlock (&m, &ts_timeout), 0);
 
-  (void) gettimeofday (&tv2, NULL);
+  const struct timespec ts_end = xclock_now (CLOCK_REALTIME);
 
   /* Check that timedlock didn't delay.  We use a limit of 0.1 secs.  */
-  timersub (&tv2, &tv, &tv2);
-  if (tv2.tv_sec > 0 || tv2.tv_usec > 100000)
-    {
-      puts ("3rd timedlock didn't return right away");
-      return 1;
-    }
+  TEST_TIMESPEC_BEFORE (ts_end,
+                        timespec_add (ts_start, make_timespec (0, 100000000)));
 
-  if (pthread_mutex_unlock (&m) != 0)
-    {
-      puts ("final mutex_unlock failed");
-      return 1;
-    }
-
-  if (pthread_mutex_destroy (&m) != 0)
-    {
-      puts ("mutex_destroy failed");
-      return 1;
-    }
+  TEST_COMPARE (pthread_mutex_unlock (&m), 0);
+  TEST_COMPARE (pthread_mutex_destroy (&m), 0);
 
   return 0;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>
