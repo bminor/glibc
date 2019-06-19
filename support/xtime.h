@@ -28,6 +28,16 @@ __BEGIN_DECLS
 
 void xclock_gettime (clockid_t clock, struct timespec *ts);
 
+/* This helper can often simplify tests by avoiding an explicit
+   variable declaration or allowing that declaration to be const. */
+
+static inline struct timespec xclock_now (clockid_t clock)
+{
+  struct timespec ts;
+  xclock_gettime (clock, &ts);
+  return ts;
+}
+
 __END_DECLS
 
 #endif /* SUPPORT_TIME_H */
