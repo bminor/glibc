@@ -1,3 +1,9 @@
+2019-06-19  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24166]
+	* dlfcn/dlfcn.h (Dl_serinfo): Do not use array of length 1 for
+	dls_serpath field.
+
 2019-06-18  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #24323]
