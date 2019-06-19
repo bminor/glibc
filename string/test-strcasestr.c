@@ -67,7 +67,8 @@ check_result (impl_t *impl, const char *s1, const char *s2,
   if (result != exp_result)
     {
       error (0, 0, "Wrong result in function %s %s %s", impl->name,
-	     result, exp_result);
+	     (result == NULL) ? "(null)" : result,
+	     (exp_result == NULL) ? "(null)" : exp_result);
       ret = 1;
       return -1;
     }

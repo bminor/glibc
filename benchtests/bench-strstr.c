@@ -147,7 +147,8 @@ do_one_test (impl_t *impl, const char *s1, const char *s2, char *exp_result)
   if (res != exp_result)
     {
       error (0, 0, "Wrong result in function %s %s %s", impl->name,
-	     res, exp_result);
+	     (res == NULL) ? "(null)" : res,
+	     (exp_result == NULL) ? "(null)" : exp_result);
       ret = 1;
     }
 }

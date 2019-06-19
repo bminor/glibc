@@ -1,3 +1,14 @@
+2019-06-19  Stefan Liebler  <stli@linux.ibm.com>
+
+	[BZ #24556]
+	* string/test-strcasestr.c (check_result): Add NULL check.
+	* nss/tst-field.c (check_rewrite): Likewise.
+	* benchtests/bench-strstr.c (do_one_test): Likewise.
+	* string/test-strstr.c (check_result): Likewise.
+	* argp/argp-test.c (popt): Increase size of buf to 12.
+	* benchtests/bench-malloc-simple.c (bench):
+	Do not initialize tests array out of bounds.
+
 2019-06-19  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #24166]

@@ -123,7 +123,7 @@ static const char doc[] = "Test program for argp."
 static void
 popt (int key, char *arg)
 {
-  char buf[10];
+  char buf[12];
   if (isprint (key))
     sprintf (buf, "%c", key);
   else

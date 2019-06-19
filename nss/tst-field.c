@@ -50,7 +50,8 @@ check_rewrite (const char *input, const char *expected)
   if (result != NULL && strcmp (result, expected) != 0)
     {
       printf ("FAIL: rewrite \"%s\" -> \"%s\", expected \"%s\"\n",
-	      input, result, expected);
+	      (input == NULL) ? "(null)" : input, result,
+	      (expected == NULL) ? "(null)" : expected);
       errors = true;
     }
   free (to_free);
