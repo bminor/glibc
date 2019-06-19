@@ -1,3 +1,10 @@
+2019-07-08  DJ Delorie  <dj@redhat.com>
+
+	[BZ #23501]
+	* io/ftw.c (process_entry): Fill in statbuf for dangling links.
+	* io/tst-ftw-lnk.c: New test.
+	* io/Makefile: Run it.
+
 2019-07-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/powerpc/power7/fpu/s_logb.c: Move to ...
