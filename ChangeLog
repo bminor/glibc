@@ -1,5 +1,7 @@
 2019-06-20  Mike Crowe  <mac@mcrowe.com>
 
+	* support/test-driver.h: Add verbose_printf macro.
+
 	* support/xtime.h: Add xclock_now() helper function.
 
 2019-06-20  Dmitry V. Levin  <ldv@altlinux.org>

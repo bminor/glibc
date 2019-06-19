@@ -69,6 +69,14 @@ extern const char *test_dir;
    tests.  */
 extern unsigned int test_verbose;
 
+/* Output that is only emitted if at least one --verbose argument was
+   specified. */
+#define verbose_printf(...)                      \
+  do {                                           \
+    if (test_verbose > 0)                        \
+      printf (__VA_ARGS__);                      \
+  } while (0);
+
 int support_test_main (int argc, char **argv, const struct test_config *);
 
 __END_DECLS
