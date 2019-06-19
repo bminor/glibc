@@ -1,3 +1,16 @@
+2019-06-19  Stan Shebs  <stanshebs@google.com>
+	    Raoni Fassina Firmino  <raoni@linux.ibm.com>
+
+	[BZ #24640]
+	* sysdeps/unix/sysv/linux/powerpc/get_timebase_freq.c
+	[!SHARED] (__get_timebase_freq): Fix sense of a test in the
+	static-linking version.
+	* sysdeps/unix/sysv/linux/powerpc/Makefile
+	(tests-static): Add test-gettimebasefreq-static.
+	(tests): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/test-gettimebasefreq-static.c:
+	New file.
+
 2019-06-19  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	[BZ #24614]

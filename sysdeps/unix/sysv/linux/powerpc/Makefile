@@ -25,6 +25,8 @@ endif
 ifeq ($(subdir),misc)
 sysdep_headers += bits/ppc.h
 sysdep_routines += get_timebase_freq
+tests-static += test-gettimebasefreq-static
+tests += $(tests-static)
 tests += test-gettimebasefreq
 tests += test-powerpc-linux-sysconf
 endif
