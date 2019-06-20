@@ -1,3 +1,21 @@
+2019-06-30  Paul A. Clarke  <pc@us.ibm.com>
+
+	* sysdeps/powerpc/bits/fenvinline.h (__fegetround): Use
+	__fegetround_ISA300() or __fegetround_ISA2() as appropriate.
+	(__fegetround_ISA300) New.
+	(__fegetround_ISA2) New.
+	* sysdeps/powerpc/fpu_control.h (IS_ISA300): New.
+	(_FPU_MFFS): Move implementation...
+	(_FPU_GETCW): Here.
+	(_FPU_MFFSL): Move implementation....
+	(_FPU_GET_RC_ISA300): Here. New.
+	(_FPU_GET_RC): Use _FPU_GET_RC_ISA300() or _FPU_GETCW() as appropriate.
+	* sysdeps/powerpc/fpu/fenv_libc.h (fegetenv_status_ISA300): New.
+	(fegetenv_status): New.
+	* sysdeps/powerpc/fpu/fegetmode.c (fegetmode): Use fegetenv_status()
+	instead of fegetenv_register().
+	* sysdeps/powerpc/fpu/fegetexcept.c (__fegetexcept): Likewise.
+
 2019-06-28  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* benchtests/bench-math-inlines.c: Increase iterations.

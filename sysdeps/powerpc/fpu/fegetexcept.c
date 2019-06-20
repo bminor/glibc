@@ -24,7 +24,7 @@ __fegetexcept (void)
 {
   fenv_union_t fe;
 
-  fe.fenv = fegetenv_register ();
+  fe.fenv = fegetenv_status ();
 
   return fenv_reg_to_exceptions (fe.l);
 }
