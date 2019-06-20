@@ -92,6 +92,7 @@ The following bugs are resolved with this release:
   [22937] Greek (el_GR, el_CY) locales actually need ab_alt_mon
   [22947] FAIL: misc/tst-preadvwritev2
   [22963] cs_CZ: Add alternative month names
+  [22964] The Japanese Era name will be changed on May 1, 2019
   [22996] localedata: change LC_PAPER to en_US in es_BO locale
   [23005] Crash in __res_context_send after memory allocation failure
   [23036] regexec: Fix off-by-one bug in weight comparison
@@ -129,6 +130,9 @@ The following bugs are resolved with this release:
   [24027] malloc: Integer overflow in realloc
   [24097] Can't use 64-bit register for size_t in assembly codes for x32 (CVE-2019-6488)
   [24155] x32 memcmp can treat positive length as 0 (if sign bit in RDX is set) (CVE-2019-7309)
+  [24180] pthread_mutex_trylock does not use the correct order of instructions
+    while maintaining the robust mutex list due to missing compiler barriers
+  [24531] Malloc tunables give tcache assertion failures
 
 
 Version 2.27
