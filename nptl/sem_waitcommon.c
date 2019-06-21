@@ -103,19 +103,19 @@ __sem_wait_cleanup (void *arg)
    users don't seem to need it.  */
 static int
 __attribute__ ((noinline))
-do_futex_wait (struct new_sem *sem, const struct timespec *abstime)
+do_futex_wait (struct new_sem *sem, clockid_t clockid,
+	       const struct timespec *abstime)
 {
   int err;
 
 #if __HAVE_64B_ATOMICS
   err = futex_abstimed_wait_cancelable (
       (unsigned int *) &sem->data + SEM_VALUE_OFFSET, 0,
-      CLOCK_REALTIME, abstime,
+      clockid, abstime,
       sem->private);
 #else
   err = futex_abstimed_wait_cancelable (&sem->value, SEM_NWAITERS_MASK,
-					CLOCK_REALTIME, abstime,
-					sem->private);
+					clockid, abstime, sem->private);
 #endif
 
   return err;
@@ -162,7 +162,8 @@ __new_sem_wait_fast (struct new_sem *sem, int definitive_result)
 /* Slow path that blocks.  */
 static int
 __attribute__ ((noinline))
-__new_sem_wait_slow (struct new_sem *sem, const struct timespec *abstime)
+__new_sem_wait_slow (struct new_sem *sem, clockid_t clockid,
+		     const struct timespec *abstime)
 {
   int err = 0;
 
@@ -180,7 +181,7 @@ __new_sem_wait_slow (struct new_sem *sem, const struct timespec *abstime)
       /* If there is no token available, sleep until there is.  */
       if ((d & SEM_VALUE_MASK) == 0)
 	{
-	  err = do_futex_wait (sem, abstime);
+	  err = do_futex_wait (sem, clockid, abstime);
 	  /* A futex return value of 0 or EAGAIN is due to a real or spurious
 	     wake-up, or due to a change in the number of tokens.  We retry in
 	     these cases.
@@ -281,7 +282,7 @@ __new_sem_wait_slow (struct new_sem *sem, const struct timespec *abstime)
 	  if ((v >> SEM_VALUE_SHIFT) == 0)
 	    {
 	      /* See __HAVE_64B_ATOMICS variant.  */
-	      err = do_futex_wait(sem, abstime);
+	      err = do_futex_wait (sem, clockid, abstime);
 	      if (err == ETIMEDOUT || err == EINTR)
 		{
 		  __set_errno (err);

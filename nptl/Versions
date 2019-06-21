@@ -276,6 +276,10 @@ libpthread {
     cnd_timedwait; cnd_wait; tss_create; tss_delete; tss_get; tss_set;
   }
 
+  GLIBC_2.30 {
+    sem_clockwait;
+  }
+
   GLIBC_PRIVATE {
     __pthread_initialize_minimal;
     __pthread_clock_gettime; __pthread_clock_settime;

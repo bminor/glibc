@@ -64,6 +64,13 @@ extern int sem_timedwait (sem_t *__restrict __sem,
   __nonnull ((1, 2));
 #endif
 
+#ifdef __USE_GNU
+extern int sem_clockwait (sem_t *__restrict __sem,
+			  clockid_t clock,
+			  const struct timespec *__restrict __abstime)
+  __nonnull ((1, 3));
+#endif
+
 /* Test whether SEM is posted.  */
 extern int sem_trywait (sem_t *__sem) __THROWNL __nonnull ((1));
 

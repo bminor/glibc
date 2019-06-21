@@ -25,10 +25,15 @@
 #include <support/timespec.h>
 #include <support/xtime.h>
 
+/* A bogus clock value that tells run_test to use sem_timedwait rather than
+   sem_clockwait.  */
+#define CLOCK_USE_TIMEDWAIT (-1)
 
-static int
-do_test (void)
+static void
+do_test_clock (clockid_t clockid)
 {
+  const clockid_t clockid_for_get =
+    clockid == CLOCK_USE_TIMEDWAIT ? CLOCK_REALTIME : clockid;
   sem_t s;
   struct timespec ts;
 
@@ -36,14 +41,22 @@ do_test (void)
   TEST_COMPARE (TEMP_FAILURE_RETRY (sem_wait (&s)), 0);
 
   /* We wait for half a second.  */
-  xclock_gettime (CLOCK_REALTIME, &ts);
+  xclock_gettime (clockid_for_get, &ts);
   ts = timespec_add (ts, make_timespec (0, TIMESPEC_HZ/2));
 
   errno = 0;
-  TEST_COMPARE (TEMP_FAILURE_RETRY (sem_timedwait (&s, &ts)), -1);
+  TEST_COMPARE (TEMP_FAILURE_RETRY ((clockid == CLOCK_USE_TIMEDWAIT)
+                                    ? sem_timedwait (&s, &ts)
+                                    : sem_clockwait (&s, clockid, &ts)), -1);
   TEST_COMPARE (errno, ETIMEDOUT);
-  TEST_TIMESPEC_NOW_OR_AFTER (CLOCK_REALTIME, ts);
+  TEST_TIMESPEC_NOW_OR_AFTER (clockid_for_get, ts);
+}
 
+static int do_test (void)
+{
+  do_test_clock (CLOCK_USE_TIMEDWAIT);
+  do_test_clock (CLOCK_REALTIME);
+  do_test_clock (CLOCK_MONOTONIC);
   return 0;
 }
 

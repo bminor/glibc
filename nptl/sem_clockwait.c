@@ -1,7 +1,8 @@
-/* sem_timedwait -- wait on a semaphore with timeout.
-   Copyright (C) 2003-2019 Free Software Foundation, Inc.
+/* sem_clockwait -- wait on a semaphore with timeout using the specified
+   clock.
+
+   Copyright (C) 2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Paul Mackerras <paulus@au.ibm.com>, 2003.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -19,23 +20,26 @@
 
 #include "sem_waitcommon.c"
 
-/* This is in a separate file because because sem_timedwait is only provided
-   if __USE_XOPEN2K is defined.  */
 int
-sem_timedwait (sem_t *sem, const struct timespec *abstime)
+sem_clockwait (sem_t *sem, clockid_t clockid,
+	       const struct timespec *abstime)
 {
+  /* Check that supplied clockid is one we support, even if we don't end up
+     waiting.  */
+  if (!futex_abstimed_supported_clockid (clockid))
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
+
   if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
     {
       __set_errno (EINVAL);
       return -1;
     }
 
-  /* Check sem_wait.c for a more detailed explanation why it is required.  */
-  __pthread_testcancel ();
-
   if (__new_sem_wait_fast ((struct new_sem *) sem, 0) == 0)
     return 0;
   else
-    return __new_sem_wait_slow ((struct new_sem *) sem,
-				CLOCK_REALTIME, abstime);
+    return __new_sem_wait_slow ((struct new_sem *) sem, clockid, abstime);
 }

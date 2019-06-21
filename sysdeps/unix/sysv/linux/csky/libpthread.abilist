@@ -233,3 +233,4 @@ GLIBC_2.29 tss_set F
 GLIBC_2.29 wait F
 GLIBC_2.29 waitpid F
 GLIBC_2.29 write F
+GLIBC_2.30 sem_clockwait F

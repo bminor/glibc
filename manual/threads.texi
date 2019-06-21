@@ -669,6 +669,16 @@ The system does not have sufficient memory.
 @end table
 @end deftypefun
 
+@comment semaphore.h
+@comment POSIX-proposed
+@deftypefun int sem_clockwait (sem_t *@var{sem}, clockid_t @var{clockid},
+                               const struct timespec *@var{abstime})
+Behaves like @code{sem_timedwait} except the time @var{abstime} is measured
+against the clock specified by @var{clockid} rather than
+@code{CLOCK_REALTIME}.  Currently, @var{clockid} must be either
+@code{CLOCK_MONOTONIC} or @code{CLOCK_REALTIME}.
+@end deftypefun
+
 @c FIXME these are undocumented:
 @c pthread_atfork
 @c pthread_attr_destroy

@@ -113,7 +113,7 @@ libpthread-routines = nptl-init nptlfreeres vars events version pt-interp \
 		      sem_init sem_destroy \
 		      sem_open sem_close sem_unlink \
 		      sem_getvalue \
-		      sem_wait sem_timedwait sem_post \
+		      sem_wait sem_timedwait sem_clockwait sem_post \
 		      cleanup cleanup_defer cleanup_compat \
 		      cleanup_defer_compat unwind \
 		      pt-longjmp pt-cleanup\
@@ -194,6 +194,7 @@ CFLAGS-pthread_once.c += $(uses-callbacks) -fexceptions \
 CFLAGS-pthread_cond_wait.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sem_wait.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sem_timedwait.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-sem_clockwait.c = -fexceptions -fasynchronous-unwind-tables
 
 # These are the function wrappers we have to duplicate here.
 CFLAGS-fcntl.c += -fexceptions -fasynchronous-unwind-tables
@@ -263,7 +264,7 @@ tests = tst-attr1 tst-attr2 tst-attr3 tst-default-attr \
 	tst-key1 tst-key2 tst-key3 tst-key4 \
 	tst-sem1 tst-sem2 tst-sem3 tst-sem4 tst-sem5 tst-sem6 tst-sem7 \
 	tst-sem8 tst-sem9 tst-sem10 tst-sem14 \
-	tst-sem15 tst-sem16 \
+	tst-sem15 tst-sem16 tst-sem17 \
 	tst-barrier1 tst-barrier2 tst-barrier3 tst-barrier4 \
 	tst-align tst-align3 \
 	tst-basic1 tst-basic2 tst-basic3 tst-basic4 tst-basic5 tst-basic6 \

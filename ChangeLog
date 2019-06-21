@@ -1,5 +1,64 @@
 2019-07-12  Mike Crowe  <mac@mcrowe.com>
 
+	nptl: Add POSIX-proposed sem_clockwait which behaves just like
+	sem_timedwait, but measures abstime against the specified clock.
+	* nptl/sem_waitcommon.c (do_futex_wait, __new_sem_wait_slow): Add
+	clockid parameters to indicate the clock which abstime should be
+	measured against.
+	* nptl/sem_timedwait.c (sem_timedwait), nptl/sem_wait.c
+	(__new_sem_wait): Pass CLOCK_REALTIME as clockid to
+	__new_sem_wait_slow.
+	* nptl/sem_clockwait.c: New file to implement sem_clockwait based
+	on sem_timedwait.c.
+	* nptl/Makefile: Add sem_clockwait.c source file. Add CFLAGS for
+	sem_clockwait.c to match those used for sem_timedwait.c.
+	* sysdeps/pthread/semaphore.h: Add sem_clockwait.
+	* nptl/Versions (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/libpthread.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libpthread.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/arm/libpthread.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/csky/libpthread.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libpthread.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/i386/libpthread.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libpthread.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libpthread.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/riscv/rv64/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/sh/libpthread.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* nptl/tst-sem17.c: Add new test for passing invalid clock to
+	sem_clockwait.
+	* nptl/tst-sem13.c, nptl/tst-sem5.c: Modify existing sem_timedwait
+	tests to also test sem_clockwait.
+	* manual/threads.texi: Document sem_clockwait.
+
 	nptl: Add clockid parameter to futex timed wait calls
 	* sysdeps/nptl/lowlevellock-futex.h,
 	sysdeps/unix/sysv/linux/lowlevellock-futex.h: Replace
