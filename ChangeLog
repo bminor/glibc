@@ -1,3 +1,11 @@
+2019-06-21  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #23831]
+	* localedata/locales/nl_AW (mon_thousands_sep): Set to ".".
+	* localedata/locales/nl_NL (mon_thousands_sep): Likewise.
+	(thousands_sep): Likewise.
+	(grouping): Set to 3;3.
+
 2019-06-21  Tobias Klauser  <tklauser@distanz.ch>
 
 	* sysdeps/unix/sysv/linux/aarch64/gettimeofday.c (INIT_ARCH): Use
