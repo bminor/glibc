@@ -27,9 +27,9 @@ static inline void
 _libc_vdso_platform_setup (void)
 {
 #ifdef __LP64__
-  PREPARE_VERSION (linux_version, "LINUX_2.6.39", 123718537);
+  PREPARE_VERSION_KNOWN (linux_version, LINUX_2_6_39);
 #else
-  PREPARE_VERSION (linux_version, "LINUX_4.9", 61765625);
+  PREPARE_VERSION_KNOWN (linux_version, LINUX_4_9);
 #endif
 
   void *p = _dl_vdso_vsym ("__kernel_gettimeofday", &linux_version);

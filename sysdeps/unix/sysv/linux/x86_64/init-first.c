@@ -32,7 +32,7 @@ extern __typeof (clock_gettime) __syscall_clock_gettime attribute_hidden;
 static inline void
 __vdso_platform_setup (void)
 {
-  PREPARE_VERSION (linux26, "LINUX_2.6", 61765110);
+  PREPARE_VERSION_KNOWN (linux26, LINUX_2_6);
 
   void *p = _dl_vdso_vsym ("__vdso_clock_gettime", &linux26);
   if (p == NULL)

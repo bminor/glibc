@@ -35,7 +35,7 @@ long int (*VDSO_SYMBOL(getcpu)) (unsigned *, unsigned *, void *)
 static inline void
 _libc_vdso_platform_setup (void)
 {
-  PREPARE_VERSION (linux2629, "LINUX_2.6.29", 123718585);
+  PREPARE_VERSION_KNOWN (linux2629, LINUX_2_6_29);
 
   void *p = _dl_vdso_vsym ("__kernel_gettimeofday", &linux2629);
   PTR_MANGLE (p);

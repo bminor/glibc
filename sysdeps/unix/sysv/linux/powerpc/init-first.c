@@ -37,7 +37,7 @@ void *VDSO_SYMBOL(sigtramp_rt32);
 static inline void
 _libc_vdso_platform_setup (void)
 {
-  PREPARE_VERSION (linux2615, "LINUX_2.6.15", 123718565);
+  PREPARE_VERSION_KNOWN (linux2615, LINUX_2_6_15);
 
   void *p = _dl_vdso_vsym ("__kernel_gettimeofday", &linux2615);
   PTR_MANGLE (p);

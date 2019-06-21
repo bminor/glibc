@@ -1,3 +1,22 @@
+2019-06-21  Tobias Klauser  <tklauser@distanz.ch>
+
+	* sysdeps/unix/sysv/linux/aarch64/gettimeofday.c (INIT_ARCH): Use
+	PREPARE_VERSION_KNOWN.
+	* sysdeps/unix/sysv/linux/aarch64/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/dl-vdso.h (VDSO_NAME_LINUX_2_6_39): New
+	define.
+	(VDSO_HASH_LINUX_2_6_39): Likewise.
+	(VDSO_NAME_LINUX_4_9): Likewise.
+	(VDSO_HASH_LINUX_4_9): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/gettimeofday.c (INIT_ARCH): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/init-first.c
+	(_libc_vdso_platform_setup): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/time.c (INIT_ARCH): Likewise.
+	* sysdeps/unix/sysv/linux/s390/init-first.c (_libc_vdso_platform_setup):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/init-first.c (__vdso_platform_setup):
+	Likewise.
+
 2019-06-20  Mike Crowe  <mac@mcrowe.com>
 
 	* nptl/eintr.c: Use libsupport.

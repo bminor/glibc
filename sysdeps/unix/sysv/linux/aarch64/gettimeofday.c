@@ -38,13 +38,13 @@ __gettimeofday_vsyscall (struct timeval *tv, struct timezone *tz)
   return INLINE_VSYSCALL (gettimeofday, 2, tv, tz);
 }
 
-/* PREPARE_VERSION will need an __LP64__ ifdef when ILP32 support
+/* PREPARE_VERSION_KNOWN will need an __LP64__ ifdef when ILP32 support
    goes in.  See _libc_vdso_platform_setup in
    sysdeps/unix/sysv/linux/aarch64/init-first.c.  */
 
 # undef INIT_ARCH
 # define INIT_ARCH() \
-	   PREPARE_VERSION (linux_version, "LINUX_2.6.39", 123718537); \
+	   PREPARE_VERSION_KNOWN (linux_version, LINUX_2_6_39); \
 	   void *vdso_gettimeofday = \
 	     _dl_vdso_vsym ("__kernel_gettimeofday", &linux_version);
 

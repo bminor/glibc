@@ -66,8 +66,8 @@ time_syscall (time_t *t)
   return result;
 }
 
-# define INIT_ARCH()							\
-  PREPARE_VERSION (linux2615, "LINUX_2.6.15", 123718565);		\
+# define INIT_ARCH()						\
+  PREPARE_VERSION_KNOWN (linux2615, LINUX_2_6_15);		\
   void *vdso_time = _dl_vdso_vsym ("__kernel_time", &linux2615);
 
 /* If the vDSO is not available we fall back to the syscall.  */
