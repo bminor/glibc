@@ -679,6 +679,26 @@ against the clock specified by @var{clockid} rather than
 @code{CLOCK_MONOTONIC} or @code{CLOCK_REALTIME}.
 @end deftypefun
 
+@comment pthread.h
+@comment POSIX-proposed
+@deftypefun int pthread_cond_clockwait (pthread_cond_t *@var{cond}, pthread_mutex_t *@var{mutex},
+                                        clockid_t @var{clockid}, const struct timespec *@var{abstime})
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
+@c If exactly the same function with arguments is called from a signal
+@c handler that interrupts between the mutex unlock and sleep then it
+@c will unlock the mutex twice resulting in undefined behaviour.  Keep
+@c in mind that the unlock and sleep are only atomic with respect to other
+@c threads (really a happens-after relationship for pthread_cond_broadcast
+@c and pthread_cond_signal).
+@c In the AC case we would cancel the thread and the mutex would remain
+@c locked and we can't recover from that.
+Behaves like @code{pthread_cond_timedwait} except the time @var{abstime} is
+measured against the clock specified by @var{clockid} rather than the clock
+specified or defaulted when @code{pthread_cond_init} was called.  Currently,
+@var{clockid} must be either @code{CLOCK_MONOTONIC} or
+@code{CLOCK_REALTIME}.
+@end deftypefun
+
 @c FIXME these are undocumented:
 @c pthread_atfork
 @c pthread_attr_destroy

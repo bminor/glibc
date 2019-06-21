@@ -243,6 +243,7 @@ GLIBC_2.3.4 pthread_attr_setaffinity_np F
 GLIBC_2.3.4 pthread_getaffinity_np F
 GLIBC_2.3.4 pthread_setaffinity_np F
 GLIBC_2.3.4 pthread_setschedprio F
+GLIBC_2.30 pthread_cond_clockwait F
 GLIBC_2.30 sem_clockwait F
 GLIBC_2.4 pthread_mutex_consistent_np F
 GLIBC_2.4 pthread_mutex_getprioceiling F

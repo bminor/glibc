@@ -164,6 +164,11 @@ FORWARD (__pthread_cond_timedwait,
 	  const struct timespec *abstime), (cond, mutex, abstime), 0)
 versioned_symbol (libc, __pthread_cond_timedwait, pthread_cond_timedwait,
 		  GLIBC_2_3_2);
+FORWARD (__pthread_cond_clockwait,
+	 (pthread_cond_t *cond, pthread_mutex_t *mutex, clockid_t clockid,
+	  const struct timespec *abstime), (cond, mutex, clockid, abstime),
+	 0)
+weak_alias (__pthread_cond_clockwait, pthread_cond_clockwait);
 
 
 FORWARD (pthread_equal, (pthread_t thread1, pthread_t thread2),

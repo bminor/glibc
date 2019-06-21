@@ -55,6 +55,10 @@ struct pthread_functions
   int (*ptr___pthread_cond_wait) (pthread_cond_t *, pthread_mutex_t *);
   int (*ptr___pthread_cond_timedwait) (pthread_cond_t *, pthread_mutex_t *,
 				       const struct timespec *);
+  int (*ptr___pthread_cond_clockwait) (pthread_cond_t *,
+				       pthread_mutex_t *,
+				       clockid_t,
+				       const struct timespec *);
   int (*ptr___pthread_cond_broadcast_2_0) (pthread_cond_2_0_t *);
   int (*ptr___pthread_cond_destroy_2_0) (pthread_cond_2_0_t *);
   int (*ptr___pthread_cond_init_2_0) (pthread_cond_2_0_t *,

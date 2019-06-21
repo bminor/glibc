@@ -95,6 +95,7 @@ static const struct pthread_functions pthread_functions =
     .ptr___pthread_cond_signal = __pthread_cond_signal,
     .ptr___pthread_cond_wait = __pthread_cond_wait,
     .ptr___pthread_cond_timedwait = __pthread_cond_timedwait,
+    .ptr___pthread_cond_clockwait = __pthread_cond_clockwait,
 # if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_3_2)
     .ptr___pthread_cond_broadcast_2_0 = __pthread_cond_broadcast_2_0,
     .ptr___pthread_cond_destroy_2_0 = __pthread_cond_destroy_2_0,

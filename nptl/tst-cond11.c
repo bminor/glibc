@@ -22,28 +22,32 @@
 #include <time.h>
 #include <unistd.h>
 #include <support/check.h>
+#include <support/test-driver.h>
 #include <support/timespec.h>
 #include <support/xthread.h>
 #include <support/xtime.h>
 
+/* A bogus clock value that tells run_test to use pthread_cond_timedwait
+   rather than pthread_condclockwait.  */
+#define CLOCK_USE_ATTR_CLOCK (-1)
 
 #if defined _POSIX_CLOCK_SELECTION && _POSIX_CLOCK_SELECTION >= 0
 static int
-run_test (clockid_t cl)
+run_test (clockid_t attr_clock, clockid_t wait_clock)
 {
   pthread_condattr_t condattr;
   pthread_cond_t cond;
   pthread_mutexattr_t mutattr;
   pthread_mutex_t mut;
 
-  printf ("clock = %d\n", (int) cl);
+  verbose_printf ("attr_clock = %d\n", (int) attr_clock);
 
   TEST_COMPARE (pthread_condattr_init (&condattr), 0);
-  TEST_COMPARE (pthread_condattr_setclock (&condattr, cl), 0);
+  TEST_COMPARE (pthread_condattr_setclock (&condattr, attr_clock), 0);
 
-  clockid_t cl2;
-  TEST_COMPARE (pthread_condattr_getclock (&condattr, &cl2), 0);
-  TEST_COMPARE (cl, cl2);
+  clockid_t attr_clock_read;
+  TEST_COMPARE (pthread_condattr_getclock (&condattr, &attr_clock_read), 0);
+  TEST_COMPARE (attr_clock, attr_clock_read);
 
   TEST_COMPARE (pthread_cond_init (&cond, &condattr), 0);
   TEST_COMPARE (pthread_condattr_destroy (&condattr), 0);
@@ -57,13 +61,20 @@ run_test (clockid_t cl)
   TEST_COMPARE (pthread_mutex_lock (&mut), EDEADLK);
 
   struct timespec ts_timeout;
-  xclock_gettime (cl, &ts_timeout);
+  xclock_gettime (wait_clock == CLOCK_USE_ATTR_CLOCK ? attr_clock : wait_clock,
+                  &ts_timeout);
 
   /* Wait one second.  */
   ++ts_timeout.tv_sec;
 
-  TEST_COMPARE (pthread_cond_timedwait (&cond, &mut, &ts_timeout), ETIMEDOUT);
-  TEST_TIMESPEC_BEFORE_NOW (ts_timeout, cl);
+  if (wait_clock == CLOCK_USE_ATTR_CLOCK) {
+    TEST_COMPARE (pthread_cond_timedwait (&cond, &mut, &ts_timeout), ETIMEDOUT);
+    TEST_TIMESPEC_BEFORE_NOW (ts_timeout, attr_clock);
+  } else {
+    TEST_COMPARE (pthread_cond_clockwait (&cond, &mut, wait_clock, &ts_timeout),
+                  ETIMEDOUT);
+    TEST_TIMESPEC_BEFORE_NOW (ts_timeout, wait_clock);
+  }
 
   xpthread_mutex_unlock (&mut);
   xpthread_mutex_destroy (&mut);
@@ -83,7 +94,7 @@ do_test (void)
 
 #else
 
-  run_test (CLOCK_REALTIME);
+  run_test (CLOCK_REALTIME, CLOCK_USE_ATTR_CLOCK);
 
 # if defined _POSIX_MONOTONIC_CLOCK && _POSIX_MONOTONIC_CLOCK >= 0
 #  if _POSIX_MONOTONIC_CLOCK == 0
@@ -93,8 +104,13 @@ do_test (void)
   else if (e == 0)
       FAIL_RET ("sysconf (_SC_MONOTONIC_CLOCK) must not return 0");
   else
+    {
 #  endif
-    run_test (CLOCK_MONOTONIC);
+      run_test (CLOCK_MONOTONIC, CLOCK_USE_ATTR_CLOCK);
+      run_test (CLOCK_REALTIME, CLOCK_MONOTONIC);
+      run_test (CLOCK_MONOTONIC, CLOCK_MONOTONIC);
+      run_test (CLOCK_MONOTONIC, CLOCK_REALTIME);
+    }
 # else
   puts ("_POSIX_MONOTONIC_CLOCK not defined");
 # endif

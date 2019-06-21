@@ -1,5 +1,74 @@
 2019-07-12  Mike Crowe  <mac@mcrowe.com>
 
+	nptl: Add POSIX-proposed pthread_cond_clockwait which behaves just
+	like pthread_cond_timedwait except it always measures abstime
+	against the supplied clockid.
+	* nptl/Makefile: Add tst-cond26 and tst-cond27
+	* nptl/Versions (GLIBC_2.30): Add pthread_cond_clockwait
+	* sysdeps/nptl/pthread.h: Likewise
+	* nptl/forward.c: Add __pthread_cond_clockwait
+	* nptl/forward.c: Likewise
+	* nptl/pthreadP.h: Likewise
+	* sysdeps/nptl/pthread-functions.h: Likewise
+	* nptl/pthread_cond_wait.c (__pthread_cond_wait_common): Add
+	clockid parameter and comment describing why we don't need to check
+	its value. Use that value when calling
+	futex_abstimed_wait_cancelable rather than reading the clock from
+	the flags. (__pthread_cond_wait): Pass unused clockid parameter.
+	(__pthread_cond_timedwait): Read clock from flags and pass it to
+	__pthread_cond_wait_common. (__pthread_cond_clockwait): Add new
+	function with weak alias from pthread_cond_clockwait.
+	* sysdeps/unix/sysv/linux/aarch64/libpthread.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libpthread.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/arm/libpthread.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/csky/libpthread.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libpthread.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/i386/libpthread.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libpthread.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libpthread.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/riscv/rv64/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/sh/libpthread.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* nptl/tst-cond11.c (run_test): Support testing
+	pthread_cond_clockwait too by using a special magic
+	CLOCK_USE_ATTR_CLOCK value to determine whether to call
+	pthread_cond_timedwait or pthread_cond_clockwait. (do_test): Pass
+	CLOCK_USE_ATTR_CLOCK for existing tests, and add new tests using
+	all combinations of CLOCK_MONOTONIC and CLOCK_REALTIME.
+	* ntpl/tst-cond26.c: New test for passing unsupported and invalid
+	clocks to pthread_cond_clockwait.
+	* nptl/tst-cond27.c: Add test similar to tst-cond5.c, but using
+	struct timespec and pthread_cond_clockwait.
+	* manual/threads.texi: Document pthread_cond_clockwait.
+
 	nptl: Add POSIX-proposed sem_clockwait which behaves just like
 	sem_timedwait, but measures abstime against the specified clock.
 	* nptl/sem_waitcommon.c (do_futex_wait, __new_sem_wait_slow): Add
