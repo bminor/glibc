@@ -162,15 +162,24 @@ futex_reltimed_wait_cancelable (unsigned int *futex_word,
 
 /* See sysdeps/nptl/futex-internal.h for details.  */
 static __always_inline int
+futex_abstimed_supported_clockid (clockid_t clockid)
+{
+  return lll_futex_supported_clockid (clockid);
+}
+
+/* See sysdeps/nptl/futex-internal.h for details.  */
+static __always_inline int
 futex_abstimed_wait (unsigned int *futex_word, unsigned int expected,
+		     clockid_t clockid,
 		     const struct timespec *abstime, int private)
 {
   /* Work around the fact that the kernel rejects negative timeout values
      despite them being valid.  */
   if (__glibc_unlikely ((abstime != NULL) && (abstime->tv_sec < 0)))
     return ETIMEDOUT;
-  int err = lll_futex_timed_wait_bitset (futex_word, expected, abstime,
-					 FUTEX_CLOCK_REALTIME, private);
+  int err = lll_futex_clock_wait_bitset (futex_word, expected,
+					 clockid, abstime,
+					 private);
   switch (err)
     {
     case 0:
@@ -180,8 +189,9 @@ futex_abstimed_wait (unsigned int *futex_word, unsigned int expected,
       return -err;
 
     case -EFAULT: /* Must have been caused by a glibc or application bug.  */
-    case -EINVAL: /* Either due to wrong alignment or due to the timeout not
-		     being normalized.  Must have been caused by a glibc or
+    case -EINVAL: /* Either due to wrong alignment, unsupported
+		     clockid or due to the timeout not being
+		     normalized. Must have been caused by a glibc or
 		     application bug.  */
     case -ENOSYS: /* Must have been caused by a glibc bug.  */
     /* No other errors are documented at this time.  */
@@ -194,6 +204,7 @@ futex_abstimed_wait (unsigned int *futex_word, unsigned int expected,
 static __always_inline int
 futex_abstimed_wait_cancelable (unsigned int *futex_word,
 				unsigned int expected,
+				clockid_t clockid,
 			        const struct timespec *abstime, int private)
 {
   /* Work around the fact that the kernel rejects negative timeout values
@@ -202,8 +213,9 @@ futex_abstimed_wait_cancelable (unsigned int *futex_word,
     return ETIMEDOUT;
   int oldtype;
   oldtype = __pthread_enable_asynccancel ();
-  int err = lll_futex_timed_wait_bitset (futex_word, expected, abstime,
-					 FUTEX_CLOCK_REALTIME, private);
+  int err = lll_futex_clock_wait_bitset (futex_word, expected,
+					clockid, abstime,
+					private);
   __pthread_disable_asynccancel (oldtype);
   switch (err)
     {

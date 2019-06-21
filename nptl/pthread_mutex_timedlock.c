@@ -266,8 +266,8 @@ __pthread_mutex_timedlock (pthread_mutex_t *mutex,
 	  assume_other_futex_waiters |= FUTEX_WAITERS;
 
 	  /* Block using the futex.  */
-	  int err = lll_futex_timed_wait_bitset (&mutex->__data.__lock,
-	      oldval, abstime, FUTEX_CLOCK_REALTIME,
+	  int err = lll_futex_clock_wait_bitset (&mutex->__data.__lock,
+	      oldval, CLOCK_REALTIME, abstime,
 	      PTHREAD_ROBUST_MUTEX_PSHARED (mutex));
 	  /* The futex call timed out.  */
 	  if (err == -ETIMEDOUT)

@@ -319,7 +319,7 @@ __pthread_rwlock_rdlock_full (pthread_rwlock_t *rwlock,
 		{
 		  int private = __pthread_rwlock_get_private (rwlock);
 		  int err = futex_abstimed_wait (&rwlock->__data.__readers,
-						 r, abstime, private);
+						 r, CLOCK_REALTIME, abstime, private);
 		  /* We ignore EAGAIN and EINTR.  On time-outs, we can just
 		     return because we don't need to clean up anything.  */
 		  if (err == ETIMEDOUT)
@@ -447,7 +447,7 @@ __pthread_rwlock_rdlock_full (pthread_rwlock_t *rwlock,
 	    continue;
 	  int err = futex_abstimed_wait (&rwlock->__data.__wrphase_futex,
 					 1 | PTHREAD_RWLOCK_FUTEX_USED,
-					 abstime, private);
+					 CLOCK_REALTIME, abstime, private);
 	  if (err == ETIMEDOUT)
 	    {
 	      /* If we timed out, we need to unregister.  If no read phase
@@ -707,7 +707,7 @@ __pthread_rwlock_wrlock_full (pthread_rwlock_t *rwlock,
 	  may_share_futex_used_flag = true;
 	  int err = futex_abstimed_wait (&rwlock->__data.__writers_futex,
 					 1 | PTHREAD_RWLOCK_FUTEX_USED,
-					 abstime, private);
+					 CLOCK_REALTIME, abstime, private);
 	  if (err == ETIMEDOUT)
 	    {
 	      if (prefer_writer)
@@ -806,7 +806,7 @@ __pthread_rwlock_wrlock_full (pthread_rwlock_t *rwlock,
 	    continue;
 	  int err = futex_abstimed_wait (&rwlock->__data.__wrphase_futex,
 					 PTHREAD_RWLOCK_FUTEX_USED,
-					 abstime, private);
+					 CLOCK_REALTIME, abstime, private);
 	  if (err == ETIMEDOUT)
 	    {
 	      if (rwlock->__data.__flags != PTHREAD_RWLOCK_PREFER_READER_NP)

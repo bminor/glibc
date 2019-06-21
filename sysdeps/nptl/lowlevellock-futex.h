@@ -43,10 +43,15 @@
 #define lll_futex_timed_wait(futexp, val, timeout, private)             \
   -ENOSYS
 
-/* If CLOCKBIT is zero, this is identical to lll_futex_timed_wait.
-   If CLOCKBIT has FUTEX_CLOCK_REALTIME set, then it's the same but
-   TIMEOUT is counted by CLOCK_REALTIME rather than CLOCK_MONOTONIC.  */
-#define lll_futex_timed_wait_bitset(futexp, val, timeout, clockbit, private) \
+/* Verify whether the supplied clockid is supported by
+   lll_futex_clock_wait_bitset.  */
+#define lll_futex_supported_clockid(clockid)				\
+  (0)
+
+/* Wait until a lll_futex_wake call on FUTEXP, or the absolute TIMEOUT
+   measured against CLOCKID elapses. CLOCKID may be CLOCK_REALTIME or
+   CLOCK_MONOTONIC.  */
+#define lll_futex_clock_wait_bitset(futexp, val, clockid, timeout, private) \
   -ENOSYS
 
 /* Wake up up to NR waiters on FUTEXP.  */

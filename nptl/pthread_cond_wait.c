@@ -509,35 +509,15 @@ __pthread_cond_wait_common (pthread_cond_t *cond, pthread_mutex_t *mutex,
 		 values despite them being valid.  */
 	      if (__glibc_unlikely (abstime->tv_sec < 0))
 	        err = ETIMEDOUT;
-
-	      else if ((flags & __PTHREAD_COND_CLOCK_MONOTONIC_MASK) != 0)
-		{
-		  /* CLOCK_MONOTONIC is requested.  */
-		  struct timespec rt;
-		  if (__clock_gettime (CLOCK_MONOTONIC, &rt) != 0)
-		    __libc_fatal ("clock_gettime does not support "
-				  "CLOCK_MONOTONIC\n");
-		  /* Convert the absolute timeout value to a relative
-		     timeout.  */
-		  rt.tv_sec = abstime->tv_sec - rt.tv_sec;
-		  rt.tv_nsec = abstime->tv_nsec - rt.tv_nsec;
-		  if (rt.tv_nsec < 0)
-		    {
-		      rt.tv_nsec += 1000000000;
-		      --rt.tv_sec;
-		    }
-		  /* Did we already time out?  */
-		  if (__glibc_unlikely (rt.tv_sec < 0))
-		    err = ETIMEDOUT;
-		  else
-		    err = futex_reltimed_wait_cancelable
-			(cond->__data.__g_signals + g, 0, &rt, private);
-		}
 	      else
 		{
-		  /* Use CLOCK_REALTIME.  */
+		  const clockid_t clockid =
+		    ((flags & __PTHREAD_COND_CLOCK_MONOTONIC_MASK) != 0) ?
+		    CLOCK_MONOTONIC : CLOCK_REALTIME;
+
 		  err = futex_abstimed_wait_cancelable
-		      (cond->__data.__g_signals + g, 0, abstime, private);
+                    (cond->__data.__g_signals + g, 0, clockid, abstime,
+                     private);
 		}
 	    }
 

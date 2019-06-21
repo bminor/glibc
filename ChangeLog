@@ -1,3 +1,36 @@
+2019-07-12  Mike Crowe  <mac@mcrowe.com>
+
+	nptl: Add clockid parameter to futex timed wait calls
+	* sysdeps/nptl/lowlevellock-futex.h,
+	sysdeps/unix/sysv/linux/lowlevellock-futex.h: Replace
+	lll_futex_timed_wait_bitset with lll_futex_clock_wait_bitset that
+	takes a clockid rather than a special clockbit.
+	* sysdeps/nptl/lowlevellock-futex.h: Add
+	lll_futex_supported_clockid so that client functions can check
+	whether their clockid parameter is valid even if they don't
+	ultimately end up calling lll_futex_clock_wait_bitset.
+	* sysdeps/nptl/futex-internal.h,
+	sysdeps/unix/sysv/linux/futex-internal.h
+	(futex_abstimed_wait, futex_abstimed_wait_cancelable): Add
+	clockid_t parameter to indicate which clock the absolute time
+	passed should be measured against. Pass that clockid onto
+	lll_futex_clock_wait_bitset. Add invalid clock as reason for
+	returning -EINVAL.
+	* sysdeps/nptl/futex-internal.h,
+	sysdeps/unix/sysv/linux/futex-internal.h: Introduce
+	futex_abstimed_supported_clockid so that client functions can check
+	whether their clockid parameter is valid even if they don't
+	ultimately end up calling futex_abstimed_wait.
+	* nptl/pthread_cond_wait.c (__pthread_cond_wait_common): Remove
+	code to calculate relative timeout for
+	__PTHREAD_COND_CLOCK_MONOTONIC_MASK and just pass CLOCK_MONOTONIC
+	or CLOCK_REALTIME as required to futex_abstimed_wait_cancelable.
+	* nptl/pthread_rwlock_common (__pthread_rwlock_rdlock_full)
+	(__pthread_wrlock_full), nptl/sem_waitcommon (do_futex_wait): Pass
+	additional CLOCK_REALTIME to futex_abstimed_wait_cancelable.
+	* nptl/pthread_mutex_timedlock.c (__pthread_mutex_timedlock):
+	Switch to lll_futex_clock_wait_bitset and pass CLOCK_REALTIME
+
 2019-07-10  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #24699]
