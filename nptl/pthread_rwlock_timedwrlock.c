@@ -23,5 +23,5 @@ int
 pthread_rwlock_timedwrlock (pthread_rwlock_t *rwlock,
     const struct timespec *abstime)
 {
-  return __pthread_rwlock_wrlock_full (rwlock, abstime);
+  return __pthread_rwlock_wrlock_full (rwlock, CLOCK_REALTIME, abstime);
 }

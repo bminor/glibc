@@ -64,19 +64,31 @@ do_test (void)
   ts.tv_nsec = -1;
 
   TEST_COMPARE (pthread_rwlock_timedrdlock (&r, &ts), EINVAL);
+  TEST_COMPARE (pthread_rwlock_clockrdlock (&r, CLOCK_REALTIME, &ts), EINVAL);
+  TEST_COMPARE (pthread_rwlock_clockrdlock (&r, CLOCK_MONOTONIC, &ts), EINVAL);
   TEST_COMPARE (pthread_rwlock_timedwrlock (&r, &ts), EINVAL);
+  TEST_COMPARE (pthread_rwlock_clockwrlock (&r, CLOCK_REALTIME, &ts), EINVAL);
+  TEST_COMPARE (pthread_rwlock_clockwrlock (&r, CLOCK_MONOTONIC, &ts), EINVAL);
 
   ts.tv_nsec = 1000000000;
 
   TEST_COMPARE (pthread_rwlock_timedrdlock (&r, &ts), EINVAL);
+  TEST_COMPARE (pthread_rwlock_clockrdlock (&r, CLOCK_REALTIME, &ts), EINVAL);
+  TEST_COMPARE (pthread_rwlock_clockrdlock (&r, CLOCK_MONOTONIC, &ts), EINVAL);
   TEST_COMPARE (pthread_rwlock_timedwrlock (&r, &ts), EINVAL);
+  TEST_COMPARE (pthread_rwlock_clockwrlock (&r, CLOCK_REALTIME, &ts), EINVAL);
+  TEST_COMPARE (pthread_rwlock_clockwrlock (&r, CLOCK_MONOTONIC, &ts), EINVAL);
 
   ts.tv_nsec = (__typeof (ts.tv_nsec)) 0x100001000LL;
   if ((__typeof (ts.tv_nsec)) 0x100001000LL != 0x100001000LL)
     ts.tv_nsec = 2000000000;
 
   TEST_COMPARE (pthread_rwlock_timedrdlock (&r, &ts), EINVAL);
+  TEST_COMPARE (pthread_rwlock_clockrdlock (&r, CLOCK_REALTIME, &ts), EINVAL);
+  TEST_COMPARE (pthread_rwlock_clockrdlock (&r, CLOCK_MONOTONIC, &ts), EINVAL);
   TEST_COMPARE (pthread_rwlock_timedwrlock (&r, &ts), EINVAL);
+  TEST_COMPARE (pthread_rwlock_clockwrlock (&r, CLOCK_REALTIME, &ts), EINVAL);
+  TEST_COMPARE (pthread_rwlock_clockwrlock (&r, CLOCK_MONOTONIC, &ts), EINVAL);
 
   return 0;
 }

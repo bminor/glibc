@@ -699,6 +699,34 @@ specified or defaulted when @code{pthread_cond_init} was called.  Currently,
 @code{CLOCK_REALTIME}.
 @end deftypefun
 
+@comment pthread.h
+@comment POSIX-proposed
+@deftypefun int pthread_rwlock_clockrdlock (pthread_rwlock_t *@var{rwlock},
+				       clockid_t @var{clockid},
+				       const struct timespec *@var{abstime})
+
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
+Behaves like @code{pthread_rwlock_timedrdlock} except the time
+@var{abstime} is measured against the clock specified by @var{clockid}
+rather than @code{CLOCK_REALTIME}.  Currently, @var{clockid} must be either
+@code{CLOCK_MONOTONIC} or @code{CLOCK_REALTIME}, otherwise @code{EINVAL} is
+returned.
+@end deftypefun
+
+@comment pthread.h
+@comment POSIX-proposed
+@deftypefun int pthread_rwlock_clockwrlock (pthread_rwlock_t *@var{rwlock},
+				       clockid_t @var{clockid},
+				       const struct timespec *@var{abstime})
+
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
+Behaves like @code{pthread_rwlock_timedwrlock} except the time
+@var{abstime} is measured against the clock specified by @var{clockid}
+rather than @code{CLOCK_REALTIME}.  Currently, @var{clockid} must be either
+@code{CLOCK_MONOTONIC} or @code{CLOCK_REALTIME}, otherwise @code{EINVAL} is
+returned.
+@end deftypefun
+
 @c FIXME these are undocumented:
 @c pthread_atfork
 @c pthread_attr_destroy

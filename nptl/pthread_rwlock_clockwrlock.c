@@ -1,6 +1,7 @@
-/* Copyright (C) 2003-2019 Free Software Foundation, Inc.
+/* Implement pthread_rwlock_clockwrlock.
+
+   Copyright (C) 2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2003.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -20,14 +21,8 @@
 
 /* See pthread_rwlock_common.c.  */
 int
-__pthread_rwlock_rdlock (pthread_rwlock_t *rwlock)
+pthread_rwlock_clockwrlock (pthread_rwlock_t *rwlock, clockid_t clockid,
+			    const struct timespec *abstime)
 {
-  LIBC_PROBE (rdlock_entry, 1, rwlock);
-
-  int result = __pthread_rwlock_rdlock_full (rwlock, CLOCK_REALTIME, NULL);
-  LIBC_PROBE (rdlock_acquire_read, 1, rwlock);
-  return result;
+  return __pthread_rwlock_wrlock_full (rwlock, clockid, abstime);
 }
-
-weak_alias (__pthread_rwlock_rdlock, pthread_rwlock_rdlock)
-hidden_def (__pthread_rwlock_rdlock)

@@ -278,17 +278,19 @@ __pthread_rwlock_rdunlock (pthread_rwlock_t *rwlock)
 
 static __always_inline int
 __pthread_rwlock_rdlock_full (pthread_rwlock_t *rwlock,
+    clockid_t clockid,
     const struct timespec *abstime)
 {
   unsigned int r;
 
-  /* Make sure any passed in timeout value is valid.  Note that the previous
-     implementation assumed that this check *must* not be performed if there
-     would in fact be no blocking; however, POSIX only requires that "the
-     validity of the abstime parameter need not be checked if the lock can be
-     immediately acquired" (i.e., we need not but may check it).  */
-  if (abstime
-      && __glibc_unlikely (abstime->tv_nsec >= 1000000000
+  /* Make sure any passed in clockid and timeout value are valid.  Note that
+     the previous implementation assumed that this check *must* not be
+     performed if there would in fact be no blocking; however, POSIX only
+     requires that "the validity of the abstime parameter need not be checked
+     if the lock can be immediately acquired" (i.e., we need not but may check
+     it).  */
+  if (abstime && __glibc_unlikely (!futex_abstimed_supported_clockid (clockid)
+      || abstime->tv_nsec >= 1000000000
       || abstime->tv_nsec < 0))
     return EINVAL;
 
@@ -329,7 +331,7 @@ __pthread_rwlock_rdlock_full (pthread_rwlock_t *rwlock,
 		{
 		  int private = __pthread_rwlock_get_private (rwlock);
 		  int err = futex_abstimed_wait (&rwlock->__data.__readers,
-						 r, CLOCK_REALTIME, abstime, private);
+						 r, clockid, abstime, private);
 		  /* We ignore EAGAIN and EINTR.  On time-outs, we can just
 		     return because we don't need to clean up anything.  */
 		  if (err == ETIMEDOUT)
@@ -457,7 +459,7 @@ __pthread_rwlock_rdlock_full (pthread_rwlock_t *rwlock,
 	    continue;
 	  int err = futex_abstimed_wait (&rwlock->__data.__wrphase_futex,
 					 1 | PTHREAD_RWLOCK_FUTEX_USED,
-					 CLOCK_REALTIME, abstime, private);
+					 clockid, abstime, private);
 	  if (err == ETIMEDOUT)
 	    {
 	      /* If we timed out, we need to unregister.  If no read phase
@@ -584,15 +586,17 @@ __pthread_rwlock_wrunlock (pthread_rwlock_t *rwlock)
 
 static __always_inline int
 __pthread_rwlock_wrlock_full (pthread_rwlock_t *rwlock,
+    clockid_t clockid,
     const struct timespec *abstime)
 {
-  /* Make sure any passed in timeout value is valid.  Note that the previous
-     implementation assumed that this check *must* not be performed if there
-     would in fact be no blocking; however, POSIX only requires that "the
-     validity of the abstime parameter need not be checked if the lock can be
-     immediately acquired" (i.e., we need not but may check it).  */
-  if (abstime
-      && __glibc_unlikely (abstime->tv_nsec >= 1000000000
+  /* Make sure any passed in clockid and timeout value are valid.  Note that
+     the previous implementation assumed that this check *must* not be
+     performed if there would in fact be no blocking; however, POSIX only
+     requires that "the validity of the abstime parameter need not be checked
+     if the lock can be immediately acquired" (i.e., we need not but may check
+     it).  */
+  if (abstime && __glibc_unlikely (!futex_abstimed_supported_clockid (clockid)
+      || abstime->tv_nsec >= 1000000000
       || abstime->tv_nsec < 0))
     return EINVAL;
 
@@ -727,7 +731,7 @@ __pthread_rwlock_wrlock_full (pthread_rwlock_t *rwlock,
 	  may_share_futex_used_flag = true;
 	  int err = futex_abstimed_wait (&rwlock->__data.__writers_futex,
 					 1 | PTHREAD_RWLOCK_FUTEX_USED,
-					 CLOCK_REALTIME, abstime, private);
+					 clockid, abstime, private);
 	  if (err == ETIMEDOUT)
 	    {
 	      if (prefer_writer)
@@ -826,7 +830,7 @@ __pthread_rwlock_wrlock_full (pthread_rwlock_t *rwlock,
 	    continue;
 	  int err = futex_abstimed_wait (&rwlock->__data.__wrphase_futex,
 					 PTHREAD_RWLOCK_FUTEX_USED,
-					 CLOCK_REALTIME, abstime, private);
+					 clockid, abstime, private);
 	  if (err == ETIMEDOUT)
 	    {
 	      if (rwlock->__data.__flags != PTHREAD_RWLOCK_PREFER_READER_NP)

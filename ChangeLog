@@ -1,5 +1,101 @@
 2019-07-12  Mike Crowe  <mac@mcrowe.com>
 
+	nptl: Add POSIX-proposed pthread_rwlock_clockrdlock &
+	pthread_rwlock_clockwrlock which behave like
+	pthread_rwlock_timedrdlock and pthread_rwlock_timedwrlock
+	respectively, except they always measure abstime against the
+	supplied clockid. The functions currently support CLOCK_REALTIME
+	and CLOCK_MONOTONIC and return EINVAL if any other clock is
+	specified.
+	* sysdeps/nptl/pthread.h: Add pthread_rwlock_clockrdlock and
+	pthread_wrlock_clockwrlock.
+	* nptl/Makefile: Build pthread_rwlock_clockrdlock.c and
+	pthread_rwlock_clockwrlock.c.
+	* nptl/pthread_rwlock_clockrdlock.c: Implement
+	pthread_rwlock_clockrdlock.
+	* nptl/pthread_rwlock_clockwrlock.c: Implement
+	pthread_rwlock_clockwrlock.
+	* nptl/pthread_rwlock_common.c (__pthread_rwlock_rdlock_full): Add
+	clockid parameter and verify that it indicates a supported clock on
+	entry so that we fail even if it doesn't end up being used. Pass
+	that clock on to futex_abstimed_wait when necessary.
+	(__pthread_rwlock_wrlock_full): Likewise.
+	* nptl/pthread_rwlock_rdlock.c: (__pthread_rwlock_rdlock): Pass
+	CLOCK_REALTIME to __pthread_rwlock_rdlock_full even though it won't
+	be used because there's no timeout.
+	* nptl/pthread_rwlock_wrlock.c (__pthread_rwlock_wrlock): Pass
+	CLOCK_REALTIME to __pthread_rwlock_wrlock_full even though it won't
+	be used because there is no timeout.
+	* nptl/pthread_rwlock_timedrdlock.c (pthread_rwlock_timedrdlock):
+	Pass CLOCK_REALTIME to __pthread_rwlock_rdlock_full since abstime
+	uses that clock.
+	* nptl/pthread_rwlock_timedwrlock.c (pthread_rwlock_timedwrlock):
+	Pass CLOCK_REALTIME to __pthread_rwlock_wrlock_full since abstime
+	uses that clock.
+	* sysdeps/unix/sysv/linux/aarch64/libpthread.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libpthread.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/arm/libpthread.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/csky/libpthread.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libpthread.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/i386/libpthread.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libpthread.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libpthread.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/riscv/rv64/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/sh/libpthread.abilist (GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* nptl/tst-abstime.c (th): Add pthread_rwlock_clockrdlock and
+	pthread_rwlock_clockwrlock timeout tests to match the existing
+	pthread_rwlock_timedrdloock and pthread_rwlock_timedwrlock tests.
+	* nptl/tst-rwlock14.c (do_test): Likewise.
+	* nptl/tst-rwlock6.c Invent verbose_printf macro, and use for
+	ancillary output throughout. (tf): Accept thread_args structure so
+	that rwlock, a clockid and function name can be passed to the
+	thread. (do_test_clock): Rename from do_test. Accept clockid
+	parameter to specify test clock. Use the magic clockid value of
+	CLOCK_USE_TIMEDLOCK to indicate that pthread_rwlock_timedrdlock and
+	pthread_rwlock_timedwrlock should be tested, otherwise pass the
+	specified clockid to pthread_rwlock_clockrdlock and
+	pthread_rwlock_clockwrlock. Use xpthread_create and xpthread_join.
+	(do_test): Call do_test_clock to test each clockid in turn.
+	* nptl/tst-rwlock7.c: Likewise.
+	* nptl/tst-rwlock9.c (writer_thread, reader_thread): Accept
+	thread_args structure so that the (now int) thread number, the
+	clockid and the function name can be passed to the thread.
+	(do_test_clock): Renamed from do_test. Pass the necessary
+	thread_args when creating the reader and writer threads. Use
+	xpthread_create and xpthread_join.
+	(do_test): Call do_test_clock to test each clockid in turn.
+	* manual/threads.texi: Add documentation for
+	pthread_rwlock_clockrdlock and pthread_rwlock_clockwrclock.
+
 	nptl: pthread_rwlock: Move timeout validation into _full functions
 	* nptl/pthread_rwlock_common.c (__pthread_rwlock_rdlock_full):
 	Check validity of abstime parameter.
