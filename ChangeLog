@@ -1,5 +1,9 @@
 2019-07-12  Mike Crowe  <mac@mcrowe.com>
 
+	* NEWS: Mention recently-added pthread_cond_clockwait,
+	pthread_rwlock_clockrdlock, pthread_rwlock_clockwrlock and
+	sem_clockwait functions.
+
 	nptl: Add POSIX-proposed pthread_mutex_clocklock function that
 	works like pthread_mutex_timedlock but takes a clockid parameter to
 	measure the abstime parameter against.

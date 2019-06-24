@@ -40,6 +40,15 @@ Major new features:
   FUNCTION-NAME, version SYMBOL-VERSION not defined in file DSO-NAME with
   link time reference, is gone.
 
+* Add new POSIX-proposed pthread_cond_clockwait, pthread_mutex_clocklock,
+  pthread_rwlock_clockrdlock, pthread_rwlock_clockwrlock and sem_clockwait
+  functions.  These behave similarly to their "timed" equivalents, but also
+  accept a clockid_t parameter to determine which clock their timeout should
+  be measured against.  All functions allow waiting against CLOCK_MONOTONIC
+  and CLOCK_REALTIME.  The decision of which clock to be used is made at the
+  time of the wait (unlike with pthread_condattr_setclock, which requires
+  the clock choice at initialization time).
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The copy_file_range function fails with ENOSYS if the kernel does not
