@@ -282,6 +282,16 @@ __pthread_rwlock_rdlock_full (pthread_rwlock_t *rwlock,
 {
   unsigned int r;
 
+  /* Make sure any passed in timeout value is valid.  Note that the previous
+     implementation assumed that this check *must* not be performed if there
+     would in fact be no blocking; however, POSIX only requires that "the
+     validity of the abstime parameter need not be checked if the lock can be
+     immediately acquired" (i.e., we need not but may check it).  */
+  if (abstime
+      && __glibc_unlikely (abstime->tv_nsec >= 1000000000
+      || abstime->tv_nsec < 0))
+    return EINVAL;
+
   /* Make sure we are not holding the rwlock as a writer.  This is a deadlock
      situation we recognize and report.  */
   if (__glibc_unlikely (atomic_load_relaxed (&rwlock->__data.__cur_writer)
@@ -576,6 +586,16 @@ static __always_inline int
 __pthread_rwlock_wrlock_full (pthread_rwlock_t *rwlock,
     const struct timespec *abstime)
 {
+  /* Make sure any passed in timeout value is valid.  Note that the previous
+     implementation assumed that this check *must* not be performed if there
+     would in fact be no blocking; however, POSIX only requires that "the
+     validity of the abstime parameter need not be checked if the lock can be
+     immediately acquired" (i.e., we need not but may check it).  */
+  if (abstime
+      && __glibc_unlikely (abstime->tv_nsec >= 1000000000
+      || abstime->tv_nsec < 0))
+    return EINVAL;
+
   /* Make sure we are not holding the rwlock as a writer.  This is a deadlock
      situation we recognize and report.  */
   if (__glibc_unlikely (atomic_load_relaxed (&rwlock->__data.__cur_writer)

@@ -1,5 +1,14 @@
 2019-07-12  Mike Crowe  <mac@mcrowe.com>
 
+	nptl: pthread_rwlock: Move timeout validation into _full functions
+	* nptl/pthread_rwlock_common.c (__pthread_rwlock_rdlock_full):
+	Check validity of abstime parameter.
+	(__pthread_rwlock_rwlock_full): Likewise.
+	* nptl/pthread_rwlock_timedrdlock.c (pthread_rwlock_timedrdlock):
+	Remove check for validity of abstime parameter.
+	* nptl/pthread_rwlock_timedwrlock.c (pthread_rwlock_timedwrlock):
+	Likewise.
+
 	nptl: Add POSIX-proposed pthread_cond_clockwait which behaves just
 	like pthread_cond_timedwait except it always measures abstime
 	against the supplied clockid.
