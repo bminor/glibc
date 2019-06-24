@@ -22,12 +22,13 @@
 #include <sysdeps/nptl/lowlevellock.h>
 
 /* Transactional lock elision definitions.  */
-extern int __lll_timedlock_elision
-  (int *futex, short *adapt_count, const struct timespec *timeout, int private)
+extern int __lll_clocklock_elision
+  (int *futex, short *adapt_count,
+   clockid_t clockid, const struct timespec *timeout, int private)
   attribute_hidden;
 
-#  define lll_timedlock_elision(futex, adapt_count, timeout, private)	\
-  __lll_timedlock_elision(&(futex), &(adapt_count), timeout, private)
+#  define lll_clocklock_elision(futex, adapt_count, clockid, timeout, private) \
+  __lll_clocklock_elision (&(futex), &(adapt_count), clockid, timeout, private)
 
 extern int __lll_lock_elision (int *futex, short *adapt_count, int private)
   attribute_hidden;

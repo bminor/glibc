@@ -121,24 +121,26 @@ extern void __lll_lock_wait (int *futex, int private) attribute_hidden;
 #define lll_cond_lock(futex, private) __lll_cond_lock (&(futex), private)
 
 
-extern int __lll_timedlock_wait (int *futex, const struct timespec *,
+extern int __lll_clocklock_wait (int *futex, clockid_t,
+				 const struct timespec *,
 				 int private) attribute_hidden;
 
 
-/* As __lll_lock, but with a timeout.  If the timeout occurs then return
-   ETIMEDOUT.  If ABSTIME is invalid, return EINVAL.  */
-#define __lll_timedlock(futex, abstime, private)                \
+/* As __lll_lock, but with an absolute timeout measured against the clock
+   specified in CLOCKID.  If the timeout occurs then return ETIMEDOUT. If
+   ABSTIME is invalid, return EINVAL.  */
+#define __lll_clocklock(futex, clockid, abstime, private)       \
   ({                                                            \
     int *__futex = (futex);                                     \
     int __val = 0;                                              \
                                                                 \
     if (__glibc_unlikely                                        \
         (atomic_compare_and_exchange_bool_acq (__futex, 1, 0))) \
-      __val = __lll_timedlock_wait (__futex, abstime, private); \
+      __val = __lll_clocklock_wait (__futex, clockid, abstime, private); \
     __val;                                                      \
   })
-#define lll_timedlock(futex, abstime, private)  \
-  __lll_timedlock (&(futex), abstime, private)
+#define lll_clocklock(futex, clockid, abstime, private)         \
+  __lll_clocklock (&(futex), clockid, abstime, private)
 
 
 /* This is an expression rather than a statement even though its value is

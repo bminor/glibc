@@ -75,22 +75,23 @@ __lll_cond_lock (int *futex, int private)
 #define lll_cond_lock(futex, private) __lll_cond_lock (&(futex), private)
 
 
-extern int __lll_timedlock_wait (int *futex, const struct timespec *,
+extern int __lll_clocklock_wait (int *futex, clockid_t, const struct timespec *,
 				 int private) attribute_hidden;
 
 static inline int
 __attribute__ ((always_inline))
-__lll_timedlock (int *futex, const struct timespec *abstime, int private)
+__lll_clocklock (int *futex, clockid_t clockid,
+                 const struct timespec *abstime, int private)
 {
   int val = atomic_compare_and_exchange_val_24_acq (futex, 1, 0);
   int result = 0;
 
   if (__glibc_unlikely (val != 0))
-    result = __lll_timedlock_wait (futex, abstime, private);
+    result = __lll_clocklock_wait (futex, clockid, abstime, private);
   return result;
 }
-#define lll_timedlock(futex, abstime, private) \
-  __lll_timedlock (&(futex), abstime, private)
+#define lll_clocklock(futex, clockid, abstime, private)  \
+  __lll_clocklock (&(futex), clockid, abstime, private)
 
 #define lll_unlock(lock, private) \
   ((void) ({								      \

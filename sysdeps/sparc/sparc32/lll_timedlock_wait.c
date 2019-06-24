@@ -1,1 +1,1 @@
-/* __lll_timedlock_wait is in lowlevellock.c.  */
+/* __lll_clocklock_wait is in lowlevellock.c.  */

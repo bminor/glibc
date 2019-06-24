@@ -28,8 +28,9 @@
 
 #include <stap-probe.h>
 
-#ifndef lll_timedlock_elision
-#define lll_timedlock_elision(a,dummy,b,c) lll_timedlock(a, b, c)
+#ifndef lll_clocklock_elision
+#define lll_clocklock_elision(futex, adapt_count, clockid, abstime, private) \
+  lll_clocklock (futex, clockid, abstime, private)
 #endif
 
 #ifndef lll_trylock_elision
@@ -75,7 +76,7 @@ __pthread_mutex_timedlock (pthread_mutex_t *mutex,
 	}
 
       /* We have to get the mutex.  */
-      result = lll_timedlock (mutex->__data.__lock, abstime,
+      result = lll_clocklock (mutex->__data.__lock, CLOCK_REALTIME, abstime,
 			      PTHREAD_MUTEX_PSHARED (mutex));
 
       if (result != 0)
@@ -98,16 +99,16 @@ __pthread_mutex_timedlock (pthread_mutex_t *mutex,
       FORCE_ELISION (mutex, goto elision);
     simple:
       /* Normal mutex.  */
-      result = lll_timedlock (mutex->__data.__lock, abstime,
+      result = lll_clocklock (mutex->__data.__lock, CLOCK_REALTIME, abstime,
 			      PTHREAD_MUTEX_PSHARED (mutex));
       break;
 
     case PTHREAD_MUTEX_TIMED_ELISION_NP:
     elision: __attribute__((unused))
       /* Don't record ownership */
-      return lll_timedlock_elision (mutex->__data.__lock,
+      return lll_clocklock_elision (mutex->__data.__lock,
 				    mutex->__data.__spins,
-				    abstime,
+				    CLOCK_REALTIME, abstime,
 				    PTHREAD_MUTEX_PSHARED (mutex));
 
 
@@ -124,7 +125,8 @@ __pthread_mutex_timedlock (pthread_mutex_t *mutex,
 	    {
 	      if (cnt++ >= max_cnt)
 		{
-		  result = lll_timedlock (mutex->__data.__lock, abstime,
+		  result = lll_clocklock (mutex->__data.__lock,
+					  CLOCK_REALTIME, abstime,
 					  PTHREAD_MUTEX_PSHARED (mutex));
 		  break;
 		}

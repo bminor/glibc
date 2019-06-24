@@ -24,7 +24,8 @@
 
 
 int
-__lll_timedlock_wait (int *futex, const struct timespec *abstime, int private)
+__lll_clocklock_wait (int *futex, clockid_t clockid,
+		      const struct timespec *abstime, int private)
 {
   /* Reject invalid timeouts.  */
   if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
@@ -33,15 +34,17 @@ __lll_timedlock_wait (int *futex, const struct timespec *abstime, int private)
   /* Try locking.  */
   while (atomic_exchange_acq (futex, 2) != 0)
     {
-      struct timeval tv;
+      struct timespec ts;
 
-      /* Get the current time.  */
-      (void) __gettimeofday (&tv, NULL);
+      /* Get the current time. This can only fail if clockid is not
+         valid.  */
+      if (__glibc_unlikely (__clock_gettime (clockid, &ts) != 0))
+        return EINVAL;
 
       /* Compute relative timeout.  */
       struct timespec rt;
-      rt.tv_sec = abstime->tv_sec - tv.tv_sec;
-      rt.tv_nsec = abstime->tv_nsec - tv.tv_usec * 1000;
+      rt.tv_sec = abstime->tv_sec - ts.tv_sec;
+      rt.tv_nsec = abstime->tv_nsec - ts.tv_nsec;
       if (rt.tv_nsec < 0)
         {
           rt.tv_nsec += 1000000000;

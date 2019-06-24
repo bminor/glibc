@@ -1,5 +1,40 @@
 2019-07-12  Mike Crowe  <mac@mcrowe.com>
 
+	nptl: Rename lll_timedlock to lll_clocklock and add clockid
+	parameter to indicate the clock that the abstime parameter should
+	be measured against in preparation for adding
+	pthread_mutex_clocklock.
+	* sysdeps/nptl/lowlevellock.h (lll_clocklock): Rename from
+	lll_timedlock and add clockid parameter. (__lll_clocklock): Rename
+	from __lll_timedlock and add clockid parameter.
+	* sysdeps/unix/sysv/linux/sparc/lowlevellock.h (lll_clocklock):
+	Likewise.
+	* nptl/lll_timedlock_wait.c (__lll_clocklock_wait): Rename from
+	__lll_timedlock_wait and add clockid parameter. Use __clock_gettime
+	rather than __gettimeofday so that clockid can be used. This means
+	that conversion from struct timeval is no longer required.
+	* sysdeps/sparc/sparc32/lowlevellock.c (lll_clocklock_wait):
+	Likewise.
+	* sysdeps/sparc/sparc32/lll_timedlock_wait.c: Update comment to
+	refer to __lll_clocklock_wait rather than __lll_timedlock_wait.
+	* nptl/pthread_mutex_timedlock.c (lll_clocklock_elision): Rename
+	from lll_timedlock_elision, add clockid parameter and use
+	meaningful names for other parameters. (__pthread_mutex_timedlock):
+	Pass CLOCK_REALTIME where necessary to lll_clocklock and
+	lll_clocklock_elision.
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h
+	(lll_clocklock_elision): Rename from lll_timedlock_elision and add
+	clockid parameter. (__lll_clocklock_elision): Rename from
+	__lll_timedlock_elision and add clockid parameter.
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/elision-timed.c
+	(__lll_lock_elision): Call __lll_clocklock_elision rather than
+	__lll_timedlock_elision. (EXTRAARG): Add clockid parameter.
+	(LLL_LOCK): Likewise.
+	* sysdeps/unix/sysv/linux/s390/elision-timed.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86/elision-timed.c: Likewise.
+
 	nptl: Add POSIX-proposed pthread_rwlock_clockrdlock &
 	pthread_rwlock_clockwrlock which behave like
 	pthread_rwlock_timedrdlock and pthread_rwlock_timedwrlock
