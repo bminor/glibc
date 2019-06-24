@@ -1,3 +1,9 @@
+2019-06-24  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #24652]
+	* localedata/locales/szl_PL (day): Use the correct Unicode
+	sequences instead of non-ASCII characters.
+
 2019-06-24  Grzegorz Kulik  <gregorykkulik@gmail.com>
 
 	[BZ #24652]
