@@ -42,14 +42,13 @@
 #endif
 
 int
-__pthread_mutex_timedlock (pthread_mutex_t *mutex,
-			   const struct timespec *abstime)
+__pthread_mutex_clocklock_common (pthread_mutex_t *mutex,
+				  clockid_t clockid,
+				  const struct timespec *abstime)
 {
   int oldval;
   pid_t id = THREAD_GETMEM (THREAD_SELF, tid);
   int result = 0;
-
-  LIBC_PROBE (mutex_timedlock_entry, 2, mutex, abstime);
 
   /* We must not check ABSTIME here.  If the thread does not block
      abstime must not be checked for a valid value.  */
@@ -76,7 +75,7 @@ __pthread_mutex_timedlock (pthread_mutex_t *mutex,
 	}
 
       /* We have to get the mutex.  */
-      result = lll_clocklock (mutex->__data.__lock, CLOCK_REALTIME, abstime,
+      result = lll_clocklock (mutex->__data.__lock, clockid, abstime,
 			      PTHREAD_MUTEX_PSHARED (mutex));
 
       if (result != 0)
@@ -99,7 +98,7 @@ __pthread_mutex_timedlock (pthread_mutex_t *mutex,
       FORCE_ELISION (mutex, goto elision);
     simple:
       /* Normal mutex.  */
-      result = lll_clocklock (mutex->__data.__lock, CLOCK_REALTIME, abstime,
+      result = lll_clocklock (mutex->__data.__lock, clockid, abstime,
 			      PTHREAD_MUTEX_PSHARED (mutex));
       break;
 
@@ -108,7 +107,7 @@ __pthread_mutex_timedlock (pthread_mutex_t *mutex,
       /* Don't record ownership */
       return lll_clocklock_elision (mutex->__data.__lock,
 				    mutex->__data.__spins,
-				    CLOCK_REALTIME, abstime,
+				    clockid, abstime,
 				    PTHREAD_MUTEX_PSHARED (mutex));
 
 
@@ -126,7 +125,7 @@ __pthread_mutex_timedlock (pthread_mutex_t *mutex,
 	      if (cnt++ >= max_cnt)
 		{
 		  result = lll_clocklock (mutex->__data.__lock,
-					  CLOCK_REALTIME, abstime,
+					  clockid, abstime,
 					  PTHREAD_MUTEX_PSHARED (mutex));
 		  break;
 		}
@@ -269,7 +268,7 @@ __pthread_mutex_timedlock (pthread_mutex_t *mutex,
 
 	  /* Block using the futex.  */
 	  int err = lll_futex_clock_wait_bitset (&mutex->__data.__lock,
-	      oldval, CLOCK_REALTIME, abstime,
+	      oldval, clockid, abstime,
 	      PTHREAD_ROBUST_MUTEX_PSHARED (mutex));
 	  /* The futex call timed out.  */
 	  if (err == -ETIMEDOUT)
@@ -405,7 +404,7 @@ __pthread_mutex_timedlock (pthread_mutex_t *mutex,
 		    struct timespec reltime;
 		    struct timespec now;
 
-		    INTERNAL_SYSCALL (clock_gettime, __err, 2, CLOCK_REALTIME,
+		    INTERNAL_SYSCALL (clock_gettime, __err, 2, clockid,
 				      &now);
 		    reltime.tv_sec = abstime->tv_sec - now.tv_sec;
 		    reltime.tv_nsec = abstime->tv_nsec - now.tv_nsec;
@@ -622,5 +621,26 @@ __pthread_mutex_timedlock (pthread_mutex_t *mutex,
 
  out:
   return result;
+}
+
+int
+__pthread_mutex_clocklock (pthread_mutex_t *mutex,
+			   clockid_t clockid,
+			   const struct timespec *abstime)
+{
+  if (__glibc_unlikely (!lll_futex_supported_clockid (clockid)))
+    return EINVAL;
+
+  LIBC_PROBE (mutex_clocklock_entry, 3, mutex, clockid, abstime);
+  return __pthread_mutex_clocklock_common (mutex, clockid, abstime);
+}
+weak_alias (__pthread_mutex_clocklock, pthread_mutex_clocklock)
+
+int
+__pthread_mutex_timedlock (pthread_mutex_t *mutex,
+			   const struct timespec *abstime)
+{
+  LIBC_PROBE (mutex_timedlock_entry, 2, mutex, abstime);
+  return __pthread_mutex_clocklock_common (mutex, CLOCK_REALTIME, abstime);
 }
 weak_alias (__pthread_mutex_timedlock, pthread_mutex_timedlock)

@@ -1,5 +1,81 @@
 2019-07-12  Mike Crowe  <mac@mcrowe.com>
 
+	nptl: Add POSIX-proposed pthread_mutex_clocklock function that
+	works like pthread_mutex_timedlock but takes a clockid parameter to
+	measure the abstime parameter against.
+	* sysdeps/nptl/pthread.h: Add pthread_mutex_clocklock.
+	* nptl/DESIGN-systemtap-probes.txt: Likewise.
+	* nptl/pthread_mutex_timedlock.c
+	(__pthread_mutex_clocklock_common): Rename from
+	__pthread_mutex_timedlock and add clockid parameter. Pass this
+	parameter to lll_clocklock and lll_clocklock_elision in place of
+	CLOCK_REALTIME. (__pthread_mutex_clocklock): New function to add
+	LIBC_PROBE and validate clockid parameter before calling
+	__pthread_mutex_clocklock_common. (__pthread_mutex_timedlock): New
+	implementation to add LIBC_PROBE and calls
+	__pthread_mutex_clocklock_common passing CLOCK_REALTIME as the
+	clockid.
+	* nptl/Makefile: Add tst-mutex11.c.
+	* nptl/tst-abstime.c (th): Add tests for pthread_mutex_clocklock.
+	* nptl/tst-mutex11.c: New tests for passing invalid and unsupported
+	clockid parameters to pthread_mutex_clocklock.
+	* nptl/tst-mutex5.c (do_test_clock): Rename from do_test and take
+	clockid parameter to indicate which clock to be used. Call
+	pthread_mutex_timedlock or pthread_mutex_clocklock as appropriate.
+	(do_test): Call do_test_clock to separately test
+	pthread_mutex_timedlock, pthread_mutex_clocklock(CLOCK_REALTIME)
+	and pthread_mutex_clocklock(CLOCK_MONOTONIC).
+	* nptl/tst-mutex9.c: Likewise.
+	* nptl/Versions (GLIBC_2.30): Add pthread_mutex_clocklock.
+	* sysdeps/unix/sysv/linux/aarch64/libpthread.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libpthread.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/arm/libpthread.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/csky/libpthread.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libpthread.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/libpthread.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libpthread.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libpthread.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/riscv/rv64/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/sh/libpthread.abilist (GLIBC_2.30):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libpthread.abilist
+	(GLIBC_2.30): Likewise.
+
 	nptl: Rename lll_timedlock to lll_clocklock and add clockid
 	parameter to indicate the clock that the abstime parameter should
 	be measured against in preparation for adding

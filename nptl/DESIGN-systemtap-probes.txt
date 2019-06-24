@@ -32,6 +32,9 @@ mutex_entry   - probe for entry to the pthread_mutex_lock function
               arg1 = address of mutex lock
 mutex_timedlock_entry - probe for entry to the pthread_mutex_timedlock function
                       arg1 = address of mutex lock, arg2 = address of timespec
+mutex_clocklock_entry - probe for entry to the pthread_mutex_clocklock function
+                      arg1 = address of mutex lock, arg2 = clockid,
+		      arg3 = address of timespec
 mutex_release - probe for pthread_mutex_unlock after the successful release of a
                 mutex lock
               arg1 = address of mutex lock

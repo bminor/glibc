@@ -32,12 +32,17 @@
 # define TYPE PTHREAD_MUTEX_NORMAL
 #endif
 
+/* A bogus clock value that tells run_test to use
+   pthread_mutex_timedlock rather than pthread_mutex_clocklock.  */
+#define CLOCK_USE_TIMEDLOCK (-1)
 
 static int
-do_test (void)
+do_test_clock (clockid_t clockid, const char *fnname)
 {
   pthread_mutex_t m;
   pthread_mutexattr_t a;
+  const clockid_t clockid_for_get =
+    (clockid == CLOCK_USE_TIMEDLOCK) ? CLOCK_REALTIME : clockid;
 
   TEST_COMPARE (pthread_mutexattr_init (&a), 0);
   TEST_COMPARE (pthread_mutexattr_settype (&a, TYPE), 0);
@@ -62,16 +67,23 @@ do_test (void)
     FAIL_EXIT1 ("mutex_trylock succeeded");
 
   /* Wait 2 seconds.  */
-  struct timespec ts_timeout = timespec_add (xclock_now (CLOCK_REALTIME),
+  struct timespec ts_timeout = timespec_add (xclock_now (clockid_for_get),
                                              make_timespec (2, 0));
 
-  TEST_COMPARE (pthread_mutex_timedlock (&m, &ts_timeout), ETIMEDOUT);
-  TEST_TIMESPEC_BEFORE_NOW (ts_timeout, CLOCK_REALTIME);
+  if (clockid == CLOCK_USE_TIMEDLOCK)
+    TEST_COMPARE (pthread_mutex_timedlock (&m, &ts_timeout), ETIMEDOUT);
+  else
+    TEST_COMPARE (pthread_mutex_clocklock (&m, clockid, &ts_timeout),
+		  ETIMEDOUT);
+  TEST_TIMESPEC_BEFORE_NOW (ts_timeout, clockid_for_get);
 
   /* The following makes the ts value invalid.  */
   ts_timeout.tv_nsec += 1000000000;
 
-  TEST_COMPARE (pthread_mutex_timedlock (&m, &ts_timeout), EINVAL);
+  if (clockid == CLOCK_USE_TIMEDLOCK)
+    TEST_COMPARE (pthread_mutex_timedlock (&m, &ts_timeout), EINVAL);
+  else
+    TEST_COMPARE (pthread_mutex_clocklock (&m, clockid, &ts_timeout), EINVAL);
   TEST_COMPARE (pthread_mutex_unlock (&m), 0);
 
   const struct timespec ts_start = xclock_now (CLOCK_REALTIME);
@@ -79,9 +91,12 @@ do_test (void)
   /* Wait 2 seconds.  */
   ts_timeout = timespec_add (ts_start, make_timespec (2, 0));
 
-  TEST_COMPARE (pthread_mutex_timedlock (&m, &ts_timeout), 0);
+  if (clockid == CLOCK_USE_TIMEDLOCK)
+    TEST_COMPARE (pthread_mutex_timedlock (&m, &ts_timeout), 0);
+  else
+    TEST_COMPARE (pthread_mutex_clocklock (&m, clockid, &ts_timeout), 0);
 
-  const struct timespec ts_end = xclock_now (CLOCK_REALTIME);
+  const struct timespec ts_end = xclock_now (clockid_for_get);
 
   /* Check that timedlock didn't delay.  We use a limit of 0.1 secs.  */
   TEST_TIMESPEC_BEFORE (ts_end,
@@ -90,6 +105,14 @@ do_test (void)
   TEST_COMPARE (pthread_mutex_unlock (&m), 0);
   TEST_COMPARE (pthread_mutex_destroy (&m), 0);
 
+  return 0;
+}
+
+static int do_test (void)
+{
+  do_test_clock (CLOCK_USE_TIMEDLOCK, "timedlock");
+  do_test_clock (CLOCK_REALTIME, "clocklock(realtime)");
+  do_test_clock (CLOCK_MONOTONIC, "clocklock(monotonic)");
   return 0;
 }
 

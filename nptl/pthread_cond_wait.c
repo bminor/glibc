@@ -655,6 +655,10 @@ __pthread_cond_timedwait (pthread_cond_t *cond, pthread_mutex_t *mutex,
                     ? CLOCK_MONOTONIC : CLOCK_REALTIME;
   return __pthread_cond_wait_common (cond, mutex, clockid, abstime);
 }
+versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,
+		  GLIBC_2_3_2);
+versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
+		  GLIBC_2_3_2);
 
 /* See __pthread_cond_wait_common.  */
 int
@@ -677,9 +681,4 @@ __pthread_cond_clockwait (pthread_cond_t *cond, pthread_mutex_t *mutex,
 
   return __pthread_cond_wait_common (cond, mutex, clockid, abstime);
 }
-
-versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,
-		  GLIBC_2_3_2);
-versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
-		  GLIBC_2_3_2);
 weak_alias (__pthread_cond_clockwait, pthread_cond_clockwait);

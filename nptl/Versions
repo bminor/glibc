@@ -279,6 +279,7 @@ libpthread {
   GLIBC_2.30 {
     sem_clockwait; pthread_cond_clockwait;
     pthread_rwlock_clockrdlock; pthread_rwlock_clockwrlock;
+    pthread_mutex_clocklock;
   }
 
   GLIBC_PRIVATE {

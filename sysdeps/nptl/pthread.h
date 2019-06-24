@@ -770,6 +770,13 @@ extern int pthread_mutex_timedlock (pthread_mutex_t *__restrict __mutex,
 				    __abstime) __THROWNL __nonnull ((1, 2));
 #endif
 
+#ifdef __USE_GNU
+extern int pthread_mutex_clocklock (pthread_mutex_t *__restrict __mutex,
+				    clockid_t __clockid,
+				    const struct timespec *__restrict
+				    __abstime) __THROWNL __nonnull ((1, 3));
+#endif
+
 /* Unlock a mutex.  */
 extern int pthread_mutex_unlock (pthread_mutex_t *__mutex)
      __THROWNL __nonnull ((1));

@@ -31,9 +31,15 @@
 #include <support/xunistd.h>
 
 
-static int
-do_test (void)
+/* A bogus clock value that tells run_test to use pthread_mutex_timedlock
+   rather than pthread_mutex_clocklock.  */
+#define CLOCK_USE_TIMEDLOCK (-1)
+
+static void
+do_test_clock (clockid_t clockid)
 {
+  const clockid_t clockid_for_get =
+    (clockid == CLOCK_USE_TIMEDLOCK) ? CLOCK_REALTIME : clockid;
   size_t ps = sysconf (_SC_PAGESIZE);
   char tmpfname[] = "/tmp/tst-mutex9.XXXXXX";
   char data[ps];
@@ -95,10 +101,13 @@ do_test (void)
       if (pthread_mutex_unlock (m) == 0)
         FAIL_EXIT1 ("child: mutex_unlock succeeded");
 
-      const struct timespec ts = timespec_add (xclock_now (CLOCK_REALTIME),
+      const struct timespec ts = timespec_add (xclock_now (clockid_for_get),
                                                make_timespec (0, 500000000));
 
-      TEST_COMPARE (pthread_mutex_timedlock (m, &ts), ETIMEDOUT);
+      if (clockid == CLOCK_USE_TIMEDLOCK)
+        TEST_COMPARE (pthread_mutex_timedlock (m, &ts), ETIMEDOUT);
+      else
+        TEST_COMPARE (pthread_mutex_clocklock (m, clockid, &ts), ETIMEDOUT);
 
       alarm (1);
 
@@ -117,7 +126,14 @@ do_test (void)
   if (! WIFSIGNALED (status))
     FAIL_EXIT1 ("child not killed by signal");
   TEST_COMPARE (WTERMSIG (status), SIGALRM);
+}
 
+static int
+do_test (void)
+{
+  do_test_clock (CLOCK_USE_TIMEDLOCK);
+  do_test_clock (CLOCK_REALTIME);
+  do_test_clock (CLOCK_MONOTONIC);
   return 0;
 }
 

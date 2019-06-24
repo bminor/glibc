@@ -36,6 +36,8 @@ th (void *arg)
   struct timespec t = { -2, 0 };
 
   TEST_COMPARE (pthread_mutex_timedlock (&m1, &t), ETIMEDOUT);
+  TEST_COMPARE (pthread_mutex_clocklock (&m1, CLOCK_REALTIME, &t), ETIMEDOUT);
+  TEST_COMPARE (pthread_mutex_clocklock (&m1, CLOCK_MONOTONIC, &t), ETIMEDOUT);
   TEST_COMPARE (pthread_rwlock_timedrdlock (&rw1, &t), ETIMEDOUT);
   TEST_COMPARE (pthread_rwlock_timedwrlock (&rw2, &t), ETIMEDOUT);
   TEST_COMPARE (pthread_rwlock_clockrdlock (&rw1, CLOCK_REALTIME, &t),
