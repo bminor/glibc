@@ -1,5 +1,16 @@
 2019-07-12  Mike Crowe  <mac@mcrowe.com>
 
+	* nptl/pthread_cond_wait.c: (__pthread_cond_clockwait): Remove code
+	that is only useful if futex_supports_exact_relative_timeouts ()
+	returns false.
+	* nptl/pthread_condattr_setclock.c: (pthread_condattr_setclock):
+	Likewise.
+	* sysdeps/nptl/futex-internal.h: Remove comment about relative
+	timeouts potentially being imprecise since it's no longer true.
+	Remove declaration of futex_supports_exact_relative_timeouts.
+	* sysdeps/unix/sysv/linux/futex-internal.h: Remove implementation
+	of futex_supports_exact_relative_timeouts.
+
 	* NEWS: Mention recently-added pthread_cond_clockwait,
 	pthread_rwlock_clockrdlock, pthread_rwlock_clockwrlock and
 	sem_clockwait functions.

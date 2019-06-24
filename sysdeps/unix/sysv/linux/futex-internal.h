@@ -46,14 +46,6 @@ futex_supports_pshared (int pshared)
     return EINVAL;
 }
 
-/* The Linux kernel supports relative timeouts measured against the
-   CLOCK_MONOTONIC clock.  */
-static __always_inline bool
-futex_supports_exact_relative_timeouts (void)
-{
-  return true;
-}
-
 /* See sysdeps/nptl/futex-internal.h for details.  */
 static __always_inline int
 futex_wait (unsigned int *futex_word, unsigned int expected, int private)

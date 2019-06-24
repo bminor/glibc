@@ -674,11 +674,6 @@ __pthread_cond_clockwait (pthread_cond_t *cond, pthread_mutex_t *mutex,
   if (!futex_abstimed_supported_clockid (clockid))
     return EINVAL;
 
-  /* If we do not support waiting using CLOCK_MONOTONIC, return an error.  */
-  if (clockid == CLOCK_MONOTONIC
-      && !futex_supports_exact_relative_timeouts ())
-    return EINVAL;
-
   return __pthread_cond_wait_common (cond, mutex, clockid, abstime);
 }
 weak_alias (__pthread_cond_clockwait, pthread_cond_clockwait);

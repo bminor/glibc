@@ -33,11 +33,6 @@ pthread_condattr_setclock (pthread_condattr_t *attr, clockid_t clock_id)
        in the pthread_cond_t structure needs to be adjusted.  */
     return EINVAL;
 
-  /* If we do not support waiting using CLOCK_MONOTONIC, return an error.  */
-  if (clock_id == CLOCK_MONOTONIC
-      && !futex_supports_exact_relative_timeouts())
-    return ENOTSUP;
-
   /* Make sure the value fits in the bits we reserved.  */
   assert (clock_id < (1 << COND_CLOCK_BITS));
 
