@@ -1,3 +1,7 @@
+2019-06-25  Stefan Liebler  <stli@linux.ibm.com>
+
+	* sysdeps/s390/fpu/libm-test-ulps: Regenerated.
+
 2019-06-24  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	[BZ #24652]
