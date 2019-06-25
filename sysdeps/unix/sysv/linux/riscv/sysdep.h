@@ -116,6 +116,67 @@
 
 #include <sysdeps/unix/sysdep.h>
 
+#if __riscv_xlen == 32
+/* Define the __NR_futex as __NR_futex64 as RV32 doesn't have a
+ * __NR_futex syscall.
+ */
+# ifndef __NR_futex
+#  define __NR_futex __NR_futex_time64
+# endif
+
+# ifndef __NR_rt_sigtimedwait
+#  define __NR_rt_sigtimedwait __NR_rt_sigtimedwait_time64
+# endif
+
+# ifndef __NR_ppoll
+#  define __NR_ppoll __NR_ppoll_time64
+# endif
+
+# ifndef __NR_utimensat
+#  define __NR_utimensat __NR_utimensat_time64
+# endif
+
+# ifndef __NR_pselect6
+#  define __NR_pselect6 __NR_pselect6_time64
+# endif
+
+# ifndef __NR_recvmmsg
+#  define __NR_recvmmsg __NR_recvmmsg_time64
+# endif
+
+# ifndef __NR_semtimedop
+#  define __NR_semtimedop __NR_semtimedop_time64
+# endif
+
+# ifndef __NR_mq_timedreceive
+#  define __NR_mq_timedreceive __NR_mq_timedreceive_time64
+# endif
+
+# ifndef __NR_mq_timedsend
+#  define __NR_mq_timedsend __NR_mq_timedsend_time64
+# endif
+
+# ifndef __NR_clock_getres
+#  define __NR_clock_getres __NR_clock_getres_time64
+# endif
+
+# ifndef __NR_timerfd_settime
+#  define __NR_timerfd_settime __NR_timerfd_settime64
+# endif
+
+# ifndef __NR_timerfd_gettime
+#  define __NR_timerfd_gettime __NR_timerfd_gettime64
+# endif
+
+# ifndef __NR_sched_rr_get_interval
+#  define __NR_sched_rr_get_interval __NR_sched_rr_get_interval_time64
+# endif
+
+# ifndef __NR_clock_adjtime
+#  define __NR_clock_adjtime __NR_clock_adjtime64
+# endif
+#endif /* __riscv_xlen == 32 */
+
 #undef SYS_ify
 #define SYS_ify(syscall_name)	__NR_##syscall_name
 
