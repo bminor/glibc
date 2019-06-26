@@ -1,3 +1,9 @@
+2019-06-26  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/dl-lookupcfg.h: Moved to ...
+	* sysdeps/x86/dl-lookupcfg.h: Here.
+	* sysdeps/x86_64/dl-lookupcfg.h: Removed.
+
 2019-06-26  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile
