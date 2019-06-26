@@ -81,6 +81,17 @@ asuint64 (double f)
   return u.i;
 }
 
+static inline vector unsigned long long
+vasuint64 (vector double f)
+{
+  union
+  {
+    vector double f;
+    vector unsigned long long i;
+  } u = {f};
+  return u.i;
+}
+
 static inline double
 asdouble (uint64_t i)
 {
@@ -88,6 +99,17 @@ asdouble (uint64_t i)
   {
     uint64_t i;
     double f;
+  } u = {i};
+  return u.f;
+}
+
+static inline vector double
+vasdouble (vector unsigned long long i)
+{
+  union
+  {
+    vector unsigned long long i;
+    vector double f;
   } u = {i};
   return u.f;
 }
@@ -190,9 +212,9 @@ extern const struct log2_data
 #define POW_LOG_POLY_ORDER 8
 extern const struct pow_log_data
 {
-  double ln2hi;
-  double ln2lo;
-  double poly[POW_LOG_POLY_ORDER - 1]; /* First coefficient is 1.  */
+  vector double ln2hi;
+  vector double ln2lo;
+  vector double poly[POW_LOG_POLY_ORDER - 1]; /* First coefficient is 1.  */
   /* Note: the pad field is unused, but allows slightly faster indexing.  */
   /* See e_pow_log_data.c for details.  */
   struct {double invc, pad, logc, logctail;} tab[1 << POW_LOG_TABLE_BITS];

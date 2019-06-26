@@ -2533,6 +2533,9 @@ ifloat128: 2
 ildouble: 1
 ldouble: 1
 
+Function: "pow_vlen2":
+double: 1
+
 Function: "sin":
 double: 1
 float: 1

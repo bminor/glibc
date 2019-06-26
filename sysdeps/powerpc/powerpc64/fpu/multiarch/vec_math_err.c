@@ -16,14 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <fpu/math-barriers.h>
 #include "math_config_dbl.h"
-
-/* NOINLINE reduces code size.  */
+/* NOINLINE prevents fenv semantics breaking optimizations.  */
 NOINLINE static double
 xflow (uint32_t sign, double y)
 {
-  y = math_opt_barrier (sign ? -y : y) * y;
+  y = (sign ? -y : y) * y;
   return y;
 }
 
@@ -37,4 +35,17 @@ attribute_hidden double
 __math_oflow (uint32_t sign)
 {
   return xflow (sign, 0x1p769);
+}
+
+
+attribute_hidden double
+__math_invalid(double x)
+{
+  return (x - x) / (x - x);
+}
+
+attribute_hidden double
+__math_divzero(uint32_t sign)
+{
+  return (double)(sign ? -1.0 : 1.0) / 0.0;
 }

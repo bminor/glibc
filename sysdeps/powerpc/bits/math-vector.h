@@ -50,6 +50,8 @@
 #  define __DECL_SIMD_exp __DECL_SIMD_PPC64
 #  undef __DECL_SIMD_powf
 #  define __DECL_SIMD_powf __DECL_SIMD_PPC64
+#  undef __DECL_SIMD_pow
+#  define __DECL_SIMD_pow __DECL_SIMD_PPC64
 
 # endif
 #endif
