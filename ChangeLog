@@ -1,3 +1,8 @@
+2019-06-26  Stefan Liebler  <stli@linux.ibm.com>
+
+	* locale/programs/ld-ctype.c (charclass_symbolic_ellipsis):
+	Return error if get_character fails.
+
 2019-06-25  Stefan Liebler  <stli@linux.ibm.com>
 
 	* sysdeps/s390/fpu/libm-test-ulps: Regenerated.

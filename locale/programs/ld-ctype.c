@@ -1396,7 +1396,8 @@ charclass_symbolic_ellipsis (struct linereader *ldfile,
 		   (int) (now->val.str.lenmb - (cp - last_str)),
 		   from);
 
-	  get_character (now, charmap, repertoire, &seq, &wch);
+	  if (get_character (now, charmap, repertoire, &seq, &wch))
+	    goto invalid_range;
 
 	  if (seq != NULL && seq->nbytes == 1)
 	    /* Yep, we can store information about this byte sequence.  */
