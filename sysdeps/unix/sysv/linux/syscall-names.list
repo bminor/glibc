@@ -121,6 +121,7 @@ finit_module
 flistxattr
 flock
 fork
+fp_udfiex_crtl
 free_hugepages
 fremovexattr
 fsetxattr
@@ -603,6 +604,7 @@ tkill
 truncate
 truncate64
 tuxcall
+udftrap
 ugetrlimit
 ulimit
 umask

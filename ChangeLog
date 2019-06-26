@@ -1,3 +1,8 @@
+2019-06-26  Vincent Chen  <vincentc@andestech.com>
+
+	* sysdeps/unix/sysv/linux/syscall-names.list: Add nds32
+	specific system calls, fp_udfiex_crtl and udftrap.
+
 2019-06-26  Stefan Liebler  <stli@linux.ibm.com>
 
 	* nptl/tst-eintr1.c (tf1): Add return statement.
