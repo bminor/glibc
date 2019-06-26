@@ -43,6 +43,7 @@ tf1 (void *arg)
       pthread_t th = xpthread_create (NULL, tf2, NULL);
       xpthread_join (th);
     }
+  return NULL;
 }
 
 
@@ -53,9 +54,7 @@ do_test (void)
 
   int i;
   for (i = 0; i < 10; ++i)
-    {
-      pthread_t th = xpthread_create (NULL, tf1, NULL);
-    }
+    xpthread_create (NULL, tf1, NULL);
 
   delayed_exit (3);
   /* This call must never return.  */
