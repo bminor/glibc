@@ -23,11 +23,17 @@
 #include <sys/param.h>
 #include <unistd.h>
 #include <scratch_buffer.h>
+#include <limits.h>
 
 ssize_t
 __getdents64 (int fd, void *buf0, size_t nbytes)
 {
   char *buf = buf0;
+
+  /* The system call takes an unsigned int argument, and some length
+     checks in the kernel use an int type.  */
+  if (nbytes > INT_MAX)
+    nbytes = INT_MAX;
 
 #ifdef __NR_getdents64
   ssize_t ret = INLINE_SYSCALL_CALL (getdents64, fd, buf, nbytes);

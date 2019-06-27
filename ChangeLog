@@ -1,3 +1,15 @@
+2019-06-27  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24740]
+	* sysdeps/unix/sysv/linux/getdents64.c (__getdents64): Adjust
+	buffer size if necessary.
+	* sysdeps/unix/sysv/linux/mips/mips64/getdents64.c (__getdents64):
+	Likewise.
+	* sysdeps/unix/sysv/linux/tst-getdents64.c (large_buffer_check):
+	New function.
+	(large_buffer_checks): Likewise.
+	(do_test): Call large_buffer_checks.
+
 2019-06-26  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/dl-lookupcfg.h: Moved to ...

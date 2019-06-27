@@ -19,11 +19,16 @@
 #include <string.h>
 #include <dirent.h>
 #include <errno.h>
+#include <limits.h>
 
 /* The kernel struct linux_dirent64 matches the 'struct dirent64' type.  */
 ssize_t
 __getdents64 (int fd, void *buf, size_t nbytes)
 {
+  /* The system call takes an unsigned int argument, and some length
+     checks in the kernel use an int type.  */
+  if (nbytes > INT_MAX)
+    nbytes = INT_MAX;
   return INLINE_SYSCALL_CALL (getdents64, fd, buf, nbytes);
 }
 libc_hidden_def (__getdents64)

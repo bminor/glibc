@@ -19,6 +19,7 @@
 #include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,6 +28,47 @@
 #include <support/support.h>
 #include <support/xunistd.h>
 #include <unistd.h>
+
+/* Called by large_buffer_checks below.  */
+static void
+large_buffer_check (int fd, char *large_buffer, size_t large_buffer_size)
+{
+  xlseek (fd, 0, SEEK_SET);
+  ssize_t ret = getdents64 (fd, large_buffer, large_buffer_size);
+  if (ret < 0)
+    FAIL_EXIT1 ("getdents64 for buffer of %zu bytes failed: %m",
+                large_buffer_size);
+  if (ret < offsetof (struct dirent64, d_name))
+    FAIL_EXIT1 ("getdents64 for buffer of %zu returned small value %zd",
+                large_buffer_size, ret);
+}
+
+/* Bug 24740: Make sure that the system call argument is adjusted
+   properly for the int type.  A large value should stay a large
+   value, and not wrap around to something small, causing the system
+   call to fail with EINVAL.  */
+static void
+large_buffer_checks (int fd)
+{
+  size_t large_buffer_size;
+  if (!__builtin_add_overflow (UINT_MAX, 2, &large_buffer_size))
+    {
+      char *large_buffer = malloc (large_buffer_size);
+      if (large_buffer == NULL)
+        printf ("warning: could not allocate %zu bytes of memory,"
+                " subtests skipped\n", large_buffer_size);
+      else
+        {
+          large_buffer_check (fd, large_buffer, INT_MAX);
+          large_buffer_check (fd, large_buffer, (size_t) INT_MAX + 1);
+          large_buffer_check (fd, large_buffer, (size_t) INT_MAX + 2);
+          large_buffer_check (fd, large_buffer, UINT_MAX);
+          large_buffer_check (fd, large_buffer, (size_t) UINT_MAX + 1);
+          large_buffer_check (fd, large_buffer, (size_t) UINT_MAX + 2);
+        }
+      free (large_buffer);
+    }
+}
 
 static int
 do_test (void)
@@ -104,6 +146,8 @@ do_test (void)
       xlseek (fd, 0, SEEK_SET);
       rewinddir (reference);
     }
+
+  large_buffer_checks (fd);
 
   xclose (fd);
   closedir (reference);
