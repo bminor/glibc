@@ -52,22 +52,7 @@
 #define XXVR(insn, vrt, vra, vrb) \
 	insn 32+vrt, 32+vra, 32+vrb
 
-/* ISA 2.07B instructions are not all defined for older binutils.
-   Macros are defined below for these newer instructions in order
-   to maintain compatibility.  */
-
-/* Note, TX/SX is always set as VMX regs are the high 32 VSX regs.  */
-#define MTVRD(v,r) .long (0x7c000167 | ((v)<<(32-11)) | ((r)<<(32-16)))
-#define MFVRD(r,v) .long (0x7c000067 | ((v)<<(32-11)) | ((r)<<(32-16)))
-
-#define VBPERMQ(t,a,b) .long (0x1000054c \
-			      | ((t)<<(32-11))	\
-			      | ((a)<<(32-16))	\
-			      | ((b)<<(32-21)) )
-
-	/* This can be updated to power8 once the minimum version of
-	   binutils supports power8 and the above instructions.  */
-	.machine power7
+	.machine  power8
 ENTRY_TOCLESS (STRSPN, 4)
 	CALL_MCOUNT 2
 
@@ -135,10 +120,10 @@ L(needle_gt128):
 L(start_cmp):
 	/* Move and merge bitmap into 2 VRs.  bpermd is slower on P8.  */
 	mr	r0, r3		/* Save r3 for final length computation.  */
-	MTVRD (v5, r5)
-	MTVRD (v6, r6)
-	MTVRD (v7, r7)
-	MTVRD (v8, r8)
+	mtvrd	v5, r5
+	mtvrd	v6, r6
+	mtvrd	v7, r7
+	mtvrd	v8, r8
 
 	/* Continue interleaved mask generation.  */
 #ifdef __LITTLE_ENDIAN__
@@ -160,8 +145,8 @@ L(start_cmp):
 	/* Compare the first 1-16B, while masking unwanted bytes.  */
 	clrrdi  r3, r3, 4	/* Note,  counts from qw boundaries.  */
 	vxor	v9, v0, v1	/* Swap high bit.  */
-	VBPERMQ (v8, v5, v0)
-	VBPERMQ (v7, v6, v9)
+	vbpermq	v8, v5, v0
+	vbpermq	v7, v6, v9
 	vor	v7, v7, v8
 	vor	v7, v7, v11	/* Ignore non-participating bytes.  */
 	vcmpequh. v8, v7, v4
@@ -174,8 +159,8 @@ L(vec):
 	lvx	v0, 0, r3
 	addi	r3, r3, 16
 	vxor	v9, v0, v1	/* Swap high bit.  */
-	VBPERMQ (v8, v5, v0)
-	VBPERMQ (v7, v6, v9)
+	vbpermq	v8, v5, v0
+	vbpermq	v7, v6, v9
 	vor	v7, v7, v8
 	vcmpequh. v8, v7, v4
 	blt	cr6, L(vec)
@@ -183,7 +168,7 @@ L(vec):
 	addi	r3, r3, -16
 L(done):
 	subf	r3, r0, r3
-	MFVRD (r10, v7)
+	mfvrd	r10, v7
 
 #ifdef __LITTLE_ENDIAN__
 	addi	r0,  r10, 1	/* Count the trailing 1's.  */

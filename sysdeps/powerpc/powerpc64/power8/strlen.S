@@ -19,23 +19,12 @@
 
 #include <sysdep.h>
 
-/* TODO: change these to the actual instructions when the minimum required
-   binutils allows it.  */
-#define MFVRD(r,v)	.long (0x7c000067 | ((v)<<(32-11)) | ((r)<<(32-16)))
-#define VBPERMQ(t,a,b)	.long (0x1000054c \
-			       | ((t)<<(32-11))	\
-			       | ((a)<<(32-16))	\
-			       | ((b)<<(32-21)) )
-
 /* int [r3] strlen (char *s [r3])  */
 
 #ifndef STRLEN
 # define STRLEN strlen
 #endif
-
-/* TODO: change this to .machine power8 when the minimum required binutils
-   allows it.  */
-	.machine  power7
+	.machine  power8
 ENTRY_TOCLESS (STRLEN, 4)
 	CALL_MCOUNT 1
 	dcbt	0,r3
@@ -250,10 +239,10 @@ L(vmx_zero):
 	vslb	  v10,v11,v10
 
 	/* Permute the first bit of each byte into bits 48-63.  */
-	VBPERMQ(v1,v1,v10)
-	VBPERMQ(v2,v2,v10)
-	VBPERMQ(v3,v3,v10)
-	VBPERMQ(v4,v4,v10)
+	vbpermq	v1,v1,v10
+	vbpermq	v2,v2,v10
+	vbpermq	v3,v3,v10
+	vbpermq	v4,v4,v10
 
 	/* Shift each component into its correct position for merging.  */
 #ifdef __LITTLE_ENDIAN__
@@ -270,7 +259,7 @@ L(vmx_zero):
 	vor	v1,v2,v1
 	vor	v2,v3,v4
 	vor	v4,v1,v2
-	MFVRD(r10,v4)
+	mfvrd	r10,v4
 
 	 /* Adjust address to the begninning of the current 64-byte block.  */
 	addi	r4,r4,-64

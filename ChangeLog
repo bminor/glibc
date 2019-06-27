@@ -1,3 +1,18 @@
+2019-08-01  Raoni Fassina Firmino  <raoni@linux.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power8/memchr.S: Update power8
+	mnemonics and set .machine power8.
+	* sysdeps/powerpc/powerpc64/power8/memcmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/memrchr.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/memset.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/strchr.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/strlen.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/strncmp.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/strncpy.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/strnlen.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/strrchr.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/strspn.S: Likewise.
+
 2019-08-01  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/hppa/fpu/libm-test-ulps: Update.

@@ -60,7 +60,7 @@
    64K as default, the page cross handling assumes minimum page size of
    4k.  */
 
-	.machine  power7
+	.machine  power8
 #ifdef MEMSET_is_local
 ENTRY_TOCLESS (FUNC_NAME, 4)
 #else

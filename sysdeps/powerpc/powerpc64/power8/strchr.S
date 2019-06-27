@@ -33,17 +33,7 @@
 #endif  /* !USE_AS_STRCHRNUL  */
 
 /* int [r3] strchr (char *s [r3], int c [r4])  */
-/* TODO: change these to the actual instructions when the minimum required
-   binutils allows it.  */
-#define MTVRD(v,r) .long (0x7c000167 | ((v)<<(32-11)) | ((r)<<(32-16)))
-#define MFVRD(r,v) .long (0x7c000067 | ((v)<<(32-11)) | ((r)<<(32-16)))
-#define VBPERMQ(t,a,b)  .long (0x1000054c \
-			| ((t)<<(32-11)) \
-			| ((a)<<(32-16)) \
-			| ((b)<<(32-21)) )
-/* TODO: change this to .machine power8 when the minimum required binutils
-   allows it.  */
-	.machine  power7
+	.machine  power8
 ENTRY_TOCLESS (FUNC_NAME)
 	CALL_MCOUNT 2
 	dcbt	0,r3
@@ -178,7 +168,7 @@ L(vector):
 	vspltisb	v10, 3
 	lvsl	v11, r0, r0
 	vslb	v10, v11, v10
-	MTVRD(v1,r4)
+	mtvrd	v1, r4
 	li	r5, 16
 	vspltb	v1, v1, 7
 	/* Compare 32 bytes in each loop.  */
@@ -202,10 +192,10 @@ L(continue):
 	blt	cr6, L(no_match)
 #endif
 	/* Permute the first bit of each byte into bits 48-63.  */
-	VBPERMQ(v2, v2, v10)
-	VBPERMQ(v3, v3, v10)
-	VBPERMQ(v6, v6, v10)
-	VBPERMQ(v7, v7, v10)
+	vbpermq	v2, v2, v10
+	vbpermq	v3, v3, v10
+	vbpermq	v6, v6, v10
+	vbpermq	v7, v7, v10
 	/* Shift each component into its correct position for merging.  */
 #ifdef __LITTLE_ENDIAN__
 	vsldoi	v3, v3, v3, 2
@@ -221,7 +211,7 @@ L(continue):
         vor     v1, v3, v2
         vor     v2, v6, v7
         vor     v4, v1, v2
-	MFVRD(r5, v4)
+	mfvrd	r5, v4
 #ifdef __LITTLE_ENDIAN__
 	addi	r6, r5, -1
 	andc	r6, r6, r5
@@ -347,8 +337,8 @@ L(continue1):
 	blt	cr6, L(continue1)
 	addi	r3, r3, -32
 L(end1):
-	VBPERMQ(v2, v2, v10)
-	VBPERMQ(v3, v3, v10)
+	vbpermq	v2, v2, v10
+	vbpermq	v3, v3, v10
 	/* Shift each component into its correct position for merging.  */
 #ifdef __LITTLE_ENDIAN__
 	vsldoi	v3, v3, v3, 2
@@ -359,7 +349,7 @@ L(end1):
 
         /* Merge the results and move to a GPR.  */
         vor     v4, v3, v2
-	MFVRD(r5, v4)
+	mfvrd	r5, v4
 #ifdef __LITTLE_ENDIAN__
 	addi	r6, r5, -1
 	andc	r6, r6, r5

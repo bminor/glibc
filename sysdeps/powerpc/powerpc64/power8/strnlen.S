@@ -33,32 +33,9 @@
 /* Define default page size to 4KB.  */
 #define PAGE_SIZE 4096
 
-/* The following macros implement Power ISA v2.07 opcodes
-   that could not be used directly into this code to the keep
-   compatibility with older binutils versions.  */
-
-/* Move from vector register doubleword.  */
-#define MFVRD(r,v) .long (0x7c000067 | ((v)<<(32-11)) | ((r)<<(32-16)))
-
-/* Move to vector register doubleword.  */
-#define MTVRD(v,r) .long (0x7c000167 | ((v)<<(32-11)) | ((r)<<(32-16)))
-
-/* Vector Bit Permute Quadword.  */
-#define VBPERMQ(t,a,b)	.long (0x1000054c	\
-			       | ((t)<<(32-11))	\
-			       | ((a)<<(32-16))	\
-			       | ((b)<<(32-21)) )
-
-/* Vector Population Count Halfword.  */
-#define VPOPCNTH(t,b) .long (0x10000743 | ((t)<<(32-11)) | ((b)<<(32-21)))
-
-/* Vector Count Leading Zeros Halfword.  */
-#define VCLZH(t,b) .long (0x10000742 | ((t)<<(32-11)) | ((b)<<(32-21)))
-
 
 /* int [r3] strnlen (char *s [r3], size_t maxlen [r4])  */
-/* TODO: change to power8 when minimum required binutils allows it.  */
-	.machine  power7
+	.machine  power8
 ENTRY_TOCLESS (__strnlen)
 	CALL_MCOUNT 2
 	dcbt	0,r3
@@ -207,7 +184,7 @@ L(smaller):
 	/* Place rounded up number of qw's to check into a vmx
 	   register, and use some vector tricks to minimize
 	   branching.  */
-        MTVRD(v7,r4)            /* Copy maxlen from GPR to vector register. */
+        mtvrd    v7,r4          /* copy maxlen from gpr to vector register. */
         vspltisb v5,1
         vspltisb v6,15
         vspltb   v2,v7,7
@@ -229,20 +206,20 @@ L(loop_16B):
 	beq     cr6,L(loop_16B) /* If null bytes not found.  */
 
 	vcmpequb  v1,v1,v0
-	VBPERMQ(v1,v1,v10)
+	vbpermq   v1,v1,v10
 #ifdef __LITTLE_ENDIAN__
 	vsubuhm  v2,v1,v5       /* Form a mask of trailing zeros.  */
 	vandc    v2,v2,v1
-	VPOPCNTH(v1,v2)         /* Count of trailing zeros, 16 if none.  */
+	vpopcnth v1,v2          /* count of trailing zeros, 16 if none.  */
 #else
-	VCLZH(v1,v1)            /* Count the leading zeros, 16 if none.  */
+	vclzh    v1,v1          /* count the leading zeros, 16 if none.  */
 #endif
 	/* Truncate to maximum allowable offset.  */
 	vcmpgtub v2,v1,v7       /* Compare and truncate for matches beyond
 				   maxlen.  */
 	vsel     v1,v1,v7,v2    /* 0-16 is now in byte 7.  */
 
-	MFVRD(r0,v1)
+	mfvrd   r0,v1
 	addi    r5,r5,-16       /* Undo speculative bump.  */
 	extsb   r0,r0           /* Clear whatever gunk is in the high 56b.  */
 	add     r5,r5,r0        /* Add the offset of whatever was found.  */
@@ -262,10 +239,10 @@ L(found_64B):
 	vcmpequb  v4,v4,v0
 
 	/* Permute the first bit of each byte into bits 48-63.  */
-	VBPERMQ(v1,v1,v10)
-	VBPERMQ(v2,v2,v10)
-	VBPERMQ(v3,v3,v10)
-	VBPERMQ(v4,v4,v10)
+	vbpermq	v1,v1,v10
+	vbpermq	v2,v2,v10
+	vbpermq	v3,v3,v10
+	vbpermq	v4,v4,v10
 
 	/* Shift each component into its correct position for merging.  */
 #ifdef __LITTLE_ENDIAN__
@@ -286,7 +263,7 @@ L(found_64B):
 	/* Adjust address to the start of the current 64B block.  */
 	addi	r5,r5,-64
 
-	MFVRD(r10,v4)
+	mfvrd	r10,v4
 #ifdef __LITTLE_ENDIAN__
 	addi	r9,r10,-1	/* Form a mask from trailing zeros.  */
 	andc	r9,r9,r10
@@ -302,15 +279,15 @@ L(found_64B):
 	   as a preparation for the 64B loop.  */
 	.p2align 4
 L(found_aligning64B):
-	VBPERMQ(v1,v1,v10)
+	vbpermq v1,v1,v10
 #ifdef __LITTLE_ENDIAN__
-	MFVRD(r10,v1)
+	mfvrd   r10,v1
 	addi    r9,r10,-1       /* Form a mask from trailing zeros.  */
 	andc    r9,r9,r10
 	popcntd r0,r9           /* Count the bits in the mask.  */
 #else
 	vsldoi  v1,v1,v1,6
-	MFVRD(r10,v1)
+	mfvrd   r10,v1
 	cntlzd  r0,r10          /* Count leading zeros before the match.  */
 #endif
 	addi    r5,r5,-16	/* Adjust address to offset of last 16 bytes

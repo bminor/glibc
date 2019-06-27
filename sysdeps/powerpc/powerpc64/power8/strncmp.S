@@ -31,7 +31,7 @@
    64K as default, the page cross handling assumes minimum page size of
    4k.  */
 
-	.machine  power7
+	.machine  power8
 ENTRY_TOCLESS (STRNCMP, 4)
 	/* Check if size is 0.  */
 	mr.	r10,r5

@@ -18,19 +18,13 @@
 
 #include <sysdep.h>
 
-#define MTVSRD_V1_R4  .long 0x7c240166     /* mtvsrd  v1,r4  */
-
 /* void * [r3] memset (void *s [r3], int c [r4], size_t n [r5]));
    Returns 's'.  */
 
 #ifndef MEMSET
 # define MEMSET memset
 #endif
-
-	/* No need to use .machine power8 since mtvsrd is already
-	   handled by the define.  It avoid breakage on binutils
-	   that does not support this machine specifier.  */
-	.machine power7
+	.machine  power8
 ENTRY_TOCLESS (MEMSET, 5)
 	CALL_MCOUNT 3
 
@@ -151,7 +145,7 @@ L(tail_bytes):
 	   vector instruction to achieve best throughput.  */
 L(huge_vector):
 	/* Replicate set byte to quadword in VMX register.  */
-	MTVSRD_V1_R4
+	mtvsrd	v1,r4
 	xxpermdi 32,v0,v1,0
 	vspltb	 v2,v0,15
 

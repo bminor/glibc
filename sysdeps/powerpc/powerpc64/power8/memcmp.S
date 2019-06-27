@@ -22,13 +22,10 @@
 		    const char *s2 [r4],
 		    size_t size [r5])  */
 
-/* TODO: change these to the actual instructions when the minimum required
-   binutils allows it.  */
-#define MFVRD(r,v)	.long (0x7c000067 | ((v)<<(32-11)) | ((r)<<(32-16)))
 #ifndef MEMCMP
 # define MEMCMP memcmp
 #endif
-	.machine power7
+	.machine  power8
 ENTRY_TOCLESS (MEMCMP, 4)
 	CALL_MCOUNT 3
 
@@ -231,15 +228,15 @@ L(different2):
 	vperm	v4, v4, v0, v9
 	vperm	v5, v5, v0, v9
 #endif
-	MFVRD(r7, v4)
-	MFVRD(r9, v5)
+	mfvrd	r7, v4
+	mfvrd	r9, v5
 	cmpld	cr6, r7, r9
 	bne	cr6, L(ret_diff)
 	/* Difference in second DW.  */
 	vsldoi	v4, v4, v4, 8
 	vsldoi	v5, v5, v5, 8
-	MFVRD(r7, v4)
-	MFVRD(r9, v5)
+	mfvrd	r7, v4
+	mfvrd	r9, v5
 	cmpld	cr6, r7, r9
 L(ret_diff):
 	li	rRTN, 1
@@ -256,15 +253,15 @@ L(different3):
 	vperm	v6, v6, v0, v9
 	vperm	v8, v8, v0, v9
 #endif
-	MFVRD(r7, v6)
-	MFVRD(r9, v8)
+	mfvrd	r7, v6
+	mfvrd	r9, v8
 	cmpld	cr6, r7, r9
 	bne	cr6, L(ret_diff)
 	/* Difference in second DW.  */
 	vsldoi	v6, v6, v6, 8
 	vsldoi	v8, v8, v8, 8
-	MFVRD(r7, v6)
-	MFVRD(r9, v8)
+	mfvrd	r7, v6
+	mfvrd	r9, v8
 	cmpld	cr6, r7, r9
 	li	rRTN, 1
 	bgtlr	cr6

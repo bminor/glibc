@@ -19,26 +19,13 @@
 #include <sysdep.h>
 
 /* char *[r3] strrchr (char *s [r3], int c [r4])  */
-/* TODO: change these to the actual instructions when the minimum required
-   binutils allows it.  */
-#define MTVRD(v,r) .long (0x7c000167 | ((v)<<(32-11)) | ((r)<<(32-16)))
-#define MFVRD(r,v) .long (0x7c000067 | ((v)<<(32-11)) | ((r)<<(32-16)))
-#define VBPERMQ(t,a,b)  .long (0x1000054c \
-				| ((t)<<(32-11)) \
-				| ((a)<<(32-16)) \
-				| ((b)<<(32-21)) )
-#define VCLZD(r,v) .long (0x100007c2 | ((r)<<(32-11)) | ((v)<<(32-21)))
-#define VPOPCNTD(r,v) .long (0x100007c3 | ((r)<<(32-11)) | ((v)<<(32-21)))
-#define VADDUQM(t,a,b)  .long (0x10000100 \
-				| ((t)<<(32-11)) \
-				| ((a)<<(32-16)) \
-				| ((b)<<(32-21)) )
+
 #ifdef __LITTLE_ENDIAN__
 /* Find the match position from v6 and place result in r6.  */
 # define CALCULATE_MATCH() \
-	VBPERMQ(v6, v6, v10); \
+	vbpermq	v6, v6, v10; \
 	vsldoi	v6, v6, v6, 6; \
-	MFVRD(r7, v6); \
+	mfvrd	r7, v6; \
 	cntlzd	r6, r7; \
 	subfic	r6, r6, 15;
 /*
@@ -48,9 +35,9 @@
  */
 # define FIND_NULL_POS(reg) \
 	vspltisb	v11, -1; \
-	VADDUQM(v11, reg, v11); \
+	vadduqm	v11, reg, v11; \
 	vandc	v11, v11, reg; \
-	VPOPCNTD(v2, v11); \
+	vpopcntd	v2, v11; \
 	vspltb	v11, v2, 15; \
 	vcmpequb.	v11, v11, v9; \
 	blt	cr6, 1f; \
@@ -60,14 +47,14 @@
 	vsumsws	v2, v2, v0;
 #else
 # define CALCULATE_MATCH() \
-	VBPERMQ(v6, v6, v10); \
-	MFVRD(r7, v6); \
+	vbpermq	v6, v6, v10; \
+	mfvrd	r7, v6; \
 	addi	r6, r7, -1; \
 	andc	r6, r6, r7; \
 	popcntd	r6, r6; \
 	subfic	r6, r6, 15;
 # define FIND_NULL_POS(reg) \
-	VCLZD(v2, reg); \
+	vclzd	v2, reg; \
 	vspltb	v11, v2, 7; \
 	vcmpequb.	v11, v11, v9; \
 	blt	cr6, 1f; \
@@ -80,7 +67,7 @@
 #ifndef STRRCHR
 # define STRRCHR strrchr
 #endif
-	.machine  power7
+	.machine  power8
 ENTRY_TOCLESS (STRRCHR)
 	CALL_MCOUNT 2
 	dcbt	0,r3
@@ -243,7 +230,7 @@ L(vector):
 	vspltisb	v10, 3
 	lvsl	v11, r0, r0
 	vslb	v10, v11, v10
-	MTVRD(v1, r4)
+	mtvrd	v1, r4
 	li	r5, 16
 	vspltb	v1, v1, 7
 	/* Compare 32 bytes in each loop.  */
@@ -442,8 +429,8 @@ L(continue1):
 	addi	r3, r3, 32
 	blt	cr6, L(continue1)
 	addi	r3, r3, -32
-	VBPERMQ(v2, v2, v10)
-	VBPERMQ(v3, v3, v10)
+	vbpermq	v2, v2, v10
+	vbpermq	v3, v3, v10
 	/* Shift each component into its correct position for merging.  */
 #ifdef __LITTLE_ENDIAN__
 	vsldoi	v3, v3, v3, 2
@@ -453,7 +440,7 @@ L(continue1):
 #endif
 	/* Merge the results and move to a GPR.  */
 	vor	v4, v3, v2
-	MFVRD(r5, v4)
+	mfvrd	r5, v4
 #ifdef __LITTLE_ENDIAN__
 	addi	r6, r5, -1
 	andc	r6, r6, r5

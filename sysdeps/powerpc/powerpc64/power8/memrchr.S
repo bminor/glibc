@@ -21,18 +21,10 @@
 
 /* int [r3] memrchr (char *s [r3], int byte [r4], int size [r5])  */
 
-/* TODO: change these to the actual instructions when the minimum required
-   binutils allows it.  */
-#define MTVRD(v, r) .long (0x7c000167 | ((v)<<(32-11)) | ((r)<<(32-16)))
-#define MFVRD(r, v) .long (0x7c000067 | ((v)<<(32-11)) | ((r)<<(32-16)))
-#define VBPERMQ(t, a, b)  .long (0x1000054c \
-				| ((t)<<(32-11)) \
-				| ((a)<<(32-16)) \
-				| ((b)<<(32-21)) )
 #ifndef MEMRCHR
 # define MEMRCHR __memrchr
 #endif
-	.machine  power7
+	.machine  power8
 ENTRY_TOCLESS (MEMRCHR)
 	CALL_MCOUNT 3
 	add	r7, r3, r5      /* Calculate the last acceptable address.  */
@@ -92,7 +84,7 @@ L(align_qw):
 	li	r0, 0
 	lvsl	v11, r0, r0
 	vslb	v10, v11, v10
-	MTVRD(v1, r4)
+	mtvrd	v1, r4
 	vspltb	v1, v1, 7
 	cmpldi	r5, 64
 	ble	L(tail64)
@@ -205,10 +197,10 @@ L(tail64):
 	.align	4
 L(found):
 	/* Permute the first bit of each byte into bits 48-63.  */
-	VBPERMQ(v6, v6, v10)
-	VBPERMQ(v7, v7, v10)
-	VBPERMQ(v8, v8, v10)
-	VBPERMQ(v9, v9, v10)
+	vbpermq	v6, v6, v10
+	vbpermq	v7, v7, v10
+	vbpermq	v8, v8, v10
+	vbpermq	v9, v9, v10
 	/* Shift each component into its correct position for merging.  */
 #ifdef __LITTLE_ENDIAN__
 	vsldoi	v7, v7, v7, 2
@@ -223,7 +215,7 @@ L(found):
 	vor	v11, v6, v7
 	vor	v4, v9, v8
 	vor	v4, v11, v4
-	MFVRD(r5, v4)
+	mfvrd	r5, v4
 #ifdef __LITTLE_ENDIAN__
 	cntlzd	r6, r5	/* Count leading zeros before the match.  */
 #else
@@ -245,7 +237,7 @@ L(found_16B):
 	bge	L(last)
 	/* Now discard bytes before starting address.  */
 	sub	r9, r10, r8
-	MTVRD(v9, r9)
+	mtvrd	v9, r9
 	vspltisb	v8, 3
 	/* Mask unwanted bytes.  */
 #ifdef __LITTLE_ENDIAN__
@@ -263,14 +255,14 @@ L(found_16B):
 #endif
 L(last):
 	/* Permute the first bit of each byte into bits 48-63.  */
-	VBPERMQ(v6, v6, v10)
+	vbpermq	v6, v6, v10
 	/* Shift each component into its correct position for merging.  */
 #ifdef __LITTLE_ENDIAN__
 	vsldoi	v6, v6, v6, 6
-	MFVRD(r7, v6)
+	mfvrd	r7, v6
 	cntlzd	r6, r7	/* Count leading zeros before the match.  */
 #else
-	MFVRD(r7, v6)
+	mfvrd	r7, v6
 	addi	r6, r7, -1
 	andc	r6, r6, r7
 	popcntd	r6, r6
