@@ -1,3 +1,19 @@
+2019-06-27  Gabriel F. T. Gomes  <gabrielftg@linux.ibm.com>
+
+	* libio/libioP.h (PRINTF_LDBL_USES_FLOAT128): New macro to be
+	used as a mask for the mode argument of __vfprintf_internal.
+	* stdio-common/printf-parse.h (printf_arg): New union member:
+	pa_float128.
+	* stdio-common/vfprintf-internal.c
+	(PARSE_FLOAT_VA_ARG_EXTENDED): New macro.
+	(PARSE_FLOAT_VA_ARG): Likewise.
+	(SETUP_FLOAT128_INFO): Likewise.
+	(process_arg): Use PARSE_FLOAT_VA_ARG_EXTENDED and
+	SETUP_FLOAT128_INFO.
+	[__HAVE_FLOAT128_UNLIKE_LDBL] (printf_positional): Write
+	floating-point value to the new union member, pa_float128.
+	(printf_positional): Zero-initialize args_value[cnt] with memset.
+
 2019-06-27  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #24740]

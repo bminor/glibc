@@ -68,6 +68,57 @@
     } while (0)
 #define UNBUFFERED_P(S) ((S)->_flags & _IO_UNBUFFERED)
 
+#if __HAVE_FLOAT128_UNLIKE_LDBL
+# define PARSE_FLOAT_VA_ARG_EXTENDED(INFO)				      \
+  do									      \
+    {									      \
+      if (is_long_double						      \
+	  && (mode_flags & PRINTF_LDBL_USES_FLOAT128) != 0)		      \
+	{								      \
+	  INFO.is_binary128 = 1;					      \
+	  the_arg.pa_float128 = va_arg (ap, _Float128);			      \
+	}								      \
+      else								      \
+	{								      \
+	  PARSE_FLOAT_VA_ARG (INFO);					      \
+	}								      \
+    }									      \
+  while (0)
+#else
+# define PARSE_FLOAT_VA_ARG_EXTENDED(INFO)				      \
+  PARSE_FLOAT_VA_ARG (INFO);
+#endif
+
+#define PARSE_FLOAT_VA_ARG(INFO)					      \
+  do									      \
+    {									      \
+      INFO.is_binary128 = 0;						      \
+      if (is_long_double)						      \
+	the_arg.pa_long_double = va_arg (ap, long double);		      \
+      else								      \
+	the_arg.pa_double = va_arg (ap, double);			      \
+    }									      \
+  while (0)
+
+#if __HAVE_FLOAT128_UNLIKE_LDBL
+# define SETUP_FLOAT128_INFO(INFO)					      \
+  do									      \
+    {									      \
+      if ((mode_flags & PRINTF_LDBL_USES_FLOAT128) != 0)		      \
+	INFO.is_binary128 = is_long_double;				      \
+      else								      \
+	INFO.is_binary128 = 0;						      \
+    }									      \
+  while (0)
+#else
+# define SETUP_FLOAT128_INFO(INFO)					      \
+  do									      \
+    {									      \
+      INFO.is_binary128 = 0;						      \
+    }									      \
+  while (0)
+#endif
+
 #define done_add(val) \
   do {									      \
     unsigned int _val = val;						      \
@@ -771,10 +822,7 @@ static const uint8_t jump_table[] =
 					.wide = sizeof (CHAR_T) != 1,	      \
 					.is_binary128 = 0};		      \
 									      \
-	    if (is_long_double)						      \
-	      the_arg.pa_long_double = va_arg (ap, long double);	      \
-	    else							      \
-	      the_arg.pa_double = va_arg (ap, double);			      \
+	    PARSE_FLOAT_VA_ARG_EXTENDED (info);				      \
 	    ptr = (const void *) &the_arg;				      \
 									      \
 	    function_done = __printf_fp (s, &info, &ptr);		      \
@@ -787,8 +835,7 @@ static const uint8_t jump_table[] =
 		fspec->data_arg_type = PA_DOUBLE;			      \
 		fspec->info.is_long_double = 0;				      \
 	      }								      \
-	    /* Not supported by *printf functions.  */			      \
-	    fspec->info.is_binary128 = 0;				      \
+	    SETUP_FLOAT128_INFO (fspec->info);				      \
 									      \
 	    function_done = __printf_fp (s, &fspec->info, &ptr);	      \
 	  }								      \
@@ -831,10 +878,7 @@ static const uint8_t jump_table[] =
 					.wide = sizeof (CHAR_T) != 1,	      \
 					.is_binary128 = 0};		      \
 									      \
-	    if (is_long_double)						      \
-	      the_arg.pa_long_double = va_arg (ap, long double);	      \
-	    else							      \
-	      the_arg.pa_double = va_arg (ap, double);			      \
+	    PARSE_FLOAT_VA_ARG_EXTENDED (info);				      \
 	    ptr = (const void *) &the_arg;				      \
 									      \
 	    function_done = __printf_fphex (s, &info, &ptr);		      \
@@ -844,8 +888,7 @@ static const uint8_t jump_table[] =
 	    ptr = (const void *) &args_value[fspec->data_arg];		      \
 	    if (__glibc_unlikely ((mode_flags & PRINTF_LDBL_IS_DBL) != 0))    \
 	      fspec->info.is_long_double = 0;				      \
-	    /* Not supported by *printf functions.  */			      \
-	    fspec->info.is_binary128 = 0;				      \
+	    SETUP_FLOAT128_INFO (fspec->info);				      \
 									      \
 	    function_done = __printf_fphex (s, &fspec->info, &ptr);	      \
 	  }								      \
@@ -1869,6 +1912,10 @@ printf_positional (FILE *s, const CHAR_T *format, int readonly_format,
 	    args_value[cnt].pa_double = va_arg (*ap_savep, double);
 	    args_type[cnt] &= ~PA_FLAG_LONG_DOUBLE;
 	  }
+#if __HAVE_FLOAT128_UNLIKE_LDBL
+	else if ((mode_flags & PRINTF_LDBL_USES_FLOAT128) != 0)
+	  args_value[cnt].pa_float128 = va_arg (*ap_savep, _Float128);
+#endif
 	else
 	  args_value[cnt].pa_long_double = va_arg (*ap_savep, long double);
 	break;
@@ -1887,7 +1934,7 @@ printf_positional (FILE *s, const CHAR_T *format, int readonly_format,
 	      (args_value[cnt].pa_user, ap_savep);
 	  }
 	else
-	  args_value[cnt].pa_long_double = 0.0;
+	  memset (&args_value[cnt], 0, sizeof (args_value[cnt]));
 	break;
       case -1:
 	/* Error case.  Not all parameters appear in N$ format

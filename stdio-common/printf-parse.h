@@ -57,6 +57,9 @@ union printf_arg
     unsigned long long int pa_u_long_long_int;
     double pa_double;
     long double pa_long_double;
+#if __HAVE_FLOAT128_UNLIKE_LDBL
+    _Float128 pa_float128;
+#endif
     const char *pa_string;
     const wchar_t *pa_wstring;
     void *pa_pointer;
