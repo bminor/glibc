@@ -17,23 +17,17 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <alloca.h>
+#define _FILE_OFFSET_BITS 64
+
 #include <argp.h>
-#include <assert.h>
 #include <dirent.h>
-#include <elf.h>
-#include <errno.h>
 #include <error.h>
 #include <fcntl.h>
 #include <libintl.h>
-#include <link.h>
-#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 #include <sys/ptrace.h>
-#include <sys/stat.h>
 #include <sys/wait.h>
 #include <scratch_buffer.h>
 
@@ -76,14 +70,9 @@ static struct argp argp =
   options, parse_opt, args_doc, doc, NULL, more_help, NULL
 };
 
-// File descriptor of /proc/*/mem file.
-static int memfd;
-
-/* Name of the executable  */
-static char *exe;
 
 /* Local functions.  */
-static int get_process_info (int dfd, long int pid);
+static int get_process_info (const char *exe, int dfd, long int pid);
 static void wait_for_ptrace_stop (long int pid);
 
 
@@ -102,8 +91,10 @@ main (int argc, char *argv[])
       return 1;
     }
 
-  assert (sizeof (pid_t) == sizeof (int)
-	  || sizeof (pid_t) == sizeof (long int));
+  _Static_assert (sizeof (pid_t) == sizeof (int)
+		  || sizeof (pid_t) == sizeof (long int),
+		  "sizeof (pid_t) != sizeof (int) or sizeof (long int)");
+
   char *endp;
   errno = 0;
   long int pid = strtol (argv[remaining], &endp, 10);
@@ -119,25 +110,24 @@ main (int argc, char *argv[])
   if (dfd == -1)
     error (EXIT_FAILURE, errno, gettext ("cannot open %s"), buf);
 
-  struct scratch_buffer exebuf;
-  scratch_buffer_init (&exebuf);
+  /* Name of the executable  */
+  struct scratch_buffer exe;
+  scratch_buffer_init (&exe);
   ssize_t nexe;
   while ((nexe = readlinkat (dfd, "exe",
-			     exebuf.data, exebuf.length)) == exebuf.length)
+			     exe.data, exe.length)) == exe.length)
     {
-      if (!scratch_buffer_grow (&exebuf))
+      if (!scratch_buffer_grow (&exe))
 	{
 	  nexe = -1;
 	  break;
 	}
     }
   if (nexe == -1)
-    exe = (char *) "<program name undetermined>";
+    /* Default stack allocation is at least 1024.  */
+    snprintf (exe.data, exe.length, "<program name undetermined>");
   else
-    {
-      exe = exebuf.data;
-      exe[nexe] = '\0';
-    }
+    ((char*)exe.data)[nexe] = '\0';
 
   /* Stop all threads since otherwise the list of loaded modules might
      change while we are reading it.  */
@@ -155,8 +145,8 @@ main (int argc, char *argv[])
     error (EXIT_FAILURE, errno, gettext ("cannot prepare reading %s/task"),
 	   buf);
 
-  struct dirent64 *d;
-  while ((d = readdir64 (dir)) != NULL)
+  struct dirent *d;
+  while ((d = readdir (dir)) != NULL)
     {
       if (! isdigit (d->d_name[0]))
 	continue;
@@ -182,7 +172,7 @@ main (int argc, char *argv[])
 
       wait_for_ptrace_stop (tid);
 
-      struct thread_list *newp = alloca (sizeof (*newp));
+      struct thread_list *newp = xmalloc (sizeof (*newp));
       newp->tid = tid;
       newp->next = thread_list;
       thread_list = newp;
@@ -190,17 +180,22 @@ main (int argc, char *argv[])
 
   closedir (dir);
 
-  int status = get_process_info (dfd, pid);
+  if (thread_list == NULL)
+    error (EXIT_FAILURE, 0, gettext ("no valid %s/task entries"), buf);
 
-  assert (thread_list != NULL);
+  int status = get_process_info (exe.data, dfd, pid);
+
   do
     {
       ptrace (PTRACE_DETACH, thread_list->tid, NULL, NULL);
+      struct thread_list *prev = thread_list;
       thread_list = thread_list->next;
+      free (prev);
     }
   while (thread_list != NULL);
 
   close (dfd);
+  scratch_buffer_free (&exe);
 
   return status;
 }
@@ -281,9 +276,10 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
 
 
 static int
-get_process_info (int dfd, long int pid)
+get_process_info (const char *exe, int dfd, long int pid)
 {
-  memfd = openat (dfd, "mem", O_RDONLY);
+  /* File descriptor of /proc/<pid>/mem file.  */
+  int memfd = openat (dfd, "mem", O_RDONLY);
   if (memfd == -1)
     goto no_info;
 
@@ -333,9 +329,9 @@ get_process_info (int dfd, long int pid)
 
   int retval;
   if (e_ident[EI_CLASS] == ELFCLASS32)
-    retval = find_maps32 (pid, auxv, auxv_size);
+    retval = find_maps32 (exe, memfd, pid, auxv, auxv_size);
   else
-    retval = find_maps64 (pid, auxv, auxv_size);
+    retval = find_maps64 (exe, memfd, pid, auxv, auxv_size);
 
   free (auxv);
   close (memfd);

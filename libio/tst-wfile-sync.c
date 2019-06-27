@@ -1,6 +1,5 @@
-/* Set flags signalling availability of kernel features based on given
-   kernel version number.  RISC-V version.
-   Copyright (C) 2018 Free Software Foundation, Inc.
+/* Test that _IO_wfile_sync does not crash (bug 20568).
+   Copyright (C) 2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,12 +16,24 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include_next <kernel-features.h>
+#include <locale.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <support/check.h>
+#include <support/xunistd.h>
 
-#undef __ASSUME_CLONE_DEFAULT
-#define __ASSUME_CLONE_BACKWARDS 1
+static int
+do_test (void)
+{
+  TEST_VERIFY_EXIT (setlocale (LC_ALL, "de_DE.UTF-8") != NULL);
+  /* Fill the stdio buffer and advance the read pointer.  */
+  TEST_VERIFY_EXIT (fgetwc (stdin) != WEOF);
+  /* This calls _IO_wfile_sync, it should not crash.  */
+  TEST_VERIFY_EXIT (setvbuf (stdin, NULL, _IONBF, 0) == 0);
+  /* Verify that the external file offset has been synchronized.  */
+  TEST_COMPARE (xlseek (0, 0, SEEK_CUR), 1);
 
-/* No support for PI mutexes or robust futexes before 4.20.  */
-#if __LINUX_KERNEL_VERSION < 0x041400
-# undef __ASSUME_SET_ROBUST_LIST
-#endif
+  return 0;
+}
+
+#include <support/test-driver.c>

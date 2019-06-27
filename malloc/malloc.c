@@ -2810,6 +2810,7 @@ systrim (size_t pad, mstate av)
 static void
 munmap_chunk (mchunkptr p)
 {
+  size_t pagesize = GLRO (dl_pagesize);
   INTERNAL_SIZE_T size = chunksize (p);
 
   assert (chunk_is_mmapped (p));
@@ -2819,6 +2820,7 @@ munmap_chunk (mchunkptr p)
   if (DUMPED_MAIN_ARENA_CHUNK (p))
     return;
 
+  uintptr_t mem = (uintptr_t) chunk2mem (p);
   uintptr_t block = (uintptr_t) p - prev_size (p);
   size_t total_size = prev_size (p) + size;
   /* Unfortunately we have to do the compilers job by hand here.  Normally
@@ -2826,7 +2828,8 @@ munmap_chunk (mchunkptr p)
      page size.  But gcc does not recognize the optimization possibility
      (in the moment at least) so we combine the two values into one before
      the bit test.  */
-  if (__builtin_expect (((block | total_size) & (GLRO (dl_pagesize) - 1)) != 0, 0))
+  if (__glibc_unlikely ((block | total_size) & (pagesize - 1)) != 0
+      || __glibc_unlikely (!powerof2 (mem & (pagesize - 1))))
     malloc_printerr ("munmap_chunk(): invalid pointer");
 
   atomic_decrement (&mp_.n_mmaps);
@@ -2849,16 +2852,22 @@ mremap_chunk (mchunkptr p, size_t new_size)
   char *cp;
 
   assert (chunk_is_mmapped (p));
-  assert (((size + offset) & (GLRO (dl_pagesize) - 1)) == 0);
+
+  uintptr_t block = (uintptr_t) p - offset;
+  uintptr_t mem = (uintptr_t) chunk2mem(p);
+  size_t total_size = offset + size;
+  if (__glibc_unlikely ((block | total_size) & (pagesize - 1)) != 0
+      || __glibc_unlikely (!powerof2 (mem & (pagesize - 1))))
+    malloc_printerr("mremap_chunk(): invalid pointer");
 
   /* Note the extra SIZE_SZ overhead as in mmap_chunk(). */
   new_size = ALIGN_UP (new_size + offset + SIZE_SZ, pagesize);
 
   /* No need to remap if the number of pages does not change.  */
-  if (size + offset == new_size)
+  if (total_size == new_size)
     return p;
 
-  cp = (char *) __mremap ((char *) p - offset, size + offset, new_size,
+  cp = (char *) __mremap ((char *) block, total_size, new_size,
                           MREMAP_MAYMOVE);
 
   if (cp == MAP_FAILED)
@@ -2902,6 +2911,8 @@ typedef struct tcache_perthread_struct
   char counts[TCACHE_MAX_BINS];
   tcache_entry *entries[TCACHE_MAX_BINS];
 } tcache_perthread_struct;
+
+#define MAX_TCACHE_COUNT 127	/* Maximum value of counts[] entries.  */
 
 static __thread bool tcache_shutting_down = false;
 static __thread tcache_perthread_struct *tcache = NULL;
@@ -3738,7 +3749,7 @@ _int_malloc (mstate av, size_t bytes)
           if (__glibc_unlikely (bck->fd != victim)
               || __glibc_unlikely (victim->fd != unsorted_chunks (av)))
             malloc_printerr ("malloc(): unsorted double linked list corrupted");
-          if (__glibc_unlikely (prev_inuse(next)))
+          if (__glibc_unlikely (prev_inuse (next)))
             malloc_printerr ("malloc(): invalid next->prev_inuse (unsorted)");
 
           /*
@@ -3860,10 +3871,14 @@ _int_malloc (mstate av, size_t bytes)
                         {
                           victim->fd_nextsize = fwd;
                           victim->bk_nextsize = fwd->bk_nextsize;
+                          if (__glibc_unlikely (fwd->bk_nextsize->fd_nextsize != fwd))
+                            malloc_printerr ("malloc(): largebin double linked list corrupted (nextsize)");
                           fwd->bk_nextsize = victim;
                           victim->bk_nextsize->fd_nextsize = victim;
                         }
                       bck = fwd->bk;
+                      if (bck->fd != fwd)
+                        malloc_printerr ("malloc(): largebin double linked list corrupted (bk)");
                     }
                 }
               else
@@ -5109,8 +5124,11 @@ static inline int
 __always_inline
 do_set_tcache_count (size_t value)
 {
-  LIBC_PROBE (memory_tunable_tcache_count, 2, value, mp_.tcache_count);
-  mp_.tcache_count = value;
+  if (value <= MAX_TCACHE_COUNT)
+    {
+      LIBC_PROBE (memory_tunable_tcache_count, 2, value, mp_.tcache_count);
+      mp_.tcache_count = value;
+    }
   return 1;
 }
 

@@ -1,6 +1,5 @@
-/* Set flags signalling availability of kernel features based on given
-   kernel version number.  RISC-V version.
-   Copyright (C) 2018 Free Software Foundation, Inc.
+/* BZ #24228 check for memory corruption in legacy libio
+   Copyright (C) 2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,14 +14,16 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
-#include_next <kernel-features.h>
+#include <mcheck.h>
+#include <support/test-driver.h>
 
-#undef __ASSUME_CLONE_DEFAULT
-#define __ASSUME_CLONE_BACKWARDS 1
+static int
+do_test (void)
+{
+  mtrace ();
+  return 0;
+}
 
-/* No support for PI mutexes or robust futexes before 4.20.  */
-#if __LINUX_KERNEL_VERSION < 0x041400
-# undef __ASSUME_SET_ROBUST_LIST
-#endif
+#include <support/test-driver.c>
