@@ -27,6 +27,7 @@
 #include <support/check.h>
 #include <support/support.h>
 #include <support/xunistd.h>
+#include <sys/mman.h>
 #include <unistd.h>
 
 /* Called by large_buffer_checks below.  */
@@ -53,8 +54,13 @@ large_buffer_checks (int fd)
   size_t large_buffer_size;
   if (!__builtin_add_overflow (UINT_MAX, 2, &large_buffer_size))
     {
-      char *large_buffer = malloc (large_buffer_size);
-      if (large_buffer == NULL)
+      int flags = MAP_ANONYMOUS | MAP_PRIVATE;
+#ifdef MAP_NORESERVE
+      flags |= MAP_NORESERVE;
+#endif
+      void *large_buffer = mmap (NULL, large_buffer_size,
+                                 PROT_READ | PROT_WRITE, flags, -1, 0);
+      if (large_buffer == MAP_FAILED)
         printf ("warning: could not allocate %zu bytes of memory,"
                 " subtests skipped\n", large_buffer_size);
       else
@@ -65,8 +71,8 @@ large_buffer_checks (int fd)
           large_buffer_check (fd, large_buffer, UINT_MAX);
           large_buffer_check (fd, large_buffer, (size_t) UINT_MAX + 1);
           large_buffer_check (fd, large_buffer, (size_t) UINT_MAX + 2);
+          xmunmap (large_buffer, large_buffer_size);
         }
-      free (large_buffer);
     }
 }
 

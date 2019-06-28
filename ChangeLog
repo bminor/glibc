@@ -1,3 +1,9 @@
+2019-06-28  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/unix/sysv/linux/tst-getdents64.c (large_buffer_checks):
+	Use mmap instead of malloc.  malloc with M_PERTURB writes to the
+	entire allocated memory range.
+
 2019-06-28  Tobias Klauser  <tklauser@distanz.ch>
 
 	* sysdeps/unix/sysv/linux/dl-vdso.h (PREPARE_VERSION): Remove macro.
