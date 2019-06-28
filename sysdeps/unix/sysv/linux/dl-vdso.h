@@ -24,19 +24,19 @@
 #include <dl-hash.h>
 
 /* Create version number record for lookup.  */
-#define PREPARE_VERSION(var, vname, vhash) \
-  struct r_found_version var;						      \
-  var.name = vname;							      \
-  var.hidden = 1;							      \
-  var.hash = vhash;							      \
-  assert (var.hash == _dl_elf_hash (var.name));				      \
-  /* We don't have a specific file where the symbol can be found.  */	      \
-  var.filename = NULL
+static inline struct r_found_version
+prepare_version_base (const char *name, ElfW(Word) hash)
+{
+  assert (hash == _dl_elf_hash (name));
+  return (struct r_found_version) { name, hash, 1, NULL };
+}
+#define prepare_version(vname) \
+  prepare_version_base (VDSO_NAME_##vname, VDSO_HASH_##vname)
 
 /* Use this for the known version sets defined below, where we
    record their precomputed hash values only once, in this file.  */
 #define PREPARE_VERSION_KNOWN(var, vname) \
-  PREPARE_VERSION (var, VDSO_NAME_##vname, VDSO_HASH_##vname)
+  struct r_found_version var = prepare_version (vname);
 
 #define VDSO_NAME_LINUX_2_6	"LINUX_2.6"
 #define VDSO_HASH_LINUX_2_6	61765110

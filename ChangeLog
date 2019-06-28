@@ -1,3 +1,10 @@
+2019-06-28  Tobias Klauser  <tklauser@distanz.ch>
+
+	* sysdeps/unix/sysv/linux/dl-vdso.h (PREPARE_VERSION): Remove macro.
+	(prepare_version_base): New helper inline function.
+	(prepare_version): New macro replacing PREPARE_VERSION.
+	(PREPARE_VERSION_KNOWN): Use prepare_version instead of PREPARE_VERSION.
+
 2019-06-28  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #24741]
