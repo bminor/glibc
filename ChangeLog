@@ -1,3 +1,11 @@
+2019-07-10  DJ Delorie  <dj@redhat.com>
+	    Sergei Trofimovich <slyfox@inbox.ru>
+
+	[BZ #24696]
+	[BZ #24695]
+	* nss/nss_db/db-open.c (internal_endent): Protect against NULL
+	mappings.
+
 2019-07-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #24259]
