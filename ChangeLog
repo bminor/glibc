@@ -1,5 +1,10 @@
 2019-06-28  Florian Weimer  <fweimer@redhat.com>
 
+	* support/xdlfcn.h (xdlvsym): Declare function.
+	* support/xdlfcn.c (xdlvsym): Define funciton.
+
+2019-06-28  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #24744]
 	io: Remove the copy_file_range emulation.
 	* sysdeps/unix/sysv/linux/copy_file_range.c (copy_file_range): Do

@@ -51,6 +51,26 @@ xdlsym (void *handle, const char *symbol)
   return sym;
 }
 
+void *
+xdlvsym (void *handle, const char *symbol, const char *version)
+{
+  /* Clear any pending errors.  */
+  dlerror ();
+
+  void *sym = dlvsym (handle, symbol, version);
+
+  if (sym == NULL)
+    {
+      const char *error = dlerror ();
+      if (error != NULL)
+        FAIL_EXIT1 ("error: dlvsym: %s\n", error);
+      /* If there was no error, we found a NULL symbol.  Return the
+         NULL value in this case.  */
+    }
+
+  return sym;
+}
+
 void
 xdlclose (void *handle)
 {
