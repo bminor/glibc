@@ -1,2 +1,10 @@
+GLIBC_2.30 _ZGVnN2v_cos F
 GLIBC_2.30 _ZGVnN2v_exp F
+GLIBC_2.30 _ZGVnN2v_log F
+GLIBC_2.30 _ZGVnN2v_sin F
+GLIBC_2.30 _ZGVnN2vv_pow F
+GLIBC_2.30 _ZGVnN4v_cosf F
 GLIBC_2.30 _ZGVnN4v_expf F
+GLIBC_2.30 _ZGVnN4v_logf F
+GLIBC_2.30 _ZGVnN4v_sinf F
+GLIBC_2.30 _ZGVnN4vv_powf F

@@ -1,5 +1,9 @@
 libmvec {
   GLIBC_2.30 {
+    _ZGVnN2v_cos; _ZGVnN4v_cosf;
     _ZGVnN2v_exp; _ZGVnN4v_expf;
+    _ZGVnN2v_log; _ZGVnN4v_logf;
+    _ZGVnN2vv_pow; _ZGVnN4vv_powf;
+    _ZGVnN2v_sin; _ZGVnN4v_sinf;
   }
 }

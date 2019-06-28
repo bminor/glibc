@@ -1043,6 +1043,12 @@ ifloat: 1
 ildouble: 2
 ldouble: 2
 
+Function: "cos_vlen2":
+double: 1
+
+Function: "cos_vlen4":
+float: 1
+
 Function: "cosh":
 double: 1
 float: 1
@@ -1977,6 +1983,12 @@ ifloat: 1
 ildouble: 2
 ldouble: 2
 
+Function: "pow_vlen2":
+double: 1
+
+Function: "pow_vlen4":
+float: 1
+
 Function: "sin":
 double: 1
 float: 1
@@ -2008,6 +2020,12 @@ idouble: 1
 ifloat: 1
 ildouble: 3
 ldouble: 3
+
+Function: "sin_vlen2":
+double: 1
+
+Function: "sin_vlen4":
+float: 1
 
 Function: "sincos":
 double: 1

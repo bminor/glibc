@@ -15,8 +15,16 @@ endif
 
 ifeq ($(subdir),mathvec)
 libmvec-support += \
+  libmvec_double_vlen2_cos \
   libmvec_double_vlen2_exp \
+  libmvec_double_vlen2_log \
+  libmvec_double_vlen2_pow \
+  libmvec_double_vlen2_sin \
+  libmvec_float_vlen4_cosf \
   libmvec_float_vlen4_expf \
+  libmvec_float_vlen4_logf \
+  libmvec_float_vlen4_powf \
+  libmvec_float_vlen4_sinf \
 
 install-lib += libmvec_nonshared.a
 $(objpfx)libmvec_nonshared.a: $(dep-dummy-lib); $(make-dummy-lib)
@@ -24,8 +32,8 @@ endif
 
 ifeq ($(subdir),math)
 ifeq ($(build-mathvec),yes)
-double-vlen2-funcs = exp
-float-vlen4-funcs = exp
+double-vlen2-funcs = cos exp log pow sin
+float-vlen4-funcs = cos exp log pow sin
 ifeq ($(test-mathvec),yes)
 libmvec-tests += double-vlen2 float-vlen4
 endif

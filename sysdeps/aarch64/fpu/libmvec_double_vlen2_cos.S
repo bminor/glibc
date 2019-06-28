@@ -1,4 +1,4 @@
-/* Wrapper part of tests for aarch64 double vector math functions.
+/* Double-precision 2 element vector cos function.
    Copyright (C) 2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,25 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <arm_neon.h>
-#include "test-double-vlen2.h"
-
-#define VEC_TYPE float64x2_t
-
-/* Hack: VECTOR_WRAPPER declares the vector function without the pcs attribute,
-   placing it here happens to work, should be fixed in test-math-vector.h.  */
-__attribute__ ((aarch64_vector_pcs))
-
-VECTOR_WRAPPER (WRAPPER_NAME (cos), _ZGVnN2v_cos)
-
-__attribute__ ((aarch64_vector_pcs))
-VECTOR_WRAPPER (WRAPPER_NAME (exp), _ZGVnN2v_exp)
-
-__attribute__ ((aarch64_vector_pcs))
-VECTOR_WRAPPER (WRAPPER_NAME (log), _ZGVnN2v_log)
-
-__attribute__ ((aarch64_vector_pcs))
-VECTOR_WRAPPER_ff (WRAPPER_NAME (pow), _ZGVnN2vv_pow)
-
-__attribute__ ((aarch64_vector_pcs))
-VECTOR_WRAPPER (WRAPPER_NAME (sin), _ZGVnN2v_sin)
+#define SCALAR_FUNCTION cos
+#define VECTOR_FUNCTION _ZGVnN2v_cos
+#include "libmvec_double_vlen2.h"

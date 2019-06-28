@@ -25,4 +25,16 @@
    placing it here happens to work, should be fixed in test-math-vector.h.  */
 __attribute__ ((aarch64_vector_pcs))
 
+VECTOR_WRAPPER (WRAPPER_NAME (cosf), _ZGVnN4v_cosf)
+
+__attribute__ ((aarch64_vector_pcs))
 VECTOR_WRAPPER (WRAPPER_NAME (expf), _ZGVnN4v_expf)
+
+__attribute__ ((aarch64_vector_pcs))
+VECTOR_WRAPPER (WRAPPER_NAME (logf), _ZGVnN4v_logf)
+
+__attribute__ ((aarch64_vector_pcs))
+VECTOR_WRAPPER_ff (WRAPPER_NAME (powf), _ZGVnN4vv_powf)
+
+__attribute__ ((aarch64_vector_pcs))
+VECTOR_WRAPPER (WRAPPER_NAME (sinf), _ZGVnN4v_sinf)
