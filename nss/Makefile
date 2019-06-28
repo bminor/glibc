@@ -61,7 +61,9 @@ xtests			= bug-erange
 
 tests-container = \
 			  tst-nss-test3 \
-			  tst-nss-files-hosts-long
+			  tst-nss-files-hosts-long \
+			  tst-nss-db-endpwent \
+			  tst-nss-db-endgrent
 
 # Tests which need libdl
 ifeq (yes,$(build-shared))

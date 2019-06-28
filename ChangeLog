@@ -1,3 +1,19 @@
+2019-07-10  DJ Delorie  <dj@redhat.com>
+	    Sergei Trofimovich <slyfox@inbox.ru>
+
+	[BZ #24696]
+	[BZ #24695]
+	* nss/nss_db/db-open.c (internal_endent): Protect against NULL
+	mappings.
+	* nss/tst-nss-db-endgrent.c: New.
+	* nss/tst-nss-db-endgrent.root: New.
+	* nss/tst-nss-db-endpwent.c: New.
+	* nss/tst-nss-db-endpwent.root: New.
+	* nss/Makefile: Add new tests.
+	* support/links-dso-program-c.c: Add selinux dependency.
+	* support/links-dso-program.cc: Add selinux dependency.
+	* support/Makefile: Build those with -lselinux if enabled.
+
 2019-07-10  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* sysdeps/aarch64/dl-machine.h (elf_machine_runtime_setup): Remove the

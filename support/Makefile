@@ -191,6 +191,11 @@ LINKS_DSO_PROGRAM = links-dso-program
 LDLIBS-links-dso-program = -lstdc++ -lgcc -lgcc_s $(libunwind)
 endif
 
+ifeq (yes,$(have-selinux))
+LDLIBS-$(LINKS_DSO_PROGRAM) += -lselinux
+endif
+
+
 LDLIBS-test-container = $(libsupport)
 
 others += test-container

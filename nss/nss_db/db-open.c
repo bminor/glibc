@@ -63,5 +63,9 @@ internal_setent (const char *file, struct nss_db_map *mapping)
 void
 internal_endent (struct nss_db_map *mapping)
 {
-  munmap (mapping->header, mapping->len);
+  if (mapping->header != NULL)
+    {
+      munmap (mapping->header, mapping->len);
+      mapping->header = NULL;
+    }
 }
