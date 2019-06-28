@@ -1,3 +1,39 @@
+2019-06-28  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24744]
+	io: Remove the copy_file_range emulation.
+	* sysdeps/unix/sysv/linux/copy_file_range.c (copy_file_range): Do
+	not define and call copy_file_range_compat.
+	* io/Makefile (tests-static, tests-internal): Do not add
+	tst-copy_file_range-compat.
+	* io/copy_file_range-compat.c: Remove file.
+	* io/copy_file_range.c (copy_file_range): Define as stub.
+	* io/tst-copy_file_range-compat.c: Remove file.
+	* io/tst-copy_file_range.c (xdevfile): Remove variable.
+	(typical_sizes): Update comment.  Remove 16K sizes.
+	(maximum_offset, maximum_offset_errno, maximum_offset_hard_limit):
+	Remove variables.
+	(find_maximum_offset, pipe_as_source, pipe_as_destination)
+	(delayed_write_failure_beginning, delayed_write_failure_end)
+	(cross_device_failure, enospc_failure_1, enospc_failure)
+	(oappend_failure): Remove functions.
+	(tests): Adjust test case list.
+	(do_test): Remove file system search code.  Check for ENOSYS from
+	copy_file_range.  Do not free xdevfile.
+	* manual/llio.texi (Copying File Data): Document ENOSYS error from
+	copy_file_range.  Do not document the EXDEV error, which future
+	kernels may not report.  Update the wording to reflect that
+	further errors are possible.
+	* sysdeps/unix/sysv/linux/alpha/kernel-features.h
+	[__LINUX_KERNEL_VERSION < 0x040D00] (__ASSUME_COPY_FILE_RANGE): Do
+	not undefine.
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x040500] (__ASSUME_COPY_FILE_RANGE):
+	Remove definition.
+	* sysdeps/unix/sysv/linux/microblaze/kernel-features.h
+	[__LINUX_KERNEL_VERSION < 0x040A00] (__ASSUME_COPY_FILE_RANGE): Do
+	not undefine.
+
 2019-06-20  Dmitry V. Levin  <ldv@altlinux.org>
 	    Florian Weimer  <fweimer@redhat.com>
 
