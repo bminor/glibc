@@ -26,6 +26,16 @@ Major new features:
   for safety are now load errors e.g. /foo/${ORIGIN}.so in DT_NEEDED
   results in a load failure now.
 
+Deprecated and removed features, and other changes affecting compatibility:
+
+* The copy_file_range function fails with ENOSYS if the kernel does not
+  support the system call of the same name.  Previously, user space
+  emulation was performed, but its behavior did not match the kernel
+  behavior, which was deemed too confusing.  Applications which use the
+  copy_file_range function will have to be run on kernels which implement
+  the copy_file_range system call.  Support for most architectures was added
+  in version 4.5 of the mainline Linux kernel.
+
 Security related changes:
 
   CVE-2017-18269: An SSE2-based memmove implementation for the i386
@@ -134,6 +144,7 @@ The following bugs are resolved with this release:
     while maintaining the robust mutex list due to missing compiler barriers
   [24228] old x86 applications that use legacy libio crash on exit
   [24531] Malloc tunables give tcache assertion failures
+  [24744] io: Remove the copy_file_range emulation
 
 
 Version 2.27
