@@ -77,7 +77,7 @@ do_one_test (impl_t *impl, char *dst, const char *src,
 	     size_t len, size_t dlen)
 {
   char *res;
-  size_t i, iters = INNER_LOOP_ITERS;
+  size_t i, iters = INNER_LOOP_ITERS8;
   timing_t start, stop, cur;
 
   if (dlen <= len)

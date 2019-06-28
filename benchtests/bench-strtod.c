@@ -24,7 +24,7 @@
 #include "bench-timing.h"
 
 #undef INNER_LOOP_ITERS
-#define INNER_LOOP_ITERS 65536
+#define INNER_LOOP_ITERS 131072
 
 static const char *inputs[] =
 {

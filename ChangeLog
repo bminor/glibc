@@ -1,3 +1,20 @@
+2019-06-28  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* benchtests/bench-math-inlines.c: Increase iterations.
+	* benchtests/bench-memcmp.c: Likewise.
+	* benchtests/bench-rawmemchr.c: Likewise.
+	* benchtests/bench-strcmp.c: Likewise.
+	* benchtests/bench-strcpy_chk.c: Likewise.
+	* benchtests/bench-string.h (INNER_LOOP_ITERS8): Add define.
+	(INNER_LOOP_ITERS_MEDIUM): Increase iterations.
+	(INNER_LOOP_ITERS_SMALL): Likewise.
+	* benchtests/bench-strncat.c: Increase iterations.
+	* benchtests/bench-strncmp.c: Increase iterations.
+	* benchtests/bench-strncpy.c: Reduce iterations for wide strings.
+	* benchtests/bench-strrchr.c: Increase iterations.
+	* benchtests/bench-strstr.c: Keep iterations unchanged.
+	* benchtests/bench-strtod.c: Increase iterations.
+
 2019-06-28  Anton Youdkevitch  <anton.youdkevitch@bell-sw.com>
 
 	* benchtests/bench-memccpy.c: Replace INNER_LOOP_ITERS

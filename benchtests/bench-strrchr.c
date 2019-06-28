@@ -56,7 +56,7 @@ static void
 do_one_test (impl_t *impl, const CHAR *s, int c, CHAR *exp_res)
 {
   CHAR *res = CALL (impl, s, c);
-  size_t i, iters = INNER_LOOP_ITERS;
+  size_t i, iters = INNER_LOOP_ITERS8;
   timing_t start, stop, cur;
 
   if (res != exp_res)

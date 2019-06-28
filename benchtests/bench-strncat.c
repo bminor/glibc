@@ -51,7 +51,7 @@ IMPL (generic_strncat, 0)
 static void
 do_one_test (impl_t *impl, CHAR *dst, const CHAR *src, size_t n)
 {
-  size_t k = STRLEN (dst), i, iters = INNER_LOOP_ITERS;
+  size_t k = STRLEN (dst), i, iters = INNER_LOOP_ITERS8;
   timing_t start, stop, cur;
 
   if (CALL (impl, dst, src, n) != dst)

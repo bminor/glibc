@@ -220,7 +220,7 @@ static void
 do_one_test (json_ctx_t *json_ctx, proto_t test_fn, volatile double *arr,
 	     size_t len, const char *testname)
 {
-  size_t iters = 500;
+  size_t iters = 2048;
   timing_t start, stop, cur;
 
   json_attr_object_begin (json_ctx, testname);
