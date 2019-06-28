@@ -1,0 +1,5 @@
+libmvec {
+  GLIBC_2.30 {
+    _ZGVnN2v_exp; _ZGVnN4v_expf;
+  }
+}

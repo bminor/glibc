@@ -172,3 +172,34 @@ else
   config_vars="$config_vars
 default-abi = lp64"
 fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for pcs attribute support" >&5
+$as_echo_n "checking for pcs attribute support... " >&6; }
+if ${libc_cv_gcc_pcs_attribute+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat > conftest.c <<EOF
+__attribute__((aarch64_vector_pcs)) extern void foo (void);
+EOF
+libc_cv_gcc_pcs_attribute=no
+if ${CC-cc} -c -Wall -Werror conftest.c -o conftest.o 1>&5 \
+   2>&5 ; then
+  libc_cv_gcc_pcs_attribute=yes
+fi
+rm -f conftest*
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_gcc_pcs_attribute" >&5
+$as_echo "$libc_cv_gcc_pcs_attribute" >&6; }
+
+# Enable libmvec by default.
+if test x"$build_mathvec" = xnotset; then
+  build_mathvec=yes
+fi
+
+# Only test libmvec if the compiler supports aarch64_vector_pcs.
+if test x"$build_mathvec" = xyes; then
+  if test $libc_cv_gcc_pcs_attribute = yes; then
+    config_vars="$config_vars
+test-mathvec = yes"
+  fi
+fi

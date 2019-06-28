@@ -1601,6 +1601,12 @@ float: 1
 idouble: 1
 ifloat: 1
 
+Function: "exp_vlen2":
+double: 1
+
+Function: "exp_vlen4":
+float: 1
+
 Function: "expm1":
 double: 1
 float: 1

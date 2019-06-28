@@ -20,3 +20,27 @@ if test $libc_cv_aarch64_be = yes; then
 else
   LIBC_CONFIG_VAR([default-abi], [lp64])
 fi
+
+AC_CACHE_CHECK([for pcs attribute support],
+               libc_cv_gcc_pcs_attribute, [dnl
+cat > conftest.c <<EOF
+__attribute__((aarch64_vector_pcs)) extern void foo (void);
+EOF
+libc_cv_gcc_pcs_attribute=no
+if ${CC-cc} -c -Wall -Werror conftest.c -o conftest.o 1>&AS_MESSAGE_LOG_FD \
+   2>&AS_MESSAGE_LOG_FD ; then
+  libc_cv_gcc_pcs_attribute=yes
+fi
+rm -f conftest*])
+
+# Enable libmvec by default.
+if test x"$build_mathvec" = xnotset; then
+  build_mathvec=yes
+fi
+
+# Only test libmvec if the compiler supports aarch64_vector_pcs.
+if test x"$build_mathvec" = xyes; then
+  if test $libc_cv_gcc_pcs_attribute = yes; then
+    LIBC_CONFIG_VAR([test-mathvec], [yes])
+  fi
+fi
