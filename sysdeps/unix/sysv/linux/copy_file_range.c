@@ -20,27 +20,16 @@
 #include <sysdep-cancel.h>
 #include <unistd.h>
 
-/* Include the fallback implementation.  */
-#ifndef __ASSUME_COPY_FILE_RANGE
-#define COPY_FILE_RANGE_DECL static
-#define COPY_FILE_RANGE copy_file_range_compat
-#include <io/copy_file_range-compat.c>
-#endif
-
 ssize_t
 copy_file_range (int infd, __off64_t *pinoff,
                  int outfd, __off64_t *poutoff,
                  size_t length, unsigned int flags)
 {
 #ifdef __NR_copy_file_range
-  ssize_t ret = SYSCALL_CANCEL (copy_file_range, infd, pinoff, outfd, poutoff,
-                                length, flags);
-# ifndef __ASSUME_COPY_FILE_RANGE
-  if (ret == -1 && errno == ENOSYS)
-    ret = copy_file_range_compat (infd, pinoff, outfd, poutoff, length, flags);
-# endif
-  return ret;
-#else  /* !__NR_copy_file_range */
-  return copy_file_range_compat (infd, pinoff, outfd, poutoff, length, flags);
+  return SYSCALL_CANCEL (copy_file_range, infd, pinoff, outfd, poutoff,
+                         length, flags);
+#else
+  __set_errno (ENOSYS);
+  return -1;
 #endif
 }

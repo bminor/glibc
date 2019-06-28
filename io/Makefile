@@ -73,11 +73,6 @@ tests		:= test-utime test-stat test-stat2 test-lfs tst-getcwd \
 		   tst-fts tst-fts-lfs tst-open-tmpfile \
 		   tst-copy_file_range tst-getcwd-abspath \
 
-# This test includes the compat implementation of copy_file_range,
-# which uses internal, unexported libc functions.
-tests-static += tst-copy_file_range-compat
-tests-internal += tst-copy_file_range-compat
-
 # Likewise for statx, but we do not need static linking here.
 tests-internal += tst-statx
 
