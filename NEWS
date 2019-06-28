@@ -36,6 +36,14 @@ Major new features:
 
 Deprecated and removed features, and other changes affecting compatibility:
 
+* The copy_file_range function fails with ENOSYS if the kernel does not
+  support the system call of the same name.  Previously, user space
+  emulation was performed, but its behavior did not match the kernel
+  behavior, which was deemed too confusing.  Applications which use the
+  copy_file_range function will have to be run on kernels which implement
+  the copy_file_range system call.  Support for most architectures was added
+  in version 4.5 of the mainline Linux kernel.
+
 * The functions clock_gettime, clock_getres, clock_settime,
   clock_getcpuclockid, clock_nanosleep were removed from the librt library
   for new applications (on architectures which had them).  Instead, the

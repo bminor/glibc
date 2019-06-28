@@ -1404,10 +1404,13 @@ failure occurs.  The return value is zero if the end of the input file
 is encountered immediately.
 
 If no bytes can be copied, to report an error, @code{copy_file_range}
-returns the value @math{-1} and sets @code{errno}.  The following
-@code{errno} error conditions are specific to this function:
+returns the value @math{-1} and sets @code{errno}.  The table below
+lists some of the error conditions for this function.
 
 @table @code
+@item ENOSYS
+The kernel does not implement the required functionality.
+
 @item EISDIR
 At least one of the descriptors @var{inputfd} or @var{outputfd} refers
 to a directory.
@@ -1437,9 +1440,6 @@ reading.
 
 The argument @var{outputfd} is not a valid file descriptor open for
 writing, or @var{outputfd} has been opened with @code{O_APPEND}.
-
-@item EXDEV
-The input and output files reside on different file systems.
 @end table
 
 In addition, @code{copy_file_range} can fail with the error codes
