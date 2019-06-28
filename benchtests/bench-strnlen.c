@@ -51,7 +51,7 @@ IMPL (generic_strnlen, 0)
 static void
 do_one_test (impl_t *impl, const CHAR *s, size_t maxlen, size_t exp_len)
 {
-  size_t len = CALL (impl, s, maxlen), i, iters = INNER_LOOP_ITERS;
+  size_t len = CALL (impl, s, maxlen), i, iters = INNER_LOOP_ITERS_LARGE;
   timing_t start, stop, cur;
 
   if (len != exp_len)

@@ -39,7 +39,7 @@ IMPL (generic_rawmemchr, 0)
 static void
 do_one_test (impl_t *impl, const char *s, int c, char *exp_res)
 {
-  size_t i, iters = INNER_LOOP_ITERS;
+  size_t i, iters = INNER_LOOP_ITERS_LARGE;
   timing_t start, stop, cur;
   char *res = CALL (impl, s, c);
   if (res != exp_res)

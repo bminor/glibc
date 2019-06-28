@@ -1,3 +1,16 @@
+2019-06-28  Anton Youdkevitch  <anton.youdkevitch@bell-sw.com>
+
+	* benchtests/bench-memccpy.c: Replace INNER_LOOP_ITERS
+	with INNER_LOOP_ITERS_LARGE.
+	* benchtests/bench-memchr.c: Likewise.
+	* benchtests/bench-rawmemchr.c: Likewise.
+	* benchtests/bench-strcat.c: Likewise.
+	* benchtests/bench-strchr.c: Likewise.
+	* benchtests/bench-string.h: Likewise.
+	* benchtests/bench-strlen.c: Likewise.
+	* benchtests/bench-strncpy.c: Likewise.
+	* benchtests/bench-strnlen.c: Likewise.
+
 2019-06-28  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/unix/sysv/linux/tst-getdents64.c (large_buffer_checks):
