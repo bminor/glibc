@@ -1,5 +1,34 @@
 2019-06-28  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #24741]
+	* elf/dl-lookup.c (do_lookup_x): Do not fail if there is a soname
+	mismatch in a versioned symbol reference.
+	(_dl_lookup_symbol_x): Do not report soname mismatch failures.
+	* elf/Makefile [$(build-shared)] (tests): Add tst-sonamemove-link,
+	tst-sonamemove-dlopen.
+	(module-names): Add tst-sonamemove-linkmod1,
+	tst-sonamemove-runmod1, tst-sonamemove-runmod2.
+	(LDFLAGS-tst-sonamemove-linkmod1.so): Set.
+	(LDFLAGS-tst-sonamemove-runmod1.so): Likewise.
+	(LDFLAGS-tst-sonamemove-runmod2.so): Likewise.
+	(tst-sonamemove-runmod1.so): Link against
+	tst-sonamemove-runmod2.so.
+	(tst-sonamemove-link): Link against tst-sonamemove-linkmod1.so.
+	(tst-sonamemove-link.out): Depend on tst-sonamemove-runmod1.so,
+	tst-sonamemove-runmod2.so.
+	(tst-sonamemove-dlopen): Link with -ldl.
+	(tst-sonamemove-dlopen.out): Likewise.
+	* elf/tst-sonamemove-link.c: New file.
+	* elf/tst-sonamemove-dlopen.c: Likewise.
+	* elf/tst-sonamemove-linkmod1.c: Likewise.
+	* elf/tst-sonamemove-linkmod1.map: Likewise.
+	* elf/tst-sonamemove-runmod1.c: Likewise.
+	* elf/tst-sonamemove-runmod1.map: Likewise.
+	* elf/tst-sonamemove-runmod2.c: Likewise.
+	* elf/tst-sonamemove-runmod2.map: Likewise.
+
+2019-06-28  Florian Weimer  <fweimer@redhat.com>
+
 	* support/xdlfcn.h (xdlvsym): Declare function.
 	* support/xdlfcn.c (xdlvsym): Define funciton.
 

@@ -191,7 +191,8 @@ tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-nodelete2 tst-audit11 tst-audit12 tst-dlsym-error tst-noload \
 	 tst-latepthread tst-tls-manydynamic tst-nodelete-dlclose \
 	 tst-debug1 tst-main1 tst-absolute-sym tst-absolute-zero tst-big-note \
-	 tst-unwind-ctor tst-unwind-main tst-audit13
+	 tst-unwind-ctor tst-unwind-main tst-audit13 \
+	 tst-sonamemove-link tst-sonamemove-dlopen
 #	 reldep9
 tests-internal += loadtest unload unload2 circleload1 \
 	 neededtest neededtest2 neededtest3 neededtest4 \
@@ -281,7 +282,8 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-nodelete-dlclose-dso tst-nodelete-dlclose-plugin \
 		tst-main1mod tst-libc_dlvsym-dso tst-absolute-sym-lib \
 		tst-absolute-zero-lib tst-big-note-lib tst-unwind-ctor-lib \
-		tst-audit13mod1
+		tst-audit13mod1 tst-sonamemove-linkmod1 \
+		tst-sonamemove-runmod1 tst-sonamemove-runmod2
 # Most modules build with _ISOMAC defined, but those filtered out
 # depend on internal headers.
 modules-names-tests = $(filter-out ifuncmod% tst-libc_dlvsym-dso tst-tlsmod%,\
@@ -1409,6 +1411,28 @@ LDFLAGS-tst-audit12mod2.so = -Wl,--version-script=tst-audit12mod2.map
 $(objpfx)tst-audit13.out: $(objpfx)tst-audit13mod1.so
 LDFLAGS-tst-audit13mod1.so = -Wl,-z,lazy
 tst-audit13-ENV = LD_AUDIT=$(objpfx)tst-audit13mod1.so
+
+# tst-sonamemove links against an older implementation of the library.
+LDFLAGS-tst-sonamemove-linkmod1.so = \
+  -Wl,--version-script=tst-sonamemove-linkmod1.map \
+  -Wl,-soname,tst-sonamemove-runmod1.so
+LDFLAGS-tst-sonamemove-runmod1.so = -Wl,--no-as-needed \
+  -Wl,--version-script=tst-sonamemove-runmod1.map \
+  -Wl,-soname,tst-sonamemove-runmod1.so
+LDFLAGS-tst-sonamemove-runmod2.so = \
+  -Wl,--version-script=tst-sonamemove-runmod2.map \
+  -Wl,-soname,tst-sonamemove-runmod2.so
+$(objpfx)tst-sonamemove-runmod1.so: $(objpfx)tst-sonamemove-runmod2.so
+# Link against the link module, but depend on the run-time modules
+# for execution.
+$(objpfx)tst-sonamemove-link: $(objpfx)tst-sonamemove-linkmod1.so
+$(objpfx)tst-sonamemove-link.out: \
+  $(objpfx)tst-sonamemove-runmod1.so \
+  $(objpfx)tst-sonamemove-runmod2.so
+$(objpfx)tst-sonamemove-dlopen: $(libdl)
+$(objpfx)tst-sonamemove-dlopen.out: \
+  $(objpfx)tst-sonamemove-runmod1.so \
+  $(objpfx)tst-sonamemove-runmod2.so
 
 # Override -z defs, so that we can reference an undefined symbol.
 # Force lazy binding for the same reason.

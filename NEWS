@@ -34,6 +34,12 @@ Major new features:
   pointer subtraction within the allocated object, where results might
   overflow the ptrdiff_t type.
 
+* The dynamic linker no longer refuses to load objects which reference
+  versioned symbols whose implementation has moved to a different soname
+  since the object has been linked.  The old error message, symbol
+  FUNCTION-NAME, version SYMBOL-VERSION not defined in file DSO-NAME with
+  link time reference, is gone.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The copy_file_range function fails with ENOSYS if the kernel does not

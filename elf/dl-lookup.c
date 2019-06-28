@@ -536,11 +536,7 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 	}
 
 skip:
-      /* If this current map is the one mentioned in the verneed entry
-	 and we have not found a weak entry, it is a bug.  */
-      if (symidx == STN_UNDEF && version != NULL && version->filename != NULL
-	  && __glibc_unlikely (_dl_name_match_p (version->filename, map)))
-	return -1;
+      ;
     }
   while (++i < n);
 
@@ -810,34 +806,10 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 
   /* Search the relevant loaded objects for a definition.  */
   for (size_t start = i; *scope != NULL; start = 0, ++scope)
-    {
-      int res = do_lookup_x (undef_name, new_hash, &old_hash, *ref,
-			     &current_value, *scope, start, version, flags,
-			     skip_map, type_class, undef_map);
-      if (res > 0)
-	break;
-
-      if (__glibc_unlikely (res < 0) && skip_map == NULL)
-	{
-	  /* Oh, oh.  The file named in the relocation entry does not
-	     contain the needed symbol.  This code is never reached
-	     for unversioned lookups.  */
-	  assert (version != NULL);
-	  const char *reference_name = undef_map ? undef_map->l_name : "";
-	  struct dl_exception exception;
-	  /* XXX We cannot translate the message.  */
-	  _dl_exception_create_format
-	    (&exception, DSO_FILENAME (reference_name),
-	     "symbol %s version %s not defined in file %s"
-	     " with link time reference%s",
-	     undef_name, version->name, version->filename,
-	     res == -2 ? " (no version symbols)" : "");
-	  _dl_signal_cexception (0, &exception, N_("relocation error"));
-	  _dl_exception_free (&exception);
-	  *ref = NULL;
-	  return 0;
-	}
-    }
+    if (do_lookup_x (undef_name, new_hash, &old_hash, *ref,
+		     &current_value, *scope, start, version, flags,
+		     skip_map, type_class, undef_map) != 0)
+      break;
 
   if (__glibc_unlikely (current_value.s == NULL))
     {
