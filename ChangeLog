@@ -1,3 +1,52 @@
+2019-07-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #24259]
+	* elf/dl-open.c (dl_open_worker): Call _dl_open_check after
+	relocation.
+	* sysdeps/x86/Makefile (tests): Add tst-cet-legacy-5a,
+	tst-cet-legacy-5b, tst-cet-legacy-6a and tst-cet-legacy-6b.
+	(modules-names): Add tst-cet-legacy-mod-5a, tst-cet-legacy-mod-5b,
+	tst-cet-legacy-mod-5c, tst-cet-legacy-mod-6a, tst-cet-legacy-mod-6b
+	and tst-cet-legacy-mod-6c.
+	(CFLAGS-tst-cet-legacy-5a.c): New.
+	(CFLAGS-tst-cet-legacy-5b.c): Likewise.
+	(CFLAGS-tst-cet-legacy-mod-5a.c): Likewise.
+	(CFLAGS-tst-cet-legacy-mod-5b.c): Likewise.
+	(CFLAGS-tst-cet-legacy-mod-5c.c): Likewise.
+	(CFLAGS-tst-cet-legacy-6a.c): Likewise.
+	(CFLAGS-tst-cet-legacy-6b.c): Likewise.
+	(CFLAGS-tst-cet-legacy-mod-6a.c): Likewise.
+	(CFLAGS-tst-cet-legacy-mod-6b.c): Likewise.
+	(CFLAGS-tst-cet-legacy-mod-6c.c): Likewise.
+	($(objpfx)tst-cet-legacy-5a): Likewise.
+	($(objpfx)tst-cet-legacy-5a.out): Likewise.
+	($(objpfx)tst-cet-legacy-mod-5a.so): Likewise.
+	($(objpfx)tst-cet-legacy-mod-5b.so): Likewise.
+	($(objpfx)tst-cet-legacy-5b): Likewise.
+	($(objpfx)tst-cet-legacy-5b.out): Likewise.
+	(tst-cet-legacy-5b-ENV): Likewise.
+	($(objpfx)tst-cet-legacy-6a): Likewise.
+	($(objpfx)tst-cet-legacy-6a.out): Likewise.
+	($(objpfx)tst-cet-legacy-mod-6a.so): Likewise.
+	($(objpfx)tst-cet-legacy-mod-6b.so): Likewise.
+	($(objpfx)tst-cet-legacy-6b): Likewise.
+	($(objpfx)tst-cet-legacy-6b.out): Likewise.
+	(tst-cet-legacy-6b-ENV): Likewise.
+	* sysdeps/x86/tst-cet-legacy-5.c: New file.
+	* sysdeps/x86/tst-cet-legacy-5a.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-5b.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-6.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-6a.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-6b.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-mod-5.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-mod-5a.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-mod-5b.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-mod-5c.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-mod-6.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-mod-6a.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-mod-6b.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-mod-6c.c: Likewise.
+
 2019-08-08  Niklas Hambüchen  <mail@nh2.me>
 	    Carlos O'Donell  <carlos@redhat.com>
 
