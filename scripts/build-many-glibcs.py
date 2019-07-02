@@ -158,7 +158,9 @@ class Context(object):
         self.add_config(arch='alpha',
                         os_name='linux-gnu')
         self.add_config(arch='arm',
-                        os_name='linux-gnueabi')
+                        os_name='linux-gnueabi',
+                        extra_glibcs=[{'variant': 'v4t',
+                                       'ccopts': '-march=armv4t'}])
         self.add_config(arch='armeb',
                         os_name='linux-gnueabi')
         self.add_config(arch='armeb',

@@ -1,3 +1,8 @@
+2019-07-01  Florian Weimer  <fweimer@redhat.com>
+
+	* scripts/build-many-glibcs.py (Context.add_all_configs): Add v4t
+	variant for arm-linux-gnueabi.
+
 2019-07-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #24259]
