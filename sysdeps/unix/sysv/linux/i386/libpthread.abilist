@@ -114,7 +114,6 @@ GLIBC_2.0 siglongjmp F
 GLIBC_2.0 sigwait F
 GLIBC_2.0 system F
 GLIBC_2.0 tcdrain F
-GLIBC_2.0 vfork F
 GLIBC_2.0 wait F
 GLIBC_2.0 waitpid F
 GLIBC_2.0 write F
@@ -155,7 +154,7 @@ GLIBC_2.1 sem_wait F
 GLIBC_2.1.1 sem_close F
 GLIBC_2.1.1 sem_open F
 GLIBC_2.1.1 sem_unlink F
-GLIBC_2.1.2 __vfork F
+GLIBC_2.1.2 __libpthread_version_placeholder F
 GLIBC_2.11 pthread_sigqueue F
 GLIBC_2.12 pthread_getname_np F
 GLIBC_2.12 pthread_mutex_consistent F

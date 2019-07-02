@@ -1,3 +1,84 @@
+2019-07-01  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20188]
+	* nptl/Versions (libpthread): Remove __fork from GLIBC_2.0.
+	Replace __vfork with __libpthread_version_placeholder for
+	GLIBC_2.1.2.
+	(libc): Remove __libc_vfork from GLIBC_PRIVATE.
+	* nptl/Makefile (libpthread-routines): Remove pt-vfork.  Add
+	libpthread-compat.
+	* nptl/pt-vfork.c: Remove file.
+	* sysdeps/unix/sysv/linux/aarch64/pt-vfork.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/pt-vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/csky/pt-vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/pt-vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/pt-vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/pt-vfork.c: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/pt-vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/mips/pt-vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/pt-vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/pt-vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/pt-vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/sh/pt-vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/pt-vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/libpthread.abilist (GLIBC_2.17):
+	Remove vfork, __vfork.
+	* sysdeps/unix/sysv/linux/alpha/libpthread.abilist (GLIBC_2.0):
+	Remove vfork.
+	(GLIBC_2.1.2): Replace __vfork with
+	__libpthread_version_placeholder.
+	* sysdeps/unix/sysv/linux/arm/libpthread.abilist (GLIBC_2.4):
+	Remove vfork, __vfork.
+	* sysdeps/unix/sysv/linux/hppa/libpthread.abilist (GLIBC_2.2):
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/libpthread.abilist (GLIBC_2.0):
+	Remove vfork.
+	(GLIBC_2.1.2): Replace __vfork with
+	__libpthread_version_placeholder.
+	* sysdeps/unix/sysv/linux/ia64/libpthread.abilist (GLIBC_2.2):
+	Remove vfork.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libpthread.abilist
+	(GLIBC_2.4): Remove vfork, __vfork.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libpthread.abilist
+	(GLIBC_2.0): Remove vfork.
+	(GLIBC_2.1.2): Replace __vfork with
+	__libpthread_version_placeholder.
+	* sysdeps/unix/sysv/linux/microblaze/libpthread.abilist
+	(GLIBC_2.18): Remove vfork, __vfork.
+	* sysdeps/unix/sysv/linux/mips/mips32/libpthread.abilist
+	(GLIBC_2.0): Remove vfork.
+	(GLIBC_2.2): Remove __vfork.
+	* sysdeps/unix/sysv/linux/mips/mips64/libpthread.abilist:
+	(GLIBC_2.2): Remove vfork, __vfork.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/libpthread.abilist:
+	(GLIBC_2.0): Remove vfork.
+	(GLIBC_2.1.2): Replace __vfork with
+	__libpthread_version_placeholder.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libpthread.abilist
+	(GLIBC_2.3): Remove vfork, __vfork.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libpthread.abilist
+	(GLIBC_2.17): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libpthread.abilist
+	(GLIBC_2.0): Remove vfork.
+	(GLIBC_2.1.2): Replace __vfork with
+	__libpthread_version_placeholder.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libpthread.abilist
+	(GLIBC_2.2): Remove vfork, __vfork.
+	* sysdeps/unix/sysv/linux/sh/libpthread.abilist (GLIBC_2.2):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libpthread.abilist
+	(GLIBC_2.0): Remove vfork.
+	(GLIBC_2.1.2): Replace __vfork with
+	__libpthread_version_placeholder.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libpthread.abilist
+	(GLIBC_2.2): Remove vfork, __vfork.
+	* sysdeps/unix/sysv/linux/x86_64/64/libpthread.abilist
+	(GLIBC_2.2.5): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libpthread.abilist
+	(GLIBC_2.16): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/localplt.data (libpthread.so):
+	Remove __errno_location.
+
 2019-07-02  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #24757]

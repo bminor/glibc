@@ -36,7 +36,6 @@ libc {
     __libc_alloca_cutoff;
     # Internal libc interface to libpthread
     __libc_dl_error_tsd;
-    __libc_vfork;
     __libc_pthread_init;
     __libc_current_sigrtmin_private; __libc_current_sigrtmax_private;
     __libc_allocate_rtsig_private;
@@ -98,7 +97,7 @@ libpthread {
     sem_destroy; sem_getvalue; sem_init; sem_post; sem_trywait; sem_wait;
 
     # Special fork handling.
-    fork; __fork; vfork;
+    fork; __fork;
 
     # Cancellation points.
     close; __close; fcntl; __fcntl; read; __read; write; __write; accept;
@@ -152,7 +151,7 @@ libpthread {
   }
 
   GLIBC_2.1.2 {
-    __vfork;
+    __libpthread_version_placeholder;
   }
 
   GLIBC_2.2 {

@@ -114,7 +114,6 @@ GLIBC_2.0 siglongjmp F
 GLIBC_2.0 sigwait F
 GLIBC_2.0 system F
 GLIBC_2.0 tcdrain F
-GLIBC_2.0 vfork F
 GLIBC_2.0 wait F
 GLIBC_2.0 waitpid F
 GLIBC_2.0 write F
@@ -140,7 +139,6 @@ GLIBC_2.2 __pthread_rwlock_unlock F
 GLIBC_2.2 __pthread_rwlock_wrlock F
 GLIBC_2.2 __pwrite64 F
 GLIBC_2.2 __res_state F
-GLIBC_2.2 __vfork F
 GLIBC_2.2 lseek64 F
 GLIBC_2.2 open64 F
 GLIBC_2.2 pread F

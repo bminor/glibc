@@ -120,7 +120,7 @@ libpthread-routines = nptl-init nptlfreeres vars events version pt-interp \
 		      cancellation \
 		      lowlevellock \
 		      lll_timedlock_wait \
-		      pt-fork pt-vfork pt-fcntl \
+		      pt-fork pt-fcntl \
 		      $(pthread-compat-wrappers) \
 		      pt-raise pt-system \
 		      flockfile ftrylockfile funlockfile \
@@ -144,7 +144,8 @@ libpthread-routines = nptl-init nptlfreeres vars events version pt-interp \
 		      mtx_destroy mtx_init mtx_lock mtx_timedlock \
 		      mtx_trylock mtx_unlock call_once cnd_broadcast \
 		      cnd_destroy cnd_init cnd_signal cnd_timedwait cnd_wait \
-		      tss_create tss_delete tss_get tss_set pthread_mutex_conf
+		      tss_create tss_delete tss_get tss_set pthread_mutex_conf \
+		      libpthread-compat
 #		      pthread_setuid pthread_seteuid pthread_setreuid \
 #		      pthread_setresuid \
 #		      pthread_setgid pthread_setegid pthread_setregid \
