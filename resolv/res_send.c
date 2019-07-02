@@ -401,7 +401,18 @@ __res_context_send (struct resolv_context *ctx,
 		    int *nansp2, int *resplen2, int *ansp2_malloced)
 {
 	struct __res_state *statp = ctx->resp;
-	int gotsomewhere, terrno, try, v_circuit, resplen, n;
+	int gotsomewhere, terrno, try, v_circuit, resplen;
+	/* On some architectures send_vc is inlined and the compiler might emit
+	   a warning indicating 'resplen' may be used uninitialized.  Note that
+	   the warning belongs to resplen in send_vc which is used as return
+	   value!  There the maybe-uninitialized warning is already ignored as
+	   it is a false-positive - see comment in send_vc.
+	   Here the variable n is set to the return value of send_vc.
+	   See below.  */
+	DIAG_PUSH_NEEDS_COMMENT;
+	DIAG_IGNORE_NEEDS_COMMENT (9, "-Wmaybe-uninitialized");
+	int n;
+	DIAG_POP_NEEDS_COMMENT;
 
 	if (statp->nscount == 0) {
 		__set_errno (ESRCH);
@@ -495,8 +506,12 @@ __res_context_send (struct resolv_context *ctx,
 				    ansp2_malloced);
 			if (n < 0)
 				return (-1);
+			/* See comment at the declaration of n.  */
+			DIAG_PUSH_NEEDS_COMMENT;
+			DIAG_IGNORE_NEEDS_COMMENT (9, "-Wmaybe-uninitialized");
 			if (n == 0 && (buf2 == NULL || *resplen2 == 0))
 				goto next_ns;
+			DIAG_POP_NEEDS_COMMENT;
 		} else {
 			/* Use datagrams. */
 			n = send_dg(statp, buf, buflen, buf2, buflen2,

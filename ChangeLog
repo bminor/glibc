@@ -1,3 +1,8 @@
+2019-07-02  Stefan Liebler  <stli@linux.ibm.com>
+
+	* resolv/res_send.c (__res_context_send): Disable maybe-uninitialized
+	warning.
+
 2019-07-01  Florian Weimer  <fweimer@redhat.com>
 
 	* scripts/build-many-glibcs.py (Context.add_all_configs): Add v4t
