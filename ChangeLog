@@ -1,3 +1,8 @@
+2019-07-04  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #24484]
+	* sysdeps/riscv/ldsodefs.h (DL_RO_DYN_SECTION): Define.
+
 2019-07-04  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* sysdeps/aarch64/Makefile: Install sys/ifunc.h and add tests.
