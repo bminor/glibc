@@ -45,6 +45,17 @@
 # define TOINT_INTRINSICS 0
 #endif
 
+/* vec_cmpne was included in GCC 7.
+   TODO: Remove this when the minimum required GCC version is >= 7.  */
+#ifndef vec_cmpne
+static inline vector bool long long
+vec_cmpne (vector unsigned long long a, vector unsigned long long b)
+{
+  vector bool long long tmp = vec_cmpeq (a, b);
+  return vec_nor (tmp, tmp);
+}
+#endif
+
 #if TOINT_INTRINSICS
 /* Round x to nearest int in all rounding modes, ties have to be rounded
    consistently with converttoint so the results match.  If the result
