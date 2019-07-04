@@ -7,4 +7,5 @@ GLIBC_2.30 _ZGVbN4v_cosf F
 GLIBC_2.30 _ZGVbN4v_expf F
 GLIBC_2.30 _ZGVbN4v_logf F
 GLIBC_2.30 _ZGVbN4v_sinf F
+GLIBC_2.30 _ZGVbN4vv_powf F
 GLIBC_2.30 _ZGVbN4vvv_sincosf F

@@ -36,3 +36,15 @@ __math_oflowf (uint32_t sign)
 {
   return xflowf (sign, 0x1p97f);
 }
+
+attribute_hidden float
+__math_invalidf (float x)
+{
+  return (x - x) / (x - x);
+}
+
+attribute_hidden float
+__math_divzerof (uint32_t sign)
+{
+  return (float)(sign ? -1.0f : 1.0f) / 0.0f;
+}
