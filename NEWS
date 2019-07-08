@@ -46,9 +46,11 @@ Deprecated and removed features, and other changes affecting compatibility:
   support the system call of the same name.  Previously, user space
   emulation was performed, but its behavior did not match the kernel
   behavior, which was deemed too confusing.  Applications which use the
-  copy_file_range function will have to be run on kernels which implement
-  the copy_file_range system call.  Support for most architectures was added
-  in version 4.5 of the mainline Linux kernel.
+  copy_file_range function can no longer rely on glibc to provide a fallback
+  on kernels that do not support the copy_file_range system call, and if
+  this function returns ENOSYS, they will need to use their own fallback.
+  Support for copy_file_range for most architectures was added in version
+  4.5 of the mainline Linux kernel.
 
 * The functions clock_gettime, clock_getres, clock_settime,
   clock_getcpuclockid, clock_nanosleep were removed from the librt library
