@@ -47,12 +47,14 @@ extern const fenv_t *__fe_mask_env (void) attribute_hidden;
 
 #ifdef _ARCH_PWR9
 # define fegetenv_status() fegetenv_status_ISA300()
-#else
+#elif defined __BUILTIN_CPU_SUPPORTS__
 # define fegetenv_status()						\
   (__glibc_likely (__builtin_cpu_supports ("arch_3_00"))		\
    ? fegetenv_status_ISA300()						\
    : fegetenv_register()						\
   )
+#else
+# define fegetenv_status() fegetenv_register ()
 #endif
 
 /* Equivalent to fesetenv, but takes a fenv_t instead of a pointer.  */

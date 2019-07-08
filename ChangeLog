@@ -1,3 +1,8 @@
+2019-07-09  Paul A. Clarke  <pc@us.ibm.com>
+    
+	* sysdeps/powerpc/fpu/fenv_libc.h (_FPU_GET_RC): Protect use of
+	__builtin_cpu_supports with __BUILTIN_CPU_SUPPORTS__.
+
 2019-07-08  DJ Delorie  <dj@redhat.com>
 
 	[BZ #23501]
