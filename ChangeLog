@@ -1,5 +1,23 @@
 2019-07-17  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
+	[BZ #21897]
+	* localedata/locales/aa_DJ (abday): Update from CLDR, all words
+	begin with an uppercase letter now.
+	(abmon): Likewise.
+	(mon): Update from CLDR, reword February from "Kudo" to
+	"Naharsi Kudo", April from "Agda Baxisso" to "Agda Baxis",
+	and August from "Liiqen" to "Leqeeni".
+	* localedata/locales/aa_ER (mon): Update from CLDR, reword
+	April from "Agda Baxisso" to "Agda Baxis" and August from
+	"Leqeeni" to "Liiqen".
+	* localedata/locales/aa_ER@saaho (mon): Likewise.
+	* localedata/locales/aa_ET (abmon): Update from CLDR, reword
+	abbreviated February from "Kud" to "Nah".
+	(mon): Update from CLDR, reword February from "Kudo" to
+	"Naharsi Kudo" and April from "Agda Baxisso" to "Agda Baxis".
+
+2019-07-17  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
 	[BZ #23996]
 	* localedata/locales/nl_BE (LC_NAME): Replace with “copy "nl_NL"”.
 
