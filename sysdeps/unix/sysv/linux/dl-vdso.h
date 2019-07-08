@@ -46,6 +46,8 @@ prepare_version_base (const char *name, ElfW(Word) hash)
 #define VDSO_HASH_LINUX_2_6_29	123718585
 #define VDSO_NAME_LINUX_2_6_39	"LINUX_2.6.39"
 #define VDSO_HASH_LINUX_2_6_39	123718537
+#define VDSO_NAME_LINUX_4	"LINUX_4"
+#define VDSO_HASH_LINUX_4	14921332
 #define VDSO_NAME_LINUX_4_9	"LINUX_4.9"
 #define VDSO_HASH_LINUX_4_9	61765625
 #define VDSO_NAME_LINUX_4_15	"LINUX_4.15"
