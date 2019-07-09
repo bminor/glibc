@@ -11,6 +11,8 @@ Major new features:
 
 * The entry for the new Japanese era has been added for ja_JP locale.
 
+Deprecated and removed features, and other changes affecting compatibility:
+
 * The copy_file_range function fails with ENOSYS if the kernel does not
   support the system call of the same name.  Previously, user space
   emulation was performed, but its behavior did not match the kernel
