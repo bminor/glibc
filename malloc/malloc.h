@@ -159,9 +159,6 @@ extern void *(*__MALLOC_HOOK_VOLATILE __memalign_hook)(size_t __alignment,
 __MALLOC_DEPRECATED;
 extern void (*__MALLOC_HOOK_VOLATILE __after_morecore_hook) (void);
 
-/* Activate a standard set of debugging hooks. */
-extern void __malloc_check_init (void) __THROW __MALLOC_DEPRECATED;
-
 
 __END_DECLS
 #endif /* malloc.h */

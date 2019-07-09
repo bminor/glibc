@@ -1,9 +1,17 @@
+2019-07-10  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #23352]
+	* malloc/malloc.h (__malloc_check_init): Don't declare.
+	* include/malloc.h (__malloc_check_init): Likewise.
+	* malloc/malloc-internal.h (__malloc_check_init): Declare it here.
+	* manual/memory.texi (__malloc_check_init): Don't mention it.
+
 2019-07-10  Mao Han  <han_mao@c-sky.com>
 
 	* locale/Makefile: Fix tst-locale-locpath arguments passing.
 
 2019-07-09  Paul A. Clarke  <pc@us.ibm.com>
-    
+
 	* sysdeps/powerpc/fpu/fenv_libc.h (_FPU_GET_RC): Protect use of
 	__builtin_cpu_supports with __BUILTIN_CPU_SUPPORTS__.
 

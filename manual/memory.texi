@@ -1056,7 +1056,6 @@ systems that do not support @w{ISO C11}.
 @c   next_env_entry ok
 @c   strcspn dup ok
 @c   __libc_mallopt dup @mtasuconst:mallopt [setting mp_]
-@c   __malloc_check_init @mtasuconst:malloc_hooks [setting hooks]
 @c   *__malloc_initialize_hook unguarded, ok
 @c  *__memalign_hook dup ok, unguarded
 @c  arena_get dup @asulock @aculock @acsfd @acsmem

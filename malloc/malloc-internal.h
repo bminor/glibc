@@ -74,4 +74,7 @@ void __malloc_fork_unlock_child (void) attribute_hidden;
 /* Called as part of the thread shutdown sequence.  */
 void __malloc_arena_thread_freeres (void) attribute_hidden;
 
+/* Activate a standard set of debugging hooks. */
+void __malloc_check_init (void) attribute_hidden;
+
 #endif /* _MALLOC_INTERNAL_H */
