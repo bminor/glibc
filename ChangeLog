@@ -1,3 +1,11 @@
+2019-07-10  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* sysdeps/aarch64/dl-machine.h (elf_machine_runtime_setup): Remove the
+	DT_AARCH64_VARIANT_PCS check.
+	(elf_machine_lazy_rel): Use l_info[DT_AARCH64 (VARIANT_PCS)].
+	* sysdeps/aarch64/linkmap.h (struct link_map_machine): Remove
+	variant_pcs.
+
 2019-07-10  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #23352]

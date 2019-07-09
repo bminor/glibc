@@ -105,10 +105,6 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	}
     }
 
-  /* Check if STO_AARCH64_VARIANT_PCS needs to be handled.  */
-  if (l->l_info[DT_AARCH64 (VARIANT_PCS)])
-    l->l_mach.variant_pcs = 1;
-
   return lazy;
 }
 
@@ -402,7 +398,7 @@ elf_machine_lazy_rel (struct link_map *map,
 	  return;
 	}
 
-      if (__glibc_unlikely (map->l_mach.variant_pcs))
+      if (__glibc_unlikely (map->l_info[DT_AARCH64 (VARIANT_PCS)] != NULL))
 	{
 	  /* Check the symbol table for variant PCS symbols.  */
 	  const Elf_Symndx symndx = ELFW (R_SYM) (reloc->r_info);
