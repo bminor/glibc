@@ -1,3 +1,8 @@
+2019-07-17  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #23996]
+	* localedata/locales/nl_BE (LC_NAME): Replace with “copy "nl_NL"”.
+
 2019-07-17  PanderMusubi  <pander@users.sourceforge.net>
 
 	[BZ #23996]
