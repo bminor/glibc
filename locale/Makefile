@@ -113,5 +113,5 @@ lib := locale-programs
 include $(patsubst %,$(..)libof-iterator.mk,$(cpp-srcs-left))
 
 $(objpfx)tst-locale-locpath.out : tst-locale-locpath.sh $(objpfx)locale
-	$(SHELL) $< '$(common-objpfx)' '$(test-wrapper)' '$(test-wrapper-env)' > $@; \
+	$(SHELL) $< '$(common-objpfx)' '$(test-wrapper-env)' '$(run-program-env)' > $@; \
 	$(evaluate-test)

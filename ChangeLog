@@ -1,3 +1,7 @@
+2019-07-10  Mao Han  <han_mao@c-sky.com>
+
+	* locale/Makefile: Fix tst-locale-locpath arguments passing.
+
 2019-07-09  Paul A. Clarke  <pc@us.ibm.com>
     
 	* sysdeps/powerpc/fpu/fenv_libc.h (_FPU_GET_RC): Protect use of
