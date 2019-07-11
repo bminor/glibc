@@ -85,6 +85,10 @@ do_test_call (void)
   /* Print in hexadecimal notation.  */
   do_test_call_rarg (stdout, L"%.10La, %.10a", ld, d);
   do_test_call_varg (stdout, L"%.10La, %.10a", ld, d);
+
+  /* Test positional parameters.  */
+  do_test_call_varg (stdout, L"%3$Lf, %2$Lf, %1$f",
+		     (double) 1, (long double) 2, (long double) 3);
 }
 
 static int
@@ -106,7 +110,10 @@ do_test (void)
     "     __wprintf_chk: -0x1.0000000000p+0, -0x1.0000000000p+0\n"
     "   __vfwprintf_chk: -0x1.0000000000p+0, -0x1.0000000000p+0\n"
     "   __vswprintf_chk: -0x1.0000000000p+0, -0x1.0000000000p+0\n"
-    "    __vwprintf_chk: -0x1.0000000000p+0, -0x1.0000000000p+0\n";
+    "    __vwprintf_chk: -0x1.0000000000p+0, -0x1.0000000000p+0\n"
+    "   __vfwprintf_chk: 3.000000, 2.000000, 1.000000\n"
+    "   __vswprintf_chk: 3.000000, 2.000000, 1.000000\n"
+    "    __vwprintf_chk: 3.000000, 2.000000, 1.000000\n";
   TEST_COMPARE_STRING (expected, result.out.buffer);
 
   return 0;
