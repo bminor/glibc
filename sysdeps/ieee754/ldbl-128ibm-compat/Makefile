@@ -1,3 +1,11 @@
+ifeq ($(subdir),libio)
+ldbl-extra-routines += fwscanf \
+		       swscanf \
+		       wscanf \
+		       vswscanf \
+		       vwscanf
+endif
+
 ifeq ($(subdir),stdio-common)
 ldbl-extra-routines += printf_size \
 		       asprintf \
@@ -23,7 +31,8 @@ ldbl-extra-routines += printf_size \
 		       sscanf \
 		       vfscanf \
 		       vscanf \
-		       vsscanf
+		       vsscanf \
+		       vfwscanf
 
 # Printing long double values with IEEE binary128 format reuses part
 # of the internal float128 implementation (__printf_fp, __printf_fphex,
@@ -34,6 +43,7 @@ ldbl-extra-routines += printf_size \
 CFLAGS-vfprintf-internal.c += -mfloat128 -mabi=ibmlongdouble
 CFLAGS-vfwprintf-internal.c += -mfloat128 -mabi=ibmlongdouble
 CFLAGS-vfscanf-internal.c += -mfloat128 -mabi=ibmlongdouble
+CFLAGS-vfwscanf-internal.c += -mfloat128 -mabi=ibmlongdouble
 
 # Basic tests for the implementation of long double with IEEE binary128
 # format and for the related redirections in installed headers.
@@ -51,9 +61,18 @@ CFLAGS-test-scanf-ibm128.c += -mabi=ibmlongdouble -Wno-psabi
 
 $(objpfx)test-scanf-ieee128: gnulib-tests += $(f128-loader-link)
 
+tests-internal += test-wscanf-ieee128 test-wscanf-ibm128
+CFLAGS-test-wscanf-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
+CFLAGS-test-wscanf-ibm128.c += -mabi=ibmlongdouble -Wno-psabi
+
+$(objpfx)test-wscanf-ieee128: gnulib-tests += $(f128-loader-link)
+
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)test-scanf-ieee128.out
 tests-special += $(objpfx)test-scanf-ibm128.out
+
+tests-special += $(objpfx)test-wscanf-ieee128.out
+tests-special += $(objpfx)test-wscanf-ibm128.out
 endif
 
 $(objpfx)test-scanf-ieee128.out: \
@@ -65,6 +84,18 @@ $(objpfx)test-scanf-ieee128.out: \
 $(objpfx)test-scanf-ibm128.out: \
   ../sysdeps/ieee754/ldbl-128ibm-compat/test-scanf-ldbl-compat.sh \
   $(objpfx)test-scanf-ibm128
+	$(SHELL) $^ '$(test-program-prefix)' $@; \
+	$(evaluate-test)
+
+$(objpfx)test-wscanf-ieee128.out: \
+  ../sysdeps/ieee754/ldbl-128ibm-compat/test-scanf-ldbl-compat.sh \
+  $(objpfx)test-wscanf-ieee128
+	$(SHELL) $^ '$(test-program-prefix)' $@; \
+	$(evaluate-test)
+
+$(objpfx)test-wscanf-ibm128.out: \
+  ../sysdeps/ieee754/ldbl-128ibm-compat/test-scanf-ldbl-compat.sh \
+  $(objpfx)test-wscanf-ibm128
 	$(SHELL) $^ '$(test-program-prefix)' $@; \
 	$(evaluate-test)
 
