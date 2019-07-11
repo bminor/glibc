@@ -53,21 +53,22 @@ do_test_call_varg (FILE *stream, const wchar_t *format, ...)
 }
 
 static void
-do_test_call_rarg (FILE *stream, const wchar_t *format, long double ld)
+do_test_call_rarg (FILE *stream, const wchar_t *format, long double ld,
+		   double d)
 {
   wchar_t string[128];
 
   wprintf (L"%20Ls", L"__fwprintf_chk: ");
-  __fwprintf_chk (stream, 1, format, ld);
+  __fwprintf_chk (stream, 1, format, ld, d);
   wprintf (L"\n");
 
   wprintf (L"%20Ls", L"__swprintf_chk: ");
-  __swprintf_chk (string, 79, 1, 127, format, ld);
+  __swprintf_chk (string, 79, 1, 127, format, ld, d);
   wprintf (L"%Ls", string);
   wprintf (L"\n");
 
   wprintf (L"%20Ls", L"__wprintf_chk: ");
-  __wprintf_chk (1, format, ld);
+  __wprintf_chk (1, format, ld, d);
   wprintf (L"\n");
 }
 
@@ -75,14 +76,15 @@ static void
 do_test_call (void)
 {
   long double ld = -1;
+  double d = -1;
 
   /* Print in decimal notation.  */
-  do_test_call_rarg (stdout, L"%.10Lf", ld);
-  do_test_call_varg (stdout, L"%.10Lf", ld);
+  do_test_call_rarg (stdout, L"%.10Lf, %.10f", ld, d);
+  do_test_call_varg (stdout, L"%.10Lf, %.10f", ld, d);
 
   /* Print in hexadecimal notation.  */
-  do_test_call_rarg (stdout, L"%.10La", ld);
-  do_test_call_varg (stdout, L"%.10La", ld);
+  do_test_call_rarg (stdout, L"%.10La, %.10a", ld, d);
+  do_test_call_varg (stdout, L"%.10La, %.10a", ld, d);
 }
 
 static int
@@ -93,18 +95,18 @@ do_test (void)
 
   /* Compare against the expected output.  */
   const char *expected =
-    "    __fwprintf_chk: -1.0000000000\n"
-    "    __swprintf_chk: -1.0000000000\n"
-    "     __wprintf_chk: -1.0000000000\n"
-    "   __vfwprintf_chk: -1.0000000000\n"
-    "   __vswprintf_chk: -1.0000000000\n"
-    "    __vwprintf_chk: -1.0000000000\n"
-    "    __fwprintf_chk: -0x1.0000000000p+0\n"
-    "    __swprintf_chk: -0x1.0000000000p+0\n"
-    "     __wprintf_chk: -0x1.0000000000p+0\n"
-    "   __vfwprintf_chk: -0x1.0000000000p+0\n"
-    "   __vswprintf_chk: -0x1.0000000000p+0\n"
-    "    __vwprintf_chk: -0x1.0000000000p+0\n";
+    "    __fwprintf_chk: -1.0000000000, -1.0000000000\n"
+    "    __swprintf_chk: -1.0000000000, -1.0000000000\n"
+    "     __wprintf_chk: -1.0000000000, -1.0000000000\n"
+    "   __vfwprintf_chk: -1.0000000000, -1.0000000000\n"
+    "   __vswprintf_chk: -1.0000000000, -1.0000000000\n"
+    "    __vwprintf_chk: -1.0000000000, -1.0000000000\n"
+    "    __fwprintf_chk: -0x1.0000000000p+0, -0x1.0000000000p+0\n"
+    "    __swprintf_chk: -0x1.0000000000p+0, -0x1.0000000000p+0\n"
+    "     __wprintf_chk: -0x1.0000000000p+0, -0x1.0000000000p+0\n"
+    "   __vfwprintf_chk: -0x1.0000000000p+0, -0x1.0000000000p+0\n"
+    "   __vswprintf_chk: -0x1.0000000000p+0, -0x1.0000000000p+0\n"
+    "    __vwprintf_chk: -0x1.0000000000p+0, -0x1.0000000000p+0\n";
   TEST_COMPARE_STRING (expected, result.out.buffer);
 
   return 0;

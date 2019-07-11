@@ -78,13 +78,13 @@ do_test_call_varg (FILE *stream, const char *format, ...)
 }
 
 static void
-do_test_call_rarg (FILE *stream, const char *format, long double ld)
+do_test_call_rarg (FILE *stream, const char *format, long double ld, double d)
 {
   char *buffer = NULL;
   char string[128];
 
   printf ("%15s", "asprintf: ");
-  asprintf (&buffer, format, ld);
+  asprintf (&buffer, format, ld, d);
   if (buffer == NULL)
     printf ("Error using asprintf\n");
   else
@@ -95,24 +95,24 @@ do_test_call_rarg (FILE *stream, const char *format, long double ld)
   printf ("\n");
 
   printf ("%15s", "dprintf: ");
-  dprintf (fileno (stream), format, ld);
+  dprintf (fileno (stream), format, ld, d);
   printf ("\n");
 
   printf ("%15s", "fprintf: ");
-  fprintf (stream, format, ld);
+  fprintf (stream, format, ld, d);
   printf ("\n");
 
   printf ("%15s", "printf: ");
-  printf (format, ld);
+  printf (format, ld, d);
   printf ("\n");
 
   printf ("%15s", "snprintf: ");
-  snprintf (string, 127, format, ld);
+  snprintf (string, 127, format, ld, d);
   printf ("%s", string);
   printf ("\n");
 
   printf ("%15s", "sprintf: ");
-  sprintf (string, format, ld);
+  sprintf (string, format, ld, d);
   printf ("%s", string);
   printf ("\n");
 }
@@ -121,14 +121,15 @@ static void
 do_test_call (void)
 {
   long double ld = -1;
+  double d = -1;
 
   /* Print in decimal notation.  */
-  do_test_call_rarg (stdout, "%.10Lf", ld);
-  do_test_call_varg (stdout, "%.10Lf", ld);
+  do_test_call_rarg (stdout, "%.10Lf, %.10f", ld, d);
+  do_test_call_varg (stdout, "%.10Lf, %.10f", ld, d);
 
   /* Print in hexadecimal notation.  */
-  do_test_call_rarg (stdout, "%.10La", ld);
-  do_test_call_varg (stdout, "%.10La", ld);
+  do_test_call_rarg (stdout, "%.10La, %.10a", ld, d);
+  do_test_call_varg (stdout, "%.10La, %.10a", ld, d);
 }
 
 static int
@@ -139,30 +140,30 @@ do_test (void)
 
   /* Compare against the expected output.  */
   const char *expected =
-    "     asprintf: -1.0000000000\n"
-    "      dprintf: -1.0000000000\n"
-    "      fprintf: -1.0000000000\n"
-    "       printf: -1.0000000000\n"
-    "     snprintf: -1.0000000000\n"
-    "      sprintf: -1.0000000000\n"
-    "    vasprintf: -1.0000000000\n"
-    "     vdprintf: -1.0000000000\n"
-    "     vfprintf: -1.0000000000\n"
-    "      vprintf: -1.0000000000\n"
-    "    vsnprintf: -1.0000000000\n"
-    "     vsprintf: -1.0000000000\n"
-    "     asprintf: -0x1.0000000000p+0\n"
-    "      dprintf: -0x1.0000000000p+0\n"
-    "      fprintf: -0x1.0000000000p+0\n"
-    "       printf: -0x1.0000000000p+0\n"
-    "     snprintf: -0x1.0000000000p+0\n"
-    "      sprintf: -0x1.0000000000p+0\n"
-    "    vasprintf: -0x1.0000000000p+0\n"
-    "     vdprintf: -0x1.0000000000p+0\n"
-    "     vfprintf: -0x1.0000000000p+0\n"
-    "      vprintf: -0x1.0000000000p+0\n"
-    "    vsnprintf: -0x1.0000000000p+0\n"
-    "     vsprintf: -0x1.0000000000p+0\n";
+    "     asprintf: -1.0000000000, -1.0000000000\n"
+    "      dprintf: -1.0000000000, -1.0000000000\n"
+    "      fprintf: -1.0000000000, -1.0000000000\n"
+    "       printf: -1.0000000000, -1.0000000000\n"
+    "     snprintf: -1.0000000000, -1.0000000000\n"
+    "      sprintf: -1.0000000000, -1.0000000000\n"
+    "    vasprintf: -1.0000000000, -1.0000000000\n"
+    "     vdprintf: -1.0000000000, -1.0000000000\n"
+    "     vfprintf: -1.0000000000, -1.0000000000\n"
+    "      vprintf: -1.0000000000, -1.0000000000\n"
+    "    vsnprintf: -1.0000000000, -1.0000000000\n"
+    "     vsprintf: -1.0000000000, -1.0000000000\n"
+    "     asprintf: -0x1.0000000000p+0, -0x1.0000000000p+0\n"
+    "      dprintf: -0x1.0000000000p+0, -0x1.0000000000p+0\n"
+    "      fprintf: -0x1.0000000000p+0, -0x1.0000000000p+0\n"
+    "       printf: -0x1.0000000000p+0, -0x1.0000000000p+0\n"
+    "     snprintf: -0x1.0000000000p+0, -0x1.0000000000p+0\n"
+    "      sprintf: -0x1.0000000000p+0, -0x1.0000000000p+0\n"
+    "    vasprintf: -0x1.0000000000p+0, -0x1.0000000000p+0\n"
+    "     vdprintf: -0x1.0000000000p+0, -0x1.0000000000p+0\n"
+    "     vfprintf: -0x1.0000000000p+0, -0x1.0000000000p+0\n"
+    "      vprintf: -0x1.0000000000p+0, -0x1.0000000000p+0\n"
+    "    vsnprintf: -0x1.0000000000p+0, -0x1.0000000000p+0\n"
+    "     vsprintf: -0x1.0000000000p+0, -0x1.0000000000p+0\n";
   TEST_COMPARE_STRING (expected, result.out.buffer);
 
   return 0;

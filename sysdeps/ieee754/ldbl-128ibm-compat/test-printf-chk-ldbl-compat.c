@@ -83,14 +83,15 @@ do_test_call_varg (FILE *stream, const char *format, ...)
 }
 
 static void
-do_test_call_rarg (FILE *stream, const char *format, long double ld)
+do_test_call_rarg (FILE *stream, const char *format, long double ld,
+		   double d)
 {
   char *buffer = NULL;
   char string[128];
   int res;
 
   printf ("%20s", "__asprintf_chk: ");
-  res = __asprintf_chk (&buffer, 1, format, ld);
+  res = __asprintf_chk (&buffer, 1, format, ld, d);
   if (res == -1)
     printf ("Error using vasprintf\n");
   if (buffer == NULL)
@@ -103,24 +104,24 @@ do_test_call_rarg (FILE *stream, const char *format, long double ld)
   printf ("\n");
 
   printf ("%20s", "__dprintf_chk: ");
-  __dprintf_chk (fileno (stream), 1, format, ld);
+  __dprintf_chk (fileno (stream), 1, format, ld, d);
   printf ("\n");
 
   printf ("%20s", "__fprintf_chk: ");
-  __fprintf_chk (stdout, 1, format, ld);
+  __fprintf_chk (stdout, 1, format, ld, d);
   printf ("\n");
 
   printf ("%20s", "__printf_chk: ");
-  __printf_chk (1, format, ld);
+  __printf_chk (1, format, ld, d);
   printf ("\n");
 
   printf ("%20s", "__snprintf_chk: ");
-  __snprintf_chk (string, 79, 1, 127, format, ld);
+  __snprintf_chk (string, 79, 1, 127, format, ld, d);
   printf ("%s", string);
   printf ("\n");
 
   printf ("%20s", "__sprintf_chk: ");
-  __sprintf_chk (string, 1, 127, format, ld);
+  __sprintf_chk (string, 1, 127, format, ld, d);
   printf ("%s", string);
   printf ("\n");
 }
@@ -129,14 +130,15 @@ static void
 do_test_call (void)
 {
   long double ld = -1;
+  double d = -1;
 
   /* Print in decimal notation.  */
-  do_test_call_rarg (stdout, "%.10Lf", ld);
-  do_test_call_varg (stdout, "%.10Lf", ld);
+  do_test_call_rarg (stdout, "%.10Lf, %.10f", ld, d);
+  do_test_call_varg (stdout, "%.10Lf, %.10f", ld, d);
 
   /* Print in hexadecimal notation.  */
-  do_test_call_rarg (stdout, "%.10La", ld);
-  do_test_call_varg (stdout, "%.10La", ld);
+  do_test_call_rarg (stdout, "%.10La, %.10a", ld, d);
+  do_test_call_varg (stdout, "%.10La, %.10a", ld, d);
 }
 
 static int
@@ -147,30 +149,30 @@ do_test (void)
 
   /* Compare against the expected output.  */
   const char *expected =
-    "    __asprintf_chk: -1.0000000000\n"
-    "     __dprintf_chk: -1.0000000000\n"
-    "     __fprintf_chk: -1.0000000000\n"
-    "      __printf_chk: -1.0000000000\n"
-    "    __snprintf_chk: -1.0000000000\n"
-    "     __sprintf_chk: -1.0000000000\n"
-    "   __vasprintf_chk: -1.0000000000\n"
-    "    __vdprintf_chk: -1.0000000000\n"
-    "    __vfprintf_chk: -1.0000000000\n"
-    "     __vprintf_chk: -1.0000000000\n"
-    "   __vsnprintf_chk: -1.0000000000\n"
-    "    __vsprintf_chk: -1.0000000000\n"
-    "    __asprintf_chk: -0x1.0000000000p+0\n"
-    "     __dprintf_chk: -0x1.0000000000p+0\n"
-    "     __fprintf_chk: -0x1.0000000000p+0\n"
-    "      __printf_chk: -0x1.0000000000p+0\n"
-    "    __snprintf_chk: -0x1.0000000000p+0\n"
-    "     __sprintf_chk: -0x1.0000000000p+0\n"
-    "   __vasprintf_chk: -0x1.0000000000p+0\n"
-    "    __vdprintf_chk: -0x1.0000000000p+0\n"
-    "    __vfprintf_chk: -0x1.0000000000p+0\n"
-    "     __vprintf_chk: -0x1.0000000000p+0\n"
-    "   __vsnprintf_chk: -0x1.0000000000p+0\n"
-    "    __vsprintf_chk: -0x1.0000000000p+0\n";
+    "    __asprintf_chk: -1.0000000000, -1.0000000000\n"
+    "     __dprintf_chk: -1.0000000000, -1.0000000000\n"
+    "     __fprintf_chk: -1.0000000000, -1.0000000000\n"
+    "      __printf_chk: -1.0000000000, -1.0000000000\n"
+    "    __snprintf_chk: -1.0000000000, -1.0000000000\n"
+    "     __sprintf_chk: -1.0000000000, -1.0000000000\n"
+    "   __vasprintf_chk: -1.0000000000, -1.0000000000\n"
+    "    __vdprintf_chk: -1.0000000000, -1.0000000000\n"
+    "    __vfprintf_chk: -1.0000000000, -1.0000000000\n"
+    "     __vprintf_chk: -1.0000000000, -1.0000000000\n"
+    "   __vsnprintf_chk: -1.0000000000, -1.0000000000\n"
+    "    __vsprintf_chk: -1.0000000000, -1.0000000000\n"
+    "    __asprintf_chk: -0x1.0000000000p+0, -0x1.0000000000p+0\n"
+    "     __dprintf_chk: -0x1.0000000000p+0, -0x1.0000000000p+0\n"
+    "     __fprintf_chk: -0x1.0000000000p+0, -0x1.0000000000p+0\n"
+    "      __printf_chk: -0x1.0000000000p+0, -0x1.0000000000p+0\n"
+    "    __snprintf_chk: -0x1.0000000000p+0, -0x1.0000000000p+0\n"
+    "     __sprintf_chk: -0x1.0000000000p+0, -0x1.0000000000p+0\n"
+    "   __vasprintf_chk: -0x1.0000000000p+0, -0x1.0000000000p+0\n"
+    "    __vdprintf_chk: -0x1.0000000000p+0, -0x1.0000000000p+0\n"
+    "    __vfprintf_chk: -0x1.0000000000p+0, -0x1.0000000000p+0\n"
+    "     __vprintf_chk: -0x1.0000000000p+0, -0x1.0000000000p+0\n"
+    "   __vsnprintf_chk: -0x1.0000000000p+0, -0x1.0000000000p+0\n"
+    "    __vsprintf_chk: -0x1.0000000000p+0, -0x1.0000000000p+0\n";
   TEST_COMPARE_STRING (expected, result.out.buffer);
 
   return 0;
