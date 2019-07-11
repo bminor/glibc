@@ -174,6 +174,10 @@ CFLAGS-tst-ieee128-argp.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
 CFLAGS-tst-ibm128-argp.c += -mabi=ibmlongdouble -Wno-psabi
 endif
 
+ifeq ($(subdir),misc)
+ldbl-extra-routines += err
+endif
+
 # Add IEEE binary128 files as make targets.
 routines += $(foreach r,$(ldbl-extra-routines),ieee128-$(r))
 
