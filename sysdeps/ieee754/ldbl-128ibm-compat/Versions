@@ -191,6 +191,22 @@ libc {
     __vswscanfieee128;
     __vwscanfieee128;
 
+    __isoc99_fscanfieee128;
+    __isoc99_scanfieee128;
+    __isoc99_sscanfieee128;
+
+    __isoc99_vfscanfieee128;
+    __isoc99_vscanfieee128;
+    __isoc99_vsscanfieee128;
+
+    __isoc99_fwscanfieee128;
+    __isoc99_swscanfieee128;
+    __isoc99_wscanfieee128;
+
+    __isoc99_vfwscanfieee128;
+    __isoc99_vswscanfieee128;
+    __isoc99_vwscanfieee128;
+
     __argp_errorieee128;
     __argp_failureieee128;
 

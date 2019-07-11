@@ -3,7 +3,8 @@
 #include <libio/stdio.h>
 
 #define CHAR char
-#define L(x) x
+#define Lx(x) x
+#define L(x) Lx (x)
 #define FSCANF fscanf
 #define SSCANF sscanf
 #define SCANF scanf
