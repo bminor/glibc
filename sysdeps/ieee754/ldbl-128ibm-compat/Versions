@@ -192,5 +192,8 @@ libc {
     __errxieee128;
     __verrieee128;
     __verrxieee128;
+
+    __errorieee128;
+    __error_at_lineieee128;
   }
 }

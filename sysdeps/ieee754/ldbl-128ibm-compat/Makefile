@@ -175,7 +175,8 @@ CFLAGS-tst-ibm128-argp.c += -mabi=ibmlongdouble -Wno-psabi
 endif
 
 ifeq ($(subdir),misc)
-ldbl-extra-routines += err
+ldbl-extra-routines += err \
+		       error
 endif
 
 # Add IEEE binary128 files as make targets.
