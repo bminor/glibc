@@ -224,6 +224,12 @@ ldbl-extra-routines += strfmon strfmon_l
 # Also, guarantee that they are compiled in IBM long double mode.
 CFLAGS-strfmon.c += -mfloat128 -mabi=ibmlongdouble
 CFLAGS-strfmon_l.c += -mfloat128 -mabi=ibmlongdouble
+
+tests-internal += test-strfmon-ibm128 test-strfmon-ieee128
+CFLAGS-test-strfmon-ibm128.c += -mabi=ibmlongdouble -Wno-psabi
+CFLAGS-test-strfmon-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
+$(objpfx)tst-strfmon-ibm128.out: $(gen-locales)
+$(objpfx)tst-strfmon-ieee128.out: $(gen-locales)
 endif
 
 # Add IEEE binary128 files as make targets.
