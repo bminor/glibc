@@ -170,6 +170,11 @@ libc {
     __obstack_printf_chkieee128;
     __obstack_vprintf_chkieee128;
 
+    __syslogieee128;
+    __vsyslogieee128;
+    __syslog_chkieee128;
+    __vsyslog_chkieee128;
+
     __fscanfieee128;
     __scanfieee128;
     __sscanfieee128;

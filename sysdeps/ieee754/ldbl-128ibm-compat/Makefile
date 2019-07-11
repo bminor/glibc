@@ -187,7 +187,8 @@ endif
 
 ifeq ($(subdir),misc)
 ldbl-extra-routines += err \
-		       error
+		       error \
+		       syslog
 
 tests-internal += tst-ibm128-warn tst-ieee128-warn
 tests-internal += tst-ibm128-error tst-ieee128-error
@@ -203,6 +204,14 @@ CFLAGS-tst-ibm128-error.c += -mabi=ibmlongdouble -Wno-psabi
 
 CFLAGS-tst-ieee128-warn.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
 CFLAGS-tst-ieee128-error.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
+
+tests-container += test-syslog-ieee128 test-syslog-ibm128
+CFLAGS-test-syslog-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
+CFLAGS-test-syslog-ibm128.c += -mabi=ibmlongdouble -Wno-psabi
+
+tests-container += test-syslog-chk-ieee128 test-syslog-chk-ibm128
+CFLAGS-test-syslog-chk-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
+CFLAGS-test-syslog-chk-ibm128.c += -mabi=ibmlongdouble -Wno-psabi
 endif
 
 # Add IEEE binary128 files as make targets.
