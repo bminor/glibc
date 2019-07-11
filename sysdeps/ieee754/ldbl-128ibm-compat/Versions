@@ -224,5 +224,11 @@ libc {
 
     __strfmonieee128;
     __strfmon_lieee128;
+
+    __qecvtieee128;
+    __qfcvtieee128;
+    __qgcvtieee128;
+    __qecvtieee128_r;
+    __qfcvtieee128_r;
   }
 }

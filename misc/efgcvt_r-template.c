@@ -25,6 +25,10 @@
 #include <sys/param.h>
 #include <math_ldbl_opt.h>
 
+#ifndef SNPRINTF
+# define SNPRINTF __snprintf
+#endif
+
 
 #define APPEND(a, b) APPEND2 (a, b)
 #define APPEND2(a, b) a##b
@@ -73,7 +77,7 @@ __FCVT_R (FLOAT_TYPE value, int ndigit, int *decpt, int *sign,
     /* Value is Inf or NaN.  */
     *sign = 0;
 
-  n = __snprintf (buf, len, "%.*" FLOAT_FMT_FLAG "f", MIN (ndigit, NDIGIT_MAX),
+  n = SNPRINTF (buf, len, "%.*" FLOAT_FMT_FLAG "f", MIN (ndigit, NDIGIT_MAX),
 		  value);
   /* Check for a too small buffer.  */
   if (n >= (ssize_t) len)
