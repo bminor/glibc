@@ -160,6 +160,20 @@ CFLAGS-test-wprintf-chk-redir-ibm128.c += -mabi=ibmlongdouble -Wno-psabi \
 					  -Wno-unused-result
 endif
 
+ifeq ($(subdir),argp)
+ldbl-extra-routines += argp-help
+
+$(objpfx)tst-ieee128-argp.c: tst-ldbl-argp.c
+	cp $< $@
+
+$(objpfx)tst-ibm128-argp.c: tst-ldbl-argp.c
+	cp $< $@
+
+tests-internal += tst-ieee128-argp tst-ibm128-argp
+CFLAGS-tst-ieee128-argp.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
+CFLAGS-tst-ibm128-argp.c += -mabi=ibmlongdouble -Wno-psabi
+endif
+
 # Add IEEE binary128 files as make targets.
 routines += $(foreach r,$(ldbl-extra-routines),ieee128-$(r))
 

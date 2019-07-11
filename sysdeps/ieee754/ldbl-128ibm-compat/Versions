@@ -180,5 +180,8 @@ libc {
     __vfwscanfieee128;
     __vswscanfieee128;
     __vwscanfieee128;
+
+    __argp_errorieee128;
+    __argp_failureieee128;
   }
 }
