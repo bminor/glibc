@@ -23,6 +23,10 @@
 #include <libc-lock.h>
 #include <math_ldbl_opt.h>
 
+#ifndef SPRINTF
+# define SPRINTF sprintf
+#endif
+
 #define APPEND(a, b) APPEND2 (a, b)
 #define APPEND2(a, b) a##b
 
@@ -66,6 +70,6 @@ __ECVT (FLOAT_TYPE value, int ndigit, int *decpt, int *sign)
 char *
 __GCVT (FLOAT_TYPE value, int ndigit, char *buf)
 {
-  sprintf (buf, "%.*" FLOAT_FMT_FLAG "g", MIN (ndigit, NDIGIT_MAX), value);
+  SPRINTF (buf, "%.*" FLOAT_FMT_FLAG "g", MIN (ndigit, NDIGIT_MAX), value);
   return buf;
 }
