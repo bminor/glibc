@@ -57,6 +57,31 @@ $(objpfx)test-printf-size-ibm128.out: \
 	$(evaluate-test)
 endif
 
+ifeq ($(subdir),debug)
+ldbl-extra-routines += asprintf_chk \
+		       dprintf_chk \
+		       fprintf_chk \
+		       printf_chk \
+		       snprintf_chk \
+		       sprintf_chk \
+		       vasprintf_chk \
+		       vdprintf_chk \
+		       vfprintf_chk \
+		       vprintf_chk \
+		       vsnprintf_chk \
+		       vsprintf_chk
+
+tests-internal += test-printf-chk-ieee128 test-printf-chk-ibm128
+CFLAGS-test-printf-chk-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
+CFLAGS-test-printf-chk-ibm128.c += -mabi=ibmlongdouble -Wno-psabi
+
+tests-internal += test-printf-chk-redir-ieee128 test-printf-chk-redir-ibm128
+CFLAGS-test-printf-chk-redir-ieee128.c += -mfloat128 -mabi=ieeelongdouble \
+					  -Wno-psabi -Wno-unused-result
+CFLAGS-test-printf-chk-redir-ibm128.c += -mabi=ibmlongdouble -Wno-psabi \
+					 -Wno-unused-result
+endif
+
 # Add IEEE binary128 files as make targets.
 routines += $(foreach r,$(ldbl-extra-routines),ieee128-$(r))
 
