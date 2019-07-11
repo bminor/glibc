@@ -156,5 +156,13 @@ libc {
     __vprintf_chkieee128;
     __vsnprintf_chkieee128;
     __vsprintf_chkieee128;
+
+    __fwprintf_chkieee128;
+    __swprintf_chkieee128;
+    __wprintf_chkieee128;
+
+    __vfwprintf_chkieee128;
+    __vswprintf_chkieee128;
+    __vwprintf_chkieee128;
   }
 }

@@ -69,7 +69,13 @@ ldbl-extra-routines += asprintf_chk \
 		       vfprintf_chk \
 		       vprintf_chk \
 		       vsnprintf_chk \
-		       vsprintf_chk
+		       vsprintf_chk \
+		       fwprintf_chk \
+		       swprintf_chk \
+		       wprintf_chk \
+		       vfwprintf_chk \
+		       vswprintf_chk \
+		       vwprintf_chk
 
 tests-internal += test-printf-chk-ieee128 test-printf-chk-ibm128
 CFLAGS-test-printf-chk-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
@@ -80,6 +86,16 @@ CFLAGS-test-printf-chk-redir-ieee128.c += -mfloat128 -mabi=ieeelongdouble \
 					  -Wno-psabi -Wno-unused-result
 CFLAGS-test-printf-chk-redir-ibm128.c += -mabi=ibmlongdouble -Wno-psabi \
 					 -Wno-unused-result
+
+tests-internal += test-wprintf-chk-ieee128 test-wprintf-chk-ibm128
+CFLAGS-test-wprintf-chk-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
+CFLAGS-test-wprintf-chk-ibm128.c += -mabi=ibmlongdouble -Wno-psabi
+
+tests-internal += test-wprintf-chk-redir-ieee128 test-wprintf-chk-redir-ibm128
+CFLAGS-test-wprintf-chk-redir-ieee128.c += -mfloat128 -mabi=ieeelongdouble \
+					   -Wno-psabi -Wno-unused-result
+CFLAGS-test-wprintf-chk-redir-ibm128.c += -mabi=ibmlongdouble -Wno-psabi \
+					  -Wno-unused-result
 endif
 
 # Add IEEE binary128 files as make targets.
