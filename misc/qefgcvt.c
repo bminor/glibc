@@ -16,31 +16,19 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <float.h>
+#include <efgcvt-ldbl-macros.h>
+#include <efgcvt-template.c>
 
-#define FLOAT_TYPE long double
-#define FUNC_PREFIX q
-#define FLOAT_FMT_FLAG "L"
-/* Actually we have to write (LDBL_DIG + log10 (LDBL_MAX_10_EXP)) but
-   we don't have log10 available in the preprocessor.  Since we cannot
-   assume anything on the used `long double' format be generous.  */
-#define MAXDIG (NDIGIT_MAX + 12)
-#define FCVT_MAXDIG (LDBL_MAX_10_EXP + MAXDIG)
-#if LDBL_MANT_DIG == 64
-# define NDIGIT_MAX 21
-#elif LDBL_MANT_DIG == 53
-# define NDIGIT_MAX 17
-#elif LDBL_MANT_DIG == 113
-# define NDIGIT_MAX 36
-#elif LDBL_MANT_DIG == 106
-# define NDIGIT_MAX 34
-#elif LDBL_MANT_DIG == 56
-# define NDIGIT_MAX 18
+#if LONG_DOUBLE_COMPAT (libc, GLIBC_2_0)
+# define cvt_symbol(symbol) \
+  cvt_symbol_1 (libc, __APPEND (FUNC_PREFIX, symbol), \
+	      APPEND (FUNC_PREFIX, symbol), GLIBC_2_4)
+# define cvt_symbol_1(lib, local, symbol, version) \
+    versioned_symbol (lib, local, symbol, version)
 #else
-/* See IEEE 854 5.6, table 2 for this formula.  Unfortunately we need a
-   compile time constant here, so we cannot use it.  */
-# error "NDIGIT_MAX must be precomputed"
-# define NDIGIT_MAX (lrint (ceil (M_LN2 / M_LN10 * LDBL_MANT_DIG + 1.0)))
+# define cvt_symbol(symbol) \
+  strong_alias (__APPEND (FUNC_PREFIX, symbol), APPEND (FUNC_PREFIX, symbol))
 #endif
-
-#include "efgcvt.c"
+cvt_symbol(fcvt);
+cvt_symbol(ecvt);
+cvt_symbol(gcvt);

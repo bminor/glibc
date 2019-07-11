@@ -1,4 +1,4 @@
-/* Compatibility functions for floating point formatting.
+/* Double versions of *cvt_r functions.
    Copyright (C) 1995-2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,107 +16,16 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/param.h>
-#include <float.h>
-#include <libc-lock.h>
-#include <math_ldbl_opt.h>
-
-#ifndef FLOAT_TYPE
-# define FLOAT_TYPE double
-# define FUNC_PREFIX
-# define FLOAT_FMT_FLAG
-/* Actually we have to write (DBL_DIG + log10 (DBL_MAX_10_EXP)) but we
-   don't have log10 available in the preprocessor.  */
-# define MAXDIG (NDIGIT_MAX + 3)
-# define FCVT_MAXDIG (DBL_MAX_10_EXP + MAXDIG)
-# if DBL_MANT_DIG == 53
-#  define NDIGIT_MAX 17
-# elif DBL_MANT_DIG == 24
-#  define NDIGIT_MAX 9
-# elif DBL_MANT_DIG == 56
-#  define NDIGIT_MAX 18
-# else
-/* See IEEE 854 5.6, table 2 for this formula.  Unfortunately we need a
-   compile time constant here, so we cannot use it.  */
-#  error "NDIGIT_MAX must be precomputed"
-#  define NDIGIT_MAX (lrint (ceil (M_LN2 / M_LN10 * DBL_MANT_DIG + 1.0)))
-# endif
-#else
-# define LONG_DOUBLE_CVT
-#endif
-
-#define APPEND(a, b) APPEND2 (a, b)
-#define APPEND2(a, b) a##b
-#define __APPEND(a, b) __APPEND2 (a, b)
-#define __APPEND2(a, b) __##a##b
-
-
-#define FCVT_BUFFER APPEND (FUNC_PREFIX, fcvt_buffer)
-#define FCVT_BUFPTR APPEND (FUNC_PREFIX, fcvt_bufptr)
-#define ECVT_BUFFER APPEND (FUNC_PREFIX, ecvt_buffer)
-
-
-static char FCVT_BUFFER[MAXDIG];
-static char ECVT_BUFFER[MAXDIG];
-libc_freeres_ptr (static char *FCVT_BUFPTR);
-
-char *
-__APPEND (FUNC_PREFIX, fcvt) (FLOAT_TYPE value, int ndigit, int *decpt,
-			      int *sign)
-{
-  if (FCVT_BUFPTR == NULL)
-    {
-      if (__APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign,
-					  FCVT_BUFFER, MAXDIG) != -1)
-	return FCVT_BUFFER;
-
-      FCVT_BUFPTR = (char *) malloc (FCVT_MAXDIG);
-      if (FCVT_BUFPTR == NULL)
-	return FCVT_BUFFER;
-    }
-
-  (void) __APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign,
-					 FCVT_BUFPTR, FCVT_MAXDIG);
-
-  return FCVT_BUFPTR;
-}
-
-
-char *
-__APPEND (FUNC_PREFIX, ecvt) (FLOAT_TYPE value, int ndigit, int *decpt,
-			      int *sign)
-{
-  (void) __APPEND (FUNC_PREFIX, ecvt_r) (value, ndigit, decpt, sign,
-					 ECVT_BUFFER, MAXDIG);
-
-  return ECVT_BUFFER;
-}
-
-char *
-__APPEND (FUNC_PREFIX, gcvt) (FLOAT_TYPE value, int ndigit, char *buf)
-{
-  sprintf (buf, "%.*" FLOAT_FMT_FLAG "g", MIN (ndigit, NDIGIT_MAX), value);
-  return buf;
-}
+#include <efgcvt-dbl-macros.h>
+#include <efgcvt-template.c>
 
 #if LONG_DOUBLE_COMPAT (libc, GLIBC_2_0)
-# ifdef LONG_DOUBLE_CVT
-#  define cvt_symbol(symbol) \
-  cvt_symbol_1 (libc, __APPEND (FUNC_PREFIX, symbol), \
-	      APPEND (FUNC_PREFIX, symbol), GLIBC_2_4)
-#  define cvt_symbol_1(lib, local, symbol, version) \
-    versioned_symbol (lib, local, symbol, version)
-# else
-#  define cvt_symbol(symbol) \
+# define cvt_symbol(symbol) \
   cvt_symbol_1 (libc, __APPEND (FUNC_PREFIX, symbol), \
 	      APPEND (q, symbol), GLIBC_2_0); \
   strong_alias (__APPEND (FUNC_PREFIX, symbol), APPEND (FUNC_PREFIX, symbol))
-#  define cvt_symbol_1(lib, local, symbol, version) \
+# define cvt_symbol_1(lib, local, symbol, version) \
   compat_symbol (lib, local, symbol, version)
-# endif
 #else
 # define cvt_symbol(symbol) \
   strong_alias (__APPEND (FUNC_PREFIX, symbol), APPEND (FUNC_PREFIX, symbol))

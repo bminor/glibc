@@ -17,41 +17,22 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <float.h>
+#include <efgcvt-ldbl-macros.h>
+#include <efgcvt_r-template.c>
 
-#define FLOAT_TYPE long double
-#define FUNC_PREFIX q
-#define FLOAT_FMT_FLAG "L"
-#define FLOAT_NAME_EXT l
-#define FLOAT_MIN_10_EXP LDBL_MIN_10_EXP
-#if LDBL_MANT_DIG == 64
-# define NDIGIT_MAX 21
-#elif LDBL_MANT_DIG == 53
-# define NDIGIT_MAX 17
-#elif LDBL_MANT_DIG == 113
-# define NDIGIT_MAX 36
-#elif LDBL_MANT_DIG == 106
-# define NDIGIT_MAX 34
-#elif LDBL_MANT_DIG == 56
-# define NDIGIT_MAX 18
+#if LONG_DOUBLE_COMPAT (libc, GLIBC_2_0)
+# define cvt_symbol(symbol) \
+  cvt_symbol_1 (libc, __APPEND (FUNC_PREFIX, symbol), \
+	      APPEND (FUNC_PREFIX, symbol), GLIBC_2_4)
+# define cvt_symbol_1(lib, local, symbol, version) \
+  libc_hidden_def (local) \
+  versioned_symbol (lib, local, symbol, version)
 #else
-/* See IEEE 854 5.6, table 2 for this formula.  Unfortunately we need a
-   compile time constant here, so we cannot use it.  */
-# error "NDIGIT_MAX must be precomputed"
-# define NDIGIT_MAX (lrint (ceil (M_LN2 / M_LN10 * LDBL_MANT_DIG + 1.0)))
+# define cvt_symbol(symbol) \
+  cvt_symbol_1 (__APPEND (FUNC_PREFIX, symbol), APPEND (FUNC_PREFIX, symbol))
+#  define cvt_symbol_1(local, symbol) \
+  libc_hidden_def (local) \
+  weak_alias (local, symbol)
 #endif
-#if LDBL_MIN_10_EXP == -37
-# define FLOAT_MIN_10_NORM	1.0e-37L
-#elif LDBL_MIN_10_EXP == -291
-# define FLOAT_MIN_10_NORM	1.0e-291L
-#elif LDBL_MIN_10_EXP == -307
-# define FLOAT_MIN_10_NORM	1.0e-307L
-#elif LDBL_MIN_10_EXP == -4931
-# define FLOAT_MIN_10_NORM	1.0e-4931L
-#else
-/* libc can't depend on libm.  */
-# error "FLOAT_MIN_10_NORM must be precomputed"
-# define FLOAT_MIN_10_NORM	exp10l (LDBL_MIN_10_EXP)
-#endif
-
-#include "efgcvt_r.c"
+cvt_symbol(fcvt_r);
+cvt_symbol(ecvt_r);
