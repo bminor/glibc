@@ -1266,21 +1266,25 @@ ldouble: 1
 Function: "gamma":
 double: 3
 float: 4
+float128: 5
 ldouble: 3
 
 Function: "gamma_downward":
 double: 4
 float: 4
+float128: 8
 ldouble: 15
 
 Function: "gamma_towardzero":
 double: 4
 float: 3
+float128: 5
 ldouble: 16
 
 Function: "gamma_upward":
 double: 4
 float: 5
+float128: 8
 ldouble: 11
 
 Function: "hypot":

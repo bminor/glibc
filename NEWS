@@ -18,6 +18,11 @@ Major new features:
 * The GNU C Library now loads audit modules listed in the DT_AUDIT and
   DT_DEPAUDIT dynamic section entries of the main executable.
 
+* powerpc64le supports IEEE128 long double libm/libc redirects when
+  using the -mabi=ieeelongdouble to compile C code on supported GCC
+  toolchains.  It is recommended to use GCC 8 or newer when testing
+  this option.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The deprecated <sys/sysctl.h> header and the sysctl function have been

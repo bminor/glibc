@@ -20,6 +20,10 @@ no-gnu-attribute-CFLAGS = -mno-gnu-attribute
 # We built an object file and extract the desired .gnu.attributes section
 # to be inserted into lib{c,m}.so.
 ifeq ($(build-shared),yes)
+
+# Build everything with IEEE 128-bit long double.
+sysdep-CFLAGS += -mabi=ieeelongdouble -Wno-psabi $(no-gnu-attribute-CFLAGS)
+
 before-compile += $(common-objpfx)no_ldbl_gnu_attribute.bin
 
 $(common-objpfx)no_ldbl_gnu_attribute.bin: $(..)sysdeps/powerpc/powerpc64/le/no_ldbl_gnu_attribute.c
