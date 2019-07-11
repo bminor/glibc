@@ -17,15 +17,23 @@ ldbl-extra-routines += printf_size \
 		       wprintf \
 		       vfwprintf \
 		       vswprintf \
-		       vwprintf
+		       vwprintf \
+		       fscanf \
+		       scanf \
+		       sscanf \
+		       vfscanf \
+		       vscanf \
+		       vsscanf
 
 # Printing long double values with IEEE binary128 format reuses part
 # of the internal float128 implementation (__printf_fp, __printf_fphex,
-# and __float128 variables and union members).  Thus, the compilation of
-# the following functions, must have -mfloat128 and -mabi=ibmlongdouble
+# and __float128 variables and union members).  Likewise, reading these
+# values reuses __strtof128_internal.  Thus, the compilation of the
+# following functions, must have -mfloat128 and -mabi=ibmlongdouble
 # passed to the compiler.
 CFLAGS-vfprintf-internal.c += -mfloat128 -mabi=ibmlongdouble
 CFLAGS-vfwprintf-internal.c += -mfloat128 -mabi=ibmlongdouble
+CFLAGS-vfscanf-internal.c += -mfloat128 -mabi=ibmlongdouble
 
 # Basic tests for the implementation of long double with IEEE binary128
 # format and for the related redirections in installed headers.
@@ -36,6 +44,29 @@ CFLAGS-test-printf-ibm128.c += -mabi=ibmlongdouble -Wno-psabi
 tests-internal += test-wprintf-ieee128 test-wprintf-ibm128
 CFLAGS-test-wprintf-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
 CFLAGS-test-wprintf-ibm128.c += -mabi=ibmlongdouble -Wno-psabi
+
+tests-internal += test-scanf-ieee128 test-scanf-ibm128
+CFLAGS-test-scanf-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
+CFLAGS-test-scanf-ibm128.c += -mabi=ibmlongdouble -Wno-psabi
+
+$(objpfx)test-scanf-ieee128: gnulib-tests += $(f128-loader-link)
+
+ifeq ($(run-built-tests),yes)
+tests-special += $(objpfx)test-scanf-ieee128.out
+tests-special += $(objpfx)test-scanf-ibm128.out
+endif
+
+$(objpfx)test-scanf-ieee128.out: \
+  ../sysdeps/ieee754/ldbl-128ibm-compat/test-scanf-ldbl-compat.sh \
+  $(objpfx)test-scanf-ieee128
+	$(SHELL) $^ '$(test-program-prefix)' $@; \
+	$(evaluate-test)
+
+$(objpfx)test-scanf-ibm128.out: \
+  ../sysdeps/ieee754/ldbl-128ibm-compat/test-scanf-ldbl-compat.sh \
+  $(objpfx)test-scanf-ibm128
+	$(SHELL) $^ '$(test-program-prefix)' $@; \
+	$(evaluate-test)
 
 tests-internal += test-printf-size-ieee128 test-printf-size-ibm128
 CFLAGS-test-printf-size-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
