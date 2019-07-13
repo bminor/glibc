@@ -1,3 +1,12 @@
+2019-08-28  Paul A. Clarke  <pc@us.ibm.com>
+    
+    	* sysdeps/powerpc/fpu/fenv_libc.h: Define FPSCR bitmasks.
+    	(fenv_reg_to_exceptions): Replace bitwise operations with mask-shift.
+    	(fenv_exceptions_to_reg): New.
+    	* sysdeps/powerpc/fpu/fedisblxcpt.c (fedisableexcept): Replace bitwise
+    	operation with call to fenv_exceptions_to_reg().
+    	* sysdeps/powerpc/fpu/feenablxcpt.c (feenableexcept): Likewise.
+
 2019-08-28  Florian Weimer  <fweimer@redhat.com>
 
 	* misc/mntent.c (struct mntent_buffer): Define.
