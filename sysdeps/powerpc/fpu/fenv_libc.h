@@ -128,60 +128,108 @@ __fesetround_inline_nocheck (const int round)
   asm volatile ("mtfsfi 7,%0" : : "i" (round));
 }
 
+#define FPSCR_MASK(bit) (1 << (31 - (bit)))
+
 /* Definitions of all the FPSCR bit numbers */
 enum {
   FPSCR_FX = 0,    /* exception summary */
+#define FPSCR_FX_MASK (FPSCR_MASK (FPSCR_FX))
   FPSCR_FEX,       /* enabled exception summary */
+#define FPSCR_FEX_MASK (FPSCR_MASK FPSCR_FEX))
   FPSCR_VX,        /* invalid operation summary */
+#define FPSCR_VX_MASK (FPSCR_MASK (FPSCR_VX))
   FPSCR_OX,        /* overflow */
+#define FPSCR_OX_MASK (FPSCR_MASK (FPSCR_OX))
   FPSCR_UX,        /* underflow */
+#define FPSCR_UX_MASK (FPSCR_MASK (FPSCR_UX))
   FPSCR_ZX,        /* zero divide */
+#define FPSCR_ZX_MASK (FPSCR_MASK (FPSCR_ZX))
   FPSCR_XX,        /* inexact */
+#define FPSCR_XX_MASK (FPSCR_MASK (FPSCR_XX))
   FPSCR_VXSNAN,    /* invalid operation for sNaN */
+#define FPSCR_VXSNAN_MASK (FPSCR_MASK (FPSCR_VXSNAN))
   FPSCR_VXISI,     /* invalid operation for Inf-Inf */
+#define FPSCR_VXISI_MASK (FPSCR_MASK (FPSCR_VXISI))
   FPSCR_VXIDI,     /* invalid operation for Inf/Inf */
+#define FPSCR_VXIDI_MASK (FPSCR_MASK (FPSCR_VXIDI))
   FPSCR_VXZDZ,     /* invalid operation for 0/0 */
+#define FPSCR_VXZDZ_MASK (FPSCR_MASK (FPSCR_VXZDZ))
   FPSCR_VXIMZ,     /* invalid operation for Inf*0 */
+#define FPSCR_VXIMZ_MASK (FPSCR_MASK (FPSCR_VXIMZ))
   FPSCR_VXVC,      /* invalid operation for invalid compare */
+#define FPSCR_VXVC_MASK (FPSCR_MASK (FPSCR_VXVC))
   FPSCR_FR,        /* fraction rounded [fraction was incremented by round] */
+#define FPSCR_FR_MASK (FPSCR_MASK (FPSCR_FR))
   FPSCR_FI,        /* fraction inexact */
+#define FPSCR_FI_MASK (FPSCR_MASK (FPSCR_FI))
   FPSCR_FPRF_C,    /* result class descriptor */
+#define FPSCR_FPRF_C_MASK (FPSCR_MASK (FPSCR_FPRF_C))
   FPSCR_FPRF_FL,   /* result less than (usually, less than 0) */
+#define FPSCR_FPRF_FL_MASK (FPSCR_MASK (FPSCR_FPRF_FL))
   FPSCR_FPRF_FG,   /* result greater than */
+#define FPSCR_FPRF_FG_MASK (FPSCR_MASK (FPSCR_FPRF_FG))
   FPSCR_FPRF_FE,   /* result equal to */
+#define FPSCR_FPRF_FE_MASK (FPSCR_MASK (FPSCR_FPRF_FE))
   FPSCR_FPRF_FU,   /* result unordered */
+#define FPSCR_FPRF_FU_MASK (FPSCR_MASK (FPSCR_FPRF_FU))
   FPSCR_20,        /* reserved */
   FPSCR_VXSOFT,    /* invalid operation set by software */
+#define FPSCR_VXSOFT_MASK (FPSCR_MASK (FPSCR_VXSOFT))
   FPSCR_VXSQRT,    /* invalid operation for square root */
+#define FPSCR_VXSQRT_MASK (FPSCR_MASK (FPSCR_VXSQRT))
   FPSCR_VXCVI,     /* invalid operation for invalid integer convert */
+#define FPSCR_VXCVI_MASK (FPSCR_MASK (FPSCR_VXCVI))
   FPSCR_VE,        /* invalid operation exception enable */
+#define FPSCR_VE_MASK (FPSCR_MASK (FPSCR_VE))
   FPSCR_OE,        /* overflow exception enable */
+#define FPSCR_OE_MASK (FPSCR_MASK (FPSCR_OE))
   FPSCR_UE,        /* underflow exception enable */
+#define FPSCR_UE_MASK (FPSCR_MASK (FPSCR_UE))
   FPSCR_ZE,        /* zero divide exception enable */
+#define FPSCR_ZE_MASK (FPSCR_MASK (FPSCR_ZE))
   FPSCR_XE,        /* inexact exception enable */
+#define FPSCR_XE_MASK (FPSCR_MASK (FPSCR_XE))
 #ifdef _ARCH_PWR6
   FPSCR_29,        /* Reserved in ISA 2.05  */
+#define FPSCR_NI_MASK (FPSCR_MASK (FPSCR_29))
 #else
-  FPSCR_NI         /* non-IEEE mode (typically, no denormalised numbers) */
+  FPSCR_NI,        /* non-IEEE mode (typically, no denormalised numbers) */
+#define FPSCR_NI_MASK (FPSCR_MASK (FPSCR_NI))
 #endif /* _ARCH_PWR6 */
   /* the remaining two least-significant bits keep the rounding mode */
+  FPSCR_RN_hi,
+#define FPSCR_RN_hi_MASK (FPSCR_MASK (FPSCR_RN_hi))
+  FPSCR_RN_lo
+#define FPSCR_RN_lo_MASK (FPSCR_MASK (FPSCR_RN_lo))
 };
+
+#define FPSCR_RN_MASK (FPSCR_RN_hi_MASK|FPSCR_RN_lo_MASK)
+#define FPSCR_ENABLES_MASK \
+  (FPSCR_VE_MASK|FPSCR_OE_MASK|FPSCR_UE_MASK|FPSCR_ZE_MASK|FPSCR_XE_MASK)
+#define FPSCR_BASIC_EXCEPTIONS_MASK \
+  (FPSCR_VX_MASK|FPSCR_OX_MASK|FPSCR_UX_MASK|FPSCR_ZX_MASK|FPSCR_XX_MASK)
+
+#define FPSCR_CONTROL_MASK (FPSCR_ENABLES_MASK|FPSCR_NI_MASK|FPSCR_RN_MASK)
+
+/* The bits in the FENV(1) ABI for exceptions correspond one-to-one with bits
+   in the FPSCR, albeit shifted to different but corresponding locations.
+   Similarly, the exception indicator bits in the FPSCR correspond one-to-one
+   with the exception enable bits. It is thus possible to map the FENV(1)
+   exceptions directly to the FPSCR enables with a simple mask and shift,
+   and vice versa. */
+#define FPSCR_EXCEPT_TO_ENABLE_SHIFT 22
 
 static inline int
 fenv_reg_to_exceptions (unsigned long long l)
 {
-  int result = 0;
-  if (l & (1 << (31 - FPSCR_XE)))
-    result |= FE_INEXACT;
-  if (l & (1 << (31 - FPSCR_ZE)))
-    result |= FE_DIVBYZERO;
-  if (l & (1 << (31 - FPSCR_UE)))
-    result |= FE_UNDERFLOW;
-  if (l & (1 << (31 - FPSCR_OE)))
-    result |= FE_OVERFLOW;
-  if (l & (1 << (31 - FPSCR_VE)))
-    result |= FE_INVALID;
-  return result;
+  return (((int)l) & FPSCR_ENABLES_MASK) << FPSCR_EXCEPT_TO_ENABLE_SHIFT;
+}
+
+static inline unsigned long long
+fenv_exceptions_to_reg (int excepts)
+{
+  return (unsigned long long)
+    (excepts & FE_ALL_EXCEPT) >> FPSCR_EXCEPT_TO_ENABLE_SHIFT;
 }
 
 #ifdef _ARCH_PWR6

@@ -33,16 +33,7 @@ fedisableexcept (int excepts)
     excepts = (excepts | FE_INVALID) & ~ FE_ALL_INVALID;
 
   /* Sets the new exception mask.  */
-  if (excepts & FE_INEXACT)
-    fe.l &= ~(1 << (31 - FPSCR_XE));
-  if (excepts & FE_DIVBYZERO)
-    fe.l &= ~(1 << (31 - FPSCR_ZE));
-  if (excepts & FE_UNDERFLOW)
-    fe.l &= ~(1 << (31 - FPSCR_UE));
-  if (excepts & FE_OVERFLOW)
-    fe.l &= ~(1 << (31 - FPSCR_OE));
-  if (excepts & FE_INVALID)
-    fe.l &= ~(1 << (31 - FPSCR_VE));
+  fe.l &= ~ fenv_exceptions_to_reg (excepts);
 
   if (fe.l != curr.l)
     fesetenv_register (fe.fenv);
