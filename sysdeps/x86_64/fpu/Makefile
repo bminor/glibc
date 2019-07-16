@@ -20,9 +20,7 @@ libmvec-support += svml_d_cos2_core svml_d_cos4_core_avx \
 		   svml_d_pow_data svml_s_powf4_core svml_s_powf8_core_avx \
 		   svml_s_powf8_core svml_s_powf16_core svml_s_powf_data \
 		   svml_s_sincosf4_core svml_s_sincosf8_core_avx \
-		   svml_s_sincosf8_core svml_s_sincosf16_core svml_finite_alias
-
-libmvec-static-only-routines = svml_finite_alias
+		   svml_s_sincosf8_core svml_s_sincosf16_core
 endif
 
 # Variables for libmvec tests.
@@ -30,93 +28,15 @@ ifeq ($(subdir),math)
 ifeq ($(build-mathvec),yes)
 libmvec-tests += double-vlen2 double-vlen4 double-vlen4-avx2 \
 		 float-vlen4 float-vlen8 float-vlen8-avx2
-tests += test-double-libmvec-alias test-double-libmvec-alias-avx \
-	 test-double-libmvec-alias-avx2 test-double-libmvec-alias-main \
-	 test-double-libmvec-alias-avx-main test-double-libmvec-alias-avx2-main \
-	 test-float-libmvec-alias test-float-libmvec-alias-avx \
-	 test-float-libmvec-alias-avx2 test-float-libmvec-alias-main \
-	 test-float-libmvec-alias-avx-main test-float-libmvec-alias-avx2-main \
-	 test-double-libmvec-sincos test-double-libmvec-sincos-avx \
+tests += test-double-libmvec-sincos test-double-libmvec-sincos-avx \
 	 test-double-libmvec-sincos-avx2 test-float-libmvec-sincosf \
 	 test-float-libmvec-sincosf-avx test-float-libmvec-sincosf-avx2
-modules-names += test-double-libmvec-alias-mod \
-		 test-double-libmvec-alias-avx-mod \
-		 test-double-libmvec-alias-avx2-mod \
-		 test-float-libmvec-alias-mod \
-		 test-float-libmvec-alias-avx-mod \
-		 test-float-libmvec-alias-avx2-mod
-modules-names-tests += test-double-libmvec-alias-mod \
-		 test-double-libmvec-alias-avx-mod \
-		 test-double-libmvec-alias-avx2-mod \
-		 test-float-libmvec-alias-mod \
-		 test-float-libmvec-alias-avx-mod \
-		 test-float-libmvec-alias-avx2-mod
 extra-test-objs += test-double-libmvec-sincos-avx-main.o \
 		   test-double-libmvec-sincos-avx2-main.o \
 		   test-double-libmvec-sincos-main.o \
 		   test-float-libmvec-sincosf-avx-main.o \
 		   test-float-libmvec-sincosf-avx2-main.o\
 		   test-float-libmvec-sincosf-main.o
-test-double-libmvec-alias-mod.so-no-z-defs = yes
-test-double-libmvec-alias-avx-mod.so-no-z-defs = yes
-test-double-libmvec-alias-avx2-mod.so-no-z-defs = yes
-test-float-libmvec-alias-mod.so-no-z-defs = yes
-test-float-libmvec-alias-avx-mod.so-no-z-defs = yes
-test-float-libmvec-alias-avx2-mod.so-no-z-defs = yes
-
-$(objpfx)test-double-libmvec-alias: \
-  $(objpfx)test-double-libmvec-alias-mod.so
-$(objpfx)test-double-libmvec-alias-mod.so: \
-  $(objpfx)../mathvec/libmvec_nonshared.a $(libmvec)
-
-$(objpfx)test-double-libmvec-alias-avx: \
-  $(objpfx)test-double-libmvec-alias-avx-mod.so
-$(objpfx)test-double-libmvec-alias-avx-mod.so: \
-  $(objpfx)../mathvec/libmvec_nonshared.a $(libmvec)
-
-$(objpfx)test-double-libmvec-alias-avx2: \
-  $(objpfx)test-double-libmvec-alias-avx2-mod.so
-$(objpfx)test-double-libmvec-alias-avx2-mod.so: \
-  $(objpfx)../mathvec/libmvec_nonshared.a $(libmvec)
-
-$(objpfx)test-double-libmvec-alias-main: \
-  $(objpfx)test-double-libmvec-alias-mod.os \
-  $(objpfx)../mathvec/libmvec_nonshared.a $(libmvec)
-
-$(objpfx)test-double-libmvec-alias-avx-main: \
-  $(objpfx)test-double-libmvec-alias-avx-mod.os \
-  $(objpfx)../mathvec/libmvec_nonshared.a $(libmvec)
-
-$(objpfx)test-double-libmvec-alias-avx2-main: \
-  $(objpfx)test-double-libmvec-alias-avx2-mod.os \
-  $(objpfx)../mathvec/libmvec_nonshared.a $(libmvec)
-
-$(objpfx)test-float-libmvec-alias: \
-  $(objpfx)test-float-libmvec-alias-mod.so
-$(objpfx)test-float-libmvec-alias-mod.so: \
-  $(objpfx)../mathvec/libmvec_nonshared.a $(libmvec)
-
-$(objpfx)test-float-libmvec-alias-avx: \
-  $(objpfx)test-float-libmvec-alias-avx-mod.so
-$(objpfx)test-float-libmvec-alias-avx-mod.so: \
-  $(objpfx)../mathvec/libmvec_nonshared.a $(libmvec)
-
-$(objpfx)test-float-libmvec-alias-avx2: \
-  $(objpfx)test-float-libmvec-alias-avx2-mod.so
-$(objpfx)test-float-libmvec-alias-avx2-mod.so: \
-  $(objpfx)../mathvec/libmvec_nonshared.a $(libmvec)
-
-$(objpfx)test-float-libmvec-alias-main: \
-  $(objpfx)test-float-libmvec-alias-mod.os \
-  $(objpfx)../mathvec/libmvec_nonshared.a $(libmvec)
-
-$(objpfx)test-float-libmvec-alias-avx-main: \
-  $(objpfx)test-float-libmvec-alias-avx-mod.os \
-  $(objpfx)../mathvec/libmvec_nonshared.a $(libmvec)
-
-$(objpfx)test-float-libmvec-alias-avx2-main: \
-  $(objpfx)test-float-libmvec-alias-avx2-mod.os \
-  $(objpfx)../mathvec/libmvec_nonshared.a $(libmvec)
 
 $(objpfx)test-double-libmvec-sincos: \
   $(objpfx)test-double-libmvec-sincos.o \
@@ -144,38 +64,10 @@ $(objpfx)test-float-libmvec-sincosf-avx2: \
 
 ifeq (yes,$(config-cflags-avx512))
 libmvec-tests += double-vlen8 float-vlen16
-tests += test-double-libmvec-alias-avx512 \
-	 test-float-libmvec-alias-avx512 \
-	 test-double-libmvec-alias-avx512-main \
-	 test-float-libmvec-alias-avx512-main \
-	 test-double-libmvec-sincos-avx512 \
+tests += test-double-libmvec-sincos-avx512 \
 	 test-float-libmvec-sincosf-avx512
-modules-names += test-double-libmvec-alias-avx512-mod \
-		 test-float-libmvec-alias-avx512-mod
-modules-names-tests += test-double-libmvec-alias-avx512-mod \
-		 test-float-libmvec-alias-avx512-mod
 extra-test-objs += test-double-libmvec-sincos-avx512-main.o \
 		   test-float-libmvec-sincosf-avx512-main.o
-test-double-libmvec-alias-avx512-mod.so-no-z-defs = yes
-test-float-libmvec-alias-avx512-mod.so-no-z-defs = yes
-
-$(objpfx)test-double-libmvec-alias-avx512: \
-  $(objpfx)test-double-libmvec-alias-avx512-mod.so
-$(objpfx)test-double-libmvec-alias-avx512-mod.so: \
-  $(objpfx)../mathvec/libmvec_nonshared.a $(libmvec)
-
-$(objpfx)test-double-libmvec-alias-avx512-main: \
-  $(objpfx)test-double-libmvec-alias-avx512-mod.os \
-  $(objpfx)../mathvec/libmvec_nonshared.a $(libmvec)
-
-$(objpfx)test-float-libmvec-alias-avx512: \
-  $(objpfx)test-float-libmvec-alias-avx512-mod.so
-$(objpfx)test-float-libmvec-alias-avx512-mod.so: \
-  $(objpfx)../mathvec/libmvec_nonshared.a $(libmvec)
-
-$(objpfx)test-float-libmvec-alias-avx512-main: \
-  $(objpfx)test-float-libmvec-alias-avx512-mod.os \
-  $(objpfx)../mathvec/libmvec_nonshared.a $(libmvec)
 
 $(objpfx)test-double-libmvec-sincos-avx512: \
   $(objpfx)test-double-libmvec-sincos-avx512.o \
@@ -204,17 +96,6 @@ float-vlen8-arch-ext2-cflags = -mavx2
 float-vlen16-arch-ext-cflags = -mavx512f
 
 libmvec-sincos-cflags = $(libm-test-fast-math-cflags) -fno-inline -fopenmp -Wno-unknown-pragmas
-libmvec-alias-cflags = $(libmvec-sincos-cflags) -ffloat-store -ffinite-math-only
-
-CFLAGS-test-double-libmvec-alias-mod.c = $(libmvec-alias-cflags)
-CFLAGS-test-double-libmvec-alias-avx-mod.c = $(double-vlen4-arch-ext-cflags) $(libmvec-alias-cflags) -DREQUIRE_AVX
-CFLAGS-test-double-libmvec-alias-avx2-mod.c = $(double-vlen4-arch-ext2-cflags) $(libmvec-alias-cflags) -DREQUIRE_AVX2
-CFLAGS-test-double-libmvec-alias-avx512-mod.c = $(double-vlen8-arch-ext-cflags) $(libmvec-alias-cflags) -DREQUIRE_AVX512F
-
-CFLAGS-test-float-libmvec-alias-mod.c = $(libmvec-alias-cflags)
-CFLAGS-test-float-libmvec-alias-avx-mod.c = $(double-vlen4-arch-ext-cflags) $(libmvec-alias-cflags) -DREQUIRE_AVX
-CFLAGS-test-float-libmvec-alias-avx2-mod.c = $(double-vlen4-arch-ext2-cflags) $(libmvec-alias-cflags) -DREQUIRE_AVX2
-CFLAGS-test-float-libmvec-alias-avx512-mod.c = $(double-vlen8-arch-ext-cflags) $(libmvec-alias-cflags) -DREQUIRE_AVX512F
 
 CFLAGS-test-double-vlen4-avx2-wrappers.c = $(double-vlen4-arch-ext2-cflags)
 

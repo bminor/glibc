@@ -22,7 +22,7 @@
 
 	.text
 ENTRY (_ZGVbN4v_expf)
-WRAPPER_IMPL_SSE2 __expf_finite
+WRAPPER_IMPL_SSE2 expf
 END (_ZGVbN4v_expf)
 
 #ifndef USE_MULTIARCH

@@ -21,7 +21,7 @@
 
 	.text
 ENTRY (_ZGVbN2vv_pow)
-WRAPPER_IMPL_SSE2_ff __pow_finite
+WRAPPER_IMPL_SSE2_ff pow
 END (_ZGVbN2vv_pow)
 
 #ifndef USE_MULTIARCH

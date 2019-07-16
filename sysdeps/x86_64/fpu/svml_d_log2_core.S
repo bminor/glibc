@@ -21,7 +21,7 @@
 
 	.text
 ENTRY (_ZGVbN2v_log)
-WRAPPER_IMPL_SSE2 __log_finite
+WRAPPER_IMPL_SSE2 log
 END (_ZGVbN2v_log)
 
 #ifndef USE_MULTIARCH

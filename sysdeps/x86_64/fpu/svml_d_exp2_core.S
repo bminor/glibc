@@ -21,7 +21,7 @@
 
 	.text
 ENTRY (_ZGVbN2v_exp)
-WRAPPER_IMPL_SSE2 __exp_finite
+WRAPPER_IMPL_SSE2 exp
 END (_ZGVbN2v_exp)
 
 #ifndef USE_MULTIARCH

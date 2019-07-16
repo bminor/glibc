@@ -22,7 +22,7 @@
 
 	.text
 ENTRY (_ZGVbN4v_logf)
-WRAPPER_IMPL_SSE2 __logf_finite
+WRAPPER_IMPL_SSE2 logf
 END (_ZGVbN4v_logf)
 
 #ifndef USE_MULTIARCH
