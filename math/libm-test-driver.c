@@ -23,7 +23,6 @@
 /* Flags set by the including file.  */
 const int flag_test_errno = TEST_ERRNO;
 const int flag_test_exceptions = TEST_EXCEPTIONS;
-const int flag_test_finite = TEST_FINITE;
 const int flag_test_inline = TEST_INLINE;
 const int flag_test_mathvec = TEST_MATHVEC;
 
@@ -44,8 +43,6 @@ const int snan_tests_arg = SNAN_TESTS (FLOAT);
 # define TEST_MSG "testing " STR_FLOAT " (vector length " STR_VEC_LEN ")\n"
 #elif TEST_INLINE
 # define TEST_MSG "testing " STR_FLOAT " (inline functions)\n"
-#elif TEST_FINITE
-# define TEST_MSG "testing " STR_FLOAT " (finite-math-only)\n"
 #elif TEST_NARROW
 # define TEST_MSG "testing " STR_FLOAT " (argument " STR_ARG_FLOAT ")\n"
 #else

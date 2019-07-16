@@ -1,5 +1,5 @@
-/* Common definitions for libm tests for no-finite-math-only.
-   Copyright (C) 2015-2019 Free Software Foundation, Inc.
+/* Common definitions for libm tests for exceptions.
+   Copyright (C) 1997-2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,5 +16,4 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define TEST_FINITE 0
 #define TEST_EXCEPTIONS 1

@@ -228,8 +228,7 @@ tests = test-matherr-3 test-fenv basic-test \
 	test-tgmath-ret bug-nextafter bug-nexttoward bug-tgmath1 \
 	test-tgmath-int test-tgmath2 test-powl tst-CMPLX tst-CMPLX2 test-snan \
 	test-fenv-tls test-fenv-preserve test-fenv-return test-fenvinline \
-	test-nearbyint-except test-fenv-clear test-signgam-finite \
-	test-signgam-finite-c99 test-signgam-finite-c11 \
+	test-nearbyint-except test-fenv-clear \
 	test-nearbyint-except-2 test-signgam-uchar test-signgam-uchar-init \
 	test-signgam-uint test-signgam-uint-init test-signgam-ullong \
 	test-signgam-ullong-init test-nan-overflow test-nan-payload \
@@ -238,7 +237,7 @@ tests = test-matherr-3 test-fenv basic-test \
 	test-femode-traps test-iszero-excess-precision \
 	test-iseqsig-excess-precision test-flt-eval-method \
 	test-fp-ilogb-constants test-fp-llogb-constants \
-	test-fe-snans-always-signal test-finite-macros test-narrow-macros \
+	test-fe-snans-always-signal test-narrow-macros \
 	test-nan-const $(tests-static)
 tests-static = test-fpucw-static test-fpucw-ieee-static \
 	       test-signgam-uchar-static test-signgam-uchar-init-static \
@@ -298,15 +297,11 @@ generated += libm-test-ulps.h $(libm-test-c-auto) $(libm-test-c-noauto) \
 	     $(libm-test-c-narrow)
 
 libm-tests-base-normal = $(foreach t,$(test-types),test-$(t))
-libm-tests-base-finite = $(foreach t,$(test-types),test-$(t)-finite)
 libm-tests-base-inline = $(foreach t,$(test-types),test-i$(t))
 libm-tests-base-narrow = $(foreach t,$(test-type-pairs),test-$(t))
-libm-tests-base = $(libm-tests-base-normal) $(libm-tests-base-finite) \
-		  $(libm-tests-base-inline) $(libm-vec-tests)
+libm-tests-base = $(libm-tests-base-normal) $(libm-tests-base-inline) \
+		  $(libm-vec-tests)
 libm-tests-normal = $(foreach t,$(libm-tests-base-normal),\
-				$(foreach f,$(libm-test-funcs-all),\
-					    $(t)-$(f)))
-libm-tests-finite = $(foreach t,$(libm-tests-base-finite),\
 				$(foreach f,$(libm-test-funcs-all),\
 					    $(t)-$(f)))
 libm-tests-inline = $(foreach t,$(libm-tests-base-inline),\
@@ -317,7 +312,7 @@ libm-tests-narrow = $(foreach t,$(libm-tests-base-narrow),\
 					    $(t)-$(f)))
 libm-tests-vector = $(foreach t,$(libmvec-tests),\
 				$(foreach f,$($(t)-funcs),test-$(t)-$(f)))
-libm-tests = $(libm-tests-normal) $(libm-tests-finite) $(libm-tests-inline) \
+libm-tests = $(libm-tests-normal) $(libm-tests-inline) \
 	     $(libm-tests-narrow) $(libm-tests-vector)
 libm-tests-compat = $(foreach t,$(libm-tests-base-normal) \
 				$(libm-tests-base-finite) \
@@ -325,8 +320,7 @@ libm-tests-compat = $(foreach t,$(libm-tests-base-normal) \
 				$(foreach f,$(libm-test-funcs-compat),\
 					    $(t)-$(f)))
 libm-tests-for-type = $(foreach f,$(libm-test-funcs-all),\
-				  test-$(1)-$(f) test-$(1)-finite-$(f) \
-				  test-i$(1)-$(f)) \
+				  test-$(1)-$(f) test-i$(1)-$(f)) \
 		      $(filter test-$(1)-%,$(libm-tests-vector) \
 					   $(libm-tests-narrow))
 
@@ -417,8 +411,6 @@ CFLAGS-test-float-vlen16-wrappers.c += $(float-vlen16-arch-ext-cflags)
 # validated.
 libm-test-no-inline-cflags = -fno-inline -ffloat-store -fno-builtin \
 			     -fsignaling-nans
-libm-test-finite-cflags = $(libm-test-no-inline-cflags) \
-			  -U__FINITE_MATH_ONLY__ -D__FINITE_MATH_ONLY__=1
 libm-test-inline-cflags = $(libm-test-fast-math-cflags)
 CFLAGS-test-tgmath.c += -fno-builtin
 # The following testcase uses very long lines (>3 million), so it may take a
@@ -430,9 +422,6 @@ CFLAGS-test-powl.c += -fno-builtin
 
 CFLAGS-test-snan.c += -fsignaling-nans
 
-CFLAGS-test-signgam-finite.c += -ffinite-math-only
-CFLAGS-test-signgam-finite-c99.c += -ffinite-math-only -std=c99
-CFLAGS-test-signgam-finite-c11.c += -ffinite-math-only -std=c11
 CFLAGS-test-signgam-uchar.c += -std=c99
 CFLAGS-test-signgam-uchar-init.c += -std=c99
 CFLAGS-test-signgam-uchar-static.c += -std=c99
@@ -458,8 +447,6 @@ CFLAGS-test-iseqsig-excess-precision.c += -fexcess-precision=standard
 CFLAGS-test-flt-eval-method.c += -fexcess-precision=standard
 
 CFLAGS-test-fe-snans-always-signal.c += -fsignaling-nans
-
-CFLAGS-test-finite-macros.c += -ffinite-math-only
 
 CFLAGS-test-nan-const.c += -fno-builtin
 
@@ -499,21 +486,9 @@ $(foreach t,$(libm-tests-normal),$(objpfx)$(t).c): $(objpfx)test-%.c:
 	func=$${type_func#*-}; \
 	( \
 	  echo "#include <test-$$type.h>"; \
-	  echo "#include <test-math-no-finite.h>"; \
+	  echo "#include <test-math-exceptions.h>"; \
 	  echo "#include <test-math-no-inline.h>"; \
 	  echo "#include <test-math-errno.h>"; \
-	  echo "#include <test-math-scalar.h>"; \
-	  echo "#include <libm-test-$$func.c>"; \
-	) > $@
-
-$(foreach t,$(libm-tests-finite),$(objpfx)$(t).c): $(objpfx)test-%.c:
-	type_func=$*; \
-	type=$${type_func%%-*}; \
-	func=$${type_func#*-finite-}; \
-	( \
-	  echo "#include <test-$$type.h>"; \
-	  echo "#include <test-math-finite.h>"; \
-	  echo "#include <test-math-no-inline.h>"; \
 	  echo "#include <test-math-scalar.h>"; \
 	  echo "#include <libm-test-$$func.c>"; \
 	) > $@
@@ -538,7 +513,7 @@ $(foreach t,$(libm-tests-narrow),$(objpfx)$(t).c): $(objpfx)test-%.c:
 	( \
 	  echo "#include <test-$$ret_type.h>"; \
 	  echo "#include <test-arg-$$arg_type.h>"; \
-	  echo "#include <test-math-no-finite.h>"; \
+	  echo "#include <test-math-exceptions.h>"; \
 	  echo "#include <test-math-no-inline.h>"; \
 	  echo "#include <test-math-errno.h>"; \
 	  echo "#include <test-math-narrow.h>"; \
@@ -586,13 +561,6 @@ $(foreach f,$(libm-test-funcs-all),\
 	    $(objpfx)$(o)-$(f).o): CFLAGS += $(libm-test-no-inline-cflags)
 endef
 object-suffixes-left := $(libm-tests-base-normal)
-include $(o-iterator)
-
-define o-iterator-doit
-$(foreach f,$(libm-test-funcs-all),\
-	    $(objpfx)$(o)-$(f).o): CFLAGS += $(libm-test-finite-cflags)
-endef
-object-suffixes-left := $(libm-tests-base-finite)
 include $(o-iterator)
 
 define o-iterator-doit

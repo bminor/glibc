@@ -17,7 +17,6 @@
    <https://www.gnu.org/licenses/>.  */
 
 #define TEST_INLINE 1
-#define TEST_FINITE 0
 #define TEST_ERRNO 0
 #define TEST_EXCEPTIONS 0
 
