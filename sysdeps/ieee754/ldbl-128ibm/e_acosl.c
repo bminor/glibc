@@ -56,6 +56,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-finite.h>
 
 static const long double
   one = 1.0L,
@@ -313,4 +314,4 @@ __ieee754_acosl (long double x)
       return 2.0 * w;
     }
 }
-strong_alias (__ieee754_acosl, __acosl_finite)
+libm_alias_finite (__ieee754_acosl, __acosl)

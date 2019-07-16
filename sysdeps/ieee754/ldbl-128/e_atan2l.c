@@ -42,6 +42,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-finite.h>
 
 static const _Float128
 tiny  = L(1.0e-4900),
@@ -119,4 +120,4 @@ __ieee754_atan2l(_Float128 y, _Float128 x)
 		    return  (z-pi_lo)-pi;/* atan(-,-) */
 	}
 }
-strong_alias (__ieee754_atan2l, __atan2l_finite)
+libm_alias_finite (__ieee754_atan2l, __atan2l)

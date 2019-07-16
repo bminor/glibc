@@ -6,6 +6,7 @@
  */
 
 #include <math_private.h>
+#include <libm-alias-finite.h>
 
 long double
 __ieee754_atan2l (long double y, long double x)
@@ -16,4 +17,4 @@ __ieee754_atan2l (long double y, long double x)
 
   return res;
 }
-strong_alias (__ieee754_atan2l, __atan2l_finite)
+libm_alias_finite (__ieee754_atan2l, __atan2l)

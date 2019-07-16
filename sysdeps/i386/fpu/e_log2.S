@@ -7,6 +7,7 @@
  */
 
 #include <machine/asm.h>
+#include <libm-alias-finite.h>
 
 	.section .rodata.cst8,"aM",@progbits,8
 
@@ -66,4 +67,4 @@ ENTRY(__ieee754_log2)
 	fstp	%st(1)
 	ret
 END (__ieee754_log2)
-strong_alias (__ieee754_log2, __log2_finite)
+libm_alias_finite (__ieee754_log2, __log2)

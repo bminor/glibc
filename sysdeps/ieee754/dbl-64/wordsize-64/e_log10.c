@@ -46,6 +46,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <stdint.h>
+#include <libm-alias-finite.h>
 
 static const double two54 = 1.80143985094819840000e+16;		/* 0x4350000000000000 */
 static const double ivln10 = 4.34294481903251816668e-01;	/* 0x3FDBCB7B1526E50E */
@@ -83,5 +84,4 @@ __ieee754_log10 (double x)
   z = y * log10_2lo + ivln10 * __ieee754_log (x);
   return z + y * log10_2hi;
 }
-
-strong_alias (__ieee754_log10, __log10_finite)
+libm_alias_finite (__ieee754_log10, __log10)

@@ -45,9 +45,9 @@ ENTRY(__ieee754_sqrt)
 END(__ieee754_sqrt)
 
 #if SHLIB_COMPAT (libm, GLIBC_2_15, GLIBC_2_18)
-strong_alias(__ieee754_sqrt, __sqrt_finite1)
-compat_symbol(libm, __sqrt_finite1, __sqrt_finite, GLIBC_2_15)
-versioned_symbol(libm, __ieee754_sqrt, __sqrt_finite, GLIBC_2_18)
-#else
-strong_alias(__ieee754_sqrt, __sqrt_finite)
+strong_alias(__ieee754_sqrt, __sqrt_dummy)
+compat_symbol(libm, __sqrt_dummy, __sqrt_finite, GLIBC_2_15)
+#endif
+#if SHLIB_COMPAT (libm, GLIBC_2_18, GLIBC_2_31)
+compat_symbol(libm, __ieee754_sqrt, __sqrt_finite, GLIBC_2_18)
 #endif

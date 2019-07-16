@@ -19,6 +19,7 @@
 
 #include <machine/asm.h>
 #include <x86_64-math-asm.h>
+#include <libm-alias-finite.h>
 
 	.section .rodata.cst8,"aM",@progbits,8
 
@@ -430,4 +431,4 @@ ENTRY(__ieee754_powl)
 	ret
 
 END(__ieee754_powl)
-strong_alias (__ieee754_powl, __powl_finite)
+libm_alias_finite (__ieee754_powl, __powl)

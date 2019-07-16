@@ -18,7 +18,7 @@
 
 #include <math.h>
 #include <math_private.h>
-
+#include <libm-alias-finite.h>
 
 static double
 __attribute__ ((noinline))
@@ -51,4 +51,4 @@ __ieee754_scalb (double x, double fn)
 
   return __scalbn (x, (int) fn);
 }
-strong_alias (__ieee754_scalb, __scalb_finite)
+libm_alias_finite (__ieee754_scalb, __scalb)

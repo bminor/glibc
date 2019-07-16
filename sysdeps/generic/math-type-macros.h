@@ -75,8 +75,8 @@
 #endif
 
 #ifndef declare_mgen_finite_alias_x
-#define declare_mgen_finite_alias_x(from, to)	\
-  strong_alias (from, to ## _finite)
+#define declare_mgen_finite_alias_x(from, to)   \
+  libm_alias_finite (from, to)
 #endif
 
 #ifndef declare_mgen_finite_alias_s
@@ -117,6 +117,7 @@
 
 /* Needed to evaluate M_MANT_DIG below.  */
 #include <float.h>
+#include <libm-alias-finite.h>
 
 /* Use a special epsilon value for IBM long double
    to avoid spurious overflows/underflows.  */

@@ -15,6 +15,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-finite.h>
 
 static const float
 one =  1.0000000000e+00, /* 0x3F800000 */
@@ -75,4 +76,4 @@ __ieee754_acosf(float x)
 	    return (float)2.0*(df+w);
 	}
 }
-strong_alias (__ieee754_acosf, __acosf_finite)
+libm_alias_finite (__ieee754_acosf, __acosf)

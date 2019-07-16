@@ -4,6 +4,7 @@
  */
 
 #include <machine/asm.h>
+#include <libm-alias-finite.h>
 
 ENTRY(__ieee754_remainderf)
 	flds	8(%esp)
@@ -15,4 +16,4 @@ ENTRY(__ieee754_remainderf)
 	fstp	%st(1)
 	ret
 END (__ieee754_remainderf)
-strong_alias (__ieee754_remainderf, __remainderf_finite)
+libm_alias_finite (__ieee754_remainderf, __remainderf)

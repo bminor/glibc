@@ -24,7 +24,7 @@
 #include <math.h>
 #include <math-narrow-eval.h>
 #include <stdint.h>
-#include <shlib-compat.h>
+#include <libm-alias-finite.h>
 #include <libm-alias-float.h>
 #include "math_config.h"
 
@@ -108,7 +108,7 @@ __expf (float x)
 #ifndef __expf
 hidden_def (__expf)
 strong_alias (__expf, __ieee754_expf)
-strong_alias (__expf, __expf_finite)
+libm_alias_finite (__ieee754_expf, __expf)
 versioned_symbol (libm, __expf, expf, GLIBC_2_27);
 libm_alias_float_other (__exp, exp)
 #endif

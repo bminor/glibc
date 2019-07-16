@@ -56,6 +56,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-finite.h>
 
 static const _Float128
   one = 1,
@@ -316,4 +317,4 @@ __ieee754_acosl (_Float128 x)
       return 2.0 * w;
     }
 }
-strong_alias (__ieee754_acosl, __acosl_finite)
+libm_alias_finite (__ieee754_acosl, __acosl)

@@ -18,6 +18,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <machine/asm.h>
+#include <libm-alias-finite.h>
 
 	.section .rodata
 
@@ -124,4 +125,4 @@ ENTRY(__ieee754_atanhl)
 	fadd	%st(0)
 	ret
 END(__ieee754_atanhl)
-strong_alias (__ieee754_atanhl, __atanhl_finite)
+libm_alias_finite (__ieee754_atanhl, __atanhl)

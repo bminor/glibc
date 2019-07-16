@@ -57,6 +57,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-underflow.h>
+#include <libm-alias-finite.h>
 
 static const _Float128 one = 1.0, shuge = L(1.0e4931),
 ovf_thresh = L(1.1357216553474703894801348310092223067821E4);
@@ -115,4 +116,4 @@ __ieee754_sinhl (_Float128 x)
   /* |x| > overflowthreshold, sinhl(x) overflow */
   return x * shuge;
 }
-strong_alias (__ieee754_sinhl, __sinhl_finite)
+libm_alias_finite (__ieee754_sinhl, __sinhl)

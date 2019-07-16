@@ -36,6 +36,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <fenv_private.h>
+#include <libm-alias-finite.h>
 
 /**************************************************************************/
 /* An ultimate remainder routine. Given two IEEE double machine numbers x */
@@ -150,4 +151,4 @@ __ieee754_remainder (double x, double y)
 	}
     }
 }
-strong_alias (__ieee754_remainder, __remainder_finite)
+libm_alias_finite (__ieee754_remainder, __remainder)

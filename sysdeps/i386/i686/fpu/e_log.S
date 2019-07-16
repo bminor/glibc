@@ -6,7 +6,7 @@
  */
 
 #include <machine/asm.h>
-
+#include <libm-alias-finite.h>
 
 	.text
 ENTRY(__ieee754_log)
@@ -27,3 +27,4 @@ ENTRY(__log_finite)
 	fyl2x			// log(x)
 	ret
 END(__log_finite)
+libm_alias_finite (__log_finite, __log)

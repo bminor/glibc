@@ -26,6 +26,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <libm-alias-finite.h>
+
 __float128
 __ieee754_sqrtf128 (__float128 a)
 {
@@ -33,4 +35,4 @@ __ieee754_sqrtf128 (__float128 a)
   asm ("xssqrtqp %0,%1" : "=v" (z) : "v" (a));
   return z;
 }
-strong_alias (__ieee754_sqrtf128, __sqrtf128_finite)
+libm_alias_finite (__ieee754_sqrtf128, __sqrtf128)

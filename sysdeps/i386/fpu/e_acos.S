@@ -4,6 +4,7 @@
  */
 
 #include <machine/asm.h>
+#include <libm-alias-finite.h>
 
 RCSID("$NetBSD: e_acos.S,v 1.4 1995/05/08 23:44:37 jtc Exp $")
 
@@ -22,4 +23,4 @@ ENTRY(__ieee754_acos)
 	fpatan				/* atan (sqrt(1 - x^2) / x) */
 	ret
 END (__ieee754_acos)
-strong_alias (__ieee754_acos, __acos_finite)
+libm_alias_finite (__ieee754_acos, __acos)

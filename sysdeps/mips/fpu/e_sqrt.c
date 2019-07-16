@@ -18,7 +18,7 @@
 
 
 #include <sgidefs.h>
-
+#include <libm-alias-finite.h>
 
 #if (_MIPS_ISA >= _MIPS_ISA_MIPS2)
 
@@ -29,7 +29,7 @@ __ieee754_sqrt (double x)
   __asm__ ("sqrt.d %0,%1" : "=f" (z) : "f" (x));
   return z;
 }
-strong_alias (__ieee754_sqrt, __sqrt_finite)
+libm_alias_finite (__ieee754_sqrt, __sqrt)
 
 #else
 

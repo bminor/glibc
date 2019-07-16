@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <libm-alias-finite.h>
+
 extern double __redirect_ieee754_atan2 (double, double);
 
 #define SYMBOL_NAME ieee754_atan2
@@ -23,7 +25,7 @@ extern double __redirect_ieee754_atan2 (double, double);
 
 libc_ifunc_redirected (__redirect_ieee754_atan2,
 		       __ieee754_atan2, IFUNC_SELECTOR ());
-strong_alias (__ieee754_atan2, __atan2_finite)
+libm_alias_finite (__ieee754_atan2, __atan2)
 
 #define __ieee754_atan2 __ieee754_atan2_sse2
 #include <sysdeps/ieee754/dbl-64/e_atan2.c>

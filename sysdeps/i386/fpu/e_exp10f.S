@@ -4,6 +4,7 @@
 
 #include <machine/asm.h>
 #include <i386-math-asm.h>
+#include <libm-alias-finite.h>
 
 DEFINE_FLT_MIN
 
@@ -50,4 +51,4 @@ ENTRY(__ieee754_exp10f)
 	fldz				/* Set result to 0.  */
 2:	ret
 END (__ieee754_exp10f)
-strong_alias (__ieee754_exp10f, __exp10f_finite)
+libm_alias_finite (__ieee754_exp10f, __exp10f)

@@ -16,6 +16,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <fix-int-fp-convert-zero.h>
+#include <libm-alias-finite.h>
 
 static const float
 two25      =  3.3554432000e+07, /* 0x4c000000 */
@@ -51,4 +52,4 @@ __ieee754_log10f(float x)
 	z  = y*log10_2lo + ivln10*__ieee754_logf(x);
 	return  z+y*log10_2hi;
 }
-strong_alias (__ieee754_log10f, __log10f_finite)
+libm_alias_finite (__ieee754_log10f, __log10f)

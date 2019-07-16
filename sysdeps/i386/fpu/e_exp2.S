@@ -6,6 +6,7 @@
 
 #include <machine/asm.h>
 #include <i386-math-asm.h>
+#include <libm-alias-finite.h>
 
 DEFINE_DBL_MIN
 
@@ -49,4 +50,4 @@ ENTRY(__ieee754_exp2)
 	fldz				/* Set result to 0.  */
 2:	ret
 END (__ieee754_exp2)
-strong_alias (__ieee754_exp2, __exp2_finite)
+libm_alias_finite (__ieee754_exp2, __exp2)

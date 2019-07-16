@@ -20,6 +20,7 @@
 #include <math_private.h>
 #include <fenv_private.h>
 #include <math-underflow.h>
+#include <libm-alias-finite.h>
 
 static float ponef(float), qonef(float);
 
@@ -87,7 +88,7 @@ __ieee754_j1f(float x)
 	r *= x;
 	return(x*(float)0.5+r/s);
 }
-strong_alias (__ieee754_j1f, __j1f_finite)
+libm_alias_finite (__ieee754_j1f, __j1f)
 
 static const float U0[5] = {
  -1.9605709612e-01, /* 0xbe48c331 */
@@ -156,7 +157,7 @@ __ieee754_y1f(float x)
 	v = one+z*(V0[0]+z*(V0[1]+z*(V0[2]+z*(V0[3]+z*V0[4]))));
 	return(x*(u/v) + tpi*(__ieee754_j1f(x)*__ieee754_logf(x)-one/x));
 }
-strong_alias (__ieee754_y1f, __y1f_finite)
+libm_alias_finite (__ieee754_y1f, __y1f)
 
 /* For x >= 8, the asymptotic expansions of pone is
  *	1 + 15/128 s^2 - 4725/2^15 s^4 - ...,	where s = 1/x.

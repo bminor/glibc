@@ -18,7 +18,7 @@
 
 #include <math.h>
 #include <math_private.h>
-
+#include <libm-alias-finite.h>
 
 float
 __ieee754_exp10f (float arg)
@@ -29,4 +29,4 @@ __ieee754_exp10f (float arg)
      this.  */
   return __ieee754_exp (M_LN10 * arg);
 }
-strong_alias (__ieee754_exp10f, __exp10f_finite)
+libm_alias_finite (__ieee754_exp10f, __exp10f)

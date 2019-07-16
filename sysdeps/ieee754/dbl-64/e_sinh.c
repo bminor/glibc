@@ -37,6 +37,7 @@ static char rcsid[] = "$NetBSD: e_sinh.c,v 1.7 1995/05/10 20:46:13 jtc Exp $";
 #include <math-narrow-eval.h>
 #include <math_private.h>
 #include <math-underflow.h>
+#include <libm-alias-finite.h>
 
 static const double one = 1.0, shuge = 1.0e307;
 
@@ -89,4 +90,4 @@ __ieee754_sinh (double x)
   /* |x| > overflowthresold, sinh(x) overflow */
   return math_narrow_eval (x * shuge);
 }
-strong_alias (__ieee754_sinh, __sinh_finite)
+libm_alias_finite (__ieee754_sinh, __sinh)

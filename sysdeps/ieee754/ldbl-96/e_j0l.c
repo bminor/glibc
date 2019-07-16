@@ -74,6 +74,7 @@
 #include <math.h>
 #include <math-barriers.h>
 #include <math_private.h>
+#include <libm-alias-finite.h>
 
 static long double pzero (long double), qzero (long double);
 
@@ -165,7 +166,7 @@ __ieee754_j0l (long double x)
       return ((one + u) * (one - u) + z * (r / s));
     }
 }
-strong_alias (__ieee754_j0l, __j0l_finite)
+libm_alias_finite (__ieee754_j0l, __j0l)
 
 
 /* y0(x) = 2/pi ln(x) J0(x) + U(x^2)/V(x^2)
@@ -256,7 +257,7 @@ __ieee754_y0l (long double x)
   v = V[0] + z * (V[1] + z * (V[2] + z * (V[3] + z * (V[4] + z))));
   return (u / v + tpi * (__ieee754_j0l (x) * __ieee754_logl (x)));
 }
-strong_alias (__ieee754_y0l, __y0l_finite)
+libm_alias_finite (__ieee754_y0l, __y0l)
 
 /* The asymptotic expansions of pzero is
  *	1 - 9/128 s^2 + 11025/98304 s^4 - ...,	where s = 1/x.

@@ -21,7 +21,7 @@
 #include <math-barriers.h>
 #include <math-narrow-eval.h>
 #include <math-svid-compat.h>
-#include <shlib-compat.h>
+#include <libm-alias-finite.h>
 #include <libm-alias-double.h>
 #include "math_config.h"
 
@@ -380,7 +380,7 @@ __pow (double x, double y)
 }
 #ifndef __pow
 strong_alias (__pow, __ieee754_pow)
-strong_alias (__pow, __pow_finite)
+libm_alias_finite (__ieee754_pow, __pow)
 # if LIBM_SVID_COMPAT
 versioned_symbol (libm, __pow, pow, GLIBC_2_29);
 libm_alias_double_other (__pow, pow)

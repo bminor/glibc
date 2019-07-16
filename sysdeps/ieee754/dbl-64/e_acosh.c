@@ -26,6 +26,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-finite.h>
 
 static const double
   one = 1.0,
@@ -66,4 +67,4 @@ __ieee754_acosh (double x)
       return __log1p (t + sqrt (2.0 * t + t * t));
     }
 }
-strong_alias (__ieee754_acosh, __acosh_finite)
+libm_alias_finite (__ieee754_acosh, __acosh)

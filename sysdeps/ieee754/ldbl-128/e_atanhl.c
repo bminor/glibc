@@ -36,6 +36,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-underflow.h>
+#include <libm-alias-finite.h>
 
 static const _Float128 one = 1, huge = L(1e4900);
 
@@ -72,4 +73,4 @@ __ieee754_atanhl(_Float128 x)
 	    t = 0.5*__log1pl((u.value+u.value)/(one-u.value));
 	if(jx & 0x80000000) return -t; else return t;
 }
-strong_alias (__ieee754_atanhl, __atanhl_finite)
+libm_alias_finite (__ieee754_atanhl, __atanhl)

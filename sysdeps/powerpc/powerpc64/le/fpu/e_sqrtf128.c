@@ -27,6 +27,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <libm-alias-finite.h>
 
 /* Unavoidable hacks since TFmode is assumed to be binary128 when
    -mabi=ibmlongdouble is used.  */
@@ -53,4 +54,4 @@ __ieee754_sqrtf128 (__float128 a)
   FP_HANDLE_EXCEPTIONS;
   return r;
 }
-strong_alias (__ieee754_sqrtf128, __sqrtf128_finite)
+libm_alias_finite (__ieee754_sqrtf128, __sqrtf128)

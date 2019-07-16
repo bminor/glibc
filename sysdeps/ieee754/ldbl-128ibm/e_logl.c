@@ -60,6 +60,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-finite.h>
 
 /* log(1+x) = x - .5 x^2 + x^3 l(x)
    -.0078125 <= x <= +.0078125
@@ -297,4 +298,4 @@ __ieee754_logl(long double x)
   y += e * ln2a;
   return y;
 }
-strong_alias (__ieee754_logl, __logl_finite)
+libm_alias_finite (__ieee754_logl, __logl)

@@ -17,6 +17,7 @@
 #include <math.h>
 #include <math-narrow-eval.h>
 #include <math_private.h>
+#include <libm-alias-finite.h>
 
 static const float huge = 1.0e30;
 static const float one = 1.0, half=0.5;
@@ -61,4 +62,4 @@ __ieee754_coshf (float x)
     /* |x| > overflowthresold, cosh(x) overflow */
 	return math_narrow_eval (huge*huge);
 }
-strong_alias (__ieee754_coshf, __coshf_finite)
+libm_alias_finite (__ieee754_coshf, __coshf)

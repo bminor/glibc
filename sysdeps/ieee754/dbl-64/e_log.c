@@ -19,7 +19,7 @@
 #include <math.h>
 #include <stdint.h>
 #include <math-svid-compat.h>
-#include <shlib-compat.h>
+#include <libm-alias-finite.h>
 #include <libm-alias-double.h>
 #include "math_config.h"
 
@@ -132,7 +132,7 @@ __log (double x)
 }
 #ifndef __log
 strong_alias (__log, __ieee754_log)
-strong_alias (__log, __log_finite)
+libm_alias_finite (__ieee754_log, __log)
 # if LIBM_SVID_COMPAT
 versioned_symbol (libm, __log, log, GLIBC_2_29);
 libm_alias_double_other (__log, log)

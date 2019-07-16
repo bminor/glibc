@@ -5,6 +5,7 @@
  */
 
 #include <machine/asm.h>
+#include <libm-alias-finite.h>
 
 ENTRY(__ieee754_fmodf)
 	flds	8(%esp)
@@ -16,4 +17,4 @@ ENTRY(__ieee754_fmodf)
 	fstp	%st(1)
 	ret
 END(__ieee754_fmodf)
-strong_alias (__ieee754_fmodf, __fmodf_finite)
+libm_alias_finite (__ieee754_fmodf, __fmodf)

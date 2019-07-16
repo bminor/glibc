@@ -23,6 +23,7 @@
 #include <fenv_private.h>
 #include <math-underflow.h>
 #include <float.h>
+#include <libm-alias-finite.h>
 
 /* Coefficients B_2k / 2k(2k-1) of x^-(2k-1) inside exp in Stirling's
    approximation to gamma function.  */
@@ -212,4 +213,4 @@ __ieee754_gammaf_r (float x, int *signgamp)
   else
     return ret;
 }
-strong_alias (__ieee754_gammaf_r, __gammaf_r_finite)
+libm_alias_finite (__ieee754_gammaf_r, __gammaf_r)

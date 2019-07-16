@@ -67,6 +67,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-underflow.h>
+#include <libm-alias-finite.h>
 
 static const long double bp[] = {
   1.0L,
@@ -413,4 +414,4 @@ __ieee754_powl (long double x, long double y)
   math_check_force_underflow (z);
   return z;
 }
-strong_alias (__ieee754_powl, __powl_finite)
+libm_alias_finite (__ieee754_powl, __powl)

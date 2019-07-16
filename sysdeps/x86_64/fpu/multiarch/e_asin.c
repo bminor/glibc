@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <libm-alias-finite.h>
+
 extern double __redirect_ieee754_asin (double);
 extern double __redirect_ieee754_acos (double);
 
@@ -24,7 +26,7 @@ extern double __redirect_ieee754_acos (double);
 
 libc_ifunc_redirected (__redirect_ieee754_asin, __ieee754_asin,
 		       IFUNC_SELECTOR ());
-strong_alias (__ieee754_asin, __asin_finite)
+libm_alias_finite (__ieee754_asin, __asin)
 
 #undef SYMBOL_NAME
 #define SYMBOL_NAME ieee754_acos
@@ -32,8 +34,7 @@ strong_alias (__ieee754_asin, __asin_finite)
 
 libc_ifunc_redirected (__redirect_ieee754_acos, __ieee754_acos,
 		       IFUNC_SELECTOR ());
-strong_alias (__ieee754_acos, __acos_finite)
-
+libm_alias_finite (__ieee754_acos, __acos)
 
 #define __ieee754_acos __ieee754_acos_sse2
 #define __ieee754_asin __ieee754_asin_sse2

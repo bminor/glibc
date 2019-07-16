@@ -5,6 +5,7 @@
  */
 
 #include <machine/asm.h>
+#include <libm-alias-finite.h>
 
 RCSID("$NetBSD: $")
 
@@ -21,4 +22,4 @@ ENTRY(__ieee754_acosf)
 	fpatan
 	ret
 END (__ieee754_acosf)
-strong_alias (__ieee754_acosf, __acosf_finite)
+libm_alias_finite (__ieee754_acosf, __acosf)

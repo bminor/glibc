@@ -19,6 +19,7 @@
 
 #include <machine/asm.h>
 #include <i386-math-asm.h>
+#include <libm-alias-finite.h>
 
 	.section .rodata
 
@@ -106,4 +107,4 @@ ENTRY(__ieee754_atanhf)
 5:	flds	4(%esp)
 	ret
 END(__ieee754_atanhf)
-strong_alias (__ieee754_atanhf, __atanhf_finite)
+libm_alias_finite (__ieee754_atanhf, __atanhf)

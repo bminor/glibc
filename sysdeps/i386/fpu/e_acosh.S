@@ -18,6 +18,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <machine/asm.h>
+#include <libm-alias-finite.h>
 
 	.section .rodata.cst8,"aM",@progbits,8
 
@@ -98,4 +99,4 @@ ENTRY(__ieee754_acosh)
 	fdiv	%st, %st(0)
 	ret
 END(__ieee754_acosh)
-strong_alias (__ieee754_acosh, __acosh_finite)
+libm_alias_finite (__ieee754_acosh, __acosh)

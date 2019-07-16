@@ -48,6 +48,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-underflow.h>
+#include <libm-alias-finite.h>
 
 _Float128
 __ieee754_hypotl(_Float128 x, _Float128 y)
@@ -138,4 +139,4 @@ __ieee754_hypotl(_Float128 x, _Float128 y)
 	    return w;
 	} else return w;
 }
-strong_alias (__ieee754_hypotl, __hypotl_finite)
+libm_alias_finite (__ieee754_hypotl, __hypotl)

@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <libm-alias-finite.h>
 
 extern double __redirect_ieee754_log (double);
 
@@ -25,7 +26,7 @@ extern double __redirect_ieee754_log (double);
 
 libc_ifunc_redirected (__redirect_ieee754_log, __ieee754_log,
 		       IFUNC_SELECTOR ());
-strong_alias (__ieee754_log, __log_finite)
+libm_alias_finite (__ieee754_log, __log)
 
 #define __log __ieee754_log_sse2
 #include <sysdeps/ieee754/dbl-64/e_log.c>

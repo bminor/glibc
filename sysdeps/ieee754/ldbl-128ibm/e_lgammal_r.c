@@ -21,6 +21,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <float.h>
+#include <libm-alias-finite.h>
 
 static const long double PIL = 3.1415926535897932384626433832795028841972E0L;
 static const long double MAXLGM = 0x5.d53649e2d469dbc1f01e99fd66p+1012L;
@@ -989,4 +990,4 @@ __ieee754_lgammal_r (long double x, int *signgamp)
   q += neval (p, RASY, NRASY) / x;
   return (q);
 }
-strong_alias (__ieee754_lgammal_r, __lgammal_r_finite)
+libm_alias_finite (__ieee754_lgammal_r, __lgammal_r)

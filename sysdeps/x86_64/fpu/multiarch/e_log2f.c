@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <libm-alias-float.h>
+#include <libm-alias-finite.h>
 
 extern float __redirect_log2f (float);
 
@@ -29,15 +30,14 @@ libc_ifunc_redirected (__redirect_log2f, __log2f, IFUNC_SELECTOR ());
 __hidden_ver1 (__log2f, __GI___log2f, __redirect_log2f)
   __attribute__ ((visibility ("hidden")));
 
-# include <shlib-compat.h>
-versioned_symbol (libm, __log2f, log2f, GLIBC_2_27);
+versioned_symbol (libm, __ieee754_log2f, log2f, GLIBC_2_27);
 libm_alias_float_other (__log2, log2)
 #else
 libm_alias_float (__log2, log2)
 #endif
 
 strong_alias (__log2f, __ieee754_log2f)
-strong_alias (__log2f, __log2f_finite)
+libm_alias_finite (__log2f, __log2f)
 
 #define __log2f __log2f_sse2
 #include <sysdeps/ieee754/flt-32/e_log2f.c>

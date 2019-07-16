@@ -26,6 +26,7 @@
 /* Use VFP square root instruction.  */
 # include <math.h>
 # include <sysdep.h>
+# include <libm-alias-finite.h>
 
 double
 __ieee754_sqrt (double x)
@@ -40,6 +41,6 @@ __ieee754_sqrt (double x)
 # endif
   return ret;
 }
-strong_alias (__ieee754_sqrt, __sqrt_finite)
+libm_alias_finite (__ieee754_sqrt, __sqrt)
 
 #endif

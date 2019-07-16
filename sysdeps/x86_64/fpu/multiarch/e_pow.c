@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <libm-alias-finite.h>
 
 extern double __redirect_ieee754_pow (double, double);
 
@@ -25,7 +26,7 @@ extern double __redirect_ieee754_pow (double, double);
 
 libc_ifunc_redirected (__redirect_ieee754_pow,
 		       __ieee754_pow, IFUNC_SELECTOR ());
-strong_alias (__ieee754_pow, __pow_finite)
+libm_alias_finite (__ieee754_pow, __pow)
 
 #define __pow __ieee754_pow_sse2
 #include <sysdeps/ieee754/dbl-64/e_pow.c>

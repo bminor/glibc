@@ -42,6 +42,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-finite.h>
 
 static const long double
 tiny  = 1.0e-300L,
@@ -119,4 +120,4 @@ __ieee754_atan2l(long double y, long double x)
 		    return  (z-pi_lo)-pi;/* atan(-,-) */
 	}
 }
-strong_alias (__ieee754_atan2l, __atan2l_finite)
+libm_alias_finite (__ieee754_atan2l, __atan2l)

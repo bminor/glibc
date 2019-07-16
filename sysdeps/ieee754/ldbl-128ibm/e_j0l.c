@@ -21,6 +21,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <float.h>
+#include <libm-alias-finite.h>
 
 /* 1 / sqrt(pi) */
 static const long double ONEOSQPI = 5.6418958354775628694807945156077258584405E-1L;
@@ -716,7 +717,7 @@ __ieee754_j0l (long double x)
   z = ONEOSQPI * (p * cc - q * ss) / sqrtl (xx);
   return z;
 }
-strong_alias (__ieee754_j0l, __j0l_finite)
+libm_alias_finite (__ieee754_j0l, __j0l)
 
 
 /* Y0(x) = 2/pi * log(x) * J0(x) + R(x^2)
@@ -861,4 +862,4 @@ long double
   z = ONEOSQPI * (p * ss + q * cc) / sqrtl (x);
   return z;
 }
-strong_alias (__ieee754_y0l, __y0l_finite)
+libm_alias_finite (__ieee754_y0l, __y0l)

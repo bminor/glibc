@@ -45,6 +45,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-underflow.h>
+#include <libm-alias-finite.h>
 
 double
 __ieee754_hypot (double x, double y)
@@ -159,4 +160,6 @@ __ieee754_hypot (double x, double y)
   else
     return w;
 }
-strong_alias (__ieee754_hypot, __hypot_finite)
+#ifndef __ieee754_hypot
+libm_alias_finite (__ieee754_hypot, __hypot)
+#endif

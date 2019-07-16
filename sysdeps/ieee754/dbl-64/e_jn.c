@@ -43,6 +43,7 @@
 #include <math_private.h>
 #include <fenv_private.h>
 #include <math-underflow.h>
+#include <libm-alias-finite.h>
 
 static const double
   invsqrtpi = 5.64189583547756279280e-01, /* 0x3FE20DD7, 0x50429B6D */
@@ -258,7 +259,7 @@ __ieee754_jn (int n, double x)
     math_check_force_underflow (ret);
   return ret;
 }
-strong_alias (__ieee754_jn, __jn_finite)
+libm_alias_finite (__ieee754_jn, __jn)
 
 double
 __ieee754_yn (int n, double x)
@@ -349,4 +350,4 @@ __ieee754_yn (int n, double x)
     ret = copysign (DBL_MAX, ret) * DBL_MAX;
   return ret;
 }
-strong_alias (__ieee754_yn, __yn_finite)
+libm_alias_finite (__ieee754_yn, __yn)

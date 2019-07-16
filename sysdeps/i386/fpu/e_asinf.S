@@ -6,6 +6,7 @@
 
 #include <machine/asm.h>
 #include <i386-math-asm.h>
+#include <libm-alias-finite.h>
 
 RCSID("$NetBSD: $")
 
@@ -36,4 +37,4 @@ ENTRY(__ieee754_asinf)
 	FLT_CHECK_FORCE_UFLOW
 	ret
 END (__ieee754_asinf)
-strong_alias (__ieee754_asinf, __asinf_finite)
+libm_alias_finite (__ieee754_asinf, __asinf)

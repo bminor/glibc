@@ -62,6 +62,7 @@
 #include <math_private.h>
 #include <fenv_private.h>
 #include <math-underflow.h>
+#include <libm-alias-finite.h>
 
 static const _Float128
   invsqrtpi = L(5.6418958354775628694807945156077258584405E-1),
@@ -308,7 +309,7 @@ __ieee754_jnl (int n, _Float128 x)
     math_check_force_underflow (ret);
   return ret;
 }
-strong_alias (__ieee754_jnl, __jnl_finite)
+libm_alias_finite (__ieee754_jnl, __jnl)
 
 _Float128
 __ieee754_ynl (int n, _Float128 x)
@@ -422,4 +423,4 @@ __ieee754_ynl (int n, _Float128 x)
     ret = copysignl (LDBL_MAX, ret) * LDBL_MAX;
   return ret;
 }
-strong_alias (__ieee754_ynl, __ynl_finite)
+libm_alias_finite (__ieee754_ynl, __ynl)

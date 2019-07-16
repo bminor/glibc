@@ -17,6 +17,7 @@
 
 #include <errno.h>
 #include <math.h>
+#include <libm-alias-finite.h>
 
 #ifndef	__GNUC__
   #error This file uses GNU C extensions; you must compile with GCC.
@@ -30,4 +31,4 @@ __ieee754_sqrt (double x)
   asm ("fsqrtd %1, %0" : "=f" (result) : "f" (x));
   return result;
 }
-strong_alias (__ieee754_sqrt, __sqrt_finite)
+libm_alias_finite (__ieee754_sqrt, __sqrt)

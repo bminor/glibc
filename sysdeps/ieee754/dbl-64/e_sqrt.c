@@ -40,6 +40,7 @@
 #include <math-barriers.h>
 #include <math_private.h>
 #include <fenv_private.h>
+#include <libm-alias-finite.h>
 
 /*********************************************************************/
 /* An ultimate sqrt routine. Given an IEEE double machine number x   */
@@ -138,4 +139,6 @@ __ieee754_sqrt (double x)
       return 0x1p-256 * __ieee754_sqrt (x * 0x1p512);
     }
 }
-strong_alias (__ieee754_sqrt, __sqrt_finite)
+#ifndef __ieee754_sqrt
+libm_alias_finite (__ieee754_sqrt, __sqrt)
+#endif

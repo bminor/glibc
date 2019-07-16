@@ -41,6 +41,7 @@
 #include <math-barriers.h>
 #include <math_private.h>
 #include <math-underflow.h>
+#include <libm-alias-finite.h>
 
 static const double huge = 1e300;
 
@@ -73,4 +74,4 @@ __ieee754_atanh (double x)
 
   return copysign (t, x);
 }
-strong_alias (__ieee754_atanh, __atanh_finite)
+libm_alias_finite (__ieee754_atanh, __atanh)

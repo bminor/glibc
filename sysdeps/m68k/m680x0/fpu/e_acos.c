@@ -18,10 +18,11 @@
 #include <math.h>
 #include <math_private.h>
 #include "mathimpl.h"
+#include <libm-alias-finite.h>
 
 #ifndef	FUNC
 # define FUNC __ieee754_acos
-# define FUNC_FINITE __acos_finite
+# define FUNC_FINITE __acos
 #endif
 #ifndef float_type
 # define float_type double
@@ -33,5 +34,5 @@ FUNC (float_type x)
   return __m81_u(FUNC)(x);
 }
 #ifdef FUNC_FINITE
-strong_alias (FUNC, FUNC_FINITE)
+libm_alias_finite (FUNC, FUNC_FINITE)
 #endif

@@ -64,6 +64,7 @@
 #include <math-narrow-eval.h>
 #include <math_private.h>
 #include <math-underflow.h>
+#include <libm-alias-finite.h>
 
 static double pone (double), qone (double);
 
@@ -147,7 +148,7 @@ __ieee754_j1 (double x)
   s = s1 + z2 * s2 + z4 * s3;
   return (x * 0.5 + r / s);
 }
-strong_alias (__ieee754_j1, __j1_finite)
+libm_alias_finite (__ieee754_j1, __j1)
 
 static const double U0[5] = {
  -1.96057090646238940668e-01, /* 0xBFC91866, 0x143CBC8A */
@@ -230,7 +231,7 @@ __ieee754_y1 (double x)
   v = v1 + z2 * v2 + z4 * v3;
   return (x * (u / v) + tpi * (__ieee754_j1 (x) * __ieee754_log (x) - one / x));
 }
-strong_alias (__ieee754_y1, __y1_finite)
+libm_alias_finite (__ieee754_y1, __y1)
 
 /* For x >= 8, the asymptotic expansions of pone is
  *	1 + 15/128 s^2 - 4725/2^15 s^4 - ...,	where s = 1/x.

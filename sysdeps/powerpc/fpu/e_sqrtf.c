@@ -24,6 +24,7 @@
 #include <stdint.h>
 #include <sysdep.h>
 #include <ldsodefs.h>
+#include <libm-alias-finite.h>
 
 #ifndef _ARCH_PPCSQ
 static const float almost_half = 0.50000006;	/* 0.5 + 2^-24 */
@@ -148,4 +149,4 @@ __ieee754_sqrtf (float x)
 
   return z;
 }
-strong_alias (__ieee754_sqrtf, __sqrtf_finite)
+libm_alias_finite (__ieee754_sqrtf, __sqrtf)

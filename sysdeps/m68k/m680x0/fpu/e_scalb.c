@@ -19,6 +19,7 @@
 #include <math.h>
 #include <math_private.h>
 #include "mathimpl.h"
+#include <libm-alias-finite.h>
 
 #ifndef SUFF
 #define SUFF
@@ -57,4 +58,4 @@ s(__ieee754_scalb) (float_type x, float_type fn)
   __asm ("fscale%.x %1, %0" : "=f" (retval) : "f" (fn), "0" (x));
   return retval;
 }
-strong_alias (s(__ieee754_scalb), CONCATX (s(__scalb), _finite))
+libm_alias_finite (s(__ieee754_scalb), s (__scalb))

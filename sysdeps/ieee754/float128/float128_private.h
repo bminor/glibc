@@ -283,6 +283,32 @@
 #define __fsubl __f32subf128
 #define __dsubl __f64subf128
 
+/* Used on __finite compat alias.  */
+#define __acosl __acosf128
+#define __acoshl __acoshf128
+#define __asinl __asinf128
+#define __atan2l __atan2f128
+#define __atanhl __atanhf128
+#define __coshl __coshf128
+#define __exp10l __exp10f128
+#define __expl __expf128
+#define __fmodl __fmodf128
+#define __gammal_r __gammaf128_r
+#define __hypotl __hypotf128
+#define __j0l __j0f128
+#define __j1l __j1f128
+#define __jnl __jnf128
+#define __lgammal_r __lgammaf128_r
+#define __log10l __log10f128
+#define __log2l __log2f128
+#define __logl __logf128
+#define __powl __powf128
+#define __remainderl __remainderf128
+#define __sinhl __sinhf128
+#define __y0l __y0f128
+#define __y1l __y1f128
+#define __ynl __ynf128
+
 /* __nexttowardf128 is not _Float128 API. */
 #define __nexttowardl __nexttowardf128_do_not_use
 #define nexttowardl nexttowardf128_do_not_use

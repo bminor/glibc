@@ -5,6 +5,7 @@
 
 #include <machine/asm.h>
 #include <i386-math-asm.h>
+#include <libm-alias-finite.h>
 
 RCSID("$NetBSD: e_asin.S,v 1.4 1995/05/08 23:45:40 jtc Exp $")
 
@@ -35,4 +36,4 @@ ENTRY(__ieee754_asin)
 	DBL_CHECK_FORCE_UFLOW
 	ret
 END (__ieee754_asin)
-strong_alias (__ieee754_asin, __asin_finite)
+libm_alias_finite (__ieee754_asin, __asin)

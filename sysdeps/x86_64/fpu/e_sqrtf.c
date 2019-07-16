@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <math_private.h>
+#include <libm-alias-finite.h>
 
 #undef __ieee754_sqrtf
 float
@@ -28,4 +29,4 @@ __ieee754_sqrtf (float x)
 
   return res;
 }
-strong_alias (__ieee754_sqrtf, __sqrtf_finite)
+libm_alias_finite (__ieee754_sqrtf, __sqrtf)

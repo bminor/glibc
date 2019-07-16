@@ -48,6 +48,7 @@
 #include <math_private.h>
 #include <fenv_private.h>
 #include <stap-probe.h>
+#include <libm-alias-finite.h>
 
 #ifndef SECTION
 # define SECTION
@@ -570,7 +571,7 @@ __ieee754_atan2 (double y, double x)
 }
 
 #ifndef __ieee754_atan2
-strong_alias (__ieee754_atan2, __atan2_finite)
+libm_alias_finite (__ieee754_atan2, __atan2)
 #endif
 
 /* Treat the Denormalized case */

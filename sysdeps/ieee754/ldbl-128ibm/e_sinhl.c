@@ -32,6 +32,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-underflow.h>
+#include <libm-alias-finite.h>
 
 static const long double one = 1.0, shuge = 1.0e307;
 
@@ -77,4 +78,4 @@ __ieee754_sinhl(long double x)
     /* |x| > overflowthresold, sinh(x) overflow */
 	return x*shuge;
 }
-strong_alias (__ieee754_sinhl, __sinhl_finite)
+libm_alias_finite (__ieee754_sinhl, __sinhl)

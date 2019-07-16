@@ -15,6 +15,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-finite.h>
 
 float
 __ieee754_hypotf(float x, float y)
@@ -42,4 +43,6 @@ __ieee754_hypotf(float x, float y)
 
 	return (float) sqrt(d_x * d_x + d_y * d_y);
 }
-strong_alias (__ieee754_hypotf, __hypotf_finite)
+#ifndef __ieee754_hypotf
+libm_alias_finite (__ieee754_hypotf, __hypotf)
+#endif

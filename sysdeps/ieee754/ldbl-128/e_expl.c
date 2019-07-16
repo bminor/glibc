@@ -69,6 +69,7 @@
 #include <math-underflow.h>
 #include <stdlib.h>
 #include "t_expl.h"
+#include <libm-alias-finite.h>
 
 static const _Float128 C[] = {
 /* Smallest integer x for which e^x overflows.  */
@@ -253,4 +254,4 @@ __ieee754_expl (_Float128 x)
     /* Return x, if x is a NaN or Inf; or overflow, otherwise.  */
     return TWO16383*x;
 }
-strong_alias (__ieee754_expl, __expl_finite)
+libm_alias_finite (__ieee754_expl, __expl)

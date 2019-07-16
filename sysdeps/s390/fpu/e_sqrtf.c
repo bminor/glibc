@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <math_private.h>
+#include <libm-alias-finite.h>
 
 float
 __ieee754_sqrtf (float x)
@@ -26,4 +27,4 @@ __ieee754_sqrtf (float x)
   __asm__ ( "sqebr %0,%1" : "=f" (res) : "f" (x) );
   return res;
 }
-strong_alias (__ieee754_sqrtf, __sqrtf_finite)
+libm_alias_finite (__ieee754_sqrtf, __sqrtf)

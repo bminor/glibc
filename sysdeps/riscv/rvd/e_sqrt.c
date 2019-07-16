@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <libm-alias-finite.h>
 
 double
 __ieee754_sqrt (double x)
@@ -24,4 +25,4 @@ __ieee754_sqrt (double x)
   asm ("fsqrt.d %0, %1" : "=f" (x) : "f" (x));
   return x;
 }
-strong_alias (__ieee754_sqrt, __sqrt_finite)
+libm_alias_finite (__ieee754_sqrt, __sqrt)

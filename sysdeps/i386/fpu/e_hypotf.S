@@ -19,6 +19,7 @@
 
 #include <sysdep.h>
 #include <i386-math-asm.h>
+#include <libm-alias-finite.h>
 
 	.text
 ENTRY(__ieee754_hypotf)
@@ -61,4 +62,4 @@ ENTRY(__ieee754_hypotf)
 	jmp	2b
 
 END(__ieee754_hypotf)
-strong_alias (__ieee754_hypotf, __hypotf_finite)
+libm_alias_finite (__ieee754_hypotf, __hypotf)

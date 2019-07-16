@@ -43,6 +43,7 @@ static char rcsid[] = "$NetBSD: e_asinf.c,v 1.5 1995/05/12 04:57:25 jtc Exp $";
 #include <math.h>
 #include <math_private.h>
 #include <math-underflow.h>
+#include <libm-alias-finite.h>
 
 static const float
 one =  1.0000000000e+00, /* 0x3F800000 */
@@ -102,4 +103,4 @@ float __ieee754_asinf(float x)
 	}
 	if(hx>0) return t; else return -t;
 }
-strong_alias (__ieee754_asinf, __asinf_finite)
+libm_alias_finite (__ieee754_asinf, __asinf)

@@ -26,6 +26,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-finite.h>
 
 static const double
 one	= 1.0,
@@ -64,4 +65,4 @@ __ieee754_acosh (double x)
   else					/* x < 1 */
     return (x - x) / (x - x);
 }
-strong_alias (__ieee754_acosh, __acosh_finite)
+libm_alias_finite (__ieee754_acosh, __acosh)

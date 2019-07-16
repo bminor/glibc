@@ -53,6 +53,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-finite.h>
 
 static const _Float128 one = 1.0, half = 0.5, huge = L(1.0e4900),
 ovf_thresh = L(1.1357216553474703894801348310092223067821E4);
@@ -107,4 +108,4 @@ __ieee754_coshl (_Float128 x)
   /* |x| > overflowthresold, cosh(x) overflow */
   return huge * huge;
 }
-strong_alias (__ieee754_coshl, __coshl_finite)
+libm_alias_finite (__ieee754_coshl, __coshl)

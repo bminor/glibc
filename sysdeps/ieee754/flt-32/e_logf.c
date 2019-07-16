@@ -18,7 +18,7 @@
 
 #include <math.h>
 #include <stdint.h>
-#include <shlib-compat.h>
+#include <libm-alias-finite.h>
 #include <libm-alias-float.h>
 #include "math_config.h"
 
@@ -88,7 +88,7 @@ __logf (float x)
 }
 #ifndef __logf
 strong_alias (__logf, __ieee754_logf)
-strong_alias (__logf, __logf_finite)
+libm_alias_finite (__ieee754_logf, __logf)
 versioned_symbol (libm, __logf, logf, GLIBC_2_27);
 libm_alias_float_other (__log, log)
 #endif

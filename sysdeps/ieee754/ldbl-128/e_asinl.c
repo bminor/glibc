@@ -64,6 +64,7 @@
 #include <math-barriers.h>
 #include <math_private.h>
 #include <math-underflow.h>
+#include <libm-alias-finite.h>
 
 static const _Float128
   one = 1,
@@ -257,4 +258,4 @@ __ieee754_asinl (_Float128 x)
   else
     return -t;
 }
-strong_alias (__ieee754_asinl, __asinl_finite)
+libm_alias_finite (__ieee754_asinl, __asinl)

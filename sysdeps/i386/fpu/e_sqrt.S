@@ -4,6 +4,7 @@
  */
 
 #include <machine/asm.h>
+#include <libm-alias-finite.h>
 
 ENTRY(__ieee754_sqrt)
 	fldl	4(%esp)
@@ -20,4 +21,4 @@ ENTRY(__ieee754_sqrt)
 	cfi_adjust_cfa_offset (-8)
 	ret
 END (__ieee754_sqrt)
-strong_alias (__ieee754_sqrt, __sqrt_finite)
+libm_alias_finite (__ieee754_sqrt, __sqrt)

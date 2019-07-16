@@ -15,6 +15,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-finite.h>
 
 static	const float	one	= 1.0, tiny=1.0e-30;
 
@@ -83,4 +84,6 @@ __ieee754_sqrtf(float x)
 	SET_FLOAT_WORD(z,ix);
 	return z;
 }
-strong_alias (__ieee754_sqrtf, __sqrtf_finite)
+#ifndef __ieee754_sqrtf
+libm_alias_finite (__ieee754_sqrtf, __sqrtf)
+#endif

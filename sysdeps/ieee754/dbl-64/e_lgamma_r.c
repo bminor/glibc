@@ -81,6 +81,7 @@
 #include <math-narrow-eval.h>
 #include <math_private.h>
 #include <libc-diag.h>
+#include <libm-alias-finite.h>
 
 static const double
 two52=  4.50359962737049600000e+15, /* 0x43300000, 0x00000000 */
@@ -308,4 +309,4 @@ __ieee754_lgamma_r(double x, int *signgamp)
 	DIAG_POP_NEEDS_COMMENT;
 	return r;
 }
-strong_alias (__ieee754_lgamma_r, __lgamma_r_finite)
+libm_alias_finite (__ieee754_lgamma_r, __lgamma_r)

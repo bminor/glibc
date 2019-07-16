@@ -45,6 +45,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-underflow.h>
+#include <libm-alias-finite.h>
 
 long double
 __ieee754_hypotl(long double x, long double y)
@@ -136,4 +137,4 @@ __ieee754_hypotl(long double x, long double y)
 	else
 	    return w;
 }
-strong_alias (__ieee754_hypotl, __hypotl_finite)
+libm_alias_finite (__ieee754_hypotl, __hypotl)

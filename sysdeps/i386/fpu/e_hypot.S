@@ -19,6 +19,7 @@
 
 #include <sysdep.h>
 #include <i386-math-asm.h>
+#include <libm-alias-finite.h>
 
 DEFINE_DBL_MIN
 
@@ -72,4 +73,4 @@ ENTRY(__ieee754_hypot)
 	jmp	2b
 
 END(__ieee754_hypot)
-strong_alias (__ieee754_hypot, __hypot_finite)
+libm_alias_finite (__ieee754_hypot, __hypot)

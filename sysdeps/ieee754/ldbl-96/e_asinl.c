@@ -62,6 +62,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-underflow.h>
+#include <libm-alias-finite.h>
 
 static const long double
   one = 1.0L,
@@ -155,4 +156,4 @@ __ieee754_asinl (long double x)
   else
     return -t;
 }
-strong_alias (__ieee754_asinl, __asinl_finite)
+libm_alias_finite (__ieee754_asinl, __asinl)

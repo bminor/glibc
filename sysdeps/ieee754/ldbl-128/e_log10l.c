@@ -62,6 +62,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-finite.h>
 
 /* Coefficients for ln(1+x) = x - x**2/2 + x**3 P(x)/Q(x)
  * 1/sqrt(2) <= x < sqrt(2)
@@ -256,4 +257,4 @@ done:
   z += e * L102A;
   return (z);
 }
-strong_alias (__ieee754_log10l, __log10l_finite)
+libm_alias_finite (__ieee754_log10l, __log10l)

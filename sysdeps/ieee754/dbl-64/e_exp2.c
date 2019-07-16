@@ -21,7 +21,7 @@
 #include <math-barriers.h>
 #include <math-narrow-eval.h>
 #include <math-svid-compat.h>
-#include <shlib-compat.h>
+#include <libm-alias-finite.h>
 #include <libm-alias-double.h>
 #include "math_config.h"
 
@@ -145,7 +145,7 @@ __exp2 (double x)
 }
 #ifndef __exp2
 strong_alias (__exp2, __ieee754_exp2)
-strong_alias (__exp2, __exp2_finite)
+libm_alias_finite (__ieee754_exp2, __exp2)
 # if LIBM_SVID_COMPAT
 versioned_symbol (libm, __exp2, exp2, GLIBC_2_29);
 libm_alias_double_other (__exp2, exp2)

@@ -66,7 +66,7 @@
 #include <inttypes.h>
 #include <math_private.h>
 #include <fenv_private.h>
-
+#include <libm-alias-finite.h>
 
 #include "t_expl.h"
 
@@ -257,4 +257,4 @@ __ieee754_expl (long double x)
     return result;
   return result * scale_u.ld;
 }
-strong_alias (__ieee754_expl, __expl_finite)
+libm_alias_finite (__ieee754_expl, __expl)

@@ -7,6 +7,7 @@
  */
 
 #include <machine/asm.h>
+#include <libm-alias-finite.h>
 
 ENTRY(__ieee754_remainderl)
 	fldt	24(%rsp)
@@ -18,4 +19,4 @@ ENTRY(__ieee754_remainderl)
 	fstp	%st(1)
 	ret
 END (__ieee754_remainderl)
-strong_alias (__ieee754_remainderl, __remainderl_finite)
+libm_alias_finite (__ieee754_remainderl, __remainderl)

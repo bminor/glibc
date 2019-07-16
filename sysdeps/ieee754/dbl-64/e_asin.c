@@ -43,6 +43,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-underflow.h>
+#include <libm-alias-finite.h>
 
 #ifndef SECTION
 # define SECTION
@@ -334,7 +335,7 @@ __ieee754_asin(double x){
  }
 }
 #ifndef __ieee754_asin
-strong_alias (__ieee754_asin, __asin_finite)
+libm_alias_finite (__ieee754_asin, __asin)
 #endif
 
 /*******************************************************************/
@@ -644,5 +645,5 @@ __ieee754_acos(double x)
   }
 }
 #ifndef __ieee754_acos
-strong_alias (__ieee754_acos, __acos_finite)
+libm_alias_finite (__ieee754_acos, __acos)
 #endif

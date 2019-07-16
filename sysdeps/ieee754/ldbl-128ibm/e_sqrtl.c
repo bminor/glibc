@@ -33,6 +33,7 @@
 /*********************************************************************/
 
 #include <math_private.h>
+#include <libm-alias-finite.h>
 
 typedef union {int64_t i[2]; long double x; double d[2]; } mynumber;
 
@@ -99,4 +100,4 @@ long double __ieee754_sqrtl(long double x)
     return tm256*__ieee754_sqrtl(x*t512);
   }
 }
-strong_alias (__ieee754_sqrtl, __sqrtl_finite)
+libm_alias_finite (__ieee754_sqrtl, __sqrtl)

@@ -19,7 +19,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math_ldbl_opt.h>
-#include <shlib-compat.h>
+#include <libm-alias-finite.h>
 #include "init-arch.h"
 
 extern __typeof (__ieee754_hypotf) __ieee754_hypotf_ppc32 attribute_hidden;
@@ -30,4 +30,4 @@ libc_ifunc (__ieee754_hypotf,
 	    ? __ieee754_hypotf_power7
             : __ieee754_hypotf_ppc32);
 
-strong_alias (__ieee754_hypotf, __hypotf_finite)
+libm_alias_finite (__ieee754_hypotf, __hypotf)

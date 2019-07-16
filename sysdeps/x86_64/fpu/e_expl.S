@@ -25,6 +25,7 @@
 #include <libm-alias-ldouble.h>
 #include <machine/asm.h>
 #include <x86_64-math-asm.h>
+#include <libm-alias-finite.h>
 
 #ifdef USE_AS_EXP10L
 # define IEEE754_EXPL __ieee754_exp10l
@@ -212,9 +213,12 @@ ENTRY(IEEE754_EXPL)
 	fadd	%st
 	ret
 END(IEEE754_EXPL)
+
 #ifdef USE_AS_EXPM1L
 libm_hidden_def (__expm1l)
 libm_alias_ldouble (__expm1, expm1)
+#elif defined USE_AS_EXP10L
+libm_alias_finite (__ieee754_exp10l, __exp10l)
 #else
-strong_alias (IEEE754_EXPL, EXPL_FINITE)
+libm_alias_finite (__ieee754_expl, __expl)
 #endif

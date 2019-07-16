@@ -8,6 +8,7 @@
 
 #include <machine/asm.h>
 #include <i386-math-asm.h>
+#include <libm-alias-finite.h>
 
 	.section .rodata
 
@@ -99,4 +100,4 @@ ENTRY(__ieee754_scalbf)
 	fdiv	%st
 	ret
 END(__ieee754_scalbf)
-strong_alias (__ieee754_scalbf, __scalbf_finite)
+libm_alias_finite (__ieee754_scalbf, __scalbf)

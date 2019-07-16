@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <math_private.h>
+#include <libm-alias-finite.h>
 
 #undef __ieee754_sqrt
 double
@@ -28,4 +29,4 @@ __ieee754_sqrt (double x)
 
   return res;
 }
-strong_alias (__ieee754_sqrt, __sqrt_finite)
+libm_alias_finite (__ieee754_sqrt, __sqrt)

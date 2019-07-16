@@ -16,6 +16,7 @@
 #include <math.h>
 #include <math-barriers.h>
 #include <math_private.h>
+#include <libm-alias-finite.h>
 
 static float pzerof(float), qzerof(float);
 
@@ -81,7 +82,7 @@ __ieee754_j0f(float x)
 	    return((one+u)*(one-u)+z*(r/s));
 	}
 }
-strong_alias (__ieee754_j0f, __j0f_finite)
+libm_alias_finite (__ieee754_j0f, __j0f)
 
 static const float
 u00  = -7.3804296553e-02, /* 0xbd9726b5 */
@@ -147,7 +148,7 @@ __ieee754_y0f(float x)
 	v = one+z*(v01+z*(v02+z*(v03+z*v04)));
 	return(u/v + tpi*(__ieee754_j0f(x)*__ieee754_logf(x)));
 }
-strong_alias (__ieee754_y0f, __y0f_finite)
+libm_alias_finite (__ieee754_y0f, __y0f)
 
 /* The asymptotic expansions of pzero is
  *	1 - 9/128 s^2 + 11025/98304 s^4 - ...,	where s = 1/x.

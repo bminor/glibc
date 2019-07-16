@@ -23,6 +23,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-finite.h>
 
 static const _Float128 zero = 0;
 
@@ -68,4 +69,4 @@ __ieee754_remainderl(_Float128 x, _Float128 p)
 	SET_LDOUBLE_MSW64(x,hx^sx);
 	return x;
 }
-strong_alias (__ieee754_remainderl, __remainderl_finite)
+libm_alias_finite (__ieee754_remainderl, __remainderl)

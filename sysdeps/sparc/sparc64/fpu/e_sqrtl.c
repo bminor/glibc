@@ -18,6 +18,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <libm-alias-finite.h>
 
 extern void _Qp_sqrt(long double *, const long double *);
 
@@ -28,4 +29,4 @@ __ieee754_sqrtl (long double x)
   _Qp_sqrt (&ret, &x);
   return ret;
 }
-strong_alias (__ieee754_sqrtl, __sqrtl_finite)
+libm_alias_finite (__ieee754_sqrtl, __sqrtl)

@@ -18,6 +18,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <float.h>
+#include <libm-alias-finite.h>
 
 static const long double log10_high = 0x2.4d763776aaap+0L;
 static const long double log10_low = 0x2.b05ba95b58ae0b4c28a38a3fb4p-48L;
@@ -45,4 +46,4 @@ __ieee754_exp10l (long double arg)
   exp_low = arg_high * log10_low + arg_low * M_LN10l;
   return __ieee754_expl (exp_high) * __ieee754_expl (exp_low);
 }
-strong_alias (__ieee754_exp10l, __exp10l_finite)
+libm_alias_finite (__ieee754_exp10l, __exp10l)

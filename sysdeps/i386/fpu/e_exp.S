@@ -5,6 +5,7 @@
 
 #include <machine/asm.h>
 #include <i386-math-asm.h>
+#include <libm-alias-finite.h>
 
 DEFINE_DBL_MIN
 
@@ -71,3 +72,4 @@ ENTRY(__exp_finite)
 	DBL_NARROW_EVAL_UFLOW_NONNEG
 	ret
 END(__exp_finite)
+libm_alias_finite (__exp_finite, __exp)

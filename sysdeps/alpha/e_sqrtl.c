@@ -43,7 +43,5 @@ __ieee754_sqrtl (const long double a)
    straight-forward as just adding the alias, since a generic Versions file
    includes the 2.15 version and the linker uses the first one it sees.  */
 #if SHLIB_COMPAT (libm, GLIBC_2_15, GLIBC_2_18)
-versioned_symbol (libm, __ieee754_sqrtl, __sqrtl_finite, GLIBC_2_18);
-#else
-strong_alias(__ieee754_sqrtl, __sqrtl_finite)
+compat_symbol (libm, __ieee754_sqrtl, __sqrtl_finite, GLIBC_2_18);
 #endif

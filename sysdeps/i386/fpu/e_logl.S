@@ -6,7 +6,7 @@
  */
 
 #include <machine/asm.h>
-
+#include <libm-alias-finite.h>
 
 	.section .rodata.cst8,"aM",@progbits,8
 
@@ -95,3 +95,4 @@ ENTRY(__logl_finite)
 	fyl2xp1			// log(x)
 	ret
 END(__logl_finite)
+libm_alias_finite (__logl_finite, __logl)

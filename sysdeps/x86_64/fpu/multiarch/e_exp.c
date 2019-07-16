@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <libm-alias-finite.h>
 
 extern double __redirect_ieee754_exp (double);
 
@@ -25,7 +26,7 @@ extern double __redirect_ieee754_exp (double);
 
 libc_ifunc_redirected (__redirect_ieee754_exp, __ieee754_exp,
 		       IFUNC_SELECTOR ());
-strong_alias (__ieee754_exp, __exp_finite)
+libm_alias_finite (__ieee754_exp, __exp)
 
 #define __exp __ieee754_exp_sse2
 #include <sysdeps/ieee754/dbl-64/e_exp.c>

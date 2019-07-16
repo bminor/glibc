@@ -5,6 +5,7 @@
 
 #include <machine/asm.h>
 #include <i386-math-asm.h>
+#include <libm-alias-finite.h>
 
 RCSID("$NetBSD: e_atan2.S,v 1.4 1995/05/08 23:46:28 jtc Exp $")
 
@@ -27,4 +28,4 @@ ENTRY(__ieee754_atan2)
 	DBL_CHECK_FORCE_UFLOW_NARROW
 	ret
 END (__ieee754_atan2)
-strong_alias (__ieee754_atan2, __atan2_finite)
+libm_alias_finite (__ieee754_atan2, __atan2)

@@ -18,9 +18,6 @@
 
 #include <math.h>
 
-#undef strong_alias
-#define strong_alias(a, b)
-
 #define __ieee754_hypotf __ieee754_hypotf_power7
 
 #include <sysdeps/powerpc/fpu/e_hypotf.c>

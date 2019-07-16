@@ -20,6 +20,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-finite.h>
 
 static const _Float128 one = 1.0, Zero[] = {0.0, -0.0,};
 
@@ -128,4 +129,4 @@ __ieee754_fmodl (_Float128 x, _Float128 y)
 	}
 	return x;		/* exact output */
 }
-strong_alias (__ieee754_fmodl, __fmodl_finite)
+libm_alias_finite (__ieee754_fmodl, __fmodl)

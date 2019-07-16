@@ -21,6 +21,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-finite.h>
 
 static const float one = 1.0, Zero[] = {0.0, -0.0,};
 
@@ -99,4 +100,4 @@ __ieee754_fmodf (float x, float y)
 	}
 	return x;		/* exact output */
 }
-strong_alias (__ieee754_fmodf, __fmodf_finite)
+libm_alias_finite (__ieee754_fmodf, __fmodf)

@@ -18,6 +18,7 @@
 #include <math.h>
 #include <math_private.h>
 #include "mathimpl.h"
+#include <libm-alias-finite.h>
 
 #ifndef SUFF
 #define SUFF
@@ -101,4 +102,4 @@ s(__ieee754_atan2) (float_type y, float_type x)
     }
   return z;
 }
-strong_alias (s(__ieee754_atan2), CONCATX (s (__atan2), _finite))
+libm_alias_finite (s(__ieee754_atan2), s (__atan2))

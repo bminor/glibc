@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <soft-fp.h>
 #include <quad.h>
+#include <libm-alias-finite.h>
 
 long double
 __ieee754_sqrtl (const long double a)
@@ -36,4 +37,4 @@ __ieee754_sqrtl (const long double a)
   FP_HANDLE_EXCEPTIONS;
   return c;
 }
-strong_alias (__ieee754_sqrtl, __sqrtl_finite)
+libm_alias_finite (__ieee754_sqrtl, __sqrtl)

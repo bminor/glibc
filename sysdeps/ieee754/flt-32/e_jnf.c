@@ -20,6 +20,7 @@
 #include <math_private.h>
 #include <fenv_private.h>
 #include <math-underflow.h>
+#include <libm-alias-finite.h>
 
 static const float
 two   =  2.0000000000e+00, /* 0x40000000 */
@@ -181,7 +182,7 @@ __ieee754_jnf(int n, float x)
 	math_check_force_underflow (ret);
     return ret;
 }
-strong_alias (__ieee754_jnf, __jnf_finite)
+libm_alias_finite (__ieee754_jnf, __jnf)
 
 float
 __ieee754_ynf(int n, float x)
@@ -233,4 +234,4 @@ __ieee754_ynf(int n, float x)
 	ret = copysignf (FLT_MAX, ret) * FLT_MAX;
     return ret;
 }
-strong_alias (__ieee754_ynf, __ynf_finite)
+libm_alias_finite (__ieee754_ynf, __ynf)

@@ -32,6 +32,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math-underflow.h>
+#include <libm-alias-finite.h>
 
 static const long double one = 1.0L, huge = 1e300L;
 
@@ -69,4 +70,4 @@ __ieee754_atanhl(long double x)
 	    t = 0.5*__log1pl((x+x)/(one-x));
 	if(hx>=0) return t; else return -t;
 }
-strong_alias (__ieee754_atanhl, __atanhl_finite)
+libm_alias_finite (__ieee754_atanhl, __atanhl)

@@ -67,6 +67,7 @@
 #include <math.h>
 #include <math-barriers.h>
 #include <math_private.h>
+#include <libm-alias-finite.h>
 
 static const _Float128 bp[] = {
   1,
@@ -449,4 +450,4 @@ __ieee754_powl (_Float128 x, _Float128 y)
     }
   return sgn * z;
 }
-strong_alias (__ieee754_powl, __powl_finite)
+libm_alias_finite (__ieee754_powl, __powl)

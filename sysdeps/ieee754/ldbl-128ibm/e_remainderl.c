@@ -23,6 +23,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-finite.h>
 
 static const long double zero = 0.0L;
 
@@ -78,4 +79,4 @@ __ieee754_remainderl(long double x, long double p)
 	  x = -x;
 	return x;
 }
-strong_alias (__ieee754_remainderl, __remainderl_finite)
+libm_alias_finite (__ieee754_remainderl, __remainderl)

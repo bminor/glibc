@@ -18,9 +18,6 @@
 
 #include <math.h>
 
-#undef strong_alias
-#define strong_alias(a, b)
-
 #define __ieee754_hypotf __ieee754_hypotf_ppc32
 
 #include <sysdeps/ieee754/flt-32/e_hypotf.c>
