@@ -25,8 +25,7 @@ include ../Makeconfig
 headers		:= math.h bits/mathcalls.h bits/mathinline.h \
 		   fpu_control.h complex.h bits/cmathcalls.h fenv.h \
 		   bits/fenv.h bits/fenvinline.h bits/mathdef.h tgmath.h \
-		   bits/math-finite.h bits/math-vector.h \
-		   finclude/math-vector-fortran.h \
+		   bits/math-vector.h finclude/math-vector-fortran.h \
 		   bits/libm-simd-decl-stubs.h bits/iscanonical.h \
 		   bits/flt-eval-method.h bits/fp-fast.h bits/fp-logb.h \
 		   bits/long-double.h bits/mathcalls-helper-functions.h \
