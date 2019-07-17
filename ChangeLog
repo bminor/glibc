@@ -1,5 +1,10 @@
 2019-07-18  Mike Crowe  <mac@mcrowe.com>
 
+	* sysdeps/unix/sysv/linux/hppa/pthread.h: Add declarations of
+	functions recently added to sysdeps/nptl/pthread.h:
+	pthread_mutex_clocklock, pthread_rwlock_clockrdlock,
+	pthread_rwlock_clockwrlock and pthread_cond_clockwait.
+
 	* nptl/forward.c: Remove unnecessary __pthread_cond_clockwait and
 	pthread_cond_clockwait forwarding functions.  There are no internal
 	users, so it is unnecessary to expose these functions in libc.so.
