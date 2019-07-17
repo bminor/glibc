@@ -1,3 +1,13 @@
+2019-07-18  Mike Crowe  <mac@mcrowe.com>
+
+	* nptl/forward.c: Remove unnecessary __pthread_cond_clockwait and
+	pthread_cond_clockwait forwarding functions.  There are no internal
+	users, so it is unnecessary to expose these functions in libc.so.
+	* sysdeps/nptl/pthread-functions.h (pthread_functions): Remove
+	unnecessary ptr___pthread_cond_clockwait member.
+	* nptl/nptl-init.c (pthread_functions): Remove assignment of
+	removed member.
+
 2019-07-17  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	[BZ #21897]
