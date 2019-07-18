@@ -1,3 +1,7 @@
+2019-07-18  Carlos O'Donell  <carlos@redhat.com>
+
+	* po/libc.pot: Regenerate.
+
 2019-07-18  Mike Crowe  <mac@mcrowe.com>
 
 	* sysdeps/unix/sysv/linux/hppa/pthread.h: Add declarations of
