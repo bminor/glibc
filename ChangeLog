@@ -1,5 +1,10 @@
 2019-07-18  Florian Weimer  <fweimer@redhat.com>
 
+	* scripts/build-many-glibcs.py (Context.checkout): Default to
+	Linux 5.2.
+
+2019-07-18  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #24532]
 	Linux: Use in-tree copy of SO_ constants for !__USE_MISC.
 	* sysdeps/unix/sysv/linux/Makefile [$(subdir) == socket]
