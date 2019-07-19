@@ -70,6 +70,11 @@ extern const fenv_t *__fe_mask_env (void) attribute_hidden;
 	    __builtin_mtfsf (0xff, d); \
 	} while(0)
 
+/* Set the last 2 nibbles of the FPSCR, which contain the
+   exception enables and the rounding mode.
+   'fegetenv_status' retrieves these bits by reading the FPSCR.  */
+#define fesetenv_mode(env) __builtin_mtfsf (0b00000011, (env));
+
 /* This very handy macro:
    - Sets the rounding mode to 'round to nearest';
    - Sets the processor into IEEE mode; and
@@ -208,8 +213,11 @@ enum {
   (FPSCR_VE_MASK|FPSCR_OE_MASK|FPSCR_UE_MASK|FPSCR_ZE_MASK|FPSCR_XE_MASK)
 #define FPSCR_BASIC_EXCEPTIONS_MASK \
   (FPSCR_VX_MASK|FPSCR_OX_MASK|FPSCR_UX_MASK|FPSCR_ZX_MASK|FPSCR_XX_MASK)
-
+#define FPSCR_FPRF_MASK \
+  (FPSCR_FPRF_C_MASK|FPSCR_FPRF_FL_MASK|FPSCR_FPRF_FG_MASK| \
+   FPSCR_FPRF_FE_MASK|FPSCR_FPRF_FU_MASK)
 #define FPSCR_CONTROL_MASK (FPSCR_ENABLES_MASK|FPSCR_NI_MASK|FPSCR_RN_MASK)
+#define FPSCR_STATUS_MASK (FPSCR_FR_MASK|FPSCR_FI_MASK|FPSCR_FPRF_MASK)
 
 /* The bits in the FENV(1) ABI for exceptions correspond one-to-one with bits
    in the FPSCR, albeit shifted to different but corresponding locations.

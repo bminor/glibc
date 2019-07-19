@@ -19,11 +19,6 @@
 #include <fenv_libc.h>
 #include <fpu_control.h>
 
-#define _FPU_MASK_ALL (_FPU_MASK_ZM | _FPU_MASK_OM | _FPU_MASK_UM	\
-		       | _FPU_MASK_XM | _FPU_MASK_IM)
-
-#define FPU_STATUS 0xbffff700ULL
-
 int
 fesetmode (const femode_t *modep)
 {
@@ -32,18 +27,18 @@ fesetmode (const femode_t *modep)
   /* Logic regarding enabled exceptions as in fesetenv.  */
 
   new.fenv = *modep;
-  old.fenv = fegetenv_register ();
-  new.l = (new.l & ~FPU_STATUS) | (old.l & FPU_STATUS);
+  old.fenv = fegetenv_status ();
+  new.l = (new.l & ~FPSCR_STATUS_MASK) | (old.l & FPSCR_STATUS_MASK);
 
   if (old.l == new.l)
     return 0;
 
-  if ((old.l & _FPU_MASK_ALL) == 0 && (new.l & _FPU_MASK_ALL) != 0)
+  if ((old.l & FPSCR_ENABLES_MASK) == 0 && (new.l & FPSCR_ENABLES_MASK) != 0)
     (void) __fe_nomask_env_priv ();
 
-  if ((old.l & _FPU_MASK_ALL) != 0 && (new.l & _FPU_MASK_ALL) == 0)
+  if ((old.l & FPSCR_ENABLES_MASK) != 0 && (new.l & FPSCR_ENABLES_MASK) == 0)
     (void) __fe_mask_env ();
 
-  fesetenv_register (new.fenv);
+  fesetenv_mode (new.fenv);
   return 0;
 }
