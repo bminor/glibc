@@ -1,3 +1,14 @@
+2019-07-19  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/unix/sysv/linux/syscall-names.list: Add system calls
+	from Linux 5.2.
+	(fsconfig): Add system call name.
+	(fsmount): Likewise.
+	(fsopen): Likewise.
+	(fspick): Likewise.
+	(move_mount): Likewise.
+	(open_tree): Likewise.
+
 2019-07-18  Carlos O'Donell  <carlos@redhat.com>
 
 	* po/libc.pot: Regenerate.

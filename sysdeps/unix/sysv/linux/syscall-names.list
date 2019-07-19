@@ -23,7 +23,7 @@
 # them.
 
 # The list of system calls is current as of Linux 5.1.
-kernel 5.1
+kernel 5.2
 
 FAST_atomic_update
 FAST_cmpxchg
@@ -124,7 +124,11 @@ fork
 fp_udfiex_crtl
 free_hugepages
 fremovexattr
+fsconfig
 fsetxattr
+fsmount
+fsopen
+fspick
 fstat
 fstat64
 fstatat64
@@ -248,6 +252,7 @@ mmap
 mmap2
 modify_ldt
 mount
+move_mount
 move_pages
 mprotect
 mpx
@@ -285,6 +290,7 @@ oldumount
 olduname
 open
 open_by_handle_at
+open_tree
 openat
 osf_adjtime
 osf_afs_syscall
