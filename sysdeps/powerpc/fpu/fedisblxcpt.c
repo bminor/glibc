@@ -26,23 +26,25 @@ fedisableexcept (int excepts)
   int result, new;
 
   /* Get current exception mask to return.  */
-  fe.fenv = curr.fenv = fegetenv_register ();
+  fe.fenv = curr.fenv = fegetenv_status ();
   result = fenv_reg_to_exceptions (fe.l);
 
   if ((excepts & FE_ALL_INVALID) == FE_ALL_INVALID)
     excepts = (excepts | FE_INVALID) & ~ FE_ALL_INVALID;
 
+  new = fenv_exceptions_to_reg (excepts);
+
+  if (fenv_reg_to_exceptions (new) != excepts)
+    return -1;
+
   /* Sets the new exception mask.  */
-  fe.l &= ~ fenv_exceptions_to_reg (excepts);
+  fe.l &= ~new;
 
   if (fe.l != curr.l)
-    fesetenv_register (fe.fenv);
+    fesetenv_mode (fe.fenv);
 
-  new = __fegetexcept ();
   if (new == 0 && result != 0)
     (void)__fe_mask_env ();
 
-  if ((new & excepts) != 0)
-    result = -1;
   return result;
 }
