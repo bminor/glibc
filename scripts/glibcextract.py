@@ -59,7 +59,12 @@ def compute_c_consts(sym_data, cc):
         # Compilation has to be from stdin to avoid the temporary file
         # name being written into the generated dependencies.
         cmd = ('%s -S -o %s -x c - < %s' % (cc, s_file_name, c_file_name))
-        subprocess.check_call(cmd, shell=True)
+        try:
+            subprocess.check_call(cmd, shell=True)
+        except:
+            print("Source code failed to compile:")
+            print(out_text)
+            raise
         consts = {}
         with open(s_file_name, 'r') as s_file:
             for line in s_file:
