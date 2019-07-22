@@ -352,6 +352,7 @@ struct ucred
 #ifdef __USE_MISC
 # include <bits/types/time_t.h>
 # include <asm/socket.h>
+# include <linux/sockios.h>
 #else
 # define SO_DEBUG 1
 # include <bits/socket-constants.h>
