@@ -395,7 +395,8 @@ ifeq ($(run-built-tests),yes)
 	    $(test-wrapper) cp $$dso $(objpfx)testroot.pristine$$dso ;\
 	  done
 endif
-	$(MAKE) install DESTDIR=$(objpfx)testroot.pristine
+	$(MAKE) install DESTDIR=$(objpfx)testroot.pristine \
+	  subdirs='$(all-subdirs)'
 	touch $(objpfx)testroot.pristine/install.stamp
 
 tests-special-notdir = $(patsubst $(objpfx)%, %, $(tests-special))
