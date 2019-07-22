@@ -1,5 +1,11 @@
 2019-07-22  Florian Weimer  <fweimer@redhat.com>
 
+	* nptl/tst-pthread-getattr.c (allocate_and_test): Change return
+	type to uintptr_t.
+	(check_stack_top): Adjust.
+
+2019-07-22  Florian Weimer  <fweimer@redhat.com>
+
 	* sysdeps/unix/sysv/linux/bits/socket.h [__USE_MISC]: Include
 	<linux/sockios.h>.
 
