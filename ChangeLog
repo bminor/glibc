@@ -1,5 +1,9 @@
 2019-07-23  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
 
+	[BZ #24794]
+	* Makefile (testroot.pristine/install.stamp): Pass
+	subdirs='$(all-subdirs)' to make install.
+
 	* Makefile (testroot.pristine/install.stamp): Execute ld.so with
 	the same arguments used in all tests.
 
