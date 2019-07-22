@@ -1,3 +1,7 @@
+2019-07-22  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* NEWS: Mention the AArch64 IFUNC resolver ABI change.
+
 2019-07-20  Egor Kobylkin  <egor@kobylkin.com>
 
 	[BZ #2872]

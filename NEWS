@@ -49,6 +49,10 @@ Major new features:
   time of the wait (unlike with pthread_condattr_setclock, which requires
   the clock choice at initialization time).
 
+* On AArch64 the GNU IFUNC resolver call ABI changed: old resolvers still
+  work, new resolvers can use a second argument which can be extended in
+  the future, currently it contains the AT_HWCAP2 value.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The copy_file_range function fails with ENOSYS if the kernel does not
