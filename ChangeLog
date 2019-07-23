@@ -1,5 +1,15 @@
 2019-08-29  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/microblaze/preconfigure.ac: New file.
+	* sysdeps/microblaze/preconfigure: Regenerate.
+	* sysdeps/microblaze/be/implies: New file.
+	* sysdeps/microblaze/le/implies: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/be/implies: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/le/implies: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/*.abilist. Move to
+	sysdeps/unix/sysv/linux/microblaze/be/*.abilist.
+	* sysdeps/unix/sysv/linux/microblaze/le/*.abilist: New files.
+
 	* sysdeps/arm/preconfigure.ac: Set machine based on endianness.
 	* sysdeps/arm/preconfigure: Regenerate.
 	* sysdeps/arm/be/Implies: New file.
