@@ -1,3 +1,18 @@
+2019-08-29  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/arm/preconfigure.ac: Set machine based on endianness.
+	* sysdeps/arm/preconfigure: Regenerate.
+	* sysdeps/arm/be/Implies: New file.
+	* sysdeps/arm/be/armv6/Implies: Likewise.
+	* sysdeps/arm/be/armv6t2/Implies: Likewise.
+	* sysdeps/arm/be/armv7/Implies: Likewise.
+	* sysdeps/arm/le/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/arm/be/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/arm/le/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/arm/*.abilist: Move to
+	sysdeps/unix/sysv/linux/arm/le/*.abilist.
+	* sysdeps/unix/sysv/linux/arm/be/l*.abilist: New files.
+
 2019-08-27  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Fix posix/tst-regex by using UTF-8 and own test input

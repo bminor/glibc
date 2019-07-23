@@ -46,6 +46,11 @@ arm*)
     ;;
   esac
 
-  machine=arm/$machine
+  AC_EGREP_CPP(yes,[#if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+                     yes
+                    #endif
+                   ], endianness=le, endianness=be)
+
+  machine=arm/$endianness/$machine
   with_fp_cond="!defined __SOFTFP__"
 esac
