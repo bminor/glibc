@@ -1,5 +1,17 @@
 2019-08-29  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/sh/preconfigure.ac: New file.
+	* sysdeps/sh/preconfigure: Regenerate.
+	* sysdeps/sh/be/sh3/Implies: New file.
+	* sysdeps/sh/be/sh4/Implies: Likewise.
+	* sysdeps/sh/le/sh3/Implies: Likewise.
+	* sysdeps/sh/le/sh4/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/sh/le/sh3/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/sh/le/sh4/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/sh/*.abilist: Move to
+	sysdeps/unix/sysv/linux/sh/le/*.abilist.
+	* sysdeps/unix/sysv/linux/sh/be/*.abilist: New files.
+
 	* sysdeps/microblaze/preconfigure.ac: New file.
 	* sysdeps/microblaze/preconfigure: Regenerate.
 	* sysdeps/microblaze/be/implies: New file.
