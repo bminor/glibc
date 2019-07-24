@@ -25,6 +25,15 @@ if test $libc_cv_cc_avx512 = yes; then
 fi
 LIBC_CONFIG_VAR([config-cflags-avx512], [$libc_cv_cc_avx512])
 
+dnl Check if -mprefer-vector-width=128 works.
+AC_CACHE_CHECK(-mprefer-vector-width=128, libc_cv_cc_mprefer_vector_width, [dnl
+LIBC_TRY_CC_OPTION([-mprefer-vector-width=128],
+		   [libc_cv_cc_mprefer_vector_width=yes],
+		   [libc_cv_cc_mprefer_vector_width=no])
+])
+LIBC_CONFIG_VAR([config-cflags-mprefer-vector-width],
+		[$libc_cv_cc_mprefer_vector_width])
+
 dnl Check whether asm supports Intel MPX
 AC_CACHE_CHECK(for Intel MPX support, libc_cv_asm_mpx, [dnl
 cat > conftest.s <<\EOF

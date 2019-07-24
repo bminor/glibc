@@ -237,3 +237,15 @@ CFLAGS-test-float-libmvec-sincosf-avx512.c = -DREQUIRE_AVX512F
 CFLAGS-test-float-libmvec-sincosf-avx512-main.c = $(libmvec-sincos-cflags) $(float-vlen16-arch-ext-cflags)
 endif
 endif
+
+ifeq ($(subdir)$(config-cflags-mprefer-vector-width),mathyes)
+# When compiled with -O3 -march=skylake, GCC 8 and 9 optimize some loops
+# in branred.c with 256-bit vector instructions, which leads to store
+# forward stall:
+#
+# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=90579
+#
+# Limit vector width to 128 bits to work around this issue.  It improves
+# performance of sin and cos by more than 40% on Skylake.
+CFLAGS-branred.c = -mprefer-vector-width=128
+endif
