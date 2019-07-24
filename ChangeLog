@@ -1,3 +1,10 @@
+2019-10-09  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/mips/mips64/getdents64.c (__getdents64):
+	Add small optimization for older kernel to avoid issuing
+	__NR_getdents64 on each call and replace scratch_buffer usage with
+	a static allocated buffer.
+
 2019-10-09  Florian Weimer  <fweimer@redhat.com>
 
 	* config.h.in (HAVE_GCC_GOTDATA): Remove.

@@ -22,98 +22,120 @@
 #include <assert.h>
 #include <sys/param.h>
 #include <unistd.h>
-#include <scratch_buffer.h>
 #include <limits.h>
 
-ssize_t
-__getdents64 (int fd, void *buf0, size_t nbytes)
-{
-  char *buf = buf0;
+#include <include/libc-pointer-arith.h>
 
+ssize_t
+__getdents64 (int fd, void *buf, size_t nbytes)
+{
   /* The system call takes an unsigned int argument, and some length
      checks in the kernel use an int type.  */
   if (nbytes > INT_MAX)
     nbytes = INT_MAX;
 
 #ifdef __NR_getdents64
-  ssize_t ret = INLINE_SYSCALL_CALL (getdents64, fd, buf, nbytes);
-  if (ret != -1)
-    return ret;
+  static int getdents64_supported = true;
+  if (atomic_load_relaxed (&getdents64_supported))
+    {
+      ssize_t ret = INLINE_SYSCALL_CALL (getdents64, fd, buf, nbytes);
+      if (ret >= 0 || errno != ENOSYS)
+	return ret;
+
+      atomic_store_relaxed (&getdents64_supported, false);
+    }
 #endif
 
   /* Unfortunately getdents64 was only wire-up for MIPS n64 on Linux 3.10.
-     If syscall is not available it need to fallback to non-LFS one.  */
+     If the syscall is not available it need to fallback to the non-LFS one.
+     Also to avoid an unbounded allocation through VLA/alloca or malloc (which
+     would make the syscall non async-signal-safe) it uses a limited buffer.
+     This is sub-optimal for large NBYTES, however this is a fallback
+     mechanism to emulate a syscall that kernel should provide.   */
 
   struct kernel_dirent
-    {
-      unsigned long d_ino;
-      unsigned long d_off;
-      unsigned short int d_reclen;
-      char d_name[256];
-    };
+  {
+#if _MIPS_SIM == _ABI64
+    uint64_t d_ino;
+    uint64_t d_off;
+#else
+    uint32_t d_ino;
+    uint32_t d_off;
+#endif
+    unsigned short int d_reclen;
+    char d_name[1];
+  };
+
+  /* The largest possible practical length of the d_name member are 255
+     Unicode characters in UTF-8 encoding, so d_name is 766 bytes long, plus
+     18 (mips64) / 10 (mips64n32) bytes from header, for total of 784 (mips64)
+     / 776 (mips64n32) bytes total.  Ensure that the minimum size holds at
+     least one entry.  */
+  enum { KBUF_SIZE = 1024 };
+  char kbuf[KBUF_SIZE];
+  size_t kbuf_size = nbytes < KBUF_SIZE ? nbytes : KBUF_SIZE;
 
   const size_t size_diff = (offsetof (struct dirent64, d_name)
 			   - offsetof (struct kernel_dirent, d_name));
 
-  size_t red_nbytes = MIN (nbytes
-			   - ((nbytes / (offsetof (struct dirent64, d_name)
-					 + 14)) * size_diff),
-			   nbytes - size_diff);
+  struct dirent64 *dp = (struct dirent64 *) buf;
 
-  struct scratch_buffer tmpbuf;
-  scratch_buffer_init (&tmpbuf);
-  if (!scratch_buffer_set_array_size (&tmpbuf, red_nbytes, sizeof (uint8_t)))
-    INLINE_SYSCALL_ERROR_RETURN_VALUE (ENOMEM);
+  size_t nb = 0;
+  off64_t last_offset = -1;
+
+  ssize_t r = INLINE_SYSCALL_CALL (getdents, fd, kbuf, kbuf_size);
+  if (r <= 0)
+    return r;
 
   struct kernel_dirent *skdp, *kdp;
-  skdp = kdp = tmpbuf.data;
+  skdp = kdp = (struct kernel_dirent *) kbuf;
 
-  ssize_t retval = INLINE_SYSCALL_CALL (getdents, fd, kdp, red_nbytes);
-  if (retval == -1)
+  while ((char *) kdp < (char *) skdp + r)
     {
-      scratch_buffer_free (&tmpbuf);
-      return -1;
-    }
+      /* This macro is used to avoid aliasing violation.  */
+#define KDP_MEMBER(src, member)			     			\
+    (__typeof__((struct kernel_dirent){0}.member) *)			\
+      memcpy (&((__typeof__((struct kernel_dirent){0}.member)){0}),	\
+	      ((char *)(src) + offsetof (struct kernel_dirent, member)),\
+	      sizeof ((struct kernel_dirent){0}.member))
 
-  off64_t last_offset = -1;
-  struct dirent64 *dp = (struct dirent64 *) buf;
-  while ((char *) kdp < (char *) skdp + retval)
-    {
-      const size_t alignment = _Alignof (struct dirent64);
-      /* Since kdp->d_reclen is already aligned for the kernel structure
-	 this may compute a value that is bigger than necessary.  */
-      size_t new_reclen = ((kdp->d_reclen + size_diff + alignment - 1)
-			   & ~(alignment - 1));
-      if ((char *) dp + new_reclen > buf + nbytes)
-        {
-	  /* Our heuristic failed.  We read too many entries.  Reset
-	     the stream.  */
-	  assert (last_offset != -1);
-	  __lseek64 (fd, last_offset, SEEK_SET);
-
-	  if ((char *) dp == buf)
+      /* This is a conservative approximation, since some of size_diff might
+	 fit into the existing padding for alignment.  */
+      unsigned short int k_reclen = *KDP_MEMBER (kdp, d_reclen);
+      unsigned short int new_reclen = ALIGN_UP (k_reclen + size_diff,
+						_Alignof (struct dirent64));
+      if (nb + new_reclen > nbytes)
+	{
+	  /* Entry is too large for the fixed-size buffer.  */
+	  if (last_offset == -1)
 	    {
-	      scratch_buffer_free (&tmpbuf);
-	      return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
+	      __set_errno (EINVAL);
+	      return -1;
 	    }
 
-	  break;
+	  /* The new entry will overflow the input buffer, rewind to last
+	     obtained entry and return.  */
+	  __lseek64 (fd, last_offset, SEEK_SET);
+	  return (char *) dp - (char *) buf;
 	}
+      nb += new_reclen;
 
-      last_offset = kdp->d_off;
-      dp->d_ino = kdp->d_ino;
-      dp->d_off = kdp->d_off;
-      dp->d_reclen = new_reclen;
-      dp->d_type = *((char *) kdp + kdp->d_reclen - 1);
+      memcpy (((char *) dp + offsetof (struct dirent64, d_ino)),
+	      KDP_MEMBER (kdp, d_ino), sizeof ((struct dirent64){0}.d_ino));
+      memcpy (((char *) dp + offsetof (struct dirent64, d_off)),
+	      KDP_MEMBER (kdp, d_off), sizeof ((struct dirent64){0}.d_off));
+      last_offset = *KDP_MEMBER (kdp, d_off);
+      memcpy (((char *) dp + offsetof (struct dirent64, d_reclen)),
+	      &new_reclen, sizeof (new_reclen));
+      dp->d_type = *((char *) kdp + k_reclen - 1);
       memcpy (dp->d_name, kdp->d_name,
-	      kdp->d_reclen - offsetof (struct kernel_dirent, d_name));
+	      k_reclen - offsetof (struct kernel_dirent, d_name));
 
       dp = (struct dirent64 *) ((char *) dp + new_reclen);
-      kdp = (struct kernel_dirent *) (((char *) kdp) + kdp->d_reclen);
+      kdp = (struct kernel_dirent *) (((char *) kdp) + k_reclen);
     }
 
-  scratch_buffer_free (&tmpbuf);
-  return (char *) dp - buf;
+  return (char *) dp - (char *) buf;
 }
 libc_hidden_def (__getdents64)
 weak_alias (__getdents64, getdents64)
