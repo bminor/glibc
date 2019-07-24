@@ -142,11 +142,21 @@ endif
 ifeq ($(subdir),socket)
 sysdep_headers += net/if_ppp.h net/ppp-comp.h \
 		  net/ppp_defs.h net/if_arp.h net/route.h net/ethernet.h \
-		  net/if_slip.h net/if_packet.h net/if_shaper.h
+		  net/if_slip.h net/if_packet.h net/if_shaper.h \
+		  bits/socket-constants.h
 sysdep_routines += cmsg_nxthdr
 CFLAGS-recvmmsg.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sendmmsg.c = -fexceptions -fasynchronous-unwind-tables
-endif
+
+tests-special += $(objpfx)tst-socket-consts.out
+$(objpfx)tst-socket-consts.out: ../sysdeps/unix/sysv/linux/tst-socket-consts.py
+	PYTHONPATH=../scripts \
+	$(PYTHON) ../sysdeps/unix/sysv/linux/tst-socket-consts.py \
+		   --cc="$(CC) $(patsubst -DMODULE_NAME=%, \
+					  -DMODULE_NAME=testsuite, \
+					  $(CPPFLAGS)) -D_ISOMAC" \
+	< /dev/null > $@ 2>&1; $(evaluate-test)
+endif # $(subdir) == socket
 
 ifeq ($(subdir),sunrpc)
 sysdep_headers += nfs/nfs.h
