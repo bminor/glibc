@@ -1,3 +1,25 @@
+2019-07-24  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24532]
+	Linux: Use in-tree copy of SO_ constants for !__USE_MISC.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir) == socket]
+	(sysdep_headers): Add bits/socket-constants.h.
+	(tests-special): Add tst-socket-consts.out.
+	(tst-socket-consts.out): New target.
+	* sysdeps/unix/sysv/linux/bits/socket.h: Remove macro tracking
+	around <asm/unistd.h>.
+	[__USE_MISC]: Include <bits/types/time_t.h> before <asm/socket.h>.
+	[!__USE_MISC]: Include <sys/socket-constants.h> instead of
+	<asm/socket.h>.
+	* sysdeps/unix/sysv/linux/bits/tst-socket-consts.py: New file.
+	* sysdeps/unix/sysv/linux/bits/socket-constants.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/socket-constants.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/bits/socket-constants.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/socket-constants.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/socket-constants.h:
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/socket-constants.h: Likewise.
+
 2019-07-23  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
 
 	[BZ #24794]
