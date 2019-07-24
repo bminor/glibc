@@ -1,3 +1,11 @@
+2019-07-29  DJ Delorie  <dj@redhat.com>
+	    Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
+
+	[BZ #24794]
+	* Makeconfig (all-subdirs): Improved source comments.
+	* Makefile (testroot.pristine/install.stamp): Pass
+	subdirs='$(sorted-subdirs)' to make install.
+
 2019-07-25  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #24677]

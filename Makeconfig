@@ -1267,9 +1267,9 @@ else
 libsupport = $(common-objpfx)support/libsupport.a
 endif
 
-# These are the subdirectories containing the library source.  The order
-# is more or less arbitrary.  The sorting step will take care of the
-# dependencies.
+# This is a partial list of subdirectories containing the library source.
+# The order is more or less arbitrary.  The sorting step will take care of the
+# dependencies and generate sorted-subdirs dynamically.
 all-subdirs = csu assert ctype locale intl catgets math setjmp signal	    \
 	      stdlib stdio-common libio malloc string wcsmbs time dirent    \
 	      grp pwd posix io termios resource misc socket sysvipc gmon    \
