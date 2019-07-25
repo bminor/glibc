@@ -186,7 +186,6 @@ __gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
 {
   int len;
   char *XXXXXX;
-  uint64_t value;
   unsigned int count;
   int fd = -1;
   int save_errno = errno;
@@ -218,13 +217,13 @@ __gen_tempname (char *tmpl, int suffixlen, int flags, int kind)
   /* This is where the Xs start.  */
   XXXXXX = &tmpl[len - 6 - suffixlen];
 
-  /* Get some more or less random data.  */
-  RANDOM_BITS (value);
-  value ^= (uint64_t)__getpid () << 32;
-
-  for (count = 0; count < attempts; value += 7777, ++count)
+  uint64_t pid = (uint64_t) __getpid () << 32;
+  for (count = 0; count < attempts; ++count)
     {
-      uint64_t v = value;
+      uint64_t v;
+      /* Get some more or less random data.  */
+      RANDOM_BITS (v);
+      v ^= pid;
 
       /* Fill in the random bits.  */
       XXXXXX[0] = letters[v % 62];
