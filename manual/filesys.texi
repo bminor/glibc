@@ -843,7 +843,7 @@ Directory data is obtained from a file descriptor, as created by the
 @xref{Opening and Closing Files}.
 
 @deftypefun ssize_t getdents64 (int @var{fd}, void *@var{buffer}, size_t @var{length})
-@standards{Linux, unistd.h}
+@standards{Linux, dirent.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{getdents64} function reads at most @var{length} bytes of
 directory entry data from the file descriptor @var{fd} and stores it
