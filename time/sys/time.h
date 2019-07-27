@@ -51,8 +51,8 @@ __BEGIN_DECLS
    This is obsolete and should never be used.  */
 struct timezone
   {
-    int tz_minuteswest;		/* Minutes west of GMT.  */
-    int tz_dsttime;		/* Nonzero if DST is ever in effect.  */
+    /* Formerly: int tz_minuteswest; int tz_dsttime;  */
+    char __preserve_historic_size [2 * sizeof (int)];
   };
 
 typedef struct timezone *__restrict __timezone_ptr_t;

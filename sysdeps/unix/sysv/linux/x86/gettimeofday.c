@@ -26,7 +26,9 @@
 static int
 __gettimeofday_syscall (struct timeval *tv, struct timezone *tz)
 {
-  return INLINE_SYSCALL (gettimeofday, 2, tv, tz);
+  if (tz)
+    memset (tz, 0, sizeof (struct timezone));
+  return INLINE_SYSCALL (gettimeofday, 2, tv, (void *)0);
 }
 
 # ifndef __gettimeofday_type
@@ -52,7 +54,9 @@ libc_hidden_def (__gettimeofday)
 int
 __gettimeofday (struct timeval *tv, struct timezone *tz)
 {
-  return INLINE_SYSCALL (gettimeofday, 2, tv, tz);
+  if (tz)
+    memset (tz, 0, sizeof (struct timezone));
+  return INLINE_SYSCALL (gettimeofday, 2, tv, (void *)0);
 }
 libc_hidden_def (__gettimeofday)
 

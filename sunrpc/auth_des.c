@@ -252,7 +252,7 @@ authdes_marshal (AUTH *auth, XDR *xdrs)
    * Figure out the "time", accounting for any time difference
    * with the server if necessary.
    */
-  __gettimeofday (&tval, (struct timezone *) NULL);
+  __gettimeofday (&tval, 0);
   ad->ad_timestamp.tv_sec = tval.tv_sec + ad->ad_timediff.tv_sec;
   ad->ad_timestamp.tv_usec = tval.tv_usec + ad->ad_timediff.tv_usec;
   if (ad->ad_timestamp.tv_usec >= MILLION)
@@ -453,7 +453,7 @@ synchronize (struct sockaddr *syncaddr, struct rpc_timeval *timep)
   if (rtime ((struct sockaddr_in *) syncaddr, timep, &timeout) < 0)
     return FALSE;
 
-  __gettimeofday (&mytime, (struct timezone *) NULL);
+  __gettimeofday (&mytime, 0);
   timep->tv_sec -= mytime.tv_sec;
   if (mytime.tv_usec > timep->tv_usec)
     {

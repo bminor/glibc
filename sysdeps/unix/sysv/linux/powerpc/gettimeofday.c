@@ -22,6 +22,7 @@
 #endif
 
 #include <sys/time.h>
+#include <string.h>
 
 #ifdef SHARED
 
@@ -35,7 +36,9 @@
 int
 __gettimeofday_vsyscall (struct timeval *tv, struct timezone *tz)
 {
-  return INLINE_VSYSCALL (gettimeofday, 2, tv, tz);
+  if (tz)
+    memset (tz, 0, sizeof (struct timezone));
+  return INLINE_VSYSCALL (gettimeofday, 2, tv, (void *)0);
 }
 
 /* __GI___gettimeofday is defined as hidden and for ppc32 it enables the
@@ -54,7 +57,9 @@ __gettimeofday_vsyscall (struct timeval *tv, struct timezone *tz)
 static int
 __gettimeofday_syscall (struct timeval *tv, struct timezone *tz)
 {
-  return INLINE_SYSCALL (gettimeofday, 2, tv, tz);
+  if (tz)
+    memset (tz, 0, sizeof (struct timezone));
+  return INLINE_SYSCALL (gettimeofday, 2, tv, (void *)0);
 }
 
 # define INIT_ARCH()						\
@@ -76,7 +81,9 @@ libc_hidden_def (__gettimeofday)
 int
 __gettimeofday (struct timeval *tv, struct timezone *tz)
 {
-  return INLINE_SYSCALL (gettimeofday, 2, tv, tz);
+  if (tz)
+    memset (tz, 0, sizeof (struct timezone));
+  return INLINE_SYSCALL (gettimeofday, 2, tv, (void *)0);
 }
 libc_hidden_def (__gettimeofday)
 

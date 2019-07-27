@@ -35,7 +35,9 @@
 static int
 __gettimeofday_vsyscall (struct timeval *tv, struct timezone *tz)
 {
-  return INLINE_VSYSCALL (gettimeofday, 2, tv, tz);
+  if (tz)
+    memset (tz, 0, sizeof (struct timezone));
+  return INLINE_VSYSCALL (gettimeofday, 2, tv, (void *)0);
 }
 
 /* PREPARE_VERSION_KNOWN will need an __LP64__ ifdef when ILP32 support
@@ -61,7 +63,9 @@ __hidden_ver1 (__gettimeofday_vsyscall, __GI___gettimeofday,
 int
 __gettimeofday (struct timeval *tv, struct timezone *tz)
 {
-  return INLINE_SYSCALL (gettimeofday, 2, tv, tz);
+  if (tz)
+    memset (tz, 0, sizeof (struct timezone));
+  return INLINE_SYSCALL (gettimeofday, 2, tv, (void *)0);
 }
 libc_hidden_def (__gettimeofday)
 

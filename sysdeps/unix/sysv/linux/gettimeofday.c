@@ -18,6 +18,7 @@
 
 #include <errno.h>
 #include <sys/time.h>
+#include <string.h>
 
 #undef __gettimeofday
 
@@ -32,7 +33,9 @@
 int
 __gettimeofday (struct timeval *tv, struct timezone *tz)
 {
-  return INLINE_VSYSCALL (gettimeofday, 2, tv, tz);
+  if (tz)
+    memset (tz, 0, sizeof (struct timezone));
+  return INLINE_VSYSCALL (gettimeofday, 2, tv, (void *)0);
 }
 libc_hidden_def (__gettimeofday)
 weak_alias (__gettimeofday, gettimeofday)

@@ -31,34 +31,11 @@ __gettimeofday (struct timeval *tv, struct timezone *tz)
       return -1;
     }
 
-  tv->tv_sec = (long int) time ((time_t *) NULL);
-  tv->tv_usec = 0L;
+  if (tz)
+    memset (tz, 0, sizeof (struct timezone));
 
-  if (tz != NULL)
-    {
-      const time_t timer = tv->tv_sec;
-      struct tm tm;
-      const struct tm *tmp;
-
-      const long int save_timezone = __timezone;
-      const long int save_daylight = __daylight;
-      char *save_tzname[2];
-      save_tzname[0] = __tzname[0];
-      save_tzname[1] = __tzname[1];
-
-      tmp = localtime_r (&timer, &tm);
-
-      tz->tz_minuteswest = __timezone / 60;
-      tz->tz_dsttime = __daylight;
-
-      __timezone = save_timezone;
-      __daylight = save_daylight;
-      __tzname[0] = save_tzname[0];
-      __tzname[1] = save_tzname[1];
-
-      if (tmp == NULL)
-	return -1;
-    }
+  tv->tv_usec = 0;
+  tv->tv_sec = time (0);
 
   return 0;
 }

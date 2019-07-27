@@ -122,7 +122,7 @@ no_memory:
   /*
    * fill in param struct from the given params
    */
-  (void) __gettimeofday (&now, (struct timezone *) 0);
+  (void) __gettimeofday (&now, 0);
   aup.aup_time = now.tv_sec;
   aup.aup_machname = machname;
   aup.aup_uid = uid;
@@ -297,7 +297,7 @@ authunix_refresh (AUTH *auth)
     goto done;
 
   /* update the time and serialize in place */
-  (void) __gettimeofday (&now, (struct timezone *) 0);
+  (void) __gettimeofday (&now, 0);
   aup.aup_time = now.tv_sec;
   xdrs.x_op = XDR_ENCODE;
   XDR_SETPOS (&xdrs, 0);

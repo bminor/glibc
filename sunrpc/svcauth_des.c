@@ -295,7 +295,7 @@ _svcauth_des (register struct svc_req *rqst, register struct rpc_msg *msg)
 	debug ("timestamp before last seen");
 	return AUTH_REJECTEDVERF;	/* replay */
       }
-    __gettimeofday (&current, (struct timezone *) NULL);
+    __gettimeofday (&current, 0);
     current.tv_sec -= window;	/* allow for expiration */
     if (!BEFORE (&current, &timestamp))
       {

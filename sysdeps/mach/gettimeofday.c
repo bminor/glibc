@@ -28,8 +28,8 @@ __gettimeofday (struct timeval *tv, struct timezone *tz)
 {
   kern_return_t err;
 
-  if (tz != NULL)
-    *tz = (struct timezone){0, 0}; /* XXX */
+  if (tz)
+    memset (tz, 0, sizeof (struct timezone));
 
   if (err = __host_get_time (__mach_host_self (), (time_value_t *) tv))
     {

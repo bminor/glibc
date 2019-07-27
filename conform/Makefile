@@ -241,3 +241,10 @@ test-xfail-XPG42/ndbm.h/linknamespace = yes
 test-xfail-UNIX98/ndbm.h/linknamespace = yes
 test-xfail-XOPEN2K/ndbm.h/linknamespace = yes
 test-xfail-XOPEN2K8/ndbm.h/linknamespace = yes
+
+# Willful violation of older POSIX standards regarding the contents
+# of struct timeb: the 'timezone' and 'dstflag' fields have been
+# removed, intentionally, to flush out old programs that still use them.
+test-xfail-UNIX98/sys/timeb.h/conform = yes
+test-xfail-XOPEN2K/sys/timeb.h/conform = yes
+test-xfail-XPG42/sys/timeb.h/conform = yes

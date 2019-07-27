@@ -56,7 +56,7 @@ time_syscall (time_t *t)
   struct timeval tv;
   time_t result;
 
-  if (INLINE_VSYSCALL (gettimeofday, 2, &tv, NULL) < 0)
+  if (INLINE_VSYSCALL (gettimeofday, 2, &tv, (void *)0) < 0)
     result = (time_t) -1;
   else
     result = (time_t) tv.tv_sec;

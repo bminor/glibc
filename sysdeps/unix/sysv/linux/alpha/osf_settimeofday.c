@@ -1,4 +1,5 @@
-/* Copyright (C) 1992-2019 Free Software Foundation, Inc.
+/* settimeofday -- Set the current time of day.  Linux/Alpha/tv32 version.
+   Copyright (C) 2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,24 +17,35 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
-#include <stddef.h>		/* For NULL.  */
 #include <sys/time.h>
-#include <time.h>
+#include <sysdep.h>
+#include <shlib-compat.h>
 
-/* Set the system clock to *WHEN.  */
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 
-int
-stime (const time_t *when)
+struct timeval32
 {
-  struct timeval tv;
+    int tv_sec, tv_usec;
+};
 
-  if (when == NULL)
+/* Set the current time of day and timezone information.
+   This call is restricted to the super-user.  */
+int
+attribute_compat_text_section
+__settimeofday_tv32 (const struct timeval32 *tv32,
+                     const struct timezone *tz)
+{
+  if (tz)
     {
-      __set_errno (EINVAL);
+      __set_errno (ENOSYS);
       return -1;
     }
 
-  tv.tv_sec = *when;
-  tv.tv_usec = 0;
-  return __settimeofday (&tv, 0);
+  struct timeval tv64;
+  tv64.tv_sec = tv32.tv_sec;
+  tv64.tv_usec = tv32.tv_usec;
+  return INLINE_SYSCALL_CALL (settimeofday, tv, (void *)0);
 }
+
+compat_symbol (libc, __settimeofday_tv32, settimeofday, GLIBC_2_0);
+#endif

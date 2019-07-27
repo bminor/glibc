@@ -461,46 +461,38 @@ declared in @file{sys/time.h}.
 
 @deftp {Data Type} {struct timezone}
 @standards{BSD, sys/time.h}
-The @code{struct timezone} structure is used to hold minimal information
-about the local time zone.  It has the following members:
+The @w{@code{struct timezone}} type is obsolete and should never be
+used.  @gnusystems{} do not support using @w{@code{struct timezone}}
+to represent time zone information, because it cannot represent the
+full complexity of real-world time zones.  Instead, use the facilities
+described in @ref{Time Zone Functions}.
 
-@table @code
-@item int tz_minuteswest
-This is the number of minutes west of UTC.
-
-@item int tz_dsttime
-If nonzero, Daylight Saving Time applies during some part of the year.
-@end table
-
-The @code{struct timezone} type is obsolete and should never be used.
-Instead, use the facilities described in @ref{Time Zone Functions}.
+For backward compatibility, some functions take arguments of type
+@w{@code{struct timezone *}}.  New programs should invariably pass
+a null pointer for any such argument.
 @end deftp
 
 @deftypefun int gettimeofday (struct timeval *@var{tp}, struct timezone *@var{tzp})
 @standards{BSD, sys/time.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-@c On most GNU/Linux systems this is a direct syscall, but the posix/
-@c implementation (not used on GNU/Linux or GNU/Hurd) relies on time and
-@c localtime_r, saving and restoring tzname in an unsafe manner.
 @c On some GNU/Linux variants, ifunc resolvers are used in shared libc
 @c for vdso resolution.  ifunc-vdso-revisit.
 The @code{gettimeofday} function returns the current calendar time as
 the elapsed time since the epoch in the @code{struct timeval} structure
 indicated by @var{tp}.  (@pxref{Elapsed Time} for a description of
-@code{struct timeval}).  Information about the time zone is returned in
-the structure pointed to by @var{tzp}.  If the @var{tzp} argument is a null
-pointer, time zone information is ignored.
+@code{struct timeval}).
+
+The @var{tzp} argument should always be a null pointer.  If it is not
+a null pointer, a crude representation of the time zone may be written
+to the object it points to, or meaningless values may be written there
+instead, or the call may fail.
 
 The return value is @code{0} on success and @code{-1} on failure.  The
 following @code{errno} error condition is defined for this function:
 
 @table @code
 @item ENOSYS
-The operating system does not support getting time zone information, and
-@var{tzp} is not a null pointer.  @gnusystems{} do not
-support using @w{@code{struct timezone}} to represent time zone
-information; that is an obsolete feature of 4.3 BSD.
-Instead, use the facilities described in @ref{Time Zone Functions}.
+@var{tzp} is not a null pointer.
 @end table
 @end deftypefun
 
@@ -510,28 +502,27 @@ Instead, use the facilities described in @ref{Time Zone Functions}.
 @c On HURD, it calls host_set_time with a privileged port.  On other
 @c unix systems, it's a syscall.
 The @code{settimeofday} function sets the current calendar time in the
-system clock according to the arguments.  As for @code{gettimeofday},
-the calendar time is represented as the elapsed time since the epoch.
-As for @code{gettimeofday}, time zone information is ignored if
-@var{tzp} is a null pointer.
+system clock according to its arguments.  You must be a privileged
+user in order to use @code{settimeofday}.
 
-You must be a privileged user in order to use @code{settimeofday}.
-
-Some kernels automatically set the system clock from some source such as
-a hardware clock when they start up.  Others, including Linux, place the
-system clock in an ``invalid'' state (in which attempts to read the clock
-fail).  A call of @code{stime} removes the system clock from an invalid
-state, and system startup scripts typically run a program that calls
-@code{stime}.
+Some operating systems automatically set the system clock from some
+source such as a hardware clock when they start up.  Others place the
+system clock in an ``invalid'' state (in which attempts to read the
+clock fail) when they start up.  A call of @code{settimeofday} removes
+the system clock from an invalid state.
 
 @code{settimeofday} causes a sudden jump forwards or backwards, which
-can cause a variety of problems in a system.  Use @code{adjtime} (below)
-to make a smooth transition from one time to another by temporarily
-speeding up or slowing down the clock.
+can cause a variety of problems in a system.  Use @code{adjtime} or
+@code{adjtimex} (below) to make a smooth transition from one time to
+another by temporarily speeding up or slowing down the clock.
 
-With a Linux kernel, @code{adjtimex} does the same thing and can also
-make permanent changes to the speed of the system clock so it doesn't
-need to be corrected as often.
+As with @code{gettimeofday}, the calendar time is represented as the
+elapsed time since the epoch.
+
+As with @code{gettimeofday}, the @var{tzp} argument should always be a
+null pointer.  If it is not a null pointer, the call may fail, or the
+object pointed to may be ignored, or it may have some effect on future
+calls to @code{gettimeofday} with @var{tzp} not null.
 
 The return value is @code{0} on success and @code{-1} on failure.  The
 following @code{errno} error conditions are defined for this function:
@@ -541,7 +532,6 @@ following @code{errno} error conditions are defined for this function:
 This process cannot set the clock because it is not privileged.
 
 @item ENOSYS
-The operating system does not support setting time zone information, and
 @var{tzp} is not a null pointer.
 @end table
 @end deftypefun

@@ -17,14 +17,14 @@
 
 #include <sys/timeb.h>
 #include <sys/time.h>
+#include <string.h>
 
 int
 ftime (struct timeb *timebuf)
 {
   struct timeval tv;
-  struct timezone tz;
 
-  if (__gettimeofday (&tv, &tz) < 0)
+  if (__gettimeofday (&tv, 0) < 0)
     return -1;
 
   timebuf->time = tv.tv_sec;
@@ -34,7 +34,9 @@ ftime (struct timeb *timebuf)
       ++timebuf->time;
       timebuf->millitm = 0;
     }
-  timebuf->timezone = tz.tz_minuteswest;
-  timebuf->dstflag = tz.tz_dsttime;
+
+  memset (timebuf->__preserve_historic_size, 0,
+          sizeof timebuf->__preserve_historic_size);
+
   return 0;
 }

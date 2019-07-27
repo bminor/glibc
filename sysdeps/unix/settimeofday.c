@@ -1,4 +1,5 @@
-/* Copyright (C) 1994-2019 Free Software Foundation, Inc.
+/* settimeofday -- Set the current time of day.  Unix version.
+   Copyright (C) 2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,30 +16,21 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _SYS_TIMEB_H
-#define _SYS_TIMEB_H	1
+#include <errno.h>
+#include <sys/time.h>
+#include <sysdep.h>
+#include <libc-symbols.h>
 
-#include <features.h>
-
-#include <bits/types/time_t.h>
-
-__BEGIN_DECLS
-
-/* Structure returned by the `ftime' function.  */
-
-struct timeb
-  {
-    time_t time;		/* Seconds since epoch, as from `time'.  */
-    unsigned short int millitm;	/* Additional milliseconds.  */
-
-    /* Formerly: short int timezone; short int dstflag;  */
-    char __preserve_historic_size [2 * sizeof (short int)];
-  };
-
-/* Fill in TIMEBUF with information about the current time.  */
-
-extern int ftime (struct timeb *__timebuf);
-
-__END_DECLS
-
-#endif	/* sys/timeb.h */
+/* Set the current time of day and timezone information.
+   This call is restricted to the super-user.  */
+int
+__settimeofday (const struct timeval *tv, const struct timezone *tz)
+{
+  if (tz)
+    {
+      __set_errno (ENOSYS);
+      return -1;
+    }
+  return INLINE_SYSCALL_CALL (settimeofday, tv, (void *)0);
+}
+weak_alias (__settimeofday, settimeofday);

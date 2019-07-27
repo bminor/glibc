@@ -28,7 +28,7 @@ time (time_t *t)
   struct timeval tv;
   time_t result;
 
-  if (__gettimeofday (&tv, (struct timezone *) NULL))
+  if (__gettimeofday (&tv, 0))
     result = (time_t) -1;
   else
     result = (time_t) tv.tv_sec;
