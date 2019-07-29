@@ -22,7 +22,7 @@ subdir		:= dirent
 
 include ../Makeconfig
 
-headers		:= dirent.h bits/dirent.h
+headers		:= dirent.h bits/dirent.h bits/dirent_ext.h
 routines	:= opendir closedir readdir readdir_r rewinddir \
 		   seekdir telldir scandir alphasort versionsort \
 		   getdents getdents64 dirfd readdir64 readdir64_r scandir64 \

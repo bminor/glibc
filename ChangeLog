@@ -1,3 +1,15 @@
+2019-07-29  Florian Weimer  <fweimer@redhat.com>
+
+	Linux: Move declaration of getdents64 to <dirent.h>.
+	* bits/dirent_ext.h: New file.
+	* dirent/Makefile (headers): Add bits/dirent_ext.h.
+	* dirent/dirent.h: Include <bits/dirent_ext.h>.
+	* sysdeps/unix/sysv/linux/bits/dirent_ext.h: New file.
+	* sysdeps/unix/sysv/linux/bits/unistd_ext.h (getdents64): Remove
+	declaration.
+	* manual/filesys.texi (Low-level Directory Access): Update header
+	to dirent.h.
+
 2019-07-29  DJ Delorie  <dj@redhat.com>
 	    Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
 
