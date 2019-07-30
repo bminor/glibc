@@ -1,3 +1,9 @@
+2019-07-30  Florian Weimer  <fweimer@redhat.com>
+
+	* nptl/tst-pthread-getattr.c (allocate_and_test): Change return
+	type to uintptr_t.  Update comment.
+	(check_stack_top): Adjust.
+
 2019-07-29  Florian Weimer  <fweimer@redhat.com>
 
 	Linux: Move declaration of getdents64 to <dirent.h>.
