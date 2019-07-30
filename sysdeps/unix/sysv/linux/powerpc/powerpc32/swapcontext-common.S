@@ -276,6 +276,9 @@ ENTRY(__CONTEXT_FUNC_NAME)
 	cmpwi	r3,0
 	bne	3f	/* L(error_exit) */
 
+	lwz	r4,_FRAME_PARM_SAVE2(r1)
+	lwz	r31,_UC_REGS_PTR(r4)
+
 #ifdef __CONTEXT_ENABLE_FPRS
 # ifdef __CONTEXT_ENABLE_VRS
 

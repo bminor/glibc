@@ -1,3 +1,8 @@
+2019-07-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext-common.S
+	(__CONTEXT_FUNC_NAME): Restore setting of r31.
+
 2019-07-30  Florian Weimer  <fweimer@redhat.com>
 
 	* nptl/tst-pthread-getattr.c (allocate_and_test): Change return
