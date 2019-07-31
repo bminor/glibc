@@ -446,12 +446,9 @@ __gconv_lookup_cache (const char *toset, const char *fromset,
 void
 __gconv_release_cache (struct __gconv_step *steps, size_t nsteps)
 {
-  /* The only thing we have to deallocate is the record with the
-     steps.  But do not do this if the reference counter is still
-     positive.  This can happen if the steps array was cloned by
-     __wcsmbs_clone_conv.  (The array elements have separate __counter
-     fields, but they are only out of sync temporarily.)  */
-  if (gconv_cache != NULL && steps->__counter == 0)
+  if (gconv_cache != NULL)
+    /* The only thing we have to deallocate is the record with the
+       steps.  */
     free (steps);
 }
 

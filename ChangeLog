@@ -1,3 +1,23 @@
+2019-07-31  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24583]
+	[BZ #24677]
+	iconv, libio: Revert reference counting changes.
+	* iconv/gconv_cache.c (__gconv_release_cache): Unconditionally
+	free the steps array.
+	* libio/Makefile (tests): Remove tst-wfile-gconv.
+	(tests-container): Do not add tst-wfile-ascii.
+	(tst-wfile-gconv-ENV): Do not set.
+	(generated): Do not add tst-wfile-gconv.mtrace,
+	tst-wfile-gconv.check.
+	[($run-built-tests)] (tests-special): Do not add
+	tst-wfile-gconv-mem.out.
+	(tst-wfile-gconv.out, tst-wfile-gconv-mem.out): Remove targets.
+	* libio/iofclose.c (_IO_new_fclose): Call __gconv_release_step
+	instead of __wcsmbs_clone_conv.
+	* wcsmbs/wcsmbsload.c (__wcsmbs_clone_conv): Remove definition.
+	* wcsmbs/wcsmbsload.h (__wcsmbs_clone_conv): Remove declaration.
+
 2019-07-30  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext-common.S

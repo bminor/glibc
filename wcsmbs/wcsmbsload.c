@@ -279,13 +279,3 @@ _nl_cleanup_ctype (struct __locale_data *locale)
       free ((char *) data);
     }
 }
-
-/* Free the specified conversion functions (but not CONV itself).  */
-void
-__wcsmbs_close_conv (struct gconv_fcts *conv)
-{
-  if (conv->towc != &to_wc)
-      __gconv_close_transform (conv->towc, conv->towc_nsteps);
-  if (conv->tomb != &to_mb)
-      __gconv_close_transform (conv->tomb, conv->tomb_nsteps);
-}
