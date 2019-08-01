@@ -1,3 +1,9 @@
+2019-08-01  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24867]
+	* malloc/malloc.c (__malloc_info): Remove unwanted leading
+	whitespace.
+
 2019-05-17  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* malloc/malloc.c (MAX_TCACHE_COUNT): Increase to UINT16_MAX.
