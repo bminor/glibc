@@ -30,5 +30,8 @@ __profil_counter (int signo, siginfo_t *_si, void *scp)
   asm volatile ("");
 }
 #ifndef __profil_counter
-weak_alias (__profil_counter, profil_counter)
+# include <shlib-compat.h>
+# if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_31)
+compat_symbol (libc, __profil_counter, profil_counter, GLIBC_2_0);
+# endif
 #endif

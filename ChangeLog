@@ -1,6 +1,12 @@
 2019-08-23  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 	    Florian Weimer  <fweimer@redhat.com>
 
+	* gmon/Versions (libc) [GLIBC_2.31]: New entry.
+	* sysdeps/unix/sysv/linux/arm/profil-counter.h (profil_counter):
+	Make a compat_symbol.
+	* sysdeps/unix/sysv/linux/sparc/profil-counter.h
+	(__profil_counter_global): Likewise.
+
 	* debug/segfault.c (install_handler): Use SA_SIGINFO if defined.
 	* sysdeps/generic/profil-counter.h (__profil_counter): Cast to
 	uintptr_t.

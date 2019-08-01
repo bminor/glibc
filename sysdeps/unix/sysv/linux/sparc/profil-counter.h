@@ -21,6 +21,8 @@
 #include <sysdeps/unix/sysv/linux/profil-counter.h>
 
 #ifndef __profil_counter
+# include <shlib-compat.h>
+# if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_31)
 void
 __profil_counter_global (int signo, struct sigcontext *si)
 {
@@ -30,5 +32,6 @@ __profil_counter_global (int signo, struct sigcontext *si)
   profil_count (si->si_regs.pc);
 #endif
 }
-weak_alias (__profil_counter_global, profil_counter)
+compat_symbol (libc, __profil_counter_global, profil_counter, GLIBC_2_0);
+# endif
 #endif
