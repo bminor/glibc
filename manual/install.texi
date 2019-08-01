@@ -504,7 +504,7 @@ GCC 6.2 or newer
 GCC 6.2 or higher is required.  In general it is recommended to use
 the newest version of the compiler that is known to work for building
 @theglibc{}, as newer compilers usually produce better code.  As of
-release time, GCC 8.2.1 is the newest compiler verified to work to build
+release time, GCC 9.1.1 is the newest compiler verified to work to build
 @theglibc{}.
 
 For multi-arch support it is recommended to use a GCC which has been built with
@@ -535,7 +535,7 @@ To correctly translate and install the Texinfo documentation you need
 this version of the @code{texinfo} package.  Earlier versions do not
 understand all the tags used in the document, and the installation
 mechanism for the info files is not present or works differently.
-As of release time, @code{texinfo} 6.5 is the newest verified to work
+As of release time, @code{texinfo} 6.6 is the newest verified to work
 to build @theglibc{}.
 
 @item
@@ -559,7 +559,7 @@ Perl 5
 
 Perl is not required, but if present it is used in some tests and the
 @code{mtrace} program, to build the @glibcadj{} manual.  As of release
-time @code{perl} version 5.28.1 is the newest verified to work to
+time @code{perl} version 5.28.2 is the newest verified to work to
 build @theglibc{}.
 
 @item
@@ -573,7 +573,7 @@ with any version of @code{sed}.  As of release time, @code{sed} version
 Python 3.4 or later
 
 Python is required to build @theglibc{}.  As of release time, Python
-3.7.1 is the newest verified to work for building and testing
+3.7.4 is the newest verified to work for building and testing
 @theglibc{}.
 
 @item PExpect 4.0
@@ -591,7 +591,7 @@ GDB itself needs to be configured with Python support in order to use
 the pretty printers.  Notice that your system having Python available
 doesn't imply that GDB supports it, nor that your system's Python and
 GDB's have the same version.  As of release time GNU @code{debugger}
-8.2 is the newest verified to work to test the pretty printers.
+8.3 is the newest verified to work to test the pretty printers.
 
 Unless Python, PExpect and GDB with Python support are present, the
 printer tests will report themselves as @code{UNSUPPORTED}.  Notice
