@@ -1,3 +1,9 @@
+2019-08-01  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24867]
+	* malloc/malloc.c (__malloc_info): Remove unwanted leading
+	whitespace.
+
 2019-08-15  Florian Weimer  <fweimer@redhat.com>
 
 	* malloc/Makefile (tests): Only add tst-mxfast for
