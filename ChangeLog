@@ -1,5 +1,9 @@
 2019-08-01  Carlos O'Donell <carlos@redhat.com>
 
+	* version.h (RELEASE): Set to "stable".
+	(VERSION): Set to "2.30".
+	* include/features.h (__GLIBC_MINOR__): Set to 2.30.
+
 	* manual/install.texi: Update component versions.
 	* INSTALL: Regenerate.
 	* NEWS: Update.
