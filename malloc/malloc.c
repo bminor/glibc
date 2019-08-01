@@ -5491,7 +5491,7 @@ __malloc_info (int options, FILE *fp)
 
       for (size_t i = 0; i < nsizes; ++i)
 	if (sizes[i].count != 0 && i != NFASTBINS)
-	  fprintf (fp, "							      \
+	  fprintf (fp, "\
   <size from=\"%zu\" to=\"%zu\" total=\"%zu\" count=\"%zu\"/>\n",
 		   sizes[i].from, sizes[i].to, sizes[i].total, sizes[i].count);
 
