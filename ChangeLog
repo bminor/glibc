@@ -1,3 +1,7 @@
+2019-08-18  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/hppa/fpu/libm-test-ulps: Update.
+
 2019-08-15  Richard Henderson  <rth@twiddle.net>
 
 	* sysdeps/unix/sysv/linux/alpha/kernel-features.h (__NR_shmat):
