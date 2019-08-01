@@ -15,7 +15,7 @@
 #
 # Notes:
 # host, name, hostname - jméno, název, označení?
-# Untranslated: netid (RFC 1833: Network Identifier), nettype
+# Untranslated: netid (RFC 1833: Network Identifier), nettype 
 # Translations of "socket" => "soket",
 # byte => bajt
 # out of memory => nedostatek paměti
@@ -24,9 +24,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.28.9000\n"
-"POT-Creation-Date: 2019-01-16 15:48+0530\n"
-"PO-Revision-Date: 2019-01-16 19:18+01:00\n"
+"Project-Id-Version: libc 2.29.9000\n"
+"POT-Creation-Date: 2019-07-18 13:28-0400\n"
+"PO-Revision-Date: 2019-07-24 22:24+02:00\n"
 "Last-Translator: Petr Pisar <petr.pisar@atlas.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "Language: cs\n"
@@ -171,10 +171,10 @@ msgstr ""
 "[ VÝSTUPNÍ_SOUBOR [VSTUPNÍ_SOUBOR]…]"
 
 #: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:308
-#: elf/pldd.c:252 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:405
-#: iconv/iconvconfig.c:379 locale/programs/locale.c:275
+#: elf/pldd.c:247 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:405
+#: iconv/iconvconfig.c:379 locale/programs/locale.c:276
 #: locale/programs/localedef.c:437 login/programs/pt_chown.c:89
-#: malloc/memusagestat.c:563 nss/getent.c:933 nss/makedb.c:369
+#: malloc/memusagestat.c:563 nss/getent.c:953 nss/makedb.c:369
 #: posix/getconf.c:503 sysdeps/unix/sysv/linux/lddlibc4.c:61
 #, c-format
 msgid ""
@@ -185,11 +185,11 @@ msgstr ""
 "%s.\n"
 
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
-#: elf/ldconfig.c:324 elf/ldd.bash.in:38 elf/pldd.c:268 elf/sotruss.sh:75
+#: elf/ldconfig.c:324 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
 #: elf/sprof.c:389 iconv/iconv_prog.c:422 iconv/iconvconfig.c:396
-#: locale/programs/locale.c:292 locale/programs/localedef.c:463
+#: locale/programs/locale.c:293 locale/programs/localedef.c:463
 #: login/programs/pt_chown.c:63 malloc/memusage.sh:71
-#: malloc/memusagestat.c:581 nscd/nscd.c:509 nss/getent.c:87 nss/makedb.c:385
+#: malloc/memusagestat.c:581 nscd/nscd.c:509 nss/getent.c:88 nss/makedb.c:385
 #: posix/getconf.c:485 sysdeps/unix/sysv/linux/lddlibc4.c:68
 #, c-format
 msgid ""
@@ -203,10 +203,10 @@ msgstr ""
 "a to i bez záruky PRODEJNOSTI nebo VHODNOSTI PRO NĚJAKÝ KONKRÉTNÍ ÚČEL.\n"
 
 #: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
-#: elf/ldconfig.c:329 elf/pldd.c:273 elf/sprof.c:395 iconv/iconv_prog.c:427
-#: iconv/iconvconfig.c:401 locale/programs/locale.c:297
+#: elf/ldconfig.c:329 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:427
+#: iconv/iconvconfig.c:401 locale/programs/locale.c:298
 #: locale/programs/localedef.c:468 malloc/memusage.sh:75
-#: malloc/memusagestat.c:586 nscd/nscd.c:514 nss/getent.c:92 nss/makedb.c:390
+#: malloc/memusagestat.c:586 nscd/nscd.c:514 nss/getent.c:93 nss/makedb.c:390
 #: posix/getconf.c:490
 #, c-format
 msgid "Written by %s.\n"
@@ -277,21 +277,21 @@ msgstr "výstupní soubor „%s“ nelze otevřít"
 msgid "invalid escape sequence"
 msgstr "chybná escape sekvence"
 
-#: catgets/gencat.c:1209
+#: catgets/gencat.c:1211
 msgid "unterminated message"
 msgstr "neukončená zpráva"
 
-#: catgets/gencat.c:1233
+#: catgets/gencat.c:1235
 #, c-format
 msgid "while opening old catalog file"
 msgstr "během otvírání starého katalogu"
 
-#: catgets/gencat.c:1324
+#: catgets/gencat.c:1326
 #, c-format
 msgid "conversion modules not available"
 msgstr "převodní modul není dostupný"
 
-#: catgets/gencat.c:1350
+#: catgets/gencat.c:1352
 #, c-format
 msgid "cannot determine escape character"
 msgstr "nelze určit escapovací znak"
@@ -419,7 +419,7 @@ msgstr "Neznámý OS"
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", ABI OS: %s %d.%d.%d"
 
-#: elf/cache.c:163 elf/ldconfig.c:1332
+#: elf/cache.c:163 elf/ldconfig.c:1333
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Soubor s keší %s nelze otevřít\n"
@@ -460,7 +460,7 @@ msgstr "Změna přístupových práv k %s na %#o se nezdařila"
 msgid "Renaming of %s to %s failed"
 msgstr "Přejmenování z %s na %s selhalo"
 
-#: elf/dl-close.c:399 elf/dl-open.c:420
+#: elf/dl-close.c:399 elf/dl-open.c:424
 msgid "cannot create scope list"
 msgstr "seznam rozsahů nelze vytvořit"
 
@@ -541,119 +541,119 @@ msgstr "nelze vytvořit pole vyhledávacích cest"
 msgid "cannot stat shared object"
 msgstr "nelze získat informace o sdíleném objektu"
 
-#: elf/dl-load.c:960
-msgid "cannot open zero fill device"
-msgstr "nulami vyplněné zařízení (zero) nelze otevřít"
-
-#: elf/dl-load.c:1007 elf/dl-load.c:2203
+#: elf/dl-load.c:992 elf/dl-load.c:2198
 msgid "cannot create shared object descriptor"
 msgstr "deskriptor sdíleného objektu nelze vytvořit"
 
-#: elf/dl-load.c:1026 elf/dl-load.c:1560 elf/dl-load.c:1673
+#: elf/dl-load.c:1011 elf/dl-load.c:1555 elf/dl-load.c:1668
 msgid "cannot read file data"
 msgstr "data ze souboru nelze načíst"
 
-#: elf/dl-load.c:1072
+#: elf/dl-load.c:1057
 msgid "ELF load command alignment not page-aligned"
 msgstr "Zarovnání kódu zavaděče formátu ELF nelícuje se stránkou"
 
-#: elf/dl-load.c:1079
+#: elf/dl-load.c:1064
 msgid "ELF load command address/offset not properly aligned"
 msgstr "Adresa/ofset kódu zavaděče formátu ELF není správně zarovnána"
 
-#: elf/dl-load.c:1161
+#: elf/dl-load.c:1146
 msgid "cannot process note segment"
 msgstr "segment s poznámkami nelze zpracovat"
 
-#: elf/dl-load.c:1172
+#: elf/dl-load.c:1157
 msgid "object file has no loadable segments"
 msgstr "objektový soubor nemá žádné nahratelné segmenty"
 
-#: elf/dl-load.c:1181 elf/dl-load.c:1652
+#: elf/dl-load.c:1170 elf/dl-load.c:1647
 msgid "cannot dynamically load executable"
-msgstr "spustitelný kód nelze dynamicky nahrát"
+msgstr "spustitelný kód nelze dynamicky zavést"
 
-#: elf/dl-load.c:1202
+#: elf/dl-load.c:1191
 msgid "object file has no dynamic section"
 msgstr "objektový soubor nemá žádnou dynamickou sekci"
 
-#: elf/dl-load.c:1225
+#: elf/dl-load.c:1218
+msgid "cannot dynamically load position-independent executable"
+msgstr "spustitelný kód nezávislý na umístění nelze dynamicky zavést"
+
+#: elf/dl-load.c:1220
 msgid "shared object cannot be dlopen()ed"
 msgstr "sdílený objekt nebylo možné načíst funkcí dlopen()"
 
-#: elf/dl-load.c:1238
+#: elf/dl-load.c:1233
 msgid "cannot allocate memory for program header"
 msgstr "nelze alokovat paměť pro hlavičku programu"
 
-#: elf/dl-load.c:1271 elf/dl-load.h:130
+#: elf/dl-load.c:1266 elf/dl-load.h:130
 msgid "cannot change memory protections"
 msgstr "ochrany paměti nelze změnit"
 
-#: elf/dl-load.c:1291
+#: elf/dl-load.c:1286
 msgid "cannot enable executable stack as shared object requires"
 msgstr "nemohu povolit spustitelnost zásobníku, jak vyžaduje sdílený objekt"
 
-#: elf/dl-load.c:1304
+#: elf/dl-load.c:1299
 msgid "cannot close file descriptor"
 msgstr "deskriptor souboru nelze zavřít"
 
-#: elf/dl-load.c:1560
+#: elf/dl-load.c:1555
 msgid "file too short"
 msgstr "soubor je příliš krátký"
 
-#: elf/dl-load.c:1595
+#: elf/dl-load.c:1590
 msgid "invalid ELF header"
 msgstr "neplatný hlavička ELF"
 
-#: elf/dl-load.c:1607
+#: elf/dl-load.c:1602
 msgid "ELF file data encoding not big-endian"
 msgstr "Kódování dat souboru ELF nemá velkou endianitu"
 
-#: elf/dl-load.c:1609
+#: elf/dl-load.c:1604
 msgid "ELF file data encoding not little-endian"
 msgstr "Kódování dat souboru ELF nemá malou endianitu"
 
-#: elf/dl-load.c:1613
+#: elf/dl-load.c:1608
 msgid "ELF file version ident does not match current one"
 msgstr "ident verze souboru ELF se neshoduje se současnou"
 
-#: elf/dl-load.c:1617
+#: elf/dl-load.c:1612
 msgid "ELF file OS ABI invalid"
 msgstr "Chybné ABI OS souboru ELF"
 
-#: elf/dl-load.c:1620
+#: elf/dl-load.c:1615
 msgid "ELF file ABI version invalid"
 msgstr "Chybná verze ABI souboru ELF"
 
-#: elf/dl-load.c:1623
+#: elf/dl-load.c:1618
 msgid "nonzero padding in e_ident"
 msgstr "nenulová výplň v e_ident"
 
-#: elf/dl-load.c:1626
+#: elf/dl-load.c:1621
 msgid "internal error"
 msgstr "vnitřní chyba"
 
-#: elf/dl-load.c:1633
+#: elf/dl-load.c:1628
 msgid "ELF file version does not match current one"
 msgstr "Verze souboru ELD se neshoduje se současnou"
 
-#: elf/dl-load.c:1641
+#: elf/dl-load.c:1636
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "jen ET_DYN a ET_EXEC mohou být nahráni"
 
-#: elf/dl-load.c:1657
+#: elf/dl-load.c:1652
 msgid "ELF file's phentsize not the expected size"
 msgstr "phentsize souboru ELF má neočekávanou velikost"
 
-#: elf/dl-load.c:2222
+#: elf/dl-load.c:2217
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "chybná třída ELF: ELFCLASS64"
 
-#: elf/dl-load.c:2223
+#: elf/dl-load.c:2218
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "chybná třída ELF: ELFCLASS32"
 
-#: elf/dl-load.c:2226
+#: elf/dl-load.c:2221
 msgid "cannot open shared object file"
 msgstr "sdílený objektový soubor nelze otevřít"
 
@@ -665,11 +665,7 @@ msgstr "namapování segmentu ze sdíleného objektu se nepodařilo"
 msgid "cannot map zero-fill pages"
 msgstr "nulami vyplněné stránky nelze mapovat"
 
-#: elf/dl-lookup.c:835
-msgid "relocation error"
-msgstr "chyba při přemisťování"
-
-#: elf/dl-lookup.c:858
+#: elf/dl-lookup.c:830
 msgid "symbol lookup error"
 msgstr "chyba při vyhledávání symbolu"
 
@@ -677,19 +673,19 @@ msgstr "chyba při vyhledávání symbolu"
 msgid "cannot extend global scope"
 msgstr "globální rozsah nelze rozšířit"
 
-#: elf/dl-open.c:470
+#: elf/dl-open.c:474
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "Čítač generátoru TLS oříznut! Prosím, tuto skutečnost nahlaste."
 
-#: elf/dl-open.c:534
+#: elf/dl-open.c:538
 msgid "invalid mode for dlopen()"
 msgstr "neplatný mód pro dlopen()"
 
-#: elf/dl-open.c:551
+#: elf/dl-open.c:555
 msgid "no more namespaces available for dlmopen()"
 msgstr "pro dlmopen() již není dostupný žádný další jmenný prostor"
 
-#: elf/dl-open.c:575
+#: elf/dl-open.c:579
 msgid "invalid target namespace in dlmopen()"
 msgstr "neplatný cílový jmenný prostor v dlmopen()"
 
@@ -928,22 +924,22 @@ msgstr "Při použití -r je třeba zadat absolutní jméno konfiguračního sou
 msgid "memory exhausted"
 msgstr "paměť vyčerpána"
 
-#: elf/ldconfig.c:1233
+#: elf/ldconfig.c:1234
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: adresář %s nelze načíst"
 
-#: elf/ldconfig.c:1281
+#: elf/ldconfig.c:1282
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "pro vybudování keše byla použita relativní cesta „%s“"
 
-#: elf/ldconfig.c:1311
+#: elf/ldconfig.c:1312
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Nelze se přepnout do adresáře /"
 
-#: elf/ldconfig.c:1352
+#: elf/ldconfig.c:1353
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Adresář %s se soubory keší nelze otevřít\n"
@@ -1014,95 +1010,100 @@ msgstr "skončil s neznám výstupním kódem"
 msgid "error: you do not have read permission for"
 msgstr "chyba: nemáte oprávnění číst"
 
-#: elf/pldd-xx.c:105
+#: elf/pldd-xx.c:102
 #, c-format
 msgid "cannot find program header of process"
 msgstr "programovou hlavičku procesu nelze nalézt"
 
-#: elf/pldd-xx.c:110
+#: elf/pldd-xx.c:106
 #, c-format
 msgid "cannot read program header"
 msgstr "hlavičku programu nelze přečíst"
 
-#: elf/pldd-xx.c:135
+#: elf/pldd-xx.c:128
 #, c-format
 msgid "cannot read dynamic section"
 msgstr "dynamickou sekci nelze přečíst"
 
-#: elf/pldd-xx.c:147
+#: elf/pldd-xx.c:137
 #, c-format
 msgid "cannot read r_debug"
 msgstr "r_debug nelze přečíst"
 
-#: elf/pldd-xx.c:167
+#: elf/pldd-xx.c:154
 #, c-format
 msgid "cannot read program interpreter"
 msgstr "interpretr programu nelze přečíst"
 
-#: elf/pldd-xx.c:197
+#: elf/pldd-xx.c:183
 #, c-format
 msgid "cannot read link map"
 msgstr "mapování odkazů nelze načíst"
 
-#: elf/pldd-xx.c:209
+#: elf/pldd-xx.c:190
 #, c-format
 msgid "cannot read object name"
 msgstr "název objektu nelze přečíst"
 
-#: elf/pldd-xx.c:219
+#: elf/pldd-xx.c:197
 #, c-format
 msgid "cannot allocate buffer for object name"
 msgstr "nelze alokovat vyrovnávací paměť pro název objektu"
 
-#: elf/pldd.c:64
+#: elf/pldd.c:58
 msgid "List dynamic shared objects loaded into process."
 msgstr "Vypíše dynamické sdílené objekty zavedené do procesu."
 
-#: elf/pldd.c:68
+#: elf/pldd.c:62
 msgid "PID"
 msgstr "PID"
 
-#: elf/pldd.c:100
+#: elf/pldd.c:89
 #, c-format
 msgid "Exactly one parameter with process ID required.\n"
 msgstr "Je třeba právě jeden parametr s ID procesu.\n"
 
-#: elf/pldd.c:112
+#: elf/pldd.c:103
 #, c-format
 msgid "invalid process ID '%s'"
 msgstr "neplatné ID procesu „%s“"
 
-#: elf/pldd.c:120
+#: elf/pldd.c:111
 #, c-format
 msgid "cannot open %s"
 msgstr "%s nelze otevřít"
 
-#: elf/pldd.c:152
+#: elf/pldd.c:142
 #, c-format
 msgid "cannot open %s/task"
 msgstr "%s/task nelze otevřít"
 
-#: elf/pldd.c:155
+#: elf/pldd.c:145
 #, c-format
 msgid "cannot prepare reading %s/task"
 msgstr "čtení %s/task nelze připravit"
 
-#: elf/pldd.c:168
+#: elf/pldd.c:158
 #, c-format
 msgid "invalid thread ID '%s'"
 msgstr "neplatné ID vlákna „%s“"
 
-#: elf/pldd.c:179
+#: elf/pldd.c:169
 #, c-format
 msgid "cannot attach to process %lu"
 msgstr "k procesu %lu se nelze připojit"
 
-#: elf/pldd.c:294
+#: elf/pldd.c:184
+#, c-format
+msgid "no valid %s/task entries"
+msgstr "žádné platné záznamy v %s/task"
+
+#: elf/pldd.c:290
 #, c-format
 msgid "cannot get information about process %lu"
 msgstr "o procesu %lu nelze získat údaje"
 
-#: elf/pldd.c:307
+#: elf/pldd.c:303
 #, c-format
 msgid "process %lu is no ELF program"
 msgstr "proces %lu není programem ELF"
@@ -1664,7 +1665,7 @@ msgstr "soubor „%s“ znakové sady nebyl nalezen"
 #: locale/programs/charmap.c:196
 #, c-format
 msgid "default character map file `%s' not found"
-msgstr "implicitní soubor „%s“ znakové sady nebyl nalezen"
+msgstr "výchozí soubor „%s“ znakové sady nebyl nalezen"
 
 #: locale/programs/charmap.c:265
 #, c-format
@@ -1717,14 +1718,14 @@ msgstr "znakové sady se uzamykacími stavy nejsou podporovány"
 
 #: locale/programs/charmap.c:503 locale/programs/charmap.c:557
 #: locale/programs/charmap.c:589 locale/programs/charmap.c:683
-#: locale/programs/charmap.c:738 locale/programs/charmap.c:779
-#: locale/programs/charmap.c:820
+#: locale/programs/charmap.c:739 locale/programs/charmap.c:780
+#: locale/programs/charmap.c:821
 #, c-format
 msgid "syntax error in %s definition: %s"
 msgstr "syntaktická chyba v definici %s: %s"
 
 #: locale/programs/charmap.c:504 locale/programs/charmap.c:684
-#: locale/programs/charmap.c:780 locale/programs/repertoire.c:229
+#: locale/programs/charmap.c:781 locale/programs/repertoire.c:229
 msgid "no symbolic name given"
 msgstr "žádné symbolické jméno nebylo zadáno"
 
@@ -1740,14 +1741,14 @@ msgstr "v kódu znaku je příliš málo bajtů"
 msgid "too many bytes in character encoding"
 msgstr "v kódu znaku je příliš mnoho bajtů"
 
-#: locale/programs/charmap.c:591 locale/programs/charmap.c:739
-#: locale/programs/charmap.c:822 locale/programs/repertoire.c:295
+#: locale/programs/charmap.c:591 locale/programs/charmap.c:740
+#: locale/programs/charmap.c:823 locale/programs/repertoire.c:295
 msgid "no symbolic name given for end of range"
 msgstr "žádné symbolické jméno nebylo pro konec rozsahu zadáno"
 
 #: locale/programs/charmap.c:615 locale/programs/ld-address.c:524
 #: locale/programs/ld-collate.c:2616 locale/programs/ld-collate.c:3774
-#: locale/programs/ld-ctype.c:2117 locale/programs/ld-ctype.c:2829
+#: locale/programs/ld-ctype.c:2118 locale/programs/ld-ctype.c:2830
 #: locale/programs/ld-identification.c:397
 #: locale/programs/ld-measurement.c:213 locale/programs/ld-messages.c:295
 #: locale/programs/ld-monetary.c:748 locale/programs/ld-name.c:262
@@ -1762,19 +1763,19 @@ msgstr "%1$s: definice nekončí na „END %1$s“"
 msgid "only WIDTH definitions are allowed to follow the CHARMAP definition"
 msgstr "definici CHARMAP mohou následovat pouze definice WIDTH"
 
-#: locale/programs/charmap.c:656 locale/programs/charmap.c:719
+#: locale/programs/charmap.c:656 locale/programs/charmap.c:720
 #, c-format
 msgid "value for %s must be an integer"
 msgstr "hodnota pro %s musí být celé číslo"
 
-#: locale/programs/charmap.c:847
+#: locale/programs/charmap.c:848
 #, c-format
 msgid "%s: error in state machine"
 msgstr "%s: chyba ve stavovém automatu"
 
-#: locale/programs/charmap.c:855 locale/programs/ld-address.c:540
+#: locale/programs/charmap.c:856 locale/programs/ld-address.c:540
 #: locale/programs/ld-collate.c:2613 locale/programs/ld-collate.c:3967
-#: locale/programs/ld-ctype.c:2114 locale/programs/ld-ctype.c:2846
+#: locale/programs/ld-ctype.c:2115 locale/programs/ld-ctype.c:2847
 #: locale/programs/ld-identification.c:413
 #: locale/programs/ld-measurement.c:229 locale/programs/ld-messages.c:311
 #: locale/programs/ld-monetary.c:764 locale/programs/ld-name.c:278
@@ -1785,35 +1786,35 @@ msgstr "%s: chyba ve stavovém automatu"
 msgid "%s: premature end of file"
 msgstr "%s: předčasný konec souboru"
 
-#: locale/programs/charmap.c:874 locale/programs/charmap.c:885
+#: locale/programs/charmap.c:875 locale/programs/charmap.c:886
 #, c-format
 msgid "unknown character `%s'"
 msgstr "neznámý znak „%s“"
 
-#: locale/programs/charmap.c:893
+#: locale/programs/charmap.c:894
 #, c-format
 msgid "number of bytes for byte sequence of beginning and end of range not the same: %d vs %d"
 msgstr "počet bajtů sekvence pro počátek a konec rozsahu není stejný: %d vs. %d"
 
-#: locale/programs/charmap.c:998 locale/programs/ld-collate.c:2893
+#: locale/programs/charmap.c:999 locale/programs/ld-collate.c:2893
 #: locale/programs/repertoire.c:418
 msgid "invalid names for character range"
 msgstr "nepovolené názvy pro rozsah znaků"
 
-#: locale/programs/charmap.c:1010 locale/programs/repertoire.c:430
+#: locale/programs/charmap.c:1011 locale/programs/repertoire.c:430
 msgid "hexadecimal range format should use only capital characters"
 msgstr "šestnáctkový formát rozsahu by měl používat jen velká písmena"
 
-#: locale/programs/charmap.c:1028 locale/programs/repertoire.c:448
+#: locale/programs/charmap.c:1029 locale/programs/repertoire.c:448
 #, c-format
 msgid "<%s> and <%s> are invalid names for range"
 msgstr "<%s> a <%s> nejsou platné názvy pro rozsah"
 
-#: locale/programs/charmap.c:1034 locale/programs/repertoire.c:455
+#: locale/programs/charmap.c:1035 locale/programs/repertoire.c:455
 msgid "upper limit in range is smaller than lower limit"
 msgstr "horní mez rozsahu je menší než dolní mez"
 
-#: locale/programs/charmap.c:1092
+#: locale/programs/charmap.c:1093
 msgid "resulting bytes for range not representable."
 msgstr "výsledné bajty rozsahu nejsou reprezentovatelné."
 
@@ -1882,7 +1883,7 @@ msgid "%s: numeric country code `%d' not valid"
 msgstr "%s: číselný kód země „%d“ není platný"
 
 #: locale/programs/ld-address.c:432 locale/programs/ld-address.c:469
-#: locale/programs/ld-address.c:507 locale/programs/ld-ctype.c:2478
+#: locale/programs/ld-address.c:507 locale/programs/ld-ctype.c:2479
 #: locale/programs/ld-identification.c:309
 #: locale/programs/ld-measurement.c:196 locale/programs/ld-messages.c:264
 #: locale/programs/ld-monetary.c:503 locale/programs/ld-monetary.c:538
@@ -1905,7 +1906,7 @@ msgid "%s: unknown character in field `%s'"
 msgstr "%s: neznámý znak v položce „%s“"
 
 #: locale/programs/ld-address.c:521 locale/programs/ld-collate.c:3772
-#: locale/programs/ld-ctype.c:2826 locale/programs/ld-identification.c:394
+#: locale/programs/ld-ctype.c:2827 locale/programs/ld-identification.c:394
 #: locale/programs/ld-measurement.c:210 locale/programs/ld-messages.c:293
 #: locale/programs/ld-monetary.c:746 locale/programs/ld-name.c:260
 #: locale/programs/ld-numeric.c:323 locale/programs/ld-paper.c:210
@@ -1918,8 +1919,8 @@ msgstr "%s: neúplný řádek „END“"
 #: locale/programs/ld-collate.c:602 locale/programs/ld-collate.c:898
 #: locale/programs/ld-collate.c:911 locale/programs/ld-collate.c:2582
 #: locale/programs/ld-collate.c:2603 locale/programs/ld-collate.c:3957
-#: locale/programs/ld-ctype.c:1846 locale/programs/ld-ctype.c:2104
-#: locale/programs/ld-ctype.c:2676 locale/programs/ld-ctype.c:2837
+#: locale/programs/ld-ctype.c:1847 locale/programs/ld-ctype.c:2105
+#: locale/programs/ld-ctype.c:2677 locale/programs/ld-ctype.c:2838
 #: locale/programs/ld-identification.c:404
 #: locale/programs/ld-measurement.c:220 locale/programs/ld-messages.c:302
 #: locale/programs/ld-monetary.c:755 locale/programs/ld-name.c:269
@@ -2264,129 +2265,129 @@ msgstr "znaková sada „%s“ již je definována"
 msgid "implementation limit: no more than %d character maps allowed"
 msgstr "implementační omezení: maximální počet znakových sad je %d"
 
-#: locale/programs/ld-ctype.c:1434 locale/programs/ld-ctype.c:1559
-#: locale/programs/ld-ctype.c:1665 locale/programs/ld-ctype.c:2341
-#: locale/programs/ld-ctype.c:3299
+#: locale/programs/ld-ctype.c:1435 locale/programs/ld-ctype.c:1560
+#: locale/programs/ld-ctype.c:1666 locale/programs/ld-ctype.c:2342
+#: locale/programs/ld-ctype.c:3302
 #, c-format
 msgid "%s: field `%s' does not contain exactly ten entries"
 msgstr "%s: pole „%s“ neobsahuje přesně deset položek"
 
-#: locale/programs/ld-ctype.c:1462 locale/programs/ld-ctype.c:2036
+#: locale/programs/ld-ctype.c:1463 locale/programs/ld-ctype.c:2037
 #, c-format
 msgid "to-value <U%0*X> of range is smaller than from-value <U%0*X>"
 msgstr "horní mez rozsahu <U%0*X> je menší než dolní mez <U%0*X>"
 
-#: locale/programs/ld-ctype.c:1589
+#: locale/programs/ld-ctype.c:1590
 msgid "start and end character sequence of range must have the same length"
 msgstr "úvodní a závěrečná sekvence znaků rozsahu musí mít stejnou délku"
 
-#: locale/programs/ld-ctype.c:1596
+#: locale/programs/ld-ctype.c:1597
 msgid "to-value character sequence is smaller than from-value sequence"
 msgstr "sekvence znaků horní meze je menší než sekvence dolní meze"
 
-#: locale/programs/ld-ctype.c:1956 locale/programs/ld-ctype.c:2007
+#: locale/programs/ld-ctype.c:1957 locale/programs/ld-ctype.c:2008
 msgid "premature end of `translit_ignore' definition"
 msgstr "předčasný konec definice „translit_ignore“"
 
-#: locale/programs/ld-ctype.c:1962 locale/programs/ld-ctype.c:2013
-#: locale/programs/ld-ctype.c:2055
+#: locale/programs/ld-ctype.c:1963 locale/programs/ld-ctype.c:2014
+#: locale/programs/ld-ctype.c:2056
 msgid "syntax error"
 msgstr "chyba syntaxe"
 
-#: locale/programs/ld-ctype.c:2188
+#: locale/programs/ld-ctype.c:2189
 #, c-format
 msgid "%s: syntax error in definition of new character class"
 msgstr "%s: syntaktická chyba v definici nové třídy znaků"
 
-#: locale/programs/ld-ctype.c:2203
+#: locale/programs/ld-ctype.c:2204
 #, c-format
 msgid "%s: syntax error in definition of new character map"
 msgstr "%s: syntaktická chyba v definici nové znakové sady"
 
-#: locale/programs/ld-ctype.c:2363
+#: locale/programs/ld-ctype.c:2364
 msgid "ellipsis range must be marked by two operands of same type"
 msgstr "výpustkový rozsah musí být vyznačen dvěma operandy stejného typu"
 
-#: locale/programs/ld-ctype.c:2372
+#: locale/programs/ld-ctype.c:2373
 msgid "with symbolic name range values the absolute ellipsis `...' must not be used"
 msgstr "s hodnotami symbolického jmenného rozsahu nelze použit absolutní výpustku „...“"
 
-#: locale/programs/ld-ctype.c:2387
+#: locale/programs/ld-ctype.c:2388
 msgid "with UCS range values one must use the hexadecimal symbolic ellipsis `..'"
 msgstr "spolu s hodnotami UCS rozsahu se musí použít šestnáctková symbolická výpustka „..“"
 
-#: locale/programs/ld-ctype.c:2401
+#: locale/programs/ld-ctype.c:2402
 msgid "with character code range values one must use the absolute ellipsis `...'"
 msgstr "spolu s hodnotami rozsahu kódů znaku se misí použít absolutní výpustka „...“"
 
-#: locale/programs/ld-ctype.c:2552
+#: locale/programs/ld-ctype.c:2553
 #, c-format
 msgid "duplicated definition for mapping `%s'"
 msgstr "duplicitní definice mapovaní „%s“"
 
-#: locale/programs/ld-ctype.c:2638 locale/programs/ld-ctype.c:2782
+#: locale/programs/ld-ctype.c:2639 locale/programs/ld-ctype.c:2783
 #, c-format
 msgid "%s: `translit_start' section does not end with `translit_end'"
 msgstr "%s: sekce „translit_start“ nekončí na „translit_end“"
 
-#: locale/programs/ld-ctype.c:2733
+#: locale/programs/ld-ctype.c:2734
 #, c-format
 msgid "%s: duplicate `default_missing' definition"
 msgstr "%s: duplicitní definice „default_missing“"
 
-#: locale/programs/ld-ctype.c:2738
+#: locale/programs/ld-ctype.c:2739
 msgid "previous definition was here"
 msgstr "předchozí definice byla zde"
 
-#: locale/programs/ld-ctype.c:2760
+#: locale/programs/ld-ctype.c:2761
 #, c-format
 msgid "%s: no representable `default_missing' definition found"
 msgstr "%s: nenalezena žádná reprezentovatelná definice „default_missing“"
 
-#: locale/programs/ld-ctype.c:2877 locale/programs/ld-ctype.c:2973
-#: locale/programs/ld-ctype.c:2992 locale/programs/ld-ctype.c:3012
-#: locale/programs/ld-ctype.c:3032 locale/programs/ld-ctype.c:3052
-#: locale/programs/ld-ctype.c:3072 locale/programs/ld-ctype.c:3111
-#: locale/programs/ld-ctype.c:3131 locale/programs/ld-ctype.c:3195
-#: locale/programs/ld-ctype.c:3236 locale/programs/ld-ctype.c:3259
+#: locale/programs/ld-ctype.c:2878 locale/programs/ld-ctype.c:2974
+#: locale/programs/ld-ctype.c:2993 locale/programs/ld-ctype.c:3013
+#: locale/programs/ld-ctype.c:3033 locale/programs/ld-ctype.c:3053
+#: locale/programs/ld-ctype.c:3073 locale/programs/ld-ctype.c:3112
+#: locale/programs/ld-ctype.c:3132 locale/programs/ld-ctype.c:3198
+#: locale/programs/ld-ctype.c:3239 locale/programs/ld-ctype.c:3262
 #, c-format
 msgid "%s: character `%s' not defined while needed as default value"
-msgstr "%s: znak „%s“ potřebný jako implicitní hodnota není definován"
+msgstr "%s: znak „%s“ potřebný jako výchozí hodnota není definován"
 
-#: locale/programs/ld-ctype.c:2882 locale/programs/ld-ctype.c:2978
-#: locale/programs/ld-ctype.c:2997 locale/programs/ld-ctype.c:3017
-#: locale/programs/ld-ctype.c:3037 locale/programs/ld-ctype.c:3057
-#: locale/programs/ld-ctype.c:3077 locale/programs/ld-ctype.c:3116
-#: locale/programs/ld-ctype.c:3136 locale/programs/ld-ctype.c:3200
+#: locale/programs/ld-ctype.c:2883 locale/programs/ld-ctype.c:2979
+#: locale/programs/ld-ctype.c:2998 locale/programs/ld-ctype.c:3018
+#: locale/programs/ld-ctype.c:3038 locale/programs/ld-ctype.c:3058
+#: locale/programs/ld-ctype.c:3078 locale/programs/ld-ctype.c:3117
+#: locale/programs/ld-ctype.c:3137 locale/programs/ld-ctype.c:3203
 #, c-format
 msgid "%s: character `%s' in charmap not representable with one byte"
 msgstr "%s: znak „%s“ z mapy znaků není reprezentovatelný jedním bajtem"
 
-#: locale/programs/ld-ctype.c:3242 locale/programs/ld-ctype.c:3265
+#: locale/programs/ld-ctype.c:3245 locale/programs/ld-ctype.c:3268
 #, c-format
 msgid "%s: character `%s' needed as default value not representable with one byte"
-msgstr "%s: znak „%s“ potřebný jako implicitní hodnota není reprezentovatelný jedním bajtem"
+msgstr "%s: znak „%s“ potřebný jako výchozí hodnota není reprezentovatelný jedním bajtem"
 
-#: locale/programs/ld-ctype.c:3321
+#: locale/programs/ld-ctype.c:3324
 msgid "no output digits defined and none of the standard names in the charmap"
 msgstr "nedefinovány žádné výstupní číslice a žádná standardní jména v mapě znaků"
 
-#: locale/programs/ld-ctype.c:3570
+#: locale/programs/ld-ctype.c:3573
 #, c-format
 msgid "%s: transliteration data from locale `%s' not available"
 msgstr "%s: přepisovací data pro národní prostřední „%s“ nejsou dostupná"
 
-#: locale/programs/ld-ctype.c:3669
+#: locale/programs/ld-ctype.c:3672
 #, c-format
 msgid "%s: table for class \"%s\": %lu bytes"
 msgstr "%s: tabulka pro třídu „%s“: %lu bajtů"
 
-#: locale/programs/ld-ctype.c:3733
+#: locale/programs/ld-ctype.c:3736
 #, c-format
 msgid "%s: table for map \"%s\": %lu bytes"
 msgstr "%s: tabulka pro mapu „%s“: %lu bajtů"
 
-#: locale/programs/ld-ctype.c:3857
+#: locale/programs/ld-ctype.c:3860
 #, c-format
 msgid "%s: table for width: %lu bytes"
 msgstr "%s: tabulka se šířkou: %lu bajtů"
@@ -2626,30 +2627,20 @@ msgstr ""
 "NÁZEV\n"
 "[-a|-m]"
 
-#: locale/programs/locale.c:190
-#, c-format
-msgid "Cannot set LC_CTYPE to default locale"
-msgstr "LC_CTYPE nelze nastavit na implicitní národní prostředí"
-
-#: locale/programs/locale.c:192
-#, c-format
-msgid "Cannot set LC_MESSAGES to default locale"
-msgstr "LC_MESSAGES nelze nastavit na implicitní národní prostředí"
-
-#: locale/programs/locale.c:205
-#, c-format
-msgid "Cannot set LC_COLLATE to default locale"
-msgstr "LC_COLLATE nelze nastavit na implicitní národní prostředí"
-
-#: locale/programs/locale.c:221
-#, c-format
-msgid "Cannot set LC_ALL to default locale"
-msgstr "LC_ALL nelze nastavit na implicitní národní prostředí"
-
-#: locale/programs/locale.c:521
+#: locale/programs/locale.c:522
 #, c-format
 msgid "while preparing output"
 msgstr "během přípravy výstupu"
+
+#: locale/programs/locale.c:998
+#, c-format
+msgid "Cannot set %s to default locale"
+msgstr "%s nelze nastavit na výchozí národní prostředí"
+
+#: locale/programs/locale.c:1096
+#, c-format
+msgid "warning: The LOCPATH variable is set to \"%s\"\n"
+msgstr "pozor: Proměnná LOCPATH je nastavena na „%s“\n"
 
 #: locale/programs/localedef.c:116
 msgid "Input Files:"
@@ -3134,7 +3125,7 @@ msgstr "Text nadpisu použitý ve výstupní grafice"
 
 #: malloc/memusagestat.c:58
 msgid "Generate output linear to time (default is linear to number of function calls)"
-msgstr "Vytvoří výstup lineární v čase (implicitní chování je linearita vzhledem k počtu volání funkce) "
+msgstr "Vytvoří výstup lineární v čase (výchozí chování je linearita vzhledem k počtu volání funkce)"
 
 #: malloc/memusagestat.c:62
 msgid "Also draw graph for total memory consumption"
@@ -3646,7 +3637,7 @@ msgstr "    Implicitní členové:\n"
 
 #: nis/nis_print_group_entry.c:138
 msgid "    No implicit members\n"
-msgstr "    Žádní implicitní členové\n"
+msgstr "    Žádní výchozí členové\n"
 
 #: nis/nis_print_group_entry.c:141
 msgid "    Recursive members:\n"
@@ -3670,7 +3661,7 @@ msgstr "    Implicitní nečlenové:\n"
 
 #: nis/nis_print_group_entry.c:162
 msgid "    No implicit nonmembers\n"
-msgstr "    Žádní implicitní nečlenové\n"
+msgstr "    Žádní výchozí nečlenové\n"
 
 #: nis/nis_print_group_entry.c:165
 msgid "    Recursive nonmembers:\n"
@@ -3808,12 +3799,12 @@ msgstr "yp_update: název počítače nelze konvertovat na síťový název\n"
 msgid "yp_update: cannot get server address\n"
 msgstr "yp_update: adresu serveru nelze zjistit\n"
 
-#: nscd/aicache.c:83 nscd/hstcache.c:452
+#: nscd/aicache.c:82 nscd/hstcache.c:452
 #, c-format
 msgid "Haven't found \"%s\" in hosts cache!"
 msgstr "„%s“ nebylo v cache paměti pro počítače nalezeno!"
 
-#: nscd/aicache.c:85 nscd/hstcache.c:454
+#: nscd/aicache.c:84 nscd/hstcache.c:454
 #, c-format
 msgid "Reloading \"%s\" in hosts cache!"
 msgstr "Znovu načítám „%s“ do keše pro jména počítačů!"
@@ -3847,259 +3838,259 @@ msgstr "čistím keš %s, čas %ld"
 msgid "considering %s entry \"%s\", timeout %<PRIu64>"
 msgstr "zvažuji %s-položku „%s“, životnost %<PRIu64>"
 
-#: nscd/connections.c:521
+#: nscd/connections.c:520
 #, c-format
 msgid "invalid persistent database file \"%s\": %s"
 msgstr "chybný soubor „%s“ s trvalou databází: %s"
 
-#: nscd/connections.c:529
+#: nscd/connections.c:528
 msgid "uninitialized header"
 msgstr "neinicializovaná hlavička"
 
-#: nscd/connections.c:534
+#: nscd/connections.c:533
 msgid "header size does not match"
 msgstr "velikost hlavičky nesouhlasí"
 
-#: nscd/connections.c:544
+#: nscd/connections.c:543
 msgid "file size does not match"
 msgstr "velikost souboru nesouhlasí"
 
-#: nscd/connections.c:561
+#: nscd/connections.c:560
 msgid "verification failed"
 msgstr "ověření selhalo"
 
-#: nscd/connections.c:575
+#: nscd/connections.c:574
 #, c-format
 msgid "suggested size of table for database %s larger than the persistent database's table"
 msgstr "navrhovaná velikost tabulky pro databázi %s je větší než tabulka trvalých databází"
 
-#: nscd/connections.c:586 nscd/connections.c:670
+#: nscd/connections.c:585 nscd/connections.c:669
 #, c-format
 msgid "cannot create read-only descriptor for \"%s\"; no mmap"
 msgstr "deskriptor jen-pro-čtení „%s“ nelze vytvořit: žádný mmap"
 
-#: nscd/connections.c:602
+#: nscd/connections.c:601
 #, c-format
 msgid "cannot access '%s'"
 msgstr "k „%s“ nelze přistoupit"
 
-#: nscd/connections.c:650
+#: nscd/connections.c:649
 #, c-format
 msgid "database for %s corrupted or simultaneously used; remove %s manually if necessary and restart"
 msgstr "Databáze pro %s je poškozena nebo vícenásobně používána. Je-li třeba, ručně odstraňte %s a restartuje."
 
-#: nscd/connections.c:656
+#: nscd/connections.c:655
 #, c-format
 msgid "cannot create %s; no persistent database used"
 msgstr "%s nelze vytvořit, žádná trvalá databáze nebude použita"
 
-#: nscd/connections.c:659
+#: nscd/connections.c:658
 #, c-format
 msgid "cannot create %s; no sharing possible"
 msgstr "%s nelze vytvořit, sdílení není možno"
 
-#: nscd/connections.c:730
+#: nscd/connections.c:729
 #, c-format
 msgid "cannot write to database file %s: %s"
 msgstr "do databázového soubor %s nelze zapsat: %s"
 
-#: nscd/connections.c:786
+#: nscd/connections.c:785
 #, c-format
 msgid "cannot open socket: %s"
 msgstr "soket nelze otevřít: %s"
 
-#: nscd/connections.c:805
+#: nscd/connections.c:804
 #, c-format
 msgid "cannot enable socket to accept connections: %s"
 msgstr "soket nemůže přijímat spojení: %s"
 
-#: nscd/connections.c:862
+#: nscd/connections.c:861
 #, c-format
 msgid "disabled inotify-based monitoring for file `%s': %s"
 msgstr "sledování souboru „%s“ pomocí inotify zakázáno: %s"
 
-#: nscd/connections.c:866
+#: nscd/connections.c:865
 #, c-format
 msgid "monitoring file `%s` (%d)"
 msgstr "sleduje se soubor „%s“ (%d)"
 
-#: nscd/connections.c:879
+#: nscd/connections.c:878
 #, c-format
 msgid "disabled inotify-based monitoring for directory `%s': %s"
 msgstr "sledování adresáře „%s“ pomocí inotify zakázáno: %s"
 
-#: nscd/connections.c:883
+#: nscd/connections.c:882
 #, c-format
 msgid "monitoring directory `%s` (%d)"
 msgstr "sleduje se adresář „%s“ (%d)"
 
-#: nscd/connections.c:911
+#: nscd/connections.c:910
 #, c-format
 msgid "monitoring file %s for database %s"
 msgstr "sleduje se soubor %s pro databázi %s"
 
-#: nscd/connections.c:921
+#: nscd/connections.c:920
 #, c-format
 msgid "stat failed for file `%s'; will try again later: %s"
 msgstr "volání stat nad souborem „%s“ selhalo, zkusí se později: %s"
 
-#: nscd/connections.c:1040
+#: nscd/connections.c:1039
 #, c-format
 msgid "provide access to FD %d, for %s"
 msgstr "poskytnout přístup na deskriptor souboru %d pro %s"
 
-#: nscd/connections.c:1052
+#: nscd/connections.c:1051
 #, c-format
 msgid "cannot handle old request version %d; current version is %d"
 msgstr "žádost staré verze (%d) nelze zpracovat; aktuální verze je %d"
 
-#: nscd/connections.c:1075
+#: nscd/connections.c:1074
 #, c-format
 msgid "request from %ld not handled due to missing permission"
 msgstr "požadavek z %ld neobsloužen kvůli chybějícím právům"
 
-#: nscd/connections.c:1080
+#: nscd/connections.c:1079
 #, c-format
 msgid "request from '%s' [%ld] not handled due to missing permission"
 msgstr "požadavek z „%s“ [%ld] neobsloužen kvůli chybějícím právům"
 
-#: nscd/connections.c:1085
+#: nscd/connections.c:1084
 msgid "request not handled due to missing permission"
 msgstr "požadavek neobsloužen kvůli chybějícím právům"
 
-#: nscd/connections.c:1123 nscd/connections.c:1149
+#: nscd/connections.c:1122 nscd/connections.c:1148
 #, c-format
 msgid "cannot write result: %s"
 msgstr "výsledek nelze zapsat: %s"
 
-#: nscd/connections.c:1240
+#: nscd/connections.c:1239
 #, c-format
 msgid "error getting caller's id: %s"
 msgstr "chyba při zjišťování id volajícího: %s"
 
-#: nscd/connections.c:1350
+#: nscd/connections.c:1349
 #, c-format
 msgid "cannot open /proc/self/cmdline: %m; disabling paranoia mode"
 msgstr "/proc/self/cmdline nelze otevřít: %m, paranoidní režim se vypíná"
 
-#: nscd/connections.c:1373
+#: nscd/connections.c:1372
 #, c-format
 msgid "cannot change to old UID: %s; disabling paranoia mode"
 msgstr "nelze se přepnout do starého UID: %s, paranoidní režim se vypíná"
 
-#: nscd/connections.c:1384
+#: nscd/connections.c:1383
 #, c-format
 msgid "cannot change to old GID: %s; disabling paranoia mode"
 msgstr "nelze se přepnout do starého GID: %s, paranoidní režim se vypíná"
 
-#: nscd/connections.c:1398
+#: nscd/connections.c:1397
 #, c-format
 msgid "cannot change to old working directory: %s; disabling paranoia mode"
 msgstr "nelze se přepnout do starého pracovního adresáře: %s, paranoidní režim se vypíná"
 
-#: nscd/connections.c:1445
+#: nscd/connections.c:1444
 #, c-format
 msgid "re-exec failed: %s; disabling paranoia mode"
 msgstr "znovuspuštění selhalo: %s, paranoidní režim se vypíná"
 
-#: nscd/connections.c:1454
+#: nscd/connections.c:1453
 #, c-format
 msgid "cannot change current working directory to \"/\": %s"
 msgstr "současný pracovní adresář nelze změnit na „/“: %s"
 
-#: nscd/connections.c:1638
+#: nscd/connections.c:1637
 #, c-format
 msgid "short read while reading request: %s"
 msgstr "neúplné čtení žádosti: „%s“"
 
-#: nscd/connections.c:1671
+#: nscd/connections.c:1670
 #, c-format
 msgid "key length in request too long: %d"
 msgstr "délka klíče v žádosti je příliš dlouhá: %d"
 
-#: nscd/connections.c:1684
+#: nscd/connections.c:1683
 #, c-format
 msgid "short read while reading request key: %s"
 msgstr "neúplné čtení klíče žádosti: %s"
 
-#: nscd/connections.c:1694
+#: nscd/connections.c:1693
 #, c-format
 msgid "handle_request: request received (Version = %d) from PID %ld"
 msgstr "handle_request: žádost přijata (verze = %d) od PID %ld"
 
-#: nscd/connections.c:1699
+#: nscd/connections.c:1698
 #, c-format
 msgid "handle_request: request received (Version = %d)"
 msgstr "handle_request: žádost přijata (verze = %d)"
 
-#: nscd/connections.c:1839
+#: nscd/connections.c:1838
 #, c-format
 msgid "ignored inotify event for `%s` (file exists)"
 msgstr "událost inotify pro „%s“ ignorována (soubor existuje)"
 
-#: nscd/connections.c:1844
+#: nscd/connections.c:1843
 #, c-format
 msgid "monitored file `%s` was %s, removing watch"
 msgstr "sledovaný soubor „%s“ byl %s, hlídání se ruší"
 
-#: nscd/connections.c:1852 nscd/connections.c:1894
+#: nscd/connections.c:1851 nscd/connections.c:1893
 #, c-format
 msgid "failed to remove file watch `%s`: %s"
 msgstr "zrušení hlídání souboru „%s“ selhalo: %s"
 
-#: nscd/connections.c:1867
+#: nscd/connections.c:1866
 #, c-format
 msgid "monitored file `%s` was written to"
 msgstr "do sledovaného souboru „%s“ bylo zapsáno"
 
-#: nscd/connections.c:1891
+#: nscd/connections.c:1890
 #, c-format
 msgid "monitored parent directory `%s` was %s, removing watch on `%s`"
 msgstr "sledovaný rodičovský adresář „%s“ byl %s, ruší se hlídání „%s“"
 
-#: nscd/connections.c:1917
+#: nscd/connections.c:1916
 #, c-format
 msgid "monitored file `%s` was %s, adding watch"
 msgstr "sledovaný soubor „%s“ byl %s, začíná se hlídat"
 
-#: nscd/connections.c:1929
+#: nscd/connections.c:1928
 #, c-format
 msgid "failed to add file watch `%s`: %s"
 msgstr "hlídání souboru „%s“ se nepodařilo zahájit: %s"
 
-#: nscd/connections.c:2107 nscd/connections.c:2272
+#: nscd/connections.c:2106 nscd/connections.c:2271
 #, c-format
 msgid "disabled inotify-based monitoring after read error %d"
 msgstr "po chybě v čtení %d bylo zakázáno sledování pomocí inotify"
 
-#: nscd/connections.c:2387
+#: nscd/connections.c:2386
 msgid "could not initialize conditional variable"
 msgstr "proměnnou podmínky nebylo možné inicializovat"
 
-#: nscd/connections.c:2395
+#: nscd/connections.c:2394
 msgid "could not start clean-up thread; terminating"
 msgstr "nebylo možné spustit úklidové vlákno, končím"
 
-#: nscd/connections.c:2409
+#: nscd/connections.c:2408
 msgid "could not start any worker thread; terminating"
 msgstr "nebylo možné spustit jakékoliv výkonné vlákno, končím"
 
-#: nscd/connections.c:2464 nscd/connections.c:2466 nscd/connections.c:2482
-#: nscd/connections.c:2492 nscd/connections.c:2510 nscd/connections.c:2521
-#: nscd/connections.c:2531
+#: nscd/connections.c:2463 nscd/connections.c:2465 nscd/connections.c:2481
+#: nscd/connections.c:2491 nscd/connections.c:2509 nscd/connections.c:2520
+#: nscd/connections.c:2530
 #, c-format
 msgid "Failed to run nscd as user '%s'"
 msgstr "Spuštění nscd pod uživatelem „%s“ selhalo"
 
-#: nscd/connections.c:2484
+#: nscd/connections.c:2483
 msgid "initial getgrouplist failed"
 msgstr "prvotní získání seznamu skupin (getgrouplist) selhalo"
 
-#: nscd/connections.c:2493
+#: nscd/connections.c:2492
 msgid "getgrouplist failed"
 msgstr "getgrouplist (získej seznam skupin) selhalo"
 
-#: nscd/connections.c:2511
+#: nscd/connections.c:2510
 msgid "setgroups failed"
 msgstr "funkce setgroups() selhala"
 
@@ -4202,7 +4193,7 @@ msgstr "Použije oddělenou cache pro každého uživatele"
 msgid "Name Service Cache Daemon."
 msgstr "NSC (Name Service Cache) démon [pro kešování jmenných služeb]."
 
-#: nscd/nscd.c:155 nss/getent.c:967 nss/makedb.c:206
+#: nscd/nscd.c:155 nss/getent.c:987 nss/makedb.c:206
 #, c-format
 msgid "wrong number of arguments"
 msgstr "chybný počet argumentů"
@@ -4594,46 +4585,46 @@ msgstr "„%s“ nebylo v keši pro služby nalezeno!"
 msgid "Reloading \"%s\" in services cache!"
 msgstr "Znovu načítám „%s“ do keše pro služby!"
 
-#: nss/getent.c:54
+#: nss/getent.c:55
 msgid "database [key ...]"
 msgstr "databáze [klíč…]"
 
-#: nss/getent.c:59
+#: nss/getent.c:60
 msgid "CONFIG"
 msgstr "KONFIGURACE"
 
-#: nss/getent.c:59
+#: nss/getent.c:60
 msgid "Service configuration to be used"
 msgstr "Konfigurace služby, která má být použita"
 
-#: nss/getent.c:60
+#: nss/getent.c:61
 msgid "disable IDN encoding"
 msgstr "zakáže kódování IDN"
 
-#: nss/getent.c:65
+#: nss/getent.c:66
 msgid "Get entries from administrative database."
 msgstr "Získá záznamy ze správní databáze."
 
-#: nss/getent.c:149 nss/getent.c:442 nss/getent.c:489
+#: nss/getent.c:150 nss/getent.c:462 nss/getent.c:509
 #, c-format
 msgid "Enumeration not supported on %s\n"
 msgstr "Výčet není podporován na %s\n"
 
-#: nss/getent.c:497 nss/getent.c:510
+#: nss/getent.c:517 nss/getent.c:530
 #, c-format
 msgid "Could not allocate group list: %m\n"
 msgstr "Seznam skupin nebylo možné alokovat: %m\n"
 
-#: nss/getent.c:881
+#: nss/getent.c:901
 #, c-format
 msgid "Unknown database name"
 msgstr "Neznámé jméno databáze"
 
-#: nss/getent.c:911
+#: nss/getent.c:931
 msgid "Supported databases:\n"
 msgstr "Podporované databáze:\n"
 
-#: nss/getent.c:977
+#: nss/getent.c:997
 #, c-format
 msgid "Unknown database: %s\n"
 msgstr "Neznámá databáze: %s\n"
@@ -4894,7 +4885,7 @@ msgstr "Nepárová ) or \\)"
 msgid "No previous regular expression"
 msgstr "Předchozí regulární výraz neexistuje"
 
-#: posix/wordexp.c:1815
+#: posix/wordexp.c:1816
 msgid "parameter null or not set"
 msgstr "parametr je nullový nebo prázdný"
 
@@ -5162,7 +5153,7 @@ msgstr "Neznámý signál %d"
 #: sunrpc/auth_unix.c:112 sunrpc/clnt_tcp.c:124 sunrpc/clnt_udp.c:139
 #: sunrpc/clnt_unix.c:125 sunrpc/svc_tcp.c:189 sunrpc/svc_tcp.c:233
 #: sunrpc/svc_udp.c:161 sunrpc/svc_unix.c:189 sunrpc/svc_unix.c:229
-#: sunrpc/xdr.c:628 sunrpc/xdr.c:788 sunrpc/xdr_array.c:102
+#: sunrpc/xdr.c:631 sunrpc/xdr.c:791 sunrpc/xdr_array.c:102
 #: sunrpc/xdr_rec.c:153 sunrpc/xdr_ref.c:79
 msgid "out of memory\n"
 msgstr "nedostatek paměti\n"
@@ -7314,6 +7305,21 @@ msgstr "příliš mnoho nebo příliš dlouhé zkratky časového pásma"
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s: Adresář %s nelze vytvořit: %s"
+
+#~ msgid "cannot open zero fill device"
+#~ msgstr "nulami vyplněné zařízení (zero) nelze otevřít"
+
+#~ msgid "relocation error"
+#~ msgstr "chyba při přemisťování"
+
+#~ msgid "Cannot set LC_CTYPE to default locale"
+#~ msgstr "LC_CTYPE nelze nastavit na implicitní národní prostředí"
+
+#~ msgid "Cannot set LC_MESSAGES to default locale"
+#~ msgstr "LC_MESSAGES nelze nastavit na implicitní národní prostředí"
+
+#~ msgid "Cannot set LC_COLLATE to default locale"
+#~ msgstr "LC_COLLATE nelze nastavit na implicitní národní prostředí"
 
 #~ msgid "unruly zone"
 #~ msgstr "časové pásmo bez pravidel"

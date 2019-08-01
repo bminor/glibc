@@ -1,19 +1,19 @@
 # Dutch translations for GNU libc.
-# Copyright (C) 2018 Free Software Foundation, Inc.
+# Copyright (C) 2019 Free Software Foundation, Inc.
 # This file is distributed under the same license as the glibc package.
 #
-# "When du ein Fehler machst, hast du kein Zahnschmerzen mehr."
+# "When du ein Fehler machst, hast du keine Zahnschmerzen mehr."
 #
 # Elros Cyriatan <cyriatan@fastmail.fm>, 2004.
 # Erwin Poeze <erwin.poeze@gmail.com>, 2009.
 # Benno Schulenberg <benno@vertaalt.nl>, 2006, 2007, 2008, 2010, 2011, 2012.
-# Benno Schulenberg <benno@vertaalt.nl>, 2013, 2014, 2015, 2017, 2018.
+# Benno Schulenberg <benno@vertaalt.nl>, 2013, 2014, 2015, 2017, 2018, 2019.
 msgid ""
 msgstr ""
-"Project-Id-Version: libc-2.26.9000\n"
+"Project-Id-Version: libc-2.29.9000\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-16 15:48+0530\n"
-"PO-Revision-Date: 2018-06-10 18:20+0200\n"
+"POT-Creation-Date: 2019-07-18 13:28-0400\n"
+"PO-Revision-Date: 2019-07-30 10:21+0200\n"
 "Last-Translator: Benno Schulenberg <vertaling@coevern.nl>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "Language: nl\n"
@@ -22,7 +22,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Bugs: Report translation errors to the Language-Team address.\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.6\n"
 
 #: argp/argp-help.c:227
 #, c-format
@@ -113,12 +112,13 @@ msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "**Interne programmafout**: optie had herkend moeten worden!?"
 
 #: assert/assert-perr.c:35
-#, fuzzy, c-format
-#| msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
+#, c-format
 msgid ""
 "%s%s%s:%u: %s%sUnexpected error: %s.\n"
 "%n"
-msgstr "%s%s%s:%u: %s%sOnverwachte fout: %s.\n"
+msgstr ""
+"%s%s%s:%u: %s%sOnverwachte fout: %s.\n"
+"%n"
 
 #: assert/assert.c:101
 #, c-format
@@ -159,10 +159,10 @@ msgstr ""
 "[UITVOERBESTAND [INVOERBESTAND...]]"
 
 #: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:308
-#: elf/pldd.c:252 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:405
-#: iconv/iconvconfig.c:379 locale/programs/locale.c:275
+#: elf/pldd.c:247 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:405
+#: iconv/iconvconfig.c:379 locale/programs/locale.c:276
 #: locale/programs/localedef.c:437 login/programs/pt_chown.c:89
-#: malloc/memusagestat.c:563 nss/getent.c:933 nss/makedb.c:369
+#: malloc/memusagestat.c:563 nss/getent.c:953 nss/makedb.c:369
 #: posix/getconf.c:503 sysdeps/unix/sysv/linux/lddlibc4.c:61
 #, c-format
 msgid ""
@@ -173,11 +173,11 @@ msgstr ""
 "  %s.\n"
 
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
-#: elf/ldconfig.c:324 elf/ldd.bash.in:38 elf/pldd.c:268 elf/sotruss.sh:75
+#: elf/ldconfig.c:324 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
 #: elf/sprof.c:389 iconv/iconv_prog.c:422 iconv/iconvconfig.c:396
-#: locale/programs/locale.c:292 locale/programs/localedef.c:463
+#: locale/programs/locale.c:293 locale/programs/localedef.c:463
 #: login/programs/pt_chown.c:63 malloc/memusage.sh:71
-#: malloc/memusagestat.c:581 nscd/nscd.c:509 nss/getent.c:87 nss/makedb.c:385
+#: malloc/memusagestat.c:581 nscd/nscd.c:509 nss/getent.c:88 nss/makedb.c:385
 #: posix/getconf.c:485 sysdeps/unix/sysv/linux/lddlibc4.c:68
 #, c-format
 msgid ""
@@ -191,10 +191,10 @@ msgstr ""
 "VOOR EEN BEPAALD DOEL.\n"
 
 #: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
-#: elf/ldconfig.c:329 elf/pldd.c:273 elf/sprof.c:395 iconv/iconv_prog.c:427
-#: iconv/iconvconfig.c:401 locale/programs/locale.c:297
+#: elf/ldconfig.c:329 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:427
+#: iconv/iconvconfig.c:401 locale/programs/locale.c:298
 #: locale/programs/localedef.c:468 malloc/memusage.sh:75
-#: malloc/memusagestat.c:586 nscd/nscd.c:514 nss/getent.c:92 nss/makedb.c:390
+#: malloc/memusagestat.c:586 nscd/nscd.c:514 nss/getent.c:93 nss/makedb.c:390
 #: posix/getconf.c:490
 #, c-format
 msgid "Written by %s.\n"
@@ -265,21 +265,21 @@ msgstr "kan uitvoerbestand '%s' niet openen"
 msgid "invalid escape sequence"
 msgstr "ongeldige stuurcode"
 
-#: catgets/gencat.c:1209
+#: catgets/gencat.c:1211
 msgid "unterminated message"
 msgstr "onafgesloten bericht"
 
-#: catgets/gencat.c:1233
+#: catgets/gencat.c:1235
 #, c-format
 msgid "while opening old catalog file"
 msgstr "bij openen van oude catalogusbestand"
 
-#: catgets/gencat.c:1324
+#: catgets/gencat.c:1326
 #, c-format
 msgid "conversion modules not available"
 msgstr "conversiemodules zijn niet beschikbaar"
 
-#: catgets/gencat.c:1350
+#: catgets/gencat.c:1352
 #, c-format
 msgid "cannot determine escape character"
 msgstr "kan niet bepalen wat het escapeteken is"
@@ -406,7 +406,7 @@ msgstr "onbekend besturingssysteem"
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", OS-ABI: %s %d.%d.%d"
 
-#: elf/cache.c:163 elf/ldconfig.c:1332
+#: elf/cache.c:163 elf/ldconfig.c:1333
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Kan cachebestand %s niet openen\n"
@@ -447,7 +447,7 @@ msgstr "Wijzigen van toegangsrechten van %s naar %#o is mislukt"
 msgid "Renaming of %s to %s failed"
 msgstr "Naamswijziging van %s naar %s is mislukt"
 
-#: elf/dl-close.c:399 elf/dl-open.c:420
+#: elf/dl-close.c:399 elf/dl-open.c:424
 msgid "cannot create scope list"
 msgstr "kan lijst voor geldigheidsbereik niet aanmaken"
 
@@ -469,10 +469,8 @@ msgid "cannot load auxiliary `%s' because of empty dynamic string token substitu
 msgstr "kan helper '%s' niet laden vanwege lege DST-vervanging\n"
 
 #: elf/dl-deps.c:220
-#, fuzzy
-#| msgid "cannot allocate dependency list"
 msgid "cannot allocate dependency buffer"
-msgstr "kan geen geheugen reserveren voor afhankelijkhedenlijst"
+msgstr "kan geen geheugen reserveren voor afhankelijkhedenbuffer"
 
 #: elf/dl-deps.c:443
 msgid "cannot allocate dependency list"
@@ -530,121 +528,119 @@ msgstr "kan zoekpad-array niet aanmaken"
 msgid "cannot stat shared object"
 msgstr "kan gedeeld object niet vinden"
 
-#: elf/dl-load.c:960
-msgid "cannot open zero fill device"
-msgstr "kan nullenapparaat niet openen"
-
-#: elf/dl-load.c:1007 elf/dl-load.c:2203
+#: elf/dl-load.c:992 elf/dl-load.c:2198
 msgid "cannot create shared object descriptor"
 msgstr "kan descriptor voor gedeeld object niet aanmaken"
 
-#: elf/dl-load.c:1026 elf/dl-load.c:1560 elf/dl-load.c:1673
+#: elf/dl-load.c:1011 elf/dl-load.c:1555 elf/dl-load.c:1668
 msgid "cannot read file data"
 msgstr "kan bestandsgegevens niet lezen"
 
-#: elf/dl-load.c:1072
+#: elf/dl-load.c:1057
 msgid "ELF load command alignment not page-aligned"
 msgstr "uitlijning in ELF-laadopdracht ligt niet op een paginagrens"
 
-#: elf/dl-load.c:1079
+#: elf/dl-load.c:1064
 msgid "ELF load command address/offset not properly aligned"
 msgstr "adres/positie in ELF-laadopdracht is niet correct uitgelijnd"
 
-#: elf/dl-load.c:1161
-#, fuzzy
-#| msgid "cannot restore segment prot after reloc"
+#: elf/dl-load.c:1146
 msgid "cannot process note segment"
-msgstr "kan segmentbescherming niet herstellen na verplaatsing"
+msgstr "kan notitiesegment niet verwerken"
 
-#: elf/dl-load.c:1172
+#: elf/dl-load.c:1157
 msgid "object file has no loadable segments"
 msgstr "objectbestand heeft geen laadbare segmenten"
 
-#: elf/dl-load.c:1181 elf/dl-load.c:1652
+#: elf/dl-load.c:1170 elf/dl-load.c:1647
 msgid "cannot dynamically load executable"
 msgstr "kan uitvoerbaar bestand niet dynamisch laden"
 
-#: elf/dl-load.c:1202
+#: elf/dl-load.c:1191
 msgid "object file has no dynamic section"
 msgstr "objectbestand heeft geen dynamische sectie"
 
-#: elf/dl-load.c:1225
+#: elf/dl-load.c:1218
+msgid "cannot dynamically load position-independent executable"
+msgstr "kan positie-onafhankelijk uitvoerbaar bestand niet dynamisch laden"
+
+#: elf/dl-load.c:1220
 msgid "shared object cannot be dlopen()ed"
 msgstr "gedeeld object kan niet met dlopen() geopend worden -- heeft DF_1_NOOPEN-vlag"
 
-#: elf/dl-load.c:1238
+#: elf/dl-load.c:1233
 msgid "cannot allocate memory for program header"
 msgstr "kan geen geheugen reserveren voor programmakop"
 
-#: elf/dl-load.c:1271 elf/dl-load.h:130
+#: elf/dl-load.c:1266 elf/dl-load.h:130
 msgid "cannot change memory protections"
 msgstr "kan geheugenbeschermingen niet veranderen"
 
-#: elf/dl-load.c:1291
+#: elf/dl-load.c:1286
 msgid "cannot enable executable stack as shared object requires"
 msgstr "kan uitvoerbare stack niet aanzetten zoals gedeeld object vereist"
 
-#: elf/dl-load.c:1304
+#: elf/dl-load.c:1299
 msgid "cannot close file descriptor"
 msgstr "kan bestandsdescriptor niet sluiten"
 
-#: elf/dl-load.c:1560
+#: elf/dl-load.c:1555
 msgid "file too short"
 msgstr "bestand is te kort"
 
-#: elf/dl-load.c:1595
+#: elf/dl-load.c:1590
 msgid "invalid ELF header"
 msgstr "ongeldige ELF-header"
 
-#: elf/dl-load.c:1607
+#: elf/dl-load.c:1602
 msgid "ELF file data encoding not big-endian"
 msgstr "gegevenscodering van ELF-bestand is niet big-endian"
 
-#: elf/dl-load.c:1609
+#: elf/dl-load.c:1604
 msgid "ELF file data encoding not little-endian"
 msgstr "gegevenscodering van ELF-bestand is niet little-endian"
 
-#: elf/dl-load.c:1613
+#: elf/dl-load.c:1608
 msgid "ELF file version ident does not match current one"
 msgstr "ELF-bestands-identversie komt niet overeen met huidige"
 
-#: elf/dl-load.c:1617
+#: elf/dl-load.c:1612
 msgid "ELF file OS ABI invalid"
 msgstr "OS-ABI van ELF-bestand is ongeldig"
 
-#: elf/dl-load.c:1620
+#: elf/dl-load.c:1615
 msgid "ELF file ABI version invalid"
 msgstr "ABI-versie van ELF-bestand is ongeldig"
 
-#: elf/dl-load.c:1623
+#: elf/dl-load.c:1618
 msgid "nonzero padding in e_ident"
 msgstr "opvulling met niet-nullen in e_ident()"
 
-#: elf/dl-load.c:1626
+#: elf/dl-load.c:1621
 msgid "internal error"
 msgstr "**interne fout**"
 
-#: elf/dl-load.c:1633
+#: elf/dl-load.c:1628
 msgid "ELF file version does not match current one"
 msgstr "ELF-bestandsversie komt niet overeen met huidige"
 
-#: elf/dl-load.c:1641
+#: elf/dl-load.c:1636
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "alleen ET_DYN en ET_EXEC kunnen worden geladen"
 
-#: elf/dl-load.c:1657
+#: elf/dl-load.c:1652
 msgid "ELF file's phentsize not the expected size"
 msgstr "'phentsize' van ELF-bestand heeft niet de verwachte grootte"
 
-#: elf/dl-load.c:2222
+#: elf/dl-load.c:2217
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "verkeerde ELF-klasse: ELFCLASS64"
 
-#: elf/dl-load.c:2223
+#: elf/dl-load.c:2218
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "verkeerde ELF-klasse: ELFCLASS32"
 
-#: elf/dl-load.c:2226
+#: elf/dl-load.c:2221
 msgid "cannot open shared object file"
 msgstr "kan gedeeld objectbestand niet openen"
 
@@ -656,11 +652,7 @@ msgstr "kan segment van gedeeld object niet in het geheugen plaatsen"
 msgid "cannot map zero-fill pages"
 msgstr "kan nul-gevulde pagina's niet in het geheugen plaatsen"
 
-#: elf/dl-lookup.c:835
-msgid "relocation error"
-msgstr "verplaatsingsfout"
-
-#: elf/dl-lookup.c:858
+#: elf/dl-lookup.c:830
 msgid "symbol lookup error"
 msgstr "opzoekfout voor symbool"
 
@@ -668,21 +660,21 @@ msgstr "opzoekfout voor symbool"
 msgid "cannot extend global scope"
 msgstr "kan globaal geldigheidsbereik niet uitbreiden"
 
-#: elf/dl-open.c:470
+#: elf/dl-open.c:474
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr ""
 "De TLS-generatieteller is opnieuw bij nul begonnen!\n"
 "Dit is een **programmafout**.  Graag rapporteren."
 
-#: elf/dl-open.c:534
+#: elf/dl-open.c:538
 msgid "invalid mode for dlopen()"
 msgstr "ongeldige modus voor dlopen()"
 
-#: elf/dl-open.c:551
+#: elf/dl-open.c:555
 msgid "no more namespaces available for dlmopen()"
 msgstr "geen naamsruimten meer beschikbaar voor dlmopen()"
 
-#: elf/dl-open.c:575
+#: elf/dl-open.c:579
 msgid "invalid target namespace in dlmopen()"
 msgstr "ongeldige doelnaamsruimte in dlmopen()"
 
@@ -925,22 +917,22 @@ msgstr "bij gebruik van '-r' is voor het configuratiebestand een absoluut pad ve
 msgid "memory exhausted"
 msgstr "onvoldoende geheugen beschikbaar"
 
-#: elf/ldconfig.c:1233
+#: elf/ldconfig.c:1234
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: kan map %s niet lezen"
 
-#: elf/ldconfig.c:1281
+#: elf/ldconfig.c:1282
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "relatief pad '%s' wordt gebruikt bij opbouwen van cache"
 
-#: elf/ldconfig.c:1311
+#: elf/ldconfig.c:1312
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Kan niet naar hoofdmap ('/') gaan"
 
-#: elf/ldconfig.c:1352
+#: elf/ldconfig.c:1353
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Kan map %s voor cachebestand niet openen\n"
@@ -1013,95 +1005,100 @@ msgstr "eindigde met een onbekende afsluitwaarde"
 msgid "error: you do not have read permission for"
 msgstr "fout: u hebt geen leesrechten voor"
 
-#: elf/pldd-xx.c:105
+#: elf/pldd-xx.c:102
 #, c-format
 msgid "cannot find program header of process"
 msgstr "kan programmakop van proces niet vinden"
 
-#: elf/pldd-xx.c:110
+#: elf/pldd-xx.c:106
 #, c-format
 msgid "cannot read program header"
 msgstr "kan programmakop niet lezen"
 
-#: elf/pldd-xx.c:135
+#: elf/pldd-xx.c:128
 #, c-format
 msgid "cannot read dynamic section"
 msgstr "kan dynamische sectie niet lezen"
 
-#: elf/pldd-xx.c:147
+#: elf/pldd-xx.c:137
 #, c-format
 msgid "cannot read r_debug"
 msgstr "kan 'r_debug' niet lezen"
 
-#: elf/pldd-xx.c:167
+#: elf/pldd-xx.c:154
 #, c-format
 msgid "cannot read program interpreter"
 msgstr "kan programma-interpreter niet lezen"
 
-#: elf/pldd-xx.c:197
+#: elf/pldd-xx.c:183
 #, c-format
 msgid "cannot read link map"
 msgstr "kan link-kaart niet lezen"
 
-#: elf/pldd-xx.c:209
+#: elf/pldd-xx.c:190
 #, c-format
 msgid "cannot read object name"
 msgstr "kan objectnaam niet lezen"
 
-#: elf/pldd-xx.c:219
+#: elf/pldd-xx.c:197
 #, c-format
 msgid "cannot allocate buffer for object name"
 msgstr "kan geen geheugen reserveren voor objectnaambuffer"
 
-#: elf/pldd.c:64
+#: elf/pldd.c:58
 msgid "List dynamic shared objects loaded into process."
 msgstr "Dynamische gedeelde objecten tonen die in proces geladen zijn."
 
-#: elf/pldd.c:68
+#: elf/pldd.c:62
 msgid "PID"
 msgstr "PID"
 
-#: elf/pldd.c:100
+#: elf/pldd.c:89
 #, c-format
 msgid "Exactly one parameter with process ID required.\n"
 msgstr "Precies één argument met proces-ID is vereist.\n"
 
-#: elf/pldd.c:112
+#: elf/pldd.c:103
 #, c-format
 msgid "invalid process ID '%s'"
 msgstr "ongeldig proces-ID: '%s'"
 
-#: elf/pldd.c:120
+#: elf/pldd.c:111
 #, c-format
 msgid "cannot open %s"
 msgstr "kan '%s' niet openen"
 
-#: elf/pldd.c:152
+#: elf/pldd.c:142
 #, c-format
 msgid "cannot open %s/task"
 msgstr "kan '%s/task' niet openen"
 
-#: elf/pldd.c:155
+#: elf/pldd.c:145
 #, c-format
 msgid "cannot prepare reading %s/task"
 msgstr "kan lezen van '%s/task' niet voorbereiden"
 
-#: elf/pldd.c:168
+#: elf/pldd.c:158
 #, c-format
 msgid "invalid thread ID '%s'"
 msgstr "ongeldig thread-ID: '%s'"
 
-#: elf/pldd.c:179
+#: elf/pldd.c:169
 #, c-format
 msgid "cannot attach to process %lu"
 msgstr "kan niet aanhechten aan proces %lu"
 
-#: elf/pldd.c:294
+#: elf/pldd.c:184
+#, c-format
+msgid "no valid %s/task entries"
+msgstr "geen geldige '%s/task' items"
+
+#: elf/pldd.c:290
 #, c-format
 msgid "cannot get information about process %lu"
 msgstr "kan geen informatie verkrijgen over proces %lu"
 
-#: elf/pldd.c:307
+#: elf/pldd.c:303
 #, c-format
 msgid "process %lu is no ELF program"
 msgstr "proces %lu is geen ELF-programma"
@@ -1644,10 +1641,8 @@ msgid "Error: .netrc file is readable by others."
 msgstr "Fout: .netrc-bestand is leesbaar voor anderen."
 
 #: inet/ruserpass.c:180
-#, fuzzy
-#| msgid "Remove password or make file unreadable by others."
 msgid "Remove 'password' line or make file unreadable by others."
-msgstr "Verwijder het wachtwoord of maak het bestand onleesbaar voor anderen."
+msgstr "Verwijder de regel met 'password', of maak het bestand onleesbaar voor anderen."
 
 #: inet/ruserpass.c:199
 #, c-format
@@ -1720,14 +1715,14 @@ msgstr "tekensets met blokkerende toestanden worden niet ondersteund"
 
 #: locale/programs/charmap.c:503 locale/programs/charmap.c:557
 #: locale/programs/charmap.c:589 locale/programs/charmap.c:683
-#: locale/programs/charmap.c:738 locale/programs/charmap.c:779
-#: locale/programs/charmap.c:820
+#: locale/programs/charmap.c:739 locale/programs/charmap.c:780
+#: locale/programs/charmap.c:821
 #, c-format
 msgid "syntax error in %s definition: %s"
 msgstr "syntaxfout in definitie van %s: %s"
 
 #: locale/programs/charmap.c:504 locale/programs/charmap.c:684
-#: locale/programs/charmap.c:780 locale/programs/repertoire.c:229
+#: locale/programs/charmap.c:781 locale/programs/repertoire.c:229
 msgid "no symbolic name given"
 msgstr "geen symbolische naam gegeven"
 
@@ -1743,14 +1738,14 @@ msgstr "te weinig bytes in tekencodering"
 msgid "too many bytes in character encoding"
 msgstr "te veel bytes in tekencodering"
 
-#: locale/programs/charmap.c:591 locale/programs/charmap.c:739
-#: locale/programs/charmap.c:822 locale/programs/repertoire.c:295
+#: locale/programs/charmap.c:591 locale/programs/charmap.c:740
+#: locale/programs/charmap.c:823 locale/programs/repertoire.c:295
 msgid "no symbolic name given for end of range"
 msgstr "geen symbolische naam gegeven voor einde-van-bereik"
 
 #: locale/programs/charmap.c:615 locale/programs/ld-address.c:524
 #: locale/programs/ld-collate.c:2616 locale/programs/ld-collate.c:3774
-#: locale/programs/ld-ctype.c:2117 locale/programs/ld-ctype.c:2829
+#: locale/programs/ld-ctype.c:2118 locale/programs/ld-ctype.c:2830
 #: locale/programs/ld-identification.c:397
 #: locale/programs/ld-measurement.c:213 locale/programs/ld-messages.c:295
 #: locale/programs/ld-monetary.c:748 locale/programs/ld-name.c:262
@@ -1765,19 +1760,19 @@ msgstr "%1$s: definitie eindigt niet met 'END %1$s'"
 msgid "only WIDTH definitions are allowed to follow the CHARMAP definition"
 msgstr "na de definitie van CHARMAP zijn alleen definities van WIDTH toegestaan"
 
-#: locale/programs/charmap.c:656 locale/programs/charmap.c:719
+#: locale/programs/charmap.c:656 locale/programs/charmap.c:720
 #, c-format
 msgid "value for %s must be an integer"
 msgstr "de waarde van %s moet een geheel getal zijn"
 
-#: locale/programs/charmap.c:847
+#: locale/programs/charmap.c:848
 #, c-format
 msgid "%s: error in state machine"
 msgstr "%s: **interne fout** in toestandsmachine"
 
-#: locale/programs/charmap.c:855 locale/programs/ld-address.c:540
+#: locale/programs/charmap.c:856 locale/programs/ld-address.c:540
 #: locale/programs/ld-collate.c:2613 locale/programs/ld-collate.c:3967
-#: locale/programs/ld-ctype.c:2114 locale/programs/ld-ctype.c:2846
+#: locale/programs/ld-ctype.c:2115 locale/programs/ld-ctype.c:2847
 #: locale/programs/ld-identification.c:413
 #: locale/programs/ld-measurement.c:229 locale/programs/ld-messages.c:311
 #: locale/programs/ld-monetary.c:764 locale/programs/ld-name.c:278
@@ -1788,35 +1783,35 @@ msgstr "%s: **interne fout** in toestandsmachine"
 msgid "%s: premature end of file"
 msgstr "%s: voortijdig einde van bestand"
 
-#: locale/programs/charmap.c:874 locale/programs/charmap.c:885
+#: locale/programs/charmap.c:875 locale/programs/charmap.c:886
 #, c-format
 msgid "unknown character `%s'"
 msgstr "onbekend teken '%s'"
 
-#: locale/programs/charmap.c:893
+#: locale/programs/charmap.c:894
 #, c-format
 msgid "number of bytes for byte sequence of beginning and end of range not the same: %d vs %d"
 msgstr "het aantal bytes in de bytereeks is voor begin en einde van het bereik niet hetzelfde: %d tegenover %d"
 
-#: locale/programs/charmap.c:998 locale/programs/ld-collate.c:2893
+#: locale/programs/charmap.c:999 locale/programs/ld-collate.c:2893
 #: locale/programs/repertoire.c:418
 msgid "invalid names for character range"
 msgstr "ongeldige namen voor tekenbereik"
 
-#: locale/programs/charmap.c:1010 locale/programs/repertoire.c:430
+#: locale/programs/charmap.c:1011 locale/programs/repertoire.c:430
 msgid "hexadecimal range format should use only capital characters"
 msgstr "hexadecimale bereikopgave mag alleen hoofdletters bevatten"
 
-#: locale/programs/charmap.c:1028 locale/programs/repertoire.c:448
+#: locale/programs/charmap.c:1029 locale/programs/repertoire.c:448
 #, c-format
 msgid "<%s> and <%s> are invalid names for range"
 msgstr "<%s> en <%s> zijn ongeldige namen voor een bereik"
 
-#: locale/programs/charmap.c:1034 locale/programs/repertoire.c:455
+#: locale/programs/charmap.c:1035 locale/programs/repertoire.c:455
 msgid "upper limit in range is smaller than lower limit"
 msgstr "bovengrens in bereik is kleiner dan ondergrens"
 
-#: locale/programs/charmap.c:1092
+#: locale/programs/charmap.c:1093
 msgid "resulting bytes for range not representable."
 msgstr "resulterende bytes voor bereik zijn niet te representeren"
 
@@ -1885,7 +1880,7 @@ msgid "%s: numeric country code `%d' not valid"
 msgstr "%s: numerieke landcode '%d' is ongeldig"
 
 #: locale/programs/ld-address.c:432 locale/programs/ld-address.c:469
-#: locale/programs/ld-address.c:507 locale/programs/ld-ctype.c:2478
+#: locale/programs/ld-address.c:507 locale/programs/ld-ctype.c:2479
 #: locale/programs/ld-identification.c:309
 #: locale/programs/ld-measurement.c:196 locale/programs/ld-messages.c:264
 #: locale/programs/ld-monetary.c:503 locale/programs/ld-monetary.c:538
@@ -1908,7 +1903,7 @@ msgid "%s: unknown character in field `%s'"
 msgstr "%s: onbekend teken in het veld '%s'"
 
 #: locale/programs/ld-address.c:521 locale/programs/ld-collate.c:3772
-#: locale/programs/ld-ctype.c:2826 locale/programs/ld-identification.c:394
+#: locale/programs/ld-ctype.c:2827 locale/programs/ld-identification.c:394
 #: locale/programs/ld-measurement.c:210 locale/programs/ld-messages.c:293
 #: locale/programs/ld-monetary.c:746 locale/programs/ld-name.c:260
 #: locale/programs/ld-numeric.c:323 locale/programs/ld-paper.c:210
@@ -1921,8 +1916,8 @@ msgstr "%s: onvolledige 'END'-regel"
 #: locale/programs/ld-collate.c:602 locale/programs/ld-collate.c:898
 #: locale/programs/ld-collate.c:911 locale/programs/ld-collate.c:2582
 #: locale/programs/ld-collate.c:2603 locale/programs/ld-collate.c:3957
-#: locale/programs/ld-ctype.c:1846 locale/programs/ld-ctype.c:2104
-#: locale/programs/ld-ctype.c:2676 locale/programs/ld-ctype.c:2837
+#: locale/programs/ld-ctype.c:1847 locale/programs/ld-ctype.c:2105
+#: locale/programs/ld-ctype.c:2677 locale/programs/ld-ctype.c:2838
 #: locale/programs/ld-identification.c:404
 #: locale/programs/ld-measurement.c:220 locale/programs/ld-messages.c:302
 #: locale/programs/ld-monetary.c:755 locale/programs/ld-name.c:269
@@ -2266,132 +2261,132 @@ msgstr "tekensetdefinitie '%s' is al gedefinieerd"
 msgid "implementation limit: no more than %d character maps allowed"
 msgstr "implementatiegrens: er zijn niet meer dan %d tekensetdefinities toegestaan"
 
-#: locale/programs/ld-ctype.c:1434 locale/programs/ld-ctype.c:1559
-#: locale/programs/ld-ctype.c:1665 locale/programs/ld-ctype.c:2341
-#: locale/programs/ld-ctype.c:3299
+#: locale/programs/ld-ctype.c:1435 locale/programs/ld-ctype.c:1560
+#: locale/programs/ld-ctype.c:1666 locale/programs/ld-ctype.c:2342
+#: locale/programs/ld-ctype.c:3302
 #, c-format
 msgid "%s: field `%s' does not contain exactly ten entries"
 msgstr "%s: het veld '%s' bevat niet precies tien items"
 
-#: locale/programs/ld-ctype.c:1462 locale/programs/ld-ctype.c:2036
+#: locale/programs/ld-ctype.c:1463 locale/programs/ld-ctype.c:2037
 #, c-format
 msgid "to-value <U%0*X> of range is smaller than from-value <U%0*X>"
 msgstr "eindwaarde <U%0*X> van bereik is kleiner dan beginwaarde <U%0*X>"
 
-#: locale/programs/ld-ctype.c:1589
+#: locale/programs/ld-ctype.c:1590
 msgid "start and end character sequence of range must have the same length"
 msgstr "begin- en eindbytereeks van bereik moeten dezelfde lengte hebben"
 
-#: locale/programs/ld-ctype.c:1596
+#: locale/programs/ld-ctype.c:1597
 msgid "to-value character sequence is smaller than from-value sequence"
 msgstr "eindwaarde is kleiner dan beginwaarde"
 
-#: locale/programs/ld-ctype.c:1956 locale/programs/ld-ctype.c:2007
+#: locale/programs/ld-ctype.c:1957 locale/programs/ld-ctype.c:2008
 msgid "premature end of `translit_ignore' definition"
 msgstr "voortijdig einde van definitie van 'translit_ignore'"
 
 #
 # This error message is issued when yacc finds an error at parse time.
 #
-#: locale/programs/ld-ctype.c:1962 locale/programs/ld-ctype.c:2013
-#: locale/programs/ld-ctype.c:2055
+#: locale/programs/ld-ctype.c:1963 locale/programs/ld-ctype.c:2014
+#: locale/programs/ld-ctype.c:2056
 msgid "syntax error"
 msgstr "syntaxfout"
 
-#: locale/programs/ld-ctype.c:2188
+#: locale/programs/ld-ctype.c:2189
 #, c-format
 msgid "%s: syntax error in definition of new character class"
 msgstr "%s: syntaxfout in definitie van nieuwe tekenklasse"
 
-#: locale/programs/ld-ctype.c:2203
+#: locale/programs/ld-ctype.c:2204
 #, c-format
 msgid "%s: syntax error in definition of new character map"
 msgstr "%s: syntaxfout in nieuwe tekensetdefinitie"
 
-#: locale/programs/ld-ctype.c:2363
+#: locale/programs/ld-ctype.c:2364
 msgid "ellipsis range must be marked by two operands of same type"
 msgstr "een bereik met een beletselteken moet twee parameters van dezelfde soort bevatten"
 
-#: locale/programs/ld-ctype.c:2372
+#: locale/programs/ld-ctype.c:2373
 msgid "with symbolic name range values the absolute ellipsis `...' must not be used"
 msgstr "in een bereik met symbolische namen mag het absolute beletselteken '...' niet gebruikt worden"
 
-#: locale/programs/ld-ctype.c:2387
+#: locale/programs/ld-ctype.c:2388
 msgid "with UCS range values one must use the hexadecimal symbolic ellipsis `..'"
 msgstr "in een bereik met UCS-waarden moet het hexadecimale symbolische beletselsteken '..' gebruikt worden"
 
-#: locale/programs/ld-ctype.c:2401
+#: locale/programs/ld-ctype.c:2402
 msgid "with character code range values one must use the absolute ellipsis `...'"
 msgstr "in een bereik met tekencodes moet het absolute beletselteken '...' gebruikt worden"
 
-#: locale/programs/ld-ctype.c:2552
+#: locale/programs/ld-ctype.c:2553
 #, c-format
 msgid "duplicated definition for mapping `%s'"
 msgstr "dubbele definitie van afbeelding '%s'"
 
-#: locale/programs/ld-ctype.c:2638 locale/programs/ld-ctype.c:2782
+#: locale/programs/ld-ctype.c:2639 locale/programs/ld-ctype.c:2783
 #, c-format
 msgid "%s: `translit_start' section does not end with `translit_end'"
 msgstr "%s: sectie 'translit_start' eindigt niet met 'translit_end'"
 
-#: locale/programs/ld-ctype.c:2733
+#: locale/programs/ld-ctype.c:2734
 #, c-format
 msgid "%s: duplicate `default_missing' definition"
 msgstr "%s: dubbele definitie van 'default_missing'"
 
-#: locale/programs/ld-ctype.c:2738
+#: locale/programs/ld-ctype.c:2739
 msgid "previous definition was here"
 msgstr "de vorige definitie was hier"
 
-#: locale/programs/ld-ctype.c:2760
+#: locale/programs/ld-ctype.c:2761
 #, c-format
 msgid "%s: no representable `default_missing' definition found"
 msgstr "%s: geen representeerbare definitie van 'default_missing' gevonden"
 
-#: locale/programs/ld-ctype.c:2877 locale/programs/ld-ctype.c:2973
-#: locale/programs/ld-ctype.c:2992 locale/programs/ld-ctype.c:3012
-#: locale/programs/ld-ctype.c:3032 locale/programs/ld-ctype.c:3052
-#: locale/programs/ld-ctype.c:3072 locale/programs/ld-ctype.c:3111
-#: locale/programs/ld-ctype.c:3131 locale/programs/ld-ctype.c:3195
-#: locale/programs/ld-ctype.c:3236 locale/programs/ld-ctype.c:3259
+#: locale/programs/ld-ctype.c:2878 locale/programs/ld-ctype.c:2974
+#: locale/programs/ld-ctype.c:2993 locale/programs/ld-ctype.c:3013
+#: locale/programs/ld-ctype.c:3033 locale/programs/ld-ctype.c:3053
+#: locale/programs/ld-ctype.c:3073 locale/programs/ld-ctype.c:3112
+#: locale/programs/ld-ctype.c:3132 locale/programs/ld-ctype.c:3198
+#: locale/programs/ld-ctype.c:3239 locale/programs/ld-ctype.c:3262
 #, c-format
 msgid "%s: character `%s' not defined while needed as default value"
 msgstr "%s: teken '%s' is niet gedefinieerd maar is nodig als standaardwaarde"
 
-#: locale/programs/ld-ctype.c:2882 locale/programs/ld-ctype.c:2978
-#: locale/programs/ld-ctype.c:2997 locale/programs/ld-ctype.c:3017
-#: locale/programs/ld-ctype.c:3037 locale/programs/ld-ctype.c:3057
-#: locale/programs/ld-ctype.c:3077 locale/programs/ld-ctype.c:3116
-#: locale/programs/ld-ctype.c:3136 locale/programs/ld-ctype.c:3200
+#: locale/programs/ld-ctype.c:2883 locale/programs/ld-ctype.c:2979
+#: locale/programs/ld-ctype.c:2998 locale/programs/ld-ctype.c:3018
+#: locale/programs/ld-ctype.c:3038 locale/programs/ld-ctype.c:3058
+#: locale/programs/ld-ctype.c:3078 locale/programs/ld-ctype.c:3117
+#: locale/programs/ld-ctype.c:3137 locale/programs/ld-ctype.c:3203
 #, c-format
 msgid "%s: character `%s' in charmap not representable with one byte"
 msgstr "%s: teken '%s' in de tekensetdefinitie is niet te representeren met één byte"
 
-#: locale/programs/ld-ctype.c:3242 locale/programs/ld-ctype.c:3265
+#: locale/programs/ld-ctype.c:3245 locale/programs/ld-ctype.c:3268
 #, c-format
 msgid "%s: character `%s' needed as default value not representable with one byte"
 msgstr "%s: teken '%s' is nodig als standaardwaarde maar niet te representeren met één byte"
 
-#: locale/programs/ld-ctype.c:3321
+#: locale/programs/ld-ctype.c:3324
 msgid "no output digits defined and none of the standard names in the charmap"
 msgstr "er zijn geen uitvoercijfers gedefinieerd en geen van de standaardnamen zit in de tekensetdefinitie"
 
-#: locale/programs/ld-ctype.c:3570
+#: locale/programs/ld-ctype.c:3573
 #, c-format
 msgid "%s: transliteration data from locale `%s' not available"
 msgstr "%s: transliteratiegegevens van taalregio '%s' zijn niet beschikbaar"
 
-#: locale/programs/ld-ctype.c:3669
+#: locale/programs/ld-ctype.c:3672
 #, c-format
 msgid "%s: table for class \"%s\": %lu bytes"
 msgstr "%s: tabel voor klasse \"%s\": %lu bytes"
 
-#: locale/programs/ld-ctype.c:3733
+#: locale/programs/ld-ctype.c:3736
 #, c-format
 msgid "%s: table for map \"%s\": %lu bytes"
 msgstr "%s: tabel voor kaart \"%s\": %lu bytes"
 
-#: locale/programs/ld-ctype.c:3857
+#: locale/programs/ld-ctype.c:3860
 #, c-format
 msgid "%s: table for width: %lu bytes"
 msgstr "%s: tabel voor breedte: %lu bytes"
@@ -2631,30 +2626,20 @@ msgstr ""
 "NAAM\n"
 "[-a|-m]"
 
-#: locale/programs/locale.c:190
-#, c-format
-msgid "Cannot set LC_CTYPE to default locale"
-msgstr "Kan LC_TYPE niet op de standaard-taalregio instellen"
-
-#: locale/programs/locale.c:192
-#, c-format
-msgid "Cannot set LC_MESSAGES to default locale"
-msgstr "Kan LC_MESSAGES niet op de standaard-taalregio instellen"
-
-#: locale/programs/locale.c:205
-#, c-format
-msgid "Cannot set LC_COLLATE to default locale"
-msgstr "Kan LC_COLLATE niet op de standaard-taalregio instellen"
-
-#: locale/programs/locale.c:221
-#, c-format
-msgid "Cannot set LC_ALL to default locale"
-msgstr "Kan LC_ALL niet op de standaard-taalregio instellen"
-
-#: locale/programs/locale.c:521
+#: locale/programs/locale.c:522
 #, c-format
 msgid "while preparing output"
 msgstr "tijdens voorbereiden van uitvoer"
+
+#: locale/programs/locale.c:998
+#, c-format
+msgid "Cannot set %s to default locale"
+msgstr "Kan %s niet op de standaard taalregio instellen"
+
+#: locale/programs/locale.c:1096
+#, c-format
+msgid "warning: The LOCPATH variable is set to \"%s\"\n"
+msgstr "waarschuwing: de variabele 'LOCPATH' is ingesteld op \"%s\"\n"
 
 #: locale/programs/localedef.c:116
 msgid "Input Files:"
@@ -2679,7 +2664,7 @@ msgstr "ook uitvoer genereren na waarschuwingen"
 
 #: locale/programs/localedef.c:128
 msgid "Do not create hard links between installed locales"
-msgstr ""
+msgstr "geen harde koppelingen maken tussen geïnstalleerde taalregios"
 
 #: locale/programs/localedef.c:129
 msgid "Optional output file prefix"
@@ -3815,12 +3800,12 @@ msgstr "yp_update: kan host niet converteren naar netnaam\n"
 msgid "yp_update: cannot get server address\n"
 msgstr "yp_update: kan server-adres niet opvragen\n"
 
-#: nscd/aicache.c:83 nscd/hstcache.c:452
+#: nscd/aicache.c:82 nscd/hstcache.c:452
 #, c-format
 msgid "Haven't found \"%s\" in hosts cache!"
 msgstr "Item \"%s\" niet gevonden in hosts-cache!"
 
-#: nscd/aicache.c:85 nscd/hstcache.c:454
+#: nscd/aicache.c:84 nscd/hstcache.c:454
 #, c-format
 msgid "Reloading \"%s\" in hosts cache!"
 msgstr "Herladen van \"%s\" in hosts-cache!"
@@ -3854,265 +3839,264 @@ msgstr "snoeien van cache %s; tijd %ld"
 msgid "considering %s entry \"%s\", timeout %<PRIu64>"
 msgstr "overwegen van %s-item \"%s\", tijdslimiet %<PRIu64>"
 
-#: nscd/connections.c:521
+#: nscd/connections.c:520
 #, c-format
 msgid "invalid persistent database file \"%s\": %s"
 msgstr "ongeldig persistent gegevensbestand '%s': %s"
 
-#: nscd/connections.c:529
+#: nscd/connections.c:528
 msgid "uninitialized header"
 msgstr "ongeïnitialiseerde header"
 
-#: nscd/connections.c:534
+#: nscd/connections.c:533
 msgid "header size does not match"
 msgstr "grootte van de kop klopt niet"
 
-#: nscd/connections.c:544
+#: nscd/connections.c:543
 msgid "file size does not match"
 msgstr "bestandsgrootte klopt niet"
 
-#: nscd/connections.c:561
+#: nscd/connections.c:560
 msgid "verification failed"
 msgstr "gegevenscontrole is mislukt"
 
-#: nscd/connections.c:575
+#: nscd/connections.c:574
 #, c-format
 msgid "suggested size of table for database %s larger than the persistent database's table"
 msgstr "de aangeraden tabelgrootte voor gegevensbestand '%s' is groter dan de tabelgrootte van het persistente gegevensbestand"
 
-#: nscd/connections.c:586 nscd/connections.c:670
+#: nscd/connections.c:585 nscd/connections.c:669
 #, c-format
 msgid "cannot create read-only descriptor for \"%s\"; no mmap"
 msgstr "kan geen alleen-lezen-descriptor voor '%s' aanmaken; geen mmap()"
 
-#: nscd/connections.c:602
+#: nscd/connections.c:601
 #, c-format
 msgid "cannot access '%s'"
 msgstr "kan geen toegang tot '%s' verkrijgen"
 
-#: nscd/connections.c:650
+#: nscd/connections.c:649
 #, c-format
 msgid "database for %s corrupted or simultaneously used; remove %s manually if necessary and restart"
 msgstr ""
 "gegevensbestand voor %s is beschadigd of wordt al gebruikt;\n"
 "verwijder %s zo nodig handmatig en herstart"
 
-#: nscd/connections.c:656
+#: nscd/connections.c:655
 #, c-format
 msgid "cannot create %s; no persistent database used"
 msgstr "kan %s niet aanmaken; geen persistent gegevensbestand gebruikt"
 
-#: nscd/connections.c:659
+#: nscd/connections.c:658
 #, c-format
 msgid "cannot create %s; no sharing possible"
 msgstr "kan %s niet aanmaken; bestandsdeling is niet mogelijk"
 
-#: nscd/connections.c:730
+#: nscd/connections.c:729
 #, c-format
 msgid "cannot write to database file %s: %s"
 msgstr "kan niet naar gegevensbestand %s schrijven: %s"
 
-#: nscd/connections.c:786
+#: nscd/connections.c:785
 #, c-format
 msgid "cannot open socket: %s"
 msgstr "kan socket niet openen: %s"
 
-#: nscd/connections.c:805
+#: nscd/connections.c:804
 #, c-format
 msgid "cannot enable socket to accept connections: %s"
 msgstr "kan socket geen verbindingen laten accepteren: %s"
 
-#: nscd/connections.c:862
+#: nscd/connections.c:861
 #, c-format
 msgid "disabled inotify-based monitoring for file `%s': %s"
 msgstr "'inotify'-monitoring van bestand '%s' is uitgeschakeld: %s"
 
-#: nscd/connections.c:866
+#: nscd/connections.c:865
 #, c-format
 msgid "monitoring file `%s` (%d)"
 msgstr "bestand '%s' wordt gemonitord (%d)"
 
-#: nscd/connections.c:879
+#: nscd/connections.c:878
 #, c-format
 msgid "disabled inotify-based monitoring for directory `%s': %s"
 msgstr "'inotify'-monitoring van map '%s' is uitgeschakeld: %s"
 
-#: nscd/connections.c:883
+#: nscd/connections.c:882
 #, c-format
 msgid "monitoring directory `%s` (%d)"
 msgstr "map '%s' wordt gemonitord (%d)"
 
-#: nscd/connections.c:911
+#: nscd/connections.c:910
 #, c-format
 msgid "monitoring file %s for database %s"
 msgstr "bestand '%s' wordt gemonitord voor gegevensbank '%s'"
 
-#: nscd/connections.c:921
+#: nscd/connections.c:920
 #, c-format
 msgid "stat failed for file `%s'; will try again later: %s"
 msgstr "opvragen van status van bestand '%s' is mislukt; zal het later opnieuw proberen: %s"
 
-#: nscd/connections.c:1040
+#: nscd/connections.c:1039
 #, c-format
 msgid "provide access to FD %d, for %s"
 msgstr "toegang verleend aan bestandsdescriptor %d, voor %s"
 
-#: nscd/connections.c:1052
+#: nscd/connections.c:1051
 #, c-format
 msgid "cannot handle old request version %d; current version is %d"
 msgstr "kan verzoek voor oude versie %d niet behandelen; huidige versie is %d"
 
-#: nscd/connections.c:1075
+#: nscd/connections.c:1074
 #, c-format
 msgid "request from %ld not handled due to missing permission"
 msgstr "verzoek van %ld is niet behandeld omdat er rechten ontbreken"
 
-#: nscd/connections.c:1080
+#: nscd/connections.c:1079
 #, c-format
 msgid "request from '%s' [%ld] not handled due to missing permission"
 msgstr "verzoek van '%s' [%ld] is niet behandeld omdat er rechten ontbreken"
 
-#: nscd/connections.c:1085
+#: nscd/connections.c:1084
 msgid "request not handled due to missing permission"
 msgstr "verzoek is niet behandeld omdat er rechten ontbreken"
 
-#: nscd/connections.c:1123 nscd/connections.c:1149
+#: nscd/connections.c:1122 nscd/connections.c:1148
 #, c-format
 msgid "cannot write result: %s"
 msgstr "kan resultaat niet schrijven: %s"
 
-#: nscd/connections.c:1240
+#: nscd/connections.c:1239
 #, c-format
 msgid "error getting caller's id: %s"
 msgstr "fout bij opvragen van ID van aanroeper: %s"
 
-#: nscd/connections.c:1350
-#, fuzzy, c-format
-#| msgid "cannot open /proc/self/cmdline: %s; disabling paranoia mode"
+#: nscd/connections.c:1349
+#, c-format
 msgid "cannot open /proc/self/cmdline: %m; disabling paranoia mode"
-msgstr "kan '/proc/self/cmdline' niet openen: %s -- paranoia-modus is uitgeschakeld"
+msgstr "kan '/proc/self/cmdline' niet openen: %m -- paranoia-modus is uitgeschakeld"
 
-#: nscd/connections.c:1373
+#: nscd/connections.c:1372
 #, c-format
 msgid "cannot change to old UID: %s; disabling paranoia mode"
 msgstr "kan niet overschakelen naar oude UID: %s -- paranoia-modus is uitgeschakeld"
 
-#: nscd/connections.c:1384
+#: nscd/connections.c:1383
 #, c-format
 msgid "cannot change to old GID: %s; disabling paranoia mode"
 msgstr "kan niet overschakelen naar oude GID: %s -- paranoia-modus is uitgeschakeld"
 
-#: nscd/connections.c:1398
+#: nscd/connections.c:1397
 #, c-format
 msgid "cannot change to old working directory: %s; disabling paranoia mode"
 msgstr "kan niet overschakelen naar oude werkmap: %s -- paranoia-modus is uitgeschakeld"
 
-#: nscd/connections.c:1445
+#: nscd/connections.c:1444
 #, c-format
 msgid "re-exec failed: %s; disabling paranoia mode"
 msgstr "her-exec() is mislukt: %s -- paranoia-modus is uitgeschakeld"
 
-#: nscd/connections.c:1454
+#: nscd/connections.c:1453
 #, c-format
 msgid "cannot change current working directory to \"/\": %s"
 msgstr "kan huidige werkmap niet overschakelen naar '/': %s"
 
-#: nscd/connections.c:1638
+#: nscd/connections.c:1637
 #, c-format
 msgid "short read while reading request: %s"
 msgstr "te weinig gelezen bij lezen van verzoek: %s"
 
-#: nscd/connections.c:1671
+#: nscd/connections.c:1670
 #, c-format
 msgid "key length in request too long: %d"
 msgstr "sleutellengte in verzoek is te lang: %d"
 
-#: nscd/connections.c:1684
+#: nscd/connections.c:1683
 #, c-format
 msgid "short read while reading request key: %s"
 msgstr "te weinig gelezen bij lezen van verzoeksleutel: %s"
 
-#: nscd/connections.c:1694
+#: nscd/connections.c:1693
 #, c-format
 msgid "handle_request: request received (Version = %d) from PID %ld"
 msgstr "handle_request(): verzoek ontvangen (versie = %d) van PID %ld"
 
-#: nscd/connections.c:1699
+#: nscd/connections.c:1698
 #, c-format
 msgid "handle_request: request received (Version = %d)"
 msgstr "handle_request(): verzoek ontvangen (versie = %d)"
 
-#: nscd/connections.c:1839
+#: nscd/connections.c:1838
 #, c-format
 msgid "ignored inotify event for `%s` (file exists)"
 msgstr "'inotify'-gebeurtenis voor '%s' is genegeerd (bestand bestaat al)"
 
 # FIXME: missing translatable word in second %s
-#: nscd/connections.c:1844
+#: nscd/connections.c:1843
 #, c-format
 msgid "monitored file `%s` was %s, removing watch"
 msgstr "gemonitord bestand '%s' werd «%s»; wachter wordt verwijderd"
 
-#: nscd/connections.c:1852 nscd/connections.c:1894
+#: nscd/connections.c:1851 nscd/connections.c:1893
 #, c-format
 msgid "failed to remove file watch `%s`: %s"
 msgstr "verwijderen van bestandswachter '%s' is mislukt: %s"
 
-#: nscd/connections.c:1867
+#: nscd/connections.c:1866
 #, c-format
 msgid "monitored file `%s` was written to"
 msgstr "er is geschreven naar gemonitord bestand '%s'"
 
 # FIXME: untranslatable second %s
-#: nscd/connections.c:1891
+#: nscd/connections.c:1890
 #, c-format
 msgid "monitored parent directory `%s` was %s, removing watch on `%s`"
 msgstr "gemonitorde oudermap '%s' werd «%s»; wachter op '%s' wordt verwijderd`"
 
 # FIXME: untranslatable second %s
-#: nscd/connections.c:1917
+#: nscd/connections.c:1916
 #, c-format
 msgid "monitored file `%s` was %s, adding watch"
 msgstr "gemonitord bestand '%s' werd «%s»; wachter wordt toegevoegd"
 
-#: nscd/connections.c:1929
+#: nscd/connections.c:1928
 #, c-format
 msgid "failed to add file watch `%s`: %s"
 msgstr "toevoegen van bestandswachter '%s' is mislukt: %s"
 
-#: nscd/connections.c:2107 nscd/connections.c:2272
+#: nscd/connections.c:2106 nscd/connections.c:2271
 #, c-format
 msgid "disabled inotify-based monitoring after read error %d"
 msgstr "'inotify'-monitoring is uitgeschakeld na leesfout %d"
 
-#: nscd/connections.c:2387
+#: nscd/connections.c:2386
 msgid "could not initialize conditional variable"
 msgstr "kan conditionele variabele niet initialiseren"
 
-#: nscd/connections.c:2395
+#: nscd/connections.c:2394
 msgid "could not start clean-up thread; terminating"
 msgstr "kan opschoon-thread niet starten -- gestopt"
 
-#: nscd/connections.c:2409
+#: nscd/connections.c:2408
 msgid "could not start any worker thread; terminating"
 msgstr "kan geen enkele werk-thread starten -- gestopt"
 
-#: nscd/connections.c:2464 nscd/connections.c:2466 nscd/connections.c:2482
-#: nscd/connections.c:2492 nscd/connections.c:2510 nscd/connections.c:2521
-#: nscd/connections.c:2531
+#: nscd/connections.c:2463 nscd/connections.c:2465 nscd/connections.c:2481
+#: nscd/connections.c:2491 nscd/connections.c:2509 nscd/connections.c:2520
+#: nscd/connections.c:2530
 #, c-format
 msgid "Failed to run nscd as user '%s'"
 msgstr "uitvoeren van nscd als gebruiker '%s' is mislukt"
 
-#: nscd/connections.c:2484
+#: nscd/connections.c:2483
 msgid "initial getgrouplist failed"
 msgstr "eerste getgrouplist() is mislukt"
 
-#: nscd/connections.c:2493
+#: nscd/connections.c:2492
 msgid "getgrouplist failed"
 msgstr "getgrouplist() is mislukt"
 
-#: nscd/connections.c:2511
+#: nscd/connections.c:2510
 msgid "setgroups failed"
 msgstr "setgroups() is mislukt"
 
@@ -4217,7 +4201,7 @@ msgstr ""
 "  \n"
 "Daemon voor namen-cache."
 
-#: nscd/nscd.c:155 nss/getent.c:967 nss/makedb.c:206
+#: nscd/nscd.c:155 nss/getent.c:987 nss/makedb.c:206
 #, c-format
 msgid "wrong number of arguments"
 msgstr "onjuist aantal argumenten"
@@ -4478,16 +4462,14 @@ msgstr ""
 "%15s  /etc/%s controleren op wijzigingen\n"
 
 #: nscd/pwdcache.c:407
-#, fuzzy, c-format
-#| msgid "Haven't found \"%s\" in hosts cache!"
+#, c-format
 msgid "Haven't found \"%s\" in user database cache!"
-msgstr "Item \"%s\" niet gevonden in hosts-cache!"
+msgstr "Item \"%s\" niet gevonden in gebruikers-cache!"
 
 #: nscd/pwdcache.c:409
-#, fuzzy, c-format
-#| msgid "Reloading \"%s\" in hosts cache!"
+#, c-format
 msgid "Reloading \"%s\" in user database cache!"
-msgstr "Herladen van \"%s\" in hosts-cache!"
+msgstr "Herladen van \"%s\" in gebruikers-cache!"
 
 #: nscd/pwdcache.c:471
 #, c-format
@@ -4609,47 +4591,46 @@ msgstr "Item \"%s\" niet gevonden in diensten-cache!"
 msgid "Reloading \"%s\" in services cache!"
 msgstr "Herladen van \"%s\" in diensten-cache!"
 
-#: nss/getent.c:54
+#: nss/getent.c:55
 msgid "database [key ...]"
 msgstr "gegevensbank [sleutel...]"
 
-#: nss/getent.c:59
+#: nss/getent.c:60
 msgid "CONFIG"
 msgstr "CONFIG"
 
-#: nss/getent.c:59
+#: nss/getent.c:60
 msgid "Service configuration to be used"
 msgstr "te gebruiken configuratie"
 
-#: nss/getent.c:60
+#: nss/getent.c:61
 msgid "disable IDN encoding"
 msgstr "IDN-codering uitschakelen"
 
-#: nss/getent.c:65
+#: nss/getent.c:66
 msgid "Get entries from administrative database."
 msgstr "Haalt items op uit een administratieve gegevensbank."
 
-#: nss/getent.c:149 nss/getent.c:442 nss/getent.c:489
+#: nss/getent.c:150 nss/getent.c:462 nss/getent.c:509
 #, c-format
 msgid "Enumeration not supported on %s\n"
 msgstr "Opsomming wordt niet ondersteund op %s\n"
 
-#: nss/getent.c:497 nss/getent.c:510
-#, fuzzy, c-format
-#| msgid "Could not create log file"
+#: nss/getent.c:517 nss/getent.c:530
+#, c-format
 msgid "Could not allocate group list: %m\n"
-msgstr "Kan geen logbestand aanmaken"
+msgstr "Kan geen geheugen reserveren voor groepslijst: %m\n"
 
-#: nss/getent.c:881
+#: nss/getent.c:901
 #, c-format
 msgid "Unknown database name"
 msgstr "Onbekende gegevensbanknaam"
 
-#: nss/getent.c:911
+#: nss/getent.c:931
 msgid "Supported databases:\n"
 msgstr "Ondersteunde gegevensbanken:\n"
 
-#: nss/getent.c:977
+#: nss/getent.c:997
 #, c-format
 msgid "Unknown database: %s\n"
 msgstr "Onbekende gegevensbank: %s\n"
@@ -4868,10 +4849,8 @@ msgid "Invalid back reference"
 msgstr "Ongeldige terugverwijzing"
 
 #: posix/regcomp.c:156
-#, fuzzy
-#| msgid "Unmatched [ or [^"
 msgid "Unmatched [, [^, [:, [., or [="
-msgstr "Ongepaarde [ of [^"
+msgstr "Ongepaarde [, [^, [:, [., of [="
 
 #: posix/regcomp.c:159
 msgid "Unmatched ( or \\("
@@ -4913,7 +4892,7 @@ msgstr "Ongepaarde ) of \\)"
 msgid "No previous regular expression"
 msgstr "Geen eerdere reguliere expressie"
 
-#: posix/wordexp.c:1815
+#: posix/wordexp.c:1816
 msgid "parameter null or not set"
 msgstr "parameter is null of niet ingesteld"
 
@@ -5181,7 +5160,7 @@ msgstr "Onbekend signaal %d"
 #: sunrpc/auth_unix.c:112 sunrpc/clnt_tcp.c:124 sunrpc/clnt_udp.c:139
 #: sunrpc/clnt_unix.c:125 sunrpc/svc_tcp.c:189 sunrpc/svc_tcp.c:233
 #: sunrpc/svc_udp.c:161 sunrpc/svc_unix.c:189 sunrpc/svc_unix.c:229
-#: sunrpc/xdr.c:628 sunrpc/xdr.c:788 sunrpc/xdr_array.c:102
+#: sunrpc/xdr.c:631 sunrpc/xdr.c:791 sunrpc/xdr_array.c:102
 #: sunrpc/xdr_rec.c:153 sunrpc/xdr_ref.c:79
 msgid "out of memory\n"
 msgstr "onvoldoende geheugen beschikbaar\n"
@@ -6804,27 +6783,23 @@ msgstr "kan kop van '%s' niet lezen"
 
 #: sysdeps/x86/dl-cet.c:202
 msgid "mprotect legacy bitmap failed"
-msgstr ""
+msgstr "'mprotect' voor verouderde bitkaart is mislukt"
 
 #: sysdeps/x86/dl-cet.c:217
-#, fuzzy
-#| msgid "Data input available"
 msgid "legacy bitmap isn't available"
-msgstr "Gegevensinvoer is beschikbaar"
+msgstr "verouderde bitkaart is niet beschikbaar"
 
 #: sysdeps/x86/dl-cet.c:247
-#, fuzzy
-#| msgid "failed to start conversion processing"
 msgid "failed to mark legacy code region"
-msgstr "beginnen van conversieproces is mislukt"
+msgstr "markeren van verouderd codeblok is mislukt"
 
 #: sysdeps/x86/dl-cet.c:269
 msgid "shadow stack isn't enabled"
-msgstr ""
+msgstr "schaduw-stack is niet ingeschakeld"
 
 #: sysdeps/x86/dl-cet.c:290
 msgid "can't disable CET"
-msgstr ""
+msgstr "kan CET niet uitschakelen"
 
 #: timezone/zdump.c:332
 msgid "has fewer than 3 characters"
@@ -6844,19 +6819,7 @@ msgid "%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"
 msgstr "%s: Waarschuwing: zone \"%s\", afkorting \"%s\" %s\n"
 
 #: timezone/zdump.c:387
-#, fuzzy, c-format
-#| msgid ""
-#| "%s: usage: %s OPTIONS ZONENAME ...\n"
-#| "Options include:\n"
-#| "  -c [L,]U   Start at year L (default -500), end before year U (default 2500)\n"
-#| "  -t [L,]U   Start at time L, end before time U (in seconds since 1970)\n"
-#| "  -i         List transitions briefly (format is experimental)\n"
-#| "  -v         List transitions verbosely\n"
-#| "  -V         List transitions a bit less verbosely\n"
-#| "  --help     Output this help\n"
-#| "  --version  Output version info\n"
-#| "\n"
-#| "Report bugs to %s.\n"
+#, c-format
 msgid ""
 "%s: usage: %s OPTIONS TIMEZONE ...\n"
 "Options include:\n"
@@ -6881,7 +6844,7 @@ msgstr ""
 "  --help       deze hulptekst tonen\n"
 "  --version    programmaversie tonen\n"
 "\n"
-"Rapporteer programmagebreken aan %s;\n"
+"Rapporteer gebreken in het programma aan %s;\n"
 "meld fouten in de vertaling aan <vertaling@vrijschrift.nl>.\n"
 
 #: timezone/zdump.c:473
@@ -6904,10 +6867,8 @@ msgid "size overflow"
 msgstr "grootteoverloop"
 
 #: timezone/zic.c:447
-#, fuzzy
-#| msgid "int overflow"
 msgid "alignment overflow"
-msgstr "geheelgetaloverloop"
+msgstr "uitlijningsoverloop"
 
 #: timezone/zic.c:495
 msgid "integer overflow"
@@ -6929,13 +6890,7 @@ msgid "warning: "
 msgstr "waarschuwing: "
 
 #: timezone/zic.c:576
-#, fuzzy, c-format
-#| msgid ""
-#| "%s: usage is %s [ --version ] [ --help ] [ -v ] \\\n"
-#| "\t[ -l localtime ] [ -p posixrules ] [ -d directory ] \\\n"
-#| "\t[ -L leapseconds ] [ filename ... ]\n"
-#| "\n"
-#| "Report bugs to %s.\n"
+#, c-format
 msgid ""
 "%s: usage is %s [ --version ] [ --help ] [ -v ] \\\n"
 "\t[ -l localtime ] [ -p posixrules ] [ -d directory ] \\\n"
@@ -6944,10 +6899,11 @@ msgid ""
 "Report bugs to %s.\n"
 msgstr ""
 "Gebruik:  %s [-v] [-d map] [-l lokaletijdzone] [-p posixvoorschriftenzone]\\\n"
-"              [-L schrikkelsecondenbestand] [bestand...]\n"
+"               [-t lokaletijdlink] [-L schrikkelsecondenbestand] [bestand...]\n"
 "     of:  %s [--version] [--help]\n"
 "\n"
-"Rapporteer programmafouten aan %s.\n"
+"Rapporteer gebreken in het programma aan %s;\n"
+"meld fouten in de vertaling aan <vertaling@vrijschrift.nl>.\n"
 
 #: timezone/zic.c:599
 #, c-format
@@ -6974,14 +6930,13 @@ msgid "%s: More than one -p option specified\n"
 msgstr "%s: Optie -p is meermaals gegeven\n"
 
 #: timezone/zic.c:680
-#, fuzzy, c-format
-#| msgid "%s: More than one -d option specified\n"
+#, c-format
 msgid "%s: More than one -t option specified\n"
-msgstr "%s: Optie -d is meermaals gegeven\n"
+msgstr "%s: Optie -t is meermaals gegeven\n"
 
 #: timezone/zic.c:689
 msgid "-y is obsolescent"
-msgstr ""
+msgstr "-y is verouderd"
 
 #: timezone/zic.c:693
 #, c-format
@@ -7114,10 +7069,8 @@ msgid "expected continuation line not found"
 msgstr "verwachte regelcontinuering is niet gevonden"
 
 #: timezone/zic.c:1203
-#, fuzzy
-#| msgid "format '%s' not handled by pre-2015 versions of zic"
 msgid "fractional seconds rejected by pre-2018 versions of zic"
-msgstr "opmaak '%s' werkt niet in versies van 'zic' van voor 2015"
+msgstr "fractionele seconden worden geweigerd door versies van 'zic' van voor 2018"
 
 #: timezone/zic.c:1221 timezone/zic.c:3078
 msgid "time overflow"
@@ -7136,10 +7089,9 @@ msgid "wrong number of fields on Rule line"
 msgstr "verkeerd aantal velden op 'Rule'-regel"
 
 #: timezone/zic.c:1265
-#, fuzzy, c-format
-#| msgid "Invalid numeric gid \"%s\"!"
+#, c-format
 msgid "Invalid rule name \"%s\""
-msgstr "Ongeldig numeriek GID '%s'!"
+msgstr "Ongeldige regelnaam \"%s\""
 
 #: timezone/zic.c:1287
 msgid "wrong number of fields on Zone line"
@@ -7218,10 +7170,8 @@ msgid "illegal Rolling/Stationary field on Leap line"
 msgstr "ongeldig 'Rolling'/'Stationary'-veld op 'Leap'-regel"
 
 #: timezone/zic.c:1505
-#, fuzzy
-#| msgid "leap second precedes Big Bang"
 msgid "leap second precedes Epoch"
-msgstr "schrikkelseconde valt voor de oerknal"
+msgstr "schrikkelseconde valt voor begin van tijdperk"
 
 #: timezone/zic.c:1518
 msgid "wrong number of fields on Link line"
@@ -7250,7 +7200,7 @@ msgstr "begin- en eindjaar zijn gelijk"
 #: timezone/zic.c:1633
 #, c-format
 msgid "year type \"%s\" is obsolete; use \"-\" instead"
-msgstr ""
+msgstr "jaartype \"%s\" verouderd; gebruik hiervoor in de plaats \"-\""
 
 #: timezone/zic.c:1668
 msgid "invalid weekday name"
@@ -7270,10 +7220,9 @@ msgid "too many transition times"
 msgstr "te veel overgangstijden"
 
 #: timezone/zic.c:2107
-#, fuzzy, c-format
-#| msgid "%%z UTC offset magnitude exceeds 99:59:59"
+#, c-format
 msgid "%%z UT offset magnitude exceeds 99:59:59"
-msgstr "verschuiving %%z t.o.v. UTC is groter dan 99:59:59"
+msgstr "verschuiving %%z t.o.v. UT is groter dan 99:59:59"
 
 #: timezone/zic.c:2488
 msgid "no POSIX environment variable for zone"
@@ -7306,7 +7255,7 @@ msgstr "te veel schrikkelseconden"
 
 #: timezone/zic.c:2844
 msgid "Leap seconds too close together"
-msgstr ""
+msgstr "schrikkelseconden liggen te dicht bij elkaar"
 
 #: timezone/zic.c:2891
 msgid "Wild result from command execution"
@@ -7320,12 +7269,12 @@ msgstr "%s: opdracht was '%s', resultaat was %d\n"
 #: timezone/zic.c:2998
 #, c-format
 msgid "\"%s\" is undocumented; use \"last%s\" instead"
-msgstr ""
+msgstr "\"%s\" is ongedocumenteerd; gebruik hiervoor in de plaats \"last%s\""
 
 #: timezone/zic.c:3029
 #, c-format
 msgid "\"%s\" is ambiguous in pre-2017c zic"
-msgstr ""
+msgstr "\"%s\" is niet eenduidig in 'zic' van voor 2017"
 
 #: timezone/zic.c:3063
 msgid "Odd number of quotation marks"
@@ -7361,6 +7310,21 @@ msgstr "te veel of te lange tijdzone-afkortingen"
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s: Kan map %s niet aanmaken: %s"
+
+#~ msgid "cannot open zero fill device"
+#~ msgstr "kan nullenapparaat niet openen"
+
+#~ msgid "relocation error"
+#~ msgstr "verplaatsingsfout"
+
+#~ msgid "Cannot set LC_CTYPE to default locale"
+#~ msgstr "Kan LC_TYPE niet op de standaard-taalregio instellen"
+
+#~ msgid "Cannot set LC_MESSAGES to default locale"
+#~ msgstr "Kan LC_MESSAGES niet op de standaard-taalregio instellen"
+
+#~ msgid "Cannot set LC_COLLATE to default locale"
+#~ msgstr "Kan LC_COLLATE niet op de standaard-taalregio instellen"
 
 #~ msgid "invalid caller"
 #~ msgstr "ongeldige aanroeper"

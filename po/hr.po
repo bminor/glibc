@@ -1,5 +1,5 @@
-# This is translation of GNU libc to Croatian.
-# Copyright © 2002, 2012 Free Software Foundation, Inc.
+# This is translation of GNU libc messages to Croatian.
+# Copyright © 2002, 2012, 2019 Free Software Foundation, Inc.
 # This file is distributed under the same license as the glibc package.
 #
 # Denis Lackovic <delacko@fly.srk.fer.hr>, 2002.
@@ -9,8 +9,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc-2.28.9000\n"
-"POT-Creation-Date: 2019-01-16 15:48+0530\n"
-"PO-Revision-Date: 2019-01-21 13:27-0800\n"
+"POT-Creation-Date: 2019-07-18 13:28-0400\n"
+"PO-Revision-Date: 2019-02-08 16:27-0800\n"
 "Last-Translator: Božidar Putanec <bozidarp@yahoo.com>\n"
 "Language-Team: Croatian <lokalizacija@linux.hr>\n"
 "Language: hr\n"
@@ -155,10 +155,10 @@ msgstr ""
 "[IZLAZNA-DATOTEKA [ULAZNA-DATOTEKA]...]"
 
 #: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:308
-#: elf/pldd.c:252 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:405
-#: iconv/iconvconfig.c:379 locale/programs/locale.c:275
+#: elf/pldd.c:247 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:405
+#: iconv/iconvconfig.c:379 locale/programs/locale.c:276
 #: locale/programs/localedef.c:437 login/programs/pt_chown.c:89
-#: malloc/memusagestat.c:563 nss/getent.c:933 nss/makedb.c:369
+#: malloc/memusagestat.c:563 nss/getent.c:953 nss/makedb.c:369
 #: posix/getconf.c:503 sysdeps/unix/sysv/linux/lddlibc4.c:61
 #, c-format
 msgid ""
@@ -169,11 +169,11 @@ msgstr ""
 "%s.\n"
 
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
-#: elf/ldconfig.c:324 elf/ldd.bash.in:38 elf/pldd.c:268 elf/sotruss.sh:75
+#: elf/ldconfig.c:324 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
 #: elf/sprof.c:389 iconv/iconv_prog.c:422 iconv/iconvconfig.c:396
-#: locale/programs/locale.c:292 locale/programs/localedef.c:463
+#: locale/programs/locale.c:293 locale/programs/localedef.c:463
 #: login/programs/pt_chown.c:63 malloc/memusage.sh:71
-#: malloc/memusagestat.c:581 nscd/nscd.c:509 nss/getent.c:87 nss/makedb.c:385
+#: malloc/memusagestat.c:581 nscd/nscd.c:509 nss/getent.c:88 nss/makedb.c:385
 #: posix/getconf.c:485 sysdeps/unix/sysv/linux/lddlibc4.c:68
 #, c-format
 msgid ""
@@ -186,10 +186,10 @@ msgstr ""
 "NEMA jamstava; čak ni za PRODAJU ili UPOTREBU ZA ODREĐENU NAMJENU.\n"
 
 #: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
-#: elf/ldconfig.c:329 elf/pldd.c:273 elf/sprof.c:395 iconv/iconv_prog.c:427
-#: iconv/iconvconfig.c:401 locale/programs/locale.c:297
+#: elf/ldconfig.c:329 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:427
+#: iconv/iconvconfig.c:401 locale/programs/locale.c:298
 #: locale/programs/localedef.c:468 malloc/memusage.sh:75
-#: malloc/memusagestat.c:586 nscd/nscd.c:514 nss/getent.c:92 nss/makedb.c:390
+#: malloc/memusagestat.c:586 nscd/nscd.c:514 nss/getent.c:93 nss/makedb.c:390
 #: posix/getconf.c:490
 #, c-format
 msgid "Written by %s.\n"
@@ -260,21 +260,21 @@ msgstr "nije moguće otvoriti izlaznu datoteku „%s“"
 msgid "invalid escape sequence"
 msgstr "nevaljana kontrolna sekvencija (escape sequence)"
 
-#: catgets/gencat.c:1209
+#: catgets/gencat.c:1211
 msgid "unterminated message"
 msgstr "poruka nije završila"
 
-#: catgets/gencat.c:1233
+#: catgets/gencat.c:1235
 #, c-format
 msgid "while opening old catalog file"
 msgstr "pri otvaranju starog kataloga"
 
-#: catgets/gencat.c:1324
+#: catgets/gencat.c:1326
 #, c-format
 msgid "conversion modules not available"
 msgstr "moduli pretvorbe nisu dostupni"
 
-#: catgets/gencat.c:1350
+#: catgets/gencat.c:1352
 #, c-format
 msgid "cannot determine escape character"
 msgstr "nije moguće odrediti escape znak (znak za maskiranje)"
@@ -400,7 +400,7 @@ msgstr "Nepoznati OS"
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", OS ABI: %s %d.%d.%d"
 
-#: elf/cache.c:163 elf/ldconfig.c:1332
+#: elf/cache.c:163 elf/ldconfig.c:1333
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Nije moguće otvoriti cache-datoteku %s\n"
@@ -441,7 +441,7 @@ msgstr "Promjena prava pristupa %s u %#o nije uspjela"
 msgid "Renaming of %s to %s failed"
 msgstr "Preimenovanje %s u %s nije uspjelo"
 
-#: elf/dl-close.c:399 elf/dl-open.c:420
+#: elf/dl-close.c:399 elf/dl-open.c:424
 msgid "cannot create scope list"
 msgstr "nije moguće stvoriti popis dosega (scope list)"
 
@@ -520,121 +520,123 @@ msgstr "nije moguće stvoriti polje za pretraživanje staza"
 
 #: elf/dl-load.c:883
 msgid "cannot stat shared object"
-msgstr "nije moguće naći zajednički objekt"
+msgstr "nije moguće stat zajednički objekt"
 
-#: elf/dl-load.c:960
-msgid "cannot open zero fill device"
-msgstr "nije moguće otvoriti nulama ispunjeni uređaj"
-
-#: elf/dl-load.c:1007 elf/dl-load.c:2203
+#: elf/dl-load.c:992 elf/dl-load.c:2198
 msgid "cannot create shared object descriptor"
 msgstr "nije moguće stvoriti deskriptor zajedničkog objekta"
 
-#: elf/dl-load.c:1026 elf/dl-load.c:1560 elf/dl-load.c:1673
+#: elf/dl-load.c:1011 elf/dl-load.c:1555 elf/dl-load.c:1668
 msgid "cannot read file data"
 msgstr "nije moguće pročitati podatke iz datoteke"
 
-#: elf/dl-load.c:1072
+#: elf/dl-load.c:1057
 msgid "ELF load command alignment not page-aligned"
 msgstr "poravnanje učitane ELF naredbe nije na granici stranice"
 
-#: elf/dl-load.c:1079
+#: elf/dl-load.c:1064
 msgid "ELF load command address/offset not properly aligned"
 msgstr "adresa/odmak učitane ELF naredbe nije ispravno poravnana"
 
-#: elf/dl-load.c:1161
+#: elf/dl-load.c:1146
 msgid "cannot process note segment"
 msgstr "nije moguće procesirati notni segment"
 
-#: elf/dl-load.c:1172
+#: elf/dl-load.c:1157
 msgid "object file has no loadable segments"
 msgstr "datoteka objekta nema segmenata koji se mogu učitati"
 
-#: elf/dl-load.c:1181 elf/dl-load.c:1652
+#: elf/dl-load.c:1170 elf/dl-load.c:1647
 msgid "cannot dynamically load executable"
 msgstr "nije moguće dinamički učitati izvršnu datoteku"
 
-#: elf/dl-load.c:1202
+#: elf/dl-load.c:1191
 msgid "object file has no dynamic section"
 msgstr "datoteka objekta nema dinamičku sekciju"
 
-#: elf/dl-load.c:1225
+#: elf/dl-load.c:1218
+#, fuzzy
+#| msgid "cannot dynamically load executable"
+msgid "cannot dynamically load position-independent executable"
+msgstr "nije moguće dinamički učitati izvršnu datoteku"
+
+#: elf/dl-load.c:1220
 msgid "shared object cannot be dlopen()ed"
 msgstr "zajednički objekt nije moguće otvoriti s dlopen()"
 
-#: elf/dl-load.c:1238
+#: elf/dl-load.c:1233
 msgid "cannot allocate memory for program header"
 msgstr "nije moguće dodijeliti memoriju za zaglavlje programa"
 
-#: elf/dl-load.c:1271 elf/dl-load.h:130
+#: elf/dl-load.c:1266 elf/dl-load.h:130
 msgid "cannot change memory protections"
 msgstr "nije moguće promijeniti zaštitu memorije"
 
-#: elf/dl-load.c:1291
+#: elf/dl-load.c:1286
 msgid "cannot enable executable stack as shared object requires"
-msgstr "nije moguće koristiti izvršni stog kako to zahtijeva zajednički objekt"
+msgstr "nije moguće koristiti izvršni stȏg kako to zahtijeva zajednički objekt"
 
-#: elf/dl-load.c:1304
+#: elf/dl-load.c:1299
 msgid "cannot close file descriptor"
 msgstr "nije moguće zatvoriti deskriptor datoteke"
 
-#: elf/dl-load.c:1560
+#: elf/dl-load.c:1555
 msgid "file too short"
 msgstr "datoteka je prekratka"
 
-#: elf/dl-load.c:1595
+#: elf/dl-load.c:1590
 msgid "invalid ELF header"
 msgstr "nevaljano ELF zaglavlje"
 
-#: elf/dl-load.c:1607
+#: elf/dl-load.c:1602
 msgid "ELF file data encoding not big-endian"
 msgstr "Kodiranje podataka ELF datoteke nije big-endian"
 
-#: elf/dl-load.c:1609
+#: elf/dl-load.c:1604
 msgid "ELF file data encoding not little-endian"
 msgstr "Kodiranje podataka ELF datoteke nije little-endian"
 
-#: elf/dl-load.c:1613
+#: elf/dl-load.c:1608
 msgid "ELF file version ident does not match current one"
 msgstr "Identifikacija inačice ELF datoteke ne slaže se s aktualnom"
 
-#: elf/dl-load.c:1617
+#: elf/dl-load.c:1612
 msgid "ELF file OS ABI invalid"
 msgstr "OS ABI od ELF datoteke nije valjani"
 
-#: elf/dl-load.c:1620
+#: elf/dl-load.c:1615
 msgid "ELF file ABI version invalid"
 msgstr "ABI inačica od ELF datoteke nije valjana"
 
-#: elf/dl-load.c:1623
+#: elf/dl-load.c:1618
 msgid "nonzero padding in e_ident"
 msgstr "popuna u e_ident() nisu nule"
 
-#: elf/dl-load.c:1626
+#: elf/dl-load.c:1621
 msgid "internal error"
 msgstr "**interna greška**"
 
-#: elf/dl-load.c:1633
+#: elf/dl-load.c:1628
 msgid "ELF file version does not match current one"
 msgstr "Inačica ELF datoteke ne slaže se s aktualnom"
 
-#: elf/dl-load.c:1641
+#: elf/dl-load.c:1636
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "mogu se učitati samo ET_DYN i ET_EXEC"
 
-#: elf/dl-load.c:1657
+#: elf/dl-load.c:1652
 msgid "ELF file's phentsize not the expected size"
 msgstr "phentsize ELF datoteke nije očekivane veličine"
 
-#: elf/dl-load.c:2222
+#: elf/dl-load.c:2217
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "nevaljana ELF klasa: ELFCLASS64"
 
-#: elf/dl-load.c:2223
+#: elf/dl-load.c:2218
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "nevaljana ELF klasa: ELFCLASS32"
 
-#: elf/dl-load.c:2226
+#: elf/dl-load.c:2221
 msgid "cannot open shared object file"
 msgstr "nije moguće otvoriti datoteku zajedničkoga objekta"
 
@@ -646,11 +648,7 @@ msgstr "nije uspjelo mapirati segment iz zajedničkog objekta u memoriju"
 msgid "cannot map zero-fill pages"
 msgstr "nulama ispunjene stranice ne mogu se mapirati u memoriju"
 
-#: elf/dl-lookup.c:835
-msgid "relocation error"
-msgstr "greška premještanja"
-
-#: elf/dl-lookup.c:858
+#: elf/dl-lookup.c:830
 msgid "symbol lookup error"
 msgstr "greška u potrazi za simbolom"
 
@@ -658,21 +656,21 @@ msgstr "greška u potrazi za simbolom"
 msgid "cannot extend global scope"
 msgstr "nije moguće proširiti globalni opseg"
 
-#: elf/dl-open.c:470
+#: elf/dl-open.c:474
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr ""
 "Brojač TLS generatora ponovno je počeo od nule!\n"
 "Ovo je ** programska pogreška **. Molimo da to prijavite."
 
-#: elf/dl-open.c:534
+#: elf/dl-open.c:538
 msgid "invalid mode for dlopen()"
 msgstr "nevaljani mod za dlopen()"
 
-#: elf/dl-open.c:551
+#: elf/dl-open.c:555
 msgid "no more namespaces available for dlmopen()"
 msgstr "nema više imenskih prostora dostupnih za dlmopen()"
 
-#: elf/dl-open.c:575
+#: elf/dl-open.c:579
 msgid "invalid target namespace in dlmopen()"
 msgstr "nevaljani ciljani imenski prostor u dlopen()"
 
@@ -800,7 +798,7 @@ msgstr "Nije moguće dobiti status %s\n"
 #: elf/ldconfig.c:499
 #, c-format
 msgid "%s is not a symbolic link\n"
-msgstr "%s nije simbolička veza\n"
+msgstr "%s nije simbolička poveznica\n"
 
 #: elf/ldconfig.c:518
 #, c-format
@@ -838,7 +836,7 @@ msgstr "Ignorira datoteku %s jer nije obična datoteka."
 #: elf/ldconfig.c:619
 #, c-format
 msgid "No link created since soname could not be found for %s"
-msgstr "Nijedna veza nije stvorena jer soname nije bilo moguće naći za %s"
+msgstr "Nijedna poveznica nije stvorena jer soname nije bilo moguće naći za %s"
 
 #: elf/ldconfig.c:702
 #, c-format
@@ -853,7 +851,7 @@ msgstr "Ulazna datoteka %s nije pronađena.\n"
 #: elf/ldconfig.c:794
 #, c-format
 msgid "Cannot stat %s"
-msgstr "Nije moguće dobiti status za %s"
+msgstr "Nije moguće stat %s"
 
 #: elf/ldconfig.c:939
 #, c-format
@@ -911,24 +909,24 @@ msgstr "treba apsolutno ime datoteke za konfiguracijsku datoteku kad se koristi 
 #: malloc/obstack.c:418 posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
-msgstr "memorija je iscrpljena"
+msgstr "nema dovoljno memorije"
 
-#: elf/ldconfig.c:1233
+#: elf/ldconfig.c:1234
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: nije moguće čitati direktorij %s"
 
-#: elf/ldconfig.c:1281
+#: elf/ldconfig.c:1282
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "relativna staza „%s“ korištena je za izgradnju predmemorije"
 
-#: elf/ldconfig.c:1311
+#: elf/ldconfig.c:1312
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Nije moguće promijeniti direktorij u / (root)"
 
-#: elf/ldconfig.c:1352
+#: elf/ldconfig.c:1353
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Nije moguće otvoriti direktorij %s s cache-datotekom\n"
@@ -1000,95 +998,101 @@ msgstr "završen s nepoznatim izlaznim kodom"
 msgid "error: you do not have read permission for"
 msgstr "greška: nemate prava čitanja za"
 
-#: elf/pldd-xx.c:105
+#: elf/pldd-xx.c:102
 #, c-format
 msgid "cannot find program header of process"
 msgstr "nije moguće pronaći zaglavlje programa od procesa"
 
-#: elf/pldd-xx.c:110
+#: elf/pldd-xx.c:106
 #, c-format
 msgid "cannot read program header"
 msgstr "nije moguće pročitati zaglavlje programa"
 
-#: elf/pldd-xx.c:135
+#: elf/pldd-xx.c:128
 #, c-format
 msgid "cannot read dynamic section"
 msgstr "nije moguće pročitati dinamičku sekciju"
 
-#: elf/pldd-xx.c:147
+#: elf/pldd-xx.c:137
 #, c-format
 msgid "cannot read r_debug"
 msgstr "nije moguće pročitati r_debug"
 
-#: elf/pldd-xx.c:167
+#: elf/pldd-xx.c:154
 #, c-format
 msgid "cannot read program interpreter"
 msgstr "nije moguće pročitati interpreter programa"
 
-#: elf/pldd-xx.c:197
+#: elf/pldd-xx.c:183
 #, c-format
 msgid "cannot read link map"
-msgstr "nije moguće pročitati mapu veza (link map)"
+msgstr "nije moguće pročitati mapu poveznica (link map)"
 
-#: elf/pldd-xx.c:209
+#: elf/pldd-xx.c:190
 #, c-format
 msgid "cannot read object name"
 msgstr "nije moguće pročitati ime objekta"
 
-#: elf/pldd-xx.c:219
+#: elf/pldd-xx.c:197
 #, c-format
 msgid "cannot allocate buffer for object name"
 msgstr "nije moguće dodijeliti međuspremnik za ime objekta"
 
-#: elf/pldd.c:64
+#: elf/pldd.c:58
 msgid "List dynamic shared objects loaded into process."
 msgstr "Izlista dinamičke dijeljene objekte učitane u proces."
 
-#: elf/pldd.c:68
+#: elf/pldd.c:62
 msgid "PID"
 msgstr "PID"
 
-#: elf/pldd.c:100
+#: elf/pldd.c:89
 #, c-format
 msgid "Exactly one parameter with process ID required.\n"
 msgstr "Potreban je jedan i samo jedan parametar s ID-om procesa (PID).\n"
 
-#: elf/pldd.c:112
+#: elf/pldd.c:103
 #, c-format
 msgid "invalid process ID '%s'"
 msgstr "nevaljani ID procesa „%s“"
 
-#: elf/pldd.c:120
+#: elf/pldd.c:111
 #, c-format
 msgid "cannot open %s"
 msgstr "nije moguće otvoriti %s"
 
-#: elf/pldd.c:152
+#: elf/pldd.c:142
 #, c-format
 msgid "cannot open %s/task"
 msgstr "nije moguće otvoriti %s/task"
 
-#: elf/pldd.c:155
+#: elf/pldd.c:145
 #, c-format
 msgid "cannot prepare reading %s/task"
 msgstr "nije moguće pripremiti čitanje %s/task"
 
-#: elf/pldd.c:168
+#: elf/pldd.c:158
 #, c-format
 msgid "invalid thread ID '%s'"
 msgstr "nevaljani ID dretve „%s“"
 
-#: elf/pldd.c:179
+#: elf/pldd.c:169
 #, c-format
 msgid "cannot attach to process %lu"
 msgstr "nije moguće pridodati procesu %lu"
 
-#: elf/pldd.c:294
+#: elf/pldd.c:184
+#, fuzzy, c-format
+#| msgid "invalid saved time"
+msgid "no valid %s/task entries"
+msgstr "nevaljano sačuvano vrijeme"
+
+#: elf/pldd.c:290
 #, c-format
 msgid "cannot get information about process %lu"
 msgstr "nije moguće dobiti informacije o procesu %lu"
 
-#: elf/pldd.c:307
+#: elf/pldd.c:303
 #, c-format
 msgid "process %lu is no ELF program"
 msgstr "proces %lu nije ELF program"
@@ -1187,7 +1191,7 @@ msgstr "%s: nevaljano odredište: %s\n"
 #: elf/sln.c:189 elf/sln.c:198
 #, c-format
 msgid "Invalid link from \"%s\" to \"%s\": %s\n"
-msgstr "Nevaljana veza od „%s“ na „%s“: %s\n"
+msgstr "Nevaljana poveznica od „%s“ na „%s“: %s\n"
 
 #: elf/sotruss.sh:32
 #, sh-format
@@ -1212,7 +1216,7 @@ msgstr ""
 "  -T, --to TOLIST         prati pozive objektima popisanim u TOLIST\n"
 "\n"
 "  -e, --exit              ispisuje i izlazne kodove funkcijskih poziva\n"
-"  -f, --follow            prati procese potomaka (dijete-procesa)\n"
+"  -f, --follow            prati potomke (child processes)\n"
 "  -o, --output DATOTEKA   izlaz ispiše u DATOTEKU (ili DATOTEKA.$PID ako je\n"
 "                          naveden -f) umjesto na standardni izlaz za greške\n"
 "\n"
@@ -1622,7 +1626,7 @@ msgstr "pisanje je moguće za druge korisnike, a ne samo za vlasnika"
 
 #: inet/rcmd.c:493
 msgid "hard linked somewhere"
-msgstr "negdje postoji čvrsta veza"
+msgstr "negdje postoji čvrsta poveznica"
 
 #: inet/ruserpass.c:165 inet/ruserpass.c:188
 msgid "out of memory"
@@ -1709,14 +1713,14 @@ msgstr "blokirani skupovi znakova nisu podržani"
 
 #: locale/programs/charmap.c:503 locale/programs/charmap.c:557
 #: locale/programs/charmap.c:589 locale/programs/charmap.c:683
-#: locale/programs/charmap.c:738 locale/programs/charmap.c:779
-#: locale/programs/charmap.c:820
+#: locale/programs/charmap.c:739 locale/programs/charmap.c:780
+#: locale/programs/charmap.c:821
 #, c-format
 msgid "syntax error in %s definition: %s"
 msgstr "sintaktička greška u definiciji %s: %s"
 
 #: locale/programs/charmap.c:504 locale/programs/charmap.c:684
-#: locale/programs/charmap.c:780 locale/programs/repertoire.c:229
+#: locale/programs/charmap.c:781 locale/programs/repertoire.c:229
 msgid "no symbolic name given"
 msgstr "nije dano simboličko ime"
 
@@ -1732,14 +1736,14 @@ msgstr "premalo bajtova u kodiranju znakova"
 msgid "too many bytes in character encoding"
 msgstr "previše bajtova u kodiranju znakova"
 
-#: locale/programs/charmap.c:591 locale/programs/charmap.c:739
-#: locale/programs/charmap.c:822 locale/programs/repertoire.c:295
+#: locale/programs/charmap.c:591 locale/programs/charmap.c:740
+#: locale/programs/charmap.c:823 locale/programs/repertoire.c:295
 msgid "no symbolic name given for end of range"
 msgstr "nije dano simboličko ime kraja raspona"
 
 #: locale/programs/charmap.c:615 locale/programs/ld-address.c:524
 #: locale/programs/ld-collate.c:2616 locale/programs/ld-collate.c:3774
-#: locale/programs/ld-ctype.c:2117 locale/programs/ld-ctype.c:2829
+#: locale/programs/ld-ctype.c:2118 locale/programs/ld-ctype.c:2830
 #: locale/programs/ld-identification.c:397
 #: locale/programs/ld-measurement.c:213 locale/programs/ld-messages.c:295
 #: locale/programs/ld-monetary.c:748 locale/programs/ld-name.c:262
@@ -1756,19 +1760,19 @@ msgstr ""
 "samo su definicije širine (WIDTH) dopuštene nakon definicije\n"
 "  tablice znakova (CHARMAP)"
 
-#: locale/programs/charmap.c:656 locale/programs/charmap.c:719
+#: locale/programs/charmap.c:656 locale/programs/charmap.c:720
 #, c-format
 msgid "value for %s must be an integer"
 msgstr "vrijednost %s mora biti cijeli broj"
 
-#: locale/programs/charmap.c:847
+#: locale/programs/charmap.c:848
 #, c-format
 msgid "%s: error in state machine"
 msgstr "%s: greška u automatu"
 
-#: locale/programs/charmap.c:855 locale/programs/ld-address.c:540
+#: locale/programs/charmap.c:856 locale/programs/ld-address.c:540
 #: locale/programs/ld-collate.c:2613 locale/programs/ld-collate.c:3967
-#: locale/programs/ld-ctype.c:2114 locale/programs/ld-ctype.c:2846
+#: locale/programs/ld-ctype.c:2115 locale/programs/ld-ctype.c:2847
 #: locale/programs/ld-identification.c:413
 #: locale/programs/ld-measurement.c:229 locale/programs/ld-messages.c:311
 #: locale/programs/ld-monetary.c:764 locale/programs/ld-name.c:278
@@ -1779,37 +1783,37 @@ msgstr "%s: greška u automatu"
 msgid "%s: premature end of file"
 msgstr "%s: preuranjen kraj datoteke"
 
-#: locale/programs/charmap.c:874 locale/programs/charmap.c:885
+#: locale/programs/charmap.c:875 locale/programs/charmap.c:886
 #, c-format
 msgid "unknown character `%s'"
 msgstr "nepoznati znak „%s“"
 
-#: locale/programs/charmap.c:893
+#: locale/programs/charmap.c:894
 #, c-format
 msgid "number of bytes for byte sequence of beginning and end of range not the same: %d vs %d"
 msgstr ""
 "broj bajtova za sekvenciju bajtova na početku i kraju raspona\n"
 "  nije jednak: %d nasuprot %d"
 
-#: locale/programs/charmap.c:998 locale/programs/ld-collate.c:2893
+#: locale/programs/charmap.c:999 locale/programs/ld-collate.c:2893
 #: locale/programs/repertoire.c:418
 msgid "invalid names for character range"
 msgstr "nevaljana imena raspona znakova"
 
-#: locale/programs/charmap.c:1010 locale/programs/repertoire.c:430
+#: locale/programs/charmap.c:1011 locale/programs/repertoire.c:430
 msgid "hexadecimal range format should use only capital characters"
 msgstr "heksadecimalni format raspona trebao bi se koristiti samo velika slova"
 
-#: locale/programs/charmap.c:1028 locale/programs/repertoire.c:448
+#: locale/programs/charmap.c:1029 locale/programs/repertoire.c:448
 #, c-format
 msgid "<%s> and <%s> are invalid names for range"
 msgstr "<%s> i <%s> nisu valjana imena raspona"
 
-#: locale/programs/charmap.c:1034 locale/programs/repertoire.c:455
+#: locale/programs/charmap.c:1035 locale/programs/repertoire.c:455
 msgid "upper limit in range is smaller than lower limit"
 msgstr "gornja granica u rasponu je manja od donje granice"
 
-#: locale/programs/charmap.c:1092
+#: locale/programs/charmap.c:1093
 msgid "resulting bytes for range not representable."
 msgstr "rezultirajući bajtovi za raspon nisu reprezentativni"
 
@@ -1878,7 +1882,7 @@ msgid "%s: numeric country code `%d' not valid"
 msgstr "%s: nevaljani brojčani kod za „%d“ zemlju"
 
 #: locale/programs/ld-address.c:432 locale/programs/ld-address.c:469
-#: locale/programs/ld-address.c:507 locale/programs/ld-ctype.c:2478
+#: locale/programs/ld-address.c:507 locale/programs/ld-ctype.c:2479
 #: locale/programs/ld-identification.c:309
 #: locale/programs/ld-measurement.c:196 locale/programs/ld-messages.c:264
 #: locale/programs/ld-monetary.c:503 locale/programs/ld-monetary.c:538
@@ -1901,7 +1905,7 @@ msgid "%s: unknown character in field `%s'"
 msgstr "%s: nepoznati znak u polju „%s“"
 
 #: locale/programs/ld-address.c:521 locale/programs/ld-collate.c:3772
-#: locale/programs/ld-ctype.c:2826 locale/programs/ld-identification.c:394
+#: locale/programs/ld-ctype.c:2827 locale/programs/ld-identification.c:394
 #: locale/programs/ld-measurement.c:210 locale/programs/ld-messages.c:293
 #: locale/programs/ld-monetary.c:746 locale/programs/ld-name.c:260
 #: locale/programs/ld-numeric.c:323 locale/programs/ld-paper.c:210
@@ -1914,8 +1918,8 @@ msgstr "%s: nepotpuni „END“ redak"
 #: locale/programs/ld-collate.c:602 locale/programs/ld-collate.c:898
 #: locale/programs/ld-collate.c:911 locale/programs/ld-collate.c:2582
 #: locale/programs/ld-collate.c:2603 locale/programs/ld-collate.c:3957
-#: locale/programs/ld-ctype.c:1846 locale/programs/ld-ctype.c:2104
-#: locale/programs/ld-ctype.c:2676 locale/programs/ld-ctype.c:2837
+#: locale/programs/ld-ctype.c:1847 locale/programs/ld-ctype.c:2105
+#: locale/programs/ld-ctype.c:2677 locale/programs/ld-ctype.c:2838
 #: locale/programs/ld-identification.c:404
 #: locale/programs/ld-measurement.c:220 locale/programs/ld-messages.c:302
 #: locale/programs/ld-monetary.c:755 locale/programs/ld-name.c:269
@@ -2263,137 +2267,137 @@ msgstr "tablica znakova „%s“ je već definirana"
 msgid "implementation limit: no more than %d character maps allowed"
 msgstr "ograničenje implementacije: nije dopušteno više od %d tablica znakova"
 
-#: locale/programs/ld-ctype.c:1434 locale/programs/ld-ctype.c:1559
-#: locale/programs/ld-ctype.c:1665 locale/programs/ld-ctype.c:2341
-#: locale/programs/ld-ctype.c:3299
+#: locale/programs/ld-ctype.c:1435 locale/programs/ld-ctype.c:1560
+#: locale/programs/ld-ctype.c:1666 locale/programs/ld-ctype.c:2342
+#: locale/programs/ld-ctype.c:3302
 #, c-format
 msgid "%s: field `%s' does not contain exactly ten entries"
 msgstr "%s: polje „%s“ ne sadrži točno deset stavki"
 
-#: locale/programs/ld-ctype.c:1462 locale/programs/ld-ctype.c:2036
+#: locale/programs/ld-ctype.c:1463 locale/programs/ld-ctype.c:2037
 #, c-format
 msgid "to-value <U%0*X> of range is smaller than from-value <U%0*X>"
 msgstr "„do“-vrijednost <U%0*X> raspona je manja od „od“-vrijednosti <U%0*X>"
 
-#: locale/programs/ld-ctype.c:1589
+#: locale/programs/ld-ctype.c:1590
 msgid "start and end character sequence of range must have the same length"
 msgstr "početna i krajnja sekvencija znakova raspona moraju imati istu duljinu"
 
-#: locale/programs/ld-ctype.c:1596
+#: locale/programs/ld-ctype.c:1597
 msgid "to-value character sequence is smaller than from-value sequence"
 msgstr "„od“-vrijednost sekvencije znakova je manja od „do“-vrijednosti sekvencije"
 
-#: locale/programs/ld-ctype.c:1956 locale/programs/ld-ctype.c:2007
+#: locale/programs/ld-ctype.c:1957 locale/programs/ld-ctype.c:2008
 msgid "premature end of `translit_ignore' definition"
 msgstr "preuranjen kraj definicije „translit_ignore“"
 
-#: locale/programs/ld-ctype.c:1962 locale/programs/ld-ctype.c:2013
-#: locale/programs/ld-ctype.c:2055
+#: locale/programs/ld-ctype.c:1963 locale/programs/ld-ctype.c:2014
+#: locale/programs/ld-ctype.c:2056
 msgid "syntax error"
 msgstr "sintaktička greška"
 
-#: locale/programs/ld-ctype.c:2188
+#: locale/programs/ld-ctype.c:2189
 #, c-format
 msgid "%s: syntax error in definition of new character class"
 msgstr "%s: sintaktička greška u definiciji nove klase znakova"
 
-#: locale/programs/ld-ctype.c:2203
+#: locale/programs/ld-ctype.c:2204
 #, c-format
 msgid "%s: syntax error in definition of new character map"
 msgstr "%s: sintaktička greška u definiciji nove tablice znakova"
 
-#: locale/programs/ld-ctype.c:2363
+#: locale/programs/ld-ctype.c:2364
 msgid "ellipsis range must be marked by two operands of same type"
 msgstr "raspon s trotočkom mora sadržavati dva operanda istog tipa"
 
-#: locale/programs/ld-ctype.c:2372
+#: locale/programs/ld-ctype.c:2373
 msgid "with symbolic name range values the absolute ellipsis `...' must not be used"
 msgstr ""
 "za raspon sa simboličkim imenima kao granicama raspona\n"
 "  ne smije se koristiti apsolutni simbol (ellipsis) „...“ (trotočka)"
 
-#: locale/programs/ld-ctype.c:2387
+#: locale/programs/ld-ctype.c:2388
 msgid "with UCS range values one must use the hexadecimal symbolic ellipsis `..'"
 msgstr ""
 "za raspon s UCS vrijednostima mora se koristiti\n"
 "  heksadecimalni simbol (ellipsis) „..“ (dvije uzastopne točke)"
 
-#: locale/programs/ld-ctype.c:2401
+#: locale/programs/ld-ctype.c:2402
 msgid "with character code range values one must use the absolute ellipsis `...'"
 msgstr ""
 "za raspon sa znakovnim kodovima kao granicama raspona\n"
 "  mora se koristiti apsolutni simbol (ellipsis) „...“ (trotočka)"
 
-#: locale/programs/ld-ctype.c:2552
+#: locale/programs/ld-ctype.c:2553
 #, c-format
 msgid "duplicated definition for mapping `%s'"
 msgstr "duplikat definicije za mapiranje „%s“"
 
-#: locale/programs/ld-ctype.c:2638 locale/programs/ld-ctype.c:2782
+#: locale/programs/ld-ctype.c:2639 locale/programs/ld-ctype.c:2783
 #, c-format
 msgid "%s: `translit_start' section does not end with `translit_end'"
 msgstr "%s: „translit_start“ sekcija ne završava s „translit_end“"
 
-#: locale/programs/ld-ctype.c:2733
+#: locale/programs/ld-ctype.c:2734
 #, c-format
 msgid "%s: duplicate `default_missing' definition"
 msgstr "%s: duplikat definicije „default_missing“"
 
-#: locale/programs/ld-ctype.c:2738
+#: locale/programs/ld-ctype.c:2739
 msgid "previous definition was here"
 msgstr "prethodna definicija bila je ovdje"
 
-#: locale/programs/ld-ctype.c:2760
+#: locale/programs/ld-ctype.c:2761
 #, c-format
 msgid "%s: no representable `default_missing' definition found"
 msgstr "%s: nema reprezentativne definicije „default_missing“"
 
-#: locale/programs/ld-ctype.c:2877 locale/programs/ld-ctype.c:2973
-#: locale/programs/ld-ctype.c:2992 locale/programs/ld-ctype.c:3012
-#: locale/programs/ld-ctype.c:3032 locale/programs/ld-ctype.c:3052
-#: locale/programs/ld-ctype.c:3072 locale/programs/ld-ctype.c:3111
-#: locale/programs/ld-ctype.c:3131 locale/programs/ld-ctype.c:3195
-#: locale/programs/ld-ctype.c:3236 locale/programs/ld-ctype.c:3259
+#: locale/programs/ld-ctype.c:2878 locale/programs/ld-ctype.c:2974
+#: locale/programs/ld-ctype.c:2993 locale/programs/ld-ctype.c:3013
+#: locale/programs/ld-ctype.c:3033 locale/programs/ld-ctype.c:3053
+#: locale/programs/ld-ctype.c:3073 locale/programs/ld-ctype.c:3112
+#: locale/programs/ld-ctype.c:3132 locale/programs/ld-ctype.c:3198
+#: locale/programs/ld-ctype.c:3239 locale/programs/ld-ctype.c:3262
 #, c-format
 msgid "%s: character `%s' not defined while needed as default value"
 msgstr "%s: znak „%s“ potreban je kao zadana vrijednost a nije definiran"
 
-#: locale/programs/ld-ctype.c:2882 locale/programs/ld-ctype.c:2978
-#: locale/programs/ld-ctype.c:2997 locale/programs/ld-ctype.c:3017
-#: locale/programs/ld-ctype.c:3037 locale/programs/ld-ctype.c:3057
-#: locale/programs/ld-ctype.c:3077 locale/programs/ld-ctype.c:3116
-#: locale/programs/ld-ctype.c:3136 locale/programs/ld-ctype.c:3200
+#: locale/programs/ld-ctype.c:2883 locale/programs/ld-ctype.c:2979
+#: locale/programs/ld-ctype.c:2998 locale/programs/ld-ctype.c:3018
+#: locale/programs/ld-ctype.c:3038 locale/programs/ld-ctype.c:3058
+#: locale/programs/ld-ctype.c:3078 locale/programs/ld-ctype.c:3117
+#: locale/programs/ld-ctype.c:3137 locale/programs/ld-ctype.c:3203
 #, c-format
 msgid "%s: character `%s' in charmap not representable with one byte"
 msgstr "%s: znak „%s“ u tablici znakova ne može reprezentirati samo s jedan bajt"
 
-#: locale/programs/ld-ctype.c:3242 locale/programs/ld-ctype.c:3265
+#: locale/programs/ld-ctype.c:3245 locale/programs/ld-ctype.c:3268
 #, c-format
 msgid "%s: character `%s' needed as default value not representable with one byte"
 msgstr ""
 "%s: znak „%s“ potreban kao zadana vrijednost ne može\n"
 "  reprezentirati samo jedan bajt"
 
-#: locale/programs/ld-ctype.c:3321
+#: locale/programs/ld-ctype.c:3324
 msgid "no output digits defined and none of the standard names in the charmap"
 msgstr "izlazne znamenke nisu definirane i nemaju standardna imena u tablici znakova"
 
-#: locale/programs/ld-ctype.c:3570
+#: locale/programs/ld-ctype.c:3573
 #, c-format
 msgid "%s: transliteration data from locale `%s' not available"
 msgstr "%s: nema podataka za transliteraciju iz locale „%s“"
 
-#: locale/programs/ld-ctype.c:3669
+#: locale/programs/ld-ctype.c:3672
 #, c-format
 msgid "%s: table for class \"%s\": %lu bytes"
 msgstr "%s: tablica za klasu „%s“: %lu bajtova"
 
-#: locale/programs/ld-ctype.c:3733
+#: locale/programs/ld-ctype.c:3736
 #, c-format
 msgid "%s: table for map \"%s\": %lu bytes"
 msgstr "%s: tablica za znakovne tablice „%s“: %lu bajtova"
 
-#: locale/programs/ld-ctype.c:3857
+#: locale/programs/ld-ctype.c:3860
 #, c-format
 msgid "%s: table for width: %lu bytes"
 msgstr "%s: tablica za širinu: %lu bajtova"
@@ -2635,30 +2639,21 @@ msgstr ""
 "IME\n"
 "[-a|-m]"
 
-#: locale/programs/locale.c:190
-#, c-format
-msgid "Cannot set LC_CTYPE to default locale"
-msgstr "Nije moguće postaviti LC_CTYPE na zadani locale"
-
-#: locale/programs/locale.c:192
-#, c-format
-msgid "Cannot set LC_MESSAGES to default locale"
-msgstr "Nije moguće postaviti LC_MESSAGES na zadani locale"
-
-#: locale/programs/locale.c:205
-#, c-format
-msgid "Cannot set LC_COLLATE to default locale"
-msgstr "Nije moguće postaviti LC_COLLATE na zadani locale"
-
-#: locale/programs/locale.c:221
-#, c-format
-msgid "Cannot set LC_ALL to default locale"
-msgstr "Nije moguće postaviti LC_ALL na zadani locale"
-
-#: locale/programs/locale.c:521
+#: locale/programs/locale.c:522
 #, c-format
 msgid "while preparing output"
 msgstr "tijekom pripremanja izlaza"
+
+#: locale/programs/locale.c:998
+#, fuzzy, c-format
+#| msgid "Cannot set LC_ALL to default locale"
+msgid "Cannot set %s to default locale"
+msgstr "Nije moguće postaviti LC_ALL na zadani locale"
+
+#: locale/programs/locale.c:1096
+#, c-format
+msgid "warning: The LOCPATH variable is set to \"%s\"\n"
+msgstr ""
 
 #: locale/programs/localedef.c:116
 msgid "Input Files:"
@@ -2881,7 +2876,7 @@ msgstr "nije moguće otvoriti „%s“ locale arhivu"
 #: locale/programs/locarchive.c:613
 #, c-format
 msgid "cannot stat locale archive \"%s\""
-msgstr "nije moguće dobiti status za locale arhivu „%s“"
+msgstr "nije moguće stat locale arhivu „%s“"
 
 #: locale/programs/locarchive.c:632
 #, c-format
@@ -3091,7 +3086,7 @@ msgstr ""
 "   -d,--data=DATOTEKA     generira binarne podatke i spremi ih u DATOTEKU\n"
 "   -u,--unbuffered        ne koristi međuspremnik za izlaz\n"
 "   -b,--buffer=VELIČINA   prikupi VELIČINU stavki prije ispisa na izlaz\n"
-"      --no-timer          ne skuplja dodatne informacije sa štopericom\n"
+"      --no-timer          ne skuplja dodatne informacije s tajmerom\n"
 "   -m,--mmap              također prati mmap() i s njim povezane funkcije\n"
 "\n"
 "   -?,--help              ova pomoć\n"
@@ -3284,7 +3279,7 @@ msgstr "Vrsta stavke/tablice se ne podudaraju"
 
 #: nis/nis_error.h:26
 msgid "Link points to illegal name"
-msgstr "Veza ukazuje na nepropisno ime"
+msgstr "Poveznica ukazuje na nepropisno ime"
 
 #: nis/nis_error.h:27
 msgid "Partial success"
@@ -3300,7 +3295,7 @@ msgstr "Greška u RPC podsustavu"
 
 #: nis/nis_error.h:30
 msgid "Missing or malformed attribute"
-msgstr "Atribut nema ili je deformirani"
+msgstr "Atributa nema ili je deformiran"
 
 #: nis/nis_error.h:31
 msgid "Named object is not searchable"
@@ -3807,18 +3802,18 @@ msgstr "Nepoznata ypbind() greška"
 
 #: nis/ypclnt.c:967
 msgid "yp_update: cannot convert host to netname\n"
-msgstr "yp_update: nije moguće pretvoriti ime računala u mrežno ime (netname)\n"
+msgstr "yp_update: nije moguće pretvoriti hostname u mrežno ime (netname)\n"
 
 #: nis/ypclnt.c:985
 msgid "yp_update: cannot get server address\n"
 msgstr "yp_update: nije moguće dobiti adresu poslužitelja\n"
 
-#: nscd/aicache.c:83 nscd/hstcache.c:452
+#: nscd/aicache.c:82 nscd/hstcache.c:452
 #, c-format
 msgid "Haven't found \"%s\" in hosts cache!"
 msgstr "Nije pronađen „%s“ u predmemoriji računala!"
 
-#: nscd/aicache.c:85 nscd/hstcache.c:454
+#: nscd/aicache.c:84 nscd/hstcache.c:454
 #, c-format
 msgid "Reloading \"%s\" in hosts cache!"
 msgstr "Ponovno učitavanje „%s“ predmemoriju računala!"
@@ -3852,271 +3847,271 @@ msgstr "čišćenje predmemorije %s; vrijeme %ld"
 msgid "considering %s entry \"%s\", timeout %<PRIu64>"
 msgstr "razmatranje %s stavke „%s“; tajmaut %<PRIu64>"
 
-#: nscd/connections.c:521
+#: nscd/connections.c:520
 #, c-format
 msgid "invalid persistent database file \"%s\": %s"
 msgstr "nevaljana postojana datoteka baze podataka „%s“: %s"
 
-#: nscd/connections.c:529
+#: nscd/connections.c:528
 msgid "uninitialized header"
 msgstr "zaglavlje nije inicirano"
 
-#: nscd/connections.c:534
+#: nscd/connections.c:533
 msgid "header size does not match"
 msgstr "veličina zaglavlja nije točna"
 
-#: nscd/connections.c:544
+#: nscd/connections.c:543
 msgid "file size does not match"
 msgstr "veličina datoteke nije točna"
 
-#: nscd/connections.c:561
+#: nscd/connections.c:560
 msgid "verification failed"
 msgstr "provjera nije uspjela"
 
-#: nscd/connections.c:575
+#: nscd/connections.c:574
 #, c-format
 msgid "suggested size of table for database %s larger than the persistent database's table"
 msgstr ""
 "predložena veličina tablice za bazu podataka %s\n"
 "  je veća od trajne tablice baze podataka"
 
-#: nscd/connections.c:586 nscd/connections.c:670
+#: nscd/connections.c:585 nscd/connections.c:669
 #, c-format
 msgid "cannot create read-only descriptor for \"%s\"; no mmap"
 msgstr "nije moguće stvoriti deskriptor „%s“ samo za čitanje; nema mmap()"
 
-#: nscd/connections.c:602
+#: nscd/connections.c:601
 #, c-format
 msgid "cannot access '%s'"
 msgstr "nije moguće pristupiti k „%s“"
 
-#: nscd/connections.c:650
+#: nscd/connections.c:649
 #, c-format
 msgid "database for %s corrupted or simultaneously used; remove %s manually if necessary and restart"
 msgstr ""
 "baza podataka za %s je oštećena ili se istovremeno koristi;\n"
 "ručno uklonite %s ako je potrebno i ponovno pokrenite"
 
-#: nscd/connections.c:656
+#: nscd/connections.c:655
 #, c-format
 msgid "cannot create %s; no persistent database used"
 msgstr "nije moguće stvoriti %s; trajna baza podataka se neće koristi"
 
-#: nscd/connections.c:659
+#: nscd/connections.c:658
 #, c-format
 msgid "cannot create %s; no sharing possible"
 msgstr "nije moguće stvoriti %s; dijeljenje (zajednička upotreba datoteke) nije moguće"
 
-#: nscd/connections.c:730
+#: nscd/connections.c:729
 #, c-format
 msgid "cannot write to database file %s: %s"
 msgstr "nije moguće pisati u datoteku baze podataka %s: %s"
 
-#: nscd/connections.c:786
+#: nscd/connections.c:785
 #, c-format
 msgid "cannot open socket: %s"
 msgstr "nije moguće otvoriti utičnicu: %s"
 
-#: nscd/connections.c:805
+#: nscd/connections.c:804
 #, c-format
 msgid "cannot enable socket to accept connections: %s"
-msgstr "nije moguće omogućiti utičnicu za prihvaćanje veza: %s"
+msgstr "nije moguće omogućiti utičnicu za prihvaćanje poveznica: %s"
 
-#: nscd/connections.c:862
+#: nscd/connections.c:861
 #, c-format
 msgid "disabled inotify-based monitoring for file `%s': %s"
 msgstr "onemogućuje se praćenje praćenje datoteke „%s“ s inotify: %s"
 
-#: nscd/connections.c:866
+#: nscd/connections.c:865
 #, c-format
 msgid "monitoring file `%s` (%d)"
 msgstr "prati se datoteka „%s“ (%d)"
 
-#: nscd/connections.c:879
+#: nscd/connections.c:878
 #, c-format
 msgid "disabled inotify-based monitoring for directory `%s': %s"
 msgstr "onemogućuje se praćenje praćenje direktorija „%s“ s inotify: %s"
 
-#: nscd/connections.c:883
+#: nscd/connections.c:882
 #, c-format
 msgid "monitoring directory `%s` (%d)"
 msgstr "prati se direktorij „%s“ (%d)"
 
-#: nscd/connections.c:911
+#: nscd/connections.c:910
 #, c-format
 msgid "monitoring file %s for database %s"
 msgstr "prati se datoteke %s za bazu podataka %s"
 
-#: nscd/connections.c:921
+#: nscd/connections.c:920
 #, c-format
 msgid "stat failed for file `%s'; will try again later: %s"
 msgstr "nije uspjelo dobiti status datoteke „%s“; pokušati će se ponovno: %s"
 
-#: nscd/connections.c:1040
+#: nscd/connections.c:1039
 #, c-format
 msgid "provide access to FD %d, for %s"
 msgstr "omogući pristup deskriptoru datoteke (FD) %d, za %s"
 
-#: nscd/connections.c:1052
+#: nscd/connections.c:1051
 #, c-format
 msgid "cannot handle old request version %d; current version is %d"
 msgstr "nije moguće obraditi zahtjev stare inačice %d; trenutačna inačica je %d"
 
-#: nscd/connections.c:1075
+#: nscd/connections.c:1074
 #, c-format
 msgid "request from %ld not handled due to missing permission"
 msgstr "zahtjev od %ld nije obrađen jer nema prava pristupa"
 
-#: nscd/connections.c:1080
+#: nscd/connections.c:1079
 #, c-format
 msgid "request from '%s' [%ld] not handled due to missing permission"
 msgstr "zahtjev od „%s“ [%ld] nije obrađen jer nema prava pristupa"
 
-#: nscd/connections.c:1085
+#: nscd/connections.c:1084
 msgid "request not handled due to missing permission"
 msgstr "zahtjev nije obrađen jer nema prava pristupa"
 
-#: nscd/connections.c:1123 nscd/connections.c:1149
+#: nscd/connections.c:1122 nscd/connections.c:1148
 #, c-format
 msgid "cannot write result: %s"
 msgstr "nije moguće zapisati rezultat: %s"
 
-#: nscd/connections.c:1240
+#: nscd/connections.c:1239
 #, c-format
 msgid "error getting caller's id: %s"
 msgstr "greška pri dobivanju identiteta pozivatelja: %s"
 
-#: nscd/connections.c:1350
+#: nscd/connections.c:1349
 #, c-format
 msgid "cannot open /proc/self/cmdline: %m; disabling paranoia mode"
 msgstr "nije moguće otvoriti /proc/self/cmdline: %m;onemogućuje se paranoični mod"
 
-#: nscd/connections.c:1373
+#: nscd/connections.c:1372
 #, c-format
 msgid "cannot change to old UID: %s; disabling paranoia mode"
 msgstr ""
 "nije moguće promijeniti na stari UID:\n"
 "  %s -- onemogućuje se paranoični mod"
 
-#: nscd/connections.c:1384
+#: nscd/connections.c:1383
 #, c-format
 msgid "cannot change to old GID: %s; disabling paranoia mode"
 msgstr ""
 "nije moguće promijeniti na stari GID:\n"
 "  %s -- onemogućuje se paranoični mod"
 
-#: nscd/connections.c:1398
+#: nscd/connections.c:1397
 #, c-format
 msgid "cannot change to old working directory: %s; disabling paranoia mode"
 msgstr ""
 "nije moguće promijeniti u stari radni direktorij:\n"
 "  %s -- onemogućuje se paranoični mod"
 
-#: nscd/connections.c:1445
+#: nscd/connections.c:1444
 #, c-format
 msgid "re-exec failed: %s; disabling paranoia mode"
 msgstr ""
 "ponovljeno izvršavanje nije uspjelo:\n"
 "  %s -- onemogućuje se paranoični mod"
 
-#: nscd/connections.c:1454
+#: nscd/connections.c:1453
 #, c-format
 msgid "cannot change current working directory to \"/\": %s"
 msgstr "nije moguće promijeniti trenutačni radni direktorij u „/“: %s"
 
-#: nscd/connections.c:1638
+#: nscd/connections.c:1637
 #, c-format
 msgid "short read while reading request: %s"
 msgstr "nepotpuno pročitani zahtjev: %s"
 
-#: nscd/connections.c:1671
+#: nscd/connections.c:1670
 #, c-format
 msgid "key length in request too long: %d"
 msgstr "duljina ključa u zahtjevu je prevelika: %d"
 
-#: nscd/connections.c:1684
+#: nscd/connections.c:1683
 #, c-format
 msgid "short read while reading request key: %s"
 msgstr "nepotpuno pročitani ključ zahtjeva: %s"
 
-#: nscd/connections.c:1694
+#: nscd/connections.c:1693
 #, c-format
 msgid "handle_request: request received (Version = %d) from PID %ld"
 msgstr "handle_request: zahtjev je primljen (inačica = %d) od PID-a %ld"
 
-#: nscd/connections.c:1699
+#: nscd/connections.c:1698
 #, c-format
 msgid "handle_request: request received (Version = %d)"
 msgstr "handle_request: zahtjev je primljen (inačica = %d)"
 
-#: nscd/connections.c:1839
+#: nscd/connections.c:1838
 #, c-format
 msgid "ignored inotify event for `%s` (file exists)"
 msgstr "ignorirani inotify događaj za „%s“ (datoteka postoji)"
 
-#: nscd/connections.c:1844
+#: nscd/connections.c:1843
 #, c-format
 msgid "monitored file `%s` was %s, removing watch"
 msgstr "praćena datoteka „%s“ bila je »%s«; motrenje prestaje"
 
-#: nscd/connections.c:1852 nscd/connections.c:1894
+#: nscd/connections.c:1851 nscd/connections.c:1893
 #, c-format
 msgid "failed to remove file watch `%s`: %s"
 msgstr "nije uspjelo ukloniti nadzor nad datotekom „%s“: %s"
 
-#: nscd/connections.c:1867
+#: nscd/connections.c:1866
 #, c-format
 msgid "monitored file `%s` was written to"
 msgstr "praćena datoteka „%s“ je zapisana u"
 
-#: nscd/connections.c:1891
+#: nscd/connections.c:1890
 #, c-format
 msgid "monitored parent directory `%s` was %s, removing watch on `%s`"
 msgstr "praćeni naddirektorij „%s“ je bio »%s«; motrenje „%s“ prestaje"
 
-#: nscd/connections.c:1917
+#: nscd/connections.c:1916
 #, c-format
 msgid "monitored file `%s` was %s, adding watch"
 msgstr "praćena datoteka „%s“ bila je »%s«; motrenje započinje"
 
-#: nscd/connections.c:1929
+#: nscd/connections.c:1928
 #, c-format
 msgid "failed to add file watch `%s`: %s"
 msgstr "nije uspjelo dodati motrenje datoteke „%s“: %s"
 
-#: nscd/connections.c:2107 nscd/connections.c:2272
+#: nscd/connections.c:2106 nscd/connections.c:2271
 #, c-format
 msgid "disabled inotify-based monitoring after read error %d"
 msgstr "nakon greške čitanja %d onemogućuje se praćenje s inotify"
 
-#: nscd/connections.c:2387
+#: nscd/connections.c:2386
 msgid "could not initialize conditional variable"
 msgstr "nije bilo moguće inicirati uvjetnu varijablu"
 
-#: nscd/connections.c:2395
+#: nscd/connections.c:2394
 msgid "could not start clean-up thread; terminating"
 msgstr "nije bilo moguće pokrenuti „čistačica“-dretvu -- završava se"
 
-#: nscd/connections.c:2409
+#: nscd/connections.c:2408
 msgid "could not start any worker thread; terminating"
 msgstr "nije bilo moguće pokrenuti nijednu „radnik“-dretvu -- završava se"
 
-#: nscd/connections.c:2464 nscd/connections.c:2466 nscd/connections.c:2482
-#: nscd/connections.c:2492 nscd/connections.c:2510 nscd/connections.c:2521
-#: nscd/connections.c:2531
+#: nscd/connections.c:2463 nscd/connections.c:2465 nscd/connections.c:2481
+#: nscd/connections.c:2491 nscd/connections.c:2509 nscd/connections.c:2520
+#: nscd/connections.c:2530
 #, c-format
 msgid "Failed to run nscd as user '%s'"
 msgstr "nije uspjelo pokrenuti nscd kao korisnik „%s“"
 
-#: nscd/connections.c:2484
+#: nscd/connections.c:2483
 msgid "initial getgrouplist failed"
 msgstr "neuspješni prvotni getgrouplist()"
 
-#: nscd/connections.c:2493
+#: nscd/connections.c:2492
 msgid "getgrouplist failed"
 msgstr "neuspješni getgrouplist()"
 
-#: nscd/connections.c:2511
+#: nscd/connections.c:2510
 msgid "setgroups failed"
 msgstr "neuspješni setgroups()"
 
@@ -4219,7 +4214,7 @@ msgstr "rabi zasebnu predmemoriju za svakog korisnika"
 msgid "Name Service Cache Daemon."
 msgstr "Name Service Cache Daemon (usluge za imena predmemorija)"
 
-#: nscd/nscd.c:155 nss/getent.c:967 nss/makedb.c:206
+#: nscd/nscd.c:155 nss/getent.c:987 nss/makedb.c:206
 #, c-format
 msgid "wrong number of arguments"
 msgstr "nevaljani broj argumenata"
@@ -4237,12 +4232,12 @@ msgstr "već radi"
 #: nscd/nscd.c:194
 #, c-format
 msgid "cannot create a pipe to talk to the child"
-msgstr "nije moguće stvoriti cijev za komunikaciju s potomkom (dijete-procesom)"
+msgstr "nije moguće stvoriti cijev za komunikaciju s potomkom (child process)"
 
 #: nscd/nscd.c:198
 #, c-format
 msgid "cannot fork"
-msgstr "nije moguće započeti novi proces (novog potomka, novi dijete-proces)"
+msgstr "nije moguće započeti novi proces (novog potomka, novi child process)"
 
 #: nscd/nscd.c:268
 msgid "cannot change current working directory to \"/\""
@@ -4305,12 +4300,12 @@ msgstr "neuspješni „wait“\n"
 #: nscd/nscd.c:642
 #, c-format
 msgid "child exited with status %d\n"
-msgstr "potomak (dijete-proces) je završio sa statusom %d\n"
+msgstr "potomak (child process) je završio sa statusom %d\n"
 
 #: nscd/nscd.c:647
 #, c-format
 msgid "child terminated by signal %d\n"
-msgstr "potomak (dijete-proces) bio je završen signalom %d\n"
+msgstr "potomak (child process) prekinut je signalom %d\n"
 
 #: nscd/nscd_conf.c:54
 #, c-format
@@ -4478,7 +4473,7 @@ msgstr ""
 "%15zu  najveća duljina lanca koja se pretražuje\n"
 "%15<PRIuMAX>  broj kašnjenja na rdlocku\n"
 "%15<PRIuMAX>  broj kašnjenja na wrlocku\n"
-"%15<PRIuMAX>  broj neuspješnih dodjela memorijske\n"
+"%15<PRIuMAX>  neuspješnih dodjela memorije\n"
 "%15s  provjeri promjene u /etc/%s\n"
 
 #: nscd/pwdcache.c:407
@@ -4613,46 +4608,46 @@ msgstr "Nije bio pronađen „%s“ u predmemoriji usluga!"
 msgid "Reloading \"%s\" in services cache!"
 msgstr "Ponovno učitavanje „%s“ u predmemoriju usluga!"
 
-#: nss/getent.c:54
+#: nss/getent.c:55
 msgid "database [key ...]"
 msgstr "baza podataka [ključ ...]"
 
-#: nss/getent.c:59
+#: nss/getent.c:60
 msgid "CONFIG"
 msgstr "KONFIG"
 
-#: nss/getent.c:59
+#: nss/getent.c:60
 msgid "Service configuration to be used"
 msgstr "konfiguracija servisa koja će se koristiti"
 
-#: nss/getent.c:60
+#: nss/getent.c:61
 msgid "disable IDN encoding"
 msgstr "onemogući IDN kodiranje"
 
-#: nss/getent.c:65
+#: nss/getent.c:66
 msgid "Get entries from administrative database."
 msgstr "Čita stavke iz administrativne baze podataka."
 
-#: nss/getent.c:149 nss/getent.c:442 nss/getent.c:489
+#: nss/getent.c:150 nss/getent.c:462 nss/getent.c:509
 #, c-format
 msgid "Enumeration not supported on %s\n"
 msgstr "Enumeriracija nije podržana na %s\n"
 
-#: nss/getent.c:497 nss/getent.c:510
+#: nss/getent.c:517 nss/getent.c:530
 #, c-format
 msgid "Could not allocate group list: %m\n"
 msgstr "Nije bilo moguće dodijeliti grupni popis: %m\n"
 
-#: nss/getent.c:881
+#: nss/getent.c:901
 #, c-format
 msgid "Unknown database name"
 msgstr "Nepoznato ime baze podataka"
 
-#: nss/getent.c:911
+#: nss/getent.c:931
 msgid "Supported databases:\n"
 msgstr "Podržane baze podataka:\n"
 
-#: nss/getent.c:977
+#: nss/getent.c:997
 #, c-format
 msgid "Unknown database: %s\n"
 msgstr "Nepoznata baza podataka: %s\n"
@@ -4714,7 +4709,7 @@ msgstr "nije moguće stvoriti privremenu datoteku"
 #: nss/makedb.c:304
 #, c-format
 msgid "cannot stat newly created file"
-msgstr "nije moguće odrediti status novo stvorene datoteke"
+msgstr "nije moguće stat novo stvorene datoteke"
 
 #: nss/makedb.c:315
 #, c-format
@@ -4743,7 +4738,7 @@ msgstr "novu datoteku baze podataka nije uspjelo zapisati"
 #: nss/makedb.c:808
 #, c-format
 msgid "cannot stat database file"
-msgstr "nije moguće odrediti status datoteke baze podataka"
+msgstr "nije moguće stat datoteke baze podataka"
 
 #: nss/makedb.c:813
 #, c-format
@@ -4857,7 +4852,7 @@ msgstr "Nevaljani regularni izraz"
 
 #: posix/regcomp.c:144
 msgid "Invalid collation character"
-msgstr "Nevaljani znak razvrstavanja"
+msgstr "Nevaljani znak za razvrstavanje"
 
 #: posix/regcomp.c:147
 msgid "Invalid character class name"
@@ -4865,7 +4860,7 @@ msgstr "Nevaljano ime klase znakova"
 
 #: posix/regcomp.c:150
 msgid "Trailing backslash"
-msgstr "Zaostala obrnuta kosa crta („\\“) na kraju"
+msgstr "Zaostala obrnuta kosa crta („\\“, backslash)"
 
 #: posix/regcomp.c:153
 msgid "Invalid back reference"
@@ -4885,7 +4880,7 @@ msgstr "Nesparena \\{"
 
 #: posix/regcomp.c:165
 msgid "Invalid content of \\{\\}"
-msgstr "Nevaljani sadržaj od \\{\\}"
+msgstr "Nevaljani sadržaj u \\{\\}"
 
 #: posix/regcomp.c:168
 msgid "Invalid range end"
@@ -4893,7 +4888,7 @@ msgstr "Nevaljani kraj raspona"
 
 #: posix/regcomp.c:171
 msgid "Memory exhausted"
-msgstr "Memorija iscrpljena"
+msgstr "Nema dovoljno memorije"
 
 #: posix/regcomp.c:174
 msgid "Invalid preceding regular expression"
@@ -4913,9 +4908,9 @@ msgstr "Nesparena ) ili \\)"
 
 #: posix/regcomp.c:676
 msgid "No previous regular expression"
-msgstr "Nema prethodni regularni izraz"
+msgstr "Nema prethodnog regularnog izraza"
 
-#: posix/wordexp.c:1815
+#: posix/wordexp.c:1816
 msgid "parameter null or not set"
 msgstr "parametar je prazan ili nije postavljen"
 
@@ -4925,11 +4920,11 @@ msgstr "Nema greške -- (resolver greška 0; nema greške u rješavanju imena)"
 
 #: resolv/herror.c:64
 msgid "Unknown host"
-msgstr "Nepoznato računalo"
+msgstr "Nepoznati host"
 
 #: resolv/herror.c:65
 msgid "Host name lookup failure"
-msgstr "Nije pronađeno ime računala"
+msgstr "Nije pronađeno hostname"
 
 #: resolv/herror.c:66
 msgid "Unknown server error"
@@ -5002,7 +4997,7 @@ msgstr "Greška koprocesora"
 
 #: stdio-common/psiginfo-data.h:9
 msgid "Internal stack error"
-msgstr "Interna greška stoga"
+msgstr "Interna greška stȏga"
 
 #: stdio-common/psiginfo-data.h:12
 msgid "Integer divide by zero"
@@ -5010,7 +5005,7 @@ msgstr "Dijeljenje s nulom cijelog broja"
 
 #: stdio-common/psiginfo-data.h:13
 msgid "Integer overflow"
-msgstr "Preljev pri operaciji s cijelim brojem"
+msgstr "Prelijevanje pri operaciji s cijelim brojem"
 
 #: stdio-common/psiginfo-data.h:14
 msgid "Floating-point divide by zero"
@@ -5066,27 +5061,27 @@ msgstr "Zamka za praćenje procesa"
 
 #: stdio-common/psiginfo-data.h:35
 msgid "Child has exited"
-msgstr "Potomak (dijete-proces) je završio"
+msgstr "Potomak (child process) je završio"
 
 #: stdio-common/psiginfo-data.h:36
 msgid "Child has terminated abnormally and did not create a core file"
 msgstr ""
-"Potomak (dijete-proces) je abnormalno završio i nije\n"
-"  proizveo ispis stanja memorije u datoteku"
+"Potomak (child process) je abnormalno završio i nije\n"
+" ispisao stanje memorije u datoteku"
 
 #: stdio-common/psiginfo-data.h:37
 msgid "Child has terminated abnormally and created a core file"
 msgstr ""
-"Potomak (dijete-proces) je abnormalno završio i\n"
-"  proizveo je ispis stanja memorije u datoteku"
+"Potomak (child process) nije normalno završio i\n"
+" ispisao je stanje memorije u datoteku"
 
 #: stdio-common/psiginfo-data.h:38
 msgid "Traced child has trapped"
-msgstr "Praćeni potomak (dijete-proces) završio je u zamci"
+msgstr "Praćeni potomak (child process) završio je u zamci"
 
 #: stdio-common/psiginfo-data.h:39
 msgid "Child has stopped"
-msgstr "Potomak (dijete-proces) bio je zaustavljen"
+msgstr "Potomak (child process) je zaustavljen"
 
 #: stdio-common/psiginfo-data.h:40
 msgid "Stopped child has continued"
@@ -5110,7 +5105,7 @@ msgstr "U/I greška"
 
 #: stdio-common/psiginfo-data.h:47
 msgid "High priority input available"
-msgstr "Dostupni je visoko prioritetni ulaz"
+msgstr "Ulaz visokog prioriteta je dostupan"
 
 #: stdio-common/psiginfo-data.h:48
 msgid "Device disconnected"
@@ -5126,7 +5121,7 @@ msgstr "Signal je poslao sigqueue()"
 
 #: stdio-common/psiginfo.c:146
 msgid "Signal generated by the expiration of a timer"
-msgstr "Signal koji je generirala štoperica nakon isteka vremena"
+msgstr "Signal generiran tajmerom nakon isteka vremena"
 
 #: stdio-common/psiginfo.c:149
 msgid "Signal generated by the completion of an asynchronous I/O request"
@@ -5177,7 +5172,7 @@ msgstr "Nepoznata greška"
 #: string/strsignal.c:60
 #, c-format
 msgid "Real-time signal %d"
-msgstr "Signal realnoga vremena %d"
+msgstr "Signal realnog vremena %d"
 
 #: string/strsignal.c:64
 #, c-format
@@ -5187,7 +5182,7 @@ msgstr "Nepoznati signal %d"
 #: sunrpc/auth_unix.c:112 sunrpc/clnt_tcp.c:124 sunrpc/clnt_udp.c:139
 #: sunrpc/clnt_unix.c:125 sunrpc/svc_tcp.c:189 sunrpc/svc_tcp.c:233
 #: sunrpc/svc_udp.c:161 sunrpc/svc_unix.c:189 sunrpc/svc_unix.c:229
-#: sunrpc/xdr.c:628 sunrpc/xdr.c:788 sunrpc/xdr_array.c:102
+#: sunrpc/xdr.c:631 sunrpc/xdr.c:791 sunrpc/xdr_array.c:102
 #: sunrpc/xdr_rec.c:153 sunrpc/xdr_ref.c:79
 msgid "out of memory\n"
 msgstr "nema dovoljno memorije\n"
@@ -5265,7 +5260,7 @@ msgstr "RPC: Greška udaljenog sustava"
 
 #: sunrpc/clnt_perr.c:201
 msgid "RPC: Unknown host"
-msgstr "RPC: Nepoznato računalo"
+msgstr "RPC: Nepoznati host"
 
 #: sunrpc/clnt_perr.c:205
 msgid "RPC: Unknown protocol"
@@ -5734,15 +5729,15 @@ msgstr "svc_unix.c - neuspješni getsockname() ili listen"
 
 #: sysdeps/generic/siglist.h:29
 msgid "Hangup"
-msgstr "Završetak -- terminal zatvoren"
+msgstr "Terminal zatvoren"
 
 #: sysdeps/generic/siglist.h:30
 msgid "Interrupt"
-msgstr "Prekid -- SIGINT"
+msgstr "Prekini"
 
 #: sysdeps/generic/siglist.h:31
 msgid "Quit"
-msgstr "Izlaz"
+msgstr "Završi"
 
 #: sysdeps/generic/siglist.h:32
 msgid "Illegal instruction"
@@ -5750,23 +5745,23 @@ msgstr "Nepropisna instrukcija"
 
 #: sysdeps/generic/siglist.h:33
 msgid "Trace/breakpoint trap"
-msgstr "Trace/breakpoint instrukcija (zamka)"
+msgstr "Trace/breakpoint (SIGTRAP)"
 
 #: sysdeps/generic/siglist.h:34
 msgid "Aborted"
-msgstr "Prekinuto (neuspješni završetak)"
+msgstr "Prekid"
 
 #: sysdeps/generic/siglist.h:35
 msgid "Floating point exception"
-msgstr "Iznimka pomičnog zareza"
+msgstr "Iznimka (broja) pomičnog zareza"
 
 #: sysdeps/generic/siglist.h:36
 msgid "Killed"
-msgstr "Eliminirano"
+msgstr "Ubijen"
 
 #: sysdeps/generic/siglist.h:37
 msgid "Bus error"
-msgstr "Greška sabirnice"
+msgstr "Sabirnička greška"
 
 #: sysdeps/generic/siglist.h:38
 msgid "Bad system call"
@@ -5807,11 +5802,11 @@ msgstr "Zaustavljeno"
 
 #: sysdeps/generic/siglist.h:46
 msgid "Continued"
-msgstr "Nastavljeno"
+msgstr "Nastavlja se"
 
 #: sysdeps/generic/siglist.h:47
 msgid "Child exited"
-msgstr "Potomak (dijete-proces) je završio"
+msgstr "Potomak (child process) je završio"
 
 #: sysdeps/generic/siglist.h:48
 msgid "Stopped (tty input)"
@@ -5823,7 +5818,7 @@ msgstr "Zaustavljen (tty izlaz)"
 
 #: sysdeps/generic/siglist.h:50
 msgid "I/O possible"
-msgstr "Mogući je U/I"
+msgstr "U/I je sada moguć"
 
 #: sysdeps/generic/siglist.h:51
 msgid "CPU time limit exceeded"
@@ -5835,23 +5830,23 @@ msgstr "Prekoračeno ograničenje veličine datoteke"
 
 #: sysdeps/generic/siglist.h:53
 msgid "Virtual timer expired"
-msgstr "Virtualna štoperica istekla"
+msgstr "Virtualni tajmer je istekao"
 
 #: sysdeps/generic/siglist.h:54
 msgid "Profiling timer expired"
-msgstr "Štoperica profiliranja (analize) je istekla"
+msgstr "Isteklo je vrijeme za profiliranje"
 
 #: sysdeps/generic/siglist.h:55
 msgid "User defined signal 1"
-msgstr "Korisnikom definirani signal 1"
+msgstr "Korisnikom definiran signal 1"
 
 #: sysdeps/generic/siglist.h:56
 msgid "User defined signal 2"
-msgstr "Korisnikom definirani signal 2"
+msgstr "Korisnikom definiran signal 2"
 
 #: sysdeps/generic/siglist.h:57
 msgid "Window changed"
-msgstr "Prozor je promijenjen"
+msgstr "Promjena veličine prozora"
 
 #: sysdeps/generic/siglist.h:61
 msgid "EMT trap"
@@ -5859,11 +5854,11 @@ msgstr "EMT zamka"
 
 #: sysdeps/generic/siglist.h:64
 msgid "Stack fault"
-msgstr "Greška stoga"
+msgstr "Greška stȏga"
 
 #: sysdeps/generic/siglist.h:67
 msgid "Power failure"
-msgstr "Prekid napajanja"
+msgstr "Prekinuto napajanje"
 
 #: sysdeps/generic/siglist.h:70
 msgid "Information request"
@@ -5871,7 +5866,7 @@ msgstr "Zahtjev za informacijom"
 
 #: sysdeps/generic/siglist.h:73
 msgid "Resource lost"
-msgstr "Resurs izgubljen"
+msgstr "Resurs je izgubljen (SIGLOST)"
 
 #. TRANS Only the owner of the file (or other resource)
 #. TRANS or processes with special privileges can perform the operation.
@@ -5893,7 +5888,7 @@ msgstr "Nema takvog procesa"
 #. TRANS Primitives}.
 #: sysdeps/gnu/errlist.c:61
 msgid "Interrupted system call"
-msgstr "Prekinut sustavski poziv"
+msgstr "Prekinuti sustavski poziv"
 
 #. TRANS Usually used for physical read or write errors.
 #: sysdeps/gnu/errlist.c:70
@@ -5915,27 +5910,27 @@ msgstr "Nema takvog uređaja ili adrese"
 #. TRANS @gnuhurdsystems{}.
 #: sysdeps/gnu/errlist.c:95
 msgid "Argument list too long"
-msgstr "Popis argumenata je predugačak"
+msgstr "Popis sadrži previše argumenata"
 
 #. TRANS Invalid executable file format.  This condition is detected by the
 #. TRANS @code{exec} functions; see @ref{Executing a File}.
 #: sysdeps/gnu/errlist.c:105
 msgid "Exec format error"
-msgstr "Greška formata izvršne datoteke"
+msgstr "Greška u formatu izvršne datoteke"
 
 #. TRANS For example, I/O on a descriptor that has been
 #. TRANS closed or reading from a descriptor open only for writing (or vice
 #. TRANS versa).
 #: sysdeps/gnu/errlist.c:116
 msgid "Bad file descriptor"
-msgstr "Loši datotečni deskriptor"
+msgstr "Loš datotečni deskriptor"
 
 #. TRANS This error happens on operations that are
 #. TRANS supposed to manipulate child processes, when there aren't any processes
 #. TRANS to manipulate.
 #: sysdeps/gnu/errlist.c:127
 msgid "No child processes"
-msgstr "Nema procesa potomka (dijete-procesa)"
+msgstr "Nema potomaka (child processes)"
 
 #. TRANS Allocating a system resource would have resulted in a
 #. TRANS deadlock situation.  The system does not guarantee that it will notice
@@ -5949,7 +5944,7 @@ msgstr "Izbjegnuto je potpuno blokiranje resursa"
 #. TRANS because its capacity is full.
 #: sysdeps/gnu/errlist.c:149
 msgid "Cannot allocate memory"
-msgstr "Nema dovoljno memorije za dodijeliti"
+msgstr "Nema dovoljno memorije"
 
 #. TRANS An invalid pointer was detected.
 #. TRANS On @gnuhurdsystems{}, this error never happens; you get a signal instead.
@@ -5982,7 +5977,7 @@ msgstr "Datoteka postoji"
 #. TRANS also when you rename a file with @code{rename} (@pxref{Renaming Files}).
 #: sysdeps/gnu/errlist.c:211
 msgid "Invalid cross-device link"
-msgstr "Nevaljana veza između uređaja"
+msgstr "Nevaljana poveznica između uređaja"
 
 #. TRANS The wrong type of device was given to a function that expects a
 #. TRANS particular sort of device.
@@ -6066,7 +6061,7 @@ msgstr "Datotečni sustav je samo za čitanje"
 #. TRANS as many links as it can take (@pxref{Renaming Files}).
 #: sysdeps/gnu/errlist.c:347
 msgid "Too many links"
-msgstr "Previše veza"
+msgstr "Previše poveznica"
 
 #. TRANS Used by mathematical functions when an argument value does
 #. TRANS not fall into the domain over which the function is defined.
@@ -6216,7 +6211,7 @@ msgstr "Mreža je isključena -- nije aktivna"
 #. TRANS was unreachable.
 #: sysdeps/gnu/errlist.c:586
 msgid "Network is unreachable"
-msgstr "Mreža je nedostupna"
+msgstr "Mreža nije dostupna"
 
 #. TRANS A network connection was reset because the remote host crashed.
 #: sysdeps/gnu/errlist.c:595
@@ -6233,7 +6228,7 @@ msgstr "Softver je uzrok prekida veze"
 #. TRANS protocol violation.
 #: sysdeps/gnu/errlist.c:615
 msgid "Connection reset by peer"
-msgstr "Veza je prekinuta od druge strane (od ravnopravnoga člana u prijenosu)"
+msgstr "Poveznica je prekinuta od druge strane (od ravnopravnoga člana u prijenosu)"
 
 #. TRANS The kernel's buffers for I/O operations are all in use.  In GNU, this
 #. TRANS error is always synonymous with @code{ENOMEM}; you may get one or the
@@ -6288,7 +6283,7 @@ msgstr "Veza odbijena"
 #. TRANS This often indicates a cycle of symbolic links.
 #: sysdeps/gnu/errlist.c:706
 msgid "Too many levels of symbolic links"
-msgstr "Previše razina simboličkih veza"
+msgstr "Previše razina simboličkih poveznica"
 
 #. TRANS Filename too long (longer than @code{PATH_MAX}; @pxref{Limits for
 #. TRANS Files}) or host name too long (in @code{gethostname} or
@@ -6300,7 +6295,7 @@ msgstr "Ime datoteke je predugačko"
 #. TRANS The remote host for a requested network connection is down.
 #: sysdeps/gnu/errlist.c:726
 msgid "Host is down"
-msgstr "Računalo nije uključeno"
+msgstr "Host nije uključen"
 
 #. TRANS The remote host for a requested network connection is not reachable.
 #: sysdeps/gnu/errlist.c:735
@@ -6470,7 +6465,7 @@ msgstr "Ovog puta si zbilja zabrljao"
 #. TRANS @c an idiomatic funny way of saying that the computer died.
 #: sysdeps/gnu/errlist.c:991
 msgid "Computer bought the farm"
-msgstr "Računalo je crknulo"
+msgstr "Računalo je mrtvo"
 
 #. TRANS This error code has no purpose.
 #: sysdeps/gnu/errlist.c:1000
@@ -6519,7 +6514,7 @@ msgstr "Greška protokola"
 
 #: sysdeps/gnu/errlist.c:1088
 msgid "Timer expired"
-msgstr "Vrijeme na štoperici je isteklo"
+msgstr "Tajmer je istekao"
 
 #. TRANS An asynchronous operation was canceled before it
 #. TRANS completed.  @xref{Asynchronous I/O}.  When you call @code{aio_cancel},
@@ -6723,11 +6718,11 @@ msgstr "Greška u nepoznatom sustavu grešaka: "
 
 #: sysdeps/posix/gai_strerror-strs.h:1
 msgid "Address family for hostname not supported"
-msgstr "Familija adresa ne podržava dano ime računala"
+msgstr "Familija adresa za hostname nije podržana"
 
 #: sysdeps/posix/gai_strerror-strs.h:2
 msgid "Temporary failure in name resolution"
-msgstr "Privremena greška u razlučivanju imena"
+msgstr "Privremeni neuspjeh u rješavanju imena"
 
 #: sysdeps/posix/gai_strerror-strs.h:3
 msgid "Bad value for ai_flags"
@@ -6739,27 +6734,27 @@ msgstr "Nepopravljivi neuspjeh u razlučivanju imena"
 
 #: sysdeps/posix/gai_strerror-strs.h:5
 msgid "ai_family not supported"
-msgstr "ai_family nije podržani"
+msgstr "ai_family nije podržana"
 
 #: sysdeps/posix/gai_strerror-strs.h:6
 msgid "Memory allocation failure"
-msgstr "Dodjeljivanje memorije nije uspjelo"
+msgstr "Dodjela memorije nije uspjela"
 
 #: sysdeps/posix/gai_strerror-strs.h:7
 msgid "No address associated with hostname"
-msgstr "S imenom računala nije povezana ni jedna adresa"
+msgstr "Nema adrese povezane s hostname"
 
 #: sysdeps/posix/gai_strerror-strs.h:8
 msgid "Name or service not known"
-msgstr "Ime ili usluga nisu poznati"
+msgstr "Ime ili servis nije poznato"
 
 #: sysdeps/posix/gai_strerror-strs.h:9
 msgid "Servname not supported for ai_socktype"
-msgstr "Servname nije podržani za ai_socktype"
+msgstr "Servname nije podržano za ai_socktype"
 
 #: sysdeps/posix/gai_strerror-strs.h:10
 msgid "ai_socktype not supported"
-msgstr "ai_socktype nije podržani"
+msgstr "ai_socktype nije podržan"
 
 #: sysdeps/posix/gai_strerror-strs.h:11
 msgid "System error"
@@ -6771,7 +6766,7 @@ msgstr "Obrada zahtjeva je u tijeku"
 
 #: sysdeps/posix/gai_strerror-strs.h:13
 msgid "Request canceled"
-msgstr "Zahtjev otkazan"
+msgstr "Zahtjev je otkazan"
 
 #: sysdeps/posix/gai_strerror-strs.h:14
 msgid "Request not canceled"
@@ -6787,7 +6782,7 @@ msgstr "Prekinuto signalom"
 
 #: sysdeps/posix/gai_strerror-strs.h:17
 msgid "Parameter string not correctly encoded"
-msgstr "String parametra nije pravilno kodiran"
+msgstr "String parametra nije ispravno kodiran"
 
 #: sysdeps/unix/sysv/linux/i386/readelflib.c:65
 #, c-format
@@ -6832,7 +6827,7 @@ msgstr "nije uspjelo označiti područje zastarjelog koda"
 
 #: sysdeps/x86/dl-cet.c:269
 msgid "shadow stack isn't enabled"
-msgstr "„sjena“ stog nije omogućeni"
+msgstr "stȏgova sjena (shadow stack) nije omogućena"
 
 # Intel CET (Control-Flow Enforcement Technology)
 #: sysdeps/x86/dl-cet.c:290
@@ -6898,7 +6893,7 @@ msgstr "%s: suvišni argument %s na opciji -t\n"
 #: timezone/zic.c:429
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
-msgstr "%s: Memorija je iscrpljena: %s\n"
+msgstr "%s: Nema dovoljno memorije: %s\n"
 
 #: timezone/zic.c:437
 msgid "size overflow"
@@ -6910,7 +6905,7 @@ msgstr "prelijevanje poravnanja"
 
 #: timezone/zic.c:495
 msgid "integer overflow"
-msgstr "preljev cijelog broja"
+msgstr "prelijevanje pri operaciji s cijelim brojem"
 
 #: timezone/zic.c:529
 #, c-format
@@ -6991,7 +6986,7 @@ msgstr "-s ignorira se"
 
 #: timezone/zic.c:753
 msgid "link to link"
-msgstr "veza na drugu vezu"
+msgstr "poveznica na drugu vezu"
 
 #: timezone/zic.c:756 timezone/zic.c:760
 msgid "command line"
@@ -6999,7 +6994,7 @@ msgstr "naredbeni redak"
 
 #: timezone/zic.c:776
 msgid "empty file name"
-msgstr "prazno ime datoteke"
+msgstr "ime datoteke je prazno"
 
 #: timezone/zic.c:779
 #, c-format
@@ -7044,7 +7039,7 @@ msgstr "%s: Nije moguće ukloniti %s/%s: %s\n"
 #: timezone/zic.c:931
 #, c-format
 msgid "symbolic link used because hard link failed: %s"
-msgstr "stvorena je simbolička veza jer čvrsta veza nije uspjela: %s"
+msgstr "stvorena je simbolička poveznica jer čvrsta poveznica nije uspjela: %s"
 
 #: timezone/zic.c:939
 #, c-format
@@ -7059,12 +7054,12 @@ msgstr "%s: Nije moguće stvoriti %s/%s: %s\n"
 #: timezone/zic.c:955
 #, c-format
 msgid "copy used because hard link failed: %s"
-msgstr "kopira se jer čvrsta veza nije uspjela: %s"
+msgstr "kopira se jer čvrsta poveznica nije uspjela: %s"
 
 #: timezone/zic.c:958
 #, c-format
 msgid "copy used because symbolic link failed: %s"
-msgstr "kopira se jer simbolička veza nije uspjela: %s"
+msgstr "kopira se jer simbolička poveznica nije uspjela: %s"
 
 #: timezone/zic.c:1032 timezone/zic.c:1034
 msgid "same rule name in multiple files"
@@ -7351,6 +7346,21 @@ msgstr "kratice vremenskih zona su predugačke ili ih ima previše"
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s: Nije moguće stvoriti direktorij %s: %s"
+
+#~ msgid "cannot open zero fill device"
+#~ msgstr "nije moguće otvoriti nulama ispunjeni uređaj"
+
+#~ msgid "relocation error"
+#~ msgstr "greška premještanja"
+
+#~ msgid "Cannot set LC_CTYPE to default locale"
+#~ msgstr "Nije moguće postaviti LC_CTYPE na zadani locale"
+
+#~ msgid "Cannot set LC_MESSAGES to default locale"
+#~ msgstr "Nije moguće postaviti LC_MESSAGES na zadani locale"
+
+#~ msgid "Cannot set LC_COLLATE to default locale"
+#~ msgstr "Nije moguće postaviti LC_COLLATE na zadani locale"
 
 #~ msgid "unruly zone"
 #~ msgstr "„neposlušna“ vremenska zona"

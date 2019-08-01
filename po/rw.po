@@ -14,7 +14,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.3\n"
-"POT-Creation-Date: 2019-01-16 15:48+0530\n"
+"POT-Creation-Date: 2019-07-18 13:28-0400\n"
 "PO-Revision-Date: 2005-04-04 10:55-0700\n"
 "Last-Translator: Steven Michael Murphy <murf@e-tools.com>\n"
 "Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"
@@ -178,10 +178,10 @@ msgid ""
 msgstr "-o"
 
 #: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:308
-#: elf/pldd.c:252 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:405
-#: iconv/iconvconfig.c:379 locale/programs/locale.c:275
+#: elf/pldd.c:247 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:405
+#: iconv/iconvconfig.c:379 locale/programs/locale.c:276
 #: locale/programs/localedef.c:437 login/programs/pt_chown.c:89
-#: malloc/memusagestat.c:563 nss/getent.c:933 nss/makedb.c:369
+#: malloc/memusagestat.c:563 nss/getent.c:953 nss/makedb.c:369
 #: posix/getconf.c:503 sysdeps/unix/sysv/linux/lddlibc4.c:61
 #, c-format
 msgid ""
@@ -190,11 +190,11 @@ msgid ""
 msgstr ""
 
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
-#: elf/ldconfig.c:324 elf/ldd.bash.in:38 elf/pldd.c:268 elf/sotruss.sh:75
+#: elf/ldconfig.c:324 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
 #: elf/sprof.c:389 iconv/iconv_prog.c:422 iconv/iconvconfig.c:396
-#: locale/programs/locale.c:292 locale/programs/localedef.c:463
+#: locale/programs/locale.c:293 locale/programs/localedef.c:463
 #: login/programs/pt_chown.c:63 malloc/memusage.sh:71
-#: malloc/memusagestat.c:581 nscd/nscd.c:509 nss/getent.c:87 nss/makedb.c:385
+#: malloc/memusagestat.c:581 nscd/nscd.c:509 nss/getent.c:88 nss/makedb.c:385
 #: posix/getconf.c:485 sysdeps/unix/sysv/linux/lddlibc4.c:68
 #, fuzzy, c-format
 msgid ""
@@ -204,10 +204,10 @@ msgid ""
 msgstr "C ni Kigenga i Inkomoko kugirango ni OYA ATARIIGIHARWE kugirango Cyangwa A"
 
 #: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
-#: elf/ldconfig.c:329 elf/pldd.c:273 elf/sprof.c:395 iconv/iconv_prog.c:427
-#: iconv/iconvconfig.c:401 locale/programs/locale.c:297
+#: elf/ldconfig.c:329 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:427
+#: iconv/iconvconfig.c:401 locale/programs/locale.c:298
 #: locale/programs/localedef.c:468 malloc/memusage.sh:75
-#: malloc/memusagestat.c:586 nscd/nscd.c:514 nss/getent.c:92 nss/makedb.c:390
+#: malloc/memusagestat.c:586 nscd/nscd.c:514 nss/getent.c:93 nss/makedb.c:390
 #: posix/getconf.c:490
 #, fuzzy, c-format
 msgid "Written by %s.\n"
@@ -289,22 +289,22 @@ msgstr "Gufungura Ibisohoka IDOSIYE"
 msgid "invalid escape sequence"
 msgstr "Sibyo"
 
-#: catgets/gencat.c:1209
+#: catgets/gencat.c:1211
 #, fuzzy
 msgid "unterminated message"
 msgstr "Ubutumwa"
 
-#: catgets/gencat.c:1233
+#: catgets/gencat.c:1235
 #, fuzzy, c-format
 msgid "while opening old catalog file"
 msgstr "Gufungura%S ki/ bishaje Agatabo IDOSIYE"
 
-#: catgets/gencat.c:1324
+#: catgets/gencat.c:1326
 #, fuzzy, c-format
 msgid "conversion modules not available"
 msgstr "Ihindurangero Modire OYA Bihari"
 
-#: catgets/gencat.c:1350
+#: catgets/gencat.c:1352
 #, fuzzy, c-format
 msgid "cannot determine escape character"
 msgstr "Inyuguti"
@@ -440,7 +440,7 @@ msgstr ""
 "X- Generator: KBabel 1. 0\n"
 "."
 
-#: elf/cache.c:163 elf/ldconfig.c:1332
+#: elf/cache.c:163 elf/ldconfig.c:1333
 #, fuzzy, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Gufungura Ubwihisho IDOSIYE"
@@ -481,7 +481,7 @@ msgstr "Bya Kuri Byanze"
 msgid "Renaming of %s to %s failed"
 msgstr "Bya Kuri Byanze"
 
-#: elf/dl-close.c:399 elf/dl-open.c:420
+#: elf/dl-close.c:399 elf/dl-open.c:424
 #, fuzzy
 msgid "cannot create scope list"
 msgstr "Kurema Ingano: Urutonde"
@@ -579,144 +579,144 @@ msgstr "Kurema Gushaka Inzira Imbonerahamwe"
 msgid "cannot stat shared object"
 msgstr "Igikoresho"
 
-#: elf/dl-load.c:960
-#, fuzzy
-msgid "cannot open zero fill device"
-msgstr "Gufungura Zeru Kuzuza APAREYE"
-
-#: elf/dl-load.c:1007 elf/dl-load.c:2203
+#: elf/dl-load.c:992 elf/dl-load.c:2198
 #, fuzzy
 msgid "cannot create shared object descriptor"
 msgstr "Kurema Igikoresho"
 
-#: elf/dl-load.c:1026 elf/dl-load.c:1560 elf/dl-load.c:1673
+#: elf/dl-load.c:1011 elf/dl-load.c:1555 elf/dl-load.c:1668
 #, fuzzy
 msgid "cannot read file data"
 msgstr "Gusoma IDOSIYE Ibyatanzwe"
 
-#: elf/dl-load.c:1072
+#: elf/dl-load.c:1057
 #, fuzzy
 msgid "ELF load command alignment not page-aligned"
 msgstr "Ibirimo Komandi: Itunganya OYA Ipaji"
 
-#: elf/dl-load.c:1079
+#: elf/dl-load.c:1064
 #, fuzzy
 msgid "ELF load command address/offset not properly aligned"
 msgstr "Ibirimo Komandi: Aderesi Nta- boneza OYA"
 
-#: elf/dl-load.c:1161
+#: elf/dl-load.c:1146
 #, fuzzy
 msgid "cannot process note segment"
 msgstr "Kugarura Nyuma"
 
-#: elf/dl-load.c:1172
+#: elf/dl-load.c:1157
 #, fuzzy
 msgid "object file has no loadable segments"
 msgstr "Igikoresho IDOSIYE Oya Icyiciro"
 
-#: elf/dl-load.c:1181 elf/dl-load.c:1652
+#: elf/dl-load.c:1170 elf/dl-load.c:1647
 #, fuzzy
 msgid "cannot dynamically load executable"
 msgstr "Ibirimo"
 
-#: elf/dl-load.c:1202
+#: elf/dl-load.c:1191
 #, fuzzy
 msgid "object file has no dynamic section"
 msgstr "Igikoresho IDOSIYE Oya Icyiciro"
 
-#: elf/dl-load.c:1225
+#: elf/dl-load.c:1218
+#, fuzzy
+msgid "cannot dynamically load position-independent executable"
+msgstr "Ibirimo"
+
+#: elf/dl-load.c:1220
 #, fuzzy
 msgid "shared object cannot be dlopen()ed"
 msgstr "Igikoresho"
 
-#: elf/dl-load.c:1238
+#: elf/dl-load.c:1233
 #, fuzzy
 msgid "cannot allocate memory for program header"
 msgstr "Ububiko kugirango Porogaramu Umutwempangano"
 
-#: elf/dl-load.c:1271 elf/dl-load.h:130
+#: elf/dl-load.c:1266 elf/dl-load.h:130
 #, fuzzy
 msgid "cannot change memory protections"
 msgstr "Guhindura>> Ububiko"
 
-#: elf/dl-load.c:1291
+#: elf/dl-load.c:1286
 #, fuzzy
 msgid "cannot enable executable stack as shared object requires"
 msgstr "Kurema Igikoresho"
 
-#: elf/dl-load.c:1304
+#: elf/dl-load.c:1299
 #, fuzzy
 msgid "cannot close file descriptor"
 msgstr "Kurema By'imbere"
 
-#: elf/dl-load.c:1560
+#: elf/dl-load.c:1555
 #, fuzzy
 msgid "file too short"
 msgstr "IDOSIYE"
 
-#: elf/dl-load.c:1595
+#: elf/dl-load.c:1590
 #, fuzzy
 msgid "invalid ELF header"
 msgstr "Sibyo Umutwempangano"
 
-#: elf/dl-load.c:1607
+#: elf/dl-load.c:1602
 #, fuzzy
 msgid "ELF file data encoding not big-endian"
 msgstr "IDOSIYE Ibyatanzwe Imisobekere: OYA"
 
-#: elf/dl-load.c:1609
+#: elf/dl-load.c:1604
 #, fuzzy
 msgid "ELF file data encoding not little-endian"
 msgstr "IDOSIYE Ibyatanzwe Imisobekere: OYA"
 
-#: elf/dl-load.c:1613
+#: elf/dl-load.c:1608
 #, fuzzy
 msgid "ELF file version ident does not match current one"
 msgstr "IDOSIYE Verisiyo OYA BIHUYE KIGEZWEHO"
 
-#: elf/dl-load.c:1617
+#: elf/dl-load.c:1612
 #, fuzzy
 msgid "ELF file OS ABI invalid"
 msgstr "IDOSIYE Sibyo"
 
-#: elf/dl-load.c:1620
+#: elf/dl-load.c:1615
 #, fuzzy
 msgid "ELF file ABI version invalid"
 msgstr "IDOSIYE Verisiyo Sibyo"
 
-#: elf/dl-load.c:1623
+#: elf/dl-load.c:1618
 msgid "nonzero padding in e_ident"
 msgstr ""
 
-#: elf/dl-load.c:1626
+#: elf/dl-load.c:1621
 #, fuzzy
 msgid "internal error"
 msgstr "Ikosa ry'imbere"
 
-#: elf/dl-load.c:1633
+#: elf/dl-load.c:1628
 #, fuzzy
 msgid "ELF file version does not match current one"
 msgstr "IDOSIYE Verisiyo OYA BIHUYE KIGEZWEHO"
 
-#: elf/dl-load.c:1641
+#: elf/dl-load.c:1636
 #, fuzzy
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "Na"
 
-#: elf/dl-load.c:1657
+#: elf/dl-load.c:1652
 #, fuzzy
 msgid "ELF file's phentsize not the expected size"
 msgstr "OYA i Ikitezwe: Ingano"
 
-#: elf/dl-load.c:2222
+#: elf/dl-load.c:2217
 msgid "wrong ELF class: ELFCLASS64"
 msgstr ""
 
-#: elf/dl-load.c:2223
+#: elf/dl-load.c:2218
 msgid "wrong ELF class: ELFCLASS32"
 msgstr ""
 
-#: elf/dl-load.c:2226
+#: elf/dl-load.c:2221
 #, fuzzy
 msgid "cannot open shared object file"
 msgstr "Gufungura Igikoresho IDOSIYE"
@@ -731,12 +731,7 @@ msgstr "Byanze Kuri Bivuye Igikoresho"
 msgid "cannot map zero-fill pages"
 msgstr "Zeru Kuzuza Amapaji"
 
-#: elf/dl-lookup.c:835
-#, fuzzy
-msgid "relocation error"
-msgstr "Ikosa"
-
-#: elf/dl-lookup.c:858
+#: elf/dl-lookup.c:830
 msgid "symbol lookup error"
 msgstr ""
 
@@ -745,21 +740,21 @@ msgstr ""
 msgid "cannot extend global scope"
 msgstr "Ingano:"
 
-#: elf/dl-open.c:470
+#: elf/dl-open.c:474
 #, fuzzy
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "Kohereza Icyegeranyo Na: i IYANDIKA"
 
-#: elf/dl-open.c:534
+#: elf/dl-open.c:538
 #, fuzzy
 msgid "invalid mode for dlopen()"
 msgstr "Sibyo Ubwoko kugirango"
 
-#: elf/dl-open.c:551
+#: elf/dl-open.c:555
 msgid "no more namespaces available for dlmopen()"
 msgstr ""
 
-#: elf/dl-open.c:575
+#: elf/dl-open.c:579
 #, fuzzy
 msgid "invalid target namespace in dlmopen()"
 msgstr "Sibyo Ubwoko kugirango"
@@ -1019,22 +1014,22 @@ msgstr ""
 msgid "memory exhausted"
 msgstr "Ububiko"
 
-#: elf/ldconfig.c:1233
+#: elf/ldconfig.c:1234
 #, fuzzy, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:Kurema bushyinguro"
 
-#: elf/ldconfig.c:1281
+#: elf/ldconfig.c:1282
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr ""
 
-#: elf/ldconfig.c:1311
+#: elf/ldconfig.c:1312
 #, fuzzy, c-format
 msgid "Can't chdir to /"
 msgstr "Kuri"
 
-#: elf/ldconfig.c:1352
+#: elf/ldconfig.c:1353
 #, fuzzy, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Gufungura Ubwihisho IDOSIYE bushyinguro"
@@ -1105,95 +1100,100 @@ msgstr ""
 msgid "error: you do not have read permission for"
 msgstr ""
 
-#: elf/pldd-xx.c:105
+#: elf/pldd-xx.c:102
 #, fuzzy, c-format
 msgid "cannot find program header of process"
 msgstr "Gusoma Umutwempangano Bivuye"
 
-#: elf/pldd-xx.c:110
+#: elf/pldd-xx.c:106
 #, fuzzy, c-format
 msgid "cannot read program header"
 msgstr "Gusoma Umutwempangano"
 
-#: elf/pldd-xx.c:135
+#: elf/pldd-xx.c:128
 #, fuzzy, c-format
 msgid "cannot read dynamic section"
 msgstr "Igikoresho IDOSIYE Oya Icyiciro"
 
-#: elf/pldd-xx.c:147
+#: elf/pldd-xx.c:137
 #, fuzzy, c-format
 msgid "cannot read r_debug"
 msgstr "Gusoma Umutwempangano"
 
-#: elf/pldd-xx.c:167
+#: elf/pldd-xx.c:154
 #, fuzzy, c-format
 msgid "cannot read program interpreter"
 msgstr "Gusoma Umutwempangano"
 
-#: elf/pldd-xx.c:197
+#: elf/pldd-xx.c:183
 #, fuzzy, c-format
 msgid "cannot read link map"
 msgstr "Gusoma IDOSIYE Ibyatanzwe"
 
-#: elf/pldd-xx.c:209
+#: elf/pldd-xx.c:190
 #, fuzzy, c-format
 msgid "cannot read object name"
 msgstr "Gusoma Umutwempangano"
 
-#: elf/pldd-xx.c:219
+#: elf/pldd-xx.c:197
 #, fuzzy, c-format
 msgid "cannot allocate buffer for object name"
 msgstr "Ububiko kugirango Porogaramu Umutwempangano"
 
-#: elf/pldd.c:64
+#: elf/pldd.c:58
 msgid "List dynamic shared objects loaded into process."
 msgstr ""
 
-#: elf/pldd.c:68
+#: elf/pldd.c:62
 msgid "PID"
 msgstr ""
 
-#: elf/pldd.c:100
+#: elf/pldd.c:89
 #, c-format
 msgid "Exactly one parameter with process ID required.\n"
 msgstr ""
 
-#: elf/pldd.c:112
+#: elf/pldd.c:103
 #, fuzzy, c-format
 msgid "invalid process ID '%s'"
 msgstr "Sibyo Mweretsi Ingano"
 
-#: elf/pldd.c:120
+#: elf/pldd.c:111
 #, fuzzy, c-format
 msgid "cannot open %s"
 msgstr "Gufungura"
 
-#: elf/pldd.c:152
+#: elf/pldd.c:142
 #, fuzzy, c-format
 msgid "cannot open %s/task"
 msgstr "Gufungura"
 
-#: elf/pldd.c:155
+#: elf/pldd.c:145
 #, fuzzy, c-format
 msgid "cannot prepare reading %s/task"
 msgstr "Kurema"
 
-#: elf/pldd.c:168
+#: elf/pldd.c:158
 #, fuzzy, c-format
 msgid "invalid thread ID '%s'"
 msgstr "Sibyo Umutwempangano"
 
-#: elf/pldd.c:179
+#: elf/pldd.c:169
 #, fuzzy, c-format
 msgid "cannot attach to process %lu"
 msgstr "Gushaka C"
 
-#: elf/pldd.c:294
+#: elf/pldd.c:184
+#, fuzzy, c-format
+msgid "no valid %s/task entries"
+msgstr "Sibyo Igihe"
+
+#: elf/pldd.c:290
 #, c-format
 msgid "cannot get information about process %lu"
 msgstr ""
 
-#: elf/pldd.c:307
+#: elf/pldd.c:303
 #, c-format
 msgid "process %lu is no ELF program"
 msgstr ""
@@ -1819,14 +1819,14 @@ msgstr "Inyuguti Na: OYA"
 
 #: locale/programs/charmap.c:503 locale/programs/charmap.c:557
 #: locale/programs/charmap.c:589 locale/programs/charmap.c:683
-#: locale/programs/charmap.c:738 locale/programs/charmap.c:779
-#: locale/programs/charmap.c:820
+#: locale/programs/charmap.c:739 locale/programs/charmap.c:780
+#: locale/programs/charmap.c:821
 #, fuzzy, c-format
 msgid "syntax error in %s definition: %s"
 msgstr "Ikosa in Insobanuro"
 
 #: locale/programs/charmap.c:504 locale/programs/charmap.c:684
-#: locale/programs/charmap.c:780 locale/programs/repertoire.c:229
+#: locale/programs/charmap.c:781 locale/programs/repertoire.c:229
 #, fuzzy
 msgid "no symbolic name given"
 msgstr "Oya Izina:"
@@ -1846,15 +1846,15 @@ msgstr "Bayite in Inyuguti Imisobekere:"
 msgid "too many bytes in character encoding"
 msgstr "Bayite in Inyuguti Imisobekere:"
 
-#: locale/programs/charmap.c:591 locale/programs/charmap.c:739
-#: locale/programs/charmap.c:822 locale/programs/repertoire.c:295
+#: locale/programs/charmap.c:591 locale/programs/charmap.c:740
+#: locale/programs/charmap.c:823 locale/programs/repertoire.c:295
 #, fuzzy
 msgid "no symbolic name given for end of range"
 msgstr "Oya Izina: kugirango Impera Bya Urutonde"
 
 #: locale/programs/charmap.c:615 locale/programs/ld-address.c:524
 #: locale/programs/ld-collate.c:2616 locale/programs/ld-collate.c:3774
-#: locale/programs/ld-ctype.c:2117 locale/programs/ld-ctype.c:2829
+#: locale/programs/ld-ctype.c:2118 locale/programs/ld-ctype.c:2830
 #: locale/programs/ld-identification.c:397
 #: locale/programs/ld-measurement.c:213 locale/programs/ld-messages.c:295
 #: locale/programs/ld-monetary.c:748 locale/programs/ld-name.c:262
@@ -1870,19 +1870,19 @@ msgstr "%1$S Insobanuro OYA Impera Na:"
 msgid "only WIDTH definitions are allowed to follow the CHARMAP definition"
 msgstr "Kuri i Insobanuro"
 
-#: locale/programs/charmap.c:656 locale/programs/charmap.c:719
+#: locale/programs/charmap.c:656 locale/programs/charmap.c:720
 #, fuzzy, c-format
 msgid "value for %s must be an integer"
 msgstr "Agaciro kugirango Umubare wuzuye"
 
-#: locale/programs/charmap.c:847
+#: locale/programs/charmap.c:848
 #, fuzzy, c-format
 msgid "%s: error in state machine"
 msgstr "%s:Ikosa in Leta"
 
-#: locale/programs/charmap.c:855 locale/programs/ld-address.c:540
+#: locale/programs/charmap.c:856 locale/programs/ld-address.c:540
 #: locale/programs/ld-collate.c:2613 locale/programs/ld-collate.c:3967
-#: locale/programs/ld-ctype.c:2114 locale/programs/ld-ctype.c:2846
+#: locale/programs/ld-ctype.c:2115 locale/programs/ld-ctype.c:2847
 #: locale/programs/ld-identification.c:413
 #: locale/programs/ld-measurement.c:229 locale/programs/ld-messages.c:311
 #: locale/programs/ld-monetary.c:764 locale/programs/ld-name.c:278
@@ -1893,38 +1893,38 @@ msgstr "%s:Ikosa in Leta"
 msgid "%s: premature end of file"
 msgstr "%s:Impera Bya IDOSIYE"
 
-#: locale/programs/charmap.c:874 locale/programs/charmap.c:885
+#: locale/programs/charmap.c:875 locale/programs/charmap.c:886
 #, fuzzy, c-format
 msgid "unknown character `%s'"
 msgstr "Kitazwi Inyuguti"
 
-#: locale/programs/charmap.c:893
+#: locale/programs/charmap.c:894
 #, fuzzy, c-format
 msgid "number of bytes for byte sequence of beginning and end of range not the same: %d vs %d"
 msgstr "Umubare Bya Bayite kugirango Bayite Bya Itangiriro Na Impera Bya Urutonde OYA i"
 
-#: locale/programs/charmap.c:998 locale/programs/ld-collate.c:2893
+#: locale/programs/charmap.c:999 locale/programs/ld-collate.c:2893
 #: locale/programs/repertoire.c:418
 #, fuzzy
 msgid "invalid names for character range"
 msgstr "Sibyo Amazina kugirango Inyuguti Urutonde"
 
-#: locale/programs/charmap.c:1010 locale/programs/repertoire.c:430
+#: locale/programs/charmap.c:1011 locale/programs/repertoire.c:430
 #, fuzzy
 msgid "hexadecimal range format should use only capital characters"
 msgstr "Urutonde Imiterere Gukoresha Inyuguti"
 
-#: locale/programs/charmap.c:1028 locale/programs/repertoire.c:448
+#: locale/programs/charmap.c:1029 locale/programs/repertoire.c:448
 #, fuzzy, c-format
 msgid "<%s> and <%s> are invalid names for range"
 msgstr "<%s>Na Sibyo Amazina kugirango Urutonde"
 
-#: locale/programs/charmap.c:1034 locale/programs/repertoire.c:455
+#: locale/programs/charmap.c:1035 locale/programs/repertoire.c:455
 #, fuzzy
 msgid "upper limit in range is smaller than lower limit"
 msgstr "Nkuru in Urutonde ni OYA Gitoya Hanyuma Ntoya"
 
-#: locale/programs/charmap.c:1092
+#: locale/programs/charmap.c:1093
 #, fuzzy
 msgid "resulting bytes for range not representable."
 msgstr "Bayite kugirango Urutonde OYA"
@@ -1994,7 +1994,7 @@ msgid "%s: numeric country code `%d' not valid"
 msgstr "%s:Bikurikije umubare Igihugu ITEGEKONGENGA OYA Byemewe"
 
 #: locale/programs/ld-address.c:432 locale/programs/ld-address.c:469
-#: locale/programs/ld-address.c:507 locale/programs/ld-ctype.c:2478
+#: locale/programs/ld-address.c:507 locale/programs/ld-ctype.c:2479
 #: locale/programs/ld-identification.c:309
 #: locale/programs/ld-measurement.c:196 locale/programs/ld-messages.c:264
 #: locale/programs/ld-monetary.c:503 locale/programs/ld-monetary.c:538
@@ -2017,7 +2017,7 @@ msgid "%s: unknown character in field `%s'"
 msgstr "%s:Kitazwi Inyuguti in Umwanya"
 
 #: locale/programs/ld-address.c:521 locale/programs/ld-collate.c:3772
-#: locale/programs/ld-ctype.c:2826 locale/programs/ld-identification.c:394
+#: locale/programs/ld-ctype.c:2827 locale/programs/ld-identification.c:394
 #: locale/programs/ld-measurement.c:210 locale/programs/ld-messages.c:293
 #: locale/programs/ld-monetary.c:746 locale/programs/ld-name.c:260
 #: locale/programs/ld-numeric.c:323 locale/programs/ld-paper.c:210
@@ -2031,8 +2031,8 @@ msgstr "%s:Umurongo"
 #: locale/programs/ld-collate.c:602 locale/programs/ld-collate.c:898
 #: locale/programs/ld-collate.c:911 locale/programs/ld-collate.c:2582
 #: locale/programs/ld-collate.c:2603 locale/programs/ld-collate.c:3957
-#: locale/programs/ld-ctype.c:1846 locale/programs/ld-ctype.c:2104
-#: locale/programs/ld-ctype.c:2676 locale/programs/ld-ctype.c:2837
+#: locale/programs/ld-ctype.c:1847 locale/programs/ld-ctype.c:2105
+#: locale/programs/ld-ctype.c:2677 locale/programs/ld-ctype.c:2838
 #: locale/programs/ld-identification.c:404
 #: locale/programs/ld-measurement.c:220 locale/programs/ld-messages.c:302
 #: locale/programs/ld-monetary.c:755 locale/programs/ld-name.c:269
@@ -2417,59 +2417,59 @@ msgstr "Inyuguti"
 msgid "implementation limit: no more than %d character maps allowed"
 msgstr "Oya Birenzeho Inyuguti Amakarita"
 
-#: locale/programs/ld-ctype.c:1434 locale/programs/ld-ctype.c:1559
-#: locale/programs/ld-ctype.c:1665 locale/programs/ld-ctype.c:2341
-#: locale/programs/ld-ctype.c:3299
+#: locale/programs/ld-ctype.c:1435 locale/programs/ld-ctype.c:1560
+#: locale/programs/ld-ctype.c:1666 locale/programs/ld-ctype.c:2342
+#: locale/programs/ld-ctype.c:3302
 #, fuzzy, c-format
 msgid "%s: field `%s' does not contain exactly ten entries"
 msgstr "%s:Umwanya OYA Ibyinjijwe"
 
-#: locale/programs/ld-ctype.c:1462 locale/programs/ld-ctype.c:2036
+#: locale/programs/ld-ctype.c:1463 locale/programs/ld-ctype.c:2037
 #, fuzzy, c-format
 msgid "to-value <U%0*X> of range is smaller than from-value <U%0*X>"
 msgstr "Kuri Agaciro U Bya Urutonde ni Gitoya Bivuye Agaciro U"
 
-#: locale/programs/ld-ctype.c:1589
+#: locale/programs/ld-ctype.c:1590
 #, fuzzy
 msgid "start and end character sequence of range must have the same length"
 msgstr "Gutangira Na Impera Inyuguti Bya Urutonde i Uburebure"
 
-#: locale/programs/ld-ctype.c:1596
+#: locale/programs/ld-ctype.c:1597
 #, fuzzy
 msgid "to-value character sequence is smaller than from-value sequence"
 msgstr "Kuri Agaciro Inyuguti ni Gitoya Bivuye Agaciro"
 
-#: locale/programs/ld-ctype.c:1956 locale/programs/ld-ctype.c:2007
+#: locale/programs/ld-ctype.c:1957 locale/programs/ld-ctype.c:2008
 #, fuzzy
 msgid "premature end of `translit_ignore' definition"
 msgstr "Impera Bya Insobanuro"
 
-#: locale/programs/ld-ctype.c:1962 locale/programs/ld-ctype.c:2013
-#: locale/programs/ld-ctype.c:2055
+#: locale/programs/ld-ctype.c:1963 locale/programs/ld-ctype.c:2014
+#: locale/programs/ld-ctype.c:2056
 msgid "syntax error"
 msgstr "Ikosa mu myandikire"
 
-#: locale/programs/ld-ctype.c:2188
+#: locale/programs/ld-ctype.c:2189
 #, fuzzy, c-format
 msgid "%s: syntax error in definition of new character class"
 msgstr "%s:Ikosa in Insobanuro Bya Gishya Inyuguti ishuri"
 
-#: locale/programs/ld-ctype.c:2203
+#: locale/programs/ld-ctype.c:2204
 #, fuzzy, c-format
 msgid "%s: syntax error in definition of new character map"
 msgstr "%s:Ikosa in Insobanuro Bya Gishya Inyuguti"
 
-#: locale/programs/ld-ctype.c:2363
+#: locale/programs/ld-ctype.c:2364
 #, fuzzy
 msgid "ellipsis range must be marked by two operands of same type"
 msgstr "Urutonde cy/ byagarajwe ku Bya Ubwoko"
 
-#: locale/programs/ld-ctype.c:2372
+#: locale/programs/ld-ctype.c:2373
 #, fuzzy
 msgid "with symbolic name range values the absolute ellipsis `...' must not be used"
 msgstr "Na: Izina: Urutonde Uduciro i OYA"
 
-#: locale/programs/ld-ctype.c:2387
+#: locale/programs/ld-ctype.c:2388
 #, fuzzy
 msgid "with UCS range values one must use the hexadecimal symbolic ellipsis `..'"
 msgstr ""
@@ -2482,81 +2482,81 @@ msgstr ""
 "X- Generator: KBabel 1. 0\n"
 "."
 
-#: locale/programs/ld-ctype.c:2401
+#: locale/programs/ld-ctype.c:2402
 #, fuzzy
 msgid "with character code range values one must use the absolute ellipsis `...'"
 msgstr "Na: Inyuguti ITEGEKONGENGA Urutonde Uduciro Gukoresha i"
 
-#: locale/programs/ld-ctype.c:2552
+#: locale/programs/ld-ctype.c:2553
 #, fuzzy, c-format
 msgid "duplicated definition for mapping `%s'"
 msgstr "Insobanuro kugirango Igereranya"
 
-#: locale/programs/ld-ctype.c:2638 locale/programs/ld-ctype.c:2782
+#: locale/programs/ld-ctype.c:2639 locale/programs/ld-ctype.c:2783
 #, fuzzy, c-format
 msgid "%s: `translit_start' section does not end with `translit_end'"
 msgstr "%s:`Icyiciro OYA Impera Na:"
 
-#: locale/programs/ld-ctype.c:2733
+#: locale/programs/ld-ctype.c:2734
 #, fuzzy, c-format
 msgid "%s: duplicate `default_missing' definition"
 msgstr "%s:Gusubiramo Insobanuro"
 
-#: locale/programs/ld-ctype.c:2738
+#: locale/programs/ld-ctype.c:2739
 #, fuzzy
 msgid "previous definition was here"
 msgstr "Ibanjirije Insobanuro"
 
-#: locale/programs/ld-ctype.c:2760
+#: locale/programs/ld-ctype.c:2761
 #, fuzzy, c-format
 msgid "%s: no representable `default_missing' definition found"
 msgstr "%s:Oya Insobanuro Byabonetse"
 
-#: locale/programs/ld-ctype.c:2877 locale/programs/ld-ctype.c:2973
-#: locale/programs/ld-ctype.c:2992 locale/programs/ld-ctype.c:3012
-#: locale/programs/ld-ctype.c:3032 locale/programs/ld-ctype.c:3052
-#: locale/programs/ld-ctype.c:3072 locale/programs/ld-ctype.c:3111
-#: locale/programs/ld-ctype.c:3131 locale/programs/ld-ctype.c:3195
-#: locale/programs/ld-ctype.c:3236 locale/programs/ld-ctype.c:3259
+#: locale/programs/ld-ctype.c:2878 locale/programs/ld-ctype.c:2974
+#: locale/programs/ld-ctype.c:2993 locale/programs/ld-ctype.c:3013
+#: locale/programs/ld-ctype.c:3033 locale/programs/ld-ctype.c:3053
+#: locale/programs/ld-ctype.c:3073 locale/programs/ld-ctype.c:3112
+#: locale/programs/ld-ctype.c:3132 locale/programs/ld-ctype.c:3198
+#: locale/programs/ld-ctype.c:3239 locale/programs/ld-ctype.c:3262
 #, fuzzy, c-format
 msgid "%s: character `%s' not defined while needed as default value"
 msgstr "%s:Inyuguti OYA Nka Mburabuzi Agaciro"
 
-#: locale/programs/ld-ctype.c:2882 locale/programs/ld-ctype.c:2978
-#: locale/programs/ld-ctype.c:2997 locale/programs/ld-ctype.c:3017
-#: locale/programs/ld-ctype.c:3037 locale/programs/ld-ctype.c:3057
-#: locale/programs/ld-ctype.c:3077 locale/programs/ld-ctype.c:3116
-#: locale/programs/ld-ctype.c:3136 locale/programs/ld-ctype.c:3200
+#: locale/programs/ld-ctype.c:2883 locale/programs/ld-ctype.c:2979
+#: locale/programs/ld-ctype.c:2998 locale/programs/ld-ctype.c:3018
+#: locale/programs/ld-ctype.c:3038 locale/programs/ld-ctype.c:3058
+#: locale/programs/ld-ctype.c:3078 locale/programs/ld-ctype.c:3117
+#: locale/programs/ld-ctype.c:3137 locale/programs/ld-ctype.c:3203
 #, fuzzy, c-format
 msgid "%s: character `%s' in charmap not representable with one byte"
 msgstr "%s:Inyuguti in OYA Na: Bayite"
 
-#: locale/programs/ld-ctype.c:3242 locale/programs/ld-ctype.c:3265
+#: locale/programs/ld-ctype.c:3245 locale/programs/ld-ctype.c:3268
 #, fuzzy, c-format
 msgid "%s: character `%s' needed as default value not representable with one byte"
 msgstr "%s:Inyuguti Nka Mburabuzi Agaciro OYA Na: Bayite"
 
-#: locale/programs/ld-ctype.c:3321
+#: locale/programs/ld-ctype.c:3324
 #, fuzzy
 msgid "no output digits defined and none of the standard names in the charmap"
 msgstr "Oya Ibisohoka Na Ntacyo Bya i Bisanzwe Amazina in i"
 
-#: locale/programs/ld-ctype.c:3570
+#: locale/programs/ld-ctype.c:3573
 #, fuzzy, c-format
 msgid "%s: transliteration data from locale `%s' not available"
 msgstr "%s:Ibyatanzwe Bivuye Umwanya OYA Bihari"
 
-#: locale/programs/ld-ctype.c:3669
+#: locale/programs/ld-ctype.c:3672
 #, fuzzy, c-format
 msgid "%s: table for class \"%s\": %lu bytes"
 msgstr "%s:imbonerahamwe# kugirango ishuri"
 
-#: locale/programs/ld-ctype.c:3733
+#: locale/programs/ld-ctype.c:3736
 #, fuzzy, c-format
 msgid "%s: table for map \"%s\": %lu bytes"
 msgstr "%s:imbonerahamwe# kugirango"
 
-#: locale/programs/ld-ctype.c:3857
+#: locale/programs/ld-ctype.c:3860
 #, fuzzy, c-format
 msgid "%s: table for width: %lu bytes"
 msgstr "%s:imbonerahamwe# kugirango Ubugari"
@@ -2811,30 +2811,20 @@ msgid ""
 "[-a|-m]"
 msgstr "a M"
 
-#: locale/programs/locale.c:190
-#, c-format
-msgid "Cannot set LC_CTYPE to default locale"
-msgstr ""
-
-#: locale/programs/locale.c:192
-#, c-format
-msgid "Cannot set LC_MESSAGES to default locale"
-msgstr ""
-
-#: locale/programs/locale.c:205
-#, c-format
-msgid "Cannot set LC_COLLATE to default locale"
-msgstr ""
-
-#: locale/programs/locale.c:221
-#, c-format
-msgid "Cannot set LC_ALL to default locale"
-msgstr ""
-
-#: locale/programs/locale.c:521
+#: locale/programs/locale.c:522
 #, fuzzy, c-format
 msgid "while preparing output"
 msgstr "Mugutegura... Ibisohoka"
+
+#: locale/programs/locale.c:998
+#, c-format
+msgid "Cannot set %s to default locale"
+msgstr ""
+
+#: locale/programs/locale.c:1096
+#, c-format
+msgid "warning: The LOCPATH variable is set to \"%s\"\n"
+msgstr ""
 
 #: locale/programs/localedef.c:116
 msgid "Input Files:"
@@ -4088,12 +4078,12 @@ msgstr "GUHINDURA Ubuturo Kuri"
 msgid "yp_update: cannot get server address\n"
 msgstr "Kubona Seriveri"
 
-#: nscd/aicache.c:83 nscd/hstcache.c:452
+#: nscd/aicache.c:82 nscd/hstcache.c:452
 #, fuzzy, c-format
 msgid "Haven't found \"%s\" in hosts cache!"
 msgstr "Byabonetse in Ubwihisho"
 
-#: nscd/aicache.c:85 nscd/hstcache.c:454
+#: nscd/aicache.c:84 nscd/hstcache.c:454
 #, fuzzy, c-format
 msgid "Reloading \"%s\" in hosts cache!"
 msgstr "Byabonetse in Ubwihisho"
@@ -4127,266 +4117,266 @@ msgstr ""
 msgid "considering %s entry \"%s\", timeout %<PRIu64>"
 msgstr ""
 
-#: nscd/connections.c:521
+#: nscd/connections.c:520
 #, c-format
 msgid "invalid persistent database file \"%s\": %s"
 msgstr ""
 
-#: nscd/connections.c:529
+#: nscd/connections.c:528
 #, fuzzy
 msgid "uninitialized header"
 msgstr "Sibyo Umutwempangano"
 
-#: nscd/connections.c:534
+#: nscd/connections.c:533
 msgid "header size does not match"
 msgstr ""
 
-#: nscd/connections.c:544
+#: nscd/connections.c:543
 #, fuzzy
 msgid "file size does not match"
 msgstr "IDOSIYE Verisiyo OYA BIHUYE KIGEZWEHO"
 
-#: nscd/connections.c:561
+#: nscd/connections.c:560
 #, fuzzy
 msgid "verification failed"
 msgstr "Byanze"
 
-#: nscd/connections.c:575
+#: nscd/connections.c:574
 #, c-format
 msgid "suggested size of table for database %s larger than the persistent database's table"
 msgstr ""
 
-#: nscd/connections.c:586 nscd/connections.c:670
+#: nscd/connections.c:585 nscd/connections.c:669
 #, fuzzy, c-format
 msgid "cannot create read-only descriptor for \"%s\"; no mmap"
 msgstr "Kurema By'imbere"
 
-#: nscd/connections.c:602
+#: nscd/connections.c:601
 #, fuzzy, c-format
 msgid "cannot access '%s'"
 msgstr "Gufungura"
 
-#: nscd/connections.c:650
+#: nscd/connections.c:649
 #, c-format
 msgid "database for %s corrupted or simultaneously used; remove %s manually if necessary and restart"
 msgstr ""
 
-#: nscd/connections.c:656
+#: nscd/connections.c:655
 #, fuzzy, c-format
 msgid "cannot create %s; no persistent database used"
 msgstr "Kurema Ingano: Urutonde"
 
-#: nscd/connections.c:659
+#: nscd/connections.c:658
 #, fuzzy, c-format
 msgid "cannot create %s; no sharing possible"
 msgstr "Kurema By'igihe gito IDOSIYE"
 
-#: nscd/connections.c:730
+#: nscd/connections.c:729
 #, fuzzy, c-format
 msgid "cannot write to database file %s: %s"
 msgstr "Kwandika Sitatisitiki"
 
-#: nscd/connections.c:786
+#: nscd/connections.c:785
 #, fuzzy, c-format
 msgid "cannot open socket: %s"
 msgstr "Gufungura"
 
-#: nscd/connections.c:805
+#: nscd/connections.c:804
 #, fuzzy, c-format
 msgid "cannot enable socket to accept connections: %s"
 msgstr "Gushoboza Kuri Kwemera Ukwihuza"
 
-#: nscd/connections.c:862
+#: nscd/connections.c:861
 #, c-format
 msgid "disabled inotify-based monitoring for file `%s': %s"
 msgstr ""
 
-#: nscd/connections.c:866
+#: nscd/connections.c:865
 #, c-format
 msgid "monitoring file `%s` (%d)"
 msgstr ""
 
-#: nscd/connections.c:879
+#: nscd/connections.c:878
 #, c-format
 msgid "disabled inotify-based monitoring for directory `%s': %s"
 msgstr ""
 
 # svtools/source\dialogs\filedlg2.src:STR_FILEDLG_CANTOPENDIR.text
-#: nscd/connections.c:883
+#: nscd/connections.c:882
 #, fuzzy, c-format
 msgid "monitoring directory `%s` (%d)"
 msgstr "Gufungura ububiko ntibishoboka"
 
-#: nscd/connections.c:911
+#: nscd/connections.c:910
 #, c-format
 msgid "monitoring file %s for database %s"
 msgstr ""
 
-#: nscd/connections.c:921
+#: nscd/connections.c:920
 #, c-format
 msgid "stat failed for file `%s'; will try again later: %s"
 msgstr ""
 
-#: nscd/connections.c:1040
+#: nscd/connections.c:1039
 #, c-format
 msgid "provide access to FD %d, for %s"
 msgstr ""
 
-#: nscd/connections.c:1052
+#: nscd/connections.c:1051
 #, fuzzy, c-format
 msgid "cannot handle old request version %d; current version is %d"
 msgstr "ki/ bishaje Kubaza... Verisiyo KIGEZWEHO Verisiyo ni"
 
-#: nscd/connections.c:1075
+#: nscd/connections.c:1074
 #, c-format
 msgid "request from %ld not handled due to missing permission"
 msgstr ""
 
-#: nscd/connections.c:1080
+#: nscd/connections.c:1079
 #, c-format
 msgid "request from '%s' [%ld] not handled due to missing permission"
 msgstr ""
 
-#: nscd/connections.c:1085
+#: nscd/connections.c:1084
 msgid "request not handled due to missing permission"
 msgstr ""
 
-#: nscd/connections.c:1123 nscd/connections.c:1149
+#: nscd/connections.c:1122 nscd/connections.c:1148
 #, fuzzy, c-format
 msgid "cannot write result: %s"
 msgstr "Kwandika Igisubizo"
 
-#: nscd/connections.c:1240
+#: nscd/connections.c:1239
 #, fuzzy, c-format
 msgid "error getting caller's id: %s"
 msgstr "Ikosa ID"
 
-#: nscd/connections.c:1350
+#: nscd/connections.c:1349
 #, c-format
 msgid "cannot open /proc/self/cmdline: %m; disabling paranoia mode"
 msgstr ""
 
-#: nscd/connections.c:1373
+#: nscd/connections.c:1372
 #, c-format
 msgid "cannot change to old UID: %s; disabling paranoia mode"
 msgstr ""
 
-#: nscd/connections.c:1384
+#: nscd/connections.c:1383
 #, c-format
 msgid "cannot change to old GID: %s; disabling paranoia mode"
 msgstr ""
 
-#: nscd/connections.c:1398
+#: nscd/connections.c:1397
 #, c-format
 msgid "cannot change to old working directory: %s; disabling paranoia mode"
 msgstr ""
 
-#: nscd/connections.c:1445
+#: nscd/connections.c:1444
 #, c-format
 msgid "re-exec failed: %s; disabling paranoia mode"
 msgstr ""
 
-#: nscd/connections.c:1454
+#: nscd/connections.c:1453
 #, c-format
 msgid "cannot change current working directory to \"/\": %s"
 msgstr ""
 
-#: nscd/connections.c:1638
+#: nscd/connections.c:1637
 #, fuzzy, c-format
 msgid "short read while reading request: %s"
 msgstr "Gusoma Kubaza..."
 
-#: nscd/connections.c:1671
+#: nscd/connections.c:1670
 #, fuzzy, c-format
 msgid "key length in request too long: %d"
 msgstr "Urufunguzo Uburebure in Kubaza..."
 
-#: nscd/connections.c:1684
+#: nscd/connections.c:1683
 #, fuzzy, c-format
 msgid "short read while reading request key: %s"
 msgstr "Gusoma Kubaza... Urufunguzo"
 
-#: nscd/connections.c:1694
+#: nscd/connections.c:1693
 #, fuzzy, c-format
 msgid "handle_request: request received (Version = %d) from PID %ld"
 msgstr "Kubaza... BYAKIRIWE"
 
-#: nscd/connections.c:1699
+#: nscd/connections.c:1698
 #, fuzzy, c-format
 msgid "handle_request: request received (Version = %d)"
 msgstr "Kubaza... BYAKIRIWE"
 
-#: nscd/connections.c:1839
+#: nscd/connections.c:1838
 #, c-format
 msgid "ignored inotify event for `%s` (file exists)"
 msgstr ""
 
-#: nscd/connections.c:1844
+#: nscd/connections.c:1843
 #, c-format
 msgid "monitored file `%s` was %s, removing watch"
 msgstr ""
 
-#: nscd/connections.c:1852 nscd/connections.c:1894
+#: nscd/connections.c:1851 nscd/connections.c:1893
 #, c-format
 msgid "failed to remove file watch `%s`: %s"
 msgstr ""
 
-#: nscd/connections.c:1867
+#: nscd/connections.c:1866
 #, c-format
 msgid "monitored file `%s` was written to"
 msgstr ""
 
-#: nscd/connections.c:1891
+#: nscd/connections.c:1890
 #, c-format
 msgid "monitored parent directory `%s` was %s, removing watch on `%s`"
 msgstr ""
 
-#: nscd/connections.c:1917
+#: nscd/connections.c:1916
 #, c-format
 msgid "monitored file `%s` was %s, adding watch"
 msgstr ""
 
-#: nscd/connections.c:1929
+#: nscd/connections.c:1928
 #, fuzzy, c-format
 msgid "failed to add file watch `%s`: %s"
 msgstr "Byanze Kuri Ibirimo Igikoresho"
 
-#: nscd/connections.c:2107 nscd/connections.c:2272
+#: nscd/connections.c:2106 nscd/connections.c:2271
 #, c-format
 msgid "disabled inotify-based monitoring after read error %d"
 msgstr ""
 
-#: nscd/connections.c:2387
+#: nscd/connections.c:2386
 #, fuzzy
 msgid "could not initialize conditional variable"
 msgstr "gutangiza IDOSIYE"
 
-#: nscd/connections.c:2395
+#: nscd/connections.c:2394
 msgid "could not start clean-up thread; terminating"
 msgstr ""
 
-#: nscd/connections.c:2409
+#: nscd/connections.c:2408
 msgid "could not start any worker thread; terminating"
 msgstr ""
 
-#: nscd/connections.c:2464 nscd/connections.c:2466 nscd/connections.c:2482
-#: nscd/connections.c:2492 nscd/connections.c:2510 nscd/connections.c:2521
-#: nscd/connections.c:2531
+#: nscd/connections.c:2463 nscd/connections.c:2465 nscd/connections.c:2481
+#: nscd/connections.c:2491 nscd/connections.c:2509 nscd/connections.c:2520
+#: nscd/connections.c:2530
 #, fuzzy, c-format
 msgid "Failed to run nscd as user '%s'"
 msgstr "Kuri Gukoresha Nka Ukoresha:"
 
-#: nscd/connections.c:2484
+#: nscd/connections.c:2483
 #, fuzzy
 msgid "initial getgrouplist failed"
 msgstr "Byanze"
 
-#: nscd/connections.c:2493
+#: nscd/connections.c:2492
 #, fuzzy
 msgid "getgrouplist failed"
 msgstr "Byanze"
 
-#: nscd/connections.c:2511
+#: nscd/connections.c:2510
 #, fuzzy
 msgid "setgroups failed"
 msgstr "Byanze"
@@ -4500,7 +4490,7 @@ msgstr "Ubwihisho kugirango Ukoresha:"
 msgid "Name Service Cache Daemon."
 msgstr ""
 
-#: nscd/nscd.c:155 nss/getent.c:967 nss/makedb.c:206
+#: nscd/nscd.c:155 nss/getent.c:987 nss/makedb.c:206
 #, fuzzy, c-format
 msgid "wrong number of arguments"
 msgstr "Umubare Bya ingingo"
@@ -4848,50 +4838,50 @@ msgstr "Byabonetse in Ubwihisho"
 msgid "Reloading \"%s\" in services cache!"
 msgstr "Byabonetse in Ubwihisho"
 
-#: nss/getent.c:54
+#: nss/getent.c:55
 #, fuzzy
 msgid "database [key ...]"
 msgstr "Ububikoshingiro Urufunguzo"
 
-#: nss/getent.c:59
+#: nss/getent.c:60
 msgid "CONFIG"
 msgstr ""
 
-#: nss/getent.c:59
+#: nss/getent.c:60
 #, fuzzy
 msgid "Service configuration to be used"
 msgstr "Iboneza Kuri"
 
-#: nss/getent.c:60
+#: nss/getent.c:61
 msgid "disable IDN encoding"
 msgstr ""
 
-#: nss/getent.c:65
+#: nss/getent.c:66
 #, fuzzy
 msgid "Get entries from administrative database."
 msgstr "Kubona Ibyinjijwe Bivuye Ububikoshingiro"
 
-#: nss/getent.c:149 nss/getent.c:442 nss/getent.c:489
+#: nss/getent.c:150 nss/getent.c:462 nss/getent.c:509
 #, fuzzy, c-format
 msgid "Enumeration not supported on %s\n"
 msgstr "OYA ku"
 
-#: nss/getent.c:497 nss/getent.c:510
+#: nss/getent.c:517 nss/getent.c:530
 #, fuzzy, c-format
 msgid "Could not allocate group list: %m\n"
 msgstr "OYA Kurema LOG IDOSIYE"
 
-#: nss/getent.c:881
+#: nss/getent.c:901
 #, fuzzy, c-format
 msgid "Unknown database name"
 msgstr "Ububikoshingiro"
 
-#: nss/getent.c:911
+#: nss/getent.c:931
 #, fuzzy
 msgid "Supported databases:\n"
 msgstr "Ububikoshingiro"
 
-#: nss/getent.c:977
+#: nss/getent.c:997
 #, fuzzy, c-format
 msgid "Unknown database: %s\n"
 msgstr "Ububikoshingiro"
@@ -5155,7 +5145,7 @@ msgstr "Cyangwa"
 msgid "No previous regular expression"
 msgstr "Ibanjirije Ibisanzwe imvugo"
 
-#: posix/wordexp.c:1815
+#: posix/wordexp.c:1816
 #, fuzzy
 msgid "parameter null or not set"
 msgstr "NTAGIHARI Cyangwa OYA Gushyiraho"
@@ -5453,7 +5443,7 @@ msgstr ""
 #: sunrpc/auth_unix.c:112 sunrpc/clnt_tcp.c:124 sunrpc/clnt_udp.c:139
 #: sunrpc/clnt_unix.c:125 sunrpc/svc_tcp.c:189 sunrpc/svc_tcp.c:233
 #: sunrpc/svc_udp.c:161 sunrpc/svc_unix.c:189 sunrpc/svc_unix.c:229
-#: sunrpc/xdr.c:628 sunrpc/xdr.c:788 sunrpc/xdr_array.c:102
+#: sunrpc/xdr.c:631 sunrpc/xdr.c:791 sunrpc/xdr_array.c:102
 #: sunrpc/xdr_rec.c:153 sunrpc/xdr_ref.c:79
 #, fuzzy
 #| msgid "out of memory"
@@ -8272,6 +8262,14 @@ msgstr "%s:Kurema bushyinguro"
 #, fuzzy
 #~ msgid "empty dynamics string token substitution"
 #~ msgstr "ubusa Ikurikiranyanyuguti"
+
+#, fuzzy
+#~ msgid "cannot open zero fill device"
+#~ msgstr "Gufungura Zeru Kuzuza APAREYE"
+
+#, fuzzy
+#~ msgid "relocation error"
+#~ msgstr "Ikosa"
 
 #, fuzzy
 #~ msgid "%s: profiler found no PLTREL in object %s\n"
