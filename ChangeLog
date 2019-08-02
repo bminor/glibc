@@ -1,5 +1,7 @@
 2019-08-02  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/syscall-names.list: Update comment.
+
 	* sysdeps/unix/sysv/linux/tst-mman-consts.py (main): Update Linux
 	kernel version number to 5.2.
 

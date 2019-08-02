@@ -22,7 +22,7 @@
 # names are only used if the installed kernel headers also provide
 # them.
 
-# The list of system calls is current as of Linux 5.1.
+# The list of system calls is current as of Linux 5.2.
 kernel 5.2
 
 FAST_atomic_update
