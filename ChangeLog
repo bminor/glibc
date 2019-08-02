@@ -1,3 +1,8 @@
+2019-08-02  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/tst-mman-consts.py (main): Update Linux
+	kernel version number to 5.2.
+
 2019-08-01  Raoni Fassina Firmino  <raoni@linux.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/power8/memchr.S: Update power8
