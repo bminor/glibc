@@ -1,5 +1,13 @@
 2019-08-28  Paul A. Clarke  <pc@us.ibm.com>
     
+    	* sysdeps/powerpc/fpu/fenv_private.h (libc_feholdsetround_ppc_ctx):
+    	Utilize lightweight FPSCR read if possible, set fewer FPSCR bits
+    	if possible.
+    	(libc_feresetround_ppc):  Replace call to __libc_femergeenv_ppc
+    	with simpler required steps, set fewer FPSCR bits if possible.
+
+2019-08-28  Paul A. Clarke  <pc@us.ibm.com>
+    
     	* sysdeps/powerpc/fpu/fenv_libc.h (fesetenv_mode): New.
     	(FPSCR_FPRF_MASK): New. (FPSCR_STATUS_MASK): New.
     	* sysdeps/powerpc/fpu/feenablxcpt.c (feenableexcept): Use lighter-

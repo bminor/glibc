@@ -132,7 +132,17 @@ libc_fesetenv_ppc (const fenv_t *envp)
 static __always_inline void
 libc_feresetround_ppc (fenv_t *envp)
 {
-  __libc_femergeenv_ppc (envp, _FPU_MASK_TRAPS_RN, _FPU_MASK_FRAC_INEX_RET_CC);
+  fenv_union_t new = { .fenv = *envp };
+
+  /* If the old env has no enabled exceptions and the new env has any enabled
+     exceptions, then unmask SIGFPE in the MSR FE0/FE1 bits.  This will put the
+     hardware into "precise mode" and may cause the FPU to run slower on some
+     hardware.  */
+  if ((new.l & _FPU_ALL_TRAPS) != 0)
+    (void) __fe_nomask_env_priv ();
+
+  /* Atomically enable and raise (if appropriate) exceptions set in `new'.  */
+  fesetenv_mode (new.fenv);
 }
 
 static __always_inline int
@@ -176,9 +186,30 @@ libc_feholdsetround_ppc_ctx (struct rm_ctx *ctx, int r)
 {
   fenv_union_t old, new;
 
+  old.fenv = fegetenv_status ();
+
+  new.l = (old.l & ~(FPSCR_ENABLES_MASK|FPSCR_RN_MASK)) | r;
+
+  ctx->env = old.fenv;
+  if (__glibc_unlikely (new.l != old.l))
+    {
+      if ((old.l & _FPU_ALL_TRAPS) != 0)
+	(void) __fe_mask_env ();
+      fesetenv_mode (new.fenv);
+      ctx->updated_status = true;
+    }
+  else
+    ctx->updated_status = false;
+}
+
+static __always_inline void
+libc_feholdsetround_noex_ppc_ctx (struct rm_ctx *ctx, int r)
+{
+  fenv_union_t old, new;
+
   old.fenv = fegetenv_register ();
 
-  new.l = (old.l & _FPU_MASK_TRAPS_RN) | r;
+  new.l = (old.l & ~(FPSCR_ENABLES_MASK|FPSCR_RN_MASK)) | r;
 
   ctx->env = old.fenv;
   if (__glibc_unlikely (new.l != old.l))
@@ -218,6 +249,9 @@ libc_feresetround_ppc_ctx (struct rm_ctx *ctx)
 #define libc_feholdsetround_ctx          libc_feholdsetround_ppc_ctx
 #define libc_feholdsetroundf_ctx         libc_feholdsetround_ppc_ctx
 #define libc_feholdsetroundl_ctx         libc_feholdsetround_ppc_ctx
+#define libc_feholdsetround_noex_ctx     libc_feholdsetround_noex_ppc_ctx
+#define libc_feholdsetround_noexf_ctx    libc_feholdsetround_noex_ppc_ctx
+#define libc_feholdsetround_noexl_ctx    libc_feholdsetround_noex_ppc_ctx
 #define libc_feresetround_ctx            libc_feresetround_ppc_ctx
 #define libc_feresetroundf_ctx           libc_feresetround_ppc_ctx
 #define libc_feresetroundl_ctx           libc_feresetround_ppc_ctx
