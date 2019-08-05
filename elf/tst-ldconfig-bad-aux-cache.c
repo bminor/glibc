@@ -31,6 +31,7 @@
 #include <ftw.h>
 #include <stdint.h>
 
+#include <support/capture_subprocess.h>
 #include <support/check.h>
 #include <support/support.h>
 #include <support/xunistd.h>
@@ -52,6 +53,15 @@ display_info (const char *fpath, const struct stat *sb,
   return 0;
 }
 
+static void
+execv_wrapper (void *args)
+{
+  char **argv = args;
+
+  execv (argv[0], argv);
+  FAIL_EXIT1 ("execv: %m");
+}
+
 /* Run ldconfig with a corrupt aux-cache, in particular we test for size
    truncation that might happen if a previous ldconfig run failed or if
    there were storage or power issues while we were writing the file.
@@ -61,53 +71,38 @@ static int
 do_test (void)
 {
   char *prog = xasprintf ("%s/ldconfig", support_install_rootsbindir);
-  char *const args[] = { prog, NULL };
+  char *args[] = { prog, NULL };
   const char *path = "/var/cache/ldconfig/aux-cache";
   struct stat64 fs;
   long int size, new_size, i;
-  int status;
-  pid_t pid;
 
   /* Create the needed directories. */
   xmkdirp ("/var/cache/ldconfig", 0777);
 
-  pid = xfork ();
-  /* Run ldconfig fist to generate the aux-cache.  */
-  if (pid == 0)
-    {
-      execv (args[0], args);
-      _exit (1);
-    }
-  else
-    {
-      xwaitpid (pid, &status, 0);
-      TEST_COMPARE(status, 0);
-      xstat (path, &fs);
+  /* Run ldconfig first to generate the aux-cache.  */
+  struct support_capture_subprocess result;
+  result = support_capture_subprocess (execv_wrapper, args);
+  support_capture_subprocess_check (&result, "execv", 0, sc_allow_none);
+  support_capture_subprocess_free (&result);
 
-      size = fs.st_size;
-      /* Run 3 tests, each truncating aux-cache shorter and shorter.  */
-      for (i = 3; i > 0; i--)
-        {
-          new_size = size * i / 4;
-          if (truncate (path, new_size))
-              FAIL_EXIT1 ("truncation failed: %m");
-          if (nftw (path, display_info, 1000, 0) == -1)
-              FAIL_EXIT1 ("nftw failed.");
+  xstat (path, &fs);
 
-          pid = xfork ();
-          /* Verify that ldconfig can run with a truncated
-             aux-cache and doesn't crash.  */
-          if (pid == 0)
-            {
-              execv (args[0], args);
-              _exit (1);
-            }
-          else
-            {
-              xwaitpid (pid, &status, 0);
-              TEST_COMPARE(status, 0);
-            }
-        }
+  size = fs.st_size;
+  /* Run 3 tests, each truncating aux-cache shorter and shorter.  */
+  for (i = 3; i > 0; i--)
+    {
+      new_size = size * i / 4;
+      if (truncate (path, new_size))
+        FAIL_EXIT1 ("truncation failed: %m");
+      if (nftw (path, display_info, 1000, 0) == -1)
+        FAIL_EXIT1 ("nftw failed.");
+
+      /* Verify that ldconfig can run with a truncated
+         aux-cache and doesn't crash.  */
+      struct support_capture_subprocess result;
+      result = support_capture_subprocess (execv_wrapper, args);
+      support_capture_subprocess_check (&result, "execv", 0, sc_allow_none);
+      support_capture_subprocess_free (&result);
     }
 
   free (prog);
