@@ -105,37 +105,12 @@ static void timeout_handler (int signum) {};
     alarm (old_timeout);						      \
 } while (0)
 
-
-/* Functions defined here.  */
-static int setutent_file (void);
-static int getutent_r_file (struct utmp *buffer, struct utmp **result);
-static int getutid_r_file (const struct utmp *key, struct utmp *buffer,
-			   struct utmp **result);
-static int getutline_r_file (const struct utmp *key, struct utmp *buffer,
-			     struct utmp **result);
-static struct utmp *pututline_file (const struct utmp *data);
-static void endutent_file (void);
-static int updwtmp_file (const char *file, const struct utmp *utmp);
-
-/* Jump table for file functions.  */
-const struct utfuncs __libc_utmp_file_functions =
-{
-  setutent_file,
-  getutent_r_file,
-  getutid_r_file,
-  getutline_r_file,
-  pututline_file,
-  endutent_file,
-  updwtmp_file
-};
-
-
 #ifndef TRANSFORM_UTMP_FILE_NAME
 # define TRANSFORM_UTMP_FILE_NAME(file_name) (file_name)
 #endif
 
-static int
-setutent_file (void)
+int
+__libc_setutent (void)
 {
   if (file_fd < 0)
     {
@@ -166,15 +141,19 @@ setutent_file (void)
   return 1;
 }
 
+/* Preform initialization if necessary.  */
+static bool
+maybe_setutent (void)
+{
+  return file_fd >= 0 || __libc_setutent ();
+}
 
-static int
-getutent_r_file (struct utmp *buffer, struct utmp **result)
+int
+__libc_getutent_r (struct utmp *buffer, struct utmp **result)
 {
   ssize_t nbytes;
 
-  assert (file_fd >= 0);
-
-  if (file_offset == -1l)
+  if (!maybe_setutent () || file_offset == -1l)
     {
       /* Not available.  */
       *result = NULL;
@@ -279,13 +258,11 @@ unlock_return:
 
 /* For implementing this function we don't use the getutent_r function
    because we can avoid the reposition on every new entry this way.  */
-static int
-getutid_r_file (const struct utmp *id, struct utmp *buffer,
-		struct utmp **result)
+int
+__libc_getutid_r (const struct utmp *id, struct utmp *buffer,
+		  struct utmp **result)
 {
-  assert (file_fd >= 0);
-
-  if (file_offset == -1l)
+  if (!maybe_setutent () || file_offset == -1l)
     {
       *result = NULL;
       return -1;
@@ -309,13 +286,11 @@ getutid_r_file (const struct utmp *id, struct utmp *buffer,
 
 /* For implementing this function we don't use the getutent_r function
    because we can avoid the reposition on every new entry this way.  */
-static int
-getutline_r_file (const struct utmp *line, struct utmp *buffer,
-		  struct utmp **result)
+int
+__libc_getutline_r (const struct utmp *line, struct utmp *buffer,
+		    struct utmp **result)
 {
-  assert (file_fd >= 0);
-
-  if (file_offset == -1l)
+  if (!maybe_setutent () || file_offset == -1l)
     {
       *result = NULL;
       return -1;
@@ -361,14 +336,15 @@ unlock_return:
 }
 
 
-static struct utmp *
-pututline_file (const struct utmp *data)
+struct utmp *
+__libc_pututline (const struct utmp *data)
 {
+  if (!maybe_setutent ())
+    return NULL;
+
   struct utmp buffer;
   struct utmp *pbuf;
   int found;
-
-  assert (file_fd >= 0);
 
   if (! file_writable)
     {
@@ -467,18 +443,19 @@ pututline_file (const struct utmp *data)
 }
 
 
-static void
-endutent_file (void)
+void
+__libc_endutent (void)
 {
-  assert (file_fd >= 0);
-
-  __close_nocancel_nostatus (file_fd);
-  file_fd = -1;
+  if (file_fd >= 0)
+    {
+      __close_nocancel_nostatus (file_fd);
+      file_fd = -1;
+    }
 }
 
 
-static int
-updwtmp_file (const char *file, const struct utmp *utmp)
+int
+__libc_updwtmp (const char *file, const struct utmp *utmp)
 {
   int result = -1;
   off64_t offset;

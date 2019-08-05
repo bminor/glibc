@@ -49,7 +49,7 @@ __getutid_r (const struct utmp *id, struct utmp *buffer, struct utmp **result)
 
   __libc_lock_lock (__libc_utmp_lock);
 
-  retval = (*__libc_utmp_jump_table->getutid_r) (id, buffer, result);
+  retval = __libc_getutid_r (id, buffer, result);
 
   __libc_lock_unlock (__libc_utmp_lock);
 
