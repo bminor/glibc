@@ -1,3 +1,43 @@
+2019-08-05  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23518]
+	* login/uptmp-private.h (struct ufuncs): Remove definition.
+	(__libc_utmp_file_functions, __libc_utmp_unknown_functions)
+	(__libc_utmp_jump_table): Remove declarations.
+	(__libc_setutent, __libc_getutent_r, __libc_getutid_r)
+	(__libc_getutline_r, __libc_pututline, __libc_endutent)
+	(__libc_updwtmp): Declare.
+	* login/getutent_r.c (__libc_utmp_unknown_functions)
+	(__libc_utmp_jump_table, setutent_unknown, getutent_r_unknown)
+	(getutid_r_unknown, getutline_r_unknown, pututline_unknown)
+	(endutent_unknown): Remove definitions.
+	(__setutent): Call __libc_setutent.
+	(__getutent_r): Call __libc_getutent_r.
+	(__pututline): Call __libc_pututline.
+	(__endutent): Call __libc_endutent.
+	* login/getutid_r.c (__getutid_r): Call __libc_getutid_r.
+	* login/getutline_r.c (__getutline_r): Call __libc_getutline_r.
+	* login/updwtmp.c (__updwtmp): Call __libc_updwtmp.
+	* login/utmp_file.c (__libc_utmp_file_functions): Remove definition
+	(__libc_setutent): Rename from stetutent_file.  Drop static.
+	(maybe_setutent): New function.
+	(__libc_getutent_r): Rename from getutent_r_file.  Drop static.
+	Check for initialization.
+	(__libc_getutid_r): Rename from getutid_r_file.  Drop static.
+	Check for initialization.
+	(__libc_getutline_r): Rename from getutline_r_file.  Drop static.
+	Check for initialization.
+	(__libc_pututline): Rename from pututline_file.  Drop static.
+	Check for initialization.
+	(__libc_endutent): Rename from endutent_file.  Drop static.  Check
+	for initialization.
+	(__libc_updwtmp): Rename from updwtmp_file.  Drop static.
+	* login/utmpname.c (__utmpname): Call __libc_endutent.
+	* sysdeps/unix/getlogin_r (__getlogin_r): Call __libc_setutent,
+	__libc_getutlien_r, __libc_endutent.
+	* manual/users.texi (Who Logged In, Manipulating the Database):
+	Adjust.
+
 2019-08-15  Florian Weimer  <fweimer@redhat.com>
 
 	* malloc/Makefile (tests): Only add tst-mxfast for
