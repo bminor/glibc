@@ -53,4 +53,6 @@ _libc_vdso_platform_setup (void)
   VDSO_SYMBOL (getcpu) = p;
 }
 
+#define VDSO_SETUP _libc_vdso_platform_setup
+
 #include <csu/init-first.c>

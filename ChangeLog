@@ -1,3 +1,7 @@
+2019-07-02  Stefan Liebler  <stli@linux.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/init-first.c (VDSO_SETUP): New define.
+
 2019-08-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/bits/sched.h [__USE_GNU] (CLONE_PIDFD):
