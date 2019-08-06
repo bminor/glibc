@@ -1,5 +1,11 @@
 2019-08-28  Paul A. Clarke  <pc@us.ibm.com>
     
+    	* sysdeps/powerpc/fpu/fesetenv.c (__fesetenv):  Utilize lightweight
+    	FPSCR read.
+    	(_FPU_MASK_ALL):  Delete.
+
+2019-08-28  Paul A. Clarke  <pc@us.ibm.com>
+    
     	* sysdeps/powerpc/fpu/fenv_private.h (libc_feholdsetround_ppc_ctx):
     	Utilize lightweight FPSCR read if possible, set fewer FPSCR bits
     	if possible.
