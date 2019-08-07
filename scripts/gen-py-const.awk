@@ -111,7 +111,7 @@ NF > 1 {
 
     # '$0' ends up being everything that appeared after the first field
     # separator.
-    printf "  asm (\"@name@%s@value@%0@\" : : \"i\" (%s));\n", name, $0;
+    printf "  asm (\".ascii \\\"@name@%s@value@%0@\\\"\" : : \"i\" (%s));\n", name, $0;
 }
 
 # Close the 'dummy' function.
