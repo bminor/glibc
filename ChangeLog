@@ -1,3 +1,8 @@
+2019-08-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/bits/fcntl-linux.h [__USE_GNU]
+	(SYNC_FILE_RANGE_WRITE_AND_WAIT): New macro.
+
 2019-08-06  Joseph Myers  <joseph@codesourcery.com>
 
 	* io/fcntl.h [__USE_GNU] (AT_RECURSIVE): New macro.
