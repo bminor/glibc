@@ -1,3 +1,13 @@
+2019-08-09  DJ Delorie  <dj@redhat.com>
+
+	* elf/dl-tunables.list: Add glibc.malloc.mxfast.
+	* manual/tunables.texi: Document it.
+	* malloc/malloc.c (do_set_mxfast): New.
+	(__libc_mallopt): Call it.
+	* malloc/arena.c: Add mxfast tunable.
+	* malloc/tst-mxfast.c: New.
+	* malloc/Makefile: Add it.
+
 2019-08-08  Niklas Hambüchen  <mail@nh2.me>
 	    Carlos O'Donell  <carlos@redhat.com>
 

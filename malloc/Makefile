@@ -39,6 +39,7 @@ tests := mallocbug tst-malloc tst-valloc tst-calloc tst-obstack \
 	 tst-malloc-too-large \
 	 tst-malloc-stats-cancellation \
 	 tst-tcfree1 tst-tcfree2 tst-tcfree3 \
+	 tst-mxfast \
 
 tests-static := \
 	 tst-interpose-static-nothread \
@@ -195,6 +196,8 @@ tst-malloc-usable-ENV = MALLOC_CHECK_=3
 tst-malloc-usable-static-ENV = $(tst-malloc-usable-ENV)
 tst-malloc-usable-tunables-ENV = GLIBC_TUNABLES=glibc.malloc.check=3
 tst-malloc-usable-static-tunables-ENV = $(tst-malloc-usable-tunables-ENV)
+
+tst-mxfast-ENV = GLIBC_TUNABLES=glibc.malloc.tcache_count=0:glibc.malloc.mxfast=0
 
 ifeq ($(experimental-malloc),yes)
 CPPFLAGS-malloc.c += -DUSE_TCACHE=1
