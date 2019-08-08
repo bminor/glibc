@@ -120,4 +120,19 @@ libc {
     __wcstoieee128_l;
 
     __printf_sizeieee128;
+
+    __asprintfieee128;
+    __dprintfieee128;
+    __fprintfieee128;
+    __printfieee128;
+    __snprintfieee128;
+    __sprintfieee128;
+
+    __vasprintfieee128;
+    __vdprintfieee128;
+    __vfprintfieee128;
+    __vprintfieee128;
+    __vsnprintfieee128;
+    __vsprintfieee128;
   }
+}
