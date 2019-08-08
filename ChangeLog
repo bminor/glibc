@@ -1,3 +1,9 @@
+2019-08-08  Niklas Hambüchen  <mail@nh2.me>
+	    Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #24026]
+	* malloc/malloc.c (__malloc_info): Account for top chunk.
+
 2019-08-01  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #24867]

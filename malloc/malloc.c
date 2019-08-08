@@ -5438,6 +5438,12 @@ __malloc_info (int options, FILE *fp)
 
       __libc_lock_lock (ar_ptr->mutex);
 
+      /* Account for top chunk.  The top-most available chunk is
+	 treated specially and is never in any bin. See "initial_top"
+	 comments.  */
+      avail = chunksize (ar_ptr->top);
+      nblocks = 1;  /* Top always exists.  */
+
       for (size_t i = 0; i < NFASTBINS; ++i)
 	{
 	  mchunkptr p = fastbin (ar_ptr, i);
