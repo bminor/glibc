@@ -213,6 +213,18 @@ pre-fill the per-thread cache with.  The default, or when set to zero,
 is no limit.
 @end deftp
 
+@deftp Tunable glibc.malloc.mxfast
+One of the optimizations malloc uses is to maintain a series of ``fast
+bins'' that hold chunks up to a specific size.  The default and
+maximum size which may be held this way is 80 bytes on 32-bit systems
+or 160 bytes on 64-bit systems.  Applications which value size over
+speed may choose to reduce the size of requests which are serviced
+from fast bins with this tunable.  Note that the value specified
+includes malloc's internal overhead, which is normally the size of one
+pointer, so add 4 on 32-bit systems or 8 on 64-bit systems to the size
+passed to @code{malloc} for the largest bin size to enable.
+@end deftp
+
 @node Elision Tunables
 @section Elision Tunables
 @cindex elision tunables
