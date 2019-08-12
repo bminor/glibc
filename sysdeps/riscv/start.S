@@ -47,7 +47,7 @@ ENTRY (ENTRY_POINT)
 	   .cfi_label to force starting the FDE.  */
 	.cfi_label .Ldummy
 	cfi_undefined (ra)
-	call  .Lload_gp
+	call  load_gp
 	mv    a5, a0  /* rtld_fini.  */
 	/* main may be in a shared library.  */
 	la   a0, main
@@ -68,7 +68,7 @@ END (ENTRY_POINT)
    needs to be initialized before calling __libc_start_main in that case.
    So we redundantly initialize it at the beginning of _start.  */
 
-.Lload_gp:
+load_gp:
 .option push
 .option norelax
 	lla   gp, __global_pointer$
@@ -76,7 +76,7 @@ END (ENTRY_POINT)
 	ret
 
 	.section .preinit_array,"aw"
-	.dc.a .Lload_gp
+	.dc.a load_gp
 
 /* Define a symbol for the first piece of initialized data.  */
 	.data
