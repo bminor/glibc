@@ -49,6 +49,13 @@ NF > 1 {
   if (test)
     print "  TEST (" name ", \"" FILENAME ":" FNR "\", " $0 ")";
   else
+    # The `.ascii` directive here is needed for LLVM/clang support. LLVM will
+    # validate every `asm(...)` directive before emitting it, whereas GCC will
+    # literally emit the directive without validation. Without `.ascii` the
+    # directives emitted by this generator are not valid assembler statements,
+    # and the LLVM assembler will fail to assemble the file. The `.ascii` here
+    # has no functional affect, because string parsing is used to extract the
+    # integer constant from the assembly file built from the generated file.
     printf "asm (\".ascii \\\"@@@name@@@%s@@@value@@@%%0@@@end@@@\\\"\" : : \"i\" ((long) %s));\n",
       name, $0;
 }

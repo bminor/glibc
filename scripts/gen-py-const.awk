@@ -109,6 +109,13 @@ NF > 1 {
     # Remove any characters before the second field.
     sub(/^[^[:blank:]]+[[:blank:]]+/, "");
 
+    # The `.ascii` directive here is needed for LLVM/clang support. LLVM will
+    # validate every `asm(...)` directive before emitting it, whereas GCC will
+    # literally emit the directive without validation. Without `.ascii` the
+    # directives emitted by this generator are not valid assembler statements,
+    # and the LLVM assembler will fail to assemble the file. The `.ascii` here
+    # has no functional affect, because string parsing is used to extract the
+    # integer constant from the assembly file built from the generated file.
     # '$0' ends up being everything that appeared after the first field
     # separator.
     printf "  asm (\".ascii \\\"@name@%s@value@%0@\\\"\" : : \"i\" (%s));\n", name, $0;
