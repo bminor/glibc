@@ -18,15 +18,13 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.
+   <http://www.gnu.org/licenses/>.  */
 
-   Note: this test currently only fails when glibc is configured with
-   --enable-hardcoded-path-in-tests.  */
-
-#include <assert.h>
 #include <dlfcn.h>
-#include <stdio.h>
 #include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <support/support.h>
 #include <support/xthread.h>
 
 __thread int x;
@@ -42,15 +40,21 @@ do_test (int argc, char *argv[])
 {
   int j;
 
+  /* Use the full path so that the dynamic loader does not recognize
+     the main program as already loaded (even with an explicit ld.so
+     invocation).  */
+  char *path = xasprintf ("%s/%s", support_objdir_root, "tst-dlopen-aout");
+  printf ("info: dlopen object: %s\n", path);
+
   for (j = 0; j < 100; ++j)
     {
       pthread_t thr;
       void *p;
 
-      p = dlopen (argv[0], RTLD_LAZY);
+      p = dlopen (path, RTLD_LAZY);
       if (p != NULL)
         {
-          fprintf (stderr, "dlopen unexpectedly succeeded\n");
+          puts ("error: dlopen succeeded unexpectedly");
           return 1;
         }
       /* We create threads to force TLS allocation, which triggers
@@ -60,6 +64,7 @@ do_test (int argc, char *argv[])
       xpthread_join (thr);
     }
 
+  free (path);
   return 0;
 }
 

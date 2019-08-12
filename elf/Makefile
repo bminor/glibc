@@ -192,7 +192,7 @@ tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-latepthread tst-tls-manydynamic tst-nodelete-dlclose \
 	 tst-debug1 tst-main1 tst-absolute-sym tst-absolute-zero tst-big-note \
 	 tst-unwind-ctor tst-unwind-main tst-audit13 \
-	 tst-sonamemove-link tst-sonamemove-dlopen
+	 tst-sonamemove-link tst-sonamemove-dlopen tst-dlopen-aout
 #	 reldep9
 tests-internal += loadtest unload unload2 circleload1 \
 	 neededtest neededtest2 neededtest3 neededtest4 \
@@ -200,10 +200,6 @@ tests-internal += loadtest unload unload2 circleload1 \
 	 tst-ptrguard1 tst-stackguard1 tst-libc_dlvsym \
 	 tst-create_format1
 tests-container += tst-pldd
-ifeq ($(build-hardcoded-path-in-tests),yes)
-tests += tst-dlopen-aout
-tst-dlopen-aout-no-pie = yes
-endif
 test-srcs = tst-pathopt
 selinux-enabled := $(shell cat /selinux/enforce 2> /dev/null)
 ifneq ($(selinux-enabled),1)
