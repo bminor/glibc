@@ -51,6 +51,9 @@ static inline int stat_overflow (struct stat *buf)
 /* Note that f_files and f_ffree may validly be a sign-extended -1.  */
 static inline int statfs_overflow (struct statfs *buf)
 {
+#if __STATFS_MATCHES_STATFS64
+  return 0;
+#else
   if (buf->__f_blocks_pad == 0 && buf->__f_bfree_pad == 0
       && buf->__f_bavail_pad == 0
       && (buf->__f_files_pad == 0
@@ -61,4 +64,5 @@ static inline int statfs_overflow (struct statfs *buf)
 
   __set_errno (EOVERFLOW);
   return -1;
+#endif
 }

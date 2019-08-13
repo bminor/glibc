@@ -84,8 +84,13 @@
 
 /* And for __rlim_t and __rlim64_t.  */
 # define __RLIM_T_MATCHES_RLIM64_T	1
+
+/* And for fsblkcnt_t, fsblkcnt64_t, fsfilcnt_t and fsfilcnt64_t.  */
+# define __STATFS_MATCHES_STATFS64  1
 #else
 # define __RLIM_T_MATCHES_RLIM64_T	0
+
+# define __STATFS_MATCHES_STATFS64  0
 #endif
 
 /* Number of descriptors that can fit in an `fd_set'.  */

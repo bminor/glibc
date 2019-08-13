@@ -64,5 +64,9 @@
 /* Number of descriptors that can fit in an `fd_set'.  */
 #define	__FD_SETSIZE		256
 
+/* Tell the libc code that fsblkcnt_t, fsblkcnt64_t, fsfilcnt_t and
+   fsfilcnt64_t are not the same type for all ABI purposes.  */
+# define __STATFS_MATCHES_STATFS64  0
+
 
 #endif /* bits/typesizes.h */
