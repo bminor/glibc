@@ -36,12 +36,16 @@ static inline off_t lseek_overflow (loff_t res)
 
 static inline int stat_overflow (struct stat *buf)
 {
+#if defined __INO_T_MATCHES_INO64_T
+  return 0;
+#else
   if (buf->__st_ino_pad == 0 && buf->__st_size_pad == 0
       && buf->__st_blocks_pad == 0)
     return 0;
 
   __set_errno (EOVERFLOW);
   return -1;
+#endif
 }
 
 /* Note that f_files and f_ffree may validly be a sign-extended -1.  */
