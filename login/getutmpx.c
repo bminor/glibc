@@ -24,24 +24,11 @@ void
 getutmpx (const struct utmp *utmp, struct utmpx *utmpx)
 {
   memset (utmpx, 0, sizeof (struct utmpx));
-
-#if _HAVE_UT_TYPE - 0
   utmpx->ut_type = utmp->ut_type;
-#endif
-#if _HAVE_UT_PID - 0
   utmpx->ut_pid = utmp->ut_pid;
-#endif
   memcpy (utmpx->ut_line, utmp->ut_line, sizeof (utmp->ut_line));
   memcpy (utmpx->ut_user, utmp->ut_user, sizeof (utmp->ut_user));
-#if _HAVE_UT_ID - 0
   memcpy (utmpx->ut_id, utmp->ut_id, sizeof (utmp->ut_id));
-#endif
-#if _HAVE_UT_HOST - 0
   memcpy (utmpx->ut_host, utmp->ut_host, sizeof (utmp->ut_host));
-#endif
-#if _HAVE_UT_TV - 0
   utmpx->ut_tv = utmp->ut_tv;
-#else
-  utmpx->ut_time = utmp->ut_time;
-#endif
 }

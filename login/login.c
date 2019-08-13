@@ -91,12 +91,8 @@ login (const struct utmp *ut)
   struct utmp copy = *ut;
 
   /* Fill in those fields we supply.  */
-#if _HAVE_UT_TYPE - 0
   copy.ut_type = USER_PROCESS;
-#endif
-#if _HAVE_UT_PID - 0
   copy.ut_pid = getpid ();
-#endif
 
   /* Seek tty.  */
   found_tty = tty_name (STDIN_FILENO, &tty, sizeof (_tty));

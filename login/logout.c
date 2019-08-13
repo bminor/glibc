@@ -36,9 +36,7 @@ logout (const char *line)
   setutent ();
 
   /* Fill in search information.  */
-#if _HAVE_UT_TYPE - 0
   tmp.ut_type = USER_PROCESS;
-#endif
   strncpy (tmp.ut_line, line, sizeof tmp.ut_line);
 
   /* Read the record.  */
@@ -46,20 +44,12 @@ logout (const char *line)
     {
       /* Clear information about who & from where.  */
       memset (ut->ut_name, '\0', sizeof ut->ut_name);
-#if _HAVE_UT_HOST - 0
       memset (ut->ut_host, '\0', sizeof ut->ut_host);
-#endif
-#if _HAVE_UT_TV - 0
       struct timeval tv;
       __gettimeofday (&tv, NULL);
       ut->ut_tv.tv_sec = tv.tv_sec;
       ut->ut_tv.tv_usec = tv.tv_usec;
-#else
-      ut->ut_time = time (NULL);
-#endif
-#if _HAVE_UT_TYPE - 0
       ut->ut_type = DEAD_PROCESS;
-#endif
 
       if (pututline (ut) != NULL)
 	result = 1;
