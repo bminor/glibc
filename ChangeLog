@@ -1,3 +1,14 @@
+2019-08-13  Joseph Myers  <joseph@codesourcery.com>
+
+	* include/features.h (_ISOC2X_SOURCE): New feature test macro.
+	Undefine and define to 1 if [_GNU_SOURCE].
+	(__GLIBC_USE_ISOC2X): New macro.  Undefine and redefine depending
+	on [_ISOC2X_SOURCE] and [__STDC_VERSION__ > 201710L].
+	(__USE_ISOC11): Also define to 1 if [_ISOC2X_SOURCE].
+	(__USE_ISOC99): Likewise.
+	(__USE_ISOC95): Likewise.
+	* manual/creature.texi (_ISOC2X_SOURCE): Document.
+
 2019-08-13  Florian Weimer  <fweimer@redhat.com>
 
 	* login/getutid_r.c (__getutid_r): _HAVE_UT_ID and _HAVE_UT_TYPE

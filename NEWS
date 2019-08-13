@@ -9,7 +9,12 @@ Version 2.31
 
 Major new features:
 
-  [Add new features here]
+* The GNU C Library now supports a feature test macro _ISOC2X_SOURCE to
+  enable features from the draft ISO C2X standard.  Only some features from
+  this draft standard are supported by the GNU C Library, and as the draft
+  is under active development, the set of features enabled by this macro is
+  liable to change.  Features from C2X are also enabled by _GNU_SOURCE, or
+  by compiling with "gcc -std=gnu2x".
 
 Deprecated and removed features, and other changes affecting compatibility:
 

@@ -177,6 +177,13 @@ when the compiler uses an earlier language version.
 If this macro is defined, ISO C11 extensions to ISO C99 are included.
 @end defvr
 
+@defvr Macro _ISOC2X_SOURCE
+@standards{C2X, (none)}
+If this macro is defined, ISO C2X extensions to ISO C11 are included.
+Only some features from this draft standard are supported by
+@theglibc{}.
+@end defvr
+
 @defvr Macro __STDC_WANT_LIB_EXT2__
 @standards{ISO, (none)}
 If you define this macro to the value @code{1}, features from ISO/IEC
