@@ -39,8 +39,6 @@
 #endif
 
 
-#if defined UTMPX || _HAVE_UT_TYPE
-
 /* Prototype for our test function.  */
 static int do_test (int argc, char *argv[]);
 
@@ -75,11 +73,7 @@ do_prepare (int argc, char *argv[])
 
 struct utmp entry[] =
 {
-#if defined UTMPX || _HAVE_UT_TV
 #define UT(a)  .ut_tv = { .tv_sec = (a)}
-#else
-#define UT(a)  .ut_time = (a)
-#endif
 
   { .ut_type = BOOT_TIME, .ut_pid = 1, UT(1000) },
   { .ut_type = RUN_LVL, .ut_pid = 1, UT(2000) },
@@ -167,11 +161,7 @@ simulate_login (const char *line, const char *user)
 	    entry[n].ut_pid = (entry_pid += 27);
 	  entry[n].ut_type = USER_PROCESS;
 	  strncpy (entry[n].ut_user, user, sizeof (entry[n].ut_user));
-#if defined UTMPX || _HAVE_UT_TV - 0
 	  entry[n].ut_tv.tv_sec = (entry_time += 1000);
-#else
-          entry[n].ut_time = (entry_time += 1000);
-#endif
 	  setutent ();
 
 	  if (pututline (&entry[n]) == NULL)
@@ -201,11 +191,7 @@ simulate_logout (const char *line)
 	{
 	  entry[n].ut_type = DEAD_PROCESS;
 	  strncpy (entry[n].ut_user, "", sizeof (entry[n].ut_user));
-#if defined UTMPX || _HAVE_UT_TV - 0
           entry[n].ut_tv.tv_sec = (entry_time += 1000);
-#else
-          entry[n].ut_time = (entry_time += 1000);
-#endif
 	  setutent ();
 
 	  if (pututline (&entry[n]) == NULL)
@@ -390,14 +376,3 @@ do_test (int argc, char *argv[])
 
   return result;
 }
-
-#else
-
-/* No field 'ut_type' in struct utmp.  */
-int
-main (void)
-{
-  return 0;
-}
-
-#endif

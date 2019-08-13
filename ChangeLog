@@ -1,3 +1,29 @@
+2019-08-13  Florian Weimer  <fweimer@redhat.com>
+
+	* login/getutid_r.c (__getutid_r): _HAVE_UT_ID and _HAVE_UT_TYPE
+	are always true.
+	* login/getutmp.c (getutmp): _HAVE_UT_TYPE, _HAVE_UT_PID,
+	_HAVE_UT_ID, _HAVE_UT_HOST, _HAVE_UT_TV are always true.
+	* login/getutmpx.c (getutmpx): Likewise.
+	* login/login.c (login): _HAVE_UT_TYPE, _HAVE_UT_PID are always
+	true.
+	* login/logout.c (logout): _HAVE_UT_TYPE, _HAVE_UT_HOST,
+	_HAVE_UT_TV are always true.
+	* login/logwtmp.c (logwtmp): _HAVE_UT_PID, _HAVE_UT_TYPE,
+	_HAVE_UT_HOST, _HAVE_UT_TV are always true.
+	* login/tst-utmp.c: _HAVE_UT_TYPE, _HAVE_UT_TV are always true.
+	* login/utmp_file.c (__libc_setutent): _HAVE_UT_TYPE, _HAVE_UT_ID
+	are always true.
+	(internal_getut_r): _HAVE_UT_TYPE is always true.
+	(__libc_pututline): Likewise.
+	* login/programs/utmpdump.c (print_entry): Assume that
+	_HAVE_UT_TYPE, _HAVE_UT_PID, _HAVE_UT_ID, _HAVE_UT_HOST,
+	_HAVE_UT_TV are always true.
+	* sysdeps/generic/utmp-equal.h (__utmp_equal): _HAVE_UT_TYPE,
+	_HAVE_UT_ID are always true.
+	* sysdeps/gnu/bits/utmp.h: Move to ...
+	* bits/utmp.h: ... here, replacing the old file.
+
 2019-08-05  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #23518]

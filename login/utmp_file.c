@@ -129,14 +129,7 @@ __libc_setutent (void)
   file_offset = 0;
 
   /* Make sure the entry won't match.  */
-#if _HAVE_UT_TYPE - 0
   last_entry.ut_type = -1;
-#else
-  last_entry.ut_line[0] = '\177';
-# if _HAVE_UT_ID - 0
-  last_entry.ut_id[0] = '\0';
-# endif
-#endif
 
   return 1;
 }
@@ -201,7 +194,6 @@ internal_getut_r (const struct utmp *id, struct utmp *buffer,
       LOCKING_FAILED ();
     }
 
-#if _HAVE_UT_TYPE - 0
   if (id->ut_type == RUN_LVL || id->ut_type == BOOT_TIME
       || id->ut_type == OLD_TIME || id->ut_type == NEW_TIME)
     {
@@ -225,7 +217,6 @@ internal_getut_r (const struct utmp *id, struct utmp *buffer,
 	}
     }
   else
-#endif /* _HAVE_UT_TYPE */
     {
       /* Search for the next entry with the specified ID and with type
 	 INIT_PROCESS, LOGIN_PROCESS, USER_PROCESS, or DEAD_PROCESS.  */
@@ -316,13 +307,10 @@ __libc_getutline_r (const struct utmp *line, struct utmp *buffer,
       file_offset += sizeof (struct utmp);
 
       /* Stop if we found a user or login entry.  */
-      if (
-#if _HAVE_UT_TYPE - 0
-	  (last_entry.ut_type == USER_PROCESS
+      if ((last_entry.ut_type == USER_PROCESS
 	   || last_entry.ut_type == LOGIN_PROCESS)
-	  &&
-#endif
-	  !strncmp (line->ut_line, last_entry.ut_line, sizeof line->ut_line))
+	  && (strncmp (line->ut_line, last_entry.ut_line, sizeof line->ut_line)
+	      == 0))
 	break;
     }
 
@@ -368,16 +356,12 @@ __libc_pututline (const struct utmp *data)
 
   /* Find the correct place to insert the data.  */
   if (file_offset > 0
-      && (
-#if _HAVE_UT_TYPE - 0
-	  (last_entry.ut_type == data->ut_type
+      && ((last_entry.ut_type == data->ut_type
 	   && (last_entry.ut_type == RUN_LVL
 	       || last_entry.ut_type == BOOT_TIME
 	       || last_entry.ut_type == OLD_TIME
 	       || last_entry.ut_type == NEW_TIME))
-	  ||
-#endif
-	  __utmp_equal (&last_entry, data)))
+	  || __utmp_equal (&last_entry, data)))
     found = 1;
   else
     {

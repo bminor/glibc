@@ -32,7 +32,6 @@ __libc_lock_define (extern, __libc_utmp_lock attribute_hidden)
 int
 __getutid_r (const struct utmp *id, struct utmp *buffer, struct utmp **result)
 {
-#if (_HAVE_UT_ID - 0) && (_HAVE_UT_TYPE - 0)
   int retval;
 
   /* Test whether ID has any of the legal types.  */
@@ -54,10 +53,6 @@ __getutid_r (const struct utmp *id, struct utmp *buffer, struct utmp **result)
   __libc_lock_unlock (__libc_utmp_lock);
 
   return retval;
-#else	/* !_HAVE_UT_ID && !_HAVE_UT_TYPE */
-  __set_errno (ENOSYS);
-  return -1;
-#endif
 }
 libc_hidden_def (__getutid_r)
 weak_alias (__getutid_r, getutid_r)
