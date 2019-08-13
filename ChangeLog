@@ -1,5 +1,17 @@
 2019-08-13  Florian Weimer  <fweimer@redhat.com>
 
+	* login/utmp_file.c (LOCK_FILE, LOCKING_FAILED, UNLOCK_FILE):
+	Remove macros.
+	(struct file_locking): New.
+	(try_file_lock, file_unlock, file_lock_restore): New functions.
+	(__libc_getutent_r): Use the new functions.
+	(internal_getut_r): Likewise.
+	(__libc_getutline_r): Likewise.
+	(__libc_pututline): Likewise.
+	(__libc_updwtmp): Likewise.
+
+2019-08-13  Florian Weimer  <fweimer@redhat.com>
+
 	* login/getutid_r.c (__getutid_r): _HAVE_UT_ID and _HAVE_UT_TYPE
 	are always true.
 	* login/getutmp.c (getutmp): _HAVE_UT_TYPE, _HAVE_UT_PID,
