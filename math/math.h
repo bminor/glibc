@@ -104,7 +104,7 @@ __BEGIN_DECLS
 # endif
 #endif /* __USE_ISOC99 */
 
-#if __GLIBC_USE (IEC_60559_BFP_EXT)
+#if __GLIBC_USE (IEC_60559_BFP_EXT_C2X)
 /* Signaling NaN macros, if supported.  */
 # if __GNUC_PREREQ (3, 3)
 #  define SNANF (__builtin_nansf (""))
@@ -200,7 +200,7 @@ typedef _Float128x double_t;
 #  define FP_ILOGBNAN	2147483647
 # endif
 #endif
-#if __GLIBC_USE (IEC_60559_BFP_EXT)
+#if __GLIBC_USE (IEC_60559_BFP_EXT_C2X)
 # if __WORDSIZE == 32
 #  define __FP_LONG_MAX 0x7fffffffL
 # else
@@ -232,7 +232,7 @@ typedef _Float128x double_t;
 
 #include <bits/fp-fast.h>
 
-#if __GLIBC_USE (IEC_60559_BFP_EXT)
+#if __GLIBC_USE (IEC_60559_BFP_EXT_C2X)
 /* Rounding direction macros for fromfp functions.  */
 enum
   {
@@ -495,7 +495,7 @@ extern long double __REDIRECT_NTH (nexttowardl,
 #define __MATHCALL_NARROW(func, redir, nargs)	\
   __MATHCALL_NARROW_NORMAL (func, nargs)
 
-#if __GLIBC_USE (IEC_60559_BFP_EXT)
+#if __GLIBC_USE (IEC_60559_BFP_EXT_C2X)
 
 # define _Mret_ float
 # define _Marg_ double
@@ -969,7 +969,7 @@ enum
 
 #endif /* Use ISO C99.  */
 
-#if __GLIBC_USE (IEC_60559_BFP_EXT)
+#if __GLIBC_USE (IEC_60559_BFP_EXT_C2X)
 # include <bits/iscanonical.h>
 
 /* Return nonzero value if X is a signaling NaN.  */
@@ -1466,7 +1466,7 @@ iszero (__T __val)
 
 #endif /* __FINITE_MATH_ONLY__ > 0.  */
 
-#if __GLIBC_USE (IEC_60559_BFP_EXT)
+#if __GLIBC_USE (IEC_60559_BFP_EXT_C2X)
 /* An expression whose type has the widest of the evaluation formats
    of X and Y (which are of floating-point types).  */
 # if __FLT_EVAL_METHOD__ == 2 || __FLT_EVAL_METHOD__ > 64

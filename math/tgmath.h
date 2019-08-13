@@ -661,7 +661,7 @@
    prevailing rounding mode.  */
 #define rint(Val) __TGMATH_UNARY_REAL_ONLY (Val, rint)
 
-#if __GLIBC_USE (IEC_60559_BFP_EXT)
+#if __GLIBC_USE (IEC_60559_BFP_EXT_C2X)
 /* Return X - epsilon.  */
 # define nextdown(Val) __TGMATH_UNARY_REAL_ONLY (Val, nextdown)
 /* Return X + epsilon.  */
@@ -706,7 +706,7 @@
 #define fma(Val1, Val2, Val3) \
      __TGMATH_TERNARY_REAL_ONLY (Val1, Val2, Val3, fma)
 
-#if __GLIBC_USE (IEC_60559_BFP_EXT)
+#if __GLIBC_USE (IEC_60559_BFP_EXT_C2X)
 /* Round X to nearest integer value, rounding halfway cases to even.  */
 # define roundeven(Val) __TGMATH_UNARY_REAL_ONLY (Val, roundeven)
 
@@ -730,7 +730,9 @@
 
 /* Return value with minimum magnitude.  */
 # define fminmag(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2, fminmag)
+#endif
 
+#if __GLIBC_USE (IEC_60559_BFP_EXT)
 /* Total order operation.  */
 # define totalorder(Val1, Val2)					\
   __TGMATH_BINARY_REAL_RET_ONLY (Val1, Val2, totalorder)

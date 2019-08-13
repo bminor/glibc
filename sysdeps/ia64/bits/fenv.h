@@ -95,7 +95,7 @@ typedef unsigned long int fenv_t;
 # define FE_NONIEEE_ENV ((const fenv_t *) 0xc009a04d0270037fUL)
 #endif
 
-#if __GLIBC_USE (IEC_60559_BFP_EXT)
+#if __GLIBC_USE (IEC_60559_BFP_EXT_C2X)
 /* Type representing floating-point control modes.  */
 typedef unsigned long int femode_t;
 

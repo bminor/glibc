@@ -28,7 +28,7 @@ __LDBL_REDIR1_DECL (strtold, strtod)
 __LDBL_REDIR1_DECL (strtold_l, strtod_l)
 #endif
 
-#if __GLIBC_USE (IEC_60559_BFP_EXT)
+#if __GLIBC_USE (IEC_60559_BFP_EXT_C2X)
 __LDBL_REDIR1_DECL (strfroml, strfromd)
 #endif
 

@@ -92,7 +92,7 @@ typedef unsigned long int fenv_t;
 # define __fenv_ldfsr(X)   __asm__ __volatile__ ("ld %0,%%fsr" : : "m" (X))
 #endif
 
-#if __GLIBC_USE (IEC_60559_BFP_EXT)
+#if __GLIBC_USE (IEC_60559_BFP_EXT_C2X)
 /* Type representing floating-point control modes.  */
 typedef unsigned long int femode_t;
 

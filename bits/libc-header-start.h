@@ -43,12 +43,20 @@
 #endif
 
 /* ISO/IEC TS 18661-1:2014 defines the __STDC_WANT_IEC_60559_BFP_EXT__
-   macro.  */
+   macro.  Most but not all symbols enabled by that macro in TS
+   18661-1 are enabled unconditionally in C2X; the symbols in Annex F
+   still require that macro in C2X.  */
 #undef __GLIBC_USE_IEC_60559_BFP_EXT
 #if defined __USE_GNU || defined __STDC_WANT_IEC_60559_BFP_EXT__
 # define __GLIBC_USE_IEC_60559_BFP_EXT 1
 #else
 # define __GLIBC_USE_IEC_60559_BFP_EXT 0
+#endif
+#undef __GLIBC_USE_IEC_60559_BFP_EXT_C2X
+#if __GLIBC_USE (IEC_60559_BFP_EXT) || __GLIBC_USE (ISOC2X)
+# define __GLIBC_USE_IEC_60559_BFP_EXT_C2X 1
+#else
+# define __GLIBC_USE_IEC_60559_BFP_EXT_C2X 0
 #endif
 
 /* ISO/IEC TS 18661-4:2015 defines the

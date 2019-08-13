@@ -142,7 +142,7 @@
 /* The integer width macros are not defined by GCC's <limits.h> before
    GCC 7, or if _GNU_SOURCE rather than
    __STDC_WANT_IEC_60559_BFP_EXT__ is used to enable this feature.  */
-#if __GLIBC_USE (IEC_60559_BFP_EXT)
+#if __GLIBC_USE (IEC_60559_BFP_EXT_C2X)
 # ifndef CHAR_WIDTH
 #  define CHAR_WIDTH 8
 # endif

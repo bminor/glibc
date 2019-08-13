@@ -1,5 +1,55 @@
 2019-08-13  Joseph Myers  <joseph@codesourcery.com>
 
+	* bits/libc-header-start.h (__GLIBC_USE_IEC_60559_BFP_EXT): Update
+	comment.
+	(__GLIBC_USE_IEC_60559_BFP_EXT_C2X): New macro.
+	* bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]: Change to
+	[__GLIBC_USE (IEC_60559_BFP_EXT_C2X)].
+	* include/limits.h [__GLIBC_USE (IEC_60559_BFP_EXT)]: Likewise.
+	* math/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]: Likewise.
+	* math/math.h [__GLIBC_USE (IEC_60559_BFP_EXT)]: Likewise.
+	* stdlib/bits/stdlib-ldbl.h [__GLIBC_USE (IEC_60559_BFP_EXT)]:
+	Likewise.
+	* stdlib/stdint.h [__GLIBC_USE (IEC_60559_BFP_EXT)]: Likewise.
+	* stdlib/stdlib.h [__GLIBC_USE (IEC_60559_BFP_EXT)]: Likewise.
+	* sysdeps/aarch64/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]:
+	Likewise.
+	* sysdeps/alpha/fpu/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]:
+	Likewise.
+	* sysdeps/arm/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]:
+	Likewise.
+	* sysdeps/csky/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]:
+	Likewise.
+	* sysdeps/hppa/fpu/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]:
+	Likewise.
+	* sysdeps/ia64/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]:
+	Likewise.
+	* sysdeps/m68k/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]:
+	Likewise.
+	* sysdeps/microblaze/bits/fenv.h [__GLIBC_USE
+	(IEC_60559_BFP_EXT)]: Likewise.
+	* sysdeps/mips/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]:
+	Likewise.
+	* sysdeps/nios2/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]:
+	Likewise.
+	* sysdeps/powerpc/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]:
+	Likewise.
+	* sysdeps/riscv/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]:
+	Likewise.
+	* sysdeps/s390/fpu/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]:
+	Likewise.
+	* sysdeps/sh/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]:
+	Likewise.
+	* sysdeps/sparc/fpu/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]:
+	Likewise.
+	* sysdeps/x86/fpu/bits/fenv.h [__GLIBC_USE (IEC_60559_BFP_EXT)]:
+	Likewise.
+	* math/bits/mathcalls.h [__GLIBC_USE (IEC_60559_BFP_EXT)]:
+	Likewise, except for totalorder, totalordermag, getpayload,
+	setpayload and setpayloadsig.
+	* math/tgmath.h [__GLIBC_USE (IEC_60559_BFP_EXT)]: Likewise,
+	except for totalorder and totalordermag.
+
 	* string/string.h (memccpy): Also declare if [__GLIBC_USE (ISOC2X)].
 	(strdup): Likewise.
 	(strndup): Likewise.

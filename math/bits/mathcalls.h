@@ -261,7 +261,7 @@ __MATHCALL (nextafter,, (_Mdouble_ __x, _Mdouble_ __y));
 __MATHCALL (nexttoward,, (_Mdouble_ __x, long double __y));
 # endif
 
-# if __GLIBC_USE (IEC_60559_BFP_EXT) || __MATH_DECLARING_FLOATN
+# if __GLIBC_USE (IEC_60559_BFP_EXT_C2X) || __MATH_DECLARING_FLOATN
 /* Return X - epsilon.  */
 __MATHCALL (nextdown,, (_Mdouble_ __x));
 /* Return X + epsilon.  */
@@ -280,7 +280,7 @@ __MATHCALL (scalbn,, (_Mdouble_ __x, int __n));
 __MATHDECL (int,ilogb,, (_Mdouble_ __x));
 #endif
 
-#if __GLIBC_USE (IEC_60559_BFP_EXT) || __MATH_DECLARING_FLOATN
+#if __GLIBC_USE (IEC_60559_BFP_EXT_C2X) || __MATH_DECLARING_FLOATN
 /* Like ilogb, but returning long int.  */
 __MATHDECL (long int, llogb,, (_Mdouble_ __x));
 #endif
@@ -335,7 +335,7 @@ __MATHCALLX (fmin,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 __MATHCALL (fma,, (_Mdouble_ __x, _Mdouble_ __y, _Mdouble_ __z));
 #endif /* Use ISO C99.  */
 
-#if __GLIBC_USE (IEC_60559_BFP_EXT) || __MATH_DECLARING_FLOATN
+#if __GLIBC_USE (IEC_60559_BFP_EXT_C2X) || __MATH_DECLARING_FLOATN
 /* Round X to nearest integer value, rounding halfway cases to even.  */
 __MATHCALLX (roundeven,, (_Mdouble_ __x), (__const__));
 
@@ -367,6 +367,11 @@ __MATHCALLX (fmaxmag,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 /* Return value with minimum magnitude.  */
 __MATHCALLX (fminmag,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 
+/* Canonicalize floating-point representation.  */
+__MATHDECL_1 (int, canonicalize,, (_Mdouble_ *__cx, const _Mdouble_ *__x));
+#endif
+
+#if __GLIBC_USE (IEC_60559_BFP_EXT) || __MATH_DECLARING_FLOATN
 /* Total order operation.  */
 __MATHDECL_1 (int, totalorder,, (_Mdouble_ __x, _Mdouble_ __y))
      __attribute__ ((__const__));
@@ -374,9 +379,6 @@ __MATHDECL_1 (int, totalorder,, (_Mdouble_ __x, _Mdouble_ __y))
 /* Total order operation on absolute values.  */
 __MATHDECL_1 (int, totalordermag,, (_Mdouble_ __x, _Mdouble_ __y))
      __attribute__ ((__const__));
-
-/* Canonicalize floating-point representation.  */
-__MATHDECL_1 (int, canonicalize,, (_Mdouble_ *__cx, const _Mdouble_ *__x));
 
 /* Get NaN payload.  */
 __MATHCALL (getpayload,, (const _Mdouble_ *__x));

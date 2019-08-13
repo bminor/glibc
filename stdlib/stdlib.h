@@ -208,7 +208,7 @@ extern unsigned long long int strtoull (const char *__restrict __nptr,
 #endif /* ISO C99 or use MISC.  */
 
 /* Convert a floating-point number to a string.  */
-#if __GLIBC_USE (IEC_60559_BFP_EXT)
+#if __GLIBC_USE (IEC_60559_BFP_EXT_C2X)
 extern int strfromd (char *__dest, size_t __size, const char *__format,
 		     double __f)
      __THROW __nonnull ((3));
