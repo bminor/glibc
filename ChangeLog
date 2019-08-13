@@ -1,3 +1,15 @@
+2019-08-13  Florian Weimer  <fweimer@redhat.com>
+
+	* login/utmp_file.c (LOCK_FILE, LOCKING_FAILED, UNLOCK_FILE):
+	Remove macros.
+	(struct file_locking): New.
+	(try_file_lock, file_unlock, file_lock_restore): New functions.
+	(__libc_getutent_r): Use the new functions.
+	(internal_getut_r): Likewise.
+	(__libc_getutline_r): Likewise.
+	(__libc_pututline): Likewise.
+	(__libc_updwtmp): Likewise.
+
 2019-08-13  Joseph Myers  <joseph@codesourcery.com>
 
 	* bits/libc-header-start.h (__GLIBC_USE_IEC_60559_BFP_EXT): Update
