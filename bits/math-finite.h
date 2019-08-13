@@ -67,7 +67,7 @@ __MATH_REDIRCALL (cosh, , (_Mdouble_));
 /* exp.  */
 __MATH_REDIRCALL (exp, , (_Mdouble_));
 
-#if __GLIBC_USE (IEC_60559_FUNCS_EXT)
+#if __GLIBC_USE (IEC_60559_FUNCS_EXT_C2X)
 /* exp10.  */
 __MATH_REDIRCALL (exp10, , (_Mdouble_));
 #endif

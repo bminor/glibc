@@ -109,7 +109,7 @@ __MATHCALL (log10,, (_Mdouble_ __x));
 /* Break VALUE into integral and fractional parts.  */
 __MATHCALL (modf,, (_Mdouble_ __x, _Mdouble_ *__iptr)) __nonnull ((2));
 
-#if __GLIBC_USE (IEC_60559_FUNCS_EXT)
+#if __GLIBC_USE (IEC_60559_FUNCS_EXT_C2X)
 /* Compute exponent to base ten.  */
 __MATHCALL (exp10,, (_Mdouble_ __x));
 #endif

@@ -1,3 +1,13 @@
+2019-08-13  Joseph Myers  <joseph@codesourcery.com>
+
+	* bits/libc-header-start.h (__GLIBC_USE_IEC_60559_FUNCS_EXT):
+	Update comment.
+	(__GLIBC_USE_IEC_60559_FUNCS_EXT_C2X): New macro.
+	* bits/math-finite.h [__GLIBC_USE (IEC_60559_FUNCS_EXT)]: Change
+	to [__GLIBC_USE (IEC_60559_FUNCS_EXT_C2X)].
+	* math/bits/mathcalls.h [__GLIBC_USE (IEC_60559_FUNCS_EXT)]:
+	Likewise.
+
 2019-08-13  Florian Weimer  <fweimer@redhat.com>
 
 	* login/utmp_file.c (LOCK_FILE, LOCKING_FAILED, UNLOCK_FILE):

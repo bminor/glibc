@@ -60,12 +60,20 @@
 #endif
 
 /* ISO/IEC TS 18661-4:2015 defines the
-   __STDC_WANT_IEC_60559_FUNCS_EXT__ macro.  */
+   __STDC_WANT_IEC_60559_FUNCS_EXT__ macro.  Other than the reduction
+   functions, the symbols from this TS are enabled unconditionally in
+   C2X.  */
 #undef __GLIBC_USE_IEC_60559_FUNCS_EXT
 #if defined __USE_GNU || defined __STDC_WANT_IEC_60559_FUNCS_EXT__
 # define __GLIBC_USE_IEC_60559_FUNCS_EXT 1
 #else
 # define __GLIBC_USE_IEC_60559_FUNCS_EXT 0
+#endif
+#undef __GLIBC_USE_IEC_60559_FUNCS_EXT_C2X
+#if __GLIBC_USE (IEC_60559_FUNCS_EXT) || __GLIBC_USE (ISOC2X)
+# define __GLIBC_USE_IEC_60559_FUNCS_EXT_C2X 1
+#else
+# define __GLIBC_USE_IEC_60559_FUNCS_EXT_C2X 0
 #endif
 
 /* ISO/IEC TS 18661-3:2015 defines the
