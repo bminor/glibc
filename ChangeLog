@@ -1,5 +1,9 @@
 2019-08-13  Joseph Myers  <joseph@codesourcery.com>
 
+	* string/string.h (memccpy): Also declare if [__GLIBC_USE (ISOC2X)].
+	(strdup): Likewise.
+	(strndup): Likewise.
+
 	* include/features.h (_ISOC2X_SOURCE): New feature test macro.
 	Undefine and define to 1 if [_GNU_SOURCE].
 	(__GLIBC_USE_ISOC2X): New macro.  Undefine and redefine depending
