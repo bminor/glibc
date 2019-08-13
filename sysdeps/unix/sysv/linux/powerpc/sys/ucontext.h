@@ -75,12 +75,12 @@ typedef struct
  * a sigcontext.  For older kernel (without Altivec) the sigcontext matches
  * the mcontext upto but not including the v_regs field.  For kernels that
  * don't set AT_HWCAP or return AT_HWCAP without PPC_FEATURE_HAS_ALTIVEC the
- * v_regs field may not exist and should not be referenced.  The v_regd field
- * can be refernced safely only after verifying that PPC_FEATURE_HAS_ALTIVEC
+ * v_regs field may not exist and should not be referenced.  The v_regs field
+ * can be referenced safely only after verifying that PPC_FEATURE_HAS_ALTIVEC
  * is set in AT_HWCAP.  */
 
 /* Number of general registers.  */
-# define __NGREG	48	/* includes r0-r31, nip, msr, lr, etc.   */
+# define __NGREG	48	/* includes r0-r31, nip, msr, lr, etc.  */
 # define __NFPREG	33	/* includes fp0-fp31 &fpscr.  */
 # define __NVRREG	34	/* includes v0-v31, vscr, & vrsave in
 				   split vectors */
@@ -136,7 +136,7 @@ typedef struct {
  * either NULL (if this processor does not support the VMX feature) or the
  * address of the first quadword within the allocated (vmx_reserve) area.
  *
- * The pointer (v_regs) of vector type (elf_vrreg_t) is essentually
+ * The pointer (v_regs) of vector type (elf_vrreg_t) is essentially
  * an array of 34 quadword entries.  The entries with
  * indexes 0-31 contain the corresponding vector registers.  The entry with
  * index 32 contains the vscr as the last word (offset 12) within the
