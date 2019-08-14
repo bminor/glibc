@@ -1,3 +1,8 @@
+2019-08-23  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/generic/single-thread.h (RTLD_SINGLE_THREAD_P): Add
+	definition.
+
 2019-08-23  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	[BZ #24682]

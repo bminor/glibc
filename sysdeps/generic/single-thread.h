@@ -20,5 +20,6 @@
 #define _SINGLE_THREAD_H
 
 #define SINGLE_THREAD_P (0)
+#define RTLD_SINGLE_THREAD_P (0)
 
 #endif /* _SINGLE_THREAD_H  */
