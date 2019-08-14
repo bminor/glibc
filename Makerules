@@ -458,8 +458,8 @@ $(common-objpfx)shlib.lds: $(common-objpfx)config.make $(..)Makerules
 	$(LINK.o) -shared -Wl,-O1 \
 		  -nostdlib -nostartfiles \
 		  $(sysdep-LDFLAGS) $(rtld-LDFLAGS) $(LDFLAGS.so) \
-		  -Wl,--verbose 2>&1 | \
-	  sed > $@T \
+		  -Wl,--verbose 2>&1 >$@-tmp
+	  sed $@-tmp > $@T \
 	      -e '/^=========/,/^=========/!d;/^=========/d' \
 	      $(if $(filter yes,$(have-hash-style)), \
 		   -e 's/^.*\.gnu\.hash[ 	]*:.*$$/  .note.ABI-tag : { *(.note.ABI-tag) } &/' \
