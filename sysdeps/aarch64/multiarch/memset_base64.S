@@ -23,6 +23,7 @@
 # define MEMSET __memset_base64
 #endif
 
+/* To disable DC ZVA, set this threshold to 0. */
 #ifndef DC_ZVA_THRESHOLD
 # define DC_ZVA_THRESHOLD 512
 #endif
@@ -91,11 +92,12 @@ L(set96):
 	.p2align 4
 L(set_long):
 	stp	val, val, [dstin]
+	bic	dst, dstin, 15
+#if DC_ZVA_THRESHOLD
 	cmp	count, DC_ZVA_THRESHOLD
 	ccmp	val, 0, 0, cs
-	bic	dst, dstin, 15
 	b.eq	L(zva_64)
-
+#endif
 	/* Small-size or non-zero memset does not use DC ZVA. */
 	sub	count, dstend, dst
 
@@ -105,7 +107,11 @@ L(set_long):
 	 * count is less than 33 bytes, so as to bypass 2 unneccesary stps.
 	 */
 	sub	count, count, 64+16+1
+
+#if DC_ZVA_THRESHOLD
+	/* Align loop on 16-byte boundary, this might be friendly to i-cache. */
 	nop
+#endif
 
 1:	stp	val, val, [dst, 16]
 	stp	val, val, [dst, 32]
@@ -121,6 +127,7 @@ L(set_long):
 	stp	val, val, [dstend, -16]
 	ret
 
+#if DC_ZVA_THRESHOLD
 	.p2align 3
 L(zva_64):
 	stp	val, val, [dst, 16]
@@ -173,6 +180,7 @@ L(zva_64):
 1:	stp	val, val, [dstend, -32]
 	stp	val, val, [dstend, -16]
 	ret
+#endif
 
 END (MEMSET)
 libc_hidden_builtin_def (MEMSET)

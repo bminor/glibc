@@ -21,12 +21,14 @@
 # define MEMSET __memset_emag
 
 /*
- * Using dc zva to zero memory does not produce better performance if
+ * Using DC ZVA to zero memory does not produce better performance if
  * memory size is not very large, especially when there are multiple
- * processes/threads contending memory/cache. Here we use a somewhat
- * large threshold to trigger usage of dc zva.
-*/
-# define DC_ZVA_THRESHOLD 1024
+ * processes/threads contending memory/cache. Here we set threshold to
+ * zero to disable using DC ZVA, which is good for multi-process/thread
+ * workloads.
+ */
+
+# define DC_ZVA_THRESHOLD 0
 
 # include "./memset_base64.S"
 #endif

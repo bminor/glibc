@@ -1,3 +1,10 @@
+2019-08-14  Feng Xue  <fxue@os.amperecomputing.com>
+
+	* sysdeps/aarch64/multiarch/memset_base64.S (DC_ZVA_THRESHOLD):
+	Disable DC ZVA code if this macro is defined as zero.
+	* sysdeps/aarch64/multiarch/memset_emag.S (DC_ZVA_THRESHOLD):
+	Change to zero to disable using DC ZVA.
+
 2019-08-13  Joseph Myers  <joseph@codesourcery.com>
 
 	* bits/libc-header-start.h (__GLIBC_USE_IEC_60559_FUNCS_EXT):
