@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <support/check.h>
+#include <support/descriptors.h>
 #include <support/support.h>
 #include <sys/stat.h>
 #include <sys/sysmacros.h>
