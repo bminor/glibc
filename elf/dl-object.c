@@ -57,14 +57,30 @@ struct link_map *
 _dl_new_object (char *realname, const char *libname, int type,
 		struct link_map *loader, int mode, Lmid_t nsid)
 {
+#ifdef SHARED
+  unsigned int naudit;
+  if (__glibc_unlikely ((mode & __RTLD_OPENEXEC) != 0))
+    {
+      assert (type == lt_executable);
+      assert (nsid == LM_ID_BASE);
+
+      /* Ignore the specified libname for the main executable.  It is
+	 only known with an explicit loader invocation.  */
+      libname = "";
+
+      /* We create the map for the executable before we know whether
+	 we have auditing libraries and if yes, how many.  Assume the
+	 worst.  */
+      naudit = DL_NNS;
+    }
+  else
+    naudit = GLRO (dl_naudit);
+#endif
+
   size_t libname_len = strlen (libname) + 1;
   struct link_map *new;
   struct libname_list *newname;
 #ifdef SHARED
-  /* We create the map for the executable before we know whether we have
-     auditing libraries and if yes, how many.  Assume the worst.  */
-  unsigned int naudit = GLRO(dl_naudit) ?: ((mode & __RTLD_OPENEXEC)
-					    ? DL_NNS : 0);
   size_t audit_space = naudit * sizeof (new->l_audit[0]);
 #else
 # define audit_space 0
@@ -91,8 +107,20 @@ _dl_new_object (char *realname, const char *libname, int type,
      and won't get dumped during core file generation. Therefore to assist
      gdb and to create more self-contained core files we adjust l_name to
      point at the newly allocated copy (which will get dumped) instead of
-     the ld.so rodata copy.  */
-  new->l_name = *realname ? realname : (char *) newname->name + libname_len - 1;
+     the ld.so rodata copy.
+
+     Furthermore, in case of explicit loader invocation, discard the
+     name of the main executable, to match the regular behavior, where
+     name of the executable is not known.  */
+#ifdef SHARED
+  if (*realname != '\0' && (mode & __RTLD_OPENEXEC) == 0)
+#else
+  if (*realname != '\0')
+#endif
+    new->l_name = realname;
+  else
+    new->l_name = (char *) newname->name + libname_len - 1;
+
   new->l_type = type;
   /* If we set the bit now since we know it is never used we avoid
      dirtying the cache line later.  */
@@ -149,7 +177,14 @@ _dl_new_object (char *realname, const char *libname, int type,
 
   new->l_local_scope[0] = &new->l_searchlist;
 
-  /* Don't try to find the origin for the main map which has the name "".  */
+  /* Determine the origin.  If allocating the link map for the main
+     executable, the realname is not known and "".  In this case, the
+     origin needs to be determined by other means.  However, in case
+     of an explicit loader invocation, the pathname of the main
+     executable is known and needs to be processed here: From the
+     point of view of the kernel, the main executable is the
+     dynamic loader, and this would lead to a computation of the wrong
+     origin.  */
   if (realname[0] != '\0')
     {
       size_t realname_len = strlen (realname) + 1;

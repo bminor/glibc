@@ -1,7 +1,8 @@
-/* Test case for BZ #16634.
+/* Test case for BZ #16634 and BZ#24900.
 
    Verify that incorrectly dlopen()ing an executable without
-   __RTLD_OPENEXEC does not cause assertion in ld.so.
+   __RTLD_OPENEXEC does not cause assertion in ld.so, and that it
+   actually results in an error.
 
    Copyright (C) 2014-2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
@@ -24,6 +25,8 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <support/check.h>
 #include <support/support.h>
 #include <support/xthread.h>
 
@@ -35,28 +38,35 @@ fn (void *p)
   return p;
 }
 
+/* Call dlopen on PATH and check that fails with an error message
+   indicating an attempt to open an ET_EXEC or PIE object.  */
+static void
+check_dlopen_failure (const char *path)
+{
+  void *handle = dlopen (path, RTLD_LAZY);
+  if (handle != NULL)
+    FAIL_EXIT1 ("dlopen succeeded unexpectedly: %s", path);
+
+  const char *message = dlerror ();
+  TEST_VERIFY_EXIT (message != NULL);
+  if ((strstr (message,
+	       "cannot dynamically load position-independent executable")
+       == NULL)
+      && strstr (message, "cannot dynamically load executable") == NULL)
+    FAIL_EXIT1 ("invalid dlopen error message: \"%s\"", message);
+}
+
 static int
 do_test (int argc, char *argv[])
 {
   int j;
 
-  /* Use the full path so that the dynamic loader does not recognize
-     the main program as already loaded (even with an explicit ld.so
-     invocation).  */
-  char *path = xasprintf ("%s/%s", support_objdir_root, "tst-dlopen-aout");
-  printf ("info: dlopen object: %s\n", path);
-
   for (j = 0; j < 100; ++j)
     {
       pthread_t thr;
-      void *p;
 
-      p = dlopen (path, RTLD_LAZY);
-      if (p != NULL)
-        {
-          puts ("error: dlopen succeeded unexpectedly");
-          return 1;
-        }
+      check_dlopen_failure (argv[0]);
+
       /* We create threads to force TLS allocation, which triggers
 	 the original bug i.e. running out of surplus slotinfo entries
 	 for TLS.  */
@@ -64,7 +74,10 @@ do_test (int argc, char *argv[])
       xpthread_join (thr);
     }
 
-  free (path);
+  /* The elf subdirectory (or $ORIGIN in the container case) is on the
+     library search path.  */
+  check_dlopen_failure ("tst-dlopen-aout");
+
   return 0;
 }
 

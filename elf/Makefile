@@ -199,7 +199,7 @@ tests-internal += loadtest unload unload2 circleload1 \
 	 tst-tls3 tst-tls6 tst-tls7 tst-tls8 tst-dlmopen2 \
 	 tst-ptrguard1 tst-stackguard1 tst-libc_dlvsym \
 	 tst-create_format1
-tests-container += tst-pldd
+tests-container += tst-pldd tst-dlopen-aout-container
 test-srcs = tst-pathopt
 selinux-enabled := $(shell cat /selinux/enforce 2> /dev/null)
 ifneq ($(selinux-enabled),1)
@@ -1268,6 +1268,8 @@ $(objpfx)tst-addr1: $(libdl)
 
 $(objpfx)tst-thrlock: $(libdl) $(shared-thread-library)
 $(objpfx)tst-dlopen-aout: $(libdl) $(shared-thread-library)
+$(objpfx)tst-dlopen-aout-container: $(libdl) $(shared-thread-library)
+LDFLAGS-tst-dlopen-aout-container += -Wl,-rpath,\$$ORIGIN
 
 CFLAGS-ifuncmain1pic.c += $(pic-ccflag)
 CFLAGS-ifuncmain1picstatic.c += $(pic-ccflag)

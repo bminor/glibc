@@ -1,3 +1,15 @@
+2019-08-15  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24900]
+	* elf/dl-object.c (_dl_new_object): Do not store pathnames in the
+	new object in __RTLD_OPENEXEC mode (except for the origin).
+	* elf/tst-dlopen-aout.c (check_dlopen_failure): New function with
+	check for the error message.
+	(do_test): Call it.  Add check using relative path.
+	* elf/Makefile (tests-container): Add tst-dlopen-aout-container.
+	(tst-dlopen-aout-container): Link with libpthread.
+	(LDFLAGS-tst-dlopen-aout-container): Set RPATH to $ORIGIN.
+
 2019-08-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/bits/mathcalls.h
