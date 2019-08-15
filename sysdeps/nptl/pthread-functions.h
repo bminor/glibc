@@ -30,7 +30,6 @@ struct xid_command;
    the thread functions.  */
 struct pthread_functions
 {
-  int (*ptr_pthread_attr_destroy) (pthread_attr_t *);
   int (*ptr___pthread_attr_init_2_0) (pthread_attr_t *);
   int (*ptr___pthread_attr_init_2_1) (pthread_attr_t *);
   int (*ptr_pthread_attr_getdetachstate) (const pthread_attr_t *, int *);

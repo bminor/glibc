@@ -30,7 +30,8 @@ extra-libs-others := $(extra-libs)
 routines = alloca_cutoff forward libc-lowlevellock libc-cancellation \
 	   libc-cleanup libc_pthread_init libc_multiple_threads \
 	   register-atfork pthread_atfork pthread_self thrd_current \
-	   thrd_equal thrd_sleep thrd_yield pthread_equal
+	   thrd_equal thrd_sleep thrd_yield pthread_equal \
+	   pthread_attr_destroy
 shared-only-routines = forward
 static-only-routines = pthread_atfork
 
@@ -54,7 +55,7 @@ libpthread-routines = nptl-init nptlfreeres vars events version pt-interp \
 		      pthread_getconcurrency pthread_setconcurrency \
 		      pthread_getschedparam pthread_setschedparam \
 		      pthread_setschedprio \
-		      pthread_attr_init pthread_attr_destroy \
+		      pthread_attr_init \
 		      pthread_attr_getdetachstate pthread_attr_setdetachstate \
 		      pthread_attr_getguardsize pthread_attr_setguardsize \
 		      pthread_attr_getschedparam pthread_attr_setschedparam \

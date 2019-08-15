@@ -70,7 +70,6 @@ GLIBC_2.21 open64 F
 GLIBC_2.21 pause F
 GLIBC_2.21 pread F
 GLIBC_2.21 pread64 F
-GLIBC_2.21 pthread_attr_destroy F
 GLIBC_2.21 pthread_attr_getaffinity_np F
 GLIBC_2.21 pthread_attr_getdetachstate F
 GLIBC_2.21 pthread_attr_getguardsize F
