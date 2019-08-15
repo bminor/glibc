@@ -503,7 +503,7 @@ __libc_updwtmp (const char *file, const struct utmp *utmp)
   result = 0;
 
 unlock_return:
-  file_unlock (file_fd);
+  file_unlock (fd);
   file_lock_restore (&fl);
 
   /* Close WTMP file.  */

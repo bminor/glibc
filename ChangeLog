@@ -1,3 +1,10 @@
+2019-08-15  Florian Weimer  <fweimer@redhat.com>
+
+	* login/utmp_file.c (__libc_updwtmp): Unlock the right file
+	descriptor.
+	* login/Makefile (tests): Add tst-updwtmpx.
+	* login/tst-updwtmpx.c: New file.
+
 2019-08-13  Florian Weimer  <fweimer@redhat.com>
 
 	* login/utmp_file.c (LOCK_FILE, LOCKING_FAILED, UNLOCK_FILE):
