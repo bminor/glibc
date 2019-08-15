@@ -1,3 +1,11 @@
+2019-08-15  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/Makefile (tests): Only add tst-mxfast for
+	$(have-tunables).
+	* malloc/tst-mxfast.c: Fix copyright year.
+	(do_test): Fix GNU style issues.  Use TEST_COMPARE instead of
+	assert for checks.
+
 2019-08-09  DJ Delorie  <dj@redhat.com>
 
 	* elf/dl-tunables.list: Add glibc.malloc.mxfast.
