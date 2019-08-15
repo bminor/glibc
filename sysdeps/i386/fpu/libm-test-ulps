@@ -1158,8 +1158,8 @@ float128: 4
 idouble: 4
 ifloat: 5
 ifloat128: 4
-ildouble: 7
-ldouble: 7
+ildouble: 8
+ldouble: 8
 
 Function: Imaginary part of "clog10_upward":
 double: 2
@@ -2222,8 +2222,8 @@ float128: 8
 idouble: 5
 ifloat: 5
 ifloat128: 8
-ildouble: 5
-ldouble: 5
+ildouble: 6
+ldouble: 6
 
 Function: "log":
 double: 1
