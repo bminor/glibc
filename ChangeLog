@@ -1,5 +1,18 @@
 2019-08-15  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #24879]
+	login: Disarm timer after utmp lock acquisition.
+	* login/utmp_file.c (struct file_locking): Remove.
+	(try_file_lock): Adjust.
+	(file_lock_restore): Remove function.
+	(__libc_getutent_r): .
+	(internal_getut_r): Likewise.
+	(__libc_getutline_r): Likewise.
+	(__libc_pututline): Likewise.
+	(__libc_updwtmp): Likewise.
+
+2019-08-15  Florian Weimer  <fweimer@redhat.com>
+
 	* login/utmp_file.c (__libc_updwtmp): Unlock the right file
 	descriptor.
 	* login/Makefile (tests): Add tst-updwtmpx.
