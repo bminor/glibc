@@ -44,7 +44,7 @@ libc {
 
 libpthread {
   GLIBC_2.0 {
-    pthread_create; pthread_join; pthread_self; pthread_equal;
+    pthread_create; pthread_join;
     pthread_exit; pthread_detach;
 
     pthread_getschedparam; pthread_setschedparam;

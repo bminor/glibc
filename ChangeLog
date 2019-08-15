@@ -1,5 +1,57 @@
 2019-08-15  Florian Weimer  <fweimer@redhat.com>
 
+	nptl: Remove pthread_self compatibility symbol from libpthread.
+	* nptl/Versions (libpthread GLIBC_2.0): Remove pthread_self,
+	pthread_equal.
+	* nptl/Makefile (libpthread-routines): Remove compat-pthread_self.
+	* nptl/compat-pthread_self.c: Remove file.
+	* sysdeps/unix/sysv/linux/aarch64/libpthread.abilist (GLIBC_2.17):
+	Remove pthread_self.
+	* sysdeps/unix/sysv/linux/alpha/libpthread.abilist (GLIBC_2.0):
+	Likewise.
+	* sysdeps/unix/sysv/linux/arm/libpthread.abilist (GLIBC_2.4):
+	Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libpthread.abilist (GLIBC_2.2):
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/libpthread.abilist (GLIBC_2.0):
+	Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libpthread.abilist (GLIBC_2.2):
+	Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libpthread.abilist
+	(GLIBC_2.4): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libpthread.abilist
+	(GLIBC_2.0): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libpthread.abilist
+	(GLIBC_2.18): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libpthread.abilist
+	(GLIBC_2.0): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libpthread.abilist
+	(GLIBC_2.0): Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libpthread.abilist (GLIBC_2.21):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/libpthread.abilist
+	(GLIBC_2.0): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libpthread.abilist
+	(GLIBC_2.3): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libpthread.abilist
+	(GLIBC_2.17): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libpthread.abilist
+	(GLIBC_2.0): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libpthread.abilist
+	(GLIBC_2.2): Likewise.
+	* sysdeps/unix/sysv/linux/sh/libpthread.abilist (GLIBC_2.2):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libpthread.abilist
+	(GLIBC_2.0): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libpthread.abilist
+	(GLIBC_2.2): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libpthread.abilist
+	(GLIBC_2.2.5): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libpthread.abilist
+	(GLIBC_2.16): Likewise.
+
+2019-08-15  Florian Weimer  <fweimer@redhat.com>
+
 	nptl: Move pthread_attr_destroy implementation into libc.
 	* nptl/Makefile (routines): Add pthread_attr_destroy.
 	(libpthread-routines): Remove pthread_attr_destroy.
