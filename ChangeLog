@@ -1,5 +1,11 @@
 2019-08-15  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #24880]
+	* login/utmp_file.c (file_locking_failed): Use struct flock64.
+	(file_locking_unlock): Likewise.
+
+2019-08-15  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #24879]
 	login: Disarm timer after utmp lock acquisition.
 	* login/utmp_file.c (struct file_locking): Remove.
