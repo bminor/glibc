@@ -1,5 +1,5 @@
 /* Test that glibc.malloc.mxfast tunable works.
-   Copyright (C) 2018, 2019 Free Software Foundation, Inc.
+   Copyright (C) 2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,14 +21,14 @@
    the fast bins.  */
 
 #include <malloc.h>
-#include <assert.h>
+#include <support/check.h>
 
 int
-do_test(void)
+do_test (void)
 {
   struct mallinfo m;
-  char * volatile p1;
-  char * volatile p2;
+  char *volatile p1;
+  char *volatile p2;
 
   /* Arbitrary value; must be in default fastbin range.  */
   p1 = malloc (3);
@@ -36,10 +36,10 @@ do_test(void)
   p2 = malloc (512);
   free (p1);
 
-  m = mallinfo();
+  m = mallinfo ();
 
   /* This will fail if there are any blocks in the fastbins.  */
-  assert (m.smblks == 0);
+  TEST_COMPARE (m.smblks, 0);
 
   /* To keep gcc happy.  */
   free (p2);

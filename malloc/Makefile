@@ -39,7 +39,6 @@ tests := mallocbug tst-malloc tst-valloc tst-calloc tst-obstack \
 	 tst-malloc-too-large \
 	 tst-malloc-stats-cancellation \
 	 tst-tcfree1 tst-tcfree2 tst-tcfree3 \
-	 tst-mxfast \
 
 tests-static := \
 	 tst-interpose-static-nothread \
@@ -55,7 +54,7 @@ tests-internal += \
 	 tst-dynarray-at-fail \
 
 ifneq (no,$(have-tunables))
-tests += tst-malloc-usable-tunables
+tests += tst-malloc-usable-tunables tst-mxfast
 tests-static += tst-malloc-usable-static-tunables
 endif
 

@@ -1,5 +1,13 @@
 2019-08-15  Florian Weimer  <fweimer@redhat.com>
 
+	* malloc/Makefile (tests): Only add tst-mxfast for
+	$(have-tunables).
+	* malloc/tst-mxfast.c: Fix copyright year.
+	(do_test): Fix GNU style issues.  Use TEST_COMPARE instead of
+	assert for checks.
+
+2019-08-15  Florian Weimer  <fweimer@redhat.com>
+
 	* login/utmp_file.c (__libc_updwtmp): Unlock the right file
 	descriptor.
 	* login/Makefile (tests): Add tst-updwtmpx.
