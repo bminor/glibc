@@ -43,7 +43,7 @@ endif
 subdir-dirs = programs
 vpath %.c programs
 
-tests := tst-utmp tst-utmpx tst-grantpt tst-ptsname tst-getlogin
+tests := tst-utmp tst-utmpx tst-grantpt tst-ptsname tst-getlogin tst-updwtmpx
 
 # Build the -lutil library with these extra functions.
 extra-libs      := libutil

@@ -1,5 +1,12 @@
 2019-08-15  Florian Weimer  <fweimer@redhat.com>
 
+	* login/utmp_file.c (__libc_updwtmp): Unlock the right file
+	descriptor.
+	* login/Makefile (tests): Add tst-updwtmpx.
+	* login/tst-updwtmpx.c: New file.
+
+2019-08-15  Florian Weimer  <fweimer@redhat.com>
+
 	nptl: Move pthread_equal implementation into libc.
 	* nptl/Makefile (routines): Add pthread_equal.
 	* nptl/forward.c (pthread_equal): Remove definition.
