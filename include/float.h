@@ -4,7 +4,9 @@
 #define __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION
 #include <bits/libc-header-start.h>
 
-#ifndef _ISOMAC
+/* Some tests also define this macro, requiring a check here to avoid
+   errors for duplicate definitions (see GCC bug 91451).  */
+#if !defined _ISOMAC && !defined __STDC_WANT_IEC_60559_TYPES_EXT__
 # define __STDC_WANT_IEC_60559_TYPES_EXT__
 #endif
 

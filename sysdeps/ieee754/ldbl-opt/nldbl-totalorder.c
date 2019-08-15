@@ -20,7 +20,7 @@
 
 double
 attribute_hidden
-totalorderl (double x, double y)
+totalorderl (const double *x, const double *y)
 {
   return totalorder (x, y);
 }

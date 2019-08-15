@@ -287,7 +287,8 @@ libm-test-funcs-noauto = canonicalize ceil cimag conj copysign cproj creal \
 			 nextup remainder remquo rint round roundeven scalb \
 			 scalbln scalbn setpayload setpayloadsig signbit \
 			 significand totalorder totalordermag trunc ufromfp \
-			 ufromfpx
+			 ufromfpx compat_totalorder compat_totalordermag
+libm-test-funcs-compat = compat_totalorder compat_totalordermag
 libm-test-funcs-narrow = add div mul sub
 libm-test-funcs-all = $(libm-test-funcs-auto) $(libm-test-funcs-noauto)
 libm-test-c-auto = $(foreach f,$(libm-test-funcs-auto),libm-test-$(f).c)
@@ -319,6 +320,11 @@ libm-tests-vector = $(foreach t,$(libmvec-tests),\
 				$(foreach f,$($(t)-funcs),test-$(t)-$(f)))
 libm-tests = $(libm-tests-normal) $(libm-tests-finite) $(libm-tests-inline) \
 	     $(libm-tests-narrow) $(libm-tests-vector)
+libm-tests-compat = $(foreach t,$(libm-tests-base-normal) \
+				$(libm-tests-base-finite) \
+				$(libm-tests-base-inline),\
+				$(foreach f,$(libm-test-funcs-compat),\
+					    $(t)-$(f)))
 libm-tests-for-type = $(foreach f,$(libm-test-funcs-all),\
 				  test-$(1)-$(f) test-$(1)-finite-$(f) \
 				  test-i$(1)-$(f)) \
@@ -327,7 +333,8 @@ libm-tests-for-type = $(foreach f,$(libm-test-funcs-all),\
 
 libm-tests.o = $(addsuffix .o,$(libm-tests))
 
-tests += $(libm-tests)
+tests += $(filter-out $(libm-tests-compat),$(libm-tests))
+tests-internal += $(libm-tests-compat)
 generated += $(addsuffix .c,$(libm-tests)) \
 	     $(foreach t,$(test-types),libm-test-support-$(t).c)
 
@@ -352,6 +359,15 @@ $(libm-test-c-narrow-obj): $(objpfx)libm-test%.c: libm-test%.inc \
 	$(make-target-directory)
 	$(PYTHON) gen-libm-test.py -c $< -a auto-libm-test-out$* -C $@
 
+# Tests for totalorder compat symbols reuse the table of tests as
+# processed by gen-libm-test.py, so add dependencies on the generated
+# .c files.
+$(foreach t,$(libm-tests-base),\
+	    $(objpfx)$(t)-compat_totalorder.o): $(objpfx)libm-test-totalorder.c
+
+$(foreach t,$(libm-tests-base),\
+	    $(objpfx)$(t)-compat_totalordermag.o): $(objpfx)libm-test-totalordermag.c
+
 tgmath3-macros = atan2 cbrt ceil copysign erf erfc exp2 expm1 fdim floor \
 		 fma fmax fmin fmod frexp hypot ilogb ldexp lgamma llrint \
 		 llround log10 log1p log2 logb lrint lround nearbyint \
@@ -359,8 +375,7 @@ tgmath3-macros = atan2 cbrt ceil copysign erf erfc exp2 expm1 fdim floor \
 		 scalbln tgamma trunc acos asin atan acosh asinh atanh cos \
 		 sin tan cosh sinh tanh exp log pow sqrt fabs carg cimag conj \
 		 cproj creal roundeven nextup nextdown fminmag fmaxmag llogb \
-		 fromfp fromfpx ufromfp ufromfpx totalorder totalordermag \
-		 scalb
+		 fromfp fromfpx ufromfp ufromfpx scalb
 tgmath3-macro-tests = $(addprefix test-tgmath3-,$(tgmath3-macros))
 tests += $(tgmath3-macro-tests)
 generated += $(addsuffix .c,$(tgmath3-macro-tests))

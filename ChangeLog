@@ -1,3 +1,158 @@
+2019-08-15  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/bits/mathcalls.h
+	[__GLIBC_USE (IEC_60559_BFP_EXT) || __MATH_DECLARING_FLOATN]
+	(totalorder): Take pointer arguments.
+	[__GLIBC_USE (IEC_60559_BFP_EXT) || __MATH_DECLARING_FLOATN]
+	(totalordermag): Likewise.
+	* manual/arith.texi (totalorder): Likewise.
+	(totalorderf): Likewise.
+	(totalorderl): Likewise.
+	(totalorderfN): Likewise.
+	(totalorderfNx): Likewise.
+	(totalordermag): Likewise.
+	(totalordermagf): Likewise.
+	(totalordermagl): Likewise.
+	(totalordermagfN): Likewise.
+	(totalordermagfNx): Likewise.
+	* math/tgmath.h (__TGMATH_BINARY_REAL_RET_ONLY): Remove macro.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (totalorder): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)] (totalordermag): Likewise.
+	* math/Versions (GLIBC_2.31): Add totalorder, totalorderf,
+	totalorderl, totalordermag, totalordermagf, totalordermagl,
+	totalorderf32, totalorderf64, totalorderf32x, totalordermagf32,
+	totalordermagf64, totalordermagf32x, totalorderf64x,
+	totalordermagf64x, totalorderf128 and totalordermagf128.
+	* math/Makefile (libm-test-funcs-noauto): Add compat_totalorder
+	and compat_totalordermag.
+	(libm-test-funcs-compat): New variable.
+	(libm-tests-compat): Likewise.
+	(tests): Do not include compat tests.
+	(tests-internal): Add compat tests.
+	($(foreach t,$(libm-tests-base),
+	$(objpfx)$(t)-compat_totalorder.o)): Depend
+	on $(objpfx)libm-test-totalorder.c.
+	($(foreach t,$(libm-tests-base),
+	$(objpfx)$(t)-compat_totalordermag.o): Depend on
+	$(objpfx)libm-test-totalordermag.c.
+	(tgmath3-macros): Remove totalorder and totalordermag.
+	* math/libm-test-compat_totalorder.inc: New file.
+	* math/libm-test-compat_totalordermag.inc: Likewise.
+	* math/libm-test-driver.c (struct test_ff_i_data): Update comment.
+	(RUN_TEST_fpfp_b): New macro.
+	(RUN_TEST_LOOP_fpfp_b): Likewise.
+	* math/libm-test-totalorder.inc (totalorder_test_data): Use
+	TEST_fpfp_b.
+	(totalorder_test): Condition on [!COMPAT_TEST].
+	(do_test): Likewise.
+	* math/libm-test-totalordermag.inc (totalordermag_test_data): Use
+	TEST_fpfp_b.
+	(totalordermag_test): Condition on [!COMPAT_TEST].
+	(do_test): Likewise.
+	* math/gen-tgmath-tests.py (Tests.add_all_tests): Remove
+	totalorder and totalordermag.
+	* math/test-tgmath.c (NCALLS): Change to 132.
+	(F(compile_test)): Do not call totalorder or totalordermag.
+	(F(totalorder)): Remove.
+	(F(totalordermag)): Likewise.
+	* include/float.h (__STDC_WANT_IEC_60559_TYPES_EXT__): Do not
+	define if [__STDC_WANT_IEC_60559_TYPES_EXT__].
+	* include/setjmp.h [!_ISOMAC] (STR_HELPER): Rename to
+	SJSTR_HELPER.
+	[!_ISOMAC] (STR): Rename to SJSTR.  Update call to STR_HELPER.
+	[!_ISOMAC] (TEST_SIZE): Update call to STR.
+	[!_ISOMAC] (TEST_ALIGN): Likewise.
+	[!_ISOMAC] (TEST_OFFSET): Likewise.
+	* sysdeps/ieee754/dbl-64/s_totalorder.c: Include <shlib-compat.h>
+	and <first-versions.h>.
+	(__totalorder): Take pointer arguments.  Add symbol versions and
+	compat symbols.
+	* sysdeps/ieee754/dbl-64/s_totalordermag.c: Include
+	<shlib-compat.h> and <first-versions.h>.
+	(__totalordermag): Take pointer arguments.  Add symbol versions
+	and compat symbols.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_totalorder.c: Include
+	<shlib-compat.h> and <first-versions.h>.
+	(__totalorder): Take pointer arguments.  Add symbol versions and
+	compat symbols.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_totalordermag.c: Include
+	<shlib-compat.h> and <first-versions.h>.
+	(__totalordermag): Take pointer arguments.  Add symbol versions
+	and compat symbols.
+	* sysdeps/ieee754/float128/float128_private.h
+	(__totalorder_compatl): New macro.
+	(__totalordermag_compatl): Likewise.
+	* sysdeps/ieee754/flt-32/s_totalorderf.c: Include <shlib-compat.h>
+	and <first-versions.h>.
+	(__totalorderf): Take pointer arguments.  Add symbol versions and
+	compat symbols.
+	* sysdeps/ieee754/flt-32/s_totalordermagf.c: Include
+	<shlib-compat.h> and <first-versions.h>.
+	(__totalordermagf): Take pointer arguments.  Add symbol versions
+	and compat symbols.
+	* sysdeps/ieee754/ldbl-128/s_totalorderl.c: Include
+	<shlib-compat.h> and <first-versions.h>.
+	(__totalorderl): Take pointer arguments.  Add symbol versions and
+	compat symbols.
+	* sysdeps/ieee754/ldbl-128/s_totalordermagl.c: Include
+	<shlib-compat.h> and <first-versions.h>.
+	(__totalordermagl): Take pointer arguments.  Add symbol versions
+	and compat symbols.
+	* sysdeps/ieee754/ldbl-128ibm/s_totalorderl.c: Include
+	<shlib-compat.h>.
+	(__totalorderl): Take pointer arguments.  Add symbol versions and
+	compat symbols.
+	* sysdeps/ieee754/ldbl-128ibm/s_totalordermagl.c: Include
+	<shlib-compat.h>.
+	(__totalordermagl): Take pointer arguments.  Add symbol versions
+	and compat symbols.
+	* sysdeps/ieee754/ldbl-96/s_totalorderl.c: Include
+	<shlib-compat.h> and <first-versions.h>.
+	(__totalorderl): Take pointer arguments.  Add symbol versions and
+	compat symbols.
+	* sysdeps/ieee754/ldbl-96/s_totalordermagl.c: Include
+	<shlib-compat.h> and <first-versions.h>.
+	(__totalordermagl): Take pointer arguments.  Add symbol versions
+	and compat symbols.
+	* sysdeps/ieee754/ldbl-opt/nldbl-totalorder.c (totalorderl): Take
+	pointer arguments.
+	* sysdeps/ieee754/ldbl-opt/nldbl-totalordermag.c (totalordermagl):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/test-totalorderl-ldbl-128ibm.c
+	(do_test): Update calls to totalorderl and totalordermagl.
+	* sysdeps/ieee754/ldbl-96/test-totalorderl-ldbl-96.c (do_test):
+	Update calls to totalorderl and totalordermagl.
+	* sysdeps/mach/hurd/i386/libm.abilist: Update.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/csky/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/riscv/rv64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+
 2019-08-15  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #24899]

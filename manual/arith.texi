@@ -2020,21 +2020,23 @@ exception and sets @code{errno} to @code{EDOM} if either argument is a
 NaN.
 @end deftypefn
 
-@deftypefun int totalorder (double @var{x}, double @var{y})
-@deftypefunx int totalorderf (float @var{x}, float @var{y})
-@deftypefunx int totalorderl (long double @var{x}, long double @var{y})
-@deftypefunx int totalorderfN (_Float@var{N} @var{x}, _Float@var{N} @var{y})
-@deftypefunx int totalorderfNx (_Float@var{N}x @var{x}, _Float@var{N}x @var{y})
+@deftypefun int totalorder (const double *@var{x}, const double *@var{y})
+@deftypefunx int totalorderf (const float *@var{x}, const float *@var{y})
+@deftypefunx int totalorderl (const long double *@var{x}, const long double *@var{y})
+@deftypefunx int totalorderfN (const _Float@var{N} *@var{x}, const _Float@var{N} *@var{y})
+@deftypefunx int totalorderfNx (const _Float@var{N}x *@var{x}, const _Float@var{N}x *@var{y})
 @standards{TS 18661-1:2014, math.h}
 @standardsx{totalorderfN, TS 18661-3:2015, math.h}
 @standardsx{totalorderfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions determine whether the total order relationship,
-defined in IEEE 754-2008, is true for @var{x} and @var{y}, returning
+defined in IEEE 754-2008, is true for @code{*@var{x}} and
+@code{*@var{y}}, returning
 nonzero if it is true and zero if it is false.  No exceptions are
 raised even for signaling NaNs.  The relationship is true if they are
 the same floating-point value (including sign for zero and NaNs, and
-payload for NaNs), or if @var{x} comes before @var{y} in the following
+payload for NaNs), or if @code{*@var{x}} comes before @code{*@var{y}}
+in the following
 order: negative quiet NaNs, in order of decreasing payload; negative
 signaling NaNs, in order of decreasing payload; negative infinity;
 finite numbers, in ascending order, with negative zero before positive
@@ -2043,18 +2045,18 @@ increasing payload; positive quiet NaNs, in order of increasing
 payload.
 @end deftypefun
 
-@deftypefun int totalordermag (double @var{x}, double @var{y})
-@deftypefunx int totalordermagf (float @var{x}, float @var{y})
-@deftypefunx int totalordermagl (long double @var{x}, long double @var{y})
-@deftypefunx int totalordermagfN (_Float@var{N} @var{x}, _Float@var{N} @var{y})
-@deftypefunx int totalordermagfNx (_Float@var{N}x @var{x}, _Float@var{N}x @var{y})
+@deftypefun int totalordermag (const double *@var{x}, const double *@var{y})
+@deftypefunx int totalordermagf (const float *@var{x}, const float *@var{y})
+@deftypefunx int totalordermagl (const long double *@var{x}, const long double *@var{y})
+@deftypefunx int totalordermagfN (const _Float@var{N} *@var{x}, const _Float@var{N} *@var{y})
+@deftypefunx int totalordermagfNx (const _Float@var{N}x *@var{x}, const _Float@var{N}x *@var{y})
 @standards{TS 18661-1:2014, math.h}
 @standardsx{totalordermagfN, TS 18661-3:2015, math.h}
 @standardsx{totalordermagfNx, TS 18661-3:2015, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 These functions determine whether the total order relationship,
-defined in IEEE 754-2008, is true for the absolute values of @var{x}
-and @var{y}, returning nonzero if it is true and zero if it is false.
+defined in IEEE 754-2008, is true for the absolute values of @code{*@var{x}}
+and @code{*@var{y}}, returning nonzero if it is true and zero if it is false.
 No exceptions are raised even for signaling NaNs.
 @end deftypefun
 

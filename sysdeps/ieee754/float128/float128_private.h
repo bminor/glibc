@@ -253,7 +253,9 @@
 #define __tanhl __tanhf128
 #define __tanl __tanf128
 #define __totalorderl __totalorderf128
+#define __totalorder_compatl __totalorder_compatf128
 #define __totalordermagl __totalordermagf128
+#define __totalordermag_compatl __totalordermag_compatf128
 #define __truncl __truncf128
 #define __x2y2m1l __x2y2m1f128
 

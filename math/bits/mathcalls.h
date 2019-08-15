@@ -373,11 +373,12 @@ __MATHDECL_1 (int, canonicalize,, (_Mdouble_ *__cx, const _Mdouble_ *__x));
 
 #if __GLIBC_USE (IEC_60559_BFP_EXT) || __MATH_DECLARING_FLOATN
 /* Total order operation.  */
-__MATHDECL_1 (int, totalorder,, (_Mdouble_ __x, _Mdouble_ __y))
+__MATHDECL_1 (int, totalorder,, (const _Mdouble_ *__x, const _Mdouble_ *__y))
      __attribute__ ((__const__));
 
 /* Total order operation on absolute values.  */
-__MATHDECL_1 (int, totalordermag,, (_Mdouble_ __x, _Mdouble_ __y))
+__MATHDECL_1 (int, totalordermag,, (const _Mdouble_ *__x,
+				    const _Mdouble_ *__y))
      __attribute__ ((__const__));
 
 /* Get NaN payload.  */

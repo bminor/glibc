@@ -35,21 +35,21 @@ extern __typeof (__sigsetjmp) __sigsetjmp attribute_hidden;
 # include <stddef.h>
 # include <jmp_buf-macros.h>
 
-# define STR_HELPER(x) #x
-# define STR(x) STR_HELPER(x)
+# define SJSTR_HELPER(x) #x
+# define SJSTR(x) SJSTR_HELPER(x)
 
 # define TEST_SIZE(type, size) \
   _Static_assert (sizeof (type) == size, \
 		  "size of " #type " != " \
-		  STR (size))
+		  SJSTR (size))
 # define TEST_ALIGN(type, align) \
   _Static_assert (__alignof__ (type) == align , \
 		  "align of " #type " != " \
-		  STR (align))
+		  SJSTR (align))
 # define TEST_OFFSET(type, member, offset) \
   _Static_assert (offsetof (type, member) == offset, \
 		  "offset of " #member " field of " #type " != " \
-		  STR (offset))
+		  SJSTR (offset))
 
 /* Check if jmp_buf have the expected sizes.  */
 TEST_SIZE (jmp_buf, JMP_BUF_SIZE);

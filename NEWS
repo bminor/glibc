@@ -18,7 +18,12 @@ Major new features:
 
 Deprecated and removed features, and other changes affecting compatibility:
 
-  [Add deprecations, removals and changes affecting compatibility here]
+* The totalorder and totalordermag functions, and the corresponding
+  functions for other floating-point types, now take pointer arguments to
+  avoid signaling NaNs possibly being converted to quiet NaNs in argument
+  passing.  This is in accordance with the resolution of Clarification
+  Request 25 to TS 18661-1, as applied for C2X.  Existing binaries that pass
+  floating-point arguments directly will continue to work.
 
 Changes to build and runtime requirements:
 

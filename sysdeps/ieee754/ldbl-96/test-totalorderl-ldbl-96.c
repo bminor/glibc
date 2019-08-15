@@ -51,10 +51,10 @@ do_test (void)
 	SET_LDOUBLE_WORDS (ldny, 0xffff,
 			   (tests[i] >> 32) | 0x80000000,
 			   tests[i] & 0xffffffffULL);
-	bool to1 = totalorderl (ldx, ldy);
-	bool to2 = totalorderl (ldy, ldx);
-	bool to3 = totalorderl (ldnx, ldny);
-	bool to4 = totalorderl (ldny, ldnx);
+	bool to1 = totalorderl (&ldx, &ldy);
+	bool to2 = totalorderl (&ldy, &ldx);
+	bool to3 = totalorderl (&ldnx, &ldny);
+	bool to4 = totalorderl (&ldny, &ldnx);
 	if (to1 && to2 && to3 && to4)
 	  printf ("PASS: test %zu\n", i);
 	else
@@ -62,10 +62,10 @@ do_test (void)
 	    printf ("FAIL: test %zu\n", i);
 	    result = 1;
 	  }
-	to1 = totalordermagl (ldx, ldy);
-	to2 = totalordermagl (ldy, ldx);
-	to3 = totalordermagl (ldnx, ldny);
-	to4 = totalordermagl (ldny, ldnx);
+	to1 = totalordermagl (&ldx, &ldy);
+	to2 = totalordermagl (&ldy, &ldx);
+	to3 = totalordermagl (&ldnx, &ldny);
+	to4 = totalordermagl (&ldny, &ldnx);
 	if (to1 && to2 && to3 && to4)
 	  printf ("PASS: test %zu (totalordermagl)\n", i);
 	else

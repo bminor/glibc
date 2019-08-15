@@ -751,3 +751,15 @@ GLIBC_2.29 ynf32 F
 GLIBC_2.29 ynf32x F
 GLIBC_2.29 ynf64 F
 GLIBC_2.29 ynl F
+GLIBC_2.31 totalorder F
+GLIBC_2.31 totalorderf F
+GLIBC_2.31 totalorderf32 F
+GLIBC_2.31 totalorderf32x F
+GLIBC_2.31 totalorderf64 F
+GLIBC_2.31 totalorderl F
+GLIBC_2.31 totalordermag F
+GLIBC_2.31 totalordermagf F
+GLIBC_2.31 totalordermagf32 F
+GLIBC_2.31 totalordermagf32x F
+GLIBC_2.31 totalordermagf64 F
+GLIBC_2.31 totalordermagl F

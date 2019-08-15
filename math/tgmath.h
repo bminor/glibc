@@ -230,8 +230,6 @@
   __TGMATH_2 (Fct, (Val1), (Val2))
 #  define __TGMATH_BINARY_REAL_STD_ONLY(Val1, Val2, Fct)	\
   __TGMATH_2STD (Fct, (Val1), (Val2))
-#  define __TGMATH_BINARY_REAL_RET_ONLY(Val1, Val2, Fct)	\
-  __TGMATH_2 (Fct, (Val1), (Val2))
 #  define __TGMATH_TERNARY_FIRST_SECOND_REAL_ONLY(Val1, Val2, Val3, Fct) \
   __TGMATH_3 (Fct, (Val1), (Val2), (Val3))
 #  define __TGMATH_TERNARY_REAL_ONLY(Val1, Val2, Val3, Fct)	\
@@ -325,18 +323,6 @@
 		     : (__typeof ((__tgmath_real_type (Val1)) 0		      \
 				   + (__tgmath_real_type (Val2)) 0))	      \
 		       Fct##f (Val1, Val2)))
-
-#  define __TGMATH_BINARY_REAL_RET_ONLY(Val1, Val2, Fct) \
-     (__extension__ ((sizeof ((Val1) + (Val2)) > sizeof (double)	      \
-		      && __builtin_classify_type ((Val1) + (Val2)) == 8)      \
-		     ? __TGMATH_F128 ((Val1) + (Val2), Fct, (Val1, Val2))     \
-		     __tgml(Fct) (Val1, Val2)				      \
-		     : (sizeof (+(Val1)) == sizeof (double)		      \
-			|| sizeof (+(Val2)) == sizeof (double)		      \
-			|| __builtin_classify_type (Val1) != 8		      \
-			|| __builtin_classify_type (Val2) != 8)		      \
-		     ? Fct (Val1, Val2)					      \
-		     : Fct##f (Val1, Val2)))
 
 #  define __TGMATH_TERNARY_FIRST_SECOND_REAL_ONLY(Val1, Val2, Val3, Fct) \
      (__extension__ ((sizeof ((Val1) + (Val2)) > sizeof (double)	      \
@@ -730,16 +716,6 @@
 
 /* Return value with minimum magnitude.  */
 # define fminmag(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2, fminmag)
-#endif
-
-#if __GLIBC_USE (IEC_60559_BFP_EXT)
-/* Total order operation.  */
-# define totalorder(Val1, Val2)					\
-  __TGMATH_BINARY_REAL_RET_ONLY (Val1, Val2, totalorder)
-
-/* Total order operation on absolute values.  */
-# define totalordermag(Val1, Val2)				\
-  __TGMATH_BINARY_REAL_RET_ONLY (Val1, Val2, totalordermag)
 #endif
 
 

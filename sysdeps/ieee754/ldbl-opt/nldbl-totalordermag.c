@@ -20,7 +20,7 @@
 
 double
 attribute_hidden
-totalordermagl (double x, double y)
+totalordermagl (const double *x, const double *y)
 {
   return totalordermag (x, y);
 }

@@ -326,7 +326,8 @@ struct test_f_i_data
     int exceptions;
   } rd, rn, rz, ru;
 };
-/* Used for both RUN_TEST_LOOP_ff_b and RUN_TEST_LOOP_ff_i_tg.  */
+/* Used for RUN_TEST_LOOP_ff_b, RUN_TEST_LOOP_fpfp_b and
+   RUN_TEST_LOOP_ff_i_tg.  */
 struct test_ff_i_data
 {
   const char *arg_str;
@@ -859,6 +860,26 @@ struct test_Ff_b1_data
 		     (ARRAY)[i].arg1, (ARRAY)[i].arg2,			\
 		     (ARRAY)[i].RM_##ROUNDING_MODE.expected,		\
 		     (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);		\
+  ROUND_RESTORE_ ## ROUNDING_MODE
+#define RUN_TEST_fpfp_b(ARG_STR, FUNC_NAME, ARG1, ARG2, EXPECTED,	\
+			EXCEPTIONS)					\
+  do									\
+    if (enable_test (EXCEPTIONS))					\
+      {									\
+	COMMON_TEST_SETUP (ARG_STR);					\
+	check_bool (test_name,						\
+		    FUNC_TEST (FUNC_NAME) (&(ARG1), &(ARG2)),		\
+		    EXPECTED, EXCEPTIONS);				\
+	COMMON_TEST_CLEANUP;						\
+      }									\
+  while (0)
+#define RUN_TEST_LOOP_fpfp_b(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
+  IF_ROUND_INIT_ ## ROUNDING_MODE					\
+    for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
+      RUN_TEST_fpfp_b ((ARRAY)[i].arg_str, FUNC_NAME,			\
+		       (ARRAY)[i].arg1, (ARRAY)[i].arg2,		\
+		       (ARRAY)[i].RM_##ROUNDING_MODE.expected,		\
+		       (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);	\
   ROUND_RESTORE_ ## ROUNDING_MODE
 #define RUN_TEST_ff_i_tg(ARG_STR, FUNC_NAME, ARG1, ARG2, EXPECTED,	\
 			 EXCEPTIONS)					\

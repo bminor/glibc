@@ -20,16 +20,17 @@
 #include <math_private.h>
 #include <nan-high-order-bit.h>
 #include <stdint.h>
+#include <shlib-compat.h>
 
 int
-__totalorderl (long double x, long double y)
+__totalorderl (const long double *x, const long double *y)
 {
   double xhi, xlo, yhi, ylo;
   int64_t hx, hy, lx, ly;
 
-  ldbl_unpack (x, &xhi, &xlo);
+  ldbl_unpack (*x, &xhi, &xlo);
   EXTRACT_WORDS64 (hx, xhi);
-  ldbl_unpack (y, &yhi, &ylo);
+  ldbl_unpack (*y, &yhi, &ylo);
   EXTRACT_WORDS64 (hy, yhi);
 #if HIGH_ORDER_BIT_IS_SET_FOR_SNAN
 # error not implemented
@@ -60,4 +61,13 @@ __totalorderl (long double x, long double y)
   ly ^= ly_sign >> 1;
   return lx <= ly;
 }
-weak_alias (__totalorderl, totalorderl)
+versioned_symbol (libm, __totalorderl, totalorderl, GLIBC_2_31);
+#if SHLIB_COMPAT (libm, GLIBC_2_25, GLIBC_2_31)
+int
+attribute_compat_text_section
+__totalorder_compatl (long double x, long double y)
+{
+  return __totalorderl (&x, &y);
+}
+compat_symbol (libm, __totalorder_compatl, totalorderl, GLIBC_2_25);
+#endif

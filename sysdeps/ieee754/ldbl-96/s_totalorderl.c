@@ -22,15 +22,17 @@
 #include <libm-alias-ldouble.h>
 #include <nan-high-order-bit.h>
 #include <stdint.h>
+#include <shlib-compat.h>
+#include <first-versions.h>
 
 int
-__totalorderl (long double x, long double y)
+__totalorderl (const long double *x, const long double *y)
 {
   int16_t expx, expy;
   uint32_t hx, hy;
   uint32_t lx, ly;
-  GET_LDOUBLE_WORDS (expx, hx, lx, x);
-  GET_LDOUBLE_WORDS (expy, hy, ly, y);
+  GET_LDOUBLE_WORDS (expx, hx, lx, *x);
+  GET_LDOUBLE_WORDS (expy, hy, ly, *y);
   if (LDBL_MIN_EXP == -16382)
     {
       /* M68K variant: for the greatest exponent, the high mantissa
@@ -56,4 +58,29 @@ __totalorderl (long double x, long double y)
   ly ^= y_sign;
   return expx < expy || (expx == expy && (hx < hy || (hx == hy && lx <= ly)));
 }
+#ifdef SHARED
+# define CONCATX(x, y) x ## y
+# define CONCAT(x, y) CONCATX (x, y)
+# define UNIQUE_ALIAS(name) CONCAT (name, __COUNTER__)
+# define do_symbol(orig_name, name, aliasname)		\
+  strong_alias (orig_name, name)			\
+  versioned_symbol (libm, name, aliasname, GLIBC_2_31)
+# undef weak_alias
+# define weak_alias(name, aliasname)			\
+  do_symbol (name, UNIQUE_ALIAS (name), aliasname);
+#endif
 libm_alias_ldouble (__totalorder, totalorder)
+#if SHLIB_COMPAT (libm, GLIBC_2_25, GLIBC_2_31)
+int
+attribute_compat_text_section
+__totalorder_compatl (long double x, long double y)
+{
+  return __totalorderl (&x, &y);
+}
+#undef do_symbol
+#define do_symbol(orig_name, name, aliasname)			\
+  strong_alias (orig_name, name)				\
+  compat_symbol (libm, name, aliasname,				\
+		 CONCAT (FIRST_VERSION_libm_, aliasname))
+libm_alias_ldouble (__totalorder_compat, totalorder)
+#endif
