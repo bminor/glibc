@@ -30,7 +30,7 @@ extra-libs-others := $(extra-libs)
 routines = alloca_cutoff forward libc-lowlevellock libc-cancellation \
 	   libc-cleanup libc_pthread_init libc_multiple_threads \
 	   register-atfork pthread_atfork pthread_self thrd_current \
-	   thrd_equal thrd_sleep thrd_yield
+	   thrd_equal thrd_sleep thrd_yield pthread_equal
 shared-only-routines = forward
 static-only-routines = pthread_atfork
 
@@ -50,7 +50,7 @@ libpthread-routines = nptl-init nptlfreeres vars events version pt-interp \
 		      pthread_create pthread_exit pthread_detach \
 		      pthread_join pthread_tryjoin pthread_timedjoin \
 		      pthread_join_common \
-		      compat-pthread_self pthread_equal pthread_yield \
+		      compat-pthread_self pthread_yield \
 		      pthread_getconcurrency pthread_setconcurrency \
 		      pthread_getschedparam pthread_setschedparam \
 		      pthread_setschedprio \

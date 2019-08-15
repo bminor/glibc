@@ -64,7 +64,6 @@ struct pthread_functions
   int (*ptr___pthread_cond_timedwait_2_0) (pthread_cond_2_0_t *,
 					   pthread_mutex_t *,
 					   const struct timespec *);
-  int (*ptr_pthread_equal) (pthread_t, pthread_t);
   void (*ptr___pthread_exit) (void *) __attribute__ ((__noreturn__));
   int (*ptr_pthread_getschedparam) (pthread_t, int *, struct sched_param *);
   int (*ptr_pthread_setschedparam) (pthread_t, int,

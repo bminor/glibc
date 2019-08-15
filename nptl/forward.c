@@ -166,10 +166,6 @@ versioned_symbol (libc, __pthread_cond_timedwait, pthread_cond_timedwait,
 		  GLIBC_2_3_2);
 
 
-FORWARD (pthread_equal, (pthread_t thread1, pthread_t thread2),
-	 (thread1, thread2), 1)
-
-
 FORWARD_NORETURN (__pthread_exit, void, (void *retval), (retval),
 		  exit (EXIT_SUCCESS))
 strong_alias (__pthread_exit, pthread_exit);

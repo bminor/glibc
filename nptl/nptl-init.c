@@ -103,7 +103,6 @@ static const struct pthread_functions pthread_functions =
     .ptr___pthread_cond_wait_2_0 = __pthread_cond_wait_2_0,
     .ptr___pthread_cond_timedwait_2_0 = __pthread_cond_timedwait_2_0,
 # endif
-    .ptr_pthread_equal = __pthread_equal,
     .ptr___pthread_exit = __pthread_exit,
     .ptr_pthread_getschedparam = __pthread_getschedparam,
     .ptr_pthread_setschedparam = __pthread_setschedparam,
