@@ -61,7 +61,8 @@ struct utmp
   pid_t ut_pid;			/* Process ID of login process.  */
   char ut_line[UT_LINESIZE]
     __attribute_nonstring__;	/* Devicename.  */
-  char ut_id[4];		/* Inittab ID.  */
+  char ut_id[4]
+    __attribute_nonstring__;	/* Inittab ID.  */
   char ut_user[UT_NAMESIZE]
     __attribute_nonstring__;	/* Username.  */
   char ut_host[UT_HOSTSIZE]

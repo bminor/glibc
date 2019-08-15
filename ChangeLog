@@ -1,5 +1,17 @@
 2019-08-15  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #24899]
+	* sysdeps/gnu/bits/utmpx.h (struct utmpx): Add
+	__attribute_nonstring__ to ut_line, ut_id, ut_user, ut_host.
+	* sysdeps/unix/sysv/linux/s390/bits/utmpx.h (struct utmpx):
+	Likewise.
+	* sysdeps/gnu/bits/utmp.h (struct utmp): Add
+	__attribute_nonstring__ to ut_id.
+	* sysdeps/unix/sysv/linux/s390/bits/utmpx.h (struct utmp):
+	Likewise.
+
+2019-08-15  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #24880]
 	* login/utmp_file.c (file_locking_failed): Use struct flock64.
 	(file_locking_unlock): Likewise.
