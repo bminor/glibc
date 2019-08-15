@@ -80,7 +80,6 @@ GLIBC_2.17 pthread_attr_getscope F
 GLIBC_2.17 pthread_attr_getstack F
 GLIBC_2.17 pthread_attr_getstackaddr F
 GLIBC_2.17 pthread_attr_getstacksize F
-GLIBC_2.17 pthread_attr_init F
 GLIBC_2.17 pthread_attr_setaffinity_np F
 GLIBC_2.17 pthread_attr_setdetachstate F
 GLIBC_2.17 pthread_attr_setguardsize F

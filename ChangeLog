@@ -1,5 +1,78 @@
 2019-08-15  Florian Weimer  <fweimer@redhat.com>
 
+	nptl: Move pthread_attr_init implementation into libc.
+	* nptl/Makefile (routines): Add pthread_attr_init.
+	(libpthread-routines): Remove pthread_attr_init.
+	* nptl/Versions (libpthread GLIBC_2.0): Remove pthread_attr_init.
+	(libpthread GLIBC_2.0): Likewise.
+	* nptl/pthread_attr_init.c: Check for libc compat version instead
+	of libpthread compat version.
+	* nptl/forward.c (__pthread_attr_init_2_0)
+	(__pthread_attr_init_2_1): Remove definitions.
+	* nptl/nptl-init.c (pthread_functions): Remove initializers for
+	ptr___pthread_attr_init_2_0, ptr___pthread_attr_init_2_1.
+	* sysdeps/nptl/pthread-functions.h (struct pthread_functions):
+	Remove members ptr___pthread_attr_init_2_0,
+	ptr___pthread_attr_init_2_1.
+	* sysdeps/unix/sysv/linux/aarch64/libpthread.abilist (GLIBC_2.17):
+	Remove pthread_attr_init.
+	* sysdeps/unix/sysv/linux/alpha/libpthread.abilist (GLIBC_2.0):
+	Likewise.
+	(GLIBC_2.1): Likewise.
+	* sysdeps/unix/sysv/linux/arm/libpthread.abilist (GLIBC_2.4):
+	Likewise.
+	* sysdeps/unix/sysv/linux/csky/libpthread.abilist (GLIBC_2.29):
+	Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libpthread.abilist (GLIBC_2.2):
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/libpthread.abilist (GLIBC_2.0):
+	Likewise.
+	(GLIBC_2.1): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libpthread.abilist (GLIBC_2.2):
+	Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libpthread.abilist
+	(GLIBC_2.4): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libpthread.abilist
+	(GLIBC_2.0): Likewise.
+	(GLIBC_2.1): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libpthread.abilist
+	(GLIBC_2.18): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libpthread.abilist
+	(GLIBC_2.0): Likewise.
+	(GLIBC_2.1): Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libpthread.abilist
+	(GLIBC_2.0): Likewise.
+	(GLIBC_2.1): Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libpthread.abilist (GLIBC_2.21):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/libpthread.abilist
+	(GLIBC_2.0): Likewise.
+	(GLIBC_2.1): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libpthread.abilist
+	(GLIBC_2.3): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libpthread.abilist
+	(GLIBC_2.17): Likewise.
+	* sysdeps/unix/sysv/linux/riscv/rv64/libpthread.abilist
+	(GLIBC_2.27): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libpthread.abilist
+	(GLIBC_2.0): Likewise.
+	(GLIBC_2.1): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libpthread.abilist
+	(GLIBC_2.2): Likewise.
+	* sysdeps/unix/sysv/linux/sh/libpthread.abilist (GLIBC_2.2):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libpthread.abilist
+	(GLIBC_2.0): Likewise.
+	(GLIBC_2.1): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libpthread.abilist
+	(GLIBC_2.2): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libpthread.abilist
+	(GLIBC_2.2.5): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libpthread.abilist
+	(GLIBC_2.16): Likewise.
+
+2019-08-15  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #24900]
 	* elf/dl-object.c (_dl_new_object): Do not store pathnames in the
 	new object in __RTLD_OPENEXEC mode (except for the origin).

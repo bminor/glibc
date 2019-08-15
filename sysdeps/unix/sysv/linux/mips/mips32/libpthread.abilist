@@ -51,7 +51,6 @@ GLIBC_2.0 pthread_attr_getinheritsched F
 GLIBC_2.0 pthread_attr_getschedparam F
 GLIBC_2.0 pthread_attr_getschedpolicy F
 GLIBC_2.0 pthread_attr_getscope F
-GLIBC_2.0 pthread_attr_init F
 GLIBC_2.0 pthread_attr_setdetachstate F
 GLIBC_2.0 pthread_attr_setinheritsched F
 GLIBC_2.0 pthread_attr_setschedparam F
@@ -144,7 +143,6 @@ GLIBC_2.2 pthread_attr_getguardsize F
 GLIBC_2.2 pthread_attr_getstack F
 GLIBC_2.2 pthread_attr_getstackaddr F
 GLIBC_2.2 pthread_attr_getstacksize F
-GLIBC_2.2 pthread_attr_init F
 GLIBC_2.2 pthread_attr_setguardsize F
 GLIBC_2.2 pthread_attr_setstack F
 GLIBC_2.2 pthread_attr_setstackaddr F

@@ -49,7 +49,6 @@ libpthread {
 
     pthread_getschedparam; pthread_setschedparam;
 
-    pthread_attr_init;
     pthread_attr_getdetachstate; pthread_attr_setdetachstate;
     pthread_attr_getschedparam; pthread_attr_setschedparam;
     pthread_attr_getschedpolicy; pthread_attr_setschedpolicy;
@@ -121,7 +120,6 @@ libpthread {
 
   GLIBC_2.1 {
     pthread_create;
-    pthread_attr_init;
 
     pthread_attr_getguardsize; pthread_attr_setguardsize;
     pthread_attr_getstackaddr; pthread_attr_setstackaddr;
