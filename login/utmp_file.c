@@ -55,32 +55,23 @@ static void timeout_handler (int signum) {};
 
 /* try_file_lock (LOCKING, FD, TYPE) returns true if the locking
    operation failed and recovery needs to be performed.
-   (file_lock_restore (LOCKING) still needs to be called.)
 
    file_unlock (FD) removes the lock (which must have been
-   acquired).
-
-   file_lock_restore (LOCKING) is needed to clean up in both
-   cases.  */
-
-struct file_locking
-{
-  struct sigaction old_action;
-  unsigned int old_timeout;
-};
+   successfully acquired). */
 
 static bool
-try_file_lock (struct file_locking *locking, int fd, int type)
+try_file_lock (int fd, int type)
 {
   /* Cancel any existing alarm.  */
-  locking->old_timeout = alarm (0);
+  int old_timeout = alarm (0);
 
   /* Establish signal handler.  */
+  struct sigaction old_action;
   struct sigaction action;
   action.sa_handler = timeout_handler;
   __sigemptyset (&action.sa_mask);
   action.sa_flags = 0;
-  __sigaction (SIGALRM, &action, &locking->old_action);
+  __sigaction (SIGALRM, &action, &old_action);
 
   alarm (TIMEOUT);
 
@@ -90,7 +81,23 @@ try_file_lock (struct file_locking *locking, int fd, int type)
     .l_type = type,
     fl.l_whence = SEEK_SET,
    };
- return __fcntl64_nocancel (fd, F_SETLKW, &fl) < 0;
+
+ bool status = __fcntl64_nocancel (fd, F_SETLKW, &fl) < 0;
+ int saved_errno = errno;
+
+ /* Reset the signal handler and alarm.  We must reset the alarm
+    before resetting the handler so our alarm does not generate a
+    spurious SIGALRM seen by the user.  However, we cannot just set
+    the user's old alarm before restoring the handler, because then
+    it's possible our handler could catch the user alarm's SIGARLM and
+    then the user would never see the signal he expected.  */
+  alarm (0);
+  __sigaction (SIGALRM, &old_action, NULL);
+  if (old_timeout != 0)
+    alarm (old_timeout);
+
+  __set_errno (saved_errno);
+  return status;
 }
 
 static void
@@ -101,21 +108,6 @@ file_unlock (int fd)
       .l_type = F_UNLCK,
     };
   __fcntl64_nocancel (fd, F_SETLKW, &fl);
-}
-
-static void
-file_lock_restore (struct file_locking *locking)
-{
-  /* Reset the signal handler and alarm.  We must reset the alarm
-     before resetting the handler so our alarm does not generate a
-     spurious SIGALRM seen by the user.  However, we cannot just set
-     the user's old alarm before restoring the handler, because then
-     it's possible our handler could catch the user alarm's SIGARLM
-     and then the user would never see the signal he expected.  */
-  alarm (0);
-  __sigaction (SIGALRM, &locking->old_action, NULL);
-  if (locking->old_timeout != 0)
-    alarm (locking->old_timeout);
 }
 
 #ifndef TRANSFORM_UTMP_FILE_NAME
@@ -166,8 +158,7 @@ __libc_getutent_r (struct utmp *buffer, struct utmp **result)
       return -1;
     }
 
-  struct file_locking fl;
-  if (try_file_lock (&fl, file_fd, F_RDLCK))
+  if (try_file_lock (file_fd, F_RDLCK))
     nbytes = 0;
   else
     {
@@ -175,7 +166,6 @@ __libc_getutent_r (struct utmp *buffer, struct utmp **result)
       nbytes = __read_nocancel (file_fd, &last_entry, sizeof (struct utmp));
       file_unlock (file_fd);
     }
-  file_lock_restore (&fl);
 
   if (nbytes != sizeof (struct utmp))
     {
@@ -201,11 +191,9 @@ internal_getut_r (const struct utmp *id, struct utmp *buffer,
 {
   int result = -1;
 
-  struct file_locking fl;
-  if (try_file_lock (&fl, file_fd, F_RDLCK))
+  if (try_file_lock (file_fd, F_RDLCK))
     {
       *lock_failed = true;
-      file_lock_restore (&fl);
       return -1;
     }
 
@@ -257,7 +245,6 @@ internal_getut_r (const struct utmp *id, struct utmp *buffer,
 
 unlock_return:
   file_unlock (file_fd);
-  file_lock_restore (&fl);
 
   return result;
 }
@@ -303,11 +290,9 @@ __libc_getutline_r (const struct utmp *line, struct utmp *buffer,
       return -1;
     }
 
-  struct file_locking fl;
-  if (try_file_lock (&fl, file_fd, F_RDLCK))
+  if (try_file_lock (file_fd, F_RDLCK))
     {
       *result = NULL;
-      file_lock_restore (&fl);
       return -1;
     }
 
@@ -337,7 +322,6 @@ __libc_getutline_r (const struct utmp *line, struct utmp *buffer,
 
 unlock_return:
   file_unlock (file_fd);
-  file_lock_restore (&fl);
 
   return ((*result == NULL) ? -1 : 0);
 }
@@ -394,12 +378,8 @@ __libc_pututline (const struct utmp *data)
 	}
     }
 
-  struct file_locking fl;
-  if (try_file_lock (&fl, file_fd, F_WRLCK))
-    {
-      file_lock_restore (&fl);
-      return NULL;
-    }
+  if (try_file_lock (file_fd, F_WRLCK))
+    return NULL;
 
   if (found < 0)
     {
@@ -442,7 +422,6 @@ __libc_pututline (const struct utmp *data)
 
  unlock_return:
   file_unlock (file_fd);
-  file_lock_restore (&fl);
 
   return pbuf;
 }
@@ -471,10 +450,8 @@ __libc_updwtmp (const char *file, const struct utmp *utmp)
   if (fd < 0)
     return -1;
 
-  struct file_locking fl;
-  if (try_file_lock (&fl, fd, F_WRLCK))
+  if (try_file_lock (fd, F_WRLCK))
     {
-      file_lock_restore (&fl);
       __close_nocancel_nostatus (fd);
       return -1;
     }
@@ -504,7 +481,6 @@ __libc_updwtmp (const char *file, const struct utmp *utmp)
 
 unlock_return:
   file_unlock (fd);
-  file_lock_restore (&fl);
 
   /* Close WTMP file.  */
   __close_nocancel_nostatus (fd);
