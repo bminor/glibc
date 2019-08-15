@@ -76,7 +76,7 @@ try_file_lock (int fd, int type)
   alarm (TIMEOUT);
 
   /* Try to get the lock.  */
- struct flock fl =
+ struct flock64 fl =
    {
     .l_type = type,
     fl.l_whence = SEEK_SET,
@@ -103,7 +103,7 @@ try_file_lock (int fd, int type)
 static void
 file_unlock (int fd)
 {
-  struct flock fl =
+  struct flock64 fl =
     {
       .l_type = F_UNLCK,
     };
