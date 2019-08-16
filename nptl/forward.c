@@ -56,9 +56,6 @@ name decl								      \
   FORWARD2 (name, int, decl, params, return defretval)
 
 
-FORWARD (pthread_attr_getdetachstate,
-	 (const pthread_attr_t *attr, int *detachstate), (attr, detachstate),
-	 0)
 FORWARD (pthread_attr_setdetachstate, (pthread_attr_t *attr, int detachstate),
 	 (attr, detachstate), 0)
 

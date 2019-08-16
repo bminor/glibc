@@ -68,7 +68,6 @@ GLIBC_2.27 pause F
 GLIBC_2.27 pread F
 GLIBC_2.27 pread64 F
 GLIBC_2.27 pthread_attr_getaffinity_np F
-GLIBC_2.27 pthread_attr_getdetachstate F
 GLIBC_2.27 pthread_attr_getguardsize F
 GLIBC_2.27 pthread_attr_getinheritsched F
 GLIBC_2.27 pthread_attr_getschedparam F

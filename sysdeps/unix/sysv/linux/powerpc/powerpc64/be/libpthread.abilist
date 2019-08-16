@@ -93,7 +93,6 @@ GLIBC_2.3 open64 F
 GLIBC_2.3 pause F
 GLIBC_2.3 pread F
 GLIBC_2.3 pread64 F
-GLIBC_2.3 pthread_attr_getdetachstate F
 GLIBC_2.3 pthread_attr_getguardsize F
 GLIBC_2.3 pthread_attr_getinheritsched F
 GLIBC_2.3 pthread_attr_getschedparam F

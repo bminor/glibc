@@ -72,7 +72,6 @@ GLIBC_2.2 pause F
 GLIBC_2.2 pread F
 GLIBC_2.2 pread64 F
 GLIBC_2.2 pthread_atfork F
-GLIBC_2.2 pthread_attr_getdetachstate F
 GLIBC_2.2 pthread_attr_getguardsize F
 GLIBC_2.2 pthread_attr_getinheritsched F
 GLIBC_2.2 pthread_attr_getschedparam F
