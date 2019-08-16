@@ -44,7 +44,7 @@ compat_totalordermag_test (void)
 static void
 do_test (void)
 {
-#if TEST_COMPAT (libm, GLIBC_2_25, GLIBC_2_31)
+#if TEST_COMPAT (libm, COMPAT_VER, GLIBC_2_31)
   compat_totalordermag_test ();
 #endif
 }

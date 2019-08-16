@@ -1,3 +1,11 @@
+2019-08-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test-compat_totalorder.inc (do_test)
+	[TEST_COMPAT (libm, GLIBC_2_25, GLIBC_2_31)]: Change condition to
+	[TEST_COMPAT (libm, COMPAT_VER, GLIBC_2_31)].
+	* math/libm-test-compat_totalordermag.inc (do_test)
+	[TEST_COMPAT (libm, GLIBC_2_25, GLIBC_2_31)]: Likewise.
+
 2019-08-15  Florian Weimer  <fweimer@redhat.com>
 
 	nptl: Move pthread_attr_init implementation into libc.
