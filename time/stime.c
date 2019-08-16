@@ -15,23 +15,24 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
+#include <shlib-compat.h>
+
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_31)
+
 #include <time.h>
-#include <stddef.h>
 
 /* Set the system clock to *WHEN.  */
 
 int
-stime (const time_t *when)
+attribute_compat_text_section
+__stime (const time_t *when)
 {
-  if (when == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
+  struct timespec ts;
+  ts.tv_sec = *when;
+  ts.tv_nsec = 0;
 
-  __set_errno (ENOSYS);
-  return -1;
+  return __clock_settime (CLOCK_REALTIME, &ts);
 }
 
-stub_warning (stime)
+compat_symbol (libc, __stime, stime, GLIBC_2_0);
+#endif

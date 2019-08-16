@@ -61,7 +61,6 @@ setfsgid	EXTRA	setfsgid	i:i	setfsgid
 setfsuid	EXTRA	setfsuid	i:i	setfsuid
 setpgid		-	setpgid		i:ii	__setpgid	setpgid
 sigaltstack	-	sigaltstack	i:PP	__sigaltstack	sigaltstack
-stime		-	stime		i:p	stime
 sysinfo		EXTRA	sysinfo		i:p	__sysinfo	sysinfo
 swapon		-	swapon		i:si	__swapon	swapon
 swapoff		-	swapoff		i:s	__swapoff	swapoff

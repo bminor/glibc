@@ -175,12 +175,6 @@ extern int daylight;
 extern long int timezone;
 #endif
 
-#ifdef __USE_MISC
-/* Set the system time to *WHEN.
-   This call is restricted to the superuser.  */
-extern int stime (const time_t *__when) __THROW;
-#endif
-
 
 /* Nonzero if YEAR is a leap year (every 4 years,
    except every 100th isn't, and every 400th is).  */

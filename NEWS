@@ -30,6 +30,10 @@ Deprecated and removed features, and other changes affecting compatibility:
   Request 25 to TS 18661-1, as applied for C2X.  Existing binaries that pass
   floating-point arguments directly will continue to work.
 
+* The obsolete function stime is no longer available to newly linked
+  binaries and it has been removed from <time.h> header.  This function
+  has been deprecated in favor of clock_settime.
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]
