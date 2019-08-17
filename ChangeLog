@@ -1,3 +1,14 @@
+2019-08-21  Zack Weinberg  <zackw@panix.com>
+
+	* misc/syslog.c (__vsyslog_internal)
+	* time/getdate.c (__getdate_r)
+	* time/tst_wcsftime.c (main):
+	Use return value of time, not its argument.
+
+	* string/strfry.c (strfry)
+	* sysdeps/mach/sleep.c (__sleep):
+	Remove unnecessary casts of NULL in calls to time.
+
 2019-08-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/tgmath.h [__HAVE_FLOAT128X]: Give error.

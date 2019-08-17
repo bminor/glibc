@@ -219,7 +219,7 @@ __getdate_r (const char *string, struct tm *tp)
     return 7;
 
   /* Get current time.  */
-  time (&timer);
+  timer = time (NULL);
   __localtime_r (&timer, &tm);
 
   /* If only the weekday is given, today is assumed if the given day

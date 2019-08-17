@@ -30,7 +30,7 @@ strfry (char *string)
     {
       static char state[32];
       rdata.state = NULL;
-      __initstate_r (time ((time_t *) NULL) ^ getpid (),
+      __initstate_r (time (NULL) ^ getpid (),
 		     state, sizeof (state), &rdata);
       init = 1;
     }

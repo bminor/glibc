@@ -10,7 +10,7 @@ main (int argc, char *argv[])
   int result = 0;
   size_t n;
 
-  time (&t);
+  t = time (NULL);
   tp = gmtime (&t);
 
   n = wcsftime (buf, sizeof (buf) / sizeof (buf[0]),
