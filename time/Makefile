@@ -22,7 +22,7 @@ subdir	:= time
 
 include ../Makeconfig
 
-headers := time.h sys/time.h sys/timeb.h bits/time.h			\
+headers := time.h sys/time.h bits/time.h				\
 	   bits/types/clockid_t.h bits/types/clock_t.h			\
 	   bits/types/struct_itimerspec.h				\
 	   bits/types/struct_timespec.h bits/types/struct_timeval.h	\
@@ -43,9 +43,9 @@ routines := offtime asctime clock ctime ctime_r difftime \
 aux :=	    era alt_digit lc-time-cleanup
 
 tests	:= test_time clocktest tst-posixtz tst-strptime tst_wcsftime \
-	   tst-getdate tst-mktime tst-mktime2 tst-ftime_l tst-strftime \
+	   tst-getdate tst-mktime tst-mktime2 tst-strftime tst-strftime_l \
 	   tst-mktime3 tst-strptime2 bug-asctime bug-asctime_r bug-mktime1 \
-	   tst-strptime3 bug-getdate1 tst-strptime-whitespace tst-ftime \
+	   tst-strptime3 bug-getdate1 tst-strptime-whitespace \
 	   tst-tzname tst-y2039 bug-mktime4 tst-strftime2 tst-strftime3 \
 	   tst-clock tst-clock2 tst-clock_nanosleep tst-cpuclock1
 
@@ -59,7 +59,7 @@ LOCALES := de_DE.ISO-8859-1 en_US.ISO-8859-1 ja_JP.EUC-JP fr_FR.UTF-8 \
 	   nan_TW.UTF-8 lzh_TW.UTF-8
 include ../gen-locales.mk
 
-$(objpfx)tst-ftime_l.out: $(gen-locales)
+$(objpfx)tst-strftime_l.out: $(gen-locales)
 $(objpfx)tst-strptime.out: $(gen-locales)
 $(objpfx)tst-strftime2.out: $(gen-locales)
 $(objpfx)tst-strftime3.out: $(gen-locales)

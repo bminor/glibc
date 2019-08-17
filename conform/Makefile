@@ -241,3 +241,12 @@ test-xfail-XPG42/ndbm.h/linknamespace = yes
 test-xfail-UNIX98/ndbm.h/linknamespace = yes
 test-xfail-XOPEN2K/ndbm.h/linknamespace = yes
 test-xfail-XOPEN2K8/ndbm.h/linknamespace = yes
+
+# Header no longer provided by glibc (obsoleted in newer POSIX
+# standards).
+test-xfail-UNIX98/sys/timeb.h/conform = yes
+test-xfail-UNIX98/sys/timeb.h/linknamespace = yes
+test-xfail-XOPEN2K/sys/timeb.h/conform = yes
+test-xfail-XOPEN2K/sys/timeb.h/linknamespace = yes
+test-xfail-XPG42/sys/timeb.h/conform = yes
+test-xfail-XPG42/sys/timeb.h/linknamespace = yes
