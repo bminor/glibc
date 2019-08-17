@@ -567,15 +567,14 @@ __pthread_mutex_clocklock_common (pthread_mutex_t *mutex,
 			goto failpp;
 		      }
 
-		    struct timeval tv;
 		    struct timespec rt;
 
 		    /* Get the current time.  */
-		    (void) __gettimeofday (&tv, NULL);
+		    __clock_gettime (CLOCK_REALTIME, &rt);
 
 		    /* Compute relative timeout.  */
-		    rt.tv_sec = abstime->tv_sec - tv.tv_sec;
-		    rt.tv_nsec = abstime->tv_nsec - tv.tv_usec * 1000;
+		    rt.tv_sec = abstime->tv_sec - rt.tv_sec;
+		    rt.tv_nsec = abstime->tv_nsec - rt.tv_nsec;
 		    if (rt.tv_nsec < 0)
 		      {
 			rt.tv_nsec += 1000000000;

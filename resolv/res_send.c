@@ -172,12 +172,7 @@ evCmpTime(struct timespec a, struct timespec b) {
 
 static void
 evNowTime(struct timespec *res) {
-	struct timeval now;
-
-	if (gettimeofday(&now, NULL) < 0)
-		evConsTime(res, 0, 0);
-	else
-		TIMEVAL_TO_TIMESPEC (&now, res);
+	__clock_gettime(CLOCK_REALTIME, res);
 }
 
 

@@ -18,16 +18,26 @@
 
 #include <errno.h>
 #include <mach.h>
-#include <sys/time.h>
 #include <time.h>
 #include <unistd.h>
 
+# define timespec_sub(a, b, result)					      \
+  do {									      \
+    (result)->tv_sec = (a)->tv_sec - (b)->tv_sec;			      \
+    (result)->tv_nsec = (a)->tv_nsec - (b)->tv_nsec;			      \
+    if ((result)->tv_nsec < 0) {					      \
+      --(result)->tv_sec;						      \
+      (result)->tv_nsec += 1000000000;					      \
+    }									      \
+  } while (0)
+
 int
 __libc_nanosleep (const struct timespec *requested_time,
-	     struct timespec *remaining)
+                  struct timespec *remaining)
 {
   mach_port_t recv;
-  struct timeval before, after;
+  struct timespec before;
+  error_t err;
 
   if (requested_time->tv_sec < 0
       || ! valid_nanoseconds (requested_time->tv_nsec))
@@ -42,20 +52,20 @@ __libc_nanosleep (const struct timespec *requested_time,
 
   recv = __mach_reply_port ();
 
-  if (remaining && __gettimeofday (&before, NULL) < 0)
-    return -1;
-  error_t err = __mach_msg (NULL, MACH_RCV_MSG|MACH_RCV_TIMEOUT|MACH_RCV_INTERRUPT,
-			    0, 0, recv, ms, MACH_PORT_NULL);
+  if (remaining != 0)
+    __clock_gettime (CLOCK_REALTIME, &before);
+
+  err = __mach_msg (NULL, MACH_RCV_MSG|MACH_RCV_TIMEOUT|MACH_RCV_INTERRUPT,
+                    0, 0, recv, ms, MACH_PORT_NULL);
   __mach_port_destroy (mach_task_self (), recv);
   if (err == EMACH_RCV_INTERRUPTED)
     {
-      if (remaining && __gettimeofday (&after, NULL) >= 0)
+      if (remaining != 0)
 	{
-	  struct timeval req_time, elapsed, rem;
-	  TIMESPEC_TO_TIMEVAL (&req_time, requested_time);
-	  timersub (&after, &before, &elapsed);
-	  timersub (&req_time, &elapsed, &rem);
-	  TIMEVAL_TO_TIMESPEC (&rem, remaining);
+	  struct timespec after, elapsed;
+	  __clock_gettime (CLOCK_REALTIME, &after);
+	  timespec_sub (&after, &before, &elapsed);
+	  timespec_sub (requested_time, &elapsed, remaining);
 	}
 
       errno = EINTR;

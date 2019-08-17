@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <string.h>
 #include <utmp.h>
+#include <time.h>
 #include <sys/time.h>
 
 int
@@ -45,10 +46,10 @@ logout (const char *line)
       /* Clear information about who & from where.  */
       memset (ut->ut_name, '\0', sizeof ut->ut_name);
       memset (ut->ut_host, '\0', sizeof ut->ut_host);
-      struct timeval tv;
-      __gettimeofday (&tv, NULL);
-      ut->ut_tv.tv_sec = tv.tv_sec;
-      ut->ut_tv.tv_usec = tv.tv_usec;
+
+      struct timespec ts;
+      __clock_gettime (CLOCK_REALTIME, &ts);
+      TIMESPEC_TO_TIMEVAL (&ut->ut_tv, &ts);
       ut->ut_type = DEAD_PROCESS;
 
       if (pututline (ut) != NULL)

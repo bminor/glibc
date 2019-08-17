@@ -357,13 +357,13 @@ handle_requests (void *arg)
 	 something to arrive in it. */
       if (runp == NULL && optim.gai_idle_time >= 0)
 	{
-	  struct timeval now;
+	  struct timespec now;
 	  struct timespec wakeup_time;
 
 	  ++idle_thread_count;
-	  gettimeofday (&now, NULL);
+          __clock_gettime (CLOCK_REALTIME, &now);
 	  wakeup_time.tv_sec = now.tv_sec + optim.gai_idle_time;
-	  wakeup_time.tv_nsec = now.tv_usec * 1000;
+	  wakeup_time.tv_nsec = now.tv_nsec;
 	  if (wakeup_time.tv_nsec >= 1000000000)
 	    {
 	      wakeup_time.tv_nsec -= 1000000000;

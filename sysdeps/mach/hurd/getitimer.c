@@ -19,8 +19,9 @@
 #include <errno.h>
 #include <sys/time.h>
 #include <hurd.h>
+#include <mach.h>
 
-/* XXX Temporary cheezoid implementation; see __setitmr.c.  */
+/* XXX Temporary cheezoid implementation; see setitimer.c.  */
 
 /* These are defined in __setitmr.c.  */
 extern spin_lock_t _hurd_itimer_lock;
@@ -61,8 +62,12 @@ __getitimer (enum __itimer_which which, struct itimerval *value)
     }
 
   /* Get the time now.  */
-  if (__gettimeofday (&elapsed, NULL) < 0)
-    return -1;
+  {
+     time_value_t tv;
+     __host_get_time (__mach_host_self (), &tv);
+     elapsed.tv_sec = tv.seconds;
+     elapsed.tv_usec = tv.microseconds;
+  }
 
   /* Extract the current timer setting; and the time it was set, so we can
      calculate the time elapsed so far.  */

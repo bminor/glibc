@@ -43,6 +43,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <time.h>
 #include <libintl.h>
 #include <sys/param.h>
 #include <wchar.h>
@@ -96,7 +97,7 @@ authunix_create (char *machname, uid_t uid, gid_t gid, int len,
 {
   struct authunix_parms aup;
   char mymem[MAX_AUTH_BYTES];
-  struct timeval now;
+  struct timespec now;
   XDR xdrs;
   AUTH *auth;
   struct audata *au;
@@ -122,7 +123,7 @@ no_memory:
   /*
    * fill in param struct from the given params
    */
-  (void) __gettimeofday (&now, (struct timezone *) 0);
+  __clock_gettime (CLOCK_REALTIME, &now);
   aup.aup_time = now.tv_sec;
   aup.aup_machname = machname;
   aup.aup_uid = uid;
@@ -276,7 +277,7 @@ authunix_refresh (AUTH *auth)
 {
   struct audata *au = AUTH_PRIVATE (auth);
   struct authunix_parms aup;
-  struct timeval now;
+  struct timespec now;
   XDR xdrs;
   int stat;
 
@@ -297,7 +298,7 @@ authunix_refresh (AUTH *auth)
     goto done;
 
   /* update the time and serialize in place */
-  (void) __gettimeofday (&now, (struct timezone *) 0);
+  __clock_gettime (CLOCK_REALTIME, &now);
   aup.aup_time = now.tv_sec;
   xdrs.x_op = XDR_ENCODE;
   XDR_SETPOS (&xdrs, 0);

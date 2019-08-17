@@ -44,6 +44,7 @@
 #include <limits.h>
 #include <string.h>
 #include <stdint.h>
+#include <time.h>
 #include <sys/param.h>
 #include <netinet/in.h>
 #include <rpc/rpc.h>
@@ -295,7 +296,11 @@ _svcauth_des (register struct svc_req *rqst, register struct rpc_msg *msg)
 	debug ("timestamp before last seen");
 	return AUTH_REJECTEDVERF;	/* replay */
       }
-    __gettimeofday (&current, (struct timezone *) NULL);
+    {
+      struct timespec now;
+      __clock_gettime (CLOCK_REALTIME, &now);
+      TIMESPEC_TO_TIMEVAL (&current, &now);
+    }
     current.tv_sec -= window;	/* allow for expiration */
     if (!BEFORE (&current, &timestamp))
       {

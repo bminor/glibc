@@ -614,13 +614,13 @@ handle_fildes_io (void *arg)
 	 something to arrive in it. */
       if (runp == NULL && optim.aio_idle_time >= 0)
 	{
-	  struct timeval now;
+	  struct timespec now;
 	  struct timespec wakeup_time;
 
 	  ++idle_thread_count;
-	  __gettimeofday (&now, NULL);
+	  __clock_gettime (CLOCK_REALTIME, &now);
 	  wakeup_time.tv_sec = now.tv_sec + optim.aio_idle_time;
-	  wakeup_time.tv_nsec = now.tv_usec * 1000;
+	  wakeup_time.tv_nsec = now.tv_nsec;
 	  if (wakeup_time.tv_nsec >= 1000000000)
 	    {
 	      wakeup_time.tv_nsec -= 1000000000;

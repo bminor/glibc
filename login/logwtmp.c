@@ -36,10 +36,9 @@ logwtmp (const char *line, const char *name, const char *host)
   strncpy (ut.ut_name, name, sizeof ut.ut_name);
   strncpy (ut.ut_host, host, sizeof ut.ut_host);
 
-  struct timeval tv;
-  __gettimeofday (&tv, NULL);
-  ut.ut_tv.tv_sec = tv.tv_sec;
-  ut.ut_tv.tv_usec = tv.tv_usec;
+  struct timespec ts;
+  __clock_gettime (CLOCK_REALTIME, &ts);
+  TIMESPEC_TO_TIMEVAL (&ut.ut_tv, &ts);
 
   updwtmp (_PATH_WTMP, &ut);
 }

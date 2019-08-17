@@ -27,7 +27,7 @@
 # n: scalar buffer length (e.g., 3rd arg to read)
 # N: pointer to value/return scalar buffer length (e.g., 6th arg to recvfrom)
 # p: non-NULL pointer to typed object (e.g., any non-void* arg)
-# P: optionally-NULL pointer to typed object (e.g., 2nd argument to gettimeofday)
+# P: optionally-NULL pointer to typed object (e.g., 3rd argument to sigaction)
 # s: non-NULL string (e.g., 1st arg to open)
 # S: optionally-NULL string (e.g., 1st arg to acct)
 # v: vararg scalar (e.g., optional 3rd arg to open)

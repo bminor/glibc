@@ -41,6 +41,7 @@
 #include <rpc/xdr.h>
 #include <netinet/in.h>		/* XXX: just to get htonl() and ntohl() */
 #include <sys/socket.h>
+#include <time.h>
 #include <shlib-compat.h>
 
 #define MILLION		1000000L
@@ -246,15 +247,15 @@ authdes_marshal (AUTH *auth, XDR *xdrs)
   int status;
   int len;
   register int32_t *ixdr;
-  struct timeval tval;
+  struct timespec now;
 
   /*
    * Figure out the "time", accounting for any time difference
    * with the server if necessary.
    */
-  __gettimeofday (&tval, (struct timezone *) NULL);
-  ad->ad_timestamp.tv_sec = tval.tv_sec + ad->ad_timediff.tv_sec;
-  ad->ad_timestamp.tv_usec = tval.tv_usec + ad->ad_timediff.tv_usec;
+  __clock_gettime (CLOCK_REALTIME, &now);
+  ad->ad_timestamp.tv_sec = now.tv_sec + ad->ad_timediff.tv_sec;
+  ad->ad_timestamp.tv_usec = (now.tv_nsec / 1000) + ad->ad_timediff.tv_usec;
   if (ad->ad_timestamp.tv_usec >= MILLION)
     {
       ad->ad_timestamp.tv_usec -= MILLION;
@@ -445,21 +446,23 @@ authdes_destroy (AUTH *auth)
 static bool_t
 synchronize (struct sockaddr *syncaddr, struct rpc_timeval *timep)
 {
-  struct timeval mytime;
+  struct timespec mytime;
   struct rpc_timeval timeout;
+  long int myusec;
 
   timeout.tv_sec = RTIME_TIMEOUT;
   timeout.tv_usec = 0;
   if (rtime ((struct sockaddr_in *) syncaddr, timep, &timeout) < 0)
     return FALSE;
 
-  __gettimeofday (&mytime, (struct timezone *) NULL);
+  __clock_gettime (CLOCK_REALTIME, &mytime);
   timep->tv_sec -= mytime.tv_sec;
-  if (mytime.tv_usec > timep->tv_usec)
+  myusec = mytime.tv_nsec / 1000;
+  if (myusec > timep->tv_usec)
     {
       timep->tv_sec -= 1;
       timep->tv_usec += MILLION;
     }
-  timep->tv_usec -= mytime.tv_usec;
+  timep->tv_usec -= myusec;
   return TRUE;
 }

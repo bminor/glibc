@@ -23,16 +23,10 @@
 int
 timespec_get (struct timespec *ts, int base)
 {
-  switch (base)
+  if (base == TIME_UTC)
     {
-    case TIME_UTC:
-      if (__clock_gettime (CLOCK_REALTIME, ts) < 0)
-        return 0;
-      break;
-
-    default:
-      return 0;
+      __clock_gettime (CLOCK_REALTIME, ts);
+      return base;
     }
-
-  return base;
+  return 0;
 }

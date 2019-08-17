@@ -183,11 +183,11 @@ aio_suspend (const struct aiocb *const list[], int nent,
 	{
 	  /* We have to convert the relative timeout value into an
 	     absolute time value with pthread_cond_timedwait expects.  */
-	  struct timeval now;
+	  struct timespec now;
 	  struct timespec abstime;
 
-	  __gettimeofday (&now, NULL);
-	  abstime.tv_nsec = timeout->tv_nsec + now.tv_usec * 1000;
+	  __clock_gettime (CLOCK_REALTIME, &now);
+	  abstime.tv_nsec = timeout->tv_nsec + now.tv_nsec;
 	  abstime.tv_sec = timeout->tv_sec + now.tv_sec;
 	  if (abstime.tv_nsec >= 1000000000)
 	    {

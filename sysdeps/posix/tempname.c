@@ -50,7 +50,7 @@
 #include <string.h>
 
 #include <fcntl.h>
-#include <sys/time.h>
+#include <time.h>
 #include <stdint.h>
 #include <unistd.h>
 
@@ -63,7 +63,6 @@
 # define struct_stat64 struct stat
 # define __gen_tempname gen_tempname
 # define __getpid getpid
-# define __gettimeofday gettimeofday
 # define __mkdir mkdir
 # define __open open
 # define __lxstat64(version, file, buf) lstat (file, buf)
@@ -76,9 +75,9 @@
 # else
 # define RANDOM_BITS(Var) \
     {                                                                         \
-      struct timeval tv;                                                      \
-      __gettimeofday (&tv, NULL);                                             \
-      (Var) = ((uint64_t) tv.tv_usec << 16) ^ tv.tv_sec;                      \
+      struct timespec ts;                                                     \
+      clock_gettime (CLOCK_REALTIME, &ts);                                    \
+      (Var) = ((uint64_t) tv.tv_nsec << 16) ^ tv.tv_sec;                      \
     }
 #endif
 

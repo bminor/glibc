@@ -39,10 +39,10 @@ _create_xid (void)
   pid_t pid = getpid ();
   if (is_initialized != pid)
     {
-      struct timeval now;
+      struct timespec now;
 
-      __gettimeofday (&now, (struct timezone *) 0);
-      __srand48_r (now.tv_sec ^ now.tv_usec ^ pid,
+      __clock_gettime (CLOCK_REALTIME, &now);
+      __srand48_r (now.tv_sec ^ now.tv_nsec ^ pid,
 		   &__rpc_lrand48_data);
       is_initialized = pid;
     }
