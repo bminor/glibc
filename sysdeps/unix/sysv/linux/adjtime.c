@@ -23,39 +23,14 @@
 #define MAX_SEC	(INT_MAX / 1000000L - 2)
 #define MIN_SEC	(INT_MIN / 1000000L + 2)
 
-#ifndef MOD_OFFSET
-#define modes mode
-#endif
-
-#ifndef TIMEVAL
-#define TIMEVAL timeval
-#endif
-
-#ifndef TIMEX
-#define TIMEX timex
-#endif
-
-#ifndef ADJTIME
-#define ADJTIME __adjtime
-#endif
-
-#ifndef ADJTIMEX
-#define NO_LOCAL_ADJTIME
-#define ADJTIMEX(x) __adjtimex (x)
-#endif
-
-#ifndef LINKAGE
-#define LINKAGE
-#endif
-
-LINKAGE int
-ADJTIME (const struct TIMEVAL *itv, struct TIMEVAL *otv)
+int
+__adjtime (const struct timeval *itv, struct timeval *otv)
 {
-  struct TIMEX tntx;
+  struct timex tntx;
 
   if (itv)
     {
-      struct TIMEVAL tmp;
+      struct timeval tmp;
 
       /* We will do some check here. */
       tmp.tv_sec = itv->tv_sec + itv->tv_usec / 1000000L;
@@ -68,7 +43,7 @@ ADJTIME (const struct TIMEVAL *itv, struct TIMEVAL *otv)
   else
     tntx.modes = ADJ_OFFSET_SS_READ;
 
-  if (__glibc_unlikely (ADJTIMEX (&tntx) < 0))
+  if (__glibc_unlikely (__adjtimex (&tntx) < 0))
     return -1;
 
   if (otv)
@@ -87,6 +62,9 @@ ADJTIME (const struct TIMEVAL *itv, struct TIMEVAL *otv)
   return 0;
 }
 
-#ifdef NO_LOCAL_ADJTIME
+#ifdef VERSION_adjtime
+weak_alias (__adjtime, __wadjtime);
+default_symbol_version (__wadjtime, adjtime, VERSION_adjtime);
+#else
 weak_alias (__adjtime, adjtime)
 #endif

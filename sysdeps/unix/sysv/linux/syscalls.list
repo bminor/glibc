@@ -1,6 +1,5 @@
 # File name	Caller	Syscall name	Args	Strong name	Weak names
 
-adjtimex	adjtime	adjtimex	i:p	__adjtimex	adjtimex ntp_adjtime
 alarm		-	alarm		i:i	alarm
 bdflush		EXTRA	bdflush		i:ii	__compat_bdflush	bdflush@GLIBC_2.0:GLIBC_2.23
 capget		EXTRA	capget		i:pp	capget

@@ -30,10 +30,20 @@
    putting it into *tv and *tz.  If tz is null, *tz is not filled.
    Returns 0 on success, -1 on errors.  */
 int
-__gettimeofday (struct timeval *tv, struct timezone *tz)
+___gettimeofday (struct timeval *tv, struct timezone *tz)
 {
   return INLINE_VSYSCALL (gettimeofday, 2, tv, tz);
 }
+
+#ifdef VERSION_gettimeofday
+weak_alias (___gettimeofday, __wgettimeofday);
+default_symbol_version (___gettimeofday, __gettimeofday, VERSION_gettimeofday);
+default_symbol_version (__wgettimeofday,   gettimeofday, VERSION_gettimeofday);
+libc_hidden_ver (___gettimeofday, __gettimeofday);
+libc_hidden_ver (___gettimeofday, gettimeofday);
+#else
+strong_alias (___gettimeofday, __gettimeofday)
+weak_alias (___gettimeofday, gettimeofday)
 libc_hidden_def (__gettimeofday)
-weak_alias (__gettimeofday, gettimeofday)
 libc_hidden_weak (gettimeofday)
+#endif

@@ -1,4 +1,4 @@
-/* adjtime -- Adjust the current time of day.  Linux/Alpha/tv64 version.
+/* utimes -- change file timestamps.  Linux/Alpha/tv32 version.
    Copyright (C) 2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -13,10 +13,27 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library.  If not, see
-   <https://www.gnu.org/licenses/>.  */
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
 
-/* We can use the generic Linux implementation, but we have to override its
-   default symbol version.  */
-#define VERSION_adjtime GLIBC_2.1
-#include <sysdeps/unix/sysv/linux/adjtime.c>
+#include <shlib-compat.h>
+
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
+
+#include <sys/time.h>
+#include <sys/resource.h>
+#include <tv32-compat.h>
+
+int
+__getrusage_tv32 (int who, struct rusage32 *usage32)
+{
+  struct rusage usage64;
+  if (__getrusage (who, &usage64) == -1)
+    return -1;
+
+  rusage64_to_rusage32 (usage32, &usage64);
+  return 0;
+}
+
+compat_symbol (libc, __getrusage_tv32, getrusage, GLIBC_2_0);
+#endif

@@ -1,4 +1,4 @@
-# File name	Caller	Syscall name	# args	Strong name	Weak names
+# File name	Caller	Syscall name	Args	Strong name	Weak names
 
 sigstack	-	sigstack	2	sigstack
 
@@ -22,23 +22,14 @@ pciconfig_read	EXTRA	pciconfig_read	5	pciconfig_read
 pciconfig_write	EXTRA	pciconfig_write	5	pciconfig_write
 pciconfig_iobase EXTRA	pciconfig_iobase 3	__pciconfig_iobase pciconfig_iobase
 
-# support old timeval32 entry points
-osf_gettimeofday -	osf_gettimeofday 2	__gettimeofday_tv32  __gettimeofday@GLIBC_2.0 gettimeofday@GLIBC_2.0
-osf_settimeofday -	osf_settimeofday 2	__settimeofday_tv32  settimeofday@GLIBC_2.0
-osf_getitimer	-	osf_getitimer	2	__getitimer_tv32  getitimer@GLIBC_2.0
-osf_setitimer	-	osf_setitimer	3	__setitimer_tv32  setitimer@GLIBC_2.0
-osf_utimes	-	osf_utimes	2	__utimes_tv32  utimes@GLIBC_2.0
-osf_getrusage	-	osf_getrusage	2	__getrusage_tv32  getrusage@GLIBC_2.0
-osf_wait4	-	osf_wait4	4	__wait4_tv32  wait4@GLIBC_2.0
-
-# support new timeval64 entry points
-gettimeofday	-	gettimeofday	2	__GI___gettimeofday gettimeofday@@GLIBC_2.1 __gettimeofday@@GLIBC_2.1
-settimeofday	-	settimeofday	2	__settimeofday settimeofday@@GLIBC_2.1
-getitimer	-	getitimer	2	__getitimer getitimer@@GLIBC_2.1
-setitimer	-	setitimer	3	__setitimer setitimer@@GLIBC_2.1
-utimes		-	utimes		2	__utimes utimes@@GLIBC_2.1
-getrusage	-	getrusage	2	__getrusage getrusage@@GLIBC_2.1
-wait4		-	wait4		4	__wait4 wait4@@GLIBC_2.1
+# timeval64 entry points (see osf_*.c for GLIBC_2.0 timeval32 equivalents)
+gettimeofday	-	gettimeofday	i:pP	__GI___gettimeofday gettimeofday@@GLIBC_2.1 __gettimeofday@@GLIBC_2.1
+settimeofday	-	settimeofday	i:PP	__settimeofday	settimeofday@@GLIBC_2.1
+getitimer	-	getitimer	i:ip	__getitimer	getitimer@@GLIBC_2.1
+setitimer	-	setitimer	i:ipP	__setitimer	setitimer@@GLIBC_2.1
+utimes		-	utimes		i:sp	__utimes	utimes@@GLIBC_2.1
+getrusage	-	getrusage	i:ip	__getrusage	getrusage@@GLIBC_2.1
+wait4		-	wait4		i:iWiP	__wait4		wait4@@GLIBC_2.1
 
 # avoid 64-bit aliases on 32-bit statfs syscalls
 fstatfs		-	fstatfs		i:ip	__fstatfs	fstatfs
