@@ -67,4 +67,13 @@ nop (void)
 #define __builtin___strncpy_chk(dest, src, len, bos) NULL
 #define __builtin_object_size(bos, level) 0
 
+/* The code in sys/time.h that uses __warndecl has to work around GCC
+    bug 91554.  The work-around is only effective if intptr_t is not
+    the same size as short.  */
+#include <stdint.h>
+_Static_assert (sizeof (intptr_t) != sizeof (short),
+                "workaround for GCC bug 91554 in sys/time.h"
+                " is only effective when short is smaller than a pointer");
+
 #include <string.h>
+#include <sys/time.h>

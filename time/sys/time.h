@@ -66,6 +66,30 @@ struct timezone
 extern int gettimeofday (struct timeval *__restrict __tv,
 			 void *__restrict __tz) __THROW __nonnull ((1));
 
+#if __GNUC_PREREQ (4,3) && defined __REDIRECT && defined __OPTIMIZE__
+/* Issue a warning for use of gettimeofday with a non-null __tz argument.  */
+__warndecl (__warn_gettimeofday_nonnull_timezone,
+            "gettimeofday with non-null or non-constant timezone parameter;"
+            " this is obsolete and inaccurate, use localtime instead");
+
+extern int __REDIRECT_NTH (__gettimeofday_alias,
+                           (struct timeval *__restrict __tv,
+                            void *__restrict __tz), gettimeofday)
+  __nonnull ((1));
+
+/* The double cast below works around a limitation in __builtin_constant_p
+   in all released versions of GCC (as of August 2019).
+   See <https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91554>.  */
+__fortify_function int
+__NTH (gettimeofday (struct timeval *__restrict __tv, void *__restrict __tz))
+{
+  if (! (__builtin_constant_p ((short) (__intptr_t) __tz) && __tz == 0))
+    __warn_gettimeofday_nonnull_timezone ();
+
+  return __gettimeofday_alias (__tv, __tz);
+}
+#endif
+
 #ifdef __USE_MISC
 /* Set the current time of day and timezone information.
    This call is restricted to the super-user.
