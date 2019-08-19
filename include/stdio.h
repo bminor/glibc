@@ -102,7 +102,6 @@ enum __libc_message_action
 {
   do_message	= 0,		/* Print message.  */
   do_abort	= 1 << 0,	/* Abort.  */
-  do_backtrace	= 1 << 1	/* Backtrace.  */
 };
 
 /* Print out MESSAGE (which should end with a newline) on the error output
@@ -112,10 +111,7 @@ extern void __libc_fatal (const char *__message)
 extern void __libc_message (enum __libc_message_action action,
 			    const char *__fnt, ...) attribute_hidden;
 extern void __fortify_fail (const char *msg) __attribute__ ((__noreturn__));
-extern void __fortify_fail_abort (_Bool, const char *msg)
-  __attribute__ ((__noreturn__)) attribute_hidden;
 libc_hidden_proto (__fortify_fail)
-libc_hidden_proto (__fortify_fail_abort)
 
 /* Acquire ownership of STREAM.  */
 extern void __flockfile (FILE *__stream) attribute_hidden;

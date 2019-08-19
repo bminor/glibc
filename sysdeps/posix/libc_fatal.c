@@ -45,16 +45,6 @@ writev_for_fatal (int fd, const struct iovec *iov, size_t niov, size_t total)
 }
 #endif
 
-#ifndef BEFORE_ABORT
-# define BEFORE_ABORT		before_abort
-static void
-before_abort (int do_abort __attribute__ ((unused)),
-              bool written __attribute__ ((unused)),
-              int fd __attribute__ ((unused)))
-{
-}
-#endif
-
 struct str_list
 {
   const char *str;
@@ -74,17 +64,6 @@ __libc_message (enum __libc_message_action action, const char *fmt, ...)
 #ifdef FATAL_PREPARE
   FATAL_PREPARE;
 #endif
-
-  /* Don't call __libc_secure_getenv if we aren't doing backtrace, which
-     may access the corrupted stack.  */
-  if ((action & do_backtrace))
-    {
-      /* Open a descriptor for /dev/tty unless the user explicitly
-	 requests errors on standard error.  */
-      const char *on_2 = __libc_secure_getenv ("LIBC_FATAL_STDERR_");
-      if (on_2 == NULL || *on_2 == '\0')
-	fd = __open_nocancel (_PATH_TTY, O_RDWR | O_NOCTTY | O_NDELAY);
-    }
 
   if (fd == -1)
     fd = STDERR_FILENO;
@@ -129,7 +108,6 @@ __libc_message (enum __libc_message_action action, const char *fmt, ...)
       ++nlist;
     }
 
-  bool written = false;
   if (nlist > 0)
     {
       struct iovec *iov = alloca (nlist * sizeof (struct iovec));
@@ -143,7 +121,7 @@ __libc_message (enum __libc_message_action action, const char *fmt, ...)
 	  list = list->next;
 	}
 
-      written = WRITEV_FOR_FATAL (fd, iov, nlist, total);
+      WRITEV_FOR_FATAL (fd, iov, nlist, total);
 
       if ((action & do_abort))
 	{
@@ -173,13 +151,8 @@ __libc_message (enum __libc_message_action action, const char *fmt, ...)
   va_end (ap);
 
   if ((action & do_abort))
-    {
-      if ((action & do_backtrace))
-	BEFORE_ABORT (do_abort, written, fd);
-
-      /* Kill the application.  */
-      abort ();
-    }
+    /* Kill the application.  */
+    abort ();
 }
 
 
@@ -188,6 +161,6 @@ __libc_fatal (const char *message)
 {
   /* The loop is added only to keep gcc happy.  */
   while (1)
-    __libc_message (do_abort | do_backtrace, "%s", message);
+    __libc_message (do_abort, "%s", message);
 }
 libc_hidden_def (__libc_fatal)

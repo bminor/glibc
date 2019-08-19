@@ -1,3 +1,21 @@
+2019-08-19  Florian Weimer  <fweimer@redhat.com>
+
+	Do not print backtraces on fatal errors.
+	* debug/fortify_fail.c (__libc_argv): Remove declaration.
+	(__fortify_fail_abort): Remove definition.
+	(__fortify_fail): Call __libc_message directly.
+	* debug/stack_chk_fail.c (__libc_argv): Remove declaration.
+	(__stack_chk_fail): Call __fortify_fail instead of
+	__fortify_fail_abort.
+	* include/stdio.h (__fortify_fail_abort): Remove declaration.
+	* sysdeps/posix/libc_fatal.c (BEFORE_ABORT, before_abort): Remove
+	definitions.
+	(__libc_message): Do not handle do_backtrace.  Do not call
+	BEFORE_ABORT.
+	(__libc_fatal): Do not pass do_backtrace to __libc_message.
+	* sysdeps/unix/sysv/linux/libc_fatal.c (BEFORE_ABORT)
+	(before_abort): Remove definitions.
+
 2019-08-16  Florian Weimer  <fweimer@redhat.com>
 
 	nptl: Move pthread_attr_getdetachstate implementation into libc.
