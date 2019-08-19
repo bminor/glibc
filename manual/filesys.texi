@@ -2899,7 +2899,7 @@ which extends its resolution.  These fields are called
 @code{st_atime_usec}, @code{st_mtime_usec}, and @code{st_ctime_usec};
 each has a value between 0 and 999,999, which indicates the time in
 microseconds.  They correspond to the @code{tv_usec} field of a
-@code{timeval} structure; see @ref{High-Resolution Calendar}.
+@code{timeval} structure; see @ref{Time Types}.
 
 The @code{utimes} function is like @code{utime}, but also lets you specify
 the fractional part of the file times.  The prototype for this function is

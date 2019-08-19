@@ -128,7 +128,7 @@ function returns @math{0}; otherwise, the return value is non-zero.
 least until the elapsed time pointed to by @var{time_point} has been
 reached.  This function does not take an absolute time, but a duration
 that the thread is required to be blocked.  @xref{Time Basics}, and
-@ref{Elapsed Time}.
+@ref{Time Types}.
 
 The thread may wake early if a signal that is not ignored is received.
 In such a case, if @code{remaining} is not NULL, the remaining time

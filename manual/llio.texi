@@ -2094,11 +2094,11 @@ descriptors.  The usual thing is to pass @code{FD_SETSIZE} as the value
 of this argument.
 
 The @var{timeout} specifies the maximum time to wait.  If you pass a
-null pointer for this argument, it means to block indefinitely until one
-of the file descriptors is ready.  Otherwise, you should provide the
-time in @code{struct timeval} format; see @ref{High-Resolution
-Calendar}.  Specify zero as the time (a @code{struct timeval} containing
-all zeros) if you want to find out which descriptors are ready without
+null pointer for this argument, it means to block indefinitely until
+one of the file descriptors is ready.  Otherwise, you should provide
+the time in @code{struct timeval} format; see @ref{Time Types}.
+Specify zero as the time (a @code{struct timeval} containing all
+zeros) if you want to find out which descriptors are ready without
 waiting if none are ready.
 
 The normal return value from @code{select} is the total number of ready file
