@@ -23,10 +23,10 @@
    If *TZ is not NULL, clear it.
    Returns 0 on success, -1 on errors.  */
 int
-___gettimeofday (struct timeval *tv, struct timezone *tz)
+___gettimeofday (struct timeval *restrict tv, void *restrict tz)
 {
   if (__glibc_unlikely (tz != 0))
-    memset (tz, 0, sizeof *tz);
+    memset (tz, 0, sizeof (struct timezone));
 
   struct timespec ts;
   if (__clock_gettime (CLOCK_REALTIME, &ts))

@@ -54,23 +54,24 @@ struct timezone
     int tz_minuteswest;		/* Minutes west of GMT.  */
     int tz_dsttime;		/* Nonzero if DST is ever in effect.  */
   };
-
-typedef struct timezone *__restrict __timezone_ptr_t;
-#else
-typedef void *__restrict __timezone_ptr_t;
 #endif
 
-/* Get the current time of day and timezone information,
-   putting it into *TV and *TZ.  If TZ is NULL, *TZ is not filled.
-   Returns 0 on success, -1 on errors.
-   NOTE: This form of timezone information is obsolete.
-   Use the functions and variables declared in <time.h> instead.  */
+/* Get the current time of day, putting it into *TV.
+   If TZ is not null, *TZ must be a struct timezone, and both fields
+   will be set to zero.
+   Calling this function with a non-null TZ is obsolete;
+   use localtime etc. instead.
+   This function itself is semi-obsolete;
+   most callers should use time or clock_gettime instead. */
 extern int gettimeofday (struct timeval *__restrict __tv,
-			 __timezone_ptr_t __tz) __THROW __nonnull ((1));
+			 void *__restrict __tz) __THROW __nonnull ((1));
 
 #ifdef __USE_MISC
 /* Set the current time of day and timezone information.
-   This call is restricted to the super-user.  */
+   This call is restricted to the super-user.
+   Setting the timezone in this way is obsolete, but we don't yet
+   warn about it because it still has some uses for which there is
+   no alternative.  */
 extern int settimeofday (const struct timeval *__tv,
 			 const struct timezone *__tz)
      __THROW;

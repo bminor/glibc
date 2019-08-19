@@ -24,7 +24,7 @@
 #include <sysdep-vdso.h>
 
 static int
-__gettimeofday_syscall (struct timeval *tv, struct timezone *tz)
+__gettimeofday_syscall (struct timeval *restrict tv, void *restrict tz)
 {
   if (__glibc_unlikely (tz != 0))
     memset (tz, 0, sizeof *tz);
@@ -46,7 +46,7 @@ libc_ifunc (__gettimeofday,
 	    : (void *) __gettimeofday_syscall);
 #else
 int
-__gettimeofday (struct timeval *tv, struct timezone *tz)
+__gettimeofday (struct timeval *restrict tv, void *restrict tz)
 {
   return __gettimeofday_syscall (tv, tz);
 }

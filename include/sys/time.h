@@ -21,7 +21,7 @@
 
 # ifndef _ISOMAC
 extern int __gettimeofday (struct timeval *__tv,
-			   struct timezone *__tz);
+			   void *__tz);
 extern int __settimezone (const struct timezone *__tz)
 	attribute_hidden;
 extern int __adjtime (const struct timeval *__delta,
