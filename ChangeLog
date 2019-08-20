@@ -1,5 +1,10 @@
 2019-08-28  Paul A. Clarke  <pc@us.ibm.com>
     
+    	* sysdeps/powerpc/fpu/fenv_libc.h (fegetenv_status_ISA300):  Delete.
+    	(fegetenv_status):  Generate 'mffsl' unconditionally.
+
+2019-08-28  Paul A. Clarke  <pc@us.ibm.com>
+    
     	* sysdeps/powerpc/fpu/fesetenv.c (__fesetenv):  Utilize lightweight
     	FPSCR read.
     	(_FPU_MASK_ALL):  Delete.

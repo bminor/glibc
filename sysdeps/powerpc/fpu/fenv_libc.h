@@ -35,27 +35,18 @@ extern const fenv_t *__fe_mask_env (void) attribute_hidden;
 #define fegetenv_register() __builtin_mffs()
 
 /* Equivalent to fegetenv_register, but only returns bits for
-   status, exception enables, and mode.  */
-
-#define fegetenv_status_ISA300()					\
+   status, exception enables, and mode.
+   Nicely, it turns out that the 'mffsl' instruction will decode to
+   'mffs' on architectures older than "power9" because the additional
+   bits set for 'mffsl' are "don't care" for 'mffs'.  'mffs' is a superset
+   of 'mffsl'.  */
+#define fegetenv_status()					\
   ({register double __fr;						\
     __asm__ __volatile__ (						\
       ".machine push; .machine \"power9\"; mffsl %0; .machine pop"	\
       : "=f" (__fr));							\
     __fr;								\
   })
-
-#ifdef _ARCH_PWR9
-# define fegetenv_status() fegetenv_status_ISA300()
-#elif defined __BUILTIN_CPU_SUPPORTS__
-# define fegetenv_status()						\
-  (__glibc_likely (__builtin_cpu_supports ("arch_3_00"))		\
-   ? fegetenv_status_ISA300()						\
-   : fegetenv_register()						\
-  )
-#else
-# define fegetenv_status() fegetenv_register ()
-#endif
 
 /* Equivalent to fesetenv, but takes a fenv_t instead of a pointer.  */
 #define fesetenv_register(env) \
