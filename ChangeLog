@@ -1,3 +1,7 @@
+2019-08-20  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+
 2019-08-19  Carlos O'Donell  <carlos@redhat.com>
 
 	* nscd/nscd.conf: Add warning and comment about shared option.

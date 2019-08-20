@@ -2030,8 +2030,8 @@ double: 5
 float: 5
 idouble: 5
 ifloat: 5
-ildouble: 5
-ldouble: 5
+ildouble: 6
+ldouble: 6
 
 Function: "hypot":
 double: 1
