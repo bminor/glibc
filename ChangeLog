@@ -1,3 +1,86 @@
+2019-08-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/tgmath.h [__HAVE_FLOAT128X]: Give error.
+	[(__HAVE_FLOAT64X && !__HAVE_FLOAT128)
+	|| (__HAVE_FLOAT128 && !__HAVE_FLOAT64X)]: Likewise.
+	(__TGMATH_2_NARROW_F): Likewise.
+	(__TGMATH_2_NARROW_D): New macro.
+	(__TGMATH_2_NARROW_F16): Likewise.
+	(__TGMATH_2_NARROW_F32): Likewise.
+	(__TGMATH_2_NARROW_F64): Likewise.
+	(__TGMATH_2_NARROW_F32X): Likewise.
+	(__TGMATH_2_NARROW_F64X): Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TGMATH_NARROW_FUNCS_F): Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TGMATH_NARROW_FUNCS_F16): Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TGMATH_NARROW_FUNCS_F32): Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TGMATH_NARROW_FUNCS_F64): Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TGMATH_NARROW_FUNCS_F32X): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT_C2X)] (fadd): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT_C2X)] (dadd): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT_C2X)] (fdiv): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT_C2X)] (ddiv): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT_C2X)] (fmul): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT_C2X)] (dmul): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT_C2X)] (fsub): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT_C2X)] (dsub): Likewise.
+	[__GLIBC_USE (IEC_60559_TYPES_EXT) && __HAVE_FLOAT16] (f16add):
+	Likewise.
+	[__GLIBC_USE (IEC_60559_TYPES_EXT) && __HAVE_FLOAT16] (f16div):
+	Likewise.
+	[__GLIBC_USE (IEC_60559_TYPES_EXT) && __HAVE_FLOAT16] (f16mul):
+	Likewise.
+	[__GLIBC_USE (IEC_60559_TYPES_EXT) && __HAVE_FLOAT16] (f16sub):
+	Likewise.
+	[__GLIBC_USE (IEC_60559_TYPES_EXT) && __HAVE_FLOAT32] (f32add):
+	Likewise.
+	[__GLIBC_USE (IEC_60559_TYPES_EXT) && __HAVE_FLOAT32] (f32div):
+	Likewise.
+	[__GLIBC_USE (IEC_60559_TYPES_EXT) && __HAVE_FLOAT32] (f32mul):
+	Likewise.
+	[__GLIBC_USE (IEC_60559_TYPES_EXT) && __HAVE_FLOAT32] (f32sub):
+	Likewise.
+	[__GLIBC_USE (IEC_60559_TYPES_EXT) && __HAVE_FLOAT64
+	&& (__HAVE_FLOAT64X || __HAVE_FLOAT128)] (f64add): Likewise.
+	[__GLIBC_USE (IEC_60559_TYPES_EXT) && __HAVE_FLOAT64
+	&& (__HAVE_FLOAT64X || __HAVE_FLOAT128)] (f64div): Likewise.
+	[__GLIBC_USE (IEC_60559_TYPES_EXT) && __HAVE_FLOAT64
+	&& (__HAVE_FLOAT64X || __HAVE_FLOAT128)] (f64mul): Likewise.
+	[__GLIBC_USE (IEC_60559_TYPES_EXT) && __HAVE_FLOAT64
+	&& (__HAVE_FLOAT64X || __HAVE_FLOAT128)] (f64sub): Likewise.
+	[__GLIBC_USE (IEC_60559_TYPES_EXT) && __HAVE_FLOAT32X] (f32xadd):
+	Likewise.
+	[__GLIBC_USE (IEC_60559_TYPES_EXT) && __HAVE_FLOAT32X] (f32xdiv):
+	Likewise.
+	[__GLIBC_USE (IEC_60559_TYPES_EXT) && __HAVE_FLOAT32X] (f32xmul):
+	Likewise.
+	[__GLIBC_USE (IEC_60559_TYPES_EXT) && __HAVE_FLOAT32X] (f32xsub):
+	Likewise.
+	[__GLIBC_USE (IEC_60559_TYPES_EXT) && __HAVE_FLOAT64X
+	&& (__HAVE_FLOAT128X || __HAVE_FLOAT128)] (f64xadd): Likewise.
+	[__GLIBC_USE (IEC_60559_TYPES_EXT) && __HAVE_FLOAT64X
+	&& (__HAVE_FLOAT128X || __HAVE_FLOAT128)] (f64xdiv): Likewise.
+	[__GLIBC_USE (IEC_60559_TYPES_EXT) && __HAVE_FLOAT64X
+	&& (__HAVE_FLOAT128X || __HAVE_FLOAT128)] (f64xmul): Likewise.
+	[__GLIBC_USE (IEC_60559_TYPES_EXT) && __HAVE_FLOAT64X
+	&& (__HAVE_FLOAT128X || __HAVE_FLOAT128)] (f64xsub): Likewise.
+	* math/gen-tgmath-tests.py (Type): Add members
+	non_standard_real_argument_types_list, long_double_type,
+	complex_float64_type and float32x_ext_type.
+	(Type.__init__): Set the new members.
+	(Type.floating_type): Add new argument floatn.
+	(Type.real_floating_type): Likewise.
+	(Type.can_combine_types): Likewise.
+	(Type.combine_types): Likewise.
+	(Type.init_types): Create internal Float32x_ext type.
+	(Tests.__init__): Define Float32x_ext in generated C code.
+	(Tests.add_tests): Handle narrowing functions.
+	(Tests.add_all_tests): Likewise.
+	(Tests.tests_text): Allow variation in mant_dig for narrowing
+	functions with compilers before GCC 8.
+	* math/Makefile (tgmath3-narrow-types): New variable.
+	(tgmath3-narrow-macros): Likewise.
+	(tgmath3-macros): Add $(tgmath3-narrow-macros).
+
 2019-08-20  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/i386/fpu/libm-test-ulps: Update.

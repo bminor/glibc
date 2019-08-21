@@ -69,17 +69,27 @@ class Type(object):
     # Real argument types that correspond to a standard floating type
     # (float, double or long double; not _FloatN or _FloatNx).
     standard_real_argument_types_list = []
+    # Real argument types other than float, double and long double
+    # (i.e., those that are valid as arguments to narrowing macros
+    # returning _FloatN or _FloatNx).
+    non_standard_real_argument_types_list = []
     # The real floating types by their order properties (which are
     # tuples giving the positions in both the possible orders above).
     real_types_order = {}
     # The type double.
     double_type = None
+    # The type long double.
+    long_double_type = None
     # The type _Complex double.
     complex_double_type = None
     # The type _Float64.
     float64_type = None
+    # The type _Complex _Float64.
+    complex_float64_type = None
     # The type _Float64x.
     float64x_type = None
+    # The type _Float64x if available, otherwise _Float64.
+    float32x_ext_type = None
 
     def __init__(self, name, suffix=None, mant_dig=None, condition='1',
                  order=None, integer=False, complex=False, real_type=None):
@@ -109,16 +119,24 @@ class Type(object):
                 Type.real_argument_types_list.append(self)
                 if not self.name.startswith('_Float'):
                     Type.standard_real_argument_types_list.append(self)
+                if self.name not in ('float', 'double', 'long double'):
+                    Type.non_standard_real_argument_types_list.append(self)
         if self.order is not None:
             Type.real_types_order[self.order] = self
         if self.name == 'double':
             Type.double_type = self
+        if self.name == 'long double':
+            Type.long_double_type = self
         if self.name == '_Complex double':
             Type.complex_double_type = self
         if self.name == '_Float64':
             Type.float64_type = self
+        if self.name == '_Complex _Float64':
+            Type.complex_float64_type = self
         if self.name == '_Float64x':
             Type.float64x_type = self
+        if self.name == 'Float32x_ext':
+            Type.float32x_ext_type = self
 
     @staticmethod
     def create_type(name, suffix=None, mant_dig=None, condition='1', order=None,
@@ -142,18 +160,23 @@ class Type(object):
         if complex_type is not None:
             complex_type.register_type(internal)
 
-    def floating_type(self):
+    def floating_type(self, floatn):
         """Return the corresponding floating type."""
         if self.integer:
-            return (Type.complex_double_type
-                    if self.complex
-                    else Type.double_type)
+            if floatn:
+                return (Type.complex_float64_type
+                        if self.complex
+                        else Type.float64_type)
+            else:
+                return (Type.complex_double_type
+                        if self.complex
+                        else Type.double_type)
         else:
             return self
 
-    def real_floating_type(self):
+    def real_floating_type(self, floatn):
         """Return the corresponding real floating type."""
-        return self.real_type.floating_type()
+        return self.real_type.floating_type(floatn)
 
     def __str__(self):
         """Return string representation of a type."""
@@ -212,15 +235,21 @@ class Type(object):
                          complex_name='complex_long_double_Float64x',
                          condition='defined HUGE_VAL_F64X', order=(7, 7),
                          internal=True)
+        # An internal type for the argument type used by f32x*
+        # narrowing macros (_Float64x if available, otherwise
+        # _Float64).
+        Type.create_type('Float32x_ext', None, 'FLT32X_EXT_MANT_DIG',
+                         complex_name='complex_Float32x_ext',
+                         condition='1', internal=True)
 
     @staticmethod
-    def can_combine_types(types):
+    def can_combine_types(types, floatn):
         """Return a C preprocessor conditional for whether the given list of
         types can be used together as type-generic macro arguments."""
         have_long_double = False
         have_float128 = False
         for t in types:
-            t = t.real_floating_type()
+            t = t.real_floating_type(floatn)
             if t.name == 'long double':
                 have_long_double = True
             if t.name == '_Float128' or t.name == '_Float64x':
@@ -233,14 +262,14 @@ class Type(object):
         return '1'
 
     @staticmethod
-    def combine_types(types):
+    def combine_types(types, floatn):
         """Return the result of combining a set of types."""
         have_complex = False
         combined = None
         for t in types:
             if t.complex:
                 have_complex = True
-            t = t.real_floating_type()
+            t = t.real_floating_type(floatn)
             if combined is None:
                 combined = t
             else:
@@ -316,6 +345,7 @@ class Tests(object):
                             '    const char *func_name;\n'
                             '    const char *test_name;\n'
                             '    int mant_dig;\n'
+                            '    int narrow_mant_dig;\n'
                             '  };\n'
                             'int num_pass, num_fail;\n'
                             'volatile int called_mant_dig;\n'
@@ -345,8 +375,18 @@ class Tests(object):
                          '# endif\n')
         float64x_text = if_cond_text([Type.float64x_type.condition],
                                      float64x_text)
+        float32x_ext_text = ('#ifdef HUGE_VAL_F64X\n'
+                             'typedef _Float64x Float32x_ext;\n'
+                             'typedef __CFLOAT64X complex_Float32x_ext;\n'
+                             '# define FLT32X_EXT_MANT_DIG FLT64X_MANT_DIG\n'
+                             '#else\n'
+                             'typedef _Float64 Float32x_ext;\n'
+                             'typedef __CFLOAT64 complex_Float32x_ext;\n'
+                             '# define FLT32X_EXT_MANT_DIG FLT64_MANT_DIG\n'
+                             '#endif\n')
         self.header_list.append(float64_text)
         self.header_list.append(float64x_text)
+        self.header_list.append(float32x_ext_text)
         self.types_seen = set()
         for t in Type.all_types_list:
             self.add_type_var(t.name, t.condition)
@@ -377,6 +417,8 @@ class Tests(object):
             return
         have_complex = False
         func = macro
+        narrowing = False
+        narrowing_std = False
         if ret == 'c' or 'c' in args:
             # Complex-only.
             have_complex = True
@@ -387,6 +429,49 @@ class Tests(object):
             have_complex = True
             if complex_func == None:
                 complex_func = 'c%s' % func
+        # For narrowing macros, compute narrow_args, the list of
+        # argument types for which there is an actual corresponding
+        # function.  If none of those types exist, or the return type
+        # does not exist, then the macro is not defined and no tests
+        # of it can be run.
+        if ret == 'float':
+            narrowing = True
+            narrowing_std = True
+            narrow_cond = '1'
+            narrow_args = [Type.double_type, Type.long_double_type]
+            narrow_fallback = Type.double_type
+        elif ret == 'double':
+            narrowing = True
+            narrowing_std = True
+            narrow_cond = '1'
+            narrow_args = [Type.long_double_type]
+            narrow_fallback = Type.long_double_type
+        elif ret.startswith('_Float'):
+            narrowing = True
+            narrow_args = []
+            nret_type = None
+            narrow_fallback = None
+            for order, real_type in sorted(Type.real_types_order.items()):
+                if real_type.name == ret:
+                    nret_type = real_type
+                elif nret_type and real_type.name.startswith('_Float'):
+                    narrow_args.append(real_type)
+                    if (narrow_fallback is None
+                        and ret.endswith('x') == real_type.name.endswith('x')):
+                        narrow_fallback = real_type
+            if narrow_args:
+                narrow_cond = ('(%s && (%s))'
+                               % (nret_type.condition,
+                                  ' || '.join(t.condition
+                                              for t in narrow_args)))
+                if narrow_fallback is None:
+                    narrow_fallback = narrow_args[0]
+                if ret == '_Float32x':
+                    narrow_fallback = Type.float32x_ext_type
+            else:
+                # No possible argument types, even conditionally.
+                narrow_cond = '0'
+        narrowing_nonstd = narrowing and not narrowing_std
         types = [ret] + args
         for t in types:
             if t != 'c' and t != 'g' and t != 'r' and t != 's':
@@ -399,6 +484,8 @@ class Tests(object):
             if func == None and not t.complex:
                 continue
             if ret == 's' and t.name.startswith('_Float'):
+                continue
+            if narrowing and t not in narrow_args:
                 continue
             if ret == 'c':
                 ret_name = t.complex_type.name
@@ -432,23 +519,56 @@ class Tests(object):
                           '}\n' % (ret_name, dummy_func_name,
                                    t.real_type.suffix, ', '.join(arg_list),
                                    t.real_type.mant_dig, dummy_func_name))
-            dummy_func = if_cond_text([t.condition], dummy_func)
+            if narrowing:
+                dummy_cond = [narrow_cond, t.condition]
+            else:
+                dummy_cond = [t.condition]
+            dummy_func = if_cond_text(dummy_cond, dummy_func)
             self.test_text_list.append(dummy_func)
         arg_types = []
         for t in args:
             if t == 'g' or t == 'c':
                 arg_types.append(Type.argument_types_list)
             elif t == 'r':
-                arg_types.append(Type.real_argument_types_list)
+                if narrowing_std:
+                    arg_types.append(Type.standard_real_argument_types_list)
+                elif narrowing:
+                    arg_types.append(
+                        Type.non_standard_real_argument_types_list)
+                else:
+                    arg_types.append(Type.real_argument_types_list)
             elif t == 's':
                 arg_types.append(Type.standard_real_argument_types_list)
         arg_types_product = list_product(arg_types)
         test_num = 0
         for this_args in arg_types_product:
-            comb_type = Type.combine_types(this_args)
-            can_comb = Type.can_combine_types(this_args)
+            comb_type = Type.combine_types(this_args, narrowing_nonstd)
+            if narrowing:
+                # As long as there are no integer arguments, and as
+                # long as the chosen argument type is as wide as all
+                # the floating-point arguments passed, the semantics
+                # of the macro call do not depend on the exact
+                # function chosen.  In particular, for f32x functions
+                # when _Float64x exists, the chosen type should differ
+                # for _Float32x and _Float64 arguments, but it is not
+                # always possible to distinguish those types before
+                # GCC 7 and the implementation does not attempt to do
+                # so before GCC 8.
+                narrow_mant_dig = comb_type.real_type.mant_dig
+                for arg_type in this_args:
+                    if arg_type.integer:
+                        narrow_mant_dig = 0
+            else:
+                narrow_mant_dig = 0
+            if (narrowing
+                and comb_type not in narrow_args
+                and narrow_fallback is not None):
+                comb_type = narrow_fallback
+            can_comb = Type.can_combine_types(this_args, narrowing_nonstd)
             all_conds = [t.condition for t in this_args]
             all_conds.append(can_comb)
+            if narrowing:
+                all_conds.append(narrow_cond)
             any_complex = func == None
             for t in this_args:
                 if t.complex:
@@ -459,8 +579,9 @@ class Tests(object):
             test_func_name = 'test_%s_%d' % (macro, test_num)
             test_num += 1
             mant_dig = comb_type.real_type.mant_dig
-            test_text = '%s, "%s", "%s", %s' % (test_func_name, func_name,
-                                                test_name, mant_dig)
+            test_text = '%s, "%s", "%s", %s, %s' % (test_func_name, func_name,
+                                                    test_name, mant_dig,
+                                                    narrow_mant_dig)
             test_text = '    { %s },\n' % test_text
             test_text = if_cond_text(all_conds, test_text)
             self.test_array_list.append(test_text)
@@ -575,9 +696,16 @@ class Tests(object):
         self.add_tests('fromfpx', 'intmax_t', ['r', 'int', 'unsigned int'])
         self.add_tests('ufromfp', 'uintmax_t', ['r', 'int', 'unsigned int'])
         self.add_tests('ufromfpx', 'uintmax_t', ['r', 'int', 'unsigned int'])
-        # The functions that round their result to a narrower type,
-        # and the associated type-generic macros, are not yet
-        # supported by this script or by glibc.
+        for fn in ('add', 'div', 'mul', 'sub'):
+            for ret, prefix in (('float', 'f'),
+                                ('double', 'd'),
+                                ('_Float16', 'f16'),
+                                ('_Float32', 'f32'),
+                                ('_Float64', 'f64'),
+                                ('_Float128', 'f128'),
+                                ('_Float32x', 'f32x'),
+                                ('_Float64x', 'f64x')):
+                self.add_tests(prefix + fn, ret, ['r', 'r'])
         # Miscellaneous functions.
         self.add_tests('scalb', 's', ['s', 's'])
 
@@ -602,6 +730,24 @@ class Tests(object):
                        '          && strcmp (called_func_name,\n'
                        '                     tests[i].func_name) == 0)\n'
                        '        num_pass++;\n'
+                       '#if !__GNUC_PREREQ (8, 0)\n'
+                       '      else if (tests[i].narrow_mant_dig > 0\n'
+                       '               && (called_mant_dig\n'
+                       '                   >= tests[i].narrow_mant_dig)\n'
+                       '               && strcmp (called_func_name,\n'
+                       '                          tests[i].func_name) == 0)\n'
+                       '        {\n'
+                       '          num_pass++;\n'
+                       '          printf ("Test %zu (%s):\\n"\n'
+                       '                  "  Expected: %s precision %d\\n"\n'
+                       '                  "  Actual: %s precision %d\\n"\n'
+                       '                  "  (OK with old GCC)\\n\\n",\n'
+                       '                  i, tests[i].test_name,\n'
+                       '                  tests[i].func_name,\n'
+                       '                  tests[i].mant_dig,\n'
+                       '                  called_func_name, called_mant_dig);\n'
+                       '        }\n'
+                       '#endif\n'
                        '      else\n'
                        '        {\n'
                        '          num_fail++;\n'

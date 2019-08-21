@@ -43,6 +43,25 @@
 
 #if __GNUC_PREREQ (2, 7)
 
+/* Certain cases of narrowing macros only need to call a single
+   function so cannot use __builtin_tgmath and do not need any
+   complicated logic.  */
+# if __HAVE_FLOAT128X
+#  error "Unsupported _Float128x type for <tgmath.h>."
+# endif
+# if ((__HAVE_FLOAT64X && !__HAVE_FLOAT128)		\
+      || (__HAVE_FLOAT128 && !__HAVE_FLOAT64X))
+#  error "Unsupported combination of types for <tgmath.h>."
+# endif
+# define __TGMATH_2_NARROW_D(F, X, Y)		\
+  (F ## l (X, Y))
+# define __TGMATH_2_NARROW_F64X(F, X, Y)	\
+  (F ## f128 (X, Y))
+# if !__HAVE_FLOAT128
+#  define __TGMATH_2_NARROW_F32X(F, X, Y)	\
+  (F ## f64 (X, Y))
+# endif
+
 # if __HAVE_BUILTIN_TGMATH
 
 #  if __HAVE_FLOAT16 && __GLIBC_USE (IEC_60559_TYPES_EXT)
@@ -93,6 +112,33 @@
 #  define __TGMATH_1C(F, C, X) __builtin_tgmath (__TGMATH_RCFUNCS (F, C) (X))
 #  define __TGMATH_2C(F, C, X, Y) __builtin_tgmath (__TGMATH_RCFUNCS (F, C) \
 						    (X), (Y))
+
+#  define __TGMATH_NARROW_FUNCS_F(X) X, X ## l,
+#  define __TGMATH_NARROW_FUNCS_F16(X)				\
+    __TG_F32_ARG (X) __TG_F64_ARG (X) __TG_F128_ARG (X)		\
+    __TG_F32X_ARG (X) __TG_F64X_ARG (X) __TG_F128X_ARG (X)
+#  define __TGMATH_NARROW_FUNCS_F32(X)				\
+    __TG_F64_ARG (X) __TG_F128_ARG (X)				\
+    __TG_F32X_ARG (X) __TG_F64X_ARG (X) __TG_F128X_ARG (X)
+#  define __TGMATH_NARROW_FUNCS_F64(X)		\
+    __TG_F128_ARG (X)				\
+    __TG_F64X_ARG (X) __TG_F128X_ARG (X)
+#  define __TGMATH_NARROW_FUNCS_F32X(X)		\
+    __TG_F64X_ARG (X) __TG_F128X_ARG (X)	\
+    __TG_F64_ARG (X) __TG_F128_ARG (X)
+
+#  define __TGMATH_2_NARROW_F(F, X, Y)				\
+  __builtin_tgmath (__TGMATH_NARROW_FUNCS_F (F) (X), (Y))
+#  define __TGMATH_2_NARROW_F16(F, X, Y)			\
+  __builtin_tgmath (__TGMATH_NARROW_FUNCS_F16 (F) (X), (Y))
+#  define __TGMATH_2_NARROW_F32(F, X, Y)			\
+  __builtin_tgmath (__TGMATH_NARROW_FUNCS_F32 (F) (X), (Y))
+#  define __TGMATH_2_NARROW_F64(F, X, Y)			\
+  __builtin_tgmath (__TGMATH_NARROW_FUNCS_F64 (F) (X), (Y))
+#  if __HAVE_FLOAT128
+#   define __TGMATH_2_NARROW_F32X(F, X, Y)			\
+  __builtin_tgmath (__TGMATH_NARROW_FUNCS_F32X (F) (X), (Y))
+#  endif
 
 # else /* !__HAVE_BUILTIN_TGMATH.  */
 
@@ -493,6 +539,65 @@
 			: (__typeof ((__tgmath_complex_type (Val1)) 0	      \
 				   + (__tgmath_complex_type (Val2)) 0))	      \
 			  Cfct##f (Val1, Val2))))
+
+#  define __TGMATH_2_NARROW_F(F, X, Y)					\
+  (__extension__ (sizeof ((__tgmath_real_type (X)) 0			\
+			  + (__tgmath_real_type (Y)) 0) > sizeof (double) \
+		  ? F ## l (X, Y)					\
+		  : F (X, Y)))
+/* In most cases, these narrowing macro definitions based on sizeof
+   ensure that the function called has the right argument format, as
+   for other <tgmath.h> macros for compilers before GCC 8, but may not
+   have exactly the argument type (among the types with that format)
+   specified in the standard logic.
+
+   In the case of macros for _Float32x return type, when _Float64x
+   exists, _Float64 arguments should result in the *f64 function being
+   called while _Float32x arguments should result in the *f64x
+   function being called.  These cases cannot be distinguished using
+   sizeof (or at all if the types are typedefs rather than different
+   types).  However, for these functions it is OK (does not affect the
+   final result) to call a function with any argument format at least
+   as wide as all the floating-point arguments, unless that affects
+   rounding of integer arguments.  Integer arguments are considered to
+   have type _Float64, so the *f64 functions are preferred for f32x*
+   macros when no argument has a wider floating-point type.  */
+#  if __HAVE_FLOAT64X_LONG_DOUBLE && __HAVE_DISTINCT_FLOAT128
+#   define __TGMATH_2_NARROW_F32(F, X, Y)				\
+  (__extension__ (sizeof ((__tgmath_real_type (X)) 0			\
+			  + (__tgmath_real_type (Y)) 0) > sizeof (_Float64) \
+		  ? __TGMATH_F128 ((X) + (Y), F, (X, Y))		\
+		  F ## f64x (X, Y)					\
+		  : F ## f64 (X, Y)))
+#   define __TGMATH_2_NARROW_F64(F, X, Y)				\
+  (__extension__ (sizeof ((__tgmath_real_type (X)) 0			\
+			  + (__tgmath_real_type (Y)) 0) > sizeof (_Float64) \
+		  ? __TGMATH_F128 ((X) + (Y), F, (X, Y))		\
+		  F ## f64x (X, Y)					\
+		  : F ## f128 (X, Y)))
+#   define __TGMATH_2_NARROW_F32X(F, X, Y)				\
+  (__extension__ (sizeof ((__tgmath_real_type (X)) 0			\
+			  + (__tgmath_real_type (Y)) 0) > sizeof (_Float64) \
+		  ? __TGMATH_F128 ((X) + (Y), F, (X, Y))		\
+		  F ## f64x (X, Y)					\
+		  : F ## f64 (X, Y)))
+#  elif __HAVE_FLOAT128
+#   define __TGMATH_2_NARROW_F32(F, X, Y)				\
+  (__extension__ (sizeof ((__tgmath_real_type (X)) 0			\
+			  + (__tgmath_real_type (Y)) 0) > sizeof (_Float64) \
+		  ? F ## f128 (X, Y)					\
+		  : F ## f64 (X, Y)))
+#   define __TGMATH_2_NARROW_F64(F, X, Y)	\
+  (F ## f128 (X, Y))
+#   define __TGMATH_2_NARROW_F32X(F, X, Y)				\
+  (__extension__ (sizeof ((__tgmath_real_type (X)) 0			\
+			  + (__tgmath_real_type (Y)) 0) > sizeof (_Float32x) \
+		  ? F ## f64x (X, Y)					\
+		  : F ## f64 (X, Y)))
+#  else
+#   define __TGMATH_2_NARROW_F32(F, X, Y)	\
+  (F ## f64 (X, Y))
+#  endif
 # endif /* !__HAVE_BUILTIN_TGMATH.  */
 #else
 # error "Unsupported compiler; you cannot use <tgmath.h>"
@@ -738,5 +843,67 @@
 
 /* Real part of Z.  */
 #define creal(Val) __TGMATH_UNARY_REAL_IMAG_RET_REAL_SAME (Val, creal)
+
+
+/* Narrowing functions.  */
+
+#if __GLIBC_USE (IEC_60559_BFP_EXT_C2X)
+
+/* Add.  */
+# define fadd(Val1, Val2) __TGMATH_2_NARROW_F (fadd, Val1, Val2)
+# define dadd(Val1, Val2) __TGMATH_2_NARROW_D (dadd, Val1, Val2)
+
+/* Divide.  */
+# define fdiv(Val1, Val2) __TGMATH_2_NARROW_F (fdiv, Val1, Val2)
+# define ddiv(Val1, Val2) __TGMATH_2_NARROW_D (ddiv, Val1, Val2)
+
+/* Multiply.  */
+# define fmul(Val1, Val2) __TGMATH_2_NARROW_F (fmul, Val1, Val2)
+# define dmul(Val1, Val2) __TGMATH_2_NARROW_D (dmul, Val1, Val2)
+
+/* Subtract.  */
+# define fsub(Val1, Val2) __TGMATH_2_NARROW_F (fsub, Val1, Val2)
+# define dsub(Val1, Val2) __TGMATH_2_NARROW_D (dsub, Val1, Val2)
+
+#endif
+
+#if __GLIBC_USE (IEC_60559_TYPES_EXT)
+
+# if __HAVE_FLOAT16
+#  define f16add(Val1, Val2) __TGMATH_2_NARROW_F16 (f16add, Val1, Val2)
+#  define f16div(Val1, Val2) __TGMATH_2_NARROW_F16 (f16div, Val1, Val2)
+#  define f16mul(Val1, Val2) __TGMATH_2_NARROW_F16 (f16mul, Val1, Val2)
+#  define f16sub(Val1, Val2) __TGMATH_2_NARROW_F16 (f16sub, Val1, Val2)
+# endif
+
+# if __HAVE_FLOAT32
+#  define f32add(Val1, Val2) __TGMATH_2_NARROW_F32 (f32add, Val1, Val2)
+#  define f32div(Val1, Val2) __TGMATH_2_NARROW_F32 (f32div, Val1, Val2)
+#  define f32mul(Val1, Val2) __TGMATH_2_NARROW_F32 (f32mul, Val1, Val2)
+#  define f32sub(Val1, Val2) __TGMATH_2_NARROW_F32 (f32sub, Val1, Val2)
+# endif
+
+# if __HAVE_FLOAT64 && (__HAVE_FLOAT64X || __HAVE_FLOAT128)
+#  define f64add(Val1, Val2) __TGMATH_2_NARROW_F64 (f64add, Val1, Val2)
+#  define f64div(Val1, Val2) __TGMATH_2_NARROW_F64 (f64div, Val1, Val2)
+#  define f64mul(Val1, Val2) __TGMATH_2_NARROW_F64 (f64mul, Val1, Val2)
+#  define f64sub(Val1, Val2) __TGMATH_2_NARROW_F64 (f64sub, Val1, Val2)
+# endif
+
+# if __HAVE_FLOAT32X
+#  define f32xadd(Val1, Val2) __TGMATH_2_NARROW_F32X (f32xadd, Val1, Val2)
+#  define f32xdiv(Val1, Val2) __TGMATH_2_NARROW_F32X (f32xdiv, Val1, Val2)
+#  define f32xmul(Val1, Val2) __TGMATH_2_NARROW_F32X (f32xmul, Val1, Val2)
+#  define f32xsub(Val1, Val2) __TGMATH_2_NARROW_F32X (f32xsub, Val1, Val2)
+# endif
+
+# if __HAVE_FLOAT64X && (__HAVE_FLOAT128X || __HAVE_FLOAT128)
+#  define f64xadd(Val1, Val2) __TGMATH_2_NARROW_F64X (f64xadd, Val1, Val2)
+#  define f64xdiv(Val1, Val2) __TGMATH_2_NARROW_F64X (f64xdiv, Val1, Val2)
+#  define f64xmul(Val1, Val2) __TGMATH_2_NARROW_F64X (f64xmul, Val1, Val2)
+#  define f64xsub(Val1, Val2) __TGMATH_2_NARROW_F64X (f64xsub, Val1, Val2)
+# endif
+
+#endif
 
 #endif /* tgmath.h */

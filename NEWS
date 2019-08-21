@@ -16,6 +16,11 @@ Major new features:
   liable to change.  Features from C2X are also enabled by _GNU_SOURCE, or
   by compiling with "gcc -std=gnu2x".
 
+* The <math.h> functions that round their results to a narrower type now
+  have corresponding type-generic macros in <tgmath.h>, as defined in TS
+  18661-1:2014 and TS 18661-3:2015 as amended by the resolution of
+  Clarification Request 13 to TS 18661-3.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The totalorder and totalordermag functions, and the corresponding
