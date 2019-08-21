@@ -1716,15 +1716,19 @@ create_cd_newstate (const re_dfa_t *dfa, const re_node_set *nodes,
 	{
 	  if (newstate->entrance_nodes == &newstate->nodes)
 	    {
-	      newstate->entrance_nodes = re_malloc (re_node_set, 1);
-	      if (__glibc_unlikely (newstate->entrance_nodes == NULL))
+	      re_node_set *entrance_nodes = re_malloc (re_node_set, 1);
+	      if (__glibc_unlikely (entrance_nodes == NULL))
 		{
 		  free_state (newstate);
 		  return NULL;
 		}
+	      newstate->entrance_nodes = entrance_nodes;
 	      if (re_node_set_init_copy (newstate->entrance_nodes, nodes)
 		  != REG_NOERROR)
-		return NULL;
+		{
+		  free_state (newstate);
+		  return NULL;
+		}
 	      nctx_nodes = 0;
 	      newstate->has_constraint = 1;
 	    }

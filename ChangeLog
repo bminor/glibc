@@ -1,3 +1,10 @@
+2019-08-21  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Fix bad pointer / leak in regex code
+	This was found by Coverity (CID 1484201).  [BZ#24844]
+	* posix/regex_internal.c (create_cd_newstate): Fix use of bad
+	pointer and/or memory leak when storage is exhausted.
+
 2019-08-21  Zack Weinberg  <zackw@panix.com>
 
 	* misc/syslog.c (__vsyslog_internal)
