@@ -1,5 +1,10 @@
 2019-08-21  Paul Eggert  <eggert@cs.ucla.edu>
 
+	Remove dead regex code
+	* posix/regex_internal.c (re_node_set_insert):
+	Remove unnecessary assignment.  Reported by Tim Rühsen in:
+	https://lists.gnu.org/r/bug-gnulib/2019-08/msg00026.html
+
 	Fix bad pointer / leak in regex code
 	This was found by Coverity (CID 1484201).  [BZ#24844]
 	* posix/regex_internal.c (create_cd_newstate): Fix use of bad

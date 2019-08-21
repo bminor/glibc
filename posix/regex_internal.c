@@ -1311,7 +1311,6 @@ re_node_set_insert (re_node_set *set, Idx elem)
      first element separately to skip a check in the inner loop.  */
   if (elem < set->elems[0])
     {
-      idx = 0;
       for (idx = set->nelem; idx > 0; idx--)
 	set->elems[idx] = set->elems[idx - 1];
     }
