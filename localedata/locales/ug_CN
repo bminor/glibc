@@ -165,6 +165,7 @@ am_pm    "";""
 date_fmt "%a<U060C> %d-%m-%Y<U060C> %T"
 
 week 7;19971130;1
+first_weekday 2
 END LC_TIME
 
 LC_MESSAGES

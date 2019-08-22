@@ -1,3 +1,11 @@
+2019-08-28  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #24682]
+	* NEWS: Mention this bug fixed.
+	* localedata/locales/bo_CN (first_weekday): Add, set to 2 (Monday).
+	* localedata/locales/ug_CN (first_weekday): Likewise.
+	* localedata/locales/zh_CN (first_weekday): Likewise.
+
 2019-08-01  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #24867]
