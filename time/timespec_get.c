@@ -22,16 +22,10 @@
 int
 timespec_get (struct timespec *ts, int base)
 {
-  switch (base)
+  if (base == TIME_UTC)
     {
-    case TIME_UTC:
-      /* Not supported.  */
-      return 0;
-
-    default:
-      return 0;
+      __clock_gettime (CLOCK_REALTIME, ts);
+      return base;
     }
-
-  return base;
+  return 0;
 }
-stub_warning (timespec_get)
