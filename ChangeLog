@@ -1,5 +1,9 @@
 2019-08-22  Joseph Myers  <joseph@codesourcery.com>
 
+	* resolv/tst-resolv-ai_idn-latin1.c (do_test): Mark test
+	unsupported with libidn2 before 2.0.5.
+	* resolv/tst-resolv-ai_idn.c (do_test): Likewise.
+
 	* manual/time.texi (strftime): Document %Ob and %OB as C2X
 	features.
 

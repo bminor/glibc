@@ -29,6 +29,11 @@ do_test (void)
   void *handle = dlopen (LIBIDN2_SONAME, RTLD_LAZY);
   if (handle == NULL)
     FAIL_UNSUPPORTED ("libidn2 not installed");
+  void *check_ver_sym = xdlsym (handle, "idn2_check_version");
+  const char *check_res
+    = ((const char *(*) (const char *)) check_ver_sym) ("2.0.5");
+  if (check_res == NULL)
+    FAIL_UNSUPPORTED ("libidn2 too old");
 
   if (setlocale (LC_CTYPE, "en_US.ISO-8859-1") == NULL)
     FAIL_EXIT1 ("setlocale: %m");
