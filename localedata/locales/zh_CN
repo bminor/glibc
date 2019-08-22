@@ -139,6 +139,7 @@ t_fmt_ampm "%p %I<U65F6>%M<U5206>%S<U79D2>"
 
 date_fmt       "%Y<U5E74> %m<U6708> %d<U65E5> %A %H:%M:%S %Z"
 week 7;19971130;1
+first_weekday 2
 END LC_TIME
 
 LC_MESSAGES
