@@ -1,3 +1,10 @@
+2019-08-23  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #24682]
+	* localedata/locales/bo_CN (first_weekday): Add, set to 2 (Monday).
+	* localedata/locales/ug_CN (first_weekday): Likewise.
+	* localedata/locales/zh_CN (first_weekday): Likewise.
+
 2019-08-22  Gustavo Romero  <gromero@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h: Fix typos and
