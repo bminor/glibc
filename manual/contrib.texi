@@ -30,6 +30,11 @@ Miles Bader for writing the @code{argp} argument-parsing package, and the
 @code{argz}/@code{envz} interfaces.
 
 @item
+Ralf B@"achle for contributing @file{fpu_control.h},
+@file{regdef.h}, @file{sgidefs.h}, @file{sys/asm.h}, and @file{sys/regdef.h}
+under the @file{sysdeps/mips} directory.
+
+@item
 Jeff Bailey for his maintainership of the HPPA architecture.
 
 @item
@@ -130,6 +135,10 @@ locale updates and fixes.
 Tulio Magno Quites Machado Filho for adding a new class of installed
 headers for low-level platform-specific functionality and one such for
 PowerPC and various fixes.
+
+@item
+Olaf Flebbe and Ralf B@"achle for contributing
+@file{sysdeps/mips/fpu_control.h}.
 
 @item
 Mike Frysinger for his maintaining of the IA64 architecture and for

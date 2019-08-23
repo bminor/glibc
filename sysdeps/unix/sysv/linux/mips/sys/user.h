@@ -41,7 +41,7 @@
  * License.  See the file "COPYING" in the main directory of this archive
  * for more details.
  *
- * Copyright (C) 1995, 1999 by Ralf Bächle
+ * Copyright (C) 1995, 1999 by Ralf Baechle
  */
 #ifndef __ASM_MIPS_REG_H
 #define __ASM_MIPS_REG_H
@@ -110,7 +110,7 @@
  * License.  See the file "COPYING" in the main directory of this archive
  * for more details.
  *
- * Copyright (C) 1995, 1999 Ralf Bächle
+ * Copyright (C) 1995, 1999 Ralf Baechle
  * Copyright (C) 1995, 1999 Silicon Graphics
  */
 #ifndef _ASM_REG_H
