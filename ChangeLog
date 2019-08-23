@@ -1,3 +1,19 @@
+2019-08-23  Dragan Mladjenovic  <dmladjenovic@wavecomp.com>
+
+	* sysdeps/unix/sysv/linux/mips/Makefile
+	(test-xfail-check-execstack):
+	Move under mips-has-gnustack != yes.
+	(CFLAGS-.o*, ASFLAGS-.o*): New rules.
+	Apply -Wa,-execstack if mips-force-execstack == yes.
+	* sysdeps/unix/sysv/linux/mips/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/mips/configure.ac
+	(mips-force-execstack): New var.
+	Set to yes for hard-float builds with minimum_kernel < 4.8.0
+	or minimum_kernel not set at all.
+	(mips-has-gnustack): New var.
+	Use value of libc_cv_as_noexecstack
+	if mips-force-execstack != yes, otherwise set to no.
+
 2019-08-23  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 	    Florian Weimer  <fweimer@redhat.com>
 
