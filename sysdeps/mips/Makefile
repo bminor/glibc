@@ -82,3 +82,10 @@ $(objpfx)tst-mode-switch-2: $(shared-thread-library)
 endif
 endif
 endif
+
+ifeq ($(subdir),elf)
+tests += tst-undefined-weak
+modules-names += tst-undefined-weak-lib
+
+$(objpfx)tst-undefined-weak: $(objpfx)tst-undefined-weak-lib.so
+endif

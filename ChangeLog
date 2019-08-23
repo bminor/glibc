@@ -1,3 +1,15 @@
+2019-08-23  Mihailo Stojanovic  <mihailo.stojanovic@rt-rk.com>
+
+	[BZ #24916]
+	* sysdeps/mips/Makefile [$(subdir) = elf] (tests): Add
+	tst-undefined-weak.
+	[$(subdir) = elf] (modules-names): Add tst-undefined-weak-lib.
+	[$(subdir) = elf] ($(objpfx)tst-undefined-weak): Add dependency.
+	* sysdeps/mips/tst-undefined-weak-lib.S: New file.
+	* sysdeps/mips/tst-undefined-weak.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/ldsodefs.h (VALID_ELF_ABIVERSION):
+	Increment highest valid ABIVERSION value.
+
 2019-08-23  Dragan Mladjenovic  <dmladjenovic@wavecomp.com>
 
 	* sysdeps/unix/sysv/linux/mips/Makefile
