@@ -134,3 +134,35 @@ if test -z "$arch_minimum_kernel"; then
     arch_minimum_kernel=4.5.0
   fi
 fi
+
+# Check if we are supposed to run on kernels older than 4.8.0. If so,
+# force executable stack to avoid potential runtime problems with fpu
+# emulation.
+# NOTE: The check below assumes that in absence of user-provided minumum_kernel
+# we will default to arch_minimum_kernel which is currently less than 4.8.0 for
+# all known configurations. If this changes, the check must be updated.
+AC_CACHE_CHECK([whether the compiler must use executable stack],
+        libc_cv_mips_force_execstack, [dnl
+libc_cv_mips_force_execstack=no
+  if test $libc_mips_float = hard; then
+    if test -n "$minimum_kernel"; then
+       changequote(,)
+       min_version=$((`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/\1 \* 65536 + \2 \* 256 + \3/'`))
+       changequote([,])
+       if test $min_version -lt 264192; then
+         libc_cv_mips_force_execstack=yes
+       fi
+    else
+      libc_cv_mips_force_execstack=yes
+    fi
+  fi])
+
+libc_mips_has_gnustack=$libc_cv_as_noexecstack
+
+if test $libc_cv_mips_force_execstack = yes; then
+  libc_mips_has_gnustack=no
+  AC_MSG_WARN([forcing executable stack for pre-4.8.0 Linux kernels])
+fi
+
+LIBC_CONFIG_VAR([mips-force-execstack],[${libc_cv_mips_force_execstack}])
+LIBC_CONFIG_VAR([mips-has-gnustack],[${libc_mips_has_gnustack}])
