@@ -658,10 +658,10 @@
 	Define and initialize use_outdigits in the inner loops.
 
 	* sysdeps/posix/sigwait.c: Don't look for signal 0 since it does
-	not exist.  Patch by Miloslav Trmac <mitr@volny.cz> (PR libc/1601).
+	not exist.  Patch by Miloslav Trmač <mitr@volny.cz> (PR libc/1601).
 
 	* sysdeps/i386/fpu/s_nearbyint.S: Disable raising exception, not
-	enable it.  Patch by Miloslav Trmac <mitr@volny.cz> (PR libc/1600).
+	enable it.  Patch by Miloslav Trmač <mitr@volny.cz> (PR libc/1600).
 	* sysdeps/i386/fpu/s_nearbyintf.S: Likewise.
 	* sysdeps/i386/fpu/s_nearbyintl.S: Likewise.
 
@@ -693,7 +693,7 @@
 	so test for overflow and handle it.
 	* sysdeps/i386/fpu/s_sinf.S: Likewise.
 	* sysdeps/i386/fpu/s_tanf.S: Likewise.
-	Patch by Miloslav Trmac <mitr@volny.cz> (PR libc/1563).
+	Patch by Miloslav Trmač <mitr@volny.cz> (PR libc/1563).
 
 	* iconvdata/Makefile (modules): Add UTF-16.
 	(distribute): Add utf-16.c.
@@ -981,7 +981,7 @@
 	* sysdeps/unix/sysv/linux/mips/fxstat.c: Likewise.
 
 	* sysdeps/unix/sysv/linux/mips/init-first.h: New file, from Ralf
-	Baechle <ralf@gnu.org>.
+	Bächle <ralf@gnu.org>.
 
 	* sysdeps/unix/sysv/linux/mips/brk.c: New file.
 
@@ -1012,7 +1012,7 @@
 	* sysdeps/powerpc/fpu/fesetround.c: Likewise.
 	* sysdeps/sparc/fpu/feholdexcpt.c: Likewise.
 	* sysdeps/sparc/fpu/fesetround.c: Likewise.
-	Patch by Miloslav Trmac <mitr@volny.cz>.
+	Patch by Miloslav Trmač <mitr@volny.cz>.
 
 	* locale/programs/ld-collate.c (struct locale_collate_t): Change
 	type of plane_size and plane_cnt to uint32_t.
@@ -1482,7 +1482,7 @@
 
 	* manual/getopt.texi (Using the getopt function): Fix description of
 	return value for format string starting with '-' (PR libc/1551).
-	Patch by Ra�l N��ez de Arenas Coronado <dervishd@jazzfree.com>
+	Patch by Raúl Núñez de Arenas Coronado <dervishd@jazzfree.com>
 
 	* sunrpc/clnt_perr.c (rpc_errlist): Fix index for RPC_PROGVERSMISMATCH.
 	Patch by jens.moeller@westgeo.com (PR libc/1550).
@@ -3715,7 +3715,7 @@
 	(RESOLVE_GOTSYM): Use R_MIPS_REL32.
 	(ELF_MACHINE_RUNTIME_TRAMPOLINE): Likewise.
 	Based on patches from Maciej W. Rozycki <macro@ds2.pg.gda.pl> and
-	Ralf Baechle <baechle@uni-koblenz.de>.
+	Ralf Bächle <baechle@uni-koblenz.de>.
 
 	* sysdeps/mips/mips64/dl-machine.h: Apply same patches.
 
@@ -6138,7 +6138,7 @@
 	* sysdeps/unix/sysv/linux/mips/bits/errno.h: Likewise.
 
 	* elf/Makefile ($(objpfx)ld.so): Fix rtld-ldscript dependency.
-	Patch by Ralf Baechle <ralf@uni-koblenz.de>.
+	Patch by Ralf Bächle <ralf@uni-koblenz.de>.
 
 1999-08-25  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -6188,14 +6188,14 @@
 	* stdio-common/tst-cookie.c: New file.
 
 	* sysdeps/unix/sysv/linux/mips/bits/errno.h: Fix EILSEQ value
-	changed in last patch.  Reported by Ralf Baechle.
+	changed in last patch.  Reported by Ralf Bächle.
 
 1999-08-24  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/unix/mips/sysdep.h: Use __syscall_error.
 
 	* sysdeps/unix/mips/sysdep.S: Rewrite, don't declare errno here.
-	Patches by Ralf Baechle <ralf@uni-koblenz.de>
+	Patches by Ralf Bächle <ralf@uni-koblenz.de>
 
 1999-08-24  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
@@ -6361,7 +6361,7 @@
 
 	* sysdeps/unix/sysv/linux/mips/bits/sigaction.h (SA_RESETHAND): Add it.
 	* sysdeps/mips/bits/dlfcn.h: Remove SGI specific calls, add RTLD_LOCAL.
-	Patches by Ralf Baechle <ralf@uni-koblenz.de>
+	Patches by Ralf Bächle <ralf@uni-koblenz.de>
 
 1999-08-21  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -7316,7 +7316,7 @@
 
 1999-07-25  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
-	* localedata/tst-rpmatch.sh: Use "&" instead of "�" to avoid a bug
+	* localedata/tst-rpmatch.sh: Use "&" instead of "§" to avoid a bug
 	in bash 2.03.
 
 1999-07-25  Ulrich Drepper  <drepper@cygnus.com>

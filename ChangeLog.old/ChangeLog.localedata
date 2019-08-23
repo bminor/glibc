@@ -3021,13 +3021,13 @@
 	* locales/zh_SG: Likewise.
 	* locales/zh_TW: Likewise.
 
-2016-04-13  Matthias Wallnoefer  <matthias.wallnoefer@lugbz.org>
+2016-04-13  Matthias Wallnöfer  <matthias.wallnoefer@lugbz.org>
 
 	* locales/de_IT: New locale.
 	* SUPPORTED (SUPPORTED-LOCALES): Add de_IT.UTF-8/UTF-8
 	and de_IT/ISO-8859-1.
 
-2016-04-13  Matthias Wallnoefer  <matthias.wallnoefer@lugbz.org>
+2016-04-13  Matthias Wallnöfer  <matthias.wallnoefer@lugbz.org>
 
 	* locales/de_AT (LC_MESSAGES): Change to copy de_DE.
 	(LC_NAME): Likewise.
@@ -6105,7 +6105,7 @@
 
 	[BZ #14368]
 	* locales/szl_PL: New Silesian Language Locale for Poland.
-	Contributed by Przemyslaw Buczkowski <przemub@yahoo.pl>.
+	Contributed by Przemysław Buczkowski <przemub@yahoo.pl>.
 	* localedata/SUPPORTED (SUPPORTED-LOCALES): Add szl_PL.
 
 	[BZ # 14828]
@@ -6224,13 +6224,13 @@
 	* locales/es_PR: Likewise.
 	* locales/es_SV: Likewise.
 
-2012-06-20  Petr Baudis  <pasky@ucw.cz>
+2012-06-20  Petr Baudiš  <pasky@ucw.cz>
 
 	* locales/mag_IN: Fix comment character.
 	* locales/tr_CY (LC_TIME): Remove redundant first_weekday
 	and first_workday.
 
-2012-06-04  Petr Baudis  <pasky@ucw.cz>
+2012-06-04  Petr Baudiš  <pasky@ucw.cz>
 
 	[BZ#13996]
 	* locales/tr_TR: Change currency from YTL to TL.
@@ -6288,7 +6288,7 @@
 	[BZ #6770]
 	* locales/ca_ES (LC_TIME): Add first_weekday and first_workday.
 
-2012-04-04  Petr Baudis  <pasky@ucw.cz>
+2012-04-04  Petr Baudiš  <pasky@ucw.cz>
 
 	[BZ #6770]
 	* locales/ca_ES: This locale is now maintained by Jordi Mallach.
@@ -6726,7 +6726,7 @@
 	[BZ #10425]
 	* locales/it_IT: Fix date_fmt.
 	* locales/it_CH: Likewise.
-	Patch by Nicolo' Chieffo <nicolo.chieffo@gmail.com>.
+	Patch by Nicolò Chieffo <nicolo.chieffo@gmail.com>.
 
 	* locales/POSIX: Define yesstr and nostr.
 	* locales/en_US: Likewise.
@@ -8084,7 +8084,7 @@
 
 	[BZ #448]
 	* locales/vi_VN: Several fixes.
-	Patch by Nguyen Thai Ngoc Duy <pclouds@gmail.com>.
+	Patch by Nguyễn Thái Ngọc Duy <pclouds@gmail.com>.
 
 	[BZ #428]
 	* locales/te_IN: Several fixes.
@@ -9717,7 +9717,7 @@
 2001-07-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/tr_TR: Define missing fields and remove FIXME comments.
-	Patch by Nilg~n Belma Bug~ner <nilgun@fide.org>.
+	Patch by Nilgün Belma Bugüner <nilgun@fide.org>.
 
 2001-07-19  Jakub Jelinek  <jakub@redhat.com>
 
@@ -11911,7 +11911,7 @@
 1999-12-19  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locales/POSIX: Fix collation order of <SI> and add a few missing
-	symbols.  Patch by Miloslav Trmac <mitr@volny.cz>.
+	symbols.  Patch by Miloslav Trmač <mitr@volny.cz>.
 
 	* locales/cs_CZ: Fix syntax of collation entries with multi-character
 	weights.

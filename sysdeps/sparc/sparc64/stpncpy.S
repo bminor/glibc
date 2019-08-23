@@ -5,7 +5,7 @@
    Copyright (C) 1998-2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jj@ultra.linux.cz> and
-		  Jan Vondrak <jvon4518@ss1000.ms.mff.cuni.cz>.
+		  Jan Vondrák <jvon4518@ss1000.ms.mff.cuni.cz>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

@@ -43,7 +43,7 @@ Stephen R. van den Berg for contributing a highly-optimized
 @code{strstr} function.
 
 @item
-Ondrej Bilka for contributing optimized string routines for x64 and various
+Ond@v{r}ej B@'ilka for contributing optimized string routines for x64 and various
 fixes.
 
 @item

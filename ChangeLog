@@ -3089,7 +3089,7 @@
 	* benchtests/bench-strstr.c (do_one_test): Use small iterations.
 	* benchtests/bench-strtok.c (do_one_test): Use small iterations.
 
-2019-05-21  Adhemeval Zanella  <adhemerval.zanella@linaro.org>
+2019-05-21  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/powerpc/ipc_priv.h (SEMTIMEDOP_IPC_ARGS):
 	New define.
@@ -13470,7 +13470,7 @@
 	(SNAN_TESTS_TYPE_CAST): Do not define macro here.
 	* sysdeps/powerpc/math-tests.h (SNAN_TESTS_TYPE_CAST): Likewise.
 
-2018-08-01  Carlos O'Donel  <carlos@redhat.com>
+2018-08-01  Carlos O'Donell  <carlos@redhat.com>
 
 	* version.h (RELEASE): Set to "development".
 	(VERSION): Set to "2.28.9000".
@@ -24584,7 +24584,7 @@
 
 2017-12-05  Rogerio A. Cardoso  <rcardoso@linux.vnet.ibm.com>
 	    Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
-	    Carlos O'Donnell  <carlos@redhat.com>
+	    Carlos O'Donell  <carlos@redhat.com>
 
 	* elf/dl-tunables.list: Add elision parameters.
 	* manual/tunables.texi: Add entries about elision tunable.

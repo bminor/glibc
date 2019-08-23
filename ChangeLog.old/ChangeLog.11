@@ -789,7 +789,7 @@
 	* sysdeps/s390/fpu/libm-test-ulps: New ulps.
 
 	* sysdeps/unix/sysv/linux/mips/syscalls.list: Add fcntl64.
-	Patch by Ralf Baechle <ralf@gnu.org>.
+	Patch by Ralf Bächle <ralf@gnu.org>.
 
 2000-10-21  Ulrich Drepper  <drepper@redhat.com>
 
@@ -878,7 +878,7 @@
 	* sysdeps/sh/dl-machine.h: Likewise.
 	* sysdeps/sparc/sparc32/dl-machine.h: Likewise.
 	* sysdeps/sparc/sparc64/dl-machine.h: Likewise.
-	Patch by Martin Schwidefsksy <schwidefsky@de.ibm.com>.
+	Patch by Martin Schwidefsky <schwidefsky@de.ibm.com>.
 
 2000-10-20  Jakub Jelinek  <jakub@redhat.com>
 
@@ -918,7 +918,7 @@
 	* string/string.h: Remove declaration of __strcasecmp and __strcasestr.
 	* include/string.h: Declare them here.
 
-2000-10-18  Ralf Baechle  <ralf@gnu.org>
+2000-10-18  Ralf Bächle  <ralf@gnu.org>
 
 	* sysdeps/unix/sysv/linux/mips/sys/syscall.h: Include <asm/unistd.h>.
 
@@ -944,7 +944,7 @@
 	(elf_machine_runtime_link_map): Likewise.
 	(elf_machine_runtime_setup): Likewise.
 	Handle dynamic linker's local got entries.
-	Patches by Ralf Baechle <ralf@gnu.org>.
+	Patches by Ralf Bächle <ralf@gnu.org>.
 
 2000-10-09  Maciej W. Rozycki  <macro@ds2.pg.gda.pl>
 
@@ -1347,7 +1347,7 @@
 
 	* sysdeps/sparc/sparc32/fpu/libm-test-ulps: New file.
 
-2000-10-02  Ralf Baechle  <ralf@gnu.org>
+2000-10-02  Ralf Bächle  <ralf@gnu.org>
 
 	* sysdeps/unix/sysv/linux/mips/sys/tas.h: Add missing .mips0 at the
 	end of inline assembler code.
@@ -1364,7 +1364,7 @@
 
 	* sysdeps/unix/sysv/linux/alpha/bits/resource.h: Add RLIMIT_LOCKS.
 
-2000-10-01  Ralf Baechle  <ralf@gnu.org>
+2000-10-01  Ralf Bächle  <ralf@gnu.org>
 
 	* sysdeps/mips/dl-machine.h (RTLD_START): Fix computation of envp
 	argument passed to _dl_init.
@@ -1433,7 +1433,7 @@
 	level2, and level3 as well.
 	(wctype_table_add): Remove a few unnecessary conditionals.
 
-2000-09-30  Ralf Baechle  <ralf@gnu.org>
+2000-09-30  Ralf Bächle  <ralf@gnu.org>
 
 	* wcsmbs/Versions [libc] (GLIBC_2.0): Add __mbrtowc.
 
@@ -1702,7 +1702,7 @@
 	* sysdeps/unix/sysv/linux/powerpc/bits/sem.h: New file.
 	* sysdeps/unix/sysv/linux/powerpc/bits/shm.h: New file.
 
-2000-09-28  Martin Schwidefsksy  <schwidefsky@de.ibm.com>
+2000-09-28  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/s390/atomicity.h: Fix compare_and_swap.
 
@@ -1733,7 +1733,7 @@
 2000-09-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* manual/errno.texi: Correct error text for ENXIO.
-	Reported by J�rg Schilling <schilling@fokus.gmd.de>.
+	Reported by Jörg Schilling <schilling@fokus.gmd.de>.
 
 2000-09-27  Jes Sorensen  <jes@linuxcare.com>
 
@@ -2216,7 +2216,7 @@
 
 	* intl/Versions: Add bind_textdomain_codeset.
 
-2000-09-16  Ralf Baechle  <ralf@gnu.org>
+2000-09-16  Ralf Bächle  <ralf@gnu.org>
 
 	* sysdeps/mips/dl-machine.h (_RTLD_PROLOGUE): Reformat.  Declare
 	as function.
@@ -3116,7 +3116,7 @@
 	* libio/oldiofsetpos64.c: iofsetpos was introduced in glibc 2.1,
 	change symbol version.
 	* libio/oldiofgetpos64.c: Likewise.
-	Reported by Martin v. Loewis <martin@loewis.home.cs.tu-berlin.de>.
+	Reported by Martin v. Löwis <martin@loewis.home.cs.tu-berlin.de>.
 
 	* locale/programs/ld-ctype.c (charclass_charcode_ellipsis): Fix
 	typo.
@@ -5522,7 +5522,7 @@
 	* timezone/northamerica: Likewise.
 	* timezone/zone-tab: Likewise.
 
-2000-07-30  Ralf Baechle  <ralf@gnu.org>
+2000-07-30  Ralf Bächle  <ralf@gnu.org>
 
 	* sysdeps/unix/sysv/linux/mips/bits/sigstack.h:  New file.  On MIPS
 	the order of struct sigaltstack members is different.
@@ -6434,7 +6434,7 @@
 
 	* nss/makedb.c (main): Compare result of load_db with
 	NSS_STATUS_SUCCESS and not 0.
-	Patch by Jan Rekorajski <baggins@sith.mimuw.edu.pl>.
+	Patch by Jan Rękorajski <baggins@sith.mimuw.edu.pl>.
 
 	* sysdeps/unix/sysv/linux/Versions: Export __sysctl for GLIBC_2.2.
 
@@ -7177,7 +7177,7 @@
 
 	* sysdeps/mips/fpu_control.h: Fix type of fpu_control_t.
 	(_FPU_GETCW): Remove extra colon.
-	Patch by Ralf Baechle <ralf@uni-koblenz.de>.
+	Patch by Ralf Bächle <ralf@uni-koblenz.de>.
 
 	* posix/fnmatch_loop.c (FCT): Only declare len if
 	!WIDE_CHAR_VERSION to silence GCC.
@@ -8201,7 +8201,7 @@
 2000-06-18  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/mips/dl-machine.h: Always use $25 as jump register.
-	Patch by Ralf Baechle <ralf@uni-koblenz.de>.
+	Patch by Ralf Bächle <ralf@uni-koblenz.de>.
 
 2000-06-17  Ulrich Drepper  <drepper@redhat.com>
 
@@ -8471,7 +8471,7 @@
 2000-06-13  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/mips/elf/start.S (ENTRY_POINT): Remove mips64 defines.
-	Patch by Ralf Baechle <ralf@gnu.org>.
+	Patch by Ralf Bächle <ralf@gnu.org>.
 
 2000-06-13  Ulrich Drepper  <drepper@redhat.com>
 
@@ -9820,7 +9820,7 @@
 	* inet/netinet/in.h (IN6_ARE_ADDR_EQUAL): Correct indices.
 	Reported by tmoestl@gmx.net, closes PR libc/1732.
 
-2000-05-11  Jan Hubicka  <jh@suse.cz>
+2000-05-11  Jan Hubička  <jh@suse.cz>
 
 	* misc/sys/cdefs.h: Add support for pure attribute.
 
@@ -11318,7 +11318,7 @@
 
 	* sysdeps/mips/__longjmp.c (__longjmp): Use $25 to fix problems
 	with some applications.
-	Patches by Ralf Baechle <ralf@uni-koblenz.de>.
+	Patches by Ralf Bächle <ralf@uni-koblenz.de>.
 
 	* sysdeps/mips/bsd-setjmp.S: Use __PIC__.
 	* sysdeps/mips/bsd-_setjmp.S: Likewise.
@@ -12107,7 +12107,7 @@
 	* sysdeps/unix/sysv/linux/arm/siglist.c: Likewise.
 
 2000-03-29  Andreas Jaeger  <aj@suse.de>,
-	    Ralf Baechle <ralf@uni-koblenz.de>
+	    Ralf Bächle <ralf@uni-koblenz.de>
 
 	* Makeconfig: Introduce new variable SHARED to mark code used in
 	the shared library.

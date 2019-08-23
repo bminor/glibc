@@ -1,4 +1,4 @@
-/* Optimizations bu Ulrich Drepper <drepper@gmail.com>, 2011 */
+/* Optimizations by Ulrich Drepper <drepper@gmail.com>, 2011 */
 /*
  * ====================================================
  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.

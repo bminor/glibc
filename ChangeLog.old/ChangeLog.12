@@ -510,7 +510,7 @@
 
 	* libio/iopopen.c: Add lock for proc_file_chain access.
 	* libio/oldiopopen.c: Add lock for old_proc_file_chain access.
-	Reported by Padraig Brady <Padraig@linux.ie>.
+	Reported by Pádraig Brady <Padraig@linux.ie>.
 
 2001-07-31  Andreas Jaeger  <aj@suse.de>
 
@@ -2247,7 +2247,7 @@
 	* sysdeps/unix/sysv/linux/speed.c (cfsetispeed): Max speed is
 	B4000000.
 	(cfsetospeed): Likewise.
-	Reported by Lukasz Trabinski <lukasz@lt.wsisiz.edu.pl>.
+	Reported by Łukasz Trąbiński <lukasz@lt.wsisiz.edu.pl>.
 
 2001-05-31  Joseph S. Myers  <jsm28@cam.ac.uk>
 
@@ -2813,7 +2813,7 @@
 	that _CS_LFS_CFLAGS can fall through to the empty returned string
 	case.  Add FALLTHROUGH comment.
 
-2001-04-29  Ralf Baechle  <ralf@gnu.org>
+2001-04-29  Ralf Bächle  <ralf@gnu.org>
 
 	* sysdeps/unix/sysv/linux/mips/bits/sem.h: Make structure
 	definitions match the kernel definitions.
@@ -5570,7 +5570,7 @@
 	* resolv/tst-aton.c: Add testcase for IP with four periods.
 
 	* resolv/inet_addr.c: Don't recognize an IP with four periods.
-	Patch by Andre' Breiler <A.Breiler@gmx.net>.
+	Patch by André Breiler <A.Breiler@gmx.net>.
 
 2001-02-27  Philip Blundell  <pb@futuretv.com>
 
@@ -9884,7 +9884,7 @@
 
 	* manual/startup.texi (Program Arguments): Fix type of main's envp
 	parameter.
-	Reported by Ra�l N��ez de Arenas Coronado <dervishd@linuxfreak.com>.
+	Reported by Raúl Núñez de Arenas Coronado <dervishd@linuxfreak.com>.
 
 	* iconvdata/gconv-modules: Add CP950 alias.
 

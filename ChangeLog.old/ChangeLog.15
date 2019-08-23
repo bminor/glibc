@@ -2046,7 +2046,7 @@
 	(delete_heap): Clear aligned_heap_area if deleting the area right
 	before aligned_heap_area.
 
-2004-10-03  Juerg Billeter  <j@bitron.ch>
+2004-10-03  Jürg Billeter  <j@bitron.ch>
 
 	* nscd/nscd_initgroups.c (__nscd_getgrouplist): Return -1 if nscd
 	can't be used.  [BZ #424]

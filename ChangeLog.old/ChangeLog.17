@@ -795,7 +795,7 @@
 	[BZ #5553]
 	* malloc/malloc.c (public_vALLOc): Set ar_ptr when trying main_arena.
 	(public_pVALLOc): Likewise.
-	Patch by Petr Baudis.
+	Patch by Petr Baudiš.
 
 2010-02-22  Jim Meyering  <meyering@redhat.com>
 
@@ -5048,7 +5048,7 @@ d2009-10-30  Ulrich Drepper  <drepper@redhat.com>
 	* posix/Makefile (getconf.speclist): Also collect SUSv5 and SUSv7
 	environments.
 
-2009-01-16  Petr Baudis  <pasky@suse.cz>
+2009-01-16  Petr Baudiš  <pasky@suse.cz>
 
 	[BZ #9753]
 	* resolv/res_libc.c (__res_maybe_init): Call __res_vinit()
@@ -5462,7 +5462,7 @@ d2009-10-30  Ulrich Drepper  <drepper@redhat.com>
 	* inet/Makefile (tests): Add tst-getni1.
 	* inet/tst-getni1.c: New file.
 
-2008-12-03  Petr Baudis  <pasky@suse.cz>
+2008-12-03  Petr Baudiš  <pasky@suse.cz>
 
 	[BZ #7067]
 	* nscd/connections.c (invalidate_cache): Use prune_run_lock
@@ -6487,7 +6487,7 @@ d2009-10-30  Ulrich Drepper  <drepper@redhat.com>
 	[BZ #6657]
 	* time/strptime_l.c: Don't clear s.era_cnt after successful match
 	of %EY.
-	Patch by Petr Baudis.
+	Patch by Petr Baudiš.
 
 2008-06-26  Ulrich Drepper  <drepper@redhat.com>
 
@@ -6542,7 +6542,7 @@ d2009-10-30  Ulrich Drepper  <drepper@redhat.com>
 	[BZ #6612]
 	* time/strftime.c (__strftime_internal): Call tzset() only
 	when printing timezone-dependent values.
-	Based on a patch by Petr Baudis <pasky@suse.cz>.
+	Based on a patch by Petr Baudiš <pasky@suse.cz>.
 
 	* resolv/nss_dns/dns-host.c (gaih_getanswer): Don't
 	unconditionally use second gaih_getanswer_slice result.
@@ -8275,7 +8275,7 @@ d2009-10-30  Ulrich Drepper  <drepper@redhat.com>
 	* nscd/connections.c (start_threads): Use NSCD_THREAD_STACKSIZE.
 	* nscd/mem.c (gc): Don't allocate arrays on the stack if they can
 	overflow it.
-	Partially based on a patch by Petr Baudis <pasky@suse.cz>.
+	Partially based on a patch by Petr Baudiš <pasky@suse.cz>.
 
 	* sysdeps/unix/sysv/linux/nscd_setup_thread.c (setup_thread):
 	Return zero in case the thread library is not NPTL.
@@ -8288,7 +8288,7 @@ d2009-10-30  Ulrich Drepper  <drepper@redhat.com>
 	* nis/nss_compat/compat-initgroups.c (getgrent_next_nss): Don't
 	use result of nss_getgrgid_r if nothing was found.  For other
 	error return with a failure.
-	Partially based on a patch by Petr Baudis <pasky@suse.cz>.
+	Partially based on a patch by Petr Baudiš <pasky@suse.cz>.
 
 	* locale/programs/ld-collate.c (collate_read): Fix loop to match
 	macro name.
@@ -9789,7 +9789,7 @@ d2009-10-30  Ulrich Drepper  <drepper@redhat.com>
 	[BZ #4946]
 	* nscd/connections.c (handle_request): Using sendfile always
 	requires that mmap is used for the database.
-	Patch by Petr Baudis <pasky@suse.cz>.
+	Patch by Petr Baudiš <pasky@suse.cz>.
 
 	[BZ #4905]
 	* nscd/hstcache.c (cache_addhst): When reloading an entry which
@@ -12914,7 +12914,7 @@ d2009-10-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* io/fts.c: Make sure fts_cur is always valid after return from
 	fts_read.
-	Patch by Miloslav Trmac <mitr@redhat.com>.
+	Patch by Miloslav Trmač <mitr@redhat.com>.
 
 2006-10-27  Richard Sandiford  <richard@codesourcery.com>
 
@@ -13800,7 +13800,7 @@ d2009-10-30  Ulrich Drepper  <drepper@redhat.com>
 	* po/pl.po: Update from translation team.
 
 	* nscd/nscd.c (main): Fix typo in message.
-	Patch by Jakub Bogsz <qboosh@pld-linux.org>.
+	Patch by Jakub Bogusz <qboosh@pld-linux.org>.
 
 2006-10-02  Jakub Jelinek  <jakub@redhat.com>
 
@@ -13858,7 +13858,7 @@ d2009-10-30  Ulrich Drepper  <drepper@redhat.com>
 	[BZ #3273]
 	* nscd/nscd_initgroups.c (__nscd_getgrouplist): It is OK to have
 	found no group members.
-	Patch by Petr Baudis.
+	Patch by Petr Baudiš.
 
 2006-09-29  Jakub Jelinek  <jakub@redhat.com>
 

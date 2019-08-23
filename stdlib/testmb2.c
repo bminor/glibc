@@ -1,4 +1,4 @@
-/* Test case by Miloslav Trmac <mitr@volny.cz>.  */
+/* Test case by Miloslav Trmač <mitr@volny.cz>.  */
 #include <locale.h>
 #include <stdint.h>
 #include <stdlib.h>

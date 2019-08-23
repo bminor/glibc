@@ -15923,7 +15923,7 @@
 
 	* math/libm-test.inc (totalorder_test_data): Add more tests.
 
-2016-10-12  Adhemerval Zanela  <adhemerval.zanella@linaro.org>
+2016-10-12  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/mips/mips64/n64/posix_fadvise64.c:
 	Undefine weak_alias and add a comment why mips64 require
@@ -20368,7 +20368,7 @@
 	* misc/sys/cdefs.h [__GNUC_PREREQ (3,2)]: Undef __always_inline first.
 	[!__GNUC_PREREQ (3,2)]: Likewise.
 
-2016-06-10  Adhemerval Zanela  <adhemerval.zanella@linaro.org>
+2016-06-10  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* conform/data/sys/socket.h-data (msghdr.msg_iovlen): Add xfail-.
 	(msghdr.msg_controllen): Likewise.
@@ -24840,7 +24840,7 @@
 	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Move
 	__sqrtl_finite to GLIBC_2.23
 
-2016-01-25  Ricchard Henderson  <rth@redhat.com>
+2016-01-25  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/alpha/fpu/libm-test-ulps: Update.
 
@@ -33529,7 +33529,7 @@
 	* sysdeps/posix/nice.c (nice): Restore old errno.
 	* posix/tst-nice.c (do_test): Add test for BZ #18086.
 
-2015-08-10  Ondrej Bilka  <neleai@seznam.cz>
+2015-08-10  Ondřej Bílka  <neleai@seznam.cz>
 
 	* sysdeps/powerpc/powerpc64/multiarch/stpcpy.c: Fix ifunc.
 
@@ -39110,7 +39110,7 @@
 	[BZ #18043]
 	* posix/wordexp.c (parse_param): Don't call setenv(..., NULL, 1).
 
-2015-03-11  Adhemerval Zanellla  <azanella@linux.vnet.ibm.com>
+2015-03-11  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* config.h.in [HAVE_ASM_GLOBAL_DOT_NAME]: Remove define.
 	* include/libc-symbols.h [HAVE_ASM_GLOBAL_DOT_NAME] (strong_alias):
@@ -39397,7 +39397,7 @@
 	* string/strings.h (__CORRECT_ISO_CPP_STRINGS_H_PROTO):
 	Likewise.
 
-2015-03-03 Adhemerval Zanellla  <azanella@linux.vnet.ibm.com>
+2015-03-03 Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	[BZ #17776]
 	* sysdeps/powerpc/bits/fenvinline.h (feraiseexcept): Convert input to
@@ -40170,7 +40170,7 @@
 	* sysdeps/i386/i686/multiarch/mempcpy_chk.S: Fix position of
 	jump label.
 
-2015-02-09  Adhemerval Zanellla  <azanella@linux.vnet.ibm.com>
+2015-02-09  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc32/configure.ac: Remove R_PPC_REL16 check.
 	* sysdeps/powerpc/powerpc32/configure: Regenerated.
@@ -40608,7 +40608,7 @@
 	* sysdeps/mips/bits/atomic.h [_MIPS_SIM == _ABIN32]
 	(__HAVE_64B_ATOMICS): Define to 0.
 
-2015-01-28  Adhemerval Zanellla  <azanella@linux.vnet.ibm.com>
+2015-01-28  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	[BZ #17885]
 	* sysdeps/powerpc/fpu/fsetexcptflg.c (__fesetexceptflag): Fix correct
@@ -40657,7 +40657,7 @@
 	* elf/dl-load.c (open_path): Avoid writing to 'env_path_list'
 	when none of the search directories exist.
 
-2015-01-24  Adhemerval Zanellla  <azanella@linux.vnet.ibm.com>
+2015-01-24  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
 
 	[BZ #17869]
 	* sysdeps/powerpc/powerpc64/power8/memset.S: Use power7 instead of
@@ -51441,7 +51441,7 @@
 
 	* manual/resource.texi (How to get information about the memory
 	subsystem?): Fix typo.
-	Reported by Peon de la Parra Ivan <peon@keba.com>
+	Reported by Ivan Peon de la Parra <peon@keba.com>
 
 2014-06-03  Guo Yixuan  <culu.gyx@gmail.com>
 
@@ -58133,7 +58133,7 @@
 	* libio/tst-ftell-partial-wide.c: New test case.
 	* libio/Makefile (tests): Add tst-ftell-partial-wide.
 
-	* manual/contrib.texi: Update entry for Ondrej Bilka, Will
+	* manual/contrib.texi: Update entry for Ondřej Bílka, Will
 	Newton and Alexandre Oliva.  Add entries for Steve Ellcey, Chris
 	Leonard and Allan McRae.
 
@@ -64634,8 +64634,8 @@
 2013-08-01  David S. Miller  <davem@davemloft.net>
 
 	* manual/contrib.texi: Update entry for Siddhesh Poyarekar.  Add
-	entries for Will Newton, Andi Kleen, David Holsgrove, and Ondrej
-	Bilka.
+	entries for Will Newton, Andi Kleen, David Holsgrove, and Ondřej
+	Bílka.
 
 2013-07-30  David S. Miller  <davem@davemloft.net>
 
@@ -68988,7 +68988,7 @@
 
 2013-04-10  Siddhesh Poyarekar  <siddhesh@redhat.com>
 	    Roland McGrath  <roland@hack.frob.com>
-	    Ondrej Bilka  <neleai@seznam.cz>
+	    Ondřej Bílka  <neleai@seznam.cz>
 
 	[BZ #15346]
 	* time/getdate.c: Include ctype.h and alloca.h.
@@ -69563,7 +69563,7 @@
 	on argument names, not just descriptions.
 	* iconv/iconvconfig.c (options): Likewise.
 
-2013-03-18  Ondrej Bilka  <neleai@seznam.cz>
+2013-03-18  Ondřej Bílka  <neleai@seznam.cz>
 
 	* sysdeps/x86_64/strlen.S: Replace with new SSE2 based
 	implementation which is faster on all x86_64 architectures.
@@ -69772,7 +69772,7 @@
 
 	* sysdeps/unix/sysv/linux/times.c (__times): Fix formatting.
 
-2013-03-14  Petr Baudis  <pasky@ucw.cz>
+2013-03-14  Petr Baudiš  <pasky@ucw.cz>
 
 	* sysdeps/unix/sysv/linux/times.c (__times): On EFAULT, test
 	for non-NULL pointer before the memory validity test. Pointed
@@ -83503,7 +83503,7 @@
 
 	* config.h.in: Add HAVE_ARM_PCS_VFP.
 
-2012-05-08  Roland Mc Grath  <roland@hack.frob.com>
+2012-05-08  Roland McGrath  <roland@hack.frob.com>
 
 	[BZ #13979]
 	* include/features.h: Warn if user requests __FORTIFY_SOURCE
@@ -85140,7 +85140,7 @@
 	* sysdeps/ieee754/ldbl-opt/w_ilogb.c: ... here.
 	* sysdeps/ieee754/ldbl-opt/w_ilogbl.c: New file: ilogbl wrapper.
 
-2012-04-17  Petr Baudis  <pasky@ucw.cz>
+2012-04-17  Petr Baudiš  <pasky@ucw.cz>
 
 	* include/sys/uio.h: Change __vector to __iovec to avoid clash
 	with altivec.
@@ -85188,7 +85188,7 @@
 	[BZ #2074]
 	* libio/libio.h (__io_write_fn): Update comment.
 
-2012-04-12  Petr Baudis  <pasky@ucw.cz>
+2012-04-12  Petr Baudiš  <pasky@ucw.cz>
 
 	[BZ #2074]
 	* stdio.texi (Hook Functions): The user provided writer function
@@ -92408,7 +92408,7 @@
 	* sysdeps/x86_64/fpu/libm-test-ulps: Add new ULPs for jn_test,
 	regenerate with gen-libm-tests.pl.
 
-2010-05-12  Petr Baudis  <pasky@suse.cz>
+2010-05-12  Petr Baudiš  <pasky@suse.cz>
 
 	[BZ #11589]
 	* sysdeps/ieee754/dbl-64/e_jn.c: Compensate major precision loss
@@ -94475,7 +94475,7 @@
 	* resolv/res_query.c (__libc_res_nsearch): Backport changes from
 	modern BIND to search name as TLD unless forbidden.
 
-2011-05-07  Petr Baudis  <pasky@suse.cz>
+2011-05-07  Petr Baudiš  <pasky@suse.cz>
 	    Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ #12393]
@@ -94984,7 +94984,7 @@
 	Hurd needs munmap.
 	* sysdeps/mach/hurd/ifreq.h: New file.
 
-2011-01-27  Petr Baudis  <pasky@suse.cz>
+2011-01-27  Petr Baudiš  <pasky@suse.cz>
 	    Ulrich Drepper  <drepper@gmail.com>
 
 	[BZ 12445]#
@@ -95432,7 +95432,7 @@
 
 	* sysdeps/ieee754/ldbl-128/s_fmal.c (__fmal): Fix up inline asm.
 
-2010-05-31  Petr Baudis  <pasky@suse.cz>
+2010-05-31  Petr Baudiš  <pasky@suse.cz>
 
 	[BZ #11149]
 	* elf/ldconfig.c (main): Allow aux_cache_file open()ing to fail
@@ -95443,7 +95443,7 @@
 	* nis/nss_compat/compat-initgroups.c (internal_getgrent_r): Optimize
 	last patch a bit.  Pretty printing
 
-2010-05-31  Petr Baudis <pasky@suse.cz>
+2010-05-31  Petr Baudiš <pasky@suse.cz>
 
 	[BZ #10085]
 	* nis/nss_compat/compat-initgroups.c (internal_getgrent_r): Fix
@@ -95821,7 +95821,7 @@
 	* sysdeps/unix/sysv/linux/internal_statvfs.c (INTERNAL_STATVFS):
 	Mask out sign-bit copies when constructing f_fsid.
 
-2010-09-24  Petr Baudis <pasky@suse.cz>
+2010-09-24  Petr Baudiš <pasky@suse.cz>
 
 	* debug/stack_chk_fail_local.c: Add missing licence exception.
 	* debug/warning-nop.c: Likewise.
@@ -96051,7 +96051,7 @@
 
 	* configure.in: Move assembler checks to before sysdep dir checking.
 
-2010-08-20  Petr Baudis  <pasky@suse.cz>
+2010-08-20  Petr Baudiš  <pasky@suse.cz>
 
 	* LICENSES: Sync the sunrpc license.
 

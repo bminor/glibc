@@ -4810,7 +4810,7 @@ Later nptl/ changes go into the top-level ChangeLog file, not here.
 
 	[BZ #3251]
 	* descr.h (ENQUEUE_MUTEX_BOTH): Add cast to avoid warning.
-	Patch by Petr Baudis.
+	Patch by Petr Baudiš.
 
 2006-09-18  Jakub Jelinek  <jakub@redhat.com>
 

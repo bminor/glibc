@@ -727,7 +727,7 @@
 
 1998-12-30  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
-	Patche by Ralf Baechle <ralf@gnu.org>:
+	Patche by Ralf Bächle <ralf@gnu.org>:
 	* sysdeps/mips/sys/regdef.h: New file, enhanced versions of
 	deleted linux specific files.
 
@@ -1098,7 +1098,7 @@
 
 1998-12-30  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
-	Patches by Ralf Baechle <ralf@gnu.org>:
+	Patches by Ralf Bächle <ralf@gnu.org>:
 	* sysdeps/unix/sysv/linux/mips/sgidefs.h: Removed.
 	* sysdeps/unix/sysv/linux/mips/sys/asm.h:  Removed.
 	* sysdeps/unix/sysv/linux/mips/sys/regdef.h:  Removed.
@@ -1169,7 +1169,7 @@
 
 1998-12-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
-	Patches by Ralf Baechle <ralf@gnu.org> for Linux/MIPS:
+	Patches by Ralf Bächle <ralf@gnu.org> for Linux/MIPS:
 	* sysdeps/unix/sysv/linux/mips/syscalls.list: Add ipc, change
 	pread/pwrite and llseek calls.
 
@@ -2213,7 +2213,7 @@
 	<asm/signal.h> and add needed symbols from <asm/signal.h>; bring
 	in sync with linux specific version.
 
-	Patches by Ralf Baechle <ralf@uni-koblenz.de> for mips-linux:
+	Patches by Ralf Bächle <ralf@uni-koblenz.de> for mips-linux:
 
 	* sysdeps/unix/mips/sysdep.S: Define _errno as weak_alias, rewrite
 	errno declaration.
@@ -2772,7 +2772,7 @@
 
 	* elf/dynamic-link.h (_ELF_DYNAMIC_DO_RELOC): Rename macro
 	parameter lazy to do_lazy to avoid clashing with struct member name.
-	Reported by Ralf Baechle <ralf@uni-koblenz.de>.
+	Reported by Ralf Bächle <ralf@uni-koblenz.de>.
 
 1998-11-10  H.J. Lu  <hjl@gnu.org>
 
@@ -4060,7 +4060,7 @@
 	* sysdeps/unix/sysv/linux/bits/fcntl.h: Add dummy definition of
 	O_LARGEFILE back.
 
-1998-10-16  Paul Eggert  <eggert@shade.twinsun.com>
+1998-10-16  Paul Eggert  <eggert@twinsun.com>
 
 	* time/mktime.c: Some systems require <unistd.h> to be
 	included before <time.h> for localtime_r to be declared
@@ -4618,7 +4618,7 @@
 	strftime, and check to see whether strftime has set the buffer to zero.
 	This lets us distinguish between an empty buffer and an error.
 
-1998-09-24  Paul Eggert  <eggert@shade.twinsun.com>
+1998-09-24  Paul Eggert  <eggert@twinsun.com>
 
 	* time/strftime.c (INT_STRLEN_BOUND): Fix typo by changing 100 to 1000.
 	This fix is propagated from tzcode1998g.tar.gz.
