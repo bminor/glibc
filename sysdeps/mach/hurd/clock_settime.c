@@ -16,37 +16,40 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
-#include <sys/time.h>
+#include <time.h>
 #include <hurd.h>
 #include <hurd/port.h>
+#include <shlib-compat.h>
 
-/* Set the current time of day and timezone information.
+/* Set the current time of day.
    This call is restricted to the super-user.  */
 int
-__settimeofday (const struct timeval *tv, const struct timezone *tz)
+__clock_settime (clockid_t clock_id, const struct timespec *ts)
 {
   error_t err;
   mach_port_t hostpriv;
+  time_value_t tv;
 
-  if (tz != NULL)
-    {
-      errno = ENOSYS;
-      return -1;
-    }
+  if (clock_id != CLOCK_REALTIME
+      || ! valid_nanoseconds (ts->tv_nsec))
+    return __hurd_fail (EINVAL);
 
   err = __get_privileged_ports (&hostpriv, NULL);
   if (err)
     return __hurd_fail (EPERM);
 
-  /* `time_value_t' and `struct timeval' are in fact identical with the
-     names changed.  */
-  err = __host_set_time (hostpriv, *(time_value_t *) tv);
+  TIMESPEC_TO_TIME_VALUE (&tv, ts);
+  err = __host_set_time (hostpriv, tv);
   __mach_port_deallocate (__mach_task_self (), hostpriv);
 
-  if (err)
-    return __hurd_fail (err);
-
-  return 0;
+  return __hurd_fail (err);
 }
+libc_hidden_def (__clock_settime)
 
-weak_alias (__settimeofday, settimeofday)
+versioned_symbol (libc, __clock_settime, clock_settime, GLIBC_2_17);
+/* clock_settime moved to libc in version 2.17;
+   old binaries may expect the symbol version it had in librt.  */
+#if SHLIB_COMPAT (libc, GLIBC_2_2, GLIBC_2_17)
+strong_alias (__clock_settime, __clock_settime_2);
+compat_symbol (libc, __clock_settime_2, clock_settime, GLIBC_2_2);
+#endif

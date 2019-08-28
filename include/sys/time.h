@@ -24,8 +24,7 @@ extern int __gettimeofday (struct timeval *__tv,
 			   struct timezone *__tz);
 libc_hidden_proto (__gettimeofday)
 libc_hidden_proto (gettimeofday)
-extern int __settimeofday (const struct timeval *__tv,
-			   const struct timezone *__tz)
+extern int __settimezone (const struct timezone *__tz)
 	attribute_hidden;
 extern int __adjtime (const struct timeval *__delta,
 		      struct timeval *__olddelta);

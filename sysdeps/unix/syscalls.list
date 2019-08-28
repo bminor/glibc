@@ -76,7 +76,6 @@ setreuid	-	setreuid	i:ii	__setreuid	setreuid
 setrlimit	-	setrlimit	i:ip	__setrlimit setrlimit
 setsid		-	setsid		i:	__setsid	setsid
 setsockopt	-	setsockopt	i:iiibn	setsockopt	__setsockopt
-settimeofday	-	settimeofday	i:PP	__settimeofday	settimeofday
 setuid		-	setuid		i:i	__setuid	setuid
 shutdown	-	shutdown	i:ii	shutdown
 sigaction	-	sigaction	i:ipp	__sigaction	sigaction

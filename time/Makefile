@@ -31,13 +31,13 @@ headers := time.h sys/time.h sys/timeb.h bits/time.h			\
 
 routines := offtime asctime clock ctime ctime_r difftime \
 	    gmtime localtime mktime time		 \
-	    gettimeofday settimeofday adjtime tzset	 \
-	    tzfile getitimer setitimer			 \
+	    gettimeofday settimeofday settimezone	 \
+	    adjtime tzset tzfile getitimer setitimer	 \
 	    stime dysize timegm ftime			 \
 	    getdate strptime strptime_l			 \
 	    strftime wcsftime strftime_l wcsftime_l	 \
-	    timespec_get 	 			 \
-	    clock_getcpuclockid clock_getres 		 \
+	    timespec_get				 \
+	    clock_getcpuclockid clock_getres		 \
 	    clock_gettime clock_settime clock_nanosleep
 
 aux :=	    era alt_digit lc-time-cleanup

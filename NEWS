@@ -34,6 +34,30 @@ Deprecated and removed features, and other changes affecting compatibility:
   binaries and it has been removed from <time.h> header.  This function
   has been deprecated in favor of clock_settime.
 
+* The settimeofday function can still be used to set a system-wide time
+  zone when the operating system supports it.  This is because the Linux
+  kernel reused the API, on some architectures, to describe a system-wide
+  time-zone-like offset between the software clock maintained by the kernel,
+  and the "RTC" clock that keeps time when the system is shut down.
+
+  However, to reduce the odds of this offset being set by accident,
+  settimeofday can no longer be used to set the time and the offset
+  simultaneously.  If both of its two arguments are non-null, the call
+  will fail (setting errno to EINVAL).
+
+  Callers attempting to set this offset should also be prepared for the call
+  to fail and set errno to ENOSYS; this already happens on the Hurd and on
+  some Linux architectures.  The Linux kernel maintainers are discussing a
+  more principled replacement for the reused API.  After a replacement
+  becomes available, we will change settimeofday to fail with ENOSYS on all
+  platforms when its 'tzp' argument is not a null pointer.
+
+  Note that settimeofday itself is obsolescent according to POSIX.
+  Programs that set the system time should use clock_settime and/or
+  the adjtime family of functions instead.  We may also cease to make
+  settimeofday available to newly linked binaries after there is a
+  replacement for Linux's time-zone-like offset API.
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]
