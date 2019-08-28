@@ -43,7 +43,8 @@ endif
 subdir-dirs = programs
 vpath %.c programs
 
-tests := tst-utmp tst-utmpx tst-grantpt tst-ptsname tst-getlogin tst-updwtmpx
+tests := tst-utmp tst-utmpx tst-grantpt tst-ptsname tst-getlogin tst-updwtmpx \
+  tst-pututxline-lockfail
 
 # Build the -lutil library with these extra functions.
 extra-libs      := libutil
@@ -71,3 +72,5 @@ endif
 $(inst_libexecdir)/pt_chown: $(objpfx)pt_chown $(+force)
 	$(make-target-directory)
 	-$(INSTALL_PROGRAM) -m 4755 -o root $< $@
+
+$(objpfx)tst-pututxline-lockfail: $(shared-thread-library)
