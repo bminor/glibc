@@ -1,3 +1,8 @@
+2019-09-04  Lukasz Majewski <lukma@denx.de>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_TIME64_SYSCALLS): New macro.
+
 2019-09-04  Zack Weinberg  <zackw@panix.com>
 
 	[BZ #24959]

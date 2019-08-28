@@ -20,6 +20,11 @@
 /* This file must not contain any C code.  At least it must be protected
    to allow using the file also in assembler files.  */
 
+#ifndef _LINUX_KERNEL_FEATURES_H
+#define _LINUX_KERNEL_FEATURES_H 1
+
+#include <bits/wordsize.h>
+
 #ifndef __LINUX_KERNEL_VERSION
 /* We assume the worst; all kernels should be supported.  */
 # define __LINUX_KERNEL_VERSION	0
@@ -139,3 +144,57 @@
    */
 
 #define __ASSUME_CLONE_DEFAULT 1
+
+/* Support for 64-bit time_t in the system call interface.  When this
+   flag is set, the kernel provides a version of each of these system
+   calls that accepts 64-bit time_t:
+
+     clock_adjtime(64)
+     clock_gettime(64)
+     clock_settime(64)
+     clock_getres(_time64)
+     clock_nanosleep(_time64)
+     futex(_time64)
+     mq_timedreceive(_time64)
+     mq_timedsend(_time64)
+     ppoll(_time64)
+     pselect6(_time64)
+     rt_sigtimedwait(_time64)
+     sched_rr_get_interval(_time64)
+     timer_gettime(64)
+     timer_settime(64)
+     timerfd_gettime(64)
+     timerfd_settime(64)
+     utimensat(_time64)
+
+   On architectures where time_t has historically been 64 bits,
+   only the 64-bit version of each system call exists, and there
+   are no suffixes on the __NR_ constants.
+
+   On architectures where time_t has historically been 32 bits,
+   both 32-bit and 64-bit versions of each system call may exist,
+   depending on the kernel version.  When the 64-bit version exists,
+   there is a '64' or '_time64' suffix on the name of its __NR_
+   constant, as shown above.
+
+   This flag is always set for Linux 5.1 and later.  Prior to that
+   version, it is set only for some CPU architectures and ABIs:
+
+   - __WORDSIZE == 64 - all supported architectures where pointers
+     are 64 bits also have always had 64-bit time_t.
+
+   - __WORDSIZE == 32 && __SYSCALL_WORDSIZE == 64 - this describes
+     only one supported configuration, x86's 'x32' subarchitecture,
+     where pointers are 32 bits but time_t has always been 64 bits.
+
+   __ASSUME_TIME64_SYSCALLS being set does not mean __TIMESIZE is 64,
+   and __TIMESIZE equal to 64 does not mean __ASSUME_TIME64_SYSCALLS
+   is set.  All four cases are possible.  */
+
+#if __LINUX_KERNEL_VERSION >= 0x050100                          \
+  || __WORDSIZE == 64                                           \
+  || (defined __SYSCALL_WORDSIZE && __SYSCALL_WORDSIZE == 64)
+# define __ASSUME_TIME64_SYSCALLS 1
+#endif
+
+#endif /* kernel-features.h */
