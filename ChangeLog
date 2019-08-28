@@ -1,3 +1,8 @@
+2019-08-28  Stefan Liebler  <stli@linux.ibm.com>
+
+	* posix/tst-regex.c (do_test): Use tst-regex.input as input file.
+	* posix/tst-regex.input: New file.
+
 2019-08-23  Mihailo Stojanovic  <mihailo.stojanovic@rt-rk.com>
 
 	[BZ #24916]
