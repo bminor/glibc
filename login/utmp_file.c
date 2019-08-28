@@ -185,9 +185,11 @@ __libc_getutent_r (struct utmp *buffer, struct utmp **result)
 }
 
 
+/* Search for *ID, updating last_entry and file_offset.  Return 0 on
+   success and -1 on failure.  If the locking operation failed, write
+   true to *LOCK_FAILED.  */
 static int
-internal_getut_r (const struct utmp *id, struct utmp *buffer,
-		  bool *lock_failed)
+internal_getut_r (const struct utmp *id, bool *lock_failed)
 {
   int result = -1;
 
@@ -206,7 +208,7 @@ internal_getut_r (const struct utmp *id, struct utmp *buffer,
       while (1)
 	{
 	  /* Read the next entry.  */
-	  if (__read_nocancel (file_fd, buffer, sizeof (struct utmp))
+	  if (__read_nocancel (file_fd, &last_entry, sizeof (struct utmp))
 	      != sizeof (struct utmp))
 	    {
 	      __set_errno (ESRCH);
@@ -215,7 +217,7 @@ internal_getut_r (const struct utmp *id, struct utmp *buffer,
 	    }
 	  file_offset += sizeof (struct utmp);
 
-	  if (id->ut_type == buffer->ut_type)
+	  if (id->ut_type == last_entry.ut_type)
 	    break;
 	}
     }
@@ -227,7 +229,7 @@ internal_getut_r (const struct utmp *id, struct utmp *buffer,
       while (1)
 	{
 	  /* Read the next entry.  */
-	  if (__read_nocancel (file_fd, buffer, sizeof (struct utmp))
+	  if (__read_nocancel (file_fd, &last_entry, sizeof (struct utmp))
 	      != sizeof (struct utmp))
 	    {
 	      __set_errno (ESRCH);
@@ -236,7 +238,7 @@ internal_getut_r (const struct utmp *id, struct utmp *buffer,
 	    }
 	  file_offset += sizeof (struct utmp);
 
-	  if (__utmp_equal (buffer, id))
+	  if (__utmp_equal (&last_entry, id))
 	    break;
 	}
     }
@@ -265,7 +267,7 @@ __libc_getutid_r (const struct utmp *id, struct utmp *buffer,
   /* We don't have to distinguish whether we can lock the file or
      whether there is no entry.  */
   bool lock_failed = false;
-  if (internal_getut_r (id, &last_entry, &lock_failed) < 0)
+  if (internal_getut_r (id, &lock_failed) < 0)
     {
       *result = NULL;
       return -1;
@@ -330,10 +332,9 @@ unlock_return:
 struct utmp *
 __libc_pututline (const struct utmp *data)
 {
-  if (!maybe_setutent ())
+  if (!maybe_setutent () || file_offset == -1l)
     return NULL;
 
-  struct utmp buffer;
   struct utmp *pbuf;
   int found;
 
@@ -369,7 +370,7 @@ __libc_pututline (const struct utmp *data)
   else
     {
       bool lock_failed = false;
-      found = internal_getut_r (data, &buffer, &lock_failed);
+      found = internal_getut_r (data, &lock_failed);
 
       if (__builtin_expect (lock_failed, false))
 	{

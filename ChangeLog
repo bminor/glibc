@@ -1,3 +1,13 @@
+2019-08-28  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24902]
+	* login/Makefile (tests): Add tst-pututxline-lockfail.
+	(tst-pututxline-lockfail): Link with -lpthread.
+	* login/utmp_file.c (internal_getut_r): Remove buffer argument.
+	(__libc_getutid_r): Adjust.
+	(__libc_pututline): Likewise.  Check for file_offset == -1.
+	* login/tst-pututxline-lockfail.c: New file.
+
 2019-08-15  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #24880]
