@@ -18,36 +18,41 @@
 
 #include <mntent.h>
 #include <stdlib.h>
-#include <libc-lock.h>
+#include <allocate_once.h>
+
+struct mntent_buffer
+{
+  struct mntent m;
+  char buffer[4096];
+};
 
 /* We don't want to allocate the static buffer all the time since it
-   is not always used (in fact, rather infrequently).  Accept the
-   extra cost of a `malloc'.  */
-libc_freeres_ptr (static char *getmntent_buffer);
+   is not always used (in fact, rather infrequently).  */
+libc_freeres_ptr (static void *mntent_buffer);
 
-/* This is the size of the buffer.  This is really big.  */
-#define BUFFER_SIZE	4096
-
-
-static void
-allocate (void)
+static void *
+allocate (void *closure)
 {
-  getmntent_buffer = (char *) malloc (BUFFER_SIZE);
+  return malloc (sizeof (struct mntent_buffer));
 }
 
+static void
+deallocate (void *closure, void *ptr)
+{
+  free (ptr);
+}
 
 struct mntent *
 getmntent (FILE *stream)
 {
-  static struct mntent m;
-  __libc_once_define (static, once);
-  __libc_once (once, allocate);
-
-  if (getmntent_buffer == NULL)
+  struct mntent_buffer *buffer = allocate_once (&mntent_buffer,
+						allocate, deallocate, NULL);
+  if (buffer == NULL)
     /* If no core is available we don't have a chance to run the
        program successfully and so returning NULL is an acceptable
        result.  */
     return NULL;
 
-  return __getmntent_r (stream, &m, getmntent_buffer, BUFFER_SIZE);
+  return __getmntent_r (stream, &buffer->m,
+			buffer->buffer, sizeof (buffer->buffer));
 }

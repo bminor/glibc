@@ -1,5 +1,13 @@
 2019-08-28  Florian Weimer  <fweimer@redhat.com>
 
+	* misc/mntent.c (struct mntent_buffer): Define.
+	(mntent_buffer): Adjust type to void *.
+	(allocate): Adjust for allocate_once.
+	(deallocate): New function.
+	(getmntent): Call allocate_once.
+
+2019-08-28  Florian Weimer  <fweimer@redhat.com>
+
 	nptl: Move pthread_attr_setdetachstate implementation into libc.
 	* nptl/Makefile (routines): Add pthread_attr_setdetachstate.
 	(libpthread-routines): Remove pthread_attr_setdetachstate.
