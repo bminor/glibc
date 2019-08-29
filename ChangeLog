@@ -24,6 +24,11 @@
 	* sysdeps/mach/hurd/mmap.c (__mmap): Remove optimizing anonymous maps
 	as __vm_allocate.
 
+	* sysdeps/mach/hurd/i386/sigreturn.c (__sigreturn2): New function,
+	unlocks SS and returns to the saved PC.
+	(__sigreturn): Do not unlock SS, and "return" into __sigreturn2 on the
+	thread stack instead of the saved PC.
+
 2019-08-30  Richard Braun  <rbraun@sceen.net>
 
 	* hurd/hurdselect.c (_hurd_select): Always call __io_select with no
