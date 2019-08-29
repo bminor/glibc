@@ -1,3 +1,8 @@
+2019-08-30  Richard Braun <rbraun@sceen.net>
+
+	* hurd/hurdselect.c (_hurd_select): Always call __io_select with no
+	timeout.
+
 2019-08-29  Mihailo Stojanovic  <mihailo.stojanovic@rt-rk.com>
 
 	* elf/dl-addr.c (determine_info): Calculate the symbol index

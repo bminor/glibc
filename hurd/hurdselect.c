@@ -236,10 +236,7 @@ _hurd_select (int nfds,
 	  {
 	    int type = d[i].type;
 	    d[i].reply_port = __mach_reply_port ();
-	    err = __io_select (d[i].io_port, d[i].reply_port,
-			       /* Poll only if there's a single descriptor.  */
-			       (firstfd == lastfd) ? to : 0,
-			       &type);
+	    err = __io_select (d[i].io_port, d[i].reply_port, 0, &type);
 	    switch (err)
 	      {
 	      case MACH_RCV_TIMED_OUT:
