@@ -18,11 +18,13 @@
 #include <string.h>
 #include <memcopy.h>
 
-#undef memset
+#ifndef MEMSET
+# define MEMSET memset
+#endif
 
 void *
 inhibit_loop_to_libcall
-memset (void *dstpp, int c, size_t len)
+MEMSET (void *dstpp, int c, size_t len)
 {
   long int dstp = (long int) dstpp;
 
@@ -85,4 +87,4 @@ memset (void *dstpp, int c, size_t len)
 
   return dstpp;
 }
-libc_hidden_builtin_def (memset)
+libc_hidden_builtin_def (MEMSET)

@@ -23,23 +23,16 @@
 # define TEST_NAME "memcpy"
 # include "bench-string.h"
 
-char *
-simple_memcpy (char *dst, const char *src, size_t n)
-{
-  char *ret = dst;
-  while (n--)
-    *dst++ = *src++;
-  return ret;
-}
+void *generic_memcpy (void *, const void *, size_t);
 
 IMPL (memcpy, 1)
-IMPL (simple_memcpy, 0)
+IMPL (generic_memcpy, 0)
 
 #endif
 
 # include "json-lib.h"
 
-typedef char *(*proto_t) (char *, const char *, size_t);
+typedef void *(*proto_t) (void *, const void *, size_t);
 
 static void
 do_one_test (json_ctx_t *json_ctx, impl_t *impl, char *dst, const char *src,
@@ -161,3 +154,9 @@ test_main (void)
 }
 
 #include <support/test-driver.c>
+
+#define libc_hidden_builtin_def(X)
+#undef MEMCPY
+#define MEMCPY generic_memcpy
+#include <string/memcpy.c>
+#include <string/wordcopy.c>

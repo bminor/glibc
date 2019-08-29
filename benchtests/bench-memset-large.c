@@ -17,38 +17,20 @@
    <http://www.gnu.org/licenses/>.  */
 
 #define TEST_MAIN
-#ifndef WIDE
-# define TEST_NAME "memset"
-#else
-# define TEST_NAME "wmemset"
-#endif /* WIDE */
+#define TEST_NAME "memset"
 #define START_SIZE (128 * 1024)
 #define MIN_PAGE_SIZE (getpagesize () + 64 * 1024 * 1024)
 #define TIMEOUT (20 * 60)
 #include "bench-string.h"
 
-#ifndef WIDE
-# define SIMPLE_MEMSET simple_memset
-#else
-# define SIMPLE_MEMSET simple_wmemset
-#endif /* WIDE */
-
 #include <assert.h>
 #include "json-lib.h"
 
+void *generic_memset (void *, int, size_t);
+typedef void *(*proto_t) (void *, int, size_t);
+
 IMPL (MEMSET, 1)
-
-typedef CHAR *(*proto_t) (CHAR *, int, size_t);
-
-CHAR *
-inhibit_loop_to_libcall
-SIMPLE_MEMSET (CHAR *s, int c, size_t n)
-{
-  CHAR *r = s, *end = s + n;
-  while (r < end)
-    *r++ = c;
-  return s;
-}
+IMPL (generic_memset, 0)
 
 static void
 do_one_test (json_ctx_t *json_ctx, impl_t *impl, CHAR *s,
@@ -133,3 +115,11 @@ test_main (void)
 }
 
 #include <support/test-driver.c>
+
+#define libc_hidden_builtin_def(X)
+#define libc_hidden_def(X)
+#define libc_hidden_weak(X)
+#define weak_alias(X,Y)
+#undef MEMSET
+#define MEMSET generic_memset
+#include <string/memset.c>

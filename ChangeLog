@@ -1,3 +1,19 @@
+2019-08-30  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* benchtests/bench-memcpy.c (simple_memcpy): Remove.
+	(generic_memcpy): Include generic C memcpy.
+	* benchtests/bench-memmove.c (simple_memmove): Remove.
+	(generic_memmove): Include generic C memmove.
+	* benchtests/bench-memset.c (simple_memset): Remove.
+	(generic_memset): Include generic C memset.
+	* benchtests/bench-memset-large.c (simple_memset): Remove.
+	(generic_memset): Include generic C memset.
+	* benchtests/bench-memset-walk.c (simple_memset): Remove.
+	(generic_memset): Include generic C memset.
+	* string/memcpy.c (MEMCPY): Add defines to enable redirection.
+	* string/memset.c (MEMSET): Likewise.
+	* sysdeps/x86_64/memcopy.h: Remove empty file.
+
 2019-08-30  Florian Weimer  <fweimer@redhat.com>
 
 	nptl: Move pthread_attr_getinheritsched implementation into libc.

@@ -21,30 +21,12 @@
 #include "bench-string.h"
 #include "json-lib.h"
 
-char *simple_memmove (char *, const char *, size_t);
+void *generic_memmove (void *, const void *, size_t);
 
-typedef char *(*proto_t) (char *, const char *, size_t);
+typedef void *(*proto_t) (void *, const void *, size_t);
 
 IMPL (memmove, 1)
-IMPL (simple_memmove, 0)
-
-char *
-inhibit_loop_to_libcall
-simple_memmove (char *dst, const char *src, size_t n)
-{
-  char *ret = dst;
-  if (src < dst)
-    {
-      dst += n;
-      src += n;
-      while (n--)
-	*--dst = *--src;
-    }
-  else
-    while (n--)
-      *dst++ = *src++;
-  return ret;
-}
+IMPL (generic_memmove, 0)
 
 static void
 do_one_test (json_ctx_t *json_ctx, impl_t *impl, char *dst, char *src,
@@ -165,3 +147,9 @@ test_main (void)
 }
 
 #include <support/test-driver.c>
+
+#define libc_hidden_builtin_def(X)
+#undef MEMMOVE
+#define MEMMOVE generic_memmove
+#include <string/memmove.c>
+#include <string/wordcopy.c>
