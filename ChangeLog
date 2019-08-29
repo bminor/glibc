@@ -1,4 +1,12 @@
-2019-08-30  Richard Braun <rbraun@sceen.net>
+2019-08-30  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+
+	* sysdeps/mach/hurd/getcwd.c
+	(_hurd_canonicalize_directory_name_internal): Do not remove the heading
+	slash if we got an unknown root directory. (__getcwd): Do not fail with
+	EGRATUITOUS if we got an unknown root directory.
+
+2019-08-30  Richard Braun  <rbraun@sceen.net>
 
 	* hurd/hurdselect.c (_hurd_select): Always call __io_select with no
 	timeout.

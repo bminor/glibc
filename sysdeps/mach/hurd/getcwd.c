@@ -266,11 +266,6 @@ __hurd_canonicalize_directory_name_internal (file_t thisdir,
        So the root is our current directory.  */
     *--file_namep = '/';
 
-  if (thisid != rootid)
-    /* We did not get to our root directory. The returned name should
-       not begin with a slash.  */
-    ++file_namep;
-
   memmove (file_name, file_namep, file_name + size - file_namep);
   cleanup ();
   return file_name;
@@ -309,13 +304,6 @@ __getcwd (char *buf, size_t size)
     __USEPORT (CWDIR,
 	       __hurd_canonicalize_directory_name_internal (port,
 							    buf, size));
-  if (cwd && cwd[0] != '/')
-    {
-      /* `cwd' is an unknown root directory.  */
-      if (buf == NULL)
-	  free (cwd);
-      return __hurd_fail (EGRATUITOUS), NULL;
-    }
   return cwd;
 }
 weak_alias (__getcwd, getcwd)
