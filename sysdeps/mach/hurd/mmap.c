@@ -44,29 +44,6 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
   if ((mapaddr & (__vm_page_size - 1)) || (offset & (__vm_page_size - 1)))
     return (void *) (long int) __hurd_fail (EINVAL);
 
-  if ((flags & (MAP_TYPE|MAP_INHERIT)) == MAP_ANON
-      && prot == (PROT_READ|PROT_WRITE)) /* cf VM_PROT_DEFAULT */
-    {
-      /* vm_allocate has (a little) less overhead in the kernel too.  */
-      err = __vm_allocate (__mach_task_self (), &mapaddr, len, mapaddr == 0);
-
-      if (err == KERN_NO_SPACE)
-	{
-	  if (flags & MAP_FIXED)
-	    {
-	      /* XXX this is not atomic as it is in unix! */
-	      /* The region is already allocated; deallocate it first.  */
-	      err = __vm_deallocate (__mach_task_self (), mapaddr, len);
-	      if (!err)
-		err = __vm_allocate (__mach_task_self (), &mapaddr, len, 0);
-	    }
-	  else if (mapaddr != 0)
-	    err = __vm_allocate (__mach_task_self (), &mapaddr, len, 1);
-	}
-
-      return err ? (void *) (long int) __hurd_fail (err) : (void *) mapaddr;
-    }
-
   vmprot = VM_PROT_NONE;
   if (prot & PROT_READ)
     vmprot |= VM_PROT_READ;

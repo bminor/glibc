@@ -20,6 +20,10 @@
 	EBADF case, or else POLLERR.
 	- On error, make select simulated readiness.
 
+	[BZ #19903]
+	* sysdeps/mach/hurd/mmap.c (__mmap): Remove optimizing anonymous maps
+	as __vm_allocate.
+
 2019-08-30  Richard Braun  <rbraun@sceen.net>
 
 	* hurd/hurdselect.c (_hurd_select): Always call __io_select with no
