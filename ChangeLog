@@ -1,3 +1,14 @@
+2019-08-27  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Fix posix/tst-regex by using UTF-8 and own test input
+	Problem reported by Stefan Liebler in:
+	https://sourceware.org/ml/libc-alpha/2019-08/msg00658.html
+	* posix/tst-regex.c: Convert this file from Latin-1 to UTF-8.
+	(do_test, test_expr): Adjust to the fact that this source file,
+	and the test data in ChangeLog.8, is now UTF-8 instead of Latin-1.
+	* posix/tst-regex.input: Copy from ChangeLog.old/ChangeLog.8,
+	so that it is now UTF-8.
+
 2019-08-28  Paul A. Clarke  <pc@us.ibm.com>
     
     	* sysdeps/powerpc/fpu/fenv_libc.h (fegetenv_status_ISA300):  Delete.

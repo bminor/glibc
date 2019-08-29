@@ -6025,7 +6025,7 @@
 	(Host Address Functions): Use uint32_t consequently and add a
 	number of clarifications for IPv4/IPv6, classless addresses.
 	(Internet Namespace): Added some paragraphs about IPv6.
-	Based on suggestions by Francesco Potorti` <F.Potorti@cnuce.cnr.it>.
+	Based on suggestions by Francesco Potortì <F.Potorti@cnuce.cnr.it>.
 
 1998-04-05  Philip Blundell  <Philip.Blundell@pobox.com>
 
@@ -6565,7 +6565,7 @@
 	* manual/examples/mkfsock.c (make_named_socket): Removed blank
 	lines for clarification.
 	(make_named_socket): Use strncpy instead of strcpy.
-	Reported by Francesco Potorti` <F.Potorti@cnuce.cnr.it>.
+	Reported by Francesco Potortì <F.Potorti@cnuce.cnr.it>.
 
 1998-03-30 13:28  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -7975,7 +7975,7 @@
 	* sysdeps/generic/getresuid.c (__getresuid): Use ISO C
 	declaration style to avoid warnings.
 
-1998-03-06 11:48  Mark M._Kettenis  <kettenis@hall.phys.uva.nl>
+1998-03-06 11:48  Mark M. Kettenis  <kettenis@hall.phys.uva.nl>
 
 	* elf/rtld.c (process_dl_debug): Fix typo: "DL_DEBUG" ->
 	"LD_DEBUG".
@@ -8314,7 +8314,7 @@
 1998-02-27  Ulrich Drepper  <drepper@cygnus.com>
 
 	* misc/efgcvt_r.c (APPEND): Handle printing of 0.0 correctly.
-	Reported by G�ran Uddeborg <goeran@uddeborg.pp.se>.
+	Reported by Göran Uddeborg <goeran@uddeborg.pp.se>.
 
 	* misc/tst-efgcvt.c (ecvt_tests): Add new test case for reported
 	bug.
@@ -8322,7 +8322,7 @@
 1998-02-25  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* manual/arith.texi (Old-style number conversion): Correct
-	typo. Reported by G�ran Uddeborg <goeran@uddeborg.pp.se>.
+	typo. Reported by Göran Uddeborg <goeran@uddeborg.pp.se>.
 
 1998-02-27  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -12044,7 +12044,7 @@
 
 	* libio/stdio.h: Correct comment of sys_nerr/sys_errlist.
 
-1997-11-25  Paul Eggert  <eggert@shade.twinsun.com>
+1997-11-25  Paul Eggert  <eggert@twinsun.com>
 
 	* strftime.c (strftime):
 	No longer any need to undef or declare if emacs is defined.

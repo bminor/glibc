@@ -86,27 +86,26 @@ do_test (void)
 
   close (fd);
 
-  /* We have to convert a few things from Latin-1 to UTF-8.  */
-  cd = iconv_open ("UTF-8", "ISO-8859-1");
+  /* We have to convert a few things from UTF-8 to Latin-1.  */
+  cd = iconv_open ("ISO-8859-1", "UTF-8");
   if (cd == (iconv_t) -1)
     error (EXIT_FAILURE, errno, "cannot get conversion descriptor");
 
-  /* For the second test we have to convert the file content to UTF-8.
-     Since the text is mostly ASCII it should be enough to allocate
-     twice as much memory for the UTF-8 text than for the Latin-1
-     text.  */
-  umem = (char *) calloc (2, memlen);
+  /* For the second test we have to convert the file content to Latin-1.
+     This cannot grow the data.  */
+  umem = (char *) malloc (memlen + 1);
   if (umem == NULL)
     error (EXIT_FAILURE, errno, "while allocating buffer");
 
   inmem = mem;
   inlen = memlen;
   outmem = umem;
-  outlen = 2 * memlen - 1;
+  outlen = memlen;
   iconv (cd, &inmem, &inlen, &outmem, &outlen);
   umemlen = outmem - umem;
   if (inlen != 0)
     error (EXIT_FAILURE, errno, "cannot convert buffer");
+  umem[umemlen] = '\0';
 
 #if defined _POSIX_CPUTIME && _POSIX_CPUTIME >= 0
 # if _POSIX_CPUTIME == 0
@@ -124,11 +123,11 @@ do_test (void)
 
   /* Run the actual tests.  All tests are run in a single-byte and a
      multi-byte locale.  */
-  result = test_expr ("[‰·‡‚ÈËÍÌÏÓÒˆÛÚÙ¸˙˘˚]", 2, 2);
+  result = test_expr ("[√§√°√†√¢√©√®√™√≠√¨√Æ√±√∂√≥√≤√¥√º√∫√π√ª]", 4, 4);
   result |= test_expr ("G.ran", 2, 3);
   result |= test_expr ("G.\\{1\\}ran", 2, 3);
   result |= test_expr ("G.*ran", 3, 44);
-  result |= test_expr ("[‰·‡‚]", 0, 0);
+  result |= test_expr ("[√§√°√†√¢]", 0, 0);
   result |= test_expr ("Uddeborg", 2, 2);
   result |= test_expr (".Uddeborg", 2, 2);
 
@@ -151,27 +150,27 @@ test_expr (const char *expr, int expected, int expectedicase)
   size_t outlen;
   char *uexpr;
 
-  /* First test: search with an ISO-8859-1 locale.  */
-  if (setlocale (LC_ALL, "de_DE.ISO-8859-1") == NULL)
-    error (EXIT_FAILURE, 0, "cannot set locale de_DE.ISO-8859-1");
-
-  printf ("\nTest \"%s\" with 8-bit locale\n", expr);
-  result = run_test (expr, mem, memlen, 0, expected);
-  printf ("\nTest \"%s\" with 8-bit locale, case insensitive\n", expr);
-  result |= run_test (expr, mem, memlen, 1, expectedicase);
-  printf ("\nTest \"%s\" backwards with 8-bit locale\n", expr);
-  result |= run_test_backwards (expr, mem, memlen, 0, expected);
-  printf ("\nTest \"%s\" backwards with 8-bit locale, case insensitive\n",
-	  expr);
-  result |= run_test_backwards (expr, mem, memlen, 1, expectedicase);
-
-  /* Second test: search with an UTF-8 locale.  */
+  /* First test: search with an UTF-8 locale.  */
   if (setlocale (LC_ALL, "de_DE.UTF-8") == NULL)
     error (EXIT_FAILURE, 0, "cannot set locale de_DE.UTF-8");
 
+  printf ("\nTest \"%s\" with multi-byte locale\n", expr);
+  result = run_test (expr, mem, memlen, 0, expected);
+  printf ("\nTest \"%s\" with multi-byte locale, case insensitive\n", expr);
+  result |= run_test (expr, mem, memlen, 1, expectedicase);
+  printf ("\nTest \"%s\" backwards with multi-byte locale\n", expr);
+  result |= run_test_backwards (expr, mem, memlen, 0, expected);
+  printf ("\nTest \"%s\" backwards with multi-byte locale, case insensitive\n",
+	  expr);
+  result |= run_test_backwards (expr, mem, memlen, 1, expectedicase);
+
+  /* Second test: search with an ISO-8859-1 locale.  */
+  if (setlocale (LC_ALL, "de_DE.ISO-8859-1") == NULL)
+    error (EXIT_FAILURE, 0, "cannot set locale de_DE.ISO-8859-1");
+
   inmem = (char *) expr;
   inlen = strlen (expr);
-  outlen = inlen * MB_CUR_MAX;
+  outlen = inlen;
   outmem = uexpr = alloca (outlen + 1);
   memset (outmem, '\0', outlen + 1);
   iconv (cd, &inmem, &inlen, &outmem, &outlen);
@@ -179,13 +178,13 @@ test_expr (const char *expr, int expected, int expectedicase)
     error (EXIT_FAILURE, errno, "cannot convert expression");
 
   /* Run the tests.  */
-  printf ("\nTest \"%s\" with multi-byte locale\n", expr);
+  printf ("\nTest \"%s\" with 8-bit locale\n", expr);
   result |= run_test (uexpr, umem, umemlen, 0, expected);
-  printf ("\nTest \"%s\" with multi-byte locale, case insensitive\n", expr);
+  printf ("\nTest \"%s\" with 8-bit locale, case insensitive\n", expr);
   result |= run_test (uexpr, umem, umemlen, 1, expectedicase);
-  printf ("\nTest \"%s\" backwards with multi-byte locale\n", expr);
+  printf ("\nTest \"%s\" backwards with 8-bit locale\n", expr);
   result |= run_test_backwards (uexpr, umem, umemlen, 0, expected);
-  printf ("\nTest \"%s\" backwards with multi-byte locale, case insensitive\n",
+  printf ("\nTest \"%s\" backwards with 8-bit locale, case insensitive\n",
 	  expr);
   result |= run_test_backwards (uexpr, umem, umemlen, 1, expectedicase);
 
