@@ -4,6 +4,21 @@
 	(_hurd_canonicalize_directory_name_internal): Do not remove the heading
 	slash if we got an unknown root directory. (__getcwd): Do not fail with
 	EGRATUITOUS if we got an unknown root directory.
+	* hurd/hurdselect.c (SELECT_ERROR): New macro.
+	(_hurd_select):
+	- Add `error' field to `d' structures array.
+	- If a poll descriptor is bogus, set EBADF, but continue with a zero
+	timeout.
+	- Go through the whole fd_set, not only until _hurd_dtablesize. Return
+	EBADF there is any bit set above _hurd_dtablesize.
+	- Do not request io_select on bogus descriptors (SELECT_ERROR).
+	- On io_select request error, record the error.
+	- On io_select bogus reply, use EIO error code.
+	- On io_select bogus or error reply, record the error.
+	- Do not destroy reply port for bogus FDs.
+	- On error, make poll set POLLHUP in the EPIPE case, POLLNVAL in the
+	EBADF case, or else POLLERR.
+	- On error, make select simulated readiness.
 
 2019-08-30  Richard Braun  <rbraun@sceen.net>
 

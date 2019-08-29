@@ -34,6 +34,7 @@
 /* Used to record that a particular select rpc returned.  Must be distinct
    from SELECT_ALL (which better not have the high bit set).  */
 #define SELECT_RETURNED ((SELECT_ALL << 1) & ~SELECT_ALL)
+#define SELECT_ERROR (SELECT_RETURNED << 1)
 
 /* Check the first NFDS descriptors either in POLLFDS (if nonnnull) or in
    each of READFDS, WRITEFDS, EXCEPTFDS that is nonnull.  If TIMEOUT is not
@@ -61,6 +62,7 @@ _hurd_select (int nfds,
       mach_port_t io_port;
       int type;
       mach_port_t reply_port;
+      int error;
     } d[nfds];
   sigset_t oset;
 
@@ -118,6 +120,7 @@ _hurd_select (int nfds,
 
   if (pollfds)
     {
+      int error = 0;
       /* Collect interesting descriptors from the user's `pollfd' array.
 	 We do a first pass that reads the user's array before taking
 	 any locks.  The second pass then only touches our own stack,
@@ -151,28 +154,47 @@ _hurd_select (int nfds,
 	    if (fd < _hurd_dtablesize)
 	      {
 		d[i].cell = _hurd_dtable[fd];
-		d[i].io_port = _hurd_port_get (&d[i].cell->port, &d[i].ulink);
-		if (d[i].io_port != MACH_PORT_NULL)
-		  continue;
+		if (d[i].cell != NULL)
+		  {
+		    d[i].io_port = _hurd_port_get (&d[i].cell->port,
+						   &d[i].ulink);
+		    if (d[i].io_port != MACH_PORT_NULL)
+		      continue;
+		  }
 	      }
 
-	    /* If one descriptor is bogus, we fail completely.  */
-	    while (i-- > 0)
-	      if (d[i].type != 0)
-		_hurd_port_free (&d[i].cell->port,
-				 &d[i].ulink, d[i].io_port);
-	    break;
+	    /* Bogus descriptor, make it EBADF already.  */
+	    d[i].error = EBADF;
+	    d[i].type = SELECT_ERROR;
+	    error = 1;
 	  }
 
       __mutex_unlock (&_hurd_dtable_lock);
       HURD_CRITICAL_END;
 
-      if (i < nfds)
+      if (error)
 	{
-	  if (sigmask)
-	    __sigprocmask (SIG_SETMASK, &oset, NULL);
-	  errno = EBADF;
-	  return -1;
+	  /* Set timeout to 0.  */
+	  struct timeval now;
+	  err = __gettimeofday(&now, NULL);
+	  if (err)
+	    {
+	      /* Really bad luck.  */
+	      err = errno;
+	      HURD_CRITICAL_BEGIN;
+	      __mutex_lock (&_hurd_dtable_lock);
+	      while (i-- > 0)
+		if (d[i].type & ~SELECT_ERROR != 0)
+		  _hurd_port_free (&d[i].cell->port, &d[i].ulink,
+				   d[i].io_port);
+	      __mutex_unlock (&_hurd_dtable_lock);
+	      HURD_CRITICAL_END;
+	      errno = err;
+	      return -1;
+	    }
+	  ts.tv_sec = now.tv_sec;
+	  ts.tv_nsec = now.tv_usec * 1000;
+	  reply_msgid = IO_SELECT_TIMEOUT_REPLY_MSGID;
 	}
 
       lastfd = i - 1;
@@ -199,9 +221,6 @@ _hurd_select (int nfds,
       HURD_CRITICAL_BEGIN;
       __mutex_lock (&_hurd_dtable_lock);
 
-      if (nfds > _hurd_dtablesize)
-	nfds = _hurd_dtablesize;
-
       /* Collect the ports for interesting FDs.  */
       firstfd = lastfd = -1;
       for (i = 0; i < nfds; ++i)
@@ -216,9 +235,15 @@ _hurd_select (int nfds,
 	  d[i].type = type;
 	  if (type)
 	    {
-	      d[i].cell = _hurd_dtable[i];
-	      d[i].io_port = _hurd_port_get (&d[i].cell->port, &d[i].ulink);
-	      if (d[i].io_port == MACH_PORT_NULL)
+	      if (i < _hurd_dtablesize)
+		{
+		  d[i].cell = _hurd_dtable[i];
+		  if (d[i].cell != NULL)
+		    d[i].io_port = _hurd_port_get (&d[i].cell->port,
+						   &d[i].ulink);
+		}
+	      if (i >= _hurd_dtablesize || d[i].cell == NULL ||
+		  d[i].io_port == MACH_PORT_NULL)
 		{
 		  /* If one descriptor is bogus, we fail completely.  */
 		  while (i-- > 0)
@@ -243,6 +268,9 @@ _hurd_select (int nfds,
 	  errno = EBADF;
 	  return -1;
 	}
+
+      if (nfds > _hurd_dtablesize)
+	nfds = _hurd_dtablesize;
     }
 
 
@@ -260,7 +288,9 @@ _hurd_select (int nfds,
       portset = MACH_PORT_NULL;
 
       for (i = firstfd; i <= lastfd; ++i)
-	if (d[i].type)
+	if (!(d[i].type & ~SELECT_ERROR))
+	  d[i].reply_port = MACH_PORT_NULL;
+	else
 	  {
 	    int type = d[i].type;
 	    d[i].reply_port = __mach_reply_port ();
@@ -294,11 +324,10 @@ _hurd_select (int nfds,
 	      }
 	    else
 	      {
-		/* No error should happen.  Callers of select
-		   don't expect to see errors, so we simulate
-		   readiness of the erring object and the next call
-		   hopefully will get the error again.  */
-		d[i].type |= SELECT_RETURNED;
+		/* No error should happen, but record it for later
+		   processing.  */
+		d[i].error = err;
+		d[i].type |= SELECT_ERROR;
 		++got;
 	      }
 	    _hurd_port_free (&d[i].cell->port, &d[i].ulink, d[i].io_port);
@@ -404,9 +433,10 @@ _hurd_select (int nfds,
 #endif
 		  || msg.head.msgh_size != sizeof msg.success)
 		{
-		  /* Error or bogus reply.  Simulate readiness.  */
+		  /* Error or bogus reply.  */
+		  if (!msg.error.err)
+		    msg.error.err = EIO;
 		  __mach_msg_destroy (&msg.head);
-		  msg.success.result = SELECT_ALL;
 		}
 
 	      /* Look up the respondent's reply port and record its
@@ -418,9 +448,18 @@ _hurd_select (int nfds,
 		    if (d[i].type
 			&& d[i].reply_port == msg.head.msgh_local_port)
 		      {
-			d[i].type &= msg.success.result;
-			if (d[i].type)
-			  ++ready;
+			if (msg.error.err)
+			  {
+			    d[i].error = msg.error.err;
+			    d[i].type = SELECT_ERROR;
+			    ++ready;
+			  }
+			else
+			  {
+			    d[i].type &= msg.success.result;
+			    if (d[i].type)
+			      ++ready;
+			  }
 
 			d[i].type |= SELECT_RETURNED;
 			++got;
@@ -454,7 +493,7 @@ _hurd_select (int nfds,
 
   if (firstfd != -1)
     for (i = firstfd; i <= lastfd; ++i)
-      if (d[i].type)
+      if (d[i].reply_port != MACH_PORT_NULL)
 	__mach_port_destroy (__mach_task_self (), d[i].reply_port);
   if (firstfd == -1 || (firstfd != lastfd && portset != MACH_PORT_NULL))
     /* Destroy PORTSET, but only if it's not actually the reply port for a
@@ -476,15 +515,29 @@ _hurd_select (int nfds,
 	int type = d[i].type;
 	int_fast16_t revents = 0;
 
-	if (type & SELECT_RETURNED)
-	  {
-	    if (type & SELECT_READ)
-	      revents |= POLLIN;
-	    if (type & SELECT_WRITE)
-	      revents |= POLLOUT;
-	    if (type & SELECT_URG)
-	      revents |= POLLPRI;
-	  }
+	if (type & SELECT_ERROR)
+	  switch (d[i].error)
+	    {
+	      case EPIPE:
+		revents = POLLHUP;
+		break;
+	      case EBADF:
+		revents = POLLNVAL;
+		break;
+	      default:
+		revents = POLLERR;
+		break;
+	    }
+	else
+	  if (type & SELECT_RETURNED)
+	    {
+	      if (type & SELECT_READ)
+		revents |= POLLIN;
+	      if (type & SELECT_WRITE)
+		revents |= POLLOUT;
+	      if (type & SELECT_URG)
+		revents |= POLLPRI;
+	    }
 
 	pollfds[i].revents = revents;
       }
@@ -503,6 +556,20 @@ _hurd_select (int nfds,
 
 	    if ((type & SELECT_RETURNED) == 0)
 	      type = 0;
+
+	    /* Callers of select don't expect to see errors, so we simulate
+	       readiness of the erring object and the next call hopefully
+	       will get the error again.  */
+	    if (type & SELECT_ERROR)
+	      {
+		type = 0;
+		if (readfds != NULL && FD_ISSET (i, readfds))
+		  type |= SELECT_READ;
+		if (writefds != NULL && FD_ISSET (i, writefds))
+		  type |= SELECT_WRITE;
+		if (exceptfds != NULL && FD_ISSET (i, exceptfds))
+		  type |= SELECT_URG;
+	      }
 
 	    if (type & SELECT_READ)
 	      ready++;
