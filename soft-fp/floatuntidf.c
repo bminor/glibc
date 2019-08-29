@@ -2,7 +2,7 @@
    Convert a 128bit unsigned integer to IEEE double
    Copyright (C) 1997-2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Uros Bizjak (ubizjak@gmail.com).
+   Contributed by Uroš Bizjak (ubizjak@gmail.com).
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

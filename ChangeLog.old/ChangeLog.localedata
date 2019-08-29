@@ -640,7 +640,7 @@
 	* locales/sl_SI (LC_IDENTIFICATION): Fix inappropriate escape sequence.
 	* locales/ta_LK (LC_IDENTIFICATION): Fix inappropriate escape sequence.
 
-2017-07-21  Rafal Luzynski <digitalfreak@lingonborough.com>
+2017-07-21  Rafał Lużyński <digitalfreak@lingonborough.com>
 
 	Indian scripts: abmon imported from CLDRv31 (related with
 	BZ#21217).
@@ -780,7 +780,7 @@
 	* locales/sc_IT (LC_TIME): Fix mispelled day/abday/mon/abmon and
 	fix date_fmt.
 
-2017-07-21  Rafal Luzynski <digitalfreak@lingonborough.com>
+2017-07-21  Rafał Lużyński <digitalfreak@lingonborough.com>
 
 	[BZ #21783]
 	* locales/lg_UG (LC_TELEPHONE): Move all comments above the
@@ -1070,7 +1070,7 @@
 	[BZ #21721]
 	* locales/ks_IN@devanagari: Fix full weekday names, add yesstr and nostr
 
-2017-07-06  Rafal Luzynski <digitalfreak@lingonborough.com>
+2017-07-06  Rafał Lużyński <digitalfreak@lingonborough.com>
 
 	Arabic scripts: More fixes after the recent import.
 
@@ -1122,7 +1122,7 @@
 	[BZ #21706]
 	* locales/br_FR (LC_MESSAGES): add yesstr and nostr
 
-2017-06-30  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2017-06-30  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	* locales/br_FR (abmon): Reworded "Eve " to "Mezh".
 	* locales/fy_NL (abmon): Reworded "Maa" (March) to
@@ -1150,7 +1150,7 @@
 	updates the language endonym in a bunch of locales based
 	on CLDR v 31.0.1 data
 
-2017-06-16  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2017-06-16  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #21217]
 	* locales/be_BY (mon, abmon): Reworded "Травень" ("travyen'")
@@ -1235,12 +1235,12 @@
 	* locales/yi_US (mon): Likewise.
 	* locales/yue_HK (mon): Likewise.
 
-2017-06-22  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2017-06-22  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	* locales/fur_IT (day, abday): reworded "Miarcus" to "Miercus"
 	and abbreviated "Mia" to "Mie".
 
-2017-06-13  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2017-06-13  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #21207]
 	* locales/ce_RU (day): Updated (imported) from CLDR.  Uppercase letters
@@ -1249,7 +1249,7 @@
 	"I" replaced with Cyrillic "Ӏ" ("Palochka", Unicode: U04C0).  Trailing
 	spaces removed.
 
-2017-06-13  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2017-06-13  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	* localedata/locales/mag_IN (abday, day): Consistently use
 	uppercase hexadecimal in <Uxxxx> notation.

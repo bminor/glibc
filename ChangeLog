@@ -243,7 +243,7 @@
 	* sysdeps/generic/single-thread.h (RTLD_SINGLE_THREAD_P): Add
 	definition.
 
-2019-08-23  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2019-08-23  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #24682]
 	* localedata/locales/bo_CN (first_weekday): Add, set to 2 (Monday).
@@ -1197,7 +1197,7 @@
 	* manual/users.texi (Who Logged In, Manipulating the Database):
 	Adjust.
 
-2019-08-05  Alexandra Hajkova  <ahajkova@redhat.com>
+2019-08-05  Alexandra Hájková  <ahajkova@redhat.com>
 
 	* elf/tst-ldconfig-bad-aux-cache.c: Use support_capture_subprocess.
 
@@ -1427,7 +1427,7 @@
 	* nptl/nptl-init.c (pthread_functions): Remove assignment of
 	removed member.
 
-2019-07-17  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2019-07-17  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #21897]
 	* localedata/locales/aa_DJ (abday): Update from CLDR, all words
@@ -1445,7 +1445,7 @@
 	(mon): Update from CLDR, reword February from "Kudo" to
 	"Naharsi Kudo" and April from "Agda Baxisso" to "Agda Baxis".
 
-2019-07-17  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2019-07-17  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #23996]
 	* localedata/locales/nl_BE (LC_NAME): Replace with “copy "nl_NL"”.
@@ -2430,7 +2430,7 @@
 
 	* sysdeps/s390/fpu/libm-test-ulps: Regenerated.
 
-2019-06-24  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2019-06-24  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #24652]
 	* localedata/locales/szl_PL (day): Use the correct Unicode
@@ -2446,7 +2446,7 @@
 	(alt_mon): This, then apply spelling corrections.
 	(mon): New entry, month names in the genitive case.
 
-2019-06-21  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2019-06-21  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #23831]
 	* localedata/locales/nl_AW (mon_thousands_sep): Set to ".".
@@ -2525,7 +2525,7 @@
 	* sysdeps/unix/sysv/linux/powerpc/test-gettimebasefreq-static.c:
 	New file.
 
-2019-06-19  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2019-06-19  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #24614]
 	* localedata/locales/nl_AW (n_sep_by_space): Set to 2 (a space
@@ -2561,7 +2561,7 @@
 	(tst-dlopen-pie.out): Add run-time dependency on tst-pie1.
 	* elf/tst-dlopen-pie.c (do_test): New file.
 
-2019-06-17  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2019-06-17  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #24614]
 	* localedata/Makefile (LOCALES): Add nl_NL.UTF-8.
@@ -3168,7 +3168,7 @@
 	* sysdeps/unix/sysv/linux/bits/fcntl-linux.h [__USE_GNU]
 	(F_SEAL_FUTURE_WRITE): New macro.
 
-2019-05-23 Alexandra Hajkova  <ahajkova@redhat.com>
+2019-05-23  Alexandra Hájková  <ahajkova@redhat.com>
 
        * elf/Makefile (test-container): Add tst-ldconfig-bad-aux-cache.
        * elf/tst-ldconfig-bad-aux-cache.c: New file.
@@ -3449,7 +3449,7 @@
 	* nss/nss_compat/compat-spwd.c (init_nss_interface): Likewise.
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Likewise.
 
-2019-05-15  Alexandra Hajkova  <ahajkova@redhat.com>
+2019-05-15  Alexandra Hájková  <ahajkova@redhat.com>
 
 	* support/support.h (support_install_rootsbindir): New variable.
 	* support/support_paths.c: Likewise.
@@ -4500,7 +4500,7 @@
 	(mkreftable): Add rules for the new Japanese era and the new dates.
 
 2019-04-02  TAMUKI Shoichi  <tamuki@linet.gr.jp>
-	    Rafal Luzynski  <digitalfreak@lingonborough.com>
+	    Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	* time/tst-strftime2.c (date_t): Explicitly define the type.
 	(dates): Use natural month and year numbers to express a date.
@@ -4527,7 +4527,7 @@
 	* time/tst-strftime3.c: New.
 	* time/Makefile (tests): Add tst-strftime3.
 
-2019-04-01  Uros Bizjak  <ubizjak@gmail.com>
+2019-04-01  Uroš Bizjak  <ubizjak@gmail.com>
 
 	* sysdeps/alpha/divqu.S (__divqu): Move save of $f0 and excb after
 	conditional branch to DIVBYZERO.  Fix unwind info.
@@ -7331,7 +7331,7 @@
 	(__hurd_file_name_lookup_retry): Keep a ref on last result in `lastdir'.
 	Release it on return.  Handle "pid" magical lookup retry.
 
-2018-12-28  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-12-28  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #10496]
 	* localedata/locales/aa_DJ (t_fmt): Set to "%l:%M:%S %p".
@@ -7463,7 +7463,7 @@
 	* localedata/locales/cs_CZ (t_fmt_ampm): Likewise.
 	* localedata/locales/sk_SK (t_fmt_ampm): Likewise.
 
-2018-12-28  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-12-28  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #10496]
 	[BZ #23724]
@@ -10664,7 +10664,7 @@
 	* sysdeps/mips/sys/tas.h (_test_and_set): Handle the R5900 CPU
 	with the ISA override.
 
-2018-10-31  Rafael Avila de Espindola  <rafael@espindo.la>
+2018-10-31  Rafael Ávila de Espíndola  <rafael@espindo.la>
 
 	* sysdeps/unix/sysv/linux/sysdep-vdso.h: Simplify an #if #else
 	#endif.
@@ -11312,7 +11312,7 @@
 	* benchtests/scripts/compare_bench.py (main): set float type on
 	threshold argument.
 
-2018-10-08  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-10-08  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #23740]
 	* localedata/locales/kl_GL (mon): Update, the relative case.
@@ -11391,7 +11391,7 @@
 	* support/test-container.c (main): Search for the ld.so
 	which is also used by the testsuite.
 
-2018-10-02  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-10-02  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #20209]
 	* localedata/locales/kl_GL: (abday): Fix spelling of Sun (Sunday),
@@ -11856,7 +11856,7 @@
 	usage.
 	* sysdeps/unix/sysv/linux/powerpc/not-errno.h: Remove file.
 
-2018-09-21  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-09-21  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #10425]
 	* localedata/locales/it_IT (d_t_fmt): Use "%a %-d %b %Y, %T".
@@ -12332,7 +12332,7 @@
 	(get_parser): Add --full-gcc option.
 	(main): Update call to Context.
 
-2018-09-10  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-09-10  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #10797]
 	* localedata/locales/de_CH (mon_thousands_sep): Use "<U2019>" (Right
@@ -12357,7 +12357,7 @@
 	* sysdeps/unix/sysv/linux/spawni.c (maybe_script_execute):
 	Increment size of new_argv by one.
 
-2018-09-05  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-09-05  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #17426]
 	* localedata/locales/anp_IN (d_fmt): Use "%-d//%-m//%y".
@@ -12786,7 +12786,7 @@
 
 	* string/memmem.c: Use memcmp for first match.
 
-2018-08-28  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-08-28  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #17426]
 	* localedata/locales/en_IN (d_fmt): Use "%d/%m/%y".
@@ -14478,7 +14478,7 @@
 	* sysdeps/x86_64/crti.S (_init): Likewise.
 	(_fini): Likewise.
 
-2018-07-17  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-07-17  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #23140]
 	* localedata/locales/os_RU (mon): Rename to...
@@ -14643,7 +14643,7 @@
 	(IBT_ENABLED): Likewise.
 	(SHSTK_ENABLED): Likewise.
 
-2018-07-13  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-07-13  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #23208]
 	* localedata/Makefile (test-input): Add dsb_DE.UTF-8.
@@ -15013,7 +15013,7 @@
 	* localedata/SUPPORTED (dsb_DE/UTF-8): New entry.
 	* localedata/locales/dsb_DE: New file.
 
-2018-06-29  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-06-29  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #23140]
 	* localedata/locales/hy_AM (mon): Synchronize with CLDR (lowercase,
@@ -15152,7 +15152,7 @@
 	* malloc/malloc.c (__malloc_get_state, __malloc_set_state): Remove
 	declarations.
 
-2018-06-29  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-06-29  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #23140]
 	* localedata/locales/ast_ES (mon): Rename to...
@@ -15431,7 +15431,7 @@
 	* nscd/connections.c (read_cmdline): New function.
 	(restart): Use it.  Update comment.
 
-2018-06-25  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-06-25  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #23140]
 	* localedata/locales/csb_PL (mon): Rename to...
@@ -15441,7 +15441,7 @@
 	(mon): Add with proper genitive forms, copy from Wikipedia.
 	(abmon): Likewise.
 
-2018-06-25  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-06-25  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #19485]
 	* localedata/locales/csb_PL (mon): Fix typos:
@@ -15903,7 +15903,7 @@
 	* sysdeps/x86_64/multiarch/strncmp-sse2.S: Rename strcmp to
 	strncmp if not in libc (and not to __strncmp_sse2).
 
-2018-06-12  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-06-12  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #23140]
 	* localedata/locales/gd_GB (mon): Rename to...
@@ -17018,7 +17018,7 @@
 	* sunrpc/svcauth_des.c (svcauthdes_stats): Turn into compatibility
 	symbol.  This should not have been exported, ever.
 
-2018-05-11  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-05-11  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #23152]
 	* localedata/locales/gd_GB (abmon): Fix typo in May:
@@ -19611,14 +19611,14 @@
 	* sysdeps/aarch64/strncmp.S (strncmp): Use lsr instead of
 	mov + lsr.
 
-2018-03-15  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-03-15  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #22963]
 	* localedata/locales/cs_CZ (mon): Rename to...
 	(alt_mon): This.
 	(mon): Import from CLDR (genitive case).
 
-2018-03-15  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-03-15  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #22937]
 	* localedata/locales/el_CY (abmon): Rename to...
@@ -19628,7 +19628,7 @@
 	(ab_alt_mon): This.
 	(abmon): Import from CLDR (abbreviated genitive case).
 
-2018-03-15  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-03-15  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #22932]
 	* localedata/locales/lt_LT (abmon): Synchronize with CLDR.
@@ -21675,9 +21675,9 @@
 
 	* manual/contrib.texi (Palmer Dabbelt, Arjun Shankar, Florian Weimer):
 	New entries.
-	(Rafal Luzynski, Andreas Schwab): Update.
+	(Rafał Lużyński, Andreas Schwab): Update.
 
-2018-02-01  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-02-01  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #10871]
 	* NEWS: List the languages which actually use the alternative
@@ -21706,7 +21706,7 @@
 	data.
 	* nss/tst-nss-getpwent.c (do_test): Likewise.
 
-2018-01-30  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-01-30  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #10871]
 	* localedata/locales/hr_HR (mon): Rename to...
@@ -21952,13 +21952,13 @@
 	* scripts/build-many-glibcs.py (Context.checkout): Default Linux
 	version to 4.15.
 
-2018-01-29  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-01-29  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #10871]
 	* localedata/locales/lt_LT (alt_mon): Import from CLDR (nominative
 	case).
 
-2018-01-29  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-01-29  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #10871]
 	* localedata/locales/be_BY (mon): Rename to...
@@ -21974,7 +21974,7 @@
 	* localedata/locales/be_BY@latin (lang_name): Reworded to
 	"biełaruskaja mova".
 
-2018-01-29  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-01-29  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #10871]
 	* localedata/locales/el_CY (mon): Renamed to...
@@ -21982,7 +21982,7 @@
 	(mon): Import from CLDR (genitive case).
 	* localedata/locales/el_GR: Likewise.
 
-2018-01-29  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-01-29  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #10871]
 	* localedata/locales/ru_RU (mon): Rename to...
@@ -22159,7 +22159,7 @@
 	__cancel_jmp_buf.
 	* sysdeps/unix/sysv/linux/hppa/pthread.h: Likewise.
 
-2018-01-25  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-01-25  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #10871]
 	* localedata/locales/uk_UA (mon): Renamed to...
@@ -22263,7 +22263,7 @@
 	(ALTMON_11, ALTMON_12): Improve documentation.
 	* manual/time.texi (strftime): Likewise.
 
-2018-01-22  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-01-22  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #10871]
 	* localedata/locales/pl_PL: Alternative month names added,
@@ -22271,7 +22271,7 @@
 	* time/tst-strptime.c (day_tests): Actually use a genitive case
 	of a month name in Polish language.
 
-2018-01-22  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-01-22  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #10871]
 	* manual/locale.texi: Document ALTMON_1..12 constants for
@@ -22280,7 +22280,7 @@
 	permitting O modifier with %B and %b.  Specify when to use
 	%OB instead of %B.
 
-2018-01-22  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-01-22  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #10871]
 	* locale/C-time.c (_nl_C_LC_TIME): Add abbreviated alternative month
@@ -22311,7 +22311,7 @@
 	* time/tst-strptime.c (day_tests): Add more tests to parse different
 	forms of month names including the new %Ob format specifier.
 
-2018-01-22  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-01-22  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	[BZ #10871]
 	* locale/C-time.c (_nl_C_LC_TIME): Add alternative month names,
@@ -22360,7 +22360,7 @@
 
 	* sysdeps/generic/netinet/if_ether.h: Include <stdint.h>.
 
-2018-01-19  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-01-19  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	* localedata/locales/gu_IN (LC_IDENTIFICATION): Fix an obvious typo
 	in date: "2004-14-09" should be "2004-09-14".
@@ -22380,7 +22380,7 @@
 	* malloc/tst-malloc-too-large.c: New test.
 	* malloc/Makefile: Add tst-malloc-too-large.
 
-2018-01-18  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2018-01-18  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	* localedata/locales/bho_NP (LC_IDENTIFICATION): Fix an obvious typo
 	in date: "2017-24-07" should be "2017-07-24".
@@ -28562,7 +28562,7 @@
 	(L): Likewise.
 	(atom_text_section): Likewise.
 
-2017-10-31  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2017-10-31  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	* localedata/unicode-gen/gen_unicode_ctype.py (output_head):
 	category of LC_CTYPE set to "i18n:2012".
@@ -28911,7 +28911,7 @@
 	then it is better not to have name_mr and name_mrs at all than
 	having it wrong).
 
-2017-10-27  Rafal Luzynski  <digitalfreak@lingonborough.com>
+2017-10-27  Rafał Lużyński  <digitalfreak@lingonborough.com>
 
 	* locale/loadlocale.c: Correct size of
 	_nl_value_type_LC_<category> arrays.

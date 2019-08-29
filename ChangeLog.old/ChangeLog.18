@@ -6271,7 +6271,7 @@
 	* scripts/build-many-glibcs.py (Context.checkout): Default gcc
 	version to 7 branch.
 
-2017-04-25  Uros Bizjak  <ubizjak@gmail.com>
+2017-04-25  Uroš Bizjak  <ubizjak@gmail.com>
 
 	* sysdeps/alpha/fpu/math_private.h (__ieee754_sqrt): Add
 	earlyclobber to output operand of sqrt insn.
@@ -61220,7 +61220,7 @@
 
 	* malloc/malloc.c (__libc_calloc): Make memset a tail call.
 
-2013-11-26  Uros Bizjak  <ubizjak@gmail.com>
+2013-11-26  Uroš Bizjak  <ubizjak@gmail.com>
 
 	* soft-fp/op-4.h (_FP_FRAC_ASSEMBLE_4): Check rsize against
 	_FP_W_TYPE_SIZE to avoid "left shift count >= width of type"

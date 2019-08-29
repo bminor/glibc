@@ -270,7 +270,8 @@ implementations, for implementing Intel Control-Flow Enforcement
 Technology, and many bug fixes.
 
 @item
-Rafal Luzynski for contributing support for two grammatical forms of month
+Rafa@l{} Lu@dotaccent{z}y@'nski
+for contributing support for two grammatical forms of month
 names, and for various fixes to locales.
 
 @item
