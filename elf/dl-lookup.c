@@ -403,7 +403,7 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 		  do
 		    if (((*hasharr ^ new_hash) >> 1) == 0)
 		      {
-			symidx = hasharr - map->l_gnu_chain_zero;
+			symidx = ELF_MACHINE_HASH_SYMIDX (map, hasharr);
 			sym = check_match (undef_name, ref, version, flags,
 					   type_class, &symtab[symidx], symidx,
 					   strtab, map, &versioned_sym,
@@ -909,10 +909,10 @@ _dl_setup_hash (struct link_map *map)
 {
   Elf_Symndx *hash;
 
-  if (__glibc_likely (map->l_info[ADDRIDX (DT_GNU_HASH)] != NULL))
+  if (__glibc_likely (map->l_info[ELF_MACHINE_GNU_HASH_ADDRIDX] != NULL))
     {
       Elf32_Word *hash32
-	= (void *) D_PTR (map, l_info[ADDRIDX (DT_GNU_HASH)]);
+	= (void *) D_PTR (map, l_info[ELF_MACHINE_GNU_HASH_ADDRIDX]);
       map->l_nbuckets = *hash32++;
       Elf32_Word symbias = *hash32++;
       Elf32_Word bitmask_nwords = *hash32++;
@@ -927,6 +927,10 @@ _dl_setup_hash (struct link_map *map)
       map->l_gnu_buckets = hash32;
       hash32 += map->l_nbuckets;
       map->l_gnu_chain_zero = hash32 - symbias;
+
+      /* Initialize MIPS xhash translation table.  */
+      ELF_MACHINE_XHASH_SETUP (hash32, symbias, map);
+
       return;
     }
 

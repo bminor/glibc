@@ -47,6 +47,23 @@ __BEGIN_DECLS
 #define ADDRIDX(tag)	(DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM \
 			 + DT_EXTRANUM + DT_VALNUM + DT_ADDRTAGIDX (tag))
 
+/* Type of GNU hash which the machine uses.  */
+#ifndef ELF_MACHINE_GNU_HASH_ADDRIDX
+# define ELF_MACHINE_GNU_HASH_ADDRIDX ADDRIDX (DT_GNU_HASH)
+#endif
+
+/* Calculate the index of a symbol in GNU hash.  */
+#ifndef ELF_MACHINE_HASH_SYMIDX
+# define ELF_MACHINE_HASH_SYMIDX(map, hasharr) \
+  ((hasharr) - (map)->l_gnu_chain_zero)
+#endif
+
+/* Setup MIPS xhash.  Defined only for MIPS.  */
+#ifndef ELF_MACHINE_XHASH_SETUP
+# define ELF_MACHINE_XHASH_SETUP(hash32, symbias, map) \
+  ((void) (hash32), (void) (symbias), (void) (map))
+#endif
+
 /* We use this macro to refer to ELF types independent of the native wordsize.
    `ElfW(TYPE)' is used in place of `Elf32_TYPE' or `Elf64_TYPE'.  */
 #define ELFW(type)	_ElfW (ELF, __ELF_NATIVE_CLASS, type)

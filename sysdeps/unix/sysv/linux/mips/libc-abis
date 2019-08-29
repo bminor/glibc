@@ -16,3 +16,5 @@ UNIQUE
 MIPS_O32_FP64   mips*-*-linux*
 # Absolute (SHN_ABS) symbols working correctly.
 ABSOLUTE
+# GNU-style hash table with translation table.
+MIPS_XHASH

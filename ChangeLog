@@ -1,3 +1,24 @@
+2019-08-29  Mihailo Stojanovic  <mihailo.stojanovic@rt-rk.com>
+
+	* elf/dl-addr.c (determine_info): Calculate the symbol index
+	using the newly defined ELF_MACHINE_HASH_SYMIDX macro.
+	* elf/dl-lookup.c (do_lookup_x): Ditto.
+	(_dl_setup_hash): Initialize MIPS xhash translation table.
+	* elf/elf.h (SHT_MIPS_XHASH): New define.
+	(DT_MIPS_XHASH): New define.
+	* sysdeps/generic/ldsodefs.h (ELF_MACHINE_GNU_HASH_ADDRIDX): New
+	define.
+	(ELF_MACHINE_HASH_SYMIDX): Ditto.
+	(ELF_MACHINE_XHASH_SETUP): Ditto.
+	* sysdeps/mips/ldsodefs.h (ELF_MACHINE_GNU_HASH_ADDRIDX): New
+	define.
+	(ELF_MACHINE_HASH_SYMIDX): Ditto.
+	(ELF_MACHINE_XHASH_SETUP): Ditto.
+	* sysdeps/mips/linkmap.h (struct link_map_machine): New member.
+	* sysdeps/unix/sysv/linux/mips/ldsodefs.h: Increment valid ABI
+	version.
+	* sysdeps/unix/sysv/linux/mips/libc-abis: New ABI version.
+
 2019-08-29  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/sh/preconfigure.ac: New file.
