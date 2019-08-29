@@ -1,6 +1,5 @@
 2019-08-30  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
-
 	* sysdeps/mach/hurd/getcwd.c
 	(_hurd_canonicalize_directory_name_internal): Do not remove the heading
 	slash if we got an unknown root directory. (__getcwd): Do not fail with
@@ -11,6 +10,14 @@
 	* hurd/hurdselect.c (_hurd_select): Always call __io_select with no
 	timeout.
 	* sysdeps/mach/hurd/setitimer.c (setitimer_locked): Fix preemptor setup.
+	* hurd/Makefile (user-interfaces): Add io_reply and io_request.
+	* hurd/hurdselect.c: Include <sys/time.h>, <hurd/io_request.h> and
+	<limits.h>.
+	(_hurd_select): Replace the call to __io_select with either
+	__io_select_request or __io_select_timeout_request, depending on the
+	timeout. Count the number of ready descriptors (replies for which at
+	least one type bit is set). Implement the timeout locally when there is
+	no file descriptor.
 
 2019-08-29  Mihailo Stojanovic  <mihailo.stojanovic@rt-rk.com>
 

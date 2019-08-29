@@ -16,14 +16,17 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <sys/time.h>
 #include <sys/types.h>
 #include <sys/poll.h>
 #include <hurd.h>
 #include <hurd/fd.h>
+#include <hurd/io_request.h>
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
 #include <stdint.h>
+#include <limits.h>
 
 /* All user select types.  */
 #define SELECT_ALL (SELECT_READ | SELECT_WRITE | SELECT_URG)
@@ -44,11 +47,13 @@ _hurd_select (int nfds,
 {
   int i;
   mach_port_t portset;
-  int got;
+  int got, ready;
   error_t err;
   fd_set rfds, wfds, xfds;
   int firstfd, lastfd;
-  mach_msg_timeout_t to = 0;
+  mach_msg_id_t reply_msgid;
+  mach_msg_timeout_t to;
+  struct timespec ts;
   struct
     {
       struct hurd_userlink ulink;
@@ -73,16 +78,39 @@ _hurd_select (int nfds,
       return -1;
     }
 
-  if (timeout != NULL)
+#define IO_SELECT_REPLY_MSGID (21012 + 100) /* XXX */
+#define IO_SELECT_TIMEOUT_REPLY_MSGID (21031 + 100) /* XXX */
+
+  if (timeout == NULL)
+    reply_msgid = IO_SELECT_REPLY_MSGID;
+  else
     {
-      if (timeout->tv_sec < 0 || timeout->tv_nsec < 0)
+      struct timeval now;
+
+      if (timeout->tv_sec < 0 || timeout->tv_nsec < 0 ||
+	  timeout->tv_nsec >= 1000000000)
 	{
 	  errno = EINVAL;
 	  return -1;
 	}
 
-      to = (timeout->tv_sec * 1000
-            + (timeout->tv_nsec + 999999) / 1000000);
+      err = __gettimeofday(&now, NULL);
+      if (err)
+	return -1;
+
+      ts.tv_sec = now.tv_sec + timeout->tv_sec;
+      ts.tv_nsec = now.tv_usec * 1000 + timeout->tv_nsec;
+
+      if (ts.tv_nsec >= 1000000000)
+	{
+	  ts.tv_sec++;
+	  ts.tv_nsec -= 1000000000;
+	}
+
+      if (ts.tv_sec < 0)
+	ts.tv_sec = LONG_MAX; /* XXX */
+
+      reply_msgid = IO_SELECT_TIMEOUT_REPLY_MSGID;
     }
 
   if (sigmask && __sigprocmask (SIG_SETMASK, sigmask, &oset))
@@ -236,12 +264,13 @@ _hurd_select (int nfds,
 	  {
 	    int type = d[i].type;
 	    d[i].reply_port = __mach_reply_port ();
-	    err = __io_select (d[i].io_port, d[i].reply_port, 0, &type);
-	    switch (err)
+	    if (timeout == NULL)
+	      err = __io_select_request (d[i].io_port, d[i].reply_port, type);
+	    else
+	      err = __io_select_timeout_request (d[i].io_port, d[i].reply_port,
+						 ts, type);
+	    if (!err)
 	      {
-	      case MACH_RCV_TIMED_OUT:
-		/* No immediate response.  This is normal.  */
-		err = 0;
 		if (firstfd == lastfd)
 		  /* When there's a single descriptor, we don't need a
 		     portset, so just pretend we have one, but really
@@ -262,31 +291,23 @@ _hurd_select (int nfds,
 		      __mach_port_move_member (__mach_task_self (),
 					       d[i].reply_port, portset);
 		  }
-		break;
-
-	      default:
-		/* No other error should happen.  Callers of select
+	      }
+	    else
+	      {
+		/* No error should happen.  Callers of select
 		   don't expect to see errors, so we simulate
 		   readiness of the erring object and the next call
 		   hopefully will get the error again.  */
-		type = SELECT_ALL;
-		/* FALLTHROUGH */
-
-	      case 0:
-		/* We got an answer.  */
-		if ((type & SELECT_ALL) == 0)
-		  /* Bogus answer; treat like an error, as a fake positive.  */
-		  type = SELECT_ALL;
-
-		/* This port is already ready already.  */
-		d[i].type &= type;
 		d[i].type |= SELECT_RETURNED;
 		++got;
-		break;
 	      }
 	    _hurd_port_free (&d[i].cell->port, &d[i].ulink, d[i].io_port);
 	  }
     }
+
+  /* GOT is the number of replies (or errors), while READY is the number of
+     replies with at least one type bit set.  */
+  ready = 0;
 
   /* Now wait for reply messages.  */
   if (!err && got == 0)
@@ -329,22 +350,35 @@ _hurd_select (int nfds,
 	    } success;
 #endif
 	} msg;
-      mach_msg_option_t options = (timeout == NULL ? 0 : MACH_RCV_TIMEOUT);
+      mach_msg_option_t options;
       error_t msgerr;
+
+      /* We rely on servers to implement the timeout, but when there are none,
+	 do it on the client side.  */
+      if (timeout != NULL && firstfd == -1)
+	{
+	  options = MACH_RCV_TIMEOUT;
+	  to = timeout->tv_sec * 1000 + (timeout->tv_nsec + 999999) / 1000000;
+	}
+      else
+	{
+	  options = 0;
+	  to = MACH_MSG_TIMEOUT_NONE;
+	}
+
       while ((msgerr = __mach_msg (&msg.head,
 				   MACH_RCV_MSG | MACH_RCV_INTERRUPT | options,
 				   0, sizeof msg, portset, to,
 				   MACH_PORT_NULL)) == MACH_MSG_SUCCESS)
 	{
 	  /* We got a message.  Decode it.  */
-#define IO_SELECT_REPLY_MSGID (21012 + 100) /* XXX */
 #ifdef MACH_MSG_TYPE_BIT
 	  const union typeword inttype =
 	  { type:
 	    { MACH_MSG_TYPE_INTEGER_T, sizeof (integer_t) * 8, 1, 1, 0, 0 }
 	  };
 #endif
-	  if (msg.head.msgh_id == IO_SELECT_REPLY_MSGID
+	  if (msg.head.msgh_id == reply_msgid
 	      && msg.head.msgh_size >= sizeof msg.error
 	      && !(msg.head.msgh_bits & MACH_MSGH_BITS_COMPLEX)
 #ifdef MACH_MSG_TYPE_BIT
@@ -362,12 +396,13 @@ _hurd_select (int nfds,
 		  err = EINTR;
 		  goto poll;
 		}
+	      /* Keep in mind msg.success.result can be 0 if a timeout
+		 occurred.  */
 	      if (msg.error.err
-		  || msg.head.msgh_size != sizeof msg.success
 #ifdef MACH_MSG_TYPE_BIT
 		  || msg.success.result_type.word != inttype.word
 #endif
-		  || (msg.success.result & SELECT_ALL) == 0)
+		  || msg.head.msgh_size != sizeof msg.success)
 		{
 		  /* Error or bogus reply.  Simulate readiness.  */
 		  __mach_msg_destroy (&msg.head);
@@ -384,6 +419,9 @@ _hurd_select (int nfds,
 			&& d[i].reply_port == msg.head.msgh_local_port)
 		      {
 			d[i].type &= msg.success.result;
+			if (d[i].type)
+			  ++ready;
+
 			d[i].type |= SELECT_RETURNED;
 			++got;
 		      }
@@ -408,7 +446,7 @@ _hurd_select (int nfds,
 	/* Interruption on our side (e.g. signal reception).  */
 	err = EINTR;
 
-      if (got)
+      if (ready)
 	/* At least one descriptor is known to be ready now, so we will
 	   return success.  */
 	err = 0;
@@ -452,9 +490,9 @@ _hurd_select (int nfds,
       }
   else
     {
-      /* Below we recalculate GOT to include an increment for each operation
+      /* Below we recalculate READY to include an increment for each operation
 	 allowed on each fd.  */
-      got = 0;
+      ready = 0;
 
       /* Set the user bitarrays.  We only ever have to clear bits, as all
 	 desired ones are initially set.  */
@@ -467,15 +505,15 @@ _hurd_select (int nfds,
 	      type = 0;
 
 	    if (type & SELECT_READ)
-	      got++;
+	      ready++;
 	    else if (readfds)
 	      FD_CLR (i, readfds);
 	    if (type & SELECT_WRITE)
-	      got++;
+	      ready++;
 	    else if (writefds)
 	      FD_CLR (i, writefds);
 	    if (type & SELECT_URG)
-	      got++;
+	      ready++;
 	    else if (exceptfds)
 	      FD_CLR (i, exceptfds);
 	  }
@@ -484,5 +522,5 @@ _hurd_select (int nfds,
   if (sigmask && __sigprocmask (SIG_SETMASK, &oset, NULL))
     return -1;
 
-  return got;
+  return ready;
 }
