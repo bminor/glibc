@@ -2,6 +2,7 @@
 
 	* hurd/hurdselect.c (_hurd_select): Always call __io_select with no
 	timeout.
+	* sysdeps/mach/hurd/setitimer.c (setitimer_locked): Fix preemptor setup.
 
 2019-08-29  Mihailo Stojanovic  <mihailo.stojanovic@rt-rk.com>
 
