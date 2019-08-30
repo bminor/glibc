@@ -30,7 +30,7 @@ static void
 __sigreturn2 (int *usp)
 {
   struct hurd_sigstate *ss = _hurd_self_sigstate ();
-  __spin_unlock (ss);
+  __spin_unlock (&ss->lock);
 
   sp = usp;
 #define A(line) asm volatile (#line)
