@@ -30,7 +30,6 @@ struct xid_command;
    the thread functions.  */
 struct pthread_functions
 {
-  int (*ptr_pthread_attr_getinheritsched) (const pthread_attr_t *, int *);
   int (*ptr_pthread_attr_setinheritsched) (pthread_attr_t *, int);
   int (*ptr_pthread_attr_getschedparam) (const pthread_attr_t *,
 					 struct sched_param *);

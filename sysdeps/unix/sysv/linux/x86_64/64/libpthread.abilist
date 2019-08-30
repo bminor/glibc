@@ -73,7 +73,6 @@ GLIBC_2.2.5 pread F
 GLIBC_2.2.5 pread64 F
 GLIBC_2.2.5 pthread_atfork F
 GLIBC_2.2.5 pthread_attr_getguardsize F
-GLIBC_2.2.5 pthread_attr_getinheritsched F
 GLIBC_2.2.5 pthread_attr_getschedparam F
 GLIBC_2.2.5 pthread_attr_getschedpolicy F
 GLIBC_2.2.5 pthread_attr_getscope F
