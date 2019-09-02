@@ -1,3 +1,11 @@
+2019-09-02  Ian Kent  <ikent@redhat.com>
+
+	Use autofs "ignore" mount hint in getmntent_r/getmntent.
+	* misc/mntent_r.c (get_mnt_entry): New function, extracted from
+	getmntent_r.
+	(__getmntent_r): Call it.  Filter out autofs entries with an
+	"ignore" mount option.
+
 2019-08-30  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* benchtests/bench-memcpy.c (simple_memcpy): Remove.
