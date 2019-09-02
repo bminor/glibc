@@ -1,3 +1,8 @@
+2019-09-02  Florian Weimer  <fweimer@redhat.com>
+
+	* misc/tst-mntent-autofs.c: New file.
+	* misc/Makefile (tests): Add misc/tst-mntent-autofs.
+
 2019-09-02  Ian Kent  <ikent@redhat.com>
 
 	Use autofs "ignore" mount hint in getmntent_r/getmntent.
