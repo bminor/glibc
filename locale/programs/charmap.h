@@ -60,7 +60,7 @@ struct charseq
   const char *name;
   uint32_t ucs4;
   int nbytes;
-  unsigned char bytes[0];
+  unsigned char bytes[];
 };
 
 

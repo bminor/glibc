@@ -842,8 +842,6 @@ no input digits defined and none of the standard names in the charmap"));
   for (cnt = 0; cnt < 10; ++cnt)
     if (ctype->mboutdigits[cnt] == NULL)
       {
-	static struct charseq replace[2];
-
 	if (!warned)
 	  {
 	    record_error (0, 0, _("\
@@ -851,10 +849,12 @@ not all characters used in `outdigit' are available in the charmap"));
 	    warned = 1;
 	  }
 
-	replace[0].nbytes = 1;
-	replace[0].bytes[0] = '?';
-	replace[0].bytes[1] = '\0';
-	ctype->mboutdigits[cnt] = &replace[0];
+	static const struct charseq replace =
+	  {
+	     .nbytes = 1,
+	     .bytes = "?",
+	  };
+	ctype->mboutdigits[cnt] = (struct charseq *) &replace;
       }
 
   warned = 0;

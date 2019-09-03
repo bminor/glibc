@@ -1,3 +1,11 @@
+2019-09-03  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24950]
+	* locale/programs/charmap.h (struct charseq): Turn bytes into a
+	flexible array member.
+	* locale/programs/ld-ctype.c (ctype_finish): Use initializer for
+	replace.
+
 2019-09-02  Florian Weimer  <fweimer@redhat.com>
 
 	* misc/tst-mntent-autofs.c: New file.
