@@ -1084,10 +1084,10 @@ ildouble: 1
 ldouble: 1
 
 Function: Real part of "cpow_downward":
-double: 2
-float: 4
-idouble: 2
-ifloat: 4
+double: 5
+float: 8
+idouble: 5
+ifloat: 8
 ildouble: 6
 ldouble: 6
 
@@ -1100,10 +1100,10 @@ ildouble: 2
 ldouble: 2
 
 Function: Real part of "cpow_towardzero":
-double: 2
-float: 4
-idouble: 2
-ifloat: 4
+double: 5
+float: 8
+idouble: 5
+ifloat: 8
 ildouble: 6
 ldouble: 6
 
