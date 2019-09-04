@@ -20,6 +20,7 @@
 #include <time.h>
 #include <unistd.h>
 #include "kernel-posix-cpu-timers.h"
+#include <shlib-compat.h>
 
 int
 __clock_getcpuclockid (pid_t pid, clockid_t *clock_id)
@@ -45,4 +46,11 @@ __clock_getcpuclockid (pid_t pid, clockid_t *clock_id)
   else
     return INTERNAL_SYSCALL_ERRNO (r, err);
 }
-weak_alias (__clock_getcpuclockid, clock_getcpuclockid)
+
+versioned_symbol (libc, __clock_getcpuclockid, clock_getcpuclockid, GLIBC_2_17);
+/* clock_getcpuclockid moved to libc in version 2.17;
+   old binaries may expect the symbol version it had in librt.  */
+#if SHLIB_COMPAT (libc, GLIBC_2_2, GLIBC_2_17)
+strong_alias (__clock_getcpuclockid, __clock_getcpuclockid_2);
+compat_symbol (libc, __clock_getcpuclockid_2, clock_getcpuclockid, GLIBC_2_2);
+#endif

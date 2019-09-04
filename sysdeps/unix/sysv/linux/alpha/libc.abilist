@@ -1863,6 +1863,11 @@ GLIBC_2.2 __xpg_sigpause F
 GLIBC_2.2 _flushlbf F
 GLIBC_2.2 _res_hconf D 0x48
 GLIBC_2.2 bind_textdomain_codeset F
+GLIBC_2.2 clock_getcpuclockid F
+GLIBC_2.2 clock_getres F
+GLIBC_2.2 clock_gettime F
+GLIBC_2.2 clock_nanosleep F
+GLIBC_2.2 clock_settime F
 GLIBC_2.2 dcngettext F
 GLIBC_2.2 dngettext F
 GLIBC_2.2 fgetpos F

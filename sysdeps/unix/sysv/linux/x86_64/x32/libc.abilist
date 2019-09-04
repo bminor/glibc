@@ -660,6 +660,11 @@ GLIBC_2.16 clntudp_create F
 GLIBC_2.16 clntunix_create F
 GLIBC_2.16 clock F
 GLIBC_2.16 clock_adjtime F
+GLIBC_2.16 clock_getcpuclockid F
+GLIBC_2.16 clock_getres F
+GLIBC_2.16 clock_gettime F
+GLIBC_2.16 clock_nanosleep F
+GLIBC_2.16 clock_settime F
 GLIBC_2.16 clone F
 GLIBC_2.16 close F
 GLIBC_2.16 closedir F

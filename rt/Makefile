@@ -28,9 +28,6 @@ aio-routines   := aio_cancel aio_error aio_fsync aio_misc aio_read	\
 		  aio_read64 aio_return aio_suspend aio_write		\
 		  aio_write64 lio_listio lio_listio64 aio_sigqueue	\
 		  aio_notify
-clock-routines := clock_getcpuclockid					\
-		  clock_getres clock_gettime clock_settime		\
-		  clock_nanosleep
 timer-routines := timer_create timer_delete timer_getoverr		\
 		  timer_gettime timer_settime
 shm-routines   := shm_open shm_unlink
@@ -38,22 +35,18 @@ mq-routines    := mq_open mq_close mq_unlink mq_getattr mq_setattr	\
 		  mq_notify mq_send mq_receive mq_timedsend		\
 		  mq_timedreceive
 
-routines = $(clock-routines)
-
 librt-routines = $(aio-routines) \
 		 $(timer-routines) \
-		 $(shm-routines) $(mq-routines) \
-		 clock-compat
+		 $(shm-routines) $(mq-routines)
 
-tests := tst-shm tst-clock tst-clock_nanosleep tst-timer tst-timer2 \
+tests := tst-shm tst-timer tst-timer2 \
 	 tst-aio tst-aio64 tst-aio2 tst-aio3 tst-aio4 tst-aio5 tst-aio6 \
 	 tst-aio7 tst-aio8 tst-aio9 tst-aio10 \
 	 tst-mqueue1 tst-mqueue2 tst-mqueue3 tst-mqueue4 \
 	 tst-mqueue5 tst-mqueue6 tst-mqueue7 tst-mqueue8 tst-mqueue9 \
 	 tst-timer3 tst-timer4 tst-timer5 \
-	 tst-cpuclock1 tst-cpuclock2 \
-	 tst-cputimer1 tst-cputimer2 tst-cputimer3 \
-	 tst-clock2 tst-shm-cancel
+	 tst-cpuclock2 tst-cputimer1 tst-cputimer2 tst-cputimer3 \
+	 tst-shm-cancel
 
 extra-libs := librt
 extra-libs-others := $(extra-libs)

@@ -49,6 +49,10 @@ libc {
   GLIBC_2.2 {
     # w*
     wcsftime;
+
+    # c*; actually in librt in version 2.2, moved to libc in 2.17
+    clock_getres; clock_gettime; clock_settime; clock_getcpuclockid;
+    clock_nanosleep;
   }
   GLIBC_2.3 {
     # these internal names are used by libstdc++
@@ -64,5 +68,14 @@ libc {
   }
   GLIBC_2.16 {
     timespec_get;
+  }
+  GLIBC_2.17 {
+    # c*
+    clock_getres; clock_gettime; clock_settime; clock_getcpuclockid;
+    clock_nanosleep;
+  }
+  GLIBC_PRIVATE {
+    # same as clock_gettime; used in other libraries
+    __clock_gettime;
   }
 }

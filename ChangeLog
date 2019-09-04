@@ -1,3 +1,107 @@
+2019-09-04  Zack Weinberg  <zackw@panix.com>
+
+	[BZ #24959]
+	* rt/clock_getcpuclockid.c: Move to time/clock_getcpuclockid.c.
+	* rt/clock_getres.c: Move to time/clock_getres.c.
+	* rt/clock_gettime.c: Move to time/clock_gettime.c.
+	* rt/clock_nanosleep.c: Move to time/clock_nanosleep.c.
+	* rt/clock_settime.c: Move to time/clock_settime.c.
+	* rt/tst-clock.c: Move to time/tst-clock.c.
+	* rt/tst-clock2.c: Move to time/tst-clock2.c.
+	* rt/tst-clock_nanosleep.c: Move to time/tst-clock_nanosleep.c.
+	* rt/tst-cpuclock1.c: Move to time/tst-cpuclock1.c.
+	* rt/clock-compat.c: Delete file.
+
+	* time/clock_getcpuclockid.c
+	* time/clock_getres.c
+	* time/clock_gettime.c
+	* time/clock_nanosleep.c
+	* time/clock_settime.c
+	* sysdeps/posix/clock_getres.c
+	* sysdeps/unix/clock_gettime.c
+	* sysdeps/unix/clock_nanosleep.c
+	* sysdeps/unix/clock_settime.c
+	* sysdeps/unix/sysv/linux/clock_getcpuclockid.c
+	* sysdeps/unix/sysv/linux/clock_getres.c
+	* sysdeps/unix/sysv/linux/clock_gettime.c
+	* sysdeps/unix/sysv/linux/clock_nanosleep.c
+	* sysdeps/unix/sysv/linux/clock_settime.c: Define the function
+	defined by this file with default symbol version GLIBC_2_17,
+	and optionally a compatibility alias at symbol version GLIBC_2_2.
+	* include/time.h: Remove internal prototypes for clock_getres,
+	clock_nanosleep, and clock_getcpuclockid.
+
+	* sysdeps/unix/sysv/linux/clock_gettime.c: Prune includes.
+	Remove unused function realtime_gettime.
+
+	* rt/Makefile (clock-routines, routines): Remove variable.
+	(librt-routines): Remove clock-compat.
+	(tests): Remove tst-clock, tst-clock2, tst-clock_nanosleep,
+	and tst-cpuclock1.
+	* time/Makefile (routines): Add clock_getres, clock_gettime,
+	clock_settime, clock_getcpuclockid, and clock_nanosleep.
+	(tests): Add tst-clock, tst-clock2, tst-clock_nanosleep,
+	and tst-cpuclock1.
+
+	* rt/Versions (libc): Remove entire stanza.
+	(librt GLIBC_2.2): Remove all clock_* functions.
+	* time/Versions (libc GLIBC_2.2, libc GLIBC_2.17):
+	Add clock_getres, clock_gettime, clock_settime,
+	clock_getcpuclockid, and clock_nanosleep.
+	(libc GLIBC_PRIVATE): Add __clock_gettime.
+
+	* sysdeps/mach/hurd/i386/librt.abilist
+	* sysdeps/unix/sysv/linux/alpha/librt.abilist
+	* sysdeps/unix/sysv/linux/arm/be/librt.abilist
+	* sysdeps/unix/sysv/linux/arm/le/librt.abilist
+	* sysdeps/unix/sysv/linux/hppa/librt.abilist
+	* sysdeps/unix/sysv/linux/i386/librt.abilist
+	* sysdeps/unix/sysv/linux/ia64/librt.abilist
+	* sysdeps/unix/sysv/linux/m68k/coldfire/librt.abilist
+	* sysdeps/unix/sysv/linux/m68k/m680x0/librt.abilist
+	* sysdeps/unix/sysv/linux/microblaze/be/librt.abilist
+	* sysdeps/unix/sysv/linux/microblaze/le/librt.abilist
+	* sysdeps/unix/sysv/linux/mips/mips32/librt.abilist
+	* sysdeps/unix/sysv/linux/mips/mips64/librt.abilist
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/librt.abilist
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/be/librt.abilist
+	* sysdeps/unix/sysv/linux/s390/s390-32/librt.abilist
+	* sysdeps/unix/sysv/linux/s390/s390-64/librt.abilist
+	* sysdeps/unix/sysv/linux/sh/librt.abilist
+	* sysdeps/unix/sysv/linux/sparc/sparc32/librt.abilist
+	* sysdeps/unix/sysv/linux/sparc/sparc64/librt.abilist
+	* sysdeps/unix/sysv/linux/x86_64/64/librt.abilist
+	* sysdeps/unix/sysv/linux/x86_64/x32/librt.abilist:
+	Remove entries for clock_getres, clock_gettime, clock_settime,
+	clock_getcpuclockid, and clock_nanosleep.
+
+	* sysdeps/mach/hurd/i386/libc.abilist
+	* sysdeps/unix/sysv/linux/alpha/libc.abilist
+	* sysdeps/unix/sysv/linux/arm/libc.abilist
+	* sysdeps/unix/sysv/linux/hppa/libc.abilist
+	* sysdeps/unix/sysv/linux/i386/libc.abilist
+	* sysdeps/unix/sysv/linux/ia64/libc.abilist
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist
+	* sysdeps/unix/sysv/linux/mips/mips32/fpu/libc.abilist
+	* sysdeps/unix/sysv/linux/mips/mips32/nofpu/libc.abilist
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libc.abilist
+	* sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist
+	* sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist
+	* sysdeps/unix/sysv/linux/sh/be/libc.abilist
+	* sysdeps/unix/sysv/linux/sh/le/libc.abilist
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist
+	* sysdeps/unix/sysv/linux/x86_64/64/libc.abilist
+	* sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist:
+	Add another set of entries for clock_getres, clock_gettime,
+	clock_settime, clock_getcpuclockid, and clock_nanosleep at
+	whatever version GLIBC_2.2 maps to.
+
 2019-09-03  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/alpha/fpu/libm-test-ulps: Regenerated using GCC 9.2.

@@ -1610,6 +1610,11 @@ GLIBC_2.2 capget F
 GLIBC_2.2 capset F
 GLIBC_2.2 cbc_crypt F
 GLIBC_2.2 clntunix_create F
+GLIBC_2.2 clock_getcpuclockid F
+GLIBC_2.2 clock_getres F
+GLIBC_2.2 clock_gettime F
+GLIBC_2.2 clock_nanosleep F
+GLIBC_2.2 clock_settime F
 GLIBC_2.2 creat64 F
 GLIBC_2.2 dcngettext F
 GLIBC_2.2 des_setparity F

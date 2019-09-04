@@ -1,5 +1,5 @@
-/* High-resolution sleep with the specified clock.  Stub version.
-   Copyright (C) 2000-2019 Free Software Foundation, Inc.
+/* Get the current value of a clock.  Stub version.
+   Copyright (C) 1999-2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,20 +18,23 @@
 
 #include <errno.h>
 #include <time.h>
+#include <shlib-compat.h>
 
+/* Get current value of CLOCK and store it in TP.  */
 int
-__clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req,
-		   struct timespec *rem)
+__clock_gettime (clockid_t clock_id, struct timespec *tp)
 {
-  if (__builtin_expect (req->tv_nsec, 0) < 0
-      || __builtin_expect (req->tv_nsec, 0) >= 1000000000)
-    return EINVAL;
-
-  if (flags != TIMER_ABSTIME && flags != 0)
-    return EINVAL;
-
-  /* Not implemented.  */
-  return ENOSYS;
+  __set_errno (ENOSYS);
+  return -1;
 }
-weak_alias (__clock_nanosleep, clock_nanosleep)
-stub_warning (clock_nanosleep)
+libc_hidden_def (__clock_gettime)
+
+versioned_symbol (libc, __clock_gettime, clock_gettime, GLIBC_2_17);
+/* clock_gettime moved to libc in version 2.17;
+   old binaries may expect the symbol version it had in librt.  */
+#if SHLIB_COMPAT (libc, GLIBC_2_2, GLIBC_2_17)
+strong_alias (__clock_gettime, __clock_gettime_2);
+compat_symbol (libc, __clock_gettime_2, clock_gettime, GLIBC_2_2);
+#endif
+
+stub_warning (clock_gettime)

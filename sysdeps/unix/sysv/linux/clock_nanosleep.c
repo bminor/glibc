@@ -21,6 +21,7 @@
 #include <sysdep-cancel.h>
 #include "kernel-posix-cpu-timers.h"
 
+#include <shlib-compat.h>
 
 /* We can simply use the syscall.  The CPU clocks are not supported
    with this function.  */
@@ -41,4 +42,11 @@ __clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req,
   return (INTERNAL_SYSCALL_ERROR_P (r, err)
 	  ? INTERNAL_SYSCALL_ERRNO (r, err) : 0);
 }
-weak_alias (__clock_nanosleep, clock_nanosleep)
+
+versioned_symbol (libc, __clock_nanosleep, clock_nanosleep, GLIBC_2_17);
+/* clock_nanosleep moved to libc in version 2.17;
+   old binaries may expect the symbol version it had in librt.  */
+#if SHLIB_COMPAT (libc, GLIBC_2_2, GLIBC_2_17)
+strong_alias (__clock_nanosleep, __clock_nanosleep_2);
+compat_symbol (libc, __clock_nanosleep_2, clock_nanosleep, GLIBC_2_2);
+#endif

@@ -1,4 +1,4 @@
-/* Get the current value of a clock.  Stub version.
+/* Get the resolution of a clock.  Stub version.
    Copyright (C) 1999-2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -18,14 +18,22 @@
 
 #include <errno.h>
 #include <time.h>
+#include <shlib-compat.h>
 
-/* Get current value of CLOCK and store it in TP.  */
+/* Get resolution of clock.  */
 int
-__clock_gettime (clockid_t clock_id, struct timespec *tp)
+__clock_getres (clockid_t clock_id, struct timespec *res)
 {
   __set_errno (ENOSYS);
   return -1;
 }
-weak_alias (__clock_gettime, clock_gettime)
-libc_hidden_def (__clock_gettime)
-stub_warning (clock_gettime)
+
+versioned_symbol (libc, __clock_getres, clock_getres, GLIBC_2_17);
+/* clock_getres moved to libc in version 2.17;
+   old binaries may expect the symbol version it had in librt.  */
+#if SHLIB_COMPAT (libc, GLIBC_2_2, GLIBC_2_17)
+strong_alias (__clock_getres, __clock_getres_2);
+compat_symbol (libc, __clock_getres_2, clock_getres, GLIBC_2_2);
+#endif
+
+stub_warning (clock_getres)

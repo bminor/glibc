@@ -621,6 +621,11 @@ GLIBC_2.2.5 clntudp_bufcreate F
 GLIBC_2.2.5 clntudp_create F
 GLIBC_2.2.5 clntunix_create F
 GLIBC_2.2.5 clock F
+GLIBC_2.2.5 clock_getcpuclockid F
+GLIBC_2.2.5 clock_getres F
+GLIBC_2.2.5 clock_gettime F
+GLIBC_2.2.5 clock_nanosleep F
+GLIBC_2.2.5 clock_settime F
 GLIBC_2.2.5 clone F
 GLIBC_2.2.5 close F
 GLIBC_2.2.5 closedir F

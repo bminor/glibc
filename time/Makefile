@@ -36,14 +36,18 @@ routines := offtime asctime clock ctime ctime_r difftime \
 	    stime dysize timegm ftime			 \
 	    getdate strptime strptime_l			 \
 	    strftime wcsftime strftime_l wcsftime_l	 \
-	    timespec_get
+	    timespec_get 	 			 \
+	    clock_getcpuclockid clock_getres 		 \
+	    clock_gettime clock_settime clock_nanosleep
+
 aux :=	    era alt_digit lc-time-cleanup
 
 tests	:= test_time clocktest tst-posixtz tst-strptime tst_wcsftime \
 	   tst-getdate tst-mktime tst-mktime2 tst-ftime_l tst-strftime \
 	   tst-mktime3 tst-strptime2 bug-asctime bug-asctime_r bug-mktime1 \
 	   tst-strptime3 bug-getdate1 tst-strptime-whitespace tst-ftime \
-	   tst-tzname tst-y2039 bug-mktime4 tst-strftime2 tst-strftime3
+	   tst-tzname tst-y2039 bug-mktime4 tst-strftime2 tst-strftime3 \
+	   tst-clock tst-clock2 tst-clock_nanosleep tst-cpuclock1
 
 include ../Rules
 

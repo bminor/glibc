@@ -14,11 +14,6 @@ GLIBC_2.18 aio_suspend F
 GLIBC_2.18 aio_suspend64 F
 GLIBC_2.18 aio_write F
 GLIBC_2.18 aio_write64 F
-GLIBC_2.18 clock_getcpuclockid F
-GLIBC_2.18 clock_getres F
-GLIBC_2.18 clock_gettime F
-GLIBC_2.18 clock_nanosleep F
-GLIBC_2.18 clock_settime F
 GLIBC_2.18 lio_listio F
 GLIBC_2.18 lio_listio64 F
 GLIBC_2.18 mq_close F
