@@ -1,3 +1,8 @@
+2019-09-05  Gabriel F. T. Gomes  <gabrielftg@linux.ibm.com>
+
+	* math/bits/mathcalls.h (totalorder, totalordermag): Replace
+	const attribute with pure attribute.
+
 2019-09-04  Lukasz Majewski <lukma@denx.de>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h
