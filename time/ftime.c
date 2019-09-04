@@ -1,4 +1,5 @@
-/* Copyright (C) 1994-2019 Free Software Foundation, Inc.
+/* Deprecated return date and time.
+   Copyright (C) 1994-2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,27 +16,18 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <time.h>
 #include <sys/timeb.h>
+#include <time.h>
 
 int
 ftime (struct timeb *timebuf)
 {
-  int save = errno;
-  struct tm tp;
+  struct timespec ts;
+  __clock_gettime (CLOCK_REALTIME, &ts);
 
-  __set_errno (0);
-  if (time (&timebuf->time) == (time_t) -1 && errno != 0)
-    return -1;
-  timebuf->millitm = 0;
-
-  if (__localtime_r (&timebuf->time, &tp) == NULL)
-    return -1;
-
-  timebuf->timezone = tp.tm_gmtoff / 60;
-  timebuf->dstflag = tp.tm_isdst;
-
-  __set_errno (save);
+  timebuf->time = ts.tv_sec;
+  timebuf->millitm = ts.tv_nsec / 1000000;
+  timebuf->timezone = 0;
+  timebuf->dstflag = 0;
   return 0;
 }

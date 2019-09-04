@@ -18,6 +18,7 @@
 
 #include <sys/timeb.h>
 #include <stdio.h>
+#include <libc-diag.h>
 
 static int
 do_test (void)
@@ -29,11 +30,17 @@ do_test (void)
     {
       prev = curr;
 
+      /* ftime was deprecated on 2.31.  */
+      DIAG_PUSH_NEEDS_COMMENT;
+      DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wdeprecated-declarations");
+
       if (ftime (&curr))
         {
           printf ("ftime returned an error\n");
           return 1;
         }
+
+      DIAG_POP_NEEDS_COMMENT;
 
       if (curr.time < prev.time)
         {

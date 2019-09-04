@@ -58,6 +58,9 @@ Deprecated and removed features, and other changes affecting compatibility:
   settimeofday available to newly linked binaries after there is a
   replacement for Linux's time-zone-like offset API.
 
+* The obsolete functions ftime has been deprecated and will be removed from
+  a future version of glibc.  Application should use clock_gettime instead.
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]

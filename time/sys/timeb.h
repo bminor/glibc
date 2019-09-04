@@ -36,7 +36,8 @@ struct timeb
 
 /* Fill in TIMEBUF with information about the current time.  */
 
-extern int ftime (struct timeb *__timebuf);
+extern int ftime (struct timeb *__timebuf)
+  __nonnull ((1)) __attribute_deprecated__;
 
 __END_DECLS
 
