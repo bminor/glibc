@@ -199,8 +199,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
       newp = (char *) alloca (filenamelen
 			      + 5 + _nl_category_name_sizes[category] + 1);
       __mempcpy (__mempcpy (__mempcpy (newp, file->filename, filenamelen),
-			    "/SYS_", 5),
-		 _nl_category_names.str + _nl_category_name_idxs[category],
+			    "/SYS_", 5), _nl_category_names_get (category),
 		 _nl_category_name_sizes[category] + 1);
 
       fd = __open_nocancel (newp, O_RDONLY | O_CLOEXEC);

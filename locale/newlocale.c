@@ -131,8 +131,7 @@ __newlocale (int category_mask, const char *locale, locale_t base)
 	  for (cnt = 0; cnt < __LC_LAST; ++cnt)
 	    if (cnt != LC_ALL
 		&& (size_t) (cp - np) == _nl_category_name_sizes[cnt]
-		&& memcmp (np, (_nl_category_names.str
-				+ _nl_category_name_idxs[cnt]), cp - np) == 0)
+		&& memcmp (np, (_nl_category_names_get (cnt)), cp - np) == 0)
 	      break;
 
 	  if (cnt == __LC_LAST)

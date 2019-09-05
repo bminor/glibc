@@ -65,20 +65,18 @@ static char *const _nl_current_used[] =
 
 
 /* Define an array of category names (also the environment variable names).  */
-const union catnamestr_t _nl_category_names attribute_hidden =
+const struct catnamestr_t _nl_category_names attribute_hidden =
   {
-    {
 #define DEFINE_CATEGORY(category, category_name, items, a) \
-      category_name,
+    category_name,
 #include "categories.def"
 #undef DEFINE_CATEGORY
-    }
   };
 
 const uint8_t _nl_category_name_idxs[__LC_LAST] attribute_hidden =
   {
 #define DEFINE_CATEGORY(category, category_name, items, a) \
-    [category] = offsetof (union catnamestr_t, CATNAMEMF (__LINE__)),
+    [category] = offsetof (struct catnamestr_t, CATNAMEMF (__LINE__)),
 #include "categories.def"
 #undef DEFINE_CATEGORY
   };
@@ -180,7 +178,7 @@ new_composite_name (int category, const char *newnames[__LC_LAST])
 	const char *name = (category == LC_ALL ? newnames[i]
 			    : category == i ? newnames[0]
 			    : _nl_global_locale.__names[i]);
-	p = __stpcpy (p, _nl_category_names.str + _nl_category_name_idxs[i]);
+	p = __stpcpy (p, _nl_category_names_get (i));
 	*p++ = '=';
 	p = __stpcpy (p, name);
 	*p++ = ';';
@@ -298,8 +296,7 @@ setlocale (int category, const char *locale)
 	      for (cnt = 0; cnt < __LC_LAST; ++cnt)
 		if (cnt != LC_ALL
 		    && (size_t) (cp - np) == _nl_category_name_sizes[cnt]
-		    && (memcmp (np, (_nl_category_names.str
-				     + _nl_category_name_idxs[cnt]), cp - np)
+		    && (memcmp (np, (_nl_category_names_get (cnt)), cp - np)
 			== 0))
 		  break;
 

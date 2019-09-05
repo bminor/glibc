@@ -1,3 +1,17 @@
+2019-09-05  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24962]
+	* locale/localeinfo.h (_nl_category_names): Remove union wrapper.
+	(_nl_category_names_get): New function.
+	* intl/dcigettext.c (category_to_name): Call it.
+	* locale/findlocale.c (_nl_find_locale): Likewise.
+	* intl/loadlocale.c (_nl_load_locale): Likewise.
+	* locale/newlocale.c (__newlocale): Likewise.
+	* locale/setlocale.c (_nl_category_names): Adjust definition.
+	(_nl_category_name_idxs): Likewise.
+	(new_composite_name): Call _nl_category_names_get.
+	(setlocale): Likewise.
+
 2019-09-05  Gabriel F. T. Gomes  <gabrielftg@linux.ibm.com>
 
 	* math/bits/mathcalls.h (totalorder, totalordermag): Replace

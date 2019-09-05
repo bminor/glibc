@@ -183,22 +183,28 @@ enum
 #define _ISCTYPE(c, desc) \
   (((((const uint32_t *) (desc)) - 8)[(c) >> 5] >> ((c) & 0x1f)) & 1)
 
-/* Category name handling variables.  */
+/* Category name handling variables.  Concatenate all the strings in a
+   single object to minimize relocations.  Individual strings can be
+   accessed using _nl_category_names.  */
 #define CATNAMEMF(line) CATNAMEMF1 (line)
 #define CATNAMEMF1(line) str##line
-extern const union catnamestr_t
+extern const struct catnamestr_t
 {
-  struct
-  {
 #define DEFINE_CATEGORY(category, category_name, items, a) \
-    char CATNAMEMF (__LINE__)[sizeof (category_name)];
+  char CATNAMEMF (__LINE__)[sizeof (category_name)];
 #include "categories.def"
 #undef DEFINE_CATEGORY
-  };
-  char str[0];
 } _nl_category_names attribute_hidden;
 extern const uint8_t _nl_category_name_idxs[__LC_LAST] attribute_hidden;
 extern const uint8_t _nl_category_name_sizes[__LC_LAST] attribute_hidden;
+
+/* Return the name of the category INDEX, which must be nonnegative
+   and less than _LC_LAST.  */
+static inline const char *
+_nl_category_names_get (int index)
+{
+  return (const char *) &_nl_category_names + _nl_category_name_idxs[index];
+}
 
 /* Name of the standard locales.  */
 extern const char _nl_C_name[] attribute_hidden;

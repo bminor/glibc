@@ -360,8 +360,7 @@ static const char *guess_category_value (int category,
 
 #ifdef _LIBC
 # include "../locale/localeinfo.h"
-# define category_to_name(category) \
-  _nl_category_names.str + _nl_category_name_idxs[category]
+# define category_to_name(category) _nl_category_names_get (category)
 #else
 static const char *category_to_name (int category);
 #endif
