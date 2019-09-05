@@ -375,12 +375,12 @@ __MATHDECL_1 (int, canonicalize,, (_Mdouble_ *__cx, const _Mdouble_ *__x));
 /* Total order operation.  */
 __MATHDECL_1 (int, totalorder,, (const _Mdouble_ *__x,
 				 const _Mdouble_ *__y))
-     __attribute__ ((__pure__));
+     __attribute_pure__;
 
 /* Total order operation on absolute values.  */
 __MATHDECL_1 (int, totalordermag,, (const _Mdouble_ *__x,
 				    const _Mdouble_ *__y))
-     __attribute__ ((__pure__));
+     __attribute_pure__;
 
 /* Get NaN payload.  */
 __MATHCALL (getpayload,, (const _Mdouble_ *__x));
