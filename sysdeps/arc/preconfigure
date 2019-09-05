@@ -1,14 +1,15 @@
 case "$machine" in
 arc*)
-	base_machine=arc
-	machine=arc
-	;;
-esac
+  base_machine=arc
+  machine=arc
 
-gccfloat=`$CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null | grep __ARC_FPU_| wc -l`
-if test "$gccfloat" != "0"; then
-	echo "glibc being configured for double precision floating point"
-	with_fp_cond=1
-else
-	with_fp_cond=0
-fi
+  gccfloat=`$CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null | grep __ARC_FPU_| wc -l`
+  if test "$gccfloat" != "0"; then
+    echo "glibc being configured for double precision floating point"
+    with_fp_cond=1
+  else
+    with_fp_cond=0
+  fi
+  ;;
+
+esac
