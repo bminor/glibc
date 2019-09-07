@@ -6,7 +6,7 @@ AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([scripts])
 
 ACX_PKGVERSION([GNU libc])
-ACX_BUGURL([http://www.gnu.org/software/libc/bugs.html])
+ACX_BUGURL([https://www.gnu.org/software/libc/bugs.html])
 AC_DEFINE_UNQUOTED([PKGVERSION], ["$PKGVERSION"],
 		   [Package description])
 AC_DEFINE_UNQUOTED([REPORT_BUGS_TO], ["$REPORT_BUGS_TO"],

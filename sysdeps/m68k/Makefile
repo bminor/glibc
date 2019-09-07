@@ -13,7 +13,7 @@
 
 # You should have received a copy of the GNU Lesser General Public
 # License along with the GNU C Library.  If not, see
-# <http://www.gnu.org/licenses/>.
+# <https://www.gnu.org/licenses/>.
 
 # The mpn functions need this.  All existing 68k ports use MIT syntax.  If
 # a new port wants to use Motorola or Sony syntax, it can redefine this

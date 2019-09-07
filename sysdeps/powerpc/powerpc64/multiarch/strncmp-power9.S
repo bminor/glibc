@@ -13,7 +13,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 #if defined __LITTLE_ENDIAN__ && IS_IN (libc)
 #define STRNCMP __strncmp_power9

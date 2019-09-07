@@ -15,7 +15,7 @@
 
 # You should have received a copy of the GNU Lesser General Public
 # License along with the GNU C Library; if not, see
-# <http://www.gnu.org/licenses/>.
+# <https://www.gnu.org/licenses/>.
 
 # This script does not backport the Makefile tweaks outside the
 # support/ directory (which need to be backported separately), or the

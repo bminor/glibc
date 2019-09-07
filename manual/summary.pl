@@ -17,7 +17,7 @@
 
 # You should have received a copy of the GNU Lesser General Public
 # License along with the GNU C Library; if not, see
-# <http://www.gnu.org/licenses/>.
+# <https://www.gnu.org/licenses/>.
 
 # Anything declared in a header or defined in a standard should have
 # its origins annotated using the @standards macro (see macro.texi).

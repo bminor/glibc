@@ -3,7 +3,7 @@
  * This is used in ld-address.c (address_finish).
  *
  * If you find something missing or wrong, please go to the URL
- * http://www.gnu.org/software/libc/bugs.html and follow
+ * https://www.gnu.org/software/libc/bugs.html and follow
  * instructions there to file a bug report.
  */
 DEFINE_COUNTRY_CODE ("AALAND ISLANDS", AX, ALA, 248)

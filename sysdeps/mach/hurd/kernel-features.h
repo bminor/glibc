@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* This file can define __ASSUME_* macros checked by certain source files.
    Almost none of these are used outside of sysdeps/unix/sysv/linux code.

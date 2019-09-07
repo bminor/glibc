@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Library General Public
    License along with the GNU C Library; see the file COPYING.LIB.  If
-   not, see <http://www.gnu.org/licenses/>.  */
+   not, see <https://www.gnu.org/licenses/>.  */
 
 #ifndef _ROUND_TO_INTEGER_H
 #define _ROUND_TO_INTEGER_H

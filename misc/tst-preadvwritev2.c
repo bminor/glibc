@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 #define PREADV(__fd, __iov, __iovcnt, __offset) \
   preadv2 (__fd, __iov, __iovcnt, __offset, 0)

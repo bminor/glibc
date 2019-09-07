@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 static inline void __attribute__ ((always_inline))
 setup_vdso (struct link_map *main_map __attribute__ ((unused)),

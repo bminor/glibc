@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* The actual strlen code is in ../strlen.S.  If we are building libc this file
    defines __strlen_generic.  Otherwise the include of ../strlen.S will define

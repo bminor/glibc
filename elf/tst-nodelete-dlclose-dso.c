@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* This is the primary DSO that is loaded by the appliation.  This DSO
    then loads a plugin with RTLD_NODELETE.  This plugin depends on this

@@ -14,7 +14,7 @@
    GNU Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 /* For bison < 2.0, the bison generated parser uses alloca.  AIX 3 forces us
    to put this declaration at the beginning of the file.  The declaration in

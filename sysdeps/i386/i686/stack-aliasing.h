@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* What is useful is to avoid the 64k aliasing problem which reliably
    happens if all stacks use sizes which are a multiple of 64k.  Tell

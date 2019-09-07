@@ -15,7 +15,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* Return the difference between two timespec values A and B.  On
    overflow, return an extremal value.  This assumes 0 <= tv_nsec <

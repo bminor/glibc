@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 #define ATEXIT(fn) on_exit ((void (*) (int, void *)) fn, (void *) 0)
 #define EXIT(x) exit (x)

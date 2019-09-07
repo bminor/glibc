@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* This version does lives in ld.so, does not use thread-local data
    and supports _dl_signal_cerror and _dl_receive_error.  */

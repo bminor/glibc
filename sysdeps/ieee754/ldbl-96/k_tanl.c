@@ -29,7 +29,7 @@
 
     You should have received a copy of the GNU Lesser General Public
     License along with this library; if not, see
-    <http://www.gnu.org/licenses/>.  */
+    <https://www.gnu.org/licenses/>.  */
 
 /* __kernel_tanl( x, y, k )
  * kernel tan function on [-pi/4, pi/4], pi/4 ~ 0.7854

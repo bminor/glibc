@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 #define _ZGVbN2v_cos _ZGVbN2v_cos_sse2
 #include "../svml_d_cos2_core.S"

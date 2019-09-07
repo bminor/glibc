@@ -643,7 +643,7 @@ library, you really only need to narrow it down to one library function
 call, if possible.  This should not be too difficult.
 
    The final step when you have a simple test case is to report the bug.
-Do this at <http://www.gnu.org/software/libc/bugs.html>.
+Do this at <https://www.gnu.org/software/libc/bugs.html>.
 
    If you are not sure how a function should behave, and this manual
 doesn't tell you, that's a bug in the manual.  Report that too!  If the

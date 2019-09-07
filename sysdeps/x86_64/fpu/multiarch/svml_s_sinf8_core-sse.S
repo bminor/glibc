@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 #define _ZGVdN8v_sinf _ZGVdN8v_sinf_sse_wrapper
 #include "../svml_s_sinf8_core.S"

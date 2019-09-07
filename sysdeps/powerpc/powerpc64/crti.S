@@ -31,7 +31,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* crti.S puts a function prologue at the beginning of the .init and
    .fini sections and defines global symbols for those addresses, so

@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* This information must be kept in sync with the _DL_HWCAP_COUNT,
    HWCAP_PLATFORMS_START and HWCAP_PLATFORMS_COUNT definitions in

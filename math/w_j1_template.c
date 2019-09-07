@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* Only build wrappers from the templates for the types that define the macro
    below.  This macro is set in math-type-macros-<type>.h in sysdeps/generic

@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* These are the bits used by 4.4 BSD and its derivatives.  On systems
    (such as GNU) where these facilities are not system services but can be

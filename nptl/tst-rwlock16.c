@@ -13,7 +13,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* This tests that with a reader-preferring rwlock, all readers are woken if
    one reader "steals" lock ownership from a blocked writer.  */

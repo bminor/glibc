@@ -15,7 +15,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* UTF-7 is a legacy encoding used for transmitting Unicode within the
    ASCII character set, used primarily by mail agents.  New programs

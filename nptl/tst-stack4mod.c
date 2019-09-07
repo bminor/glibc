@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* 256 is arbitrary here and is known to trigger PR 13862.  */
 __thread int var[256] attribute_hidden = {0};

@@ -15,7 +15,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 #include <argp.h>
 #include <dlfcn.h>
@@ -88,7 +88,7 @@ static const struct argp_option options[] =
 /* Short description of program.  */
 static const char doc[] = N_("Read and display shared object profiling data.");
 //For bug reporting instructions, please see:\n
-//<http://www.gnu.org/software/libc/bugs.html>.\n");
+//<https://www.gnu.org/software/libc/bugs.html>.\n");
 
 /* Strings for arguments in help texts.  */
 static const char args_doc[] = N_("SHOBJ [PROFDATA]");

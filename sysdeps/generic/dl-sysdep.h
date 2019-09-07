@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* No multiple inclusion protection need here because it's just macros.
    We don't want to use _DL_SYSDEP_H in case we are #include_next'd.  */

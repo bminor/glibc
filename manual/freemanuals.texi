@@ -90,4 +90,4 @@ paid or pay the authors to work on it.
 
 The Free Software Foundation maintains a list of free documentation
 published by other publishers, at
-@url{http://www.fsf.org/doc/other-free-books.html}.
+@url{https://www.fsf.org/doc/other-free-books.html}.

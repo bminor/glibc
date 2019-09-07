@@ -15,7 +15,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 extern __typeof (__open) __open attribute_hidden;
 extern __typeof (__fcntl) __fcntl attribute_hidden;

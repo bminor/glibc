@@ -20,7 +20,7 @@ escape_char /
 LC_IDENTIFICATION
 title      "Turkish language locale for Cyprus"
 source     "Free Software Foundation, Inc."
-address    "http:////www.gnu.org//software//libc//"
+address    "https:////www.gnu.org//software//libc//"
 contact    ""
 email      "bug-glibc-locales@gnu.org"
 tel        ""

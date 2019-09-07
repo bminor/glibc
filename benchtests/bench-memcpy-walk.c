@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* This microbenchmark measures the throughput of memcpy for various sizes from
    1 byte to 32MiB, doubling every iteration and then misaligning by 0-15

@@ -13,7 +13,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* Copy of sysdeps/generic/sigjmp.c modified for backward compatibility
    with old non AltiVec/VMX setjmp.  */

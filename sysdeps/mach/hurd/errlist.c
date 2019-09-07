@@ -13,7 +13,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* sys_errlist cannot have Unix semantics on the Hurd, so it is easier just
    to rename it.  We also need to remap error codes to array indices by

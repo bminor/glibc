@@ -33,7 +33,7 @@
 
     You should have received a copy of the GNU Lesser General Public
     License along with this library; if not, see
-    <http://www.gnu.org/licenses/>.  */
+    <https://www.gnu.org/licenses/>.  */
 
 #if defined(LIBM_SCCS) && !defined(lint)
 static char rcsid[] = "$NetBSD: e_asinf.c,v 1.5 1995/05/12 04:57:25 jtc Exp $";

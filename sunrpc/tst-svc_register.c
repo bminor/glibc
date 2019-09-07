@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* This test uses a stub rpcbind server (implemented in a child
    process using rpcbind_dispatch/run_rpcbind) to check how RPC

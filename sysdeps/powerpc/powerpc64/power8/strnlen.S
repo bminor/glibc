@@ -12,7 +12,7 @@
    Lesser General Public License for more details.
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* It is implemented the following heuristic:
 	1. Case maxlen <= 32: align the pointer to 8 bytes to loop through

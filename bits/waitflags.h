@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 #if !defined _SYS_WAIT_H && !defined _STDLIB_H
 # error "Never include <bits/waitflags.h> directly; use <sys/wait.h> instead."

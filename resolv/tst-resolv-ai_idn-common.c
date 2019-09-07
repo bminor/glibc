@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* Before including this file, TEST_USE_UTF8 must be defined to 1 or
    0, depending on whether a UTF-8 locale is used or a Latin-1

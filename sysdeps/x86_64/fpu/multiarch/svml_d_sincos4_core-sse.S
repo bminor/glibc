@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 #define _ZGVdN4vvv_sincos _ZGVdN4vvv_sincos_sse_wrapper
 #include "../svml_d_sincos4_core.S"

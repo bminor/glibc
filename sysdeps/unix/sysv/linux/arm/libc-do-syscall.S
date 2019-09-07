@@ -13,7 +13,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library.  If not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* When this file is built for inclusion in nscd, _FORTIFY_SOURCE is
    defined but -O is not used, resulting in a warning from features.h.  */

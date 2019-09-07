@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 /* Redefine lroundf/__lroundf so that the compiler won't complain about
    the type mismatch with the IFUNC selector in strong_alias below.  */
 #define lroundf __hidden_lroundf

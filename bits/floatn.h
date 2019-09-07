@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* Defined to 1 if the current compiler invocation provides a
    floating-point type with the IEEE 754 binary128 format, and this glibc

@@ -19,7 +19,7 @@ escape_char /
 LC_IDENTIFICATION
 title      "Finnish locale for Finland with Euro"
 source     "Free Software Foundation, Inc."
-address    "http:////www.gnu.org//software//libc//"
+address    "https:////www.gnu.org//software//libc//"
 contact    ""
 email      "bug-glibc-locales@gnu.org"
 tel        ""

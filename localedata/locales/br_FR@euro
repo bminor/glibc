@@ -18,7 +18,7 @@ escape_char /
 LC_IDENTIFICATION
 title      "Breton locale for France with Euro"
 source     "Free Software Foundation, Inc."
-address    "http:////www.gnu.org//software//libc//"
+address    "https:////www.gnu.org//software//libc//"
 email      "bug-glibc-locales@gnu.org"
 tel        ""
 fax        ""

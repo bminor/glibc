@@ -28,7 +28,7 @@
 
     You should have received a copy of the GNU Lesser General Public
     License along with this library; if not, see
-    <http://www.gnu.org/licenses/>.  */
+    <https://www.gnu.org/licenses/>.  */
 
 /* __ieee754_lgammal_r(x, signgamp)
  * Reentrant version of the logarithm of the Gamma function

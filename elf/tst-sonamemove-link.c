@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* At link time, moved_function is bound to the symbol version
    SONAME_MOVE in tst-sonamemove-runmod1.so, using the

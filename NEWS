@@ -4226,7 +4226,7 @@ Version 2.3.6
   1110, 1111, 1112, 1113, 1125, 1137, 1138, 1249, 1250, 1251, 1252,
   1253, 1254, 1350, 1358, 1394, 1438, 1498, 1534
 
-  Visit <http://sources.redhat.com/bugzilla/> for the details of each bug.
+  Visit <https://sourceware.org/bugzilla/> for the details of each bug.
 
 * As of this release, GCC 4 can be used to compile the C Library.
 
@@ -4241,7 +4241,7 @@ Version 2.3.5
   737, 738, 739, 740, 741, 742, 743, 744, 745, 765, 767, 768, 769, 776,
   777, 787, 821, 822, 823, 825
 
-  Visit <http://sources.redhat.com/bugzilla/> for the details of each bug.
+  Visit <https://sourceware.org/bugzilla/> for the details of each bug.
 
 Version 2.3.4
 

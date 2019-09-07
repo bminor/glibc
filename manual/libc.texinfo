@@ -95,7 +95,7 @@ supports it in developing GNU and promoting software freedom.''
 
 @c Disabled (printed editions, see above).
 @c @sp 2
-@c Published by the @uref{http://www.fsf.org/, Free Software Foundation} @*
+@c Published by the @uref{https://www.fsf.org/, Free Software Foundation} @*
 @c ISBN @value{ISBN} @*
 
 @c Disabled (printed editions, see above).

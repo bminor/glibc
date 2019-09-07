@@ -16,7 +16,7 @@ License for more details.
 
 You should have received a copy of the GNU Lesser General Public License
 along with the GNU MP Library; see the file COPYING.LIB.  If not, see
-<http://www.gnu.org/licenses/>.  */
+<https://www.gnu.org/licenses/>.  */
 
 #define BITS_PER_MP_LIMB 32
 #define BYTES_PER_MP_LIMB 4

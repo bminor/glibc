@@ -16,7 +16,7 @@ License for more details.
 
 You should have received a copy of the GNU Lesser General Public License
 along with the GNU MP Library; see the file COPYING.LIB.  If not, see
-<http://www.gnu.org/licenses/>.  */
+<https://www.gnu.org/licenses/>.  */
 
 /* When using gcc, make sure to use its builtin alloca.  */
 #if ! defined (alloca) && defined (__GNUC__)

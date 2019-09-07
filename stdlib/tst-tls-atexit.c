@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* For the default case, i.e. NO_DELETE not defined, the test dynamically loads
    a DSO and spawns a thread that subsequently calls into the DSO to register a

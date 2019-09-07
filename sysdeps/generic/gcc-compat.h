@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* This is the base file.  More-specific sysdeps/.../gcc-compat.h files
    can define GCC_COMPAT_VERSION and then #include_next this file.  */

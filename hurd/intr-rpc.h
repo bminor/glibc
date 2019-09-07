@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* This file is imported by the MiG-generated user stubs for interruptible
    RPCs.  We modify them to use our own function in place of mach_msg.  */

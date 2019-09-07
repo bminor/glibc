@@ -15,7 +15,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* Linux/ia64 only has rt signals, thus we do not even want to try falling
    back to the old style signals as the default Linux handler does. */

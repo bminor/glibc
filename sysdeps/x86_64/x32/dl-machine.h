@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* Must allow <sysdeps/x86_64/dl-machine.h> to be included more than once.
    See #ifdef RESOLVE_MAP in sysdeps/x86_64/dl-machine.h.  */

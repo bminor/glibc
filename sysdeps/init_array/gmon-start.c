@@ -31,7 +31,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* Instead of defining __gmon_start__ globally in gcrt1.o, we make it
    static and just put a pointer to it into the .preinit_array section.  */

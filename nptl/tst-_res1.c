@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* Test whether _res in glibc 2.1.x and earlier (before __res_state()
    was introduced) works.  Portable programs should never do the

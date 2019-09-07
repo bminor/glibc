@@ -13,7 +13,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* Default stack size.  */
 #define ARCH_STACK_DEFAULT_SIZE	(2 * 1024 * 1024)

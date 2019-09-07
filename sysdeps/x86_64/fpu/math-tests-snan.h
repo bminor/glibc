@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 #ifndef X86_64_MATH_TESTS_SNAN_H
 #define X86_64_MATH_TESTS_SNAN_H 1

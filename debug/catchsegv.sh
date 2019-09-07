@@ -15,7 +15,7 @@
 
 # You should have received a copy of the GNU Lesser General Public
 # License along with the GNU C Library; if not, see
-# <http://www.gnu.org/licenses/>.
+# <https://www.gnu.org/licenses/>.
 
 if test $# -eq 0; then
   echo "$0: missing program name" >&2

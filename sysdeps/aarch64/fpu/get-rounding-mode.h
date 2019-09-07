@@ -16,7 +16,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 #ifndef _AARCH64_GET_ROUNDING_MODE_H
 #define _AARCH64_GET_ROUNDING_MODE_H	1

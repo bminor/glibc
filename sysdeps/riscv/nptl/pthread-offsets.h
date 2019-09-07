@@ -15,7 +15,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library.  If not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 #define __PTHREAD_MUTEX_NUSERS_OFFSET   12
 #define __PTHREAD_MUTEX_KIND_OFFSET     16

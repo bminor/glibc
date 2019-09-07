@@ -31,7 +31,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* Arrange for __pthread_initialize_minimal_internal to be called at
    libpthread startup, instead of conditionally calling

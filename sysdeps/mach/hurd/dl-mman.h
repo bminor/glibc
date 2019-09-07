@@ -15,7 +15,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* Can't hide __mmap on Hurd, since __mmap in ld.so will be preempted by
    the one in libc.so after bootstrap.  */

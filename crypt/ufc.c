@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with the GNU C Library; see the file COPYING.LIB.  If not,
- * see <http://www.gnu.org/licenses/>.
+ * see <https://www.gnu.org/licenses/>.
  *
  * @(#)ufc.c	2.7 9/10/96
  *

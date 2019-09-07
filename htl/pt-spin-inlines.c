@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library;  if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* <bits/types/__pthread_spinlock_t.h> declares some extern inline functions.  These
    functions are declared additionally here for use when inlining is

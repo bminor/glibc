@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* GNU has no arbitrary fixed limits on most of these things, so we
    don't define the macros.  Some things are unlimited.  Some are in

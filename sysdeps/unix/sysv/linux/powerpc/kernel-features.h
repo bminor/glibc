@@ -15,7 +15,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* New syscalls added for PowerPC in 2.6.37.  */
 #define __ASSUME_SOCKET_SYSCALL	1

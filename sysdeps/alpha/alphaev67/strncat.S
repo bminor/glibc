@@ -15,7 +15,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library.  If not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* Append no more than COUNT characters from the null-terminated string SRC
    to the null-terminated string DST.  Always null-terminate the new DST.  */

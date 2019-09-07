@@ -23,7 +23,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* Language-independent unwinder header public defines.  This contains both
    ABI defined objects, and GNU support routines.  */

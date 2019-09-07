@@ -13,7 +13,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* Declare the few Mach system calls (except mach_msg, in <mach/message.h>).
    This does not include the kernel RPC shortcut calls (in <mach-shortcuts.h>).

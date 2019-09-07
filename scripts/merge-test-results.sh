@@ -15,7 +15,7 @@
 
 # You should have received a copy of the GNU Lesser General Public
 # License along with the GNU C Library; if not, see
-# <http://www.gnu.org/licenses/>.
+# <https://www.gnu.org/licenses/>.
 
 # usage: merge-test-results.sh -s objpfx subdir test-name...
 # (subdirectory tests; empty subdir at top level), or

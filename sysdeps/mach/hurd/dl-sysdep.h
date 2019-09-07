@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* The private errno doesn't make sense on the Hurd.  errno is always the
    thread-local slot shared with libc, and it matters to share the cell

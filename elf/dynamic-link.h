@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* This macro is used as a callback from elf_machine_rel{a,} when a
    static TLS reloc is about to be performed.  Since (in dl-load.c) we

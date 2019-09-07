@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library.  If not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* Ignore prototype to avoid error if we alias __lxstat and __lxstat64. */
 #define __lxstat64 __lxstat64_disable

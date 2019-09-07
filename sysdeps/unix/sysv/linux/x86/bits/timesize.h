@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 #if defined __x86_64__ && defined __ILP32__
 /* For x32, time is 64-bit even though word size is 32-bit.  */

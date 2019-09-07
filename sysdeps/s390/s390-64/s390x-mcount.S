@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 #define MCOUNT_SYMBOL _mcount
 #define MCOUNT_CALLER_OFF 232	/* Pushed by the _mcount stub.  */

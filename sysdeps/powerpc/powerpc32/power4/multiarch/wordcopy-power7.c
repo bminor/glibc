@@ -13,7 +13,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 #define WORDCOPY_FWD_ALIGNED      _wordcopy_fwd_aligned_power7
 #define WORDCOPY_FWD_DEST_ALIGNED _wordcopy_fwd_dest_aligned_power7

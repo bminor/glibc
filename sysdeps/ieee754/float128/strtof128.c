@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* The actual implementation for all floating point sizes is in strtod.c.
    These macros tell it to produce the `_Float128' version, `strtof128'.  */

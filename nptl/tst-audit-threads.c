@@ -15,7 +15,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* This test uses a dummy LD_AUDIT library (test-audit-threads-mod1) and a
    library with a huge number of functions in order to validate lazy symbol

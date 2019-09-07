@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* This code was moved into memset.S to solve a double stub call problem.
    @local would have worked but it is not supported in PowerPC64 asm.  */

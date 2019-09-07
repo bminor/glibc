@@ -13,7 +13,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.
+   <https://www.gnu.org/licenses/>.
 
    The layout of the jmp_buf is as follows.  This is subject to change
    and user-code should never depend on the particular layout of

@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* Bug 22375 reported a regression in malloc where if after malloc'ing then
    free'ing a small block of memory, malloc is then called with a really

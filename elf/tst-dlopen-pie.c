@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* This test attempts to open the (otherwise unrelated) PIE test
    program elf/tst-pie1 and expects the attempt to fail.  */

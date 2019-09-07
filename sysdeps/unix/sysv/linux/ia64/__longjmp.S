@@ -13,7 +13,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.
+   <https://www.gnu.org/licenses/>.
 
    Note that __sigsetjmp() did NOT flush the register stack.  Instead,
    we do it here since __longjmp() is usually much less frequently

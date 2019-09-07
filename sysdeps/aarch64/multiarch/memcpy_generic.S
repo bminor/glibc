@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* The actual memcpy and memmove code is in ../memcpy.S.  If we are
    building libc this file defines __memcpy_generic and __memmove_generic.

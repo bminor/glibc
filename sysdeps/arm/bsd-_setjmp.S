@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library.  If not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* This just does a tail-call to `__sigsetjmp (ARG, 1)'.
    We cannot do it in C because it must be a tail-call, so frame-unwinding

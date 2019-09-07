@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* The real guts of this work are in the macros defined in the
    machine- and kernel-specific sysdep.h header file.  Cancellable syscalls

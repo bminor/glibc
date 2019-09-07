@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 /* Adapted from gcc.dg/torture/builtin-complex-1.c test from GCC
    testsuite written by Joseph S. Myers.  */
