@@ -14,7 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
 /* We don't need to save the parameter-passing registers as gcc takes
@@ -38,4 +38,3 @@ ENTRY(_mcount)
 	addi		 r1,r1,FRAME_MIN_SIZE
 	blr
 END(_mcount)
-
