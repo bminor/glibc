@@ -803,11 +803,11 @@ exceeded the threshold.
 The @code{ntp_adjtime} function sets the structure specified by
 @var{tptr} to current values.
 
-In addition, @code{ntp_adjtime} updates some settings to match what you
-pass to it in *@var{tptr}.  Use the @code{modes} element of *@var{tptr}
-to select what settings to update.  You can set @code{offset},
-@code{freq}, @code{maxerror}, @code{esterror}, @code{status},
-@code{constant}, and @code{tick}.
+In addition, @code{ntp_adjtime} updates some settings to match what
+you pass to it in @code{*@var{tptr}}.  Use the @code{modes} element of
+@code{*@var{tptr}} to select what settings to update.  You can set
+@code{offset}, @code{freq}, @code{maxerror}, @code{esterror},
+@code{status}, @code{constant}, and @code{tick}.
 
 @code{modes} = zero means set nothing.
 
@@ -3018,12 +3018,12 @@ nanoseconds.  The actual elapsed time of the sleep interval might be
 longer since the system rounds the elapsed time you request up to the
 next integer multiple of the actual resolution the system can deliver.
 
-*@code{requested_time} is the elapsed time of the interval you want to
-sleep.
+@code{*@var{requested_time}} is the elapsed time of the interval you
+want to sleep.
 
-The function returns as *@code{remaining} the elapsed time left in the
-interval for which you requested to sleep.  If the interval completed
-without getting interrupted by a signal, this is zero.
+The function returns as @code{*@var{remaining}} the elapsed time left
+in the interval for which you requested to sleep.  If the interval
+completed without getting interrupted by a signal, this is zero.
 
 @code{struct timespec} is described in @ref{Time Types}.
 
