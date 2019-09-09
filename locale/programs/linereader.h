@@ -29,7 +29,7 @@
 #include "repertoire.h"
 #include "record-status.h"
 
-typedef const struct keyword_t *(*kw_hash_fct_t) (const char *, unsigned int);
+typedef const struct keyword_t *(*kw_hash_fct_t) (const char *, size_t);
 struct charset_t;
 struct localedef_t;
 

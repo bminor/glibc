@@ -37,7 +37,7 @@
 
 /* Simple keyword hashing for the repertoiremap.  */
 static const struct keyword_t *repertoiremap_hash (const char *str,
-						   unsigned int len);
+						   size_t len);
 static void repertoire_new_char (struct linereader *lr, hash_table *ht,
 				 hash_table *rt, struct obstack *ob,
 				 uint32_t value, const char *from,
@@ -358,7 +358,7 @@ repertoire_compare (const void *p1, const void *p2)
 
 
 static const struct keyword_t *
-repertoiremap_hash (const char *str, unsigned int len)
+repertoiremap_hash (const char *str, size_t len)
 {
   static const struct keyword_t wordlist[] =
   {
