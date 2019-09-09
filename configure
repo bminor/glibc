@@ -582,7 +582,7 @@ PACKAGE_TARNAME='glibc'
 PACKAGE_VERSION='(see version.h)'
 PACKAGE_STRING='GNU C Library (see version.h)'
 PACKAGE_BUGREPORT='https://sourceware.org/bugzilla/'
-PACKAGE_URL='http://www.gnu.org/software/glibc/'
+PACKAGE_URL='https://www.gnu.org/software/glibc/'
 
 ac_unique_file="include/features.h"
 enable_option_checking=no
@@ -1505,7 +1505,7 @@ Use these variables to override the choices made by `configure' or to help
 it to find libraries and programs with nonstandard names/locations.
 
 Report bugs to <https://sourceware.org/bugzilla/>.
-GNU C Library home page: <http://www.gnu.org/software/glibc/>.
+GNU C Library home page: <https://www.gnu.org/software/glibc/>.
 General help using GNU software: <http://www.gnu.org/gethelp/>.
 _ACEOF
 ac_status=$?
@@ -7473,7 +7473,7 @@ Configuration commands:
 $config_commands
 
 Report bugs to <https://sourceware.org/bugzilla/>.
-GNU C Library home page: <http://www.gnu.org/software/glibc/>.
+GNU C Library home page: <https://www.gnu.org/software/glibc/>.
 General help using GNU software: <http://www.gnu.org/gethelp/>."
 
 _ACEOF

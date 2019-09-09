@@ -1,5 +1,10 @@
 2019-09-09  Paul Eggert  <eggert@cs.ucla.edu>
 
+	Fix http: URL in 'configure'
+	* configure.ac: Add URL to AC_INIT so that it generates an
+	https: URL instead of an http: URL.
+	* configure: Regenerate.
+
 	Regenerate charmap-kw.h, locfile-kw.h
 	This propagates the recent http->https URL changes.
 	Since I used gperf 3.1 to regenerate, this is also a minor

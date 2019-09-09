@@ -1,6 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 dnl Note we do not use AC_PREREQ here!  See aclocal.m4 for what we use instead.
-AC_INIT([GNU C Library], [(see version.h)], [https://sourceware.org/bugzilla/], [glibc])
+AC_INIT([GNU C Library], [(see version.h)], [https://sourceware.org/bugzilla/],
+  [glibc], [https://www.gnu.org/software/glibc/])
 AC_CONFIG_SRCDIR([include/features.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([scripts])
