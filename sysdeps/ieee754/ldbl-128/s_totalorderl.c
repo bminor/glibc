@@ -74,6 +74,15 @@ __totalorder_compatl (_Float128 x, _Float128 y)
 {
   return __totalorderl (&x, &y);
 }
+/* On platforms that reuse the _Float128 implementation for IEEE long
+   double (powerpc64le), the libm_alias_float128_other_r_ldbl macro
+   (which is called by the libm_alias_ldouble macro) is used to create
+   aliases between *f128 (_Float128 API) and __*ieee128 functions.
+   However, this compat version of totalorderl is older than the
+   availability of __ieee*128 symbols, thus, the compat alias is not
+   required, nor desired.  */
+#undef libm_alias_float128_other_r_ldbl
+#define libm_alias_float128_other_r_ldbl(from, to, r)
 #undef do_symbol
 #define do_symbol(orig_name, name, aliasname)			\
   strong_alias (orig_name, name)				\
