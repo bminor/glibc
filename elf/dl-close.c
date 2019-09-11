@@ -723,6 +723,9 @@ _dl_close_worker (struct link_map *map, bool force)
 	    _dl_debug_printf ("\nfile=%s [%lu];  destroying link map\n",
 			      imap->l_name, imap->l_ns);
 
+	  /* Remove from hashtables.  */
+	  _dl_hash_del_object (imap);
+
 	  /* This name always is allocated.  */
 	  free (imap->l_name);
 	  /* Remove the list with all the names of the shared object.  */

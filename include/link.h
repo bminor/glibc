@@ -180,8 +180,7 @@ struct link_map
     unsigned int l_reserved:2;	/* Reserved for internal use.  */
     unsigned int l_phdr_allocated:1; /* Nonzero if the data structure pointed
 					to by `l_phdr' is allocated.  */
-    unsigned int l_soname_added:1; /* Nonzero if the SONAME is for sure in
-				      the l_libname list.  */
+    unsigned int l_inedge:1;    /* Used temporarily when sorting deps.  */
     unsigned int l_faked:1;	/* Nonzero if this is a faked descriptor
 				   without associated file.  */
     unsigned int l_need_tls_init:1; /* Nonzero if GL(dl_init_static_tls)

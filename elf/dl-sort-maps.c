@@ -33,11 +33,32 @@ _dl_sort_maps (struct link_map **maps, unsigned int nmaps, char *used,
   unsigned int i = 0;
   uint16_t seen[nmaps];
   memset (seen, 0, nmaps * sizeof (seen[0]));
-  while (1)
+
+  /* Mark objects with in-edges.  */
+  for (unsigned j = i; j < nmaps; ++j)
+    maps[j]->l_inedge = 0;
+
+  for (unsigned j = i; j < nmaps; ++j)
     {
+      for (struct link_map **p = maps[j]->l_initfini; p && *p; ++p)
+        {
+          if (*p != maps[j])  /* Skip self-edges.  */
+            (*p)->l_inedge = 1;
+        }
+    }
+
+  while (i < nmaps)
+    {
+      struct link_map *thisp = maps[i];
+      if (!thisp->l_inedge)
+        {
+          /* No dependencies on this object.  */
+          ++i;
+          continue;
+        }
+
       /* Keep track of which object we looked at this round.  */
       ++seen[i];
-      struct link_map *thisp = maps[i];
 
       if (__glibc_unlikely (for_fini))
 	{
@@ -52,7 +73,7 @@ _dl_sort_maps (struct link_map **maps, unsigned int nmaps, char *used,
 	 with the dependency.  */
       unsigned int k = nmaps - 1;
       while (k > i)
-	{
+        {
 	  struct link_map **runp = maps[k]->l_initfini;
 	  if (runp != NULL)
 	    /* Look through the dependencies of the object.  */

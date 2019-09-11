@@ -292,7 +292,6 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
     ._dl_close = _dl_close,
     ._dl_tls_get_addr_soft = _dl_tls_get_addr_soft,
     ._dl_position_hash_cutoff = DL_POSITION_HASH_CUTOFF_DEFAULT,
-    ._dl_position_hash_bits = 0,
 #ifdef HAVE_DL_DISCOVER_OSVERSION
     ._dl_discover_osversion = _dl_discover_osversion
 #endif
@@ -1382,6 +1381,7 @@ of this helper program; chances are you did not intend to run this program.\n\
   GL(dl_rtld_map).l_type = lt_library;
   main_map->l_next = &GL(dl_rtld_map);
   GL(dl_rtld_map).l_prev = main_map;
+  _dl_hash_add_object (&GL(dl_rtld_map));
   ++GL(dl_ns)[LM_ID_BASE]._ns_nloaded;
   ++GL(dl_load_adds);
 
@@ -2702,12 +2702,6 @@ process_envvars (enum mode *modep)
           if (memcmp (envline, "FASTLOAD_CUTOFF", 15) == 0)
 	    GLRO(dl_position_hash_cutoff)
               = _dl_strtoul (&envline[16], NULL);;
-          break;
-
-        case 18:
-          if (memcmp (envline, "FASTLOAD_HASH_BITS", 18) == 0)
-	    GLRO(dl_position_hash_bits)
-              = _dl_strtoul (&envline[19], NULL);;
           break;
         }
     }

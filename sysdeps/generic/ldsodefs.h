@@ -589,22 +589,13 @@ struct rtld_global_ro
      below.  */
   EXTERN struct r_search_path_elem *_dl_init_all_dirs;
 
-  /* The merged hash table used if we have a lot of shared objects. */
-  EXTERN dl_position_table_entry_t *_dl_position_hash_table;
-  EXTERN int _dl_position_hash_mask;
-  EXTERN int _dl_position_hash_bits;
   EXTERN int _dl_position_hash_cutoff;
 
-#define DL_POSITION_HASH_BITS_MAX       27  /* (1 << 27) entries.  */
 #if defined(__powerpc__) && !defined(__powerpc64__)
 #define DL_POSITION_HASH_CUTOFF_DEFAULT -1  /* Disabled.  */
 #else
 #define DL_POSITION_HASH_CUTOFF_DEFAULT 32  /* > 32 shared libs.  */
 #endif
-
-  /* Colon-separated list of absolute paths to ld.so.cache files
-     we'll load.  */
-  EXTERN const char *_google_ld_so_cache_list;
 
 #if HP_SMALL_TIMING_AVAIL || HP_TIMING_PAD
   /* Overhead of a high-precision timing measurement.  */
@@ -969,6 +960,12 @@ extern lookup_t _dl_lookup_symbol_x (const char *undef,
 extern void _dl_add_to_namespace_list (struct link_map *new, Lmid_t nsid)
      attribute_hidden;
 
+/* Update hashtables when objects are loaded or unloaded.  */
+extern void _dl_hash_add_object (struct link_map *lib)
+    attribute_hidden;
+extern void _dl_hash_del_object (struct link_map *lib)
+    attribute_hidden;
+
 /* Allocate a `struct link_map' for a new object being loaded.  */
 extern struct link_map *_dl_new_object (char *realname, const char *libname,
 					int type, struct link_map *loader,
@@ -1255,6 +1252,15 @@ _dl_last_entry (struct link_namespaces *ns)
 
   ns->_ns_last = map;
   return map;
+}
+
+static inline uint_fast32_t
+dl_new_hash (const char *s)
+{
+  uint_fast32_t h = 5381;
+  for (unsigned char c = *s; c != '\0'; c = *++s)
+    h = h * 33 + c;
+  return h & 0xffffffff;
 }
 
 __END_DECLS

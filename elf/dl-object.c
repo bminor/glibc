@@ -34,9 +34,7 @@ _dl_add_to_namespace_list (struct link_map *new, Lmid_t nsid)
 
   if (GL(dl_ns)[nsid]._ns_loaded != NULL)
     {
-      struct link_map *l = GL(dl_ns)[nsid]._ns_loaded;
-      while (l->l_next != NULL)
-	l = l->l_next;
+      struct link_map *l = _dl_last_entry (&GL(dl_ns)[nsid]);
       new->l_prev = l;
       /* new->l_next = NULL;   Would be necessary but we use calloc.  */
       l->l_next = new;
@@ -47,12 +45,13 @@ _dl_add_to_namespace_list (struct link_map *new, Lmid_t nsid)
   new->l_serial = GL(dl_load_adds);
   ++GL(dl_load_adds);
 
+  _dl_hash_add_object (new);
+
   __rtld_lock_unlock_recursive (GL(dl_load_write_lock));
 }
 
 
-/* Allocate a `struct link_map' for a new object being loaded,
-   and enter it into the _dl_loaded list.  */
+/* Allocate a `struct link_map' for a new object being loaded.  */
 struct link_map *
 _dl_new_object (char *realname, const char *libname, int type,
 		struct link_map *loader, int mode, Lmid_t nsid)

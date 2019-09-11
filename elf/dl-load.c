@@ -357,8 +357,7 @@ expand_dynamic_string_token (struct link_map *l, const char *s)
 
 /* Add `name' to the list of names for a particular shared object.
    `name' is expected to have been allocated with malloc and will
-   be freed if the shared object already has this name.
-   Returns false if the object already had this name.  */
+   be freed if the shared object already has this name.  */
 static void
 add_name_to_object (struct link_map *l, const char *name)
 {
@@ -804,6 +803,177 @@ lose (int code, int fd, const char *name, char *realname, struct link_map *l,
 }
 
 
+/* Hash tables of loaded objects; one keyed on name, one keyed on inode.  */
+
+struct lib_hash_namenode
+{
+  const char *name;
+  struct link_map *lib;
+  struct lib_hash_namenode *next;
+  uint32_t hash;
+};
+
+struct lib_hash_filenode
+{
+  struct link_map *lib;
+  struct lib_hash_filenode *next;
+  uint32_t hash;
+};
+
+/* Must be a power of 2.  */
+#define LIB_HASH_BUCKETS 256
+
+static struct lib_hash_namenode *lib_hash_nametable[LIB_HASH_BUCKETS];
+static struct lib_hash_filenode *lib_hash_filetable[LIB_HASH_BUCKETS];
+
+static size_t
+lib_hash_bucket (uint32_t hash)
+{
+  return hash & (LIB_HASH_BUCKETS-1);
+}
+
+static uint32_t
+hash_mix (uint32_t h, size_t val)
+{
+  h ^= val;
+  h *= 0x5bd1e995;
+  h ^= h >> 15;
+  val >>= 4 * sizeof val;
+  h ^= val;
+  h *= 0x5bd1e995;
+  h ^= h >> 15;
+  return h;
+}
+
+static struct link_map *
+lib_hash_getname (Lmid_t nsid, const char *name)
+{
+  uint32_t hash = hash_mix (dl_new_hash (name), nsid);
+  struct lib_hash_namenode *n = lib_hash_nametable[lib_hash_bucket (hash)];
+  while (n)
+    {
+      struct link_map *l = n->lib;
+      if (n->hash == hash && !strcmp (n->name, name) && l->l_ns == nsid && !l->l_removed)
+        return l;
+      n = n->next;
+    }
+  return NULL;
+}
+
+static void
+lib_hash_addname (const char *name, struct link_map *lib)
+{
+  if (lib->l_faked)
+    return;
+  struct lib_hash_namenode *n = malloc (sizeof (struct lib_hash_namenode));
+  if (!n)
+    _dl_fatal_printf ("%s: out of memory\n", __func__);
+  uint32_t hash = hash_mix (dl_new_hash (name), lib->l_ns);
+  struct lib_hash_namenode **p = lib_hash_nametable + lib_hash_bucket (hash);
+  n->name = name;
+  n->lib = lib;
+  n->next = *p;
+  n->hash = hash;
+  *p = n;
+}
+
+static void
+lib_hash_delname (const char *name, struct link_map *lib)
+{
+  uint32_t hash = hash_mix (dl_new_hash (name), lib->l_ns);
+  struct lib_hash_namenode **p = lib_hash_nametable + lib_hash_bucket (hash);
+  while (*p)
+    {
+      struct lib_hash_namenode *n = *p;
+      if (n->hash == hash && n->lib == lib &&
+          (n->name == name || !strcmp (n->name, name))) {
+        *p = n->next;
+        free (n);
+        return;
+      }
+      p = &n->next;
+    }
+  _dl_fatal_printf ("%s: can't unhash '%s'\n", __func__, name);
+}
+
+static uint32_t
+hash_file (Lmid_t nsid, dev_t dev, ino64_t ino, off_t off)
+{
+  return hash_mix (hash_mix (hash_mix (hash_mix (0, nsid), dev), ino), off);
+}
+
+static struct link_map *
+lib_hash_getfile (Lmid_t nsid, dev_t dev, ino64_t ino, off_t off)
+{
+  uint32_t hash = hash_file (nsid, dev, ino, off);
+  struct lib_hash_filenode *n = lib_hash_filetable[lib_hash_bucket (hash)];
+  while (n)
+    {
+      struct link_map *l = n->lib;
+      if (n->hash == hash && !l->l_removed && l->l_ns == nsid &&
+          l->l_file_id.dev == dev && l->l_file_id.ino == ino && l->l_off == off)
+        return l;
+      n = n->next;
+    }
+  return NULL;
+}
+
+static void
+lib_hash_addfile (struct link_map *lib)
+{
+  if (lib->l_faked)
+    return;
+  struct lib_hash_filenode *n = malloc (sizeof (struct lib_hash_filenode));
+  if (!n)
+    _dl_fatal_printf ("%s: out of memory\n", __func__);
+  uint32_t hash = hash_file (lib->l_ns, lib->l_file_id.dev, lib->l_file_id.ino, lib->l_off);
+  struct lib_hash_filenode **p = lib_hash_filetable + lib_hash_bucket (hash);
+  n->lib = lib;
+  n->next = *p;
+  n->hash = hash;
+  *p = n;
+}
+
+static void
+lib_hash_delfile (struct link_map *lib)
+{
+  uint32_t hash = hash_file (lib->l_ns, lib->l_file_id.dev, lib->l_file_id.ino, lib->l_off);
+  struct lib_hash_filenode **p = lib_hash_filetable + lib_hash_bucket (hash);
+  while (*p)
+    {
+      struct lib_hash_filenode *n = *p;
+      if (n->hash == hash && n->lib == lib)
+        {
+          *p = n->next;
+          free (n);
+          return;
+        }
+      p = &n->next;
+    }
+  _dl_fatal_printf ("%s: can't unhash '%s'\n", __func__, lib->l_name);
+}
+
+void
+_dl_hash_add_object (struct link_map *lib)
+{
+  lib_hash_addfile (lib);
+  lib_hash_addname (lib->l_name, lib);
+  for (struct libname_list *ln = lib->l_libname; ln; ln = ln->next)
+    {
+      lib_hash_addname (ln->name, lib);
+    }
+}
+
+void
+_dl_hash_del_object (struct link_map *lib)
+{
+  lib_hash_delfile (lib);
+  lib_hash_delname (lib->l_name, lib);
+  for (struct libname_list *ln = lib->l_libname; ln; ln = ln->next) {
+    lib_hash_delname (ln->name, lib);
+  }
+}
+
 /* Map in the shared object NAME, actually located in REALNAME, and already
    opened on FD.  */
 
@@ -841,28 +1011,34 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd, off_t of
     }
 
   /* Look again to see if the real name matched another already loaded.  */
-  for (l = GL(dl_ns)[nsid]._ns_loaded; l != NULL; l = l->l_next)
-    if (!l->l_removed && _dl_file_id_match_p (&l->l_file_id, &id)
-        && l->l_off == offset)
-      {
-	/* The object is already loaded.
-	   Just bump its reference count and return it.  */
-	__close (fd);
+  l = lib_hash_getfile (nsid, id.dev, id.ino, offset);
+  if (l)
+    {
+      /* The object is already loaded.
+         Just bump its reference count and return it.  */
+      __close (fd);
 
-	/* If the name is not in the list of names for this object add
-	   it.  */
-	free (realname);
-	if (offset == 0)
-	  /* If offset!=0, foo.so/@0x<offset> should be the *only*
-	     name for this object. b/20141439.  */
-	  add_name_to_object (l, name);
+      /* If the name is not in the list of names for this object add
+         it.  */
+      free (realname);
+      if (offset == 0)
+        {
+          /* If offset!=0, foo.so/@0x<offset> should be the *only*
+             name for this object. b/20141439.  */
+          add_name_to_object (l, name);
+          lib_hash_addname (name, l);
+        }
 
-	return l;
-      }
+      return l;
+    }
 
 #ifdef SHARED
   /* When loading into a namespace other than the base one we must
      avoid loading ld.so since there can only be one copy.  Ever.  */
+
+  /* Note that this test is wrong in two ways:
+       1) it doesn't consider offset, and
+       2) l_file_id.ino and l_file_id.dev for rtld are always zero!  */
   if (__glibc_unlikely (nsid != LM_ID_BASE)
       && (_dl_file_id_match_p (&id, &GL(dl_rtld_map).l_file_id)
 	  || _dl_name_match_p (name, &GL(dl_rtld_map))))
@@ -1349,10 +1525,7 @@ cannot enable executable stack as shared object requires");
 
   l->l_off = offset;
 
-  /* When we profile the SONAME might be needed for something else but
-     loading.  Add it right away.  */
-  if (__glibc_unlikely (GLRO(dl_profile) != NULL)
-      && l->l_info[DT_SONAME] != NULL)
+  if (l->l_info[DT_SONAME] != NULL)
     add_name_to_object (l, ((const char *) D_PTR (l, l_info[DT_STRTAB])
 			    + l->l_info[DT_SONAME]->d_un.d_val));
 
@@ -1909,26 +2082,7 @@ match_one (const char *name, struct link_map *l)
   if (__builtin_expect (l->l_faked, 0) != 0
       || __builtin_expect (l->l_removed, 0) != 0)
     return 0;
-  if (!_dl_name_match_p (name, l))
-    {
-      const char *soname;
-
-      if (__builtin_expect (l->l_soname_added, 1)
-	  || l->l_info[DT_SONAME] == NULL)
-	return 0;
-
-      soname = ((const char *) D_PTR (l, l_info[DT_STRTAB])
-		+ l->l_info[DT_SONAME]->d_un.d_val);
-      if (strcmp (name, soname) != 0)
-	return 0;
-
-      /* We have a match on a new name -- cache it.  */
-      add_name_to_object (l, soname);
-      l->l_soname_added = 1;
-    }
-
-  /* We have a match.  */
-  return 1;
+  return _dl_name_match_p (name, l);
 }
 
 /* Map in the shared object file NAME.  */
@@ -1960,9 +2114,9 @@ _dl_map_object (struct link_map *loader, const char *name, off_t offset,
     }
   else
     {
-      for (l = _dl_last_entry (&GL(dl_ns)[nsid]); l; l = l->l_prev)
-	if (match_one (name, l))
-	  return l;
+      l = lib_hash_getname(nsid, name);
+      if (l)
+        return l;
     }
 
   /* Display information if we are debugging.  */
