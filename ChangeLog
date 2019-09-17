@@ -1,3 +1,8 @@
+2019-09-17  Chung-Lin Tang  <cltang@codesourcery.com>
+
+	* sysdeps/generic/hp-timing-common.h (HP_TIMING_PRINT): Correct
+	position of string null termination.
+
 2019-09-14  Aurelien Jarno  <aurelien@aurel32.net>
 
 	[BZ #24986]
