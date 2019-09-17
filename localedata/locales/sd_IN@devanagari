@@ -167,6 +167,8 @@ country_ab2 "IN"
 country_ab3 "IND"
 country_num 356
 country_car    "IND"
+% सिन्धी
+lang_name    "<U0938><U093F><U0928><U094D><U0927><U0940>"
 lang_ab      "sd"
 lang_term    "snd"
 lang_lib    "snd"

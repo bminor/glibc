@@ -222,6 +222,8 @@ country_ab2 "TJ"
 country_ab3 "TJK"
 country_num 762
 country_car    "TJ"
+% тоҷикӣ
+lang_name    "<U0442><U043E><U04B7><U0438><U043A><U04E3>"
 lang_ab      "tg"
 lang_term    "tgk"
 lang_lib    "tgk"

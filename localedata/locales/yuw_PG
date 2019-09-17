@@ -16,7 +16,7 @@ contact    "Hannah Sarvasy"
 email      "nungon.localization@gmail.com"
 tel        ""
 fax        ""
-language   "Yau/Nungon"
+language   "Yau"
 territory  "Papua New Guinea"
 revision   "1.0"
 date       "2016-12-07"
@@ -133,8 +133,8 @@ country_ab2  "PG"
 country_ab3  "PNG"
 % ISO 3166-1 numeric code for PNG
 country_num 598
-% Yau/Nungon
-lang_name    "Yau/Nungon"
+% See: https://en.wikipedia.org/wiki/Yau_language, the endonym seems to be Uruwa
+lang_name    "Uruwa"
 country_car  "PNG"
 lang_ab      ""
 lang_term    "yuw"

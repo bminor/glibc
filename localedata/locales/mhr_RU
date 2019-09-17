@@ -159,6 +159,8 @@ country_ab2 "RU"
 country_ab3 "RUS"
 country_num 643
 country_car    "RUS"
+% марий йылме
+lang_name    "<U043C><U0430><U0440><U0438><U0439> <U0439><U044B><U043B><U043C><U0435>"
 lang_term    "mhr"
 lang_lib    "mhr"
 END LC_ADDRESS

@@ -209,13 +209,13 @@ END LC_NAME
 
 LC_ADDRESS
 % https://xh.wikipedia.org/wiki/UMzantsi_Afrika
-country_name "UMzantsi Afrika"
+country_name "uMzantsi Afrika"
 %
 % Abbreviated country postal name
 country_post "ZA"
 %
 % Language name in Sotho
-lang_name "IsiXhosa"
+lang_name "isiXhosa"
 
 % UN Geneve 1949:68 Distinguishing signs of vehicles in international traffic
 % http://www.unece.org/trans/conventn/disting-signs-5-2001.pdf

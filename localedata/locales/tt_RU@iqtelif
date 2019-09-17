@@ -155,10 +155,12 @@ END LC_MEASUREMENT
 
 LC_ADDRESS
 postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
+country_name  "Ur<U0131>s Pat<U015F>ahl<U0131>q"
 country_ab2 "RU"
 country_ab3 "RUS"
 country_num 643
 country_car    "RUS"
+lang_name    "tatar tele"
 lang_ab      "tt"
 lang_term    "tat"
 lang_lib    "tat"

@@ -158,7 +158,16 @@ name_ms     "<U0915><U0941><U092E><U093E><U0930>"
 END LC_NAME
 
 LC_ADDRESS
-copy "hi_IN"
+postal_fmt  "%z%c%T%s%b%e%r"
+country_name "<U092D><U093E><U0930><U0924>"
+country_ab2 "IN"
+country_ab3 "IND"
+country_num 356
+country_car "IND"
+% राजस्थानी
+lang_name    "<U0930><U093E><U091C><U0938><U094D><U0925><U093E><U0928><U0940>"
+lang_term    "raj"
+lang_lib    "raj"
 END LC_ADDRESS
 
 LC_TELEPHONE

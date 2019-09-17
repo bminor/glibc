@@ -175,6 +175,7 @@ country_ab3 "SGP"
 country_num 702
 % SGP
 country_car    "SGP"
+lang_name       "<U7B80><U4F53><U4E2D><U6587>"
 lang_ab		"zh"
 lang_term	"zho"
 lang_lib	"chi"

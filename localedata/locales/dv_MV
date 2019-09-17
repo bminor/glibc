@@ -182,9 +182,8 @@ country_ab2 "MV"
 country_ab3 "MDV"
 country_num 462
 country_car "MV"
-% lang_name FIXME
-% Cannot represent Dhivehi in Thaana script
-% http://en.wikipedia.org/wiki/Maldivian_language
+% ދިވެހި
+lang_name    "<U078B><U07A8><U0788><U07AC><U0780><U07A8>"
 lang_ab      "dv"
 lang_term    "div"
 lang_lib    "div"

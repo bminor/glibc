@@ -172,7 +172,8 @@ END LC_NAME
 LC_ADDRESS
 % http://www.addressexamples.com/papua-new-guinea-address-format/
 postal_fmt    "%a%s%z%C"
-country_name "Papua New Guinea"
+% https://tpi.wikipedia.org/wiki/Papua_Niugini
+country_name "Papua Niugini"
 country_post ""
 country_ab2  "PG"
 country_ab3  "PNG"
@@ -180,7 +181,7 @@ country_car  "PNG"
 % https://en.wikipedia.org/wiki/ISO_3166-1_numeric
 country_num 598
 % Tok Pisin
-lang_name    "Tok  Pisin"
+lang_name    "Tok Pisin"
 % https://en.wikipedia.org/wiki/Tok_Pisin
 lang_ab      ""
 lang_term    "tpi"

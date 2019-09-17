@@ -243,7 +243,7 @@ country_ab3 "AZE"
 country_num 031
 country_car    "AZ"
 % Azərbaycanca
-lang_name    "az<U0259>rbaycan dili"
+lang_name    "az<U0259>rbaycan"
 lang_ab      "az"
 lang_term    "aze"
 lang_lib    "aze"

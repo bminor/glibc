@@ -10,7 +10,7 @@ escape_char /
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% Quechua (Cusco-Collao) language locale for Peru
+% Cusco Quechua language locale for Peru
 %
 % Prepared and contributed to glibc by Chris Leonard <cjl@sugarlabs.org>
 % and Amos Batto
@@ -25,14 +25,14 @@ escape_char /
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 LC_IDENTIFICATION
-title        "Quechua (Cusco-Collao) locale for Peru"
+title        "Cusco Quechua locale for Peru"
 source       "Sugar Labs // OLPC"
 address      ""
 contact      "sugarlabs.org"
 email        "libc-alpha@sourceware.org"
 tel          ""
 fax          ""
-language     "Quechua (Cusco-Collao)"
+language     "Cusco Quechua"
 territory    "Peru"
 revision     "1.0"
 date         "2013-08-24"
@@ -144,7 +144,7 @@ country_ab2   "PE"
 country_ab3   "PER"
 country_num   604
 country_car   "PE"
-lang_name    "Quechua (Cusco)"
+lang_name    "Qusqu runasimi"
 lang_term    "quz"
 lang_lib    "quz"
 END LC_ADDRESS

@@ -184,7 +184,7 @@ country_ab3 "MYS"
 country_num 458
 country_car "MAL"
 % Bahasa Melayu
-lang_name    "Bahasa Melayu"
+lang_name    "Melayu"
 lang_ab      "ms"
 lang_term    "msa"
 lang_lib    "may"

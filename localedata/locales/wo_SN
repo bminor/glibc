@@ -161,6 +161,7 @@ country_ab2 "SN"
 country_ab3 "SEN"
 country_num 686
 country_car "SN"
+lang_name    "Wolof"
 lang_ab      "wo"
 lang_term    "wol"
 lang_lib    "wol"

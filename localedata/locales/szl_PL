@@ -200,6 +200,7 @@ END LC_NAME
 
 LC_ADDRESS
 postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
+country_name "Polska"
 country_ab2 "PL"
 country_ab3 "POL"
 country_num 616

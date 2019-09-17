@@ -1,7 +1,7 @@
 escape_char  /
 comment_char  %
 
-% Yakut (Sakha) locale for Russian Federation
+% Sakha (Yakut) locale for Russian Federation
 % Source: Valery Timiriliyev
 % Email: timiriliyev@gmail.com
 % Tel:
@@ -13,14 +13,14 @@ comment_char  %
 % Users: general
 
 LC_IDENTIFICATION
-title      "Yakut (Sakha) locale for Russian Federation"
+title      "Sakha (Yakut) locale for Russian Federation"
 source     "Valery Timiriliyev"
 address    ""
 contact    "Valery Timiriliyev"
 email      "timiriliyev@gmail.com"
 tel        ""
 fax        ""
-language   "Yakut"
+language   "Sakha"
 territory  "Russian Federation"
 revision   "1.1.0"
 date       "2018-07-06"
@@ -264,11 +264,11 @@ END LC_NAME
 LC_ADDRESS
 postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
 
-% Россия
-country_name  "<U0420><U043E><U0441><U0441><U0438><U044F>"
+% Арассыыйа
+country_name  "<U0410><U0440><U0430><U0441><U0441><U044B><U044B><U0439><U0430>"
 
-% Саха тыла
-lang_name     "<U0421><U0430><U0445><U0430> <U0442><U044B><U043B><U0430>"
+% саха тыла
+lang_name     "<U0441><U0430><U0445><U0430><U0020><U0442><U044B><U043B><U0430>"
 
 % UN Geneve 1949:68 Distinguishing signs of vehicles in international traffic
 % RUS

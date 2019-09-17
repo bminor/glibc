@@ -192,8 +192,8 @@ country_ab3  "TWN"
 country_num  158
 country_car "RC"
 country_isbn 957
-% 漢語閩南語
-lang_name    "<U6F22><U8A9E><U95A9><U5357><U8A9E>"
+% 閩南語
+lang_name    "<U95A9><U5357><U8A9E>"
 lang_term    "nan"
 lang_lib     "nan"
 END LC_ADDRESS

@@ -399,7 +399,7 @@ country_num  795
 country_ab2 "TM"
 country_ab3 "TKM"
 % Türkmençe
-lang_name   "t<U00FC>rkmen<U00E7>e"
+lang_name   "t<U00FC>rkmen dili"
 lang_term   "tuk"
 lang_lib    "tuk"
 lang_ab     "tk"

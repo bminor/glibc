@@ -159,7 +159,7 @@ END LC_NAME
 
 LC_ADDRESS
 postal_fmt    "%a%N%f%N%d%N%b%N%h %s %e %r%N%T, %S %z%N%c%N"
-country_name "Samoa"
+country_name "S<U0101>moa"
 country_post "%a %N   %f %N   %d %N   %b %N   %h %s %e %/
 r %N   %T, %c  %N"
 % http://laendercode.net/en/2-letter-list.html

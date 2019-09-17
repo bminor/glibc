@@ -309,7 +309,8 @@ country_ab2     "MM"
 country_num 104
 country_car "MYA"
 lang_ab         "my"
-lang_name       "<U1017><U1019><U102C>"
+% မြန်မာ
+lang_name       "<U1019><U103C><U1014><U103A><U1019><U102C>"
 lang_term   "mya"
 lang_lib    "bur"
 END LC_ADDRESS

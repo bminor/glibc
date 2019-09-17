@@ -138,6 +138,7 @@ country_ab2 "PH"
 country_ab3 "PHL"
 country_num 608
 country_car    "RP"
+lang_name    "Tagalog"
 lang_ab      "tl"
 lang_term    "tgl"
 lang_lib    "tgl"

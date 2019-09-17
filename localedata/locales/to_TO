@@ -167,7 +167,7 @@ country_ab3  "TON"
 country_car  "TON"
 country_num 776
 % Tongan
-lang_name    "Tonga<U000A>"
+lang_name    "lea fakatonga"
 % https://en.wikipedia.org/wiki/Tongan_language
 lang_ab      "to"
 lang_term    "ton"

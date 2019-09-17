@@ -8,7 +8,7 @@ escape_char /
 % exempt you from the conditions of the license if your use would
 % otherwise be governed by that license.
 
-% Amazigh Language Locale for Algeria (latin)
+% Berber Language Locale for Algeria (latin)
 % Source:
 % Contact: Pablo Saratxaga
 % Email: <pablo@mandrakesoft.com>
@@ -20,14 +20,14 @@ escape_char /
 % Users: general
 
 LC_IDENTIFICATION
-title "Amazigh language locale for Algeria (latin)"
+title "Berber language locale for Algeria (latin)"
 source ""
 address ""
 contact "Pablo Saratxaga"
 email "pablo@mandrakesoft.com"
 tel ""
 fax ""
-language "Amazigh"
+language "Berber"
 territory "Algeria"
 revision "0.1"
 date "2002-04-16"
@@ -253,14 +253,15 @@ LC_ADDRESS
 % This is the ISO_IEC TR14652 Locale definition for the
 % LC_ADDRESS
 postal_fmt  "%z%c%T%s%b%e%r"
+country_name "Lezzayer"
 %country_post ""
 country_ab2 "DZ"
 country_ab3 "DZA"
 country_num 012
 %country_isbn ""
 country_car  "DZ"
-% ⵜⴰⵎⴰⵣⵉⵖⵜ
-lang_name "<U2D5C><U2D30><U2D4E><U2D30><U2D49><U2D56><U2D5C>"
+% Tamaziɣt
+lang_name "Tamazi<U0263>t"
 %lang_ab
 lang_term "ber"
 lang_lib "ber"

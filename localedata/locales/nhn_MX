@@ -133,11 +133,12 @@ END LC_NAME
 
 LC_ADDRESS
 postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
+country_name  "Mexihco"
 country_ab2   "MX"
 country_ab3   "MEX"
 country_num   484
 country_car    "MEX"
-lang_name    "Tlaxcala-Puebla Nahuatl"
+lang_name    "Tlahco n<U0101>huatlaht<U014D>lli"
 lang_term    "nhn"
 lang_lib    "nhn"
 END LC_ADDRESS

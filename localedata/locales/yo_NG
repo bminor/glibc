@@ -271,8 +271,8 @@ LC_ADDRESS
 % "country designation for the <country_post> keyword",
 % "end of line
 postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
-
-country_name "Or<U00ED>l<U1EB9><U0301><U00E8>de N<U00E0><U00EC>j<U00ED>r<U00ED><U00E0>"
+% https://yo.wikipedia.org/wiki/N%C3%A0%C3%ACj%C3%ADr%C3%AD%C3%A0 and CLDR: Orilẹ̀-èdè Nàìjíríà
+country_name "Oril<U1EB9><U0300><U002D><U00E8>d<U00E8> N<U00E0><U00EC>j<U00ED>r<U00ED><U00E0>"
 
 % Language name in Yoruba - "Yorùbá"
 lang_name     "<U00C8>d<U00E8> Yor<U00F9>b<U00E1>"

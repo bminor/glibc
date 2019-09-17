@@ -158,12 +158,13 @@ END LC_NAME
 LC_ADDRESS
 
 postal_fmt  "%z%c%T%s%b%e%r"
+country_name "<U1C65><U1C64><U1C67><U1C5A><U1C5B>"
 country_ab2 "IN"
 country_ab3 "IND"
 country_num 356
 country_car    "IND"
-% Satār
-lang_name    "Sat<U0101>r"
+% ᱥᱟᱱᱛᱟᱲᱤ
+lang_name    "<U1C65><U1C5F><U1C71><U1C5B><U1C5F><U1C72><U1C64>"
 lang_term    "sat"
 lang_lib    "sat"
 END LC_ADDRESS

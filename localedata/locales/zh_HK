@@ -178,6 +178,7 @@ country_ab2 "HK"
 country_ab3 "HKG"
 country_num 344
 country_car "HK"
+lang_name       "<U7E41><U9AD4><U4E2D><U6587>"
 lang_ab		"zh"
 lang_term	"zho"
 lang_lib	"chi"

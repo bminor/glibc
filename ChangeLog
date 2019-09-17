@@ -1,3 +1,74 @@
+2019-09-17  Mike FABIAN  <mfabian@redhat.com>
+
+	* localedata/locales/az_AZ: Make lang_name agree with CLDR
+	* localedata/locales/be_BY@latin: Make lang_name agree with langtable
+	* localedata/locales/ber_DZ: Make language, country_name, lang_name agree with langtable
+	* localedata/locales/ber_MA: Add country_name from langtable, make language, lang_name agree with langtable
+	* localedata/locales/bhb_IN: Add country_name from langtable, make lang_name agree with langtable
+	* localedata/locales/bho_IN: Add country_name from langtable
+	* localedata/locales/chr_US: Make country_name agree with CLDR
+	* localedata/locales/crh_UA: Make lang_name agree with langtable
+	* localedata/locales/csb_PL: Add country_name from langtable
+	* localedata/locales/doi_IN: Add country_name from langtable
+	* localedata/locales/dv_MV: Add country_name from langtable
+	* localedata/locales/eo: Fix capitalisation of lang_name, agree with CLDR
+	* localedata/locales/hak_TW: Make lang_name agree with langtable
+	* localedata/locales/hif_FJ: Make lang_name agree with langtable
+	* localedata/locales/hne_IN: Add country_name from langtable
+	* localedata/locales/ia_FR: Fix capitalisation of lang_name, agree with CLDR
+	* localedata/locales/id_ID: Make lang_name agree with CLDR
+	* localedata/locales/ig_NG: Make country_name, lang_name agree with CLDR
+	* localedata/locales/kab_DZ: Make country_name agree  with CLDR
+	* localedata/locales/ks_IN: Make country_name agree with CLDR
+	* localedata/locales/ku_TR: Make country_name, lang_name agree with CLDR
+	* localedata/locales/mag_IN: Add country_name from langtable
+	* localedata/locales/mfe_MU: Make country_name agree with CLDR
+	* localedata/locales/mhr_RU: Add lang_name from langtable
+	* localedata/locales/mi_NZ: Make lang_name agree with CLDR
+	* localedata/locales/ms_MY: Make lang_name agree with CLDR
+	* localedata/locales/nan_TW: Make lang_name agree with langtable
+	* localedata/locales/nan_TW@latin: Make lang_name agree with langtable
+	* localedata/locales/nds_DE: Make lang_name agree with langtable
+	* localedata/locales/nds_NL: Make lang_name agree with langtable
+	* localedata/locales/nhn_MX: Add country_name from langtable, make lang_name agree with langtable
+	* localedata/locales/niu_NU: Add country_name, lang_name from langtable
+	* localedata/locales/niu_NZ: Add lang_name from langtable
+	* localedata/locales/nr_ZA: Fix capitalisation of lang_name from langtable
+	* localedata/locales/oc_FR: Fix capitalisation of lang_name from langtable
+	* localedata/locales/or_IN: Fix spelling of language from langtable
+	* localedata/locales/pa_PK: Make country_name agree with CLDR
+	* localedata/locales/ps_AF: Make country_name agree with CLDR
+	* localedata/locales/quz_PE: Make language, lang_name agree with langtable
+	* localedata/locales/raj_IN: Make country_name, lang_name agree with langtable
+	* localedata/locales/rw_RW: Make country_name agree with CLDR
+	* localedata/locales/sah_RU: Make langauge, country_name, lang_name agree with CLDR
+	* localedata/locales/sat_IN: Make country_name, lang_name agree with langtable
+	* localedata/locales/sc_IT: Fix capitalisaton of lang_name according to langtable
+	* localedata/locales/sd_IN: Make country_name, lang_name agree with CLDR
+	* localedata/locales/sd_IN@devanagari: Make lang_name agree with langtable
+	* localedata/locales/shn_MM: Make country_name agree with langtable
+	* localedata/locales/shs_CA: Make language, lang_name agree with langtable
+	* localedata/locales/sm_WS: Make country_name agree with langtable
+	* localedata/locales/ss_ZA: Fix capitalisation of lang_name from langtable
+	* localedata/locales/szl_PL: Add country_name from langtable
+	* localedata/locales/te_IN: Fix country_name from CLDR
+	* localedata/locales/tg_TJ: Add lang_name from CLDR
+	* localedata/locales/the_NP: Add country_name, lang_name from langtable
+	* localedata/locales/tk_TM: Make lang_name agree with CLDR
+	* localedata/locales/tl_PH: Add lang_name from langtable
+	* localedata/locales/to_TO: Make lang_name agree with CLDR
+	* localedata/locales/tpi_PG: Make country_name, lang_name agree with langtable
+	* localedata/locales/tt_RU@iqtelif: Add country_name, lang_name from langtable
+	* localedata/locales/ug_CN: Add lang_name from CLDR
+	* localedata/locales/unm_US: Add lang_name from langtable
+	* localedata/locales/wa_BE: Fix capitalisation of lang_name from langtable
+	* localedata/locales/wo_SN: Add lang_name from CLDR
+	* localedata/locales/xh_ZA: Fix capitalisation of country_name, lang_name from CLDR
+	* localedata/locales/yo_NG: Make country_name agree with CLDR
+	* localedata/locales/yuw_PG: Make langauge, lang_name agree with langtable
+	* localedata/locales/zh_HK: Add lang_name from langtable
+	* localedata/locales/zh_SG: Add lang_name from langtable
+
 2019-09-30  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/build-many-glibcs.py (Context.checkout): Default

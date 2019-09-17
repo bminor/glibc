@@ -173,7 +173,7 @@ END LC_NAME
 LC_ADDRESS
 % FIXME
 postal_fmt    "%a%N%f%N%d%N%b%N%h %s %e %r%N%T %z%N%c%N"
-country_name "<U0A2A><U0A3E><U0A15><U0A3F><U0A38><U0A24><U0A3E><U0A28>"
+country_name "<U067E><U06A9><U0633><U062A><U0627><U0646>"
 country_ab2 "PK"
 country_ab3 "PAK"
 country_num 586

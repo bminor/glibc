@@ -206,7 +206,7 @@ END LC_NAME
 
 LC_ADDRESS
 postal_fmt   "%f%N%a%N%d%N%b%N%s %h %e %r%N%%z %T%N%c%N"
-lang_name    "Esperanto"
+lang_name    "esperanto"
 lang_ab      "eo"
 lang_term    "epo"
 END LC_ADDRESS

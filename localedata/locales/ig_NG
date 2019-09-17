@@ -321,11 +321,11 @@ LC_ADDRESS
 % "end of line
 postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
 
-% Country name in Igbo - "Nigeria"
-country_name  "Nigeria"
+% Country name in Igbo - "Naịjịrịa"
+country_name  "Na<U1ECB>j<U1ECB>r<U1ECB>a"
 
-% Language name in Igbo - "Igbo"
-lang_name     "Igbo"
+% Language name in Igbo - "Asụsụ Igbo"
+lang_name     "As<U1EE5>s<U1EE5> Igbo"
 
 % CEPT MAILCODES are suggested
 % Alternatively use the code found on your countries postal item tracking number

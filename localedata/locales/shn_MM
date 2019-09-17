@@ -281,7 +281,8 @@ END LC_NAME
 
 LC_ADDRESS
 postal_fmt   "%a%N%d%N%f%N%b%N%h%t%r%t%e%t%s%N%T%t%z%N%c%N"
-country_name "<U1019><U1062><U107C><U103A><U1088>"
+% https://shn.wikipedia.org/wiki/%E1%80%99%E1%80%AD%E1%80%B0%E1%80%84%E1%80%BA%E1%80%B8%E1%80%99%E1%81%A2%E1%81%BC%E1%80%BA%E1%82%88 မိူင်းမၢၼ်ႈ
+country_name "<U1019><U102D><U1030><U1004><U103A><U1038><U1019><U1062><U107C><U103A><U1088>"
 country_post "Myanmar"
 country_ab2  "MM"
 country_num  104
