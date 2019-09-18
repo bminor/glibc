@@ -1,3 +1,10 @@
+2019-09-18  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/riscv/vfork.S: Do not include
+	<linux/sched.h>.
+	(CLONE_VM): New macro.
+	(CLONE_VFORK): Likewise.
+
 2019-09-18  Stefan Liebler  <stli@linux.ibm.com>
 
 	* elf/tst-pldd.c (do_test): Add UNSUPPORTED check.
