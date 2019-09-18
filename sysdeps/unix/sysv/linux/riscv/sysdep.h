@@ -182,14 +182,21 @@
 
 #ifndef __ASSEMBLER__
 
-# define VDSO_NAME  "LINUX_4.15"
-# define VDSO_HASH  182943605
+# if __riscv_xlen == 32
+#  define VDSO_NAME  "LINUX_5.4"
+#  define VDSO_HASH  61765876
 
 /* List of system calls which are supported as vsyscalls.  */
-# define HAVE_CLOCK_GETRES64_VSYSCALL	"__vdso_clock_getres"
-# define HAVE_CLOCK_GETTIME64_VSYSCALL	"__vdso_clock_gettime"
-# define HAVE_GETTIMEOFDAY_VSYSCALL	"__vdso_gettimeofday"
-# define HAVE_GETCPU_VSYSCALL		"__vdso_getcpu"
+# else
+#  define VDSO_NAME  "LINUX_4.15"
+#  define VDSO_HASH  182943605
+
+/* List of system calls which are supported as vsyscalls.  */
+#  define HAVE_CLOCK_GETRES64_VSYSCALL   "__vdso_clock_getres"
+#  define HAVE_CLOCK_GETTIME64_VSYSCALL  "__vdso_clock_gettime"
+#  define HAVE_GETTIMEOFDAY_VSYSCALL     "__vdso_gettimeofday"
+#  define HAVE_GETCPU_VSYSCALL           "__vdso_getcpu"
+# endif
 
 # define INTERNAL_SYSCALL(name, nr, args...) \
 	internal_syscall##nr (SYS_ify (name), args)
