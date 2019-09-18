@@ -1,3 +1,8 @@
+2019-10-01  Alistair Francis  <alistair.francis@wdc.com>
+
+	 * time/bits/types/struct_timespec.h: Add padding for the timespec if
+	required.
+
 2019-10-01  Zack Weinberg  <zackw@panix.com>
 	    Alistair Francis <alistair.francis@wdc.com>
 
