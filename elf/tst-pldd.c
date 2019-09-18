@@ -30,11 +30,44 @@
 #include <support/capture_subprocess.h>
 #include <support/check.h>
 #include <support/support.h>
+#include <support/xptrace.h>
+#include <support/xunistd.h>
+#include <sys/mman.h>
+#include <errno.h>
+#include <signal.h>
 
 static void
 target_process (void *arg)
 {
   pause ();
+}
+
+static void
+pldd_process (void *arg)
+{
+  pid_t *target_pid_ptr = (pid_t *) arg;
+
+  /* Create a copy of current test to check with pldd.  As the
+     target_process is a child of this pldd_process, pldd is also able
+     to attach to target_process if YAMA is configured to 1 =
+     "restricted ptrace".  */
+  struct support_subprocess target = support_subprocess (target_process, NULL);
+
+  /* Store the pid of target-process as do_test needs it in order to
+     e.g. terminate it at end of the test.  */
+  *target_pid_ptr = target.pid;
+
+  /* Three digits per byte plus null terminator.  */
+  char pid[3 * sizeof (uint32_t) + 1];
+  snprintf (pid, array_length (pid), "%d", target.pid);
+
+  char *prog = xasprintf ("%s/pldd", support_bindir_prefix);
+
+  /* Run pldd and use the pid of target_process as argument.  */
+  execve (prog, (char *const []) { (char *) prog, pid, NULL },
+	  (char *const []) { NULL });
+
+  FAIL_EXIT1 ("Returned from execve: errno=%d=%m\n", errno);
 }
 
 /* The test runs in a container because pldd does not support tracing
@@ -52,25 +85,22 @@ in_str_list (const char *libname, const char *const strlist[])
 static int
 do_test (void)
 {
-  /* Create a copy of current test to check with pldd.  */
-  struct support_subprocess target = support_subprocess (target_process, NULL);
-
-  /* Run 'pldd' on test subprocess.  */
-  struct support_capture_subprocess pldd;
+  /* Check if our subprocess can be debugged with ptrace.  */
   {
-    /* Three digits per byte plus null terminator.  */
-    char pid[3 * sizeof (uint32_t) + 1];
-    snprintf (pid, array_length (pid), "%d", target.pid);
-
-    char *prog = xasprintf ("%s/pldd", support_bindir_prefix);
-
-    pldd = support_capture_subprogram (prog,
-      (char *const []) { (char *) prog, pid, NULL });
-
-    support_capture_subprocess_check (&pldd, "pldd", 0, sc_allow_stdout);
-
-    free (prog);
+    int ptrace_scope = support_ptrace_scope ();
+    if (ptrace_scope >= 2)
+      FAIL_UNSUPPORTED ("/proc/sys/kernel/yama/ptrace_scope >= 2");
   }
+
+  pid_t *target_pid_ptr = (pid_t *) xmmap (NULL, sizeof (pid_t),
+					   PROT_READ | PROT_WRITE,
+					   MAP_SHARED | MAP_ANONYMOUS, -1);
+
+  /* Run 'pldd' on test subprocess which will be created in pldd_process.
+     The pid of the subprocess will be written to target_pid_ptr.  */
+  struct support_capture_subprocess pldd;
+  pldd = support_capture_subprocess (pldd_process, target_pid_ptr);
+  support_capture_subprocess_check (&pldd, "pldd", 0, sc_allow_stdout);
 
   /* Check 'pldd' output.  The test is expected to be linked against only
      loader and libc.  */
@@ -85,7 +115,7 @@ do_test (void)
     /* First line is in the form of <pid>: <full path of executable>  */
     TEST_COMPARE (fscanf (out, "%u: " STRINPUT (512), &pid, buffer), 2);
 
-    TEST_COMPARE (pid, target.pid);
+    TEST_COMPARE (pid, *target_pid_ptr);
     TEST_COMPARE (strcmp (basename (buffer), "tst-pldd"), 0);
 
     /* It expects only one loader and libc loaded by the program.  */
@@ -93,7 +123,7 @@ do_test (void)
     while (fgets (buffer, array_length (buffer), out) != NULL)
       {
 	/* Ignore vDSO.  */
-        if (buffer[0] != '/')
+	if (buffer[0] != '/')
 	  continue;
 
 	/* Remove newline so baseline (buffer) can compare against the
@@ -128,7 +158,9 @@ do_test (void)
   }
 
   support_capture_subprocess_free (&pldd);
-  support_process_terminate (&target);
+  if (kill (*target_pid_ptr, SIGKILL) != 0)
+    FAIL_EXIT1 ("Unable to kill target_process: errno=%d=%m\n", errno);
+  xmunmap (target_pid_ptr, sizeof (pid_t));
 
   return 0;
 }

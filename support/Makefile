@@ -56,6 +56,7 @@ libsupport-routines = \
   support_format_hostent \
   support_format_netent \
   support_isolate_in_subprocess \
+  support_ptrace \
   support_openpty \
   support_paths \
   support_quote_blob \

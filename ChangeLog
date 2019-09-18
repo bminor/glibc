@@ -1,3 +1,12 @@
+2019-09-18  Stefan Liebler  <stli@linux.ibm.com>
+
+	* elf/tst-pldd.c (do_test): Add UNSUPPORTED check.
+	Rearrange subprocesses.
+	(pldd_process): New function.
+	* support/Makefile (libsupport-routines): Add support_ptrace.
+	* support/xptrace.h: New file.
+	* support/support_ptrace.c: Likewise.
+
 2019-09-17  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/time.c: Remove file.
