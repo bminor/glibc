@@ -24,6 +24,11 @@
 int (*VDSO_SYMBOL(clock_gettime)) (clockid_t, struct timespec *)
   attribute_hidden;
 #endif
+/* vDSO symbol used on clock_gettime64 implementation.  */
+#ifdef HAVE_CLOCK_GETTIME64_VSYSCALL
+int (*VDSO_SYMBOL(clock_gettime64)) (clockid_t, struct __timespec64 *)
+  attribute_hidden;
+#endif
 /* vDSO symbol used on clock_getres implementation.  */
 #ifdef HAVE_CLOCK_GETRES_VSYSCALL
 int (*VDSO_SYMBOL(clock_getres)) (clockid_t, struct timespec *)
@@ -50,6 +55,11 @@ __libc_vdso_platform_setup (void)
 #ifdef HAVE_CLOCK_GETTIME_VSYSCALL
   VDSO_SYMBOL(clock_gettime)
     = get_vdso_mangle_symbol (HAVE_CLOCK_GETTIME_VSYSCALL);
+#endif
+
+#ifdef HAVE_CLOCK_GETTIME64_VSYSCALL
+  VDSO_SYMBOL(clock_gettime64)
+    = get_vdso_mangle_symbol (HAVE_CLOCK_GETTIME64_VSYSCALL);
 #endif
 
 #ifdef HAVE_CLOCK_GETRES_VSYSCALL

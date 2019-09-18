@@ -32,6 +32,10 @@
 extern int (*VDSO_SYMBOL(clock_gettime)) (clockid_t, struct timespec *)
   attribute_hidden;
 #endif
+#ifdef HAVE_CLOCK_GETTIME64_VSYSCALL
+extern int (*VDSO_SYMBOL(clock_gettime64)) (clockid_t, struct __timespec64 *)
+  attribute_hidden;
+#endif
 #ifdef HAVE_CLOCK_GETRES_VSYSCALL
 extern int (*VDSO_SYMBOL(clock_getres)) (clockid_t, struct timespec *)
   attribute_hidden;
