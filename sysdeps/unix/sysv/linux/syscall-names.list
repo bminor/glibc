@@ -22,8 +22,8 @@
 # names are only used if the installed kernel headers also provide
 # them.
 
-# The list of system calls is current as of Linux 5.2.
-kernel 5.2
+# The list of system calls is current as of Linux 5.3.
+kernel 5.3
 
 FAST_atomic_update
 FAST_cmpxchg
@@ -75,6 +75,7 @@ clock_settime
 clock_settime64
 clone
 clone2
+clone3
 close
 cmpxchg_badaddr
 connect
@@ -410,6 +411,7 @@ perf_event_open
 perfctr
 perfmonctl
 personality
+pidfd_open
 pidfd_send_signal
 pipe
 pipe2

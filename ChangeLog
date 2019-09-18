@@ -1,5 +1,10 @@
 2019-09-18  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/syscall-names.list: Update kernel
+	version to 5.3.
+	(clone3): New syscall.
+	(pidfd_open): Likewise.
+
 	* scripts/build-many-glibcs.py (Context.checkout): Default Linux
 	version to 5.3.
 
