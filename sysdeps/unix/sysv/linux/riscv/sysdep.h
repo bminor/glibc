@@ -135,13 +135,24 @@
 
 #else /* !__ASSEMBLER__ */
 
-# define VDSO_NAME  "LINUX_4.15"
-# define VDSO_HASH  182943605
+# if __WORDSIZE == 64
+#  define VDSO_NAME	"LINUX_4.15"
+#  define VDSO_HASH	182943605
 
-/* List of system calls which are supported as vsyscalls.  */
-# define HAVE_CLOCK_GETRES64_VSYSCALL	"__vdso_clock_getres"
-# define HAVE_CLOCK_GETTIME64_VSYSCALL	"__vdso_clock_gettime"
-# define HAVE_GETTIMEOFDAY_VSYSCALL	"__vdso_gettimeofday"
+/* List of system calls which are supported as vsyscalls only
+   for RV64.  */
+#  define HAVE_CLOCK_GETRES64_VSYSCALL	"__vdso_clock_getres"
+#  define HAVE_CLOCK_GETTIME64_VSYSCALL	"__vdso_clock_gettime"
+#  define HAVE_GETTIMEOFDAY_VSYSCALL	"__vdso_gettimeofday"
+# else
+#  define VDSO_NAME	"LINUX_5.4"
+#  define VDSO_HASH	61765876
+
+/* RV32 does not support the gettime VDSO syscalls.  */
+# endif
+
+/* List of system calls which are supported as vsyscalls (for RV32 and
+   RV64).  */
 # define HAVE_GETCPU_VSYSCALL		"__vdso_getcpu"
 
 # define INTERNAL_SYSCALL(name, nr, args...) \
