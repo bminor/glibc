@@ -1,3 +1,7 @@
+2019-09-18  Stefan Liebler  <stli@linux.ibm.com>
+
+	* sysdeps/s390/hp-timing.h: New file.
+
 2019-09-18  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/riscv/vfork.S: Do not include
