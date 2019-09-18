@@ -1,3 +1,8 @@
+2019-09-18  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/build-many-glibcs.py (Context.checkout): Default Linux
+	version to 5.3.
+
 2019-09-18  Stefan Liebler  <stli@linux.ibm.com>
 
 	* sysdeps/s390/hp-timing.h: New file.
