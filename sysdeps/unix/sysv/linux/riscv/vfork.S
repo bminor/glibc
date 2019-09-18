@@ -21,8 +21,11 @@
 #include <sys/asm.h>
 #include <sysdep.h>
 #define __ASSEMBLY__
-#include <linux/sched.h>
 #include <asm/signal.h>
+
+#define CLONE_VM      0x00000100 /* Set if VM shared between processes.  */
+#define CLONE_VFORK   0x00004000 /* Set if the parent wants the child to
+				    wake it up on mm_release.  */
 
 	.text
 LEAF (__libc_vfork)
