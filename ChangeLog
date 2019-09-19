@@ -1,5 +1,11 @@
 2019-09-27  Paul A. Clarke  <pc@us.ibm.com>
 
+	* sysdeps/powerpc/fpu/fenv_libc.h (__fesetround_inline): Use
+	'mffscrn' instruction on POWER9.
+	(__fesetround_inline_nocheck): Likewise.
+
+2019-09-27  Paul A. Clarke  <pc@us.ibm.com>
+
 	* sysdeps/powerpc/fpu/fenv_libc.h (FPSCR_EXCEPTIONS_MASK):  New.
 	* sysdeps/powerpc/fpu/fenv_private.h (__libc_femergeenv_ppc):  Optimize
 	to write FPSCR control only, if exceptions have not changed.
