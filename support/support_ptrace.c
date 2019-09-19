@@ -19,7 +19,6 @@
 #include <support/check.h>
 #include <support/xstdio.h>
 #include <support/xptrace.h>
-#include <sys/prctl.h>
 
 int
 support_ptrace_scope (void)

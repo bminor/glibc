@@ -1,5 +1,9 @@
 2019-09-19  Stefan Liebler  <stli@linux.ibm.com>
 
+	* support/support_ptrace.c: Remove inclusion of sys/prctl.h.
+
+2019-09-19  Stefan Liebler  <stli@linux.ibm.com>
+
 	* sysdeps/s390/hp-timing.h (_HP_TIMING_H): Undefine.
 	(_HP_TIMING_S390_H): Define.
 
