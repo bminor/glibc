@@ -133,16 +133,7 @@ static __always_inline void
 libc_feresetround_ppc (fenv_t *envp)
 {
   fenv_union_t new = { .fenv = *envp };
-
-  /* If the old env has no enabled exceptions and the new env has any enabled
-     exceptions, then unmask SIGFPE in the MSR FE0/FE1 bits.  This will put the
-     hardware into "precise mode" and may cause the FPU to run slower on some
-     hardware.  */
-  if ((new.l & _FPU_ALL_TRAPS) != 0)
-    (void) __fe_nomask_env_priv ();
-
-  /* Atomically enable and raise (if appropriate) exceptions set in `new'.  */
-  fesetenv_mode (new.fenv);
+  fegetenv_and_set_rn (new.l & FPSCR_RN_MASK);
 }
 
 static __always_inline int
@@ -184,22 +175,10 @@ libc_feupdateenv_ppc (fenv_t *e)
 static __always_inline void
 libc_feholdsetround_ppc_ctx (struct rm_ctx *ctx, int r)
 {
-  fenv_union_t old, new;
+  fenv_union_t old;
 
-  old.fenv = fegetenv_status ();
-
-  new.l = (old.l & ~(FPSCR_ENABLES_MASK|FPSCR_RN_MASK)) | r;
-
-  ctx->env = old.fenv;
-  if (__glibc_unlikely (new.l != old.l))
-    {
-      if ((old.l & _FPU_ALL_TRAPS) != 0)
-	(void) __fe_mask_env ();
-      fesetenv_mode (new.fenv);
-      ctx->updated_status = true;
-    }
-  else
-    ctx->updated_status = false;
+  ctx->env = old.fenv = fegetenv_and_set_rn (r);
+  ctx->updated_status = (r != (old.l & FPSCR_RN_MASK));
 }
 
 static __always_inline void

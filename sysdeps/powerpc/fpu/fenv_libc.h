@@ -48,6 +48,38 @@ extern const fenv_t *__fe_mask_env (void) attribute_hidden;
     __fr;								\
   })
 
+#define __fe_mffscrn(rn)						\
+  ({register fenv_union_t __fr;						\
+    if (__builtin_constant_p (rn))					\
+      __asm__ __volatile__ (						\
+        ".machine push; .machine \"power9\"; mffscrni %0,%1; .machine pop" \
+        : "=f" (__fr.fenv) : "i" (rn));					\
+    else								\
+    {									\
+      __fr.l = (rn);							\
+      __asm__ __volatile__ (						\
+        ".machine push; .machine \"power9\"; mffscrn %0,%1; .machine pop" \
+        : "=f" (__fr.fenv) : "f" (__fr.fenv));				\
+    }									\
+    __fr.fenv;								\
+  })
+
+/* Like fegetenv_status, but also sets the rounding mode.  */
+#ifdef _ARCH_PWR9
+#define fegetenv_and_set_rn(rn) __fe_mffscrn (rn)
+#else
+/* 'mffscrn' will decode to 'mffs' on ARCH < 3_00, which is still necessary
+   but not sufficient, because it does not set the rounding mode.
+   Explicitly set the rounding mode when 'mffscrn' actually doesn't.  */
+#define fegetenv_and_set_rn(rn)						\
+  ({register fenv_union_t __fr;						\
+    __fr.fenv = __fe_mffscrn (rn);					\
+    if (__glibc_unlikely (!(GLRO(dl_hwcap2) & PPC_FEATURE2_ARCH_3_00)))	\
+      __fesetround_inline (rn);						\
+    __fr.fenv;								\
+  })
+#endif
+
 /* Equivalent to fesetenv, but takes a fenv_t instead of a pointer.  */
 #define fesetenv_register(env) \
 	do { \

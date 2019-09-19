@@ -1,3 +1,13 @@
+2019-09-19  Paul A. Clarke  <pc@us.ibm.com>
+    
+	* sysdeps/powerpc/fpu/fenv_libc.h (fegetenv_and_set_rn): New.
+	(__fe_mffscrn): New.
+	* sysdeps/powerpc/fpu/fenv_private.h (libc_feholdsetround_ppc_ctx):
+	Do not clear enable bits, remove obsolete code, use
+	fegetenv_and_set_rn.
+	(libc_feresetround_ppc): Remove obsolete code, use
+	fegetenv_and_set_rn.
+
 2019-09-19  Stefan Liebler  <stli@linux.ibm.com>
 
 	* support/support_ptrace.c: Remove inclusion of sys/prctl.h.
