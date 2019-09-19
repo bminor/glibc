@@ -1,5 +1,11 @@
 2019-09-27  Paul A. Clarke  <pc@us.ibm.com>
 
+	* sysdeps/powerpc/fpu/fenv_private.h
+	(libc_feholdsetround_noex_ppc_ctx): Call fesetenv_mode instead
+	of fesetenv_register.
+
+2019-09-27  Paul A. Clarke  <pc@us.ibm.com>
+
 	* sysdeps/powerpc/fpu/fenv_libc.h (fegetenv_status): Rename to
 	fegetenv_control.
 	* sysdeps/powerpc/fpu/fedisblxcpt.c (fedisableexcept): Accommodate

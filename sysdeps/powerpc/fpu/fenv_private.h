@@ -142,7 +142,7 @@ libc_feholdsetround_noex_ppc_ctx (struct rm_ctx *ctx, int r)
   if (__glibc_unlikely (new.l != old.l))
     {
       __TEST_AND_ENTER_NON_STOP (old.l, 0ULL);
-      fesetenv_register (new.fenv);
+      fesetenv_mode (new.fenv);
       ctx->updated_status = true;
     }
   else
