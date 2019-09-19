@@ -148,7 +148,12 @@ typedef union
 static inline int
 __fesetround_inline (int round)
 {
-  if ((unsigned int) round < 2)
+#ifdef _ARCH_PWR9
+  __fe_mffscrn (round);
+#else
+  if (__glibc_likely (GLRO(dl_hwcap2) & PPC_FEATURE2_ARCH_3_00))
+    __fe_mffscrn (round);
+  else if ((unsigned int) round < 2)
     {
        asm volatile ("mtfsb0 30");
        if ((unsigned int) round == 0)
@@ -164,7 +169,7 @@ __fesetround_inline (int round)
        else
          asm volatile ("mtfsb1 31");
     }
-
+#endif
   return 0;
 }
 
@@ -173,7 +178,14 @@ __fesetround_inline (int round)
 static inline void
 __fesetround_inline_nocheck (const int round)
 {
-  asm volatile ("mtfsfi 7,%0" : : "i" (round));
+#ifdef _ARCH_PWR9
+  __fe_mffscrn (round);
+#else
+  if (__glibc_likely (GLRO(dl_hwcap2) & PPC_FEATURE2_ARCH_3_00))
+    __fe_mffscrn (round);
+  else
+    asm volatile ("mtfsfi 7,%0" : : "i" (round));
+#endif
 }
 
 #define FPSCR_MASK(bit) (1 << (31 - (bit)))
