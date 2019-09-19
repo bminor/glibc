@@ -21,6 +21,6 @@
 int
 fegetmode (femode_t *modep)
 {
-  *modep = fegetenv_status ();
+  *modep = fegetenv_control ();
   return 0;
 }

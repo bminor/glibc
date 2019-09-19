@@ -1,5 +1,17 @@
 2019-09-27  Paul A. Clarke  <pc@us.ibm.com>
 
+	* sysdeps/powerpc/fpu/fenv_libc.h (fegetenv_status): Rename to
+	fegetenv_control.
+	* sysdeps/powerpc/fpu/fedisblxcpt.c (fedisableexcept): Accommodate
+	rename of fegetenv_status to fegetenv_control.
+	* sysdeps/powerpc/fpu/feenablxcpt.c (feenableexcept): Likewise.
+	* sysdeps/powerpc/fpu/fegetexcept.c (__fegetexcept): Likewise.
+	* sysdeps/powerpc/fpu/fegetmode.c (fegetmode): Likewise.
+	* sysdeps/powerpc/fpu/fesetenv.c (__fesetenv): Likewise.
+	* sysdeps/powerpc/fpu/fesetmode.c (fesetmode): Likewise.
+
+2019-09-27  Paul A. Clarke  <pc@us.ibm.com>
+
 	* sysdeps/powerpc/fpu/fenv_libc.h (__fesetround_inline): Use
 	'mffscrn' instruction on POWER9.
 	(__fesetround_inline_nocheck): Likewise.
