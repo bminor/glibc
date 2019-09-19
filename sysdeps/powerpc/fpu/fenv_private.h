@@ -23,6 +23,17 @@
 #include <fenv_libc.h>
 #include <fpu_control.h>
 
+#ifdef _ARCH_PWR8
+/* There is no performance advantage to non-stop mode.  */
+/* The odd syntax here is to innocuously reference the given variables
+   to prevent warnings about unused variables.  */
+#define __TEST_AND_BEGIN_NON_STOP(old, new) do {} while ((old) * (new) * 0 != 0)
+#define __TEST_AND_END_NON_STOP(old, new) do {} while ((old) * (new) * 0 != 0)
+#else
+#define __TEST_AND_BEGIN_NON_STOP __TEST_AND_ENTER_NON_STOP
+#define __TEST_AND_END_NON_STOP __TEST_AND_EXIT_NON_STOP
+#endif
+
 static __always_inline void
 libc_feholdexcept_setround_ppc (fenv_t *envp, int r)
 {
@@ -30,7 +41,7 @@ libc_feholdexcept_setround_ppc (fenv_t *envp, int r)
 
   old.fenv = *envp = fegetenv_register ();
 
-  __TEST_AND_ENTER_NON_STOP (old.l, 0ULL);
+  __TEST_AND_BEGIN_NON_STOP (old.l, 0ULL);
 
   /* Clear everything and set the rounding mode.  */
   new.l = r;
@@ -49,8 +60,8 @@ __libc_femergeenv_ppc (const fenv_t *envp, unsigned long long old_mask,
   /* Merge bits while masking unwanted bits from new and old env.  */
   new.l = (old.l & old_mask) | (new.l & new_mask);
 
-  __TEST_AND_EXIT_NON_STOP (old.l, new.l);
-  __TEST_AND_ENTER_NON_STOP (old.l, new.l);
+  __TEST_AND_END_NON_STOP (old.l, new.l);
+  __TEST_AND_BEGIN_NON_STOP (old.l, new.l);
 
   /* If requesting to keep status, replace control, and merge exceptions,
      and exceptions haven't changed, we can just set new control instead
@@ -141,7 +152,7 @@ libc_feholdsetround_noex_ppc_ctx (struct rm_ctx *ctx, int r)
   ctx->env = old.fenv;
   if (__glibc_unlikely (new.l != old.l))
     {
-      __TEST_AND_ENTER_NON_STOP (old.l, 0ULL);
+      __TEST_AND_BEGIN_NON_STOP (old.l, 0ULL);
       fesetenv_control (new.fenv);
       ctx->updated_status = true;
     }
