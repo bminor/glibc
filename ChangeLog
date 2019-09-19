@@ -1,5 +1,16 @@
 2019-09-27  Paul A. Clarke  <pc@us.ibm.com>
 
+	* sysdeps/powerpc/fpu/fenv_libc.h (fesetenv_mode): Rename to
+	fesetenv_control.
+	* sysdeps/powerpc/fpu/fedisblxcpt.c (fedisableexcept): Accommodate
+	rename of fesetenv_mode to fegetenv_control.
+	* sysdeps/powerpc/fpu/feenablxcpt.c (feenableexcept): Likewise.
+	* sysdeps/powerpc/fpu/fesetmode.c (fesetmode): Likewise.
+	* sysdeps/powerpc/fpu/fenv_private.h (__libc_femergeenv_ppc): Likewise.
+	(libc_feholdsetround_noex_ppc_ctx): Likewise.
+
+2019-09-27  Paul A. Clarke  <pc@us.ibm.com>
+
 	* sysdeps/powerpc/fpu/fenv_private.h
 	(libc_feholdsetround_noex_ppc_ctx): Call fesetenv_mode instead
 	of fesetenv_register.

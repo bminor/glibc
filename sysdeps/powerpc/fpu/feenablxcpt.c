@@ -41,7 +41,7 @@ feenableexcept (int excepts)
   fe.l |= new;
 
   if (fe.l != curr.l)
-    fesetenv_mode (fe.fenv);
+    fesetenv_control (fe.fenv);
 
   __TEST_AND_EXIT_NON_STOP (0ULL, fe.l);
 

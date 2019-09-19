@@ -61,7 +61,7 @@ __libc_femergeenv_ppc (const fenv_t *envp, unsigned long long old_mask,
       == (FPSCR_CONTROL_MASK|FPSCR_EXCEPTIONS_MASK) &&
       (old.l & FPSCR_EXCEPTIONS_MASK) == (new.l & FPSCR_EXCEPTIONS_MASK))
   {
-    fesetenv_mode (new.fenv);
+    fesetenv_control (new.fenv);
   }
   else
     /* Atomically enable and raise (if appropriate) exceptions set in `new'.  */
@@ -142,7 +142,7 @@ libc_feholdsetround_noex_ppc_ctx (struct rm_ctx *ctx, int r)
   if (__glibc_unlikely (new.l != old.l))
     {
       __TEST_AND_ENTER_NON_STOP (old.l, 0ULL);
-      fesetenv_mode (new.fenv);
+      fesetenv_control (new.fenv);
       ctx->updated_status = true;
     }
   else

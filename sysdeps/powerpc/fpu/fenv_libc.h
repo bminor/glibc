@@ -116,7 +116,7 @@ extern const fenv_t *__fe_mask_env (void) attribute_hidden;
 /* Set the last 2 nibbles of the FPSCR, which contain the
    exception enables and the rounding mode.
    'fegetenv_control' retrieves these bits by reading the FPSCR.  */
-#define fesetenv_mode(env) __builtin_mtfsf (0b00000011, (env));
+#define fesetenv_control(env) __builtin_mtfsf (0b00000011, (env));
 
 /* This very handy macro:
    - Sets the rounding mode to 'round to nearest';

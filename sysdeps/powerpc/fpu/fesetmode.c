@@ -36,6 +36,6 @@ fesetmode (const femode_t *modep)
   __TEST_AND_EXIT_NON_STOP (old.l, new.l);
   __TEST_AND_ENTER_NON_STOP (old.l, new.l);
 
-  fesetenv_mode (new.fenv);
+  fesetenv_control (new.fenv);
   return 0;
 }
