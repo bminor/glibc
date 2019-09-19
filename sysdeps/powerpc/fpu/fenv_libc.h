@@ -27,6 +27,26 @@ extern const fenv_t *__fe_nomask_env_priv (void);
 
 extern const fenv_t *__fe_mask_env (void) attribute_hidden;
 
+/* If the old env had any enabled exceptions and the new env has no enabled
+   exceptions, then mask SIGFPE in the MSR FE0/FE1 bits.  This may allow the
+   FPU to run faster because it always takes the default action and can not
+   generate SIGFPE.  */
+#define __TEST_AND_ENTER_NON_STOP(old, new) \
+  do { \
+    if (((old) & FPSCR_ENABLES_MASK) != 0 && ((new) & FPSCR_ENABLES_MASK) == 0) \
+      (void) __fe_mask_env (); \
+  } while (0)
+
+/* If the old env has no enabled exceptions and the new env has any enabled
+   exceptions, then unmask SIGFPE in the MSR FE0/FE1 bits.  This will put the
+   hardware into "precise mode" and may cause the FPU to run slower on some
+   hardware.  */
+#define __TEST_AND_EXIT_NON_STOP(old, new) \
+  do { \
+    if (((old) & FPSCR_ENABLES_MASK) == 0 && ((new) & FPSCR_ENABLES_MASK) != 0) \
+      (void) __fe_nomask_env_priv (); \
+  } while (0)
+
 /* The sticky bits in the FPSCR indicating exceptions have occurred.  */
 #define FPSCR_STICKY_BITS ((FE_ALL_EXCEPT | FE_ALL_INVALID) & ~FE_INVALID)
 

@@ -1,3 +1,32 @@
+2019-09-27  Paul A. Clarke  <pc@us.ibm.com>
+
+	* sysdeps/powerpc/fpu/fenv_libc.h:
+	(__TEST_AND_ENTER_NON_STOP): New.
+	(__TEST_AND_EXIT_NON_STOP): New.
+	* sysdeps/powerpc/fpu/fenv_private.h
+	(_FPU_ALL_TRAPS): Delete, replace with FPSCR_ENABLES_MASK.
+	(_FPU_MASK_RN): Delete.
+	(_FPU_MASK_NOT_RN_NI): Delete.
+	(_FPU_MASK_TRAPS_RN): Delete, replace with ~FPSCR_CONTROL_MASK.
+	(_FPU_MASK_FRAC_INEX_RET_CC): Delete, replace with ~FPSCR_STATUS_MASK.
+	(__libc_feholdbits_ppc): Delete, move code into
+	libc_feholdexcept_setround_ppc.
+	(libc_feholdexcept_ppc): Delete.
+	(libc_fesetround_ppc): Delete.
+	(libc_fetestexcept_ppc): Delete.
+	(libc_feholdsetround_ppc): Delete.
+	(__libc_femergeenv_ppc): Use __TEST_AND_ENTER/EXIT_NON_STOP.
+	(libc_feholdsetround_noex_ppc_ctx): Likewise.
+	(libc_feupdateenv_test_ppc): Use FPSCR defines.
+	* sysdeps/powerpc/fpu/feenablxcpt.c (feenableexcept): Use
+	__TEST_AND_ENTER_NON_STOP.
+	* sysdeps/powerpc/fpu/fedisblxcpt.c (fedisableexcept): Likewise.
+	* sysdeps/powerpc/fpu/feholdexcpt.c (__feholdexcept): Likewise.
+	* sysdeps/powerpc/fpu/fesetenv.c (__fesetenv): Likewise.
+	* sysdeps/powerpc/fpu/fesetmode.c (fesetmode): Likewise.
+	* sysdeps/powerpc/fpu/feupdateenv.c (__feupdateenv): Likewise.
+	(_FPU_MASK_ALL): Delete.
+
 2019-09-19  Paul A. Clarke  <pc@us.ibm.com>
     
 	* sysdeps/powerpc/fpu/fenv_libc.h (fegetenv_and_set_rn): New.

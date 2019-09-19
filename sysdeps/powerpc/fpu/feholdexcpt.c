@@ -18,7 +18,6 @@
 
 #include <fenv_libc.h>
 #include <fpu_control.h>
-#define _FPU_MASK_ALL (_FPU_MASK_ZM | _FPU_MASK_OM | _FPU_MASK_UM | _FPU_MASK_XM | _FPU_MASK_IM)
 
 int
 __feholdexcept (fenv_t *envp)
@@ -35,11 +34,7 @@ __feholdexcept (fenv_t *envp)
   if (new.l == old.l)
     return 0;
 
-  /* If the old env had any enabled exceptions, then mask SIGFPE in the
-     MSR FE0/FE1 bits.  This may allow the FPU to run faster because it
-     always takes the default action and can not generate SIGFPE. */
-  if ((old.l & _FPU_MASK_ALL) != 0)
-    (void)__fe_mask_env ();
+  __TEST_AND_ENTER_NON_STOP (old.l, 0ULL);
 
   /* Put the new state in effect.  */
   fesetenv_register (new.fenv);

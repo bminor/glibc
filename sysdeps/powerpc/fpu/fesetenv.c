@@ -28,19 +28,8 @@ __fesetenv (const fenv_t *envp)
   new.fenv = *envp;
   old.fenv = fegetenv_status ();
 
-  /* If the old env has no enabled exceptions and the new env has any enabled
-     exceptions, then unmask SIGFPE in the MSR FE0/FE1 bits.  This will put the
-     hardware into "precise mode" and may cause the FPU to run slower on some
-     hardware.  */
-  if ((old.l & FPSCR_ENABLES_MASK) == 0 && (new.l & FPSCR_ENABLES_MASK) != 0)
-    (void) __fe_nomask_env_priv ();
-
-  /* If the old env had any enabled exceptions and the new env has no enabled
-     exceptions, then mask SIGFPE in the MSR FE0/FE1 bits.  This may allow the
-     FPU to run faster because it always takes the default action and can not
-     generate SIGFPE. */
-  if ((old.l & FPSCR_ENABLES_MASK) != 0 && (new.l & FPSCR_ENABLES_MASK) == 0)
-    (void)__fe_mask_env ();
+  __TEST_AND_EXIT_NON_STOP (old.l, new.l);
+  __TEST_AND_ENTER_NON_STOP (old.l, new.l);
 
   fesetenv_register (new.fenv);
 
