@@ -1,5 +1,11 @@
 2019-09-27  Paul A. Clarke  <pc@us.ibm.com>
 
+	* sysdeps/powerpc/fpu/fenv_libc.h (FPSCR_EXCEPTIONS_MASK):  New.
+	* sysdeps/powerpc/fpu/fenv_private.h (__libc_femergeenv_ppc):  Optimize
+	to write FPSCR control only, if exceptions have not changed.
+
+2019-09-27  Paul A. Clarke  <pc@us.ibm.com>
+
 	* sysdeps/powerpc/fpu/fenv_libc.h:
 	(__TEST_AND_ENTER_NON_STOP): New.
 	(__TEST_AND_EXIT_NON_STOP): New.

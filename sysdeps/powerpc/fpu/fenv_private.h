@@ -52,8 +52,20 @@ __libc_femergeenv_ppc (const fenv_t *envp, unsigned long long old_mask,
   __TEST_AND_EXIT_NON_STOP (old.l, new.l);
   __TEST_AND_ENTER_NON_STOP (old.l, new.l);
 
-  /* Atomically enable and raise (if appropriate) exceptions set in `new'.  */
-  fesetenv_register (new.fenv);
+  /* If requesting to keep status, replace control, and merge exceptions,
+     and exceptions haven't changed, we can just set new control instead
+     of the whole FPSCR.  */
+  if ((old_mask & (FPSCR_CONTROL_MASK|FPSCR_STATUS_MASK|FPSCR_EXCEPTIONS_MASK))
+      == (FPSCR_STATUS_MASK|FPSCR_EXCEPTIONS_MASK) &&
+      (new_mask & (FPSCR_CONTROL_MASK|FPSCR_STATUS_MASK|FPSCR_EXCEPTIONS_MASK))
+      == (FPSCR_CONTROL_MASK|FPSCR_EXCEPTIONS_MASK) &&
+      (old.l & FPSCR_EXCEPTIONS_MASK) == (new.l & FPSCR_EXCEPTIONS_MASK))
+  {
+    fesetenv_mode (new.fenv);
+  }
+  else
+    /* Atomically enable and raise (if appropriate) exceptions set in `new'.  */
+    fesetenv_register (new.fenv);
 
   return old.l;
 }
