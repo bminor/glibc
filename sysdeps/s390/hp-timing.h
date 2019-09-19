@@ -16,12 +16,12 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _HP_TIMING_H
+#ifndef _HP_TIMING_S390_H
+#define _HP_TIMING_S390_H	1
 
 /* The stckf instruction is available starting with z9-109 zarch CPUs.
    As there is no extra configure check for z9-109, the z10 one is used.  */
 #ifdef HAVE_S390_MIN_Z10_ZARCH_ASM_SUPPORT
-# define _HP_TIMING_H	1
 # include <hp-timing-common.h>
 
 /* We use 64 bit values for the times.
