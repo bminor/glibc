@@ -27,7 +27,7 @@ fesetmode (const femode_t *modep)
   /* Logic regarding enabled exceptions as in fesetenv.  */
 
   new.fenv = *modep;
-  old.fenv = fegetenv_status ();
+  old.fenv = fegetenv_control ();
   new.l = (new.l & ~FPSCR_STATUS_MASK) | (old.l & FPSCR_STATUS_MASK);
 
   if (old.l == new.l)

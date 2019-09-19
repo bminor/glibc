@@ -26,7 +26,7 @@ __fesetenv (const fenv_t *envp)
 
   /* get the currently set exceptions.  */
   new.fenv = *envp;
-  old.fenv = fegetenv_status ();
+  old.fenv = fegetenv_control ();
 
   __TEST_AND_EXIT_NON_STOP (old.l, new.l);
   __TEST_AND_ENTER_NON_STOP (old.l, new.l);

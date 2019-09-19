@@ -26,7 +26,7 @@ fedisableexcept (int excepts)
   int result, new;
 
   /* Get current exception mask to return.  */
-  fe.fenv = curr.fenv = fegetenv_status ();
+  fe.fenv = curr.fenv = fegetenv_control ();
   result = fenv_reg_to_exceptions (fe.l);
 
   if ((excepts & FE_ALL_INVALID) == FE_ALL_INVALID)

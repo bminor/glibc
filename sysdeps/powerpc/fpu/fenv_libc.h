@@ -60,7 +60,7 @@ extern const fenv_t *__fe_mask_env (void) attribute_hidden;
    'mffs' on architectures older than "power9" because the additional
    bits set for 'mffsl' are "don't care" for 'mffs'.  'mffs' is a superset
    of 'mffsl'.  */
-#define fegetenv_status()					\
+#define fegetenv_control()					\
   ({register double __fr;						\
     __asm__ __volatile__ (						\
       ".machine push; .machine \"power9\"; mffsl %0; .machine pop"	\
@@ -84,7 +84,7 @@ extern const fenv_t *__fe_mask_env (void) attribute_hidden;
     __fr.fenv;								\
   })
 
-/* Like fegetenv_status, but also sets the rounding mode.  */
+/* Like fegetenv_control, but also sets the rounding mode.  */
 #ifdef _ARCH_PWR9
 #define fegetenv_and_set_rn(rn) __fe_mffscrn (rn)
 #else
@@ -115,7 +115,7 @@ extern const fenv_t *__fe_mask_env (void) attribute_hidden;
 
 /* Set the last 2 nibbles of the FPSCR, which contain the
    exception enables and the rounding mode.
-   'fegetenv_status' retrieves these bits by reading the FPSCR.  */
+   'fegetenv_control' retrieves these bits by reading the FPSCR.  */
 #define fesetenv_mode(env) __builtin_mtfsf (0b00000011, (env));
 
 /* This very handy macro:
