@@ -1,3 +1,13 @@
+2019-09-19  Paul A. Clarke  <pc@us.ibm.com>
+    
+	* sysdeps/powerpc/fpu/fenv_libc.h (fegetenv_and_set_rn): New.
+	(__fe_mffscrn): New.
+	* sysdeps/powerpc/fpu/fenv_private.h (libc_feholdsetround_ppc_ctx):
+	Do not clear enable bits, remove obsolete code, use
+	fegetenv_and_set_rn.
+	(libc_feresetround_ppc): Remove obsolete code, use
+	fegetenv_and_set_rn.
+
 2019-08-28  Paul A. Clarke  <pc@us.ibm.com>
     
     	* sysdeps/powerpc/fpu/fenv_libc.h (fegetenv_status_ISA300):  Delete.
