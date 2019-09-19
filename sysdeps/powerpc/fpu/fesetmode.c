@@ -33,11 +33,8 @@ fesetmode (const femode_t *modep)
   if (old.l == new.l)
     return 0;
 
-  if ((old.l & FPSCR_ENABLES_MASK) == 0 && (new.l & FPSCR_ENABLES_MASK) != 0)
-    (void) __fe_nomask_env_priv ();
-
-  if ((old.l & FPSCR_ENABLES_MASK) != 0 && (new.l & FPSCR_ENABLES_MASK) == 0)
-    (void) __fe_mask_env ();
+  __TEST_AND_EXIT_NON_STOP (old.l, new.l);
+  __TEST_AND_ENTER_NON_STOP (old.l, new.l);
 
   fesetenv_mode (new.fenv);
   return 0;

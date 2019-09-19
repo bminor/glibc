@@ -43,8 +43,7 @@ fedisableexcept (int excepts)
   if (fe.l != curr.l)
     fesetenv_mode (fe.fenv);
 
-  if (new == 0 && result != 0)
-    (void)__fe_mask_env ();
+  __TEST_AND_ENTER_NON_STOP (-1ULL, fe.l);
 
   return result;
 }

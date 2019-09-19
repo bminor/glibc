@@ -43,8 +43,7 @@ feenableexcept (int excepts)
   if (fe.l != curr.l)
     fesetenv_mode (fe.fenv);
 
-  if (new != 0 && result == 0)
-    (void) __fe_nomask_env_priv ();
+  __TEST_AND_EXIT_NON_STOP (0ULL, fe.l);
 
   return result;
 }
