@@ -1,3 +1,77 @@
+2019-10-01  Zack Weinberg  <zackw@panix.com>
+	    Alistair Francis <alistair.francis@wdc.com>
+
+	* string/endian.h: Unconditionally define LITTLE_ENDIAN,
+	BIG_ENDIAN, PDP_ENDIAN, and BYTE_ORDER.  Condition byteswapping
+	macros only on !__ASSEMBLER__.  Move the definitions of
+	__BIG_ENDIAN, __LITTLE_ENDIAN, __PDP_ENDIAN, __FLOAT_WORD_ORDER,
+	and __LONG_LONG_PAIR to...
+	* string/bits/endian.h: ...this new file, which includes
+	the renamed header bits/endianness.h for the definition of
+	__BYTE_ORDER and possibly __FLOAT_WORD_ORDER.
+
+	* string/Makefile: Install bits/endianness.h.
+	* include/bits/endian.h: New wrapper.
+
+	* bits/endian.h: Rename to bits/endianness.h.
+	Add multiple-include guard.  Rewrite the comment explaining what
+	the machine-specific variants of this file should do.
+
+	* sysdeps/unix/sysv/linux/ia64/bits/endian.h:
+	Move to sysdeps/ia64.
+
+	* sysdeps/aarch64/bits/endian.h
+	* sysdeps/alpha/bits/endian.h
+	* sysdeps/arm/bits/endian.h
+	* sysdeps/csky/bits/endian.h
+	* sysdeps/hppa/bits/endian.h
+	* sysdeps/ia64/bits/endian.h
+	* sysdeps/m68k/bits/endian.h
+	* sysdeps/microblaze/bits/endian.h
+	* sysdeps/mips/bits/endian.h
+	* sysdeps/nios2/bits/endian.h
+	* sysdeps/powerpc/bits/endian.h
+	* sysdeps/riscv/bits/endian.h
+	* sysdeps/s390/bits/endian.h
+	* sysdeps/sh/bits/endian.h
+	* sysdeps/sparc/bits/endian.h
+	* sysdeps/x86/bits/endian.h:
+	Rename to endianness.h; canonicalize form of file; remove
+	redundant definitions of __FLOAT_WORD_ORDER.
+
+	* sysdeps/powerpc/bits/endianness.h: Remove logic to check for
+	broken compilers.
+
+	* ctype/ctype.h
+	* sysdeps/aarch64/nptl/bits/pthreadtypes-arch.h
+	* sysdeps/arm/nptl/bits/pthreadtypes-arch.h
+	* sysdeps/csky/nptl/bits/pthreadtypes-arch.h
+	* sysdeps/ia64/ieee754.h
+	* sysdeps/ieee754/ieee754.h
+	* sysdeps/ieee754/ldbl-128/ieee754.h
+	* sysdeps/ieee754/ldbl-128ibm/ieee754.h
+	* sysdeps/m68k/nptl/bits/pthreadtypes-arch.h
+	* sysdeps/microblaze/nptl/bits/pthreadtypes-arch.h
+	* sysdeps/mips/ieee754/ieee754.h
+	* sysdeps/mips/nptl/bits/pthreadtypes-arch.h
+	* sysdeps/nios2/nptl/bits/pthreadtypes-arch.h
+	* sysdeps/nptl/pthread.h
+	* sysdeps/riscv/nptl/bits/pthreadtypes-arch.h
+	* sysdeps/sh/nptl/bits/pthreadtypes-arch.h
+	* sysdeps/sparc/sparc32/ieee754.h
+	* sysdeps/unix/sysv/linux/generic/bits/stat.h
+	* sysdeps/unix/sysv/linux/generic/bits/statfs.h
+	* sysdeps/unix/sysv/linux/sys/acct.h
+	* wctype/bits/wctype-wchar.h:
+	Include bits/endian.h, not endian.h.
+
+	* sysdeps/unix/sysv/linux/hppa/pthread.h: Don’t include endian.h.
+
+	* sysdeps/mips/ieee754/ieee754.h: Use __LDBL_MANT_DIG__
+	in ifdefs, instead of LDBL_MANT_DIG.  Only include float.h
+	when __LDBL_MANT_DIG__ is not predefined, in which case
+	define __LDBL_MANT_DIG__ to equal LDBL_MANT_DIG.
+
 2019-09-17  Mike FABIAN  <mfabian@redhat.com>
 
 	* localedata/locales/az_AZ: Make lang_name agree with CLDR

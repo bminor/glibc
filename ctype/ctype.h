@@ -36,7 +36,7 @@ __BEGIN_DECLS
    endian).  We define the bit value interpretations here dependent on the
    machine's byte order.  */
 
-# include <endian.h>
+# include <bits/endian.h>
 # if __BYTE_ORDER == __BIG_ENDIAN
 #  define _ISbit(bit)	(1 << (bit))
 # else /* __BYTE_ORDER == __LITTLE_ENDIAN */

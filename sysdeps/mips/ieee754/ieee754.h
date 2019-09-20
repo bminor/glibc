@@ -16,13 +16,16 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _IEEE754_H
-
 #define _IEEE754_H 1
+
 #include <features.h>
 
-#include <endian.h>
+#include <bits/endian.h>
 
-#include <float.h>
+#ifndef __LDBL_MANT_DIG__
+# include <float.h>
+# define __LDBL_MANT_DIG__ __LDBL_MANT_DIG__
+#endif
 
 __BEGIN_DECLS
 
@@ -127,7 +130,7 @@ union ieee754_double
 
 #define IEEE754_DOUBLE_BIAS	0x3ff /* Added to exponent.  */
 
-#if LDBL_MANT_DIG == 113
+#if __LDBL_MANT_DIG__ == 113
 
 union ieee854_long_double
   {
@@ -184,7 +187,7 @@ union ieee854_long_double
 
 #define IEEE854_LONG_DOUBLE_BIAS 0x3fff /* Added to exponent.  */
 
-#elif LDBL_MANT_DIG == 64
+#elif __LDBL_MANT_DIG__ == 64
 
 union ieee854_long_double
   {
@@ -253,7 +256,7 @@ union ieee854_long_double
 
 #define IEEE854_LONG_DOUBLE_BIAS 0x3fff
 
-#elif LDBL_MANT_DIG == 53
+#elif __LDBL_MANT_DIG__ == 53
 
 union ieee854_long_double
   {
@@ -316,7 +319,7 @@ union ieee854_long_double
 
 #define IEEE854_LONG_DOUBLE_BIAS	0x3ff /* Added to exponent.  */
 
-#endif /* LDBL_MANT_DIG == 53 */
+#endif /* __LDBL_MANT_DIG__ == 53 */
 
 __END_DECLS
 

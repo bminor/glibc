@@ -19,7 +19,6 @@
 #define _PTHREAD_H	1
 
 #include <features.h>
-#include <endian.h>
 #include <sched.h>
 #include <time.h>
 

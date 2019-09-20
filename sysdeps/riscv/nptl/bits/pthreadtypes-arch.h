@@ -19,7 +19,7 @@
 #ifndef _BITS_PTHREADTYPES_ARCH_H
 #define _BITS_PTHREADTYPES_ARCH_H	1
 
-#include <endian.h>
+#include <bits/endian.h>
 
 #if __riscv_xlen == 64
 # define __SIZEOF_PTHREAD_ATTR_T 		56

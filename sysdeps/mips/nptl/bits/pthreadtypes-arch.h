@@ -19,7 +19,7 @@
 #ifndef _BITS_PTHREADTYPES_ARCH_H
 #define _BITS_PTHREADTYPES_ARCH_H	1
 
-#include <endian.h>
+#include <bits/endian.h>
 
 #if _MIPS_SIM == _ABI64
 # define __SIZEOF_PTHREAD_ATTR_T 56

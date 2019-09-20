@@ -19,7 +19,7 @@
 #ifndef _BITS_PTHREADTYPES_ARCH_H
 # define _BITS_PTHREADTYPES_ARCH_H	1
 
-# include <endian.h>
+# include <bits/endian.h>
 
 # define __SIZEOF_PTHREAD_ATTR_T         36
 # define __SIZEOF_PTHREAD_MUTEX_T        24

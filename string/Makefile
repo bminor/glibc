@@ -25,7 +25,8 @@ include ../Makeconfig
 headers		:= string.h bits/string_fortified.h			\
 		   strings.h bits/strings_fortified.h			\
 		   byteswap.h bits/byteswap.h				\
-		   endian.h bits/endian.h bits/uintn-identity.h		\
+		   endian.h bits/endian.h bits/endianness.h		\
+		   bits/uintn-identity.h				\
 		   memory.h argz.h envz.h
 
 routines	:= strcat strchr strcmp strcoll strcpy strcspn		\

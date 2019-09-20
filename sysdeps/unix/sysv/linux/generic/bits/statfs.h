@@ -20,7 +20,7 @@
 # error "Never include <bits/statfs.h> directly; use <sys/statfs.h> instead."
 #endif
 
-#include <endian.h>
+#include <bits/endian.h>
 #include <bits/types.h>
 #include <bits/wordsize.h>
 

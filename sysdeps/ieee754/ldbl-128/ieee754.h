@@ -16,11 +16,11 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _IEEE754_H
-
 #define _IEEE754_H 1
+
 #include <features.h>
 
-#include <endian.h>
+#include <bits/endian.h>
 
 __BEGIN_DECLS
 

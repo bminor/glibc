@@ -23,7 +23,7 @@
 #ifndef _BITS_STAT_H
 #define _BITS_STAT_H	1
 
-#include <endian.h>
+#include <bits/endian.h>
 #include <bits/wordsize.h>
 
 /* 64-bit libc uses the kernel's 'struct stat', accessed via the

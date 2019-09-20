@@ -20,7 +20,7 @@
 
 #include <sys/types.h>
 #include <stdint.h>
-#include <endian.h>
+#include <bits/endian.h>
 #include <bits/types/time_t.h>
 
 __BEGIN_DECLS

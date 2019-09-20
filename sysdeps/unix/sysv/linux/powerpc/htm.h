@@ -50,7 +50,7 @@
 
 #else
 
-#include <endian.h>
+#include <bits/endian.h>
 
 /* Official HTM intrinsics interface matching GCC, but works
    on older GCC compatible compilers and binutils.
