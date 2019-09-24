@@ -187,7 +187,163 @@ $(common-objpfx)testrun.sh: $(common-objpfx)config.make \
 	mv -f $@T $@
 postclean-generated += testrun.sh
 
-others: $(common-objpfx)testrun.sh
+define debugglibc
+#!/bin/bash
+
+SOURCE_DIR="$(CURDIR)"
+BUILD_DIR="$(common-objpfx)"
+CMD_FILE="$(common-objpfx)debugglibc.gdb"
+DIRECT=true
+SYMBOLSFILE=true
+unset TESTCASE
+unset BREAKPOINTS
+unset ENVVARS
+
+usage()
+{
+cat << EOF
+Usage: $$0 [OPTIONS] <testcase>
+
+  where <testcase> is the path to the program being tested.
+
+Options:
+
+  -h, --help
+	Prints this message and leaves.
+
+  The following options require one argument:
+
+  -b, --breakpoint
+	Breakpoints to set at the beginning of the execution
+	(each breakpoint demands its own -b option, e.g. -b foo -b bar)
+  -e, --environment-variable
+	Environment variables to be set with 'exec-wrapper env' in GDB
+	(each environment variable demands its own -e option, e.g.
+	-e FOO=foo -e BAR=bar)
+
+  The following options do not take arguments:
+
+  -i, --no-direct
+	Selects whether to pass the flag --direct to gdb.
+	Required for glibc test cases and not allowed for non-glibc tests.
+	Default behaviour is to pass the flag --direct to gdb.
+  -s, --no-symbols-file
+	Do not tell GDB to load debug symbols from the testcase.
+EOF
+}
+
+# Parse input options
+while [[ $$# > 0 ]]
+do
+  key="$$1"
+  case $$key in
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    -b|--breakpoint)
+      BREAKPOINTS="break $$2\n$$BREAKPOINTS"
+      shift
+      ;;
+    -e|--environment-variable)
+      ENVVARS="$$2 $$ENVVARS"
+      shift
+      ;;
+    -i|--no-direct)
+      DIRECT=false
+      ;;
+    -s|--no-symbols-file)
+      SYMBOLSFILE=false
+      ;;
+    *)
+      TESTCASE=$$1
+      ;;
+  esac
+  shift
+done
+
+# Check for required argument
+if [ ! -v TESTCASE ]
+then
+  usage
+  exit 1
+fi
+
+# Expand environment setup command
+if [ -v ENVVARS ]
+then
+  ENVVARSCMD="set exec-wrapper env $$ENVVARS"
+fi
+
+# Expand direct argument
+if [ "$$DIRECT" == true ]
+then
+  DIRECT="--direct"
+else
+  DIRECT=""
+fi
+
+# Expand symbols loading command
+if [ "$$SYMBOLSFILE" == true ]
+then
+  SYMBOLSFILE="add-symbol-file $${TESTCASE}"
+else
+  SYMBOLSFILE=""
+fi
+
+# GDB commands template
+template ()
+{
+cat <<EOF
+set environment C -E -x c-header
+set auto-load safe-path $${BUILD_DIR}/nptl_db:\$$debugdir:\$$datadir/auto-load
+set libthread-db-search-path $${BUILD_DIR}/nptl_db
+__ENVVARS__
+__SYMBOLSFILE__
+break _dl_start_user
+run --library-path $(rpath-link):$${BUILD_DIR}/nptl_db \
+__TESTCASE__ __DIRECT__
+__BREAKPOINTS__
+EOF
+}
+
+# Generate the commands file for gdb initialization
+template | sed \
+  -e "s|__ENVVARS__|$$ENVVARSCMD|" \
+  -e "s|__SYMBOLSFILE__|$$SYMBOLSFILE|" \
+  -e "s|__TESTCASE__|$$TESTCASE|" \
+  -e "s|__DIRECT__|$$DIRECT|" \
+  -e "s|__BREAKPOINTS__|$$BREAKPOINTS|" \
+  > $$CMD_FILE
+
+echo
+echo "Debugging glibc..."
+echo "Build directory  : $$BUILD_DIR"
+echo "Source directory : $$SOURCE_DIR"
+echo "GLIBC Testcase   : $$TESTCASE"
+echo "GDB Commands     : $$CMD_FILE"
+echo "Env vars         : $$ENVVARS"
+echo
+
+# Start the test case debugging in two steps:
+#   1. the following command invokes gdb to run the loader;
+#   2. the commands file tells the loader to run the test case.
+gdb -q \
+  -x $${CMD_FILE} \
+  -d $${SOURCE_DIR} \
+  $${BUILD_DIR}/elf/ld.so
+endef
+
+# This is another handy script for debugging dynamically linked program
+# against the current libc build for testing.
+$(common-objpfx)debugglibc.sh: $(common-objpfx)config.make \
+			    $(..)Makeconfig $(..)Makefile
+	$(file >$@T,$(debugglibc))
+	chmod a+x $@T
+	mv -f $@T $@
+postclean-generated += debugglibc.sh debugglibc.gdb
+
+others: $(common-objpfx)testrun.sh $(common-objpfx)debugglibc.sh
 
 # Makerules creates a file `stubs' in each subdirectory, which
 # contains `#define __stub_FUNCTION' for each function defined in that
