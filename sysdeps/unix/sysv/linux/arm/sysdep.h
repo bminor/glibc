@@ -392,8 +392,8 @@ __local_syscall_error:						\
 #define VDSO_HASH  61765110
 
 /* List of system calls which are supported as vsyscalls.  */
-#define HAVE_CLOCK_GETTIME_VSYSCALL	"__vdso_gettimeofday"
-#define HAVE_GETTIMEOFDAY_VSYSCALL	"__vdso_clock_gettime"
+#define HAVE_CLOCK_GETTIME_VSYSCALL	"__vdso_clock_gettime"
+#define HAVE_GETTIMEOFDAY_VSYSCALL	"__vdso_gettimeofday"
 
 #define LOAD_ARGS_0()
 #define ASM_ARGS_0

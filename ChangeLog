@@ -1,5 +1,18 @@
+2019-09-24  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/arm/sysdep.h
+	(HAVE_CLOCK_GETTIME_VSYSCALL): Define to "__vdso_clock_gettime",
+	not "__vdso_gettimeofday".
+	(HAVE_GETTIMEOFDAY_VSYSCALL): Define to "__vdso_gettimeofday", not
+	"__vdso_clock_gettime".
+	* sysdeps/unix/sysv/linux/mips/sysdep.h
+	(HAVE_CLOCK_GETTIME_VSYSCALL): Define to "__vdso_clock_gettime",
+	not "__vdso_gettimeofday".
+	(HAVE_GETTIMEOFDAY_VSYSCALL): Define to "__vdso_gettimeofday", not
+	"__vdso_clock_gettime".
+
 2019-09-19  Paul A. Clarke  <pc@us.ibm.com>
-    
+
 	* sysdeps/powerpc/fpu/fenv_libc.h (fegetenv_and_set_rn): New.
 	(__fe_mffscrn): New.
 	* sysdeps/powerpc/fpu/fenv_private.h (libc_feholdsetround_ppc_ctx):
