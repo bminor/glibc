@@ -23,6 +23,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <sys/time.h>
+#include <libc-diag.h>
 
 int __inet6_scopeid_pton (const struct in6_addr *address,
                           const char *scope, uint32_t *result);
@@ -96,6 +97,16 @@ __deadline_is_infinite (struct deadline deadline)
   return deadline.absolute.tv_nsec < 0;
 }
 
+/* GCC 8.3 and 9.2 both incorrectly report total_deadline
+ * (from sunrpc/clnt_udp.c) as maybe-uninitialized when tv_sec is 8 bytes
+ * (64-bits) wide on 32-bit systems. We have to set -Wmaybe-uninitialized
+ * here as it won't fix the error in sunrpc/clnt_udp.c.
+ * A GCC bug has been filed here:
+ *    https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91691
+ */
+DIAG_PUSH_NEEDS_COMMENT;
+DIAG_IGNORE_NEEDS_COMMENT (9, "-Wmaybe-uninitialized");
+
 /* Return true if the current time is at the deadline or past it.  */
 static inline bool
 __deadline_elapsed (struct deadline_current_time current,
@@ -119,6 +130,8 @@ __deadline_first (struct deadline left, struct deadline right)
   else
     return right;
 }
+
+DIAG_POP_NEEDS_COMMENT;
 
 /* Add TV to the current time and return it.  Returns a special
    infinite absolute deadline on overflow.  */
