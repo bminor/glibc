@@ -125,6 +125,14 @@ extern __time64_t __timegm64 (struct tm *__tp) __THROW;
 libc_hidden_proto (__timegm64)
 #endif
 
+#if __TIMESIZE == 64
+# define __clock_settime64 __clock_settime
+#else
+extern int __clock_settime64 (clockid_t clock_id,
+                              const struct __timespec64 *tp);
+libc_hidden_proto (__clock_settime64)
+#endif
+
 /* Compute the `struct tm' representation of T,
    offset OFFSET seconds east of UTC,
    and store year, yday, mon, mday, wday, hour, min, sec into *TP.

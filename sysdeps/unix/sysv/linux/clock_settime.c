@@ -20,11 +20,9 @@
 #include <time.h>
 #include <shlib-compat.h>
 
-#include "kernel-posix-cpu-timers.h"
-
 /* Set CLOCK to value TP.  */
 int
-__clock_settime (clockid_t clock_id, const struct timespec *tp)
+__clock_settime64 (clockid_t clock_id, const struct __timespec64 *tp)
 {
   /* Make sure the time cvalue is OK.  */
   if (tp->tv_nsec < 0 || tp->tv_nsec >= 1000000000)
@@ -33,8 +31,38 @@ __clock_settime (clockid_t clock_id, const struct timespec *tp)
       return -1;
     }
 
-  return INLINE_SYSCALL_CALL (clock_settime, clock_id, tp);
+#ifdef __ASSUME_TIME64_SYSCALLS
+# ifndef __NR_clock_settime64
+#  define __NR_clock_settime64 __NR_clock_settime
+# endif
+  return INLINE_SYSCALL_CALL (clock_settime64, clock_id, tp);
+#else
+# ifdef __NR_clock_settime64
+  int ret = INLINE_SYSCALL_CALL (clock_settime64, clock_id, tp);
+  if (ret == 0 || errno != ENOSYS)
+    return ret;
+# endif
+  if (! in_time_t_range (tp->tv_sec))
+    {
+      __set_errno (EOVERFLOW);
+      return -1;
+    }
+
+  struct timespec ts32 = valid_timespec64_to_timespec (*tp);
+  return INLINE_SYSCALL_CALL (clock_settime, clock_id, &ts32);
+#endif
 }
+
+#if __TIMESIZE != 64
+int
+__clock_settime (clockid_t clock_id, const struct timespec *tp)
+{
+  struct __timespec64 ts64 = valid_timespec_to_timespec64 (*tp);
+
+  return __clock_settime64 (clock_id, &ts64);
+}
+#endif
+
 libc_hidden_def (__clock_settime)
 
 versioned_symbol (libc, __clock_settime, clock_settime, GLIBC_2_17);

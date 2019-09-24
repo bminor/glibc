@@ -1,3 +1,14 @@
+2019-10-10  Łukasz Majewski <lukma@denx.de>
+
+	* include/time.h (__clock_settime64):
+	Add __clock_settime alias according to __TIMESIZE define
+	* sysdeps/unix/sysv/linux/clock_settime.c (__clock_settime):
+	Refactor this function to be used only on 32 bit machines as a
+	wrapper on __clock_settime64.
+	* sysdeps/unix/sysv/linux/clock_settime.c (__clock_settime64): Add
+	* sysdeps/unix/sysv/linux/clock_settime.c (__clock_settime64):
+	Use clock_settime64 kernel syscall (available from 5.1+ Linux)
+
 2019-10-09  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* include/spawn.h (__posix_spawn_file_actions_addopen): New
