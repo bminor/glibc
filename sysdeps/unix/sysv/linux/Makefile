@@ -57,7 +57,7 @@ tests += tst-clone tst-clone2 tst-clone3 tst-fanotify tst-personality \
 	 tst-tgkill
 tests-internal += tst-ofdlocks-compat tst-sigcontext-get_pc
 
-CFLAGS-tst-sigcontextinfo-get_pc.c = -fasynchronous-unwind-tables
+CFLAGS-tst-sigcontext-get_pc.c = -fasynchronous-unwind-tables
 
 # Generate the list of SYS_* macros for the system calls (__NR_*
 # macros).  The file syscall-names.list contains all possible system

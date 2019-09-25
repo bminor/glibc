@@ -1,3 +1,9 @@
+2019-09-25  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/Makefile
+	(CFLAGS-tst-sigcontextinfo-get_pc.c): Rename to
+	CFLAGS-tst-sigcontext-get_pc.c.
+
 2019-09-24  Alistair Francis  <alistair.francis@wdc.com>
     
 	* inet/net-internal.h: Fix uninitalised clntudp_call() variable.
