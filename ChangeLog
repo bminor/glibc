@@ -1,3 +1,8 @@
+2019-09-26  Siddhesh Poyarekar  <siddhesh@gotplt.org>
+
+	* scripts/vcs_to_changelog/misc_util.py (decode): Remove latin1
+	from codecs.
+
 2019-09-25  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* rt/Makefile (CFLAGS-clock_nanosleep.c): Move to ...

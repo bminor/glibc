@@ -40,7 +40,7 @@ def decode(string):
     Decode a string read from the source file.  The multiple attempts are needed
     due to the presence of the page break characters and some tests in locales.
     '''
-    codecs = ['utf8', 'latin1', 'cp1252']
+    codecs = ['utf8', 'cp1252']
 
     for i in codecs:
         try:
