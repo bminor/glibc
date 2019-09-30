@@ -1,3 +1,12 @@
+2019-09-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/bits/mman.h [__USE_MISC]
+	(MAP_SYNC): New macro.
+	* sysdeps/unix/sysv/linux/sparc/bits/mman.h [__USE_MISC]
+	(MAP_SYNC): Likewise.
+	* sysdeps/unix/sysv/linux/tst-mman-consts.py (main): Update Linux
+	kernel version number to 5.3.
+
 2019-09-27  Paul A. Clarke  <pc@us.ibm.com>
 
 	* sysdeps/powerpc/fpu/fenv_libc.h (fesetenv_mode): Rename to
