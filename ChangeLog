@@ -1,3 +1,8 @@
+2019-09-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/build-many-glibcs.py (Context.checkout): Default
+	binutils version to 2.33 branch.
+
 2019-10-01  Lukasz Majewski <lukma@denx.de>
 
 	* include/time.h (valid_timeval_to_timespec64): Add.
