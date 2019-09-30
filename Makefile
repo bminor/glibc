@@ -26,8 +26,17 @@ include Makeconfig
 
 
 # This is the default target; it makes everything except the tests.
-.PHONY: all
-all: lib others
+.PHONY: all help minihelp
+all: minihelp lib others
+
+help:
+	@sed '0,/^help-starts-here$$/d' Makefile.help
+
+minihelp:
+	@echo
+	@echo type \"make help\" for help with common glibc makefile targets
+	@echo
+
 
 ifneq ($(AUTOCONF),no)
 
@@ -669,3 +678,12 @@ FORCE:
 
 iconvdata/% localedata/% po/%: FORCE
 	$(MAKE) $(PARALLELMFLAGS) -C $(@D) $(@F)
+
+# Convenience target to rerun one test, from the top of the build tree
+# Example: make test t=wcsmbs/test-wcsnlen
+.PHONY: test
+test :
+	@-rm -f $(objpfx)$t.out
+	$(MAKE) subdir=$(dir $t) -C $(dir $t) ..=../ $(objpfx)$t.out
+	@cat $(objpfx)$t.test-result
+	@cat $(objpfx)$t.out
