@@ -1,3 +1,8 @@
+2019-10-02  Arjun Shankar  <arjun@redhat.com>
+
+	debugglibc.sh: Implement program arguments
+	* Makefile (debugglibc): Change variable definition.
+
 2019-10-01  Alistair Francis  <alistair.francis@wdc.com>
 
 	 * time/bits/types/struct_timespec.h: Add padding for the timespec if

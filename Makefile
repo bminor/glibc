@@ -202,9 +202,12 @@ unset ENVVARS
 usage()
 {
 cat << EOF
-Usage: $$0 [OPTIONS] <testcase>
+Usage: $$0 [OPTIONS] <program>
 
-  where <testcase> is the path to the program being tested.
+   Or: $$0 [OPTIONS] -- <program> [<args>]...
+
+  where <program> is the path to the program being tested,
+  and <args> are the arguments to be passed to it.
 
 Options:
 
@@ -224,11 +227,13 @@ Options:
   The following options do not take arguments:
 
   -i, --no-direct
-	Selects whether to pass the flag --direct to gdb.
-	Required for glibc test cases and not allowed for non-glibc tests.
-	Default behaviour is to pass the flag --direct to gdb.
+	Selects whether to pass the --direct flag to the program.
+	--direct is useful when debugging glibc test cases. It inhibits the
+	tests from forking and executing in a subprocess.
+	Default behaviour is to pass the --direct flag, except when the
+	program is run with user specified arguments using the "--" separator.
   -s, --no-symbols-file
-	Do not tell GDB to load debug symbols from the testcase.
+	Do not tell GDB to load debug symbols from the program.
 EOF
 }
 
@@ -255,8 +260,17 @@ do
     -s|--no-symbols-file)
       SYMBOLSFILE=false
       ;;
+    --)
+      shift
+      TESTCASE=$$1
+      COMMANDLINE="$$@"
+      # Don't add --direct when user specifies program arguments
+      DIRECT=false
+      break
+      ;;
     *)
       TESTCASE=$$1
+      COMMANDLINE=$$TESTCASE
       ;;
   esac
   shift
@@ -302,7 +316,7 @@ __ENVVARS__
 __SYMBOLSFILE__
 break _dl_start_user
 run --library-path $(rpath-link):$${BUILD_DIR}/nptl_db \
-__TESTCASE__ __DIRECT__
+__COMMANDLINE__ __DIRECT__
 __BREAKPOINTS__
 EOF
 }
@@ -311,7 +325,7 @@ EOF
 template | sed \
   -e "s|__ENVVARS__|$$ENVVARSCMD|" \
   -e "s|__SYMBOLSFILE__|$$SYMBOLSFILE|" \
-  -e "s|__TESTCASE__|$$TESTCASE|" \
+  -e "s|__COMMANDLINE__|$$COMMANDLINE|" \
   -e "s|__DIRECT__|$$DIRECT|" \
   -e "s|__BREAKPOINTS__|$$BREAKPOINTS|" \
   > $$CMD_FILE
