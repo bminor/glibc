@@ -34,6 +34,20 @@
 #include <fcntl.h>
 #include <libc-diag.h>
 
+/* This file tests a range of corner cases of string functions,
+   including cases where truncation occurs or where sizes specified
+   are larger than the actual buffers, which result in various
+   warnings.  */
+DIAG_IGNORE_NEEDS_COMMENT (8, "-Warray-bounds");
+DIAG_IGNORE_NEEDS_COMMENT (5.0, "-Wmemset-transposed-args");
+#if __GNUC_PREREQ (7, 0)
+DIAG_IGNORE_NEEDS_COMMENT (9, "-Wrestrict");
+DIAG_IGNORE_NEEDS_COMMENT (7, "-Wstringop-overflow=");
+#endif
+#if __GNUC_PREREQ (8, 0)
+DIAG_IGNORE_NEEDS_COMMENT (8, "-Wstringop-truncation");
+#endif
+
 
 #define	STREQ(a, b)	(strcmp((a), (b)) == 0)
 
@@ -264,15 +278,8 @@ test_stpncpy (void)
 {
   it = "stpncpy";
   memset (one, 'x', sizeof (one));
-  DIAG_PUSH_NEEDS_COMMENT;
-#if __GNUC_PREREQ (8, 0)
-  /* GCC 8 warns about stpncpy truncating output; this is deliberately
-     tested here.  */
-  DIAG_IGNORE_NEEDS_COMMENT (8, "-Wstringop-truncation");
-#endif
   check (stpncpy (one, "abc", 2) == one + 2, 1);
   check (stpncpy (one, "abc", 3) == one + 3, 2);
-  DIAG_POP_NEEDS_COMMENT;
   check (stpncpy (one, "abc", 4) == one + 3, 3);
   check (one[3] == '\0' && one[4] == 'x', 4);
   check (stpncpy (one, "abcd", 5) == one + 4, 5);
@@ -360,106 +367,41 @@ test_strncat (void)
      mechanism.  */
   it = "strncat";
   (void) strcpy (one, "ijk");
-  DIAG_PUSH_NEEDS_COMMENT;
-#if __GNUC_PREREQ (7, 0)
-  /* GCC 7 warns about the size passed to strncat being larger than
-     the size of the buffer; this is deliberately tested here..  */
-  DIAG_IGNORE_NEEDS_COMMENT (7, "-Wstringop-overflow=");
-#endif
   check (strncat (one, "lmn", 99) == one, 1);	/* Returned value. */
-  DIAG_POP_NEEDS_COMMENT;
   equal (one, "ijklmn", 2);		/* Basic test. */
 
   (void) strcpy (one, "x");
-  DIAG_PUSH_NEEDS_COMMENT;
-#if __GNUC_PREREQ (7, 0)
-  /* GCC 7 warns about the size passed to strncat being larger than
-     the size of the buffer; this is deliberately tested here..  */
-  DIAG_IGNORE_NEEDS_COMMENT (7, "-Wstringop-overflow=");
-#endif
   (void) strncat (one, "yz", 99);
-  DIAG_POP_NEEDS_COMMENT;
   equal (one, "xyz", 3);		/* Writeover. */
   equal (one+4, "mn", 4);		/* Wrote too much? */
 
   (void) strcpy (one, "gh");
   (void) strcpy (two, "ef");
-  DIAG_PUSH_NEEDS_COMMENT;
-#if __GNUC_PREREQ (7, 0)
-  /* GCC 7 warns about the size passed to strncat being larger than
-     the size of the buffer; this is deliberately tested here; GCC 8
-     gives a -Warray-bounds warning about this.  */
-  DIAG_IGNORE_NEEDS_COMMENT (7, "-Wstringop-overflow=");
-#endif
-  DIAG_IGNORE_NEEDS_COMMENT (8, "-Warray-bounds");
   (void) strncat (one, two, 99);
-  DIAG_POP_NEEDS_COMMENT;
   equal (one, "ghef", 5);			/* Basic test encore. */
   equal (two, "ef", 6);			/* Stomped on source? */
 
   (void) strcpy (one, "");
-  DIAG_PUSH_NEEDS_COMMENT;
-#if __GNUC_PREREQ (7, 0)
-  /* GCC 7 warns about the size passed to strncat being larger than
-     the size of the buffer; this is deliberately tested here..  */
-  DIAG_IGNORE_NEEDS_COMMENT (7, "-Wstringop-overflow=");
-#endif
   (void) strncat (one, "", 99);
-  DIAG_POP_NEEDS_COMMENT;
   equal (one, "", 7);			/* Boundary conditions. */
   (void) strcpy (one, "ab");
-  DIAG_PUSH_NEEDS_COMMENT;
-#if __GNUC_PREREQ (7, 0)
-  /* GCC 7 warns about the size passed to strncat being larger than
-     the size of the buffer; this is deliberately tested here..  */
-  DIAG_IGNORE_NEEDS_COMMENT (7, "-Wstringop-overflow=");
-#endif
   (void) strncat (one, "", 99);
-  DIAG_POP_NEEDS_COMMENT;
   equal (one, "ab", 8);
   (void) strcpy (one, "");
-  DIAG_PUSH_NEEDS_COMMENT;
-#if __GNUC_PREREQ (7, 0)
-  /* GCC 7 warns about the size passed to strncat being larger than
-     the size of the buffer; this is deliberately tested here..  */
-  DIAG_IGNORE_NEEDS_COMMENT (7, "-Wstringop-overflow=");
-#endif
   (void) strncat (one, "cd", 99);
-  DIAG_POP_NEEDS_COMMENT;
   equal (one, "cd", 9);
 
   (void) strcpy (one, "ab");
-  DIAG_PUSH_NEEDS_COMMENT;
-#if __GNUC_PREREQ (8, 0)
-  /* GCC 8 warns about strncat truncating output; this is deliberately
-     tested here.  */
-  DIAG_IGNORE_NEEDS_COMMENT (8, "-Wstringop-truncation");
-#endif
   (void) strncat (one, "cdef", 2);
-  DIAG_POP_NEEDS_COMMENT;
   equal (one, "abcd", 10);			/* Count-limited. */
 
   (void) strncat (one, "gh", 0);
   equal (one, "abcd", 11);			/* Zero count. */
 
-  DIAG_PUSH_NEEDS_COMMENT;
-#if __GNUC_PREREQ (7, 0)
-  /* GCC 8 warns about strncat bound equal to source length; this is
-     deliberately tested here.  */
-  DIAG_IGNORE_NEEDS_COMMENT (8, "-Wstringop-overflow=");
-#endif
   (void) strncat (one, "gh", 2);
-  DIAG_POP_NEEDS_COMMENT;
   equal (one, "abcdgh", 12);		/* Count and length equal. */
 
-  DIAG_PUSH_NEEDS_COMMENT;
-#if __GNUC_PREREQ (7, 0)
-  /* GCC 7 warns about the size passed to strncat being larger than
-     the size of the buffer; this is deliberately tested here..  */
-  DIAG_IGNORE_NEEDS_COMMENT (7, "-Wstringop-overflow=");
-#endif
   (void) strncat (one, "ij", (size_t)-1);	/* set sign bit in count */
-  DIAG_POP_NEEDS_COMMENT;
   equal (one, "abcdghij", 13);
 
   int ntest = 14;
@@ -478,22 +420,8 @@ test_strncat (void)
 	    buf1[n2 + n3] = '\0';
 	    strcpy (buf2 + n1, "123");
 
-	    DIAG_PUSH_NEEDS_COMMENT;
-#if __GNUC_PREREQ (7, 0)
-	    /* GCC 7 warns about the size passed to strncat being
-	       larger than the size of the buffer; this is
-	       deliberately tested here; GCC 8 gives a -Warray-bounds
-	       warning about this.  */
-	    DIAG_IGNORE_NEEDS_COMMENT (7, "-Wstringop-overflow=");
-	    /* GCC 9 as of 2018-06-14 warns that the size passed is
-	       large enough that, if it were the actual object size,
-	       the objects would have to overlap.  */
-	    DIAG_IGNORE_NEEDS_COMMENT (9, "-Wrestrict");
-#endif
-	    DIAG_IGNORE_NEEDS_COMMENT (8, "-Warray-bounds");
 	    check (strncat (buf1 + n2, buf2 + n1, ~((size_t) 0) - n4)
 		   == buf1 + n2, ntest);
-	    DIAG_POP_NEEDS_COMMENT;
 	    if (errors == olderrors)
 	      for (size_t i = 0; i < sizeof (buf1); ++i)
 		{
@@ -552,25 +480,11 @@ test_strncpy (void)
   equal (one, "abc", 2);			/* Did the copy go right? */
 
   (void) strcpy (one, "abcdefgh");
-  DIAG_PUSH_NEEDS_COMMENT;
-#if __GNUC_PREREQ (8, 0)
-  /* GCC 8 warns about strncpy truncating output; this is deliberately
-     tested here.  */
-  DIAG_IGNORE_NEEDS_COMMENT (8, "-Wstringop-truncation");
-#endif
   (void) strncpy (one, "xyz", 2);
-  DIAG_POP_NEEDS_COMMENT;
   equal (one, "xycdefgh", 3);			/* Copy cut by count. */
 
   (void) strcpy (one, "abcdefgh");
-  DIAG_PUSH_NEEDS_COMMENT;
-#if __GNUC_PREREQ (8, 0)
-  /* GCC 8 warns about strncpy truncating output; this is deliberately
-     tested here.  */
-  DIAG_IGNORE_NEEDS_COMMENT (8, "-Wstringop-truncation");
-#endif
   (void) strncpy (one, "xyz", 3);		/* Copy cut just before NUL. */
-  DIAG_POP_NEEDS_COMMENT;
   equal (one, "xyzdefgh", 4);
 
   (void) strcpy (one, "abcdefgh");
@@ -585,14 +499,7 @@ test_strncpy (void)
   equal (one+5, "fgh", 9);
 
   (void) strcpy (one, "abc");
-  DIAG_PUSH_NEEDS_COMMENT;
-#if __GNUC_PREREQ (8, 0)
-  /* GCC 8 warns about strncpy truncating output; this is deliberately
-     tested here.  */
-  DIAG_IGNORE_NEEDS_COMMENT (8, "-Wstringop-truncation");
-#endif
   (void) strncpy (one, "xyz", 0);		/* Zero-length copy. */
-  DIAG_POP_NEEDS_COMMENT;
   equal (one, "abc", 10);
 
   (void) strncpy (one, "", 2);		/* Zero-length source. */
@@ -1411,15 +1318,8 @@ test_memset (void)
   check(memset(one+1, 'x', 3) == one+1, 1);	/* Return value. */
   equal(one, "axxxefgh", 2);		/* Basic test. */
 
-  DIAG_PUSH_NEEDS_COMMENT;
-#if __GNUC_PREREQ (5, 0)
-  /* GCC 5.0 warns about a zero-length memset because the arguments to memset
-     may be in the wrong order.  But we really want to test this.  */
-  DIAG_IGNORE_NEEDS_COMMENT (5.0, "-Wmemset-transposed-args")
-#endif
   (void) memset(one+2, 'y', 0);
   equal(one, "axxxefgh", 3);		/* Zero-length set. */
-  DIAG_POP_NEEDS_COMMENT;
 
   (void) memset(one+5, 0, 1);
   equal(one, "axxxe", 4);			/* Zero fill. */

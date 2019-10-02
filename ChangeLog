@@ -1,3 +1,15 @@
+2019-10-02  Joseph Myers  <joseph@codesourcery.com>
+
+	* string/tester.c: Ignore -Warray-bounds and
+	-Wmemset-transposed-args at top level.
+	[__GNUC_PREREQ (7, 0)]: Ignore -Wrestrict and -Wstringop-overflow=
+	at top level.
+	[__GNUC_PREREQ (8, 0)]: Ignore -Wstringop-truncation at top level.
+	(test_stpncpy): Do not ignore warnings here.
+	(test_strncat): Likewise.
+	(test_strncpy): Likewise.
+	(test_memset): Likewise.
+
 2019-10-02  Łukasz Majewski <lukma@denx.de>
 	* include/time.h: Add #include <bits/types/struct_timeval.h>
 
