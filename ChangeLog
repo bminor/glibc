@@ -1,3 +1,7 @@
+2019-10-02  Alistair Francis  <alistair.francis@wdc.com>
+
+	* string/endian.h: Restore the __USE_MISC conditionals.
+
 2019-10-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* string/tester.c: Ignore -Warray-bounds and
