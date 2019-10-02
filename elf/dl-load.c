@@ -1015,8 +1015,8 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
   else
     {
       phdr = alloca (maplength);
-      __lseek (fd, header->e_phoff, SEEK_SET);
-      if ((size_t) __read_nocancel (fd, (void *) phdr, maplength) != maplength)
+      if ((size_t) __pread64_nocancel (fd, (void *) phdr, maplength,
+				       header->e_phoff) != maplength)
 	{
 	  errstring = N_("cannot read file data");
 	  goto call_lose_errno;
@@ -1664,9 +1664,8 @@ open_verify (const char *name, int fd,
       else
 	{
 	  phdr = alloca (maplength);
-	  __lseek (fd, ehdr->e_phoff, SEEK_SET);
-	  if ((size_t) __read_nocancel (fd, (void *) phdr, maplength)
-	      != maplength)
+	  if ((size_t) __pread64_nocancel (fd, (void *) phdr, maplength,
+					   ehdr->e_phoff) != maplength)
 	    {
 	    read_error:
 	      errval = errno;
@@ -1704,8 +1703,8 @@ open_verify (const char *name, int fd,
 
 		    abi_note = abi_note_malloced;
 		  }
-		__lseek (fd, ph->p_offset, SEEK_SET);
-		if (__read_nocancel (fd, (void *) abi_note, size) != size)
+		if (__pread64_nocancel (fd, (void *) abi_note, size,
+					ph->p_offset) != size)
 		  {
 		    free (abi_note_malloced);
 		    goto read_error;

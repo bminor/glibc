@@ -167,8 +167,7 @@ _dl_process_pt_note (struct link_map *l, const ElfW(Phdr) *ph,
 	  note_malloced = malloc (size);
 	  note = note_malloced;
 	}
-      __lseek (fd, ph->p_offset, SEEK_SET);
-      if (__read_nocancel (fd, (void *) note, size) != size)
+      if (__pread64_nocancel (fd, (void *) note, size, ph->p_offset) != size)
 	{
 	  if (note_malloced)
 	    free (note_malloced);
