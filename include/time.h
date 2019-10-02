@@ -2,6 +2,7 @@
 #include <time/time.h>
 
 #ifndef _ISOMAC
+# include <bits/types/struct_timeval.h>
 # include <bits/types/locale_t.h>
 # include <stdbool.h>
 # include <time/mktime-internal.h>
