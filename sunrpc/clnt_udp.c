@@ -57,6 +57,7 @@
 #include <kernel-features.h>
 #include <inet/net-internal.h>
 #include <shlib-compat.h>
+#include <libc-diag.h>
 
 extern u_long _create_xid (void);
 
@@ -290,7 +291,17 @@ clntudp_call (/* client handle */
   int anyup;			/* any network interface up */
 
   struct deadline_current_time current_time = __deadline_current_time ();
+  /* GCC 10 for MIPS reports total_deadline as possibly used
+     uninitialized; see
+     <https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91691>.  In fact it
+     is initialized conditionally and only ever used under the same
+     condition.  The same warning is also disabled in
+     inet/net-internal.h because in some other configurations GCC
+     gives the warning in an inline function.  */
+  DIAG_PUSH_NEEDS_COMMENT;
+  DIAG_IGNORE_NEEDS_COMMENT (10, "-Wmaybe-uninitialized");
   struct deadline total_deadline; /* Determined once by overall timeout.  */
+  DIAG_POP_NEEDS_COMMENT;
   struct deadline response_deadline; /* Determined anew for each query.  */
 
   /* Choose the timeout value.  For non-sending usage (xargs == NULL),

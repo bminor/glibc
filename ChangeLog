@@ -1,3 +1,9 @@
+2019-10-02  Joseph Myers  <joseph@codesourcery.com>
+
+	* sunrpc/clnt_udp.c: Include <libc-diag.h>.
+	(clntudp_call): Disable -Wmaybe-uninitialized around declaration
+	of total_deadline.
+
 2019-10-02  Alistair Francis  <alistair.francis@wdc.com>
 
 	* string/endian.h: Restore the __USE_MISC conditionals.
