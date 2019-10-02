@@ -41,6 +41,8 @@
   (void) __close (fd)
 #define __read_nocancel(fd, buf, n) \
   __read (fd, buf, n)
+#define __pread64_nocancel(fd, buf, count, offset) \
+  __pread64 (fd, buf, count, offset)
 #define __write_nocancel(fd, buf, n) \
   __write (fd, buf, n)
 #define __writev_nocancel_nostatus(fd, iov, n) \
