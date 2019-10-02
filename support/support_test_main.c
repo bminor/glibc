@@ -19,6 +19,7 @@
 #include <support/test-driver.h>
 #include <support/check.h>
 #include <support/temp_file-internal.h>
+#include <support/support.h>
 
 #include <assert.h>
 #include <errno.h>
@@ -35,6 +36,8 @@
 #include <sys/wait.h>
 #include <time.h>
 #include <unistd.h>
+
+#include <xstdio.h>
 
 static const struct option default_options[] =
 {
@@ -176,10 +179,55 @@ signal_handler (int sig)
   exit (1);
 }
 
+/* This must be volatile as it will be modified by the debugger.  */
+static volatile int wait_for_debugger = 0;
+
 /* Run test_function or test_function_argv.  */
 static int
 run_test_function (int argc, char **argv, const struct test_config *config)
 {
+  const char *wfd = getenv("WAIT_FOR_DEBUGGER");
+  if (wfd != NULL)
+    wait_for_debugger = atoi (wfd);
+  if (wait_for_debugger)
+    {
+      pid_t mypid;
+      FILE *gdb_script;
+      char *gdb_script_name;
+      int inside_container = 0;
+
+      mypid = getpid();
+      if (mypid < 3)
+	{
+	  const char *outside_pid = getenv("PID_OUTSIDE_CONTAINER");
+	  if (outside_pid)
+	    {
+	      mypid = atoi (outside_pid);
+	      inside_container = 1;
+	    }
+	}
+
+      gdb_script_name = (char *) xmalloc (strlen (argv[0]) + strlen (".gdb") + 1);
+      sprintf (gdb_script_name, "%s.gdb", argv[0]);
+      gdb_script = xfopen (gdb_script_name, "w");
+
+      fprintf (stderr, "Waiting for debugger, test process is pid %d\n", mypid);
+      fprintf (stderr, "gdb -x %s\n", gdb_script_name);
+      if (inside_container)
+	fprintf (gdb_script, "set sysroot %s/testroot.root\n", support_objdir_root);
+      fprintf (gdb_script, "file\n");
+      fprintf (gdb_script, "file %s\n", argv[0]);
+      fprintf (gdb_script, "symbol-file %s\n", argv[0]);
+      fprintf (gdb_script, "exec-file %s\n", argv[0]);
+      fprintf (gdb_script, "attach %ld\n", (long int) mypid);
+      fprintf (gdb_script, "set wait_for_debugger = 0\n");
+      fclose (gdb_script);
+    }
+
+  /* Wait for the debugger to set wait_for_debugger to zero.  */
+  while (wait_for_debugger)
+    usleep (1000);
+
   if (config->test_function != NULL)
     return config->test_function ();
   else if (config->test_function_argv != NULL)
@@ -228,6 +276,11 @@ support_test_main (int argc, char **argv, const struct test_config *config)
   int opt;
   unsigned int timeoutfactor = 1;
   pid_t termpid;
+
+  /* If we're debugging the test, we need to disable timeouts and use
+     the initial pid (esp if we're running inside a container).  */
+  if (getenv("WAIT_FOR_DEBUGGER") != NULL)
+    direct = 1;
 
   if (!config->no_mallopt)
     {

@@ -676,6 +676,9 @@ main (int argc, char **argv)
   char *so_base;
   int do_postclean = 0;
 
+  int pipes[2];
+  char pid_buf[20];
+
   uid_t original_uid;
   gid_t original_gid;
   /* If set, the test runs as root instead of the user running the testsuite.  */
@@ -999,6 +1002,11 @@ main (int argc, char **argv)
   if (chdir (new_cwd_path) < 0)
     FAIL_EXIT1 ("Can't cd to new %s - ", new_cwd_path);
 
+  /* This is to pass the "outside" PID to the child, which will be PID
+     1.  */
+  if (pipe2 (pipes, O_CLOEXEC) < 0)
+    FAIL_EXIT1 ("Can't create pid pipe");
+
   /* To complete the containerization, we need to fork () at least
      once.  We can't exec, nor can we somehow link the new child to
      our parent.  So we run the child and propogate it's exit status
@@ -1010,6 +1018,12 @@ main (int argc, char **argv)
     {
       /* Parent.  */
       int status;
+
+      /* Send the child's "outside" pid to it.  */
+      write (pipes[1], &child, sizeof(child));
+      close (pipes[0]);
+      close (pipes[1]);
+
       waitpid (child, &status, 0);
 
       if (WIFEXITED (status))
@@ -1027,6 +1041,14 @@ main (int argc, char **argv)
 
   /* The rest is the child process, which is now PID 1 and "in" the
      new root.  */
+
+  /* Get our "outside" pid from our parent.  We use this to help with
+     debugging from outside the container.  */
+  read (pipes[0], &child, sizeof(child));
+  close (pipes[0]);
+  close (pipes[1]);
+  sprintf (pid_buf, "%lu", (long unsigned)child);
+  setenv ("PID_OUTSIDE_CONTAINER", pid_buf, 0);
 
   maybe_xmkdir ("/tmp", 0755);
 
