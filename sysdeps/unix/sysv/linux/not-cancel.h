@@ -43,6 +43,9 @@ __typeof (openat64) __openat64_nocancel;
 /* Non cancellable read syscall.  */
 __typeof (__read) __read_nocancel;
 
+/* Non cancellable pread syscall (LFS version).  */
+__typeof (__pread64) __pread64_nocancel;
+
 /* Uncancelable write.  */
 __typeof (__write) __write_nocancel;
 
@@ -84,6 +87,7 @@ hidden_proto (__open64_nocancel)
 hidden_proto (__openat_nocancel)
 hidden_proto (__openat64_nocancel)
 hidden_proto (__read_nocancel)
+hidden_proto (__pread64_nocancel)
 hidden_proto (__write_nocancel)
 hidden_proto (__close_nocancel)
 hidden_proto (__waitpid_nocancel)

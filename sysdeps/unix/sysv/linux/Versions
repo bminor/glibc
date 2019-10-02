@@ -182,6 +182,7 @@ libc {
     __syscall_rt_sigqueueinfo;
     __open_nocancel;
     __read_nocancel;
+    __pread64_nocancel;
     __close_nocancel;
     __sigtimedwait;
     # functions used by nscd

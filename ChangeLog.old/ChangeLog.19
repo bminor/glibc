@@ -1,7 +1,3 @@
-2019-10-11  Florian Weimer  <fweimer@redhat.com>
-
-	* manual/startup.texi (Aborting a Program): Remove warning.
-
 2019-10-10  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #18231]
@@ -374,6 +370,7 @@
 	(test_memset): Likewise.
 
 2019-10-02  Łukasz Majewski <lukma@denx.de>
+
 	* include/time.h: Add #include <bits/types/struct_timeval.h>
 
 2019-10-02  Paul A. Clarke  <pc@us.ibm.com>
