@@ -23,6 +23,16 @@
 2019-10-02  Łukasz Majewski <lukma@denx.de>
 	* include/time.h: Add #include <bits/types/struct_timeval.h>
 
+2019-10-02  Paul A. Clarke  <pc@us.ibm.com>
+
+	* sysdeps/powerpc/fpu/fenv_private.h:
+	(__TEST_AND_BEGIN_NON_STOP): New.
+	(__TEST_AND_END_NON_STOP): New.
+	(libc_feholdexcept_setround_ppc): Use __TEST_AND_BEGIN_NON_STOP.
+	(__libc_femergeenv_ppc): Use __TEST_AND_BEGIN_NON_STOP and
+	__TEST_AND_END_NON_STOP.
+	(libc_feholdsetround_noex_ppc_ctx): Use __TEST_AND_END_NON_STOP.
+
 2019-10-02  Arjun Shankar  <arjun@redhat.com>
 
 	debugglibc.sh: Implement program arguments
