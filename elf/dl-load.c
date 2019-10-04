@@ -876,33 +876,43 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
   struct r_debug *r = _dl_debug_initialize (0, nsid);
   bool make_consistent = false;
 
-  /* Get file information.  */
+  /* Get file information.  To match the kernel behavior, do not fill
+     in this information for the executable in case of an explicit
+     loader invocation.  */
   struct r_file_id id;
-  if (__glibc_unlikely (!_dl_get_file_id (fd, &id)))
+  if (mode & __RTLD_OPENEXEC)
     {
-      errstring = N_("cannot stat shared object");
-    call_lose_errno:
-      errval = errno;
-    call_lose:
-      lose (errval, fd, name, realname, l, errstring,
-	    make_consistent ? r : NULL, nsid);
+      assert (nsid == LM_ID_BASE);
+      memset (&id, 0, sizeof (id));
     }
+  else
+    {
+      if (__glibc_unlikely (!_dl_get_file_id (fd, &id)))
+	{
+	  errstring = N_("cannot stat shared object");
+	call_lose_errno:
+	  errval = errno;
+	call_lose:
+	  lose (errval, fd, name, realname, l, errstring,
+		make_consistent ? r : NULL, nsid);
+	}
 
-  /* Look again to see if the real name matched another already loaded.  */
-  for (l = GL(dl_ns)[nsid]._ns_loaded; l != NULL; l = l->l_next)
-    if (!l->l_removed && _dl_file_id_match_p (&l->l_file_id, &id))
-      {
-	/* The object is already loaded.
-	   Just bump its reference count and return it.  */
-	__close_nocancel (fd);
+      /* Look again to see if the real name matched another already loaded.  */
+      for (l = GL(dl_ns)[nsid]._ns_loaded; l != NULL; l = l->l_next)
+	if (!l->l_removed && _dl_file_id_match_p (&l->l_file_id, &id))
+	  {
+	    /* The object is already loaded.
+	       Just bump its reference count and return it.  */
+	    __close_nocancel (fd);
 
-	/* If the name is not in the list of names for this object add
-	   it.  */
-	free (realname);
-	add_name_to_object (l, name);
+	    /* If the name is not in the list of names for this object add
+	       it.  */
+	    free (realname);
+	    add_name_to_object (l, name);
 
-	return l;
-      }
+	    return l;
+	  }
+    }
 
 #ifdef SHARED
   /* When loading into a namespace other than the base one we must

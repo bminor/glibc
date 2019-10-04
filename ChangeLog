@@ -1,5 +1,12 @@
 2019-10-04  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #24900]
+	* elf/dl-load.c (_dl_map_object_from_fd): Do not use the file ID
+	when loading the executable as part of an explicit loader
+	invocation.
+
+2019-10-04  Florian Weimer  <fweimer@redhat.com>
+
 	nptl: Move pthread_attr_setinheritsched implementation into libc.
 	* nptl/Makefile (routines): Add pthread_attr_setinheritsched.
 	(libpthread-routines): Remove pthread_attr_setinheritsched.
