@@ -24,7 +24,9 @@
 
 /* The next two functions are similar to pthread_setcanceltype() but
    more specialized for the use in the cancelable functions like write().
-   They do not need to check parameters etc.  */
+   They do not need to check parameters etc.  These functions must be
+   AS-safe, with the exception of the actual cancellation, because they
+   are called by wrappers around AS-safe functions like write().*/
 int
 attribute_hidden
 __pthread_enable_asynccancel (void)
@@ -59,7 +61,8 @@ __pthread_enable_asynccancel (void)
   return oldval;
 }
 
-
+/* See the comment for __pthread_enable_asynccancel regarding
+   the AS-safety of this function.  */
 void
 attribute_hidden
 __pthread_disable_asynccancel (int oldtype)
