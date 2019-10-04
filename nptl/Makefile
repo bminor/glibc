@@ -32,7 +32,8 @@ routines = alloca_cutoff forward libc-lowlevellock libc-cancellation \
 	   register-atfork pthread_atfork pthread_self thrd_current \
 	   thrd_equal thrd_sleep thrd_yield pthread_equal \
 	   pthread_attr_destroy pthread_attr_init pthread_attr_getdetachstate \
-	   pthread_attr_setdetachstate pthread_attr_getinheritsched
+	   pthread_attr_setdetachstate pthread_attr_getinheritsched \
+	   pthread_attr_setinheritsched
 shared-only-routines = forward
 static-only-routines = pthread_atfork
 
@@ -58,7 +59,6 @@ libpthread-routines = nptl-init nptlfreeres vars events version pt-interp \
 		      pthread_attr_getguardsize pthread_attr_setguardsize \
 		      pthread_attr_getschedparam pthread_attr_setschedparam \
 		      pthread_attr_getschedpolicy pthread_attr_setschedpolicy \
-		      pthread_attr_setinheritsched \
 		      pthread_attr_getscope pthread_attr_setscope \
 		      pthread_attr_getstackaddr pthread_attr_setstackaddr \
 		      pthread_attr_getstacksize pthread_attr_setstacksize \
