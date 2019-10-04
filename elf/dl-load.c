@@ -1118,27 +1118,21 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 	     offset.  We will adjust it later.  */
 	  l->l_tls_initimage = (void *) ph->p_vaddr;
 
-	  /* If not loading the initial set of shared libraries,
-	     check whether we should permit loading a TLS segment.  */
-	  if (__glibc_likely (l->l_type == lt_library)
-	      /* If GL(dl_tls_dtv_slotinfo_list) == NULL, then rtld.c did
-		 not set up TLS data structures, so don't use them now.  */
-	      || __glibc_likely (GL(dl_tls_dtv_slotinfo_list) != NULL))
-	    {
-	      /* Assign the next available module ID.  */
-	      l->l_tls_modid = _dl_next_tls_modid ();
-	      break;
-	    }
+	  /* l->l_tls_modid is assigned below, once there is no
+	     possibility for failure.  */
 
+	  if (l->l_type != lt_library
+	      && GL(dl_tls_dtv_slotinfo_list) == NULL)
+	    {
 #ifdef SHARED
-	  /* We are loading the executable itself when the dynamic
-	     linker was executed directly.  The setup will happen
-	     later.  Otherwise, the TLS data structures are already
-	     initialized, and we assigned a TLS modid above.  */
-	  assert (l->l_prev == NULL || (mode & __RTLD_AUDIT) != 0);
+	      /* We are loading the executable itself when the dynamic
+		 linker was executed directly.  The setup will happen
+		 later.  */
+	      assert (l->l_prev == NULL || (mode & __RTLD_AUDIT) != 0);
 #else
-	  assert (false && "TLS not initialized in static application");
+	      assert (false && "TLS not initialized in static application");
 #endif
+	    }
 	  break;
 
 	case PT_GNU_STACK:
@@ -1378,6 +1372,18 @@ cannot enable executable stack as shared object requires");
       && l->l_info[DT_SONAME] != NULL)
     add_name_to_object (l, ((const char *) D_PTR (l, l_info[DT_STRTAB])
 			    + l->l_info[DT_SONAME]->d_un.d_val));
+
+  /* _dl_close can only eventually undo the module ID assignment (via
+     remove_slotinfo) if this function returns a pointer to a link
+     map.  Therefore, delay this step until all possibilities for
+     failure have been excluded.  */
+  if (l->l_tls_blocksize > 0
+      && (__glibc_likely (l->l_type == lt_library)
+	  /* If GL(dl_tls_dtv_slotinfo_list) == NULL, then rtld.c did
+	     not set up TLS data structures, so don't use them now.  */
+	  || __glibc_likely (GL(dl_tls_dtv_slotinfo_list) != NULL)))
+    /* Assign the next available module ID.  */
+    l->l_tls_modid = _dl_next_tls_modid ();
 
 #ifdef DL_AFTER_LOAD
   DL_AFTER_LOAD (l);
@@ -1644,17 +1650,6 @@ open_verify (const char *name, int fd,
 				 && ehdr->e_type != ET_EXEC))
 	{
 	  errstring = N_("only ET_DYN and ET_EXEC can be loaded");
-	  goto call_lose;
-	}
-      else if (__glibc_unlikely (ehdr->e_type == ET_EXEC
-				 && (mode & __RTLD_OPENEXEC) == 0))
-	{
-	  /* BZ #16634. It is an error to dlopen ET_EXEC (unless
-	     __RTLD_OPENEXEC is explicitly set).  We return error here
-	     so that code in _dl_map_object_from_fd does not try to set
-	     l_tls_modid for this module.  */
-
-	  errstring = N_("cannot dynamically load executable");
 	  goto call_lose;
 	}
       else if (__glibc_unlikely (ehdr->e_phentsize != sizeof (ElfW(Phdr))))

@@ -308,8 +308,8 @@ test-xfail-tst-protected1b = yes
 endif
 ifeq (yesyes,$(have-fpie)$(build-shared))
 modules-names += tst-piemod1
-tests += tst-pie1 tst-pie2 tst-dlopen-pie
-tests-pie += tst-pie1 tst-pie2
+tests += tst-pie1 tst-pie2 tst-dlopen-pie tst-dlopen-aout-pie
+tests-pie += tst-pie1 tst-pie2 tst-dlopen-aout-pie
 ifeq (yes,$(have-protected-data))
 tests += vismain
 tests-pie += vismain
@@ -1267,7 +1267,11 @@ tst-leaks1-static-ENV = MALLOC_TRACE=$(objpfx)tst-leaks1-static.mtrace
 $(objpfx)tst-addr1: $(libdl)
 
 $(objpfx)tst-thrlock: $(libdl) $(shared-thread-library)
+
+tst-tst-dlopen-aout-no-pie = yes
 $(objpfx)tst-dlopen-aout: $(libdl) $(shared-thread-library)
+CFLAGS-tst-dlopen-aout-pie.c += $(pie-ccflag)
+$(objpfx)tst-dlopen-aout-pie: $(libdl) $(shared-thread-library)
 $(objpfx)tst-dlopen-aout-container: $(libdl) $(shared-thread-library)
 LDFLAGS-tst-dlopen-aout-container += -Wl,-rpath,\$$ORIGIN
 

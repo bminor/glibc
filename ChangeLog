@@ -1,5 +1,17 @@
 2019-10-04  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #24930]
+	* elf/dl-load.c (_dl_map_object_from_fd): Only assign TLS modid if
+	the link map will be returned to the caller.
+	* elf/Makefile [$(have-fpie) && $(build-shared)] (tests, tests-pie):
+	Add tst-dlopen-aout-pie.
+	(tst-tst-dlopen-aout-no-pie): Set.
+	(CFLAGS-tst-dlopen-aout-pie.c): Build with -fpie.
+	(tst-dlopen-aout-pie): Link with -ldl -lpthread.
+	* elf/tst-dlopen-aout-pie.c: New file.
+
+2019-10-04  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #24900]
 	* elf/dl-load.c (_dl_map_object_from_fd): Do not use the file ID
 	when loading the executable as part of an explicit loader
