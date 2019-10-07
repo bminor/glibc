@@ -46,7 +46,6 @@ GLIBC_2.0 nanosleep F
 GLIBC_2.0 open F
 GLIBC_2.0 pause F
 GLIBC_2.0 pthread_atfork F
-GLIBC_2.0 pthread_attr_getschedparam F
 GLIBC_2.0 pthread_attr_getschedpolicy F
 GLIBC_2.0 pthread_attr_getscope F
 GLIBC_2.0 pthread_attr_setschedparam F
