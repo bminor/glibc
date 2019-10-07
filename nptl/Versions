@@ -49,7 +49,6 @@ libpthread {
 
     pthread_getschedparam; pthread_setschedparam;
 
-    pthread_attr_setschedparam;
     pthread_attr_getschedpolicy; pthread_attr_setschedpolicy;
     pthread_attr_getscope; pthread_attr_setscope;
 

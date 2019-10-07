@@ -56,10 +56,6 @@ name decl								      \
   FORWARD2 (name, int, decl, params, return defretval)
 
 
-FORWARD (pthread_attr_setschedparam,
-	 (pthread_attr_t *attr, const struct sched_param *param),
-	 (attr, param), 0)
-
 FORWARD (pthread_attr_getschedpolicy,
 	 (const pthread_attr_t *attr, int *policy), (attr, policy), 0)
 FORWARD (pthread_attr_setschedpolicy, (pthread_attr_t *attr, int policy),

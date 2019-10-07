@@ -48,7 +48,6 @@ GLIBC_2.0 pause F
 GLIBC_2.0 pthread_atfork F
 GLIBC_2.0 pthread_attr_getschedpolicy F
 GLIBC_2.0 pthread_attr_getscope F
-GLIBC_2.0 pthread_attr_setschedparam F
 GLIBC_2.0 pthread_attr_setschedpolicy F
 GLIBC_2.0 pthread_attr_setscope F
 GLIBC_2.0 pthread_cancel F
