@@ -1,5 +1,13 @@
 2019-10-07  Florian Weimer  <fweimer@redhat.com>
 
+	riscv: Remove support for variable page sizes.
+	* sysdeps/unix/sysv/linux/riscv/Makefile [$(subdir) == elf]
+	(sysdep_routines): Do not add dl-static.
+	* sysdeps/unix/sysv/linux/riscv/dl-static.c: Remove file.
+	* sysdeps/unix/sysv/linux/riscv/ldsodefs.h: Likewise.
+
+2019-10-07  Florian Weimer  <fweimer@redhat.com>
+
 	nptl: Move pthread_attr_getschedparam implementation into libc.
 	* nptl/Makefile (routines): Add pthread_attr_getschedparam.
 	(libpthread-routines): Remove pthread_attr_getschedparam.
