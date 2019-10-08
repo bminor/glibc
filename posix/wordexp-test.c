@@ -31,23 +31,6 @@
 
 #define IFS " \n\t"
 
-extern int __register_atfork (void (*) (void), void (*) (void), void (*) (void), void *);
-
-static int __app_register_atfork (void (*prepare) (void), void (*parent) (void), void (*child) (void))
-{
-  return __register_atfork (prepare, parent, child, __dso_handle);
-}
-
-/* Number of forks seen.  */
-static int registered_forks;
-
-/* For each fork increment the fork count.  */
-static void
-register_fork (void)
-{
-  registered_forks++;
-}
-
 struct test_case_struct
 {
   int retval;
@@ -217,7 +200,6 @@ struct test_case_struct
     { WRDE_BADCHAR, NULL, "close-paren)", 0, 0, { NULL, }, IFS },
     { WRDE_BADCHAR, NULL, "{open-brace", 0, 0, { NULL, }, IFS },
     { WRDE_BADCHAR, NULL, "close-brace}", 0, 0, { NULL, }, IFS },
-    { WRDE_CMDSUB, NULL, "$(ls)", WRDE_NOCMD, 0, { NULL, }, IFS },
     { WRDE_BADVAL, NULL, "$var", WRDE_UNDEF, 0, { NULL, }, IFS },
     { WRDE_BADVAL, NULL, "$9", WRDE_UNDEF, 0, { NULL, }, IFS },
     { WRDE_SYNTAX, NULL, "$[50+20))", 0, 0, { NULL, }, IFS },
@@ -227,17 +209,10 @@ struct test_case_struct
     { WRDE_SYNTAX, NULL, "$((2+))", 0, 0, { NULL, }, IFS },
     { WRDE_SYNTAX, NULL, "`", 0, 0, { NULL, }, IFS },
     { WRDE_SYNTAX, NULL, "$((010+4+))", 0, 0, { NULL }, IFS },
-    /* Test for CVE-2014-7817. We test 3 combinations of command
-       substitution inside an arithmetic expression to make sure that
-       no commands are executed and error is returned.  */
-    { WRDE_CMDSUB, NULL, "$((`echo 1`))", WRDE_NOCMD, 0, { NULL, }, IFS },
-    { WRDE_CMDSUB, NULL, "$((1+`echo 1`))", WRDE_NOCMD, 0, { NULL, }, IFS },
-    { WRDE_CMDSUB, NULL, "$((1+$((`echo 1`))))", WRDE_NOCMD, 0, { NULL, }, IFS },
 
     { WRDE_SYNTAX, NULL, "`\\", 0, 0, { NULL, }, IFS },     /* BZ 18042  */
     { WRDE_SYNTAX, NULL, "${", 0, 0, { NULL, }, IFS },      /* BZ 18043  */
     { WRDE_SYNTAX, NULL, "L${a:", 0, 0, { NULL, }, IFS },   /* BZ 18043#c4  */
-    { WRDE_SYNTAX, NULL, "$[1/0]", WRDE_NOCMD, 0, {NULL, }, IFS }, /* BZ 18100 */
 
     { -1, NULL, NULL, 0, 0, { NULL, }, IFS },
   };
@@ -288,15 +263,6 @@ main (int argc, char *argv[])
 	if ((fd = creat (globfile[i], S_IRUSR | S_IWUSR)) == -1
 	    || close (fd))
 	  return -1;
-    }
-
-  /* If we are not allowed to do command substitution, we install
-     fork handlers to verify that no forks happened.  No forks should
-     happen at all if command substitution is disabled.  */
-  if (__app_register_atfork (register_fork, NULL, NULL) != 0)
-    {
-      printf ("Failed to register fork handler.\n");
-      return -1;
     }
 
   for (test = 0; test_case[test].retval != -1; test++)
@@ -362,45 +328,6 @@ main (int argc, char *argv[])
       if (testit (&ts))
 	++fail;
     }
-
-  /* Integer overflow in division.  */
-  {
-    static const char *const numbers[] = {
-      "0",
-      "1",
-      "65536",
-      "2147483648",
-      "4294967296"
-      "9223372036854775808",
-      "18446744073709551616",
-      "170141183460469231731687303715884105728",
-      "340282366920938463463374607431768211456",
-      NULL
-    };
-
-    for (const char *const *num = numbers; *num; ++num)
-      {
-	wordexp_t p;
-	char pattern[256];
-	snprintf (pattern, sizeof (pattern), "$[(-%s)/(-1)]", *num);
-	int ret = wordexp (pattern, &p, WRDE_NOCMD);
-	if (ret == 0)
-	  {
-	    if (p.we_wordc != 1 || strcmp (p.we_wordv[0], *num) != 0)
-	      {
-		printf ("Integer overflow for \"%s\" failed", pattern);
-		++fail;
-	      }
-	    wordfree (&p);
-	  }
-	else if (ret != WRDE_SYNTAX)
-	  {
-	    printf ("Integer overflow for \"%s\" failed with %d",
-		    pattern, ret);
-	    ++fail;
-	  }
-      }
-  }
 
   puts ("tests completed, now cleaning up");
 
@@ -472,9 +399,6 @@ testit (struct test_case_struct *tc)
   fflush (NULL);
   const char *words = at_page_end (tc->words);
 
-  if (tc->flags & WRDE_NOCMD)
-    registered_forks = 0;
-
   if (tc->flags & WRDE_APPEND)
     {
       /* initial wordexp() call, to be appended to */
@@ -485,13 +409,6 @@ testit (struct test_case_struct *tc)
 	}
     }
   retval = wordexp (words, &we, tc->flags);
-
-  if ((tc->flags & WRDE_NOCMD)
-      && (registered_forks > 0))
-    {
-	  printf ("FAILED fork called for WRDE_NOCMD\n");
-	  return 1;
-    }
 
   if (tc->flags & WRDE_DOOFFS)
       start_offs = sav_we.we_offs;

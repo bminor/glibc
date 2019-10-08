@@ -1,3 +1,16 @@
+2019-10-08  Florian Weimer  <fweimer@redhat.com>
+
+	* posix/Makefile (tests): Add tst-wordexp-nocmd.
+	* posix/wordexp-test.c (__app_register_atfork): Remove function.
+	(registered_forks): Remove variable.
+	(register_fork): Remove function.
+	(test_case): Remove WRDE_NOCMD tests.
+	(main): Do not set up fork tracking.  Remove integer overflow in
+	division tests.
+	(testit): Do not check for unexpected forks.
+	* posix/tst-wordexp-nocmd.c: New file containing the tests removed
+	from posix/wordexp-test.c.
+
 2019-10-07  Florian Weimer  <fweimer@redhat.com>
 
 	nptl: Move pthread_attr_setschedparam implementation into libc.
