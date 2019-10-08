@@ -61,6 +61,8 @@ include ../gen-locales.mk
 
 $(objpfx)tst-ftime_l.out: $(gen-locales)
 $(objpfx)tst-strptime.out: $(gen-locales)
+$(objpfx)tst-strftime2.out: $(gen-locales)
+$(objpfx)tst-strftime3.out: $(gen-locales)
 endif
 
 tz-cflags = -DTZDIR='"$(zonedir)"' \

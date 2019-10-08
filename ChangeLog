@@ -1,3 +1,9 @@
+2019-10-08  Gabriel F. T. Gomes  <gabrielftg@linux.ibm.com>
+
+	* Makefile: Fix locale dependency for a couple of tests.
+	($(objpfx)tst-strftime2.out): New rule.
+	($(objpfx)tst-strftime3.out): Likewise.
+
 2019-10-08  Florian Weimer  <fweimer@redhat.com>
 
 	* posix/tst-wordexp-nocmd.c (do_test): Fix diagnostics output.
