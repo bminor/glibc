@@ -1,5 +1,9 @@
 2019-10-08  Florian Weimer  <fweimer@redhat.com>
 
+	* posix/tst-wordexp-nocmd.c (do_test): Fix diagnostics output.
+
+2019-10-08  Florian Weimer  <fweimer@redhat.com>
+
 	* posix/Makefile (tests): Add tst-wordexp-nocmd.
 	* posix/wordexp-test.c (__app_register_atfork): Remove function.
 	(registered_forks): Remove variable.

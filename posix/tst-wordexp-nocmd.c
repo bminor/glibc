@@ -161,12 +161,12 @@ do_test (void)
 
 #ifdef CLONE_NEWPID
   if (unshare (CLONE_NEWPID) != 0)
-    printf ("warning: unshare (CLONE_NEW_PID) failed: %m\n"
+    printf ("warning: unshare (CLONE_NEWPID) failed: %m\n"
             "warning: This leads to reduced test coverage.\n");
   else
     pid_tests_supported = true;
 #else
-  printf ("warning: CLONE_NEW_PID not available.\n"
+  printf ("warning: CLONE_NEWPID not available.\n"
           "warning: This leads to reduced test coverage.\n");
 #endif
 
