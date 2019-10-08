@@ -85,16 +85,21 @@ libm-sysdep_routines += e_exp-avx e_log-avx s_atan-avx \
 			mplog-avx mpa-avx slowexp-avx \
 			mpexp-avx
 
-CFLAGS-e_atan2-avx.c = -msse2avx -DSSE2AVX
-CFLAGS-e_exp-avx.c = -msse2avx -DSSE2AVX
-CFLAGS-e_log-avx.c = -msse2avx -DSSE2AVX
-CFLAGS-mpa-avx.c = -msse2avx -DSSE2AVX
-CFLAGS-mpexp-avx.c = -msse2avx -DSSE2AVX
-CFLAGS-mplog-avx.c = -msse2avx -DSSE2AVX
-CFLAGS-s_atan-avx.c = -msse2avx -DSSE2AVX
-CFLAGS-s_sin-avx.c = -msse2avx -DSSE2AVX
-CFLAGS-slowexp-avx.c = -msse2avx -DSSE2AVX
-CFLAGS-s_tan-avx.c = -msse2avx -DSSE2AVX
+sse2avx-flags = -msse2avx -DSSE2AVX
+ifeq ($(with-clang),yes)
+sse2avx-flags = -DSSE2AVX
+endif
+
+CFLAGS-e_atan2-avx.c = $(sse2avx-flags)
+CFLAGS-e_exp-avx.c = $(sse2avx-flags)
+CFLAGS-e_log-avx.c = $(sse2avx-flags)
+CFLAGS-mpa-avx.c = $(sse2avx-flags)
+CFLAGS-mpexp-avx.c = $(sse2avx-flags)
+CFLAGS-mplog-avx.c = $(sse2avx-flags)
+CFLAGS-s_atan-avx.c = $(sse2avx-flags)
+CFLAGS-s_sin-avx.c = $(sse2avx-flags)
+CFLAGS-slowexp-avx.c = $(sse2avx-flags)
+CFLAGS-s_tan-avx.c = $(sse2avx-flags)
 endif
 
 ifeq ($(subdir),mathvec)

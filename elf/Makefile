@@ -336,11 +336,15 @@ tests-static += $(tests-ifuncstatic)
 tests-internal += $(tests-ifuncstatic)
 ifeq (yes,$(build-shared))
 tests-internal += \
-	 ifuncmain1 ifuncmain1pic ifuncmain1vis ifuncmain1vispic \
+	 ifuncmain1pic ifuncmain1vis ifuncmain1vispic \
 	 ifuncmain1staticpic \
 	 ifuncmain2 ifuncmain2pic ifuncmain3 ifuncmain4 \
-	 ifuncmain5 ifuncmain5pic ifuncmain5staticpic \
+	 ifuncmain5pic ifuncmain5staticpic \
 	 ifuncmain7 ifuncmain7pic
+ifneq ($(with-clang),yes)
+# Skip over tests where lld errors with "cannot preempt symbol"
+tests-internal += ifuncmain1 ifuncmain5
+endif
 ifunc-test-modules = ifuncdep1 ifuncdep1pic ifuncdep2 ifuncdep2pic \
 		     ifuncdep5 ifuncdep5pic
 extra-test-objs += $(ifunc-test-modules:=.o)
