@@ -45,7 +45,6 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
 {
   int i;
   unsigned int j;
-  ElfW(Addr) loadaddr;
   unsigned int dynamic_addr;
   size_t dynamic_size;
   char *program_interpreter;
@@ -87,7 +86,6 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
      libc5/libc6.  */
   *flag = FLAG_ELF;
 
-  loadaddr = -1;
   dynamic_addr = 0;
   dynamic_size = 0;
   program_interpreter = NULL;
@@ -98,11 +96,6 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
 
       switch (segment->p_type)
 	{
-	case PT_LOAD:
-	  if (loadaddr == (ElfW(Addr)) -1)
-	    loadaddr = segment->p_vaddr - segment->p_offset;
-	  break;
-
 	case PT_DYNAMIC:
 	  if (dynamic_addr)
 	    error (0, 0, _("more than one dynamic segment\n"));
@@ -176,11 +169,6 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
 	}
 
     }
-  if (loadaddr == (ElfW(Addr)) -1)
-    {
-      /* Very strange. */
-      loadaddr = 0;
-    }
 
   /* Now we can read the dynamic sections.  */
   if (dynamic_size == 0)
@@ -197,7 +185,29 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
       check_ptr (dyn_entry);
       if (dyn_entry->d_tag == DT_STRTAB)
 	{
-	  dynamic_strings = (char *) (file_contents + dyn_entry->d_un.d_val - loadaddr);
+	  /* Find the file offset of the segment containing the dynamic
+	     string table.  */
+	  ElfW(Off) loadoff = -1;
+	  for (i = 0, segment = elf_pheader;
+	       i < elf_header->e_phnum; i++, segment++)
+	    {
+	      if (segment->p_type == PT_LOAD
+		  && dyn_entry->d_un.d_val >= segment->p_vaddr
+		  && (dyn_entry->d_un.d_val - segment->p_vaddr
+		      < segment->p_filesz))
+		{
+		  loadoff = segment->p_vaddr - segment->p_offset;
+		  break;
+		}
+	    }
+	  if (loadoff == (ElfW(Off)) -1)
+	    {
+	      /* Very strange. */
+	      loadoff = 0;
+	    }
+
+	  dynamic_strings = (char *) (file_contents + dyn_entry->d_un.d_val
+				      - loadoff);
 	  check_ptr (dynamic_strings);
 	  break;
 	}
