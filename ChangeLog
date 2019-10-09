@@ -553,7 +553,7 @@
 	CFLAGS-tst-sigcontext-get_pc.c.
 
 2019-09-24  Alistair Francis  <alistair.francis@wdc.com>
-    
+
 	* inet/net-internal.h: Fix uninitalised clntudp_call() variable.
 
 2019-09-24  Andreas Schwab  <schwab@suse.de>
@@ -1156,42 +1156,42 @@
 
 2019-08-28  Paul A. Clarke  <pc@us.ibm.com>
 
-    	* sysdeps/powerpc/fpu/fenv_libc.h (fegetenv_status_ISA300):  Delete.
-    	(fegetenv_status):  Generate 'mffsl' unconditionally.
+	* sysdeps/powerpc/fpu/fenv_libc.h (fegetenv_status_ISA300):  Delete.
+	(fegetenv_status):  Generate 'mffsl' unconditionally.
 
 2019-08-28  Paul A. Clarke  <pc@us.ibm.com>
 
-    	* sysdeps/powerpc/fpu/fesetenv.c (__fesetenv):  Utilize lightweight
-    	FPSCR read.
-    	(_FPU_MASK_ALL):  Delete.
+	* sysdeps/powerpc/fpu/fesetenv.c (__fesetenv):  Utilize lightweight
+	FPSCR read.
+	(_FPU_MASK_ALL):  Delete.
 
 2019-08-28  Paul A. Clarke  <pc@us.ibm.com>
 
-    	* sysdeps/powerpc/fpu/fenv_private.h (libc_feholdsetround_ppc_ctx):
-    	Utilize lightweight FPSCR read if possible, set fewer FPSCR bits
-    	if possible.
-    	(libc_feresetround_ppc):  Replace call to __libc_femergeenv_ppc
-    	with simpler required steps, set fewer FPSCR bits if possible.
+	* sysdeps/powerpc/fpu/fenv_private.h (libc_feholdsetround_ppc_ctx):
+	Utilize lightweight FPSCR read if possible, set fewer FPSCR bits
+	if possible.
+	(libc_feresetround_ppc):  Replace call to __libc_femergeenv_ppc
+	with simpler required steps, set fewer FPSCR bits if possible.
 
 2019-08-28  Paul A. Clarke  <pc@us.ibm.com>
 
-    	* sysdeps/powerpc/fpu/fenv_libc.h (fesetenv_mode): New.
-    	(FPSCR_FPRF_MASK): New. (FPSCR_STATUS_MASK): New.
-    	* sysdeps/powerpc/fpu/feenablxcpt.c (feenableexcept): Use lighter-
-    	weight access to FPSCR; remove unnecessary second FPSCR read and
-    	validate.
-    	* sysdeps/powerpc/fpu/fedisblxcpt.c (fedisableexcept): Likewise.
-    	* sysdeps/powerpc/fpu/fesetmode.c (fesetmode): Use lighter-weight
-    	access to FPSCR; Use macros in fenv_libc.h in favor of local.
+	* sysdeps/powerpc/fpu/fenv_libc.h (fesetenv_mode): New.
+	(FPSCR_FPRF_MASK): New. (FPSCR_STATUS_MASK): New.
+	* sysdeps/powerpc/fpu/feenablxcpt.c (feenableexcept): Use lighter-
+	weight access to FPSCR; remove unnecessary second FPSCR read and
+	validate.
+	* sysdeps/powerpc/fpu/fedisblxcpt.c (fedisableexcept): Likewise.
+	* sysdeps/powerpc/fpu/fesetmode.c (fesetmode): Use lighter-weight
+	access to FPSCR; Use macros in fenv_libc.h in favor of local.
 
 2019-08-28  Paul A. Clarke  <pc@us.ibm.com>
 
-    	* sysdeps/powerpc/fpu/fenv_libc.h: Define FPSCR bitmasks.
-    	(fenv_reg_to_exceptions): Replace bitwise operations with mask-shift.
-    	(fenv_exceptions_to_reg): New.
-    	* sysdeps/powerpc/fpu/fedisblxcpt.c (fedisableexcept): Replace bitwise
-    	operation with call to fenv_exceptions_to_reg().
-    	* sysdeps/powerpc/fpu/feenablxcpt.c (feenableexcept): Likewise.
+	* sysdeps/powerpc/fpu/fenv_libc.h: Define FPSCR bitmasks.
+	(fenv_reg_to_exceptions): Replace bitwise operations with mask-shift.
+	(fenv_exceptions_to_reg): New.
+	* sysdeps/powerpc/fpu/fedisblxcpt.c (fedisableexcept): Replace bitwise
+	operation with call to fenv_exceptions_to_reg().
+	* sysdeps/powerpc/fpu/feenablxcpt.c (feenableexcept): Likewise.
 
 2019-08-28  Florian Weimer  <fweimer@redhat.com>
 
