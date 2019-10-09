@@ -47,9 +47,6 @@
 #undef	STACK_PROTECTOR_LEVEL
 #endif
 
-/* Defined on SPARC if GCC emits GOTDATA relocations.  */
-#undef  HAVE_GCC_GOTDATA
-
 /* Define if the linker supports the -z combreloc option.  */
 #undef	HAVE_Z_COMBRELOC
 
