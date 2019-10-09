@@ -1,3 +1,7 @@
+2019-10-09  Petr Vorel  <pvorel@suse.cz>
+
+	* include/dirent.h (__getdents64): Update comment.
+
 2019-10-08  Gabriel F. T. Gomes  <gabrielftg@linux.ibm.com>
 
 	* Makefile: Fix locale dependency for a couple of tests.

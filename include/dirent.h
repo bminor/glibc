@@ -36,8 +36,7 @@ extern __ssize_t __getdirentries (int __fd, char *__restrict __buf,
 				__off_t *__restrict __basep)
      __THROW __nonnull ((2, 4));
 
-/* These functions are only implemented on Linux.  The public
-   interface for getdents64 is declared in <unistd.h>.  */
+/* These functions are only implemented on Linux.  */
 extern __ssize_t __getdents (int __fd, void *__buf, size_t __nbytes)
      attribute_hidden;
 extern __ssize_t __getdents64 (int __fd, void *__buf, size_t __nbytes);
