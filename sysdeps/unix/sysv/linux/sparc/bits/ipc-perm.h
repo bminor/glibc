@@ -1,6 +1,6 @@
-/* Copyright (C) 2000-2019 Free Software Foundation, Inc.
+/* struct ipc_perm definition.  Linux/sparc version.
+   Copyright (C) 1995-2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-	Contributed by David Mosberger-Tang <davidm@hpl.hp.com>
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,25 +17,8 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _SYS_IPC_H
-# error "Never use <bits/ipc.h> directly; include <sys/ipc.h> instead."
+# error "Never use <bits/ipc-perm.h> directly; include <sys/ipc.h> instead."
 #endif
-
-#include <sys/types.h>
-
-/* Mode bits for `msgget', `semget', and `shmget'.  */
-#define IPC_CREAT	01000		/* Create key if key does not exist. */
-#define IPC_EXCL	02000		/* Fail if key exists.  */
-#define IPC_NOWAIT	04000		/* Return error on wait.  */
-
-/* Control commands for `msgctl', `semctl', and `shmctl'.  */
-#define IPC_RMID	0		/* Remove identifier.  */
-#define IPC_SET		1		/* Set `ipc_perm' options.  */
-#define IPC_STAT	2		/* Get `ipc_perm' options.  */
-#define IPC_INFO	3		/* See ipcs.  */
-
-/* Special key values.  */
-#define IPC_PRIVATE	((__key_t) 0)	/* Private key.  */
-
 
 /* Data structure used to pass permission information to IPC operations.  */
 struct ipc_perm
@@ -46,8 +29,8 @@ struct ipc_perm
     __uid_t cuid;			/* Creator's user ID.  */
     __gid_t cgid;			/* Creator's group ID.  */
     __mode_t mode;			/* Read/write permission.  */
-    unsigned short int __seq;		/* Sequence number.  */
     unsigned short int __pad1;
-    unsigned long int __glibc_reserved1;
-    unsigned long int __glibc_reserved2;
+    unsigned short int __seq;		/* Sequence number.  */
+    __extension__ unsigned long long int __glibc_reserved1;
+    __extension__ unsigned long long int __glibc_reserved2;
   };

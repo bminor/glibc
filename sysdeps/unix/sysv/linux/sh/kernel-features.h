@@ -20,6 +20,8 @@
 #ifndef __KERNEL_FEATURES_SH__
 # define __KERNEL_FEATURES_SH__
 
+#include <endian.h>
+
 /* These syscalls were added for SH in 2.6.37.  */
 #define __ASSUME_SOCKET_SYSCALL		1
 #define __ASSUME_BIND_SYSCALL		1
@@ -43,6 +45,9 @@
 
 /* sh only supports ipc syscall.  */
 #undef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
+#if __BYTE_ORDER == __BIG_ENDIAN
+# define __ASSUME_SYSVIPC_BROKEN_MODE_T
+#endif
 
 /* Support for several syscalls was added in 4.8.  */
 #if __LINUX_KERNEL_VERSION < 0x040800

@@ -23,15 +23,16 @@
 #include <shlib-compat.h>
 #include <errno.h>
 
-
 #ifndef DEFAULT_VERSION
-# define DEFAULT_VERSION GLIBC_2_2
+# ifndef __ASSUME_SYSVIPC_BROKEN_MODE_T
+#  define DEFAULT_VERSION GLIBC_2_2
+# else
+#  define DEFAULT_VERSION GLIBC_2_31
+# endif
 #endif
 
-
-/* Provide operations to control over shared memory segments.  */
-int
-__new_shmctl (int shmid, int cmd, struct shmid_ds *buf)
+static int
+shmctl_syscall (int shmid, int cmd, struct shmid_ds *buf)
 {
 #ifdef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
   return INLINE_SYSCALL_CALL (shmctl, shmid, cmd | __IPC_64, buf);
@@ -40,8 +41,55 @@ __new_shmctl (int shmid, int cmd, struct shmid_ds *buf)
 			      buf);
 #endif
 }
+
+/* Provide operations to control over shared memory segments.  */
+int
+__new_shmctl (int shmid, int cmd, struct shmid_ds *buf)
+{
+  /* POSIX states ipc_perm mode should have type of mode_t.  */
+  _Static_assert (sizeof ((struct shmid_ds){0}.shm_perm.mode)
+		  == sizeof (mode_t),
+		  "sizeof (msqid_ds.msg_perm.mode) != sizeof (mode_t)");
+
+#ifdef __ASSUME_SYSVIPC_BROKEN_MODE_T
+  struct shmid_ds tmpds;
+  if (cmd == IPC_SET)
+    {
+      tmpds = *buf;
+      tmpds.shm_perm.mode *= 0x10000U;
+      buf = &tmpds;
+    }
+#endif
+
+  int ret = shmctl_syscall (shmid, cmd, buf);
+
+#ifdef __ASSUME_SYSVIPC_BROKEN_MODE_T
+  if (ret >= 0)
+    {
+      switch (cmd)
+	{
+        case IPC_STAT:
+        case SHM_STAT:
+        case SHM_STAT_ANY:
+          buf->shm_perm.mode >>= 16;
+	}
+    }
+#endif
+
+  return ret;
+}
 versioned_symbol (libc, __new_shmctl, shmctl, DEFAULT_VERSION);
 
+#if defined __ASSUME_SYSVIPC_BROKEN_MODE_T \
+    && SHLIB_COMPAT (libc, GLIBC_2_2, GLIBC_2_31)
+int
+attribute_compat_text_section
+__shmctl_mode16 (int shmid, int cmd, struct shmid_ds *buf)
+{
+  return shmctl_syscall (shmid, cmd, buf);
+}
+compat_symbol (libc, __shmctl_mode16, shmctl, GLIBC_2_2);
+#endif
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
 struct __old_shmid_ds

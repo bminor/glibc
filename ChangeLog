@@ -1,3 +1,54 @@
+2019-10-10  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #18231]
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
+	bits/ipc-perm.h.
+	* sysdeps/unix/sysv/linux/aarch64/bits/ipc.h: Remove file.
+	* sysdeps/unix/sysv/linux/alpha/bits/ipc.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/bits/ipc.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/ipc.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/ipc.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/ipc.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/ipc.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/ipc.h: Likewise.
+	* sysdeps/unix/sysv/linux/arm/kernel-features.h
+	[__BYTE_ORDER == __BIG_ENDIAN] (__ASSUME_SYSVIPC_BROKEN_MODE_T):
+	Define.
+	* sysdeps/sysv/linux/microblaze/kernel-features.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/kernel-features.h
+	[!__s390x__] (__ASSUME_SYSVIPC_BROKEN_MODE_T): Define.
+	* sysdeps/unix/sysv/linux/sh/kernel-features.h
+	(__ASSUME_SYSVIPC_BROKEN_MODE_T): Define.
+	* sysdeps/unix/sysv/linux/m68k/kernel-features.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/ipc-perm.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/bits/ipc-perm.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/ipc-perm.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/ipc.h (ipc_perm): Move to
+	bits/ipc-perm.h.
+	* sysdeps/unix/sysv/linux/hppa/bits/ipc-perm.h: New file.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Add comment about
+	__ASSUME_SYSVIPC_BROKEN_MODE_T semantic.
+	* sysdeps/unix/sysv/linux/msgctl.c (DEFAULT_VERSION): Define as
+	2.31 if __ASSUME_SYSVIPC_BROKEN_MODE_T is defined.
+	(msgctl_syscall, __msgctl_mode16): New symbol.
+	(__new_msgctl): Add bits for __ASSUME_SYSVIPC_BROKEN_MODE_T.
+	* sysdeps/unix/sysv/linux/semctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/shmctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/be/libc.abilist (GLIBC_2.31): Add
+	msgctl, semctl, and shmctl.
+	* sysdeps/sysv/linux/microblaze/be/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/be/libc.abilist: Likewise.
+	* conform/data/sys/ipc.h-data: Only xfail {struct ipc_perm} mode_t
+	mode for Hurd.
+	* sysdeps/unix/sysv/linux/m68k/Versions (libc) [GLIBC_2.31]: Add
+	msgctl, semctl, and shmctl.
+	* sysdeps/unix/sysv/linux/arm/be/Versions: New file.
+	* sysdeps/unix/sysv/linux/microblaze/be/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/sh/be/Versions: Likewise.
+
 2019-10-10  Andreas Schwab  <schwab@suse.de>
 
 	* elf/dl-load.c (open_verify): Remove dead code.

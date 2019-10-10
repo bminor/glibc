@@ -86,6 +86,14 @@
    either support ipc syscall and/or all the ipc correspondent syscalls.  */
 #define __ASSUME_DIRECT_SYSVIPC_SYSCALLS	1
 
+/* All supported architectures reserve a 32-bit for MODE field in sysvipc
+   ipc_perm.  However, some kernel ABI interfaces still expect a 16-bit
+   field.  This is only an issue if arch-defined IPC_PERM padding is on a
+   wrong position regarding endianness.  In this case, the IPC control
+   routines (msgctl, semctl, and semtctl) requires to shift the value to
+   correct place.
+   The ABIs that requires it define __ASSUME_SYSVIPC_BROKEN_MODE_T.  */
+
 /* Support for p{read,write}v2 was added in 4.6.  However Linux default
    implementation does not assume the __ASSUME_* and instead use a fallback
    implementation based on p{read,write}v and returning an error for

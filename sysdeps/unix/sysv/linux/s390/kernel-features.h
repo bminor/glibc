@@ -47,6 +47,9 @@
 
 /* s390 only supports ipc syscall.  */
 #undef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
+#ifndef __s390x__
+# define __ASSUME_SYSVIPC_BROKEN_MODE_T
+#endif
 
 #undef __ASSUME_CLONE_DEFAULT
 #define __ASSUME_CLONE_BACKWARDS2

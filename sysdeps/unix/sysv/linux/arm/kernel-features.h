@@ -17,6 +17,7 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <endian.h>
 #include_next <kernel-features.h>
 
 /* The ARM kernel before 3.14.3 may or may not support
@@ -49,3 +50,7 @@
 
 #undef __ASSUME_CLONE_DEFAULT
 #define __ASSUME_CLONE_BACKWARDS	1
+
+#if __BYTE_ORDER == __BIG_ENDIAN
+# define __ASSUME_SYSVIPC_BROKEN_MODE_T
+#endif

@@ -6,8 +6,7 @@ xfail[i386-gnu]-element {struct ipc_perm} uid_t uid
 xfail[i386-gnu]-element {struct ipc_perm} gid_t gid
 xfail[i386-gnu]-element {struct ipc_perm} uid_t cuid
 xfail[i386-gnu]-element {struct ipc_perm} gid_t cgid
-// Bug 18231: wrong type for mode member.
-xfail-element {struct ipc_perm} mode_t mode
+xfail[i386-gnu]-element {struct ipc_perm} mode_t mode
 
 type uid_t
 type gid_t
