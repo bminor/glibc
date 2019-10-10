@@ -1,3 +1,8 @@
+2019-10-10  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* sysdeps/unix/sysv/linux/syscall-names.list: Fix typos in comment,
+	reformat the affected paragraph.
+
 2019-10-10  Łukasz Majewski <lukma@denx.de>
 
 	* include/time.h (__clock_settime64):

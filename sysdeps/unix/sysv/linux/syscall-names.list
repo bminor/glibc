@@ -16,11 +16,10 @@
 # License along with the GNU C Library; if not, see
 # <https://www.gnu.org/licenses/>.
 
-# This file contains the list of system call names names.  It has to
-# remain in alphabetica order.  Lines which start with # are treated
-# as comments.  This file can list all potential system calls.  The
-# names are only used if the installed kernel headers also provide
-# them.
+# This file contains the list of system call names.  It has to remain in
+# alphabetical order.  Lines which start with # are treated as comments.
+# This file can list all potential system calls.  The names are only
+# used if the installed kernel headers also provide them.
 
 # The list of system calls is current as of Linux 5.3.
 kernel 5.3
