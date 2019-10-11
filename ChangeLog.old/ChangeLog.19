@@ -1,5 +1,34 @@
 2019-10-11  Florian Weimer  <fweimer@redhat.com>
 
+	* csu/init-first.c (_init): Remove call to __ctype_init.  Moved to
+	__libc_early_init.
+	* csu/libc-start.c [!SHARED] (LIBC_START_MAIN): Call
+	__libc_early_init.
+	* elf/Makefile (routines): Add libc_early_init.
+	(dl-routines): Add dl-call-libc-early-init.
+	* elf/Versions (libc): Export __libc_early_init under
+	GLIBC_PRIVATE.
+	* elf/dl-call-libc-early-init.c: New file.
+	* elf/dl-load.c (_dl_map_object_from_fd): Record in the namespace
+	description if libc.so has been loaded.
+	* elf/dl-lookup-direct.c: New file.  Extracted from
+	elf/dl-lookup.c.
+	* elf/dl-open.c (struct dl_open_args): Add libc_already_loaded.
+	(dl_open_worker): Set libc_already_loaded.  Call
+	_dl_call_libc_early_init if libc.so has been loaded.
+	(_dl_open): Initialize libc_already_loaded.  Reset libc_map on
+	failure if necessary.
+	* elf/libc-early-init.h: New file.
+	* elf/libc_early_init.c: Likewise.
+	* elf/rtld.c (dl_main): Call _dl_call_libc_early_init.
+	* sysdeps/generic/ldsodefs.h (struct rtld_global): Add libc_map
+	member to the namespace description.
+	(_dl_lookup_direct): Declare.
+	* sysdeps/mach/hurd/i386/init-first.c (posixland_init): Do not
+	call __ctype_init.
+
+2019-10-11  Florian Weimer  <fweimer@redhat.com>
+
 	* elf/elf_machine_sym_no_match.h: New file.
 	* elf/dl-lookip.c (ELF_MACHINE_SYM_NO_MATCH): Do not define.
 	* elf/dl-lookup.c (check_match) Call elf_machine_sym_no_match

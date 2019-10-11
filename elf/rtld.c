@@ -43,6 +43,7 @@
 #include <stap-probe.h>
 #include <stackinfo.h>
 #include <not-cancel.h>
+#include <libc-early-init.h>
 
 #include <assert.h>
 
@@ -2314,6 +2315,9 @@ ERROR: '%s': cannot process note segment.\n", _dl_argv[0]);
 
       rtld_timer_accum (&relocate_time, start);
     }
+
+  /* Relocation is complete.  Perform early libc initialization.  */
+  _dl_call_libc_early_init (GL(dl_ns)[LM_ID_BASE].libc_map);
 
   /* Do any necessary cleanups for the startup OS interface code.
      We do these now so that no calls are made after rtld re-relocation

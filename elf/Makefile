@@ -25,7 +25,7 @@ headers		= elf.h bits/elfclass.h link.h bits/link.h
 routines	= $(all-dl-routines) dl-support dl-iteratephdr \
 		  dl-addr dl-addr-obj enbl-secure dl-profstub \
 		  dl-origin dl-libc dl-sym dl-sysdep dl-error \
-		  dl-reloc-static-pie
+		  dl-reloc-static-pie libc_early_init
 
 # The core dynamic linking functions are in libc for the static and
 # profiled libraries.
@@ -33,7 +33,8 @@ dl-routines	= $(addprefix dl-,load lookup object reloc deps hwcaps \
 				  runtime init fini debug misc \
 				  version profile tls origin scope \
 				  execstack open close trampoline \
-				  exception sort-maps)
+				  exception sort-maps lookup-direct \
+				  call-libc-early-init)
 ifeq (yes,$(use-ldconfig))
 dl-routines += dl-cache
 endif
