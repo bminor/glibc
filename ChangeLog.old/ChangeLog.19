@@ -1,5 +1,16 @@
 2019-10-11  Florian Weimer  <fweimer@redhat.com>
 
+	* elf/elf_machine_sym_no_match.h: New file.
+	* elf/dl-lookip.c (ELF_MACHINE_SYM_NO_MATCH): Do not define.
+	* elf/dl-lookup.c (check_match) Call elf_machine_sym_no_match
+	instead of ELF_MACHINE_SYM_NO_MATCH.
+	* sysdeps/mips/dl-machine.h (ELF_MACHINE_SYM_NO_MATCH): Remove
+	definition.
+	* sysdeps/mips/elf_machine_sym_no_match.h: New file.  Extracted
+	from sysdeps/mips/dl-machine.h.
+
+2019-10-11  Florian Weimer  <fweimer@redhat.com>
+
 	* manual/startup.texi (Aborting a Program): Remove warning.
 
 2019-10-10  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
