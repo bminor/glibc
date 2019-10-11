@@ -1,3 +1,7 @@
+2019-10-11  Florian Weimer  <fweimer@redhat.com>
+
+	* manual/startup.texi (Aborting a Program): Remove warning.
+
 2019-10-10  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #18231]
