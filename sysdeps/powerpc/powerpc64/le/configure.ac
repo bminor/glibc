@@ -17,4 +17,19 @@ AS_IF([test "$libc_cv_target_power8_ok" != "yes"],
       [critic_missing="$critic_missing POWER8 or newer is required on powerpc64le."])
 CFLAGS="$OLD_CFLAGS"
 
+# Local configure fragment for sysdeps/powerpc/powerpc64le.
+
+dnl Require support for -mno-gnu-attribute
+OLD_CFLAGS="$CFLAGS"
+CFLAGS="$CFLAGS -mno-gnu-attribute"
+AC_CACHE_CHECK([if the compiler supports -mno-gnu-attribute],
+	       libc_cv_no_gnu_attr_ok, [
+AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
+]])],
+	       [libc_cv_no_gnu_attr_ok=yes],
+	       [libc_cv_no_gnu_attr_ok=no])])
+AS_IF([test "$libc_cv_no_gnu_attr_ok" != "yes"],
+      [critic_missing="$critic_missing A compiler with -mno-gnu-attribute is required on powerpc64le."])
+CFLAGS="$OLD_CFLAGS"
+
 test -n "$critic_missing" && AC_MSG_ERROR([*** $critic_missing])
