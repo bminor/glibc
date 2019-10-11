@@ -26,9 +26,5 @@
 int
 semop (int semid, struct sembuf *sops, size_t nsops)
 {
-#ifdef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
-  return INLINE_SYSCALL_CALL (semop, semid, sops, nsops);
-#else
-  return INLINE_SYSCALL_CALL (ipc, IPCOP_semop, semid, nsops, 0, sops);
-#endif
+  return __semtimedop (semid, sops, nsops, NULL);
 }
