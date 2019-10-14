@@ -52,6 +52,15 @@ enum __ptrace_eventcodes
   PTRACE_EVENT_STOP	= 128
 };
 
+/* Type of stop for PTRACE_GET_SYSCALL_INFO.  */
+enum __ptrace_get_syscall_info_op
+{
+  PTRACE_SYSCALL_INFO_NONE = 0,
+  PTRACE_SYSCALL_INFO_ENTRY = 1,
+  PTRACE_SYSCALL_INFO_EXIT = 2,
+  PTRACE_SYSCALL_INFO_SECCOMP = 3
+};
+
 /* Arguments for PTRACE_PEEKSIGINFO.  */
 struct __ptrace_peeksiginfo_args
 {
@@ -71,6 +80,44 @@ struct __ptrace_seccomp_metadata
 {
   __uint64_t filter_off;	/* Input: which filter.  */
   __uint64_t flags;		/* Output: filter's flags.  */
+};
+
+/* Results of PTRACE_GET_SYSCALL_INFO.  */
+struct __ptrace_syscall_info
+{
+  __uint8_t op;			/* One of the enum
+				   __ptrace_get_syscall_info_op
+				   values.  */
+  __uint32_t arch __attribute__ ((__aligned__ (4))); /* AUDIT_ARCH_*
+							value.  */
+  __uint64_t instruction_pointer; /* Instruction pointer.  */
+  __uint64_t stack_pointer;	/* Stack pointer.  */
+  union
+  {
+    /* System call number and arguments, for
+       PTRACE_SYSCALL_INFO_ENTRY.  */
+    struct
+    {
+      __uint64_t nr;
+      __uint64_t args[6];
+    } entry;
+    /* System call return value and error flag, for
+       PTRACE_SYSCALL_INFO_EXIT.  */
+    struct
+    {
+      __int64_t rval;
+      __uint8_t is_error;
+    } exit;
+    /* System call number, arguments and SECCOMP_RET_DATA portion of
+       SECCOMP_RET_TRACE return value, for
+       PTRACE_SYSCALL_INFO_SECCOMP.  */
+    struct
+    {
+      __uint64_t nr;
+      __uint64_t args[6];
+      __uint32_t ret_data;
+    } seccomp;
+  };
 };
 
 /* Perform process tracing functions.  REQUEST is one of the values
