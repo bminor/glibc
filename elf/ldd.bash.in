@@ -167,7 +167,7 @@ warning: you do not have execution permission for" "\`$file'" >&2
     1)
       # This can be a non-ELF binary or no binary at all.
       nonelf "$file" || {
-	echo $"	not a dynamic executable"
+	echo $"	not a dynamic executable" >&2
 	result=1
       }
       ;;
