@@ -19,21 +19,53 @@
 #include <sysdep.h>
 #include <errno.h>
 #include <time.h>
-#include "kernel-posix-cpu-timers.h"
 
 #ifdef HAVE_CLOCK_GETRES_VSYSCALL
 # define HAVE_VSYSCALL
 #endif
 #include <sysdep-vdso.h>
-
 #include <shlib-compat.h>
+#include <kernel-features.h>
 
 /* Get resolution of clock.  */
 int
+__clock_getres64 (clockid_t clock_id, struct __timespec64 *res)
+{
+#ifdef __ASSUME_TIME64_SYSCALLS
+# ifndef __NR_clock_getres_time64
+  return INLINE_VSYSCALL (clock_getres, 2, clock_id, res);
+# else
+  return INLINE_SYSCALL (clock_getres_time64, 2, clock_id, res);
+# endif
+#else
+# ifdef __NR_clock_getres_time64
+  int ret = INLINE_SYSCALL (clock_getres_time64, 2, clock_id, res);
+  if (ret == 0 || errno != ENOSYS)
+    return ret;
+# endif
+  struct timespec ts32;
+  int retval = INLINE_VSYSCALL (clock_getres, 2, clock_id, &ts32);
+  if (! retval && res)
+    *res = valid_timespec_to_timespec64 (ts32);
+
+  return retval;
+#endif
+}
+
+#if __TIMESIZE != 64
+int
 __clock_getres (clockid_t clock_id, struct timespec *res)
 {
-  return INLINE_VSYSCALL (clock_getres, 2, clock_id, res);
+  struct __timespec64 ts64;
+  int retval;
+
+  retval = __clock_getres64 (clock_id, &ts64);
+  if (! retval && res)
+    *res = valid_timespec64_to_timespec (ts64);
+
+  return retval;
 }
+#endif
 
 versioned_symbol (libc, __clock_getres, clock_getres, GLIBC_2_17);
 /* clock_getres moved to libc in version 2.17;

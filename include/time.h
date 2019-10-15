@@ -133,6 +133,14 @@ extern int __clock_settime64 (clockid_t clock_id,
 libc_hidden_proto (__clock_settime64)
 #endif
 
+#if __TIMESIZE == 64
+# define __clock_getres64 __clock_getres
+#else
+extern int __clock_getres64 (clockid_t clock_id,
+                             struct __timespec64 *tp);
+libc_hidden_proto (__clock_getres64);
+#endif
+
 /* Compute the `struct tm' representation of T,
    offset OFFSET seconds east of UTC,
    and store year, yday, mon, mday, wday, hour, min, sec into *TP.
