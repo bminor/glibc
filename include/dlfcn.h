@@ -117,7 +117,7 @@ struct dlfcn_hook
   int (*dladdr) (const void *address, Dl_info *info);
   int (*dladdr1) (const void *address, Dl_info *info,
 		  void **extra_info, int flags);
-  int (*dlinfo) (void *handle, int request, void *arg, void *dl_caller);
+  int (*dlinfo) (void *handle, int request, void *arg);
   void *(*dlmopen) (Lmid_t nsid, const char *file, int mode, void *dl_caller);
   void *pad[4];
 };
@@ -143,8 +143,7 @@ extern int __dladdr (const void *address, Dl_info *info)
 extern int __dladdr1 (const void *address, Dl_info *info,
 		      void **extra_info, int flags)
      attribute_hidden;
-extern int __dlinfo (void *handle, int request, void *arg DL_CALLER_DECL)
-     attribute_hidden;
+extern int __dlinfo (void *handle, int request, void *arg) attribute_hidden;
 
 #ifndef SHARED
 struct link_map;
