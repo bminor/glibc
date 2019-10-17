@@ -1,4 +1,4 @@
-/* Test case for BZ #16634 and BZ#24900.  PIE version.
+/* Test case for BZ #16634.  Container version.
    Copyright (C) 2014-2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -14,6 +14,26 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
-#include "tst-dlopen-aout.c"
+/* This test uses the iconv program as the test binary.  */
+
+#include <stdlib.h>
+#include <support/support.h>
+
+static char *iconv_path;
+
+static __attribute__ ((constructor)) void
+iconv_path_init (void)
+{
+  iconv_path = xasprintf ("%s/iconv", support_bindir_prefix);
+}
+
+static __attribute__ ((destructor)) void
+iconv_path_fini (void)
+{
+  free (iconv_path);
+}
+
+#define TST_DLOPEN_TLSMODID_PATH iconv_path
+#include "tst-dlopen-tlsmodid.h"

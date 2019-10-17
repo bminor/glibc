@@ -1,4 +1,9 @@
-/* Test case for BZ #16634 and BZ#24900.  Container version.
+/* Test case for BZ #16634.  Non-PIE version.
+
+   Verify that incorrectly dlopen()ing an executable without
+   __RTLD_OPENEXEC does not cause assertion in ld.so, and that it
+   actually results in an error.
+
    Copyright (C) 2014-2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,4 +21,5 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include "tst-dlopen-aout.c"
+#define TST_DLOPEN_TLSMODID_PATH "tst-dlopen-self"
+#include "tst-dlopen-tlsmodid.h"

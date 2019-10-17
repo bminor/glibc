@@ -192,14 +192,16 @@ tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-latepthread tst-tls-manydynamic tst-nodelete-dlclose \
 	 tst-debug1 tst-main1 tst-absolute-sym tst-absolute-zero tst-big-note \
 	 tst-unwind-ctor tst-unwind-main tst-audit13 \
-	 tst-sonamemove-link tst-sonamemove-dlopen tst-dlopen-aout
+	 tst-sonamemove-link tst-sonamemove-dlopen tst-dlopen-tlsmodid \
+	 tst-dlopen-self
 #	 reldep9
 tests-internal += loadtest unload unload2 circleload1 \
 	 neededtest neededtest2 neededtest3 neededtest4 \
 	 tst-tls3 tst-tls6 tst-tls7 tst-tls8 tst-dlmopen2 \
 	 tst-ptrguard1 tst-stackguard1 tst-libc_dlvsym \
 	 tst-create_format1
-tests-container += tst-pldd tst-dlopen-aout-container
+tests-container += tst-pldd tst-dlopen-tlsmodid-container \
+  tst-dlopen-self-container
 test-srcs = tst-pathopt
 selinux-enabled := $(shell cat /selinux/enforce 2> /dev/null)
 ifneq ($(selinux-enabled),1)
@@ -308,8 +310,9 @@ test-xfail-tst-protected1b = yes
 endif
 ifeq (yesyes,$(have-fpie)$(build-shared))
 modules-names += tst-piemod1
-tests += tst-pie1 tst-pie2 tst-dlopen-pie tst-dlopen-aout-pie
-tests-pie += tst-pie1 tst-pie2 tst-dlopen-aout-pie
+tests += tst-pie1 tst-pie2 tst-dlopen-pie tst-dlopen-tlsmodid-pie \
+  tst-dlopen-self-pie
+tests-pie += tst-pie1 tst-pie2 tst-dlopen-tlsmodid-pie tst-dlopen-self-pie
 ifeq (yes,$(have-protected-data))
 tests += vismain
 tests-pie += vismain
@@ -1268,12 +1271,21 @@ $(objpfx)tst-addr1: $(libdl)
 
 $(objpfx)tst-thrlock: $(libdl) $(shared-thread-library)
 
-tst-tst-dlopen-aout-no-pie = yes
-$(objpfx)tst-dlopen-aout: $(libdl) $(shared-thread-library)
-CFLAGS-tst-dlopen-aout-pie.c += $(pie-ccflag)
-$(objpfx)tst-dlopen-aout-pie: $(libdl) $(shared-thread-library)
-$(objpfx)tst-dlopen-aout-container: $(libdl) $(shared-thread-library)
-LDFLAGS-tst-dlopen-aout-container += -Wl,-rpath,\$$ORIGIN
+tst-tst-dlopen-tlsmodid-no-pie = yes
+$(objpfx)tst-dlopen-tlsmodid: $(libdl) $(shared-thread-library)
+$(objpfx)tst-dlopen-tlsmodid.out: $(objpfx)tst-dlopen-self
+CFLAGS-tst-dlopen-tlsmodid-pie.c += $(pie-ccflag)
+$(objpfx)tst-dlopen-tlsmodid-pie: $(libdl) $(shared-thread-library)
+$(objpfx)tst-dlopen-tlsmodid-pie.out: $(objpfx)tst-dlopen-self-pie
+$(objpfx)tst-dlopen-tlsmodid-container: $(libdl) $(shared-thread-library)
+LDFLAGS-tst-dlopen-tlsmodid-container += -Wl,-rpath,\$$ORIGIN
+
+tst-tst-dlopen-self-no-pie = yes
+$(objpfx)tst-dlopen-self: $(libdl)
+CFLAGS-tst-dlopen-self-pie.c += $(pie-ccflag)
+$(objpfx)tst-dlopen-self-pie: $(libdl)
+$(objpfx)tst-dlopen-self-container: $(libdl)
+LDFLAGS-tst-dlopen-self-container += -Wl,-rpath,\$$ORIGIN
 
 CFLAGS-ifuncmain1pic.c += $(pic-ccflag)
 CFLAGS-ifuncmain1picstatic.c += $(pic-ccflag)

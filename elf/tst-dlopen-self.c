@@ -1,9 +1,4 @@
-/* Test case for BZ #16634 and BZ#24900.
-
-   Verify that incorrectly dlopen()ing an executable without
-   __RTLD_OPENEXEC does not cause assertion in ld.so, and that it
-   actually results in an error.
-
+/* Check that dlopen'ing the executable itself fails (bug 24900).
    Copyright (C) 2014-2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -22,24 +17,12 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <dlfcn.h>
-#include <pthread.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <support/check.h>
-#include <support/support.h>
-#include <support/xthread.h>
 
-__thread int x;
-
-void *
-fn (void *p)
-{
-  return p;
-}
-
-/* Call dlopen on PATH and check that fails with an error message
-   indicating an attempt to open an ET_EXEC or PIE object.  */
+/* Call dlopen and check that fails with an error message indicating
+   an attempt to open an ET_EXEC or PIE object.  */
 static void
 check_dlopen_failure (const char *path)
 {
@@ -59,24 +42,11 @@ check_dlopen_failure (const char *path)
 static int
 do_test (int argc, char *argv[])
 {
-  int j;
+  check_dlopen_failure (argv[0]);
 
-  for (j = 0; j < 100; ++j)
-    {
-      pthread_t thr;
-
-      check_dlopen_failure (argv[0]);
-
-      /* We create threads to force TLS allocation, which triggers
-	 the original bug i.e. running out of surplus slotinfo entries
-	 for TLS.  */
-      thr = xpthread_create (NULL, fn, NULL);
-      xpthread_join (thr);
-    }
-
-  /* The elf subdirectory (or $ORIGIN in the container case) is on the
-     library search path.  */
-  check_dlopen_failure ("tst-dlopen-aout");
+  char *full_path = realpath (argv[0], NULL);
+  check_dlopen_failure  (full_path);
+  free (full_path);
 
   return 0;
 }
