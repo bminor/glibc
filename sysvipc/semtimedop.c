@@ -29,6 +29,5 @@ __semtimedop (int semid, struct sembuf *sops, size_t nsops,
   return -1;
 }
 weak_alias (__semtimedop, semtimedop)
-libc_hidden_def (__semtimedop)
 
 stub_warning (semtimedop)
