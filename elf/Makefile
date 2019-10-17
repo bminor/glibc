@@ -193,7 +193,7 @@ tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-debug1 tst-main1 tst-absolute-sym tst-absolute-zero tst-big-note \
 	 tst-unwind-ctor tst-unwind-main tst-audit13 \
 	 tst-sonamemove-link tst-sonamemove-dlopen tst-dlopen-tlsmodid \
-	 tst-dlopen-self
+	 tst-dlopen-self tst-initfinilazyfail
 #	 reldep9
 tests-internal += loadtest unload unload2 circleload1 \
 	 neededtest neededtest2 neededtest3 neededtest4 \
@@ -281,7 +281,8 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-main1mod tst-libc_dlvsym-dso tst-absolute-sym-lib \
 		tst-absolute-zero-lib tst-big-note-lib tst-unwind-ctor-lib \
 		tst-audit13mod1 tst-sonamemove-linkmod1 \
-		tst-sonamemove-runmod1 tst-sonamemove-runmod2
+		tst-sonamemove-runmod1 tst-sonamemove-runmod2 \
+		tst-initlazyfailmod tst-finilazyfailmod
 # Most modules build with _ISOMAC defined, but those filtered out
 # depend on internal headers.
 modules-names-tests = $(filter-out ifuncmod% tst-libc_dlvsym-dso tst-tlsmod%,\
@@ -1569,3 +1570,13 @@ $(objpfx)tst-big-note-lib.so: $(objpfx)tst-big-note-lib.o
 $(objpfx)tst-unwind-ctor: $(objpfx)tst-unwind-ctor-lib.so
 
 CFLAGS-tst-unwind-main.c += -funwind-tables -DUSE_PTHREADS=0
+
+$(objpfx)tst-initfinilazyfail: $(libdl)
+$(objpfx)tst-initfinilazyfail.out: \
+  $(objpfx)tst-initlazyfailmod.so $(objpfx)tst-finilazyfailmod.so
+# Override -z defs, so that we can reference an undefined symbol.
+# Force lazy binding for the same reason.
+LDFLAGS-tst-initlazyfailmod.so = \
+  -Wl,-z,lazy -Wl,--unresolved-symbols=ignore-all
+LDFLAGS-tst-finilazyfailmod.so = \
+  -Wl,-z,lazy -Wl,--unresolved-symbols=ignore-all

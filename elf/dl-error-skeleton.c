@@ -173,6 +173,18 @@ int
 _dl_catch_exception (struct dl_exception *exception,
 		     void (*operate) (void *), void *args)
 {
+  /* If exception is NULL, temporarily disable exception handling.
+     Exceptions during operate (args) are fatal.  */
+  if (exception == NULL)
+    {
+      struct catch *const old = catch_hook;
+      catch_hook = NULL;
+      operate (args);
+      /* If we get here, the operation was successful.  */
+      catch_hook = old;
+      return 0;
+    }
+
   /* We need not handle `receiver' since setting a `catch' is handled
      before it.  */
 
