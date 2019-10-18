@@ -23,7 +23,7 @@
 
 #define _DL_HWCAP_COUNT 19
 
-#define _DL_PLATFORMS_COUNT	9
+#define _DL_PLATFORMS_COUNT	10
 
 /* The kernel provides up to 32 capability bits with elf_hwcap.  */
 #define _DL_FIRST_PLATFORM	32
