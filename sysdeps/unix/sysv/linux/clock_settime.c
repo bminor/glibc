@@ -19,6 +19,7 @@
 #include <sysdep.h>
 #include <time.h>
 #include <shlib-compat.h>
+#include <kernel-features.h>
 
 /* Set CLOCK to value TP.  */
 int
