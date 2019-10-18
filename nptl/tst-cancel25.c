@@ -2,6 +2,7 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <internal-signals.h>
 
 
 static pthread_barrier_t b;
