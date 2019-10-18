@@ -963,7 +963,6 @@ __reclaim_stacks (void)
 }
 
 
-#ifdef SIGSETXID
 static void
 setxid_mark_thread (struct xid_command *cmdp, struct pthread *t)
 {
@@ -1174,8 +1173,6 @@ __nptl_setxid (struct xid_command *cmdp)
   lll_unlock (stack_cache_lock, LLL_PRIVATE);
   return result;
 }
-#endif  /* SIGSETXID.  */
-
 
 static inline void __attribute__((always_inline))
 init_one_static_tls (struct pthread *curp, struct link_map *map)

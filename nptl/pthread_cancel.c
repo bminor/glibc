@@ -63,7 +63,6 @@ __pthread_cancel (pthread_t th)
 						    oldval))
 	    goto again;
 
-#ifdef SIGCANCEL
 	  /* The cancellation handler will take care of marking the
 	     thread as canceled.  */
 	  pid_t pid = __getpid ();
@@ -73,12 +72,6 @@ __pthread_cancel (pthread_t th)
 					   SIGCANCEL);
 	  if (INTERNAL_SYSCALL_ERROR_P (val, err))
 	    result = INTERNAL_SYSCALL_ERRNO (val, err);
-#else
-          /* It should be impossible to get here at all, since
-             pthread_setcanceltype should never have allowed
-             PTHREAD_CANCEL_ASYNCHRONOUS to be set.  */
-          abort ();
-#endif
 
 	  break;
 	}

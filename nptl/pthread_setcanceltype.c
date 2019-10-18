@@ -27,11 +27,6 @@ __pthread_setcanceltype (int type, int *oldtype)
   if (type < PTHREAD_CANCEL_DEFERRED || type > PTHREAD_CANCEL_ASYNCHRONOUS)
     return EINVAL;
 
-#ifndef SIGCANCEL
-  if (type == PTHREAD_CANCEL_ASYNCHRONOUS)
-    return ENOTSUP;
-#endif
-
   volatile struct pthread *self = THREAD_SELF;
 
   int oldval = THREAD_GETMEM (self, cancelhandling);

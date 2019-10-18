@@ -402,7 +402,6 @@ START_THREAD_DEFN
     }
 #endif
 
-#ifdef SIGCANCEL
   /* If the parent was running cancellation handlers while creating
      the thread the new thread inherited the signal mask.  Reset the
      cancellation signal mask.  */
@@ -415,7 +414,6 @@ START_THREAD_DEFN
       (void) INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_UNBLOCK, &mask,
 			       NULL, _NSIG / 8);
     }
-#endif
 
   /* This is where the try/finally block should be created.  For
      compilers without that support we do use setjmp.  */
