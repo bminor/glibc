@@ -22,3 +22,4 @@
 #  define __NO_LONG_DOUBLE_MATH		1
 # endif
 #endif
+#define __LONG_DOUBLE_USES_FLOAT128 0
