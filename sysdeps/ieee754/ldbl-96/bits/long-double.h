@@ -18,3 +18,4 @@
 
 /* long double is distinct from double, so there is nothing to
    define here.  */
+#define __LONG_DOUBLE_USES_FLOAT128 0

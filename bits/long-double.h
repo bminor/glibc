@@ -37,3 +37,4 @@
 #ifndef __NO_LONG_DOUBLE_MATH
 # define __NO_LONG_DOUBLE_MATH	1
 #endif
+#define __LONG_DOUBLE_USES_FLOAT128 0
