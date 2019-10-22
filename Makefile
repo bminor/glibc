@@ -564,7 +564,7 @@ ifeq ($(run-built-tests),yes)
 	for dso in `$(test-wrapper-env) LD_TRACE_LOADED_OBJECTS=1  \
 		$(rtld-prefix) \
 		$(objpfx)testroot.pristine/bin/sh \
-	        | grep / | sed 's/^[^/]*//' | sed 's/ .*//'` ;\
+	        | sed -n '/\//{s@.*=> /@/@;s/^[^/]*//;s/ .*//p;}'` ;\
 	  do \
 	    test -d `dirname $(objpfx)testroot.pristine$$dso` || \
 	      mkdir -p `dirname $(objpfx)testroot.pristine$$dso` ;\
@@ -573,7 +573,7 @@ ifeq ($(run-built-tests),yes)
 	for dso in `$(test-wrapper-env) LD_TRACE_LOADED_OBJECTS=1  \
 		$(rtld-prefix) \
 		$(objpfx)support/$(LINKS_DSO_PROGRAM) \
-	        | grep / | sed 's/^[^/]*//' | sed 's/ .*//'` ;\
+	        | sed -n '/\//{s@.*=> /@/@;s/^[^/]*//;s/ .*//p;}'` ;\
 	  do \
 	    test -d `dirname $(objpfx)testroot.pristine$$dso` || \
 	      mkdir -p `dirname $(objpfx)testroot.pristine$$dso` ;\
