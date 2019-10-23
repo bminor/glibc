@@ -22,37 +22,19 @@
    more information about the value -4095 used below.*/
 
 ENTRY (syscall)
-	/* Save registers and setup stack.  */
-	stmg	%r6,%r15,48(%r15)  /* Save registers.  */
-	cfi_offset (%r15,-40)
-	cfi_offset (%r14,-48)
-	cfi_offset (%r13,-56)
-	cfi_offset (%r12,-64)
-	cfi_offset (%r11,-72)
-	cfi_offset (%r10,-80)
-	cfi_offset (%r9,-88)
-	cfi_offset (%r8,-96)
+	stmg   %r6,%r7,48(%r15)    /* Save registers.  */
 	cfi_offset (%r7,-104)
 	cfi_offset (%r6,-112)
-	lgr	%r1,%r15
-	lg	%r0,8(%r15)	   /* Load eos.	 */
-	aghi	%r15,-160	   /* Buy stack space.	*/
-	cfi_adjust_cfa_offset (160)
-	stg	%r1,0(%r15)	   /* Store back chain.	 */
-	stg	%r0,8(%r15)	   /* Store eos.  */
 
 	lgr    %r1,%r2		   /* Move syscall number.  */
 	lgr    %r2,%r3		   /* First parameter.	*/
 	lgr    %r3,%r4		   /* Second parameter.	 */
 	lgr    %r4,%r5		   /* Third parameter.	*/
 	lgr    %r5,%r6		   /* Fourth parameter.	 */
-	lg     %r6,320(%r15)	   /* Fifth parameter.	*/
-	lg     %r7,328(%r15)	   /* Sixth parameter.	*/
-
+	lmg    %r6,%r7,160(%r15)   /* Fifth / Sixth parameter.	*/
 	svc    0
-	lg     %r15,0(%r15)        /* Load back chain.  */
-	cfi_adjust_cfa_offset (-160)
-	lmg    %r6,%r15,48(%r15)   /* Load registers.  */
+
+	lmg    %r6,%r7,48(%r15)    /* Load registers.  */
 
 	lghi   %r0,-4095
 	clgr   %r2,%r0		   /* Check R2 for error.  */
