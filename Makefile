@@ -580,8 +580,15 @@ ifeq ($(run-built-tests),yes)
 	    $(test-wrapper) cp $$dso $(objpfx)testroot.pristine$$dso ;\
 	  done
 endif
+	# $(symbolic-link-list) is a file that encodes $(DESTDIR) so we
+	# have to purge it
+	rm -f $(symbolic-link-list)
+	# Setting INSTALL_UNCOMPRESSED causes localedata/Makefile to
+	# install the charmaps uncompressed, as the testroot does not
+	# provide a gunzip program.
 	$(MAKE) install DESTDIR=$(objpfx)testroot.pristine \
-	  subdirs='$(sorted-subdirs)'
+	  INSTALL_UNCOMPRESSED=yes subdirs='$(sorted-subdirs)'
+	rm -f $(symbolic-link-list)
 	touch $(objpfx)testroot.pristine/install.stamp
 
 tests-special-notdir = $(patsubst $(objpfx)%, %, $(tests-special))

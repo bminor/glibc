@@ -167,9 +167,17 @@ endif
 endif
 
 # Files to install.
+ifeq ($(INSTALL_UNCOMPRESSED),yes)
+# This option is for testing inside the testroot container, as the
+# container does not include a working gunzip program.
+install-others := $(addprefix $(inst_i18ndir)/, \
+			      $(charmaps) \
+			      $(locales))
+else
 install-others := $(addprefix $(inst_i18ndir)/, \
 			      $(addsuffix .gz, $(charmaps)) \
 			      $(locales))
+endif
 
 tests: $(objdir)/iconvdata/gconv-modules
 
@@ -283,12 +291,22 @@ endif
 
 include ../Rules
 
+ifeq ($(INSTALL_UNCOMPRESSED),yes)
+# Install the charmap files as-is.  This option is for testing inside
+# the testroot container, as the container does not include a working
+# gunzip program.
+$(inst_i18ndir)/charmaps/%: charmaps/% $(+force)
+	$(make-target-directory)
+	rm -f $@
+	$(INSTALL_DATA) $< $@
+else
 # Install the charmap files in gzipped format.
 $(inst_i18ndir)/charmaps/%.gz: charmaps/% $(+force)
 	$(make-target-directory)
 	rm -f $(@:.gz=) $@
 	$(INSTALL_DATA) $< $(@:.gz=)
 	gzip -9n $(@:.gz=)
+endif
 
 # Install the locale source files in the appropriate directory.
 $(inst_i18ndir)/locales/%: locales/% $(+force); $(do-install)
