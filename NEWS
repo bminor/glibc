@@ -132,6 +132,8 @@ The following bugs are resolved with this release:
   [23037] initialize msg_flags to zero for sendmmsg() calls
   [23069] sigaction broken on riscv64-linux-gnu
   [23102] Incorrect parsing of consecutive $ variables in runpath entries
+  [23132] localedata: Missing transliterations in Miscellaneous Mathematical
+    Symbols-A/B Unicode blocks
   [23137] s390: pthread_join sometimes block indefinitely (on 31bit and libc
     build with -Os)
   [23152] gd_GB: Fix typo in "May" (abbreviated)

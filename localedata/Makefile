@@ -78,7 +78,7 @@ tests = $(locale_test_suite) tst-digits tst-setlocale bug-iconv-trans \
 	tst-leaks tst-mbswcs1 tst-mbswcs2 tst-mbswcs3 tst-mbswcs4 tst-mbswcs5 \
 	tst-mbswcs6 tst-xlocale1 tst-xlocale2 bug-usesetlocale \
 	tst-strfmon1 tst-sscanf bug-setlocale1 tst-setlocale2 tst-setlocale3 \
-	tst-wctype
+	tst-wctype tst-iconv-math-trans
 tests-static = bug-setlocale1-static
 tests += $(tests-static)
 ifeq (yes,$(build-shared))
@@ -113,6 +113,8 @@ LOCALES := de_DE.ISO-8859-1 de_DE.UTF-8 en_US.ANSI_X3.4-1968 \
 	   pl_PL.UTF-8 fr_CA.UTF-8 hr_HR.UTF-8 bs_BA.UTF-8 sr_RS.UTF-8 \
 	   is_IS.UTF-8 et_EE.UTF-8 hsb_DE.UTF-8 lt_LT.UTF-8
 include ../gen-locales.mk
+
+$(objpfx)tst-iconv-math-trans.out: $(gen-locales)
 endif
 
 include ../Rules
