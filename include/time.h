@@ -158,6 +158,13 @@ extern int __utimensat64_helper (int fd, const char *file,
                                  const struct __timespec64 tsp[2], int flags);
 libc_hidden_proto (__utimensat64_helper);
 
+#if __TIMESIZE == 64
+# define __futimens64 __futimens
+#else
+extern int __futimens64 (int fd, const struct __timespec64 tsp[2]);
+libc_hidden_proto (__futimens64);
+#endif
+
 /* Compute the `struct tm' representation of T,
    offset OFFSET seconds east of UTC,
    and store year, yday, mon, mday, wday, hour, min, sec into *TP.

@@ -29,10 +29,26 @@
    Starting with 2.6.22 the Linux kernel has the utimensat syscall which
    can be used to implement futimens.  */
 int
-futimens (int fd, const struct timespec tsp[2])
+__futimens64 (int fd, const struct __timespec64 tsp64[2])
 {
   if (fd < 0)
     return INLINE_SYSCALL_ERROR_RETURN_VALUE (EBADF);
-  /* Avoid implicit array coercion in syscall macros.  */
-  return INLINE_SYSCALL (utimensat, 4, fd, NULL, &tsp[0], 0);
+
+  return __utimensat64_helper (fd, NULL, &tsp64[0], 0);
 }
+
+#if __TIMESIZE != 64
+int
+__futimens (int fd, const struct timespec tsp[2])
+{
+  struct __timespec64 tsp64[2];
+  if (tsp)
+    {
+      tsp64[0] = valid_timespec_to_timespec64 (tsp[0]);
+      tsp64[1] = valid_timespec_to_timespec64 (tsp[1]);
+    }
+
+  return __futimens64 (fd, tsp ? &tsp64[0] : NULL);
+}
+#endif
+weak_alias (__futimens, futimens)
