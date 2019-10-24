@@ -357,9 +357,9 @@ __close (int fd)
   return 0;
 }
 
-check_no_hidden(__read);
+check_no_hidden(__pread64);
 __ssize_t weak_function
-__read (int fd, void *buf, size_t nbytes)
+__pread64 (int fd, void *buf, size_t nbytes, off64_t offset)
 {
   error_t err;
   char *data;
@@ -367,7 +367,7 @@ __read (int fd, void *buf, size_t nbytes)
 
   data = buf;
   nread = nbytes;
-  err = __io_read ((mach_port_t) fd, &data, &nread, -1, nbytes);
+  err = __io_read ((mach_port_t) fd, &data, &nread, offset, nbytes);
   if (err)
     return __hurd_fail (err);
 
@@ -378,6 +378,14 @@ __read (int fd, void *buf, size_t nbytes)
     }
 
   return nread;
+}
+libc_hidden_weak (__pread64)
+
+check_no_hidden(__read);
+__ssize_t weak_function
+__read (int fd, void *buf, size_t nbytes)
+{
+  return __pread64 (fd, buf, nbytes, -1);
 }
 libc_hidden_weak (__read)
 
