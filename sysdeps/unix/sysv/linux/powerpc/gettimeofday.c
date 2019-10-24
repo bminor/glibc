@@ -15,71 +15,40 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if defined SHARED && !defined __powerpc64__
-# define __gettimeofday __redirect___gettimeofday
-#else
-# define __redirect___gettimeofday __gettimeofday
+#include <time.h>
+#include <sysdep.h>
+
+#ifdef HAVE_GETTIMEOFDAY_VSYSCALL
+# define HAVE_VSYSCALL
 #endif
-
-#include <sys/time.h>
-
-#ifdef SHARED
-
-# include <dl-vdso.h>
-# include <libc-vdso.h>
-# include <dl-machine.h>
-# include <sysdep.h>
-
-# ifndef __powerpc64__
-#  undef __gettimeofday
-
-int
-__gettimeofday_vsyscall (struct timeval *tv, struct timezone *tz)
-{
-  return INLINE_VSYSCALL (gettimeofday, 2, tv, tz);
-}
-
-/* __GI___gettimeofday is defined as hidden and for ppc32 it enables the
-   compiler make a local call (symbol@local) for internal GLIBC usage. It
-   means the PLT won't be used and the ifunc resolver will be called directly.
-   For ppc64 a call to a function in another translation unit might use a
-   different toc pointer thus disallowing direct branchess and making internal
-   ifuncs calls safe.  */
-#  undef libc_hidden_def
-#  define libc_hidden_def(name)					\
-  __hidden_ver1 (__gettimeofday_vsyscall, __GI___gettimeofday,	\
-	       __gettimeofday_vsyscall);
-
-# endif /* !__powerpc64__  */
+#include <sysdep-vdso.h>
 
 static int
 __gettimeofday_syscall (struct timeval *tv, struct timezone *tz)
 {
-  return INLINE_SYSCALL (gettimeofday, 2, tv, tz);
+  if (__glibc_unlikely (tz != 0))
+    memset (tz, 0, sizeof *tz);
+
+  return INLINE_VSYSCALL (gettimeofday, 2, tv, tz);
 }
+
+#ifdef SHARED
+# include <dl-vdso.h>
+# include <libc-vdso.h>
 
 # define INIT_ARCH() \
   void *vdso_gettimeofday = get_vdso_symbol (HAVE_GETTIMEOFDAY_VSYSCALL)
 
 /* If the vDSO is not available we fall back syscall.  */
-libc_ifunc_hidden (__redirect___gettimeofday, __gettimeofday,
-		   vdso_gettimeofday
-		   ? VDSO_IFUNC_RET (vdso_gettimeofday)
-		   : (void *) __gettimeofday_syscall);
-libc_hidden_def (__gettimeofday)
-
+libc_ifunc (__gettimeofday,
+	    vdso_gettimeofday
+	    ? VDSO_IFUNC_RET (vdso_gettimeofday)
+	    : (void *) __gettimeofday_syscall);
 #else
-
-# include <sysdep.h>
-# include <errno.h>
-
 int
 __gettimeofday (struct timeval *tv, struct timezone *tz)
 {
-  return INLINE_SYSCALL (gettimeofday, 2, tv, tz);
+  return __gettimeofday_syscall (tv, tz);
 }
-libc_hidden_def (__gettimeofday)
-
 #endif
 weak_alias (__gettimeofday, gettimeofday)
-libc_hidden_weak (gettimeofday)

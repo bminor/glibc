@@ -15,20 +15,32 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
+#include <string.h>
+#include <time.h>
 #include <sys/time.h>
 
-/* Get the current time of day and timezone information,
-   putting it into *TV and *TZ.  If TZ is NULL, *TZ is not filled.
+/* Get the current time of day, putting it into *TV.
+   If *TZ is not NULL, clear it.
    Returns 0 on success, -1 on errors.  */
 int
-__gettimeofday (struct timeval *tv, struct timezone *tz)
+___gettimeofday (struct timeval *tv, struct timezone *tz)
 {
-  __set_errno (ENOSYS);
-  return -1;
-}
-libc_hidden_def (__gettimeofday)
-weak_alias (__gettimeofday, gettimeofday)
-libc_hidden_weak (gettimeofday)
+  if (__glibc_unlikely (tz != 0))
+    memset (tz, 0, sizeof *tz);
 
-stub_warning (gettimeofday)
+  struct timespec ts;
+  if (__clock_gettime (CLOCK_REALTIME, &ts))
+    return -1;
+
+  TIMESPEC_TO_TIMEVAL (tv, &ts);
+  return 0;
+}
+
+#ifdef VERSION_gettimeofday
+weak_alias (___gettimeofday, __wgettimeofday);
+default_symbol_version (___gettimeofday, __gettimeofday, VERSION_gettimeofday);
+default_symbol_version (__wgettimeofday,   gettimeofday, VERSION_gettimeofday);
+#else
+strong_alias (___gettimeofday, __gettimeofday)
+weak_alias (___gettimeofday, gettimeofday)
+#endif

@@ -89,6 +89,12 @@ valid_timeval32_to_timespec (const struct timeval32 tv)
   return (struct timespec) { tv.tv_sec, tv.tv_usec * 1000 };
 }
 
+static inline struct timeval32
+valid_timespec_to_timeval32 (const struct timespec ts)
+{
+  return (struct timeval32) { (time_t) ts.tv_sec, ts.tv_nsec / 1000 };
+}
+
 static inline void
 rusage64_to_rusage32 (struct rusage32 *restrict r32,
                       const struct rusage *restrict r64)

@@ -1,5 +1,4 @@
-/* clock_gettime -- Get the current time from a POSIX clockid_t.  Unix version.
-   Copyright (C) 1999-2019 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,32 +17,28 @@
 
 #include <errno.h>
 #include <time.h>
-#include <sys/time.h>
+#include <mach.h>
 #include <shlib-compat.h>
 
-/* Get current value of CLOCK and store it in TP.  */
+/* Get the current time of day, putting it into *TS.
+   Returns 0 on success, -1 on errors.  */
 int
-__clock_gettime (clockid_t clock_id, struct timespec *tp)
+__clock_gettime (clockid_t clock_id, struct timespec *ts)
 {
-  int retval = -1;
-
-  switch (clock_id)
+  if (clock_id != CLOCK_REALTIME)
     {
-    case CLOCK_REALTIME:
-      {
-	struct timeval tv;
-	retval = __gettimeofday (&tv, NULL);
-	if (retval == 0)
-	  TIMEVAL_TO_TIMESPEC (&tv, tp);
-      }
-      break;
-
-    default:
-      __set_errno (EINVAL);
-      break;
+      errno = EINVAL;
+      return -1;
     }
 
-  return retval;
+  /* __host_get_time can only fail if passed an invalid host_t.
+     __mach_host_self could theoretically fail (producing an
+     invalid host_t) due to resource exhaustion, but we assume
+     this will never happen.  */
+  time_value_t tv;
+  __host_get_time (__mach_host_self (), &tv);
+  TIME_VALUE_TO_TIMESPEC (&tv, ts);
+  return 0;
 }
 libc_hidden_def (__clock_gettime)
 

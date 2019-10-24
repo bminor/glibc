@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2019 Free Software Foundation, Inc.
+/* gettimeofday -- Get the current time of day.  Linux/Alpha/tv64 version.
+   Copyright (C) 2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,29 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <stddef.h>
-#include <sys/time.h>
-#include <mach.h>
-
-/* Get the current time of day and timezone information,
-   putting it into *TV and *TZ.  If TZ is NULL, *TZ is not filled.
-   Returns 0 on success, -1 on errors.  */
-int
-__gettimeofday (struct timeval *tv, struct timezone *tz)
-{
-  kern_return_t err;
-
-  if (tz != NULL)
-    *tz = (struct timezone){0, 0}; /* XXX */
-
-  if (err = __host_get_time (__mach_host_self (), (time_value_t *) tv))
-    {
-      errno = err;
-      return -1;
-    }
-  return 0;
-}
-libc_hidden_def (__gettimeofday)
-weak_alias (__gettimeofday, gettimeofday)
-libc_hidden_weak (gettimeofday)
+/* We can use the generic implementation, but we have to override its
+   default symbol version.  */
+#define VERSION_gettimeofday GLIBC_2.1
+#include <time/gettimeofday.c>

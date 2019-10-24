@@ -20,39 +20,39 @@
    putting it into *tv and *tz.  If tz is null, *tz is not filled.
    Returns 0 on success, -1 on errors.  */
 
-#include <sys/time.h>
+#include <time.h>
+#include <sysdep.h>
 
-#ifdef SHARED
-
-# include <dl-vdso.h>
-# include <sysdep-vdso.h>
+#ifdef HAVE_GETTIMEOFDAY_VSYSCALL
+# define HAVE_VSYSCALL
+#endif
+#include <sysdep-vdso.h>
 
 /* Used as a fallback in the ifunc resolver if VDSO is not available
    and for libc.so internal __gettimeofday calls.  */
-
 static int
 __gettimeofday_vsyscall (struct timeval *tv, struct timezone *tz)
 {
+  if (__glibc_unlikely (tz != 0))
+    memset (tz, 0, sizeof *tz);
+
   return INLINE_VSYSCALL (gettimeofday, 2, tv, tz);
 }
 
+#ifdef SHARED
+# include <dl-vdso.h>
+# include <sysdep-vdso.h>
+
 # define INIT_ARCH()
-libc_ifunc_hidden (__gettimeofday, __gettimeofday,
-		   (get_vdso_symbol (HAVE_GETTIMEOFDAY_VSYSCALL)
-		    ?: __gettimeofday_vsyscall))
-libc_hidden_def (__gettimeofday)
+libc_ifunc (__gettimeofday,
+	    (get_vdso_symbol (HAVE_GETTIMEOFDAY_VSYSCALL)
+	    ?: __gettimeofday_vsyscall))
 
 #else
-
-# include <sysdep.h>
 int
 __gettimeofday (struct timeval *tv, struct timezone *tz)
 {
-  return INLINE_SYSCALL (gettimeofday, 2, tv, tz);
+  return __gettimeofday_vsyscall (tv, tz);
 }
-libc_hidden_def (__gettimeofday)
-
 #endif
-
 weak_alias (__gettimeofday, gettimeofday)
-libc_hidden_weak (gettimeofday)

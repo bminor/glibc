@@ -20,6 +20,8 @@
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 
+#include <string.h>
+#include <time.h>
 #include <sys/time.h>
 #include <tv32-compat.h>
 
@@ -30,10 +32,13 @@ int
 attribute_compat_text_section
 __gettimeofday_tv32 (struct timeval32 *restrict tv32, void *restrict tz)
 {
-  struct timeval tv;
-  __gettimeofday (&tv, tz);
+  if (__glibc_unlikely (tz != 0))
+    memset (tz, 0, sizeof (struct timezone));
 
-  *tv32 = valid_timeval64_to_timeval (tv);
+  struct timespec ts;
+  __clock_gettime (CLOCK_REALTIME, &ts);
+
+  *tv32 = valid_timespec_to_timeval32 (ts);
   return 0;
 }
 

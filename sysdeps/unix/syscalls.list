@@ -33,7 +33,6 @@ getrlimit	-	getrlimit	i:ip	__getrlimit	getrlimit
 getrusage	-	getrusage	i:ip	__getrusage	getrusage
 getsockname	-	getsockname	i:ibN	__getsockname	getsockname
 getsockopt	-	getsockopt	i:iiiBN	getsockopt
-gettimeofday	-	gettimeofday	i:pP	__gettimeofday	gettimeofday
 getuid		-	getuid		Ei:	__getuid	getuid
 ioctl		-	ioctl		i:iiI	__ioctl		ioctl
 kill		-	kill		i:ii	__kill		kill

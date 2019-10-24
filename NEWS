@@ -21,6 +21,19 @@ Major new features:
   18661-1:2014 and TS 18661-3:2015 as amended by the resolution of
   Clarification Request 13 to TS 18661-3.
 
+* The gettimeofday function will no longer report information about a
+  system-wide time zone, expect for aarch64, powerpc, and x86 on Linux
+  which still uses the vDSO symbol (when available).
+
+  This 4.2-BSD-era feature has been deprecated for many years, as it cannot
+  handle the full complexity of the world's timezones, but hitherto we have
+  supported it on a best-effort basis.  Changes required to support 64-bit
+  time_t on 32-bit architectures have made this no longer practical.
+
+  As of this release, callers of gettimeofday with a non-null 'tzp' argument
+  will always receive a 'struct timezone' whose tz_minuteswest and
+  tz_dsttime fields are zero.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The totalorder and totalordermag functions, and the corresponding
