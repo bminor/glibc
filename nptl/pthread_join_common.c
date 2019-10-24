@@ -19,6 +19,7 @@
 #include "pthreadP.h"
 #include <atomic.h>
 #include <stap-probe.h>
+#include <time.h>
 
 static void
 cleanup (void *arg)
@@ -40,7 +41,7 @@ timedwait_tid (pid_t *tidp, const struct timespec *abstime)
 {
   pid_t tid;
 
-  if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
+  if (! valid_nanoseconds (abstime->tv_nsec))
     return EINVAL;
 
   /* Repeat until thread terminated.  */

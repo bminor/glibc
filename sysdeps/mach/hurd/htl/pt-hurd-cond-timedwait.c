@@ -19,6 +19,7 @@
 #include <pthread.h>
 #include <assert.h>
 #include <hurd/signal.h>
+#include <time.h>
 
 #include <pt-internal.h>
 
@@ -69,7 +70,7 @@ __pthread_hurd_cond_timedwait_internal (pthread_cond_t *cond,
 
   assert (ss->intr_port == MACH_PORT_NULL);	/* Sanity check for signal bugs. */
 
-  if (abstime != NULL && (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000))
+  if (abstime != NULL && ! valid_nanoseconds (abstime->tv_nsec))
     return EINVAL;
 
   /* Atomically enqueue our thread on the condition variable's queue of

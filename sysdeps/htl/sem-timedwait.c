@@ -19,6 +19,7 @@
 #include <semaphore.h>
 #include <errno.h>
 #include <assert.h>
+#include <time.h>
 
 #include <pt-internal.h>
 
@@ -39,7 +40,7 @@ __sem_timedwait_internal (sem_t *restrict sem,
       return 0;
     }
 
-  if (timeout != NULL && (timeout->tv_nsec < 0 || timeout->tv_nsec >= 1000000000))
+  if (timeout != NULL && ! valid_nanoseconds (timeout->tv_nsec))
     {
       errno = EINVAL;
       return -1;

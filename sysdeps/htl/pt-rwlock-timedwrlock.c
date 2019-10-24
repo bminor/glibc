@@ -18,6 +18,7 @@
 
 #include <pthread.h>
 #include <assert.h>
+#include <time.h>
 
 #include <pt-internal.h>
 
@@ -46,7 +47,7 @@ __pthread_rwlock_timedwrlock_internal (struct __pthread_rwlock *rwlock,
 
   /* The lock is busy.  */
 
-  if (abstime != NULL && (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000))
+  if (abstime != NULL && ! valid_nanoseconds (abstime->tv_nsec))
     return EINVAL;
 
   self = _pthread_self ();

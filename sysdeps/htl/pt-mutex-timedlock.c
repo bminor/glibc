@@ -18,6 +18,7 @@
 
 #include <pthread.h>
 #include <assert.h>
+#include <time.h>
 
 #include <pt-internal.h>
 
@@ -119,7 +120,7 @@ __pthread_mutex_timedlock_internal (struct __pthread_mutex *mutex,
 #endif
     assert (mutex->__owner);
 
-  if (abstime != NULL && (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000))
+  if (abstime != NULL && ! valid_nanoseconds (abstime->tv_nsec))
     return EINVAL;
 
   /* Add ourselves to the queue.  */

@@ -24,8 +24,7 @@ int
 __clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req,
 		   struct timespec *rem)
 {
-  if (__builtin_expect (req->tv_nsec, 0) < 0
-      || __builtin_expect (req->tv_nsec, 0) >= 1000000000)
+  if (! valid_nanoseconds (req->tv_nsec))
     return EINVAL;
 
   if (flags != TIMER_ABSTIME && flags != 0)

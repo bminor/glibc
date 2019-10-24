@@ -21,6 +21,7 @@
 #include <sysdep.h>
 #include <lowlevellock.h>
 #include <sys/time.h>
+#include <time.h>
 
 
 void
@@ -56,7 +57,7 @@ __lll_clocklock_wait (int *futex, clockid_t clockid,
                       const struct timespec *abstime, int private)
 {
   /* Reject invalid timeouts.  */
-  if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
+  if (! valid_nanoseconds (abstime->tv_nsec))
     return EINVAL;
 
   do

@@ -18,6 +18,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <time.h>
 #include "sem_waitcommon.c"
 
 int
@@ -32,7 +33,7 @@ sem_clockwait (sem_t *sem, clockid_t clockid,
       return -1;
     }
 
-  if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
+  if (! valid_nanoseconds (abstime->tv_nsec))
     {
       __set_errno (EINVAL);
       return -1;

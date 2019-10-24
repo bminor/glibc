@@ -17,6 +17,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <time.h>
 #include "sem_waitcommon.c"
 
 /* This is in a separate file because because sem_timedwait is only provided
@@ -24,7 +25,7 @@
 int
 sem_timedwait (sem_t *sem, const struct timespec *abstime)
 {
-  if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
+  if (! valid_nanoseconds (abstime->tv_nsec))
     {
       __set_errno (EINVAL);
       return -1;

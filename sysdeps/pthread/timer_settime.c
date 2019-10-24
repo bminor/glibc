@@ -41,10 +41,8 @@ timer_settime (timer_t timerid, int flags, const struct itimerspec *value,
       goto bail;
     }
 
-  if (value->it_interval.tv_nsec < 0
-      || value->it_interval.tv_nsec >= 1000000000
-      || value->it_value.tv_nsec < 0
-      || value->it_value.tv_nsec >= 1000000000)
+  if (! valid_nanoseconds (value->it_interval.tv_nsec)
+      || ! valid_nanoseconds (value->it_value.tv_nsec))
     {
       __set_errno (EINVAL);
       goto bail;

@@ -27,6 +27,7 @@
 #include <assert.h>
 #include <stdint.h>
 #include <limits.h>
+#include <time.h>
 
 /* All user select types.  */
 #define SELECT_ALL (SELECT_READ | SELECT_WRITE | SELECT_URG)
@@ -89,8 +90,7 @@ _hurd_select (int nfds,
     {
       struct timeval now;
 
-      if (timeout->tv_sec < 0 || timeout->tv_nsec < 0 ||
-	  timeout->tv_nsec >= 1000000000)
+      if (timeout->tv_sec < 0 || ! valid_nanoseconds (timeout->tv_nsec))
 	{
 	  errno = EINVAL;
 	  return -1;

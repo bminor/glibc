@@ -26,7 +26,7 @@ int
 __clock_settime64 (clockid_t clock_id, const struct __timespec64 *tp)
 {
   /* Make sure the time cvalue is OK.  */
-  if (tp->tv_nsec < 0 || tp->tv_nsec >= 1000000000)
+  if (! valid_nanoseconds (tp->tv_nsec))
     {
       __set_errno (EINVAL);
       return -1;

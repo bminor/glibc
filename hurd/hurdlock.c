@@ -71,7 +71,7 @@ __lll_abstimed_lock (void *ptr,
     {
       if (atomic_exchange_acq ((int *)ptr, 2) == 0)
         return 0;
-      else if (tsp->tv_nsec < 0 || tsp->tv_nsec >= 1000000000)
+      else if (! valid_nanoseconds (tsp->tv_nsec))
         return EINVAL;
 
       int mlsec = compute_reltime (tsp, clk);

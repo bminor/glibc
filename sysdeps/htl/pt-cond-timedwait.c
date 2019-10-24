@@ -20,6 +20,7 @@
 
 #include <pt-internal.h>
 #include <pthreadP.h>
+#include <time.h>
 
 extern int __pthread_cond_timedwait_internal (pthread_cond_t *cond,
 					      pthread_mutex_t *mutex,
@@ -74,7 +75,7 @@ __pthread_cond_timedwait_internal (pthread_cond_t *cond,
   int cancelled, oldtype, drain;
   clockid_t clock_id = __pthread_default_condattr.__clock;
 
-  if (abstime && (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000))
+  if (abstime && ! valid_nanoseconds (abstime->tv_nsec))
     return EINVAL;
 
   struct __pthread *self = _pthread_self ();

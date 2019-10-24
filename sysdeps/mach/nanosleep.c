@@ -30,8 +30,7 @@ __libc_nanosleep (const struct timespec *requested_time,
   struct timeval before, after;
 
   if (requested_time->tv_sec < 0
-      || requested_time->tv_nsec < 0
-      || requested_time->tv_nsec >= 1000000000)
+      || ! valid_nanoseconds (requested_time->tv_nsec))
     {
       errno = EINVAL;
       return -1;

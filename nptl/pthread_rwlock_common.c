@@ -24,6 +24,7 @@
 #include <stap-probe.h>
 #include <atomic.h>
 #include <futex-internal.h>
+#include <time.h>
 
 
 /* A reader--writer lock that fulfills the POSIX requirements (but operations
@@ -290,8 +291,7 @@ __pthread_rwlock_rdlock_full (pthread_rwlock_t *rwlock,
      if the lock can be immediately acquired" (i.e., we need not but may check
      it).  */
   if (abstime && __glibc_unlikely (!futex_abstimed_supported_clockid (clockid)
-      || abstime->tv_nsec >= 1000000000
-      || abstime->tv_nsec < 0))
+      || ! valid_nanoseconds (abstime->tv_nsec)))
     return EINVAL;
 
   /* Make sure we are not holding the rwlock as a writer.  This is a deadlock
@@ -596,8 +596,7 @@ __pthread_rwlock_wrlock_full (pthread_rwlock_t *rwlock,
      if the lock can be immediately acquired" (i.e., we need not but may check
      it).  */
   if (abstime && __glibc_unlikely (!futex_abstimed_supported_clockid (clockid)
-      || abstime->tv_nsec >= 1000000000
-      || abstime->tv_nsec < 0))
+      || ! valid_nanoseconds (abstime->tv_nsec)))
     return EINVAL;
 
   /* Make sure we are not holding the rwlock as a writer.  This is a deadlock

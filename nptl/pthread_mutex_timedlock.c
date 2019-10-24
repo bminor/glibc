@@ -235,7 +235,7 @@ __pthread_mutex_clocklock_common (pthread_mutex_t *mutex,
 	    }
 
 	  /* We are about to block; check whether the timeout is invalid.  */
-	  if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
+	  if (! valid_nanoseconds (abstime->tv_nsec))
 	    return EINVAL;
 	  /* Work around the fact that the kernel rejects negative timeout
 	     values despite them being valid.  */
@@ -561,7 +561,7 @@ __pthread_mutex_clocklock_common (pthread_mutex_t *mutex,
 		if (oldval != ceilval)
 		  {
 		    /* Reject invalid timeouts.  */
-		    if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
+		    if (! valid_nanoseconds (abstime->tv_nsec))
 		      {
 			result = EINVAL;
 			goto failpp;

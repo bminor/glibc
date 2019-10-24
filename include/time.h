@@ -236,5 +236,13 @@ valid_timespec64_to_timeval (const struct __timespec64 ts64)
 
   return tv;
 }
+
+/* Check if a value is in the valid nanoseconds range. Return true if
+   it is, false otherwise.  */
+static inline bool
+valid_nanoseconds (__syscall_slong_t ns)
+{
+  return __glibc_likely (0 <= ns && ns < 1000000000);
+}
 #endif
 #endif
