@@ -348,7 +348,7 @@ __nscd_get_mapping (request_type type, const char *key,
 	     thread got stuck.  */
 	  || __builtin_expect (! head->nscd_certainly_running
 			       && (head->timestamp + MAPPING_TIMEOUT
-				   < time (NULL)), 0))
+				   < time_now ()), 0))
 	{
 	out_unmap:
 	  __munmap (mapping, mapsize);
@@ -414,7 +414,7 @@ __nscd_get_map_ref (request_type type, const char *name,
       /* If not mapped or timestamp not updated, request new map.  */
       if (cur == NULL
 	  || (cur->head->nscd_certainly_running == 0
-	      && cur->head->timestamp + MAPPING_TIMEOUT < time (NULL))
+	      && cur->head->timestamp + MAPPING_TIMEOUT < time_now ())
 	  || cur->head->data_size > cur->datasize)
 	cur = __nscd_get_mapping (type, name,
 				  (struct mapped_database **) &mapptr->mapped);

@@ -69,7 +69,7 @@ __check_native (uint32_t a1_index, int *a1_native,
   req.nlh.nlmsg_type = RTM_GETLINK;
   req.nlh.nlmsg_flags = NLM_F_ROOT | NLM_F_MATCH | NLM_F_REQUEST;
   req.nlh.nlmsg_pid = 0;
-  req.nlh.nlmsg_seq = time (NULL);
+  req.nlh.nlmsg_seq = time_now ();
   req.g.rtgen_family = AF_UNSPEC;
 
   assert (sizeof (req) - offsetof (struct req, pad) == 3);

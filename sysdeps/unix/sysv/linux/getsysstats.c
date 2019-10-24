@@ -128,7 +128,7 @@ __get_nprocs (void)
   static int cached_result = -1;
   static time_t timestamp;
 
-  time_t now = time (NULL);
+  time_t now = time_now ();
   time_t prev = timestamp;
   atomic_read_barrier ();
   if (now == prev && cached_result > -1)

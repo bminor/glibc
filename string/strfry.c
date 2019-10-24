@@ -17,7 +17,7 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <time.h>
+#include <random-bits.h>
 #include <unistd.h>
 
 char *
@@ -30,7 +30,7 @@ strfry (char *string)
     {
       static char state[32];
       rdata.state = NULL;
-      __initstate_r (time (NULL) ^ getpid (),
+      __initstate_r (random_bits (),
 		     state, sizeof (state), &rdata);
       init = 1;
     }

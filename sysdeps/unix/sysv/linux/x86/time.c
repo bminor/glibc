@@ -17,43 +17,31 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <time.h>
+#include <sysdep.h>
 
-#ifdef SHARED
-
-#include <dl-vdso.h>
-#include <errno.h>
+#ifdef HAVE_TIME_VSYSCALL
+# define HAVE_VSYSCALL
+#endif
 #include <sysdep-vdso.h>
 
 static time_t
-__time_syscall (time_t *t)
+time_vsyscall (time_t *t)
 {
-  INTERNAL_SYSCALL_DECL (err);
-  return INTERNAL_SYSCALL (time, err, 1, t);
+  return INLINE_VSYSCALL (time, 1, t);
 }
 
-# ifndef time_type
-/* The i386 time.c includes this file with a defined time_type macro.
-   For x86_64 we have to define it to time as the internal symbol is the
-   ifunc'ed one.  */
-#  define time_type time
-# endif
+#ifdef SHARED
+# include <dl-vdso.h>
+# include <libc-vdso.h>
 
 #undef INIT_ARCH
 #define INIT_ARCH()
 /* If the vDSO is not available we fall back on the syscall.  */
-libc_ifunc_hidden (time_type, time,
-		   (get_vdso_symbol ("__vdso_time") ?: __time_syscall))
-libc_hidden_def (time)
-
+libc_ifunc (time, (get_vdso_symbol ("__vdso_time") ?: time_vsyscall))
 #else
-
-# include <sysdep.h>
-
 time_t
 time (time_t *t)
 {
-  INTERNAL_SYSCALL_DECL (err);
-  return INTERNAL_SYSCALL (time, err, 1, t);
+  return time_vsyscall (t);
 }
-
 #endif

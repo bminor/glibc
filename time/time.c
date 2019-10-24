@@ -29,4 +29,3 @@ time (time_t *timer)
     *timer = ts.tv_sec;
   return ts.tv_sec;
 }
-libc_hidden_def (time)

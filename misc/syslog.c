@@ -205,7 +205,7 @@ __vsyslog_internal(int pri, const char *fmt, va_list ap,
 	  {
 	    __fsetlocking (f, FSETLOCKING_BYCALLER);
 	    fprintf (f, "<%d>", pri);
-	    now = time (NULL);
+	    now = time_now ();
 	    f->_IO_write_ptr += __strftime_l (f->_IO_write_ptr,
 					      f->_IO_write_end
 					      - f->_IO_write_ptr,

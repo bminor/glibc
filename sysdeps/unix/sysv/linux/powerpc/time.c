@@ -16,68 +16,37 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifdef SHARED
-# ifndef __powerpc64__
-#  define time __redirect_time
-# else
-#  define __redirect_time time
-# endif
+#include <time.h>
+#include <sysdep.h>
 
-# include <time.h>
-# include <sysdep.h>
-# include <dl-vdso.h>
-# include <libc-vdso.h>
-# include <dl-machine.h>
+#ifdef HAVE_TIME_VSYSCALL
+# define HAVE_VSYSCALL
+#endif
+#include <sysdep-vdso.h>
 
-# ifndef __powerpc64__
-#  undef time
-
-time_t
-__time_vsyscall (time_t *t)
+static time_t
+time_vsyscall (time_t *t)
 {
   return INLINE_VSYSCALL (time, 1, t);
 }
 
-/* __GI_time is defined as hidden and for ppc32 it enables the
-   compiler make a local call (symbol@local) for internal GLIBC usage. It
-   means the PLT won't be used and the ifunc resolver will be called directly.
-   For ppc64 a call to a function in another translation unit might use a
-   different toc pointer thus disallowing direct branchess and making internal
-   ifuncs calls safe.  */
-#  undef libc_hidden_def
-#  define libc_hidden_def(name)					\
-  __hidden_ver1 (__time_vsyscall, __GI_time, __time_vsyscall);
-
-# endif /* !__powerpc64__  */
-
-static time_t
-time_syscall (time_t *t)
-{
-  struct timeval tv;
-  time_t result;
-
-  if (INLINE_VSYSCALL (gettimeofday, 2, &tv, NULL) < 0)
-    result = (time_t) -1;
-  else
-    result = (time_t) tv.tv_sec;
-
-  if (t != NULL)
-    *t = result;
-  return result;
-}
+#ifdef SHARED
+# include <dl-vdso.h>
+# include <libc-vdso.h>
 
 # define INIT_ARCH() \
   void *vdso_time = get_vdso_symbol (HAVE_TIME_VSYSCALL);
 
 /* If the vDSO is not available we fall back to the syscall.  */
-libc_ifunc_hidden (__redirect_time, time,
-		   vdso_time
-		   ? VDSO_IFUNC_RET (vdso_time)
-		   : (void *) time_syscall);
-libc_hidden_def (time)
+libc_ifunc (time,
+	    vdso_time
+	    ? VDSO_IFUNC_RET (vdso_time)
+	    : (void *) time_vsyscall);
 
 #else
-
-#include <time/time.c>
-
+time_t
+time (time_t *t)
+{
+  return time_vsyscall (t);
+}
 #endif /* !SHARED */

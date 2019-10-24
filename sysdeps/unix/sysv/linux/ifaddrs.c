@@ -102,7 +102,7 @@ __netlink_sendreq (struct netlink_handle *h, int type)
   struct sockaddr_nl nladdr;
 
   if (h->seq == 0)
-    h->seq = time (NULL);
+    h->seq = time_now ();
 
   req.nlh.nlmsg_len = sizeof (req);
   req.nlh.nlmsg_type = type;

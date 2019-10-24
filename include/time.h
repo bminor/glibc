@@ -7,12 +7,12 @@
 # include <stdbool.h>
 # include <time/mktime-internal.h>
 # include <endian.h>
+# include <time-clockid.h>
 
 extern __typeof (strftime_l) __strftime_l;
 libc_hidden_proto (__strftime_l)
 extern __typeof (strptime_l) __strptime_l;
 
-libc_hidden_proto (time)
 libc_hidden_proto (asctime)
 libc_hidden_proto (mktime)
 libc_hidden_proto (timelocal)
@@ -252,5 +252,15 @@ valid_nanoseconds (__syscall_slong_t ns)
 {
   return __glibc_likely (0 <= ns && ns < 1000000000);
 }
+
+/* Helper function to get time in seconds, similar to time.  */
+static inline time_t
+time_now (void)
+{
+  struct timespec ts;
+  __clock_gettime (TIME_CLOCK_GETTIME_CLOCKID, &ts);
+  return ts.tv_sec;
+}
 #endif
+
 #endif
