@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2019 Free Software Foundation, Inc.
+/* System specific time definitions.  Generic Version.
+   Copyright 2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,26 +16,5 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <stddef.h>		/* For NULL.  */
-#include <time.h>
-#include <sys/time.h>
-
-
-/* Return the current time as a `time_t' and also put it in *T if T is
-   not NULL.  Time is represented as seconds from Jan 1 00:00:00 1970.  */
-time_t
-time (time_t *t)
-{
-  struct timeval tv;
-  time_t result;
-
-  if (__gettimeofday (&tv, (struct timezone *) NULL))
-    result = (time_t) -1;
-  else
-    result = (time_t) tv.tv_sec;
-
-  if (t != NULL)
-    *t = result;
-  return result;
-}
-libc_hidden_def (time)
+/* Timer used on clock_gettime for time implementation.  */
+#define TIME_CLOCK_GETTIME_CLOCKID CLOCK_REALTIME

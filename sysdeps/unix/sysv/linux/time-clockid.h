@@ -1,4 +1,5 @@
-/* Copyright (C) 2005-2019 Free Software Foundation, Inc.
+/* System specific time definitions.  Generic Version.
+   Copyright 2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,27 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <stddef.h>
-#include <time.h>
-
-#include <sysdep.h>
-
-#ifdef __NR_time
-
-time_t
-time (time_t *t)
-{
-  INTERNAL_SYSCALL_DECL (err);
-  time_t res = INTERNAL_SYSCALL (time, err, 1, NULL);
-  /* There cannot be any error.  */
-  if (t != NULL)
-    *t = res;
-  return res;
-}
-libc_hidden_def (time)
-
-#else
-
-# include <sysdeps/posix/time.c>
-
-#endif
+/* Timer used on clock_gettime for time implementation.  For Linux
+   it uses the coarse version which returns the time at the last tick
+   and mimic what time as syscall should return.  */
+#define TIME_CLOCK_GETTIME_CLOCKID CLOCK_REALTIME_COARSE
