@@ -146,6 +146,18 @@ extern int __clock_getres64 (clockid_t clock_id,
 libc_hidden_proto (__clock_getres64);
 #endif
 
+#if __TIMESIZE == 64
+# define __utimensat64 __utimensat
+#else
+extern int __utimensat64 (int fd, const char *file,
+                          const struct __timespec64 tsp[2], int flags);
+libc_hidden_proto (__utimensat64);
+#endif
+
+extern int __utimensat64_helper (int fd, const char *file,
+                                 const struct __timespec64 tsp[2], int flags);
+libc_hidden_proto (__utimensat64_helper);
+
 /* Compute the `struct tm' representation of T,
    offset OFFSET seconds east of UTC,
    and store year, yday, mon, mday, wday, hour, min, sec into *TP.
