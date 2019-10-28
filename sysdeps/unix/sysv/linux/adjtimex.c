@@ -22,7 +22,7 @@
 int
 ___adjtimex (struct timex *buf)
 {
-  return INLINE_SYSCALL_CALL (adjtimex, buf);
+  return __clock_adjtime (CLOCK_REALTIME, buf);
 }
 
 #ifdef VERSION_adjtimex

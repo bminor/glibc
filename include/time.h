@@ -25,6 +25,11 @@ libc_hidden_proto (__clock_gettime)
 extern __typeof (clock_settime) __clock_settime;
 libc_hidden_proto (__clock_settime)
 
+#ifdef __linux__
+extern __typeof (clock_adjtime) __clock_adjtime;
+libc_hidden_proto (__clock_adjtime);
+#endif
+
 /* Now define the internal interfaces.  */
 struct tm;
 
