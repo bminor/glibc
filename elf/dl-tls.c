@@ -883,7 +883,7 @@ _dl_tls_get_addr_soft (struct link_map *l)
 
 
 void
-_dl_add_to_slotinfo (struct link_map *l)
+_dl_add_to_slotinfo (struct link_map *l, bool do_add)
 {
   /* Now that we know the object is loaded successfully add
      modules containing TLS data to the dtv info table.  We
@@ -939,6 +939,9 @@ cannot create TLS data structures"));
     }
 
   /* Add the information into the slotinfo data structure.  */
-  listp->slotinfo[idx].map = l;
-  listp->slotinfo[idx].gen = GL(dl_tls_generation) + 1;
+  if (do_add)
+    {
+      listp->slotinfo[idx].map = l;
+      listp->slotinfo[idx].gen = GL(dl_tls_generation) + 1;
+    }
 }

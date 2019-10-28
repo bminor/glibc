@@ -2214,7 +2214,7 @@ ERROR: '%s': cannot process note segment.\n", _dl_argv[0]);
 
 	  /* Add object to slot information data if necessasy.  */
 	  if (l->l_tls_blocksize != 0 && tls_init_tp_called)
-	    _dl_add_to_slotinfo (l);
+	    _dl_add_to_slotinfo (l, true);
 	}
     }
   else
@@ -2259,7 +2259,7 @@ ERROR: '%s': cannot process note segment.\n", _dl_argv[0]);
 
 	  /* Add object to slot information data if necessasy.  */
 	  if (l->l_tls_blocksize != 0 && tls_init_tp_called)
-	    _dl_add_to_slotinfo (l);
+	    _dl_add_to_slotinfo (l, true);
 	}
       rtld_timer_stop (&relocate_time, start);
 
