@@ -163,6 +163,8 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
   if (info[VERSYMIDX (DT_FLAGS_1)] != NULL)
     {
       l->l_flags_1 = info[VERSYMIDX (DT_FLAGS_1)]->d_un.d_val;
+      if (l->l_flags_1 & DF_1_NODELETE)
+	l->l_nodelete = link_map_nodelete_pending;
 
       /* Only DT_1_SUPPORTED_MASK bits are supported, and we would like
 	 to assert this, but we can't. Users have been setting

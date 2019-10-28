@@ -923,6 +923,10 @@ enum
     DL_LOOKUP_RETURN_NEWEST = 2,
     /* Set if dl_lookup* called with GSCOPE lock held.  */
     DL_LOOKUP_GSCOPE_LOCK = 4,
+
+    /* Set if dl_lookup* is called from within dlopen, for non-lazy
+       binding.  */
+    DL_LOOKUP_INSIDE_DLOPEN = 8,
   };
 
 /* Lookup versioned symbol.  */
