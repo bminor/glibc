@@ -244,7 +244,8 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 	       v = (version);						      \
 	     _lr = _dl_lookup_symbol_x (strtab + (*ref)->st_name, l, (ref),   \
 					scope, v, _tc,			      \
-					DL_LOOKUP_ADD_DEPENDENCY, NULL);      \
+					DL_LOOKUP_ADD_DEPENDENCY	      \
+					| DL_LOOKUP_FOR_RELOCATE, NULL);      \
 	     l->l_lookup_cache.ret = (*ref);				      \
 	     l->l_lookup_cache.value = _lr; }))				      \
      : l)
