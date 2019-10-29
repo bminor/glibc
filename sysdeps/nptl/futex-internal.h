@@ -74,11 +74,35 @@
 # error FUTEX_PRIVATE must be equal to 0
 #endif
 
+/* Calls __libc_fatal with an error message.  Convenience function for
+   concrete implementations of the futex interface.  */
+static __always_inline __attribute__ ((__noreturn__)) void
+futex_fatal_error (void)
+{
+  __libc_fatal ("The futex facility returned an unexpected error code.\n");
+}
+
+
+/* The Linux kernel treats provides absolute timeouts based on the
+   CLOCK_REALTIME clock and relative timeouts measured against the
+   CLOCK_MONOTONIC clock.
+
+   We expect a Linux kernel version of 2.6.22 or more recent (since this
+   version, EINTR is not returned on spurious wake-ups anymore).  */
+
 /* Returns EINVAL if PSHARED is neither PTHREAD_PROCESS_PRIVATE nor
    PTHREAD_PROCESS_SHARED; otherwise, returns 0 if PSHARED is supported, and
    ENOTSUP if not.  */
 static __always_inline int
-futex_supports_pshared (int pshared);
+futex_supports_pshared (int pshared)
+{
+  if (__glibc_likely (pshared == PTHREAD_PROCESS_PRIVATE))
+    return 0;
+  else if (pshared == PTHREAD_PROCESS_SHARED)
+    return 0;
+  else
+    return EINVAL;
+}
 
 /* Atomically wrt other futex operations on the same futex, this blocks iff
    the value *FUTEX_WORD matches the expected value.  This is
@@ -112,7 +136,27 @@ futex_supports_pshared (int pshared);
    a futex_wait call when synchronizing similar to Dekker synchronization.
    However, we make no such guarantee here.  */
 static __always_inline int
-futex_wait (unsigned int *futex_word, unsigned int expected, int private);
+futex_wait (unsigned int *futex_word, unsigned int expected, int private)
+{
+  int err = lll_futex_timed_wait (futex_word, expected, NULL, private);
+  switch (err)
+    {
+    case 0:
+    case -EAGAIN:
+    case -EINTR:
+      return -err;
+
+    case -ETIMEDOUT: /* Cannot have happened as we provided no timeout.  */
+    case -EFAULT: /* Must have been caused by a glibc or application bug.  */
+    case -EINVAL: /* Either due to wrong alignment or due to the timeout not
+		     being normalized.  Must have been caused by a glibc or
+		     application bug.  */
+    case -ENOSYS: /* Must have been caused by a glibc bug.  */
+    /* No other errors are documented at this time.  */
+    default:
+      futex_fatal_error ();
+    }
+}
 
 /* Like futex_wait but does not provide any indication why we stopped waiting.
    Thus, when this function returns, you have to always check FUTEX_WORD to
@@ -132,7 +176,30 @@ futex_wait_simple (unsigned int *futex_word, unsigned int expected,
 /* Like futex_wait but is a POSIX cancellation point.  */
 static __always_inline int
 futex_wait_cancelable (unsigned int *futex_word, unsigned int expected,
-		       int private);
+		       int private)
+{
+  int oldtype;
+  oldtype = __pthread_enable_asynccancel ();
+  int err = lll_futex_timed_wait (futex_word, expected, NULL, private);
+  __pthread_disable_asynccancel (oldtype);
+  switch (err)
+    {
+    case 0:
+    case -EAGAIN:
+    case -EINTR:
+      return -err;
+
+    case -ETIMEDOUT: /* Cannot have happened as we provided no timeout.  */
+    case -EFAULT: /* Must have been caused by a glibc or application bug.  */
+    case -EINVAL: /* Either due to wrong alignment or due to the timeout not
+		     being normalized.  Must have been caused by a glibc or
+		     application bug.  */
+    case -ENOSYS: /* Must have been caused by a glibc bug.  */
+    /* No other errors are documented at this time.  */
+    default:
+      futex_fatal_error ();
+    }
+}
 
 /* Like futex_wait, but will eventually time out (i.e., stop being
    blocked) after the duration of time provided (i.e., RELTIME) has
@@ -144,32 +211,134 @@ futex_wait_cancelable (unsigned int *futex_word, unsigned int expected,
    */
 static __always_inline int
 futex_reltimed_wait (unsigned int* futex_word, unsigned int expected,
-		     const struct timespec* reltime, int private);
+		     const struct timespec* reltime, int private)
+{
+  int err = lll_futex_timed_wait (futex_word, expected, reltime, private);
+  switch (err)
+    {
+    case 0:
+    case -EAGAIN:
+    case -EINTR:
+    case -ETIMEDOUT:
+      return -err;
+
+    case -EFAULT: /* Must have been caused by a glibc or application bug.  */
+    case -EINVAL: /* Either due to wrong alignment or due to the timeout not
+		     being normalized.  Must have been caused by a glibc or
+		     application bug.  */
+    case -ENOSYS: /* Must have been caused by a glibc bug.  */
+    /* No other errors are documented at this time.  */
+    default:
+      futex_fatal_error ();
+    }
+}
 
 /* Like futex_reltimed_wait but is a POSIX cancellation point.  */
 static __always_inline int
 futex_reltimed_wait_cancelable (unsigned int* futex_word,
 				unsigned int expected,
-			        const struct timespec* reltime, int private);
+			        const struct timespec* reltime, int private)
+{
+  int oldtype;
+  oldtype = LIBC_CANCEL_ASYNC ();
+  int err = lll_futex_timed_wait (futex_word, expected, reltime, private);
+  LIBC_CANCEL_RESET (oldtype);
+  switch (err)
+    {
+    case 0:
+    case -EAGAIN:
+    case -EINTR:
+    case -ETIMEDOUT:
+      return -err;
+
+    case -EFAULT: /* Must have been caused by a glibc or application bug.  */
+    case -EINVAL: /* Either due to wrong alignment or due to the timeout not
+		     being normalized.  Must have been caused by a glibc or
+		     application bug.  */
+    case -ENOSYS: /* Must have been caused by a glibc bug.  */
+    /* No other errors are documented at this time.  */
+    default:
+      futex_fatal_error ();
+    }
+}
 
 /* Check whether the specified clockid is supported by
    futex_abstimed_wait and futex_abstimed_wait_cancelable.  */
 static __always_inline int
-futex_abstimed_supported_clockid (clockid_t clockid);
+futex_abstimed_supported_clockid (clockid_t clockid)
+{
+  return lll_futex_supported_clockid (clockid);
+}
 
 /* Like futex_reltimed_wait, but the provided timeout (ABSTIME) is an
    absolute point in time; a call will time out after this point in time.  */
 static __always_inline int
 futex_abstimed_wait (unsigned int* futex_word, unsigned int expected,
 		     clockid_t clockid,
-		     const struct timespec* abstime, int private);
+		     const struct timespec* abstime, int private)
+{
+  /* Work around the fact that the kernel rejects negative timeout values
+     despite them being valid.  */
+  if (__glibc_unlikely ((abstime != NULL) && (abstime->tv_sec < 0)))
+    return ETIMEDOUT;
+  int err = lll_futex_clock_wait_bitset (futex_word, expected,
+					 clockid, abstime,
+					 private);
+  switch (err)
+    {
+    case 0:
+    case -EAGAIN:
+    case -EINTR:
+    case -ETIMEDOUT:
+      return -err;
+
+    case -EFAULT: /* Must have been caused by a glibc or application bug.  */
+    case -EINVAL: /* Either due to wrong alignment, unsupported
+		     clockid or due to the timeout not being
+		     normalized. Must have been caused by a glibc or
+		     application bug.  */
+    case -ENOSYS: /* Must have been caused by a glibc bug.  */
+    /* No other errors are documented at this time.  */
+    default:
+      futex_fatal_error ();
+    }
+}
 
 /* Like futex_reltimed_wait but is a POSIX cancellation point.  */
 static __always_inline int
 futex_abstimed_wait_cancelable (unsigned int* futex_word,
 				unsigned int expected,
 				clockid_t clockid,
-			        const struct timespec* abstime, int private);
+			        const struct timespec* abstime, int private)
+{
+  /* Work around the fact that the kernel rejects negative timeout values
+     despite them being valid.  */
+  if (__glibc_unlikely ((abstime != NULL) && (abstime->tv_sec < 0)))
+    return ETIMEDOUT;
+  int oldtype;
+  oldtype = __pthread_enable_asynccancel ();
+  int err = lll_futex_clock_wait_bitset (futex_word, expected,
+					clockid, abstime,
+					private);
+  __pthread_disable_asynccancel (oldtype);
+  switch (err)
+    {
+    case 0:
+    case -EAGAIN:
+    case -EINTR:
+    case -ETIMEDOUT:
+      return -err;
+
+    case -EFAULT: /* Must have been caused by a glibc or application bug.  */
+    case -EINVAL: /* Either due to wrong alignment or due to the timeout not
+		     being normalized.  Must have been caused by a glibc or
+		     application bug.  */
+    case -ENOSYS: /* Must have been caused by a glibc bug.  */
+    /* No other errors are documented at this time.  */
+    default:
+      futex_fatal_error ();
+    }
+}
 
 /* Atomically wrt other futex operations on the same futex, this unblocks the
    specified number of processes, or all processes blocked on this futex if
@@ -190,14 +359,26 @@ futex_abstimed_wait_cancelable (unsigned int* futex_word,
    object destruction (see above); therefore, we must not report or abort
    on most errors.  */
 static __always_inline void
-futex_wake (unsigned int* futex_word, int processes_to_wake, int private);
-
-/* Calls __libc_fatal with an error message.  Convenience function for
-   concrete implementations of the futex interface.  */
-static __always_inline __attribute__ ((__noreturn__)) void
-futex_fatal_error (void)
+futex_wake (unsigned int* futex_word, int processes_to_wake, int private)
 {
-  __libc_fatal ("The futex facility returned an unexpected error code.\n");
+  int res = lll_futex_wake (futex_word, processes_to_wake, private);
+  /* No error.  Ignore the number of woken processes.  */
+  if (res >= 0)
+    return;
+  switch (res)
+    {
+    case -EFAULT: /* Could have happened due to memory reuse.  */
+    case -EINVAL: /* Could be either due to incorrect alignment (a bug in
+		     glibc or in the application) or due to memory being
+		     reused for a PI futex.  We cannot distinguish between the
+		     two causes, and one of them is correct use, so we do not
+		     act in this case.  */
+      return;
+    case -ENOSYS: /* Must have been caused by a glibc bug.  */
+    /* No other errors are documented at this time.  */
+    default:
+      futex_fatal_error ();
+    }
 }
 
 #endif  /* futex-internal.h */
