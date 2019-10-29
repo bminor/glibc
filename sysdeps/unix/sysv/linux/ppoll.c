@@ -21,21 +21,62 @@
 #include <time.h>
 #include <sys/poll.h>
 #include <sysdep-cancel.h>
+#include <kernel-features.h>
 
 
 int
-ppoll (struct pollfd *fds, nfds_t nfds, const struct timespec *timeout,
-       const sigset_t *sigmask)
+__ppoll64 (struct pollfd *fds, nfds_t nfds, const struct __timespec64 *timeout,
+           const sigset_t *sigmask)
 {
   /* The Linux kernel can in some situations update the timeout value.
      We do not want that so use a local variable.  */
-  struct timespec tval;
+  struct __timespec64 tval;
   if (timeout != NULL)
     {
       tval = *timeout;
       timeout = &tval;
     }
 
-  return SYSCALL_CANCEL (ppoll, fds, nfds, timeout, sigmask, _NSIG / 8);
+#ifdef __ASSUME_TIME64_SYSCALLS
+# ifndef __NR_ppoll_time64
+#  define __NR_ppoll_time64 __NR_ppoll
+# endif
+  return SYSCALL_CANCEL (ppoll_time64, fds, nfds, timeout, sigmask, _NSIG / 8);
+#else
+# ifdef __NR_ppoll_time64
+  int ret = SYSCALL_CANCEL (ppoll_time64, fds, nfds, timeout, sigmask,
+                            _NSIG / 8);
+  if (ret >= 0 || errno != ENOSYS)
+    return ret;
+# endif
+  struct timespec ts32;
+  if (timeout)
+    {
+      if (! in_time_t_range (timeout->tv_sec))
+        {
+          __set_errno (EOVERFLOW);
+          return -1;
+        }
+
+      ts32 = valid_timespec64_to_timespec (*timeout);
+    }
+
+  return SYSCALL_CANCEL (ppoll, fds, nfds, timeout ? &ts32 : NULL, sigmask,
+                         _NSIG / 8);
+#endif
 }
+
+#if __TIMESIZE != 64
+int
+__ppoll (struct pollfd *fds, nfds_t nfds, const struct timespec *timeout,
+         const sigset_t *sigmask)
+{
+  struct __timespec64 ts64;
+  if (timeout)
+    ts64 = valid_timespec_to_timespec64 (*timeout);
+
+  return __ppoll64 (fds, nfds, timeout ? &ts64 : NULL, sigmask);
+}
+#endif
+strong_alias (__ppoll, ppoll)
 libc_hidden_def (ppoll)
