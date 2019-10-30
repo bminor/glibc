@@ -679,7 +679,8 @@ res_setoptions (struct resolv_conf_parser *parser, const char *options)
             { STRnLEN ("no_tld_query"), 0, RES_NOTLDQUERY },
             { STRnLEN ("no-tld-query"), 0, RES_NOTLDQUERY },
             { STRnLEN ("no-reload"), 0, RES_NORELOAD },
-            { STRnLEN ("use-vc"), 0, RES_USEVC }
+            { STRnLEN ("use-vc"), 0, RES_USEVC },
+            { STRnLEN ("trust-ad"), 0, RES_TRUSTAD },
           };
 #define noptions (sizeof (options) / sizeof (options[0]))
           for (int i = 0; i < noptions; ++i)

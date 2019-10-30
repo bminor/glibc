@@ -68,6 +68,7 @@ tests += \
   tst-resolv-ai_idn-latin1 \
   tst-resolv-ai_idn-nolibidn2 \
   tst-resolv-canonname \
+  tst-resolv-trustad \
 
 # Needs resolv_context.
 tests-internal += \
@@ -199,6 +200,7 @@ $(objpfx)tst-resolv-threads: \
   $(libdl) $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-canonname: \
   $(libdl) $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-resolv-trustad: $(objpfx)libresolv.so $(shared-thread-library)
 
 $(objpfx)tst-ns_name: $(objpfx)libresolv.so
 $(objpfx)tst-ns_name.out: tst-ns_name.data

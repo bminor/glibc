@@ -182,6 +182,8 @@ resolv_response_init (struct resolv_response_builder *b,
   if (flags.tc)
     b->buffer[2] |= 0x02;
   b->buffer[3] = 0x80 | flags.rcode; /* Always set RA.  */
+  if (flags.ad)
+    b->buffer[3] |= 0x20;
 
   /* Fill in the initial section count values.  */
   b->buffer[4] = flags.qdcount >> 8;

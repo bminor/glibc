@@ -134,6 +134,9 @@ struct resolv_response_flags
   /* If true, the TC (truncation) flag will be set.  */
   bool tc;
 
+  /* If true, the AD (authenticated data) flag will be set.  */
+  bool ad;
+
   /* Initial section count values.  Can be used to artificially
      increase the counts, for malformed packet testing.*/
   unsigned short qdcount;

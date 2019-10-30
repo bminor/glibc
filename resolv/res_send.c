@@ -332,6 +332,15 @@ nameserver_offset (struct __res_state *statp)
     }
 }
 
+/* Clear the AD bit unless the trust-ad option was specified in the
+   resolver configuration.  */
+static void
+mask_ad_bit (struct resolv_context *ctx, void *buf)
+{
+  if (!(ctx->resp->options & RES_TRUSTAD))
+    ((HEADER *) buf)->ad = 0;
+}
+
 /* int
  * res_queriesmatch(buf1, eom1, buf2, eom2)
  *	is there a 1:1 mapping of (name,type,class)
@@ -524,6 +533,18 @@ __res_context_send (struct resolv_context *ctx,
 		}
 
 		resplen = n;
+
+		/* Mask the AD bit in both responses unless it is
+		   marked trusted.  */
+		if (resplen > HFIXEDSZ)
+		  {
+		    if (ansp != NULL)
+		      mask_ad_bit (ctx, *ansp);
+		    else
+		      mask_ad_bit (ctx, ans);
+		  }
+		if (resplen2 != NULL && *resplen2 > HFIXEDSZ)
+		  mask_ad_bit (ctx, *ansp2);
 
 		/*
 		 * If we have temporarily opened a virtual circuit,

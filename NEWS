@@ -40,6 +40,15 @@ Major new features:
 
 * New locale added: mnw_MM (Mon language spoken in Myanmar).
 
+* The DNS stub resolver will optionally send the AD (authenticated data) bit
+  in queries if the trust-ad option is set via the options directive in
+  /etc/resolv.conf (or if RES_TRUSTAD is set in _res.options).  In this
+  mode, the AD bit, as provided by the name server, is available to
+  applications which call res_search and related functions.  In the default
+  mode, the AD bit is not set in queries, and it is automatically cleared in
+  responses, indicating a lack of DNSSEC validation.  (Therefore, the name
+  servers and the network path to them are treated as untrusted.)
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The totalorder and totalordermag functions, and the corresponding

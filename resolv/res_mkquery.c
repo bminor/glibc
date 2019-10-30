@@ -118,6 +118,8 @@ __res_context_mkquery (struct resolv_context *ctx, int op, const char *dname,
      the application does multiple requests.  */
   hp->id = random_bits ();
   hp->opcode = op;
+  if (ctx->resp->options & RES_TRUSTAD)
+    hp->ad = 1;
   hp->rd = (ctx->resp->options & RES_RECURSE) != 0;
   hp->rcode = NOERROR;
   cp = buf + HFIXEDSZ;
