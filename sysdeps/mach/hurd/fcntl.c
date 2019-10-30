@@ -130,23 +130,75 @@ __libc_fcntl (int fd, int cmd, ...)
     case F_SETLKW:
       {
 	struct flock *fl = va_arg (ap, struct flock *);
-	int wait = 0;
-	va_end (ap);
+
 	switch (cmd)
 	  {
 	  case F_GETLK:
-	    errno = ENOSYS;
-	    return -1;
-	  case F_SETLKW:
-	    wait = 1;
-	    /* FALLTHROUGH */
+	    cmd = F_GETLK64;
+	    break;
 	  case F_SETLK:
-	    return __f_setlk (fd, fl->l_type, fl->l_whence,
-			      fl->l_start, fl->l_len, wait);
+	    cmd = F_SETLK64;
+	    break;
+	  case F_SETLKW:
+	    cmd = F_SETLKW64;
+	    break;
 	  default:
 	    errno = EINVAL;
 	    return -1;
 	  }
+
+	struct flock64 fl64 = {
+	  .l_type = fl->l_type,
+	  .l_whence = fl->l_whence,
+	  .l_start = fl->l_start,
+	  .l_len = fl->l_len,
+	  .l_pid = fl->l_pid
+	};
+
+	err = HURD_FD_PORT_USE (d, __file_record_lock (port, cmd, &fl64,
+				MACH_PORT_NULL, MACH_MSG_TYPE_MAKE_SEND));
+
+	/* XXX: To remove once file_record_lock RPC is settled.  */
+	if (err == EMIG_BAD_ID || err == EOPNOTSUPP)
+	  {
+	    int wait = 0;
+	    va_end (ap);
+	    switch (cmd)
+	      {
+	      case F_GETLK64:
+		errno = ENOSYS;
+		return -1;
+	      case F_SETLKW64:
+		wait = 1;
+		/* FALLTHROUGH */
+	      case F_SETLK64:
+		return __f_setlk (fd, fl->l_type, fl->l_whence,
+				  fl->l_start, fl->l_len, wait);
+	      default:
+		errno = EINVAL;
+		return -1;
+	      }
+	  }
+	else if (cmd == F_GETLK64)
+	  {
+	    fl->l_type = fl64.l_type;
+	    fl->l_whence = fl64.l_whence;
+	    fl->l_start = fl64.l_start;
+	    fl->l_len = fl64.l_len;
+	    fl->l_pid = fl64.l_pid;
+
+	    if ((sizeof fl->l_start != sizeof fl64.l_start
+		 && fl->l_start != fl64.l_start)
+	     || (sizeof fl->l_len != sizeof fl64.l_len
+		 && fl->l_len != fl64.l_len))
+	      {
+		errno = EOVERFLOW;
+		return -1;
+	      }
+	  }
+
+	result = err ? __hurd_dfail (fd, err) : 0;
+	break;
       }
 
     case F_GETLK64:
@@ -154,23 +206,34 @@ __libc_fcntl (int fd, int cmd, ...)
     case F_SETLKW64:
       {
 	struct flock64 *fl = va_arg (ap, struct flock64 *);
-	int wait = 0;
-	va_end (ap);
-	switch (cmd)
+
+	err = HURD_FD_PORT_USE (d, __file_record_lock (port, cmd, fl,
+				MACH_PORT_NULL, MACH_MSG_TYPE_MAKE_SEND));
+
+	/* XXX: To remove once file_record_lock RPC is settled.  */
+	if (err == EMIG_BAD_ID || err == EOPNOTSUPP)
 	  {
-	  case F_GETLK64:
-	    errno = ENOSYS;
-	    return -1;
-	  case F_SETLKW64:
-	    wait = 1;
-	    /* FALLTHROUGH */
-	  case F_SETLK64:
-	    return __f_setlk (fd, fl->l_type, fl->l_whence,
-			      fl->l_start, fl->l_len, wait);
-	  default:
-	    errno = EINVAL;
-	    return -1;
+	    int wait = 0;
+	    va_end (ap);
+	    switch (cmd)
+	      {
+	      case F_GETLK64:
+		errno = ENOSYS;
+		return -1;
+	      case F_SETLKW64:
+		wait = 1;
+		/* FALLTHROUGH */
+	      case F_SETLK64:
+		return __f_setlk (fd, fl->l_type, fl->l_whence,
+				  fl->l_start, fl->l_len, wait);
+	      default:
+		errno = EINVAL;
+		return -1;
+	      }
 	  }
+
+	result = err ? __hurd_dfail (fd, err) : 0;
+	break;
       }
 
     case F_GETFL:		/* Get per-open flags.  */
