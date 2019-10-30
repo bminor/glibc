@@ -720,26 +720,25 @@ _dl_update_slotinfo (unsigned long int req_modid)
 	      if (gen <= dtv[0].counter)
 		continue;
 
-	      size_t modid = total + cnt;
-
 	      /* If there is no map this means the entry is empty.  */
 	      struct link_map *map = listp->slotinfo[cnt].map;
 	      if (map == NULL)
 		{
-		  if (dtv[-1].counter >= modid)
+		  if (dtv[-1].counter >= total + cnt)
 		    {
 		      /* If this modid was used at some point the memory
 			 might still be allocated.  */
-		      __signal_safe_free (dtv[modid].pointer.to_free);
-		      dtv[modid].pointer.val = TLS_DTV_UNALLOCATED;
-		      dtv[modid].pointer.to_free = NULL;
+		      __signal_safe_free (dtv[total + cnt].pointer.to_free);
+		      dtv[total + cnt].pointer.val = TLS_DTV_UNALLOCATED;
+		      dtv[total + cnt].pointer.to_free = NULL;
 		    }
 
 		  continue;
 		}
 
-	      assert (modid == map->l_tls_modid);
 	      /* Check whether the current dtv array is large enough.  */
+	      size_t modid = map->l_tls_modid;
+	      assert (total + cnt == modid);
 	      if (dtv[-1].counter < modid)
 		{
 		  /* Resize the dtv.  */
