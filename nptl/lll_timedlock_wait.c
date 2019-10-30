@@ -25,39 +25,38 @@
 
 
 int
-__lll_clocklock_wait (int *futex, clockid_t clockid,
+__lll_clocklock_wait (int *futex, int val, clockid_t clockid,
 		      const struct timespec *abstime, int private)
 {
-  /* Reject invalid timeouts.  */
-  if (! valid_nanoseconds (abstime->tv_nsec))
-    return EINVAL;
+  struct timespec ts, *tsp = NULL;
 
-  /* Try locking.  */
-  while (atomic_exchange_acq (futex, 2) != 0)
+  if (abstime != NULL)
     {
-      struct timespec ts;
+      /* Reject invalid timeouts.  */
+      if (! valid_nanoseconds (abstime->tv_nsec))
+        return EINVAL;
 
-      /* Get the current time. This can only fail if clockid is not
-         valid.  */
+      /* Get the current time. This can only fail if clockid is not valid.  */
       if (__glibc_unlikely (__clock_gettime (clockid, &ts) != 0))
         return EINVAL;
 
       /* Compute relative timeout.  */
-      struct timespec rt;
-      rt.tv_sec = abstime->tv_sec - ts.tv_sec;
-      rt.tv_nsec = abstime->tv_nsec - ts.tv_nsec;
-      if (rt.tv_nsec < 0)
+      ts.tv_sec = abstime->tv_sec - ts.tv_sec;
+      ts.tv_nsec = abstime->tv_nsec - ts.tv_nsec;
+      if (ts.tv_nsec < 0)
         {
-          rt.tv_nsec += 1000000000;
-          --rt.tv_sec;
+	  ts.tv_nsec += 1000000000;
+	  --ts.tv_sec;
         }
 
-      if (rt.tv_sec < 0)
+      if (ts.tv_sec < 0)
         return ETIMEDOUT;
 
-      /* If *futex == 2, wait until woken or timeout.  */
-      lll_futex_timed_wait (futex, 2, &rt, private);
+      tsp = &ts;
     }
+
+  /* If *futex == val, wait until woken or timeout.  */
+  lll_futex_timed_wait (futex, val, tsp, private);
 
   return 0;
 }

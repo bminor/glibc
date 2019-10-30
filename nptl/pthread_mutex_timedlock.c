@@ -401,22 +401,10 @@ __pthread_mutex_clocklock_common (pthread_mutex_t *mutex,
 
 		    /* Delay the thread until the timeout is reached.
 		       Then return ETIMEDOUT.  */
-		    struct timespec reltime;
-		    struct timespec now;
-
-		    INTERNAL_SYSCALL (clock_gettime, __err, 2, clockid,
-				      &now);
-		    reltime.tv_sec = abstime->tv_sec - now.tv_sec;
-		    reltime.tv_nsec = abstime->tv_nsec - now.tv_nsec;
-		    if (reltime.tv_nsec < 0)
-		      {
-			reltime.tv_nsec += 1000000000;
-			--reltime.tv_sec;
-		      }
-		    if (reltime.tv_sec >= 0)
-		      while (__nanosleep_nocancel (&reltime, &reltime) != 0)
-			continue;
-
+		    do
+		      e = lll_timedwait (&(int){0}, 0, clockid, abstime,
+					 private);
+		    while (e != ETIMEDOUT);
 		    return ETIMEDOUT;
 		  }
 

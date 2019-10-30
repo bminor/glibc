@@ -50,46 +50,4 @@ __lll_lock_wait (int *futex, int private)
     }
   while (atomic_compare_and_exchange_val_24_acq (futex, 2, 0) != 0);
 }
-
-
-int
-__lll_clocklock_wait (int *futex, clockid_t clockid,
-                      const struct timespec *abstime, int private)
-{
-  /* Reject invalid timeouts.  */
-  if (! valid_nanoseconds (abstime->tv_nsec))
-    return EINVAL;
-
-  do
-    {
-      struct timespec ts;
-      struct timespec rt;
-
-      /* Get the current time. This can only fail if clockid is not
-         valid. */
-      if (__glibc_unlikely (__clock_gettime (clockid, &ts) != 0))
-        return EINVAL;
-
-      /* Compute relative timeout.  */
-      rt.tv_sec = abstime->tv_sec - ts.tv_sec;
-      rt.tv_nsec = abstime->tv_nsec - ts.tv_nsec;
-      if (rt.tv_nsec < 0)
-	{
-	  rt.tv_nsec += 1000000000;
-	  --rt.tv_sec;
-	}
-
-      /* Already timed out?  */
-      if (rt.tv_sec < 0)
-	return ETIMEDOUT;
-
-      /* Wait.  */
-      int oldval = atomic_compare_and_exchange_val_24_acq (futex, 2, 1);
-      if (oldval != 0)
-	lll_futex_timed_wait (futex, 2, &rt, private);
-    }
-  while (atomic_compare_and_exchange_val_24_acq (futex, 2, 0) != 0);
-
-  return 0;
-}
 #endif

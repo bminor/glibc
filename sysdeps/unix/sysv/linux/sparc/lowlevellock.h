@@ -24,6 +24,7 @@
 #include <bits/pthreadtypes.h>
 #include <atomic.h>
 #include <kernel-features.h>
+#include <errno.h>
 
 #include <lowlevellock-futex.h>
 
@@ -75,8 +76,12 @@ __lll_cond_lock (int *futex, int private)
 #define lll_cond_lock(futex, private) __lll_cond_lock (&(futex), private)
 
 
-extern int __lll_clocklock_wait (int *futex, clockid_t, const struct timespec *,
+extern int __lll_clocklock_wait (int *futex, clockid_t, int val,
+				 const struct timespec *,
 				 int private) attribute_hidden;
+
+#define lll_timedwait(futex, val, clockid, abstime, private)		\
+  __lll_clocklock_wait (futex, val, clockid, abstime, private)
 
 static inline int
 __attribute__ ((always_inline))
@@ -87,7 +92,20 @@ __lll_clocklock (int *futex, clockid_t clockid,
   int result = 0;
 
   if (__glibc_unlikely (val != 0))
-    result = __lll_clocklock_wait (futex, clockid, abstime, private);
+    {
+      do
+	{
+	  int oldval = atomic_compare_and_exchange_val_24_acq (futex, val, 1);
+	  if (oldval != 0)
+	    {
+	      result = __lll_clocklock_wait (futex, 2, clockid, abstime,
+					     private);
+	      if (result == EINVAL || result == ETIMEDOUT)
+		break;
+	    }
+        }
+      while (atomic_compare_and_exchange_val_24_acq (futex, val, 0) != 0);
+    }
   return result;
 }
 #define lll_clocklock(futex, clockid, abstime, private)  \

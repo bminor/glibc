@@ -21,6 +21,7 @@
 
 #include <atomic.h>
 #include <lowlevellock-futex.h>
+#include <time.h>
 
 /* Low-level locks use a combination of atomic operations (to acquire and
    release lock ownership) and futex operations (to block until the state
@@ -121,10 +122,12 @@ extern void __lll_lock_wait (int *futex, int private) attribute_hidden;
 #define lll_cond_lock(futex, private) __lll_cond_lock (&(futex), private)
 
 
-extern int __lll_clocklock_wait (int *futex, clockid_t,
+extern int __lll_clocklock_wait (int *futex, int val, clockid_t,
 				 const struct timespec *,
 				 int private) attribute_hidden;
 
+#define lll_timedwait(futex, val, clockid, abstime, private)		\
+  __lll_clocklock_wait (futex, val, clockid, abstime, private)
 
 /* As __lll_lock, but with an absolute timeout measured against the clock
    specified in CLOCKID.  If the timeout occurs then return ETIMEDOUT. If
@@ -136,7 +139,15 @@ extern int __lll_clocklock_wait (int *futex, clockid_t,
                                                                 \
     if (__glibc_unlikely                                        \
         (atomic_compare_and_exchange_bool_acq (__futex, 1, 0))) \
-      __val = __lll_clocklock_wait (__futex, clockid, abstime, private); \
+      {								\
+	while (atomic_exchange_acq (futex, 2) != 0)		\
+	  {							\
+	    __val = __lll_clocklock_wait (__futex, 2, clockid, 	\
+					  abstime, private);	\
+	    if (__val == EINVAL || __val == ETIMEDOUT)		\
+	      break;						\
+	  }							\
+      }								\
     __val;                                                      \
   })
 #define lll_clocklock(futex, clockid, abstime, private)         \
