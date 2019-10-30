@@ -112,4 +112,8 @@ ifeq ($(build-static-nss),yes)
 CFLAGS += -DSTATIC_NSS
 endif
 
+# The test uses dlopen indirectly and would otherwise load system
+# objects.
+tst-idna_name_classify-ENV = \
+  LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)elf
 $(objpfx)tst-idna_name_classify.out: $(gen-locales)
