@@ -140,6 +140,15 @@
 
 
 /* Priority Inheritance support.  */
+#define lll_futex_timed_lock_pi(futexp, abstime, private) 		\
+  lll_futex_syscall (4, futexp,						\
+		     __lll_private_flag (FUTEX_LOCK_PI, private),	\
+		     0, abstime)
+
+#define lll_futex_timed_unlock_pi(futexp, private) 			\
+  lll_futex_syscall (4, futexp,						\
+		     __lll_private_flag (FUTEX_UNLOCK_PI, private),	\
+		     0, 0)
 
 /* Like lll_futex_wait (FUTEXP, VAL, PRIVATE) but with the expectation
    that lll_futex_cmp_requeue_pi (FUTEXP, _, _, MUTEX, _, PRIVATE) will

@@ -24,6 +24,7 @@
 #include "pthreadP.h"
 #include <atomic.h>
 #include <pthread-offsets.h>
+#include <futex-internal.h>
 
 #include <stap-probe.h>
 
@@ -37,19 +38,13 @@ static const struct pthread_mutexattr default_mutexattr =
 static bool
 prio_inherit_missing (void)
 {
-#ifdef __NR_futex
   static int tpi_supported;
-  if (__glibc_unlikely (tpi_supported == 0))
+  if (__glibc_unlikely (atomic_load_relaxed (&tpi_supported) == 0))
     {
-      int lock = 0;
-      INTERNAL_SYSCALL_DECL (err);
-      int ret = INTERNAL_SYSCALL (futex, err, 4, &lock, FUTEX_UNLOCK_PI, 0, 0);
-      assert (INTERNAL_SYSCALL_ERROR_P (ret, err));
-      tpi_supported = INTERNAL_SYSCALL_ERRNO (ret, err) == ENOSYS ? -1 : 1;
+      int e = futex_unlock_pi (&(unsigned int){0}, 0);
+      atomic_store_relaxed (&tpi_supported, e == ENOSYS ? -1 : 1);
     }
   return __glibc_unlikely (tpi_supported < 0);
-#endif
-  return true;
 }
 
 int

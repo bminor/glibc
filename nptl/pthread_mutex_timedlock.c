@@ -25,6 +25,7 @@
 #include <atomic.h>
 #include <lowlevellock.h>
 #include <not-cancel.h>
+#include <futex-internal.h>
 
 #include <stap-probe.h>
 
@@ -377,39 +378,29 @@ __pthread_mutex_clocklock_common (pthread_mutex_t *mutex,
 	    int private = (robust
 			   ? PTHREAD_ROBUST_MUTEX_PSHARED (mutex)
 			   : PTHREAD_MUTEX_PSHARED (mutex));
-	    INTERNAL_SYSCALL_DECL (__err);
-
-	    int e = INTERNAL_SYSCALL (futex, __err, 4, &mutex->__data.__lock,
-				      __lll_private_flag (FUTEX_LOCK_PI,
-							  private), 1,
-				      abstime);
-	    if (INTERNAL_SYSCALL_ERROR_P (e, __err))
+	    int e = futex_lock_pi ((unsigned int *) &mutex->__data.__lock,
+				   abstime, private);
+	    if (e == ETIMEDOUT)
+	      return ETIMEDOUT;
+	    else if (e == ESRCH || e == EDEADLK)
 	      {
-		if (INTERNAL_SYSCALL_ERRNO (e, __err) == ETIMEDOUT)
-		  return ETIMEDOUT;
+		assert (e != EDEADLK
+			|| (kind != PTHREAD_MUTEX_ERRORCHECK_NP
+			   && kind != PTHREAD_MUTEX_RECURSIVE_NP));
+		/* ESRCH can happen only for non-robust PI mutexes where
+		   the owner of the lock died.  */
+		assert (e != ESRCH || !robust);
 
-		if (INTERNAL_SYSCALL_ERRNO (e, __err) == ESRCH
-		    || INTERNAL_SYSCALL_ERRNO (e, __err) == EDEADLK)
-		  {
-		    assert (INTERNAL_SYSCALL_ERRNO (e, __err) != EDEADLK
-			    || (kind != PTHREAD_MUTEX_ERRORCHECK_NP
-				&& kind != PTHREAD_MUTEX_RECURSIVE_NP));
-		    /* ESRCH can happen only for non-robust PI mutexes where
-		       the owner of the lock died.  */
-		    assert (INTERNAL_SYSCALL_ERRNO (e, __err) != ESRCH
-			    || !robust);
-
-		    /* Delay the thread until the timeout is reached.
-		       Then return ETIMEDOUT.  */
-		    do
-		      e = lll_timedwait (&(int){0}, 0, clockid, abstime,
-					 private);
-		    while (e != ETIMEDOUT);
-		    return ETIMEDOUT;
-		  }
-
-		return INTERNAL_SYSCALL_ERRNO (e, __err);
+		/* Delay the thread until the timeout is reached. Then return
+		   ETIMEDOUT.  */
+		do
+		  e = lll_timedwait (&(int){0}, 0, clockid, abstime,
+				     private);
+		while (e != ETIMEDOUT);
+		return ETIMEDOUT;
 	      }
+	    else if (e != 0)
+	      return e;
 
 	    oldval = mutex->__data.__lock;
 
@@ -447,11 +438,8 @@ __pthread_mutex_clocklock_common (pthread_mutex_t *mutex,
 	    /* This mutex is now not recoverable.  */
 	    mutex->__data.__count = 0;
 
-	    INTERNAL_SYSCALL_DECL (__err);
-	    INTERNAL_SYSCALL (futex, __err, 4, &mutex->__data.__lock,
-			      __lll_private_flag (FUTEX_UNLOCK_PI,
-						  PTHREAD_ROBUST_MUTEX_PSHARED (mutex)),
-			      0, 0);
+	    futex_unlock_pi ((unsigned int *) &mutex->__data.__lock,
+			     PTHREAD_ROBUST_MUTEX_PSHARED (mutex));
 
 	    /* To the kernel, this will be visible after the kernel has
 	       acquired the mutex in the syscall.  */

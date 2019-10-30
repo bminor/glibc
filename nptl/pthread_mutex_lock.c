@@ -24,7 +24,7 @@
 #include <not-cancel.h>
 #include "pthreadP.h"
 #include <atomic.h>
-#include <lowlevellock.h>
+#include <futex-internal.h>
 #include <stap-probe.h>
 
 #ifndef lll_lock_elision
@@ -416,21 +416,16 @@ __pthread_mutex_lock_full (pthread_mutex_t *mutex)
 	    int private = (robust
 			   ? PTHREAD_ROBUST_MUTEX_PSHARED (mutex)
 			   : PTHREAD_MUTEX_PSHARED (mutex));
-	    INTERNAL_SYSCALL_DECL (__err);
-	    int e = INTERNAL_SYSCALL (futex, __err, 4, &mutex->__data.__lock,
-				      __lll_private_flag (FUTEX_LOCK_PI,
-							  private), 1, 0);
-
-	    if (INTERNAL_SYSCALL_ERROR_P (e, __err)
-		&& (INTERNAL_SYSCALL_ERRNO (e, __err) == ESRCH
-		    || INTERNAL_SYSCALL_ERRNO (e, __err) == EDEADLK))
+	    int e = futex_lock_pi ((unsigned int *) &mutex->__data.__lock,
+				   NULL, private);
+	    if (e == ESRCH || e == EDEADLK)
 	      {
-		assert (INTERNAL_SYSCALL_ERRNO (e, __err) != EDEADLK
+		assert (e != EDEADLK
 			|| (kind != PTHREAD_MUTEX_ERRORCHECK_NP
 			    && kind != PTHREAD_MUTEX_RECURSIVE_NP));
 		/* ESRCH can happen only for non-robust PI mutexes where
 		   the owner of the lock died.  */
-		assert (INTERNAL_SYSCALL_ERRNO (e, __err) != ESRCH || !robust);
+		assert (e != ESRCH || !robust);
 
 		/* Delay the thread indefinitely.  */
 		while (1)
@@ -479,11 +474,8 @@ __pthread_mutex_lock_full (pthread_mutex_t *mutex)
 	    /* This mutex is now not recoverable.  */
 	    mutex->__data.__count = 0;
 
-	    INTERNAL_SYSCALL_DECL (__err);
-	    INTERNAL_SYSCALL (futex, __err, 4, &mutex->__data.__lock,
-			      __lll_private_flag (FUTEX_UNLOCK_PI,
-						  PTHREAD_ROBUST_MUTEX_PSHARED (mutex)),
-			      0, 0);
+	    futex_unlock_pi ((unsigned int *) &mutex->__data.__lock,
+			     PTHREAD_ROBUST_MUTEX_PSHARED (mutex));
 
 	    /* To the kernel, this will be visible after the kernel has
 	       acquired the mutex in the syscall.  */

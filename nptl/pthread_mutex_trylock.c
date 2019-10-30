@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include "pthreadP.h"
 #include <lowlevellock.h>
+#include <futex-internal.h>
 
 #ifndef lll_trylock_elision
 #define lll_trylock_elision(a,t) lll_trylock(a)
@@ -346,11 +347,8 @@ __pthread_mutex_trylock (pthread_mutex_t *mutex)
 	    /* This mutex is now not recoverable.  */
 	    mutex->__data.__count = 0;
 
-	    INTERNAL_SYSCALL_DECL (__err);
-	    INTERNAL_SYSCALL (futex, __err, 4, &mutex->__data.__lock,
-			      __lll_private_flag (FUTEX_UNLOCK_PI,
-						  PTHREAD_ROBUST_MUTEX_PSHARED (mutex)),
-			      0, 0);
+	    futex_unlock_pi ((unsigned int *) &mutex->__data.__lock,
+			     PTHREAD_ROBUST_MUTEX_PSHARED (mutex));
 
 	    /* To the kernel, this will be visible after the kernel has
 	       acquired the mutex in the syscall.  */
