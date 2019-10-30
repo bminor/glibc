@@ -49,10 +49,6 @@
   (void) __writev (fd, iov, n)
 # define __waitpid_nocancel(pid, stat_loc, options) \
   __waitpid (pid, stat_loc, options)
-#define __pause_nocancel() \
-  __pause ()
-#define __nanosleep_nocancel(requested_time, remaining) \
-  __nanosleep (requested_time, remaining)
 #define __fcntl64_nocancel(fd, cmd, ...) \
   __fcntl64 (fd, cmd, __VA_ARGS__)
 

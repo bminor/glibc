@@ -72,12 +72,6 @@ __writev_nocancel_nostatus (int fd, const struct iovec *iov, int iovcnt)
 /* Uncancelable waitpid.  */
 __typeof (waitpid) __waitpid_nocancel;
 
-/* Uncancelable pause.  */
-__typeof (pause) __pause_nocancel;
-
-/* Uncancelable nanosleep.  */
-__typeof (__nanosleep) __nanosleep_nocancel;
-
 /* Uncancelable fcntl.  */
 __typeof (__fcntl) __fcntl64_nocancel;
 
@@ -91,8 +85,6 @@ hidden_proto (__pread64_nocancel)
 hidden_proto (__write_nocancel)
 hidden_proto (__close_nocancel)
 hidden_proto (__waitpid_nocancel)
-hidden_proto (__pause_nocancel)
-hidden_proto (__nanosleep_nocancel)
 hidden_proto (__fcntl64_nocancel)
 #endif
 
