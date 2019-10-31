@@ -21,6 +21,7 @@
 int
 __pthread_join (pthread_t threadid, void **thread_return)
 {
-  return __pthread_timedjoin_ex (threadid, thread_return, NULL, true);
+  return __pthread_clockjoin_ex (threadid, thread_return, 0 /* Ignored */,
+				 NULL, true);
 }
 weak_alias (__pthread_join, pthread_join)

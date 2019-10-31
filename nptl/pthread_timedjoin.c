@@ -22,6 +22,7 @@ int
 __pthread_timedjoin_np (pthread_t threadid, void **thread_return,
 			const struct timespec *abstime)
 {
-  return __pthread_timedjoin_ex (threadid, thread_return, abstime, true);
+  return __pthread_clockjoin_ex (threadid, thread_return,
+                                 CLOCK_REALTIME, abstime, true);
 }
 weak_alias (__pthread_timedjoin_np, pthread_timedjoin_np)

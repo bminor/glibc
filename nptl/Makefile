@@ -53,7 +53,7 @@ pthread-compat-wrappers = \
 libpthread-routines = nptl-init nptlfreeres vars events version pt-interp \
 		      pthread_create pthread_exit pthread_detach \
 		      pthread_join pthread_tryjoin pthread_timedjoin \
-		      pthread_join_common pthread_yield \
+		      pthread_clockjoin pthread_join_common pthread_yield \
 		      pthread_getconcurrency pthread_setconcurrency \
 		      pthread_getschedparam pthread_setschedparam \
 		      pthread_setschedprio \
@@ -189,6 +189,7 @@ CFLAGS-forward.c += -fexceptions
 CFLAGS-pthread_testcancel.c += -fexceptions
 CFLAGS-pthread_join.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pthread_timedjoin.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pthread_clockjoin.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pthread_once.c += $(uses-callbacks) -fexceptions \
 			-fasynchronous-unwind-tables
 CFLAGS-pthread_cond_wait.c += -fexceptions -fasynchronous-unwind-tables
@@ -273,7 +274,7 @@ tests = tst-attr1 tst-attr2 tst-attr3 tst-default-attr \
 	tst-kill1 tst-kill2 tst-kill3 tst-kill4 tst-kill5 tst-kill6 \
 	tst-raise1 \
 	tst-join1 tst-join2 tst-join3 tst-join4 tst-join5 tst-join6 tst-join7 \
-	tst-join8 tst-join9 \
+	tst-join8 tst-join9 tst-join10 tst-join11 tst-join12 tst-join13 \
 	tst-detach1 \
 	tst-eintr2 tst-eintr3 tst-eintr4 tst-eintr5 \
 	tst-tsd1 tst-tsd2 tst-tsd3 tst-tsd4 tst-tsd5 tst-tsd6 \

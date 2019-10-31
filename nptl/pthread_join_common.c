@@ -37,7 +37,7 @@ cleanup (void *arg)
    afterwards.  The kernel up to version 3.16.3 does not use the private futex
    operations for futex wake-up when the clone terminates.  */
 static int
-timedwait_tid (pid_t *tidp, const struct timespec *abstime)
+clockwait_tid (pid_t *tidp, clockid_t clockid, const struct timespec *abstime)
 {
   pid_t tid;
 
@@ -49,8 +49,10 @@ timedwait_tid (pid_t *tidp, const struct timespec *abstime)
     {
       struct timespec rt;
 
-      /* Get the current time.  */
-      __clock_gettime (CLOCK_REALTIME, &rt);
+      /* Get the current time. This can only fail if clockid is
+         invalid. */
+      if (__glibc_unlikely (__clock_gettime (clockid, &rt)))
+        return EINVAL;
 
       /* Compute relative timeout.  */
       rt.tv_sec = abstime->tv_sec - rt.tv_sec;
@@ -77,7 +79,8 @@ timedwait_tid (pid_t *tidp, const struct timespec *abstime)
 }
 
 int
-__pthread_timedjoin_ex (pthread_t threadid, void **thread_return,
+__pthread_clockjoin_ex (pthread_t threadid, void **thread_return,
+			clockid_t clockid,
 			const struct timespec *abstime, bool block)
 {
   struct pthread *pd = (struct pthread *) threadid;
@@ -122,7 +125,7 @@ __pthread_timedjoin_ex (pthread_t threadid, void **thread_return,
 
   /* BLOCK waits either indefinitely or based on an absolute time.  POSIX also
      states a cancellation point shall occur for pthread_join, and we use the
-     same rationale for posix_timedjoin_np.  Both timedwait_tid and the futex
+     same rationale for posix_timedjoin_np.  Both clockwait_tid and the futex
      call use the cancellable variant.  */
   if (block)
     {
@@ -132,7 +135,7 @@ __pthread_timedjoin_ex (pthread_t threadid, void **thread_return,
       pthread_cleanup_push (cleanup, &pd->joinid);
 
       if (abstime != NULL)
-	result = timedwait_tid (&pd->tid, abstime);
+	result = clockwait_tid (&pd->tid, clockid, abstime);
       else
 	{
 	  pid_t tid;
@@ -165,4 +168,3 @@ __pthread_timedjoin_ex (pthread_t threadid, void **thread_return,
 
   return result;
 }
-hidden_def (__pthread_timedjoin_ex)

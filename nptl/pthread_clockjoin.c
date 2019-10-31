@@ -1,5 +1,5 @@
-/* C11 threads thread join implementation.
-   Copyright (C) 2018-2019 Free Software Foundation, Inc.
+/* Join with a terminated thread using an specific clock.
+   Copyright (C) 2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -14,17 +14,16 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <https://www.gnu.org/licenses/>.  */
+   <http://www.gnu.org/licenses/>.  */
 
-#include "thrd_priv.h"
+#include "pthreadP.h"
 
 int
-thrd_join (thrd_t thr, int *res)
+__pthread_clockjoin_np (pthread_t threadid, void **thread_return,
+			clockid_t clockid,
+			const struct timespec *abstime)
 {
-  void *pthread_res;
-  int err_code = __pthread_clockjoin_ex (thr, &pthread_res, 0, NULL, true);
-  if (res)
-   *res = (int) (uintptr_t) pthread_res;
-
-  return thrd_err_map (err_code);
+  return __pthread_clockjoin_ex (threadid, thread_return,
+                                 clockid, abstime, true);
 }
+weak_alias (__pthread_clockjoin_np, pthread_clockjoin_np)

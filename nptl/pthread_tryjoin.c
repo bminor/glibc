@@ -28,5 +28,6 @@ pthread_tryjoin_np (pthread_t threadid, void **thread_return)
 
   /* If pd->tid == 0 then lll_wait_tid will not block on futex
      operation.  */
-  return __pthread_timedjoin_ex (threadid, thread_return, NULL, false);
+  return __pthread_clockjoin_ex (threadid, thread_return, 0 /* Ignored */,
+				 NULL, false);
 }

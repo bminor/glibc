@@ -34,6 +34,10 @@ Major new features:
   will always receive a 'struct timezone' whose tz_minuteswest and
   tz_dsttime fields are zero.
 
+* The function pthread_clockjoin_np has been added, enabling join with a
+  terminated thread with an specific clock.  It allows waiting against
+  CLOCK_MONOTONIC and CLOCK_REALTIME.  This function is a GNU extension.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The totalorder and totalordermag functions, and the corresponding

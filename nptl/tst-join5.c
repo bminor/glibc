@@ -24,7 +24,9 @@
 #include <unistd.h>
 
 #include <support/check.h>
+#include <support/timespec.h>
 #include <support/xthread.h>
+#include <support/xtime.h>
 
 static void
 wait_code (void)
@@ -42,14 +44,20 @@ static pthread_barrier_t b;
 static int
 thread_join (pthread_t thread, void **retval)
 {
-#ifdef USE_PTHREAD_TIMEDJOIN_NP
-  struct timespec tv;
-  TEST_COMPARE (clock_gettime (CLOCK_REALTIME, &tv), 0);
-  /* Arbitrary large timeout to make it act as pthread_join.  */
-  tv.tv_sec += 1000;
-  return pthread_timedjoin_np ((pthread_t) thread, retval, &tv);
+#if defined USE_PTHREAD_TIMEDJOIN_NP
+  const struct timespec ts = timespec_add (xclock_now (CLOCK_REALTIME),
+                                           make_timespec (1000, 0));
+  return pthread_timedjoin_np (thread, retval, &ts);
+#elif defined USE_PTHREAD_CLOCKJOIN_NP_REALTIME
+  const struct timespec ts = timespec_add (xclock_now (CLOCK_REALTIME),
+                                           make_timespec (1000, 0));
+  return pthread_clockjoin_np (thread, retval, CLOCK_REALTIME, &ts);
+#elif defined USE_PTHREAD_CLOCKJOIN_NP_MONOTONIC
+  const struct timespec ts = timespec_add (xclock_now (CLOCK_MONOTONIC),
+                                           make_timespec (1000, 0));
+  return pthread_clockjoin_np (thread, retval, CLOCK_MONOTONIC, &ts);
 #else
-  return pthread_join ((pthread_t) thread, retval);
+  return pthread_join (thread, retval);
 #endif
 }
 

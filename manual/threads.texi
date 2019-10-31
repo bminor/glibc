@@ -751,6 +751,18 @@ reached if the thread has not terminated by that time and return
 will wait forever in the same way as @code{pthread_join}.
 @end deftypefun
 
+@comment pthread.h
+@comment GNU extension
+@deftypefun int pthread_clockjoin_np (pthread_t *@var{thread},
+				      void **@var{thread_return},
+                                      clockid_t @var{clockid},
+				      const struct timespec *@var{abstime})
+@standards{GNU, pthread.h}
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
+Behaves like @code{pthread_timedjoin_np} except that time absolute time in
+@var{abstime} is measured against the clock specified by @var{clockid}.
+@end deftypefun
+
 @c FIXME these are undocumented:
 @c pthread_atfork
 @c pthread_attr_destroy

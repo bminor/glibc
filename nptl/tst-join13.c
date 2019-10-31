@@ -1,5 +1,5 @@
-/* C11 threads thread join implementation.
-   Copyright (C) 2018-2019 Free Software Foundation, Inc.
+/* Check if pthread_clockjoin_np is a cancellation entrypoint.
+   Copyright (C) 2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -14,17 +14,8 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <https://www.gnu.org/licenses/>.  */
+   <http://www.gnu.org/licenses/>.  */
 
-#include "thrd_priv.h"
-
-int
-thrd_join (thrd_t thr, int *res)
-{
-  void *pthread_res;
-  int err_code = __pthread_clockjoin_ex (thr, &pthread_res, 0, NULL, true);
-  if (res)
-   *res = (int) (uintptr_t) pthread_res;
-
-  return thrd_err_map (err_code);
-}
+#define USE_PTHREAD_CLOCKJOIN_NP_MONOTONIC 1
+#define WAIT_IN_CHILD 1
+#include <nptl/tst-join5.c>

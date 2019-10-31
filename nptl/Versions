@@ -277,6 +277,10 @@ libpthread {
     pthread_mutex_clocklock;
   }
 
+  GLIBC_2.31 {
+    pthread_clockjoin_np;
+  }
+
   GLIBC_PRIVATE {
     __pthread_initialize_minimal;
     __pthread_clock_gettime; __pthread_clock_settime;
