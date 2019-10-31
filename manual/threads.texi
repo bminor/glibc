@@ -727,6 +727,30 @@ rather than @code{CLOCK_REALTIME}.  Currently, @var{clockid} must be either
 returned.
 @end deftypefun
 
+@comment pthread.h
+@comment GNU extension
+@deftypefun int pthread_tryjoin_np (pthread_t *@var{thread},
+				      void **@var{thread_return})
+@standards{GNU, pthread.h}
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
+Behaves like @code{pthread_join} except that it will return @code{EBUSY}
+immediately if the thread specified by @var{thread} has not yet terminated.
+@end deftypefun
+
+@comment pthread.h
+@comment GNU extension
+@deftypefun int pthread_timedjoin_np (pthread_t *@var{thread},
+				      void **@var{thread_return},
+				      const struct timespec *@var{abstime})
+@standards{GNU, pthread.h}
+@safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
+Behaves like @code{pthread_tryjoin_np} except that it will block until the
+absolute time @var{abstime} measured against @code{CLOCK_REALTIME} is
+reached if the thread has not terminated by that time and return
+@code{EBUSY}. If @var{abstime} is equal to @code{NULL} then the function
+will wait forever in the same way as @code{pthread_join}.
+@end deftypefun
+
 @c FIXME these are undocumented:
 @c pthread_atfork
 @c pthread_attr_destroy
@@ -844,6 +868,4 @@ returned.
 @c pthread_spin_trylock
 @c pthread_spin_unlock
 @c pthread_testcancel
-@c pthread_timedjoin_np
-@c pthread_tryjoin_np
 @c pthread_yield
