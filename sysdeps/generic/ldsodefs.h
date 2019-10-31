@@ -861,7 +861,9 @@ libc_hidden_proto (_dl_catch_error)
 
 /* Call OPERATE (ARGS).  If no error occurs, set *EXCEPTION to zero.
    Otherwise, store a copy of the raised exception in *EXCEPTION,
-   which has to be freed by _dl_exception_free.  */
+   which has to be freed by _dl_exception_free.  As a special case, if
+   EXCEPTION is null, call OPERATE (ARGS) with exception handling
+   disabled (so that exceptions are fatal).  */
 int _dl_catch_exception (struct dl_exception *exception,
 			 void (*operate) (void *), void *args);
 libc_hidden_proto (_dl_catch_exception)
