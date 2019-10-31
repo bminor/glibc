@@ -275,6 +275,7 @@ tests = tst-attr1 tst-attr2 tst-attr3 tst-default-attr \
 	tst-raise1 \
 	tst-join1 tst-join2 tst-join3 tst-join4 tst-join5 tst-join6 tst-join7 \
 	tst-join8 tst-join9 tst-join10 tst-join11 tst-join12 tst-join13 \
+	tst-join14 \
 	tst-detach1 \
 	tst-eintr2 tst-eintr3 tst-eintr4 tst-eintr5 \
 	tst-tsd1 tst-tsd2 tst-tsd3 tst-tsd4 tst-tsd5 tst-tsd6 \
