@@ -792,11 +792,9 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 
   bump_num_relocations ();
 
-  /* No other flag than DL_LOOKUP_ADD_DEPENDENCY or DL_LOOKUP_GSCOPE_LOCK
-     is allowed if we look up a versioned symbol.  */
-  assert (version == NULL
-	  || (flags & ~(DL_LOOKUP_ADD_DEPENDENCY | DL_LOOKUP_GSCOPE_LOCK))
-	     == 0);
+  /* DL_LOOKUP_RETURN_NEWEST does not make sense for versioned
+     lookups.  */
+  assert (version == NULL || !(flags & DL_LOOKUP_RETURN_NEWEST));
 
   size_t i = 0;
   if (__glibc_unlikely (skip_map != NULL))
