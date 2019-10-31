@@ -917,6 +917,9 @@ enum
     DL_LOOKUP_RETURN_NEWEST = 2,
     /* Set if dl_lookup* called with GSCOPE lock held.  */
     DL_LOOKUP_GSCOPE_LOCK = 4,
+    /* Set if dl_lookup is called for non-lazy relocation processing
+       from _dl_relocate_object in elf/dl-reloc.c.  */
+    DL_LOOKUP_FOR_RELOCATE = 8,
   };
 
 /* Lookup versioned symbol.  */
