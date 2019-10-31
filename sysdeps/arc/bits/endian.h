@@ -8,5 +8,5 @@
 # define __BYTE_ORDER __LITTLE_ENDIAN
 #endif
 #ifdef __BIG_ENDIAN__
-# error "Big Endian NOt supported on ARC"
+# define __BYTE_ORDER __BIG_ENDIAN
 #endif
