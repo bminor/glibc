@@ -622,6 +622,8 @@ dl_open_worker (void *a)
   _dl_debug_state ();
   LIBC_PROBE (map_complete, 3, args->nsid, r, new);
 
+  _dl_open_check (new);
+
   /* Print scope information.  */
   if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_SCOPES))
     _dl_show_scope (new, 0);
@@ -701,12 +703,6 @@ dl_open_worker (void *a)
 #endif
 	_dl_relocate_object (l, l->l_scope, reloc_mode, 0);
     }
-
-  /* NB: Workaround for [BZ #20839] which doesn't remove the NODELETE
-     object when _dl_open_check throws an exception.  Move it after
-     relocation to avoid leaving the NODELETE object mapped without
-     relocation.  */
-  _dl_open_check (new);
 
   /* This only performs the memory allocations.  The actual update of
      the scopes happens below, after failure is impossible.  */
