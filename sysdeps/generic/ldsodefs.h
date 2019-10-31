@@ -328,7 +328,14 @@ struct rtld_global
     /* This is zero at program start to signal that the global scope map is
        allocated by rtld.  Later it keeps the size of the map.  It might be
        reset if in _dl_close if the last global object is removed.  */
-    size_t _ns_global_scope_alloc;
+    unsigned int _ns_global_scope_alloc;
+
+    /* During dlopen, this is the number of objects that still need to
+       be added to the global scope map.  It has to be taken into
+       account when resizing the map, for future map additions after
+       recursive dlopen calls from ELF constructors.  */
+    unsigned int _ns_global_scope_pending_adds;
+
     /* Search table for unique objects.  */
     struct unique_sym_table
     {

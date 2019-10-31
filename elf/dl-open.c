@@ -50,22 +50,38 @@ struct dl_open_args
   struct link_map *map;
   /* Namespace ID.  */
   Lmid_t nsid;
+
+  /* Original value of _ns_global_scope_pending_adds.  Set by
+     dl_open_worker.  Only valid if nsid is a real namespace
+     (non-negative).  */
+  unsigned int original_global_scope_pending_adds;
+
   /* Original parameters to the program and the current environment.  */
   int argc;
   char **argv;
   char **env;
 };
 
-
-static int
-add_to_global (struct link_map *new)
+/* Called in case the global scope cannot be extended.  */
+static void __attribute__ ((noreturn))
+add_to_global_resize_failure (struct link_map *new)
 {
-  struct link_map **new_global;
-  unsigned int to_add = 0;
-  unsigned int cnt;
+  _dl_signal_error (ENOMEM, new->l_libname->name, NULL,
+		    N_ ("cannot extend global scope"));
+}
+
+/* Grow the global scope array for the namespace, so that all the new
+   global objects can be added later in add_to_global_update, without
+   risk of memory allocation failure.  add_to_global_resize raises
+   exceptions for memory allocation errors.  */
+static void
+add_to_global_resize (struct link_map *new)
+{
+  struct link_namespaces *ns = &GL (dl_ns)[new->l_ns];
 
   /* Count the objects we have to put in the global scope.  */
-  for (cnt = 0; cnt < new->l_searchlist.r_nlist; ++cnt)
+  unsigned int to_add = 0;
+  for (unsigned int cnt = 0; cnt < new->l_searchlist.r_nlist; ++cnt)
     if (new->l_searchlist.r_list[cnt]->l_global == 0)
       ++to_add;
 
@@ -83,47 +99,51 @@ add_to_global (struct link_map *new)
      in an realloc() call.  Therefore we allocate a completely new
      array the first time we have to add something to the locale scope.  */
 
-  struct link_namespaces *ns = &GL(dl_ns)[new->l_ns];
+  if (__builtin_add_overflow (ns->_ns_global_scope_pending_adds, to_add,
+			      &ns->_ns_global_scope_pending_adds))
+    add_to_global_resize_failure (new);
+
+  unsigned int new_size = 0; /* 0 means no new allocation.  */
+  void *old_global = NULL; /* Old allocation if free-able.  */
+
+  /* Minimum required element count for resizing.  Adjusted below for
+     an exponential resizing policy.  */
+  size_t required_new_size;
+  if (__builtin_add_overflow (ns->_ns_main_searchlist->r_nlist,
+			      ns->_ns_global_scope_pending_adds,
+			      &required_new_size))
+    add_to_global_resize_failure (new);
+
   if (ns->_ns_global_scope_alloc == 0)
     {
-      /* This is the first dynamic object given global scope.  */
-      ns->_ns_global_scope_alloc
-	= ns->_ns_main_searchlist->r_nlist + to_add + 8;
-      new_global = (struct link_map **)
-	malloc (ns->_ns_global_scope_alloc * sizeof (struct link_map *));
+      if (__builtin_add_overflow (required_new_size, 8, &new_size))
+	add_to_global_resize_failure (new);
+    }
+  else if (required_new_size > ns->_ns_global_scope_alloc)
+    {
+      if (__builtin_mul_overflow (required_new_size, 2, &new_size))
+	add_to_global_resize_failure (new);
+
+      /* The old array was allocated with our malloc, not the minimal
+	 malloc.  */
+      old_global = ns->_ns_main_searchlist->r_list;
+    }
+
+  if (new_size > 0)
+    {
+      size_t allocation_size;
+      if (__builtin_mul_overflow (new_size, sizeof (struct link_map *),
+				  &allocation_size))
+	add_to_global_resize_failure (new);
+      struct link_map **new_global = malloc (allocation_size);
       if (new_global == NULL)
-	{
-	  ns->_ns_global_scope_alloc = 0;
-	nomem:
-	  _dl_signal_error (ENOMEM, new->l_libname->name, NULL,
-			    N_("cannot extend global scope"));
-	  return 1;
-	}
+	add_to_global_resize_failure (new);
 
       /* Copy over the old entries.  */
-      ns->_ns_main_searchlist->r_list
-	= memcpy (new_global, ns->_ns_main_searchlist->r_list,
-		  (ns->_ns_main_searchlist->r_nlist
-		   * sizeof (struct link_map *)));
-    }
-  else if (ns->_ns_main_searchlist->r_nlist + to_add
-	   > ns->_ns_global_scope_alloc)
-    {
-      /* We have to extend the existing array of link maps in the
-	 main map.  */
-      struct link_map **old_global
-	= GL(dl_ns)[new->l_ns]._ns_main_searchlist->r_list;
-      size_t new_nalloc = ((ns->_ns_global_scope_alloc + to_add) * 2);
+      memcpy (new_global, ns->_ns_main_searchlist->r_list,
+	      ns->_ns_main_searchlist->r_nlist * sizeof (struct link_map *));
 
-      new_global = (struct link_map **)
-	malloc (new_nalloc * sizeof (struct link_map *));
-      if (new_global == NULL)
-	goto nomem;
-
-      memcpy (new_global, old_global,
-	      ns->_ns_global_scope_alloc * sizeof (struct link_map *));
-
-      ns->_ns_global_scope_alloc = new_nalloc;
+      ns->_ns_global_scope_alloc = new_size;
       ns->_ns_main_searchlist->r_list = new_global;
 
       if (!RTLD_SINGLE_THREAD_P)
@@ -131,16 +151,28 @@ add_to_global (struct link_map *new)
 
       free (old_global);
     }
+}
+
+/* Actually add the new global objects to the global scope.  Must be
+   called after add_to_global_resize.  This function cannot fail.  */
+static void
+add_to_global_update (struct link_map *new)
+{
+  struct link_namespaces *ns = &GL (dl_ns)[new->l_ns];
 
   /* Now add the new entries.  */
   unsigned int new_nlist = ns->_ns_main_searchlist->r_nlist;
-  for (cnt = 0; cnt < new->l_searchlist.r_nlist; ++cnt)
+  for (unsigned int cnt = 0; cnt < new->l_searchlist.r_nlist; ++cnt)
     {
       struct link_map *map = new->l_searchlist.r_list[cnt];
 
       if (map->l_global == 0)
 	{
 	  map->l_global = 1;
+
+	  /* The array has been resized by add_to_global_resize.  */
+	  assert (new_nlist < ns->_ns_global_scope_alloc);
+
 	  ns->_ns_main_searchlist->r_list[new_nlist++] = map;
 
 	  /* We modify the global scope.  Report this.  */
@@ -149,10 +181,15 @@ add_to_global (struct link_map *new)
 			      map->l_name, map->l_ns);
 	}
     }
+
+  /* Some of the pending adds have been performed by the loop above.
+     Adjust the counter accordingly.  */
+  unsigned int added = new_nlist - ns->_ns_main_searchlist->r_nlist;
+  assert (added <= ns->_ns_global_scope_pending_adds);
+  ns->_ns_global_scope_pending_adds -= added;
+
   atomic_write_barrier ();
   ns->_ns_main_searchlist->r_nlist = new_nlist;
-
-  return 0;
 }
 
 /* Search link maps in all namespaces for the DSO that contains the object at
@@ -225,6 +262,10 @@ dl_open_worker (void *a)
 	args->nsid = call_map->l_ns;
     }
 
+  /* Retain the old value, so that it can be restored.  */
+  args->original_global_scope_pending_adds
+    = GL (dl_ns)[args->nsid]._ns_global_scope_pending_adds;
+
   /* One might be tempted to assert that we are RT_CONSISTENT at this point, but that
      may not be true if this is a recursive call to dlopen.  */
   _dl_debug_initialize (0, args->nsid);
@@ -266,7 +307,10 @@ dl_open_worker (void *a)
       /* If the user requested the object to be in the global namespace
 	 but it is not so far, add it now.  */
       if ((mode & RTLD_GLOBAL) && new->l_global == 0)
-	(void) add_to_global (new);
+	{
+	  add_to_global_resize (new);
+	  add_to_global_update (new);
+	}
 
       assert (_dl_debug_initialize (0, args->nsid)->r_state == RT_CONSISTENT);
 
@@ -526,6 +570,11 @@ TLS generation counter wrapped!  Please report this."));
   DL_STATIC_INIT (new);
 #endif
 
+  /* Perform the necessary allocations for adding new global objects
+     to the global scope below, via add_to_global_update.  */
+  if (mode & RTLD_GLOBAL)
+    add_to_global_resize (new);
+
   /* Run the initializer functions of new objects.  Temporarily
      disable the exception handler, so that lazy binding failures are
      fatal.  */
@@ -542,10 +591,7 @@ TLS generation counter wrapped!  Please report this."));
 
   /* Now we can make the new map available in the global scope.  */
   if (mode & RTLD_GLOBAL)
-    /* Move the object in the global namespace.  */
-    if (add_to_global (new) != 0)
-      /* It failed.  */
-      return;
+    add_to_global_update (new);
 
 #ifndef SHARED
   /* We must be the static _dl_open in libc.a.  A static program that
@@ -558,7 +604,6 @@ TLS generation counter wrapped!  Please report this."));
     _dl_debug_printf ("opening file=%s [%lu]; direct_opencount=%u\n\n",
 		      new->l_name, new->l_ns, new->l_direct_opencount);
 }
-
 
 void *
 _dl_open (const char *file, int mode, const void *caller_dlopen, Lmid_t nsid,
@@ -626,6 +671,19 @@ no more namespaces available for dlmopen()"));
   /* We must unmap the cache file.  */
   _dl_unload_cache ();
 #endif
+
+  /* Do this for both the error and success cases.  The old value has
+     only been determined if the namespace ID was assigned (i.e., it
+     is not __LM_ID_CALLER).  In the success case, we actually may
+     have consumed more pending adds than planned (because the local
+     scopes overlap in case of a recursive dlopen, the inner dlopen
+     doing some of the globalization work of the outer dlopen), so the
+     old pending adds value is larger than absolutely necessary.
+     Since it is just a conservative upper bound, this is harmless.
+     The top-level dlopen call will restore the field to zero.  */
+  if (args.nsid >= 0)
+    GL (dl_ns)[args.nsid]._ns_global_scope_pending_adds
+      = args.original_global_scope_pending_adds;
 
   /* See if an error occurred during loading.  */
   if (__glibc_unlikely (exception.errstring != NULL))
