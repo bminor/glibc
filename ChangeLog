@@ -1,3 +1,10 @@
+2019-06-18  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24323]
+	* include/elf.h (DT_1_SUPPORTED_MASK): Include DF_1_PIE.
+	* elf/dl-load.c (_dl_map_object_from_fd): Check for DF_1_PIE and
+	fail when called from dlopen.
+
 2019-07-10  DJ Delorie  <dj@redhat.com>
 	    Sergei Trofimovich <slyfox@inbox.ru>
 
