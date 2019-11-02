@@ -1025,9 +1025,9 @@ ERROR: audit interface '%s' requires version %d (maximum supported version %d); 
   else
     *last_audit = (*last_audit)->next = &newp->ifaces;
 
-  /* The dynamic linker link map is statically allocated, initialize
-     the data now.  */
-  GL (dl_rtld_map).l_audit[GLRO (dl_naudit)].cookie
+  /* The dynamic linker link map is statically allocated, so the
+     cookie in _dl_new_object has not happened.  */
+  link_map_audit_state (&GL (dl_rtld_map), GLRO (dl_naudit))->cookie
     = (intptr_t) &GL (dl_rtld_map);
 
   ++GLRO(dl_naudit);
@@ -1046,9 +1046,9 @@ notify_audit_modules_of_loaded_object (struct link_map *map)
     {
       if (afct->objopen != NULL)
 	{
-	  map->l_audit[cnt].bindflags
-	    = afct->objopen (map, LM_ID_BASE, &map->l_audit[cnt].cookie);
-	  map->l_audit_any_plt |= map->l_audit[cnt].bindflags != 0;
+	  struct auditstate *state = link_map_audit_state (map, cnt);
+	  state->bindflags = afct->objopen (map, LM_ID_BASE, &state->cookie);
+	  map->l_audit_any_plt |= state->bindflags != 0;
 	}
 
       afct = afct->next;
@@ -1662,7 +1662,8 @@ ERROR: '%s': cannot process note segment.\n", _dl_argv[0]);
       for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
 	{
 	  if (afct->activity != NULL)
-	    afct->activity (&main_map->l_audit[cnt].cookie, LA_ACT_ADD);
+	    afct->activity (&link_map_audit_state (main_map, cnt)->cookie,
+			    LA_ACT_ADD);
 
 	  afct = afct->next;
 	}
@@ -2333,7 +2334,8 @@ ERROR: '%s': cannot process note segment.\n", _dl_argv[0]);
 	  for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
 	    {
 	      if (afct->activity != NULL)
-		afct->activity (&head->l_audit[cnt].cookie, LA_ACT_CONSISTENT);
+		afct->activity (&link_map_audit_state (head, cnt)->cookie,
+				LA_ACT_CONSISTENT);
 
 	      afct = afct->next;
 	    }

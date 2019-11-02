@@ -973,7 +973,8 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 	      for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
 		{
 		  if (afct->activity != NULL)
-		    afct->activity (&head->l_audit[cnt].cookie, LA_ACT_ADD);
+		    afct->activity (&link_map_audit_state (head, cnt)->cookie,
+				    LA_ACT_ADD);
 
 		  afct = afct->next;
 		}
@@ -1402,10 +1403,9 @@ cannot enable executable stack as shared object requires");
 	{
 	  if (afct->objopen != NULL)
 	    {
-	      l->l_audit[cnt].bindflags
-		= afct->objopen (l, nsid, &l->l_audit[cnt].cookie);
-
-	      l->l_audit_any_plt |= l->l_audit[cnt].bindflags != 0;
+	      struct auditstate *state = link_map_audit_state (l, cnt);
+	      state->bindflags = afct->objopen (l, nsid, &state->cookie);
+	      l->l_audit_any_plt |= state->bindflags != 0;
 	    }
 
 	  afct = afct->next;
@@ -1511,8 +1511,8 @@ open_verify (const char *name, int fd,
 	{
 	  if (afct->objsearch != NULL)
 	    {
-	      name = afct->objsearch (name, &loader->l_audit[cnt].cookie,
-				      whatcode);
+	      struct auditstate *state = link_map_audit_state (loader, cnt);
+	      name = afct->objsearch (name, &state->cookie, whatcode);
 	      if (name == NULL)
 		/* Ignore the path.  */
 		return -1;
@@ -1970,8 +1970,8 @@ _dl_map_object (struct link_map *loader, const char *name,
 	  if (afct->objsearch != NULL)
 	    {
 	      const char *before = name;
-	      name = afct->objsearch (name, &loader->l_audit[cnt].cookie,
-				      LA_SER_ORIG);
+	      struct auditstate *state = link_map_audit_state (loader, cnt);
+	      name = afct->objsearch (name, &state->cookie, LA_SER_ORIG);
 	      if (name == NULL)
 		{
 		  /* Do not try anything further.  */

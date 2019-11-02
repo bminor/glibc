@@ -302,8 +302,12 @@ _dl_close_worker (struct link_map *map, bool force)
 	      for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
 		{
 		  if (afct->objclose != NULL)
-		    /* Return value is ignored.  */
-		    (void) afct->objclose (&imap->l_audit[cnt].cookie);
+		    {
+		      struct auditstate *state
+			= link_map_audit_state (imap, cnt);
+		      /* Return value is ignored.  */
+		      (void) afct->objclose (&state->cookie);
+		    }
 
 		  afct = afct->next;
 		}
@@ -478,7 +482,10 @@ _dl_close_worker (struct link_map *map, bool force)
 	  for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
 	    {
 	      if (afct->activity != NULL)
-		afct->activity (&head->l_audit[cnt].cookie, LA_ACT_DELETE);
+		{
+		  struct auditstate *state = link_map_audit_state (head, cnt);
+		  afct->activity (&state->cookie, LA_ACT_DELETE);
+		}
 
 	      afct = afct->next;
 	    }
@@ -774,7 +781,10 @@ _dl_close_worker (struct link_map *map, bool force)
 	  for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
 	    {
 	      if (afct->activity != NULL)
-		afct->activity (&head->l_audit[cnt].cookie, LA_ACT_CONSISTENT);
+		{
+		  struct auditstate *state = link_map_audit_state (head, cnt);
+		  afct->activity (&state->cookie, LA_ACT_CONSISTENT);
+		}
 
 	      afct = afct->next;
 	    }

@@ -1174,7 +1174,13 @@ rtld_active (void)
      initialized and active ld.so copy.  */
   return GLRO(dl_init_all_dirs) != NULL;
 }
-#endif
+
+static inline struct auditstate *
+link_map_audit_state (struct link_map *l, size_t index)
+{
+  return &l->l_audit[index];
+}
+#endif /* SHARED */
 
 __END_DECLS
 
