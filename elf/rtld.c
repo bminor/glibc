@@ -1008,13 +1008,7 @@ ERROR: audit interface '%s' requires version %d (maximum supported version %d); 
 
       /* Store the pointer.  */
       if (err_str == NULL && largs.result != NULL)
-	{
-	  newp->fptr[cnt] = largs.result;
-
-	  /* The dynamic linker link map is statically allocated,
-	     initialize the data now.  */
-	  GL(dl_rtld_map).l_audit[cnt].cookie = (intptr_t) &GL(dl_rtld_map);
-	}
+	newp->fptr[cnt] = largs.result;
       else
 	newp->fptr[cnt] = NULL;
       ++cnt;
@@ -1030,6 +1024,12 @@ ERROR: audit interface '%s' requires version %d (maximum supported version %d); 
     *last_audit = GLRO(dl_audit) = &newp->ifaces;
   else
     *last_audit = (*last_audit)->next = &newp->ifaces;
+
+  /* The dynamic linker link map is statically allocated, initialize
+     the data now.  */
+  GL (dl_rtld_map).l_audit[GLRO (dl_naudit)].cookie
+    = (intptr_t) &GL (dl_rtld_map);
+
   ++GLRO(dl_naudit);
 
   /* Mark the DSO as being used for auditing.  */
