@@ -81,7 +81,7 @@ _dl_new_object (char *realname, const char *libname, int type,
   struct link_map *new;
   struct libname_list *newname;
 #ifdef SHARED
-  size_t audit_space = naudit * sizeof (new->l_audit[0]);
+  size_t audit_space = naudit * sizeof (struct auditstate);
 #else
 # define audit_space 0
 #endif
@@ -134,10 +134,8 @@ _dl_new_object (char *realname, const char *libname, int type,
 
 #ifdef SHARED
   for (unsigned int cnt = 0; cnt < naudit; ++cnt)
-    {
-      new->l_audit[cnt].cookie = (uintptr_t) new;
-      /* new->l_audit[cnt].bindflags = 0; */
-    }
+    /* No need to initialize bindflags due to calloc.  */
+    link_map_audit_state (new, cnt)->cookie = (uintptr_t) new;
 #endif
 
   /* new->l_global = 0;	We use calloc therefore not necessary.  */

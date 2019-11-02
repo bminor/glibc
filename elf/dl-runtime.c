@@ -325,15 +325,18 @@ _dl_profile_fixup (
 		{
 		  /* XXX Check whether both DSOs must request action or
 		     only one */
-		  if ((l->l_audit[cnt].bindflags & LA_FLG_BINDFROM) != 0
-		      && (result->l_audit[cnt].bindflags & LA_FLG_BINDTO) != 0)
+		  struct auditstate *l_state = link_map_audit_state (l, cnt);
+		  struct auditstate *result_state
+		    = link_map_audit_state (result, cnt);
+		  if ((l_state->bindflags & LA_FLG_BINDFROM) != 0
+		      && (result_state->bindflags & LA_FLG_BINDTO) != 0)
 		    {
 		      if (afct->symbind != NULL)
 			{
 			  uintptr_t new_value
 			    = afct->symbind (&sym, reloc_result->boundndx,
-					     &l->l_audit[cnt].cookie,
-					     &result->l_audit[cnt].cookie,
+					     &l_state->cookie,
+					     &result_state->cookie,
 					     &flags,
 					     strtab2 + defsym->st_name);
 			  if (new_value != (uintptr_t) sym.st_value)
@@ -421,10 +424,13 @@ _dl_profile_fixup (
 		  & (LA_SYMB_NOPLTENTER << (2 * (cnt + 1)))) == 0)
 	    {
 	      long int new_framesize = -1;
+	      struct auditstate *l_state = link_map_audit_state (l, cnt);
+	      struct auditstate *bound_state
+		= link_map_audit_state (reloc_result->bound, cnt);
 	      uintptr_t new_value
 		= afct->ARCH_LA_PLTENTER (&sym, reloc_result->boundndx,
-					  &l->l_audit[cnt].cookie,
-					  &reloc_result->bound->l_audit[cnt].cookie,
+					  &l_state->cookie,
+					  &bound_state->cookie,
 					  regs, &flags, symname,
 					  &new_framesize);
 	      if (new_value != (uintptr_t) sym.st_value)
@@ -504,9 +510,11 @@ _dl_call_pltexit (struct link_map *l, ElfW(Word) reloc_arg,
 	  && (reloc_result->enterexit
 	      & (LA_SYMB_NOPLTEXIT >> (2 * cnt))) == 0)
 	{
+	  struct auditstate *l_state = link_map_audit_state (l, cnt);
+	  struct auditstate *bound_state
+	    = link_map_audit_state (reloc_result->bound, cnt);
 	  afct->ARCH_LA_PLTEXIT (&sym, reloc_result->boundndx,
-				 &l->l_audit[cnt].cookie,
-				 &reloc_result->bound->l_audit[cnt].cookie,
+				 &l_state->cookie, &bound_state->cookie,
 				 inregs, outregs, symname);
 	}
 

@@ -198,17 +198,20 @@ RTLD_NEXT used in code not dynamically loaded"));
 
 	      for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
 		{
+		  struct auditstate *match_audit
+		    = link_map_audit_state (match, cnt);
+		  struct auditstate *result_audit
+		    = link_map_audit_state (result, cnt);
 		  if (afct->symbind != NULL
-		      && ((match->l_audit[cnt].bindflags & LA_FLG_BINDFROM)
-			  != 0
-			  || ((result->l_audit[cnt].bindflags & LA_FLG_BINDTO)
+		      && ((match_audit->bindflags & LA_FLG_BINDFROM) != 0
+			  || ((result_audit->bindflags & LA_FLG_BINDTO)
 			      != 0)))
 		    {
 		      unsigned int flags = altvalue | LA_SYMB_DLSYM;
 		      uintptr_t new_value
 			= afct->symbind (&sym, ndx,
-					 &match->l_audit[cnt].cookie,
-					 &result->l_audit[cnt].cookie,
+					 &match_audit->cookie,
+					 &result_audit->cookie,
 					 &flags, strtab + ref->st_name);
 		      if (new_value != (uintptr_t) sym.st_value)
 			{

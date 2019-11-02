@@ -152,9 +152,12 @@ _dl_fini (void)
 		      for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
 			{
 			  if (afct->objclose != NULL)
-			    /* Return value is ignored.  */
-			    (void) afct->objclose (&l->l_audit[cnt].cookie);
-
+			    {
+			      struct auditstate *state
+				= link_map_audit_state (l, cnt);
+			      /* Return value is ignored.  */
+			      (void) afct->objclose (&state->cookie);
+			    }
 			  afct = afct->next;
 			}
 		    }

@@ -272,7 +272,7 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
       for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
 	{
 	  if (afct->preinit != NULL)
-	    afct->preinit (&head->l_audit[cnt].cookie);
+	    afct->preinit (&link_map_audit_state (head, cnt)->cookie);
 
 	  afct = afct->next;
 	}
