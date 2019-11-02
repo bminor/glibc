@@ -110,7 +110,7 @@ DB_RTLD_GLOBAL_FIELD (dl_tls_dtv_slotinfo_list)
 DB_STRUCT (dtv_slotinfo_list)
 DB_STRUCT_FIELD (dtv_slotinfo_list, len)
 DB_STRUCT_FIELD (dtv_slotinfo_list, next)
-DB_STRUCT_ARRAY_FIELD (dtv_slotinfo_list, slotinfo)
+DB_STRUCT_FLEXIBLE_ARRAY (dtv_slotinfo_list, slotinfo)
 
 DB_STRUCT (dtv_slotinfo)
 DB_STRUCT_FIELD (dtv_slotinfo, gen)

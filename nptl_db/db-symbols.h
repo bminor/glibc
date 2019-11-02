@@ -25,6 +25,7 @@
   DB_LOOKUP_NAME (SYM_SIZEOF_##type, _thread_db_sizeof_##type)
 #define DB_STRUCT_FIELD(type, field) \
   DB_LOOKUP_NAME (SYM_##type##_FIELD_##field, _thread_db_##type##_##field)
+#define DB_STRUCT_FLEXIBLE_ARRAY(type, field) DB_STRUCT_FIELD (type, field)
 #define DB_SYMBOL(name) \
   DB_LOOKUP_NAME (SYM_##name, name)
 #define DB_FUNCTION(name) \
@@ -36,6 +37,8 @@
 # include "structs.def"
 
 # undef DB_STRUCT
+# undef DB_STRUCT_FIELD
+# undef DB_STRUCT_FLEXIBLE_ARRAY
 # undef DB_FUNCTION
 # undef DB_SYMBOL
 # undef DB_VARIABLE

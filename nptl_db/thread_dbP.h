@@ -37,12 +37,14 @@ enum
   {
 # define DB_STRUCT(type)		SYM_SIZEOF_##type,
 # define DB_STRUCT_FIELD(type, field)	SYM_##type##_FIELD_##field,
+# define DB_STRUCT_FLEXIBLE_ARRAY(type, field) DB_STRUCT_FIELD (type, field)
 # define DB_SYMBOL(name)		SYM_##name,
 # define DB_FUNCTION(name)		SYM_##name,
 # define DB_VARIABLE(name)		SYM_##name, SYM_DESC_##name,
 # include "structs.def"
 # undef DB_STRUCT
 # undef DB_STRUCT_FIELD
+# undef DB_STRUCT_FLEXIBLE_ARRAY
 # undef DB_SYMBOL
 # undef DB_FUNCTION
 # undef DB_VARIABLE
@@ -90,6 +92,7 @@ struct td_thragent
   uint32_t ta_sizeof_##type;
 # define DB_STRUCT_FIELD(type, field) \
   db_desc_t ta_field_##type##_##field;
+# define DB_STRUCT_FLEXIBLE_ARRAY(type, field) DB_STRUCT_FIELD (type, field)
 # define DB_SYMBOL(name) \
   psaddr_t ta_addr_##name;
 # define DB_FUNCTION(name) \
@@ -100,6 +103,7 @@ struct td_thragent
 # include "structs.def"
 # undef DB_STRUCT
 # undef DB_STRUCT_FIELD
+# undef DB_STRUCT_FLEXIBLE_ARRAY
 # undef DB_FUNCTION
 # undef DB_SYMBOL
 # undef DB_VARIABLE
