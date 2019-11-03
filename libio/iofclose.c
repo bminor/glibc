@@ -62,8 +62,8 @@ _IO_new_fclose (FILE *fp)
       struct _IO_codecvt *cc = fp->_codecvt;
 
       __libc_lock_lock (__gconv_lock);
-      __gconv_release_step (cc->__cd_in.__cd.__steps);
-      __gconv_release_step (cc->__cd_out.__cd.__steps);
+      __gconv_release_step (cc->__cd_in.step);
+      __gconv_release_step (cc->__cd_out.step);
       __libc_lock_unlock (__gconv_lock);
     }
   else
