@@ -379,11 +379,12 @@ struct rtld_global
   /* List of search directories.  */
   EXTERN struct r_search_path_elem *_dl_all_dirs;
 
-  /* Structure describing the dynamic linker itself.  We need to
-     reserve memory for the data the audit libraries need.  */
+  /* Structure describing the dynamic linker itself.  */
   EXTERN struct link_map _dl_rtld_map;
 #ifdef SHARED
-  struct auditstate audit_data[DL_NNS];
+  /* Used to store the audit information for the link map of the
+     dynamic loader.  */
+  struct auditstate _dl_rtld_auditstate[DL_NNS];
 #endif
 
 #if defined SHARED && defined _LIBC_REENTRANT \
@@ -1178,7 +1179,15 @@ rtld_active (void)
 static inline struct auditstate *
 link_map_audit_state (struct link_map *l, size_t index)
 {
-  return &l->l_audit[index];
+  if (l == &GL (dl_rtld_map))
+    /* The auditstate array is stored separately.  */
+    return &GL (dl_rtld_auditstate) [index];
+  else
+    {
+      /* The auditstate array follows the link map in memory.  */
+      struct auditstate *base = (struct auditstate *) (l + 1);
+      return &base[index];
+    }
 }
 #endif /* SHARED */
 

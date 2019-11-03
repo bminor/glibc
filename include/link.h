@@ -325,15 +325,17 @@ struct link_map
     size_t l_relro_size;
 
     unsigned long long int l_serial;
-
-    /* Audit information.  This array apparent must be the last in the
-       structure.  Never add something after it.  */
-    struct auditstate
-    {
-      uintptr_t cookie;
-      unsigned int bindflags;
-    } l_audit[0];
   };
+
+/* Information used by audit modules.  For most link maps, this data
+   immediate follows the link map in memory.  For the dynamic linker,
+   it is allocated separately.  See link_map_audit_state in
+   <ldsodefs.h>.  */
+struct auditstate
+{
+  uintptr_t cookie;
+  unsigned int bindflags;
+};
 
 
 #if __ELF_NATIVE_CLASS == 32
