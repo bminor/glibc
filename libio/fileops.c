@@ -331,23 +331,19 @@ _IO_new_file_fopen (FILE *fp, const char *filename, const char *mode,
 
 	  cc = fp->_codecvt = &fp->_wide_data->_codecvt;
 
-	  cc->__cd_in.__cd.__nsteps = fcts.towc_nsteps;
-	  cc->__cd_in.__cd.__steps = fcts.towc;
+	  cc->__cd_in.step = fcts.towc;
 
-	  cc->__cd_in.__cd.__data[0].__invocation_counter = 0;
-	  cc->__cd_in.__cd.__data[0].__internal_use = 1;
-	  cc->__cd_in.__cd.__data[0].__flags = __GCONV_IS_LAST;
-	  cc->__cd_in.__cd.__data[0].__statep = &result->_wide_data->_IO_state;
+	  cc->__cd_in.step_data.__invocation_counter = 0;
+	  cc->__cd_in.step_data.__internal_use = 1;
+	  cc->__cd_in.step_data.__flags = __GCONV_IS_LAST;
+	  cc->__cd_in.step_data.__statep = &result->_wide_data->_IO_state;
 
-	  cc->__cd_out.__cd.__nsteps = fcts.tomb_nsteps;
-	  cc->__cd_out.__cd.__steps = fcts.tomb;
+	  cc->__cd_out.step = fcts.tomb;
 
-	  cc->__cd_out.__cd.__data[0].__invocation_counter = 0;
-	  cc->__cd_out.__cd.__data[0].__internal_use = 1;
-	  cc->__cd_out.__cd.__data[0].__flags
-	    = __GCONV_IS_LAST | __GCONV_TRANSLIT;
-	  cc->__cd_out.__cd.__data[0].__statep =
-	    &result->_wide_data->_IO_state;
+	  cc->__cd_out.step_data.__invocation_counter = 0;
+	  cc->__cd_out.step_data.__internal_use = 1;
+	  cc->__cd_out.step_data.__flags = __GCONV_IS_LAST | __GCONV_TRANSLIT;
+	  cc->__cd_out.step_data.__statep = &result->_wide_data->_IO_state;
 
 	  /* From now on use the wide character callback functions.  */
 	  _IO_JUMPS_FILE_plus (fp) = fp->_wide_data->_wide_vtable;

@@ -80,22 +80,19 @@ _IO_fwide (FILE *fp, int mode)
 	assert (fcts.towc_nsteps == 1);
 	assert (fcts.tomb_nsteps == 1);
 
-	cc->__cd_in.__cd.__nsteps = fcts.towc_nsteps;
-	cc->__cd_in.__cd.__steps = fcts.towc;
+	cc->__cd_in.step = fcts.towc;
 
-	cc->__cd_in.__cd.__data[0].__invocation_counter = 0;
-	cc->__cd_in.__cd.__data[0].__internal_use = 1;
-	cc->__cd_in.__cd.__data[0].__flags = __GCONV_IS_LAST;
-	cc->__cd_in.__cd.__data[0].__statep = &fp->_wide_data->_IO_state;
+	cc->__cd_in.step_data.__invocation_counter = 0;
+	cc->__cd_in.step_data.__internal_use = 1;
+	cc->__cd_in.step_data.__flags = __GCONV_IS_LAST;
+	cc->__cd_in.step_data.__statep = &fp->_wide_data->_IO_state;
 
-	cc->__cd_out.__cd.__nsteps = fcts.tomb_nsteps;
-	cc->__cd_out.__cd.__steps = fcts.tomb;
+	cc->__cd_out.step = fcts.tomb;
 
-	cc->__cd_out.__cd.__data[0].__invocation_counter = 0;
-	cc->__cd_out.__cd.__data[0].__internal_use = 1;
-	cc->__cd_out.__cd.__data[0].__flags
-	  = __GCONV_IS_LAST | __GCONV_TRANSLIT;
-	cc->__cd_out.__cd.__data[0].__statep = &fp->_wide_data->_IO_state;
+	cc->__cd_out.step_data.__invocation_counter = 0;
+	cc->__cd_out.step_data.__internal_use = 1;
+	cc->__cd_out.step_data.__flags = __GCONV_IS_LAST | __GCONV_TRANSLIT;
+	cc->__cd_out.step_data.__statep = &fp->_wide_data->_IO_state;
       }
 
       /* From now on use the wide character callback functions.  */
@@ -117,14 +114,14 @@ __libio_codecvt_out (struct _IO_codecvt *codecvt, __mbstate_t *statep,
 {
   enum __codecvt_result result;
 
-  struct __gconv_step *gs = codecvt->__cd_out.__cd.__steps;
+  struct __gconv_step *gs = codecvt->__cd_out.step;
   int status;
   size_t dummy;
   const unsigned char *from_start_copy = (unsigned char *) from_start;
 
-  codecvt->__cd_out.__cd.__data[0].__outbuf = (unsigned char *) to_start;
-  codecvt->__cd_out.__cd.__data[0].__outbufend = (unsigned char *) to_end;
-  codecvt->__cd_out.__cd.__data[0].__statep = statep;
+  codecvt->__cd_out.step_data.__outbuf = (unsigned char *) to_start;
+  codecvt->__cd_out.step_data.__outbufend = (unsigned char *) to_end;
+  codecvt->__cd_out.step_data.__statep = statep;
 
   __gconv_fct fct = gs->__fct;
 #ifdef PTR_DEMANGLE
@@ -133,12 +130,12 @@ __libio_codecvt_out (struct _IO_codecvt *codecvt, __mbstate_t *statep,
 #endif
 
   status = DL_CALL_FCT (fct,
-			(gs, codecvt->__cd_out.__cd.__data, &from_start_copy,
+			(gs, &codecvt->__cd_out.step_data, &from_start_copy,
 			 (const unsigned char *) from_end, NULL,
 			 &dummy, 0, 0));
 
   *from_stop = (wchar_t *) from_start_copy;
-  *to_stop = (char *) codecvt->__cd_out.__cd.__data[0].__outbuf;
+  *to_stop = (char *) codecvt->__cd_out.step_data.__outbuf;
 
   switch (status)
     {
@@ -169,14 +166,14 @@ __libio_codecvt_in (struct _IO_codecvt *codecvt, __mbstate_t *statep,
 {
   enum __codecvt_result result;
 
-  struct __gconv_step *gs = codecvt->__cd_in.__cd.__steps;
+  struct __gconv_step *gs = codecvt->__cd_in.step;
   int status;
   size_t dummy;
   const unsigned char *from_start_copy = (unsigned char *) from_start;
 
-  codecvt->__cd_in.__cd.__data[0].__outbuf = (unsigned char *) to_start;
-  codecvt->__cd_in.__cd.__data[0].__outbufend = (unsigned char *) to_end;
-  codecvt->__cd_in.__cd.__data[0].__statep = statep;
+  codecvt->__cd_in.step_data.__outbuf = (unsigned char *) to_start;
+  codecvt->__cd_in.step_data.__outbufend = (unsigned char *) to_end;
+  codecvt->__cd_in.step_data.__statep = statep;
 
   __gconv_fct fct = gs->__fct;
 #ifdef PTR_DEMANGLE
@@ -185,12 +182,12 @@ __libio_codecvt_in (struct _IO_codecvt *codecvt, __mbstate_t *statep,
 #endif
 
   status = DL_CALL_FCT (fct,
-			(gs, codecvt->__cd_in.__cd.__data, &from_start_copy,
+			(gs, &codecvt->__cd_in.step_data, &from_start_copy,
 			 (const unsigned char *) from_end, NULL,
 			 &dummy, 0, 0));
 
   *from_stop = (const char *) from_start_copy;
-  *to_stop = (wchar_t *) codecvt->__cd_in.__cd.__data[0].__outbuf;
+  *to_stop = (wchar_t *) codecvt->__cd_in.step_data.__outbuf;
 
   switch (status)
     {
@@ -217,16 +214,16 @@ int
 __libio_codecvt_encoding (struct _IO_codecvt *codecvt)
 {
   /* See whether the encoding is stateful.  */
-  if (codecvt->__cd_in.__cd.__steps[0].__stateful)
+  if (codecvt->__cd_in.step->__stateful)
     return -1;
   /* Fortunately not.  Now determine the input bytes for the conversion
      necessary for each wide character.  */
-  if (codecvt->__cd_in.__cd.__steps[0].__min_needed_from
-      != codecvt->__cd_in.__cd.__steps[0].__max_needed_from)
+  if (codecvt->__cd_in.step->__min_needed_from
+      != codecvt->__cd_in.step->__max_needed_from)
     /* Not a constant value.  */
     return 0;
 
-  return codecvt->__cd_in.__cd.__steps[0].__min_needed_from;
+  return codecvt->__cd_in.step->__min_needed_from;
 }
 
 
@@ -238,12 +235,12 @@ __libio_codecvt_length (struct _IO_codecvt *codecvt, __mbstate_t *statep,
   int result;
   const unsigned char *cp = (const unsigned char *) from_start;
   wchar_t to_buf[max];
-  struct __gconv_step *gs = codecvt->__cd_in.__cd.__steps;
+  struct __gconv_step *gs = codecvt->__cd_in.step;
   size_t dummy;
 
-  codecvt->__cd_in.__cd.__data[0].__outbuf = (unsigned char *) to_buf;
-  codecvt->__cd_in.__cd.__data[0].__outbufend = (unsigned char *) &to_buf[max];
-  codecvt->__cd_in.__cd.__data[0].__statep = statep;
+  codecvt->__cd_in.step_data.__outbuf = (unsigned char *) to_buf;
+  codecvt->__cd_in.step_data.__outbufend = (unsigned char *) &to_buf[max];
+  codecvt->__cd_in.step_data.__statep = statep;
 
   __gconv_fct fct = gs->__fct;
 #ifdef PTR_DEMANGLE
@@ -252,7 +249,7 @@ __libio_codecvt_length (struct _IO_codecvt *codecvt, __mbstate_t *statep,
 #endif
 
   DL_CALL_FCT (fct,
-	       (gs, codecvt->__cd_in.__cd.__data, &cp,
+	       (gs, &codecvt->__cd_in.step_data, &cp,
 		(const unsigned char *) from_end, NULL,
 		&dummy, 0, 0));
 

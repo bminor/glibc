@@ -48,14 +48,10 @@
 #include <bits/types/wint_t.h>
 #include <gconv.h>
 
-typedef union
+typedef struct
 {
-  struct __gconv_info __cd;
-  struct
-  {
-    struct __gconv_info __cd;
-    struct __gconv_step_data __data;
-  } __combined;
+  struct __gconv_step *step;
+  struct __gconv_step_data step_data;
 } _IO_iconv_t;
 
 #include <shlib-compat.h>
