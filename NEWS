@@ -28,6 +28,7 @@ The following bugs are resolved with this release:
     unconditionally
   [24899] login: Add nonstring attributes to struct utmp, struct utmpx
   [24902] login: pututxline could fail to overwrite existing entries
+  [25066] FAIL: nptl/tst-tls1 on hppa
   [25189] Don't use a custom wrapper macro around __has_include
   [25203] libio: Disable vtable validation for pre-2.1 interposed handles
   [25204] Ignore LD_PREFER_MAP_32BIT_EXEC for SUID programs
