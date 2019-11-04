@@ -272,7 +272,7 @@ extern int pthread_timedjoin_np (pthread_t __th, void **__thread_return,
    This function is a cancellation point and therefore not marked with
    __THROW.  */
 extern int pthread_clockjoin_np (pthread_t __th, void **__thread_return,
-                                 clockid_t clockid,
+                                 clockid_t __clockid,
 				 const struct timespec *__abstime);
 #endif
 

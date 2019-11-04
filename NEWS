@@ -35,7 +35,7 @@ Major new features:
   tz_dsttime fields are zero.
 
 * The function pthread_clockjoin_np has been added, enabling join with a
-  terminated thread with an specific clock.  It allows waiting against
+  terminated thread with a specific clock.  It allows waiting against
   CLOCK_MONOTONIC and CLOCK_REALTIME.  This function is a GNU extension.
 
 Deprecated and removed features, and other changes affecting compatibility:

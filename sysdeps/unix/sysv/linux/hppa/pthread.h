@@ -238,6 +238,17 @@ extern int pthread_tryjoin_np (pthread_t __th, void **__thread_return) __THROW;
    __THROW.  */
 extern int pthread_timedjoin_np (pthread_t __th, void **__thread_return,
 				 const struct timespec *__abstime);
+
+/* Make calling thread wait for termination of the thread TH, but only
+   until TIMEOUT measured against the clock specified by CLOCKID.  The
+   exit status of the thread is stored in *THREAD_RETURN, if
+   THREAD_RETURN is not NULL.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern int pthread_clockjoin_np (pthread_t __th, void **__thread_return,
+                                 clockid_t __clockid,
+				 const struct timespec *__abstime);
 #endif
 
 /* Indicate that the thread TH is never to be joined with PTHREAD_JOIN.
