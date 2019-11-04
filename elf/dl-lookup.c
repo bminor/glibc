@@ -28,6 +28,7 @@
 #include <libc-lock.h>
 #include <tls.h>
 #include <atomic.h>
+#include <divopt.h>
 
 #include <assert.h>
 
@@ -394,8 +395,18 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 	  if (__glibc_unlikely ((bitmask_word >> hashbit1)
 				& (bitmask_word >> hashbit2) & 1))
 	    {
-	      Elf32_Word bucket = map->l_gnu_buckets[new_hash
-						     % map->l_nbuckets];
+	      Elf32_Word bucket;
+	      if (map->l_nbuckets > 1)
+		{
+		  uint32_t quotient
+		    = divopt_32 (new_hash, map->l_nbuckets_multiplier,
+				 map->l_nbuckets_multiplier_shift);
+		  uint32_t remainder = new_hash - map->l_nbuckets * quotient;
+		  bucket = map->l_gnu_buckets[remainder];
+		}
+	      else
+		bucket = map->l_gnu_buckets[0];
+
 	      if (bucket != 0)
 		{
 		  const Elf32_Word *hasharr = &map->l_gnu_chain_zero[bucket];
@@ -930,6 +941,11 @@ _dl_setup_hash (struct link_map *map)
 
       /* Initialize MIPS xhash translation table.  */
       ELF_MACHINE_XHASH_SETUP (hash32, symbias, map);
+
+      if (map->l_nbuckets >= 2)
+	map->l_nbuckets_multiplier_shift
+	  = precompute_divopt_32 (map->l_nbuckets,
+				  &map->l_nbuckets_multiplier);
 
       return;
     }
