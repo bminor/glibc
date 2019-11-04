@@ -1,1 +1,7 @@
 #define __PTHREAD_MUTEX_KIND_OFFSET     12
+
+#if __BYTE_ORDER == __BIG_ENDIAN
+# define __PTHREAD_RWLOCK_FLAGS_OFFSET  27
+#else
+# define __PTHREAD_RWLOCK_FLAGS_OFFSET  24
+#endif
