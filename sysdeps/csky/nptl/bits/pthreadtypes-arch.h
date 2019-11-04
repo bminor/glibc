@@ -65,6 +65,4 @@ struct __pthread_rwlock_arch_t
   int __cur_writer;
 };
 
-#define __PTHREAD_RWLOCK_ELISION_EXTRA 0
-
 #endif

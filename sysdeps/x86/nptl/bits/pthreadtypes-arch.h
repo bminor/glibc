@@ -73,14 +73,7 @@ struct __pthread_rwlock_arch_t
 #ifdef __x86_64__
   int __cur_writer;
   int __shared;
-  signed char __rwelision;
-# ifdef  __ILP32__
-  unsigned char __pad1[3];
-#  define __PTHREAD_RWLOCK_ELISION_EXTRA 0, { 0, 0, 0 }
-# else
-  unsigned char __pad1[7];
-#  define __PTHREAD_RWLOCK_ELISION_EXTRA 0, { 0, 0, 0, 0, 0, 0, 0 }
-# endif
+  unsigned long int __pad1;
   unsigned long int __pad2;
   /* FLAGS must stay at this position in the structure to maintain
      binary compatibility.  */
@@ -91,8 +84,7 @@ struct __pthread_rwlock_arch_t
      binary compatibility.  */
   unsigned char __flags;
   unsigned char __shared;
-  signed char __rwelision;
-# define __PTHREAD_RWLOCK_ELISION_EXTRA 0
+  unsigned char __pad1;
   unsigned char __pad2;
   int __cur_writer;
 #endif

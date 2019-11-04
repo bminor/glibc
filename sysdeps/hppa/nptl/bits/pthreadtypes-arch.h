@@ -86,6 +86,4 @@ struct __pthread_rwlock_arch_t
   int __reserved4;
 };
 
-#define __PTHREAD_RWLOCK_ELISION_EXTRA 0
-
 #endif	/* bits/pthreadtypes.h */
