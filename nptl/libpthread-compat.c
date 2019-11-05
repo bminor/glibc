@@ -26,7 +26,7 @@
    version or later, the placeholder symbol is not needed because
    there are plenty of other symbols which populate those later
    versions.  */
-#if (SHLIB_COMPAT (libpthread, GLIBC_2_1_2, GLIBC_2_2))
+#if (SHLIB_COMPAT (libpthread, GLIBC_2_1_2, GLIBC_2_2_6))
 void
 attribute_compat_text_section
 __libpthread_version_placeholder (void)

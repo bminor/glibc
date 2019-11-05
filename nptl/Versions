@@ -98,7 +98,7 @@ libpthread {
     # Cancellation points.
     close; __close; fcntl; __fcntl; read; __read; write; __write; accept;
     connect; __connect; recv; recvfrom; recvmsg; send; __send; sendmsg; sendto;
-    fsync; lseek; __lseek; msync; nanosleep; open; __open; pause; tcdrain;
+    fsync; lseek; __lseek; msync; open; __open; pause; tcdrain;
     system; wait; __wait; waitpid;
 
     # Hidden entry point (through macros).
@@ -193,8 +193,7 @@ libpthread {
   }
 
   GLIBC_2.2.6 {
-    # Cancellation wrapper
-    __nanosleep;
+    __libpthread_version_placeholder;
   }
 
   GLIBC_2.3.2 {

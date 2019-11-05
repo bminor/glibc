@@ -46,7 +46,6 @@ GLIBC_2.4 __libc_allocate_rtsig F
 GLIBC_2.4 __libc_current_sigrtmax F
 GLIBC_2.4 __libc_current_sigrtmin F
 GLIBC_2.4 __lseek F
-GLIBC_2.4 __nanosleep F
 GLIBC_2.4 __open F
 GLIBC_2.4 __open64 F
 GLIBC_2.4 __pread64 F
@@ -99,7 +98,6 @@ GLIBC_2.4 longjmp F
 GLIBC_2.4 lseek F
 GLIBC_2.4 lseek64 F
 GLIBC_2.4 msync F
-GLIBC_2.4 nanosleep F
 GLIBC_2.4 open F
 GLIBC_2.4 open64 F
 GLIBC_2.4 pause F

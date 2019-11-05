@@ -9,7 +9,6 @@ GLIBC_2.29 __libc_allocate_rtsig F
 GLIBC_2.29 __libc_current_sigrtmax F
 GLIBC_2.29 __libc_current_sigrtmin F
 GLIBC_2.29 __lseek F
-GLIBC_2.29 __nanosleep F
 GLIBC_2.29 __open F
 GLIBC_2.29 __open64 F
 GLIBC_2.29 __pread64 F
@@ -72,7 +71,6 @@ GLIBC_2.29 mtx_lock F
 GLIBC_2.29 mtx_timedlock F
 GLIBC_2.29 mtx_trylock F
 GLIBC_2.29 mtx_unlock F
-GLIBC_2.29 nanosleep F
 GLIBC_2.29 open F
 GLIBC_2.29 open64 F
 GLIBC_2.29 pause F

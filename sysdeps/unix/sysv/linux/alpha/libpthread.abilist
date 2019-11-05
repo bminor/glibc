@@ -42,7 +42,6 @@ GLIBC_2.0 funlockfile F
 GLIBC_2.0 longjmp F
 GLIBC_2.0 lseek F
 GLIBC_2.0 msync F
-GLIBC_2.0 nanosleep F
 GLIBC_2.0 open F
 GLIBC_2.0 pause F
 GLIBC_2.0 pthread_atfork F
@@ -193,7 +192,6 @@ GLIBC_2.2 pwrite F
 GLIBC_2.2 pwrite64 F
 GLIBC_2.2 sem_timedwait F
 GLIBC_2.2.3 pthread_getattr_np F
-GLIBC_2.2.6 __nanosleep F
 GLIBC_2.28 call_once F
 GLIBC_2.28 cnd_broadcast F
 GLIBC_2.28 cnd_destroy F

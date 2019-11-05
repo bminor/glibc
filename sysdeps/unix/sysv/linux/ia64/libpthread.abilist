@@ -65,7 +65,6 @@ GLIBC_2.2 longjmp F
 GLIBC_2.2 lseek F
 GLIBC_2.2 lseek64 F
 GLIBC_2.2 msync F
-GLIBC_2.2 nanosleep F
 GLIBC_2.2 open F
 GLIBC_2.2 open64 F
 GLIBC_2.2 pause F
@@ -185,7 +184,6 @@ GLIBC_2.2 wait F
 GLIBC_2.2 waitpid F
 GLIBC_2.2 write F
 GLIBC_2.2.3 pthread_getattr_np F
-GLIBC_2.2.6 __nanosleep F
 GLIBC_2.28 call_once F
 GLIBC_2.28 cnd_broadcast F
 GLIBC_2.28 cnd_destroy F

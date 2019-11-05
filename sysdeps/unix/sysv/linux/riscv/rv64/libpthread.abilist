@@ -10,7 +10,6 @@ GLIBC_2.27 __libc_allocate_rtsig F
 GLIBC_2.27 __libc_current_sigrtmax F
 GLIBC_2.27 __libc_current_sigrtmin F
 GLIBC_2.27 __lseek F
-GLIBC_2.27 __nanosleep F
 GLIBC_2.27 __open F
 GLIBC_2.27 __open64 F
 GLIBC_2.27 __pread64 F
@@ -61,7 +60,6 @@ GLIBC_2.27 funlockfile F
 GLIBC_2.27 lseek F
 GLIBC_2.27 lseek64 F
 GLIBC_2.27 msync F
-GLIBC_2.27 nanosleep F
 GLIBC_2.27 open F
 GLIBC_2.27 open64 F
 GLIBC_2.27 pause F
