@@ -42,7 +42,7 @@ __clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req,
   return (INTERNAL_SYSCALL_ERROR_P (r, err)
 	  ? INTERNAL_SYSCALL_ERRNO (r, err) : 0);
 }
-
+libc_hidden_def (__clock_nanosleep)
 versioned_symbol (libc, __clock_nanosleep, clock_nanosleep, GLIBC_2_17);
 /* clock_nanosleep moved to libc in version 2.17;
    old binaries may expect the symbol version it had in librt.  */

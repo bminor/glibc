@@ -25,6 +25,9 @@ libc_hidden_proto (__clock_gettime)
 extern __typeof (clock_settime) __clock_settime;
 libc_hidden_proto (__clock_settime)
 
+extern __typeof (clock_nanosleep) __clock_nanosleep;
+libc_hidden_proto (__clock_nanosleep);
+
 #ifdef __linux__
 extern __typeof (clock_adjtime) __clock_adjtime;
 libc_hidden_proto (__clock_adjtime);

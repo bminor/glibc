@@ -1,5 +1,5 @@
-/* High-resolution sleep with the specified clock.
-   Copyright (C) 2000-2019 Free Software Foundation, Inc.
+/* clock_nanosleep - high-resolution sleep with specifiable clock.
+   Copyright (C) 2002-2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,28 +16,58 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <assert.h>
 #include <errno.h>
+#include <mach.h>
 #include <time.h>
-#include <sysdep-cancel.h>
+#include <unistd.h>
+#include <posix-timer.h>
 #include <shlib-compat.h>
 
-/* This implementation assumes that these is only a `nanosleep' system
-   call.  So we have to remap all other activities.  */
+static int
+nanosleep_call (const struct timespec *req, struct timespec *rem)
+{
+  mach_port_t recv;
+  struct timespec before;
+  error_t err;
+
+  const mach_msg_timeout_t ms
+    = req->tv_sec * 1000
+    + (req->tv_nsec + 999999) / 1000000;
+
+  recv = __mach_reply_port ();
+
+  if (rem != NULL)
+    __clock_gettime (CLOCK_REALTIME, &before);
+
+  err = __mach_msg (NULL, MACH_RCV_MSG|MACH_RCV_TIMEOUT|MACH_RCV_INTERRUPT,
+                    0, 0, recv, ms, MACH_PORT_NULL);
+  __mach_port_destroy (mach_task_self (), recv);
+  if (err == EMACH_RCV_INTERRUPTED)
+    {
+      if (rem != NULL)
+	{
+	  struct timespec after, elapsed;
+	  __clock_gettime (CLOCK_REALTIME, &after);
+	  timespec_sub (&elapsed, &after, &before);
+	  timespec_sub (rem, req, &elapsed);
+	}
+
+      return EINTR;
+    }
+
+  return 0;
+}
+
 int
 __clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req,
 		   struct timespec *rem)
 {
+  if (clock_id != CLOCK_REALTIME
+      || !valid_nanoseconds (req->tv_nsec)
+      || (flags != 0 && flags != TIMER_ABSTIME))
+    return EINVAL;
+
   struct timespec now;
-
-  if (! valid_nanoseconds (req->tv_nsec))
-    return EINVAL;
-
-  if (clock_id == CLOCK_THREAD_CPUTIME_ID)
-    return EINVAL;		/* POSIX specifies EINVAL for this case.  */
-
-  if (clock_id < CLOCK_REALTIME || clock_id > CLOCK_THREAD_CPUTIME_ID)
-    return EINVAL;
 
   /* If we got an absolute time, remap it.  */
   if (flags == TIMER_ABSTIME)
@@ -68,15 +98,10 @@ __clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req,
       /* Make sure we are not modifying the struct pointed to by REM.  */
       rem = NULL;
     }
-  else if (flags != 0)
-    return EINVAL;
-  else if (clock_id != CLOCK_REALTIME)
-    /* Not supported.  */
-    return ENOTSUP;
 
-  return __nanosleep (req, rem), 0 ? errno : 0;
+  return nanosleep_call (req, rem);
 }
-
+libc_hidden_def (__clock_nanosleep)
 versioned_symbol (libc, __clock_nanosleep, clock_nanosleep, GLIBC_2_17);
 /* clock_nanosleep moved to libc in version 2.17;
    old binaries may expect the symbol version it had in librt.  */

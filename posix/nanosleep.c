@@ -24,10 +24,13 @@ int
 __nanosleep (const struct timespec *requested_time,
 	     struct timespec *remaining)
 {
-  __set_errno (ENOSYS);
-  return -1;
+  int ret = __clock_nanosleep (CLOCK_REALTIME, 0, requested_time, remaining);
+  if (ret != 0)
+    {
+      __set_errno (ret);
+      return -1;
+    }
+  return 0;
 }
-stub_warning (nanosleep)
-
-hidden_def (__nanosleep)
+libc_hidden_def (__nanosleep)
 weak_alias (__nanosleep, nanosleep)
