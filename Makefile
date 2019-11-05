@@ -691,6 +691,6 @@ iconvdata/% localedata/% po/%: FORCE
 .PHONY: test
 test :
 	@-rm -f $(objpfx)$t.out
-	$(MAKE) subdir=$(dir $t) -C $(dir $t) ..=../ $(objpfx)$t.out
+	$(MAKE) subdir=$(patsubst %/,%,$(dir $t)) -C $(dir $t) ..=../ $(objpfx)$t.out
 	@cat $(objpfx)$t.test-result
 	@cat $(objpfx)$t.out
