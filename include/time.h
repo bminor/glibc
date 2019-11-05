@@ -83,6 +83,17 @@ struct __timespec64
 #endif
 
 #if __TIMESIZE == 64
+# define __itimerspec64 itimerspec
+#else
+/* The glibc's internal representation of the struct itimerspec.  */
+struct __itimerspec64
+{
+  struct __timespec64 it_interval;
+  struct __timespec64 it_value;
+};
+#endif
+
+#if __TIMESIZE == 64
 # define __ctime64 ctime
 #else
 extern char *__ctime64 (const __time64_t *__timer) __THROW;
