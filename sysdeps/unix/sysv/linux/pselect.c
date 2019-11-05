@@ -59,15 +59,8 @@ __pselect (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
   data.ss = (__syscall_ulong_t) (uintptr_t) sigmask;
   data.ss_len = _NSIG / 8;
 
-  int result;
-
-#ifndef CALL_PSELECT6
-# define CALL_PSELECT6(nfds, readfds, writefds, exceptfds, timeout, data) \
-  SYSCALL_CANCEL (pselect6, nfds, readfds, writefds, exceptfds,	timeout, data)
-#endif
-
-  result = CALL_PSELECT6 (nfds, readfds, writefds, exceptfds, timeout,
-			  &data);
+  int result = SYSCALL_CANCEL (pselect6, nfds, readfds, writefds, exceptfds,
+                               timeout, &data);
 
 # ifndef __ASSUME_PSELECT
   if (result == -1 && errno == ENOSYS)
