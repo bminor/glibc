@@ -24,16 +24,13 @@
 int
 thrd_sleep (const struct timespec* time_point, struct timespec* remaining)
 {
-  INTERNAL_SYSCALL_DECL (err);
-  int ret = INTERNAL_SYSCALL_CANCEL (nanosleep, err, time_point, remaining);
-  if (INTERNAL_SYSCALL_ERROR_P (ret, err))
-    {
-      /* C11 states thrd_sleep function returns -1 if it has been interrupted
-	 by a signal, or a negative value if it fails.  */
-      ret = INTERNAL_SYSCALL_ERRNO (ret, err);
-      if (ret == EINTR)
-	return -1;
-      return -2;
-    }
-  return 0;
+  int ret = __clock_nanosleep (CLOCK_REALTIME, 0, time_point, remaining);
+  /* C11 states thrd_sleep function returns -1 if it has been interrupted
+     by a signal, or a negative value if it fails.  */
+  switch (ret)
+  {
+     case 0:      return 0;
+     case EINTR:  return -1;
+     default:     return -2;
+  }
 }
