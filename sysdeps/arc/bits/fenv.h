@@ -47,7 +47,7 @@ enum
 # define FE_TOWARDZERO	(0x0)
       FE_TOWARDZERO,
     FE_TONEAREST  =
-# define FE_TONEAREST	(0x1)
+# define FE_TONEAREST	(0x1)	/* default */
       FE_TONEAREST,
     FE_UPWARD     =
 # define FE_UPWARD	(0x2)
@@ -58,7 +58,12 @@ enum
   };
 
 typedef unsigned int fexcept_t;
-typedef unsigned int fenv_t;
+
+typedef struct
+{
+  unsigned int __fpcr;
+  unsigned int __fpsr;
+} fenv_t;
 
 /* If the default argument is used we use this value.  */
 #define FE_DFL_ENV	((const fenv_t *) -1)
