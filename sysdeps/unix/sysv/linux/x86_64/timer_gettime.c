@@ -17,13 +17,17 @@
    not, see <https://www.gnu.org/licenses/>.  */
 
 #include <shlib-compat.h>
+#include <sysdep.h>
+#include "kernel-posix-timers.h"
 #include "compat-timer.h"
 
+int
+__timer_gettime_new (timer_t timerid, struct itimerspec *value)
+{
+  struct timer *kt = (struct timer *) timerid;
 
-#define timer_gettime_alias __timer_gettime_new
-#include <sysdeps/unix/sysv/linux/timer_gettime.c>
-
-#undef timer_gettime
+  return INLINE_SYSCALL_CALL (timer_gettime, kt->ktimerid, value);
+}
 versioned_symbol (librt, __timer_gettime_new, timer_gettime, GLIBC_2_3_3);
 
 
