@@ -38,6 +38,8 @@ Major new features:
   terminated thread with a specific clock.  It allows waiting against
   CLOCK_MONOTONIC and CLOCK_REALTIME.  This function is a GNU extension.
 
+* New locale added: mnw_MM (Mon language spoken in Myanmar).
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The totalorder and totalordermag functions, and the corresponding
