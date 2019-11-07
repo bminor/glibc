@@ -617,5 +617,8 @@ check_stacksize_attr (size_t st)
   _Static_assert (offsetof (type, member) == offset,			\
 		  "offset of " #member " field of " #type " != "	\
 		  ASSERT_PTHREAD_STRING (offset))
+#define ASSERT_PTHREAD_INTERNAL_MEMBER_SIZE(type, member, mtype)	\
+  _Static_assert (sizeof (((type) { 0 }).member) != 8,	\
+		  "sizeof (" #type "." #member ") != sizeof (" #mtype "))")
 
 #endif	/* pthreadP.h */

@@ -55,18 +55,11 @@ __pthread_mutex_init (pthread_mutex_t *mutex,
 
   ASSERT_TYPE_SIZE (pthread_mutex_t, __SIZEOF_PTHREAD_MUTEX_T);
 
-  ASSERT_PTHREAD_INTERNAL_OFFSET (pthread_mutex_t, __data.__nusers,
-				  __PTHREAD_MUTEX_NUSERS_OFFSET);
+  /* __kind is the only field where its offset should be checked to
+     avoid ABI breakage with static initializers.  */
   ASSERT_PTHREAD_INTERNAL_OFFSET (pthread_mutex_t, __data.__kind,
 				  __PTHREAD_MUTEX_KIND_OFFSET);
-  ASSERT_PTHREAD_INTERNAL_OFFSET (pthread_mutex_t, __data.__spins,
-				  __PTHREAD_MUTEX_SPINS_OFFSET);
-#if __PTHREAD_MUTEX_LOCK_ELISION
-  ASSERT_PTHREAD_INTERNAL_OFFSET (pthread_mutex_t, __data.__elision,
-				  __PTHREAD_MUTEX_ELISION_OFFSET);
-#endif
-  ASSERT_PTHREAD_INTERNAL_OFFSET (pthread_mutex_t, __data.__list,
-				  __PTHREAD_MUTEX_LIST_OFFSET);
+  ASSERT_PTHREAD_INTERNAL_MEMBER_SIZE (pthread_mutex_t, __data.__kind, int);
 
   imutexattr = ((const struct pthread_mutexattr *) mutexattr
 		?: &default_mutexattr);
