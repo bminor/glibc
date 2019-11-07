@@ -88,7 +88,7 @@ _hurd_select (int nfds,
     reply_msgid = IO_SELECT_REPLY_MSGID;
   else
     {
-      struct timeval now;
+      struct timespec now;
 
       if (timeout->tv_sec < 0 || ! valid_nanoseconds (timeout->tv_nsec))
 	{
@@ -96,12 +96,12 @@ _hurd_select (int nfds,
 	  return -1;
 	}
 
-      err = __gettimeofday(&now, NULL);
+      err = __clock_gettime (CLOCK_REALTIME, &now);
       if (err)
 	return -1;
 
       ts.tv_sec = now.tv_sec + timeout->tv_sec;
-      ts.tv_nsec = now.tv_usec * 1000 + timeout->tv_nsec;
+      ts.tv_nsec = now.tv_nsec + timeout->tv_nsec;
 
       if (ts.tv_nsec >= 1000000000)
 	{
@@ -175,8 +175,7 @@ _hurd_select (int nfds,
       if (error)
 	{
 	  /* Set timeout to 0.  */
-	  struct timeval now;
-	  err = __gettimeofday(&now, NULL);
+	  err = __clock_gettime (CLOCK_REALTIME, &ts);
 	  if (err)
 	    {
 	      /* Really bad luck.  */
@@ -192,8 +191,6 @@ _hurd_select (int nfds,
 	      errno = err;
 	      return -1;
 	    }
-	  ts.tv_sec = now.tv_sec;
-	  ts.tv_nsec = now.tv_usec * 1000;
 	  reply_msgid = IO_SELECT_TIMEOUT_REPLY_MSGID;
 	}
 
