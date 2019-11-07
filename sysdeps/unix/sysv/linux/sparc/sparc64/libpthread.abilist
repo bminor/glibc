@@ -18,6 +18,7 @@ GLIBC_2.2 __h_errno_location F
 GLIBC_2.2 __libc_allocate_rtsig F
 GLIBC_2.2 __libc_current_sigrtmax F
 GLIBC_2.2 __libc_current_sigrtmin F
+GLIBC_2.2 __libpthread_version_placeholder F
 GLIBC_2.2 __lseek F
 GLIBC_2.2 __open F
 GLIBC_2.2 __open64 F

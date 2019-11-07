@@ -117,6 +117,7 @@ GLIBC_2.18 pthread_setattr_default_np F
 GLIBC_2.2 __libc_allocate_rtsig F
 GLIBC_2.2 __libc_current_sigrtmax F
 GLIBC_2.2 __libc_current_sigrtmin F
+GLIBC_2.2 __libpthread_version_placeholder F
 GLIBC_2.2 __open64 F
 GLIBC_2.2 __pread64 F
 GLIBC_2.2 __pthread_rwlock_destroy F
