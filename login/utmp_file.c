@@ -79,7 +79,7 @@ try_file_lock (int fd, int type)
  struct flock64 fl =
    {
     .l_type = type,
-    fl.l_whence = SEEK_SET,
+    .l_whence = SEEK_SET,
    };
 
  bool status = __fcntl64_nocancel (fd, F_SETLKW, &fl) < 0;
