@@ -1298,7 +1298,7 @@ handle_input_flag (char *arg, input_flag *flag,
   char c = *ep;
   *ep = 0;
   bool found = false;
-  for (input_flag_type i = flag_first_flag; i <= num_input_flag_types; i++)
+  for (input_flag_type i = flag_first_flag; i < num_input_flag_types; i++)
     {
       if (strcmp (arg, input_flags[i]) == 0)
 	{
