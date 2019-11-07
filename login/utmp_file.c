@@ -186,19 +186,11 @@ __libc_getutent_r (struct utmp *buffer, struct utmp **result)
 
 
 /* Search for *ID, updating last_entry and file_offset.  Return 0 on
-   success and -1 on failure.  If the locking operation failed, write
-   true to *LOCK_FAILED.  */
+   success and -1 on failure.  Does not perform locking; for that see
+   internal_getut_r below.  */
 static int
-internal_getut_r (const struct utmp *id, bool *lock_failed)
+internal_getut_nolock (const struct utmp *id)
 {
-  int result = -1;
-
-  if (try_file_lock (file_fd, F_RDLCK))
-    {
-      *lock_failed = true;
-      return -1;
-    }
-
   if (id->ut_type == RUN_LVL || id->ut_type == BOOT_TIME
       || id->ut_type == OLD_TIME || id->ut_type == NEW_TIME)
     {
@@ -213,7 +205,7 @@ internal_getut_r (const struct utmp *id, bool *lock_failed)
 	    {
 	      __set_errno (ESRCH);
 	      file_offset = -1l;
-	      goto unlock_return;
+	      return -1;
 	    }
 	  file_offset += sizeof (struct utmp);
 
@@ -234,7 +226,7 @@ internal_getut_r (const struct utmp *id, bool *lock_failed)
 	    {
 	      __set_errno (ESRCH);
 	      file_offset = -1l;
-	      goto unlock_return;
+	      return -1;
 	    }
 	  file_offset += sizeof (struct utmp);
 
@@ -243,14 +235,25 @@ internal_getut_r (const struct utmp *id, bool *lock_failed)
 	}
     }
 
-  result = 0;
-
-unlock_return:
-  file_unlock (file_fd);
-
-  return result;
+  return 0;
 }
 
+/* Search for *ID, updating last_entry and file_offset.  Return 0 on
+   success and -1 on failure.  If the locking operation failed, write
+   true to *LOCK_FAILED.  */
+static int
+internal_getut_r (const struct utmp *id, bool *lock_failed)
+{
+  if (try_file_lock (file_fd, F_RDLCK))
+    {
+      *lock_failed = true;
+      return -1;
+    }
+
+  int result = internal_getut_nolock (id);
+  file_unlock (file_fd);
+  return result;
+}
 
 /* For implementing this function we don't use the getutent_r function
    because we can avoid the reposition on every new entry this way.  */
@@ -278,7 +281,6 @@ __libc_getutid_r (const struct utmp *id, struct utmp *buffer,
 
   return 0;
 }
-
 
 /* For implementing this function we don't use the getutent_r function
    because we can avoid the reposition on every new entry this way.  */
@@ -336,7 +338,6 @@ __libc_pututline (const struct utmp *data)
     return NULL;
 
   struct utmp *pbuf;
-  int found;
 
   if (! file_writable)
     {
@@ -358,7 +359,12 @@ __libc_pututline (const struct utmp *data)
       file_writable = true;
     }
 
+  /* Exclude other writers before validating the cache.  */
+  if (try_file_lock (file_fd, F_WRLCK))
+    return NULL;
+
   /* Find the correct place to insert the data.  */
+  bool found = false;
   if (file_offset > 0
       && ((last_entry.ut_type == data->ut_type
 	   && (last_entry.ut_type == RUN_LVL
@@ -366,23 +372,30 @@ __libc_pututline (const struct utmp *data)
 	       || last_entry.ut_type == OLD_TIME
 	       || last_entry.ut_type == NEW_TIME))
 	  || __utmp_equal (&last_entry, data)))
-    found = 1;
-  else
     {
-      bool lock_failed = false;
-      found = internal_getut_r (data, &lock_failed);
-
-      if (__builtin_expect (lock_failed, false))
+      if (__lseek64 (file_fd, file_offset, SEEK_SET) < 0)
 	{
-	  __set_errno (EAGAIN);
+	  file_unlock (file_fd);
 	  return NULL;
 	}
+      if (__read_nocancel (file_fd, &last_entry, sizeof (last_entry))
+	  != sizeof (last_entry))
+	{
+	  if (__lseek64 (file_fd, file_offset, SEEK_SET) < 0)
+	    {
+	      file_unlock (file_fd);
+	      return NULL;
+	    }
+	  found = false;
+	}
+      else
+	found = __utmp_equal (&last_entry, data);
     }
 
-  if (try_file_lock (file_fd, F_WRLCK))
-    return NULL;
+  if (!found)
+    found = internal_getut_nolock (data) >= 0;
 
-  if (found < 0)
+  if (!found)
     {
       /* We append the next entry.  */
       file_offset = __lseek64 (file_fd, 0, SEEK_END);
@@ -411,7 +424,7 @@ __libc_pututline (const struct utmp *data)
     {
       /* If we appended a new record this is only partially written.
 	 Remove it.  */
-      if (found < 0)
+      if (!found)
 	(void) __ftruncate64 (file_fd, file_offset);
       pbuf = NULL;
     }

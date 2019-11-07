@@ -44,7 +44,7 @@ subdir-dirs = programs
 vpath %.c programs
 
 tests := tst-utmp tst-utmpx tst-grantpt tst-ptsname tst-getlogin tst-updwtmpx \
-  tst-pututxline-lockfail
+  tst-pututxline-lockfail tst-pututxline-cache
 
 # Build the -lutil library with these extra functions.
 extra-libs      := libutil
@@ -74,3 +74,4 @@ $(inst_libexecdir)/pt_chown: $(objpfx)pt_chown $(+force)
 	-$(INSTALL_PROGRAM) -m 4755 -o root $< $@
 
 $(objpfx)tst-pututxline-lockfail: $(shared-thread-library)
+$(objpfx)tst-pututxline-cache: $(shared-thread-library)
