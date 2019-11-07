@@ -23,6 +23,7 @@ The following bugs are resolved with this release:
   [24867] malloc: Remove unwanted leading whitespace in malloc_info
   [24879] login: Disarm timer after utmp lock acquisition
   [24880] login: Use struct flock64 in utmp
+  [24882] login: Acquire write lock early in pututline
   [24986] alpha: new getegid, geteuid and getppid syscalls used
     unconditionally
   [24899] login: Add nonstring attributes to struct utmp, struct utmpx
