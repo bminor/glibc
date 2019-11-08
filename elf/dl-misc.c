@@ -81,7 +81,10 @@ _dl_debug_vdprintf (int fd, int tag_p, const char *fmt, va_list arg)
   struct iovec iov[NIOVMAX];
   int niov = 0;
   pid_t pid = 0;
-  char pidbuf[12];
+  char pidbuf[23];
+  pid_t tid = 0;
+  /* Start with a known bad value, should never get used.  */
+  char *tag_start = NULL;
 
   while (*fmt != '\0')
     {
@@ -93,20 +96,32 @@ _dl_debug_vdprintf (int fd, int tag_p, const char *fmt, va_list arg)
 	     colon followed by a tab.  */
 	  if (pid == 0)
 	    {
-	      char *p;
+	      char *p = &pidbuf[21];
+
 	      pid = __getpid ();
 	      assert (pid >= 0 && sizeof (pid_t) <= 4);
-	      p = _itoa (pid, &pidbuf[10], 10, 0);
-	      while (p > pidbuf)
+
+              /* If we are doing thread-related output, maybe add a thread id,
+                 taking care that pid continues to appear at the same
+                 positions.  */
+              tid = _dl_tls_tid ();
+              if (tid > 0)
+                {
+                  p = _itoa (tid, p, 10, 0);
+                  *--p = '/';
+                }
+              tag_start = p - 10;
+	      p = _itoa (pid, p, 10, 0);
+	      while (p > tag_start)
 		*--p = ' ';
-	      pidbuf[10] = ':';
-	      pidbuf[11] = '\t';
+	      pidbuf[21] = ':';
+	      pidbuf[22] = '\t';
 	    }
 
 	  /* Append to the output.  */
 	  assert (niov < NIOVMAX);
-	  iov[niov].iov_len = 12;
-	  iov[niov++].iov_base = pidbuf;
+	  iov[niov].iov_len = &(pidbuf[23]) - tag_start;
+	  iov[niov++].iov_base = tag_start;
 
 	  /* No more tags until we see the next newline.  */
 	  tag_p = -1;

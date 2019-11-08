@@ -30,6 +30,8 @@
 #include <dl-tls.h>
 #include <ldsodefs.h>
 
+static void _dl_print_dtv(const char *msg, dtv_t *dtv, int numentries);
+
 /* Amount of excess space to allocate in the static TLS area
    to allow dynamic loading of modules defining IE-model TLS data.  */
 #define TLS_STATIC_SURPLUS	64 + DL_NNS * 100
@@ -428,6 +430,13 @@ _dl_resize_dtv (dtv_t *dtv)
   memset (newp + 2 + oldsize, '\0',
 	  (newsize - oldsize) * sizeof (dtv_t));
 
+  if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_TLS))
+    _dl_debug_printf ("Resized dtv 0x%0*Zx, size %lu, to dtv 0x%0*Zx, size %lu\n",
+                      (int) sizeof (void *) * 2, (unsigned long int) dtv,
+                      oldsize,
+                      (int) sizeof (void *) * 2, (unsigned long int) &newp[1],
+                      newsize);
+
   /* Return the generation counter.  */
   return &newp[1];
 }
@@ -484,6 +493,12 @@ _dl_allocate_tls_init (void *result)
 
 	  dtv[map->l_tls_modid].pointer.val = TLS_DTV_UNALLOCATED;
 	  dtv[map->l_tls_modid].pointer.to_free = NULL;
+	  if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_TLS))
+            _dl_debug_printf ("_dl_allocate_tls_init unallocates %sdtv 0x%0*Zx module %lu\n",
+                              (dtv == THREAD_DTV () ? "own " : ""),
+                              (int) sizeof (void *) * 2,
+                              (unsigned long int) dtv,
+                              map->l_tls_modid);
 
 	  if (map->l_tls_offset == NO_TLS_OFFSET
 	      || map->l_tls_offset == FORCED_DYNAMIC_TLS_OFFSET)
@@ -503,6 +518,14 @@ _dl_allocate_tls_init (void *result)
 	  /* Set up the DTV entry.  The simplified __tls_get_addr that
 	     some platforms use in static programs requires it.  */
 	  dtv[map->l_tls_modid].pointer.val = dest;
+	  if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_TLS))
+            _dl_debug_printf ("_dl_allocate_tls_init sets %sdtv 0x%0*Zx module %lu to 0x%0*Zx\n",
+                              (dtv == THREAD_DTV () ? "own " : ""),
+                              (int) sizeof (void *) * 2,
+                              (unsigned long int) dtv,
+                              map->l_tls_modid,
+                              (int) sizeof (void *) * 2,
+                              (unsigned long int) dest);
 
 	  /* Copy the initialization image and clear the BSS part.  */
 	  memset (__mempcpy (dest, map->l_tls_initimage,
@@ -520,6 +543,9 @@ _dl_allocate_tls_init (void *result)
 
   /* The DTV version is up-to-date now.  */
   dtv[0].counter = maxgen;
+
+  if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_TLS))
+    _dl_print_dtv ("_dl_allocate_tls_init return ", dtv, 10);
 
   return result;
 }
@@ -655,6 +681,12 @@ _dl_update_slotinfo (unsigned long int req_modid)
   struct link_map *the_map = NULL;
   dtv_t *dtv = THREAD_DTV ();
 
+  if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_TLS))
+    // (should mention module name?)
+    _dl_debug_printf ("Updating slot info for own dtv 0x%0*Zx module %lu\n",
+                      (int) sizeof (void *) * 2, (unsigned long int) dtv,
+                      req_modid);
+
   /* The global dl_tls_dtv_slotinfo array contains for each module
      index the generation counter current when the entry was created.
      This array never shrinks so that all module indices which were
@@ -698,6 +730,11 @@ _dl_update_slotinfo (unsigned long int req_modid)
 	if (dtv[0].counter >= listp->slotinfo[idx].gen)
 	  {
 	    _dl_unmask_signals (&old);
+            if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_TLS))
+              _dl_debug_printf ("Slot info update for own dtv 0x%0*Zx module %lu done, exiting early\n",
+                                (int) sizeof (void *) * 2,
+                                (unsigned long int) dtv,
+                                req_modid);
 	    return the_map;
 	  }
       }
@@ -728,6 +765,13 @@ _dl_update_slotinfo (unsigned long int req_modid)
 		    {
 		      /* If this modid was used at some point the memory
 			 might still be allocated.  */
+                      if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_TLS))
+                        _dl_debug_printf ("Slot info update for own dtv 0x%0*Zx module %lu unallocating 0x%0*Zx\n",
+                                          (int) sizeof (void *) * 2,
+                                          (unsigned long int) dtv,
+                                          total + cnt,
+                                          (int) sizeof (void *) * 2,
+                                          (unsigned long int) dtv[total + cnt].pointer.val);
 		      __signal_safe_free (dtv[total + cnt].pointer.to_free);
 		      dtv[total + cnt].pointer.val = TLS_DTV_UNALLOCATED;
 		      dtv[total + cnt].pointer.to_free = NULL;
@@ -755,6 +799,13 @@ _dl_update_slotinfo (unsigned long int req_modid)
 		 dtv entry free it.  */
 	      /* XXX Ideally we will at some point create a memory
 		 pool.  */
+              if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_TLS))
+                _dl_debug_printf ("Slot info update for own dtv 0x%0*Zx module %lu unallocating 0x%0*Zx\n",
+                                  (int) sizeof (void *) * 2,
+                                  (unsigned long int) dtv,
+                                  modid,
+                                  (int) sizeof (void *) * 2,
+                                  (unsigned long int) dtv[modid].pointer.val);
 	      __signal_safe_free (dtv[modid].pointer.to_free);
 	      dtv[modid].pointer.val = TLS_DTV_UNALLOCATED;
 	      dtv[modid].pointer.to_free = NULL;
@@ -796,6 +847,15 @@ tls_get_addr_tail (GET_ADDR_ARGS, dtv_t *dtv, struct link_map *the_map)
 
       the_map = listp->slotinfo[idx].map;
     }
+  if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_TLS))
+    {
+      char *map_name = (the_map->l_name ? the_map->l_name : "no name");
+      _dl_debug_printf ("tls_get_addr_tail entry, own dtv 0x%0*Zx module %lu (%s) pointer.val = 0x%0*Zx\n",
+                        (int) sizeof (void *) * 2, (unsigned long int) dtv,
+                        GET_ADDR_MODULE, map_name,
+                        (int) sizeof (void *) * 2,
+                        (unsigned long int) dtv[GET_ADDR_MODULE].pointer.val);
+    }
 
   if (!GLRO(dl_async_signal_safe)) {
 
@@ -826,6 +886,13 @@ tls_get_addr_tail (GET_ADDR_ARGS, dtv_t *dtv, struct link_map *the_map)
 
 	  dtv[GET_ADDR_MODULE].pointer.to_free = NULL;
 	  dtv[GET_ADDR_MODULE].pointer.val = p;
+	  if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_TLS))
+            _dl_debug_printf ("tls_get_addr_tail sets own dtv 0x%0*Zx module %lu pointer.val to 0x%0*Zx, returns\n",
+                              (int) sizeof (void *) * 2,
+                              (unsigned long int) dtv,
+                              GET_ADDR_MODULE,
+                              (int) sizeof (void *) * 2,
+                              (unsigned long int) p);
 
 	  return (char *) p + GET_ADDR_OFFSET;
 	}
@@ -835,6 +902,11 @@ tls_get_addr_tail (GET_ADDR_ARGS, dtv_t *dtv, struct link_map *the_map)
   struct dtv_pointer result = allocate_and_init (the_map);
   dtv[GET_ADDR_MODULE].pointer = result;
   assert (result.to_free != NULL);
+  if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_TLS))
+    _dl_debug_printf ("tls_get_addr_tail sets own dtv 0x%0*Zx module %lu pointer.val to 0x%0*Zx, returns\n",
+                      (int) sizeof (void *) * 2, (unsigned long int) dtv,
+                      GET_ADDR_MODULE,
+                      (int) sizeof (void *) * 2, (unsigned long int) result.val);
 
   return (char *) result.val + GET_ADDR_OFFSET;
 
@@ -848,6 +920,9 @@ tls_get_addr_tail (GET_ADDR_ARGS, dtv_t *dtv, struct link_map *the_map)
   if (dtv[GET_ADDR_MODULE].pointer.val != TLS_DTV_UNALLOCATED)
     {
       _dl_unmask_signals (&old);
+
+      if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_TLS))
+        _dl_debug_printf ("tls_get_addr_tail keeps own dtv pointer.val, returns\n");
 
       return (char *) dtv[GET_ADDR_MODULE].pointer.val + GET_ADDR_OFFSET;
     }
@@ -874,10 +949,22 @@ tls_get_addr_tail (GET_ADDR_ARGS, dtv_t *dtv, struct link_map *the_map)
   if (offset == FORCED_DYNAMIC_TLS_OFFSET)
     {
       signal_safe_allocate_and_init (&dtv[GET_ADDR_MODULE], the_map);
+      if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_TLS))
+        _dl_debug_printf ("tls_get_addr_tail allocates own dtv 0x%0*Zx module %lu pointer.val = 0x%0*Zx\n",
+                          (int) sizeof (void *) * 2,
+                          (unsigned long int) dtv,
+                          GET_ADDR_MODULE,
+                          (int) sizeof (void *) * 2,
+                          (unsigned long int) dtv[GET_ADDR_MODULE].pointer.val);
     }
   else
     {
       void ** volatile pp = &dtv[GET_ADDR_MODULE].pointer.val;
+      if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_TLS))
+        _dl_debug_printf ("tls_get_addr_tail waiting for own dtv 0x%0*Zx module %lu to be allocated\n",
+                          (int) sizeof (void *) * 2,
+                          (unsigned long int) dtv,
+                          GET_ADDR_MODULE);
       while (atomic_forced_read (*pp) == TLS_DTV_UNALLOCATED)
 	{
 	  /* for lack of a better (safe) thing to do, just spin.
@@ -893,6 +980,13 @@ tls_get_addr_tail (GET_ADDR_ARGS, dtv_t *dtv, struct link_map *the_map)
 	 init_one_static_tls, guaranteeing that we see their write of
 	 the tls_initimage into the static region.  */
       atomic_read_barrier ();
+      if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_TLS))
+        _dl_debug_printf ("tls_get_addr_tail sees own dtv 0x%0*Zx module %lu has pointer.val = 0x%0*Zx\n",
+                          (int) sizeof (void *) * 2,
+                          (unsigned long int) dtv,
+                          GET_ADDR_MODULE,
+                          (int) sizeof (void *) * 2,
+                          (unsigned long int) dtv[GET_ADDR_MODULE].pointer.val);
     }
   assert (dtv[GET_ADDR_MODULE].pointer.val != TLS_DTV_UNALLOCATED);
   _dl_unmask_signals (&old);
@@ -1051,4 +1145,69 @@ cannot create TLS data structures"));
   /* Add the information into the slotinfo data structure.  */
   listp->slotinfo[idx].map = l;
   listp->slotinfo[idx].gen = GL(dl_tls_generation) + 1;
+}
+
+/* Return a thread id of the current thread if we are debugging tls and the
+   value is meaningful.  */
+
+pid_t
+_dl_tls_tid (void)
+{
+  if (!__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_TLS))
+    return 0;
+
+#ifdef SHARED
+  if (GL(dl_initial_dtv) == NULL)
+    return 0;
+#endif
+
+  struct pthread *thr = THREAD_SELF;
+
+  return thr->tid;
+}
+
+/* Print all or part of a dtv.  Note that the output may be large; for instance
+   nptl/tst-stack4 has dtv's with hundreds of entries.  */
+
+static void
+_dl_print_dtv (const char *msg, dtv_t *dtv, int numentries)
+{
+  size_t cnt, last_used, num_to_print, i;
+
+  cnt = dtv[-1].counter;
+  last_used = 0;
+  for (i = 1; i <= cnt; ++i)
+    {
+      if (dtv[i].pointer.val || dtv[i].pointer.to_free)
+        last_used = i;
+    }
+  num_to_print = last_used;
+  if (numentries >= 0 && numentries < num_to_print)
+    num_to_print = numentries;
+  _dl_debug_printf ("%sdtv 0x%0*Zx has %lu used of %lu entries, generation %lu\n",
+                    msg,
+                    (int) sizeof (void *) * 2, (unsigned long int) dtv,
+                    last_used, cnt, dtv[0].counter);
+  for (i = 1; i <= num_to_print; ++i)
+    {
+      if (dtv[i].pointer.to_free == dtv[i].pointer.val)
+        _dl_debug_printf ("%*lu: pointer.val = 0x%0*Zx to_free = same\n",
+                          4, i,
+                          (int) sizeof (void *) * 2,
+                          (unsigned long int) dtv[i].pointer.val);
+      else if (dtv[i].pointer.to_free)
+        _dl_debug_printf ("%*lu: pointer.val = 0x%0*Zx to_free = 0x%0*Zx\n",
+                          4, i,
+                          (int) sizeof (void *) * 2,
+                          (unsigned long int) dtv[i].pointer.val,
+                          (int) sizeof (void *) * 2,
+                          (unsigned long int) dtv[i].pointer.to_free);
+      else
+        _dl_debug_printf ("%*lu: pointer.val = 0x%0*Zx\n",
+                          4, i,
+                          (int) sizeof (void *) * 2,
+                          (unsigned long int) dtv[i].pointer.val);
+    }
+  if (num_to_print < last_used)
+    _dl_debug_printf ("      [...]\n");
 }

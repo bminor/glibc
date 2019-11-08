@@ -500,6 +500,8 @@ struct rtld_global_ro
 /* Google-local.  */
 #define DL_DEBUG_FASTLOAD   (1 << 12)
 
+#define DL_DEBUG_TLS        (1 << 13)
+
   /* OS version.  */
   EXTERN unsigned int _dl_osversion;
   /* Platform name.  */
@@ -1195,6 +1197,9 @@ extern struct link_map *_dl_update_slotinfo (unsigned long int req_modid)
 /* Look up the module's TLS block as for __tls_get_addr,
    but never touch anything.  Return null if it's not allocated yet.  */
 extern void *_dl_tls_get_addr_soft (struct link_map *l) attribute_hidden;
+
+/* Return an id for the current thread if possible, otherwise 0.  */
+extern pid_t _dl_tls_tid (void) attribute_hidden;
 
 extern int _dl_addr_inside_object (struct link_map *l, const ElfW(Addr) addr)
      attribute_hidden;

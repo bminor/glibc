@@ -2395,6 +2395,8 @@ process_dl_debug (const char *dl_debug)
 	DL_DEBUG_VERSIONS | DL_DEBUG_IMPCALLS },
       { LEN_AND_STR ("scopes"), "display scope information",
 	DL_DEBUG_SCOPES },
+      { LEN_AND_STR ("tls"), "display thread-local storage processing",
+	DL_DEBUG_TLS },
       { LEN_AND_STR ("fastload"), "display fastload information",
         DL_DEBUG_FASTLOAD },
       { LEN_AND_STR ("all"), "all previous options combined",
