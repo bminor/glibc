@@ -931,8 +931,8 @@ tls_get_addr_tail (GET_ADDR_ARGS, dtv_t *dtv, struct link_map *the_map)
      into static storage.  If that happens, we have to be more careful
      about initializing the area, as that dlopen() will be iterating
      the threads to do so itself.  */
-  ptrdiff_t offset;
-  if ((offset = the_map->l_tls_offset) == NO_TLS_OFFSET)
+  ptrdiff_t offset = the_map->l_tls_offset;
+  if (offset == NO_TLS_OFFSET)
     {
       /* l_tls_offset starts out at NO_TLS_OFFSET, and all attempts to
 	 change it go from NO_TLS_OFFSET to some other value.  We use
@@ -951,6 +951,29 @@ tls_get_addr_tail (GET_ADDR_ARGS, dtv_t *dtv, struct link_map *the_map)
       signal_safe_allocate_and_init (&dtv[GET_ADDR_MODULE], the_map);
       if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_TLS))
         _dl_debug_printf ("tls_get_addr_tail allocates own dtv 0x%0*Zx module %lu pointer.val = 0x%0*Zx\n",
+                          (int) sizeof (void *) * 2,
+                          (unsigned long int) dtv,
+                          GET_ADDR_MODULE,
+                          (int) sizeof (void *) * 2,
+                          (unsigned long int) dtv[GET_ADDR_MODULE].pointer.val);
+    }
+  /* It can happen that slot info updates will un-allocate a pointer (possibly
+     due to a bug elsewhere), which leaves us waiting indefinitely for the
+     dlopen that will never happen.  Emulate the async-signal-unsafe case above
+     and use a static TLS address.  */
+  else if (dtv[GET_ADDR_MODULE].pointer.val == TLS_DTV_UNALLOCATED)
+    {
+#if TLS_TCB_AT_TP
+      void *p = (char *) THREAD_SELF - the_map->l_tls_offset;
+#elif TLS_DTV_AT_TP
+      void *p = (char *) THREAD_SELF + the_map->l_tls_offset + TLS_PRE_TCB_SIZE;
+#else
+# error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
+#endif
+      dtv[GET_ADDR_MODULE].pointer.to_free = NULL;
+      dtv[GET_ADDR_MODULE].pointer.val = p;
+      if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_TLS))
+        _dl_debug_printf ("tls_get_addr_tail sets unallocated own dtv 0x%0*Zx module %lu pointer.val = 0x%0*Zx\n",
                           (int) sizeof (void *) * 2,
                           (unsigned long int) dtv,
                           GET_ADDR_MODULE,
