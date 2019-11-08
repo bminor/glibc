@@ -58,9 +58,6 @@ __doasin(double x, double dx, double v[]) {
 
   double xx,p,pp,u,uu,r,s;
   double tc,tcc;
-#ifndef DLA_FMS
-  double hx,tx,hy,ty,tp,tq;
-#endif
 
 
 /* Taylor series for arcsin for Double-Length numbers         */
@@ -68,16 +65,16 @@ __doasin(double x, double dx, double v[]) {
   p = ((((((d11*xx+d10)*xx+d9)*xx+d8)*xx+d7)*xx+d6)*xx+d5)*xx;
   pp = 0;
 
-  MUL2(x,dx,x,dx,u,uu,tp,hx,tx,hy,ty,tq,tc,tcc);
+  MUL2(x,dx,x,dx,u,uu,tc,tcc);
   ADD2(p,pp,c4.x,cc4.x,p,pp,r,s);
-  MUL2(p,pp,u,uu,p,pp,tp,hx,tx,hy,ty,tq,tc,tcc);
+  MUL2(p,pp,u,uu,p,pp,tc,tcc);
   ADD2(p,pp,c3.x,cc3.x,p,pp,r,s);
-  MUL2(p,pp,u,uu,p,pp,tp,hx,tx,hy,ty,tq,tc,tcc);
+  MUL2(p,pp,u,uu,p,pp,tc,tcc);
   ADD2(p,pp,c2.x,cc2.x,p,pp,r,s);
-  MUL2(p,pp,u,uu,p,pp,tp,hx,tx,hy,ty,tq,tc,tcc);
+  MUL2(p,pp,u,uu,p,pp,tc,tcc);
   ADD2(p,pp,c1.x,cc1.x,p,pp,r,s);
-  MUL2(p,pp,u,uu,p,pp,tp,hx,tx,hy,ty,tq,tc,tcc);
-  MUL2(p,pp,x,dx,p,pp,tp,hx,tx,hy,ty,tq,tc,tcc);
+  MUL2(p,pp,u,uu,p,pp,tc,tcc);
+  MUL2(p,pp,x,dx,p,pp,tc,tcc);
   ADD2(p,pp,x,dx,p,pp,r,s);
   v[0]=p;
   v[1]=pp; /* arcsin(x+dx)=v[0]+v[1] */

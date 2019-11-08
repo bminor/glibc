@@ -61,7 +61,7 @@ __ieee754_sqrt (double x)
     rt2 = 3.75017500867345182581453026130850E-01,
     rt3 = 3.12523626554518656309172508769531E-01;
   static const double big = 134217728.0;
-  double y, t, del, res, res1, hy, z, zz, p, hx, tx, ty, s;
+  double y, t, del, res, res1, hy, z, zz, s;
   mynumber a, c = { { 0, 0 } };
   int4 k;
 
@@ -89,7 +89,7 @@ __ieee754_sqrt (double x)
       else
 	{
 	  res1 = res + 1.5 * ((y - res) + del);
-	  EMULV (res, res1, z, zz, p, hx, tx, hy, ty); /* (z+zz)=res*res1 */
+	  EMULV (res, res1, z, zz); /* (z+zz)=res*res1 */
 	  res = ((((z - s) + zz) < 0) ? max (res, res1) :
 					min (res, res1));
 	  ret = res * c.x;

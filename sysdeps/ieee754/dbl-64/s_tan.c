@@ -63,11 +63,8 @@ __tan (double x)
 
   int ux, i, n;
   double a, da, a2, b, db, c, dc, c1, cc1, c2, cc2, c3, cc3, fi, ffi, gi, pz,
-	 s, sy, t, t1, t2, t3, t4, t7, t8, t9, t10, w, x2, xn, xx2, y, ya,
+	 s, sy, t, t1, t2, t3, t4, w, x2, xn, xx2, y, ya,
          yya, z0, z, zz, z2, zz2;
-#ifndef DLA_FMS
-  double t5, t6;
-#endif
   int p;
   number num, v;
   mp_no mpa, mpt1, mpt2;
@@ -127,20 +124,20 @@ __tan (double x)
       c1 = a15.d + x2 * c1;
       c1 *= x2;
 
-      EMULV (x, x, x2, xx2, t1, t2, t3, t4, t5);
+      EMULV (x, x, x2, xx2);
       ADD2 (a13.d, aa13.d, c1, 0.0, c2, cc2, t1, t2);
-      MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2);
       ADD2 (a11.d, aa11.d, c1, cc1, c2, cc2, t1, t2);
-      MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2);
       ADD2 (a9.d, aa9.d, c1, cc1, c2, cc2, t1, t2);
-      MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2);
       ADD2 (a7.d, aa7.d, c1, cc1, c2, cc2, t1, t2);
-      MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2);
       ADD2 (a5.d, aa5.d, c1, cc1, c2, cc2, t1, t2);
-      MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2);
       ADD2 (a3.d, aa3.d, c1, cc1, c2, cc2, t1, t2);
-      MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
-      MUL2 (x, 0.0, c1, cc1, c2, cc2, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2);
+      MUL2 (x, 0.0, c1, cc1, c2, cc2, t1, t2);
       ADD2 (x, 0.0, c2, cc2, c1, cc1, t1, t2);
       if ((y = c1 + (cc1 - u2.d * c1)) == c1 + (cc1 + u2.d * c1))
 	{
@@ -179,19 +176,18 @@ __tan (double x)
       /* Second stage */
       ffi = xfg[i][3].d;
       c1 = z2 * (a7.d + z2 * (a9.d + z2 * a11.d));
-      EMULV (z, z, z2, zz2, t1, t2, t3, t4, t5);
+      EMULV (z, z, z2, zz2);
       ADD2 (a5.d, aa5.d, c1, 0.0, c2, cc2, t1, t2);
-      MUL2 (z2, zz2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (z2, zz2, c2, cc2, c1, cc1, t1, t2);
       ADD2 (a3.d, aa3.d, c1, cc1, c2, cc2, t1, t2);
-      MUL2 (z2, zz2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
-      MUL2 (z, 0.0, c1, cc1, c2, cc2, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (z2, zz2, c2, cc2, c1, cc1, t1, t2);
+      MUL2 (z, 0.0, c1, cc1, c2, cc2, t1, t2);
       ADD2 (z, 0.0, c2, cc2, c1, cc1, t1, t2);
 
       ADD2 (fi, ffi, c1, cc1, c2, cc2, t1, t2);
-      MUL2 (fi, ffi, c1, cc1, c3, cc3, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (fi, ffi, c1, cc1, c3, cc3, t1, t2);
       SUB2 (1.0, 0.0, c3, cc3, c1, cc1, t1, t2);
-      DIV2 (c2, cc2, c1, cc1, c3, cc3, t1, t2, t3, t4, t5, t6, t7, t8, t9,
-	    t10);
+      DIV2 (c2, cc2, c1, cc1, c3, cc3, t1, t2, t3, t4);
 
       if ((y = c3 + (cc3 - u4.d * c3)) == c3 + (cc3 + u4.d * c3))
 	{
@@ -248,8 +244,7 @@ __tan (double x)
 	    {
 	      /* First stage -cot */
 	      EADD (a, t2, b, db);
-	      DIV2 (1.0, 0.0, b, db, c, dc, t1, t2, t3, t4, t5, t6, t7, t8,
-		    t9, t10);
+	      DIV2 (1.0, 0.0, b, db, c, dc, t1, t2, t3, t4);
 	      if ((y = c + (dc - u6.d * c)) == c + (dc + u6.d * c))
 		{
 		  retval = (-y);
@@ -283,7 +278,7 @@ __tan (double x)
 	  EADD (a, da, t1, t2);
 	  a = t1;
 	  da = t2;
-	  MUL2 (a, da, a, da, x2, xx2, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (a, da, a, da, x2, xx2, t1, t2);
 
 	  c1 = a25.d + x2 * a27.d;
 	  c1 = a23.d + x2 * c1;
@@ -294,25 +289,24 @@ __tan (double x)
 	  c1 *= x2;
 
 	  ADD2 (a13.d, aa13.d, c1, 0.0, c2, cc2, t1, t2);
-	  MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2);
 	  ADD2 (a11.d, aa11.d, c1, cc1, c2, cc2, t1, t2);
-	  MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2);
 	  ADD2 (a9.d, aa9.d, c1, cc1, c2, cc2, t1, t2);
-	  MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2);
 	  ADD2 (a7.d, aa7.d, c1, cc1, c2, cc2, t1, t2);
-	  MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2);
 	  ADD2 (a5.d, aa5.d, c1, cc1, c2, cc2, t1, t2);
-	  MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2);
 	  ADD2 (a3.d, aa3.d, c1, cc1, c2, cc2, t1, t2);
-	  MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
-	  MUL2 (a, da, c1, cc1, c2, cc2, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2);
+	  MUL2 (a, da, c1, cc1, c2, cc2, t1, t2);
 	  ADD2 (a, da, c2, cc2, c1, cc1, t1, t2);
 
 	  if (n)
 	    {
 	      /* Second stage -cot */
-	      DIV2 (1.0, 0.0, c1, cc1, c2, cc2, t1, t2, t3, t4, t5, t6, t7,
-		    t8, t9, t10);
+	      DIV2 (1.0, 0.0, c1, cc1, c2, cc2, t1, t2, t3, t4);
 	      if ((y = c2 + (cc2 - u8.d * c2)) == c2 + (cc2 + u8.d * c2))
 		{
 		  retval = (-y);
@@ -380,24 +374,23 @@ __tan (double x)
       /* Second stage */
       ffi = xfg[i][3].d;
       EADD (z0, yya, z, zz)
-      MUL2 (z, zz, z, zz, z2, zz2, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (z, zz, z, zz, z2, zz2, t1, t2);
       c1 = z2 * (a7.d + z2 * (a9.d + z2 * a11.d));
       ADD2 (a5.d, aa5.d, c1, 0.0, c2, cc2, t1, t2);
-      MUL2 (z2, zz2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (z2, zz2, c2, cc2, c1, cc1, t1, t2);
       ADD2 (a3.d, aa3.d, c1, cc1, c2, cc2, t1, t2);
-      MUL2 (z2, zz2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
-      MUL2 (z, zz, c1, cc1, c2, cc2, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (z2, zz2, c2, cc2, c1, cc1, t1, t2);
+      MUL2 (z, zz, c1, cc1, c2, cc2, t1, t2);
       ADD2 (z, zz, c2, cc2, c1, cc1, t1, t2);
 
       ADD2 (fi, ffi, c1, cc1, c2, cc2, t1, t2);
-      MUL2 (fi, ffi, c1, cc1, c3, cc3, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (fi, ffi, c1, cc1, c3, cc3, t1, t2);
       SUB2 (1.0, 0.0, c3, cc3, c1, cc1, t1, t2);
 
       if (n)
 	{
 	  /* -cot */
-	  DIV2 (c1, cc1, c2, cc2, c3, cc3, t1, t2, t3, t4, t5, t6, t7, t8, t9,
-		t10);
+	  DIV2 (c1, cc1, c2, cc2, c3, cc3, t1, t2, t3, t4);
 	  if ((y = c3 + (cc3 - u12.d * c3)) == c3 + (cc3 + u12.d * c3))
 	    {
 	      retval = (-sy * y);
@@ -407,8 +400,7 @@ __tan (double x)
       else
 	{
 	  /* tan */
-	  DIV2 (c2, cc2, c1, cc1, c3, cc3, t1, t2, t3, t4, t5, t6, t7, t8, t9,
-		t10);
+	  DIV2 (c2, cc2, c1, cc1, c3, cc3, t1, t2, t3, t4);
 	  if ((y = c3 + (cc3 - u11.d * c3)) == c3 + (cc3 + u11.d * c3))
 	    {
 	      retval = (sy * y);
@@ -472,8 +464,7 @@ __tan (double x)
 	    {
 	      /* First stage -cot */
 	      EADD (a, t2, b, db);
-	      DIV2 (1.0, 0.0, b, db, c, dc, t1, t2, t3, t4, t5, t6, t7, t8,
-		    t9, t10);
+	      DIV2 (1.0, 0.0, b, db, c, dc, t1, t2, t3, t4);
 	      if ((y = c + (dc - u14.d * c)) == c + (dc + u14.d * c))
 		{
 		  retval = (-y);
@@ -491,7 +482,7 @@ __tan (double x)
 	    }
 
 	  /* Second stage */
-	  MUL2 (a, da, a, da, x2, xx2, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (a, da, a, da, x2, xx2, t1, t2);
 	  c1 = a25.d + x2 * a27.d;
 	  c1 = a23.d + x2 * c1;
 	  c1 = a21.d + x2 * c1;
@@ -501,25 +492,24 @@ __tan (double x)
 	  c1 *= x2;
 
 	  ADD2 (a13.d, aa13.d, c1, 0.0, c2, cc2, t1, t2);
-	  MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2);
 	  ADD2 (a11.d, aa11.d, c1, cc1, c2, cc2, t1, t2);
-	  MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2);
 	  ADD2 (a9.d, aa9.d, c1, cc1, c2, cc2, t1, t2);
-	  MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2);
 	  ADD2 (a7.d, aa7.d, c1, cc1, c2, cc2, t1, t2);
-	  MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2);
 	  ADD2 (a5.d, aa5.d, c1, cc1, c2, cc2, t1, t2);
-	  MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2);
 	  ADD2 (a3.d, aa3.d, c1, cc1, c2, cc2, t1, t2);
-	  MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
-	  MUL2 (a, da, c1, cc1, c2, cc2, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2);
+	  MUL2 (a, da, c1, cc1, c2, cc2, t1, t2);
 	  ADD2 (a, da, c2, cc2, c1, cc1, t1, t2);
 
 	  if (n)
 	    {
 	      /* Second stage -cot */
-	      DIV2 (1.0, 0.0, c1, cc1, c2, cc2, t1, t2, t3, t4, t5, t6, t7,
-		    t8, t9, t10);
+	      DIV2 (1.0, 0.0, c1, cc1, c2, cc2, t1, t2, t3, t4);
 	      if ((y = c2 + (cc2 - u16.d * c2)) == c2 + (cc2 + u16.d * c2))
 		{
 		  retval = (-y);
@@ -586,24 +576,23 @@ __tan (double x)
       /* Second stage */
       ffi = xfg[i][3].d;
       EADD (z0, yya, z, zz);
-      MUL2 (z, zz, z, zz, z2, zz2, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (z, zz, z, zz, z2, zz2, t1, t2);
       c1 = z2 * (a7.d + z2 * (a9.d + z2 * a11.d));
       ADD2 (a5.d, aa5.d, c1, 0.0, c2, cc2, t1, t2);
-      MUL2 (z2, zz2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (z2, zz2, c2, cc2, c1, cc1, t1, t2);
       ADD2 (a3.d, aa3.d, c1, cc1, c2, cc2, t1, t2);
-      MUL2 (z2, zz2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
-      MUL2 (z, zz, c1, cc1, c2, cc2, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (z2, zz2, c2, cc2, c1, cc1, t1, t2);
+      MUL2 (z, zz, c1, cc1, c2, cc2, t1, t2);
       ADD2 (z, zz, c2, cc2, c1, cc1, t1, t2);
 
       ADD2 (fi, ffi, c1, cc1, c2, cc2, t1, t2);
-      MUL2 (fi, ffi, c1, cc1, c3, cc3, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (fi, ffi, c1, cc1, c3, cc3, t1, t2);
       SUB2 (1.0, 0.0, c3, cc3, c1, cc1, t1, t2);
 
       if (n)
 	{
 	  /* -cot */
-	  DIV2 (c1, cc1, c2, cc2, c3, cc3, t1, t2, t3, t4, t5, t6, t7, t8, t9,
-		t10);
+	  DIV2 (c1, cc1, c2, cc2, c3, cc3, t1, t2, t3, t4);
 	  if ((y = c3 + (cc3 - u20.d * c3)) == c3 + (cc3 + u20.d * c3))
 	    {
 	      retval = (-sy * y);
@@ -613,8 +602,7 @@ __tan (double x)
       else
 	{
 	  /* tan */
-	  DIV2 (c2, cc2, c1, cc1, c3, cc3, t1, t2, t3, t4, t5, t6, t7, t8, t9,
-		t10);
+	  DIV2 (c2, cc2, c1, cc1, c3, cc3, t1, t2, t3, t4);
 	  if ((y = c3 + (cc3 - u19.d * c3)) == c3 + (cc3 + u19.d * c3))
 	    {
 	      retval = (sy * y);
@@ -664,8 +652,7 @@ __tan (double x)
 	{
 	  /* First stage -cot */
 	  EADD (a, t2, b, db);
-	  DIV2 (1.0, 0.0, b, db, c, dc, t1, t2, t3, t4, t5, t6, t7, t8, t9,
-		t10);
+	  DIV2 (1.0, 0.0, b, db, c, dc, t1, t2, t3, t4);
 	  if ((y = c + (dc - u22.d * c)) == c + (dc + u22.d * c))
 	    {
 	      retval = (-y);
@@ -691,7 +678,7 @@ __tan (double x)
       __sub (&mpa, &mpt1, &mpt2, p);
       __mp_dbl (&mpt2, &da, p);
 
-      MUL2 (a, da, a, da, x2, xx2, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (a, da, a, da, x2, xx2, t1, t2);
 
       c1 = a25.d + x2 * a27.d;
       c1 = a23.d + x2 * c1;
@@ -702,25 +689,24 @@ __tan (double x)
       c1 *= x2;
 
       ADD2 (a13.d, aa13.d, c1, 0.0, c2, cc2, t1, t2);
-      MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2);
       ADD2 (a11.d, aa11.d, c1, cc1, c2, cc2, t1, t2);
-      MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2);
       ADD2 (a9.d, aa9.d, c1, cc1, c2, cc2, t1, t2);
-      MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2);
       ADD2 (a7.d, aa7.d, c1, cc1, c2, cc2, t1, t2);
-      MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2);
       ADD2 (a5.d, aa5.d, c1, cc1, c2, cc2, t1, t2);
-      MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2);
       ADD2 (a3.d, aa3.d, c1, cc1, c2, cc2, t1, t2);
-      MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
-      MUL2 (a, da, c1, cc1, c2, cc2, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (x2, xx2, c2, cc2, c1, cc1, t1, t2);
+      MUL2 (a, da, c1, cc1, c2, cc2, t1, t2);
       ADD2 (a, da, c2, cc2, c1, cc1, t1, t2);
 
       if (n)
 	{
 	  /* Second stage -cot */
-	  DIV2 (1.0, 0.0, c1, cc1, c2, cc2, t1, t2, t3, t4, t5, t6, t7, t8,
-		t9, t10);
+	  DIV2 (1.0, 0.0, c1, cc1, c2, cc2, t1, t2, t3, t4);
 	  if ((y = c2 + (cc2 - u24.d * c2)) == c2 + (cc2 + u24.d * c2))
 	    {
 	      retval = (-y);
@@ -787,24 +773,23 @@ __tan (double x)
   /* Second stage */
   ffi = xfg[i][3].d;
   EADD (z0, yya, z, zz);
-  MUL2 (z, zz, z, zz, z2, zz2, t1, t2, t3, t4, t5, t6, t7, t8);
+  MUL2 (z, zz, z, zz, z2, zz2, t1, t2);
   c1 = z2 * (a7.d + z2 * (a9.d + z2 * a11.d));
   ADD2 (a5.d, aa5.d, c1, 0.0, c2, cc2, t1, t2);
-  MUL2 (z2, zz2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
+  MUL2 (z2, zz2, c2, cc2, c1, cc1, t1, t2);
   ADD2 (a3.d, aa3.d, c1, cc1, c2, cc2, t1, t2);
-  MUL2 (z2, zz2, c2, cc2, c1, cc1, t1, t2, t3, t4, t5, t6, t7, t8);
-  MUL2 (z, zz, c1, cc1, c2, cc2, t1, t2, t3, t4, t5, t6, t7, t8);
+  MUL2 (z2, zz2, c2, cc2, c1, cc1, t1, t2);
+  MUL2 (z, zz, c1, cc1, c2, cc2, t1, t2);
   ADD2 (z, zz, c2, cc2, c1, cc1, t1, t2);
 
   ADD2 (fi, ffi, c1, cc1, c2, cc2, t1, t2);
-  MUL2 (fi, ffi, c1, cc1, c3, cc3, t1, t2, t3, t4, t5, t6, t7, t8);
+  MUL2 (fi, ffi, c1, cc1, c3, cc3, t1, t2);
   SUB2 (1.0, 0.0, c3, cc3, c1, cc1, t1, t2);
 
   if (n)
     {
       /* -cot */
-      DIV2 (c1, cc1, c2, cc2, c3, cc3, t1, t2, t3, t4, t5, t6, t7, t8, t9,
-	    t10);
+      DIV2 (c1, cc1, c2, cc2, c3, cc3, t1, t2, t3, t4);
       if ((y = c3 + (cc3 - u28.d * c3)) == c3 + (cc3 + u28.d * c3))
 	{
 	  retval = (-sy * y);
@@ -814,8 +799,7 @@ __tan (double x)
   else
     {
       /* tan */
-      DIV2 (c2, cc2, c1, cc1, c3, cc3, t1, t2, t3, t4, t5, t6, t7, t8, t9,
-	    t10);
+      DIV2 (c2, cc2, c1, cc1, c3, cc3, t1, t2, t3, t4);
       if ((y = c3 + (cc3 - u27.d * c3)) == c3 + (cc3 + u27.d * c3))
 	{
 	  retval = (sy * y);

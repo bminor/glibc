@@ -77,11 +77,8 @@ __ieee754_atan2 (double y, double x)
 {
   int i, de, ux, dx, uy, dy;
   static const int pr[MM] = { 6, 8, 10, 20, 32 };
-  double ax, ay, u, du, u9, ua, v, vv, dv, t1, t2, t3, t7, t8,
+  double ax, ay, u, du, u9, ua, v, vv, dv, t1, t2, t3,
 	 z, zz, cor, s1, ss1, s2, ss2;
-#ifndef DLA_FMS
-  double t4, t5, t6;
-#endif
   number num;
 
   static const int ep = 59768832,      /*  57*16**5   */
@@ -246,13 +243,13 @@ __ieee754_atan2 (double y, double x)
   if (ay < ax)
     {
       u = ay / ax;
-      EMULV (ax, u, v, vv, t1, t2, t3, t4, t5);
+      EMULV (ax, u, v, vv);
       du = ((ay - v) - vv) / ax;
     }
   else
     {
       u = ax / ay;
-      EMULV (ay, u, v, vv, t1, t2, t3, t4, t5);
+      EMULV (ay, u, v, vv);
       du = ((ax - v) - vv) / ay;
     }
 
@@ -275,18 +272,18 @@ __ieee754_atan2 (double y, double x)
 	      if ((z = u + (zz - u1.d * u)) == u + (zz + u1.d * u))
 		return signArctan2 (y, z);
 
-	      MUL2 (u, du, u, du, v, vv, t1, t2, t3, t4, t5, t6, t7, t8);
+	      MUL2 (u, du, u, du, v, vv, t1, t2);
 	      s1 = v * (f11.d + v * (f13.d
 				     + v * (f15.d + v * (f17.d + v * f19.d))));
 	      ADD2 (f9.d, ff9.d, s1, 0, s2, ss2, t1, t2);
-	      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+	      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
 	      ADD2 (f7.d, ff7.d, s1, ss1, s2, ss2, t1, t2);
-	      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+	      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
 	      ADD2 (f5.d, ff5.d, s1, ss1, s2, ss2, t1, t2);
-	      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+	      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
 	      ADD2 (f3.d, ff3.d, s1, ss1, s2, ss2, t1, t2);
-	      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
-	      MUL2 (u, du, s1, ss1, s2, ss2, t1, t2, t3, t4, t5, t6, t7, t8);
+	      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
+	      MUL2 (u, du, s1, ss1, s2, ss2, t1, t2);
 	      ADD2 (u, du, s2, ss2, s1, ss1, t1, t2);
 
 	      if ((z = s1 + (ss1 - u5.d * s1)) == s1 + (ss1 + u5.d * s1))
@@ -331,13 +328,13 @@ __ieee754_atan2 (double y, double x)
 				  + v * (hij[i][14].d
 					 + v * hij[i][15].d))));
 	  ADD2 (hij[i][9].d, hij[i][10].d, s1, 0, s2, ss2, t1, t2);
-	  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
 	  ADD2 (hij[i][7].d, hij[i][8].d, s1, ss1, s2, ss2, t1, t2);
-	  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
 	  ADD2 (hij[i][5].d, hij[i][6].d, s1, ss1, s2, ss2, t1, t2);
-	  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
 	  ADD2 (hij[i][3].d, hij[i][4].d, s1, ss1, s2, ss2, t1, t2);
-	  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
 	  ADD2 (hij[i][1].d, hij[i][2].d, s1, ss1, s2, ss2, t1, t2);
 
 	  if ((z = s2 + (ss2 - ub.d * s2)) == s2 + (ss2 + ub.d * s2))
@@ -360,19 +357,19 @@ __ieee754_atan2 (double y, double x)
 	  if ((z = t2 + (t3 - u2.d)) == t2 + (t3 + u2.d))
 	    return signArctan2 (y, z);
 
-	  MUL2 (u, du, u, du, v, vv, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (u, du, u, du, v, vv, t1, t2);
 	  s1 = v * (f11.d
 		    + v * (f13.d
 			   + v * (f15.d + v * (f17.d + v * f19.d))));
 	  ADD2 (f9.d, ff9.d, s1, 0, s2, ss2, t1, t2);
-	  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
 	  ADD2 (f7.d, ff7.d, s1, ss1, s2, ss2, t1, t2);
-	  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
 	  ADD2 (f5.d, ff5.d, s1, ss1, s2, ss2, t1, t2);
-	  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
 	  ADD2 (f3.d, ff3.d, s1, ss1, s2, ss2, t1, t2);
-	  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
-	  MUL2 (u, du, s1, ss1, s2, ss2, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
+	  MUL2 (u, du, s1, ss1, s2, ss2, t1, t2);
 	  ADD2 (u, du, s2, ss2, s1, ss1, t1, t2);
 	  SUB2 (hpi.d, hpi1.d, s1, ss1, s2, ss2, t1, t2);
 
@@ -408,13 +405,13 @@ __ieee754_atan2 (double y, double x)
 				     + v * hij[i][15].d))));
 
       ADD2 (hij[i][9].d, hij[i][10].d, s1, 0, s2, ss2, t1, t2);
-      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
       ADD2 (hij[i][7].d, hij[i][8].d, s1, ss1, s2, ss2, t1, t2);
-      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
       ADD2 (hij[i][5].d, hij[i][6].d, s1, ss1, s2, ss2, t1, t2);
-      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
       ADD2 (hij[i][3].d, hij[i][4].d, s1, ss1, s2, ss2, t1, t2);
-      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
       ADD2 (hij[i][1].d, hij[i][2].d, s1, ss1, s2, ss2, t1, t2);
       SUB2 (hpi.d, hpi1.d, s2, ss2, s1, ss1, t1, t2);
 
@@ -439,18 +436,18 @@ __ieee754_atan2 (double y, double x)
 	  if ((z = t2 + (t3 - u3.d)) == t2 + (t3 + u3.d))
 	    return signArctan2 (y, z);
 
-	  MUL2 (u, du, u, du, v, vv, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (u, du, u, du, v, vv, t1, t2);
 	  s1 = v * (f11.d
 		    + v * (f13.d + v * (f15.d + v * (f17.d + v * f19.d))));
 	  ADD2 (f9.d, ff9.d, s1, 0, s2, ss2, t1, t2);
-	  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
 	  ADD2 (f7.d, ff7.d, s1, ss1, s2, ss2, t1, t2);
-	  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
 	  ADD2 (f5.d, ff5.d, s1, ss1, s2, ss2, t1, t2);
-	  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
 	  ADD2 (f3.d, ff3.d, s1, ss1, s2, ss2, t1, t2);
-	  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
-	  MUL2 (u, du, s1, ss1, s2, ss2, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
+	  MUL2 (u, du, s1, ss1, s2, ss2, t1, t2);
 	  ADD2 (u, du, s2, ss2, s1, ss1, t1, t2);
 	  ADD2 (hpi.d, hpi1.d, s1, ss1, s2, ss2, t1, t2);
 
@@ -483,13 +480,13 @@ __ieee754_atan2 (double y, double x)
 			      + v * (hij[i][14].d
 				     + v * hij[i][15].d))));
       ADD2 (hij[i][9].d, hij[i][10].d, s1, 0, s2, ss2, t1, t2);
-      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
       ADD2 (hij[i][7].d, hij[i][8].d, s1, ss1, s2, ss2, t1, t2);
-      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
       ADD2 (hij[i][5].d, hij[i][6].d, s1, ss1, s2, ss2, t1, t2);
-      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
       ADD2 (hij[i][3].d, hij[i][4].d, s1, ss1, s2, ss2, t1, t2);
-      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
       ADD2 (hij[i][1].d, hij[i][2].d, s1, ss1, s2, ss2, t1, t2);
       ADD2 (hpi.d, hpi1.d, s2, ss2, s1, ss1, t1, t2);
 
@@ -511,17 +508,17 @@ __ieee754_atan2 (double y, double x)
       if ((z = t2 + (t3 - u4.d)) == t2 + (t3 + u4.d))
 	return signArctan2 (y, z);
 
-      MUL2 (u, du, u, du, v, vv, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (u, du, u, du, v, vv, t1, t2);
       s1 = v * (f11.d + v * (f13.d + v * (f15.d + v * (f17.d + v * f19.d))));
       ADD2 (f9.d, ff9.d, s1, 0, s2, ss2, t1, t2);
-      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
       ADD2 (f7.d, ff7.d, s1, ss1, s2, ss2, t1, t2);
-      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
       ADD2 (f5.d, ff5.d, s1, ss1, s2, ss2, t1, t2);
-      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
       ADD2 (f3.d, ff3.d, s1, ss1, s2, ss2, t1, t2);
-      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
-      MUL2 (u, du, s1, ss1, s2, ss2, t1, t2, t3, t4, t5, t6, t7, t8);
+      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
+      MUL2 (u, du, s1, ss1, s2, ss2, t1, t2);
       ADD2 (u, du, s2, ss2, s1, ss1, t1, t2);
       SUB2 (opi.d, opi1.d, s1, ss1, s2, ss2, t1, t2);
 
@@ -555,13 +552,13 @@ __ieee754_atan2 (double y, double x)
 			  + v * (hij[i][14].d + v * hij[i][15].d))));
 
   ADD2 (hij[i][9].d, hij[i][10].d, s1, 0, s2, ss2, t1, t2);
-  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
   ADD2 (hij[i][7].d, hij[i][8].d, s1, ss1, s2, ss2, t1, t2);
-  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
   ADD2 (hij[i][5].d, hij[i][6].d, s1, ss1, s2, ss2, t1, t2);
-  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
   ADD2 (hij[i][3].d, hij[i][4].d, s1, ss1, s2, ss2, t1, t2);
-  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+  MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
   ADD2 (hij[i][1].d, hij[i][2].d, s1, ss1, s2, ss2, t1, t2);
   SUB2 (opi.d, opi1.d, s2, ss2, s1, ss1, t1, t2);
 

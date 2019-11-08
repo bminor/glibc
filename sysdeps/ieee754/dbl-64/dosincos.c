@@ -61,9 +61,6 @@ __dubsin (double x, double dx, double v[])
 {
   double r, s, c, cc, d, dd, d2, dd2, e, ee,
 	 sn, ssn, cs, ccs, ds, dss, dc, dcc;
-#ifndef DLA_FMS
-  double p, hx, tx, hy, ty, q;
-#endif
   mynumber u;
   int4 k;
 
@@ -73,31 +70,31 @@ __dubsin (double x, double dx, double v[])
   d = x + dx;
   dd = (x - d) + dx;
   /* sin(x+dx)=sin(Xi+t)=sin(Xi)*cos(t) + cos(Xi)sin(t) where t ->0 */
-  MUL2 (d, dd, d, dd, d2, dd2, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (d, dd, d, dd, d2, dd2, c, cc);
   sn = __sincostab.x[k];       /*                                  */
   ssn = __sincostab.x[k + 1];  /*      sin(Xi) and cos(Xi)         */
   cs = __sincostab.x[k + 2];   /*                                  */
   ccs = __sincostab.x[k + 3];  /*                                  */
   /* Taylor series for sin ds=sin(t) */
-  MUL2 (d2, dd2, s7.x, ss7.x, ds, dss, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (d2, dd2, s7.x, ss7.x, ds, dss, c, cc);
   ADD2 (ds, dss, s5.x, ss5.x, ds, dss, r, s);
-  MUL2 (d2, dd2, ds, dss, ds, dss, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (d2, dd2, ds, dss, ds, dss, c, cc);
   ADD2 (ds, dss, s3.x, ss3.x, ds, dss, r, s);
-  MUL2 (d2, dd2, ds, dss, ds, dss, p, hx, tx, hy, ty, q, c, cc);
-  MUL2 (d, dd, ds, dss, ds, dss, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (d2, dd2, ds, dss, ds, dss, c, cc);
+  MUL2 (d, dd, ds, dss, ds, dss, c, cc);
   ADD2 (ds, dss, d, dd, ds, dss, r, s);
 
   /* Taylor series for cos dc=cos(t) */
-  MUL2 (d2, dd2, c8.x, cc8.x, dc, dcc, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (d2, dd2, c8.x, cc8.x, dc, dcc, c, cc);
   ADD2 (dc, dcc, c6.x, cc6.x, dc, dcc, r, s);
-  MUL2 (d2, dd2, dc, dcc, dc, dcc, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (d2, dd2, dc, dcc, dc, dcc, c, cc);
   ADD2 (dc, dcc, c4.x, cc4.x, dc, dcc, r, s);
-  MUL2 (d2, dd2, dc, dcc, dc, dcc, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (d2, dd2, dc, dcc, dc, dcc, c, cc);
   ADD2 (dc, dcc, c2.x, cc2.x, dc, dcc, r, s);
-  MUL2 (d2, dd2, dc, dcc, dc, dcc, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (d2, dd2, dc, dcc, dc, dcc, c, cc);
 
-  MUL2 (cs, ccs, ds, dss, e, ee, p, hx, tx, hy, ty, q, c, cc);
-  MUL2 (dc, dcc, sn, ssn, dc, dcc, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (cs, ccs, ds, dss, e, ee, c, cc);
+  MUL2 (dc, dcc, sn, ssn, dc, dcc, c, cc);
   SUB2 (e, ee, dc, dcc, e, ee, r, s);
   ADD2 (e, ee, sn, ssn, e, ee, r, s);                    /* e+ee=sin(x+dx) */
 
@@ -117,9 +114,6 @@ __dubcos (double x, double dx, double v[])
 {
   double r, s, c, cc, d, dd, d2, dd2, e, ee,
 	 sn, ssn, cs, ccs, ds, dss, dc, dcc;
-#ifndef DLA_FMS
-  double p, hx, tx, hy, ty, q;
-#endif
   mynumber u;
   int4 k;
   u.x = x + big.x;
@@ -127,46 +121,46 @@ __dubcos (double x, double dx, double v[])
   x = x - (u.x - big.x);
   d = x + dx;
   dd = (x - d) + dx;  /* cos(x+dx)=cos(Xi+t)=cos(Xi)cos(t) - sin(Xi)sin(t) */
-  MUL2 (d, dd, d, dd, d2, dd2, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (d, dd, d, dd, d2, dd2, c, cc);
   sn = __sincostab.x[k];     /*                                  */
   ssn = __sincostab.x[k + 1];  /*      sin(Xi) and cos(Xi)         */
   cs = __sincostab.x[k + 2];   /*                                  */
   ccs = __sincostab.x[k + 3];  /*                                  */
-  MUL2 (d2, dd2, s7.x, ss7.x, ds, dss, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (d2, dd2, s7.x, ss7.x, ds, dss, c, cc);
   ADD2 (ds, dss, s5.x, ss5.x, ds, dss, r, s);
-  MUL2 (d2, dd2, ds, dss, ds, dss, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (d2, dd2, ds, dss, ds, dss, c, cc);
   ADD2 (ds, dss, s3.x, ss3.x, ds, dss, r, s);
-  MUL2 (d2, dd2, ds, dss, ds, dss, p, hx, tx, hy, ty, q, c, cc);
-  MUL2 (d, dd, ds, dss, ds, dss, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (d2, dd2, ds, dss, ds, dss, c, cc);
+  MUL2 (d, dd, ds, dss, ds, dss, c, cc);
   ADD2 (ds, dss, d, dd, ds, dss, r, s);
 
-  MUL2 (d2, dd2, c8.x, cc8.x, dc, dcc, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (d2, dd2, c8.x, cc8.x, dc, dcc, c, cc);
   ADD2 (dc, dcc, c6.x, cc6.x, dc, dcc, r, s);
-  MUL2 (d2, dd2, dc, dcc, dc, dcc, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (d2, dd2, dc, dcc, dc, dcc, c, cc);
   ADD2 (dc, dcc, c4.x, cc4.x, dc, dcc, r, s);
-  MUL2 (d2, dd2, dc, dcc, dc, dcc, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (d2, dd2, dc, dcc, dc, dcc, c, cc);
   ADD2 (dc, dcc, c2.x, cc2.x, dc, dcc, r, s);
-  MUL2 (d2, dd2, dc, dcc, dc, dcc, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (d2, dd2, dc, dcc, dc, dcc, c, cc);
 
-  MUL2 (cs, ccs, ds, dss, e, ee, p, hx, tx, hy, ty, q, c, cc);
-  MUL2 (dc, dcc, sn, ssn, dc, dcc, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (cs, ccs, ds, dss, e, ee, c, cc);
+  MUL2 (dc, dcc, sn, ssn, dc, dcc, c, cc);
 
-  MUL2 (d2, dd2, s7.x, ss7.x, ds, dss, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (d2, dd2, s7.x, ss7.x, ds, dss, c, cc);
   ADD2 (ds, dss, s5.x, ss5.x, ds, dss, r, s);
-  MUL2 (d2, dd2, ds, dss, ds, dss, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (d2, dd2, ds, dss, ds, dss, c, cc);
   ADD2 (ds, dss, s3.x, ss3.x, ds, dss, r, s);
-  MUL2 (d2, dd2, ds, dss, ds, dss, p, hx, tx, hy, ty, q, c, cc);
-  MUL2 (d, dd, ds, dss, ds, dss, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (d2, dd2, ds, dss, ds, dss, c, cc);
+  MUL2 (d, dd, ds, dss, ds, dss, c, cc);
   ADD2 (ds, dss, d, dd, ds, dss, r, s);
-  MUL2 (d2, dd2, c8.x, cc8.x, dc, dcc, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (d2, dd2, c8.x, cc8.x, dc, dcc, c, cc);
   ADD2 (dc, dcc, c6.x, cc6.x, dc, dcc, r, s);
-  MUL2 (d2, dd2, dc, dcc, dc, dcc, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (d2, dd2, dc, dcc, dc, dcc, c, cc);
   ADD2 (dc, dcc, c4.x, cc4.x, dc, dcc, r, s);
-  MUL2 (d2, dd2, dc, dcc, dc, dcc, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (d2, dd2, dc, dcc, dc, dcc, c, cc);
   ADD2 (dc, dcc, c2.x, cc2.x, dc, dcc, r, s);
-  MUL2 (d2, dd2, dc, dcc, dc, dcc, p, hx, tx, hy, ty, q, c, cc);
-  MUL2 (sn, ssn, ds, dss, e, ee, p, hx, tx, hy, ty, q, c, cc);
-  MUL2 (dc, dcc, cs, ccs, dc, dcc, p, hx, tx, hy, ty, q, c, cc);
+  MUL2 (d2, dd2, dc, dcc, dc, dcc, c, cc);
+  MUL2 (sn, ssn, ds, dss, e, ee, c, cc);
+  MUL2 (dc, dcc, cs, ccs, dc, dcc, c, cc);
   ADD2 (e, ee, dc, dcc, e, ee, r, s);
   SUB2 (cs, ccs, e, ee, e, ee, r, s);
 

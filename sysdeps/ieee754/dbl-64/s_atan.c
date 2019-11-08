@@ -65,11 +65,8 @@ __signArctan (double x, double y)
 double
 __atan (double x)
 {
-  double cor, s1, ss1, s2, ss2, t1, t2, t3, t7, t8, t9, t10, u, u2, u3,
+  double cor, s1, ss1, s2, ss2, t1, t2, t3, t4, u, u2, u3,
 	 v, vv, w, ww, y, yy, z, zz;
-#ifndef DLA_FMS
-  double t4, t5, t6;
-#endif
   int i, ux, dx;
   static const int pr[M] = { 6, 8, 10, 32 };
   number num;
@@ -108,7 +105,7 @@ __atan (double x)
 	      if ((y = x + (yy - U1 * x)) == x + (yy + U1 * x))
 		return y;
 
-	      EMULV (x, x, v, vv, t1, t2, t3, t4, t5);	/* v+vv=x^2 */
+	      EMULV (x, x, v, vv);	/* v+vv=x^2 */
 
 	      s1 = f17.d + v * f19.d;
 	      s1 = f15.d + v * s1;
@@ -117,15 +114,14 @@ __atan (double x)
 	      s1 *= v;
 
 	      ADD2 (f9.d, ff9.d, s1, 0, s2, ss2, t1, t2);
-	      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+	      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
 	      ADD2 (f7.d, ff7.d, s1, ss1, s2, ss2, t1, t2);
-	      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+	      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
 	      ADD2 (f5.d, ff5.d, s1, ss1, s2, ss2, t1, t2);
-	      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+	      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
 	      ADD2 (f3.d, ff3.d, s1, ss1, s2, ss2, t1, t2);
-	      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
-	      MUL2 (x, 0, s1, ss1, s2, ss2, t1, t2, t3, t4, t5, t6, t7,
-		    t8);
+	      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
+	      MUL2 (x, 0, s1, ss1, s2, ss2, t1, t2);
 	      ADD2 (x, 0, s2, ss2, s1, ss1, t1, t2);
 	      if ((y = s1 + (ss1 - U5 * s1)) == s1 + (ss1 + U5 * s1))
 		return y;
@@ -171,13 +167,13 @@ __atan (double x)
 	  s1 *= z;
 
 	  ADD2 (hij[i][9].d, hij[i][10].d, s1, 0, s2, ss2, t1, t2);
-	  MUL2 (z, 0, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (z, 0, s2, ss2, s1, ss1, t1, t2);
 	  ADD2 (hij[i][7].d, hij[i][8].d, s1, ss1, s2, ss2, t1, t2);
-	  MUL2 (z, 0, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (z, 0, s2, ss2, s1, ss1, t1, t2);
 	  ADD2 (hij[i][5].d, hij[i][6].d, s1, ss1, s2, ss2, t1, t2);
-	  MUL2 (z, 0, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (z, 0, s2, ss2, s1, ss1, t1, t2);
 	  ADD2 (hij[i][3].d, hij[i][4].d, s1, ss1, s2, ss2, t1, t2);
-	  MUL2 (z, 0, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (z, 0, s2, ss2, s1, ss1, t1, t2);
 	  ADD2 (hij[i][1].d, hij[i][2].d, s1, ss1, s2, ss2, t1, t2);
 	  if ((y = s2 + (ss2 - U6 * s2)) == s2 + (ss2 + U6 * s2))
 	    return __signArctan (x, y);
@@ -190,7 +186,7 @@ __atan (double x)
       if (u < D)
 	{			/* C <= u < D */
 	  w = 1 / u;
-	  EMULV (w, u, t1, t2, t3, t4, t5, t6, t7);
+	  EMULV (w, u, t1, t2);
 	  ww = w * ((1 - t1) - t2);
 	  i = (TWO52 + TWO8 * w) - TWO52;
 	  i -= 16;
@@ -210,8 +206,7 @@ __atan (double x)
 	  if ((y = t1 + (yy - u3)) == t1 + (yy + u3))
 	    return __signArctan (x, y);
 
-	  DIV2 (1, 0, u, 0, w, ww, t1, t2, t3, t4, t5, t6, t7, t8, t9,
-		t10);
+	  DIV2 (1, 0, u, 0, w, ww, t1, t2, t3, t4);
 	  t1 = w - hij[i][0].d;
 	  EADD (t1, ww, z, zz);
 
@@ -222,13 +217,13 @@ __atan (double x)
 	  s1 *= z;
 
 	  ADD2 (hij[i][9].d, hij[i][10].d, s1, 0, s2, ss2, t1, t2);
-	  MUL2 (z, zz, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (z, zz, s2, ss2, s1, ss1, t1, t2);
 	  ADD2 (hij[i][7].d, hij[i][8].d, s1, ss1, s2, ss2, t1, t2);
-	  MUL2 (z, zz, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (z, zz, s2, ss2, s1, ss1, t1, t2);
 	  ADD2 (hij[i][5].d, hij[i][6].d, s1, ss1, s2, ss2, t1, t2);
-	  MUL2 (z, zz, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (z, zz, s2, ss2, s1, ss1, t1, t2);
 	  ADD2 (hij[i][3].d, hij[i][4].d, s1, ss1, s2, ss2, t1, t2);
-	  MUL2 (z, zz, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+	  MUL2 (z, zz, s2, ss2, s1, ss1, t1, t2);
 	  ADD2 (hij[i][1].d, hij[i][2].d, s1, ss1, s2, ss2, t1, t2);
 	  SUB2 (HPI, HPI1, s2, ss2, s1, ss1, t1, t2);
 	  if ((y = s1 + (ss1 - U7)) == s1 + (ss1 + U7))
@@ -242,7 +237,7 @@ __atan (double x)
 	    {                   /* D <= u < E */
 	      w = 1 / u;
 	      v = w * w;
-	      EMULV (w, u, t1, t2, t3, t4, t5, t6, t7);
+	      EMULV (w, u, t1, t2);
 
 	      yy = d11.d + v * d13.d;
 	      yy = d9.d + v * yy;
@@ -257,9 +252,8 @@ __atan (double x)
 	      if ((y = t3 + (yy - U4)) == t3 + (yy + U4))
 		return __signArctan (x, y);
 
-	      DIV2 (1, 0, u, 0, w, ww, t1, t2, t3, t4, t5, t6, t7, t8,
-		    t9, t10);
-	      MUL2 (w, ww, w, ww, v, vv, t1, t2, t3, t4, t5, t6, t7, t8);
+	      DIV2 (1, 0, u, 0, w, ww, t1, t2, t3, t4);
+	      MUL2 (w, ww, w, ww, v, vv, t1, t2);
 
 	      s1 = f17.d + v * f19.d;
 	      s1 = f15.d + v * s1;
@@ -268,14 +262,14 @@ __atan (double x)
 	      s1 *= v;
 
 	      ADD2 (f9.d, ff9.d, s1, 0, s2, ss2, t1, t2);
-	      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+	      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
 	      ADD2 (f7.d, ff7.d, s1, ss1, s2, ss2, t1, t2);
-	      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+	      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
 	      ADD2 (f5.d, ff5.d, s1, ss1, s2, ss2, t1, t2);
-	      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
+	      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
 	      ADD2 (f3.d, ff3.d, s1, ss1, s2, ss2, t1, t2);
-	      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2, t3, t4, t5, t6, t7, t8);
-	      MUL2 (w, ww, s1, ss1, s2, ss2, t1, t2, t3, t4, t5, t6, t7, t8);
+	      MUL2 (v, vv, s2, ss2, s1, ss1, t1, t2);
+	      MUL2 (w, ww, s1, ss1, s2, ss2, t1, t2);
 	      ADD2 (w, ww, s2, ss2, s1, ss1, t1, t2);
 	      SUB2 (HPI, HPI1, s1, ss1, s2, ss2, t1, t2);
 
