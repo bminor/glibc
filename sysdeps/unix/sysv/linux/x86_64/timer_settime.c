@@ -17,13 +17,19 @@
    not, see <https://www.gnu.org/licenses/>.  */
 
 #include <shlib-compat.h>
+#include <sysdep.h>
+#include "kernel-posix-timers.h"
 #include "compat-timer.h"
 
+int
+__timer_settime_new (timer_t timerid, int flags, const struct itimerspec *value,
+                     struct itimerspec *ovalue)
+{
+  struct timer *kt = (struct timer *) timerid;
 
-#define timer_settime_alias __timer_settime_new
-#include <sysdeps/unix/sysv/linux/timer_settime.c>
-
-#undef timer_settime
+  return INLINE_SYSCALL_CALL (timer_settime, kt->ktimerid, flags, value,
+                              ovalue);
+}
 versioned_symbol (librt, __timer_settime_new, timer_settime, GLIBC_2_3_3);
 
 

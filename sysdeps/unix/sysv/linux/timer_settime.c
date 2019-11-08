@@ -22,17 +22,10 @@
 #include <sysdep.h>
 #include "kernel-posix-timers.h"
 
-
-#ifdef timer_settime_alias
-# define timer_settime timer_settime_alias
-#endif
-
-
 int
 timer_settime (timer_t timerid, int flags, const struct itimerspec *value,
 	       struct itimerspec *ovalue)
 {
-#undef timer_settime
   struct timer *kt = (struct timer *) timerid;
 
   /* Delete the kernel timer object.  */
