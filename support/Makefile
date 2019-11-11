@@ -63,7 +63,9 @@ libsupport-routines = \
   support_quote_string \
   support_record_failure \
   support_run_diff \
+  support_set_small_thread_stack_size \
   support_shared_allocate \
+  support_small_stack_thread_attribute \
   support_subprocess \
   support_test_compare_blob \
   support_test_compare_failure \
