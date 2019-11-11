@@ -91,6 +91,7 @@ char *xasprintf (const char *format, ...)
   __attribute__ ((format (printf, 1, 2), malloc));
 char *xstrdup (const char *);
 char *xstrndup (const char *, size_t);
+char *xsetlocale (int category, const char *locale);
 
 /* These point to the TOP of the source/build tree, not your (or
    support's) subdirectory.  */

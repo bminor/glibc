@@ -151,6 +151,7 @@ libsupport-routines = \
   xrealloc \
   xrecvfrom \
   xsendto \
+  xsetlocale \
   xsetsockopt \
   xsigaction \
   xsignal \
