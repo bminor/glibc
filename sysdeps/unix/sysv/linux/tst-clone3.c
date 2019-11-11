@@ -56,7 +56,11 @@ f (void *a)
 static inline int
 futex_wait (int *futexp, int val)
 {
+#ifdef __NR_futex
   return syscall (__NR_futex, futexp, FUTEX_WAIT, val);
+#else
+  return syscall (__NR_futex_time64, futexp, FUTEX_WAIT, val);
+#endif
 }
 
 static int
