@@ -264,6 +264,11 @@ do_test (void)
 
   struct conf conf;
   setup_conf (&conf);
+  /* Note: The CPU set size in bits can be less than the CPU count
+     (and the maximum test CPU) because the userspace interface rounds
+     up the bit count, and the rounded-up buffer size is passed into
+     the kernel.  The kernel does not know that some of the buffer are
+     actually padding, and writes data there.  */
   printf ("info: Detected CPU set size (in bits): %d\n", conf.set_size);
   printf ("info: Maximum test CPU: %d\n", conf.last_cpu);
   if (conf.set_size < 0 || conf.last_cpu < 0)
