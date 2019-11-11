@@ -122,7 +122,7 @@ extern struct tm *gmtime (const time_t *__timer) __THROW;
    of *TIMER in the local timezone.  */
 extern struct tm *localtime (const time_t *__timer) __THROW;
 
-#ifdef __USE_POSIX
+#if defined __USE_POSIX || __GLIBC_USE (ISOC2X)
 /* Return the `struct tm' representation of *TIMER in UTC,
    using *TP to store the result.  */
 extern struct tm *gmtime_r (const time_t *__restrict __timer,
@@ -132,7 +132,7 @@ extern struct tm *gmtime_r (const time_t *__restrict __timer,
    using *TP to store the result.  */
 extern struct tm *localtime_r (const time_t *__restrict __timer,
 			       struct tm *__restrict __tp) __THROW;
-#endif	/* POSIX */
+#endif	/* POSIX || C2X */
 
 /* Return a string of the form "Day Mon dd hh:mm:ss yyyy\n"
    that is the representation of TP in this format.  */
@@ -141,7 +141,7 @@ extern char *asctime (const struct tm *__tp) __THROW;
 /* Equivalent to `asctime (localtime (timer))'.  */
 extern char *ctime (const time_t *__timer) __THROW;
 
-#ifdef __USE_POSIX
+#if defined __USE_POSIX || __GLIBC_USE (ISOC2X)
 /* Reentrant versions of the above functions.  */
 
 /* Return in BUF a string of the form "Day Mon dd hh:mm:ss yyyy\n"
@@ -152,7 +152,7 @@ extern char *asctime_r (const struct tm *__restrict __tp,
 /* Equivalent to `asctime_r (localtime_r (timer, *TMP*), buf)'.  */
 extern char *ctime_r (const time_t *__restrict __timer,
 		      char *__restrict __buf) __THROW;
-#endif	/* POSIX */
+#endif	/* POSIX || C2X */
 
 
 /* Defined in localtime.c.  */
