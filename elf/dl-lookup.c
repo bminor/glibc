@@ -396,16 +396,15 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 				& (bitmask_word >> hashbit2) & 1))
 	    {
 	      Elf32_Word bucket;
-	      if (map->l_nbuckets > 1)
+	      if (powerof2 (map->l_nbuckets))
+		bucket = map->l_gnu_buckets[new_hash & (map->l_nbuckets - 1)];
+	      else
 		{
 		  uint32_t quotient
-		    = divopt_32 (new_hash, map->l_nbuckets_multiplier,
-				 map->l_nbuckets_multiplier_shift);
+		    = ((unsigned __int128) map->l_nbuckets_multiplier * ((uint64_t) new_hash + 1)) >> 64;
 		  uint32_t remainder = new_hash - map->l_nbuckets * quotient;
 		  bucket = map->l_gnu_buckets[remainder];
 		}
-	      else
-		bucket = map->l_gnu_buckets[0];
 
 	      if (bucket != 0)
 		{
@@ -942,11 +941,10 @@ _dl_setup_hash (struct link_map *map)
       /* Initialize MIPS xhash translation table.  */
       ELF_MACHINE_XHASH_SETUP (hash32, symbias, map);
 
-      if (map->l_nbuckets >= 2)
-	map->l_nbuckets_multiplier_shift
-	  = precompute_divopt_32 (map->l_nbuckets,
-				  &map->l_nbuckets_multiplier);
-
+      if (powerof2 (map->l_nbuckets))
+	map->l_nbuckets_multiplier = __builtin_ctz (map->l_nbuckets);
+      else
+	map->l_nbuckets_multiplier = ((unsigned __int128) 1 << 64) / map->l_nbuckets;
       return;
     }
 

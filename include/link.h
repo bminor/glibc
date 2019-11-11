@@ -153,8 +153,7 @@ struct link_map
 
     /* Symbol hash table.  */
     Elf_Symndx l_nbuckets;
-    uint32_t l_nbuckets_multiplier;
-    int l_nbuckets_multiplier_shift;
+    uint64_t l_nbuckets_multiplier;
     Elf32_Word l_gnu_bitmask_idxbits;
     Elf32_Word l_gnu_shift;
     const ElfW(Addr) *l_gnu_bitmask;
