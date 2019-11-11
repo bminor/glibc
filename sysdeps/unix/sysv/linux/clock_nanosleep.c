@@ -52,13 +52,10 @@ __clock_nanosleep_time64 (clockid_t clock_id, int flags, const struct __timespec
   r = INTERNAL_SYSCALL_CANCEL (clock_nanosleep_time64, err, clock_id,
                                flags, req, rem);
 
-  if (r == 0 || errno != ENOSYS)
-    {
-      return (INTERNAL_SYSCALL_ERROR_P (r, err)
-              ? INTERNAL_SYSCALL_ERRNO (r, err) : 0);
-    }
+  if (r != -ENOSYS)
+    return (INTERNAL_SYSCALL_ERROR_P (r, err)
+            ? INTERNAL_SYSCALL_ERRNO (r, err) : 0);
 # endif /* __NR_clock_nanosleep_time64 */
-  struct timespec ts32, tr32;
 
   if (! in_time_t_range (req->tv_sec))
     {
@@ -66,11 +63,12 @@ __clock_nanosleep_time64 (clockid_t clock_id, int flags, const struct __timespec
       return -1;
     }
 
-  ts32 = valid_timespec64_to_timespec (*req);
+  struct timespec tr32;
+  struct timespec ts32 = valid_timespec64_to_timespec (*req);
   r =  INTERNAL_SYSCALL_CANCEL (clock_nanosleep, err, clock_id, flags,
                                 &ts32, &tr32);
 
-  if (r == 0 && rem != NULL)
+  if (r == -EINTR && rem != NULL && (flags & TIMER_ABSTIME) == 0)
     *rem = valid_timespec_to_timespec64 (tr32);
 #endif /* __ASSUME_TIME64_SYSCALLS */
 
@@ -89,7 +87,7 @@ __clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req,
   treq64 = valid_timespec_to_timespec64 (*req);
   r = __clock_nanosleep_time64 (clock_id, flags, &treq64, &trem64);
 
-  if (r == 0 && rem != NULL)
+  if (r == EINTR && rem != NULL && (flags & TIMER_ABSTIME) == 0)
     *rem = valid_timespec64_to_timespec (trem64);
 
   return r;
