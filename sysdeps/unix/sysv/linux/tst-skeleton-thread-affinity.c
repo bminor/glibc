@@ -24,6 +24,7 @@
 #include <pthread.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <support/xthread.h>
 #include <sys/time.h>
 
 struct conf;
@@ -191,6 +192,7 @@ early_test (struct conf *conf)
       printf ("error: pthread_attr_init failed: %s\n", strerror (ret));
       return false;
     }
+  support_set_small_thread_stack_size (&attr);
 
   /* Spawn a thread pinned to each available CPU.  */
   for (int cpu = 0; cpu <= conf->last_cpu; ++cpu)
@@ -228,7 +230,8 @@ early_test (struct conf *conf)
     {
       if (!CPU_ISSET_S (cpu, CPU_ALLOC_SIZE (conf->set_size), initial_set))
 	continue;
-      ret = pthread_create (&other_threads[cpu].self, NULL,
+      ret = pthread_create (&other_threads[cpu].self,
+			    support_small_stack_thread_attribute (),
 			    thread_burn_any_cpu, other_threads + cpu);
       if (ret != 0)
 	{
