@@ -80,6 +80,7 @@ char *xasprintf (const char *format, ...)
   __attribute__ ((format (printf, 1, 2), malloc));
 char *xstrdup (const char *);
 char *xstrndup (const char *, size_t);
+char *xsetlocale (int category, const char *locale);
 
 __END_DECLS
 
