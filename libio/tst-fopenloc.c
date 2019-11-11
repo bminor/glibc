@@ -25,13 +25,10 @@
 #include <string.h>
 #include <wchar.h>
 #include <sys/resource.h>
+#include <support/support.h>
+#include <support/xstdio.h>
 
 static const char inputfile[] = "../iconvdata/testdata/ISO-8859-1";
-
-static int do_test(void);
-
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
 
 static int
 do_bz17916 (void)
@@ -66,14 +63,9 @@ do_test (void)
 
   mtrace ();
 
-  setlocale (LC_ALL, "de_DE.UTF-8");
+  xsetlocale (LC_ALL, "de_DE.UTF-8");
 
-  fp = fopen (inputfile, "r,ccs=ISO-8859-1");
-  if (fp == NULL)
-    {
-      printf ("cannot open \"%s\": %s\n", inputfile, strerror (errno));
-      exit (1);
-    }
+  fp = xfopen (inputfile, "r,ccs=ISO-8859-1");
 
   while (! feof_unlocked (fp))
     {
@@ -85,7 +77,9 @@ do_test (void)
       fputws (buf, stdout);
     }
 
-  fclose (fp);
+  xfclose (fp);
 
   return do_bz17916 ();
 }
+
+#include <support/test-driver.c>
