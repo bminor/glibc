@@ -16,9 +16,9 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <limits.h>
 #include <pthread.h>
 #include <support/xthread.h>
-#include <sys/param.h>
 
 void
 support_set_small_thread_stack_size (pthread_attr_t *attr)
@@ -26,5 +26,10 @@ support_set_small_thread_stack_size (pthread_attr_t *attr)
   /* Some architectures have too small values for PTHREAD_STACK_MIN
      which cannot be used for creating threads.  Ensure that the stack
      size is at least 256 KiB.  */
-  xpthread_attr_setstacksize (attr, MAX (256 * 1024, PTHREAD_STACK_MIN));
+  size_t stack_size = 256 * 1024;
+#ifdef PTHREAD_STACK_MIN
+  if (stack_size < PTHREAD_STACK_MIN)
+    stack_size = PTHREAD_STACK_MIN;
+#endif
+  xpthread_attr_setstacksize (attr, stack_size);
 }
