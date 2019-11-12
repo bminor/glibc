@@ -1,4 +1,4 @@
-/* CPU strand yielding for busy loops.  Linux/sparc64 version.
+/* CPU strand yielding for busy loops.  Linux/sparc version.
    Copyright (C) 2017-2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -18,6 +18,7 @@
 
 #include <sparc-ifunc.h>
 
+#ifdef __sparc_v9__
 static void
 __cpu_relax_generic (void)
 {
@@ -36,3 +37,4 @@ sparc_libc_ifunc (__cpu_relax,
 		  hwcap & HWCAP_SPARC_PAUSE
 		  ? __cpu_relax_pause
 		  : __cpu_relax_generic)
+#endif

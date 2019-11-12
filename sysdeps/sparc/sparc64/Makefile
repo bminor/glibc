@@ -29,15 +29,6 @@ ASFLAGS-.os += -Wa,-Av9d
 ASFLAGS-.op += -Wa,-Av9d
 ASFLAGS-.oS += -Wa,-Av9d
 
-# nscd uses atomic_spin_nop which in turn requires cpu_relax
-ifeq ($(subdir),nscd)
-routines += cpu_relax
-endif
-
-ifeq ($(subdir),nptl)
-libpthread-routines += cpu_relax
-endif
-
 ifeq ($(subdir),soft-fp)
 sparc64-quad-routines := qp_add qp_cmp qp_cmpe qp_div qp_dtoq qp_feq qp_fge \
 	qp_fgt qp_fle qp_flt qp_fne qp_itoq qp_mul qp_neg qp_qtod qp_qtoi   \
