@@ -420,7 +420,7 @@ struct rtld_global
     {
       size_t gen;
       struct link_map *map;
-    } slotinfo[0];
+    } slotinfo[];
   } *_dl_tls_dtv_slotinfo_list;
   /* Number of modules in the static TLS block.  */
   EXTERN size_t _dl_tls_static_nelem;

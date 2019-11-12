@@ -23,7 +23,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <sys/param.h>
-
+#include <array_length.h>
 
 #ifdef SHARED
  #error makefile bug, this file is for static only
@@ -32,17 +32,11 @@
 dtv_t _dl_static_dtv[2 + TLS_SLOTINFO_SURPLUS];
 
 
-static struct
-{
-  struct dtv_slotinfo_list si;
-  /* The dtv_slotinfo_list data structure does not include the actual
-     information since it is defined as an array of size zero.  We define
-     here the necessary entries.  Note that it is not important whether
-     there is padding or not since we will always access the information
-     through the 'si' element.  */
-  struct dtv_slotinfo info[2 + TLS_SLOTINFO_SURPLUS];
-} static_slotinfo;
-
+static struct dtv_slotinfo_list static_slotinfo =
+  {
+   /* Allocate an array of 2 + TLS_SLOTINFO_SURPLUS elements.  */
+   .slotinfo =  { [array_length (_dl_static_dtv) - 1] = { 0 } },
+  };
 
 /* Highest dtv index currently needed.  */
 size_t _dl_tls_max_dtv_idx;
@@ -72,16 +66,16 @@ TLS_INIT_HELPER
 static void
 init_slotinfo (void)
 {
-  /* Create the slotinfo list.  */
-  static_slotinfo.si.len = (((char *) (&static_slotinfo + 1)
-			     - (char *) &static_slotinfo.si.slotinfo[0])
-			    / sizeof static_slotinfo.si.slotinfo[0]);
-  // static_slotinfo.si.next = NULL;	already zero
+  /* Create the slotinfo list.  Note that the type of static_slotinfo
+     has effectively a zero-length array, so we cannot use the size of
+     static_slotinfo to determine the array length.  */
+  static_slotinfo.len = array_length (_dl_static_dtv);
+  /* static_slotinfo.next = NULL; -- Already zero.  */
 
   /* The slotinfo list.  Will be extended by the code doing dynamic
      linking.  */
   GL(dl_tls_max_dtv_idx) = 1;
-  GL(dl_tls_dtv_slotinfo_list) = &static_slotinfo.si;
+  GL(dl_tls_dtv_slotinfo_list) = &static_slotinfo;
 }
 
 static void
@@ -205,8 +199,8 @@ __libc_setup_tls (void)
   main_map->l_tls_modid = 1;
 
   init_slotinfo ();
-  // static_slotinfo.si.slotinfo[1].gen = 0; already zero
-  static_slotinfo.si.slotinfo[1].map = main_map;
+  /* static_slotinfo.slotinfo[1].gen = 0; -- Already zero.  */
+  static_slotinfo.slotinfo[1].map = main_map;
 
   memsz = roundup (memsz, align ?: 1);
 
