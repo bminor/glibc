@@ -162,12 +162,35 @@ maybe_setutent (void)
   return file_fd >= 0 || __libc_setutent ();
 }
 
+/* Reads the entry at file_offset, storing it in last_entry and
+   updating file_offset on success.  Returns -1 for a read error, 0
+   for EOF, and 1 for a successful read.  last_entry and file_offset
+   are only updated on a successful and complete read.  */
+static ssize_t
+read_last_entry (void)
+{
+  struct utmp buffer;
+  ssize_t nbytes = __pread64_nocancel (file_fd, &buffer, sizeof (buffer),
+				       file_offset);
+  if (nbytes < 0)
+    return -1;
+  else if (nbytes != sizeof (buffer))
+    /* Assume EOF.  */
+    return 0;
+  else
+    {
+      last_entry = buffer;
+      file_offset += sizeof (buffer);
+      return 1;
+    }
+}
+
 int
 __libc_getutent_r (struct utmp *buffer, struct utmp **result)
 {
-  ssize_t nbytes;
+  int saved_errno = errno;
 
-  if (!maybe_setutent () || file_offset == -1l)
+  if (!maybe_setutent ())
     {
       /* Not available.  */
       *result = NULL;
@@ -175,24 +198,21 @@ __libc_getutent_r (struct utmp *buffer, struct utmp **result)
     }
 
   if (try_file_lock (file_fd, F_RDLCK))
-    nbytes = 0;
-  else
-    {
-      /* Read the next entry.  */
-      nbytes = __read_nocancel (file_fd, &last_entry, sizeof (struct utmp));
-      file_unlock (file_fd);
-    }
+    return -1;
 
-  if (nbytes != sizeof (struct utmp))
+  ssize_t nbytes = read_last_entry ();
+  file_unlock (file_fd);
+
+  if (nbytes <= 0)		/* Read error or EOF.  */
     {
-      if (nbytes != 0)
-	file_offset = -1l;
+      if (nbytes == 0)
+	/* errno should be unchanged to indicate success.  A premature
+	   EOF is treated like an EOF (missing complete record at the
+	   end).  */
+	__set_errno (saved_errno);
       *result = NULL;
       return -1;
     }
-
-  /* Update position pointer.  */
-  file_offset += sizeof (struct utmp);
 
   memcpy (buffer, &last_entry, sizeof (struct utmp));
   *result = buffer;
@@ -209,15 +229,15 @@ internal_getut_nolock (const struct utmp *id)
 {
   while (1)
     {
-      /* Read the next entry.  */
-      if (__read_nocancel (file_fd, &last_entry, sizeof (struct utmp))
-	  != sizeof (struct utmp))
+      ssize_t nbytes = read_last_entry ();
+      if (nbytes < 0)
+	return -1;
+      if (nbytes == 0)
 	{
+	  /* End of file reached.  */
 	  __set_errno (ESRCH);
-	  file_offset = -1l;
 	  return -1;
 	}
-      file_offset += sizeof (struct utmp);
 
       if (matches_last_entry (id))
 	break;
@@ -249,7 +269,7 @@ int
 __libc_getutid_r (const struct utmp *id, struct utmp *buffer,
 		  struct utmp **result)
 {
-  if (!maybe_setutent () || file_offset == -1l)
+  if (!maybe_setutent ())
     {
       *result = NULL;
       return -1;
@@ -276,7 +296,7 @@ int
 __libc_getutline_r (const struct utmp *line, struct utmp *buffer,
 		    struct utmp **result)
 {
-  if (!maybe_setutent () || file_offset == -1l)
+  if (!maybe_setutent ())
     {
       *result = NULL;
       return -1;
@@ -290,16 +310,21 @@ __libc_getutline_r (const struct utmp *line, struct utmp *buffer,
 
   while (1)
     {
-      /* Read the next entry.  */
-      if (__read_nocancel (file_fd, &last_entry, sizeof (struct utmp))
-	  != sizeof (struct utmp))
+      ssize_t nbytes = read_last_entry ();
+      if (nbytes < 0)
 	{
-	  __set_errno (ESRCH);
-	  file_offset = -1l;
+	  file_unlock (file_fd);
 	  *result = NULL;
-	  goto unlock_return;
+	  return -1;
 	}
-      file_offset += sizeof (struct utmp);
+      if (nbytes == 0)
+	{
+	  /* End of file reached.  */
+	  file_unlock (file_fd);
+	  __set_errno (ESRCH);
+	  *result = NULL;
+	  return -1;
+	}
 
       /* Stop if we found a user or login entry.  */
       if ((last_entry.ut_type == USER_PROCESS
@@ -309,20 +334,18 @@ __libc_getutline_r (const struct utmp *line, struct utmp *buffer,
 	break;
     }
 
+  file_unlock (file_fd);
   memcpy (buffer, &last_entry, sizeof (struct utmp));
   *result = buffer;
 
-unlock_return:
-  file_unlock (file_fd);
-
-  return ((*result == NULL) ? -1 : 0);
+  return 0;
 }
 
 
 struct utmp *
 __libc_pututline (const struct utmp *data)
 {
-  if (!maybe_setutent () || file_offset == -1l)
+  if (!maybe_setutent ())
     return NULL;
 
   struct utmp *pbuf;
@@ -337,8 +360,7 @@ __libc_pututline (const struct utmp *data)
       if (new_fd == -1)
 	return NULL;
 
-      if (__lseek64 (new_fd, __lseek64 (file_fd, 0, SEEK_CUR), SEEK_SET) == -1
-	  || __dup2 (new_fd, file_fd) < 0)
+      if (__dup2 (new_fd, file_fd) < 0)
 	{
 	  __close_nocancel_nostatus (new_fd);
 	  return NULL;
@@ -355,69 +377,70 @@ __libc_pututline (const struct utmp *data)
   bool found = false;
   if (matches_last_entry (data))
     {
-      if (__lseek64 (file_fd, file_offset, SEEK_SET) < 0)
+      /* Read back the entry under the write lock.  */
+      file_offset -= sizeof (last_entry);
+      ssize_t nbytes = read_last_entry ();
+      if (nbytes < 0)
 	{
 	  file_unlock (file_fd);
 	  return NULL;
 	}
-      if (__read_nocancel (file_fd, &last_entry, sizeof (last_entry))
-	  != sizeof (last_entry))
-	{
-	  if (__lseek64 (file_fd, file_offset, SEEK_SET) < 0)
-	    {
-	      file_unlock (file_fd);
-	      return NULL;
-	    }
-	  found = false;
-	}
+
+      if (nbytes == 0)
+	/* End of file reached.  */
+	found = false;
       else
 	found = matches_last_entry (data);
     }
 
   if (!found)
+    /* Search forward for the entry.  */
     found = internal_getut_nolock (data) >= 0;
 
+  off64_t write_offset;
   if (!found)
     {
       /* We append the next entry.  */
-      file_offset = __lseek64 (file_fd, 0, SEEK_END);
-      if (file_offset % sizeof (struct utmp) != 0)
-	{
-	  file_offset -= file_offset % sizeof (struct utmp);
-	  __ftruncate64 (file_fd, file_offset);
+      write_offset = __lseek64 (file_fd, 0, SEEK_END);
 
-	  if (__lseek64 (file_fd, 0, SEEK_END) < 0)
-	    {
-	      pbuf = NULL;
-	      goto unlock_return;
-	    }
-	}
+      /* Round down to the next multiple of the entry size.  This
+	 ensures any partially-written record is overwritten by the
+	 new record.  */
+      write_offset = (write_offset / sizeof (struct utmp)
+		      * sizeof (struct utmp));
     }
   else
-    {
-      /* We replace the just read entry.  */
-      file_offset -= sizeof (struct utmp);
-      __lseek64 (file_fd, file_offset, SEEK_SET);
-    }
+    /* Overwrite last_entry.  */
+    write_offset = file_offset - sizeof (struct utmp);
 
   /* Write the new data.  */
-  if (__write_nocancel (file_fd, data, sizeof (struct utmp))
-      != sizeof (struct utmp))
+  ssize_t nbytes;
+  if (__lseek64 (file_fd, write_offset, SEEK_SET) < 0
+      || (nbytes = __write_nocancel (file_fd, data, sizeof (struct utmp))) < 0)
+    {
+      /* There is no need to recover the file position because all
+	 reads use pread64, and any future write is preceded by
+	 another seek.  */
+      file_unlock (file_fd);
+      return NULL;
+    }
+
+  if (nbytes != sizeof (struct utmp))
     {
       /* If we appended a new record this is only partially written.
 	 Remove it.  */
       if (!found)
-	(void) __ftruncate64 (file_fd, file_offset);
-      pbuf = NULL;
-    }
-  else
-    {
-      file_offset += sizeof (struct utmp);
-      pbuf = (struct utmp *) data;
+	(void) __ftruncate64 (file_fd, write_offset);
+      file_unlock (file_fd);
+      /* Assume that the write failure was due to missing disk
+	 space.  */
+      __set_errno (ENOSPC);
+      return NULL;
     }
 
- unlock_return:
   file_unlock (file_fd);
+  file_offset = write_offset + sizeof (struct utmp);
+  pbuf = (struct utmp *) data;
 
   return pbuf;
 }
