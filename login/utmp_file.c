@@ -43,6 +43,25 @@ static off64_t file_offset;
 /* Cache for the last read entry.  */
 static struct utmp last_entry;
 
+/* Returns true if *ENTRY matches last_entry, based on
+   data->ut_type.  */
+static bool
+matches_last_entry (const struct utmp *data)
+{
+  if (file_offset <= 0)
+    /* Nothing has been read.  last_entry is stale and cannot match.  */
+    return false;
+
+  if (data->ut_type == RUN_LVL
+      || data->ut_type == BOOT_TIME
+      || data->ut_type == OLD_TIME
+      || data->ut_type == NEW_TIME)
+    /* For some entry types, only a type match is required.  */
+    return data->ut_type == last_entry.ut_type;
+  else
+    /* For the process-related entries, a full match is needed.  */
+    return __utmp_equal (&last_entry, data);
+}
 
 /* Locking timeout.  */
 #ifndef TIMEOUT
@@ -133,9 +152,6 @@ __libc_setutent (void)
   __lseek64 (file_fd, 0, SEEK_SET);
   file_offset = 0;
 
-  /* Make sure the entry won't match.  */
-  last_entry.ut_type = -1;
-
   return 1;
 }
 
@@ -191,48 +207,20 @@ __libc_getutent_r (struct utmp *buffer, struct utmp **result)
 static int
 internal_getut_nolock (const struct utmp *id)
 {
-  if (id->ut_type == RUN_LVL || id->ut_type == BOOT_TIME
-      || id->ut_type == OLD_TIME || id->ut_type == NEW_TIME)
+  while (1)
     {
-      /* Search for next entry with type RUN_LVL, BOOT_TIME,
-	 OLD_TIME, or NEW_TIME.  */
-
-      while (1)
+      /* Read the next entry.  */
+      if (__read_nocancel (file_fd, &last_entry, sizeof (struct utmp))
+	  != sizeof (struct utmp))
 	{
-	  /* Read the next entry.  */
-	  if (__read_nocancel (file_fd, &last_entry, sizeof (struct utmp))
-	      != sizeof (struct utmp))
-	    {
-	      __set_errno (ESRCH);
-	      file_offset = -1l;
-	      return -1;
-	    }
-	  file_offset += sizeof (struct utmp);
-
-	  if (id->ut_type == last_entry.ut_type)
-	    break;
+	  __set_errno (ESRCH);
+	  file_offset = -1l;
+	  return -1;
 	}
-    }
-  else
-    {
-      /* Search for the next entry with the specified ID and with type
-	 INIT_PROCESS, LOGIN_PROCESS, USER_PROCESS, or DEAD_PROCESS.  */
+      file_offset += sizeof (struct utmp);
 
-      while (1)
-	{
-	  /* Read the next entry.  */
-	  if (__read_nocancel (file_fd, &last_entry, sizeof (struct utmp))
-	      != sizeof (struct utmp))
-	    {
-	      __set_errno (ESRCH);
-	      file_offset = -1l;
-	      return -1;
-	    }
-	  file_offset += sizeof (struct utmp);
-
-	  if (__utmp_equal (&last_entry, id))
-	    break;
-	}
+      if (matches_last_entry (id))
+	break;
     }
 
   return 0;
@@ -365,13 +353,7 @@ __libc_pututline (const struct utmp *data)
 
   /* Find the correct place to insert the data.  */
   bool found = false;
-  if (file_offset > 0
-      && ((last_entry.ut_type == data->ut_type
-	   && (last_entry.ut_type == RUN_LVL
-	       || last_entry.ut_type == BOOT_TIME
-	       || last_entry.ut_type == OLD_TIME
-	       || last_entry.ut_type == NEW_TIME))
-	  || __utmp_equal (&last_entry, data)))
+  if (matches_last_entry (data))
     {
       if (__lseek64 (file_fd, file_offset, SEEK_SET) < 0)
 	{
@@ -389,7 +371,7 @@ __libc_pututline (const struct utmp *data)
 	  found = false;
 	}
       else
-	found = __utmp_equal (&last_entry, data);
+	found = matches_last_entry (data);
     }
 
   if (!found)
