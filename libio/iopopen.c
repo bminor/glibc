@@ -281,7 +281,11 @@ _IO_new_proc_close (FILE *fp)
      described in POSIX.2, such implementations are not conforming." */
   do
     {
-      wait_pid = __waitpid_nocancel (((_IO_proc_file *) fp)->pid, &wstatus, 0);
+      int state;
+      __libc_ptf_call (__pthread_setcancelstate,
+		       (PTHREAD_CANCEL_DISABLE, &state), 0);
+      wait_pid = __waitpid (((_IO_proc_file *) fp)->pid, &wstatus, 0);
+      __libc_ptf_call (__pthread_setcancelstate, (state, NULL), 0);
     }
   while (wait_pid == -1 && errno == EINTR);
   if (wait_pid == -1)

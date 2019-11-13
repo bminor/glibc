@@ -81,7 +81,11 @@ cancel_handler (void *arg)
 
   __kill_noerrno (args->pid, SIGKILL);
 
-  TEMP_FAILURE_RETRY (__waitpid_nocancel (args->pid, NULL, 0));
+  int state;
+  __libc_ptf_call (__pthread_setcancelstate,
+                   (PTHREAD_CANCEL_DISABLE, &state), 0);
+  TEMP_FAILURE_RETRY (__waitpid (args->pid, NULL, 0));
+  __libc_ptf_call (__pthread_setcancelstate, (state, NULL), 0);
 
   DO_LOCK ();
   if (SUB_REF () == 0)

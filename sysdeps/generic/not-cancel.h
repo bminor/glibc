@@ -47,8 +47,6 @@
   __write (fd, buf, n)
 #define __writev_nocancel_nostatus(fd, iov, n) \
   (void) __writev (fd, iov, n)
-# define __waitpid_nocancel(pid, stat_loc, options) \
-  __waitpid (pid, stat_loc, options)
 #define __fcntl64_nocancel(fd, cmd, ...) \
   __fcntl64 (fd, cmd, __VA_ARGS__)
 
