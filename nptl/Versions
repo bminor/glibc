@@ -99,7 +99,7 @@ libpthread {
     close; __close; fcntl; __fcntl; read; __read; write; __write; accept;
     connect; __connect; recv; recvfrom; recvmsg; send; __send; sendmsg; sendto;
     fsync; lseek; __lseek; msync; open; __open; pause; tcdrain;
-    system; wait; __wait; waitpid;
+    system; waitpid;
 
     # Hidden entry point (through macros).
     _pthread_cleanup_push; _pthread_cleanup_pop;

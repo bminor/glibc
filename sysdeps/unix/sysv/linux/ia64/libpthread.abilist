@@ -46,7 +46,6 @@ GLIBC_2.2 __read F
 GLIBC_2.2 __res_state F
 GLIBC_2.2 __send F
 GLIBC_2.2 __sigaction F
-GLIBC_2.2 __wait F
 GLIBC_2.2 __write F
 GLIBC_2.2 _pthread_cleanup_pop F
 GLIBC_2.2 _pthread_cleanup_pop_restore F
@@ -180,7 +179,6 @@ GLIBC_2.2 siglongjmp F
 GLIBC_2.2 sigwait F
 GLIBC_2.2 system F
 GLIBC_2.2 tcdrain F
-GLIBC_2.2 wait F
 GLIBC_2.2 waitpid F
 GLIBC_2.2 write F
 GLIBC_2.2.3 pthread_getattr_np F

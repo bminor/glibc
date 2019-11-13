@@ -44,7 +44,6 @@ GLIBC_2.18 __read F
 GLIBC_2.18 __res_state F
 GLIBC_2.18 __send F
 GLIBC_2.18 __sigaction F
-GLIBC_2.18 __wait F
 GLIBC_2.18 __write F
 GLIBC_2.18 _pthread_cleanup_pop F
 GLIBC_2.18 _pthread_cleanup_pop_restore F
@@ -205,7 +204,6 @@ GLIBC_2.18 siglongjmp F
 GLIBC_2.18 sigwait F
 GLIBC_2.18 system F
 GLIBC_2.18 tcdrain F
-GLIBC_2.18 wait F
 GLIBC_2.18 waitpid F
 GLIBC_2.18 write F
 GLIBC_2.28 call_once F

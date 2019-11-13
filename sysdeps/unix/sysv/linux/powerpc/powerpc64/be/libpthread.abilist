@@ -67,7 +67,6 @@ GLIBC_2.3 __read F
 GLIBC_2.3 __res_state F
 GLIBC_2.3 __send F
 GLIBC_2.3 __sigaction F
-GLIBC_2.3 __wait F
 GLIBC_2.3 __write F
 GLIBC_2.3 _pthread_cleanup_pop F
 GLIBC_2.3 _pthread_cleanup_pop_restore F
@@ -201,7 +200,6 @@ GLIBC_2.3 siglongjmp F
 GLIBC_2.3 sigwait F
 GLIBC_2.3 system F
 GLIBC_2.3 tcdrain F
-GLIBC_2.3 wait F
 GLIBC_2.3 waitpid F
 GLIBC_2.3 write F
 GLIBC_2.3.2 pthread_cond_broadcast F
