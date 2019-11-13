@@ -208,4 +208,10 @@
 # define __ASSUME_TIME64_SYSCALLS 1
 #endif
 
+/* Linux waitid prior kernel 5.4 does not support waiting for the current
+   process group.  */
+#if __LINUX_KERNEL_VERSION >= 0x050400
+# define __ASSUME_WAITID_PID0_P_PGID
+#endif
+
 #endif /* kernel-features.h */
