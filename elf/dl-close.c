@@ -168,14 +168,6 @@ _dl_close_worker (struct link_map *map, bool force)
   char done[nloaded];
   struct link_map *maps[nloaded];
 
-  /* Clear DF_1_NODELETE to force object deletion.  We don't need to touch
-     l_tls_dtor_count because forced object deletion only happens when an
-     error occurs during object load.  Destructor registration for TLS
-     non-POD objects should not have happened till then for this
-     object.  */
-  if (force)
-    map->l_flags_1 &= ~DF_1_NODELETE;
-
   /* Run over the list and assign indexes to the link maps and enter
      them into the MAPS array.  */
   int idx = 0;
@@ -205,7 +197,7 @@ _dl_close_worker (struct link_map *map, bool force)
       /* Check whether this object is still used.  */
       if (l->l_type == lt_loaded
 	  && l->l_direct_opencount == 0
-	  && (l->l_flags_1 & DF_1_NODELETE) == 0
+	  && l->l_nodelete != link_map_nodelete_active
 	  /* See CONCURRENCY NOTES in cxa_thread_atexit_impl.c to know why
 	     acquire is sufficient and correct.  */
 	  && atomic_load_acquire (&l->l_tls_dtor_count) == 0
@@ -288,7 +280,7 @@ _dl_close_worker (struct link_map *map, bool force)
       if (!used[i])
 	{
 	  assert (imap->l_type == lt_loaded
-		  && (imap->l_flags_1 & DF_1_NODELETE) == 0);
+		  && imap->l_nodelete != link_map_nodelete_active);
 
 	  /* Call its termination function.  Do not do it for
 	     half-cooked objects.  Temporarily disable exception
@@ -838,7 +830,7 @@ _dl_close (void *_map)
      before we took the lock. There is no way to detect this (see below)
      so we proceed assuming this isn't the case.  First see whether we
      can remove the object at all.  */
-  if (__glibc_unlikely (map->l_flags_1 & DF_1_NODELETE))
+  if (__glibc_unlikely (map->l_nodelete == link_map_nodelete_active))
     {
       /* Nope.  Do nothing.  */
       __rtld_lock_unlock_recursive (GL(dl_load_lock));

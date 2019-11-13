@@ -79,6 +79,21 @@ struct r_search_path_struct
     int malloced;
   };
 
+/* Type used by the l_nodelete member.  */
+enum link_map_nodelete
+{
+ /* This link map can be deallocated.  */
+ link_map_nodelete_inactive = 0, /* Zero-initialized in _dl_new_object.  */
+
+ /* This link map cannot be deallocated.  */
+ link_map_nodelete_active,
+
+ /* This link map cannot be deallocated after dlopen has succeded.
+    dlopen turns this into link_map_nodelete_active.  dlclose treats
+    this intermediate state as link_map_nodelete_active.  */
+ link_map_nodelete_pending,
+};
+
 
 /* Structure describing a loaded shared object.  The `l_next' and `l_prev'
    members form a chain of all the shared objects loaded at startup.
@@ -202,6 +217,11 @@ struct link_map
     unsigned int l_free_initfini:1; /* Nonzero if l_initfini can be
 				       freed, ie. not allocated with
 				       the dummy malloc in ld.so.  */
+
+    /* Actually of type enum link_map_nodelete.  Separate byte due to
+       a read in add_dependency in elf/dl-lookup.c outside the loader
+       lock.  Only valid for l_type == lt_loaded.  */
+    unsigned char l_nodelete;
 
 #include <link_map.h>
 

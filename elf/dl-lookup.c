@@ -192,9 +192,10 @@ enter_unique_sym (struct unique_sym *table, size_t size,
    Return the matching symbol in RESULT.  */
 static void
 do_lookup_unique (const char *undef_name, uint_fast32_t new_hash,
-		  const struct link_map *map, struct sym_val *result,
+		  struct link_map *map, struct sym_val *result,
 		  int type_class, const ElfW(Sym) *sym, const char *strtab,
-		  const ElfW(Sym) *ref, const struct link_map *undef_map)
+		  const ElfW(Sym) *ref, const struct link_map *undef_map,
+		  int flags)
 {
   /* We have to determine whether we already found a symbol with this
      name before.  If not then we have to add it to the search table.
@@ -222,7 +223,7 @@ do_lookup_unique (const char *undef_name, uint_fast32_t new_hash,
 		     copy from the copy addressed through the
 		     relocation.  */
 		  result->s = sym;
-		  result->m = (struct link_map *) map;
+		  result->m = map;
 		}
 	      else
 		{
@@ -311,9 +312,19 @@ do_lookup_unique (const char *undef_name, uint_fast32_t new_hash,
                         new_hash, strtab + sym->st_name, sym, map);
 
       if (map->l_type == lt_loaded)
-	/* Make sure we don't unload this object by
-	   setting the appropriate flag.  */
-	((struct link_map *) map)->l_flags_1 |= DF_1_NODELETE;
+	{
+	  /* Make sure we don't unload this object by
+	     setting the appropriate flag.  */
+	  if (__glibc_unlikely (GLRO (dl_debug_mask) & DL_DEBUG_BINDINGS)
+	      && map->l_nodelete == link_map_nodelete_inactive)
+	    _dl_debug_printf ("\
+marking %s [%lu] as NODELETE due to unique symbol\n",
+			      map->l_name, map->l_ns);
+	  if (flags & DL_LOOKUP_FOR_RELOCATE)
+	    map->l_nodelete = link_map_nodelete_pending;
+	  else
+	    map->l_nodelete = link_map_nodelete_active;
+	}
     }
   ++tab->n_elements;
 
@@ -525,8 +536,9 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 	      return 1;
 
 	    case STB_GNU_UNIQUE:;
-	      do_lookup_unique (undef_name, new_hash, map, result, type_class,
-				sym, strtab, ref, undef_map);
+	      do_lookup_unique (undef_name, new_hash, (struct link_map *) map,
+				result, type_class, sym, strtab, ref,
+				undef_map, flags);
 	      return 1;
 
 	    default:
@@ -568,9 +580,13 @@ add_dependency (struct link_map *undef_map, struct link_map *map, int flags)
   if (undef_map == map)
     return 0;
 
-  /* Avoid references to objects which cannot be unloaded anyway.  */
+  /* Avoid references to objects which cannot be unloaded anyway.  We
+     do not need to record dependencies if this object goes away
+     during dlopen failure, either.  IFUNC resolvers with relocation
+     dependencies may pick an dependency which can be dlclose'd, but
+     such IFUNC resolvers are undefined anyway.  */
   assert (map->l_type == lt_loaded);
-  if ((map->l_flags_1 & DF_1_NODELETE) != 0)
+  if (map->l_nodelete != link_map_nodelete_inactive)
     return 0;
 
   struct link_map_reldeps *l_reldeps
@@ -678,16 +694,33 @@ add_dependency (struct link_map *undef_map, struct link_map *map, int flags)
 
       /* Redo the NODELETE check, as when dl_load_lock wasn't held
 	 yet this could have changed.  */
-      if ((map->l_flags_1 & DF_1_NODELETE) != 0)
+      if (map->l_nodelete != link_map_nodelete_inactive)
 	goto out;
 
       /* If the object with the undefined reference cannot be removed ever
 	 just make sure the same is true for the object which contains the
 	 definition.  */
       if (undef_map->l_type != lt_loaded
-	  || (undef_map->l_flags_1 & DF_1_NODELETE) != 0)
+	  || (undef_map->l_nodelete != link_map_nodelete_inactive))
 	{
-	  map->l_flags_1 |= DF_1_NODELETE;
+	  if (__glibc_unlikely (GLRO (dl_debug_mask) & DL_DEBUG_BINDINGS)
+	      && map->l_nodelete == link_map_nodelete_inactive)
+	    {
+	      if (undef_map->l_name[0] == '\0')
+		_dl_debug_printf ("\
+marking %s [%lu] as NODELETE due to reference to main program\n",
+				  map->l_name, map->l_ns);
+	      else
+		_dl_debug_printf ("\
+marking %s [%lu] as NODELETE due to reference to %s [%lu]\n",
+				  map->l_name, map->l_ns,
+				  undef_map->l_name, undef_map->l_ns);
+	    }
+
+	  if (flags & DL_LOOKUP_FOR_RELOCATE)
+	    map->l_nodelete = link_map_nodelete_pending;
+	  else
+	    map->l_nodelete = link_map_nodelete_active;
 	  goto out;
 	}
 
@@ -712,7 +745,18 @@ add_dependency (struct link_map *undef_map, struct link_map *map, int flags)
 		 no fatal problem.  We simply make sure the referenced object
 		 cannot be unloaded.  This is semantically the correct
 		 behavior.  */
-	      map->l_flags_1 |= DF_1_NODELETE;
+	      if (__glibc_unlikely (GLRO (dl_debug_mask) & DL_DEBUG_BINDINGS)
+		  && map->l_nodelete == link_map_nodelete_inactive)
+		_dl_debug_printf ("\
+marking %s [%lu] as NODELETE due to memory allocation failure\n",
+				  map->l_name, map->l_ns);
+	      if (flags & DL_LOOKUP_FOR_RELOCATE)
+		/* In case of non-lazy binding, we could actually
+		   report the memory allocation error, but for now, we
+		   use the conservative approximation as well. */
+		map->l_nodelete = link_map_nodelete_pending;
+	      else
+		map->l_nodelete = link_map_nodelete_active;
 	      goto out;
 	    }
 	  else

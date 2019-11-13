@@ -424,6 +424,40 @@ TLS generation counter wrapped!  Please report this."));
     }
 }
 
+/* Mark the objects as NODELETE if required.  This is delayed until
+   after dlopen failure is not possible, so that _dl_close can clean
+   up objects if necessary.  */
+static void
+activate_nodelete (struct link_map *new, int mode)
+{
+  if (mode & RTLD_NODELETE || new->l_nodelete == link_map_nodelete_pending)
+    {
+      if (__glibc_unlikely (GLRO (dl_debug_mask) & DL_DEBUG_FILES))
+	_dl_debug_printf ("activating NODELETE for %s [%lu]\n",
+			  new->l_name, new->l_ns);
+      new->l_nodelete = link_map_nodelete_active;
+    }
+
+  for (unsigned int i = 0; i < new->l_searchlist.r_nlist; ++i)
+    {
+      struct link_map *imap = new->l_searchlist.r_list[i];
+      if (imap->l_nodelete == link_map_nodelete_pending)
+	{
+	  if (__glibc_unlikely (GLRO (dl_debug_mask) & DL_DEBUG_FILES))
+	    _dl_debug_printf ("activating NODELETE for %s [%lu]\n",
+			      imap->l_name, imap->l_ns);
+
+	  /* Only new objects should have set
+	     link_map_nodelete_pending.  Existing objects should not
+	     have gained any new dependencies and therefore cannot
+	     reach NODELETE status.  */
+	  assert (!imap->l_init_called || imap->l_type != lt_loaded);
+
+	  imap->l_nodelete = link_map_nodelete_active;
+	}
+     }
+}
+
 /* struct dl_init_args and call_dl_init are used to call _dl_init with
    exception handling disabled.  */
 struct dl_init_args
@@ -493,12 +527,6 @@ dl_open_worker (void *a)
       return;
     }
 
-  /* Mark the object as not deletable if the RTLD_NODELETE flags was passed.
-     Do this early so that we don't skip marking the object if it was
-     already loaded.  */
-  if (__glibc_unlikely (mode & RTLD_NODELETE))
-    new->l_flags_1 |= DF_1_NODELETE;
-
   if (__glibc_unlikely (mode & __RTLD_SPROF))
     /* This happens only if we load a DSO for 'sprof'.  */
     return;
@@ -514,18 +542,36 @@ dl_open_worker (void *a)
 	_dl_debug_printf ("opening file=%s [%lu]; direct_opencount=%u\n\n",
 			  new->l_name, new->l_ns, new->l_direct_opencount);
 
-      /* If the user requested the object to be in the global namespace
-	 but it is not so far, add it now.  */
+      /* If the user requested the object to be in the global
+	 namespace but it is not so far, prepare to add it now.  This
+	 can raise an exception to do a malloc failure.  */
       if ((mode & RTLD_GLOBAL) && new->l_global == 0)
+	add_to_global_resize (new);
+
+      /* Mark the object as not deletable if the RTLD_NODELETE flags
+	 was passed.  */
+      if (__glibc_unlikely (mode & RTLD_NODELETE))
 	{
-	  add_to_global_resize (new);
-	  add_to_global_update (new);
+	  if (__glibc_unlikely (GLRO (dl_debug_mask) & DL_DEBUG_FILES)
+	      && new->l_nodelete == link_map_nodelete_inactive)
+	    _dl_debug_printf ("marking %s [%lu] as NODELETE\n",
+			      new->l_name, new->l_ns);
+	  new->l_nodelete = link_map_nodelete_active;
 	}
+
+      /* Finalize the addition to the global scope.  */
+      if ((mode & RTLD_GLOBAL) && new->l_global == 0)
+	add_to_global_update (new);
 
       assert (_dl_debug_initialize (0, args->nsid)->r_state == RT_CONSISTENT);
 
       return;
     }
+
+  /* Schedule NODELETE marking for the directly loaded object if
+     requested.  */
+  if (__glibc_unlikely (mode & RTLD_NODELETE))
+    new->l_nodelete = link_map_nodelete_pending;
 
   /* Load that object's dependencies.  */
   _dl_map_object_deps (new, NULL, 0, 0,
@@ -601,6 +647,14 @@ dl_open_worker (void *a)
 
   int relocation_in_progress = 0;
 
+  /* Perform relocation.  This can trigger lazy binding in IFUNC
+     resolvers.  For NODELETE mappings, these dependencies are not
+     recorded because the flag has not been applied to the newly
+     loaded objects.  This means that upon dlopen failure, these
+     NODELETE objects can be unloaded despite existing references to
+     them.  However, such relocation dependencies in IFUNC resolvers
+     are undefined anyway, so this is not a problem.  */
+
   for (unsigned int i = nmaps; i-- > 0; )
     {
       l = maps[i];
@@ -630,7 +684,7 @@ dl_open_worker (void *a)
 	      _dl_start_profile ();
 
 	      /* Prevent unloading the object.  */
-	      GL(dl_profile_map)->l_flags_1 |= DF_1_NODELETE;
+	      GL(dl_profile_map)->l_nodelete = link_map_nodelete_active;
 	    }
 	}
       else
@@ -660,6 +714,8 @@ dl_open_worker (void *a)
   /* Demarcation point: After this, no recoverable errors are allowed.
      All memory allocations for new objects must have happened
      before.  */
+
+  activate_nodelete (new, mode);
 
   /* Second stage after resize_scopes: Actually perform the scope
      update.  After this, dlsym and lazy binding can bind to new
@@ -820,6 +876,10 @@ no more namespaces available for dlmopen()"));
 	    GL(dl_tls_dtv_gaps) = true;
 
 	  _dl_close_worker (args.map, true);
+
+	  /* All link_map_nodelete_pending objects should have been
+	     deleted at this point, which is why it is not necessary
+	     to reset the flag here.  */
 	}
 
       assert (_dl_debug_initialize (0, args.nsid)->r_state == RT_CONSISTENT);
