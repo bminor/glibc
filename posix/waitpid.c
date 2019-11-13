@@ -16,8 +16,8 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
+#include <stdlib.h>
 #include <sys/wait.h>
-#include <sys/types.h>
 
 
 /* Wait for a child matching PID to die.
@@ -35,16 +35,7 @@
 pid_t
 __waitpid (pid_t pid, int *stat_loc, int options)
 {
-  if ((options & ~(WNOHANG|WUNTRACED)) != 0)
-    {
-      __set_errno (EINVAL);
-      return (pid_t) -1;
-    }
-
-  __set_errno (ENOSYS);
-  return (pid_t) -1;
+  return __wait4 (pid, stat_loc, options, NULL);
 }
 libc_hidden_def (__waitpid)
 weak_alias (__waitpid, waitpid)
-
-stub_warning (waitpid)

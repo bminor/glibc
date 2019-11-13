@@ -27,4 +27,5 @@ __wait4 (__pid_t pid, int *stat_loc, int options, struct rusage *usage)
 }
 stub_warning (wait4)
 
+libc_hidden_def (__wait4)
 weak_alias (__wait4, wait4)

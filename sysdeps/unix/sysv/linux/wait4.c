@@ -81,4 +81,5 @@ __wait4 (pid_t pid, int *stat_loc, int options, struct rusage *usage)
 # error "The kernel ABI does not provide a way to implement wait4"
 #endif
 }
+libc_hidden_def (__wait4);
 weak_alias (__wait4, wait4)

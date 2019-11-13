@@ -15,5 +15,6 @@ extern __pid_t __wait3 (int *__stat_loc,
 extern __pid_t __wait4 (__pid_t __pid, int *__stat_loc,
 			int __options, struct rusage *__usage)
 			attribute_hidden;
+libc_hidden_proto (__wait4);
 #endif
 #endif
