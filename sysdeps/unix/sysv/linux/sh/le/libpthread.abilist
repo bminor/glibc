@@ -179,7 +179,6 @@ GLIBC_2.2 siglongjmp F
 GLIBC_2.2 sigwait F
 GLIBC_2.2 system F
 GLIBC_2.2 tcdrain F
-GLIBC_2.2 waitpid F
 GLIBC_2.2 write F
 GLIBC_2.2.3 pthread_getattr_np F
 GLIBC_2.2.6 __libpthread_version_placeholder F

@@ -199,7 +199,6 @@ GLIBC_2.27 sendto F
 GLIBC_2.27 sigaction F
 GLIBC_2.27 sigwait F
 GLIBC_2.27 tcdrain F
-GLIBC_2.27 waitpid F
 GLIBC_2.27 write F
 GLIBC_2.28 call_once F
 GLIBC_2.28 cnd_broadcast F

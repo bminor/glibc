@@ -204,7 +204,6 @@ GLIBC_2.18 siglongjmp F
 GLIBC_2.18 sigwait F
 GLIBC_2.18 system F
 GLIBC_2.18 tcdrain F
-GLIBC_2.18 waitpid F
 GLIBC_2.18 write F
 GLIBC_2.28 call_once F
 GLIBC_2.28 cnd_broadcast F

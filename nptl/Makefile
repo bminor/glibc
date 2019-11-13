@@ -47,7 +47,7 @@ pthread-compat-wrappers = \
 		      sendto fsync lseek lseek64 \
 		      msync open open64 pause \
 		      pread pread64 pwrite pwrite64 \
-		      tcdrain waitpid msgrcv msgsnd \
+		      tcdrain msgrcv msgsnd \
 		      sigwait sigsuspend \
 		      recvmsg sendmsg
 
@@ -206,7 +206,6 @@ CFLAGS-pread.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pread64.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pwrite.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pwrite64.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-waitpid.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sigwait.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-msgrcv.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-msgsnd.c += -fexceptions -fasynchronous-unwind-tables

@@ -231,5 +231,4 @@ GLIBC_2.4 siglongjmp F
 GLIBC_2.4 sigwait F
 GLIBC_2.4 system F
 GLIBC_2.4 tcdrain F
-GLIBC_2.4 waitpid F
 GLIBC_2.4 write F
