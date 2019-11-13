@@ -358,8 +358,10 @@ class Context(object):
         self.add_config(arch='sparc64',
                         os_name='linux-gnu',
                         glibcs=[{},
+                                {'arch': 'sparcv8',
+                                 'ccopts': '-m32 -mlong-double-128 -mcpu=leon3'}],
                                 {'arch': 'sparcv9',
-                                 'ccopts': '-m32 -mlong-double-128'}],
+                                 'ccopts': '-m32 -mlong-double-128 -mcpu=v9'}],
                         extra_glibcs=[{'variant': 'disable-multi-arch',
                                        'cfg': ['--disable-multi-arch']},
                                       {'variant': 'disable-multi-arch',
@@ -847,11 +849,7 @@ class Context(object):
         # be touched because nothing in a build depends on the files
         # in question.
         for f in ('sysdeps/gnu/errlist.c',
-                  'sysdeps/mach/hurd/bits/errno.h',
-                  'sysdeps/sparc/sparc32/rem.S',
-                  'sysdeps/sparc/sparc32/sdiv.S',
-                  'sysdeps/sparc/sparc32/udiv.S',
-                  'sysdeps/sparc/sparc32/urem.S'):
+                  'sysdeps/mach/hurd/bits/errno.h'):
             to_touch = os.path.join(srcdir, f)
             subprocess.run(['touch', '-c', to_touch], check=True)
         for dirpath, dirnames, filenames in os.walk(srcdir):

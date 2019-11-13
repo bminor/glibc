@@ -80,6 +80,10 @@ Deprecated and removed features, and other changes affecting compatibility:
 * The obsolete functions ftime has been deprecated and will be removed from
   a future version of glibc.  Application should use clock_gettime instead.
 
+* The sparc*-*linux-gnu configurations targeting v7 or order architecture
+  are no longer supported.  For v8 only implementations with native CAS
+  instruction are still supported (such as LEON).
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]
