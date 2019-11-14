@@ -17,12 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
-#include <signal.h>
-#include <stddef.h>	/* For NULL.  */
-#include <sys/time.h>
 #include <sys/select.h>
-#include <sysdep-cancel.h>
-
 
 /* Check the first NFDS descriptors each in READFDS (if not NULL) for read
    readiness, in WRITEFDS (if not NULL) for write readiness, and in EXCEPTFDS
@@ -34,43 +29,8 @@ int
 __pselect (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
 	   const struct timespec *timeout, const sigset_t *sigmask)
 {
-  struct timeval tval;
-  int retval;
-  sigset_t savemask;
-
-  /* Change nanosecond number to microseconds.  This might mean losing
-     precision and therefore the `pselect` should be available.  But
-     for now it is hardly found.  */
-  if (timeout != NULL)
-    {
-      /* Catch bugs which would be hidden by the TIMESPEC_TO_TIMEVAL
-	 computations.  The division by 1000 truncates values.  */
-      if (__glibc_unlikely (timeout->tv_nsec < 0))
-	{
-	  __set_errno (EINVAL);
-	  return -1;
-	}
-
-      TIMESPEC_TO_TIMEVAL (&tval, timeout);
-    }
-
-  /* The setting and restoring of the signal mask and the select call
-     should be an atomic operation.  This can't be done without kernel
-     help.  */
-  if (sigmask != NULL)
-    __sigprocmask (SIG_SETMASK, sigmask, &savemask);
-
-  /* Note the pselect() is a cancellation point.  But since we call
-     select() which itself is a cancellation point we do not have
-     to do anything here.  */
-  retval = __select (nfds, readfds, writefds, exceptfds,
-		     timeout != NULL ? &tval : NULL);
-
-  if (sigmask != NULL)
-    __sigprocmask (SIG_SETMASK, &savemask, NULL);
-
-  return retval;
+  __set_errno (ENOSYS);
+  return -1;
 }
-#ifndef __pselect
 weak_alias (__pselect, pselect)
-#endif
+stub_warning (pselect)
