@@ -40,6 +40,4 @@ __vswscanf (const wchar_t *string, const wchar_t *format, va_list args)
   FILE *f = _IO_strfile_readw (&sf, &wd, string);
   return __vfwscanf_internal (f, format, args, 0);
 }
-libc_hidden_def (__vswscanf)
-ldbl_hidden_def (__vswscanf, vswscanf)
 ldbl_weak_alias (__vswscanf, vswscanf)

@@ -685,7 +685,8 @@ extern int vswscanf (const wchar_t *__restrict __s,
 		     __gnuc_va_list __arg)
      __THROW /* __attribute__ ((__format__ (__wscanf__, 2, 0))) */;
 
-# if !defined __USE_GNU \
+/* Same redirection as above for the v*wscanf family.  */
+# if !__GLIBC_USE (DEPRECATED_SCANF) \
      && (!defined __LDBL_COMPAT || !defined __REDIRECT) \
      && (defined __STRICT_ANSI__ || defined __USE_XOPEN2K)
 #  ifdef __REDIRECT

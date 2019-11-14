@@ -114,8 +114,6 @@ libc_hidden_proto (fputws_unlocked)
 libc_hidden_proto (putwc_unlocked)
 libc_hidden_proto (putwc)
 
-libc_hidden_proto (vswscanf)
-
 libc_hidden_proto (mbrtowc)
 libc_hidden_proto (wcrtomb)
 extern int __wcscmp (const wchar_t *__s1, const wchar_t *__s2)
@@ -237,11 +235,7 @@ extern int __isoc99_vwscanf (const wchar_t *__restrict __format,
 extern int __isoc99_vswscanf (const wchar_t *__restrict __s,
 			      const wchar_t *__restrict __format,
 			      __gnuc_va_list __arg) __THROW;
-extern int __vswscanf (const wchar_t *__restrict __s,
-		       const wchar_t *__restrict __format,
-		       __gnuc_va_list __arg) __THROW;
 libc_hidden_proto (__isoc99_vswscanf)
-libc_hidden_proto (__vswscanf)
 libc_hidden_proto (__isoc99_vfwscanf)
 
 /* Internal functions.  */
