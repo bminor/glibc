@@ -346,8 +346,13 @@ libc_hidden_proto (__mips_syscall7, nomips16)
 	_sc_ret.reg.v0;							\
 })
 
-#define __SYSCALL_CLOBBERS "$1", "$3", "$8", "$9", "$10", "$11", "$12", "$13", \
-	"$14", "$15", "$24", "$25", "hi", "lo", "memory"
+#if __mips_isa_rev >= 6
+# define __SYSCALL_CLOBBERS "$1", "$3", "$8", "$9", "$10", "$11", "$12", "$13", \
+	 "$14", "$15", "$24", "$25", "memory"
+#else
+# define __SYSCALL_CLOBBERS "$1", "$3", "$8", "$9", "$10", "$11", "$12", "$13", \
+	 "$14", "$15", "$24", "$25", "hi", "lo", "memory"
+#endif
 
 #endif /* __ASSEMBLER__ */
 
