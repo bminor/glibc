@@ -17,25 +17,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <assert.h>
 #include <errno.h>
-#include <signal.h>
-#define __need_NULL
-#include <stddef.h>
 #include <sys/wait.h>
-#include <sys/types.h>
-#include <sysdep-cancel.h>
 
-
-#ifdef DO_WAITID
-# define OUR_WAITID DO_WAITID
-#elif !defined NO_DO_WAITID
-# define OUR_WAITID do_waitid
-#endif
-
-#ifdef OUR_WAITID
-static int
-OUR_WAITID (idtype_t idtype, id_t id, siginfo_t *infop, int options)
+int
+__waitid (idtype_t idtype, id_t id, siginfo_t *infop, int options)
 {
   pid_t pid, child;
   int status;
@@ -43,7 +29,7 @@ OUR_WAITID (idtype_t idtype, id_t id, siginfo_t *infop, int options)
   switch (idtype)
     {
     case P_PID:
-      if(id <= 0)
+      if (id <= 0)
 	goto invalid;
       pid = (pid_t) id;
       break;
@@ -72,31 +58,10 @@ OUR_WAITID (idtype_t idtype, id_t id, siginfo_t *infop, int options)
       return -1;
     }
 
-  /* This emulation using waitpid cannot support the waitid modes in which
-     we do not reap the child, or match only stopped and not dead children.  */
-  if (0
-#ifdef WNOWAIT
-      || (options & WNOWAIT)
-#endif
-#ifdef WEXITED
-      || ((options & (WEXITED|WSTOPPED|WCONTINUED))
-	  != (WEXITED | (options & WSTOPPED)))
-#endif
-      )
-    {
-      __set_errno (ENOTSUP);
-      return -1;
-    }
-
   /* Note the waitid() is a cancellation point.  But since we call
      waitpid() which itself is a cancellation point we do not have
      to do anything here.  */
-  child = __waitpid (pid, &status,
-		     options
-#ifdef WEXITED
-		     &~ WEXITED
-#endif
-		     );
+  child = __waitpid (pid, &status, options);
 
   if (child == -1)
     /* `waitpid' set `errno' for us.  */
@@ -104,9 +69,11 @@ OUR_WAITID (idtype_t idtype, id_t id, siginfo_t *infop, int options)
 
   if (child == 0)
     {
-      /* The WHOHANG bit in OPTIONS is set and there are children available
-	 but none has a status for us.  The XPG docs do not mention this
-	 case so we clear the `siginfo_t' struct and return successfully.  */
+      /* POSIX.1-2008, Technical Corrigendum 1 XSH/TC1-2008/0713 [153] states
+	 that if waitid returns because WNOHANG was specified and status is
+	 not available for any process specified by idtype and id, then the
+	 si_signo and si_pid members of the structure pointed to by infop
+	 shall be set to zero.  */
       infop->si_signo = 0;
       infop->si_code = 0;
       return 0;
@@ -132,27 +99,8 @@ OUR_WAITID (idtype_t idtype, id_t id, siginfo_t *infop, int options)
       infop->si_code = CLD_STOPPED;
       infop->si_status = WSTOPSIG (status);
     }
-#ifdef WIFCONTINUED
-  else if (WIFCONTINUED (status))
-    {
-      infop->si_code = CLD_CONTINUED;
-      infop->si_status = SIGCONT;
-    }
-#endif
-  else
-    /* Can't happen. */
-    assert (! "What?");
 
   return 0;
-}
-#endif
-
-
-int
-__waitid (idtype_t idtype, id_t id, siginfo_t *infop, int options)
-{
-  /* __waitpid should be a cancellation point.  */
-  return do_waitid (idtype, id, infop, options);
 }
 weak_alias (__waitid, waitid)
 strong_alias (__waitid, __libc_waitid)
