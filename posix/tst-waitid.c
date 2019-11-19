@@ -22,13 +22,20 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <signal.h>
+#include <time.h>
+#include <stdatomic.h>
+#include <stdbool.h>
+
+#include <support/xsignal.h>
+#include <support/xunistd.h>
+#include <support/check.h>
+#include <support/process_state.h>
 
 static void
-test_child (void)
+test_child (bool setgroup)
 {
-  /* Wait a second to be sure the parent set his variables before we
-     produce a SIGCHLD.  */
-  sleep (1);
+  if (setgroup)
+    TEST_COMPARE (setpgid (0, 0), 0);
 
   /* First thing, we stop ourselves.  */
   raise (SIGSTOP);
@@ -44,475 +51,225 @@ test_child (void)
 # define WSTOPPED	WUNTRACED
 #endif
 
-static sig_atomic_t expecting_sigchld, spurious_sigchld;
-#ifdef SA_SIGINFO
-static siginfo_t sigchld_info;
+/* Set with only SIGCHLD on do_test_waitid.  */
+static sigset_t chldset;
 
+#ifdef SA_SIGINFO
 static void
 sigchld (int signo, siginfo_t *info, void *ctx)
 {
-  if (signo != SIGCHLD)
-    {
-      printf ("SIGCHLD handler got signal %d instead!\n", signo);
-      _exit (EXIT_FAILURE);
-    }
-
-  if (! expecting_sigchld)
-    {
-      spurious_sigchld = 1;
-      printf ("spurious SIGCHLD: signo %d code %d status %d pid %d\n",
-	      info->si_signo, info->si_code, info->si_status, info->si_pid);
-    }
-  else
-    {
-      sigchld_info = *info;
-      expecting_sigchld = 0;
-    }
 }
+#endif
 
 static void
-check_sigchld (const char *phase, int *ok, int code, int status, pid_t pid)
-{
-  if (expecting_sigchld)
-    {
-      printf ("missing SIGCHLD on %s\n", phase);
-      *ok = EXIT_FAILURE;
-      expecting_sigchld = 0;
-      return;
-    }
-
-  if (sigchld_info.si_signo != SIGCHLD)
-    {
-      printf ("SIGCHLD for %s signal %d\n", phase, sigchld_info.si_signo);
-      *ok = EXIT_FAILURE;
-    }
-  if (sigchld_info.si_code != code)
-    {
-      printf ("SIGCHLD for %s code %d\n", phase, sigchld_info.si_code);
-      *ok = EXIT_FAILURE;
-    }
-  if (sigchld_info.si_status != status)
-    {
-      printf ("SIGCHLD for %s status %d\n", phase, sigchld_info.si_status);
-      *ok = EXIT_FAILURE;
-    }
-  if (sigchld_info.si_pid != pid)
-    {
-      printf ("SIGCHLD for %s pid %d\n", phase, sigchld_info.si_pid);
-      *ok = EXIT_FAILURE;
-    }
-}
-# define CHECK_SIGCHLD(phase, code_check, status_check) \
-  check_sigchld ((phase), &status, (code_check), (status_check), pid)
-#else
-# define CHECK_SIGCHLD(phase, code, status) ((void) 0)
-#endif
-
-static int
-do_test (int argc, char *argv[])
+check_sigchld (int code, int status, pid_t pid)
 {
 #ifdef SA_SIGINFO
-  struct sigaction sa;
-  sa.sa_flags = SA_SIGINFO|SA_RESTART;
-  sa.sa_sigaction = &sigchld;
-  if (sigemptyset (&sa.sa_mask) < 0 || sigaction (SIGCHLD, &sa, NULL) < 0)
-    {
-      printf ("setting SIGCHLD handler: %m\n");
-      return EXIT_FAILURE;
-    }
+  siginfo_t siginfo;
+  TEST_COMPARE (sigwaitinfo (&chldset, &siginfo), SIGCHLD);
+
+  TEST_COMPARE (siginfo.si_signo, SIGCHLD);
+  TEST_COMPARE (siginfo.si_code, code);
+  TEST_COMPARE (siginfo.si_status, status);
+  TEST_COMPARE (siginfo.si_pid, pid);
 #endif
+}
 
-  expecting_sigchld = 1;
+static int
+do_test_waitd_common (idtype_t type, pid_t pid)
+{
+  /* Adding process_state_tracing_stop ('t') allows the test to work under
+     trace programs such as ptrace.  */
+  enum support_process_state stop_state = support_process_state_stopped
+					  | support_process_state_tracing_stop;
 
-  pid_t pid = fork ();
-  if (pid < 0)
-    {
-      printf ("fork: %m\n");
-      return EXIT_FAILURE;
-    }
-  else if (pid == 0)
-    {
-      test_child ();
-      _exit (127);
-    }
+  support_process_state_wait (pid, stop_state);
 
-  int status = EXIT_SUCCESS;
-#define RETURN(ok) \
-    do { if (status == EXIT_SUCCESS) status = (ok); goto out; } while (0)
-
-  /* Give the child a chance to stop.  */
-  sleep (3);
-
-  CHECK_SIGCHLD ("stopped (before waitid)", CLD_STOPPED, SIGSTOP);
+  check_sigchld (CLD_STOPPED, SIGSTOP, pid);
 
   /* Now try a wait that should not succeed.  */
   siginfo_t info;
+  int fail;
+
   info.si_signo = 0;		/* A successful call sets it to SIGCHLD.  */
-  int fail = waitid (P_PID, pid, &info, WEXITED|WCONTINUED|WNOHANG);
-  switch (fail)
-    {
-    default:
-      printf ("waitid returned bogus value %d\n", fail);
-      RETURN (EXIT_FAILURE);
-    case -1:
-      printf ("waitid WNOHANG on stopped: %m\n");
-      RETURN (errno == ENOTSUP ? EXIT_SUCCESS : EXIT_FAILURE);
-    case 0:
-      if (info.si_signo == 0)
-	break;
-      if (info.si_signo == SIGCHLD)
-	printf ("waitid WNOHANG on stopped status %d\n", info.si_status);
-      else
-	printf ("waitid WNOHANG on stopped signal %d\n", info.si_signo);
-      RETURN (EXIT_FAILURE);
-    }
+  fail = waitid (P_PID, pid, &info, WEXITED|WCONTINUED|WNOHANG);
+  if (fail == -1 && errno == ENOTSUP)
+    FAIL_RET ("waitid WNOHANG on stopped: %m");
+  TEST_COMPARE (fail, 0);
+  TEST_COMPARE (info.si_signo, 0);
 
   /* Next the wait that should succeed right away.  */
   info.si_signo = 0;		/* A successful call sets it to SIGCHLD.  */
   info.si_pid = -1;
   info.si_status = -1;
   fail = waitid (P_PID, pid, &info, WSTOPPED|WNOHANG);
-  switch (fail)
-    {
-    default:
-      printf ("waitid WSTOPPED|WNOHANG returned bogus value %d\n", fail);
-      RETURN (EXIT_FAILURE);
-    case -1:
-      printf ("waitid WSTOPPED|WNOHANG on stopped: %m\n");
-      RETURN (errno == ENOTSUP ? EXIT_SUCCESS : EXIT_FAILURE);
-    case 0:
-      if (info.si_signo != SIGCHLD)
-	{
-	  printf ("waitid WSTOPPED|WNOHANG on stopped signal %d\n",
-		  info.si_signo);
-	  RETURN (EXIT_FAILURE);
-	}
-      if (info.si_code != CLD_STOPPED)
-	{
-	  printf ("waitid WSTOPPED|WNOHANG on stopped code %d\n",
-		  info.si_code);
-	  RETURN (EXIT_FAILURE);
-	}
-      if (info.si_status != SIGSTOP)
-	{
-	  printf ("waitid WSTOPPED|WNOHANG on stopped status %d\n",
-		  info.si_status);
-	  RETURN (EXIT_FAILURE);
-	}
-      if (info.si_pid != pid)
-	{
-	  printf ("waitid WSTOPPED|WNOHANG on stopped pid %d != %d\n",
-		  info.si_pid, pid);
-	  RETURN (EXIT_FAILURE);
-	}
-    }
-
-  expecting_sigchld = WCONTINUED != 0;
+  if (fail == -1 && errno == ENOTSUP)
+    FAIL_RET ("waitid WNOHANG on stopped: %m");
+  TEST_COMPARE (fail, 0);
+  TEST_COMPARE (info.si_signo, SIGCHLD);
+  TEST_COMPARE (info.si_code, CLD_STOPPED);
+  TEST_COMPARE (info.si_status, SIGSTOP);
+  TEST_COMPARE (info.si_pid, pid);
 
   if (kill (pid, SIGCONT) != 0)
-    {
-      printf ("kill (%d, SIGCONT): %m\n", pid);
-      RETURN (EXIT_FAILURE);
-    }
+    FAIL_RET ("kill (%d, SIGCONT): %m\n", pid);
 
   /* Wait for the child to have continued.  */
-  sleep (2);
+  support_process_state_wait (pid, support_process_state_sleeping);
 
 #if WCONTINUED != 0
-  if (expecting_sigchld)
-    {
-      printf ("no SIGCHLD seen for SIGCONT (optional)\n");
-      expecting_sigchld = 0;
-    }
-  else
-    CHECK_SIGCHLD ("continued (before waitid)", CLD_CONTINUED, SIGCONT);
+  check_sigchld (CLD_CONTINUED, SIGCONT, pid);
 
   info.si_signo = 0;		/* A successful call sets it to SIGCHLD.  */
   info.si_pid = -1;
   info.si_status = -1;
   fail = waitid (P_PID, pid, &info, WCONTINUED|WNOWAIT);
-  switch (fail)
-    {
-    default:
-      printf ("waitid WCONTINUED|WNOWAIT returned bogus value %d\n", fail);
-      RETURN (EXIT_FAILURE);
-    case -1:
-      printf ("waitid WCONTINUED|WNOWAIT on continued: %m\n");
-      RETURN (errno == ENOTSUP ? EXIT_SUCCESS : EXIT_FAILURE);
-    case 0:
-      if (info.si_signo != SIGCHLD)
-	{
-	  printf ("waitid WCONTINUED|WNOWAIT on continued signal %d\n",
-		  info.si_signo);
-	  RETURN (EXIT_FAILURE);
-	}
-      if (info.si_code != CLD_CONTINUED)
-	{
-	  printf ("waitid WCONTINUED|WNOWAIT on continued code %d\n",
-		  info.si_code);
-	  RETURN (EXIT_FAILURE);
-	}
-      if (info.si_status != SIGCONT)
-	{
-	  printf ("waitid WCONTINUED|WNOWAIT on continued status %d\n",
-		  info.si_status);
-	  RETURN (EXIT_FAILURE);
-	}
-      if (info.si_pid != pid)
-	{
-	  printf ("waitid WCONTINUED|WNOWAIT on continued pid %d != %d\n",
-		  info.si_pid, pid);
-	  RETURN (EXIT_FAILURE);
-	}
-    }
+  if (fail == -1 && errno == ENOTSUP)
+    FAIL_RET ("waitid WCONTINUED|WNOWAIT on continued: %m");
+  TEST_COMPARE (fail, 0);
+  TEST_COMPARE (info.si_signo, SIGCHLD);
+  TEST_COMPARE (info.si_code, CLD_CONTINUED);
+  TEST_COMPARE (info.si_status, SIGCONT);
+  TEST_COMPARE (info.si_pid, pid);
 
   /* That should leave the CLD_CONTINUED state waiting to be seen again.  */
   info.si_signo = 0;		/* A successful call sets it to SIGCHLD.  */
   info.si_pid = -1;
   info.si_status = -1;
   fail = waitid (P_PID, pid, &info, WCONTINUED);
-  switch (fail)
-    {
-    default:
-      printf ("waitid WCONTINUED returned bogus value %d\n", fail);
-      RETURN (EXIT_FAILURE);
-    case -1:
-      printf ("waitid WCONTINUED on continued: %m\n");
-      RETURN (errno == ENOTSUP ? EXIT_SUCCESS : EXIT_FAILURE);
-    case 0:
-      if (info.si_signo != SIGCHLD)
-	{
-	  printf ("waitid WCONTINUED on continued signal %d\n", info.si_signo);
-	  RETURN (EXIT_FAILURE);
-	}
-      if (info.si_code != CLD_CONTINUED)
-	{
-	  printf ("waitid WCONTINUED on continued code %d\n", info.si_code);
-	  RETURN (EXIT_FAILURE);
-	}
-      if (info.si_status != SIGCONT)
-	{
-	  printf ("waitid WCONTINUED on continued status %d\n",
-		  info.si_status);
-	  RETURN (EXIT_FAILURE);
-	}
-      if (info.si_pid != pid)
-	{
-	  printf ("waitid WCONTINUED on continued pid %d != %d\n",
-		  info.si_pid, pid);
-	  RETURN (EXIT_FAILURE);
-	}
-    }
+  if (fail == -1 && errno == ENOTSUP)
+    FAIL_RET ("waitid WCONTINUED on continued: %m");
+  TEST_COMPARE (fail, 0);
+  TEST_COMPARE (info.si_signo, SIGCHLD);
+  TEST_COMPARE (info.si_code, CLD_CONTINUED);
+  TEST_COMPARE (info.si_status, SIGCONT);
+  TEST_COMPARE (info.si_pid, pid);
 
   /* Now try a wait that should not succeed.  */
   info.si_signo = 0;		/* A successful call sets it to SIGCHLD.  */
   fail = waitid (P_PID, pid, &info, WCONTINUED|WNOHANG);
-  switch (fail)
-    {
-    default:
-      printf ("waitid returned bogus value %d\n", fail);
-      RETURN (EXIT_FAILURE);
-    case -1:
-      printf ("waitid WCONTINUED|WNOHANG on waited continued: %m\n");
-      RETURN (errno == ENOTSUP ? EXIT_SUCCESS : EXIT_FAILURE);
-    case 0:
-      if (info.si_signo == 0)
-	break;
-      if (info.si_signo == SIGCHLD)
-	printf ("waitid WCONTINUED|WNOHANG on waited continued status %d\n",
-		info.si_status);
-      else
-	printf ("waitid WCONTINUED|WNOHANG on waited continued signal %d\n",
-		info.si_signo);
-      RETURN (EXIT_FAILURE);
-    }
+  if (fail == -1 && errno == ENOTSUP)
+    FAIL_RET ("waitid WCONTINUED|WNOHANG on waited continued: %m");
+  TEST_COMPARE (fail, 0);
+  TEST_COMPARE (info.si_signo, 0);
 
   /* Now stop him again and test waitpid with WCONTINUED.  */
-  expecting_sigchld = 1;
   if (kill (pid, SIGSTOP) != 0)
-    {
-      printf ("kill (%d, SIGSTOP): %m\n", pid);
-      RETURN (EXIT_FAILURE);
-    }
+    FAIL_RET ("kill (%d, SIGSTOP): %m\n", pid);
 
-  /* Give the child a chance to stop.  The waitpid call below will block
-     until it has stopped, but if we are real quick and enter the waitpid
-     system call before the SIGCHLD has been generated, then it will be
-     discarded and never delivered.  */
-  sleep (3);
+  /* Wait the child stop.  The waitid call below will block until it has
+     stopped, but if we are real quick and enter the waitid system call
+     before the SIGCHLD has been generated, then it will be discarded and
+     never delivered.  */
+  support_process_state_wait (pid, stop_state);
 
-  pid_t wpid = waitpid (pid, &fail, WUNTRACED);
-  if (wpid < 0)
-    {
-      printf ("waitpid WUNTRACED on stopped: %m\n");
-      RETURN (EXIT_FAILURE);
-    }
-  else if (wpid != pid)
-    {
-      printf ("waitpid WUNTRACED on stopped returned %d != %d (status %x)\n",
-	      wpid, pid, fail);
-      RETURN (EXIT_FAILURE);
-    }
-  else if (!WIFSTOPPED (fail) || WIFSIGNALED (fail) || WIFEXITED (fail)
-	   || WIFCONTINUED (fail) || WSTOPSIG (fail) != SIGSTOP)
-    {
-      printf ("waitpid WUNTRACED on stopped: status %x\n", fail);
-      RETURN (EXIT_FAILURE);
-    }
-  CHECK_SIGCHLD ("stopped (after waitpid)", CLD_STOPPED, SIGSTOP);
+  fail = waitid (type, pid, &info, WEXITED|WSTOPPED);
+  TEST_COMPARE (fail, 0);
+  TEST_COMPARE (info.si_signo, SIGCHLD);
+  TEST_COMPARE (info.si_code, CLD_STOPPED);
+  TEST_COMPARE (info.si_status, SIGSTOP);
+  TEST_COMPARE (info.si_pid, pid);
 
-  expecting_sigchld = 1;
+  check_sigchld (CLD_STOPPED, SIGSTOP, pid);
+
   if (kill (pid, SIGCONT) != 0)
-    {
-      printf ("kill (%d, SIGCONT): %m\n", pid);
-      RETURN (EXIT_FAILURE);
-    }
+    FAIL_RET ("kill (%d, SIGCONT): %m\n", pid);
 
   /* Wait for the child to have continued.  */
-  sleep (2);
+  support_process_state_wait (pid, support_process_state_sleeping);
 
-  if (expecting_sigchld)
-    {
-      printf ("no SIGCHLD seen for SIGCONT (optional)\n");
-      expecting_sigchld = 0;
-    }
-  else
-    CHECK_SIGCHLD ("continued (before waitpid)", CLD_CONTINUED, SIGCONT);
+  check_sigchld (CLD_CONTINUED, SIGCONT, pid);
 
-  wpid = waitpid (pid, &fail, WCONTINUED);
-  if (wpid < 0)
-    {
-      if (errno == EINVAL)
-	printf ("waitpid does not support WCONTINUED\n");
-      else
-	{
-	  printf ("waitpid WCONTINUED on continued: %m\n");
-	  RETURN (EXIT_FAILURE);
-	}
-    }
-  else if (wpid != pid)
-    {
-      printf ("\
-waitpid WCONTINUED on continued returned %d != %d (status %x)\n",
-	     wpid, pid, fail);
-      RETURN (EXIT_FAILURE);
-    }
-  else if (WIFSTOPPED (fail) || WIFSIGNALED (fail) || WIFEXITED (fail)
-	   || !WIFCONTINUED (fail))
-    {
-      printf ("waitpid WCONTINUED on continued: status %x\n", fail);
-      RETURN (EXIT_FAILURE);
-    }
+  fail = waitid (type, pid, &info, WCONTINUED);
+  TEST_COMPARE (fail, 0);
+  TEST_COMPARE (info.si_signo, SIGCHLD);
+  TEST_COMPARE (info.si_code, CLD_CONTINUED);
+  TEST_COMPARE (info.si_status, SIGCONT);
+  TEST_COMPARE (info.si_pid, pid);
 #endif
-
-  expecting_sigchld = 1;
 
   /* Die, child, die!  */
   if (kill (pid, SIGKILL) != 0)
-    {
-      printf ("kill (%d, SIGKILL): %m\n", pid);
-      RETURN (EXIT_FAILURE);
-    }
+    FAIL_RET ("kill (%d, SIGKILL): %m\n", pid);
 
 #ifdef WNOWAIT
   info.si_signo = 0;		/* A successful call sets it to SIGCHLD.  */
   info.si_pid = -1;
   info.si_status = -1;
-  fail = waitid (P_PID, pid, &info, WEXITED|WNOWAIT);
-  switch (fail)
-    {
-    default:
-      printf ("waitid WNOWAIT returned bogus value %d\n", fail);
-      RETURN (EXIT_FAILURE);
-    case -1:
-      printf ("waitid WNOWAIT on killed: %m\n");
-      RETURN (errno == ENOTSUP ? EXIT_SUCCESS : EXIT_FAILURE);
-    case 0:
-      if (info.si_signo != SIGCHLD)
-	{
-	  printf ("waitid WNOWAIT on killed signal %d\n", info.si_signo);
-	  RETURN (EXIT_FAILURE);
-	}
-      if (info.si_code != CLD_KILLED)
-	{
-	  printf ("waitid WNOWAIT on killed code %d\n", info.si_code);
-	  RETURN (EXIT_FAILURE);
-	}
-      if (info.si_status != SIGKILL)
-	{
-	  printf ("waitid WNOWAIT on killed status %d\n", info.si_status);
-	  RETURN (EXIT_FAILURE);
-	}
-      if (info.si_pid != pid)
-	{
-	  printf ("waitid WNOWAIT on killed pid %d != %d\n", info.si_pid, pid);
-	  RETURN (EXIT_FAILURE);
-	}
-    }
+  fail = waitid (type, pid, &info, WEXITED|WNOWAIT);
+  if (fail == -1 && errno == ENOTSUP)
+    FAIL_RET ("waitid WNOHANG on killed: %m");
+  TEST_COMPARE (fail, 0);
+  TEST_COMPARE (info.si_signo, SIGCHLD);
+  TEST_COMPARE (info.si_code, CLD_KILLED);
+  TEST_COMPARE (info.si_status, SIGKILL);
+  TEST_COMPARE (info.si_pid, pid);
 #else
-  /* Allow enough time to be sure the child died; we didn't synchronize.  */
-  sleep (2);
+  support_process_state_wait (pid, support_process_state_zombie);
 #endif
-
-  CHECK_SIGCHLD ("killed", CLD_KILLED, SIGKILL);
+  check_sigchld (CLD_KILLED, SIGKILL, pid);
 
   info.si_signo = 0;		/* A successful call sets it to SIGCHLD.  */
   info.si_pid = -1;
   info.si_status = -1;
-  fail = waitid (P_PID, pid, &info, WEXITED|WNOHANG);
-  switch (fail)
-    {
-    default:
-      printf ("waitid WNOHANG returned bogus value %d\n", fail);
-      RETURN (EXIT_FAILURE);
-    case -1:
-      printf ("waitid WNOHANG on killed: %m\n");
-      RETURN (EXIT_FAILURE);
-    case 0:
-      if (info.si_signo != SIGCHLD)
-	{
-	  printf ("waitid WNOHANG on killed signal %d\n", info.si_signo);
-	  RETURN (EXIT_FAILURE);
-	}
-      if (info.si_code != CLD_KILLED)
-	{
-	  printf ("waitid WNOHANG on killed code %d\n", info.si_code);
-	  RETURN (EXIT_FAILURE);
-	}
-      if (info.si_status != SIGKILL)
-	{
-	  printf ("waitid WNOHANG on killed status %d\n", info.si_status);
-	  RETURN (EXIT_FAILURE);
-	}
-      if (info.si_pid != pid)
-	{
-	  printf ("waitid WNOHANG on killed pid %d != %d\n", info.si_pid, pid);
-	  RETURN (EXIT_FAILURE);
-	}
-    }
+  fail = waitid (type, pid, &info, WEXITED | WNOHANG);
+  TEST_COMPARE (fail, 0);
+  TEST_COMPARE (info.si_signo, SIGCHLD);
+  TEST_COMPARE (info.si_code, CLD_KILLED);
+  TEST_COMPARE (info.si_status, SIGKILL);
+  TEST_COMPARE (info.si_pid, pid);
 
   fail = waitid (P_PID, pid, &info, WEXITED);
-  if (fail == -1)
-    {
-      if (errno != ECHILD)
-	{
-	  printf ("waitid WEXITED on killed: %m\n");
-	  RETURN (EXIT_FAILURE);
-	}
-    }
-  else
-    {
-      printf ("waitid WEXITED returned bogus value %d\n", fail);
-      RETURN (EXIT_FAILURE);
-    }
+  TEST_COMPARE (fail, -1);
+  TEST_COMPARE (errno, ECHILD);
 
-#undef RETURN
- out:
-  if (spurious_sigchld)
-    status = EXIT_FAILURE;
-  signal (SIGCHLD, SIG_IGN);
-  kill (pid, SIGKILL);		/* Make sure it's dead if we bailed early.  */
-  return status;
+  return 0;
 }
 
-#include "../test-skeleton.c"
+static int
+do_test_waitid (idtype_t type)
+{
+#ifdef SA_SIGINFO
+  {
+    struct sigaction sa;
+    sa.sa_flags = SA_SIGINFO | SA_RESTART;
+    sa.sa_sigaction = sigchld;
+    sigemptyset (&sa.sa_mask);
+    xsigaction (SIGCHLD, &sa, NULL);
+  }
+#endif
+
+  sigemptyset (&chldset);
+  sigaddset (&chldset, SIGCHLD);
+
+  /* The SIGCHLD shall has blocked at the time of the call to sigwait;
+     otherwise, the behavior is undefined.  */
+  sigprocmask (SIG_BLOCK, &chldset, NULL);
+
+  pid_t pid = xfork ();
+  if (pid == 0)
+    {
+      test_child (type == P_PGID || type == P_ALL);
+      _exit (127);
+    }
+
+  int ret = do_test_waitd_common (type, pid);
+
+  xsignal (SIGCHLD, SIG_IGN);
+  kill (pid, SIGKILL);		/* Make sure it's dead if we bailed early.  */
+  return ret;
+}
+
+static int
+do_test (void)
+{
+  int ret = 0;
+
+  ret |= do_test_waitid (P_PID);
+  ret |= do_test_waitid (P_PGID);
+  ret |= do_test_waitid (P_ALL);
+
+  return ret;
+}
+
+#include <support/test-driver.c>
