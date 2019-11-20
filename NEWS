@@ -69,6 +69,7 @@ The following bugs are resolved with this release:
   [24228] old x86 applications that use legacy libio crash on exit
   [24476] dlfcn: Guard __dlerror_main_freeres with __libc_once_get (once)
   [24744] io: Remove the copy_file_range emulation.
+  [25204] Ignore LD_PREFER_MAP_32BIT_EXEC for SUID programs
 
 Security related changes:
 
@@ -97,6 +98,13 @@ Security related changes:
   CVE-2019-9169: Attempted case-insensitive regular-expression match
   via proceed_next_node in posix/regexec.c leads to heap-based buffer
   over-read.  Reported by Hongxu Chen.
+
+  CVE-2019-19126: ld.so failed to ignore the LD_PREFER_MAP_32BIT_EXEC
+  environment variable during program execution after a security
+  transition, allowing local attackers to restrict the possible mapping
+  addresses for loaded libraries and thus bypass ASLR for a setuid
+  program.  Reported by Marcin Kościelnicki.
+
 
 Version 2.28
 
