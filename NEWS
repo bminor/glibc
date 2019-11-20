@@ -28,6 +28,12 @@ Security related changes:
   (denial of service) in some Go applications compiled with gccgo.  Reported
   by Andreas Schwab.  (CVE-2016-6323)
 
+  CVE-2019-19126: ld.so failed to ignore the LD_PREFER_MAP_32BIT_EXEC
+  environment variable during program execution after a security
+  transition, allowing local attackers to restrict the possible mapping
+  addresses for loaded libraries and thus bypass ASLR for a setuid
+  program.  Reported by Marcin Kościelnicki.
+
 The following bugs are resolved with this release:
 
   [19679] gcc-4.9.3 C++ exception handling broken due to unaligned stack
@@ -49,6 +55,7 @@ The following bugs are resolved with this release:
   [21666] Avoid .symver on common symbols
   [22641] x86: Fix mis-merge of XSAVE ld.so trampoline selection
   [22715] x86-64: Properly align La_x86_64_retval to VEC_SIZE
+  [25204] Ignore LD_PREFER_MAP_32BIT_EXEC for SUID programs
 
 
 Version 2.23
