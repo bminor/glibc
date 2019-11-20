@@ -31,7 +31,8 @@
    environment variable, LD_PREFER_MAP_32BIT_EXEC.  */
 #define EXTRA_LD_ENVVARS \
   case 21:								  \
-    if (memcmp (envline, "PREFER_MAP_32BIT_EXEC", 21) == 0)		  \
+    if (!__libc_enable_secure						  \
+	&& memcmp (envline, "PREFER_MAP_32BIT_EXEC", 21) == 0)		  \
       GLRO(dl_x86_cpu_features).feature[index_arch_Prefer_MAP_32BIT_EXEC] \
 	|= bit_arch_Prefer_MAP_32BIT_EXEC;				  \
     break;

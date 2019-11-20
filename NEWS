@@ -86,7 +86,11 @@ Changes to build and runtime requirements:
 
 Security related changes:
 
-  [Add security related changes here]
+  CVE-2019-19126: ld.so failed to ignore the LD_PREFER_MAP_32BIT_EXEC
+  environment variable during program execution after a security
+  transition, allowing local attackers to restrict the possible mapping
+  addresses for loaded libraries and thus bypass ASLR for a setuid
+  program.  Reported by Marcin Kościelnicki.
 
 The following bugs are resolved with this release:
 
