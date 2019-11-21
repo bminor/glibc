@@ -65,6 +65,12 @@ CFLAGS-dl-runtime.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-dl-lookup.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-dl-iterate-phdr.c += $(uses-callbacks)
 
+# On targets without __builtin_memset, rtld.c uses a hand-coded loop
+# in _dl_start.  Make sure this isn't turned into a call to regular memset.
+ifeq (yes,$(have-loop-to-function))
+CFLAGS-rtld.c += -fno-tree-loop-distribute-patterns
+endif
+
 # Compile rtld itself without stack protection.
 # Also compile all routines in the static library that are elided from
 # the shared libc because they are in libc.a in the same way.
