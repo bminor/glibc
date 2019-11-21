@@ -153,35 +153,6 @@ do {								\
 } while (0)
 #endif
 
-/* A union which permits us to convert between a float and a 32 bit
-   int.  */
-
-typedef union
-{
-  float value;
-  uint32_t word;
-} ieee_float_shape_type;
-
-/* Get a 32 bit int from a float.  */
-#ifndef GET_FLOAT_WORD
-# define GET_FLOAT_WORD(i,d)					\
-do {								\
-  ieee_float_shape_type gf_u;					\
-  gf_u.value = (d);						\
-  (i) = gf_u.word;						\
-} while (0)
-#endif
-
-/* Set a float from a 32 bit int.  */
-#ifndef SET_FLOAT_WORD
-# define SET_FLOAT_WORD(d,i)					\
-do {								\
-  ieee_float_shape_type sf_u;					\
-  sf_u.word = (i);						\
-  (d) = sf_u.value;						\
-} while (0)
-#endif
-
 /* We need to guarantee an expansion of name when building
    ldbl-128 files as another type (e.g _Float128).  */
 #define mathx_hidden_def(name) hidden_def(name)
