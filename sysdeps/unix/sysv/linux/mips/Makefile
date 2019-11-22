@@ -63,14 +63,25 @@ sysdep-dl-routines += dl-static
 
 sysdep_routines += dl-vdso
 endif
-
-# Supporting non-executable stacks on MIPS requires changes to both
-# the Linux kernel and glibc.  See
-# <https://sourceware.org/ml/libc-alpha/2016-01/msg00567.html> and
-# <https://sourceware.org/ml/libc-alpha/2016-01/msg00719.html>.
+# If the compiler doesn't use GNU.stack note,
+# this test is expected to fail.
+ifneq ($(mips-has-gnustack),yes)
 test-xfail-check-execstack = yes
+endif
 endif
 
 ifeq ($(subdir),stdlib)
 gen-as-const-headers += ucontext_i.sym
+endif
+
+ifeq ($(mips-force-execstack),yes)
+CFLAGS-.o += -Wa,-execstack
+CFLAGS-.os += -Wa,-execstack
+CFLAGS-.op += -Wa,-execstack
+CFLAGS-.oS += -Wa,-execstack
+
+ASFLAGS-.o += -Wa,-execstack
+ASFLAGS-.os += -Wa,-execstack
+ASFLAGS-.op += -Wa,-execstack
+ASFLAGS-.oS += -Wa,-execstack
 endif

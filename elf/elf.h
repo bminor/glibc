@@ -2847,6 +2847,13 @@ enum
 #define R_AARCH64_TLSDESC      1031	/* TLS Descriptor.  */
 #define R_AARCH64_IRELATIVE	1032	/* STT_GNU_IFUNC relocation.  */
 
+/* AArch64 specific values for the Dyn d_tag field.  */
+#define DT_AARCH64_VARIANT_PCS	(DT_LOPROC + 5)
+#define DT_AARCH64_NUM		6
+
+/* AArch64 specific values for the st_other field.  */
+#define STO_AARCH64_VARIANT_PCS 0x80
+
 /* ARM relocs.  */
 
 #define R_ARM_NONE		0	/* No reloc */

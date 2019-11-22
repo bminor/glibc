@@ -1,5 +1,6 @@
-/* Stub implementation of copy_file_range.
-   Copyright (C) 2017-2019 Free Software Foundation, Inc.
+/* Check compatibility of CET-enabled executable with dlopened legacy
+   shared object.
+   Copyright (C) 2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,15 +17,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <unistd.h>
+#include <error.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-ssize_t
-copy_file_range (int infd, __off64_t *pinoff,
-                 int outfd, __off64_t *poutoff,
-                 size_t length, unsigned int flags)
+extern void foo (void);
+
+int
+test (void)
 {
-  __set_errno (ENOSYS);
-  return -1;
+  foo ();
+  return 0;
 }
-stub_warning (copy_file_range)

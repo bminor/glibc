@@ -1,3 +1,217 @@
+2019-02-06  Stefan Liebler  <stli@linux.ibm.com>
+
+	[BZ #23403]
+	* nptl/allocatestack.c (allocate_stack): Align pointer pd for
+	TLS_TCB_AT_TP tls variant.
+	* nptl/tst-tls1.c: Migrate to support/test-driver.c.
+	Add alignment checks.
+	* support/Makefile (libsupport-routines): Add xposix_memalign and
+	xpthread_setstack.
+	* support/support.h: Add xposix_memalign.
+	* support/xthread.h: Add xpthread_attr_setstack.
+	* support/xposix_memalign.c: New File.
+	* support/xpthread_attr_setstack.c: Likewise.
+
+2019-06-18  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24323]
+	* include/elf.h (DT_1_SUPPORTED_MASK): Include DF_1_PIE.
+	* elf/dl-load.c (_dl_map_object_from_fd): Check for DF_1_PIE and
+	fail when called from dlopen.
+
+2019-07-10  DJ Delorie  <dj@redhat.com>
+	    Sergei Trofimovich <slyfox@inbox.ru>
+
+	[BZ #24696]
+	[BZ #24695]
+	* nss/nss_db/db-open.c (internal_endent): Protect against NULL
+	mappings.
+
+2019-07-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #24259]
+	* elf/dl-open.c (dl_open_worker): Call _dl_open_check after
+	relocation.
+	* sysdeps/x86/Makefile (tests): Add tst-cet-legacy-5a,
+	tst-cet-legacy-5b, tst-cet-legacy-6a and tst-cet-legacy-6b.
+	(modules-names): Add tst-cet-legacy-mod-5a, tst-cet-legacy-mod-5b,
+	tst-cet-legacy-mod-5c, tst-cet-legacy-mod-6a, tst-cet-legacy-mod-6b
+	and tst-cet-legacy-mod-6c.
+	(CFLAGS-tst-cet-legacy-5a.c): New.
+	(CFLAGS-tst-cet-legacy-5b.c): Likewise.
+	(CFLAGS-tst-cet-legacy-mod-5a.c): Likewise.
+	(CFLAGS-tst-cet-legacy-mod-5b.c): Likewise.
+	(CFLAGS-tst-cet-legacy-mod-5c.c): Likewise.
+	(CFLAGS-tst-cet-legacy-6a.c): Likewise.
+	(CFLAGS-tst-cet-legacy-6b.c): Likewise.
+	(CFLAGS-tst-cet-legacy-mod-6a.c): Likewise.
+	(CFLAGS-tst-cet-legacy-mod-6b.c): Likewise.
+	(CFLAGS-tst-cet-legacy-mod-6c.c): Likewise.
+	($(objpfx)tst-cet-legacy-5a): Likewise.
+	($(objpfx)tst-cet-legacy-5a.out): Likewise.
+	($(objpfx)tst-cet-legacy-mod-5a.so): Likewise.
+	($(objpfx)tst-cet-legacy-mod-5b.so): Likewise.
+	($(objpfx)tst-cet-legacy-5b): Likewise.
+	($(objpfx)tst-cet-legacy-5b.out): Likewise.
+	(tst-cet-legacy-5b-ENV): Likewise.
+	($(objpfx)tst-cet-legacy-6a): Likewise.
+	($(objpfx)tst-cet-legacy-6a.out): Likewise.
+	($(objpfx)tst-cet-legacy-mod-6a.so): Likewise.
+	($(objpfx)tst-cet-legacy-mod-6b.so): Likewise.
+	($(objpfx)tst-cet-legacy-6b): Likewise.
+	($(objpfx)tst-cet-legacy-6b.out): Likewise.
+	(tst-cet-legacy-6b-ENV): Likewise.
+	* sysdeps/x86/tst-cet-legacy-5.c: New file.
+	* sysdeps/x86/tst-cet-legacy-5a.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-5b.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-6.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-6a.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-6b.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-mod-5.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-mod-5a.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-mod-5b.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-mod-5c.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-mod-6.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-mod-6a.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-mod-6b.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-mod-6c.c: Likewise.
+
+2019-08-08  Niklas Hambüchen  <mail@nh2.me>
+	    Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #24026]
+	* malloc/malloc.c (__malloc_info): Account for top chunk.
+
+2019-08-01  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24867]
+	* malloc/malloc.c (__malloc_info): Remove unwanted leading
+	whitespace.
+
+2019-08-15  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/Makefile (tests): Only add tst-mxfast for
+	$(have-tunables).
+	* malloc/tst-mxfast.c: Fix copyright year.
+	(do_test): Fix GNU style issues.  Use TEST_COMPARE instead of
+	assert for checks.
+
+2019-08-09  DJ Delorie  <dj@redhat.com>
+
+	* elf/dl-tunables.list: Add glibc.malloc.mxfast.
+	* manual/tunables.texi: Document it.
+	* malloc/malloc.c (do_set_mxfast): New.
+	(__libc_mallopt): Call it.
+	* malloc/arena.c: Add mxfast tunable.
+	* malloc/tst-mxfast.c: New.
+	* malloc/Makefile: Add it.
+
+2018-12-19  Andreas Schwab  <schwab@suse.de>
+
+	* nscd/connections.c (check_use): Don't abort on invalid len.
+
+2019-05-17  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* malloc/malloc.c (MAX_TCACHE_COUNT): Increase to UINT16_MAX.
+	(tcache_put): Remove redundant assert.
+	(tcache_get): Remove redundant asserts.
+	(__libc_malloc): Check tcache count is not zero.
+	* manual/tunables.texi (glibc.malloc.tcache_count): Update maximum.
+
+2019-02-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* malloc/malloc.c (tcache_get): Compare tcache->counts[tc_idx]
+	with 0, not tcache->entries[tc_idx].
+
+2019-09-13  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* string/memmem.c (__memmem): Rewrite to improve performance.
+
+2019-06-12  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* string/str-two-way.h (two_way_short_needle): Add inline to avoid
+	warning.
+	(two_way_long_needle): Block inlining.
+	* string/strstr.c (strstr2): Add new function.
+	(strstr3): Likewise.
+	(STRSTR): Completely rewrite strstr to improve performance.
+
+2019-09-13  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* string/memmem.c: Use memcmp for first match.
+
+2019-09-13  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* string/strcasestr.c (STRCASESTR): Simplify and speedup first match.
+	* string/strstr.c (AVAILABLE): Likewise.
+
+2019-09-06  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* manual/tunables.texi (glibc.cpu.name): Add ares tunable.
+	* sysdeps/aarch64/multiarch/memcpy.c (__libc_memcpy): Use
+	__memcpy_falkor for ares.
+	* sysdeps/unix/sysv/linux/aarch64/cpu-features.h (IS_ARES):
+	Add new define.
+	* sysdeps/unix/sysv/linux/aarch64/cpu-features.c (cpu_list):
+	Add ares cpu.
+
+2019-07-12  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #24699]
+	* posix/tst-mmap-offset.c: Mention BZ #24699.
+	(do_test_bz21270): Rename to do_test_large_offset and use
+	mmap64_maximum_offset to check for maximum expected offset value.
+	* sysdeps/generic/mmap_info.h: New file.
+	* sysdeps/unix/sysv/linux/mips/mmap_info.h: Likewise.
+	* sysdeps/unix/sysv/linux/mmap64.c (MMAP_OFF_HIGH_MASK): Define iff
+	__NR_mmap2 is used.
+
+2019-07-12  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* sysdeps/aarch64/dl-machine.h (elf_machine_lazy_rel): Check
+	STO_AARCH64_VARIANT_PCS and bind such symbols at load time.
+
+2019-06-13  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* elf/elf.h (STO_AARCH64_VARIANT_PCS): Define.
+	(DT_AARCH64_VARIANT_PCS): Define.
+
+2019-06-28  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24744]
+	io: Remove the copy_file_range emulation.
+	* sysdeps/unix/sysv/linux/copy_file_range.c (copy_file_range): Do
+	not define and call copy_file_range_compat.
+	* io/Makefile (tests-static, tests-internal): Do not add
+	tst-copy_file_range-compat.
+	* io/copy_file_range-compat.c: Remove file.
+	* io/copy_file_range.c (copy_file_range): Define as stub.
+	* io/tst-copy_file_range-compat.c: Remove file.
+	* io/tst-copy_file_range.c (xdevfile): Remove variable.
+	(typical_sizes): Update comment.  Remove 16K sizes.
+	(maximum_offset, maximum_offset_errno, maximum_offset_hard_limit):
+	Remove variables.
+	(find_maximum_offset, pipe_as_source, pipe_as_destination)
+	(delayed_write_failure_beginning, delayed_write_failure_end)
+	(cross_device_failure, enospc_failure_1, enospc_failure)
+	(oappend_failure): Remove functions.
+	(tests): Adjust test case list.
+	(do_test): Remove file system search code.  Check for ENOSYS from
+	copy_file_range.  Do not free xdevfile.
+	* manual/llio.texi (Copying File Data): Document ENOSYS error from
+	copy_file_range.  Do not document the EXDEV error, which future
+	kernels may not report.  Update the wording to reflect that
+	further errors are possible.
+	* sysdeps/unix/sysv/linux/alpha/kernel-features.h
+	[__LINUX_KERNEL_VERSION < 0x040D00] (__ASSUME_COPY_FILE_RANGE): Do
+	not undefine.
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x040500] (__ASSUME_COPY_FILE_RANGE):
+	Remove definition.
+	* sysdeps/unix/sysv/linux/microblaze/kernel-features.h
+	[__LINUX_KERNEL_VERSION < 0x040A00] (__ASSUME_COPY_FILE_RANGE): Do
+	not undefine.
+
 2019-06-20  Dmitry V. Levin  <ldv@altlinux.org>
 	    Florian Weimer  <fweimer@redhat.com>
 

@@ -1,5 +1,6 @@
-/* Test the fallback implementation of copy_file_range.
-   Copyright (C) 2017-2018 Free Software Foundation, Inc.
+/* Check compatibility of CET-enabled executable with dlopened legacy
+   shared object.
+   Copyright (C) 2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,15 +17,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* Get the declaration of the official copy_of_range function.  */
-#include <unistd.h>
+#include <error.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-/* Compile a local version of copy_file_range.  */
-#define COPY_FILE_RANGE_DECL static
-#define COPY_FILE_RANGE copy_file_range_compat
-#include <io/copy_file_range-compat.c>
+extern void foo (void);
 
-/* Re-use the test, but run it against copy_file_range_compat defined
-   above.  */
-#define copy_file_range copy_file_range_compat
-#include "tst-copy_file_range.c"
+int
+test (void)
+{
+  foo ();
+  return 0;
+}

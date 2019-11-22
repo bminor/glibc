@@ -321,6 +321,10 @@ __malloc_assert (const char *assertion, const char *file, unsigned int line,
 /* This is another arbitrary limit, which tunables can change.  Each
    tcache bin will hold at most this number of chunks.  */
 # define TCACHE_FILL_COUNT 7
+
+/* Maximum chunks in tcache bins for tunables.  This value must fit the range
+   of tcache->counts[] entries, else they may overflow.  */
+# define MAX_TCACHE_COUNT UINT16_MAX
 #endif
 
 
@@ -1624,7 +1628,7 @@ static INTERNAL_SIZE_T global_max_fast;
 
 #define set_max_fast(s) \
   global_max_fast = (((s) == 0)						      \
-                     ? SMALLBIN_WIDTH : ((s + SIZE_SZ) & ~MALLOC_ALIGN_MASK))
+                     ? MIN_CHUNK_SIZE / 2 : ((s + SIZE_SZ) & ~MALLOC_ALIGN_MASK))
 
 static inline INTERNAL_SIZE_T
 get_max_fast (void)
@@ -2908,11 +2912,9 @@ typedef struct tcache_entry
    time), this is for performance reasons.  */
 typedef struct tcache_perthread_struct
 {
-  char counts[TCACHE_MAX_BINS];
+  uint16_t counts[TCACHE_MAX_BINS];
   tcache_entry *entries[TCACHE_MAX_BINS];
 } tcache_perthread_struct;
-
-#define MAX_TCACHE_COUNT 127	/* Maximum value of counts[] entries.  */
 
 static __thread bool tcache_shutting_down = false;
 static __thread tcache_perthread_struct *tcache = NULL;
@@ -2923,7 +2925,6 @@ static __always_inline void
 tcache_put (mchunkptr chunk, size_t tc_idx)
 {
   tcache_entry *e = (tcache_entry *) chunk2mem (chunk);
-  assert (tc_idx < TCACHE_MAX_BINS);
 
   /* Mark this chunk as "in the tcache" so the test in _int_free will
      detect a double free.  */
@@ -2940,8 +2941,6 @@ static __always_inline void *
 tcache_get (size_t tc_idx)
 {
   tcache_entry *e = tcache->entries[tc_idx];
-  assert (tc_idx < TCACHE_MAX_BINS);
-  assert (tcache->entries[tc_idx] > 0);
   tcache->entries[tc_idx] = e->next;
   --(tcache->counts[tc_idx]);
   e->key = NULL;
@@ -3046,9 +3045,8 @@ __libc_malloc (size_t bytes)
 
   DIAG_PUSH_NEEDS_COMMENT;
   if (tc_idx < mp_.tcache_bins
-      /*&& tc_idx < TCACHE_MAX_BINS*/ /* to appease gcc */
       && tcache
-      && tcache->entries[tc_idx] != NULL)
+      && tcache->counts[tc_idx] > 0)
     {
       return tcache_get (tc_idx);
     }
@@ -5142,6 +5140,19 @@ do_set_tcache_unsorted_limit (size_t value)
 }
 #endif
 
+static inline int
+__always_inline
+do_set_mxfast (size_t value)
+{
+  if (value >= 0 && value <= MAX_FAST_SIZE)
+    {
+      LIBC_PROBE (memory_mallopt_mxfast, 2, value, get_max_fast ());
+      set_max_fast (value);
+      return 1;
+    }
+  return 0;
+}
+
 int
 __libc_mallopt (int param_number, int value)
 {
@@ -5161,13 +5172,7 @@ __libc_mallopt (int param_number, int value)
   switch (param_number)
     {
     case M_MXFAST:
-      if (value >= 0 && value <= MAX_FAST_SIZE)
-        {
-          LIBC_PROBE (memory_mallopt_mxfast, 2, value, get_max_fast ());
-          set_max_fast (value);
-        }
-      else
-        res = 0;
+      do_set_mxfast (value);
       break;
 
     case M_TRIM_THRESHOLD:
@@ -5433,6 +5438,12 @@ __malloc_info (int options, FILE *fp)
 
       __libc_lock_lock (ar_ptr->mutex);
 
+      /* Account for top chunk.  The top-most available chunk is
+	 treated specially and is never in any bin. See "initial_top"
+	 comments.  */
+      avail = chunksize (ar_ptr->top);
+      nblocks = 1;  /* Top always exists.  */
+
       for (size_t i = 0; i < NFASTBINS; ++i)
 	{
 	  mchunkptr p = fastbin (ar_ptr, i);
@@ -5518,7 +5529,7 @@ __malloc_info (int options, FILE *fp)
 
       for (size_t i = 0; i < nsizes; ++i)
 	if (sizes[i].count != 0 && i != NFASTBINS)
-	  fprintf (fp, "							      \
+	  fprintf (fp, "\
   <size from=\"%zu\" to=\"%zu\" total=\"%zu\" count=\"%zu\"/>\n",
 		   sizes[i].from, sizes[i].to, sizes[i].total, sizes[i].count);
 

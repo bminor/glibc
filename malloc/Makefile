@@ -54,7 +54,7 @@ tests-internal += \
 	 tst-dynarray-at-fail \
 
 ifneq (no,$(have-tunables))
-tests += tst-malloc-usable-tunables
+tests += tst-malloc-usable-tunables tst-mxfast
 tests-static += tst-malloc-usable-static-tunables
 endif
 
@@ -195,6 +195,8 @@ tst-malloc-usable-ENV = MALLOC_CHECK_=3
 tst-malloc-usable-static-ENV = $(tst-malloc-usable-ENV)
 tst-malloc-usable-tunables-ENV = GLIBC_TUNABLES=glibc.malloc.check=3
 tst-malloc-usable-static-tunables-ENV = $(tst-malloc-usable-tunables-ENV)
+
+tst-mxfast-ENV = GLIBC_TUNABLES=glibc.malloc.tcache_count=0:glibc.malloc.mxfast=0
 
 ifeq ($(experimental-malloc),yes)
 CPPFLAGS-malloc.c += -DUSE_TCACHE=1

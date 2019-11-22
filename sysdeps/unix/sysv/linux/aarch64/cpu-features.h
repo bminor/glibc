@@ -51,6 +51,8 @@
 
 #define IS_PHECDA(midr) (MIDR_IMPLEMENTOR(midr) == 'h'			      \
                         && MIDR_PARTNUM(midr) == 0x000)
+#define IS_ARES(midr) (MIDR_IMPLEMENTOR(midr) == 'A'			      \
+			&& MIDR_PARTNUM(midr) == 0xd0c)
 
 struct cpu_features
 {

@@ -304,7 +304,8 @@ static int
 check_use (const char *data, nscd_ssize_t first_free, uint8_t *usemap,
 	   enum usekey use, ref_t start, size_t len)
 {
-  assert (len >= 2);
+  if (len < 2)
+    return 0;
 
   if (start > first_free || start + len > first_free
       || (start & BLOCK_ALIGN_M1))

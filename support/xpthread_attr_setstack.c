@@ -1,5 +1,5 @@
-/* Stub implementation of copy_file_range.
-   Copyright (C) 2017-2019 Free Software Foundation, Inc.
+/* pthread_attr_setstack with error checking.
+   Copyright (C) 2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,15 +16,11 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <unistd.h>
+#include <support/xthread.h>
 
-ssize_t
-copy_file_range (int infd, __off64_t *pinoff,
-                 int outfd, __off64_t *poutoff,
-                 size_t length, unsigned int flags)
+void
+xpthread_attr_setstack (pthread_attr_t *attr, void *stackaddr, size_t stacksize)
 {
-  __set_errno (ENOSYS);
-  return -1;
+  xpthread_check_return ("pthread_attr_setstack",
+			 pthread_attr_setstack (attr, stackaddr, stacksize));
 }
-stub_warning (copy_file_range)

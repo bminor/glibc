@@ -85,6 +85,11 @@ glibc {
     tcache_unsorted_limit {
       type: SIZE_T
     }
+    mxfast {
+      type: SIZE_T
+      minval: 0
+      security_level: SXID_IGNORE
+    }
   }
   tune {
     hwcap_mask {

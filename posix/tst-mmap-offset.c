@@ -1,4 +1,4 @@
-/* BZ #18877 and #21270 mmap offset test.
+/* BZ #18877, BZ #21270, and BZ #24699 mmap offset test.
 
    Copyright (C) 2015-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
@@ -24,6 +24,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <sys/mman.h>
+#include <mmap_info.h>
 
 #include <support/check.h>
 
@@ -76,7 +77,7 @@ do_test_bz18877 (void)
 
 /* Check if invalid offset are handled correctly by mmap.  */
 static int
-do_test_bz21270 (void)
+do_test_large_offset (void)
 {
   /* For architectures with sizeof (off_t) < sizeof (off64_t) mmap is
      implemented with __SYS_mmap2 syscall and the offset is represented in
@@ -90,7 +91,7 @@ do_test_bz21270 (void)
   const size_t length = 4096;
 
   void *addr = mmap64 (NULL, length, prot, flags, fd, offset);
-  if (sizeof (off_t) < sizeof (off64_t))
+  if (mmap64_maximum_offset (page_shift) < UINT64_MAX)
     {
       if ((addr != MAP_FAILED) && (errno != EINVAL))
 	FAIL_RET ("mmap succeed");
@@ -110,7 +111,7 @@ do_test (void)
   int ret = 0;
 
   ret += do_test_bz18877 ();
-  ret += do_test_bz21270 ();
+  ret += do_test_large_offset ();
 
   return ret;
 }

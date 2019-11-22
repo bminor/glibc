@@ -19,12 +19,17 @@ ifeq ($(subdir),elf)
 sysdep-dl-routines += dl-cet
 
 tests += tst-cet-legacy-1 tst-cet-legacy-2 tst-cet-legacy-2a \
-	 tst-cet-legacy-3 tst-cet-legacy-4
+	 tst-cet-legacy-3 tst-cet-legacy-4 \
+	 tst-cet-legacy-5a tst-cet-legacy-6a
 ifneq (no,$(have-tunables))
-tests += tst-cet-legacy-4a tst-cet-legacy-4b tst-cet-legacy-4c
+tests += tst-cet-legacy-4a tst-cet-legacy-4b tst-cet-legacy-4c \
+	 tst-cet-legacy-5b tst-cet-legacy-6b
 endif
 modules-names += tst-cet-legacy-mod-1 tst-cet-legacy-mod-2 \
-		 tst-cet-legacy-mod-4
+		 tst-cet-legacy-mod-4 tst-cet-legacy-mod-5a \
+		 tst-cet-legacy-mod-5b tst-cet-legacy-mod-5c \
+		 tst-cet-legacy-mod-6a tst-cet-legacy-mod-6b \
+		 tst-cet-legacy-mod-6c
 
 CFLAGS-tst-cet-legacy-2.c += -fcf-protection=branch
 CFLAGS-tst-cet-legacy-2a.c += -fcf-protection
@@ -35,6 +40,16 @@ CFLAGS-tst-cet-legacy-4.c += -fcf-protection=branch
 CFLAGS-tst-cet-legacy-4a.c += -fcf-protection
 CFLAGS-tst-cet-legacy-4b.c += -fcf-protection
 CFLAGS-tst-cet-legacy-mod-4.c += -fcf-protection=none
+CFLAGS-tst-cet-legacy-5a.c += -fcf-protection
+CFLAGS-tst-cet-legacy-5b.c += -fcf-protection
+CFLAGS-tst-cet-legacy-mod-5a.c += -fcf-protection=none
+CFLAGS-tst-cet-legacy-mod-5b.c += -fcf-protection
+CFLAGS-tst-cet-legacy-mod-5c.c += -fcf-protection
+CFLAGS-tst-cet-legacy-6a.c += -fcf-protection
+CFLAGS-tst-cet-legacy-6b.c += -fcf-protection
+CFLAGS-tst-cet-legacy-mod-6a.c += -fcf-protection=none
+CFLAGS-tst-cet-legacy-mod-6b.c += -fcf-protection
+CFLAGS-tst-cet-legacy-mod-6c.c += -fcf-protection
 
 $(objpfx)tst-cet-legacy-1: $(objpfx)tst-cet-legacy-mod-1.so \
 		       $(objpfx)tst-cet-legacy-mod-2.so
@@ -44,6 +59,17 @@ $(objpfx)tst-cet-legacy-2a: $(objpfx)tst-cet-legacy-mod-2.so $(libdl)
 $(objpfx)tst-cet-legacy-2a.out: $(objpfx)tst-cet-legacy-mod-1.so
 $(objpfx)tst-cet-legacy-4: $(libdl)
 $(objpfx)tst-cet-legacy-4.out: $(objpfx)tst-cet-legacy-mod-4.so
+$(objpfx)tst-cet-legacy-5a: $(libdl)
+$(objpfx)tst-cet-legacy-5a.out: $(objpfx)tst-cet-legacy-mod-5a.so \
+				$(objpfx)tst-cet-legacy-mod-5b.so
+$(objpfx)tst-cet-legacy-mod-5a.so: $(objpfx)tst-cet-legacy-mod-5c.so
+$(objpfx)tst-cet-legacy-mod-5b.so: $(objpfx)tst-cet-legacy-mod-5c.so
+$(objpfx)tst-cet-legacy-6a: $(libdl)
+$(objpfx)tst-cet-legacy-6a.out: $(objpfx)tst-cet-legacy-mod-6a.so \
+				$(objpfx)tst-cet-legacy-mod-6b.so
+$(objpfx)tst-cet-legacy-mod-6a.so: $(objpfx)tst-cet-legacy-mod-6c.so
+$(objpfx)tst-cet-legacy-mod-6b.so: $(objpfx)tst-cet-legacy-mod-6c.so
+LDFLAGS-tst-cet-legacy-mod-6c.so = -Wl,--enable-new-dtags,-z,nodelete
 ifneq (no,$(have-tunables))
 $(objpfx)tst-cet-legacy-4a: $(libdl)
 $(objpfx)tst-cet-legacy-4a.out: $(objpfx)tst-cet-legacy-mod-4.so
@@ -54,6 +80,14 @@ tst-cet-legacy-4b-ENV = GLIBC_TUNABLES=glibc.tune.x86_shstk=on
 $(objpfx)tst-cet-legacy-4c: $(libdl)
 $(objpfx)tst-cet-legacy-4c.out: $(objpfx)tst-cet-legacy-mod-4.so
 tst-cet-legacy-4c-ENV = GLIBC_TUNABLES=glibc.tune.x86_shstk=off
+$(objpfx)tst-cet-legacy-5b: $(libdl)
+$(objpfx)tst-cet-legacy-5b.out: $(objpfx)tst-cet-legacy-mod-5a.so \
+				$(objpfx)tst-cet-legacy-mod-5b.so
+tst-cet-legacy-5b-ENV = GLIBC_TUNABLES=glibc.tune.x86_ibt=off:glibc.tune.x86_shstk=off
+$(objpfx)tst-cet-legacy-6b: $(libdl)
+$(objpfx)tst-cet-legacy-6b.out: $(objpfx)tst-cet-legacy-mod-6a.so \
+				$(objpfx)tst-cet-legacy-mod-6b.so
+tst-cet-legacy-6b-ENV = GLIBC_TUNABLES=glibc.tune.x86_ibt=off:glibc.tune.x86_shstk=off
 endif
 endif
 
