@@ -1,3 +1,88 @@
+2019-08-15  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/Makefile (tests): Only add tst-mxfast for
+	$(have-tunables).
+	* malloc/tst-mxfast.c: Fix copyright year.
+	(do_test): Fix GNU style issues.  Use TEST_COMPARE instead of
+	assert for checks.
+
+2019-08-09  DJ Delorie  <dj@redhat.com>
+
+	* elf/dl-tunables.list: Add glibc.malloc.mxfast.
+	* manual/tunables.texi: Document it.
+	* malloc/malloc.c (do_set_mxfast): New.
+	(__libc_mallopt): Call it.
+	* malloc/arena.c: Add mxfast tunable.
+	* malloc/tst-mxfast.c: New.
+	* malloc/Makefile: Add it.
+
+2019-08-08  Niklas Hambüchen  <mail@nh2.me>
+	    Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #24026]
+	* malloc/malloc.c (__malloc_info): Account for top chunk.
+
+2019-11-01  Dragan Mladjenovic  <dmladjenovic@wavecomp.com>
+
+	* sysdeps/unix/sysv/linux/mips/Makefile
+	(test-xfail-check-execstack):
+	Move under mips-has-gnustack != yes.
+	(CFLAGS-.o*, ASFLAGS-.o*): New rules.
+	Apply -Wa,-execstack if mips-force-execstack == yes.
+	* sysdeps/unix/sysv/linux/mips/configure: Regenerated.
+	* sysdeps/unix/sysv/linux/mips/configure.ac
+	(mips-force-execstack): New var.
+	Set to yes for hard-float builds with minimum_kernel < 4.8.0
+	or minimum_kernel not set at all.
+	(mips-has-gnustack): New var.
+	Use value of libc_cv_as_noexecstack
+	if mips-force-execstack != yes, otherwise set to no.
+
+2019-10-08  Gabriel F. T. Gomes  <gabrielftg@linux.ibm.com>
+
+	* Makefile: Fix locale dependency for a couple of tests.
+	($(objpfx)tst-strftime2.out): New rule.
+	($(objpfx)tst-strftime3.out): Likewise.
+
+2019-09-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/riscv/vfork.S: Do not include
+	<linux/sched.h>.
+	(CLONE_VM): New macro.
+	(CLONE_VFORK): Likewise.
+
+2019-09-14  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #24986]
+        * sysdeps/unix/alpha/getegid.S: Move to ...
+	* sysdeps/unix/sysv/linux/alpha/getegid.S: ... here.
+        * sysdeps/unix/alpha/geteuid.S: Move to ...
+	* sysdeps/unix/sysv/linux/alpha/geteuid.S: ... here.
+        * sysdeps/unix/alpha/getppid.S: Move to ...
+	* sysdeps/unix/sysv/linux/alpha/getppid.S: ... here
+
+2019-09-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/hppa/fpu/libm-test-ulps: Update.
+
+2019-09-03  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/alpha/fpu/libm-test-ulps: Regenerated using GCC 9.2.
+
+2019-08-28  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #24682]
+	* NEWS: Mention this bug fixed.
+	* localedata/locales/bo_CN (first_weekday): Add, set to 2 (Monday).
+	* localedata/locales/ug_CN (first_weekday): Likewise.
+	* localedata/locales/zh_CN (first_weekday): Likewise.
+
+2019-08-01  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #24867]
+	* malloc/malloc.c (__malloc_info): Remove unwanted leading
+	whitespace.
+
 2019-10-02  Paul A. Clarke  <pc@us.ibm.com>
 
 	* sysdeps/powerpc/fpu/fenv_private.h:

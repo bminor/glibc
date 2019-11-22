@@ -1621,7 +1621,7 @@ static INTERNAL_SIZE_T global_max_fast;
 
 #define set_max_fast(s) \
   global_max_fast = (((s) == 0)						      \
-                     ? SMALLBIN_WIDTH : ((s + SIZE_SZ) & ~MALLOC_ALIGN_MASK))
+                     ? MIN_CHUNK_SIZE / 2 : ((s + SIZE_SZ) & ~MALLOC_ALIGN_MASK))
 
 static inline INTERNAL_SIZE_T
 get_max_fast (void)
@@ -5115,6 +5115,19 @@ do_set_tcache_unsorted_limit (size_t value)
 }
 #endif
 
+static inline int
+__always_inline
+do_set_mxfast (size_t value)
+{
+  if (value >= 0 && value <= MAX_FAST_SIZE)
+    {
+      LIBC_PROBE (memory_mallopt_mxfast, 2, value, get_max_fast ());
+      set_max_fast (value);
+      return 1;
+    }
+  return 0;
+}
+
 int
 __libc_mallopt (int param_number, int value)
 {
@@ -5134,13 +5147,7 @@ __libc_mallopt (int param_number, int value)
   switch (param_number)
     {
     case M_MXFAST:
-      if (value >= 0 && value <= MAX_FAST_SIZE)
-        {
-          LIBC_PROBE (memory_mallopt_mxfast, 2, value, get_max_fast ());
-          set_max_fast (value);
-        }
-      else
-        res = 0;
+      do_set_mxfast (value);
       break;
 
     case M_TRIM_THRESHOLD:
@@ -5405,6 +5412,12 @@ __malloc_info (int options, FILE *fp)
 #define nsizes (sizeof (sizes) / sizeof (sizes[0]))
 
       __libc_lock_lock (ar_ptr->mutex);
+
+      /* Account for top chunk.  The top-most available chunk is
+	 treated specially and is never in any bin. See "initial_top"
+	 comments.  */
+      avail = chunksize (ar_ptr->top);
+      nblocks = 1;  /* Top always exists.  */
 
       for (size_t i = 0; i < NFASTBINS; ++i)
 	{

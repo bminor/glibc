@@ -26,11 +26,13 @@
 
 /* Use "" to work around incorrect macro expansion of the
    __has_include argument (GCC PR 80005).  */
-#if __glibc_has_include ("linux/stat.h")
-# include "linux/stat.h"
-# ifdef STATX_TYPE
-#  define __statx_timestamp_defined 1
-#  define __statx_defined 1
+#ifdef __has_include
+# if __has_include ("linux/stat.h")
+#  include "linux/stat.h"
+#  ifdef STATX_TYPE
+#   define __statx_timestamp_defined 1
+#   define __statx_defined 1
+#  endif
 # endif
 #endif
 
