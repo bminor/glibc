@@ -51,6 +51,12 @@ Security related changes:
   via proceed_next_node in posix/regexec.c leads to heap-based buffer
   over-read.  Reported by Hongxu Chen.
 
+  CVE-2019-19126: ld.so failed to ignore the LD_PREFER_MAP_32BIT_EXEC
+  environment variable during program execution after a security
+  transition, allowing local attackers to restrict the possible mapping
+  addresses for loaded libraries and thus bypass ASLR for a setuid
+  program.  Reported by Marcin Kościelnicki.
+
 
 Version 2.29
 
