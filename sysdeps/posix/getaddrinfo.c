@@ -2186,6 +2186,10 @@ getaddrinfo (const char *name, const char *service,
   if ((hints->ai_flags & AI_CANONNAME) && name == NULL)
     return EAI_BADFLAGS;
 
+  if (hints->ai_family != AF_UNSPEC && hints->ai_family != AF_INET
+      && hints->ai_family != AF_INET6)
+    return EAI_FAMILY;
+
   struct in6addrinfo *in6ai = NULL;
   size_t in6ailen = 0;
   bool seen_ipv4 = false;
@@ -2244,33 +2248,25 @@ getaddrinfo (const char *name, const char *service,
     pservice = NULL;
 
   struct addrinfo **end = &p;
-
   unsigned int naddrs = 0;
-  if (hints->ai_family == AF_UNSPEC || hints->ai_family == AF_INET
-      || hints->ai_family == AF_INET6)
-    {
-      struct scratch_buffer tmpbuf;
-      scratch_buffer_init (&tmpbuf);
-      last_i = gaih_inet (name, pservice, hints, end, &naddrs, &tmpbuf);
-      scratch_buffer_free (&tmpbuf);
+  struct scratch_buffer tmpbuf;
 
-      if (last_i != 0)
-	{
-	  freeaddrinfo (p);
-	  __free_in6ai (in6ai);
+  scratch_buffer_init (&tmpbuf);
+  last_i = gaih_inet (name, pservice, hints, end, &naddrs, &tmpbuf);
+  scratch_buffer_free (&tmpbuf);
 
-	  return -last_i;
-	}
-      while (*end)
-	{
-	  end = &((*end)->ai_next);
-	  ++nresults;
-	}
-    }
-  else
+  if (last_i != 0)
     {
+      freeaddrinfo (p);
       __free_in6ai (in6ai);
-      return EAI_FAMILY;
+
+      return -last_i;
+    }
+
+  while (*end)
+    {
+      end = &((*end)->ai_next);
+      ++nresults;
     }
 
   if (naddrs > 1)
