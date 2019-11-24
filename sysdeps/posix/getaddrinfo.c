@@ -2206,7 +2206,7 @@ getaddrinfo (const char *name, const char *service,
 	{
 	  /* If we haven't seen both IPv4 and IPv6 interfaces we can
 	     narrow down the search.  */
-	  if ((! seen_ipv4 || ! seen_ipv6) && (seen_ipv4 || seen_ipv6))
+	  if (seen_ipv4 != seen_ipv6)
 	    {
 	      local_hints = *hints;
 	      local_hints.ai_family = seen_ipv4 ? PF_INET : PF_INET6;
