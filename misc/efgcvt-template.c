@@ -25,8 +25,6 @@
 
 #define APPEND(a, b) APPEND2 (a, b)
 #define APPEND2(a, b) a##b
-#define __APPEND(a, b) __APPEND2 (a, b)
-#define __APPEND2(a, b) __##a##b
 
 
 #define FCVT_BUFFER APPEND (FUNC_PREFIX, fcvt_buffer)
@@ -39,13 +37,11 @@ static char ECVT_BUFFER[MAXDIG];
 libc_freeres_ptr (static char *FCVT_BUFPTR);
 
 char *
-__APPEND (FUNC_PREFIX, fcvt) (FLOAT_TYPE value, int ndigit, int *decpt,
-			      int *sign)
+__FCVT (FLOAT_TYPE value, int ndigit, int *decpt, int *sign)
 {
   if (FCVT_BUFPTR == NULL)
     {
-      if (__APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign,
-					  FCVT_BUFFER, MAXDIG) != -1)
+      if (__FCVT_R (value, ndigit, decpt, sign, FCVT_BUFFER, MAXDIG) != -1)
 	return FCVT_BUFFER;
 
       FCVT_BUFPTR = (char *) malloc (FCVT_MAXDIG);
@@ -53,25 +49,22 @@ __APPEND (FUNC_PREFIX, fcvt) (FLOAT_TYPE value, int ndigit, int *decpt,
 	return FCVT_BUFFER;
     }
 
-  (void) __APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign,
-					 FCVT_BUFPTR, FCVT_MAXDIG);
+  (void) __FCVT_R (value, ndigit, decpt, sign, FCVT_BUFPTR, FCVT_MAXDIG);
 
   return FCVT_BUFPTR;
 }
 
 
 char *
-__APPEND (FUNC_PREFIX, ecvt) (FLOAT_TYPE value, int ndigit, int *decpt,
-			      int *sign)
+__ECVT (FLOAT_TYPE value, int ndigit, int *decpt, int *sign)
 {
-  (void) __APPEND (FUNC_PREFIX, ecvt_r) (value, ndigit, decpt, sign,
-					 ECVT_BUFFER, MAXDIG);
+  (void) __ECVT_R (value, ndigit, decpt, sign, ECVT_BUFFER, MAXDIG);
 
   return ECVT_BUFFER;
 }
 
 char *
-__APPEND (FUNC_PREFIX, gcvt) (FLOAT_TYPE value, int ndigit, char *buf)
+__GCVT (FLOAT_TYPE value, int ndigit, char *buf)
 {
   sprintf (buf, "%.*" FLOAT_FMT_FLAG "g", MIN (ndigit, NDIGIT_MAX), value);
   return buf;

@@ -17,22 +17,21 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#define ECVT_R qecvt_r
+#define FCVT_R qfcvt_r
+#define __ECVT_R __qecvt_r
+#define __FCVT_R __qfcvt_r
 #include <efgcvt-ldbl-macros.h>
 #include <efgcvt_r-template.c>
 
 #if LONG_DOUBLE_COMPAT (libc, GLIBC_2_0)
-# define cvt_symbol(symbol) \
-  cvt_symbol_1 (libc, __APPEND (FUNC_PREFIX, symbol), \
-	      APPEND (FUNC_PREFIX, symbol), GLIBC_2_4)
-# define cvt_symbol_1(lib, local, symbol, version) \
+# define cvt_symbol(local, symbol) \
   libc_hidden_def (local) \
-  versioned_symbol (lib, local, symbol, version)
+  versioned_symbol (libc, local, symbol, GLIBC_2_4)
 #else
-# define cvt_symbol(symbol) \
-  cvt_symbol_1 (__APPEND (FUNC_PREFIX, symbol), APPEND (FUNC_PREFIX, symbol))
-#  define cvt_symbol_1(local, symbol) \
+# define cvt_symbol(local, symbol) \
   libc_hidden_def (local) \
   weak_alias (local, symbol)
 #endif
-cvt_symbol(fcvt_r);
-cvt_symbol(ecvt_r);
+cvt_symbol (__qfcvt_r, qfcvt_r);
+cvt_symbol (__qecvt_r, qecvt_r);

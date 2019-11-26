@@ -28,12 +28,10 @@
 
 #define APPEND(a, b) APPEND2 (a, b)
 #define APPEND2(a, b) a##b
-#define __APPEND(a, b) __APPEND2 (a, b)
-#define __APPEND2(a, b) __##a##b
 
 int
-__APPEND (FUNC_PREFIX, fcvt_r) (FLOAT_TYPE value, int ndigit, int *decpt,
-				int *sign, char *buf, size_t len)
+__FCVT_R (FLOAT_TYPE value, int ndigit, int *decpt, int *sign,
+	  char *buf, size_t len)
 {
   ssize_t n;
   ssize_t i;
@@ -127,8 +125,8 @@ __APPEND (FUNC_PREFIX, fcvt_r) (FLOAT_TYPE value, int ndigit, int *decpt,
 }
 
 int
-__APPEND (FUNC_PREFIX, ecvt_r) (FLOAT_TYPE value, int ndigit, int *decpt,
-				int *sign, char *buf, size_t len)
+__ECVT_R (FLOAT_TYPE value, int ndigit, int *decpt, int *sign,
+	  char *buf, size_t len)
 {
   int exponent = 0;
 
@@ -187,8 +185,8 @@ __APPEND (FUNC_PREFIX, ecvt_r) (FLOAT_TYPE value, int ndigit, int *decpt,
       *sign = isfinite (value) ? signbit (value) != 0 : 0;
     }
   else
-    if (__APPEND (FUNC_PREFIX, fcvt_r) (value, MIN (ndigit, NDIGIT_MAX) - 1,
-					decpt, sign, buf, len))
+    if (__FCVT_R (value, MIN (ndigit, NDIGIT_MAX) - 1,
+		  decpt, sign, buf, len))
       return -1;
 
   *decpt += exponent;
