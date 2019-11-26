@@ -16,20 +16,27 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#define ECVT ecvt
+#define FCVT fcvt
+#define GCVT gcvt
+#define __ECVT __ecvt
+#define __FCVT __fcvt
+#define __GCVT __gcvt
+#define __ECVT_R __ecvt_r
+#define __FCVT_R __fcvt_r
 #include <efgcvt-dbl-macros.h>
 #include <efgcvt-template.c>
 
 #if LONG_DOUBLE_COMPAT (libc, GLIBC_2_0)
-# define cvt_symbol(symbol) \
-  cvt_symbol_1 (libc, __APPEND (FUNC_PREFIX, symbol), \
-	      APPEND (q, symbol), GLIBC_2_0); \
-  strong_alias (__APPEND (FUNC_PREFIX, symbol), APPEND (FUNC_PREFIX, symbol))
+# define cvt_symbol(local, symbol) \
+  cvt_symbol_1 (libc, local, APPEND (q, symbol), GLIBC_2_0); \
+  strong_alias (local, symbol)
 # define cvt_symbol_1(lib, local, symbol, version) \
   compat_symbol (lib, local, symbol, version)
 #else
-# define cvt_symbol(symbol) \
-  strong_alias (__APPEND (FUNC_PREFIX, symbol), APPEND (FUNC_PREFIX, symbol))
+# define cvt_symbol(local, symbol) \
+  strong_alias (local, symbol)
 #endif
-cvt_symbol(fcvt);
-cvt_symbol(ecvt);
-cvt_symbol(gcvt);
+cvt_symbol (__fcvt, fcvt);
+cvt_symbol (__ecvt, ecvt);
+cvt_symbol (__gcvt, gcvt);
