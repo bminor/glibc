@@ -164,7 +164,7 @@ ENTRY(STRSTR_ARCH13)
 	vfenezb	%v19,%v18,%v18	/* Search zero in loaded needle bytes.  */
 	veclb	%v19,%v21	/* Zero index <= max loaded byte index?  */
 	jle	.Lneedle_loaded	/* -> v18 contains full needle.  */
-	vl	%v16,0(%r3)	/* Load needle beyond page boundary.  */
+	vl	%v18,0(%r3)	/* Load needle beyond page boundary.  */
 	vfenezb	%v19,%v18,%v18
 	j	.Lneedle_loaded
 END(STRSTR_ARCH13)

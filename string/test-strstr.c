@@ -139,16 +139,45 @@ check1 (void)
 static void
 check2 (void)
 {
-  const char s1[] = ", enable_static, \0, enable_shared, ";
+  const char s1_stack[] = ", enable_static, \0, enable_shared, ";
+  const size_t s1_byte_count = 18;
+  const char *s2_stack = &(s1_stack[s1_byte_count]);
+  const size_t s2_byte_count = 18;
   char *exp_result;
-  char *s2 = (void *) buf1 + page_size - 18;
+  const size_t page_size_real = getpagesize ();
 
-  strcpy (s2, s1);
-  exp_result = stupid_strstr (s1, s1 + 18);
+  /* Haystack at end of page.  The following page is protected.  */
+  char *s1_page_end = (void *) buf1 + page_size - s1_byte_count;
+  strcpy (s1_page_end, s1_stack);
+
+  /* Haystack which crosses a page boundary.
+     Note: page_size is at least 2 * getpagesize.  See test_init.  */
+  char *s1_page_cross = (void *) buf1 + page_size_real - 8;
+  strcpy (s1_page_cross, s1_stack);
+
+  /* Needle at end of page.  The following page is protected.  */
+  char *s2_page_end = (void *) buf2 + page_size - s2_byte_count;
+  strcpy (s2_page_end, s2_stack);
+
+  /* Needle which crosses a page boundary.
+     Note: page_size is at least 2 * getpagesize.  See test_init.  */
+  char *s2_page_cross = (void *) buf2 + page_size_real - 8;
+  strcpy (s2_page_cross, s2_stack);
+
+  exp_result = stupid_strstr (s1_stack, s2_stack);
   FOR_EACH_IMPL (impl, 0)
     {
-      check_result (impl, s1, s1 + 18, exp_result);
-      check_result (impl, s2, s1 + 18, exp_result);
+      check_result (impl, s1_stack, s2_stack, exp_result);
+      check_result (impl, s1_stack, s2_page_end, exp_result);
+      check_result (impl, s1_stack, s2_page_cross, exp_result);
+
+      check_result (impl, s1_page_end, s2_stack, exp_result);
+      check_result (impl, s1_page_end, s2_page_end, exp_result);
+      check_result (impl, s1_page_end, s2_page_cross, exp_result);
+
+      check_result (impl, s1_page_cross, s2_stack, exp_result);
+      check_result (impl, s1_page_cross, s2_page_end, exp_result);
+      check_result (impl, s1_page_cross, s2_page_cross, exp_result);
     }
 }
 
