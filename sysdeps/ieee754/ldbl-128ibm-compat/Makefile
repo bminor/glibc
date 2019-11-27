@@ -75,14 +75,14 @@ CFLAGS-test-obstack-chk-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
 CFLAGS-test-obstack-chk-ibm128.c += -mabi=ibmlongdouble -Wno-psabi
 
 tests-internal += test-scanf-ieee128 test-scanf-ibm128
-CFLAGS-test-scanf-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
-CFLAGS-test-scanf-ibm128.c += -mabi=ibmlongdouble -Wno-psabi
+CFLAGS-test-scanf-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi -std=c89 -D_GNU_SOURCE
+CFLAGS-test-scanf-ibm128.c += -mabi=ibmlongdouble -Wno-psabi -std=c89 -D_GNU_SOURCE
 
 $(objpfx)test-scanf-ieee128: gnulib-tests += $(f128-loader-link)
 
 tests-internal += test-wscanf-ieee128 test-wscanf-ibm128
-CFLAGS-test-wscanf-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
-CFLAGS-test-wscanf-ibm128.c += -mabi=ibmlongdouble -Wno-psabi
+CFLAGS-test-wscanf-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi -std=c89 -D_GNU_SOURCE
+CFLAGS-test-wscanf-ibm128.c += -mabi=ibmlongdouble -Wno-psabi -std=c89 -D_GNU_SOURCE
 
 $(objpfx)test-wscanf-ieee128: gnulib-tests += $(f128-loader-link)
 

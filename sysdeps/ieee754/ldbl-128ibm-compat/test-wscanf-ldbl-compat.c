@@ -1,3 +1,7 @@
+/* Include stdio.h from libio/, because include/stdio.h and -std=c89 do
+   not work together.  */
+#include <libio/stdio.h>
+
 #define CHAR wchar_t
 #define L(x) L##x
 #define FSCANF fwscanf
