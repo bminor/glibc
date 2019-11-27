@@ -93,6 +93,12 @@ Deprecated and removed features, and other changes affecting compatibility:
   are no longer supported.  For v8 only implementations with native CAS
   instruction are still supported (such as LEON).
 
+* If a lazy binding failure happens during dlopen, during the execution of
+  an ELF constructor, the process is now terminated.  Previously, the
+  dynamic loader would return NULL from dlopen, with the lazy binding error
+  captured in a dlerror message.  In general, this is unsafe because
+  resetting the stack in an arbitrary function call is not possible.
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]
