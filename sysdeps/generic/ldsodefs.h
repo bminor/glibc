@@ -1144,8 +1144,15 @@ extern void *_dl_open (const char *name, int mode, const void *caller,
    old scope, OLD can't be freed until no thread is using it.  */
 extern int _dl_scope_free (void *) attribute_hidden;
 
-/* Add module to slot information data.  */
-extern void _dl_add_to_slotinfo (struct link_map  *l) attribute_hidden;
+
+/* Add module to slot information data.  If DO_ADD is false, only the
+   required memory is allocated.  Must be called with GL
+   (dl_load_lock) acquired.  If the function has already been called
+   for the link map L with !do_add, then this function will not raise
+   an exception, otherwise it is possible that it encounters a memory
+   allocation failure.  */
+extern void _dl_add_to_slotinfo (struct link_map *l, bool do_add)
+  attribute_hidden;
 
 /* Update slot information data for at least the generation of the
    module with the given index.  */

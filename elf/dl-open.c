@@ -33,6 +33,7 @@
 #include <stap-probe.h>
 #include <atomic.h>
 #include <libc-internal.h>
+#include <array_length.h>
 
 #include <dl-dst.h>
 #include <dl-prop.h>
@@ -213,6 +214,215 @@ _dl_find_dso_for_object (const ElfW(Addr) addr)
   return NULL;
 }
 rtld_hidden_def (_dl_find_dso_for_object);
+
+/* Return true if NEW is found in the scope for MAP.  */
+static size_t
+scope_has_map (struct link_map *map, struct link_map *new)
+{
+  size_t cnt;
+  for (cnt = 0; map->l_scope[cnt] != NULL; ++cnt)
+    if (map->l_scope[cnt] == &new->l_searchlist)
+      return true;
+  return false;
+}
+
+/* Return the length of the scope for MAP.  */
+static size_t
+scope_size (struct link_map *map)
+{
+  size_t cnt;
+  for (cnt = 0; map->l_scope[cnt] != NULL; )
+    ++cnt;
+  return cnt;
+}
+
+/* Resize the scopes of depended-upon objects, so that the new object
+   can be added later without further allocation of memory.  This
+   function can raise an exceptions due to malloc failure.  */
+static void
+resize_scopes (struct link_map *new)
+{
+  /* If the file is not loaded now as a dependency, add the search
+     list of the newly loaded object to the scope.  */
+  for (unsigned int i = 0; i < new->l_searchlist.r_nlist; ++i)
+    {
+      struct link_map *imap = new->l_searchlist.r_list[i];
+
+      /* If the initializer has been called already, the object has
+	 not been loaded here and now.  */
+      if (imap->l_init_called && imap->l_type == lt_loaded)
+	{
+	  if (scope_has_map (imap, new))
+	    /* Avoid duplicates.  */
+	    continue;
+
+	  size_t cnt = scope_size (imap);
+	  if (__glibc_unlikely (cnt + 1 >= imap->l_scope_max))
+	    {
+	      /* The l_scope array is too small.  Allocate a new one
+		 dynamically.  */
+	      size_t new_size;
+	      struct r_scope_elem **newp;
+
+	      if (imap->l_scope != imap->l_scope_mem
+		  && imap->l_scope_max < array_length (imap->l_scope_mem))
+		{
+		  /* If the current l_scope memory is not pointing to
+		     the static memory in the structure, but the
+		     static memory in the structure is large enough to
+		     use for cnt + 1 scope entries, then switch to
+		     using the static memory.  */
+		  new_size = array_length (imap->l_scope_mem);
+		  newp = imap->l_scope_mem;
+		}
+	      else
+		{
+		  new_size = imap->l_scope_max * 2;
+		  newp = (struct r_scope_elem **)
+		    malloc (new_size * sizeof (struct r_scope_elem *));
+		  if (newp == NULL)
+		    _dl_signal_error (ENOMEM, "dlopen", NULL,
+				      N_("cannot create scope list"));
+		}
+
+	      /* Copy the array and the terminating NULL.  */
+	      memcpy (newp, imap->l_scope,
+		      (cnt + 1) * sizeof (imap->l_scope[0]));
+	      struct r_scope_elem **old = imap->l_scope;
+
+	      imap->l_scope = newp;
+
+	      if (old != imap->l_scope_mem)
+		_dl_scope_free (old);
+
+	      imap->l_scope_max = new_size;
+	    }
+	}
+    }
+}
+
+/* Second stage of resize_scopes: Add NEW to the scopes.  Also print
+   debugging information about scopes if requested.
+
+   This function cannot raise an exception because all required memory
+   has been allocated by a previous call to resize_scopes.  */
+static void
+update_scopes (struct link_map *new)
+{
+  for (unsigned int i = 0; i < new->l_searchlist.r_nlist; ++i)
+    {
+      struct link_map *imap = new->l_searchlist.r_list[i];
+      int from_scope = 0;
+
+      if (imap->l_init_called && imap->l_type == lt_loaded)
+	{
+	  if (scope_has_map (imap, new))
+	    /* Avoid duplicates.  */
+	    continue;
+
+	  size_t cnt = scope_size (imap);
+	  /* Assert that resize_scopes has sufficiently enlarged the
+	     array.  */
+	  assert (cnt + 1 < imap->l_scope_max);
+
+	  /* First terminate the extended list.  Otherwise a thread
+	     might use the new last element and then use the garbage
+	     at offset IDX+1.  */
+	  imap->l_scope[cnt + 1] = NULL;
+	  atomic_write_barrier ();
+	  imap->l_scope[cnt] = &new->l_searchlist;
+
+	  from_scope = cnt;
+	}
+
+      /* Print scope information.  */
+      if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_SCOPES))
+	_dl_show_scope (imap, from_scope);
+    }
+}
+
+/* Call _dl_add_to_slotinfo with DO_ADD set to false, to allocate
+   space in GL (dl_tls_dtv_slotinfo_list).  This can raise an
+   exception.  The return value is true if any of the new objects use
+   TLS.  */
+static bool
+resize_tls_slotinfo (struct link_map *new)
+{
+  bool any_tls = false;
+  for (unsigned int i = 0; i < new->l_searchlist.r_nlist; ++i)
+    {
+      struct link_map *imap = new->l_searchlist.r_list[i];
+
+      /* Only add TLS memory if this object is loaded now and
+	 therefore is not yet initialized.  */
+      if (! imap->l_init_called && imap->l_tls_blocksize > 0)
+	{
+	  _dl_add_to_slotinfo (imap, false);
+	  any_tls = true;
+	}
+    }
+  return any_tls;
+}
+
+/* Second stage of TLS update, after resize_tls_slotinfo.  This
+   function does not raise any exception.  It should only be called if
+   resize_tls_slotinfo returned true.  */
+static void
+update_tls_slotinfo (struct link_map *new)
+{
+  unsigned int first_static_tls = new->l_searchlist.r_nlist;
+  for (unsigned int i = 0; i < new->l_searchlist.r_nlist; ++i)
+    {
+      struct link_map *imap = new->l_searchlist.r_list[i];
+
+      /* Only add TLS memory if this object is loaded now and
+	 therefore is not yet initialized.  */
+      if (! imap->l_init_called && imap->l_tls_blocksize > 0)
+	{
+	  _dl_add_to_slotinfo (imap, true);
+
+	  if (imap->l_need_tls_init
+	      && first_static_tls == new->l_searchlist.r_nlist)
+	    first_static_tls = i;
+	}
+    }
+
+  if (__builtin_expect (++GL(dl_tls_generation) == 0, 0))
+    _dl_fatal_printf (N_("\
+TLS generation counter wrapped!  Please report this."));
+
+  /* We need a second pass for static tls data, because
+     _dl_update_slotinfo must not be run while calls to
+     _dl_add_to_slotinfo are still pending.  */
+  for (unsigned int i = first_static_tls; i < new->l_searchlist.r_nlist; ++i)
+    {
+      struct link_map *imap = new->l_searchlist.r_list[i];
+
+      if (imap->l_need_tls_init
+	  && ! imap->l_init_called
+	  && imap->l_tls_blocksize > 0)
+	{
+	  /* For static TLS we have to allocate the memory here and
+	     now, but we can delay updating the DTV.  */
+	  imap->l_need_tls_init = 0;
+#ifdef SHARED
+	  /* Update the slot information data for at least the
+	     generation of the DSO we are allocating data for.  */
+
+	  /* FIXME: This can terminate the process on memory
+	     allocation failure.  It is not possible to raise
+	     exceptions from this context; to fix this bug,
+	     _dl_update_slotinfo would have to be split into two
+	     operations, similar to resize_scopes and update_scopes
+	     above.  This is related to bug 16134.  */
+	  _dl_update_slotinfo (imap->l_tls_modid);
+#endif
+
+	  GL(dl_init_static_tls) (imap);
+	  assert (imap->l_need_tls_init == 0);
+	}
+    }
+}
 
 /* struct dl_init_args and call_dl_init are used to call _dl_init with
    exception handling disabled.  */
@@ -434,133 +644,40 @@ dl_open_worker (void *a)
      relocation.  */
   _dl_open_check (new);
 
-  /* If the file is not loaded now as a dependency, add the search
-     list of the newly loaded object to the scope.  */
-  bool any_tls = false;
-  unsigned int first_static_tls = new->l_searchlist.r_nlist;
-  for (unsigned int i = 0; i < new->l_searchlist.r_nlist; ++i)
-    {
-      struct link_map *imap = new->l_searchlist.r_list[i];
-      int from_scope = 0;
+  /* This only performs the memory allocations.  The actual update of
+     the scopes happens below, after failure is impossible.  */
+  resize_scopes (new);
 
-      /* If the initializer has been called already, the object has
-	 not been loaded here and now.  */
-      if (imap->l_init_called && imap->l_type == lt_loaded)
-	{
-	  struct r_scope_elem **runp = imap->l_scope;
-	  size_t cnt = 0;
+  /* Increase the size of the GL (dl_tls_dtv_slotinfo_list) data
+     structure.  */
+  bool any_tls = resize_tls_slotinfo (new);
 
-	  while (*runp != NULL)
-	    {
-	      if (*runp == &new->l_searchlist)
-		break;
-	      ++cnt;
-	      ++runp;
-	    }
+  /* Perform the necessary allocations for adding new global objects
+     to the global scope below.  */
+  if (mode & RTLD_GLOBAL)
+    add_to_global_resize (new);
 
-	  if (*runp != NULL)
-	    /* Avoid duplicates.  */
-	    continue;
+  /* Demarcation point: After this, no recoverable errors are allowed.
+     All memory allocations for new objects must have happened
+     before.  */
 
-	  if (__glibc_unlikely (cnt + 1 >= imap->l_scope_max))
-	    {
-	      /* The 'r_scope' array is too small.  Allocate a new one
-		 dynamically.  */
-	      size_t new_size;
-	      struct r_scope_elem **newp;
+  /* Second stage after resize_scopes: Actually perform the scope
+     update.  After this, dlsym and lazy binding can bind to new
+     objects.  */
+  update_scopes (new);
 
-#define SCOPE_ELEMS(imap) \
-  (sizeof (imap->l_scope_mem) / sizeof (imap->l_scope_mem[0]))
+  /* FIXME: It is unclear whether the order here is correct.
+     Shouldn't new objects be made available for binding (and thus
+     execution) only after there TLS data has been set up fully?
+     Fixing bug 16134 will likely make this distinction less
+     important.  */
 
-	      if (imap->l_scope != imap->l_scope_mem
-		  && imap->l_scope_max < SCOPE_ELEMS (imap))
-		{
-		  new_size = SCOPE_ELEMS (imap);
-		  newp = imap->l_scope_mem;
-		}
-	      else
-		{
-		  new_size = imap->l_scope_max * 2;
-		  newp = (struct r_scope_elem **)
-		    malloc (new_size * sizeof (struct r_scope_elem *));
-		  if (newp == NULL)
-		    _dl_signal_error (ENOMEM, "dlopen", NULL,
-				      N_("cannot create scope list"));
-		}
-
-	      memcpy (newp, imap->l_scope, cnt * sizeof (imap->l_scope[0]));
-	      struct r_scope_elem **old = imap->l_scope;
-
-	      imap->l_scope = newp;
-
-	      if (old != imap->l_scope_mem)
-		_dl_scope_free (old);
-
-	      imap->l_scope_max = new_size;
-	    }
-
-	  /* First terminate the extended list.  Otherwise a thread
-	     might use the new last element and then use the garbage
-	     at offset IDX+1.  */
-	  imap->l_scope[cnt + 1] = NULL;
-	  atomic_write_barrier ();
-	  imap->l_scope[cnt] = &new->l_searchlist;
-
-	  /* Print only new scope information.  */
-	  from_scope = cnt;
-	}
-      /* Only add TLS memory if this object is loaded now and
-	 therefore is not yet initialized.  */
-      else if (! imap->l_init_called
-	       /* Only if the module defines thread local data.  */
-	       && __builtin_expect (imap->l_tls_blocksize > 0, 0))
-	{
-	  /* Now that we know the object is loaded successfully add
-	     modules containing TLS data to the slot info table.  We
-	     might have to increase its size.  */
-	  _dl_add_to_slotinfo (imap);
-
-	  if (imap->l_need_tls_init
-	      && first_static_tls == new->l_searchlist.r_nlist)
-	    first_static_tls = i;
-
-	  /* We have to bump the generation counter.  */
-	  any_tls = true;
-	}
-
-      /* Print scope information.  */
-      if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_SCOPES))
-	_dl_show_scope (imap, from_scope);
-    }
-
-  /* Bump the generation number if necessary.  */
-  if (any_tls && __builtin_expect (++GL(dl_tls_generation) == 0, 0))
-    _dl_fatal_printf (N_("\
-TLS generation counter wrapped!  Please report this."));
-
-  /* We need a second pass for static tls data, because _dl_update_slotinfo
-     must not be run while calls to _dl_add_to_slotinfo are still pending.  */
-  for (unsigned int i = first_static_tls; i < new->l_searchlist.r_nlist; ++i)
-    {
-      struct link_map *imap = new->l_searchlist.r_list[i];
-
-      if (imap->l_need_tls_init
-	  && ! imap->l_init_called
-	  && imap->l_tls_blocksize > 0)
-	{
-	  /* For static TLS we have to allocate the memory here and
-	     now, but we can delay updating the DTV.  */
-	  imap->l_need_tls_init = 0;
-#ifdef SHARED
-	  /* Update the slot information data for at least the
-	     generation of the DSO we are allocating data for.  */
-	  _dl_update_slotinfo (imap->l_tls_modid);
-#endif
-
-	  GL(dl_init_static_tls) (imap);
-	  assert (imap->l_need_tls_init == 0);
-	}
-    }
+  /* Second stage after resize_tls_slotinfo: Update the slotinfo data
+     structures.  */
+  if (any_tls)
+    /* FIXME: This calls _dl_update_slotinfo, which aborts the process
+       on memory allocation failure.  See bug 16134.  */
+    update_tls_slotinfo (new);
 
   /* Notify the debugger all new objects have been relocated.  */
   if (relocation_in_progress)
