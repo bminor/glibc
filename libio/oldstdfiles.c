@@ -87,6 +87,11 @@ _IO_check_libio (void)
 	stdout->_vtable_offset = stderr->_vtable_offset =
 	((int) sizeof (struct _IO_FILE)
 	 - (int) sizeof (struct _IO_FILE_complete));
+
+      if (_IO_stdin_.vtable != &_IO_old_file_jumps
+	  || _IO_stdout_.vtable != &_IO_old_file_jumps
+	  || _IO_stderr_.vtable != &_IO_old_file_jumps)
+	IO_set_accept_foreign_vtables (&_IO_vtable_check);
     }
 }
 
