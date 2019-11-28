@@ -209,6 +209,15 @@ provides additional security hardening because it enables full RELRO
 and a read-only global offset table (GOT), at the cost of slightly
 increased program load times.
 
+@item --disable-major-minor-libraries
+Do not install shared objects under file names that contain the major
+and minor version of @theglibc.  By default, such names are used, and
+the names defined by the ABI are provided as symbolic links only.  This
+causes problems with certain package managers during library upgrades
+and (in particular) downgrades, so this option can be used to install
+these shared objects directly under their ABI-defined names, without an
+additional indirection via symbolic links.
+
 @pindex pt_chown
 @findex grantpt
 @item --enable-pt_chown

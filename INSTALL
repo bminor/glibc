@@ -181,6 +181,16 @@ if 'CFLAGS' is specified it must enable optimization.  For example:
      RELRO and a read-only global offset table (GOT), at the cost of
      slightly increased program load times.
 
+'--disable-major-minor-libraries'
+     Do not install shared objects under file names that contain the
+     major and minor version of the GNU C Library.  By default, such
+     names are used, and the names defined by the ABI are provided as
+     symbolic links only.  This causes problems with certain package
+     managers during library upgrades and (in particular) downgrades, so
+     this option can be used to install these shared objects directly
+     under their ABI-defined names, without an additional indirection
+     via symbolic links.
+
 '--enable-pt_chown'
      The file 'pt_chown' is a helper binary for 'grantpt' (*note
      Pseudo-Terminals: Allocation.) that is installed setuid root to fix

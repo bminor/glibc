@@ -71,6 +71,7 @@ have-libcap = @have_libcap@
 have-cc-with-libunwind = @libc_cv_cc_with_libunwind@
 fno-unit-at-a-time = @fno_unit_at_a_time@
 bind-now = @bindnow@
+major-minor-libraries = @major_minor_libraries@
 have-hash-style = @libc_cv_hashstyle@
 use-default-link = @use_default_link@
 output-format = @libc_cv_output_format@

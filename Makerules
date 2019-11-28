@@ -991,6 +991,14 @@ versioned := $(strip $(foreach so,$(install-lib.so),\
 install-lib.so-versioned := $(filter $(versioned), $(install-lib.so))
 install-lib.so-unversioned := $(filter-out $(versioned), $(install-lib.so))
 
+# $(install-major-minor-libraries) is used within install-lib-nosubdir
+# to trigger installation of the actual implementation file.
+ifeq (yes,$(major-minor-libraries))
+install-major-minor-libraries = $(inst_slibdir)/$(L:.so=)-$(version).so
+else
+install-major-minor-libraries =
+endif
+
 # For libraries whose soname have version numbers, we install three files:
 #	$(inst_libdir)/libfoo.so	-- for linking, symlink or ld script
 #	$(inst_slibdir)/libfoo.so.NN	-- for loading by SONAME, symlink
@@ -998,7 +1006,7 @@ install-lib.so-unversioned := $(filter-out $(versioned), $(install-lib.so))
 install-lib-nosubdir: $(install-lib.so-unversioned:%=$(inst_slibdir)/%) \
 		      $(foreach L,$(install-lib.so-versioned),\
 				$(inst_libdir)/$L \
-				$(inst_slibdir)/$(L:.so=)-$(version).so \
+				$(install-major-minor-libraries) \
 				$(inst_slibdir)/$L$($L-version))
 
 # Install all the unversioned shared libraries.
@@ -1051,6 +1059,7 @@ endef
 endif
 
 ifdef libc.so-version
+ifeq (yes,$(major-minor-libraries))
 # For a library specified to be version N, install three files:
 # libc.so	->	libc.so.N	(e.g. libc.so.6)
 # libc.so.6	->	libc-VERSION.so	(e.g. libc-1.10.so)
@@ -1060,6 +1069,11 @@ $(inst_slibdir)/libc.so$(libc.so-version): $(inst_slibdir)/libc-$(version).so \
 	$(make-shlib-link)
 $(inst_slibdir)/libc-$(version).so: $(common-objpfx)libc.so $(+force)
 	$(do-install-program)
+else # !$(major-minor-libraries)
+$(inst_slibdir)/libc.so$(libc.so-version): $(common-objpfx)libc.so $(+force)
+	$(do-install-program)
+endif # !$(major-minor-libraries)
+
 install: $(inst_slibdir)/libc.so$(libc.so-version)
 
 # This fragment of linker script gives the OUTPUT_FORMAT statement
@@ -1134,6 +1148,7 @@ include $(o-iterator)
 
 generated += $(foreach o,$(versioned),$o$($o-version))
 
+ifeq (yes,$(major-minor-libraries))
 define o-iterator-doit
 $(inst_slibdir)/$o$($o-version): $(inst_slibdir)/$(o:.so=)-$(version).so \
 				 $(+force);
@@ -1148,6 +1163,15 @@ $(inst_slibdir)/$(o:.so=)-$(version).so: $(objpfx)$o $(+force);
 endef
 object-suffixes-left := $(versioned)
 include $(o-iterator)
+
+else # !$(major-minor-libraries)
+define o-iterator-doit
+$(inst_slibdir)/$o$($o-version): $(objpfx)$o $(+force);
+	$$(do-install-program)
+endef
+object-suffixes-left := $(versioned)
+include $(o-iterator)
+endif # !$(major-minor-libraries)
 endif # ifneq (,$(versioned))
 
 define do-install-so

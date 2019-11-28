@@ -112,7 +112,9 @@ ifeq (yes,$(build-shared))
 install: install-symbolic-link
 .PHONY: install-symbolic-link
 install-symbolic-link: subdir_install
-	$(symbolic-link-prog) $(symbolic-link-list)
+	if test -e $(symbolic-link-list) ; then \
+	  $(symbolic-link-prog) $(symbolic-link-list); \
+	fi
 	rm -f $(symbolic-link-list)
 
 install:

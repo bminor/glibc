@@ -682,6 +682,7 @@ experimental_malloc
 enable_werror
 all_warnings
 force_install
+major_minor_libraries
 bindnow
 hardcoded_path_in_tests
 enable_timezone_tools
@@ -776,6 +777,7 @@ enable_hidden_plt
 enable_bind_now
 enable_stack_protector
 enable_static_nss
+enable_major_minor_libraries
 enable_force_install
 enable_maintainer_mode
 enable_kernel
@@ -1441,6 +1443,10 @@ Optional Features:
                           Use -fstack-protector[-all|-strong] to detect glibc
                           buffer overflows
   --enable-static-nss     build static NSS modules [default=no]
+  --enable-major-minor-libraries
+                          install most shared objects under names based on the
+                          glibc version, with symbolic links to them
+                          [default=yes]
   --disable-force-install don't force installation of files from this package,
                           even if they are older than the installed files
   --enable-maintainer-mode
@@ -3462,6 +3468,15 @@ if test x"$static_nss" = xyes || test x"$shared" = xno; then
   $as_echo "#define DO_STATIC_NSS 1" >>confdefs.h
 
 fi
+
+# Check whether --enable-major-minor-libraries was given.
+if test "${enable_major_minor_libraries+set}" = set; then :
+  enableval=$enable_major_minor_libraries; major_minor_libraries=$enableval
+else
+  major_minor_libraries=yes
+fi
+
+
 
 # Check whether --enable-force-install was given.
 if test "${enable_force_install+set}" = set; then :

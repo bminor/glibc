@@ -251,6 +251,13 @@ if test x"$static_nss" = xyes || test x"$shared" = xno; then
   AC_DEFINE(DO_STATIC_NSS)
 fi
 
+AC_ARG_ENABLE([major-minor-libraries],
+	AC_HELP_STRING([--enable-major-minor-libraries],
+	[install most shared objects under names based on the glibc version, with symbolic links to them  @<:@default=yes@:>@]),
+	[major_minor_libraries=$enableval],
+	[major_minor_libraries=yes])
+AC_SUBST(major_minor_libraries)
+
 AC_ARG_ENABLE([force-install],
 	      AC_HELP_STRING([--disable-force-install],
 			     [don't force installation of files from this package, even if they are older than the installed files]),
