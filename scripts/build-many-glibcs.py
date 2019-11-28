@@ -359,7 +359,7 @@ class Context(object):
                         os_name='linux-gnu',
                         glibcs=[{},
                                 {'arch': 'sparcv8',
-                                 'ccopts': '-m32 -mlong-double-128 -mcpu=leon3'}],
+                                 'ccopts': '-m32 -mlong-double-128 -mcpu=leon3'},
                                 {'arch': 'sparcv9',
                                  'ccopts': '-m32 -mlong-double-128 -mcpu=v9'}],
                         extra_glibcs=[{'variant': 'disable-multi-arch',
