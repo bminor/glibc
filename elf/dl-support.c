@@ -367,14 +367,24 @@ _dl_non_dynamic_init (void)
   if (_dl_platform != NULL)
     _dl_platformlen = strlen (_dl_platform);
 
-  /* Scan for a program header telling us the stack is nonexecutable.  */
   if (_dl_phdr != NULL)
-    for (uint_fast16_t i = 0; i < _dl_phnum; ++i)
-      if (_dl_phdr[i].p_type == PT_GNU_STACK)
+    for (const ElfW(Phdr) *ph = _dl_phdr; ph < &_dl_phdr[_dl_phnum]; ++ph)
+      switch (ph->p_type)
 	{
-	  _dl_stack_flags = _dl_phdr[i].p_flags;
+	/* Check if the stack is nonexecutable.  */
+	case PT_GNU_STACK:
+	  _dl_stack_flags = ph->p_flags;
+	  break;
+
+	case PT_GNU_RELRO:
+	  _dl_main_map.l_relro_addr = ph->p_vaddr;
+	  _dl_main_map.l_relro_size = ph->p_memsz;
 	  break;
 	}
+
+  /* Setup relro on the binary itself.  */
+  if (_dl_main_map.l_relro_size != 0)
+    _dl_protect_relro (&_dl_main_map);
 }
 
 #ifdef DL_SYSINFO_IMPLEMENTATION
