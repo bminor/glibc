@@ -51,14 +51,14 @@ struct signal_frame_32 {
   /* We don't care about the rest, since IP value is at 'mctx' field.  */
 };
 
-static inline int
+static inline bool
 is_sigtramp_address (void *nip)
 {
 #ifdef HAVE_SIGTRAMP_RT32
-  if (nip == VDSO_SYMBOL (sigtramp32))
-    return 1;
+  if (nip == GLRO (dl_vdso_sigtramp_32))
+    return true;
 #endif
-  return 0;
+  return false;
 }
 
 struct rt_signal_frame_32 {
@@ -68,14 +68,14 @@ struct rt_signal_frame_32 {
   /* We don't care about the rest, since IP value is at 'uc' field.  */
 };
 
-static inline int
+static inline bool
 is_sigtramp_address_rt (void * nip)
 {
 #ifdef HAVE_SIGTRAMP_32
-  if (nip == VDSO_SYMBOL (sigtramp_rt32))
-    return 1;
+  if (nip == GLRO (dl_vdso_sigtramp_rt32))
+    return true;
 #endif
-  return 0;
+  return false;
 }
 
 int

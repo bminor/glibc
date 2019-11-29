@@ -608,6 +608,12 @@ struct rtld_global_ro
   /* At startup time we set up the normal DSO data structure for it,
      and this points to it.  */
   EXTERN struct link_map *_dl_sysinfo_map;
+
+# define PROCINFO_DECL
+# ifndef PROCINFO_CLASS
+#  define PROCINFO_CLASS EXTERN
+# endif
+# include <dl-vdso-setup.c>
 #endif
 
   /* Mask for more hardware capabilities that are available on some

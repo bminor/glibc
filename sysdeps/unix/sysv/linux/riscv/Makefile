@@ -1,7 +1,3 @@
-ifeq ($(subdir),elf)
-sysdep_routines	+= dl-vdso
-endif
-
 ifeq ($(subdir),misc)
 sysdep_headers += sys/cachectl.h
 sysdep_routines += flush-icache

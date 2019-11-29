@@ -11,10 +11,6 @@ ifeq ($(subdir),stdlib)
 gen-as-const-headers += ucontext_i.sym
 endif
 
-ifeq ($(subdir),elf)
-sysdep_routines += dl-vdso
-endif
-
 ifeq ($(subdir),nptl)
 libpthread-sysdep_routines += elision-lock elision-unlock elision-timed \
 			      elision-trylock

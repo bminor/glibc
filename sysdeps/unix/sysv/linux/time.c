@@ -24,6 +24,7 @@
 
 #ifdef SHARED
 # include <dl-vdso.h>
+# include <libc-vdso.h>
 
 static time_t
 time_syscall (time_t *t)
@@ -33,7 +34,7 @@ time_syscall (time_t *t)
 
 # undef INIT_ARCH
 # define INIT_ARCH() \
-  void *vdso_time = get_vdso_symbol (HAVE_TIME_VSYSCALL);
+  void *vdso_time = dl_vdso_vsym (HAVE_TIME_VSYSCALL);
 libc_ifunc (time,
 	    vdso_time ? VDSO_IFUNC_RET (vdso_time)
 		      : (void *) time_syscall);

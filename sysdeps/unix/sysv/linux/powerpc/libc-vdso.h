@@ -54,14 +54,4 @@
 # define VDSO_IFUNC_RET(value)  ((void *) (value))
 #endif
 
-#include_next <libc-vdso.h>
-
-extern unsigned long long (*VDSO_SYMBOL(get_tbfreq)) (void);
-#if defined(__PPC64__) || defined(__powerpc64__)
-extern void *VDSO_SYMBOL(sigtramp_rt64);
-#else
-extern void *VDSO_SYMBOL(sigtramp32);
-extern void *VDSO_SYMBOL(sigtramp_rt32);
-#endif
-
 #endif /* _LIBC_VDSO_H */

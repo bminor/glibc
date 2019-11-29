@@ -1,5 +1,5 @@
-/* Copyright (C) 2009-2020 Free Software Foundation, Inc.
-
+/* ELF symbol resolve functions for VDSO objects.
+   Copyright (C) 2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -13,15 +13,18 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library.  If not, see
+   License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _LIBC_VDSO_H
-#define _LIBC_VDSO_H
+#ifndef _DL_VDSO_H
+#define _DL_VDSO_H	1
 
-/* Adjust the return IFUNC value from a vDSO symbol accordingly required
-   by the ELFv1 ABI.  It is used by the architecture to create an ODP
-   entry since the kernel vDSO does not provide it.  */
-#define VDSO_IFUNC_RET(__value) (__value)
+/* Function for resolving symbols in the VDSO link map.  Return the
+   address of the vdso symbol NAME. */
+static inline void *
+dl_vdso_vsym (const char *name)
+{
+  return NULL;
+}
 
 #endif

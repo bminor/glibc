@@ -28,6 +28,7 @@
 #include <sys/mman.h>
 #include <sys/uio.h>
 #include <unistd.h>
+#include <time.h>
 
 #if INTERPOSE_THREADS
 #include <pthread.h>
@@ -96,6 +97,7 @@ struct __attribute__ ((aligned (__alignof__ (max_align_t)))) allocation_header
 {
   size_t allocation_index;
   size_t allocation_size;
+  struct timespec ts;
 };
 
 /* Array of known allocations, to track invalid frees.  */
@@ -166,6 +168,9 @@ malloc_internal (size_t size)
       .allocation_index = index,
       .allocation_size = allocation_size
     };
+  /* BZ#24967: Check if calling a symbol which may use the vDSO does not fail.
+     The CLOCK_REALTIME should be supported on all systems.  */
+  clock_gettime (CLOCK_REALTIME, &allocations[index]->ts);
   return allocations[index] + 1;
 }
 

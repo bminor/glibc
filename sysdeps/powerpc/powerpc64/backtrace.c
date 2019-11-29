@@ -54,14 +54,14 @@ struct signal_frame_64 {
   /* We don't care about the rest, since the IP value is at 'uc' field.  */
 };
 
-static inline int
+static inline bool
 is_sigtramp_address (void *nip)
 {
 #ifdef HAVE_SIGTRAMP_RT64
-  if (nip == VDSO_SYMBOL (sigtramp_rt64))
-    return 1;
+  if (nip == GLRO (dl_vdso_sigtramp_rt64))
+    return true;
 #endif
-  return 0;
+  return false;
 }
 
 int

@@ -7,10 +7,6 @@ librt-routines += rt-sysdep
 librt-shared-only-routines += rt-sysdep
 endif
 
-ifeq ($(subdir),elf)
-sysdep_routines += dl-vdso
-endif
-
 ifeq ($(subdir),sysvipc)
 sysdep_routines += getshmlba
 endif

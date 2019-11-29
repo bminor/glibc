@@ -19,8 +19,7 @@
 #ifndef SYSDEP_VDSO_LINUX_H
 # define SYSDEP_VDSO_LINUX_H
 
-#include <dl-vdso.h>
-#include <libc-vdso.h>
+#include <ldsodefs.h>
 
 #ifndef INTERNAL_VSYSCALL_CALL
 # define INTERNAL_VSYSCALL_CALL(funcptr, err, nr, args...)		      \
@@ -34,8 +33,7 @@
     INTERNAL_SYSCALL_DECL (sc_err);					      \
     long int sc_ret;							      \
 									      \
-    __typeof (__vdso_##name) vdsop = __vdso_##name;			      \
-    PTR_DEMANGLE (vdsop);						      \
+    __typeof (GLRO(dl_vdso_##name)) vdsop = GLRO(dl_vdso_##name);	      \
     if (vdsop != NULL)							      \
       {									      \
 	sc_ret = INTERNAL_VSYSCALL_CALL (vdsop, sc_err, nr, ##args);	      \

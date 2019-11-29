@@ -39,6 +39,8 @@
 #include <dl-osinfo.h>
 #include <dl-procinfo.h>
 #include <dl-prop.h>
+#include <dl-vdso.h>
+#include <dl-vdso-setup.h>
 #include <tls.h>
 #include <stap-probe.h>
 #include <stackinfo.h>
@@ -833,7 +835,7 @@ security_init (void)
   _dl_random = NULL;
 }
 
-#include "setup-vdso.h"
+#include <setup-vdso.h>
 
 /* The library search path.  */
 static const char *library_path attribute_relro;
@@ -1537,6 +1539,9 @@ ERROR: '%s': cannot process note segment.\n", _dl_argv[0]);
   /* Set up the data structures for the system-supplied DSO early,
      so they can influence _dl_init_paths.  */
   setup_vdso (main_map, &first_preload);
+
+  /* With vDSO setup we can initialize the function pointers.  */
+  setup_vdso_pointers ();
 
 #ifdef DL_SYSDEP_OSCHECK
   DL_SYSDEP_OSCHECK (_dl_fatal_printf);

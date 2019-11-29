@@ -20,10 +20,6 @@ CFLAGS-elision-timed.c += -mrtm
 CFLAGS-elision-trylock.c += -mrtm
 endif
 
-ifeq ($(subdir),elf)
-sysdep_routines += dl-vdso
-endif
-
 ifeq ($(subdir),setjmp)
 tests += tst-saved_mask-1
 endif

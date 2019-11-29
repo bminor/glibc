@@ -22,11 +22,6 @@
 #include <ldsodefs.h>
 #include <dl-hash.h>
 
-/* Functions for resolving symbols in the VDSO link map.  */
-extern void *_dl_vdso_vsym (const char *name,
-			    const struct r_found_version *version)
-      attribute_hidden;
-
 /* If the architecture support vDSO it should define which is the expected
    kernel version and hash value through both VDSO_NAME and VDSO_HASH
    (usually defined at architecture sysdep.h).  */
@@ -38,19 +33,26 @@ extern void *_dl_vdso_vsym (const char *name,
 # define VDSO_HASH 0
 #endif
 
+/* Functions for resolving symbols in the VDSO link map.  */
 static inline void *
-get_vdso_symbol (const char *symbol)
+dl_vdso_vsym (const char *name)
 {
-  struct r_found_version rfv = { VDSO_NAME, VDSO_HASH, 1, NULL };
-  return _dl_vdso_vsym (symbol, &rfv);
-}
+  struct link_map *map = GLRO (dl_sysinfo_map);
+  if (map == NULL)
+    return NULL;
 
-static inline void *
-get_vdso_mangle_symbol (const char *symbol)
-{
-  void *vdsop = get_vdso_symbol (symbol);
-  PTR_MANGLE (vdsop);
-  return vdsop;
+  /* Use a WEAK REF so we don't error out if the symbol is not found.  */
+  ElfW (Sym) wsym = { 0 };
+  wsym.st_info = (unsigned char) ELFW (ST_INFO (STB_WEAK, STT_NOTYPE));
+
+  struct r_found_version rfv = { VDSO_NAME, VDSO_HASH, 1, NULL };
+
+  /* Search the scope of the vdso map.  */
+  const ElfW (Sym) *ref = &wsym;
+  lookup_t result = GLRO (dl_lookup_symbol_x) (name, map, &ref,
+					       map->l_local_scope,
+					       &rfv, 0, 0, NULL);
+  return ref != NULL ? DL_SYMBOL_ADDRESS (result, ref) : NULL;
 }
 
 #endif /* dl-vdso.h */

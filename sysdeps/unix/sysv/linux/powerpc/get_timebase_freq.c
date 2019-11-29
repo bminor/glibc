@@ -21,7 +21,7 @@
 
 #include <libc-internal.h>
 #include <not-cancel.h>
-#include <libc-vdso.h>
+#include <sysdep-vdso.h>
 
 static uint64_t
 get_timebase_freq_fallback (void)
@@ -101,8 +101,7 @@ uint64_t
 __get_timebase_freq (void)
 {
   /* The vDSO does not have a fallback mechanism (such calling a syscall).  */
-  __typeof (VDSO_SYMBOL (get_tbfreq)) vdsop = VDSO_SYMBOL (get_tbfreq);
-  PTR_DEMANGLE (vdsop);
+  uint64_t (*vdsop)(void) = GLRO(dl_vdso_get_tbfreq);
   if (vdsop == NULL)
     return get_timebase_freq_fallback ();
 

@@ -34,6 +34,8 @@
 #include <unsecvars.h>
 #include <hp-timing.h>
 #include <stackinfo.h>
+#include <dl-vdso.h>
+#include <dl-vdso-setup.h>
 
 extern char *__progname;
 char **_dl_argv = &__progname;	/* This is checked for some error messages.  */
@@ -201,6 +203,8 @@ struct link_map *_dl_sysinfo_map;
 # include "get-dynamic-info.h"
 #endif
 #include "setup-vdso.h"
+/* Define the vDSO function pointers.  */
+#include <dl-vdso-setup.c>
 
 /* During the program run we must not modify the global data of
    loaded shared object simultanously in two threads.  Therefore we
@@ -314,6 +318,9 @@ _dl_non_dynamic_init (void)
   /* Set up the data structures for the system-supplied DSO early,
      so they can influence _dl_init_paths.  */
   setup_vdso (NULL, NULL);
+
+  /* With vDSO setup we can initialize the function pointers.  */
+  setup_vdso_pointers ();
 
   /* Initialize the data structures for the search paths for shared
      objects.  */

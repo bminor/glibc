@@ -74,10 +74,6 @@ _init (int argc, char **argv, char **envp)
   _dl_non_dynamic_init ();
 #endif
 
-#ifdef VDSO_SETUP
-  VDSO_SETUP ();
-#endif
-
   __init_misc (argc, argv, envp);
 
   /* Initialize ctype data.  */

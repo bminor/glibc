@@ -39,7 +39,7 @@ __riscv_flush_icache_syscall (void *start, void *end, unsigned long int flags)
 static func_type
 __lookup_riscv_flush_icache (void)
 {
-  func_type func = get_vdso_symbol ("__vdso_flush_icache");
+  func_type func = dl_vdso_vsym ("__vdso_flush_icache");
 
   /* If there is no vDSO entry then call the system call directly.  All Linux
      versions provide the vDSO entry, but QEMU's user-mode emulation doesn't

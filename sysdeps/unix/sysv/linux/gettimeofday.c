@@ -25,6 +25,7 @@
 
 # ifdef SHARED
 #  include <dl-vdso.h>
+# include <libc-vdso.h>
 
 static int
 __gettimeofday_syscall (struct timeval *restrict tv, void *restrict tz)
@@ -36,7 +37,7 @@ __gettimeofday_syscall (struct timeval *restrict tv, void *restrict tz)
 
 # undef INIT_ARCH
 # define INIT_ARCH() \
-  void *vdso_gettimeofday = get_vdso_symbol (HAVE_GETTIMEOFDAY_VSYSCALL)
+  void *vdso_gettimeofday = dl_vdso_vsym (HAVE_GETTIMEOFDAY_VSYSCALL)
 libc_ifunc (__gettimeofday,
 	    vdso_gettimeofday ? VDSO_IFUNC_RET (vdso_gettimeofday)
 			      : (void *) __gettimeofday_syscall)
