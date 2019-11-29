@@ -2,4 +2,3 @@
 
 personality	EXTRA	personality	Ei:i	__personality	personality
 posix_fadvise64	-	fadvise64	Vi:iiii	posix_fadvise	posix_fadvise64
-time		-	time:__vdso_time@LINUX_2.6			Ei:P	time
