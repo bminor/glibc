@@ -169,7 +169,7 @@ typedef __socklen_t socklen_t;
 #define SOL_XDP		283
 
 /* Maximum queue length specifiable by listen.  */
-#define SOMAXCONN	128
+#define SOMAXCONN	4096
 
 /* Get the definition of the macro to define the common sockaddr members.  */
 #include <bits/sockaddr.h>
