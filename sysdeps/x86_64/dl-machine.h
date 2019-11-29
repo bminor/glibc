@@ -512,7 +512,8 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 #  endif
 	case R_X86_64_IRELATIVE:
 	  value = map->l_addr + reloc->r_addend;
-	  value = ((ElfW(Addr) (*) (void)) value) ();
+	  if (__glibc_likely (!skip_ifunc))
+	    value = ((ElfW(Addr) (*) (void)) value) ();
 	  *reloc_addr = value;
 	  break;
 	default:

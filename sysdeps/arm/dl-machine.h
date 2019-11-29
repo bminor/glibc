@@ -522,7 +522,8 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	  break;
 	case R_ARM_IRELATIVE:
 	  value = map->l_addr + *reloc_addr;
-	  value = ((Elf32_Addr (*) (int)) value) (GLRO(dl_hwcap));
+	  if (__glibc_likely (!skip_ifunc))
+	    value = ((Elf32_Addr (*) (int)) value) (GLRO(dl_hwcap));
 	  *reloc_addr = value;
 	  break;
 #endif
@@ -614,7 +615,8 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  break;
 	case R_ARM_IRELATIVE:
 	  value = map->l_addr + reloc->r_addend;
-	  value = ((Elf32_Addr (*) (int)) value) (GLRO(dl_hwcap));
+	  if (__glibc_likely (!skip_ifunc))
+	    value = ((Elf32_Addr (*) (int)) value) (GLRO(dl_hwcap));
 	  *reloc_addr = value;
 	  break;
 #endif
