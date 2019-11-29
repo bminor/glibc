@@ -358,7 +358,8 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 
 	case AARCH64_R(IRELATIVE):
 	  value = map->l_addr + reloc->r_addend;
-	  value = elf_ifunc_invoke (value);
+	  if (__glibc_likely (!skip_ifunc))
+	    value = elf_ifunc_invoke (value);
 	  *reloc_addr = value;
 	  break;
 

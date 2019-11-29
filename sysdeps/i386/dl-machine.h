@@ -480,7 +480,8 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	  break;
 	case R_386_IRELATIVE:
 	  value = map->l_addr + *reloc_addr;
-	  value = ((Elf32_Addr (*) (void)) value) ();
+	  if (__glibc_likely (!skip_ifunc))
+	    value = ((Elf32_Addr (*) (void)) value) ();
 	  *reloc_addr = value;
 	  break;
 	default:
@@ -627,7 +628,8 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 #  endif /* !RESOLVE_CONFLICT_FIND_MAP */
 	case R_386_IRELATIVE:
 	  value = map->l_addr + reloc->r_addend;
-	  value = ((Elf32_Addr (*) (void)) value) ();
+	  if (__glibc_likely (!skip_ifunc))
+	    value = ((Elf32_Addr (*) (void)) value) ();
 	  *reloc_addr = value;
 	  break;
 	default:

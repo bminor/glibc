@@ -348,6 +348,7 @@ tests-ifuncstatic := ifuncmain1static ifuncmain1picstatic \
 tests-static += $(tests-ifuncstatic)
 tests-internal += $(tests-ifuncstatic)
 ifeq (yes,$(build-shared))
+tests += tst-ifunc-fault-lazy tst-ifunc-fault-bindnow
 # Note: sysdeps/x86_64/ifuncmain8.c uses ifuncmain8.
 tests-internal += \
 	 ifuncmain1 ifuncmain1pic ifuncmain1vis ifuncmain1vispic \
@@ -1353,6 +1354,21 @@ $(objpfx)ifuncmain5pic: $(addprefix $(objpfx),ifuncmod5.so)
 $(objpfx)ifuncmain5static: $(addprefix $(objpfx),ifuncdep5.o)
 $(objpfx)ifuncmain5staticpic: $(addprefix $(objpfx),ifuncdep5pic.o)
 $(objpfx)ifuncmain5picstatic: $(addprefix $(objpfx),ifuncdep5pic.o)
+
+LDFLAGS-tst-ifunc-fault-lazy = -Wl,-z,lazy
+LDFLAGS-tst-ifunc-fault-bindnow = -Wl,-z,now
+define tst-ifunc-fault-script
+( $(objpfx)ld.so --verify --library-path  $(objpfx) $^ \
+  && LD_TRACE_LOADED_OBJECTS=1 $(objpfx)ld.so --library-path $(objpfx) $^ \
+  && LD_TRACE_LOADED_OBJECTS=1 LD_DEBUG=unused \
+    $(objpfx)ld.so --library-path  $(objpfx) $^ \
+) > $@; $(evaluate-test)
+endef
+$(objpfx)tst-ifunc-fault-lazy.out: $(objpfx)tst-ifunc-fault-lazy $(objpfx)ld.so
+	$(tst-ifunc-fault-script)
+$(objpfx)tst-ifunc-fault-bindnow.out: $(objpfx)tst-ifunc-fault-bindnow \
+   $(objpfx)ld.so
+	$(tst-ifunc-fault-script)
 
 $(objpfx)tst-unique1: $(libdl)
 $(objpfx)tst-unique1.out: $(objpfx)tst-unique1mod1.so \

@@ -425,11 +425,13 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
       *reloc_addr = value;
       break;
     case R_SPARC_IRELATIVE:
-      value = ((Elf32_Addr (*) (int)) value) (GLRO(dl_hwcap));
+      if (__glibc_likely (!skip_ifunc))
+	value = ((Elf32_Addr (*) (int)) value) (GLRO(dl_hwcap));
       *reloc_addr = value;
       break;
     case R_SPARC_JMP_IREL:
-      value = ((Elf32_Addr (*) (int)) value) (GLRO(dl_hwcap));
+      if (__glibc_likely (!skip_ifunc))
+	value = ((Elf32_Addr (*) (int)) value) (GLRO(dl_hwcap));
       /* Fall thru */
     case R_SPARC_JMP_SLOT:
       {

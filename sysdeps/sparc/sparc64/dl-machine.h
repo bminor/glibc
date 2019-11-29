@@ -450,11 +450,13 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
       *reloc_addr = value;
       break;
     case R_SPARC_IRELATIVE:
-      value = ((Elf64_Addr (*) (int)) value) (GLRO(dl_hwcap));
+      if (__glibc_likely (!skip_ifunc))
+	value = ((Elf64_Addr (*) (int)) value) (GLRO(dl_hwcap));
       *reloc_addr = value;
       break;
     case R_SPARC_JMP_IREL:
-      value = ((Elf64_Addr (*) (int)) value) (GLRO(dl_hwcap));
+      if (__glibc_likely (!skip_ifunc))
+	value = ((Elf64_Addr (*) (int)) value) (GLRO(dl_hwcap));
       /* 'high' is always zero, for large PLT entries the linker
 	 emits an R_SPARC_IRELATIVE.  */
 #ifdef RESOLVE_CONFLICT_FIND_MAP
