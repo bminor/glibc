@@ -40,6 +40,7 @@ ld.so: __sbrk
 ld.so: __strtoul_internal
 #ld.so: _exit
 ld.so: abort
+ld.so: __sigprocmask
 ld.so: _hurd_intr_rpc_mach_msg
 ld.so: __errno_location
 # rtld_hidden is currently disabled to avoid having to special-case the

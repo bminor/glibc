@@ -1,7 +1,7 @@
 libc {
   GLIBC_2.0 {
     # functions with a weak definition in the dynamic linker
-    __access; __getcwd; __mmap;
+    __access; __getcwd; __mmap; __sigprocmask;
   }
   GLIBC_2.2.6 {
     # functions with a weak definition in the dynamic linker
@@ -26,7 +26,7 @@ ld {
     __mmap; __open; __read; __sbrk; __strtoul_internal;
     __write; __writev; __xstat64; __fxstat64;
     _exit; _hurd_intr_rpc_mach_msg;
-    abort;
+    abort; __sigprocmask;
   }
   GLIBC_2.2 {
     # functions that must be shared with libc

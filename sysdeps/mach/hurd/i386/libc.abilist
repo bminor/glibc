@@ -426,6 +426,7 @@ GLIBC_2.2.6 __signbit F
 GLIBC_2.2.6 __signbitf F
 GLIBC_2.2.6 __signbitl F
 GLIBC_2.2.6 __sigpause F
+GLIBC_2.2.6 __sigprocmask F
 GLIBC_2.2.6 __sigsetjmp F
 GLIBC_2.2.6 __sigsuspend F
 GLIBC_2.2.6 __stpcpy F

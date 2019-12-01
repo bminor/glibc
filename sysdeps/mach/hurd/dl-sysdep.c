@@ -264,13 +264,14 @@ _dl_sysdep_start_cleanup (void)
   __mach_port_deallocate (__mach_task_self (), __mach_task_self_);
 }
 
-/* Minimal open/close/mmap implementation sufficient for initial loading of
+/* Minimal open/close/mmap/etc. implementation sufficient for initial loading of
    shared libraries.  These are weak definitions so that when the
    dynamic linker re-relocates itself to be user-visible (for -ldl),
    it will get the user's definition (i.e. usually libc's).
 
-   They also need to be set in the ld section of sysdeps/mach/hurd/Versions, to
-   be overridable, and in libc.abilist and ld.abilist to be checked. */
+   They also need to be set in the libc and ld section of
+   sysdeps/mach/hurd/Versions, to be overridable, and in libc.abilist and
+   ld.abilist to be checked. */
 
 /* This macro checks that the function does not get renamed to be hidden: we do
    need these to be overridable by libc's.  */
@@ -674,6 +675,14 @@ strong_alias (abort, __GI___chk_fail)
 strong_alias (abort, __GI___fortify_fail)
 strong_alias (abort, __GI___assert_fail)
 strong_alias (abort, __GI___assert_perror_fail)
+
+check_no_hidden(__sigprocmask);
+int weak_function
+__sigprocmask (int how, const sigset_t *set, sigset_t *oset)
+{
+  /* We do not have signals yet at this stage.  */
+  return 0;
+}
 
 /* This function is called by interruptible RPC stubs.  For initial
    dynamic linking, just use the normal mach_msg.  Since this defn is
