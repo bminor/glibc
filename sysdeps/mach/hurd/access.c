@@ -35,4 +35,5 @@ __access (const char *file, int type)
 {
   return __faccessat (AT_FDCWD, file, type, 0);
 }
+libc_hidden_def (__access)
 weak_alias (__access, access)

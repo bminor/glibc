@@ -39,6 +39,7 @@ __access (const char *file, int type)
   __set_errno (ENOSYS);
   return -1;
 }
+libc_hidden_def (__access)
 stub_warning (access)
 
 weak_alias (__access, access)

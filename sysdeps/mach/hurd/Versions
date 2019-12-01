@@ -1,7 +1,7 @@
 libc {
   GLIBC_2.0 {
     # functions with a weak definition in the dynamic linker
-    __access; __mmap;
+    __mmap;
   }
   GLIBC_2.2.6 {
     # functions with a weak definition in the dynamic linker
@@ -9,7 +9,7 @@ libc {
   }
   GLIBC_PRIVATE {
     # Functions shared with the dynamic linker
-    __access_noerrno; __libc_read; __libc_write; __libc_lseek64;
+    __access; __access_noerrno; __libc_read; __libc_write; __libc_lseek64;
     __libc_lock_self0; __sigprocmask; __getcwd;
 
     _dl_init_first;
@@ -22,7 +22,7 @@ ld {
     __hurd_threadvar_stack_mask;  __hurd_threadvar_stack_offset;
 
     # functions that must be shared with libc
-    __access; __close; __getpid;
+    __close; __getpid;
     __mmap; __open; __read; __sbrk; __strtoul_internal;
     __write; __writev; __xstat64; __fxstat64;
     _exit; _hurd_intr_rpc_mach_msg;
@@ -40,7 +40,7 @@ ld {
     _dl_init_first;
 
     # functions that must be shared with libc
-    __access_noerrno; __libc_read; __libc_write; __libc_lseek64;
+    __access; __access_noerrno; __libc_read; __libc_write; __libc_lseek64;
     __libc_lock_self0; __sigprocmask; __getcwd;
   }
 }

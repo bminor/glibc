@@ -29,4 +29,5 @@ __access (const char *file, int type)
   return INLINE_SYSCALL_CALL (faccessat, AT_FDCWD, file, type);
 #endif
 }
+libc_hidden_def (__access)
 weak_alias (__access, access)
