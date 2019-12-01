@@ -75,7 +75,8 @@ extern int __lchown (const char *__file, __uid_t __owner,
 		     __gid_t __group);
 extern int __chdir (const char *__path) attribute_hidden;
 extern int __fchdir (int __fd) attribute_hidden;
-extern char *__getcwd (char *__buf, size_t __size) attribute_hidden;
+extern char *__getcwd (char *__buf, size_t __size);
+libc_hidden_proto (__getcwd)
 extern int __rmdir (const char *__path) attribute_hidden;
 extern int __execvpe (const char *file, char *const argv[],
 		      char *const envp[]) attribute_hidden;

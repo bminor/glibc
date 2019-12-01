@@ -306,4 +306,5 @@ __getcwd (char *buf, size_t size)
 							    buf, size));
   return cwd;
 }
+libc_hidden_def (__getcwd)
 weak_alias (__getcwd, getcwd)

@@ -531,5 +531,6 @@ __getcwd (char *buf, size_t size)
 }
 
 #if defined _LIBC && !defined __getcwd
+libc_hidden_def (__getcwd)
 weak_alias (__getcwd, getcwd)
 #endif

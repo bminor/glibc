@@ -32,6 +32,7 @@ __getcwd (char *buf, size_t size)
   __set_errno (ENOSYS);
   return NULL;
 }
+libc_hidden_def (__getcwd)
 weak_alias (__getcwd, getcwd)
 
 stub_warning (__getcwd)
