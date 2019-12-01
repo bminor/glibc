@@ -30,6 +30,8 @@ __renameat2 (int oldfd, const char *old, int newfd, const char *new,
   const char *oldname, *newname;
   int excl = 0;
 
+  if ((flags & (RENAME_EXCHANGE | RENAME_NOREPLACE)) == (RENAME_EXCHANGE | RENAME_NOREPLACE))
+    return __hurd_fail (EINVAL);
   if (flags & (RENAME_EXCHANGE | RENAME_WHITEOUT))
     return __hurd_fail (ENOSYS);
   if (flags & RENAME_NOREPLACE)
