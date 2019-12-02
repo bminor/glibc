@@ -1602,8 +1602,11 @@ LDFLAGS-tst-finilazyfailmod.so = \
 $(objpfx)tst-dlopenfail: $(libdl)
 $(objpfx)tst-dlopenfail.out: \
   $(objpfx)tst-dlopenfailmod1.so $(objpfx)tst-dlopenfailmod2.so
-# Order matters here.  tst-dlopenfaillinkmod.so's soname ensures
-# a run-time loader failure.
+# Order matters here.  tst-dlopenfaillinkmod.so's soname ensures a
+# run-time loader failure.  --as-needed breaks this test because
+# nothing actually references tst-dlopenfailmod2.so (with its soname
+# tst-dlopenfail-missingmod.so).
+LDFLAGS-tst-dlopenfailmod1.so = -Wl,--no-as-needed
 $(objpfx)tst-dlopenfailmod1.so: \
   $(shared-thread-library) $(objpfx)tst-dlopenfaillinkmod.so
 LDFLAGS-tst-dlopenfaillinkmod.so = -Wl,-soname,tst-dlopenfail-missingmod.so
