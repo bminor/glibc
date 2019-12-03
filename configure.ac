@@ -473,11 +473,18 @@ AC_ARG_ENABLE([mathvec],
 	      [build_mathvec=$enableval],
 	      [build_mathvec=notset])
 
+AC_TRY_COMPILE([], [
+#ifndef __CET__
+# error no CET compiler support
+#endif],
+	       [libc_cv_compiler_default_cet=yes],
+	       [libc_cv_compiler_default_cet=no])
+
 AC_ARG_ENABLE([cet],
 	      AC_HELP_STRING([--enable-cet],
 			     [enable Intel Control-flow Enforcement Technology (CET), x86 only]),
 	      [enable_cet=$enableval],
-	      [enable_cet=no])
+	      [enable_cet=$libc_cv_compiler_default_cet])
 
 # We keep the original values in `$config_*' and never modify them, so we
 # can write them unchanged into config.make.  Everything else uses
