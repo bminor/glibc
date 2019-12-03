@@ -690,20 +690,20 @@ $(objpfx)tst-tlsalign-extern: $(objpfx)tst-tlsalign-vars.o
 $(objpfx)tst-tlsalign-extern-static: $(objpfx)tst-tlsalign-vars.o
 
 tst-null-argv-ENV = LD_DEBUG=all LD_DEBUG_OUTPUT=$(objpfx)tst-null-argv.debug.out
-LDFLAGS-nodel2mod3.so = $(no-as-needed)
-LDFLAGS-reldepmod5.so = $(no-as-needed)
-LDFLAGS-reldep6mod1.so = $(no-as-needed)
-LDFLAGS-reldep6mod4.so = $(no-as-needed)
-LDFLAGS-reldep8mod3.so = $(no-as-needed)
-LDFLAGS-unload4mod1.so = $(no-as-needed)
-LDFLAGS-unload4mod2.so = $(no-as-needed)
-LDFLAGS-tst-initorder = $(no-as-needed)
-LDFLAGS-tst-initordera2.so = $(no-as-needed)
-LDFLAGS-tst-initordera3.so = $(no-as-needed)
-LDFLAGS-tst-initordera4.so = $(no-as-needed)
-LDFLAGS-tst-initorderb2.so = $(no-as-needed)
-LDFLAGS-tst-tlsmod5.so = -nostdlib $(no-as-needed)
-LDFLAGS-tst-tlsmod6.so = -nostdlib $(no-as-needed)
+LDFLAGS-nodel2mod3.so = -Wl,--no-as-needed
+LDFLAGS-reldepmod5.so = -Wl,--no-as-needed
+LDFLAGS-reldep6mod1.so = -Wl,--no-as-needed
+LDFLAGS-reldep6mod4.so = -Wl,--no-as-needed
+LDFLAGS-reldep8mod3.so = -Wl,--no-as-needed
+LDFLAGS-unload4mod1.so = -Wl,--no-as-needed
+LDFLAGS-unload4mod2.so = -Wl,--no-as-needed
+LDFLAGS-tst-initorder = -Wl,--no-as-needed
+LDFLAGS-tst-initordera2.so = -Wl,--no-as-needed
+LDFLAGS-tst-initordera3.so = -Wl,--no-as-needed
+LDFLAGS-tst-initordera4.so = -Wl,--no-as-needed
+LDFLAGS-tst-initorderb2.so = -Wl,--no-as-needed
+LDFLAGS-tst-tlsmod5.so = -nostdlib -Wl,--no-as-needed
+LDFLAGS-tst-tlsmod6.so = -nostdlib -Wl,--no-as-needed
 
 testobj1.so-no-z-defs = yes
 testobj3.so-no-z-defs = yes
@@ -838,7 +838,7 @@ $(objpfx)vismain.out: $(addprefix $(objpfx),vismod3.so)
 vismain-ENV = LD_PRELOAD=$(addprefix $(objpfx),vismod3.so)
 
 $(objpfx)noload: $(objpfx)testobj1.so $(libdl)
-LDFLAGS-noload = -rdynamic $(no-as-needed)
+LDFLAGS-noload = -rdynamic -Wl,--no-as-needed
 $(objpfx)noload.out: $(objpfx)testobj5.so
 
 $(objpfx)noload-mem.out: $(objpfx)noload.out
@@ -887,7 +887,7 @@ $(objpfx)reldep4: $(libdl)
 $(objpfx)reldep4.out: $(objpfx)reldep4mod1.so $(objpfx)reldep4mod2.so
 
 $(objpfx)next: $(objpfx)nextmod1.so $(objpfx)nextmod2.so $(libdl)
-LDFLAGS-next = $(no-as-needed)
+LDFLAGS-next = -Wl,--no-as-needed
 
 $(objpfx)unload2: $(libdl)
 $(objpfx)unload2.out: $(objpfx)unload2mod.so $(objpfx)unload2dep.so
@@ -1055,8 +1055,8 @@ CFLAGS-tst-execstack-prog.c += -Wno-trampolines
 CFLAGS-tst-execstack-mod.c += -Wno-trampolines
 endif
 
-LDFLAGS-tst-array2 = $(no-as-needed)
-LDFLAGS-tst-array5 = $(no-as-needed)
+LDFLAGS-tst-array2 = -Wl,--no-as-needed
+LDFLAGS-tst-array5 = -Wl,--no-as-needed
 
 $(objpfx)tst-array1-cmp.out: tst-array1.exp $(objpfx)tst-array1.out
 	cmp $^ > $@; \
@@ -1254,8 +1254,8 @@ $(objpfx)order2mod1.so: $(objpfx)order2mod4.so
 $(objpfx)order2mod4.so: $(objpfx)order2mod3.so
 $(objpfx)order2mod2.so: $(objpfx)order2mod3.so
 order2mod2.so-no-z-defs = yes
-LDFLAGS-order2mod1.so = $(no-as-needed)
-LDFLAGS-order2mod2.so = $(no-as-needed)
+LDFLAGS-order2mod1.so = -Wl,--no-as-needed
+LDFLAGS-order2mod2.so = -Wl,--no-as-needed
 
 tst-stackguard1-ARGS = --command "$(host-test-program-cmd) --child"
 tst-stackguard1-static-ARGS = --command "$(objpfx)tst-stackguard1-static --child"
@@ -1403,10 +1403,10 @@ $(objpfx)tst-initorder2: $(objpfx)tst-initorder2a.so $(objpfx)tst-initorder2d.so
 $(objpfx)tst-initorder2a.so: $(objpfx)tst-initorder2b.so
 $(objpfx)tst-initorder2b.so: $(objpfx)tst-initorder2c.so
 $(objpfx)tst-initorder2c.so: $(objpfx)tst-initorder2d.so
-LDFLAGS-tst-initorder2 = $(no-as-needed)
-LDFLAGS-tst-initorder2a.so = $(no-as-needed)
-LDFLAGS-tst-initorder2b.so = $(no-as-needed)
-LDFLAGS-tst-initorder2c.so = $(no-as-needed)
+LDFLAGS-tst-initorder2 = -Wl,--no-as-needed
+LDFLAGS-tst-initorder2a.so = -Wl,--no-as-needed
+LDFLAGS-tst-initorder2b.so = -Wl,--no-as-needed
+LDFLAGS-tst-initorder2c.so = -Wl,--no-as-needed
 define o-iterator-doit
 $(objpfx)tst-initorder2$o.os: tst-initorder2.c; \
 $$(compile-command.c) -DNAME=\"$o\"

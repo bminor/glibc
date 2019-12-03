@@ -211,7 +211,7 @@ $(objpfx)tst-fmtmsg.out: tst-fmtmsg.sh $(objpfx)tst-fmtmsg
 	$(evaluate-test)
 
 $(objpfx)tst-putenv: $(objpfx)tst-putenvmod.so
-LDFLAGS-tst-putenv = $(no-as-needed)
+LDFLAGS-tst-putenv = -Wl,--no-as-needed
 
 $(objpfx)tst-putenvmod.so: $(objpfx)tst-putenvmod.os $(link-libc-deps)
 	$(build-module)

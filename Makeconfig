@@ -336,9 +336,6 @@ ifndef asm-CPPFLAGS
 asm-CPPFLAGS =
 endif
 
-as-needed := -Wl,--as-needed
-no-as-needed := -Wl,--no-as-needed
-
 # Must be supported by the linker.
 no-whole-archive = -Wl,--no-whole-archive
 whole-archive = -Wl,--whole-archive
@@ -569,8 +566,8 @@ endif  # build-hardcoded-path-in-tests
 
 link-libc-before-gnulib = $(common-objpfx)libc.so$(libc.so-version) \
 			  $(common-objpfx)$(patsubst %,$(libtype.oS),c) \
-			  $(as-needed) $(elf-objpfx)ld.so \
-			  $(no-as-needed)
+			  -Wl,--as-needed $(elf-objpfx)ld.so \
+			  -Wl,--no-as-needed
 link-libc = $(link-libc-before-gnulib) $(gnulib)
 
 link-libc-tests-after-rpath-link = $(link-libc-before-gnulib) $(gnulib-tests)

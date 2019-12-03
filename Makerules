@@ -513,7 +513,7 @@ endif
 link-libc-args = -Wl,--start-group \
 		 $(libc-for-link) \
 		 $(common-objpfx)libc_nonshared.a \
-		 $(as-needed) $(elf-objpfx)ld.so $(no-as-needed) \
+		 -Wl,--as-needed $(elf-objpfx)ld.so -Wl,--no-as-needed \
 		 -Wl,--end-group
 
 # The corresponding shared libc to use.  This may be modified for a

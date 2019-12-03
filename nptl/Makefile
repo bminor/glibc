@@ -591,7 +591,7 @@ $(objpfx)tst-tls4: $(libdl) $(shared-thread-library)
 $(objpfx)tst-tls4.out: $(objpfx)tst-tls4moda.so $(objpfx)tst-tls4modb.so
 
 $(objpfx)tst-tls5: $(objpfx)tst-tls5mod.so $(shared-thread-library)
-LDFLAGS-tst-tls5 = $(no-as-needed)
+LDFLAGS-tst-tls5 = -Wl,--no-as-needed
 LDFLAGS-tst-tls5mod.so = -Wl,-soname,tst-tls5mod.so
 
 ifeq ($(build-shared),yes)
@@ -631,7 +631,7 @@ LDFLAGS-tst-_res1mod2.so = -Wl,-soname,tst-_res1mod2.so
 $(objpfx)tst-_res1: $(objpfx)tst-_res1mod1.so $(objpfx)tst-_res1mod2.so \
 		    $(shared-thread-library)
 
-LDLIBS-tst-cancel24 = $(no-as-needed) -lstdc++
+LDLIBS-tst-cancel24 = -Wl,--no-as-needed -lstdc++
 LDLIBS-tst-cancel24-static = $(LDLIBS-tst-cancel24)
 
 extra-B-pthread.so = -B$(common-objpfx)nptl/

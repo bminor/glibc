@@ -4,7 +4,7 @@
 # libgcc requires __tcb_parse_hwcap_and_convert_at_platform when built with
 # a binary128 type.  That symbol is provided by the loader on dynamically
 # linked executables, forcing to link the loader after libgcc link.
-f128-loader-link = $(as-needed) $(elf-objpfx)ld.so $(no-as-needed)
+f128-loader-link = -Wl,--as-needed $(elf-objpfx)ld.so -Wl,--no-as-needed
 
 ifeq ($(subdir),math)
 # sqrtf128 requires emulation before POWER9.
