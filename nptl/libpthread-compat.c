@@ -16,7 +16,17 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <sys/cdefs.h>
 #include <shlib-compat.h>
+
+#ifdef SHARED
+static void
+attribute_compat_text_section
+__attribute_used__
+__libpthread_version_placeholder (void)
+{
+}
+#endif
 
 /* This is an unused compatibility symbol definition, to prevent ld
    from creating a weak version definition for GLIBC_2.1.2.  (__vfork
@@ -26,12 +36,12 @@
    version or later, the placeholder symbol is not needed because
    there are plenty of other symbols which populate those later
    versions.  */
-#if (SHLIB_COMPAT (libpthread, GLIBC_2_1_2, GLIBC_2_2_6))
-void
-attribute_compat_text_section
-__libpthread_version_placeholder (void)
-{
-}
-compat_symbol (libpthread, __libpthread_version_placeholder,
-               __libpthread_version_placeholder, GLIBC_2_1_2);
+#if (SHLIB_COMPAT (libpthread, GLIBC_2_1_2, GLIBC_2_2))
+compat_symbol_unique (libpthread,
+		      __libpthread_version_placeholder, GLIBC_2_1_2);
+#endif
+
+#if (SHLIB_COMPAT (libpthread, GLIBC_2_2_6, GLIBC_2_3))
+compat_symbol_unique (libpthread,
+		      __libpthread_version_placeholder, GLIBC_2_2_6);
 #endif
