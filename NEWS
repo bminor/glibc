@@ -71,6 +71,7 @@ The following bugs are resolved with this release:
   [24744] io: Remove the copy_file_range emulation.
   [25203] libio: Disable vtable validation for pre-2.1 interposed handles
   [25204] Ignore LD_PREFER_MAP_32BIT_EXEC for SUID programs
+  [25225] ld.so fails to link on x86 if GCC defaults to -fcf-protection
 
 Security related changes:
 
