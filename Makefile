@@ -209,6 +209,7 @@ BUILD_DIR="$(common-objpfx)"
 CMD_FILE="$(common-objpfx)debugglibc.gdb"
 CONTAINER=false
 DIRECT=true
+STATIC=false
 SYMBOLSFILE=true
 unset TESTCASE
 unset BREAKPOINTS
@@ -297,8 +298,8 @@ do
   shift
 done
 
-# Check for required argument
-if [ ! -v TESTCASE ]
+# Check for required argument and if the testcase exists
+if [ ! -v TESTCASE ] || [ ! -f $${TESTCASE} ]
 then
   usage
   exit 1
@@ -316,6 +317,14 @@ then
   DIRECT="--direct"
 else
   DIRECT=""
+fi
+
+# Check if the test case is static
+if file $${TESTCASE} | grep "statically linked" >/dev/null
+then
+  STATIC=true
+else
+  STATIC=false
 fi
 
 # Expand symbols loading command
@@ -366,6 +375,9 @@ then
 # automatically attach GDB to it.
 WAIT_FOR_DEBUGGER=1 $(common-objpfx)testrun.sh --tool=container $${TESTCASE} &
 gdb -x $${TESTCASE}.gdb
+elif [ "$$STATIC" == true ]
+then
+gdb $${TESTCASE}
 else
 # Start the test case debugging in two steps:
 #   1. the following command invokes gdb to run the loader;
