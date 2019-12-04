@@ -181,6 +181,11 @@ case "$$toolname" in
   valgrind)
     exec env $(run-program-env) valgrind $(test-via-rtld-prefix) $${1+"$$@"}
     ;;
+  container)
+    exec env $(run-program-env) $(test-via-rtld-prefix) \
+      $(common-objdir)/support/test-container \
+      env $(run-program-env) $(test-via-rtld-prefix) $${1+"$$@"}
+    ;;
   *)
     usage
     ;;
@@ -202,6 +207,7 @@ define debugglibc
 SOURCE_DIR="$(CURDIR)"
 BUILD_DIR="$(common-objpfx)"
 CMD_FILE="$(common-objpfx)debugglibc.gdb"
+CONTAINER=false
 DIRECT=true
 SYMBOLSFILE=true
 unset TESTCASE
@@ -235,6 +241,9 @@ Options:
 
   The following options do not take arguments:
 
+  -c, --in-container
+	Run the test case inside a container and automatically attach
+	GDB to it.
   -i, --no-direct
 	Selects whether to pass the --direct flag to the program.
 	--direct is useful when debugging glibc test cases. It inhibits the
@@ -262,6 +271,9 @@ do
     -e|--environment-variable)
       ENVVARS="$$2 $$ENVVARS"
       shift
+      ;;
+    -c|--in-container)
+      CONTAINER=true
       ;;
     -i|--no-direct)
       DIRECT=false
@@ -348,6 +360,13 @@ echo "GDB Commands     : $$CMD_FILE"
 echo "Env vars         : $$ENVVARS"
 echo
 
+if [ "$$CONTAINER" == true ]
+then
+# Use testrun.sh to start the test case with WAIT_FOR_DEBUGGER=1, then
+# automatically attach GDB to it.
+WAIT_FOR_DEBUGGER=1 $(common-objpfx)testrun.sh --tool=container $${TESTCASE} &
+gdb -x $${TESTCASE}.gdb
+else
 # Start the test case debugging in two steps:
 #   1. the following command invokes gdb to run the loader;
 #   2. the commands file tells the loader to run the test case.
@@ -355,6 +374,7 @@ gdb -q \
   -x $${CMD_FILE} \
   -d $${SOURCE_DIR} \
   $${BUILD_DIR}/elf/ld.so
+fi
 endef
 
 # This is another handy script for debugging dynamically linked program
