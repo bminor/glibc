@@ -92,6 +92,7 @@ test-input := \
 	nan_TW.UTF-8@latin \
 	nb_NO.UTF-8 \
 	om_KE.UTF-8 \
+	or_IN.UTF-8 \
 	os_RU.UTF-8 \
 	pl_PL.UTF-8 \
 	ps_AF.UTF-8 \
@@ -258,6 +259,7 @@ LOCALES := \
 	nl_NL.UTF-8 \
 	nn_NO.ISO-8859-1 \
 	om_KE.UTF-8 \
+	or_IN.UTF-8 \
 	os_RU.UTF-8 \
 	pl_PL.UTF-8 \
 	ps_AF.UTF-8 \
