@@ -59,32 +59,32 @@ static const sigset_t sigall_set = {
 };
 
 /* Block all signals, including internal glibc ones.  */
-static inline int
+static inline void
 __libc_signal_block_all (sigset_t *set)
 {
   INTERNAL_SYSCALL_DECL (err);
-  return INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_BLOCK, &sigall_set,
-			   set, _NSIG / 8);
+  INTERNAL_SYSCALL_CALL (rt_sigprocmask, err, SIG_BLOCK, &sigall_set, set,
+			 _NSIG / 8);
 }
 
 /* Block all application signals (excluding internal glibc ones).  */
-static inline int
+static inline void
 __libc_signal_block_app (sigset_t *set)
 {
   sigset_t allset = sigall_set;
   __clear_internal_signals (&allset);
   INTERNAL_SYSCALL_DECL (err);
-  return INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_BLOCK, &allset,
-			   set, _NSIG / 8);
+  INTERNAL_SYSCALL_CALL (rt_sigprocmask, err, SIG_BLOCK, &allset, set,
+			 _NSIG / 8);
 }
 
 /* Restore current process signal mask.  */
-static inline int
+static inline void
 __libc_signal_restore_set (const sigset_t *set)
 {
   INTERNAL_SYSCALL_DECL (err);
-  return INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_SETMASK, set, NULL,
-			   _NSIG / 8);
+  INTERNAL_SYSCALL_CALL (rt_sigprocmask, err, SIG_SETMASK, set, NULL,
+			 _NSIG / 8);
 }
 
 /* Used to communicate with signal handler.  */
