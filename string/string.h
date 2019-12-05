@@ -33,7 +33,8 @@ __BEGIN_DECLS
 #include <stddef.h>
 
 /* Tell the caller that we provide correct C++ prototypes.  */
-#if defined __cplusplus && __GNUC_PREREQ (4, 4)
+#if defined __cplusplus && (__GNUC_PREREQ (4, 4) \
+			    || __glibc_clang_prereq (3, 5))
 # define __CORRECT_ISO_CPP_STRING_H_PROTO
 #endif
 
