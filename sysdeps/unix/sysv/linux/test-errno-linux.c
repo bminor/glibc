@@ -160,8 +160,9 @@ do_test (void)
   fails |= test_wrp (EINVAL, poll, &pollfd, -1, 0);
   /* quotactl returns ENOSYS for kernels not configured with
      CONFIG_QUOTA, and may return EPERM if called within certain types
-     of containers.  */
-  fails |= test_wrp2 (LIST (ENODEV, ENOSYS, EPERM),
+     of containers.  Linux 5.4 added additional argument validation
+     and can return EINVAL.  */
+  fails |= test_wrp2 (LIST (ENODEV, ENOSYS, EPERM, EINVAL),
 		      quotactl, Q_GETINFO, NULL, -1, (caddr_t) &dqblk);
   fails |= test_wrp (EINVAL, sched_getparam, -1, &sch_param);
   fails |= test_wrp (EINVAL, sched_getscheduler, -1);
