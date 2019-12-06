@@ -191,11 +191,16 @@ libc_hidden_proto (__timerfd_gettime64);
 
 #if __TIMESIZE == 64
 # define __timer_settime64 __timer_settime
+# define __timerfd_settime64 __timerfd_settime
 #else
 extern int __timer_settime64 (timer_t timerid, int flags,
                               const struct __itimerspec64 *value,
                               struct __itimerspec64 *ovalue);
+extern int __timerfd_settime64 (int fd, int flags,
+                                const struct __itimerspec64 *value,
+                                struct __itimerspec64 *ovalue);
 libc_hidden_proto (__timer_settime64);
+libc_hidden_proto (__timerfd_settime64);
 #endif
 
 /* Compute the `struct tm' representation of T,
