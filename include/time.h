@@ -181,9 +181,12 @@ libc_hidden_proto (__futimens64);
 
 #if __TIMESIZE == 64
 # define __timer_gettime64 __timer_gettime
+# define __timerfd_gettime64 __timerfd_gettime
 #else
 extern int __timer_gettime64 (timer_t timerid, struct __itimerspec64 *value);
+extern int __timerfd_gettime64 (int fd, struct __itimerspec64 *value);
 libc_hidden_proto (__timer_gettime64);
+libc_hidden_proto (__timerfd_gettime64);
 #endif
 
 #if __TIMESIZE == 64
