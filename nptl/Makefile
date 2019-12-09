@@ -266,7 +266,7 @@ tests = tst-attr2 tst-attr3 tst-default-attr \
 	tst-cancel11 tst-cancel12 tst-cancel13 tst-cancel14 tst-cancel15 \
 	tst-cancel16 tst-cancel17 tst-cancel18 tst-cancel19 tst-cancel20 \
 	tst-cancel21 tst-cancel22 tst-cancel23 tst-cancel24 \
-	tst-cancel26 tst-cancel27 \
+	tst-cancel26 tst-cancel27 tst-cancel28 \
 	tst-cancel-self tst-cancel-self-cancelstate \
 	tst-cancel-self-canceltype tst-cancel-self-testcancel \
 	tst-cleanup0 tst-cleanup1 tst-cleanup2 tst-cleanup3 tst-cleanup4 \
@@ -574,6 +574,9 @@ $(objpfx)tst-tls6.out: tst-tls6.sh $(objpfx)tst-tls5 \
 	$(BASH) $< $(common-objpfx) '$(test-via-rtld-prefix)' \
 	  '$(test-wrapper-env)' '$(run-program-env)' > $@; \
 	$(evaluate-test)
+$(objpfx)tst-cancel28: $(common-objpfx)rt/librt.so
+else
+$(objpfx)tst-cancel28: $(common-objpfx)rt/librt.a
 endif
 
 $(objpfx)tst-dlsym1: $(libdl) $(shared-thread-library)

@@ -58,6 +58,11 @@ static const sigset_t sigall_set = {
    .__val = {[0 ...  _SIGSET_NWORDS-1 ] =  -1 }
 };
 
+static const sigset_t sigtimer_set = {
+  .__val = { [0]                      = __sigmask (SIGTIMER),
+             [1 ... _SIGSET_NWORDS-1] = 0 }
+};
+
 /* Block all signals, including internal glibc ones.  */
 static inline void
 __libc_signal_block_all (sigset_t *set)
@@ -73,6 +78,22 @@ __libc_signal_block_app (sigset_t *set)
   sigset_t allset = sigall_set;
   __clear_internal_signals (&allset);
   INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_BLOCK, &allset, set,
+			 _NSIG / 8);
+}
+
+/* Block only SIGTIMER and return the previous set on SET.  */
+static inline void
+__libc_signal_block_sigtimer (sigset_t *set)
+{
+  INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_BLOCK, &sigtimer_set, set,
+			 _NSIG / 8);
+}
+
+/* Unblock only SIGTIMER and return the previous set on SET.  */
+static inline void
+__libc_signal_unblock_sigtimer (sigset_t *set)
+{
+  INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_UNBLOCK, &sigtimer_set, set,
 			 _NSIG / 8);
 }
 
