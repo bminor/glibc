@@ -16,11 +16,16 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <sgidefs.h>
+
 #define VDSO_NAME  "LINUX_2.6"
 #define VDSO_HASH  61765110
 
 /* List of system calls which are supported as vsyscalls.  */
 #define HAVE_CLOCK_GETTIME_VSYSCALL     "__vdso_clock_gettime"
+#if _MIPS_SIM != _ABI64
+# define HAVE_CLOCK_GETTIME64_VSYSCALL  "__vdso_clock_gettime64"
+#endif
 #define HAVE_GETTIMEOFDAY_VSYSCALL      "__vdso_gettimeofday"
 #define HAVE_CLOCK_GETRES_VSYSCALL      "__vdso_clock_getres"
 
