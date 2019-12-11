@@ -301,6 +301,17 @@ class Context(object):
                                  'ccopts': '-mabi=32'},
                                 {'variant': 'n64-nan2008-soft',
                                  'ccopts': '-mabi=64'}])
+        self.add_config(arch='mipsisa64r6el',
+                        os_name='linux-gnu',
+                        gcc_cfg=['--with-mips-plt', '--with-nan=2008',
+                                 '--with-arch-64=mips64r6',
+                                 '--with-arch-32=mips32r6',
+                                 '--with-float=hard'],
+                        glibcs=[{'variant': 'n32'},
+                                {'arch': 'mipsisa32r6el',
+                                 'ccopts': '-mabi=32'},
+                                {'variant': 'n64',
+                                 'ccopts': '-mabi=64'}])
         self.add_config(arch='nios2',
                         os_name='linux-gnu')
         self.add_config(arch='powerpc',
