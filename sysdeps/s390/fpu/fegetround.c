@@ -17,17 +17,12 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <fenv_libc.h>
-#include <fpu_control.h>
+#include <get-rounding-mode.h>
 
 int
 __fegetround (void)
 {
-  fexcept_t cw;
-
-  _FPU_GETCW (cw);
-
-  return cw & FPC_RM_MASK;
+  return get_rounding_mode ();
 }
 libm_hidden_def (__fegetround)
 weak_alias (__fegetround, fegetround)

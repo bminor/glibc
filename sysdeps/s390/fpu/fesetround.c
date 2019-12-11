@@ -17,21 +17,18 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <fenv_libc.h>
-#include <fpu_control.h>
+#include <fenv_private.h>
 
 int
 __fesetround (int round)
 {
-  if ((round|FPC_RM_MASK) != FPC_RM_MASK)
+  if ((round | FPC_RM_MASK) != FPC_RM_MASK)
     {
       /* ROUND is not a valid rounding mode.  */
       return 1;
     }
-  __asm__ __volatile__ ("srnm 0(%0)"
-			:
-			: "a" (round));
 
+  libc_fesetround_s390 (round);
   return 0;
 }
 libm_hidden_def (__fesetround)

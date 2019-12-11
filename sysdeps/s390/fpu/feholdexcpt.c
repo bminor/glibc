@@ -17,19 +17,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <fenv_libc.h>
-#include <fpu_control.h>
+#include <fenv_private.h>
 
 int __feholdexcept (fenv_t *envp)
 {
-  fexcept_t fpc;
-  /* Store the environment.  */
-  __fegetenv (envp);
-  /* Clear the current sticky bits as more than one exception
-     may be generated.  */
-  fpc = envp->__fpc & ~(FPC_FLAGS_MASK | FPC_DXC_MASK);
-  /* Hold from generating fpu exceptions temporarily.  */
-  _FPU_SETCW ((fpc & ~(FE_ALL_EXCEPT << FPC_EXCEPTION_MASK_SHIFT)));
+  libc_feholdexcept_s390 (envp);
   return 0;
 }
 libm_hidden_def (__feholdexcept)

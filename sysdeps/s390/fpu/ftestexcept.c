@@ -17,23 +17,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <fenv_libc.h>
-#include <fpu_control.h>
+#include <fenv_private.h>
 
 int
 fetestexcept (int excepts)
 {
-  fexcept_t temp, res;
-
-  /* Get current exceptions.  */
-  _FPU_GETCW (temp);
-  res = temp >> FPC_FLAGS_SHIFT;
-  if ((temp & FPC_NOT_FPU_EXCEPTION) == 0)
-    /* Bits 6, 7 of dxc-byte are zero,
-       thus bits 0-5 of dxc-byte correspond to the flag-bits.
-       Evaluate flags and last dxc-exception-code.  */
-    res |= temp >> FPC_DXC_SHIFT;
-
-  return res & excepts & FE_ALL_EXCEPT;
+  return libc_fetestexcept_s390 (excepts);
 }
 libm_hidden_def (fetestexcept)
