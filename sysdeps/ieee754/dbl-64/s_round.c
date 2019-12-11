@@ -23,11 +23,16 @@
 #include <math_private.h>
 #include <libm-alias-double.h>
 #include <stdint.h>
+#include <math-use-builtins.h>
 
 
 double
 __round (double x)
 {
+#if USE_ROUND_BUILTIN
+  return __builtin_round (x);
+#else
+  /* Use generic implementation.  */
   int64_t i0, j0;
 
   EXTRACT_WORDS64 (i0, x);
@@ -62,5 +67,6 @@ __round (double x)
 
   INSERT_WORDS64 (x, i0);
   return x;
+#endif /* ! USE_ROUND_BUILTIN  */
 }
 libm_alias_double (__round, round)

@@ -46,4 +46,9 @@
 #define USE_TRUNCL_BUILTIN 0
 #define USE_TRUNCF128_BUILTIN 0
 
+#define USE_ROUND_BUILTIN 0
+#define USE_ROUNDF_BUILTIN 0
+#define USE_ROUNDL_BUILTIN 0
+#define USE_ROUNDF128_BUILTIN 0
+
 #endif /* math-use-builtins.h */

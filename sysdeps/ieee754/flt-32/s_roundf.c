@@ -22,11 +22,16 @@
 
 #include <math_private.h>
 #include <libm-alias-float.h>
+#include <math-use-builtins.h>
 
 
 float
 __roundf (float x)
 {
+#if USE_ROUNDF_BUILTIN
+  return __builtin_roundf (x);
+#else
+  /* Use generic implementation.  */
   int32_t i0, j0;
 
   GET_FLOAT_WORD (i0, x);
@@ -61,5 +66,6 @@ __roundf (float x)
 
   SET_FLOAT_WORD (x, i0);
   return x;
+#endif /* ! USE_ROUNDF_BUILTIN  */
 }
 libm_alias_float (__round, round)
