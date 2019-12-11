@@ -45,6 +45,10 @@
 PROCINFO_CLASS int (*_dl_vdso_clock_gettime) (clockid_t,
 					      struct timespec *) RELRO;
 #endif
+# ifdef HAVE_CLOCK_GETTIME64_VSYSCALL
+PROCINFO_CLASS int (*_dl_vdso_clock_gettime64) (clockid_t,
+						struct __timespec64 *) RELRO;
+#endif
 # ifdef HAVE_GETTIMEOFDAY_VSYSCALL
 PROCINFO_CLASS int (*_dl_vdso_gettimeofday) (struct timeval *, void *) RELRO;
 #endif

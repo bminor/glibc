@@ -30,21 +30,24 @@ int
 __clock_gettime64 (clockid_t clock_id, struct __timespec64 *tp)
 {
 #ifdef __ASSUME_TIME64_SYSCALLS
-  /* 64 bit ABIs or Newer 32-bit ABIs that only support 64-bit time_t.  */
-# ifdef __NR_clock_gettime64
-  return INLINE_SYSCALL_CALL (clock_gettime64, clock_id, tp);
+  /* 64 bit ABIs or newer 32-bit ABIs that only support 64-bit time_t.  */
+# ifndef __NR_clock_gettime64
+#  define __NR_clock_gettime64 __NR_clock_gettime
+# endif
+# ifdef HAVE_CLOCK_GETTIME64_VSYSCALL
+  return INLINE_VSYSCALL (clock_gettime64, 2, clock_id, tp);
 # else
-#  ifdef HAVE_CLOCK_GETTIME_VSYSCALL
-  return INLINE_VSYSCALL (clock_gettime, 2, clock_id, tp);
-#  else
-  return INLINE_SYSCALL_CALL (clock_gettime, clock_id, tp);
-#  endif
+  return INLINE_SYSCALL_CALL (clock_gettime64, clock_id, tp);
 # endif
 #else
   int r;
   /* Old 32-bit ABI with possible 64-bit time_t support.  */
 # ifdef __NR_clock_gettime64
+#  ifdef HAVE_CLOCK_GETTIME64_VSYSCALL
+  r = INLINE_VSYSCALL (clock_gettime64, 2, clock_id, tp);
+#  else
   r = INLINE_SYSCALL_CALL (clock_gettime64, clock_id, tp);
+#  endif
   if (r == 0 || errno != ENOSYS)
     return r;
 # endif
