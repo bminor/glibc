@@ -125,7 +125,7 @@
 # define VDSO_HASH  182943605
 
 /* List of system calls which are supported as vsyscalls.  */
-# define HAVE_CLOCK_GETRES_VSYSCALL	"__vdso_clock_getres"
+# define HAVE_CLOCK_GETRES64_VSYSCALL	"__vdso_clock_getres"
 # define HAVE_CLOCK_GETTIME64_VSYSCALL	"__vdso_clock_gettime"
 # define HAVE_GETTIMEOFDAY_VSYSCALL	"__vdso_gettimeofday"
 # define HAVE_GETCPU_VSYSCALL		"__vdso_getcpu"

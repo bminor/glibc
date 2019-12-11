@@ -41,6 +41,9 @@ setup_vdso_pointers (void)
 #ifdef HAVE_CLOCK_GETRES_VSYSCALL
   GLRO(dl_vdso_clock_getres) = dl_vdso_vsym (HAVE_CLOCK_GETRES_VSYSCALL);
 #endif
+#ifdef HAVE_CLOCK_GETRES64_VSYSCALL
+  GLRO(dl_vdso_clock_getres_time64) = dl_vdso_vsym (HAVE_CLOCK_GETRES64_VSYSCALL);
+#endif
 #ifdef HAVE_GET_TBFREQ
   GLRO(dl_vdso_get_tbfreq) = dl_vdso_vsym (HAVE_GET_TBFREQ);
 #endif

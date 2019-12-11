@@ -62,6 +62,10 @@ PROCINFO_CLASS int (*_dl_vdso_getcpu) (unsigned *, unsigned *, void *) RELRO;
 PROCINFO_CLASS int (*_dl_vdso_clock_getres) (clockid_t,
 					     struct timespec *) RELRO;
 # endif
+# ifdef HAVE_CLOCK_GETRES64_VSYSCALL
+PROCINFO_CLASS int (*_dl_vdso_clock_getres_time64) (clockid_t,
+						    struct __timespec64 *) RELRO;
+# endif
 
 /* PowerPC specific ones.  */
 # ifdef HAVE_GET_TBFREQ
