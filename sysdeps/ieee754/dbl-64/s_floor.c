@@ -1,4 +1,24 @@
-/* @(#)s_floor.c 5.1 93/09/24 */
+/* Round double to integer away from zero.
+   Copyright (C) 2011-2019 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 2011.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
+
+/* Based on a version which carries the following copyright:  */
+
 /*
  * ====================================================
  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
@@ -10,6 +30,12 @@
  * ====================================================
  */
 
+#define NO_MATH_REDIRECT
+#include <math.h>
+#include <math_private.h>
+#include <stdint.h>
+#include <libm-alias-double.h>
+
 /*
  * floor(x)
  * Return x rounded toward -inf to integral value
@@ -17,69 +43,36 @@
  *	Bit twiddling.
  */
 
-#define NO_MATH_REDIRECT
-#include <math.h>
-#include <math_private.h>
-#include <libm-alias-double.h>
 
 double
 __floor (double x)
 {
-  int32_t i0, i1, j0;
-  uint32_t i, j;
-  EXTRACT_WORDS (i0, i1, x);
-  j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
-  if (j0 < 20)
+  int64_t i0;
+  EXTRACT_WORDS64 (i0, x);
+  int32_t j0 = ((i0 >> 52) & 0x7ff) - 0x3ff;
+  if (__glibc_likely (j0 < 52))
     {
       if (j0 < 0)
 	{
-	  /* return 0*sign(x) if |x|<1 */
+	  /* return 0 * sign (x) if |x| < 1  */
 	  if (i0 >= 0)
-	    {
-	      i0 = i1 = 0;
-	    }
-	  else if (((i0 & 0x7fffffff) | i1) != 0)
-	    {
-	      i0 = 0xbff00000; i1 = 0;
-	    }
+	    i0 = 0;
+	  else if ((i0 & 0x7fffffffffffffffl) != 0)
+	    i0 = 0xbff0000000000000l;
 	}
       else
 	{
-	  i = (0x000fffff) >> j0;
-	  if (((i0 & i) | i1) == 0)
-	    return x;                        /* x is integral */
+	  uint64_t i = 0x000fffffffffffffl >> j0;
+	  if ((i0 & i) == 0)
+	    return x;			 /* x is integral */
 	  if (i0 < 0)
-	    i0 += (0x00100000) >> j0;
-	  i0 &= (~i); i1 = 0;
+	    i0 += 0x0010000000000000l >> j0;
+	  i0 &= ~i;
 	}
+      INSERT_WORDS64 (x, i0);
     }
-  else if (j0 > 51)
-    {
-      if (j0 == 0x400)
-	return x + x;                   /* inf or NaN */
-      else
-	return x;                       /* x is integral */
-    }
-  else
-    {
-      i = ((uint32_t) (0xffffffff)) >> (j0 - 20);
-      if ((i1 & i) == 0)
-	return x;                       /* x is integral */
-      if (i0 < 0)
-	{
-	  if (j0 == 20)
-	    i0 += 1;
-	  else
-	    {
-	      j = i1 + (1 << (52 - j0));
-	      if (j < i1)
-		i0 += 1;                /* got a carry */
-	      i1 = j;
-	    }
-	}
-      i1 &= (~i);
-    }
-  INSERT_WORDS (x, i0, i1);
+  else if (j0 == 0x400)
+    return x + x;			/* inf or NaN */
   return x;
 }
 #ifndef __floor

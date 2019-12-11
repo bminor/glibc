@@ -20,4 +20,4 @@
 
 #define __floor __floor_vis3
 
-#include <sysdeps/ieee754/dbl-64/wordsize-64/s_floor.c>
+#include <sysdeps/ieee754/dbl-64/s_floor.c>
