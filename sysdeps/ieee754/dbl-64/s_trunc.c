@@ -22,11 +22,16 @@
 
 #include <math_private.h>
 #include <libm-alias-double.h>
+#include <math-use-builtins.h>
 
 
 double
 __trunc (double x)
 {
+#if USE_TRUNC_BUILTIN
+  return __builtin_trunc (x);
+#else
+  /* Use generic implementation.  */
   int64_t i0, j0;
   int64_t sx;
 
@@ -49,6 +54,7 @@ __trunc (double x)
     }
 
   return x;
+#endif /* ! USE_TRUNC_BUILTIN  */
 }
 #ifndef __trunc
 libm_alias_double (__trunc, trunc)

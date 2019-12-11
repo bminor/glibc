@@ -22,11 +22,16 @@
 
 #include <math_private.h>
 #include <libm-alias-float.h>
+#include <math-use-builtins.h>
 
 
 float
 __truncf (float x)
 {
+#if USE_TRUNCF_BUILTIN
+  return __builtin_truncf (x);
+#else
+  /* Use generic implementation.  */
   int32_t i0, j0;
   int sx;
 
@@ -49,6 +54,7 @@ __truncf (float x)
     }
 
   return x;
+#endif /* ! USE_TRUNCF_BUILTIN  */
 }
 #ifndef __truncf
 libm_alias_float (__trunc, trunc)

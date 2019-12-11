@@ -148,6 +148,8 @@
 #define USE_FLOORL_BUILTIN USE_FLOORF128_BUILTIN
 #undef USE_CEILL_BUILTIN
 #define USE_CEILL_BUILTIN USE_CEILF128_BUILTIN
+#undef USE_TRUNCL_BUILTIN
+#define USE_TRUNCL_BUILTIN USE_TRUNCF128_BUILTIN
 
 /* IEEE function renames.  */
 #define __ieee754_acoshl __ieee754_acoshf128
@@ -355,6 +357,7 @@
 #define __builtin_rintl __builtin_rintf128
 #define __builtin_floorl __builtin_floorf128
 #define __builtin_ceill __builtin_ceilf128
+#define __builtin_truncl __builtin_truncf128
 
 /* Get the constant suffix from bits/floatn-compat.h.  */
 #define L(x) __f128 (x)

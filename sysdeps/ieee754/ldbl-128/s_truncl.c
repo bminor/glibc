@@ -23,11 +23,16 @@
 
 #include <math_private.h>
 #include <libm-alias-ldouble.h>
+#include <math-use-builtins.h>
 
 
 _Float128
 __truncl (_Float128 x)
 {
+#if USE_TRUNCL_BUILTIN
+  return __builtin_truncl (x);
+#else
+  /* Use generic implementation.  */
   int32_t j0;
   uint64_t i0, i1, sx;
 
@@ -54,5 +59,6 @@ __truncl (_Float128 x)
     }
 
   return x;
+#endif /* ! USE_TRUNCL_BUILTIN  */
 }
 libm_alias_ldouble (__trunc, trunc)

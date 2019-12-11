@@ -41,4 +41,9 @@
 #define USE_CEILL_BUILTIN 0
 #define USE_CEILF128_BUILTIN 0
 
+#define USE_TRUNC_BUILTIN 0
+#define USE_TRUNCF_BUILTIN 0
+#define USE_TRUNCL_BUILTIN 0
+#define USE_TRUNCF128_BUILTIN 0
+
 #endif /* math-use-builtins.h */
