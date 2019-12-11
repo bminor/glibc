@@ -20,4 +20,4 @@
 
 #define __ceil __ceil_vis3
 
-#include <sysdeps/ieee754/dbl-64/wordsize-64/s_ceil.c>
+#include <sysdeps/ieee754/dbl-64/s_ceil.c>

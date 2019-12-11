@@ -25,61 +25,38 @@
 double
 __ceil (double x)
 {
-  int32_t i0, i1, j0;
-  uint32_t i, j;
-  EXTRACT_WORDS (i0, i1, x);
-  j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
-  if (j0 < 20)
+  int64_t i0, i;
+  int32_t j0;
+  EXTRACT_WORDS64 (i0, x);
+  j0 = ((i0 >> 52) & 0x7ff) - 0x3ff;
+  if (j0 <= 51)
     {
       if (j0 < 0)
 	{
-	  /* return 0*sign(x) if |x|<1 */
+	  /* return 0 * sign(x) if |x| < 1  */
 	  if (i0 < 0)
-	    {
-	      i0 = 0x80000000; i1 = 0;
-	    }
-	  else if ((i0 | i1) != 0)
-	    {
-	      i0 = 0x3ff00000; i1 = 0;
-	    }
+	    i0 = INT64_C (0x8000000000000000);
+	  else if (i0 != 0)
+	    i0 = INT64_C (0x3ff0000000000000);
 	}
       else
 	{
-	  i = (0x000fffff) >> j0;
-	  if (((i0 & i) | i1) == 0)
-	    return x;                        /* x is integral */
+	  i = INT64_C (0x000fffffffffffff) >> j0;
+	  if ((i0 & i) == 0)
+	    return x;			/* x is integral  */
 	  if (i0 > 0)
-	    i0 += (0x00100000) >> j0;
-	  i0 &= (~i); i1 = 0;
+	    i0 += UINT64_C (0x0010000000000000) >> j0;
+	  i0 &= ~i;
 	}
-    }
-  else if (j0 > 51)
-    {
-      if (j0 == 0x400)
-	return x + x;                   /* inf or NaN */
-      else
-	return x;                       /* x is integral */
     }
   else
     {
-      i = ((uint32_t) (0xffffffff)) >> (j0 - 20);
-      if ((i1 & i) == 0)
-	return x;                       /* x is integral */
-      if (i0 > 0)
-	{
-	  if (j0 == 20)
-	    i0 += 1;
-	  else
-	    {
-	      j = i1 + (1 << (52 - j0));
-	      if (j < i1)
-		i0 += 1;                /* got a carry */
-	      i1 = j;
-	    }
-	}
-      i1 &= (~i);
+      if (j0 == 0x400)
+	return x + x;			/* inf or NaN  */
+      else
+	return x;			/* x is integral  */
     }
-  INSERT_WORDS (x, i0, i1);
+  INSERT_WORDS64 (x, i0);
   return x;
 }
 #ifndef __ceil
