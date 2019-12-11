@@ -22,38 +22,36 @@
 
 #include <math_private.h>
 #include <libm-alias-double.h>
+#include <stdint.h>
 
 
 double
 __round (double x)
 {
-  int32_t i0, j0;
-  uint32_t i1;
+  int64_t i0, j0;
 
-  EXTRACT_WORDS (i0, i1, x);
-  j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
-  if (j0 < 20)
+  EXTRACT_WORDS64 (i0, x);
+  j0 = ((i0 >> 52) & 0x7ff) - 0x3ff;
+  if (__glibc_likely (j0 < 52))
     {
       if (j0 < 0)
 	{
-	  i0 &= 0x80000000;
+	  i0 &= UINT64_C (0x8000000000000000);
 	  if (j0 == -1)
-	    i0 |= 0x3ff00000;
-	  i1 = 0;
+	    i0 |= UINT64_C (0x3ff0000000000000);
 	}
       else
 	{
-	  uint32_t i = 0x000fffff >> j0;
-	  if (((i0 & i) | i1) == 0)
+	  uint64_t i = UINT64_C (0x000fffffffffffff) >> j0;
+	  if ((i0 & i) == 0)
 	    /* X is integral.  */
 	    return x;
 
-	  i0 += 0x00080000 >> j0;
+	  i0 += UINT64_C (0x0008000000000000) >> j0;
 	  i0 &= ~i;
-	  i1 = 0;
 	}
     }
-  else if (j0 > 51)
+  else
     {
       if (j0 == 0x400)
 	/* Inf or NaN.  */
@@ -61,21 +59,8 @@ __round (double x)
       else
 	return x;
     }
-  else
-    {
-      uint32_t i = 0xffffffff >> (j0 - 20);
-      if ((i1 & i) == 0)
-	/* X is integral.  */
-	return x;
 
-      uint32_t j = i1 + (1 << (51 - j0));
-      if (j < i1)
-	i0 += 1;
-      i1 = j;
-      i1 &= ~i;
-    }
-
-  INSERT_WORDS (x, i0, i1);
+  INSERT_WORDS64 (x, i0);
   return x;
 }
 libm_alias_double (__round, round)
