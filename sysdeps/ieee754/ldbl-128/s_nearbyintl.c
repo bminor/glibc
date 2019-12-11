@@ -28,15 +28,19 @@
 #include <math-barriers.h>
 #include <math_private.h>
 #include <libm-alias-ldouble.h>
-
-static const _Float128
-TWO112[2]={
-  L(5.19229685853482762853049632922009600E+33), /* 0x406F000000000000, 0 */
- L(-5.19229685853482762853049632922009600E+33)  /* 0xC06F000000000000, 0 */
-};
+#include <math-use-builtins.h>
 
 _Float128 __nearbyintl(_Float128 x)
 {
+#if USE_NEARBYINTL_BUILTIN
+  return __builtin_nearbyintl (x);
+#else
+  /* Use generic implementation.  */
+  static const _Float128
+    TWO112[2] = {
+		 L(5.19229685853482762853049632922009600E+33), /* 0x406F000000000000, 0 */
+		 L(-5.19229685853482762853049632922009600E+33)  /* 0xC06F000000000000, 0 */
+  };
 	fenv_t env;
 	int64_t i0,j0,sx;
 	uint64_t i1 __attribute__ ((unused));
@@ -65,5 +69,6 @@ _Float128 __nearbyintl(_Float128 x)
 	math_force_eval (t);
 	fesetenv (&env);
 	return t;
+#endif /* ! USE_NEARBYINTL_BUILTIN  */
 }
 libm_alias_ldouble (__nearbyint, nearbyint)

@@ -21,16 +21,20 @@
 #include <math_private.h>
 #include <fenv_private.h>
 #include <libm-alias-float.h>
-
-static const float
-TWO23[2]={
-  8.3886080000e+06, /* 0x4b000000 */
- -8.3886080000e+06, /* 0xcb000000 */
-};
+#include <math-use-builtins.h>
 
 float
 __nearbyintf(float x)
 {
+#if USE_NEARBYINTF_BUILTIN
+  return __builtin_nearbyintf (x);
+#else
+  /* Use generic implementation.  */
+  static const float
+    TWO23[2] = {
+		8.3886080000e+06, /* 0x4b000000 */
+		-8.3886080000e+06, /* 0xcb000000 */
+  };
 	fenv_t env;
 	int32_t i0,j0,sx;
 	float w,t;
@@ -58,5 +62,6 @@ __nearbyintf(float x)
 	math_force_eval (t);
 	libc_fesetenvf (&env);
 	return t;
+#endif /* ! USE_NEARBYINT_BUILTIN  */
 }
 libm_alias_float (__nearbyint, nearbyint)
