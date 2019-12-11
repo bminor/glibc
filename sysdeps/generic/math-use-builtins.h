@@ -19,6 +19,8 @@
 #ifndef MATH_USE_BUILTINS_H
 #define MATH_USE_BUILTINS_H	1
 
+#include <features.h> /* For __GNUC_PREREQ.  */
+
 /* Define these macros to 1 to use __builtin_xyz instead of the
    generic implementation.  */
 #define USE_NEARBYINT_BUILTIN 0
@@ -50,5 +52,12 @@
 #define USE_ROUNDF_BUILTIN 0
 #define USE_ROUNDL_BUILTIN 0
 #define USE_ROUNDF128_BUILTIN 0
+
+#define USE_COPYSIGNL_BUILTIN 1
+#if __GNUC_PREREQ (7, 0)
+# define USE_COPYSIGNF128_BUILTIN 1
+#else
+# define USE_COPYSIGNF128_BUILTIN 0
+#endif
 
 #endif /* math-use-builtins.h */

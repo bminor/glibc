@@ -27,14 +27,20 @@ static char rcsid[] = "$NetBSD: $";
 #include <math.h>
 #include <math_private.h>
 #include <libm-alias-ldouble.h>
+#include <math-use-builtins.h>
 
 _Float128 __copysignl(_Float128 x, _Float128 y)
 {
+#if USE_COPYSIGNL_BUILTIN
+  return __builtin_copysignl (x, y);
+#else
+  /* Use generic implementation.  */
 	uint64_t hx,hy;
 	GET_LDOUBLE_MSW64(hx,x);
 	GET_LDOUBLE_MSW64(hy,y);
 	SET_LDOUBLE_MSW64(x,(hx&0x7fffffffffffffffULL)
 			    |(hy&0x8000000000000000ULL));
         return x;
+#endif /* ! USE_COPYSIGNL_BUILTIN  */
 }
 libm_alias_ldouble (__copysign, copysign)

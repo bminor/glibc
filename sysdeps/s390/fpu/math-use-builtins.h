@@ -101,4 +101,11 @@
 
 #endif /* ! HAVE_S390_MIN_Z196_ZARCH_ASM_SUPPORT  */
 
+#define USE_COPYSIGNL_BUILTIN 1
+#if __GNUC_PREREQ (7, 0)
+# define USE_COPYSIGNF128_BUILTIN 1
+#else
+# define USE_COPYSIGNF128_BUILTIN 0
+#endif
+
 #endif /* math-use-builtins.h */

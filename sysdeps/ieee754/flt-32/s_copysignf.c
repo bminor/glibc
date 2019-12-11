@@ -13,7 +13,7 @@
  * ====================================================
  */
 
-#if defined(LIBM_SCCS) && !defined(lint)
+#if defined (LIBM_SCCS) && ! defined (lint)
 static char rcsid[] = "$NetBSD: s_copysignf.c,v 1.4 1995/05/10 20:46:59 jtc Exp $";
 #endif
 
@@ -25,15 +25,11 @@ static char rcsid[] = "$NetBSD: s_copysignf.c,v 1.4 1995/05/10 20:46:59 jtc Exp 
 
 #define NO_MATH_REDIRECT
 #include <math.h>
-#include <math_private.h>
 #include <libm-alias-float.h>
 
-float __copysignf(float x, float y)
+float
+__copysignf (float x, float y)
 {
-	uint32_t ix,iy;
-	GET_FLOAT_WORD(ix,x);
-	GET_FLOAT_WORD(iy,y);
-	SET_FLOAT_WORD(x,(ix&0x7fffffff)|(iy&0x80000000));
-        return x;
+  return __builtin_copysignf (x, y);
 }
 libm_alias_float (__copysign, copysign)
