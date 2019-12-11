@@ -21,10 +21,15 @@
 #include <math.h>
 #include <math_private.h>
 #include <libm-alias-double.h>
+#include <math-use-builtins.h>
 
 double
 __ceil (double x)
 {
+#if USE_CEIL_BUILTIN
+  return __builtin_ceil (x);
+#else
+  /* Use generic implementation.  */
   int64_t i0, i;
   int32_t j0;
   EXTRACT_WORDS64 (i0, x);
@@ -58,6 +63,7 @@ __ceil (double x)
     }
   INSERT_WORDS64 (x, i0);
   return x;
+#endif /* ! USE_CEIL_BUILTIN  */
 }
 #ifndef __ceil
 libm_alias_double (__ceil, ceil)

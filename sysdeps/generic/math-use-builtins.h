@@ -36,4 +36,9 @@
 #define USE_FLOORL_BUILTIN 0
 #define USE_FLOORF128_BUILTIN 0
 
+#define USE_CEIL_BUILTIN 0
+#define USE_CEILF_BUILTIN 0
+#define USE_CEILL_BUILTIN 0
+#define USE_CEILF128_BUILTIN 0
+
 #endif /* math-use-builtins.h */

@@ -17,11 +17,15 @@
 #include <math.h>
 #include <math_private.h>
 #include <libm-alias-float.h>
-
+#include <math-use-builtins.h>
 
 float
 __ceilf(float x)
 {
+#if USE_CEILF_BUILTIN
+  return __builtin_ceilf (x);
+#else
+  /* Use generic implementation.  */
 	int32_t i0,j0;
 	uint32_t i;
 
@@ -44,6 +48,7 @@ __ceilf(float x)
 	}
 	SET_FLOAT_WORD(x,i0);
 	return x;
+#endif /* ! USE_CEILF_BUILTIN  */
 }
 #ifndef __ceilf
 libm_alias_float (__ceil, ceil)
