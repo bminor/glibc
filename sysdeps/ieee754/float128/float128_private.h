@@ -142,6 +142,8 @@
 #include <math-use-builtins.h>
 #undef USE_NEARBYINTL_BUILTIN
 #define USE_NEARBYINTL_BUILTIN USE_NEARBYINTF128_BUILTIN
+#undef USE_RINTL_BUILTIN
+#define USE_RINTL_BUILTIN USE_RINTF128_BUILTIN
 
 /* IEEE function renames.  */
 #define __ieee754_acoshl __ieee754_acoshf128
@@ -346,6 +348,7 @@
 #define __builtin_copysignl __builtin_copysignf128
 #define __builtin_signbitl __builtin_signbit
 #define __builtin_nearbyintl __builtin_nearbyintf128
+#define __builtin_rintl __builtin_rintf128
 
 /* Get the constant suffix from bits/floatn-compat.h.  */
 #define L(x) __f128 (x)

@@ -23,16 +23,20 @@
 #include <math.h>
 #include <math_private.h>
 #include <libm-alias-double.h>
-
-static const double
-TWO52[2] = {
-	    4.50359962737049600000e+15, /* 0x43300000, 0x00000000 */
-	    -4.50359962737049600000e+15, /* 0xC3300000, 0x00000000 */
-};
+#include <math-use-builtins.h>
 
 double
 __rint (double x)
 {
+#if USE_RINT_BUILTIN
+  return __builtin_rint (x);
+#else
+  /* Use generic implementation.  */
+  static const double
+    TWO52[2] = {
+		4.50359962737049600000e+15, /* 0x43300000, 0x00000000 */
+		-4.50359962737049600000e+15, /* 0xC3300000, 0x00000000 */
+  };
   int64_t i0, sx;
   int32_t j0;
   EXTRACT_WORDS64 (i0, x);
@@ -59,6 +63,7 @@ __rint (double x)
     }
   double w = TWO52[sx] + x;
   return w - TWO52[sx];
+#endif /* ! USE_RINT_BUILTIN  */
 }
 #ifndef __rint
 libm_alias_double (__rint, rint)

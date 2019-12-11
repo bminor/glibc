@@ -17,16 +17,20 @@
 #include <math.h>
 #include <math_private.h>
 #include <libm-alias-float.h>
-
-static const float
-TWO23[2]={
-  8.3886080000e+06, /* 0x4b000000 */
- -8.3886080000e+06, /* 0xcb000000 */
-};
+#include <math-use-builtins.h>
 
 float
 __rintf(float x)
 {
+#if USE_RINTF_BUILTIN
+  return __builtin_rintf (x);
+#else
+  /* Use generic implementation.  */
+  static const float
+    TWO23[2] = {
+		8.3886080000e+06, /* 0x4b000000 */
+		-8.3886080000e+06, /* 0xcb000000 */
+  };
 	int32_t i0,j0,sx;
 	float w,t;
 	GET_FLOAT_WORD(i0,x);
@@ -46,6 +50,7 @@ __rintf(float x)
 	}
 	w = TWO23[sx]+x;
 	return w-TWO23[sx];
+#endif /* ! USE_RINTF_BUILTIN  */
 }
 #ifndef __rintf
 libm_alias_float (__rint, rint)

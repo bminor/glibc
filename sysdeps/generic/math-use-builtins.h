@@ -26,4 +26,9 @@
 #define USE_NEARBYINTL_BUILTIN 0
 #define USE_NEARBYINTF128_BUILTIN 0
 
+#define USE_RINT_BUILTIN 0
+#define USE_RINTF_BUILTIN 0
+#define USE_RINTL_BUILTIN 0
+#define USE_RINTF128_BUILTIN 0
+
 #endif /* math-use-builtins.h */
