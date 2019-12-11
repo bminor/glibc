@@ -389,6 +389,7 @@ __local_syscall_error:						\
 
 /* List of system calls which are supported as vsyscalls.  */
 #define HAVE_CLOCK_GETTIME_VSYSCALL	"__vdso_clock_gettime"
+#define HAVE_CLOCK_GETTIME64_VSYSCALL	"__vdso_clock_gettime64"
 #define HAVE_GETTIMEOFDAY_VSYSCALL	"__vdso_gettimeofday"
 
 #define LOAD_ARGS_0()
