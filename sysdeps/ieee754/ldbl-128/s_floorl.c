@@ -28,9 +28,14 @@ static char rcsid[] = "$NetBSD: $";
 #include <math.h>
 #include <math_private.h>
 #include <libm-alias-ldouble.h>
+#include <math-use-builtins.h>
 
 _Float128 __floorl(_Float128 x)
 {
+#if USE_FLOORL_BUILTIN
+  return __builtin_floorl (x);
+#else
+  /* Use generic implementation.  */
 	int64_t i0,i1,j0;
 	uint64_t i,j;
 	GET_LDOUBLE_WORDS64(i0,i1,x);
@@ -65,5 +70,6 @@ _Float128 __floorl(_Float128 x)
 	}
 	SET_LDOUBLE_WORDS64(x,i0,i1);
 	return x;
+#endif /* ! USE_FLOORL_BUILTIN  */
 }
 libm_alias_ldouble (__floor, floor)

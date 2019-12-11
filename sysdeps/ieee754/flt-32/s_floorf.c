@@ -24,10 +24,15 @@
 #include <math.h>
 #include <math_private.h>
 #include <libm-alias-float.h>
+#include <math-use-builtins.h>
 
 float
 __floorf(float x)
 {
+#if USE_FLOORF_BUILTIN
+  return __builtin_floorf (x);
+#else
+  /* Use generic implementation.  */
 	int32_t i0,j0;
 	uint32_t i;
 	GET_FLOAT_WORD(i0,x);
@@ -50,6 +55,7 @@ __floorf(float x)
 	}
 	SET_FLOAT_WORD(x,i0);
 	return x;
+#endif /* ! USE_FLOORF_BUILTIN  */
 }
 #ifndef __floorf
 libm_alias_float (__floor, floor)

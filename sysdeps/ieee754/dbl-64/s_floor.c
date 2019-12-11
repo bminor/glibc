@@ -35,6 +35,7 @@
 #include <math_private.h>
 #include <stdint.h>
 #include <libm-alias-double.h>
+#include <math-use-builtins.h>
 
 /*
  * floor(x)
@@ -47,6 +48,10 @@
 double
 __floor (double x)
 {
+#if USE_FLOOR_BUILTIN
+  return __builtin_floor (x);
+#else
+  /* Use generic implementation.  */
   int64_t i0;
   EXTRACT_WORDS64 (i0, x);
   int32_t j0 = ((i0 >> 52) & 0x7ff) - 0x3ff;
@@ -74,6 +79,7 @@ __floor (double x)
   else if (j0 == 0x400)
     return x + x;			/* inf or NaN */
   return x;
+#endif /* ! USE_FLOOR_BUILTIN  */
 }
 #ifndef __floor
 libm_alias_double (__floor, floor)
