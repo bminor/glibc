@@ -216,7 +216,9 @@ exists, @code{fopen} fails rather than opening it.  If you use
 file.  This is equivalent to the @code{O_EXCL} option to the
 @code{open} function (@pxref{Opening and Closing Files}).
 
-The @samp{x} modifier is part of @w{ISO C11}.
+The @samp{x} modifier is part of @w{ISO C11}, which says the file is
+created with exclusive access; in @theglibc{} this means the
+equivalent of @code{O_EXCL}.
 @end table
 
 The character @samp{b} in @var{opentype} has a standard meaning; it
