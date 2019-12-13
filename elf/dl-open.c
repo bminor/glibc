@@ -440,13 +440,17 @@ activate_nodelete (struct link_map *new)
      NODELETE status for objects outside the local scope.  */
   for (struct link_map *l = GL (dl_ns)[new->l_ns]._ns_loaded; l != NULL;
        l = l->l_next)
-    if (l->l_nodelete == link_map_nodelete_pending)
+    if (l->l_nodelete_pending)
       {
 	if (__glibc_unlikely (GLRO (dl_debug_mask) & DL_DEBUG_FILES))
 	  _dl_debug_printf ("activating NODELETE for %s [%lu]\n",
 			    l->l_name, l->l_ns);
 
-	l->l_nodelete = link_map_nodelete_active;
+	l->l_nodelete_active = true;
+
+	/* This is just a debugging aid, to indicate that
+	   activate_nodelete has run for this map.  */
+	l->l_nodelete_pending = false;
       }
 }
 
@@ -549,10 +553,10 @@ dl_open_worker (void *a)
       if (__glibc_unlikely (mode & RTLD_NODELETE))
 	{
 	  if (__glibc_unlikely (GLRO (dl_debug_mask) & DL_DEBUG_FILES)
-	      && new->l_nodelete == link_map_nodelete_inactive)
+	      && !new->l_nodelete_active)
 	    _dl_debug_printf ("marking %s [%lu] as NODELETE\n",
 			      new->l_name, new->l_ns);
-	  new->l_nodelete = link_map_nodelete_active;
+	  new->l_nodelete_active = true;
 	}
 
       /* Finalize the addition to the global scope.  */
@@ -568,7 +572,7 @@ dl_open_worker (void *a)
   /* Schedule NODELETE marking for the directly loaded object if
      requested.  */
   if (__glibc_unlikely (mode & RTLD_NODELETE))
-    new->l_nodelete = link_map_nodelete_pending;
+    new->l_nodelete_pending = true;
 
   /* Load that object's dependencies.  */
   _dl_map_object_deps (new, NULL, 0, 0,
@@ -683,7 +687,7 @@ dl_open_worker (void *a)
 	      _dl_start_profile ();
 
 	      /* Prevent unloading the object.  */
-	      GL(dl_profile_map)->l_nodelete = link_map_nodelete_active;
+	      GL(dl_profile_map)->l_nodelete_active = true;
 	    }
 	}
       else
@@ -882,9 +886,9 @@ no more namespaces available for dlmopen()"));
 	     happens inside dl_open_worker.  */
 	  __libc_signal_restore_set (&args.original_signal_mask);
 
-	  /* All link_map_nodelete_pending objects should have been
-	     deleted at this point, which is why it is not necessary
-	     to reset the flag here.  */
+	  /* All l_nodelete_pending objects should have been deleted
+	     at this point, which is why it is not necessary to reset
+	     the flag here.  */
 	}
       else
 	__libc_signal_restore_set (&args.original_signal_mask);

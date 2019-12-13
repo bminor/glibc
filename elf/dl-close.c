@@ -197,7 +197,7 @@ _dl_close_worker (struct link_map *map, bool force)
       /* Check whether this object is still used.  */
       if (l->l_type == lt_loaded
 	  && l->l_direct_opencount == 0
-	  && l->l_nodelete != link_map_nodelete_active
+	  && !l->l_nodelete_active
 	  /* See CONCURRENCY NOTES in cxa_thread_atexit_impl.c to know why
 	     acquire is sufficient and correct.  */
 	  && atomic_load_acquire (&l->l_tls_dtor_count) == 0
@@ -279,8 +279,7 @@ _dl_close_worker (struct link_map *map, bool force)
 
       if (!used[i])
 	{
-	  assert (imap->l_type == lt_loaded
-		  && imap->l_nodelete != link_map_nodelete_active);
+	  assert (imap->l_type == lt_loaded && !imap->l_nodelete_active);
 
 	  /* Call its termination function.  Do not do it for
 	     half-cooked objects.  Temporarily disable exception
@@ -830,7 +829,7 @@ _dl_close (void *_map)
      before we took the lock. There is no way to detect this (see below)
      so we proceed assuming this isn't the case.  First see whether we
      can remove the object at all.  */
-  if (__glibc_unlikely (map->l_nodelete == link_map_nodelete_active))
+  if (__glibc_unlikely (map->l_nodelete_active))
     {
       /* Nope.  Do nothing.  */
       __rtld_lock_unlock_recursive (GL(dl_load_lock));

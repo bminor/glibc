@@ -187,6 +187,28 @@ enter_unique_sym (struct unique_sym *table, size_t size,
   table[idx].map = map;
 }
 
+/* Mark MAP as NODELETE according to the lookup mode in FLAGS.  During
+   initial relocation, NODELETE state is pending only.  */
+static void
+mark_nodelete (struct link_map *map, int flags)
+{
+  if (flags & DL_LOOKUP_FOR_RELOCATE)
+    map->l_nodelete_pending = true;
+  else
+    map->l_nodelete_active = true;
+}
+
+/* Return true if MAP is marked as NODELETE according to the lookup
+   mode in FLAGS> */
+static bool
+is_nodelete (struct link_map *map, int flags)
+{
+  /* Non-pending NODELETE always counts.  Pending NODELETE only counts
+     during initial relocation processing.  */
+  return map->l_nodelete_active
+    || ((flags & DL_LOOKUP_FOR_RELOCATE) && map->l_nodelete_pending);
+}
+
 /* Utility function for do_lookup_x. Lookup an STB_GNU_UNIQUE symbol
    in the unique symbol table, creating a new entry if necessary.
    Return the matching symbol in RESULT.  */
@@ -311,8 +333,7 @@ do_lookup_unique (const char *undef_name, uint_fast32_t new_hash,
       enter_unique_sym (entries, size,
                         new_hash, strtab + sym->st_name, sym, map);
 
-      if (map->l_type == lt_loaded
-	  && map->l_nodelete == link_map_nodelete_inactive)
+      if (map->l_type == lt_loaded && !is_nodelete (map, flags))
 	{
 	  /* Make sure we don't unload this object by
 	     setting the appropriate flag.  */
@@ -320,10 +341,7 @@ do_lookup_unique (const char *undef_name, uint_fast32_t new_hash,
 	    _dl_debug_printf ("\
 marking %s [%lu] as NODELETE due to unique symbol\n",
 			      map->l_name, map->l_ns);
-	  if (flags & DL_LOOKUP_FOR_RELOCATE)
-	    map->l_nodelete = link_map_nodelete_pending;
-	  else
-	    map->l_nodelete = link_map_nodelete_active;
+	  mark_nodelete (map, flags);
 	}
     }
   ++tab->n_elements;
@@ -586,7 +604,7 @@ add_dependency (struct link_map *undef_map, struct link_map *map, int flags)
      dependencies may pick an dependency which can be dlclose'd, but
      such IFUNC resolvers are undefined anyway.  */
   assert (map->l_type == lt_loaded);
-  if (map->l_nodelete != link_map_nodelete_inactive)
+  if (is_nodelete (map, flags))
     return 0;
 
   struct link_map_reldeps *l_reldeps
@@ -694,17 +712,16 @@ add_dependency (struct link_map *undef_map, struct link_map *map, int flags)
 
       /* Redo the NODELETE check, as when dl_load_lock wasn't held
 	 yet this could have changed.  */
-      if (map->l_nodelete != link_map_nodelete_inactive)
+      if (is_nodelete (map, flags))
 	goto out;
 
       /* If the object with the undefined reference cannot be removed ever
 	 just make sure the same is true for the object which contains the
 	 definition.  */
-      if (undef_map->l_type != lt_loaded
-	  || (undef_map->l_nodelete != link_map_nodelete_inactive))
+      if (undef_map->l_type != lt_loaded || is_nodelete (map, flags))
 	{
 	  if (__glibc_unlikely (GLRO (dl_debug_mask) & DL_DEBUG_BINDINGS)
-	      && map->l_nodelete == link_map_nodelete_inactive)
+	      && !is_nodelete (map, flags))
 	    {
 	      if (undef_map->l_name[0] == '\0')
 		_dl_debug_printf ("\
@@ -716,11 +733,7 @@ marking %s [%lu] as NODELETE due to reference to %s [%lu]\n",
 				  map->l_name, map->l_ns,
 				  undef_map->l_name, undef_map->l_ns);
 	    }
-
-	  if (flags & DL_LOOKUP_FOR_RELOCATE)
-	    map->l_nodelete = link_map_nodelete_pending;
-	  else
-	    map->l_nodelete = link_map_nodelete_active;
+	  mark_nodelete (map, flags);
 	  goto out;
 	}
 
@@ -746,17 +759,14 @@ marking %s [%lu] as NODELETE due to reference to %s [%lu]\n",
 		 cannot be unloaded.  This is semantically the correct
 		 behavior.  */
 	      if (__glibc_unlikely (GLRO (dl_debug_mask) & DL_DEBUG_BINDINGS)
-		  && map->l_nodelete == link_map_nodelete_inactive)
+		  && !is_nodelete (map, flags))
 		_dl_debug_printf ("\
 marking %s [%lu] as NODELETE due to memory allocation failure\n",
 				  map->l_name, map->l_ns);
-	      if (flags & DL_LOOKUP_FOR_RELOCATE)
-		/* In case of non-lazy binding, we could actually
-		   report the memory allocation error, but for now, we
-		   use the conservative approximation as well. */
-		map->l_nodelete = link_map_nodelete_pending;
-	      else
-		map->l_nodelete = link_map_nodelete_active;
+	      /* In case of non-lazy binding, we could actually report
+		 the memory allocation error, but for now, we use the
+		 conservative approximation as well.  */
+	      mark_nodelete (map, flags);
 	      goto out;
 	    }
 	  else
