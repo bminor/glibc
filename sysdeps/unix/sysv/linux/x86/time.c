@@ -18,16 +18,16 @@
 
 #include <time.h>
 #include <sysdep.h>
-
-#ifdef HAVE_TIME_VSYSCALL
-# define HAVE_VSYSCALL
-#endif
 #include <sysdep-vdso.h>
 
 static time_t
 time_vsyscall (time_t *t)
 {
+#ifdef HAVE_TIME_VSYSCALL
   return INLINE_VSYSCALL (time, 1, t);
+#else
+  return INLINE_SYSCALL_CALL (time, t);
+#endif
 }
 
 #ifdef SHARED

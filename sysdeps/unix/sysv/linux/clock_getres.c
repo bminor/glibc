@@ -20,9 +20,6 @@
 #include <errno.h>
 #include <time.h>
 
-#ifdef HAVE_CLOCK_GETRES_VSYSCALL
-# define HAVE_VSYSCALL
-#endif
 #include <sysdep-vdso.h>
 #include <shlib-compat.h>
 #include <kernel-features.h>
@@ -32,23 +29,34 @@ int
 __clock_getres64 (clockid_t clock_id, struct __timespec64 *res)
 {
 #ifdef __ASSUME_TIME64_SYSCALLS
-# ifndef __NR_clock_getres_time64
-  return INLINE_VSYSCALL (clock_getres, 2, clock_id, res);
+  /* 64 bit ABIs or Newer 32-bit ABIs that only support 64-bit time_t.  */
+# ifdef __NR_clock_getres_time64
+  return INLINE_SYSCALL_CALL (clock_getres_time64, clock_id, res);
 # else
-  return INLINE_SYSCALL (clock_getres_time64, 2, clock_id, res);
+#  ifdef HAVE_CLOCK_GETRES_VSYSCALL
+  return INLINE_VSYSCALL (clock_getres, 2, clock_id, res);
+#  else
+  return INLINE_SYSCALL_CALL (clock_getres, clock_id, res);
+#  endif
 # endif
 #else
+  int r;
+  /* Old 32-bit ABI with possible 64-bit time_t support.  */
 # ifdef __NR_clock_getres_time64
-  int ret = INLINE_SYSCALL (clock_getres_time64, 2, clock_id, res);
-  if (ret == 0 || errno != ENOSYS)
-    return ret;
+  r = INLINE_SYSCALL_CALL (clock_getres_time64, clock_id, res);
+  if (r == 0 || errno != ENOSYS)
+    return r;
 # endif
+  /* Fallback code that uses 32-bit support.  */
   struct timespec ts32;
-  int retval = INLINE_VSYSCALL (clock_getres, 2, clock_id, &ts32);
-  if (! retval && res)
+# ifdef HAVE_CLOCK_GETRES_VSYSCALL
+  r = INLINE_VSYSCALL (clock_getres, 2, clock_id, &ts32);
+# else
+  r = INLINE_SYSCALL_CALL (clock_getres, clock_id, &ts32);
+# endif
+  if (r == 0)
     *res = valid_timespec_to_timespec64 (ts32);
-
-  return retval;
+  return r;
 #endif
 }
 
@@ -60,7 +68,7 @@ __clock_getres (clockid_t clock_id, struct timespec *res)
   int retval;
 
   retval = __clock_getres64 (clock_id, &ts64);
-  if (! retval && res)
+  if (retval == 0 && res != NULL)
     *res = valid_timespec64_to_timespec (ts64);
 
   return retval;

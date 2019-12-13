@@ -18,10 +18,6 @@
 
 #include <time.h>
 #include <sysdep.h>
-
-#ifdef HAVE_TIME_VSYSCALL
-# define HAVE_VSYSCALL
-#endif
 #include <sysdep-vdso.h>
 
 static time_t

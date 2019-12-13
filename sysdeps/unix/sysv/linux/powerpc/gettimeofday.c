@@ -17,10 +17,6 @@
 
 #include <time.h>
 #include <sysdep.h>
-
-#ifdef HAVE_GETTIMEOFDAY_VSYSCALL
-# define HAVE_VSYSCALL
-#endif
 #include <sysdep-vdso.h>
 
 static int

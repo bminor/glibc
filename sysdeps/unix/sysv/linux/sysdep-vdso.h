@@ -20,17 +20,14 @@
 # define SYSDEP_VDSO_LINUX_H
 
 #include <dl-vdso.h>
+#include <libc-vdso.h>
 
 #ifndef INTERNAL_VSYSCALL_CALL
 # define INTERNAL_VSYSCALL_CALL(funcptr, err, nr, args...)		      \
      funcptr (args)
 #endif
 
-#ifdef HAVE_VSYSCALL
-
-# include <libc-vdso.h>
-
-# define INLINE_VSYSCALL(name, nr, args...)				      \
+#define INLINE_VSYSCALL(name, nr, args...)				      \
   ({									      \
     __label__ out;							      \
     __label__ iserr;							      \
@@ -58,32 +55,5 @@
   out:									      \
     sc_ret;								      \
   })
-
-# define INTERNAL_VSYSCALL(name, err, nr, args...)			      \
-  ({									      \
-    __label__ out;							      \
-    long v_ret;								      \
-									      \
-    __typeof (__vdso_##name) vdsop = __vdso_##name;			      \
-    PTR_DEMANGLE (vdsop);						      \
-    if (vdsop != NULL)							      \
-      {									      \
-	v_ret = INTERNAL_VSYSCALL_CALL (vdsop, err, nr, ##args);	      \
-	if (!INTERNAL_SYSCALL_ERROR_P (v_ret, err)			      \
-	    || INTERNAL_SYSCALL_ERRNO (v_ret, err) != ENOSYS)		      \
-	  goto out;							      \
-      }									      \
-    v_ret = INTERNAL_SYSCALL (name, err, nr, ##args);			      \
-  out:									      \
-    v_ret;								      \
-  })
-#else
-
-# define INLINE_VSYSCALL(name, nr, args...) \
-   INLINE_SYSCALL (name, nr, ##args)
-# define INTERNAL_VSYSCALL(name, err, nr, args...) \
-   INTERNAL_SYSCALL (name, err, nr, ##args)
-
-#endif /* USE_VSYSCALL && defined HAVE_VSYSCALL */
 
 #endif /* SYSDEP_VDSO_LINUX_H  */
