@@ -13,6 +13,7 @@ libc {
     __libc_lock_self0; __sigprocmask; __getcwd;
 
     _dl_init_first;
+    __close_nocancel_nostatus;
   }
 }
 

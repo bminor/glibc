@@ -40,11 +40,7 @@
 #define __close_nocancel(fd) \
   __close (fd)
 
-static inline void
-__close_nocancel_nostatus (int fd)
-{
-  HURD_FD_USE (fd, _hurd_fd_close (descriptor));
-}
+void __close_nocancel_nostatus (int fd);
 
 #define __read_nocancel(fd, buf, n) \
   __read (fd, buf, n)
@@ -58,5 +54,9 @@ __close_nocancel_nostatus (int fd)
   __waitpid (pid, stat_loc, options)
 #define __fcntl64_nocancel(fd, cmd, ...) \
   __fcntl64 (fd, cmd, __VA_ARGS__)
+
+#if IS_IN (libc) || IS_IN (rtld)
+hidden_proto (__close_nocancel_nostatus)
+#endif
 
 #endif /* NOT_CANCEL_H  */
