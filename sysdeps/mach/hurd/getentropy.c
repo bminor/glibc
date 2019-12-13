@@ -41,7 +41,7 @@ getentropy (void *buffer, size_t length)
   while (buffer < end)
     {
       /* NB: No cancellation point.  */
-      ssize_t bytes = getrandom (buffer, end - buffer, 0);
+      ssize_t bytes = __getrandom (buffer, end - buffer, 0);
       if (bytes < 0)
         {
           if (errno == EINTR)

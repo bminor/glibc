@@ -24,7 +24,7 @@
 /* Write up to LENGTH bytes of randomness starting at BUFFER.
    Return the number of bytes written, or -1 on error.  */
 ssize_t
-getrandom (void *buffer, size_t length, unsigned int flags)
+__getrandom (void *buffer, size_t length, unsigned int flags)
 {
   const char *random_source = "/dev/urandom";
   size_t amount_read;
@@ -41,3 +41,6 @@ getrandom (void *buffer, size_t length, unsigned int flags)
   __close_nocancel_nostatus(fd);
   return amount_read;
 }
+
+libc_hidden_def (__getrandom)
+weak_alias (__getrandom, getrandom)
