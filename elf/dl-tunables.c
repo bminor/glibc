@@ -45,12 +45,11 @@ tunables_strdup (const char *in)
   while (in[i++] != '\0');
   char *out = __sbrk (i);
 
-  /* FIXME: In reality if the allocation fails, __sbrk will crash attempting to
-     set the thread-local errno since the TCB has not yet been set up.  This
-     needs to be fixed with an __sbrk implementation that does not set
-     errno.  */
+  /* For most of the tunables code, we ignore user errors.  However,
+     this is a system error - and running out of memory at program
+     startup should be reported, so we do.  */
   if (out == (void *)-1)
-    return NULL;
+    _dl_fatal_printf ("sbrk() failure while processing tunables\n");
 
   i--;
 
