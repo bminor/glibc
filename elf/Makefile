@@ -191,7 +191,7 @@ tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-audit1 tst-audit2 tst-audit8 tst-audit9 \
 	 tst-addr1 tst-thrlock \
 	 tst-unique1 tst-unique2 $(if $(CXX),tst-unique3 tst-unique4 \
-	 tst-nodelete) \
+	 tst-nodelete tst-dlopen-nodelete-reloc) \
 	 tst-initorder tst-initorder2 tst-relsort1 tst-null-argv \
 	 tst-tlsalign tst-tlsalign-extern tst-nodelete-opened \
 	 tst-nodelete2 tst-audit11 tst-audit12 tst-dlsym-error tst-noload \
@@ -271,7 +271,24 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-auditmod9a tst-auditmod9b \
 		$(if $(CXX),tst-unique3lib tst-unique3lib2 tst-unique4lib \
 		  tst-nodelete-uniquemod tst-nodelete-rtldmod \
-		  tst-nodelete-zmod) \
+		  tst-nodelete-zmod \
+                  tst-dlopen-nodelete-reloc-mod1 \
+		  tst-dlopen-nodelete-reloc-mod2 \
+	          tst-dlopen-nodelete-reloc-mod3 \
+		  tst-dlopen-nodelete-reloc-mod4 \
+		  tst-dlopen-nodelete-reloc-mod5 \
+	          tst-dlopen-nodelete-reloc-mod6 \
+	          tst-dlopen-nodelete-reloc-mod7 \
+	          tst-dlopen-nodelete-reloc-mod8 \
+	          tst-dlopen-nodelete-reloc-mod9 \
+	          tst-dlopen-nodelete-reloc-mod10 \
+	          tst-dlopen-nodelete-reloc-mod11 \
+	          tst-dlopen-nodelete-reloc-mod12 \
+	          tst-dlopen-nodelete-reloc-mod13 \
+	          tst-dlopen-nodelete-reloc-mod14 \
+	          tst-dlopen-nodelete-reloc-mod15 \
+	          tst-dlopen-nodelete-reloc-mod16 \
+		  tst-dlopen-nodelete-reloc-mod17) \
 		tst-initordera1 tst-initorderb1 \
 		tst-initordera2 tst-initorderb2 \
 		tst-initordera3 tst-initordera4 \
@@ -1627,3 +1644,48 @@ $(objpfx)tst-dlopenfailmod1.so: \
   $(shared-thread-library) $(objpfx)tst-dlopenfaillinkmod.so
 LDFLAGS-tst-dlopenfaillinkmod.so = -Wl,-soname,tst-dlopenfail-missingmod.so
 $(objpfx)tst-dlopenfailmod2.so: $(shared-thread-library)
+
+$(objpfx)tst-dlopen-nodelete-reloc: $(libdl)
+$(objpfx)tst-dlopen-nodelete-reloc.out: \
+  $(objpfx)tst-dlopen-nodelete-reloc-mod1.so \
+  $(objpfx)tst-dlopen-nodelete-reloc-mod2.so \
+  $(objpfx)tst-dlopen-nodelete-reloc-mod3.so \
+  $(objpfx)tst-dlopen-nodelete-reloc-mod4.so \
+  $(objpfx)tst-dlopen-nodelete-reloc-mod5.so \
+  $(objpfx)tst-dlopen-nodelete-reloc-mod6.so \
+  $(objpfx)tst-dlopen-nodelete-reloc-mod7.so \
+  $(objpfx)tst-dlopen-nodelete-reloc-mod8.so \
+  $(objpfx)tst-dlopen-nodelete-reloc-mod9.so \
+  $(objpfx)tst-dlopen-nodelete-reloc-mod10.so \
+  $(objpfx)tst-dlopen-nodelete-reloc-mod11.so \
+  $(objpfx)tst-dlopen-nodelete-reloc-mod12.so \
+  $(objpfx)tst-dlopen-nodelete-reloc-mod13.so \
+  $(objpfx)tst-dlopen-nodelete-reloc-mod14.so \
+  $(objpfx)tst-dlopen-nodelete-reloc-mod15.so \
+  $(objpfx)tst-dlopen-nodelete-reloc-mod16.so \
+  $(objpfx)tst-dlopen-nodelete-reloc-mod17.so
+tst-dlopen-nodelete-reloc-mod2.so-no-z-defs = yes
+LDFLAGS-tst-dlopen-nodelete-reloc-mod2.so = -Wl,-z,nodelete
+$(objpfx)tst-dlopen-nodelete-reloc-mod4.so: \
+  $(objpfx)tst-dlopen-nodelete-reloc-mod3.so
+LDFLAGS-tst-dlopen-nodelete-reloc-mod4.so = -Wl,--no-as-needed
+$(objpfx)tst-dlopen-nodelete-reloc-mod5.so: \
+  $(objpfx)tst-dlopen-nodelete-reloc-mod4.so
+LDFLAGS-tst-dlopen-nodelete-reloc-mod5.so = -Wl,-z,nodelete,--no-as-needed
+tst-dlopen-nodelete-reloc-mod5.so-no-z-defs = yes
+tst-dlopen-nodelete-reloc-mod7.so-no-z-defs = yes
+$(objpfx)tst-dlopen-nodelete-reloc-mod8.so: $(libdl)
+$(objpfx)tst-dlopen-nodelete-reloc-mod10.so: $(libdl)
+tst-dlopen-nodelete-reloc-mod11.so-no-z-defs = yes
+$(objpfx)tst-dlopen-nodelete-reloc-mod13.so: \
+  $(objpfx)tst-dlopen-nodelete-reloc-mod12.so
+$(objpfx)tst-dlopen-nodelete-reloc-mod15.so: \
+  $(objpfx)tst-dlopen-nodelete-reloc-mod14.so
+tst-dlopen-nodelete-reloc-mod16.so-no-z-defs = yes
+$(objpfx)tst-dlopen-nodelete-reloc-mod16.so: \
+  $(objpfx)tst-dlopen-nodelete-reloc-mod15.so
+LDFLAGS-tst-dlopen-nodelete-reloc-mod16.so = -Wl,--no-as-needed
+$(objpfx)tst-dlopen-nodelete-reloc-mod17.so: \
+  $(objpfx)tst-dlopen-nodelete-reloc-mod15.so \
+  $(objpfx)tst-dlopen-nodelete-reloc-mod16.so
+LDFLAGS-tst-dlopen-nodelete-reloc-mod17.so = -Wl,--no-as-needed

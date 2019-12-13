@@ -311,12 +311,12 @@ do_lookup_unique (const char *undef_name, uint_fast32_t new_hash,
       enter_unique_sym (entries, size,
                         new_hash, strtab + sym->st_name, sym, map);
 
-      if (map->l_type == lt_loaded)
+      if (map->l_type == lt_loaded
+	  && map->l_nodelete == link_map_nodelete_inactive)
 	{
 	  /* Make sure we don't unload this object by
 	     setting the appropriate flag.  */
-	  if (__glibc_unlikely (GLRO (dl_debug_mask) & DL_DEBUG_BINDINGS)
-	      && map->l_nodelete == link_map_nodelete_inactive)
+	  if (__glibc_unlikely (GLRO (dl_debug_mask) & DL_DEBUG_BINDINGS))
 	    _dl_debug_printf ("\
 marking %s [%lu] as NODELETE due to unique symbol\n",
 			      map->l_name, map->l_ns);

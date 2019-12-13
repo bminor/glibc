@@ -433,34 +433,21 @@ TLS generation counter wrapped!  Please report this."));
    after dlopen failure is not possible, so that _dl_close can clean
    up objects if necessary.  */
 static void
-activate_nodelete (struct link_map *new, int mode)
+activate_nodelete (struct link_map *new)
 {
-  if (mode & RTLD_NODELETE || new->l_nodelete == link_map_nodelete_pending)
-    {
-      if (__glibc_unlikely (GLRO (dl_debug_mask) & DL_DEBUG_FILES))
-	_dl_debug_printf ("activating NODELETE for %s [%lu]\n",
-			  new->l_name, new->l_ns);
-      new->l_nodelete = link_map_nodelete_active;
-    }
+  /* It is necessary to traverse the entire namespace.  References to
+     objects in the global scope and unique symbol bindings can force
+     NODELETE status for objects outside the local scope.  */
+  for (struct link_map *l = GL (dl_ns)[new->l_ns]._ns_loaded; l != NULL;
+       l = l->l_next)
+    if (l->l_nodelete == link_map_nodelete_pending)
+      {
+	if (__glibc_unlikely (GLRO (dl_debug_mask) & DL_DEBUG_FILES))
+	  _dl_debug_printf ("activating NODELETE for %s [%lu]\n",
+			    l->l_name, l->l_ns);
 
-  for (unsigned int i = 0; i < new->l_searchlist.r_nlist; ++i)
-    {
-      struct link_map *imap = new->l_searchlist.r_list[i];
-      if (imap->l_nodelete == link_map_nodelete_pending)
-	{
-	  if (__glibc_unlikely (GLRO (dl_debug_mask) & DL_DEBUG_FILES))
-	    _dl_debug_printf ("activating NODELETE for %s [%lu]\n",
-			      imap->l_name, imap->l_ns);
-
-	  /* Only new objects should have set
-	     link_map_nodelete_pending.  Existing objects should not
-	     have gained any new dependencies and therefore cannot
-	     reach NODELETE status.  */
-	  assert (!imap->l_init_called || imap->l_type != lt_loaded);
-
-	  imap->l_nodelete = link_map_nodelete_active;
-	}
-     }
+	l->l_nodelete = link_map_nodelete_active;
+      }
 }
 
 /* struct dl_init_args and call_dl_init are used to call _dl_init with
@@ -721,7 +708,7 @@ dl_open_worker (void *a)
      All memory allocations for new objects must have happened
      before.  */
 
-  activate_nodelete (new, mode);
+  activate_nodelete (new);
 
   /* Second stage after resize_scopes: Actually perform the scope
      update.  After this, dlsym and lazy binding can bind to new
