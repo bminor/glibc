@@ -49,6 +49,8 @@ do_test (void)
   else
     printf ("Succeeded\n");
 
+  iconv_close (cd);
+
   return result;
 }
 
