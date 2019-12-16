@@ -16,39 +16,5 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* Get the current time of day and timezone information,
-   putting it into *tv and *tz.  If tz is null, *tz is not filled.
-   Returns 0 on success, -1 on errors.  */
-
-#include <time.h>
-#include <sysdep.h>
-#include <sysdep-vdso.h>
-
-/* Used as a fallback in the ifunc resolver if VDSO is not available
-   and for libc.so internal __gettimeofday calls.  */
-static int
-__gettimeofday_vsyscall (struct timeval *restrict tv, void *restrict tz)
-{
-  if (__glibc_unlikely (tz != 0))
-    memset (tz, 0, sizeof *tz);
-
-  return INLINE_VSYSCALL (gettimeofday, 2, tv, tz);
-}
-
-#ifdef SHARED
-# include <dl-vdso.h>
-# include <sysdep-vdso.h>
-
-# define INIT_ARCH()
-libc_ifunc (__gettimeofday,
-	    (get_vdso_symbol (HAVE_GETTIMEOFDAY_VSYSCALL)
-	    ?: __gettimeofday_vsyscall))
-
-#else
-int
-__gettimeofday (struct timeval *restrict tv, void *restrict tz)
-{
-  return __gettimeofday_vsyscall (tv, tz);
-}
-#endif
-weak_alias (__gettimeofday, gettimeofday)
+#define USE_IFUNC_GETTIMEOFDAY
+#include <sysdeps/unix/sysv/linux/gettimeofday.c>
