@@ -16,28 +16,5 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <time.h>
-#include <sysdep.h>
-#include <sysdep-vdso.h>
-
-static time_t
-time_vsyscall (time_t *t)
-{
-  return INLINE_VSYSCALL (time, 1, t);
-}
-
-#ifdef SHARED
-# include <dl-vdso.h>
-# include <libc-vdso.h>
-
-#undef INIT_ARCH
-#define INIT_ARCH()
-/* If the vDSO is not available we fall back on the syscall.  */
-libc_ifunc (time, (get_vdso_symbol ("__vdso_time") ?: time_vsyscall))
-#else
-time_t
-time (time_t *t)
-{
-  return time_vsyscall (t);
-}
-#endif
+#define USE_IFUNC_TIME
+#include <sysdeps/unix/sysv/linux/time.c>
