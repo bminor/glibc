@@ -42,13 +42,21 @@ __clock_getres64 (clockid_t clock_id, struct __timespec64 *res)
   int r;
   /* Old 32-bit ABI with possible 64-bit time_t support.  */
 # ifdef __NR_clock_getres_time64
+  /* Avoid issue a __NR_clock_getres_time64 syscall on kernels that do not
+     support 64-bit time_t.  */
+  static int time64_support = 1;
+  if (atomic_load_relaxed (&time64_support) != 0)
+    {
 #  ifdef HAVE_CLOCK_GETRES64_VSYSCALL
-  r = INLINE_VSYSCALL (clock_getres_time64, 2, clock_id, res);
+      r = INLINE_VSYSCALL (clock_getres_time64, 2, clock_id, res);
 #  else
-  r = INLINE_SYSCALL_CALL (clock_getres_time64, clock_id, res);
+      r = INLINE_SYSCALL_CALL (clock_getres_time64, clock_id, res);
 #  endif
-  if (r == 0 || errno != ENOSYS)
-    return r;
+      if (r == 0 || errno != ENOSYS)
+	return r;
+
+      atomic_store_relaxed (&time64_support, 0);
+    }
 # endif
   /* Fallback code that uses 32-bit support.  */
   struct timespec ts32;
