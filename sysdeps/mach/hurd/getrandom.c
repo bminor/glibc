@@ -27,13 +27,17 @@ ssize_t
 __getrandom (void *buffer, size_t length, unsigned int flags)
 {
   const char *random_source = "/dev/urandom";
+  int open_flags = O_RDONLY | O_CLOEXEC;
   size_t amount_read;
   int fd;
 
   if (flags & GRND_RANDOM)
     random_source = "/dev/random";
 
-  fd = __open_nocancel(random_source, O_RDONLY | O_CLOEXEC);
+  if (flags & GRND_NONBLOCK)
+    open_flags |= O_NONBLOCK;
+
+  fd = __open_nocancel(random_source, open_flags);
   if (fd == -1)
     return -1;
 
