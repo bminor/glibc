@@ -1382,9 +1382,12 @@ class Config(object):
         else:
             tool_build = 'gcc'
             # libsanitizer commonly breaks because of glibc header
-            # changes, or on unusual targets.
+            # changes, or on unusual targets.  C++ pre-compiled
+            # headers are not used during the glibc build and are
+            # expensive to create.
             if not self.ctx.full_gcc:
-                cfg_opts += ['--disable-libsanitizer']
+                cfg_opts += ['--disable-libsanitizer',
+                             '--disable-libstdcxx-pch']
             langs = 'all' if self.ctx.full_gcc else 'c,c++'
             cfg_opts += ['--enable-languages=%s' % langs,
                          '--enable-shared', '--enable-threads']
