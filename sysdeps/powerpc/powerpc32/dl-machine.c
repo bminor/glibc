@@ -414,7 +414,7 @@ __process_machine_rela (struct link_map *map,
 			const Elf32_Sym *refsym,
 			Elf32_Addr *const reloc_addr,
 			Elf32_Addr const finaladdr,
-			int rinfo)
+			int rinfo, bool skip_ifunc)
 {
   union unaligned
     {
@@ -434,7 +434,8 @@ __process_machine_rela (struct link_map *map,
       return;
 
     case R_PPC_IRELATIVE:
-      *reloc_addr = ((Elf32_Addr (*) (void)) finaladdr) ();
+      if (__glibc_likely (!skip_ifunc))
+	*reloc_addr = ((Elf32_Addr (*) (void)) finaladdr) ();
       return;
 
     case R_PPC_UADDR32:
