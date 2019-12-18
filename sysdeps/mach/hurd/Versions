@@ -10,7 +10,7 @@ libc {
   GLIBC_PRIVATE {
     # Functions shared with the dynamic linker
     __access; __access_noerrno; __libc_read; __libc_write; __libc_lseek64;
-    __libc_lock_self0; __sigprocmask; __getcwd;
+    __libc_lock_self0; __getcwd;
 
     _dl_init_first;
     __close_nocancel_nostatus;
@@ -42,6 +42,6 @@ ld {
 
     # functions that must be shared with libc
     __access; __access_noerrno; __libc_read; __libc_write; __libc_lseek64;
-    __libc_lock_self0; __sigprocmask; __getcwd;
+    __libc_lock_self0; __getcwd;
   }
 }

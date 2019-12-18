@@ -675,14 +675,6 @@ strong_alias (abort, __GI___chk_fail)
 strong_alias (abort, __GI___fortify_fail)
 strong_alias (abort, __GI___assert_fail)
 strong_alias (abort, __GI___assert_perror_fail)
-
-check_no_hidden(__sigprocmask);
-int weak_function
-__sigprocmask (int how, const sigset_t *set, sigset_t *oset)
-{
-  /* We do not have signals yet at this stage.  */
-  return 0;
-}
 
 /* This function is called by interruptible RPC stubs.  For initial
    dynamic linking, just use the normal mach_msg.  Since this defn is
