@@ -30,10 +30,13 @@ extern __typeof (__redirect_memset) __libc_memset;
 
 extern __typeof (__redirect_memset) __memset_falkor attribute_hidden;
 extern __typeof (__redirect_memset) __memset_emag attribute_hidden;
+extern __typeof (__redirect_memset) __memset_kunpeng attribute_hidden;
 extern __typeof (__redirect_memset) __memset_generic attribute_hidden;
 
 libc_ifunc (__libc_memset,
-	    ((IS_FALKOR (midr) || IS_PHECDA (midr)) && zva_size == 64
+	    IS_KUNPENG (midr)
+	    ?__memset_kunpeng
+	    : ((IS_FALKOR (midr) || IS_PHECDA (midr)) && zva_size == 64
 	     ? __memset_falkor
 	     : (IS_EMAG (midr) && zva_size == 64
 	       ? __memset_emag
