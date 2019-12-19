@@ -400,9 +400,12 @@ extern int sscanf (const char *__restrict __s,
 		   const char *__restrict __format, ...) __THROW;
 
 /* For historical reasons, the C99-compliant versions of the scanf
-   functions are at alternative names.  When __LDBL_COMPAT is in
-   effect, this is handled in bits/stdio-ldbl.h.  */
-#if !__GLIBC_USE (DEPRECATED_SCANF) && !defined __LDBL_COMPAT
+   functions are at alternative names.  When __LDBL_COMPAT or
+   __LONG_DOUBLE_USES_FLOAT128 are in effect, this is handled in
+   bits/stdio-ldbl.h.  */
+#include <bits/floatn.h>
+#if !__GLIBC_USE (DEPRECATED_SCANF) && !defined __LDBL_COMPAT \
+    && __LONG_DOUBLE_USES_FLOAT128 == 0
 # ifdef __REDIRECT
 extern int __REDIRECT (fscanf, (FILE *__restrict __stream,
 				const char *__restrict __format, ...),
@@ -447,7 +450,8 @@ extern int vsscanf (const char *__restrict __s,
 
 /* Same redirection as above for the v*scanf family.  */
 # if !__GLIBC_USE (DEPRECATED_SCANF)
-#  if defined __REDIRECT && !defined __LDBL_COMPAT
+#  if defined __REDIRECT && !defined __LDBL_COMPAT \
+      && __LONG_DOUBLE_USES_FLOAT128 == 0
 extern int __REDIRECT (vfscanf,
 		       (FILE *__restrict __s,
 			const char *__restrict __format, __gnuc_va_list __arg),
@@ -866,7 +870,9 @@ extern int __overflow (FILE *, int);
 #if __USE_FORTIFY_LEVEL > 0 && defined __fortify_function
 # include <bits/stdio2.h>
 #endif
-#ifdef __LDBL_COMPAT
+
+#include <bits/floatn.h>
+#if defined __LDBL_COMPAT || __LONG_DOUBLE_USES_FLOAT128 == 1
 # include <bits/stdio-ldbl.h>
 #endif
 

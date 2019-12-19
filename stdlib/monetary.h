@@ -50,7 +50,8 @@ extern ssize_t strfmon_l (char *__restrict __s, size_t __maxsize,
      __THROW __attribute_format_strfmon__ (4, 5);
 #endif
 
-#ifdef __LDBL_COMPAT
+#include <bits/floatn.h>
+#if defined __LDBL_COMPAT || __LONG_DOUBLE_USES_FLOAT128 == 1
 # include <bits/monetary-ldbl.h>
 #endif
 

@@ -452,7 +452,37 @@
 #include <bits/wordsize.h>
 #include <bits/long-double.h>
 
-#if defined __LONG_DOUBLE_MATH_OPTIONAL && defined __NO_LONG_DOUBLE_MATH
+#if __LONG_DOUBLE_USES_FLOAT128 == 1
+# ifdef __REDIRECT
+
+/* Alias name defined automatically.  */
+#  define __LDBL_REDIR(name, proto) ... unused__ldbl_redir
+#  define __LDBL_REDIR_DECL(name) \
+  extern __typeof (name) name __asm (__ASMNAME ("__" #name "ieee128"));
+
+/* Alias name defined automatically, with leading underscores.  */
+#  define __LDBL_REDIR2_DECL(name) \
+  extern __typeof (__##name) __##name \
+    __asm (__ASMNAME ("__" #name "ieee128"));
+
+/* Alias name defined manually.  */
+#  define __LDBL_REDIR1(name, proto, alias) ... unused__ldbl_redir1
+#  define __LDBL_REDIR1_DECL(name, alias) \
+  extern __typeof (name) name __asm (__ASMNAME (#alias));
+
+#  define __LDBL_REDIR1_NTH(name, proto, alias) \
+  __REDIRECT_NTH (name, proto, alias)
+#  define __REDIRECT_NTH_LDBL(name, proto, alias) \
+  __LDBL_REDIR1_NTH (name, proto, __##alias##ieee128)
+
+/* Unused.  */
+#  define __REDIRECT_LDBL(name, proto, alias) ... unused__redirect_ldbl
+#  define __LDBL_REDIR_NTH(name, proto) ... unused__ldbl_redir_nth
+
+# else
+_Static_assert (0, "IEEE 128-bits long double requires redirection on this platform");
+# endif
+#elif defined __LONG_DOUBLE_MATH_OPTIONAL && defined __NO_LONG_DOUBLE_MATH
 # define __LDBL_COMPAT 1
 # ifdef __REDIRECT
 #  define __LDBL_REDIR1(name, proto, alias) __REDIRECT (name, proto, alias)
@@ -461,6 +491,8 @@
 #  define __LDBL_REDIR1_NTH(name, proto, alias) __REDIRECT_NTH (name, proto, alias)
 #  define __LDBL_REDIR_NTH(name, proto) \
   __LDBL_REDIR1_NTH (name, proto, __nldbl_##name)
+#  define __LDBL_REDIR2_DECL(name) \
+  extern __typeof (__##name) __##name __asm (__ASMNAME ("__nldbl___" #name));
 #  define __LDBL_REDIR1_DECL(name, alias) \
   extern __typeof (name) name __asm (__ASMNAME (#alias));
 #  define __LDBL_REDIR_DECL(name) \
@@ -471,11 +503,13 @@
   __LDBL_REDIR1_NTH (name, proto, __nldbl_##alias)
 # endif
 #endif
-#if !defined __LDBL_COMPAT || !defined __REDIRECT
+#if (!defined __LDBL_COMPAT && __LONG_DOUBLE_USES_FLOAT128 == 0) \
+    || !defined __REDIRECT
 # define __LDBL_REDIR1(name, proto, alias) name proto
 # define __LDBL_REDIR(name, proto) name proto
 # define __LDBL_REDIR1_NTH(name, proto, alias) name proto __THROW
 # define __LDBL_REDIR_NTH(name, proto) name proto __THROW
+# define __LDBL_REDIR2_DECL(name)
 # define __LDBL_REDIR_DECL(name)
 # ifdef __REDIRECT
 #  define __REDIRECT_LDBL(name, proto, alias) __REDIRECT (name, proto, alias)
