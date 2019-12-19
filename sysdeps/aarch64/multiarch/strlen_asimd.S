@@ -48,6 +48,9 @@
 #define dataq2		q3
 #define datav2		v3
 
+#define REP8_01 0x0101010101010101
+#define REP8_7f 0x7f7f7f7f7f7f7f7f
+
 #ifdef TEST_PAGE_CROSS
 # define MIN_PAGE_SIZE 16
 #else
@@ -82,40 +85,47 @@ ENTRY_ALIGN (__strlen_asimd, 6)
 	DELOUSE (0)
 	DELOUSE (1)
 	and	tmp1, srcin, MIN_PAGE_SIZE - 1
+	mov	zeroones, REP8_01
 	cmp	tmp1, MIN_PAGE_SIZE - 16
 	b.gt	L(page_cross)
-	ldr	dataq, [srcin]
+	ldp	data1, data2, [srcin]
 #ifdef __AARCH64EB__
-	rev64	datav.16b, datav.16b
+	rev	data1, data1
+	rev	data2, data2
 #endif
 
-	/* Get the minimum value and keep going if it is not zero.  */
-	uminv	datab2, datav.16b
-	mov	tmp1, datav2.d[0]
-	cbnz	tmp1, L(main_loop_entry)
-
-	cmeq	datav.16b, datav.16b, #0
-	mov	data1, datav.d[0]
-	mov	data2, datav.d[1]
-	cmp	data1, 0
-	csel	data1, data1, data2, ne
+	sub	tmp1, data1, zeroones
+	orr	tmp2, data1, REP8_7f
+	sub	tmp3, data2, zeroones
+	orr	tmp4, data2, REP8_7f
+	bics	has_nul1, tmp1, tmp2
+	bic	has_nul2, tmp3, tmp4
+	ccmp	has_nul2, 0, 0, eq
+	beq	L(main_loop_entry)
+	csel	has_nul1, has_nul1, has_nul2, cc
 	mov	len, 8
-	rev	data1, data1
-	clz	tmp1, data1
-	csel	len, xzr, len, ne
+	rev	has_nul1, has_nul1
+	clz	tmp1, has_nul1
+	csel	len, xzr, len, cc
 	add	len, len, tmp1, lsr 3
 	ret
 
 L(main_loop_entry):
 	bic	src, srcin, 15
+	sub	src, src, 16
 
 L(main_loop):
-	ldr	dataq, [src, 16]!
+	ldr	dataq, [src, 32]!
 L(page_cross_entry):
 	/* Get the minimum value and keep going if it is not zero.  */
 	uminv	datab2, datav.16b
 	mov	tmp1, datav2.d[0]
+	cbz	tmp1, L(tail)
+	ldr	dataq, [src, 16]
+	uminv	datab2, datav.16b
+	mov	tmp1, datav2.d[0]
 	cbnz	tmp1, L(main_loop)
+	add	src, src, 16
 
 L(tail):
 #ifdef __AARCH64EB__
