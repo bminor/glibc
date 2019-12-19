@@ -45,6 +45,11 @@
 #define pos		x13
 #define limit_wd	x14
 
+#define dataq		q2
+#define datav		v2
+#define datab2		b3
+#define dataq2		q3
+#define datav2		v3
 #define REP8_01 0x0101010101010101
 #define REP8_7f 0x7f7f7f7f7f7f7f7f
 #define REP8_80 0x8080808080808080
@@ -71,7 +76,7 @@ ENTRY_ALIGN_AND_PAD (__strnlen, 6, 9)
 	   cycle, as we get much better parallelism out of the operations.  */
 
 	/* Start of critial section -- keep to one 64Byte cache line.  */
-L(loop):
+
 	ldp	data1, data2, [src], #16
 L(realigned):
 	sub	tmp1, data1, zeroones
@@ -115,6 +120,51 @@ L(nul_in_data2):
 	rev	has_nul2, has_nul2
 	clz	pos, has_nul2
 	add	len, len, pos, lsr #3		/* Bits to bytes.  */
+	cmp	len, limit
+	csel	len, len, limit, ls		/* Return the lower value.  */
+	RET
+
+L(loop):
+	ldr	dataq, [src], #16
+	uminv	datab2, datav.16b
+	mov	tmp1, datav2.d[0]
+	subs	limit_wd, limit_wd, #1
+	ccmp	tmp1, #0, #4, pl	/* NZCV = 0000  */
+	b.eq	L(loop_end)
+	ldr	dataq, [src], #16
+	uminv	datab2, datav.16b
+	mov	tmp1, datav2.d[0]
+	subs	limit_wd, limit_wd, #1
+	ccmp	tmp1, #0, #4, pl	/* NZCV = 0000  */
+	b.ne	L(loop)
+L(loop_end):
+	/* End of critical section -- keep to one 64Byte cache line.  */
+
+	cbnz	tmp1, L(hit_limit)	/* No null in final Qword.  */
+
+	/* We know there's a null in the final Qword.  The easiest thing
+	   to do now is work out the length of the string and return
+	   MIN (len, limit).  */
+
+#ifdef __AARCH64EB__
+	rev64	datav.16b, datav.16b
+#endif
+	/* Set te NULL byte as 0xff and the rest as 0x00, move the data into a
+	   pair of scalars and then compute the length from the earliest NULL
+	   byte.  */
+
+	cmeq	datav.16b, datav.16b, #0
+	mov	data1, datav.d[0]
+	mov	data2, datav.d[1]
+	cmp	data1, 0
+	csel	data1, data1, data2, ne
+	sub	len, src, srcin
+	sub	len, len, #16
+	rev	data1, data1
+	add	tmp2, len, 8
+	clz	tmp1, data1
+	csel	len, len, tmp2, ne
+	add	len, len, tmp1, lsr 3
 	cmp	len, limit
 	csel	len, len, limit, ls		/* Return the lower value.  */
 	RET
