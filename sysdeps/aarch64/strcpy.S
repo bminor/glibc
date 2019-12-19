@@ -53,6 +53,12 @@
 #define len		x16
 #define to_align	x17
 
+/* NEON register */
+#define dataq		q2
+#define datav		v2
+#define datab2		b3
+#define datav2		v3
+
 #ifdef BUILD_STPCPY
 #define STRCPY __stpcpy
 #else
@@ -199,7 +205,6 @@ L(fp_lt2):
 #endif
 	ret
 
-	.p2align 6
 	/* Aligning here ensures that the entry code and main loop all lies
 	   within one 64-byte cache line.  */
 L(bulk_entry):
@@ -214,46 +219,36 @@ L(bulk_entry):
 	   especially on cores with a high number of issue slots per
 	   cycle, as we get much better parallelism out of the operations.  */
 L(main_loop):
-	stp	data1, data2, [dst], #16
+	str	dataq, [dst], #16
 L(entry_no_page_cross):
-	ldp	data1, data2, [src], #16
-	sub	tmp1, data1, zeroones
-	orr	tmp2, data1, #REP8_7f
-	sub	tmp3, data2, zeroones
-	orr	tmp4, data2, #REP8_7f
-	bic	has_nul1, tmp1, tmp2
-	bics	has_nul2, tmp3, tmp4
-	ccmp	has_nul1, #0, #0, eq	/* NZCV = 0000  */
-	b.eq	L(main_loop)
+	ldr	dataq, [src], #16
+	uminv	datab2, datav.16b
+	mov	tmp3, datav2.d[0]
+	cbnz	tmp3, L(main_loop)
 
 	/* Since we know we are copying at least 16 bytes, the fastest way
 	   to deal with the tail is to determine the location of the
 	   trailing NUL, then (re)copy the 16 bytes leading up to that.  */
-	cmp	has_nul1, #0
 #ifdef __AARCH64EB__
-	/* For big-endian, carry propagation (if the final byte in the
-	   string is 0x01) means we cannot use has_nul directly.  The
-	   easiest way to get the correct byte is to byte-swap the data
-	   and calculate the syndrome a second time.  */
-	csel	data1, data1, data2, ne
-	rev	data1, data1
-	sub	tmp1, data1, zeroones
-	orr	tmp2, data1, #REP8_7f
-	bic	has_nul1, tmp1, tmp2
-#else
-	csel	has_nul1, has_nul1, has_nul2, ne
+	rev64	datav.16b, datav.16b
 #endif
-	rev	has_nul1, has_nul1
-	clz	pos, has_nul1
-	add	tmp1, pos, #72
-	add	pos, pos, #8
-	csel	pos, pos, tmp1, ne
-	add	src, src, pos, lsr #3
-	add	dst, dst, pos, lsr #3
-	ldp	data1, data2, [src, #-32]
-	stp	data1, data2, [dst, #-16]
+	/* ���loc */
+	cmeq	datav.16b, datav.16b, #0
+	mov	data1, datav.d[0]
+	mov	data2, datav.d[1]
+	cmp	data1, 0
+	csel	data1, data1, data2, ne
+	mov	pos, 8
+	rev	data1, data1
+	clz	tmp1, data1
+	csel	pos, xzr, pos, ne
+	add	pos, pos, tmp1, lsr 3
+	add	src, src, pos
+	add	dst, dst, pos
+	ldr	dataq,[src, #-31]
+	str	dataq,[dst, #-15]
 #ifdef BUILD_STPCPY
-	sub	dstin, dst, #1
+	mov	dstin, dst
 #endif
 	ret
 
