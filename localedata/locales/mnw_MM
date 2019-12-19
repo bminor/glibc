@@ -100,7 +100,7 @@ abday  "<U1012><U102D><U102F><U1010><U103A>";/
        "<U101E><U102D><U102F><U1000><U103A>";/
        "<U101E><U101D><U103A>"
 week          7;19971130;1
-d_t_fmt       "%OC%Oy %b %Od %A %OI:%OM:%OS %Op %Z"
+d_t_fmt       "%OC%Oy %b %Od %A %OI:%OM:%OS %p %Z"
 d_fmt         "%OC%Oy %b %Od %A"
 t_fmt         "%OI:%OM:%OS %p"
 % ဂယး, တ္ၚဲစေၚ်
