@@ -223,6 +223,7 @@ CFLAGS-sleep.c += -fexceptions
 CFLAGS-wait.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-waitid.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-waitpid.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-wait4.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-getopt.c += -fexceptions
 CFLAGS-wordexp.c += -fexceptions
 CFLAGS-wordexp.os = -fomit-frame-pointer
