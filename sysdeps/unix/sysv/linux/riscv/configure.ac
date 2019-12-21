@@ -11,6 +11,10 @@ if test $libc_cv_riscv_int_abi = no; then
   AC_MSG_ERROR([Unable to determine integer ABI])
 fi
 
+if test $libc_cv_riscv_int_abi = ilp32; then
+  arch_minimum_kernel=5.4.0
+fi
+
 libc_cv_riscv_float_abi=no
 AC_EGREP_CPP(yes, [#ifdef __riscv_float_abi_double
 		   yes

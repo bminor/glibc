@@ -151,6 +151,10 @@ if test $libc_cv_riscv_int_abi = no; then
   as_fn_error $? "Unable to determine integer ABI" "$LINENO" 5
 fi
 
+if test $libc_cv_riscv_int_abi = ilp32; then
+  arch_minimum_kernel=5.4.0
+fi
+
 libc_cv_riscv_float_abi=no
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
