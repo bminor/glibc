@@ -29,7 +29,6 @@ getpeername	-	getpeername	i:ibN	__getpeername	getpeername
 getpid		-	getpid		Ei:	__getpid	getpid
 getpriority	-	getpriority	i:ii	__getpriority	getpriority
 getrlimit	-	getrlimit	i:ip	__getrlimit	getrlimit
-getrusage	-	getrusage	i:ip	__getrusage	getrusage
 getsockname	-	getsockname	i:ibN	__getsockname	getsockname
 getsockopt	-	getsockopt	i:iiiBN	getsockopt
 getuid		-	getuid		Ei:	__getuid	getuid

@@ -134,5 +134,16 @@ extern int __getrusage (enum __rusage_who __who, struct rusage *__usage)
 extern int __setrlimit (enum __rlimit_resource __resource,
 			const struct rlimit *__rlimits);
 libc_hidden_proto (__setrlimit);
+
+#if __TIMESIZE == 64
+# define __getrusage64 __getrusage
+# define __wait4_time64 __wait4
+#else
+extern int __getrusage64 (enum __rusage_who who, struct __rusage64 *usage);
+libc_hidden_proto (__getrusage64)
+extern pid_t __wait4_time64 (pid_t pid, int *stat_loc, int options,
+                             struct __rusage64 *usage);
+libc_hidden_proto (__wait4_time64)
+#endif
 #endif
 #endif
