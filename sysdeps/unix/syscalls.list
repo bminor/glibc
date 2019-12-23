@@ -25,7 +25,6 @@ getgid		-	getgid		Ei:	__getgid	getgid
 getgroups	-	getgroups	i:ip	__getgroups	getgroups
 gethostid	-	gethostid	i:	gethostid
 gethostname	-	gethostname	i:bn	__gethostname	gethostname
-getitimer	-	getitimer	i:ip	__getitimer	getitimer
 getpeername	-	getpeername	i:ibN	__getpeername	getpeername
 getpid		-	getpid		Ei:	__getpid	getpid
 getpriority	-	getpriority	i:ii	__getpriority	getpriority
@@ -67,7 +66,6 @@ setgid		-	setgid		i:i	__setgid	setgid
 setgroups	-	setgroups	i:ip	setgroups
 sethostid	-	sethostid	i:i	sethostid
 sethostname	-	sethostname	i:pi	sethostname
-setitimer	-	setitimer	i:ipp	__setitimer	setitimer
 setpgid		-	setpgrp		i:ii	__setpgid	setpgid
 setpriority	-	setpriority	i:iii	__setpriority	setpriority
 setregid	-	setregid	i:ii	__setregid	setregid

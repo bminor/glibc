@@ -6,6 +6,7 @@
 # include <bits/types/locale_t.h>
 # include <stdbool.h>
 # include <time/mktime-internal.h>
+# include <sys/time.h>
 # include <endian.h>
 # include <time-clockid.h>
 # include <sys/time.h>
@@ -125,6 +126,20 @@ struct __itimerval64
   struct __timeval64 it_interval;
   struct __timeval64 it_value;
 };
+#endif
+
+#if __TIMESIZE == 64
+# define __getitimer64 __getitimer
+# define __setitimer64 __setitimer
+#else
+extern int __getitimer64 (enum __itimer_which __which,
+                          struct __itimerval64 *__value);
+
+libc_hidden_proto (__getitimer64)
+extern int __setitimer64 (enum __itimer_which __which,
+                          const struct __itimerval64 *__restrict __new,
+                          struct __itimerval64 *__restrict __old);
+libc_hidden_proto (__setitimer64)
 #endif
 
 #if __TIMESIZE == 64
