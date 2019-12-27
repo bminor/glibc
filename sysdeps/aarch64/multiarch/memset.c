@@ -34,7 +34,7 @@ extern __typeof (__redirect_memset) __memset_kunpeng attribute_hidden;
 extern __typeof (__redirect_memset) __memset_generic attribute_hidden;
 
 libc_ifunc (__libc_memset,
-	    IS_KUNPENG (midr)
+	    IS_KUNPENG920 (midr)
 	    ?__memset_kunpeng
 	    : ((IS_FALKOR (midr) || IS_PHECDA (midr)) && zva_size == 64
 	     ? __memset_falkor

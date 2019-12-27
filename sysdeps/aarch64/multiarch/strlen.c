@@ -34,7 +34,7 @@ extern __typeof (__redirect_strlen) __strlen_generic attribute_hidden;
 extern __typeof (__redirect_strlen) __strlen_asimd attribute_hidden;
 
 libc_ifunc (__strlen,
-	    (USE_ASIMD_STRLEN () || IS_KUNPENG(midr)
+	    (USE_ASIMD_STRLEN () || IS_KUNPENG920 (midr)
 	    ? __strlen_asimd
 	    :__strlen_generic));
 
