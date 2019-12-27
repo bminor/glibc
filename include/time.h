@@ -432,6 +432,51 @@ timespec64_to_timeval64 (const struct __timespec64 ts64)
   return tv64;
 }
 
+/* A version of 'struct timeval' with 32-bit time_t
+   and suseconds_t.  */
+struct __timeval32
+{
+  __int32_t tv_sec;         /* Seconds.  */
+  __int32_t tv_usec;        /* Microseconds.  */
+};
+
+/* Conversion functions for converting to/from __timeval32  */
+static inline struct __timeval64
+valid_timeval32_to_timeval64 (const struct __timeval32 tv)
+{
+  return (struct __timeval64) { tv.tv_sec, tv.tv_usec };
+}
+
+static inline struct __timeval32
+valid_timeval64_to_timeval32 (const struct __timeval64 tv64)
+{
+  return (struct __timeval32) { tv64.tv_sec, tv64.tv_usec };
+}
+
+static inline struct timeval
+valid_timeval32_to_timeval (const struct __timeval32 tv)
+{
+  return (struct timeval) { tv.tv_sec, tv.tv_usec };
+}
+
+static inline struct __timeval32
+valid_timeval_to_timeval32 (const struct timeval tv)
+{
+  return (struct __timeval32) { tv.tv_sec, tv.tv_usec };
+}
+
+static inline struct timespec
+valid_timeval32_to_timespec (const struct __timeval32 tv)
+{
+  return (struct timespec) { tv.tv_sec, tv.tv_usec * 1000 };
+}
+
+static inline struct __timeval32
+valid_timespec_to_timeval32 (const struct timespec ts)
+{
+  return (struct __timeval32) { (time_t) ts.tv_sec, ts.tv_nsec / 1000 };
+}
+
 /* Check if a value is in the valid nanoseconds range. Return true if
    it is, false otherwise.  */
 static inline bool
