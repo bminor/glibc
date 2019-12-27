@@ -28,7 +28,6 @@ getitimer	-	getitimer	i:ip	__getitimer	getitimer@@GLIBC_2.1
 setitimer	-	setitimer	i:ipP	__setitimer	setitimer@@GLIBC_2.1
 utimes		-	utimes		i:sp	__utimes	utimes@@GLIBC_2.1
 getrusage	-	getrusage	i:ip	__getrusage	getrusage@@GLIBC_2.1
-wait4		-	wait4		i:iWiP	__wait4		wait4@@GLIBC_2.1
 
 # avoid 64-bit aliases on 32-bit statfs syscalls
 fstatfs		-	fstatfs		i:ip	__fstatfs	fstatfs
