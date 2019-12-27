@@ -310,6 +310,43 @@ valid_timespec64_to_timeval (const struct __timespec64 ts64)
   return tv;
 }
 
+/* A version of 'struct timeval' with `long` time_t
+   and suseconds_t.  */
+struct __timeval_long
+{
+  long tv_sec;         /* Seconds.  */
+  long tv_usec;        /* Microseconds.  */
+};
+
+/* Conversion functions for converting to/from __timeval_long
+.  If the seconds field of a __timeval_long would
+   overflow, they write { INT32_MAX, 999999 } to the output.  */
+static inline struct timeval
+valid_timeval_long_to_timeval64 (const struct __timeval_long tv)
+{
+  return (struct timeval) { tv.tv_sec, tv.tv_usec };
+}
+
+static inline struct __timeval_long
+valid_timeval64_to_timeval_long (const struct timeval tv64)
+{
+  if (__glibc_unlikely (tv64.tv_sec > (time_t) 2147483647))
+    return (struct __timeval_long) { 2147483647, 999999};
+  return (struct __timeval_long) { tv64.tv_sec, tv64.tv_usec };
+}
+
+static inline struct timespec
+valid_timeval_long_to_timespec (const struct __timeval_long tv)
+{
+  return (struct timespec) { tv.tv_sec, tv.tv_usec * 1000 };
+}
+
+static inline struct __timeval_long
+valid_timespec_to_timeval_long (const struct timespec ts)
+{
+  return (struct __timeval_long) { (time_t) ts.tv_sec, ts.tv_nsec / 1000 };
+}
+
 /* Check if a value is in the valid nanoseconds range. Return true if
    it is, false otherwise.  */
 static inline bool
