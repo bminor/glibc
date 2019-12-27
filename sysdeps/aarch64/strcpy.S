@@ -232,7 +232,7 @@ L(entry_no_page_cross):
 #ifdef __AARCH64EB__
 	rev64	datav.16b, datav.16b
 #endif
-	/* ���loc */
+	/* calculate the loc value */
 	cmeq	datav.16b, datav.16b, #0
 	mov	data1, datav.d[0]
 	mov	data2, datav.d[1]
