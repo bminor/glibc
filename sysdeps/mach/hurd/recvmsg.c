@@ -32,13 +32,34 @@ __libc_recvmsg (int fd, struct msghdr *message, int flags)
   addr_port_t aport;
   char *data = NULL;
   mach_msg_type_number_t len = 0;
-  mach_port_t *ports;
+  mach_port_t *ports, *newports = NULL;
   mach_msg_type_number_t nports = 0;
+  struct cmsghdr *cmsg;
   char *cdata = NULL;
   mach_msg_type_number_t clen = 0;
   size_t amount;
   char *buf;
-  int i;
+  int nfds, *opened_fds = NULL;
+  int i, ii, j;
+  int newfds;
+
+  error_t reauthenticate (mach_port_t port, mach_port_t *result)
+    {
+      error_t err;
+      mach_port_t ref;
+      ref = __mach_reply_port ();
+      do
+	err = __io_reauthenticate (port, ref, MACH_MSG_TYPE_MAKE_SEND);
+      while (err == EINTR);
+      if (!err)
+	do
+	  err = __USEPORT (AUTH, __auth_user_authenticate (port,
+					  ref, MACH_MSG_TYPE_MAKE_SEND,
+					  result));
+	while (err == EINTR);
+      __mach_port_destroy (__mach_task_self (), ref);
+      return err;
+    }
 
   /* Find the total number of bytes to be read.  */
   amount = 0;
@@ -137,9 +158,81 @@ __libc_recvmsg (int fd, struct msghdr *message, int flags)
     message->msg_controllen = clen;
   memcpy (message->msg_control, cdata, message->msg_controllen);
 
+  if (nports > 0)
+    {
+      newports = __alloca (nports * sizeof (mach_port_t));
+      opened_fds = __alloca (nports * sizeof (int));
+    }
+
+  /* This counts how many ports we processed completely.  */
+  i = 0;
+  /* This counts how many new fds we create.  */
+  newfds = 0;
+
+  for (cmsg = CMSG_FIRSTHDR (message);
+       cmsg;
+       cmsg = CMSG_NXTHDR (message, cmsg))
+  {
+    if (cmsg->cmsg_level == SOL_SOCKET && cmsg->cmsg_type == SCM_RIGHTS)
+      {
+	/* SCM_RIGHTS support.  */
+	/* The fd's flags are passed in the control data.  */
+	int *fds = (int *) CMSG_DATA (cmsg);
+	nfds = (cmsg->cmsg_len - CMSG_ALIGN (sizeof (struct cmsghdr)))
+	       / sizeof (int);
+
+	for (j = 0; j < nfds; j++)
+	  {
+	    err = reauthenticate (ports[i], &newports[newfds]);
+	    if (err)
+	      goto cleanup;
+	    fds[j] = opened_fds[newfds] = _hurd_intern_fd (newports[newfds],
+							   fds[j], 0);
+	    if (fds[j] == -1)
+	      {
+		err = errno;
+		__mach_port_deallocate (__mach_task_self (), newports[newfds]);
+		goto cleanup;
+	      }
+	    i++;
+	    newfds++;
+	  }
+      }
+  }
+
+  for (i = 0; i < nports; i++)
+    __mach_port_deallocate (mach_task_self (), ports[i]);
+
   __vm_deallocate (__mach_task_self (), (vm_address_t) cdata, clen);
 
   return (buf - data);
+
+cleanup:
+  /* Clean up all the file descriptors from port 0 to i-1.  */
+  if (nports > 0)
+    {
+      ii = 0;
+      newfds = 0;
+      for (cmsg = CMSG_FIRSTHDR (message);
+	   cmsg;
+	   cmsg = CMSG_NXTHDR (message, cmsg))
+	{
+	  if (cmsg->cmsg_level == SOL_SOCKET && cmsg->cmsg_type == SCM_RIGHTS)
+	    {
+	      nfds = (cmsg->cmsg_len - CMSG_ALIGN (sizeof (struct cmsghdr)))
+		     / sizeof (int);
+	      for (j = 0; j < nfds && ii < i; j++, ii++, newfds++)
+	      {
+		_hurd_fd_close (_hurd_fd_get (opened_fds[newfds]));
+		__mach_port_deallocate (__mach_task_self (), newports[newfds]);
+		__mach_port_deallocate (__mach_task_self (), ports[ii]);
+	      }
+	    }
+	}
+    }
+
+  __vm_deallocate (__mach_task_self (), (vm_address_t) cdata, clen);
+  return __hurd_fail (err);
 }
 
 weak_alias (__libc_recvmsg, recvmsg)

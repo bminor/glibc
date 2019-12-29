@@ -32,6 +32,10 @@ ssize_t
 __libc_sendmsg (int fd, const struct msghdr *message, int flags)
 {
   error_t err = 0;
+  struct cmsghdr *cmsg;
+  mach_port_t *ports = NULL;
+  mach_msg_type_number_t nports = 0;
+  int *fds, nfds;
   struct sockaddr_un *addr = message->msg_name;
   socklen_t addr_len = message->msg_namelen;
   addr_port_t aport = MACH_PORT_NULL;
@@ -44,6 +48,7 @@ __libc_sendmsg (int fd, const struct msghdr *message, int flags)
   mach_msg_type_number_t len;
   mach_msg_type_number_t amount;
   int dealloc = 0;
+  int socketrpc = 0;
   int i;
 
   /* Find the total number of bytes to be written.  */
@@ -101,6 +106,48 @@ __libc_sendmsg (int fd, const struct msghdr *message, int flags)
 	}
     }
 
+  /* Allocate enough room for ports.  */
+  cmsg = CMSG_FIRSTHDR (message);
+  for (; cmsg; cmsg = CMSG_NXTHDR (message, cmsg))
+    if (cmsg->cmsg_level == SOL_SOCKET && cmsg->cmsg_type == SCM_RIGHTS)
+      nports += (cmsg->cmsg_len - CMSG_ALIGN (sizeof (struct cmsghdr)))
+		/ sizeof (int);
+
+  if (nports)
+    ports = __alloca (nports * sizeof (mach_port_t));
+
+  nports = 0;
+  for (cmsg = CMSG_FIRSTHDR (message);
+       cmsg;
+       cmsg = CMSG_NXTHDR (message, cmsg))
+    {
+      if (cmsg->cmsg_level == SOL_SOCKET && cmsg->cmsg_type == SCM_RIGHTS)
+	{
+	  /* SCM_RIGHTS support: send FDs.   */
+	  fds = (int *) CMSG_DATA (cmsg);
+	  nfds = (cmsg->cmsg_len - CMSG_ALIGN (sizeof (struct cmsghdr)))
+		 / sizeof (int);
+
+	  for (i = 0; i < nfds; i++)
+	    {
+	      err = HURD_DPORT_USE
+		(fds[i],
+		 ({
+		   err = __io_restrict_auth (port, &ports[nports],
+					     0, 0, 0, 0);
+		   if (! err)
+		     nports++;
+		   /* We pass the flags in the control data.  */
+		   fds[i] = descriptor->flags;
+		   err;
+		 }));
+
+	      if (err)
+		goto out;
+	    }
+	}
+    }
+
   if (addr)
     {
       if (addr->sun_family == AF_LOCAL)
@@ -111,9 +158,8 @@ __libc_sendmsg (int fd, const struct msghdr *message, int flags)
 	  file_t file = __file_name_lookup (name, 0, 0);
 	  if (file == MACH_PORT_NULL)
 	    {
-	      if (dealloc)
-		__vm_deallocate (__mach_task_self (), data.addr, len);
-	      return -1;
+	      err = errno;
+	      goto out;
 	    }
 	  err = __ifsock_getsockaddr (file, &aport);
 	  __mach_port_deallocate (__mach_task_self (), file);
@@ -121,11 +167,7 @@ __libc_sendmsg (int fd, const struct msghdr *message, int flags)
 	    /* The file did not grok the ifsock protocol.  */
 	    err = ENOTSOCK;
 	  if (err)
-	    {
-	      if (dealloc)
-		__vm_deallocate (__mach_task_self (), data.addr, len);
-	      return __hurd_fail (err);
-	    }
+	    goto out;
 	}
       else
 	err = EIEIO;
@@ -144,8 +186,9 @@ __libc_sendmsg (int fd, const struct msghdr *message, int flags)
 			      /* Send the data.  */
 			      err = __socket_send (port, aport,
 						   flags, data.ptr, len,
-						   NULL,
-						   MACH_MSG_TYPE_COPY_SEND, 0,
+						   ports,
+						   MACH_MSG_TYPE_COPY_SEND,
+						   nports,
 						   message->msg_control,
 						   message->msg_controllen,
 						   &amount);
@@ -154,11 +197,19 @@ __libc_sendmsg (int fd, const struct msghdr *message, int flags)
 			    }
 			  err;
 			}));
+  socketrpc = 1;
+
+ out:
+  for (i = 0; i < nports; i++)
+    __mach_port_deallocate (__mach_task_self (), ports[i]);
 
   if (dealloc)
     __vm_deallocate (__mach_task_self (), data.addr, len);
 
-  return err ? __hurd_sockfail (fd, flags, err) : amount;
+  if (socketrpc)
+    return err ? __hurd_sockfail (fd, flags, err) : amount;
+  else
+    return __hurd_fail (err);
 }
 
 weak_alias (__libc_sendmsg, sendmsg)
