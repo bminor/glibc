@@ -445,6 +445,7 @@ __fork (void)
 					      thread,
 					      MACH_MSG_TYPE_COPY_SEND)))
 	LOSE;
+      /* XXX consumed? (_hurd_sigthread is no more) */
       if (thread_refs > 1
 	  && (err = __mach_port_mod_refs (newtask, ss->thread,
 					  MACH_PORT_RIGHT_SEND,
@@ -610,10 +611,6 @@ __fork (void)
       for (i = 0; i < _hurd_nports; ++i)
 	__spin_unlock (&_hurd_ports[i].lock);
 
-      /* We are one of the (exactly) two threads in this new task, we
-	 will take the task-global signals.  */
-      _hurd_sigthread = ss->thread;
-
       /* Claim our sigstate structure and unchain the rest: the
 	 threads existed in the parent task but don't exist in this
 	 task (the child process).  Delay freeing them until later
@@ -633,6 +630,25 @@ __fork (void)
       ss->next = NULL;
       _hurd_sigstates = ss;
       __mutex_unlock (&_hurd_siglock);
+      /* Earlier on, the global sigstate may have been tainted and now needs to
+         be reinitialized.  Nobody is interested in its present state anymore:
+         we're not, the signal thread will be restarted, and there are no other
+         threads.
+
+         We can't simply allocate a fresh global sigstate here, as
+         _hurd_thread_sigstate will call malloc and that will deadlock trying
+         to determine the current thread's sigstate.  */
+#if 0
+      _hurd_thread_sigstate_init (_hurd_global_sigstate, MACH_PORT_NULL);
+#else
+      /* Only reinitialize the lock -- otherwise we might have to do additional
+         setup as done in hurdsig.c:_hurdsig_init.  */
+      __spin_lock_init (&_hurd_global_sigstate->lock);
+#endif
+
+      /* We are one of the (exactly) two threads in this new task, we
+	 will take the task-global signals.  */
+      _hurd_sigstate_set_global_rcv (ss);
 
       /* Fetch our new process IDs from the proc server.  No need to
 	 refetch our pgrp; it is always inherited from the parent (so
@@ -641,8 +657,10 @@ __fork (void)
       err = __USEPORT (PROC, __proc_getpids (port, &_hurd_pid, &_hurd_ppid,
 					     &_hurd_orphaned));
 
-      /* Forking clears the trace flag.  */
+      /* Forking clears the trace flag and pending masks.  */
       __sigemptyset (&_hurdsig_traced);
+      __sigemptyset (&_hurd_global_sigstate->pending);
+      __sigemptyset (&ss->pending);
 
       /* Release malloc locks.  */
       _hurd_malloc_fork_child ();

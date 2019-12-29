@@ -35,7 +35,7 @@ __pthread_sigstate_init (struct __pthread *thread)
   if (do_init_global)
     {
       struct hurd_sigstate *ss = _hurd_thread_sigstate (thread->kernel_thread);
-      (void) ss;
+      _hurd_sigstate_set_global_rcv (ss);
     }
   else if (__pthread_num_threads >= 2)
     do_init_global = 1;

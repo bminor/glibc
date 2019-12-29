@@ -43,12 +43,15 @@ _hurd_ctty_input (io_t port, io_t ctty, error_t (*rpc) (io_t))
 	  else
 	    {
 	      struct hurd_sigstate *ss = _hurd_self_sigstate ();
-	      __spin_lock (&ss->lock);
+	      struct sigaction *actions;
+
+	      _hurd_sigstate_lock (ss);
+	      actions = _hurd_sigstate_actions (ss);
 	      if (__sigismember (&ss->blocked, SIGTTIN)
-		  || ss->actions[SIGTTIN].sa_handler == SIG_IGN)
+		  || actions[SIGTTIN].sa_handler == SIG_IGN)
 		/* We are blocking or ignoring SIGTTIN.  Just fail.  */
 		err = EIO;
-	      __spin_unlock (&ss->lock);
+	      _hurd_sigstate_unlock (ss);
 
 	      if (err == EBACKGROUND)
 		{
@@ -65,10 +68,11 @@ _hurd_ctty_input (io_t port, io_t ctty, error_t (*rpc) (io_t))
 		     SIGTTIN or resumed after being stopped.  Now this is
 		     still a "system call", so check to see if we should
 		  restart it.  */
-		  __spin_lock (&ss->lock);
-		  if (!(ss->actions[SIGTTIN].sa_flags & SA_RESTART))
+		  _hurd_sigstate_lock (ss);
+		  actions = _hurd_sigstate_actions (ss);
+		  if (!(actions[SIGTTIN].sa_flags & SA_RESTART))
 		    err = EINTR;
-		  __spin_unlock (&ss->lock);
+		  _hurd_sigstate_unlock (ss);
 		}
 	    }
 	}

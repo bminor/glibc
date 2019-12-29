@@ -17,10 +17,12 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <pthread.h>
+#include <hurd/signal.h>
 
 #include <pt-internal.h>
 
 void
 __pthread_sigstate_destroy (struct __pthread *thread)
 {
+  _hurd_sigstate_delete (thread->kernel_thread);
 }

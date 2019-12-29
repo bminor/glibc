@@ -159,5 +159,12 @@ libc {
     __lll_abstimed_lock; __lll_robust_lock;
     __lll_robust_abstimed_lock; __lll_robust_trylock;
     __lll_robust_unlock;
+
+    # Used by libpthread.
+    _hurd_sigstate_set_global_rcv;
+    _hurd_sigstate_lock;
+    _hurd_sigstate_pending;
+    _hurd_sigstate_unlock;
+    _hurd_sigstate_delete;
   }
 }

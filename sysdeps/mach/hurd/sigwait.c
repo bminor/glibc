@@ -27,7 +27,7 @@ int
 __sigwait (const sigset_t *set, int *sig)
 {
   struct hurd_sigstate *ss;
-  sigset_t mask, ready;
+  sigset_t mask, ready, blocked;
   int signo = 0;
   struct hurd_signal_preemptor preemptor;
   jmp_buf buf;
@@ -49,8 +49,8 @@ __sigwait (const sigset_t *set, int *sig)
       /* Make sure this is all kosher */
       assert (__sigismember (&mask, signo));
 
-      /* Make sure this signal is unblocked */
-      __sigdelset (&ss->blocked, signo);
+      /* Restore the blocking mask. */
+      ss->blocked = blocked;
 
       return pe->handler;
     }
@@ -71,10 +71,11 @@ __sigwait (const sigset_t *set, int *sig)
     __sigemptyset (&mask);
 
   ss = _hurd_self_sigstate ();
-  __spin_lock (&ss->lock);
+  _hurd_sigstate_lock (ss);
 
   /* See if one of these signals is currently pending.  */
-  __sigandset (&ready, &ss->pending, &mask);
+  sigset_t pending = _hurd_sigstate_pending (ss);
+  __sigandset (&ready, &pending, &mask);
   if (! __sigisemptyset (&ready))
     {
       for (signo = 1; signo < NSIG; signo++)
@@ -102,7 +103,11 @@ __sigwait (const sigset_t *set, int *sig)
       preemptor.next = ss->preemptors;
       ss->preemptors = &preemptor;
 
-      __spin_unlock (&ss->lock);
+      /* Unblock the expected signals */
+      blocked = ss->blocked;
+      ss->blocked &= ~mask;
+
+      _hurd_sigstate_unlock (ss);
 
       /* Wait. */
       __mach_msg (&msg, MACH_RCV_MSG, 0, sizeof (msg), wait,
@@ -113,7 +118,7 @@ __sigwait (const sigset_t *set, int *sig)
     {
       assert (signo);
 
-      __spin_lock (&ss->lock);
+      _hurd_sigstate_lock (ss);
 
       /* Delete our preemptor. */
       assert (ss->preemptors == &preemptor);
@@ -122,7 +127,7 @@ __sigwait (const sigset_t *set, int *sig)
 
 
 all_done:
-  spin_unlock (&ss->lock);
+  _hurd_sigstate_unlock (ss);
 
   __mach_port_destroy (__mach_task_self (), wait);
   *sig = signo;

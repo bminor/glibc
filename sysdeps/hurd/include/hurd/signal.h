@@ -11,6 +11,11 @@ libc_hidden_proto (_hurd_exception2signal)
 libc_hidden_proto (_hurd_intr_rpc_mach_msg)
 libc_hidden_proto (_hurd_thread_sigstate)
 libc_hidden_proto (_hurd_raise_signal)
+libc_hidden_proto (_hurd_sigstate_set_global_rcv)
+libc_hidden_proto (_hurd_sigstate_lock)
+libc_hidden_proto (_hurd_sigstate_pending)
+libc_hidden_proto (_hurd_sigstate_unlock)
+libc_hidden_proto (_hurd_sigstate_delete)
 #endif
 #ifdef _HURD_SIGNAL_H_HIDDEN_DEF
 libc_hidden_def (_hurd_self_sigstate)

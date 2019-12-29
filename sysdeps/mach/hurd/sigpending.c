@@ -36,9 +36,9 @@ sigpending (sigset_t *set)
     }
 
   ss = _hurd_self_sigstate ();
-  __spin_lock (&ss->lock);
-  pending = ss->pending;
-  __spin_unlock (&ss->lock);
+  _hurd_sigstate_lock (ss);
+  pending = _hurd_sigstate_pending (ss);
+  _hurd_sigstate_unlock (ss);
 
   *set = pending;
   return 0;

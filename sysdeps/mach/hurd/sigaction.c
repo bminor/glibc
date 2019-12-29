@@ -46,15 +46,15 @@ __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
   ss = _hurd_self_sigstate ();
 
   __spin_lock (&ss->critical_section_lock);
-  __spin_lock (&ss->lock);
-  old = ss->actions[sig];
+  _hurd_sigstate_lock (ss);
+  old = _hurd_sigstate_actions (ss) [sig];
   if (act != NULL)
-    ss->actions[sig] = a;
+    _hurd_sigstate_actions (ss) [sig] = a;
 
   if (act != NULL && sig == SIGCHLD
       && (a.sa_flags & SA_NOCLDSTOP) != (old.sa_flags & SA_NOCLDSTOP))
     {
-      __spin_unlock (&ss->lock);
+      _hurd_sigstate_unlock (ss);
 
       /* Inform the proc server whether or not it should send us SIGCHLD for
 	 stopped children.  We do this in a critical section so that no
@@ -62,8 +62,8 @@ __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
       __USEPORT (PROC,
 		 __proc_mod_stopchild (port, !(a.sa_flags & SA_NOCLDSTOP)));
 
-      __spin_lock (&ss->lock);
-      pending = ss->pending & ~ss->blocked;
+      _hurd_sigstate_lock (ss);
+      pending = _hurd_sigstate_pending (ss) & ~ss->blocked;
     }
   else if (act != NULL && (a.sa_handler == SIG_IGN || a.sa_handler == SIG_DFL))
     /* We are changing to an action that might be to ignore SIG signals.
@@ -72,11 +72,11 @@ __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
        back and then SIG is unblocked, the signal pending now should not
        arrive.  So wake up the signal thread to check the new state and do
        the right thing.  */
-    pending = ss->pending & __sigmask (sig);
+    pending = _hurd_sigstate_pending (ss) & __sigmask (sig);
   else
     pending = 0;
 
-  __spin_unlock (&ss->lock);
+  _hurd_sigstate_unlock (ss);
   __spin_unlock (&ss->critical_section_lock);
 
   if (pending)
