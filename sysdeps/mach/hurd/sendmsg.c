@@ -108,7 +108,7 @@ __libc_sendmsg (int fd, const struct msghdr *message, int flags)
 
   /* Allocate enough room for ports.  */
   cmsg = CMSG_FIRSTHDR (message);
-  for (; cmsg; cmsg = CMSG_NXTHDR (message, cmsg))
+  for (; cmsg; cmsg = CMSG_NXTHDR ((struct msghdr *) message, cmsg))
     if (cmsg->cmsg_level == SOL_SOCKET && cmsg->cmsg_type == SCM_RIGHTS)
       nports += (cmsg->cmsg_len - CMSG_ALIGN (sizeof (struct cmsghdr)))
 		/ sizeof (int);
@@ -119,7 +119,7 @@ __libc_sendmsg (int fd, const struct msghdr *message, int flags)
   nports = 0;
   for (cmsg = CMSG_FIRSTHDR (message);
        cmsg;
-       cmsg = CMSG_NXTHDR (message, cmsg))
+       cmsg = CMSG_NXTHDR ((struct msghdr *) message, cmsg))
     {
       if (cmsg->cmsg_level == SOL_SOCKET && cmsg->cmsg_type == SCM_RIGHTS)
 	{
