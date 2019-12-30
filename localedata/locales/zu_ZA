@@ -127,8 +127,8 @@ mon         "Januwari";/
             "Novemba";/
             "Disemba"
 
-% Abreviated date and time representation to be referenced by the "%c" field descriptor -
-d_t_fmt     "%a %d %b %Y %T %Z"
+% Abbreviated date and time representation to be referenced by the "%c" field descriptor -
+d_t_fmt     "%a %d %b %Y %T"
 %
 % "%a" (short weekday name),
 % "%d" (day of month as a decimal number),
@@ -136,6 +136,9 @@ d_t_fmt     "%a %d %b %Y %T %Z"
 % "%Y" (year with century as a decimal number),
 % "%T" (24-hour clock time in format HH:MM:SS),
 % "%Z" (Time zone name)
+
+% Abbreviated date and time representation to be used by date(1)
+date_fmt    "%a %d %b %Y %T %Z"
 
 % Date representation to be referenced by the "%x" field descriptor -
 % "%d/%m/%Y", day/month/year as decimal numbers (01/01/2000).

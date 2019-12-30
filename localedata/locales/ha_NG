@@ -196,7 +196,8 @@ mon         "Janairu";/
             "Oktoba";/
             "Nuwamba";/
             "Disamba"
-d_t_fmt     "ranar %A, %d ga %B cikin %r %Z"
+d_t_fmt     "ranar %A, %d ga %B cikin %r"
+date_fmt    "ranar %A, %d ga %B cikin %r %Z"
 d_fmt       "%d//%m//%y"
 t_fmt       "%r"
 am_pm       "AM";"PM"

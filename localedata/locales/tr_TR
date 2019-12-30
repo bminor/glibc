@@ -2628,7 +2628,8 @@ mon     "Ocak";/
         "Ekim";/
 	"Kas<U0131>m";/
 	"Aral<U0131>k"
-d_t_fmt "%a %d %b %Y %T %Z"
+d_t_fmt  "%a %d %b %Y %T"
+date_fmt "%a %d %b %Y %T %Z"
 d_fmt   "%d-%m-%Y"
 t_fmt   "%T"
 am_pm   "<U00D6><U00D6>";"<U00D6>S"

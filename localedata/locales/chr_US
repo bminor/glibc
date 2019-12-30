@@ -87,7 +87,8 @@ mon	"<U13A4><U13C3><U13B8><U13D4><U13C5>";/
 	"<U13DA><U13C2><U13C5><U13D7>";/
 	"<U13C5><U13D3><U13D5><U13C6>";/
 	"<U13A5><U13CD><U13A9><U13F1>"
-d_t_fmt "%a %d %b %Y %r %Z"
+d_t_fmt  "%a %d %b %Y %r"
+date_fmt "%a %d %b %Y %r %Z"
 d_fmt   "%m//%d//%Y"
 t_fmt   "%r"
 t_fmt_ampm "%I:%M:%S %p"

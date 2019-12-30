@@ -108,7 +108,8 @@ alt_mon "xineru";/
         "ochobre";/
         "payares";/
         "avientu"
-d_t_fmt "%a %d %b %Y %T %Z"
+d_t_fmt  "%a %d %b %Y %T"
+date_fmt "%a %d %b %Y %T %Z"
 d_fmt   "%d//%m//%y"
 t_fmt   "%T"
 % Month names in genitive form:

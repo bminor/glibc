@@ -79,7 +79,8 @@ day  "Jumapili";/
      "Ijumaa";/
      "Jumamosi"
 abday  "J2";"J3";"J4";"J5";"Alh";"Ij";"J1"
-d_t_fmt  "%e %B %Y %I:%M:%S %p %Z"
+d_t_fmt  "%e %B %Y %I:%M:%S %p"
+date_fmt "%e %B %Y %I:%M:%S %p %Z"
 d_fmt  "%d//%m//%Y"
 t_fmt  "%I:%M:%S %p"
 am_pm  "asubuhi";"alasiri"

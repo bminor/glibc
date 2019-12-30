@@ -95,7 +95,10 @@ abday	"Aso Sa";/
         "Aso To'"
 %
 % Appropriate date and time representation
-d_t_fmt	"%a %d %b %Y %T %Z"
+d_t_fmt	"%a %d %b %Y %T"
+%
+% Appropriate date and time representation for date(1)
+date_fmt	"%a %d %b %Y %T %Z"
 %
 % Appropriate date representation
 % https://en.wikipedia.org/wiki/Date_and_time_notation_in_Australia

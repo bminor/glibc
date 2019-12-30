@@ -128,7 +128,8 @@ mon	/
 "<U10D3><U10D4><U10D9><U10D4><U10DB><U10D1><U10D4><U10E0><U10D8>"
 
 %"%Y ÜÊÈÑ %d %B"
-d_t_fmt  "%Y <U10EC><U10DA><U10D8><U10E1> %d %B, %T %Z"
+d_t_fmt  "%Y <U10EC><U10DA><U10D8><U10E1> %d %B, %T"
+date_fmt "%Y <U10EC><U10DA><U10D8><U10E1> %d %B, %T %Z"
 d_fmt    "%m//%d//%Y"
 t_fmt    "%T"
 am_pm    "";""

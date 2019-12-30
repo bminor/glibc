@@ -121,7 +121,10 @@ mon         "January";"February";/
 am_pm       "AM";"PM"
 %
 % Appropriate date and time representation
-d_t_fmt     "%A, %B %d, %Y %p%I:%M:%S %Z"
+d_t_fmt     "%A, %B %d, %Y %p%I:%M:%S"
+%
+% Appropriate date and time representation for date(1)
+date_fmt    "%A, %B %d, %Y %p%I:%M:%S %Z"
 %
 % Appropriate date representation
 d_fmt       "%A, %B %d, %Y"

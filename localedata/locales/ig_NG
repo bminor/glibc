@@ -263,7 +263,8 @@ mon         "Jen<U1EE5>war<U1ECB>";/
             "Novemba";/
             "Disemba"
 % FIXME
-d_t_fmt     "%A, %d %B %Y %T %Z"
+d_t_fmt     "%A, %d %B %Y %T"
+date_fmt    "%A, %d %B %Y %T %Z"
 d_fmt       "%d//%m//%y"
 t_fmt       "%r"
 am_pm       "AM";"PM"

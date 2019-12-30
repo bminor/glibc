@@ -174,14 +174,17 @@ mon         "Janwaliyo";/
 %                                    Juuni, Julaayi, Agusito, Sebuttemba,
 %                                    Okitobba, Novemba, Desemba
 %
-d_t_fmt     "%a %d %b %Y %T %Z"
-% Abreviated date and time representation to be referenced by the "%c" field descriptor -
+d_t_fmt     "%a %d %b %Y %T"
+% Abbreviated date and time representation to be referenced by the "%c" field descriptor -
 % "%a" (weekday name),
 % "%d" (day of month as a decimal number),
 % "%b" (month name),
 % "%Y" (year with century as a decimal number),
 % "%T" (24-hour clock time in format HH:MM:SS),
 % "%Z" (Time zone name)
+%
+date_fmt    "%a %d %b %Y %T %Z"
+% Abbreviated date and time representation to be used by date(1)
 %
 d_fmt   "%d//%m//%y"
 % Date representation to be referenced by the "%x" field % descriptor -

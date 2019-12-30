@@ -127,7 +127,10 @@ mon         "<U064A><U0646><U0627><U064A><U0631>";/
 am_pm       "<U0635>";"<U0645>"
 %
 % Appropriate date and time representation
-d_t_fmt     "%d %b, %Y %Z %I:%M:%S %p"
+d_t_fmt     "%d %b, %Y %I:%M:%S %p"
+%
+% Appropriate date and time representation for date(1)
+date_fmt    "%d %b, %Y %Z %I:%M:%S %p"
 %
 % Appropriate date representation
 d_fmt       "%d %b, %Y"

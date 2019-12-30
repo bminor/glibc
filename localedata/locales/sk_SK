@@ -166,7 +166,8 @@ abmon		"jan";/
 		"nov";/
 		"dec"
 
-d_t_fmt		"%a<U00A0>%e.<U00A0>%B<U00A0>%Y,<U00A0>%H:%M:%S<U00A0>%Z"
+d_t_fmt		"%a<U00A0>%e.<U00A0>%B<U00A0>%Y,<U00A0>%H:%M:%S"
+date_fmt		"%a<U00A0>%e.<U00A0>%B<U00A0>%Y,<U00A0>%H:%M:%S<U00A0>%Z"
 
 d_fmt 		"%d.%m.%Y"
 

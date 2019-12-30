@@ -121,7 +121,8 @@ mon     "urtarrila";/
         "azaroa";/
         "abendua"
 % YY-MM-DD
-d_t_fmt "%y-%m-%d %T %Z"
+d_t_fmt  "%y-%m-%d %T"
+date_fmt "%y-%m-%d %T %Z"
 % dddddddddd,   19YYeko  mmmmmmmren   XXa
 % day of the week,   year+eko   month+ren   day+a
 d_fmt   "%a, %Y.eko %bren %da"

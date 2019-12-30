@@ -213,8 +213,10 @@ mon         "O<U1E63><U00F9> <U1E62><U1EB9><U0301>r<U1EB9><U0301>";/
             "O<U1E63><U00F9> <U1ECC><U0300>w<U00E0>r<U00E0>";/
             "O<U1E63><U00F9> B<U00E9>l<U00FA>";/
             "O<U1E63><U00F9> <U1ECC><U0300>p<U1EB9><U0300>"
+% ọjọ́ %a, %d oṣù %b ọdún %Y %T
+d_t_fmt     "<U1ECD>j<U1ECD><U0301> %a, %d o<U1E63><U00F9> %b <U1ECD>d<U00FA>n %Y %T"
 % ọjọ́ %a, %d oṣù %b ọdún %Y %T %Z
-d_t_fmt     "<U1ECD>j<U1ECD><U0301> %a, %d o<U1E63><U00F9> %b <U1ECD>d<U00FA>n %Y %T %Z"
+date_fmt    "<U1ECD>j<U1ECD><U0301> %a, %d o<U1E63><U00F9> %b <U1ECD>d<U00FA>n %Y %T %Z"
 d_fmt       "%d//%m//%y"
 t_fmt       "%r"
 am_pm       "AM";"PM"

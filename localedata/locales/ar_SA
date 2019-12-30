@@ -298,7 +298,8 @@ END LC_NUMERIC
 
 
 LC_TIME
-d_t_fmt	"%A %e %B %Y  %k:%M:%S"
+d_t_fmt	"%A %e %B %Y %k:%M:%S"
+date_fmt	"%A %e %B %Y %Z %k:%M:%S"
 d_fmt	"%A %e %B %Y"
 t_fmt	"%k:%M:%S"
 t_fmt_ampm	"%k:%M:%S"

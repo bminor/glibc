@@ -232,6 +232,7 @@ mon       "sausio";/
           "lapkri<U010D>io";/
           "gruod<U017E>io"
 d_t_fmt   "%Y m. %B %d d. %T"
+date_fmt  "%Y m. %B %d d. %T %Z"
 d_fmt     "%Y-%m-%d"
 t_fmt     "%T"
 am_pm     "";""

@@ -136,7 +136,8 @@ abmon   "<U011E><U0131>n";/
         "<U00DC>kt";/
         "Noy";/
         "Dik"
-d_t_fmt "%a %d %b %Y %T"
+d_t_fmt   "%a %d %b %Y %T"
+date_fmt  "%a %d %b %Y %T %Z"
 d_fmt     "%d.%m.%Y"
 t_fmt     "%T"
 am_pm     "<U00D6>A";"<U00D6>S"

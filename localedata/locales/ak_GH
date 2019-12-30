@@ -96,7 +96,8 @@ day  "Kwesida";/
      "Fida";/
      "Memeneda"
 abday  "Kwe";"Dwo";"Ben";"Wuk";"Yaw";"Fia";"Mem"
-d_t_fmt       "%a %d %b %Y %T %Z"
+d_t_fmt       "%a %d %b %Y %T"
+date_fmt      "%a %d %b %Y %T %Z"
 d_fmt         "%Y//%m//%d"
 t_fmt   "%r"
 % AM/PM time representation

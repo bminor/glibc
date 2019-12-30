@@ -183,7 +183,8 @@ mon     "st<U00EB>cznika";/
         "rujana";/
         "l<U00EB>stopadnika";/
         "g<U00F2>dnika"
-d_t_fmt "%a %d %b %Y %T %Z"
+d_t_fmt  "%a %d %b %Y %T"
+date_fmt "%a %d %b %Y %T %Z"
 d_fmt   "%Y-%m-%d"
 t_fmt   "%T"
 am_pm   "";""

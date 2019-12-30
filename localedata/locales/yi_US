@@ -228,7 +228,8 @@ abmon   "<U05D9><U05D0><U05B7><U05E0>";"<U05E4><U05BF><U05E2><U05D1>";/
         "<U05D9><U05D5><U05DC>";"<U05D0><U05F1><U05D2>";/
         "<U05E1><U05E2><U05E4><U05BC>";"<U05D0><U05B8><U05E7><U05D8>";/
         "<U05E0><U05D0><U05B8><U05F0>";"<U05D3><U05E2><U05E6>"
-d_t_fmt "%Z %H:%M:%S %Y %b %d %a"
+d_t_fmt  "%H:%M:%S %Y %b %d %a"
+date_fmt "%Z %H:%M:%S %Y %b %d %a"
 d_fmt   "%d//%m//%y"
 t_fmt   "%H:%M:%S"
 am_pm   "AM";"PM"

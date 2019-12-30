@@ -171,7 +171,8 @@ mon	"Januaro";/
 	"Decembro"
 am_pm "";""
 t_fmt_ampm ""
-d_t_fmt "%a %d %b %Y %T %z"
+d_t_fmt  "%a %d %b %Y %T"
+date_fmt "%a %d %b %Y %T %z"
 d_fmt   "%Y-%m-%d"
 t_fmt   "%T"
 week 7;19971130;1

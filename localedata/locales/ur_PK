@@ -136,7 +136,10 @@ mon	"<U062C><U0646><U0648><U0631><U06CC>";/
 	"<U062F><U0633><U0645><U0628><U0631>"
 
 % Date Time Format
-d_t_fmt "<U0648> %H:%M:%S %Z <U062A> %d %B %Y"
+d_t_fmt "<U0648> %H:%M:%S <U062A> %d %B %Y"
+
+% Date Time Format for date(1)
+date_fmt "<U0648> %H:%M:%S %Z <U062A> %d %B %Y"
 
 % date Format. I have put this in reverse order to try to get the date
 % in R->L order

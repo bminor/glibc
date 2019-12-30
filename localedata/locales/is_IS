@@ -207,7 +207,8 @@ mon   "jan<U00FA>ar";/
       "okt<U00F3>ber";/
       "n<U00F3>vember";/
       "desember"
-d_t_fmt "%a %e.%b %Y, %T %Z"
+d_t_fmt  "%a %e.%b %Y, %T"
+date_fmt "%a %e.%b %Y, %T %Z"
 d_fmt   "%a %e.%b %Y"
 t_fmt   "%T"
 am_pm   "fh";"eh"

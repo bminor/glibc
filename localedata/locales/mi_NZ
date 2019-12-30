@@ -120,7 +120,8 @@ mon      "Kohi-t<U0101>tea";/
          "Whiringa-<U0101>-nuku";/
          "Whiringa-<U0101>-rangi";/
          "Hakihea"
-d_t_fmt     "Te %A, te %d o %B, %Y %T %Z"
+d_t_fmt     "Te %A, te %d o %B, %Y %T"
+date_fmt    "Te %A, te %d o %B, %Y %T %Z"
 d_fmt       "%d//%m//%y"
 t_fmt       "%T"
 am_pm       "";""

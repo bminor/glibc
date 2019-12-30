@@ -120,7 +120,8 @@ mon        "Pellkwet<U0313>min";/
        "Pesllw<U00E9>lsten";/
        "Pellc7ell7<U00E9>7llcwten<U0313>";/
        "Pelltet<U00E9>tq<U0313>em"
-d_t_fmt    "%a %d %b %Y %r %Z"
+d_t_fmt    "%a %d %b %Y %r"
+date_fmt   "%a %d %b %Y %r %Z"
 d_fmt      "%d//%m//%y"
 t_fmt      "%r"
 am_pm      "AM";"PM"

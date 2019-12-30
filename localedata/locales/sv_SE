@@ -231,6 +231,7 @@ mon       "januari";/
           "november";/
           "december"
 d_t_fmt   "%a %e %b %Y %H:%M:%S"
+date_fmt  "%a %e %b %Y %H:%M:%S %Z"
 d_fmt     "%Y-%m-%d"
 t_fmt     "%H:%M:%S"
 am_pm     "";""

@@ -116,7 +116,8 @@ mon         "January";/
             "October";/
             "November";/
             "December"
-d_t_fmt     "%a %d %b %Y %r %Z"
+d_t_fmt     "%a %d %b %Y %r"
+date_fmt    "%a %d %b %Y %r %Z"
 d_fmt       "%Y-%m-%d"
 t_fmt       "%r"
 am_pm       "AM";"PM"

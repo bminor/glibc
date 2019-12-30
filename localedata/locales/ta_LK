@@ -85,7 +85,8 @@ mon         "<U0B9C><U0BA9><U0BB5><U0BB0><U0BBF>";"<U0BAA><U0BBF><U0BAA><U0BCD><
             "<U0B9A><U0BC6><U0BAA><U0BCD><U0B9F><U0BAE><U0BCD><U0BAA><U0BB0><U0BCD>";"<U0B85><U0B95><U0BCD><U0B9F><U0BCB><U0BAA><U0BB0><U0BCD>";/
             "<U0BA8><U0BB5><U0BAE><U0BCD><U0BAA><U0BB0><U0BCD>";"<U0B9F><U0BBF><U0B9A><U0BAE><U0BCD><U0BAA><U0BB0><U0BCD>"
 am_pm       "<U0B95><U0BBE><U0BB2><U0BC8>";"<U0BAE><U0BBE><U0BB2><U0BC8>"
-d_t_fmt     "%A %d %B %Y %H:%M:%S %Z"
+d_t_fmt     "%A %d %B %Y %H:%M:%S"
+date_fmt    "%A %d %B %Y %H:%M:%S %Z"
 d_fmt       "%-d//%-m//%y"
 t_fmt       "%H:%M:%S %Z"
 t_fmt_ampm  ""

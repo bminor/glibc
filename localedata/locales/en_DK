@@ -115,6 +115,7 @@ mon      "January";/
 	 "December"
 % date formats following ISO 8601-1988
 d_t_fmt  "%Y-%m-%dT%T %Z"
+date_fmt "%Y-%m-%dT%T %Z"
 d_fmt    "%Y-%m-%d"
 t_fmt    "%T"
 am_pm    "";""

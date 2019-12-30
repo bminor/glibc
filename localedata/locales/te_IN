@@ -129,7 +129,10 @@ mon         "<U0C1C><U0C28><U0C35><U0C30><U0C3F>";"<U0C2B><U0C3F><U0C2C><U0C4D><
 am_pm       "<U0C09>.";"<U0C38><U0C3E>."
 %
 % Appropriate date and time representation
-d_t_fmt     "%B %d %A %Y %p%I.%M.%S %Z"
+d_t_fmt     "%B %d %A %Y %p%I.%M.%S"
+%
+% Appropriate date and time representation for date(1)
+date_fmt    "%B %d %A %Y %p%I.%M.%S %Z"
 %
 % Appropriate date representation
 d_fmt       "%d-%m-%y"

@@ -176,7 +176,8 @@ mon         "Siqi<U00F1><U00F1>aatchiaq";/
             "Sikkuvik";/
             "Nippivik";/
             "Siqi<U00F1><U0121>i<U1E37>aq"
-d_t_fmt     "%a %d %b %Y %r %Z"
+d_t_fmt     "%a %d %b %Y %r"
+date_fmt    "%a %d %b %Y %r %Z"
 d_fmt       "%d//%m//%y"
 t_fmt       "%r"
 am_pm       "AM";"PM"

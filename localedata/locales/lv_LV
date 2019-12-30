@@ -183,6 +183,7 @@ mon      "janv<U0101>ris";/
          "novembris";/
          "decembris"
 d_t_fmt  "%A, %Y. gada %e. %B, %H:%M:%S"
+date_fmt "%A, %Y. gada %e. %B, %H:%M:%S %Z"
 d_fmt    "%Y.%m.%d."
 t_fmt    "%T"
 am_pm    "";""

@@ -89,6 +89,7 @@ abday         "<U041A><U04C0>";/
        "<U041F><U04C0>";/
        "<U0428><U043E>"
 d_t_fmt       "%Y %d %b %a %T"
+date_fmt      "%Y %d %b %a %T %Z"
 d_fmt         "%Y.%d.%m"
 t_fmt         "%T"
 %

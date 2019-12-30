@@ -114,7 +114,10 @@ am_pm       "<U092B><U0941><U0902>.";/
             "<U092C><U0947><U0932><U093E><U0938><U0947>."
 %
 % Appropriate date and time representation
-d_t_fmt     "%A %d %b %Y %I:%M:%S %p %Z"
+d_t_fmt     "%A %d %b %Y %I:%M:%S %p"
+%
+% Appropriate date and time representation for date(1)
+date_fmt    "%A %d %b %Y %I:%M:%S %p %Z"
 %
 % Appropriate date representation
 d_fmt       "%-m//%-d//%y"

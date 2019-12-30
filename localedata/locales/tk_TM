@@ -323,7 +323,8 @@ abmon   "<U00DD>an";"Few";/
 % date  dd.mm.yyyy %d.%m.%Y %T
 % time  hh:mm:ss (24 hour - no am/pm)
 %
-d_t_fmt "%d.%m.%Y %T"
+d_t_fmt   "%d.%m.%Y %T"
+date_fmt  "%d.%m.%Y %T %Z"
 d_fmt     "%d.%m.%Y"
 t_fmt     "%T"
 am_pm     "";""

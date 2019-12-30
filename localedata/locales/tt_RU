@@ -230,7 +230,8 @@ abmon   "<U0433><U044B><U0439><U043D>";/
         "<U043E><U043A><U0442>";/
         "<U043D><U043E><U044F><U0431>";/
         "<U0434><U0435><U043A>"
-d_t_fmt "%a %d %b %Y %T"
+d_t_fmt   "%a %d %b %Y %T"
+date_fmt  "%a %d %b %Y %T %Z"
 d_fmt     "%d.%m.%Y"
 t_fmt     "%T"
 am_pm     "";""

@@ -125,7 +125,10 @@ mon         "Januarie";/
 % "%Y" (year with century as a decimal number),
 % "%T" (24-hour clock time in format HH:MM:SS),
 % "%Z" (Time zone name)
-d_t_fmt     "%a %d %b %Y %T %Z"
+d_t_fmt     "%a %d %b %Y %T"
+
+% Abbreviated date and time representation to be used by date(1)
+date_fmt    "%a %d %b %Y %T %Z"
 
 % Date representation to be referenced by the "%x" field descriptor -
 % "%d/%m/%Y", day/month/year as decimal numbers (01/01/2000).

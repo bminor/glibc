@@ -109,7 +109,8 @@ mon         "<U152E><U14C4><U140A><U14D5>";/
             "<U140A><U1466><U1450><U1559>";/
             "<U14C4><U1555><U1559>";/
             "<U144E><U14EF><U155D><U1559>"
-d_t_fmt     "%a %d %b %Y %r %Z"
+d_t_fmt     "%a %d %b %Y %r"
+date_fmt    "%a %d %b %Y %r %Z"
 d_fmt       "%m//%d//%y"
 t_fmt       "%r"
 am_pm       "AM";"PM"

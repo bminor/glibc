@@ -148,7 +148,8 @@ mon        "de gener";/
            "d<U2019>octubre";/
            "de novembre";/
            "de desembre"
-d_t_fmt    "%A, %-d %B de %Y, %T %Z"
+d_t_fmt    "%A, %-d %B de %Y, %T"
+date_fmt   "%A, %-d %B de %Y, %T %Z"
 d_fmt      "%-d//%-m//%y"
 t_fmt      "%T"
 am_pm      "a. m.";/

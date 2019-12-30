@@ -111,7 +111,8 @@ mon      "januaarip";/
          "oktobarip";/
          "novembarip";/
          "decembarip"
-d_t_fmt     "%a %b %d %Y %T %Z"
+d_t_fmt     "%a %b %d %Y %T"
+date_fmt    "%a %b %d %Y %T %Z"
 d_fmt       "%b %d %Y"
 t_fmt       "%T"
 am_pm       "";""

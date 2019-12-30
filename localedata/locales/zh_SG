@@ -121,8 +121,11 @@ mon         "<U4E00><U6708>";"<U4E8C><U6708>";/
 am_pm       "<U4E0A><U5348>";"<U4E0B><U5348>"
 %
 % Appropriate date and time representation
-% %Y\u5e74%m\u6708%d\u65e5 %H\u65f6%M\u5206%S\u79d2 %Z
-d_t_fmt     "%Y<U5E74>%m<U6708>%d<U65E5> %H<U65F6>%M<U5206>%S<U79D2> %Z"
+% %Y\u5e74%m\u6708%d\u65e5 %H\u65f6%M\u5206%S\u79d2
+d_t_fmt     "%Y<U5E74>%m<U6708>%d<U65E5> %H<U65F6>%M<U5206>%S<U79D2>"
+%
+% Appropriate date and time representation for date(1)
+date_fmt     "%Y<U5E74>%m<U6708>%d<U65E5> %H<U65F6>%M<U5206>%S<U79D2> %Z"
 %
 % Appropriate date representation
 % %Y\u5e74%m\u6708%d\u65e5

@@ -134,7 +134,8 @@ mon     "Genver";/
         "Here";/
         "Du";/
         "Kerzu"
-d_t_fmt "D<U02BC>ar %A %d a viz %B %Y"
+d_t_fmt  "D<U02BC>ar %A %d a viz %B %Y %T"
+date_fmt "D<U02BC>ar %A %d a viz %B %Y %T %Z"
 d_fmt   "%d.%m.%Y"
 t_fmt   "%T"
 am_pm   " ";" "

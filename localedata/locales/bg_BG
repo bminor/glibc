@@ -272,7 +272,8 @@ grouping                  3;3
 END LC_NUMERIC
 
 LC_TIME
-d_t_fmt    "%x (%a) %X %Z"
+d_t_fmt    "%x (%a) %X"
+date_fmt   "%x (%a) %X %Z"
 d_fmt      "%e.%m.%Y"
 t_fmt      "%k:%M:%S"
 am_pm      "";""

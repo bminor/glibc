@@ -140,7 +140,8 @@ mon         "<U101C><U102D><U1030><U107C><U103A><U1075><U1019><U103A>";/
 	    "<U101C><U102D><U1030><U107C><U103A><U1078><U1035><U1004><U103A>"
 
 am_pm       "<U1075><U1062><U1004><U103A><U107C><U1082><U103A>";"<U1010><U1062><U1019><U103A><U1038><U1076><U1019><U103A><U1088>"
-d_t_fmt     "%OC%Oy %b %Od %A %OI:%OM:%OS %p %Z"
+d_t_fmt     "%OC%Oy %b %Od %A %OI:%OM:%OS %p"
+date_fmt    "%OC%Oy %b %Od %A %OI:%OM:%OS %p %Z"
 % Note: the use of %OC requires a patch to strftime_l.h
 d_fmt       "%OC%Oy %b %Od %A"
 t_fmt       "%OH:%OM:%OS %p"

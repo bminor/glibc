@@ -123,6 +123,9 @@ am_pm       "AM";"PM"
 % Appropriate date and time representation
 d_t_fmt     "%a %d %b %Y %r"
 %
+% Appropriate date and time representation for date(1)
+date_fmt    "%a %d %b %Y %r %Z"
+%
 % Appropriate date representation
 d_fmt       "%d//%m//%Y"
 %
