@@ -182,7 +182,7 @@ mon      "janv<U0101>ris";/
          "oktobris";/
          "novembris";/
          "decembris"
-d_t_fmt  "%A, %Y. gada %e. %B, plkst. %H un %M"
+d_t_fmt  "%A, %Y. gada %e. %B, %H:%M:%S"
 d_fmt    "%Y.%m.%d."
 t_fmt    "%T"
 am_pm    "";""
