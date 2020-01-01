@@ -1,5 +1,5 @@
 /* Optimized memcpy for Qualcomm Falkor processor.
-   Copyright (C) 2017-2019 Free Software Foundation, Inc.
+   Copyright (C) 2017-2020 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # VCSToChangeLog Quirks for the GNU C Library.
 
-# Copyright (C) 2019 Free Software Foundation, Inc.
+# Copyright (C) 2019-2020 Free Software Foundation, Inc.
 #
 # The GNU C Library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public

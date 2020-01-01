@@ -1,5 +1,5 @@
 /* Optimized memset for Huawei Kunpeng processor.
-   Copyright (C) 2012-2019 Free Software Foundation, Inc.
+   Copyright (C) 2012-2020 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 

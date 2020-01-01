@@ -1,6 +1,6 @@
 /* ABI compatibility for 'longjmp' and 'siglongjmp' symbols in libpthread ABI.
    X86 version.
-   Copyright (C) 1918-2019 Free Software Foundation, Inc.
+   Copyright (C) 1918-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
