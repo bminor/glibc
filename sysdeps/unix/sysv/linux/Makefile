@@ -1,3 +1,45 @@
+# Option to pass to Python scripts to set the C compiler.  Rewriting
+# MODULE_NAME is required to enable the _ISOMAC verbatim header
+# environment.
+sysdeps-linux-python-cc = \
+  --cc="$(CC) $(patsubst -DMODULE_NAME=%,-DMODULE_NAME=testsuite,$(CPPFLAGS))"
+
+# Additional dependencies for Python scripts.
+sysdeps-linux-python-deps = \
+  $(..)sysdeps/unix/sysv/linux/glibcsyscalls.py \
+  $(..)scripts/glibcextract.py
+
+# Invocation of the Python interpreter with the Python search path.
+sysdeps-linux-python = \
+  PYTHONPATH=$(..)scripts:$(..)sysdeps/unix/sysv/linux $(PYTHON)
+
+ifndef subdir
+# This target performs two actions:
+#
+# Replace <arch-syscall.h> with a file generated from kernel headers
+# and <fixup-asm-unistd.h>.  Both files are located via the sysdeps
+# override search path.
+#
+# Update sysdeps/unix/sysv/linux/syscall-names.list with additional
+# names found in the generated <arch-syscall.h> file, so that the
+# global system call names list is a superset of the
+# architecture-specific system call names.
+#
+# To bootstrap a new architecture, create an empty file in the right
+# place and run “make update-arch-syscall” from the top-level of a
+# configured, but not-yet-built glibc tree.
+#
+# --lock points to a file not replaced during the update operation, so
+# that mutual exclusion is achieved.
+.PHONY: update-syscall-lists
+update-syscall-lists: arch-syscall.h
+	$(sysdeps-linux-python) \
+	  sysdeps/unix/sysv/linux/update-syscall-lists.py \
+	    $(sysdeps-linux-python-cc) \
+	    --lock=sysdeps/unix/sysv/linux/update-syscall-lists.py $< \
+	    sysdeps/unix/sysv/linux/syscall-names.list
+endif
+
 ifeq ($(subdir),csu)
 sysdep_routines += errno-loc
 endif
@@ -103,6 +145,19 @@ $(objpfx)tst-syscall-list.out: \
   $(objpfx)tst-syscall-list-sys.list
 	$(BASH) $^ $(AWK) > $@; $(evaluate-test)
 
+tests-special += $(objpfx)tst-glibcsyscalls.out
+# arch-syscall.h is located via the sysdeps override search path.
+$(objpfx)tst-glibcsyscalls.out: arch-syscall.h \
+  ../sysdeps/unix/sysv/linux/syscall-names.list
+	$(sysdeps-linux-python) \
+	  ../sysdeps/unix/sysv/linux/tst-glibcsyscalls.py \
+	    $(sysdeps-linux-python-cc) $< \
+	    ../sysdeps/unix/sysv/linux/syscall-names.list \
+	  < /dev/null > $@ 2>&1; $(evaluate-test)
+$(objpfx)tst-glibcsyscalls.out: \
+  ../sysdeps/unix/sysv/linux/tst-glibcsyscalls.py \
+  $(sysdeps-linux-python-deps)
+
 # Separate object file for access to the constant from the UAPI header.
 $(objpfx)tst-sysconf-iov_max: $(objpfx)tst-sysconf-iov_max-uapi.o
 
@@ -110,12 +165,11 @@ $(objpfx)tst-pkey: $(shared-thread-library)
 
 tests-special += $(objpfx)tst-mman-consts.out
 $(objpfx)tst-mman-consts.out: ../sysdeps/unix/sysv/linux/tst-mman-consts.py
-	PYTHONPATH=../scripts \
-	$(PYTHON) ../sysdeps/unix/sysv/linux/tst-mman-consts.py \
-		   --cc="$(CC) $(patsubst -DMODULE_NAME=%, \
-					  -DMODULE_NAME=testsuite, \
-					  $(CPPFLAGS))" \
-	< /dev/null > $@ 2>&1; $(evaluate-test)
+	$(sysdeps-linux-python) \
+	  ../sysdeps/unix/sysv/linux/tst-mman-consts.py \
+	    $(sysdeps-linux-python-cc) \
+	  < /dev/null > $@ 2>&1; $(evaluate-test)
+$(objpfx)tst-mman-consts.out: $(sysdeps-linux-python-deps)
 
 $(objpfx)tst-gettid: $(shared-thread-library)
 $(objpfx)tst-gettid-kill: $(shared-thread-library)
@@ -138,12 +192,11 @@ tests-special += $(objpfx)tst-signal-numbers.out
 $(objpfx)tst-signal-numbers.out: \
 		../sysdeps/unix/sysv/linux/tst-signal-numbers.py \
 		$(objpfx)signal.o*
-	PYTHONPATH=../scripts \
-	$(PYTHON) ../sysdeps/unix/sysv/linux/tst-signal-numbers.py \
-		   --cc="$(CC) $(patsubst -DMODULE_NAME=%, \
-					  -DMODULE_NAME=testsuite, \
-					  $(CPPFLAGS))" \
-	< /dev/null > $@ 2>&1; $(evaluate-test)
+	$(sysdeps-linux-python) \
+	  ../sysdeps/unix/sysv/linux/tst-signal-numbers.py \
+	    $(sysdeps-linux-python-cc) \
+	  < /dev/null > $@ 2>&1; $(evaluate-test)
+$(objpfx)tst-signal-numbers.out: $(sysdeps-linux-python-deps)
 endif
 
 ifeq ($(subdir),socket)
