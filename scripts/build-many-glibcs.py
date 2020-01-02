@@ -1274,7 +1274,7 @@ class Config(object):
         for g in self.compiler_glibcs:
             cmdlist.push_subdesc('glibc')
             cmdlist.push_subdesc(g.name)
-            g.build_glibc(cmdlist, True)
+            g.build_glibc(cmdlist, GlibcPolicyForCompiler(g))
             cmdlist.pop_subdesc()
             cmdlist.pop_subdesc()
         self.build_gcc(cmdlist, False)
@@ -1398,6 +1398,76 @@ class Config(object):
                          '--enable-shared', '--enable-threads']
         self.build_cross_tool(cmdlist, 'gcc', tool_build, cfg_opts)
 
+class GlibcPolicyDefault(object):
+    """Build policy for glibc: common defaults."""
+
+    def __init__(self, glibc):
+        self.srcdir = glibc.ctx.component_srcdir('glibc')
+        self.use_usr = glibc.os != 'gnu'
+        self.prefix = '/usr' if self.use_usr else ''
+        self.configure_args = [
+            '--prefix=%s' % self.prefix,
+            '--enable-profile',
+            '--build=%s' % glibc.ctx.build_triplet,
+            '--host=%s' % glibc.triplet,
+            'CC=%s' % glibc.tool_name('gcc'),
+            'CXX=%s' % glibc.tool_name('g++'),
+            'AR=%s' % glibc.tool_name('ar'),
+            'AS=%s' % glibc.tool_name('as'),
+            'LD=%s' % glibc.tool_name('ld'),
+            'NM=%s' % glibc.tool_name('nm'),
+            'OBJCOPY=%s' % glibc.tool_name('objcopy'),
+            'OBJDUMP=%s' % glibc.tool_name('objdump'),
+            'RANLIB=%s' % glibc.tool_name('ranlib'),
+            'READELF=%s' % glibc.tool_name('readelf'),
+            'STRIP=%s' % glibc.tool_name('strip'),
+        ]
+        if glibc.os == 'gnu':
+            self.configure_args.append('MIG=%s' % glibc.tool_name('mig'))
+        self.configure_args += glibc.cfg
+
+    def configure(self, cmdlist):
+        """Invoked to add the configure command to the command list."""
+        cmdlist.add_command('configure',
+                            [os.path.join(self.srcdir, 'configure'),
+                             *self.configure_args])
+
+    def extra_commands(self, cmdlist):
+        """Invoked to inject additional commands (make check) after build."""
+        pass
+
+class GlibcPolicyForCompiler(GlibcPolicyDefault):
+    """Build policy for glibc during the compilers stage."""
+
+    def __init__(self, glibc):
+        super().__init__(glibc)
+        self.builddir = glibc.ctx.component_builddir(
+            'compilers', glibc.compiler.name, 'glibc', glibc.name)
+        self.installdir = glibc.compiler.sysroot
+
+class GlibcPolicyForBuild(GlibcPolicyDefault):
+    """Build policy for glibc during the glibcs stage."""
+
+    def __init__(self, glibc):
+        super().__init__(glibc)
+        self.builddir = glibc.ctx.component_builddir(
+            'glibcs', glibc.name, 'glibc')
+        self.installdir = glibc.ctx.glibc_installdir(glibc.name)
+        if glibc.ctx.strip:
+            self.strip = glibc.tool_name('strip')
+        else:
+            self.strip = None
+        self.save_logs = glibc.ctx.save_logs
+
+    def extra_commands(self, cmdlist):
+        if self.strip:
+            cmdlist.add_command('strip',
+                                ['sh', '-c',
+                                 ('%s $(find %s/lib* -name "*.so")' %
+                                  (self.strip, self.installdir))])
+        cmdlist.add_command('check', ['make', 'check'])
+        cmdlist.add_command('save-logs', [self.save_logs], always_run=True)
+
 
 class Glibc(object):
     """A configuration for building glibc."""
@@ -1445,66 +1515,27 @@ class Glibc(object):
                             ['test', '-f',
                              os.path.join(self.compiler.installdir, 'ok')])
         cmdlist.use_path(self.compiler.bindir)
-        self.build_glibc(cmdlist, False)
+        self.build_glibc(cmdlist, GlibcPolicyForBuild(self))
         self.ctx.add_makefile_cmdlist('glibcs-%s' % self.name, cmdlist,
                                       logsdir)
 
-    def build_glibc(self, cmdlist, for_compiler):
+    def build_glibc(self, cmdlist, policy):
         """Generate commands to build this glibc, either as part of a compiler
         build or with the bootstrapped compiler (and in the latter case, run
         tests as well)."""
-        srcdir = self.ctx.component_srcdir('glibc')
-        if for_compiler:
-            builddir = self.ctx.component_builddir('compilers',
-                                                   self.compiler.name, 'glibc',
-                                                   self.name)
-            installdir = self.compiler.sysroot
-        else:
-            builddir = self.ctx.component_builddir('glibcs', self.name,
-                                                   'glibc')
-            installdir = self.ctx.glibc_installdir(self.name)
-        cmdlist.create_use_dir(builddir)
-        use_usr = self.os != 'gnu'
-        prefix = '/usr' if use_usr else ''
-        cfg_cmd = [os.path.join(srcdir, 'configure'),
-                   '--prefix=%s' % prefix,
-                   '--enable-profile',
-                   '--build=%s' % self.ctx.build_triplet,
-                   '--host=%s' % self.triplet,
-                   'CC=%s' % self.tool_name('gcc'),
-                   'CXX=%s' % self.tool_name('g++'),
-                   'AR=%s' % self.tool_name('ar'),
-                   'AS=%s' % self.tool_name('as'),
-                   'LD=%s' % self.tool_name('ld'),
-                   'NM=%s' % self.tool_name('nm'),
-                   'OBJCOPY=%s' % self.tool_name('objcopy'),
-                   'OBJDUMP=%s' % self.tool_name('objdump'),
-                   'RANLIB=%s' % self.tool_name('ranlib'),
-                   'READELF=%s' % self.tool_name('readelf'),
-                   'STRIP=%s' % self.tool_name('strip')]
-        if self.os == 'gnu':
-            cfg_cmd += ['MIG=%s' % self.tool_name('mig')]
-        cfg_cmd += self.cfg
-        cmdlist.add_command('configure', cfg_cmd)
+        cmdlist.create_use_dir(policy.builddir)
+        policy.configure(cmdlist)
         cmdlist.add_command('build', ['make'])
         cmdlist.add_command('install', ['make', 'install',
-                                        'install_root=%s' % installdir])
+                                        'install_root=%s' % policy.installdir])
         # GCC uses paths such as lib/../lib64, so make sure lib
         # directories always exist.
         mkdir_cmd = ['mkdir', '-p',
-                     os.path.join(installdir, 'lib')]
-        if use_usr:
-            mkdir_cmd += [os.path.join(installdir, 'usr', 'lib')]
+                     os.path.join(policy.installdir, 'lib')]
+        if policy.use_usr:
+            mkdir_cmd += [os.path.join(policy.installdir, 'usr', 'lib')]
         cmdlist.add_command('mkdir-lib', mkdir_cmd)
-        if not for_compiler:
-            if self.ctx.strip:
-                cmdlist.add_command('strip',
-                                    ['sh', '-c',
-                                     ('%s $(find %s/lib* -name "*.so")' %
-                                      (self.tool_name('strip'), installdir))])
-            cmdlist.add_command('check', ['make', 'check'])
-            cmdlist.add_command('save-logs', [self.ctx.save_logs],
-                                always_run=True)
+        policy.extra_commands(cmdlist)
         cmdlist.cleanup_dir()
 
 
