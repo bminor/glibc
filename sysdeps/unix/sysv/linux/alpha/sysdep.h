@@ -37,16 +37,6 @@
 #undef SYS_ify
 #define SYS_ify(syscall_name)	__NR_##syscall_name
 
-/* This is a kludge to make syscalls.list find these under the names
-   pread and pwrite, since some kernel headers define those names
-   and some define the *64 names for the same system calls.  */
-#if !defined __NR_pread && defined __NR_pread64
-# define __NR_pread __NR_pread64
-#endif
-#if !defined __NR_pwrite && defined __NR_pwrite64
-# define __NR_pwrite __NR_pwrite64
-#endif
-
 #define SINGLE_THREAD_BY_GLOBAL 1
 
 #endif /* _LINUX_ALPHA_SYSDEP_H */
