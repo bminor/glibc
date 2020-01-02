@@ -498,7 +498,10 @@ class Context(object):
             old_components = ('gmp', 'mpfr', 'mpc', 'binutils', 'gcc', 'linux',
                               'mig', 'gnumach', 'hurd')
             old_versions = self.build_state['compilers']['build-versions']
-            self.build_glibcs(configs)
+            if action == 'update-syscalls':
+                self.update_syscalls(configs)
+            else:
+                self.build_glibcs(configs)
         self.write_files()
         self.do_build()
         if configs:
@@ -688,6 +691,15 @@ class Context(object):
             configs = sorted(self.glibc_configs.keys())
         for c in configs:
             self.glibc_configs[c].build()
+
+    def update_syscalls(self, configs):
+        """Update the glibc syscall lists."""
+        if not configs:
+            self.remove_dirs(os.path.join(self.builddir, 'update-syscalls'))
+            self.remove_dirs(os.path.join(self.logsdir, 'update-syscalls'))
+            configs = sorted(self.glibc_configs.keys())
+        for c in configs:
+            self.glibc_configs[c].update_syscalls()
 
     def load_versions_json(self):
         """Load information about source directory versions."""
@@ -921,7 +933,7 @@ class Context(object):
                 self.build_state = json.load(f)
         else:
             self.build_state = {}
-        for k in ('host-libraries', 'compilers', 'glibcs'):
+        for k in ('host-libraries', 'compilers', 'glibcs', 'update-syscalls'):
             if k not in self.build_state:
                 self.build_state[k] = {}
             if 'build-time' not in self.build_state[k]:
@@ -1168,6 +1180,16 @@ class LinuxHeadersPolicyForBuild(object):
         self.srcdir = config.ctx.component_srcdir('linux')
         self.builddir = config.component_builddir('linux')
         self.headers_dir = os.path.join(config.sysroot, 'usr')
+
+class LinuxHeadersPolicyForUpdateSyscalls(object):
+    """Names and directories for Linux headers.  update-syscalls variant."""
+
+    def __init__(self, glibc, headers_dir):
+        self.arch = glibc.compiler.arch
+        self.srcdir = glibc.compiler.ctx.component_srcdir('linux')
+        self.builddir = glibc.ctx.component_builddir(
+            'update-syscalls', glibc.name, 'build-linux')
+        self.headers_dir = headers_dir
 
 def install_linux_headers(policy, cmdlist):
     """Install Linux kernel headers."""
@@ -1468,6 +1490,20 @@ class GlibcPolicyForBuild(GlibcPolicyDefault):
         cmdlist.add_command('check', ['make', 'check'])
         cmdlist.add_command('save-logs', [self.save_logs], always_run=True)
 
+class GlibcPolicyForUpdateSyscalls(GlibcPolicyDefault):
+    """Build policy for glibc during update-syscalls."""
+
+    def __init__(self, glibc):
+        super().__init__(glibc)
+        self.builddir = glibc.ctx.component_builddir(
+            'update-syscalls', glibc.name, 'glibc')
+        self.linuxdir = glibc.ctx.component_builddir(
+            'update-syscalls', glibc.name, 'linux')
+        self.linux_policy = LinuxHeadersPolicyForUpdateSyscalls(
+            glibc, self.linuxdir)
+        self.configure_args.insert(
+            0, '--with-headers=%s' % os.path.join(self.linuxdir, 'include'))
+        # self.installdir not set because installation is not supported
 
 class Glibc(object):
     """A configuration for building glibc."""
@@ -1538,6 +1574,28 @@ class Glibc(object):
         policy.extra_commands(cmdlist)
         cmdlist.cleanup_dir()
 
+    def update_syscalls(self):
+        if self.os == 'gnu':
+            # Hurd does not have system call tables that need updating.
+            return
+
+        policy = GlibcPolicyForUpdateSyscalls(self)
+        logsdir = os.path.join(self.ctx.logsdir, 'update-syscalls', self.name)
+        self.ctx.remove_recreate_dirs(policy.builddir, logsdir)
+        cmdlist = CommandList('update-syscalls-%s' % self.name, self.ctx.keep)
+        cmdlist.add_command('check-compilers',
+                            ['test', '-f',
+                             os.path.join(self.compiler.installdir, 'ok')])
+        cmdlist.use_path(self.compiler.bindir)
+
+        install_linux_headers(policy.linux_policy, cmdlist)
+
+        cmdlist.create_use_dir(policy.builddir)
+        policy.configure(cmdlist)
+        cmdlist.add_command('build', ['make', 'update-syscall-lists'])
+        cmdlist.cleanup_dir()
+        self.ctx.add_makefile_cmdlist('update-syscalls-%s' % self.name,
+                                      cmdlist, logsdir)
 
 class Command(object):
     """A command run in the build process."""
@@ -1705,7 +1763,8 @@ def get_parser():
     parser.add_argument('action',
                         help='What to do',
                         choices=('checkout', 'bot-cycle', 'bot',
-                                 'host-libraries', 'compilers', 'glibcs'))
+                                 'host-libraries', 'compilers', 'glibcs',
+                                 'update-syscalls'))
     parser.add_argument('configs',
                         help='Versions to check out or configurations to build',
                         nargs='*')
