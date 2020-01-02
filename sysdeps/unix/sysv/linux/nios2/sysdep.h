@@ -19,7 +19,6 @@
 #ifndef _LINUX_NIOS2_SYSDEP_H
 #define _LINUX_NIOS2_SYSDEP_H 1
 
-#include <asm/unistd.h>
 #include <sysdeps/unix/sysdep.h>
 #include <sysdeps/nios2/sysdep.h>
 #include <sysdeps/unix/sysv/linux/generic/sysdep.h>

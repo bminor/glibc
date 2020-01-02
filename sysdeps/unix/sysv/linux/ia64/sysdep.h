@@ -25,6 +25,7 @@
 #include <sysdeps/ia64/sysdep.h>
 #include <dl-sysdep.h>
 #include <tls.h>
+#include <asm/break.h>
 
 /* In order to get __set_errno() definition in INLINE_SYSCALL.  */
 #ifndef __ASSEMBLER__
@@ -115,7 +116,7 @@
 
 #define DO_CALL_VIA_BREAK(num)			\
 	mov r15=num;				\
-	break __BREAK_SYSCALL
+	break __IA64_BREAK_SYSCALL
 
 #ifdef IA64_USE_NEW_STUB
 # ifdef SHARED
@@ -229,7 +230,7 @@
     register long _r15 asm ("r15") = name;			\
     long _retval;						\
     LOAD_REGS_##nr						\
-    __asm __volatile (BREAK_INSN (__BREAK_SYSCALL)		\
+    __asm __volatile (BREAK_INSN (__IA64_BREAK_SYSCALL)		\
 		      : "=r" (_r8), "=r" (_r10), "=r" (_r15)	\
 			ASM_OUTARGS_##nr			\
 		      : "2" (_r15) ASM_ARGS_##nr		\

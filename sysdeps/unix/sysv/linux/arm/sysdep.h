@@ -377,10 +377,6 @@ __local_syscall_error:						\
 #define INTERNAL_SYSCALL(name, err, nr, args...)		\
 	INTERNAL_SYSCALL_RAW(SYS_ify(name), err, nr, args)
 
-#undef INTERNAL_SYSCALL_ARM
-#define INTERNAL_SYSCALL_ARM(name, err, nr, args...)		\
-	INTERNAL_SYSCALL_RAW(__ARM_NR_##name, err, nr, args)
-
 #undef INTERNAL_SYSCALL_ERROR_P
 #define INTERNAL_SYSCALL_ERROR_P(val, err) \
   ((unsigned int) (val) >= 0xfffff001u)

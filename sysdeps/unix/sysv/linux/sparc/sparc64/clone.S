@@ -20,7 +20,6 @@
    and invokes a function in the right context after its all over.  */
 
 #include <asm/errno.h>
-#include <asm/unistd.h>
 #include <tcb-offsets.h>
 #include <sysdep.h>
 

@@ -20,7 +20,6 @@
 
 #include <sysdep.h>
 
-#include <asm/unistd.h>
 #include <asm/errno.h>
 
 	.global __curbrk

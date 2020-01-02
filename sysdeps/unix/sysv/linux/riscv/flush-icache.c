@@ -26,6 +26,7 @@
 #else
 # include <asm/unistd.h>
 #endif
+#include <sys/syscall.h>
 
 typedef int (*func_type) (void *, void *, unsigned long int);
 

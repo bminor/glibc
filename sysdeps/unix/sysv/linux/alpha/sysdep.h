@@ -37,31 +37,6 @@
 #undef SYS_ify
 #define SYS_ify(syscall_name)	__NR_##syscall_name
 
-/* Define some aliases to make automatic syscall generation work
-   properly.  The SYS_* variants are for the benefit of the files in
-   sysdeps/unix.  */
-#define __NR_getpid	__NR_getxpid
-#define __NR_getuid	__NR_getxuid
-#define __NR_getgid	__NR_getxgid
-#define SYS_getpid	__NR_getxpid
-#define SYS_getuid	__NR_getxuid
-#define SYS_getgid	__NR_getxgid
-
-/*
- * Some syscalls no Linux program should know about:
- */
-#define __NR_osf_sigprocmask	 48
-#ifndef __NR_osf_shmat
-# define __NR_osf_shmat		209
-#endif
-#define __NR_osf_getsysinfo	256
-#define __NR_osf_setsysinfo	257
-
-/* Help old kernel headers where particular syscalls are not available.  */
-#ifndef __NR_semtimedop
-# define __NR_semtimedop	423
-#endif
-
 /* This is a kludge to make syscalls.list find these under the names
    pread and pwrite, since some kernel headers define those names
    and some define the *64 names for the same system calls.  */

@@ -101,7 +101,8 @@ Deprecated and removed features, and other changes affecting compatibility:
 
 Changes to build and runtime requirements:
 
-  [Add changes to build and runtime requirements here]
+* It is no longer necessary to have recent Linux kernel headers to build
+  working (non-stub) system call wrappers.
 
 Security related changes:
 

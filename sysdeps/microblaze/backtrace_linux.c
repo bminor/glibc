@@ -20,7 +20,7 @@
 #include <asm/sigcontext.h>
 #include <linux/signal.h>
 #include <asm-generic/ucontext.h>
-#include <asm/unistd.h>
+#include <sys/syscall.h>
 
 int
 _identify_sighandler (unsigned long fp, unsigned long pc,

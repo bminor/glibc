@@ -25,7 +25,7 @@ ENTRY(syscall)
 	   in {out0...out5} like the kernel syscall handler expects.  */
 	alloc r2=ar.pfs,1,0,8,0
 	mov r15=r32		/* syscall number */
-	break __BREAK_SYSCALL
+	break __IA64_BREAK_SYSCALL
 	;;
 	cmp.ne p6,p0=-1,r10	/* r10 = -1 on error */
 (p6)	ret

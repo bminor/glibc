@@ -19,7 +19,6 @@
 
 #include <sys/asm.h>
 #include <sysdep.h>
-#include <asm/unistd.h>
 #include <sgidefs.h>
 #include <tls.h>
 

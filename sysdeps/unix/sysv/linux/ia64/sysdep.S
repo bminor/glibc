@@ -51,7 +51,7 @@ END(__syscall_error)
 
 ENTRY(__ia64_syscall)
 	mov r15=r37		/* syscall number */
-	break __BREAK_SYSCALL
+	break __IA64_BREAK_SYSCALL
 	cmp.eq p6,p0=-1,r10	/* r10 = -1 on error */
 (p6)	br.cond.spnt.few __syscall_error
 	ret

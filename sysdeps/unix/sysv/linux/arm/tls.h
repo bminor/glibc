@@ -33,7 +33,7 @@
 # define TLS_INIT_TP(tcbp) \
   ({ INTERNAL_SYSCALL_DECL (err);					\
      long int result_var;						\
-     result_var = INTERNAL_SYSCALL_ARM (set_tls, err, 1, (tcbp));	\
+     result_var = INTERNAL_SYSCALL (set_tls, err, 1, (tcbp));		\
      INTERNAL_SYSCALL_ERROR_P (result_var, err)				\
        ? "unknown error" : NULL; })
 
