@@ -1160,6 +1160,53 @@ class Context(object):
                 print('Script changed, bot re-execing.')
                 self.exec_self()
 
+class LinuxHeadersPolicyForBuild(object):
+    """Names and directories for installing Linux headers.  Build variant."""
+
+    def __init__(self, config):
+        self.arch = config.arch
+        self.srcdir = config.ctx.component_srcdir('linux')
+        self.builddir = config.component_builddir('linux')
+        self.headers_dir = os.path.join(config.sysroot, 'usr')
+
+def install_linux_headers(policy, cmdlist):
+    """Install Linux kernel headers."""
+    arch_map = {'aarch64': 'arm64',
+                'alpha': 'alpha',
+                'arm': 'arm',
+                'csky': 'csky',
+                'hppa': 'parisc',
+                'i486': 'x86',
+                'i586': 'x86',
+                'i686': 'x86',
+                'i786': 'x86',
+                'ia64': 'ia64',
+                'm68k': 'm68k',
+                'microblaze': 'microblaze',
+                'mips': 'mips',
+                'nios2': 'nios2',
+                'powerpc': 'powerpc',
+                's390': 's390',
+                'riscv32': 'riscv',
+                'riscv64': 'riscv',
+                'sh': 'sh',
+                'sparc': 'sparc',
+                'x86_64': 'x86'}
+    linux_arch = None
+    for k in arch_map:
+        if policy.arch.startswith(k):
+            linux_arch = arch_map[k]
+            break
+    assert linux_arch is not None
+    cmdlist.push_subdesc('linux')
+    cmdlist.create_use_dir(policy.builddir)
+    cmdlist.add_command('install-headers',
+                        ['make', '-C', policy.srcdir, 'O=%s' % policy.builddir,
+                         'ARCH=%s' % linux_arch,
+                         'INSTALL_HDR_PATH=%s' % policy.headers_dir,
+                         'headers_install'])
+    cmdlist.cleanup_dir()
+    cmdlist.pop_subdesc()
 
 class Config(object):
     """A configuration for building a compiler and associated libraries."""
@@ -1218,7 +1265,7 @@ class Config(object):
                                '--disable-readline',
                                '--disable-sim'])
         if self.os.startswith('linux'):
-            self.install_linux_headers(cmdlist)
+            install_linux_headers(LinuxHeadersPolicyForBuild(self), cmdlist)
         self.build_gcc(cmdlist, True)
         if self.os == 'gnu':
             self.install_gnumach_headers(cmdlist)
@@ -1263,48 +1310,6 @@ class Config(object):
         # significantly beneficial, so it is simplest just to disable
         # parallel install for cross tools here.
         cmdlist.add_command('install', ['make', '-j1', 'install'])
-        cmdlist.cleanup_dir()
-        cmdlist.pop_subdesc()
-
-    def install_linux_headers(self, cmdlist):
-        """Install Linux kernel headers."""
-        arch_map = {'aarch64': 'arm64',
-                    'alpha': 'alpha',
-                    'arm': 'arm',
-                    'csky': 'csky',
-                    'hppa': 'parisc',
-                    'i486': 'x86',
-                    'i586': 'x86',
-                    'i686': 'x86',
-                    'i786': 'x86',
-                    'ia64': 'ia64',
-                    'm68k': 'm68k',
-                    'microblaze': 'microblaze',
-                    'mips': 'mips',
-                    'nios2': 'nios2',
-                    'powerpc': 'powerpc',
-                    's390': 's390',
-                    'riscv32': 'riscv',
-                    'riscv64': 'riscv',
-                    'sh': 'sh',
-                    'sparc': 'sparc',
-                    'x86_64': 'x86'}
-        linux_arch = None
-        for k in arch_map:
-            if self.arch.startswith(k):
-                linux_arch = arch_map[k]
-                break
-        assert linux_arch is not None
-        srcdir = self.ctx.component_srcdir('linux')
-        builddir = self.component_builddir('linux')
-        headers_dir = os.path.join(self.sysroot, 'usr')
-        cmdlist.push_subdesc('linux')
-        cmdlist.create_use_dir(builddir)
-        cmdlist.add_command('install-headers',
-                            ['make', '-C', srcdir, 'O=%s' % builddir,
-                             'ARCH=%s' % linux_arch,
-                             'INSTALL_HDR_PATH=%s' % headers_dir,
-                             'headers_install'])
         cmdlist.cleanup_dir()
         cmdlist.pop_subdesc()
 
