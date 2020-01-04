@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # Print a list of symbols exported by some headers that would
 # otherwise be in the user's namespace.
 # Copyright (C) 2018-2020 Free Software Foundation, Inc.

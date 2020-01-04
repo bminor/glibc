@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # Generate tests for libm functions.
 # Copyright (C) 2018-2020 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.

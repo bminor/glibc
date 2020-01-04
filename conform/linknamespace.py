@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # Check that use of symbols declared in a given header does not result
 # in any symbols being brought in that are not reserved with external
 # linkage for the given standard.

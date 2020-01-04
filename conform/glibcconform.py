@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # Shared code for glibc conformance tests.
 # Copyright (C) 2018-2020 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
