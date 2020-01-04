@@ -145,5 +145,7 @@ GLIBC_2.12 sem_wait F
 GLIBC_2.2.6 _IO_flockfile F
 GLIBC_2.2.6 _IO_ftrylockfile F
 GLIBC_2.2.6 _IO_funlockfile F
+GLIBC_2.2.6 __errno_location F
+GLIBC_2.2.6 __h_errno_location F
 GLIBC_2.21 pthread_hurd_cond_timedwait_np F
 GLIBC_2.21 pthread_hurd_cond_wait_np F
