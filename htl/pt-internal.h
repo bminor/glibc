@@ -37,6 +37,8 @@
 # include <ldsodefs.h>
 #endif
 
+#include <tls.h>
+
 /* Thread state.  */
 enum pthread_state
 {
@@ -57,16 +59,6 @@ enum pthread_state
 #ifndef PTHREAD_SYSDEP_MEMBERS
 # define PTHREAD_SYSDEP_MEMBERS
 #endif
-
-#if !(IS_IN (libpthread))
-/* Type of the TCB.  */
-typedef struct
-{
-  void *tcb;			/* Points to this structure.  */
-  void *dtv;			/* Vector of pointers to TLS data.  */
-  thread_t self;		/* This thread's control port.  */
-} tcbhead_t;
-#endif /* ! IS_IN (libpthread) */
 
 /* This structure describes a POSIX thread.  */
 struct __pthread
