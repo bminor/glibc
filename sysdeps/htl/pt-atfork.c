@@ -22,9 +22,10 @@
 #include <dso_handle.h>
 
 int
-pthread_atfork (void (*prepare) (void),
+__pthread_atfork (void (*prepare) (void),
 		void (*parent) (void),
 		void (*child) (void))
 {
   return __register_atfork (prepare, parent, child, __dso_handle);
 }
+weak_alias (__pthread_atfork, pthread_atfork)
