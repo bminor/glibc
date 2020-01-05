@@ -80,6 +80,7 @@ timer_thread (void)
       struct
 	{
 	  mach_msg_header_t header;
+	  mach_msg_type_t return_code_type;
 	  error_t return_code;
 	} msg;
 
@@ -89,7 +90,7 @@ timer_thread (void)
 	 _hurd_itimerval.  */
       err = __mach_msg (&msg.header,
 			MACH_RCV_MSG|MACH_RCV_TIMEOUT|MACH_RCV_INTERRUPT,
-			0, 0, _hurd_itimer_port,
+			0, sizeof(msg), _hurd_itimer_port,
 			_hurd_itimerval.it_value.tv_sec * 1000
 			+ _hurd_itimerval.it_value.tv_usec / 1000,
 			MACH_PORT_NULL);
