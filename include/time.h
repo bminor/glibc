@@ -203,6 +203,13 @@ libc_hidden_proto (__timer_settime64);
 libc_hidden_proto (__timerfd_settime64);
 #endif
 
+#if __TIMESIZE == 64
+# define __sched_rr_get_interval64 __sched_rr_get_interval
+#else
+extern int __sched_rr_get_interval64 (pid_t pid, struct __timespec64 *tp);
+libc_hidden_proto (__sched_rr_get_interval64);
+#endif
+
 /* Compute the `struct tm' representation of T,
    offset OFFSET seconds east of UTC,
    and store year, yday, mon, mday, wday, hour, min, sec into *TP.
