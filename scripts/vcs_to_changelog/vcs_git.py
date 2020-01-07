@@ -102,7 +102,7 @@ class GitRepo:
         # updates, copyright notice changes, etc.) and likely not interesting
         # enough to produce a detailed ChangeLog entry.
         if len(op) > 100:
-            print('\t* Suppressing diff as too many files differ.')
+            print('\t* Suppressing diff as too many files differ.\n')
             return
 
         # Each of these lines has a space separated format like so:
