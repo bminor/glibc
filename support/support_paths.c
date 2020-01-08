@@ -78,3 +78,10 @@ const char support_install_rootsbindir[] = ROOTSBINDIR_PATH;
 #else
 # error please -DROOTSBINDIR_PATH=something in the Makefile
 #endif
+
+#ifdef COMPLOCALEDIR_PATH
+/* Corresponds to the install's compiled locale directory.  */
+const char support_complocaledir_prefix[] = COMPLOCALEDIR_PATH;
+#else
+# error please -DCOMPLOCALEDIR_PATH=something in the Makefile
+#endif

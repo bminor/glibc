@@ -112,6 +112,8 @@ extern const char support_bindir_prefix[];
 extern const char support_sbindir_prefix[];
 /* Corresponds to the install's sbin/ directory (without prefix).  */
 extern const char support_install_rootsbindir[];
+/* Corresponds to the install's compiled locale directory.  */
+extern const char support_complocaledir_prefix[];
 
 extern ssize_t support_copy_file_range (int, off64_t *, int, off64_t *,
 					size_t, unsigned int);

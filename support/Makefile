@@ -189,7 +189,8 @@ CFLAGS-support_paths.c = \
 		-DLIBDIR_PATH=\"$(libdir)\" \
 		-DBINDIR_PATH=\"$(bindir)\" \
 		-DSBINDIR_PATH=\"$(sbindir)\" \
-		-DROOTSBINDIR_PATH=\"$(rootsbindir)\"
+		-DROOTSBINDIR_PATH=\"$(rootsbindir)\" \
+		-DCOMPLOCALEDIR_PATH=\"$(complocaledir)\"
 
 ifeq (,$(CXX))
 LINKS_DSO_PROGRAM = links-dso-program-c

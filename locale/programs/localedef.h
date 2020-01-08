@@ -123,6 +123,7 @@ extern bool hard_links;
 
 /* Prototypes for a few program-wide used functions.  */
 #include <programs/xmalloc.h>
+#include <programs/xasprintf.h>
 
 
 /* Mark given locale as to be read.  */

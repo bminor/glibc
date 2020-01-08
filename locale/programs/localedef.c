@@ -180,14 +180,14 @@ static struct argp argp =
 
 /* Prototypes for local functions.  */
 static void error_print (void);
-static const char *construct_output_path (char *path);
-static const char *normalize_codeset (const char *codeset, size_t name_len);
+static char *construct_output_path (char *path);
+static char *normalize_codeset (const char *codeset, size_t name_len);
 
 
 int
 main (int argc, char *argv[])
 {
-  const char *output_path;
+  char *output_path;
   int cannot_write_why;
   struct charmap_t *charmap;
   struct localedef_t global;
@@ -232,7 +232,8 @@ main (int argc, char *argv[])
     }
 
   /* The parameter describes the output path of the constructed files.
-     If the described files cannot be written return a NULL pointer.  */
+     If the described files cannot be written return a NULL pointer.
+     We don't free output_path because we will exit.  */
   output_path  = construct_output_path (argv[remaining]);
   if (output_path == NULL && ! no_archive)
     error (4, errno, _("cannot create directory for output files"));
@@ -434,20 +435,16 @@ more_help (int key, const char *text, void *input)
     {
     case ARGP_KEY_HELP_EXTRA:
       /* We print some extra information.  */
-      if (asprintf (&tp, gettext ("\
+      tp = xasprintf (gettext ("\
 For bug reporting instructions, please see:\n\
-%s.\n"), REPORT_BUGS_TO) < 0)
-	return NULL;
-      if (asprintf (&cp, gettext ("\
+%s.\n"), REPORT_BUGS_TO);
+      cp = xasprintf (gettext ("\
 System's directory for character maps : %s\n\
 		       repertoire maps: %s\n\
 		       locale path    : %s\n\
 %s"),
-		    CHARMAP_PATH, REPERTOIREMAP_PATH, LOCALE_PATH, tp) < 0)
-	{
-	  free (tp);
-	  return NULL;
-	}
+		    CHARMAP_PATH, REPERTOIREMAP_PATH, LOCALE_PATH, tp);
+      free (tp);
       return cp;
     default:
       break;
@@ -477,15 +474,13 @@ error_print (void)
 }
 
 
-/* The parameter to localedef describes the output path.  If it does
-   contain a '/' character it is a relative path.  Otherwise it names the
-   locale this definition is for.  */
-static const char *
+/* The parameter to localedef describes the output path.  If it does contain a
+   '/' character it is a relative path.  Otherwise it names the locale this
+   definition is for.   The returned path must be freed by the caller. */
+static char *
 construct_output_path (char *path)
 {
-  const char *normal = NULL;
   char *result;
-  char *endp;
 
   if (strchr (path, '/') == NULL)
     {
@@ -493,50 +488,44 @@ construct_output_path (char *path)
 	 contains a reference to the codeset.  This should be
 	 normalized.  */
       char *startp;
+      char *endp = NULL;
+      char *normal = NULL;
 
       startp = path;
-      /* We must be prepared for finding a CEN name or a location of
-	 the introducing `.' where it is not possible anymore.  */
+      /* Either we have a '@' which starts a CEN name or '.' which starts the
+	 codeset specification.  The CEN name starts with '@' and may also have
+	 a codeset specification, but we do not normalize the string after '@'.
+	 If we only find the codeset specification then we normalize only the codeset
+	 specification (but not anything after a subsequent '@').  */
       while (*startp != '\0' && *startp != '@' && *startp != '.')
 	++startp;
       if (*startp == '.')
 	{
 	  /* We found a codeset specification.  Now find the end.  */
 	  endp = ++startp;
+
+	  /* Stop at the first '@', and don't normalize anything past that.  */
 	  while (*endp != '\0' && *endp != '@')
 	    ++endp;
 
 	  if (endp > startp)
 	    normal = normalize_codeset (startp, endp - startp);
 	}
-      else
-	/* This is to keep gcc quiet.  */
-	endp = NULL;
 
-      /* We put an additional '\0' at the end of the string because at
-	 the end of the function we need another byte for the trailing
-	 '/'.  */
-      ssize_t n;
       if (normal == NULL)
-	n = asprintf (&result, "%s%s/%s%c", output_prefix ?: "",
-		      COMPLOCALEDIR, path, '\0');
+	result = xasprintf ("%s%s/%s/", output_prefix ?: "",
+			    COMPLOCALEDIR, path);
       else
-	n = asprintf (&result, "%s%s/%.*s%s%s%c",
-		      output_prefix ?: "", COMPLOCALEDIR,
-		      (int) (startp - path), path, normal, endp, '\0');
-
-      if (n < 0)
-	return NULL;
-
-      endp = result + n - 1;
+	result = xasprintf ("%s%s/%.*s%s%s/",
+			    output_prefix ?: "", COMPLOCALEDIR,
+			    (int) (startp - path), path, normal, endp ?: "");
+      /* Free the allocated normalized codeset name.  */
+      free (normal);
     }
   else
     {
-      /* This is a user path.  Please note the additional byte in the
-	 memory allocation.  */
-      size_t len = strlen (path) + 1;
-      result = xmalloc (len + 1);
-      endp = mempcpy (result, path, len) - 1;
+      /* This is a user path.  */
+      result = xasprintf ("%s/", path);
 
       /* If the user specified an output path we cannot add the output
 	 to the archive.  */
@@ -546,25 +535,41 @@ construct_output_path (char *path)
   errno = 0;
 
   if (no_archive && euidaccess (result, W_OK) == -1)
-    /* Perhaps the directory does not exist now.  Try to create it.  */
-    if (errno == ENOENT)
-      {
-	errno = 0;
-	if (mkdir (result, 0777) < 0)
-	  return NULL;
-      }
-
-  *endp++ = '/';
-  *endp = '\0';
+    {
+      /* Perhaps the directory does not exist now.  Try to create it.  */
+      if (errno == ENOENT)
+	{
+	  errno = 0;
+	  if (mkdir (result, 0777) < 0)
+	    {
+	      record_verbose (stderr,
+			      _("cannot create output path \'%s\': %s"),
+			      result, strerror (errno));
+	      free (result);
+	      return NULL;
+	    }
+	}
+      else
+	record_verbose (stderr,
+			_("no write permission to output path \'%s\': %s"),
+			result, strerror (errno));
+    }
 
   return result;
 }
 
 
-/* Normalize codeset name.  There is no standard for the codeset
-   names.  Normalization allows the user to use any of the common
-   names.  */
-static const char *
+/* Normalize codeset name.  There is no standard for the codeset names.
+   Normalization allows the user to use any of the common names e.g. UTF-8,
+   utf-8, utf8, UTF8 etc.
+
+   We normalize using the following rules:
+   - Remove all non-alpha-numeric characters
+   - Lowercase all characters.
+   - If there are only digits assume it's an ISO standard and prefix with 'iso'
+
+   We return the normalized string which needs to be freed by free.  */
+static char *
 normalize_codeset (const char *codeset, size_t name_len)
 {
   int len = 0;
@@ -573,6 +578,7 @@ normalize_codeset (const char *codeset, size_t name_len)
   char *wp;
   size_t cnt;
 
+  /* Compute the length of only the alpha-numeric characters.  */
   for (cnt = 0; cnt < name_len; ++cnt)
     if (isalnum (codeset[cnt]))
       {
@@ -582,25 +588,24 @@ normalize_codeset (const char *codeset, size_t name_len)
 	  only_digit = 0;
       }
 
-  retval = (char *) malloc ((only_digit ? 3 : 0) + len + 1);
+  /* If there were only digits we assume it's an ISO standard and we will
+     prefix with 'iso' so include space for that.  We fill in the required
+     space from codeset up to the converted length.  */
+  wp = retval = xasprintf ("%s%.*s", only_digit ? "iso" : "", len, codeset);
 
-  if (retval != NULL)
-    {
-      if (only_digit)
-	wp = stpcpy (retval, "iso");
-      else
-	wp = retval;
+  /* Skip "iso".  */
+  if (only_digit)
+    wp += 3;
 
-      for (cnt = 0; cnt < name_len; ++cnt)
-	if (isalpha (codeset[cnt]))
-	  *wp++ = tolower (codeset[cnt]);
-	else if (isdigit (codeset[cnt]))
-	  *wp++ = codeset[cnt];
+  /* Lowercase all characters. */
+  for (cnt = 0; cnt < name_len; ++cnt)
+    if (isalpha (codeset[cnt]))
+      *wp++ = tolower (codeset[cnt]);
+    else if (isdigit (codeset[cnt]))
+      *wp++ = codeset[cnt];
 
-      *wp = '\0';
-    }
-
-  return (const char *) retval;
+  /* Return allocated and converted name for caller to free.  */
+  return retval;
 }
 
 
