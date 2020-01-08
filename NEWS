@@ -104,6 +104,10 @@ Changes to build and runtime requirements:
 * It is no longer necessary to have recent Linux kernel headers to build
   working (non-stub) system call wrappers.
 
+* The ChangeLog file is no longer present in the toplevel directory of the
+  source tree.  ChangeLog files are located in the ChangeLog.old directory as
+  ChangeLog.N where the highest N has the latest entries.
+
 Security related changes:
 
   CVE-2019-19126: ld.so failed to ignore the LD_PREFER_MAP_32BIT_EXEC

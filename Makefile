@@ -673,7 +673,7 @@ TAGS:
 
 generated := $(generated) stubs.h
 
-files-for-dist := README INSTALL configure ChangeLog NEWS
+files-for-dist := README INSTALL configure NEWS
 
 # Regenerate stuff, then error if these things are not committed yet.
 dist-prepare: $(files-for-dist)
