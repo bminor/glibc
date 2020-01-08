@@ -24,7 +24,7 @@
 
 #ifndef __LDBL_MANT_DIG__
 # include <float.h>
-# define __LDBL_MANT_DIG__ __LDBL_MANT_DIG__
+# define __LDBL_MANT_DIG__ LDBL_MANT_DIG
 #endif
 
 __BEGIN_DECLS
