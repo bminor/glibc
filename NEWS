@@ -21,19 +21,6 @@ Major new features:
   18661-1:2014 and TS 18661-3:2015 as amended by the resolution of
   Clarification Request 13 to TS 18661-3.
 
-* The gettimeofday function will no longer report information about a
-  system-wide time zone, expect for aarch64, powerpc, and x86 on Linux
-  which still uses the vDSO symbol (when available).
-
-  This 4.2-BSD-era feature has been deprecated for many years, as it cannot
-  handle the full complexity of the world's timezones, but hitherto we have
-  supported it on a best-effort basis.  Changes required to support 64-bit
-  time_t on 32-bit architectures have made this no longer practical.
-
-  As of this release, callers of gettimeofday with a non-null 'tzp' argument
-  will always receive a 'struct timezone' whose tz_minuteswest and
-  tz_dsttime fields are zero.
-
 * The function pthread_clockjoin_np has been added, enabling join with a
   terminated thread with a specific clock.  It allows waiting against
   CLOCK_MONOTONIC and CLOCK_REALTIME.  This function is a GNU extension.
@@ -59,8 +46,34 @@ Deprecated and removed features, and other changes affecting compatibility:
   floating-point arguments directly will continue to work.
 
 * The obsolete function stime is no longer available to newly linked
-  binaries and it has been removed from <time.h> header.  This function
-  has been deprecated in favor of clock_settime.
+  binaries, and its declaration has been removed from <time.h>.
+  Programs that set the system time should use clock_settime instead.
+
+* We plan to remove the obsolete function ftime, and the header <sys/timeb.h>,
+  in a future version of glibc.  In this release, the header still exists
+  but calling ftime will cause a compiler warning.  All programs should use
+  gettimeofday or clock_gettime instead.
+
+* The gettimeofday function no longer reports information about a
+  system-wide time zone.  This 4.2-BSD-era feature has been deprecated for
+  many years, as it cannot handle the full complexity of the world's
+  timezones, but hitherto we have supported it on a best-effort basis.
+  Changes required to support 64-bit time_t on 32-bit architectures have
+  made this no longer practical.
+
+  As of this release, callers of gettimeofday with a non-null 'tzp' argument
+  should expect to receive a 'struct timezone' whose tz_minuteswest and
+  tz_dsttime fields are zero.  (For efficiency reasons, this does not always
+  happen on a few Linux-based ports.  This will be corrected in a future
+  release.)
+
+  All callers should supply a null pointer for the 'tzp' argument to
+  gettimeofday.  For accurate information about the time zone associated
+  with the current time, use the localtime function.
+
+  gettimeofday itself is obsolescent according to POSIX.  We have no plans
+  to remove access to this function, but portable programs should consider
+  using clock_gettime instead.
 
 * The settimeofday function can still be used to set a system-wide time
   zone when the operating system supports it.  This is because the Linux
@@ -80,18 +93,18 @@ Deprecated and removed features, and other changes affecting compatibility:
   becomes available, we will change settimeofday to fail with ENOSYS on all
   platforms when its 'tzp' argument is not a null pointer.
 
-  Note that settimeofday itself is obsolescent according to POSIX.
-  Programs that set the system time should use clock_settime and/or
-  the adjtime family of functions instead.  We may also cease to make
-  settimeofday available to newly linked binaries after there is a
-  replacement for Linux's time-zone-like offset API.
+  settimeofday itself is obsolescent according to POSIX.  Programs that set
+  the system time should use clock_settime and/or the adjtime family of
+  functions instead.  We may cease to make settimeofday available to newly
+  linked binaries after there is a replacement for Linux's time-zone-like
+  offset API.
 
-* The obsolete functions ftime has been deprecated and will be removed from
-  a future version of glibc.  Application should use clock_gettime instead.
+* SPARC ISA v7 is no longer supported.  v8 is still supported, but only if
+  the optional CAS instruction is implemented (for instance, LEON processors
+  are still supported, but SuperSPARC processors are not).
 
-* The sparc*-*linux-gnu configurations targeting v7 or order architecture
-  are no longer supported.  For v8 only implementations with native CAS
-  instruction are still supported (such as LEON).
+  As the oldest 64-bit SPARC ISA is v9, this only affects 32-bit
+  configurations.
 
 * If a lazy binding failure happens during dlopen, during the execution of
   an ELF constructor, the process is now terminated.  Previously, the
