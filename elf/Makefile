@@ -162,8 +162,9 @@ tests-static-internal := tst-tls1-static tst-tls2-static \
 CRT-tst-tls1-static-non-pie := $(csu-objpfx)crt1.o
 tst-tls1-static-non-pie-no-pie = yes
 
-tests-container = \
-			  tst-ldconfig-bad-aux-cache
+tests-container := \
+			  tst-ldconfig-bad-aux-cache \
+			  tst-ldconfig-ld_so_conf-update
 
 tests := tst-tls9 tst-leaks1 \
 	tst-array1 tst-array2 tst-array3 tst-array4 tst-array5 \
@@ -309,7 +310,8 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-auditmanymod4 tst-auditmanymod5 tst-auditmanymod6 \
 		tst-auditmanymod7 tst-auditmanymod8 tst-auditmanymod9 \
 		tst-initlazyfailmod tst-finilazyfailmod \
-		tst-dlopenfailmod1 tst-dlopenfaillinkmod tst-dlopenfailmod2
+		tst-dlopenfailmod1 tst-dlopenfaillinkmod tst-dlopenfailmod2 \
+		tst-ldconfig-ld-mod
 # Most modules build with _ISOMAC defined, but those filtered out
 # depend on internal headers.
 modules-names-tests = $(filter-out ifuncmod% tst-libc_dlvsym-dso tst-tlsmod%,\
@@ -1688,3 +1690,6 @@ $(objpfx)tst-dlopen-nodelete-reloc-mod17.so: \
   $(objpfx)tst-dlopen-nodelete-reloc-mod15.so \
   $(objpfx)tst-dlopen-nodelete-reloc-mod16.so
 LDFLAGS-tst-dlopen-nodelete-reloc-mod17.so = -Wl,--no-as-needed
+
+$(objpfx)tst-ldconfig-ld_so_conf-update.out: $(objpfx)tst-ldconfig-ld-mod.so
+$(objpfx)tst-ldconfig-ld_so_conf-update: $(libdl)
