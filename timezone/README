@@ -1,6 +1,7 @@
 The files
-	zic.c zdump.c tzfile.h private.h tzselect.ksh
+	zic.c zdump.c tzfile.h private.h tzselect.ksh version
 come from the tzcode package by Arthur David Olson et.al.
+The 'version' file specifies which tzcode version was used.
 
 The files
 	africa antarctica asia australasia europe
@@ -8,14 +9,15 @@ The files
 	backward systemv solar87 solar88 solar89
 	iso3166.tab zone.tab leapseconds yearistype
 come from the tzdata package by Arthur David Olson et.al.
-
-Please check the ChangeLog files in the top level directory for the
-version of the tzcode and tzdata packages.
+except that its 'yearistype.sh' file is renamed to 'yearistype'.
+These tzdata files were taken from tzdata 2009i and have not been
+updated since, as they do not affect glibc installation and are
+present only for regression testing.
 
 Please also see: https://sourceware.org/glibc/wiki/SharedSourceFiles
 
-These packages may be found at ftp://ftp.iana.org/tz/releases/.  Commentary
-should be addressed to tz@iana.org.
+These packages may be found at https://ftp.iana.org/tz/releases/.
+Commentary should be addressed to tz@iana.org.
 
 The subdirectory testdata contains manually edited data files for
 regression testing purposes.
