@@ -26,17 +26,26 @@ _dl_var_init (void *array[])
   /* It has to match "variables" below. */
   enum
     {
-      DL_PAGESIZE = 0
+      DL_PAGESIZE = 0,
+      DL_AUXV = 1,
+      DL_HWCAP = 2,
+      DL_HWCAP2 = 3,
     };
 
   GLRO(dl_pagesize) = *((size_t *) array[DL_PAGESIZE]);
+  GLRO(dl_auxv) = (ElfW(auxv_t) *) *((size_t *) array[DL_AUXV]);
+  GLRO(dl_hwcap)  = *((unsigned long int *) array[DL_HWCAP]);
+  GLRO(dl_hwcap2) = *((unsigned long int *) array[DL_HWCAP2]);
 }
 
 #else
 
 static void *variables[] =
 {
-  &GLRO(dl_pagesize)
+  &GLRO(dl_pagesize),
+  &GLRO(dl_auxv),
+  &GLRO(dl_hwcap),
+  &GLRO(dl_hwcap2),
 };
 
 static void
