@@ -342,6 +342,30 @@ LT_LABELSUFFIX(name,_name_end): ; \
 #define	PSEUDO_END_ERRVAL(name) \
   END (name)
 
+#ifdef SHARED
+# if IS_IN (rtld)
+	 /* Inside ld.so we use the local alias to avoid runtime GOT
+	    relocations.  */
+#  define __GLRO_DEF(var)				\
+.LC__ ## var:						\
+	.tc _rtld_local_ro[TC],_rtld_local_ro
+# else
+#  define __GLRO_DEF(var)				\
+.LC__ ## var:						\
+	.tc _rtld_global_ro[TC],_rtld_global_ro
+# endif
+# define __GLRO(rOUT, var, offset)		\
+	ld	rOUT,.LC__ ## var@toc(r2);	\
+	lwz	rOUT,offset(rOUT)
+#else
+# define __GLRO_DEF(var)			\
+.LC__ ## var:					\
+	.tc _ ## var[TC],_ ## var
+# define __GLRO(rOUT, var, offset)		\
+	ld	rOUT,.LC__ ## var@toc(r2);	\
+	lwz	rOUT,0(rOUT)
+#endif
+
 #else /* !__ASSEMBLER__ */
 
 #if _CALL_ELF != 2

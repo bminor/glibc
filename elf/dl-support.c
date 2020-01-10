@@ -36,6 +36,7 @@
 #include <stackinfo.h>
 #include <dl-vdso.h>
 #include <dl-vdso-setup.h>
+#include <dl-auxv.h>
 
 extern char *__progname;
 char **_dl_argv = &__progname;	/* This is checked for some error messages.  */
@@ -293,9 +294,7 @@ _dl_aux_init (ElfW(auxv_t) *av)
       case AT_RANDOM:
 	_dl_random = (void *) av->a_un.a_val;
 	break;
-# ifdef DL_PLATFORM_AUXV
       DL_PLATFORM_AUXV
-# endif
       }
   if (seen == 0xf)
     {

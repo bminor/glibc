@@ -30,12 +30,14 @@ _dl_var_init (void *array[])
       DL_AUXV = 1,
       DL_HWCAP = 2,
       DL_HWCAP2 = 3,
+      DL_CACHE_LINE_SIZE = 4
     };
 
   GLRO(dl_pagesize) = *((size_t *) array[DL_PAGESIZE]);
   GLRO(dl_auxv) = (ElfW(auxv_t) *) *((size_t *) array[DL_AUXV]);
   GLRO(dl_hwcap)  = *((unsigned long int *) array[DL_HWCAP]);
   GLRO(dl_hwcap2) = *((unsigned long int *) array[DL_HWCAP2]);
+  GLRO(dl_cache_line_size) = (int) *((int *) array[DL_CACHE_LINE_SIZE]);
 }
 
 #else
@@ -46,6 +48,7 @@ static void *variables[] =
   &GLRO(dl_auxv),
   &GLRO(dl_hwcap),
   &GLRO(dl_hwcap2),
+  &GLRO(dl_cache_line_size)
 };
 
 static void

@@ -45,6 +45,7 @@
 #include <tls.h>
 
 #include <dl-tunables.h>
+#include <dl-auxv.h>
 
 extern char **_environ attribute_hidden;
 extern char _end[] attribute_hidden;
@@ -180,9 +181,7 @@ _dl_sysdep_start (void **start_argptr,
       case AT_RANDOM:
 	_dl_random = (void *) av->a_un.a_val;
 	break;
-#ifdef DL_PLATFORM_AUXV
       DL_PLATFORM_AUXV
-#endif
       }
 
 #ifndef HAVE_AUX_SECURE

@@ -89,5 +89,22 @@ PROCINFO_CLASS const char _dl_powerpc_cap_flags[64][15]
 ,
 #endif
 
+#if !IS_IN (ldconfig)
+# if !defined PROCINFO_DECL && defined SHARED
+     ._dl_cache_line_size
+# else
+PROCINFO_CLASS int _dl_cache_line_size
+# endif
+# ifndef PROCINFO_DECL
+     = 0
+# endif
+# if !defined SHARED || defined PROCINFO_DECL
+;
+# else
+,
+# endif
+#endif
+
+
 #undef PROCINFO_DECL
 #undef PROCINFO_CLASS

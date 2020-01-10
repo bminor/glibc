@@ -18,6 +18,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <rtld-global-offsets.h>
 
 #ifndef MEMCPY
 # define MEMCPY memcpy
@@ -27,8 +28,9 @@
 #define ZERO_AHEAD 2            /* no cache lines DST zeroing ahead  */
 
 	.section        ".toc","aw"
-.LC0:
-	.tc __cache_line_size[TC],__cache_line_size
+__GLRO_DEF(dl_cache_line_size)
+
+
 	.section        ".text"
 	.align 2
 
@@ -55,10 +57,11 @@ ENTRY (MEMCPY, 5)
 	*/
 
 	neg     r8,r3           /* LS 4 bits = # bytes to 8-byte dest bdry  */
-	ld      r9,.LC0@toc(r2) /* Get cache line size (part 1) */
+	/* Get the cache line size.  */
+	__GLRO (r9, dl_cache_line_size,
+		RTLD_GLOBAL_RO_DL_CACHE_LINE_SIZE_OFFSET)
 	clrldi  r8,r8,64-4      /* align to 16byte boundary  */
 	sub     r7,r4,r3        /* compute offset to src from dest */
-	lwz     r9,0(r9)        /* Get cache line size (part 2) */
 	cmpldi  cr0,r8,0        /* Were we aligned on a 16 byte bdy? */
 	addi    r10,r9,-1       /* Cache line mask */
 	beq+    L(dst_aligned)
@@ -121,7 +124,7 @@ L(dst_aligned):
 	cmpdi	cr0,r9,0	/* Cache line size set? */
 	bne+	cr0,L(cachelineset)
 
-/* __cache_line_size not set: generic byte copy without much optimization */
+/* Cache line size not set: generic byte copy without much optimization */
 	clrldi.	r0,r5,63	/* If length is odd copy one byte */
 	beq	L(cachelinenotset_align)
 	lbz	r7,0(r4)	/* Read one byte from source */

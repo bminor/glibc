@@ -157,4 +157,30 @@ GOT_LABEL:			;					      \
 /* Label in text section.  */
 #define C_TEXT(name) name
 
+/* Read the value of member from rtld_global_ro.  */
+#ifdef PIC
+# ifdef SHARED
+#  if IS_IN (rtld)
+/* Inside ld.so we use the local alias to avoid runtime GOT
+   relocations.  */
+#   define __GLRO(rOUT, rGOT, member, offset)				\
+	lwz     rOUT,_rtld_local_ro@got(rGOT);				\
+	lwz     rOUT,offset(rOUT)
+#  else
+#   define __GLRO(rOUT, rGOT, member, offset)				\
+	lwz     rOUT,_rtld_global_ro@got(rGOT);				\
+	lwz     rOUT,offset(rOUT)
+#  endif
+# else
+#  define __GLRO(rOUT, rGOT, member, offset)				\
+	lwz     rOUT,member@got(rGOT);					\
+	lwz     rOUT,0(rOUT)
+# endif
+#else
+/* Position-dependent code does not require access to the GOT.  */
+# define __GLRO(rOUT, rGOT, member, offset)				\
+	lis     rOUT,(member+LOWORD)@ha					\
+	lwz     rOUT,(member+LOWORD)@l(rOUT)
+#endif	/* PIC */
+
 #endif	/* __ASSEMBLER__ */

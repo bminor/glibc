@@ -17,12 +17,13 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <rtld-global-offsets.h>
 
 /* void * [r3] memset (void *s [r3], int c [r4], size_t n [r5]));
    Returns 's'.
 
    The memset is done in four sizes: byte (8 bits), word (32 bits),
-   32-byte blocks (256 bits) and __cache_line_size (128, 256, 1024 bits).
+   32-byte blocks (256 bits) and cache line size (128, 256, 1024 bits).
    There is a special case for setting whole cache lines to 0, which
    takes advantage of the dcbz instruction.  */
 
@@ -95,7 +96,7 @@ L(caligned):
 
 /* Check if we can use the special case for clearing memory using dcbz.
    This requires that we know the correct cache line size for this
-   processor.  Getting the __cache_line_size may require establishing GOT
+   processor.  Getting the cache line size may require establishing GOT
    addressability, so branch out of line to set this up.  */
 	beq	cr1, L(checklinesize)
 
@@ -230,26 +231,22 @@ L(medium_28t):
 	blr
 
 L(checklinesize):
-#ifdef SHARED
+/* If the remaining length is less the 32 bytes then don't bother getting
+   the cache line size.  */
+	beq	L(medium)
+#ifdef PIC
 	mflr	rTMP
-/* If the remaining length is less the 32 bytes then don't bother getting
-   the cache line size.  */
-	beq	L(medium)
-/* Establishes GOT addressability so we can load __cache_line_size
-   from static. This value was set from the aux vector during startup.  */
+/* Establishes GOT addressability so we can load the cache line size
+   from rtld_global_ro. This value was set from the aux vector during
+   startup.  */
 	SETUP_GOT_ACCESS(rGOT,got_label)
-	addis	rGOT,rGOT,__cache_line_size-got_label@ha
-	lwz	rCLS,__cache_line_size-got_label@l(rGOT)
+	addis	rGOT,rGOT,_GLOBAL_OFFSET_TABLE_-got_label@ha
+	addi	rGOT,rGOT,_GLOBAL_OFFSET_TABLE_-got_label@l
 	mtlr	rTMP
-#else
-/* Load __cache_line_size from static. This value was set from the
-   aux vector during startup.  */
-	lis	rCLS,__cache_line_size@ha
-/* If the remaining length is less the 32 bytes then don't bother getting
-   the cache line size.  */
-	beq	L(medium)
-	lwz	rCLS,__cache_line_size@l(rCLS)
 #endif
+/* Load rtld_global_ro._dl_cache_line_size.  */
+	__GLRO(rCLS, rGOT, _dl_cache_line_size,
+	       RTLD_GLOBAL_RO_DL_CACHE_LINE_SIZE_OFFSET)
 
 /* If the cache line size was not set then goto to L(nondcbz), which is
    safe for any cache line size.  */

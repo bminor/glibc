@@ -1,5 +1,5 @@
-/* Operating system support for run-time dynamic linker.  Linux/PPC version.
-   Copyright (C) 1997-2020 Free Software Foundation, Inc.
+/* Test if an executable can read from rtld_global_ro._dl_cache_line_size.
+   Copyright (C) 2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,18 +16,30 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <config.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <inttypes.h>
+#include <sys/auxv.h>
 #include <ldsodefs.h>
+#include <errno.h>
 
-int __cache_line_size attribute_hidden;
+/* errnop is required in order to work around BZ #20802.  */
+int
+test_cache (int *errnop)
+{
+  int cls1 = GLRO (dl_cache_line_size);
+  errno = *errnop;
+  uint64_t cls2 = getauxval (AT_DCACHEBSIZE);
+  *errnop = errno;
 
-/* Scan the Aux Vector for the "Data Cache Block Size" entry.  If found
-   verify that the static extern __cache_line_size is defined by checking
-   for not NULL.  If it is defined then assign the cache block size
-   value to __cache_line_size.  */
-#define DL_PLATFORM_AUXV						      \
-      case AT_DCACHEBSIZE:						      \
-	__cache_line_size = av->a_un.a_val;				      \
-	break;
+  printf ("AT_DCACHEBSIZE      = %" PRIu64 " B\n", cls2);
+  printf ("_dl_cache_line_size = %d B\n", cls1);
 
-#include <sysdeps/unix/sysv/linux/dl-sysdep.c>
+  if (cls1 != cls2)
+    {
+      printf ("error: _dl_cache_line_size != AT_DCACHEBSIZE\n");
+      return 1;
+    }
+
+  return 0;
+}

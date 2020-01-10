@@ -17,10 +17,11 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <rtld-global-offsets.h>
 
 	.section	".toc","aw"
-.LC0:
-	.tc __cache_line_size[TC],__cache_line_size
+__GLRO_DEF(dl_cache_line_size)
+
 	.section	".text"
 	.align 2
 
@@ -146,8 +147,10 @@ L(zloopstart):
 /* If the remaining length is less the 32 bytes, don't bother getting
 	 the cache line size.  */
 	beq	L(medium)
-	ld	rCLS,.LC0@toc(r2)
-	lwz	rCLS,0(rCLS)
+	/* Read the cache line size.  */
+	__GLRO (rCLS, dl_cache_line_size,
+		RTLD_GLOBAL_RO_DL_CACHE_LINE_SIZE_OFFSET)
+
 /* If the cache line size was not set just goto to L(nondcbz) which is
 	 safe for any cache line size.  */
 	cmpldi	cr1,rCLS,0
