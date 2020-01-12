@@ -112,6 +112,8 @@ extern int __pthread_rwlock_unlock (pthread_rwlock_t *__rwlock);
 extern int __pthread_key_create (pthread_key_t *__key,
 				 void (*__destr_function) (void *));
 
+extern int __pthread_key_delete (pthread_key_t __key);
+
 extern int __pthread_setspecific (pthread_key_t __key,
 				  const void *__pointer);
 

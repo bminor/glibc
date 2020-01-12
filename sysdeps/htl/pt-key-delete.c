@@ -21,7 +21,7 @@
 #include <pt-internal.h>
 
 int
-pthread_key_delete (pthread_key_t key)
+__pthread_key_delete (pthread_key_t key)
 {
   error_t err = 0;
 
@@ -61,3 +61,4 @@ pthread_key_delete (pthread_key_t key)
 
   return err;
 }
+strong_alias (__pthread_key_delete, pthread_key_delete)

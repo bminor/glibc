@@ -27,7 +27,7 @@
 /* Make calling thread wait for termination of thread THREAD.  Return
    the exit status of the thread in *STATUS.  */
 int
-pthread_join (pthread_t thread, void **status)
+__pthread_join (pthread_t thread, void **status)
 {
   struct __pthread *pthread;
   int err = 0;
@@ -75,3 +75,4 @@ pthread_join (pthread_t thread, void **status)
 
   return err;
 }
+strong_alias (__pthread_join, pthread_join);

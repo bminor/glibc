@@ -45,6 +45,7 @@ int __pthread_create (pthread_t *newthread,
 void __cthread_detach (__cthread_t);
 int __pthread_detach (pthread_t __threadp);
 void __pthread_exit (void *value) __attribute__ ((__noreturn__));
+int __pthread_join (pthread_t, void **);
 int __cthread_keycreate (__cthread_key_t *);
 int __cthread_getspecific (__cthread_key_t, void **);
 int __cthread_setspecific (__cthread_key_t, void *);
