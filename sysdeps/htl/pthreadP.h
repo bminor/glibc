@@ -30,11 +30,22 @@ extern struct __pthread **__pthread_threads;
 extern int __pthread_mutex_init (pthread_mutex_t *__mutex, const pthread_mutexattr_t *__attr);
 extern int __pthread_mutex_destroy (pthread_mutex_t *__mutex);
 extern int __pthread_mutex_lock (pthread_mutex_t *__mutex);
+extern int __pthread_mutex_trylock (pthread_mutex_t *_mutex);
 extern int __pthread_mutex_timedlock (pthread_mutex_t *__mutex,
      const struct timespec *__abstime);
 extern int __pthread_mutex_unlock (pthread_mutex_t *__mutex);
+extern int __pthread_mutexattr_init (pthread_mutexattr_t *attr);
+extern int __pthread_mutexattr_settype (pthread_mutexattr_t *attr, int kind);
 
+extern int __pthread_cond_init (pthread_cond_t *cond,
+				const pthread_condattr_t *cond_attr);
+extern int __pthread_cond_signal (pthread_cond_t *cond);
 extern int __pthread_cond_broadcast (pthread_cond_t *cond);
+extern int __pthread_cond_wait (pthread_cond_t *cond, pthread_mutex_t *mutex);
+extern int __pthread_cond_timedwait (pthread_cond_t *cond,
+				     pthread_mutex_t *mutex,
+				     const struct timespec *abstime);
+extern int __pthread_cond_destroy (pthread_cond_t *cond);
 
 typedef struct __cthread *__cthread_t;
 typedef int __cthread_key_t;
@@ -55,6 +66,8 @@ int __cthread_setspecific (__cthread_key_t, void *);
 int __pthread_key_create (pthread_key_t *key, void (*destr) (void *));
 void *__pthread_getspecific (pthread_key_t key);
 int __pthread_setspecific (pthread_key_t key, const void *value);
+int __pthread_key_delete (pthread_key_t key);
+int __pthread_once (pthread_once_t *once_control, void (*init_routine) (void));
 
 int __pthread_setcancelstate (int state, int *oldstate);
 
