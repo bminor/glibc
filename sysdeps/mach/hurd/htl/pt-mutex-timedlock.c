@@ -24,7 +24,7 @@
 #include <hurdlock.h>
 
 int
-pthread_mutex_timedlock (pthread_mutex_t *mtxp, const struct timespec *tsp)
+__pthread_mutex_timedlock (pthread_mutex_t *mtxp, const struct timespec *tsp)
 {
   struct __pthread *self;
   int ret, flags = mtxp->__flags & GSYNC_SHARED;
@@ -76,3 +76,4 @@ pthread_mutex_timedlock (pthread_mutex_t *mtxp, const struct timespec *tsp)
 
   return ret;
 }
+strong_alias (__pthread_mutex_timedlock, pthread_mutex_timedlock)

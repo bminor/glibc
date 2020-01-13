@@ -29,6 +29,8 @@ extern struct __pthread **__pthread_threads;
 
 extern int _pthread_mutex_init (pthread_mutex_t *mutex, const pthread_mutexattr_t *attr);
 extern int __pthread_mutex_lock (pthread_mutex_t *__mutex);
+extern int __pthread_mutex_timedlock (pthread_mutex_t *__mutex,
+     const struct timespec *__abstime);
 extern int __pthread_mutex_unlock (pthread_mutex_t *__mutex);
 
 extern int __pthread_cond_broadcast (pthread_cond_t *cond);

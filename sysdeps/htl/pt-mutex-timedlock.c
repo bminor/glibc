@@ -189,8 +189,9 @@ __pthread_mutex_timedlock_internal (struct __pthread_mutex *mutex,
 }
 
 int
-pthread_mutex_timedlock (struct __pthread_mutex *mutex,
+__pthread_mutex_timedlock (struct __pthread_mutex *mutex,
 			 const struct timespec *abstime)
 {
   return __pthread_mutex_timedlock_internal (mutex, abstime);
 }
+strong_alias (__pthread_mutex_timedlock, pthread_mutex_timedlock)

@@ -155,5 +155,6 @@ libpthread {
     __pthread_setspecific;
     __pthread_getattr_np;
     __pthread_attr_getstack;
+    __pthread_mutex_timedlock;
   }
 }
