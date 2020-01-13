@@ -22,7 +22,7 @@ int
 thrd_join (thrd_t thr, int *res)
 {
   void *pthread_res;
-  int err_code = __pthread_clockjoin_ex (thr, &pthread_res, 0, NULL, true);
+  int err_code = __pthread_join (thr, &pthread_res);
   if (res)
    *res = (int) (uintptr_t) pthread_res;
 
