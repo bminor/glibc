@@ -71,9 +71,11 @@ do_test (void)
   /* Rename the DSO to start with "lib" because there's an undocumented
      filter in ldconfig where it ignores any file that doesn't start with
      "lib" (for regular shared libraries) or "ld-" (for ld-linux-*).  */
-  if (rename ("/usr/lib64/tst-ldconfig-ld-mod.so",
-              "/tmp/tst-ldconfig/libldconfig-ld-mod.so"))
+  char *mod_src_path = xasprintf ("%s/tst-ldconfig-ld-mod.so",
+				  support_libdir_prefix);
+  if (rename (mod_src_path, "/tmp/tst-ldconfig/libldconfig-ld-mod.so"))
     FAIL_EXIT1 ("Renaming/moving the DSO failed: %m");
+  free (mod_src_path);
 
 
   /* Open the DSO.  We expect this to fail - tst-ldconfig directory
