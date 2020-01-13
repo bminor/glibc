@@ -1,5 +1,5 @@
-/* C11 threads thread creation implementation.
-   Copyright (C) 2018-2020 Free Software Foundation, Inc.
+/* sched_yield -- yield the processor.  Mach version.
+   Copyright (C) 2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,15 +16,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <mach.h>
 #include "thrd_priv.h"
 
-int
-thrd_create (thrd_t *thr, thrd_start_t func, void *arg)
+void
+thrd_yield (void)
 {
-  _Static_assert (sizeof (thrd_t) == sizeof (pthread_t),
-		  "sizeof (thrd_t) != sizeof (pthread_t)");
-
-  int err_code = __pthread_create_2_1 (thr, ATTR_C11_THREAD,
-				       (void* (*) (void*))func, arg);
-  return thrd_err_map (err_code);
+  (void) __swtch ();
 }

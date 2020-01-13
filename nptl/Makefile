@@ -22,7 +22,7 @@ subdir	:= nptl
 
 include ../Makeconfig
 
-headers := pthread.h semaphore.h bits/semaphore.h threads.h \
+headers := pthread.h semaphore.h bits/semaphore.h \
 	   bits/struct_mutex.h bits/struct_rwlock.h
 
 extra-libs := libpthread
@@ -30,8 +30,7 @@ extra-libs-others := $(extra-libs)
 
 routines = alloca_cutoff forward libc-lowlevellock libc-cancellation \
 	   libc-cleanup libc_pthread_init libc_multiple_threads \
-	   register-atfork pthread_atfork pthread_self thrd_current \
-	   thrd_equal thrd_sleep thrd_yield pthread_equal \
+	   register-atfork pthread_atfork pthread_self pthread_equal \
 	   pthread_attr_destroy pthread_attr_init pthread_attr_getdetachstate \
 	   pthread_attr_setdetachstate pthread_attr_getinheritsched \
 	   pthread_attr_setinheritsched pthread_attr_getschedparam \
@@ -141,11 +140,7 @@ libpthread-routines = nptl-init nptlfreeres vars events version pt-interp \
 		      pthread_mutex_setprioceiling \
 		      pthread_setname pthread_getname \
 		      pthread_setattr_default_np pthread_getattr_default_np \
-		      thrd_create thrd_detach thrd_exit thrd_join \
-		      mtx_destroy mtx_init mtx_lock mtx_timedlock \
-		      mtx_trylock mtx_unlock call_once cnd_broadcast \
-		      cnd_destroy cnd_init cnd_signal cnd_timedwait cnd_wait \
-		      tss_create tss_delete tss_get tss_set pthread_mutex_conf \
+		      pthread_mutex_conf \
 		      libpthread-compat
 #		      pthread_setuid pthread_seteuid pthread_setreuid \
 #		      pthread_setresuid \
@@ -319,9 +314,6 @@ tests = tst-attr1 tst-attr2 tst-attr3 tst-default-attr \
 	tst-robust-fork tst-create-detached tst-memstream \
 	tst-thread-exit-clobber tst-minstack-cancel tst-minstack-exit \
 	tst-minstack-throw \
-	tst-cnd-basic tst-mtx-trylock tst-cnd-broadcast \
-	tst-cnd-timedwait tst-thrd-detach tst-mtx-basic tst-thrd-sleep \
-	tst-mtx-recursive tst-tss-basic tst-call-once tst-mtx-timedlock \
 	tst-rwlock-pwn \
 	tst-rwlock-tryrdlock-stall tst-rwlock-trywrlock-stall \
 	tst-unwind-thread

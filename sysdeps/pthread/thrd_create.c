@@ -1,5 +1,5 @@
-/* pthread_mutex_destroy.  Hurd version.
-   Copyright (C) 2016-2020 Free Software Foundation, Inc.
+/* C11 threads thread creation implementation.
+   Copyright (C) 2018-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -13,26 +13,18 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library;  if not, see
+   License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <pthread.h>
-#include <stdlib.h>
-#include <assert.h>
-#include <pt-internal.h>
-#include "pt-mutex.h"
-#include <hurdlock.h>
+#include "thrd_priv.h"
 
 int
-__pthread_mutex_destroy (pthread_mutex_t *mtxp)
+thrd_create (thrd_t *thr, thrd_start_t func, void *arg)
 {
-  atomic_read_barrier ();
-  if (*(volatile unsigned int *) &mtxp->__lock != 0)
-    return EBUSY;
+  _Static_assert (sizeof (thrd_t) == sizeof (pthread_t),
+		  "sizeof (thrd_t) != sizeof (pthread_t)");
 
-  mtxp->__type = -1;
-  return 0;
+  int err_code = __pthread_create (thr, ATTR_C11_THREAD,
+				   (void* (*) (void*))func, arg);
+  return thrd_err_map (err_code);
 }
-
-strong_alias (__pthread_mutex_destroy, pthread_mutex_destroy)
-hidden_def (__pthread_mutex_destroy)

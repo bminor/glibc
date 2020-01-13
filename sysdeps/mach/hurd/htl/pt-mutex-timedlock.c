@@ -77,3 +77,4 @@ __pthread_mutex_timedlock (pthread_mutex_t *mtxp, const struct timespec *tsp)
   return ret;
 }
 strong_alias (__pthread_mutex_timedlock, pthread_mutex_timedlock)
+hidden_def (__pthread_mutex_timedlock)

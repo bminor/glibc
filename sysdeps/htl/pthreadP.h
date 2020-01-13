@@ -91,6 +91,8 @@ hidden_proto (__pthread_key_create)
 hidden_proto (__pthread_getspecific)
 hidden_proto (__pthread_setspecific)
 hidden_proto (__pthread_mutex_init)
+hidden_proto (__pthread_mutex_destroy)
+hidden_proto (__pthread_mutex_timedlock)
 #endif
 
 #define ASSERT_TYPE_SIZE(type, size) 					\
