@@ -21,8 +21,8 @@
 int
 thrd_create (thrd_t *thr, thrd_start_t func, void *arg)
 {
-  _Static_assert (sizeof (thr) == sizeof (pthread_t),
-		  "sizeof (thr) != sizeof (pthread_t)");
+  _Static_assert (sizeof (thrd_t) == sizeof (pthread_t),
+		  "sizeof (thrd_t) != sizeof (pthread_t)");
 
   int err_code = __pthread_create_2_1 (thr, ATTR_C11_THREAD,
 				       (void* (*) (void*))func, arg);
