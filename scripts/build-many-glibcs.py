@@ -803,12 +803,10 @@ class Context(object):
             return self.git_checkout(component, git_url, git_branch, update)
         elif component == 'gcc':
             if version == 'mainline':
-                branch = 'trunk'
+                branch = 'master'
             else:
-                trans = str.maketrans({'.': '_'})
-                branch = 'branches/gcc-%s-branch' % version.translate(trans)
-            svn_url = 'svn://gcc.gnu.org/svn/gcc/%s' % branch
-            return self.gcc_checkout(svn_url, update)
+                branch = 'releases/gcc-%s' % version
+            return self.gcc_checkout(branch, update)
         elif component == 'glibc':
             git_url = 'git://sourceware.org/git/glibc.git'
             if version == 'mainline':
@@ -884,14 +882,23 @@ class Context(object):
                     to_touch = os.path.join(dirpath, f)
                     subprocess.run(['touch', to_touch], check=True)
 
-    def gcc_checkout(self, svn_url, update):
-        """Check out GCC from SVN.  Return the revision number."""
+    def gcc_checkout(self, branch, update):
+        """Check out GCC from git.  Return the commit identifier."""
+        if os.access(os.path.join(self.component_srcdir('gcc'), '.svn'),
+                     os.F_OK):
+            if not self.replace_sources:
+                print('error: GCC has moved from SVN to git, use '
+                      '--replace-sources to check out again')
+                exit(1)
+            shutil.rmtree(self.component_srcdir('gcc'))
+            update = False
         if not update:
-            subprocess.run(['svn', 'co', '-q', svn_url,
-                            self.component_srcdir('gcc')], check=True)
+            self.git_checkout('gcc', 'git://gcc.gnu.org/git/gcc.git',
+                              branch, update)
         subprocess.run(['contrib/gcc_update', '--silent'],
                        cwd=self.component_srcdir('gcc'), check=True)
-        r = subprocess.run(['svnversion', self.component_srcdir('gcc')],
+        r = subprocess.run(['git', 'rev-parse', 'HEAD'],
+                           cwd=self.component_srcdir('gcc'),
                            stdout=subprocess.PIPE,
                            check=True, universal_newlines=True).stdout
         return r.rstrip()
