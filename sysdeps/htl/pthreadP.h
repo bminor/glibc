@@ -21,6 +21,9 @@
 
 #include <pthread.h>
 
+/* Attribute to indicate thread creation was issued from C11 thrd_create.  */
+#define ATTR_C11_THREAD ((void*)(uintptr_t)-1)
+
 /* These represent the interface used by glibc itself.  */
 
 extern pthread_t __pthread_self (void);

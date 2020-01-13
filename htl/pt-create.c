@@ -59,7 +59,17 @@ entry_point (struct __pthread *self, void *(*start_routine) (void *), void *arg)
 
   __pthread_startup ();
 
-  __pthread_exit (start_routine (arg));
+  if (self->c11)
+    {
+      /* The function pointer of the c11 thread start is cast to an incorrect
+         type on __pthread_create call, however it is casted back to correct
+         one so the call behavior is well-defined (it is assumed that pointers
+         to void are able to represent all values of int).  */
+      int (*start)(void*) = (int (*) (void*)) start_routine;
+      __pthread_exit ((void*) (uintptr_t) start (arg));
+    }
+  else
+    __pthread_exit (start_routine (arg));
 }
 
 /* Create a thread with attributes given by ATTR, executing
@@ -98,6 +108,14 @@ __pthread_create_internal (struct __pthread **thread,
   err = __pthread_alloc (&pthread);
   if (err)
     goto failed;
+
+  if (attr == ATTR_C11_THREAD)
+    {
+      attr = NULL;
+      pthread->c11 = true;
+    }
+  else
+    pthread->c11 = false;
 
   /* Use the default attributes if ATTR is NULL.  */
   setup = attr ? attr : &__pthread_default_attr;

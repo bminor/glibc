@@ -100,6 +100,9 @@ struct __pthread
   /* Resolver state.  */
   struct __res_state res_state;
 
+  /* Indicates whether is a C11 thread created by thrd_creat.  */
+  bool c11;
+
   /* Thread context.  */
   struct pthread_mcontext mcontext;
 
