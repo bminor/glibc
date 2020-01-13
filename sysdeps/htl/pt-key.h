@@ -66,7 +66,7 @@ __pthread_key_lock_ready (void)
     err = __pthread_mutexattr_settype (&attr, PTHREAD_MUTEX_RECURSIVE);
     assert_perror (err);
 
-    err = _pthread_mutex_init (&__pthread_key_lock, &attr);
+    err = __pthread_mutex_init (&__pthread_key_lock, &attr);
     assert_perror (err);
 
     err = __pthread_mutexattr_destroy (&attr);

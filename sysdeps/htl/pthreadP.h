@@ -27,7 +27,8 @@ extern pthread_t __pthread_self (void);
 extern int __pthread_kill (pthread_t threadid, int signo);
 extern struct __pthread **__pthread_threads;
 
-extern int _pthread_mutex_init (pthread_mutex_t *mutex, const pthread_mutexattr_t *attr);
+extern int __pthread_mutex_init (pthread_mutex_t *__mutex, const pthread_mutexattr_t *__attr);
+extern int __pthread_mutex_destroy (pthread_mutex_t *__mutex);
 extern int __pthread_mutex_lock (pthread_mutex_t *__mutex);
 extern int __pthread_mutex_timedlock (pthread_mutex_t *__mutex,
      const struct timespec *__abstime);
@@ -73,7 +74,7 @@ struct __pthread_cancelation_handler **___pthread_get_cleanup_stack (void) attri
 hidden_proto (__pthread_key_create)
 hidden_proto (__pthread_getspecific)
 hidden_proto (__pthread_setspecific)
-hidden_proto (_pthread_mutex_init)
+hidden_proto (__pthread_mutex_init)
 #endif
 
 #define ASSERT_TYPE_SIZE(type, size) 					\

@@ -149,9 +149,10 @@ libpthread {
     __pthread_setspecific;
     __pthread_getattr_np;
     __pthread_attr_getstack;
+    __pthread_mutex_init;
+    __pthread_mutex_destroy;
     __pthread_mutex_timedlock;
 
-    _pthread_mutex_destroy; _pthread_mutex_init;
     _pthread_mutex_lock; _pthread_mutex_trylock; _pthread_mutex_unlock;
     _pthread_rwlock_destroy; _pthread_rwlock_init;
   }

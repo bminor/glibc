@@ -24,7 +24,7 @@
 #include <hurdlock.h>
 
 int
-_pthread_mutex_destroy (pthread_mutex_t *mtxp)
+__pthread_mutex_destroy (pthread_mutex_t *mtxp)
 {
   atomic_read_barrier ();
   if (*(volatile unsigned int *) &mtxp->__lock != 0)
@@ -34,4 +34,4 @@ _pthread_mutex_destroy (pthread_mutex_t *mtxp)
   return 0;
 }
 
-strong_alias (_pthread_mutex_destroy, pthread_mutex_destroy)
+strong_alias (__pthread_mutex_destroy, pthread_mutex_destroy)
