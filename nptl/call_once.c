@@ -27,5 +27,5 @@ call_once (once_flag *flag, void (*func)(void))
 		  "sizeof (once_flag) != sizeof (pthread_once_t)");
   _Static_assert (alignof (once_flag) == alignof (pthread_once_t),
 		  "alignof (once_flag) != alignof (pthread_once_t)");
-  __pthread_once (&flag->__data, func);
+  __pthread_once ((pthread_once_t *) flag, func);
 }
