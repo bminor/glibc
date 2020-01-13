@@ -68,7 +68,7 @@ __pthread_destroy_specific (struct __pthread *thread)
 
       /* This may take a very long time.  Let those blocking on
          pthread_key_create or pthread_key_delete make progress.  */
-      sched_yield ();
+      __sched_yield ();
     }
 
   free (thread->thread_specifics);

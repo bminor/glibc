@@ -39,7 +39,7 @@ __pthread_timedblock (struct __pthread *thread,
   /* We have an absolute time and now we have to convert it to a
      relative time.  Arg.  */
 
-  err = clock_gettime (clock_id, &now);
+  err = __clock_gettime (clock_id, &now);
   assert (!err);
 
   if (now.tv_sec > abstime->tv_sec

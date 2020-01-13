@@ -178,7 +178,7 @@ __pthread_create_internal (struct __pthread **thread,
      shall be empty."  If the currnet thread is not a pthread then we
      just inherit the process' sigmask.  */
   if (__pthread_num_threads == 1)
-    err = sigprocmask (0, 0, &sigset);
+    err = __sigprocmask (0, 0, &sigset);
   else
     err = __pthread_sigstate (_pthread_self (), 0, 0, &sigset, 0);
   assert_perror (err);

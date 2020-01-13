@@ -22,5 +22,5 @@
 int
 pthread_yield (void)
 {
-  return sched_yield ();
+  return __sched_yield ();
 }
