@@ -28,6 +28,6 @@ struct __pthread_once
 };
 
 #define __PTHREAD_ONCE_INIT \
-	(struct __pthread_once) { 0, __PTHREAD_SPIN_LOCK_INITIALIZER }
+	0, __PTHREAD_SPIN_LOCK_INITIALIZER
 
 #endif /* bits/types/struct___pthread_once.h */

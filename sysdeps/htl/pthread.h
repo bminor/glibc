@@ -802,7 +802,7 @@ extern int pthread_setspecific (pthread_key_t __key, const void *__value)
 
 #include <bits/types/struct___pthread_once.h>
 
-#define PTHREAD_ONCE_INIT __PTHREAD_ONCE_INIT
+#define PTHREAD_ONCE_INIT (struct __pthread_once) { __PTHREAD_ONCE_INIT }
 
 /* Call INIT_ROUTINE if this function has never been called with
    *ONCE_CONTROL, otherwise do nothing.  */
