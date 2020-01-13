@@ -34,6 +34,8 @@ static const pthread_mutexattr_t dfl_attr = {
 int
 _pthread_mutex_init (pthread_mutex_t *mtxp, const pthread_mutexattr_t *attrp)
 {
+  ASSERT_TYPE_SIZE (pthread_mutex_t, __SIZEOF_PTHREAD_MUTEX_T);
+
   if (attrp == NULL)
     attrp = &dfl_attr;
 

@@ -22,6 +22,8 @@
 int
 pthread_barrierattr_init (pthread_barrierattr_t *attr)
 {
+  ASSERT_TYPE_SIZE (pthread_barrierattr_t, __SIZEOF_PTHREAD_BARRIERATTR_T);
+
   *attr = __pthread_default_barrierattr;
   return 0;
 }

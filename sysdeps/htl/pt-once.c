@@ -24,6 +24,8 @@
 int
 __pthread_once (pthread_once_t *once_control, void (*init_routine) (void))
 {
+  ASSERT_TYPE_SIZE (pthread_once_t, __SIZEOF_PTHREAD_ONCE_T);
+
   atomic_full_barrier ();
   if (once_control->__run == 0)
     {

@@ -74,4 +74,8 @@ hidden_proto (__pthread_setspecific)
 hidden_proto (_pthread_mutex_init)
 #endif
 
+#define ASSERT_TYPE_SIZE(type, size) 					\
+  _Static_assert (sizeof (type) == size,				\
+		  "sizeof (" #type ") != " #size)
+
 #endif	/* pthreadP.h */

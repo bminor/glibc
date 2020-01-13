@@ -22,6 +22,8 @@
 int
 __pthread_condattr_init (pthread_condattr_t *attr)
 {
+  ASSERT_TYPE_SIZE (pthread_condattr_t, __SIZEOF_PTHREAD_CONDATTR_T);
+
   *attr = __pthread_default_condattr;
   return 0;
 }

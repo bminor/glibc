@@ -26,6 +26,8 @@ int
 pthread_barrier_init (pthread_barrier_t *barrier,
 		      const pthread_barrierattr_t *attr, unsigned count)
 {
+  ASSERT_TYPE_SIZE (pthread_barrier_t, __SIZEOF_PTHREAD_BARRIER_T);
+
   if (count == 0)
     return EINVAL;
 

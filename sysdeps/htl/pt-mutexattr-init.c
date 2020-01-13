@@ -22,6 +22,8 @@
 int
 __pthread_mutexattr_init (pthread_mutexattr_t *attr)
 {
+  ASSERT_TYPE_SIZE (pthread_mutexattr_t, __SIZEOF_PTHREAD_MUTEXATTR_T);
+
   *attr = __pthread_default_mutexattr;
   return 0;
 }

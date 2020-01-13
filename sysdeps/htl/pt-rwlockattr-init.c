@@ -22,6 +22,8 @@
 int
 pthread_rwlockattr_init (pthread_rwlockattr_t *attr)
 {
+  ASSERT_TYPE_SIZE (pthread_rwlockattr_t, __SIZEOF_PTHREAD_RWLOCKATTR_T);
+
   *attr = __pthread_default_rwlockattr;
   return 0;
 }
