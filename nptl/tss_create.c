@@ -23,8 +23,10 @@ tss_create (tss_t *tss_id, tss_dtor_t destructor)
 {
   _Static_assert (sizeof (tss_t) == sizeof (pthread_key_t),
 		  "sizeof (tss_t) != sizeof (pthread_key_t)");
+#ifdef PTHREAD_DESTRUCTOR_ITERATIONS
   _Static_assert (TSS_DTOR_ITERATIONS == PTHREAD_DESTRUCTOR_ITERATIONS,
 		  "TSS_DTOR_ITERATIONS != PTHREAD_DESTRUCTOR_ITERATIONS");
+#endif
 
   int err_code = __pthread_key_create (tss_id, destructor);
   return thrd_err_map (err_code);
