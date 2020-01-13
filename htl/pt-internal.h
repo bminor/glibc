@@ -173,12 +173,14 @@ extern int __pthread_concurrency;
    brain-dead users of the pthread interface incorrectly assume that 0
    is an invalid pthread id.)  */
 extern struct __pthread **__pthread_threads;
+extern int __pthread_max_threads;
 extern pthread_rwlock_t __pthread_threads_lock;
 
 #define __pthread_getid(thread) \
-  ({ struct __pthread *__t;                                                  \
+  ({ struct __pthread *__t = NULL;                                           \
      __pthread_rwlock_rdlock (&__pthread_threads_lock);                      \
-     __t = __pthread_threads[thread - 1];                                    \
+     if (thread <= __pthread_max_threads)                                    \
+       __t = __pthread_threads[thread - 1];                                  \
      __pthread_rwlock_unlock (&__pthread_threads_lock);                      \
      __t; })
 
