@@ -254,6 +254,7 @@ extern double __difftime (time_t time1, time_t time0);
 #if __TIMESIZE == 64
 # define __clock_nanosleep_time64 __clock_nanosleep
 # define __clock_gettime64 __clock_gettime
+# define __timespec_get64 __timespec_get
 #else
 extern int __clock_nanosleep_time64 (clockid_t clock_id,
                                      int flags, const struct __timespec64 *req,
@@ -261,6 +262,8 @@ extern int __clock_nanosleep_time64 (clockid_t clock_id,
 libc_hidden_proto (__clock_nanosleep_time64)
 extern int __clock_gettime64 (clockid_t clock_id, struct __timespec64 *tp);
 libc_hidden_proto (__clock_gettime64)
+extern int __timespec_get64 (struct __timespec64 *ts, int base);
+libc_hidden_proto (__timespec_get64)
 #endif
 
 /* Use in the clock_* functions.  Size of the field representing the
