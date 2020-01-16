@@ -304,6 +304,43 @@ valid_timeval_to_timespec64 (const struct timeval tv)
   return ts64;
 }
 
+/* Convert a known valid struct timeval into a struct __timeval64.  */
+static inline struct __timeval64
+valid_timeval_to_timeval64 (const struct timeval tv)
+{
+  struct __timeval64 tv64;
+
+  tv64.tv_sec = tv.tv_sec;
+  tv64.tv_usec = tv.tv_usec;
+
+  return tv64;
+}
+
+/* Convert a valid and within range of struct timeval, struct
+   __timeval64 into a struct timeval.  */
+static inline struct timeval
+valid_timeval64_to_timeval (const struct __timeval64 tv64)
+{
+  struct timeval tv;
+
+  tv.tv_sec = (time_t) tv64.tv_sec;
+  tv.tv_usec = (suseconds_t) tv64.tv_usec;
+
+  return tv;
+}
+
+/* Convert a struct __timeval64 into a struct __timespec64.  */
+static inline struct __timespec64
+timeval64_to_timespec64 (const struct __timeval64 tv64)
+{
+  struct __timespec64 ts64;
+
+  ts64.tv_sec = tv64.tv_sec;
+  ts64.tv_nsec = tv64.tv_usec * 1000;
+
+  return ts64;
+}
+
 /* Convert a known valid struct timespec into a struct __timespec64.  */
 static inline struct __timespec64
 valid_timespec_to_timespec64 (const struct timespec ts)
@@ -340,6 +377,18 @@ valid_timespec64_to_timeval (const struct __timespec64 ts64)
   tv.tv_usec = ts64.tv_nsec / 1000;
 
   return tv;
+}
+
+/* Convert a struct __timespec64 into a struct __timeval64.  */
+static inline struct __timeval64
+timespec64_to_timeval64 (const struct __timespec64 ts64)
+{
+  struct __timeval64 tv64;
+
+  tv64.tv_sec = ts64.tv_sec;
+  tv64.tv_usec = ts64.tv_nsec / 1000;
+
+  return tv64;
 }
 
 /* Check if a value is in the valid nanoseconds range. Return true if
