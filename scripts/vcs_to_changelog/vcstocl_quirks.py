@@ -39,6 +39,8 @@ class GlibcProjectQuirks(ProjectQuirks):
           'sub': r'__attribute__ ((\1))'},
          {'orig': r'__THROW', 'sub': r'__attribute__ ((__nothrow__ __LEAF))'},
          {'orig': r'__THROWNL', 'sub': r'__attribute__ ((__nothrow__))'},
+         {'orig': r'__nonnull \(\(([^)]+)\)\)',
+          'sub': r'__attribute__ ((__nonnull__ \1))'},
          {'orig': r'([^_])attribute_(\w+)', 'sub': r'\1__attribute__ ((\2))'},
          {'orig': r'^attribute_(\w+)', 'sub': r'__attribute__ ((\1))'}]
 
