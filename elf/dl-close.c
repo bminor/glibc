@@ -756,6 +756,10 @@ _dl_close_worker (struct link_map *map, bool force)
 	  if (imap->l_runpath_dirs.dirs != (void *) -1)
 	    free (imap->l_runpath_dirs.dirs);
 
+	  /* Clear GL(dl_initfirst) when freeing its link_map memory.  */
+	  if (imap == GL(dl_initfirst))
+	    GL(dl_initfirst) = NULL;
+
 	  free (imap);
 	}
     }
