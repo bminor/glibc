@@ -8,6 +8,7 @@
 # include <time/mktime-internal.h>
 # include <endian.h>
 # include <time-clockid.h>
+# include <sys/time.h>
 
 extern __typeof (strftime_l) __strftime_l;
 libc_hidden_proto (__strftime_l)
@@ -222,6 +223,14 @@ libc_hidden_proto (__timerfd_settime64);
 #else
 extern int __sched_rr_get_interval64 (pid_t pid, struct __timespec64 *tp);
 libc_hidden_proto (__sched_rr_get_interval64);
+#endif
+
+#if __TIMESIZE == 64
+# define __settimeofday64 __settimeofday
+#else
+extern int __settimeofday64 (const struct __timeval64 *tv,
+                             const struct timezone *tz);
+libc_hidden_proto (__settimeofday64)
 #endif
 
 /* Compute the `struct tm' representation of T,
