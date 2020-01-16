@@ -197,6 +197,10 @@ do_test (void)
       if (errno == EINVAL)
         FAIL_UNSUPPORTED
           ("CPU does not support memory protection keys: %m");
+      if (errno == ENOSPC)
+        FAIL_UNSUPPORTED
+          ("no keys available or kernel does not support memory"
+           " protection keys");
       FAIL_EXIT1 ("pkey_alloc: %m");
     }
   TEST_COMPARE (pkey_get (keys[0]), 0);

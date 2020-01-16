@@ -3288,6 +3288,10 @@ in which memory protection keys are disabled.
 
 @item ENOSPC
 All available protection keys already have been allocated.
+
+The system does not implement memory protection keys or runs in a mode
+in which memory protection keys are disabled.
+
 @end table
 @end deftypefun
 
