@@ -200,7 +200,8 @@ tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-debug1 tst-main1 tst-absolute-sym tst-absolute-zero tst-big-note \
 	 tst-unwind-ctor tst-unwind-main tst-audit13 \
 	 tst-sonamemove-link tst-sonamemove-dlopen tst-dlopen-tlsmodid \
-	 tst-dlopen-self tst-auditmany tst-initfinilazyfail tst-dlopenfail
+	 tst-dlopen-self tst-auditmany tst-initfinilazyfail tst-dlopenfail \
+	 tst-dlopenfail-2
 #	 reldep9
 tests-internal += loadtest unload unload2 circleload1 \
 	 neededtest neededtest2 neededtest3 neededtest4 \
@@ -311,7 +312,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-auditmanymod7 tst-auditmanymod8 tst-auditmanymod9 \
 		tst-initlazyfailmod tst-finilazyfailmod \
 		tst-dlopenfailmod1 tst-dlopenfaillinkmod tst-dlopenfailmod2 \
-		tst-ldconfig-ld-mod
+		tst-dlopenfailmod3 tst-ldconfig-ld-mod
 # Most modules build with _ISOMAC defined, but those filtered out
 # depend on internal headers.
 modules-names-tests = $(filter-out ifuncmod% tst-libc_dlvsym-dso tst-tlsmod%,\
@@ -1645,6 +1646,10 @@ $(objpfx)tst-dlopenfailmod1.so: \
   $(shared-thread-library) $(objpfx)tst-dlopenfaillinkmod.so
 LDFLAGS-tst-dlopenfaillinkmod.so = -Wl,-soname,tst-dlopenfail-missingmod.so
 $(objpfx)tst-dlopenfailmod2.so: $(shared-thread-library)
+$(objpfx)tst-dlopenfail-2: $(libdl)
+$(objpfx)tst-dlopenfail.out: \
+  $(objpfx)tst-dlopenfailmod1.so $(objpfx)tst-dlopenfailmod2.so \
+  $(objpfx)tst-dlopenfailmod3.so
 
 $(objpfx)tst-dlopen-nodelete-reloc: $(libdl)
 $(objpfx)tst-dlopen-nodelete-reloc.out: \
