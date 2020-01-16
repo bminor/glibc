@@ -1,7 +1,7 @@
 # Catalan messages for GNU libc.
-# Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2006, 2007, 2009, 2011, 2012, 2013, 2015 Free Software Foundation, Inc.
+# Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2006, 2007, 2009, 2011, 2012, 2013, 2015, 2019 Free Software Foundation, Inc.
 # This file is distributed under the same license as the glibc package.
-# Ivan Vilata i Balaguer <ivan@selidor.net>, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2006, 2007, 2009, 2011, 2012, 2013, 2014, 2015.
+# Ivan Vilata i Balaguer <ivan@selidor.net>, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2006, 2007, 2009, 2011, 2012, 2013, 2014, 2015, 2019.
 #
 # Sóc Ivan, aquestes són les convencions que adopte per a la 2.18.90.20140105:
 #
@@ -47,9 +47,9 @@
 # <https://www.softcatala.org/recursos/quality/gnutools.html>.
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.22-pre1\n"
+"Project-Id-Version: libc 2.29.9000\n"
 "POT-Creation-Date: 2019-07-18 13:28-0400\n"
-"PO-Revision-Date: 2015-12-29 22:56+0100\n"
+"PO-Revision-Date: 2019-11-17 16:17-0500\n"
 "Last-Translator: Ivan Vilata i Balaguer <ivan@selidor.net>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
 "Language: ca\n"
@@ -146,12 +146,13 @@ msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "(ERROR DEL PROGRAMA) L’opció hauria d’haver estat reconeguda!?"
 
 #: assert/assert-perr.c:35
-#, fuzzy, c-format
-#| msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
+#, c-format
 msgid ""
 "%s%s%s:%u: %s%sUnexpected error: %s.\n"
 "%n"
-msgstr "%s%s%s:%u: %s%sError inesperat: %s.\n"
+msgstr ""
+"%s%s%s:%u: %s%sError inesperat: %s.\n"
+"%n"
 
 #: assert/assert.c:101
 #, c-format
@@ -529,10 +530,8 @@ msgid "cannot load auxiliary `%s' because of empty dynamic string token substitu
 msgstr "no s’ha pogut carregar l’objecte auxiliar «%s» perquè la substitució del component cadena dinàmica és buida\n"
 
 #: elf/dl-deps.c:220
-#, fuzzy
-#| msgid "cannot allocate dependency list"
 msgid "cannot allocate dependency buffer"
-msgstr "no s’ha pogut reservar la llista de dependències"
+msgstr "no s’ha pogut reservar la memòria intermèdia de dependències"
 
 #: elf/dl-deps.c:443
 msgid "cannot allocate dependency list"
@@ -609,10 +608,8 @@ msgid "ELF load command address/offset not properly aligned"
 msgstr "l’adreça o desplaçament de l’ordre ELF de càrrega no està correctament alineada"
 
 #: elf/dl-load.c:1146
-#, fuzzy
-#| msgid "cannot restore segment prot after reloc"
 msgid "cannot process note segment"
-msgstr "no s’ha pogut restaurar la protecció del segment després de reubicar‐lo"
+msgstr "no s’ha pogut processar el segment de notes"
 
 #: elf/dl-load.c:1157
 msgid "object file has no loadable segments"
@@ -627,10 +624,8 @@ msgid "object file has no dynamic section"
 msgstr "el fitxer d’objecte no té secció dinàmica"
 
 #: elf/dl-load.c:1218
-#, fuzzy
-#| msgid "cannot dynamically load executable"
 msgid "cannot dynamically load position-independent executable"
-msgstr "no s’ha pogut carregar dinàmicament l’executable"
+msgstr "no s’ha pogut carregar dinàmicament l’executable independent de la posició"
 
 #: elf/dl-load.c:1220
 msgid "shared object cannot be dlopen()ed"
@@ -802,10 +797,8 @@ msgid "Don't build cache"
 msgstr "No construeix la memòria cau."
 
 #: elf/ldconfig.c:145
-#, fuzzy
-#| msgid "%s is not a symbolic link\n"
 msgid "Don't update symbolic links"
-msgstr "«%s» no és un enllaç simbòlic\n"
+msgstr "No actualitza els enllaços simbòlics."
 
 #: elf/ldconfig.c:146
 msgid "Change to and use ROOT as root directory"
@@ -1175,11 +1168,11 @@ msgstr "l’identificador de fil «%s» no és vàlid"
 msgid "cannot attach to process %lu"
 msgstr "no s’ha pogut associar al procés %lu"
 
+# No usa quote().  ivb
 #: elf/pldd.c:184
-#, fuzzy, c-format
-#| msgid "invalid saved time"
+#, c-format
 msgid "no valid %s/task entries"
-msgstr "el temps estalviat no és vàlid"
+msgstr "no hi ha entrades «%s/task» vàlides"
 
 #: elf/pldd.c:290
 #, c-format
@@ -1732,10 +1725,8 @@ msgid "Error: .netrc file is readable by others."
 msgstr "Error: el fitxer «.netrc» és llegible per altres que no en són el propietari."
 
 #: inet/ruserpass.c:180
-#, fuzzy
-#| msgid "Remove password or make file unreadable by others."
 msgid "Remove 'password' line or make file unreadable by others."
-msgstr "Elimineu la contrasenya o feu il·legible el fitxer per a altres."
+msgstr "Elimineu la línia «password» o feu il·legible el fitxer per a altres."
 
 #: inet/ruserpass.c:199
 #, c-format
@@ -1758,10 +1749,9 @@ msgid "default character map file `%s' not found"
 msgstr "no s’ha trobat el fitxer «%s» de mapa de caràcters per defecte"
 
 #: locale/programs/charmap.c:265
-#, fuzzy, c-format
-#| msgid "character map `%s' is not ASCII compatible, locale not ISO C compliant\n"
+#, c-format
 msgid "character map `%s' is not ASCII compatible, locale not ISO C compliant [--no-warnings=ascii]"
-msgstr "el mapa de caràcters «%s» no és compatible amb ASCII, el locale no és conforme amb ISO C\n"
+msgstr "el mapa de caràcters «%s» no és compatible amb ASCII, el locale no és conforme amb ISO C (amagueu açò amb «--no-warnings=ascii»)"
 
 # La variable porta els símbols inclosos.  ivb
 #: locale/programs/charmap.c:343
@@ -2479,22 +2469,19 @@ msgid "%s: transliteration data from locale `%s' not available"
 msgstr "%s: les dades de transliteració del locale «%s» no es troben disponibles"
 
 #: locale/programs/ld-ctype.c:3672
-#, fuzzy, c-format
-#| msgid "%s: table for class \"%s\": %lu bytes\n"
+#, c-format
 msgid "%s: table for class \"%s\": %lu bytes"
-msgstr "%s: taula de la classe «%s»: %lu octets\n"
+msgstr "%s: taula de la classe «%s»: %lu octets"
 
 #: locale/programs/ld-ctype.c:3736
-#, fuzzy, c-format
-#| msgid "%s: table for map \"%s\": %lu bytes\n"
+#, c-format
 msgid "%s: table for map \"%s\": %lu bytes"
-msgstr "%s: taula del mapa «%s»: %lu octets\n"
+msgstr "%s: taula del mapa «%s»: %lu octets"
 
 #: locale/programs/ld-ctype.c:3860
-#, fuzzy, c-format
-#| msgid "%s: table for width: %lu bytes\n"
+#, c-format
 msgid "%s: table for width: %lu bytes"
-msgstr "%s: taula d’amplada: %lu bytes\n"
+msgstr "%s: taula d’amplada: %lu bytes"
 
 #: locale/programs/ld-identification.c:173
 #, c-format
@@ -2502,10 +2489,9 @@ msgid "%s: no identification for category `%s'"
 msgstr "%s: no hi ha cap identificació per a la categoria «%s»"
 
 #: locale/programs/ld-identification.c:197
-#, fuzzy, c-format
-#| msgid "%s: no identification for category `%s'"
+#, c-format
 msgid "%s: unknown standard `%s' for category `%s'"
-msgstr "%s: no hi ha cap identificació per a la categoria «%s»"
+msgstr "%s: l’estàndard «%s» per a la categoria «%s» no és conegut"
 
 #: locale/programs/ld-identification.c:380
 #, c-format
@@ -2539,10 +2525,9 @@ msgid "%s: value of field `int_curr_symbol' has wrong length"
 msgstr "%s: el valor del camp «int_curr_symbol» té una longitud incorrecta"
 
 #: locale/programs/ld-monetary.c:245
-#, fuzzy, c-format
-#| msgid "%s: value of field `int_curr_symbol' does not correspond to a valid name in ISO 4217"
+#, c-format
 msgid "%s: value of field `int_curr_symbol' does not correspond to a valid name in ISO 4217 [--no-warnings=intcurrsym]"
-msgstr "%s: el valor del camp «int_curr_symbol» no és un nom vàlid de l’estàndard ISO 4217"
+msgstr "%s: el valor del camp «int_curr_symbol» no és un nom vàlid de l’estàndard ISO 4217 (amagueu açò amb «--no-warnings=intcurrsym»)"
 
 #: locale/programs/ld-monetary.c:293 locale/programs/ld-monetary.c:322
 #, c-format
@@ -2741,16 +2726,16 @@ msgstr ""
 msgid "while preparing output"
 msgstr "en preparar l’eixida"
 
+# És un nom de variable d’entorn.  ivb
 #: locale/programs/locale.c:998
-#, fuzzy, c-format
-#| msgid "Cannot set LC_ALL to default locale"
+#, c-format
 msgid "Cannot set %s to default locale"
-msgstr "no s’ha pogut establir LC_ALL al locale per defecte"
+msgstr "no s’ha pogut establir %s al locale per defecte"
 
 #: locale/programs/locale.c:1096
 #, c-format
 msgid "warning: The LOCPATH variable is set to \"%s\"\n"
-msgstr ""
+msgstr "avís: la variable LOCPATH està establerta a «%s»\n"
 
 # Més ajudes.  ivb
 #: locale/programs/localedef.c:116
@@ -2775,7 +2760,7 @@ msgstr "Crea fitxers d’eixida encara que s’hagen emès missatges d’avís."
 
 #: locale/programs/localedef.c:128
 msgid "Do not create hard links between installed locales"
-msgstr ""
+msgstr "No crea enllaços forts entre locales instal·lats."
 
 # ivb (2001/10/28)
 # ivb  Localedef crea diversos fitxers en un directori: és plural.
@@ -2798,18 +2783,16 @@ msgid "Print more messages"
 msgstr "Mostra més missatges."
 
 #: locale/programs/localedef.c:134 locale/programs/localedef.c:137
-#, fuzzy
-#| msgid "warning: "
 msgid "<warnings>"
-msgstr "avís: "
+msgstr "AVISOS"
 
 #: locale/programs/localedef.c:135
 msgid "Comma-separated list of warnings to disable; supported warnings are: ascii, intcurrsym"
-msgstr ""
+msgstr "Llista separada per comes d’avisos a inhabilitar; els avisos acceptats són: «ascii», «intcurrsym»."
 
 #: locale/programs/localedef.c:138
 msgid "Comma-separated list of warnings to enable; supported warnings are: ascii, intcurrsym"
-msgstr ""
+msgstr "Llista separada per comes d’avisos a habilitar; els avisos acceptats són: «ascii», «intcurrsym»."
 
 #: locale/programs/localedef.c:141
 msgid "Archive control:"
@@ -2884,10 +2867,8 @@ msgid "cannot write output files to `%s'"
 msgstr "no s’han pogut escriure els fitxers d’eixida a «%s»"
 
 #: locale/programs/localedef.c:309
-#, fuzzy
-#| msgid "no output file produced because warnings were issued"
 msgid "no output file produced because errors were issued"
-msgstr "no s’ha generat el fitxer d’eixida perquè s’han produït avisos"
+msgstr "no s’ha generat el fitxer d’eixida perquè s’han produït errors"
 
 #: locale/programs/localedef.c:441
 #, c-format
@@ -4132,10 +4113,9 @@ msgid "error getting caller's id: %s"
 msgstr "error en obtenir l’identificador del programa de control: %s"
 
 #: nscd/connections.c:1349
-#, fuzzy, c-format
-#| msgid "cannot open /proc/self/cmdline: %s; disabling paranoia mode"
+#, c-format
 msgid "cannot open /proc/self/cmdline: %m; disabling paranoia mode"
-msgstr "no s’ha pogut obrir «/proc/self/cmdline»: %s; s’inhabilita el mode paranoic"
+msgstr "no s’ha pogut obrir «/proc/self/cmdline»: %m; s’inhabilita el mode paranoic"
 
 #: nscd/connections.c:1372
 #, c-format
@@ -4638,19 +4618,17 @@ msgstr ""
 "%15<PRIuMAX>  reserves de memòria fallades\n"
 "%15s  comprovar «/etc/%s» per si hi ha hagut canvis?\n"
 
-# El nom de la base de dades s’usa més a sovint que la descripció.  ivb
+# El nom de la base de dades no és «user» sinó «passwd».  ivb
 #: nscd/pwdcache.c:407
-#, fuzzy, c-format
-#| msgid "Haven't found \"%s\" in hosts cache!"
+#, c-format
 msgid "Haven't found \"%s\" in user database cache!"
-msgstr "no s’ha trobat «%s» a la memòria cau de «hosts»"
+msgstr "no s’ha trobat «%s» a la memòria cau de la base de dades d’usuaris"
 
-# El nom de la base de dades s’usa més a sovint que la descripció.  ivb
+# El nom de la base de dades no és «user» sinó «passwd».  ivb
 #: nscd/pwdcache.c:409
-#, fuzzy, c-format
-#| msgid "Reloading \"%s\" in hosts cache!"
+#, c-format
 msgid "Reloading \"%s\" in user database cache!"
-msgstr "es torna a carregar «%s» a la memòria cau de «hosts»"
+msgstr "es torna a carregar «%s» a la memòria cau de la base de dades d’usuaris"
 
 #: nscd/pwdcache.c:471
 #, c-format
@@ -4801,10 +4779,9 @@ msgid "Enumeration not supported on %s\n"
 msgstr "no es permet l’enumeració sobre «%s»\n"
 
 #: nss/getent.c:517 nss/getent.c:530
-#, fuzzy, c-format
-#| msgid "Could not create log file"
+#, c-format
 msgid "Could not allocate group list: %m\n"
-msgstr "no s’ha pogut crear el fitxer de registre"
+msgstr "no s’ha pogut reservar la llista de grups: %m\n"
 
 #: nss/getent.c:901
 #, c-format
@@ -4976,34 +4953,29 @@ msgid "Unrecognized variable `%s'"
 msgstr "la variable «%s» no és reconeguda"
 
 #: posix/getopt.c:277
-#, fuzzy, c-format
-#| msgid "%s: option '-W %s' is ambiguous\n"
+#, c-format
 msgid "%s: option '%s%s' is ambiguous\n"
-msgstr "%s: l’opció «-W %s» és ambigua\n"
+msgstr "%s: l’opció «%s%s» és ambigua\n"
 
 #: posix/getopt.c:283
-#, fuzzy, c-format
-#| msgid "%s: option '%s' is ambiguous; possibilities:"
+#, c-format
 msgid "%s: option '%s%s' is ambiguous; possibilities:"
-msgstr "%s: l’opció «%s» és ambigua; possibilitats:"
+msgstr "%s: l’opció «%s%s» és ambigua; possibilitats:"
 
 #: posix/getopt.c:318
-#, fuzzy, c-format
-#| msgid "%s: unrecognized option '%c%s'\n"
+#, c-format
 msgid "%s: unrecognized option '%s%s'\n"
-msgstr "%s: l’opció «%c%s» no és reconeguda\n"
+msgstr "%s: l’opció «%s%s» no és reconeguda\n"
 
 #: posix/getopt.c:344
-#, fuzzy, c-format
-#| msgid "%s: option '%c%s' doesn't allow an argument\n"
+#, c-format
 msgid "%s: option '%s%s' doesn't allow an argument\n"
-msgstr "%s: l’opció «%c%s» no admet arguments\n"
+msgstr "%s: l’opció «%s%s» no admet arguments\n"
 
 #: posix/getopt.c:359
-#, fuzzy, c-format
-#| msgid "%s: option '--%s' requires an argument\n"
+#, c-format
 msgid "%s: option '%s%s' requires an argument\n"
-msgstr "%s: l’opció «--%s» necessita un argument\n"
+msgstr "%s: l’opció «%s%s» necessita un argument\n"
 
 #: posix/getopt.c:620
 #, c-format
@@ -5040,10 +5012,8 @@ msgid "Invalid back reference"
 msgstr "La referència cap enrere no és vàlida"
 
 #: posix/regcomp.c:156
-#, fuzzy
-#| msgid "Unmatched [ or [^"
 msgid "Unmatched [, [^, [:, [., or [="
-msgstr "«[» o «[^» desaparellat"
+msgstr "«[», «[^», «[:», «[.», o «[=» desaparellat"
 
 #: posix/regcomp.c:159
 msgid "Unmatched ( or \\("
@@ -7021,43 +6991,37 @@ msgstr "no s’ha pogut llegir la capçalera de «%s»"
 
 #: sysdeps/x86/dl-cet.c:202
 msgid "mprotect legacy bitmap failed"
-msgstr ""
+msgstr "ha fallat mprotect() sobre el mapa de bits antic"
 
 #: sysdeps/x86/dl-cet.c:217
-#, fuzzy
-#| msgid "Data input available"
 msgid "legacy bitmap isn't available"
-msgstr "Hi ha dades disponibles a l’entrada"
+msgstr "el mapa de bits antic no es troba disponible"
 
 #: sysdeps/x86/dl-cet.c:247
-#, fuzzy
-#| msgid "failed to start conversion processing"
 msgid "failed to mark legacy code region"
-msgstr "no s’ha pogut començar a processar la conversió"
+msgstr "no s’ha pogut marcar la regió de codi antic"
 
+# Amb CET hi ha una segona pila només per a instruccions de control.  ivb
 #: sysdeps/x86/dl-cet.c:269
 msgid "shadow stack isn't enabled"
-msgstr ""
+msgstr "la pila de control de flux («shadow») no està habilitada"
 
+# CET = Control-Flow Enforcement Technology.  ivb
 #: sysdeps/x86/dl-cet.c:290
 msgid "can't disable CET"
-msgstr ""
+msgstr "no es pot inhabilitar CET"
 
 #: timezone/zdump.c:332
-#, fuzzy
-#| msgid "has fewer than 3 alphabetics"
 msgid "has fewer than 3 characters"
-msgstr "té menys de 3 caràcters alfabètics"
+msgstr "té menys de 3 caràcters"
 
 #: timezone/zdump.c:334
-#, fuzzy
-#| msgid "has more than 6 alphabetics"
 msgid "has more than 6 characters"
-msgstr "té més de 6 caràcters alfabètics"
+msgstr "té més de 6 caràcters"
 
 #: timezone/zdump.c:336
 msgid "has characters other than ASCII alphanumerics, '-' or '+'"
-msgstr ""
+msgstr "conté caràcters que no són ASCII alfanumèrics, «-» ni «+»"
 
 # FIXME: language-dependent
 # La cadena final és una de les anteriors.  ivb
@@ -7081,6 +7045,21 @@ msgid ""
 "\n"
 "Report bugs to %s.\n"
 msgstr ""
+"%s: forma d’ús: %s OPCIONS ZONA_HORÀRIA…\n"
+"\n"
+"Opcions:\n"
+"  -c [INICI,]FI        Comença a l’any INICI (-500 per defecte) i acaba abans\n"
+"                       de l’any FI (2500 per defecte).\n"
+"  -t [INICI,]FI        Comença a l’instant INICI i acaba abans de l’instant FI\n"
+"                       (en segons des de 1970).\n"
+"  -i                   Llista les transicions de forma resumida (en un format\n"
+"                       experimental).\n"
+"  -v                   Llista les transicions de forma detallada.\n"
+"  -V                   Llista les transicions de forma un poc menys detallada.\n"
+"  --help               Mostra aquesta ajuda i ix.\n"
+"  --version            Mostra informació sobre la versió i ix.\n"
+"\n"
+"Informeu dels errors a %s.\n"
 
 #: timezone/zdump.c:473
 #, c-format
@@ -7098,34 +7077,26 @@ msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: la memòria s’ha exhaurit: %s\n"
 
 #: timezone/zic.c:437
-#, fuzzy
-#| msgid "time overflow"
 msgid "size overflow"
-msgstr "desbordament de l’hora"
+msgstr "desbordament de la mida"
 
 #: timezone/zic.c:447
-#, fuzzy
-#| msgid "time overflow"
 msgid "alignment overflow"
-msgstr "desbordament de l’hora"
+msgstr "desbordament de l’alineament"
 
 #: timezone/zic.c:495
-#, fuzzy
-#| msgid "Integer overflow"
 msgid "integer overflow"
-msgstr "Desbordament enter"
+msgstr "desbordament enter"
 
 #: timezone/zic.c:529
-#, fuzzy, c-format
-#| msgid "\"%s\", line %d: "
+#, c-format
 msgid "\"%s\", line %<PRIdMAX>: "
-msgstr "«%s», línia %d: "
+msgstr "«%s», línia %<PRIdMAX>: "
 
 #: timezone/zic.c:532
-#, fuzzy, c-format
-#| msgid " (rule from \"%s\", line %d)"
+#, c-format
 msgid " (rule from \"%s\", line %<PRIdMAX>)"
-msgstr " (regla de «%s», línia %d)"
+msgstr " (regla de «%s», línia %<PRIdMAX>)"
 
 #: timezone/zic.c:551
 #, c-format
@@ -7137,12 +7108,7 @@ msgstr "avís: "
 # ivb  reservades dels fitxers amb què treballa zic.
 # Sembla que la barra al final de la línia no pinta res.  ivb
 #: timezone/zic.c:576
-#, fuzzy, c-format
-#| msgid ""
-#| "%s: usage is %s [ --version ] [ --help ] [ -v ] [ -l localtime ] [ -p posixrules ] \\\n"
-#| "\t[ -d directory ] [ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n"
-#| "\n"
-#| "Report bugs to %s.\n"
+#, c-format
 msgid ""
 "%s: usage is %s [ --version ] [ --help ] [ -v ] \\\n"
 "\t[ -l localtime ] [ -p posixrules ] [ -d directory ] \\\n"
@@ -7150,17 +7116,17 @@ msgid ""
 "\n"
 "Report bugs to %s.\n"
 msgstr ""
-"%s: forma d’ús: %s [--version] [--help] [-s] [-v] [-l localtime]\n"
-"\t[-p posixrules] [-d DIRECTORI] [-L FITXER_SEGONS_INTERCALARS]\n"
-"\t[-y yearistype] [FITXER…]\n"
+"%s: forma d’ús: %s [--version] [--help] [-v]\n"
+"\t[-l FITXER_localtime] [-p FITXER_posixrules] [-d DIRECTORI]\n"
+"\t[-t ENLLAÇ_A_localtime] [-L FITXER_SEGONS_INTERCALARS] [FITXER…]\n"
 "\n"
 "Informeu dels errors a %s.\n"
 
+# No usa quote().  ivb
 #: timezone/zic.c:599
-#, fuzzy, c-format
-#| msgid "%s: Can't create %s: %s\n"
+#, c-format
 msgid "%s: Can't chdir to %s: %s\n"
-msgstr "%s: no s’ha pogut crear «%s»: %s\n"
+msgstr "%s: no s’ha pogut canviar al directori «%s»: %s\n"
 
 #: timezone/zic.c:632
 msgid "wild compilation-time specification of zic_t"
@@ -7182,14 +7148,13 @@ msgid "%s: More than one -p option specified\n"
 msgstr "%s: s’ha indicat l’opció «-p» més d’una volta\n"
 
 #: timezone/zic.c:680
-#, fuzzy, c-format
-#| msgid "%s: More than one -d option specified\n"
+#, c-format
 msgid "%s: More than one -t option specified\n"
-msgstr "%s: s’ha indicat l’opció «-d» més d’una volta\n"
+msgstr "%s: s’ha indicat l’opció «-t» més d’una volta\n"
 
 #: timezone/zic.c:689
 msgid "-y is obsolescent"
-msgstr ""
+msgstr "l’opció «-y» és obsoleta"
 
 #: timezone/zic.c:693
 #, c-format
@@ -7203,90 +7168,89 @@ msgstr "%s: s’ha indicat l’opció «-L» més d’una volta\n"
 
 #: timezone/zic.c:712
 msgid "-s ignored"
-msgstr ""
+msgstr "es descarta l’opció «-s»"
 
 #: timezone/zic.c:753
 msgid "link to link"
 msgstr "enllaç a un altre enllaç"
 
 #: timezone/zic.c:756 timezone/zic.c:760
-#, fuzzy
-#| msgid "Too many links"
 msgid "command line"
-msgstr "El fitxer té massa enllaços"
+msgstr "línia d’ordres"
 
 #: timezone/zic.c:776
 msgid "empty file name"
-msgstr ""
+msgstr "el nom de fitxer és buit"
 
 #: timezone/zic.c:779
 #, c-format
 msgid "file name '%s' begins with '/'"
-msgstr ""
+msgstr "el nom de fitxer «%s» comença per «/»"
 
 #: timezone/zic.c:789
 #, c-format
 msgid "file name '%s' contains '%.*s' component"
-msgstr ""
+msgstr "el nom de fitxer «%s» conté un component «%.*s»"
 
+# Crec que queda més clar que «respecte al temps universal».  ivb
 #: timezone/zic.c:795
 #, c-format
 msgid "file name '%s' component contains leading '-'"
-msgstr ""
+msgstr "el nom de fitxer «%s» conté un component que comença per «-»"
 
 #: timezone/zic.c:798
 #, c-format
 msgid "file name '%s' contains overlength component '%.*s...'"
-msgstr ""
+msgstr "el nom de fitxer «%s» conté un component massa llarg «%.*s…»"
 
 #: timezone/zic.c:826
 #, c-format
 msgid "file name '%s' contains byte '%c'"
-msgstr ""
+msgstr "el nom de fitxer «%s» conté l’octet «%c»"
 
 #: timezone/zic.c:827
 #, c-format
 msgid "file name '%s' contains byte '\\%o'"
-msgstr ""
+msgstr "el nom de fitxer «%s» conté l’octet «\\%o»"
 
+# No usa quote().  ivb
 #: timezone/zic.c:897
-#, fuzzy, c-format
-#| msgid "Invalid link from \"%s\" to \"%s\": %s\n"
+#, c-format
 msgid "%s: link from %s/%s failed: %s\n"
-msgstr "l’enllaç des de «%s» cap a «%s» no és vàlid: %s\n"
+msgstr "%s: no s’ha pogut enllaçar des de «%s/%s»: %s\n"
 
+# No usa quote().  ivb
 #: timezone/zic.c:907 timezone/zic.c:1876
-#, fuzzy, c-format
-#| msgid "%s: Can't remove %s: %s\n"
+#, c-format
 msgid "%s: Can't remove %s/%s: %s\n"
-msgstr "%s: no s’ha pogut eliminar «%s»: %s\n"
+msgstr "%s: no s’ha pogut eliminar «%s/%s»: %s\n"
 
 #: timezone/zic.c:931
 #, c-format
 msgid "symbolic link used because hard link failed: %s"
-msgstr ""
+msgstr "s’ha emprat un enllaç simbòlic perquè l’enllaç fort ha fallat: %s"
 
+# No usa quote().  ivb
 #: timezone/zic.c:939
-#, fuzzy, c-format
-#| msgid "%s: Can't read %s: %s\n"
+#, c-format
 msgid "%s: Can't read %s/%s: %s\n"
-msgstr "%s: no s’ha pogut llegir «%s»: %s\n"
+msgstr "%s: no s’ha pogut llegir «%s/%s»: %s\n"
 
+# No usa quote().  ivb
 #: timezone/zic.c:946 timezone/zic.c:1889
-#, fuzzy, c-format
-#| msgid "%s: Can't create %s: %s\n"
+#, c-format
 msgid "%s: Can't create %s/%s: %s\n"
-msgstr "%s: no s’ha pogut crear «%s»: %s\n"
+msgstr "%s: no s’ha pogut crear «%s/%s»: %s\n"
 
 #: timezone/zic.c:955
 #, c-format
 msgid "copy used because hard link failed: %s"
-msgstr ""
+msgstr "s’ha emprat una còpia perquè l’enllaç fort ha fallat: %s"
 
 #: timezone/zic.c:958
 #, c-format
 msgid "copy used because symbolic link failed: %s"
-msgstr ""
+msgstr "s’ha emprat una còpia perquè l’enllaç simbòlic ha fallat: %s"
 
 #: timezone/zic.c:1032 timezone/zic.c:1034
 msgid "same rule name in multiple files"
@@ -7324,10 +7288,8 @@ msgid "expected continuation line not found"
 msgstr "cal una línia de continuació, però se’n troba cap"
 
 #: timezone/zic.c:1203
-#, fuzzy
-#| msgid "values over 24 hours not handled by pre-2007 versions of zic"
 msgid "fractional seconds rejected by pre-2018 versions of zic"
-msgstr "les versions de «zic» anteriors a 2007 no admeten valors majors que 24 hores"
+msgstr "les versions de «zic» anteriors a 2018 no admeten segons fraccionals"
 
 #: timezone/zic.c:1221 timezone/zic.c:3078
 msgid "time overflow"
@@ -7346,10 +7308,9 @@ msgid "wrong number of fields on Rule line"
 msgstr "el nombre de camps de la línia «Rule» és incorrecte"
 
 #: timezone/zic.c:1265
-#, fuzzy, c-format
-#| msgid "Invalid numeric gid \"%s\"!"
+#, c-format
 msgid "Invalid rule name \"%s\""
-msgstr "«%s» no és un identificador numèric de grup vàlid"
+msgstr "«%s» no és un nom de regla vàlid"
 
 #: timezone/zic.c:1287
 msgid "wrong number of fields on Zone line"
@@ -7366,10 +7327,9 @@ msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr "la línia «Zone %s» i l’opció «-p» són mútuament excloents"
 
 #: timezone/zic.c:1305
-#, fuzzy, c-format
-#| msgid "duplicate zone name %s (file \"%s\", line %d)"
+#, c-format
 msgid "duplicate zone name %s (file \"%s\", line %<PRIdMAX>)"
-msgstr "el nom de zona «%s» (fitxer «%s», línia %d) és duplicat"
+msgstr "el nom de zona «%s» (fitxer «%s», línia %<PRIdMAX>) és duplicat"
 
 #: timezone/zic.c:1319
 msgid "wrong number of fields on Zone continuation line"
@@ -7385,10 +7345,9 @@ msgid "invalid abbreviation format"
 msgstr "el format de l’abreviatura no és vàlid"
 
 #: timezone/zic.c:1372
-#, fuzzy, c-format
-#| msgid "values over 24 hours not handled by pre-2007 versions of zic"
+#, c-format
 msgid "format '%s' not handled by pre-2015 versions of zic"
-msgstr "les versions de «zic» anteriors a 2007 no admeten valors majors que 24 hores"
+msgstr "les versions de «zic» anteriors a 2015 no admeten el format «%s»"
 
 #: timezone/zic.c:1399
 msgid "Zone continuation line end time is not after end time of previous line"
@@ -7432,10 +7391,8 @@ msgstr "el camp «Rolling/Stationary» de la línia «Leap» no és vàlid"
 
 # I?  ivb
 #: timezone/zic.c:1505
-#, fuzzy
-#| msgid "leap second precedes Big Bang"
 msgid "leap second precedes Epoch"
-msgstr "el segon intercalar és anterior al Big Bang"
+msgstr "el segon intercalar és anterior a l’Època"
 
 #: timezone/zic.c:1518
 msgid "wrong number of fields on Link line"
@@ -7465,32 +7422,29 @@ msgstr "s’ha especificat un sol any"
 #: timezone/zic.c:1633
 #, c-format
 msgid "year type \"%s\" is obsolete; use \"-\" instead"
-msgstr ""
+msgstr "el tipus d’any «%s» és obsolet; empreu «-» en el seu lloc"
 
 #: timezone/zic.c:1668
 msgid "invalid weekday name"
 msgstr "el nom del dia de la setmana no és vàlid"
 
 #: timezone/zic.c:1800
-#, fuzzy, c-format
-#| msgid "pre-2014 clients may mishandle more than 1200 transition times"
+#, c-format
 msgid "reference clients mishandle more than %d transition times"
-msgstr "els clients anteriors a 2014 podrien processar malament més de 1200 dates de transició"
+msgstr "els clients de referència processen malament més de %d dates de transició"
 
 #: timezone/zic.c:1804
 msgid "pre-2014 clients may mishandle more than 1200 transition times"
 msgstr "els clients anteriors a 2014 podrien processar malament més de 1200 dates de transició"
 
 #: timezone/zic.c:1920
-#, fuzzy
-#| msgid "too many local time types"
 msgid "too many transition times"
-msgstr "hi ha massa tipus d’hora local"
+msgstr "hi ha massa dates de transició"
 
 #: timezone/zic.c:2107
 #, c-format
 msgid "%%z UT offset magnitude exceeds 99:59:59"
-msgstr ""
+msgstr "la magnitud «%%z» del desplaçament respecte a UTC excedeix 99:59:59"
 
 #: timezone/zic.c:2488
 msgid "no POSIX environment variable for zone"
@@ -7504,7 +7458,7 @@ msgstr "%s: els clients anteriors a %d podrien processar malament les dates dist
 
 #: timezone/zic.c:2631
 msgid "two rules for same instant"
-msgstr ""
+msgstr "dues regles per al mateix instant"
 
 #: timezone/zic.c:2696
 msgid "can't determine time zone abbreviation to use just after until time"
@@ -7525,7 +7479,7 @@ msgstr "hi ha massa segons intercalars"
 
 #: timezone/zic.c:2844
 msgid "Leap seconds too close together"
-msgstr ""
+msgstr "els segons intercalars són massa propers"
 
 #: timezone/zic.c:2891
 msgid "Wild result from command execution"
@@ -7536,15 +7490,17 @@ msgstr "l’execució de l’ordre ha donat un resultat estrany"
 msgid "%s: command was '%s', result was %d\n"
 msgstr "%s: l’ordre ha estat «%s», el resultat ha estat %d\n"
 
+# El primer és un prefix, masculí.  ivb
 #: timezone/zic.c:2998
 #, c-format
 msgid "\"%s\" is undocumented; use \"last%s\" instead"
-msgstr ""
+msgstr "«%s» no està documentat; empreu «last%s» en el seu lloc"
 
+# Es refereix a una paraula.  ivb
 #: timezone/zic.c:3029
 #, c-format
 msgid "\"%s\" is ambiguous in pre-2017c zic"
-msgstr ""
+msgstr "«%s» és ambígua en la versió «pre-2017c» de «zic»"
 
 # ivb (2001/10/30)
 # ivb  Es refereix a les cometes dobles «"».
@@ -7557,22 +7513,16 @@ msgid "use of 2/29 in non leap-year"
 msgstr "s’ha emprat el dia 29 de febrer en un any no bixest"
 
 #: timezone/zic.c:3192
-#, fuzzy
-#| msgid "rule goes past start/end of month--will not work with pre-2004 versions of zic"
 msgid "rule goes past start/end of month; will not work with pre-2004 versions of zic"
 msgstr "la regla va més enllà de l’inici o fi del mes; no funcionarà en les versions de «zic» anteriors a 2004"
 
 #: timezone/zic.c:3219
-#, fuzzy
-#| msgid "time zone abbreviation has fewer than 3 alphabetics"
 msgid "time zone abbreviation has fewer than 3 characters"
-msgstr "l’abreviatura de la zona horària té menys de 3 caràcters alfabètics"
+msgstr "l’abreviatura de la zona horària té menys de 3 caràcters"
 
 #: timezone/zic.c:3221
-#, fuzzy
-#| msgid "time zone abbreviation has too many alphabetics"
 msgid "time zone abbreviation has too many characters"
-msgstr "l’abreviatura de la zona horària té massa caràcters alfabètics"
+msgstr "l’abreviatura de la zona horària té massa caràcters"
 
 #: timezone/zic.c:3223
 msgid "time zone abbreviation differs from POSIX standard"
@@ -7582,199 +7532,8 @@ msgstr "l’abreviatura de la zona horària difereix de l’estàndard POSIX"
 msgid "too many, or too long, time zone abbreviations"
 msgstr "hi ha massa abreviatures de zona horària (o són massa llargues)"
 
+# No usa quote().  ivb
 #: timezone/zic.c:3275
-#, fuzzy, c-format
-#| msgid "%s: Can't create directory %s: %s\n"
+#, c-format
 msgid "%s: Can't create directory %s: %s"
-msgstr "%s: no s’ha pogut crear el directori «%s»: %s\n"
-
-# ivb (2001/10/28)
-# ivb  Es refereix a /dev/zero .
-#~ msgid "cannot open zero fill device"
-#~ msgstr "no s’ha pogut obrir el dispositiu de zeros"
-
-#~ msgid "cannot allocate TLS data structures for initial thread"
-#~ msgstr "no s’han pogut reservar les estructures de dades TLS per al fil inicial"
-
-#~ msgid "cannot handle TLS data"
-#~ msgstr "no es pot tractar amb dades TLS"
-
-#~ msgid "invalid caller"
-#~ msgstr "la biblioteca que ha fet la crida no és vàlida"
-
-#~ msgid "relocation error"
-#~ msgstr "error de reubicació"
-
-#~ msgid "Don't generate links"
-#~ msgstr "No genera enllaços."
-
-#~ msgid "Character out of range for UTF-8"
-#~ msgstr "el caràcter és fora de rang respecte a UTF-8"
-
-#~ msgid "no definition of `UNDEFINED'"
-#~ msgstr "no s’ha definit «UNDEFINED»"
-
-#~ msgid "non-symbolic character value should not be used"
-#~ msgstr "no s’han d’emprar valors de caràcters no simbòlics"
-
-#~ msgid "Cannot set LC_CTYPE to default locale"
-#~ msgstr "no s’ha pogut establir LC_CTYPE al locale per defecte"
-
-#~ msgid "Cannot set LC_MESSAGES to default locale"
-#~ msgstr "no s’ha pogut establir LC_MESSAGES al locale per defecte"
-
-#~ msgid "Cannot set LC_COLLATE to default locale"
-#~ msgstr "no s’ha pogut establir LC_COLLATE al locale per defecte"
-
-#~ msgid "Create old-style tables"
-#~ msgstr "Crea taules de l’estil antic."
-
-#~ msgid "cannot set socket to close on exec: %s; disabling paranoia mode"
-#~ msgstr "no s’ha pogut indicar que el connector es tanque en fer exec(): %s; s’inhabilita el mode paranoic"
-
-#~ msgid "cannot change socket to nonblocking mode: %s"
-#~ msgstr "no s’ha pogut canviar el connector al mode no blocador: %s"
-
-#~ msgid "cannot set socket to close on exec: %s"
-#~ msgstr "no s’ha pogut indicar que el connector es tanque en fer exec(): %s"
-
-#~ msgid "cannot read /proc/self/cmdline: %s; disabling paranoia mode"
-#~ msgstr "no s’ha pogut llegir «/proc/self/cmdline»: %s; s’inhabilita el mode paranoic"
-
-# El nom de la base de dades s’usa més a sovint que la descripció.  ivb
-#~ msgid "Haven't found \"%s\" in password cache!"
-#~ msgstr "no s’ha trobat «%s» a la memòria cau de «passwd»"
-
-# El nom de la base de dades s’usa més a sovint que la descripció.  ivb
-#~ msgid "Reloading \"%s\" in password cache!"
-#~ msgstr "es torna a carregar «%s» a la memòria cau de «passwd»"
-
-#~ msgid "%s: option '--%s' doesn't allow an argument\n"
-#~ msgstr "%s: l’opció «--%s» no admet arguments\n"
-
-#~ msgid "%s: unrecognized option '--%s'\n"
-#~ msgstr "%s: l’opció «--%s» no és reconeguda\n"
-
-#~ msgid "%s: option '-W %s' doesn't allow an argument\n"
-#~ msgstr "%s: l’opció «-W %s» no admet arguments\n"
-
-#~ msgid "%s: option '-W %s' requires an argument\n"
-#~ msgstr "%s: l’opció «-W %s» necessita un argument\n"
-
-#~ msgid "This implementation doesn't support newstyle or MT-safe code!\n"
-#~ msgstr "aquesta implementació no accepta l’estil nou ni el codi compatible amb MT\n"
-
-#~ msgid "program %lu is not available\n"
-#~ msgstr "el programa %lu no es troba disponible\n"
-
-#~ msgid "program %lu version %lu is not available\n"
-#~ msgstr "el programa %lu, versió %lu, no es troba disponible\n"
-
-#~ msgid "program %lu version %lu ready and waiting\n"
-#~ msgstr "el programa %lu, versió %lu, es troba llest i esperant\n"
-
-#~ msgid "rpcinfo: can't contact portmapper"
-#~ msgstr "rpcinfo: no s’ha pogut contactar amb el mapador de ports"
-
-#~ msgid "No remote programs registered.\n"
-#~ msgstr "no hi ha cap programa remot donat d’alta\n"
-
-#~ msgid "   program vers proto   port\n"
-#~ msgstr "  programa vers proto   port\n"
-
-# ivb (2001/10/28)
-# ivb  Es refereix al nom d'una estació -> masculí.
-#~ msgid "(unknown)"
-#~ msgstr "(desconegut)"
-
-#~ msgid "rpcinfo: broadcast failed: %s\n"
-#~ msgstr "rpcinfo: la difusió ha fallat: %s\n"
-
-#~ msgid "Sorry. You are not root\n"
-#~ msgstr "ho sent, no sou root\n"
-
-#~ msgid "rpcinfo: Could not delete registration for prog %s version %s\n"
-#~ msgstr "rpcinfo: no s’ha pogut donar de baixa el programa «%s», versió %s\n"
-
-#~ msgid "Usage: rpcinfo [ -n portnum ] -u host prognum [ versnum ]\n"
-#~ msgstr "Forma d’ús: rpcinfo [-n NÚMPORT] -u ESTACIÓ NÚMPROGRAMA [NÚMVERSIÓ]\n"
-
-#~ msgid "       rpcinfo [ -n portnum ] -t host prognum [ versnum ]\n"
-#~ msgstr "        rpcinfo [-n NÚMPORT] -t ESTACIÓ NÚMPROGRAMA [NÚMVERSIÓ]\n"
-
-#~ msgid "       rpcinfo -p [ host ]\n"
-#~ msgstr "       rpcinfo -p [ESTACIÓ]\n"
-
-#~ msgid "       rpcinfo -b prognum versnum\n"
-#~ msgstr "       rpcinfo -b NÚMPROGRAMA NÚMVERSIÓ\n"
-
-#~ msgid "       rpcinfo -d prognum versnum\n"
-#~ msgstr "       rpcinfo -d NÚMPROGRAMA NÚMVERSIÓ\n"
-
-#~ msgid "rpcinfo: %s is unknown service\n"
-#~ msgstr "rpcinfo: el servei «%s» no és conegut\n"
-
-#~ msgid "rpcinfo: %s is unknown host\n"
-#~ msgstr "rpcinfo: l’estació «%s» no és coneguda\n"
-
-#~ msgid "lacks alphabetic at start"
-#~ msgstr "no comença per un caràcter alfabètic"
-
-#~ msgid "differs from POSIX standard"
-#~ msgstr "difereix de l’estàndard POSIX"
-
-#~ msgid ""
-#~ "%s: usage: %s [--version] [--help] [-{vV}] [-{ct} [lo,]hi] zonename ...\n"
-#~ "\n"
-#~ "Report bugs to %s.\n"
-#~ msgstr ""
-#~ "%s: forma d’ús: %s [--version] [--help] [-{vV}] [-{cC} [ANY_INF,]ANY_SUP]\n"
-#~ "\tNOM_DE_ZONA…\n"
-#~ "\n"
-#~ "Informeu dels errors a %s.\n"
-
-#~ msgid "Error writing to standard output"
-#~ msgstr "error en escriure a l’eixida estàndard"
-
-#~ msgid "hard link failed, symbolic link used"
-#~ msgstr "no s’ha pogut crear un enllaç fort, se n’ha emprat un de simbòlic"
-
-#~ msgid "%s: Error reading %s\n"
-#~ msgstr "%s: error en llegir «%s»\n"
-
-#~ msgid "%s: Error writing %s\n"
-#~ msgstr "%s: error en escriure «%s»\n"
-
-#~ msgid "link failed, copy used"
-#~ msgstr "no s’ha pogut crear un enllaç, se n’ha creat una còpia"
-
-#~ msgid "unruly zone"
-#~ msgstr "la zona no té regles"
-
-#~ msgid "%s: Leap line in non leap seconds file %s\n"
-#~ msgstr "%s: línia «Leap» en fitxer no de segons intercalars «%s»\n"
-
-#~ msgid "%s: Error closing %s: %s\n"
-#~ msgstr "%s: error en tancar «%s»: %s\n"
-
-#~ msgid "nameless rule"
-#~ msgstr "la regla no té nom"
-
-# El nom del camp no és una paraula clau del fitxer.  ivb
-#~ msgid "blank TO field on Link line"
-#~ msgstr "el camp d’acabament de la línia «Link» és buit"
-
-#~ msgid "internal error - addtype called with bad isdst"
-#~ msgstr "error intern: s’ha cridat addtype() amb un valor erroni per a «isdst»"
-
-#~ msgid "internal error - addtype called with bad ttisstd"
-#~ msgstr "error intern: s’ha cridat addtype() amb un valor erroni per a «ttisstd»"
-
-#~ msgid "internal error - addtype called with bad ttisgmt"
-#~ msgstr "error intern: s’ha cridat addtype() amb un valor erroni per a «ttisgmt»"
-
-#~ msgid "repeated leap second moment"
-#~ msgstr "el moment de segon intercalar és repetit"
-
-#~ msgid "time zone abbreviation lacks alphabetic at start"
-#~ msgstr "l’abreviatura de la zona horària no comença per un caràcter alfabètic"
+msgstr "%s: no s’ha pogut crear el directori «%s»: %s"

@@ -2,15 +2,15 @@
 # Copyright © 2002, 2012, 2019 Free Software Foundation, Inc.
 # This file is distributed under the same license as the glibc package.
 #
+#
 # Denis Lackovic <delacko@fly.srk.fer.hr>, 2002.
 # Tomislav Krznar <tomislav.krznar@gmail.com>, 2012.
-# Božidar Putanec <bozidarp@yahoo.com>, 2018, 2019.
-#
+# Božidar Putanec <bozidarp@yahoo.com>, 2018, 2019, 2020.
 msgid ""
 msgstr ""
-"Project-Id-Version: libc-2.28.9000\n"
-"POT-Creation-Date: 2019-07-18 13:28-0400\n"
-"PO-Revision-Date: 2019-02-08 16:27-0800\n"
+"Project-Id-Version: libc-2.30.9000\n"
+"POT-Creation-Date: 2020-01-02 20:08+0530\n"
+"PO-Revision-Date: 2020-01-10 12:03-0800\n"
 "Last-Translator: Božidar Putanec <bozidarp@yahoo.com>\n"
 "Language-Team: Croatian <lokalizacija@linux.hr>\n"
 "Language: hr\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Bugs: Report translation errors to the Language-Team address.\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Lokalize 2.0\n"
+"X-Generator: Lokalize 19.04.3\n"
 
 #: argp/argp-help.c:227
 #, c-format
@@ -367,11 +367,7 @@ msgstr "izvršna datoteka „$program“ nije nađena\\n"
 msgid "\\`$program' is no executable\\n"
 msgstr "Program „$program“ nije izvršna datoteka\\n"
 
-#: dlfcn/dlinfo.c:63
-msgid "RTLD_SELF used in code not dynamically loaded"
-msgstr "RTLD_SELF je korišten u kodu koji nije dinamički učitan"
-
-#: dlfcn/dlinfo.c:72
+#: dlfcn/dlinfo.c:53
 msgid "unsupported dlinfo request"
 msgstr "nepodržani dlinfo zahtjev"
 
@@ -400,7 +396,7 @@ msgstr "Nepoznati OS"
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", OS ABI: %s %d.%d.%d"
 
-#: elf/cache.c:163 elf/ldconfig.c:1333
+#: elf/cache.c:163 elf/ldconfig.c:1334
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Nije moguće otvoriti cache-datoteku %s\n"
@@ -441,11 +437,11 @@ msgstr "Promjena prava pristupa %s u %#o nije uspjela"
 msgid "Renaming of %s to %s failed"
 msgstr "Preimenovanje %s u %s nije uspjelo"
 
-#: elf/dl-close.c:399 elf/dl-open.c:424
+#: elf/dl-close.c:406 elf/dl-open.c:285
 msgid "cannot create scope list"
 msgstr "nije moguće stvoriti popis dosega (scope list)"
 
-#: elf/dl-close.c:839
+#: elf/dl-close.c:852
 msgid "shared object not open"
 msgstr "zajednički objekt nije otvoren"
 
@@ -518,125 +514,123 @@ msgstr "nije moguće stvoriti RUNPATH/RPATH kopiju"
 msgid "cannot create search path array"
 msgstr "nije moguće stvoriti polje za pretraživanje staza"
 
-#: elf/dl-load.c:883
+#: elf/dl-load.c:892
 msgid "cannot stat shared object"
 msgstr "nije moguće stat zajednički objekt"
 
-#: elf/dl-load.c:992 elf/dl-load.c:2198
+#: elf/dl-load.c:1003 elf/dl-load.c:2191
 msgid "cannot create shared object descriptor"
 msgstr "nije moguće stvoriti deskriptor zajedničkog objekta"
 
-#: elf/dl-load.c:1011 elf/dl-load.c:1555 elf/dl-load.c:1668
+#: elf/dl-load.c:1022 elf/dl-load.c:1571 elf/dl-load.c:1672
 msgid "cannot read file data"
 msgstr "nije moguće pročitati podatke iz datoteke"
 
-#: elf/dl-load.c:1057
+#: elf/dl-load.c:1068
 msgid "ELF load command alignment not page-aligned"
 msgstr "poravnanje učitane ELF naredbe nije na granici stranice"
 
-#: elf/dl-load.c:1064
+#: elf/dl-load.c:1075
 msgid "ELF load command address/offset not properly aligned"
 msgstr "adresa/odmak učitane ELF naredbe nije ispravno poravnana"
 
-#: elf/dl-load.c:1146
+#: elf/dl-load.c:1151
 msgid "cannot process note segment"
 msgstr "nije moguće procesirati notni segment"
 
-#: elf/dl-load.c:1157
+#: elf/dl-load.c:1162
 msgid "object file has no loadable segments"
 msgstr "datoteka objekta nema segmenata koji se mogu učitati"
 
-#: elf/dl-load.c:1170 elf/dl-load.c:1647
+#: elf/dl-load.c:1175
 msgid "cannot dynamically load executable"
 msgstr "nije moguće dinamički učitati izvršnu datoteku"
 
-#: elf/dl-load.c:1191
+#: elf/dl-load.c:1196
 msgid "object file has no dynamic section"
 msgstr "datoteka objekta nema dinamičku sekciju"
 
-#: elf/dl-load.c:1218
-#, fuzzy
-#| msgid "cannot dynamically load executable"
+#: elf/dl-load.c:1223
 msgid "cannot dynamically load position-independent executable"
-msgstr "nije moguće dinamički učitati izvršnu datoteku"
+msgstr "nije moguće dinamički učitati izvršnu ovisnu-o-poziciji datoteku "
 
-#: elf/dl-load.c:1220
+#: elf/dl-load.c:1225
 msgid "shared object cannot be dlopen()ed"
 msgstr "zajednički objekt nije moguće otvoriti s dlopen()"
 
-#: elf/dl-load.c:1233
+#: elf/dl-load.c:1238
 msgid "cannot allocate memory for program header"
 msgstr "nije moguće dodijeliti memoriju za zaglavlje programa"
 
-#: elf/dl-load.c:1266 elf/dl-load.h:130
+#: elf/dl-load.c:1271 elf/dl-load.h:130
 msgid "cannot change memory protections"
 msgstr "nije moguće promijeniti zaštitu memorije"
 
-#: elf/dl-load.c:1286
+#: elf/dl-load.c:1291
 msgid "cannot enable executable stack as shared object requires"
 msgstr "nije moguće koristiti izvršni stȏg kako to zahtijeva zajednički objekt"
 
-#: elf/dl-load.c:1299
+#: elf/dl-load.c:1304
 msgid "cannot close file descriptor"
 msgstr "nije moguće zatvoriti deskriptor datoteke"
 
-#: elf/dl-load.c:1555
+#: elf/dl-load.c:1571
 msgid "file too short"
 msgstr "datoteka je prekratka"
 
-#: elf/dl-load.c:1590
+#: elf/dl-load.c:1606
 msgid "invalid ELF header"
 msgstr "nevaljano ELF zaglavlje"
 
-#: elf/dl-load.c:1602
+#: elf/dl-load.c:1618
 msgid "ELF file data encoding not big-endian"
 msgstr "Kodiranje podataka ELF datoteke nije big-endian"
 
-#: elf/dl-load.c:1604
+#: elf/dl-load.c:1620
 msgid "ELF file data encoding not little-endian"
 msgstr "Kodiranje podataka ELF datoteke nije little-endian"
 
-#: elf/dl-load.c:1608
+#: elf/dl-load.c:1624
 msgid "ELF file version ident does not match current one"
 msgstr "Identifikacija inačice ELF datoteke ne slaže se s aktualnom"
 
-#: elf/dl-load.c:1612
+#: elf/dl-load.c:1628
 msgid "ELF file OS ABI invalid"
 msgstr "OS ABI od ELF datoteke nije valjani"
 
-#: elf/dl-load.c:1615
+#: elf/dl-load.c:1631
 msgid "ELF file ABI version invalid"
 msgstr "ABI inačica od ELF datoteke nije valjana"
 
-#: elf/dl-load.c:1618
+#: elf/dl-load.c:1634
 msgid "nonzero padding in e_ident"
 msgstr "popuna u e_ident() nisu nule"
 
-#: elf/dl-load.c:1621
+#: elf/dl-load.c:1637
 msgid "internal error"
 msgstr "**interna greška**"
 
-#: elf/dl-load.c:1628
+#: elf/dl-load.c:1644
 msgid "ELF file version does not match current one"
 msgstr "Inačica ELF datoteke ne slaže se s aktualnom"
 
-#: elf/dl-load.c:1636
+#: elf/dl-load.c:1652
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "mogu se učitati samo ET_DYN i ET_EXEC"
 
-#: elf/dl-load.c:1652
+#: elf/dl-load.c:1657
 msgid "ELF file's phentsize not the expected size"
 msgstr "phentsize ELF datoteke nije očekivane veličine"
 
-#: elf/dl-load.c:2217
+#: elf/dl-load.c:2210
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "nevaljana ELF klasa: ELFCLASS64"
 
-#: elf/dl-load.c:2218
+#: elf/dl-load.c:2211
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "nevaljana ELF klasa: ELFCLASS32"
 
-#: elf/dl-load.c:2221
+#: elf/dl-load.c:2214
 msgid "cannot open shared object file"
 msgstr "nije moguće otvoriti datoteku zajedničkoga objekta"
 
@@ -648,29 +642,29 @@ msgstr "nije uspjelo mapirati segment iz zajedničkog objekta u memoriju"
 msgid "cannot map zero-fill pages"
 msgstr "nulama ispunjene stranice ne mogu se mapirati u memoriju"
 
-#: elf/dl-lookup.c:830
+#: elf/dl-lookup.c:882
 msgid "symbol lookup error"
 msgstr "greška u potrazi za simbolom"
 
-#: elf/dl-open.c:99
+#: elf/dl-open.c:71
 msgid "cannot extend global scope"
 msgstr "nije moguće proširiti globalni opseg"
 
-#: elf/dl-open.c:474
+#: elf/dl-open.c:391
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr ""
 "Brojač TLS generatora ponovno je počeo od nule!\n"
 "Ovo je ** programska pogreška **. Molimo da to prijavite."
 
-#: elf/dl-open.c:538
+#: elf/dl-open.c:783
 msgid "invalid mode for dlopen()"
 msgstr "nevaljani mod za dlopen()"
 
-#: elf/dl-open.c:555
+#: elf/dl-open.c:800
 msgid "no more namespaces available for dlmopen()"
 msgstr "nema više imenskih prostora dostupnih za dlmopen()"
 
-#: elf/dl-open.c:579
+#: elf/dl-open.c:824
 msgid "invalid target namespace in dlmopen()"
 msgstr "nevaljani ciljani imenski prostor u dlopen()"
 
@@ -682,20 +676,20 @@ msgstr "nije moguće dodijeliti memoriju u statičkom TLS bloku"
 msgid "cannot make segment writable for relocation"
 msgstr "nije moguće napraviti segment za premještanje u koji je moguće pisati"
 
-#: elf/dl-reloc.c:272
+#: elf/dl-reloc.c:273
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr "%s: nema dovoljno memorije za spremanje rezultata premještanja za %s\n"
 
-#: elf/dl-reloc.c:288
+#: elf/dl-reloc.c:289
 msgid "cannot restore segment prot after reloc"
 msgstr "nije moguće obnoviti zaštitu segmenta nakon premještanja"
 
-#: elf/dl-reloc.c:319
+#: elf/dl-reloc.c:320
 msgid "cannot apply additional memory protection after relocation"
 msgstr "nije moguće primijeniti dodatnu zaštitu memorije nakon premještanja"
 
-#: elf/dl-sym.c:136
+#: elf/dl-sym.c:150
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT korišten u kodu nije dinamički učitan"
 
@@ -873,60 +867,60 @@ msgstr "libc4 biblioteka %s je u krivom direktoriju"
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "Biblioteke %s i %s u direktoriju %s imaju isti soname ali su različite vrste."
 
-#: elf/ldconfig.c:1082
+#: elf/ldconfig.c:1083
 #, c-format
 msgid "Warning: ignoring configuration file that cannot be opened: %s"
 msgstr ""
 "Upozorenje: ignorira se konfiguracijska datoteka\n"
 "  koju nije moguće otvoriti: %s"
 
-#: elf/ldconfig.c:1148
+#: elf/ldconfig.c:1149
 #, c-format
 msgid "%s:%u: bad syntax in hwcap line"
 msgstr "%s:%u: loša sintaksa u retku hwcap"
 
-#: elf/ldconfig.c:1154
+#: elf/ldconfig.c:1155
 #, c-format
 msgid "%s:%u: hwcap index %lu above maximum %u"
 msgstr "%s:%u: hwcap indeks %lu prelazi maksimum %u"
 
-#: elf/ldconfig.c:1161 elf/ldconfig.c:1169
+#: elf/ldconfig.c:1162 elf/ldconfig.c:1170
 #, c-format
 msgid "%s:%u: hwcap index %lu already defined as %s"
 msgstr "%s:%u: hwcap indeks %lu već je definiran kao %s"
 
-#: elf/ldconfig.c:1172
+#: elf/ldconfig.c:1173
 #, c-format
 msgid "%s:%u: duplicate hwcap %lu %s"
 msgstr "%s:%u: duplikat hwcap %lu %s"
 
-#: elf/ldconfig.c:1194
+#: elf/ldconfig.c:1195
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr "treba apsolutno ime datoteke za konfiguracijsku datoteku kad se koristi -r"
 
-#: elf/ldconfig.c:1201 locale/programs/xmalloc.c:63 malloc/obstack.c:416
+#: elf/ldconfig.c:1202 locale/programs/xmalloc.c:63 malloc/obstack.c:416
 #: malloc/obstack.c:418 posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr "nema dovoljno memorije"
 
-#: elf/ldconfig.c:1234
+#: elf/ldconfig.c:1235
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: nije moguće čitati direktorij %s"
 
-#: elf/ldconfig.c:1282
+#: elf/ldconfig.c:1283
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "relativna staza „%s“ korištena je za izgradnju predmemorije"
 
-#: elf/ldconfig.c:1312
+#: elf/ldconfig.c:1313
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Nije moguće promijeniti direktorij u / (root)"
 
-#: elf/ldconfig.c:1353
+#: elf/ldconfig.c:1354
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Nije moguće otvoriti direktorij %s s cache-datotekom\n"
@@ -1082,10 +1076,9 @@ msgid "cannot attach to process %lu"
 msgstr "nije moguće pridodati procesu %lu"
 
 #: elf/pldd.c:184
-#, fuzzy, c-format
-#| msgid "invalid saved time"
+#, c-format
 msgid "no valid %s/task entries"
-msgstr "nevaljano sačuvano vrijeme"
+msgstr "unosi %s/task nisu valjani"
 
 #: elf/pldd.c:290
 #, c-format
@@ -1102,27 +1095,27 @@ msgstr "proces %lu nije ELF program"
 msgid "file %s is truncated\n"
 msgstr "datoteka %s je podrezana\n"
 
-#: elf/readelflib.c:66
+#: elf/readelflib.c:65
 #, c-format
 msgid "%s is a 32 bit ELF file.\n"
 msgstr "%s je 32-bitna ELF datoteka.\n"
 
-#: elf/readelflib.c:68
+#: elf/readelflib.c:67
 #, c-format
 msgid "%s is a 64 bit ELF file.\n"
 msgstr "%s je 64-bitna ELF datoteka.\n"
 
-#: elf/readelflib.c:70
+#: elf/readelflib.c:69
 #, c-format
 msgid "Unknown ELFCLASS in file %s.\n"
 msgstr "Nepoznati ELFCLASS u datoteci %s.\n"
 
-#: elf/readelflib.c:77
+#: elf/readelflib.c:76
 #, c-format
 msgid "%s is not a shared object file (Type: %d).\n"
 msgstr "%s nije datoteka dijeljenoga objekta (Vrsta: %d).\n"
 
-#: elf/readelflib.c:108
+#: elf/readelflib.c:101
 #, c-format
 msgid "more than one dynamic segment\n"
 msgstr "više od jedan dinamički segment\n"
@@ -1378,7 +1371,7 @@ msgstr "greška pri zatvaranju ulaza „%s“"
 #: iconv/iconv_charmap.c:435
 #, c-format
 msgid "illegal input sequence at position %Zd"
-msgstr "nepropisna ulazna sekvencija na mjestu %Zd"
+msgstr "nepropisna ulazna sekvencija na poziciji %Zd"
 
 #: iconv/iconv_charmap.c:454 iconv/iconv_prog.c:536
 #, c-format
@@ -1489,7 +1482,7 @@ msgstr "konverzija je zaustavljena zbog problema u pisanju izlaza"
 #: iconv/iconv_prog.c:532
 #, c-format
 msgid "illegal input sequence at position %ld"
-msgstr "nedopuštena ulazna sekvencija na mjestu %ld"
+msgstr "nedopuštena ulazna sekvencija na poziciji %ld"
 
 #: iconv/iconv_prog.c:540
 #, c-format
@@ -2035,7 +2028,7 @@ msgstr "%s: „%s“ mora biti znak"
 msgid "%s: `position' must be used for a specific level in all sections or none"
 msgstr ""
 "%s: „position“ se mora koristiti za određenu razinu\n"
-"  u svim sekcijama ili ni u jednoj"
+"  u svim sekcijama ili nijednoj sekciji"
 
 #: locale/programs/ld-collate.c:1604
 #, c-format
@@ -2239,7 +2232,7 @@ msgstr ""
 "nema definiranih ulaznih znamenaka i nijednoga od standardnih\n"
 "  imena u tablici znakova"
 
-#: locale/programs/ld-ctype.c:849
+#: locale/programs/ld-ctype.c:847
 msgid "not all characters used in `outdigit' are available in the charmap"
 msgstr "nisu svi znakovi korišteni u „outdigit“ dostupni u tablici znakova"
 
@@ -2645,15 +2638,14 @@ msgid "while preparing output"
 msgstr "tijekom pripremanja izlaza"
 
 #: locale/programs/locale.c:998
-#, fuzzy, c-format
-#| msgid "Cannot set LC_ALL to default locale"
+#, c-format
 msgid "Cannot set %s to default locale"
-msgstr "Nije moguće postaviti LC_ALL na zadani locale"
+msgstr "Nije moguće postaviti %s na zadani (default) locale"
 
 #: locale/programs/locale.c:1096
 #, c-format
 msgid "warning: The LOCPATH variable is set to \"%s\"\n"
-msgstr ""
+msgstr "upozorenje: varijable LOCPATH je postavljena na „%s“\n"
 
 #: locale/programs/localedef.c:116
 msgid "Input Files:"
@@ -4910,7 +4902,7 @@ msgstr "Nesparena ) ili \\)"
 msgid "No previous regular expression"
 msgstr "Nema prethodnog regularnog izraza"
 
-#: posix/wordexp.c:1816
+#: posix/wordexp.c:1795
 msgid "parameter null or not set"
 msgstr "parametar je prazan ili nije postavljen"
 
@@ -5179,7 +5171,7 @@ msgstr "Signal realnog vremena %d"
 msgid "Unknown signal %d"
 msgstr "Nepoznati signal %d"
 
-#: sunrpc/auth_unix.c:112 sunrpc/clnt_tcp.c:124 sunrpc/clnt_udp.c:139
+#: sunrpc/auth_unix.c:113 sunrpc/clnt_tcp.c:124 sunrpc/clnt_udp.c:140
 #: sunrpc/clnt_unix.c:125 sunrpc/svc_tcp.c:189 sunrpc/svc_tcp.c:233
 #: sunrpc/svc_udp.c:161 sunrpc/svc_unix.c:189 sunrpc/svc_unix.c:229
 #: sunrpc/xdr.c:631 sunrpc/xdr.c:791 sunrpc/xdr_array.c:102
@@ -5187,7 +5179,7 @@ msgstr "Nepoznati signal %d"
 msgid "out of memory\n"
 msgstr "nema dovoljno memorije\n"
 
-#: sunrpc/auth_unix.c:349
+#: sunrpc/auth_unix.c:350
 msgid "auth_unix.c: Fatal marshalling problem"
 msgstr "auth_unix.c: Fatalna greška procedure authunix_create -- (marshalling problem)"
 
@@ -7346,6 +7338,9 @@ msgstr "kratice vremenskih zona su predugačke ili ih ima previše"
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s: Nije moguće stvoriti direktorij %s: %s"
+
+#~ msgid "RTLD_SELF used in code not dynamically loaded"
+#~ msgstr "RTLD_SELF je korišten u kodu koji nije dinamički učitan"
 
 #~ msgid "cannot open zero fill device"
 #~ msgstr "nije moguće otvoriti nulama ispunjeni uređaj"

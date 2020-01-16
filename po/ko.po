@@ -1,14 +1,14 @@
 # GNU libc의 한국어 메시지
 # This file is distributed under the same license as the glibc package.
-# Copyright (C) 1996, 1998, 2000, 2001, 2002, 2003, 2004, 2007, 2008, 2009, 2011, 2013, 2014, 2015 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1998, 2000, 2001, 2002, 2003, 2004, 2007, 2008, 2009, 2011, 2013, 2014, 2015, 2017, 2018, 2019 Free Software Foundation, Inc.
 # Bang Jun-Young <bangjy@nownuri.net>, 1996-97.
-# Changwoo Ryu <cwryu@debian.org>, 2000-2004, 2007-2009, 2011, 2013-2015, 2017-2018.
+# Changwoo Ryu <cwryu@debian.org>, 2000-2004, 2007-2009, 2011, 2013-2015, 2017-2019.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GNU libc 2.26.9000\n"
+"Project-Id-Version: GNU libc 2.29.9000\n"
 "POT-Creation-Date: 2019-07-18 13:28-0400\n"
-"PO-Revision-Date: 2018-01-11 14:24+0900\n"
+"PO-Revision-Date: 2019-08-06 11:29+0900\n"
 "Last-Translator: Changwoo Ryu <cwryu@debian.org>\n"
 "Language-Team: Korean <translation-team-ko@googlegroups.com>\n"
 "Language: ko\n"
@@ -102,12 +102,13 @@ msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "(프로그램 오류) 옵션을 알 수 있어야 합니다!?"
 
 #: assert/assert-perr.c:35
-#, fuzzy, c-format
-#| msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
+#, c-format
 msgid ""
 "%s%s%s:%u: %s%sUnexpected error: %s.\n"
 "%n"
-msgstr "%s%s%s:%u: %s%s예기치 못한 오류: %s.\n"
+msgstr ""
+"%s%s%s:%u: %s%s예기치 못한 오류: %s.\n"
+"%n"
 
 #: assert/assert.c:101
 #, c-format
@@ -174,7 +175,7 @@ msgid ""
 "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
 msgstr ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
-"이 프로그램은 공개 소프트웨어입니다; 복사조건은 소스를 참조하십시오.  상품성\n"
+"이 프로그램은 자유 소프트웨어입니다. 복사조건은 소스를 참조하십시오.  상품성\n"
 "이나 특정 목적에 대한 적합성을 비롯하여 어떠한 보증도 하지 않습니다.\n"
 
 #: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
@@ -457,10 +458,8 @@ msgid "cannot load auxiliary `%s' because of empty dynamic string token substitu
 msgstr "동적 문자열 토큰 치환이 비어 있기 때문에 `%s' 부가 데이터를 읽어들일 수 없습니다\n"
 
 #: elf/dl-deps.c:220
-#, fuzzy
-#| msgid "cannot allocate dependency list"
 msgid "cannot allocate dependency buffer"
-msgstr "의존성 리스트를 할당할 수 없습니다"
+msgstr "의존성 버퍼를 할당할 수 없습니다"
 
 #: elf/dl-deps.c:443
 msgid "cannot allocate dependency list"
@@ -537,10 +536,8 @@ msgid "ELF load command address/offset not properly aligned"
 msgstr "ELF 로드 명령의 주소/오프셋이 올바르게 align되어 있지 않습니다"
 
 #: elf/dl-load.c:1146
-#, fuzzy
-#| msgid "cannot restore segment prot after reloc"
 msgid "cannot process note segment"
-msgstr "리로케이션 뒤에 prot 세그먼트를 복구할 수 없습니다"
+msgstr "note 세그먼트를 처리할 수 없습니다"
 
 #: elf/dl-load.c:1157
 msgid "object file has no loadable segments"
@@ -548,17 +545,15 @@ msgstr "오브젝트 파일에 읽어들일 수 있는 섹션이 없습니다"
 
 #: elf/dl-load.c:1170 elf/dl-load.c:1647
 msgid "cannot dynamically load executable"
-msgstr "동적으로 실행파일을 로드할 수 없습니다"
+msgstr "동적으로 실행파일을 읽어들일 수 없습니다"
 
 #: elf/dl-load.c:1191
 msgid "object file has no dynamic section"
 msgstr "오브젝트 파일에 동적 섹션이 없습니다"
 
 #: elf/dl-load.c:1218
-#, fuzzy
-#| msgid "cannot dynamically load executable"
 msgid "cannot dynamically load position-independent executable"
-msgstr "동적으로 실행파일을 로드할 수 없습니다"
+msgstr "위치 독립 실행 파일을 동적으로 읽어들일 수 없습니다"
 
 #: elf/dl-load.c:1220
 msgid "shared object cannot be dlopen()ed"
@@ -1076,10 +1071,9 @@ msgid "cannot attach to process %lu"
 msgstr "프로세스 %lu번에 붙일 수 없습니다"
 
 #: elf/pldd.c:184
-#, fuzzy, c-format
-#| msgid "invalid saved time"
+#, c-format
 msgid "no valid %s/task entries"
-msgstr "절약 시간이 부적절함"
+msgstr "올바른 %s/작업 항목이 없습니다"
 
 #: elf/pldd.c:290
 #, c-format
@@ -1625,10 +1619,8 @@ msgid "Error: .netrc file is readable by others."
 msgstr "오류: .netrc 파일을 다른 사람이 읽을 수 있습니다."
 
 #: inet/ruserpass.c:180
-#, fuzzy
-#| msgid "Remove password or make file unreadable by others."
 msgid "Remove 'password' line or make file unreadable by others."
-msgstr "암호를 지우거나 파일을 다른 사람이 읽을 수 없게 만듭니다."
+msgstr "'password' 줄을 제거하거나 다른 사람이 읽을 수 없게 만드십시오."
 
 #: inet/ruserpass.c:199
 #, c-format
@@ -1950,7 +1942,7 @@ msgstr "%1$s: 무게 %3$d의 정의에서 `%2$s'이(가) 여러 번 나타났습
 #: locale/programs/ld-collate.c:587
 #, c-format
 msgid "%s: too many rules; first entry only had %d"
-msgstr "%s: 규칙이 너무 많음; 첫 번째 항목만이 %d개를 가집니다"
+msgstr "%s: 규칙이 너무 많음. 첫 번째 항목만이 %d개를 가집니다"
 
 #: locale/programs/ld-collate.c:623
 #, c-format
@@ -2039,7 +2031,7 @@ msgstr "기호 `%s'"
 
 #: locale/programs/ld-collate.c:1852
 msgid "too many errors; giving up"
-msgstr "오류가 너무 많습니다; 포기합니다"
+msgstr "오류가 너무 많습니다. 포기합니다"
 
 #: locale/programs/ld-collate.c:2508 locale/programs/ld-collate.c:3896
 #, c-format
@@ -2628,15 +2620,14 @@ msgid "while preparing output"
 msgstr "출력을 준비하는 동안"
 
 #: locale/programs/locale.c:998
-#, fuzzy, c-format
-#| msgid "Cannot set LC_ALL to default locale"
+#, c-format
 msgid "Cannot set %s to default locale"
-msgstr "LC_ALL을 기본 로캘로 설정할 수 없습니다"
+msgstr "%s을(를) 기본 로캘로 설정할 수 없습니다"
 
 #: locale/programs/locale.c:1096
 #, c-format
 msgid "warning: The LOCPATH variable is set to \"%s\"\n"
-msgstr ""
+msgstr "경고: LOCPATH 변수가 \"%s\"(으)로 설정되었습니다\n"
 
 #: locale/programs/localedef.c:116
 msgid "Input Files:"
@@ -2660,7 +2651,7 @@ msgstr "경고 메시지가 나올 경우에도 출력함"
 
 #: locale/programs/localedef.c:128
 msgid "Do not create hard links between installed locales"
-msgstr ""
+msgstr "설치한 로캘 사이에 하드 링크를 만들지 마십시오"
 
 #: locale/programs/localedef.c:129
 msgid "Optional output file prefix"
@@ -3270,7 +3261,7 @@ msgstr "속성이 너무 많음"
 
 #: nis/nis_error.h:29
 msgid "Error in RPC subsystem"
-msgstr "RPC 서브 시스템에 오류: "
+msgstr "RPC 서브 시스템에 오류"
 
 #: nis/nis_error.h:30
 msgid "Missing or malformed attribute"
@@ -3819,7 +3810,7 @@ msgstr "감시하는 `%s` 파일이 바뀌었습니다 (mtime)"
 #: nscd/cache.c:341
 #, c-format
 msgid "pruning %s cache; time %ld"
-msgstr "잘라내기: %s 캐시; 시간 %ld"
+msgstr "잘라내기: %s 캐시, 시간 %ld"
 
 #: nscd/cache.c:370
 #, c-format
@@ -3930,7 +3921,7 @@ msgstr "FD %d번에 접근, 용도 %s"
 #: nscd/connections.c:1051
 #, c-format
 msgid "cannot handle old request version %d; current version is %d"
-msgstr "과거의 요청 버전 %d 버전을 처리할 수 없습니다; 현재 버전은 %d입니다"
+msgstr "과거의 요청 버전 %d 버전을 처리할 수 없습니다. 현재 버전은 %d입니다"
 
 #: nscd/connections.c:1074
 #, c-format
@@ -3957,10 +3948,9 @@ msgid "error getting caller's id: %s"
 msgstr "호출한 측 ID를 얻는데 오류: %s"
 
 #: nscd/connections.c:1349
-#, fuzzy, c-format
-#| msgid "cannot open /proc/self/cmdline: %s; disabling paranoia mode"
+#, c-format
 msgid "cannot open /proc/self/cmdline: %m; disabling paranoia mode"
-msgstr "/proc/self/cmdline을 열 수 없습니다: %s: 파라노이아 모드를 사용하지 않습니다"
+msgstr "/proc/self/cmdline을 열 수 없습니다: %m: 파라노이아 모드를 사용하지 않습니다"
 
 #: nscd/connections.c:1372
 #, c-format
@@ -4110,7 +4100,7 @@ msgstr "gid 번호 \"%s\"번이 잘못되었습니다!"
 #: nscd/mem.c:425
 #, c-format
 msgid "freed %zu bytes in %s cache"
-msgstr "%zu 바이트 메모리 해제(%s 캐시) "
+msgstr "%zu 바이트 메모리 해제 (%s 캐시)"
 
 #: nscd/mem.c:568
 #, c-format
@@ -4446,16 +4436,14 @@ msgstr ""
 "%15s  바뀐 사항에 대해 /etc/%s 검사\n"
 
 #: nscd/pwdcache.c:407
-#, fuzzy, c-format
-#| msgid "Haven't found \"%s\" in hosts cache!"
+#, c-format
 msgid "Haven't found \"%s\" in user database cache!"
-msgstr "호스트 캐시에서 \"%s\"을(를) 찾을 수 없었습니다!"
+msgstr "사용자 데이터베이스 캐시에서 \"%s\"을(를) 찾을 수 없었습니다!"
 
 #: nscd/pwdcache.c:409
-#, fuzzy, c-format
-#| msgid "Reloading \"%s\" in hosts cache!"
+#, c-format
 msgid "Reloading \"%s\" in user database cache!"
-msgstr "호스트 캐시에서 \"%s\"을(를) 다시 읽어들입니다!"
+msgstr "사용자 데이터베이스 캐시에서 \"%s\"을(를) 다시 읽어들입니다!"
 
 #: nscd/pwdcache.c:471
 #, c-format
@@ -4603,10 +4591,9 @@ msgid "Enumeration not supported on %s\n"
 msgstr "%s에 이뉴머레이션을 지원하지 않습니다\n"
 
 #: nss/getent.c:517 nss/getent.c:530
-#, fuzzy, c-format
-#| msgid "Could not create log file"
+#, c-format
 msgid "Could not allocate group list: %m\n"
-msgstr "기록 파일을 만들 수 없습니다"
+msgstr "그룹 목록을 만들 수 없습니다: %m\n"
 
 #: nss/getent.c:901
 #, c-format
@@ -4833,10 +4820,8 @@ msgid "Invalid back reference"
 msgstr "부적절한 후방 참조"
 
 #: posix/regcomp.c:156
-#, fuzzy
-#| msgid "Unmatched [ or [^"
 msgid "Unmatched [, [^, [:, [., or [="
-msgstr "짝이 맞지 않는 [ 또는 [^"
+msgstr "짝이 맞지 않는 [, [^, [:, [. 또는 [="
 
 #: posix/regcomp.c:159
 msgid "Unmatched ( or \\("
@@ -6762,27 +6747,24 @@ msgstr "`%s'에서 헤더를 읽을 수 없습니다"
 
 #: sysdeps/x86/dl-cet.c:202
 msgid "mprotect legacy bitmap failed"
-msgstr ""
+msgstr "mprotect 구식 비트맵 실패"
 
 #: sysdeps/x86/dl-cet.c:217
-#, fuzzy
-#| msgid "Data input available"
 msgid "legacy bitmap isn't available"
-msgstr "데이터 입력이 있음"
+msgstr "구식 비트맵이 없음"
 
 #: sysdeps/x86/dl-cet.c:247
-#, fuzzy
-#| msgid "failed to start conversion processing"
 msgid "failed to mark legacy code region"
-msgstr "변환작업을 시작하는데 실패"
+msgstr "구식 코드 구역 표시하는데 실패"
 
+# 참고: https://en.wikipedia.org/wiki/Shadow_stack
 #: sysdeps/x86/dl-cet.c:269
 msgid "shadow stack isn't enabled"
-msgstr ""
+msgstr "셰도우 스택을 켜지 않았습니다"
 
 #: sysdeps/x86/dl-cet.c:290
 msgid "can't disable CET"
-msgstr ""
+msgstr "CET 사용을 끌 수 없습니다"
 
 #: timezone/zdump.c:332
 msgid "has fewer than 3 characters"
@@ -6802,19 +6784,7 @@ msgid "%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"
 msgstr "%s: 경고: 지역 \"%s\" 약어 \"%s\" %s\n"
 
 #: timezone/zdump.c:387
-#, fuzzy, c-format
-#| msgid ""
-#| "%s: usage: %s OPTIONS ZONENAME ...\n"
-#| "Options include:\n"
-#| "  -c [L,]U   Start at year L (default -500), end before year U (default 2500)\n"
-#| "  -t [L,]U   Start at time L, end before time U (in seconds since 1970)\n"
-#| "  -i         List transitions briefly (format is experimental)\n"
-#| "  -v         List transitions verbosely\n"
-#| "  -V         List transitions a bit less verbosely\n"
-#| "  --help     Output this help\n"
-#| "  --version  Output version info\n"
-#| "\n"
-#| "Report bugs to %s.\n"
+#, c-format
 msgid ""
 "%s: usage: %s OPTIONS TIMEZONE ...\n"
 "Options include:\n"
@@ -6828,7 +6798,7 @@ msgid ""
 "\n"
 "Report bugs to %s.\n"
 msgstr ""
-"%s: 사용법: %s <옵션> <시간대이름> ...\n"
+"%s: 사용법: %s <옵션> <시간대> ...\n"
 "옵션:\n"
 "  -c [L,]U   연도 L에서 시작 (기본값 -500), U 전에 끝 (기본값 2500)\n"
 "  -t [L,]U   시각 L에서 시작, U 전에 끝 (1970년 이후 지난 초 단위)\n"
@@ -6860,10 +6830,8 @@ msgid "size overflow"
 msgstr "크기 오버플로"
 
 #: timezone/zic.c:447
-#, fuzzy
-#| msgid "time overflow"
 msgid "alignment overflow"
-msgstr "시간 값 오버플로"
+msgstr "정렬 값 오버플로"
 
 #: timezone/zic.c:495
 msgid "integer overflow"
@@ -6885,13 +6853,7 @@ msgid "warning: "
 msgstr "경고: "
 
 #: timezone/zic.c:576
-#, fuzzy, c-format
-#| msgid ""
-#| "%s: usage is %s [ --version ] [ --help ] [ -v ] \\\n"
-#| "\t[ -l localtime ] [ -p posixrules ] [ -d directory ] \\\n"
-#| "\t[ -L leapseconds ] [ filename ... ]\n"
-#| "\n"
-#| "Report bugs to %s.\n"
+#, c-format
 msgid ""
 "%s: usage is %s [ --version ] [ --help ] [ -v ] \\\n"
 "\t[ -l localtime ] [ -p posixrules ] [ -d directory ] \\\n"
@@ -6901,7 +6863,7 @@ msgid ""
 msgstr ""
 "%s: 사용법은 %s [ --version ] [ --help ] [ -v ] \\\n"
 "\t[ -l <지역시각> ] [ -p <POSIX규칙> ] [ -d <디렉터리> ] \\\n"
-"\t[ -L <윤초> ] [ <파일이름> ... ]\n"
+"\t[ -t <지역시각-링크> ][ -L <윤초> ] [ <파일이름> ... ]\n"
 "\n"
 "문제점은 %s 주소로 알려 주십시오.\n"
 
@@ -6930,24 +6892,23 @@ msgid "%s: More than one -p option specified\n"
 msgstr "%s: 하나 이상의 -p 옵션을 지정했습니다\n"
 
 #: timezone/zic.c:680
-#, fuzzy, c-format
-#| msgid "%s: More than one -d option specified\n"
+#, c-format
 msgid "%s: More than one -t option specified\n"
-msgstr "%s: 하나 이상의 -d 옵션을 지정했습니다\n"
+msgstr "%s: 여러 개의 -t 옵션을 지정했습니다\n"
 
 #: timezone/zic.c:689
 msgid "-y is obsolescent"
-msgstr ""
+msgstr "-y 옵션은 이제 사용하지 않습니다"
 
 #: timezone/zic.c:693
 #, c-format
 msgid "%s: More than one -y option specified\n"
-msgstr "%s: 하나 이상의 -y 옵션을 지정했습니다\n"
+msgstr "%s: 여러 개의 -y 옵션을 지정했습니다\n"
 
 #: timezone/zic.c:703
 #, c-format
 msgid "%s: More than one -L option specified\n"
-msgstr "%s: 하나 이상의 -L 옵션을 지정했습니다\n"
+msgstr "%s: 여러 개의 -L 옵션을 지정했습니다\n"
 
 #: timezone/zic.c:712
 msgid "-s ignored"
@@ -7066,10 +7027,8 @@ msgid "expected continuation line not found"
 msgstr "예상했던 연속 행을 찾지 못했음"
 
 #: timezone/zic.c:1203
-#, fuzzy
-#| msgid "format '%s' not handled by pre-2015 versions of zic"
 msgid "fractional seconds rejected by pre-2018 versions of zic"
-msgstr "'%s' 포맷은 2015년 전 버전의 zic는 처리하지 못합니다"
+msgstr "2018보다 전 버전의 zic는 초보다 작은 단위를 거부합니다"
 
 #: timezone/zic.c:1221 timezone/zic.c:3078
 msgid "time overflow"
@@ -7077,7 +7036,7 @@ msgstr "시간 값 오버플로"
 
 #: timezone/zic.c:1227
 msgid "values over 24 hours not handled by pre-2007 versions of zic"
-msgstr "24보다 큰 값은 2007년 전 버전의 zic는 처리하지 못합니다"
+msgstr "2007보다 전 버전의 zic는 24보다 큰 값을 처리하지 못합니다"
 
 #: timezone/zic.c:1245
 msgid "invalid saved time"
@@ -7088,10 +7047,9 @@ msgid "wrong number of fields on Rule line"
 msgstr "Rule 줄에 필드의 개수가 잘못되었음"
 
 #: timezone/zic.c:1265
-#, fuzzy, c-format
-#| msgid "Invalid numeric gid \"%s\"!"
+#, c-format
 msgid "Invalid rule name \"%s\""
-msgstr "gid 번호 \"%s\"번이 잘못되었습니다!"
+msgstr "\"%s\" 규칙 이름이 잘못되었습니다"
 
 #: timezone/zic.c:1287
 msgid "wrong number of fields on Zone line"
@@ -7127,7 +7085,7 @@ msgstr "약어 형식이 잘못됨"
 #: timezone/zic.c:1372
 #, c-format
 msgid "format '%s' not handled by pre-2015 versions of zic"
-msgstr "'%s' 포맷은 2015년 전 버전의 zic는 처리하지 못합니다"
+msgstr "2015보다 전 버전이 zic는 '%s' 포맷을 처리하지 못합니다"
 
 #: timezone/zic.c:1399
 msgid "Zone continuation line end time is not after end time of previous line"
@@ -7170,10 +7128,8 @@ msgid "illegal Rolling/Stationary field on Leap line"
 msgstr "Leap 줄에 Rolling/Stationary 필드가 잘못됨"
 
 #: timezone/zic.c:1505
-#, fuzzy
-#| msgid "leap second precedes Big Bang"
 msgid "leap second precedes Epoch"
-msgstr "윤초가 원점보다 앞섬"
+msgstr "윤초가 시간 원점보다 앞섬"
 
 #: timezone/zic.c:1518
 msgid "wrong number of fields on Link line"
@@ -7202,7 +7158,7 @@ msgstr "연도를 한개 입력했습니다"
 #: timezone/zic.c:1633
 #, c-format
 msgid "year type \"%s\" is obsolete; use \"-\" instead"
-msgstr ""
+msgstr "연도 종류 \"%s\"은(는) 이제 사용되지 않습니다. 대신 \"-\"를 사용하십시오"
 
 #: timezone/zic.c:1668
 msgid "invalid weekday name"
@@ -7222,10 +7178,9 @@ msgid "too many transition times"
 msgstr "시각 이행이 너무 많습니다"
 
 #: timezone/zic.c:2107
-#, fuzzy, c-format
-#| msgid "%%z UTC offset magnitude exceeds 99:59:59"
+#, c-format
 msgid "%%z UT offset magnitude exceeds 99:59:59"
-msgstr "%%z UTC 오프셋 크기가 99:59:59를 넘어갑니다"
+msgstr "%%z UT 오프셋 크기가 99:59:59를 넘어갑니다"
 
 #: timezone/zic.c:2488
 msgid "no POSIX environment variable for zone"
@@ -7258,7 +7213,7 @@ msgstr "윤초가 너무 많습니다"
 
 #: timezone/zic.c:2844
 msgid "Leap seconds too close together"
-msgstr ""
+msgstr "윤초가 너무 가깝습니다"
 
 #: timezone/zic.c:2891
 msgid "Wild result from command execution"
@@ -7272,12 +7227,12 @@ msgstr "%s: 명령은 '%s'였고, 결과는 %d였습니다\n"
 #: timezone/zic.c:2998
 #, c-format
 msgid "\"%s\" is undocumented; use \"last%s\" instead"
-msgstr ""
+msgstr "\"%s\"은(는) 문서화되지 않았습니다. 대신 \"last%s\"를(를) 사용하십시오"
 
 #: timezone/zic.c:3029
 #, c-format
 msgid "\"%s\" is ambiguous in pre-2017c zic"
-msgstr ""
+msgstr "\"%s\"은(는) 2017c 보다 전 버전의 zic에서 애매한 표현입니다"
 
 #: timezone/zic.c:3063
 msgid "Odd number of quotation marks"
@@ -7289,7 +7244,7 @@ msgstr "평년에 2월 29일을 사용"
 
 #: timezone/zic.c:3192
 msgid "rule goes past start/end of month; will not work with pre-2004 versions of zic"
-msgstr "달의 시작/끝을 넘어가는 규칙은 2004년 전 버전의 zic에서는 동작하지 않습니다"
+msgstr "2004보다 전 버전의 zic에서는 달의 시작/끝을 넘어가는 규칙이 동작하지 않습니다"
 
 #: timezone/zic.c:3219
 msgid "time zone abbreviation has fewer than 3 characters"
@@ -7311,48 +7266,3 @@ msgstr "너무 많거나 너무 긴 시간대 약어"
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s: %s 디렉터리를 만들 수 없습니다: %s"
-
-#~ msgid "cannot open zero fill device"
-#~ msgstr "0으로 채운 장치를 열 수 없습니다"
-
-#~ msgid "invalid caller"
-#~ msgstr "호출한 측이 올바르지 않습니다"
-
-#~ msgid "relocation error"
-#~ msgstr "리로케이션 오류"
-
-#~ msgid "Character out of range for UTF-8"
-#~ msgstr "UTF-8 범위를 벗어난 문자"
-
-#~ msgid "Cannot set LC_CTYPE to default locale"
-#~ msgstr "LC_CTYPE을 기본 로캘로 설정할 수 없습니다"
-
-#~ msgid "Cannot set LC_MESSAGES to default locale"
-#~ msgstr "LC_MESSAGES을 기본 로캘로 설정할 수 없습니다"
-
-#~ msgid "Cannot set LC_COLLATE to default locale"
-#~ msgstr "LC_COLLATE을 기본 로캘로 설정할 수 없습니다"
-
-#~ msgid "cannot read /proc/self/cmdline: %s; disabling paranoia mode"
-#~ msgstr "/proc/self/cmdline을 읽을 수 없습니다: %s: 파라노이아 모드를 사용하지 않습니다"
-
-#~ msgid "Haven't found \"%s\" in password cache!"
-#~ msgstr "암호 캐시에서 \"%s\"을(를) 찾을 수 없었습니다!"
-
-#~ msgid "Reloading \"%s\" in password cache!"
-#~ msgstr "암호 캐시에서 \"%s\"을(를) 다시 읽어들입니다!"
-
-#~ msgid "This implementation doesn't support newstyle or MT-safe code!\n"
-#~ msgstr "이 구현물은 newstyle이나 MT-safe 코드를 지원하지 않습니다!\n"
-
-#~ msgid "unruly zone"
-#~ msgstr "규칙없는 지역"
-
-#~ msgid "%s: Leap line in non leap seconds file %s"
-#~ msgstr "%s: 윤초 파일이 아닌 %s 파일에 Leap 줄이 있음"
-
-#~ msgid "nameless rule"
-#~ msgstr "이름없는 규칙"
-
-#~ msgid "repeated leap second moment"
-#~ msgstr "윤초의 크기가 중복되었습니다"

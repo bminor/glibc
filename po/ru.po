@@ -11,9 +11,9 @@
 # Yuri Kozlov <yuray@komyakino.ru>, 2009, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019.
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.28.9000\n"
+"Project-Id-Version: libc 2.29.9000\n"
 "POT-Creation-Date: 2019-07-18 13:28-0400\n"
-"PO-Revision-Date: 2019-01-17 21:07+0300\n"
+"PO-Revision-Date: 2019-08-04 08:22+0300\n"
 "Last-Translator: Yuri Kozlov <yuray@komyakino.ru>\n"
 "Language-Team: Russian <gnu@d07.ru>\n"
 "Language: ru\n"
@@ -557,10 +557,8 @@ msgid "object file has no dynamic section"
 msgstr "в объектном файле нет динамической секции"
 
 #: elf/dl-load.c:1218
-#, fuzzy
-#| msgid "cannot dynamically load executable"
 msgid "cannot dynamically load position-independent executable"
-msgstr "невозможно динамически загрузить исполняемый файл"
+msgstr "невозможно динамически загрузить независимый от расположения исполняемый файл"
 
 #: elf/dl-load.c:1220
 msgid "shared object cannot be dlopen()ed"
@@ -1079,10 +1077,9 @@ msgid "cannot attach to process %lu"
 msgstr "не удалось присоединиться к процессу %lu"
 
 #: elf/pldd.c:184
-#, fuzzy, c-format
-#| msgid "invalid saved time"
+#, c-format
 msgid "no valid %s/task entries"
-msgstr "неверное сохраненное время"
+msgstr "нет корректных элементов %s/задач"
 
 #: elf/pldd.c:290
 #, c-format
@@ -2617,15 +2614,14 @@ msgid "while preparing output"
 msgstr "при подготовке вывода"
 
 #: locale/programs/locale.c:998
-#, fuzzy, c-format
-#| msgid "Cannot set LC_ALL to default locale"
+#, c-format
 msgid "Cannot set %s to default locale"
-msgstr "Невозможно установить LC_ALL в локаль по умолчанию."
+msgstr "Невозможно установить %s локалью по умолчанию"
 
 #: locale/programs/locale.c:1096
 #, c-format
 msgid "warning: The LOCPATH variable is set to \"%s\"\n"
-msgstr ""
+msgstr "предупреждение: значение переменной LOCPATH равно «%s»\n"
 
 #: locale/programs/localedef.c:116
 msgid "Input Files:"

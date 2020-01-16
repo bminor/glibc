@@ -17,9 +17,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.29.9000\n"
 "POT-Creation-Date: 2019-07-18 13:28-0400\n"
-"PO-Revision-Date: 2019-07-25 18:38+0800\n"
+"PO-Revision-Date: 2019-12-16 01:13+0800\n"
 "Last-Translator: pan93412 <pan93412@gmail.com>\n"
-"Language-Team: Chinese (traditional) <zh-l10n@linux.org.tw>\n"
+"Language-Team: Chinese (traditional) <zh-l10n@lists.linux.org.tw>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5659,11 +5659,11 @@ msgstr "掛斷"
 
 #: sysdeps/generic/siglist.h:30
 msgid "Interrupt"
-msgstr "中止"
+msgstr "中斷"
 
 #: sysdeps/generic/siglist.h:31
 msgid "Quit"
-msgstr "結束"
+msgstr "退出"
 
 #: sysdeps/generic/siglist.h:32
 msgid "Illegal instruction"
@@ -5675,11 +5675,11 @@ msgstr "追蹤 / 斷點陷阱"
 
 #: sysdeps/generic/siglist.h:34
 msgid "Aborted"
-msgstr "取消"
+msgstr "中止"
 
 #: sysdeps/generic/siglist.h:35
 msgid "Floating point exception"
-msgstr "期望浮點數"
+msgstr "浮點數例外"
 
 #: sysdeps/generic/siglist.h:36
 msgid "Killed"
@@ -5695,7 +5695,7 @@ msgstr "無效系統呼叫"
 
 #: sysdeps/generic/siglist.h:39
 msgid "Segmentation fault"
-msgstr "分割錯誤"
+msgstr "程式記憶體區段錯誤"
 
 #. TRANS There is no process reading from the other end of a pipe.
 #. TRANS Every library function that returns this error code also generates a
@@ -6735,7 +6735,7 @@ msgstr "所有請求完成"
 
 #: sysdeps/posix/gai_strerror-strs.h:16
 msgid "Interrupted by a signal"
-msgstr "遭信號中止"
+msgstr "遭信號中斷"
 
 #: sysdeps/posix/gai_strerror-strs.h:17
 msgid "Parameter string not correctly encoded"
@@ -7292,18 +7292,3 @@ msgstr "時區縮寫太多或者太長"
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s：無法建立 %s 目錄：%s"
-
-#~ msgid "cannot open zero fill device"
-#~ msgstr "無法開啟以零填滿的裝置"
-
-#~ msgid "relocation error"
-#~ msgstr "重定址錯誤"
-
-#~ msgid "Cannot set LC_CTYPE to default locale"
-#~ msgstr "無法將 LC_CTYPE 設置為預設的語區"
-
-#~ msgid "Cannot set LC_MESSAGES to default locale"
-#~ msgstr "無法將 LC_MESSAGES 設置為預設的語區"
-
-#~ msgid "Cannot set LC_COLLATE to default locale"
-#~ msgstr "無法將 LC_COLLATE 設置為預設的語區"
