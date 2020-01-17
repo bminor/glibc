@@ -96,6 +96,8 @@ WGET = wget
 update-translations:
 	$(WGET) -qO- $(TRANSLATIONS_URL) | sed -n 's|.*href="\([^"]\+po\)".*|\1|p' | \
 	  while read f; do \
-	    $(WGET) -O $(objdir)/$$f-tmp $(TRANSLATIONS_URL)/$$f && \
+	    $(WGET) -O $(objdir)/$$f-tmp2 $(TRANSLATIONS_URL)/$$f && \
+	    msgmerge --previous --no-wrap $(objdir)/$$f-tmp2 libc.pot > \
+	      $(objdir)/$$f-tmp && \
 	    mv -f $(objdir)/$$f-tmp $$f; \
 	  done
