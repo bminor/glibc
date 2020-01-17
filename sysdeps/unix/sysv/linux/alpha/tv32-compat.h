@@ -70,7 +70,7 @@ struct rusage32
    overflow, they write { INT32_MAX, TV_USEC_MAX } to the output.  */
 
 static inline struct timeval
-valid_timeval_to_timeval64 (const struct timeval32 tv)
+valid_timeval32_to_timeval (const struct timeval32 tv)
 {
   return (struct timeval) { tv.tv_sec, tv.tv_usec };
 }

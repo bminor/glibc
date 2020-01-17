@@ -57,7 +57,7 @@ int
 attribute_compat_text_section
 __adjtime_tv32 (const struct timeval32 *itv, struct timeval32 *otv)
 {
-  struct timeval itv64 = valid_timeval_to_timeval64 (*itv);
+  struct timeval itv64 = valid_timeval32_to_timeval (*itv);
   struct timeval otv64;
 
   if (__adjtime (&itv64, &otv64) == -1)
@@ -91,7 +91,7 @@ __adjtimex_tv32 (struct timex32 *tx)
   tx64.calcnt    = tx->calcnt;
   tx64.errcnt    = tx->errcnt;
   tx64.stbcnt    = tx->stbcnt;
-  tx64.time      = valid_timeval_to_timeval64 (tx->time);
+  tx64.time      = valid_timeval32_to_timeval (tx->time);
 
   int status = __adjtimex (&tx64);
   if (status < 0)

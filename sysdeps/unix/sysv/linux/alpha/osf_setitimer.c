@@ -30,9 +30,9 @@ __setitimer_tv32 (int which, const struct itimerval32 *restrict new_value,
 {
   struct itimerval new_value_64;
   new_value_64.it_interval
-    = valid_timeval_to_timeval64 (new_value->it_interval);
+    = valid_timeval32_to_timeval (new_value->it_interval);
   new_value_64.it_value
-    = valid_timeval_to_timeval64 (new_value->it_value);
+    = valid_timeval32_to_timeval (new_value->it_value);
 
   if (old_value == NULL)
     return __setitimer (which, &new_value_64, NULL);
