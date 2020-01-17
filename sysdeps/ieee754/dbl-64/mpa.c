@@ -871,6 +871,13 @@ __inv (const mp_no *x, mp_no *y, int p)
   z.e = 0;
   __mp_dbl (&z, &t, p);
   t = 1 / t;
+
+  /* t == 0 will never happen at this point, since 1/t can only be 0 if t is
+     infinity, but before the division t == mantissa of x (exponent is 0).  We
+     can instruct the compiler to ignore this case.  */
+  if (t == 0)
+    __builtin_unreachable ();
+
   __dbl_mp (t, y, p);
   EY -= EX;
 
