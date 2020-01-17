@@ -71,8 +71,7 @@ extern void *valloc (size_t __size) __THROW __attribute_malloc__
 
 /* Equivalent to valloc(minimum-page-that-holds(n)), that is, round up
    __size to nearest pagesize. */
-extern void *pvalloc (size_t __size) __THROW __attribute_malloc__
-     __attribute_alloc_size__ ((1)) __wur;
+extern void *pvalloc (size_t __size) __THROW __attribute_malloc__ __wur;
 
 /* Underlying allocation function; successive calls should return
    contiguous pieces of memory.  */
