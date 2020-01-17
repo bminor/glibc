@@ -179,7 +179,7 @@ GOT_LABEL:			;					      \
 #else
 /* Position-dependent code does not require access to the GOT.  */
 # define __GLRO(rOUT, rGOT, member, offset)				\
-	lis     rOUT,(member+LOWORD)@ha					\
+	lis     rOUT,(member+LOWORD)@ha;					\
 	lwz     rOUT,(member+LOWORD)@l(rOUT)
 #endif	/* PIC */
 
