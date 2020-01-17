@@ -99,5 +99,7 @@ update-translations:
 	    $(WGET) -O $(objdir)/$$f-tmp2 $(TRANSLATIONS_URL)/$$f && \
 	    msgmerge --previous --no-wrap $(objdir)/$$f-tmp2 libc.pot > \
 	      $(objdir)/$$f-tmp && \
-	    mv -f $(objdir)/$$f-tmp $$f; \
+	    msgattrib --translated --no-fuzzy --no-obsolete --no-wrap \
+	      $(objdir)/$$f-tmp > $(objdir)/$$f-tmp0 && \
+	    mv -f $(objdir)/$$f-tmp0 $$f; \
 	  done
