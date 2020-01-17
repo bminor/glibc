@@ -28,6 +28,7 @@ union semun
 {
   int val;			/* value for SETVAL */
   struct semid_ds *buf;		/* buffer for IPC_STAT & IPC_SET */
+  struct __semid_ds32 *buf32;
   unsigned short int *array;	/* array for GETALL & SETALL */
   struct seminfo *__buf;	/* buffer for IPC_INFO */
 };
@@ -43,12 +44,30 @@ union semun
 static int
 semctl_syscall (int semid, int semnum, int cmd, union semun arg)
 {
-#ifdef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
-  return INLINE_SYSCALL_CALL (semctl, semid, semnum, cmd | __IPC_64,
-			      arg.array);
+#if __TIMESZIE == 64 && __WORDSIZE == 32
+  int ret;
+# ifdef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
+  ret = INLINE_SYSCALL_CALL (semctl, semid, semnum, cmd | __IPC_64,
+			     arg.array);
+# else
+  ret = INLINE_SYSCALL_CALL (ipc, IPCOP_semctl, semid, semnum, cmd | __IPC_64,
+			     SEMCTL_ARG_ADDRESS (arg));
+# endif
+  if (ret == 0)
+    {
+      arg.buf.sem_ctime = arg.buf32.sem_ctime + arg.buf32.sem_ctime_high;
+      arg.buf.sem_otime = arg.buf32.sem_otime + arg.buf32.sem_otime_high;
+    }
+  return ret;
 #else
+# ifdef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
+  return INLINE_SYSCALL_CALL (semctl, semid, semnum, cmd | __IPC_64,
+                              arg.array);
+# else
   return INLINE_SYSCALL_CALL (ipc, IPCOP_semctl, semid, semnum, cmd | __IPC_64,
-			      SEMCTL_ARG_ADDRESS (arg));
+                              SEMCTL_ARG_ADDRESS (arg));
+# endif
+
 #endif
 }
 

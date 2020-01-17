@@ -57,6 +57,18 @@ struct semid_ds
   __syscall_ulong_t __glibc_reserved4;
 };
 
+struct __semid_ds32 {
+  struct ipc_perm sem_perm;            /* operation permission struct */
+  __syscall_ulong_t   sem_otime;       /* last semop() time */
+  __syscall_ulong_t   sem_otime_high;  /* last semop() time high */
+  __syscall_ulong_t   sem_ctime;       /* last time changed by semctl() */
+  __syscall_ulong_t   sem_ctime_high;  /* last time changed by semctl() high */
+  __syscall_ulong_t   sem_nsems;       /* number of semaphores in set */
+  __syscall_ulong_t   __glibc_reserved3;
+  __syscall_ulong_t   __glibc_reserved4;
+};
+
+
 /* The user should define a union like the following to use it for arguments
    for `semctl'.
 
