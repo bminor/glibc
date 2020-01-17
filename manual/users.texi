@@ -894,9 +894,9 @@ The @code{getlogin} function is declared in @file{unistd.h}, while
 @c   ttyname_r dup @ascuheap @acsmem @acsfd
 @c   strncpy dup ok
 @c   libc_lock_lock dup @asulock @aculock
-@c   *libc_utmp_jump_table->setutent dup @mtasurace:utent @acsfd
-@c   *libc_utmp_jump_table->getutline_r dup @mtasurace:utent @mtascusig:ALRM @mtascutimer
-@c   *libc_utmp_jump_table->endutent dup @mtasurace:utent @asulock @aculock
+@c   __libc_setutent dup @mtasurace:utent @acsfd
+@c   __libc_getutline_r dup @mtasurace:utent @mtascusig:ALRM @mtascutimer
+@c   __libc_endutent dup @mtasurace:utent @asulock @aculock
 @c   libc_lock_unlock dup ok
 @c   strlen dup ok
 @c   memcpy dup ok
@@ -1111,7 +1111,7 @@ compatibility only, @file{utmp.h} defines @code{ut_time} as an alias for
 
 @c setutent @mtasurace:utent @asulock @aculock @acsfd
 @c  libc_lock_lock dup @asulock @aculock
-@c  *libc_utmp_jump_table->setutent @mtasurace:utent @acsfd
+@c  __libc_setutent @mtasurace:utent @acsfd
 @c   setutent_unknown @mtasurace:utent @acsfd
 @c    *libc_utmp_file_functions.setutent = setutent_file @mtasurace:utent @acsfd
 @c      open_not_cancel_2 dup @acsfd
@@ -1152,7 +1152,7 @@ A null pointer is returned in case no further entry is available.
 @safety{@prelim{}@mtunsafe{@mtasurace{:utent}}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{}}}
 @c endutent @mtasurace:utent @asulock @aculock @acsfd
 @c  libc_lock_lock dup @asulock @aculock
-@c  *libc_utmp_jump_table->endutent @mtasurace:utent @acsfd
+@c  __libc_endutent @mtasurace:utent @acsfd
 @c   endutent_unknown ok
 @c   endutent_file @mtasurace:utent @acsfd
 @c    close_not_cancel_no_status dup @acsfd
@@ -1230,7 +1230,7 @@ over again.
 @safety{@prelim{}@mtunsafe{@mtasurace{:utent} @mtascusig{:ALRM} @mtascutimer{}}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{}}}
 @c pututline @mtasurace:utent @mtascusig:ALRM @mtascutimer @asulock @aculock @acsfd
 @c  libc_lock_lock dup @asulock @aculock
-@c  *libc_utmp_jump_table->pututline @mtasurace:utent @mtascusig:ALRM @mtascutimer @acsfd
+@c  __libc_pututline @mtasurace:utent @mtascusig:ALRM @mtascutimer @acsfd
 @c   pututline_unknown @mtasurace:utent @acsfd
 @c    setutent_unknown dup @mtasurace:utent @acsfd
 @c   pututline_file @mtascusig:ALRM @mtascutimer @acsfd
@@ -1282,7 +1282,7 @@ user-provided buffer.
 @safety{@prelim{}@mtunsafe{@mtasurace{:utent} @mtascusig{:ALRM} @mtascutimer{}}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{}}}
 @c getutent_r @mtasurace:utent @mtascusig:ALRM @mtascutimer @asulock @aculock @acsfd
 @c  libc_lock_lock dup @asulock @aculock
-@c  *libc_utmp_jump_table->getutent_r @mtasurace:utent @mtascusig:ALRM @mtascutimer @acsfd
+@c  __libc_getutent_r @mtasurace:utent @mtascusig:ALRM @mtascutimer @acsfd
 @c   getutent_r_unknown @mtasurace:utent @acsfd
 @c    setutent_unknown dup @mtasurace:utent @acsfd
 @c   getutent_r_file @mtasurace:utent @mtascusig:ALRM @mtascutimer
@@ -1319,7 +1319,7 @@ This function is a GNU extension.
 @safety{@prelim{}@mtunsafe{@mtasurace{:utent} @mtascusig{:ALRM} @mtascutimer{}}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{}}}
 @c getutid_r @mtasurace:utent @mtascusig:ALRM @mtascutimer @asulock @aculock @acsfd
 @c  libc_lock_lock dup @asulock @aculock
-@c  *libc_utmp_jump_table->getutid_r @mtasurace:utent @mtascusig:ALRM @mtascutimer @acsfd
+@c  __libc_getutid_r @mtasurace:utent @mtascusig:ALRM @mtascutimer @acsfd
 @c   getutid_r_unknown @mtasurace:utent @acsfd
 @c    setutent_unknown dup @mtasurace:utent @acsfd
 @c   getutid_r_file @mtascusig:ALRM @mtascutimer
@@ -1349,7 +1349,7 @@ This function is a GNU extension.
 @safety{@prelim{}@mtunsafe{@mtasurace{:utent} @mtascusig{:ALRM} @mtascutimer{}}@asunsafe{@asulock{}}@acunsafe{@aculock{} @acsfd{}}}
 @c getutline_r @mtasurace:utent @mtascusig:ALRM @mtascutimer @asulock @aculock @acsfd
 @c  libc_lock_lock dup @asulock @aculock
-@c  *libc_utmp_jump_table->getutline_r @mtasurace:utent @mtascusig:ALRM @mtascutimer @acsfd
+@c  __libc_getutline_r @mtasurace:utent @mtascusig:ALRM @mtascutimer @acsfd
 @c   getutline_r_unknown @mtasurace:utent @acsfd
 @c    setutent_unknown dup @mtasurace:utent @acsfd
 @c   getutline_r_file @mtasurace:utent @mtascusig:ALRM @mtascutimer
@@ -1393,7 +1393,7 @@ be used.
 @safety{@prelim{}@mtunsafe{@mtasurace{:utent}}@asunsafe{@asulock{} @ascuheap{}}@acunsafe{@aculock{} @acsmem{}}}
 @c utmpname @mtasurace:utent @asulock @ascuheap @aculock @acsmem
 @c  libc_lock_lock dup @asulock @aculock
-@c  *libc_utmp_jump_table->endutent dup @mtasurace:utent
+@c  __libc_endutent dup @mtasurace:utent
 @c  strcmp dup ok
 @c  free dup @ascuheap @acsmem
 @c  strdup dup @ascuheap @acsmem

@@ -27,26 +27,16 @@
 static int
 __utmp_equal (const struct utmp *entry, const struct utmp *match)
 {
-  return
-    (
-#if _HAVE_UT_TYPE - 0
-     (entry->ut_type == INIT_PROCESS
-      || entry->ut_type == LOGIN_PROCESS
-      || entry->ut_type == USER_PROCESS
-      || entry->ut_type == DEAD_PROCESS)
-     &&
-     (match->ut_type == INIT_PROCESS
-      || match->ut_type == LOGIN_PROCESS
-      || match->ut_type == USER_PROCESS
-      || match->ut_type == DEAD_PROCESS)
-     &&
-#endif
-#if _HAVE_UT_ID - 0
-     (entry->ut_id[0] && match->ut_id[0]
-      ? strncmp (entry->ut_id, match->ut_id, sizeof match->ut_id) == 0
-      : strncmp (entry->ut_line, match->ut_line, sizeof match->ut_line) == 0)
-#else
-     strncmp (entry->ut_line, match->ut_line, sizeof match->ut_line) == 0
-#endif
-     );
+  return (entry->ut_type == INIT_PROCESS
+          || entry->ut_type == LOGIN_PROCESS
+          || entry->ut_type == USER_PROCESS
+          || entry->ut_type == DEAD_PROCESS)
+    && (match->ut_type == INIT_PROCESS
+        || match->ut_type == LOGIN_PROCESS
+        || match->ut_type == USER_PROCESS
+        || match->ut_type == DEAD_PROCESS)
+    && (entry->ut_id[0] && match->ut_id[0]
+        ? strncmp (entry->ut_id, match->ut_id, sizeof match->ut_id) == 0
+        : (strncmp (entry->ut_line, match->ut_line, sizeof match->ut_line)
+           == 0));
 }

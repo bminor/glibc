@@ -1,6 +1,6 @@
-/* Copyright (C) 1997-2019 Free Software Foundation, Inc.
+/* Linux pread64() syscall implementation -- non-cancellable.
+   Copyright (C) 2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Mark Kettenis <kettenis@phys.uva.nl>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,20 +16,17 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <utmp.h>
+#include <unistd.h>
+#include <sysdep-cancel.h>
+#include <not-cancel.h>
 
-#include "utmp-private.h"
-
-#ifndef TRANSFORM_UTMP_FILE_NAME
-# define TRANSFORM_UTMP_FILE_NAME(file_name) (file_name)
+#ifndef __NR_pread64
+# define __NR_pread64 __NR_pread
 #endif
 
-void
-__updwtmp (const char *wtmp_file, const struct utmp *utmp)
+ssize_t
+__pread64_nocancel (int fd, void *buf, size_t count, off64_t offset)
 {
-  const char *file_name = TRANSFORM_UTMP_FILE_NAME (wtmp_file);
-
-  __libc_updwtmp (file_name, utmp);
+  return INLINE_SYSCALL_CALL (pread64, fd, buf, count, SYSCALL_LL64_PRW (offset));
 }
-libc_hidden_def (__updwtmp)
-weak_alias (__updwtmp, updwtmp)
+hidden_def (__pread64_nocancel)
