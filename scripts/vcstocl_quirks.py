@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 # VCSToChangeLog Quirks for the GNU C Library.
 
 # Copyright (C) 2019-2020 Free Software Foundation, Inc.
