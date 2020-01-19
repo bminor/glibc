@@ -7041,12 +7041,6 @@ msgstr "%s: 嚴重錯誤: 錯誤的 l_value %d\n"
 msgid "expected continuation line not found"
 msgstr "找不到預期的接續列"
 
-#: timezone/zic.c:1203
-#, fuzzy
-#| msgid "24:00 not handled by pre-1998 versions of zic"
-msgid "fractional seconds rejected by pre-2018 versions of zic"
-msgstr "24:00 無法由早於 1998 的 zic 版本所處理"
-
 #: timezone/zic.c:1221 timezone/zic.c:3078
 msgid "time overflow"
 msgstr "時間溢位"
@@ -7144,10 +7138,6 @@ msgstr "在閏時設定列中有不合法的 CORRECTION 欄位"
 msgid "illegal Rolling/Stationary field on Leap line"
 msgstr "在閏時設定列中有不合法的 Rolling/Stationary 欄位"
 
-#: timezone/zic.c:1505
-msgid "leap second precedes Epoch"
-msgstr ""
-
 #: timezone/zic.c:1518
 msgid "wrong number of fields on Link line"
 msgstr "連結設定列的欄位數目錯誤"
@@ -7194,11 +7184,6 @@ msgstr "早於 2014 的客戶端可能會無法處理超過 1200 次的轉換次
 msgid "too many transition times"
 msgstr "轉換次數過多"
 
-#: timezone/zic.c:2107
-#, c-format
-msgid "%%z UT offset magnitude exceeds 99:59:59"
-msgstr ""
-
 #: timezone/zic.c:2488
 msgid "no POSIX environment variable for zone"
 msgstr "無 POSIX 環境變數用於區"
@@ -7207,10 +7192,6 @@ msgstr "無 POSIX 環境變數用於區"
 #, c-format
 msgid "%s: pre-%d clients may mishandle distant timestamps"
 msgstr "%s：早於 %d 的客戶端可能會無法處理過久的時間戳"
-
-#: timezone/zic.c:2631
-msgid "two rules for same instant"
-msgstr ""
 
 #: timezone/zic.c:2696
 msgid "can't determine time zone abbreviation to use just after until time"
@@ -7283,6 +7264,3 @@ msgstr "時區縮寫太多或者太長"
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s：無法建立 %s 目錄：%s"
-
-#~ msgid "RTLD_SELF used in code not dynamically loaded"
-#~ msgstr "程式碼所使用的 RTLD_SELF 沒有動態載入"

@@ -105,14 +105,6 @@ msgstr "%s : Trop d'arguments\n"
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "(ERREUR DU PROGRAMME) L'option aurait dû être reconnue ! ?"
 
-#: assert/assert-perr.c:35
-#, fuzzy, c-format
-#| msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
-msgid ""
-"%s%s%s:%u: %s%sUnexpected error: %s.\n"
-"%n"
-msgstr "%s%s%s : %u : %s%s erreur imprévue : %s.\n"
-
 #: assert/assert.c:101
 #, c-format
 msgid ""
@@ -456,12 +448,6 @@ msgstr "la chaîne dynamique d'un jeton de substitution est vide"
 msgid "cannot load auxiliary `%s' because of empty dynamic string token substitution\n"
 msgstr "ne peut charger l'auxiliaire « %s » en raison d'une chaîne dynamique de substitution de jeton vide\n"
 
-#: elf/dl-deps.c:220
-#, fuzzy
-#| msgid "cannot allocate dependency list"
-msgid "cannot allocate dependency buffer"
-msgstr "ne peut allouer une liste de dépendances"
-
 #: elf/dl-deps.c:443
 msgid "cannot allocate dependency list"
 msgstr "ne peut allouer une liste de dépendances"
@@ -534,12 +520,6 @@ msgstr "Commande de chargement sur une page ELF qui n'est pas alignée"
 msgid "ELF load command address/offset not properly aligned"
 msgstr "Commande de chargement sur une adresse ELF incorrectement alignée"
 
-#: elf/dl-load.c:1151
-#, fuzzy
-#| msgid "cannot restore segment prot after reloc"
-msgid "cannot process note segment"
-msgstr "ne peut restaurer le segment prot après reloc"
-
 #: elf/dl-load.c:1162
 msgid "object file has no loadable segments"
 msgstr "le fichier objet n'a pas de segment chargeable"
@@ -551,12 +531,6 @@ msgstr "ne peut dynamiquement charger un exécutable"
 #: elf/dl-load.c:1196
 msgid "object file has no dynamic section"
 msgstr "le fichier objet n'a pas de section dynamique"
-
-#: elf/dl-load.c:1223
-#, fuzzy
-#| msgid "cannot dynamically load executable"
-msgid "cannot dynamically load position-independent executable"
-msgstr "ne peut dynamiquement charger un exécutable"
 
 #: elf/dl-load.c:1225
 msgid "shared object cannot be dlopen()ed"
@@ -1072,12 +1046,6 @@ msgstr "ID de fil (thread) invalide '%s'"
 #, c-format
 msgid "cannot attach to process %lu"
 msgstr "ne peut s'attacher au process %lu"
-
-#: elf/pldd.c:184
-#, fuzzy, c-format
-#| msgid "invalid saved time"
-msgid "no valid %s/task entries"
-msgstr "Temps sauvegardé invalide"
 
 #: elf/pldd.c:290
 #, c-format
@@ -1624,12 +1592,6 @@ msgstr "mémoire épuisée"
 msgid "Error: .netrc file is readable by others."
 msgstr "Erreur : le fichier .netrc est lisible par les autres usagers."
 
-#: inet/ruserpass.c:180
-#, fuzzy
-#| msgid "Remove password or make file unreadable by others."
-msgid "Remove 'password' line or make file unreadable by others."
-msgstr "Retirer le mot de passe ou rendre les fichiers illisibles pour les autres usagers."
-
 #: inet/ruserpass.c:199
 #, c-format
 msgid "Unknown .netrc keyword %s"
@@ -1649,12 +1611,6 @@ msgstr "fichier de la table des caractères « %s » non repérable"
 #, c-format
 msgid "default character map file `%s' not found"
 msgstr "fichier par défaut de la table des caractères « %s » non repéré"
-
-#: locale/programs/charmap.c:265
-#, fuzzy, c-format
-#| msgid "character map `%s' is not ASCII compatible, locale not ISO C compliant\n"
-msgid "character map `%s' is not ASCII compatible, locale not ISO C compliant [--no-warnings=ascii]"
-msgstr "table de caractères « %s » n'est pas compatible ASCII, la locale n'est pas compatible ISO C\n"
 
 #: locale/programs/charmap.c:343
 #, c-format
@@ -2360,24 +2316,6 @@ msgstr "Pas de chiffre défini et aucun des noms standards dans la table des car
 msgid "%s: transliteration data from locale `%s' not available"
 msgstr "%s : le particularisme local « %s » ne dispose pas des données de transposition"
 
-#: locale/programs/ld-ctype.c:3672
-#, fuzzy, c-format
-#| msgid "%s: table for class \"%s\": %lu bytes\n"
-msgid "%s: table for class \"%s\": %lu bytes"
-msgstr "%s : table pour la classe « %s » : %lu octets\n"
-
-#: locale/programs/ld-ctype.c:3736
-#, fuzzy, c-format
-#| msgid "%s: table for map \"%s\": %lu bytes\n"
-msgid "%s: table for map \"%s\": %lu bytes"
-msgstr "%s : table de caractères « %s » : %lu octets\n"
-
-#: locale/programs/ld-ctype.c:3860
-#, fuzzy, c-format
-#| msgid "%s: table for width: %lu bytes\n"
-msgid "%s: table for width: %lu bytes"
-msgstr "%s : table de largeur : %lu octets\n"
-
 #: locale/programs/ld-identification.c:173
 #, c-format
 msgid "%s: no identification for category `%s'"
@@ -2418,12 +2356,6 @@ msgstr "%s : expression régulière incorrecte du champ « %s » : %s"
 #, c-format
 msgid "%s: value of field `int_curr_symbol' has wrong length"
 msgstr "%s : valeur du champ « int_curr_symbol » n'a pas la bonne longueur"
-
-#: locale/programs/ld-monetary.c:245
-#, fuzzy, c-format
-#| msgid "%s: value of field `int_curr_symbol' does not correspond to a valid name in ISO 4217"
-msgid "%s: value of field `int_curr_symbol' does not correspond to a valid name in ISO 4217 [--no-warnings=intcurrsym]"
-msgstr "%s : valeur du champ « int_curr_symbol » ne correspond pas à un nom valide de la norme ISO 4217"
 
 #: locale/programs/ld-monetary.c:293 locale/programs/ld-monetary.c:322
 #, c-format
@@ -2625,17 +2557,6 @@ msgstr ""
 msgid "while preparing output"
 msgstr "lors de la préparation de la sortie"
 
-#: locale/programs/locale.c:998
-#, fuzzy, c-format
-#| msgid "Cannot set LC_ALL to default locale"
-msgid "Cannot set %s to default locale"
-msgstr "Ne peut initialiser LC_ALL à la locale par défaut"
-
-#: locale/programs/locale.c:1096
-#, c-format
-msgid "warning: The LOCPATH variable is set to \"%s\"\n"
-msgstr ""
-
 #: locale/programs/localedef.c:116
 msgid "Input Files:"
 msgstr "Fichiers d'entrée :"
@@ -2656,10 +2577,6 @@ msgstr "FICHIER contient la table d'adressage des noms symboliques vers les vale
 msgid "Create output even if warning messages were issued"
 msgstr "Créer la sortie même si des messages d'avertissement sont affichées"
 
-#: locale/programs/localedef.c:128
-msgid "Do not create hard links between installed locales"
-msgstr ""
-
 #: locale/programs/localedef.c:129
 msgid "Optional output file prefix"
 msgstr "Préfixe optionnel du fichier de sortie"
@@ -2675,20 +2592,6 @@ msgstr "Supprimer les messages d'avertissement et d'information"
 #: locale/programs/localedef.c:133
 msgid "Print more messages"
 msgstr "Afficher d'autres messages"
-
-#: locale/programs/localedef.c:134 locale/programs/localedef.c:137
-#, fuzzy
-#| msgid "warning: "
-msgid "<warnings>"
-msgstr "AVERTISSEMENT : "
-
-#: locale/programs/localedef.c:135
-msgid "Comma-separated list of warnings to disable; supported warnings are: ascii, intcurrsym"
-msgstr ""
-
-#: locale/programs/localedef.c:138
-msgid "Comma-separated list of warnings to enable; supported warnings are: ascii, intcurrsym"
-msgstr ""
 
 #: locale/programs/localedef.c:141
 msgid "Archive control:"
@@ -2759,12 +2662,6 @@ msgstr "Ne peut ouvrir le fichier des particularisations « %s »"
 #, c-format
 msgid "cannot write output files to `%s'"
 msgstr "Ne peut écrire dans les fichiers de sortie vers « %s »"
-
-#: locale/programs/localedef.c:309
-#, fuzzy
-#| msgid "no output file produced because warnings were issued"
-msgid "no output file produced because errors were issued"
-msgstr "aucun fichier de sortie généré en raison d'avertissements émis"
 
 #: locale/programs/localedef.c:441
 #, c-format
@@ -3958,12 +3855,6 @@ msgstr "Ne peut écrire les résultats : « %s »"
 msgid "error getting caller's id: %s"
 msgstr "erreur lors de la récupération de l'identifiant de l'appelant : %s"
 
-#: nscd/connections.c:1349
-#, fuzzy, c-format
-#| msgid "cannot open /proc/self/cmdline: %s; disabling paranoia mode"
-msgid "cannot open /proc/self/cmdline: %m; disabling paranoia mode"
-msgstr "ne peut ouvrir /proc/self/cmdline : %s; désactive le mode paranoïa"
-
 #: nscd/connections.c:1372
 #, c-format
 msgid "cannot change to old UID: %s; disabling paranoia mode"
@@ -4445,18 +4336,6 @@ msgstr ""
 "%15<PRIuMAX>  allocation de mémoire à échouée\n"
 "%15s  vérifier /etc/%s pour les changements\n"
 
-#: nscd/pwdcache.c:407
-#, fuzzy, c-format
-#| msgid "Haven't found \"%s\" in hosts cache!"
-msgid "Haven't found \"%s\" in user database cache!"
-msgstr "N'a pas trouvé « %s » dans la cache de la liste des hôtes !"
-
-#: nscd/pwdcache.c:409
-#, fuzzy, c-format
-#| msgid "Reloading \"%s\" in hosts cache!"
-msgid "Reloading \"%s\" in user database cache!"
-msgstr "Recharge « %s » dans le cache hôte !"
-
 #: nscd/pwdcache.c:471
 #, c-format
 msgid "Invalid numeric uid \"%s\"!"
@@ -4601,12 +4480,6 @@ msgstr "Obtient des entrées de la base de données administrative"
 #, c-format
 msgid "Enumeration not supported on %s\n"
 msgstr "Énumération non supportée sur %s\n"
-
-#: nss/getent.c:517 nss/getent.c:530
-#, fuzzy, c-format
-#| msgid "Could not create log file"
-msgid "Could not allocate group list: %m\n"
-msgstr "N'a pu créé le fichier journal"
 
 #: nss/getent.c:901
 #, c-format
@@ -4833,12 +4706,6 @@ msgstr "Barre oblique inverse en suffixe"
 #: posix/regcomp.c:153
 msgid "Invalid back reference"
 msgstr "Référence arrière invalide"
-
-#: posix/regcomp.c:156
-#, fuzzy
-#| msgid "Unmatched [ or [^"
-msgid "Unmatched [, [^, [:, [., or [="
-msgstr "Échec du pairage de [ ou de [^"
 
 #: posix/regcomp.c:159
 msgid "Unmatched ( or \\("
@@ -6762,30 +6629,6 @@ msgstr "Ne peut ouvrir « %s »"
 msgid "cannot read header from `%s'"
 msgstr "Ne peut lire l'en-tête de « %s »"
 
-#: sysdeps/x86/dl-cet.c:202
-msgid "mprotect legacy bitmap failed"
-msgstr ""
-
-#: sysdeps/x86/dl-cet.c:217
-#, fuzzy
-#| msgid "Data input available"
-msgid "legacy bitmap isn't available"
-msgstr "Donnée disponible en entrée "
-
-#: sysdeps/x86/dl-cet.c:247
-#, fuzzy
-#| msgid "failed to start conversion processing"
-msgid "failed to mark legacy code region"
-msgstr "échec de démarrage du processus de conversion"
-
-#: sysdeps/x86/dl-cet.c:269
-msgid "shadow stack isn't enabled"
-msgstr ""
-
-#: sysdeps/x86/dl-cet.c:290
-msgid "can't disable CET"
-msgstr ""
-
 #: timezone/zdump.c:332
 msgid "has fewer than 3 characters"
 msgstr "a moins de 3 caractères"
@@ -6802,45 +6645,6 @@ msgstr "a  des caractères autres que de l'alphanumérique ASCII, '-' ou '+'"
 #, c-format
 msgid "%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"
 msgstr "%s : attention : zone \"%s\" abréviation \"%s\" %s\n"
-
-#: timezone/zdump.c:387
-#, fuzzy, c-format
-#| msgid ""
-#| "%s: usage: %s OPTIONS ZONENAME ...\n"
-#| "Options include:\n"
-#| "  -c [L,]U   Start at year L (default -500), end before year U (default 2500)\n"
-#| "  -t [L,]U   Start at time L, end before time U (in seconds since 1970)\n"
-#| "  -i         List transitions briefly (format is experimental)\n"
-#| "  -v         List transitions verbosely\n"
-#| "  -V         List transitions a bit less verbosely\n"
-#| "  --help     Output this help\n"
-#| "  --version  Output version info\n"
-#| "\n"
-#| "Report bugs to %s.\n"
-msgid ""
-"%s: usage: %s OPTIONS TIMEZONE ...\n"
-"Options include:\n"
-"  -c [L,]U   Start at year L (default -500), end before year U (default 2500)\n"
-"  -t [L,]U   Start at time L, end before time U (in seconds since 1970)\n"
-"  -i         List transitions briefly (format is experimental)\n"
-"  -v         List transitions verbosely\n"
-"  -V         List transitions a bit less verbosely\n"
-"  --help     Output this help\n"
-"  --version  Output version info\n"
-"\n"
-"Report bugs to %s.\n"
-msgstr ""
-"%s: usage: %s OPTIONS ZONENAME ...\n"
-"Options include:\n"
-"  -c [L,]U  Commence à l'année L (par défaut -500), fini avant l'année U (défaut 2500)\n"
-"  -t [L,]U   Commence à l'heure L, fini avant l'heure U (en secondes depuis 1970)\n"
-"  -i         Liste les transitions en bref (format expérimental)\n"
-"  -v         Liste les transitions en étendu\n"
-"  -V         Liste les transitions en un peu moins étendu\n"
-"  --help     Affiche cette aide\n"
-"  --version  Affiche les infos de version\n"
-"\n"
-"Déclarer les bugs à %s.\n"
 
 #: timezone/zdump.c:473
 #, c-format
@@ -6861,12 +6665,6 @@ msgstr "%s : mémoire épuisée : %s\n"
 msgid "size overflow"
 msgstr "Débordement de taille"
 
-#: timezone/zic.c:447
-#, fuzzy
-#| msgid "int overflow"
-msgid "alignment overflow"
-msgstr "Débordement d'entier"
-
 #: timezone/zic.c:495
 msgid "integer overflow"
 msgstr "Débordement d'entier "
@@ -6885,27 +6683,6 @@ msgstr " (règle de \"%s\", ligne %<PRIdMAX>)"
 #, c-format
 msgid "warning: "
 msgstr "AVERTISSEMENT : "
-
-#: timezone/zic.c:576
-#, fuzzy, c-format
-#| msgid ""
-#| "%s: usage is %s [ --version ] [ --help ] [ -v ] \\\n"
-#| "\t[ -l localtime ] [ -p posixrules ] [ -d directory ] \\\n"
-#| "\t[ -L leapseconds ] [ filename ... ]\n"
-#| "\n"
-#| "Report bugs to %s.\n"
-msgid ""
-"%s: usage is %s [ --version ] [ --help ] [ -v ] \\\n"
-"\t[ -l localtime ] [ -p posixrules ] [ -d directory ] \\\n"
-"\t[ -t localtime-link ] [ -L leapseconds ] [ filename ... ]\n"
-"\n"
-"Report bugs to %s.\n"
-msgstr ""
-"%s : l'usage is %s [ --version ] [ --help ] [ -v ] \\\n"
-"\t[ -l localtime ] [ -p posixrules ] [ -d directory ]\n"
-"\t[ -L leapseconds ] [ filename ... ]\n"
-"\n"
-"Rapporter les bugs à %s.\n"
 
 #: timezone/zic.c:599
 #, c-format
@@ -6930,16 +6707,6 @@ msgstr "%s : option -l spécifiée plus d'une fois\n"
 #, c-format
 msgid "%s: More than one -p option specified\n"
 msgstr "%s : option -p spécifiée plus d'une fois\n"
-
-#: timezone/zic.c:680
-#, fuzzy, c-format
-#| msgid "%s: More than one -d option specified\n"
-msgid "%s: More than one -t option specified\n"
-msgstr "%s : option -d spécifiée plus d'une fois\n"
-
-#: timezone/zic.c:689
-msgid "-y is obsolescent"
-msgstr ""
 
 #: timezone/zic.c:693
 #, c-format
@@ -7067,12 +6834,6 @@ msgstr "%s : panique : valeur %d de type « l_value » invalide\n"
 msgid "expected continuation line not found"
 msgstr "ligne de continuation attendue, non repérée"
 
-#: timezone/zic.c:1203
-#, fuzzy
-#| msgid "format '%s' not handled by pre-2015 versions of zic"
-msgid "fractional seconds rejected by pre-2018 versions of zic"
-msgstr "format '%s' non pris en charge par les versions de zic antérieures à 2015 "
-
 #: timezone/zic.c:1221 timezone/zic.c:3078
 msgid "time overflow"
 msgstr "Débordement du temps alloué"
@@ -7088,12 +6849,6 @@ msgstr "Temps sauvegardé invalide"
 #: timezone/zic.c:1256
 msgid "wrong number of fields on Rule line"
 msgstr "Mauvais nombre de champs sur la ligne de type « Rule »"
-
-#: timezone/zic.c:1265
-#, fuzzy, c-format
-#| msgid "Invalid numeric gid \"%s\"!"
-msgid "Invalid rule name \"%s\""
-msgstr "gid numérique invalide  « %s » !"
 
 #: timezone/zic.c:1287
 msgid "wrong number of fields on Zone line"
@@ -7173,12 +6928,6 @@ msgstr "champ CORRECTION non permis dans la ligne de type « Leap »"
 msgid "illegal Rolling/Stationary field on Leap line"
 msgstr "Champ « Rolling/Stationary » non permis sur la ligne de type « Leap »"
 
-#: timezone/zic.c:1505
-#, fuzzy
-#| msgid "leap second precedes Big Bang"
-msgid "leap second precedes Epoch"
-msgstr "La seconde de saut précède le Big Bang"
-
 #: timezone/zic.c:1518
 msgid "wrong number of fields on Link line"
 msgstr "Mauvais nombre de champs sur la ligne de type « Link »"
@@ -7203,11 +6952,6 @@ msgstr "année initiale plus grande que l'année finale"
 msgid "typed single year"
 msgstr "une seule année fournie"
 
-#: timezone/zic.c:1633
-#, c-format
-msgid "year type \"%s\" is obsolete; use \"-\" instead"
-msgstr ""
-
 #: timezone/zic.c:1668
 msgid "invalid weekday name"
 msgstr "Nom du jour de semaine invalide"
@@ -7224,12 +6968,6 @@ msgstr "les clients pre-2014 peuvent mal gérer plus de 1200 heures de transitio
 #: timezone/zic.c:1920
 msgid "too many transition times"
 msgstr "trop d'heures de transition"
-
-#: timezone/zic.c:2107
-#, fuzzy, c-format
-#| msgid "%%z UTC offset magnitude exceeds 99:59:59"
-msgid "%%z UT offset magnitude exceeds 99:59:59"
-msgstr "%% l'ampleur du décalage UTC excède 99:59:59"
 
 #: timezone/zic.c:2488
 msgid "no POSIX environment variable for zone"
@@ -7262,10 +7000,6 @@ msgstr "décalage  de l'UTC en dehors de la plage"
 msgid "too many leap seconds"
 msgstr "trop de délai en secondes"
 
-#: timezone/zic.c:2844
-msgid "Leap seconds too close together"
-msgstr ""
-
 #: timezone/zic.c:2891
 msgid "Wild result from command execution"
 msgstr "Résultat anarchique résultant de l'exécution de la commande"
@@ -7274,16 +7008,6 @@ msgstr "Résultat anarchique résultant de l'exécution de la commande"
 #, c-format
 msgid "%s: command was '%s', result was %d\n"
 msgstr "%s : la commande était « %s », le résultat était %d\n"
-
-#: timezone/zic.c:2998
-#, c-format
-msgid "\"%s\" is undocumented; use \"last%s\" instead"
-msgstr ""
-
-#: timezone/zic.c:3029
-#, c-format
-msgid "\"%s\" is ambiguous in pre-2017c zic"
-msgstr ""
 
 #: timezone/zic.c:3063
 msgid "Odd number of quotation marks"
@@ -7317,210 +7041,3 @@ msgstr "trop ou de trop longues abréviations de fuseaux horaires"
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s : ne peut créer le dossier %s : %s"
-
-#~ msgid "RTLD_SELF used in code not dynamically loaded"
-#~ msgstr "RTLD_SELF utilisé dans du code non chargé dynamiquement"
-
-#~ msgid "cannot open zero fill device"
-#~ msgstr "ne peut ouvrir le fichier de périphérique rempli de zéros"
-
-#~ msgid "invalid caller"
-#~ msgstr "appelant invalide"
-
-#~ msgid "relocation error"
-#~ msgstr "erreur de réaffectation"
-
-#~ msgid "Character out of range for UTF-8"
-#~ msgstr "Caractère en dehors de la plage pour UTF-8"
-
-#, c-format
-#~ msgid "no definition of `UNDEFINED'"
-#~ msgstr "Pas de définition de type « UNDEFINED »"
-
-#~ msgid "non-symbolic character value should not be used"
-#~ msgstr "Une valeur de caractère non-symbolique ne doit pas être utilisée"
-
-#, c-format
-#~ msgid "Cannot set LC_CTYPE to default locale"
-#~ msgstr "Ne peut initialiser LC_TYPE à la locale par défaut"
-
-#, c-format
-#~ msgid "Cannot set LC_MESSAGES to default locale"
-#~ msgstr "Ne peut initialiser LC_MESSAGES à la locale par défaut"
-
-#, c-format
-#~ msgid "Cannot set LC_COLLATE to default locale"
-#~ msgstr "Ne peut initialiser LC_COLLATE à la locale par défaut"
-
-#, c-format
-#~ msgid "cannot read /proc/self/cmdline: %s; disabling paranoia mode"
-#~ msgstr "ne peut lire /proc/self/cmdline : %s; désactive le mode paranoïa"
-
-#, c-format
-#~ msgid "Haven't found \"%s\" in password cache!"
-#~ msgstr "N'a pas trouvé « %s » dans le cache des mots de passe !"
-
-#, c-format
-#~ msgid "Reloading \"%s\" in password cache!"
-#~ msgstr "Recharge « %s » dans le cache des mots de passe !"
-
-#, c-format
-#~ msgid "This implementation doesn't support newstyle or MT-safe code!\n"
-#~ msgstr "Cette implantation ne supporte pas le nouveau style ou le code MT-safe !\n"
-
-#~ msgid "unruly zone"
-#~ msgstr "Zone sans règle"
-
-#, c-format
-#~ msgid "%s: Leap line in non leap seconds file %s"
-#~ msgstr "%s : ligne de type « Leap » dans un fichier de secondes non  « Leap »  %s"
-
-#~ msgid "nameless rule"
-#~ msgstr "Règle sans nom"
-
-#~ msgid "repeated leap second moment"
-#~ msgstr "Répétition du délai une seconde fois"
-
-#~ msgid "cannot set socket to close on exec: %s; disabling paranoia mode"
-#~ msgstr "ne peut établir le socket comme étant fermé dans exec : %s; désactive le mode paranoïa"
-
-#~ msgid "%s: option '--%s' doesn't allow an argument\n"
-#~ msgstr "%s : l'option « --%s » ne permet pas d'argument\n"
-
-#~ msgid "%s: unrecognized option '--%s'\n"
-#~ msgstr "%s : option non reconnue « --%s »\n"
-
-#~ msgid "%s: option '-W %s' doesn't allow an argument\n"
-#~ msgstr "%s : l'option « -W %s » ne permet pas d'argument\n"
-
-#~ msgid "%s: option '-W %s' requires an argument\n"
-#~ msgstr "%s : l'option «-W %s » requiert un argument\n"
-
-#~ msgid ""
-#~ "%s: usage: %s [--version] [--help] [-{vV}] [-{ct} [lo,]hi] zonename ...\n"
-#~ "\n"
-#~ "Report bugs to %s.\n"
-#~ msgstr ""
-#~ "%s : usage %s [--version] [--help]  [-{vV}] [-{ct} [lo,]hi] nom_fuseau_horaire ...\n"
-#~ "\n"
-#~ "Rapporter les bugs à %s.\n"
-
-#~ msgid "hard link failed, symbolic link used"
-#~ msgstr "Échec de création du lien direct, création d'un lien symbolique"
-
-#~ msgid "link failed, copy used"
-#~ msgstr "Échec de création du lien, la copie est utilisée"
-
-#~ msgid "cannot allocate TLS data structures for initial thread"
-#~ msgstr "ne peut allouer une structure de données TLS pour un thread initial"
-
-#~ msgid "cannot handle TLS data"
-#~ msgstr "ne peut traiter les données TLS"
-
-#~ msgid "Don't generate links"
-#~ msgstr "Ne pas générer les liens"
-
-#~ msgid "Create old-style tables"
-#~ msgstr "Création des tables selon le vieux format"
-
-#~ msgid "cannot change socket to nonblocking mode: %s"
-#~ msgstr "ne peut établir le socket en mode nonblocking : %s"
-
-#~ msgid "cannot set socket to close on exec: %s"
-#~ msgstr "ne peut établir le socket à l'état fermé dans exec : %s"
-
-#~ msgid "program %lu is not available\n"
-#~ msgstr "Le programme %lu n'est pas disponible.\n"
-
-#~ msgid "program %lu version %lu is not available\n"
-#~ msgstr "Le programme %lu de version %lu n'est pas disponible.\n"
-
-#~ msgid "program %lu version %lu ready and waiting\n"
-#~ msgstr "Le programme %lu de version %lu est prêt et en attente.\n"
-
-#~ msgid "rpcinfo: can't contact portmapper"
-#~ msgstr "rpcinfo : ne peut contacter l'aiguilleur de ports"
-
-#~ msgid "No remote programs registered.\n"
-#~ msgstr "Aucun programme enregistré sur l'hôte cible\n"
-
-#~ msgid "   program vers proto   port\n"
-#~ msgstr "   program no_version protocole  no_port\n"
-
-#~ msgid "(unknown)"
-#~ msgstr "(inconnu)"
-
-#~ msgid "rpcinfo: broadcast failed: %s\n"
-#~ msgstr "rpcinfo : échec de diffusion : %s\n"
-
-#~ msgid "Sorry. You are not root\n"
-#~ msgstr "Désolé. Vous n'êtes pas ROOT\n"
-
-#~ msgid "rpcinfo: Could not delete registration for prog %s version %s\n"
-#~ msgstr "rpcinfo : ne peut éliminer l'enregistrement du programme %s de version %s\n"
-
-#~ msgid "Usage: rpcinfo [ -n portnum ] -u host prognum [ versnum ]\n"
-#~ msgstr "Usage : rpcinfo [ -n no_port ] -u hôte no_prog [ no_version ]\n"
-
-#~ msgid "       rpcinfo [ -n portnum ] -t host prognum [ versnum ]\n"
-#~ msgstr "       rpcinfo [ -n no_de_port ] -t hôte no_program [ no_version ]\n"
-
-#~ msgid "       rpcinfo -p [ host ]\n"
-#~ msgstr "       rpcinfo -p [ hôte ]\n"
-
-#~ msgid "       rpcinfo -b prognum versnum\n"
-#~ msgstr "       rpcinfo -b no_program no_version\n"
-
-#~ msgid "       rpcinfo -d prognum versnum\n"
-#~ msgstr "       rpcinfo -d no_program no_version\n"
-
-#~ msgid "rpcinfo: %s is unknown service\n"
-#~ msgstr "rpcinfo : %s est un service inconnu\n"
-
-#~ msgid "rpcinfo: %s is unknown host\n"
-#~ msgstr "rpcinfo : %s est un hôte inconnu\n"
-
-#~ msgid "lacks alphabetic at start"
-#~ msgstr "Il manque un lettre de l'alphabet au début"
-
-#~ msgid "differs from POSIX standard"
-#~ msgstr "diffère du standard POSIX"
-
-#~ msgid "Error writing to standard output"
-#~ msgstr "Erreur d'écriture sur la sortie standard"
-
-#~ msgid "%s: Error reading %s\n"
-#~ msgstr "%s : erreur de lecture de %s\n"
-
-#~ msgid "%s: Error writing %s\n"
-#~ msgstr "%s : erreur d'écriture de %s\n"
-
-#~ msgid "%s: Error closing %s: %s\n"
-#~ msgstr "%s : erreur lors de la fermeture de %s : %s\n"
-
-#~ msgid "blank TO field on Link line"
-#~ msgstr "Champ « TO » vide dans la ligne de type « Link »"
-
-#~ msgid "internal error - addtype called with bad isdst"
-#~ msgstr "Erreur interne - addtype() appellé avec un mauvais bloc de type « isdst »"
-
-#~ msgid "internal error - addtype called with bad ttisstd"
-#~ msgstr "Erreur interne - addtype() appellé avec un mauvais bloc de type « ttisstd »"
-
-#~ msgid "internal error - addtype called with bad ttisgmt"
-#~ msgstr "Erreur interne - addtype() appellé avec un mauvais bloc de type « ttisgmt »"
-
-#~ msgid "time zone abbreviation lacks alphabetic at start"
-#~ msgstr "l'abréviation du nom de fuseau horaire n'a pas de caractère alphabétique au début"
-
-#~ msgid "cannot load any more object with static TLS"
-#~ msgstr "ne peut pas charger plus d'objets avec TLS statique"
-
-#~ msgid "%s: no PLTREL found in object %s\n"
-#~ msgstr "%s : aucun PLTREL trouvé dans l'objet %s\n"
-
-#~ msgid "cannot create internal descriptors"
-#~ msgstr "ne peut créer les descripteurs internes"
-
-#~ msgid "compile-time support for database policy missing"
-#~ msgstr "il manque le support du temps de compilation pour la politique de base de données"

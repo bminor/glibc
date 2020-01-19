@@ -7530,6 +7530,3 @@ msgstr "hi ha massa abreviatures de zona horària (o són massa llargues)"
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s: no s’ha pogut crear el directori «%s»: %s"
-
-#~ msgid "RTLD_SELF used in code not dynamically loaded"
-#~ msgstr "S’ha emprat RTLD_SELF en un codi no carregat dinàmicament"

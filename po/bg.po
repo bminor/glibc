@@ -7268,6 +7268,3 @@ msgstr "твърде много или твърде дълго съкращен�
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s: Не може да се създаде директория %s: %s"
-
-#~ msgid "RTLD_SELF used in code not dynamically loaded"
-#~ msgstr "RTLD_SELF, използван в кода, не се зарежда динамично"

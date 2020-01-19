@@ -74,10 +74,6 @@ msgstr "NAMA"
 msgid "Set the program name"
 msgstr "Set nama aplikasi"
 
-#: argp/argp-parse.c:105
-msgid "SECS"
-msgstr ""
-
 #: argp/argp-parse.c:106
 msgid "Hang for SECS seconds (default 3600)"
 msgstr "Tahan untuk DET detik (baku 3600)"
@@ -98,22 +94,6 @@ msgstr "%s: Terlalu banyak argumen\n"
 #: argp/argp-parse.c:766
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "(APLIKASI ERROR) Pilihan seharusnya telah dikenal!?"
-
-#: assert/assert-perr.c:35
-#, fuzzy, c-format
-#| msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
-msgid ""
-"%s%s%s:%u: %s%sUnexpected error: %s.\n"
-"%n"
-msgstr "%s%s%s:%u: %s%sError tidak terduga: %s.\n"
-
-#: assert/assert.c:101
-#, fuzzy, c-format
-#| msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
-msgid ""
-"%s%s%s:%u: %s%sAssertion `%s' failed.\n"
-"%n"
-msgstr "%s%s%s:%u: %s%sAssertion `%s' gagal.\n"
 
 #: catgets/gencat.c:110
 msgid "Create C header file NAME containing symbol definitions"
@@ -143,23 +123,6 @@ msgid ""
 msgstr ""
 "-o BERKAS-KELUARAN [BERKAS-MASUKAN]...\n"
 "[BERKAS-KELUARAN [BERKAS-MASUKAN]...]"
-
-#: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:308
-#: elf/pldd.c:247 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:405
-#: iconv/iconvconfig.c:379 locale/programs/locale.c:276
-#: locale/programs/localedef.c:437 login/programs/pt_chown.c:89
-#: malloc/memusagestat.c:563 nss/getent.c:953 nss/makedb.c:369
-#: posix/getconf.c:503 sysdeps/unix/sysv/linux/lddlibc4.c:61
-#, fuzzy, c-format
-#| msgid ""
-#| "For bug reporting instructions, please see:\n"
-#| "<http://www.gnu.org/software/libc/bugs.html>.\n"
-msgid ""
-"For bug reporting instructions, please see:\n"
-"%s.\n"
-msgstr ""
-"Untuk instruksi pelaporan bug, tolong lihat:\n"
-"<http://www.gnu.org/software/libc/bugs.html>.\n"
 
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
 #: elf/ldconfig.c:324 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
@@ -303,19 +266,6 @@ msgstr "ukuran penunjuk tidak valid"
 msgid "Usage: xtrace [OPTION]... PROGRAM [PROGRAMOPTION]...\\n"
 msgstr "Penggunaan: xtrace [PILIHAN]... APLIKASI [PILIHAN APLIKASI]...\\n"
 
-#: debug/xtrace.sh:32 elf/sotruss.sh:56 elf/sotruss.sh:67 elf/sotruss.sh:135
-#: malloc/memusage.sh:26
-#, fuzzy
-#| msgid "Try `%s --help' or `%s --usage' for more information.\n"
-msgid "Try \\`%s --help' or \\`%s --usage' for more information.\\n"
-msgstr "Coba `%s --help' atau `%s --usage' untuk informasi lebih lanjut.\n"
-
-#: debug/xtrace.sh:38
-#, fuzzy
-#| msgid "%s: option '%s' requires an argument\n"
-msgid "%s: option '%s' requires an argument.\\n"
-msgstr "%s: pilihan '%s' membutuhkan sebuah argumen\n"
-
 #: debug/xtrace.sh:45
 msgid ""
 "Trace execution of program by printing currently executed function.\n"
@@ -341,17 +291,6 @@ msgstr ""
 "Argumen wajib untuk pilihan panjang juga wajib untuk setiap pilihan pendek\n"
 "yang berhubungan.\n"
 "\n"
-
-#: debug/xtrace.sh:57 elf/ldd.bash.in:55 elf/sotruss.sh:49
-#: malloc/memusage.sh:64
-#, fuzzy
-#| msgid ""
-#| "For bug reporting instructions, please see:\n"
-#| "<http://www.gnu.org/software/libc/bugs.html>.\n"
-msgid "For bug reporting instructions, please see:\\\\n%s.\\\\n"
-msgstr ""
-"Untuk instruksi pelaporan bug, tolong lihat:\n"
-"<http://www.gnu.org/software/libc/bugs.html>.\n"
 
 #: debug/xtrace.sh:125
 msgid "xtrace: unrecognized option \\`$1'\\n"
@@ -462,12 +401,6 @@ msgstr "penggantian string token dinamis kosong"
 msgid "cannot load auxiliary `%s' because of empty dynamic string token substitution\n"
 msgstr "tidak dapat melod tambahan `%s' karena penggantian string dinamis kosong\n"
 
-#: elf/dl-deps.c:220
-#, fuzzy
-#| msgid "cannot allocate dependency list"
-msgid "cannot allocate dependency buffer"
-msgstr "tidak dapat mengalokasikan daftar ketergantungan"
-
 #: elf/dl-deps.c:443
 msgid "cannot allocate dependency list"
 msgstr "tidak dapat mengalokasikan daftar ketergantungan"
@@ -540,12 +473,6 @@ msgstr "ELF perintah angkut tidak teralign-halaman"
 msgid "ELF load command address/offset not properly aligned"
 msgstr "ELF perintah angkut alamat/ofset tidak secara benar ter-align"
 
-#: elf/dl-load.c:1151
-#, fuzzy
-#| msgid "cannot restore segment prot after reloc"
-msgid "cannot process note segment"
-msgstr "tidak dapat merestore segmen prot setelah relokasi"
-
 #: elf/dl-load.c:1162
 msgid "object file has no loadable segments"
 msgstr "berkas objek tidak memiliki segmen yang dapat diangkut"
@@ -557,12 +484,6 @@ msgstr "tidak dapat secara dinamis mengangkut aplikasi"
 #: elf/dl-load.c:1196
 msgid "object file has no dynamic section"
 msgstr "berkas objek tidak memiliki bagian dinamis"
-
-#: elf/dl-load.c:1223
-#, fuzzy
-#| msgid "cannot dynamically load executable"
-msgid "cannot dynamically load position-independent executable"
-msgstr "tidak dapat secara dinamis mengangkut aplikasi"
 
 #: elf/dl-load.c:1225
 msgid "shared object cannot be dlopen()ed"
@@ -611,10 +532,6 @@ msgstr "berkas OS ABI ELF tidak valid"
 #: elf/dl-load.c:1631
 msgid "ELF file ABI version invalid"
 msgstr "berkas versi ABI ELF tidak valid"
-
-#: elf/dl-load.c:1634
-msgid "nonzero padding in e_ident"
-msgstr ""
 
 #: elf/dl-load.c:1637
 msgid "internal error"
@@ -705,12 +622,6 @@ msgstr "RTLD_NEXT digunakan dalam kode yang tidak secara dinamis diangkut"
 msgid "cannot create TLS data structures"
 msgstr "tidak dapat membuat struktur data TLS"
 
-#: elf/dl-version.c:148
-#, fuzzy
-#| msgid "symbol lookup error"
-msgid "version lookup error"
-msgstr "simbol lookup error"
-
 #: elf/dl-version.c:279
 msgid "cannot allocate version reference table"
 msgstr "tidak dapat mengalokasikan tabel referensi versi"
@@ -726,12 +637,6 @@ msgstr "Menghasilkan pesan verbose"
 #: elf/ldconfig.c:144
 msgid "Don't build cache"
 msgstr "Jangan membuat cache"
-
-#: elf/ldconfig.c:145
-#, fuzzy
-#| msgid "%s is not a symbolic link\n"
-msgid "Don't update symbolic links"
-msgstr "%s bukan sebuah link simbolis\n"
 
 #: elf/ldconfig.c:146
 msgid "Change to and use ROOT as root directory"
@@ -879,11 +784,6 @@ msgstr "perpustakaan lib4 %s berada dalam direktori salah"
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "perpustakaan %s dan %s berada dalam direktori %s memiliki soname sama tetapi memiliki tipe berbeda."
 
-#: elf/ldconfig.c:1083
-#, c-format
-msgid "Warning: ignoring configuration file that cannot be opened: %s"
-msgstr ""
-
 #: elf/ldconfig.c:1149
 #, c-format
 msgid "%s:%u: bad syntax in hwcap line"
@@ -1000,119 +900,6 @@ msgstr "keluar dengan kode keluar yang tidak diketahui"
 msgid "error: you do not have read permission for"
 msgstr "error: anda tidak memiliki ijin membaca untuk"
 
-#: elf/pldd-xx.c:102
-#, fuzzy, c-format
-#| msgid "cannot read header from `%s'"
-msgid "cannot find program header of process"
-msgstr "tidak dapat membaca header dari `%s'"
-
-#: elf/pldd-xx.c:106
-#, fuzzy, c-format
-#| msgid "cannot read header"
-msgid "cannot read program header"
-msgstr "tidak dapat membaca header"
-
-#: elf/pldd-xx.c:128
-#, fuzzy, c-format
-#| msgid "object file has no dynamic section"
-msgid "cannot read dynamic section"
-msgstr "berkas objek tidak memiliki bagian dinamis"
-
-#: elf/pldd-xx.c:137
-#, fuzzy, c-format
-#| msgid "cannot read header"
-msgid "cannot read r_debug"
-msgstr "tidak dapat membaca header"
-
-#: elf/pldd-xx.c:154
-#, fuzzy, c-format
-#| msgid "cannot read archive header"
-msgid "cannot read program interpreter"
-msgstr "tidak dapat membaca archive header"
-
-#: elf/pldd-xx.c:183
-#, fuzzy, c-format
-#| msgid "cannot read file data"
-msgid "cannot read link map"
-msgstr "tidak dapat membaca berkas data"
-
-#: elf/pldd-xx.c:190
-#, fuzzy, c-format
-#| msgid "cannot read header"
-msgid "cannot read object name"
-msgstr "tidak dapat membaca header"
-
-#: elf/pldd-xx.c:197
-#, fuzzy, c-format
-#| msgid "cannot allocate memory for program header"
-msgid "cannot allocate buffer for object name"
-msgstr "tidak dapat mengalokasikan memori untuk aplikasi header"
-
-#: elf/pldd.c:58
-msgid "List dynamic shared objects loaded into process."
-msgstr ""
-
-#: elf/pldd.c:62
-msgid "PID"
-msgstr ""
-
-#: elf/pldd.c:89
-#, c-format
-msgid "Exactly one parameter with process ID required.\n"
-msgstr ""
-
-#: elf/pldd.c:103
-#, fuzzy, c-format
-#| msgid "invalid pointer size"
-msgid "invalid process ID '%s'"
-msgstr "ukuran penunjuk tidak valid"
-
-#: elf/pldd.c:111
-#, fuzzy, c-format
-#| msgid "cannot open `%s'"
-msgid "cannot open %s"
-msgstr "tidak dapat membuka `%s'"
-
-#: elf/pldd.c:142
-#, fuzzy, c-format
-#| msgid "cannot open `%s'"
-msgid "cannot open %s/task"
-msgstr "tidak dapat membuka `%s'"
-
-#: elf/pldd.c:145
-#, fuzzy, c-format
-#| msgid "cannot create searchlist"
-msgid "cannot prepare reading %s/task"
-msgstr "tidak dapat membuat daftar pencarian"
-
-#: elf/pldd.c:158
-#, fuzzy, c-format
-#| msgid "invalid ELF header"
-msgid "invalid thread ID '%s'"
-msgstr "header ELF tidak valid"
-
-#: elf/pldd.c:169
-#, fuzzy, c-format
-#| msgid "cannot access '%s'"
-msgid "cannot attach to process %lu"
-msgstr "tidak dapat mengakses '%s'"
-
-#: elf/pldd.c:184
-#, fuzzy, c-format
-#| msgid "invalid saved time"
-msgid "no valid %s/task entries"
-msgstr "waktu disimpan tidak valid"
-
-#: elf/pldd.c:290
-#, c-format
-msgid "cannot get information about process %lu"
-msgstr ""
-
-#: elf/pldd.c:303
-#, c-format
-msgid "process %lu is no ELF program"
-msgstr ""
-
 #: elf/readelflib.c:34
 #, c-format
 msgid "file %s is truncated\n"
@@ -1206,61 +993,6 @@ msgstr "%s: tujuan tidak valid: %s\n"
 #, c-format
 msgid "Invalid link from \"%s\" to \"%s\": %s\n"
 msgstr "Sambungan tidak valid dari \"%s\" ke \"%s\": %s\n"
-
-#: elf/sotruss.sh:32
-#, sh-format
-msgid ""
-"Usage: sotruss [OPTION...] [--] EXECUTABLE [EXECUTABLE-OPTION...]\n"
-"  -F, --from FROMLIST     Trace calls from objects on FROMLIST\n"
-"  -T, --to TOLIST         Trace calls to objects on TOLIST\n"
-"\n"
-"  -e, --exit              Also show exits from the function calls\n"
-"  -f, --follow            Trace child processes\n"
-"  -o, --output FILENAME   Write output to FILENAME (or FILENAME.$PID in case\n"
-"\t\t\t  -f is also used) instead of standard error\n"
-"\n"
-"  -?, --help              Give this help list\n"
-"      --usage             Give a short usage message\n"
-"      --version           Print program version"
-msgstr ""
-
-#: elf/sotruss.sh:46
-#, fuzzy
-#| msgid "Mandatory or optional arguments to long options are also mandatory or optional for any corresponding short options."
-msgid "Mandatory arguments to long options are also mandatory for any corresponding\\nshort options.\\n"
-msgstr "Argumen wajib atau opsional untuk pilihan panjang juga wajib atau opsional untuk pilihan pendek yang berhubungan."
-
-#: elf/sotruss.sh:55
-#, fuzzy
-#| msgid "%s: option requires an argument -- '%c'\n"
-msgid "%s: option requires an argument -- '%s'\\n"
-msgstr "%s: pilihan membutuhkan sebuah argumen -- '%c'\n"
-
-#: elf/sotruss.sh:61
-#, fuzzy
-#| msgid "%s: option '%s' is ambiguous\n"
-msgid "%s: option is ambiguous; possibilities:"
-msgstr "%s: pilihan '%s' adalah ambigu\n"
-
-#: elf/sotruss.sh:79
-#, fuzzy
-#| msgid "Written by %s.\n"
-msgid "Written by %s.\\n"
-msgstr "Ditulis oleh %s.\n"
-
-#: elf/sotruss.sh:86
-msgid ""
-"Usage: %s [-ef] [-F FROMLIST] [-o FILENAME] [-T TOLIST] [--exit]\n"
-"\t    [--follow] [--from FROMLIST] [--output FILENAME] [--to TOLIST]\n"
-"\t    [--help] [--usage] [--version] [--]\n"
-"\t    EXECUTABLE [EXECUTABLE-OPTION...]\\n"
-msgstr ""
-
-#: elf/sotruss.sh:134
-#, fuzzy
-#| msgid "%s: unrecognized option '%c%s'\n"
-msgid "%s: unrecognized option '%c%s'\\n"
-msgstr "%s: pilihan tidak dikenal '%c%s'\n"
 
 #: elf/sprof.c:77
 msgid "Output selection:"
@@ -1430,15 +1162,6 @@ msgstr "Pengontrol keluaran:"
 msgid "omit invalid characters from output"
 msgstr "abaikan karakter tidak valid dari keluaran"
 
-#: iconv/iconv_prog.c:66 iconv/iconvconfig.c:128
-#: locale/programs/localedef.c:117 locale/programs/localedef.c:119
-#: locale/programs/localedef.c:121 locale/programs/localedef.c:150
-#: malloc/memusagestat.c:56
-#, fuzzy
-#| msgid "[FILE]"
-msgid "FILE"
-msgstr "[BERKAS]"
-
 #: iconv/iconv_prog.c:66
 msgid "output file"
 msgstr "berkas keluaran"
@@ -1509,30 +1232,6 @@ msgstr "internal error (deskripsi tidak legal)"
 msgid "unknown iconv() error %d"
 msgstr "error %d iconv() tidak dikenal"
 
-#: iconv/iconv_prog.c:786
-#, fuzzy
-#| msgid ""
-#| "The following list contain all the coded character sets known.  This does\n"
-#| "not necessarily mean that all combinations of these names can be used for\n"
-#| "the FROM and TO command line parameters.  One coded character set can be\n"
-#| "listed with several different names (aliases).\n"
-#| "\n"
-#| "  "
-msgid ""
-"The following list contains all the coded character sets known.  This does\n"
-"not necessarily mean that all combinations of these names can be used for\n"
-"the FROM and TO command line parameters.  One coded character set can be\n"
-"listed with several different names (aliases).\n"
-"\n"
-"  "
-msgstr ""
-"Daftar berikut berisi seluruh kode karakter yang dikenal. Ini bukan berarti\n"
-"bahwa seluruh kombinasi dari nama ini dapat digunakan untuk parameter DARI\n"
-"dan KE baris perintah. Satu kode karakter dapat terdiri dari\n"
-"beberapa nama yang berbeda (alias).\n"
-"\n"
-"  "
-
 #: iconv/iconvconfig.c:109
 msgid "Create fastloading iconv module configuration file."
 msgstr "Buat berkas konfigurasi fastloading iconv modul."
@@ -1540,10 +1239,6 @@ msgstr "Buat berkas konfigurasi fastloading iconv modul."
 #: iconv/iconvconfig.c:113
 msgid "[DIR...]"
 msgstr "[DIR...]"
-
-#: iconv/iconvconfig.c:126 locale/programs/localedef.c:129
-msgid "PATH"
-msgstr ""
 
 #: iconv/iconvconfig.c:127
 msgid "Prefix used for all file accesses"
@@ -1650,12 +1345,6 @@ msgstr "kehabisan memori"
 msgid "Error: .netrc file is readable by others."
 msgstr "Error: .netrc berkas dapat dibaca oleh yang lain."
 
-#: inet/ruserpass.c:180
-#, fuzzy
-#| msgid "Remove password or make file unreadable by others."
-msgid "Remove 'password' line or make file unreadable by others."
-msgstr "Hapus kata-kunci atau buat berkas tidak dapat dibaca oleh yang lain."
-
 #: inet/ruserpass.c:199
 #, c-format
 msgid "Unknown .netrc keyword %s"
@@ -1675,12 +1364,6 @@ msgstr "peta karakter berkas `%s' tidak ditemukan"
 #, c-format
 msgid "default character map file `%s' not found"
 msgstr "peta karakter baku berkas `%s' tidak ditemukan"
-
-#: locale/programs/charmap.c:265
-#, fuzzy, c-format
-#| msgid "character map `%s' is not ASCII compatible, locale not ISO C compliant\n"
-msgid "character map `%s' is not ASCII compatible, locale not ISO C compliant [--no-warnings=ascii]"
-msgstr "peta karakter `%s' tidak kompatibel dengan ASCII, lokal bukan ISO C compliant\n"
 
 #: locale/programs/charmap.c:343
 #, c-format
@@ -2068,12 +1751,6 @@ msgstr "terlalu banyak error; menyerah"
 msgid "%s: nested conditionals not supported"
 msgstr "%s: nested kondisional tidak didukung"
 
-#: locale/programs/ld-collate.c:2526
-#, fuzzy, c-format
-#| msgid "%s: more then one 'else'"
-msgid "%s: more than one 'else'"
-msgstr "%s: lebih dari satu 'else'"
-
 #: locale/programs/ld-collate.c:2701
 #, c-format
 msgid "%s: duplicate definition of `%s'"
@@ -2385,33 +2062,9 @@ msgstr "tidak ada keluaran digital terdefinisi dan tidak ada nama baku dalam cha
 msgid "%s: transliteration data from locale `%s' not available"
 msgstr "%s: transliteration data dari lokal `%s' tidak tersedia"
 
-#: locale/programs/ld-ctype.c:3672
-#, fuzzy, c-format
-#| msgid "%s: table for class \"%s\": %lu bytes\n"
-msgid "%s: table for class \"%s\": %lu bytes"
-msgstr "%s: tabel untuk kelas \"%s\": %lu bytes\n"
-
-#: locale/programs/ld-ctype.c:3736
-#, fuzzy, c-format
-#| msgid "%s: table for map \"%s\": %lu bytes\n"
-msgid "%s: table for map \"%s\": %lu bytes"
-msgstr "%s: tabel untuk peta \"%s\": %lu bytes\n"
-
-#: locale/programs/ld-ctype.c:3860
-#, fuzzy, c-format
-#| msgid "%s: table for width: %lu bytes\n"
-msgid "%s: table for width: %lu bytes"
-msgstr "%s: tabel untuk lebar: %lu bytes\n"
-
 #: locale/programs/ld-identification.c:173
 #, c-format
 msgid "%s: no identification for category `%s'"
-msgstr "%s: tidak ada identifikasi untuk kategori `%s'"
-
-#: locale/programs/ld-identification.c:197
-#, fuzzy, c-format
-#| msgid "%s: no identification for category `%s'"
-msgid "%s: unknown standard `%s' for category `%s'"
 msgstr "%s: tidak ada identifikasi untuk kategori `%s'"
 
 #: locale/programs/ld-identification.c:380
@@ -2444,12 +2097,6 @@ msgstr "%s: tidak ada ekspresi reguler yang benar untuk daerah `%s': %s"
 #, c-format
 msgid "%s: value of field `int_curr_symbol' has wrong length"
 msgstr "%s: nilai untuk daerah `int_curr_symbol' memiliki panjang salah"
-
-#: locale/programs/ld-monetary.c:245
-#, fuzzy, c-format
-#| msgid "%s: value of field `int_curr_symbol' does not correspond to a valid name in ISO 4217"
-msgid "%s: value of field `int_curr_symbol' does not correspond to a valid name in ISO 4217 [--no-warnings=intcurrsym]"
-msgstr "%s: nilai dari daerah `int_curr_symbol' tidak berhubungan dengan sebuah nama yang valid dalam ISO 4217"
 
 #: locale/programs/ld-monetary.c:293 locale/programs/ld-monetary.c:322
 #, c-format
@@ -2595,12 +2242,6 @@ msgstr "simbol `%.*s' tidak dalam charmap"
 msgid "symbol `%.*s' not in repertoire map"
 msgstr "simbol `%.*s' tidak dalam repertoire map"
 
-#: locale/programs/locale-spec.c:130
-#, fuzzy, c-format
-#| msgid "unknown set `%s'"
-msgid "unknown name \"%s\""
-msgstr "set `%s' tidak diketahui"
-
 #: locale/programs/locale.c:70
 msgid "System information:"
 msgstr "Informasi sistem:"
@@ -2646,17 +2287,6 @@ msgstr ""
 msgid "while preparing output"
 msgstr "ketika menyiapkan keluaran"
 
-#: locale/programs/locale.c:998
-#, fuzzy, c-format
-#| msgid "Cannot set LC_ALL to default locale"
-msgid "Cannot set %s to default locale"
-msgstr "Tidak dapat menset lokal baku ke LC_ALL"
-
-#: locale/programs/locale.c:1096
-#, c-format
-msgid "warning: The LOCPATH variable is set to \"%s\"\n"
-msgstr ""
-
 #: locale/programs/localedef.c:116
 msgid "Input Files:"
 msgstr "Berkas Masukan:"
@@ -2677,19 +2307,9 @@ msgstr "BERKAS berisi pemetaan dari nama simbolis ke nilai UCS4"
 msgid "Create output even if warning messages were issued"
 msgstr "Membuat keluaran walaupun jika pesan peringatan diberikan"
 
-#: locale/programs/localedef.c:128
-msgid "Do not create hard links between installed locales"
-msgstr ""
-
 #: locale/programs/localedef.c:129
 msgid "Optional output file prefix"
 msgstr "Awalan berkas keluaran opsional"
-
-#: locale/programs/localedef.c:130
-#, fuzzy
-#| msgid "Be strictly POSIX conform"
-msgid "Strictly conform to POSIX"
-msgstr "Konform terhada POSIX secara patuh"
 
 #: locale/programs/localedef.c:132
 msgid "Suppress warnings and information messages"
@@ -2698,20 +2318,6 @@ msgstr "Tekan peringatan dan pesan informasi"
 #: locale/programs/localedef.c:133
 msgid "Print more messages"
 msgstr "Tampilkan lebih banyak pesan"
-
-#: locale/programs/localedef.c:134 locale/programs/localedef.c:137
-#, fuzzy
-#| msgid "warning: "
-msgid "<warnings>"
-msgstr "peringatan: "
-
-#: locale/programs/localedef.c:135
-msgid "Comma-separated list of warnings to disable; supported warnings are: ascii, intcurrsym"
-msgstr ""
-
-#: locale/programs/localedef.c:138
-msgid "Comma-separated list of warnings to enable; supported warnings are: ascii, intcurrsym"
-msgstr ""
 
 #: locale/programs/localedef.c:141
 msgid "Archive control:"
@@ -2740,14 +2346,6 @@ msgstr "Daftar isi dari archive"
 #: locale/programs/localedef.c:151
 msgid "locale.alias file to consult when making archive"
 msgstr "berkas locale.alias untuk konsultasi ketika membuat archive"
-
-#: locale/programs/localedef.c:153
-msgid "Generate little-endian output"
-msgstr ""
-
-#: locale/programs/localedef.c:155
-msgid "Generate big-endian output"
-msgstr ""
 
 #: locale/programs/localedef.c:160
 msgid "Compile locale specification"
@@ -2783,30 +2381,6 @@ msgstr "tidak dapat membuka berkas definisi lokal `%s'"
 msgid "cannot write output files to `%s'"
 msgstr "tidak dapat menulis berkas keluaran ke `%s'"
 
-#: locale/programs/localedef.c:309
-#, fuzzy
-#| msgid "no output file produced because warnings were issued"
-msgid "no output file produced because errors were issued"
-msgstr "tidak ada berkas keluaran yang dihasilkan karena peringatan diberikan"
-
-#: locale/programs/localedef.c:441
-#, fuzzy, c-format
-#| msgid ""
-#| "System's directory for character maps : %s\n"
-#| "                       repertoire maps: %s\n"
-#| "                       locale path    : %s\n"
-#| "%s"
-msgid ""
-"System's directory for character maps : %s\n"
-"\t\t       repertoire maps: %s\n"
-"\t\t       locale path    : %s\n"
-"%s"
-msgstr ""
-"Sistem direktori untuk peta karakter  : %s\n"
-"                       peta repertoire: %s\n"
-"                       jalur lokal    : %s\n"
-"%s"
-
 #: locale/programs/localedef.c:641
 msgid "circular dependencies between locale definitions"
 msgstr "circular ketergantungan diantara definisi lokal"
@@ -2815,12 +2389,6 @@ msgstr "circular ketergantungan diantara definisi lokal"
 #, c-format
 msgid "cannot add already read locale `%s' a second time"
 msgstr "tidak dapat menambahkan lokal yang sudah dibaca `%s' untuk kedua kali"
-
-#: locale/programs/locarchive.c:133 locale/programs/locarchive.c:380
-#, fuzzy, c-format
-#| msgid "cannot create temporary file"
-msgid "cannot create temporary file: %s"
-msgstr "tidak dapat membuat berkas sementara"
 
 #: locale/programs/locarchive.c:167 locale/programs/locarchive.c:430
 #, c-format
@@ -2847,12 +2415,6 @@ msgstr "gagal membuat archive lokal baru"
 #, c-format
 msgid "cannot change mode of new locale archive"
 msgstr "tidak dapat mengubah mode dari lokal archive baru"
-
-#: locale/programs/locarchive.c:324
-#, fuzzy
-#| msgid "cannot add to locale archive"
-msgid "cannot read data from locale archive"
-msgstr "tidak dapat menambahkan lokal archive"
 
 #: locale/programs/locarchive.c:355
 #, c-format
@@ -3057,12 +2619,6 @@ msgstr "blok dibebaskan dua kali\n"
 msgid "bogus mcheck_status, library is buggy\n"
 msgstr "mcheck_status palsu, perpustakaan buggy\n"
 
-#: malloc/memusage.sh:32
-#, fuzzy
-#| msgid "%s: option '%s' requires an argument\n"
-msgid "%s: option '%s' requires an argument\\n"
-msgstr "%s: pilihan '%s' membutuhkan sebuah argumen\n"
-
 #: malloc/memusage.sh:38
 msgid ""
 "Usage: memusage [OPTION]... PROGRAM [PROGRAMOPTION]...\n"
@@ -3116,24 +2672,6 @@ msgstr ""
 "yang berhubungan.\n"
 "\n"
 
-#: malloc/memusage.sh:99
-#, fuzzy
-#| msgid ""
-#| "Syntax: memusage [--data=FILE] [--progname=NAME] [--png=FILE] [--unbuffered]\n"
-#| "            [--buffer=SIZE] [--no-timer] [--time-based] [--total]\n"
-#| "            [--title=STRING] [--x-size=SIZE] [--y-size=SIZE]\n"
-#| "            PROGRAM [PROGRAMOPTION]..."
-msgid ""
-"Syntax: memusage [--data=FILE] [--progname=NAME] [--png=FILE] [--unbuffered]\n"
-"\t    [--buffer=SIZE] [--no-timer] [--time-based] [--total]\n"
-"\t    [--title=STRING] [--x-size=SIZE] [--y-size=SIZE]\n"
-"\t    PROGRAM [PROGRAMOPTION]..."
-msgstr ""
-"Sintaks: memusage [--data=BERKAS] [--progname=NAMA] [--png=BERKAS] [--unbuffered]\n"
-"            [--buffer=UKURAN] [--no-timer] [--time-based] [--total]\n"
-"            [--title=STRING] [--x-size=UKURAN] [--y-size=UKURAN]\n"
-"            APLIKASI [PILIHAN APLIKASI]..."
-
 #: malloc/memusage.sh:191
 msgid "memusage: option \\`${1##*=}' is ambiguous"
 msgstr "memusage: pilihan \\`${1##*=}' adalah ambigu"
@@ -3151,10 +2689,6 @@ msgid "Name output file"
 msgstr "Nama dari berkas keluaran"
 
 #: malloc/memusagestat.c:57
-msgid "STRING"
-msgstr ""
-
-#: malloc/memusagestat.c:57
 msgid "Title string used in output graphic"
 msgstr "Judul string digunakan dalam graphis keluaran"
 
@@ -3165,10 +2699,6 @@ msgstr "Hasilkan keluaran linear ke waktu (baku adalah linear ke jumlah dari fun
 #: malloc/memusagestat.c:62
 msgid "Also draw graph for total memory consumption"
 msgstr "Juga gambar graphik untuk konsumsi memori total"
-
-#: malloc/memusagestat.c:63
-msgid "VALUE"
-msgstr ""
 
 #: malloc/memusagestat.c:64
 msgid "Make output graphic VALUE pixels wide"
@@ -3846,17 +3376,6 @@ msgstr "penambahan masukan baru \"%s\" dari tipe %s untuk %s ke cache %s"
 msgid " (first)"
 msgstr " (pertama)"
 
-#: nscd/cache.c:288
-#, fuzzy, c-format
-#| msgid "cannot open database file `%s': %s"
-msgid "checking for monitored file `%s': %s"
-msgstr "tidak dapat membuka berkas basis data `%s': %s"
-
-#: nscd/cache.c:298
-#, c-format
-msgid "monitored file `%s` changed (mtime)"
-msgstr ""
-
 #: nscd/cache.c:341
 #, c-format
 msgid "pruning %s cache; time %ld"
@@ -3933,38 +3452,6 @@ msgstr "tidak dapat membuka socket: %s"
 msgid "cannot enable socket to accept connections: %s"
 msgstr "tidak dapat mengaktifkan socket untuk menerima koneksi: %s"
 
-#: nscd/connections.c:861
-#, c-format
-msgid "disabled inotify-based monitoring for file `%s': %s"
-msgstr ""
-
-#: nscd/connections.c:865
-#, c-format
-msgid "monitoring file `%s` (%d)"
-msgstr ""
-
-#: nscd/connections.c:878
-#, c-format
-msgid "disabled inotify-based monitoring for directory `%s': %s"
-msgstr ""
-
-#: nscd/connections.c:882
-#, fuzzy, c-format
-#| msgid "Can't open directory %s"
-msgid "monitoring directory `%s` (%d)"
-msgstr "Tidak dapat membuka direktori %s"
-
-#: nscd/connections.c:910
-#, fuzzy, c-format
-#| msgid "no more memory for database '%s'"
-msgid "monitoring file %s for database %s"
-msgstr "tidak ada memori lagi untuk basis data '%s'"
-
-#: nscd/connections.c:920
-#, c-format
-msgid "stat failed for file `%s'; will try again later: %s"
-msgstr ""
-
 #: nscd/connections.c:1039
 #, c-format
 msgid "provide access to FD %d, for %s"
@@ -3998,12 +3485,6 @@ msgstr "tidak dapat menulis hasil: %s"
 #, c-format
 msgid "error getting caller's id: %s"
 msgstr "error memperoleh id pemanggil: %s"
-
-#: nscd/connections.c:1349
-#, fuzzy, c-format
-#| msgid "cannot open /proc/self/cmdline: %s; disabling paranoia mode"
-msgid "cannot open /proc/self/cmdline: %m; disabling paranoia mode"
-msgstr "tidak dapat membuka /proc/self/cmdline: %s; menonaktifkan mode paranoia"
 
 #: nscd/connections.c:1372
 #, c-format
@@ -4054,48 +3535,6 @@ msgstr "handle_request: permintaan diterima (Versi = %d) dari PID %ld"
 #, c-format
 msgid "handle_request: request received (Version = %d)"
 msgstr "handle_request: permintaan diterima (Versi = %d)"
-
-#: nscd/connections.c:1838
-#, c-format
-msgid "ignored inotify event for `%s` (file exists)"
-msgstr ""
-
-#: nscd/connections.c:1843
-#, c-format
-msgid "monitored file `%s` was %s, removing watch"
-msgstr ""
-
-#: nscd/connections.c:1851 nscd/connections.c:1893
-#, c-format
-msgid "failed to remove file watch `%s`: %s"
-msgstr ""
-
-#: nscd/connections.c:1866
-#, c-format
-msgid "monitored file `%s` was written to"
-msgstr ""
-
-#: nscd/connections.c:1890
-#, c-format
-msgid "monitored parent directory `%s` was %s, removing watch on `%s`"
-msgstr ""
-
-#: nscd/connections.c:1916
-#, c-format
-msgid "monitored file `%s` was %s, adding watch"
-msgstr ""
-
-#: nscd/connections.c:1928
-#, fuzzy, c-format
-#| msgid "failed to load shared object `%s'"
-msgid "failed to add file watch `%s`: %s"
-msgstr "gagal mengangkut objek terbagi `%s'"
-
-#: nscd/connections.c:2106 nscd/connections.c:2271
-#, fuzzy, c-format
-#| msgid "disabled inotify after read error %d"
-msgid "disabled inotify-based monitoring after read error %d"
-msgstr "menonaktifkan inotify setelah error membaca %d"
 
 #: nscd/connections.c:2386
 msgid "could not initialize conditional variable"
@@ -4159,30 +3598,6 @@ msgstr "dibebaskan %zu bytes dalam %s cache"
 msgid "no more memory for database '%s'"
 msgstr "tidak ada memori lagi untuk basis data '%s'"
 
-#: nscd/netgroupcache.c:122
-#, fuzzy, c-format
-#| msgid "Haven't found \"%s\" in group cache!"
-msgid "Haven't found \"%s\" in netgroup cache!"
-msgstr "Belum ditemukan \"%s\" dalam grup cache!"
-
-#: nscd/netgroupcache.c:124
-#, fuzzy, c-format
-#| msgid "Reloading \"%s\" in group cache!"
-msgid "Reloading \"%s\" in netgroup cache!"
-msgstr "Reloading \"%s\" dalam grup cache!"
-
-#: nscd/netgroupcache.c:470
-#, fuzzy, c-format
-#| msgid "Haven't found \"%s\" in group cache!"
-msgid "Haven't found \"%s (%s,%s,%s)\" in netgroup cache!"
-msgstr "Belum ditemukan \"%s\" dalam grup cache!"
-
-#: nscd/netgroupcache.c:473
-#, fuzzy, c-format
-#| msgid "Reloading \"%s\" in group cache!"
-msgid "Reloading \"%s (%s,%s,%s)\" in netgroup cache!"
-msgstr "Reloading \"%s\" dalam grup cache!"
-
 #: nscd/nscd.c:106
 msgid "Read configuration data from NAME"
 msgstr "Baca data konfigurasi dari NAMA"
@@ -4190,10 +3605,6 @@ msgstr "Baca data konfigurasi dari NAMA"
 #: nscd/nscd.c:108
 msgid "Do not fork and display messages on the current tty"
 msgstr "Jangan fork dan tampilkan pesan dalam tty sekarang"
-
-#: nscd/nscd.c:110
-msgid "Do not fork, but otherwise behave like a daemon"
-msgstr ""
 
 #: nscd/nscd.c:111
 msgid "NUMBER"
@@ -4246,12 +3657,6 @@ msgstr "gagal ketika membaca berkas konfigurasi; ini adalah fatal"
 msgid "already running"
 msgstr "telah berjalan"
 
-#: nscd/nscd.c:194
-#, fuzzy, c-format
-#| msgid "cannot create directory for output files"
-msgid "cannot create a pipe to talk to the child"
-msgstr "tidak dapat membuat direktori untuk berkas keluaran"
-
 #: nscd/nscd.c:198
 #, c-format
 msgid "cannot fork"
@@ -4294,33 +3699,6 @@ msgstr "'%s' bukan tipe perpustakaan yang dikenal"
 #, c-format
 msgid "secure services not implemented anymore"
 msgstr "layanan aman tidak terimplementasi lagi"
-
-#: nscd/nscd.c:485
-#, c-format
-msgid ""
-"Supported tables:\n"
-"%s\n"
-"\n"
-"For bug reporting instructions, please see:\n"
-"%s.\n"
-msgstr ""
-
-#: nscd/nscd.c:635
-#, fuzzy, c-format
-#| msgid "lstat failed"
-msgid "'wait' failed\n"
-msgstr "lstat gagal"
-
-#: nscd/nscd.c:642
-#, c-format
-msgid "child exited with status %d\n"
-msgstr ""
-
-#: nscd/nscd.c:647
-#, fuzzy, c-format
-#| msgid "Interrupted by a signal"
-msgid "child terminated by signal %d\n"
-msgstr "Interupsi oleh sebuah sinyal"
 
 #: nscd/nscd_conf.c:54
 #, c-format
@@ -4421,28 +3799,6 @@ msgstr "        %2um %2lus server waktu jalan\n"
 msgid "            %2lus  server runtime\n"
 msgstr "            %2lus server waktu jalan\n"
 
-#: nscd/nscd_stat.c:257
-#, fuzzy, c-format
-#| msgid ""
-#| "%15d  current number of threads\n"
-#| "%15d  maximum number of threads\n"
-#| "%15lu  number of times clients had to wait\n"
-#| "%15s  paranoia mode enabled\n"
-#| "%15lu  restart internal\n"
-msgid ""
-"%15d  current number of threads\n"
-"%15d  maximum number of threads\n"
-"%15lu  number of times clients had to wait\n"
-"%15s  paranoia mode enabled\n"
-"%15lu  restart internal\n"
-"%15u  reload count\n"
-msgstr ""
-"%15d  jumlah thread sekarang\n"
-"%15d  maksimum jumlah threads\n"
-"%15lu jumlah dari kesempatan client untuk menunggu\n"
-"%15s  mode paranoia diaktifkan\n"
-"%15lu restart internal\n"
-
 #: nscd/nscd_stat.c:292
 #, c-format
 msgid ""
@@ -4493,18 +3849,6 @@ msgstr ""
 "%15<PRIuMAX> jumlah dari delay di wrlock\n"
 "%15<PRIuMAX> alokasi memori gagal\n"
 "%15s   periksa /etc/%s untuk perubahan\n"
-
-#: nscd/pwdcache.c:407
-#, fuzzy, c-format
-#| msgid "Haven't found \"%s\" in hosts cache!"
-msgid "Haven't found \"%s\" in user database cache!"
-msgstr "Belum ditemukan \"%s\" dalam cache host!"
-
-#: nscd/pwdcache.c:409
-#, fuzzy, c-format
-#| msgid "Reloading \"%s\" in hosts cache!"
-msgid "Reloading \"%s\" in user database cache!"
-msgstr "Reloading \"%s\" dalam cache host !"
 
 #: nscd/pwdcache.c:471
 #, c-format
@@ -4564,21 +3908,6 @@ msgstr "Gagal untuk menjalankan AVC"
 msgid "Access Vector Cache (AVC) started"
 msgstr "Akses Vektor Cache (AVC) berjalan"
 
-#: nscd/selinux.c:368
-msgid "Error querying policy for undefined object classes or permissions."
-msgstr ""
-
-#: nscd/selinux.c:375
-#, fuzzy
-#| msgid "Error getting context of nscd"
-msgid "Error getting security class for nscd."
-msgstr "Error memperoleh konteks dari nscd"
-
-#: nscd/selinux.c:380
-#, c-format
-msgid "Error translating permission name \"%s\" to access vector bit."
-msgstr ""
-
 #: nscd/selinux.c:390
 msgid "Error getting context of socket peer"
 msgstr "Error memperoleh konteks dari socket peer"
@@ -4633,18 +3962,8 @@ msgid "database [key ...]"
 msgstr "basis data [kunci ...]"
 
 #: nss/getent.c:60
-#, fuzzy
-#| msgid "CONF"
-msgid "CONFIG"
-msgstr "CONF"
-
-#: nss/getent.c:60
 msgid "Service configuration to be used"
 msgstr "Konfigurasi layanan yang akan digunakan"
-
-#: nss/getent.c:61
-msgid "disable IDN encoding"
-msgstr ""
 
 #: nss/getent.c:66
 msgid "Get entries from administrative database."
@@ -4654,12 +3973,6 @@ msgstr "Dapatkan masukan dari basis data administrasi."
 #, c-format
 msgid "Enumeration not supported on %s\n"
 msgstr "Enumerasi tidak didukung di %s\n"
-
-#: nss/getent.c:517 nss/getent.c:530
-#, fuzzy, c-format
-#| msgid "Could not create log file"
-msgid "Could not allocate group list: %m\n"
-msgstr "Tidak dapat membuat berkas log"
 
 #: nss/getent.c:901
 #, c-format
@@ -4687,20 +4000,6 @@ msgstr "Jangan tampilkan pesan ketika membuat basis data"
 msgid "Print content of database file, one entry a line"
 msgstr "Tampilkan isi dari berkas basis data, satu masukan per baris"
 
-#: nss/makedb.c:125
-msgid "CHAR"
-msgstr ""
-
-#: nss/makedb.c:126
-msgid "Generated line not part of iteration"
-msgstr ""
-
-#: nss/makedb.c:131
-#, fuzzy
-#| msgid "Create simple DB database from textual input."
-msgid "Create simple database from textual input."
-msgstr "Buat basis data DB sederhana dari masukan tekstual."
-
 #: nss/makedb.c:134
 msgid ""
 "INPUT-FILE OUTPUT-FILE\n"
@@ -4711,45 +4010,10 @@ msgstr ""
 "-o BERKAS-KELUARAN BERKAS-MASUKAN\n"
 "-u BERKAS-MASUKAN"
 
-#: nss/makedb.c:227
-#, fuzzy, c-format
-#| msgid "cannot open database file `%s': %s"
-msgid "cannot open database file `%s'"
-msgstr "tidak dapat membuka berkas basis data `%s': %s"
-
-#: nss/makedb.c:272
-#, c-format
-msgid "no entries to be processed"
-msgstr ""
-
-#: nss/makedb.c:282
-#, fuzzy, c-format
-#| msgid "cannot create temporary file"
-msgid "cannot create temporary file name"
-msgstr "tidak dapat membuat berkas sementara"
-
 #: nss/makedb.c:288
 #, c-format
 msgid "cannot create temporary file"
 msgstr "tidak dapat membuat berkas sementara"
-
-#: nss/makedb.c:304
-#, fuzzy, c-format
-#| msgid "cannot map locale archive file"
-msgid "cannot stat newly created file"
-msgstr "tidak dapat memetakan berkas lokal archive"
-
-#: nss/makedb.c:315
-#, fuzzy, c-format
-#| msgid "cannot create temporary file"
-msgid "cannot rename temporary file"
-msgstr "tidak dapat membuat berkas sementara"
-
-#: nss/makedb.c:527 nss/makedb.c:550
-#, fuzzy, c-format
-#| msgid "cannot create searchlist"
-msgid "cannot create search tree"
-msgstr "tidak dapat membuat daftar pencarian"
 
 #: nss/makedb.c:556
 msgid "duplicate key"
@@ -4759,36 +4023,6 @@ msgstr "kunci terduplikasi"
 #, c-format
 msgid "problems while reading `%s'"
 msgstr "masalah ketika membaca `%s'"
-
-#: nss/makedb.c:795
-#, fuzzy, c-format
-#| msgid "while writing database file"
-msgid "failed to write new database file"
-msgstr "ketika menulis berkas basis data"
-
-#: nss/makedb.c:808
-#, fuzzy, c-format
-#| msgid "cannot write to database file %s: %s"
-msgid "cannot stat database file"
-msgstr "tidak dapat menulis ke berkas basis data %s: %s"
-
-#: nss/makedb.c:813
-#, fuzzy, c-format
-#| msgid "cannot open database file `%s': %s"
-msgid "cannot map database file"
-msgstr "tidak dapat membuka berkas basis data `%s': %s"
-
-#: nss/makedb.c:816
-#, fuzzy, c-format
-#| msgid "while writing database file"
-msgid "file not a database file"
-msgstr "ketika menulis berkas basis data"
-
-#: nss/makedb.c:867
-#, fuzzy, c-format
-#| msgid "cannot open output file `%s' for category `%s'"
-msgid "cannot set file creation context for `%s'"
-msgstr "tidak dapat membuka berkas keluaran `%s' untuk kategori `%s'"
 
 #: posix/getconf.c:417
 #, c-format
@@ -4838,36 +4072,6 @@ msgstr "tidak terdefinisi"
 msgid "Unrecognized variable `%s'"
 msgstr "Variabel `%s' tidak dikenal"
 
-#: posix/getopt.c:277
-#, fuzzy, c-format
-#| msgid "%s: option '%s' is ambiguous\n"
-msgid "%s: option '%s%s' is ambiguous\n"
-msgstr "%s: pilihan '%s' adalah ambigu\n"
-
-#: posix/getopt.c:283
-#, fuzzy, c-format
-#| msgid "%s: option '%s' is ambiguous\n"
-msgid "%s: option '%s%s' is ambiguous; possibilities:"
-msgstr "%s: pilihan '%s' adalah ambigu\n"
-
-#: posix/getopt.c:318
-#, fuzzy, c-format
-#| msgid "%s: unrecognized option '%c%s'\n"
-msgid "%s: unrecognized option '%s%s'\n"
-msgstr "%s: pilihan tidak dikenal '%c%s'\n"
-
-#: posix/getopt.c:344
-#, fuzzy, c-format
-#| msgid "%s: option '%c%s' doesn't allow an argument\n"
-msgid "%s: option '%s%s' doesn't allow an argument\n"
-msgstr "%s: pilihan '%c%s' tidak mengijinkan sebuah argumen\n"
-
-#: posix/getopt.c:359
-#, fuzzy, c-format
-#| msgid "%s: option '%s' requires an argument\n"
-msgid "%s: option '%s%s' requires an argument\n"
-msgstr "%s: pilihan '%s' membutuhkan sebuah argumen\n"
-
 #: posix/getopt.c:620
 #, c-format
 msgid "%s: invalid option -- '%c'\n"
@@ -4901,12 +4105,6 @@ msgstr "akhiran backslash"
 #: posix/regcomp.c:153
 msgid "Invalid back reference"
 msgstr "referensi back tidak valid"
-
-#: posix/regcomp.c:156
-#, fuzzy
-#| msgid "Unmatched [ or [^"
-msgid "Unmatched [, [^, [:, [., or [="
-msgstr "Tidak cocok [ atau [^"
 
 #: posix/regcomp.c:159
 msgid "Unmatched ( or \\("
@@ -5004,230 +4202,6 @@ msgstr "%s: baris %d: perintah buruk `%s'\n"
 #, c-format
 msgid "%s: line %d: ignoring trailing garbage `%s'\n"
 msgstr "%s: baris %d: mengabaikan akhiran sampah `%s'\n"
-
-#: stdio-common/psiginfo-data.h:2
-#, fuzzy
-#| msgid "Illegal seek"
-msgid "Illegal opcode"
-msgstr "pencarian tidak legal"
-
-#: stdio-common/psiginfo-data.h:3
-#, fuzzy
-#| msgid "Illegal seek"
-msgid "Illegal operand"
-msgstr "pencarian tidak legal"
-
-#: stdio-common/psiginfo-data.h:4
-msgid "Illegal addressing mode"
-msgstr ""
-
-#: stdio-common/psiginfo-data.h:5
-#, fuzzy
-#| msgid "Illegal seek"
-msgid "Illegal trap"
-msgstr "pencarian tidak legal"
-
-#: stdio-common/psiginfo-data.h:6
-msgid "Privileged opcode"
-msgstr ""
-
-#: stdio-common/psiginfo-data.h:7
-msgid "Privileged register"
-msgstr ""
-
-#: stdio-common/psiginfo-data.h:8
-#, fuzzy
-#| msgid "preprocessor error"
-msgid "Coprocessor error"
-msgstr "preprosesor error"
-
-#: stdio-common/psiginfo-data.h:9
-#, fuzzy
-#| msgid "Internal NIS error"
-msgid "Internal stack error"
-msgstr "Internal NIS error"
-
-#: stdio-common/psiginfo-data.h:12
-msgid "Integer divide by zero"
-msgstr ""
-
-#: stdio-common/psiginfo-data.h:13
-#, fuzzy
-#| msgid "time overflow"
-msgid "Integer overflow"
-msgstr "waktu overflow"
-
-#: stdio-common/psiginfo-data.h:14
-#, fuzzy
-#| msgid "Floating point exception"
-msgid "Floating-point divide by zero"
-msgstr "Eksepsi titik pecahan"
-
-#: stdio-common/psiginfo-data.h:15
-#, fuzzy
-#| msgid "Floating point exception"
-msgid "Floating-point overflow"
-msgstr "Eksepsi titik pecahan"
-
-#: stdio-common/psiginfo-data.h:16
-#, fuzzy
-#| msgid "Floating point exception"
-msgid "Floating-point underflow"
-msgstr "Eksepsi titik pecahan"
-
-#: stdio-common/psiginfo-data.h:17
-#, fuzzy
-#| msgid "Floating point exception"
-msgid "Floating-poing inexact result"
-msgstr "Eksepsi titik pecahan"
-
-#: stdio-common/psiginfo-data.h:18
-#, fuzzy
-#| msgid "Invalid object for operation"
-msgid "Invalid floating-point operation"
-msgstr "Objek tidak valid untuk operasi"
-
-#: stdio-common/psiginfo-data.h:19
-#, fuzzy
-#| msgid "Link number out of range"
-msgid "Subscript out of range"
-msgstr "Jumlah sambungan diluar dari jangkauan"
-
-#: stdio-common/psiginfo-data.h:22
-msgid "Address not mapped to object"
-msgstr ""
-
-#: stdio-common/psiginfo-data.h:23
-msgid "Invalid permissions for mapped object"
-msgstr ""
-
-#: stdio-common/psiginfo-data.h:26
-#, fuzzy
-#| msgid "Invalid argument"
-msgid "Invalid address alignment"
-msgstr "Argumen tidak valid"
-
-#: stdio-common/psiginfo-data.h:27
-msgid "Nonexisting physical address"
-msgstr ""
-
-#: stdio-common/psiginfo-data.h:28
-msgid "Object-specific hardware error"
-msgstr ""
-
-#: stdio-common/psiginfo-data.h:31
-#, fuzzy
-#| msgid "Trace/breakpoint trap"
-msgid "Process breakpoint"
-msgstr "Jejak/titik-putus jebakan"
-
-#: stdio-common/psiginfo-data.h:32
-msgid "Process trace trap"
-msgstr ""
-
-#: stdio-common/psiginfo-data.h:35
-#, fuzzy
-#| msgid "Child exited"
-msgid "Child has exited"
-msgstr "Anak keluar"
-
-#: stdio-common/psiginfo-data.h:36
-msgid "Child has terminated abnormally and did not create a core file"
-msgstr ""
-
-#: stdio-common/psiginfo-data.h:37
-msgid "Child has terminated abnormally and created a core file"
-msgstr ""
-
-#: stdio-common/psiginfo-data.h:38
-msgid "Traced child has trapped"
-msgstr ""
-
-#: stdio-common/psiginfo-data.h:39
-#, fuzzy
-#| msgid "Child exited"
-msgid "Child has stopped"
-msgstr "Anak keluar"
-
-#: stdio-common/psiginfo-data.h:40
-msgid "Stopped child has continued"
-msgstr ""
-
-#: stdio-common/psiginfo-data.h:43
-#, fuzzy
-#| msgid "No data available"
-msgid "Data input available"
-msgstr "Tidak ada data yang tersedia"
-
-#: stdio-common/psiginfo-data.h:44
-#, fuzzy
-#| msgid "No buffer space available"
-msgid "Output buffers available"
-msgstr "Tidak ada ruang penyangga yang tersedia"
-
-#: stdio-common/psiginfo-data.h:45
-#, fuzzy
-#| msgid "No buffer space available"
-msgid "Input message available"
-msgstr "Tidak ada ruang penyangga yang tersedia"
-
-#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:375 timezone/zic.c:561
-#, fuzzy
-#| msgid "Remote I/O error"
-msgid "I/O error"
-msgstr "Remote I/O error"
-
-#: stdio-common/psiginfo-data.h:47
-#, fuzzy
-#| msgid "RPC program not available"
-msgid "High priority input available"
-msgstr "aplikasi RPC tidak tersedia"
-
-#: stdio-common/psiginfo-data.h:48
-msgid "Device disconnected"
-msgstr ""
-
-#: stdio-common/psiginfo.c:140
-msgid "Signal sent by kill()"
-msgstr ""
-
-#: stdio-common/psiginfo.c:143
-msgid "Signal sent by sigqueue()"
-msgstr ""
-
-#: stdio-common/psiginfo.c:146
-msgid "Signal generated by the expiration of a timer"
-msgstr ""
-
-#: stdio-common/psiginfo.c:149
-msgid "Signal generated by the completion of an asynchronous I/O request"
-msgstr ""
-
-#: stdio-common/psiginfo.c:153
-msgid "Signal generated by the arrival of a message on an empty message queue"
-msgstr ""
-
-#: stdio-common/psiginfo.c:158
-msgid "Signal sent by tkill()"
-msgstr ""
-
-#: stdio-common/psiginfo.c:163
-msgid "Signal generated by the completion of an asynchronous name lookup request"
-msgstr ""
-
-#: stdio-common/psiginfo.c:169
-msgid "Signal generated by the completion of an I/O request"
-msgstr ""
-
-#: stdio-common/psiginfo.c:175
-msgid "Signal sent by the kernel"
-msgstr ""
-
-#: stdio-common/psiginfo.c:199
-#, fuzzy, c-format
-#| msgid "Unknown signal %d"
-msgid "Unknown signal %d\n"
-msgstr "Sinyal %d tidak dikenal"
 
 #: stdio-common/psignal.c:43
 #, c-format
@@ -5438,12 +4412,6 @@ msgstr "%s: tidak dapat membuka %s: %m\n"
 msgid "%s: while writing output %s: %m"
 msgstr "%s: ketika menulis keluaran %s: %m"
 
-#: sunrpc/rpc_main.c:336 sunrpc/rpc_main.c:375
-#, fuzzy, c-format
-#| msgid "cannot find C preprocessor: %s \n"
-msgid "cannot find C preprocessor: %s\n"
-msgstr "tidak dapat menemukan C preprosesor: %s\n"
-
 #: sunrpc/rpc_main.c:411
 #, c-format
 msgid "%s: C preprocessor failed with signal %d\n"
@@ -5652,36 +4620,6 @@ msgid "-Y path\t\tdirectory name to find C preprocessor (cpp)\n"
 msgstr ""
 "-Y jalur\t\n"
 "ama direktori untuk  menemukan C preprosesor (cpp)\n"
-
-#: sunrpc/rpc_main.c:1436
-#, c-format
-msgid "-5\t\tSysVr4 compatibility mode\n"
-msgstr ""
-
-#: sunrpc/rpc_main.c:1437
-#, fuzzy, c-format
-#| msgid "Give this help list"
-msgid "--help\t\tgive this help list\n"
-msgstr "Berikan daftar bantuan ini"
-
-#: sunrpc/rpc_main.c:1438
-#, fuzzy, c-format
-#| msgid "Print program version"
-msgid "--version\tprint program version\n"
-msgstr "Tampilkan versi aplikasi"
-
-#: sunrpc/rpc_main.c:1440
-#, fuzzy, c-format
-#| msgid ""
-#| "For bug reporting instructions, please see:\n"
-#| "<http://www.gnu.org/software/libc/bugs.html>.\n"
-msgid ""
-"\n"
-"For bug reporting instructions, please see:\n"
-"%s.\n"
-msgstr ""
-"Untuk instruksi pelaporan bug, tolong lihat:\n"
-"<http://www.gnu.org/software/libc/bugs.html>.\n"
 
 #: sunrpc/rpc_scan.c:112
 msgid "constant or identifier expected"
@@ -6394,17 +5332,6 @@ msgstr "Terlalu banyak pengguna"
 msgid "Disk quota exceeded"
 msgstr "Quota Dis terlampaui"
 
-#. TRANS This indicates an internal confusion in the
-#. TRANS file system which is due to file system rearrangements on the server host
-#. TRANS for NFS file systems or corruption in other file systems.
-#. TRANS Repairing this condition usually requires unmounting, possibly repairing
-#. TRANS and remounting the file system.
-#: sysdeps/gnu/errlist.c:788
-#, fuzzy
-#| msgid "Stale NFS file handle"
-msgid "Stale file handle"
-msgstr "Berkas penangan NFS sudah tidak berfungsi dengan baik"
-
 #. TRANS An attempt was made to NFS-mount a remote file system with a file name that
 #. TRANS already specifies an NFS-mounted file.
 #. TRANS (This is an error on some operating systems, but we expect it to work
@@ -6773,16 +5700,6 @@ msgstr "Kunci telah direvok"
 msgid "Key was rejected by service"
 msgstr "Kunci telah ditolah oleh layanan"
 
-#: sysdeps/gnu/errlist.c:1468
-#, fuzzy
-#| msgid "Operation not permitted"
-msgid "Operation not possible due to RF-kill"
-msgstr "Operasi tidak diijinkan"
-
-#: sysdeps/gnu/errlist.c:1476
-msgid "Memory page has hardware error"
-msgstr ""
-
 #: sysdeps/mach/_strerror.c:56
 msgid "Error in unknown error system: "
 msgstr "Error dalam sistem error tidak dikenal: "
@@ -6884,76 +5801,14 @@ msgstr "tidak dapat membuka `%s'"
 msgid "cannot read header from `%s'"
 msgstr "tidak dapat membaca header dari `%s'"
 
-#: sysdeps/x86/dl-cet.c:202
-msgid "mprotect legacy bitmap failed"
-msgstr ""
-
-#: sysdeps/x86/dl-cet.c:217
-#, fuzzy
-#| msgid "program %lu is not available\n"
-msgid "legacy bitmap isn't available"
-msgstr "aplikasi %lu tidak tersedia\n"
-
-#: sysdeps/x86/dl-cet.c:247
-#, fuzzy
-#| msgid "failed to start conversion processing"
-msgid "failed to mark legacy code region"
-msgstr "gagal untuk menjalankan proses pengubahan"
-
-#: sysdeps/x86/dl-cet.c:269
-msgid "shadow stack isn't enabled"
-msgstr ""
-
-#: sysdeps/x86/dl-cet.c:290
-msgid "can't disable CET"
-msgstr ""
-
-#: timezone/zdump.c:332
-#, fuzzy
-#| msgid "has fewer than 3 alphabetics"
-msgid "has fewer than 3 characters"
-msgstr "memiliki lebih kecil dari 3 alphabet"
-
-#: timezone/zdump.c:334
-#, fuzzy
-#| msgid "has more than 6 alphabetics"
-msgid "has more than 6 characters"
-msgstr "lebih dari 6 alphabet"
-
-#: timezone/zdump.c:336
-msgid "has characters other than ASCII alphanumerics, '-' or '+'"
-msgstr ""
-
 #: timezone/zdump.c:341
 #, c-format
 msgid "%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"
 msgstr "%s: peringatan: daerah \"%s\" kependekan \"%s\" %s\n"
 
-#: timezone/zdump.c:387
-#, c-format
-msgid ""
-"%s: usage: %s OPTIONS TIMEZONE ...\n"
-"Options include:\n"
-"  -c [L,]U   Start at year L (default -500), end before year U (default 2500)\n"
-"  -t [L,]U   Start at time L, end before time U (in seconds since 1970)\n"
-"  -i         List transitions briefly (format is experimental)\n"
-"  -v         List transitions verbosely\n"
-"  -V         List transitions a bit less verbosely\n"
-"  --help     Output this help\n"
-"  --version  Output version info\n"
-"\n"
-"Report bugs to %s.\n"
-msgstr ""
-
 #: timezone/zdump.c:473
 #, c-format
 msgid "%s: wild -c argument %s\n"
-msgstr "%s: argumen -c ganas %s\n"
-
-#: timezone/zdump.c:506
-#, fuzzy, c-format
-#| msgid "%s: wild -c argument %s\n"
-msgid "%s: wild -t argument %s\n"
 msgstr "%s: argumen -c ganas %s\n"
 
 #: timezone/zic.c:429
@@ -6961,61 +5816,10 @@ msgstr "%s: argumen -c ganas %s\n"
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: Kehabisan memori: %s\n"
 
-#: timezone/zic.c:437
-#, fuzzy
-#| msgid "time overflow"
-msgid "size overflow"
-msgstr "waktu overflow"
-
-#: timezone/zic.c:447
-#, fuzzy
-#| msgid "time overflow"
-msgid "alignment overflow"
-msgstr "waktu overflow"
-
-#: timezone/zic.c:495
-#, fuzzy
-#| msgid "time overflow"
-msgid "integer overflow"
-msgstr "waktu overflow"
-
-#: timezone/zic.c:529
-#, fuzzy, c-format
-#| msgid "\"%s\", line %d: %s"
-msgid "\"%s\", line %<PRIdMAX>: "
-msgstr "\"%s\", baris %d: %s"
-
-#: timezone/zic.c:532
-#, fuzzy, c-format
-#| msgid " (rule from \"%s\", line %d)"
-msgid " (rule from \"%s\", line %<PRIdMAX>)"
-msgstr " (aturan dari \"%s\", baris %d)"
-
 #: timezone/zic.c:551
 #, c-format
 msgid "warning: "
 msgstr "peringatan: "
-
-#: timezone/zic.c:576
-#, fuzzy, c-format
-#| msgid ""
-#| "%s: usage is %s [ --version ] [ -v ] [ -l localtime ] [ -p posixrules ] \\\n"
-#| "\t[ -d directory ] [ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n"
-msgid ""
-"%s: usage is %s [ --version ] [ --help ] [ -v ] \\\n"
-"\t[ -l localtime ] [ -p posixrules ] [ -d directory ] \\\n"
-"\t[ -t localtime-link ] [ -L leapseconds ] [ filename ... ]\n"
-"\n"
-"Report bugs to %s.\n"
-msgstr ""
-"%s: penggunaan adalah %s [ --version ] [ -v ] [ -l waktu-lokal ] [ -p posixrules ] \\\n"
-"\t[ -d direktori ] [ -L leapseconds ] [ -y tahun-adalah-tipe ] [ nama-berkas ... ]\n"
-
-#: timezone/zic.c:599
-#, fuzzy, c-format
-#| msgid "%s: Can't create %s: %s\n"
-msgid "%s: Can't chdir to %s: %s\n"
-msgstr "%s: Tidak dapat membuat %s: %s\n"
 
 #: timezone/zic.c:632
 msgid "wild compilation-time specification of zic_t"
@@ -7036,16 +5840,6 @@ msgstr "%s: Lebih dari satu pilihan -l dispesifikasikan\n"
 msgid "%s: More than one -p option specified\n"
 msgstr "%s: Lebih dari satu pilihan -p dispesifikasikan\n"
 
-#: timezone/zic.c:680
-#, fuzzy, c-format
-#| msgid "%s: More than one -d option specified\n"
-msgid "%s: More than one -t option specified\n"
-msgstr "%s: Lebih dari satu pilihan -d dispesifikasikan\n"
-
-#: timezone/zic.c:689
-msgid "-y is obsolescent"
-msgstr ""
-
 #: timezone/zic.c:693
 #, c-format
 msgid "%s: More than one -y option specified\n"
@@ -7056,92 +5850,9 @@ msgstr "%s: Lebih dari satu pilihan -y dispesifikasikan\n"
 msgid "%s: More than one -L option specified\n"
 msgstr "%s: Lebih dari satu pilihan -L dispesifikasikan\n"
 
-#: timezone/zic.c:712
-msgid "-s ignored"
-msgstr ""
-
 #: timezone/zic.c:753
 msgid "link to link"
 msgstr "link ke link"
-
-#: timezone/zic.c:756 timezone/zic.c:760
-#, fuzzy
-#| msgid "Too many links"
-msgid "command line"
-msgstr "Terlalu banyak sambungan"
-
-#: timezone/zic.c:776
-msgid "empty file name"
-msgstr ""
-
-#: timezone/zic.c:779
-#, c-format
-msgid "file name '%s' begins with '/'"
-msgstr ""
-
-#: timezone/zic.c:789
-#, c-format
-msgid "file name '%s' contains '%.*s' component"
-msgstr ""
-
-#: timezone/zic.c:795
-#, c-format
-msgid "file name '%s' component contains leading '-'"
-msgstr ""
-
-#: timezone/zic.c:798
-#, c-format
-msgid "file name '%s' contains overlength component '%.*s...'"
-msgstr ""
-
-#: timezone/zic.c:826
-#, c-format
-msgid "file name '%s' contains byte '%c'"
-msgstr ""
-
-#: timezone/zic.c:827
-#, c-format
-msgid "file name '%s' contains byte '\\%o'"
-msgstr ""
-
-#: timezone/zic.c:897
-#, fuzzy, c-format
-#| msgid "%s: Can't link from %s to %s: %s\n"
-msgid "%s: link from %s/%s failed: %s\n"
-msgstr "%s: Tidak dapat menghubungkan dari %s ke %s: %s\n"
-
-#: timezone/zic.c:907 timezone/zic.c:1876
-#, fuzzy, c-format
-#| msgid "%s: Can't remove %s: %s\n"
-msgid "%s: Can't remove %s/%s: %s\n"
-msgstr "%s: Tidak dapat menghapus %s: %s\n"
-
-#: timezone/zic.c:931
-#, c-format
-msgid "symbolic link used because hard link failed: %s"
-msgstr ""
-
-#: timezone/zic.c:939
-#, fuzzy, c-format
-#| msgid "%s: Can't create %s: %s\n"
-msgid "%s: Can't read %s/%s: %s\n"
-msgstr "%s: Tidak dapat membuat %s: %s\n"
-
-#: timezone/zic.c:946 timezone/zic.c:1889
-#, fuzzy, c-format
-#| msgid "%s: Can't create %s: %s\n"
-msgid "%s: Can't create %s/%s: %s\n"
-msgstr "%s: Tidak dapat membuat %s: %s\n"
-
-#: timezone/zic.c:955
-#, c-format
-msgid "copy used because hard link failed: %s"
-msgstr ""
-
-#: timezone/zic.c:958
-#, c-format
-msgid "copy used because symbolic link failed: %s"
-msgstr ""
 
 #: timezone/zic.c:1032 timezone/zic.c:1034
 msgid "same rule name in multiple files"
@@ -7178,12 +5889,6 @@ msgstr "%s: panic: l_value %d tidak valid\n"
 msgid "expected continuation line not found"
 msgstr "diduga baris kelanjutan tidak ditemukan"
 
-#: timezone/zic.c:1203
-#, fuzzy
-#| msgid "24:00 not handled by pre-1998 versions of zic"
-msgid "fractional seconds rejected by pre-2018 versions of zic"
-msgstr "24:00 tidak ditangani oleh versi sebelum 1998 dari zic"
-
 #: timezone/zic.c:1221 timezone/zic.c:3078
 msgid "time overflow"
 msgstr "waktu overflow"
@@ -7200,12 +5905,6 @@ msgstr "waktu disimpan tidak valid"
 msgid "wrong number of fields on Rule line"
 msgstr "jumlah dari daerah salah dalam baris Aturan"
 
-#: timezone/zic.c:1265
-#, fuzzy, c-format
-#| msgid "Invalid numeric gid \"%s\"!"
-msgid "Invalid rule name \"%s\""
-msgstr "Numerik gid \"%s\" tidak valid !"
-
 #: timezone/zic.c:1287
 msgid "wrong number of fields on Zone line"
 msgstr "jumlah dari daerah dalam baris daerah salah"
@@ -7220,31 +5919,13 @@ msgstr "\"Daerah %s\" baris dan pilihan -l secara mutual ekslusif"
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr "\"Daerah %s\" baris dan pilihan -p secara mutual ekslusif"
 
-#: timezone/zic.c:1305
-#, fuzzy, c-format
-#| msgid "duplicate zone name %s (file \"%s\", line %d)"
-msgid "duplicate zone name %s (file \"%s\", line %<PRIdMAX>)"
-msgstr "duplikasi nama daerah %s (berkas \"%s\", baris %d)"
-
 #: timezone/zic.c:1319
 msgid "wrong number of fields on Zone continuation line"
 msgstr "jumlah dari daerah salah di baris kelanjutan Daerah"
 
-#: timezone/zic.c:1359
-#, fuzzy
-#| msgid "invalid UTC offset"
-msgid "invalid UT offset"
-msgstr "ofset UTC tidak valid"
-
 #: timezone/zic.c:1363
 msgid "invalid abbreviation format"
 msgstr "format kependekan tidak valid"
-
-#: timezone/zic.c:1372
-#, fuzzy, c-format
-#| msgid "24:00 not handled by pre-1998 versions of zic"
-msgid "format '%s' not handled by pre-2015 versions of zic"
-msgstr "24:00 tidak ditangani oleh versi sebelum 1998 dari zic"
 
 #: timezone/zic.c:1399
 msgid "Zone continuation line end time is not after end time of previous line"
@@ -7286,10 +5967,6 @@ msgstr "daerah KOREKSI tidak legal di baris Leap"
 msgid "illegal Rolling/Stationary field on Leap line"
 msgstr "daerah Rolling/Stationary tidak legal di baris Leap"
 
-#: timezone/zic.c:1505
-msgid "leap second precedes Epoch"
-msgstr ""
-
 #: timezone/zic.c:1518
 msgid "wrong number of fields on Link line"
 msgstr "jumlah dari daerah salah di baris sambungan"
@@ -7314,47 +5991,13 @@ msgstr "awal tahun lebih besar dari akhir tahun"
 msgid "typed single year"
 msgstr "tipe tahun tunggal"
 
-#: timezone/zic.c:1633
-#, c-format
-msgid "year type \"%s\" is obsolete; use \"-\" instead"
-msgstr ""
-
 #: timezone/zic.c:1668
 msgid "invalid weekday name"
 msgstr "nama hari-minggu tidak valid"
 
-#: timezone/zic.c:1800
-#, c-format
-msgid "reference clients mishandle more than %d transition times"
-msgstr ""
-
-#: timezone/zic.c:1804
-msgid "pre-2014 clients may mishandle more than 1200 transition times"
-msgstr ""
-
-#: timezone/zic.c:1920
-#, fuzzy
-#| msgid "too many transitions?!"
-msgid "too many transition times"
-msgstr "terlalu banyak perubahan?!"
-
-#: timezone/zic.c:2107
-#, c-format
-msgid "%%z UT offset magnitude exceeds 99:59:59"
-msgstr ""
-
 #: timezone/zic.c:2488
 msgid "no POSIX environment variable for zone"
 msgstr "tidak ada variabel lingkungan POSIX untuk daerah"
-
-#: timezone/zic.c:2494
-#, c-format
-msgid "%s: pre-%d clients may mishandle distant timestamps"
-msgstr ""
-
-#: timezone/zic.c:2631
-msgid "two rules for same instant"
-msgstr ""
 
 #: timezone/zic.c:2696
 msgid "can't determine time zone abbreviation to use just after until time"
@@ -7364,19 +6007,9 @@ msgstr "tidak dapat menentukan kependekan daerah waktu untuk digunakan setelah w
 msgid "too many local time types"
 msgstr "terlalu banyak tipe waktu lokal"
 
-#: timezone/zic.c:2789
-#, fuzzy
-#| msgid "UTC offset out of range"
-msgid "UT offset out of range"
-msgstr "ofset UTC diluar dari jangkauan"
-
 #: timezone/zic.c:2813
 msgid "too many leap seconds"
 msgstr "terlalu banyak leap detik"
-
-#: timezone/zic.c:2844
-msgid "Leap seconds too close together"
-msgstr ""
 
 #: timezone/zic.c:2891
 msgid "Wild result from command execution"
@@ -7387,16 +6020,6 @@ msgstr "Hasil ganas dari eksekusi perintah"
 msgid "%s: command was '%s', result was %d\n"
 msgstr "%s: perintah adalah '%s', hasil adalah %d\n"
 
-#: timezone/zic.c:2998
-#, c-format
-msgid "\"%s\" is undocumented; use \"last%s\" instead"
-msgstr ""
-
-#: timezone/zic.c:3029
-#, c-format
-msgid "\"%s\" is ambiguous in pre-2017c zic"
-msgstr ""
-
 #: timezone/zic.c:3063
 msgid "Odd number of quotation marks"
 msgstr "Jumlah dari tanda kuotasi ganjil"
@@ -7405,24 +6028,6 @@ msgstr "Jumlah dari tanda kuotasi ganjil"
 msgid "use of 2/29 in non leap-year"
 msgstr "penggunaan dari 2/29 dalam bukan leap-year"
 
-#: timezone/zic.c:3192
-#, fuzzy
-#| msgid "rule goes past start/end of month--will not work with pre-2004 versions of zic"
-msgid "rule goes past start/end of month; will not work with pre-2004 versions of zic"
-msgstr "aturan melewati awal/akhir dari bulan -- tidak akan bekerja dengan versi sebelum 2004 dari zic"
-
-#: timezone/zic.c:3219
-#, fuzzy
-#| msgid "time zone abbreviation has more than 3 alphabetics"
-msgid "time zone abbreviation has fewer than 3 characters"
-msgstr "kependekan daerah waktu memiliki lebih dari 3 alphabet"
-
-#: timezone/zic.c:3221
-#, fuzzy
-#| msgid "time zone abbreviation has too many alphabetics"
-msgid "time zone abbreviation has too many characters"
-msgstr "kependekan daerah waktu memiliki terlalu banyak alphabet"
-
 #: timezone/zic.c:3223
 msgid "time zone abbreviation differs from POSIX standard"
 msgstr "kependekan daerah waktu berbeda dari standar POSIX"
@@ -7430,344 +6035,3 @@ msgstr "kependekan daerah waktu berbeda dari standar POSIX"
 #: timezone/zic.c:3229
 msgid "too many, or too long, time zone abbreviations"
 msgstr "terlalu banyak, atau terlalu panjang, kependekan daerah waktu"
-
-#: timezone/zic.c:3275
-#, fuzzy, c-format
-#| msgid "%s: Can't create directory %s: %s\n"
-msgid "%s: Can't create directory %s: %s"
-msgstr "%s: Tidak dapat membuat direktori %s: %s\n"
-
-#~ msgid "Try \\`xtrace --help' for more information.\\n"
-#~ msgstr "Coba \\`xtrace --help' untuk informasi lebih lanjut.\\n"
-
-#~ msgid "xtrace: option \\`$1' requires an argument.\\n"
-#~ msgstr "xtrace: pilihan \\`$1' membutuhkan sebuah argumen.\\n"
-
-#~ msgid "RTLD_SELF used in code not dynamically loaded"
-#~ msgstr "RTLD_SELF digunakan dalam kode yang bukan secara dinamis dilod"
-
-#~ msgid "cannot open zero fill device"
-#~ msgstr "tidak dapat membuka perangkat pengisi nol"
-
-#~ msgid "cannot allocate TLS data structures for initial thread"
-#~ msgstr "tidak dapat mengalokasikan struktur data TLS untuk inisial thread"
-
-#~ msgid "cannot handle TLS data"
-#~ msgstr "tidak dapat menangani data TLS"
-
-#~ msgid "invalid caller"
-#~ msgstr "pemanggil tidak valid"
-
-#~ msgid "relocation error"
-#~ msgstr "relokasi error"
-
-#, c-format
-#~ msgid "%s: no PLTREL found in object %s\n"
-#~ msgstr "%s: tidak ada PLTREL ditemukan dalam objek %s\n"
-
-#~ msgid "Don't generate links"
-#~ msgstr "Jangan menghasilkan links"
-
-#, c-format
-#~ msgid "Can't open configuration file %s"
-#~ msgstr "Tidak dapat membuka berkas konfigurasi %s"
-
-#, c-format
-#~ msgid "cannot create internal descriptors"
-#~ msgstr "tidak dapat membuat deskripsi internal"
-
-#~ msgid "Character out of range for UTF-8"
-#~ msgstr "Karakter diluar dari jangkauan untuk UTF-8"
-
-#, c-format
-#~ msgid "no definition of `UNDEFINED'"
-#~ msgstr "tidak ada definisi dari `UNDEFINED'"
-
-#~ msgid "non-symbolic character value should not be used"
-#~ msgstr "nilai karakter bukan simbolis seharusnya tidak digunakan"
-
-#, c-format
-#~ msgid "Cannot set LC_CTYPE to default locale"
-#~ msgstr "Tidak dapat menset lokal baku ke LC_CTYPE"
-
-#, c-format
-#~ msgid "Cannot set LC_MESSAGES to default locale"
-#~ msgstr "Tidak dapat menset lokal baku ke LC_MESSAGES"
-
-#, c-format
-#~ msgid "Cannot set LC_COLLATE to default locale"
-#~ msgstr "Tidak dapat menset lokal baku ke LC_COLLATE"
-
-#~ msgid "Create old-style tables"
-#~ msgstr "Membuat tabel gaya-lama"
-
-#~ msgid "Try \\`memusage --help' for more information."
-#~ msgstr "Coba \\`memusage --help' untuk informasi lebih lanjut."
-
-#~ msgid "memusage: option \\`$1' requires an argument"
-#~ msgstr "memusage: pilihan \\`$1' membutuhkan sebuah argumen"
-
-#, c-format
-#~ msgid "cannot stat() file `%s': %s"
-#~ msgstr "tidak dapat stat() berkas `%s': %s"
-
-#, c-format
-#~ msgid "cannot set socket to close on exec: %s; disabling paranoia mode"
-#~ msgstr "tidak dapat menset socket ke close di exec: %s; menonaktifkan mode paranoia"
-
-#, c-format
-#~ msgid "cannot change socket to nonblocking mode: %s"
-#~ msgstr "tidak dapat mengubah socket untuk mode tidak terblok: %s"
-
-#, c-format
-#~ msgid "cannot set socket to close on exec: %s"
-#~ msgstr "tidak dapat menset socket untuk menutup di exec: %s"
-
-#, c-format
-#~ msgid "cannot read /proc/self/cmdline: %s; disabling paranoia mode"
-#~ msgstr "tidak dapat membaca /proc/self/cmdline: %s; menonaktifkan mode paranoia"
-
-#, c-format
-#~ msgid "invalid value for 'reload-count': %u"
-#~ msgstr "nilai tidak valid untuk 'reload-count': %u"
-
-#, c-format
-#~ msgid "Haven't found \"%s\" in password cache!"
-#~ msgstr "Belum ditemukan \"%s\" dalam cache kata-kunci!"
-
-#, c-format
-#~ msgid "Reloading \"%s\" in password cache!"
-#~ msgstr "Reloading \"%s\" dalam cache kata-kunci!"
-
-#~ msgid "compile-time support for database policy missing"
-#~ msgstr "dukungan waktu-kompilasi untuk kebijakan basis data tidak ada"
-
-#, c-format
-#~ msgid "No usable database library found."
-#~ msgstr "Tidak ada perpustakaan basis data yang dapat digunakan yang ditemukan."
-
-#~ msgid "incorrectly formatted file"
-#~ msgstr "berkas diformat secara tidak benar"
-
-#, c-format
-#~ msgid "while reading database"
-#~ msgstr "ketika membaca basis data"
-
-#, c-format
-#~ msgid "%s: option '--%s' doesn't allow an argument\n"
-#~ msgstr "%s: pilihan '--%s' tidak mengijinkan sebuah argumen\n"
-
-#, c-format
-#~ msgid "%s: unrecognized option '--%s'\n"
-#~ msgstr "%s: pilihan tidak dikenal '--%s'\n"
-
-#, c-format
-#~ msgid "%s: option '-W %s' is ambiguous\n"
-#~ msgstr "%s: pilihan '-W %s' adalah ambigu\n"
-
-#, c-format
-#~ msgid "%s: option '-W %s' doesn't allow an argument\n"
-#~ msgstr "%s: pilihan '-W %s' tidak mengijinkan sebuah argumen\n"
-
-#~ msgid "cannot find any C preprocessor (cpp)\n"
-#~ msgstr "tidak dapat menemukan C preprosesor apapun (cpp)\n"
-
-#, c-format
-#~ msgid "This implementation doesn't support newstyle or MT-safe code!\n"
-#~ msgstr "Implementasi ini tidak mendukung newstyle atau MT-safe kode!\n"
-
-#, c-format
-#~ msgid "program %lu version %lu is not available\n"
-#~ msgstr "aplikasi %lu versi %lu tidak tersedia\n"
-
-#, c-format
-#~ msgid "program %lu version %lu ready and waiting\n"
-#~ msgstr "aplikasi %lu versi %lu siap dan menunggu\n"
-
-#~ msgid "rpcinfo: can't contact portmapper"
-#~ msgstr "rpcinfo: tidak dapat menghubungi portmapper"
-
-#~ msgid "No remote programs registered.\n"
-#~ msgstr "Tidak ada aplikasi remote yang terdaftar.\n"
-
-#~ msgid "   program vers proto   port\n"
-#~ msgstr "   aplikasi vers proto  port\n"
-
-#~ msgid "(unknown)"
-#~ msgstr "(tidak diketahui)"
-
-#, c-format
-#~ msgid "rpcinfo: broadcast failed: %s\n"
-#~ msgstr "rpcinfo: broadcast gagal: %s\n"
-
-#~ msgid "Sorry. You are not root\n"
-#~ msgstr "Maaf. Anda bukan root\n"
-
-#, c-format
-#~ msgid "rpcinfo: Could not delete registration for prog %s version %s\n"
-#~ msgstr "rpcinfo: Tidak dapat menghapus pendaftaran untuk aplikasi %s versi %s\n"
-
-#~ msgid "Usage: rpcinfo [ -n portnum ] -u host prognum [ versnum ]\n"
-#~ msgstr "Penggunaan: rpcinfo [ -n nomor port ] -u host prognum [ versnum ]\n"
-
-#~ msgid "       rpcinfo [ -n portnum ] -t host prognum [ versnum ]\n"
-#~ msgstr "       rpcinfo [ -n nomor port ] -t host prognum [ versnum ]\n"
-
-#~ msgid "       rpcinfo -p [ host ]\n"
-#~ msgstr "       rpcinfo -p [ host ]\n"
-
-#~ msgid "       rpcinfo -b prognum versnum\n"
-#~ msgstr "       rpcinfo -b nomor program versnum\n"
-
-#~ msgid "       rpcinfo -d prognum versnum\n"
-#~ msgstr "       rpcinfo -d nomor program versnum\n"
-
-#, c-format
-#~ msgid "rpcinfo: %s is unknown service\n"
-#~ msgstr "rpcinfo: %s layanan tidak dikenal\n"
-
-#, c-format
-#~ msgid "rpcinfo: %s is unknown host\n"
-#~ msgstr "rpcinfo: %s host tidak dikenal\n"
-
-#~ msgid "Signal 0"
-#~ msgstr "Sinyal 0"
-
-#~ msgid "IOT trap"
-#~ msgstr "IOT jebakan"
-
-#~ msgid "lacks alphabetic at start"
-#~ msgstr "kekurangan alphabet di awal"
-
-#~ msgid "differs from POSIX standard"
-#~ msgstr "berbeda dari standar POSIX"
-
-#, c-format
-#~ msgid "%s: usage is %s [ --version ] [ -v ] [ -c [loyear,]hiyear ] zonename ...\n"
-#~ msgstr "%s: penggunaan adalah %s [ --version ] [ -v ] [ -c [loyear,]hiyear ] nama-daerah ...\n"
-
-#~ msgid "Error writing to standard output"
-#~ msgstr "Error menulis ke keluaran standar"
-
-#, c-format
-#~ msgid "%s: use of -v on system with floating time_t other than float or double\n"
-#~ msgstr "%s: penggunaan -v di sistem dengan pecahan time_t selain dari float atau double\n"
-
-#~ msgid "hard link failed, symbolic link used"
-#~ msgstr "sambungan keras gagal, menggunakan sambungan simbolis"
-
-#~ msgid "unruly zone"
-#~ msgstr "daerah unruly"
-
-#, c-format
-#~ msgid "%s: Leap line in non leap seconds file %s\n"
-#~ msgstr "%s: Baris leap dalam bukan leap detik berkas %s\n"
-
-#, c-format
-#~ msgid "%s: Error reading %s\n"
-#~ msgstr "%s: Error membaca %s\n"
-
-#, c-format
-#~ msgid "%s: Error closing %s: %s\n"
-#~ msgstr "%s: Error menutup %s: %s\n"
-
-#~ msgid "nameless rule"
-#~ msgstr "aturan tidak bernama"
-
-#~ msgid "time before zero"
-#~ msgstr "waktu sebelum nol"
-
-#~ msgid "blank TO field on Link line"
-#~ msgstr "daerah TO kosong di baris Link"
-
-#, c-format
-#~ msgid "%s: Error writing %s\n"
-#~ msgstr "%s: Error menulis %s\n"
-
-#~ msgid "internal error - addtype called with bad isdst"
-#~ msgstr "internal error - addtype dipanggil dengan isdst buruk"
-
-#~ msgid "internal error - addtype called with bad ttisstd"
-#~ msgstr "internal error - addtype dipanggil dengan ttisstd buruk"
-
-#~ msgid "internal error - addtype called with bad ttisgmt"
-#~ msgstr "internal error - addtype dipanggil dengan ttisgmt buruk"
-
-#~ msgid "repeated leap second moment"
-#~ msgstr "pengulangan momen leap detik"
-
-#~ msgid "time zone abbreviation lacks alphabetic at start"
-#~ msgstr "kependekan daerah waktu kurang alphabet di awal"
-
-#, c-format
-#~ msgid "%s: %d did not sign extend correctly\n"
-#~ msgstr "%s: %d tidak menandai ektensi secara benar\n"
-
-#~ msgid ""
-#~ "Read and display shared object profiling data.\vFor bug reporting instructions, please see:\n"
-#~ "<http://www.gnu.org/software/libc/bugs.html>.\n"
-#~ msgstr ""
-#~ "Baca dan tampilkan data profiling objek terbagi.\vUntuk instruksi pelaporan bug, mohon lihat:\n"
-#~ "<http://www.gnu.org/software/libc/bugs.html>.\n"
-
-#~ msgid "%s: stopping date is invalid in string %Zd in `era' field"
-#~ msgstr "%s: tanggal selesai tidak valid dalam string %Zd dalam daerah `era'"
-
-#~ msgid ""
-#~ "Get locale-specific information.\vFor bug reporting instructions, please see:\n"
-#~ "<http://www.gnu.org/software/libc/bugs.html>.\n"
-#~ msgstr ""
-#~ "Dapatkan informasi lokal-spesifik.\vUntuk instruksi pelaporan bug, mohon lihat:\n"
-#~ "<http://www.gnu.org/software/libc/bugs.html>.\n"
-
-#~ msgid ""
-#~ "Get entries from administrative database.\vFor bug reporting instructions, please see:\n"
-#~ "<http://www.gnu.org/software/libc/bugs.html>.\n"
-#~ msgstr ""
-#~ "Dapatkan masukan dari basis data administrasi.\vUntuk instruksi pelaporan bug, mohon lihat:\n"
-#~ "<http://www.gnu.org/software/libc/bugs.html>.\n"
-
-#~ msgid "%s: illegal option -- %c\n"
-#~ msgstr "%s: opsi tidak legal -- %c\n"
-
-#~ msgid "authunix_create: out of memory\n"
-#~ msgstr "authunix_create: kehabisan memori\n"
-
-#~ msgid "clnttcp_create: out of memory\n"
-#~ msgstr "clnttcp_create: kehabisan memori\n"
-
-#~ msgid "clntudp_create: out of memory\n"
-#~ msgstr "clntudp_create: kehabisan memori\n"
-
-#~ msgid "clntunix_create: out of memory\n"
-#~ msgstr "clntunix_create: kehabisan memori\n"
-
-#~ msgid "svctcp_create: out of memory\n"
-#~ msgstr "svctcp_create: kehabisan memori\n"
-
-#~ msgid "svc_tcp: makefd_xprt: out of memory\n"
-#~ msgstr "svc_tcp: makefd_xprt: kehabisan memori\n"
-
-#~ msgid "svcudp_create: out of memory\n"
-#~ msgstr "svcudp_create: kehabisan memori\n"
-
-#~ msgid "svcunix_create: out of memory\n"
-#~ msgstr "svcunix_create: kehabisan memori\n"
-
-#~ msgid "svc_unix: makefd_xprt: out of memory\n"
-#~ msgstr "svc_unix: makefd_xprt: kehabisan memori\n"
-
-#~ msgid "xdr_bytes: out of memory\n"
-#~ msgstr "xdr_bytes: kehabisan memori\n"
-
-#~ msgid "xdr_string: out of memory\n"
-#~ msgstr "xdr_string: kehabisan memori\n"
-
-#~ msgid "xdr_array: out of memory\n"
-#~ msgstr "xdr_array: kehabisan memori\n"
-
-#~ msgid "xdrrec_create: out of memory\n"
-#~ msgstr "xdrrec_create: kehabisan memori\n"
-
-#~ msgid "xdr_reference: out of memory\n"
-#~ msgstr "xdr_reference: kehabisan memori\n"

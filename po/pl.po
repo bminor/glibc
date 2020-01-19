@@ -7257,6 +7257,3 @@ msgstr "za długie lub za dużo skrótów stref czasowych"
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s: Nie można utworzyć katalogu %s: %s"
-
-#~ msgid "RTLD_SELF used in code not dynamically loaded"
-#~ msgstr "RTLD_SELF wystąpiło w kodzie nie ładowanym dynamicznie"

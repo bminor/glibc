@@ -7259,6 +7259,3 @@ msgstr "너무 많거나 너무 긴 시간대 약어"
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s: %s 디렉터리를 만들 수 없습니다: %s"
-
-#~ msgid "RTLD_SELF used in code not dynamically loaded"
-#~ msgstr "동적으로 적재하지 않은 코드에 RTLD_SELF를 사용함"

@@ -102,14 +102,6 @@ msgstr "%s: 引数が多すぎます\n"
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "(プログラムエラー) オプションは認識されているべきです!?"
 
-#: assert/assert-perr.c:35
-#, fuzzy, c-format
-#| msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
-msgid ""
-"%s%s%s:%u: %s%sUnexpected error: %s.\n"
-"%n"
-msgstr "%s%s%s:%u: %s%s予期しないエラーです: %s。\n"
-
 #: assert/assert.c:101
 #, c-format
 msgid ""
@@ -146,23 +138,6 @@ msgid ""
 msgstr ""
 "-o OUTPUT-FILE [INPUT-FILE]...\n"
 "[OUTPUT-FILE [INPUT-FILE]...]"
-
-#: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:308
-#: elf/pldd.c:247 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:405
-#: iconv/iconvconfig.c:379 locale/programs/locale.c:276
-#: locale/programs/localedef.c:437 login/programs/pt_chown.c:89
-#: malloc/memusagestat.c:563 nss/getent.c:953 nss/makedb.c:369
-#: posix/getconf.c:503 sysdeps/unix/sysv/linux/lddlibc4.c:61
-#, fuzzy, c-format
-#| msgid ""
-#| "For bug reporting instructions, please see:\n"
-#| "<http://www.gnu.org/software/libc/bugs.html>.\n"
-msgid ""
-"For bug reporting instructions, please see:\n"
-"%s.\n"
-msgstr ""
-"バグを報告する方法に関しては、下記を参照してください:\n"
-"<http://www.gnu.org/software/libc/bugs.html>.\n"
 
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
 #: elf/ldconfig.c:324 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
@@ -340,17 +315,6 @@ msgstr ""
 "長い形式のオプションで必須または任意の引数は、それに対応する短い形式のオプションでも同様に必須または任意です。\n"
 "\n"
 
-#: debug/xtrace.sh:57 elf/ldd.bash.in:55 elf/sotruss.sh:49
-#: malloc/memusage.sh:64
-#, fuzzy
-#| msgid ""
-#| "For bug reporting instructions, please see:\n"
-#| "<http://www.gnu.org/software/libc/bugs.html>.\n"
-msgid "For bug reporting instructions, please see:\\\\n%s.\\\\n"
-msgstr ""
-"バグを報告する方法に関しては、下記を参照してください:\n"
-"<http://www.gnu.org/software/libc/bugs.html>.\n"
-
 #: debug/xtrace.sh:125
 msgid "xtrace: unrecognized option \\`$1'\\n"
 msgstr "xtrace: 認識出来ないオプション \\`$1' です。\\n"
@@ -460,12 +424,6 @@ msgstr "空の動的文字列トークンの代入です"
 msgid "cannot load auxiliary `%s' because of empty dynamic string token substitution\n"
 msgstr "動的ロードに際し空文字トークンによる置換えを行ったために auxiliary `%s' のロードに失敗しました\n"
 
-#: elf/dl-deps.c:220
-#, fuzzy
-#| msgid "cannot allocate dependency list"
-msgid "cannot allocate dependency buffer"
-msgstr "依存リストを配置出来ません"
-
 #: elf/dl-deps.c:443
 msgid "cannot allocate dependency list"
 msgstr "依存リストを配置出来ません"
@@ -538,12 +496,6 @@ msgstr "ELF ロードコマンド整列がページで整列されていませ�
 msgid "ELF load command address/offset not properly aligned"
 msgstr "ELF ロードコマンドのアドレス/オフセットが適切に整列されていません"
 
-#: elf/dl-load.c:1151
-#, fuzzy
-#| msgid "cannot restore segment prot after reloc"
-msgid "cannot process note segment"
-msgstr "再配置後にセグメントの prot を復元できません"
-
 #: elf/dl-load.c:1162
 msgid "object file has no loadable segments"
 msgstr "オブジェクトファイルはロード可能セグメントを持っていません"
@@ -555,12 +507,6 @@ msgstr "実行ファイルを動的にロードできません"
 #: elf/dl-load.c:1196
 msgid "object file has no dynamic section"
 msgstr "オブジェクトファイルは動的セクションを持っていません"
-
-#: elf/dl-load.c:1223
-#, fuzzy
-#| msgid "cannot dynamically load executable"
-msgid "cannot dynamically load position-independent executable"
-msgstr "実行ファイルを動的にロードできません"
 
 #: elf/dl-load.c:1225
 msgid "shared object cannot be dlopen()ed"
@@ -723,12 +669,6 @@ msgstr "冗長なメッセージを生成します"
 msgid "Don't build cache"
 msgstr "キャッシュの構築を行いません"
 
-#: elf/ldconfig.c:145
-#, fuzzy
-#| msgid "%s is not a symbolic link\n"
-msgid "Don't update symbolic links"
-msgstr "%s はシンボリックリンクではありません\n"
-
 #: elf/ldconfig.c:146
 msgid "Change to and use ROOT as root directory"
 msgstr "ルートディレクトリを ROOT に変更し、使用します"
@@ -875,11 +815,6 @@ msgstr "libc4 ライブラリ %s が誤ったディレクトリ内にありま�
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "ディレクトリ %3$s 内にあるライブラリ %1$s と %2$s は同一の動的ライブラリ名 (soname) ですが異なった型です。"
 
-#: elf/ldconfig.c:1083
-#, c-format
-msgid "Warning: ignoring configuration file that cannot be opened: %s"
-msgstr ""
-
 #: elf/ldconfig.c:1149
 #, c-format
 msgid "%s:%u: bad syntax in hwcap line"
@@ -996,119 +931,6 @@ msgstr "不明な終了コードで終了しました"
 msgid "error: you do not have read permission for"
 msgstr "エラー: 読み込みパーミッションがありません:"
 
-#: elf/pldd-xx.c:102
-#, fuzzy, c-format
-#| msgid "cannot read header from `%s'"
-msgid "cannot find program header of process"
-msgstr "`%s'のヘッダーを読めません"
-
-#: elf/pldd-xx.c:106
-#, fuzzy, c-format
-#| msgid "cannot read header"
-msgid "cannot read program header"
-msgstr "ヘッダーを読み込めません"
-
-#: elf/pldd-xx.c:128
-#, fuzzy, c-format
-#| msgid "object file has no dynamic section"
-msgid "cannot read dynamic section"
-msgstr "オブジェクトファイルは動的セクションを持っていません"
-
-#: elf/pldd-xx.c:137
-#, fuzzy, c-format
-#| msgid "cannot read header"
-msgid "cannot read r_debug"
-msgstr "ヘッダーを読み込めません"
-
-#: elf/pldd-xx.c:154
-#, fuzzy, c-format
-#| msgid "cannot read archive header"
-msgid "cannot read program interpreter"
-msgstr "書庫ヘッダーを読み込めません"
-
-#: elf/pldd-xx.c:183
-#, fuzzy, c-format
-#| msgid "cannot read file data"
-msgid "cannot read link map"
-msgstr "ファイルデータを読み込めません"
-
-#: elf/pldd-xx.c:190
-#, fuzzy, c-format
-#| msgid "cannot read header"
-msgid "cannot read object name"
-msgstr "ヘッダーを読み込めません"
-
-#: elf/pldd-xx.c:197
-#, fuzzy, c-format
-#| msgid "cannot allocate memory for program header"
-msgid "cannot allocate buffer for object name"
-msgstr "プログラムヘッダー用のメモリを配置できません"
-
-#: elf/pldd.c:58
-msgid "List dynamic shared objects loaded into process."
-msgstr ""
-
-#: elf/pldd.c:62
-msgid "PID"
-msgstr ""
-
-#: elf/pldd.c:89
-#, c-format
-msgid "Exactly one parameter with process ID required.\n"
-msgstr ""
-
-#: elf/pldd.c:103
-#, fuzzy, c-format
-#| msgid "invalid argument %s for %s"
-msgid "invalid process ID '%s'"
-msgstr "%2$s に対する引数 %1$s が間違っています"
-
-#: elf/pldd.c:111
-#, fuzzy, c-format
-#| msgid "cannot open `%s'"
-msgid "cannot open %s"
-msgstr "`%s'を開けません"
-
-#: elf/pldd.c:142
-#, fuzzy, c-format
-#| msgid "cannot open `%s'"
-msgid "cannot open %s/task"
-msgstr "`%s'を開けません"
-
-#: elf/pldd.c:145
-#, fuzzy, c-format
-#| msgid "cannot create searchlist"
-msgid "cannot prepare reading %s/task"
-msgstr "サーチリストを作成できません"
-
-#: elf/pldd.c:158
-#, fuzzy, c-format
-#| msgid "invalid ELF header"
-msgid "invalid thread ID '%s'"
-msgstr "無効な ELF ヘッダーです"
-
-#: elf/pldd.c:169
-#, fuzzy, c-format
-#| msgid "cannot access '%s'"
-msgid "cannot attach to process %lu"
-msgstr "'%s' にアクセス出来ません"
-
-#: elf/pldd.c:184
-#, fuzzy, c-format
-#| msgid "invalid saved time"
-msgid "no valid %s/task entries"
-msgstr "不正な保存時刻です"
-
-#: elf/pldd.c:290
-#, c-format
-msgid "cannot get information about process %lu"
-msgstr ""
-
-#: elf/pldd.c:303
-#, c-format
-msgid "process %lu is no ELF program"
-msgstr ""
-
 #: elf/readelflib.c:34
 #, c-format
 msgid "file %s is truncated\n"
@@ -1203,46 +1025,6 @@ msgstr "%s: 無効なリンク先です: %s\n"
 msgid "Invalid link from \"%s\" to \"%s\": %s\n"
 msgstr "\"%s\" から \"%s\" への無効なリンクです: %s\n"
 
-#: elf/sotruss.sh:32
-#, fuzzy, sh-format
-#| msgid ""
-#| "Usage: sotruss [OPTION...] [--] EXECUTABLE [EXECUTABLE-OPTION...]\n"
-#| "  -F, --from FROMLIST     trace calls from objects on FORMLIST\n"
-#| "  -T, --to TOLIST         trace calls to objects on TOLIST\n"
-#| "\n"
-#| "  -e, --exit              also show exits from the function calls\n"
-#| "  -f, --follow            trace child processes\n"
-#| "  -o, --output FILENAME   write output to FILENAME (or FILENAME.$PID in case\n"
-#| "\t\t\t  -f is also used) instead of standard error\n"
-#| "\n"
-#| "      --help              print this help and exit\n"
-#| "      --version           print version information and exit"
-msgid ""
-"Usage: sotruss [OPTION...] [--] EXECUTABLE [EXECUTABLE-OPTION...]\n"
-"  -F, --from FROMLIST     Trace calls from objects on FROMLIST\n"
-"  -T, --to TOLIST         Trace calls to objects on TOLIST\n"
-"\n"
-"  -e, --exit              Also show exits from the function calls\n"
-"  -f, --follow            Trace child processes\n"
-"  -o, --output FILENAME   Write output to FILENAME (or FILENAME.$PID in case\n"
-"\t\t\t  -f is also used) instead of standard error\n"
-"\n"
-"  -?, --help              Give this help list\n"
-"      --usage             Give a short usage message\n"
-"      --version           Print program version"
-msgstr ""
-"Usage: sotruss [OPTION...] [--] EXECUTABLE [EXECUTABLE-OPTION...]\n"
-"  -F, --from FROMLIST     FORMLIST のオブジェクトからの呼び出しをトレースする\n"
-"  -T, --to TOLIST         TOLIST のオブジェクトへの呼び出しをトレースする\n"
-"\n"
-"  -e, --exit              関数呼び出しからの終了も表示する\n"
-"  -f, --follow            子プロセスもトレースする\n"
-"  -o, --output FILENAME   出力を標準出力の代わりに FILENAME (-f も使用された\n"
-"\t\t\t    場合は FILENAME.$PID) へ書き込む\n"
-"\n"
-"      --help              このヘルプメッセージを表示して終了する\n"
-"      --version           バージョン情報を表示して終了する"
-
 #: elf/sotruss.sh:46
 msgid "Mandatory arguments to long options are also mandatory for any corresponding\\nshort options.\\n"
 msgstr "長い形式のオプションで必須または任意の引数は、それに対応する短い形式のオプションでも同様に必須または任意です。\\n"
@@ -1258,20 +1040,6 @@ msgstr "%s: オプション '%s' は曖昧です: 次のものが可能です:"
 #: elf/sotruss.sh:79
 msgid "Written by %s.\\n"
 msgstr "作者 %s。\\n"
-
-#: elf/sotruss.sh:86
-#, fuzzy
-#| msgid ""
-#| "Usage: %s [-ef] [-F FROMLIST] [-o FILENAME] [-T TOLIST] [--exit]\n"
-#| "\t    [--follow] [--from FROMLIST] [--output FILENAME] [--to TOLIST]\\n"
-msgid ""
-"Usage: %s [-ef] [-F FROMLIST] [-o FILENAME] [-T TOLIST] [--exit]\n"
-"\t    [--follow] [--from FROMLIST] [--output FILENAME] [--to TOLIST]\n"
-"\t    [--help] [--usage] [--version] [--]\n"
-"\t    EXECUTABLE [EXECUTABLE-OPTION...]\\n"
-msgstr ""
-"使用法: %s [-ef] [-F FROMLIST] [-o FILENAME] [-T TOLIST] [--exit]\n"
-"\t    [--follow] [--from FROMLIST] [--output FILENAME] [--to TOLIST]\\n"
 
 #: elf/sotruss.sh:134
 msgid "%s: unrecognized option '%c%s'\\n"
@@ -1445,15 +1213,6 @@ msgstr "出力制御:"
 msgid "omit invalid characters from output"
 msgstr "出力から無効な文字を取り除く"
 
-#: iconv/iconv_prog.c:66 iconv/iconvconfig.c:128
-#: locale/programs/localedef.c:117 locale/programs/localedef.c:119
-#: locale/programs/localedef.c:121 locale/programs/localedef.c:150
-#: malloc/memusagestat.c:56
-#, fuzzy
-#| msgid "[FILE]"
-msgid "FILE"
-msgstr "[FILE]"
-
 #: iconv/iconv_prog.c:66
 msgid "output file"
 msgstr "出力ファイル"
@@ -1524,30 +1283,6 @@ msgstr "内部エラー (不正な記述子) です"
 msgid "unknown iconv() error %d"
 msgstr "不明な iconv() エラー %d です"
 
-#: iconv/iconv_prog.c:786
-#, fuzzy
-#| msgid ""
-#| "The following list contain all the coded character sets known.  This does\n"
-#| "not necessarily mean that all combinations of these names can be used for\n"
-#| "the FROM and TO command line parameters.  One coded character set can be\n"
-#| "listed with several different names (aliases).\n"
-#| "\n"
-#| "  "
-msgid ""
-"The following list contains all the coded character sets known.  This does\n"
-"not necessarily mean that all combinations of these names can be used for\n"
-"the FROM and TO command line parameters.  One coded character set can be\n"
-"listed with several different names (aliases).\n"
-"\n"
-"  "
-msgstr ""
-"以下のリストには、全ての既知の文字集合が含まれています。これらの名前は\n"
-"コマンドラインパラメータの FROM と TO の全ての組み合わせとして使用出来\n"
-"るとは限りません。ある文字集合は複数の異なった名前 (別名、alias) で\n"
-"リストされています。\n"
-"\n"
-" "
-
 #: iconv/iconvconfig.c:109
 msgid "Create fastloading iconv module configuration file."
 msgstr "高速読込み用 iconv モジュール設定ファイルを作成します。"
@@ -1555,10 +1290,6 @@ msgstr "高速読込み用 iconv モジュール設定ファイルを作成し�
 #: iconv/iconvconfig.c:113
 msgid "[DIR...]"
 msgstr "[DIR...]"
-
-#: iconv/iconvconfig.c:126 locale/programs/localedef.c:129
-msgid "PATH"
-msgstr ""
 
 #: iconv/iconvconfig.c:127
 msgid "Prefix used for all file accesses"
@@ -1665,12 +1396,6 @@ msgstr "メモリが不足しました"
 msgid "Error: .netrc file is readable by others."
 msgstr "エラー: .netrc ファイルが他の人によって読み込み可能です。"
 
-#: inet/ruserpass.c:180
-#, fuzzy
-#| msgid "Remove password or make file unreadable by others."
-msgid "Remove 'password' line or make file unreadable by others."
-msgstr "パスワードを削除するか、他の人によってファイルを読み込めないようにしてください。"
-
 #: inet/ruserpass.c:199
 #, c-format
 msgid "Unknown .netrc keyword %s"
@@ -1690,12 +1415,6 @@ msgstr "文字マップファイル `%s' が見つかりません"
 #, c-format
 msgid "default character map file `%s' not found"
 msgstr "デフォルト文字マップファイル `%s' が見つかりません"
-
-#: locale/programs/charmap.c:265
-#, fuzzy, c-format
-#| msgid "character map `%s' is not ASCII compatible, locale not ISO C compliant\n"
-msgid "character map `%s' is not ASCII compatible, locale not ISO C compliant [--no-warnings=ascii]"
-msgstr "文字マップ `%s' は ASCII 互換ではありません。ロケールが ISO C 準拠ではありません\n"
 
 #: locale/programs/charmap.c:343
 #, c-format
@@ -2083,12 +1802,6 @@ msgstr "エラーが多すぎます。処理をあきらめます"
 msgid "%s: nested conditionals not supported"
 msgstr "%s: 入れ子になった条件はサポートされていません"
 
-#: locale/programs/ld-collate.c:2526
-#, fuzzy, c-format
-#| msgid "%s: more then one 'else'"
-msgid "%s: more than one 'else'"
-msgstr "%s: 'else' が二回以上あります"
-
 #: locale/programs/ld-collate.c:2701
 #, c-format
 msgid "%s: duplicate definition of `%s'"
@@ -2400,33 +2113,9 @@ msgstr "出力桁が定義されていないか、文字マップ内に標準名
 msgid "%s: transliteration data from locale `%s' not available"
 msgstr "%s: ロケール `%s' からのリテラル変換データが使用出来ません"
 
-#: locale/programs/ld-ctype.c:3672
-#, fuzzy, c-format
-#| msgid "%s: table for class \"%s\": %lu bytes\n"
-msgid "%s: table for class \"%s\": %lu bytes"
-msgstr "%s: クラス \"%s\" 用の表: %lu バイト\n"
-
-#: locale/programs/ld-ctype.c:3736
-#, fuzzy, c-format
-#| msgid "%s: table for map \"%s\": %lu bytes\n"
-msgid "%s: table for map \"%s\": %lu bytes"
-msgstr "%s: マップ \"%s\" 用の表: %lu バイト\n"
-
-#: locale/programs/ld-ctype.c:3860
-#, fuzzy, c-format
-#| msgid "%s: table for width: %lu bytes\n"
-msgid "%s: table for width: %lu bytes"
-msgstr "%s: 幅用の表: %lu バイト\n"
-
 #: locale/programs/ld-identification.c:173
 #, c-format
 msgid "%s: no identification for category `%s'"
-msgstr "%s: カテゴリ `%s' 用の識別子がありません"
-
-#: locale/programs/ld-identification.c:197
-#, fuzzy, c-format
-#| msgid "%s: no identification for category `%s'"
-msgid "%s: unknown standard `%s' for category `%s'"
 msgstr "%s: カテゴリ `%s' 用の識別子がありません"
 
 #: locale/programs/ld-identification.c:380
@@ -2459,12 +2148,6 @@ msgstr "%s: フィールド `%s' 用の正しくない正規表現です: %s"
 #, c-format
 msgid "%s: value of field `int_curr_symbol' has wrong length"
 msgstr "%s: フィールド `int_curr_symbol' の値が間違った長さです"
-
-#: locale/programs/ld-monetary.c:245
-#, fuzzy, c-format
-#| msgid "%s: value of field `int_curr_symbol' does not correspond to a valid name in ISO 4217"
-msgid "%s: value of field `int_curr_symbol' does not correspond to a valid name in ISO 4217 [--no-warnings=intcurrsym]"
-msgstr "%s: フィールド `int_curr_symbol' の値が ISO 4217 の有効な値と対応していません"
 
 #: locale/programs/ld-monetary.c:293 locale/programs/ld-monetary.c:322
 #, c-format
@@ -2660,17 +2343,6 @@ msgstr ""
 msgid "while preparing output"
 msgstr "出力を準備中"
 
-#: locale/programs/locale.c:998
-#, fuzzy, c-format
-#| msgid "Cannot set LC_ALL to default locale"
-msgid "Cannot set %s to default locale"
-msgstr "LC_ALLをデフォルトロケールへ設定できません"
-
-#: locale/programs/locale.c:1096
-#, c-format
-msgid "warning: The LOCPATH variable is set to \"%s\"\n"
-msgstr ""
-
 #: locale/programs/localedef.c:116
 msgid "Input Files:"
 msgstr "入力ファイル:"
@@ -2691,19 +2363,9 @@ msgstr "FILE にはシンボル名から UCS4 値へのマップが含まれま�
 msgid "Create output even if warning messages were issued"
 msgstr "警告メッセージがあっても出力を作成する"
 
-#: locale/programs/localedef.c:128
-msgid "Do not create hard links between installed locales"
-msgstr ""
-
 #: locale/programs/localedef.c:129
 msgid "Optional output file prefix"
 msgstr "出力ファイルにオプションの接頭辞を付加する"
-
-#: locale/programs/localedef.c:130
-#, fuzzy
-#| msgid "Be strictly POSIX conform"
-msgid "Strictly conform to POSIX"
-msgstr "厳密に POSIX 規格に準拠する"
 
 #: locale/programs/localedef.c:132
 msgid "Suppress warnings and information messages"
@@ -2712,20 +2374,6 @@ msgstr "警告と情報メッセージを抑制する"
 #: locale/programs/localedef.c:133
 msgid "Print more messages"
 msgstr "詳細なメッセージを表示する"
-
-#: locale/programs/localedef.c:134 locale/programs/localedef.c:137
-#, fuzzy
-#| msgid "warning: "
-msgid "<warnings>"
-msgstr "警告: "
-
-#: locale/programs/localedef.c:135
-msgid "Comma-separated list of warnings to disable; supported warnings are: ascii, intcurrsym"
-msgstr ""
-
-#: locale/programs/localedef.c:138
-msgid "Comma-separated list of warnings to enable; supported warnings are: ascii, intcurrsym"
-msgstr ""
 
 #: locale/programs/localedef.c:141
 msgid "Archive control:"
@@ -2754,14 +2402,6 @@ msgstr "書庫の内容のリストを表示する"
 #: locale/programs/localedef.c:151
 msgid "locale.alias file to consult when making archive"
 msgstr "書庫を作成する時に locale.alias ファイルを参照する"
-
-#: locale/programs/localedef.c:153
-msgid "Generate little-endian output"
-msgstr ""
-
-#: locale/programs/localedef.c:155
-msgid "Generate big-endian output"
-msgstr ""
 
 #: locale/programs/localedef.c:160
 msgid "Compile locale specification"
@@ -2797,12 +2437,6 @@ msgstr "ロケール定義ファイル `%s' を開けません"
 msgid "cannot write output files to `%s'"
 msgstr "出力ファイル `%s' へ書き込めません"
 
-#: locale/programs/localedef.c:309
-#, fuzzy
-#| msgid "no output file produced because warnings were issued"
-msgid "no output file produced because errors were issued"
-msgstr "警告が出されたため出力ファイルが作成されませんでした"
-
 #: locale/programs/localedef.c:441
 #, c-format
 msgid ""
@@ -2824,12 +2458,6 @@ msgstr "ロケール定義間で依存関係が循環しています"
 #, c-format
 msgid "cannot add already read locale `%s' a second time"
 msgstr "読み込み済みのロケール `%s' の二回目の追加は出来ません"
-
-#: locale/programs/locarchive.c:133 locale/programs/locarchive.c:380
-#, fuzzy, c-format
-#| msgid "cannot create temporary file"
-msgid "cannot create temporary file: %s"
-msgstr "一時ファイルを作成できません"
 
 #: locale/programs/locarchive.c:167 locale/programs/locarchive.c:430
 #, c-format
@@ -3150,10 +2778,6 @@ msgid "Name output file"
 msgstr "出力ファイル名前"
 
 #: malloc/memusagestat.c:57
-msgid "STRING"
-msgstr ""
-
-#: malloc/memusagestat.c:57
 msgid "Title string used in output graphic"
 msgstr "出力グラフィック内で使用されるタイトル文字列"
 
@@ -3164,10 +2788,6 @@ msgstr "時間に対して線形に出力を生成する (デフォルトは関�
 #: malloc/memusagestat.c:62
 msgid "Also draw graph for total memory consumption"
 msgstr "合計メモリ消費に関するグラフも描画する"
-
-#: malloc/memusagestat.c:63
-msgid "VALUE"
-msgstr ""
 
 #: malloc/memusagestat.c:64
 msgid "Make output graphic VALUE pixels wide"
@@ -3836,35 +3456,14 @@ msgstr "ホストキャッシュ内に \"%s\" が見つかりません!"
 msgid "Reloading \"%s\" in hosts cache!"
 msgstr "ホストキャッシュ内の \"%s\" を再ロードしています"
 
-#: nscd/cache.c:151
-#, c-format
-msgid "add new entry \"%s\" of type %s for %s to cache%s"
-msgstr ""
-
 #: nscd/cache.c:153
 msgid " (first)"
 msgstr " (最初)"
-
-#: nscd/cache.c:288
-#, fuzzy, c-format
-#| msgid "cannot open database file `%s': %s"
-msgid "checking for monitored file `%s': %s"
-msgstr "データベースファイル `%s' を開けません: %s"
-
-#: nscd/cache.c:298
-#, c-format
-msgid "monitored file `%s` changed (mtime)"
-msgstr ""
 
 #: nscd/cache.c:341
 #, c-format
 msgid "pruning %s cache; time %ld"
 msgstr "%s キャッシュを切り詰めています。時間 %ld"
-
-#: nscd/cache.c:370
-#, c-format
-msgid "considering %s entry \"%s\", timeout %<PRIu64>"
-msgstr ""
 
 #: nscd/connections.c:520
 #, c-format
@@ -3932,38 +3531,6 @@ msgstr "ソケットを開けません: %s"
 msgid "cannot enable socket to accept connections: %s"
 msgstr "接続を受け付けるソケットを有効にできません: %s"
 
-#: nscd/connections.c:861
-#, c-format
-msgid "disabled inotify-based monitoring for file `%s': %s"
-msgstr ""
-
-#: nscd/connections.c:865
-#, c-format
-msgid "monitoring file `%s` (%d)"
-msgstr ""
-
-#: nscd/connections.c:878
-#, c-format
-msgid "disabled inotify-based monitoring for directory `%s': %s"
-msgstr ""
-
-#: nscd/connections.c:882
-#, fuzzy, c-format
-#| msgid "Can't open directory %s"
-msgid "monitoring directory `%s` (%d)"
-msgstr "ディレクトリ %s を開けません"
-
-#: nscd/connections.c:910
-#, fuzzy, c-format
-#| msgid "no more memory for database '%s'"
-msgid "monitoring file %s for database %s"
-msgstr "データベース '%s' 用のメモリがこれ以上ありません"
-
-#: nscd/connections.c:920
-#, c-format
-msgid "stat failed for file `%s'; will try again later: %s"
-msgstr ""
-
 #: nscd/connections.c:1039
 #, c-format
 msgid "provide access to FD %d, for %s"
@@ -3997,12 +3564,6 @@ msgstr "結果を書き込めません: %s"
 #, c-format
 msgid "error getting caller's id: %s"
 msgstr "呼び出し元 ID の取得時にエラーが発生しました: %s"
-
-#: nscd/connections.c:1349
-#, fuzzy, c-format
-#| msgid "cannot open /proc/self/cmdline: %s; disabling paranoia mode"
-msgid "cannot open /proc/self/cmdline: %m; disabling paranoia mode"
-msgstr "/proc/self/cmdline を開けません: %s; paranoia モードを無効にしています"
 
 #: nscd/connections.c:1372
 #, c-format
@@ -4053,49 +3614,6 @@ msgstr "handle_request: 要求を受け取りました (バージョン = %d) �
 #, c-format
 msgid "handle_request: request received (Version = %d)"
 msgstr "handle_request: 要求を受け取りました (バージョン = %d)"
-
-#: nscd/connections.c:1838
-#, c-format
-msgid "ignored inotify event for `%s` (file exists)"
-msgstr ""
-
-#: nscd/connections.c:1843
-#, c-format
-msgid "monitored file `%s` was %s, removing watch"
-msgstr ""
-
-#: nscd/connections.c:1851 nscd/connections.c:1893
-#, fuzzy, c-format
-#| msgid "failed to reopen %s with mode %s"
-msgid "failed to remove file watch `%s`: %s"
-msgstr "%s をモード %s で再度開くことに失敗しました"
-
-#: nscd/connections.c:1866
-#, c-format
-msgid "monitored file `%s` was written to"
-msgstr ""
-
-#: nscd/connections.c:1890
-#, c-format
-msgid "monitored parent directory `%s` was %s, removing watch on `%s`"
-msgstr ""
-
-#: nscd/connections.c:1916
-#, c-format
-msgid "monitored file `%s` was %s, adding watch"
-msgstr ""
-
-#: nscd/connections.c:1928
-#, fuzzy, c-format
-#| msgid "failed to load shared object `%s'"
-msgid "failed to add file watch `%s`: %s"
-msgstr "共有オブジェクト `%s' の読み込みに失敗しました"
-
-#: nscd/connections.c:2106 nscd/connections.c:2271
-#, fuzzy, c-format
-#| msgid "disabled inotify after read error %d"
-msgid "disabled inotify-based monitoring after read error %d"
-msgstr "読み込みエラー %d が発生したため  inotify を無効にしました"
 
 #: nscd/connections.c:2386
 msgid "could not initialize conditional variable"
@@ -4159,30 +3677,6 @@ msgstr "%zu バイト解放されました (%s キャッシュ内)"
 msgid "no more memory for database '%s'"
 msgstr "データベース '%s' 用のメモリがこれ以上ありません"
 
-#: nscd/netgroupcache.c:122
-#, fuzzy, c-format
-#| msgid "Haven't found \"%s\" in group cache!"
-msgid "Haven't found \"%s\" in netgroup cache!"
-msgstr "グループキャッシュ内に \"%s\" が見つかりません!"
-
-#: nscd/netgroupcache.c:124
-#, fuzzy, c-format
-#| msgid "Reloading \"%s\" in group cache!"
-msgid "Reloading \"%s\" in netgroup cache!"
-msgstr "グループキャッシュ内の \"%s\" を再ロードしています!"
-
-#: nscd/netgroupcache.c:470
-#, fuzzy, c-format
-#| msgid "Haven't found \"%s\" in group cache!"
-msgid "Haven't found \"%s (%s,%s,%s)\" in netgroup cache!"
-msgstr "グループキャッシュ内に \"%s\" が見つかりません!"
-
-#: nscd/netgroupcache.c:473
-#, fuzzy, c-format
-#| msgid "Reloading \"%s\" in group cache!"
-msgid "Reloading \"%s (%s,%s,%s)\" in netgroup cache!"
-msgstr "グループキャッシュ内の \"%s\" を再ロードしています!"
-
 #: nscd/nscd.c:106
 msgid "Read configuration data from NAME"
 msgstr "NAME から設定情報を読み込む"
@@ -4190,10 +3684,6 @@ msgstr "NAME から設定情報を読み込む"
 #: nscd/nscd.c:108
 msgid "Do not fork and display messages on the current tty"
 msgstr "fork しないで現在の tty にメッセージを表示する"
-
-#: nscd/nscd.c:110
-msgid "Do not fork, but otherwise behave like a daemon"
-msgstr ""
 
 #: nscd/nscd.c:111
 msgid "NUMBER"
@@ -4246,12 +3736,6 @@ msgstr "設定ファイルの読み込みに失敗しました。これは致命
 msgid "already running"
 msgstr "既に起動しています"
 
-#: nscd/nscd.c:194
-#, fuzzy, c-format
-#| msgid "cannot create directory for output files"
-msgid "cannot create a pipe to talk to the child"
-msgstr "出力ファイル用ディレクトリが作成できません"
-
 #: nscd/nscd.c:198
 #, c-format
 msgid "cannot fork"
@@ -4294,33 +3778,6 @@ msgstr "'%s' は既知のデータベースではありません"
 #, c-format
 msgid "secure services not implemented anymore"
 msgstr "セキュアなサービスはもう実装されていません"
-
-#: nscd/nscd.c:485
-#, c-format
-msgid ""
-"Supported tables:\n"
-"%s\n"
-"\n"
-"For bug reporting instructions, please see:\n"
-"%s.\n"
-msgstr ""
-
-#: nscd/nscd.c:635
-#, fuzzy, c-format
-#| msgid "lstat failed"
-msgid "'wait' failed\n"
-msgstr "lstat に失敗しました"
-
-#: nscd/nscd.c:642
-#, c-format
-msgid "child exited with status %d\n"
-msgstr ""
-
-#: nscd/nscd.c:647
-#, fuzzy, c-format
-#| msgid "Interrupted by a signal"
-msgid "child terminated by signal %d\n"
-msgstr "シグナル割り込みが発生しました"
 
 #: nscd/nscd_conf.c:54
 #, c-format
@@ -4489,18 +3946,6 @@ msgstr ""
 "%15<PRIuMAX>  メモリ割り当て失敗\n"
 "%15s  変更に関しては /etc/%s を確認してください\n"
 
-#: nscd/pwdcache.c:407
-#, fuzzy, c-format
-#| msgid "Haven't found \"%s\" in hosts cache!"
-msgid "Haven't found \"%s\" in user database cache!"
-msgstr "ホストキャッシュ内に \"%s\" が見つかりません!"
-
-#: nscd/pwdcache.c:409
-#, fuzzy, c-format
-#| msgid "Reloading \"%s\" in hosts cache!"
-msgid "Reloading \"%s\" in user database cache!"
-msgstr "ホストキャッシュ内の \"%s\" を再ロードしています"
-
 #: nscd/pwdcache.c:471
 #, c-format
 msgid "Invalid numeric uid \"%s\"!"
@@ -4559,21 +4004,6 @@ msgstr "AVC の開始に失敗しました"
 msgid "Access Vector Cache (AVC) started"
 msgstr "Access Vector Cache (AVC) が開始されました"
 
-#: nscd/selinux.c:368
-msgid "Error querying policy for undefined object classes or permissions."
-msgstr ""
-
-#: nscd/selinux.c:375
-#, fuzzy
-#| msgid "Error getting context of nscd"
-msgid "Error getting security class for nscd."
-msgstr "nscd のコンテキスト取得中にエラーが発生しました"
-
-#: nscd/selinux.c:380
-#, c-format
-msgid "Error translating permission name \"%s\" to access vector bit."
-msgstr ""
-
 #: nscd/selinux.c:390
 msgid "Error getting context of socket peer"
 msgstr "ソケット対向のコンテキスト取得中にエラーが発生しました"
@@ -4628,12 +4058,6 @@ msgid "database [key ...]"
 msgstr "database [key ...]"
 
 #: nss/getent.c:60
-#, fuzzy
-#| msgid "CONF"
-msgid "CONFIG"
-msgstr "CONF"
-
-#: nss/getent.c:60
 msgid "Service configuration to be used"
 msgstr "使用されるサービス設定"
 
@@ -4649,12 +4073,6 @@ msgstr "管理データベースからエントリを取得します。"
 #, c-format
 msgid "Enumeration not supported on %s\n"
 msgstr "エミュレーションは %s 上ではサポートされていません\n"
-
-#: nss/getent.c:517 nss/getent.c:530
-#, fuzzy, c-format
-#| msgid "Could not create log file"
-msgid "Could not allocate group list: %m\n"
-msgstr "ログファイルを作成できませんでした"
 
 #: nss/getent.c:901
 #, c-format
@@ -4682,20 +4100,6 @@ msgstr "データベース構築中にメッセージを表示しない"
 msgid "Print content of database file, one entry a line"
 msgstr "データベースのコンテキストを、1 エントリ 1 行で表示する"
 
-#: nss/makedb.c:125
-msgid "CHAR"
-msgstr ""
-
-#: nss/makedb.c:126
-msgid "Generated line not part of iteration"
-msgstr ""
-
-#: nss/makedb.c:131
-#, fuzzy
-#| msgid "Create simple DB database from textual input."
-msgid "Create simple database from textual input."
-msgstr "テキスト入力から単純なデータベースを作成します。"
-
 #: nss/makedb.c:134
 msgid ""
 "INPUT-FILE OUTPUT-FILE\n"
@@ -4706,46 +4110,10 @@ msgstr ""
 "-o OUTPUT-FILE INPUT-FILE\n"
 "-u INPUT-FILE"
 
-#: nss/makedb.c:227
-#, fuzzy, c-format
-#| msgid "cannot open database file `%s': %s"
-msgid "cannot open database file `%s'"
-msgstr "データベースファイル `%s' を開けません: %s"
-
-#: nss/makedb.c:272
-#, fuzzy, c-format
-#| msgid "write to %s subprocess failed"
-msgid "no entries to be processed"
-msgstr "%s 子プロセスへの書き込みに失敗しました"
-
-#: nss/makedb.c:282
-#, fuzzy, c-format
-#| msgid "cannot create temporary file"
-msgid "cannot create temporary file name"
-msgstr "一時ファイルを作成できません"
-
 #: nss/makedb.c:288
 #, c-format
 msgid "cannot create temporary file"
 msgstr "一時ファイルを作成できません"
-
-#: nss/makedb.c:304
-#, fuzzy, c-format
-#| msgid "cannot create pipe"
-msgid "cannot stat newly created file"
-msgstr "パイプを作成できません"
-
-#: nss/makedb.c:315
-#, fuzzy, c-format
-#| msgid "cannot create temporary file"
-msgid "cannot rename temporary file"
-msgstr "一時ファイルを作成できません"
-
-#: nss/makedb.c:527 nss/makedb.c:550
-#, fuzzy, c-format
-#| msgid "cannot create searchlist"
-msgid "cannot create search tree"
-msgstr "サーチリストを作成できません"
 
 #: nss/makedb.c:556
 msgid "duplicate key"
@@ -4755,36 +4123,6 @@ msgstr "キーが重複しています"
 #, c-format
 msgid "problems while reading `%s'"
 msgstr "`%s' の読み込み中に問題が発生しました"
-
-#: nss/makedb.c:795
-#, fuzzy, c-format
-#| msgid "while writing database file"
-msgid "failed to write new database file"
-msgstr "データベースファイルを書き込み中"
-
-#: nss/makedb.c:808
-#, fuzzy, c-format
-#| msgid "cannot write to database file %s: %s"
-msgid "cannot stat database file"
-msgstr "データベースファイル %s へ書き込めません: %s"
-
-#: nss/makedb.c:813
-#, fuzzy, c-format
-#| msgid "cannot open database file `%s': %s"
-msgid "cannot map database file"
-msgstr "データベースファイル `%s' を開けません: %s"
-
-#: nss/makedb.c:816
-#, fuzzy, c-format
-#| msgid "while writing database file"
-msgid "file not a database file"
-msgstr "データベースファイルを書き込み中"
-
-#: nss/makedb.c:867
-#, fuzzy, c-format
-#| msgid "cannot open output file `%s' for category `%s'"
-msgid "cannot set file creation context for `%s'"
-msgstr "カテゴリ `%2$s' 用の出力ファイル `%1$s' を開けません"
 
 #: posix/getconf.c:417
 #, c-format
@@ -4833,36 +4171,6 @@ msgstr "未定義"
 msgid "Unrecognized variable `%s'"
 msgstr "認識できない変数 `%s' です"
 
-#: posix/getopt.c:277
-#, fuzzy, c-format
-#| msgid "%s: option '-W %s' is ambiguous\n"
-msgid "%s: option '%s%s' is ambiguous\n"
-msgstr "%s: オプション '-W %s' は曖昧です\n"
-
-#: posix/getopt.c:283
-#, fuzzy, c-format
-#| msgid "%s: option '%s' is ambiguous; possibilities:"
-msgid "%s: option '%s%s' is ambiguous; possibilities:"
-msgstr "%s: オプション '%s' は曖昧です:次のものが可能です:"
-
-#: posix/getopt.c:318
-#, fuzzy, c-format
-#| msgid "%s: unrecognized option '%c%s'\n"
-msgid "%s: unrecognized option '%s%s'\n"
-msgstr "%s: オプション '%c%s' を認識できません\n"
-
-#: posix/getopt.c:344
-#, fuzzy, c-format
-#| msgid "%s: option '%c%s' doesn't allow an argument\n"
-msgid "%s: option '%s%s' doesn't allow an argument\n"
-msgstr "%s: オプション '%c%s' は引数を取ることができません\n"
-
-#: posix/getopt.c:359
-#, fuzzy, c-format
-#| msgid "%s: option '--%s' requires an argument\n"
-msgid "%s: option '%s%s' requires an argument\n"
-msgstr "%s: オプション '--%s' は引数が必要です\n"
-
 #: posix/getopt.c:620
 #, c-format
 msgid "%s: invalid option -- '%c'\n"
@@ -4896,12 +4204,6 @@ msgstr "終端のバックスラッシュ"
 #: posix/regcomp.c:153
 msgid "Invalid back reference"
 msgstr "無効な前方参照です"
-
-#: posix/regcomp.c:156
-#, fuzzy
-#| msgid "Unmatched [ or [^"
-msgid "Unmatched [, [^, [:, [., or [="
-msgstr "[ または [^ が不一致です"
 
 #: posix/regcomp.c:159
 msgid "Unmatched ( or \\("
@@ -5100,12 +4402,6 @@ msgstr "子プロセスが終了しました"
 msgid "Child has terminated abnormally and did not create a core file"
 msgstr "子プロセスが異常終了しました。コアファイルは作成されませんでした"
 
-#: stdio-common/psiginfo-data.h:37
-#, fuzzy
-#| msgid "Child hat terminated abnormally and created a core file"
-msgid "Child has terminated abnormally and created a core file"
-msgstr "子プロセスが異常終了しました。コアファイルが作成されました"
-
 #: stdio-common/psiginfo-data.h:38
 msgid "Traced child has trapped"
 msgstr "追跡している子プロセスがトラップされました"
@@ -5217,10 +4513,6 @@ msgstr "不明なシグナル %d"
 #: sunrpc/xdr_rec.c:153 sunrpc/xdr_ref.c:79
 msgid "out of memory\n"
 msgstr "メモリが足りなくなりました\n"
-
-#: sunrpc/auth_unix.c:350
-msgid "auth_unix.c: Fatal marshalling problem"
-msgstr ""
 
 #: sunrpc/clnt_perr.c:92 sunrpc/clnt_perr.c:108
 #, c-format
@@ -5391,12 +4683,6 @@ msgstr "%s: %s を開けません: %m\n"
 #, c-format
 msgid "%s: while writing output %s: %m"
 msgstr "%s: 出力 %s を書き込み中: %m"
-
-#: sunrpc/rpc_main.c:336 sunrpc/rpc_main.c:375
-#, fuzzy, c-format
-#| msgid "cannot find C preprocessor: %s \n"
-msgid "cannot find C preprocessor: %s\n"
-msgstr "C プリプロセッサが見つかりません: %s \n"
 
 #: sunrpc/rpc_main.c:411
 #, c-format
@@ -5604,36 +4890,6 @@ msgstr "-T\t\tRPC ディスパッチ表をサポートするためのコード�
 #, c-format
 msgid "-Y path\t\tdirectory name to find C preprocessor (cpp)\n"
 msgstr "-Y path\t\tC プリプロセッサ (cpp) を見つけるためのディレクトリ名\n"
-
-#: sunrpc/rpc_main.c:1436
-#, c-format
-msgid "-5\t\tSysVr4 compatibility mode\n"
-msgstr ""
-
-#: sunrpc/rpc_main.c:1437
-#, fuzzy, c-format
-#| msgid "give this help list"
-msgid "--help\t\tgive this help list\n"
-msgstr "このヘルプを表示する"
-
-#: sunrpc/rpc_main.c:1438
-#, fuzzy, c-format
-#| msgid "print program version"
-msgid "--version\tprint program version\n"
-msgstr "プログラムのバージョンを表示する"
-
-#: sunrpc/rpc_main.c:1440
-#, fuzzy, c-format
-#| msgid ""
-#| "For bug reporting instructions, please see:\n"
-#| "<http://www.gnu.org/software/libc/bugs.html>.\n"
-msgid ""
-"\n"
-"For bug reporting instructions, please see:\n"
-"%s.\n"
-msgstr ""
-"バグを報告する方法に関しては、下記を参照してください:\n"
-"<http://www.gnu.org/software/libc/bugs.html>.\n"
 
 #: sunrpc/rpc_scan.c:112
 msgid "constant or identifier expected"
@@ -6346,17 +5602,6 @@ msgstr "ユーザが多すぎます"
 msgid "Disk quota exceeded"
 msgstr "ディスク使用量制限を超過しました"
 
-#. TRANS This indicates an internal confusion in the
-#. TRANS file system which is due to file system rearrangements on the server host
-#. TRANS for NFS file systems or corruption in other file systems.
-#. TRANS Repairing this condition usually requires unmounting, possibly repairing
-#. TRANS and remounting the file system.
-#: sysdeps/gnu/errlist.c:788
-#, fuzzy
-#| msgid "Stale NFS file handle"
-msgid "Stale file handle"
-msgstr "実効性のないNFSファイルハンドルです"
-
 #. TRANS An attempt was made to NFS-mount a remote file system with a file name that
 #. TRANS already specifies an NFS-mounted file.
 #. TRANS (This is an error on some operating systems, but we expect it to work
@@ -6729,12 +5974,6 @@ msgstr "キーがサービスによって拒否されました"
 msgid "Operation not possible due to RF-kill"
 msgstr "RF-kill のため操作は不可能です"
 
-#: sysdeps/gnu/errlist.c:1476
-#, fuzzy
-#| msgid "Object-specific hardware error"
-msgid "Memory page has hardware error"
-msgstr "オブジェクト特有のハードウェアエラーです"
-
 #: sysdeps/mach/_strerror.c:56
 msgid "Error in unknown error system: "
 msgstr "不明なエラーシステムでのエラー:"
@@ -6836,147 +6075,20 @@ msgstr "`%s'を開けません"
 msgid "cannot read header from `%s'"
 msgstr "`%s'のヘッダーを読めません"
 
-#: sysdeps/x86/dl-cet.c:202
-msgid "mprotect legacy bitmap failed"
-msgstr ""
-
-#: sysdeps/x86/dl-cet.c:217
-#, fuzzy
-#| msgid "Data input available"
-msgid "legacy bitmap isn't available"
-msgstr "データ入力が使用可能です"
-
-#: sysdeps/x86/dl-cet.c:247
-#, fuzzy
-#| msgid "failed to start conversion processing"
-msgid "failed to mark legacy code region"
-msgstr "変換処理の開始に失敗しました"
-
-#: sysdeps/x86/dl-cet.c:269
-msgid "shadow stack isn't enabled"
-msgstr ""
-
-#: sysdeps/x86/dl-cet.c:290
-msgid "can't disable CET"
-msgstr ""
-
-#: timezone/zdump.c:332
-#, fuzzy
-#| msgid "has fewer than 3 alphabetics"
-msgid "has fewer than 3 characters"
-msgstr "アルファベットが 3 文字より少ないです"
-
-#: timezone/zdump.c:334
-#, fuzzy
-#| msgid "has more than 6 alphabetics"
-msgid "has more than 6 characters"
-msgstr "アルファベットが 6 文字を超えています"
-
-#: timezone/zdump.c:336
-msgid "has characters other than ASCII alphanumerics, '-' or '+'"
-msgstr ""
-
 #: timezone/zdump.c:341
 #, c-format
 msgid "%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"
 msgstr "%s: 警告: ゾーン \"%s\" 省略形 \"%s\" %s\n"
-
-#: timezone/zdump.c:387
-#, c-format
-msgid ""
-"%s: usage: %s OPTIONS TIMEZONE ...\n"
-"Options include:\n"
-"  -c [L,]U   Start at year L (default -500), end before year U (default 2500)\n"
-"  -t [L,]U   Start at time L, end before time U (in seconds since 1970)\n"
-"  -i         List transitions briefly (format is experimental)\n"
-"  -v         List transitions verbosely\n"
-"  -V         List transitions a bit less verbosely\n"
-"  --help     Output this help\n"
-"  --version  Output version info\n"
-"\n"
-"Report bugs to %s.\n"
-msgstr ""
-
-#: timezone/zdump.c:473
-#, c-format
-msgid "%s: wild -c argument %s\n"
-msgstr ""
-
-#: timezone/zdump.c:506
-#, fuzzy, c-format
-#| msgid "%s: Too many arguments\n"
-msgid "%s: wild -t argument %s\n"
-msgstr "%s: 引数が多すぎます\n"
 
 #: timezone/zic.c:429
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: メモリが足りません: %s\n"
 
-#: timezone/zic.c:437
-#, fuzzy
-#| msgid "time overflow"
-msgid "size overflow"
-msgstr "時間オーバーフロー"
-
-#: timezone/zic.c:447
-#, fuzzy
-#| msgid "time overflow"
-msgid "alignment overflow"
-msgstr "時間オーバーフロー"
-
-#: timezone/zic.c:495
-#, fuzzy
-#| msgid "Integer overflow"
-msgid "integer overflow"
-msgstr "整数のオーバーフローです"
-
-#: timezone/zic.c:529
-#, fuzzy, c-format
-#| msgid "\"%s\", line %d: %s"
-msgid "\"%s\", line %<PRIdMAX>: "
-msgstr "\"%s\", %d行: %s"
-
-#: timezone/zic.c:532
-#, fuzzy, c-format
-#| msgid " (rule from \"%s\", line %d)"
-msgid " (rule from \"%s\", line %<PRIdMAX>)"
-msgstr " (\"%s\"からの規則, %d行)"
-
 #: timezone/zic.c:551
 #, c-format
 msgid "warning: "
 msgstr "警告: "
-
-#: timezone/zic.c:576
-#, fuzzy, c-format
-#| msgid ""
-#| "%s: usage is %s [ --version ] [ --help ] [ -v ] [ -l localtime ] [ -p posixrules ] \\\n"
-#| "\t[ -d directory ] [ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n"
-#| "\n"
-#| "Report bugs to tz@elsie.nci.nih.gov.\n"
-msgid ""
-"%s: usage is %s [ --version ] [ --help ] [ -v ] \\\n"
-"\t[ -l localtime ] [ -p posixrules ] [ -d directory ] \\\n"
-"\t[ -t localtime-link ] [ -L leapseconds ] [ filename ... ]\n"
-"\n"
-"Report bugs to %s.\n"
-msgstr ""
-"%s: 使用法 %s [ --version ] [ --help ] [ -v ] [ -l localtime ] [ -p posixrules ] \\\n"
-"\t[ -d directory ] [ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n"
-"\n"
-"バグを発見したら <tz@elsie.nci.nih.gov> に報告してください。\n"
-"翻訳に関するバグは<translation-team-ja@lists.sourceforge.net>に報告してください。\n"
-
-#: timezone/zic.c:599
-#, fuzzy, c-format
-#| msgid "%s: Can't create %s: %s\n"
-msgid "%s: Can't chdir to %s: %s\n"
-msgstr "%s: %sを作成できません: %s\n"
-
-#: timezone/zic.c:632
-msgid "wild compilation-time specification of zic_t"
-msgstr ""
 
 #: timezone/zic.c:652
 #, c-format
@@ -6993,16 +6105,6 @@ msgstr "%s: -l オプションが複数指定されています\n"
 msgid "%s: More than one -p option specified\n"
 msgstr "%s: -p オプションが複数指定されています\n"
 
-#: timezone/zic.c:680
-#, fuzzy, c-format
-#| msgid "%s: More than one -d option specified\n"
-msgid "%s: More than one -t option specified\n"
-msgstr "%s: -d オプションが複数指定されています\n"
-
-#: timezone/zic.c:689
-msgid "-y is obsolescent"
-msgstr ""
-
 #: timezone/zic.c:693
 #, c-format
 msgid "%s: More than one -y option specified\n"
@@ -7013,103 +6115,9 @@ msgstr "%s: -y オプションが複数指定されています\n"
 msgid "%s: More than one -L option specified\n"
 msgstr "%s: -L オプションが複数指定されています\n"
 
-#: timezone/zic.c:712
-msgid "-s ignored"
-msgstr ""
-
-#: timezone/zic.c:753
-msgid "link to link"
-msgstr ""
-
-#: timezone/zic.c:756 timezone/zic.c:760
-#, fuzzy
-#| msgid "Too many links"
-msgid "command line"
-msgstr "リンクが多すぎます"
-
-#: timezone/zic.c:776
-#, fuzzy
-#| msgid "regular empty file"
-msgid "empty file name"
-msgstr "通常の空ファイル"
-
-#: timezone/zic.c:779
-#, c-format
-msgid "file name '%s' begins with '/'"
-msgstr ""
-
-#: timezone/zic.c:789
-#, c-format
-msgid "file name '%s' contains '%.*s' component"
-msgstr ""
-
-#: timezone/zic.c:795
-#, c-format
-msgid "file name '%s' component contains leading '-'"
-msgstr ""
-
-#: timezone/zic.c:798
-#, c-format
-msgid "file name '%s' contains overlength component '%.*s...'"
-msgstr ""
-
-#: timezone/zic.c:826
-#, c-format
-msgid "file name '%s' contains byte '%c'"
-msgstr ""
-
-#: timezone/zic.c:827
-#, c-format
-msgid "file name '%s' contains byte '\\%o'"
-msgstr ""
-
-#: timezone/zic.c:897
-#, fuzzy, c-format
-#| msgid "%s: Can't link from %s to %s: %s\n"
-msgid "%s: link from %s/%s failed: %s\n"
-msgstr "%s: %sから%sへリンクを張れません: %s\n"
-
-#: timezone/zic.c:907 timezone/zic.c:1876
-#, fuzzy, c-format
-#| msgid "%s: Can't remove %s: %s\n"
-msgid "%s: Can't remove %s/%s: %s\n"
-msgstr "%s: %sを削除できません: %s\n"
-
-#: timezone/zic.c:931
-#, c-format
-msgid "symbolic link used because hard link failed: %s"
-msgstr ""
-
-#: timezone/zic.c:939
-#, fuzzy, c-format
-#| msgid "%s: Can't create %s: %s\n"
-msgid "%s: Can't read %s/%s: %s\n"
-msgstr "%s: %sを作成できません: %s\n"
-
-#: timezone/zic.c:946 timezone/zic.c:1889
-#, fuzzy, c-format
-#| msgid "%s: Can't create %s: %s\n"
-msgid "%s: Can't create %s/%s: %s\n"
-msgstr "%s: %sを作成できません: %s\n"
-
-#: timezone/zic.c:955
-#, c-format
-msgid "copy used because hard link failed: %s"
-msgstr ""
-
-#: timezone/zic.c:958
-#, c-format
-msgid "copy used because symbolic link failed: %s"
-msgstr ""
-
 #: timezone/zic.c:1032 timezone/zic.c:1034
 msgid "same rule name in multiple files"
 msgstr "複数ファイルに同じルール名があります"
-
-#: timezone/zic.c:1081
-#, c-format
-msgid "%s in ruleless zone"
-msgstr ""
 
 #: timezone/zic.c:1101
 msgid "standard input"
@@ -7137,12 +6145,6 @@ msgstr "%s: パニック: 無効な l_value %d です\n"
 msgid "expected continuation line not found"
 msgstr "継続行が期待されましたが見つかりません"
 
-#: timezone/zic.c:1203
-#, fuzzy
-#| msgid "24:00 not handled by pre-1998 versions of zic"
-msgid "fractional seconds rejected by pre-2018 versions of zic"
-msgstr "1998 以前のバージョンの zic では 24:00 は扱えません"
-
 #: timezone/zic.c:1221 timezone/zic.c:3078
 msgid "time overflow"
 msgstr "時間オーバーフロー"
@@ -7159,12 +6161,6 @@ msgstr "不正な保存時刻です"
 msgid "wrong number of fields on Rule line"
 msgstr "Rule行のフィールド数が間違っています"
 
-#: timezone/zic.c:1265
-#, fuzzy, c-format
-#| msgid "Invalid numeric gid \"%s\"!"
-msgid "Invalid rule name \"%s\""
-msgstr "無効な gid の数値 \"%s\"!"
-
 #: timezone/zic.c:1287
 msgid "wrong number of fields on Zone line"
 msgstr "Zone行のフィールド数が間違っています"
@@ -7179,31 +6175,13 @@ msgstr "\"Zone %s\"行と -l オプションは同時指定できません"
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr "\"Zone %s\"行と -p オプションは同時指定できません"
 
-#: timezone/zic.c:1305
-#, fuzzy, c-format
-#| msgid "duplicate zone name %s (file \"%s\", line %d)"
-msgid "duplicate zone name %s (file \"%s\", line %<PRIdMAX>)"
-msgstr "ゾーン名 %s が重複しています(ファイル\"%s\", %d 行)"
-
 #: timezone/zic.c:1319
 msgid "wrong number of fields on Zone continuation line"
 msgstr "Zone continuation行のフィールド数が間違っています"
 
-#: timezone/zic.c:1359
-#, fuzzy
-#| msgid "invalid UTC offset"
-msgid "invalid UT offset"
-msgstr "無効なUTCオフセットです"
-
 #: timezone/zic.c:1363
 msgid "invalid abbreviation format"
 msgstr "無効な省略形です"
-
-#: timezone/zic.c:1372
-#, fuzzy, c-format
-#| msgid "24:00 not handled by pre-1998 versions of zic"
-msgid "format '%s' not handled by pre-2015 versions of zic"
-msgstr "1998 以前のバージョンの zic では 24:00 は扱えません"
 
 #: timezone/zic.c:1399
 msgid "Zone continuation line end time is not after end time of previous line"
@@ -7245,10 +6223,6 @@ msgstr "Leap 行に不正な CORRECTION フィールドがあります"
 msgid "illegal Rolling/Stationary field on Leap line"
 msgstr "Leap 行に不正な Rolling/Stationary フィールドがあります"
 
-#: timezone/zic.c:1505
-msgid "leap second precedes Epoch"
-msgstr ""
-
 #: timezone/zic.c:1518
 msgid "wrong number of fields on Link line"
 msgstr "Link行のフィールド数が間違っています"
@@ -7269,51 +6243,13 @@ msgstr "無効な終了年です"
 msgid "starting year greater than ending year"
 msgstr "開始年が終了年より大きくなっています"
 
-#: timezone/zic.c:1630
-msgid "typed single year"
-msgstr ""
-
-#: timezone/zic.c:1633
-#, c-format
-msgid "year type \"%s\" is obsolete; use \"-\" instead"
-msgstr ""
-
 #: timezone/zic.c:1668
 msgid "invalid weekday name"
 msgstr "無効な曜日名です"
 
-#: timezone/zic.c:1800
-#, c-format
-msgid "reference clients mishandle more than %d transition times"
-msgstr ""
-
-#: timezone/zic.c:1804
-msgid "pre-2014 clients may mishandle more than 1200 transition times"
-msgstr ""
-
-#: timezone/zic.c:1920
-#, fuzzy
-#| msgid "too many transitions?!"
-msgid "too many transition times"
-msgstr "遷移先が多すぎます?!"
-
-#: timezone/zic.c:2107
-#, c-format
-msgid "%%z UT offset magnitude exceeds 99:59:59"
-msgstr ""
-
 #: timezone/zic.c:2488
 msgid "no POSIX environment variable for zone"
 msgstr "ゾーン用の POSIX 環境変数ではありません"
-
-#: timezone/zic.c:2494
-#, c-format
-msgid "%s: pre-%d clients may mishandle distant timestamps"
-msgstr ""
-
-#: timezone/zic.c:2631
-msgid "two rules for same instant"
-msgstr ""
 
 #: timezone/zic.c:2696
 msgid "can't determine time zone abbreviation to use just after until time"
@@ -7323,19 +6259,9 @@ msgstr "ちょうどその時刻を使用するタイムゾーンの省略形を
 msgid "too many local time types"
 msgstr "ローカル時間形式が多すぎます"
 
-#: timezone/zic.c:2789
-#, fuzzy
-#| msgid "UTC offset out of range"
-msgid "UT offset out of range"
-msgstr "UTC オフセットが範囲外です"
-
 #: timezone/zic.c:2813
 msgid "too many leap seconds"
 msgstr "うるう秒が大きすぎます"
-
-#: timezone/zic.c:2844
-msgid "Leap seconds too close together"
-msgstr ""
 
 #: timezone/zic.c:2891
 msgid "Wild result from command execution"
@@ -7346,16 +6272,6 @@ msgstr "コマンド実行からの粗い結果"
 msgid "%s: command was '%s', result was %d\n"
 msgstr "%s: コマンドは'%s', 結果は %dでした\n"
 
-#: timezone/zic.c:2998
-#, c-format
-msgid "\"%s\" is undocumented; use \"last%s\" instead"
-msgstr ""
-
-#: timezone/zic.c:3029
-#, c-format
-msgid "\"%s\" is ambiguous in pre-2017c zic"
-msgstr ""
-
 #: timezone/zic.c:3063
 msgid "Odd number of quotation marks"
 msgstr "クォートするマークが奇数個分しかありません"
@@ -7364,24 +6280,6 @@ msgstr "クォートするマークが奇数個分しかありません"
 msgid "use of 2/29 in non leap-year"
 msgstr "うるう年ではないのに2/29を使っています"
 
-#: timezone/zic.c:3192
-#, fuzzy
-#| msgid "rule goes past start/end of month--will not work with pre-2004 versions of zic"
-msgid "rule goes past start/end of month; will not work with pre-2004 versions of zic"
-msgstr "月の開始と終了で過去にさかのぼっているルールです -- 2004 以前のバージョンの zic では動作しません"
-
-#: timezone/zic.c:3219
-#, fuzzy
-#| msgid "time zone abbreviation has more than 3 alphabetics"
-msgid "time zone abbreviation has fewer than 3 characters"
-msgstr "タイムゾーン省略名がアルファベット4文字以上です"
-
-#: timezone/zic.c:3221
-#, fuzzy
-#| msgid "time zone abbreviation has too many alphabetics"
-msgid "time zone abbreviation has too many characters"
-msgstr "タイムゾーン省略名に含まれるアルファベットが多すぎます"
-
 #: timezone/zic.c:3223
 msgid "time zone abbreviation differs from POSIX standard"
 msgstr "タイムゾーン省略名が POSIX 標準と異なります"
@@ -7389,1039 +6287,3 @@ msgstr "タイムゾーン省略名が POSIX 標準と異なります"
 #: timezone/zic.c:3229
 msgid "too many, or too long, time zone abbreviations"
 msgstr "タイムゾーン省略名が多すぎるか長すぎます"
-
-#: timezone/zic.c:3275
-#, fuzzy, c-format
-#| msgid "%s: Can't create directory %s: %s\n"
-msgid "%s: Can't create directory %s: %s"
-msgstr "%s: ディレクトリ%sを作成できません: %s\n"
-
-#~ msgid "Try \\`%s --help' or `%s --usage' for more information.\\n"
-#~ msgstr "詳細は \\`%s --help' または `%s --usage' を実行してください。\\n"
-
-#~ msgid "RTLD_SELF used in code not dynamically loaded"
-#~ msgstr "コード内で使用されている RTLD_SELF を動的にロードできません"
-
-#~ msgid "cannot open zero fill device"
-#~ msgstr "ゼロで埋められたデバイスを開けません"
-
-#~ msgid "cannot allocate TLS data structures for initial thread"
-#~ msgstr "初期スレッド用の TLS データ構造体が配置できません"
-
-#~ msgid "cannot handle TLS data"
-#~ msgstr "TLS データを取り扱えません"
-
-#~ msgid "invalid caller"
-#~ msgstr "無効な呼び出し元です"
-
-#~ msgid "relocation error"
-#~ msgstr "再配置エラーです"
-
-#~ msgid "cannot load any more object with static TLS"
-#~ msgstr "静的 TLS ブロックではこれ以上オブジェクトをロードできません"
-
-#, c-format
-#~ msgid "%s: no PLTREL found in object %s\n"
-#~ msgstr "%s: PLTREL がオブジェクト %s 内に見つかりません\n"
-
-#~ msgid "Don't generate links"
-#~ msgstr "リンクを生成しません"
-
-#, c-format
-#~ msgid "Can't open configuration file %s"
-#~ msgstr "設定ファイル %s を開けません"
-
-#, c-format
-#~ msgid "cannot create internal descriptors"
-#~ msgstr "内部記述子を作成できません"
-
-#~ msgid "Character out of range for UTF-8"
-#~ msgstr "文字が UTF-8 の範囲外です"
-
-#, c-format
-#~ msgid "no definition of `UNDEFINED'"
-#~ msgstr "`UNDEFINED' の定義がありません"
-
-#~ msgid "non-symbolic character value should not be used"
-#~ msgstr "非シンボル文字値は使用すべきではありません"
-
-#, c-format
-#~ msgid "Cannot set LC_CTYPE to default locale"
-#~ msgstr "LC_CTYPE をデフォルトロケールへ設定できません"
-
-#, c-format
-#~ msgid "Cannot set LC_MESSAGES to default locale"
-#~ msgstr "LC_MESSAGES をデフォルトロケールへ設定できません"
-
-#, c-format
-#~ msgid "Cannot set LC_COLLATE to default locale"
-#~ msgstr "LC_COLLATE をデフォルトロケールへ設定できません"
-
-#~ msgid "Create old-style tables"
-#~ msgstr "古いスタイルの表を作成する"
-
-#, c-format
-#~ msgid "cannot stat() file `%s': %s"
-#~ msgstr "ファイル `%s' を stat() できません: %s"
-
-#, c-format
-#~ msgid "cannot set socket to close on exec: %s; disabling paranoia mode"
-#~ msgstr "ソケットを実行時に閉じるように設定できません: %s; paranoia モードを無効にしています"
-
-#, c-format
-#~ msgid "cannot change socket to nonblocking mode: %s"
-#~ msgstr "ソケットを非ブロッキングモードに変更できません: %s"
-
-#, c-format
-#~ msgid "cannot set socket to close on exec: %s"
-#~ msgstr "ソケットを実行時に閉じるように設定できません: %s"
-
-#, c-format
-#~ msgid "cannot read /proc/self/cmdline: %s; disabling paranoia mode"
-#~ msgstr "/proc/self/cmdline を読み込めません: %s; paranoia モードを無効にしています"
-
-#, c-format
-#~ msgid "invalid value for 'reload-count': %u"
-#~ msgstr "'reload-count' 用の無効な値です: %u"
-
-#, c-format
-#~ msgid "Haven't found \"%s\" in password cache!"
-#~ msgstr "パスワードキャッシュ内に \"%s\" が見つかりません!"
-
-#, c-format
-#~ msgid "Reloading \"%s\" in password cache!"
-#~ msgstr "パスワードキャッシュ内の \"%s\" を再ロードしています!"
-
-#~ msgid "compile-time support for database policy missing"
-#~ msgstr "データベースポリシーのサポートがかコンパイル時に無効にされています"
-
-#, c-format
-#~ msgid "No usable database library found."
-#~ msgstr "使用可能なデータベースライブラリがありません。"
-
-#~ msgid "incorrectly formatted file"
-#~ msgstr "正しくない形式のファイルです"
-
-#, c-format
-#~ msgid "while reading database"
-#~ msgstr "データベースの読み込み中"
-
-#, c-format
-#~ msgid "%s: option '--%s' doesn't allow an argument\n"
-#~ msgstr "%s: オプション '--%s' は引数を取ることができません\n"
-
-#, c-format
-#~ msgid "%s: unrecognized option '--%s'\n"
-#~ msgstr "%s: オプション '--%s' を認識できません\n"
-
-#, c-format
-#~ msgid "%s: option '-W %s' doesn't allow an argument\n"
-#~ msgstr "%s: オプション '-W %s' は引数を取ることができません\n"
-
-#, c-format
-#~ msgid "%s: option '-W %s' requires an argument\n"
-#~ msgstr "%s: オプション '-W %s' は引数が必要です\n"
-
-#~ msgid "cannot find any C preprocessor (cpp)\n"
-#~ msgstr "どのような C プリプロセッサも見つかりません (cpp)\n"
-
-#, c-format
-#~ msgid "This implementation doesn't support newstyle or MT-safe code!\n"
-#~ msgstr "この実装は新形式またはMTセーフなコードをサポートしていません!\n"
-
-#, c-format
-#~ msgid "program %lu is not available\n"
-#~ msgstr "プログラム%luは利用できません\n"
-
-#, c-format
-#~ msgid "program %lu version %lu is not available\n"
-#~ msgstr "プログラム%luバージョン%luは利用できません\n"
-
-#, c-format
-#~ msgid "program %lu version %lu ready and waiting\n"
-#~ msgstr "プログラム %lu バージョン %lu の準備が完了し待機中です\n"
-
-#~ msgid "rpcinfo: can't contact portmapper"
-#~ msgstr "rpcinfo: ポートマッパと接続できません"
-
-#~ msgid "No remote programs registered.\n"
-#~ msgstr "遠隔プログラムが登録されていません.\n"
-
-#~ msgid "   program vers proto   port\n"
-#~ msgstr "   プログラム バージョン プロトコル ポート\n"
-
-#~ msgid "(unknown)"
-#~ msgstr "(不明)"
-
-#, c-format
-#~ msgid "rpcinfo: broadcast failed: %s\n"
-#~ msgstr "rpcinfo: ブロードキャストに失敗しました: %s\n"
-
-#~ msgid "Sorry. You are not root\n"
-#~ msgstr "失礼. あなたは root ではありません\n"
-
-#, c-format
-#~ msgid "rpcinfo: Could not delete registration for prog %s version %s\n"
-#~ msgstr "rpcinfo: プログラム%sバージョン%sへの登録を削除できません\n"
-
-#~ msgid "Usage: rpcinfo [ -n portnum ] -u host prognum [ versnum ]\n"
-#~ msgstr ""
-#~ "使用法: rpcinfo [ -n ポート番号 ] -u ホスト\n"
-#~ "                              プログラム番号 [ バージョン番号 ]\n"
-
-#~ msgid "       rpcinfo [ -n portnum ] -t host prognum [ versnum ]\n"
-#~ msgstr "       rpcinfo [ -n portnum ] -t ホスト prognum [ versnum ]\n"
-
-#~ msgid "       rpcinfo -p [ host ]\n"
-#~ msgstr "       rpcinfo -p [ ホスト ]\n"
-
-#~ msgid "       rpcinfo -b prognum versnum\n"
-#~ msgstr "       rpcinfo -b prognum versnum\n"
-
-#~ msgid "       rpcinfo -d prognum versnum\n"
-#~ msgstr "       rpcinfo -d prognum versnum\n"
-
-#, c-format
-#~ msgid "rpcinfo: %s is unknown service\n"
-#~ msgstr "rpcinfo: %sは不明なサービスです\n"
-
-#, c-format
-#~ msgid "rpcinfo: %s is unknown host\n"
-#~ msgstr "rpcinfo: %sは不明なホストです\n"
-
-#~ msgid "Signal 0"
-#~ msgstr "シグナル 0"
-
-#~ msgid "IOT trap"
-#~ msgstr "IOTトラップ"
-
-#~ msgid "lacks alphabetic at start"
-#~ msgstr "開始文字がアルファベットではありません"
-
-#~ msgid "differs from POSIX standard"
-#~ msgstr "POSIX 標準と異なります"
-
-#, c-format
-#~ msgid ""
-#~ "%s: usage is %s [ --version ] [ --help ] [ -v ] [ -c [loyear,]hiyear ] zonename ...\n"
-#~ "\n"
-#~ "Report bugs to tz@elsie.nci.nih.gov.\n"
-#~ msgstr ""
-#~ "%s: 使用法: %s [ --version ] [ --help ] [ -v ] [ -c [loyear,]hiyear ] zonename ...\n"
-#~ "\n"
-#~ "バグを発見したら <tz@elsie.nci.nih.gov> に報告してください。\n"
-#~ "翻訳に関するバグは<translation-team-ja@lists.sourceforge.net>に報告してください。\n"
-
-#~ msgid "Error writing to standard output"
-#~ msgstr "標準出力へ書き込み中にエラーが発生しました"
-
-#~ msgid "hard link failed, symbolic link used"
-#~ msgstr "ハードリンクに失敗したため、シンボリックリンクを使います"
-
-#, c-format
-#~ msgid "%s: Leap line in non leap seconds file %s\n"
-#~ msgstr "%s: 閏秒ファイルでないファイル %s に Leap 行があります\n"
-
-#, c-format
-#~ msgid "%s: Error reading %s\n"
-#~ msgstr "%s: %s を読み込み中にエラーが発生しました\n"
-
-#, c-format
-#~ msgid "%s: Error closing %s: %s\n"
-#~ msgstr "%s: %s を閉じている間にエラーが発生しました: %s\n"
-
-#~ msgid "nameless rule"
-#~ msgstr "名前がないルールです"
-
-#~ msgid "time before zero"
-#~ msgstr "ゼロ前の時刻"
-
-#~ msgid "blank TO field on Link line"
-#~ msgstr "Link 行の TO フィールドが空欄です"
-
-#, c-format
-#~ msgid "%s: Error writing %s\n"
-#~ msgstr "%s: %s を書き込み中にエラーが発生しました\n"
-
-#~ msgid "internal error - addtype called with bad isdst"
-#~ msgstr "内部エラー - 間違った isdst とともに addtype が呼ばれました"
-
-#~ msgid "internal error - addtype called with bad ttisstd"
-#~ msgstr "内部エラー - 間違った ttisstd とともに addtype が呼ばれました"
-
-#~ msgid "internal error - addtype called with bad ttisgmt"
-#~ msgstr "内部エラー - 間違った ttisgmt とともに addtype が呼ばれました"
-
-#~ msgid "repeated leap second moment"
-#~ msgstr "循環閏秒の瞬間"
-
-#~ msgid "time zone abbreviation lacks alphabetic at start"
-#~ msgstr "タイムゾーン省略名がアルファベットで開始していません"
-
-#, c-format
-#~ msgid "%s: %d did not sign extend correctly\n"
-#~ msgstr "%s: %d は正しく記号を拡張しませんでした\n"
-
-#~ msgid "Try \\`xtrace --help' for more information.\\n"
-#~ msgstr "詳細は \\`xtrace --help' を参照してください\\n"
-
-#~ msgid "xtrace: option \\`$1' requires an argument.\\n"
-#~ msgstr "xtrace: オプション \\`$1' には引数が必要です。\\n"
-
-#~ msgid "Try \\`memusage --help' for more information."
-#~ msgstr "詳細は \\`memusage --help' を参照してください。"
-
-#~ msgid "memusage: option \\`$1' requires an argument"
-#~ msgstr "memusage: オプション \\`$1' は引数が必要です"
-
-#~ msgid "ambiguous argument %s for %s"
-#~ msgstr "%2$s に対する引数 %1$s が曖昧です"
-
-#~ msgid "Valid arguments are:"
-#~ msgstr "有効な引数:"
-
-#~ msgid "ARGP_HELP_FMT: %s value is less than or equal to %s"
-#~ msgstr "ARGP_HELP_FMT: %s の値は %s の値以下です"
-
-#~ msgid "%.*s: ARGP_HELP_FMT parameter must be positive"
-#~ msgstr "%.*s: ARGP_HELP_FMT パラメータは正の値でなければいけません"
-
-#~ msgid "give a short usage message"
-#~ msgstr "短い使用方法を表示する"
-
-#~ msgid "set the program name"
-#~ msgstr "プログラム名を設定する"
-
-#~ msgid "hang for SECS seconds (default 3600)"
-#~ msgstr "SECS 秒でハング (デフォルト 3600)"
-
-#~ msgid "program error"
-#~ msgstr "プログラムエラー"
-
-#~ msgid "stack overflow"
-#~ msgstr "スタックオーバーフロー"
-
-#~ msgid "cannot find a temporary directory, try setting $TMPDIR"
-#~ msgstr "一時ディレクトリを作成できません。 $TMPDIR を設定してみてください"
-
-#~ msgid "cannot create a temporary directory using template \"%s\""
-#~ msgstr "テンプレート \"%s\" を使用した一時ディレクトリを作成できません"
-
-#~ msgid "cannot remove temporary file %s"
-#~ msgstr "一時ファイル %s を削除できません"
-
-#~ msgid "cannot remove temporary directory %s"
-#~ msgstr "一時ディレクトリ %s を削除できません"
-
-#~ msgid "error closing file"
-#~ msgstr "ファイルクローズエラー"
-
-#~ msgid "write error"
-#~ msgstr "書き込みエラー"
-
-#~ msgid "preserving permissions for %s"
-#~ msgstr "%s のパーミッションを保存しています"
-
-#~ msgid "error while opening \"%s\" for reading"
-#~ msgstr "\"%s\"を読込むため開いている際にエラーが発生しました"
-
-#~ msgid "cannot open backup file \"%s\" for writing"
-#~ msgstr "書込み用バックアップファイル\"%s\"を開くことができません"
-
-#~ msgid "error reading \"%s\""
-#~ msgstr "\"%s\"の読込み中にエラーが発生しました"
-
-#~ msgid "error writing \"%s\""
-#~ msgstr "\"%s\"の書込み中にエラーが発生しました"
-
-#~ msgid "error after reading \"%s\""
-#~ msgstr "\"%s\"の読込み後にエラーが発生しました"
-
-#~ msgid "fdopen() failed"
-#~ msgstr "fdopen()に失敗しました"
-
-#~ msgid "C# compiler not found, try installing pnet"
-#~ msgstr "C# コンパイラが見つりません。pnet をインストールしてみてください"
-
-#~ msgid "C# virtual machine not found, try installing pnet"
-#~ msgstr "C# 仮想マシンが見つかりません。pnet をインストールしてみてください"
-
-#~ msgid "%s subprocess failed"
-#~ msgstr "%s サブプロセスが失敗しました"
-
-#~ msgid "regular file"
-#~ msgstr "通常ファイル"
-
-#~ msgid "directory"
-#~ msgstr "ディレクトリ"
-
-#~ msgid "block special file"
-#~ msgstr "ブロックスペシャルファイル"
-
-#~ msgid "character special file"
-#~ msgstr "キャラクタスペシャルファイル"
-
-#~ msgid "fifo"
-#~ msgstr "fifo"
-
-#~ msgid "symbolic link"
-#~ msgstr "シンボリックリンク"
-
-#~ msgid "socket"
-#~ msgstr "ソケット"
-
-#~ msgid "message queue"
-#~ msgstr "メッセージキュー"
-
-#~ msgid "semaphore"
-#~ msgstr "セマフォ"
-
-#~ msgid "shared memory object"
-#~ msgstr "共有メモリオブジェクト"
-
-#~ msgid "typed memory object"
-#~ msgstr "型付メモリオブジェクト"
-
-#~ msgid "weird file"
-#~ msgstr "不明なファイル"
-
-#~ msgid "Argument buffer too small"
-#~ msgstr "引数バッファが小さすぎます"
-
-#~ msgid "invalid source_version argument to compile_java_class"
-#~ msgstr "compile_java_class への source_version 引数が無効です"
-
-#~ msgid "invalid target_version argument to compile_java_class"
-#~ msgstr "compile_java_class への target_version 引数が無効です"
-
-#~ msgid "failed to create \"%s\""
-#~ msgstr "\"%s\" の作成に失敗しました"
-
-#~ msgid "error while writing \"%s\" file"
-#~ msgstr "\"%s\" ファイルの書き込み中にエラーが発生しました"
-
-#~ msgid "Java compiler not found, try installing gcj or set $JAVAC"
-#~ msgstr "Java コンパイラが見つかりません。 gcj をインストールするか、または $JAVAC を設定してみてください"
-
-#~ msgid "Java virtual machine not found, try installing gij or set $JAVA"
-#~ msgstr "Java 仮想マシンが見つかりません。 gij をインストールするか、または $JAVA を設定してみてください"
-
-#~ msgid "%s subprocess I/O error"
-#~ msgstr "%s サブプロセス I/O エラー"
-
-#~ msgid "cannot change permissions of %s"
-#~ msgstr "%s のパーミッションを変更できません"
-
-#~ msgid "cannot create directory %s"
-#~ msgstr "ディレクトリ %s を作成できません"
-
-#~ msgid "unable to record current working directory"
-#~ msgstr "現在の作業ディレクトリを記録することができません"
-
-#~ msgid "failed to return to initial working directory"
-#~ msgstr "初期作業ディレクトリに戻るのに失敗しました"
-
-#~ msgid "Failed to open /dev/zero for read"
-#~ msgstr "/dev/zeroを読込み用に開けません"
-
-#~ msgid "creation of reading thread failed"
-#~ msgstr "読み込みスレッドの作成に失敗しました"
-
-#~ msgid "cannot set up nonblocking I/O to %s subprocess"
-#~ msgstr "%s 子プロセスへ非ブロック I/O を設定できません"
-
-#~ msgid "communication with %s subprocess failed"
-#~ msgstr "%s 子プロセスとの通信に失敗しました"
-
-#~ msgid "read from %s subprocess failed"
-#~ msgstr "%s 子プロセスからの読み込みに失敗しました"
-
-#~ msgid "subprocess %s terminated with exit code %d"
-#~ msgstr "子プロセス %s が終了コード %d で終了しました"
-
-#~ msgid "creation of threads failed"
-#~ msgstr "スレッドの作成に失敗しました"
-
-#~ msgid "%s subprocess terminated with exit code %d"
-#~ msgstr "%s 子プロセスが終了コード %d で終了しました"
-
-#~ msgid "`"
-#~ msgstr "`"
-
-#~ msgid "'"
-#~ msgstr "'"
-
-#~ msgid "^[yY]"
-#~ msgstr "^[yY]"
-
-#~ msgid "^[nN]"
-#~ msgstr "^[nN]"
-
-#~ msgid "setting permissions for %s"
-#~ msgstr "%s のパーミッションを設定します"
-
-#~ msgid "error writing to a closed pipe or socket"
-#~ msgstr "閉じたパイプまたはソケットへの書き込みでエラーが発生しました"
-
-#~ msgid "iconv function not usable"
-#~ msgstr "iconv 関数が使えません"
-
-#~ msgid "iconv function not available"
-#~ msgstr "iconv 関数が有効ではありません"
-
-#~ msgid "cannot convert U+%04X to local character set"
-#~ msgstr "U+%04X をローカル文字セットに変換できません"
-
-#~ msgid "cannot convert U+%04X to local character set: %s"
-#~ msgstr "U+%04X をローカル文字セット %s に変換できません"
-
-#~ msgid "invalid user"
-#~ msgstr "無効なユーザ"
-
-#~ msgid "invalid group"
-#~ msgstr "無効なグループ"
-
-#~ msgid "invalid spec"
-#~ msgstr "無効な指定"
-
-#~ msgid "unable to display error message"
-#~ msgstr "エラーメッセージを表示できません"
-
-#~ msgid "Packaged by %s (%s)\n"
-#~ msgstr "パッケージ作成者: %s (%s)\n"
-
-#~ msgid "Packaged by %s\n"
-#~ msgstr "パッケージ作成者: %s\n"
-
-#~ msgid "(C)"
-#~ msgstr "(C)"
-
-#~ msgid ""
-#~ "\n"
-#~ "License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.\n"
-#~ "This is free software: you are free to change and redistribute it.\n"
-#~ "There is NO WARRANTY, to the extent permitted by law.\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\n"
-#~ "ライセンス GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.\n"
-#~ "This is free software: you are free to change and redistribute it.\n"
-#~ "There is NO WARRANTY, to the extent permitted by law.\n"
-#~ "\n"
-
-#~ msgid "Written by %s, %s, and %s.\n"
-#~ msgstr "作者 %s、 %s、および %s。\n"
-
-#~ msgid ""
-#~ "Written by %s, %s, %s,\n"
-#~ "and %s.\n"
-#~ msgstr ""
-#~ "作者 %s、 %s、 %s、\n"
-#~ "および %s。\n"
-
-#~ msgid ""
-#~ "Written by %s, %s, %s,\n"
-#~ "%s, and %s.\n"
-#~ msgstr ""
-#~ "作者 %s、 %s、 %s、\n"
-#~ "%s、および %s。\n"
-
-#~ msgid ""
-#~ "Written by %s, %s, %s,\n"
-#~ "%s, %s, and %s.\n"
-#~ msgstr ""
-#~ "作者 %s、 %s、 %s、\n"
-#~ "%s、 %s、および %s。\n"
-
-#~ msgid ""
-#~ "Written by %s, %s, %s,\n"
-#~ "%s, %s, %s, and %s.\n"
-#~ msgstr ""
-#~ "作者 %s、 %s、 %s、\n"
-#~ "%s、 %s、 %s、および %s。\n"
-
-#~ msgid ""
-#~ "Written by %s, %s, %s,\n"
-#~ "%s, %s, %s, %s,\n"
-#~ "and %s.\n"
-#~ msgstr ""
-#~ "作者 %s、 %s、 %s、\n"
-#~ "%s、 %s、 %s、 %s、\n"
-#~ "および %s。\n"
-
-#~ msgid ""
-#~ "Written by %s, %s, %s,\n"
-#~ "%s, %s, %s, %s,\n"
-#~ "%s, and %s.\n"
-#~ msgstr ""
-#~ "作者 %s、 %s、 %s、\n"
-#~ "%s、 %s、 %s、 %s、\n"
-#~ "%s、および %s。\n"
-
-#~ msgid ""
-#~ "Written by %s, %s, %s,\n"
-#~ "%s, %s, %s, %s,\n"
-#~ "%s, %s, and others.\n"
-#~ msgstr ""
-#~ "作者 %s、 %s、 %s、\n"
-#~ "%s、 %s、 %s、 %s、\n"
-#~ "%s、 %s、 および他の方々。\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "Report bugs to: %s\n"
-#~ msgstr ""
-#~ "\n"
-#~ "バグを発見したら <%s> に報告して下さい。\n"
-#~ "翻訳に関するバグは<translation-team-ja@lists.sourceforge.net>に報告してください。\n"
-
-#~ msgid "Report %s bugs to: %s\n"
-#~ msgstr "%s のバグは <%s> に報告してください。\n"
-
-#~ msgid "%s home page: <%s>\n"
-#~ msgstr "%s のホームページ: <%s>\n"
-
-#~ msgid "%s home page: <http://www.gnu.org/software/%s/>\n"
-#~ msgstr "%s のホームページ: <http://www.gnu.org/software/%s/>\n"
-
-#~ msgid "General help using GNU software: <http://www.gnu.org/gethelp/>\n"
-#~ msgstr "GNU ソフトウェアを使用する際の一般的なヘルプ: <http://www.gnu.org/gethelp/>\n"
-
-#~ msgid "_open_osfhandle failed"
-#~ msgstr "_open_osfhandle に失敗しました"
-
-#~ msgid "cannot restore fd %d: dup2 failed"
-#~ msgstr "ファイル記述子 (fd) %d をリストアできません: dup2 に失敗しました"
-
-#~ msgid "%s subprocess"
-#~ msgstr "%s 子プロセス"
-
-#~ msgid "%s subprocess got fatal signal %d"
-#~ msgstr "%s 子プロセスが致命的なシグナル %d を受信しました"
-
-#~ msgid "stdin"
-#~ msgstr "標準入力"
-
-#~ msgid "stdout"
-#~ msgstr "標準出力"
-
-#~ msgid "stderr"
-#~ msgstr "標準エラー出力"
-
-#~ msgid "unknown stream"
-#~ msgstr "不明なストリーム"
-
-#~ msgid "string comparison failed"
-#~ msgstr "文字列の比較に失敗しました"
-
-#~ msgid "Set LC_ALL='C' to work around the problem."
-#~ msgstr "問題を回避するために LC_ALL='C' を指定してください."
-
-#~ msgid "The strings compared were %s and %s."
-#~ msgstr "比較した文字列は %s と %s です."
-
-#~ msgid "cannot perform formatted output"
-#~ msgstr "書式設定を行った出力を実行することができません"
-
-#~ msgid "invalid %s%s argument `%s'"
-#~ msgstr "引数 `%3$s' に対して %1$s%2$s が無効です"
-
-#~ msgid "invalid suffix in %s%s argument `%s'"
-#~ msgstr "引数 `%3$s' に対して無効な接尾辞 %1$s%2$s です"
-
-#~ msgid "%s%s argument `%s' too large"
-#~ msgstr "引数 `%3$s' に対する %1$s%2$s が大きすぎます"
-
-#~ msgid "%s: illegal option -- %c\n"
-#~ msgstr "%s: 不正なオプションです -- %c\n"
-
-#~ msgid "block size"
-#~ msgstr "ブロックサイズ"
-
-#~ msgid "%s exists but is not a directory"
-#~ msgstr "%s は存在しますがディレクトリではありません"
-
-#~ msgid "cannot change owner and/or group of %s"
-#~ msgstr "%s のオーナーとグループを変更できません"
-
-#~ msgid "cannot chdir to directory %s"
-#~ msgstr "ディレクトリ %s に移動できません"
-
-#~ msgid "cannot get the login group of a numeric UID"
-#~ msgstr "数字のUIDのログイングループを取得できません"
-
-#~ msgid ""
-#~ "\n"
-#~ "This is free software.  You may redistribute copies of it under the terms of\n"
-#~ "the GNU General Public License <http://www.gnu.org/licenses/gpl.html>.\n"
-#~ "There is NO WARRANTY, to the extent permitted by law.\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\n"
-#~ "本プログラムはフリーソフトウェアです. GNU一般公有使用許諾\n"
-#~ "<http://www.gnu.org/licenses/gpl.html> で定められた条項の下で本プログラ\n"
-#~ "ムのコピーを再配布できます. 適切な法が認る限りにおいて全くの無保証です.\n"
-#~ "\n"
-
-#~ msgid "Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n"
-#~ msgstr "バグはスクリプト`glibcbug'を用いて<bugs@gnu.org>まで報告してください.\n"
-
-#~ msgid "<%s> and <%s> are illegal names for range"
-#~ msgstr "<%s> と <%s> は範囲として不正な名前です"
-
-#~ msgid "upper limit in range is not higher then lower limit"
-#~ msgstr "範囲内の上限は下限より大きくありません"
-
-#~ msgid "%s: character `%s' not defined in charmap while needed as default value"
-#~ msgstr "%s: キャラクタマップ中で文字`%s'が未定義ですがデフォルト値として必要です"
-
-#~ msgid "character `%s' not defined while needed as default value"
-#~ msgstr "デフォルト値として必要なキャラクタ`%s'が定義されていません"
-
-#~ msgid "%s: value for field `%s' must not be the empty string"
-#~ msgstr "%s: フィールド`%s'に対する値は空の文字列ではいけません"
-
-#~ msgid "%s: stopping date is invalid in string %Zd in `era' field"
-#~ msgstr "%s: `era'フィールドにある文字列 %Zd 中の終了年は不正です"
-
-#~ msgid "%s: values of field `%s' must not be larger than %d"
-#~ msgstr "%s: フィールド`%s'の値は %d 以上であってはいけません"
-
-#~ msgid "cheese"
-#~ msgstr "cheese"
-
-#~ msgid "First string for testing."
-#~ msgstr "テストのための最初の文字列."
-
-#~ msgid "Another string for testing."
-#~ msgstr "テストのための他の文字列."
-
-#~ msgid "Error 0"
-#~ msgstr "エラー 0"
-
-#~ msgid "Arg list too long"
-#~ msgstr "引数リストが長すぎます"
-
-#~ msgid "Bad file number"
-#~ msgstr "不正なファイル番号です"
-
-#~ msgid "Not enough space"
-#~ msgstr "十分な領域がありません"
-
-#~ msgid "Device busy"
-#~ msgstr "デバイスがビジー状態です"
-
-#~ msgid "Cross-device link"
-#~ msgstr "クロスデバイスリンク"
-
-#~ msgid "File table overflow"
-#~ msgstr "ファイルテーブルオーバーフロー"
-
-#~ msgid "Argument out of domain"
-#~ msgstr "引数リストが長すぎます"
-
-#~ msgid "Result too large"
-#~ msgstr "結果が大きすぎます"
-
-#~ msgid "Deadlock situation detected/avoided"
-#~ msgstr "デッドロック状態を検知/回避しました"
-
-#~ msgid "No record locks available"
-#~ msgstr "レコードロックが利用できません"
-
-#~ msgid "Disc quota exceeded"
-#~ msgstr "ディスク使用量制限(クォータ)を超過しました"
-
-#~ msgid "Bad exchange descriptor"
-#~ msgstr "不正なファイル記述子です"
-
-#~ msgid "Bad request descriptor"
-#~ msgstr "不正な要求記述子です"
-
-#~ msgid "Message tables full"
-#~ msgstr "メッセージテーブルが一杯です"
-
-#~ msgid "Anode table overflow"
-#~ msgstr "アノードテーブルオーバーフロー"
-
-#~ msgid "Bad request code"
-#~ msgstr "不正な要求コードです"
-
-#~ msgid "File locking deadlock"
-#~ msgstr "ファイルロックのデッドロックです"
-
-#~ msgid "Error 58"
-#~ msgstr "エラー 58"
-
-#~ msgid "Error 59"
-#~ msgstr "エラー 59"
-
-#~ msgid "Not a stream device"
-#~ msgstr "ストリームデバイスではありません"
-
-#~ msgid "Out of stream resources"
-#~ msgstr "ストリームリソース外です"
-
-#~ msgid "Error 72"
-#~ msgstr "エラー 72"
-
-#~ msgid "Error 73"
-#~ msgstr "エラー 73"
-
-#~ msgid "Error 75"
-#~ msgstr "エラー 75"
-
-#~ msgid "Error 76"
-#~ msgstr "エラー 76"
-
-#~ msgid "Not a data message"
-#~ msgstr "データメッセージではありません"
-
-#~ msgid "Attempting to link in more shared libraries than system limit"
-#~ msgstr "システムの制限以上の共有ライブラリへリンクしようとしています"
-
-#~ msgid "Can not exec a shared library directly"
-#~ msgstr "共有ライブラリは直接実行できません"
-
-#~ msgid "Illegal byte sequence"
-#~ msgstr "不正なバイトシーケンスです"
-
-#~ msgid "Number of symbolic links encountered during path name traversal exceeds MAXSYMLINKS"
-#~ msgstr "パス名を検査中に通過したシンボリックリンクの数がMAXSYNLINKSを越えました"
-
-#~ msgid "Error 91"
-#~ msgstr "エラー 91"
-
-#~ msgid "Error 92"
-#~ msgstr "エラー 92"
-
-#~ msgid "Option not supported by protocol"
-#~ msgstr "オプションはプロトコルによってサポートされていません"
-
-#~ msgid "Error 100"
-#~ msgstr "エラー 100"
-
-#~ msgid "Error 101"
-#~ msgstr "エラー 101"
-
-#~ msgid "Error 102"
-#~ msgstr "エラー 102"
-
-#~ msgid "Error 103"
-#~ msgstr "エラー 103"
-
-#~ msgid "Error 104"
-#~ msgstr "エラー 104"
-
-#~ msgid "Error 105"
-#~ msgstr "エラー 105"
-
-#~ msgid "Error 106"
-#~ msgstr "エラー 106"
-
-#~ msgid "Error 107"
-#~ msgstr "エラー 107"
-
-#~ msgid "Error 108"
-#~ msgstr "エラー 108"
-
-#~ msgid "Error 109"
-#~ msgstr "エラー 109"
-
-#~ msgid "Error 110"
-#~ msgstr "エラー 110"
-
-#~ msgid "Error 111"
-#~ msgstr "エラー 111"
-
-#~ msgid "Error 112"
-#~ msgstr "エラー 112"
-
-#~ msgid "Error 113"
-#~ msgstr "エラー 113"
-
-#~ msgid "Error 114"
-#~ msgstr "エラー 114"
-
-#~ msgid "Error 115"
-#~ msgstr "エラー 115"
-
-#~ msgid "Error 116"
-#~ msgstr "エラー 116"
-
-#~ msgid "Error 117"
-#~ msgstr "エラー 117"
-
-#~ msgid "Error 118"
-#~ msgstr "エラー 118"
-
-#~ msgid "Error 119"
-#~ msgstr "エラー 119"
-
-#~ msgid "Operation not supported on transport endpoint"
-#~ msgstr "通信端点ではサポートされていない操作です"
-
-#~ msgid "Address family not supported by protocol family"
-#~ msgstr "アドレスファミリはプロトコルファミリによってサポートされていません"
-
-#~ msgid "Network dropped connection because of reset"
-#~ msgstr "リセットされたためネットワーク接続が切れました"
-
-#~ msgid "Error 136"
-#~ msgstr "エラー 136"
-
-#~ msgid "Not available"
-#~ msgstr "利用出来ません"
-
-#~ msgid "Is a name file"
-#~ msgstr "名前ファイルです"
-
-#~ msgid "Reserved for future use"
-#~ msgstr "将来のために予約済み"
-
-#~ msgid "Error 142"
-#~ msgstr "エラー 142"
-
-#~ msgid "Cannot send after socket shutdown"
-#~ msgstr "ソケットのシャットダウン後は送信できません"
-
-#~ msgid "%s: Can't unlink  %s: %s\n"
-#~ msgstr "%s: %sをアンリンクできません: %s\n"
-
-#~ msgid "starting year too low to be represented"
-#~ msgstr "開始年の値が小さすぎるため表現できません"
-
-#~ msgid "starting year too high to be represented"
-#~ msgstr "開始年の値が大きすぎるため表現できません"
-
-#~ msgid "ending year too low to be represented"
-#~ msgstr "終了年の値が小さすぎるため表現できません"
-
-#~ msgid "ending year too high to be represented"
-#~ msgstr "終了年の値が大きすぎるため表現できません"
-
-#~ msgid "no day in month matches rule"
-#~ msgstr "月の中の日にちはルールにマッチしていません"
-
-#~ msgid "%s: line %d: expected service, found `%s'\n"
-#~ msgstr "%s: %d行: 要求したサービス `%s' が見つかりました\n"
-
-#~ msgid "%s: line %d: cannot specify more than %d services"
-#~ msgstr "%s: %d行: %d サービス以上指定できません"
-
-#~ msgid "%s: line %d: list delimiter not followed by keyword"
-#~ msgstr "%s: %d行: リストデリミタはキーワードにしたがってません"
-
-#~ msgid "authunix_create: out of memory\n"
-#~ msgstr "authunix_create: メモリが足りません\n"
-
-#~ msgid "clnttcp_create: out of memory\n"
-#~ msgstr "clnttcp_create: メモリが足りません\n"
-
-#~ msgid "clntudp_create: out of memory\n"
-#~ msgstr "clntudp_create: メモリが足りません\n"
-
-#~ msgid "clntunix_create: out of memory\n"
-#~ msgstr "clntunix_create: メモリが足りません\n"
-
-#~ msgid "get_myaddress: ioctl (get interface configuration)"
-#~ msgstr "get_myaddress: ioctl (インターフェースの設定を取得します)"
-
-#~ msgid "__get_myaddress: ioctl (get interface configuration)"
-#~ msgstr "__get_myaddress: ioctl (インターフェースの設定を取得します)"
-
-#~ msgid "broadcast: ioctl (get interface configuration)"
-#~ msgstr "ブロードキャスト: ioctl (インターフェース設定を取得)"
-
-#~ msgid "broadcast: ioctl (get interface flags)"
-#~ msgstr "ブロードキャスト: ioctl (インターフェースフラグを取得)"
-
-#~ msgid "svc_tcp: makefd_xprt: out of memory\n"
-#~ msgstr "svc_tcp: makefd_xprt: メモリが足りません\n"
-
-#~ msgid "svcudp_create: out of memory\n"
-#~ msgstr "svcudp_create: メモリが足りません\n"
-
-#~ msgid "svcunix_create: out of memory\n"
-#~ msgstr "svcunix_create: メモリが足りません\n"
-
-#~ msgid "svc_unix: makefd_xprt: out of memory\n"
-#~ msgstr "svc_unix: makefd_xprt: メモリが足りません\n"
-
-#~ msgid "xdr_bytes: out of memory\n"
-#~ msgstr "xdr_bytes: メモリが足りません\n"
-
-#~ msgid "xdr_string: out of memory\n"
-#~ msgstr "xdr_string: メモリが足りません\n"
-
-#~ msgid "xdr_array: out of memory\n"
-#~ msgstr "xdr_array: メモリが足りません\n"
-
-#~ msgid "xdrrec_create: out of memory\n"
-#~ msgstr "xdrrec_create: メモリが足りません\n"
-
-#~ msgid "xdr_reference: out of memory\n"
-#~ msgstr "xdr_reference: メモリが足りません\n"
-
-#~ msgid "YPBINDPROC_DOMAIN: %s\n"
-#~ msgstr "YPBINDPROC_DOMAIN: %s\n"
-
-#~ msgid "while allocating hash table entry"
-#~ msgstr "ハッシュテーブルエントリ割り当て中"
-
-#~ msgid "Cannot run nscd in secure mode as unprivileged user"
-#~ msgstr "非特権ユーザはセキュアモードでnscdを実行できません"
-
-#~ msgid "while allocating cache: %s"
-#~ msgstr "キャッシュ割り当て中: %s"
-
-#~ msgid "while accepting connection: %s"
-#~ msgstr "受付コネクション中: %s"
-
-#~ msgid "while allocating key copy"
-#~ msgstr "キーコピー割り当て中"
-
-#~ msgid "while allocating cache entry"
-#~ msgstr "キャッシュエントリ割り当て中"
-
-#~ msgid "Haven't found \"%d\" in group cache!"
-#~ msgstr "グループキャッシュ中に \"%d\" が見つかりません!"
-
-#~ msgid "%15lu  number of times clients had to wait\n"
-#~ msgstr "%15lu  クライアントが待たされた回数\n"
-
-#~ msgid "      no"
-#~ msgstr "  いいえ"
-
-#~ msgid "     yes"
-#~ msgstr "    はい"
-
-#~ msgid "Haven't found \"%d\" in password cache!"
-#~ msgstr "パスワードキャッシュに \"%d\" が見つかりません!"
-
-#~ msgid "Can't remove old temporary cache file %s"
-#~ msgstr "古いテンポラリキャッシュファイル %s を削除できません"
-
-#~ msgid "Writing of cache data failed."
-#~ msgstr "キャッシュデータの書込みに失敗しました."
-
-#~ msgid "empty dynamics string token substitution"
-#~ msgstr "空な動的文字列トークンの代入"
-
-#~ msgid "%s: profiler out of memory shadowing PLTREL of %s\n"
-#~ msgstr "%s: %s の PLTREL 用メモリが足りません\n"
-
-#~ msgid "Can't lstat %s"
-#~ msgstr "lstat %s できません"
-
-#~ msgid "shared object cannot be dlopen()ed: static TLS memory too small"
-#~ msgstr "共有オブジェクトは dlopen() できません: TLS 用静的メモリが小さすぎます"
-
-#~ msgid "\t\t\t\t\t\t\t      %s: value for field `%s' must be in range %d...%d"
-#~ msgstr "\t\t\t\t\t\t\t       %s: フィールド`%s'の値は %d...%d の範囲になければなりません"
-
-#~ msgid "Failed to look up user '%s' to run server as"
-#~ msgstr "サーバーを実行させるためのユーザ'%s'の検索に失敗しました"
-
-#~ msgid "no filename for profiling data given and shared object `%s' has no soname"
-#~ msgstr "プロファイリングデータのファイル名が与えられていないか、共有オブジェクト`%s' がsonameではありません"
