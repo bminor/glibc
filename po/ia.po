@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.17-pre1\n"
-"POT-Creation-Date: 2019-07-18 13:28-0400\n"
+"POT-Creation-Date: 2020-01-02 20:08+0530\n"
 "PO-Revision-Date: 2013-04-26 04:10+0400\n"
 "Last-Translator: Nik Kalach <nik.kalach@inbox.ru>\n"
 "Language-Team: Interlingua <translation-team-ia@lists.sourceforge.net>\n"
@@ -67,8 +67,7 @@ msgid "Give a short usage message"
 msgstr "Monstrar un breve message de usage"
 
 #: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
-#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:105
-#: nss/makedb.c:120
+#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:105 nss/makedb.c:120
 msgid "NAME"
 msgstr "NOMINE"
 
@@ -164,9 +163,9 @@ msgstr ""
 #: elf/ldconfig.c:324 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
 #: elf/sprof.c:389 iconv/iconv_prog.c:422 iconv/iconvconfig.c:396
 #: locale/programs/locale.c:293 locale/programs/localedef.c:463
-#: login/programs/pt_chown.c:63 malloc/memusage.sh:71
-#: malloc/memusagestat.c:581 nscd/nscd.c:509 nss/getent.c:88 nss/makedb.c:385
-#: posix/getconf.c:485 sysdeps/unix/sysv/linux/lddlibc4.c:68
+#: login/programs/pt_chown.c:63 malloc/memusage.sh:71 malloc/memusagestat.c:581
+#: nscd/nscd.c:509 nss/getent.c:88 nss/makedb.c:385 posix/getconf.c:485
+#: sysdeps/unix/sysv/linux/lddlibc4.c:68
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -360,11 +359,7 @@ msgstr "executabile \\`$program' non trovate\\n"
 msgid "\\`$program' is no executable\\n"
 msgstr "\\`$program' non es un executabile\\n"
 
-#: dlfcn/dlinfo.c:63
-msgid "RTLD_SELF used in code not dynamically loaded"
-msgstr "RTLD_SELF usate in le codice non cargate dynamicamente"
-
-#: dlfcn/dlinfo.c:72
+#: dlfcn/dlinfo.c:53
 msgid "unsupported dlinfo request"
 msgstr "requesta dlinfo non supportate"
 
@@ -393,7 +388,7 @@ msgstr "Systema operative incognite"
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", ABI del systema operative: %s %d.%d.%d"
 
-#: elf/cache.c:163 elf/ldconfig.c:1333
+#: elf/cache.c:163 elf/ldconfig.c:1334
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Impossibile de aperir le file de cache %s\n"
@@ -434,11 +429,11 @@ msgstr "Insuccesso del modification del derectos de accesso de %s a %#o"
 msgid "Renaming of %s to %s failed"
 msgstr "Insuccesso del cambiamento de nomine %s a %s"
 
-#: elf/dl-close.c:399 elf/dl-open.c:424
+#: elf/dl-close.c:406 elf/dl-open.c:285
 msgid "cannot create scope list"
 msgstr "impossibile de crear un lista de ambito"
 
-#: elf/dl-close.c:839
+#: elf/dl-close.c:852
 msgid "shared object not open"
 msgstr "objecto condivise non aperte"
 
@@ -513,127 +508,127 @@ msgstr "impossibile de crear un copia de RUNPATH/RPATH"
 msgid "cannot create search path array"
 msgstr "impossibile de crear un array del percurso de cerca"
 
-#: elf/dl-load.c:883
+#: elf/dl-load.c:892
 msgid "cannot stat shared object"
 msgstr "impossibile de effectuar stat sur le objecto condivise"
 
-#: elf/dl-load.c:992 elf/dl-load.c:2198
+#: elf/dl-load.c:1003 elf/dl-load.c:2191
 msgid "cannot create shared object descriptor"
 msgstr "impossibile de crear un descriptor de objecto condivise"
 
-#: elf/dl-load.c:1011 elf/dl-load.c:1555 elf/dl-load.c:1668
+#: elf/dl-load.c:1022 elf/dl-load.c:1571 elf/dl-load.c:1672
 msgid "cannot read file data"
 msgstr "impossibile de leger datos del file"
 
-#: elf/dl-load.c:1057
+#: elf/dl-load.c:1068
 msgid "ELF load command alignment not page-aligned"
 msgstr "Le commando de cargar ELF non es alineate a un pagina"
 
-#: elf/dl-load.c:1064
+#: elf/dl-load.c:1075
 msgid "ELF load command address/offset not properly aligned"
 msgstr "Le adresso o displaciamento del commando de cargar ELF non es alineate correctemente"
 
-#: elf/dl-load.c:1146
+#: elf/dl-load.c:1151
 #, fuzzy
 #| msgid "cannot restore segment prot after reloc"
 msgid "cannot process note segment"
 msgstr "impossibile de restabilir le protection del segmento post le relocation"
 
-#: elf/dl-load.c:1157
+#: elf/dl-load.c:1162
 msgid "object file has no loadable segments"
 msgstr "le file de objecto non ha segmentos cargabile"
 
-#: elf/dl-load.c:1170 elf/dl-load.c:1647
+#: elf/dl-load.c:1175
 msgid "cannot dynamically load executable"
 msgstr "impossibile de cargar dynamicamente un executabile"
 
-#: elf/dl-load.c:1191
+#: elf/dl-load.c:1196
 msgid "object file has no dynamic section"
 msgstr "le file de objecto non ha un section dynamic"
 
-#: elf/dl-load.c:1218
+#: elf/dl-load.c:1223
 #, fuzzy
 #| msgid "cannot dynamically load executable"
 msgid "cannot dynamically load position-independent executable"
 msgstr "impossibile de cargar dynamicamente un executabile"
 
-#: elf/dl-load.c:1220
+#: elf/dl-load.c:1225
 msgid "shared object cannot be dlopen()ed"
 msgstr "le objecto condivise non pote esser aperite via dlopen()"
 
-#: elf/dl-load.c:1233
+#: elf/dl-load.c:1238
 msgid "cannot allocate memory for program header"
 msgstr "impossibile de allocar le memoria pro un testa de programma"
 
-#: elf/dl-load.c:1266 elf/dl-load.h:130
+#: elf/dl-load.c:1271 elf/dl-load.h:130
 msgid "cannot change memory protections"
 msgstr "impossibile de modificar le protection de memoria"
 
-#: elf/dl-load.c:1286
+#: elf/dl-load.c:1291
 msgid "cannot enable executable stack as shared object requires"
 msgstr "impossibile de habilitar un pila executabile como le objecto condivise necessita"
 
-#: elf/dl-load.c:1299
+#: elf/dl-load.c:1304
 msgid "cannot close file descriptor"
 msgstr "impossibile de clauder un descriptor de file"
 
-#: elf/dl-load.c:1555
+#: elf/dl-load.c:1571
 msgid "file too short"
 msgstr "file troppo curte"
 
-#: elf/dl-load.c:1590
+#: elf/dl-load.c:1606
 msgid "invalid ELF header"
 msgstr "testa ELF incorrecte"
 
-#: elf/dl-load.c:1602
+#: elf/dl-load.c:1618
 msgid "ELF file data encoding not big-endian"
 msgstr "le codification de datos del file ELF non es big-endian"
 
-#: elf/dl-load.c:1604
+#: elf/dl-load.c:1620
 msgid "ELF file data encoding not little-endian"
 msgstr "le codification de datos del file ELF non es little-endian"
 
-#: elf/dl-load.c:1608
+#: elf/dl-load.c:1624
 msgid "ELF file version ident does not match current one"
 msgstr "le identificator de version del file ELF non corresponde con le version actual"
 
-#: elf/dl-load.c:1612
+#: elf/dl-load.c:1628
 msgid "ELF file OS ABI invalid"
 msgstr "ABI de systema operative del file ELF invalide"
 
-#: elf/dl-load.c:1615
+#: elf/dl-load.c:1631
 msgid "ELF file ABI version invalid"
 msgstr "Version de ABI del file ELF invalide"
 
-#: elf/dl-load.c:1618
+#: elf/dl-load.c:1634
 msgid "nonzero padding in e_ident"
 msgstr "impletion con non-zeros in e_ident"
 
-#: elf/dl-load.c:1621
+#: elf/dl-load.c:1637
 msgid "internal error"
 msgstr "error interne"
 
-#: elf/dl-load.c:1628
+#: elf/dl-load.c:1644
 msgid "ELF file version does not match current one"
 msgstr "Le version del file ELF non corresponde con le version actual"
 
-#: elf/dl-load.c:1636
+#: elf/dl-load.c:1652
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "solo ET_DYN e ET_EXEC pote esser cargate"
 
-#: elf/dl-load.c:1652
+#: elf/dl-load.c:1657
 msgid "ELF file's phentsize not the expected size"
 msgstr "Le valor `phentsize' del file ELF non concorda con le expectation"
 
-#: elf/dl-load.c:2217
+#: elf/dl-load.c:2210
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "classe ELF incorrecte: ELFCLASS64"
 
-#: elf/dl-load.c:2218
+#: elf/dl-load.c:2211
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "classe ELF incorrecte: ELFCLASS32"
 
-#: elf/dl-load.c:2221
+#: elf/dl-load.c:2214
 msgid "cannot open shared object file"
 msgstr "impossibile de aperir un file de objecto condivise"
 
@@ -645,27 +640,27 @@ msgstr "insuccesso de mmap sur un objecto condivise"
 msgid "cannot map zero-fill pages"
 msgstr "impossibile de mmap paginas del dispositivo de impletion con zeros"
 
-#: elf/dl-lookup.c:830
+#: elf/dl-lookup.c:882
 msgid "symbol lookup error"
 msgstr "error de cerca de symbolo"
 
-#: elf/dl-open.c:99
+#: elf/dl-open.c:71
 msgid "cannot extend global scope"
 msgstr "impossibile de extender le ambito global"
 
-#: elf/dl-open.c:474
+#: elf/dl-open.c:391
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "Le contator de generation TLS ha permitite! Reporta iste problema."
 
-#: elf/dl-open.c:538
+#: elf/dl-open.c:783
 msgid "invalid mode for dlopen()"
 msgstr "modo invalide pro dlopen()"
 
-#: elf/dl-open.c:555
+#: elf/dl-open.c:800
 msgid "no more namespaces available for dlmopen()"
 msgstr "necun altere spatios de nomines disponibile pro dlmopen()"
 
-#: elf/dl-open.c:579
+#: elf/dl-open.c:824
 msgid "invalid target namespace in dlmopen()"
 msgstr "spatio de nomines de destination invalide in dlmopen()"
 
@@ -677,20 +672,20 @@ msgstr "impossibile de allocar memoria in un bloco TLS static"
 msgid "cannot make segment writable for relocation"
 msgstr "impossibile de render un segmento scribibile pro le relocation"
 
-#: elf/dl-reloc.c:272
+#: elf/dl-reloc.c:273
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr "%s: memoria exhauste pro immagazinar le resultatos de relocation pro %s\n"
 
-#: elf/dl-reloc.c:288
+#: elf/dl-reloc.c:289
 msgid "cannot restore segment prot after reloc"
 msgstr "impossibile de restabilir le protection del segmento post le relocation"
 
-#: elf/dl-reloc.c:319
+#: elf/dl-reloc.c:320
 msgid "cannot apply additional memory protection after relocation"
 msgstr "impossibile de applicar le protection de memoria additional post le relocation"
 
-#: elf/dl-sym.c:136
+#: elf/dl-sym.c:150
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT usate in le codice non cargate dynamicamente"
 
@@ -870,58 +865,58 @@ msgstr "bibliotheca libc4 %s es in un directorio incorrecte"
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "Le bibliothecas %s e %s es in le directorio %s ha le mesme so-nomine, ma lor typo es differente."
 
-#: elf/ldconfig.c:1082
+#: elf/ldconfig.c:1083
 #, c-format
 msgid "Warning: ignoring configuration file that cannot be opened: %s"
 msgstr "Advertimento: ignorar le file de configuration que non pote esser aperite: %s"
 
-#: elf/ldconfig.c:1148
+#: elf/ldconfig.c:1149
 #, c-format
 msgid "%s:%u: bad syntax in hwcap line"
 msgstr "%s:%u: syntaxe incorrecte in le linea hwcap"
 
-#: elf/ldconfig.c:1154
+#: elf/ldconfig.c:1155
 #, c-format
 msgid "%s:%u: hwcap index %lu above maximum %u"
 msgstr "%s:%u: le indice hwcap %lu superpassa le maximo %u"
 
-#: elf/ldconfig.c:1161 elf/ldconfig.c:1169
+#: elf/ldconfig.c:1162 elf/ldconfig.c:1170
 #, c-format
 msgid "%s:%u: hwcap index %lu already defined as %s"
 msgstr "%s:%u: le indice hwcap %lu jam definite como %s"
 
-#: elf/ldconfig.c:1172
+#: elf/ldconfig.c:1173
 #, c-format
 msgid "%s:%u: duplicate hwcap %lu %s"
 msgstr "%s:%u: hwcap duplicate %lu %s"
 
-#: elf/ldconfig.c:1194
+#: elf/ldconfig.c:1195
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr "il es necessari usar le nomine absolute pro le file de configuration quando on utilisa -r"
 
-#: elf/ldconfig.c:1201 locale/programs/xmalloc.c:63 malloc/obstack.c:416
+#: elf/ldconfig.c:1202 locale/programs/xmalloc.c:63 malloc/obstack.c:416
 #: malloc/obstack.c:418 posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr "memoria exhaurite"
 
-#: elf/ldconfig.c:1234
+#: elf/ldconfig.c:1235
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: impossibile de leger le directorio %s"
 
-#: elf/ldconfig.c:1282
+#: elf/ldconfig.c:1283
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "percurso relative `%s' usate pro construer le cache"
 
-#: elf/ldconfig.c:1312
+#: elf/ldconfig.c:1313
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Impossibile de effectuar chdir a /"
 
-#: elf/ldconfig.c:1353
+#: elf/ldconfig.c:1354
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Impossibile de aperir le directorio de files de cache %s\n"
@@ -1095,27 +1090,27 @@ msgstr "le processo %lu non es un programma ELF"
 msgid "file %s is truncated\n"
 msgstr "le file %s es truncate\n"
 
-#: elf/readelflib.c:66
+#: elf/readelflib.c:65
 #, c-format
 msgid "%s is a 32 bit ELF file.\n"
 msgstr "%s es un file ELF 32 bits.\n"
 
-#: elf/readelflib.c:68
+#: elf/readelflib.c:67
 #, c-format
 msgid "%s is a 64 bit ELF file.\n"
 msgstr "%s es un file ELF 64 bits.\n"
 
-#: elf/readelflib.c:70
+#: elf/readelflib.c:69
 #, c-format
 msgid "Unknown ELFCLASS in file %s.\n"
 msgstr "ELFCLASS incognite in le file %s.\n"
 
-#: elf/readelflib.c:77
+#: elf/readelflib.c:76
 #, c-format
 msgid "%s is not a shared object file (Type: %d).\n"
 msgstr "%s non es un file de objectos condivise (Typo: %d).\n"
 
-#: elf/readelflib.c:108
+#: elf/readelflib.c:101
 #, c-format
 msgid "more than one dynamic segment\n"
 msgstr "plus de un segmento dynamic\n"
@@ -1742,12 +1737,11 @@ msgstr "necun nomine symbolic fornite pro le fin del intervallo"
 #: locale/programs/charmap.c:615 locale/programs/ld-address.c:524
 #: locale/programs/ld-collate.c:2616 locale/programs/ld-collate.c:3774
 #: locale/programs/ld-ctype.c:2118 locale/programs/ld-ctype.c:2830
-#: locale/programs/ld-identification.c:397
-#: locale/programs/ld-measurement.c:213 locale/programs/ld-messages.c:295
-#: locale/programs/ld-monetary.c:748 locale/programs/ld-name.c:262
-#: locale/programs/ld-numeric.c:325 locale/programs/ld-paper.c:212
-#: locale/programs/ld-telephone.c:276 locale/programs/ld-time.c:959
-#: locale/programs/repertoire.c:312
+#: locale/programs/ld-identification.c:397 locale/programs/ld-measurement.c:213
+#: locale/programs/ld-messages.c:295 locale/programs/ld-monetary.c:748
+#: locale/programs/ld-name.c:262 locale/programs/ld-numeric.c:325
+#: locale/programs/ld-paper.c:212 locale/programs/ld-telephone.c:276
+#: locale/programs/ld-time.c:959 locale/programs/repertoire.c:312
 #, c-format
 msgid "%1$s: definition does not end with `END %1$s'"
 msgstr "%1$s: le definition non termina con `END %1$s'"
@@ -1769,12 +1763,12 @@ msgstr "%s: error in le automato de statos finite"
 #: locale/programs/charmap.c:856 locale/programs/ld-address.c:540
 #: locale/programs/ld-collate.c:2613 locale/programs/ld-collate.c:3967
 #: locale/programs/ld-ctype.c:2115 locale/programs/ld-ctype.c:2847
-#: locale/programs/ld-identification.c:413
-#: locale/programs/ld-measurement.c:229 locale/programs/ld-messages.c:311
-#: locale/programs/ld-monetary.c:764 locale/programs/ld-name.c:278
-#: locale/programs/ld-numeric.c:341 locale/programs/ld-paper.c:228
-#: locale/programs/ld-telephone.c:292 locale/programs/ld-time.c:990
-#: locale/programs/locfile.c:1010 locale/programs/repertoire.c:323
+#: locale/programs/ld-identification.c:413 locale/programs/ld-measurement.c:229
+#: locale/programs/ld-messages.c:311 locale/programs/ld-monetary.c:764
+#: locale/programs/ld-name.c:278 locale/programs/ld-numeric.c:341
+#: locale/programs/ld-paper.c:228 locale/programs/ld-telephone.c:292
+#: locale/programs/ld-time.c:990 locale/programs/locfile.c:1010
+#: locale/programs/repertoire.c:323
 #, c-format
 msgid "%s: premature end of file"
 msgstr "%s: fin prematur de file"
@@ -1877,13 +1871,12 @@ msgstr "%s: le codice numeric de pais `%d' non es valide"
 
 #: locale/programs/ld-address.c:432 locale/programs/ld-address.c:469
 #: locale/programs/ld-address.c:507 locale/programs/ld-ctype.c:2479
-#: locale/programs/ld-identification.c:309
-#: locale/programs/ld-measurement.c:196 locale/programs/ld-messages.c:264
-#: locale/programs/ld-monetary.c:503 locale/programs/ld-monetary.c:538
-#: locale/programs/ld-monetary.c:579 locale/programs/ld-name.c:235
-#: locale/programs/ld-numeric.c:217 locale/programs/ld-paper.c:195
-#: locale/programs/ld-telephone.c:251 locale/programs/ld-time.c:864
-#: locale/programs/ld-time.c:906
+#: locale/programs/ld-identification.c:309 locale/programs/ld-measurement.c:196
+#: locale/programs/ld-messages.c:264 locale/programs/ld-monetary.c:503
+#: locale/programs/ld-monetary.c:538 locale/programs/ld-monetary.c:579
+#: locale/programs/ld-name.c:235 locale/programs/ld-numeric.c:217
+#: locale/programs/ld-paper.c:195 locale/programs/ld-telephone.c:251
+#: locale/programs/ld-time.c:864 locale/programs/ld-time.c:906
 #, c-format
 msgid "%s: field `%s' declared more than once"
 msgstr "%s: le campo `%s' es declarate plus de un vice"
@@ -1914,11 +1907,11 @@ msgstr "%s: linea `END' incomplete"
 #: locale/programs/ld-collate.c:2603 locale/programs/ld-collate.c:3957
 #: locale/programs/ld-ctype.c:1847 locale/programs/ld-ctype.c:2105
 #: locale/programs/ld-ctype.c:2677 locale/programs/ld-ctype.c:2838
-#: locale/programs/ld-identification.c:404
-#: locale/programs/ld-measurement.c:220 locale/programs/ld-messages.c:302
-#: locale/programs/ld-monetary.c:755 locale/programs/ld-name.c:269
-#: locale/programs/ld-numeric.c:332 locale/programs/ld-paper.c:219
-#: locale/programs/ld-telephone.c:283 locale/programs/ld-time.c:981
+#: locale/programs/ld-identification.c:404 locale/programs/ld-measurement.c:220
+#: locale/programs/ld-messages.c:302 locale/programs/ld-monetary.c:755
+#: locale/programs/ld-name.c:269 locale/programs/ld-numeric.c:332
+#: locale/programs/ld-paper.c:219 locale/programs/ld-telephone.c:283
+#: locale/programs/ld-time.c:981
 #, c-format
 msgid "%s: syntax error"
 msgstr "%s: error de syntaxe"
@@ -2230,7 +2223,7 @@ msgstr "le categoria `digit' non ha entratas in gruppos de dece"
 msgid "no input digits defined and none of the standard names in the charmap"
 msgstr "necun cifras de entrata definite e necun del nomines standard in le tabula de characteres"
 
-#: locale/programs/ld-ctype.c:849
+#: locale/programs/ld-ctype.c:847
 msgid "not all characters used in `outdigit' are available in the charmap"
 msgstr "non tote le characteres usate in `outdigit' es disponibile in le tabula de characteres"
 
@@ -4795,7 +4788,7 @@ msgstr ""
 msgid "No previous regular expression"
 msgstr ""
 
-#: posix/wordexp.c:1816
+#: posix/wordexp.c:1795
 msgid "parameter null or not set"
 msgstr ""
 
@@ -5060,7 +5053,7 @@ msgstr ""
 msgid "Unknown signal %d"
 msgstr ""
 
-#: sunrpc/auth_unix.c:112 sunrpc/clnt_tcp.c:124 sunrpc/clnt_udp.c:139
+#: sunrpc/auth_unix.c:113 sunrpc/clnt_tcp.c:124 sunrpc/clnt_udp.c:140
 #: sunrpc/clnt_unix.c:125 sunrpc/svc_tcp.c:189 sunrpc/svc_tcp.c:233
 #: sunrpc/svc_udp.c:161 sunrpc/svc_unix.c:189 sunrpc/svc_unix.c:229
 #: sunrpc/xdr.c:631 sunrpc/xdr.c:791 sunrpc/xdr_array.c:102
@@ -5068,7 +5061,7 @@ msgstr ""
 msgid "out of memory\n"
 msgstr ""
 
-#: sunrpc/auth_unix.c:349
+#: sunrpc/auth_unix.c:350
 msgid "auth_unix.c: Fatal marshalling problem"
 msgstr ""
 
@@ -7190,6 +7183,9 @@ msgstr ""
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s:%u: impossibile de leger le directorio %s"
 
+#~ msgid "RTLD_SELF used in code not dynamically loaded"
+#~ msgstr "RTLD_SELF usate in le codice non cargate dynamicamente"
+
 #~ msgid "cannot open zero fill device"
 #~ msgstr "impossibile de aperir un dispositovo de impletion con zeros"
 
@@ -7208,30 +7204,36 @@ msgstr "%s:%u: impossibile de leger le directorio %s"
 #~ msgid "cannot load any more object with static TLS"
 #~ msgstr "impossibile de cargar necun altere objectos con TLS static"
 
+#, c-format
 #~ msgid "%s: no PLTREL found in object %s\n"
 #~ msgstr "%s: necun PLTREL trovate in le objecto %s\n"
 
 #~ msgid "Don't generate links"
 #~ msgstr "Non generar le ligamines"
 
+#, c-format
 #~ msgid "cannot create internal descriptors"
 #~ msgstr "impossibile de crear descriptores interne"
 
 #~ msgid "Character out of range for UTF-8"
 #~ msgstr "Character es foras de intervallo pro UTF-8"
 
+#, c-format
 #~ msgid "no definition of `UNDEFINED'"
 #~ msgstr "nulle definition de `UNDEFINED'"
 
 #~ msgid "non-symbolic character value should not be used"
 #~ msgstr "un valor de character non-symbolic non deberea usar se"
 
+#, c-format
 #~ msgid "Cannot set LC_CTYPE to default locale"
 #~ msgstr "Impossibile de initialisar LC_CTYPE al localitate predefinite"
 
+#, c-format
 #~ msgid "Cannot set LC_MESSAGES to default locale"
 #~ msgstr "Impossibile de initialisar LC_MESSAGE al localitate predefinite"
 
+#, c-format
 #~ msgid "Cannot set LC_COLLATE to default locale"
 #~ msgstr "Impossibile de initialisar LC_COLLATE al localitate predefinite"
 

@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GNU libc 2.29.9000\n"
-"POT-Creation-Date: 2019-07-18 13:28-0400\n"
+"POT-Creation-Date: 2020-01-02 20:08+0530\n"
 "PO-Revision-Date: 2019-08-06 11:29+0900\n"
 "Last-Translator: Changwoo Ryu <cwryu@debian.org>\n"
 "Language-Team: Korean <translation-team-ko@googlegroups.com>\n"
@@ -67,8 +67,7 @@ msgid "Give a short usage message"
 msgstr "간략한 사용법 메시지를 표시함"
 
 #: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
-#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:105
-#: nss/makedb.c:120
+#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:105 nss/makedb.c:120
 msgid "NAME"
 msgstr "<이름>"
 
@@ -165,9 +164,9 @@ msgstr ""
 #: elf/ldconfig.c:324 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
 #: elf/sprof.c:389 iconv/iconv_prog.c:422 iconv/iconvconfig.c:396
 #: locale/programs/locale.c:293 locale/programs/localedef.c:463
-#: login/programs/pt_chown.c:63 malloc/memusage.sh:71
-#: malloc/memusagestat.c:581 nscd/nscd.c:509 nss/getent.c:88 nss/makedb.c:385
-#: posix/getconf.c:485 sysdeps/unix/sysv/linux/lddlibc4.c:68
+#: login/programs/pt_chown.c:63 malloc/memusage.sh:71 malloc/memusagestat.c:581
+#: nscd/nscd.c:509 nss/getent.c:88 nss/makedb.c:385 posix/getconf.c:485
+#: sysdeps/unix/sysv/linux/lddlibc4.c:68
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -360,11 +359,7 @@ msgstr "\\`$program' 실행 파일이 없습니다\\n"
 msgid "\\`$program' is no executable\\n"
 msgstr "\\`$program' 파일이 실행 파일이 아닙니다\\n"
 
-#: dlfcn/dlinfo.c:63
-msgid "RTLD_SELF used in code not dynamically loaded"
-msgstr "동적으로 적재하지 않은 코드에 RTLD_SELF를 사용함"
-
-#: dlfcn/dlinfo.c:72
+#: dlfcn/dlinfo.c:53
 msgid "unsupported dlinfo request"
 msgstr "지원하지 않는 dlinfo 요청"
 
@@ -393,7 +388,7 @@ msgstr "알 수 없는 운영체제"
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", OS ABI: %s %d.%d.%d"
 
-#: elf/cache.c:163 elf/ldconfig.c:1333
+#: elf/cache.c:163 elf/ldconfig.c:1334
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "캐시 파일 `%s'을(를) 열 수 없습니다\n"
@@ -434,11 +429,11 @@ msgstr "%s의 접근권한을 to %#o로(으로) 바꾸는 데 실패했습니다
 msgid "Renaming of %s to %s failed"
 msgstr "%s에서 %s으로(로) 이름을 바꾸는 데 실패했습니다"
 
-#: elf/dl-close.c:399 elf/dl-open.c:424
+#: elf/dl-close.c:406 elf/dl-open.c:285
 msgid "cannot create scope list"
 msgstr "스코프 목록을 만들 수 없습니다"
 
-#: elf/dl-close.c:839
+#: elf/dl-close.c:852
 msgid "shared object not open"
 msgstr "공유 오브젝트가 열리지 않았습니다"
 
@@ -515,123 +510,123 @@ msgstr "RUNPATH/RPATH 카피를 만들 수 없습니다"
 msgid "cannot create search path array"
 msgstr "검색 경로 배열을 만들 수 없습니다"
 
-#: elf/dl-load.c:883
+#: elf/dl-load.c:892
 msgid "cannot stat shared object"
 msgstr "동적 오브젝트에 대해 stat()이 실패했습니다"
 
-#: elf/dl-load.c:992 elf/dl-load.c:2198
+#: elf/dl-load.c:1003 elf/dl-load.c:2191
 msgid "cannot create shared object descriptor"
 msgstr "공유 오브젝트 디스크립터를 만들 수 없습니다"
 
-#: elf/dl-load.c:1011 elf/dl-load.c:1555 elf/dl-load.c:1668
+#: elf/dl-load.c:1022 elf/dl-load.c:1571 elf/dl-load.c:1672
 msgid "cannot read file data"
 msgstr "파일 데이터를 읽을 수 없습니다"
 
-#: elf/dl-load.c:1057
+#: elf/dl-load.c:1068
 msgid "ELF load command alignment not page-aligned"
 msgstr "ELF 로드 명령의의 align이 페이지에 align되어 있지 않습니다"
 
-#: elf/dl-load.c:1064
+#: elf/dl-load.c:1075
 msgid "ELF load command address/offset not properly aligned"
 msgstr "ELF 로드 명령의 주소/오프셋이 올바르게 align되어 있지 않습니다"
 
-#: elf/dl-load.c:1146
+#: elf/dl-load.c:1151
 msgid "cannot process note segment"
 msgstr "note 세그먼트를 처리할 수 없습니다"
 
-#: elf/dl-load.c:1157
+#: elf/dl-load.c:1162
 msgid "object file has no loadable segments"
 msgstr "오브젝트 파일에 읽어들일 수 있는 섹션이 없습니다"
 
-#: elf/dl-load.c:1170 elf/dl-load.c:1647
+#: elf/dl-load.c:1175
 msgid "cannot dynamically load executable"
 msgstr "동적으로 실행파일을 읽어들일 수 없습니다"
 
-#: elf/dl-load.c:1191
+#: elf/dl-load.c:1196
 msgid "object file has no dynamic section"
 msgstr "오브젝트 파일에 동적 섹션이 없습니다"
 
-#: elf/dl-load.c:1218
+#: elf/dl-load.c:1223
 msgid "cannot dynamically load position-independent executable"
 msgstr "위치 독립 실행 파일을 동적으로 읽어들일 수 없습니다"
 
-#: elf/dl-load.c:1220
+#: elf/dl-load.c:1225
 msgid "shared object cannot be dlopen()ed"
 msgstr "동적 오브젝트는 dlopen()될 수 없습니다"
 
-#: elf/dl-load.c:1233
+#: elf/dl-load.c:1238
 msgid "cannot allocate memory for program header"
 msgstr "프로그램 헤더에 대한 메모리를 할당할 수 없습니다"
 
-#: elf/dl-load.c:1266 elf/dl-load.h:130
+#: elf/dl-load.c:1271 elf/dl-load.h:130
 msgid "cannot change memory protections"
 msgstr "메모리 보호를 바꿀 수 없습니다"
 
-#: elf/dl-load.c:1286
+#: elf/dl-load.c:1291
 msgid "cannot enable executable stack as shared object requires"
 msgstr "실행할 수 있는 스택을 공유 오브젝트 필수요소로 만들 수 없습니다"
 
-#: elf/dl-load.c:1299
+#: elf/dl-load.c:1304
 msgid "cannot close file descriptor"
 msgstr "파일 디스크립터를 닫을 수 없습니다"
 
-#: elf/dl-load.c:1555
+#: elf/dl-load.c:1571
 msgid "file too short"
 msgstr "파일이 너무 짧습니다"
 
-#: elf/dl-load.c:1590
+#: elf/dl-load.c:1606
 msgid "invalid ELF header"
 msgstr "ELF 헤더가 잘못됨"
 
-#: elf/dl-load.c:1602
+#: elf/dl-load.c:1618
 msgid "ELF file data encoding not big-endian"
 msgstr "ELF 파일 데이터 인코딩이 빅인디안이 아닙니다"
 
-#: elf/dl-load.c:1604
+#: elf/dl-load.c:1620
 msgid "ELF file data encoding not little-endian"
 msgstr "ELF 파일 데이터 인코딩이 리틀인디안이 아닙니다"
 
-#: elf/dl-load.c:1608
+#: elf/dl-load.c:1624
 msgid "ELF file version ident does not match current one"
 msgstr "ELF 파일 버전 ident가 현재 ident와 맞지 않습니다"
 
-#: elf/dl-load.c:1612
+#: elf/dl-load.c:1628
 msgid "ELF file OS ABI invalid"
 msgstr "ELF 파일 OS ABI가 잘못되었습니다"
 
-#: elf/dl-load.c:1615
+#: elf/dl-load.c:1631
 msgid "ELF file ABI version invalid"
 msgstr "ELF 파일 ABI 버전이 잘못되었습니다"
 
-#: elf/dl-load.c:1618
+#: elf/dl-load.c:1634
 msgid "nonzero padding in e_ident"
 msgstr "e_ident 안에 0이 아닌 채움"
 
-#: elf/dl-load.c:1621
+#: elf/dl-load.c:1637
 msgid "internal error"
 msgstr "내부 오류"
 
-#: elf/dl-load.c:1628
+#: elf/dl-load.c:1644
 msgid "ELF file version does not match current one"
 msgstr "ELF 파일 버전이 현재 버전과 맞지 않습니다"
 
-#: elf/dl-load.c:1636
+#: elf/dl-load.c:1652
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "ET_DYN과 ET_EXEC만을 읽어들일 수 있습니다"
 
-#: elf/dl-load.c:1652
+#: elf/dl-load.c:1657
 msgid "ELF file's phentsize not the expected size"
 msgstr "ELF 파일의 phentsize가 예상과 맞지 않습니다"
 
-#: elf/dl-load.c:2217
+#: elf/dl-load.c:2210
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "ELF 클래스가 틀렸습니다: ELFCLASS64"
 
-#: elf/dl-load.c:2218
+#: elf/dl-load.c:2211
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "ELF 클래스가 틀렸습니다: ELFCLASS32"
 
-#: elf/dl-load.c:2221
+#: elf/dl-load.c:2214
 msgid "cannot open shared object file"
 msgstr "동적 오브젝트 파일을 열 수 없습니다"
 
@@ -643,27 +638,27 @@ msgstr "동적 오브젝트의 세그먼트를 매핑하는 실패"
 msgid "cannot map zero-fill pages"
 msgstr "0으로 채운 페이지를 매핑할 수 없습니다"
 
-#: elf/dl-lookup.c:830
+#: elf/dl-lookup.c:882
 msgid "symbol lookup error"
 msgstr "심볼 찾기 오류"
 
-#: elf/dl-open.c:99
+#: elf/dl-open.c:71
 msgid "cannot extend global scope"
 msgstr "전역 스코프를 확장할 수 없습니다"
 
-#: elf/dl-open.c:474
+#: elf/dl-open.c:391
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "TLS 만들기 카운터가 겹쳤습니다!  이 문제를 알려 주십시오."
 
-#: elf/dl-open.c:538
+#: elf/dl-open.c:783
 msgid "invalid mode for dlopen()"
 msgstr "dlopen()에 모드가 잘못됨"
 
-#: elf/dl-open.c:555
+#: elf/dl-open.c:800
 msgid "no more namespaces available for dlmopen()"
 msgstr "dlmopen()에 사용할 수 있는 네임스페이스가 더 이상 없습니다"
 
-#: elf/dl-open.c:579
+#: elf/dl-open.c:824
 msgid "invalid target namespace in dlmopen()"
 msgstr "dlmopen()에 대상 네임스페이스가 잘못되었습니다"
 
@@ -675,20 +670,20 @@ msgstr "정적 TLS 블럭에는 메모리를 할당할 수 없습니다"
 msgid "cannot make segment writable for relocation"
 msgstr "리로케이션을 위해 세그먼트를 쓰기 가능하도록 만들 수 없습니다"
 
-#: elf/dl-reloc.c:272
+#: elf/dl-reloc.c:273
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr "%s: %s에 대한 리로케이션 결과를 저장할 메모리가 부족합니다\n"
 
-#: elf/dl-reloc.c:288
+#: elf/dl-reloc.c:289
 msgid "cannot restore segment prot after reloc"
 msgstr "리로케이션 뒤에 prot 세그먼트를 복구할 수 없습니다"
 
-#: elf/dl-reloc.c:319
+#: elf/dl-reloc.c:320
 msgid "cannot apply additional memory protection after relocation"
 msgstr "리로케이션 뒤에 추가로 메모리 보호를 적용할 수 없습니다"
 
-#: elf/dl-sym.c:136
+#: elf/dl-sym.c:150
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "동적으로 적재하지 않은 코드에 RTLD_NEXT를 사용함"
 
@@ -866,58 +861,58 @@ msgstr "libc4 library %s이(가) 잘못된 디렉터리에 있습니다"
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "디렉터리 %s의 라이브러리 %s과(와) %s이(가) 같은 soname을 가지고 있지만 타입이 다릅니다."
 
-#: elf/ldconfig.c:1082
+#: elf/ldconfig.c:1083
 #, c-format
 msgid "Warning: ignoring configuration file that cannot be opened: %s"
 msgstr "경고: 열 수 없는 설정 파일을 무시합니다: %s"
 
-#: elf/ldconfig.c:1148
+#: elf/ldconfig.c:1149
 #, c-format
 msgid "%s:%u: bad syntax in hwcap line"
 msgstr "%s:%u: hwcap 줄의 문법이 잘못되었습니다"
 
-#: elf/ldconfig.c:1154
+#: elf/ldconfig.c:1155
 #, c-format
 msgid "%s:%u: hwcap index %lu above maximum %u"
 msgstr "%s:%u: hwcap 인덱스 %lu은(는) 최대값 %u을(를) 넘어갔습니다"
 
-#: elf/ldconfig.c:1161 elf/ldconfig.c:1169
+#: elf/ldconfig.c:1162 elf/ldconfig.c:1170
 #, c-format
 msgid "%s:%u: hwcap index %lu already defined as %s"
 msgstr "%s:%u: hwcap 인덱스 %lu은(는) 이미 %s(으)로 정의되어 있습니다"
 
-#: elf/ldconfig.c:1172
+#: elf/ldconfig.c:1173
 #, c-format
 msgid "%s:%u: duplicate hwcap %lu %s"
 msgstr "%s:%u: 중복된 hwcap %lu %s"
 
-#: elf/ldconfig.c:1194
+#: elf/ldconfig.c:1195
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr "-r 옵션을 사용할 경우 설정 파일의 절대 파일 이름이 필요합니다"
 
-#: elf/ldconfig.c:1201 locale/programs/xmalloc.c:63 malloc/obstack.c:416
+#: elf/ldconfig.c:1202 locale/programs/xmalloc.c:63 malloc/obstack.c:416
 #: malloc/obstack.c:418 posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr "메모리가 바닥남"
 
-#: elf/ldconfig.c:1234
+#: elf/ldconfig.c:1235
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: %s 디렉터리를 읽을 수 없습니다"
 
-#: elf/ldconfig.c:1282
+#: elf/ldconfig.c:1283
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "캐시를 만드는데 상대 경로인 `%s' 경로를 사용했습니다"
 
-#: elf/ldconfig.c:1312
+#: elf/ldconfig.c:1313
 #, c-format
 msgid "Can't chdir to /"
 msgstr "/로 디렉터리를 이동할 수 없습니다"
 
-#: elf/ldconfig.c:1353
+#: elf/ldconfig.c:1354
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "캐시 파일 디렉터리 `%s'을(를) 열 수 없습니다\n"
@@ -1090,27 +1085,27 @@ msgstr "프로세스 %lu번은 ELF 프로그램이 아닙니다"
 msgid "file %s is truncated\n"
 msgstr "%s 파일이 잘라졌습니다\n"
 
-#: elf/readelflib.c:66
+#: elf/readelflib.c:65
 #, c-format
 msgid "%s is a 32 bit ELF file.\n"
 msgstr "%s은(는) 32비트 ELF 파일입니다.\n"
 
-#: elf/readelflib.c:68
+#: elf/readelflib.c:67
 #, c-format
 msgid "%s is a 64 bit ELF file.\n"
 msgstr "%s은(는) 64비트 ELF 파일입니다.\n"
 
-#: elf/readelflib.c:70
+#: elf/readelflib.c:69
 #, c-format
 msgid "Unknown ELFCLASS in file %s.\n"
 msgstr "%s 파일이 알려지지 않은 ELFCLASS.\n"
 
-#: elf/readelflib.c:77
+#: elf/readelflib.c:76
 #, c-format
 msgid "%s is not a shared object file (Type: %d).\n"
 msgstr "%s은(는) 동적 오브젝트 파일이 아닙니다(타입: %d).\n"
 
-#: elf/readelflib.c:108
+#: elf/readelflib.c:101
 #, c-format
 msgid "more than one dynamic segment\n"
 msgstr "여러 개의 동적 세그먼트\n"
@@ -1724,12 +1719,11 @@ msgstr "범위의 끝까지 기호 이름이 없습니다"
 #: locale/programs/charmap.c:615 locale/programs/ld-address.c:524
 #: locale/programs/ld-collate.c:2616 locale/programs/ld-collate.c:3774
 #: locale/programs/ld-ctype.c:2118 locale/programs/ld-ctype.c:2830
-#: locale/programs/ld-identification.c:397
-#: locale/programs/ld-measurement.c:213 locale/programs/ld-messages.c:295
-#: locale/programs/ld-monetary.c:748 locale/programs/ld-name.c:262
-#: locale/programs/ld-numeric.c:325 locale/programs/ld-paper.c:212
-#: locale/programs/ld-telephone.c:276 locale/programs/ld-time.c:959
-#: locale/programs/repertoire.c:312
+#: locale/programs/ld-identification.c:397 locale/programs/ld-measurement.c:213
+#: locale/programs/ld-messages.c:295 locale/programs/ld-monetary.c:748
+#: locale/programs/ld-name.c:262 locale/programs/ld-numeric.c:325
+#: locale/programs/ld-paper.c:212 locale/programs/ld-telephone.c:276
+#: locale/programs/ld-time.c:959 locale/programs/repertoire.c:312
 #, c-format
 msgid "%1$s: definition does not end with `END %1$s'"
 msgstr "%1$s: 정의가 `END %1$s'(으)로 끝나지 않습니다"
@@ -1751,12 +1745,12 @@ msgstr "%s: 상태 기계에 오류 발생"
 #: locale/programs/charmap.c:856 locale/programs/ld-address.c:540
 #: locale/programs/ld-collate.c:2613 locale/programs/ld-collate.c:3967
 #: locale/programs/ld-ctype.c:2115 locale/programs/ld-ctype.c:2847
-#: locale/programs/ld-identification.c:413
-#: locale/programs/ld-measurement.c:229 locale/programs/ld-messages.c:311
-#: locale/programs/ld-monetary.c:764 locale/programs/ld-name.c:278
-#: locale/programs/ld-numeric.c:341 locale/programs/ld-paper.c:228
-#: locale/programs/ld-telephone.c:292 locale/programs/ld-time.c:990
-#: locale/programs/locfile.c:1010 locale/programs/repertoire.c:323
+#: locale/programs/ld-identification.c:413 locale/programs/ld-measurement.c:229
+#: locale/programs/ld-messages.c:311 locale/programs/ld-monetary.c:764
+#: locale/programs/ld-name.c:278 locale/programs/ld-numeric.c:341
+#: locale/programs/ld-paper.c:228 locale/programs/ld-telephone.c:292
+#: locale/programs/ld-time.c:990 locale/programs/locfile.c:1010
+#: locale/programs/repertoire.c:323
 #, c-format
 msgid "%s: premature end of file"
 msgstr "%s: 파일이 완결하지 않은 채 끝남"
@@ -1861,13 +1855,12 @@ msgstr "%s: 국가 코드 숫자 `%d'번은 올바르지 않습니다"
 
 #: locale/programs/ld-address.c:432 locale/programs/ld-address.c:469
 #: locale/programs/ld-address.c:507 locale/programs/ld-ctype.c:2479
-#: locale/programs/ld-identification.c:309
-#: locale/programs/ld-measurement.c:196 locale/programs/ld-messages.c:264
-#: locale/programs/ld-monetary.c:503 locale/programs/ld-monetary.c:538
-#: locale/programs/ld-monetary.c:579 locale/programs/ld-name.c:235
-#: locale/programs/ld-numeric.c:217 locale/programs/ld-paper.c:195
-#: locale/programs/ld-telephone.c:251 locale/programs/ld-time.c:864
-#: locale/programs/ld-time.c:906
+#: locale/programs/ld-identification.c:309 locale/programs/ld-measurement.c:196
+#: locale/programs/ld-messages.c:264 locale/programs/ld-monetary.c:503
+#: locale/programs/ld-monetary.c:538 locale/programs/ld-monetary.c:579
+#: locale/programs/ld-name.c:235 locale/programs/ld-numeric.c:217
+#: locale/programs/ld-paper.c:195 locale/programs/ld-telephone.c:251
+#: locale/programs/ld-time.c:864 locale/programs/ld-time.c:906
 #, c-format
 msgid "%s: field `%s' declared more than once"
 msgstr "%s: `%s' 필드를 여러 번 선언했습니다"
@@ -1898,11 +1891,11 @@ msgstr "%s: 불완전한 `END' 줄"
 #: locale/programs/ld-collate.c:2603 locale/programs/ld-collate.c:3957
 #: locale/programs/ld-ctype.c:1847 locale/programs/ld-ctype.c:2105
 #: locale/programs/ld-ctype.c:2677 locale/programs/ld-ctype.c:2838
-#: locale/programs/ld-identification.c:404
-#: locale/programs/ld-measurement.c:220 locale/programs/ld-messages.c:302
-#: locale/programs/ld-monetary.c:755 locale/programs/ld-name.c:269
-#: locale/programs/ld-numeric.c:332 locale/programs/ld-paper.c:219
-#: locale/programs/ld-telephone.c:283 locale/programs/ld-time.c:981
+#: locale/programs/ld-identification.c:404 locale/programs/ld-measurement.c:220
+#: locale/programs/ld-messages.c:302 locale/programs/ld-monetary.c:755
+#: locale/programs/ld-name.c:269 locale/programs/ld-numeric.c:332
+#: locale/programs/ld-paper.c:219 locale/programs/ld-telephone.c:283
+#: locale/programs/ld-time.c:981
 #, c-format
 msgid "%s: syntax error"
 msgstr "%s: 문법 오류"
@@ -2219,7 +2212,7 @@ msgstr "`digit' 범주가 10의 배수의 항목을 가지지 않았습니다"
 msgid "no input digits defined and none of the standard names in the charmap"
 msgstr "입력 숫자가 정의하지 않았고 문자맵에 표준 이름이 없습니다"
 
-#: locale/programs/ld-ctype.c:849
+#: locale/programs/ld-ctype.c:847
 msgid "not all characters used in `outdigit' are available in the charmap"
 msgstr "문자맵의 `outdigit'에 사용한 문자의 전부가 사용 가능하지 않습니다"
 
@@ -4863,7 +4856,7 @@ msgstr "짝이 맞지 않는 ) 또는 \\)"
 msgid "No previous regular expression"
 msgstr "이전의 정규식이 없음"
 
-#: posix/wordexp.c:1816
+#: posix/wordexp.c:1795
 msgid "parameter null or not set"
 msgstr "인자가 NULL이거나 인자를 지정하지 않았습니다"
 
@@ -5128,7 +5121,7 @@ msgstr "실제 시각 시그널 %d번"
 msgid "Unknown signal %d"
 msgstr "알 수 없는 시그널 %d번"
 
-#: sunrpc/auth_unix.c:112 sunrpc/clnt_tcp.c:124 sunrpc/clnt_udp.c:139
+#: sunrpc/auth_unix.c:113 sunrpc/clnt_tcp.c:124 sunrpc/clnt_udp.c:140
 #: sunrpc/clnt_unix.c:125 sunrpc/svc_tcp.c:189 sunrpc/svc_tcp.c:233
 #: sunrpc/svc_udp.c:161 sunrpc/svc_unix.c:189 sunrpc/svc_unix.c:229
 #: sunrpc/xdr.c:631 sunrpc/xdr.c:791 sunrpc/xdr_array.c:102
@@ -5136,7 +5129,7 @@ msgstr "알 수 없는 시그널 %d번"
 msgid "out of memory\n"
 msgstr "메모리 부족\n"
 
-#: sunrpc/auth_unix.c:349
+#: sunrpc/auth_unix.c:350
 msgid "auth_unix.c: Fatal marshalling problem"
 msgstr "auth_unix.c: 치명적인 마샬링 문제"
 
@@ -7266,3 +7259,6 @@ msgstr "너무 많거나 너무 긴 시간대 약어"
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s: %s 디렉터리를 만들 수 없습니다: %s"
+
+#~ msgid "RTLD_SELF used in code not dynamically loaded"
+#~ msgstr "동적으로 적재하지 않은 코드에 RTLD_SELF를 사용함"

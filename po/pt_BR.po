@@ -10,7 +10,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.29.9000\n"
-"POT-Creation-Date: 2019-07-18 13:28-0400\n"
+"POT-Creation-Date: 2020-01-02 20:08+0530\n"
 "PO-Revision-Date: 2019-07-24 15:55-0200\n"
 "Last-Translator: Rafael Fontenelle <rafaelff@gnome.org>\n"
 "Language-Team: Brazilian Portuguese <ldpbr-translation@lists.sourceforge.net>\n"
@@ -72,8 +72,7 @@ msgid "Give a short usage message"
 msgstr "Retorna uma mensagem de uso curta"
 
 #: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
-#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:105
-#: nss/makedb.c:120
+#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:105 nss/makedb.c:120
 msgid "NAME"
 msgstr "NOME"
 
@@ -170,9 +169,9 @@ msgstr ""
 #: elf/ldconfig.c:324 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
 #: elf/sprof.c:389 iconv/iconv_prog.c:422 iconv/iconvconfig.c:396
 #: locale/programs/locale.c:293 locale/programs/localedef.c:463
-#: login/programs/pt_chown.c:63 malloc/memusage.sh:71
-#: malloc/memusagestat.c:581 nscd/nscd.c:509 nss/getent.c:88 nss/makedb.c:385
-#: posix/getconf.c:485 sysdeps/unix/sysv/linux/lddlibc4.c:68
+#: login/programs/pt_chown.c:63 malloc/memusage.sh:71 malloc/memusagestat.c:581
+#: nscd/nscd.c:509 nss/getent.c:88 nss/makedb.c:385 posix/getconf.c:485
+#: sysdeps/unix/sysv/linux/lddlibc4.c:68
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -367,11 +366,7 @@ msgstr "“$program” executável não foi encontrado\\n"
 msgid "\\`$program' is no executable\\n"
 msgstr "“$program” não é um executável\\n"
 
-#: dlfcn/dlinfo.c:63
-msgid "RTLD_SELF used in code not dynamically loaded"
-msgstr "RTLD_SELF usado em código não carregado dinamicamente"
-
-#: dlfcn/dlinfo.c:72
+#: dlfcn/dlinfo.c:53
 msgid "unsupported dlinfo request"
 msgstr "requisição dlinfo sem suporte"
 
@@ -401,7 +396,7 @@ msgstr "SO desconhecido"
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", ABI de SO: %s %d.%d.%d"
 
-#: elf/cache.c:163 elf/ldconfig.c:1333
+#: elf/cache.c:163 elf/ldconfig.c:1334
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Não foi possível abrir arquivo de cache %s\n"
@@ -443,11 +438,11 @@ msgstr "Mudança de direitos de acesso de %s para %#o falhou"
 msgid "Renaming of %s to %s failed"
 msgstr "Renomeio de %s para %s falhou"
 
-#: elf/dl-close.c:399 elf/dl-open.c:424
+#: elf/dl-close.c:406 elf/dl-open.c:285
 msgid "cannot create scope list"
 msgstr "não é possível criar lista de escopo"
 
-#: elf/dl-close.c:839
+#: elf/dl-close.c:852
 msgid "shared object not open"
 msgstr "objeto compartilhado não está aberto"
 
@@ -520,123 +515,123 @@ msgstr "não foi possível criar cópia de RUNPATH/RPATH"
 msgid "cannot create search path array"
 msgstr "não foi possível criar vetor de caminho de pesquisa"
 
-#: elf/dl-load.c:883
+#: elf/dl-load.c:892
 msgid "cannot stat shared object"
 msgstr "não foi possível obter estado do objeto compartilhado"
 
-#: elf/dl-load.c:992 elf/dl-load.c:2198
+#: elf/dl-load.c:1003 elf/dl-load.c:2191
 msgid "cannot create shared object descriptor"
 msgstr "não foi possível criar descritor de objeto compartilhado"
 
-#: elf/dl-load.c:1011 elf/dl-load.c:1555 elf/dl-load.c:1668
+#: elf/dl-load.c:1022 elf/dl-load.c:1571 elf/dl-load.c:1672
 msgid "cannot read file data"
 msgstr "não foi possível carregar dados do arquivo"
 
-#: elf/dl-load.c:1057
+#: elf/dl-load.c:1068
 msgid "ELF load command alignment not page-aligned"
 msgstr "alinhamento de comando de carregamento de ELF não está alinhado por página"
 
-#: elf/dl-load.c:1064
+#: elf/dl-load.c:1075
 msgid "ELF load command address/offset not properly aligned"
 msgstr "endereço/deslocamento de comando de carregamento de ELF não alinhado adequadamente"
 
-#: elf/dl-load.c:1146
+#: elf/dl-load.c:1151
 msgid "cannot process note segment"
 msgstr "não foi possível processar o segmento de nota"
 
-#: elf/dl-load.c:1157
+#: elf/dl-load.c:1162
 msgid "object file has no loadable segments"
 msgstr "arquivo de objeto não possui segmentos carregáveis"
 
-#: elf/dl-load.c:1170 elf/dl-load.c:1647
+#: elf/dl-load.c:1175
 msgid "cannot dynamically load executable"
 msgstr "não foi possível carregar dinamicamente o executável"
 
-#: elf/dl-load.c:1191
+#: elf/dl-load.c:1196
 msgid "object file has no dynamic section"
 msgstr "arquivo de objeto não possui seção dinâmica"
 
-#: elf/dl-load.c:1218
+#: elf/dl-load.c:1223
 msgid "cannot dynamically load position-independent executable"
 msgstr "não foi possível carregar dinamicamente o executável independente de posição"
 
-#: elf/dl-load.c:1220
+#: elf/dl-load.c:1225
 msgid "shared object cannot be dlopen()ed"
 msgstr "objeto compartilhado não pode ser dlopen()ado"
 
-#: elf/dl-load.c:1233
+#: elf/dl-load.c:1238
 msgid "cannot allocate memory for program header"
 msgstr "não foi possível alocar memória para cabeçalho do programa"
 
-#: elf/dl-load.c:1266 elf/dl-load.h:130
+#: elf/dl-load.c:1271 elf/dl-load.h:130
 msgid "cannot change memory protections"
 msgstr "não é possível alterar proteções de memória"
 
-#: elf/dl-load.c:1286
+#: elf/dl-load.c:1291
 msgid "cannot enable executable stack as shared object requires"
 msgstr "não foi possível habilitar pilhas de executável como requisitado pelo objeto compartilhado"
 
-#: elf/dl-load.c:1299
+#: elf/dl-load.c:1304
 msgid "cannot close file descriptor"
 msgstr "não é possível fechar o descritor de arquivo"
 
-#: elf/dl-load.c:1555
+#: elf/dl-load.c:1571
 msgid "file too short"
 msgstr "arquivo pequeno demais"
 
-#: elf/dl-load.c:1590
+#: elf/dl-load.c:1606
 msgid "invalid ELF header"
 msgstr "cabeçalho de ELF inválido"
 
-#: elf/dl-load.c:1602
+#: elf/dl-load.c:1618
 msgid "ELF file data encoding not big-endian"
 msgstr "codificação de dados de arquivo ELF não é big-endian"
 
-#: elf/dl-load.c:1604
+#: elf/dl-load.c:1620
 msgid "ELF file data encoding not little-endian"
 msgstr "codificação de dados de arquivo ELF não é little-endian"
 
-#: elf/dl-load.c:1608
+#: elf/dl-load.c:1624
 msgid "ELF file version ident does not match current one"
 msgstr "identificação de versão de arquivo ELF não corresponde ao atual"
 
-#: elf/dl-load.c:1612
+#: elf/dl-load.c:1628
 msgid "ELF file OS ABI invalid"
 msgstr "ABI de SO do arquivo ELF inválido"
 
-#: elf/dl-load.c:1615
+#: elf/dl-load.c:1631
 msgid "ELF file ABI version invalid"
 msgstr "versão de ABI do arquivo ELF inválido"
 
-#: elf/dl-load.c:1618
+#: elf/dl-load.c:1634
 msgid "nonzero padding in e_ident"
 msgstr "espaçamento não-zero em e_ident"
 
-#: elf/dl-load.c:1621
+#: elf/dl-load.c:1637
 msgid "internal error"
 msgstr "erro interno"
 
-#: elf/dl-load.c:1628
+#: elf/dl-load.c:1644
 msgid "ELF file version does not match current one"
 msgstr "versão de arquivo ELF não corresponde à atual"
 
-#: elf/dl-load.c:1636
+#: elf/dl-load.c:1652
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "apenas ET_DYN e ET_EXEC podem ser carregados"
 
-#: elf/dl-load.c:1652
+#: elf/dl-load.c:1657
 msgid "ELF file's phentsize not the expected size"
 msgstr "phentsize do arquivo ELF não está no tamanho esperado"
 
-#: elf/dl-load.c:2217
+#: elf/dl-load.c:2210
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "classe ELF errada: ELFCLASS64"
 
-#: elf/dl-load.c:2218
+#: elf/dl-load.c:2211
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "classe ELF errada: ELFCLASS32"
 
-#: elf/dl-load.c:2221
+#: elf/dl-load.c:2214
 msgid "cannot open shared object file"
 msgstr "não é possível abrir arquivo compartilhado"
 
@@ -648,27 +643,27 @@ msgstr "falha no mapeamento de segmento do objeto compartilhado"
 msgid "cannot map zero-fill pages"
 msgstr "não é possível mapear páginas preenchidas com zero"
 
-#: elf/dl-lookup.c:830
+#: elf/dl-lookup.c:882
 msgid "symbol lookup error"
 msgstr "erro de procura por símbolo"
 
-#: elf/dl-open.c:99
+#: elf/dl-open.c:71
 msgid "cannot extend global scope"
 msgstr "não foi possível estender escopo global"
 
-#: elf/dl-open.c:474
+#: elf/dl-open.c:391
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "Contador de geração TLS envolto! Por favor, relate isso."
 
-#: elf/dl-open.c:538
+#: elf/dl-open.c:783
 msgid "invalid mode for dlopen()"
 msgstr "modo inválido para dlopen()"
 
-#: elf/dl-open.c:555
+#: elf/dl-open.c:800
 msgid "no more namespaces available for dlmopen()"
 msgstr "não há mais espaços de nomes disponíveis para dlmopen()"
 
-#: elf/dl-open.c:579
+#: elf/dl-open.c:824
 msgid "invalid target namespace in dlmopen()"
 msgstr "espaço de nomes de alvo inválido em dlmopen()"
 
@@ -680,20 +675,20 @@ msgstr "não foi possível alocar memória em bloco TLS estático"
 msgid "cannot make segment writable for relocation"
 msgstr "não foi possível fazer segmento gravável para realocação"
 
-#: elf/dl-reloc.c:272
+#: elf/dl-reloc.c:273
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr "%s: memória insuficiente para armazenar resultados de realocação para %s\n"
 
-#: elf/dl-reloc.c:288
+#: elf/dl-reloc.c:289
 msgid "cannot restore segment prot after reloc"
 msgstr "não foi possível restaurar proteção de segmento após realocação"
 
-#: elf/dl-reloc.c:319
+#: elf/dl-reloc.c:320
 msgid "cannot apply additional memory protection after relocation"
 msgstr "não foi possível aplicar proteção de memória adicional após realocação"
 
-#: elf/dl-sym.c:136
+#: elf/dl-sym.c:150
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT usado em código não dinamicamente carregado"
 
@@ -874,58 +869,58 @@ msgstr "biblioteca libc4 %s em diretório errado"
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "bibliotecas %s e %s no diretório %s possuem o mesmo soname, mas tipos diferentes."
 
-#: elf/ldconfig.c:1082
+#: elf/ldconfig.c:1083
 #, c-format
 msgid "Warning: ignoring configuration file that cannot be opened: %s"
 msgstr "Aviso: ignorando arquivo de configuração que não pode ser aberto: %s"
 
-#: elf/ldconfig.c:1148
+#: elf/ldconfig.c:1149
 #, c-format
 msgid "%s:%u: bad syntax in hwcap line"
 msgstr "%s:%u: sintaxe incorreta na linha hwcap"
 
-#: elf/ldconfig.c:1154
+#: elf/ldconfig.c:1155
 #, c-format
 msgid "%s:%u: hwcap index %lu above maximum %u"
 msgstr "%s:%u: índica de hwcap %lu acima do máximo %u"
 
-#: elf/ldconfig.c:1161 elf/ldconfig.c:1169
+#: elf/ldconfig.c:1162 elf/ldconfig.c:1170
 #, c-format
 msgid "%s:%u: hwcap index %lu already defined as %s"
 msgstr "%s:%u: índice de hwcap %lu já definido como %s"
 
-#: elf/ldconfig.c:1172
+#: elf/ldconfig.c:1173
 #, c-format
 msgid "%s:%u: duplicate hwcap %lu %s"
 msgstr "%s:%u: hwcap %lu duplicado %s"
 
-#: elf/ldconfig.c:1194
+#: elf/ldconfig.c:1195
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr "necessita de nome de arquivo absoluto para arquivo de configuração quando usado -r"
 
-#: elf/ldconfig.c:1201 locale/programs/xmalloc.c:63 malloc/obstack.c:416
+#: elf/ldconfig.c:1202 locale/programs/xmalloc.c:63 malloc/obstack.c:416
 #: malloc/obstack.c:418 posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr "memória esgotada"
 
-#: elf/ldconfig.c:1234
+#: elf/ldconfig.c:1235
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: não foi possível ler diretório %s"
 
-#: elf/ldconfig.c:1282
+#: elf/ldconfig.c:1283
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "caminho relativo “%s” usado para compilar o cache"
 
-#: elf/ldconfig.c:1312
+#: elf/ldconfig.c:1313
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Não foi possível mudar o diretório para /"
 
-#: elf/ldconfig.c:1353
+#: elf/ldconfig.c:1354
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Não foi possível abrir o diretório de arquivo cache %s\n"
@@ -1100,27 +1095,27 @@ msgstr "processo %lu não é um programa ELF"
 msgid "file %s is truncated\n"
 msgstr "arquivo %s está truncado\n"
 
-#: elf/readelflib.c:66
+#: elf/readelflib.c:65
 #, c-format
 msgid "%s is a 32 bit ELF file.\n"
 msgstr "%s é um arquivo ELF de 32 bits.\n"
 
-#: elf/readelflib.c:68
+#: elf/readelflib.c:67
 #, c-format
 msgid "%s is a 64 bit ELF file.\n"
 msgstr "%s é um arquivo ELF de 64 bits.\n"
 
-#: elf/readelflib.c:70
+#: elf/readelflib.c:69
 #, c-format
 msgid "Unknown ELFCLASS in file %s.\n"
 msgstr "ELFCLASS desconhecida em arquivo %s.\n"
 
-#: elf/readelflib.c:77
+#: elf/readelflib.c:76
 #, c-format
 msgid "%s is not a shared object file (Type: %d).\n"
 msgstr "%s não é um arquivo de objeto compartilhado (Tipo: %d).\n"
 
-#: elf/readelflib.c:108
+#: elf/readelflib.c:101
 #, c-format
 msgid "more than one dynamic segment\n"
 msgstr "mais do que um segmento dinâmico\n"
@@ -1735,12 +1730,11 @@ msgstr "nenhum nome simbólico dado para fim do intervalo"
 #: locale/programs/charmap.c:615 locale/programs/ld-address.c:524
 #: locale/programs/ld-collate.c:2616 locale/programs/ld-collate.c:3774
 #: locale/programs/ld-ctype.c:2118 locale/programs/ld-ctype.c:2830
-#: locale/programs/ld-identification.c:397
-#: locale/programs/ld-measurement.c:213 locale/programs/ld-messages.c:295
-#: locale/programs/ld-monetary.c:748 locale/programs/ld-name.c:262
-#: locale/programs/ld-numeric.c:325 locale/programs/ld-paper.c:212
-#: locale/programs/ld-telephone.c:276 locale/programs/ld-time.c:959
-#: locale/programs/repertoire.c:312
+#: locale/programs/ld-identification.c:397 locale/programs/ld-measurement.c:213
+#: locale/programs/ld-messages.c:295 locale/programs/ld-monetary.c:748
+#: locale/programs/ld-name.c:262 locale/programs/ld-numeric.c:325
+#: locale/programs/ld-paper.c:212 locale/programs/ld-telephone.c:276
+#: locale/programs/ld-time.c:959 locale/programs/repertoire.c:312
 #, c-format
 msgid "%1$s: definition does not end with `END %1$s'"
 msgstr "%1$s: definição não termina com “END %1$s”"
@@ -1762,12 +1756,12 @@ msgstr "%s: erro na máquina de estados"
 #: locale/programs/charmap.c:856 locale/programs/ld-address.c:540
 #: locale/programs/ld-collate.c:2613 locale/programs/ld-collate.c:3967
 #: locale/programs/ld-ctype.c:2115 locale/programs/ld-ctype.c:2847
-#: locale/programs/ld-identification.c:413
-#: locale/programs/ld-measurement.c:229 locale/programs/ld-messages.c:311
-#: locale/programs/ld-monetary.c:764 locale/programs/ld-name.c:278
-#: locale/programs/ld-numeric.c:341 locale/programs/ld-paper.c:228
-#: locale/programs/ld-telephone.c:292 locale/programs/ld-time.c:990
-#: locale/programs/locfile.c:1010 locale/programs/repertoire.c:323
+#: locale/programs/ld-identification.c:413 locale/programs/ld-measurement.c:229
+#: locale/programs/ld-messages.c:311 locale/programs/ld-monetary.c:764
+#: locale/programs/ld-name.c:278 locale/programs/ld-numeric.c:341
+#: locale/programs/ld-paper.c:228 locale/programs/ld-telephone.c:292
+#: locale/programs/ld-time.c:990 locale/programs/locfile.c:1010
+#: locale/programs/repertoire.c:323
 #, c-format
 msgid "%s: premature end of file"
 msgstr "%s: fim de arquivo prematuro"
@@ -1870,13 +1864,12 @@ msgstr "%s: código numérico do país “%d” não válido"
 
 #: locale/programs/ld-address.c:432 locale/programs/ld-address.c:469
 #: locale/programs/ld-address.c:507 locale/programs/ld-ctype.c:2479
-#: locale/programs/ld-identification.c:309
-#: locale/programs/ld-measurement.c:196 locale/programs/ld-messages.c:264
-#: locale/programs/ld-monetary.c:503 locale/programs/ld-monetary.c:538
-#: locale/programs/ld-monetary.c:579 locale/programs/ld-name.c:235
-#: locale/programs/ld-numeric.c:217 locale/programs/ld-paper.c:195
-#: locale/programs/ld-telephone.c:251 locale/programs/ld-time.c:864
-#: locale/programs/ld-time.c:906
+#: locale/programs/ld-identification.c:309 locale/programs/ld-measurement.c:196
+#: locale/programs/ld-messages.c:264 locale/programs/ld-monetary.c:503
+#: locale/programs/ld-monetary.c:538 locale/programs/ld-monetary.c:579
+#: locale/programs/ld-name.c:235 locale/programs/ld-numeric.c:217
+#: locale/programs/ld-paper.c:195 locale/programs/ld-telephone.c:251
+#: locale/programs/ld-time.c:864 locale/programs/ld-time.c:906
 #, c-format
 msgid "%s: field `%s' declared more than once"
 msgstr "%s: campo “%s” declarado mais de uma vez"
@@ -1907,11 +1900,11 @@ msgstr "%s: linha “END” incompleta"
 #: locale/programs/ld-collate.c:2603 locale/programs/ld-collate.c:3957
 #: locale/programs/ld-ctype.c:1847 locale/programs/ld-ctype.c:2105
 #: locale/programs/ld-ctype.c:2677 locale/programs/ld-ctype.c:2838
-#: locale/programs/ld-identification.c:404
-#: locale/programs/ld-measurement.c:220 locale/programs/ld-messages.c:302
-#: locale/programs/ld-monetary.c:755 locale/programs/ld-name.c:269
-#: locale/programs/ld-numeric.c:332 locale/programs/ld-paper.c:219
-#: locale/programs/ld-telephone.c:283 locale/programs/ld-time.c:981
+#: locale/programs/ld-identification.c:404 locale/programs/ld-measurement.c:220
+#: locale/programs/ld-messages.c:302 locale/programs/ld-monetary.c:755
+#: locale/programs/ld-name.c:269 locale/programs/ld-numeric.c:332
+#: locale/programs/ld-paper.c:219 locale/programs/ld-telephone.c:283
+#: locale/programs/ld-time.c:981
 #, c-format
 msgid "%s: syntax error"
 msgstr "%s: erro de sintaxe"
@@ -2222,7 +2215,7 @@ msgstr "categoria “digit” não possui entradas em grupos de dez"
 msgid "no input digits defined and none of the standard names in the charmap"
 msgstr "nenhum dígito de entrada definido e nenhum dos nomes padrões no mapa de caracteres"
 
-#: locale/programs/ld-ctype.c:849
+#: locale/programs/ld-ctype.c:847
 msgid "not all characters used in `outdigit' are available in the charmap"
 msgstr "nem todos os caracteres usados em “outdigit” estão disponíveis no mapa de caracteres"
 
@@ -4861,7 +4854,7 @@ msgstr ") ou \\) descasados"
 msgid "No previous regular expression"
 msgstr "Não há expressão regular anterior"
 
-#: posix/wordexp.c:1816
+#: posix/wordexp.c:1795
 msgid "parameter null or not set"
 msgstr "parâmetro nulo ou não definido"
 
@@ -5126,7 +5119,7 @@ msgstr "Sinal de tempo-real %d"
 msgid "Unknown signal %d"
 msgstr "Sinal desconhecido %d"
 
-#: sunrpc/auth_unix.c:112 sunrpc/clnt_tcp.c:124 sunrpc/clnt_udp.c:139
+#: sunrpc/auth_unix.c:113 sunrpc/clnt_tcp.c:124 sunrpc/clnt_udp.c:140
 #: sunrpc/clnt_unix.c:125 sunrpc/svc_tcp.c:189 sunrpc/svc_tcp.c:233
 #: sunrpc/svc_udp.c:161 sunrpc/svc_unix.c:189 sunrpc/svc_unix.c:229
 #: sunrpc/xdr.c:631 sunrpc/xdr.c:791 sunrpc/xdr_array.c:102
@@ -5134,7 +5127,7 @@ msgstr "Sinal desconhecido %d"
 msgid "out of memory\n"
 msgstr "memória insuficiente\n"
 
-#: sunrpc/auth_unix.c:349
+#: sunrpc/auth_unix.c:350
 msgid "auth_unix.c: Fatal marshalling problem"
 msgstr "auth_unix.c: Problema fatal de marshalling"
 
@@ -7268,6 +7261,9 @@ msgstr "abreviações de fuso horário em excesso ou muito extensas"
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s: Não foi possível criar o diretório %s: %s"
+
+#~ msgid "RTLD_SELF used in code not dynamically loaded"
+#~ msgstr "RTLD_SELF usado em código não carregado dinamicamente"
 
 #~ msgid "cannot open zero fill device"
 #~ msgstr "não foi possível abrir dispositivo preenchido com zero"

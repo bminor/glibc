@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc-2.11.1\n"
-"POT-Creation-Date: 2019-07-18 13:28-0400\n"
+"POT-Creation-Date: 2020-01-02 20:08+0530\n"
 "PO-Revision-Date: 2010-11-01 10:37+0100\n"
 "Last-Translator: Keld Simonsen <keld@keldix.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
@@ -68,8 +68,7 @@ msgid "Give a short usage message"
 msgstr "Giv en kort brugsmeddelelse"
 
 #: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
-#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:105
-#: nss/makedb.c:120
+#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:105 nss/makedb.c:120
 msgid "NAME"
 msgstr "NAVN"
 
@@ -168,9 +167,9 @@ msgstr ""
 #: elf/ldconfig.c:324 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
 #: elf/sprof.c:389 iconv/iconv_prog.c:422 iconv/iconvconfig.c:396
 #: locale/programs/locale.c:293 locale/programs/localedef.c:463
-#: login/programs/pt_chown.c:63 malloc/memusage.sh:71
-#: malloc/memusagestat.c:581 nscd/nscd.c:509 nss/getent.c:88 nss/makedb.c:385
-#: posix/getconf.c:485 sysdeps/unix/sysv/linux/lddlibc4.c:68
+#: login/programs/pt_chown.c:63 malloc/memusage.sh:71 malloc/memusagestat.c:581
+#: nscd/nscd.c:509 nss/getent.c:88 nss/makedb.c:385 posix/getconf.c:485
+#: sysdeps/unix/sysv/linux/lddlibc4.c:68
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -375,11 +374,7 @@ msgstr "program \\'$program' blev ikke fundet\\n"
 msgid "\\`$program' is no executable\\n"
 msgstr "\\'$program' kan ikke udføres\\n"
 
-#: dlfcn/dlinfo.c:63
-msgid "RTLD_SELF used in code not dynamically loaded"
-msgstr "RTLD_SELF brugt i kode er ikke indlæst dynamisk"
-
-#: dlfcn/dlinfo.c:72
+#: dlfcn/dlinfo.c:53
 msgid "unsupported dlinfo request"
 msgstr "dlinfo-forespørgsel ikke understøttet"
 
@@ -408,7 +403,7 @@ msgstr "Ukendt OS"
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", OS ABI: %s %d.%d.%d"
 
-#: elf/cache.c:163 elf/ldconfig.c:1333
+#: elf/cache.c:163 elf/ldconfig.c:1334
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Kan ikke åbne hurtigbufferfil %s\n"
@@ -449,11 +444,11 @@ msgstr "Ændring af adgangsrettigheder for %s til %#o fejlede"
 msgid "Renaming of %s to %s failed"
 msgstr "Omdøbning af %s til %s fejlede"
 
-#: elf/dl-close.c:399 elf/dl-open.c:424
+#: elf/dl-close.c:406 elf/dl-open.c:285
 msgid "cannot create scope list"
 msgstr "kan ikke oprette omfangsliste"
 
-#: elf/dl-close.c:839
+#: elf/dl-close.c:852
 msgid "shared object not open"
 msgstr "delt objekt er ikke åbent"
 
@@ -530,127 +525,127 @@ msgstr "kan ikke oprette kopi af RUNPATH/RPATH"
 msgid "cannot create search path array"
 msgstr "kan ikke oprette tabel over søgestier"
 
-#: elf/dl-load.c:883
+#: elf/dl-load.c:892
 msgid "cannot stat shared object"
 msgstr "kan ikke tage status på delt objekt"
 
-#: elf/dl-load.c:992 elf/dl-load.c:2198
+#: elf/dl-load.c:1003 elf/dl-load.c:2191
 msgid "cannot create shared object descriptor"
 msgstr "kan ikke oprette delt objektbeskriver"
 
-#: elf/dl-load.c:1011 elf/dl-load.c:1555 elf/dl-load.c:1668
+#: elf/dl-load.c:1022 elf/dl-load.c:1571 elf/dl-load.c:1672
 msgid "cannot read file data"
 msgstr "kan ikke indlæse fildata"
 
-#: elf/dl-load.c:1057
+#: elf/dl-load.c:1068
 msgid "ELF load command alignment not page-aligned"
 msgstr "ELF-indlæsningskommandos tilpasning er ikke tilpasset siden"
 
-#: elf/dl-load.c:1064
+#: elf/dl-load.c:1075
 msgid "ELF load command address/offset not properly aligned"
 msgstr "ELF-indlæsningskommandos adresse/tillæg er ikke tilpasset ordentligt"
 
-#: elf/dl-load.c:1146
+#: elf/dl-load.c:1151
 #, fuzzy
 #| msgid "cannot restore segment prot after reloc"
 msgid "cannot process note segment"
 msgstr "kan ikke genskabe segmentbeskyttelse efter flytning"
 
-#: elf/dl-load.c:1157
+#: elf/dl-load.c:1162
 msgid "object file has no loadable segments"
 msgstr "objektfil har ingen indlæsbare segmenter"
 
-#: elf/dl-load.c:1170 elf/dl-load.c:1647
+#: elf/dl-load.c:1175
 msgid "cannot dynamically load executable"
 msgstr "kan ikke indlæse udførbare programmer dynamisk"
 
-#: elf/dl-load.c:1191
+#: elf/dl-load.c:1196
 msgid "object file has no dynamic section"
 msgstr "objektfil har ingen dynamisk sektion"
 
-#: elf/dl-load.c:1218
+#: elf/dl-load.c:1223
 #, fuzzy
 #| msgid "cannot dynamically load executable"
 msgid "cannot dynamically load position-independent executable"
 msgstr "kan ikke indlæse udførbare programmer dynamisk"
 
-#: elf/dl-load.c:1220
+#: elf/dl-load.c:1225
 msgid "shared object cannot be dlopen()ed"
 msgstr "delt objekt kan ikke åbnes med dlopen()"
 
-#: elf/dl-load.c:1233
+#: elf/dl-load.c:1238
 msgid "cannot allocate memory for program header"
 msgstr "kan ikke allokere hukommelse til programhoved"
 
-#: elf/dl-load.c:1266 elf/dl-load.h:130
+#: elf/dl-load.c:1271 elf/dl-load.h:130
 msgid "cannot change memory protections"
 msgstr "kan ikke ændre hukommelsesbeskyttelser"
 
-#: elf/dl-load.c:1286
+#: elf/dl-load.c:1291
 msgid "cannot enable executable stack as shared object requires"
 msgstr "kan ikke oprette udførbar stak som kræves af delt objekt"
 
-#: elf/dl-load.c:1299
+#: elf/dl-load.c:1304
 msgid "cannot close file descriptor"
 msgstr "kan ikke lukke filbeskriver"
 
-#: elf/dl-load.c:1555
+#: elf/dl-load.c:1571
 msgid "file too short"
 msgstr "for kort fil"
 
-#: elf/dl-load.c:1590
+#: elf/dl-load.c:1606
 msgid "invalid ELF header"
 msgstr "ugyldigt ELF-hoved"
 
-#: elf/dl-load.c:1602
+#: elf/dl-load.c:1618
 msgid "ELF file data encoding not big-endian"
 msgstr "Kodning for ELF-fildata er ikke \"big-endian\""
 
-#: elf/dl-load.c:1604
+#: elf/dl-load.c:1620
 msgid "ELF file data encoding not little-endian"
 msgstr "Kodning for ELF-fildata er ikke \"little-endian\""
 
-#: elf/dl-load.c:1608
+#: elf/dl-load.c:1624
 msgid "ELF file version ident does not match current one"
 msgstr "ELF-filens version-identitet passer ikke med den aktuelle"
 
-#: elf/dl-load.c:1612
+#: elf/dl-load.c:1628
 msgid "ELF file OS ABI invalid"
 msgstr "ELF-filens OS ABI er ugyldigt"
 
-#: elf/dl-load.c:1615
+#: elf/dl-load.c:1631
 msgid "ELF file ABI version invalid"
 msgstr "ELF-filens ABI-version er ugyldig"
 
-#: elf/dl-load.c:1618
+#: elf/dl-load.c:1634
 msgid "nonzero padding in e_ident"
 msgstr ""
 
-#: elf/dl-load.c:1621
+#: elf/dl-load.c:1637
 msgid "internal error"
 msgstr "intern fejl"
 
-#: elf/dl-load.c:1628
+#: elf/dl-load.c:1644
 msgid "ELF file version does not match current one"
 msgstr "ELF-filens version passer ikke med den aktuelle"
 
-#: elf/dl-load.c:1636
+#: elf/dl-load.c:1652
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "kun ET_DYN og ET_EXEC kan indlæses"
 
-#: elf/dl-load.c:1652
+#: elf/dl-load.c:1657
 msgid "ELF file's phentsize not the expected size"
 msgstr "ELF-filens 'phentsize' er ikke den forventede størrelse"
 
-#: elf/dl-load.c:2217
+#: elf/dl-load.c:2210
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "forkert ELF-klasse: ELFCLASS64"
 
-#: elf/dl-load.c:2218
+#: elf/dl-load.c:2211
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "forkert ELF-klasse: ELFCLASS32"
 
-#: elf/dl-load.c:2221
+#: elf/dl-load.c:2214
 msgid "cannot open shared object file"
 msgstr "kan ikke åbne delt objektfil"
 
@@ -662,27 +657,27 @@ msgstr "kunne ikke afbilde segment fra delt objekt'"
 msgid "cannot map zero-fill pages"
 msgstr "kan ikke mappe nulstil-sider"
 
-#: elf/dl-lookup.c:830
+#: elf/dl-lookup.c:882
 msgid "symbol lookup error"
 msgstr "fejl ved opslag af symbol"
 
-#: elf/dl-open.c:99
+#: elf/dl-open.c:71
 msgid "cannot extend global scope"
 msgstr "kan ikke udvide globalt defineringområde"
 
-#: elf/dl-open.c:474
+#: elf/dl-open.c:391
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "Generationstæller for TLS tilbagestillet!  Vær sød at indsende fejlrapport."
 
-#: elf/dl-open.c:538
+#: elf/dl-open.c:783
 msgid "invalid mode for dlopen()"
 msgstr "ugyldig modus for dlopen()"
 
-#: elf/dl-open.c:555
+#: elf/dl-open.c:800
 msgid "no more namespaces available for dlmopen()"
 msgstr "ikke flere navnerum tilgængelige for dlmopen()"
 
-#: elf/dl-open.c:579
+#: elf/dl-open.c:824
 msgid "invalid target namespace in dlmopen()"
 msgstr "ugyldigt mål-navnerum for dlmopen()"
 
@@ -694,20 +689,20 @@ msgstr "Kan ikke tildele hukommelse i statisk TLS-blok"
 msgid "cannot make segment writable for relocation"
 msgstr "kan ikke gøre segment skrivbart for relokering"
 
-#: elf/dl-reloc.c:272
+#: elf/dl-reloc.c:273
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr "%s: ikke mere hukommelse til at gemme relokeringsresultat for %s\n"
 
-#: elf/dl-reloc.c:288
+#: elf/dl-reloc.c:289
 msgid "cannot restore segment prot after reloc"
 msgstr "kan ikke genskabe segmentbeskyttelse efter flytning"
 
-#: elf/dl-reloc.c:319
+#: elf/dl-reloc.c:320
 msgid "cannot apply additional memory protection after relocation"
 msgstr "kan ikke udføre yderligere hukommelsesbeskyttelser efter flytning"
 
-#: elf/dl-sym.c:136
+#: elf/dl-sym.c:150
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT brugt i kode er ikke dynamisk indlæst"
 
@@ -889,58 +884,58 @@ msgstr "libc4-bibliotek %s i forkert katalog"
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "bibliotekerne %s og %s i kataloget %s har samme .so-navn, men forskellig type"
 
-#: elf/ldconfig.c:1082
+#: elf/ldconfig.c:1083
 #, c-format
 msgid "Warning: ignoring configuration file that cannot be opened: %s"
 msgstr ""
 
-#: elf/ldconfig.c:1148
+#: elf/ldconfig.c:1149
 #, c-format
 msgid "%s:%u: bad syntax in hwcap line"
 msgstr "%s:%u: dårlig syntaks på hwcap-linje"
 
-#: elf/ldconfig.c:1154
+#: elf/ldconfig.c:1155
 #, c-format
 msgid "%s:%u: hwcap index %lu above maximum %u"
 msgstr "%s:%u: hwcap-index %lu er større end maksimum %u"
 
-#: elf/ldconfig.c:1161 elf/ldconfig.c:1169
+#: elf/ldconfig.c:1162 elf/ldconfig.c:1170
 #, c-format
 msgid "%s:%u: hwcap index %lu already defined as %s"
 msgstr "%s:%u hwcap indeks %lu allerede defineret som %s"
 
-#: elf/ldconfig.c:1172
+#: elf/ldconfig.c:1173
 #, c-format
 msgid "%s:%u: duplicate hwcap %lu %s"
 msgstr "%s:%u: duplikér hwcap %lu %s"
 
-#: elf/ldconfig.c:1194
+#: elf/ldconfig.c:1195
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr "behøver fuldt filnavn for konfigurationsfil når -r bruges"
 
-#: elf/ldconfig.c:1201 locale/programs/xmalloc.c:63 malloc/obstack.c:416
+#: elf/ldconfig.c:1202 locale/programs/xmalloc.c:63 malloc/obstack.c:416
 #: malloc/obstack.c:418 posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr "hukommelsen opbrugt"
 
-#: elf/ldconfig.c:1234
+#: elf/ldconfig.c:1235
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: kan ikke læse katalog %s"
 
-#: elf/ldconfig.c:1282
+#: elf/ldconfig.c:1283
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "relativ søgesti \"%s\" brugt til at bygge hurtigbuffer"
 
-#: elf/ldconfig.c:1312
+#: elf/ldconfig.c:1313
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Kan ikke chdir til /"
 
-#: elf/ldconfig.c:1353
+#: elf/ldconfig.c:1354
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Kan ikke åbne hurtigbuffer-katalog %s\n"
@@ -1127,27 +1122,27 @@ msgstr ""
 msgid "file %s is truncated\n"
 msgstr "fil %s er afkortet\n"
 
-#: elf/readelflib.c:66
+#: elf/readelflib.c:65
 #, c-format
 msgid "%s is a 32 bit ELF file.\n"
 msgstr "%s er en 32-bit ELF-fil.\n"
 
-#: elf/readelflib.c:68
+#: elf/readelflib.c:67
 #, c-format
 msgid "%s is a 64 bit ELF file.\n"
 msgstr "%s er en 64-bit ELF-fil.\n"
 
-#: elf/readelflib.c:70
+#: elf/readelflib.c:69
 #, c-format
 msgid "Unknown ELFCLASS in file %s.\n"
 msgstr "Ukendt ELFCLASS i filen %s.\n"
 
-#: elf/readelflib.c:77
+#: elf/readelflib.c:76
 #, c-format
 msgid "%s is not a shared object file (Type: %d).\n"
 msgstr "%s er ikke en delt objektfil (Type: %d).\n"
 
-#: elf/readelflib.c:108
+#: elf/readelflib.c:101
 #, c-format
 msgid "more than one dynamic segment\n"
 msgstr "mere end ét dynamisk segment\n"
@@ -1768,12 +1763,11 @@ msgstr "ikke noget symbolsk navn givet for slutningen på området"
 #: locale/programs/charmap.c:615 locale/programs/ld-address.c:524
 #: locale/programs/ld-collate.c:2616 locale/programs/ld-collate.c:3774
 #: locale/programs/ld-ctype.c:2118 locale/programs/ld-ctype.c:2830
-#: locale/programs/ld-identification.c:397
-#: locale/programs/ld-measurement.c:213 locale/programs/ld-messages.c:295
-#: locale/programs/ld-monetary.c:748 locale/programs/ld-name.c:262
-#: locale/programs/ld-numeric.c:325 locale/programs/ld-paper.c:212
-#: locale/programs/ld-telephone.c:276 locale/programs/ld-time.c:959
-#: locale/programs/repertoire.c:312
+#: locale/programs/ld-identification.c:397 locale/programs/ld-measurement.c:213
+#: locale/programs/ld-messages.c:295 locale/programs/ld-monetary.c:748
+#: locale/programs/ld-name.c:262 locale/programs/ld-numeric.c:325
+#: locale/programs/ld-paper.c:212 locale/programs/ld-telephone.c:276
+#: locale/programs/ld-time.c:959 locale/programs/repertoire.c:312
 #, c-format
 msgid "%1$s: definition does not end with `END %1$s'"
 msgstr "'%1$s: definition slutter ikke med 'END %1$s'"
@@ -1795,12 +1789,12 @@ msgstr "%s: fejl i tilstandsmaskinen"
 #: locale/programs/charmap.c:856 locale/programs/ld-address.c:540
 #: locale/programs/ld-collate.c:2613 locale/programs/ld-collate.c:3967
 #: locale/programs/ld-ctype.c:2115 locale/programs/ld-ctype.c:2847
-#: locale/programs/ld-identification.c:413
-#: locale/programs/ld-measurement.c:229 locale/programs/ld-messages.c:311
-#: locale/programs/ld-monetary.c:764 locale/programs/ld-name.c:278
-#: locale/programs/ld-numeric.c:341 locale/programs/ld-paper.c:228
-#: locale/programs/ld-telephone.c:292 locale/programs/ld-time.c:990
-#: locale/programs/locfile.c:1010 locale/programs/repertoire.c:323
+#: locale/programs/ld-identification.c:413 locale/programs/ld-measurement.c:229
+#: locale/programs/ld-messages.c:311 locale/programs/ld-monetary.c:764
+#: locale/programs/ld-name.c:278 locale/programs/ld-numeric.c:341
+#: locale/programs/ld-paper.c:228 locale/programs/ld-telephone.c:292
+#: locale/programs/ld-time.c:990 locale/programs/locfile.c:1010
+#: locale/programs/repertoire.c:323
 #, c-format
 msgid "%s: premature end of file"
 msgstr "%s: for tidlig slut på filen"
@@ -1905,13 +1899,12 @@ msgstr "%s: numerisk landekode '%d' er ugyldig"
 
 #: locale/programs/ld-address.c:432 locale/programs/ld-address.c:469
 #: locale/programs/ld-address.c:507 locale/programs/ld-ctype.c:2479
-#: locale/programs/ld-identification.c:309
-#: locale/programs/ld-measurement.c:196 locale/programs/ld-messages.c:264
-#: locale/programs/ld-monetary.c:503 locale/programs/ld-monetary.c:538
-#: locale/programs/ld-monetary.c:579 locale/programs/ld-name.c:235
-#: locale/programs/ld-numeric.c:217 locale/programs/ld-paper.c:195
-#: locale/programs/ld-telephone.c:251 locale/programs/ld-time.c:864
-#: locale/programs/ld-time.c:906
+#: locale/programs/ld-identification.c:309 locale/programs/ld-measurement.c:196
+#: locale/programs/ld-messages.c:264 locale/programs/ld-monetary.c:503
+#: locale/programs/ld-monetary.c:538 locale/programs/ld-monetary.c:579
+#: locale/programs/ld-name.c:235 locale/programs/ld-numeric.c:217
+#: locale/programs/ld-paper.c:195 locale/programs/ld-telephone.c:251
+#: locale/programs/ld-time.c:864 locale/programs/ld-time.c:906
 #, c-format
 msgid "%s: field `%s' declared more than once"
 msgstr "%s: felt '%s' erklæret mere end én gang"
@@ -1942,11 +1935,11 @@ msgstr "%s: ufuldstændig 'END'-linje"
 #: locale/programs/ld-collate.c:2603 locale/programs/ld-collate.c:3957
 #: locale/programs/ld-ctype.c:1847 locale/programs/ld-ctype.c:2105
 #: locale/programs/ld-ctype.c:2677 locale/programs/ld-ctype.c:2838
-#: locale/programs/ld-identification.c:404
-#: locale/programs/ld-measurement.c:220 locale/programs/ld-messages.c:302
-#: locale/programs/ld-monetary.c:755 locale/programs/ld-name.c:269
-#: locale/programs/ld-numeric.c:332 locale/programs/ld-paper.c:219
-#: locale/programs/ld-telephone.c:283 locale/programs/ld-time.c:981
+#: locale/programs/ld-identification.c:404 locale/programs/ld-measurement.c:220
+#: locale/programs/ld-messages.c:302 locale/programs/ld-monetary.c:755
+#: locale/programs/ld-name.c:269 locale/programs/ld-numeric.c:332
+#: locale/programs/ld-paper.c:219 locale/programs/ld-telephone.c:283
+#: locale/programs/ld-time.c:981
 #, c-format
 msgid "%s: syntax error"
 msgstr "%s: syntaksfejl"
@@ -2258,7 +2251,7 @@ msgstr "'digit' kategori har ikke elementer i grupper af ti"
 msgid "no input digits defined and none of the standard names in the charmap"
 msgstr "ingen inddata-cifre defineret, og ingen af standardnavnene i tegntabellen"
 
-#: locale/programs/ld-ctype.c:849
+#: locale/programs/ld-ctype.c:847
 msgid "not all characters used in `outdigit' are available in the charmap"
 msgstr "ikke alle tegn brugt i 'outdigit' er tilstede i tegntabellen"
 
@@ -4961,7 +4954,7 @@ msgstr "Ubalanceret ) eller \\)"
 msgid "No previous regular expression"
 msgstr "Intet foregående regulært udtryk"
 
-#: posix/wordexp.c:1816
+#: posix/wordexp.c:1795
 msgid "parameter null or not set"
 msgstr "parameter er nul eller ikke sat"
 
@@ -5269,7 +5262,7 @@ msgstr "Realtid-signal %d"
 msgid "Unknown signal %d"
 msgstr "Ukendt signal %d"
 
-#: sunrpc/auth_unix.c:112 sunrpc/clnt_tcp.c:124 sunrpc/clnt_udp.c:139
+#: sunrpc/auth_unix.c:113 sunrpc/clnt_tcp.c:124 sunrpc/clnt_udp.c:140
 #: sunrpc/clnt_unix.c:125 sunrpc/svc_tcp.c:189 sunrpc/svc_tcp.c:233
 #: sunrpc/svc_udp.c:161 sunrpc/svc_unix.c:189 sunrpc/svc_unix.c:229
 #: sunrpc/xdr.c:631 sunrpc/xdr.c:791 sunrpc/xdr_array.c:102
@@ -5277,7 +5270,7 @@ msgstr "Ukendt signal %d"
 msgid "out of memory\n"
 msgstr "ikke mere hukommelse\n"
 
-#: sunrpc/auth_unix.c:349
+#: sunrpc/auth_unix.c:350
 msgid "auth_unix.c: Fatal marshalling problem"
 msgstr "auth_unix.c - Fatalt kodningsproblem"
 
@@ -7455,6 +7448,9 @@ msgstr "%s: Kan ikke oprette filkatalog %s: %s\n"
 #~ msgid "xtrace: option \\`$1' requires an argument.\\n"
 #~ msgstr "xtrace: flaget '$1' skal have et argument.\\n"
 
+#~ msgid "RTLD_SELF used in code not dynamically loaded"
+#~ msgstr "RTLD_SELF brugt i kode er ikke indlæst dynamisk"
+
 #~ msgid "cannot open zero fill device"
 #~ msgstr "kan ikke åbne nulstil-enhed"
 
@@ -7470,33 +7466,40 @@ msgstr "%s: Kan ikke oprette filkatalog %s: %s\n"
 #~ msgid "relocation error"
 #~ msgstr "fejl ved relokering"
 
+#, c-format
 #~ msgid "%s: no PLTREL found in object %s\n"
 #~ msgstr "%s: ingen PLTREL fundet i objekt %s\n"
 
 #~ msgid "Don't generate links"
 #~ msgstr "Generér ikke lænker"
 
+#, c-format
 #~ msgid "Can't open configuration file %s"
 #~ msgstr "Kan ikke åbne konfigurationsfil %s"
 
+#, c-format
 #~ msgid "cannot create internal descriptors"
 #~ msgstr "kan ikke oprette interne deskriptorer"
 
 #~ msgid "Character out of range for UTF-8"
 #~ msgstr "Tegn uden for område for UTF-8"
 
+#, c-format
 #~ msgid "no definition of `UNDEFINED'"
 #~ msgstr "ingen definition af 'UNDEFINED'"
 
 #~ msgid "non-symbolic character value should not be used"
 #~ msgstr "ikke-symbolske tegnværdier bør ikke bruges"
 
+#, c-format
 #~ msgid "Cannot set LC_CTYPE to default locale"
 #~ msgstr "Kan ikke sætte LC_CTYPE til forvalgt lokale"
 
+#, c-format
 #~ msgid "Cannot set LC_MESSAGES to default locale"
 #~ msgstr "Kan ikke sætte LC_MESSAGES til forvalgt lokale"
 
+#, c-format
 #~ msgid "Cannot set LC_COLLATE to default locale"
 #~ msgstr "Kan ikke sætte LC_COLLATE til forvalgt lokale"
 
@@ -7509,63 +7512,80 @@ msgstr "%s: Kan ikke oprette filkatalog %s: %s\n"
 #~ msgid "memusage: option \\`$1' requires an argument"
 #~ msgstr "memusage: flaget \\\"$1\\\" behøver et argument"
 
+#, c-format
 #~ msgid "cannot stat() file `%s': %s"
 #~ msgstr "kan ikke udføre stat() på fil '%s': %s"
 
+#, c-format
 #~ msgid "cannot set socket to close on exec: %s; disabling paranoia mode"
 #~ msgstr "kan ikke sætte sokkel til at lukkes ved programstart: %s; deaktiverer paranoiatilstand"
 
+#, c-format
 #~ msgid "cannot change socket to nonblocking mode: %s"
 #~ msgstr "kan ikke ændre sokkel til ikke-blokerende tilstand: %s"
 
+#, c-format
 #~ msgid "cannot set socket to close on exec: %s"
 #~ msgstr "kan ikke få sokkel til at lukke ved programstart: %s"
 
+#, c-format
 #~ msgid "cannot read /proc/self/cmdline: %s; disabling paranoia mode"
 #~ msgstr "kan ikke læse /proc/self/cmdline: %s, deaktiverer paranoiatilstand"
 
+#, c-format
 #~ msgid "invalid value for 'reload-count': %u"
 #~ msgstr "ugyldig værdi for 'reload-count': %u"
 
+#, c-format
 #~ msgid "Haven't found \"%s\" in password cache!"
 #~ msgstr "Har ikke fundet '%s' i adgangskode-nærbuffer!"
 
+#, c-format
 #~ msgid "Reloading \"%s\" in password cache!"
 #~ msgstr "Genindlæser '%s' i adgangskode-nærbuffer!"
 
 #~ msgid "compile-time support for database policy missing"
 #~ msgstr "indkompileret understøttelse for databasepolicy mangler"
 
+#, c-format
 #~ msgid "No usable database library found."
 #~ msgstr "Intet brugbart database-bibliotek fundet."
 
 #~ msgid "incorrectly formatted file"
 #~ msgstr "forkert formatteret fil"
 
+#, c-format
 #~ msgid "while reading database"
 #~ msgstr "ved læsning af database"
 
+#, c-format
 #~ msgid "%s: option '--%s' doesn't allow an argument\n"
 #~ msgstr "%s: flaget '--%s' tillader ikke et argument\n"
 
+#, c-format
 #~ msgid "%s: unrecognized option '--%s'\n"
 #~ msgstr "%s: ukendt flag '--%s'\n"
 
+#, c-format
 #~ msgid "%s: option '-W %s' is ambiguous\n"
 #~ msgstr "%s: flaget '-W %s' er flertydigt\n"
 
+#, c-format
 #~ msgid "%s: option '-W %s' doesn't allow an argument\n"
 #~ msgstr "%s: flaget '-W %s' tillader ikke et argument\n"
 
 #~ msgid "cannot find any C preprocessor (cpp)\n"
 #~ msgstr "kan ikke finde nogen C-præprocessor (cpp)\n"
 
+#, c-format
 #~ msgid "This implementation doesn't support newstyle or MT-safe code!\n"
 #~ msgstr "Denne implementation understøtter ikke nystil eller MT-sikker kode!\n"
 
+#, c-format
 #~ msgid "program %lu version %lu is not available\n"
 #~ msgstr "program %lu version %lu er ikke tilgængeligt\n"
 
+#, c-format
 #~ msgid "program %lu version %lu ready and waiting\n"
 #~ msgstr "program %lu version %lu klar og venter\n"
 
@@ -7581,12 +7601,14 @@ msgstr "%s: Kan ikke oprette filkatalog %s: %s\n"
 #~ msgid "(unknown)"
 #~ msgstr "(ukendt)"
 
+#, c-format
 #~ msgid "rpcinfo: broadcast failed: %s\n"
 #~ msgstr "rpcinfo: rundsending fejlede: %s\n"
 
 #~ msgid "Sorry. You are not root\n"
 #~ msgstr "Beklager. Du er ikke 'root'\n"
 
+#, c-format
 #~ msgid "rpcinfo: Could not delete registration for prog %s version %s\n"
 #~ msgstr "rpcinfo: Kunne ikke fjerne registrering af prog %s version %s\n"
 
@@ -7605,9 +7627,11 @@ msgstr "%s: Kan ikke oprette filkatalog %s: %s\n"
 #~ msgid "       rpcinfo -d prognum versnum\n"
 #~ msgstr "       rpcinfo -d prognr versnr\n"
 
+#, c-format
 #~ msgid "rpcinfo: %s is unknown service\n"
 #~ msgstr "rpcinfo: %s er en ukendt tjeneste\n"
 
+#, c-format
 #~ msgid "rpcinfo: %s is unknown host\n"
 #~ msgstr "rpcinfo: %s er en ukendt vært\n"
 
@@ -7623,12 +7647,14 @@ msgstr "%s: Kan ikke oprette filkatalog %s: %s\n"
 #~ msgid "differs from POSIX standard"
 #~ msgstr "afviger fra POSIX-standard"
 
+#, c-format
 #~ msgid "%s: usage is %s [ --version ] [ -v ] [ -c [loyear,]hiyear ] zonename ...\n"
 #~ msgstr "%s: brug er %s [ --version ] [ -v ] [ -c [lavtår,]højtår ] zonenavn ...\n"
 
 #~ msgid "Error writing to standard output"
 #~ msgstr "Fejl ved skrivning til standard ud"
 
+#, c-format
 #~ msgid "%s: use of -v on system with floating time_t other than float or double\n"
 #~ msgstr "%s: brug af -v på et system hvor time_t er et andet talformat end \"float\" eller \"double\"\n"
 
@@ -7638,12 +7664,15 @@ msgstr "%s: Kan ikke oprette filkatalog %s: %s\n"
 #~ msgid "unruly zone"
 #~ msgstr "vanskelig zone"
 
+#, c-format
 #~ msgid "%s: Leap line in non leap seconds file %s\n"
 #~ msgstr "%s: 'Leap'-linje i fil %s som ikke er skudsekundsfil\n"
 
+#, c-format
 #~ msgid "%s: Error reading %s\n"
 #~ msgstr "%s: Fejl ved læsning fra %s\n"
 
+#, c-format
 #~ msgid "%s: Error closing %s: %s\n"
 #~ msgstr "%s: Fejl ved lukning af %s: %s\n"
 
@@ -7656,6 +7685,7 @@ msgstr "%s: Kan ikke oprette filkatalog %s: %s\n"
 #~ msgid "blank TO field on Link line"
 #~ msgstr "tomt 'TO'-felt på 'Link'-linje"
 
+#, c-format
 #~ msgid "%s: Error writing %s\n"
 #~ msgstr "%s: Fejl ved skrivning til %s\n"
 
@@ -7674,5 +7704,6 @@ msgstr "%s: Kan ikke oprette filkatalog %s: %s\n"
 #~ msgid "time zone abbreviation lacks alphabetic at start"
 #~ msgstr "tidszoneforkortelse mangler alfabetisk tegn i begyndelsen"
 
+#, c-format
 #~ msgid "%s: %d did not sign extend correctly\n"
 #~ msgstr "%s: fortegnsudvidelsen af %d blev forkert\n"

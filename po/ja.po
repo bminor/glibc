@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.14\n"
-"POT-Creation-Date: 2019-07-18 13:28-0400\n"
+"POT-Creation-Date: 2020-01-02 20:08+0530\n"
 "PO-Revision-Date: 2011-10-08 23:43+0900\n"
 "Last-Translator: Yasuaki Taniguchi <yasuakit@gmail.com>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
@@ -69,8 +69,7 @@ msgid "Give a short usage message"
 msgstr "短い使用方法を表示する"
 
 #: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
-#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:105
-#: nss/makedb.c:120
+#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:105 nss/makedb.c:120
 msgid "NAME"
 msgstr "NAME"
 
@@ -169,9 +168,9 @@ msgstr ""
 #: elf/ldconfig.c:324 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
 #: elf/sprof.c:389 iconv/iconv_prog.c:422 iconv/iconvconfig.c:396
 #: locale/programs/locale.c:293 locale/programs/localedef.c:463
-#: login/programs/pt_chown.c:63 malloc/memusage.sh:71
-#: malloc/memusagestat.c:581 nscd/nscd.c:509 nss/getent.c:88 nss/makedb.c:385
-#: posix/getconf.c:485 sysdeps/unix/sysv/linux/lddlibc4.c:68
+#: login/programs/pt_chown.c:63 malloc/memusage.sh:71 malloc/memusagestat.c:581
+#: nscd/nscd.c:509 nss/getent.c:88 nss/makedb.c:385 posix/getconf.c:485
+#: sysdeps/unix/sysv/linux/lddlibc4.c:68
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -370,11 +369,7 @@ msgstr "実行可能ファイル \\`$program' が見つかりません\\n"
 msgid "\\`$program' is no executable\\n"
 msgstr "\\`$program' は実行可能ファイルではありません\\n"
 
-#: dlfcn/dlinfo.c:63
-msgid "RTLD_SELF used in code not dynamically loaded"
-msgstr "コード内で使用されている RTLD_SELF を動的にロードできません"
-
-#: dlfcn/dlinfo.c:72
+#: dlfcn/dlinfo.c:53
 msgid "unsupported dlinfo request"
 msgstr "サポートされていない dlinfo 要求です"
 
@@ -403,7 +398,7 @@ msgstr "不明な OS です"
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", OS ABI: %s %d.%d.%d"
 
-#: elf/cache.c:163 elf/ldconfig.c:1333
+#: elf/cache.c:163 elf/ldconfig.c:1334
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "キャッシュファイル %s を開けません\n"
@@ -444,11 +439,11 @@ msgstr "%s のアクセス権限を %#o へ変更するのに失敗しました"
 msgid "Renaming of %s to %s failed"
 msgstr "%s から %s への名前変更に失敗しました"
 
-#: elf/dl-close.c:399 elf/dl-open.c:424
+#: elf/dl-close.c:406 elf/dl-open.c:285
 msgid "cannot create scope list"
 msgstr "スコープリストを作成できません"
 
-#: elf/dl-close.c:839
+#: elf/dl-close.c:852
 msgid "shared object not open"
 msgstr "共有オブジェクトが開けません"
 
@@ -523,127 +518,127 @@ msgstr "RUNPATH/RPATH のコピーを作成できません"
 msgid "cannot create search path array"
 msgstr "探索パス配列を作成できません"
 
-#: elf/dl-load.c:883
+#: elf/dl-load.c:892
 msgid "cannot stat shared object"
 msgstr "共有オブジェクトの状態取得 (stat) ができません"
 
-#: elf/dl-load.c:992 elf/dl-load.c:2198
+#: elf/dl-load.c:1003 elf/dl-load.c:2191
 msgid "cannot create shared object descriptor"
 msgstr "共有オブジェクト記述子を作成できません"
 
-#: elf/dl-load.c:1011 elf/dl-load.c:1555 elf/dl-load.c:1668
+#: elf/dl-load.c:1022 elf/dl-load.c:1571 elf/dl-load.c:1672
 msgid "cannot read file data"
 msgstr "ファイルデータを読み込めません"
 
-#: elf/dl-load.c:1057
+#: elf/dl-load.c:1068
 msgid "ELF load command alignment not page-aligned"
 msgstr "ELF ロードコマンド整列がページで整列されていません"
 
-#: elf/dl-load.c:1064
+#: elf/dl-load.c:1075
 msgid "ELF load command address/offset not properly aligned"
 msgstr "ELF ロードコマンドのアドレス/オフセットが適切に整列されていません"
 
-#: elf/dl-load.c:1146
+#: elf/dl-load.c:1151
 #, fuzzy
 #| msgid "cannot restore segment prot after reloc"
 msgid "cannot process note segment"
 msgstr "再配置後にセグメントの prot を復元できません"
 
-#: elf/dl-load.c:1157
+#: elf/dl-load.c:1162
 msgid "object file has no loadable segments"
 msgstr "オブジェクトファイルはロード可能セグメントを持っていません"
 
-#: elf/dl-load.c:1170 elf/dl-load.c:1647
+#: elf/dl-load.c:1175
 msgid "cannot dynamically load executable"
 msgstr "実行ファイルを動的にロードできません"
 
-#: elf/dl-load.c:1191
+#: elf/dl-load.c:1196
 msgid "object file has no dynamic section"
 msgstr "オブジェクトファイルは動的セクションを持っていません"
 
-#: elf/dl-load.c:1218
+#: elf/dl-load.c:1223
 #, fuzzy
 #| msgid "cannot dynamically load executable"
 msgid "cannot dynamically load position-independent executable"
 msgstr "実行ファイルを動的にロードできません"
 
-#: elf/dl-load.c:1220
+#: elf/dl-load.c:1225
 msgid "shared object cannot be dlopen()ed"
 msgstr "共有オブジェクトは dlopen() できません"
 
-#: elf/dl-load.c:1233
+#: elf/dl-load.c:1238
 msgid "cannot allocate memory for program header"
 msgstr "プログラムヘッダー用のメモリを配置できません"
 
-#: elf/dl-load.c:1266 elf/dl-load.h:130
+#: elf/dl-load.c:1271 elf/dl-load.h:130
 msgid "cannot change memory protections"
 msgstr "メモリ保護を変更できません"
 
-#: elf/dl-load.c:1286
+#: elf/dl-load.c:1291
 msgid "cannot enable executable stack as shared object requires"
 msgstr "共有オブジェクトが必要としている実行可能スタックを有効にできません"
 
-#: elf/dl-load.c:1299
+#: elf/dl-load.c:1304
 msgid "cannot close file descriptor"
 msgstr "ファイル記述子を閉じられません"
 
-#: elf/dl-load.c:1555
+#: elf/dl-load.c:1571
 msgid "file too short"
 msgstr "ファイルが小さすぎます"
 
-#: elf/dl-load.c:1590
+#: elf/dl-load.c:1606
 msgid "invalid ELF header"
 msgstr "無効な ELF ヘッダーです"
 
-#: elf/dl-load.c:1602
+#: elf/dl-load.c:1618
 msgid "ELF file data encoding not big-endian"
 msgstr "ELF ファイルデータのエンコーディングがビッグエンディアンではありません"
 
-#: elf/dl-load.c:1604
+#: elf/dl-load.c:1620
 msgid "ELF file data encoding not little-endian"
 msgstr "ELF ファイルデータのエンコーディングがリトルエンディアンではありません"
 
-#: elf/dl-load.c:1608
+#: elf/dl-load.c:1624
 msgid "ELF file version ident does not match current one"
 msgstr "ELF ファイルバージョン識別子が現在のものと一致していません"
 
-#: elf/dl-load.c:1612
+#: elf/dl-load.c:1628
 msgid "ELF file OS ABI invalid"
 msgstr "ELF ファイル OS ABI が無効です"
 
-#: elf/dl-load.c:1615
+#: elf/dl-load.c:1631
 msgid "ELF file ABI version invalid"
 msgstr "ELF ファイル ABI バージョンが無効です"
 
-#: elf/dl-load.c:1618
+#: elf/dl-load.c:1634
 msgid "nonzero padding in e_ident"
 msgstr "e_ident 内にゼロでない詰め文字があります"
 
-#: elf/dl-load.c:1621
+#: elf/dl-load.c:1637
 msgid "internal error"
 msgstr "内部エラー"
 
-#: elf/dl-load.c:1628
+#: elf/dl-load.c:1644
 msgid "ELF file version does not match current one"
 msgstr "ELFファイルのバージョン番号が現在のファイルに一致していません"
 
-#: elf/dl-load.c:1636
+#: elf/dl-load.c:1652
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "ET_DYN と ET_EXEC のみロード可能です"
 
-#: elf/dl-load.c:1652
+#: elf/dl-load.c:1657
 msgid "ELF file's phentsize not the expected size"
 msgstr "ELF ファイルの phentsize が予期されたサイズではありません"
 
-#: elf/dl-load.c:2217
+#: elf/dl-load.c:2210
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "間違った ELF クラスです: ELFCLASS64"
 
-#: elf/dl-load.c:2218
+#: elf/dl-load.c:2211
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "間違った ELF クラスです: ELFCLASS32"
 
-#: elf/dl-load.c:2221
+#: elf/dl-load.c:2214
 msgid "cannot open shared object file"
 msgstr "共有オブジェクトファイルを開けません"
 
@@ -655,27 +650,27 @@ msgstr "共有オブジェクトのセグメントをマップするのに失敗
 msgid "cannot map zero-fill pages"
 msgstr "ゼロで埋められたページをマップできません"
 
-#: elf/dl-lookup.c:830
+#: elf/dl-lookup.c:882
 msgid "symbol lookup error"
 msgstr "シンボル検索エラーです"
 
-#: elf/dl-open.c:99
+#: elf/dl-open.c:71
 msgid "cannot extend global scope"
 msgstr "大域スコープを拡張できません"
 
-#: elf/dl-open.c:474
+#: elf/dl-open.c:391
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "TLS 生成カウンタが一周しました!  これを報告してください。"
 
-#: elf/dl-open.c:538
+#: elf/dl-open.c:783
 msgid "invalid mode for dlopen()"
 msgstr "dlopen() 用の無効なモードです"
 
-#: elf/dl-open.c:555
+#: elf/dl-open.c:800
 msgid "no more namespaces available for dlmopen()"
 msgstr "dlmopen() 用にこれ以上名前空間を使用出来ません"
 
-#: elf/dl-open.c:579
+#: elf/dl-open.c:824
 msgid "invalid target namespace in dlmopen()"
 msgstr "dlmopen() 内で無効なターゲット名前空間です"
 
@@ -687,20 +682,20 @@ msgstr "静的 TLS ブロック内にメモリを配置出来ません"
 msgid "cannot make segment writable for relocation"
 msgstr "セグメントを再配置用に書き込み可能に出来ません"
 
-#: elf/dl-reloc.c:272
+#: elf/dl-reloc.c:273
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr "%s: %s 用の再配置結果を保存するときにメモリが足りなくなりました\n"
 
-#: elf/dl-reloc.c:288
+#: elf/dl-reloc.c:289
 msgid "cannot restore segment prot after reloc"
 msgstr "再配置後にセグメントの prot を復元できません"
 
-#: elf/dl-reloc.c:319
+#: elf/dl-reloc.c:320
 msgid "cannot apply additional memory protection after relocation"
 msgstr "再配置後に追加のメモリ保護を適用できません"
 
-#: elf/dl-sym.c:136
+#: elf/dl-sym.c:150
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "コード内で使用されている RTLD_NEXT を動的にロード出来ません"
 
@@ -880,58 +875,58 @@ msgstr "libc4 ライブラリ %s が誤ったディレクトリ内にありま�
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "ディレクトリ %3$s 内にあるライブラリ %1$s と %2$s は同一の動的ライブラリ名 (soname) ですが異なった型です。"
 
-#: elf/ldconfig.c:1082
+#: elf/ldconfig.c:1083
 #, c-format
 msgid "Warning: ignoring configuration file that cannot be opened: %s"
 msgstr ""
 
-#: elf/ldconfig.c:1148
+#: elf/ldconfig.c:1149
 #, c-format
 msgid "%s:%u: bad syntax in hwcap line"
 msgstr "%s:%u: hwcap 行内の構文に誤りがあります"
 
-#: elf/ldconfig.c:1154
+#: elf/ldconfig.c:1155
 #, c-format
 msgid "%s:%u: hwcap index %lu above maximum %u"
 msgstr "%s:%u: hwcap 索引 %lu は最大値 %u を超えています"
 
-#: elf/ldconfig.c:1161 elf/ldconfig.c:1169
+#: elf/ldconfig.c:1162 elf/ldconfig.c:1170
 #, c-format
 msgid "%s:%u: hwcap index %lu already defined as %s"
 msgstr "%s:%u: hwcap 索引 %lu は既に %s として定義されています"
 
-#: elf/ldconfig.c:1172
+#: elf/ldconfig.c:1173
 #, c-format
 msgid "%s:%u: duplicate hwcap %lu %s"
 msgstr "%s:%u: 重複した hwcap %lu %s です"
 
-#: elf/ldconfig.c:1194
+#: elf/ldconfig.c:1195
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr "-r を使用しているときは設定ファイル名として絶対パスのファイル名が必要です"
 
-#: elf/ldconfig.c:1201 locale/programs/xmalloc.c:63 malloc/obstack.c:416
+#: elf/ldconfig.c:1202 locale/programs/xmalloc.c:63 malloc/obstack.c:416
 #: malloc/obstack.c:418 posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr "メモリを使い果たしました"
 
-#: elf/ldconfig.c:1234
+#: elf/ldconfig.c:1235
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: ディレクトリ %s を読み込めません"
 
-#: elf/ldconfig.c:1282
+#: elf/ldconfig.c:1283
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "キャッシュ生成時に相対パス `%s' が使用されました"
 
-#: elf/ldconfig.c:1312
+#: elf/ldconfig.c:1313
 #, c-format
 msgid "Can't chdir to /"
 msgstr "/ へディレクトリ移動 (chdir) 出来ません"
 
-#: elf/ldconfig.c:1353
+#: elf/ldconfig.c:1354
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "キャッシュファイルディレクトリ %s を開けません\n"
@@ -1119,27 +1114,27 @@ msgstr ""
 msgid "file %s is truncated\n"
 msgstr "ファイル %s は切り詰められました\n"
 
-#: elf/readelflib.c:66
+#: elf/readelflib.c:65
 #, c-format
 msgid "%s is a 32 bit ELF file.\n"
 msgstr "%s は 32 ビット ELF ファイルです。\n"
 
-#: elf/readelflib.c:68
+#: elf/readelflib.c:67
 #, c-format
 msgid "%s is a 64 bit ELF file.\n"
 msgstr "%s は 64 ビット ELF ファイルです。\n"
 
-#: elf/readelflib.c:70
+#: elf/readelflib.c:69
 #, c-format
 msgid "Unknown ELFCLASS in file %s.\n"
 msgstr "ファイル %s 内に不明な ELFCLASS があります。\n"
 
-#: elf/readelflib.c:77
+#: elf/readelflib.c:76
 #, c-format
 msgid "%s is not a shared object file (Type: %d).\n"
 msgstr "%s は共有オブジェクトファイルではありません (型: %d)。\n"
 
-#: elf/readelflib.c:108
+#: elf/readelflib.c:101
 #, c-format
 msgid "more than one dynamic segment\n"
 msgstr "二つ以上の動的セグメントがあります\n"
@@ -1779,12 +1774,11 @@ msgstr "領域の最後にシンボル名が与えられていません"
 #: locale/programs/charmap.c:615 locale/programs/ld-address.c:524
 #: locale/programs/ld-collate.c:2616 locale/programs/ld-collate.c:3774
 #: locale/programs/ld-ctype.c:2118 locale/programs/ld-ctype.c:2830
-#: locale/programs/ld-identification.c:397
-#: locale/programs/ld-measurement.c:213 locale/programs/ld-messages.c:295
-#: locale/programs/ld-monetary.c:748 locale/programs/ld-name.c:262
-#: locale/programs/ld-numeric.c:325 locale/programs/ld-paper.c:212
-#: locale/programs/ld-telephone.c:276 locale/programs/ld-time.c:959
-#: locale/programs/repertoire.c:312
+#: locale/programs/ld-identification.c:397 locale/programs/ld-measurement.c:213
+#: locale/programs/ld-messages.c:295 locale/programs/ld-monetary.c:748
+#: locale/programs/ld-name.c:262 locale/programs/ld-numeric.c:325
+#: locale/programs/ld-paper.c:212 locale/programs/ld-telephone.c:276
+#: locale/programs/ld-time.c:959 locale/programs/repertoire.c:312
 #, c-format
 msgid "%1$s: definition does not end with `END %1$s'"
 msgstr "%1$s: 定義が `END %1$s' で終っていません"
@@ -1806,12 +1800,12 @@ msgstr "%s: 状態マシン内でエラーが発生しました"
 #: locale/programs/charmap.c:856 locale/programs/ld-address.c:540
 #: locale/programs/ld-collate.c:2613 locale/programs/ld-collate.c:3967
 #: locale/programs/ld-ctype.c:2115 locale/programs/ld-ctype.c:2847
-#: locale/programs/ld-identification.c:413
-#: locale/programs/ld-measurement.c:229 locale/programs/ld-messages.c:311
-#: locale/programs/ld-monetary.c:764 locale/programs/ld-name.c:278
-#: locale/programs/ld-numeric.c:341 locale/programs/ld-paper.c:228
-#: locale/programs/ld-telephone.c:292 locale/programs/ld-time.c:990
-#: locale/programs/locfile.c:1010 locale/programs/repertoire.c:323
+#: locale/programs/ld-identification.c:413 locale/programs/ld-measurement.c:229
+#: locale/programs/ld-messages.c:311 locale/programs/ld-monetary.c:764
+#: locale/programs/ld-name.c:278 locale/programs/ld-numeric.c:341
+#: locale/programs/ld-paper.c:228 locale/programs/ld-telephone.c:292
+#: locale/programs/ld-time.c:990 locale/programs/locfile.c:1010
+#: locale/programs/repertoire.c:323
 #, c-format
 msgid "%s: premature end of file"
 msgstr "%s: ファイル終端 (EOF) が早すぎます"
@@ -1914,13 +1908,12 @@ msgstr "%s: 数字の国コード `%d' が無効です"
 
 #: locale/programs/ld-address.c:432 locale/programs/ld-address.c:469
 #: locale/programs/ld-address.c:507 locale/programs/ld-ctype.c:2479
-#: locale/programs/ld-identification.c:309
-#: locale/programs/ld-measurement.c:196 locale/programs/ld-messages.c:264
-#: locale/programs/ld-monetary.c:503 locale/programs/ld-monetary.c:538
-#: locale/programs/ld-monetary.c:579 locale/programs/ld-name.c:235
-#: locale/programs/ld-numeric.c:217 locale/programs/ld-paper.c:195
-#: locale/programs/ld-telephone.c:251 locale/programs/ld-time.c:864
-#: locale/programs/ld-time.c:906
+#: locale/programs/ld-identification.c:309 locale/programs/ld-measurement.c:196
+#: locale/programs/ld-messages.c:264 locale/programs/ld-monetary.c:503
+#: locale/programs/ld-monetary.c:538 locale/programs/ld-monetary.c:579
+#: locale/programs/ld-name.c:235 locale/programs/ld-numeric.c:217
+#: locale/programs/ld-paper.c:195 locale/programs/ld-telephone.c:251
+#: locale/programs/ld-time.c:864 locale/programs/ld-time.c:906
 #, c-format
 msgid "%s: field `%s' declared more than once"
 msgstr "%s: フィールド `%s' が二回以上宣言されています"
@@ -1951,11 +1944,11 @@ msgstr "%s: 不完全な `END' 行です"
 #: locale/programs/ld-collate.c:2603 locale/programs/ld-collate.c:3957
 #: locale/programs/ld-ctype.c:1847 locale/programs/ld-ctype.c:2105
 #: locale/programs/ld-ctype.c:2677 locale/programs/ld-ctype.c:2838
-#: locale/programs/ld-identification.c:404
-#: locale/programs/ld-measurement.c:220 locale/programs/ld-messages.c:302
-#: locale/programs/ld-monetary.c:755 locale/programs/ld-name.c:269
-#: locale/programs/ld-numeric.c:332 locale/programs/ld-paper.c:219
-#: locale/programs/ld-telephone.c:283 locale/programs/ld-time.c:981
+#: locale/programs/ld-identification.c:404 locale/programs/ld-measurement.c:220
+#: locale/programs/ld-messages.c:302 locale/programs/ld-monetary.c:755
+#: locale/programs/ld-name.c:269 locale/programs/ld-numeric.c:332
+#: locale/programs/ld-paper.c:219 locale/programs/ld-telephone.c:283
+#: locale/programs/ld-time.c:981
 #, c-format
 msgid "%s: syntax error"
 msgstr "%s: 構文エラー"
@@ -2267,7 +2260,7 @@ msgstr "`digit' カテゴリはグループ中に10個のエントリを持っ�
 msgid "no input digits defined and none of the standard names in the charmap"
 msgstr "入力桁が定義されていないか、文字マップ中に標準名がありません"
 
-#: locale/programs/ld-ctype.c:849
+#: locale/programs/ld-ctype.c:847
 msgid "not all characters used in `outdigit' are available in the charmap"
 msgstr "`outdigit' 内で使用されている文字の全てが文字マップ内で利用可能ではありません"
 
@@ -4950,7 +4943,7 @@ msgstr ") または \\) が不一致です"
 msgid "No previous regular expression"
 msgstr "以前に正規表現がありません"
 
-#: posix/wordexp.c:1816
+#: posix/wordexp.c:1795
 msgid "parameter null or not set"
 msgstr "パラメータが NULL であるか設定されていません"
 
@@ -5217,7 +5210,7 @@ msgstr "リアルタイムシグナル %d"
 msgid "Unknown signal %d"
 msgstr "不明なシグナル %d"
 
-#: sunrpc/auth_unix.c:112 sunrpc/clnt_tcp.c:124 sunrpc/clnt_udp.c:139
+#: sunrpc/auth_unix.c:113 sunrpc/clnt_tcp.c:124 sunrpc/clnt_udp.c:140
 #: sunrpc/clnt_unix.c:125 sunrpc/svc_tcp.c:189 sunrpc/svc_tcp.c:233
 #: sunrpc/svc_udp.c:161 sunrpc/svc_unix.c:189 sunrpc/svc_unix.c:229
 #: sunrpc/xdr.c:631 sunrpc/xdr.c:791 sunrpc/xdr_array.c:102
@@ -5225,7 +5218,7 @@ msgstr "不明なシグナル %d"
 msgid "out of memory\n"
 msgstr "メモリが足りなくなりました\n"
 
-#: sunrpc/auth_unix.c:349
+#: sunrpc/auth_unix.c:350
 msgid "auth_unix.c: Fatal marshalling problem"
 msgstr ""
 
@@ -7406,6 +7399,9 @@ msgstr "%s: ディレクトリ%sを作成できません: %s\n"
 #~ msgid "Try \\`%s --help' or `%s --usage' for more information.\\n"
 #~ msgstr "詳細は \\`%s --help' または `%s --usage' を実行してください。\\n"
 
+#~ msgid "RTLD_SELF used in code not dynamically loaded"
+#~ msgstr "コード内で使用されている RTLD_SELF を動的にロードできません"
+
 #~ msgid "cannot open zero fill device"
 #~ msgstr "ゼロで埋められたデバイスを開けません"
 
@@ -7424,99 +7420,124 @@ msgstr "%s: ディレクトリ%sを作成できません: %s\n"
 #~ msgid "cannot load any more object with static TLS"
 #~ msgstr "静的 TLS ブロックではこれ以上オブジェクトをロードできません"
 
+#, c-format
 #~ msgid "%s: no PLTREL found in object %s\n"
 #~ msgstr "%s: PLTREL がオブジェクト %s 内に見つかりません\n"
 
 #~ msgid "Don't generate links"
 #~ msgstr "リンクを生成しません"
 
+#, c-format
 #~ msgid "Can't open configuration file %s"
 #~ msgstr "設定ファイル %s を開けません"
 
+#, c-format
 #~ msgid "cannot create internal descriptors"
 #~ msgstr "内部記述子を作成できません"
 
 #~ msgid "Character out of range for UTF-8"
 #~ msgstr "文字が UTF-8 の範囲外です"
 
+#, c-format
 #~ msgid "no definition of `UNDEFINED'"
 #~ msgstr "`UNDEFINED' の定義がありません"
 
 #~ msgid "non-symbolic character value should not be used"
 #~ msgstr "非シンボル文字値は使用すべきではありません"
 
+#, c-format
 #~ msgid "Cannot set LC_CTYPE to default locale"
 #~ msgstr "LC_CTYPE をデフォルトロケールへ設定できません"
 
+#, c-format
 #~ msgid "Cannot set LC_MESSAGES to default locale"
 #~ msgstr "LC_MESSAGES をデフォルトロケールへ設定できません"
 
+#, c-format
 #~ msgid "Cannot set LC_COLLATE to default locale"
 #~ msgstr "LC_COLLATE をデフォルトロケールへ設定できません"
 
 #~ msgid "Create old-style tables"
 #~ msgstr "古いスタイルの表を作成する"
 
+#, c-format
 #~ msgid "cannot stat() file `%s': %s"
 #~ msgstr "ファイル `%s' を stat() できません: %s"
 
+#, c-format
 #~ msgid "cannot set socket to close on exec: %s; disabling paranoia mode"
 #~ msgstr "ソケットを実行時に閉じるように設定できません: %s; paranoia モードを無効にしています"
 
+#, c-format
 #~ msgid "cannot change socket to nonblocking mode: %s"
 #~ msgstr "ソケットを非ブロッキングモードに変更できません: %s"
 
+#, c-format
 #~ msgid "cannot set socket to close on exec: %s"
 #~ msgstr "ソケットを実行時に閉じるように設定できません: %s"
 
+#, c-format
 #~ msgid "cannot read /proc/self/cmdline: %s; disabling paranoia mode"
 #~ msgstr "/proc/self/cmdline を読み込めません: %s; paranoia モードを無効にしています"
 
+#, c-format
 #~ msgid "invalid value for 'reload-count': %u"
 #~ msgstr "'reload-count' 用の無効な値です: %u"
 
+#, c-format
 #~ msgid "Haven't found \"%s\" in password cache!"
 #~ msgstr "パスワードキャッシュ内に \"%s\" が見つかりません!"
 
+#, c-format
 #~ msgid "Reloading \"%s\" in password cache!"
 #~ msgstr "パスワードキャッシュ内の \"%s\" を再ロードしています!"
 
 #~ msgid "compile-time support for database policy missing"
 #~ msgstr "データベースポリシーのサポートがかコンパイル時に無効にされています"
 
+#, c-format
 #~ msgid "No usable database library found."
 #~ msgstr "使用可能なデータベースライブラリがありません。"
 
 #~ msgid "incorrectly formatted file"
 #~ msgstr "正しくない形式のファイルです"
 
+#, c-format
 #~ msgid "while reading database"
 #~ msgstr "データベースの読み込み中"
 
+#, c-format
 #~ msgid "%s: option '--%s' doesn't allow an argument\n"
 #~ msgstr "%s: オプション '--%s' は引数を取ることができません\n"
 
+#, c-format
 #~ msgid "%s: unrecognized option '--%s'\n"
 #~ msgstr "%s: オプション '--%s' を認識できません\n"
 
+#, c-format
 #~ msgid "%s: option '-W %s' doesn't allow an argument\n"
 #~ msgstr "%s: オプション '-W %s' は引数を取ることができません\n"
 
+#, c-format
 #~ msgid "%s: option '-W %s' requires an argument\n"
 #~ msgstr "%s: オプション '-W %s' は引数が必要です\n"
 
 #~ msgid "cannot find any C preprocessor (cpp)\n"
 #~ msgstr "どのような C プリプロセッサも見つかりません (cpp)\n"
 
+#, c-format
 #~ msgid "This implementation doesn't support newstyle or MT-safe code!\n"
 #~ msgstr "この実装は新形式またはMTセーフなコードをサポートしていません!\n"
 
+#, c-format
 #~ msgid "program %lu is not available\n"
 #~ msgstr "プログラム%luは利用できません\n"
 
+#, c-format
 #~ msgid "program %lu version %lu is not available\n"
 #~ msgstr "プログラム%luバージョン%luは利用できません\n"
 
+#, c-format
 #~ msgid "program %lu version %lu ready and waiting\n"
 #~ msgstr "プログラム %lu バージョン %lu の準備が完了し待機中です\n"
 
@@ -7532,12 +7553,14 @@ msgstr "%s: ディレクトリ%sを作成できません: %s\n"
 #~ msgid "(unknown)"
 #~ msgstr "(不明)"
 
+#, c-format
 #~ msgid "rpcinfo: broadcast failed: %s\n"
 #~ msgstr "rpcinfo: ブロードキャストに失敗しました: %s\n"
 
 #~ msgid "Sorry. You are not root\n"
 #~ msgstr "失礼. あなたは root ではありません\n"
 
+#, c-format
 #~ msgid "rpcinfo: Could not delete registration for prog %s version %s\n"
 #~ msgstr "rpcinfo: プログラム%sバージョン%sへの登録を削除できません\n"
 
@@ -7558,9 +7581,11 @@ msgstr "%s: ディレクトリ%sを作成できません: %s\n"
 #~ msgid "       rpcinfo -d prognum versnum\n"
 #~ msgstr "       rpcinfo -d prognum versnum\n"
 
+#, c-format
 #~ msgid "rpcinfo: %s is unknown service\n"
 #~ msgstr "rpcinfo: %sは不明なサービスです\n"
 
+#, c-format
 #~ msgid "rpcinfo: %s is unknown host\n"
 #~ msgstr "rpcinfo: %sは不明なホストです\n"
 
@@ -7576,6 +7601,7 @@ msgstr "%s: ディレクトリ%sを作成できません: %s\n"
 #~ msgid "differs from POSIX standard"
 #~ msgstr "POSIX 標準と異なります"
 
+#, c-format
 #~ msgid ""
 #~ "%s: usage is %s [ --version ] [ --help ] [ -v ] [ -c [loyear,]hiyear ] zonename ...\n"
 #~ "\n"
@@ -7592,12 +7618,15 @@ msgstr "%s: ディレクトリ%sを作成できません: %s\n"
 #~ msgid "hard link failed, symbolic link used"
 #~ msgstr "ハードリンクに失敗したため、シンボリックリンクを使います"
 
+#, c-format
 #~ msgid "%s: Leap line in non leap seconds file %s\n"
 #~ msgstr "%s: 閏秒ファイルでないファイル %s に Leap 行があります\n"
 
+#, c-format
 #~ msgid "%s: Error reading %s\n"
 #~ msgstr "%s: %s を読み込み中にエラーが発生しました\n"
 
+#, c-format
 #~ msgid "%s: Error closing %s: %s\n"
 #~ msgstr "%s: %s を閉じている間にエラーが発生しました: %s\n"
 
@@ -7610,6 +7639,7 @@ msgstr "%s: ディレクトリ%sを作成できません: %s\n"
 #~ msgid "blank TO field on Link line"
 #~ msgstr "Link 行の TO フィールドが空欄です"
 
+#, c-format
 #~ msgid "%s: Error writing %s\n"
 #~ msgstr "%s: %s を書き込み中にエラーが発生しました\n"
 
@@ -7628,6 +7658,7 @@ msgstr "%s: ディレクトリ%sを作成できません: %s\n"
 #~ msgid "time zone abbreviation lacks alphabetic at start"
 #~ msgstr "タイムゾーン省略名がアルファベットで開始していません"
 
+#, c-format
 #~ msgid "%s: %d did not sign extend correctly\n"
 #~ msgstr "%s: %d は正しく記号を拡張しませんでした\n"
 
