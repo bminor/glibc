@@ -87,6 +87,8 @@ __backtrace (void **array, int size)
       if (is_sigtramp_address (current->return_address))
         {
 	  struct signal_frame_64 *sigframe = (struct signal_frame_64*) current;
+	  if (count + 1 == size)
+	    break;
           array[++count] = (void*) sigframe->uc.uc_mcontext.gp_regs[PT_NIP];
 	  current = (void*) sigframe->uc.uc_mcontext.gp_regs[PT_R1];
 	}
