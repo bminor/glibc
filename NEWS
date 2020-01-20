@@ -73,6 +73,7 @@ The following bugs are resolved with this release:
   [25204] Ignore LD_PREFER_MAP_32BIT_EXEC for SUID programs
   [25225] ld.so fails to link on x86 if GCC defaults to -fcf-protection
   [25232] No const correctness for strchr et al. for Clang++
+  [25423] Array overflow in backtrace on powerpc
 
 Security related changes:
 
