@@ -288,6 +288,7 @@ convert_hostent_to_gaih_addrtuple (const struct addrinfo *req,
 	  canonbuf = __strdup (localcanon);				      \
 	  if (canonbuf == NULL)						      \
 	    {								      \
+	      __resolv_context_put (res_ctx);				      \
 	      result = -EAI_SYSTEM;					      \
 	      goto free_and_return;					      \
 	    }								      \
