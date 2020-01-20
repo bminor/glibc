@@ -89,6 +89,18 @@ handle_signal (int signum)
       }
   /* Symbol names are not available for static functions, so we do not
      check do_test.  */
+
+  /* Check that backtrace does not return more than what fits in the array
+     (bug 25423).  */
+  for (int j = 0; j < NUM_FUNCTIONS; j++)
+    {
+      n = backtrace (addresses, j);
+      if (n > j)
+	{
+	  FAIL ();
+	  return;
+	}
+    }
 }
 
 NO_INLINE int
