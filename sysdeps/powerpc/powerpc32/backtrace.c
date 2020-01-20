@@ -114,6 +114,8 @@ __backtrace (void **array, int size)
         }
       if (gregset)
 	{
+	  if (count + 1 == size)
+	    break;
 	  array[++count] = (void*)((*gregset)[PT_NIP]);
 	  current = (void*)((*gregset)[PT_R1]);
 	}
