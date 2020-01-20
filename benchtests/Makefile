@@ -217,7 +217,10 @@ bench-malloc: $(binaries-bench-malloc)
 # capable language or tool.
 bench-func: $(binaries-bench)
 	if [ -n '$^' ] ; then \
-	{ timing_type=$$($(timing-type)); \
+	{ timing_type=$$($(test-wrapper-env) \
+			 $(run-program-env) \
+			 $(test-via-rtld-prefix) \
+			 $(timing-type)); \
 	  echo "{\"timing_type\": \"$${timing_type}\","; \
 	  echo " \"functions\": {"; \
 	  for run in $^; do \
