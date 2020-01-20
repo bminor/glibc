@@ -534,6 +534,9 @@ __res_context_send (struct resolv_context *ctx,
 
 		resplen = n;
 
+		/* See comment at the declaration of n.  Note: resplen = n;  */
+		DIAG_PUSH_NEEDS_COMMENT;
+		DIAG_IGNORE_NEEDS_COMMENT (9, "-Wmaybe-uninitialized");
 		/* Mask the AD bit in both responses unless it is
 		   marked trusted.  */
 		if (resplen > HFIXEDSZ)
@@ -543,6 +546,7 @@ __res_context_send (struct resolv_context *ctx,
 		    else
 		      mask_ad_bit (ctx, ans);
 		  }
+		DIAG_POP_NEEDS_COMMENT;
 		if (resplen2 != NULL && *resplen2 > HFIXEDSZ)
 		  mask_ad_bit (ctx, *ansp2);
 
