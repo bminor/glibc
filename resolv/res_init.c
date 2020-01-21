@@ -508,7 +508,6 @@ res_vinit_1 (FILE *fp, struct resolv_conf_parser *parser)
               continue;
             }
         }
-      fclose (fp);
     }
   if (__glibc_unlikely (nameserver_list_size (&parser->nameserver_list) == 0))
     {
@@ -592,6 +591,13 @@ __resolv_conf_load (struct __res_state *preinit)
       conf = __resolv_conf_allocate (&parser.template);
     }
   resolv_conf_parser_free (&parser);
+
+  if (fp != NULL)
+    {
+      int saved_errno = errno;
+      fclose (fp);
+      __set_errno (saved_errno);
+    }
 
   return conf;
 }
