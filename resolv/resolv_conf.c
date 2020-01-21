@@ -136,7 +136,7 @@ __resolv_conf_get_current (void)
     {
       /* Parse configuration while holding the lock.  This avoids
          duplicate work.  */
-      conf = __resolv_conf_load (NULL);
+      conf = __resolv_conf_load (NULL, NULL);
       if (conf != NULL)
         {
           if (global_copy->conf_current != NULL)

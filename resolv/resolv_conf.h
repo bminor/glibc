@@ -63,12 +63,16 @@ struct resolv_conf
    and the struct resolv_context facility.  */
 
 struct __res_state;
+struct file_change_detection;
 
 /* Read /etc/resolv.conf and return a configuration object, or NULL if
    /etc/resolv.conf cannot be read due to memory allocation errors.
-   If PREINIT is not NULL, some configuration values are taken from the
-   struct __res_state object.  */
-struct resolv_conf *__resolv_conf_load (struct __res_state *preinit)
+   If PREINIT is not NULL, some configuration values are taken from
+   the struct __res_state object.  If CHANGE is not null, file change
+   detection data is written to *CHANGE, based on the state of the
+   file after reading it.  */
+struct resolv_conf *__resolv_conf_load (struct __res_state *preinit,
+                                        struct file_change_detection *change)
   attribute_hidden __attribute__ ((warn_unused_result));
 
 /* Return a configuration object for the current /etc/resolv.conf
