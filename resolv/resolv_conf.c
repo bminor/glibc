@@ -24,6 +24,7 @@
 #include <resolv-internal.h>
 #include <sys/stat.h>
 #include <libc-symbols.h>
+#include <file_change_detection.h>
 
 /* _res._u._ext.__glibc_extension_index is used as an index into a
    struct resolv_conf_array object.  The intent of this construction
@@ -68,12 +69,8 @@ struct resolv_conf_global
   /* Cached current configuration object for /etc/resolv.conf.  */
   struct resolv_conf *conf_current;
 
-  /* These properties of /etc/resolv.conf are used to check if the
-     configuration needs reloading.  */
-  struct timespec conf_mtime;
-  struct timespec conf_ctime;
-  off64_t conf_size;
-  ino64_t conf_ino;
+  /* File system identification for /etc/resolv.conf.  */
+  struct file_change_detection file_resolve_conf;
 };
 
 /* Lazily allocated storage for struct resolv_conf_global.  */
@@ -123,37 +120,16 @@ conf_decrement (struct resolv_conf *conf)
 struct resolv_conf *
 __resolv_conf_get_current (void)
 {
-  struct stat64 st;
-  if (stat64 (_PATH_RESCONF, &st) != 0)
-    {
-    switch (errno)
-      {
-      case EACCES:
-      case EISDIR:
-      case ELOOP:
-      case ENOENT:
-      case ENOTDIR:
-      case EPERM:
-        /* Ignore errors due to file system contents.  */
-        memset (&st, 0, sizeof (st));
-        break;
-      default:
-        /* Other errors are fatal.  */
-        return NULL;
-      }
-    }
+  struct file_change_detection initial;
+  if (!file_change_detection_for_path (&initial, _PATH_RESCONF))
+    return NULL;
 
   struct resolv_conf_global *global_copy = get_locked_global ();
   if (global_copy == NULL)
     return NULL;
   struct resolv_conf *conf;
   if (global_copy->conf_current != NULL
-      && (global_copy->conf_mtime.tv_sec == st.st_mtim.tv_sec
-          && global_copy->conf_mtime.tv_nsec == st.st_mtim.tv_nsec
-          && global_copy->conf_ctime.tv_sec == st.st_ctim.tv_sec
-          && global_copy->conf_ctime.tv_nsec == st.st_ctim.tv_nsec
-          && global_copy->conf_ino == st.st_ino
-          && global_copy->conf_size == st.st_size))
+      && file_is_unchanged (&initial, &global_copy->file_resolve_conf))
     /* We can reuse the cached configuration object.  */
     conf = global_copy->conf_current;
   else
@@ -171,10 +147,7 @@ __resolv_conf_get_current (void)
              read could be a newer version of the file, but this does
              not matter because this will lead to an extraneous reload
              later.  */
-          global_copy->conf_mtime = st.st_mtim;
-          global_copy->conf_ctime = st.st_ctim;
-          global_copy->conf_ino = st.st_ino;
-          global_copy->conf_size = st.st_size;
+          global_copy->file_resolve_conf = initial;
         }
     }
 
