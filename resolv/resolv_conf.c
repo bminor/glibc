@@ -136,18 +136,25 @@ __resolv_conf_get_current (void)
     {
       /* Parse configuration while holding the lock.  This avoids
          duplicate work.  */
-      conf = __resolv_conf_load (NULL, NULL);
+      struct file_change_detection after_load;
+      conf = __resolv_conf_load (NULL, &after_load);
       if (conf != NULL)
         {
           if (global_copy->conf_current != NULL)
             conf_decrement (global_copy->conf_current);
           global_copy->conf_current = conf; /* Takes ownership.  */
 
-          /* Update file modification stamps.  The configuration we
-             read could be a newer version of the file, but this does
-             not matter because this will lead to an extraneous reload
-             later.  */
-          global_copy->file_resolve_conf = initial;
+          /* Update file change detection data, but only if it matches
+             the initial measurement.  This avoids an ABA race in case
+             /etc/resolv.conf is temporarily replaced while the file
+             is read (after the initial measurement), and restored to
+             the initial version later.  */
+          if (file_is_unchanged (&initial, &after_load))
+            global_copy->file_resolve_conf = after_load;
+          else
+            /* If there is a discrepancy, trigger a reload during the
+               next use.  */
+            global_copy->file_resolve_conf.size = -1;
         }
     }
 
