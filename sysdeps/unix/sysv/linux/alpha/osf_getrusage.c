@@ -22,7 +22,7 @@
 
 #include <sys/time.h>
 #include <sys/resource.h>
-#include <tv32-compat.h>
+#include <alpha-tv32-compat.h>
 
 int
 __getrusage_tv32 (int who, struct rusage32 *usage32)
@@ -31,7 +31,7 @@ __getrusage_tv32 (int who, struct rusage32 *usage32)
   if (__getrusage (who, &usage64) == -1)
     return -1;
 
-  rusage64_to_rusage32 (usage32, &usage64);
+  alpha_rusage64_to_rusage32 (usage32, &usage64);
   return 0;
 }
 

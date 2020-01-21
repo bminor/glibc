@@ -70,13 +70,13 @@ struct rusage32
    overflow, they write { INT32_MAX, TV_USEC_MAX } to the output.  */
 
 static inline struct timeval
-valid_timeval32_to_timeval (const struct timeval32 tv)
+alpha_valid_timeval32_to_timeval (const struct timeval32 tv)
 {
   return (struct timeval) { tv.tv_sec, tv.tv_usec };
 }
 
 static inline struct timeval32
-valid_timeval_to_timeval32 (const struct timeval tv64)
+alpha_valid_timeval_to_timeval32 (const struct timeval tv64)
 {
   if (__glibc_unlikely (tv64.tv_sec > (time_t) INT32_MAX))
     return (struct timeval32) { INT32_MAX, TV_USEC_MAX};
@@ -84,27 +84,27 @@ valid_timeval_to_timeval32 (const struct timeval tv64)
 }
 
 static inline struct timespec
-valid_timeval32_to_timespec (const struct timeval32 tv)
+alpha_valid_timeval32_to_timespec (const struct timeval32 tv)
 {
   return (struct timespec) { tv.tv_sec, tv.tv_usec * 1000 };
 }
 
 static inline struct timeval32
-valid_timespec_to_timeval32 (const struct timespec ts)
+alpha_valid_timespec_to_timeval32 (const struct timespec ts)
 {
   return (struct timeval32) { (time_t) ts.tv_sec, ts.tv_nsec / 1000 };
 }
 
 static inline void
-rusage64_to_rusage32 (struct rusage32 *restrict r32,
+alpha_rusage64_to_rusage32 (struct rusage32 *restrict r32,
                       const struct rusage *restrict r64)
 {
   /* Make sure the entire output structure is cleared, including
      padding and reserved fields.  */
   memset (r32, 0, sizeof *r32);
 
-  r32->ru_utime    = valid_timeval_to_timeval32 (r64->ru_utime);
-  r32->ru_stime    = valid_timeval_to_timeval32 (r64->ru_stime);
+  r32->ru_utime    = alpha_valid_timeval_to_timeval32 (r64->ru_utime);
+  r32->ru_stime    = alpha_valid_timeval_to_timeval32 (r64->ru_stime);
   r32->ru_maxrss   = r64->ru_maxrss;
   r32->ru_ixrss    = r64->ru_ixrss;
   r32->ru_idrss    = r64->ru_idrss;
@@ -121,4 +121,4 @@ rusage64_to_rusage32 (struct rusage32 *restrict r32,
   r32->ru_nivcsw   = r64->ru_nivcsw;
 }
 
-#endif /* tv32-compat.h */
+#endif /* alpha-tv32-compat.h  */

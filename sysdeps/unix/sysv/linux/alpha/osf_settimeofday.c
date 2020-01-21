@@ -23,7 +23,7 @@
 #include <sys/time.h>
 #include <time.h>
 #include <errno.h>
-#include <tv32-compat.h>
+#include <alpha-tv32-compat.h>
 
 /* Set the current time of day and timezone information.
    This call is restricted to the super-user.  */
@@ -42,7 +42,7 @@ __settimeofday_tv32 (const struct timeval32 *tv32,
       return __settimezone (tz);
     }
 
-  struct timespec ts = valid_timeval32_to_timespec (*tv32);
+  struct timespec ts = alpha_valid_timeval32_to_timespec (*tv32);
   return __clock_settime (CLOCK_REALTIME, &ts);
 }
 

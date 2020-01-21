@@ -21,7 +21,7 @@
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 
 #include <sys/time.h>
-#include <tv32-compat.h>
+#include <alpha-tv32-compat.h>
 
 int
 attribute_compat_text_section
@@ -33,9 +33,9 @@ __getitimer_tv32 (int which, struct itimerval32 *curr_value)
 
   /* Write all fields of 'curr_value' regardless of overflow.  */
   curr_value->it_interval
-    = valid_timeval_to_timeval32 (curr_value_64.it_interval);
+    = alpha_valid_timeval_to_timeval32 (curr_value_64.it_interval);
   curr_value->it_value
-    = valid_timeval_to_timeval32 (curr_value_64.it_value);
+    = alpha_valid_timeval_to_timeval32 (curr_value_64.it_value);
   return 0;
 }
 

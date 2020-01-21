@@ -23,7 +23,7 @@
 #include <string.h>
 #include <time.h>
 #include <sys/time.h>
-#include <tv32-compat.h>
+#include <alpha-tv32-compat.h>
 
 /* Get the current time of day and timezone information putting it
    into *TV and *TZ.  */
@@ -38,7 +38,7 @@ __gettimeofday_tv32 (struct timeval32 *restrict tv32, void *restrict tz)
   struct timespec ts;
   __clock_gettime (CLOCK_REALTIME, &ts);
 
-  *tv32 = valid_timespec_to_timeval32 (ts);
+  *tv32 = alpha_valid_timespec_to_timeval32 (ts);
   return 0;
 }
 
