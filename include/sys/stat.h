@@ -9,6 +9,7 @@ extern int __lstat (const char *__file, struct stat *__buf);
 extern int __chmod (const char *__file, __mode_t __mode);
 libc_hidden_proto (__chmod)
 extern int __fchmod (int __fd, __mode_t __mode);
+libc_hidden_proto (fchmodat)
 extern __mode_t __umask (__mode_t __mask);
 extern int __mkdir (const char *__path, __mode_t __mode);
 libc_hidden_proto (__mkdir)

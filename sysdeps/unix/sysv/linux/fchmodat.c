@@ -38,3 +38,4 @@ fchmodat (int fd, const char *file, mode_t mode, int flag)
 
   return INLINE_SYSCALL (fchmodat, 3, fd, file, mode);
 }
+libc_hidden_def (fchmodat)

@@ -42,3 +42,4 @@ fchmodat (int fd, const char *file, mode_t mode, int flag)
   return -1;
 }
 stub_warning (fchmodat)
+libc_hidden_def (fchmodat)

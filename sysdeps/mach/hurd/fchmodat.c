@@ -37,3 +37,4 @@ fchmodat (int fd, const char *file, mode_t mode, int flag)
     return __hurd_fail (err);
   return 0;
 }
+libc_hidden_def (fchmodat)
