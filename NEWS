@@ -112,6 +112,18 @@ Deprecated and removed features, and other changes affecting compatibility:
   captured in a dlerror message.  In general, this is unsafe because
   resetting the stack in an arbitrary function call is not possible.
 
+* For MIPS hard-float ABIs, the GNU C Library will be configured to need an
+  executable stack unless explicitly configured at build time to require
+  minimum kernel version 4.8 or newer.  This is because executing
+  floating-point branches on a non-executable stack on Linux kernels prior to
+  4.8 can lead to application crashes for some MIPS configurations. While
+  currently PT_GNU_STACK is not widely used on MIPS, future releases of GCC are
+  expected to enable non-executable stack by default  with PT_GNU_STACK by
+  default and is thus likely to trigger a crash on older kernels.
+
+  The GNU C Library can be built with --enable-kernel=4.8.0 in order to keep a
+  non-executable stack while dropping support for older kernels.
+
 Changes to build and runtime requirements:
 
 * It is no longer necessary to have recent Linux kernel headers to build
