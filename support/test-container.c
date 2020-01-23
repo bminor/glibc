@@ -72,6 +72,10 @@ int verbose = 0;
 
    * mkdir $buildroot/testroot.pristine/
    * install into it
+     * default glibc install
+     * create /bin for /bin/sh
+     * create $(complocaledir) so localedef tests work with default paths.
+     * install /bin/sh, /bin/echo, and /bin/true.
    * rsync to $buildroot/testroot.root/
 
    "Per-test" actions:
@@ -97,9 +101,23 @@ int verbose = 0;
 	 rm FILE
 	 cwd PATH
 	 exec FILE
-	 FILE must start with $B/, $S/, $I/, $L/, or /
-	  (expands to build dir, source dir, install dir, library dir
-	   (in container), or container's root)
+	 mkdirp MODE DIR
+
+       variables:
+	 $B/ build dir, equivalent to $(common-objpfx)
+	 $S/ source dir, equivalent to $(srcdir)
+	 $I/ install dir, equivalent to $(prefix)
+	 $L/ library dir (in container), equivalent to $(libdir)
+	 $complocaledir/ compiled locale dir, equivalent to $(complocaledir)
+	 / container's root
+
+	 If FILE begins with any of these variables then they will be
+	 substituted for the described value.
+
+	 The goal is to expose as many of the runtime's configured paths
+	 via variables so they can be used to setup the container environment
+	 before execution reaches the test.
+
        details:
          - '#': A comment.
          - 'su': Enables running test as root in the container.
@@ -108,6 +126,8 @@ int verbose = 0;
          - 'rm': A minimal remove files command.
 	 - 'cwd': set test working directory
 	 - 'exec': change test binary location (may end in /)
+	 - 'mkdirp': A minimal "mkdir -p FILE" command.
+
    * mytest.root/postclean.req causes fresh rsync (with delete) after
      test if present
 
@@ -859,6 +879,7 @@ main (int argc, char **argv)
 	    int nt = tokenize (the_line, the_words, 3);
 	    int i;
 
+	    /* Expand variables.  */
 	    for (i = 1; i < nt; ++i)
 	      {
 		if (memcmp (the_words[i], "$B/", 3) == 0)
@@ -875,6 +896,10 @@ main (int argc, char **argv)
 		  the_words[i] = concat (new_root_path,
 					 support_libdir_prefix,
 					 the_words[i] + 2, NULL);
+		else if (memcmp (the_words[i], "$complocaledir/", 15) == 0)
+		  the_words[i] = concat (new_root_path,
+					 support_complocaledir_prefix,
+					 the_words[i] + 14, NULL);
 		/* "exec" and "cwd" use inside-root paths.  */
 		else if (strcmp (the_words[0], "exec") != 0
 			 && strcmp (the_words[0], "cwd") != 0
@@ -891,6 +916,9 @@ main (int argc, char **argv)
 		else
 		  the_words[2] = concat (the_words[2], the_words[1], NULL);
 	      }
+
+	    /* Run the following commands in the_words[0] with NT number of
+	       arguments (including the command).  */
 
 	    if (nt == 2 && strcmp (the_words[0], "so") == 0)
 	      {
@@ -960,6 +988,14 @@ main (int argc, char **argv)
 	    else if (nt == 1 && strcmp (the_words[0], "su") == 0)
 	      {
 		be_su = 1;
+	      }
+	    else if (nt == 3 && strcmp (the_words[0], "mkdirp") == 0)
+	      {
+		long int m;
+		errno = 0;
+		m = strtol (the_words[1], NULL, 0);
+		TEST_COMPARE (errno, 0);
+		xmkdirp (the_words[2], m);
 	      }
 	    else if (nt > 0 && the_words[0][0] != '#')
 	      {

@@ -588,6 +588,9 @@ $(objpfx)testroot.pristine/install.stamp :
 	# We need a working /bin/sh for some of the tests.
 	test -d $(objpfx)testroot.pristine/bin || \
 	  mkdir $(objpfx)testroot.pristine/bin
+	# We need the compiled locale dir for localedef tests.
+	test -d $(objpfx)testroot.pristine/$(complocaledir) || \
+	  mkdir -p $(objpfx)testroot.pristine/$(complocaledir)
 	cp $(objpfx)support/shell-container $(objpfx)testroot.pristine/bin/sh
 	cp $(objpfx)support/echo-container $(objpfx)testroot.pristine/bin/echo
 	cp $(objpfx)support/true-container $(objpfx)testroot.pristine/bin/true
