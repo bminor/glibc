@@ -1378,9 +1378,10 @@ $(objpfx)ifuncmain5picstatic: $(addprefix $(objpfx),ifuncdep5pic.o)
 LDFLAGS-tst-ifunc-fault-lazy = -Wl,-z,lazy
 LDFLAGS-tst-ifunc-fault-bindnow = -Wl,-z,now
 define tst-ifunc-fault-script
-( $(rtld-prefix) --verify $^ \
-  && LD_TRACE_LOADED_OBJECTS=1 $(rtld-prefix) $^ \
-  && LD_TRACE_LOADED_OBJECTS=1 LD_DEBUG=unused $(rtld-prefix) $^ \
+( $(test-wrapper) $(rtld-prefix) --verify $^ \
+  && $(test-wrapper-env) LD_TRACE_LOADED_OBJECTS=1 $(rtld-prefix) $^ \
+  && $(test-wrapper-env) LD_TRACE_LOADED_OBJECTS=1 LD_DEBUG=unused \
+			 $(rtld-prefix) $^ \
 ) > $@; $(evaluate-test)
 endef
 $(objpfx)tst-ifunc-fault-lazy.out: $(objpfx)tst-ifunc-fault-lazy $(objpfx)ld.so
