@@ -931,7 +931,7 @@ $(objpfx)tst-rtld-preload.out: tst-rtld-preload.sh $(objpfx)ld.so \
 			       $(objpfx)preloadtest \
 			       $(preloadtest-preloads:%=$(objpfx)%.so)
 	$(SHELL) $< $(objpfx)ld.so $(objpfx)preloadtest \
-		    '$(test-wrapper)' '$(test-wrapper-env)' '$(run_program_env)' \
+		    '$(test-wrapper-env)' '$(run_program_env)' \
 		    '$(rpath-link)' '$(tst-rtld-preload-OBJS)' > $@; \
 	$(evaluate-test)
 
