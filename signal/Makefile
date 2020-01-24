@@ -52,6 +52,7 @@ tests		:= tst-signal tst-sigset tst-sigsimple tst-raise tst-sigset2 \
 
 include ../Rules
 
+CFLAGS-raise.c += -fasynchronous-unwind-tables
 CFLAGS-sigpause.c += -fexceptions
 CFLAGS-sigsuspend.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sigtimedwait.c += -fexceptions -fasynchronous-unwind-tables
