@@ -34,10 +34,8 @@ trap cleanup 0
 rm -rf "$testroot"
 mkdir -p $testroot
 
-unset LANG
-
 ${test_wrapper_env} \
-${run_program_env} LC_ALL=invalid-locale LOCPATH=does-not-exist \
+${run_program_env} LANG= LC_ALL=invalid-locale LOCPATH=does-not-exist \
 ${common_objpfx}elf/ld.so --library-path "$LIBPATH" \
   "${common_objpfx}locale/locale" \
   > "$testroot/stdout" 2> "$testroot/stderr"
