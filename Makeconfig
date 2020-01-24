@@ -907,6 +907,7 @@ ifeq ($(with-clang),yes)
 +cflags += -fheinous-gnu-extensions
 # Don't complain about __sigsetjmp.
 +cflags += -Wno-builtin-requires-header
++cflags += -Wno-incomplete-setjmp-declaration
 # clang takes gnu89 as requiring a warning about duplicates, gcc does not
 +cflags += -Wno-duplicate-decl-specifier
 # Non-string format arguments come from debugging prints in ld.so.
