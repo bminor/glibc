@@ -105,6 +105,6 @@ END {
   print "";
   print "#ifdef EMIT_ERR_MAX";
   print "void dummy (void)"
-  print "{ asm volatile (\" @@@ %0 @@@ \" : : \"i\" (ERR_REMAP (ERR_MAX))); }"
+  print "{ asm volatile (\".ascii \\\" @@@ %0 @@@ \\\"\" : : \"i\" (ERR_REMAP (ERR_MAX))); }"
   print "#endif";
 }

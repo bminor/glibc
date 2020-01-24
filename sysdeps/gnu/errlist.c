@@ -1478,5 +1478,5 @@ const int _sys_nerr_internal = NERR;
 
 #ifdef EMIT_ERR_MAX
 void dummy (void)
-{ asm volatile (" @@@ %0 @@@ " : : "i" (ERR_REMAP (ERR_MAX))); }
+{ asm volatile (".ascii \" @@@ %0 @@@ \"" : : "i" (ERR_REMAP (ERR_MAX))); }
 #endif
