@@ -25,12 +25,6 @@
 /*               doasin.c sincos32.c dosincos.c mpa.c             */
 /*               sincos.tbl  asincos.tbl  powtwo.tbl root.tbl     */
 /*                                                                */
-/* Ultimate asin/acos routines. Given an IEEE double machine      */
-/* number x, compute the correctly rounded value of               */
-/* arcsin(x)or arccos(x)  according to the function called.       */
-/* Assumption: Machine arithmetic operations are performed in     */
-/* round to nearest mode of IEEE 754 standard.                    */
-/*                                                                */
 /******************************************************************/
 #include "endian.h"
 #include "mydefs.h"
@@ -53,13 +47,7 @@ void __doasin(double x, double dx, double w[]);
 void __dubsin(double x, double dx, double v[]);
 void __dubcos(double x, double dx, double v[]);
 void __docos(double x, double dx, double v[]);
-double __sin32(double x, double res, double res1);
-double __cos32(double x, double res, double res1);
 
-/***************************************************************************/
-/* An ultimate asin routine. Given an IEEE double machine number x         */
-/* it computes the correctly rounded (to nearest) value of arcsin(x)       */
-/***************************************************************************/
 double
 SECTION
 __ieee754_asin(double x){
@@ -100,13 +88,7 @@ __ieee754_asin(double x){
       if (res == res+1.00014*cor) return res;
       else {
 	__doasin(x,0,w);
-	if (w[0]==(w[0]+1.00000001*w[1])) return w[0];
-	else {
-	  y=fabs(x);
-	  res=fabs(w[0]);
-	  res1=fabs(w[0]+1.1*w[1]);
-	  return (m>0)?__sin32(y,res,res1):-__sin32(y,res,res1);
-	}
+	return w[0];
       }
     }
   }
@@ -137,8 +119,7 @@ __ieee754_asin(double x){
 	if (z>1.0e-27) return (m>0)?min(res,res1):-min(res,res1);
 	else if (z<-1.0e-27) return (m>0)?max(res,res1):-max(res,res1);
 	else {
-	  y=fabs(x);
-	  return (m>0)?__sin32(y,res,res1):-__sin32(y,res,res1);
+	  return (m>0)?res:-res;
 	}
       }
     }
@@ -170,8 +151,7 @@ __ieee754_asin(double x){
 	if (z>1.0e-27) return (m>0)?min(res,res1):-min(res,res1);
 	else if (z<-1.0e-27) return (m>0)?max(res,res1):-max(res,res1);
 	else {
-	  y=fabs(x);
-	  return (m>0)?__sin32(y,res,res1):-__sin32(y,res,res1);
+	  return (m>0)?res:-res;
 	}
       }
     }
@@ -205,8 +185,7 @@ __ieee754_asin(double x){
 	if (z>1.0e-27) return (m>0)?min(res,res1):-min(res,res1);
 	else if (z<-1.0e-27) return (m>0)?max(res,res1):-max(res,res1);
 	else {
-	  y=fabs(x);
-	  return (m>0)?__sin32(y,res,res1):-__sin32(y,res,res1);
+	  return (m>0)?res:-res;
 	}
       }
     }
@@ -243,8 +222,7 @@ __ieee754_asin(double x){
 	if (z>1.0e-27) return (m>0)?min(res,res1):-min(res,res1);
 	else if (z<-1.0e-27) return (m>0)?max(res,res1):-max(res,res1);
 	else {
-	  y=fabs(x);
-	  return (m>0)?__sin32(y,res,res1):-__sin32(y,res,res1);
+	  return (m>0)?res:-res;
 	}
       }
     }
@@ -282,8 +260,7 @@ __ieee754_asin(double x){
 	if (z>1.0e-27) return (m>0)?min(res,res1):-min(res,res1);
 	else if (z<-1.0e-27) return (m>0)?max(res,res1):-max(res,res1);
 	else {
-	  y=fabs(x);
-	  return (m>0)?__sin32(y,res,res1):-__sin32(y,res,res1);
+	  return (m>0)?res:-res;
 	}
       }
     }
@@ -313,13 +290,7 @@ __ieee754_asin(double x){
       res1=hp0.x-2.0*w[0];
       cor=((hp0.x-res1)-2.0*w[0])+(hp1.x-2.0*w[1]);
       res = res1+cor;
-      cor = (res1-res)+cor;
-      if (res==(res+1.0000001*cor)) return (m>0)?res:-res;
-      else {
-	y=fabs(x);
-	res1=res+1.1*cor;
-	return (m>0)?__sin32(y,res,res1):-__sin32(y,res,res1);
-      }
+      return (m>0)?res:-res;
     }
   }    /*   else  if (k < 0x3ff00000)    */
   /*---------------------------- |x|>=1 -------------------------------*/
@@ -388,12 +359,7 @@ __ieee754_acos(double x)
 	r=hp0.x-w[0];
 	cor=((hp0.x-r)-w[0])+(hp1.x-w[1]);
 	res=r+cor;
-	cor=(r-res)+cor;
-	if (res ==(res +1.00000001*cor)) return res;
-	else {
-	  res1=res+1.1*cor;
-	  return __cos32(x,res,res1);
-	}
+	return res;
       }
     }
   }    /*   else  if (k < 0x3fc00000)    */
@@ -429,7 +395,7 @@ __ieee754_acos(double x)
 	z=(w[0]-x)+w[1];
 	if (z>1.0e-27) return max(res,res1);
 	else if (z<-1.0e-27) return min(res,res1);
-	else return __cos32(x,res,res1);
+	else return res;
       }
     }
   }    /*   else  if (k < 0x3fe00000)    */
@@ -464,7 +430,7 @@ __ieee754_acos(double x)
        z=(w[0]-x)+w[1];
        if (z>1.0e-27) return max(res,res1);
        else if (z<-1.0e-27) return min(res,res1);
-       else return __cos32(x,res,res1);
+       else return res;
      }
    }
   }    /*   else  if (k < 0x3fe80000)    */
@@ -499,7 +465,7 @@ __ieee754_acos(double x)
 	z=(w[0]-x)+w[1];
 	if (z>1.0e-27) return max(res,res1);
 	else if (z<-1.0e-27) return min(res,res1);
-	else return __cos32(x,res,res1);
+	else return res;
       }
     }
   }    /*   else  if (k < 0x3fed8000)    */
@@ -535,7 +501,7 @@ __ieee754_acos(double x)
 	z=(w[0]-x)+w[1];
 	if (z>1.0e-27) return max(res,res1);
 	else if (z<-1.0e-27) return min(res,res1);
-	else return __cos32(x,res,res1);
+	else return res;
       }
     }
   }    /*   else  if (k < 0x3fee8000)    */
@@ -571,7 +537,7 @@ __ieee754_acos(double x)
        z=(w[0]-x)+w[1];
        if (z>1.0e-27) return max(res,res1);
        else if (z<-1.0e-27) return min(res,res1);
-       else return __cos32(x,res,res1);
+       else return res;
      }
    }
   }    /*   else  if (k < 0x3fef0000)    */
@@ -602,13 +568,7 @@ __ieee754_acos(double x)
 	res1=hp0.x-w[0];
 	cor=((hp0.x-res1)-w[0])+(hp1.x-w[1]);
 	res = res1+cor;
-	cor = (res1-res)+cor;
-	if (res==(res+1.000001*cor)) return (res+res);
-	else {
-	  res=res+res;
-	  res1=res+1.2*cor;
-	  return __cos32(x,res,res1);
-	}
+	return (res+res);
       }
     }
     else {
@@ -620,13 +580,7 @@ __ieee754_acos(double x)
 	cc=(y-c)+cc;
 	__doasin(c,cc,w);
 	res = w[0];
-	cor=w[1];
-	if (res==(res+1.000001*cor)) return (res+res);
-	else {
-	  res=res+res;
-	  res1=res+1.2*cor;
-	  return __cos32(x,res,res1);
-	}
+	return (res+res);
       }
     }
   }    /*   else  if (k < 0x3ff00000)    */
