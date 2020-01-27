@@ -68,6 +68,8 @@ __timer_settime64 (timer_t timerid, int flags,
 }
 
 #if __TIMESIZE != 64
+librt_hidden_def (__timer_settime64)
+
 int
 __timer_settime (timer_t timerid, int flags, const struct itimerspec *value,
                  struct itimerspec *ovalue)
@@ -89,4 +91,3 @@ __timer_settime (timer_t timerid, int flags, const struct itimerspec *value,
 }
 #endif
 weak_alias (__timer_settime, timer_settime)
-libc_hidden_def (timer_settime)

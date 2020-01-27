@@ -185,7 +185,7 @@ libc_hidden_proto (__futimens64);
 #else
 extern int __timer_gettime64 (timer_t timerid, struct __itimerspec64 *value);
 extern int __timerfd_gettime64 (int fd, struct __itimerspec64 *value);
-libc_hidden_proto (__timer_gettime64);
+librt_hidden_proto (__timer_gettime64);
 libc_hidden_proto (__timerfd_gettime64);
 #endif
 
@@ -199,7 +199,7 @@ extern int __timer_settime64 (timer_t timerid, int flags,
 extern int __timerfd_settime64 (int fd, int flags,
                                 const struct __itimerspec64 *value,
                                 struct __itimerspec64 *ovalue);
-libc_hidden_proto (__timer_settime64);
+librt_hidden_proto (__timer_settime64);
 libc_hidden_proto (__timerfd_settime64);
 #endif
 

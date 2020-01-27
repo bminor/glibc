@@ -52,6 +52,8 @@ __timer_gettime64 (timer_t timerid, struct __itimerspec64 *value)
 }
 
 #if __TIMESIZE != 64
+librt_hidden_def (__timer_gettime64)
+
 int
 __timer_gettime (timer_t timerid, struct itimerspec *value)
 {
@@ -67,4 +69,3 @@ __timer_gettime (timer_t timerid, struct itimerspec *value)
 }
 #endif
 weak_alias (__timer_gettime, timer_gettime)
-libc_hidden_def (timer_gettime)
