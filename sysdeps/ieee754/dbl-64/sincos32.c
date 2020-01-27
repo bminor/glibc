@@ -127,68 +127,6 @@ __c32 (mp_no *x, mp_no *y, mp_no *z, int p)
   __cpy (&s, z, p);
 }
 
-/* Receive double x and two double results of sin(x) and return result which is
-   more accurate, computing sin(x) with multi precision routine c32.  */
-double
-SECTION
-__sin32 (double x, double res, double res1)
-{
-  int p;
-  mp_no a, b, c;
-  p = 32;
-  __dbl_mp (res, &a, p);
-  __dbl_mp (0.5 * (res1 - res), &b, p);
-  __add (&a, &b, &c, p);
-  if (x > 0.8)
-    {
-      __sub (&hp, &c, &a, p);
-      __c32 (&a, &b, &c, p);
-    }
-  else
-    __c32 (&c, &a, &b, p);	/* b=sin(0.5*(res+res1))  */
-  __dbl_mp (x, &c, p);		/* c = x  */
-  __sub (&b, &c, &a, p);
-  /* if a > 0 return min (res, res1), otherwise return max (res, res1).  */
-  if ((a.d[0] > 0 && res >= res1) || (a.d[0] <= 0 && res <= res1))
-    res = res1;
-  LIBC_PROBE (slowasin, 2, &res, &x);
-  return res;
-}
-
-/* Receive double x and two double results of cos(x) and return result which is
-   more accurate, computing cos(x) with multi precision routine c32.  */
-double
-SECTION
-__cos32 (double x, double res, double res1)
-{
-  int p;
-  mp_no a, b, c;
-  p = 32;
-  __dbl_mp (res, &a, p);
-  __dbl_mp (0.5 * (res1 - res), &b, p);
-  __add (&a, &b, &c, p);
-  if (x > 2.4)
-    {
-      __sub (&pi, &c, &a, p);
-      __c32 (&a, &b, &c, p);
-      b.d[0] = -b.d[0];
-    }
-  else if (x > 0.8)
-    {
-      __sub (&hp, &c, &a, p);
-      __c32 (&a, &c, &b, p);
-    }
-  else
-    __c32 (&c, &b, &a, p);	/* b=cos(0.5*(res+res1))  */
-  __dbl_mp (x, &c, p);		/* c = x                  */
-  __sub (&b, &c, &a, p);
-  /* if a > 0 return max (res, res1), otherwise return min (res, res1).  */
-  if ((a.d[0] > 0 && res <= res1) || (a.d[0] <= 0 && res >= res1))
-    res = res1;
-  LIBC_PROBE (slowacos, 2, &res, &x);
-  return res;
-}
-
 /* Compute sin() of double-length number (X + DX) as Multi Precision number and
    return result as double.  If REDUCE_RANGE is true, X is assumed to be the
    original input and DX is ignored.  */

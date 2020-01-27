@@ -1,5 +1,3 @@
-#define __cos32 __cos32_fma4
-#define __sin32 __sin32_fma4
 #define __c32 __c32_fma4
 #define __mpsin __mpsin_fma4
 #define __mpsin1 __mpsin1_fma4

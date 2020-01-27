@@ -311,20 +311,6 @@ input that results in multiple precision computation with precision
 is the computed result.
 @end deftp
 
-@deftp Probe slowasin (double @var{$arg1}, double @var{$arg2})
-This probe is triggered when the @code{asin} function is called with
-an input that results in multiple precision computation with precision
-32.  Argument @var{$arg1} is the input to the function and @var{$arg2}
-is the computed result.
-@end deftp
-
-@deftp Probe slowacos (double @var{$arg1}, double @var{$arg2})
-This probe is triggered when the @code{acos} function is called with
-an input that results in multiple precision computation with precision
-32.  Argument @var{$arg1} is the input to the function and @var{$arg2}
-is the computed result.
-@end deftp
-
 @deftp Probe slowsin (double @var{$arg1}, double @var{$arg2})
 This probe is triggered when the @code{sin} function is called with an
 input that results in multiple precision computation with precision
