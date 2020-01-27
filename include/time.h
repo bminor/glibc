@@ -227,10 +227,14 @@ libc_hidden_proto (__sched_rr_get_interval64);
 
 #if __TIMESIZE == 64
 # define __settimeofday64 __settimeofday
+# define __gettimeofday64 __gettimeofday
 #else
 extern int __settimeofday64 (const struct __timeval64 *tv,
                              const struct timezone *tz);
 libc_hidden_proto (__settimeofday64)
+extern int __gettimeofday64 (struct __timeval64 *restrict tv,
+                             void *restrict tz);
+libc_hidden_proto (__gettimeofday64)
 #endif
 
 /* Compute the `struct tm' representation of T,
