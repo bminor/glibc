@@ -33,9 +33,9 @@ __getitimer_tv32 (int which, struct itimerval32 *curr_value)
 
   /* Write all fields of 'curr_value' regardless of overflow.  */
   curr_value->it_interval
-    = valid_timeval64_to_timeval (curr_value_64.it_interval);
+    = valid_timeval_to_timeval32 (curr_value_64.it_interval);
   curr_value->it_value
-    = valid_timeval64_to_timeval (curr_value_64.it_value);
+    = valid_timeval_to_timeval32 (curr_value_64.it_value);
   return 0;
 }
 

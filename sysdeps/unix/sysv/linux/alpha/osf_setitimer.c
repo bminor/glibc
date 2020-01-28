@@ -43,9 +43,9 @@ __setitimer_tv32 (int which, const struct itimerval32 *restrict new_value,
 
   /* Write all fields of 'old_value' regardless of overflow.  */
   old_value->it_interval
-     = valid_timeval64_to_timeval (old_value_64.it_interval);
+     = valid_timeval_to_timeval32 (old_value_64.it_interval);
   old_value->it_value
-     = valid_timeval64_to_timeval (old_value_64.it_value);
+     = valid_timeval_to_timeval32 (old_value_64.it_value);
   return 0;
 }
 

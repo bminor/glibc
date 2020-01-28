@@ -63,7 +63,7 @@ __adjtime_tv32 (const struct timeval32 *itv, struct timeval32 *otv)
   if (__adjtime (&itv64, &otv64) == -1)
     return -1;
 
-  *otv = valid_timeval64_to_timeval (otv64);
+  *otv = valid_timeval_to_timeval32 (otv64);
   return 0;
 }
 
@@ -116,7 +116,7 @@ __adjtimex_tv32 (struct timex32 *tx)
   tx->calcnt    = tx64.calcnt;
   tx->errcnt    = tx64.errcnt;
   tx->stbcnt    = tx64.stbcnt;
-  tx->time      = valid_timeval64_to_timeval (tx64.time);
+  tx->time      = valid_timeval_to_timeval32 (tx64.time);
 
   return status;
 }

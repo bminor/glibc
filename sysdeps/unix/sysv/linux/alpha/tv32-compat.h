@@ -76,7 +76,7 @@ valid_timeval32_to_timeval (const struct timeval32 tv)
 }
 
 static inline struct timeval32
-valid_timeval64_to_timeval (const struct timeval tv64)
+valid_timeval_to_timeval32 (const struct timeval tv64)
 {
   if (__glibc_unlikely (tv64.tv_sec > (time_t) INT32_MAX))
     return (struct timeval32) { INT32_MAX, TV_USEC_MAX};
@@ -103,8 +103,8 @@ rusage64_to_rusage32 (struct rusage32 *restrict r32,
      padding and reserved fields.  */
   memset (r32, 0, sizeof *r32);
 
-  r32->ru_utime    = valid_timeval64_to_timeval (r64->ru_utime);
-  r32->ru_stime    = valid_timeval64_to_timeval (r64->ru_stime);
+  r32->ru_utime    = valid_timeval_to_timeval32 (r64->ru_utime);
+  r32->ru_stime    = valid_timeval_to_timeval32 (r64->ru_stime);
   r32->ru_maxrss   = r64->ru_maxrss;
   r32->ru_ixrss    = r64->ru_ixrss;
   r32->ru_idrss    = r64->ru_idrss;
