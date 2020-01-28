@@ -110,9 +110,8 @@ ENTRY(name);					\
 #define __SYSCALL_STRING						\
 	"ta	0x10;"							\
 	"bcc	1f;"							\
-	" mov	0, %%g1;"						\
+	" nop;"								\
 	"sub	%%g0, %%o0, %%o0;"					\
-	"mov	1, %%g1;"						\
 	"1:"
 
 #define __SYSCALL_CLOBBERS						\
